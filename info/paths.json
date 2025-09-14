@@ -1,0 +1,11 @@
+{
+  "paths": [
+    {
+      "_path": "Library/bin/micromamba.exe",
+      "path_type": "hardlink",
+      "sha256": "4b328171d0eae31bd58ca773880492fee05e2fa2f7e9e1a876a0c39a1cf92906",
+      "size_in_bytes": 10660864
+    }
+  ],
+  "paths_version": 1
+}

@@ -521,3 +521,30 @@ Y-bar 방정식은
 3. 엔트로피 Lyapunov 함수로 전역 안정.
 
 따라서 핵심 동역학이 수학적으로도 일관됨을 확립하였다. 
+
+## 16. 다중상수 SFE의 최소 정식화(신설)
+
+단일 상수 $\epsilon$이 모든 현재 효과를 지배한다는 강한 가정은 초기우주 $G$ 변화와 가변 상수 제약에 의해 반증된다. 이를 보완하는 최소 다중상수 정식화는 다음과 같다.
+
+### 16.1 섹터 분리와 정의
+
+- **질량/관성 섹터**: $\epsilon_{\text{mass}} \equiv g_B\mu/\sqrt{\lambda}$,  $\;m_{\text{eff}}=m_0(1-\epsilon_{\text{mass}})$
+- **중력 섹터(시간의존)**: $\mu(a) \equiv G_{\text{eff}}(a)/G_N = 1 - \epsilon_{\text{grav}}\,S(a)$
+  - $S(a)$: $\Omega_\Lambda(a)$에 대한 누적 가중 함수로 $S(\text{초기})\to 0$, $S(1)\to 1$을 만족
+- **게이지 섹터**: $g_C\approx 0$ (가변 $\alpha$ 상한을 만족시키기 위한 보수적 상한 지정)
+
+### 16.2 연역적 귀결(무튜닝)
+
+- 미시(결맞음·LIGO·뮤온): $\epsilon_{\text{mass}}$만 관여
+  $$\frac{\tau_D^{\text{SFE}}}{\tau_D^{\text{STD}}}=\frac{1}{1-\epsilon_{\text{mass}}},\quad \frac{S_x^{\text{SFE}}}{S_x^{\text{STD}}}=\frac{1}{1-\epsilon_{\text{mass}}},\quad \frac{\tau_{\text{obs}}^{\text{SFE}}}{\tau_{\text{obs}}^{\text{STD}}}=\frac{1}{\sqrt{1-\epsilon_{\text{mass}}}}.$$
+- 거시(성장/렌징): $\mu(a)$만 관여
+  $$\ddot\delta+2H\dot\delta-4\pi G_N\,\mu(a)\,\rho_m\,\delta=0,\qquad \Sigma(a)=\mu(a)$$
+- 초기우주: $S\to 0 \Rightarrow \mu\to 1$ (BBN/CMB 제약 자동 충족)
+- 가변 상수: $g_C\approx 0 \Rightarrow \Delta\alpha/\alpha$ 제약 충족
+
+### 16.3 파라미터 고정 원칙
+
+- $\epsilon_{\text{mass}}$는 $\Omega_\Lambda$로 고정(기존과 동일): $\epsilon_{\text{mass}}\equiv 2\Omega_\Lambda-1$
+- $\epsilon_{\text{grav}}$은 성장/렌징에서 단 한 점(예: $S8$)으로 고정 후, 나머지 전 구간을 교차검증
+
+이 구조는 반증가능성을 유지하면서도 초기우주·가변상수 제약을 정면 돌파한다.

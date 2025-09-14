@@ -1,0 +1,11 @@
+{
+  "target_platform": "win-64",
+  "fmt": "11.2",
+  "spdlog": "1.15",
+  "channel_targets": "conda-forge main",
+  "CI": "azure",
+  "zlib": "1",
+  "c_compiler": "vs2022",
+  "c_stdlib": "vs",
+  "cxx_compiler": "vs2022"
+}
