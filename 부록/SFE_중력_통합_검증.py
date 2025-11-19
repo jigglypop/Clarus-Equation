@@ -36,7 +36,7 @@ class PhysicalConstants:
     g_B = epsilon  # 결합 상수 (근사)
     
     # 유도 상수
-    lambda_H = c / H_0  # 허블 길이 (m)
+    lambda_H = c / (H_0 * np.sqrt(3))  # 특성 길이 (m)
     m_phi = hbar / (lambda_H * c)  # 억압 보손 질량 (kg)
     m_phi_eV = m_phi * c**2 / constants.eV  # eV 단위
     
@@ -113,7 +113,7 @@ def test_fifth_force():
     print()
     
     if violation_factor > 1:
-        print("❌ 판정: 5번째 힘 가설 **실패**")
+        print("판정: 5번째 힘 가설 실패")
         print(f"   이유: 등가원리를 {violation_factor:.0e}배 위배")
     else:
         print("✅ 판정: 5번째 힘 가설 통과")
@@ -196,10 +196,10 @@ def test_modified_gravity():
     deviation = abs(gamma_PPN - 1) / cassini_error
     
     if abs(gamma_PPN - 1) > 3 * cassini_error:
-        print(f"❌ 판정: Cassini 제약 위배")
+        print(f"판정: Cassini 제약 위배")
         print(f"   편차: {deviation:.1f}σ")
     else:
-        print(f"✅ 판정: Cassini 제약 통과")
+        print(f"판정: Cassini 제약 통과")
     
     # ω에 대한 하한
     omega_min = 40000  # 실험 제약
@@ -209,9 +209,9 @@ def test_modified_gravity():
     print(f"SFE 예측: ω = {omega_BD:.1f}")
     
     if omega_BD < omega_min:
-        print(f"❌ 위배: ω가 {omega_min/omega_BD:.0f}배 부족")
+        print(f"위배: ω가 {omega_min/omega_BD:.0f}배 부족")
     else:
-        print(f"✅ 통과")
+        print(f"통과")
     
     # (2) LIGO 제약 - 중력파 속도
     print("\n[2] LIGO/Virgo - GW170817")
@@ -241,9 +241,9 @@ def test_modified_gravity():
     print(f"LIGO 제약: |c_gw - c|/c < {ligo_limit:.0e}")
     
     if speed_diff < ligo_limit:
-        print(f"✅ 판정: LIGO 제약 **통과**")
+        print(f"판정: LIGO 제약 통과")
     else:
-        print(f"❌ 판정: LIGO 제약 위배")
+        print(f"판정: LIGO 제약 위배")
     
     return {
         'omega_BD': omega_BD,
@@ -348,7 +348,7 @@ def test_emergent_gravity():
     print("그림 저장: SFE_emergent_gravity.png")
     
     print()
-    print("❌ 판정: 창발 중력 **실패**")
+    print("판정: 창발 중력 실패")
     print("   이유: r⁻² 스케일링은 성공하지만,")
     print("        커플링 강도가 맞지 않음")
     
@@ -426,20 +426,20 @@ def main():
     print("최종 판정")
     print("=" * 60)
     
-    print("\n시도 #1 (직접 동일시): ❌ 실패")
+    print("\n시도 #1 (직접 동일시): 실패")
     print("  - 차원 불일치")
     print("  - 부호 반대")
     print("  - 광자 상호작용 다름")
     
-    print("\n시도 #2 (양자 중력): ❌ 실패")
+    print("\n시도 #2 (양자 중력): 실패")
     print("  - 스핀 구조 다름 (0 vs 2)")
     print("  - 중력파 편광 불일치")
     
-    print("\n시도 #3 (5번째 힘): ❌ **명백히 실패**")
+    print("\n시도 #3 (5번째 힘): 명백히 실패")
     print(f"  - 등가원리 위배: {results_5th['violation_factor']:.1e}배")
     print(f"  - 궤도 교란: {results_5th['orbit_perturbation']:.1e} (관측 부정)")
     
-    print("\n시도 #4 (창발 중력): ⚠️ 부분 성공")
+    print("\n시도 #4 (창발 중력): 부분 성공")
     print(f"  - 개념적 유사성")
     print(f"  - 정량적 불일치: {results_emergent['ratio']:.1e}")
     
@@ -453,11 +453,11 @@ def main():
     print("=" * 60)
     
     print("\n억압장의 정체:")
-    print("  ✅ 우주론적 유효 장")
-    print("  ✅ 양자 결맞음 매개")
-    print("  ❌ 중력 아님")
-    print("  ❌ 5번째 기본 힘 아님")
-    print("  ✅ '준-힘' (quasi-force)")
+    print("  우주론적 유효 장")
+    print("  양자 결맞음 매개")
+    print("  중력 아님")
+    print("  5번째 기본 힘 아님")
+    print("  '준-힘' (quasi-force)")
     
     print("\n근본적 이유:")
     print("  1. 범주적 차이 (기하학 vs 장 이론)")

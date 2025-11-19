@@ -20,7 +20,7 @@ epsilon = 2 * Omega_Lambda - 1
 g_B = epsilon
 
 # 유도
-lambda_H = c / H_0
+lambda_H = c / (H_0 * math.sqrt(3))
 m_phi = hbar / (lambda_H * c)
 m_phi_eV = m_phi * c**2 / 1.602e-19
 
@@ -59,7 +59,7 @@ print(f"가속도 차이 예측: Δa/a = {delta_a:.3e}")
 print(f"실험 제약 (Eöt-Wash): < {eotwash:.0e}")
 print(f"위배 정도: {delta_a/eotwash:.3e}배")
 print()
-print("❌ 판정: **실패** - 등가원리를 10^143 수준으로 위배")
+print("판정: 실패 - 등가원리를 10^143 수준으로 위배")
 
 print("\n[3] 태양계 궤도")
 M_sun = 1.989e30  # kg
@@ -77,7 +77,7 @@ print()
 print(f"근일점 이동 (GR): ~43\"/century")
 print(f"추가 이동 (SFE): ~{43*perturbation:.3e}\"/century")
 print("관측: 추가 이동 없음")
-print("❌ 판정: **명백히 모순**")
+print("판정: 명백히 모순")
 
 # =================================================================
 # 시도 #5: 수정 중력
@@ -106,7 +106,7 @@ omega_min = 40000
 print(f"\n실험 제약: ω > {omega_min:,}")
 print(f"SFE 값: ω = {omega_BD:.1f}")
 print(f"부족: {omega_min/omega_BD:.0f}배")
-print("❌ 판정: Cassini 제약 **위배**")
+print("판정: Cassini 제약 위배")
 
 print("\n[2] LIGO/Virgo 제약")
 f_gw = 100  # Hz
@@ -121,9 +121,9 @@ print(f"스칼라 모드 속도 차이: {speed_diff:.3e}")
 print(f"LIGO 제약: < 1e-15")
 
 if speed_diff < 1e-15:
-    print("✅ 판정: LIGO 제약 **통과**")
+    print("판정: LIGO 제약 통과")
 else:
-    print("❌ 판정: LIGO 제약 위배")
+    print("판정: LIGO 제약 위배")
 
 # =================================================================
 # 종합 판정
@@ -145,17 +145,17 @@ print("\n" + "=" * 70)
 print("최종 판정")
 print("=" * 70)
 
-print("\n시도 #1 (직접 동일시): ❌ 실패")
+print("\n시도 #1 (직접 동일시): 실패")
 print("  - 차원, 부호, 광자 불일치")
 
-print("\n시도 #2 (양자 중력): ❌ 실패")
+print("\n시도 #2 (양자 중력): 실패")
 print("  - 스핀 구조 다름 (0 vs 2)")
 
-print("\n시도 #3 (5번째 힘): ❌ **명백히 실패**")
+print("\n시도 #3 (5번째 힘): 명백히 실패")
 print(f"  - 등가원리 위배: {delta_a/eotwash:.1e}배")
 print(f"  - 궤도 교란: {perturbation:.1e}")
 
-print("\n시도 #4 (창발 중력): ⚠️ 부분 성공")
+print("\n시도 #4 (창발 중력): 부분 성공")
 print("  - 개념적 유사성만 존재")
 print("  - 정량 불일치")
 
@@ -169,11 +169,11 @@ print("**최종 결론: 중력과 억압장은 통합 불가능**")
 print("=" * 70)
 
 print("\n억압장의 정체:")
-print("  ✅ 우주론적 유효 장 (암흑에너지 설명)")
-print("  ✅ 양자 결맞음 매개 (데코히어런스)")
-print("  ❌ 중력이 아님")
-print("  ❌ 5번째 기본 힘 아님")
-print("  ✅ '준-힘' (quasi-force)")
+print("  우주론적 유효 장 (암흑에너지 설명)")
+print("  양자 결맞음 매개 (데코히어런스)")
+print("  중력이 아님")
+print("  5번째 기본 힘 아님")
+print("  '준-힘' (quasi-force)")
 
 print("\n근본적 이유:")
 print("  1. 범주적 차이 (기하학 vs 장 이론)")
