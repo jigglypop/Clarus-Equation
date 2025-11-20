@@ -856,3 +856,158 @@ $$
 
 이 절은 성장률과 $\mu(a,k)$를 연결하는 수학적 골격을 정리한 것이며,  
 구체적인 수치해, 데이터세트 선택, 전역 오차 $E(\theta)$의 실제 계산은 후속 노트북/연구에서 수행되어야 한다.
+
+---
+
+### 26.12 $k=0$ 모드 소거와 다중스케일 커널의 정합성
+
+#### 26.12.1 문제 제기: 짧은 모드가 우주상수를 망치지 않는가?
+
+23장에서는 전역 투영자
+
+$$
+\Pi_0[f] \equiv \frac{\int d^4x\,\sqrt{-g}\,f}{\int d^4x\,\sqrt{-g}}
+$$
+
+를 도입하여, 수정된 장방정식을
+
+$$
+G_{\mu\nu} = 8\pi G_N\Bigl(T_{\mu\nu} - \Pi_0[T]\,g_{\mu\nu}\Bigr)
++ 8\pi G_N\,T^{(\Phi)}_{\mu\nu}
+$$
+
+형태로 정의함으로써, 진공의 상수 모드($k=0$ 모드)를 기하학적으로 소거하였다.  
+26장에서는 커널을
+
+$$
+G(r;t) = G_{\text{long}}(r;t) + G_{\text{short}}(r;t)
+$$
+
+로 확장했는데, 이때 짧은 모드 $G_{\text{short}}$가 새 상수 모드를 만들어 우주상수 유도를 망치지 않는지 확인할 필요가 있다.  
+이 절의 목적은, 다중스케일 커널을 도입해도 $k=0$ 모드 소거 구조가 그대로 유지된다는 것을 **연역적으로** 보이는 것이다.
+
+#### 26.12.2 균일 우주에서의 긴·짧은 모드 평균
+
+균일한 배경 우주에서 $\rho(\mathbf{x},t)=\bar\rho(t)$라 두면,
+
+$$
+\Phi_{L,\text{bg}}(t) = \bar\rho(t)\int d^3r\,G_{\text{long}}(r;t),
+\qquad
+\Phi_{S,\text{bg}}(t) = \bar\rho(t)\int d^3r\,G_{\text{short}}(r;t)
+$$
+
+가 되고, Yukawa 형식
+
+$$
+G_{\text{long}}(r;t) = A_L(t)\frac{e^{-r/\lambda_L(t)}}{4\pi r},
+\qquad
+G_{\text{short}}(r;t) = A_S(t)\frac{e^{-r/\lambda_S(t)}}{4\pi r}
+$$
+
+을 쓰면
+
+$$
+\int d^3r\,\frac{e^{-r/\lambda}}{4\pi r}
+= \int_0^\infty dr\,r\,e^{-r/\lambda}
+= \lambda^2
+$$
+
+이므로
+
+$$
+\Phi_{L,\text{bg}} = A_L\,\bar\rho\,\lambda_L^2,
+\qquad
+\Phi_{S,\text{bg}} = A_S\,\bar\rho\,\lambda_S^2.
+$$
+
+따라서 전체 배경 억압장은
+
+$$
+\Phi_{\text{bg}} = \Phi_{L,\text{bg}} + \Phi_{S,\text{bg}}
+= \bar\rho\bigl(A_L\lambda_L^2 + A_S\lambda_S^2\bigr)
+$$
+
+꼴의 **완전히 균일한(공간 상수) 모드**로 주어진다.  
+이는 23장에서 소거 대상으로 삼은 바로 그 $k=0$ 모드에 해당한다.
+
+#### 26.12.3 전역 투영자와 짧은 모드의 역할
+
+전역 투영자는 전체 에너지–운동량 텐서의 평균을 빼기 때문에,
+
+$$
+\Pi_0[T^{(\Phi)}]\,g_{\mu\nu}
+$$
+
+항은 긴 모드와 짧은 모드의 **모든 상수 기여를 동시에** 제거한다.  
+즉, $T^{(\Phi)}_{\mu\nu}$가
+
+$$
+T^{(\Phi)}_{\mu\nu} = \bigl(T^{(\Phi_L)}_{\mu\nu}\bigr)
++ \bigl(T^{(\Phi_S)}_{\mu\nu}\bigr)
+$$
+
+로 분해될 때, 균일 우주에서의 평균값
+
+$$
+\langle T^{(\Phi_L)}_{\mu\nu}\rangle
+= -\rho_{\Phi_L} g_{\mu\nu},
+\qquad
+\langle T^{(\Phi_S)}_{\mu\nu}\rangle
+= -\rho_{\Phi_S} g_{\mu\nu}
+$$
+
+은 합쳐져
+
+$$
+\langle T^{(\Phi)}_{\mu\nu}\rangle
+= -(\rho_{\Phi_L}+\rho_{\Phi_S})\,g_{\mu\nu}
+$$
+
+가 되고, 이 전체가 $\Pi_0[T]$에 흡수되어 장방정식 우변에서 사라진다.  
+따라서 짧은 모드가 존재하더라도, 그 **공간 상수(전역 평균) 부분은 긴 모드와 함께 구조적으로 소거**되며, 우주상수 항을 바꾸지 않는다.
+
+남는 것은
+
+$$
+\delta T^{(\Phi)}_{\mu\nu}
+\equiv T^{(\Phi)}_{\mu\nu}
+- \Pi_0[T^{(\Phi)}]\,g_{\mu\nu}
+$$
+
+로 정의되는 **요동 부분($k\neq 0$ 모드)**뿐이다. 이 부분은:
+
+- 긴 모드에서는 주로 우주론적 스케일에서의 미세한 시공간 변화를,
+- 짧은 모드에서는 은하·은하단 스케일에서의 추가 퍼텐셜(26.3절, 26.5절의 $\mu(a,k)$)을
+
+담게 되며, 23장의 우주상수 유도와 모순을 일으키지 않는다.
+
+요약하면, 다중스케일 커널을 도입해도 **“상수 모드는 모두 $\Pi_0$로 제거, 비상수 모드는 $\mu(a,k)$로 재해석”**이라는 23장의 구조는 그대로 유지된다.
+
+#### 26.12.4 간단한 수치 확인 스케치
+
+마지막으로, 긴·짧은 모드의 배경 값이 어떻게 분해되는지 확인할 수 있는 간단한 수치 예를 적어 둔다.  
+아래 코드는 주어진 $R\equiv\Phi_{S,\text{bg}}/\Phi_{L,\text{bg}}$에 대해 $A_S$를 계산하고, 실제로 $\Phi_{S,\text{bg}}=R\,\Phi_{L,\text{bg}}$가 되는지를 확인하는 최소 예이다.
+
+```python
+import numpy as np
+
+rho_bar = 1.0
+lambda_L = 1.0e3
+lambda_S = 1.0
+A_L = 1.0
+R = 0.1
+A_S = R * A_L * (lambda_L**2) / (lambda_S**2)
+
+phi_L_bg = A_L * rho_bar * lambda_L**2
+phi_S_bg = A_S * rho_bar * lambda_S**2
+
+print(phi_L_bg, phi_S_bg, phi_S_bg / phi_L_bg)
+```
+
+이 예에서 출력되는 세 번째 값은 항상 $R$이 되며, $R\lesssim 0.1$ 범위에서 선택하면 26.9절에서 사용한
+
+$$
+R = \frac{\Phi_{S,\text{bg}}}{\Phi_{L,\text{bg}}}
+$$
+
+조건과도 정합적이다. 전역 투영자 $\Pi_0$는 이 두 배경 값을 합한 상수 모드를 한 번에 제거하므로, 실제로 장방정식에 남는 것은 26.3–26.7절에서 분석한 **$k\neq 0$ 모드 구조와 $\mu(a,k)$**뿐이다.
