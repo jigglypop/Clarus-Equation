@@ -84,7 +84,7 @@ class NIF_Validator:
         return None, None
 
     def run_validation(self):
-        print("=== SFE Theory Validation against NIF Data ===")
+        print("=== SFE NIF Ignition: Required Local epsilon (역산 튜닝 예제, 이론 검증 아님) ===")
         print(f"Simulation Parameters:")
         print(f"  Ion Temp: {self.T_ion_obs} keV")
         print(f"  Density:  {self.rho_hot} g/cm^3")
@@ -94,34 +94,31 @@ class NIF_Validator:
 
         # 1. Standard Model Prediction (epsilon = 0)
         yield_std, sv_std = self.calculate_yield(self.T_ion_obs, epsilon=0.0)
-        print(f"[Standard Model] Yield: {yield_std:.4f} MJ")
+        print(f"[Standard Model] Yield (epsilon=0): {yield_std:.4f} MJ")
 
         # 2. Target Observation (NIF achieved ~3.15 MJ)
         target_yield = 3.15
-        print(f"[Observation]    Yield: {target_yield:.4f} MJ")
+        print(f"[Observation]    Yield: {target_yield:.4f} MJ (실제 NIF 점화 수율)")
         
         ratio = target_yield / yield_std
-        print(f"-> Discrepancy: Standard model explains only {yield_std/target_yield*100:.1f}% of observed yield.")
-        print(f"-> Required Boost Factor: {ratio:.2f}x")
+        print(f"-> Discrepancy: 표준모형만으로는 관측 수율의 {yield_std/target_yield*100:.1f}% 수준.")
+        print(f"-> Required Boost Factor (단순 비율): {ratio:.2f}x")
         
         # 3. SFE Explanation
         print("-" * 40)
-        print("[SFE Hypothesis Test]")
+        print("[SFE LSFM 시나리오: 필요한 epsilon 역산 (튜닝)]")
         req_eps, req_y = self.find_epsilon_for_yield(target_yield, self.T_ion_obs)
         
         if req_eps:
-            print(f"To match observation (3.15 MJ) at 10 keV:")
-            print(f"  Required Mass Suppression (epsilon): {req_eps:.4f} ({req_eps*100:.1f}%)")
-            print(f"  Resulting Yield: {req_y:.4f} MJ")
-            
-            # 4. Physical Interpretation check
-            # Is this epsilon realistic? NIF laser energy density vs suppression field
-            # Just a qualitative check here.
-            print("\n[Conclusion]")
-            print(f"A local mass suppression of ~{req_eps*100:.1f}% can explain the full yield.")
-            print("This suggests the high energy density might have triggered an SFE response.")
+            print(f"To match observation (3.15 MJ) at 10 keV (단순 역산):")
+            print(f"  Required local mass suppression epsilon_loc: {req_eps:.4f} ({req_eps*100:.1f}%)")
+            print(f"  Resulting Yield with this epsilon_loc: {req_y:.4f} MJ")
+            print("\n[Interpretation]")
+            print("이 epsilon_loc 값은 'NIF 조건에서 LSFM이 작동했다면 어느 정도 억압도가 필요했을까?'를 계산하는 튜닝 예제일 뿐이다.")
+            print("03장·23장에서 정의한 우주론적 epsilon_theory를 검증하는 용도가 아니며, SFE 이론의 성공/실패 판정에 직접 사용하지 않는다.")
         else:
-            print("SFE could not match the yield even with high epsilon.")
+            print("주어진 탐색 범위(0 ~ 0.9)에서는 어떤 epsilon_loc로도 관측 수율을 맞출 수 없다.")
+            print("이 경우 LSFM 시나리오는 NIF 점화를 설명하는 보조 모델로서도 부적합하다.")
 
 if __name__ == "__main__":
     val = NIF_Validator()
