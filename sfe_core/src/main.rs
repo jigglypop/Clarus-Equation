@@ -102,8 +102,24 @@ fn main() {
             println!("(Deprecated) Use Sweep for comprehensive analysis.");
         },
         Commands::PulseOptimizer { steps, pulses, generations } => {
-            let (_, udd, sfe) = run_pulse_optimizer(steps, pulses, generations, 0.15);
+            let (pulse_seq_idx, udd, sfe) = run_pulse_optimizer(steps, pulses, generations, 0.15);
             println!("Final Result -> UDD: {:.4}, SFE: {:.4}", udd, sfe);
+
+            // Print normalized sequence for external bridges (e.g. Python/IBM scripts)
+            let pulse_seq_norm: Vec<f64> = pulse_seq_idx
+                .iter()
+                .map(|&idx| idx as f64 / steps as f64)
+                .collect();
+            println!("\n>>> SFE NORMALIZED SEQUENCE (for verification_long.py) <<<");
+            print!("[");
+            for (i, val) in pulse_seq_norm.iter().enumerate() {
+                if i > 0 {
+                    print!(", ");
+                }
+                print!("{:.4}", val);
+            }
+            println!("]");
+            println!(">>> END SEQUENCE <<<\n");
         },
         Commands::Sweep { output } => {
             run_sweep_benchmark(output);
