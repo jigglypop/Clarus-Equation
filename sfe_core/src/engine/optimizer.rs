@@ -16,9 +16,10 @@ pub fn run_pulse_optimizer(steps: usize, n_pulses: usize, generations: usize, no
     // Pre-generate a noise pool to avoid FFT overhead in inner loops
     // We use a large pool and sample from it or use all of it.
     // For GA stability, using the same noise environment for a generation is good.
-    println!(">> Pre-generating noise pool...");
+    println!(">> Pre-generating noise pool (Hardware Matched: alpha=0.8, scale=1.5)...");
     let pool_size = 2000;
-    let mut noise_gen = PinkNoiseGenerator::new(steps);
+    // IBM Fez Hardware-Matched Noise Model
+    let mut noise_gen = PinkNoiseGenerator::new_with_params(steps, 0.8, 1.5);
     let mut noise_pool: Vec<Vec<f64>> = Vec::with_capacity(pool_size);
     for _ in 0..pool_size {
         noise_pool.push(noise_gen.generate_new());
@@ -243,35 +244,42 @@ fn local_search_polish(seq: &[usize], steps: usize, noise_amp: f64, noise_pool: 
 
 /// Optimized evaluator using pre-generated noise pool
 pub fn evaluate_sequence_with_pool(seq: &[usize], noise_pool: &[Vec<f64>], noise_amp: f64, trials: usize) -> f64 {
-    // If trials > pool size, we cycle; if < pool size, we pick random or first N.
-    // For consistency, let's just use the first N (randomness is in the pool generation).
-    // Or pick random indices. Picking random indices is better to avoid using same subset always if called repeatedly.
-    // But for fitness comparison in one gen, same subset is fairer.
-    // Let's use parallel iterator over a range of indices.
-    
     let pool_len = noise_pool.len();
     let safe_trials = trials.min(pool_len);
 
     (0..safe_trials).into_par_iter().map(|i| {
-        // Simple deterministic selection for stability within a generation, 
-        // or we could use a randomized offset passed in.
-        // Here we just use the first 'trials' traces. 
-        // Since the pool is random, this is fine.
         let pink_noise = &noise_pool[i]; 
-        
         let mut phase = 0.0;
         let mut sign = 1.0;
         let mut pulse_idx = 0;
-        
-        // This inner loop is hot.
+        let len = pink_noise.len();
+        let c0 = ((len as f64 * 0.4).round() as usize).min(len.saturating_sub(1));
+        let c1 = ((len as f64 * 0.6).round() as usize).min(len.saturating_sub(1));
+        let c2 = ((len as f64 * 0.8).round() as usize).min(len.saturating_sub(1));
+        let c3 = len.saturating_sub(1);
+        let checkpoints = [c0, c1, c2, c3];
+        let weights = [1.0_f64, 2.0, 3.0, 4.0];
+        let mut values = [0.0_f64; 4];
+        let mut ck_idx = 0usize;
+
         for (t, &noise_val) in pink_noise.iter().enumerate() {
              if pulse_idx < seq.len() && t == seq[pulse_idx] {
                 sign *= -1.0;
                 pulse_idx += 1;
             }
             phase += sign * noise_val * noise_amp * DT;
+            if ck_idx < checkpoints.len() && t == checkpoints[ck_idx] {
+                values[ck_idx] = phase.cos();
+                ck_idx += 1;
+            }
         }
-        phase.cos()
+        let mut num = 0.0;
+        let mut den = 0.0;
+        for j in 0..values.len() {
+            num += weights[j] * values[j];
+            den += weights[j];
+        }
+        if den > 0.0 { num / den } else { 0.0 }
     }).sum::<f64>() / safe_trials as f64
 }
 

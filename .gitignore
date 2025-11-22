@@ -1,3 +1,3 @@
 /sfe_core/target/
 /.venv/
-
+.env

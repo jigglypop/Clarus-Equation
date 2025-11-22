@@ -1,7 +1,7 @@
 use clap::{Parser, Subcommand};
 use std::time::Instant;
-use sfe_core::{run_pulse_optimizer, run_sweep_benchmark};
-use sfe_core::engine::core::QSFEngine; // Direct access if needed or wrap in lib
+use sfe_core::{run_pulse_optimizer, run_sweep_benchmark, IbmClient};
+use sfe_core::engine::core::QSFEngine; 
 use std::fs::File;
 use std::io::Write;
 use indicatif::{ProgressBar, ProgressStyle};
@@ -62,13 +62,18 @@ enum Commands {
         distance: usize,
         #[arg(short, long, default_value_t = 0.10)]
         noise: f64,
+    },
+    /// [NEW] Connect to IBM Quantum Hardware
+    RunIBM {
+        #[arg(short, long)]
+        api_key: String,
     }
 }
 
 fn main() {
     let args = Args::parse();
     println!("==========================================");
-    println!("   SFE Commercial Engine v1.4 (Library)   ");
+    println!("   SFE Commercial Engine v1.5 (Cloud)     ");
     println!("==========================================");
 
     let start_time = Instant::now();
@@ -97,7 +102,6 @@ fn main() {
             println!("(Deprecated) Use Sweep for comprehensive analysis.");
         },
         Commands::PulseOptimizer { steps, pulses, generations } => {
-            // Default noise amp for single run
             let (_, udd, sfe) = run_pulse_optimizer(steps, pulses, generations, 0.15);
             println!("Final Result -> UDD: {:.4}, SFE: {:.4}", udd, sfe);
         },
@@ -106,36 +110,61 @@ fn main() {
         },
         Commands::Qec { distance, noise } => {
             println!("Running SFE+QEC Hybrid Simulation (d={}, noise={})", distance, noise);
-            // 1. Optimize Pulses (SFE)
             println!("1. Optimizing Pulses (SFE Layer)...");
-            let (pulse_seq, udd_score, sfe_score) = run_pulse_optimizer(2000, 60, 20, noise);
+            let (pulse_seq, _, sfe_score) = run_pulse_optimizer(2000, 60, 20, noise);
             println!("   SFE Score (Coherence): {:.4}", sfe_score);
             
-            // 2. Run QEC Sim
             println!("2. Simulating Repetition Code (QEC Layer)...");
-            // Simulate 100 cycles of QEC, measuring every 20 steps?
-            // If total steps = 2000, let's say measure every 50 steps.
             let res = sfe_core::engine::qec::simulate_repetition_code(
-                distance, 
-                &pulse_seq, 
-                noise, 
-                2000, 
-                50, // Measure interval
-                2000 // Trials
+                distance, &pulse_seq, noise, 2000, 50, 2000
             );
             
             println!("---------------------------------------------");
-            println!("Physical Error Rate (per QEC cycle): {:.6}", res.physical_error_rate);
-            println!("Logical Error Rate  (per QEC cycle): {:.6}", res.logical_error_rate);
+            println!("Physical Error Rate: {:.6}", res.physical_error_rate);
+            println!("Logical Error Rate:  {:.6}", res.logical_error_rate);
             println!("Gain (Phy/Log): {:.2}", res.gain);
-            if res.logical_error_rate == 0.0 {
-                println!("SUCCESS: Perfect Logical Qubit Preservation! (0 errors)");
-            } else if res.gain > 1.0 {
-                println!("SUCCESS: SFE+QEC suppressed errors below threshold!");
-            } else {
-                println!("WARNING: Noise too high or distance too small.");
-            }
             println!("---------------------------------------------");
+        },
+        Commands::RunIBM { api_key } => {
+            println!("Mode: IBM Quantum Hardware Bridge");
+            println!("1. Running SFE Optimizer to find best pulse sequence...");
+            // Run optimizer locally first to get the "Recipe"
+            let steps_total = 2000;
+            let (pulse_seq_idx, _, sfe_score) = run_pulse_optimizer(steps_total, 50, 20, 0.15);
+            println!("   Optimization Complete. SFE Score: {:.4}", sfe_score);
+            println!("   Pulse Count: {}", pulse_seq_idx.len());
+
+            // Convert indices (steps) to normalized time (0.0 - 1.0)
+            let pulse_seq_norm: Vec<f64> = pulse_seq_idx.iter()
+                .map(|&idx| idx as f64 / steps_total as f64)
+                .collect();
+            
+            // [NEW] Print Sequence for Python Bridge
+            println!("\n>>> COPY THIS SEQUENCE FOR PYTHON BRIDGE <<<");
+            print!("[");
+            for (i, val) in pulse_seq_norm.iter().enumerate() {
+                if i > 0 { print!(", "); }
+                print!("{:.4}", val);
+            }
+            println!("]");
+            println!(">>> END SEQUENCE <<<\n");
+
+            println!("2. Connecting to IBM Quantum API...");
+            let mut client = IbmClient::new(&api_key);
+            
+            match client.authenticate() {
+                Ok(_) => {
+                    match client.submit_sfe_job(&pulse_seq_norm) {
+                        Ok(job_id) => {
+                            println!("SUCCESS: Job submitted successfully!");
+                            println!("Job ID: {}", job_id);
+                            println!("Monitor at: https://quantum.ibm.com/jobs");
+                        },
+                        Err(e) => println!("ERROR: Failed to submit job: {}", e),
+                    }
+                },
+                Err(e) => println!("ERROR: Authentication failed: {}", e),
+            }
         }
     }
 
