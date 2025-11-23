@@ -1,5 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 from sfe.quantum import QuantumCorrection, SFEActiveCanceller, _fidelity
 
 def run_demo():
