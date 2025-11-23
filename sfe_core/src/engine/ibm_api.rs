@@ -6,8 +6,7 @@ use std::thread;
 use std::time::Duration;
 
 // IBM Quantum Platform API (qiskit_ibm_runtime 방식)
-// 최신 엔드포인트: https://api.quantum.ibm.com
-const API_BASE_URL: &str = "https://api.quantum.ibm.com/runtime";
+const API_BASE_URL: &str = "https://api.quantum-computing.ibm.com/runtime";
 
 #[derive(Debug, Serialize, Deserialize)]
 struct JobResponse {

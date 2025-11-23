@@ -84,12 +84,34 @@ impl SfeOptimizer {
         let mut seq = self.optimize(steps, n_pulses, noise_level, noise_pool);
         
         // Robustness: 초기 펄스가 너무 빠르면 하드웨어 오류 발생 가능
-        // 최소 0.03 (3%) 지점 이후에 오도록 강제 보정
-        let min_first_pulse = 0.03; 
-        if !seq.is_empty() && seq[0] < min_first_pulse {
-             seq[0] = min_first_pulse;
-             // 순서가 섞였을 수 있으므로 재정렬
-             seq.sort_by(|a, b| a.partial_cmp(b).unwrap());
+        // 최소 0.10 (10%) 지점 이후에 오도록 강제 보정 (대폭 상향)
+        let min_first_pulse = 0.10; 
+        let min_pulse_interval = 0.05; // 펄스 간격 최소 5%
+
+        if !seq.is_empty() {
+            seq.sort_by(|a, b| a.partial_cmp(b).unwrap());
+            
+            // 1. 첫 펄스 보정
+            if seq[0] < min_first_pulse {
+                seq[0] = min_first_pulse;
+            }
+            
+            // 2. 간격 보정 (밀리는 도미노 효과)
+            for i in 0..seq.len()-1 {
+                if seq[i+1] - seq[i] < min_pulse_interval {
+                    seq[i+1] = seq[i] + min_pulse_interval;
+                }
+            }
+            
+            // 3. 끝 범위를 넘어갔으면 전체 스케일링으로 압축 (단, 간격 비율은 유지)
+            if let Some(&last) = seq.last() {
+                 if last >= 0.99 {
+                     let scale = 0.98 / last; // 0.98까지 안전하게 압축
+                     for x in seq.iter_mut() {
+                         *x *= scale;
+                     }
+                 }
+            }
         }
         
         seq
