@@ -22,7 +22,7 @@ impl SfeOptimizer {
         seq.sort_by(|a, b| a.partial_cmp(b).unwrap());
 
         let mut best_norm = seq.clone();
-        let mut best_idx: Vec<usize> = best_norm
+        let best_idx: Vec<usize> = best_norm
             .iter()
             .map(|&t| (t * steps as f64).round() as usize)
             .collect();
@@ -52,7 +52,6 @@ impl SfeOptimizer {
                     if score > best_score {
                         best_score = score;
                         best_norm = cand;
-                        best_idx = cand_idx;
                         improved = true;
                         break;
                     }
@@ -144,10 +143,40 @@ pub fn run_pulse_optimizer(
         .and_then(|v| v.parse().ok())
         .unwrap_or(1.5 * noise_level.abs());
 
+    let suppresson_omega: f64 = std::env::var("SFE_SUPPRESSON_OMEGA")
+        .ok()
+        .and_then(|v| v.parse().ok())
+        .unwrap_or(0.0);
+    let suppresson_amp: f64 = std::env::var("SFE_SUPPRESSON_AMP")
+        .ok()
+        .and_then(|v| v.parse().ok())
+        .unwrap_or(0.0);
+    let suppresson_omega2: f64 = std::env::var("SFE_SUPPRESSON_OMEGA2")
+        .ok()
+        .and_then(|v| v.parse().ok())
+        .unwrap_or(0.0);
+    let suppresson_amp2: f64 = std::env::var("SFE_SUPPRESSON_AMP2")
+        .ok()
+        .and_then(|v| v.parse().ok())
+        .unwrap_or(0.0);
+
     let mut gen = PinkNoiseGenerator::new_with_params(steps, alpha, scale);
     let mut noise_pool: Vec<Vec<f64>> = Vec::with_capacity(trials);
     for _ in 0..trials {
-        noise_pool.push(gen.generate_new());
+        let mut trace = gen.generate_new();
+        if suppresson_amp != 0.0 && suppresson_omega != 0.0 {
+            for (t, v) in trace.iter_mut().enumerate() {
+                let phase = suppresson_omega * (t as f64);
+                *v += suppresson_amp * phase.cos();
+            }
+        }
+        if suppresson_amp2 != 0.0 && suppresson_omega2 != 0.0 {
+            for (t, v) in trace.iter_mut().enumerate() {
+                let phase = suppresson_omega2 * (t as f64);
+                *v += suppresson_amp2 * phase.cos();
+            }
+        }
+        noise_pool.push(trace);
     }
 
     let sfe_seq_norm = optimizer.optimize(steps, n_pulses, noise_level, &noise_pool);

@@ -1,7 +1,8 @@
 use clap::{Parser, Subcommand};
 use std::time::Instant;
 use sfe_core::{run_pulse_optimizer, run_sweep_benchmark, IbmClient, SfeController};
-use sfe_core::engine::core::QSFEngine; 
+use sfe_core::engine::core::QSFEngine;
+use sfe_core::engine::qec::SFE_PHASE_SCALE;
 use std::fs::File;
 use std::io::Write;
 use indicatif::{ProgressBar, ProgressStyle};
@@ -79,7 +80,46 @@ enum Commands {
     RunIBM {
         #[arg(short, long)]
         api_key: String,
+    },
+    /// [NEW] 억압보손 증거 스캔 및 분석
+    SuppressonScan,
+    /// [NEW] 3-모드 억압보손 Yukawa 스캔
+    MultiModeScan,
+}
+
+fn configure_fez_suppresson(noise: f64, steps: usize) {
+    if noise <= 0.0 {
+        std::env::remove_var("SFE_SUPPRESSON_OMEGA");
+        std::env::remove_var("SFE_SUPPRESSON_AMP");
+        std::env::remove_var("SFE_SUPPRESSON_OMEGA2");
+        std::env::remove_var("SFE_SUPPRESSON_AMP2");
+        return;
     }
+    let mut controller = SfeController::new();
+    let t1 = 60.0_f64;
+    let t2 = 40.0_f64;
+    let gate_err = 1.0e-3_f64;
+    let spec = controller.diagnose(t1, t2, gate_err);
+    let tls_freq = match spec.tls_freq {
+        Some(v) => v,
+        None => {
+            std::env::remove_var("SFE_SUPPRESSON_OMEGA");
+            std::env::remove_var("SFE_SUPPRESSON_AMP");
+            std::env::remove_var("SFE_SUPPRESSON_OMEGA2");
+            std::env::remove_var("SFE_SUPPRESSON_AMP2");
+            return;
+        }
+    };
+    let total_time_us = 100.0_f64;
+    let dt_us = total_time_us / steps as f64;
+    let omega_top = tls_freq * dt_us;
+    let amp_top = spec.tls_amp * dt_us / (noise.abs() * SFE_PHASE_SCALE);
+    let omega_bottom = 0.5_f64 * omega_top;
+    let amp_bottom = amp_top;
+    std::env::set_var("SFE_SUPPRESSON_OMEGA", omega_top.to_string());
+    std::env::set_var("SFE_SUPPRESSON_AMP", amp_top.to_string());
+    std::env::set_var("SFE_SUPPRESSON_OMEGA2", omega_bottom.to_string());
+    std::env::set_var("SFE_SUPPRESSON_AMP2", amp_bottom.to_string());
 }
 
 fn main() {
@@ -139,15 +179,35 @@ fn main() {
         },
         Commands::Qec { distance, noise } => {
             println!("SFE+QEC 하이브리드 시뮬레이션 실행 (거리={}, 노이즈={})", distance, noise);
+            let steps = 2000usize;
+            let sup_flag: i32 = std::env::var("SFE_SUPPRESSON_ENABLE")
+                .ok()
+                .and_then(|v| v.parse().ok())
+                .unwrap_or(1);
+            match sup_flag {
+                0 => {
+                    std::env::remove_var("SFE_SUPPRESSON_OMEGA");
+                    std::env::remove_var("SFE_SUPPRESSON_AMP");
+                    std::env::remove_var("SFE_SUPPRESSON_OMEGA2");
+                    std::env::remove_var("SFE_SUPPRESSON_AMP2");
+                }
+                1 => {
+                    configure_fez_suppresson(noise, steps);
+                }
+                2 => {}
+                _ => {
+                    configure_fez_suppresson(noise, steps);
+                }
+            }
             println!("1. SFE 펄스 적용 (Pure Analytic Formula)...");
             // Pure SFE 공식은 매우 빠르므로 즉시 결과가 나옵니다.
             // 노이즈가 강한 상황을 가정하여 최적화 수행
-            let (pulse_seq, _, sfe_score) = run_pulse_optimizer(2000, 60, 0, noise);
+            let (pulse_seq, _, sfe_score) = run_pulse_optimizer(steps, 60, 0, noise);
             println!("   SFE 결맞음 점수: {:.4}", sfe_score);
             
             println!("2. 반복 코드(Repetition Code) 시뮬레이션 (QEC 계층)...");
             let res = sfe_core::engine::qec::simulate_repetition_code(
-                distance, &pulse_seq, noise, 2000, 50, 2000
+                distance, &pulse_seq, noise, steps, 50, 2000
             );
             
             println!("---------------------------------------------");
@@ -159,11 +219,31 @@ fn main() {
         Commands::Surface { noise } => {
             println!("SFE+Surface Code 시뮬레이션 실행 (거리=3, 노이즈={})", noise);
             println!("1. SFE 펄스 적용 (Pure Analytic Formula)...");
-            let (pulse_seq, _, sfe_score) = run_pulse_optimizer(2000, 60, 0, noise);
+            let steps = 2000usize;
+            let sup_flag: i32 = std::env::var("SFE_SUPPRESSON_ENABLE")
+                .ok()
+                .and_then(|v| v.parse().ok())
+                .unwrap_or(1);
+            match sup_flag {
+                0 => {
+                    std::env::remove_var("SFE_SUPPRESSON_OMEGA");
+                    std::env::remove_var("SFE_SUPPRESSON_AMP");
+                    std::env::remove_var("SFE_SUPPRESSON_OMEGA2");
+                    std::env::remove_var("SFE_SUPPRESSON_AMP2");
+                }
+                1 => {
+                    configure_fez_suppresson(noise, steps);
+                }
+                2 => {}
+                _ => {
+                    configure_fez_suppresson(noise, steps);
+                }
+            }
+            let (pulse_seq, _, sfe_score) = run_pulse_optimizer(steps, 60, 0, noise);
             println!("   SFE 결맞음 점수: {:.4}", sfe_score);
             println!("2. Surface Code(d=3) 시뮬레이션 (QEC 계층)...");
             let res = sfe_core::engine::qec::simulate_surface_code_d3(
-                &pulse_seq, noise, 2000, 50, 2000,
+                &pulse_seq, noise, steps, 50, 2000,
             );
             println!("---------------------------------------------");
             println!("물리적 오류율 (p_phy): {:.6}", res.physical_error_rate);
@@ -252,6 +332,14 @@ fn main() {
                 },
                 Err(e) => println!("오류: 인증 실패: {}", e),
             }
+        },
+        Commands::SuppressonScan => {
+            println!("모드: 억압보손 증거 스캔 및 분석");
+            sfe_core::run_suppresson_evidence_analysis();
+        }
+        Commands::MultiModeScan => {
+            println!("모드: 3-모드 억압보손 Yukawa 스캔");
+            sfe_core::engine::suppresson_physics::run_multimode_yukawa_scan();
         }
     }
 

@@ -5,7 +5,6 @@ use rustfft::num_traits::Zero;
 use std::sync::Arc;
 
 pub struct PinkNoiseGenerator {
-    planner: FftPlanner<f64>,
     fft: Arc<dyn Fft<f64>>,
     steps: usize,
     spectrum_buffer: Vec<Complex<f64>>,
@@ -22,7 +21,6 @@ impl PinkNoiseGenerator {
         let mut planner = FftPlanner::new();
         let fft = planner.plan_fft_inverse(steps);
         Self {
-            planner, 
             fft,
             steps,
             spectrum_buffer: vec![Complex::zero(); steps],

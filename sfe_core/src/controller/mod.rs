@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use crate::engine::optimizer::{evaluate_sequence_with_pool, SfeOptimizer};
+use crate::engine::optimizer::{ SfeOptimizer};
 use crate::engine::noise::PinkNoiseGenerator;
 use crate::engine::ibm_api::JobResult;
 

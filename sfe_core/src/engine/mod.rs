@@ -1,7 +1,12 @@
 pub mod core;
 pub mod noise;
+pub mod noise_multi;
 pub mod optimizer;
+pub mod optimizer_v2;
 pub mod qec;
 pub mod benchmark;
 pub mod ibm_api;
+pub mod filter;
+pub mod suppresson;
+pub mod suppresson_physics;
 

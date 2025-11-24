@@ -2,6 +2,66 @@ use rayon::prelude::*;
 use rand::prelude::*;
 use super::noise::{PinkNoiseGenerator, generate_correlated_pink_noise};
 
+pub const SFE_PHASE_SCALE: f64 = 0.01_f64;
+
+fn generate_sfe_noise_traces(
+    steps: usize,
+    qubits: usize,
+    alpha: f64,
+    scale: f64,
+    rho: f64,
+) -> Vec<Vec<f64>> {
+    let traces_base = if qubits == 1 {
+        let mut gen = PinkNoiseGenerator::new_with_params(steps, alpha, scale);
+        let mut buf = vec![0.0; steps];
+        let mut v = Vec::with_capacity(qubits);
+        for _ in 0..qubits {
+            gen.generate(&mut buf);
+            v.push(buf.clone());
+        }
+        v
+    } else {
+        generate_correlated_pink_noise(steps, qubits, alpha, scale, rho)
+    };
+
+    let omega: f64 = std::env::var("SFE_SUPPRESSON_OMEGA")
+        .ok()
+        .and_then(|v| v.parse().ok())
+        .unwrap_or(0.0);
+    let amp: f64 = std::env::var("SFE_SUPPRESSON_AMP")
+        .ok()
+        .and_then(|v| v.parse().ok())
+        .unwrap_or(0.0);
+    let omega2: f64 = std::env::var("SFE_SUPPRESSON_OMEGA2")
+        .ok()
+        .and_then(|v| v.parse().ok())
+        .unwrap_or(0.0);
+    let amp2: f64 = std::env::var("SFE_SUPPRESSON_AMP2")
+        .ok()
+        .and_then(|v| v.parse().ok())
+        .unwrap_or(0.0);
+
+    if (omega == 0.0 || amp == 0.0) && (omega2 == 0.0 || amp2 == 0.0) {
+        return traces_base;
+    }
+
+    let mut traces = traces_base;
+    for trace in traces.iter_mut() {
+        for (t, v) in trace.iter_mut().enumerate() {
+            if omega != 0.0 && amp != 0.0 {
+                let phase = omega * (t as f64);
+                *v += amp * phase.cos();
+            }
+            if omega2 != 0.0 && amp2 != 0.0 {
+                let phase2 = omega2 * (t as f64);
+                *v += amp2 * phase2.cos();
+            }
+        }
+    }
+
+    traces
+}
+
 pub struct QECResult {
     pub distance: usize,
     pub physical_error_rate: f64,
@@ -112,6 +172,19 @@ pub fn simulate_repetition_code(
         .ok()
         .and_then(|v| v.parse().ok())
         .unwrap_or(1.0e-3);
+    let sup_omega: f64 = std::env::var("SFE_SUPPRESSON_OMEGA")
+        .ok()
+        .and_then(|v| v.parse().ok())
+        .unwrap_or(0.0);
+    let sup_amp: f64 = std::env::var("SFE_SUPPRESSON_AMP")
+        .ok()
+        .and_then(|v| v.parse().ok())
+        .unwrap_or(0.0);
+    let anc_flag: i32 = std::env::var("SFE_SUPPRESSON_ANC")
+        .ok()
+        .and_then(|v| v.parse().ok())
+        .unwrap_or(0);
+    let anc_on = anc_flag != 0 && sup_omega != 0.0 && sup_amp != 0.0;
 
     let dt_cycle = measure_interval as f64;
     let p_t1 = 1.0 - (-dt_cycle / t1_steps).exp();
@@ -127,18 +200,7 @@ pub fn simulate_repetition_code(
     let (logical_errors, physical_errors) = (0..trials)
         .into_par_iter()
         .map(|_| {
-            let traces = if distance == 1 {
-                let mut gen = PinkNoiseGenerator::new_with_params(total_time, alpha, scale);
-                let mut buf = vec![0.0; total_time];
-                let mut v = Vec::with_capacity(distance);
-                for _ in 0..distance {
-                    gen.generate(&mut buf);
-                    v.push(buf.clone());
-                }
-                v
-            } else {
-                generate_correlated_pink_noise(total_time, distance, alpha, scale, rho)
-            };
+            let traces = generate_sfe_noise_traces(total_time, distance, alpha, scale, rho);
 
             let mut rng = thread_rng();
             let mut phys_err_count = 0_usize;
@@ -163,7 +225,12 @@ pub fn simulate_repetition_code(
                         if cycle_pulses.contains(&t_rel) {
                             sign *= -1.0;
                         }
-                        phase += sign * noise[t_abs] * noise_amp * 0.01;
+                        let mut val = noise[t_abs];
+                        if anc_on {
+                            let theta = sup_omega * (t_abs as f64);
+                            val -= sup_amp * theta.cos();
+                        }
+                        phase += sign * val * noise_amp * SFE_PHASE_SCALE;
                     }
 
                     let p_phase = 0.5 * (1.0 - phase.cos());
@@ -252,6 +319,27 @@ pub fn simulate_surface_code_d3(
         .ok()
         .and_then(|v| v.parse().ok())
         .unwrap_or(0.0);
+    let sup_omega: f64 = std::env::var("SFE_SUPPRESSON_OMEGA")
+        .ok()
+        .and_then(|v| v.parse().ok())
+        .unwrap_or(0.0);
+    let sup_amp: f64 = std::env::var("SFE_SUPPRESSON_AMP")
+        .ok()
+        .and_then(|v| v.parse().ok())
+        .unwrap_or(0.0);
+    let sup_omega2: f64 = std::env::var("SFE_SUPPRESSON_OMEGA2")
+        .ok()
+        .and_then(|v| v.parse().ok())
+        .unwrap_or(0.0);
+    let sup_amp2: f64 = std::env::var("SFE_SUPPRESSON_AMP2")
+        .ok()
+        .and_then(|v| v.parse().ok())
+        .unwrap_or(0.0);
+    let anc_flag: i32 = std::env::var("SFE_SUPPRESSON_ANC")
+        .ok()
+        .and_then(|v| v.parse().ok())
+        .unwrap_or(0);
+    let anc_on = anc_flag != 0 && ((sup_omega != 0.0 && sup_amp != 0.0) || (sup_omega2 != 0.0 && sup_amp2 != 0.0));
 
     let cycle_len = measure_interval;
     let mut cycle_pulses: Vec<usize> = pulse_seq
@@ -274,7 +362,7 @@ pub fn simulate_surface_code_d3(
     let (logical_errors, physical_errors) = (0..trials)
         .into_par_iter()
         .map(|_| {
-            let traces = generate_correlated_pink_noise(total_time, data_qubits, alpha, scale, rho);
+            let traces = generate_sfe_noise_traces(total_time, data_qubits, alpha, scale, rho);
 
             let mut rng = thread_rng();
             let mut phys_err_count = 0_usize;
@@ -298,7 +386,18 @@ pub fn simulate_surface_code_d3(
                         if cycle_pulses.contains(&t_rel) {
                             sign *= -1.0;
                         }
-                        phase += sign * noise[t_abs] * noise_amp * 0.01;
+                        let mut val = noise[t_abs];
+                        if anc_on {
+                            if sup_omega != 0.0 && sup_amp != 0.0 {
+                                let theta = sup_omega * (t_abs as f64);
+                                val -= sup_amp * theta.cos();
+                            }
+                            if sup_omega2 != 0.0 && sup_amp2 != 0.0 {
+                                let theta2 = sup_omega2 * (t_abs as f64);
+                                val -= sup_amp2 * theta2.cos();
+                            }
+                        }
+                        phase += sign * val * noise_amp * SFE_PHASE_SCALE;
                     }
 
                     let p_phase = 0.5 * (1.0 - phase.cos());
