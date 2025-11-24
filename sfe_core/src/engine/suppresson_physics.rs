@@ -282,6 +282,96 @@ impl MultiModeYukawa {
     }
 }
 
+fn analyze_multimode_solution(
+    masses: [f64; 3],
+    sol: &MultiModeSolution,
+    delta_r2_target: f64,
+    delta_a_target: f64,
+) {
+    let mut c_e = [0.0_f64; 3];
+    let mut c_mu = [0.0_f64; 3];
+    let mut d = [0.0_f64; 3];
+    let mut i = 0;
+    while i < 3 {
+        let m = masses[i];
+        c_e[i] = MultiModeYukawa::coeff_r2(M_E_MEV, m);
+        c_mu[i] = MultiModeYukawa::coeff_r2(M_MU_MEV, m);
+        d[i] = MultiModeYukawa::coeff_g2(m);
+        i += 1;
+    }
+    println!("\n=== 전자 방정식 계수 양의성 검사 ===");
+    println!("c_e = [{:.4e}, {:.4e}, {:.4e}]", c_e[0], c_e[1], c_e[2]);
+    let mut all_pos = true;
+    let mut j = 0;
+    while j < 3 {
+        if c_e[j] <= 0.0 {
+            all_pos = false;
+        }
+        j += 1;
+    }
+    println!("모든 c_e > 0: {}", if all_pos { "예" } else { "아니오" });
+    println!("→ c_e·κ² = 0 이고 κ² ≥ 0 이면 κ² = 0 만 가능");
+    println!("→ 비자명한 Δr_p^2(μ), Δa_μ 를 위해서는 적어도 하나의 κ_A^2 < 0 이 필요");
+
+    let mut k_plus = [0.0_f64; 3];
+    let mut k_minus = [0.0_f64; 3];
+    let mut idx = 0;
+    while idx < 3 {
+        let val = sol.kappa_sq[idx];
+        if val >= 0.0 {
+            k_plus[idx] = val;
+        } else {
+            k_minus[idx] = -val;
+        }
+        idx += 1;
+    }
+
+    let mut dr2e_plus = 0.0_f64;
+    let mut dr2e_minus = 0.0_f64;
+    let mut dr2mu_plus = 0.0_f64;
+    let mut dr2mu_minus = 0.0_f64;
+    let mut da_plus = 0.0_f64;
+    let mut da_minus = 0.0_f64;
+
+    let mut t = 0;
+    while t < 3 {
+        dr2e_plus += k_plus[t] * c_e[t];
+        dr2e_minus += k_minus[t] * c_e[t];
+        dr2mu_plus += k_plus[t] * c_mu[t];
+        dr2mu_minus += k_minus[t] * c_mu[t];
+        da_plus += k_plus[t] * d[t];
+        da_minus += k_minus[t] * d[t];
+        t += 1;
+    }
+
+    println!("\n=== 선택/비선택 모드 분해 ===");
+    println!("κ_A^2(+) = [{:.3e}, {:.3e}, {:.3e}]", k_plus[0], k_plus[1], k_plus[2]);
+    println!("κ_A^2(-) = [{:.3e}, {:.3e}, {:.3e}]", k_minus[0], k_minus[1], k_minus[2]);
+
+    println!("\n전자 반경:");
+    println!("  Δr_p^2(e)^(+) = {:.4e}", dr2e_plus);
+    println!("  Δr_p^2(e)^(-) = {:.4e}", dr2e_minus);
+    println!("  합 = {:.4e} (목표: 0)", dr2e_plus - dr2e_minus);
+
+    println!("\n뮤온 반경:");
+    println!("  Δr_p^2(μ)^(+) = {:.4e}", dr2mu_plus);
+    println!("  Δr_p^2(μ)^(-) = {:.4e}", dr2mu_minus);
+    println!(
+        "  합 = {:.4e} (목표: {:.4e})",
+        dr2mu_plus - dr2mu_minus,
+        delta_r2_target
+    );
+
+    println!("\n뮤온 g-2:");
+    println!("  Δa_μ^(+) = {:.4e}", da_plus);
+    println!("  Δa_μ^(-) = {:.4e}", da_minus);
+    println!(
+        "  합 = {:.4e} (목표: {:.4e})",
+        da_plus - da_minus,
+        delta_a_target
+    );
+}
+
 pub fn run_muon_specificity_analysis() {
     println!("\n=== 억압보손-뮤온 특이 결합 분석 ===\n");
     
@@ -444,6 +534,7 @@ pub fn run_multimode_yukawa_scan() {
                 "  뮤온 g-2 상대 오차: {:.1}%",
                 sol.residuals[2] * 100.0
             );
+            analyze_multimode_solution(masses, &sol, delta_r2_target, delta_a_target);
         }
         None => {
             println!("\n선형 방정식이 특이해서 해를 찾지 못함");

@@ -1,6 +1,5 @@
 use std::f64::consts::PI;
 use rayon::prelude::*;
-use crate::engine::noise::PinkNoiseGenerator;
 use crate::engine::filter::FilterFunction;
 
 #[derive(Clone, Debug)]
@@ -195,7 +194,7 @@ impl SfeOptimizerV2 {
     
     pub fn optimize_with_filter_function(
         &self,
-        steps: usize,
+        _steps: usize,
         n_pulses: usize,
         spectrum_fn: impl Fn(f64) -> f64 + Send + Sync,
     ) -> Vec<f64> {
@@ -380,6 +379,7 @@ fn evaluate_sequence_with_pool(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::engine::noise::PinkNoiseGenerator;
     
     #[test]
     fn test_feasibility_projection() {

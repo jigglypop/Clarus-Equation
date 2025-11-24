@@ -233,7 +233,7 @@ pub struct ProjectionResult {
 pub struct MultiScaleSuppressonSpectrum {
     pub tev_scale: TeVScaleMode,
     pub mev_scale: MeVScaleMode,
-    pub ev_scale: eVScaleMode,
+    pub ev_scale: EvScaleMode,
     pub hierarchy_check: HierarchyCheck,
 }
 
@@ -255,7 +255,7 @@ pub struct MeVScaleMode {
 }
 
 #[derive(Debug, Clone)]
-pub struct eVScaleMode {
+pub struct EvScaleMode {
     pub mass_ev: f64,
     pub tls_freq_rad_per_us: f64,
     pub qec_compatible: bool,
@@ -306,7 +306,7 @@ impl MultiScaleSuppressonSpectrum {
         let tls_freq = mass_ev / (HBAR_EV_S * 1e6_f64);
         let qec_compatible = mass_ev >= 0.9e-10_f64 && mass_ev <= 1.7e-10_f64;
         
-        let ev_scale = eVScaleMode {
+        let ev_scale = EvScaleMode {
             mass_ev,
             tls_freq_rad_per_us: tls_freq,
             qec_compatible,
