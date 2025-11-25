@@ -1,6 +1,7 @@
 import sys
 import os
 import numpy as np
+import subprocess
 from qiskit import QuantumCircuit
 from qiskit_ibm_runtime import QiskitRuntimeService, SamplerV2 as Sampler
 from qiskit.transpiler.preset_passmanagers import generate_preset_pass_manager
@@ -8,6 +9,7 @@ from qiskit.transpiler.preset_passmanagers import generate_preset_pass_manager
 sys.path.append(os.getcwd())
 from sfe.controller import SFEAdaptiveController
 from examples.backend.ibm_env import load_ibm_api_key
+from examples.backend.rust_controller_launcher import parse_rust_output
 
 def build_circuit_from_seq(seq, duration_dt, name):
     qc = QuantumCircuit(1, 1)
@@ -55,27 +57,47 @@ def run_live_commercial_controller():
         print(f"[Error] Failed to fetch backend data: {e}")
         return
 
-    # 2. 컨트롤러 구동 (진단 -> 전략 수립)
     controller = SFEAdaptiveController(verbose=True)
     
-    # 진단 실행
     spec = controller.diagnose(t1_us, t2_us)
     
-    # 전략 선택
     strategy = controller.select_best_strategy(spec)
     
     if strategy.mode == "PASSIVE":
         print("[Stop] Controller decided NO ACTION is needed.")
         return
 
-    # 3. 회로 생성 및 제출 (Execution)
+    rust_seq = None
+    try:
+        rust_exe = os.path.join("sfe_core", "target", "release", "sfe_engine.exe")
+        result = subprocess.run(
+            [
+                rust_exe,
+                "run-controller",
+                "--t1",
+                str(t1_us),
+                "--t2",
+                str(t2_us),
+                "--gate-err",
+                str(gate_err),
+            ],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            cwd=os.path.join(os.path.dirname(__file__), "..", ".."),
+        )
+        if result.returncode == 0:
+            rust_seq = parse_rust_output(result.stdout)
+    except Exception:
+        rust_seq = None
+
     print(f"\n[Execution] Generaring circuits for strategy: {strategy.mode}")
     
-    # 비교를 위해 CPMG(Standard)와 선택된 SFE 전략을 같이 제출
     durations_dt = [0, 2222, 4444, 6666, 8888, 11111, 13333, 15555, 17777, 20000]
     
     cpmg_seq = [(i - 0.5)/8.0 for i in range(1, 9)] # Standard CPMG-8
-    sfe_seq = strategy.pulse_sequence
+    sfe_seq = rust_seq if rust_seq else strategy.pulse_sequence
     
     circuits = []
     for d in durations_dt:

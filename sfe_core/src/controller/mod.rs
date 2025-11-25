@@ -57,6 +57,14 @@ impl SfeController {
 
     pub fn select_strategy(&self, spec: &HardwareSpec) -> ControlStrategy {
         let drift_penalty = spec.drift_rate * 100.0; 
+        let alpha_env: f64 = std::env::var("SFE_NOISE_ALPHA")
+            .ok()
+            .and_then(|v| v.parse().ok())
+            .unwrap_or(0.6);
+        let scale_env: f64 = std::env::var("SFE_NOISE_SCALE")
+            .ok()
+            .and_then(|v| v.parse().ok())
+            .unwrap_or(1.0e-15);
         let mut gain_static = if spec.tls_amp > 0.1 { 1.2 } else { 1.05 };
         if drift_penalty > 1.0 { gain_static *= 0.8; }
 
@@ -81,8 +89,8 @@ impl SfeController {
             // 하드웨어 스펙에 맞춰 즉시 최적 시퀀스 생성
             let steps = 2000;
             let n_pulses = 8;
-            let alpha = 0.9; // IBM 기기 특성 반영 (1/f ~ 0.9)
-            let noise_scale = 1.5; 
+            let alpha = alpha_env;
+            let noise_scale = scale_env; 
             
             // 1. 노이즈 풀 생성 (쾌속 모드: 50 trials)
             let mut gen = PinkNoiseGenerator::new_with_params(steps, alpha, noise_scale);
