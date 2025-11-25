@@ -9,4 +9,5 @@ pub mod ibm_api;
 pub mod filter;
 pub mod suppresson;
 pub mod suppresson_physics;
-
+pub mod manifold;
+pub mod geometric;

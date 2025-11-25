@@ -2,6 +2,8 @@ use clap::{Parser, Subcommand};
 use std::time::Instant;
 use sfe_core::{run_pulse_optimizer, run_sweep_benchmark, IbmClient, SfeController};
 use sfe_core::engine::core::QSFEngine;
+use sfe_core::engine::geometric::GeometricEngine;
+use sfe_core::engine::manifold::Manifold; // Trait import added
 use sfe_core::engine::qec::SFE_PHASE_SCALE;
 use std::fs::File;
 use std::io::Write;
@@ -23,6 +25,22 @@ enum Commands {
         #[arg(short, long, default_value_t = 5_000)]
         steps: usize,
         #[arg(short, long, default_value = "sfe_output.csv")]
+        output: String,
+    },
+    /// [NEW] Part8 기하학적 통합 방정식 시뮬레이션
+    GeometricDynamics {
+        #[arg(short, long, default_value_t = 2)]
+        dim: usize,
+        #[arg(short, long, default_value_t = 1000)]
+        steps: usize,
+        #[arg(short, long, default_value = "geometric_output.csv")]
+        output: String,
+    },
+    /// [NEW] SCQE(자가보정 양자소자) 작동 시뮬레이션
+    ScqeSimulation {
+        #[arg(short, long, default_value_t = 1000)]
+        steps: usize,
+        #[arg(short, long, default_value = "scqe_result.csv")]
         output: String,
     },
     /// [Deprecated] 양자 노이즈 시뮬레이션 (Sweep 사용 권장)
@@ -127,7 +145,7 @@ fn configure_fez_suppresson(noise: f64, steps: usize) {
 fn main() {
     let args = Args::parse();
     println!("==========================================");
-    println!("   SFE 상용 엔진 v1.6 (Pure Formula)      ");
+    println!("   SFE 상용 엔진 v1.7 (Part8 Integrated)  ");
     println!("==========================================");
 
     let start_time = Instant::now();
@@ -148,6 +166,51 @@ fn main() {
              let mut file = File::create(&output).unwrap();
              writeln!(file, "TimeStep,CenterPhi").unwrap();
              for (t, v) in history { writeln!(file, "{},{}", t, v).unwrap(); }
+        },
+        Commands::GeometricDynamics { dim, steps, output } => {
+            println!("모드: SFE Part8 기하학적 통합 시뮬레이션");
+            println!("  차원: {}, 스텝: {}", dim, steps);
+            let engine = GeometricEngine::new(dim);
+            
+            let mut x = vec![1.0; dim];
+            let mut p = vec![-1.0; dim]; // 원점으로의 복원력
+            let dt = 0.01;
+            
+            let pb = ProgressBar::new(steps as u64);
+            let mut file = File::create(&output).unwrap();
+            writeln!(file, "Step,R,Suppression,X0,X1").unwrap();
+            
+            for t in 0..steps {
+                let (x_next, supp) = engine.step(&x, &p, dt);
+                let r = engine.manifold.ricci_scalar(&x);
+                
+                writeln!(file, "{},{:.6},{:.6},{:.6},{:.6}", t, r, supp, x[0], x.get(1).unwrap_or(&0.0)).unwrap();
+                
+                x = x_next;
+                // 단순 조화 진동자 운동량 업데이트 (p_new = p - k*x*dt)
+                for i in 0..dim {
+                    p[i] -= x[i] * dt; 
+                }
+                
+                pb.inc(1);
+            }
+            pb.finish();
+            println!("결과 저장됨: {}", output);
+        },
+        Commands::ScqeSimulation { steps, output } => {
+            println!("모드: SCQE(자가보정 양자소자) 시뮬레이션");
+            let engine = GeometricEngine::new(2);
+            println!("  SCQE 피드백 루프 실행 중...");
+            
+            let trajectory = engine.run_scqe_simulation(steps);
+            
+            let mut file = File::create(&output).unwrap();
+            // [UPDATED] 헤더에 EnergyDensity 추가
+            writeln!(file, "Step,R,Suppression,EnergyDensity").unwrap();
+            for (t, (r, s, e)) in trajectory.iter().enumerate() {
+                writeln!(file, "{},{:.6},{:.6},{:.6}", t, r, s, e).unwrap();
+            }
+            println!("SCQE 시뮬레이션 완료. 결과 저장됨: {}", output);
         },
         Commands::QuantumNoise { .. } => {
             println!("(사용 중단됨) 포괄적인 분석을 위해 Sweep 명령을 사용하세요.");

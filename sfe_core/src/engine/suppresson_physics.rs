@@ -8,6 +8,33 @@ pub const M_TAU_MEV: f64 = 1776.86;
 pub const ALPHA_EM: f64 = 1.0 / 137.036;
 pub const HBAR_C_MEV_FM: f64 = 197.327;
 
+// [NEW] SFE Effective Mass Correction
+pub struct EffectiveMassCalculator;
+
+impl EffectiveMassCalculator {
+    /// Part8.5: Delta M = M0 * (1 - e^-1)
+    /// 입자가 억압장(R)을 통과하며 잃어버리는 유효 질량/에너지 계산
+    pub fn calculate_loss(m0: f64) -> f64 {
+        let e_inv = (-1.0_f64).exp(); // 0.3678...
+        m0 * (1.0 - e_inv)
+    }
+
+    /// 남은 유효 질량: M_eff = M0 * e^-1
+    /// (실제로 관측되거나 상호작용에 참여하는 잔여 질량)
+    pub fn calculate_effective_mass(m0: f64) -> f64 {
+        let e_inv = (-1.0_f64).exp();
+        m0 * e_inv
+    }
+    
+    /// 0.37 법칙 검증
+    pub fn verify_law() {
+        let loss_ratio = 1.0 - (-1.0_f64).exp();
+        println!("[SFE] 0.37 Law Verification:");
+        println!("  Theoretical Loss Ratio (1 - 1/e): {:.6}", loss_ratio);
+        println!("  Effective Mass Ratio (1/e):       {:.6}", (-1.0_f64).exp());
+    }
+}
+
 pub struct MassProportionalCoupling {
     pub kappa: f64,
     pub g_e: f64,
@@ -56,6 +83,9 @@ impl MassProportionalCoupling {
         
         let is_valid = self.verify_mass_proportionality();
         println!("\n  질량-비례 법칙: {}", if is_valid { "✓ 성립" } else { "✗ 위반" });
+        
+        // [NEW] 유효 질량 보정 검증 호출
+        EffectiveMassCalculator::verify_law();
     }
 }
 
@@ -683,5 +713,18 @@ mod tests {
         
         assert!(delta_a_mu > 1e-10 && delta_a_mu < 1e-6);
     }
-}
 
+    #[test]
+    fn test_effective_mass_correction() {
+        let m0 = 100.0;
+        let loss = EffectiveMassCalculator::calculate_loss(m0);
+        let eff = EffectiveMassCalculator::calculate_effective_mass(m0);
+        
+        // Loss + Eff = M0
+        assert!((loss + eff - m0).abs() < 1e-9);
+        
+        // Eff = M0 * e^-1
+        let expected_eff = m0 * (-1.0_f64).exp();
+        assert!((eff - expected_eff).abs() < 1e-9);
+    }
+}
