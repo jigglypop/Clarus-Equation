@@ -3,6 +3,7 @@ use rand::prelude::*;
 use super::noise::{PinkNoiseGenerator, generate_correlated_pink_noise};
 
 pub const SFE_PHASE_SCALE: f64 = 0.01_f64;
+pub const SFE_EPSILON: f64 = 0.37;
 
 fn generate_sfe_noise_traces(
     steps: usize,
@@ -189,6 +190,11 @@ pub fn simulate_repetition_code(
     let dt_cycle = measure_interval as f64;
     let p_t1 = 1.0 - (-dt_cycle / t1_steps).exp();
 
+    // SFE Proposal 17: Gate Fidelity Scaling
+    // F_sfe = F_std * exp(-epsilon * t_g / tau_coh)
+    // Assuming t_g = 1 step for the effective gate error application
+    let sfe_gate_fidelity_factor = (-SFE_EPSILON * (1.0 / t1_steps)).exp();
+
     let cycle_len = measure_interval;
     let mut cycle_pulses: Vec<usize> = pulse_seq
         .iter()
@@ -234,7 +240,13 @@ pub fn simulate_repetition_code(
                     }
 
                     let p_phase = 0.5 * (1.0 - phase.cos());
-                    let mut p_total = 1.0 - (1.0 - p_phase) * (1.0 - p_t1) * (1.0 - gate_err);
+
+                    // Apply SFE Gate Fidelity Correction
+                    let f_gate_std = 1.0 - gate_err;
+                    let f_gate_sfe = f_gate_std * sfe_gate_fidelity_factor;
+                    let p_gate_sfe = 1.0 - f_gate_sfe;
+
+                    let mut p_total = 1.0 - (1.0 - p_phase) * (1.0 - p_t1) * (1.0 - p_gate_sfe);
                     if p_total < 0.0 {
                         p_total = 0.0;
                     } else if p_total > 1.0 {
@@ -309,6 +321,13 @@ pub fn simulate_surface_code_d3(
         .ok()
         .and_then(|v| v.parse().ok())
         .unwrap_or(1.5 * noise_amp.abs());
+
+    let t1_steps: f64 = std::env::var("SFE_T1_STEPS")
+        .ok()
+        .and_then(|v| v.parse().ok())
+        .unwrap_or(1.0e5);
+    // SFE Proposal 17 Correction Factor for Surface Code
+    let sfe_gate_fidelity_factor = (-SFE_EPSILON * (1.0 / t1_steps)).exp();
 
     let meas_err: f64 = std::env::var("SFE_MEAS_ERROR")
         .ok()
@@ -402,7 +421,14 @@ pub fn simulate_surface_code_d3(
 
                     let p_phase = 0.5 * (1.0 - phase.cos());
 
-                    let mut p_z = p_phase;
+                    // Apply SFE correction to Z-error probability (acting as effective gate error here)
+                    // Assuming p_phase is the base environmental noise, we add the SFE gate scaling effect
+                    // F_sfe_gate = exp(-eps * 1/T1). The loss probability is 1 - F.
+                    let p_sfe_loss = 1.0 - sfe_gate_fidelity_factor;
+                    
+                    // Combine Phase noise and SFE suppression loss
+                    let mut p_z = 1.0 - (1.0 - p_phase) * (1.0 - p_sfe_loss);
+                    
                     if p_z < 0.0 {
                         p_z = 0.0;
                     } else if p_z > 1.0 {

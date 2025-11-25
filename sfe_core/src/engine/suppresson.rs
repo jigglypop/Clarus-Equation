@@ -467,6 +467,40 @@ pub fn run_suppresson_evidence_analysis() {
             frac_unsel * 100.0_f64
         );
     }
+
+    if !sweet_spots.is_empty() {
+        let g_exp = 1.5_f64;
+        let mut sum_frac = 0.0_f64;
+        let mut count = 0_usize;
+        let mut min_frac = 1e9_f64;
+        let mut max_frac = -1e9_f64;
+        
+        for spot in sweet_spots.iter() {
+            let g_sel = spot.improvement_over_baseline;
+            if g_sel <= 1.0_f64 {
+                continue;
+            }
+            let g_unsel = g_exp - g_sel;
+            let frac = g_unsel / g_sel;
+            sum_frac += frac;
+            count += 1;
+            if frac < min_frac {
+                min_frac = frac;
+            }
+            if frac > max_frac {
+                max_frac = frac;
+            }
+        }
+        
+        if count > 0 {
+            let mean_frac = sum_frac / count as f64;
+            println!("\n   스윗스팟 전체에서 본 비선택 억압장 조정 비율 통계:");
+            println!("     샘플 개수: {}", count);
+            println!("     G_unsel/G_sel 최소값: {:.3}", min_frac);
+            println!("     G_unsel/G_sel 최대값: {:.3}", max_frac);
+            println!("     G_unsel/G_sel 평균값: {:.3}", mean_frac);
+        }
+    }
     
     println!("\n5. 고에너지-저에너지 사영 검증");
     let g_mu = 6e-4;

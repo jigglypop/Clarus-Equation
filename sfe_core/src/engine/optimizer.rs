@@ -1,6 +1,8 @@
 use std::f64::consts::PI;
 use rayon::prelude::*;
 use crate::engine::noise::PinkNoiseGenerator;
+use crate::engine::optimizer_v2::{SfeOptimizerV2, HardwareConstraints}; // HardwareConstraints 추가
+use std::time::Instant;
 
 /// SFE 순수 해석학적 최적화기 (고도화 버전: Balanced Log-SFE)
 /// 복잡한 유전 알고리즘을 SFE 이론에서 유도된 공식으로 대체하고,
@@ -128,8 +130,19 @@ pub fn run_pulse_optimizer(
     _generations: usize,
     noise_level: f64,
 ) -> (Vec<usize>, f64, f64) {
+    println!("\n=== SFE Pulse Optimizer Benchmark (V1 vs V2-Coord vs V2-Riemannian) ===\n");
+    
     let beta = 50.0;
-    let optimizer = SfeOptimizer::new(beta);
+    let optimizer_v1 = SfeOptimizer::new(beta);
+    
+    // V2 Optimizer with relaxed constraints for fair comparison with V1
+    // V1 finds pulses very early (e.g. 0.004), so we relax min_first_pulse to 0.001
+    let constraints = HardwareConstraints {
+        min_first_pulse: 0.001,
+        min_interval: 0.001,
+        max_last_pulse: 0.999,
+    };
+    let optimizer_v2 = SfeOptimizerV2::new_with_constraints(beta, constraints);
 
     let trials = 200;
 
@@ -179,18 +192,62 @@ pub fn run_pulse_optimizer(
         noise_pool.push(trace);
     }
 
-    let sfe_seq_norm = optimizer.optimize(steps, n_pulses, noise_level, &noise_pool);
-    let sfe_seq_idx: Vec<usize> = sfe_seq_norm
-        .iter()
-        .map(|&t| (t * steps as f64).round() as usize)
-        .collect();
+    // 1. V1: Coordinate Descent (Simple)
+    let t_start = Instant::now();
+    let seq_v1 = optimizer_v1.optimize(steps, n_pulses, noise_level, &noise_pool);
+    let t_v1 = t_start.elapsed();
+    let idx_v1: Vec<usize> = seq_v1.iter().map(|&t| (t * steps as f64).round() as usize).collect();
+    let score_v1 = evaluate_sequence_with_pool(&idx_v1, noise_level, &noise_pool);
+    println!("1. V1 (Simple Coordinate): Score = {:.6}, Time = {:.2}ms", score_v1, t_v1.as_millis());
 
-    let (udd_score, sfe_score) = evaluate_performance(steps, &sfe_seq_idx, n_pulses, noise_level, &noise_pool);
+    // Spectrum function for V2 (Pink Noise like 1/f)
+    let spectrum_fn = |omega: f64| -> f64 {
+        if omega.abs() < 1e-6 { 0.0 } else { 1.0 / omega.abs().powf(alpha) }
+    };
 
-    (sfe_seq_idx, udd_score, sfe_score)
+    // 2. V2: Filter Function Coordinate Descent
+    let t_start = Instant::now();
+    let seq_v2_coord = optimizer_v2.optimize_with_filter_function(steps, n_pulses, &spectrum_fn);
+    let t_v2_coord = t_start.elapsed();
+    let idx_v2_coord: Vec<usize> = seq_v2_coord.iter().map(|&t| (t * steps as f64).round() as usize).collect();
+    let score_v2_coord = evaluate_sequence_with_pool(&idx_v2_coord, noise_level, &noise_pool);
+    println!("2. V2 (Filter Coordinate): Score = {:.6}, Time = {:.2}ms", score_v2_coord, t_v2_coord.as_millis());
+
+    // 3. V2: Riemannian Gradient Descent
+    let t_start = Instant::now();
+    let seq_v2_riem = optimizer_v2.optimize_riemannian(n_pulses, &spectrum_fn);
+    let t_v2_riem = t_start.elapsed();
+    let idx_v2_riem: Vec<usize> = seq_v2_riem.iter().map(|&t| (t * steps as f64).round() as usize).collect();
+    let score_v2_riem = evaluate_sequence_with_pool(&idx_v2_riem, noise_level, &noise_pool);
+    println!("3. V2 (Riemannian Grad):   Score = {:.6}, Time = {:.2}ms", score_v2_riem, t_v2_riem.as_millis());
+
+    // UDD Baseline
+    let mut udd_seq = Vec::with_capacity(n_pulses);
+    for j in 1..=n_pulses {
+        let t = ((j as f64 * PI) / (2.0 * n_pulses as f64 + 2.0)).sin().powi(2);
+        udd_seq.push((t * steps as f64).round() as usize);
+    }
+    let udd_score = evaluate_sequence_with_pool(&udd_seq, noise_level, &noise_pool);
+    println!("0. UDD (Baseline):         Score = {:.6}", udd_score);
+
+    println!("\n[Result] Best Strategy: {}", 
+        if score_v2_riem >= score_v2_coord && score_v2_riem >= score_v1 { "Riemannian" }
+        else if score_v2_coord >= score_v1 { "V2-Coordinate" }
+        else { "V1-Simple" }
+    );
+
+    // Return the best sequence
+    if score_v2_riem >= score_v2_coord && score_v2_riem >= score_v1 {
+        (idx_v2_riem, udd_score, score_v2_riem)
+    } else if score_v2_coord >= score_v1 {
+        (idx_v2_coord, udd_score, score_v2_coord)
+    } else {
+        (idx_v1, udd_score, score_v1)
+    }
 }
 
 /// 도우미: 생성된 노이즈에 대해 UDD vs SFE 평가
+#[allow(dead_code)]
 fn evaluate_performance(
     steps: usize,
     sfe_seq: &[usize],

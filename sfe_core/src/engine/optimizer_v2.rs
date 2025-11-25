@@ -48,6 +48,86 @@ impl SfeOptimizerV2 {
         
         seq
     }
+
+    /// 수치적 구배 계산 (Numerical Gradient for Filter Function)
+    fn compute_gradient(&self, seq: &[f64], spectrum_fn: &impl Fn(f64) -> f64, duration: f64) -> Vec<f64> {
+        let n = seq.len();
+        let mut grad = vec![0.0; n];
+        let eps = 1e-5;
+        
+        // 현재 점수 계산
+        let ff_curr = FilterFunction::compute(seq, duration, 512);
+        let score_curr = -ff_curr.integrate_with_spectrum(spectrum_fn);
+        
+        for i in 0..n {
+            let mut cand = seq.to_vec();
+            cand[i] += eps;
+            // 미소 변동
+            
+            let ff_cand = FilterFunction::compute(&cand, duration, 512);
+            let score_cand = -ff_cand.integrate_with_spectrum(spectrum_fn);
+            
+            grad[i] = (score_cand - score_curr) / eps;
+        }
+        
+        grad
+    }
+
+    /// 리만 기하학적 최적화 (Riemannian Gradient Descent)
+    /// 8장 이론의 Reality_Stone 개념 적용: 다양체(Manifold) 위에서의 구배 하강
+    pub fn optimize_riemannian(
+        &self,
+        n_pulses: usize,
+        spectrum_fn: impl Fn(f64) -> f64 + Send + Sync,
+    ) -> Vec<f64> {
+        let mut seq = self.initialize_feasible(n_pulses);
+        let duration = 100.0;
+        
+        let mut step_size = 0.01;
+        let min_step = 1e-6;
+        let max_iter = 200;
+        
+        for _iter in 0..max_iter {
+            if step_size < min_step { break; }
+            
+            // 1. 리만 구배 근사 (유클리드 구배 계산)
+            let grad = self.compute_gradient(&seq, &spectrum_fn, duration);
+            
+            // 2. 접공간 업데이트 (Tangent Space Step)
+            let mut new_seq = seq.clone();
+            let mut norm_grad = 0.0;
+            for g in &grad { norm_grad += g * g; }
+            norm_grad = norm_grad.sqrt();
+            
+            if norm_grad < 1e-9 { break; }
+
+            for i in 0..n_pulses {
+                new_seq[i] += step_size * grad[i] / norm_grad; // 정규화된 구배 방향 이동
+            }
+            
+            // 3. Retraction (다양체 위로 투영)
+            new_seq.sort_by(|a, b| a.partial_cmp(b).unwrap());
+            if !self.is_feasible(&new_seq) {
+                new_seq = self.project_to_feasible(new_seq);
+            }
+            
+            // 4. 라인 서치 (Line Search)와 유사한 수락 조건
+            let ff_prev = FilterFunction::compute(&seq, duration, 512);
+            let score_prev = -ff_prev.integrate_with_spectrum(&spectrum_fn);
+            
+            let ff_new = FilterFunction::compute(&new_seq, duration, 512);
+            let score_new = -ff_new.integrate_with_spectrum(&spectrum_fn);
+            
+            if score_new > score_prev {
+                seq = new_seq;
+                step_size *= 1.05; // 가속
+            } else {
+                step_size *= 0.5; // 감속
+            }
+        }
+        
+        seq
+    }
     
     fn is_feasible(&self, seq: &[f64]) -> bool {
         if seq.is_empty() {
@@ -78,24 +158,44 @@ impl SfeOptimizerV2 {
             return seq;
         }
         
-        seq.sort_by(|a, b| a.partial_cmp(b).unwrap());
-        
-        seq[0] = seq[0].max(self.constraints.min_first_pulse);
-        
-        for i in 0..seq.len()-1 {
-            if seq[i+1] - seq[i] < self.constraints.min_interval {
-                seq[i+1] = seq[i] + self.constraints.min_interval;
+        // Stack Overflow 방지를 위한 반복문 구조 변경 (최대 10회 재시도)
+        for _ in 0..10 {
+            seq.sort_by(|a, b| a.partial_cmp(b).unwrap());
+            
+            // 1. 첫 펄스 보정
+            seq[0] = seq[0].max(self.constraints.min_first_pulse);
+            
+            // 2. 간격 보정 (밀어내기)
+            let mut interval_violated = false;
+            for i in 0..seq.len()-1 {
+                if seq[i+1] - seq[i] < self.constraints.min_interval {
+                    seq[i+1] = seq[i] + self.constraints.min_interval;
+                    interval_violated = true;
+                }
+            }
+            
+            // 3. 마지막 펄스 체크 및 스케일링
+            let mut range_violated = false;
+            if let Some(&last) = seq.last() {
+                if last > self.constraints.max_last_pulse {
+                    let scale = self.constraints.max_last_pulse / last;
+                    for x in seq.iter_mut() {
+                        *x *= scale;
+                    }
+                    range_violated = true;
+                }
+            }
+            
+            if !interval_violated && !range_violated {
+                return seq;
             }
         }
         
+        // 수렴하지 못한 경우 안전장치: 마지막으로 강제 스케일링만 하고 반환
         if let Some(&last) = seq.last() {
             if last > self.constraints.max_last_pulse {
-                let scale = self.constraints.max_last_pulse / last;
-                for x in seq.iter_mut() {
-                    *x *= scale;
-                }
-                
-                seq = self.project_to_feasible(seq);
+                 let scale = self.constraints.max_last_pulse / last;
+                 for x in seq.iter_mut() { *x *= scale; }
             }
         }
         
