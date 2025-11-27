@@ -43,6 +43,27 @@ enum Commands {
         #[arg(short, long, default_value = "scqe_result.csv")]
         output: String,
     },
+    /// [NEW] SFE-ARC 노이즈 캔슬러 시뮬레이션
+    SfeArc {
+        #[arg(short, long, default_value_t = 1000)]
+        steps: usize,
+        #[arg(short, long, default_value = "sfe_arc_result.csv")]
+        output: String,
+    },
+    /// [NEW] SFE 금융 시장 시뮬레이션 (Econophysics)
+    MarketSimulation {
+        #[arg(short, long, default_value_t = 5000)]
+        steps: usize,
+        #[arg(short, long, default_value = "market_sim.csv")]
+        output: String,
+    },
+    /// [NEW] SFE 거시경제 위기 예측 시뮬레이션
+    MacroCrisis {
+        #[arg(short, long, default_value_t = 100)]
+        years: usize,
+        #[arg(short, long, default_value = "macro_crisis.csv")]
+        output: String,
+    },
     /// [Deprecated] 양자 노이즈 시뮬레이션 (Sweep 사용 권장)
     QuantumNoise {
         #[arg(short, long, default_value_t = 10_000)]
@@ -145,7 +166,7 @@ fn configure_fez_suppresson(noise: f64, steps: usize) {
 fn main() {
     let args = Args::parse();
     println!("==========================================");
-    println!("   SFE 상용 엔진 v1.7 (Part8 Integrated)  ");
+    println!("   SFE 상용 엔진 v1.9 (Crisis Sim)        ");
     println!("==========================================");
 
     let start_time = Instant::now();
@@ -205,12 +226,161 @@ fn main() {
             let trajectory = engine.run_scqe_simulation(steps);
             
             let mut file = File::create(&output).unwrap();
-            // [UPDATED] 헤더에 EnergyDensity 추가
             writeln!(file, "Step,R,Suppression,EnergyDensity").unwrap();
             for (t, (r, s, e)) in trajectory.iter().enumerate() {
                 writeln!(file, "{},{:.6},{:.6},{:.6}", t, r, s, e).unwrap();
             }
             println!("SCQE 시뮬레이션 완료. 결과 저장됨: {}", output);
+        },
+        Commands::SfeArc { steps, output } => {
+            println!("모드: SFE-ARC (Adaptive Riemannian Cancellation) 시뮬레이션");
+            println!("  목표: 실시간 곡률 예측 및 역위상 상쇄 (Target: >90% Reduction)");
+            
+            let mut env = sfe_core::engine::arc::ArcSimulationEnv::new();
+            let dt = 0.01;
+            
+            let mut file = File::create(&output).unwrap();
+            writeln!(file, "Step,TrueNoise,ResidualNoise,ReductionRatio").unwrap();
+            
+            let pb = ProgressBar::new(steps as u64);
+            let mut total_reduction = 0.0;
+            let mut count = 0;
+            
+            for t in 0..steps {
+                let (true_noise, residual) = env.step(dt);
+                let ratio = if true_noise.abs() > 1e-6 { 
+                    (1.0 - residual.abs() / true_noise.abs()) * 100.0 
+                } else { 
+                    0.0 
+                };
+                
+                if ratio > -100.0 && ratio < 200.0 {
+                    total_reduction += ratio;
+                    count += 1;
+                }
+                
+                writeln!(file, "{},{:.6},{:.6},{:.2}", t, true_noise, residual, ratio).unwrap();
+                pb.inc(1);
+            }
+            pb.finish();
+            
+            if count > 0 {
+                println!("  평균 노이즈 감소율: {:.2}%", total_reduction / count as f64);
+            }
+            println!("SFE-ARC 시뮬레이션 완료. 결과 저장됨: {}", output);
+        },
+        Commands::MarketSimulation { steps, output } => {
+            println!("모드: SFE 금융 시장 시뮬레이션 (Surfing Strategy)");
+            
+            use sfe_core::engine::market::SfeTradingBot;
+            use rand::Rng;
+            
+            let initial_cash = 10_000.0;
+            let mut bot = SfeTradingBot::new(initial_cash);
+            let mut price = 100.0;
+            
+            let mut file = File::create(&output).unwrap();
+            writeln!(file, "Step,Price,PortfolioValue").unwrap();
+            
+            let pb = ProgressBar::new(steps as u64);
+            let mut rng = rand::thread_rng();
+            
+            // 시뮬레이션 루프 (Flash Crash 시나리오 포함)
+            for t in 0..steps {
+                // Random Walk + Jump
+                let mut ret = rng.gen_range(-0.01..0.01); // 일반 등락
+                let mut volume = 1000.0 + rng.gen_range(-200.0..200.0);
+                
+                // 3000 스텝쯤에 폭락 이벤트 발생
+                if t >= 3000 && t < 3050 {
+                    ret = -0.03; // 급락
+                    volume = 5000.0; // 투매
+                }
+                // 3100 스텝쯤에 V자 반등
+                if t >= 3100 && t < 3150 {
+                    ret = 0.03; // 반등
+                    volume = 3000.0;
+                }
+                
+                price *= (1.0 + ret);
+                let high = price * 1.005;
+                let low = price * 0.995;
+                
+                let value = bot.process_tick(price, volume, high, low);
+                
+                writeln!(file, "{},{:.2},{:.2}", t, price, value).unwrap();
+                pb.inc(1);
+            }
+            pb.finish();
+            
+            let final_value = bot.get_portfolio_value(price);
+            let return_rate = (final_value - initial_cash) / initial_cash * 100.0;
+            
+            println!("시뮬레이션 완료.");
+            println!("  초기 자본: ${:.2}", initial_cash);
+            println!("  최종 가치: ${:.2}", final_value);
+            println!("  수익률: {:.2}%", return_rate);
+            
+            if return_rate > 0.0 {
+                println!("  [SUCCESS] SFE 전략이 시장을 이겼습니다.");
+            }
+            println!("결과 저장됨: {}", output);
+        },
+        Commands::MacroCrisis { years, output } => {
+            println!("모드: SFE 거시경제 위기 예측 시뮬레이션");
+            println!("  기간: {}년 (Quarterly Data)", years);
+            
+            use sfe_core::engine::market::MacroEconomy;
+            use rand::Rng;
+            
+            let mut economy = MacroEconomy::new();
+            let mut rng = rand::thread_rng();
+            let quarters = years * 4;
+            
+            let mut file = File::create(&output).unwrap();
+            writeln!(file, "Quarter,DebtToGDP,GDP_Growth,Interest,Curvature,ProbCrisis").unwrap();
+            
+            let pb = ProgressBar::new(quarters as u64);
+            
+            for q in 0..quarters {
+                // 시나리오: 
+                // 1. 부채 주도 성장 (Debt Bubble) -> Debt 증가, GDP 성장 양호
+                // 2. 성장 둔화 (Stagnation) -> Debt 유지, GDP 하락
+                // 3. 금리 인상 (Tightening) -> Interest 급등
+                // 4. 위기 발생 (Minsky Moment)
+                
+                let mut debt_shock = 0.005; // 부채는 계속 늘어남
+                let mut gdp_shock = rng.gen_range(-0.002..0.003);
+                let mut rate_shock = 0.0;
+                let mut m2_shock = 0.001;
+                
+                // 시나리오 이벤트 (Quarter 기준)
+                if q > 20 && q < 40 {
+                    debt_shock = 0.02; // 버블 형성기
+                    gdp_shock = 0.005; 
+                } else if q >= 40 && q < 50 {
+                    gdp_shock = -0.03; // 강력한 경기 침체 (Depression)
+                    rate_shock = 0.01; // 스태그플레이션 (금리 급등)
+                } else if q >= 50 {
+                    // 위기 후 디레버리징 (자동으로 되어야 하지만 여기선 강제)
+                    debt_shock = -0.01;
+                    rate_shock = -0.005;
+                }
+                
+                let (r, prob) = economy.update_and_predict(gdp_shock, debt_shock, rate_shock, m2_shock);
+                
+                writeln!(file, "{},{:.3},{:.3},{:.3},{:.6},{:.4}", 
+                    q, economy.debt_to_gdp, economy.gdp_growth, economy.interest_rate, r, prob).unwrap();
+                
+                // 경고 임계치 낮춤 (0.5 -> 0.3)
+                if prob > 0.3 {
+                    println!("  [CRISIS WARNING] Q{}: Probability {:.1}% (R={:.4})", q, prob*100.0, r);
+                }
+                
+                pb.inc(1);
+            }
+            pb.finish();
+            println!("거시경제 시뮬레이션 완료. 결과 저장됨: {}", output);
         },
         Commands::QuantumNoise { .. } => {
             println!("(사용 중단됨) 포괄적인 분석을 위해 Sweep 명령을 사용하세요.");
@@ -220,7 +390,6 @@ fn main() {
         },
         Commands::PulseOptimizer { steps, pulses, generations } => {
             println!("모드: SFE 펄스 최적화 (순수 공식 사용)");
-            // run_pulse_optimizer는 이제 내부적으로 Analytic Formula를 사용합니다.
             let (pulse_seq_idx, udd, sfe) = run_pulse_optimizer(steps, pulses, generations, 0.15);
             println!("최종 점수 -> UDD: {:.4}, SFE: {:.4}", udd, sfe);
 
@@ -265,8 +434,6 @@ fn main() {
                 }
             }
             println!("1. SFE 펄스 적용 (Pure Analytic Formula)...");
-            // Pure SFE 공식은 매우 빠르므로 즉시 결과가 나옵니다.
-            // 노이즈가 강한 상황을 가정하여 최적화 수행
             let (pulse_seq, _, sfe_score) = run_pulse_optimizer(steps, 60, 0, noise);
             println!("   SFE 결맞음 점수: {:.4}", sfe_score);
             
@@ -319,24 +486,17 @@ fn main() {
         Commands::RunController { t1, t2, gate_err } => {
             println!("모드: SFE 상용 컨트롤러 (Real-time Core)");
             let mut controller = SfeController::new();
-            
-            // 1. 진단 (nanosecond scale)
             let t_diag = Instant::now();
             let spec = controller.diagnose(t1, t2, gate_err);
             let diag_time = t_diag.elapsed().as_nanos();
-            
             println!("[Diagnosis] T1={}us T2={}us => TLS Amp={:.3} (Time: {} ns)", 
                 spec.t1, spec.t2, spec.tls_amp, diag_time);
-
-            // 2. 전략 수립 (microsecond scale)
             let t_strat = Instant::now();
             let strategy = controller.select_strategy(&spec);
             let strat_time = t_strat.elapsed().as_micros();
-            
             println!("[Strategy] Selected Mode: {:?} (Time: {} us)", strategy.mode, strat_time);
             println!("  - Expected Gain: {:.2}x", strategy.expected_gain);
             println!("  - Rec. QEC Dist: d={}", strategy.qec_distance);
-            
             if strategy.pulse_sequence.len() > 0 {
                 println!("  - Optimal Pulse Seq Generated ({} pulses)", strategy.pulse_sequence.len());
                 println!("RAW_SEQ_START");
@@ -346,32 +506,22 @@ fn main() {
         },
         Commands::RunIBM { api_key } => {
             println!("모드: IBM Quantum 하드웨어 브리지 (SFE Rust-Native Controller)");
-            
             let mut controller = SfeController::new();
-            
-            // 1. 진단 (Fez Typical Data or Fetch)
             let t1 = 60.0;
             let t2 = 40.0;
             let gate_err = 1e-3;
-            
             println!("1. 하드웨어 상태 진단 중... (T1={}us, T2={}us)", t1, t2);
             let spec = controller.diagnose(t1, t2, gate_err);
             println!("   -> 진단 결과: TLS Amp={:.3}, Drift={:.3}", spec.tls_amp, spec.drift_rate);
-
-            // 2. 전략 수립
             println!("2. 최적 제어 전략 수립 중...");
             let strategy = controller.select_strategy(&spec);
             println!("   -> 선택된 전략: {:?} (Gain {:.2}x)", strategy.mode, strategy.expected_gain);
-            
             if strategy.pulse_sequence.is_empty() {
                 println!("   [!] 전략이 ANC/Passive이므로 펄스 시퀀스 생성을 건너뜁니다.");
                 return;
             }
-
-            // 3. IBM API 직접 제출
             println!("3. IBM Quantum Runtime API 직접 연결 중...");
             let mut client = IbmClient::new(&api_key);
-            
             match client.authenticate() {
                 Ok(_) => {
                     println!("   인증 성공. SFE 펄스 작업 제출...");
@@ -380,13 +530,10 @@ fn main() {
                             println!("성공: 작업 제출 완료!");
                             println!("Job ID: {}", job_id);
                             println!("모니터링: https://quantum.ibm.com/jobs/{}", job_id);
-                            
-                            // 4. 결과 대기 및 수신
                             println!("\n4. 작업 완료 대기 중...");
                             match client.wait_for_result(&job_id) {
                                 Ok(result) => {
                                     println!("   결과 수신 완료!");
-                                    // 5. 자동 분석
                                     controller.analyze_result(&result);
                                 },
                                 Err(e) => println!("오류: 결과 수신 실패: {}", e),

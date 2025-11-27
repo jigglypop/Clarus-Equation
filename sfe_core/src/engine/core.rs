@@ -11,12 +11,14 @@ pub struct QSFEngine {
     pub forces_buffer: Array1<f64>, // 할당 방지를 위한 캐시된 버퍼
     pub mu: f64,
     pub lam: f64,
+    pub alpha2: f64, // Curvature suppression coupling (SFE Master Action)
 }
 
 impl QSFEngine {
     pub fn new(size: usize) -> Self {
         let mu: f64 = 1.0;
         let lam: f64 = 1.0;
+        let alpha2: f64 = 0.0; // Default to 0, enable via Python
         let vacuum_vev = mu / lam.sqrt();
         let phi = Array1::from_elem(size, vacuum_vev);
         let dphi = Array1::zeros(size);
@@ -30,7 +32,7 @@ impl QSFEngine {
             let mut slice = source_j.slice_mut(s![mid-range..mid+range]);
             slice.fill(-5.0); 
         }
-        QSFEngine { phi, dphi, source_j, forces_buffer, mu, lam }
+        QSFEngine { phi, dphi, source_j, forces_buffer, mu, lam, alpha2 }
     }
 
     #[inline(always)]
@@ -54,6 +56,7 @@ impl QSFEngine {
         let forces_slice = self.forces_buffer.as_slice_mut().unwrap();
         let mu = self.mu;
         let lam = self.lam;
+        let alpha2 = self.alpha2;
 
         // 힘의 병렬 계산
         forces_slice.par_iter_mut().enumerate().for_each(|(i, force)| {
@@ -64,10 +67,26 @@ impl QSFEngine {
             let right = if i == n-1 { phi_slice[n-1] } else { phi_slice[i+1] };
             
             let laplacian = left + right - 2.0 * phi_slice[i];
+
+            // SFE Master Action: Curvature Suppression (Biharmonic term)
+            // -alpha2 * nabla^4 phi
+            let biharmonic = if alpha2 != 0.0 {
+                let i_isize = i as isize;
+                let p_2l = if i_isize - 2 < 0 { phi_slice[0] } else { phi_slice[i-2] };
+                let p_1l = left;
+                let p = phi_slice[i];
+                let p_1r = right;
+                let p_2r = if i_isize + 2 >= n as isize { phi_slice[n-1] } else { phi_slice[i+2] };
+                
+                p_2l - 4.0*p_1l + 6.0*p - 4.0*p_1r + p_2r
+            } else {
+                0.0
+            };
+
             let pot_f = Self::potential_force(phi_slice[i], mu, lam);
             let damping = -0.1 * dphi_slice[i];
             
-            *force = pot_f + COUPLING_K * laplacian + source_slice[i] + damping;
+            *force = pot_f + COUPLING_K * laplacian - alpha2 * biharmonic + source_slice[i] + damping;
         });
 
         // 상태 업데이트 (심플렉틱 오일러와 유사)

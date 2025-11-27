@@ -1,38 +1,37 @@
 # SFE 문서 인덱스
 
-본 인덱스는 저장소 루트에 흩어진 주요 논문 문서를 주제별로 한 곳에서 탐색할 수 있도록 정리한 안내서입니다. 파일들은 현재 루트에 존재하며, 아래 링크는 상대 경로로 연결됩니다.
+SFE 프로젝트의 문서는 **핵심 이론**과 **최신 유도**를 중심으로 재편되었습니다.
+과거의 연구 노트들은 `archive` 폴더에 보관되어 있습니다.
 
-## 메인
-- 메인 논문: ../SFE_Main_Paper.md
-- 리포지토리 개요: ../README.md
+## 📚 핵심 이론 (Core Theory)
+**경로**: `docs/Core_Theory/` (구 Part 8)
 
-## 코어 이론(1–20장)
-- 01장 개요/공리: ../01_SFE_개요와_기본개념.md
-- 02장 수학적 기초: ../02_SFE_수학적_기초.md
-- 03장 핵심 방정식/유도: ../03_SFE_핵심_방정식과_유도.md
-- 04장 실험적 검증: ../04_SFE_실험적_검증.md
-- 05장 우주론적 응용: ../05_SFE_우주론적_응용.md
-- 18장 억압장/QFT/α 유도: ../18_SFE_억압장_상호작용_해석_및_암흑에너지_대체.md
-- 20장 핵심 공식 총정리: ../20_SFE_핵심공식_총정리.md
+SFE의 핵심 아이디어와 통합 프레임워크(후보)를 정리한 부분입니다.
+- [통합 프레임워크](Core_Theory/8.1_SFE_리만기하학적_통합_프레임워크.md)
+- [SCQE (자가보정 양자소자)](Core_Theory/8.4_양자컴퓨팅의_한계와_SCQE.md)
+- [0.37 법칙과 우주론](Core_Theory/8.5_우주론적_함의와_0.37_법칙.md)
+- [정합성 최종 검증](Core_Theory/8.9_정합성_최종_검증.md)
 
-## SFE+MOND 통합(21–31장)
-- 28장 MOND 완전통합: ../28_SFE_MOND_완전통합.md
-- 30장 MOND 제1원리 유도: ../30_SFE_MOND_완전_제1원리_유도.md
-- 31장 핵심 예측 총정리: ../31_SFE_핵심_예측_총정리.md
+## 🔭 유도 및 응용 (Derivations & Applications)
+**경로**: `docs/Derivations_Applications/` (구 Part 10)
 
-## 보강/수정(33–35장)
-- 33장 미시–거시 통합 재분석: ../33_SFE_미시거시_통합_재분석.md
-- 34장 ε(t) 시간진화/BBN 양립: ../34_SFE_시간진화_완전검증.md
-- 35장 전체 관측 정량검증: ../35_SFE_전체관측_정량검증.md
+핵심 난제들에 대해 SFE 공리·마스터 작용을 적용한 **수학적 모형, 유도 스케치, 수치 검증**을 모아 둔 부분입니다.
+- [암흑에너지 유도](Derivations_Applications/04_Dark_Energy_Derivation.md)
+- [나비에-스토크스 해법](Derivations_Applications/01_Navier_Stokes.md)
+- [단백질 접힘 경로](Derivations_Applications/03_Protein_Folding_Derivation.md)
+- [리만 제타 영점](Derivations_Applications/02_Riemann_Zeta_Derivation.md)
+- [마스터 액션 유도](Derivations_Applications/06_Master_Action_Universal_Derivation.md)
 
-## 공학/응용
-- 공학 응용 및 시스템 설계 개요: ./SFE_공학응용_및_시스템설계.md
+## 🏛️ 아카이브 (Archive)
+**경로**: `docs/archive/`
 
-## 계산/노트북
-- 수치/검증 스크립트: ../SFE_verification.py
-- 종합 평가 노트북: ../SFE_comprehensive_evaluation.ipynb
-
----
-필요 시 이 인덱스를 확장하여 하위 주제별(양자 현상, 대규모 구조, 은하 역학 등) 서브 인덱스를 추가할 수 있습니다.
-
-
+초기 연구, 방법론, 확장 이론 등 **구버전/실험적 노트**가 포함된 참고용 문서들입니다.  
+현재 본문과 톤·표현이 다를 수 있으며, 향후 정리·삭제 대상(대기 상태)로 취급합니다.
+- Part 1: 이론 기초
+- Part 2: 핵심 검증 (초기)
+- Part 3: 확장 이론 (입자물리)
+- Part 4: 방법론
+- Part 5: 고급 주제
+- Part 6: 공학 응용
+- Part 7: 양자 컴퓨팅 (초기 모델)
+- Part 9: 시스템 공학

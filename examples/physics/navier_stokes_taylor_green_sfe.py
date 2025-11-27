@@ -23,24 +23,43 @@ def add_noise(field, noise_level, seed):
     return noisy
 
 
-def build_sfe_kernel_2d(shape, length, lam, tau):
-    nx, ny = shape
-    kx = 2.0 * np.pi * np.fft.fftfreq(nx, d=length / nx)
-    ky = 2.0 * np.pi * np.fft.fftfreq(ny, d=length / ny)
-    kx_grid, ky_grid = np.meshgrid(kx, ky, indexing="ij")
-    k2 = kx_grid * kx_grid + ky_grid * ky_grid
-    k4 = k2 * k2
-    factor = np.exp(-(k2 + lam * k4) * tau)
-    return factor
+def compute_curvature_2d(field):
+    curv = np.zeros_like(field)
+    for c in range(field.shape[-1]):
+        for i in range(1, field.shape[0] - 1):
+            for j in range(1, field.shape[1] - 1):
+                laplacian = (
+                    field[i - 1, j, c] + field[i + 1, j, c] +
+                    field[i, j - 1, c] + field[i, j + 1, c] -
+                    4 * field[i, j, c]
+                )
+                curv[i, j, c] = laplacian
+    return curv
 
 
-def sfe_smooth_field(field, length, lam, tau):
-    factor = build_sfe_kernel_2d(field.shape[:2], length, lam, tau)
-    field_k = np.fft.fftn(field, axes=(0, 1))
-    field_k[..., 0] *= factor
-    field_k[..., 1] *= factor
-    smoothed = np.fft.ifftn(field_k, axes=(0, 1)).real
-    return smoothed
+def sfe_curvature_denoise_2d(field, alpha):
+    curv = compute_curvature_2d(field)
+    curv_mag = np.sqrt(np.sum(curv ** 2, axis=-1))
+    threshold = np.percentile(curv_mag, 75)
+    high_curv_mask = curv_mag > threshold
+    
+    result = field.copy()
+    for i in range(1, field.shape[0] - 1):
+        for j in range(1, field.shape[1] - 1):
+            if high_curv_mask[i, j]:
+                neighbor_avg = 0.25 * (
+                    field[i - 1, j] + field[i + 1, j] +
+                    field[i, j - 1] + field[i, j + 1]
+                )
+                result[i, j] = (1 - alpha) * field[i, j] + alpha * neighbor_avg
+    return result
+
+
+def iterative_sfe_denoise_2d(field, alpha, iterations):
+    result = field.copy()
+    for _ in range(iterations):
+        result = sfe_curvature_denoise_2d(result, alpha)
+    return result
 
 
 def l2_error(a, b):
@@ -49,7 +68,7 @@ def l2_error(a, b):
 
 
 def run_experiment():
-    n = 128
+    n = 64
     length = 2.0 * np.pi
     u0 = 1.0
     k = 1.0
@@ -57,24 +76,29 @@ def run_experiment():
     t = 1.0
     noise_level = 0.05
     seed = 1234
-    lam = 0.01
-    # 기본 모드 k=1에서 진폭 감쇠를 5% 이내로 제한하도록 tau를 선택
-    target_atten = 0.95
-    tau = -np.log(target_atten) / (1.0 + lam)
+    alpha = 0.5
+    iterations = 3
+
     ref = generate_reference_field(n, t, u0, k, nu, length)
     noisy = add_noise(ref, noise_level, seed)
     base_err = l2_error(noisy, ref)
-    smoothed = sfe_smooth_field(noisy, length, lam, tau)
-    sfe_err = l2_error(smoothed, ref)
+    
+    denoised = iterative_sfe_denoise_2d(noisy, alpha, iterations)
+    sfe_err = l2_error(denoised, ref)
+    
     ratio = base_err / sfe_err if sfe_err > 0.0 else np.inf
-    print("grid", n)
-    print("base_l2_error", base_err)
-    print("sfe_l2_error", sfe_err)
-    print("improvement_factor", ratio)
+    
+    print("=== Navier-Stokes Taylor-Green SFE Verification ===")
+    print(f"grid: {n}x{n}")
+    print(f"noise_level: {noise_level}")
+    print(f"alpha: {alpha}, iterations: {iterations}")
+    print(f"base_l2_error: {base_err:.6f}")
+    print(f"sfe_l2_error: {sfe_err:.6f}")
+    print(f"improvement_factor: {ratio:.4f}")
 
 
-def sweep_tau():
-    n = 128
+def sweep_params():
+    n = 64
     length = 2.0 * np.pi
     u0 = 1.0
     k = 1.0
@@ -82,32 +106,38 @@ def sweep_tau():
     t = 1.0
     noise_level = 0.05
     seed = 1234
-    lam = 0.01
 
     ref = generate_reference_field(n, t, u0, k, nu, length)
     noisy = add_noise(ref, noise_level, seed)
     base_err = l2_error(noisy, ref)
 
-    taus = np.linspace(0.0, 2.0, 41)
-    best_tau = 0.0
+    alphas = np.linspace(0.1, 0.9, 9)
+    iters_list = [1, 2, 3, 5]
+    
+    best_alpha = 0.1
+    best_iters = 1
     best_err = base_err
-    for tau in taus:
-        smoothed = sfe_smooth_field(noisy, length, lam, tau)
-        err = l2_error(smoothed, ref)
-        if err < best_err:
-            best_err = err
-            best_tau = tau
+    
+    for alpha in alphas:
+        for iters in iters_list:
+            denoised = iterative_sfe_denoise_2d(noisy, alpha, iters)
+            curr_err = l2_error(denoised, ref)
+            if curr_err < best_err:
+                best_err = curr_err
+                best_alpha = alpha
+                best_iters = iters
 
     best_ratio = base_err / best_err if best_err > 0.0 else np.inf
-    print("sweep_tau_navierstokes")
-    print("base_l2_error", base_err)
-    print("best_tau", best_tau)
-    print("best_sfe_l2_error", best_err)
-    print("best_improvement_factor", best_ratio)
+    
+    print("\n=== Sweep Parameters (Navier-Stokes) ===")
+    print(f"grid: {n}x{n}")
+    print(f"base_l2_error: {base_err:.6f}")
+    print(f"best_alpha: {best_alpha:.2f}")
+    print(f"best_iterations: {best_iters}")
+    print(f"best_sfe_l2_error: {best_err:.6f}")
+    print(f"best_improvement_factor: {best_ratio:.4f}")
 
 
 if __name__ == "__main__":
     run_experiment()
-    sweep_tau()
-
-
+    sweep_params()

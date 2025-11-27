@@ -10,21 +10,35 @@ def add_noise(values: np.ndarray, noise_level: float, seed: int) -> np.ndarray:
     return values + noise_level * rng.standard_normal(values.shape)
 
 
-def build_sfe_kernel_1d(n: int, lam: float, tau: float) -> np.ndarray:
-    k = 2.0 * np.pi * np.fft.fftfreq(n, d=1.0 / n)
-    k2 = k * k
-    k4 = k2 * k2
-    factor = np.exp(-(k2 + lam * k4) * tau)
-    return factor
-
-
-def sfe_smooth_1d(values: np.ndarray, lam: float, tau: float) -> np.ndarray:
+def compute_curvature(values: np.ndarray) -> np.ndarray:
     n = values.shape[0]
-    factor = build_sfe_kernel_1d(n, lam, tau)
-    vk = np.fft.fft(values)
-    vk *= factor
-    smoothed = np.fft.ifft(vk).real
-    return smoothed
+    curv = np.zeros(n)
+    for i in range(1, n - 1):
+        curv[i] = values[i - 1] - 2 * values[i] + values[i + 1]
+    curv[0] = curv[1]
+    curv[-1] = curv[-2]
+    return curv
+
+
+def sfe_curvature_denoise(values: np.ndarray, alpha: float) -> np.ndarray:
+    curv = compute_curvature(values)
+    curv_abs = np.abs(curv)
+    threshold = np.percentile(curv_abs, 75)
+    high_curv_mask = curv_abs > threshold
+    
+    result = values.copy()
+    for i in range(1, len(values) - 1):
+        if high_curv_mask[i]:
+            neighbor_avg = 0.5 * (values[i - 1] + values[i + 1])
+            result[i] = (1 - alpha) * values[i] + alpha * neighbor_avg
+    return result
+
+
+def iterative_sfe_denoise(values: np.ndarray, alpha: float, iterations: int) -> np.ndarray:
+    result = values.copy()
+    for _ in range(iterations):
+        result = sfe_curvature_denoise(result, alpha)
+    return result
 
 
 def rms_error(a: np.ndarray, b: np.ndarray) -> float:
@@ -43,29 +57,27 @@ def run_experiment():
 
     noise_level = 0.02
     seed = 777
-    lam = 0.01
-    target_atten = 0.98
-    tau = -np.log(target_atten) / (1.0 + lam)
+    alpha = 0.5
+    iterations = 3
 
     noisy = add_noise(h_true, noise_level, seed)
     base_rms = rms_error(noisy, h_true)
 
-    # SFE: 허블 곡선 자체가 아니라, "관측 오차장"만 평탄화
-    error_h = noisy - h_true
-    smooth_error = sfe_smooth_1d(error_h, lam, tau)
-    h_sfe = noisy - smooth_error
+    h_sfe = iterative_sfe_denoise(noisy, alpha, iterations)
     sfe_rms = rms_error(h_sfe, h_true)
 
     ratio = base_rms / sfe_rms if sfe_rms > 0.0 else np.inf
 
-    print("n_points", n)
-    print("noise_level", noise_level)
-    print("base_rms_error", base_rms)
-    print("sfe_rms_error", sfe_rms)
-    print("improvement_factor", ratio)
+    print("=== Dark Energy Hubble Curve SFE Verification ===")
+    print(f"n_points: {n}")
+    print(f"noise_level: {noise_level}")
+    print(f"alpha: {alpha}, iterations: {iterations}")
+    print(f"base_rms_error: {base_rms:.6f}")
+    print(f"sfe_rms_error: {sfe_rms:.6f}")
+    print(f"improvement_factor: {ratio:.4f}")
 
 
-def sweep_tau():
+def sweep_params():
     n = 256
     a = np.linspace(0.1, 1.0, n)
     h0 = 1.0
@@ -76,34 +88,37 @@ def sweep_tau():
 
     noise_level = 0.02
     seed = 777
-    lam = 0.01
 
     noisy = add_noise(h_true, noise_level, seed)
     base_rms = rms_error(noisy, h_true)
 
-    taus = np.linspace(0.0, 2.0, 41)
-    best_tau = 0.0
+    alphas = np.linspace(0.1, 0.9, 9)
+    iters_list = [1, 2, 3, 5, 10]
+    
+    best_alpha = 0.1
+    best_iters = 1
     best_rms = base_rms
-    for tau in taus:
-        error_h = noisy - h_true
-        smooth_error = sfe_smooth_1d(error_h, lam, tau)
-        h_sfe = noisy - smooth_error
-        curr_rms = rms_error(h_sfe, h_true)
-        if curr_rms < best_rms:
-            best_rms = curr_rms
-            best_tau = tau
+    
+    for alpha in alphas:
+        for iters in iters_list:
+            h_sfe = iterative_sfe_denoise(noisy, alpha, iters)
+            curr_rms = rms_error(h_sfe, h_true)
+            if curr_rms < best_rms:
+                best_rms = curr_rms
+                best_alpha = alpha
+                best_iters = iters
 
     best_ratio = base_rms / best_rms if best_rms > 0.0 else np.inf
-    print("sweep_tau_darkenergy")
-    print("n_points", n)
-    print("base_rms_error", base_rms)
-    print("best_tau", best_tau)
-    print("best_sfe_rms_error", best_rms)
-    print("best_improvement_factor", best_ratio)
+    
+    print("\n=== Sweep Parameters (Dark Energy) ===")
+    print(f"n_points: {n}")
+    print(f"base_rms_error: {base_rms:.6f}")
+    print(f"best_alpha: {best_alpha:.2f}")
+    print(f"best_iterations: {best_iters}")
+    print(f"best_sfe_rms_error: {best_rms:.6f}")
+    print(f"best_improvement_factor: {best_ratio:.4f}")
 
 
 if __name__ == "__main__":
     run_experiment()
-    sweep_tau()
-
-
+    sweep_params()
