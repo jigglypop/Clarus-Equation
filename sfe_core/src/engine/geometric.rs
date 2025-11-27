@@ -94,7 +94,8 @@ impl GeometricEngine {
         let mut trajectory = Vec::new();
         
         // 목표 생존율 (Maginot Line) - 조기 경보를 위해 0.98로 상향
-        let target_suppression = 0.98;
+        let _target_suppression = 0.98;
+        let maginot_line = 0.90;
         
         for _ in 0..steps {
             // 1. 이동 후보 위치 계산 (Predictor)
@@ -104,9 +105,9 @@ impl GeometricEngine {
             let r_cand = self.manifold.ricci_scalar(&x_cand);
             let supp_cand = (-r_cand).exp();
             
-            // 3. 마지노선(90%) 사수 로직 (Hard Constraint)
-            // 90% 미만으로 떨어질 위치라면 이동을 거부하고 반사시킴 (Quantum Zeno / Hard Wall)
-            if supp_cand < 0.90 {
+            // 3. 마지노선 사수 로직 (Hard Constraint)
+            // 마지노선 미만으로 떨어질 위치라면 이동을 거부하고 반사시킴 (Quantum Zeno / Hard Wall)
+            if supp_cand < maginot_line {
                 // [Reject] 이동 거부 및 운동량 반전
                 for i in 0..dim {
                     // 벽에 부딪힌 것처럼 운동량 반전 (Energy dissipation included)

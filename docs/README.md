@@ -25,6 +25,9 @@
 - 34장 ε(t) 시간진화/BBN 양립: ../34_SFE_시간진화_완전검증.md
 - 35장 전체 관측 정량검증: ../35_SFE_전체관측_정량검증.md
 
+## 공학/응용
+- 공학 응용 및 시스템 설계 개요: ./SFE_공학응용_및_시스템설계.md
+
 ## 계산/노트북
 - 수치/검증 스크립트: ../SFE_verification.py
 - 종합 평가 노트북: ../SFE_comprehensive_evaluation.ipynb

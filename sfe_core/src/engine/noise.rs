@@ -3,13 +3,15 @@ use rand_distr::StandardNormal;
 use rustfft::{FftPlanner, num_complex::Complex, Fft};
 use rustfft::num_traits::Zero;
 use std::sync::Arc;
+use crate::engine::suppression_filter::LyapunovSuppressionFilter;
 
 pub struct PinkNoiseGenerator {
     fft: Arc<dyn Fft<f64>>,
     steps: usize,
     spectrum_buffer: Vec<Complex<f64>>,
-    alpha: f64, // 1/f^alpha (기본값 1.0)
-    scale: f64, // 전체 진폭 스케일링
+    alpha: f64,
+    scale: f64,
+    suppression_filter: Option<LyapunovSuppressionFilter>,
 }
 
 impl PinkNoiseGenerator {
@@ -18,6 +20,20 @@ impl PinkNoiseGenerator {
     }
 
     pub fn new_with_params(steps: usize, alpha: f64, scale: f64) -> Self {
+        let sup_alpha_env = std::env::var("SFE_LYAP_SUP_ALPHA")
+            .ok()
+            .and_then(|v| v.parse().ok());
+        let sup_gamma_env = std::env::var("SFE_LYAP_SUP_GAMMA")
+            .ok()
+            .and_then(|v| v.parse().ok());
+
+        let suppression_filter = match (sup_alpha_env, sup_gamma_env) {
+            (Some(a), Some(g)) if a > 0.0 && g > 0.0 => {
+                Some(LyapunovSuppressionFilter::new(a, g))
+            }
+            _ => None,
+        };
+
         let mut planner = FftPlanner::new();
         let fft = planner.plan_fft_inverse(steps);
         Self {
@@ -26,10 +42,37 @@ impl PinkNoiseGenerator {
             spectrum_buffer: vec![Complex::zero(); steps],
             alpha,
             scale,
+            suppression_filter,
         }
     }
 
-    /// IFFT를 사용하여 1/f^alpha 노이즈 생성
+    pub fn new_with_lyapunov_suppression(
+        steps: usize,
+        alpha: f64,
+        scale: f64,
+        sup_alpha: f64,
+        sup_gamma: f64,
+    ) -> Self {
+        let mut planner = FftPlanner::new();
+        let fft = planner.plan_fft_inverse(steps);
+        Self {
+            fft,
+            steps,
+            spectrum_buffer: vec![Complex::zero(); steps],
+            alpha,
+            scale,
+            suppression_filter: Some(LyapunovSuppressionFilter::new(sup_alpha, sup_gamma)),
+        }
+    }
+
+    pub fn set_suppression(&mut self, sup_alpha: f64, sup_gamma: f64) {
+        self.suppression_filter = Some(LyapunovSuppressionFilter::new(sup_alpha, sup_gamma));
+    }
+
+    pub fn disable_suppression(&mut self) {
+        self.suppression_filter = None;
+    }
+
     pub fn generate(&mut self, output: &mut [f64]) {
         if output.len() != self.steps {
             panic!("출력 버퍼 길이는 생성기 스텝과 일치해야 합니다");
@@ -38,13 +81,11 @@ impl PinkNoiseGenerator {
         let mut rng = thread_rng();
         let steps = self.steps;
         
-        // DC 성분
         let dc_real: f64 = rng.sample(StandardNormal);
         self.spectrum_buffer[0] = Complex::new(dc_real * (steps as f64).sqrt() * self.scale, 0.0);
         
         for i in 1..steps {
             let f = if i <= steps/2 { i as f64 } else { (steps - i) as f64 };
-            // 전력 ~ 1/f^alpha => 진폭 ~ 1/f^(alpha/2)
             let amplitude = self.scale / f.powf(self.alpha / 2.0); 
             
             let real: f64 = rng.sample(StandardNormal);
@@ -57,6 +98,10 @@ impl PinkNoiseGenerator {
         
         for (i, val) in self.spectrum_buffer.iter().enumerate() {
             output[i] = val.re;
+        }
+
+        if let Some(ref filter) = self.suppression_filter {
+            filter.apply_to_signal(output);
         }
     }
     
