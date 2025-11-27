@@ -15,7 +15,7 @@ use wgpu::util::DeviceExt;
 use glam::{Mat4, Vec3};
 
 use crate::shaders::*;
-use crate::mesh::{Mesh, Vertex, create_cube, create_sphere};
+use crate::mesh::{Mesh, Vertex, create_cube, create_sphere, create_island};
 use crate::camera::Camera;
 use crate::uniforms::*;
 use crate::scene::{SceneObject, create_demo_scene};
@@ -69,6 +69,7 @@ struct GpuState {
     config: wgpu::SurfaceConfiguration,
     
     shadow_pipeline: wgpu::RenderPipeline,
+    skinned_shadow_pipeline: wgpu::RenderPipeline,
     sfe_compute_pipeline: wgpu::ComputePipeline,
     mesh_pipeline: wgpu::RenderPipeline,
     floor_pipeline: wgpu::RenderPipeline,
@@ -400,6 +401,11 @@ impl GpuState {
             bind_group_layouts: &[&skinned_bgl, &sfe_shadow_bgl],
             push_constant_ranges: &[],
         });
+        let skinned_shadow_pl = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
+            label: Some("skinned_shadow_pl"),
+            bind_group_layouts: &[&skinned_bgl],
+            push_constant_ranges: &[],
+        });
         let bloom_pl = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor { 
             label: None, 
             bind_group_layouts: &[&bloom_bgl], 
@@ -442,7 +448,10 @@ impl GpuState {
             label: None,
             source: wgpu::ShaderSource::Wgsl(SKINNED_MESH_SHADER.into()),
         });
-
+        let skinned_shadow_shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
+            label: None,
+            source: wgpu::ShaderSource::Wgsl(SKINNED_SHADOW_SHADER.into()),
+        });
         let shadow_pipeline = device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
             label: None, 
             layout: Some(&shadow_pl),
@@ -470,6 +479,36 @@ impl GpuState {
             depth_stencil: None, 
             multisample: Default::default(), 
             multiview: None, 
+            cache: None,
+        });
+
+        let skinned_shadow_pipeline = device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
+            label: Some("skinned_shadow"),
+            layout: Some(&skinned_shadow_pl),
+            vertex: wgpu::VertexState {
+                module: &skinned_shadow_shader,
+                entry_point: Some("vs_skinned_shadow"),
+                buffers: &[SkinnedVertex::desc()],
+                compilation_options: Default::default(),
+            },
+            fragment: Some(wgpu::FragmentState {
+                module: &skinned_shadow_shader,
+                entry_point: Some("fs_skinned_shadow"),
+                targets: &[Some(wgpu::ColorTargetState {
+                    format: wgpu::TextureFormat::R32Float,
+                    blend: None,
+                    write_mask: wgpu::ColorWrites::ALL,
+                })],
+                compilation_options: Default::default(),
+            }),
+            primitive: wgpu::PrimitiveState {
+                topology: wgpu::PrimitiveTopology::TriangleList,
+                cull_mode: Some(wgpu::Face::Back),
+                ..Default::default()
+            },
+            depth_stencil: None,
+            multisample: Default::default(),
+            multiview: None,
             cache: None,
         });
 
@@ -708,12 +747,12 @@ impl GpuState {
             cache: None,
         });
 
-        let meshes = vec![create_cube(&device, 1.0), create_sphere(&device, 0.5, 20)];
+        let meshes = vec![create_cube(&device, 1.0), create_sphere(&device, 0.5, 20), create_island(&device, 1.0, 0.1, 32)];
         let objects = create_demo_scene();
 
         Ok(Self {
             surface, device, queue, config,
-            shadow_pipeline, sfe_compute_pipeline, mesh_pipeline, floor_pipeline, 
+            shadow_pipeline, skinned_shadow_pipeline, sfe_compute_pipeline, mesh_pipeline, floor_pipeline, 
             water_pipeline, grass_pipeline, particle_pipeline, bloom_pipeline, skinned_pipeline,
             uniform_buffer, instance_buffer, sfe_params_buffer, bloom_params_buffer, skin_buffer,
             main_bind_group, skinned_bind_group, sfe_compute_bind_group, sfe_shadow_bind_group, bloom_bind_group,
@@ -829,6 +868,16 @@ impl GpuState {
                 pass.set_vertex_buffer(0, mesh.vertex_buffer.slice(..));
                 pass.set_index_buffer(mesh.index_buffer.slice(..), wgpu::IndexFormat::Uint32);
                 pass.draw_indexed(0..mesh.num_indices, 0, i as u32..i as u32 + 1);
+            }
+            
+            if let Some(ref model) = self.gltf_model {
+                pass.set_pipeline(&self.skinned_shadow_pipeline);
+                pass.set_bind_group(0, &self.skinned_bind_group, &[]);
+                for mesh in &model.meshes {
+                    pass.set_vertex_buffer(0, mesh.vertex_buffer.slice(..));
+                    pass.set_index_buffer(mesh.index_buffer.slice(..), wgpu::IndexFormat::Uint32);
+                    pass.draw_indexed(0..mesh.num_indices, 0, 0..1);
+                }
             }
         }
 

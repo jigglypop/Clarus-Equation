@@ -102,11 +102,25 @@ fn sfe_shadow_sample(shadow_pos: vec4<f32>) -> f32 {
     let proj = shadow_pos.xyz / shadow_pos.w;
     let uv = vec2<f32>(proj.x * 0.5 + 0.5, 1.0 - (proj.y * 0.5 + 0.5));
     let size = i32(u.shadow_size);
-    let px = vec2<i32>(i32(uv.x * f32(size)), i32(uv.y * f32(size)));
-    let stored_depth = textureLoad(sfe_shadow, clamp(px, vec2(0), vec2(size - 1)), 0).r;
-    let current_depth = proj.z - 0.002;
+    
+    var shadow_sum = 0.0;
+    let pcf_radius = 3;
+    var sample_count = 0.0;
+    
+    for (var dy = -pcf_radius; dy <= pcf_radius; dy++) {
+        for (var dx = -pcf_radius; dx <= pcf_radius; dx++) {
+            let offset = vec2<i32>(dx, dy);
+            let px = vec2<i32>(i32(uv.x * f32(size)), i32(uv.y * f32(size))) + offset;
+            let stored_depth = textureLoad(sfe_shadow, clamp(px, vec2(0), vec2(size - 1)), 0).r;
+            let current_depth = proj.z - 0.003;
+            shadow_sum += select(0.0, 1.0, current_depth <= stored_depth);
+            sample_count += 1.0;
+        }
+    }
+    
+    let shadow = shadow_sum / sample_count;
     let in_bounds = uv.x >= 0.0 && uv.x <= 1.0 && uv.y >= 0.0 && uv.y <= 1.0;
-    return select(1.0, select(0.2, 1.0, current_depth <= stored_depth), in_bounds);
+    return select(1.0, mix(0.15, 1.0, shadow), in_bounds);
 }
 
 @fragment
@@ -156,18 +170,32 @@ fn sfe_shadow_floor(shadow_pos: vec4<f32>) -> f32 {
     let proj = shadow_pos.xyz / shadow_pos.w;
     let uv = vec2<f32>(proj.x * 0.5 + 0.5, 1.0 - (proj.y * 0.5 + 0.5));
     let size = i32(u.shadow_size);
-    let px = vec2<i32>(i32(uv.x * f32(size)), i32(uv.y * f32(size)));
-    let stored_depth = textureLoad(sfe_shadow, clamp(px, vec2(0), vec2(size - 1)), 0).r;
-    let current_depth = proj.z - 0.001;
+    
+    var shadow_sum = 0.0;
+    let pcf_radius = 4;
+    var sample_count = 0.0;
+    
+    for (var dy = -pcf_radius; dy <= pcf_radius; dy++) {
+        for (var dx = -pcf_radius; dx <= pcf_radius; dx++) {
+            let offset = vec2<i32>(dx, dy);
+            let px = vec2<i32>(i32(uv.x * f32(size)), i32(uv.y * f32(size))) + offset;
+            let stored_depth = textureLoad(sfe_shadow, clamp(px, vec2(0), vec2(size - 1)), 0).r;
+            let current_depth = proj.z - 0.003;
+            shadow_sum += select(0.0, 1.0, current_depth <= stored_depth);
+            sample_count += 1.0;
+        }
+    }
+    
+    let shadow = shadow_sum / sample_count;
     let in_bounds = uv.x >= 0.0 && uv.x <= 1.0 && uv.y >= 0.0 && uv.y <= 1.0;
-    return select(1.0, select(0.25, 1.0, current_depth <= stored_depth), in_bounds);
+    return select(1.0, mix(0.1, 1.0, shadow), in_bounds);
 }
 
 @fragment
 fn fs_floor(in: VertexOutput) -> @location(0) vec4<f32> {
     let tile = 2.0;
     let checker = (i32(floor(in.world_pos.x / tile)) + i32(floor(in.world_pos.z / tile))) % 2;
-    let base = select(vec3<f32>(0.08, 0.09, 0.12), vec3<f32>(0.12, 0.13, 0.16), checker == 0);
+    let base = select(vec3<f32>(0.15, 0.16, 0.2), vec3<f32>(0.2, 0.21, 0.25), checker == 0);
     
     let bump_scale = 5.0;
     let e = 0.08;
@@ -181,18 +209,21 @@ fn fs_floor(in: VertexOutput) -> @location(0) vec4<f32> {
     let H = normalize(L + V);
     let shadow = sfe_shadow_floor(in.shadow_pos);
     
-    let ambient = 0.1;
-    let diffuse = max(dot(N, L), 0.0) * 0.4 * shadow;
-    let spec = pow(max(dot(N, H), 0.0), 64.0) * 0.5 * shadow;
-    let fresnel = pow(1.0 - max(dot(N, V), 0.0), 4.0) * 0.15;
+    let ambient = 0.15;
+    let diffuse = max(dot(N, L), 0.0) * 0.5 * shadow;
+    let spec = pow(max(dot(N, H), 0.0), 64.0) * 0.4 * shadow;
+    let fresnel = pow(1.0 - max(dot(N, V), 0.0), 4.0) * 0.1;
     
     var color = base * (ambient + diffuse) + vec3<f32>(spec + fresnel);
+    
+    let shadow_tint = vec3<f32>(0.01, 0.01, 0.02);
+    color = mix(shadow_tint, color, shadow * 0.85 + 0.15);
     
     let grid = 1.0; let lw = 0.008;
     let gx = abs(fract(in.world_pos.x / grid + 0.5) - 0.5) * grid;
     let gz = abs(fract(in.world_pos.z / grid + 0.5) - 0.5) * grid;
     let line = 1.0 - smoothstep(0.0, lw, min(gx, gz));
-    color = mix(color, vec3<f32>(0.15, 0.4, 0.6), line * 0.4);
+    color = mix(color, vec3<f32>(0.15, 0.4, 0.6), line * 0.3 * shadow);
     
     let dist = length(u.camera_pos.xyz - in.world_pos);
     let fog = clamp((dist - u.fog_start) / (u.fog_end - u.fog_start), 0.0, 1.0);
@@ -370,6 +401,83 @@ fn fs_particle(in: VertexOutput) -> @location(0) vec4<f32> {
 }
 "#;
 
+pub const SKINNED_SHADOW_SHADER: &str = r#"
+struct GlobalUniforms { 
+    view_proj: mat4x4<f32>, 
+    light_view_proj: mat4x4<f32>, 
+    light_dir: vec4<f32>, 
+    camera_pos: vec4<f32>, 
+    fog_color: vec4<f32>, 
+    time: f32, 
+    fog_start: f32, 
+    fog_end: f32, 
+    sfe_lambda: f32, 
+    sfe_tau: f32, 
+    shadow_size: f32,
+}
+@group(0) @binding(0) var<uniform> u: GlobalUniforms;
+
+struct SkinUniforms {
+    joint_matrices: array<mat4x4<f32>, 128>,
+    num_joints: u32,
+}
+@group(0) @binding(2) var<uniform> skin: SkinUniforms;
+
+struct VertexInput {
+    @location(0) position: vec3<f32>,
+    @location(1) normal: vec3<f32>,
+    @location(2) uv: vec2<f32>,
+    @location(3) joints: vec4<u32>,
+    @location(4) weights: vec4<f32>,
+}
+
+struct VertexOutput {
+    @builtin(position) clip_position: vec4<f32>,
+    @location(0) depth: f32,
+}
+
+@vertex
+fn vs_skinned_shadow(in: VertexInput) -> VertexOutput {
+    let scale = 0.018;
+    let model_matrix = mat4x4<f32>(
+        vec4<f32>(scale, 0.0, 0.0, 0.0),
+        vec4<f32>(0.0, scale, 0.0, 0.0),
+        vec4<f32>(0.0, 0.0, scale, 0.0),
+        vec4<f32>(0.0, 0.25, 0.0, 1.0)
+    );
+    
+    var skin_matrix = mat4x4<f32>(
+        vec4<f32>(1.0, 0.0, 0.0, 0.0),
+        vec4<f32>(0.0, 1.0, 0.0, 0.0),
+        vec4<f32>(0.0, 0.0, 1.0, 0.0),
+        vec4<f32>(0.0, 0.0, 0.0, 1.0)
+    );
+    
+    let total_weight = in.weights.x + in.weights.y + in.weights.z + in.weights.w;
+    if total_weight > 0.001 && skin.num_joints > 0u {
+        skin_matrix = mat4x4<f32>(
+            vec4<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0), vec4<f32>(0.0)
+        );
+        skin_matrix += skin.joint_matrices[in.joints.x] * in.weights.x;
+        skin_matrix += skin.joint_matrices[in.joints.y] * in.weights.y;
+        skin_matrix += skin.joint_matrices[in.joints.z] * in.weights.z;
+        skin_matrix += skin.joint_matrices[in.joints.w] * in.weights.w;
+    }
+    
+    let world_pos = model_matrix * skin_matrix * vec4<f32>(in.position, 1.0);
+    
+    var out: VertexOutput;
+    out.clip_position = u.light_view_proj * world_pos;
+    out.depth = out.clip_position.z / out.clip_position.w;
+    return out;
+}
+
+@fragment
+fn fs_skinned_shadow(in: VertexOutput) -> @location(0) vec4<f32> {
+    return vec4<f32>(in.depth, 0.0, 0.0, 1.0);
+}
+"#;
+
 pub const SKINNED_MESH_SHADER: &str = r#"
 struct GlobalUniforms { view_proj: mat4x4<f32>, light_view_proj: mat4x4<f32>, light_dir: vec4<f32>, camera_pos: vec4<f32>, fog_color: vec4<f32>, time: f32, fog_start: f32, fog_end: f32, sfe_lambda: f32, sfe_tau: f32, shadow_size: f32, }
 @group(0) @binding(0) var<uniform> u: GlobalUniforms;
@@ -400,12 +508,12 @@ struct VertexOutput {
 
 @vertex
 fn vs_skinned(in: VertexInput) -> VertexOutput {
-    let scale = 0.015;
+    let scale = 0.018;
     let model_matrix = mat4x4<f32>(
         vec4<f32>(scale, 0.0, 0.0, 0.0),
         vec4<f32>(0.0, scale, 0.0, 0.0),
         vec4<f32>(0.0, 0.0, scale, 0.0),
-        vec4<f32>(0.0, 0.0, 0.0, 1.0)
+        vec4<f32>(0.0, 0.25, 0.0, 1.0)
     );
     
     var skin_matrix = mat4x4<f32>(
@@ -442,11 +550,54 @@ fn sfe_shadow_skinned(shadow_pos: vec4<f32>) -> f32 {
     let proj = shadow_pos.xyz / shadow_pos.w;
     let uv = vec2<f32>(proj.x * 0.5 + 0.5, 1.0 - (proj.y * 0.5 + 0.5));
     let size = i32(u.shadow_size);
-    let px = vec2<i32>(i32(uv.x * f32(size)), i32(uv.y * f32(size)));
-    let stored_depth = textureLoad(sfe_shadow, clamp(px, vec2(0), vec2(size - 1)), 0).r;
-    let current_depth = proj.z - 0.003;
+    
+    var shadow_sum = 0.0;
+    let pcf_radius = 3;
+    var sample_count = 0.0;
+    
+    for (var dy = -pcf_radius; dy <= pcf_radius; dy++) {
+        for (var dx = -pcf_radius; dx <= pcf_radius; dx++) {
+            let offset = vec2<i32>(dx, dy);
+            let px = vec2<i32>(i32(uv.x * f32(size)), i32(uv.y * f32(size))) + offset;
+            let stored_depth = textureLoad(sfe_shadow, clamp(px, vec2(0), vec2(size - 1)), 0).r;
+            let current_depth = proj.z - 0.004;
+            shadow_sum += select(0.0, 1.0, current_depth <= stored_depth);
+            sample_count += 1.0;
+        }
+    }
+    
+    let shadow = shadow_sum / sample_count;
     let in_bounds = uv.x >= 0.0 && uv.x <= 1.0 && uv.y >= 0.0 && uv.y <= 1.0;
-    return select(1.0, select(0.3, 1.0, current_depth <= stored_depth), in_bounds);
+    return select(1.0, mix(0.2, 1.0, shadow), in_bounds);
+}
+
+fn sfe_contact_shadow(world_pos: vec3<f32>, light_dir: vec3<f32>) -> f32 {
+    let ground_y = 0.0;
+    let shadow_pos = world_pos - light_dir * (world_pos.y - ground_y) / max(light_dir.y, 0.001);
+    let dist_to_shadow = length(shadow_pos.xz - world_pos.xz);
+    let height_factor = clamp(world_pos.y * 2.0, 0.0, 1.0);
+    return 1.0 - exp(-dist_to_shadow * 0.5) * height_factor * 0.3;
+}
+
+fn sfe_sss(NdotL: f32, thickness: f32, lambda: f32) -> f32 {
+    let wrap = 0.5;
+    let scatter = max(0.0, (NdotL + wrap) / (1.0 + wrap));
+    let sss_falloff = exp(-lambda * thickness * thickness);
+    return scatter * sss_falloff * 0.4;
+}
+
+fn sfe_fresnel(NdotV: f32, lambda: f32) -> f32 {
+    let base = 1.0 - NdotV;
+    let fresnel = base * base * base;
+    let sfe_smooth = exp(-lambda * fresnel * fresnel * 4.0);
+    return fresnel * sfe_smooth * 0.6;
+}
+
+fn sfe_rim(NdotV: f32, NdotL: f32, lambda: f32) -> f32 {
+    let rim = pow(1.0 - NdotV, 3.0);
+    let light_rim = max(0.0, -NdotL + 0.3);
+    let sfe_damp = exp(-lambda * rim * 2.0);
+    return rim * light_rim * sfe_damp * 1.5;
 }
 
 @fragment
@@ -456,25 +607,44 @@ fn fs_skinned(in: VertexOutput) -> @location(0) vec4<f32> {
     let V = normalize(u.camera_pos.xyz - in.world_pos);
     let H = normalize(L + V);
     
+    let NdotL = dot(N, L);
+    let NdotV = max(dot(N, V), 0.001);
+    let NdotH = max(dot(N, H), 0.0);
+    
     let shadow = sfe_shadow_skinned(in.shadow_pos);
     
     let uv = in.uv;
-    let checker = floor(uv.x * 8.0) + floor(uv.y * 8.0);
-    let pattern = fract(checker * 0.5) * 2.0;
+    let fur_pattern = sin(uv.x * 40.0) * sin(uv.y * 40.0) * 0.1 + 0.9;
     
-    let orange = vec3<f32>(0.95, 0.5, 0.2);
-    let cream = vec3<f32>(0.98, 0.92, 0.85);
-    let base_color = mix(orange, cream, pattern * 0.3);
+    let orange = vec3<f32>(0.95, 0.55, 0.15);
+    let cream = vec3<f32>(0.98, 0.9, 0.8);
+    let dark = vec3<f32>(0.3, 0.15, 0.05);
     
-    let ambient = 0.25;
-    let diffuse = max(dot(N, L), 0.0) * 0.65 * shadow;
-    let specular = pow(max(dot(N, H), 0.0), 16.0) * 0.15 * shadow;
+    let height_blend = clamp(in.world_pos.y * 0.5 + 0.5, 0.0, 1.0);
+    var base_color = mix(dark, orange, height_blend);
+    base_color = mix(base_color, cream, clamp(uv.y * 0.3, 0.0, 0.3));
+    base_color *= fur_pattern;
     
-    var color = base_color * (ambient + diffuse) + vec3<f32>(specular);
+    let sss = sfe_sss(NdotL, 0.3, u.sfe_lambda);
+    let fresnel = sfe_fresnel(NdotV, u.sfe_lambda);
+    let rim = sfe_rim(NdotV, NdotL, u.sfe_lambda);
+    
+    let ambient = 0.15;
+    let diffuse = max(NdotL, 0.0) * 0.5 * shadow;
+    let specular = pow(NdotH, 32.0) * 0.25 * shadow;
+    
+    var color = base_color * (ambient + diffuse + sss);
+    color += vec3<f32>(specular);
+    color += base_color * fresnel * 0.3;
+    color += vec3<f32>(1.0, 0.8, 0.5) * rim * shadow;
+    
+    let emission = max(0.0, color.r - 0.7) * 0.5;
+    color += vec3<f32>(emission * 0.8, emission * 0.4, emission * 0.1);
     
     let dist = length(u.camera_pos.xyz - in.world_pos);
-    let fog = clamp((dist - u.fog_start) / (u.fog_end - u.fog_start), 0.0, 1.0);
-    color = mix(color, u.fog_color.rgb, fog);
+    let fog_factor = 1.0 - exp(-u.sfe_tau * dist * dist * 0.001);
+    let fog = clamp(fog_factor, 0.0, 0.8);
+    color = mix(color, u.fog_color.rgb * 1.2, fog);
     
     return vec4<f32>(color, 1.0);
 }

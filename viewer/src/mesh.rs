@@ -91,3 +91,35 @@ pub fn create_sphere(device: &wgpu::Device, radius: f32, seg: u32) -> Mesh {
     }
 }
 
+pub fn create_island(device: &wgpu::Device, radius: f32, _height: f32, seg: u32) -> Mesh {
+    let mut vertices = Vec::new();
+    let mut indices = Vec::new();
+    
+    vertices.push(Vertex { position: [0.0, 0.0, 0.0], normal: [0.0, 1.0, 0.0], color: [1.0, 1.0, 1.0] });
+    for i in 0..=seg {
+        let angle = i as f32 * 2.0 * std::f32::consts::PI / seg as f32;
+        let x = angle.cos() * radius;
+        let z = angle.sin() * radius;
+        vertices.push(Vertex { position: [x, 0.0, z], normal: [0.0, 1.0, 0.0], color: [1.0, 1.0, 1.0] });
+    }
+    for i in 0..seg {
+        indices.push(0);
+        indices.push(i + 2);
+        indices.push(i + 1);
+    }
+    
+    Mesh {
+        vertex_buffer: device.create_buffer_init(&wgpu::util::BufferInitDescriptor { 
+            label: None, 
+            contents: bytemuck::cast_slice(&vertices), 
+            usage: wgpu::BufferUsages::VERTEX 
+        }),
+        index_buffer: device.create_buffer_init(&wgpu::util::BufferInitDescriptor { 
+            label: None, 
+            contents: bytemuck::cast_slice(&indices), 
+            usage: wgpu::BufferUsages::INDEX 
+        }),
+        num_indices: indices.len() as u32,
+    }
+}
+
