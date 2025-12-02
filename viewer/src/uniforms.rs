@@ -40,6 +40,7 @@ pub struct BloomParams {
     pub height: f32,
     pub bloom_intensity: f32,
     pub bloom_threshold: f32,
-    pub _pad: [f32; 2],
+    pub time: f32,
+    pub light_dir_y: f32,
 }
 

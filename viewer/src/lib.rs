@@ -29,8 +29,10 @@ extern "C" {
 
 const SHADOW_SIZE: u32 = 128;
 const MAX_INSTANCES: usize = 128;
-const GRASS_INSTANCES: u32 = 1600;
-const PARTICLE_INSTANCES: u32 = 200;
+const GRASS_INSTANCES: u32 = 120000;
+const SAND_INSTANCES: u32 = 80000;
+const SNOW_INSTANCES: u32 = 5000000;
+const FIRE_INSTANCES: u32 = 8000;
 
 struct InputState { 
     mouse_down: bool, 
@@ -40,22 +42,37 @@ struct InputState {
 
 struct Benchmark {
     frame_count: u32,
+    total_frames: u64,
     last_time: f64,
     fps: f32,
     frame_time_ms: f32,
+    avg_fps: f32,
+    fps_samples: Vec<f32>,
 }
 
 impl Benchmark {
     fn new() -> Self {
-        Self { frame_count: 0, last_time: 0.0, fps: 0.0, frame_time_ms: 0.0 }
+        Self { 
+            frame_count: 0, 
+            total_frames: 0,
+            last_time: 0.0, 
+            fps: 0.0, 
+            frame_time_ms: 0.0,
+            avg_fps: 0.0,
+            fps_samples: Vec::with_capacity(60),
+        }
     }
 
     fn update(&mut self, now: f64) {
         self.frame_count += 1;
+        self.total_frames += 1;
         let elapsed = now - self.last_time;
         if elapsed >= 1000.0 {
             self.fps = self.frame_count as f32 / (elapsed as f32 / 1000.0);
             self.frame_time_ms = elapsed as f32 / self.frame_count as f32;
+            if self.fps_samples.len() >= 60 { self.fps_samples.remove(0); }
+            self.fps_samples.push(self.fps);
+            self.avg_fps = self.fps_samples.iter().sum::<f32>() / self.fps_samples.len() as f32;
             self.frame_count = 0;
             self.last_time = now;
         }
@@ -78,6 +95,13 @@ struct GpuState {
     particle_pipeline: wgpu::RenderPipeline,
     bloom_pipeline: wgpu::RenderPipeline,
     skinned_pipeline: wgpu::RenderPipeline,
+    sand_pipeline: wgpu::RenderPipeline,
+    flag_pipeline: wgpu::RenderPipeline,
+    snow_pipeline: wgpu::RenderPipeline,
+    fire_pipeline: wgpu::RenderPipeline,
+    ssao_pipeline: wgpu::RenderPipeline,
+    volumetric_pipeline: wgpu::RenderPipeline,
+    atmosphere_pipeline: wgpu::RenderPipeline,
     
     uniform_buffer: wgpu::Buffer,
     instance_buffer: wgpu::Buffer,
@@ -198,10 +222,10 @@ impl GpuState {
         let bloom_params_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor { 
             label: None, 
             contents: bytemuck::cast_slice(&[BloomParams { 
-                sfe_lambda: 0.6, sfe_tau: 0.5, 
+                sfe_lambda: 0.5, sfe_tau: 0.4, 
                 width: w as f32, height: h as f32,
-                bloom_intensity: 1.5, bloom_threshold: 0.4,
-                _pad: [0.0; 2],
+                bloom_intensity: 1.8, bloom_threshold: 0.35,
+                time: 0.0, light_dir_y: -0.7,
             }]), 
             usage: wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST 
         });
@@ -747,13 +771,267 @@ impl GpuState {
             cache: None,
         });
 
+        let sand_shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
+            label: None,
+            source: wgpu::ShaderSource::Wgsl(SAND_SHADER.into()),
+        });
+        let sand_pipeline = device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
+            label: Some("sand"),
+            layout: Some(&shadow_pl),
+            vertex: wgpu::VertexState {
+                module: &sand_shader,
+                entry_point: Some("vs_sand"),
+                buffers: &[],
+                compilation_options: Default::default(),
+            },
+            fragment: Some(wgpu::FragmentState {
+                module: &sand_shader,
+                entry_point: Some("fs_sand"),
+                targets: &[Some(wgpu::ColorTargetState {
+                    format,
+                    blend: Some(wgpu::BlendState::ALPHA_BLENDING),
+                    write_mask: wgpu::ColorWrites::ALL,
+                })],
+                compilation_options: Default::default(),
+            }),
+            primitive: Default::default(),
+            depth_stencil: Some(wgpu::DepthStencilState {
+                format: wgpu::TextureFormat::Depth32Float,
+                depth_write_enabled: false,
+                depth_compare: wgpu::CompareFunction::Less,
+                stencil: Default::default(),
+                bias: Default::default(),
+            }),
+            multisample: Default::default(),
+            multiview: None,
+            cache: None,
+        });
+
+        let flag_shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
+            label: None,
+            source: wgpu::ShaderSource::Wgsl(FLAG_SHADER.into()),
+        });
+        let flag_pipeline = device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
+            label: Some("flag"),
+            layout: Some(&mesh_pl),
+            vertex: wgpu::VertexState {
+                module: &flag_shader,
+                entry_point: Some("vs_flag"),
+                buffers: &[],
+                compilation_options: Default::default(),
+            },
+            fragment: Some(wgpu::FragmentState {
+                module: &flag_shader,
+                entry_point: Some("fs_flag"),
+                targets: &[Some(wgpu::ColorTargetState {
+                    format,
+                    blend: Some(wgpu::BlendState::REPLACE),
+                    write_mask: wgpu::ColorWrites::ALL,
+                })],
+                compilation_options: Default::default(),
+            }),
+            primitive: wgpu::PrimitiveState {
+                topology: wgpu::PrimitiveTopology::TriangleList,
+                cull_mode: None,
+                ..Default::default()
+            },
+            depth_stencil: Some(wgpu::DepthStencilState {
+                format: wgpu::TextureFormat::Depth32Float,
+                depth_write_enabled: true,
+                depth_compare: wgpu::CompareFunction::Less,
+                stencil: Default::default(),
+                bias: Default::default(),
+            }),
+            multisample: Default::default(),
+            multiview: None,
+            cache: None,
+        });
+
+        let snow_shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
+            label: None,
+            source: wgpu::ShaderSource::Wgsl(SNOW_SHADER.into()),
+        });
+        let snow_pipeline = device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
+            label: Some("snow"),
+            layout: Some(&shadow_pl),
+            vertex: wgpu::VertexState {
+                module: &snow_shader,
+                entry_point: Some("vs_snow"),
+                buffers: &[],
+                compilation_options: Default::default(),
+            },
+            fragment: Some(wgpu::FragmentState {
+                module: &snow_shader,
+                entry_point: Some("fs_snow"),
+                targets: &[Some(wgpu::ColorTargetState {
+                    format,
+                    blend: Some(wgpu::BlendState::ALPHA_BLENDING),
+                    write_mask: wgpu::ColorWrites::ALL,
+                })],
+                compilation_options: Default::default(),
+            }),
+            primitive: wgpu::PrimitiveState {
+                topology: wgpu::PrimitiveTopology::PointList,
+                ..Default::default()
+            },
+            depth_stencil: Some(wgpu::DepthStencilState {
+                format: wgpu::TextureFormat::Depth32Float,
+                depth_write_enabled: false,
+                depth_compare: wgpu::CompareFunction::Less,
+                stencil: Default::default(),
+                bias: Default::default(),
+            }),
+            multisample: Default::default(),
+            multiview: None,
+            cache: None,
+        });
+
+        let fire_shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
+            label: None,
+            source: wgpu::ShaderSource::Wgsl(FIRE_SHADER.into()),
+        });
+        let fire_pipeline = device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
+            label: Some("fire"),
+            layout: Some(&shadow_pl),
+            vertex: wgpu::VertexState {
+                module: &fire_shader,
+                entry_point: Some("vs_fire"),
+                buffers: &[],
+                compilation_options: Default::default(),
+            },
+            fragment: Some(wgpu::FragmentState {
+                module: &fire_shader,
+                entry_point: Some("fs_fire"),
+                targets: &[Some(wgpu::ColorTargetState {
+                    format,
+                    blend: Some(wgpu::BlendState::ALPHA_BLENDING),
+                    write_mask: wgpu::ColorWrites::ALL,
+                })],
+                compilation_options: Default::default(),
+            }),
+            primitive: Default::default(),
+            depth_stencil: Some(wgpu::DepthStencilState {
+                format: wgpu::TextureFormat::Depth32Float,
+                depth_write_enabled: false,
+                depth_compare: wgpu::CompareFunction::Less,
+                stencil: Default::default(),
+                bias: Default::default(),
+            }),
+            multisample: Default::default(),
+            multiview: None,
+            cache: None,
+        });
+
+        let ssao_bgl = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+            label: Some("ssao_bgl"),
+            entries: &[
+                wgpu::BindGroupLayoutEntry { binding: 0, visibility: wgpu::ShaderStages::FRAGMENT, ty: wgpu::BindingType::Buffer { ty: wgpu::BufferBindingType::Uniform, has_dynamic_offset: false, min_binding_size: None }, count: None },
+                wgpu::BindGroupLayoutEntry { binding: 1, visibility: wgpu::ShaderStages::FRAGMENT, ty: wgpu::BindingType::Texture { sample_type: wgpu::TextureSampleType::Depth, view_dimension: wgpu::TextureViewDimension::D2, multisampled: false }, count: None },
+            ],
+        });
+        let ssao_pl = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
+            label: Some("ssao_pl"),
+            bind_group_layouts: &[&ssao_bgl],
+            push_constant_ranges: &[],
+        });
+        let ssao_shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
+            label: None,
+            source: wgpu::ShaderSource::Wgsl(SSAO_SHADER.into()),
+        });
+        let ssao_pipeline = device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
+            label: Some("ssao"),
+            layout: Some(&ssao_pl),
+            vertex: wgpu::VertexState {
+                module: &ssao_shader,
+                entry_point: Some("vs_ssao"),
+                buffers: &[],
+                compilation_options: Default::default(),
+            },
+            fragment: Some(wgpu::FragmentState {
+                module: &ssao_shader,
+                entry_point: Some("fs_ssao"),
+                targets: &[Some(wgpu::ColorTargetState {
+                    format,
+                    blend: Some(wgpu::BlendState::ALPHA_BLENDING),
+                    write_mask: wgpu::ColorWrites::ALL,
+                })],
+                compilation_options: Default::default(),
+            }),
+            primitive: Default::default(),
+            depth_stencil: None,
+            multisample: Default::default(),
+            multiview: None,
+            cache: None,
+        });
+
+        let volumetric_shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
+            label: None,
+            source: wgpu::ShaderSource::Wgsl(VOLUMETRIC_SHADER.into()),
+        });
+        let volumetric_pipeline = device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
+            label: Some("volumetric"),
+            layout: Some(&mesh_pl),
+            vertex: wgpu::VertexState {
+                module: &volumetric_shader,
+                entry_point: Some("vs_volumetric"),
+                buffers: &[],
+                compilation_options: Default::default(),
+            },
+            fragment: Some(wgpu::FragmentState {
+                module: &volumetric_shader,
+                entry_point: Some("fs_volumetric"),
+                targets: &[Some(wgpu::ColorTargetState {
+                    format,
+                    blend: Some(wgpu::BlendState::ALPHA_BLENDING),
+                    write_mask: wgpu::ColorWrites::ALL,
+                })],
+                compilation_options: Default::default(),
+            }),
+            primitive: Default::default(),
+            depth_stencil: None,
+            multisample: Default::default(),
+            multiview: None,
+            cache: None,
+        });
+
+        let atmosphere_shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
+            label: None,
+            source: wgpu::ShaderSource::Wgsl(ATMOSPHERIC_SHADER.into()),
+        });
+        let atmosphere_pipeline = device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
+            label: Some("atmosphere"),
+            layout: Some(&shadow_pl),
+            vertex: wgpu::VertexState {
+                module: &atmosphere_shader,
+                entry_point: Some("vs_atmosphere"),
+                buffers: &[],
+                compilation_options: Default::default(),
+            },
+            fragment: Some(wgpu::FragmentState {
+                module: &atmosphere_shader,
+                entry_point: Some("fs_atmosphere"),
+                targets: &[Some(wgpu::ColorTargetState {
+                    format,
+                    blend: Some(wgpu::BlendState::ALPHA_BLENDING),
+                    write_mask: wgpu::ColorWrites::ALL,
+                })],
+                compilation_options: Default::default(),
+            }),
+            primitive: Default::default(),
+            depth_stencil: None,
+            multisample: Default::default(),
+            multiview: None,
+            cache: None,
+        });
+
         let meshes = vec![create_cube(&device, 1.0), create_sphere(&device, 0.5, 20), create_island(&device, 1.0, 0.1, 32)];
         let objects = create_demo_scene();
 
         Ok(Self {
             surface, device, queue, config,
             shadow_pipeline, skinned_shadow_pipeline, sfe_compute_pipeline, mesh_pipeline, floor_pipeline, 
-            water_pipeline, grass_pipeline, particle_pipeline, bloom_pipeline, skinned_pipeline,
+            water_pipeline, grass_pipeline, particle_pipeline, bloom_pipeline, skinned_pipeline, sand_pipeline, flag_pipeline, snow_pipeline, fire_pipeline,
+            ssao_pipeline, volumetric_pipeline, atmosphere_pipeline,
             uniform_buffer, instance_buffer, sfe_params_buffer, bloom_params_buffer, skin_buffer,
             main_bind_group, skinned_bind_group, sfe_compute_bind_group, sfe_shadow_bind_group, bloom_bind_group,
             shadow_view, depth_view, render_view, meshes, objects,
@@ -785,9 +1063,10 @@ impl GpuState {
         let t = ((now - self.start_time) / 1000.0) as f32;
         
         self.benchmark.update(now);
-        if self.benchmark.frame_count == 1 {
-            log(&format!("[SFE Benchmark] FPS: {:.1}, Frame: {:.2}ms", 
-                self.benchmark.fps, self.benchmark.frame_time_ms));
+        if self.benchmark.frame_count == 1 && self.benchmark.total_frames % 5 == 0 {
+            let total = GRASS_INSTANCES + SAND_INSTANCES + SNOW_INSTANCES + FIRE_INSTANCES;
+            log(&format!("[SFE] FPS:{:.0} avg:{:.0} | {:.1}ms | {}M particles", 
+                self.benchmark.fps, self.benchmark.avg_fps, self.benchmark.frame_time_ms, total / 1_000_000));
         }
         
         self.camera.update();
@@ -802,10 +1081,10 @@ impl GpuState {
             light_view_proj: light_view_proj.to_cols_array_2d(),
             light_dir: [self.light_dir.x, self.light_dir.y, self.light_dir.z, 0.0],
             camera_pos: [self.camera.position.x, self.camera.position.y, self.camera.position.z, 1.0],
-            fog_color: [0.02, 0.03, 0.06, 1.0],
+            fog_color: self.get_dawn_sky_color(t),
             time: t, 
-            fog_start: 15.0, 
-            fog_end: 50.0,
+            fog_start: 20.0, 
+            fog_end: 60.0,
             sfe_lambda: self.sfe_lambda, 
             sfe_tau: self.sfe_tau, 
             shadow_size: SHADOW_SIZE as f32, 
@@ -820,6 +1099,18 @@ impl GpuState {
             _pad: 0.0 
         };
         self.queue.write_buffer(&self.sfe_params_buffer, 0, bytemuck::cast_slice(&[sfe_params]));
+
+        let bloom_params = BloomParams {
+            sfe_lambda: self.sfe_lambda,
+            sfe_tau: self.sfe_tau,
+            width: self.config.width as f32,
+            height: self.config.height as f32,
+            bloom_intensity: 1.8,
+            bloom_threshold: 0.35,
+            time: t,
+            light_dir_y: self.light_dir.y,
+        };
+        self.queue.write_buffer(&self.bloom_params_buffer, 0, bytemuck::cast_slice(&[bloom_params]));
 
         if let Some(ref mut model) = self.gltf_model {
             model.update(t, self.sfe_lambda);
@@ -891,6 +1182,7 @@ impl GpuState {
             pass.dispatch_workgroups((SHADOW_SIZE + 7) / 8, (SHADOW_SIZE + 7) / 8, 1);
         }
 
+        let sky = self.get_dawn_sky_color(t);
         {
             let mut pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
                 label: Some("main"),
@@ -898,7 +1190,7 @@ impl GpuState {
                     view: &self.render_view, 
                     resolve_target: None, 
                     ops: wgpu::Operations { 
-                        load: wgpu::LoadOp::Clear(wgpu::Color { r: 0.02, g: 0.03, b: 0.06, a: 1.0 }), 
+                        load: wgpu::LoadOp::Clear(wgpu::Color { r: sky[0] as f64, g: sky[1] as f64, b: sky[2] as f64, a: 1.0 }), 
                         store: wgpu::StoreOp::Store 
                     } 
                 })],
@@ -922,7 +1214,7 @@ impl GpuState {
             pass.draw(0..6, 0..1);
 
             pass.set_pipeline(&self.grass_pipeline);
-            pass.draw(0..6, 0..GRASS_INSTANCES);
+            pass.draw(0..15, 0..GRASS_INSTANCES);
 
             pass.set_pipeline(&self.mesh_pipeline);
             for (i, obj) in self.objects.iter().enumerate() {
@@ -932,8 +1224,22 @@ impl GpuState {
                 pass.draw_indexed(0..mesh.num_indices, 0, i as u32..i as u32 + 1);
             }
 
-            pass.set_pipeline(&self.particle_pipeline);
-            pass.draw(0..6, 0..PARTICLE_INSTANCES);
+            pass.set_pipeline(&self.sand_pipeline);
+            pass.set_bind_group(0, &self.main_bind_group, &[]);
+            pass.draw(0..6, 0..SAND_INSTANCES);
+
+            pass.set_pipeline(&self.flag_pipeline);
+            pass.set_bind_group(0, &self.main_bind_group, &[]);
+            pass.set_bind_group(1, &self.sfe_shadow_bind_group, &[]);
+            pass.draw(0..864, 0..1);
+
+            pass.set_pipeline(&self.snow_pipeline);
+            pass.set_bind_group(0, &self.main_bind_group, &[]);
+            pass.draw(0..1, 0..SNOW_INSTANCES);
+
+            pass.set_pipeline(&self.fire_pipeline);
+            pass.set_bind_group(0, &self.main_bind_group, &[]);
+            pass.draw(0..6, 0..FIRE_INSTANCES);
 
             if let Some(ref model) = self.gltf_model {
                 pass.set_pipeline(&self.skinned_pipeline);
@@ -993,6 +1299,32 @@ impl GpuState {
     
     fn on_wheel(&mut self, d: f32) { 
         self.camera.distance = (self.camera.distance + d * 0.01).clamp(3.0, 50.0); 
+    }
+
+    fn get_dawn_sky_color(&self, t: f32) -> [f32; 4] {
+        let cycle = (t * 0.05).sin() * 0.5 + 0.5;
+        
+        let horizon_gold = [1.0, 0.65, 0.25];
+        let sky_rose = [0.95, 0.45, 0.55];
+        let sky_blue = [0.3, 0.5, 0.75];
+        let deep_purple = [0.15, 0.1, 0.3];
+        
+        let dawn_factor = (cycle * 3.14159).sin();
+        
+        let r = horizon_gold[0] * dawn_factor * 0.4 
+              + sky_rose[0] * (1.0 - dawn_factor) * 0.3 
+              + sky_blue[0] * 0.2 
+              + deep_purple[0] * 0.1;
+        let g = horizon_gold[1] * dawn_factor * 0.4 
+              + sky_rose[1] * (1.0 - dawn_factor) * 0.3 
+              + sky_blue[1] * 0.2 
+              + deep_purple[1] * 0.1;
+        let b = horizon_gold[2] * dawn_factor * 0.4 
+              + sky_rose[2] * (1.0 - dawn_factor) * 0.3 
+              + sky_blue[2] * 0.2 
+              + deep_purple[2] * 0.1;
+        
+        [r, g, b, 1.0]
     }
 }
 
@@ -1060,12 +1392,11 @@ fn setup_input(canvas: &HtmlCanvasElement, state: Rc<RefCell<Option<GpuState>>>)
 
 #[wasm_bindgen]
 pub fn run_viewer(canvas_id: String) {
-    log("=== SFE Engine v0.2 ===");
+    log("=== SFE Engine v0.3 ===");
     log("[SFE] Core: exp(-(k^2 + lambda*k^4)*tau)");
-    log(&format!("[SFE] Shadow: {}x{} + compute blur", SHADOW_SIZE, SHADOW_SIZE));
-    log(&format!("[SFE] Grass: {} instances", GRASS_INSTANCES));
-    log(&format!("[SFE] Particles: {} instances", PARTICLE_INSTANCES));
-    log("[SFE] Effects: Neon bloom, Water, Fog");
+    log(&format!("[SFE] Shadow: {}x{} + SFE compute blur", SHADOW_SIZE, SHADOW_SIZE));
+    log(&format!("[SFE] Grass: {} | Sand: {} | Snow: {} | Fire: {}", GRASS_INSTANCES, SAND_INSTANCES, SNOW_INSTANCES, FIRE_INSTANCES));
+    log("[SFE] Effects: SSAO, Volumetric, Atmosphere, Bloom, Water, Fog");
     
     let state: Rc<RefCell<Option<GpuState>>> = Rc::new(RefCell::new(None));
     let sc = state.clone();
