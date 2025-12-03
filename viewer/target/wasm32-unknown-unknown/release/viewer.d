@@ -1,1 +1,0 @@
-E:\SFE\viewer\target\wasm32-unknown-unknown\release\viewer.wasm: E:\SFE\viewer\src\camera.rs E:\SFE\viewer\src\gltf_loader.rs E:\SFE\viewer\src\lib.rs E:\SFE\viewer\src\mesh.rs E:\SFE\viewer\src\scene.rs E:\SFE\viewer\src\shaders.rs E:\SFE\viewer\src\uniforms.rs
