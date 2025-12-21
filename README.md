@@ -174,10 +174,11 @@ SFE는 이 셋이 **같은 원리의 다른 표현**이라고 봅니다.
 비선택 경로의 잔류 진폭은 곡률에 의해 지수적으로 억압된다:
 
 $$
-\boxed{A_{\text{survive}}(x) = e^{-R(x)}}
+\boxed{A_{\text{survive}}(x) = e^{-\tilde R(x)}}
 $$
 
-- $R(x)$: Ricci 스칼라 곡률
+- $\tilde R(x)$: 무차원 곡률 스칼라
+- $\tilde R(x)\equiv L_c^2 R(x)$, $R(x)$는 Ricci 스칼라 곡률, $L_c$는 곡률 무차원화 스케일
 - 곡률이 큰 영역에서 비선택 경로는 더 강하게 억압
 
 ## 2.2 경로 선택 확률 (Softmax 구조)
@@ -192,7 +193,7 @@ $$
 ## 2.3 우주 총 억압 에너지
 
 $$
-\boxed{\rho_{\text{SFE}} = \int_{\Omega} e^{-R(x)} \cdot \mathcal{L}(x) \, d^4x}
+\boxed{\rho_{\text{SFE}} = \int_{\Omega} e^{-\tilde R(x)} \cdot \mathcal{L}(x) \, d^4x}
 $$
 
 - 비선택 경로들의 억압된 에너지가 암흑에너지로 축적
@@ -200,7 +201,7 @@ $$
 ## 2.4 억압장의 시간 진화
 
 $$
-\boxed{\frac{dA}{dt} = -R(x) A \quad \Rightarrow \quad A(t) = A_0 e^{-Rt}}
+\boxed{\frac{dA}{d\tau} = -\tilde R(x) A \quad \Rightarrow \quad A(\tau) = A_0 e^{-\tilde R\,\tau}}
 $$
 
 - 양자컴퓨터의 탈결맞음(decoherence)과 직접 연결
@@ -234,7 +235,7 @@ $$
 ## 2.7 통합 라그랑지안
 
 $$
-\boxed{\mathcal{L}_{\text{total}} = \frac{1}{16\pi G_N}R + \frac{1}{2}\nabla_\mu R \nabla^\mu R - V(R)}
+\boxed{\mathcal{L}_{\text{total}} = \frac{1}{16\pi G_N}R + \frac{1}{2}\nabla_\mu \sigma \nabla^\mu \sigma - V(\sigma)}
 $$
 
 - Einstein-Hilbert (거시 중력) + 억압장 동역학 (미시 억압)
@@ -250,7 +251,7 @@ $$
 ## 2.9 기하학적 학습 규칙 (Reality Stone 통합식)
 
 $$
-\boxed{x_{\text{new}} = e^{-R(x)} \exp_x\left(-\eta \nabla_g \Phi\right)}
+\boxed{x_{\text{new}} = e^{-\tilde R(x)} \exp_x\left(-\eta \nabla_g \Phi\right)}
 $$
 
 - 양자 경로 선택 - 억압 - 기하학적 이동 - 최적화를 한 줄로 통합

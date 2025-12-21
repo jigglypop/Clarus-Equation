@@ -33,7 +33,7 @@ $$
 물리적 시간 $t$는 불연속적인 프레임의 연속이며, 프레임과 프레임 사이($t < t_P$)의 '틈새' 영역에서는 물리 법칙이 아닌 순수 연산(Imaginary Computation)이 수행된다. 이 과정에서 양자 상태의 중첩, 얽힘, 그리고 거시적 오차 보정(Curvature Smoothing)이 일어난다.
 
 $$
-\tau = t + i\sigma \quad (\sigma: \text{Computational Axis})
+\tau = t + i\chi \quad (\chi: \text{Computational Axis})
 $$
 
 ---

@@ -9,6 +9,72 @@
 
 하는 것을 목표로 한다.
 
+## 1.1 주장 범위와 파라미터 흐름
+
+이 장은 표준 우주론의 수학 구조(FLRW, 프리드만 방정식)를 전제로 두고, SFE 공리(A1–A5), 정의(D1), 가설(H1)을 덧붙여 암흑 에너지 성분을 해석하는 현상론적 모형을 정리한다.
+
+우주론 문맥에서 혼동이 자주 발생하는 지점은 “입력(캘리브레이션)”과 “출력(예측)”이다. 이 장에서는 다음을 구분한다.
+
+- 입력(캘리브레이션): 예를 들어 $\Omega_\Lambda$, $H_0$, $\Omega_m$ 등을 사용해 SFE 내부 파라미터(예: $\alpha_\Lambda$ 또는 등가 파라미터)를 제약하는 과정
+- 출력(예측): 제약된 파라미터로 $E(z)$, $D_L(z)$, $w(z)$, 성장률 $f\sigma_8(z)$ 등 함수형 관측량을 계산하고 다른 데이터와 교차검증하는 과정
+
+따라서 이 장의 핵심은 “요약값(예: $\Omega_\Lambda$)을 처음부터 예측한다”가 아니라, $\Lambda$CDM에서 우주 상수로 넣는 항을 SFE의 변수/공리 구조로 연결했을 때 어떤 제약과 검증 경로가 생기는지를 명확히 하는 데 있다.
+
+## 1.1.1 보조정리: $\epsilon$–$\Omega$ 관계의 정확한 조건
+
+본 레포에서는 관측 기반 억압 계수로
+
+$$
+\epsilon_{\text{obs}} \equiv 2\Omega_{\Lambda,0}-1 \approx 0.37
+$$
+
+를 자주 사용한다. 이 관계식은 “정의”가 아니라, 아래 조건을 전제로 한 대수적 귀결이다.
+
+**가정 A (성분 구성)**: 현재 우주의 에너지 밀도는 물질과 암흑에너지 두 성분으로만 분해되며, 복사/곡률은 무시 가능하다.
+
+**가정 B (정규화)**: $\Omega_{m,0}+\Omega_{\Lambda,0}=1$.
+
+이때, 우주론적 열역학 균형형 정의
+
+$$
+\epsilon \equiv \frac{\Omega_{\Lambda,0}-\Omega_{m,0}}{\Omega_{\Lambda,0}+\Omega_{m,0}}
+$$
+
+를 사용하면, 가정 B로부터
+
+$$
+\epsilon = \Omega_{\Lambda,0}-\Omega_{m,0} = 2\Omega_{\Lambda,0}-1
+$$
+
+가 성립한다.
+
+반대로 복사 성분이나 공간 곡률을 포함하려면 $\Omega_{m,0}+\Omega_{\Lambda,0}=1$이 더 이상 성립하지 않으므로, $2\Omega_{\Lambda,0}-1$은 $\epsilon$의 근사식으로만 사용해야 하며, 이 경우에는 위의 일반식 $\epsilon=(\Omega_{\Lambda,0}-\Omega_{m,0})/(\Omega_{\Lambda,0}+\Omega_{m,0})$를 우선한다.
+
+## 1.2 (최신) 스크리닝 함수 $S(a)$와 $\mu(a)$ 정의
+
+문서들 사이에서 가장 혼동이 컸던 정의는 $S(a)$이다. 본 레포의 최신 우주론 검증 정식화(Part5/5.6)에서는 다음을 최종 정의로 사용한다.
+
+암흑에너지 분율:
+
+$$
+\Omega_\Lambda(a)
+:= \frac{\Omega_{\Lambda,0}}{\Omega_{\Lambda,0}+\Omega_{m,0}a^{-3}}
+$$
+
+스크리닝 함수:
+
+$$
+S(a)\equiv \frac{\Omega_\Lambda(a)}{\Omega_{\Lambda,0}}
+$$
+
+유효 중력 보정:
+
+$$
+\mu(a)\equiv \frac{G_{\text{eff}}(a)}{G_N}=1-\epsilon_{\text{grav}}\,S(a)
+$$
+
+이 정의는 $a\to0$에서 $\Omega_\Lambda(a)\to0$이므로 $S(a)\to0$, 따라서 $\mu(a)\to1$이 자동으로 따라와 BBN/CMB 제약과의 충돌을 줄이는 방향으로 정식화가 고정된다.
+
 이 장의 구성은 다음과 같다.
 
 - **1장**: 목표와 구조  
@@ -19,6 +85,105 @@
 - **6장**: 암흑 에너지 방정식 상태 $w$와 SFE 모델의 수치 제약  
 - **7장**: 공통 coupling $\alpha_C$와 다른 난제와의 정합성  
 - **8장**: 순환논리 점검, 한계, 향후 과제
+
+## 1.3 재현(우주론 성장: $f\sigma_8$ 표)
+
+`examples/physics/cosmology.py`는 위의 최신 정의($S(a),\mu(a)$)를 그대로 선택할 수 있도록 구성되어 있다.
+
+- 입력(캘리브레이션): $\Omega_{m,0}$, $\Omega_{\Lambda,0}$, $\sigma_8(0)$, $\epsilon_{\text{grav}}$
+- 출력(검증): $E(z)$, $D_L(z)$, $D(a)$, $f(z)$, $f\sigma_8(z)$
+
+아래는 문서 표의 대표 z점(0.32/0.57/0.70)에서 $f\sigma_8$를 재현하는 실행 예다.
+
+```
+./.venv/Scripts/python.exe examples/physics/cosmology.py --model calibrate --omega-m 0.315 --omega-lambda 0.685 --mu sfe --sdef ratio --epsilon-grav 0.37 --sigma8-0 0.785 --z-list 0.32,0.57,0.70 --compare-fsigma8
+```
+
+동일한 설정에서 $H_0t_0$ 및 $\Omega_m(a),\Omega_\Lambda(a),S(a),\mu(a)$를 함께 출력하려면 다음을 사용한다.
+
+```
+./.venv/Scripts/python.exe examples/physics/cosmology.py --model calibrate --omega-m 0.315 --omega-lambda 0.685 --mu sfe --sdef ratio --epsilon-grav 0.37 --sigma8-0 0.785 --z-list 0.32,0.57,0.70 --extended --print-h0t0
+```
+
+## 1.4 (모형 선택) 배경–섭동 분리 가정과 성장 방정식
+
+본 레포의 우주론 검증 코드는 “배경 팽창”과 “선형 섭동 성장”을 분리한 현상론적 모형을 사용한다.
+
+**배경(Background)**: $H(a)$는 평탄 우주의 $\Lambda$CDM 형태를 그대로 사용한다.
+$$
+H(a)^2 = H_0^2\left(\Omega_{m,0}a^{-3}+\Omega_{\Lambda,0}\right)
+$$
+
+이때 우주 나이–허블 곱은
+$$
+H_0 t_0=\int_{0}^{1}\frac{d\ln a}{E(a)},\qquad E(a)\equiv \frac{H(a)}{H_0}
+$$
+로 계산한다.
+
+**섭동(Perturbation)**: 물질 섭동의 성장 $D(a)$는 선형 이론에서의 표준 형태에, 유효 중력 보정 $\mu(a)\equiv G_{\mathrm{eff}}(a)/G_N$만을 곱해 반영한다.
+$$
+\frac{d^2 D}{d(\ln a)^2}+\left(2+\frac{d\ln H}{d\ln a}\right)\frac{dD}{d\ln a}-\frac{3}{2}\,\Omega_m(a)\,\mu(a)\,D=0
+$$
+
+여기서
+$$
+\Omega_m(a)=\frac{\Omega_{m,0}a^{-3}}{\Omega_{m,0}a^{-3}+\Omega_{\Lambda,0}}
+$$
+이고, 본 레포의 “SFE 스크리닝” 선택에서는
+$$
+\mu(a)=1-\epsilon_{\mathrm{grav}}\,S(a),\qquad S(a)=\frac{\Omega_\Lambda(a)}{\Omega_{\Lambda,0}}
+$$
+를 사용한다.
+
+이 “배경–섭동 분리”는 다음의 모형 가정을 포함한다.
+
+- **준정적(Quasi-static) 및 서브호라이즌(Sub-horizon) 근사**: 성장률 검증에 사용되는 $k$ 범위에서 시간 미분 항의 상대적 기여가 작다고 본다.
+- **슬립(Gravitational slip) 무시**: 선형 섭동에서 포텐셜의 두 자유도 사이의 비율을 1로 두는 등, 단일 함수 $\mu(a)$로 효과를 요약한다.
+- **배경 팽창에 대한 1차 영향 무시**: $G_{\mathrm{eff}}$의 변화나 $\Phi$ 섹터의 에너지 교환이 $H(a)$에 미치는 영향은 본 장의 정식화에서 제외한다.
+
+따라서 위 모형은 “완전한 공변 수정중력 이론”이 아니라, 관측 가능한 선형 성장량($f\sigma_8$ 등)에 대해 $G_{\mathrm{eff}}$의 시간 의존 스크리닝이 어떤 크기의 신호를 만드는지를 점검하는 최소 현상론적 테스트로 이해해야 한다.
+
+## 1.5 (정의) 초기조건/정규화와 $f\sigma_8$
+
+성장 방정식은 2계 미분방정식이므로, 해를 결정하려면 초기조건과 정규화 규약이 필요하다. 본 레포의 구현은 초기 우주($a\ll1$)에서의 물질 지배 성장 $D(a)\propto a$를 초기조건으로 사용하고, 최종적으로 $D(1)=1$로 정규화한다.
+
+**초기조건(물질 지배 근사)**:
+$$
+D(a_i)=a_i,\qquad \frac{dD}{d\ln a}(a_i)=a_i
+$$
+($a_i$는 충분히 작은 시작점.)
+
+**정규화**:
+$$
+D_{\mathrm{norm}}(a)\equiv \frac{D(a)}{D(1)}
+$$
+
+**성장률 정의**:
+$$
+f(a)\equiv \frac{d\ln D}{d\ln a}
+$$
+
+**관측량 $f\sigma_8$**:
+$$
+f\sigma_8(z)\equiv f(a)\,\sigma_8(0)\,D_{\mathrm{norm}}(a),\qquad a=\frac{1}{1+z}
+$$
+
+## 1.6 (정의) $S(a)$의 대안 정의와 사용 범위
+
+본 문서의 기본 정의는 $S(a)=\Omega_\Lambda(a)/\Omega_{\Lambda,0}$이지만, 구현에는 대안적 정의도 존재한다.
+
+- ratio 정의:
+$$
+S_{\mathrm{ratio}}(a)=\frac{\Omega_\Lambda(a)}{\Omega_{\Lambda,0}}
+$$
+
+- cumulative 정의:
+$$
+S_{\mathrm{cumulative}}(a)=
+\frac{\int_{a_{\min}}^{a}\Omega_\Lambda(a')\,da'}{\int_{a_{\min}}^{1}\Omega_\Lambda(a')\,da'}
+$$
+
+두 정의는 $a\to0$에서 모두 $S(a)\to0$을 만족하지만, 중간 적색편이에서의 형태가 달라져 $\mu(a)$가 만들어내는 성장률 보정의 누적 방식이 달라질 수 있다. 따라서 $f\sigma_8$ 비교에서는 어떤 $S(a)$ 정의를 사용했는지 반드시 함께 명시한다.
 
 ---
 
@@ -137,6 +302,23 @@ Navier–Stokes, 리만, 단백질 접힘과 마찬가지로, 이 장에서도 �
   - 우주 전체의 “연산 복잡도 밀도”를 낮추는 방향으로  
     억압장이 작용하며, 그 결과로 **가속 팽창과 같은 전역 동역학**이 유도될 수 있다는 가정.
 
+### 3.1 (정본 표기) 억압포텐셜과 무차원 곡률
+
+이 장에서 사용하는 억압포텐셜은 **무차원**이며, 아래 규약을 기본으로 둔다.
+
+- 정의 D1에 의해 $\Phi_\text{supp}(x):=-\log P_\text{selected}(x)$.
+- 억압 가중치(선택 가중치)를 $w(x)\equiv e^{-\Phi_\text{supp}(x)}$로 둔다.
+
+또한 $R(x)$를 물리적 Ricci scalar로 해석하면 $R$은 차원을 갖는다. 따라서 곡률 기반 억압을 쓸 때는
+
+$$
+\tilde R(x)\equiv L_c^2 R(x)
+$$
+
+로 무차원 곡률 $\tilde R$를 먼저 정의한다. 이 장에서는 곡률 기반 억압을 쓸 때 $e^{-\tilde R(x)}$를 기본 표기로 둔다.
+
+마지막으로, 곡률과 억압포텐셜을 연결하는 관계(예: $\Phi_\text{supp}(x)\simeq \lambda \tilde R(x)$)는 **정의가 아니라 유효 근사**로만 사용한다.
+
 ---
 
 ## 4. 비선택 경로 에너지와 우주 상수의 관계
@@ -150,6 +332,8 @@ $$
 $$
 
 라 하자. 이때, 공리 A4, A5에 따라
+
+이 장에서는 $E_\text{nonselected}(x)$를 에너지 **밀도**로 사용하므로, $\bar{E}_\text{nonselected}$ 또한 평균 에너지 밀도이다.
 
 $$
 T_{\mu\nu}^\text{supp}
@@ -168,7 +352,17 @@ $$
 $$
 
 꼴로 쓸 수 있다.  
-($\alpha_\Lambda$는 비선택 에너지와 우주론적 에너지 밀도 단위를 연결하는 결합 상수.)
+($\alpha_\Lambda$는 $E_\text{nonselected}$에서 $T_{\mu\nu}^\text{supp}$ 유효 성분으로 넘어갈 때의 무차원 정규화 상수.)
+
+### 4.1.1 (정본과의 연결) 스칼라 억압장 모형에서의 조건
+
+`Core_Theory/8.2`의 최소 모형처럼 억압 섹터를 스칼라장으로 기술하면, 균일 우주에서 운동항이 퍼텐셜에 비해 작을 때($\dot\sigma^2\ll V(\sigma)$) 응력–에너지 텐서는
+
+$$
+T_{\mu\nu}^\text{supp}\approx -V(\sigma)\,g_{\mu\nu}
+$$
+
+로 축약되어 위의 우주 상수형 근사($w\approx -1$)가 정당화된다.
 
 이때 유효 우주 상수는
 
@@ -265,6 +459,36 @@ $$
 $$
 
 처럼 생각할 수 있다. 여기서 $\phi$는 어떤 전역 상태 변수(예: 전체 밀도/곡률장)이다.
+
+### 5.3.1 보조정리: 억제 functional의 최소화(존재/유일)와 Euler–Lagrange 방정식
+
+위의 형태는 “정성적 그림”으로 쓰기 쉽지만, 수학적으로는 어떤 함수공간에서 어떤 경계조건을 두고 최소화하는지에 따라 정합성이 갈린다. 최소한의 정식화를 다음처럼 둘 수 있다.
+
+**정의 (정적 단면에서의 에너지 functional)**: 시간 $t$를 고정한 3차원 단면 $\Omega\subset\mathbb{R}^3$에서, $\lambda_\text{cos}>0$에 대해
+
+$$
+E[\phi] \equiv \int_{\Omega}\left(\|\nabla \phi\|^2+\lambda_\text{cos}\,\|\Delta \phi\|^2\right)\,dx
+$$
+
+를 정의한다. 여기서 $\Delta$는 라플라시안이다.
+
+**가정 (함수공간/경계조건)**: $\phi\in H^2(\Omega)$이고, 예를 들어 $\phi|_{\partial\Omega}=0$ 및 $\partial_n\phi|_{\partial\Omega}=0$와 같은 경계조건(또는 주기 경계조건)을 둔다.
+
+**정리 (존재/유일)**: 위 가정하에, $E[\phi]$는 아래에서 유계이며(coercive), $E$를 최소화하는 $\phi_*$가 존재한다. 또한 최소해는 동치류(예: 주기 경계에서 상수 모드)까지 유일하다.
+
+**Euler–Lagrange 방정식(정적)**: 최소해 $\phi_*$는 약해(weak solution) 의미에서
+
+$$
+-\Delta \phi + \lambda_\text{cos}\,\Delta^2\phi = 0
+$$
+
+를 만족한다. 외력(소스) $f$를 포함해 $E[\phi]-2\langle f,\phi\rangle$를 최소화하면 우변에 $f$가 추가된다:
+
+$$
+-\Delta \phi + \lambda_\text{cos}\,\Delta^2\phi = f.
+$$
+
+이 정식화는 “고주파(큰 $k$) 모드일수록 더 큰 비용”을 부여하므로, 수학적으로는 평탄화/안정화 functional로 해석된다.
 
 이 functional을 줄이기 위한 한 가지 경로는,
 

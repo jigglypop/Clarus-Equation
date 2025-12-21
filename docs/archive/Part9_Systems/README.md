@@ -42,7 +42,7 @@ $$
 
 **기본 업데이트 방정식**:
 $$
-x_{\mathrm{new}} = e^{-R(x)} \exp_x\bigl(-\eta \nabla_g \Phi(x)\bigr)
+x_{\mathrm{new}} = e^{-\sigma(x)} \exp_x\bigl(-\eta \nabla_g \Phi(x)\bigr)
 $$
 
 ### 9.4 SFE-Lyapunov 안정성 분석 (동역학 공학)
@@ -133,7 +133,7 @@ $C(\alpha,\gamma) > 0$인 임계 조건에서 최대 Lyapunov 지수가 음수�
 
 | 구성요소 | 표준 방식 | SFE 방식 |
 |:---|:---|:---|
-| 업데이트 | $x \leftarrow x - \eta \nabla L$ | $x \leftarrow e^{-R(x)} \exp_x(-\eta \nabla_g \Phi)$ |
+| 업데이트 | $x \leftarrow x - \eta \nabla L$ | $x \leftarrow e^{-\sigma(x)} \exp_x(-\eta \nabla_g \Phi)$ |
 | 정규화 | L2, Dropout | 곡률 기반 자동 억압 |
 | 경로 선택 | 암묵적 | 명시적 위상공간 수축 |
 | 안정성 | 학습률 조절 필요 | 곡률에 따른 자동 조절 |
@@ -154,7 +154,7 @@ $C(\alpha,\gamma) > 0$인 임계 조건에서 최대 Lyapunov 지수가 음수�
 | Part8 내용 | Part9 대응 |
 |:---|:---|
 | 7개 대표식 | 9.1-9.3 공학적 구현 |
-| $x_{\mathrm{new}} = e^{-R(x)} \exp_x(-\eta\nabla_g \Phi)$ | 9.3 AI 업데이트 |
+| $x_{\mathrm{new}} = e^{-\sigma(x)} \exp_x(-\eta\nabla_g \Phi)$ | 9.3 AI 업데이트 |
 | 0.37 법칙 | 9.4 Lyapunov 분석 |
 | Reality_Stone | 9.3 위상공간 AI |
 | SCQE | 9.2 불안정성 예측 |

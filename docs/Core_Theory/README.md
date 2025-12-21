@@ -6,6 +6,16 @@ Part8은 SFE(Suppression Field Theory) 이론의 **리만기하학적 통합 프
 
 핵심 통찰: **시공간 곡률 R(x)이 거시적 중력과 미시적 억압장을 동시에 제어하는 근본 변수**
 
+## 문서 규칙 (주장 레벨)
+
+본 Part8 문서는 “통합 프레임”을 제시하는 문서이며, 모든 수식이 곧바로 관측 파라미터의 독립 예측을 의미하지 않는다. 우주론/데이터 비교가 등장하는 경우, 아래 중 무엇인지 먼저 명시한다.
+
+- **입력(캘리브레이션)**: 관측값으로 내부 파라미터를 고정
+- **출력(예측)**: 고정된 파라미터로 새로운 관측량을 계산
+- **가정(모형 선택)**: 평탄성, 성분 분해, 무차원화 스케일 등 추가 조건
+
+또한 $R(x)$가 물리적 Ricci scalar를 의미하는 경우 $R$는 차원을 갖는다. 지수함수 억압항은 항상 무차원 지수여야 하므로, 본 Part8 문서군에서 억압은 $e^{-\sigma(x)}$로 표기한다. 곡률 기반 근사에서는 $\tilde R(x)\equiv L_c^2 R(x)$를 정의하고, $\sigma(x)\simeq \lambda \tilde R(x)$ 같은 유효 관계로 연결한다.
+
 ## 구성
 
 ### 8.1 SFE 리만기하학적 통합 프레임워크
@@ -18,7 +28,7 @@ Part8은 SFE(Suppression Field Theory) 이론의 **리만기하학적 통합 프
 
 **주요 방정식**:
 $$
-x_{\text{new}} = e^{-R(x)} \exp_x\!\left( -\eta\nabla_g \Phi \right)
+x_{\text{new}} = e^{-\sigma(x)} \exp_x\!\left( -\eta\nabla_g \Phi \right)
 $$
 
 이 한 줄이 양자 경로 → 억압 → 기하학적 이동 → 최적 경로 선택을 모두 포함한다.
@@ -33,8 +43,8 @@ $$
 
 **핵심 알고리즘**:
 ```
-1. 현재 상태 x에서 곡률 R(x) 계산
-2. 억압 계수: w = exp(-R(x))
+1. 현재 상태 x에서 억압 지수 σ(x) 계산
+2. 억압 계수: w = exp(-σ(x))
 3. 메트릭 기반 gradient: ∇_g Φ
 4. 리만 exponential map: x_new = exp_x(-η∇_g Φ)
 5. 최종 업데이트: x_new ← w · x_new
@@ -57,9 +67,9 @@ $$
 
 **핵심 내용**:
 - 노이즈 캔슬러의 원리적 불가능성
-- Decoherence = $e^{-R(x)t}$ (비가역)
+- Decoherence = $e^{-\sigma(x)\tau}$ (비가역)
 - 자기보정 양자소자(SCQE) 개념
-- $R(x) \to R(x) - \Delta R_{\text{self}}$
+- $\sigma(x) \to \sigma(x) - \Delta \sigma_{\text{self}}$
 
 **결론**:
 - 기존 QEC: 원리적으로 한계 존재
@@ -89,11 +99,11 @@ $$
 - 파라미터 민감도 분석
 
 **검증 항목**:
-- LIGO 중력파: ✓
-- CMB 관측: ✓
-- 뮤온 g-2: ✓
-- 양성자 반경: ✓
-- 결맞음 시간: ✓
+- LIGO 중력파: 비교
+- CMB 관측: 비교
+- 뮤온 g-2: 비교
+- 양성자 반경: 비교
+- 결맞음 시간: 비교
 
 ### 8.7 난제 해결: 뮤온 g-2와 양성자 반경
 
@@ -122,29 +132,29 @@ $$
 
 Part1-7의 모든 결과를 다음 7개 식으로 재구성:
 
-1. **억압장 기본식**: $A_{\text{survive}}(x) = e^{-R(x)}$
+1. **억압장 기본식**: $A_{\text{survive}}(x) = e^{-\sigma(x)}$
 2. **경로 에너지 대비**: $\frac{A_{\text{NS}}}{A_{\text{S}}} = e^{-\Delta S}$
-3. **전체 억압 에너지**: $\rho_{\text{SFE}} = \int e^{-R(x)} \mathcal{L}(x) dx$
+3. **전체 억압 에너지**: $\rho_{\text{SFE}} = \int e^{-\sigma(x)} \mathcal{L}(x) dx$
 4. **선택 확률**: $P(\gamma) = \frac{e^{-S(\gamma)}}{\sum e^{-S(\gamma')}}$
-5. **시간 진화**: $\frac{dA}{dt} = -R(x) A$
+5. **시간 진화**: $\frac{dA}{d\tau} = -\sigma(x) A$
 6. **에너지 보정**: $\Delta M = M_0 (1 - e^{-1})$
-7. **통합 최종식**: $x_{\text{new}} = e^{-R(x)} \exp_x(-\eta\nabla_g \Phi)$
+7. **통합 최종식**: $x_{\text{new}} = e^{-\sigma(x)} \exp_x(-\eta\nabla_g \Phi)$
 
 ### 2. 중력-억압장 통합 라그랑지안
 
 $$
-\mathcal{L}_{\text{total}} = \frac{R}{16\pi G_N} + \frac{1}{2}\nabla_\mu R \nabla^\mu R - V(R)
+\mathcal{L}_{\text{total}} = \frac{R}{16\pi G_N} + \frac{1}{2}\nabla_\mu \sigma \nabla^\mu \sigma - V(\sigma)
 $$
 
-곡률 R(x) 자체가 거시적(중력)·미시적(억압) 동역학을 동시에 가진다.
+억압 지수 $\sigma$의 동역학이 배경 기하(중력) 위에서 정의되며, 곡률 기반 억압은 $\sigma\simeq\lambda\tilde R$의 유효 근사로 연결된다.
 
 ### 3. 양자컴퓨터 해법 제시
 
 **문제**: 기존 QEC는 intrinsic decay를 막을 수 없음
 
 **해결**: SCQE (Self-Correcting Quantum Element)
-- 큐빗이 자체적으로 $R(x)$를 조절
-- $\Delta R_{\text{self}} = R(x)$이면 decoherence 완전 제거
+- 큐빗이 자체적으로 $\sigma(x)$를 조절
+- $\Delta \sigma_{\text{self}} = \sigma(x)$이면 decoherence 완전 제거
 
 ### 4. AI/ML과의 연결
 
@@ -152,7 +162,7 @@ $$
 - $x$: 표현 공간의 점
 - $\exp_x$: 리만 다양체 위의 이동
 - $\nabla_g \Phi$: 메트릭 기반 gradient
-- $e^{-R}$: 곡률 기반 정규화
+- $e^{-\sigma}$: 억압 기반 정규화
 
 ## temp.md와의 정합성
 
@@ -194,12 +204,12 @@ Part8.1과 추가로 작성된 형식적 수학 모델(8.2 형식적 버전)에�
 ## 순환논리 검증
 
 **체크리스트**:
-- [x] $R$은 $g_{\mu\nu}$로부터 독립적으로 정의
-- [x] $\sigma$는 독립 변량으로 취급
-- [x] $\sigma = \lambda R$은 해의 선택으로만 사용
-- [x] 역방향 의존성은 $\mathcal{L}_{\text{coupling}}$으로만 발생
+- $R$은 $g_{\mu\nu}$로부터 독립적으로 정의
+- $\sigma$는 독립 변량으로 취급
+- $\sigma = \lambda R$은 해의 선택으로만 사용
+- 역방향 의존성은 $\mathcal{L}_{\text{coupling}}$으로만 발생
 
-**결론**: 순환논리 없음. 연역적 구조 확립.
+**결론**: 문서 내 정의 순서 관점에서 순환 의존을 피하는 구성을 목표로 한다.
 
 ## 예측 가능성
 
