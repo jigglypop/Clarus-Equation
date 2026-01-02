@@ -61,13 +61,14 @@ impl LyapunovSuppressionFilter {
         let suppression_factors: Vec<f64> = (0..n)
             .into_par_iter()
             .map(|i| {
-                let start = if i >= half_window { i - half_window } else { 0 };
-                let end = if i + half_window < n { i + half_window } else { n };
-                let local_energy: f64 = signal[start..end]
-                    .iter()
-                    .map(|x| x * x)
-                    .sum::<f64>()
-                    / (end - start) as f64;
+                let start = i.saturating_sub(half_window);
+                let end = if i + half_window < n {
+                    i + half_window
+                } else {
+                    n
+                };
+                let local_energy: f64 =
+                    signal[start..end].iter().map(|x| x * x).sum::<f64>() / (end - start) as f64;
                 self.suppression_factor(local_energy)
             })
             .collect();
@@ -88,8 +89,7 @@ impl LyapunovSuppressionFilter {
         let energy: f64 = signal.iter().map(|x| x * x).sum::<f64>() / signal.len() as f64;
         let sup = self.suppression_factor(energy);
 
-        let lambda_reduction = sup * self.sigma_c;
-        lambda_reduction
+        sup * self.sigma_c
     }
 
     pub fn is_in_stable_regime(&self, signal: &[f64]) -> bool {
@@ -121,13 +121,7 @@ impl AdaptiveSuppressionController {
 
         let error = self.target_sigma - current_sigma;
         self.filter.alpha += self.learning_rate * error;
-
-        if self.filter.alpha < 0.1 {
-            self.filter.alpha = 0.1;
-        }
-        if self.filter.alpha > 10.0 {
-            self.filter.alpha = 10.0;
-        }
+        self.filter.alpha = self.filter.alpha.clamp(0.1, 10.0);
     }
 
     pub fn apply(&self, signal: &mut [f64]) {
@@ -141,7 +135,8 @@ impl AdaptiveSuppressionController {
 
         let recent: Vec<f64> = self.history.iter().rev().take(10).cloned().collect();
         let mean: f64 = recent.iter().sum::<f64>() / recent.len() as f64;
-        let variance: f64 = recent.iter().map(|x| (x - mean).powi(2)).sum::<f64>() / recent.len() as f64;
+        let variance: f64 =
+            recent.iter().map(|x| (x - mean).powi(2)).sum::<f64>() / recent.len() as f64;
         let std = variance.sqrt();
 
         if std < 0.05 * mean {
@@ -164,11 +159,7 @@ pub enum ConvergenceStatus {
     Converged,
 }
 
-pub fn apply_lyapunov_suppression(
-    noise: &mut [f64],
-    alpha: f64,
-    gamma: f64,
-) {
+pub fn apply_lyapunov_suppression(noise: &mut [f64], alpha: f64, gamma: f64) {
     let filter = LyapunovSuppressionFilter::new(alpha, gamma);
     filter.apply_to_signal(noise);
 }
@@ -229,9 +220,8 @@ mod tests {
         let filter = LyapunovSuppressionFilter::new(2.0, 0.5);
 
         let low_energy_signal = vec![0.1; 100];
-        let high_energy_signal = vec![10.0; 100];
+        let _high_energy_signal = vec![10.0; 100];
 
         assert!(filter.is_in_stable_regime(&low_energy_signal));
     }
 }
-

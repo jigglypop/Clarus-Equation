@@ -1,6 +1,6 @@
-use rayon::prelude::*;
+use super::noise::{generate_correlated_pink_noise, PinkNoiseGenerator};
 use rand::prelude::*;
-use super::noise::{PinkNoiseGenerator, generate_correlated_pink_noise};
+use rayon::prelude::*;
 
 pub const SFE_PHASE_SCALE: f64 = 0.01_f64;
 pub const SFE_EPSILON: f64 = 0.37;
@@ -120,11 +120,21 @@ fn viterbi_final_state(observations: &[bool], p_flips: &[f64], meas_err: f64) ->
 
         let from0_to0 = prev0 + ln_1_p;
         let from1_to0 = prev1 + ln_p;
-        let cur0 = emit0 + if from0_to0 > from1_to0 { from0_to0 } else { from1_to0 };
+        let cur0 = emit0
+            + if from0_to0 > from1_to0 {
+                from0_to0
+            } else {
+                from1_to0
+            };
 
         let from0_to1 = prev0 + ln_p;
         let from1_to1 = prev1 + ln_1_p;
-        let cur1 = emit1 + if from0_to1 > from1_to1 { from0_to1 } else { from1_to1 };
+        let cur1 = emit1
+            + if from0_to1 > from1_to1 {
+                from0_to1
+            } else {
+                from1_to1
+            };
 
         prev0 = cur0;
         prev1 = cur1;
@@ -247,11 +257,7 @@ pub fn simulate_repetition_code(
                     let p_gate_sfe = 1.0 - f_gate_sfe;
 
                     let mut p_total = 1.0 - (1.0 - p_phase) * (1.0 - p_t1) * (1.0 - p_gate_sfe);
-                    if p_total < 0.0 {
-                        p_total = 0.0;
-                    } else if p_total > 1.0 {
-                        p_total = 1.0;
-                    }
+                    p_total = p_total.clamp(0.0, 1.0);
 
                     p_flips[q][cycle] = p_total;
 
@@ -300,7 +306,11 @@ pub fn simulate_repetition_code(
         distance,
         physical_error_rate: phy_rate,
         logical_error_rate: log_rate,
-        gain: if log_rate > 0.0 { phy_rate / log_rate } else { -1.0 },
+        gain: if log_rate > 0.0 {
+            phy_rate / log_rate
+        } else {
+            -1.0
+        },
     }
 }
 
@@ -358,7 +368,8 @@ pub fn simulate_surface_code_d3(
         .ok()
         .and_then(|v| v.parse().ok())
         .unwrap_or(0);
-    let anc_on = anc_flag != 0 && ((sup_omega != 0.0 && sup_amp != 0.0) || (sup_omega2 != 0.0 && sup_amp2 != 0.0));
+    let anc_on = anc_flag != 0
+        && ((sup_omega != 0.0 && sup_amp != 0.0) || (sup_omega2 != 0.0 && sup_amp2 != 0.0));
 
     let cycle_len = measure_interval;
     let mut cycle_pulses: Vec<usize> = pulse_seq
@@ -425,15 +436,10 @@ pub fn simulate_surface_code_d3(
                     // Assuming p_phase is the base environmental noise, we add the SFE gate scaling effect
                     // F_sfe_gate = exp(-eps * 1/T1). The loss probability is 1 - F.
                     let p_sfe_loss = 1.0 - sfe_gate_fidelity_factor;
-                    
+
                     // Combine Phase noise and SFE suppression loss
                     let mut p_z = 1.0 - (1.0 - p_phase) * (1.0 - p_sfe_loss);
-                    
-                    if p_z < 0.0 {
-                        p_z = 0.0;
-                    } else if p_z > 1.0 {
-                        p_z = 1.0;
-                    }
+                    p_z = p_z.clamp(0.0, 1.0);
 
                     if rng.gen::<f64>() < p_z {
                         z_state[q] = !z_state[q];
@@ -457,7 +463,7 @@ pub fn simulate_surface_code_d3(
                 }
             }
 
-            let mut final_synd = vec![false; 4];
+            let mut final_synd = [false; 4];
             if num_cycles > 0 {
                 for s in 0..4 {
                     final_synd[s] = syndromes[s][num_cycles - 1];
@@ -526,6 +532,10 @@ pub fn simulate_surface_code_d3(
         distance: 3,
         physical_error_rate: phy_rate,
         logical_error_rate: log_rate,
-        gain: if log_rate > 0.0 { phy_rate / log_rate } else { -1.0 },
+        gain: if log_rate > 0.0 {
+            phy_rate / log_rate
+        } else {
+            -1.0
+        },
     }
 }

@@ -1,9 +1,9 @@
+use crate::engine::suppression_filter::LyapunovSuppressionFilter;
 use rand::prelude::*;
 use rand_distr::StandardNormal;
-use rustfft::{FftPlanner, num_complex::Complex, Fft};
 use rustfft::num_traits::Zero;
+use rustfft::{num_complex::Complex, Fft, FftPlanner};
 use std::sync::Arc;
-use crate::engine::suppression_filter::LyapunovSuppressionFilter;
 
 pub struct PinkNoiseGenerator {
     fft: Arc<dyn Fft<f64>>,
@@ -28,9 +28,7 @@ impl PinkNoiseGenerator {
             .and_then(|v| v.parse().ok());
 
         let suppression_filter = match (sup_alpha_env, sup_gamma_env) {
-            (Some(a), Some(g)) if a > 0.0 && g > 0.0 => {
-                Some(LyapunovSuppressionFilter::new(a, g))
-            }
+            (Some(a), Some(g)) if a > 0.0 && g > 0.0 => Some(LyapunovSuppressionFilter::new(a, g)),
             _ => None,
         };
 
@@ -80,22 +78,26 @@ impl PinkNoiseGenerator {
 
         let mut rng = thread_rng();
         let steps = self.steps;
-        
+
         let dc_real: f64 = rng.sample(StandardNormal);
         self.spectrum_buffer[0] = Complex::new(dc_real * (steps as f64).sqrt() * self.scale, 0.0);
-        
+
         for i in 1..steps {
-            let f = if i <= steps/2 { i as f64 } else { (steps - i) as f64 };
-            let amplitude = self.scale / f.powf(self.alpha / 2.0); 
-            
+            let f = if i <= steps / 2 {
+                i as f64
+            } else {
+                (steps - i) as f64
+            };
+            let amplitude = self.scale / f.powf(self.alpha / 2.0);
+
             let real: f64 = rng.sample(StandardNormal);
             let imag: f64 = rng.sample(StandardNormal);
-            
+
             self.spectrum_buffer[i] = Complex::new(real * amplitude, imag * amplitude);
         }
-        
+
         self.fft.process(&mut self.spectrum_buffer);
-        
+
         for (i, val) in self.spectrum_buffer.iter().enumerate() {
             output[i] = val.re;
         }
@@ -104,7 +106,7 @@ impl PinkNoiseGenerator {
             filter.apply_to_signal(output);
         }
     }
-    
+
     pub fn generate_new(&mut self) -> Vec<f64> {
         let mut out = vec![0.0; self.steps];
         self.generate(&mut out);
@@ -129,13 +131,7 @@ pub fn generate_correlated_pink_noise(
     scale: f64,
     rho: f64,
 ) -> Vec<Vec<f64>> {
-    let r = if rho < 0.0 {
-        0.0
-    } else if rho > 1.0 {
-        1.0
-    } else {
-        rho
-    };
+    let r = rho.clamp(0.0, 1.0);
 
     let w_common = r.sqrt();
     let w_indiv = (1.0 - r).sqrt();

@@ -25,13 +25,16 @@ impl EffectiveMassCalculator {
         let e_inv = (-1.0_f64).exp();
         m0 * e_inv
     }
-    
+
     /// 0.37 법칙 검증
     pub fn verify_law() {
         let loss_ratio = 1.0 - (-1.0_f64).exp();
         println!("[SFE] 0.37 Law Verification:");
-        println!("  Theoretical Loss Ratio (1 - 1/e): {:.6}", loss_ratio);
-        println!("  Effective Mass Ratio (1/e):       {:.6}", (-1.0_f64).exp());
+        println!("  Theoretical Loss Ratio (1 - 1/e): {loss_ratio:.6}");
+        println!(
+            "  Effective Mass Ratio (1/e):       {:.6}",
+            (-1.0_f64).exp()
+        );
     }
 }
 
@@ -46,7 +49,7 @@ pub struct MassProportionalCoupling {
 impl MassProportionalCoupling {
     pub fn from_g_mu(g_mu: f64) -> Self {
         let kappa = g_mu / M_MU_MEV;
-        
+
         Self {
             kappa,
             g_e: kappa * M_E_MEV,
@@ -55,15 +58,15 @@ impl MassProportionalCoupling {
             g_p: kappa * M_P_MEV,
         }
     }
-    
+
     pub fn verify_mass_proportionality(&self) -> bool {
         let ratio_mu_e = self.g_mu / self.g_e;
         let expected_ratio = M_MU_MEV / M_E_MEV;
-        
+
         let error = (ratio_mu_e - expected_ratio).abs() / expected_ratio;
         error < 1e-6
     }
-    
+
     pub fn print_coupling_hierarchy(&self) {
         println!("\n질량-비례 결합 법칙 검증");
         println!("  κ = {:.3e}", self.kappa);
@@ -72,18 +75,30 @@ impl MassProportionalCoupling {
         println!("    g_μ   = {:.3e} (뮤온)", self.g_mu);
         println!("    g_τ   = {:.3e} (타우)", self.g_tau);
         println!("    g_p   = {:.3e} (양성자)", self.g_p);
-        
+
         println!("\n  비율 검증:");
-        println!("    g_μ/g_e = {:.1} (예상: {:.1})", 
-            self.g_mu / self.g_e, M_MU_MEV / M_E_MEV);
-        println!("    g_τ/g_μ = {:.1} (예상: {:.1})", 
-            self.g_tau / self.g_mu, M_TAU_MEV / M_MU_MEV);
-        println!("    g_p/g_μ = {:.1} (예상: {:.1})", 
-            self.g_p / self.g_mu, M_P_MEV / M_MU_MEV);
-        
+        println!(
+            "    g_μ/g_e = {:.1} (예상: {:.1})",
+            self.g_mu / self.g_e,
+            M_MU_MEV / M_E_MEV
+        );
+        println!(
+            "    g_τ/g_μ = {:.1} (예상: {:.1})",
+            self.g_tau / self.g_mu,
+            M_TAU_MEV / M_MU_MEV
+        );
+        println!(
+            "    g_p/g_μ = {:.1} (예상: {:.1})",
+            self.g_p / self.g_mu,
+            M_P_MEV / M_MU_MEV
+        );
+
         let is_valid = self.verify_mass_proportionality();
-        println!("\n  질량-비례 법칙: {}", if is_valid { "✓ 성립" } else { "✗ 위반" });
-        
+        println!(
+            "\n  질량-비례 법칙: {}",
+            if is_valid { "✓ 성립" } else { "✗ 위반" }
+        );
+
         // [NEW] 유효 질량 보정 검증 호출
         EffectiveMassCalculator::verify_law();
     }
@@ -97,14 +112,18 @@ pub struct YukawaPotential {
 
 impl YukawaPotential {
     pub fn new(g_lep: f64, g_p: f64, m_phi_mev: f64) -> Self {
-        Self { g_lep, g_p, m_phi_mev }
+        Self {
+            g_lep,
+            g_p,
+            m_phi_mev,
+        }
     }
-    
+
     pub fn value_at(&self, r_fm: f64) -> f64 {
         let m_phi_inv_fm = self.m_phi_mev / HBAR_C_MEV_FM;
         -(self.g_lep * self.g_p) / (4.0 * PI) * (-m_phi_inv_fm * r_fm).exp() / r_fm
     }
-    
+
     pub fn mu_to_e_ratio(&self, _r_fm: f64, coupling: &MassProportionalCoupling) -> f64 {
         let v_mu = -(coupling.g_mu * coupling.g_p) / (4.0 * PI);
         let v_e = -(coupling.g_e * coupling.g_p) / (4.0 * PI);
@@ -118,12 +137,12 @@ impl BohrRadiusCalculator {
     pub fn electron_proton_angstrom() -> f64 {
         HBAR_C_MEV_FM * 1e-5 / (ALPHA_EM * M_E_MEV)
     }
-    
+
     pub fn muon_proton_fm() -> f64 {
         let reduced_mass = (M_MU_MEV * M_P_MEV) / (M_MU_MEV + M_P_MEV);
         HBAR_C_MEV_FM / (ALPHA_EM * reduced_mass)
     }
-    
+
     pub fn mass_ratio_effect() -> f64 {
         (M_MU_MEV / M_E_MEV).powi(3)
     }
@@ -138,15 +157,15 @@ impl AnomalousMagneticMoment {
     pub fn new(g_mu: f64, m_phi_mev: f64) -> Self {
         Self { g_mu, m_phi_mev }
     }
-    
+
     pub fn delta_a_mu(&self) -> f64 {
         (self.g_mu.powi(2) * M_MU_MEV.powi(2)) / (16.0 * PI.powi(2) * self.m_phi_mev.powi(2))
     }
-    
+
     pub fn delta_a_e(&self, g_e: f64) -> f64 {
         (g_e.powi(2) * M_E_MEV.powi(2)) / (16.0 * PI.powi(2) * self.m_phi_mev.powi(2))
     }
-    
+
     pub fn verify_muon_anomaly(&self) -> bool {
         let measured = 251e-11;
         let predicted = self.delta_a_mu();
@@ -162,23 +181,26 @@ pub struct ProtonRadiusPuzzle {
 
 impl ProtonRadiusPuzzle {
     pub fn new(coupling: MassProportionalCoupling, m_phi_mev: f64) -> Self {
-        Self { coupling, m_phi_mev }
+        Self {
+            coupling,
+            m_phi_mev,
+        }
     }
-    
+
     pub fn delta_r_squared_fm2(&self, m_lep_mev: f64, g_lep: f64) -> f64 {
         let reduced_mass = (m_lep_mev * M_P_MEV) / (m_lep_mev + M_P_MEV);
         let denominator = (2.0 * reduced_mass * ALPHA_EM + self.m_phi_mev).powi(2);
-        
+
         (g_lep * self.coupling.g_p) / denominator
     }
-    
+
     pub fn muon_electron_difference_fm(&self) -> f64 {
         let delta_r2_mu = self.delta_r_squared_fm2(M_MU_MEV, self.coupling.g_mu);
         let delta_r2_e = self.delta_r_squared_fm2(M_E_MEV, self.coupling.g_e);
-        
+
         (delta_r2_mu - delta_r2_e).sqrt()
     }
-    
+
     pub fn verify_puzzle_resolution(&self) -> bool {
         let measured_diff = 0.04;
         let predicted = self.muon_electron_difference_fm();
@@ -277,10 +299,7 @@ impl MultiModeYukawa {
             [d[0], d[1], d[2]],
         ];
         let b = [0.0_f64, delta_r2_target, delta_a_target];
-        let k = match Self::solve3(a, b) {
-            Some(v) => v,
-            None => return None,
-        };
+        let k = Self::solve3(a, b)?;
         let mut delta_r2_e = 0.0_f64;
         let mut delta_r2_mu = 0.0_f64;
         let mut delta_a_mu = 0.0_f64;
@@ -375,17 +394,23 @@ fn analyze_multimode_solution(
     }
 
     println!("\n=== 선택/비선택 모드 분해 ===");
-    println!("κ_A^2(+) = [{:.3e}, {:.3e}, {:.3e}]", k_plus[0], k_plus[1], k_plus[2]);
-    println!("κ_A^2(-) = [{:.3e}, {:.3e}, {:.3e}]", k_minus[0], k_minus[1], k_minus[2]);
+    println!(
+        "κ_A^2(+) = [{:.3e}, {:.3e}, {:.3e}]",
+        k_plus[0], k_plus[1], k_plus[2]
+    );
+    println!(
+        "κ_A^2(-) = [{:.3e}, {:.3e}, {:.3e}]",
+        k_minus[0], k_minus[1], k_minus[2]
+    );
 
     println!("\n전자 반경:");
-    println!("  Δr_p^2(e)^(+) = {:.4e}", dr2e_plus);
-    println!("  Δr_p^2(e)^(-) = {:.4e}", dr2e_minus);
+    println!("  Δr_p^2(e)^(+) = {dr2e_plus:.4e}");
+    println!("  Δr_p^2(e)^(-) = {dr2e_minus:.4e}");
     println!("  합 = {:.4e} (목표: 0)", dr2e_plus - dr2e_minus);
 
     println!("\n뮤온 반경:");
-    println!("  Δr_p^2(μ)^(+) = {:.4e}", dr2mu_plus);
-    println!("  Δr_p^2(μ)^(-) = {:.4e}", dr2mu_minus);
+    println!("  Δr_p^2(μ)^(+) = {dr2mu_plus:.4e}");
+    println!("  Δr_p^2(μ)^(-) = {dr2mu_minus:.4e}");
     println!(
         "  합 = {:.4e} (목표: {:.4e})",
         dr2mu_plus - dr2mu_minus,
@@ -393,8 +418,8 @@ fn analyze_multimode_solution(
     );
 
     println!("\n뮤온 g-2:");
-    println!("  Δa_μ^(+) = {:.4e}", da_plus);
-    println!("  Δa_μ^(-) = {:.4e}", da_minus);
+    println!("  Δa_μ^(+) = {da_plus:.4e}");
+    println!("  Δa_μ^(-) = {da_minus:.4e}");
     println!(
         "  합 = {:.4e} (목표: {:.4e})",
         da_plus - da_minus,
@@ -404,53 +429,57 @@ fn analyze_multimode_solution(
 
 pub fn run_muon_specificity_analysis() {
     println!("\n=== 억압보손-뮤온 특이 결합 분석 ===\n");
-    
+
     let g_mu_mev = 6e-4;
     let coupling = MassProportionalCoupling::from_g_mu(g_mu_mev);
     coupling.print_coupling_hierarchy();
-    
+
     println!("\n{}", "=".repeat(70));
     println!("보어 반경 계산 (뮤온이 양성자에 가까이 붙는 이유)");
     println!("{}", "=".repeat(70));
-    
+
     let a0_e = BohrRadiusCalculator::electron_proton_angstrom();
     let a0_mu = BohrRadiusCalculator::muon_proton_fm();
     let mass_effect = BohrRadiusCalculator::mass_ratio_effect();
-    
-    println!("\n  전자-양성자 보어 반경: {:.2} Å", a0_e);
-    println!("  뮤온-양성자 보어 반경: {:.2} fm", a0_mu);
-    println!("  비율 (a0_e/a0_mu): {:.0}배 (뮤온이 양성자에 {:.0}배 가까이)", a0_e * 1e5 / a0_mu, a0_e * 1e5 / a0_mu);
-    println!("  질량 효과 (m_μ/m_e)^3: {:.2e}", mass_effect);
-    
+
+    println!("\n  전자-양성자 보어 반경: {a0_e:.2} Å");
+    println!("  뮤온-양성자 보어 반경: {a0_mu:.2} fm");
+    println!(
+        "  비율 (a0_e/a0_mu): {:.0}배 (뮤온이 양성자에 {:.0}배 가까이)",
+        a0_e * 1e5 / a0_mu,
+        a0_e * 1e5 / a0_mu
+    );
+    println!("  질량 효과 (m_μ/m_e)^3: {mass_effect:.2e}");
+
     println!("\n  → 뮤온은 전자보다 양성자에 207배 가까이 접근");
     println!("  → 억압보손 교환이 10^7배 더 강하게 작용");
-    
+
     println!("\n{}", "=".repeat(70));
     println!("유카와 퍼텐셜 (r = 2.6 fm, 뮤온 보어 반경)");
     println!("{}", "=".repeat(70));
-    
+
     let m_phi_mev = 17.0;
     let yukawa = YukawaPotential::new(coupling.g_mu, coupling.g_p, m_phi_mev);
-    
+
     let r_test = 2.6;
     let v_mu = yukawa.value_at(r_test);
     let ratio = yukawa.mu_to_e_ratio(r_test, &coupling);
-    
-    println!("\n  뮤온-양성자 퍼텐셜 (r={:.1} fm): {:.3e} MeV", r_test, v_mu);
-    println!("  뮤온/전자 퍼텐셜 비율: {:.0}배", ratio);
+
+    println!("\n  뮤온-양성자 퍼텐셜 (r={r_test:.1} fm): {v_mu:.3e} MeV");
+    println!("  뮤온/전자 퍼텐셜 비율: {ratio:.0}배");
     println!("\n  → 질량-비례 결합으로 뮤온이 억압장을 207배 강하게 느낌");
-    
+
     println!("\n{}", "=".repeat(70));
     println!("뮤온 g-2 변칙 설명");
     println!("{}", "=".repeat(70));
-    
+
     let anomaly = AnomalousMagneticMoment::new(coupling.g_mu, m_phi_mev);
     let delta_a_mu = anomaly.delta_a_mu();
     let delta_a_e = anomaly.delta_a_e(coupling.g_e);
-    
+
     println!("\n  억압보손 기여:");
-    println!("    Δa_μ = {:.2e} (예상: 2.51e-9)", delta_a_mu);
-    println!("    Δa_e = {:.2e}", delta_a_e);
+    println!("    Δa_μ = {delta_a_mu:.2e} (예상: 2.51e-9)");
+    println!("    Δa_e = {delta_a_e:.2e}");
     println!("    비율: {:.2e}", delta_a_mu / delta_a_e);
 
     let delta_a_target = 2.51e-9_f64;
@@ -459,73 +488,83 @@ pub fn run_muon_specificity_analysis() {
     let frac_unsel = delta_a_unsel / delta_a_mu;
 
     println!("\n  최소모델(선택 모드) vs 실험값 분해:");
-    println!("    Δa_μ(sel) = {:.2e}", delta_a_mu);
-    println!("    Δa_μ(exp) = {:.2e}", delta_a_target);
-    println!("    Δa_μ(sel)/Δa_μ(exp) = {:.1}", ratio_over);
-    println!("    Δa_μ(unsel) = {:.2e}", delta_a_unsel);
+    println!("    Δa_μ(sel) = {delta_a_mu:.2e}");
+    println!("    Δa_μ(exp) = {delta_a_target:.2e}");
+    println!("    Δa_μ(sel)/Δa_μ(exp) = {ratio_over:.1}");
+    println!("    Δa_μ(unsel) = {delta_a_unsel:.2e}");
     println!(
         "    Δa_μ(unsel)/Δa_μ(sel) = {:.3} (선택 모드의 약 {:.1}% 상쇄)",
         frac_unsel,
         frac_unsel * -100.0_f64
     );
-    
+
     let g2_ok = anomaly.verify_muon_anomaly();
-    println!("\n  뮤온 g-2 변칙 설명: {}", if g2_ok { "✓ 가능" } else { "✗ 불가능" });
+    println!(
+        "\n  뮤온 g-2 변칙 설명: {}",
+        if g2_ok { "✓ 가능" } else { "✗ 불가능" }
+    );
     println!("  전자 g-2는 영향 없음: ✓ (Δa_e ~ 10^-14, 측정 한계 이하)");
-    
+
     println!("\n{}", "=".repeat(70));
     println!("양성자 반경 퍼즐 설명");
     println!("{}", "=".repeat(70));
-    
+
     let puzzle = ProtonRadiusPuzzle::new(coupling, m_phi_mev);
     let dr_pred = puzzle.muon_electron_difference_fm();
-    
+
     println!("\n  예측된 양성자 반경 차이:");
-    println!("    r_p(e) - r_p(μ) = {:.3} fm (측정: 0.04 fm)", dr_pred);
+    println!("    r_p(e) - r_p(μ) = {dr_pred:.3} fm (측정: 0.04 fm)");
 
     let dr_exp = 0.04_f64;
     let dr_unsel = dr_exp - dr_pred;
     let frac_unsel_r = dr_unsel / dr_pred;
 
     println!("\n  최소모델(선택 모드) vs 실험값 분해:");
-    println!("    Δr_p(sel) = {:.3} fm", dr_pred);
-    println!("    Δr_p(exp) = {:.3} fm", dr_exp);
-    println!("    Δr_p(unsel) = {:.3} fm", dr_unsel);
+    println!("    Δr_p(sel) = {dr_pred:.3} fm");
+    println!("    Δr_p(exp) = {dr_exp:.3} fm");
+    println!("    Δr_p(unsel) = {dr_unsel:.3} fm");
     println!(
         "    Δr_p(unsel)/Δr_p(sel) = {:.3} (비선택 모드가 선택 모드 크기의 {:.1}% 추가)",
         frac_unsel_r,
         frac_unsel_r * 100.0_f64
     );
-    
+
     let puzzle_ok = puzzle.verify_puzzle_resolution();
-    println!("\n  양성자 반경 퍼즐 설명: {}", if puzzle_ok { "✓ 가능" } else { "✗ 불가능" });
-    
+    println!(
+        "\n  양성자 반경 퍼즐 설명: {}",
+        if puzzle_ok {
+            "✓ 가능"
+        } else {
+            "✗ 불가능"
+        }
+    );
+
     println!("\n{}", "=".repeat(70));
     println!("핵심 메커니즘 요약");
     println!("{}", "=".repeat(70));
-    
+
     println!("\n  1. 질량-비례 결합: g_f = κ × m_f");
     println!("     → 무거운 입자일수록 억압장과 강하게 결합");
     println!("     → 뮤온(105 MeV) >> 전자(0.5 MeV): 207배 차이");
-    
+
     println!("\n  2. 보어 반경 역비례: a_0 ∝ 1/m_ℓ");
     println!("     → 무거운 입자일수록 핵에 가까이 접근");
     println!("     → 뮤온이 양성자에 207배 가까이");
-    
+
     println!("\n  3. 결합 효과: ΔE ∝ m_ℓ^4");
     println!("     → 뮤온에서 10^7배 강한 억압보손 효과");
     println!("     → g-2 변칙: 측정 가능");
     println!("     → 전자에서는 무시 가능");
-    
+
     println!("\n  4. 유카와 퍼텐셜: V ∝ g_ℓ g_p exp(-m_φ r)/r");
     println!("     → 뮤온-양성자 사이 추가 인력");
     println!("     → 양성자 반경이 작게 측정됨");
-    
+
     println!("\n  결론: 억압보손은 '뮤온 탐지기'");
     println!("       - 전자는 너무 가벼워서 거의 안 보임");
     println!("       - 뮤온은 딱 적당한 질량으로 선명하게 보임");
     println!("       - 이것이 뮤온 물리학 변칙의 공통 근원");
-    
+
     println!("\n=== 분석 완료 ===");
 }
 
@@ -535,10 +574,13 @@ pub fn run_multimode_yukawa_scan() {
     let model = MultiModeYukawa { masses_mev: masses };
     let delta_r2_target = 0.04_f64 * 0.04_f64;
     let delta_a_target = 2.51e-9_f64;
-    println!("입력 질량 (MeV): [{:.1}, {:.1}, {:.1}]", masses[0], masses[1], masses[2]);
+    println!(
+        "입력 질량 (MeV): [{:.1}, {:.1}, {:.1}]",
+        masses[0], masses[1], masses[2]
+    );
     println!("목표 값:");
-    println!("  Δr_p^2 = {:.4e} fm^2 (Δr_p = 0.04 fm 가정)", delta_r2_target);
-    println!("  Δa_μ   = {:.3e}", delta_a_target);
+    println!("  Δr_p^2 = {delta_r2_target:.4e} fm^2 (Δr_p = 0.04 fm 가정)");
+    println!("  Δa_μ   = {delta_a_target:.3e}");
     match model.solve(delta_r2_target, delta_a_target) {
         Some(sol) => {
             println!("\n해결된 κ_A^2:");
@@ -586,14 +628,8 @@ pub fn run_multimode_yukawa_scan() {
             println!("  Δa_μ      = {:.3e}", sol.delta_a_mu);
             println!("\n잔차:");
             println!("  전자 반경 제약: Δr_p^2(e) = {:.3e}", sol.residuals[0]);
-            println!(
-                "  뮤온 반경 상대 오차: {:.1}%",
-                sol.residuals[1] * 100.0
-            );
-            println!(
-                "  뮤온 g-2 상대 오차: {:.1}%",
-                sol.residuals[2] * 100.0
-            );
+            println!("  뮤온 반경 상대 오차: {:.1}%", sol.residuals[1] * 100.0);
+            println!("  뮤온 g-2 상대 오차: {:.1}%", sol.residuals[2] * 100.0);
             analyze_multimode_solution(masses, &sol, delta_r2_target, delta_a_target);
         }
         None => {
@@ -612,11 +648,8 @@ pub fn run_continuous_ratio_bounds() {
     let delta_a_exp = 2.51e-9_f64;
     let r_exp = delta_r2_exp / delta_a_exp;
 
-    println!("뮤온 g-2에서 유도된 질량-비례 결합 사용: g_p/g_μ = {:.3}", g_ratio);
-    println!(
-        "실험 비율 R_exp = Δr_p^2(μ)/Δa_μ ≈ {:.3e} (단위: fm^2)",
-        r_exp
-    );
+    println!("뮤온 g-2에서 유도된 질량-비례 결합 사용: g_p/g_μ = {g_ratio:.3}");
+    println!("실험 비율 R_exp = Δr_p^2(μ)/Δa_μ ≈ {r_exp:.3e} (단위: fm^2)");
 
     let masses_min_mev = 1.0_f64;
     let masses_max_mev = 1000.0_f64;
@@ -656,8 +689,8 @@ pub fn run_continuous_ratio_bounds() {
     }
 
     println!("\n단일 모드 비율 R(m) = (g_p/g_μ)·F_μ(m)/G(m) 의 스캔 범위 (m ∈ [1, 1000] MeV):");
-    println!("  R_min ≈ {:.3e}", r_min);
-    println!("  R_max ≈ {:.3e}", r_max);
+    println!("  R_min ≈ {r_min:.3e}");
+    println!("  R_max ≈ {r_max:.3e}");
 
     if r_exp >= r_min && r_exp <= r_max {
         println!("\n결론: R_exp 가 [R_min, R_max] 내부에 있음");
@@ -672,45 +705,45 @@ pub fn run_continuous_ratio_bounds() {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_mass_proportional_law() {
         let coupling = MassProportionalCoupling::from_g_mu(6e-4);
         assert!(coupling.verify_mass_proportionality());
-        
+
         let ratio = coupling.g_mu / coupling.g_e;
         let expected = M_MU_MEV / M_E_MEV;
         assert!((ratio - expected).abs() / expected < 1e-6);
     }
-    
+
     #[test]
     fn test_bohr_radius_scaling() {
         let a0_e_angstrom = BohrRadiusCalculator::electron_proton_angstrom();
         let a0_mu_fm = BohrRadiusCalculator::muon_proton_fm();
-        
+
         assert!(a0_e_angstrom > 0.5 && a0_e_angstrom < 0.6);
         assert!(a0_mu_fm > 200.0 && a0_mu_fm < 400.0);
-        
+
         let ratio = a0_e_angstrom * 1e5 / a0_mu_fm;
         assert!(ratio > 150.0 && ratio < 250.0);
     }
-    
+
     #[test]
     fn test_yukawa_potential_hierarchy() {
         let coupling = MassProportionalCoupling::from_g_mu(6e-4);
         let yukawa = YukawaPotential::new(coupling.g_mu, coupling.g_p, 17.0);
-        
+
         let ratio = yukawa.mu_to_e_ratio(2.6, &coupling);
         let expected_ratio = M_MU_MEV / M_E_MEV;
-        
+
         assert!((ratio - expected_ratio).abs() / expected_ratio < 1e-6);
     }
-    
+
     #[test]
     fn test_g2_anomaly_order() {
         let anomaly = AnomalousMagneticMoment::new(6e-4, 17.0);
         let delta_a_mu = anomaly.delta_a_mu();
-        
+
         assert!(delta_a_mu > 1e-10 && delta_a_mu < 1e-6);
     }
 
@@ -719,10 +752,10 @@ mod tests {
         let m0 = 100.0;
         let loss = EffectiveMassCalculator::calculate_loss(m0);
         let eff = EffectiveMassCalculator::calculate_effective_mass(m0);
-        
+
         // Loss + Eff = M0
         assert!((loss + eff - m0).abs() < 1e-9);
-        
+
         // Eff = M0 * e^-1
         let expected_eff = m0 * (-1.0_f64).exp();
         assert!((eff - expected_eff).abs() < 1e-9);

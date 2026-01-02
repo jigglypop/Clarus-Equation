@@ -1,7 +1,7 @@
-use std::f64::consts::PI;
-use rayon::prelude::*;
 use crate::engine::noise::PinkNoiseGenerator;
-use crate::engine::optimizer_v2::{SfeOptimizerV2, HardwareConstraints}; // HardwareConstraints 추가
+use crate::engine::optimizer_v2::{HardwareConstraints, SfeOptimizerV2}; // HardwareConstraints 추가
+use rayon::prelude::*;
+use std::f64::consts::PI;
 use std::time::Instant;
 
 /// SFE 순수 해석학적 최적화기 (고도화 버전: Balanced Log-SFE)
@@ -16,10 +16,20 @@ impl SfeOptimizer {
         Self { beta }
     }
 
-    pub fn optimize(&self, steps: usize, n_pulses: usize, noise_level: f64, noise_pool: &[Vec<f64>]) -> Vec<f64> {
+    pub fn optimize(
+        &self,
+        steps: usize,
+        n_pulses: usize,
+        noise_level: f64,
+        noise_pool: &[Vec<f64>],
+    ) -> Vec<f64> {
         // 초기값: UDD 정규화 시퀀스
         let mut seq: Vec<f64> = (1..=n_pulses)
-            .map(|j| ((j as f64 * PI) / (2.0 * n_pulses as f64 + 2.0)).sin().powi(2))
+            .map(|j| {
+                ((j as f64 * PI) / (2.0 * n_pulses as f64 + 2.0))
+                    .sin()
+                    .powi(2)
+            })
             .collect();
         seq.sort_by(|a, b| a.partial_cmp(b).unwrap());
 
@@ -71,50 +81,57 @@ impl SfeOptimizer {
     /// 하드웨어 스펙을 반영한 Robust SFE 최적화
     /// - TLS Notch Filter 자동 적용
     /// - 초기 펄스 간격 제약 (0.03 이상) 강제
-    pub fn optimize_for_spec(&self, steps: usize, n_pulses: usize, noise_level: f64, noise_pool: &[Vec<f64>], tls_freq: Option<f64>) -> Vec<f64> {
+    pub fn optimize_for_spec(
+        &self,
+        steps: usize,
+        n_pulses: usize,
+        noise_level: f64,
+        noise_pool: &[Vec<f64>],
+        tls_freq: Option<f64>,
+    ) -> Vec<f64> {
         // TLS 주파수가 감지되면 환경변수를 통해 Notch Filter 활성화
         // (evaluate_sequence_with_pool 함수가 환경변수를 참조하므로)
         if let Some(omega) = tls_freq {
-             std::env::set_var("SFE_TLS_OMEGA", omega.to_string());
-             std::env::set_var("SFE_TLS_WEIGHT", "0.5"); // Strong penalty weight
+            std::env::set_var("SFE_TLS_OMEGA", omega.to_string());
+            std::env::set_var("SFE_TLS_WEIGHT", "0.5"); // Strong penalty weight
         } else {
-             std::env::remove_var("SFE_TLS_OMEGA");
-             std::env::remove_var("SFE_TLS_WEIGHT");
+            std::env::remove_var("SFE_TLS_OMEGA");
+            std::env::remove_var("SFE_TLS_WEIGHT");
         }
-        
+
         let mut seq = self.optimize(steps, n_pulses, noise_level, noise_pool);
-        
+
         // Robustness: 초기 펄스가 너무 빠르면 하드웨어 오류 발생 가능
         // 최소 0.10 (10%) 지점 이후에 오도록 강제 보정 (대폭 상향)
-        let min_first_pulse = 0.10; 
+        let min_first_pulse = 0.10;
         let min_pulse_interval = 0.05; // 펄스 간격 최소 5%
 
         if !seq.is_empty() {
             seq.sort_by(|a, b| a.partial_cmp(b).unwrap());
-            
+
             // 1. 첫 펄스 보정
             if seq[0] < min_first_pulse {
                 seq[0] = min_first_pulse;
             }
-            
+
             // 2. 간격 보정 (밀리는 도미노 효과)
-            for i in 0..seq.len()-1 {
-                if seq[i+1] - seq[i] < min_pulse_interval {
-                    seq[i+1] = seq[i] + min_pulse_interval;
+            for i in 0..seq.len() - 1 {
+                if seq[i + 1] - seq[i] < min_pulse_interval {
+                    seq[i + 1] = seq[i] + min_pulse_interval;
                 }
             }
-            
+
             // 3. 끝 범위를 넘어갔으면 전체 스케일링으로 압축 (단, 간격 비율은 유지)
             if let Some(&last) = seq.last() {
-                 if last >= 0.99 {
-                     let scale = 0.98 / last; // 0.98까지 안전하게 압축
-                     for x in seq.iter_mut() {
-                         *x *= scale;
-                     }
-                 }
+                if last >= 0.99 {
+                    let scale = 0.98 / last; // 0.98까지 안전하게 압축
+                    for x in seq.iter_mut() {
+                        *x *= scale;
+                    }
+                }
             }
         }
-        
+
         seq
     }
 }
@@ -131,10 +148,10 @@ pub fn run_pulse_optimizer(
     noise_level: f64,
 ) -> (Vec<usize>, f64, f64) {
     println!("\n=== SFE Pulse Optimizer Benchmark (V1 vs V2-Coord vs V2-Riemannian) ===\n");
-    
+
     let beta = 50.0;
     let optimizer_v1 = SfeOptimizer::new(beta);
-    
+
     // V2 Optimizer with relaxed constraints for fair comparison with V1
     // V1 finds pulses very early (e.g. 0.004), so we relax min_first_pulse to 0.001
     let constraints = HardwareConstraints {
@@ -196,44 +213,76 @@ pub fn run_pulse_optimizer(
     let t_start = Instant::now();
     let seq_v1 = optimizer_v1.optimize(steps, n_pulses, noise_level, &noise_pool);
     let t_v1 = t_start.elapsed();
-    let idx_v1: Vec<usize> = seq_v1.iter().map(|&t| (t * steps as f64).round() as usize).collect();
+    let idx_v1: Vec<usize> = seq_v1
+        .iter()
+        .map(|&t| (t * steps as f64).round() as usize)
+        .collect();
     let score_v1 = evaluate_sequence_with_pool(&idx_v1, noise_level, &noise_pool);
-    println!("1. V1 (Simple Coordinate): Score = {:.6}, Time = {:.2}ms", score_v1, t_v1.as_millis());
+    println!(
+        "1. V1 (Simple Coordinate): Score = {:.6}, Time = {:.2}ms",
+        score_v1,
+        t_v1.as_millis()
+    );
 
     // Spectrum function for V2 (Pink Noise like 1/f)
     let spectrum_fn = |omega: f64| -> f64 {
-        if omega.abs() < 1e-6 { 0.0 } else { 1.0 / omega.abs().powf(alpha) }
+        if omega.abs() < 1e-6 {
+            0.0
+        } else {
+            1.0 / omega.abs().powf(alpha)
+        }
     };
 
     // 2. V2: Filter Function Coordinate Descent
     let t_start = Instant::now();
-    let seq_v2_coord = optimizer_v2.optimize_with_filter_function(steps, n_pulses, &spectrum_fn);
+    let seq_v2_coord = optimizer_v2.optimize_with_filter_function(steps, n_pulses, spectrum_fn);
     let t_v2_coord = t_start.elapsed();
-    let idx_v2_coord: Vec<usize> = seq_v2_coord.iter().map(|&t| (t * steps as f64).round() as usize).collect();
+    let idx_v2_coord: Vec<usize> = seq_v2_coord
+        .iter()
+        .map(|&t| (t * steps as f64).round() as usize)
+        .collect();
     let score_v2_coord = evaluate_sequence_with_pool(&idx_v2_coord, noise_level, &noise_pool);
-    println!("2. V2 (Filter Coordinate): Score = {:.6}, Time = {:.2}ms", score_v2_coord, t_v2_coord.as_millis());
+    println!(
+        "2. V2 (Filter Coordinate): Score = {:.6}, Time = {:.2}ms",
+        score_v2_coord,
+        t_v2_coord.as_millis()
+    );
 
     // 3. V2: Riemannian Gradient Descent
     let t_start = Instant::now();
-    let seq_v2_riem = optimizer_v2.optimize_riemannian(n_pulses, &spectrum_fn);
+    let seq_v2_riem = optimizer_v2.optimize_riemannian(n_pulses, spectrum_fn);
     let t_v2_riem = t_start.elapsed();
-    let idx_v2_riem: Vec<usize> = seq_v2_riem.iter().map(|&t| (t * steps as f64).round() as usize).collect();
+    let idx_v2_riem: Vec<usize> = seq_v2_riem
+        .iter()
+        .map(|&t| (t * steps as f64).round() as usize)
+        .collect();
     let score_v2_riem = evaluate_sequence_with_pool(&idx_v2_riem, noise_level, &noise_pool);
-    println!("3. V2 (Riemannian Grad):   Score = {:.6}, Time = {:.2}ms", score_v2_riem, t_v2_riem.as_millis());
+    println!(
+        "3. V2 (Riemannian Grad):   Score = {:.6}, Time = {:.2}ms",
+        score_v2_riem,
+        t_v2_riem.as_millis()
+    );
 
     // UDD Baseline
     let mut udd_seq = Vec::with_capacity(n_pulses);
     for j in 1..=n_pulses {
-        let t = ((j as f64 * PI) / (2.0 * n_pulses as f64 + 2.0)).sin().powi(2);
+        let t = ((j as f64 * PI) / (2.0 * n_pulses as f64 + 2.0))
+            .sin()
+            .powi(2);
         udd_seq.push((t * steps as f64).round() as usize);
     }
     let udd_score = evaluate_sequence_with_pool(&udd_seq, noise_level, &noise_pool);
-    println!("0. UDD (Baseline):         Score = {:.6}", udd_score);
+    println!("0. UDD (Baseline):         Score = {udd_score:.6}");
 
-    println!("\n[Result] Best Strategy: {}", 
-        if score_v2_riem >= score_v2_coord && score_v2_riem >= score_v1 { "Riemannian" }
-        else if score_v2_coord >= score_v1 { "V2-Coordinate" }
-        else { "V1-Simple" }
+    println!(
+        "\n[Result] Best Strategy: {}",
+        if score_v2_riem >= score_v2_coord && score_v2_riem >= score_v1 {
+            "Riemannian"
+        } else if score_v2_coord >= score_v1 {
+            "V2-Coordinate"
+        } else {
+            "V1-Simple"
+        }
     );
 
     // Return the best sequence
@@ -253,11 +302,13 @@ fn evaluate_performance(
     sfe_seq: &[usize],
     n_pulses: usize,
     noise_amp: f64,
-    noise_pool: &[Vec<f64>]
+    noise_pool: &[Vec<f64>],
 ) -> (f64, f64) {
     let mut udd_seq = Vec::with_capacity(n_pulses);
     for j in 1..=n_pulses {
-        let t = ((j as f64 * PI) / (2.0 * n_pulses as f64 + 2.0)).sin().powi(2);
+        let t = ((j as f64 * PI) / (2.0 * n_pulses as f64 + 2.0))
+            .sin()
+            .powi(2);
         udd_seq.push((t * steps as f64).round() as usize);
     }
 
@@ -297,12 +348,12 @@ pub fn evaluate_sequence_with_pool(
     let mut current_sign = 1.0_f64;
     let mut pulse_idx = 0_usize;
 
-    for t in 0..steps {
+    for (t, y_t) in y.iter_mut().enumerate() {
         if pulse_idx < n_pulses && t == pulses_sorted[pulse_idx] {
             current_sign *= -1.0;
             pulse_idx += 1;
         }
-        y[t] = current_sign;
+        *y_t = current_sign;
     }
 
     // 저주파 모멘트 M_k = ∫ t^k y(t) dt (정규화된 시간 t∈[0,1]) 계산
@@ -337,8 +388,8 @@ pub fn evaluate_sequence_with_pool(
     let mut moment_penalty = 0.0_f64;
     if moment_order > 0 {
         let mut acc = 0.0_f64;
-        for k in 0..moment_order {
-            acc += m[k] * m[k];
+        for &v in m.iter().take(moment_order) {
+            acc += v * v;
         }
         moment_penalty = acc / (moment_order as f64);
     }
@@ -356,11 +407,10 @@ pub fn evaluate_sequence_with_pool(
     if tls_omega > 0.0 && tls_weight > 0.0 {
         let mut re = 0.0_f64;
         let mut im = 0.0_f64;
-        for t in 0..steps {
+        for (t, &v) in y.iter().enumerate() {
             let phase = tls_omega * (t as f64);
             let c = phase.cos();
             let s = phase.sin();
-            let v = y[t];
             re += v * c;
             im += v * s;
         }
@@ -381,8 +431,8 @@ pub fn evaluate_sequence_with_pool(
             let mut phase = 0.0_f64;
             let mut next_check = 0_usize;
 
-            for t in 0..steps {
-                phase += y[t] * noise[t] * noise_amp * dt;
+            for (t, (&y_t, &noise_t)) in y.iter().zip(noise.iter()).enumerate() {
+                phase += y_t * noise_t * noise_amp * dt;
 
                 if next_check < check_indices.len() && t == check_indices[next_check] {
                     s_vals[next_check] = phase.cos();
@@ -391,8 +441,8 @@ pub fn evaluate_sequence_with_pool(
             }
 
             let mut acc = 0.0_f64;
-            for k in 0..4 {
-                acc += weights[k] * s_vals[k];
+            for (&w, &s_val) in weights.iter().zip(s_vals.iter()) {
+                acc += w * s_val;
             }
             acc / weight_sum
         })
