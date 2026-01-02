@@ -164,20 +164,17 @@ $$
 - $\nabla_g \Phi$: 메트릭 기반 gradient
 - $e^{-\sigma}$: 억압 기반 정규화
 
-## temp.md와의 정합성
+## 문서 기반 정합성(요약)
 
-temp.md의 ChatGPT 대화 내용이 본 Part8에 완벽히 반영됨:
+Part8 문서군은 아래 규약을 기준으로 서로 호환되는 표기와 정의를 사용한다.
 
-| temp.md 내용 | Part8 대응 |
+| 항목 | 근거 문서 |
 |:---|:---|
-| 7개 대표식 | 8.1 §1 |
-| 중력-억압장 연결식 | 8.1 §2, 8.3 |
-| 수면 위/아래 비유 | 8.3 §1 |
-| 양자컴퓨터 불가능성 | 8.4 §1 |
-| SCQE 개념 | 8.4 §2 |
-| 0.37 법칙 | 8.5 |
-| Reality_Stone 통합 | 8.2 |
-| Bellman 최적화 | 8.2 §8.2 |
+| 7개 대표식(억압/선택/에너지/시간진화/통합식) | `8.1_SFE_리만기하학적_통합_프레임워크.md`, `8.1_SFE_Reality_Stone_통합_개요.md` |
+| 무차원화 규약(지수 무차원, $\tilde R$, $\sigma\simeq\lambda\tilde R$) | `8.1_SFE_리만기하학적_통합_프레임워크.md`, `8.2_SFE_형식적_수학_모델과_증명.md` |
+| $\epsilon$ 표기 규약($\epsilon_*$ / $\epsilon_{\text{obs}}$ / $\epsilon_{\text{mass}}$) | `8.11_SFE_epsilon_e역수_제1원리_유도.md` |
+| 우주론 적용의 입력/가정/출력 구분 | `../Derivations_Applications/04_Dark_Energy_Derivation.md` |
+| 정합성 체크리스트(문서 기준) | `8.9_정합성_최종_검증.md` |
 
 ## 철학적 함의
 
@@ -268,9 +265,6 @@ Part8 프레임워크는 다음을 예측:
 **수학**:
 - Evans (2010): Partial Differential Equations
 - Wald (1984): General Relativity
-
-**외부 대화**:
-- temp.md: ChatGPT와의 Reality_Stone 대화 (완전 반영)
 
 ## 최종 정리
 

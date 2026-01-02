@@ -1,8 +1,8 @@
 ## 제5장 역설계(Inverse Game Design): 목표 메타 기반 팩션·맵 생성
 
-> 본 문서는 **LB-IGD (Laplace–Beltrami Inverse Game Design)** 프로젝트의 이론 문서입니다. (코드 엔트리: `main.py`)
+> 본 문서는 **LB-IGD (Laplace–Beltrami Inverse Game Design)** 관련 이론 문서입니다. (구현 코드: 미포함)
 >
-> - 관련 문서: 제1장 `docs/bellman.md`, 제2장 `docs/lbo.md`, 제3장 `docs/blackbox.md`, 제4장 `docs/evaluation.md`
+> - 관련 문서: 제1장 `docs/brain/bellman.md`, 제2장 `docs/brain/lbo.md`, 제3장 `docs/brain/blackbox.md`, 제4장 `docs/brain/evaluation.md`
 > - 참고: 이 장은 “목표 메타 → 규칙/팩션 생성”을 위한 정식화 중심이며, 현재 코드에는 일부 개념(생성기 \(g\))이 아직 구현되어 있지 않습니다.
 
 ### 초록

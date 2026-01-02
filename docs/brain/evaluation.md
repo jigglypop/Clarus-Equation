@@ -1,9 +1,9 @@
 ## 제4장 평가 프로토콜: self-play 기반 성공 판정과 재현성
 
-> 본 문서는 **LB-IGD (Laplace–Beltrami Inverse Game Design)** 프로젝트의 이론 문서입니다. (코드 엔트리: `main.py`)
+> 본 문서는 **LB-IGD (Laplace–Beltrami Inverse Game Design)** 관련 이론 문서입니다. (구현 코드: 미포함)
 >
-> - 관련 문서: 제1장 `docs/bellman.md`, 제2장 `docs/lbo.md`, 제3장 `docs/blackbox.md`
-> - 코드 대응: `src/core/simulation.py`(평가 통계), `src/core/designer.py`(손실 구성)
+> - 관련 문서: 제1장 `docs/brain/bellman.md`, 제2장 `docs/brain/lbo.md`, 제3장 `docs/brain/blackbox.md`
+> - 코드 대응: (미포함)
 
 ### 초록
 제1장과 제3장은 “설계 \(x\)가 게임 \(\mathcal{M}_x\)를 만들고, self-play/RL로 얻는 관측 통계 \(y(x;\omega)\)로 외부 목적 \(J(x)\)를 줄인다”는 bilevel/black-box 구조를 정리했습니다. 제2장은 그 과정에서 곡률/확산(라플라시안, LBO) 관점이 왜 자연스럽게 등장하는지를 수학적으로 연결합니다.
@@ -115,7 +115,7 @@ $$
 
 이 값이 작아지는 것은 “승패 결과”가 아니라 “플레이 패턴(거리대의 리듬)”이 목표 메타에 가까워졌음을 의미합니다.
 
-> 구현 메모: `src/core/designer.py:wasserstein_distance_1d`는 1차원 경험표본에 대해 위의 형태로 \(W_2^2\)를 근사한다.
+> 구현 메모: (미포함) 1차원 경험표본에 대해 위의 형태로 \(W_2^2\)를 근사한다.
 
 ---
 

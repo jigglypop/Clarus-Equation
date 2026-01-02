@@ -96,7 +96,7 @@ $$
 
 ## 1.3 재현(우주론 성장: $f\sigma_8$ 표)
 
-`examples/physics/cosmology.py`는 위의 최신 정의($S(a),\mu(a)$)를 그대로 선택할 수 있도록 구성되어 있다.
+`../../examples/physics/cosmology.py`는 위의 최신 정의($S(a),\mu(a)$)를 그대로 선택할 수 있도록 구성되어 있다.
 
 - 입력(캘리브레이션): $\Omega_{m,0}$, $\Omega_{\Lambda,0}$, $\sigma_8(0)$, $\epsilon_{\text{grav}}$
 - 출력(검증): $E(z)$, $D_L(z)$, $D(a)$, $f(z)$, $f\sigma_8(z)$
@@ -364,7 +364,7 @@ $$
 
 ### 4.1.1 (정본과의 연결) 스칼라 억압장 모형에서의 조건
 
-`Core_Theory/8.2`의 최소 모형처럼 억압 섹터를 스칼라장으로 기술하면, 균일 우주에서 운동항이 퍼텐셜에 비해 작을 때($\dot\sigma^2\ll V(\sigma)$) 응력–에너지 텐서는
+`../Core_Theory/8.2_SFE_형식적_수학_모델과_증명.md`의 최소 모형처럼 억압 섹터를 스칼라장으로 기술하면, 균일 우주에서 운동항이 퍼텐셜에 비해 작을 때($\dot\sigma^2\ll V(\sigma)$) 응력–에너지 텐서는
 
 $$
 T_{\mu\nu}^\text{supp}\approx -V(\sigma)\,g_{\mu\nu}

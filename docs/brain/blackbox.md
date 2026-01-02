@@ -1,9 +1,9 @@
 ## 제3장 확률적 블랙박스 최적화: ES 유도와 교전 거리 분포 정합
 
-> 본 문서는 **LB-IGD (Laplace–Beltrami Inverse Game Design)** 프로젝트의 이론 문서입니다. (코드 엔트리: `main.py`)
+> 본 문서는 **LB-IGD (Laplace–Beltrami Inverse Game Design)** 관련 이론 문서입니다. (구현 코드: 미포함)
 >
-> - 관련 문서: 제1장 `docs/bellman.md`, 제2장 `docs/lbo.md`, 제4장 `docs/evaluation.md`
-> - 코드 대응: `src/core/designer.py` (ES + CRN + LBO 가중, 거리 분포 정합 항)
+> - 관련 문서: 제1장 `docs/brain/bellman.md`, 제2장 `docs/brain/lbo.md`, 제4장 `docs/brain/evaluation.md`
+> - 코드 대응: (미포함)
 
 ### 초록
 설계 변수 \(x\)는 게임(MDP) \(\mathcal{M}_x\)를 정의합니다. 그리고 그 게임에서 self-play로 학습된 정책 \(\pi_x^*\)를 통해 통계 \(y(x;\omega)\)를 관측하고, 이를 바탕으로 “밸런스 손실” \(L\)을 계산합니다. 이 구조는 내부에 학습이 들어가고(내부 루프), 외부에서는 설계를 바꾸는(외부 루프) 형태이므로 본질적으로 **확률적 bilevel(2중) 최적화**입니다.
@@ -334,7 +334,7 @@ $$
 
 가 성립한다. 이는 1차원 optimal transport에서 최적 매칭이 단조 수송(monotone coupling)으로 주어지기 때문이다.
 
-> 구현 메모: 본 프로젝트의 `src/core/designer.py:wasserstein_distance_1d`는 위의 “정렬 기반 \(W_2^2\)” 공식을 그대로 사용한다.
+> 구현 메모: (미포함) 1차원 경험표본의 \(W_2^2\)는 “정렬 기반” 공식을 사용한다.
 
 #### 9.2 목표 분포가 혼합분포인 경우
 목표 $\bar q(d)=\frac{1}{F}\sum_f q_f(d)$는 일반적으로 혼합분포이며 폐형식 $W_2$가 존재하지 않을 수 있다. 이때는 다음 중 하나를 사용한다.
