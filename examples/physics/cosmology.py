@@ -54,6 +54,63 @@ def simpson(y: list[float], x: list[float]) -> float:
     return (h / 3.0) * (s + 4.0 * s_odd + 2.0 * s_even)
 
 
+def interp_linear(x_grid: list[float], y_grid: list[float], x: float) -> float:
+    if len(x_grid) != len(y_grid):
+        raise ValueError("x_grid and y_grid length mismatch")
+    if not x_grid:
+        raise ValueError("empty grid")
+    if x <= x_grid[0]:
+        return y_grid[0]
+    if x >= x_grid[-1]:
+        return y_grid[-1]
+    lo = 0
+    hi = len(x_grid) - 1
+    while hi - lo > 1:
+        mid = (lo + hi) // 2
+        if x_grid[mid] <= x:
+            lo = mid
+        else:
+            hi = mid
+    x0 = x_grid[lo]
+    x1 = x_grid[hi]
+    if x1 == x0:
+        return y_grid[lo]
+    w = (x - x0) / (x1 - x0)
+    return (1.0 - w) * y_grid[lo] + w * y_grid[hi]
+
+
+def parse_fsigma8_triplets(spec: str) -> list[tuple[float, float, float]]:
+    """
+    Parse "z:fs8:sigma,z:fs8:sigma,..." into a list of triples.
+    sigma can be 0 to indicate "unknown/ignored".
+    """
+    out: list[tuple[float, float, float]] = []
+    s = spec.strip()
+    if not s:
+        return out
+    for part in s.split(","):
+        p = part.strip()
+        if not p:
+            continue
+        fields = [f.strip() for f in p.split(":")]
+        if len(fields) != 3:
+            raise ValueError(f"invalid triplet '{p}': expected z:fs8:sigma")
+        z = float(fields[0])
+        fs8 = float(fields[1])
+        sig = float(fields[2])
+        if z < 0.0:
+            raise ValueError("z must be >= 0")
+        if sig < 0.0:
+            raise ValueError("sigma must be >= 0")
+        out.append((z, fs8, sig))
+    out.sort(key=lambda t: t[0])
+    return out
+
+
+def is_close(a: float, b: float, tol: float) -> bool:
+    return abs(a - b) <= tol
+
+
 @dataclass(frozen=True)
 class Background:
     omega_m0: float
@@ -189,6 +246,74 @@ def h0_t0(bg: Background, a_min: float, n: int) -> float:
     return simpson(integrand, ln_a_grid)
 
 
+def make_mu_grid(s_grid: list[float], epsilon_grav: float) -> list[float]:
+    return [1.0 - epsilon_grav * ss for ss in s_grid]
+
+
+def predict_fsigma8_at_z(
+    bg: Background,
+    ln_a_grid: list[float],
+    a_grid: list[float],
+    s_grid: list[float],
+    epsilon_grav: float,
+    sigma8_0: float,
+    z: float,
+) -> float:
+    mu_grid = make_mu_grid(s_grid, epsilon_grav)
+    d_norm, f_ln = solve_growth(bg, a_grid, mu_grid)
+    a = 1.0 / (1.0 + z)
+    ln_a = math.log(a)
+    d = interp_linear(ln_a_grid, d_norm, ln_a)
+    fz = interp_linear(ln_a_grid, f_ln, ln_a)
+    return fz * (sigma8_0 * d)
+
+
+def calibrate_epsilon_grav_bisect(
+    bg: Background,
+    ln_a_grid: list[float],
+    a_grid: list[float],
+    s_grid: list[float],
+    sigma8_0: float,
+    z_cal: float,
+    fs8_target: float,
+    eps_min: float,
+    eps_max: float,
+    max_iter: int = 80,
+    tol_abs: float = 1.0e-6,
+) -> float:
+    if eps_max <= eps_min:
+        raise ValueError("invalid epsilon_grav bracket")
+    if not (z_cal >= 0.0):
+        raise ValueError("z_cal must be >= 0")
+
+    def f(epsg: float) -> float:
+        return predict_fsigma8_at_z(bg, ln_a_grid, a_grid, s_grid, epsg, sigma8_0, z_cal) - fs8_target
+
+    f_lo = f(eps_min)
+    f_hi = f(eps_max)
+    if f_lo == 0.0:
+        return eps_min
+    if f_hi == 0.0:
+        return eps_max
+    if f_lo * f_hi > 0.0:
+        raise ValueError("calibration target not bracketed by eps_min/eps_max")
+
+    lo = eps_min
+    hi = eps_max
+    for _ in range(max_iter):
+        mid = 0.5 * (lo + hi)
+        f_mid = f(mid)
+        if abs(f_mid) <= tol_abs:
+            return mid
+        if f_lo * f_mid <= 0.0:
+            hi = mid
+            f_hi = f_mid
+        else:
+            lo = mid
+            f_lo = f_mid
+    return 0.5 * (lo + hi)
+
+
 def main() -> int:
     p = argparse.ArgumentParser(prog="cosmology")
     p.add_argument("--model", choices=["epsilon", "calibrate"], default="epsilon")
@@ -198,6 +323,13 @@ def main() -> int:
     p.add_argument("--mu", choices=["lcdm", "sfe"], default="sfe")
     p.add_argument("--sdef", choices=["ratio", "cumulative"], default="ratio")
     p.add_argument("--epsilon-grav", type=float, default=0.0)
+    p.add_argument("--calibrate-epsilon-grav", action="store_true")
+    p.add_argument("--cal-z", type=float, default=float("nan"))
+    p.add_argument("--cal-fsigma8", type=float, default=float("nan"))
+    p.add_argument("--cal-pick", choices=["first", "last"], default="first")
+    p.add_argument("--eps-min", type=float, default=-1.0)
+    p.add_argument("--eps-max", type=float, default=1.0)
+    p.add_argument("--fsigma8-data", type=str, default="")
     p.add_argument("--sigma8-0", type=float, default=0.811)
     p.add_argument("--h0", type=float, default=67.4)
     p.add_argument("--zmax", type=float, default=2.0)
@@ -226,18 +358,68 @@ def main() -> int:
     bg = Background(omega_m0=omega_m0, omega_l0=omega_l0)
 
     a_grid = logspace(1.0e-3, 1.0, args.na)
+    ln_a_grid = [math.log(a) for a in a_grid]
     if args.sdef == "ratio":
         s_grid = compute_s_of_a_ratio(bg, a_grid)
     else:
         s_grid = compute_s_of_a(bg, a_grid)
 
-    if args.mu == "lcdm":
-        mu_grid = [1.0 for _ in a_grid]
-    else:
-        eg = args.epsilon_grav
-        mu_grid = [1.0 - eg * ss for ss in s_grid]
+    cal_z_used = float("nan")
+    cal_fsigma8_used = float("nan")
+    cal_source = ""
+    cal_z_source = ""
 
-    d_norm, f_ln = solve_growth(bg, a_grid, mu_grid)
+    epsilon_grav = args.epsilon_grav
+    if args.calibrate_epsilon_grav:
+        if args.mu != "sfe":
+            raise SystemExit("--calibrate-epsilon-grav requires --mu sfe")
+        triplets = parse_fsigma8_triplets(args.fsigma8_data)
+        if math.isfinite(args.cal_z):
+            cal_z_used = args.cal_z
+            cal_z_source = "explicit"
+        else:
+            if not triplets:
+                raise SystemExit("--calibrate-epsilon-grav requires --cal-z or non-empty --fsigma8-data")
+            if args.cal_pick == "last":
+                cal_z_used = triplets[-1][0]
+            else:
+                cal_z_used = triplets[0][0]
+            cal_z_source = "fsigma8_data"
+
+        cal_fsigma8 = args.cal_fsigma8
+        cal_source = "explicit"
+        if not math.isfinite(cal_fsigma8):
+            z_tol = 5.0e-7
+            for (zt, fs8, _sig) in triplets:
+                if is_close(zt, cal_z_used, z_tol):
+                    cal_fsigma8 = fs8
+                    cal_source = "fsigma8_data"
+                    break
+        if not math.isfinite(cal_fsigma8):
+            raise SystemExit("--calibrate-epsilon-grav requires --cal-fsigma8 or matching point in --fsigma8-data")
+        cal_fsigma8_used = cal_fsigma8
+        epsilon_grav = calibrate_epsilon_grav_bisect(
+            bg=bg,
+            ln_a_grid=ln_a_grid,
+            a_grid=a_grid,
+            s_grid=s_grid,
+            sigma8_0=args.sigma8_0,
+            z_cal=cal_z_used,
+            fs8_target=cal_fsigma8,
+            eps_min=args.eps_min,
+            eps_max=args.eps_max,
+        )
+
+    mu_grid_lcdm = [1.0 for _ in a_grid]
+    d_norm_lcdm, f_ln_lcdm = solve_growth(bg, a_grid, mu_grid_lcdm)
+
+    if args.mu == "lcdm":
+        mu_grid = mu_grid_lcdm
+        d_norm = d_norm_lcdm
+        f_ln = f_ln_lcdm
+    else:
+        mu_grid = make_mu_grid(s_grid, epsilon_grav)
+        d_norm, f_ln = solve_growth(bg, a_grid, mu_grid)
 
     if args.z_list.strip():
         z_grid = []
@@ -255,7 +437,12 @@ def main() -> int:
     print("omega_lambda0", f"{omega_l0:.9f}")
     print("mu", args.mu)
     print("sdef", args.sdef)
-    print("epsilon_grav", f"{args.epsilon_grav:.9f}")
+    print("epsilon_grav", f"{epsilon_grav:.9f}")
+    if args.calibrate_epsilon_grav:
+        print("cal_z", f"{cal_z_used:.6f}")
+        print("cal_fsigma8", f"{cal_fsigma8_used:.9f}")
+        print("cal_z_source", cal_z_source)
+        print("cal_source", cal_source)
     print("sigma8_0", f"{args.sigma8_0:.9f}")
     print("h0", f"{args.h0:.6f}")
     if args.print_h0t0:
@@ -266,26 +453,18 @@ def main() -> int:
     else:
         print("z,E(z),D_L_Mpc,D(a),f(z),sigma8(z),f_sigma8(z)")
 
-    d1 = d_norm[-1]
-    if d1 == 0.0:
-        d1 = 1.0
-
     for z in z_grid:
         a = 1.0 / (1.0 + z)
-        idx = int(round((math.log(a) - math.log(a_grid[0])) / (math.log(a_grid[-1]) - math.log(a_grid[0])) * (len(a_grid) - 1)))
-        if idx < 0:
-            idx = 0
-        if idx >= len(a_grid):
-            idx = len(a_grid) - 1
+        ln_a = math.log(a)
 
         ez = bg.e_of_a(a)
         dl = luminosity_distance_mpc(bg, args.h0, z, n=2001)
         om = bg.omega_m_of_a(a)
         ol = bg.omega_l_of_a(a)
-        ss = s_grid[idx]
-        muu = mu_grid[idx]
-        d = d_norm[idx]
-        fz = f_ln[idx]
+        ss = interp_linear(ln_a_grid, s_grid, ln_a)
+        muu = 1.0 if args.mu == "lcdm" else (1.0 - epsilon_grav * ss)
+        d = interp_linear(ln_a_grid, d_norm, ln_a)
+        fz = interp_linear(ln_a_grid, f_ln, ln_a)
         s8 = args.sigma8_0 * d
         fs8 = fz * s8
         if args.extended:
@@ -314,21 +493,106 @@ def main() -> int:
             )
 
     if args.compare_fsigma8:
-        targets = {0.32: 0.438, 0.57: 0.447, 0.70: 0.442}
+        triplets = parse_fsigma8_triplets(args.fsigma8_data)
+        legacy = False
+        if not triplets:
+            # Legacy illustrative values (no uncertainties). Prefer --fsigma8-data.
+            legacy = True
+            triplets = [(0.32, 0.438, 0.0), (0.57, 0.447, 0.0), (0.70, 0.442, 0.0)]
         print("")
-        print("fsigma8_compare(z,pred,target,delta,delta_percent)")
-        for zt in [0.32, 0.57, 0.70]:
+        if legacy:
+            print("fsigma8_compare_mode legacy")
+        else:
+            print("fsigma8_compare_mode data")
+        print("fsigma8_compare(z,is_cal,pred,target,sigma,delta,delta_over_sigma,delta_percent)")
+        chi2_all = 0.0
+        n_all = 0
+        chi2_holdout = 0.0
+        n_holdout = 0
+        chi2_lcdm_all = 0.0
+        n_lcdm_all = 0
+        chi2_lcdm_holdout = 0.0
+        n_lcdm_holdout = 0
+        n_cal_points = 0
+        z_cal = cal_z_used if args.calibrate_epsilon_grav else float("nan")
+        z_tol = 5.0e-7  # printing uses 6 decimals; treat same-point within this tolerance
+        for (zt, tgt, sig) in triplets:
+            is_cal = args.calibrate_epsilon_grav and math.isfinite(z_cal) and is_close(zt, z_cal, z_tol)
+            if is_cal:
+                n_cal_points += 1
+
+            # Model prediction (may be lcdm or sfe depending on --mu).
             a = 1.0 / (1.0 + zt)
-            idx = int(round((math.log(a) - math.log(a_grid[0])) / (math.log(a_grid[-1]) - math.log(a_grid[0])) * (len(a_grid) - 1)))
-            if idx < 0:
-                idx = 0
-            if idx >= len(a_grid):
-                idx = len(a_grid) - 1
-            pred = f_ln[idx] * (args.sigma8_0 * d_norm[idx])
-            tgt = targets[zt]
+            ln_a = math.log(a)
+            d_m = interp_linear(ln_a_grid, d_norm, ln_a)
+            f_m = interp_linear(ln_a_grid, f_ln, ln_a)
+            pred = f_m * (args.sigma8_0 * d_m)
+
+            # Baseline prediction (always lcdm mu=1).
+            d_b = interp_linear(ln_a_grid, d_norm_lcdm, ln_a)
+            f_b = interp_linear(ln_a_grid, f_ln_lcdm, ln_a)
+            pred_lcdm = f_b * (args.sigma8_0 * d_b)
+
             delta = pred - tgt
             pct = (delta / tgt) * 100.0 if tgt != 0.0 else 0.0
-            print(f"{zt:.2f},{pred:.6f},{tgt:.6f},{delta:.6f},{pct:.2f}")
+            if sig > 0.0:
+                d_over_s = delta / sig
+                chi2_all += d_over_s * d_over_s
+                n_all += 1
+                if not is_cal:
+                    chi2_holdout += d_over_s * d_over_s
+                    n_holdout += 1
+
+                d_over_s_lcdm = (pred_lcdm - tgt) / sig
+                chi2_lcdm_all += d_over_s_lcdm * d_over_s_lcdm
+                n_lcdm_all += 1
+                if not is_cal:
+                    chi2_lcdm_holdout += d_over_s_lcdm * d_over_s_lcdm
+                    n_lcdm_holdout += 1
+                print(f"{zt:.6f},{1 if is_cal else 0:d},{pred:.9f},{tgt:.9f},{sig:.9f},{delta:.9f},{d_over_s:.6f},{pct:.3f}")
+            else:
+                print(f"{zt:.6f},{1 if is_cal else 0:d},{pred:.9f},{tgt:.9f},{sig:.9f},{delta:.9f},,{pct:.3f}")
+        if args.calibrate_epsilon_grav and n_cal_points == 0:
+            print("")
+            print("fsigma8_note calibration_z_not_in_data")
+        if n_all > 0:
+            print("")
+            dof_all = n_all
+            if dof_all <= 0:
+                dof_all = 1
+            print("fsigma8_chi2_all", f"{chi2_all:.6f}")
+            print("fsigma8_n_all", f"{n_all:d}")
+            print("fsigma8_dof_all", f"{dof_all:d}")
+            print("fsigma8_chi2_red_all", f"{(chi2_all / dof_all):.6f}")
+            if args.calibrate_epsilon_grav and n_holdout > 0:
+                dof_h = n_holdout
+                if dof_h <= 0:
+                    dof_h = 1
+                print("fsigma8_chi2_holdout", f"{chi2_holdout:.6f}")
+                print("fsigma8_n_holdout", f"{n_holdout:d}")
+                print("fsigma8_dof_holdout", f"{dof_h:d}")
+                print("fsigma8_chi2_red_holdout", f"{(chi2_holdout / dof_h):.6f}")
+
+            # Baseline (lcdm mu=1) chi2 and delta-chi2 for easy comparison.
+            if n_lcdm_all > 0:
+                print("")
+                print("fsigma8_baseline mu=1")
+                print("fsigma8_chi2_lcdm_all", f"{chi2_lcdm_all:.6f}")
+                print("fsigma8_n_lcdm_all", f"{n_lcdm_all:d}")
+                print("fsigma8_dof_lcdm_all", f"{dof_all:d}")
+                print("fsigma8_chi2_red_lcdm_all", f"{(chi2_lcdm_all / dof_all):.6f}")
+                print("fsigma8_delta_chi2_all", f"{(chi2_all - chi2_lcdm_all):.6f}")
+                print("fsigma8_delta_chi2_red_all", f"{((chi2_all / dof_all) - (chi2_lcdm_all / dof_all)):.6f}")
+                if args.calibrate_epsilon_grav and n_lcdm_holdout > 0 and n_holdout > 0:
+                    dof_h = n_holdout
+                    if dof_h <= 0:
+                        dof_h = 1
+                    print("fsigma8_chi2_lcdm_holdout", f"{chi2_lcdm_holdout:.6f}")
+                    print("fsigma8_n_lcdm_holdout", f"{n_lcdm_holdout:d}")
+                    print("fsigma8_dof_lcdm_holdout", f"{dof_h:d}")
+                    print("fsigma8_chi2_red_lcdm_holdout", f"{(chi2_lcdm_holdout / dof_h):.6f}")
+                    print("fsigma8_delta_chi2_holdout", f"{(chi2_holdout - chi2_lcdm_holdout):.6f}")
+                    print("fsigma8_delta_chi2_red_holdout", f"{((chi2_holdout / dof_h) - (chi2_lcdm_holdout / dof_h)):.6f}")
 
     return 0
 

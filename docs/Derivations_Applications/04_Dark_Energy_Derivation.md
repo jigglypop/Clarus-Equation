@@ -107,6 +107,42 @@ $$
 ./.venv/Scripts/python.exe examples/physics/cosmology.py --model calibrate --omega-m 0.315 --omega-lambda 0.685 --mu sfe --sdef ratio --epsilon-grav 0.37 --sigma8-0 0.785 --z-list 0.32,0.57,0.70 --compare-fsigma8
 ```
 
+`--compare-fsigma8`는 기본적으로 레거시(예시) 타깃 값을 사용하지만, 외부 데이터가 있을 때는 다음 형식으로 직접 넣을 수 있다.
+- 형식: `--fsigma8-data "z:fsigma8:sigma,z:fsigma8:sigma,..."` (sigma=0이면 잔차만 출력하고 $\chi^2$는 생략)
+
+예시(레거시와 동일한 숫자를 명시적으로 주입):
+
+```
+./.venv/Scripts/python.exe examples/physics/cosmology.py --model calibrate --omega-m 0.315 --omega-lambda 0.685 --mu sfe --sdef ratio --epsilon-grav 0.37 --sigma8-0 0.785 --z-list 0.32,0.57,0.70 --compare-fsigma8 --fsigma8-data "0.32:0.438:0.0,0.57:0.447:0.0,0.70:0.442:0.0"
+```
+
+또는 "성장만"을 검정하기 위해, 한 점의 $f\sigma_8(z_\mathrm{cal})$로 $\epsilon_{\mathrm{grav}}$를 1점 캘리브레이션하고(그 외 z는 홀드아웃), 다점 잔차를 확인할 수 있다.
+
+```
+./.venv/Scripts/python.exe examples/physics/cosmology.py --model calibrate --omega-m 0.315 --omega-lambda 0.685 --mu sfe --sdef ratio --sigma8-0 0.785 --calibrate-epsilon-grav --cal-z 0.57 --cal-fsigma8 0.447 --eps-min -1 --eps-max 1 --z-list 0.32,0.57,0.70 --compare-fsigma8 --fsigma8-data "0.32:0.438:0.0,0.57:0.447:0.0,0.70:0.442:0.0"
+```
+
+`--cal-fsigma8`를 생략하더라도, `--fsigma8-data`에 `z_\mathrm{cal}` 점이 포함되어 있으면 해당 값을 자동으로 캘리브레이션 타깃으로 사용한다(`cal_source fsigma8_data`로 출력).
+
+또한 `--cal-z` 자체를 생략하고, `--fsigma8-data`에서 캘리브레이션에 사용할 점을 자동 선택할 수도 있다.
+- `--cal-pick first`: 가장 낮은 z를 캘리브레이션 점으로 선택(기본)
+- `--cal-pick last`: 가장 높은 z를 캘리브레이션 점으로 선택
+이 경우 `cal_z_source fsigma8_data`로 출력된다.
+
+예시(데이터에서 자동으로 1점을 선택해 캘리브레이션):
+
+```
+./.venv/Scripts/python.exe examples/physics/cosmology.py --model calibrate --omega-m 0.315 --omega-lambda 0.685 --mu sfe --sdef ratio --sigma8-0 0.785 --calibrate-epsilon-grav --cal-pick first --eps-min -1 --eps-max 1 --z-list 0.32,0.57,0.70 --compare-fsigma8 --fsigma8-data "0.32:0.438:0.02,0.57:0.447:0.02,0.70:0.442:0.02"
+```
+
+이때 `--compare-fsigma8` 출력에는 `is_cal` 컬럼이 포함되며, `is_cal=1`인 점은 캘리브레이션에 사용된 점으로 표시된다. 불확도(`sigma`)가 0보다 큰 데이터가 주어지면, 아래 두 종류의 적합도를 함께 출력한다.
+- `fsigma8_chi2_all`: 전체(캘리브레이션 점 포함) $\chi^2$
+- `fsigma8_chi2_holdout`: 홀드아웃(캘리브레이션 점 제외) $\chi^2$
+
+본 레포의 "1점 캘리브레이션 후 예측력" 평가는 `holdout` 값을 기준으로 한다.
+
+또한 동일 실행에서 베이스라인(ΛCDM, `mu=1`)의 `holdout chi2`를 함께 계산하며, `fsigma8_delta_chi2_holdout = chi2_holdout(model) - chi2_holdout(lcdm)`를 출력한다. 이 값이 음수이면(더 작으면) 해당 데이터 집합에 대해 SFE 성장 보정이 ΛCDM 대비 적합도를 개선한 것으로 해석한다.
+
 동일한 설정에서 $H_0t_0$ 및 $\Omega_m(a),\Omega_\Lambda(a),S(a),\mu(a)$를 함께 출력하려면 다음을 사용한다.
 
 ```
