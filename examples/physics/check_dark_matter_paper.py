@@ -34,7 +34,7 @@ class Const:
 
     # Derived
     D_eff = d + delta  # 3.17776
-    alpha_ratio = alpha_s * math.pi  # 0.37043
+    alpha_ratio = alpha_s * D_eff  # 0.37466 (extensivity principle)
 
     # Planck 2018 (TT,TE,EE+lowE+lensing, Table 2, arXiv:1807.06209)
     # These are the PRIMARY constraints
@@ -103,7 +103,7 @@ def sfe_predictions(sin2_tW, alpha_s):
     delta = sin2_tW * (1.0 - sin2_tW)
     D_eff = 3.0 + delta
     eps2 = solve_epsilon2(D_eff)
-    alpha = alpha_s * math.pi
+    alpha = alpha_s * D_eff
 
     Omega_b = eps2
     Omega_Lambda = (1.0 - eps2) / (1.0 + alpha)

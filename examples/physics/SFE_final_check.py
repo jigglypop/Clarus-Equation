@@ -93,10 +93,10 @@ def main():
     check_close(results, "D_eff = 3 + delta", d_eff, 3.17776, 5e-5)
     check_close(results, "self-consistency equation residual", eq_residual, 0.0, 1e-12)
     check_close(results, "Omega_b prediction", omega_b, 0.04865, 2e-5)
-    check_close(results, "Omega_Lambda prediction", omega_l, 0.6942, 2e-4)
-    check_close(results, "Omega_DM prediction", omega_dm, 0.2571, 2e-4)
+    check_close(results, "Omega_Lambda prediction", omega_l, 0.6921, 2e-4)
+    check_close(results, "Omega_DM prediction", omega_dm, 0.2593, 2e-4)
     check_close(results, "Omega sum to unity", omega_b + omega_l + omega_dm, 1.0, 1e-12)
-    check_close(results, "DM/DE = alpha_s * pi", omega_dm / omega_l, alpha_ratio, 1e-12)
+    check_close(results, "DM/DE = alpha_s * D_eff", omega_dm / omega_l, alpha_ratio, 1e-12)
 
     # -----------------------------------------------------------------
     # 2) Muon/electron g-2 block (recent: check_muon_g2_derivation.py)
@@ -145,11 +145,12 @@ def main():
     check_close(results, "sin^2(theta_mix)", sin2_mix, 0.004, 6e-4)
 
     # -----------------------------------------------------------------
-    # 5) Proton radius: m_phi = m_p * delta^2, F = 1 + alpha_s * pi
+    # 5) Proton radius: m_phi = m_p * delta^2, F = 1 + alpha_s * D_eff
     # -----------------------------------------------------------------
     lambda_hp_pr = delta ** 2
     m_phi_pr = M_P * lambda_hp_pr
-    F_pr = 1.0 + Const.alpha_s * PI
+    D_eff_val = 3.0 + delta
+    F_pr = 1.0 + Const.alpha_s * D_eff_val
 
     kappa_pr = math.sqrt(8.0 * PI * ALPHA_EM / E_NUM) / m_sfe
     g_mu_pr = kappa_pr * M_MU * F_pr
@@ -164,8 +165,8 @@ def main():
     dr2_obs_val = r_p_e_val ** 2 - r_p_mu_val ** 2
 
     check_close(results, "m_phi = m_p*delta^2 (MeV)", m_phi_pr, 29.65, 0.1)
-    check_close(results, "form factor F = 1+as*pi", F_pr, 1.3704, 5e-4)
-    check_close(results, "Da_mu with F (x1e-11)", da_mu_pr * 1e11, 253.2, 1.0)
+    check_close(results, "form factor F = 1+as*D_eff", F_pr, 1.3747, 5e-4)
+    check_close(results, "Da_mu with F (x1e-11)", da_mu_pr * 1e11, 254.8, 1.0)
     check_range(results, "Da_mu(F) within 1sigma of obs", da_mu_pr, DA_MU_EXP - DA_MU_ERR, DA_MU_EXP + DA_MU_ERR)
     check_close(results, "Dr_p^2 predicted (fm^2)", dr2_pr, dr2_obs_val, 0.003)
     check_close(results, "proton radius match (%)", abs(1.0 - dr2_pr / dr2_obs_val) * 100, 0.0, 3.0)
