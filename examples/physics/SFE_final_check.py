@@ -145,10 +145,35 @@ def main():
     check_close(results, "sin^2(theta_mix)", sin2_mix, 0.004, 6e-4)
 
     # -----------------------------------------------------------------
-    # 5) Unification relation (recent: check_unification.py)
+    # 5) Proton radius: m_phi = m_p * delta^2, F = 1 + alpha_s * pi
+    # -----------------------------------------------------------------
+    lambda_hp_pr = delta ** 2
+    m_phi_pr = M_P * lambda_hp_pr
+    F_pr = 1.0 + Const.alpha_s * PI
+
+    kappa_pr = math.sqrt(8.0 * PI * ALPHA_EM / E_NUM) / m_sfe
+    g_mu_pr = kappa_pr * M_MU * F_pr
+    g_p_pr = kappa_pr * M_P * F_pr
+    i_pr = feynman_integral(m_phi_pr, M_MU)
+
+    da_mu_pr = g_mu_pr ** 2 / (8.0 * PI ** 2) * i_pr
+    dr2_pr = 3.0 * g_mu_pr * g_p_pr / (2.0 * ALPHA_EM * (m_phi_pr / HBAR_C) ** 2)
+
+    r_p_e_val = 0.8751
+    r_p_mu_val = 0.84087
+    dr2_obs_val = r_p_e_val ** 2 - r_p_mu_val ** 2
+
+    check_close(results, "m_phi = m_p*delta^2 (MeV)", m_phi_pr, 29.65, 0.1)
+    check_close(results, "form factor F = 1+as*pi", F_pr, 1.3704, 5e-4)
+    check_close(results, "Da_mu with F (x1e-11)", da_mu_pr * 1e11, 253.2, 1.0)
+    check_range(results, "Da_mu(F) within 1sigma of obs", da_mu_pr, DA_MU_EXP - DA_MU_ERR, DA_MU_EXP + DA_MU_ERR)
+    check_close(results, "Dr_p^2 predicted (fm^2)", dr2_pr, dr2_obs_val, 0.003)
+    check_close(results, "proton radius match (%)", abs(1.0 - dr2_pr / dr2_obs_val) * 100, 0.0, 3.0)
+
+    # -----------------------------------------------------------------
+    # 6) Unification relation (recent: check_unification.py)
     # -----------------------------------------------------------------
     sin_tw = math.sqrt(Const.sin2_tW)
-    xi_as = alpha_ratio_raw = Const.alpha_s ** (1.0 / 3.0)
     rhs_unif = 2.0 * Const.alpha_s ** (2.0 / 3.0)
     s2_from_as = 4.0 * Const.alpha_s ** (4.0 / 3.0)
     as_from_s = (sin_tw / 2.0) ** 1.5
@@ -158,7 +183,7 @@ def main():
     check_close(results, "alpha_s = (sin(tW)/2)^(3/2)", Const.alpha_s, as_from_s, 5e-4)
 
     # -----------------------------------------------------------------
-    # 6) Dynamic dark energy block (recent: check_dynamic_de.py)
+    # 7) Dynamic dark energy block (recent: check_dynamic_de.py)
     # -----------------------------------------------------------------
     xi_unif = Const.alpha_s ** (1.0 / 3.0)
     w0_dynamic = -1.0 + 2.0 * xi_unif**2 / (3.0 * omega_l)
