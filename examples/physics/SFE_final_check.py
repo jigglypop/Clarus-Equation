@@ -183,6 +183,31 @@ def main():
     check_close(results, "alpha_s = (sin(tW)/2)^(3/2)", Const.alpha_s, as_from_s, 5e-4)
 
     # -----------------------------------------------------------------
+    # 6b) Deep derivation: Hodge self-duality, gauge structure, duality
+    # -----------------------------------------------------------------
+    d = 3
+    hodge_lhs = d
+    hodge_rhs = d * (d - 1) // 2
+    check_close(results, "Hodge self-duality: d = d(d-1)/2 at d=3", hodge_lhs, hodge_rhs, 0)
+
+    for d_test in [2, 4, 5, 6, 7]:
+        results.append(CheckResult(
+            name=f"Hodge fails for d={d_test}",
+            passed=(d_test != d_test * (d_test - 1) // 2),
+            detail=f"d={d_test}: {d_test} != {d_test*(d_test-1)//2}",
+        ))
+
+    N_c, N_w = 3, 2
+    partition_sum = N_c + N_w + 1  # {3, 2, 1}
+    triangular = d * (d + 1) // 2
+    check_close(results, "SM partition 3+2+1 = d(d+1)/2", partition_sum, triangular, 0)
+
+    duality_lhs = Const.alpha_s ** N_w
+    duality_rhs = (sin_tw / N_w) ** N_c
+    check_close(results, "strong-weak duality: as^Nw = (sin(tW)/Nw)^Nc",
+                duality_lhs, duality_rhs, 5e-5)
+
+    # -----------------------------------------------------------------
     # 7) Dynamic dark energy block (recent: check_dynamic_de.py)
     # -----------------------------------------------------------------
     xi_unif = Const.alpha_s ** (1.0 / 3.0)
