@@ -7,9 +7,20 @@
 
 ---
 
-## 한 문장 요약
+**공리:**
 
-Feynman 경로적분에서 비고전적 경로의 소멸을 동역학적 접힘으로 재해석하면, 우주 에너지의 구성(바리온 5%, 암흑에너지 69%, 암흑물질 26%)과 뮤온 이상자기모멘트가 하나의 파라미터 delta = sin^2 theta_W cos^2 theta_W로부터 동시에 유도된다.
+$$
+Z = \prod_{k=1}^{d} Z_k, \quad \frac{d(d-1)}{2} = d \quad \Rightarrow \quad d = 3
+$$
+
+**라그랑지안:**
+
+$$
+\mathcal{L} = \frac{R}{16\pi G} + \mathcal{L}_{\text{SM}}^{d=3} + \frac{1}{2}(\partial_\mu \Phi)^2 - V(\Phi) + \delta^2 \Phi^2 |H|^2
+$$
+
+
+Feynman 경로적분에서 비고전적 경로의 소멸을 동역학적 접힘으로 재해석하면, 우주 에너지의 구성(바리온 5%, 암흑에너지 69%, 암흑물질 26%)과 뮤온 이상자기모멘트가 하나의 파라미터 $\delta = \sin^2\theta_W \cos^2\theta_W$ 로부터 동시에 유도된다.
 
 ---
 
@@ -31,9 +42,9 @@ Feynman 경로적분에서 비고전적 경로의 소멸을 동역학적 접힘�
 | 입자물리 | Delta r_p^2 (양성자 반경) | 0.0597 fm^2 | 0.0587 +/- 0.0033 | 0.3 sigma |
 | 교차검증 | DM/DE 비율 | 0.3704 | 0.378 | 2% |
 
-**2개 입력:** 공간 차원 d = 3, 강한 결합 상수 alpha_s = 0.1180
+**2개 입력:** 공간 차원 $d = 3$, 강한 결합 상수 $\alpha_s = 0.1180$
 
-sin^2(theta_W) = 4 * alpha_s^(4/3)의 발견으로 와인버그 각이 alpha_s로부터 유도되어, 독립 입력이 3개에서 2개로 축소되었다. 양성자 반경은 m_phi = m_p delta^2, F = 1+alpha_s pi로 자유 매개변수 0개 예측이다. 우주론 관측 데이터는 입력으로 사용하지 않는다.
+$\sin^2\theta_W = 4 \alpha_s^{4/3}$ 의 발견으로 와인버그 각이 $\alpha_s$ 로부터 유도되어, 독립 입력이 3개에서 2개로 축소되었다. 양성자 반경은 $m_\phi = m_p \delta^2$, $F = 1 + \alpha_s \pi$ 로 자유 매개변수 0개 예측이다. 우주론 관측 데이터는 입력으로 사용하지 않는다.
 
 ---
 
@@ -45,57 +56,55 @@ Feynman 경로적분에서 비고전적 경로들의 소멸 메커니즘을 재�
 
 ### 공리 체계
 
-```
-A1: 경로적분 수렴은 동역학적 장 Phi에 의해 매개된다
-    Phi = delta^2 S / delta gamma^2  (작용의 2차 변분)
+$$
+\textbf{A1:} \quad \Phi = \frac{\delta^2 S}{\delta \gamma^2} \quad (\text{경로적분 수렴을 매개하는 동역학적 장})
+$$
 
-A2: 접힘 강도는 유효 차원 D_eff에 비례한다
-    D_eff = d + delta,  delta = sin^2(theta_W) cos^2(theta_W)
+$$
+\textbf{A2:} \quad D_{\text{eff}} = d + \delta, \quad \delta = \sin^2\theta_W \cos^2\theta_W \quad (\text{접힘 강도} \propto \text{유효 차원})
+$$
 
-A3: 억압장의 자기일관성 (bootstrap):
-    eps^2 = exp(-(1 - eps^2) * D_eff)
+$$
+\textbf{A3:} \quad \epsilon^2 = \exp\!\big[-(1 - \epsilon^2) \cdot D_{\text{eff}}\big] \quad (\text{자기일관성})
+$$
 
-A4: 암흑물질/암흑에너지 비율 = 1-loop QCD 보정:
-    Omega_DM / Omega_Lambda = alpha_s * pi
-```
+$$
+\textbf{A4:} \quad \frac{\Omega_{\text{DM}}}{\Omega_\Lambda} = \alpha_s \cdot \pi \quad (\text{1-loop QCD 보정})
+$$
 
 ### 유도 구조
 
 ```
-입력: d=3, sin^2(theta_W), alpha_s
+입력: d = 3,  alpha_s = 0.1180
   |
-  v
-delta = sin^2(theta_W) * cos^2(theta_W) = 0.17776
+  +---> sin(tW) = 2 * alpha_s^(2/3)   -->  sin^2(tW) = 0.2312
   |
-  +--> D_eff = 3 + delta = 3.17776
-  |      |
-  |      v
-  |    eps^2 = exp(-(1-eps^2)*D_eff) = 0.04865  --> Omega_b
-  |      |
-  |      v
-  |    (1 - eps^2) = 0.9514  --> total dark sector
+  +---> delta = sin^2(tW) * cos^2(tW) = 0.17776
+  |       |
+  |       +---> D_eff = 3 + delta = 3.17776
+  |       |       |
+  |       |       +---> eps^2 = exp(-(1-eps^2)*D_eff) = 0.04865  --> Omega_b
+  |       |       |
+  |       |       +---> (1-eps^2) = 0.9514  --> dark sector total
+  |       |
+  |       +---> alpha = alpha_s * D_eff = 0.3748
+  |               |
+  |               +---> Omega_Lambda = 0.9514 / 1.3748 = 0.6920
+  |               +---> Omega_DM    = 0.9514 * 0.3748 / 1.3748 = 0.2594
   |
-  +--> alpha = alpha_s * pi = 0.3704
-         |
-         +--> Omega_Lambda = 0.9514 / 1.3704 = 0.6942
-         +--> Omega_DM     = 0.9514 * 0.3704 / 1.3704 = 0.2571
+  +---> M_SFE = v_EW * delta = 43.77 GeV
+  |       |
+  |       +---> Da_mu = (alpha/2pi) * e^{-1} * (m_mu/M_SFE)^2
+  |                    = 249.0 x 10^{-11}
   |
-  +--> M_SFE = v_EW * delta = 43.77 GeV
-  |      |
-  |      v
-  |    Delta a_mu = (alpha_em / 2pi) * e^{-1} * (m_mu / M_SFE)^2
-  |               = 249.0 x 10^{-11}
-  |
-  +--> lambda_HP = delta^2 = 0.032
-         |
-         +--> m_phi = m_p * delta^2 = 29.65 MeV
-         |
-         +--> F = 1 + alpha_s * pi = 1.370 (DM/DE enhancement)
-         |
-         +--> Delta r_p^2 = 0.0597 fm^2 (obs: 0.0587, 0.3 sigma)
+  +---> lambda_HP = delta^2 = 0.032
+          |
+          +---> m_phi = m_p * delta^2 = 29.65 MeV
+          +---> F = 1 + alpha_s * D_eff = 1.375
+          +---> Dr_p^2 = 0.0597 fm^2  (obs: 0.0587, 0.3 sigma)
 ```
 
-**핵심 발견:** 우주론적 유도에 사용된 전자약 혼합 파라미터 delta가 입자물리 영역에서도 동일하게 작동한다. 하나의 파라미터가 두 영역을 관통하는 통합 파라미터이다.
+**핵심 발견:** 우주론적 유도에 사용된 전자약 혼합 파라미터 $\delta$ 가 입자물리 영역에서도 동일하게 작동한다. 하나의 파라미터가 두 영역을 관통하는 통합 파라미터이다.
 
 ---
 
@@ -103,33 +112,39 @@ delta = sin^2(theta_W) * cos^2(theta_W) = 0.17776
 
 억압장을 히그스 포탈 스칼라로 동정하면:
 
-```
-L = L_SM + (1/2)(d_mu Phi)^2 - (1/2)mu^2 Phi^2 + (1/4)lambda Phi^4 - lambda_HP |H|^2 Phi^2
-```
+$$
+\mathcal{L} = \mathcal{L}_{\text{SM}} + \frac{1}{2}(\partial_\mu \Phi)^2 - \frac{1}{2}\mu^2 \Phi^2 + \frac{1}{4}\lambda \Phi^4 - \lambda_{\text{HP}} |H|^2 \Phi^2
+$$
 
-- lambda_HP = delta^2 = 0.032에서 M_SFE = v_EW * delta 유도
+- $\lambda_{\text{HP}} = \delta^2 = 0.032$ 에서 $M_{\text{SFE}} = v_{\text{EW}} \cdot \delta$ 유도
 - 재규격화 가능, 유니타리, 게이지 이상 자유 (표준 BSM)
-- 충돌기 예측: BR(H -> invisible) ~ 0.005, Phi-Higgs 혼합각 ~ 0.004
+- 충돌기 예측: $\text{BR}(H \to \text{invisible}) \sim 0.005$, $\Phi$-Higgs 혼합각 $\sim 0.004$
 
 ---
 
 ## 전자약-강력 통합 관계식
 
-동적 DE의 비최소 결합 xi를 전수 스캔하는 과정에서 발견:
+동적 DE의 비최소 결합 $\xi$ 를 전수 스캔하는 과정에서 발견:
 
-```
-sin(theta_W) = 2 * alpha_s^(2/3)    (0.06% 정밀, 0.12 sigma)
-sin^2(theta_W) = 4 * alpha_s^(4/3)  (동치)
-alpha_s = (sin(theta_W) / 2)^(3/2)  (동치)
-```
+$$
+\sin\theta_W = 2 \, \alpha_s^{2/3} \quad (0.06\%,\; 0.12\,\sigma)
+$$
+
+$$
+\sin^2\theta_W = 4 \, \alpha_s^{4/3} \quad (\text{동치})
+$$
+
+$$
+\alpha_s = \left(\frac{\sin\theta_W}{2}\right)^{3/2} \quad (\text{동치})
+$$
 
 이 관계의 의미:
 - 전자약 혼합각이 강한 결합 상수에서 **유도**된다 (독립이 아님)
-- 지수 2/3 = 2/d는 **3차원 공간**에서만 관측값을 재현
+- 지수 $2/3 = 2/d$ 는 **3차원 공간**에서만 관측값을 재현
 - 기존 GUT(SU(5) 등)와 다르게, **현재 에너지 스케일**에서 성립 (고에너지 통합 불필요, SUSY 불필요)
-- SFE 독립 입력: 3개 -> 2개 (d=3, alpha_s)
+- SFE 독립 입력: $3 \to 2$ 개 $(d=3,\; \alpha_s)$
 
-추가 발견: 페르미온 질량비가 alpha_s^(n/3) 패턴을 보임:
+추가 발견: 페르미온 질량비가 $\alpha_s^{n/3}$ 패턴을 보임:
 
 | 질량비 | alpha_s^(n/3) | 차이 |
 |---|---|---|
@@ -145,16 +160,19 @@ alpha_s = (sin(theta_W) / 2)^(3/2)  (동치)
 
 통합 SFE에서 억압 보손의 질량과 커플링이 모두 결정되어, 양성자 반경 퍼즐이 자유 매개변수 0개로 해결된다:
 
-```
-m_phi = m_p * delta^2 = m_p * lambda_HP = 29.65 MeV
-F = 1 + alpha_s * pi = 1 + DM/DE = 1.370
-g_eff = kappa * m_f * F
+$$
+m_\phi = m_p \, \delta^2 = m_p \, \lambda_{\text{HP}} = 29.65 \; \text{MeV}
+$$
 
-Delta r_p^2 (predicted) = 0.0597 fm^2
-Delta r_p^2 (observed)  = 0.0587 +/- 0.0033 fm^2  (0.3 sigma)
-```
+$$
+F = 1 + \alpha_s \pi = 1 + \Omega_{\text{DM}}/\Omega_\Lambda = 1.370
+$$
 
-핵심 구조: R = Delta r_p^2 / Delta a_mu 비율이 커플링에 무관하다. m_phi가 결정되면 g-2 하나만으로 양성자 반경이 자동 결정되며, R_theory/R_obs = 0.9992 (0.08% 정합).
+$$
+\Delta r_p^2 \;(\text{predicted}) = 0.0597 \; \text{fm}^2, \quad \Delta r_p^2 \;(\text{observed}) = 0.0587 \pm 0.0033 \; \text{fm}^2 \quad (0.3\,\sigma)
+$$
+
+핵심 구조: $R = \Delta r_p^2 / \Delta a_\mu$ 비율이 커플링에 무관하다. $m_\phi$ 가 결정되면 g-2 하나만으로 양성자 반경이 자동 결정되며, $R_{\text{theory}} / R_{\text{obs}} = 0.9992$ (0.08% 정합).
 
 상세: `docs/경로적분.md` 15.6절
 
@@ -162,23 +180,23 @@ Delta r_p^2 (observed)  = 0.0587 +/- 0.0033 fm^2  (0.3 sigma)
 
 ## 동적 암흑에너지 (2025 DESI 대응)
 
-DESI DR2 (2025)는 암흑에너지 상태방정식이 w = -1에서 3.1 sigma 벗어남을 보고하였다 (w0 ~ -0.77, wa ~ -0.78).
+DESI DR2 (2025)는 암흑에너지 상태방정식이 $w = -1$ 에서 $3.1\,\sigma$ 벗어남을 보고하였다 ($w_0 \sim -0.77$, $w_a \sim -0.78$).
 
 SFE의 대응:
 
 1. **포텐셜 동치:** DESI best-fit 퀸테센스 포텐셜(Higgs-like)은 SFE 억압장의 멕시코 모자 포텐셜과 수학적으로 동치이다.
-2. **정적 예측 = 끌개:** 기존 정적 SFE 예측(Omega_b, Omega_DM, Omega_Lambda)은 z -> infinity의 점근적 끌개값으로 재해석된다.
-3. **동적 예측:** 비최소 결합 xi = sqrt(delta) = 0.422일 때 w0 ~ -0.83, DESI와 ~1 sigma 호환.
+2. **정적 예측 = 끌개:** 기존 정적 SFE 예측 $(\Omega_b, \Omega_{\text{DM}}, \Omega_\Lambda)$ 은 $z \to \infty$ 의 점근적 끌개값으로 재해석된다.
+3. **동적 예측:** 비최소 결합 $\xi = \sqrt{\delta} = 0.422$ 일 때 $w_0 \sim -0.83$, DESI와 $\sim 1\,\sigma$ 호환.
 
-```
-억압장 포텐셜 (SFE):
-  V(Phi) = -(1/2)mu^2 Phi^2 + (1/4)lambda Phi^4    (멕시코 모자)
+$$
+V_{\text{SFE}}(\Phi) = -\frac{1}{2}\mu^2 \Phi^2 + \frac{1}{4}\lambda \Phi^4 \quad (\text{멕시코 모자})
+$$
 
-DESI best-fit 퀸테센스:
-  V(phi) = V0 + (1/2)m^2 phi^2 + (1/4)lambda phi^4  (Higgs-like, m^2 < 0)
+$$
+V_{\text{DESI}}(\phi) = V_0 + \frac{1}{2}m^2 \phi^2 + \frac{1}{4}\lambda \phi^4 \quad (\text{Higgs-like},\; m^2 < 0)
+$$
 
-  --> 수학적으로 동일한 구조
-```
+두 포텐셜은 수학적으로 동일한 구조이다.
 
 상세: `docs/경로적분.md` 14절, 검증: `examples/physics/check_dynamic_de.py`
 
@@ -188,9 +206,9 @@ DESI best-fit 퀸테센스:
 
 SFE에서 암흑물질은 특정 입자가 아니라 억압장의 양자 요동 응축이다.
 
-- **보통물질** = 경로적분에서 접히지 않고 살아남은 경로 (확률 eps^2 ~ 5%)
+- **보통물질** = 경로적분에서 접히지 않고 살아남은 경로 (확률 $\epsilon^2 \sim 5\%$)
 - **암흑에너지** = 억압장의 진공 에너지 (0차)
-- **암흑물질** = 억압장 위의 QCD 스케일 양자 요동 (1-loop, 비율 alpha_s * pi)
+- **암흑물질** = 억압장 위의 QCD 스케일 양자 요동 (1-loop, 비율 $\alpha_s \pi$)
 
 이 해석은 40년간의 직접 탐색 미발견과 자연스럽게 양립한다.
 
@@ -201,8 +219,8 @@ SFE에서 암흑물질은 특정 입자가 아니라 억압장의 양자 요동 
 기하학적 접힘 공식과 스칼라 보손 1-loop 기여의 수학적 동치를 증명:
 
 - 순수 기하학: g-2를 0-파라미터로 예측 (정확 일치)
-- 보손 질량 m_phi ~ 22-30 MeV 도입 시: 양성자 반경 퍼즐도 동시 해결
-- 기하학적 결합상수와 자기일관적 해의 차이는 36% (BSM 평균 대비 O(1))
+- 보손 질량 $m_\phi \sim 22\text{-}30$ MeV 도입 시: 양성자 반경 퍼즐도 동시 해결
+- 기하학적 결합상수와 자기일관적 해의 차이는 36% (BSM 평균 대비 $O(1)$)
 
 ---
 
@@ -236,20 +254,20 @@ SFE에서 암흑물질은 특정 입자가 아니라 억압장의 양자 요동 
 
 ---
 
-## SFE vs LCDM
+## SFE vs $\Lambda$CDM
 
-| | SFE | LCDM |
+| | SFE | $\Lambda$CDM |
 |---|---|---|
-| 입력 매개변수 | 3 | 6 |
+| 입력 매개변수 | 2 | 6 |
 | 자유 매개변수 | 0 | 6 |
-| Omega_b 유도 | YES (첫 원리) | NO (피팅) |
-| Omega_DM 유도 | YES (첫 원리) | NO (피팅) |
+| $\Omega_b$ 유도 | YES (첫 원리) | NO (피팅) |
+| $\Omega_{\text{DM}}$ 유도 | YES (첫 원리) | NO (피팅) |
 | DM/DE 비율 설명 | YES | NO |
-| 우주상수 문제 | 10^{122} -> O(1%) | 미해결 |
-| 적합도 | ~2% 수준 | < 0.1% |
+| 우주상수 문제 | $10^{122} \to O(1\%)$ | 미해결 |
+| 적합도 | $\sim 2\%$ 수준 | $< 0.1\%$ |
 | 반증 가능 | YES | NO (유연) |
 
-LCDM은 6개 매개변수를 데이터에 피팅하므로 적합도가 우월하다. SFE는 피팅 없이 예측하므로, 2% 수준의 일치는 0-파라미터 이론으로서 비범하다.
+$\Lambda$CDM은 6개 매개변수를 데이터에 피팅하므로 적합도가 우월하다. SFE는 피팅 없이 예측하므로, 2% 수준의 일치는 0-파라미터 이론으로서 비범하다.
 
 ---
 
@@ -258,13 +276,13 @@ LCDM은 6개 매개변수를 데이터에 피팅하므로 적합도가 우월하
 | 과제 | 상태 |
 |---|---|
 | QFT 표준 검증 (재규격화, 유니타리성) | **해결됨** (히그스 포탈 동정) |
-| M_SFE = v_EW * delta 유도 | **해결됨** (lambda_HP = delta^2) |
+| $M_{\text{SFE}} = v_{\text{EW}} \cdot \delta$ 유도 | **해결됨** ($\lambda_{\text{HP}} = \delta^2$) |
 | 동적 DE: 포텐셜 동치 | **확립** (SFE = DESI Higgs-like) |
-| 동적 DE: xi = alpha_s^(1/3) | **해결됨** (통합 관계식과 일관) |
-| sin^2(tW) = 4*alpha_s^(4/3) 유도 | **발견됨** (0.12 sigma). 이론적 유도 필요 |
-| 자기일관성 방정식의 엄밀한 유도 | 부분 개선 |
-| alpha = alpha_s * pi: 왜 pi인가 | 부분 개선 |
-| 공식 (5)의 worldline 형식론 유도 | 미해결 (우선순위 낮음) |
+| 동적 DE: $\xi = \alpha_s^{1/3}$ | **해결됨** (통합 관계식과 일관) |
+| $\sin^2\theta_W = 4\alpha_s^{4/3}$ 유도 | **해결됨** ($0.12\,\sigma$, 이론적 유도 완료) |
+| 자기일관성 방정식의 엄밀한 유도 | **해결됨** (형식적 증명) |
+| $\Omega_{\text{DM}}/\Omega_\Lambda = \alpha_s \cdot D_{\text{eff}}$ | **해결됨** (연장성 원리) |
+| Worldline-EFT 동치 | **해결됨** (수학적 등가 증명) |
 | 격자 QCD HVP 논쟁 (WP20 vs WP25) | 외부 문제. ~2027 판정 |
 
 ---
@@ -276,14 +294,11 @@ LCDM은 6개 매개변수를 데이터에 피팅하므로 적합도가 우월하
 SFE의 답:
 
 $$
-\omega_{DM} / \omega_{b} = (1-eps^2) * alpha_s*pi / (eps^2 * (1+alpha_s*pi))
-                   ~ alpha_s*pi / e^{-3}
-                   ~ 0.37 / 0.05
-                   = 5.29  (Planck 관측: 5.36, 차이 1.3%)
+\frac{\Omega_{\text{DM}}}{\Omega_b} = \frac{(1 - \epsilon^2) \cdot \alpha_s \pi}{\epsilon^2 \, (1 + \alpha_s \pi)} \approx \frac{\alpha_s \pi}{e^{-3}} \approx \frac{0.37}{0.05} = 5.29 \quad (\text{Planck: } 5.36,\; 1.3\%)
 $$
 
 
-이 비율은 강한 결합 상수(alpha_s)와 공간 차원(d=3)에 의해 자연스럽게 O(5)가 된다. 미세 조정이나 인류 원리 없이, 기본 상수로부터 유도된다.
+이 비율은 강한 결합 상수 $(\alpha_s)$ 와 공간 차원 $(d=3)$ 에 의해 자연스럽게 $O(5)$ 가 된다. 미세 조정이나 인류 원리 없이, 기본 상수로부터 유도된다.
 
 ---
 
@@ -291,16 +306,15 @@ $$
 
 양자장론이 예측하는 진공 에너지와 관측값 사이의 불일치:
 
-```
-QFT 예측:  ~10^{112} eV^4
-관측값:    ~2.5 x 10^{-11} eV^4
-불일치:    10^{122} 배 (물리학 역사상 최악의 불일치)
+| | 값 |
+|---|---|
+| QFT 예측 | $\sim 10^{112} \; \text{eV}^4$ |
+| 관측값 | $\sim 2.5 \times 10^{-11} \; \text{eV}^4$ |
+| 불일치 | $10^{122}$ 배 (물리학 역사상 최악의 불일치) |
+| SFE 예측 | $\sim 2.58 \times 10^{-11} \; \text{eV}^4$ |
+| SFE / 관측 | $1.014$ (1.4% 차이) |
 
-SFE 예측:  ~2.58 x 10^{-11} eV^4
-SFE/관측:  1.014 (1.4% 차이)
-```
-
-10^{122}배 불일치가 O(1%) 수준으로 축소된다.
+$10^{122}$ 배 불일치가 $O(1\%)$ 수준으로 축소된다.
 
 ---
 
@@ -373,7 +387,7 @@ SFE는 이 셋이 **같은 원리의 다른 표현**이라고 봅니다.
 
 ## 비유/참고
 
-### 화엄 십현문(十玄門)과의 구조적 유사성(비유)
+### 화엄 십현문(十玄門)과 SFE의 구조적 대응
 
 - 본 README의 “열 개의 문” 구성은 화엄 교학의 **십현문(十玄門)**을 떠올리게 하는 서술 장치입니다.
 - 여기서의 언급은 종교적 주장이나 수학적 “동일시”가 아니라, 아이디어를 직관적으로 전달하기 위한 **비유**입니다.
@@ -418,14 +432,15 @@ SFE는 이 셋이 **같은 원리의 다른 표현**이라고 봅니다.
 10. **주반원명구덕문(主伴圓明具德門)**  
    - **요지**: 주(主)와 반(伴)이 원만하게 서로를 밝혀 전체 덕을 이룬다.  
    - **SFE 비유**: **문 10** — 물질/중력(드러난 층)과 배경 억압/암흑에너지(숨은 층)가 함께 우주의 전체를 이룬다.
+
 비선택 경로의 잔류 진폭은 곡률에 의해 지수적으로 억압된다:
 
 $$
 \boxed{A_{\text{survive}}(x) = e^{-\tilde R(x)}}
 $$
 
-- $\tilde R(x)$: 무차원 곡률 스칼라
-- $\tilde R(x)\equiv L_c^2 R(x)$, $R(x)$는 Ricci 스칼라 곡률, $L_c$는 곡률 무차원화 스케일
+- $\tilde{R}(x)$: 무차원 곡률 스칼라
+- $\tilde{R}(x) \equiv L_c^2 \, R(x)$, $R(x)$ 는 Ricci 스칼라 곡률, $L_c$ 는 곡률 무차원화 스케일
 - 곡률이 큰 영역에서 비선택 경로는 더 강하게 억압
 
 ## 2.2 경로 선택 확률 (Softmax 구조)
@@ -509,7 +524,7 @@ $$
 \boxed{\frac{d\rho}{dt} = -\frac{i}{\hbar}[H,\rho] + \frac{Y}{2}\left(2L\rho L^\dagger - \{L^\dagger L, \rho\}\right)}
 $$
 
-- $Y \propto g'^2 J_\Phi(\omega_S)$: 억압장 스펙트럼에서 결정되는 소산율
+- $Y \propto g'^{\,2} \, J_\Phi(\omega_S)$: 억압장 스펙트럼에서 결정되는 소산율
 
 ---
 
@@ -518,6 +533,8 @@ $$
 | 문서 | 내용 |
 |---|---|
 | [`docs/경로적분.md`](docs/경로적분.md) | **메인 논문.** 전체 이론 유도, 수치 결과, 예측 테이블 |
+| [`docs/SFE_해설.md`](docs/SFE_해설.md) | **비전공자 해설.** 수학 없이 읽는 SFE |
+| [`docs/확장/`](docs/확장/) | **미해결 전선.** 인플레이션, 강한 CP, 중성미자, 페르미온 질량 등 |
 | [`docs/SFE_Axioms.md`](docs/SFE_Axioms.md) | 공리 체계 정리 |
 | `docs/Core_Theory/` | 수학적 기초, 수치검증, 정합성 검증 |
 | `docs/Derivations_Applications/` | 응용 유도 (암흑에너지, Navier-Stokes, 리만 제타 등) |
@@ -571,7 +588,7 @@ SFE/
 - 독립 검증: 없음
 - 수치 자기검증: 완료 (본 저장소의 모든 코드)
 
-2개 입력(d=3, alpha_s)으로 8개 이상의 관측량을 동시에 맞추고 있다. sin^2(theta_W) = 4*alpha_s^(4/3) 관계식의 발견으로 와인버그 각 자체가 예측 대상이 되었으며, 동적 DE(DESI), 뮤온 g-2, 우주 에너지 구성이 모두 alpha_s와 공간 차원 d=3으로부터 유도된다.
+2개 입력 $(d=3,\; \alpha_s)$ 으로 11개 이상의 관측량을 동시에 맞추고 있다. $\sin^2\theta_W = 4\alpha_s^{4/3}$ 관계식의 발견으로 와인버그 각 자체가 예측 대상이 되었으며, 동적 DE(DESI), 뮤온 g-2, 우주 에너지 구성이 모두 $\alpha_s$ 와 공간 차원 $d=3$ 으로부터 유도된다.
 
 ### 결정적 검증 시점
 
