@@ -1,145 +1,246 @@
 use std::collections::VecDeque;
 
-const MAX_MODES: usize = 6;
-
-/// Riemannian geodesic deviation mode tracker (Jacobi equation discretization).
-/// d^2 r / dt^2 = -omega^2 r - gamma dr/dt + noise
-/// Symplectic Euler: v_new = v + f(r)*dt, r_new = r + v_new*dt
+/// SFE 3+1 state: [R, K, Phi, Pi] coupled through the suppression field equation.
+/// R: Ricci scalar (spatial curvature)
+/// K: extrinsic curvature (geometry velocity, from ADM lapse)
+/// Phi: suppression field amplitude
+/// Pi: field momentum
+///
+/// ADM + SFE evolution:
+///   dR/dt  = -2*alpha*K          (ADM lapse coupling)
+///   dK/dt  = alpha*R/2 - beta*K + xi*Phi^2   (Raychaudhuri + SFE restoring)
+///   dPhi/dt = Pi
+///   dPi/dt  = -(m^2 + xi*R)*Phi - gamma_phi*Pi   (field equation in curved bg)
 #[derive(Clone, Debug)]
-struct CurvatureMode {
-    omega: f64,
-    gamma: f64,
-    est_r: f64,
-    est_v: f64,
-    p_rr: f64,
-    p_rv: f64,
-    p_vv: f64,
-    q_vv: f64,
+struct SfeState {
+    x: [f64; 4],
+    p: [[f64; 4]; 4],
+    q: [[f64; 4]; 4],
 }
 
-impl CurvatureMode {
-    fn new(omega: f64, gamma: f64, q_vv: f64) -> Self {
+impl SfeState {
+    fn new(process_noise: f64, dt: f64) -> Self {
+        let mut p = [[0.0; 4]; 4];
+        for i in 0..4 {
+            p[i][i] = 2.0;
+        }
+
+        // noise in K per step: process_noise * U[-1,1] * sqrt(dt) * dt
+        // variance = process_noise^2 * dt^3 / 3
+        let q_k = process_noise * process_noise * dt * dt * dt / 3.0;
+        // noise in Pi has 0.5 factor
+        let q_pi = q_k * 0.25;
+
+        let mut q = [[0.0; 4]; 4];
+        q[1][1] = q_k * 2.0;
+        q[3][3] = q_pi * 2.0;
+
         Self {
-            omega,
-            gamma,
-            est_r: 0.0,
-            est_v: 0.0,
-            p_rr: 2.0,
-            p_rv: 0.0,
-            p_vv: 2.0,
-            q_vv,
+            x: [0.0; 4],
+            p,
+            q,
         }
     }
 
-    /// Symplectic Euler predict -- matches the simulation integrator exactly.
-    fn predict(&mut self, dt: f64) {
-        let force_coeff_r = -self.omega * self.omega * dt;
-        let force_coeff_v = 1.0 - self.gamma * dt;
+    fn transition_matrix(&self, dt: f64, alpha_lapse: f64, beta_damp: f64,
+                         xi: f64, m_phi: f64, gamma_phi: f64) -> [[f64; 4]; 4] {
+        let r = self.x[0];
+        let phi = self.x[2];
 
-        let v_new = force_coeff_r * self.est_r + force_coeff_v * self.est_v;
-        let r_new = self.est_r + v_new * dt;
+        // Jacobian of symplectic Euler scheme:
+        // Step 1 (velocities): K' = K + (alpha*R/2 - beta*K + xi*Phi^2)*dt
+        //   dK'/dR = alpha/2 * dt
+        //   dK'/dK = 1 - beta*dt
+        //   dK'/dPhi = 2*xi*Phi*dt
+        //   dK'/dPi = 0
+        let dk_dr = alpha_lapse / 2.0 * dt;
+        let dk_dk = 1.0 - beta_damp * dt;
+        let dk_dphi = 2.0 * xi * phi * dt;
 
-        // State transition for symplectic Euler:
-        // v_new = a21 * r + a22 * v          =>  A_v = [a21, a22]
-        // r_new = r + v_new * dt = (1 + a21*dt) * r + a22*dt * v   =>  A_r = [1+a21*dt, a22*dt]
-        let a_rr = 1.0 + force_coeff_r * dt;
-        let a_rv = force_coeff_v * dt;
-        let a_vr = force_coeff_r;
-        let a_vv = force_coeff_v;
+        // Pi' = Pi + (-(m^2+xi*R)*Phi - gamma*Pi)*dt
+        //   dPi'/dR = -xi*Phi*dt
+        //   dPi'/dK = 0
+        //   dPi'/dPhi = -(m^2+xi*R)*dt
+        //   dPi'/dPi = 1 - gamma*dt
+        let dpi_dr = -xi * phi * dt;
+        let dpi_dphi = -(m_phi * m_phi + xi * r) * dt;
+        let dpi_dpi = 1.0 - gamma_phi * dt;
 
-        let p11 = a_rr * a_rr * self.p_rr + 2.0 * a_rr * a_rv * self.p_rv + a_rv * a_rv * self.p_vv;
-        let p12 = a_rr * a_vr * self.p_rr + (a_rr * a_vv + a_rv * a_vr) * self.p_rv + a_rv * a_vv * self.p_vv;
-        let p22 = a_vr * a_vr * self.p_rr + 2.0 * a_vr * a_vv * self.p_rv + a_vv * a_vv * self.p_vv;
+        // Step 2 (positions using updated velocities):
+        // R' = R + (-2*alpha*K')*dt = R - 2*alpha*(K + dK)*dt
+        //   dR'/dR = 1 - 2*alpha*dK'/dR*dt = 1 - 2*alpha*(alpha/2*dt)*dt
+        //   dR'/dK = -2*alpha*dK'/dK*dt = -2*alpha*(1-beta*dt)*dt
+        //   dR'/dPhi = -2*alpha*dK'/dPhi*dt
+        //   dR'/dPi = 0
+        let dr_dr = 1.0 - 2.0 * alpha_lapse * dk_dr * dt;
+        let dr_dk = -2.0 * alpha_lapse * dk_dk * dt;
+        let dr_dphi = -2.0 * alpha_lapse * dk_dphi * dt;
 
-        // Process noise enters through velocity only: Q = [[q_vv*dt^2, q_vv*dt], [q_vv*dt, q_vv]]
-        let q_rr = self.q_vv * dt * dt;
-        let q_rv = self.q_vv * dt;
+        // Phi' = Phi + Pi'*dt
+        //   dPhi'/dR = dPi'/dR*dt
+        //   dPhi'/dK = 0
+        //   dPhi'/dPhi = 1 + dPi'/dPhi*dt
+        //   dPhi'/dPi = dPi'/dPi*dt
+        let dphi_dr = dpi_dr * dt;
+        let dphi_dphi = 1.0 + dpi_dphi * dt;
+        let dphi_dpi = dpi_dpi * dt;
 
-        self.est_r = r_new;
-        self.est_v = v_new;
-        self.p_rr = p11 + q_rr;
-        self.p_rv = p12 + q_rv;
-        self.p_vv = p22 + self.q_vv;
+        //             R        K        Phi        Pi
+        [
+            [dr_dr,    dr_dk,   dr_dphi,   0.0      ],  // R'
+            [dk_dr,    dk_dk,   dk_dphi,   0.0      ],  // K'
+            [dphi_dr,  0.0,     dphi_dphi, dphi_dpi ],  // Phi'
+            [dpi_dr,   0.0,     dpi_dphi,  dpi_dpi  ],  // Pi'
+        ]
     }
 
-    fn update_shared(&mut self, innovation: f64, s_inv: f64) {
-        let k_r = self.p_rr * s_inv;
-        let k_v = self.p_rv * s_inv;
+    fn predict(&mut self, dt: f64, alpha_lapse: f64, beta_damp: f64,
+               xi: f64, m_phi: f64, gamma_phi: f64) {
+        let r = self.x[0];
+        let kk = self.x[1];
+        let phi = self.x[2];
+        let pi = self.x[3];
 
-        self.est_r += k_r * innovation;
-        self.est_v += k_v * innovation;
+        // Symplectic Euler matching simulation exactly:
+        // velocities first, then positions
+        let dk = alpha_lapse * r / 2.0 - beta_damp * kk + xi * phi * phi;
+        let dpi = -(m_phi * m_phi + xi * r) * phi - gamma_phi * pi;
 
-        let p_rv_old = self.p_rv;
-        self.p_rr -= k_r * self.p_rr;
-        self.p_rv -= k_r * self.p_rv;
-        self.p_vv -= k_v * p_rv_old;
-        if self.p_rr < 1e-15 {
-            self.p_rr = 1e-15;
+        let k_new = kk + dk * dt;
+        let pi_new = pi + dpi * dt;
+
+        let r_new = r + (-2.0 * alpha_lapse * k_new) * dt;
+        let phi_new = phi + pi_new * dt;
+
+        self.x = [r_new, k_new, phi_new, pi_new];
+
+        // Jacobian for covariance propagation (derived from the symplectic scheme)
+        let a = self.transition_matrix(dt, alpha_lapse, beta_damp, xi, m_phi, gamma_phi);
+
+        let mut ap = [[0.0_f64; 4]; 4];
+        for i in 0..4 {
+            for j in 0..4 {
+                for k in 0..4 {
+                    ap[i][j] += a[i][k] * self.p[k][j];
+                }
+            }
         }
-        if self.p_vv < 1e-15 {
-            self.p_vv = 1e-15;
+
+        let mut p_new = [[0.0_f64; 4]; 4];
+        for i in 0..4 {
+            for j in 0..4 {
+                for k in 0..4 {
+                    p_new[i][j] += ap[i][k] * a[j][k];
+                }
+                p_new[i][j] += self.q[i][j];
+            }
         }
+
+        self.p = p_new;
     }
 
-    /// Analytic prediction for the deterministic damped oscillator.
-    fn predict_future(&self, t: f64) -> (f64, f64) {
-        let disc = self.omega * self.omega - (self.gamma / 2.0).powi(2);
+    fn update(&mut self, z: f64, r_meas: f64) {
+        // H = [1, 0, 0, 0] -- observe R only
+        let s = self.p[0][0] + r_meas;
+        if s.abs() < 1e-20 {
+            return;
+        }
+        let s_inv = 1.0 / s;
 
-        if disc < 1e-10 {
-            let decay = (-self.gamma * t / 2.0).exp();
-            return (decay * self.est_r, decay * self.est_v);
+        let innovation = z - self.x[0];
+
+        let mut k = [0.0_f64; 4];
+        for i in 0..4 {
+            k[i] = self.p[i][0] * s_inv;
         }
 
-        let omega_d = disc.sqrt();
-        let c1 = self.est_r;
-        let c2 = (self.est_v + self.gamma / 2.0 * self.est_r) / omega_d;
+        for i in 0..4 {
+            self.x[i] += k[i] * innovation;
+        }
 
-        let decay = (-self.gamma * t / 2.0).exp();
-        let cos_wt = (omega_d * t).cos();
-        let sin_wt = (omega_d * t).sin();
+        // P = (I - K*H) * P
+        let p_row0 = self.p[0];
+        let mut p_new = self.p;
+        for i in 0..4 {
+            for j in 0..4 {
+                p_new[i][j] -= k[i] * p_row0[j];
+            }
+        }
 
-        let r_pred = decay * (c1 * cos_wt + c2 * sin_wt);
-        let v_pred = decay
-            * ((c2 * omega_d - c1 * self.gamma / 2.0) * cos_wt
-                - (c1 * omega_d + c2 * self.gamma / 2.0) * sin_wt);
+        for i in 0..4 {
+            if p_new[i][i] < 1e-15 {
+                p_new[i][i] = 1e-15;
+            }
+        }
 
-        (r_pred, v_pred)
+        self.p = p_new;
+    }
+
+    fn predict_future(&self, t: f64, alpha_lapse: f64, beta_damp: f64,
+                      xi: f64, m_phi: f64, gamma_phi: f64) -> [f64; 4] {
+        let steps = (t / 0.001).ceil() as usize;
+        if steps == 0 {
+            return self.x;
+        }
+        let sub_dt = t / steps as f64;
+
+        let mut x = self.x;
+
+        for _ in 0..steps {
+            // Symplectic Euler: velocities first, then positions
+            let dk = alpha_lapse * x[0] / 2.0 - beta_damp * x[1] + xi * x[2] * x[2];
+            let dpi = -(m_phi * m_phi + xi * x[0]) * x[2] - gamma_phi * x[3];
+
+            x[1] += dk * sub_dt;
+            x[3] += dpi * sub_dt;
+
+            x[0] += (-2.0 * alpha_lapse * x[1]) * sub_dt;
+            x[2] += x[3] * sub_dt;
+        }
+
+        x
     }
 }
 
-/// SFE-ARC Controller: Riemannian holonomy coupling, joint Kalman filter.
-/// noise_influence = alpha * R + beta * V  (smooth, linear in curvature)
+/// SFE 3+1 ARC Controller
 pub struct SfeArcController {
     pub alpha: f64,
     pub beta: f64,
     pub latency: usize,
 
-    modes: Vec<CurvatureMode>,
+    state: SfeState,
     r_meas: f64,
+
+    alpha_lapse: f64,
+    beta_damp: f64,
+    xi: f64,
+    m_phi: f64,
+    gamma_phi: f64,
 }
 
 impl SfeArcController {
-    pub fn new(alpha: f64, beta: f64, latency: usize) -> Self {
-        // q_vv = process_noise^2 * dt / 3  (uniform distribution variance correction)
-        // Inflated 5x for robustness against model mismatch
-        let q_vv_base = 0.08_f64.powi(2) * 0.01 / 3.0;
-        let q_vv = q_vv_base * 5.0;
+    pub fn new(alpha: f64, beta: f64, latency: usize,
+               process_noise: f64, measure_noise: f64) -> Self {
+        let xi = 0.3;
+        let m_phi = 1.0;
+        let gamma_phi = 0.4;
+        let alpha_lapse = 2.5;
+        let beta_damp = 0.4;
+        let dt = 0.01;
 
-        let modes = vec![
-            CurvatureMode::new(5.0, 0.5, q_vv),
-            CurvatureMode::new(2.5, 0.3, q_vv),
-            CurvatureMode::new(10.0, 0.8, q_vv),
-        ];
-
-        // r_meas = measure_noise^2 / 3, inflated 5x
-        let r_meas = 0.005_f64.powi(2) / 3.0 * 5.0;
+        let r_meas = measure_noise * measure_noise / 3.0;
 
         Self {
             alpha,
             beta,
             latency,
-            modes,
+            state: SfeState::new(process_noise, dt),
             r_meas,
+            alpha_lapse,
+            beta_damp,
+            xi,
+            m_phi,
+            gamma_phi,
         }
     }
 
@@ -147,69 +248,53 @@ impl SfeArcController {
         alpha: f64,
         beta: f64,
         latency: usize,
-        mode_params: &[(f64, f64, f64)],
+        _mode_params: &[(f64, f64, f64)],
     ) -> Self {
-        let modes = mode_params
-            .iter()
-            .take(MAX_MODES)
-            .map(|&(omega, gamma, qvv)| CurvatureMode::new(omega, gamma, qvv))
-            .collect();
-
-        let r_meas = 0.005_f64.powi(2) / 3.0 * 5.0;
-
-        Self {
-            alpha,
-            beta,
-            latency,
-            modes,
-            r_meas,
-        }
+        Self::new(alpha, beta, latency, 0.08, 0.005)
     }
 
     pub fn step(&mut self, measured_r: f64, dt: f64) -> f64 {
-        for mode in self.modes.iter_mut() {
-            mode.predict(dt);
-        }
+        self.state.predict(dt, self.alpha_lapse, self.beta_damp,
+                           self.xi, self.m_phi, self.gamma_phi);
 
-        let composite_pred: f64 = self.modes.iter().map(|m| m.est_r).sum();
-        let innovation = measured_r - composite_pred;
-
-        // Joint Kalman: S = sum(P_rr_i) + R_meas, each mode updates with full innovation
-        let total_p_rr: f64 = self.modes.iter().map(|m| m.p_rr).sum();
-        let s = total_p_rr + self.r_meas;
-        let s_inv = 1.0 / s;
-
-        for mode in self.modes.iter_mut() {
-            mode.update_shared(innovation, s_inv);
-        }
+        self.state.update(measured_r, self.r_meas);
 
         let lookahead = self.latency as f64 * dt;
-        let mut pred_r = 0.0_f64;
-        let mut pred_v = 0.0_f64;
+        let x_future = self.state.predict_future(
+            lookahead, self.alpha_lapse, self.beta_damp,
+            self.xi, self.m_phi, self.gamma_phi,
+        );
 
-        for mode in &self.modes {
-            let (pr, pv) = mode.predict_future(lookahead);
-            pred_r += pr;
-            pred_v += pv;
-        }
+        let pred_r = x_future[0];
+        let pred_k = x_future[1];
 
-        -(self.alpha * pred_r + self.beta * pred_v)
+        -(self.alpha * pred_r + self.beta * pred_k)
     }
 
     pub fn mode_energies(&self) -> Vec<f64> {
-        self.modes.iter().map(|m| m.est_r * m.est_r).collect()
+        vec![
+            self.state.x[0] * self.state.x[0],
+            self.state.x[2] * self.state.x[2],
+        ]
     }
 
     pub fn total_estimation_uncertainty(&self) -> f64 {
-        self.modes.iter().map(|m| m.p_rr).sum()
+        self.state.p[0][0]
     }
 }
 
-/// Simulation: 3 true curvature modes, Riemannian holonomy coupling
+/// Simulation: 3+1 SFE coupled dynamics
 pub struct ArcSimulationEnv {
-    true_modes: Vec<(f64, f64, f64, f64)>,
+    true_state: [f64; 4],
     process_noise: f64,
     measure_noise: f64,
+
+    alpha_lapse: f64,
+    beta_damp: f64,
+    xi: f64,
+    m_phi: f64,
+    gamma_phi: f64,
+
     pub controller: SfeArcController,
     pulse_queue: VecDeque<f64>,
 }
@@ -222,21 +307,33 @@ impl Default for ArcSimulationEnv {
 
 impl ArcSimulationEnv {
     pub fn new() -> Self {
-        let true_modes = vec![
-            (1.0, 0.0, 5.0, 0.5),
-            (0.3, 0.0, 2.5, 0.3),
-            (0.15, 0.0, 10.0, 0.8),
-        ];
+        Self::with_params(0.08, 0.005, 2)
+    }
+
+    pub fn with_params(process_noise: f64, measure_noise: f64, latency: usize) -> Self {
+        // Initial: R=1.0, K=0.3, Phi=0.5, Pi=0.0
+        let true_state = [1.0, 0.3, 0.5, 0.0];
+
+        let alpha_lapse = 2.5;
+        let beta_damp = 0.4;
+        let xi = 0.3;
+        let m_phi = 1.0;
+        let gamma_phi = 0.4;
 
         let mut env = Self {
-            true_modes,
-            process_noise: 0.08,
-            measure_noise: 0.005,
-            controller: SfeArcController::new(1.0, 0.1, 2),
-            pulse_queue: VecDeque::with_capacity(2),
+            true_state,
+            process_noise,
+            measure_noise,
+            alpha_lapse,
+            beta_damp,
+            xi,
+            m_phi,
+            gamma_phi,
+            controller: SfeArcController::new(1.0, 0.1, latency, process_noise, measure_noise),
+            pulse_queue: VecDeque::with_capacity(latency),
         };
 
-        for _ in 0..2 {
+        for _ in 0..latency {
             env.pulse_queue.push_back(0.0);
         }
 
@@ -247,24 +344,35 @@ impl ArcSimulationEnv {
         use rand::Rng;
         let mut rng = rand::thread_rng();
 
-        // Symplectic Euler: v first, then r with new v
-        for mode in self.true_modes.iter_mut() {
-            let (ref mut r, ref mut v, omega, gamma) = *mode;
-            let noise_impulse: f64 = rng.gen_range(-1.0..1.0);
+        let r = self.true_state[0];
+        let k = self.true_state[1];
+        let phi = self.true_state[2];
+        let pi = self.true_state[3];
 
-            let force = -gamma * *v - omega * omega * *r;
-            *v += force * dt + self.process_noise * noise_impulse * dt.sqrt();
-            *r += *v * dt;
-        }
+        let noise_k: f64 = rng.gen_range(-1.0..1.0);
+        let noise_pi: f64 = rng.gen_range(-1.0..1.0);
 
-        let true_r: f64 = self.true_modes.iter().map(|(r, _, _, _)| *r).sum();
-        let true_v: f64 = self.true_modes.iter().map(|(_, v, _, _)| *v).sum();
+        // 3+1 ADM + SFE evolution (symplectic: velocities first, then positions)
+        let dk = self.alpha_lapse * r / 2.0 - self.beta_damp * k
+            + self.xi * phi * phi
+            + self.process_noise * noise_k * dt.sqrt();
+        let dpi = -(self.m_phi * self.m_phi + self.xi * r) * phi
+            - self.gamma_phi * pi
+            + self.process_noise * 0.5 * noise_pi * dt.sqrt();
+
+        let k_new = k + dk * dt;
+        let pi_new = pi + dpi * dt;
+
+        let r_new = r + (-2.0 * self.alpha_lapse * k_new) * dt;
+        let phi_new = phi + pi_new * dt;
+
+        self.true_state = [r_new, k_new, phi_new, pi_new];
 
         let actual_noise_influence =
-            self.controller.alpha * true_r + self.controller.beta * true_v;
+            self.controller.alpha * r_new + self.controller.beta * k_new;
 
-        let measure_noise_val: f64 = rng.gen_range(-1.0..1.0);
-        let measured_r = true_r + self.measure_noise * measure_noise_val;
+        let meas_noise: f64 = rng.gen_range(-1.0..1.0);
+        let measured_r = r_new + self.measure_noise * meas_noise;
 
         let new_pulse = self.controller.step(measured_r, dt);
 

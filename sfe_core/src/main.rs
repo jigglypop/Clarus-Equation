@@ -49,6 +49,8 @@ enum Commands {
         steps: usize,
         #[arg(short, long, default_value = "sfe_arc_result.csv")]
         output: String,
+        #[arg(long)]
+        diag: bool,
     },
     /// [NEW] SFE 금융 시장 시뮬레이션 (Econophysics)
     MarketSimulation {
@@ -253,13 +255,55 @@ fn main() {
             }
             println!("SCQE 시뮬레이션 완료. 결과 저장됨: {output}");
         }
-        Commands::SfeArc { steps, output } => {
-            println!("모드: SFE-ARC (Riemannian Holonomy Cancellation) 시뮬레이션");
-            println!("  결합 모델: delta_phi = alpha*R + beta*V (측지선 편차 / 홀로노미)");
+        Commands::SfeArc { steps, output, diag } => {
+            let dt = 0.01;
+            let warmup = 1000.min(steps / 5);
+
+            if diag {
+                println!("=== ARC 잔차 원인 분해 진단 ===\n");
+                let configs: Vec<(&str, f64, f64, usize)> = vec![
+                    ("기준 (latency=2, full noise)", 0.08, 0.005, 2),
+                    ("latency=0 (지연 제거)", 0.08, 0.005, 0),
+                    ("latency=1 (1스텝 지연)", 0.08, 0.005, 1),
+                    ("process=0 (확률노이즈 제거)", 0.0, 0.005, 2),
+                    ("meas=0 (측정잡음 제거)", 0.08, 0.0, 2),
+                    ("ideal (noise=0, meas=0, lat=0)", 0.0, 0.0, 0),
+                ];
+
+                for (label, pn, mn, lat) in &configs {
+                    let mut env =
+                        sfe_core::engine::arc::ArcSimulationEnv::with_params(*pn, *mn, *lat);
+                    let mut sn = 0.0_f64;
+                    let mut sr = 0.0_f64;
+                    let mut n = 0_usize;
+
+                    for t in 0..steps {
+                        let (noise, resid) = env.step(dt);
+                        if t >= warmup {
+                            sn += noise * noise;
+                            sr += resid * resid;
+                            n += 1;
+                        }
+                    }
+
+                    let rms_n = (sn / n as f64).sqrt();
+                    let rms_r = (sr / n as f64).sqrt();
+                    let red = if rms_n > 1e-12 {
+                        (1.0 - rms_r / rms_n) * 100.0
+                    } else if rms_r < 1e-12 {
+                        100.0
+                    } else {
+                        0.0
+                    };
+                    println!("  {label:38} | RMS_n={rms_n:.6} RMS_r={rms_r:.6} | {red:6.2}%");
+                }
+                println!();
+            }
+
+            println!("모드: SFE-ARC (3+1 ADM Coupled Cancellation) 시뮬레이션");
+            println!("  결합 모델: 3+1 ADM + SFE [R,K,Phi,Pi] 4D 결합 칼만");
 
             let mut env = sfe_core::engine::arc::ArcSimulationEnv::new();
-            let dt = 0.01;
-            let warmup = 200.min(steps / 5);
 
             let mut file = File::create(&output).unwrap();
             writeln!(file, "Step,TrueNoise,ResidualNoise").unwrap();
