@@ -5,6 +5,44 @@ use rustfft::{num_complex::Complex, Fft, FftPlanner};
 use std::f64::consts::PI;
 use std::sync::Arc;
 
+pub const OMEGA_PHI: f64 = 4.50e22;
+pub const M_PHI_MEV: f64 = 29.65;
+
+#[derive(Clone, Debug)]
+pub struct SfeSpectralDensity {
+    pub omega_phi: f64,
+    pub coupling_sq: f64,
+}
+
+impl Default for SfeSpectralDensity {
+    fn default() -> Self {
+        Self {
+            omega_phi: OMEGA_PHI,
+            coupling_sq: 1e-6,
+        }
+    }
+}
+
+impl SfeSpectralDensity {
+    pub fn j_phi(&self, omega: f64) -> f64 {
+        if omega < self.omega_phi {
+            return 0.0;
+        }
+        let ratio = omega / (omega * omega - self.omega_phi * self.omega_phi).sqrt();
+        ratio / (2.0 * PI)
+    }
+
+    pub fn off_shell_suppression(&self, omega_s: f64) -> f64 {
+        let ratio = omega_s / self.omega_phi;
+        self.coupling_sq * ratio * ratio
+    }
+
+    pub fn effective_dissipation(&self, omega_s: f64, j_env: f64) -> f64 {
+        let off_shell = self.off_shell_suppression(omega_s);
+        off_shell * j_env
+    }
+}
+
 #[derive(Clone, Debug)]
 pub struct LorentzianPeak {
     pub omega_center: f64,
@@ -18,6 +56,7 @@ pub struct MultiPeakNoiseGenerator {
     pink_scale: f64,
     lorentzian_peaks: Vec<LorentzianPeak>,
     white_level: f64,
+    sfe_spectral: Option<SfeSpectralDensity>,
     fft: Arc<dyn Fft<f64>>,
     spectrum_buffer: Vec<Complex<f64>>,
 }
@@ -38,9 +77,15 @@ impl MultiPeakNoiseGenerator {
             pink_scale: scale,
             lorentzian_peaks: peaks,
             white_level: white,
+            sfe_spectral: None,
             fft,
             spectrum_buffer: vec![Complex::zero(); steps],
         }
+    }
+
+    pub fn with_sfe_spectral(mut self, sfe: SfeSpectralDensity) -> Self {
+        self.sfe_spectral = Some(sfe);
+        self
     }
 
     pub fn spectrum_density(&self, omega: f64) -> f64 {
@@ -59,7 +104,14 @@ impl MultiPeakNoiseGenerator {
             })
             .sum();
 
-        pink + lorentz + self.white_level
+        let env_total = pink + lorentz + self.white_level;
+
+        if let Some(ref sfe) = self.sfe_spectral {
+            let sfe_contribution = sfe.effective_dissipation(omega, env_total);
+            env_total + sfe_contribution
+        } else {
+            env_total
+        }
     }
 
     pub fn generate(&mut self, output: &mut [f64]) {

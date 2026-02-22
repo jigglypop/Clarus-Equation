@@ -254,42 +254,46 @@ fn main() {
             println!("SCQE 시뮬레이션 완료. 결과 저장됨: {output}");
         }
         Commands::SfeArc { steps, output } => {
-            println!("모드: SFE-ARC (Adaptive Riemannian Cancellation) 시뮬레이션");
-            println!("  목표: 실시간 곡률 예측 및 역위상 상쇄 (Target: >90% Reduction)");
+            println!("모드: SFE-ARC (Riemannian Holonomy Cancellation) 시뮬레이션");
+            println!("  결합 모델: delta_phi = alpha*R + beta*V (측지선 편차 / 홀로노미)");
 
             let mut env = sfe_core::engine::arc::ArcSimulationEnv::new();
             let dt = 0.01;
+            let warmup = 200.min(steps / 5);
 
             let mut file = File::create(&output).unwrap();
-            writeln!(file, "Step,TrueNoise,ResidualNoise,ReductionRatio").unwrap();
+            writeln!(file, "Step,TrueNoise,ResidualNoise").unwrap();
 
             let pb = ProgressBar::new(steps as u64);
-            let mut total_reduction = 0.0;
-            let mut count = 0;
+            let mut sum_noise_sq = 0.0_f64;
+            let mut sum_resid_sq = 0.0_f64;
+            let mut n_active = 0_usize;
 
             for t in 0..steps {
                 let (true_noise, residual) = env.step(dt);
-                let ratio = if true_noise.abs() > 1e-6 {
-                    (1.0 - residual.abs() / true_noise.abs()) * 100.0
-                } else {
-                    0.0
-                };
+                writeln!(file, "{t},{true_noise:.8},{residual:.8}").unwrap();
 
-                if ratio > -100.0 && ratio < 200.0 {
-                    total_reduction += ratio;
-                    count += 1;
+                if t >= warmup {
+                    sum_noise_sq += true_noise * true_noise;
+                    sum_resid_sq += residual * residual;
+                    n_active += 1;
                 }
-
-                writeln!(file, "{t},{true_noise:.6},{residual:.6},{ratio:.2}").unwrap();
                 pb.inc(1);
             }
             pb.finish();
 
-            if count > 0 {
-                println!(
-                    "  평균 노이즈 감소율: {:.2}%",
-                    total_reduction / count as f64
-                );
+            if n_active > 0 {
+                let rms_noise = (sum_noise_sq / n_active as f64).sqrt();
+                let rms_resid = (sum_resid_sq / n_active as f64).sqrt();
+                let reduction = if rms_noise > 1e-12 {
+                    (1.0 - rms_resid / rms_noise) * 100.0
+                } else {
+                    0.0
+                };
+                println!("  웜업: {warmup} steps 제외");
+                println!("  RMS 노이즈:  {rms_noise:.6}");
+                println!("  RMS 잔차:    {rms_resid:.6}");
+                println!("  RMS 감소율:  {reduction:.2}%");
             }
             println!("SFE-ARC 시뮬레이션 완료. 결과 저장됨: {output}");
         }

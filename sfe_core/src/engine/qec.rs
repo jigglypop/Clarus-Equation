@@ -1,3 +1,4 @@
+use super::config::{NoiseConfig, QecConfig, SuppressionConfig};
 use super::noise::{generate_correlated_pink_noise, PinkNoiseGenerator};
 use rand::prelude::*;
 use rayon::prelude::*;
@@ -8,12 +9,11 @@ pub const SFE_EPSILON: f64 = 0.37;
 fn generate_sfe_noise_traces(
     steps: usize,
     qubits: usize,
-    alpha: f64,
-    scale: f64,
-    rho: f64,
+    noise_cfg: &NoiseConfig,
+    sup_cfg: &SuppressionConfig,
 ) -> Vec<Vec<f64>> {
     let traces_base = if qubits == 1 {
-        let mut gen = PinkNoiseGenerator::new_with_params(steps, alpha, scale);
+        let mut gen = PinkNoiseGenerator::new_with_params(steps, noise_cfg.alpha, noise_cfg.scale);
         let mut buf = vec![0.0; steps];
         let mut v = Vec::with_capacity(qubits);
         for _ in 0..qubits {
@@ -22,42 +22,16 @@ fn generate_sfe_noise_traces(
         }
         v
     } else {
-        generate_correlated_pink_noise(steps, qubits, alpha, scale, rho)
+        generate_correlated_pink_noise(steps, qubits, noise_cfg.alpha, noise_cfg.scale, noise_cfg.rho)
     };
 
-    let omega: f64 = std::env::var("SFE_SUPPRESSON_OMEGA")
-        .ok()
-        .and_then(|v| v.parse().ok())
-        .unwrap_or(0.0);
-    let amp: f64 = std::env::var("SFE_SUPPRESSON_AMP")
-        .ok()
-        .and_then(|v| v.parse().ok())
-        .unwrap_or(0.0);
-    let omega2: f64 = std::env::var("SFE_SUPPRESSON_OMEGA2")
-        .ok()
-        .and_then(|v| v.parse().ok())
-        .unwrap_or(0.0);
-    let amp2: f64 = std::env::var("SFE_SUPPRESSON_AMP2")
-        .ok()
-        .and_then(|v| v.parse().ok())
-        .unwrap_or(0.0);
-
-    if (omega == 0.0 || amp == 0.0) && (omega2 == 0.0 || amp2 == 0.0) {
+    if !sup_cfg.has_any() {
         return traces_base;
     }
 
     let mut traces = traces_base;
     for trace in traces.iter_mut() {
-        for (t, v) in trace.iter_mut().enumerate() {
-            if omega != 0.0 && amp != 0.0 {
-                let phase = omega * (t as f64);
-                *v += amp * phase.cos();
-            }
-            if omega2 != 0.0 && amp2 != 0.0 {
-                let phase2 = omega2 * (t as f64);
-                *v += amp2 * phase2.cos();
-            }
-        }
+        sup_cfg.apply_to_trace(trace);
     }
 
     traces
@@ -155,55 +129,14 @@ pub fn simulate_repetition_code(
         panic!("다수결 보정을 위해 거리는 홀수여야 합니다.");
     }
 
+    let noise_cfg = NoiseConfig::from_env_with_noise(noise_amp);
+    let sup_cfg = SuppressionConfig::from_env();
+    let qec_cfg = QecConfig::from_env();
+
     let num_cycles = total_time / measure_interval;
-
-    let alpha: f64 = std::env::var("SFE_NOISE_ALPHA")
-        .ok()
-        .and_then(|v| v.parse().ok())
-        .unwrap_or(0.8);
-    let scale: f64 = std::env::var("SFE_NOISE_SCALE")
-        .ok()
-        .and_then(|v| v.parse().ok())
-        .unwrap_or(1.5 * noise_amp.abs());
-
-    let t1_steps: f64 = std::env::var("SFE_T1_STEPS")
-        .ok()
-        .and_then(|v| v.parse().ok())
-        .unwrap_or(1.0e5);
-    let gate_err: f64 = std::env::var("SFE_GATE_ERROR")
-        .ok()
-        .and_then(|v| v.parse().ok())
-        .unwrap_or(1.0e-3);
-
-    let rho: f64 = std::env::var("SFE_NOISE_RHO")
-        .ok()
-        .and_then(|v| v.parse().ok())
-        .unwrap_or(0.0);
-    let meas_err: f64 = std::env::var("SFE_MEAS_ERROR")
-        .ok()
-        .and_then(|v| v.parse().ok())
-        .unwrap_or(1.0e-3);
-    let sup_omega: f64 = std::env::var("SFE_SUPPRESSON_OMEGA")
-        .ok()
-        .and_then(|v| v.parse().ok())
-        .unwrap_or(0.0);
-    let sup_amp: f64 = std::env::var("SFE_SUPPRESSON_AMP")
-        .ok()
-        .and_then(|v| v.parse().ok())
-        .unwrap_or(0.0);
-    let anc_flag: i32 = std::env::var("SFE_SUPPRESSON_ANC")
-        .ok()
-        .and_then(|v| v.parse().ok())
-        .unwrap_or(0);
-    let anc_on = anc_flag != 0 && sup_omega != 0.0 && sup_amp != 0.0;
-
     let dt_cycle = measure_interval as f64;
-    let p_t1 = 1.0 - (-dt_cycle / t1_steps).exp();
-
-    // SFE Proposal 17: Gate Fidelity Scaling
-    // F_sfe = F_std * exp(-epsilon * t_g / tau_coh)
-    // Assuming t_g = 1 step for the effective gate error application
-    let sfe_gate_fidelity_factor = (-SFE_EPSILON * (1.0 / t1_steps)).exp();
+    let p_t1 = 1.0 - (-dt_cycle / qec_cfg.t1_steps).exp();
+    let sfe_gate_fidelity_factor = (-SFE_EPSILON * (1.0 / qec_cfg.t1_steps)).exp();
 
     let cycle_len = measure_interval;
     let mut cycle_pulses: Vec<usize> = pulse_seq
@@ -216,7 +149,7 @@ pub fn simulate_repetition_code(
     let (logical_errors, physical_errors) = (0..trials)
         .into_par_iter()
         .map(|_| {
-            let traces = generate_sfe_noise_traces(total_time, distance, alpha, scale, rho);
+            let traces = generate_sfe_noise_traces(total_time, distance, &noise_cfg, &sup_cfg);
 
             let mut rng = thread_rng();
             let mut phys_err_count = 0_usize;
@@ -242,17 +175,15 @@ pub fn simulate_repetition_code(
                             sign *= -1.0;
                         }
                         let mut val = noise[t_abs];
-                        if anc_on {
-                            let theta = sup_omega * (t_abs as f64);
-                            val -= sup_amp * theta.cos();
+                        if sup_cfg.anc_enabled {
+                            val = sup_cfg.cancel_from_sample(val, t_abs);
                         }
                         phase += sign * val * noise_amp * SFE_PHASE_SCALE;
                     }
 
                     let p_phase = 0.5 * (1.0 - phase.cos());
 
-                    // Apply SFE Gate Fidelity Correction
-                    let f_gate_std = 1.0 - gate_err;
+                    let f_gate_std = 1.0 - qec_cfg.gate_error;
                     let f_gate_sfe = f_gate_std * sfe_gate_fidelity_factor;
                     let p_gate_sfe = 1.0 - f_gate_sfe;
 
@@ -269,7 +200,7 @@ pub fn simulate_repetition_code(
 
                 for q in 0..distance {
                     let mut meas = states[q];
-                    if rng.gen::<f64>() < meas_err {
+                    if rng.gen::<f64>() < qec_cfg.meas_error {
                         meas = !meas;
                     }
                     obs[q][cycle] = meas;
@@ -280,7 +211,7 @@ pub fn simulate_repetition_code(
             if num_cycles > 0 {
                 let mut final_errors = 0_usize;
                 for q in 0..distance {
-                    if viterbi_final_state(&obs[q], &p_flips[q], meas_err) {
+                    if viterbi_final_state(&obs[q], &p_flips[q], qec_cfg.meas_error) {
                         final_errors += 1;
                     }
                 }
@@ -321,55 +252,12 @@ pub fn simulate_surface_code_d3(
     measure_interval: usize,
     trials: usize,
 ) -> QECResult {
+    let noise_cfg = NoiseConfig::from_env_with_noise(noise_amp);
+    let sup_cfg = SuppressionConfig::from_env();
+    let qec_cfg = QecConfig::from_env();
+
     let num_cycles = total_time / measure_interval;
-
-    let alpha: f64 = std::env::var("SFE_NOISE_ALPHA")
-        .ok()
-        .and_then(|v| v.parse().ok())
-        .unwrap_or(0.8);
-    let scale: f64 = std::env::var("SFE_NOISE_SCALE")
-        .ok()
-        .and_then(|v| v.parse().ok())
-        .unwrap_or(1.5 * noise_amp.abs());
-
-    let t1_steps: f64 = std::env::var("SFE_T1_STEPS")
-        .ok()
-        .and_then(|v| v.parse().ok())
-        .unwrap_or(1.0e5);
-    // SFE Proposal 17 Correction Factor for Surface Code
-    let sfe_gate_fidelity_factor = (-SFE_EPSILON * (1.0 / t1_steps)).exp();
-
-    let meas_err: f64 = std::env::var("SFE_MEAS_ERROR")
-        .ok()
-        .and_then(|v| v.parse().ok())
-        .unwrap_or(1.0e-3);
-
-    let rho: f64 = std::env::var("SFE_NOISE_RHO")
-        .ok()
-        .and_then(|v| v.parse().ok())
-        .unwrap_or(0.0);
-    let sup_omega: f64 = std::env::var("SFE_SUPPRESSON_OMEGA")
-        .ok()
-        .and_then(|v| v.parse().ok())
-        .unwrap_or(0.0);
-    let sup_amp: f64 = std::env::var("SFE_SUPPRESSON_AMP")
-        .ok()
-        .and_then(|v| v.parse().ok())
-        .unwrap_or(0.0);
-    let sup_omega2: f64 = std::env::var("SFE_SUPPRESSON_OMEGA2")
-        .ok()
-        .and_then(|v| v.parse().ok())
-        .unwrap_or(0.0);
-    let sup_amp2: f64 = std::env::var("SFE_SUPPRESSON_AMP2")
-        .ok()
-        .and_then(|v| v.parse().ok())
-        .unwrap_or(0.0);
-    let anc_flag: i32 = std::env::var("SFE_SUPPRESSON_ANC")
-        .ok()
-        .and_then(|v| v.parse().ok())
-        .unwrap_or(0);
-    let anc_on = anc_flag != 0
-        && ((sup_omega != 0.0 && sup_amp != 0.0) || (sup_omega2 != 0.0 && sup_amp2 != 0.0));
+    let sfe_gate_fidelity_factor = (-SFE_EPSILON * (1.0 / qec_cfg.t1_steps)).exp();
 
     let cycle_len = measure_interval;
     let mut cycle_pulses: Vec<usize> = pulse_seq
@@ -392,7 +280,7 @@ pub fn simulate_surface_code_d3(
     let (logical_errors, physical_errors) = (0..trials)
         .into_par_iter()
         .map(|_| {
-            let traces = generate_sfe_noise_traces(total_time, data_qubits, alpha, scale, rho);
+            let traces = generate_sfe_noise_traces(total_time, data_qubits, &noise_cfg, &sup_cfg);
 
             let mut rng = thread_rng();
             let mut phys_err_count = 0_usize;
@@ -417,27 +305,15 @@ pub fn simulate_surface_code_d3(
                             sign *= -1.0;
                         }
                         let mut val = noise[t_abs];
-                        if anc_on {
-                            if sup_omega != 0.0 && sup_amp != 0.0 {
-                                let theta = sup_omega * (t_abs as f64);
-                                val -= sup_amp * theta.cos();
-                            }
-                            if sup_omega2 != 0.0 && sup_amp2 != 0.0 {
-                                let theta2 = sup_omega2 * (t_abs as f64);
-                                val -= sup_amp2 * theta2.cos();
-                            }
+                        if sup_cfg.anc_enabled {
+                            val = sup_cfg.cancel_from_sample(val, t_abs);
                         }
                         phase += sign * val * noise_amp * SFE_PHASE_SCALE;
                     }
 
                     let p_phase = 0.5 * (1.0 - phase.cos());
-
-                    // Apply SFE correction to Z-error probability (acting as effective gate error here)
-                    // Assuming p_phase is the base environmental noise, we add the SFE gate scaling effect
-                    // F_sfe_gate = exp(-eps * 1/T1). The loss probability is 1 - F.
                     let p_sfe_loss = 1.0 - sfe_gate_fidelity_factor;
 
-                    // Combine Phase noise and SFE suppression loss
                     let mut p_z = 1.0 - (1.0 - p_phase) * (1.0 - p_sfe_loss);
                     p_z = p_z.clamp(0.0, 1.0);
 
@@ -456,7 +332,7 @@ pub fn simulate_surface_code_d3(
                         }
                     }
                     let mut meas = v;
-                    if rng.gen::<f64>() < meas_err {
+                    if rng.gen::<f64>() < qec_cfg.meas_error {
                         meas = !meas;
                     }
                     syndromes[s][cycle] = meas;
@@ -470,42 +346,63 @@ pub fn simulate_surface_code_d3(
                 }
             }
 
-            let mut cand_patterns = Vec::with_capacity(data_qubits + 1);
-            let mut cand_qubits = Vec::with_capacity(data_qubits + 1);
+            let synd_weight: usize = final_synd.iter().filter(|&&s| s).count();
 
-            cand_patterns.push(vec![false; 4]);
-            cand_qubits.push(None);
-
-            for q in 0..data_qubits {
-                let mut p = vec![false; 4];
-                for s in 0..4 {
-                    let sq = &stabs[s];
-                    if sq.contains(&q) {
-                        p[s] = true;
+            if synd_weight > 0 {
+                let mut single_synd = [[false; 4]; 9];
+                for q in 0..data_qubits {
+                    for s in 0..4 {
+                        if stabs[s].contains(&q) {
+                            single_synd[q][s] = true;
+                        }
                     }
                 }
-                cand_patterns.push(p);
-                cand_qubits.push(Some(q));
-            }
 
-            let mut best_idx = 0usize;
-            let mut best_dist = usize::MAX;
+                let mut best_single_q = 0usize;
+                let mut best_single_dist = usize::MAX;
 
-            for (i, pat) in cand_patterns.iter().enumerate() {
-                let mut d = 0usize;
-                for s in 0..4 {
-                    if pat[s] != final_synd[s] {
-                        d += 1;
+                for q in 0..data_qubits {
+                    let mut d = 0usize;
+                    for s in 0..4 {
+                        if single_synd[q][s] != final_synd[s] {
+                            d += 1;
+                        }
+                    }
+                    if d < best_single_dist {
+                        best_single_dist = d;
+                        best_single_q = q;
                     }
                 }
-                if d < best_dist {
-                    best_dist = d;
-                    best_idx = i;
-                }
-            }
 
-            if let Some(q) = cand_qubits[best_idx] {
-                z_state[q] = !z_state[q];
+                let mut best_correction: Vec<usize> = vec![best_single_q];
+
+                if best_single_dist >= 2 {
+                    for q1 in 0..data_qubits {
+                        for q2 in (q1 + 1)..data_qubits {
+                            let mut combined = [false; 4];
+                            for s in 0..4 {
+                                combined[s] = single_synd[q1][s] ^ single_synd[q2][s];
+                            }
+                            let mut d = 0usize;
+                            for s in 0..4 {
+                                if combined[s] != final_synd[s] {
+                                    d += 1;
+                                }
+                            }
+                            if d == 0 {
+                                best_correction = vec![q1, q2];
+                                break;
+                            }
+                        }
+                        if best_correction.len() == 2 {
+                            break;
+                        }
+                    }
+                }
+
+                for &q in &best_correction {
+                    z_state[q] = !z_state[q];
+                }
             }
 
             let mut logical_flip = false;

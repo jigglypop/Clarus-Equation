@@ -58,20 +58,39 @@ impl LyapunovSuppressionFilter {
 
         let half_window = window_size / 2;
 
-        let suppression_factors: Vec<f64> = (0..n)
-            .into_par_iter()
-            .map(|i| {
-                let start = i.saturating_sub(half_window);
-                let end = if i + half_window < n {
-                    i + half_window
-                } else {
-                    n
-                };
-                let local_energy: f64 =
-                    signal[start..end].iter().map(|x| x * x).sum::<f64>() / (end - start) as f64;
-                self.suppression_factor(local_energy)
-            })
-            .collect();
+        let start = 0usize;
+        let end = half_window.min(n);
+        let mut window_sum: f64 = signal[start..end].iter().map(|x| x * x).sum();
+        let mut window_count = end - start;
+
+        let mut suppression_factors = Vec::with_capacity(n);
+
+        for i in 0..n {
+            let new_end = (i + half_window).min(n);
+            let new_start = i.saturating_sub(half_window);
+
+            if i > 0 {
+                if new_end > (i - 1 + half_window).min(n) {
+                    let added = new_end - 1;
+                    if added < n {
+                        window_sum += signal[added] * signal[added];
+                        window_count += 1;
+                    }
+                }
+                let old_start = (i - 1).saturating_sub(half_window);
+                if new_start > old_start {
+                    window_sum -= signal[old_start] * signal[old_start];
+                    window_count -= 1;
+                }
+            }
+
+            let local_energy = if window_count > 0 {
+                window_sum / window_count as f64
+            } else {
+                0.0
+            };
+            suppression_factors.push(self.suppression_factor(local_energy));
+        }
 
         signal
             .par_iter_mut()
@@ -103,6 +122,8 @@ pub struct AdaptiveSuppressionController {
     pub target_sigma: f64,
     pub learning_rate: f64,
     pub history: Vec<f64>,
+    integral_error: f64,
+    ki: f64,
 }
 
 impl AdaptiveSuppressionController {
@@ -112,6 +133,8 @@ impl AdaptiveSuppressionController {
             target_sigma,
             learning_rate: 0.1,
             history: Vec::new(),
+            integral_error: 0.0,
+            ki: 0.02,
         }
     }
 
@@ -120,7 +143,11 @@ impl AdaptiveSuppressionController {
         self.history.push(current_sigma);
 
         let error = self.target_sigma - current_sigma;
-        self.filter.alpha += self.learning_rate * error;
+        self.integral_error += error;
+        self.integral_error = self.integral_error.clamp(-50.0, 50.0);
+
+        let correction = self.learning_rate * error + self.ki * self.integral_error;
+        self.filter.alpha += correction;
         self.filter.alpha = self.filter.alpha.clamp(0.1, 10.0);
     }
 
@@ -139,7 +166,7 @@ impl AdaptiveSuppressionController {
             recent.iter().map(|x| (x - mean).powi(2)).sum::<f64>() / recent.len() as f64;
         let std = variance.sqrt();
 
-        if std < 0.05 * mean {
+        if std < 0.05 * mean.abs().max(1e-12) {
             if mean > self.target_sigma * 0.9 && mean < self.target_sigma * 1.1 {
                 ConvergenceStatus::Converged
             } else {
