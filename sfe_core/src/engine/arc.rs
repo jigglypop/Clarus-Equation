@@ -1,8 +1,13 @@
+use rand::Rng;
 use std::collections::VecDeque;
 use std::f64::consts::E;
 
 /// Self-consistent strong coupling from alpha_total = 1/(2*pi)
 const ALPHA_S: f64 = 0.11789;
+
+/// Error feedback measurement variance.
+/// Signal is computed from true state (noise-free); only staleness uncertainty remains.
+const R_MEAS_ERR: f64 = 1e-10;
 
 fn sfe_physics_params() -> (f64, f64, f64, f64, f64) {
     let xi = ALPHA_S.powf(1.0 / 3.0);  // coupling per dimension: alpha_s^{1/d}
@@ -107,13 +112,14 @@ impl SfeState {
 
     fn predict(&mut self, dt: f64, alpha_lapse: f64, beta_damp: f64,
                xi: f64, m_phi: f64, gamma_phi: f64) {
+        // Jacobian at OLD state (before evolution) -- EKF requires this
+        let a = self.transition_matrix(dt, alpha_lapse, beta_damp, xi, m_phi, gamma_phi);
+
         let r = self.x[0];
         let kk = self.x[1];
         let phi = self.x[2];
         let pi = self.x[3];
 
-        // Symplectic Euler matching simulation exactly:
-        // velocities first, then positions
         let dk = alpha_lapse * r / 2.0 - beta_damp * kk + xi * phi * phi;
         let dpi = -(m_phi * m_phi + xi * r) * phi - gamma_phi * pi;
 
@@ -125,9 +131,7 @@ impl SfeState {
 
         self.x = [r_new, k_new, phi_new, pi_new];
 
-        // Jacobian for covariance propagation (derived from the symplectic scheme)
-        let a = self.transition_matrix(dt, alpha_lapse, beta_damp, xi, m_phi, gamma_phi);
-
+        // P = A * P * A^T + Q * q_factor
         let mut ap = [[0.0_f64; 4]; 4];
         for i in 0..4 {
             for j in 0..4 {
@@ -137,13 +141,13 @@ impl SfeState {
             }
         }
 
+        let q_factor = (-2.0 * xi * self.x[0].abs()).exp();
         let mut p_new = [[0.0_f64; 4]; 4];
         for i in 0..4 {
             for j in 0..4 {
                 for k in 0..4 {
                     p_new[i][j] += ap[i][k] * a[j][k];
                 }
-                let q_factor = (-2.0 * xi * self.x[0].abs()).exp();
                 p_new[i][j] += self.q[i][j] * q_factor;
             }
         }
@@ -151,82 +155,65 @@ impl SfeState {
         self.p = p_new;
     }
 
-    fn update(&mut self, z: f64, r_meas_base: f64, xi: f64) {
-        let r_meas = r_meas_base * (-2.0 * xi * self.x[0].abs()).exp();
-        let s = self.p[0][0] + r_meas;
+    /// General scalar Kalman update for observation z with H vector and noise r_meas.
+    fn update_observation(&mut self, z: f64, h: [f64; 4], r_meas: f64) {
+        let mut z_pred = 0.0;
+        for i in 0..4 {
+            z_pred += h[i] * self.x[i];
+        }
+
+        // S = H * P * H^T + R
+        let mut hph = 0.0_f64;
+        for i in 0..4 {
+            for j in 0..4 {
+                hph += h[i] * self.p[i][j] * h[j];
+            }
+        }
+        let s = hph + r_meas;
         if s.abs() < 1e-20 {
             return;
         }
         let s_inv = 1.0 / s;
+        let innovation = z - z_pred;
 
-        let innovation = z - self.x[0];
-
+        // K = P * H^T / S
         let mut k = [0.0_f64; 4];
         for i in 0..4 {
-            k[i] = self.p[i][0] * s_inv;
+            for j in 0..4 {
+                k[i] += self.p[i][j] * h[j];
+            }
+            k[i] *= s_inv;
         }
 
         for i in 0..4 {
             self.x[i] += k[i] * innovation;
         }
 
-        let p_row0 = self.p[0];
-        let mut p_new = self.p;
+        // P = (I - K*H) * P
+        let mut hp = [0.0_f64; 4];
+        for j in 0..4 {
+            for l in 0..4 {
+                hp[j] += h[l] * self.p[l][j];
+            }
+        }
+
         for i in 0..4 {
             for j in 0..4 {
-                p_new[i][j] -= k[i] * p_row0[j];
+                self.p[i][j] -= k[i] * hp[j];
             }
         }
 
+        // Symmetrize + floor
         for i in 0..4 {
-            if p_new[i][i] < 1e-15 {
-                p_new[i][i] = 1e-15;
+            for j in (i + 1)..4 {
+                let avg = 0.5 * (self.p[i][j] + self.p[j][i]);
+                self.p[i][j] = avg;
+                self.p[j][i] = avg;
+            }
+            if self.p[i][i] < 1e-15 {
+                self.p[i][i] = 1e-15;
             }
         }
-
-        self.p = p_new;
-    }
-
-    /// Second observation: dR/dt = -2*alpha*K gives direct K information.
-    fn update_velocity(&mut self, dr_dt: f64, alpha_lapse: f64,
-                       r_meas_vel: f64) {
-        let h1 = -2.0 * alpha_lapse;
-        let z_pred = h1 * self.x[1];
-
-        // S = h1^2 * P[1][1] + R_vel
-        let s = h1 * h1 * self.p[1][1] + r_meas_vel;
-        if s.abs() < 1e-20 {
-            return;
-        }
-        let s_inv = 1.0 / s;
-
-        let innovation = dr_dt - z_pred;
-
-        // K = P * H^T / S, where H = [0, h1, 0, 0]
-        let mut k = [0.0_f64; 4];
-        for i in 0..4 {
-            k[i] = self.p[i][1] * h1 * s_inv;
-        }
-
-        for i in 0..4 {
-            self.x[i] += k[i] * innovation;
-        }
-
-        // P = (I - K*H) * P, H*P row = h1 * P[1][j]
-        let mut p_new = self.p;
-        for i in 0..4 {
-            for j in 0..4 {
-                p_new[i][j] -= k[i] * h1 * self.p[1][j];
-            }
-        }
-
-        for i in 0..4 {
-            if p_new[i][i] < 1e-15 {
-                p_new[i][i] = 1e-15;
-            }
-        }
-
-        self.p = p_new;
     }
 
     fn predict_future(&self, t: f64, alpha_lapse: f64, beta_damp: f64,
@@ -295,25 +282,20 @@ impl SfeArcController {
         }
     }
 
-    pub fn new_with_modes(
-        alpha: f64,
-        beta: f64,
-        latency: usize,
-        _mode_params: &[(f64, f64, f64)],
-    ) -> Self {
-        Self::new(alpha, beta, latency, 0.08, 0.005)
-    }
-
     pub fn step(&mut self, measured_r: f64, dt: f64) -> f64 {
         self.state.predict(dt, self.alpha_lapse, self.beta_damp,
                            self.xi, self.m_phi, self.gamma_phi);
 
-        self.state.update(measured_r, self.r_meas, self.xi);
+        // Obs 1: R (curvature-dependent noise)
+        let r_meas = self.r_meas * (-2.0 * self.xi * self.state.x[0].abs()).exp();
+        self.state.update_observation(measured_r, [1.0, 0.0, 0.0, 0.0], r_meas);
 
+        // Obs 2: dR/dt = -2*alpha*K (velocity from forward difference)
         if let Some(prev) = self.prev_z {
             let dr_dt = (measured_r - prev) / dt;
+            let h1 = -2.0 * self.alpha_lapse;
             let r_meas_vel = 2.0 * self.r_meas / (dt * dt);
-            self.state.update_velocity(dr_dt, self.alpha_lapse, r_meas_vel);
+            self.state.update_observation(dr_dt, [0.0, h1, 0.0, 0.0], r_meas_vel);
         }
         self.prev_z = Some(measured_r);
 
@@ -323,62 +305,16 @@ impl SfeArcController {
             self.xi, self.m_phi, self.gamma_phi,
         );
 
-        let pred_r = x_future[0];
-        let pred_k = x_future[1];
-
-        -(self.alpha * pred_r + self.beta * pred_k)
+        -(self.alpha * x_future[0] + self.beta * x_future[1])
     }
 
-    /// Error feedback: residual - pulse = alpha*R + beta*K.
-    /// Observes a linear combination of R and K distinct from other observations.
+    /// Obs 3: error feedback. residual - pulse = alpha*R + beta*K.
     pub fn update_error(&mut self, error_signal: f64, r_meas_err: f64) {
-        // H = [alpha, beta, 0, 0]
-        let h = [self.alpha, self.beta, 0.0, 0.0];
-        let z_pred = h[0] * self.state.x[0] + h[1] * self.state.x[1];
-
-        let mut hph = 0.0;
-        for i in 0..2 {
-            for j in 0..2 {
-                hph += h[i] * self.state.p[i][j] * h[j];
-            }
-        }
-        let s = hph + r_meas_err;
-        if s.abs() < 1e-20 {
-            return;
-        }
-        let s_inv = 1.0 / s;
-
-        let innovation = error_signal - z_pred;
-
-        let mut k = [0.0_f64; 4];
-        for i in 0..4 {
-            k[i] = (self.state.p[i][0] * h[0] + self.state.p[i][1] * h[1]) * s_inv;
-        }
-
-        for i in 0..4 {
-            self.state.x[i] += k[i] * innovation;
-        }
-
-        // P = (I - K*H)*P, where H*P row = h[0]*P[0][j] + h[1]*P[1][j]
-        let mut hp = [0.0_f64; 4];
-        for j in 0..4 {
-            hp[j] = h[0] * self.state.p[0][j] + h[1] * self.state.p[1][j];
-        }
-
-        let mut p_new = self.state.p;
-        for i in 0..4 {
-            for j in 0..4 {
-                p_new[i][j] -= k[i] * hp[j];
-            }
-        }
-
-        for i in 0..4 {
-            if p_new[i][i] < 1e-15 {
-                p_new[i][i] = 1e-15;
-            }
-        }
-
-        self.state.p = p_new;
+        self.state.update_observation(
+            error_signal,
+            [self.alpha, self.beta, 0.0, 0.0],
+            r_meas_err,
+        );
     }
 
     pub fn mode_energies(&self) -> Vec<f64> {
@@ -451,7 +387,6 @@ impl ArcSimulationEnv {
     }
 
     pub fn step(&mut self, dt: f64) -> (f64, f64) {
-        use rand::Rng;
         let mut rng = rand::thread_rng();
 
         let r = self.true_state[0];
@@ -489,10 +424,7 @@ impl ArcSimulationEnv {
 
         // Feed back previous residual as error observation before controller step
         let error_signal = self.prev_residual - self.prev_delayed_pulse;
-        // Error signal is computed from true state: effectively noise-free.
-        // Only uncertainty: 1-step dynamics change (~dt^2 scale).
-        let r_meas_err = 1e-10;
-        self.controller.update_error(error_signal, r_meas_err);
+        self.controller.update_error(error_signal, R_MEAS_ERR);
 
         let new_pulse = self.controller.step(measured_r, dt);
 
