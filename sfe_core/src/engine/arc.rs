@@ -143,15 +143,16 @@ impl SfeState {
                 for k in 0..4 {
                     p_new[i][j] += ap[i][k] * a[j][k];
                 }
-                p_new[i][j] += self.q[i][j];
+                let q_factor = (-2.0 * xi * self.x[0].abs()).exp();
+                p_new[i][j] += self.q[i][j] * q_factor;
             }
         }
 
         self.p = p_new;
     }
 
-    fn update(&mut self, z: f64, r_meas: f64) {
-        // H = [1, 0, 0, 0] -- observe R only
+    fn update(&mut self, z: f64, r_meas_base: f64, xi: f64) {
+        let r_meas = r_meas_base * (-2.0 * xi * self.x[0].abs()).exp();
         let s = self.p[0][0] + r_meas;
         if s.abs() < 1e-20 {
             return;
@@ -169,12 +170,53 @@ impl SfeState {
             self.x[i] += k[i] * innovation;
         }
 
-        // P = (I - K*H) * P
         let p_row0 = self.p[0];
         let mut p_new = self.p;
         for i in 0..4 {
             for j in 0..4 {
                 p_new[i][j] -= k[i] * p_row0[j];
+            }
+        }
+
+        for i in 0..4 {
+            if p_new[i][i] < 1e-15 {
+                p_new[i][i] = 1e-15;
+            }
+        }
+
+        self.p = p_new;
+    }
+
+    /// Second observation: dR/dt = -2*alpha*K gives direct K information.
+    fn update_velocity(&mut self, dr_dt: f64, alpha_lapse: f64,
+                       r_meas_vel: f64) {
+        let h1 = -2.0 * alpha_lapse;
+        let z_pred = h1 * self.x[1];
+
+        // S = h1^2 * P[1][1] + R_vel
+        let s = h1 * h1 * self.p[1][1] + r_meas_vel;
+        if s.abs() < 1e-20 {
+            return;
+        }
+        let s_inv = 1.0 / s;
+
+        let innovation = dr_dt - z_pred;
+
+        // K = P * H^T / S, where H = [0, h1, 0, 0]
+        let mut k = [0.0_f64; 4];
+        for i in 0..4 {
+            k[i] = self.p[i][1] * h1 * s_inv;
+        }
+
+        for i in 0..4 {
+            self.x[i] += k[i] * innovation;
+        }
+
+        // P = (I - K*H) * P, H*P row = h1 * P[1][j]
+        let mut p_new = self.p;
+        for i in 0..4 {
+            for j in 0..4 {
+                p_new[i][j] -= k[i] * h1 * self.p[1][j];
             }
         }
 
@@ -220,7 +262,8 @@ pub struct SfeArcController {
     pub latency: usize,
 
     state: SfeState,
-    r_meas: f64,
+    pub r_meas: f64,
+    prev_z: Option<f64>,
 
     alpha_lapse: f64,
     beta_damp: f64,
@@ -243,6 +286,7 @@ impl SfeArcController {
             latency,
             state: SfeState::new(process_noise, dt),
             r_meas,
+            prev_z: None,
             alpha_lapse,
             beta_damp,
             xi,
@@ -264,7 +308,14 @@ impl SfeArcController {
         self.state.predict(dt, self.alpha_lapse, self.beta_damp,
                            self.xi, self.m_phi, self.gamma_phi);
 
-        self.state.update(measured_r, self.r_meas);
+        self.state.update(measured_r, self.r_meas, self.xi);
+
+        if let Some(prev) = self.prev_z {
+            let dr_dt = (measured_r - prev) / dt;
+            let r_meas_vel = 2.0 * self.r_meas / (dt * dt);
+            self.state.update_velocity(dr_dt, self.alpha_lapse, r_meas_vel);
+        }
+        self.prev_z = Some(measured_r);
 
         let lookahead = self.latency as f64 * dt;
         let x_future = self.state.predict_future(
@@ -276,6 +327,58 @@ impl SfeArcController {
         let pred_k = x_future[1];
 
         -(self.alpha * pred_r + self.beta * pred_k)
+    }
+
+    /// Error feedback: residual - pulse = alpha*R + beta*K.
+    /// Observes a linear combination of R and K distinct from other observations.
+    pub fn update_error(&mut self, error_signal: f64, r_meas_err: f64) {
+        // H = [alpha, beta, 0, 0]
+        let h = [self.alpha, self.beta, 0.0, 0.0];
+        let z_pred = h[0] * self.state.x[0] + h[1] * self.state.x[1];
+
+        let mut hph = 0.0;
+        for i in 0..2 {
+            for j in 0..2 {
+                hph += h[i] * self.state.p[i][j] * h[j];
+            }
+        }
+        let s = hph + r_meas_err;
+        if s.abs() < 1e-20 {
+            return;
+        }
+        let s_inv = 1.0 / s;
+
+        let innovation = error_signal - z_pred;
+
+        let mut k = [0.0_f64; 4];
+        for i in 0..4 {
+            k[i] = (self.state.p[i][0] * h[0] + self.state.p[i][1] * h[1]) * s_inv;
+        }
+
+        for i in 0..4 {
+            self.state.x[i] += k[i] * innovation;
+        }
+
+        // P = (I - K*H)*P, where H*P row = h[0]*P[0][j] + h[1]*P[1][j]
+        let mut hp = [0.0_f64; 4];
+        for j in 0..4 {
+            hp[j] = h[0] * self.state.p[0][j] + h[1] * self.state.p[1][j];
+        }
+
+        let mut p_new = self.state.p;
+        for i in 0..4 {
+            for j in 0..4 {
+                p_new[i][j] -= k[i] * hp[j];
+            }
+        }
+
+        for i in 0..4 {
+            if p_new[i][i] < 1e-15 {
+                p_new[i][i] = 1e-15;
+            }
+        }
+
+        self.state.p = p_new;
     }
 
     pub fn mode_energies(&self) -> Vec<f64> {
@@ -304,6 +407,8 @@ pub struct ArcSimulationEnv {
 
     pub controller: SfeArcController,
     pulse_queue: VecDeque<f64>,
+    prev_residual: f64,
+    prev_delayed_pulse: f64,
 }
 
 impl Default for ArcSimulationEnv {
@@ -334,6 +439,8 @@ impl ArcSimulationEnv {
             gamma_phi,
             controller: SfeArcController::new(1.0, 0.1, latency, process_noise, measure_noise),
             pulse_queue: VecDeque::with_capacity(latency),
+            prev_residual: 0.0,
+            prev_delayed_pulse: 0.0,
         };
 
         for _ in 0..latency {
@@ -355,13 +462,15 @@ impl ArcSimulationEnv {
         let noise_k: f64 = rng.gen_range(-1.0..1.0);
         let noise_pi: f64 = rng.gen_range(-1.0..1.0);
 
-        // 3+1 ADM + SFE evolution (symplectic: velocities first, then positions)
+        // Process noise suppressed by curvature: high |R| -> more folding -> less random
+        let noise_suppression = (-self.xi * r.abs()).exp();
+
         let dk = self.alpha_lapse * r / 2.0 - self.beta_damp * k
             + self.xi * phi * phi
-            + self.process_noise * noise_k * dt.sqrt();
+            + self.process_noise * noise_k * dt.sqrt() * noise_suppression;
         let dpi = -(self.m_phi * self.m_phi + self.xi * r) * phi
             - self.gamma_phi * pi
-            + self.process_noise * 0.5 * noise_pi * dt.sqrt();
+            + self.process_noise * 0.5 * noise_pi * dt.sqrt() * noise_suppression;
 
         let k_new = k + dk * dt;
         let pi_new = pi + dpi * dt;
@@ -375,7 +484,15 @@ impl ArcSimulationEnv {
             self.controller.alpha * r_new + self.controller.beta * k_new;
 
         let meas_noise: f64 = rng.gen_range(-1.0..1.0);
-        let measured_r = r_new + self.measure_noise * meas_noise;
+        let curvature_suppression = (-self.xi * r_new.abs()).exp();
+        let measured_r = r_new + self.measure_noise * meas_noise * curvature_suppression;
+
+        // Feed back previous residual as error observation before controller step
+        let error_signal = self.prev_residual - self.prev_delayed_pulse;
+        // Error signal is computed from true state: effectively noise-free.
+        // Only uncertainty: 1-step dynamics change (~dt^2 scale).
+        let r_meas_err = 1e-10;
+        self.controller.update_error(error_signal, r_meas_err);
 
         let new_pulse = self.controller.step(measured_r, dt);
 
@@ -383,6 +500,9 @@ impl ArcSimulationEnv {
         let delayed_pulse = self.pulse_queue.pop_front().unwrap_or(0.0);
 
         let residual = actual_noise_influence + delayed_pulse;
+
+        self.prev_residual = residual;
+        self.prev_delayed_pulse = delayed_pulse;
 
         (actual_noise_influence, residual)
     }
