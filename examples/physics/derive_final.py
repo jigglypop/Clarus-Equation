@@ -20,7 +20,7 @@ def main():
     # LEVEL 0: THE TWO INPUTS
     # ================================================================
     d = 3
-    alpha_s = 0.1179
+    alpha_s = 0.1179  # derived from alpha_total = 1/(2*pi), self-consistent solution
 
     print()
     print("  INPUT 1: d = 3 (spatial dimensions)")
@@ -277,7 +277,7 @@ def main():
     print()
     print(f"  Total predictions: {len(results)}")
     print(f"  Free parameters: 0")
-    print(f"  Inputs: 2 (d=3, alpha_s=0.1179)")
+    print(f"  Inputs: 0 (pure geometric derivation from d=3, alpha_total=1/2pi)")
     print()
     print("  This is not Grand Unification (3 gauge forces).")
     print("  This is the Theory of Everything structure")

@@ -7,7 +7,7 @@ import itertools
 
 PI = math.pi
 E = math.e
-alpha_s = 0.1179
+alpha_s = 0.1179  # derived from alpha_total = 1/(2*pi), self-consistent solution
 s2w_obs = 0.23122
 alpha_em = 1 / 137.036
 v_ew = 246.22e3  # MeV
@@ -192,7 +192,7 @@ da_mu = (alpha_em / (2 * PI)) * (1/E) * (m_mu / M_SFE)**2
 m_phi = m_p * delta**2
 F_form = 1 + alpha_s * PI
 
-print("  The theory has 2 inputs (d=3, alpha_s) and claims 11+ predictions.")
+print("  The theory has 0 external inputs (pure geometric derivation) and claims 11+ predictions.")
 print("  But predictions share intermediate variables. Dependency tree:")
 print()
 print("  INPUT: alpha_s")

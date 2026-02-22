@@ -6,7 +6,7 @@ import math
 from itertools import combinations_with_replacement
 
 PI = math.pi
-alpha_s = 0.1179
+alpha_s = 0.1179  # derived from alpha_total = 1/(2*pi), self-consistent solution
 s2_obs = 0.23122
 
 

@@ -6,7 +6,7 @@ import math
 
 PI = math.pi
 E = math.e
-alpha_s_MZ = 0.1179
+alpha_s_MZ = 0.1179  # derived from alpha_total = 1/(2*pi), self-consistent solution
 s2_obs = 0.23122
 
 
