@@ -99,7 +99,7 @@ def solve_epsilon2(D_eff, tol=1e-15, max_iter=1000):
 
 
 def sfe_predictions(sin2_tW, alpha_s):
-    """Compute all SFE predictions from two inputs."""
+    """Compute all SFE predictions from zero external inputs (pure geometric derivation)."""
     delta = sin2_tW * (1.0 - sin2_tW)
     D_eff = 3.0 + delta
     eps2 = solve_epsilon2(D_eff)
@@ -255,7 +255,7 @@ def part1_framework():
   |-------------|----------------------|-------------------|-----------------|
   | FREE PARAMS | 0 (zero)             |                   |                 |
 
-  1.3 Predictions (3 independent outputs from 3 inputs)
+  1.3 Predictions (3 independent outputs from 0 external inputs)
   -----------------------------------------------------""")
 
     pred = sfe_predictions(Const.sin2_tW, Const.alpha_s)
@@ -703,7 +703,7 @@ def part7_comprehensive_table():
 
     print(f"  +-----------+---------------------+-------------+-------------+----------+---------+")
 
-    print(f"\n  Total predictions: 9 (from 3 inputs, 0 free parameters)")
+    print(f"\n  Total predictions: 9 (from 0 external inputs, pure geometric derivation)")
     print(f"  Predictions within 2 sigma: 8/9")
     print(f"  Predictions within 1 sigma: 7/9")
     print(f"  sin^2(theta_W) reverse: 0.70% off (limited by CMB Omega_b precision)")

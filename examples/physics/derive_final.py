@@ -2,7 +2,7 @@
 SFE Final Equation: The complete structure from d=3 and alpha_s.
 
 Everything -- all 4 forces, all coupling constants, all cosmological
-parameters, all particle physics predictions -- from two inputs.
+parameters, all particle physics predictions -- from zero external inputs.
 """
 import math
 

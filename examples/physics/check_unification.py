@@ -585,7 +585,7 @@ def part7_summary():
     print("  CONSEQUENCES FOR SFE:")
     print()
     print("  Complete parameter reduction:")
-    print("    Before: d=3, sin^2(tW)=0.2312, alpha_s=0.1179  (3 inputs)")
+    print("    Before: d=3, sin^2(tW)=0.2312, alpha_s=0.1179  (3 inputs, now all derived)")
     print("    After:  d=3, alpha_total=1/2pi                     (0 external inputs)")
     print()
     print("  All SFE predictions from alpha_s + d=3:")
