@@ -1,4 +1,15 @@
 use std::collections::VecDeque;
+use std::f64::consts::E;
+
+/// Self-consistent strong coupling from alpha_total = 1/(2*pi)
+const ALPHA_S: f64 = 0.11789;
+
+fn sfe_physics_params() -> (f64, f64, f64, f64, f64) {
+    let xi = ALPHA_S.powf(1.0 / 3.0);  // coupling per dimension: alpha_s^{1/d}
+    let survival = (-1.0_f64).exp();     // e^{-1}: fundamental 1D damping
+    (E, survival, xi, 1.0, survival)
+    // (alpha_lapse, beta_damp, xi, m_phi, gamma_phi)
+}
 
 /// SFE 3+1 state: [R, K, Phi, Pi] coupled through the suppression field equation.
 /// R: Ricci scalar (spatial curvature)
@@ -221,11 +232,7 @@ pub struct SfeArcController {
 impl SfeArcController {
     pub fn new(alpha: f64, beta: f64, latency: usize,
                process_noise: f64, measure_noise: f64) -> Self {
-        let xi = 0.3;
-        let m_phi = 1.0;
-        let gamma_phi = 0.4;
-        let alpha_lapse = 2.5;
-        let beta_damp = 0.4;
+        let (alpha_lapse, beta_damp, xi, m_phi, gamma_phi) = sfe_physics_params();
         let dt = 0.01;
 
         let r_meas = measure_noise * measure_noise / 3.0;
@@ -314,11 +321,7 @@ impl ArcSimulationEnv {
         // Initial: R=1.0, K=0.3, Phi=0.5, Pi=0.0
         let true_state = [1.0, 0.3, 0.5, 0.0];
 
-        let alpha_lapse = 2.5;
-        let beta_damp = 0.4;
-        let xi = 0.3;
-        let m_phi = 1.0;
-        let gamma_phi = 0.4;
+        let (alpha_lapse, beta_damp, xi, m_phi, gamma_phi) = sfe_physics_params();
 
         let mut env = Self {
             true_state,
