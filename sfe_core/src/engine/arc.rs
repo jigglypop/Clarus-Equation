@@ -5,6 +5,11 @@ use std::f64::consts::E;
 /// Self-consistent strong coupling from alpha_total = 1/(2*pi)
 const ALPHA_S: f64 = 0.11789;
 
+/// sin^2(theta_W) * cos^2(theta_W): electroweak mixing correction from 5-constant theory
+const DELTA: f64 = 0.17776;
+/// D_eff = d + delta: effective folding dimension
+const D_EFF: f64 = 3.17776;
+
 /// Error feedback measurement variance.
 /// Signal is computed from true state (noise-free); only staleness uncertainty remains.
 const R_MEAS_ERR: f64 = 1e-10;
@@ -61,52 +66,42 @@ impl SfeState {
     fn transition_matrix(&self, dt: f64, alpha_lapse: f64, beta_damp: f64,
                          xi: f64, m_phi: f64, gamma_phi: f64) -> [[f64; 4]; 4] {
         let r = self.x[0];
+        let kk = self.x[1];
         let phi = self.x[2];
+        let xi_ew = DELTA * xi;
 
-        // Jacobian of symplectic Euler scheme:
-        // Step 1 (velocities): K' = K + (alpha*R/2 - beta*K + xi*Phi^2)*dt
-        //   dK'/dR = alpha/2 * dt
-        //   dK'/dK = 1 - beta*dt
-        //   dK'/dPhi = 2*xi*Phi*dt
-        //   dK'/dPi = 0
-        let dk_dr = alpha_lapse / 2.0 * dt;
+        // K' = K + (alpha*R/2 - beta*K + xi*Phi^2 + xi_ew*R*Phi)*dt
+        let dk_dr = (alpha_lapse / 2.0 + xi_ew * phi) * dt;
         let dk_dk = 1.0 - beta_damp * dt;
-        let dk_dphi = 2.0 * xi * phi * dt;
+        let dk_dphi = (2.0 * xi * phi + xi_ew * r) * dt;
 
-        // Pi' = Pi + (-(m^2+xi*R)*Phi - gamma*Pi)*dt
-        //   dPi'/dR = -xi*Phi*dt
-        //   dPi'/dK = 0
-        //   dPi'/dPhi = -(m^2+xi*R)*dt
-        //   dPi'/dPi = 1 - gamma*dt
+        // Pi' = Pi + (-(m^2+xi*R+xi_ew*K)*Phi - gamma*Pi)*dt
         let dpi_dr = -xi * phi * dt;
-        let dpi_dphi = -(m_phi * m_phi + xi * r) * dt;
+        let dpi_dk = -xi_ew * phi * dt;
+        let dpi_dphi = -(m_phi * m_phi + xi * r + xi_ew * kk) * dt;
         let dpi_dpi = 1.0 - gamma_phi * dt;
 
-        // Step 2 (positions using updated velocities):
-        // R' = R + (-2*alpha*K')*dt = R - 2*alpha*(K + dK)*dt
-        //   dR'/dR = 1 - 2*alpha*dK'/dR*dt = 1 - 2*alpha*(alpha/2*dt)*dt
-        //   dR'/dK = -2*alpha*dK'/dK*dt = -2*alpha*(1-beta*dt)*dt
-        //   dR'/dPhi = -2*alpha*dK'/dPhi*dt
-        //   dR'/dPi = 0
+        // R' = R + (-2*alpha*K')*dt
         let dr_dr = 1.0 - 2.0 * alpha_lapse * dk_dr * dt;
         let dr_dk = -2.0 * alpha_lapse * dk_dk * dt;
-        let dr_dphi = -2.0 * alpha_lapse * dk_dphi * dt;
-
-        // Phi' = Phi + Pi'*dt
         //   dPhi'/dR = dPi'/dR*dt
         //   dPhi'/dK = 0
         //   dPhi'/dPhi = 1 + dPi'/dPhi*dt
         //   dPhi'/dPi = dPi'/dPi*dt
+        let dr_dphi = -2.0 * alpha_lapse * dk_dphi * dt;
+        //             R        K        Phi        Pi
+
+        // Phi' = Phi + Pi'*dt
         let dphi_dr = dpi_dr * dt;
+        let dphi_dk = dpi_dk * dt;
         let dphi_dphi = 1.0 + dpi_dphi * dt;
         let dphi_dpi = dpi_dpi * dt;
 
-        //             R        K        Phi        Pi
         [
-            [dr_dr,    dr_dk,   dr_dphi,   0.0      ],  // R'
-            [dk_dr,    dk_dk,   dk_dphi,   0.0      ],  // K'
-            [dphi_dr,  0.0,     dphi_dphi, dphi_dpi ],  // Phi'
-            [dpi_dr,   0.0,     dpi_dphi,  dpi_dpi  ],  // Pi'
+            [dr_dr,    dr_dk,   dr_dphi,   0.0      ],
+            [dk_dr,    dk_dk,   dk_dphi,   0.0      ],
+            [dphi_dr,  dphi_dk, dphi_dphi, dphi_dpi ],
+            [dpi_dr,   dpi_dk,  dpi_dphi,  dpi_dpi  ],
         ]
     }
 
@@ -119,9 +114,10 @@ impl SfeState {
         let kk = self.x[1];
         let phi = self.x[2];
         let pi = self.x[3];
+        let xi_ew = DELTA * xi;
 
-        let dk = alpha_lapse * r / 2.0 - beta_damp * kk + xi * phi * phi;
-        let dpi = -(m_phi * m_phi + xi * r) * phi - gamma_phi * pi;
+        let dk = alpha_lapse * r / 2.0 - beta_damp * kk + xi * phi * phi + xi_ew * r * phi;
+        let dpi = -(m_phi * m_phi + xi * r) * phi - gamma_phi * pi - xi_ew * kk * phi;
 
         let k_new = kk + dk * dt;
         let pi_new = pi + dpi * dt;
@@ -141,7 +137,7 @@ impl SfeState {
             }
         }
 
-        let q_factor = (-2.0 * xi * self.x[0].abs()).exp();
+        let q_factor = (-2.0 * xi * (D_EFF / 3.0) * self.x[0].abs()).exp();
         let mut p_new = [[0.0_f64; 4]; 4];
         for i in 0..4 {
             for j in 0..4 {
@@ -227,9 +223,9 @@ impl SfeState {
         let mut x = self.x;
 
         for _ in 0..steps {
-            // Symplectic Euler: velocities first, then positions
-            let dk = alpha_lapse * x[0] / 2.0 - beta_damp * x[1] + xi * x[2] * x[2];
-            let dpi = -(m_phi * m_phi + xi * x[0]) * x[2] - gamma_phi * x[3];
+            let xi_ew = DELTA * xi;
+            let dk = alpha_lapse * x[0] / 2.0 - beta_damp * x[1] + xi * x[2] * x[2] + xi_ew * x[0] * x[2];
+            let dpi = -(m_phi * m_phi + xi * x[0]) * x[2] - gamma_phi * x[3] - xi_ew * x[1] * x[2];
 
             x[1] += dk * sub_dt;
             x[3] += dpi * sub_dt;
@@ -286,8 +282,7 @@ impl SfeArcController {
         self.state.predict(dt, self.alpha_lapse, self.beta_damp,
                            self.xi, self.m_phi, self.gamma_phi);
 
-        // Obs 1: R (curvature-dependent noise)
-        let r_meas = self.r_meas * (-2.0 * self.xi * self.state.x[0].abs()).exp();
+        let r_meas = self.r_meas * (-2.0 * self.xi * (D_EFF / 3.0) * self.state.x[0].abs()).exp();
         self.state.update_observation(measured_r, [1.0, 0.0, 0.0, 0.0], r_meas);
 
         // Obs 2: dR/dt = -2*alpha*K (velocity from forward difference)
@@ -397,14 +392,14 @@ impl ArcSimulationEnv {
         let noise_k: f64 = rng.gen_range(-1.0..1.0);
         let noise_pi: f64 = rng.gen_range(-1.0..1.0);
 
-        // Process noise suppressed by curvature: high |R| -> more folding -> less random
-        let noise_suppression = (-self.xi * r.abs()).exp();
+        let xi_ew = DELTA * self.xi;
+        let noise_suppression = (-self.xi * (D_EFF / 3.0) * r.abs()).exp();
 
         let dk = self.alpha_lapse * r / 2.0 - self.beta_damp * k
-            + self.xi * phi * phi
+            + self.xi * phi * phi + xi_ew * r * phi
             + self.process_noise * noise_k * dt.sqrt() * noise_suppression;
         let dpi = -(self.m_phi * self.m_phi + self.xi * r) * phi
-            - self.gamma_phi * pi
+            - self.gamma_phi * pi - xi_ew * k * phi
             + self.process_noise * 0.5 * noise_pi * dt.sqrt() * noise_suppression;
 
         let k_new = k + dk * dt;
@@ -419,7 +414,7 @@ impl ArcSimulationEnv {
             self.controller.alpha * r_new + self.controller.beta * k_new;
 
         let meas_noise: f64 = rng.gen_range(-1.0..1.0);
-        let curvature_suppression = (-self.xi * r_new.abs()).exp();
+        let curvature_suppression = (-self.xi * (D_EFF / 3.0) * r_new.abs()).exp();
         let measured_r = r_new + self.measure_noise * meas_noise * curvature_suppression;
 
         // Feed back previous residual as error observation before controller step

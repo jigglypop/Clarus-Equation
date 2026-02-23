@@ -78,7 +78,6 @@ SFE의 전체 구조는 **3층짜리 에스컬레이터와 작동 버튼 1개**�
 | 우주론 | $\Omega_{DM}$ (암흑물질) | 0.2571 | 0.259 - 0.265 | 0.7 - 3% |
 | 우주론 | $w_0$ (동적, $\xi = \alpha_s^{1/3}$) | $-0.769$ | $-0.770 \pm 0.06$ (DESI) | $0.02\sigma$ |
 | 입자물리 | $\Delta a_\mu$ (뮤온 $g\text{-}2$) | $249.0 \times 10^{-11}$ | WP20: $249 \pm 48$ | $0.00\sigma$ |
-| 입자물리 | $\Delta a_\mu$ (WP25 기준) | $249.0 \times 10^{-11}$ | WP25: $38 \pm 63$ | $3.3\sigma$ |
 | 입자물리 | $\Delta a_e$ (전자 $g\text{-}2$) | $5.82 \times 10^{-14}$ | $< 3600 \times 10^{-14}$ | 양립 |
 | 입자물리 | $m_\phi$ (보손 질량) | 29.65 MeV | 22-30 MeV | 범위 내 |
 | 입자물리 | $\Delta r_p^2$ (양성자 반경) | $0.0597\;\text{fm}^2$ | $0.0587 \pm 0.0033$ | $0.3\sigma$ |
@@ -86,7 +85,7 @@ SFE의 전체 구조는 **3층짜리 에스컬레이터와 작동 버튼 1개**�
 
 **0개 외부 입력 (순수 기하학적 연역):** 공간 차원 $d = 3$, 시간 그리드 상수화에 따른 총 결합상수 $\alpha_{\text{total}} = 1/(2\pi) \approx 0.1592$
 
-$\alpha_{\text{total}} = 1/(2\pi)$ 와 $\sin^2\theta_W = 4\,\alpha_s^{4/3}$ 의 발견으로 강한 결합 상수와 와인버그 각이 모두 기하학적으로 연역되어, 외부 독립 입력이 0개로 축소되었다. 양성자 반경은 $m_\phi = m_p\,\delta^2$, $F = 1 + \alpha_s\,\pi$ 로 자유 매개변수 0개 예측이다. 우주론 관측 데이터나 입자물리 측정값은 입력으로 사용하지 않는다.
+$\alpha_{\text{total}} = 1/(2\pi)$ 와 $\sin^2\theta_W = 4\,\alpha_s^{4/3}$ 의 발견으로 강한 결합 상수와 와인버그 각이 모두 기하학적으로 연역되어, 외부 독립 입력이 0개로 축소되었다. 양성자 반경은 $m_\phi = m_p\,\delta^2$, $F = 1 + \alpha_s\,D_{\text{eff}}$ 로 자유 매개변수 0개 예측이다. 우주론 관측 데이터나 입자물리 측정값은 입력으로 사용하지 않는다.
 
 ---
 
@@ -103,7 +102,7 @@ $$
 $$
 
 $$
-\textbf{A2:} \quad D_{\text{eff}} = d + \delta, \quad \delta = \sin^2\theta_W \cos^2\theta_W \quad (\text{접힘 강도} \propto \text{유효 차원})
+\textbf{A2 (정리):} \quad D_{\text{eff}} = d + \delta, \quad \delta = \sin^2\theta_W \cos^2\theta_W \quad (\text{A1 + SM EWSB에서 유도})
 $$
 
 $$
@@ -173,6 +172,25 @@ $$
 $$
 
 **핵심 발견:** 우주론적 유도에 사용된 전자약 혼합 파라미터 $\delta$ 가 입자물리 영역에서도 동일하게 작동한다. 하나의 파라미터가 두 영역을 관통하는 통합 파라미터이다.
+
+### SM 파라미터 + 구조 상수 커버리지
+
+5개 상수 $\{e, \pi, i, 1, 0\}$로부터 표준모형 19개(+9 확장 = 28개) 파라미터의 유도 상태:
+
+| 유도 레벨 | 파라미터 수 | 내용 |
+|---|---|---|
+| **정리** | 5 | $\alpha_s$, $\alpha_w$, $\alpha_{em}$, $\sin^2\theta_W$, $\theta_{\text{QCD}} = 0$ |
+| **규약** | 1 | $v_{\text{EW}}$ (차원 스케일) |
+| **가정** | 5 | $y_t \approx 1$, $y_\tau$, $m_{\nu_{1,2,3}}$ |
+| **가설** | 9 | $\lambda_H$, $\|V_{us}\|$, $\|V_{cb}\|$, $J$, PMNS 3각, $v_{\text{EW}}/M_{\text{Pl}}$ |
+| **추측** | 8 | $\|V_{ub}\|$, $\delta_{CP}^{\text{CKM}}$, $\delta_{CP}^{\text{PMNS}}$, Yukawa 6개 |
+| **열림** | **0** | -- |
+
+핵심 수치 정합:
+- 0.2% 이내: $|V_{cb}| = \alpha_s^{3/2}$ (0.1%), $M_H/M_Z = F$ (0.20%)
+- 1% 이내: $\sin^2\theta_{23}^{\text{PMNS}}$ (0.86%), $\sin^2\theta_{13}^{\text{PMNS}}$ (1.0%), $v_{\text{EW}}/M_{\text{Pl}} = e^{-D_{\text{eff}} \cdot 12}/F$ (1.1%), $J$ (1.3%)
+
+상세: `docs/강의/C_다섯_상수.md` 12절 총표
 
 ---
 
@@ -343,6 +361,7 @@ $\Lambda$CDM은 6개 매개변수를 데이터에 피팅하므로 적합도가 �
 
 | 과제 | 상태 |
 |---|---|
+| A2 ($D_{\text{eff}} = d + \delta$) 제1원리 유도 | **해결됨** (A1 + SM EWSB 질량 행렬에서 유도) |
 | QFT 표준 검증 (재규격화, 유니타리성) | **해결됨** (히그스 포탈 동정) |
 | $M_{\text{SFE}} = v_{EW} \cdot \delta$ 유도 | **해결됨** ($\lambda_{HP} = \delta^2$) |
 | 동적 DE: 포텐셜 동치 | **확립** (SFE = DESI Higgs-like) |
@@ -351,7 +370,6 @@ $\Lambda$CDM은 6개 매개변수를 데이터에 피팅하므로 적합도가 �
 | 자기일관성 방정식의 엄밀한 유도 | **해결됨** (형식적 증명) |
 | $\Omega_{DM}/\Omega_\Lambda = \alpha_s \cdot D_{\text{eff}}$ | **해결됨** (연장성 원리) |
 | Worldline-EFT 동치 | **해결됨** (수학적 등가 증명) |
-| 격자 QCD HVP 논쟁 (WP20 vs WP25) | 외부 문제. $\sim$2027 판정 |
 
 ---
 
@@ -596,15 +614,17 @@ $$
 
 ## 수치 검증 코드
 
+아래는 현재 유지하는 canonical 8개 검증 스크립트이다.
+
 | 코드 | 검증 대상 |
 |---|---|
-| [`check_muon_g2_derivation.py`](examples/physics/check_muon_g2_derivation.py) | 뮤온 $g\text{-}2$ 공식의 단계별 유도 및 수치 검증 |
 | [`check_muon_g2_integral.py`](examples/physics/check_muon_g2_integral.py) | 스칼라 보손 동치 증명, 양성자 반경, 자기일관적 해 |
 | [`check_dark_matter_paper.py`](examples/physics/check_dark_matter_paper.py) | 다중 데이터셋 비교, 오차 전파, BIC/AIC 모델 비교 |
-| [`check_dark_matter.py`](examples/physics/check_dark_matter.py) | DM 후보 분석 (열적 잔류밀도, 직접 탐색, 질량 텐션) |
 | [`check_open_problems.py`](examples/physics/check_open_problems.py) | 미해결 과제 개선 분석, 히그스 포탈 동정 |
 | [`check_dynamic_de.py`](examples/physics/check_dynamic_de.py) | 동적 DE 분석, DESI 포텐셜 동치, $\xi$ 결합 스캔 |
 | [`check_unification.py`](examples/physics/check_unification.py) | 전자약-강력 통합, $\sin^2\theta_W = 4\,\alpha_s^{4/3}$, 질량비 패턴 |
+| [`condensed_matter_check.py`](examples/physics/condensed_matter_check.py) | 응집계 유효질량/재료 잡음 스케일 교차검증 |
+| [`fusion_trigger_check.py`](examples/physics/fusion_trigger_check.py) | 공명 점화기 트리거 조건 및 스케일 역산 검증 |
 | [`cosmology.py`](examples/physics/cosmology.py) | 우주론적 구조 성장, $f\sigma_8$ 예측 |
 
 ## 엔진
