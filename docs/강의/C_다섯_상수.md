@@ -91,24 +91,33 @@ $e$가 아닌 다른 밑이면 독립성(B1)이 깨진다.
 
 세 힘(강력, 약력, 전자기력)의 세기는 왜 그 값인가?
 
-### 2.2 격자로부터
+### 2.2 게이지 위상 공간에서
 
-3 $\times$ 3+1 게이지-중력 격자에서, 기본 전이의 위상이 1주기를 완성하려면 시간 스텝이 $\Delta t = 2\pi$이다. 
+게이지장은 내부 공간에서 위상 회전으로 기술된다. 게이지 변환 $\psi \to e^{i\theta}\psi$에서 위상 $\theta$가 $0$에서 $2\pi$로 돌면 하나의 완전한 전이이다.
 
-이때 전체 게이지 생존율:
+**$2\pi$의 기원 (정리).** SM 게이지군 $\text{SU}(3) \times \text{SU}(2) \times \text{U}(1)$의 최대 토러스(Cartan 부분군)에서, 기본 표현의 위상은 원($S^1$) 위를 돈다. 원의 둘레는 $2\pi$이다. 따라서 하나의 완전한 게이지 전이가 소비하는 위상 경로는:
 
-$$P_{\text{gauge}} = e^{-\alpha_{\text{total}} \cdot \Delta t}$$
+$$\Delta\phi = 2\pi$$
 
-여기서 핵심 가정은 두 가지다.
+이것은 원의 기하학에서 나오는 **정리**이다. 가정이 아니다.
 
-- **(H1)** 1주기 전이의 기준 시간은 $\Delta t=2\pi$
-- **(H2)** 게이지 1주기 생존율은 1차원 접힘 기준 $S(1)=e^{-1}$과 동일 규약으로 고정
+1절에서 접힘 생존율을 $S(D) = e^{-D}$로 정의했다 ($\lambda = 1$ 규약). 게이지장에 같은 구조를 적용하면, 위상 경로 $\Delta\phi$를 진행할 때의 생존율:
 
-즉 아래 등식은 **정리 + 규약(H2)**의 결합 결과다.
+$$P_{\text{gauge}} = e^{-\alpha_{\text{total}} \cdot \Delta\phi}$$
+
+여기서 $\alpha_{\text{total}}$은 라디안당 감쇠율(총 결합 상수)이다.
+
+**규약 (H2).** 하나의 완전한 게이지 주기($\Delta\phi = 2\pi$)를 접힘의 1 e-fold로 정의한다:
+
+$$P_{\text{gauge}}(\Delta\phi = 2\pi) = S(1) = e^{-1}$$
+
+이것은 1절의 $\lambda = 1$ 선택과 동일한 성격이다. "접힘 1단위가 무엇에 대응하는가"를 게이지 전이 1주기로 고정하는 단위 규약이다.
 
 따라서:
 
 $$\alpha_{\text{total}} \cdot 2\pi = 1 \quad \Longrightarrow \quad \boxed{\alpha_{\text{total}} = \frac{1}{2\pi}}$$
+
+유도 레벨: **정리**($\Delta\phi = 2\pi$, 원의 기하학) + **규약**(H2: 게이지 주기 = 1 e-fold).
 
 ### 2.3 자기일관적 분할
 
@@ -167,7 +176,15 @@ $i$가 만드는 위상 간섭에서, 접힌 경로 다발(분지)이 분리될 
 
 $$P_k = |c_k|^2$$
 
-이것이 보른 규칙이다. 공리가 아니라 접힘의 결과이다.
+**유도.** 상태 $|\psi\rangle = \sum_k c_k |k\rangle$에서 접힘이 분지를 분리한다. 각 분지 $k$의 가중치 $W_k$에 대해 세 조건이 성립한다:
+
+1. **가산성 (B1에서).** 독립 분지의 가중치는 가산적이다: $W(A \cup B) = W(A) + W(B)$. 접힘의 독립성(B1)의 직접적 결과.
+2. **위상 불변성 ($i$에서).** $c_k \to e^{i\phi} c_k$는 물리를 바꾸지 않는다. $e^{iS}$의 간섭 구조가 위상만 돌리므로, $W_k$는 $|c_k|$에만 의존한다.
+3. **비맥락성 (접힘 구조에서).** $W_k$는 다른 분지의 존재 여부에 의존하지 않는다. 접힘은 각 분지를 독립적으로 처리한다.
+
+Gleason 정리(1957): $\dim \mathcal{H} \geq 3$인 힐베르트 공간에서 위 세 조건을 만족하는 유일한 확률 측도는 $W_k = |c_k|^2$이다. $d = 3$(5절)에서 물리적 힐베르트 공간의 차원은 $\geq 3$이므로 Gleason 조건이 만족된다.
+
+유도 레벨: **정리** (B1 + $i$ + Gleason).
 
 단, 이 결론은 분지 간 억압이 대칭이라는 조건에서의 주결과다.  
 실제 장치가 비대칭이면 $W_k$에 검출기 편향 보정이 추가되고, 비율은 이상형에서 벗어날 수 있다.
@@ -222,11 +239,26 @@ $1$은 **완전의 기준선**이다. 접힘이 없을 때($d = 0$)의 상태를
 
 ### 5.2 차원 선택
 
-Hodge 자기쌍대성: $p$-형식과 $(d-p)$-형식이 같으려면
+$d$차원 공간에서 두 기본 텐서 구조를 비교한다:
 
-$$d = \frac{d(d-1)}{2} \quad \Longrightarrow \quad d(d-3) = 0$$
+- **1-형식**(벡터): $d$개 독립 성분. 물리적 예: 전기장 $E_i$, 운동량 $p_i$.
+- **2-형식**(반대칭 텐서): $\binom{d}{2} = d(d-1)/2$개 독립 성분. 물리적 예: 전자기 장세기 $F_{ij}$, 각운동량 $L_{ij}$.
+
+**Hodge 자기쌍대성.** Levi-Civita 텐서 $\varepsilon_{i_1 \cdots i_d}$에 의한 Hodge 성(star) 연산은 $p$-형식을 $(d-p)$-형식으로 사상한다. 1-형식과 2-형식이 Hodge 쌍대이려면 $p = 1$, $d - p = 2$, 즉 $d = 3$이다.
+
+동치 조건으로, 1-형식과 2-형식의 독립 성분 수가 같으려면:
+
+$$d = \frac{d(d-1)}{2} \quad \Longrightarrow \quad d^2 - 3d = 0 \quad \Longrightarrow \quad d(d-3) = 0$$
 
 두 근: $d = 0$ (4절의 완전 상태)과 $d = 3$ (물리적 세계).
+
+**$d = 3$의 물리적 유일성:**
+
+- 외적 $(\mathbf{a} \times \mathbf{b})_k = \varepsilon_{ijk} a_i b_j$가 **벡터**를 반환한다. $d \neq 3$이면 결과는 $(d-2)$-형식이 되어 벡터가 아니다.
+- 각운동량 $L_{ij}$가 벡터 $L_k = \varepsilon_{ijk} L_{ij}/2$로 표현된다. $d = 3$에서만 성립.
+- 게이지 장세기 $F_{ij}$의 공간 성분이 자기장 벡터 $B_k = \varepsilon_{ijk} F_{ij}/2$로 환원된다.
+
+$d = 7$에서도 벡터곱이 존재하지만($G_2$ 구조), 결합법칙이 깨져 리 대수의 야코비 항등식이 성립하지 않는다. 게이지 이론이 불가능하다.
 
 인과성 조건 $d > 0$에 의해:
 
@@ -331,6 +363,79 @@ $$i \xrightarrow{e^{iS}} \text{간섭} \xrightarrow{\Phi = R} \text{접힘} \xri
 - $\varepsilon^2 = e^{-(1-\varepsilon^2)D_{\text{eff}}}$: 자기일관 고정점 식(정확형)
 - $\Omega_b \approx e^{-D_{\text{eff}}}$: 1차 근사형
 - $\Omega_b = \varepsilon^2$: 물리적 식별 가정
+
+#### 4층 유도: $\delta$와 $D_{\text{eff}}$의 물리적 기원
+
+$D_{\text{eff}}$는 접힘 헤시안 $\Phi = \delta^2 S/\delta\gamma^2$의 독립 접힘 채널 수이다.
+
+**(i) 공간 기여.** 자유 입자의 작용은 공간 차원에 대해 분해된다. 등방성에 의해 각 차원이 동등하게 기여한다:
+
+$$D_{\text{space}} = d = 3$$
+
+**(ii) EWSB 기여.** EWSB 후 중성 게이지 보손 질량 행렬을 $(W^3, B)$ 기저에서 쓰면:
+
+$$M^2 = \frac{v^2}{4} \begin{pmatrix} g^2 & -gg' \\ -gg' & g'^2 \end{pmatrix}$$
+
+고유값: $M_Z^2 = (g^2 + g'^2)v^2/4$, $M_\gamma^2 = 0$. 비대각 원소를 $M_Z^2$로 정규화하면:
+
+$$\frac{|M^2_{W^3 B}|}{M_Z^2} = \frac{gg'}{g^2 + g'^2} = \sin\theta_W \cos\theta_W$$
+
+이것은 SU(2)와 U(1) 사이의 혼합 진폭이다. 접힘은 확률(진폭의 제곱)로 작용하므로, Z 보손이 여는 유효 분수 차원:
+
+$$\delta = \sin^2\theta_W \cos^2\theta_W = \sin^2\theta_W(1 - \sin^2\theta_W) = 0.17776$$
+
+광자($M_\gamma = 0$, 억압 스케일 없음)와 $W^\pm$(하전 전류, $\{3,2,1\}$ 분할에 이미 포함)은 새 채널을 추가하지 않는다. Z만이 SU(2)$\leftrightarrow$U(1) 혼합이라는 새로운 접힘 방향을 연다.
+
+**(iii) 결합.**
+
+$$D_{\text{eff}} = D_{\text{space}} + \delta = 3 + \sin^2\theta_W \cos^2\theta_W = 3.17776$$
+
+경계 검증: $\theta_W = 0$ 또는 $\pi/2$이면 $\delta = 0$, $D_{\text{eff}} = 3$. 혼합 없으면 추가 차원 없다.
+
+유도 레벨: (i) **정리**, (ii) **정리**(SM 질량 행렬) + **가정**(진폭 제곱 = 유효 차원), (iii) **정리**.
+
+#### 5층 유도: 부트스트랩 방정식과 에너지 분배
+
+**부트스트랩 방정식 (A1--A3에서).**
+
+**(i)** 경로적분에서 억압장 $\Phi$에 의한 생존 확률을 정의한다: $P_{\text{survive}} = \langle e^{-\Phi} \rangle$.
+
+**(ii)** 평균장 근사: $\langle e^{-\Phi} \rangle \approx e^{-\langle\Phi\rangle}$. 고차 큐뮬런트를 무시한다.
+
+**(iii)** 연장성 (A1): 헤시안 기대값은 유효 차원에 비례한다. $\langle\Phi\rangle = \sigma \cdot D_{\text{eff}}$. 1절의 독립성(B1), 즉 $S(D) = S(1)^D$와 동일 구조이다.
+
+**(iv)** 에너지 보존 (A2): 전체 $\Omega_{\text{total}} = 1$에서 $\varepsilon^2$이 살아남으면, 차원당 억압률 $\sigma = 1 - \varepsilon^2$.
+
+**(v)** 식별 (A3): $P_{\text{survive}} = \varepsilon^2 = \Omega_b$ (생존 확률 = 바리온 밀도).
+
+(i)--(v)를 결합:
+
+$$\varepsilon^2 = e^{-(1-\varepsilon^2) D_{\text{eff}}}$$
+
+유도 레벨: (i)--(iv) **정리**, (v) **가정**(물리적 식별).
+
+**$\Omega_\Lambda$, $\Omega_{DM}$ 분리.**
+
+억압된 에너지 $\Omega_\Phi = 1 - \varepsilon^2$가 두 성분으로 분리된다:
+
+- **진공 에너지** (0차): $\Omega_\Lambda$ -- 억압장 기저 상태의 에너지 밀도
+- **양자 요동 응축** (1-루프): $\Omega_{DM}$ -- 억압장 요동이 형성하는 비상대론적 응축체
+
+연장성 원리(A1)에 의해 요동 대 진공의 비율:
+
+$$\frac{\Omega_{DM}}{\Omega_\Lambda} = \alpha_s \cdot D_{\text{eff}} \equiv \alpha$$
+
+각 유효 차원에서 QCD 결합 $\alpha_s$만큼의 요동이 기여하고, $D_{\text{eff}}$개 차원의 기여가 합산된다. $\Omega_\Lambda + \Omega_{DM} = 1 - \varepsilon^2$와 위 비율을 연립하면:
+
+$$\Omega_\Lambda = \frac{1 - \varepsilon^2}{1 + \alpha_s D_{\text{eff}}}, \qquad \Omega_{DM} = \frac{(1-\varepsilon^2) \alpha_s D_{\text{eff}}}{1 + \alpha_s D_{\text{eff}}}$$
+
+수치: $\alpha = 0.11789 \times 3.17776 = 0.37465$
+
+$$\Omega_\Lambda = \frac{0.9514}{1.3747} = 0.6921, \quad \Omega_{DM} = \frac{0.9514 \times 0.3747}{1.3747} = 0.2593$$
+
+Planck 관측: $\Omega_\Lambda = 0.6847$, $\Omega_{DM} = 0.2589$. 차이: 1.1%, 0.13%.
+
+유도 레벨: **가정**(진공/요동 분리, $\alpha_s$가 차원당 요동률) + **정리**(에너지 보존에 의한 비율 결정).
 
 ### 7.2 예측 총표
 
