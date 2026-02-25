@@ -1,10 +1,8 @@
-use rand::Rng;
-use std::collections::VecDeque;
 use std::f64::consts::E;
+use rand::Rng;
+const R_MEAS_ERR: f64 = 1e-10;
 
-/// Self-consistent strong coupling from alpha_total = 1/(2*pi)
-const ALPHA_S: f64 = 0.11789;
-
+use std::collections::VecDeque;
 /// sin^2(theta_W) * cos^2(theta_W): electroweak mixing correction from 5-constant theory
 const DELTA: f64 = 0.17776;
 /// D_eff = d + delta: effective folding dimension
@@ -12,13 +10,30 @@ const D_EFF: f64 = 3.17776;
 
 /// Error feedback measurement variance.
 /// Signal is computed from true state (noise-free); only staleness uncertainty remains.
-const R_MEAS_ERR: f64 = 1e-10;
+
+use crate::engine::constants::{SFE, NW, D};
+
+    // (alpha_lapse, beta_damp, xi, m_phi, gamma_phi)
+fn epsilon2() -> f64 { SFE.epsilon2 }
+fn f_factor() -> f64 { SFE.f_factor }
+fn alpha_s() -> f64 { SFE.alpha_s }
+fn delta() -> f64 { SFE.delta }
+fn d_eff() -> f64 { SFE.d_eff }
+fn alpha_em_mz() -> f64 { SFE.alpha_em_mz }
+
+fn r_meas_err() -> f64 {
+    let alpha_0 = 1.0 / SFE.alpha_inv_0;
+    alpha_0.powi(5)
+}
 
 fn sfe_physics_params() -> (f64, f64, f64, f64, f64) {
-    let xi = ALPHA_S.powf(1.0 / 3.0);  // coupling per dimension: alpha_s^{1/d}
-    let survival = (-1.0_f64).exp();     // e^{-1}: fundamental 1D damping
-    (E, survival, xi, 1.0, survival)
-    // (alpha_lapse, beta_damp, xi, m_phi, gamma_phi)
+    let e = std::f64::consts::E;
+    let alpha_lapse = e;                              // ADM lapse = e (Euler number, one of {e,pi,i,1,0})
+    let xi = alpha_s().powf(D.recip());               // xi = alpha_s^(1/D), D=3
+    let beta_damp = (-1.0_f64).exp();                 // e^{-1}: SFE survival kernel
+    let m_phi = 1.0;                                  // unit mass in SFE normalization (= 1 from {1})
+    let gamma_phi = (-1.0_f64).exp();                 // e^{-1}: dissipation rate
+    (alpha_lapse, beta_damp, xi, m_phi, gamma_phi)
 }
 
 /// SFE 3+1 state: [R, K, Phi, Pi] coupled through the suppression field equation.
@@ -41,20 +56,21 @@ struct SfeState {
 
 impl SfeState {
     fn new(process_noise: f64, dt: f64) -> Self {
-        let mut p = [[0.0; 4]; 4];
-        for i in 0..4 {
-            p[i][i] = 2.0;
-        }
-
         // noise in K per step: process_noise * U[-1,1] * sqrt(dt) * dt
         // variance = process_noise^2 * dt^3 / 3
-        let q_k = process_noise * process_noise * dt * dt * dt / 3.0;
-        // noise in Pi has 0.5 factor
-        let q_pi = q_k * 0.25;
+        let p0 = NW;
+        let mut p = [[0.0; 4]; 4];
+        for i in 0..4 {
+            p[i][i] = p0;
+        }
 
+        let q_k = process_noise * process_noise * dt * dt * dt / 3.0;
+        let q_pi = q_k / (NW * NW);
+
+        let q_scale = NW;
         let mut q = [[0.0; 4]; 4];
-        q[1][1] = q_k * 2.0;
-        q[3][3] = q_pi * 2.0;
+        q[1][1] = q_k * q_scale;
+        q[3][3] = q_pi * q_scale;
 
         Self {
             x: [0.0; 4],
@@ -68,7 +84,7 @@ impl SfeState {
         let r = self.x[0];
         let kk = self.x[1];
         let phi = self.x[2];
-        let xi_ew = DELTA * xi;
+        let xi_ew = delta() * xi;
 
         // K' = K + (alpha*R/2 - beta*K + xi*Phi^2 + xi_ew*R*Phi)*dt
         let dk_dr = (alpha_lapse / 2.0 + xi_ew * phi) * dt;
@@ -114,7 +130,7 @@ impl SfeState {
         let kk = self.x[1];
         let phi = self.x[2];
         let pi = self.x[3];
-        let xi_ew = DELTA * xi;
+        let xi_ew = delta() * xi;
 
         let dk = alpha_lapse * r / 2.0 - beta_damp * kk + xi * phi * phi + xi_ew * r * phi;
         let dpi = -(m_phi * m_phi + xi * r) * phi - gamma_phi * pi - xi_ew * kk * phi;
@@ -137,7 +153,7 @@ impl SfeState {
             }
         }
 
-        let q_factor = (-2.0 * xi * (D_EFF / 3.0) * self.x[0].abs()).exp();
+        let q_factor = (-2.0 * xi * (d_eff() / 3.0) * self.x[0].abs()).exp();
         let mut p_new = [[0.0_f64; 4]; 4];
         for i in 0..4 {
             for j in 0..4 {
@@ -223,7 +239,7 @@ impl SfeState {
         let mut x = self.x;
 
         for _ in 0..steps {
-            let xi_ew = DELTA * xi;
+            let xi_ew = delta() * xi;
             let dk = alpha_lapse * x[0] / 2.0 - beta_damp * x[1] + xi * x[2] * x[2] + xi_ew * x[0] * x[2];
             let dpi = -(m_phi * m_phi + xi * x[0]) * x[2] - gamma_phi * x[3] - xi_ew * x[1] * x[2];
 
@@ -261,7 +277,7 @@ impl SfeArcController {
         let (alpha_lapse, beta_damp, xi, m_phi, gamma_phi) = sfe_physics_params();
         let dt = 0.01;
 
-        let r_meas = measure_noise * measure_noise / 3.0;
+        let r_meas = measure_noise * measure_noise / D;
 
         Self {
             alpha,
@@ -282,14 +298,14 @@ impl SfeArcController {
         self.state.predict(dt, self.alpha_lapse, self.beta_damp,
                            self.xi, self.m_phi, self.gamma_phi);
 
-        let r_meas = self.r_meas * (-2.0 * self.xi * (D_EFF / 3.0) * self.state.x[0].abs()).exp();
+        let r_meas = self.r_meas * (-2.0 * self.xi * (d_eff() / 3.0) * self.state.x[0].abs()).exp();
         self.state.update_observation(measured_r, [1.0, 0.0, 0.0, 0.0], r_meas);
 
         // Obs 2: dR/dt = -2*alpha*K (velocity from forward difference)
         if let Some(prev) = self.prev_z {
             let dr_dt = (measured_r - prev) / dt;
             let h1 = -2.0 * self.alpha_lapse;
-            let r_meas_vel = 2.0 * self.r_meas / (dt * dt);
+            let r_meas_vel = NW * self.r_meas / (dt * dt);
             self.state.update_observation(dr_dt, [0.0, h1, 0.0, 0.0], r_meas_vel);
         }
         self.prev_z = Some(measured_r);
@@ -303,12 +319,11 @@ impl SfeArcController {
         -(self.alpha * x_future[0] + self.beta * x_future[1])
     }
 
-    /// Obs 3: error feedback. residual - pulse = alpha*R + beta*K.
-    pub fn update_error(&mut self, error_signal: f64, r_meas_err: f64) {
+    pub fn update_error(&mut self, error_signal: f64, _r_meas_err: f64) {
         self.state.update_observation(
             error_signal,
             [self.alpha, self.beta, 0.0, 0.0],
-            r_meas_err,
+            r_meas_err(),
         );
     }
 
@@ -368,7 +383,7 @@ impl ArcSimulationEnv {
             xi,
             m_phi,
             gamma_phi,
-            controller: SfeArcController::new(1.0, 0.1, latency, process_noise, measure_noise),
+            controller: SfeArcController::new(1.0, alpha_s(), latency, process_noise, measure_noise),
             pulse_queue: VecDeque::with_capacity(latency),
             prev_residual: 0.0,
             prev_delayed_pulse: 0.0,
@@ -392,8 +407,8 @@ impl ArcSimulationEnv {
         let noise_k: f64 = rng.gen_range(-1.0..1.0);
         let noise_pi: f64 = rng.gen_range(-1.0..1.0);
 
-        let xi_ew = DELTA * self.xi;
-        let noise_suppression = (-self.xi * (D_EFF / 3.0) * r.abs()).exp();
+        let xi_ew = delta() * self.xi;
+        let noise_suppression = (-self.xi * (d_eff() / 3.0) * r.abs()).exp();
 
         let dk = self.alpha_lapse * r / 2.0 - self.beta_damp * k
             + self.xi * phi * phi + xi_ew * r * phi
@@ -414,12 +429,12 @@ impl ArcSimulationEnv {
             self.controller.alpha * r_new + self.controller.beta * k_new;
 
         let meas_noise: f64 = rng.gen_range(-1.0..1.0);
-        let curvature_suppression = (-self.xi * (D_EFF / 3.0) * r_new.abs()).exp();
+        let curvature_suppression = (-self.xi * (d_eff() / 3.0) * r_new.abs()).exp();
         let measured_r = r_new + self.measure_noise * meas_noise * curvature_suppression;
 
         // Feed back previous residual as error observation before controller step
         let error_signal = self.prev_residual - self.prev_delayed_pulse;
-        self.controller.update_error(error_signal, R_MEAS_ERR);
+        self.controller.update_error(error_signal, r_meas_err());
 
         let new_pulse = self.controller.step(measured_r, dt);
 
