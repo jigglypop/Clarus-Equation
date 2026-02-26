@@ -2,7 +2,7 @@
 epsilon = e^{-1} 제1원리 유도 검증
 =====================================
 
-이 스크립트는 SFE 이론에서 억압 계수 epsilon = e^{-1}이
+이 스크립트는 CE 이론에서 광명 계수 epsilon = e^{-1}이
 다양한 경로로 유도될 수 있음을 수치적으로 검증한다.
 
 """
@@ -20,14 +20,14 @@ def print_header(title: str):
 
 def verification_1_path_integral():
     """경로적분에서의 e^{-1} 등장 검증"""
-    print_header("1. 경로적분: 작용 S = hbar에서 억압")
+    print_header("1. 경로적분: 작용 S = hbar에서 광명")
     
     # 작용 S = hbar일 때
     S_over_hbar = 1.0
     suppression = np.exp(-S_over_hbar)
     
     print(f"작용 S/hbar = 1 에서:")
-    print(f"  억압 인자 = exp(-S/hbar) = exp(-1) = {suppression:.6f}")
+    print(f"  광명 인자 = exp(-S/hbar) = exp(-1) = {suppression:.6f}")
     print(f"  이론값 1/e = {1/np.e:.6f}")
     print(f"  차이: {abs(suppression - 1/np.e):.2e}")
     
@@ -239,7 +239,7 @@ def verification_6_self_entropy_minimum():
     print()
     print("물리적 해석:")
     print("  x^x는 '자기-참조 엔트로피'를 나타냄")
-    print("  억압 계수 epsilon이 스스로를 억압하는 효율")
+    print("  광명 계수 epsilon이 스스로를 광명하는 효율")
     print("  이 효율의 최솟값(최소 자기-소비)에서 시스템 안정")
     print(f"  => epsilon* = e^{{-1}} = {x_analytic:.6f}")
     

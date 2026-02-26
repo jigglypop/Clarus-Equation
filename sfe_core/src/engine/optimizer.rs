@@ -1,17 +1,17 @@
 use crate::engine::noise::PinkNoiseGenerator;
-use crate::engine::optimizer_v2::{HardwareConstraints, SfeOptimizerV2}; // HardwareConstraints 추가
+use crate::engine::optimizer_v2::{HardwareConstraints, CeOptimizerV2}; // HardwareConstraints 추가
 use rayon::prelude::*;
 use std::f64::consts::PI;
 use std::time::Instant;
 
-/// SFE 순수 해석학적 최적화기 (고도화 버전: Balanced Log-SFE)
-/// 복잡한 유전 알고리즘을 SFE 이론에서 유도된 공식으로 대체하고,
+/// CE 순수 해석학적 최적화기 (고도화 버전: Balanced Log-CE)
+/// 복잡한 유전 알고리즘을 CE 이론에서 유도된 공식으로 대체하고,
 /// DC 오프셋 제거를 위한 자동 균형 보정(Balancing)을 수행합니다.
-pub struct SfeOptimizer {
+pub struct CeOptimizer {
     pub beta: f64,
 }
 
-impl SfeOptimizer {
+impl CeOptimizer {
     pub fn new(beta: f64) -> Self {
         Self { beta }
     }
@@ -78,7 +78,7 @@ impl SfeOptimizer {
         best_norm
     }
 
-    /// 하드웨어 스펙을 반영한 Robust SFE 최적화
+    /// 하드웨어 스펙을 반영한 Robust CE 최적화
     /// - TLS Notch Filter 자동 적용
     /// - 초기 펄스 간격 제약 (0.03 이상) 강제
     pub fn optimize_for_spec(
@@ -92,11 +92,11 @@ impl SfeOptimizer {
         // TLS 주파수가 감지되면 환경변수를 통해 Notch Filter 활성화
         // (evaluate_sequence_with_pool 함수가 환경변수를 참조하므로)
         if let Some(omega) = tls_freq {
-            std::env::set_var("SFE_TLS_OMEGA", omega.to_string());
-            std::env::set_var("SFE_TLS_WEIGHT", "0.5"); // Strong penalty weight
+            std::env::set_var("CE_TLS_OMEGA", omega.to_string());
+            std::env::set_var("CE_TLS_WEIGHT", "0.5"); // Strong penalty weight
         } else {
-            std::env::remove_var("SFE_TLS_OMEGA");
-            std::env::remove_var("SFE_TLS_WEIGHT");
+            std::env::remove_var("CE_TLS_OMEGA");
+            std::env::remove_var("CE_TLS_WEIGHT");
         }
 
         let mut seq = self.optimize(steps, n_pulses, noise_level, noise_pool);
@@ -140,17 +140,17 @@ impl SfeOptimizer {
 /// main.rs / benchmark.rs와의 호환성을 위해 기존 GA 버전과 동일한 시그니처를 유지합니다.
 /// 이제 해석적 공식을 사용하여 즉시 실행됩니다.
 ///
-/// 반환값: (최적 시퀀스 인덱스, UDD 점수, SFE 점수)
+/// 반환값: (최적 시퀀스 인덱스, UDD 점수, CE 점수)
 pub fn run_pulse_optimizer(
     steps: usize,
     n_pulses: usize,
     _generations: usize,
     noise_level: f64,
 ) -> (Vec<usize>, f64, f64) {
-    println!("\n=== SFE Pulse Optimizer Benchmark (V1 vs V2-Coord vs V2-Riemannian) ===\n");
+    println!("\n=== CE Pulse Optimizer Benchmark (V1 vs V2-Coord vs V2-Riemannian) ===\n");
 
     let beta = 50.0;
-    let optimizer_v1 = SfeOptimizer::new(beta);
+    let optimizer_v1 = CeOptimizer::new(beta);
 
     // V2 Optimizer with relaxed constraints for fair comparison with V1
     // V1 finds pulses very early (e.g. 0.004), so we relax min_first_pulse to 0.001
@@ -159,33 +159,33 @@ pub fn run_pulse_optimizer(
         min_interval: 0.001,
         max_last_pulse: 0.999,
     };
-    let optimizer_v2 = SfeOptimizerV2::new_with_constraints(beta, constraints);
+    let optimizer_v2 = CeOptimizerV2::new_with_constraints(beta, constraints);
 
     let trials = 200;
 
-    let alpha: f64 = std::env::var("SFE_NOISE_ALPHA")
+    let alpha: f64 = std::env::var("CE_NOISE_ALPHA")
         .ok()
         .and_then(|v| v.parse().ok())
         .unwrap_or(0.8);
 
-    let scale: f64 = std::env::var("SFE_NOISE_SCALE")
+    let scale: f64 = std::env::var("CE_NOISE_SCALE")
         .ok()
         .and_then(|v| v.parse().ok())
         .unwrap_or(1.5 * noise_level.abs());
 
-    let suppresson_omega: f64 = std::env::var("SFE_SUPPRESSON_OMEGA")
+    let suppresson_omega: f64 = std::env::var("CE_SUPPRESSON_OMEGA")
         .ok()
         .and_then(|v| v.parse().ok())
         .unwrap_or(0.0);
-    let suppresson_amp: f64 = std::env::var("SFE_SUPPRESSON_AMP")
+    let suppresson_amp: f64 = std::env::var("CE_SUPPRESSON_AMP")
         .ok()
         .and_then(|v| v.parse().ok())
         .unwrap_or(0.0);
-    let suppresson_omega2: f64 = std::env::var("SFE_SUPPRESSON_OMEGA2")
+    let suppresson_omega2: f64 = std::env::var("CE_SUPPRESSON_OMEGA2")
         .ok()
         .and_then(|v| v.parse().ok())
         .unwrap_or(0.0);
-    let suppresson_amp2: f64 = std::env::var("SFE_SUPPRESSON_AMP2")
+    let suppresson_amp2: f64 = std::env::var("CE_SUPPRESSON_AMP2")
         .ok()
         .and_then(|v| v.parse().ok())
         .unwrap_or(0.0);
@@ -295,11 +295,11 @@ pub fn run_pulse_optimizer(
     }
 }
 
-/// 도우미: 생성된 노이즈에 대해 UDD vs SFE 평가
+/// 도우미: 생성된 노이즈에 대해 UDD vs CE 평가
 #[allow(dead_code)]
 fn evaluate_performance(
     steps: usize,
-    sfe_seq: &[usize],
+    ce_seq: &[usize],
     n_pulses: usize,
     noise_amp: f64,
     noise_pool: &[Vec<f64>],
@@ -313,9 +313,9 @@ fn evaluate_performance(
     }
 
     let udd_score = evaluate_sequence_with_pool(&udd_seq, noise_amp, noise_pool);
-    let sfe_score = evaluate_sequence_with_pool(sfe_seq, noise_amp, noise_pool);
+    let ce_score = evaluate_sequence_with_pool(ce_seq, noise_amp, noise_pool);
 
-    (udd_score, sfe_score)
+    (udd_score, ce_score)
 }
 
 /// 필터 함수 및 장기 가중 목적함수 기반 시퀀스 평가
@@ -357,8 +357,8 @@ pub fn evaluate_sequence_with_pool(
     }
 
     // 저주파 모멘트 M_k = ∫ t^k y(t) dt (정규화된 시간 t∈[0,1]) 계산
-    // SFE_MOMENT_ORDER 환경변수로 최대 차수 설정 (기본 0: 패널티 없음)
-    let moment_order: usize = std::env::var("SFE_MOMENT_ORDER")
+    // CE_MOMENT_ORDER 환경변수로 최대 차수 설정 (기본 0: 패널티 없음)
+    let moment_order: usize = std::env::var("CE_MOMENT_ORDER")
         .ok()
         .and_then(|v| v.parse().ok())
         .unwrap_or(3)
@@ -394,11 +394,11 @@ pub fn evaluate_sequence_with_pool(
         moment_penalty = acc / (moment_order as f64);
     }
 
-    let tls_omega: f64 = std::env::var("SFE_TLS_OMEGA")
+    let tls_omega: f64 = std::env::var("CE_TLS_OMEGA")
         .ok()
         .and_then(|v| v.parse().ok())
         .unwrap_or(0.0);
-    let tls_weight: f64 = std::env::var("SFE_TLS_WEIGHT")
+    let tls_weight: f64 = std::env::var("CE_TLS_WEIGHT")
         .ok()
         .and_then(|v| v.parse().ok())
         .unwrap_or(0.0);
@@ -454,7 +454,7 @@ pub fn evaluate_sequence_with_pool(
     avg_s - moment_penalty - tls_penalty
 }
 
-// 목적함수 인터페이스 추가 (SfeObjective)
-pub trait SfeObjective {
+// 목적함수 인터페이스 추가 (CeObjective)
+pub trait CeObjective {
     fn evaluate(&self, seq: &[f64]) -> f64;
 }

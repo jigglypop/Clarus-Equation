@@ -24,12 +24,12 @@ impl Default for NoiseConfig {
 impl NoiseConfig {
     pub fn from_env_with_noise(noise_amp: f64) -> Self {
         Self {
-            alpha: env_f64("SFE_NOISE_ALPHA", 0.8),
-            scale: env_f64("SFE_NOISE_SCALE", 1.5 * noise_amp.abs()),
-            rho: env_f64("SFE_NOISE_RHO", 0.0),
-            moment_order: env_usize("SFE_MOMENT_ORDER", 3).min(3),
-            tls_omega: env_f64("SFE_TLS_OMEGA", 0.0),
-            tls_weight: env_f64("SFE_TLS_WEIGHT", 0.0),
+            alpha: env_f64("CE_NOISE_ALPHA", 0.8),
+            scale: env_f64("CE_NOISE_SCALE", 1.5 * noise_amp.abs()),
+            rho: env_f64("CE_NOISE_RHO", 0.0),
+            moment_order: env_usize("CE_MOMENT_ORDER", 3).min(3),
+            tls_omega: env_f64("CE_TLS_OMEGA", 0.0),
+            tls_weight: env_f64("CE_TLS_WEIGHT", 0.0),
         }
     }
 }
@@ -57,11 +57,11 @@ impl Default for SuppressionConfig {
 
 impl SuppressionConfig {
     pub fn from_env() -> Self {
-        let omega = env_f64("SFE_SUPPRESSON_OMEGA", 0.0);
-        let amp = env_f64("SFE_SUPPRESSON_AMP", 0.0);
-        let omega2 = env_f64("SFE_SUPPRESSON_OMEGA2", 0.0);
-        let amp2 = env_f64("SFE_SUPPRESSON_AMP2", 0.0);
-        let anc_flag = env_i32("SFE_SUPPRESSON_ANC", 0);
+        let omega = env_f64("CE_SUPPRESSON_OMEGA", 0.0);
+        let amp = env_f64("CE_SUPPRESSON_AMP", 0.0);
+        let omega2 = env_f64("CE_SUPPRESSON_OMEGA2", 0.0);
+        let amp2 = env_f64("CE_SUPPRESSON_AMP2", 0.0);
+        let anc_flag = env_i32("CE_SUPPRESSON_ANC", 0);
         let anc_enabled = anc_flag != 0
             && ((omega != 0.0 && amp != 0.0) || (omega2 != 0.0 && amp2 != 0.0));
 
@@ -123,9 +123,9 @@ impl Default for QecConfig {
 impl QecConfig {
     pub fn from_env() -> Self {
         Self {
-            t1_steps: env_f64("SFE_T1_STEPS", 1.0e5),
-            gate_error: env_f64("SFE_GATE_ERROR", 1.0e-3),
-            meas_error: env_f64("SFE_MEAS_ERROR", 1.0e-3),
+            t1_steps: env_f64("CE_T1_STEPS", 1.0e5),
+            gate_error: env_f64("CE_GATE_ERROR", 1.0e-3),
+            meas_error: env_f64("CE_MEAS_ERROR", 1.0e-3),
         }
     }
 }

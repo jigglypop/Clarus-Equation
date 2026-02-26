@@ -18,9 +18,9 @@ pub trait Manifold {
     fn exp_map(&self, x: &[f64], v: &[f64], dt: f64) -> Vec<f64>;
 }
 
-/// SFE 이론에 따른 억압장 유도 계량 (Suppression Induced Metric)
+/// CE 이론에 따른 광명장 유도 계량 (Clarus Induced Metric)
 /// g_uv = e^(-2 * alpha * Phi(x)) * delta_uv
-/// 공간이 억압장 Phi에 의해 수축되는 효과를 모델링
+/// 공간이 광명장 Phi에 의해 수축되는 효과를 모델링
 pub struct SuppressionManifold {
     pub phi_field: Box<PhiField>,
     pub alpha: f64, // 결합 상수
@@ -97,7 +97,7 @@ impl Manifold for SuppressionManifold {
         let grad = self.gradient_phi(x);
         let grad_sq: f64 = grad.iter().map(|v| v * v).sum();
 
-        // 억압장 강도가 높을수록 곡률이 커짐 (R > 0) -> 공간이 닫힘 -> 이동 억제
+        // 광명장 강도가 높을수록 곡률이 커짐 (R > 0) -> 공간이 닫힘 -> 이동 억제
         self.alpha * grad_sq * phi.abs()
     }
 

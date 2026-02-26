@@ -99,21 +99,21 @@ impl FilterFunction {
 
 pub fn compute_gain_function(
     cpmg_pulses: &[f64],
-    sfe_pulses: &[f64],
+    ce_pulses: &[f64],
     duration: f64,
     n_omega: usize,
 ) -> Vec<(f64, f64)> {
     let ff_cpmg = FilterFunction::compute(cpmg_pulses, duration, n_omega);
-    let ff_sfe = FilterFunction::compute(sfe_pulses, duration, n_omega);
+    let ff_ce = FilterFunction::compute(ce_pulses, duration, n_omega);
 
     let mut gain = Vec::with_capacity(n_omega);
 
     for i in 0..n_omega
         .min(ff_cpmg.omega_grid.len())
-        .min(ff_sfe.omega_grid.len())
+        .min(ff_ce.omega_grid.len())
     {
         let omega = ff_cpmg.omega_grid[i];
-        let g = ff_cpmg.y_squared[i] / (ff_sfe.y_squared[i] + 1e-12);
+        let g = ff_cpmg.y_squared[i] / (ff_ce.y_squared[i] + 1e-12);
         gain.push((omega, g));
     }
 

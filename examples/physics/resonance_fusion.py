@@ -2,7 +2,7 @@ import math
 
 def main():
     print("="*70)
-    print("SFE Resonance Fusion: Precision Recalculation")
+    print("CE Resonance Fusion: Precision Recalculation")
     print("="*70)
     print()
 
@@ -16,7 +16,7 @@ def main():
     m_H = 125100.0         # MeV
     v_ew = 246000.0        # MeV (Higgs VEV)
 
-    # SFE parameters
+    # CE parameters
     delta = 0.17776
     m_phi = m_p * delta**2
     xi = hbar_c / m_phi
@@ -373,12 +373,12 @@ def main():
 
     print(f"Standard Lawson: n*tau_E > {ntau_std:.2e} cm^-3 s")
     if Sigma_plasma < 1e100 and Sigma_plasma > 0:
-        ntau_sfe = ntau_std / Sigma_plasma
+        ntau_ce = ntau_std / Sigma_plasma
         E_sfe = E_NIF / Sigma_plasma
-        print(f"SFE Lawson: n*tau_E > {ntau_sfe:.2e} cm^-3 s")
+        print(f"CE Lawson: n*tau_E > {ntau_ce:.2e} cm^-3 s")
         print(f"Ignition energy: {E_sfe:.2e} J = {E_sfe/1000:.2f} kJ")
     else:
-        print(f"SFE: Barrier completely eliminated -> classical ignition")
+        print(f"CE: Barrier completely eliminated -> classical ignition")
 
     print()
 

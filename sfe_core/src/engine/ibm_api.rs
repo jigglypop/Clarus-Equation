@@ -45,7 +45,7 @@ impl IbmClient {
     /// Python의 QiskitRuntimeService처럼 인증 불필요, API Key를 Bearer Token으로 직접 사용
     pub fn authenticate(&mut self) -> Result<(), Box<dyn Error>> {
         // QiskitRuntimeService는 별도 인증 없이 바로 API Key 사용
-        println!("[SFE-Rust] IBM Quantum Runtime 준비 완료 (API Key 검증 생략)");
+        println!("[CE-Rust] IBM Quantum Runtime 준비 완료 (API Key 검증 생략)");
         Ok(())
     }
 
@@ -73,8 +73,8 @@ impl IbmClient {
     }
 
     /// 작업 제출 (Python QiskitRuntimeService.run() 방식)
-    pub fn submit_sfe_job(&mut self, pulse_sequence: &[f64]) -> Result<String, Box<dyn Error>> {
-        println!("[SFE-Rust] 작업 페이로드 구성 중...");
+    pub fn submit_ce_job(&mut self, pulse_sequence: &[f64]) -> Result<String, Box<dyn Error>> {
+        println!("[CE-Rust] 작업 페이로드 구성 중...");
         let durations = [0, 2222, 4444, 6666, 8888, 11111, 13333, 15555, 17777, 20000];
         let mut circuits = Vec::new();
         for &d in &durations {
@@ -92,7 +92,7 @@ impl IbmClient {
             "backend": "ibm_fez"
         });
 
-        println!("[SFE-Rust] POST {url} (Backend: ibm_fez)");
+        println!("[CE-Rust] POST {url} (Backend: ibm_fez)");
 
         // Python QiskitRuntimeService처럼 API Key를 Authorization Header에 직접
         let resp = self
@@ -105,7 +105,7 @@ impl IbmClient {
 
         if resp.status().is_success() {
             let job_data: JobResponse = resp.json()?;
-            println!("[SFE-Rust] 작업 제출 성공! Job ID: {}", job_data.id);
+            println!("[CE-Rust] 작업 제출 성공! Job ID: {}", job_data.id);
             Ok(job_data.id)
         } else {
             let status = resp.status();
@@ -117,7 +117,7 @@ impl IbmClient {
     /// 결과 대기 및 수신 (Polling)
     pub fn wait_for_result(&mut self, job_id: &str) -> Result<JobResult, Box<dyn Error>> {
         let url = format!("{API_BASE_URL}/jobs/{job_id}");
-        println!("[SFE-Rust] 결과 대기 중 (Polling Job {job_id})...");
+        println!("[CE-Rust] 결과 대기 중 (Polling Job {job_id})...");
 
         loop {
             let resp = self
@@ -135,7 +135,7 @@ impl IbmClient {
 
             match state {
                 "Completed" => {
-                    println!("\n[SFE-Rust] 작업 완료! 결과 다운로드 중...");
+                    println!("\n[CE-Rust] 작업 완료! 결과 다운로드 중...");
                     let result_url = format!("{API_BASE_URL}/jobs/{job_id}/results");
                     let res_resp = self
                         .client

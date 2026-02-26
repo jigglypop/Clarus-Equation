@@ -2,7 +2,7 @@ import math
 
 def main():
     print("="*70)
-    print("SFE: d=0 Origin of the Suppression Boson")
+    print("CE: d=0 Origin of the Clarus boson")
     print("="*70)
 
     # ================================================================
@@ -299,42 +299,42 @@ def main():
     # V(Phi) = +mu^2/2 Phi^2 + lambda/4 Phi^4
     # (mu^2 > 0, no symmetry breaking)
     # mu^2 = lambda_HP * v^2 = delta^2 * v^2
-    # -> m_phi = v * delta (which is M_SFE = 43.73 GeV)
-    # Wait, this is M_SFE, not 29.648 MeV!
+    # -> m_phi = v * delta (which is M_CE = 43.73 GeV)
+    # Wait, this is M_CE, not 29.648 MeV!
 
     # Resolution of the two mass scales:
-    M_SFE = 246000 * delta_d3  # MeV
+    M_CE = 246000 * delta_d3  # MeV
     m_phi_portal = m_p * delta_d3**2  # MeV
 
     print("Prediction 4: TWO MASS SCALES from delta")
-    print(f"  M_SFE = v_EW * delta = {M_SFE:.0f} MeV = {M_SFE/1000:.2f} GeV")
+    print(f"  M_CE = v_EW * delta = {M_CE:.0f} MeV = {M_CE/1000:.2f} GeV")
     print(f"  m_phi = m_p * delta^2 = {m_phi_portal:.3f} MeV")
-    print(f"  Ratio: M_SFE / m_phi = {M_SFE / m_phi_portal:.1f}")
+    print(f"  Ratio: M_CE / m_phi = {M_CE / m_phi_portal:.1f}")
     print()
 
     # These two scales are related:
-    # M_SFE = v_EW * delta (EW vacuum + delta correction)
+    # M_CE = v_EW * delta (EW vacuum + delta correction)
     # m_phi = m_p * delta^2 (proton mass + double delta)
-    # m_phi / M_SFE = (m_p / v_EW) * delta
-    ratio_mm = m_phi_portal / M_SFE
+    # m_phi / M_CE = (m_p / v_EW) * delta
+    ratio_mm = m_phi_portal / M_CE
     ratio_mp_v = m_p / 246000
-    print(f"  m_phi / M_SFE = (m_p / v_EW) * delta")
+    print(f"  m_phi / M_CE = (m_p / v_EW) * delta")
     print(f"  = {ratio_mp_v:.5f} * {delta_d3:.5f} = {ratio_mp_v * delta_d3:.6f}")
     print(f"  Actual ratio: {ratio_mm:.6f}")
     print(f"  Match: {abs(ratio_mm - ratio_mp_v * delta_d3) < 1e-10}")
     print()
 
     # The key insight:
-    # M_SFE is the EW-scale manifestation of delta (delta x v_EW)
+    # M_CE is the EW-scale manifestation of delta (delta x v_EW)
     # m_phi is the QCD-scale manifestation (delta^2 x m_p)
     # Both are projections of the SAME d=0 remnant delta
     # onto different energy scales.
 
     print("Physical interpretation:")
-    print("  M_SFE = delta * v_EW : delta projected onto EW scale")
+    print("  M_CE = delta * v_EW : delta projected onto EW scale")
     print("  m_phi = delta^2 * m_p : delta^2 projected onto QCD scale")
     print("  Both arise from the SAME d=0 remnant (delta)")
-    print("  -> g-2 uses M_SFE (EW process)")
+    print("  -> g-2 uses M_CE (EW process)")
     print("  -> proton radius uses m_phi (QCD process)")
     print("  -> The 'two scales' are one origin viewed from two sectors")
     print()
@@ -347,7 +347,7 @@ def main():
     print("="*70)
     print()
 
-    print("Original SFE Lagrangian:")
+    print("Original CE Lagrangian:")
     print("  V(Phi) = -mu^2/2 Phi^2 + lambda/4 Phi^4")
     print("  -> spontaneous symmetry breaking -> VEV -> dark energy")
     print()
@@ -367,7 +367,7 @@ def main():
     print("      -> VEV generates dark energy")
     print("      -> Excitations are dark matter")
     print()
-    print("  SFE uses the Mexican hat (a < 0) for dark energy.")
+    print("  CE uses the Mexican hat (a < 0) for dark energy.")
     print("  But Z2 breaking by VEV would give sin(theta) != 0,")
     print("  which is excluded by K-decay experiments.")
     print()
@@ -460,7 +460,7 @@ def main():
     # More precisely:
     # The Higgs portal coupling lambda_HP |H|^2 Phi^2
     # generates m_phi^2 = lambda_HP * v^2 = delta^2 * v^2
-    # -> m_phi = delta * v = M_SFE (the EW mass)
+    # -> m_phi = delta * v = M_CE (the EW mass)
     #
     # The QCD manifestation is:
     # m_phi(QCD) = m_p * lambda_HP = m_p * delta^2
@@ -468,7 +468,7 @@ def main():
 
     print("Two scales, one delta:")
     print()
-    print("  EW sector:  m_phi^(EW) = delta * v_EW = M_SFE")
+    print("  EW sector:  m_phi^(EW) = delta * v_EW = M_CE")
     print(f"              = {delta:.5f} * 246 GeV = {delta*246:.2f} GeV")
     print()
     print("  QCD sector: m_phi^(QCD) = delta^2 * m_p")
@@ -478,7 +478,7 @@ def main():
     print(f"              = {delta * m_p / 246000:.6f}")
     print()
 
-    # The g-2 uses M_SFE (geometric, EW process)
+    # The g-2 uses M_CE (geometric, EW process)
     # The proton radius uses m_phi (propagator, QCD process)
     # Both are correct -- they are the SAME delta at different scales.
 

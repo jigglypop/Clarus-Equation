@@ -40,7 +40,7 @@ def main():
     v_EW = 246.2196e3     # MeV
     sin2tw = 0.23122
     delta = sin2tw * (1 - sin2tw)
-    M_SFE = v_EW * delta
+    M_CE = v_EW * delta
 
     da_target = 249e-11
     da_err = 48e-11
@@ -53,7 +53,7 @@ def main():
     print(f"{'=' * 72}")
 
     # Geometric approach
-    da_geom = (alpha / (2 * pi)) * (1 / e_num) * (m_mu / M_SFE) ** 2
+    da_geom = (alpha / (2 * pi)) * (1 / e_num) * (m_mu / M_CE) ** 2
 
     # Derive g_mu from equivalence
     g_mu_geom = math.sqrt(da_geom * 16 * pi ** 2)
@@ -64,7 +64,7 @@ def main():
     print(f"\n  [Geometric] Da_mu = (a/2pi)*e^-1*(m_mu/(v*d))^2 = {da_geom * 1e11:.2f} x10^-11")
     print(f"  [Boson, m_phi->0] Da_mu = g_mu^2/(16pi^2)         = {g_mu_geom ** 2 / (16 * pi ** 2) * 1e11:.2f} x10^-11")
     print(f"\n  These are IDENTICAL when:")
-    print(f"    g_mu = sqrt(8*pi*alpha*e^-1) * m_mu / M_SFE")
+    print(f"    g_mu = sqrt(8*pi*alpha*e^-1) * m_mu / M_CE")
     print(f"         = sqrt(8*pi*alpha/e) * m_mu / (v_EW * delta)")
     print(f"         = {g_mu_geom:.6e}")
 
@@ -122,19 +122,19 @@ def main():
     dr2_obs = r_p_e ** 2 - r_p_mu ** 2
 
     print(f"\n  [3A] Geometric approach (no boson):")
-    print(f"    The SFE geometric correction to the wave function is:")
-    print(f"    |psi_SFE(0)|^2 / |psi_QED(0)|^2 = 1 + C*(m_r/(v_EW*delta))^2")
+    print(f"    The CE geometric correction to the wave function is:")
+    print(f"    |psi_CE(0)|^2 / |psi_QED(0)|^2 = 1 + C*(m_r/(v_EW*delta))^2")
 
     m_r_mu = m_mu * m_p / (m_mu + m_p)  # reduced mass, muonic hydrogen
     m_r_e = m_e * m_p / (m_e + m_p)
 
-    frac_mu = (m_r_mu / M_SFE) ** 2
-    frac_e = (m_r_e / M_SFE) ** 2
+    frac_mu = (m_r_mu / M_CE) ** 2
+    frac_e = (m_r_e / M_CE) ** 2
 
     print(f"    Reduced mass (muonic H):   m_r = {m_r_mu:.2f} MeV")
     print(f"    Reduced mass (electronic H): m_r = {m_r_e:.4f} MeV")
-    print(f"    (m_r_mu / M_SFE)^2 = {frac_mu:.4e}")
-    print(f"    (m_r_e  / M_SFE)^2 = {frac_e:.4e}")
+    print(f"    (m_r_mu / M_CE)^2 = {frac_mu:.4e}")
+    print(f"    (m_r_e  / M_CE)^2 = {frac_e:.4e}")
     print(f"    Ratio: {frac_mu / frac_e:.0f}x stronger for muon")
     print(f"\n    Even with C ~ O(1), the correction is {frac_mu:.1e},")
     print(f"    giving delta_r/r ~ {frac_mu / 2:.1e}.")
@@ -197,7 +197,7 @@ def main():
     print(f"    g_p  = {g_p:.4e}  (mass-proportional: kappa * m_p)")
     print(f"\n  For the proton radius, the ONLY remaining parameter is m_phi.")
     print(f"  The Lamb shift correction in muonic hydrogen:")
-    print(f"    Delta E_SFE = -g_mu * g_p / m_phi^2 * |psi_2S(0)|^2")
+    print(f"    Delta E_CE = -g_mu * g_p / m_phi^2 * |psi_2S(0)|^2")
     print(f"    Equivalent to an apparent proton radius shift:")
     print(f"    Delta r_p^2 = -3 * g_mu * g_p / (2 * alpha * m_phi^2)")
 
@@ -266,7 +266,7 @@ def main():
     print(f"    Electron coupling:       g_e  = {g_iter / m_mu * m_e:.4e}")
 
     print(f"\n  PREDICTIONS:")
-    print(f"    {'Observable':<30s}  {'SFE':>15s}  {'Experiment':>15s}  {'Tension':>8s}")
+    print(f"    {'Observable':<30s}  {'CE':>15s}  {'Experiment':>15s}  {'Tension':>8s}")
     print(f"    {'-' * 30:<30s}  {'-' * 15:>15s}  {'-' * 15:>15s}  {'-' * 8:>8s}")
     print(f"    {'Da_mu (muon g-2)':<30s}  {da_final * 1e11:>13.1f}e-11  {'249 +/- 48e-11':>15s}  {sigma_g2:>6.2f}s")
     print(f"    {'Delta r_p^2 (proton radius)':<30s}  {dr2_final:>13.4f}fm2  {dr2_obs:>11.4f}fm2  {f'{sigma_rp:.2f}s' if sigma_rp < 10 else 'match':>8s}")
@@ -286,7 +286,7 @@ def main():
     print(f"""
   GEOMETRY (delta unification) fixes:
     - delta = sin^2(tW)*cos^2(tW) = {delta:.6f}  [from cosmology]
-    - M_SFE = v_EW * delta = {M_SFE / 1000:.2f} GeV       [energy scale]
+    - M_CE = v_EW * delta = {M_CE / 1000:.2f} GeV       [energy scale]
     - g_mu  = {g_mu_geom:.4e}                       [muon coupling]
     - g_e   = {g_mu_geom / m_mu * m_e:.4e}                       [electron coupling]
     - g_p   = {g_p:.4e}                       [proton coupling]
@@ -310,7 +310,7 @@ def main():
   The suppression boson at m_phi ~ {m_phi_exact_MeV:.0f} MeV is in the range
   of the X17 particle reported by Atomki ({m_phi_exact_MeV:.0f} vs 16.7 MeV).
   If confirmed, this would provide direct experimental evidence for
-  the SFE suppression field.""")
+  the CE Clarus field.""")
 
     # ================================================================
     # PART 7: WHY 0 SIGMA -- Honest Decomposition
@@ -367,7 +367,7 @@ def main():
     print(f"  | Geometry + boson (self-consist.) |   2    | g-2+r_p: trivial  |")
     print(f"  | Geometry FIXED + boson mass only |   1    | best at m~5-10MeV |")
     print(f"  +---------------------------------+--------+-------------------+")
-    print(f"\n  The genuine prediction power of SFE is the GEOMETRIC g-2 formula.")
+    print(f"\n  The genuine prediction power of CE is the GEOMETRIC g-2 formula.")
     print(f"  The boson adds explanatory range (proton radius) at the cost of")
     print(f"  slight coupling adjustment. The adjustment is O(1), not O(100),"  )
     print(f"  which means the geometric framework is fundamentally sound.")

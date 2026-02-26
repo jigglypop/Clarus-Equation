@@ -111,7 +111,7 @@ fn solve_alpha_s() -> f64 {
     //   Standard result: alpha^-1(M_Z) ~ 127.95, so Delta ~ 137.036 - 127.95 = 9.086
     // QED vacuum polarization running from Q=0 to Q=M_Z.
     // Standard SM calculation: the hadronic contribution dominates
-    // the uncertainty. Self-consistent value from the SFE gauge partition:
+    // the uncertainty. Self-consistent value from the CE gauge partition:
     //   alpha^-1(M_Z) = alpha_inv_0 - Delta = 137.036 - 8.056 = 128.98
     // This Delta=8.056 is within the SM calculation range (7.8-9.1)
     // and reproduces alpha_s = 0.11789 exactly.
@@ -137,10 +137,10 @@ fn solve_alpha_s() -> f64 {
 }
 
 // ---------------------------------------------------------------------------
-// SfeConstants: all 45 constants derived from {e, pi, i, 1, 0}
+// CeConstants: all 45 constants derived from {e, pi, i, 1, 0}
 // ---------------------------------------------------------------------------
 #[derive(Clone, Debug)]
-pub struct SfeConstants {
+pub struct CeConstants {
     // -- Layer 1: fundamental couplings --
     pub alpha_total: f64,
     pub alpha_s: f64,
@@ -207,7 +207,7 @@ pub const NC: f64 = 3.0;
 pub const NW: f64 = 2.0;
 pub const M_Z_GEV: f64 = 91.1876;
 
-impl SfeConstants {
+impl CeConstants {
     pub fn derive() -> Self {
         // ===== Layer 1 =====
         let alpha_total = 1.0 / (2.0 * PI);
@@ -342,7 +342,7 @@ impl SfeConstants {
     }
 
     pub fn print_all(&self) {
-        println!("=== SFE 45 Constants Derivation Engine ===\n");
+        println!("=== CE 45 Constants Derivation Engine ===\n");
 
         println!("--- Layer 1: Fundamental Couplings ---");
         println!("  alpha_total    = {:.6}  [1/(2pi)]", self.alpha_total);
@@ -427,7 +427,7 @@ impl Discrepancy {
     }
 }
 
-impl SfeConstants {
+impl CeConstants {
     pub fn verify(&self) -> Vec<Discrepancy> {
         vec![
             Discrepancy::new("alpha_s", self.alpha_s, 0.1179),
@@ -459,8 +459,8 @@ impl SfeConstants {
 
     pub fn print_verification(&self) {
         let discrepancies = self.verify();
-        println!("\n=== SFE vs Observation ===\n");
-        println!("{:<22} {:>14} {:>14} {:>10}", "Constant", "SFE", "Observed", "Error%");
+        println!("\n=== CE vs Observation ===\n");
+        println!("{:<22} {:>14} {:>14} {:>10}", "Constant", "CE", "Observed", "Error%");
         println!("{}", "-".repeat(64));
         for d in &discrepancies {
             if d.predicted.abs() > 1e-4 {
@@ -483,14 +483,14 @@ impl SfeConstants {
 // ---------------------------------------------------------------------------
 use std::sync::LazyLock;
 
-pub static SFE: LazyLock<SfeConstants> = LazyLock::new(SfeConstants::derive);
+pub static CE: LazyLock<CeConstants> = LazyLock::new(CeConstants::derive);
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    fn c() -> SfeConstants {
-        SfeConstants::derive()
+    fn c() -> CeConstants {
+        CeConstants::derive()
     }
 
     fn assert_pct(name: &str, pred: f64, obs: f64, tol_pct: f64) {

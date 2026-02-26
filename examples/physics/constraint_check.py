@@ -2,18 +2,18 @@ import math
 
 def main():
     print("="*70)
-    print("SFE phi Boson vs Experimental Constraints")
+    print("CE phi Boson vs Experimental Constraints")
     print("="*70)
     print()
 
-    # SFE predictions
+    # CE predictions
     sin_theta = 0.04344
     sin2_theta = sin_theta**2
     m_phi = 29.648  # MeV
     tau_phi = 6.865e-8  # s = 69 ns
     ctau = 3e8 * tau_phi  # m
 
-    print("A. SFE Predictions:")
+    print("A. CE Predictions:")
     print(f"  m_phi = {m_phi:.2f} MeV")
     print(f"  sin(theta_mix) = {sin_theta:.5f}")
     print(f"  sin^2(theta) = {sin2_theta:.4e}")
@@ -54,10 +54,10 @@ def main():
     # (Leutwyler-Roos form factor, Inami-Lim loop function)
 
     BR_per_sin2 = 5e-6  # approximate for m_S = 30 MeV
-    BR_SFE = BR_per_sin2 * sin2_theta
+    BR_CE = BR_per_sin2 * sin2_theta
     print(f"  BR(K+ -> pi+ S) = {BR_per_sin2:.0e} * sin^2(theta)")
     print(f"  = {BR_per_sin2:.0e} * {sin2_theta:.4e}")
-    print(f"  = {BR_SFE:.2e}")
+    print(f"  = {BR_CE:.2e}")
     print()
 
     # S decay: tau = 69 ns, boosted gamma ~ E_S / m_S
@@ -109,13 +109,13 @@ def main():
     print()
 
     if limit:
-        ratio = BR_SFE / limit
+        ratio = BR_CE / limit
         sin_upper = math.sqrt(limit / BR_per_sin2)
         print(f"  E949 limit: BR < {limit:.1e}")
-        print(f"  SFE prediction: BR = {BR_SFE:.1e}")
+        print(f"  CE prediction: BR = {BR_CE:.1e}")
         print(f"  Ratio: {ratio:.1f}x above limit")
         print(f"  -> sin(theta) upper bound: {sin_upper:.2e}")
-        print(f"  -> SFE sin(theta) = {sin_theta:.4f} is {sin_theta/sin_upper:.0f}x above")
+        print(f"  -> CE sin(theta) = {sin_theta:.4f} is {sin_theta/sin_upper:.0f}x above")
         if ratio > 1:
             print(f"  ** EXCLUDED by E949 **")
         print()
@@ -139,8 +139,8 @@ def main():
     print("="*70)
     print()
     print("  PADME (2025): Searched for 16.7-17.4 MeV resonance")
-    print(f"  SFE phi mass: {m_phi:.1f} MeV - OUTSIDE PADME scan range")
-    print("  -> No direct constraint from PADME on SFE phi")
+    print(f"  CE phi mass: {m_phi:.1f} MeV - OUTSIDE PADME scan range")
+    print("  -> No direct constraint from PADME on CE phi")
     print()
 
     # ============================================================
@@ -150,7 +150,7 @@ def main():
     print("D. Beam Dump Experiments (LSND, CHARM, PS191)")
     print("="*70)
     print()
-    print(f"  SFE phi: c*tau = {ctau:.1f} m, boosted c*tau ~ 100+ m")
+    print(f"  CE phi: c*tau = {ctau:.1f} m, boosted c*tau ~ 100+ m")
     print()
     print("  Beam dump sensitivity structure:")
     print("    - Small sin(theta) -> long lifetime -> reaches detector")
@@ -161,17 +161,17 @@ def main():
     print("    For m = 30 MeV: weak constraint (below pion threshold)")
     print()
     print("  CHARM: Baseline 480 m, sensitive to long-lived particles")
-    print(f"    SFE phi boosted c*tau ~ {d_decay:.0f} m << 480 m")
+    print(f"    CE phi boosted c*tau ~ {d_decay:.0f} m << 480 m")
     print(f"    -> phi decays before CHARM detector")
-    print(f"    -> CHARM constrains LOWER sin(theta), not SFE value")
+    print(f"    -> CHARM constrains LOWER sin(theta), not CE value")
     print()
     print("  PS191: Baseline 128 m")
     print(f"    Same argument: phi decays before detector")
     print()
     print("  ** Beam dump experiments generally exclude")
     print("     sin(theta) ~ 10^-4 to 10^-3 (long-lived regime)")
-    print("     SFE's sin(theta) = 0.04 is in the SHORT-LIVED regime")
-    print("     -> Beam dumps do NOT exclude SFE **")
+    print("     CE's sin(theta) = 0.04 is in the SHORT-LIVED regime")
+    print("     -> Beam dumps do NOT exclude CE **")
     print()
 
     # ============================================================
@@ -182,7 +182,7 @@ def main():
     print("="*70)
     print()
     print("  Direct search: m_S = 100-200 MeV, sin(theta) < 3-5 x 10^-4")
-    print(f"  SFE phi mass: {m_phi:.1f} MeV -> BELOW MicroBooNE mass range")
+    print(f"  CE phi mass: {m_phi:.1f} MeV -> BELOW MicroBooNE mass range")
     print("  Recast to 30-150 MeV: applies to HNL, not directly to scalar")
     print()
     print("  Production: K -> pi S in NuMI absorber")
@@ -210,7 +210,7 @@ def main():
     print(f"  = {delta_ae:.2e}")
     print()
     print(f"  Experimental: a_e(exp) - a_e(SM) ~ few x 10^-13")
-    print(f"  SFE contribution: {delta_ae:.1e}")
+    print(f"  CE contribution: {delta_ae:.1e}")
     if delta_ae < 1e-12:
         print(f"  -> CONSISTENT with experiment")
     else:
@@ -234,10 +234,10 @@ def main():
     # If mfp >> R_core, phi free-streams -> energy loss constraint
     # "Trapping" limit: sin(theta) > ~10^-4 for m ~ 30 MeV
     print("    SN trapping regime: sin(theta) > ~10^-4")
-    print(f"    SFE sin(theta) = {sin_theta:.4f} >> 10^-4")
+    print(f"    CE sin(theta) = {sin_theta:.4f} >> 10^-4")
     print("    -> phi is TRAPPED in SN core")
     print("    -> No anomalous cooling")
-    print("    -> SN1987A does NOT constrain SFE")
+    print("    -> SN1987A does NOT constrain CE")
     print()
 
     # ============================================================
@@ -247,7 +247,7 @@ def main():
     print("H. SUMMARY")
     print("="*70)
     print()
-    print("  Constraint          |  Status for SFE phi")
+    print("  Constraint          |  Status for CE phi")
     print("  --------------------|---------------------------")
     print("  E949 K->pi+invisible|  CRITICAL: likely excluded")
     print("  NA62 K->pi+invisible|  CRITICAL: need exact limit")
@@ -286,12 +286,12 @@ def main():
     print(f"  Upper bound on sin(theta) from NA62:")
     print(f"    sin(theta) < sqrt({BR_NA62:.1e}/{BR_per_sin2:.0e})")
     print(f"    = {sin_upper_NA62:.4e}")
-    print(f"    SFE: {sin_theta:.4f} -> {sin_theta/sin_upper_NA62:.0f}x above")
+    print(f"    CE: {sin_theta:.4f} -> {sin_theta/sin_upper_NA62:.0f}x above")
     print()
-    print("  ** SFE phi (sin theta = 0.04, m = 30 MeV) appears to be")
+    print("  ** CE phi (sin theta = 0.04, m = 30 MeV) appears to be")
     print("     EXCLUDED by K+ -> pi+ invisible searches at ~250x level **")
     print()
-    print("  UNLESS the SFE phi has suppressed K->pi production")
+    print("  UNLESS the CE phi has suppressed K->pi production")
     print("  (e.g., non-standard flavor structure different from")
     print("  generic Higgs-mixed scalar)")
 

@@ -8,12 +8,12 @@ pub const M_TAU_MEV: f64 = 1776.86;
 pub const ALPHA_EM: f64 = 1.0 / 137.036;
 pub const HBAR_C_MEV_FM: f64 = 197.327;
 
-// [NEW] SFE Effective Mass Correction
+// [NEW] CE Effective Mass Correction
 pub struct EffectiveMassCalculator;
 
 impl EffectiveMassCalculator {
     /// Part8.5: Delta M = M0 * (1 - e^-1)
-    /// 입자가 억압장(R)을 통과하며 잃어버리는 유효 질량/에너지 계산
+    /// 입자가 광명장(R)을 통과하며 잃어버리는 유효 질량/에너지 계산
     pub fn calculate_loss(m0: f64) -> f64 {
         let e_inv = (-1.0_f64).exp(); // 0.3678...
         m0 * (1.0 - e_inv)
@@ -29,7 +29,7 @@ impl EffectiveMassCalculator {
     /// 0.37 법칙 검증
     pub fn verify_law() {
         let loss_ratio = 1.0 - (-1.0_f64).exp();
-        println!("[SFE] 0.37 Law Verification:");
+        println!("[CE] 0.37 Law Verification:");
         println!("  Theoretical Loss Ratio (1 - 1/e): {loss_ratio:.6}");
         println!(
             "  Effective Mass Ratio (1/e):       {:.6}",
@@ -428,7 +428,7 @@ fn analyze_multimode_solution(
 }
 
 pub fn run_muon_specificity_analysis() {
-    println!("\n=== 억압보손-뮤온 특이 결합 분석 ===\n");
+    println!("\n=== 광명보손-뮤온 특이 결합 분석 ===\n");
 
     let g_mu_mev = 6e-4;
     let coupling = MassProportionalCoupling::from_g_mu(g_mu_mev);
@@ -452,7 +452,7 @@ pub fn run_muon_specificity_analysis() {
     println!("  질량 효과 (m_μ/m_e)^3: {mass_effect:.2e}");
 
     println!("\n  → 뮤온은 전자보다 양성자에 207배 가까이 접근");
-    println!("  → 억압보손 교환이 10^7배 더 강하게 작용");
+    println!("  → 광명보손 교환이 10^7배 더 강하게 작용");
 
     println!("\n{}", "=".repeat(70));
     println!("유카와 퍼텐셜 (r = 2.6 fm, 뮤온 보어 반경)");
@@ -467,7 +467,7 @@ pub fn run_muon_specificity_analysis() {
 
     println!("\n  뮤온-양성자 퍼텐셜 (r={r_test:.1} fm): {v_mu:.3e} MeV");
     println!("  뮤온/전자 퍼텐셜 비율: {ratio:.0}배");
-    println!("\n  → 질량-비례 결합으로 뮤온이 억압장을 207배 강하게 느낌");
+    println!("\n  → 질량-비례 결합으로 뮤온이 광명장을 207배 강하게 느낌");
 
     println!("\n{}", "=".repeat(70));
     println!("뮤온 g-2 변칙 설명");
@@ -477,7 +477,7 @@ pub fn run_muon_specificity_analysis() {
     let delta_a_mu = anomaly.delta_a_mu();
     let delta_a_e = anomaly.delta_a_e(coupling.g_e);
 
-    println!("\n  억압보손 기여:");
+    println!("\n  광명보손 기여:");
     println!("    Δa_μ = {delta_a_mu:.2e} (예상: 2.51e-9)");
     println!("    Δa_e = {delta_a_e:.2e}");
     println!("    비율: {:.2e}", delta_a_mu / delta_a_e);
@@ -544,7 +544,7 @@ pub fn run_muon_specificity_analysis() {
     println!("{}", "=".repeat(70));
 
     println!("\n  1. 질량-비례 결합: g_f = κ × m_f");
-    println!("     → 무거운 입자일수록 억압장과 강하게 결합");
+    println!("     → 무거운 입자일수록 광명장과 강하게 결합");
     println!("     → 뮤온(105 MeV) >> 전자(0.5 MeV): 207배 차이");
 
     println!("\n  2. 보어 반경 역비례: a_0 ∝ 1/m_ℓ");
@@ -552,7 +552,7 @@ pub fn run_muon_specificity_analysis() {
     println!("     → 뮤온이 양성자에 207배 가까이");
 
     println!("\n  3. 결합 효과: ΔE ∝ m_ℓ^4");
-    println!("     → 뮤온에서 10^7배 강한 억압보손 효과");
+    println!("     → 뮤온에서 10^7배 강한 광명보손 효과");
     println!("     → g-2 변칙: 측정 가능");
     println!("     → 전자에서는 무시 가능");
 
@@ -560,7 +560,7 @@ pub fn run_muon_specificity_analysis() {
     println!("     → 뮤온-양성자 사이 추가 인력");
     println!("     → 양성자 반경이 작게 측정됨");
 
-    println!("\n  결론: 억압보손은 '뮤온 탐지기'");
+    println!("\n  결론: 광명보손은 '뮤온 탐지기'");
     println!("       - 전자는 너무 가벼워서 거의 안 보임");
     println!("       - 뮤온은 딱 적당한 질량으로 선명하게 보임");
     println!("       - 이것이 뮤온 물리학 변칙의 공통 근원");
@@ -569,7 +569,7 @@ pub fn run_muon_specificity_analysis() {
 }
 
 pub fn run_multimode_yukawa_scan() {
-    println!("\n=== 3-모드 억압보손 Yukawa 스캔 ===\n");
+    println!("\n=== 3-모드 광명보손 Yukawa 스캔 ===\n");
     let masses = [17.0_f64, 10.0_f64, 5.0_f64];
     let model = MultiModeYukawa { masses_mev: masses };
     let delta_r2_target = 0.04_f64 * 0.04_f64;

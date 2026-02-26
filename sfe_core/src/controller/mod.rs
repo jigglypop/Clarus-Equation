@@ -1,6 +1,6 @@
 use crate::engine::ibm_api::JobResult;
 use crate::engine::noise::PinkNoiseGenerator;
-use crate::engine::optimizer::SfeOptimizer;
+use crate::engine::optimizer::CeOptimizer;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
@@ -28,17 +28,17 @@ pub struct ControlStrategy {
     pub expected_gain: f64,
 }
 
-pub struct SfeController {
+pub struct CeController {
     history: Vec<HardwareSpec>,
 }
 
-impl Default for SfeController {
+impl Default for CeController {
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl SfeController {
+impl CeController {
     pub fn new() -> Self {
         Self {
             history: Vec::new(),
@@ -70,11 +70,11 @@ impl SfeController {
 
     pub fn select_strategy(&self, spec: &HardwareSpec) -> ControlStrategy {
         let drift_penalty = spec.drift_rate * 100.0;
-        let alpha_env: f64 = std::env::var("SFE_NOISE_ALPHA")
+        let alpha_env: f64 = std::env::var("CE_NOISE_ALPHA")
             .ok()
             .and_then(|v| v.parse().ok())
             .unwrap_or(0.6);
-        let scale_env: f64 = std::env::var("SFE_NOISE_SCALE")
+        let scale_env: f64 = std::env::var("CE_NOISE_SCALE")
             .ok()
             .and_then(|v| v.parse().ok())
             .unwrap_or(1.0e-15);
@@ -131,7 +131,7 @@ impl SfeController {
             let tls_omega_sim = spec.tls_freq.map(|f| f * 0.05);
 
             // 3. 최적화 수행 (Robust Mode)
-            let optimizer = SfeOptimizer::new(50.0);
+            let optimizer = CeOptimizer::new(50.0);
             optimizer.optimize_for_spec(steps, n_pulses, 0.15, &noise_pool, tls_omega_sim)
         } else {
             vec![]
@@ -148,7 +148,7 @@ impl SfeController {
     /// [3단계: 결과 분석]
     /// 수신된 JobResult를 분석하여 P(0) 및 개선 리포트 생성
     pub fn analyze_result(&self, result: &JobResult) {
-        println!("\n[SFE-Rust] 결과 분석 리포트");
+        println!("\n[CE-Rust] 결과 분석 리포트");
         println!("---------------------------------------------------");
 
         if let Some(dists) = &result.quasi_dists {

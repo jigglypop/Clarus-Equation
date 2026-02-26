@@ -1,5 +1,5 @@
 """
-SFE Open Problems: Tractability Analysis and Improvement Attempts
+CE Open Problems: Tractability Analysis and Improvement Attempts
 """
 import math
 
@@ -12,7 +12,7 @@ V_EW = 246.2196e3       # MeV
 SIN2TW = 0.23122
 COS2TW = 1 - SIN2TW
 DELTA = SIN2TW * COS2TW
-M_SFE = V_EW * DELTA
+M_CE = V_EW * DELTA
 ALPHA_S = 0.1179
 M_Z = 91.1876e3         # MeV
 M_W = 80.3692e3         # MeV
@@ -41,15 +41,15 @@ def main():
     print("=" * 76)
 
     # ==================================================================
-    # PROBLEM 2: M_SFE = v_EW * delta -- CAN WE DERIVE IT?
+    # PROBLEM 2: M_CE = v_EW * delta -- CAN WE DERIVE IT?
     # ==================================================================
     print(f"\n{'=' * 76}")
-    print(f"  PROBLEM 2: M_SFE = v_EW * delta")
+    print(f"  PROBLEM 2: M_CE = v_EW * delta")
     print(f"  STATUS: Weakest link in the derivation chain")
     print(f"{'=' * 76}")
 
     print(f"\n  [A] UNIQUENESS ARGUMENT")
-    print(f"  M_SFE must be: (electroweak mass scale) x f(theta_W)")
+    print(f"  M_CE must be: (electroweak mass scale) x f(theta_W)")
     print(f"  The only fundamental EW scale is v_EW (M_W, M_Z, M_H are derived).")
     print(f"  f(theta_W) must satisfy:")
     print(f"    - f -> 0 when sin(tW) -> 0  (no EM => no suppression)")
@@ -68,7 +68,7 @@ def main():
     }
 
     print(f"\n  Candidate f(tW) and resulting g-2 predictions:")
-    print(f"  {'f(tW)':>35s}  {'value':>8s}  {'M_SFE(GeV)':>10s}  {'Da_mu(e-11)':>12s}  {'sigma':>6s}")
+    print(f"  {'f(tW)':>35s}  {'value':>8s}  {'M_CE(GeV)':>10s}  {'Da_mu(e-11)':>12s}  {'sigma':>6s}")
     print(f"  {'-'*35:>35s}  {'-'*8:>8s}  {'-'*10:>10s}  {'-'*12:>12s}  {'-'*6:>6s}")
     for name, val in candidates.items():
         M = V_EW * val
@@ -83,7 +83,7 @@ def main():
     print(f"\n  [B] HIGGS PORTAL DERIVATION")
     print(f"  If Phi couples to the Higgs through L = -lambda_HP |H|^2 Phi^2:")
     print(f"  After EWSB: m_Phi^2 = lambda_HP * v_EW^2")
-    print(f"  For M_SFE = v_EW * delta:  lambda_HP = delta^2 = {DELTA**2:.6f}")
+    print(f"  For M_CE = v_EW * delta:  lambda_HP = delta^2 = {DELTA**2:.6f}")
     print(f"  Compare: Higgs quartic lambda_H ~ 0.13")
     print(f"  lambda_HP / lambda_H ~ {DELTA**2 / 0.13:.2f}  => natural O(10^-1) ratio")
     print(f"\n  Why lambda_HP = delta^2?")
@@ -156,8 +156,8 @@ def main():
         "",
         "  [A] FUNCTIONAL INTEGRAL ARGUMENT:",
         "",
-        "  1. The partition function with SFE:",
-        "     Z_SFE = int D[gamma] exp(iS/hbar) * exp(-Phi[gamma])",
+        "  1. The partition function with CE:",
+        "     Z_CE = int D[gamma] exp(iS/hbar) * exp(-Phi[gamma])",
         "",
         "  2. For D independent dimensions, the suppression factorizes:",
         "     exp(-Phi) = prod_d exp(-Phi_d) = exp(-sum_d Phi_d)",
@@ -209,13 +209,13 @@ def main():
         "  The Schwinger proper time representation of the 1-loop vertex:",
         "    a = (alpha/pi) * int dT/T * K(T) * exp(-m^2 * T)",
         "",
-        "  SFE modifies the worldline path integral by adding a suppression weight.",
+        "  CE modifies the worldline path integral by adding a suppression weight.",
         "  For a 1-loop diagram, the Feynman parameter x in [0,1] parameterizes",
         "  the photon insertion point on the loop (1D parameter space).",
         "",
-        "  If SFE folding acts on this 1D parameter space:",
-        "    Weight_SFE = exp(-D_loop * <Phi>) * (m/M_SFE)^2",
-        "  The (m/M_SFE)^2 comes from EFT operator structure.",
+        "  If CE folding acts on this 1D parameter space:",
+        "    Weight_CE = exp(-D_loop * <Phi>) * (m/M_CE)^2",
+        "  The (m/M_CE)^2 comes from EFT operator structure.",
         "  The e^(-1) comes from D_loop = 1.",
         "",
         "  This is essentially Steps B + D repackaged in worldline language.",
@@ -245,7 +245,7 @@ def main():
     print(f"  Its QFT consistency has been proven in hundreds of papers.")
     print(f"\n  IMPROVEMENT: Problem 4 is essentially SOLVED")
     print(f"  if the suppression field is identified as a Higgs portal scalar.")
-    print(f"  The specific SFE claim (Phi = delta^2 S / delta gamma^2) requires")
+    print(f"  The specific CE claim (Phi = delta^2 S / delta gamma^2) requires")
     print(f"  additional formal verification, but the EFT is standard.")
 
     # ==================================================================
@@ -253,19 +253,19 @@ def main():
     # ==================================================================
     print(f"\n{'=' * 76}")
     print(f"  PROBLEM 6: Lattice QCD -- BMW vs data-driven HVP")
-    print(f"  STATUS: External, not within SFE's control")
+    print(f"  STATUS: External, not within CE's control")
     print(f"{'=' * 76}")
 
     print(f"\n  IF BMW lattice is correct: Delta a_mu(SM) increases,")
     print(f"  anomaly shrinks to ~19 x 10^-11 (0.4 sigma).")
-    print(f"  SFE prediction (249 x 10^-11) would overshoot by ~230 x 10^-11.")
+    print(f"  CE prediction (249 x 10^-11) would overshoot by ~230 x 10^-11.")
     print(f"\n  IF data-driven (WP2020) is correct: anomaly stays at 249 x 10^-11.")
-    print(f"  SFE prediction matches perfectly.")
-    print(f"\n  SFE can make a CONDITIONAL prediction:")
-    print(f"  IF the SFE formula is correct, THEN the HVP must be:")
+    print(f"  CE prediction matches perfectly.")
+    print(f"\n  CE can make a CONDITIONAL prediction:")
+    print(f"  IF the CE formula is correct, THEN the HVP must be:")
     print(f"    a_mu(HVP) = a_mu(exp) - a_mu(QED+EW+LbL) - 249.0e-11")
     print(f"\n  This constrains lattice calculations.")
-    print(f"\n  NOT IMPROVABLE by SFE itself -- wait for experimental resolution.")
+    print(f"\n  NOT IMPROVABLE by CE itself -- wait for experimental resolution.")
 
     # ==================================================================
     # SUMMARY
@@ -279,7 +279,7 @@ def main():
   | No. | Problem                                   | Tractable | Improvement |
   +-----+-------------------------------------------+-----------+-------------+
   |  4  | QFT verification (renorm, unitarity, ...)  | SOLVED    | Higgs portal|
-  |  2  | M_SFE = v_EW * delta                      | HIGH      | Portal + f  |
+  |  2  | M_CE = v_EW * delta                      | HIGH      | Portal + f  |
   |  1  | Self-consistency equation derivation       | MEDIUM    | Energy part.|
   |  5  | alpha = alpha_s * pi                      | MEDIUM    | Loop measure|
   |  3  | Worldline derivation of formula (5)        | LOW       | Repackaging |
@@ -303,11 +303,11 @@ def main():
     print(f"{'=' * 76}")
 
     lambda_HP = DELTA**2
-    m_phi_portal = V_EW * DELTA  # MeV = M_SFE
+    m_phi_portal = V_EW * DELTA  # MeV = M_CE
 
     print(f"\n  If Phi is a Higgs portal scalar with lambda_HP = delta^2:")
     print(f"    lambda_HP = {lambda_HP:.6f}")
-    print(f"    M_SFE = v_EW * sqrt(lambda_HP) = v_EW * delta = {m_phi_portal/1e3:.2f} GeV")
+    print(f"    M_CE = v_EW * sqrt(lambda_HP) = v_EW * delta = {m_phi_portal/1e3:.2f} GeV")
 
     h_to_phiphi = lambda_HP**2 * V_EW**2 / (8 * PI * M_H)
     print(f"\n  Invisible Higgs decay width (H -> Phi Phi):")
@@ -317,7 +317,7 @@ def main():
     br_inv = h_to_phiphi / higgs_total_width
     print(f"    BR(H->invisible) ~ {br_inv:.4f}")
     print(f"    Current LHC limit: BR(H->inv) < 0.11 (95% CL)")
-    print(f"    SFE prediction: {br_inv:.4f} << 0.11  =>  CONSISTENT")
+    print(f"    CE prediction: {br_inv:.4f} << 0.11  =>  CONSISTENT")
     print(f"    Future HL-LHC sensitivity: ~0.025 => {'TESTABLE' if br_inv > 0.001 else 'below sensitivity'}")
 
     print(f"\n  Phi-Higgs mixing angle:")
@@ -325,12 +325,12 @@ def main():
     print(f"    theta_mix ~ lambda_HP * v_EW / M_H = {theta_mix:.4f}")
     print(f"    sin^2(theta_mix) = {math.sin(theta_mix)**2:.6f}")
     print(f"    Current constraint: sin^2(theta) < 0.01 for m_Phi ~ 44 GeV")
-    print(f"    SFE prediction: {math.sin(theta_mix)**2:.6f} << 0.01  =>  CONSISTENT")
+    print(f"    CE prediction: {math.sin(theta_mix)**2:.6f} << 0.01  =>  CONSISTENT")
 
     print(f"\n  The Higgs portal identification is:")
     print(f"    - Consistent with ALL current collider constraints")
     print(f"    - Makes the QFT verification trivial (standard BSM)")
-    print(f"    - Explains M_SFE = v_EW * delta from lambda_HP = delta^2")
+    print(f"    - Explains M_CE = v_EW * delta from lambda_HP = delta^2")
     print(f"    - Produces testable predictions (invisible Higgs, mixing)")
 
 

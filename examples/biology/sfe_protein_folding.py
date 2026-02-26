@@ -61,17 +61,17 @@ class ProteinFolder:
             
             # 에너지 정의
             # Random: Contact 많으면 좋음 (접힘)
-            # SFE: Contact + Suppression Field (Rg가 작아야 함)
+            # CE: Contact + Clarus field (Rg가 작아야 함)
             
             E_old_phys = -self.get_contacts(current_pos)
             E_new_phys = -new_contacts
             
             if mode == 'sfe':
-                # SFE: 공간 억제장 (펼쳐진 상태 억압)
+                # CE: 공간 억제장 (펼쳐진 상태 억압)
                 # E_total = E_phys + lambda * Rg
-                lambda_sfe = 2.0
-                E_old = E_old_phys + lambda_sfe * current_rg
-                E_new = E_new_phys + lambda_sfe * new_rg
+                lambda_ce = 2.0
+                E_old = E_old_phys + lambda_ce * current_rg
+                E_new = E_new_phys + lambda_ce * new_rg
             else:
                 E_old = E_old_phys
                 E_new = E_new_phys
@@ -95,7 +95,7 @@ class ProteinFolder:
         return history, current_pos
 
 def run_comparison():
-    print("Simulating Protein Folding: Random Walk vs SFE Funneling...")
+    print("Simulating Protein Folding: Random Walk vs CE Funneling...")
     
     steps = 3000
     folder = ProteinFolder(length=50)
@@ -104,13 +104,13 @@ def run_comparison():
     print("1. Running Random Search...")
     rg_random, pos_random = folder.run_simulation(mode='random', steps=steps)
     
-    # 2. SFE Guided Search
-    print("2. Running SFE Guided Search...")
-    rg_sfe, pos_sfe = folder.run_simulation(mode='sfe', steps=steps)
+    # 2. CE Guided Search
+    print("2. Running CE Guided Search...")
+    rg_ce, pos_ce = folder.run_simulation(mode='ce', steps=steps)
     
     print(f"\nFinal Compactness (Radius of Gyration - Lower is Better):")
     print(f"Random: {rg_random[-1]:.2f}")
-    print(f"SFE   : {rg_sfe[-1]:.2f}")
+    print(f"CE   : {rg_ce[-1]:.2f}")
     
     # 시각화
     plt.figure(figsize=(12, 6))
@@ -118,7 +118,7 @@ def run_comparison():
     # 그래프 1: 수렴 속도
     plt.subplot(1, 2, 1)
     plt.plot(rg_random, label='Random Search', color='gray', alpha=0.5)
-    plt.plot(rg_sfe, label='SFE Suppression Field', color='red', linewidth=2)
+    plt.plot(rg_ce, label='CE Clarus field', color='red', linewidth=2)
     plt.title('Folding Speed (Convergence)', fontsize=12)
     plt.ylabel('Radius of Gyration (Size)', fontsize=10)
     plt.xlabel('Time Steps', fontsize=10)
@@ -128,14 +128,14 @@ def run_comparison():
     # 그래프 2: 최종 구조
     plt.subplot(1, 2, 2)
     plt.plot(pos_random[:,0], pos_random[:,1], 'o-', label='Random', color='gray', alpha=0.3)
-    plt.plot(pos_sfe[:,0], pos_sfe[:,1], 'o-', label='SFE (Compact)', color='red')
+    plt.plot(pos_ce[:,0], pos_ce[:,1], 'o-', label='CE (Compact)', color='red')
     plt.title('Final Structure', fontsize=12)
     plt.legend()
     plt.axis('equal')
     
     plt.tight_layout()
-    plt.savefig('sfe_protein_folding_v2.png')
-    print("Saved 'sfe_protein_folding_v2.png'")
+    plt.savefig('ce_protein_folding_v2.png')
+    print("Saved 'ce_protein_folding_v2.png'")
 
 if __name__ == "__main__":
     np.random.seed(123)

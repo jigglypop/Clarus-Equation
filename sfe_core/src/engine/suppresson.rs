@@ -90,11 +90,11 @@ impl SuppressonScanner {
     }
 
     pub fn measure_baseline(&mut self) -> f64 {
-        std::env::remove_var("SFE_SUPPRESSON_OMEGA");
-        std::env::remove_var("SFE_SUPPRESSON_AMP");
-        std::env::remove_var("SFE_SUPPRESSON_OMEGA2");
-        std::env::remove_var("SFE_SUPPRESSON_AMP2");
-        std::env::remove_var("SFE_SUPPRESSON_ANC");
+        std::env::remove_var("CE_SUPPRESSON_OMEGA");
+        std::env::remove_var("CE_SUPPRESSON_AMP");
+        std::env::remove_var("CE_SUPPRESSON_OMEGA2");
+        std::env::remove_var("CE_SUPPRESSON_AMP2");
+        std::env::remove_var("CE_SUPPRESSON_ANC");
 
         let res = simulate_repetition_code(
             self.qec_distance,
@@ -110,12 +110,12 @@ impl SuppressonScanner {
     }
 
     pub fn scan_mode(&self, mode: &SuppressonMode) -> SuppressonEvidence {
-        std::env::set_var("SFE_SUPPRESSON_ENABLE", "2");
-        std::env::set_var("SFE_SUPPRESSON_OMEGA", mode.omega_sim.to_string());
-        std::env::set_var("SFE_SUPPRESSON_AMP", mode.amplitude_sim.to_string());
-        std::env::set_var("SFE_SUPPRESSON_OMEGA2", (mode.omega_sim * 0.5).to_string());
-        std::env::set_var("SFE_SUPPRESSON_AMP2", mode.amplitude_sim.to_string());
-        std::env::set_var("SFE_SUPPRESSON_ANC", "1");
+        std::env::set_var("CE_SUPPRESSON_ENABLE", "2");
+        std::env::set_var("CE_SUPPRESSON_OMEGA", mode.omega_sim.to_string());
+        std::env::set_var("CE_SUPPRESSON_AMP", mode.amplitude_sim.to_string());
+        std::env::set_var("CE_SUPPRESSON_OMEGA2", (mode.omega_sim * 0.5).to_string());
+        std::env::set_var("CE_SUPPRESSON_AMP2", mode.amplitude_sim.to_string());
+        std::env::set_var("CE_SUPPRESSON_ANC", "1");
 
         let res = simulate_repetition_code(
             self.qec_distance,
@@ -376,7 +376,7 @@ impl MultiScaleSuppressonSpectrum {
     }
 
     pub fn print_full_spectrum(&self) {
-        println!("\n=== 억압보손 다중 스케일 스펙트럼 ===\n");
+        println!("\n=== 광명보손 다중 스케일 스펙트럼 ===\n");
 
         println!("1. TeV 스케일 모드 (힉스보다 큰 새로운 물리학)");
         println!(
@@ -462,7 +462,7 @@ impl MultiScaleSuppressonSpectrum {
 }
 
 pub fn run_suppresson_evidence_analysis() {
-    println!("=== SFE 억압보손 증거 분석 (다중 스케일) ===\n");
+    println!("=== CE 광명보손 증거 분석 (다중 스케일) ===\n");
 
     let spectrum = MultiScaleSuppressonSpectrum::from_first_principles();
     spectrum.print_full_spectrum();
@@ -475,7 +475,7 @@ pub fn run_suppresson_evidence_analysis() {
 
     let mut scanner = SuppressonScanner::new(2000, 5, 0.10);
 
-    println!("1. 기준선 측정 (억압보손 없음)");
+    println!("1. 기준선 측정 (광명보손 없음)");
     let baseline = scanner.measure_baseline();
     println!("   기준선 QEC Gain: {baseline:.3}\n");
 
@@ -543,7 +543,7 @@ pub fn run_suppresson_evidence_analysis() {
         let g_unsel = g_exp - g_sel;
         let frac_unsel = g_unsel / g_sel;
 
-        println!("\n   선택/비선택 억압장 관점에서 본 QEC Gain 분해:");
+        println!("\n   선택/비선택 광명장 관점에서 본 QEC Gain 분해:");
         println!("     G_sel(sim) = {g_sel:.3}x (최고 스윗스팟 시뮬레이션)");
         println!("     G_exp(doc) = {g_exp:.3}x (문서 7.5장 목표값)");
         println!("     G_unsel    = {g_unsel:.3}x");
@@ -580,7 +580,7 @@ pub fn run_suppresson_evidence_analysis() {
 
         if count > 0 {
             let mean_frac = sum_frac / count as f64;
-            println!("\n   스윗스팟 전체에서 본 비선택 억압장 조정 비율 통계:");
+            println!("\n   스윗스팟 전체에서 본 비선택 광명장 조정 비율 통계:");
             println!("     샘플 개수: {count}");
             println!("     G_unsel/G_sel 최소값: {min_frac:.3}");
             println!("     G_unsel/G_sel 최대값: {max_frac:.3}");
@@ -596,7 +596,7 @@ pub fn run_suppresson_evidence_analysis() {
 
     println!("   입력:");
     println!("   - 뮤온 결합: g_μ = {:.2e}", projection.g_mu);
-    println!("   - 억압보손 질량: m_φ = {} MeV", projection.m_phi_mev);
+    println!("   - 광명보손 질량: m_φ = {} MeV", projection.m_phi_mev);
     println!("\n   유도:");
     println!("   - 큐비트 결합: g_q = {:.2e}", projection.g_q);
     println!(

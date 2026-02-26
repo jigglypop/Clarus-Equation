@@ -3,9 +3,9 @@
 pub mod controller;
 pub mod engine;
 
-pub use controller::{ControlStrategy, HardwareSpec, SfeController};
+pub use controller::{ControlStrategy, HardwareSpec, CeController};
 pub use engine::benchmark::run_sweep_benchmark;
-pub use engine::core::QSFEngine;
+pub use engine::core::QCEngine;
 pub use engine::ibm_api::IbmClient;
 pub use engine::noise::generate_pink_noise;
 pub use engine::optimizer::run_pulse_optimizer;
@@ -15,19 +15,19 @@ pub use engine::suppresson::{run_suppresson_evidence_analysis, SuppressonMode, S
 #[cfg(feature = "python")]
 mod python_binding {
     use pyo3::prelude::*;
-    use crate::engine::core::QSFEngine;
+    use crate::engine::core::QCEngine;
 
     #[pyclass]
-    struct PyQSFEngine {
-        engine: QSFEngine,
+    struct PyQCEngine {
+        engine: QCEngine,
     }
 
     #[pymethods]
-    impl PyQSFEngine {
+    impl PyQCEngine {
         #[new]
         fn new(size: usize) -> Self {
-            PyQSFEngine {
-                engine: QSFEngine::new(size),
+            PyQCEngine {
+                engine: QCEngine::new(size),
             }
         }
 
@@ -46,7 +46,7 @@ mod python_binding {
 
     #[pymodule]
     fn sfe_core(_py: Python, m: &PyModule) -> PyResult<()> {
-        m.add_class::<PyQSFEngine>()?;
+        m.add_class::<PyQCEngine>()?;
         Ok(())
     }
 }

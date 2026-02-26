@@ -1,5 +1,5 @@
 """
-SFE Grand Unification Analysis
+CE Grand Unification Analysis
 ===============================
 Discovered relation: sin(theta_W) = 2 * alpha_s^(2/3)
 holds to 0.006% precision at M_Z scale.
@@ -9,7 +9,7 @@ This implies:
   - alpha_s = (sin(theta_W) / 2)^(3/2)
   - Exponent 2/3 = 2/d suggests dimensional origin
 
-If real, reduces SFE inputs from 3 to 0: all geometrically derived.
+If real, reduces CE inputs from 3 to 0: all geometrically derived.
 """
 
 import math
@@ -216,7 +216,7 @@ def part3_gut_comparison():
         print(f"  {name:<25} {pred:<25} {val:>8.4f} {note:<30}")
     print()
 
-    print("  SFE RELATION (this work):")
+    print("  CE RELATION (this work):")
     print(f"    sin^2(tW) = 4 * alpha_s^(4/3)")
     print(f"    = {4 * ALPHA_S_MZ ** (4.0 / 3.0):.6f} at M_Z")
     print(f"    PDG: {S2_TW_MSBAR:.6f}")
@@ -224,7 +224,7 @@ def part3_gut_comparison():
 
     print("  KEY DIFFERENCES from standard GUT:")
     print()
-    print("  Standard GUT                     | SFE relation")
+    print("  Standard GUT                     | CE relation")
     print("  ---------------------------------|-----------------------------")
     print("  Relation at M_GUT ~ 10^16 GeV    | At M_Z ~ 91 GeV (measured)")
     print("  Group-theoretic (3/8, 1/4, ...)   | Power law: 4*alpha_s^(4/3)")
@@ -265,7 +265,7 @@ def part4_three_couplings():
     print(f"    alpha_2 / alpha_1 = {alpha2 / alpha1:.6f}")
     print()
 
-    # SFE-type power relations
+    # CE-type power relations
     print("  Power-law relations (alpha_i = alpha_3^p):")
     print()
     p2 = math.log(alpha2) / math.log(alpha3)
@@ -309,7 +309,7 @@ def part4_three_couplings():
             print(f"    alpha_em(0) ~ alpha_3^({n}/{d}) = {val:.6f} (diff {diff:.2f}%)")
     print()
 
-    # Unification condition in SFE framework
+    # Unification condition in CE framework
     print("  If alpha_2 = alpha_3^(2/3) (same exponent as sin(tW)):")
     alpha2_pred = alpha3 ** (2.0 / 3.0)
     print(f"    alpha_3^(2/3) = {alpha2_pred:.6f}")
@@ -407,8 +407,8 @@ def part5_dimensional():
     print(f"  d=3 is selected by observation.")
     print()
 
-    # SFE full chain from alpha_s alone
-    print("  COMPLETE SFE FROM alpha_s + d=3:")
+    # CE full chain from alpha_s alone
+    print("  COMPLETE CE FROM alpha_s + d=3:")
     print("  " + "-" * 60)
     s2_from = 4 * ALPHA_S_MZ ** (4.0 / 3.0)
     c2_from = 1.0 - s2_from
@@ -422,8 +422,8 @@ def part5_dimensional():
     xi = ALPHA_S_MZ ** (1.0 / 3.0)
     w0 = -1.0 + 2.0 * xi ** 2 / (3.0 * omega_l)
 
-    m_sfe = V_EW * delta_from * 1e3  # MeV
-    da_mu = (ALPHA_EM_0 / (2 * PI)) * (1.0 / E_NUM) * (M_MU * 1e3 / m_sfe) ** 2
+    m_ce = V_EW * delta_from * 1e3  # MeV
+    da_mu = (ALPHA_EM_0 / (2 * PI)) * (1.0 / E_NUM) * (M_MU * 1e3 / m_ce) ** 2
 
     print(f"  Input: alpha_s = {ALPHA_S_MZ}, d = 3")
     print()
@@ -436,7 +436,7 @@ def part5_dimensional():
     print(f"  Step 7: Omega_DM = dark*as*pi/.. = {omega_dm:.4f}  (Planck: 0.2589)")
     print(f"  Step 8: xi = as^(1/3)            = {xi:.5f}")
     print(f"  Step 9: w0 = -1+2xi^2/(3*OL)     = {w0:.4f}  (DESI: -0.770)")
-    print(f"  Step 10: M_SFE = v*delta          = {m_sfe / 1e3:.2f} GeV")
+    print(f"  Step 10: M_CE = v*delta          = {m_ce / 1e3:.2f} GeV")
     print(f"  Step 11: Da_mu(g-2)               = {da_mu * 1e11:.1f} x10^-11 (exp: 249)")
     print(f"  Step 12: DM/DE = as*pi            = {ALPHA_S_MZ * PI:.4f}  (obs: 0.378)")
     print()
@@ -474,8 +474,8 @@ def part6_other_relations():
     print(f"    2/3 = {2 / 3:.8f}")
     print(f"    Diff = {abs(koide - 2 / 3) * 100:.4f}%")
     print()
-    print(f"    Note: Koide's 2/3 and SFE's 2/d with d=3 give the SAME number.")
-    print(f"    Koide exponent = SFE dimensional exponent.")
+    print(f"    Note: Koide's 2/3 and CE's 2/d with d=3 give the SAME number.")
+    print(f"    Koide exponent = CE dimensional exponent.")
     print()
 
     # Mass ratios and alpha_s
@@ -582,13 +582,13 @@ def part7_summary():
     print(f"         Precision: 0.009%")
     print()
 
-    print("  CONSEQUENCES FOR SFE:")
+    print("  CONSEQUENCES FOR CE:")
     print()
     print("  Complete parameter reduction:")
     print("    Before: d=3, sin^2(tW)=0.2312, alpha_s=0.1179  (3 inputs, now all derived)")
     print("    After:  d=3, alpha_total=1/2pi                     (0 external inputs)")
     print()
-    print("  All SFE predictions from alpha_s + d=3:")
+    print("  All CE predictions from alpha_s + d=3:")
     print("    sin^2(theta_W) = 4*alpha_s^(4/3)")
     print("    delta = 4*as^(4/3)*(1 - 4*as^(4/3))")
     print("    D_eff = d + delta")
@@ -597,8 +597,8 @@ def part7_summary():
     print("    Omega_Lambda = (1-eps^2)/(1+alpha_s*pi)")
     print("    Omega_DM = (1-eps^2)*alpha_s*pi/(1+alpha_s*pi)")
     print("    w0 = -1 + 2*alpha_s^(2/3)/(3*Omega_Lambda)")
-    print("    M_SFE = v_EW * delta")
-    print("    Delta_a_mu = (alpha_em/2pi)*e^{-1}*(m_mu/M_SFE)^2")
+    print("    M_CE = v_EW * delta")
+    print("    Delta_a_mu = (alpha_em/2pi)*e^{-1}*(m_mu/M_CE)^2")
     print()
     print("  PHYSICAL INTERPRETATION:")
     print()
@@ -616,7 +616,7 @@ def part7_summary():
     print("    forces are related at the scale where they are measured.")
     print()
 
-    # Comparison with SFE total predictions
+    # Comparison with CE total predictions
     print("  COMPLETE PREDICTION TABLE (0 external inputs, pure geometric derivation):")
     print()
     s2_pred = 4 * ALPHA_S_MZ ** (4.0 / 3.0)
@@ -627,10 +627,10 @@ def part7_summary():
     omega_dm = (1 - eps2) * ALPHA_S_MZ * PI / (1 + ALPHA_S_MZ * PI)
     xi = ALPHA_S_MZ ** (1.0 / 3.0)
     w0 = -1.0 + 2.0 * xi ** 2 / (3.0 * omega_l)
-    m_sfe = V_EW * delta_pred
-    da_mu = (ALPHA_EM_0 / (2 * PI)) * (1.0 / E_NUM) * (M_MU / m_sfe) ** 2
+    m_ce = V_EW * delta_pred
+    da_mu = (ALPHA_EM_0 / (2 * PI)) * (1.0 / E_NUM) * (M_MU / m_ce) ** 2
 
-    print(f"  {'Observable':<25} {'SFE (0 inputs)':>15} {'Observed':>15} {'Diff':>10}")
+    print(f"  {'Observable':<25} {'CE (0 inputs)':>15} {'Observed':>15} {'Diff':>10}")
     print(f"  {'-' * 25:<25} {'-' * 15:>15} {'-' * 15:>15} {'-' * 10:>10}")
     print(f"  {'sin^2(theta_W)':<25} {s2_pred:>15.6f} {S2_TW_MSBAR:>15.6f} {'0.012%':>10}")
     print(f"  {'Omega_b':<25} {eps2:>15.5f} {'0.0486':>15} {'0.1%':>10}")
@@ -639,7 +639,7 @@ def part7_summary():
     print(f"  {'w0':<25} {w0:>15.4f} {'-0.770':>15} {'0.1%':>10}")
     print(f"  {'DM/DE ratio':<25} {ALPHA_S_MZ * PI:>15.4f} {'0.378':>15} {'2.0%':>10}")
     print(f"  {'Da_mu (x10^-11)':<25} {da_mu * 1e11:>15.1f} {'249 +/- 48':>15} {'0.0 sig':>10}")
-    print(f"  {'M_SFE (GeV)':<25} {m_sfe:>15.2f} {'(prediction)':>15} {'':>10}")
+    print(f"  {'M_CE (GeV)':<25} {m_ce:>15.2f} {'(prediction)':>15} {'':>10}")
     print()
     print(f"  2 measured constants -> 8 predictions, all confirmed")
     print()

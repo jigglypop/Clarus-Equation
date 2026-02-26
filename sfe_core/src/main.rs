@@ -1,10 +1,10 @@
 use clap::{Parser, Subcommand};
 use indicatif::{ProgressBar, ProgressStyle};
-use sfe_core::engine::core::QSFEngine;
+use sfe_core::engine::core::QCEngine;
 use sfe_core::engine::geometric::GeometricEngine;
 use sfe_core::engine::manifold::Manifold; // Trait import added
-use sfe_core::engine::qec::SFE_PHASE_SCALE;
-use sfe_core::{run_pulse_optimizer, run_sweep_benchmark, IbmClient, SfeController};
+use sfe_core::engine::qec::CE_PHASE_SCALE;
+use sfe_core::{run_pulse_optimizer, run_sweep_benchmark, IbmClient, CeController};
 use std::fs::File;
 use std::io::Write;
 use std::time::Instant;
@@ -18,13 +18,13 @@ struct Args {
 
 #[derive(Subcommand, Debug)]
 enum Commands {
-    /// SFE 억압장 동역학 시뮬레이션
+    /// CE 광명장 동역학 시뮬레이션
     Dynamics {
         #[arg(short, long, default_value_t = 100_000)]
         size: usize,
         #[arg(short, long, default_value_t = 5_000)]
         steps: usize,
-        #[arg(short, long, default_value = "sfe_output.csv")]
+        #[arg(short, long, default_value = "ce_output.csv")]
         output: String,
     },
     /// [NEW] Part8 기하학적 통합 방정식 시뮬레이션
@@ -43,23 +43,23 @@ enum Commands {
         #[arg(short, long, default_value = "scqe_result.csv")]
         output: String,
     },
-    /// [NEW] SFE-ARC 노이즈 캔슬러 시뮬레이션
-    SfeArc {
+    /// [NEW] CE-ARC 노이즈 캔슬러 시뮬레이션
+    CeArc {
         #[arg(short, long, default_value_t = 1000)]
         steps: usize,
-        #[arg(short, long, default_value = "sfe_arc_result.csv")]
+        #[arg(short, long, default_value = "ce_arc_result.csv")]
         output: String,
         #[arg(long)]
         diag: bool,
     },
-    /// [NEW] SFE 금융 시장 시뮬레이션 (Econophysics)
+    /// [NEW] CE 금융 시장 시뮬레이션 (Econophysics)
     MarketSimulation {
         #[arg(short, long, default_value_t = 5000)]
         steps: usize,
         #[arg(short, long, default_value = "market_sim.csv")]
         output: String,
     },
-    /// [NEW] SFE 거시경제 위기 예측 시뮬레이션
+    /// [NEW] CE 거시경제 위기 예측 시뮬레이션
     MacroCrisis {
         #[arg(short, long, default_value_t = 100)]
         years: usize,
@@ -84,7 +84,7 @@ enum Commands {
         #[arg(short, long, default_value = "decoupling_result.csv")]
         output: String,
     },
-    /// SFE 펄스 최적화기 (Pure Analytic Formula)
+    /// CE 펄스 최적화기 (Pure Analytic Formula)
     PulseOptimizer {
         #[arg(short, long, default_value_t = 2000)]
         steps: usize,
@@ -108,7 +108,7 @@ enum Commands {
         #[arg(short, long, default_value_t = 0.10)]
         noise: f64,
     },
-    /// [NEW] SFE 상용 컨트롤러 (실시간 고속 진단/제어)
+    /// [NEW] CE 상용 컨트롤러 (실시간 고속 진단/제어)
     RunController {
         #[arg(long)]
         t1: f64,
@@ -122,9 +122,9 @@ enum Commands {
         #[arg(short, long)]
         api_key: String,
     },
-    /// [NEW] 억압보손 증거 스캔 및 분석
+    /// [NEW] 광명보손 증거 스캔 및 분석
     SuppressonScan,
-    /// [NEW] 3-모드 억압보손 Yukawa 스캔
+    /// [NEW] 3-모드 광명보손 Yukawa 스캔
     MultiModeScan,
     /// [NEW] 연속 스펙트럼 레이리 경계 스캔
     ContinuousBounds,
@@ -132,13 +132,13 @@ enum Commands {
 
 fn configure_fez_suppresson(noise: f64, steps: usize) {
     if noise <= 0.0 {
-        std::env::remove_var("SFE_SUPPRESSON_OMEGA");
-        std::env::remove_var("SFE_SUPPRESSON_AMP");
-        std::env::remove_var("SFE_SUPPRESSON_OMEGA2");
-        std::env::remove_var("SFE_SUPPRESSON_AMP2");
+        std::env::remove_var("CE_SUPPRESSON_OMEGA");
+        std::env::remove_var("CE_SUPPRESSON_AMP");
+        std::env::remove_var("CE_SUPPRESSON_OMEGA2");
+        std::env::remove_var("CE_SUPPRESSON_AMP2");
         return;
     }
-    let mut controller = SfeController::new();
+    let mut controller = CeController::new();
     let t1 = 60.0_f64;
     let t2 = 40.0_f64;
     let gate_err = 1.0e-3_f64;
@@ -146,29 +146,29 @@ fn configure_fez_suppresson(noise: f64, steps: usize) {
     let tls_freq = match spec.tls_freq {
         Some(v) => v,
         None => {
-            std::env::remove_var("SFE_SUPPRESSON_OMEGA");
-            std::env::remove_var("SFE_SUPPRESSON_AMP");
-            std::env::remove_var("SFE_SUPPRESSON_OMEGA2");
-            std::env::remove_var("SFE_SUPPRESSON_AMP2");
+            std::env::remove_var("CE_SUPPRESSON_OMEGA");
+            std::env::remove_var("CE_SUPPRESSON_AMP");
+            std::env::remove_var("CE_SUPPRESSON_OMEGA2");
+            std::env::remove_var("CE_SUPPRESSON_AMP2");
             return;
         }
     };
     let total_time_us = 100.0_f64;
     let dt_us = total_time_us / steps as f64;
     let omega_top = tls_freq * dt_us;
-    let amp_top = spec.tls_amp * dt_us / (noise.abs() * SFE_PHASE_SCALE);
+    let amp_top = spec.tls_amp * dt_us / (noise.abs() * CE_PHASE_SCALE);
     let omega_bottom = 0.5_f64 * omega_top;
     let amp_bottom = amp_top;
-    std::env::set_var("SFE_SUPPRESSON_OMEGA", omega_top.to_string());
-    std::env::set_var("SFE_SUPPRESSON_AMP", amp_top.to_string());
-    std::env::set_var("SFE_SUPPRESSON_OMEGA2", omega_bottom.to_string());
-    std::env::set_var("SFE_SUPPRESSON_AMP2", amp_bottom.to_string());
+    std::env::set_var("CE_SUPPRESSON_OMEGA", omega_top.to_string());
+    std::env::set_var("CE_SUPPRESSON_AMP", amp_top.to_string());
+    std::env::set_var("CE_SUPPRESSON_OMEGA2", omega_bottom.to_string());
+    std::env::set_var("CE_SUPPRESSON_AMP2", amp_bottom.to_string());
 }
 
 fn main() {
     let args = Args::parse();
     println!("==========================================");
-    println!("   SFE 상용 엔진 v1.9 (Crisis Sim)        ");
+    println!("   CE 상용 엔진 v1.9 (Crisis Sim)        ");
     println!("==========================================");
 
     let start_time = Instant::now();
@@ -179,8 +179,8 @@ fn main() {
             steps,
             output,
         } => {
-            println!("모드: SFE 억압장 동역학 시뮬레이션");
-            let mut engine = QSFEngine::new(size);
+            println!("모드: CE 광명장 동역학 시뮬레이션");
+            let mut engine = QCEngine::new(size);
             let pb = ProgressBar::new(steps as u64);
             pb.set_style(
                 ProgressStyle::default_bar()
@@ -203,7 +203,7 @@ fn main() {
             }
         }
         Commands::GeometricDynamics { dim, steps, output } => {
-            println!("모드: SFE Part8 기하학적 통합 시뮬레이션");
+            println!("모드: CE Part8 기하학적 통합 시뮬레이션");
             println!("  차원: {dim}, 스텝: {steps}");
             let engine = GeometricEngine::new(dim);
 
@@ -255,7 +255,7 @@ fn main() {
             }
             println!("SCQE 시뮬레이션 완료. 결과 저장됨: {output}");
         }
-        Commands::SfeArc { steps, output, diag } => {
+        Commands::CeArc { steps, output, diag } => {
             let dt = 0.01;
             let warmup = 1000.min(steps / 5);
 
@@ -300,8 +300,8 @@ fn main() {
                 println!();
             }
 
-            println!("모드: SFE-ARC (3+1 ADM Coupled Cancellation) 시뮬레이션");
-            println!("  결합 모델: 3+1 ADM + SFE [R,K,Phi,Pi] 4D 결합 칼만");
+            println!("모드: CE-ARC (3+1 ADM Coupled Cancellation) 시뮬레이션");
+            println!("  결합 모델: 3+1 ADM + CE [R,K,Phi,Pi] 4D 결합 칼만");
 
             let mut env = sfe_core::engine::arc::ArcSimulationEnv::new();
 
@@ -339,16 +339,16 @@ fn main() {
                 println!("  RMS 잔차:    {rms_resid:.6}");
                 println!("  RMS 감소율:  {reduction:.2}%");
             }
-            println!("SFE-ARC 시뮬레이션 완료. 결과 저장됨: {output}");
+            println!("CE-ARC 시뮬레이션 완료. 결과 저장됨: {output}");
         }
         Commands::MarketSimulation { steps, output } => {
-            println!("모드: SFE 금융 시장 시뮬레이션 (Surfing Strategy)");
+            println!("모드: CE 금융 시장 시뮬레이션 (Surfing Strategy)");
 
             use rand::Rng;
-            use sfe_core::engine::market::SfeTradingBot;
+            use sfe_core::engine::market::CeTradingBot;
 
             let initial_cash = 10_000.0;
-            let mut bot = SfeTradingBot::new(initial_cash);
+            let mut bot = CeTradingBot::new(initial_cash);
             let mut price = 100.0;
 
             let mut file = File::create(&output).unwrap();
@@ -394,12 +394,12 @@ fn main() {
             println!("  수익률: {return_rate:.2}%");
 
             if return_rate > 0.0 {
-                println!("  [SUCCESS] SFE 전략이 시장을 이겼습니다.");
+                println!("  [SUCCESS] CE 전략이 시장을 이겼습니다.");
             }
             println!("결과 저장됨: {output}");
         }
         Commands::MacroCrisis { years, output } => {
-            println!("모드: SFE 거시경제 위기 예측 시뮬레이션");
+            println!("모드: CE 거시경제 위기 예측 시뮬레이션");
             println!("  기간: {years}년 (Quarterly Data)");
 
             use rand::Rng;
@@ -479,15 +479,15 @@ fn main() {
             pulses,
             generations,
         } => {
-            println!("모드: SFE 펄스 최적화 (순수 공식 사용)");
+            println!("모드: CE 펄스 최적화 (순수 공식 사용)");
             let (pulse_seq_idx, udd, sfe) = run_pulse_optimizer(steps, pulses, generations, 0.15);
-            println!("최종 점수 -> UDD: {udd:.4}, SFE: {sfe:.4}");
+            println!("최종 점수 -> UDD: {udd:.4}, CE: {sfe:.4}");
 
             let pulse_seq_norm: Vec<f64> = pulse_seq_idx
                 .iter()
                 .map(|&idx| idx as f64 / steps as f64)
                 .collect();
-            println!("\n>>> SFE 정규화된 시퀀스 (검증용) <<<");
+            println!("\n>>> CE 정규화된 시퀀스 (검증용) <<<");
             print!("[");
             for (i, val) in pulse_seq_norm.iter().enumerate() {
                 if i > 0 {
@@ -502,18 +502,18 @@ fn main() {
             run_sweep_benchmark(output);
         }
         Commands::Qec { distance, noise } => {
-            println!("SFE+QEC 하이브리드 시뮬레이션 실행 (거리={distance}, 노이즈={noise})");
+            println!("CE+QEC 하이브리드 시뮬레이션 실행 (거리={distance}, 노이즈={noise})");
             let steps = 2000usize;
-            let sup_flag: i32 = std::env::var("SFE_SUPPRESSON_ENABLE")
+            let sup_flag: i32 = std::env::var("CE_SUPPRESSON_ENABLE")
                 .ok()
                 .and_then(|v| v.parse().ok())
                 .unwrap_or(1);
             match sup_flag {
                 0 => {
-                    std::env::remove_var("SFE_SUPPRESSON_OMEGA");
-                    std::env::remove_var("SFE_SUPPRESSON_AMP");
-                    std::env::remove_var("SFE_SUPPRESSON_OMEGA2");
-                    std::env::remove_var("SFE_SUPPRESSON_AMP2");
+                    std::env::remove_var("CE_SUPPRESSON_OMEGA");
+                    std::env::remove_var("CE_SUPPRESSON_AMP");
+                    std::env::remove_var("CE_SUPPRESSON_OMEGA2");
+                    std::env::remove_var("CE_SUPPRESSON_AMP2");
                 }
                 1 => {
                     configure_fez_suppresson(noise, steps);
@@ -523,9 +523,9 @@ fn main() {
                     configure_fez_suppresson(noise, steps);
                 }
             }
-            println!("1. SFE 펄스 적용 (Pure Analytic Formula)...");
-            let (pulse_seq, _, sfe_score) = run_pulse_optimizer(steps, 60, 0, noise);
-            println!("   SFE 결맞음 점수: {sfe_score:.4}");
+            println!("1. CE 펄스 적용 (Pure Analytic Formula)...");
+            let (pulse_seq, _, ce_score) = run_pulse_optimizer(steps, 60, 0, noise);
+            println!("   CE 결맞음 점수: {ce_score:.4}");
 
             println!("2. 반복 코드(Repetition Code) 시뮬레이션 (QEC 계층)...");
             let res = sfe_core::engine::qec::simulate_repetition_code(
@@ -539,19 +539,19 @@ fn main() {
             println!("---------------------------------------------");
         }
         Commands::Surface { noise } => {
-            println!("SFE+Surface Code 시뮬레이션 실행 (거리=3, 노이즈={noise})");
-            println!("1. SFE 펄스 적용 (Pure Analytic Formula)...");
+            println!("CE+Surface Code 시뮬레이션 실행 (거리=3, 노이즈={noise})");
+            println!("1. CE 펄스 적용 (Pure Analytic Formula)...");
             let steps = 2000usize;
-            let sup_flag: i32 = std::env::var("SFE_SUPPRESSON_ENABLE")
+            let sup_flag: i32 = std::env::var("CE_SUPPRESSON_ENABLE")
                 .ok()
                 .and_then(|v| v.parse().ok())
                 .unwrap_or(1);
             match sup_flag {
                 0 => {
-                    std::env::remove_var("SFE_SUPPRESSON_OMEGA");
-                    std::env::remove_var("SFE_SUPPRESSON_AMP");
-                    std::env::remove_var("SFE_SUPPRESSON_OMEGA2");
-                    std::env::remove_var("SFE_SUPPRESSON_AMP2");
+                    std::env::remove_var("CE_SUPPRESSON_OMEGA");
+                    std::env::remove_var("CE_SUPPRESSON_AMP");
+                    std::env::remove_var("CE_SUPPRESSON_OMEGA2");
+                    std::env::remove_var("CE_SUPPRESSON_AMP2");
                 }
                 1 => {
                     configure_fez_suppresson(noise, steps);
@@ -561,8 +561,8 @@ fn main() {
                     configure_fez_suppresson(noise, steps);
                 }
             }
-            let (pulse_seq, _, sfe_score) = run_pulse_optimizer(steps, 60, 0, noise);
-            println!("   SFE 결맞음 점수: {sfe_score:.4}");
+            let (pulse_seq, _, ce_score) = run_pulse_optimizer(steps, 60, 0, noise);
+            println!("   CE 결맞음 점수: {ce_score:.4}");
             println!("2. Surface Code(d=3) 시뮬레이션 (QEC 계층)...");
             let res =
                 sfe_core::engine::qec::simulate_surface_code_d3(&pulse_seq, noise, steps, 50, 2000);
@@ -573,8 +573,8 @@ fn main() {
             println!("---------------------------------------------");
         }
         Commands::RunController { t1, t2, gate_err } => {
-            println!("모드: SFE 상용 컨트롤러 (Real-time Core)");
-            let mut controller = SfeController::new();
+            println!("모드: CE 상용 컨트롤러 (Real-time Core)");
+            let mut controller = CeController::new();
             let t_diag = Instant::now();
             let spec = controller.diagnose(t1, t2, gate_err);
             let diag_time = t_diag.elapsed().as_nanos();
@@ -602,8 +602,8 @@ fn main() {
             }
         }
         Commands::RunIBM { api_key } => {
-            println!("모드: IBM Quantum 하드웨어 브리지 (SFE Rust-Native Controller)");
-            let mut controller = SfeController::new();
+            println!("모드: IBM Quantum 하드웨어 브리지 (CE Rust-Native Controller)");
+            let mut controller = CeController::new();
             let t1 = 60.0;
             let t2 = 40.0;
             let gate_err = 1e-3;
@@ -627,8 +627,8 @@ fn main() {
             let mut client = IbmClient::new(&api_key);
             match client.authenticate() {
                 Ok(_) => {
-                    println!("   인증 성공. SFE 펄스 작업 제출...");
-                    match client.submit_sfe_job(&strategy.pulse_sequence) {
+                    println!("   인증 성공. CE 펄스 작업 제출...");
+                    match client.submit_ce_job(&strategy.pulse_sequence) {
                         Ok(job_id) => {
                             println!("성공: 작업 제출 완료!");
                             println!("Job ID: {job_id}");
@@ -649,11 +649,11 @@ fn main() {
             }
         }
         Commands::SuppressonScan => {
-            println!("모드: 억압보손 증거 스캔 및 분석");
+            println!("모드: 광명보손 증거 스캔 및 분석");
             sfe_core::run_suppresson_evidence_analysis();
         }
         Commands::MultiModeScan => {
-            println!("모드: 3-모드 억압보손 Yukawa 스캔");
+            println!("모드: 3-모드 광명보손 Yukawa 스캔");
             sfe_core::engine::suppresson_physics::run_multimode_yukawa_scan();
         }
         Commands::ContinuousBounds => {

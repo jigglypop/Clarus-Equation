@@ -3,7 +3,7 @@ use indicatif::ProgressBar;
 use std::fs::File;
 use std::io::Write;
 
-/// [신규] SFE vs UDD 민감도 분석 (스윕)
+/// [신규] CE vs UDD 민감도 분석 (스윕)
 /// 펄스 개수와 노이즈 진폭에 대해 반복 실행
 pub fn run_sweep_benchmark(output: String) {
     println!("포괄적 스윕 벤치마크 시작...");
@@ -17,7 +17,7 @@ pub fn run_sweep_benchmark(output: String) {
     let mut file = File::create(&output).expect("스윕 출력 파일 생성 실패");
     writeln!(
         file,
-        "PulseCount,NoiseAmp,UDD_Score,SFE_Score,Improvement_Pct"
+        "PulseCount,NoiseAmp,UDD_Score,CE_Score,Improvement_Pct"
     )
     .unwrap();
 
@@ -26,15 +26,15 @@ pub fn run_sweep_benchmark(output: String) {
 
     for &pulses in &pulse_counts {
         for &noise in &noise_levels {
-            // 최적화 모듈을 사용하여 UDD(기준선)와 SFE(최적화됨) 점수를 모두 얻습니다.
-            // run_pulse_optimizer는 (best_seq, udd_score, sfe_score)를 반환합니다.
-            let (_, udd_score, sfe_score) = run_pulse_optimizer(steps, pulses, generations, noise);
+            // 최적화 모듈을 사용하여 UDD(기준선)와 CE(최적화됨) 점수를 모두 얻습니다.
+            // run_pulse_optimizer는 (best_seq, udd_score, ce_score)를 반환합니다.
+            let (_, udd_score, ce_score) = run_pulse_optimizer(steps, pulses, generations, noise);
 
-            let improvement = (sfe_score - udd_score) / udd_score.abs() * 100.0;
+            let improvement = (ce_score - udd_score) / udd_score.abs() * 100.0;
 
             writeln!(
                 file,
-                "{pulses},{noise},{udd_score:.4},{sfe_score:.4},{improvement:.2}"
+                "{pulses},{noise},{udd_score:.4},{ce_score:.4},{improvement:.2}"
             )
             .unwrap();
             pb.inc(1);

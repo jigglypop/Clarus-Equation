@@ -1,5 +1,5 @@
 """
-SFE Dynamic Dark Energy: Suppression Field Quintessence
+CE Dynamic Dark Energy: Suppression Field Quintessence
 ========================================================
 DESI DR2 (2025) reports w0 ~ -0.77, wa ~ -0.78 (CMB+BAO+DESY5),
 with 3.1 sigma preference for dynamical DE over LCDM.
@@ -7,14 +7,14 @@ with 3.1 sigma preference for dynamical DE over LCDM.
 A Higgs-like potential V(phi) = V0 + m^2 phi^2/2 + lambda phi^4/4
 fits DESI data well (arXiv:2506.21542).
 
-This is EXACTLY the SFE suppression field potential.
+This is EXACTLY the CE Clarus field potential.
 
-Key insight: the microscopic scalar (M_SFE = 44 GeV) sits at
+Key insight: the microscopic scalar (M_CE = 44 GeV) sits at
 its VEV and governs particle physics (g-2, Higgs portal).
 The COSMOLOGICAL condensate -- the large-scale coherent mode --
 is still rolling toward the minimum, driving w != -1.
 
-The static SFE predictions (Omega_b, Omega_DM, Omega_Lambda)
+The static CE predictions (Omega_b, Omega_DM, Omega_Lambda)
 are the ATTRACTOR (fixed-point) values that the universe
 asymptotically approaches.
 """
@@ -27,7 +27,7 @@ from dataclasses import dataclass
 PI = math.pi
 E_NUM = math.e
 
-# -- SFE constants --
+# -- CE constants --
 SIN2_TW = 0.23122
 COS2_TW = 1.0 - SIN2_TW
 DELTA = SIN2_TW * COS2_TW
@@ -35,7 +35,7 @@ ALPHA_S = 0.1179
 ALPHA_RATIO = ALPHA_S * PI
 D_EFF = 3.0 + DELTA
 V_EW = 246.22  # GeV
-M_SFE_GEV = V_EW * DELTA
+M_CE_GEV = V_EW * DELTA
 LAMBDA_HP = DELTA ** 2
 
 # -- Physical constants --
@@ -46,7 +46,7 @@ M_PL_GEV = 2.435e18  # reduced Planck mass
 
 
 # ==========================================================
-# 1. Static SFE (attractor / fixed-point)
+# 1. Static CE (attractor / fixed-point)
 # ==========================================================
 def solve_bootstrap(d_eff: float, tol: float = 1e-15, maxiter: int = 200) -> float:
     """Solve eps^2 = exp(-(1 - eps^2) * D_eff) by fixed-point iteration."""
@@ -59,7 +59,7 @@ def solve_bootstrap(d_eff: float, tol: float = 1e-15, maxiter: int = 200) -> flo
     return x
 
 
-def static_sfe():
+def static_ce():
     eps2 = solve_bootstrap(D_EFF)
     omega_b = eps2
     dark = 1.0 - eps2
@@ -80,7 +80,7 @@ def static_sfe():
 class HiggsPotential:
     """V(phi) = V0 + (1/2) m_eff^2 phi^2 + (1/4) lam phi^4
 
-    For SFE condensate:
+    For CE condensate:
     - V0 = dark energy density (attractor)
     - m_eff^2 < 0 for SSB (tachyonic mass, field rolls to VEV)
     - lam > 0 for stability
@@ -195,13 +195,13 @@ def fit_cpl(a_arr: list, w_arr: list) -> tuple:
 
 
 # ==========================================================
-# 4. SFE Condensate Potential Parameters
+# 4. CE Condensate Potential Parameters
 # ==========================================================
-def sfe_condensate_potential(
+def ce_condensate_potential(
     omega_de0: float,
     m2_over_H02: float,
 ) -> tuple:
-    """Build a Higgs-like potential for the SFE condensate.
+    """Build a Higgs-like potential for the CE condensate.
 
     The cosmological condensate has:
     - V0 chosen so that V(phi_i) ~ Omega_DE * rho_crit
@@ -233,10 +233,10 @@ def sfe_condensate_potential(
 
 
 # ==========================================================
-# 5. Analytic SFE prediction for w0 (perturbative)
+# 5. Analytic CE prediction for w0 (perturbative)
 # ==========================================================
-def sfe_w0_perturbative() -> dict:
-    """SFE's natural prediction for w0 using delta^2 coupling.
+def ce_w0_perturbative() -> dict:
+    """CE's natural prediction for w0 using delta^2 coupling.
 
     The condensate's effective mass relative to H0:
     m_eff / H0 ~ delta * sqrt(2 V0 / M_Pl^2) / H0
@@ -245,7 +245,7 @@ def sfe_w0_perturbative() -> dict:
     For small kinetic fraction:
     1 + w0 ~ (2/3) * (m_eff/H0)^2 / (9 Omega_DE^2)
     """
-    pred = static_sfe()
+    pred = static_ce()
     omega_de = pred["Omega_Lambda"]
 
     m_eff_over_H0 = DELTA * math.sqrt(6.0 * omega_de)
@@ -266,13 +266,13 @@ def sfe_w0_perturbative() -> dict:
 def main() -> int:
     sep = "=" * 72
 
-    # ---- Static SFE (attractor) ----
-    pred = static_sfe()
+    # ---- Static CE (attractor) ----
+    pred = static_ce()
     print(sep)
-    print("  SFE DYNAMIC DARK ENERGY ANALYSIS")
+    print("  CE DYNAMIC DARK ENERGY ANALYSIS")
     print(sep)
     print()
-    print("1. STATIC SFE (ATTRACTOR / FIXED-POINT)")
+    print("1. STATIC CE (ATTRACTOR / FIXED-POINT)")
     print("-" * 50)
     print(f"  delta           = {pred['delta']:.5f}")
     print(f"  D_eff           = {pred['D_eff']:.5f}")
@@ -302,9 +302,9 @@ def main() -> int:
     print(f"  LCDM exclusion = 3.1 sigma (BAO+CMB)")
     print()
 
-    # ---- SFE natural prediction (perturbative) ----
-    pert = sfe_w0_perturbative()
-    print("3. SFE NATURAL PREDICTION (delta^2 coupling)")
+    # ---- CE natural prediction (perturbative) ----
+    pert = ce_w0_perturbative()
+    print("3. CE NATURAL PREDICTION (delta^2 coupling)")
     print("-" * 50)
     print(f"  m_eff / H0     = {pert['m_eff/H0']:.4f}")
     print(f"  w0 (natural)   = {pert['w0_natural']:.6f}")
@@ -314,7 +314,7 @@ def main() -> int:
     omega_de = pred["Omega_Lambda"]
     target_1pw0 = abs(1.0 + desi_w0)  # 0.23
 
-    print(f"  -> SFE's minimal (delta^2) coupling gives |1+w0| ~ {pert['1+w0']:.3f}")
+    print(f"  -> CE's minimal (delta^2) coupling gives |1+w0| ~ {pert['1+w0']:.3f}")
     print(f"     This is ~{target_1pw0/pert['1+w0']:.0f}x smaller than DESI's |1+w0| ~ 0.23")
     print("     -> Minimal delta^2 coupling insufficient for DESI signal")
     print()
@@ -329,8 +329,8 @@ def main() -> int:
     print(f"  Target 1+w0        = {target_1pw0:.3f}")
     print(f"  Required m^2/H0^2  = {m2_needed:.2f}")
     print(f"  Required xi        = {xi_needed:.4f}")
-    print(f"  SFE delta          = {DELTA:.5f}")
-    print(f"  SFE delta^2        = {DELTA**2:.5f}")
+    print(f"  CE delta          = {DELTA:.5f}")
+    print(f"  CE delta^2        = {DELTA**2:.5f}")
     print(f"  Ratio xi/delta     = {xi_needed/DELTA:.2f}")
     print(f"  Ratio xi/delta^2   = {xi_needed/DELTA**2:.1f}")
     print()
@@ -342,14 +342,14 @@ def main() -> int:
     print()
 
     # ---- Higgs-like potential (DESI-compatible) ----
-    print("5. HIGGS-LIKE POTENTIAL: DESI vs SFE")
+    print("5. HIGGS-LIKE POTENTIAL: DESI vs CE")
     print("-" * 50)
     print()
     print("  DESI Higgs-like analysis (arXiv:2506.21542):")
     print("    V(phi) = V0 + (1/2)m^2 phi^2 + (1/4)lambda phi^4")
     print("    Best fit: |m^2| > 251 H0^2, v_phi >= 0.08 M_Pl")
     print()
-    print("  SFE suppression field potential:")
+    print("  CE Clarus field potential:")
     print("    L_Phi = (1/2)(dPhi)^2 + (1/2)mu^2 Phi^2 - (1/4)lam Phi^4")
     print("    (Mexican hat, m^2 = -mu^2 < 0)")
     print()
@@ -362,7 +362,7 @@ def main() -> int:
     print(f"    DESI best-fit v_phi/M_Pl  >= 0.08")
     print()
 
-    # SFE condensate mass scale
+    # CE condensate mass scale
     # If V0 ~ rho_Lambda ~ (2.3 meV)^4 and M_Pl ~ 2.4e18 GeV
     # m_eff ~ sqrt(V0) / M_Pl in natural units
     rho_lambda_ev4 = 2.58e-11  # eV^4 (observed)
@@ -406,11 +406,11 @@ def main() -> int:
 
     print()
 
-    # ---- Implication for SFE static predictions ----
+    # ---- Implication for CE static predictions ----
     print("7. IMPACT ON STATIC PREDICTIONS")
     print("-" * 50)
     print()
-    print("  Static SFE predictions are ATTRACTOR values (z -> infinity).")
+    print("  Static CE predictions are ATTRACTOR values (z -> infinity).")
     print("  At z=0, the universe is still approaching the attractor.")
     print()
     print("  The bootstrap equation eps^2 = exp(-(1-eps^2)*D_eff)")
@@ -424,10 +424,10 @@ def main() -> int:
     print()
 
     # ---- Summary table ----
-    print("8. SUMMARY: SFE PREDICTIONS vs 2025 DATA")
+    print("8. SUMMARY: CE PREDICTIONS vs 2025 DATA")
     print("-" * 50)
     print()
-    print(f"  {'Observable':<25} {'SFE static':>12} {'SFE dynamic':>12} {'Observed':>12}")
+    print(f"  {'Observable':<25} {'CE static':>12} {'CE dynamic':>12} {'Observed':>12}")
     print(f"  {'-'*25} {'-'*12} {'-'*12} {'-'*12}")
     print(f"  {'Omega_b':<25} {pred['Omega_b']:>12.5f} {'~same':>12} {'0.0486':>12}")
     print(f"  {'Omega_Lambda':<25} {pred['Omega_Lambda']:>12.4f} {'~same':>12} {'0.6847':>12}")
@@ -437,20 +437,20 @@ def main() -> int:
     print(f"  {'DM/DE ratio':<25} {pred['Omega_DM']/pred['Omega_Lambda']:>12.4f} {'~same':>12} {'0.378':>12}")
     print()
     print("  Key insight: The Higgs-like potential that fits DESI data")
-    print("  IS the SFE suppression field potential.")
-    print("  SFE's Mexican hat V(Phi) = -(1/2)mu^2 Phi^2 + (1/4)lam Phi^4")
+    print("  IS the CE Clarus field potential.")
+    print("  CE's Mexican hat V(Phi) = -(1/2)mu^2 Phi^2 + (1/4)lam Phi^4")
     print("  is mathematically identical to DESI's best-fit quintessence.")
     print()
 
     # ---- Theoretical framework ----
-    print("9. THEORETICAL FRAMEWORK: DYNAMICAL SFE")
+    print("9. THEORETICAL FRAMEWORK: DYNAMICAL CE")
     print("-" * 50)
     print()
-    print("  Static SFE:")
+    print("  Static CE:")
     print("    Phi at VEV -> w = -1 exactly")
     print("    Bootstrap fixed point -> Omega_b, Omega_DM, Omega_Lambda")
     print()
-    print("  Dynamic SFE:")
+    print("  Dynamic CE:")
     print("    Cosmological condensate still rolling toward VEV")
     print("    w(z) = -1 + (kinetic/potential) != -1")
     print("    Static predictions = asymptotic attractor")
@@ -458,7 +458,7 @@ def main() -> int:
     print("  Required:")
     print("    - Condensate mass: m^2 ~ 300-2000 H0^2")
     print("    - Field value: phi ~ 0.05-0.15 M_Pl")
-    print("    - These are DERIVABLE from SFE if xi = f(delta, alpha_s)")
+    print("    - These are DERIVABLE from CE if xi = f(delta, alpha_s)")
     print()
     print("  Status of xi (non-minimal coupling):")
     xi_delta2 = DELTA**2
@@ -486,7 +486,7 @@ def main() -> int:
     print("    a_mu(SM, lattice QCD HVP) = 116592033(62) x 10^-11")
     print("    Delta a_mu = 38 +/- 63 x 10^-11  (0.6 sigma)")
     print()
-    print("  SFE prediction: Delta a_mu = 249 x 10^-11")
+    print("  CE prediction: Delta a_mu = 249 x 10^-11")
     print("    vs WP20: 0.00 sigma (perfect match)")
     print("    vs WP25: 3.3 sigma (overshoot)")
     print()

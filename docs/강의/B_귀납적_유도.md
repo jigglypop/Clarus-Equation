@@ -1,4 +1,4 @@
-# SFE: 미스터리에서 공리까지
+# CE: 미스터리에서 공리까지
 
 ## 귀납적 유도 -- 관측된 수수께끼로부터 $e^{-1}$에 도달하기
 
@@ -140,19 +140,19 @@ $$\Delta a_\mu = 249 \pm 48 \times 10^{-11} \quad (5.0\sigma,\;\text{WP20})$$
 
 2절에서 고정된 $\delta = 0.17776$을 사용한다. 에너지 스케일:
 
-$$M_{\text{SFE}} = v_{\text{EW}} \cdot \delta = 246.22 \times 0.17776 = 43.77\;\text{GeV}$$
+$$M_{\text{CE}} = v_{\text{EW}} \cdot \delta = 246.22 \times 0.17776 = 43.77\;\text{GeV}$$
 
 이 식은 히그스 포탈 질량항 전개로 닫힌다:
 
 $$\mathcal{L}_{\text{portal}} = -\lambda_{\text{HP}}|H|^2\Phi^2,\quad H=\frac{1}{\sqrt{2}}(0,v_{\text{EW}}+h)$$
 
-$$m_\Phi^2 = \mu_\Phi^2 + \lambda_{\text{HP}}v_{\text{EW}}^2 \;\;\xrightarrow[\lambda_{\text{HP}}v_{\text{EW}}^2\gg\mu_\Phi^2]{}\;\; M_{\text{SFE}}\simeq v_{\text{EW}}\sqrt{\lambda_{\text{HP}}}.$$
+$$m_\Phi^2 = \mu_\Phi^2 + \lambda_{\text{HP}}v_{\text{EW}}^2 \;\;\xrightarrow[\lambda_{\text{HP}}v_{\text{EW}}^2\gg\mu_\Phi^2]{}\;\; M_{\text{CE}}\simeq v_{\text{EW}}\sqrt{\lambda_{\text{HP}}}.$$
 
-$\lambda_{\text{HP}}=\delta^2$를 대입하면 $M_{\text{SFE}}=v_{\text{EW}}\delta$가 된다.
+$\lambda_{\text{HP}}=\delta^2$를 대입하면 $M_{\text{CE}}=v_{\text{EW}}\delta$가 된다.
 
 QED 구조($\alpha / 2\pi$) + EFT 스케일링($m^2 / \Lambda^2$) + 접힘 인자($e^{-1}$):
 
-$$\Delta a_\mu^{\text{SFE}} = \frac{\alpha}{2\pi} \cdot e^{-1} \cdot \left(\frac{m_\mu}{M_{\text{SFE}}}\right)^2 = 249.0 \times 10^{-11}$$
+$$\Delta a_\mu^{\text{CE}} = \frac{\alpha}{2\pi} \cdot e^{-1} \cdot \left(\frac{m_\mu}{M_{\text{CE}}}\right)^2 = 249.0 \times 10^{-11}$$
 
 실험값: $249 \pm 48$. 텐션: **0.00$\sigma$**.
 
@@ -244,7 +244,7 @@ CP 위반의 최소 구조: CKM 위상 수 $= (N-1)(N-2)/2$. $N = 3$에서 최�
 
 전자기력, 약력, 강력은 양자화되었다. 중력만 안 된다. 70년째.
 
-### 6.2 SFE의 답
+### 6.2 CE의 답
 
 5절의 하강 쇄에서:
 
@@ -252,13 +252,13 @@ $$\text{SU}(3) \xrightarrow{\Phi} \text{SU}(2) \xrightarrow{\Phi} \text{U}(1)$$
 
 게이지 힘은 계단의 **각 층**이다. 중력은 계단을 **내려가는 행위 자체**이다.
 
-억압장은 작용의 2차 변분이다:
+광명장은 작용의 2차 변분이다:
 
 $$\Phi = \frac{\delta^2 S}{\delta\gamma^2}$$
 
 Jacobi 방정식에서 이것은 리만 곡률 텐서와 동일하다. $\Phi = R$.
 
-**중력 = 곡률 = 억압장 = 접힘.**
+**중력 = 곡률 = 광명장 = 접힘.**
 
 중력이 양자화하기 어려운 이유: 게이지 힘은 무대 위의 배우다 -- 고정된 시공간 위에서 정의된다. 중력은 무대 자체를 바꾸는 연출가다 -- 정의된 틀 안에서 양자화할 수 없다.
 
@@ -278,7 +278,7 @@ $$p_k = |c_k|^2$$
 
 - 분지 $k$: 경로 묶음 $\{\gamma_k\}$, 진폭 $c_k$
 
-억압장이 각 분지의 비고전적 경로를 접는다. 접힘 후 분지 가중치:
+광명장이 각 분지의 비고전적 경로를 접는다. 접힘 후 분지 가중치:
 
 $$W_k = |c_k|^2 \cdot e^{-\Phi_k / \Phi_0}$$
 

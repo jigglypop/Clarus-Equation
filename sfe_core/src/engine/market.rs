@@ -1,6 +1,6 @@
 use std::collections::VecDeque;
 
-/// SFE 시장 기하학 엔진
+/// CE 시장 기하학 엔진
 pub struct MarketGeometry {
     window: usize,
     alpha: f64,
@@ -43,7 +43,7 @@ impl MarketGeometry {
         self.calculate_curvature()
     }
 
-    /// 시장 곡률(R)과 억압장(Phi) 계산
+    /// 시장 곡률(R)과 광명장(Phi) 계산
     fn calculate_curvature(&self) -> (f64, f64) {
         // 1. Volatility (Parkinson Estimator approximation using history)
         let mut sum_hl_sq = 0.0;
@@ -69,8 +69,8 @@ impl MarketGeometry {
     }
 }
 
-/// SFE 트레이딩 봇 (SFE Surfing Strategy)
-pub struct SfeTradingBot {
+/// CE 트레이딩 봇 (CE Surfing Strategy)
+pub struct CeTradingBot {
     engine: MarketGeometry,
     position: f64, // 1.0 (Long), 0.0 (None), -1.0 (Short)
     entry_price: f64,
@@ -83,7 +83,7 @@ pub struct SfeTradingBot {
     in_crisis: bool,        // 위기 상황 플래그
 }
 
-impl SfeTradingBot {
+impl CeTradingBot {
     pub fn new(initial_cash: f64) -> Self {
         Self {
             engine: MarketGeometry::new(20, 5.0),
@@ -163,7 +163,7 @@ pub struct MacroEconomy {
     pub interest_rate: f64, // % (e.g., 0.05)
     pub m2_growth: f64,     // %
 
-    // SFE 파라미터
+    // CE 파라미터
     alpha_debt: f64,     // 부채 민감도
     beta_liquidity: f64, // 유동성 민감도
 }
@@ -201,7 +201,7 @@ impl MacroEconomy {
         self.interest_rate += rate_shock;
         self.m2_growth += m2_shock;
 
-        // 2. SFE 거시 곡률(R) 계산
+        // 2. CE 거시 곡률(R) 계산
         // 이론: R ~ (부채압력 / 성장동력) * 금리부담
 
         // 부채 압력: (Debt/GDP)^2

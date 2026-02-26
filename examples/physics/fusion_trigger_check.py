@@ -153,7 +153,7 @@ def main():
     # Red zone: Fail, Green zone: Ignite
     
     # Trigger curve
-    plt.plot(omega_vals, a_trig, "b-", linewidth=2.5, label="SFE Trigger Curve")
+    plt.plot(omega_vals, a_trig, "b-", linewidth=2.5, label="CE Trigger Curve")
     
     # Real data points
     if df is not None:
@@ -170,7 +170,7 @@ def main():
 
     plt.xlabel("Frequency $\\omega$ (Normalized to Resonance)")
     plt.ylabel("Input Energy $E_{laser}$ (MJ) / Amplitude $A$")
-    plt.title("SFE Fusion Trigger Map vs. NIF Shot Data (Proxy)")
+    plt.title("CE Fusion Trigger Map vs. NIF Shot Data (Proxy)")
     
     # Custom legend for regions
     from matplotlib.patches import Patch

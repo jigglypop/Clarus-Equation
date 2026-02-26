@@ -2,7 +2,7 @@ import math
 
 def main():
     print("="*70)
-    print("SFE phi: FCNC Coupling Structure Analysis")
+    print("CE phi: FCNC Coupling Structure Analysis")
     print("="*70)
     print()
 
@@ -38,24 +38,24 @@ def main():
     # BR(K -> pi S) / sin^2(theta) = f(m_S, m_K, m_pi)
     # Literature value: ~5 x 10^-6 for m_S = 30 MeV
     BR_per_sin2 = 5e-6
-    BR_SFE = BR_per_sin2 * sin2
+    BR_CE = BR_per_sin2 * sin2
     print(f"  BR(K+ -> pi+ S) = {BR_per_sin2:.0e} * sin^2(theta)")
-    print(f"  = {BR_SFE:.2e}")
+    print(f"  = {BR_CE:.2e}")
     print()
 
     # E949 constraint
     print(f"  E949 limit (Region I): BR < 7.3e-11")
-    print(f"  SFE: BR = {BR_SFE:.1e} -> EXCLUDED by factor {BR_SFE/7.3e-11:.0f}")
+    print(f"  CE: BR = {BR_CE:.1e} -> EXCLUDED by factor {BR_CE/7.3e-11:.0f}")
     print()
 
     # ==========================================================
-    # 2. SFE phi: Is it really Higgs-mixed?
+    # 2. CE phi: Is it really Higgs-mixed?
     # ==========================================================
     print("="*70)
-    print("II. SFE Phi: Coupling Structure Analysis")
+    print("II. CE Phi: Coupling Structure Analysis")
     print("="*70)
     print()
-    print("SFE Lagrangian:")
+    print("CE Lagrangian:")
     print("  L = L_SM + (1/2)(d_mu Phi)^2 - (1/2)mu^2 Phi^2")
     print("      - lambda_HP |H|^2 Phi^2")
     print()
@@ -72,7 +72,7 @@ def main():
     print("III. Z2 Symmetry: The Key Distinction")
     print("="*70)
     print()
-    print("The SFE Lagrangian has Phi^2 coupling, NOT Phi coupling:")
+    print("The CE Lagrangian has Phi^2 coupling, NOT Phi coupling:")
     print("  lambda_HP |H|^2 Phi^2  (Z2 symmetric)")
     print()
     print("This is DIFFERENT from the generic Higgs portal:")
@@ -117,7 +117,7 @@ def main():
     print("IV. Phi VEV and Z2 Breaking")
     print("="*70)
     print()
-    print("SFE uses v_Phi = v * delta = 43.73 GeV")
+    print("CE uses v_Phi = v * delta = 43.73 GeV")
     print("If Phi acquires a VEV, Z2 is SPONTANEOUSLY broken.")
     print()
     print("With <Phi> = v_Phi, expand Phi = v_Phi + phi:")
@@ -132,14 +132,14 @@ def main():
     print()
     print("This gives sin(theta_mix) = 0.04344")
     print()
-    print("BUT: Does SFE actually require v_Phi != 0?")
+    print("BUT: Does CE actually require v_Phi != 0?")
     print()
 
     # ==========================================================
     # 5. Two scenarios
     # ==========================================================
     print("="*70)
-    print("V. Two Scenarios for SFE")
+    print("V. Two Scenarios for CE")
     print("="*70)
     print()
 
@@ -157,11 +157,11 @@ def main():
     print("    -> Mechanism completely different")
     print()
     print("  Consistency check:")
-    print("  - SFE derives DM as Phi condensate: CONSISTENT")
-    print("  - SFE predicts Phi is 'dark': CONSISTENT")
+    print("  - CE derives DM as Phi condensate: CONSISTENT")
+    print("  - CE predicts Phi is 'dark': CONSISTENT")
     print("  - No FCNC problem: CONSISTENT")
     print("  - No g-2 problem: NEEDS REANALYSIS")
-    print("  - Muon g-2: SFE derives from geometry, not Phi loop")
+    print("  - Muon g-2: CE derives from geometry, not Phi loop")
     print()
 
     print("SCENARIO B: v_Phi != 0 (Z2 spontaneously broken)")
@@ -217,14 +217,14 @@ def main():
     print()
 
     # ==========================================================
-    # 7. SFE muon g-2 in Z2 scenario
+    # 7. CE muon g-2 in Z2 scenario
     # ==========================================================
     print("="*70)
     print("VII. Muon g-2 in Z2-symmetric Scenario")
     print("="*70)
     print()
-    print("SFE derives muon g-2 from GEOMETRIC formula:")
-    print("  delta(a_mu) = (alpha/2pi) * e^{-1} * (m_mu/M_SFE)^2")
+    print("CE derives muon g-2 from GEOMETRIC formula:")
+    print("  delta(a_mu) = (alpha/2pi) * e^{-1} * (m_mu/M_CE)^2")
     print("  = 249 x 10^{-11}")
     print()
     print("This does NOT require phi-muon Yukawa coupling!")
@@ -246,10 +246,10 @@ def main():
     delta_a_seagull = (m_mu**2 / (16*math.pi**2)) * G_eff**2 * m_mu**2 / m_phi**2
     print(f"  Phi^2 seagull contribution:")
     print(f"    delta(a_mu) ~ {delta_a_seagull:.2e}")
-    print(f"    (vs SFE geometric prediction: 2.49e-08)")
+    print(f"    (vs CE geometric prediction: 2.49e-08)")
     print(f"    -> Seagull diagram is {2.49e-8/delta_a_seagull:.0e}x too small")
     print()
-    print("  This means the GEOMETRIC derivation of g-2 in SFE")
+    print("  This means the GEOMETRIC derivation of g-2 in CE")
     print("  does NOT correspond to a simple perturbative loop.")
     print("  It may correspond to a non-perturbative effect")
     print("  of the Phi condensate on spacetime geometry.")
@@ -259,10 +259,10 @@ def main():
     # 8. Resolution
     # ==========================================================
     print("="*70)
-    print("VIII. Resolution: SFE Phi is Z2-symmetric")
+    print("VIII. Resolution: CE Phi is Z2-symmetric")
     print("="*70)
     print()
-    print("The SFE Lagrangian L = ... - lambda_HP |H|^2 Phi^2")
+    print("The CE Lagrangian L = ... - lambda_HP |H|^2 Phi^2")
     print("has an EXACT Z2 symmetry (Phi -> -Phi).")
     print()
     print("Two cases for VEV:")
@@ -324,7 +324,7 @@ def main():
     print("IX. Summary and Implications")
     print("="*70)
     print()
-    print("1. SFE's original formulation (sin theta = 0.04) is")
+    print("1. CE's original formulation (sin theta = 0.04) is")
     print("   EXCLUDED by E949 K+ -> pi+ invisible search.")
     print()
     print("2. The Z2-symmetric version (sin theta = 0, v_Phi = 0)")
@@ -335,7 +335,7 @@ def main():
     print("   satisfies ALL experimental constraints and STILL")
     print(f"   allows barrier elimination (Q_vac/Q_crit = {Q_vac_new/Q_crit_new:.0e}).")
     print()
-    print("4. The key SFE parameter lambda_HP = delta^2 = 0.0316")
+    print("4. The key CE parameter lambda_HP = delta^2 = 0.0316")
     print("   is NOT directly constrained by K decay searches")
     print("   (it governs Phi^2 coupling, not Phi mixing).")
     print()
@@ -346,11 +346,11 @@ def main():
 
     v_phi_max = sin_max * 125100**2 / (2 * 0.0316 * 246000)
     print(f"   v_Phi < {v_phi_max:.0f} MeV = {v_phi_max/1000:.2f} GeV")
-    print(f"   (SFE original: v_Phi = 43730 MeV = 43.73 GeV)")
+    print(f"   (CE original: v_Phi = 43730 MeV = 43.73 GeV)")
     print(f"   -> v_Phi must be reduced by factor {43730/v_phi_max:.0f}")
     print()
-    print("6. IMPLICATIONS FOR SFE THEORY:")
-    print("   M_SFE = v * delta = 43.73 GeV can be maintained")
+    print("6. IMPLICATIONS FOR CE THEORY:")
+    print("   M_CE = v * delta = 43.73 GeV can be maintained")
     print("   as the MASS SCALE of Phi (from lambda_HP * v^2),")
     print("   but v_Phi (the VEV) must be much smaller.")
     print("   This is naturally achieved if mu_Phi^2 > 0")

@@ -3,10 +3,10 @@ use super::noise::{generate_correlated_pink_noise, PinkNoiseGenerator};
 use rand::prelude::*;
 use rayon::prelude::*;
 
-pub const SFE_PHASE_SCALE: f64 = 0.01_f64;
-pub const SFE_EPSILON: f64 = 0.37;
+pub const CE_PHASE_SCALE: f64 = 0.01_f64;
+pub const CE_EPSILON: f64 = 0.37;
 
-fn generate_sfe_noise_traces(
+fn generate_ce_noise_traces(
     steps: usize,
     qubits: usize,
     noise_cfg: &NoiseConfig,
@@ -136,7 +136,7 @@ pub fn simulate_repetition_code(
     let num_cycles = total_time / measure_interval;
     let dt_cycle = measure_interval as f64;
     let p_t1 = 1.0 - (-dt_cycle / qec_cfg.t1_steps).exp();
-    let sfe_gate_fidelity_factor = (-SFE_EPSILON * (1.0 / qec_cfg.t1_steps)).exp();
+    let ce_gate_fidelity_factor = (-CE_EPSILON * (1.0 / qec_cfg.t1_steps)).exp();
 
     let cycle_len = measure_interval;
     let mut cycle_pulses: Vec<usize> = pulse_seq
@@ -149,7 +149,7 @@ pub fn simulate_repetition_code(
     let (logical_errors, physical_errors) = (0..trials)
         .into_par_iter()
         .map(|_| {
-            let traces = generate_sfe_noise_traces(total_time, distance, &noise_cfg, &sup_cfg);
+            let traces = generate_ce_noise_traces(total_time, distance, &noise_cfg, &sup_cfg);
 
             let mut rng = thread_rng();
             let mut phys_err_count = 0_usize;
@@ -178,13 +178,13 @@ pub fn simulate_repetition_code(
                         if sup_cfg.anc_enabled {
                             val = sup_cfg.cancel_from_sample(val, t_abs);
                         }
-                        phase += sign * val * noise_amp * SFE_PHASE_SCALE;
+                        phase += sign * val * noise_amp * CE_PHASE_SCALE;
                     }
 
                     let p_phase = 0.5 * (1.0 - phase.cos());
 
                     let f_gate_std = 1.0 - qec_cfg.gate_error;
-                    let f_gate_sfe = f_gate_std * sfe_gate_fidelity_factor;
+                    let f_gate_sfe = f_gate_std * ce_gate_fidelity_factor;
                     let p_gate_sfe = 1.0 - f_gate_sfe;
 
                     let mut p_total = 1.0 - (1.0 - p_phase) * (1.0 - p_t1) * (1.0 - p_gate_sfe);
@@ -257,7 +257,7 @@ pub fn simulate_surface_code_d3(
     let qec_cfg = QecConfig::from_env();
 
     let num_cycles = total_time / measure_interval;
-    let sfe_gate_fidelity_factor = (-SFE_EPSILON * (1.0 / qec_cfg.t1_steps)).exp();
+    let ce_gate_fidelity_factor = (-CE_EPSILON * (1.0 / qec_cfg.t1_steps)).exp();
 
     let cycle_len = measure_interval;
     let mut cycle_pulses: Vec<usize> = pulse_seq
@@ -280,7 +280,7 @@ pub fn simulate_surface_code_d3(
     let (logical_errors, physical_errors) = (0..trials)
         .into_par_iter()
         .map(|_| {
-            let traces = generate_sfe_noise_traces(total_time, data_qubits, &noise_cfg, &sup_cfg);
+            let traces = generate_ce_noise_traces(total_time, data_qubits, &noise_cfg, &sup_cfg);
 
             let mut rng = thread_rng();
             let mut phys_err_count = 0_usize;
@@ -308,13 +308,13 @@ pub fn simulate_surface_code_d3(
                         if sup_cfg.anc_enabled {
                             val = sup_cfg.cancel_from_sample(val, t_abs);
                         }
-                        phase += sign * val * noise_amp * SFE_PHASE_SCALE;
+                        phase += sign * val * noise_amp * CE_PHASE_SCALE;
                     }
 
                     let p_phase = 0.5 * (1.0 - phase.cos());
-                    let p_sfe_loss = 1.0 - sfe_gate_fidelity_factor;
+                    let p_ce_loss = 1.0 - ce_gate_fidelity_factor;
 
-                    let mut p_z = 1.0 - (1.0 - p_phase) * (1.0 - p_sfe_loss);
+                    let mut p_z = 1.0 - (1.0 - p_phase) * (1.0 - p_ce_loss);
                     p_z = p_z.clamp(0.0, 1.0);
 
                     if rng.gen::<f64>() < p_z {

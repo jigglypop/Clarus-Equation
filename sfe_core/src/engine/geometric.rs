@@ -10,7 +10,7 @@ pub struct GeometricEngine {
 
 impl GeometricEngine {
     pub fn new(dim: usize) -> Self {
-        // 테스트용 가상 필드: 원점에서 멀어질수록 억압장이 강해짐 (Potential well)
+        // 테스트용 가상 필드: 원점에서 멀어질수록 광명장이 강해짐 (Potential well)
         let phi_field = Box::new(|x: &[f64]| -> f64 {
             let r2: f64 = x.iter().map(|v| v * v).sum();
             0.5 * r2 // Phi = 1/2 r^2 (Harmonic oscillator potential)
@@ -22,14 +22,14 @@ impl GeometricEngine {
         }
     }
 
-    /// SFE 통합 방정식의 단일 스텝 실행
+    /// CE 통합 방정식의 단일 스텝 실행
     /// x: 현재 위치 (상태)
     /// p: 현재 운동량 (또는 의도)
     pub fn step(&self, x: &[f64], p: &[f64], dt: f64) -> (Vec<f64>, f64) {
         // 1. 곡률 R(x) 계산
         let r = self.manifold.ricci_scalar(x);
 
-        // 2. 억압 계수 (Suppression Factor)
+        // 2. 광명 계수 (Suppression Factor)
         // 곡률이 클수록(R > 0) 이동이 억제됨. Part8 핵심: e^(-R)
         let suppression = (-r).exp();
 
@@ -37,7 +37,7 @@ impl GeometricEngine {
         // 여기서는 운동량 p가 구배 역할을 한다고 가정하거나, 별도의 포텐셜 구배를 사용
         // 식: exp_x(-eta * nabla_g Phi) -> 여기서는 p를 접벡터로 사용
 
-        // p_eff = suppression * p (억압된 운동량)
+        // p_eff = suppression * p (광명된 운동량)
         let p_eff: Vec<f64> = p.iter().map(|v| v * suppression).collect();
 
         // 4. Exponential Map (기하학적 이동)
@@ -74,7 +74,7 @@ impl GeometricEngine {
         term_gravity + term_kinetic - term_potential
     }
 
-    /// [NEW] 전체 억압 에너지 밀도 계산
+    /// [NEW] 전체 광명 에너지 밀도 계산
     /// rho = e^-R(x) * L(x)
     pub fn calculate_suppression_energy_density(&self, x: &[f64]) -> f64 {
         let r = self.manifold.ricci_scalar(x);

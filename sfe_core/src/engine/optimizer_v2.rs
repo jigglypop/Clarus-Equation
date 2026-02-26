@@ -19,12 +19,12 @@ impl Default for HardwareConstraints {
     }
 }
 
-pub struct SfeOptimizerV2 {
+pub struct CeOptimizerV2 {
     pub beta: f64,
     pub constraints: HardwareConstraints,
 }
 
-impl SfeOptimizerV2 {
+impl CeOptimizerV2 {
     pub fn new(beta: f64) -> Self {
         Self {
             beta,
@@ -372,7 +372,7 @@ mod tests {
 
     #[test]
     fn test_feasibility_projection() {
-        let optimizer = SfeOptimizerV2::new(50.0);
+        let optimizer = CeOptimizerV2::new(50.0);
 
         let infeasible = vec![0.05, 0.06, 0.99];
         let feasible = optimizer.project_to_feasible(infeasible);
@@ -384,7 +384,7 @@ mod tests {
 
     #[test]
     fn test_constrained_optimization() {
-        let optimizer = SfeOptimizerV2::new(50.0);
+        let optimizer = CeOptimizerV2::new(50.0);
 
         let mut gen = PinkNoiseGenerator::new_with_params(2000, 0.8, 1.5);
         let mut noise_pool = Vec::with_capacity(50);

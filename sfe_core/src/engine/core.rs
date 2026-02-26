@@ -4,17 +4,17 @@ use rayon::prelude::*;
 const COUPLING_K: f64 = 50.0;
 const DT: f64 = 0.01;
 
-pub struct QSFEngine {
+pub struct QCEngine {
     pub phi: Array1<f64>,
     pub dphi: Array1<f64>,
     pub source_j: Array1<f64>,
     pub forces_buffer: Array1<f64>, // 할당 방지를 위한 캐시된 버퍼
     pub mu: f64,
     pub lam: f64,
-    pub alpha2: f64, // Curvature suppression coupling (SFE Master Action)
+    pub alpha2: f64, // Curvature suppression coupling (CE Master Action)
 }
 
-impl QSFEngine {
+impl QCEngine {
     pub fn new(size: usize) -> Self {
         let mu: f64 = 1.0;
         let lam: f64 = 1.0;
@@ -32,7 +32,7 @@ impl QSFEngine {
             let mut slice = source_j.slice_mut(s![mid - range..mid + range]);
             slice.fill(-5.0);
         }
-        QSFEngine {
+        QCEngine {
             phi,
             dphi,
             source_j,
@@ -87,7 +87,7 @@ impl QSFEngine {
 
                 let laplacian = left + right - 2.0 * phi_slice[i];
 
-                // SFE Master Action: Curvature Suppression (Biharmonic term)
+                // CE Master Action: Curvature Suppression (Biharmonic term)
                 // -alpha2 * nabla^4 phi
                 let biharmonic = if alpha2 != 0.0 {
                     let i_isize = i as isize;

@@ -1,6 +1,7 @@
 pub mod arc;
 pub mod benchmark;
 pub mod config;
+pub mod constants;
 pub mod core;
 pub mod filter;
 pub mod geometric;

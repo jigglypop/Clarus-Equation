@@ -16,7 +16,7 @@ def main():
     Q_crit = 1e9
 
     print("="*70)
-    print("SFE Resonance Drive: Feasibility Analysis")
+    print("CE Resonance Drive: Feasibility Analysis")
     print("="*70)
     print()
 
@@ -379,7 +379,7 @@ def main():
     print(f"  For Sigma = 278:  Q_eff > 1e9  -> dE/E < 1e-9  [far future]")
     print()
     print("  Alternative: If phi boson is discovered (PADME/NA64),")
-    print("  its actual parameters may differ from SFE predictions.")
+    print("  its actual parameters may differ from CE predictions.")
     print("  A lighter phi (lower m_phi) would be easier to drive.")
     print()
     print("  Scaling: m_phi -> m_phi/k reduces Q_crit by k")

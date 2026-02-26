@@ -2,8 +2,8 @@
 name = "sfe_core"
 version = "1.1.0"
 edition = "2021"
-authors = ["SFE Research Lab"]
-description = "Standalone High-performance Commercial SFE Engine with Quantum Noise Simulation"
+authors = ["CE Research Lab"]
+description = "Standalone High-performance Commercial CE Engine with Quantum Noise Simulation"
 
 [[bin]]
 name = "sfe_engine"

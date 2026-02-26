@@ -9,12 +9,12 @@ pub const OMEGA_PHI: f64 = 4.50e22;
 pub const M_PHI_MEV: f64 = 29.65;
 
 #[derive(Clone, Debug)]
-pub struct SfeSpectralDensity {
+pub struct CeSpectralDensity {
     pub omega_phi: f64,
     pub coupling_sq: f64,
 }
 
-impl Default for SfeSpectralDensity {
+impl Default for CeSpectralDensity {
     fn default() -> Self {
         Self {
             omega_phi: OMEGA_PHI,
@@ -23,7 +23,7 @@ impl Default for SfeSpectralDensity {
     }
 }
 
-impl SfeSpectralDensity {
+impl CeSpectralDensity {
     pub fn j_phi(&self, omega: f64) -> f64 {
         if omega < self.omega_phi {
             return 0.0;
@@ -56,7 +56,7 @@ pub struct MultiPeakNoiseGenerator {
     pink_scale: f64,
     lorentzian_peaks: Vec<LorentzianPeak>,
     white_level: f64,
-    sfe_spectral: Option<SfeSpectralDensity>,
+    ce_spectral: Option<CeSpectralDensity>,
     fft: Arc<dyn Fft<f64>>,
     spectrum_buffer: Vec<Complex<f64>>,
 }
@@ -77,14 +77,14 @@ impl MultiPeakNoiseGenerator {
             pink_scale: scale,
             lorentzian_peaks: peaks,
             white_level: white,
-            sfe_spectral: None,
+            ce_spectral: None,
             fft,
             spectrum_buffer: vec![Complex::zero(); steps],
         }
     }
 
-    pub fn with_sfe_spectral(mut self, sfe: SfeSpectralDensity) -> Self {
-        self.sfe_spectral = Some(sfe);
+    pub fn with_ce_spectral(mut self, ce: CeSpectralDensity) -> Self {
+        self.ce_spectral = Some(ce);
         self
     }
 
@@ -106,9 +106,9 @@ impl MultiPeakNoiseGenerator {
 
         let env_total = pink + lorentz + self.white_level;
 
-        if let Some(ref sfe) = self.sfe_spectral {
-            let sfe_contribution = sfe.effective_dissipation(omega, env_total);
-            env_total + sfe_contribution
+        if let Some(ref ce) = self.ce_spectral {
+            let ce_contribution = ce.effective_dissipation(omega, env_total);
+            env_total + ce_contribution
         } else {
             env_total
         }

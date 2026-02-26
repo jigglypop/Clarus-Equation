@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-# SFE-LLM Simulation: "Reality Stone"
+# CE-LLM Simulation: "Reality Stone"
 # 가상의 임베딩 공간에서 토큰의 궤적(Curvature)을 분석
 
 def softmax(x):
@@ -10,7 +10,7 @@ def softmax(x):
 
 class RealityStoneEngine:
     """
-    SFE 기반 환각 억제 엔진 (v2: 다중 스케일 곡률 + 적응형 억제)
+    CE 기반 환각 억제 엔진 (v2: 다중 스케일 곡률 + 적응형 억제)
     
     특징:
     - 1차 곡률 (방향 변화) + 2차 곡률 (가속도/굴곡) 동시 고려
@@ -201,7 +201,7 @@ def apply_reality_stone(logits, embedding_matrix, prev_vec, curr_vec,
                         prev_prev_vec=None, lambda_param=5.0, curvature_threshold=0.5,
                         use_second_order=True, adaptive_lambda=True, soft_suppression=True):
     """
-    SFE Reality Stone 환각 억제 적용 (v2)
+    CE Reality Stone 환각 억제 적용 (v2)
     
     Args:
         logits: [batch_size, vocab_size] 원본 로짓
@@ -231,7 +231,7 @@ def apply_reality_stone(logits, embedding_matrix, prev_vec, curr_vec,
 
 def simulate_hallucination_suppression():
     print("=" * 60)
-    print("SFE Reality Stone Engine v2 - Hallucination Suppression Demo")
+    print("CE Reality Stone Engine v2 - Hallucination Suppression Demo")
     print("=" * 60)
     
     # 가상의 단어장 (Vocab)
@@ -261,7 +261,7 @@ def simulate_hallucination_suppression():
     # 원본 로짓: 환각 토큰(Suddenly, Alien)이 비정상적으로 높음
     raw_logits = np.array([[2.0, 2.5, 1.0, 1.0, 1.0, 5.0, 4.0, 1.0, 1.0, 1.0]])
     
-    print("\n[1] Before SFE Suppression (Standard LLM)")
+    print("\n[1] Before CE Suppression (Standard LLM)")
     print("-" * 40)
     probs = softmax(raw_logits)[0]
     top_idx = np.argmax(probs)
@@ -269,7 +269,7 @@ def simulate_hallucination_suppression():
     print(f"  Status: HALLUCINATION - Model chose context-breaking token")
     
     # v1: 기본 억제 (1차 곡률만, 하드 threshold)
-    print("\n[2] SFE v1: Basic Suppression (1st-order only)")
+    print("\n[2] CE v1: Basic Suppression (1st-order only)")
     print("-" * 40)
     suppressed_v1 = apply_reality_stone(
         raw_logits, embeddings, prev_vec, curr_vec,
@@ -285,7 +285,7 @@ def simulate_hallucination_suppression():
     print(f"  Selected: '{vocab[top_v1]}' (Prob: {probs_v1[top_v1]:.4f})")
     
     # v2: 정교한 억제 (2차 곡률 + 적응형 + 소프트)
-    print("\n[3] SFE v2: Advanced Suppression (2nd-order + adaptive + soft)")
+    print("\n[3] CE v2: Advanced Suppression (2nd-order + adaptive + soft)")
     print("-" * 40)
     suppressed_v2 = apply_reality_stone(
         raw_logits, embeddings, prev_vec, curr_vec,
@@ -320,7 +320,7 @@ def simulate_hallucination_suppression():
     # 확률 비교표
     print("\n[5] Probability Comparison")
     print("-" * 40)
-    print(f"  {'Token':<12} {'Original':>10} {'SFE v1':>10} {'SFE v2':>10} {'Suppression':>12}")
+    print(f"  {'Token':<12} {'Original':>10} {'CE v1':>10} {'CE v2':>10} {'Suppression':>12}")
     print("  " + "-" * 54)
     for i, word in enumerate(vocab):
         suppression = probs[i] - probs_v2[i]
@@ -333,8 +333,8 @@ def simulate_hallucination_suppression():
     x = np.arange(len(vocab))
     width = 0.25
     axes[0].bar(x - width, probs, width, label='Original (Hallucinating)', color='red', alpha=0.6)
-    axes[0].bar(x, probs_v1, width, label='SFE v1 (Basic)', color='orange', alpha=0.7)
-    axes[0].bar(x + width, probs_v2, width, label='SFE v2 (Advanced)', color='green', alpha=0.8)
+    axes[0].bar(x, probs_v1, width, label='CE v1 (Basic)', color='orange', alpha=0.7)
+    axes[0].bar(x + width, probs_v2, width, label='CE v2 (Advanced)', color='green', alpha=0.8)
     axes[0].set_xticks(x)
     axes[0].set_xticklabels(vocab, rotation=45, ha='right')
     axes[0].set_ylabel('Token Probability')
@@ -353,16 +353,16 @@ def simulate_hallucination_suppression():
     axes[1].grid(axis='x', alpha=0.3)
     
     plt.tight_layout()
-    plt.savefig('sfe_llm_suppression_v2.png', dpi=150)
-    print(f"\n  Saved: 'sfe_llm_suppression_v2.png'")
+    plt.savefig('ce_llm_suppression_v2.png', dpi=150)
+    print(f"\n  Saved: 'ce_llm_suppression_v2.png'")
     
     # 최종 요약
     print("\n" + "=" * 60)
     print("SUMMARY")
     print("=" * 60)
     print(f"  Original selection:  '{vocab[top_idx]}' (HALLUCINATION)")
-    print(f"  SFE v1 selection:    '{vocab[top_v1]}'")
-    print(f"  SFE v2 selection:    '{vocab[top_v2]}'")
+    print(f"  CE v1 selection:    '{vocab[top_v1]}'")
+    print(f"  CE v2 selection:    '{vocab[top_v2]}'")
     halluc_suppression = (probs[5] + probs[6]) - (probs_v2[5] + probs_v2[6])
     print(f"  Hallucination tokens (Suddenly+Alien) suppressed by: {halluc_suppression:.4f} ({halluc_suppression/((probs[5]+probs[6])+1e-9)*100:.1f}%)")
 

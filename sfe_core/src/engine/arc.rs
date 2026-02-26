@@ -11,50 +11,50 @@ const D_EFF: f64 = 3.17776;
 /// Error feedback measurement variance.
 /// Signal is computed from true state (noise-free); only staleness uncertainty remains.
 
-use crate::engine::constants::{SFE, NW, D};
+use crate::engine::constants::{CE, NW, D};
 
     // (alpha_lapse, beta_damp, xi, m_phi, gamma_phi)
-fn epsilon2() -> f64 { SFE.epsilon2 }
-fn f_factor() -> f64 { SFE.f_factor }
-fn alpha_s() -> f64 { SFE.alpha_s }
-fn delta() -> f64 { SFE.delta }
-fn d_eff() -> f64 { SFE.d_eff }
-fn alpha_em_mz() -> f64 { SFE.alpha_em_mz }
+fn epsilon2() -> f64 { CE.epsilon2 }
+fn f_factor() -> f64 { CE.f_factor }
+fn alpha_s() -> f64 { CE.alpha_s }
+fn delta() -> f64 { CE.delta }
+fn d_eff() -> f64 { CE.d_eff }
+fn alpha_em_mz() -> f64 { CE.alpha_em_mz }
 
 fn r_meas_err() -> f64 {
-    let alpha_0 = 1.0 / SFE.alpha_inv_0;
+    let alpha_0 = 1.0 / CE.alpha_inv_0;
     alpha_0.powi(5)
 }
 
-fn sfe_physics_params() -> (f64, f64, f64, f64, f64) {
+fn ce_physics_params() -> (f64, f64, f64, f64, f64) {
     let e = std::f64::consts::E;
     let alpha_lapse = e;                              // ADM lapse = e (Euler number, one of {e,pi,i,1,0})
     let xi = alpha_s().powf(D.recip());               // xi = alpha_s^(1/D), D=3
-    let beta_damp = (-1.0_f64).exp();                 // e^{-1}: SFE survival kernel
-    let m_phi = 1.0;                                  // unit mass in SFE normalization (= 1 from {1})
+    let beta_damp = (-1.0_f64).exp();                 // e^{-1}: CE survival kernel
+    let m_phi = 1.0;                                  // unit mass in CE normalization (= 1 from {1})
     let gamma_phi = (-1.0_f64).exp();                 // e^{-1}: dissipation rate
     (alpha_lapse, beta_damp, xi, m_phi, gamma_phi)
 }
 
-/// SFE 3+1 state: [R, K, Phi, Pi] coupled through the suppression field equation.
+/// CE 3+1 state: [R, K, Phi, Pi] coupled through the Clarus field equation.
 /// R: Ricci scalar (spatial curvature)
 /// K: extrinsic curvature (geometry velocity, from ADM lapse)
-/// Phi: suppression field amplitude
+/// Phi: Clarus field amplitude
 /// Pi: field momentum
 ///
-/// ADM + SFE evolution:
+/// ADM + CE evolution:
 ///   dR/dt  = -2*alpha*K          (ADM lapse coupling)
-///   dK/dt  = alpha*R/2 - beta*K + xi*Phi^2   (Raychaudhuri + SFE restoring)
+///   dK/dt  = alpha*R/2 - beta*K + xi*Phi^2   (Raychaudhuri + CE restoring)
 ///   dPhi/dt = Pi
 ///   dPi/dt  = -(m^2 + xi*R)*Phi - gamma_phi*Pi   (field equation in curved bg)
 #[derive(Clone, Debug)]
-struct SfeState {
+struct CeState {
     x: [f64; 4],
     p: [[f64; 4]; 4],
     q: [[f64; 4]; 4],
 }
 
-impl SfeState {
+impl CeState {
     fn new(process_noise: f64, dt: f64) -> Self {
         // noise in K per step: process_noise * U[-1,1] * sqrt(dt) * dt
         // variance = process_noise^2 * dt^3 / 3
@@ -254,13 +254,13 @@ impl SfeState {
     }
 }
 
-/// SFE 3+1 ARC Controller
-pub struct SfeArcController {
+/// CE 3+1 ARC Controller
+pub struct CeArcController {
     pub alpha: f64,
     pub beta: f64,
     pub latency: usize,
 
-    state: SfeState,
+    state: CeState,
     pub r_meas: f64,
     prev_z: Option<f64>,
 
@@ -271,10 +271,10 @@ pub struct SfeArcController {
     gamma_phi: f64,
 }
 
-impl SfeArcController {
+impl CeArcController {
     pub fn new(alpha: f64, beta: f64, latency: usize,
                process_noise: f64, measure_noise: f64) -> Self {
-        let (alpha_lapse, beta_damp, xi, m_phi, gamma_phi) = sfe_physics_params();
+        let (alpha_lapse, beta_damp, xi, m_phi, gamma_phi) = ce_physics_params();
         let dt = 0.01;
 
         let r_meas = measure_noise * measure_noise / D;
@@ -283,7 +283,7 @@ impl SfeArcController {
             alpha,
             beta,
             latency,
-            state: SfeState::new(process_noise, dt),
+            state: CeState::new(process_noise, dt),
             r_meas,
             prev_z: None,
             alpha_lapse,
@@ -339,7 +339,7 @@ impl SfeArcController {
     }
 }
 
-/// Simulation: 3+1 SFE coupled dynamics
+/// Simulation: 3+1 CE coupled dynamics
 pub struct ArcSimulationEnv {
     true_state: [f64; 4],
     process_noise: f64,
@@ -351,7 +351,7 @@ pub struct ArcSimulationEnv {
     m_phi: f64,
     gamma_phi: f64,
 
-    pub controller: SfeArcController,
+    pub controller: CeArcController,
     pulse_queue: VecDeque<f64>,
     prev_residual: f64,
     prev_delayed_pulse: f64,
@@ -372,7 +372,7 @@ impl ArcSimulationEnv {
         // Initial: R=1.0, K=0.3, Phi=0.5, Pi=0.0
         let true_state = [1.0, 0.3, 0.5, 0.0];
 
-        let (alpha_lapse, beta_damp, xi, m_phi, gamma_phi) = sfe_physics_params();
+        let (alpha_lapse, beta_damp, xi, m_phi, gamma_phi) = ce_physics_params();
 
         let mut env = Self {
             true_state,
@@ -383,7 +383,7 @@ impl ArcSimulationEnv {
             xi,
             m_phi,
             gamma_phi,
-            controller: SfeArcController::new(1.0, alpha_s(), latency, process_noise, measure_noise),
+            controller: CeArcController::new(1.0, alpha_s(), latency, process_noise, measure_noise),
             pulse_queue: VecDeque::with_capacity(latency),
             prev_residual: 0.0,
             prev_delayed_pulse: 0.0,

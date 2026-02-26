@@ -1,7 +1,7 @@
 """
-SFE Dark Matter: Paper-Quality Analysis
+CE Dark Matter: Paper-Quality Analysis
 ========================================
-Comprehensive comparison of SFE cosmological predictions against
+Comprehensive comparison of CE cosmological predictions against
 multiple independent observational datasets with full error propagation.
 
 Input: geometric closure set (canonical branch)
@@ -86,7 +86,7 @@ def subsep(title):
 
 
 # ============================================================
-# 2. SFE CORE DERIVATION
+# 2. CE CORE DERIVATION
 # ============================================================
 def solve_epsilon2(D_eff, tol=1e-15, max_iter=1000):
     """Solve eps^2 = exp(-(1-eps^2)*D_eff) by fixed-point iteration."""
@@ -99,8 +99,8 @@ def solve_epsilon2(D_eff, tol=1e-15, max_iter=1000):
     return x
 
 
-def sfe_predictions(alpha_s):
-    """Compute all SFE predictions from closure constants."""
+def ce_predictions(alpha_s):
+    """Compute all CE predictions from closure constants."""
     sin2_tW = 4.0 * alpha_s ** (4.0 / 3.0)
     delta = sin2_tW * (1.0 - sin2_tW)
     D_eff = 3.0 + delta
@@ -124,8 +124,8 @@ def sfe_predictions(alpha_s):
     }
 
 
-def sfe_error_propagation(alpha_s, alpha_s_err, n_samples=100000):
-    """Monte Carlo error propagation for SFE predictions."""
+def ce_error_propagation(alpha_s, alpha_s_err, n_samples=100000):
+    """Monte Carlo error propagation for CE predictions."""
     import random
     random.seed(42)
 
@@ -137,7 +137,7 @@ def sfe_error_propagation(alpha_s, alpha_s_err, n_samples=100000):
         if als <= 0:
             continue
 
-        pred = sfe_predictions(als)
+        pred = ce_predictions(als)
         results["Omega_b"].append(pred["Omega_b"])
         results["Omega_Lambda"].append(pred["Omega_Lambda"])
         results["Omega_DM"].append(pred["Omega_DM"])
@@ -230,7 +230,7 @@ def get_datasets():
 # 4. ANALYSIS
 # ============================================================
 def part1_framework():
-    separator("1. SFE DARK MATTER THEORETICAL FRAMEWORK")
+    separator("1. CE DARK MATTER THEORETICAL FRAMEWORK")
 
     print(f"""
   1.1 Axioms
@@ -261,7 +261,7 @@ def part1_framework():
   1.3 Predictions (3 independent outputs from 0 external inputs)
   -----------------------------------------------------""")
 
-    pred = sfe_predictions(Const.alpha_s)
+    pred = ce_predictions(Const.alpha_s)
     print(f"    Omega_b      = eps^2                        = {pred['Omega_b']:.5f}")
     print(f"    Omega_Lambda = (1-eps^2) / (1+alpha_s*D_eff)   = {pred['Omega_Lambda']:.4f}")
     print(f"    Omega_DM     = (1-eps^2)*alpha_s*D_eff/(1+...) = {pred['Omega_DM']:.4f}")
@@ -271,12 +271,12 @@ def part1_framework():
 def part2_multi_dataset():
     separator("2. COMPARISON WITH MULTIPLE INDEPENDENT DATASETS")
 
-    pred = sfe_predictions(Const.alpha_s)
+    pred = ce_predictions(Const.alpha_s)
     datasets = get_datasets()
 
     # Table header
     print(f"\n  2.1 Omega_b (baryon density fraction)")
-    print(f"  {'Dataset':<20s} {'Observed':>10s} {'Error':>10s} {'SFE':>10s} {'Delta':>10s} {'Tension':>10s}")
+    print(f"  {'Dataset':<20s} {'Observed':>10s} {'Error':>10s} {'CE':>10s} {'Delta':>10s} {'Tension':>10s}")
     print(f"  {'-'*70}")
 
     chi2_Ob = 0.0
@@ -294,7 +294,7 @@ def part2_multi_dataset():
         print(f"  {'':>50s} chi^2/N = {chi2_Ob/n_Ob:.3f}")
 
     print(f"\n  2.2 Omega_DM (dark matter density fraction)")
-    print(f"  {'Dataset':<20s} {'Observed':>10s} {'Error':>10s} {'SFE':>10s} {'Delta':>10s} {'Tension':>10s}")
+    print(f"  {'Dataset':<20s} {'Observed':>10s} {'Error':>10s} {'CE':>10s} {'Delta':>10s} {'Tension':>10s}")
     print(f"  {'-'*70}")
 
     chi2_DM = 0.0
@@ -312,7 +312,7 @@ def part2_multi_dataset():
         print(f"  {'':>50s} chi^2/N = {chi2_DM/n_DM:.3f}")
 
     print(f"\n  2.3 Omega_Lambda (dark energy density fraction)")
-    print(f"  {'Dataset':<20s} {'Observed':>10s} {'Error':>10s} {'SFE':>10s} {'Delta':>10s} {'Tension':>10s}")
+    print(f"  {'Dataset':<20s} {'Observed':>10s} {'Error':>10s} {'CE':>10s} {'Delta':>10s} {'Tension':>10s}")
     print(f"  {'-'*70}")
 
     chi2_DE = 0.0
@@ -335,7 +335,7 @@ def part2_multi_dataset():
     print(f"\n  2.4 Combined Goodness-of-Fit")
     print(f"    Total chi^2 = {chi2_total:.3f}")
     print(f"    N_data = {n_total}")
-    print(f"    N_param (fitted in SFE) = 0")
+    print(f"    N_param (fitted in CE) = 0")
     print(f"    N_dof = {n_total}")
     if n_total > 0:
         chi2_red = chi2_total / n_total
@@ -353,30 +353,30 @@ def part2_multi_dataset():
 def part3_error_propagation():
     separator("3. ERROR PROPAGATION (Monte Carlo, 100k samples)")
 
-    stats = sfe_error_propagation(Const.alpha_s, Const.alpha_s_err)
+    stats = ce_error_propagation(Const.alpha_s, Const.alpha_s_err)
 
-    pred = sfe_predictions(Const.alpha_s)
+    pred = ce_predictions(Const.alpha_s)
     pd = Const.planck_derived()
 
-    print(f"\n  3.1 SFE Predictions with Input Uncertainties")
-    print(f"  {'Quantity':<20s} {'SFE Central':>12s} {'SFE sigma':>12s} {'Planck':>12s} {'Planck sigma':>12s} {'Tension':>10s}")
+    print(f"\n  3.1 CE Predictions with Input Uncertainties")
+    print(f"  {'Quantity':<20s} {'CE Central':>12s} {'CE sigma':>12s} {'Planck':>12s} {'Planck sigma':>12s} {'Tension':>10s}")
     print(f"  {'-'*80}")
 
     for key, label in [("Omega_b", "Omega_b"), ("Omega_Lambda", "Omega_Lambda"),
                         ("Omega_DM", "Omega_DM")]:
-        sfe_val = stats[key]["mean"]
-        sfe_err = stats[key]["std"]
+        ce_val = stats[key]["mean"]
+        ce_err = stats[key]["std"]
         if key in pd:
             obs_val, obs_err = pd[key]
         else:
             obs_val, obs_err = 0, 1
-        combined_err = math.sqrt(sfe_err**2 + obs_err**2)
-        tension = abs(sfe_val - obs_val) / combined_err if combined_err > 0 else 0
-        print(f"  {label:<20s} {sfe_val:12.5f} {sfe_err:12.5f} {obs_val:12.5f} {obs_err:12.5f} {tension:8.2f} sigma")
+        combined_err = math.sqrt(ce_err**2 + obs_err**2)
+        tension = abs(ce_val - obs_val) / combined_err if combined_err > 0 else 0
+        print(f"  {label:<20s} {ce_val:12.5f} {ce_err:12.5f} {obs_val:12.5f} {obs_err:12.5f} {tension:8.2f} sigma")
 
     print(f"\n  3.2 Closure-Branch Sensitivity (alpha_s only)")
-    pred_hi_als = sfe_predictions(Const.alpha_s + Const.alpha_s_err)
-    pred_lo_als = sfe_predictions(Const.alpha_s - Const.alpha_s_err)
+    pred_hi_als = ce_predictions(Const.alpha_s + Const.alpha_s_err)
+    pred_lo_als = ce_predictions(Const.alpha_s - Const.alpha_s_err)
 
     print(f"\n  Half-width shift from alpha_s +/- sigma:")
     for key, label in [("Omega_b", "Omega_b"), ("Omega_DM", "Omega_DM"), ("Omega_Lambda", "Omega_Lambda")]:
@@ -387,23 +387,23 @@ def part3_error_propagation():
 def part4_secondary_predictions():
     separator("4. SECONDARY & CROSS-DOMAIN PREDICTIONS")
 
-    pred = sfe_predictions(Const.alpha_s)
+    pred = ce_predictions(Const.alpha_s)
     pd = Const.planck_derived()
 
     subsep("4.1 DM/DE Ratio = alpha_s * D_eff")
-    ratio_sfe = pred["alpha"]
+    ratio_ce = pred["alpha"]
     ratio_obs = pd["Omega_DM"][0] / pd["Omega_Lambda"][0]
     # Error on ratio: delta(R) / R = sqrt( (dOm_DM/Om_DM)^2 + (dOm_L/Om_L)^2 )
     r_err = ratio_obs * math.sqrt(
         (pd["Omega_DM"][1]/pd["Omega_DM"][0])**2 +
         (pd["Omega_Lambda"][1]/pd["Omega_Lambda"][0])**2
     )
-    tension_r = abs(ratio_sfe - ratio_obs) / r_err
+    tension_r = abs(ratio_ce - ratio_obs) / r_err
 
-    print(f"    SFE:     {ratio_sfe:.5f}")
+    print(f"    CE:     {ratio_ce:.5f}")
     print(f"    Planck:  {ratio_obs:.5f} +/- {r_err:.5f}")
     print(f"    Tension: {tension_r:.2f} sigma")
-    print(f"    Precision needed to distinguish: delta(R)/R < {abs(ratio_sfe-ratio_obs)/ratio_obs*100:.2f}%")
+    print(f"    Precision needed to distinguish: delta(R)/R < {abs(ratio_ce-ratio_obs)/ratio_obs*100:.2f}%")
 
     subsep("4.2 alpha_s from Cosmology (reverse prediction)")
     alpha_s_cosmo = ratio_obs / pred["D_eff"]
@@ -454,23 +454,23 @@ def part4_secondary_predictions():
     print(f"    IF confirmed: independent measurement of Weinberg angle from CMB")
 
     subsep("4.4 Baryon-to-DM Ratio")
-    ratio_bDM_sfe = pred["Omega_b"] / pred["Omega_DM"]
+    ratio_bDM_ce = pred["Omega_b"] / pred["Omega_DM"]
     ratio_bDM_obs = pd["Omega_b"][0] / pd["Omega_DM"][0]
     r_bDM_err = ratio_bDM_obs * math.sqrt(
         (pd["Omega_b"][1]/pd["Omega_b"][0])**2 +
         (pd["Omega_DM"][1]/pd["Omega_DM"][0])**2
     )
-    print(f"    Omega_b / Omega_DM (SFE)   = {ratio_bDM_sfe:.4f}")
+    print(f"    Omega_b / Omega_DM (CE)   = {ratio_bDM_ce:.4f}")
     print(f"    Omega_b / Omega_DM (Planck) = {ratio_bDM_obs:.4f} +/- {r_bDM_err:.4f}")
-    print(f"    SFE formula: eps^2 / ((1-eps^2)*alpha_s*D_eff/(1+alpha_s*D_eff))")
+    print(f"    CE formula: eps^2 / ((1-eps^2)*alpha_s*D_eff/(1+alpha_s*D_eff))")
     print(f"               = eps^2 * (1+alpha_s*D_eff) / ((1-eps^2)*alpha_s*D_eff)")
     print(f"    This ratio is fully determined by alpha_s (with sin^2 theta_W derived)")
 
     subsep("4.5 Cosmic Coincidence: Why Omega_DM ~ 5 * Omega_b?")
     ratio_5 = pred["Omega_DM"] / pred["Omega_b"]
-    print(f"    Omega_DM / Omega_b (SFE)    = {ratio_5:.2f}")
+    print(f"    Omega_DM / Omega_b (CE)    = {ratio_5:.2f}")
     print(f"    Omega_DM / Omega_b (Planck)  = {pd['Omega_DM'][0]/pd['Omega_b'][0]:.2f}")
-    print(f"\n    SFE explanation:")
+    print(f"\n    CE explanation:")
     print(f"      Omega_DM/Omega_b = (1-eps^2)*alpha_s*D_eff / (eps^2*(1+alpha_s*D_eff))")
     print(f"      For eps^2 << 1:  ~ alpha_s*D_eff / eps^2")
     print(f"                       ~ {Const.alpha_ratio:.3f} / {pred['Omega_b']:.4f} = {Const.alpha_ratio/pred['Omega_b']:.1f}")
@@ -482,24 +482,24 @@ def part4_secondary_predictions():
     # rho_crit = 3 H0^2 / (8 pi G)
     # In natural units: rho_crit ~ (2.47e-3 eV)^4 for H0 = 67.36 km/s/Mpc
     rho_crit_eV4 = (2.47e-3)**4  # eV^4
-    rho_Lambda_sfe = pred["Omega_Lambda"] * rho_crit_eV4
+    rho_Lambda_ce = pred["Omega_Lambda"] * rho_crit_eV4
     rho_Lambda_obs = 0.6847 * rho_crit_eV4
 
     # QFT naive prediction: (M_Pl)^4 ~ (1.22e28 eV)^4
     rho_QFT = (1.22e28)**4  # eV^4
 
-    print(f"    rho_Lambda (SFE)  = {rho_Lambda_sfe:.3e} eV^4")
+    print(f"    rho_Lambda (CE)  = {rho_Lambda_ce:.3e} eV^4")
     print(f"    rho_Lambda (obs)  = {rho_Lambda_obs:.3e} eV^4")
     print(f"    rho_Lambda (QFT)  = {rho_QFT:.3e} eV^4")
     print(f"    QFT / obs ratio: {rho_QFT / rho_Lambda_obs:.2e} (the '10^122 problem')")
-    print(f"    SFE / obs ratio:  {rho_Lambda_sfe / rho_Lambda_obs:.4f} (1.4% level)")
-    print(f"    SFE reduces 10^122 discrepancy to O(1%)")
+    print(f"    CE / obs ratio:  {rho_Lambda_ce / rho_Lambda_obs:.4f} (1.4% level)")
+    print(f"    CE reduces 10^122 discrepancy to O(1%)")
 
 
 def part5_model_comparison():
-    separator("5. MODEL COMPARISON: SFE vs LCDM")
+    separator("5. MODEL COMPARISON: CE vs LCDM")
 
-    pred = sfe_predictions(Const.alpha_s)
+    pred = ce_predictions(Const.alpha_s)
     datasets = get_datasets()
 
     # Count data points with Omega_b, Omega_DM, Omega_Lambda
@@ -508,23 +508,23 @@ def part5_model_comparison():
         for key in ["Omega_b", "Omega_DM", "Omega_Lambda"]:
             if key in data:
                 obs, err = data[key]
-                sfe_val = pred[key]
-                data_points.append((name, key, obs, err, sfe_val))
+                ce_val = pred[key]
+                data_points.append((name, key, obs, err, ce_val))
 
     n_data = len(data_points)
 
-    # SFE chi^2
-    chi2_sfe = sum(((d[4] - d[2]) / d[3])**2 for d in data_points)
+    # CE chi^2
+    chi2_ce = sum(((d[4] - d[2]) / d[3])**2 for d in data_points)
 
     # LCDM: by construction fits perfectly (6 parameters for 6 CMB observables)
     # For fair comparison: LCDM has chi^2 ~ 0 for its fitted parameters
     chi2_lcdm = 0.0  # LCDM fits by construction
 
-    k_sfe = 0   # SFE: 0 fitted parameters
+    k_ce = 0   # CE: 0 fitted parameters
     k_lcdm = 6  # LCDM: 6 parameters (Omega_b h^2, Omega_c h^2, theta_s, tau, A_s, n_s)
 
     print(f"\n  5.1 Parameter Count")
-    print(f"  {'':>25s} {'SFE':>12s} {'LCDM':>12s}")
+    print(f"  {'':>25s} {'CE':>12s} {'LCDM':>12s}")
     print(f"  {'-'*50}")
     print(f"  {'Input parameters':>25s} {'2 (fixed)':>12s} {'6':>12s}")
     print(f"  {'Free parameters':>25s} {'0':>12s} {'6':>12s}")
@@ -532,48 +532,48 @@ def part5_model_comparison():
     print(f"  {'Data points used':>25s} {n_data:>12d} {n_data:>12d}")
 
     print(f"\n  5.2 Goodness-of-Fit")
-    print(f"    SFE:  chi^2 = {chi2_sfe:.3f} (N_data = {n_data}, N_param = {k_sfe})")
+    print(f"    CE:  chi^2 = {chi2_ce:.3f} (N_data = {n_data}, N_param = {k_ce})")
     print(f"    LCDM: chi^2 ~ 0 (by construction, 6 params fitted to data)")
 
     # BIC = chi^2 + k * ln(N)
-    bic_sfe = chi2_sfe + k_sfe * math.log(n_data)
+    bic_ce = chi2_ce + k_ce * math.log(n_data)
     bic_lcdm = chi2_lcdm + k_lcdm * math.log(n_data)
     print(f"\n  5.3 Bayesian Information Criterion (BIC)")
     print(f"    BIC = chi^2 + k * ln(N)")
-    print(f"    BIC(SFE)  = {chi2_sfe:.3f} + {k_sfe} * ln({n_data}) = {bic_sfe:.3f}")
+    print(f"    BIC(CE)  = {chi2_ce:.3f} + {k_ce} * ln({n_data}) = {bic_ce:.3f}")
     print(f"    BIC(LCDM) = {chi2_lcdm:.3f} + {k_lcdm} * ln({n_data}) = {bic_lcdm:.3f}")
-    print(f"    Delta BIC = BIC(SFE) - BIC(LCDM) = {bic_sfe - bic_lcdm:.3f}")
-    if bic_sfe < bic_lcdm:
-        print(f"    -> SFE PREFERRED (lower BIC by {bic_lcdm - bic_sfe:.1f})")
-    elif bic_sfe - bic_lcdm < 2:
+    print(f"    Delta BIC = BIC(CE) - BIC(LCDM) = {bic_ce - bic_lcdm:.3f}")
+    if bic_ce < bic_lcdm:
+        print(f"    -> CE PREFERRED (lower BIC by {bic_lcdm - bic_ce:.1f})")
+    elif bic_ce - bic_lcdm < 2:
         print(f"    -> COMPARABLE (Delta BIC < 2)")
-    elif bic_sfe - bic_lcdm < 6:
+    elif bic_ce - bic_lcdm < 6:
         print(f"    -> Positive evidence for LCDM (2 < Delta BIC < 6)")
     else:
         print(f"    -> Strong evidence for LCDM (Delta BIC > 6)")
 
     # AIC = chi^2 + 2k
-    aic_sfe = chi2_sfe + 2 * k_sfe
+    aic_ce = chi2_ce + 2 * k_ce
     aic_lcdm = chi2_lcdm + 2 * k_lcdm
     print(f"\n  5.4 Akaike Information Criterion (AIC)")
-    print(f"    AIC(SFE)  = {chi2_sfe:.3f} + 2*{k_sfe} = {aic_sfe:.3f}")
+    print(f"    AIC(CE)  = {chi2_ce:.3f} + 2*{k_ce} = {aic_ce:.3f}")
     print(f"    AIC(LCDM) = {chi2_lcdm:.3f} + 2*{k_lcdm} = {aic_lcdm:.3f}")
-    print(f"    Delta AIC = {aic_sfe - aic_lcdm:.3f}")
-    if aic_sfe < aic_lcdm:
-        print(f"    -> SFE PREFERRED by AIC (fewer parameters, comparable fit)")
+    print(f"    Delta AIC = {aic_ce - aic_lcdm:.3f}")
+    if aic_ce < aic_lcdm:
+        print(f"    -> CE PREFERRED by AIC (fewer parameters, comparable fit)")
     else:
         print(f"    -> LCDM PREFERRED by AIC (better fit outweighs extra params)")
 
     print(f"\n  5.5 Predictive Power per Parameter")
     pred_per_param_sfe = float("inf")
     pred_per_param_lcdm = 0.0 / k_lcdm  # LCDM makes 0 predictions (all fitted)
-    print(f"    SFE:  infinite (no fitted parameters)")
+    print(f"    CE:  infinite (no fitted parameters)")
     print(f"    LCDM: {pred_per_param_lcdm:.1f} predictions per parameter")
-    print(f"    SFE predicts 3 quantities it was NOT fitted to")
+    print(f"    CE predicts 3 quantities it was NOT fitted to")
     print(f"    LCDM predicts 0 quantities it was not fitted to")
 
     print(f"\n  5.6 Qualitative Comparison")
-    print(f"  {'Feature':>30s} {'SFE':>15s} {'LCDM':>15s}")
+    print(f"  {'Feature':>30s} {'CE':>15s} {'LCDM':>15s}")
     print(f"  {'-'*60}")
     print(f"  {'Omega_b from first principles':>30s} {'YES':>15s} {'NO (fitted)':>15s}")
     print(f"  {'Omega_DM from first principles':>30s} {'YES':>15s} {'NO (fitted)':>15s}")
@@ -589,50 +589,50 @@ def part5_model_comparison():
 def part6_future_tests():
     separator("6. FUTURE EXPERIMENTAL TESTS")
 
-    pred = sfe_predictions(Const.alpha_s)
+    pred = ce_predictions(Const.alpha_s)
 
     subsep("6.1 CMB-S4 (~2030)")
     sigma_Ob_S4 = 0.0003  # expected Omega_b precision
     print(f"    Expected Omega_b precision: +/- {sigma_Ob_S4}")
-    print(f"    SFE prediction: {pred['Omega_b']:.5f}")
+    print(f"    CE prediction: {pred['Omega_b']:.5f}")
     print(f"    Distinguishing power: {abs(pred['Omega_b'] - 0.04930) / sigma_Ob_S4:.1f} sigma")
     print(f"    (if Planck central value is correct)")
 
     subsep("6.2 DESI BAO (2025-2028)")
     sigma_Om_DESI = 0.003  # expected Omega_m precision
-    Om_sfe = pred["Omega_b"] + pred["Omega_DM"]
+    Om_ce = pred["Omega_b"] + pred["Omega_DM"]
     print(f"    Expected Omega_m precision: +/- {sigma_Om_DESI}")
-    print(f"    SFE prediction: Omega_m = {Om_sfe:.4f}")
+    print(f"    CE prediction: Omega_m = {Om_ce:.4f}")
     print(f"    Current Planck: 0.3153 +/- 0.0073")
-    print(f"    DESI will test SFE at {abs(Om_sfe - 0.3153) / sigma_Om_DESI:.1f} sigma level")
+    print(f"    DESI will test CE at {abs(Om_ce - 0.3153) / sigma_Om_DESI:.1f} sigma level")
 
     subsep("6.3 Euclid (2024-2030)")
     print(f"    Weak lensing: sigma(Omega_m) ~ 0.002")
     print(f"    Galaxy clustering: sigma(alpha_s) from structure growth")
     print(f"    Dark energy equation of state: w = -1 +/- 0.02")
-    print(f"    SFE predicts w = -1 exactly (cosmological constant)")
+    print(f"    CE predicts w = -1 exactly (cosmological constant)")
 
     subsep("6.4 Critical Discriminating Tests")
     print(f"""
     Test 1: DM/DE ratio precision
-      SFE: Omega_DM/Omega_Lambda = alpha_s * D_eff = {pred['alpha']:.5f}
+      CE: Omega_DM/Omega_Lambda = alpha_s * D_eff = {pred['alpha']:.5f}
       Need: delta(ratio) < 0.005 to test at 1.5 sigma
       Timeline: DESI + Euclid combination (~2028)
 
     Test 2: alpha_s cross-check
       If alpha_s(cosmo) = alpha_s(closure) within precision:
-        -> Strong evidence for SFE-type relationship
+        -> Strong evidence for CE-type relationship
       If they diverge:
         -> alpha = alpha_s * D_eff relation is accidental
 
     Test 3: Redshift evolution of DM/DE
-      SFE: DM/DE = alpha_s * D_eff = CONSTANT
+      CE: DM/DE = alpha_s * D_eff = CONSTANT
       Some DE models: DM/DE varies with redshift
       DESI multi-tracer at z = 0.3, 0.5, 0.7, 1.0 will test this
 
     Test 4: S8 tension resolution
-      SFE Omega_m = {Om_sfe:.4f} (slightly lower than Planck)
-      If SFE is correct: sigma_8 * sqrt(Omega_m/0.3) slightly modified
+      CE Omega_m = {Om_ce:.4f} (slightly lower than Planck)
+      If CE is correct: sigma_8 * sqrt(Omega_m/0.3) slightly modified
       May help resolve S8 tension between CMB and weak lensing
 """)
 
@@ -640,9 +640,9 @@ def part6_future_tests():
 def part7_comprehensive_table():
     separator("7. COMPREHENSIVE PREDICTION TABLE")
 
-    pred = sfe_predictions(Const.alpha_s)
+    pred = ce_predictions(Const.alpha_s)
     pd = Const.planck_derived()
-    stats = sfe_error_propagation(Const.alpha_s, Const.alpha_s_err, n_samples=50000)
+    stats = ce_error_propagation(Const.alpha_s, Const.alpha_s_err, n_samples=50000)
 
     ratio_obs = pd["Omega_DM"][0] / pd["Omega_Lambda"][0]
     ratio_err = ratio_obs * math.sqrt(
@@ -686,7 +686,7 @@ def part7_comprehensive_table():
   All predictions from closure: d=3, alpha_total=1/(2*pi), alpha_s=0.11789
 
   +-----------+---------------------+-------------+-------------+----------+---------+
-  | Domain    | Quantity            | SFE Pred.   | Observed    | Error    | Tension |
+  | Domain    | Quantity            | CE Pred.   | Observed    | Error    | Tension |
   +-----------+---------------------+-------------+-------------+----------+---------+""")
 
     rows = [
@@ -701,16 +701,16 @@ def part7_comprehensive_table():
         ("Particle", "Delta a_e (x1e14)", "5.82", "<3600", "--", None),
     ]
 
-    for domain, qty, sfe_val, obs_val, err_str, _ in rows:
+    for domain, qty, ce_val, obs_val, err_str, _ in rows:
         try:
-            sfe_f = float(sfe_val)
+            ce_f = float(ce_val)
             obs_f = float(obs_val)
             err_f = float(err_str)
-            tension = f"{abs(sfe_f - obs_f)/err_f:.2f} sig"
+            tension = f"{abs(ce_f - obs_f)/err_f:.2f} sig"
         except ValueError:
             tension = "compat."
 
-        print(f"  | {domain:<9s} | {qty:<19s} | {sfe_val:>11s} | {obs_val:>11s} | {err_str:>8s} | {tension:>7s} |")
+        print(f"  | {domain:<9s} | {qty:<19s} | {ce_val:>11s} | {obs_val:>11s} | {err_str:>8s} | {tension:>7s} |")
 
     print(f"  +-----------+---------------------+-------------+-------------+----------+---------+")
 
@@ -722,12 +722,12 @@ def part7_comprehensive_table():
 
 
 def part8_dm_identity():
-    separator("8. DARK MATTER IDENTITY IN SFE")
+    separator("8. DARK MATTER IDENTITY IN CE")
 
     print(f"""
-  8.1 What IS Dark Matter in SFE?
+  8.1 What IS Dark Matter in CE?
   --------------------------------
-  SFE does NOT postulate DM as a specific particle species.
+  CE does NOT postulate DM as a specific particle species.
   Instead, DM emerges as a necessary consequence of path integral folding.
 
   Physical picture:
@@ -760,7 +760,7 @@ def part8_dm_identity():
       sigma_SI ~ 10^{{-42}} cm^2 at 25 MeV: below CRESST limit (~10^{{-34}})
       Accessible only to future sub-GeV detectors (SENSEI, OSCURA)
 
-  8.4 Predictions Unique to SFE DM
+  8.4 Predictions Unique to CE DM
   ---------------------------------
   1. Omega_DM = 0.2571 (zero free parameters)
   2. DM/DE = alpha_s * D_eff = constant in redshift
@@ -778,7 +778,7 @@ def part8_dm_identity():
 # ============================================================
 if __name__ == "__main__":
     print("=" * 74)
-    print("  SFE DARK MATTER: PAPER-QUALITY ANALYSIS")
+    print("  CE DARK MATTER: PAPER-QUALITY ANALYSIS")
     print("  Predictions vs Multi-Dataset Observations")
     print("=" * 74)
 

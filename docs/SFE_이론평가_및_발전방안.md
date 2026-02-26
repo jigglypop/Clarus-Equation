@@ -1,11 +1,11 @@
-# SFE 이론 종합 평가 및 양자물리/입자물리/양자컴퓨팅 방향 발전 방안
+# CE 이론 종합 평가 및 양자물리/입자물리/양자컴퓨팅 방향 발전 방안
 
-## I. SFE 이론 현황 종합 평가
+## I. CE 이론 현황 종합 평가
 
 ### 1. 이론의 핵심 구조
 
 #### 1.1 기본 가설
-- 억압장 $\Phi$ (실수 스칼라장, 행렬값 확장 가능)
+- 광명장 $\Phi$ (실수 스칼라장, 행렬값 확장 가능)
 - 질량 억압 공식: $m_{\text{eff}} = m_0(1-\epsilon)$
 - 우주론적 열역학 균형 원리: $\epsilon = \dfrac{\rho_\Lambda - \rho_m}{\rho_\Lambda + \rho_m} \approx 2\Omega_\Lambda - 1$
 - 핵심 매개변수: $\epsilon \approx 0.37$ (우주론 관측으로부터 고정)
@@ -25,7 +25,7 @@
 #### 1.2.1 (보강) 최소 EFT 수준의 라그랑지언(예시)과 질량 억압의 연결
 아래는 "질량-비례 결합"을 구체화하기 위한 **최소 유효장론(EFT) 수준의 예시**이다(모형의 유일한 선택을 뜻하지 않음).
 
-- 스칼라 억압장(예시):
+- 스칼라 광명장(예시):
   $$\mathcal{L}_\Phi = \frac{1}{2}\partial_\mu\Phi\,\partial^\mu\Phi - V(\Phi)$$
 - 물질과의 결합(예시: 질량항에 직접 결합):
   $$\mathcal{L}_{\text{int}} = - g_m\,\Phi\,\sum_f m_f\,\bar\psi_f\psi_f$$
@@ -37,12 +37,12 @@
 문서의 "배율 예측"이 재현 가능해지려면, 아래를 최소 단위로 명시해야 한다.
 - Lindblad 형태:
   $$\dot\rho = -i[H,\rho] + \sum_k\gamma_k\left(L_k\rho L_k^\dagger - \frac{1}{2}\{L_k^\dagger L_k,\rho\}\right)$$
-- SFE의 구체화는 결국 "어떤 $L_k$가 선택되는가(질량밀도? 위치? 에너지?)"와 "그 계수 $\gamma_k$가 $\epsilon$에 어떻게 스케일되는가"로 귀결된다.
+- CE의 구체화는 결국 "어떤 $L_k$가 선택되는가(질량밀도? 위치? 에너지?)"와 "그 계수 $\gamma_k$가 $\epsilon$에 어떻게 스케일되는가"로 귀결된다.
 - 따라서 결맞음 시간/게이트 오류율/열잡음 같은 실험량은 **$L_k$의 선택**에 따라 다른 함수형이 될 수 있으므로, 단순 배율($\times 1.587$)은 "특정 $L_k$ 가정" 아래에서만 성립함을 문서에 명기해야 한다.
 
 ### 2. 검증 성과 (미시 섹터)
 
-| 현상 | SFE 예측 | 실험 관측 | 오차 | 상태 |
+| 현상 | CE 예측 | 실험 관측 | 오차 | 상태 |
 |:---|:---|:---|:---|:---|
 | 양자 결맞음 시간 | +58.7% | ~+60% | 0.8% | 통과 |
 | LIGO 열잡음 | +58.7% | +50~60% | 범위 내 | 통과 |
@@ -121,12 +121,12 @@
 - 가변 미세구조상수: $g_C \approx 0$ 제약으로 설명력 제한
 
 #### 3.3 실험적 검증 부족
-- 억압보손 직접 검출: 미발견
+- 광명보손 직접 검출: 미발견
 - 제5의 힘 탐색: 간접 증거만 존재
 - LHC, Belle-II 등 고에너지 실험: 아직 신호 없음
 
 #### 3.4 (보강) 제약(Constraints)과의 긴장 관계를 문서에 포함해야 하는 이유
-SFE가 "질량-비례 결합"을 가진 새로운 장(또는 효과적 환경)이라면, 아래 류의 제약을 체계적으로 정리하지 않으면 모델의 생존 가능성을 판단할 수 없다.
+CE가 "질량-비례 결합"을 가진 새로운 장(또는 효과적 환경)이라면, 아래 류의 제약을 체계적으로 정리하지 않으면 모델의 생존 가능성을 판단할 수 없다.
 - 등가원리/역제곱법칙(ISL) 실험(제5힘)에서의 결합 상한
 - 항성 냉각/초신성(SN1987A) 같은 천체물리 제약(특히 MeV 스케일 보손 가정 시)
 - BBN/CMB의 $N_{\text{eff}}$, 에너지 주입 제약(경입자/약결합일 때)
@@ -187,7 +187,7 @@ SFE가 "질량-비례 결합"을 가진 새로운 장(또는 효과적 환경)�
 4. CMB-S4 정밀도에서 최종 판정
 
 #### 3.7 (메인) 5상수 무피팅 해법
-위 3.6의 수치 최적화는 탐색 단계였고, SFE의 본래 목적(5상수 기반 무피팅)과 엄밀히 일치하지 않는다.  
+위 3.6의 수치 최적화는 탐색 단계였고, CE의 본래 목적(5상수 기반 무피팅)과 엄밀히 일치하지 않는다.  
 따라서 본문 메인 모델은 다음 **상수-유도형(무피팅)**으로 고정한다.
 
 **A. 부트스트랩 누적량 보정(무피팅)**
@@ -263,70 +263,70 @@ $$\frac{\Omega_{DM}}{\Omega_\Lambda}
 
 ### 1. 양자 정보 이론과의 통합
 
-#### 1.1 양자 얽힘 엔트로피와 억압장
-**목표**: 억압장 $\Phi$가 양자 얽힘 구조에 미치는 영향을 정량화
+#### 1.1 양자 얽힘 엔트로피와 광명장
+**목표**: 광명장 $\Phi$가 양자 얽힘 구조에 미치는 영향을 정량화
 
 **제안 1: 얽힘 엔트로피 스케일링 법칙**
-- 2-큐비트 시스템의 concurrence $C$에 대한 SFE 보정:
-  $$C_{\text{SFE}} = C_{\text{STD}} \times (1 - \epsilon \mathcal{G}[d])$$
+- 2-큐비트 시스템의 concurrence $C$에 대한 CE 보정:
+  $$C_{\text{CE}} = C_{\text{STD}} \times (1 - \epsilon \mathcal{G}[d])$$
   여기서 $\mathcal{G}[d]$는 큐비트 간 거리 $d$의 함수
 - 검증 경로: 초전도 큐비트, 트랩 이온에서 거리 의존 얽힘 실험
 
 **(보강) $\mathcal{G}[d]$의 후보 함수형을 명시**
-- 억압보손 질량 $m_\phi$가 존재한다면, Yukawa 꼴의 거리 감쇠가 자연스러운 후보:
+- 광명보손 질량 $m_\phi$가 존재한다면, Yukawa 꼴의 거리 감쇠가 자연스러운 후보:
   $$\mathcal{G}[d] \propto \frac{e^{-m_\phi d}}{d}$$
 - "거리 의존"을 주장하려면, 실험에서 $d$를 바꿨을 때 **환경 잡음의 변화**(배선/크로스토크/온도구배)를 어떻게 제거/보정하는지까지 프로토콜로 함께 제시해야 한다.
 
 **제안 2: 양자 Fisher 정보와 정밀 측정**
-- 양자 Fisher 정보 $F_Q$의 SFE 보정:
-  $$F_Q^{\text{SFE}} = \frac{F_Q^{\text{STD}}}{1-\epsilon}$$
+- 양자 Fisher 정보 $F_Q$의 CE 보정:
+  $$F_Q^{\text{CE}} = \frac{F_Q^{\text{STD}}}{1-\epsilon}$$
 - 응용: 원자 간섭계, 중력파 검출기의 정밀도 한계 재계산
 
 **(보강) 적용 범위 조건**
 - 위 관계는 "순수상태/유니터리 파라미터 부호화" 또는 "특정 형태의 잡음(예: 위상확산 계수의 단순 스케일링)"에서만 성립할 수 있다.
 - 실제 실험은 혼합상태+잡음이므로, $F_Q$ 스케일링은 **잡음 채널(예: dephasing, amplitude damping)과 그 계수의 $\epsilon$ 의존성**을 먼저 고정한 뒤 유도하는 방식으로 문서화해야 한다.
 
-#### 1.2 양자 오류 정정과 SFE
-**목표**: 억압장에 의한 결맞음 상실이 양자 오류 정정 코드에 미치는 영향 분석
+#### 1.2 양자 오류 정정과 CE
+**목표**: 광명장에 의한 결맞음 상실이 양자 오류 정정 코드에 미치는 영향 분석
 
 **제안 3: Threshold 정리 재유도**
 - 표준 threshold $p_{\text{th}} \sim 10^{-4}$ (Surface Code)
-- SFE 보정: 
-  $$p_{\text{th}}^{\text{SFE}} = p_{\text{th}}^{\text{STD}} \times \frac{1}{1-\epsilon} \approx 1.6 \times p_{\text{th}}^{\text{STD}}$$
+- CE 보정: 
+  $$p_{\text{th}}^{\text{CE}} = p_{\text{th}}^{\text{STD}} \times \frac{1}{1-\epsilon} \approx 1.6 \times p_{\text{th}}^{\text{STD}}$$
 - 의미(보강, 모순 해소):
   - **임계값 자체**만 보면 $p_{\text{th}}$가 커져서 "더 관대"해진다.
-  - 그러나 SFE가 **물리 오류율 $p$**도 함께 증가시키는(혹은 특정 오류 채널을 강화하는) 모형이라면, 실질 난이도는 증가할 수 있다.
+  - 그러나 CE가 **물리 오류율 $p$**도 함께 증가시키는(혹은 특정 오류 채널을 강화하는) 모형이라면, 실질 난이도는 증가할 수 있다.
   - 따라서 이 문서에서는 "$p_{\text{th}}$ 변화"와 "$p$ 변화"를 분리해서 기술하고, 어떤 물리 채널이 강화되는지(예: 상관 잡음/집단 dephasing)까지 명시해야 한다.
 
 **제안 4: Decoherence-Free Subspace (DFS) 재분석**
-- SFE 환경에서 DFS 조건 재유도
-- 억압장이 집단 결맞음 상실(collective decoherence)에 미치는 영향
+- CE 환경에서 DFS 조건 재유도
+- 광명장이 집단 결맞음 상실(collective decoherence)에 미치는 영향
 
 ### 2. 양자 측정 이론 확장
 
-#### 2.1 양자 측정 백액션과 억압장
-**제안 5: Weak Measurement와 SFE**
-- Weak value $A_w = \dfrac{\langle\phi_f|A|\phi_i\rangle}{\langle\phi_f|\phi_i\rangle}$의 SFE 보정
+#### 2.1 양자 측정 백액션과 광명장
+**제안 5: Weak Measurement와 CE**
+- Weak value $A_w = \dfrac{\langle\phi_f|A|\phi_i\rangle}{\langle\phi_f|\phi_i\rangle}$의 CE 보정
 - 영향함수 수정: $\langle\phi_f|\phi_i\rangle \to \langle\phi_f|\phi_i\rangle e^{-\epsilon J}$
 - 검증: AAV(Aharonov-Albert-Vaidman) 실험 재현
 
 #### 2.2 양자 Zeno/Anti-Zeno 효과
-**제안 6: 측정 주기와 억압장 상호작용**
+**제안 6: 측정 주기와 광명장 상호작용**
 - 측정 간격 $\tau$에 대한 생존 확률:
   $$P(t) = \exp\left(-\frac{t}{\tau_{\text{eff}}}\right), \quad \tau_{\text{eff}} = \frac{\tau_{\text{STD}}}{1-\epsilon}$$
 - 예측: Zeno 효과 강화, Anti-Zeno 영역 확장
 
 ### 3. 양자 다체계와 상전이
 
-#### 3.1 양자 임계점과 억압장
+#### 3.1 양자 임계점과 광명장
 **제안 7: 양자 상전이 보편성 등급 수정**
-- Ising 모형 임계지수 $\nu, \beta, \gamma$에 대한 SFE 보정
+- Ising 모형 임계지수 $\nu, \beta, \gamma$에 대한 CE 보정
 - 수치 시뮬레이션: DMRG, tensor network 방법 적용
 
 **제안 8: 토폴로지컬 양자 상태**
-- Kitaev chain, Majorana 모드에 대한 억압장 효과
+- Kitaev chain, Majorana 모드에 대한 광명장 효과
 - 토폴로지컬 gap $\Delta_{\text{top}}$의 스케일링:
-  $$\Delta_{\text{top}}^{\text{SFE}} = \Delta_{\text{top}}^{\text{STD}} \times (1-\epsilon)^{\alpha}$$
+  $$\Delta_{\text{top}}^{\text{CE}} = \Delta_{\text{top}}^{\text{STD}} \times (1-\epsilon)^{\alpha}$$
   여기서 $\alpha$는 계산 필요
 
 ---
@@ -335,10 +335,10 @@ $$\frac{\Omega_{DM}}{\Omega_\Lambda}
 
 ### 1. Flavor 물리학 확장
 
-#### 1.1 텐서 억압장 정식화 완성
-**목표**: 행렬값 억압장 $\Phi_{IJ}(x)$의 동역학 완전 유도
+#### 1.1 텐서 광명장 정식화 완성
+**목표**: 행렬값 광명장 $\Phi_{IJ}(x)$의 동역학 완전 유도
 
-**제안 9: Flavor 대칭성과 억압장**
+**제안 9: Flavor 대칭성과 광명장**
 - 라그랑지언:
   $$\mathcal{L} = -g_{IJ}\,\Phi_{IJ}\,(m_0)_{IJ}\,\bar\psi_I\psi_J$$
 - 대각화 기저와 질량 고유기저의 관계
@@ -359,7 +359,7 @@ $$\frac{\Omega_{DM}}{\Omega_\Lambda}
   - BBN/CMN: 경입자 수 $N_{\text{eff}} < 3.3$
 
 #### 1.2 힉스 섹터와의 연결
-**제안 11: 억압장-힉스 혼합**
+**제안 11: 광명장-힉스 혼합**
 - 혼합 라그랑지언:
   $$\mathcal{L}_{\text{mix}} = -\kappa\,\Phi^2\,H^\dagger H$$
 - LHC에서의 힉스 붕괴 분기비 변화 예측:
@@ -374,33 +374,33 @@ $$\frac{\Omega_{DM}}{\Omega_\Lambda}
 
 ### 2. 고에너지 산란 과정
 
-#### 2.1 QCD와 억압장
+#### 2.1 QCD와 광명장
 **제안 12: 강입자 질량 스펙트럼 미세 조정**
-- Proton-neutron 질량 차이에 대한 SFE 보정:
-  $$\Delta m_{np}^{\text{SFE}} = \Delta m_{np}^{\text{QCD}} \times (1-\epsilon_{\text{QCD}})$$
+- Proton-neutron 질량 차이에 대한 CE 보정:
+  $$\Delta m_{np}^{\text{CE}} = \Delta m_{np}^{\text{QCD}} \times (1-\epsilon_{\text{QCD}})$$
 - 격자 QCD 시뮬레이션 필요
 
-**제안 13: Jet Quenching과 억압장**
-- 중이온 충돌(RHIC, LHC)에서 쿼크-글루온 플라즈마 내 억압장 효과
+**제안 13: Jet Quenching과 광명장**
+- 중이온 충돌(RHIC, LHC)에서 쿼크-글루온 플라즈마 내 광명장 효과
 - 에너지 손실률 $dE/dx$ 스케일링
 
 #### 2.2 중성미자 물리학
-**제안 14: 중성미자 진동과 억압장**
+**제안 14: 중성미자 진동과 광명장**
 - 질량 제곱 차이 $\Delta m_{ij}^2$에 대한 보정:
-  $$\Delta m_{ij}^{2,\text{SFE}} = \Delta m_{ij}^{2,\text{STD}} \times (1-\epsilon_i)(1-\epsilon_j)$$
+  $$\Delta m_{ij}^{2,\text{CE}} = \Delta m_{ij}^{2,\text{STD}} \times (1-\epsilon_i)(1-\epsilon_j)$$
 - 예측: T2K, NOvA 실험에서 미세 편차
 
 ### 3. 암흑물질과 암흑에너지 통합
 
-#### 3.1 억압장의 우주론적 역할 재정립
-**제안 15: 억압장 = 암흑에너지 동일시 완성**
+#### 3.1 광명장의 우주론적 역할 재정립
+**제안 15: 광명장 = 암흑에너지 동일시 완성**
 - k=0 모드 제거 후 비국소 적분:
   $$\rho_\Phi = \alpha^2 \bar{\rho}_m^2 \lambda^2 C(X)$$
 - $\lambda$ 고정점 방정식 정밀 수치 해법
 - 목표: $|\Omega_\Phi^{\text{theory}} - \Omega_\Lambda^{\text{obs}}| < 5\%$
 
-**제안 16: 암흑물질 후보로서의 억압보손**
-- 10~20 MeV 억압보손이 온암흑물질(Warm Dark Matter) 역할
+**제안 16: 암흑물질 후보로서의 광명보손**
+- 10~20 MeV 광명보손이 온암흑물질(Warm Dark Matter) 역할
 - 구조 형성 시뮬레이션: Lyman-$\alpha$ forest 제약
 
 ---
@@ -409,10 +409,10 @@ $$\frac{\Omega_{DM}}{\Omega_\Lambda}
 
 ### 1. 양자 알고리즘 성능 분석
 
-#### 1.1 게이트 충실도와 억압장
+#### 1.1 게이트 충실도와 광명장
 **제안 17: 단일/2-큐비트 게이트 오류율**
 - 게이트 시간 $t_g$에서의 충실도:
-  $$F_{\text{SFE}} = F_{\text{STD}} \times \exp\left(-\frac{\epsilon\,t_g}{\tau_{\text{coh}}}\right)$$
+  $$F_{\text{CE}} = F_{\text{STD}} \times \exp\left(-\frac{\epsilon\,t_g}{\tau_{\text{coh}}}\right)$$
 - 실험 계획: IBM Q, Google Sycamore 데이터 재분석
 
 **(보강) 벤치마킹에서 바로 쓰는 관측량으로 변환**
@@ -420,19 +420,19 @@ $$\frac{\Omega_{DM}}{\Omega_\Lambda}
   - 예: RB의 depolarizing 파라미터 $r$ 또는 EPC(평균 오류율)로의 변환식(플랫폼별 정의를 따름)
   - 게이트 길이 $t_g$ 스윕 시 $r(t_g)$의 함수형(지수/선형/상관잡음일 때의 비지수 꼴)을 구분 예측으로 제시
 
-#### 1.2 양자 최적화와 SFE
+#### 1.2 양자 최적화와 CE
 **제안 18: QAOA, VQE 성능 평가**
 - 변분 최적화에서 회로 깊이 $d$와 정확도 관계:
-  $$\text{Accuracy}_{\text{SFE}} = \text{Accuracy}_{\text{STD}} - \epsilon\,\mathcal{O}(d^2)$$
-- 목표: SFE 환경에서 최적 회로 설계 지침
+  $$\text{Accuracy}_{\text{CE}} = \text{Accuracy}_{\text{STD}} - \epsilon\,\mathcal{O}(d^2)$$
+- 목표: CE 환경에서 최적 회로 설계 지침
 
 ### 2. 양자 시뮬레이션 플랫폼
 
-#### 2.1 SFE 효과 전용 시뮬레이터 개발
+#### 2.1 CE 효과 전용 시뮬레이터 개발
 **제안 19: Python 라이브러리 확장**
 - (미구현) Python 시뮬레이터 모듈 설계/구현
 - 기능:
-  - 억압장 환경에서의 양자 회로 시뮬레이션
+  - 광명장 환경에서의 양자 회로 시뮬레이션
   - Lindblad 방정식 수치 솔버
   - 얽힘 엔트로피, Fisher 정보 계산기
 
@@ -440,25 +440,25 @@ $$\frac{\Omega_{DM}}{\Omega_\Lambda}
 
 ```python
 # 예시 코드 구조
-from sfe.quantum import SFECircuit, SFELindblad
+from sfe.quantum import CECircuit, CELindblad
 
-# 억압장 환경 정의
+# 광명장 환경 정의
 epsilon = 0.37
-env = SFELindblad(epsilon=epsilon, coupling='mass-proportional')
+env = CELindblad(epsilon=epsilon, coupling='mass-proportional')
 
 # 양자 회로 실행
-circuit = SFECircuit(n_qubits=5)
+circuit = CECircuit(n_qubits=5)
 circuit.h(0)
 circuit.cnot(0, 1)
 result = circuit.run(environment=env, shots=1000)
 
 # 결맞음 시간 분석
 tau_d = env.decoherence_time(T=300, particle='electron')
-print(f"결맞음 시간: {tau_d/1.587} (STD) vs {tau_d} (SFE)")
+print(f"결맞음 시간: {tau_d/1.587} (STD) vs {tau_d} (CE)")
 ```
 
 #### 2.2 양자 하드웨어 벤치마킹
-**제안 20: SFE 서명(signature) 탐색 프로토콜**
+**제안 20: CE 서명(signature) 탐색 프로토콜**
 - 실험 설계:
   1. 동일 플랫폼에서 결맞음 시간 온도/거리 스윕
   2. 배율 일관성 검증: 모든 조건에서 $\times 1.587$ 유지?
@@ -466,16 +466,16 @@ print(f"결맞음 시간: {tau_d/1.587} (STD) vs {tau_d} (SFE)")
 
 ### 3. 양자 통신과 암호
 
-#### 3.1 양자 키 분배(QKD)와 SFE
+#### 3.1 양자 키 분배(QKD)와 CE
 **제안 21: BB84, E91 프로토콜 보안 재분석**
 - 도청 검출률(QBER) 임계값:
-  $$\text{QBER}_{\text{th}}^{\text{SFE}} = \text{QBER}_{\text{th}}^{\text{STD}} + \epsilon\,\Delta$$
+  $$\text{QBER}_{\text{th}}^{\text{CE}} = \text{QBER}_{\text{th}}^{\text{STD}} + \epsilon\,\Delta$$
 - 예측: 보안 거리 약간 감소
 
 #### 3.2 양자 네트워크
 **제안 22: 양자 중계기 성능**
 - Entanglement Swapping 성공률:
-  $$P_{\text{swap}}^{\text{SFE}} = P_{\text{swap}}^{\text{STD}} \times (1-\epsilon)^n$$
+  $$P_{\text{swap}}^{\text{CE}} = P_{\text{swap}}^{\text{STD}} \times (1-\epsilon)^n$$
   여기서 $n$은 중계 단계 수
 
 ---
@@ -484,7 +484,7 @@ print(f"결맞음 시간: {tau_d/1.587} (STD) vs {tau_d} (SFE)")
 
 ### 1. 재규격화 군(Renormalization Group) 분석
 
-**제안 23: 억압장의 RG 흐름**
+**제안 23: 광명장의 RG 흐름**
 - $\mu^2(\Lambda), \lambda(\Lambda), g_B(\Lambda)$ 베타 함수 유도:
   $$\beta_\lambda = \frac{d\lambda}{d\ln\Lambda} = \alpha\lambda^2 + \beta g_B^4 + \cdots$$
 - 목표: UV 고정점 존재성 증명, Asymptotic Safety 탐색
@@ -497,19 +497,19 @@ print(f"결맞음 시간: {tau_d/1.587} (STD) vs {tau_d} (SFE)")
 
 ### 2. 비평형 통계역학
 
-**제안 24: Fluctuation Theorem과 SFE**
-- Jarzynski 등식에 대한 억압장 보정:
-  $$\langle e^{-\beta W} \rangle_{\text{SFE}} = e^{-\beta(1-\epsilon)\Delta F}$$
+**제안 24: Fluctuation Theorem과 CE**
+- Jarzynski 등식에 대한 광명장 보정:
+  $$\langle e^{-\beta W} \rangle_{\text{CE}} = e^{-\beta(1-\epsilon)\Delta F}$$
 
 **제안 25: Kramers-Moyal 전개**
 - Fokker-Planck 방정식 유도
-- 억압장 환경에서의 확산 계수 $D_{\text{SFE}}$
+- 광명장 환경에서의 확산 계수 $D_{\text{CE}}$
 
 ### 3. 정보 기하학
 
-**제안 26: 양자 Fisher 계량과 억압장**
+**제안 26: 양자 Fisher 계량과 광명장**
 - 파라미터 공간의 계량 텐서:
-  $$g_{\mu\nu}^{\text{SFE}} = \text{Tr}[\rho\,\partial_\mu\ln\rho\,\partial_\nu\ln\rho] \times (1-\epsilon)$$
+  $$g_{\mu\nu}^{\text{CE}} = \text{Tr}[\rho\,\partial_\mu\ln\rho\,\partial_\nu\ln\rho] \times (1-\epsilon)$$
 
 ---
 
@@ -535,25 +535,25 @@ print(f"결맞음 시간: {tau_d/1.587} (STD) vs {tau_d} (SFE)")
 ### 2. 중기 (3-7년)
 
 4. **뮤온 g-2 실험 (Fermilab, J-PARC)**
-   - SFE Flavor 확장 예측 $\Delta a_\mu \sim 10^{-9}$ 검증
+   - CE Flavor 확장 예측 $\Delta a_\mu \sim 10^{-9}$ 검증
    - 전자 g-2 동시 측정 (Northwestern)
 
-5. **억압보손 직접 탐색**
+5. **광명보손 직접 탐색**
    - 10~20 MeV 영역: NA64, PADME, Belle-II
    - Beam-dump 실험: SHiP, FASER
 
 6. **양자컴퓨터 벤치마킹**
-   - 게이트 충실도 SFE 서명 탐색
+   - 게이트 충실도 CE 서명 탐색
    - 다양한 플랫폼 (초전도, 트랩 이온, 광학) 비교
 
 ### 3. 장기 (7-15년)
 
 7. **차세대 중력파 검출기 (Einstein Telescope, Cosmic Explorer)**
-   - 설계 단계부터 SFE 효과 반영
+   - 설계 단계부터 CE 효과 반영
    - 열잡음 예산 재계산
 
 8. **미래 가속기 (FCC, ILC)**
-   - 힉스-억압장 혼합 탐색
+   - 힉스-광명장 혼합 탐색
    - 희귀 붕괴 $\mu \to e\gamma$ 정밀 측정
 
 9. **우주론 관측 (Euclid, SKA, CMB-S4)**
@@ -566,13 +566,13 @@ print(f"결맞음 시간: {tau_d/1.587} (STD) vs {tau_d} (SFE)")
 
 ### 1. 통일 이론으로의 발전
 
-**제안 27: SFE와 양자 중력**
-- 억압장이 시공간 거품(spacetime foam)과 연결?
-- 홀로그래피 원리: 우주 경계의 정보 = 억압장 VEV
+**제안 27: CE와 양자 중력**
+- 광명장이 시공간 거품(spacetime foam)과 연결?
+- 홀로그래피 원리: 우주 경계의 정보 = 광명장 VEV
 
 **제안 28: 창발 중력 시나리오**
-- Verlinde의 emergent gravity와 SFE 통합
-- 엔트로피 힘으로서의 중력과 억압장의 관계
+- Verlinde의 emergent gravity와 CE 통합
+- 엔트로피 힘으로서의 중력과 광명장의 관계
 
 ### 2. 인식론적 의의
 
@@ -591,12 +591,12 @@ print(f"결맞음 시간: {tau_d/1.587} (STD) vs {tau_d} (SFE)")
 3. **양자컴퓨터 실험 설계** (결맞음 시간 배율 검증)
 
 ### 고우선 과제 (High)
-4. **억압장 RG 분석** (이론 자기일관성 증명)
+4. **광명장 RG 분석** (이론 자기일관성 증명)
 5. **제1원리 유도 개선** (순환성 제거, $\epsilon$ 기원 설명)
-6. **암흑물질-억압보손 연결** (우주론 시뮬레이션)
+6. **암흑물질-광명보손 연결** (우주론 시뮬레이션)
 
 ### 중우선 과제 (Medium)
-7. **SFE 양자 시뮬레이터 개발** (Python 라이브러리)
+7. **CE 양자 시뮬레이터 개발** (Python 라이브러리)
 8. **QCD 결합 연구** (격자 시뮬레이션)
 9. **양자 오류 정정 threshold 재계산**
 10. **비평형 통계역학 확장** (Fluctuation Theorem)
@@ -605,7 +605,7 @@ print(f"결맞음 시간: {tau_d/1.587} (STD) vs {tau_d} (SFE)")
 
 ## IX. 결론
 
-SFE 이론은 현재 다음과 같은 상태에 있다:
+CE 이론은 현재 다음과 같은 상태에 있다:
 
 **강점**:
 - 단일 매개변수로 우주론-양자물리 연결
@@ -618,7 +618,7 @@ SFE 이론은 현재 다음과 같은 상태에 있다:
 - 제1원리 유도 불완전 (여전히 관측값 의존)
 - 본선식(A+B)의 강한 적합 개선에 대해 블라인드 외부검정이 아직 미완료
 - Flavor 비보편성 설명 부족 (양성자 반경, 뮤온 g-2)
-- 억압보손 미발견
+- 광명보손 미발견
 - 순환성 논란 지속
 
 **발전 방향**:
@@ -626,7 +626,7 @@ SFE 이론은 현재 다음과 같은 상태에 있다:
 2. **입자물리**: Flavor 확장, 힉스 혼합, QCD/중성미자 결합
 3. **양자컴퓨팅**: 게이트 충실도, 오류 정정, 벤치마킹 프로토콜
 
-SFE는 아직 완성된 이론이 아니지만, 표준모형과 ΛCDM를 넘어서는 새로운 물리학의 유력한 후보이다. 향후 10년간의 실험적 검증과 이론적 정교화를 통해 그 진위가 판명될 것이다.
+CE는 아직 완성된 이론이 아니지만, 표준모형과 ΛCDM를 넘어서는 새로운 물리학의 유력한 후보이다. 향후 10년간의 실험적 검증과 이론적 정교화를 통해 그 진위가 판명될 것이다.
 
 ### (보강) 결론에 포함할 최소 '판정 기준'
 향후 검증에서 애매한 "범위 내" 판정을 줄이기 위해, 아래 중 최소 2~3개를 **사전등록(preregistration)된 판정 기준**으로 제시하는 것이 바람직하다.
@@ -645,13 +645,13 @@ m_eff = m_0 * (1 - epsilon)
 epsilon = 2 * Omega_Lambda - 1  # ≈ 0.37
 
 # 결맞음 시간
-tau_D_SFE = tau_D_STD / (1 - epsilon)  # × 1.587
+tau_D_CE = tau_D_STD / (1 - epsilon)  # × 1.587
 
 # 열잡음
-S_x_SFE = S_x_STD / (1 - epsilon)  # × 1.587
+S_x_CE = S_x_STD / (1 - epsilon)  # × 1.587
 
 # 뮤온 수명
-tau_obs_SFE = tau_obs_STD / sqrt(1 - epsilon)  # × 1.259
+tau_obs_CE = tau_obs_STD / sqrt(1 - epsilon)  # × 1.259
 
 # 성장률 (거시)
 mu(a) = 1 - epsilon_grav * S(a)
@@ -662,7 +662,7 @@ mu(a) = 1 - epsilon_grav * S(a)
 # - 출력(검정): 다른 z들에서의 f*sigma8(z) 홀드아웃 잔차 및 holdout chi2
 # - 구현: examples/physics/cosmology.py 의 --calibrate-epsilon-grav / --compare-fsigma8 / --fsigma8-data
 
-# 억압장 에너지 밀도
+# 광명장 에너지 밀도
 rho_Phi = alpha^2 * rho_m^2 * lambda^2 * C(X)
 ```
 

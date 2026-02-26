@@ -20,10 +20,10 @@ impl PinkNoiseGenerator {
     }
 
     pub fn new_with_params(steps: usize, alpha: f64, scale: f64) -> Self {
-        let sup_alpha_env = std::env::var("SFE_LYAP_SUP_ALPHA")
+        let sup_alpha_env = std::env::var("CE_LYAP_SUP_ALPHA")
             .ok()
             .and_then(|v| v.parse().ok());
-        let sup_gamma_env = std::env::var("SFE_LYAP_SUP_GAMMA")
+        let sup_gamma_env = std::env::var("CE_LYAP_SUP_GAMMA")
             .ok()
             .and_then(|v| v.parse().ok());
 
