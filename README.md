@@ -55,19 +55,19 @@ $d=0$에서는 공간도 게이지도 없으므로, $\Phi$의 성질이 자동�
 
 ## 핵심 결과
 
-| 영역 | 관측량 | CE 예측 (NLO) | 관측값 (Planck 2020) | 차이 |
+| 영역 | 관측량 | CE 예측 | 관측값 (Planck 2020) | 차이 |
 |---|---|---|---|---|
 | 통합 | $\sin^2\theta_W$ | 0.23122 | $0.23122 \pm 0.00003$ | $0.1\sigma$ |
 | 우주론 | $\Omega_b$ | 0.04865 | $0.0493 \pm 0.001$ | $0.7\sigma$ |
-| 우주론 | $\Omega_\Lambda$ | 0.6865 | 0.6847 | 0.26% |
-| 우주론 | $\Omega_{DM}$ | 0.2649 | 0.2607 | 1.6% |
+| 우주론 | $\Omega_\Lambda$ | 0.6891 | 0.6847 | 0.64% |
+| 우주론 | $\Omega_{DM}$ | 0.2623 | 0.2607 | 0.61% |
 | 우주론 | $w_0$ | $-0.768$ | $-0.770 \pm 0.06$ (DESI) | $0.03\sigma$ |
 | 입자물리 | $\Delta a_\mu$ (뮤온 $g\text{-}2$) | $249.0 \times 10^{-11}$ | $249 \pm 48$ | $0.00\sigma$ |
 | 입자물리 | $m_\phi$ | 29.65 MeV | 22-30 MeV | 범위 내 |
 | 입자물리 | $\Delta r_p^2$ (양성자 반경) | $0.0601\;\text{fm}^2$ | $0.0587 \pm 0.0033$ | $0.4\sigma$ |
-| 교차검증 | DM/DE 비율 | 0.3858 | 0.3808 | 1.3% |
+| 교차검증 | DM/DE 비율 | 0.3806 | 0.3808 | 0.03% |
 
-**자유 매개변수 0개.** 우주론 데이터도 입자물리 측정값도 입력으로 사용하지 않는다.
+**자유 매개변수 0개.** 우주론 데이터도 입자물리 측정값도 입력으로 사용하지 않는다. DM/DE 비율은 바리온 관성(3계층 피드백)을 포함한다.
 
 ---
 
@@ -87,13 +87,13 @@ graph TD
     DEFF --- DELTA
 
     DELTA --> BS["부트스트랩<br/>eps^2 = 0.049"]
-    DELTA --> QCD["1-loop QCD<br/>DM/DE = alpha_s pi"]
+    DELTA --> QCD["DM/DE = alpha_s D<br/>+ 3계층 바리온 관성"]
     DELTA --> MASS["질량공식<br/>m_phi = m_p delta^2<br/>= 29.65 MeV"]
     DELTA --> HP["포탈결합<br/>lambda_HP = delta^2<br/>= 0.032"]
     DELTA --> Z2["Z2 대칭<br/>sin theta_mix = 0"]
 
     BS --> OB["Omega_b = 5%"]
-    QCD --> DM["DM 26% + DE 69%"]
+    QCD --> DM["DM 26.2% + DE 68.9%"]
     MASS --> PR["양성자 반경 0.3 sigma<br/>뮤온 g-2 0.00 sigma"]
     HP --> HI["H -> inv ~0.5%"]
     Z2 --> EXP["K붕괴 / g-2<br/>실험제약 자동 통과"]
@@ -163,7 +163,7 @@ $d=0$ 기원이 주는 Z2 대칭($\Phi \to -\Phi$)은 실험적 제약을 자동
 |---|---|---|
 | $\Delta a_\mu = 249.0 \times 10^{-11}$ | Fermilab $g\text{-}2$ 최종 | 2025 |
 | $w_0 \sim -0.83$ | DESI DR2 | 2025 |
-| $\text{DM/DE} = \alpha_s\,\pi$ | DESI BAO | 2025-2028 |
+| $\text{DM/DE} = 0.381$ (3계층 관성) | DESI BAO | 2025-2028 |
 | $\Omega_b = 0.04865$ | CMB-S4 | ~2030 |
 | $\text{BR}(H \to \text{invisible}) \sim 0.005$ | HL-LHC | 2029-2035 |
 | 22-30 MeV 스칼라 (쌍생성) | PADME, NA64 | 2025-2027 |
@@ -177,11 +177,11 @@ $d=0$ 기원이 주는 Z2 대칭($\Phi \to -\Phi$)은 실험적 제약을 자동
 | 외부 입력 | 0 | 6 |
 | $\Omega_b$ 유도 | 첫 원리 | 피팅 |
 | DM/DE 비율 | 유도 | 미설명 |
-| 우주상수 문제 | $10^{122} \to 1\%$ | 미해결 |
-| 적합도 | ~2% | <0.1% |
+| 우주상수 문제 | $10^{122} \to 0.6\%$ | 미해결 |
+| 적합도 | ~0.6% | <0.1% |
 | 반증 가능 | 가능 | 유연 |
 
-$\Lambda$CDM은 6개를 피팅한다. CE는 0개로 예측한다. 2%의 일치는 0-파라미터 이론으로서 비범하다.
+$\Lambda$CDM은 6개를 피팅한다. CE는 0개로 예측한다. 0.6%의 일치는 0-파라미터 이론으로서 비범하다.
 
 ---
 
@@ -323,6 +323,7 @@ $Y \propto g'^{\,2} \, J_\Phi(\omega_S)$: 광명장 스펙트럼에서 결정되
 | [`d0_full_verification.py`](examples/physics/d0_full_verification.py) | d=0 기원 전수 검증, 역접힘 분석 |
 | [`fcnc_analysis.py`](examples/physics/fcnc_analysis.py) | Z2 대칭, FCNC 해결 |
 | [`resonance_fusion.py`](examples/physics/resonance_fusion.py) | 공명 핵융합 설계 |
+| [`baryon_inertia.py`](examples/physics/baryon_inertia.py) | 3계층 바리온 관성, DM/DE 0.03% 정합 |
 
 ---
 
