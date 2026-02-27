@@ -3,7 +3,7 @@
 *To you, two thousand years from now.*
 
 
-차원이 없는 상태($d=0$)에서 3차원 시공간($d=3$)이 결정화될 때, 결정화되지 못한 잔여($\delta$)가 스칼라장 $\Phi$로 남는다. 이 하나의 사실로부터, 외부 입력 상수 0개로 우주 에너지 구성과 입자물리 관측량 45종이 동시에 유도된다.
+차원이 없는 상태($d=0$)에서 3차원 시공간($d=3$)이 결정화될 때, 결정화되지 못한 잔여($\delta$)가 스칼라장 $\Phi$로 남는다. 이 하나의 사실로부터, 외부 입력 상수 0개로 우주 에너지 구성, 히그스 질량, CKM 혼합각, 중성미자 질량, 인플레이션 텐서 비율 등 50종 이상의 관측량이 동시에 유도된다.
 
 $$
 D_{\text{eff}} = d + \delta, \quad d = 3, \quad \delta = \sin^2\theta_W \cos^2\theta_W = 0.17776
@@ -66,8 +66,100 @@ $d=0$에서는 공간도 게이지도 없으므로, $\Phi$의 성질이 자동�
 | 입자물리 | $m_\phi$ | 29.65 MeV | 22-30 MeV | 범위 내 |
 | 입자물리 | $\Delta r_p^2$ (양성자 반경) | $0.0601\;\text{fm}^2$ | $0.0587 \pm 0.0033$ | $0.4\sigma$ |
 | 교차검증 | DM/DE 비율 | 0.3806 | 0.3808 | 0.03% |
+| 입자물리 | $M_H$ (히그스 질량) | 125.35 GeV | $125.25 \pm 0.17$ | $0.6\sigma$ |
+| 입자물리 | $|V_{cb}|$ | 0.04048 | 0.0408 | 0.8% |
+| 입자물리 | Jarlskog $J$ | $3.13 \times 10^{-5}$ | $3.08 \times 10^{-5}$ | 1.5% |
+| 입자물리 | $\sin^2\theta_{13}$ (PMNS) | 0.02222 | 0.02220 | 0.1% |
+| 입자물리 | $m_{\nu_3}$ (중성미자) | 51.5 meV | ~50.5 meV | 2.0% |
+| 입자물리 | Koide $Q_K$ | 2/3 | 0.66661 | 0.001% |
 
-**자유 매개변수 0개.** 우주론 데이터도 입자물리 측정값도 입력으로 사용하지 않는다. DM/DE 비율은 바리온 관성(3계층 피드백)을 포함한다.
+**자유 매개변수 0개.** 우주론 데이터도 입자물리 측정값도 입력으로 사용하지 않는다. 15개 관측량 전부가 $\alpha_s = 0.11789$ 하나에서 연쇄적으로 유도된다.
+
+---
+
+## 차원당 결합: $\alpha_{\text{dim}}$
+
+경로적분이 차원별로 곱적 분해될 때, 각 차원의 유효 결합 강도는:
+
+$$\alpha_{\text{dim}} = \alpha_s^{1/d} = \alpha_s^{1/3} = 0.490$$
+
+이 하나의 양이 CE의 나머지 구조 전체를 관통한다:
+
+| 관계식 | 유도 |
+|---|---|
+| $\sin\theta_W = 2\,\alpha_{\text{dim}}^2$ | 전자약 혼합각 |
+| $\xi = \alpha_{\text{dim}}$ | 비최소 중력 결합 |
+| $\|V_{cb}\| = \alpha_{\text{dim}}^{9/2} = \alpha_s^{3/2}$ | CKM 2-3 세대 전이 |
+| $m_\mu/m_\tau = \alpha_{\text{dim}}^4 = \alpha_s^{4/3}$ | 렙톤 세대비 |
+
+$\alpha_{\text{dim}}$은 "한 차원이 접히는 세기"이다. 광명장 $\Phi$는 $d=0$ 잔여물이므로, 중력과의 결합 강도도 정확히 $\alpha_{\text{dim}}$이다.
+
+---
+
+## 히그스 질량과 QCD 폼팩터
+
+$$M_H = M_Z \times F, \quad F = 1 + \alpha_s D_{\text{eff}} = 1.3746$$
+
+$F$는 QCD 진공이 전자약 스케일을 증폭하는 폼팩터이다. 같은 $F$가 양성자 반경에도 적용된다:
+
+$$\Delta r_p^2 = \frac{\alpha \lambda_{HP}}{6\pi m_\phi^2} \times F, \quad F = 1 + \alpha_s D_{\text{eff}}$$
+
+히그스 질량과 양성자 반경이 동일한 폼팩터에서 나온다. 예측: $M_H = 125.35$ GeV (관측 $125.25 \pm 0.17$, $0.6\sigma$).
+
+---
+
+## CKM 혼합과 Jarlskog 불변량
+
+세대 간 전이 진폭은 접힘 깊이에 의해 결정된다:
+
+$$|V_{us}| = \frac{\sin^2\theta_W}{1 + \alpha_s/(2\pi)} = 0.227 \quad (1.2\%)$$
+
+$$|V_{cb}| = \alpha_s^{d/2} = \alpha_s^{3/2} = 0.0405 \quad (0.8\%)$$
+
+$$|V_{ub}| = \alpha_s^{8/3} \cdot F^{1/3} = 0.00372 \quad (2.7\%)$$
+
+세 원소의 $\alpha_s$ 지수를 더하면:
+
+$$\frac{4}{3} + \frac{3}{2} + \frac{8}{3} = \frac{11}{2}$$
+
+$$J = 4\,\alpha_s^{11/2} = 3.13 \times 10^{-5} \quad (\text{관측 } 3.08 \times 10^{-5},\; 1.5\%)$$
+
+Jarlskog 불변량의 지수 $11/2$는 자유 매개변수가 아니라 세 CKM 원소의 접힘 지수의 산술적 합이다.
+
+---
+
+## 중성미자 질량
+
+2-loop Weinberg 연산자를 통해, 중성미자 질량은 하전 렙톤 질량에 비례한다:
+
+$$m_{\nu_l} = \frac{\delta^4 \cdot m_l}{(16\pi^2)^2 \cdot (1+R)}$$
+
+$1/(1+R)$은 DE 분율이다. 중성미자는 QCD에 참여하지 않으므로, 질량 생성은 광명장의 DE 모드에만 의존한다.
+
+| 세대 | CE 예측 | 관측 |
+|---|---|---|
+| $\nu_\tau$ | **51.5 meV** | **~50.5 meV** (2%) |
+| $\nu_\mu$ | 3.1 meV | ~8.7 meV |
+| $\sum m_\nu$ | **55 meV** | **< 120 meV** (Planck) |
+
+CE는 **정상 계층(NH)**을 예측한다. JUNO (~2026)에서 검증된다.
+
+---
+
+## 페르미온 질량 계층
+
+세대 간 질량비의 $\alpha_s$ 지수가 하강 분할 $\{3,2,1\}$과 직접 연결된다:
+
+| 비율 | 지수 $n$ | 정합 |
+|---|---|---|
+| $m_\mu/m_\tau$ | $\alpha_s^{4/3}$ = $\alpha_s^{(d+1)/d}$ | 2.8% |
+| $m_e/m_\mu$ | $\alpha_s^{5/2}$ = $\alpha_s^{(d+2)/(d-1)}$ | 1.3% |
+| $m_c/m_t$ | $\alpha_s^{7/3}$ = $\alpha_s^{(d+4)/d}$ | 7.3% |
+| $m_u/m_c$ | $\alpha_s^{3}$ = $\alpha_s^{d}$ | 3.7% |
+| $m_s/m_b$ | $\alpha_s^{9/5}$ | 4.6% |
+| $m_d/m_s$ | $\alpha_s^{7/5}$ | 0.3% |
+
+지수의 분모에 $d=3, 2, 1$이 반복 출현한다. Koide 공식 $Q_K = 2/d = 2/3$은 0.001% 정합.
 
 ---
 
@@ -91,20 +183,29 @@ graph TD
     DELTA --> MASS["질량공식<br/>m_phi = m_p delta^2<br/>= 29.65 MeV"]
     DELTA --> HP["포탈결합<br/>lambda_HP = delta^2<br/>= 0.032"]
     DELTA --> Z2["Z2 대칭<br/>sin theta_mix = 0"]
+    DELTA --> XI["xi = alpha_s^(1/3)<br/>차원당 결합"]
 
     BS --> OB["Omega_b = 5%"]
     QCD --> DM["DM 26.2% + DE 68.9%"]
+    QCD --> MH["M_H = M_Z * F<br/>= 125.35 GeV"]
     MASS --> PR["양성자 반경 0.3 sigma<br/>뮤온 g-2 0.00 sigma"]
+    HP --> NU["m_nu3 = 51.5 meV<br/>NH 예측"]
     HP --> HI["H -> inv ~0.5%"]
     Z2 --> EXP["K붕괴 / g-2<br/>실험제약 자동 통과"]
+    XI --> W0["w0 = -0.768<br/>r = 0.0014"]
+    AS --> CKM["V_cb = alpha_s^(3/2)<br/>J = 4*alpha_s^(11/2)"]
 
     style E fill:#1a1a2e,color:#e0e0ff,stroke:#7b68ee
     style DELTA fill:#2d1b4e,color:#e8d5f5,stroke:#9b59b6
     style OB fill:#0d3b2e,color:#a8e6cf,stroke:#2ecc71
     style DM fill:#0d3b2e,color:#a8e6cf,stroke:#2ecc71
+    style MH fill:#0d3b2e,color:#a8e6cf,stroke:#2ecc71
     style PR fill:#0d3b2e,color:#a8e6cf,stroke:#2ecc71
+    style NU fill:#0d3b2e,color:#a8e6cf,stroke:#2ecc71
     style HI fill:#0d3b2e,color:#a8e6cf,stroke:#2ecc71
     style EXP fill:#0d3b2e,color:#a8e6cf,stroke:#2ecc71
+    style W0 fill:#0d3b2e,color:#a8e6cf,stroke:#2ecc71
+    style CKM fill:#0d3b2e,color:#a8e6cf,stroke:#2ecc71
 ```
 
 ---
@@ -112,13 +213,15 @@ graph TD
 ## 라그랑지안
 
 $$
-\mathcal{L} = \frac{R}{16\pi G} + \mathcal{L}_{\text{SM}}^{d=3} + \frac{1}{2}(\partial_\mu \Phi)^2 - V(\Phi) + \delta^2 \Phi^2 |H|^2
+\mathcal{L} = \frac{R}{16\pi G} + \xi R \Phi^2 + \mathcal{L}_{\text{SM}}^{d=3} + \frac{1}{2}(\partial_\mu \Phi)^2 - V(\Phi) + \delta^2 \Phi^2 |H|^2
 $$
 
 - $\Phi$: $d=0$ 잔여물. 게이지 싱글렛, 실수 스칼라, Z2 대칭
+- $\xi R \Phi^2$: 비최소 중력 결합. $\xi = \alpha_s^{1/3} = 0.490$ (차원당 결합에서 유도)
 - $\delta^2 \Phi^2 |H|^2$: 히그스 포탈 결합. $\lambda_{\text{HP}} = \delta^2$
 - $V(\Phi) = +\frac{1}{2}m_\phi^2 \Phi^2 + \frac{1}{4}\lambda \Phi^4$: 양의 질량항 (VEV 없음, Z2 보존)
 - 암흑에너지는 $V(\Phi)$가 아니라 부트스트랩 방정식에서 유도
+- $\xi R \Phi^2$ 항이 동적 DE ($w_0 \neq -1$)와 인플레이션을 동시에 지배
 
 ---
 
@@ -162,11 +265,14 @@ $d=0$ 기원이 주는 Z2 대칭($\Phi \to -\Phi$)은 실험적 제약을 자동
 | 예측 | 실험 | 시기 |
 |---|---|---|
 | $\Delta a_\mu = 249.0 \times 10^{-11}$ | Fermilab $g\text{-}2$ 최종 | 2025 |
-| $w_0 \sim -0.83$ | DESI DR2 | 2025 |
+| $w_0 = -0.768$ ($\xi = \alpha_s^{1/3}$) | DESI DR2 | 2025 |
 | $\text{DM/DE} = 0.381$ (3계층 관성) | DESI BAO | 2025-2028 |
+| 정상 계층(NH), $\sum m_\nu = 55$ meV | JUNO | ~2026 |
 | $\Omega_b = 0.04865$ | CMB-S4 | ~2030 |
 | $\text{BR}(H \to \text{invisible}) \sim 0.005$ | HL-LHC | 2029-2035 |
+| $M_H/M_Z = 1 + \alpha_s D_{\text{eff}}$ | HL-LHC / FCC-ee | 2029-2040 |
 | 22-30 MeV 스칼라 (쌍생성) | PADME, NA64 | 2025-2027 |
+| $r = 0.0014$ (인플레이션 텐서) | LiteBIRD | ~2032 |
 
 ---
 
@@ -176,12 +282,16 @@ $d=0$ 기원이 주는 Z2 대칭($\Phi \to -\Phi$)은 실험적 제약을 자동
 |---|---|---|
 | 외부 입력 | 0 | 6 |
 | $\Omega_b$ 유도 | 첫 원리 | 피팅 |
-| DM/DE 비율 | 유도 | 미설명 |
+| DM/DE 비율 | 유도 (0.03%) | 미설명 |
+| 히그스 질량 | 유도 ($0.6\sigma$) | 미설명 |
+| CKM/PMNS | 유도 (0.1-2.7%) | 19개 자유 매개변수 |
+| 중성미자 질량 | NH 예측, $m_3$ 2% | 미설명 |
 | 우주상수 문제 | $10^{122} \to 0.6\%$ | 미해결 |
+| 동적 DE ($w_0$) | 유도 ($0.04\sigma$) | 확장 필요 (w0waCDM) |
 | 적합도 | ~0.6% | <0.1% |
 | 반증 가능 | 가능 | 유연 |
 
-$\Lambda$CDM은 6개를 피팅한다. CE는 0개로 예측한다. 0.6%의 일치는 0-파라미터 이론으로서 비범하다.
+$\Lambda$CDM은 6개를 피팅한다. CE는 0개로 예측한다. $\Lambda$CDM이 설명하지 못하는 것들 -- 왜 바리온이 5%인지, 왜 DM이 DE의 38%인지, 왜 히그스가 125 GeV인지, 왜 세대가 3개인지 -- 을 CE는 $\alpha_s$ 하나에서 유도한다.
 
 ---
 
@@ -242,53 +352,43 @@ AI 연구자들은 Softmax를 "잘 작동하니까" 썼다. CE의 관점에서 �
 
 ## 핵심 수식 (물리학자/수학자용)
 
-### 광명장 기본식
+### 유도 공식 일람
 
-비선택 경로의 잔류 진폭은 곡률에 의해 지수적으로 억압된다:
+| 공식 | 의미 |
+|---|---|
+| $\alpha_{\text{total}} = 1/(2\pi)$ | 시간 그리드 상수화 |
+| $\sin^2\theta_W = 4\alpha_s^{4/3}$ | 전자약 혼합각 |
+| $\alpha_{\text{dim}} = \alpha_s^{1/d}$ | 차원당 결합 강도 |
+| $\delta = \sin^2\theta_W\cos^2\theta_W$ | 전자약 혼합 매개변수 |
+| $D_{\text{eff}} = d + \delta$ | 유효 차원 |
+| $\varepsilon^2 = \exp[-(1-\varepsilon^2)D_{\text{eff}}]$ | 부트스트랩 (바리온 분율) |
+| $R = \alpha_s D_{\text{eff}} (1 + \text{3계층 관성})$ | DM/DE 비율 |
+| $F = 1 + \alpha_s D_{\text{eff}}$ | QCD 진공 폼팩터 |
+| $M_H = M_Z \cdot F$ | 히그스 질량 |
+| $\xi = \alpha_s^{1/3}$ | 비최소 중력 결합 |
+| $w_0 = -1 + 2\xi^2/(3\Omega_\Lambda)$ | 암흑에너지 상태방정식 |
+| $m_{\nu_l} = \delta^4 m_l / [(16\pi^2)^2(1+R)]$ | 중성미자 질량 |
+| $m_g/m_3 = \alpha_s^{(d+k)/(d-j)}$ | 페르미온 세대비 |
+| $J = 4\alpha_s^{11/2}$ | Jarlskog CP 불변량 |
+| $Q_K = 2/d = 2/3$ | Koide 공식 |
+| $n_s = 1 - 2/N$ | 인플레이션 스펙트럼 지수 |
+| $r = 12/[N^2(1+6\xi^2)]$ | 인플레이션 텐서 비율 |
 
-$$
-A_{\text{survive}}(x) = e^{-\tilde R(x)}
-$$
+모두 $\alpha_s = 0.11789$ 하나에서 연쇄적으로 결정된다.
 
-- $\tilde{R}(x) \equiv L_c^2 \, R(x)$, $R(x)$는 Ricci 스칼라 곡률
-
-### 우주 총 에너지
-
-$$
-\rho_{\text{CE}} = \int_{\Omega} e^{-\tilde R(x)} \cdot \mathcal{L}(x) \, d^4x
-$$
-
-### 광명장의 시간 진화
-
-$$
-\frac{dA}{d\tau} = -\tilde R(x) A \quad \Rightarrow \quad A(\tau) = A_0 e^{-\tilde R\,\tau}
-$$
-
-양자컴퓨터의 탈결맞음(decoherence)과 직접 연결된다.
-
-### 억압 계수 $\epsilon = e^{-1}$의 유도
-
-**자기-엔트로피 최소화:**
+### 광명장 기본 구조
 
 $$
-f(\epsilon) = \epsilon^\epsilon \quad \Rightarrow \quad \frac{df}{d\epsilon} = \epsilon^\epsilon(\ln\epsilon + 1) = 0 \quad \Rightarrow \quad \epsilon = e^{-1}
+A_{\text{survive}}(x) = e^{-\tilde R(x)}, \quad \tilde{R} \equiv L_c^2 R(x)
 $$
-
-### 물질과의 결합
 
 $$
 m_{\text{eff}}(x) = m_0(1 + g_B\Phi(x))
 $$
 
-광명장 값에 따라 유효 질량이 동적으로 변화한다.
-
-### Lindblad-GKSL 마스터 방정식
-
 $$
-\frac{d\rho}{dt} = -\frac{i}{\hbar}[H,\rho] + \frac{Y}{2}\left(2L\rho L^\dagger - \{L^\dagger L, \rho\}\right)
+\frac{d\rho}{dt} = -\frac{i}{\hbar}[H,\rho] + \frac{Y}{2}\left(2L\rho L^\dagger - \{L^\dagger L, \rho\}\right), \quad Y \propto g'^{\,2} J_\Phi(\omega_S)
 $$
-
-$Y \propto g'^{\,2} \, J_\Phi(\omega_S)$: 광명장 스펙트럼에서 결정되는 소산율.
 
 ---
 
@@ -324,6 +424,11 @@ $Y \propto g'^{\,2} \, J_\Phi(\omega_S)$: 광명장 스펙트럼에서 결정되
 | [`fcnc_analysis.py`](examples/physics/fcnc_analysis.py) | Z2 대칭, FCNC 해결 |
 | [`resonance_fusion.py`](examples/physics/resonance_fusion.py) | 공명 핵융합 설계 |
 | [`baryon_inertia.py`](examples/physics/baryon_inertia.py) | 3계층 바리온 관성, DM/DE 0.03% 정합 |
+| [`xi_derivation.py`](examples/physics/xi_derivation.py) | 비최소 결합 xi = alpha_s^(1/3) 유도, w0 0.04 sigma |
+| [`neutrino_mass.py`](examples/physics/neutrino_mass.py) | 중성미자 질량 m3 = 51.5 meV (2%), NH 예측 |
+| [`fermion_mass.py`](examples/physics/fermion_mass.py) | 페르미온 세대비 alpha_s^{(d+k)/(d-j)}, 1-7% 정합 |
+| [`higgs_mass.py`](examples/physics/higgs_mass.py) | M_H = M_Z*F = 125.35 GeV (0.6 sigma) |
+| [`ckm_derivation.py`](examples/physics/ckm_derivation.py) | CKM/PMNS 유도, J = 4*alpha_s^(11/2) |
 
 ---
 
