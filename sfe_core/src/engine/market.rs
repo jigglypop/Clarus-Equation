@@ -43,7 +43,7 @@ impl MarketGeometry {
         self.calculate_curvature()
     }
 
-    /// 시장 곡률(R)과 광명장(Phi) 계산
+    /// 시장 곡률(R)과 클라루스장(Phi) 계산
     fn calculate_curvature(&self) -> (f64, f64) {
         // 1. Volatility (Parkinson Estimator approximation using history)
         let mut sum_hl_sq = 0.0;

@@ -10,7 +10,7 @@ pub struct GeometricEngine {
 
 impl GeometricEngine {
     pub fn new(dim: usize) -> Self {
-        // 테스트용 가상 필드: 원점에서 멀어질수록 광명장이 강해짐 (Potential well)
+        // 테스트용 가상 필드: 원점에서 멀어질수록 클라루스장이 강해짐 (Potential well)
         let phi_field = Box::new(|x: &[f64]| -> f64 {
             let r2: f64 = x.iter().map(|v| v * v).sum();
             0.5 * r2 // Phi = 1/2 r^2 (Harmonic oscillator potential)

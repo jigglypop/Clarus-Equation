@@ -18,7 +18,7 @@ struct Args {
 
 #[derive(Subcommand, Debug)]
 enum Commands {
-    /// CE 광명장 동역학 시뮬레이션
+    /// CE 클라루스장 동역학 시뮬레이션
     Dynamics {
         #[arg(short, long, default_value_t = 100_000)]
         size: usize,
@@ -66,24 +66,6 @@ enum Commands {
         #[arg(short, long, default_value = "macro_crisis.csv")]
         output: String,
     },
-    /// [Deprecated] 양자 노이즈 시뮬레이션 (Sweep 사용 권장)
-    QuantumNoise {
-        #[arg(short, long, default_value_t = 10_000)]
-        steps: usize,
-        #[arg(short, long, default_value_t = 1000)]
-        trials: usize,
-        #[arg(short, long, default_value = "quantum_noise.csv")]
-        output: String,
-    },
-    /// [Deprecated] 디커플링 벤치마크 (Sweep 사용 권장)
-    DecouplingBenchmark {
-        #[arg(short, long, default_value_t = 10_000)]
-        steps: usize,
-        #[arg(short, long, default_value_t = 1000)]
-        trials: usize,
-        #[arg(short, long, default_value = "decoupling_result.csv")]
-        output: String,
-    },
     /// CE 펄스 최적화기 (Pure Analytic Formula)
     PulseOptimizer {
         #[arg(short, long, default_value_t = 2000)]
@@ -122,9 +104,9 @@ enum Commands {
         #[arg(short, long)]
         api_key: String,
     },
-    /// [NEW] 광명보손 증거 스캔 및 분석
+    /// [NEW] 클라루스 보손 증거 스캔 및 분석
     SuppressonScan,
-    /// [NEW] 3-모드 광명보손 Yukawa 스캔
+    /// [NEW] 3-모드 클라루스 보손 Yukawa 스캔
     MultiModeScan,
     /// [NEW] 연속 스펙트럼 레이리 경계 스캔
     ContinuousBounds,
@@ -179,7 +161,7 @@ fn main() {
             steps,
             output,
         } => {
-            println!("모드: CE 광명장 동역학 시뮬레이션");
+            println!("모드: CE 클라루스장 동역학 시뮬레이션");
             let mut engine = QCEngine::new(size);
             let pb = ProgressBar::new(steps as u64);
             pb.set_style(
@@ -468,12 +450,6 @@ fn main() {
             pb.finish();
             println!("거시경제 시뮬레이션 완료. 결과 저장됨: {output}");
         }
-        Commands::QuantumNoise { .. } => {
-            println!("(사용 중단됨) 포괄적인 분석을 위해 Sweep 명령을 사용하세요.");
-        }
-        Commands::DecouplingBenchmark { .. } => {
-            println!("(사용 중단됨) 포괄적인 분석을 위해 Sweep 명령을 사용하세요.");
-        }
         Commands::PulseOptimizer {
             steps,
             pulses,
@@ -649,11 +625,11 @@ fn main() {
             }
         }
         Commands::SuppressonScan => {
-            println!("모드: 광명보손 증거 스캔 및 분석");
+            println!("모드: 클라루스 보손 증거 스캔 및 분석");
             sfe_core::run_suppresson_evidence_analysis();
         }
         Commands::MultiModeScan => {
-            println!("모드: 3-모드 광명보손 Yukawa 스캔");
+            println!("모드: 3-모드 클라루스 보손 Yukawa 스캔");
             sfe_core::engine::suppresson_physics::run_multimode_yukawa_scan();
         }
         Commands::ContinuousBounds => {

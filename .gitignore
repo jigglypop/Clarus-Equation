@@ -1,4 +1,5 @@
 /sfe_core/target/
+/sfe_core/*.csv
 /.venv/
 .env
 /data/
@@ -6,3 +7,4 @@
 /.cursor
 __pycache__/
 *.pyc
+*.png

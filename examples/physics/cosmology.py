@@ -316,8 +316,8 @@ def calibrate_epsilon_grav_bisect(
 
 def main() -> int:
     p = argparse.ArgumentParser(prog="cosmology")
-    p.add_argument("--model", choices=["epsilon", "calibrate"], default="epsilon")
-    p.add_argument("--epsilon", type=float, default=1.0 / math.e)
+    p.add_argument("--model", choices=["bootstrap", "calibrate"], default="bootstrap")
+    p.add_argument("--alpha-s", type=float, default=0.11789)
     p.add_argument("--omega-lambda", type=float, default=0.685)
     p.add_argument("--omega-m", type=float, default=0.315)
     p.add_argument("--mu", choices=["lcdm", "sfe"], default="sfe")
@@ -341,10 +341,18 @@ def main() -> int:
     p.add_argument("--compare-fsigma8", action="store_true")
     args = p.parse_args()
 
-    if args.model == "epsilon":
-        eps = args.epsilon
-        omega_l0 = 0.5 * (1.0 + eps)
-        omega_m0 = 0.5 * (1.0 - eps)
+    if args.model == "bootstrap":
+        alpha_s = args.alpha_s
+        sin2_tw = 4.0 * alpha_s ** (4.0 / 3.0)
+        delta = sin2_tw * (1.0 - sin2_tw)
+        d_eff = 3.0 + delta
+        x = 0.05
+        for _ in range(200):
+            x = math.exp(-(1.0 - x) * d_eff)
+        eps2 = x
+        r_lo = alpha_s * d_eff
+        omega_l0 = (1.0 - eps2) / (1.0 + r_lo)
+        omega_m0 = 1.0 - omega_l0
     else:
         omega_l0 = args.omega_lambda
         omega_m0 = args.omega_m
