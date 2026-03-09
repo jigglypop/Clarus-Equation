@@ -56,7 +56,7 @@ $$\alpha_s^{N_w} = \left(\frac{\sin\theta_W}{N_w}\right)^{N_c}, \quad 0.11789^2 
 
 $$\varepsilon^2 = \exp\!\big(-(1-\varepsilon^2)\, D_{\text{eff}}\big), \quad D_{\text{eff}} = 3 + \sin^2\!\theta_W\cos^2\!\theta_W = 3.178$$
 
-$D_{\text{eff}} > 1$일 때 비자명 고정점이 하나의 기준 분배를 준다는 점(`homeomorphism.md` 보조정리 3.2)을 바탕으로, 이 문서는 그 구조를 신경계/AGI 해석에 **브리지 규칙으로 전사**한다.
+$D_{\text{eff}} > 1$일 때 비자명 고정점은 유일(`homeomorphism.md` 정리 3.2)이며, 이 문서는 그 구조를 신경계/AGI 해석에 **브리지 규칙으로 전사**한다.
 
 | 성분 | CE 고정점 | 우주 (Planck) | 뇌 (Raichle) | AGI 해석 |
 |---|---|---|---|---|
