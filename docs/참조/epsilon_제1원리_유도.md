@@ -23,6 +23,12 @@ CE 이론의 핵심 상수 $\epsilon \approx 0.37$이 자연상수 $e^{-1} = 0.3
 
 따라서 본 장에서의 $\Omega_\Lambda$ 계산은 “$\epsilon_*$의 독립 결정”이 성립할 때에만 예측이 된다. $\epsilon_{\text{obs}}$를 관측으로 고정하는 접근(예: $\epsilon_{\text{obs}} = 2\Omega_\Lambda - 1$)과는 목적이 다르며, 두 접근을 혼동하지 않는다.
 
+또한 이 문서는 `docs/axium.md`와 `docs/경로적분.md`의 **보조 유도 문서**다. 코어 정전의 `Exact / Selection / Bridge / Phenomenology` 체계에서 보면, 이 문서는 주로 `Selection`과 `Bridge`를 보강하는 역할을 한다. 본 장이 제공하는 것은
+- $\epsilon_*$가 왜 자연스럽게 $e^{-1}$ 꼴로 등장할 수 있는지에 대한 제1원리 후보들,
+- 서로 다른 억압 계수들을 같은 기호로 섞지 않기 위한 정의,
+- 우주론적 귀결을 읽을 때 필요한 추가 전제
+이다. 본 장의 결과만으로 `경로적분.md`의 $\varepsilon^2$ 체인이나 바리온 식별이 자동으로 증명되는 것은 아니다.
+
 ## 0.2 $\epsilon$ 표기 규약과 동일시 조건
 
 본 문서군에서는 $\epsilon$이 서로 다른 의미로 쓰이는 혼선을 피하기 위해 다음을 구분한다.
@@ -38,7 +44,7 @@ CE 이론의 핵심 상수 $\epsilon \approx 0.37$이 자연상수 $e^{-1} = 0.3
   m_{\text{eff}}=m_0(1-\epsilon_{\text{mass}}),\qquad \epsilon_{\text{mass}}\equiv -g_B\Phi_v=g_B\frac{\mu}{\sqrt{\lambda}}.
   $$
 
-단일 상수 CE의 강한 가정은 $\epsilon_{\text{mass}}=\epsilon_{\text{obs}}=\epsilon_*$를 동일시하는 것이며, 본 장의 7장은 그 동일시를 **가정**했을 때의 우주론적 귀결을 정리한다.
+단일 상수 CE의 강한 가정은 $\epsilon_{\text{mass}}=\epsilon_{\text{obs}}=\epsilon_*$를 동일시하는 것이며, 본 장의 7장은 그 동일시를 **가정**했을 때의 우주론적 귀결을 정리한다. 핵심 문서에서는 이 동일시를 정리로 쓰지 않고, 별도의 모형 선택 또는 식별 단계로 취급한다.
 
 ## 1. 경로적분에서의 $e^{-1}$ 등장
 
