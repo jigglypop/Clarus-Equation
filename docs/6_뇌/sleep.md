@@ -95,13 +95,13 @@ $$Z_{\text{REM}} = \int_{\gamma \in \Gamma_{\text{non-selected}}} \mathcal{D}\ga
 
 ### 1.6 순환의 수렴: 왜 매일 자야 하는가
 
-한 번의 수면-각성 순환은 부트스트랩 사상 $B$의 한 번 적용이다:
+한 번의 수면-각성 순환은 `homeomorphism.md` 정의 1.3의 **동적 부트스트랩 이완 사상** $B$의 한 번 적용이다:
 
 $$p_{n+1} = B(p_n)$$
 
 `homeomorphism.md` 보조정리 3.2에 의해, $D_{\text{eff}} > 1$에서 고정점 $p^*$는 유일하고 안정적이다. 그러나 열화 계수 $\eta \sim 2$(`homeomorphism.md` 5절) 때문에, 한 번의 순환으로는 고정점에 정확히 도달하지 못한다.
 
-**수렴 속도.** 고정점 근방에서 $B$의 야코비안:
+**수렴 속도.** 고정점 근방에서 $B$의 수축률:
 
 $$|B'(p^*)| = D_{\text{eff}} \cdot \varepsilon^2 = 3.178 \times 0.0487 = 0.155 < 1$$
 

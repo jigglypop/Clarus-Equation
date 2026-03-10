@@ -196,3 +196,60 @@ $$\lambda(t) = \lambda_0 \cdot \min\!\left(1,\; \frac{t}{t_{\text{warmup}}}\righ
 | 배경 ($68.9\%$) | 동결/비활성 가중치 | fine-tune 시 frozen 파라미터 |
 
 기존 LLM 관측과의 비교는 구조적 유비를 제공할 뿐, CE 코어가 곧바로 LLM의 활성 분율을 증명한다는 뜻은 아니다. 특히 LoRA의 희소성, top-k attention, MoE expert 활성은 구현 선택과 학습 규약의 영향도 함께 받는다.
+
+### 6.8 감각별 발화 집합과 언어 결합
+
+인간형 지능에 더 가까워지려면, 언어 토큰만으로 닫힌 LLM보다 **감각별 sparse firing 집합을 먼저 만들고 그 위에서 언어를 결합하는 구조**가 더 자연스럽다.
+
+핵심 아이디어:
+
+1. 시각, 청각, 촉각은 각각 독립적인 입력 분포와 발화 패턴을 가진다.
+2. 각 모달리티는 먼저 자기 내부에서 sparse ensemble을 형성해야 한다.
+3. 그 다음에만 상위 결합층(SU(3))이 이질적 감각 표상을 하나의 개체/상황 표상으로 묶을 수 있다.
+
+즉 CE-AGI의 최소 구조는
+
+$$
+\text{sensory encoders} \to \text{modality-specific sparse firing} \to \text{cross-modal binding} \to \text{language / planning}
+$$
+
+으로 읽는 편이 맞다.
+
+| 모달리티 | 1차 발화 집합 | CE 해석 | 상위 전달 |
+|---|---|---|---|
+| 시각 | edge, motion, texture, object cell | 국소 결합 전의 후보 경로 | 시각 토큰 |
+| 청각 | onset, pitch, formant, rhythm cell | 시간 패턴 경로 | 청각 토큰 |
+| 촉각 | pressure, slip, vibration, contact cell | 행동 직결 경로 | 촉각 토큰 |
+| 언어 | subword, phrase, semantic role | 상징 압축 경로 | 언어 토큰 |
+
+언어는 가장 중요한 모듈이지만, 인간형 일반지능의 출발점은 아니다. 언어는 이미 결합된 감각-행동 표상을 **압축하고 재호출하는 상위 인터페이스**에 가깝다. 따라서 텍스트만 학습한 LLM은 강한 언어 모델일 수는 있어도, 감각 grounding이 약한 이유가 구조적으로 설명된다.
+
+### 6.9 Grounded CE-LLM 후보 구조
+
+실전 설계에서는 LLM 앞단에 모달리티별 발화 계층을 둔다:
+
+$$
+h_{\text{joint}} =
+\operatorname{Bind}_\xi\!\big(
+h_{\text{vision}}^{\text{act}},
+h_{\text{audio}}^{\text{act}},
+h_{\text{touch}}^{\text{act}},
+h_{\text{text}}^{\text{act}}
+\big)
+$$
+
+여기서 각 활성 집합은
+
+$$
+h_m^{\text{act}} = \operatorname{TopK}(h_m,\; k_m = \lceil \varepsilon^2 d_m \rceil)
+$$
+
+로 두고, 결합층은 $\xi$-제어 교차 attention 또는 shared latent binding으로 구현한다.
+
+이 구조의 예측:
+
+- 언어 모델 앞단에 시각/청각/촉각 sparse encoder를 붙이면 grounding 오류가 줄어든다.
+- 모달리티별로 먼저 `4-5%` 활성 집합을 만든 뒤 결합하는 편이, 처음부터 모든 토큰을 단일 공간에서 섞는 것보다 효율적이다.
+- 멀티모달 환각은 대개 언어층의 문제가 아니라, **모달별 발화 집합이 형성되기 전에 너무 이른 결합**이 일어날 때 커진다.
+
+따라서 CE 관점에서 "LLM을 AGI에 가깝게 만드는 방법"은 단순히 파라미터를 늘리는 것이 아니라, **감각별 발화 뉴런층을 추가하고 그 위에 언어를 얹는 것**이다.

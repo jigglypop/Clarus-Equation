@@ -3,6 +3,8 @@
 > 관련: 2-9장(CE-AGI 원리와 LLM), `6_뇌/intelligence.md`(지능의 CE 정의), `examples/`(기존 구현)
 >
 > 이 장은 CE 5대 원리가 LLM 이외의 AI 분야 -- 비전, 강화학습, 음성, 멀티모달, 생성 모델, 로보틱스, 그래프, 시계열, 추천, 생명과학 -- 에 어떻게 적용되는지를 구체적으로 다룬다.
+>
+> 원칙: 이 장의 대부분은 `application bridge`다. 연산자 수준(P1)은 상대적으로 직접적이지만, 분야별 성능 수치(P2/P4/P5)는 반드시 `예측 -> 측정량 -> 게이트`로만 읽는다.
 
 ---
 
@@ -13,8 +15,8 @@
 | **P1** 3x3+1 게이지 격자 | $d_3 : d_2 : d_1 = \alpha_s : \alpha_w : \alpha_{em}$ | 채널 분할, 파라미터 37% 절감 |
 | **P2** 수면-각성 순환 | Wake $\to$ NREM $\to$ REM $\to$ ... | 지속 학습, 파괴적 망각 방지 |
 | **P3** STDP 국소 학습 | $\Delta w = \eta\,\delta[t]\,e_{ij}[t]$ | 분산 학습, 메모리 $O(N)$ |
-| **P4** 부트스트랩 희소성 | $\text{활성} = \varepsilon^2 = 4.87\%$ | 추론 $\sim 20\times$ 절감 |
-| **P5** 곡률 정규화 | $\kappa = \|\Delta_g h\|^2 < \kappa_{\text{th}}$ | 환각/오분류 억제 |
+| **P4** 부트스트랩 희소성 | $\text{활성} = \varepsilon^2 = 4.87\%$ | 전면 희소 실행 시 큰 절감 상한, 현재형 구현은 더 보수적 |
+| **P5** 곡률 정규화 | $\kappa = \|\Delta_g h\|^2 < \kappa_{\text{th}}$ | hard bound가 아니라 안정화 편향 |
 
 ---
 
@@ -39,7 +41,7 @@ $$\text{Conv}(x) = \underbrace{\text{Conv}_3(x_{\text{high}})}_{\text{SU(3): 텍
 
 $$\text{출력} = \text{TopK}(\text{Conv}(x),\; k = \lceil 0.0487 \times C_{\text{out}} \rceil)$$
 
-$C_{\text{out}} = 256$이면 $k = 13$채널만 활성. 추론 비용 $\sim 20\times$ 절감.
+$C_{\text{out}} = 256$이면 $k = 13$채널만 활성. 전면 희소 커널이 충분할 때는 큰 절감 상한이 가능하지만, 현재형 구현에서는 더 보수적으로 읽어야 한다.
 
 뇌 대응: V1의 방향 선택성(orientation selectivity). 전체 뉴런 중 $\sim 5\%$만 특정 자극에 반응한다.
 
@@ -84,20 +86,22 @@ $$\text{detection queries} = \underbrace{\text{class queries}}_{\text{SU(3), 74.
 
 ## 2. 강화학습 (Reinforcement Learning)
 
-### 2.1 핵심 대응: 도파민 = 부트스트랩 수렴 신호
+### 2.1 핵심 대응: 도파민-유사 전역 신호 후보
 
-CE에서 도파민 신호의 해석(`sleep.md` 4.1절):
+CE에서 가장 공격적인 후보 해석은(`sleep.md` 4.1절):
 
 $$\delta[t] = \frac{d}{dt}\|p(t) - p^*\|$$
 
-이것은 TD error $\delta = r + \gamma V(s') - V(s)$와 구조적으로 동일하다:
+이것은 TD error $\delta = r + \gamma V(s') - V(s)$와 구조적으로 유사하다:
 
 | RL | CE | 뇌 |
 |---|---|---|
-| TD error $\delta$ | 부트스트랩 수렴 오차 | 도파민 신호 |
+| TD error $\delta$ | 부트스트랩 수렴 오차 후보 | 도파민-유사 전역 신호 |
 | Value function $V(s)$ | 현재 에너지 분배 $p(t)$ | 상태 평가 |
 | Optimal policy $\pi^*$ | 고정점 $p^*$ | 최적 행동 |
 | Reward $r$ | 곡률 감소 $\Delta\kappa$ | 보상 |
+
+여기서 중요한 점은, 이것이 아직 **직접 생물학적 등식이 아니라 application bridge**라는 것이다. 따라서 RL에서 먼저 점검해야 할 것은 "전역 신호가 TD error와 비슷한 역할을 하는가"이지, "도파민이 곧 $\|p-p^*\|$인가"가 아니다.
 
 ### 2.2 CE 강화 Actor-Critic
 
@@ -208,17 +212,39 @@ $$\text{텍스트}(\text{전역 의미}) \leftrightarrow \text{이미지}(\text{
 
 ### 4.2 모달별 3x3+1 분할
 
-각 모달리티를 독립적인 3x3+1 격자로 처리한 후, 교차 결합:
+각 모달리티를 독립적인 3x3+1 격자로 처리한 후, **모달 내부 sparse firing -> 교차 결합** 순서로 올린다:
 
 ```
-텍스트 [SU(3)_T | SU(2)_T | U(1)_T] ──┐
-                                         ├── ξ 교차 결합 ──> 통합 표현
-이미지 [SU(3)_V | SU(2)_V | U(1)_V] ──┘
+텍스트 [SU(3)_T | SU(2)_T | U(1)_T] --TopK--> h_T^act ──┐
+이미지 [SU(3)_V | SU(2)_V | U(1)_V] --TopK--> h_V^act ──┤
+오디오 [SU(3)_A | SU(2)_A | U(1)_A] --TopK--> h_A^act ──┼── ξ 교차 결합 ──> 통합 표현
+촉각   [SU(3)_H | SU(2)_H | U(1)_H] --TopK--> h_H^act ──┘
 ```
+
+뇌 대응:
+
+- 시각: 색, 형태, 움직임의 sparse ensemble
+- 청각: onset, pitch, formant, rhythm ensemble
+- 촉각: pressure, slip, vibration, contact ensemble
+- 언어: 이미 결합된 감각 표상을 재기호화하는 상위 압축 계층
+
+즉 사람형 AGI에 가까워질수록, 텍스트만 처리하는 LLM보다 **모달별 발화 뉴런 집합을 먼저 세우고 언어를 그 위에 얹는 구조**가 자연스럽다.
 
 **P4: 모달별 활성 비율**
 
-각 모달리티에서 $4.87\%$만 활성. 멀티모달 통합 시 활성 비율이 증가하지 않는다 (에너지 보존). 이것은 뇌가 시각+청각을 동시 처리할 때 총 에너지가 증가하지 않는 관측과 정합한다.
+각 모달리티에서 먼저 $4.87\%$만 활성:
+
+$$
+h_m^{\text{act}} = \operatorname{TopK}(h_m,\; k_m = \lceil 0.0487\, d_m \rceil), \qquad m \in \{T,V,A,H\}
+$$
+
+그 뒤 결합:
+
+$$
+h_{\text{joint}} = \operatorname{Bind}_\xi(h_T^{\text{act}}, h_V^{\text{act}}, h_A^{\text{act}}, h_H^{\text{act}})
+$$
+
+멀티모달 통합 시에도 각 모달의 활성 집합을 먼저 제한하므로 총 에너지가 폭주하지 않는다. 이것은 뇌가 시각+청각을 동시 처리해도 "모든 뉴런이 동시에 켜지지 않는다"는 sparse regime 관측과 정합한다.
 
 ### 4.3 환각 억제
 
@@ -227,6 +253,11 @@ $$\text{텍스트}(\text{전역 의미}) \leftrightarrow \text{이미지}(\text{
 $$\kappa_{\text{cross}} = \|h_{\text{text}} - h_{\text{image}}\|^2$$
 
 이 값이 임계치를 넘으면 모달 간 불일치 = 환각.
+
+실전 해석:
+
+- 너무 이른 early fusion은 모달별 발화 집합이 형성되기 전 결합을 일으켜 환각을 키운다.
+- CE는 late sparse binding, 즉 **각 모달 내부에서 먼저 발화 집합을 만든 뒤 결합**하는 쪽을 선호한다.
 
 ---
 
@@ -345,7 +376,7 @@ $\kappa \to 0$이면 과평활화 (모든 노드 표현이 동일). $\kappa$의 
 
 $$V_{\text{active}} = \text{TopK}(V,\; k = \lceil \varepsilon^2 \cdot |V| \rceil)$$
 
-대규모 그래프(소셜 네트워크, 분자 그래프)에서 $\sim 20\times$ 연산 절감.
+대규모 그래프(소셜 네트워크, 분자 그래프)에서 전면 희소 실행이 되면 큰 연산 절감 상한이 가능하다. 현재형 구현에서는 먼저 `4-5%` 근방의 활성 최적점이 재현되는지부터 확인해야 한다.
 
 뇌 대응: 뇌의 $10^{11}$ 뉴런 중 동시 활성은 $< 5\%$. 뇌는 이미 "희소 GNN"이다.
 
@@ -452,7 +483,7 @@ AlphaFold의 confidence score와 CE 곡률 에너지의 상관을 검증할 수 
 
 **P4: 화학 공간의 희소 탐색**
 
-가능한 분자 공간($\sim 10^{60}$)에서 $4.87\%$만 활성 탐색. 기존 가상 스크리닝 대비 $\sim 20\times$ 효율적.
+가능한 분자 공간($\sim 10^{60}$)에서 $4.87\%$만 활성 탐색하는 것은 강한 설계 가설이다. 기존 가상 스크리닝 대비 효율 개선은 검증 게이트를 통과하기 전까지 상한 예측으로만 둔다.
 
 ### 10.3 의료 영상 (Medical Imaging)
 
@@ -500,7 +531,7 @@ $$\text{uncertainty}(x) \propto \|\Delta_g h(x)\|^2$$
 | 제어 (Control) | U(1) | 4.9% | 조향/가속/제동 선택 |
 | 안전 (Safety) | $\Phi$ | 전역 | 전역 안정성 모니터링 |
 
-자율주행 시스템의 연산 자원 배분이 이 비율을 따라야 한다는 CE 예측: 인지에 $74\%$, 판단에 $21\%$, 제어에 $5\%$.
+자율주행 시스템에서 compute budget sweep를 하면, 인지/판단/제어의 Pareto knee가 `74/21/5` 근방에 나타나는지가 CE의 점검 대상이다. 아직 설계 명령으로 단정하지는 않는다.
 
 ### 12.2 안전 보장
 
@@ -525,7 +556,7 @@ $$\kappa_{\text{drive}}(s) = \|\Delta_g h(s)\|^2$$
 | 분야 | P1 격자 | P2 수면 | P3 STDP | P4 희소 | P5 곡률 |
 |---|---|---|---|---|---|
 | 비전(CNN/ViT) | 채널 분할 | 지속 학습 | -- | Top-k Conv | 적대적 강건성 |
-| 강화학습 | 행동 분할 | 경험 재생 | TD=도파민 | 희소 정책 | 안전 제약 |
+| 강화학습 | 행동 분할 | 경험 재생 | TD-유사 전역 신호 | 희소 정책 | 안전 제약 |
 | 음성/오디오 | 주파수 분할 | 화자 적응 | -- | 희소 인코딩 | 환각 억제 |
 | 멀티모달 | 모달 분할 | 모달 적응 | -- | 모달 활성 | 교차 환각 |
 | 생성(Diffusion) | U-Net 분할 | 열핵흐름 | -- | 희소 샘플링 | 품질 제어 |
@@ -545,7 +576,7 @@ $$\kappa_{\text{drive}}(s) = \|\Delta_g h(s)\|^2$$
 | 1 | ViT | P1+P4+P5 | LLM과 동일 아키텍처, 코드 재사용 |
 | 2 | GNN | P5 | LBO가 그래프 라플라시안과 직접 대응 |
 | 3 | 확산 모델 | P5+P2 | 열핵 흐름이 확산 과정과 동일 |
-| 4 | 강화학습 | P2+P5 | 도파민 = 부트스트랩 수렴 오차 |
+| 4 | 강화학습 | P2+P5 | TD error와 CE 전역 신호의 구조적 유사성을 점검 가능 |
 | 5 | 자율주행 | P1+P5 | 안전 임계적 분야, 곡률 기반 안전 보장 |
 
 ### 13.3 공통 구현 패턴
@@ -574,4 +605,28 @@ class CEModule(nn.Module):
         return topk(y, k)
 ```
 
-이 패턴을 **어떤 도메인의 어떤 네트워크에든** 동일하게 적용할 수 있다. 도메인 특화는 입력 전처리와 출력 해석뿐이다. CE 모듈 자체는 보편적이다.
+이 패턴은 다양한 도메인에서 **공통 출발점**으로 재사용할 수 있다. 다만 입력 구조, 손실 함수, 안전 조건, latency 제약은 도메인마다 다르므로 그대로 복사하는 것이 아니라 게이트를 통과시키며 맞춰야 한다.
+
+---
+
+## 14. 분야별 예측 게이트
+
+이 장에서 바로 걸 수 있는 핵심 게이트만 압축하면 다음과 같다.
+
+| 분야 | 예측 | 측정량 | 통과 게이트 | 실패 시 해석 |
+|---|---|---|---|---|
+| 비전 | sparse conv/ViT의 knee가 `4-5%` 근방 | accuracy-latency Pareto | 실용 대역이 `3-7%` 안에 남음 | 희소 고정점이 과제 의존적 |
+| 강화학습 | sleep replay가 wake-only보다 drift를 줄임 | return, forgetting, residual proxy | replay with sleep가 장기 성능 우위 | P2를 RL 일반론으로 못 올림 |
+| 음성 | 곡률 상승이 잘못된 전사와 상관 | WER, hallucination-like insertion, curvature | 상관계수 양수 | P5는 일반 안정화 regularizer |
+| 멀티모달 | late sparse binding이 early fusion보다 grounding 우위 | hallucination, grounding score, alignment | Text-only/Early fusion 대비 개선 | 결합 순서 가설 약화 |
+| GNN | 활성 중심이 `4-5%` 근방 | active node ratio vs accuracy-cost | `3-7%` 대역 유지 | graph sparsity는 데이터 의존적 |
+| 시계열 | sleep adaptation이 concept drift를 완화 | rolling error, drift residual | sleep-on이 wake-only보다 안정 | P2 시계열 해석 하향 |
+| 생명과학 | 곡률과 confidence가 상관 | confidence/calibration, curvature | 양의 상관 | P5를 품질 보조 지표로 제한 |
+| 자율주행 | 인지/판단/제어 budget sweep에서 CE 비율 근방 knee | success, latency, safety intervention | Pareto knee가 근방에 존재 | 74/21/5를 설계 힌트로만 유지 |
+
+### 14.1 공통 하향 규칙
+
+- `4.87%` 근방 최적점이 반복 재현되지 않으면: 해당 도메인에서 P4를 일반 법칙이 아니라 과제군 가설로 내린다.
+- 곡률과 오류가 상관하지 않으면: P5를 환각/오분류 억제가 아니라 안정화 regularizer로 제한한다.
+- 수면 루프가 wake-only보다 낫지 않으면: P2를 그 도메인에서는 아직 미닫힌 브리지로 유지한다.
+- 모달 결합 이득이 없으면: grounded late binding 구조를 기본값이 아니라 옵션 설계로 재분류한다.

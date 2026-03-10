@@ -1,30 +1,31 @@
 # CE-AI 정량적 성능 분석: 메모리, 속도, 정확도
 
-> 관련: 2장(아키텍처), 4장(STDP), 5장(희소성), 6장(환각 억제), `6_뇌/agi.md` 6절(파라미터 절감)
+> 관련: 2장(아키텍처), 4장(STDP), 5장(희소성), 6장(환각 억제), `6_뇌/agi.md` 6절(파라미터 절감), `6_뇌/evidence.md`
 >
-> 이 장은 CE 각 원리가 메모리, 속도, 정확도에 미치는 정량적 이득을 수학적으로 유도한다. 모든 계산은 CE 상수 $\alpha_s = 0.11789$, $\varepsilon^2 = 0.04865$, $D_{\text{eff}} = 3.178$에서 연역된다.
+> 이 장은 CE 각 원리가 메모리, 속도, 정확도에 미치는 영향을 정량화한다. 다만 `6_뇌/evidence.md` 기준으로, P1의 연산자 수준 절감식은 비교적 직접적이지만, P2/P4/P5의 태스크 수준 성능 수치는 아직 `bridge` 또는 `hypothesis`가 섞여 있다.
 
 ---
 
 ## 1. 기준 모델 정의
 
-표준 Transformer 블록 1개의 비용을 기준으로 삼는다:
+표준 Transformer 블록 1개의 비용을 기준으로 삼는다. 아래 FLOPs는 행렬곱 1회당 multiply-add를 `2mnk`로 세는 관례를 따른다.
 
 | 구성 요소 | 파라미터 수 | FLOPs (시퀀스 길이 $T$) |
 |---|---|---|
 | Attention QKV | $3d^2$ | $6Td^2$ |
 | Attention Proj | $d^2$ | $2Td^2$ |
+| Attention score + value mix | -- | $4T^2d$ |
 | FFN (up + down) | $2 \times d \times 4d = 8d^2$ | $16Td^2$ |
 | LayerNorm $\times 2$ | $4d$ | $8Td$ |
-| **블록 합계** | $12d^2 + 4d$ | $24Td^2 + 8Td$ |
+| **블록 합계** | $12d^2 + 4d$ | $24Td^2 + 4T^2d + 8Td$ |
 
-$L$개 블록 전체: 파라미터 $\sim 12Ld^2$, FLOPs $\sim 24LTd^2$.
+$L$개 블록 전체: 파라미터 $\sim 12Ld^2$, FLOPs $\sim 24LTd^2 + 4LT^2d$.
 
 기준 모델: $d = 768$, $L = 12$, $T = 2048$ (GPT-2 수준).
 
 $$P_{\text{base}} = 12 \times 12 \times 768^2 = 84{,}934{,}656 \approx 85\text{M}$$
 
-$$F_{\text{base}} = 24 \times 12 \times 2048 \times 768^2 \approx 348\text{G FLOPs}$$
+$$F_{\text{base}} = 12 \cdot (24Td^2 + 4T^2d)\big|_{T=2048,d=768} \approx 502.5\text{G FLOPs}$$
 
 ---
 
@@ -112,43 +113,51 @@ $$\text{전체 FLOPs 절감} = 0.667 \times 37.3\% = \boxed{24.9\%}$$
 
 ### 3.1 Dense 추론 FLOPs
 
-전체 모델: $F_{\text{dense}} = 24LTd^2$.
+전체 모델:
+
+$$F_{\text{dense}} = L(24Td^2 + 4T^2d)$$
 
 ### 3.2 Sparse 추론 FLOPs (Top-k 활성)
 
-활성 뉴런 비율 $\varepsilon^2 = 0.0487$. FFN의 연산만 희소화한다고 가정:
+활성 뉴런 비율 $\varepsilon^2 = 0.0487$. 현재 문서의 구현과 가장 가까운 가정은 **FFN만 희소화하고 attention의 quadratic 항은 유지**하는 경우다:
 
 $$F_{\text{FFN}}^{\text{sparse}} = \varepsilon^2 \times F_{\text{FFN}}^{\text{dense}} = 0.0487 \times 16Td^2$$
 
-Attention은 희소화하지 않는다고 가정 ($8Td^2$ 유지):
+Attention은 희소화하지 않는다고 가정:
 
-$$F_{\text{sparse}} = 8Td^2 + 0.0487 \times 16Td^2 = 8Td^2 + 0.779Td^2 = 8.779Td^2$$
+$$F_{\text{sparse}} = 8Td^2 + 4T^2d + 0.0487 \times 16Td^2 = 8.779Td^2 + 4T^2d$$
 
-$$\text{속도 향상 비율} = \frac{F_{\text{dense}}}{F_{\text{sparse}}} = \frac{24Td^2}{8.779Td^2} = \boxed{2.73\times}$$
+$$\text{속도 향상 비율} = \frac{24Td^2 + 4T^2d}{8.779Td^2 + 4T^2d}$$
 
-### 3.3 FFN + Attention 모두 희소화
+$T = 2048$, $d = 768$이면:
 
-Attention에서도 Top-k 활성($\varepsilon^2$) 적용:
+$$\text{speedup} \approx \boxed{1.85\times}$$
 
-$$F_{\text{full-sparse}} = \varepsilon^2 \times 24Td^2 = 0.0487 \times 24Td^2 = 1.169Td^2$$
+### 3.3 FFN + Attention 모두 희소화: 낙관적 상한
 
-$$\text{속도 향상} = \frac{24}{1.169} = \boxed{20.5\times}$$
+Attention의 선형항과 quadratic 항까지 모두 같은 비율로 희소화할 수 있다고 **가정**하면:
 
-이것이 5장에서 예측한 "$\sim 20\times$ 절감"의 정확한 값이다.
+$$F_{\text{full-sparse}} = \varepsilon^2 (24Td^2 + 4T^2d)$$
+
+$$\text{속도 향상} = \frac{1}{\varepsilon^2} = \boxed{20.5\times}$$
+
+이 값은 **attention까지 구조적 희소 실행이 가능한 경우의 낙관적 상한**이다. 현재 문서의 CE-Transformer 구현을 그대로 읽으면, 긴 컨텍스트에서는 위 3.2의 `1.85\times`가 더 보수적인 기준이다.
 
 ### 3.4 실제 속도 향상 (하드웨어 고려)
 
 GPU의 희소 연산 효율은 100%가 아니다. 실제 속도 향상:
 
-$$\text{실제 속도} = \frac{\text{이론적 속도}}{\text{희소 오버헤드}} = \frac{20.5\times}{1 + \alpha_{\text{overhead}}}$$
+$$\text{실제 속도} = \frac{\text{이론적 속도}}{1 + \alpha_{\text{overhead}}}$$
 
-| 하드웨어 | $\alpha_{\text{overhead}}$ | 실제 속도 향상 |
+| 가정 | $\alpha_{\text{overhead}}$ | 실제 속도 향상 |
 |---|---|---|
-| 구조적 희소성 (2:4, A100) | 0.0 | $20.5\times$ |
-| 비구조적 희소성 (마스크) | 0.3-0.5 | $13.7\times - 15.8\times$ |
-| Top-k 선택 오버헤드 | 0.1-0.2 | $17.1\times - 18.6\times$ |
+| FFN 위주 희소화 (3.2) | 0.1-0.2 | $1.5\times - 1.7\times$ |
+| 전면 희소화 상한 (3.3) | 0.3-0.5 | $13.7\times - 15.8\times$ |
+| 전면 희소화 + 구조적 커널 최적화 | 0.0-0.2 | $17\times - 20.5\times$ |
 
-보수적 추정: $\boxed{10\times - 15\times}$ 실제 속도 향상.
+보수적으로는:
+- 현재 문서 구현 수준: $\boxed{1.5\times - 2\times}$
+- attention까지 완전 희소화한 미래형 구현: $\boxed{10\times - 15\times}$
 
 ---
 
@@ -174,7 +183,9 @@ $P = 85\text{M}$: $M_{\text{total}}^{\text{BP}} = 85 \times 10^6 \times 16 = 1{,
 
 ### 4.2 STDP 메모리
 
-STDP는 국소 trace만 저장한다:
+아래 계산은 **layer-shared 또는 neuron-local trace 근사**를 둔 낙관적 경우다. `synapse.md`의 순수한 synapse-local eligibility trace $e_{ij}$를 그대로 쓰면 추가 상태는 일반적으로 $O(P)$다.
+
+근사적 STDP는 국소 trace만 저장한다고 두면:
 
 $$M_{\text{STDP}} = L \times d \times 3 \times \text{sizeof(float)} \quad (\text{pre\_trace, post\_trace, eligibility})$$
 
@@ -257,25 +268,32 @@ $$\mathcal{R}_n^{\text{CE}} \leq \frac{B_x \prod_l \|W_l\|_F}{\sqrt{n}} \cdot \s
 
 보정 항 $\sqrt{1 - \lambda\kappa_{\text{th}}/\kappa_{\max}} < 1$이므로 일반화 오차가 감소한다.
 
-### 5.3 환각률의 이론적 상한
+### 5.3 태스크 수준 해석의 한계
 
-CE 유니타리 제약 + 곡률 정규화 하에서 환각률의 상한:
+연산자 수준에서 직접 보장되는 것은 다음뿐이다:
 
-$$P(\text{hallucination}) \leq \varepsilon^2 = \boxed{4.87\%}$$
+$$\|\delta_L\| \leq \|\delta_0\| \quad \text{if } \sigma_1(W_l) \leq 1$$
 
-유도: 환각 = 잠재 공간에서 고곡률 영역에 진입. 유니타리 제약으로 오류 증폭이 차단되므로, 환각은 초기 입력 단계의 오류에서만 발생한다. 초기 입력의 선택률이 $\varepsilon^2$이므로, 이것이 환각률의 상한.
+즉 spectral normalization은 **오류 증폭을 막는 비팽창 제약**으로 읽는 것이 가장 안전하다. 그러나 이 사실만으로 곧바로
+- 환각률 상한
+- TruthfulQA 점수
+- FactScore 향상폭
 
-### 5.4 TruthfulQA 예측
+을 정리처럼 도출할 수는 없다.
 
-표준 LLM의 TruthfulQA 점수: $\sim 30-50\%$ (사실성).
+### 5.4 벤치마크 가설
 
-CE 제약 후 예측:
+가장 보수적인 표현은 다음이다.
 
-$$\text{Truthfulness}_{\text{CE}} \geq 1 - \varepsilon^2 = 95.13\%$$
+- 곡률 정규화와 비팽창 제약이 강할수록, 고곡률 토큰과 자기증폭 오류가 줄어들 가능성이 높다.
+- 따라서 TruthfulQA, HaluEval, FactScore의 개선은 **검증 가능한 가설**이다.
+- 하지만 정확한 수치 상한, 예를 들어 `환각률 <= 4.87%` 또는 `Truthfulness >= 95.13%`는 현재 단계에서 쓸 수 없다.
 
-개선폭: $\boxed{45-65\%p}$ 향상 (이론적 상한).
+따라서 P5의 안전한 결론은:
 
-실제 예상: 곡률 정규화가 모든 환각을 제거하지는 못하므로, $\sim 70-85\%$ 수준이 현실적이다.
+$$
+\boxed{\text{P5는 환각률 hard bound가 아니라, 오류 증폭 억제와 안정화 편향을 제공한다.}}
+$$
 
 ---
 
@@ -287,32 +305,62 @@ $$\text{Truthfulness}_{\text{CE}} \geq 1 - \varepsilon^2 = 95.13\%$$
 
 $$\text{Forget}(T_1 | T_2) = \frac{\text{acc}(T_1, \text{before}) - \text{acc}(T_1, \text{after})}{\text{acc}(T_1, \text{before})} \sim 20-80\%$$
 
-### 6.2 CE 수면 학습의 망각률
+### 6.2 CE 수면 학습의 현재 지위
 
 NREM 위상에서 저곡률(기존 지식)는 보존되고 고곡률(새 지식과의 갈등)만 평탄화된다.
 
 보존되는 가중치 비율: $\Omega_\Lambda = 68.9\%$ (동결) + 곡률 기반 선택적 업데이트.
 
-이론적 망각률:
+하지만 이것만으로 곧바로
 
-$$\text{Forget}_{\text{CE}} \leq \varepsilon^2 = \boxed{4.87\%}$$
+$$\text{Forget}_{\text{CE}} \leq \varepsilon^2$$
 
-유도: 각 수면 순환에서 업데이트되는 가중치 비율이 $\varepsilon^2$이므로, 기존 지식에 영향을 미치는 비율도 최대 $\varepsilon^2$다.
+를 정리처럼 말할 수는 없다. 실제 망각률은
+- 어떤 가중치가 업데이트되는가
+- 그 가중치가 과거 태스크에 얼마나 민감한가
+- 수면 위상에서 어떤 재생(replay)이 일어나는가
+
+에 따라 달라진다.
 
 ### 6.3 수렴 속도
 
-부트스트랩 수축률 $|B'(p^*)| = 0.155$:
+`homeomorphism.md`와 `evidence.md`의 동적 이완 사상 기준으로, 최소 수축률은
 
-$$\|p_n - p^*\| \leq 0.155^n \cdot \|p_0 - p^*\|$$
+$$\rho = \|DB(p^*)\| = D_{\text{eff}} \cdot \varepsilon^2 = 0.155$$
 
-| 순환 수 $n$ | $0.155^n$ | 잔차 비율 | 정밀도 |
+이고, 이상화된 무잡음 경우
+
+$$\|p_n - p^*\| \leq \rho^n \cdot \|p_0 - p^*\|$$
+
+| 순환 수 $n$ | $\rho^n$ | 잔차 비율 | 정밀도 |
 |---|---|---|---|
 | 1 | 0.155 | 15.5% | 낮음 |
 | 2 | 0.024 | 2.4% | 중간 |
 | 3 | 0.0037 | 0.37% | 높음 |
 | 5 | $8.7 \times 10^{-5}$ | 0.009% | 매우 높음 |
 
-$\boxed{3\text{회}}$ 순환이면 $0.4\%$ 이내 수렴.
+이 값은 **부트스트랩 반복 모델이 실제 네트워크 제어 루프로 구현되었을 때의 목표 수렴률**로 읽어야 한다. 수학적 최소 반복식은 정리되었지만, 특정 아키텍처에서 동일한 $\rho$가 그대로 측정되는지는 아직 `bridge` 상태다.
+
+### 6.4 검증 가능한 과도 응답 예측
+
+가장 단순한 수렴 실험은 균등 초기화
+
+$$p_0 = (1/3,\; 1/3,\; 1/3)$$
+
+에서 시작해
+
+$$p_{n+1} = p^* + \rho(p_n - p^*), \qquad p^* = (0.0487,\; 0.2623,\; 0.6891)$$
+
+를 적용하는 것이다. 그러면 다음의 **직접 예측값**이 나온다.
+
+| 순환 수 $n$ | 활성 $x_a$ | 구조 $x_s$ | 배경 $x_b$ |
+|---|---|---|---|
+| 0 | $33.3\%$ | $33.3\%$ | $33.3\%$ |
+| 1 | $9.28\%$ | $27.3\%$ | $63.4\%$ |
+| 2 | $5.55\%$ | $26.4\%$ | $68.1\%$ |
+| 3 | $4.98\%$ | $26.3\%$ | $68.8\%$ |
+
+즉 CE 수면 순환이 실제로 작동한다면, **dense 또는 균등 초기화된 모델은 2-3회의 수면-각성 순환 뒤 활성 비율이 5% 근방으로 급히 떨어져야 한다.**
 
 ---
 
@@ -325,12 +373,13 @@ $d = 768$, $L = 12$, $T = 2048$ 기준:
 | 지표 | 표준 Transformer | CE-Transformer | 이득 | CE 원리 |
 |---|---|---|---|---|
 | **파라미터** | 85M | 65.6M | $\boxed{-22.7\%}$ | P1 (격자) |
-| **학습 메모리** | 1.41 GB | 0.68 GB | $\boxed{-51.8\%}$ | P3 (STDP) |
-| **추론 FLOPs** | 348G | 17G | $\boxed{20.5\times}$ | P4 (희소) |
-| **통신 (분산)** | 2.36 MB/층 | 4 B/층 | $\boxed{\sim 600{,}000\times}$ | P3 (STDP) |
-| **환각률** | 50-70% | $\leq 4.87\%$ | $\boxed{\geq 10\times}$ 감소 | P5 (곡률) |
-| **파괴적 망각** | 20-80% | $\leq 4.87\%$ | $\boxed{\geq 4\times}$ 감소 | P2 (수면) |
-| **수렴 속도** | -- | 3회 순환 | 고정 | P2 (수면) |
+| **학습 메모리** | 1.41 GB | 0.68 GB | up to $\boxed{-51.8\%}$ | P3 (STDP, shared-trace 가정) |
+| **추론 FLOPs** | 502.5G | 272G | $\boxed{1.85\times}$ | P4 (FFN 희소, 현재형) |
+| **추론 FLOPs 상한** | 502.5G | 24.5G | $\boxed{20.5\times}$ | P4 (전면 희소, 낙관적 상한) |
+| **통신 (분산)** | 2.36 MB/층 | 4 B/층 | strong reduction hypothesis | P3 (STDP) |
+| **환각률** | -- | -- | hard bound 미정 | P5 (곡률) |
+| **파괴적 망각** | 20-80% | -- | 개선 가설 | P2 (수면) |
+| **수렴 속도** | -- | 2회 `2.4%`, 3회 `0.37%` 잔차 목표 | bridge | P2 (수면, $\rho=0.155$) |
 
 ### 7.2 에너지 효율 총합
 
@@ -338,7 +387,9 @@ $d = 768$, $L = 12$, $T = 2048$ 기준:
 
 $$\text{에너지 비율} = \underbrace{0.627}_{\text{P1: 격자}} \times \underbrace{0.0487}_{\text{P4: 희소}} = 0.0305 = 3.05\%$$
 
-$$\text{에너지 절감} = 1 - 0.0305 = \boxed{96.95\%} \approx 33\times$$
+이 식은 attention까지 완전 희소 실행이 가능한 경우의 상한이다.
+
+$$\text{에너지 절감} = 1 - 0.0305 = \boxed{96.95\%} \approx 33\times \quad \text{(낙관적 상한)}$$
 
 학습 시:
 
@@ -350,13 +401,30 @@ $$\text{에너지 절감} = 1 - 0.0975 = \boxed{90.25\%} \approx 10\times$$
 
 | 규모 | 표준 파라미터 | CE 파라미터 | 표준 추론 비용 | CE 추론 비용 |
 |---|---|---|---|---|
-| 85M | 85M | 65.6M | 348 GFLOPS | 17 GFLOPS |
-| 1.3B | 1.3B | 1.00B | 5.3 TFLOPS | 259 GFLOPS |
-| 7B | 7B | 5.4B | 29 TFLOPS | 1.4 TFLOPS |
-| 70B | 70B | 54B | 287 TFLOPS | 14 TFLOPS |
-| 175B | 175B | 135B | 717 TFLOPS | 35 TFLOPS |
+| 85M | 85M | 65.6M | 502.5 GFLOPS | 24.5 GFLOPS (상한) |
+| 1.3B | 1.3B | 1.00B | 비례 증가 | 비례 상한 |
+| 7B | 7B | 5.4B | 비례 증가 | 비례 상한 |
+| 70B | 70B | 54B | 비례 증가 | 비례 상한 |
+| 175B | 175B | 135B | 비례 증가 | 비례 상한 |
 
-$\boxed{70\text{B CE-Transformer} \approx 7\text{B 표준 Transformer의 추론 비용}}$
+정확한 대규모 비용 비교는 attention sparsity, KV cache, prefill/decode 분리 모델을 포함해 다시 계산해야 한다.
+
+### 7.4 희소 활성 수 예측
+
+고정점 희소율을 그대로 쓰면, 각 은닉 차원에서 활성 채널 수는
+
+$$k^*(d) = \lceil 0.0487\,d \rceil$$
+
+로 예측된다.
+
+| 은닉 차원 $d$ | CE 활성 수 $k^*(d)$ | 활성 비율 |
+|---|---|---|
+| 768 | 38 | $4.95\%$ |
+| 2048 | 100 | $4.88\%$ |
+| 4096 | 200 | $4.88\%$ |
+| 8192 | 399 | $4.87\%$ |
+
+이 표는 구현 전에 바로 체크 가능한 설계 예측이다.
 
 ---
 
@@ -364,7 +432,7 @@ $\boxed{70\text{B CE-Transformer} \approx 7\text{B 표준 Transformer의 추론 
 
 ### 8.1 희소성과 정확도의 관계
 
-Top-k 비율 $\rho$에 따른 이론적 정확도 감소:
+Top-k 비율 $\rho$에 따른 정확도 감소를 닫힌형으로 쓰고 싶다면, 아래 식은 **엄밀한 정리라기보다 heuristic response curve**로 읽어야 한다:
 
 $$\text{acc}(\rho) = \text{acc}(1.0) \cdot \left(1 - C \cdot (1-\rho)^{D_{\text{eff}}}\right)$$
 
@@ -376,7 +444,11 @@ $$\text{acc loss} = C \cdot (1 - 0.0487)^{3.178} = C \cdot 0.9513^{3.178} = C \c
 
 $C \sim 0.05$ (경험적 추정)이면 정확도 손실 $\sim 4.3\%$.
 
-$$\boxed{\text{정확도 95.7\%를 유지하면서 속도 20.5배 향상}}$$
+따라서 이 절에서 안전하게 말할 수 있는 것은:
+
+$$
+\boxed{\text{희소율 }\rho\text{와 정확도 사이에 최적점이 있을 것이라는 예측은 가능하지만, 정확한 손실률은 아직 가설이다.}}
+$$
 
 ### 8.2 최적점의 수학적 근거
 
@@ -388,7 +460,20 @@ $\varepsilon^2$가 최적인 이유: 부트스트랩 방정식 $\varepsilon^2 = 
 
 $\varepsilon^2$에서만 "활성 비율을 알아야 활성 비율을 계산할 수 있고, 계산 결과가 다시 동일한 활성 비율을 준다"는 자기일관성이 성립한다.
 
----
+### 8.3 검증 가능한 최적점 예측
+
+실험 설계 관점에서 CE가 요구하는 것은 다음 두 문장이다.
+
+1. **최적점 위치 예측:** 효율-정확도 Pareto front의 knee point는 $k \approx 4.87\%$ 근방에 나타나야 한다.
+2. **강건 구간 예측:** 실제 구현의 이산화, sparse kernel 오버헤드, 과제 의존성을 감안해도 좋은 구간은 대체로 `3%-7%` 안에 남아야 한다.
+
+따라서 Top-k 스위프에서
+
+$$
+k \in \{1\%, 2\%, 3\%, 4\%, 5\%, 7\%, 10\%, 15\%, 20\%\}
+$$
+
+를 비교하면, CE는 `4-5%` 부근이 중심이고 `3-7%`가 실용 대역이라는 형태의 **반증 가능한 예측**을 제공한다.
 
 ## 9. LBONorm 오버헤드
 
@@ -428,9 +513,9 @@ FLOPs: GaugeLattice 절감 $-24.9\%$ + LBONorm 오버헤드 $+3.1\%$ = $\boxed{-
 
 | CE 원리 | 메모리 | 속도 (추론) | 정확도 | 핵심 공식 |
 |---|---|---|---|---|
-| P1 격자 | $-20.6\%$ | $+21.8\%$ | 동등 | $\sum f_i^2 = 0.596$ |
-| P2 수면 | -- | -- | 망각 $\leq 4.87\%$ | $\|B'\| = 0.155$ |
-| P3 STDP | $-51.8\%$ | -- | 동등 (검증 필요) | $O(N) \to O(1)$ 통신 |
-| P4 희소 | -- | $20.5\times$ | $-4.3\%$ (추정) | $\varepsilon^2 = 0.0487$ |
-| P5 곡률 | -- | $-3.1\%$ (오버헤드) | 환각 $\leq 4.87\%$ | $\sigma_1 \leq 1$ |
-| **복합** | $\boxed{-52\%}$ | $\boxed{20\times}$ | $\boxed{+45\%p}$ (환각) | |
+| P1 격자 | $-20.6\%$ | $+21.8\%$ | 구조적 표현력 유지 목표 | $\sum f_i^2 = 0.596$ |
+| P2 수면 | -- | -- | 지속 학습 개선 가설, 2-3회 재정렬 예측 | $\rho = \|DB(p^*)\| = 0.155$ (bridge) |
+| P3 STDP | up to $-51.8\%$ | -- | 검증 필요 | shared-trace 가정 필요 |
+| P4 희소 | -- | $1.85\times$ 현재형, $20.5\times$ 상한 | 정확도 trade-off 가설 | $\varepsilon^2 = 0.0487$ |
+| P5 곡률 | -- | $-3.1\%$ (오버헤드) | 오류 증폭 억제 | $\sigma_1 \leq 1$ |
+| **복합** | 조건부 절감 | 조건부 가속 | hard bound 미정 | |
