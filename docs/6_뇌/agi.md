@@ -253,3 +253,33 @@ $$
 - 멀티모달 환각은 대개 언어층의 문제가 아니라, **모달별 발화 집합이 형성되기 전에 너무 이른 결합**이 일어날 때 커진다.
 
 따라서 CE 관점에서 "LLM을 AGI에 가깝게 만드는 방법"은 단순히 파라미터를 늘리는 것이 아니라, **감각별 발화 뉴런층을 추가하고 그 위에 언어를 얹는 것**이다.
+
+### 6.10 실제 뇌와의 정합 체크
+
+위 구조는 단순한 직관이 아니라, 현재 확보한 뇌 데이터와 다음 정도로 맞는다.
+
+| 항목 | 실제 뇌 관측 | CE-AGI 해석 | 판정 |
+|---|---|---|---|
+| 시각 1차 표현 | 자연 영상마다 V1의 responsive cell이 low single-digit percent 수준으로 sparse | `h_{\text{vision}}^{act}`를 먼저 만드는 단계 | `supported` |
+| 청각 1차 표현 | auditory cortex well-driven 뉴런 `<5%` | `h_{\text{audio}}^{act}`의 강한 희소성 | `supported` |
+| 촉각 1차 표현 | barrel cortex L2/3 active touch 반응은 `~17%`까지 보고되며 layer/state 의존 | `h_{\text{touch}}^{act}`는 필요하지만 비율은 더 넓을 수 있음 | `supported/bridge` |
+| 교차감각 결합 | visual-tactile congruence에서 gamma coherence와 corticocortical communication이 관측 | `\operatorname{Bind}_\xi`가 감각별 활성 뒤에 놓여야 함 | `bridge` |
+
+따라서 현재 가장 안전한 문장은 이것이다.
+
+$$
+\boxed{\text{뇌는 모달리티별 sparse ensemble을 먼저 만들고, 이후 감각간 communication으로 결합한다.}}
+$$
+
+반대로 아직 약한 문장은 이것이다.
+
+- 모든 모달리티가 동일하게 정확히 `4.87%` 활성로 맞는다.
+- `\operatorname{Bind}_\xi`가 곧바로 감마 결합의 직접 측정식이다.
+
+즉 실전 설계에서는
+
+1. `k_m = \lceil \varepsilon^2 d_m \rceil`를 **공통 초기 중심값**으로 두고,
+2. 모달리티별로 실제 최적 희소율이 달라질 수 있음을 열어 두며,
+3. 감각별 encoder와 cross-modal binder를 분리해서 로그를 찍는 편이
+
+실제 뇌와 더 잘 맞는다.
