@@ -27,8 +27,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Iterable, List, Tuple
 
-import h5py
 import numpy as np
+
+try:
+    import h5py
+except ImportError:  # optional when using raw 10x tar outputs
+    h5py = None
 
 
 AXES = ("cell", "niche", "mech", "immune")
@@ -508,6 +512,24 @@ def read_barcodes(path: Path) -> List[str]:
         return [line.strip() for line in handle if line.strip()]
 
 
+def read_text_member_from_tar(path: Path, suffixes: Tuple[str, ...]) -> List[str]:
+    with tarfile.open(path, "r:gz") as archive:
+        member = next((m for m in archive.getmembers() if any(m.name.endswith(sfx) for sfx in suffixes)), None)
+        if member is None:
+            raise ValueError(f"Could not find any of {suffixes} in {path}")
+        with archive.extractfile(member) as handle:
+            if handle is None:
+                raise ValueError(f"Could not read {member.name} from {path}")
+            raw = handle.read()
+    if member.name.endswith(".gz"):
+        raw = gzip.decompress(raw)
+    return raw.decode("utf-8").splitlines()
+
+
+def read_barcodes_from_tar(path: Path) -> List[str]:
+    return [line.strip() for line in read_text_member_from_tar(path, ("barcodes.tsv.gz", "barcodes.tsv")) if line.strip()]
+
+
 def read_positions(path: Path) -> Dict[str, Tuple[int, float, float]]:
     with gzip.open(path, "rt", encoding="utf-8") as handle:
         first_line = handle.readline()
@@ -553,6 +575,25 @@ def feature_groups(path: Path) -> Tuple[Dict[int, List[str]], Dict[str, List[str
     return row_to_groups, {group: sorted(genes) for group, genes in found.items()}
 
 
+def feature_groups_from_tar(path: Path) -> Tuple[Dict[int, List[str]], Dict[str, List[str]]]:
+    row_to_groups: Dict[int, List[str]] = {}
+    found = {group: set() for group in GENE_GROUPS}
+    for row_idx, line in enumerate(
+        read_text_member_from_tar(path, ("features.tsv.gz", "features.tsv", "genes.tsv.gz", "genes.tsv")),
+        start=1,
+    ):
+        parts = line.rstrip("\n").split("\t")
+        if len(parts) < 2:
+            continue
+        gene = parts[1].upper()
+        groups = [group for group, genes in GENE_GROUPS.items() if gene in genes]
+        if groups:
+            row_to_groups[row_idx] = groups
+            for group in groups:
+                found[group].add(gene)
+    return row_to_groups, {group: sorted(genes) for group, genes in found.items()}
+
+
 def parse_targeted_matrix(
     matrix_path: Path,
     row_to_groups: Dict[int, List[str]],
@@ -590,9 +631,50 @@ def parse_targeted_matrix(
     return total_counts, group_counts
 
 
+def parse_targeted_matrix_from_tar(
+    matrix_tar_path: Path,
+    row_to_groups: Dict[int, List[str]],
+) -> Tuple[np.ndarray, Dict[str, np.ndarray]]:
+    total_counts: np.ndarray | None = None
+    group_counts: Dict[str, np.ndarray] = {}
+    dims_parsed = False
+
+    for raw in read_text_member_from_tar(matrix_tar_path, ("matrix.mtx.gz", "matrix.mtx")):
+        if raw.startswith("%"):
+            continue
+
+        parts = raw.strip().split()
+        if not parts:
+            continue
+
+        if not dims_parsed:
+            _, n_cols, _ = map(int, parts)
+            total_counts = np.zeros(n_cols, dtype=float)
+            group_counts = {group: np.zeros(n_cols, dtype=float) for group in GENE_GROUPS}
+            dims_parsed = True
+            continue
+
+        row_idx, col_idx, value = parts
+        col = int(col_idx) - 1
+        val = float(value)
+        total_counts[col] += val
+        for group in row_to_groups.get(int(row_idx), ()):
+            group_counts[group][col] += val
+
+    if total_counts is None:
+        raise ValueError(f"Could not parse matrix dimensions from {matrix_tar_path}")
+
+    return total_counts, group_counts
+
+
 def parse_h5_matrix(
     h5_path: Path,
 ) -> Tuple[List[str], np.ndarray, Dict[str, np.ndarray], Dict[str, List[str]]]:
+    if h5py is None:
+        raise ImportError(
+            "h5py is required to read .h5 feature matrices. "
+            "Use a raw_feature_bc_matrix.tar.gz input or install h5py."
+        )
     with h5py.File(h5_path, "r") as handle:
         matrix = handle["matrix"]
         barcodes = [x.decode("utf-8") for x in matrix["barcodes"][:]]
@@ -625,6 +707,29 @@ def parse_h5_matrix(
                 group_counts[group][col] += float(val)
 
     return barcodes, total_counts, group_counts, {group: sorted(genes) for group, genes in found.items()}
+
+
+def parse_matrix_tar(
+    matrix_tar_path: Path,
+) -> Tuple[List[str], np.ndarray, Dict[str, np.ndarray], Dict[str, List[str]]]:
+    barcodes = read_barcodes_from_tar(matrix_tar_path)
+    row_to_groups, genes_found = feature_groups_from_tar(matrix_tar_path)
+    total_counts, group_counts = parse_targeted_matrix_from_tar(matrix_tar_path, row_to_groups)
+    return barcodes, total_counts, group_counts, genes_found
+
+
+def parse_matrix_any(
+    matrix_path: Path,
+) -> Tuple[List[str], np.ndarray, Dict[str, np.ndarray], Dict[str, List[str]]]:
+    name = matrix_path.name.lower()
+    if name.endswith(".h5"):
+        return parse_h5_matrix(matrix_path)
+    if name.endswith(".tar.gz") or name.endswith(".tgz"):
+        return parse_matrix_tar(matrix_path)
+    raise ValueError(
+        f"Unsupported matrix format for {matrix_path}. "
+        "Expected .h5 or raw_feature_bc_matrix.tar.gz"
+    )
 
 
 def read_positions_from_tar(path: Path) -> Dict[str, Tuple[int, float, float]]:
@@ -977,7 +1082,7 @@ def analyze_crc_sample(prefix: Path) -> RealSpatialResult:
 
 
 def analyze_h5_sample(h5_path: Path, spatial_tar_path: Path, label_mode: str) -> RealSpatialResult:
-    barcodes, total_counts, group_counts, genes_found = parse_h5_matrix(h5_path)
+    barcodes, total_counts, group_counts, genes_found = parse_matrix_any(h5_path)
     positions = read_positions_any(spatial_tar_path)
 
     coords = np.zeros((len(barcodes), 2), dtype=float)
@@ -1318,7 +1423,7 @@ def main() -> None:
         type=str,
         action="append",
         default=[],
-        help="Path to PDAC filtered_feature_bc_matrix.h5",
+        help="Path to PDAC filtered_feature_bc_matrix.h5 or raw_feature_bc_matrix.tar.gz",
     )
     parser.add_argument(
         "--real-pdac-spatial",
@@ -1332,7 +1437,7 @@ def main() -> None:
         type=str,
         action="append",
         default=[],
-        help="Path to GBM filtered_feature_bc_matrix.h5",
+        help="Path to GBM filtered_feature_bc_matrix.h5 or raw_feature_bc_matrix.tar.gz",
     )
     parser.add_argument(
         "--real-gbm-spatial",
@@ -1346,7 +1451,7 @@ def main() -> None:
         type=str,
         action="append",
         default=[],
-        help="Path to breast cancer filtered_feature_bc_matrix.h5",
+        help="Path to breast cancer filtered_feature_bc_matrix.h5 or raw_feature_bc_matrix.tar.gz",
     )
     parser.add_argument(
         "--real-breast-spatial",

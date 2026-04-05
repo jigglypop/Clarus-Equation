@@ -393,68 +393,96 @@ $$
 
 ---
 
-## 8. 다음에 풀 수식 문제
+## 8. 뇌 구조 full-stack 모델
 
-### 8.1 `p = (x_a, x_s, x_b)`의 측정 정의
+### 8.1 해부학-제어 계층
 
-가장 먼저 필요한 것은:
+이제부터 `r`는 막연한 voxel이 아니라 **해부학-제어 계층을 반영한 parcel/node**로 읽는다. 현재 문서의 메인라인 brain stack은 다음 네 층으로 둔다.
 
-$$
-p_{\text{brain}}(t) = (x_a(t), x_s(t), x_b(t))
-$$
+| 층 | 포함 구조 | 실험적으로 안전한 역할 | CE에서 맡는 역할 | 판정 |
+|---|---|---|---|---|
+| `L1` 피질-시상 처리층 | 피질 task network, DMN, thalamo-cortical relay | 감각 입력 routing, 과제 반응, intrinsic background 유지 | `x_a`, `x_b`의 주 관측창 | `bridge` |
+| `L2` 기억-살리언스 층 | hippocampus, amygdala, basal ganglia, salience switching | 기억 재활성화, 가치/위험 표지, 행동 전환 | `x_a` 재할당과 `x_s` plasticity burden | `bridge` |
+| `L3` 항상성 제어층 | hypothalamus, brainstem, LC/raphe/NTS 계열 | 수면-각성, 자율신경 set-point, 체온/식욕/호르몬 조절 | `x_b` 유지와 `s_r` 억제의 주축 | `bridge` |
+| `L4` 뇌-몸 결합층 | endocrine, immune tone, metabolic reserve, vascular tone | 전신 완충력과 장기별 stress coupling | `s_r \to w_r` 전달축 | `bridge/hypothesis` |
 
-를 뇌 데이터에서 어떻게 측정할지 정하는 것이다.
+여기서 중요한 점은, 시상하부-뇌간-자율신경이 "배경 설명"이 아니라 실제로 `x_b`와 복구 여력을 떠받치는 제어층이라는 것이다.
 
-후보 proxy:
-- `x_a`: task-evoked metabolic increment, event-locked firing fraction
-- `x_s`: synaptic signaling + maintenance + plasticity-related cost
-- `x_b`: intrinsic / resting / DMN / baseline spontaneous activity
+구체화는 한 파일에 몰아넣지 않고 다음처럼 분리한다.
 
-### 8.2 `B`의 재정의
+| 문서 | 맡는 역할 |
+|---|---|
+| `evidence.md` | 메인라인 요약과 뇌-암 결합식 |
+| `anatomy.md` | 해부학-제어 계층과 정점 가족 |
+| `measure.md` | `p_r`, `x_a`, `x_s`, `x_b`, `s_r`의 측정 정의 |
+| `control.md` | `q_n`, `\ell_r`, sleep-autonomic-endocrine-immune-metabolic body loop |
+| `graph.md` | brain graph, `\Delta_G`, graph-coupled relaxation |
+| `proof.md` | 각 부위/중추/알고리즘 모듈의 증명 게이트와 반증 조건 |
+| `agi.md` | `3x3+1` 구조 유비와 bridge 해석 |
 
-이제 `homeomorphism.md`에서는 `B`를 다음 두 층으로 분리한다.
+### 8.2 `p_r`와 `s_r`의 측정 정의
 
-1. 정적 고정점 연산자:
+세부 operationalization은 `measure.md`와 `control.md`로 분리해 두고, 여기서는 mainline에 필요한 최소 요약만 유지한다. 각 항이 실제로 증명 가능한지는 `proof.md`를 따른다.
+특히 현재 `pass / partial / fail` 실판정은 `proof.md`의 `2.1`, `3.8`, `4.1`, `5.1`을 기준으로 읽는다.
+초기 단계에서 전부를 어떻게 실행할지는 `proof.md`의 `7.1`부터 `7.7`까지를 기준으로 읽는다.
 
-$$
-B_* : p \mapsto p^*
-$$
-
-2. 실제 동역학 반복:
-
-$$
-p_{n+1} = \mathcal{F}(p_n; \theta_{\text{brain}})
-$$
-
-여기서만 야코비안과 수렴률을 말할 수 있다.
-
-#### 최소 관측-정합 반복식
-
-현재 실험 사실과 CE 수축률을 동시에 만족하는 가장 단순한 반복식은 다음과 같다.
-
-1. 각성으로 인한 이탈:
+가장 먼저 필요한 것은 지역별 3분배와 취약도를 닫는 것이다.
 
 $$
-p_{n+\frac12} = p_n + u_n, \qquad \mathbf{1}^\top u_n = 0
+p_r(t) = \big(x_{a,r}(t), x_{s,r}(t), x_{b,r}(t)\big) \in \Delta^2
 $$
 
-여기서 $u_n$은 각성 중 누적되는 task load / synaptic load / background drift다.
-
-2. 수면으로 인한 수축:
+직접 한 번에 재는 값은 아직 없으므로, 현재는 각 영역의 비음수 multimodal score를 정규화해
 
 $$
-p_{n+1} = p^* + \rho \big(p_{n+\frac12} - p^*\big) + \xi_n, \qquad \rho = 0.155
+\hat x_{a,r}(t),\;\hat x_{s,r}(t),\;\hat x_{b,r}(t)\ge 0,
+\qquad
+p_r(t)
+=
+\frac{1}{\hat x_{a,r}+\hat x_{s,r}+\hat x_{b,r}}
+\big(\hat x_{a,r},\hat x_{s,r},\hat x_{b,r}\big)
 $$
 
-즉,
+처럼 읽는 것이 가장 안전하다.
+
+| 성분 | 지금 바로 쓸 수 있는 proxy | 주 관측 도구 | 현재 판정 |
+|---|---|---|---|
+| `x_a` | event-locked firing fraction, task-evoked BOLD/PET increment, task-positive gamma/beta burden | EEG/MEG, fMRI, FDG-PET | 방향성은 `supported`, 정규화된 지역 비율은 `bridge` |
+| `x_s` | synaptic maintenance/plasticity burden, sleep-dependent renormalization load, glial support/repair cost | sleep EEG, PET, molecular assay | 전역 해석은 `supported`, 지역별 정량화는 `bridge` |
+| `x_b` | resting metabolism, DMN/intrinsic activity, tonic spontaneous background | rs-fMRI, PET, resting EEG | 방향성은 `supported`, node-wise simplex 변수화는 `bridge` |
+
+#### 뇌-몸 조절축 `q_n`
+
+이제 `s_r`는 "미지의 한 숫자"가 아니라, 과활성 + 복구 부족 + 배경 항상성 부족 + 뇌-몸 조절 부하의 합으로 읽는다.
 
 $$
-e_n := p_n - p^* \quad \Longrightarrow \quad e_{n+1} = \rho e_n + \rho u_n + \xi_n
+\ell_r(n) = d_r^\top \big(q_n-q^*\big)_+,
+\qquad
+q_n=\big(q_{\text{sleep},n}, q_{\text{arousal},n}, q_{\text{aut},n}, q_{\text{endo},n}, q_{\text{immune},n}, q_{\text{met},n}\big)
 $$
 
-이다.
+$$
+s_r(n)
+=
+\eta_a\big(x_{a,r}(n)-x_a^*\big)_+
+\;+\;
+\eta_s\big(x_s^*-x_{s,r}(n)\big)_+
+\;+\;
+\eta_b\big(x_b^*-x_{b,r}(n)\big)_+
+\;+\;
+\eta_q \ell_r(n)
+$$
 
-만약 sleep noise를 무시하고 $\|u_n\| \le U$라면,
+| 항 | 의미 | 대표 proxy | 판정 |
+|---|---|---|---|
+| `q_sleep` | 수면 부채 / slow-wave 부족 | sleep EEG, actigraphy | `supported/bridge` |
+| `q_arousal` | hyperarousal / vigilance overload | pupil, EEG arousal index, LC-related proxy | `bridge` |
+| `q_aut` | sympathetic-vagal 불균형 | HRV, blood pressure variability | `supported` |
+| `q_endo` | endocrine stress load | cortisol, endocrine panel | `supported` |
+| `q_immune` | inflammatory / immune tone | CRP, cytokine panel, immune signature | `supported` |
+| `q_met` | 대사/혈관 reserve 부족 | glucose variability, perfusion, temperature | `bridge` |
+
+즉 지금 당장 안전하게 말할 수 있는 것은 "`x_a`, `x_b`는 꽤 직접적으로 보이고, `x_s`는 composite proxy가 필요하며, `s_r`는 body-loop load까지 포함해야 한다"는 점이다. 특히 `q_sleep`을 단독으로 보면, 아래의 기존 수면 수축식은 여전히 유효한 최소 근사로 남는다.
 
 $$
 \limsup_{n\to\infty} \|e_n\| \le \frac{\rho}{1-\rho} U
@@ -483,23 +511,139 @@ $$
 
 따라서 CE의 "수면은 drift를 접어 넣는 수축 단계"라는 해석은, 최소 반복식 수준에서는 상당히 자연스럽다.
 
-### 8.3 곡률의 뇌 측 proxy
+반대로 동일 위치에서 EEG/fMRI/PET/수면/자율신경을 합쳐 `p_r`를 완전히 닫는 것은 아직 `hypothesis`다.
 
-현재 `\|\Delta_g \Phi\|^2`는 너무 추상적이다. 후보 proxy는:
+### 8.3 flat region index 대신 brain graph
+
+brain graph의 구체적인 parcel family와 graph-coupled relaxation map은 `graph.md`로 분리했다. 여기서는 `r`를 flat index가 아닌 node로 읽는다는 점만 고정한다.
+
+이제 `r`는 평평한 번호표가 아니라 brain graph의 정점이다.
+
+$$
+G_{\text{brain}}=(V_{\text{brain}}, E_{\text{brain}})
+$$
+
+최소 분할은
+
+$$
+V_{\text{brain}}
+=
+V_{\text{ctx}}
+\sqcup
+V_{\text{thal}}
+\sqcup
+V_{\text{hip}}
+\sqcup
+V_{\text{sal}}
+\sqcup
+V_{\text{hyp}}
+\sqcup
+V_{\text{stem}}
+\sqcup
+V_{\text{aut}}
+$$
+
+로 두고, graph coupling은
+
+$$
+\Delta_G f(r)
+=
+\sum_{s:(s,r)\in E_{\text{brain}}}
+a_{rs}\big(f_s-f_r\big),
+\qquad
+a_{rs}\ge 0
+$$
+
+처럼 적는다.
+
+이 항의 해석은 다음과 같다.
+- 피질-피질 인접성: 과제 burden과 background drift의 확산
+- 시상-피질 relay: 입력 gating과 대역 재분배
+- 해마-피질 replay: 기억 재활성화와 복구 경로
+- 시상하부-뇌간-자율신경 축: distributed correction 또는 failure propagation
+
+즉 graph 항은 "한 지점의 문제"가 어떻게 주변으로 퍼지거나, 반대로 주변 완충망에 의해 눌리는지를 설명한다. 해부학적 연결 자체는 `supported`지만, 이를 `\Delta_G` 한 줄로 쓰는 것은 현재 `bridge`다.
+
+### 8.4 `B`의 재정의와 최소 반복식
+
+`B_*`, `B`, graph-coupled relaxation의 상세는 `graph.md`, sleep/autonomic forcing의 해부학적 해석은 `control.md`를 따른다.
+
+이제 `graph.md` 기준의 `B`는 다음 두 층으로 분리한다.
+
+1. 정적 고정점 연산자:
+
+$$
+B_* : p \mapsto p^*
+$$
+
+2. 실제 동역학 반복:
+
+$$
+p_{n+1} = \mathcal{F}(p_n; \theta_{\text{brain}}, q_n, G_{\text{brain}})
+$$
+
+full-stack 최소 반복식은
+
+$$
+p_{n+\frac12} = p_n + u_n, \qquad \mathbf{1}^\top u_n = 0
+$$
+
+$$
+p_{n+1}
+=
+p^*
++ \rho \big(p_{n+\frac12} - p^*\big)
++ \gamma_p \Delta_G p_{n+\frac12}
++ H(q_n-q^*)
++ \xi_n,
+\qquad
+\rho = 0.155
+$$
+
+즉
+
+$$
+e_n := p_n - p^*
+\quad \Longrightarrow \quad
+e_{n+1}
+=
+\rho e_n
++ \rho u_n
++ \gamma_p \Delta_G e_{n+\frac12}
++ H(q_n-q^*)
++ \xi_n
+$$
+
+이다.
+
+이 식의 의미는 단순하다.
+- `\rho e_n`: 수면과 homeostasis가 기준점으로 끌어당기는 수축
+- `\gamma_p \Delta_G e`: 지역 사이 spread 또는 buffering
+- `H(q_n-q^*)`: sleep debt, autonomic imbalance, endocrine/immune/metabolic load
+
+### 8.5 곡률과 `\delta[t]`의 현재 정의
+
+현재 `\|\Delta_g \Phi\|^2`는 너무 추상적이므로, 뇌 측 후보 proxy는 다음처럼 제한한다.
 - slow-wave activity
 - population synchrony / desynchrony
 - functional connectivity roughness
 - replay burden
 
-### 8.4 `\delta[t]`의 생물학적 정의
-
-가장 안전한 후보는:
+그리고 가장 안전한 global 조절 오차 후보는 여전히
 
 $$
 \delta[t] = a \cdot \text{RPE}(t) + b \cdot \text{surprise}(t) + c \cdot \text{novelty}(t)
 $$
 
-이고, CE 고정점과의 연결은 그 다음 단계에서 검토하는 것이 맞다.
+이다. 다만 이제는 이 항 역시 피질 단독이 아니라 `q_n`과 함께 읽어야 한다. 즉 dopamine/novelty는 국소 학습 신호이고, sleep-autonomic-endocrine-immune load는 더 느린 제어 배경이다.
+
+### 8.6 이 절의 사용 규칙
+
+| 문장 | 판정 |
+|---|---|
+| 피질-시상, 해마-살리언스, 시상하부-뇌간, 자율신경/내분비/면역 축이 뇌 상태를 층별로 나눈다는 설명 | `supported` |
+| 이 층들을 `p_r`, `s_r`, `q_n`로 압축해 CE와 연결하는 것 | `bridge` |
+| 동일한 위치에서 multimodal data로 `p_r`, `s_r`, `q_n`, `w_r`를 모두 닫아 암을 예측하는 것 | `hypothesis` |
 
 ---
 
@@ -570,7 +714,13 @@ $$
    - `CDKN2A` homozygous deletion은 전체 GBM의 `22-35%`, IDH-wildtype GBM의 `~58%`
    - 근거: [Glioblastoma: An Update in Pathology, Molecular Mechanisms and Biomarkers](https://www.mdpi.com/1422-0067/25/5/3040)
 
-3. 공간 전사체 수준에서는 세포 상태와 niche가 분리된다.
+3. 신경 활동 자체가 GBM 성장과 침윤을 직접 밀어 올린다.
+   - neuronal activity-dependent `NLGN3`와 `BDNF`가 glioma growth signal로 작동한다
+   - neuron-glioma synapse는 AMPA-glutamatergic이며, peritumoral neuron이 tumor cell proliferation/invasion을 직접 밀어 올린다
+   - glioma-infiltrated cortex에서는 hyperexcitability, seizure tendency, inhibitory interneuron loss가 반복 보고된다
+   - 근거: [Glioma progression through synaptic activity](https://www.nature.com/articles/s41582-019-0290-1), [AMPA Receptor Modulation in the Treatment of High-Grade Glioma: Translating Good Science into Better Outcomes](https://pmc.ncbi.nlm.nih.gov/articles/PMC11945080/), [Peritumoral brain zone in glioblastoma: biological, clinical and mechanical features](https://pmc.ncbi.nlm.nih.gov/articles/PMC10937439/)
+
+4. 공간 전사체 수준에서는 세포 상태와 niche가 분리된다.
    - paired snRNA-seq + spatial transcriptomics (`3` 환자)에서 `OPC-like`, `NPC-like`, `AC-like`, `MES-like` 상태가 공간적으로 분리
    - 예: AC-like vs OPC-like segregation adjusted p value `1.50e-44`
    - 예: OPC-like vs NPC-like segregation adjusted p values `7.65e-18`, `2.99e-21`
@@ -579,7 +729,7 @@ $$
    - necrotic/perinecrotic 쪽은 glycolysis, ferroptosis, unfolded protein response가 높고, perivascular 쪽은 oxidative phosphorylation이 높다
    - 근거: [Spatial transcriptomics reveals segregation of tumor cell states in glioblastoma and marked immunosuppression within the perinecrotic niche](https://link.springer.com/article/10.1186/s40478-024-01769-0)
 
-4. GBM은 기계적으로도 균질한 덩어리가 아니라, 주변 조직까지 번지는 이질적 장(field)이다.
+5. GBM은 기계적으로도 균질한 덩어리가 아니라, 주변 조직까지 번지는 이질적 장(field)이다.
    - multifrequency MRE, `22` 환자
    - tumor `|G*| = 1.32 \pm 0.26` kPa, healthy tissue `1.54 \pm 0.27` kPa (`P = 0.001`)
    - tumor phase angle `\phi = 0.37 \pm 0.08`, healthy tissue `0.58 \pm 0.07`
@@ -587,26 +737,33 @@ $$
    - perifocal region의 `|G*|`는 tumor와 상관 (`R = 0.571`, `P = 0.0055`)
    - 근거: [High-Resolution Mechanical Imaging of Glioblastoma by Multifrequency Magnetic Resonance Elastography](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0110588)
 
-5. 재발은 핵심 덩어리만의 문제가 아니라 경계 영역(PBZ, peritumoral brain zone) 문제다.
+6. 재발은 핵심 덩어리만의 문제가 아니라 경계 영역(PBZ, peritumoral brain zone) 문제다.
    - recurrence의 `80% 이상`이 resection cavity edge에서 발생
    - PBZ는 MRI상 비정상 조영이 없더라도 분자적/세포적 변화가 존재
    - review 요약에서는 MRI상 정상처럼 보이는 PBZ sample의 거의 `1/3`에서 infiltrative tumor cells가 잡힌다
    - 근거: [Peritumoral brain zone in glioblastoma: biological, clinical and mechanical features](https://www.frontiersin.org/journals/immunology/articles/10.3389/fimmu.2024.1347877/full), [Characterizing the peritumoral brain zone in glioblastoma: a multidisciplinary analysis](https://link.springer.com/article/10.1007/s11060-014-1695-8)
 
-6. 침윤 front는 core와 다른 프로그램을 가진다.
+7. 침윤 front는 core와 다른 프로그램을 가진다.
    - single-cell RNA-seq (`3,589` cells, `4` patients)에서 core와 peritumoral tissue를 함께 보면, infiltrating neoplastic cells에 공통된 signature가 잡힌다
    - 즉 암세포는 "덩어리 내부"와 "이동 경계"에서 같은 상태가 아니다
    - 근거: [Single-Cell RNA-Seq Analysis of Infiltrating Neoplastic Cells at the Migrating Front of Human Glioblastoma](https://www.cell.com/cell-reports/fulltext/S2211-1247(17)31462-6?_returnURL=https%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS2211124717314626%3Fshowall%3Dtrue)
+
+8. GBM은 perivascular / glymphatic 축도 무너뜨린다.
+   - tumor mass effect와 perivascular invasion으로 astrocytic endfeet와 `AQP4` polarity가 흐트러지고, CSF-ISF exchange와 antigen drainage가 저하된다
+   - 이는 fluid/mechanical homeostasis와 immune surveillance를 동시에 약화시켜, `q_sleep/q_met -> w_{\text{immune}}, w_{\text{mech}}` 브리지를 제공한다
+   - 근거: [The Glymphatic–Immune Axis in Glioblastoma: Mechanistic Insights and Translational Opportunities](https://www.mdpi.com/1422-0067/27/2/928)
 
 ### 11.2 최소 해석
 
 현재 데이터로 가장 안전하게 말할 수 있는 것은, GBM이 단순한 "세포 내부 변이의 합"이 아니라
 
 $$
-\boxed{\text{세포 상태와 조직 위상(niche, vessel, hypoxia, ECM, immune control)의 정합이 무너진 상태}}
+\boxed{\text{세포 상태, 조직 위상(niche, vessel, hypoxia, ECM, immune control), 주변 신경회로 활동의 정합이 함께 무너진 상태}}
 $$
 
 라는 점이다.
+
+특히 GBM은 다른 고형암보다 `주변 신경회로 활동`이 직접 종양 입력으로 작동한다는 점이 더 강하다. 따라서 최소 실패 모드 `z`는 유지하되, `V_ctx/PBZ` 쪽 과흥분을 별도 forcing으로 둔다.
 
 이를 CE 쪽에서 바로 `p=(x_a,x_s,x_b)`에 억지로 넣기보다는, 우선 다음의 **실패 모드 상태벡터**로 보는 편이 안전하다.
 
@@ -619,6 +776,14 @@ $$
 - $z_{\text{topo}}$: 혈관, ECM, niche, 기계적 경계의 재배치 정도
 - $z_{\text{suppress}}$: 면역억제/저산소/대사 스트레스 burden
 
+직접 신경 구동항은
+
+$$
+\nu_n = \text{cortical hyperexcitability / neuron-glioma synaptic drive}
+$$
+
+처럼 둔다.
+
 정상 조직 후보 동역학은
 
 $$
@@ -628,28 +793,31 @@ $$
 처럼 local contraction을 가지는 반면, GBM 후보는
 
 $$
-z_{n+1} = A_{\text{GBM}} z_n + u_n, \qquad \rho(A_{\text{GBM}}) \gtrsim 1
+z_{n+1} = A_{\text{GBM}} z_n + c\,\nu_n + u_n, \qquad \rho(A_{\text{GBM}}) \gtrsim 1,\ c \ge 0
 $$
 
 또는 별도 attractor $z_{\text{GBM}}^*$를 갖는 경우로 읽을 수 있다.
 
-이 식은 아직 `bridge/hypothesis`다. 하지만 현재 실험 데이터는 적어도 "국소 제어 붕괴 + 공간 niche 재배치 + 경계 밖 drift"가 동시에 관측된다는 점을 강하게 보여 준다.
+이 식은 아직 `bridge/hypothesis`다. 하지만 현재 실험 데이터는 적어도 "국소 제어 붕괴 + 직접 neural drive + 공간 niche 재배치 + 경계 밖 drift"가 동시에 관측된다는 점을 강하게 보여 준다.
 
 ### 11.3 CE 대응
 
 | 현상 | 실험 측 사실 | CE 해석 | 판정 |
 |---|---|---|---|
 | RTK / TP53 / RB 경로 붕괴 | 증식, apoptosis, cell-cycle 제어 경로 반복 붕괴 | 국소 제어기의 붕괴 | `supported` |
+| neuronal hyperexcitability / neuron-glioma synapse | `NLGN3`/`BDNF`, AMPA synapse, infiltrated cortex hyperexcitability | `V_ctx -> w_r` 직접 국소 forcing, 또는 `x_a` 과잉의 종양측 입력 | `bridge` |
 | spatial niche segregation | perivascular / perinecrotic / invasive front가 다른 세포 상태와 경로를 가짐 | 세포 상태와 조직 위상의 정합/불정합 | `bridge` |
 | perinecrotic immunosuppression | 저산소 niche가 더 immunosuppressive | pruning/제거 실패가 국소적으로 고정됨 | `bridge` |
 | perifocal mechanical drift | tumor 주변 조직의 물성도 tumor와 연속적으로 연결 | 병적 장이 core 밖으로 확장 | `bridge` |
 | PBZ recurrence | 재발의 다수가 경계에서 발생 | 보이는 core보다 넓은 병적 경계 | `bridge` |
+| glymphatic / perivascular breakdown | `AQP4` mislocalization, clearance and antigen drainage 저하 | `q_sleep/q_met -> w_{\text{immune}}, w_{\text{mech}}` bridge | `bridge` |
 | 암 = 병적 고정점 | 위 모든 현상이 하나의 pathological attractor를 형성 | $z_{\text{GBM}}^*$ | `hypothesis` |
 
 ### 11.4 해석
 
 - 이 비교는 "뇌 구조만 보고 암 원인을 풀었다"는 뜻이 아니다.
-- 대신 GBM에서는 실제로 **제어 경로 붕괴**, **공간 niche 분리**, **면역억제의 국소화**, **기계적/분자적 경계 확장**이 함께 관측된다.
+- 대신 GBM에서는 실제로 **제어 경로 붕괴**, **직접 neural drive**, **공간 niche 분리**, **면역억제의 국소화**, **기계적/분자적 경계 확장**이 함께 관측된다.
+- 특히 GBM은 `V_ctx`가 단순한 배경 설명이 아니라, PBZ 과흥분과 neuron-glioma synapse를 통해 종양 동역학을 직접 미는 입력이 될 수 있다는 점에서 뇌-암 결합의 첫 검증장으로 가장 유리하다.
 - 따라서 "암은 세포가 조직 위상과 안 맞아지면서 통제에서 벗어난 상태"라는 문장은, 적어도 GBM에 대해서는 공상보다 한 단계 위의 `bridge` 문장으로 올릴 수 있다.
 - 반대로 "암은 CE 고정점에서 수학적으로 반드시 유도된다" 또는 "모든 암종이 동일한 병적 상수로 닫힌다"는 문장은 현재 단계에서 금지다.
 
@@ -659,16 +827,20 @@ $$
 |---|---|---|
 | `G-C1` | 공간 niche 분리 | spatial omics에서 perivascular / hypoxic / invasive front가 재현 가능하게 분리 |
 | `G-C2` | 제어 붕괴 | RTK / TP53 / RB / CDKN2A-B 계열 이상이 종양 상태와 강하게 연결 |
-| `G-C3` | 경계 drift | PBZ 또는 perifocal zone이 healthy와 동일하지 않고 중간 상태를 보임 |
-| `G-C4` | 재발 예측력 | edge / PBZ signature가 core 평균보다 recurrence를 더 잘 설명 |
-| `G-C5` | 기계적 장 변화 | MRE / ECM / stiffness 지표가 tumor core 밖에서도 변화 |
+| `G-C3` | 직접 neural drive | PBZ / infiltrated cortex hyperexcitability, AMPA synapse, `NLGN3` 신호가 tumor burden과 함께 움직임 |
+| `G-C4` | 경계 drift | PBZ 또는 perifocal zone이 healthy와 동일하지 않고 중간 상태를 보임 |
+| `G-C5` | 재발 예측력 | edge / PBZ signature가 core 평균보다 recurrence를 더 잘 설명 |
+| `G-C6` | 기계적 장 변화 | MRE / ECM / stiffness 지표가 tumor core 밖에서도 변화 |
+| `G-C7` | glymphatic / perivascular 붕괴 | `AQP4` / perivascular / clearance marker가 immune / mech mismatch와 방향 일치 |
 
 ### 11.6 실패 시 해석 규칙
 
 1. 유전자 이상은 강하지만 spatial niche 정보가 별 도움을 주지 않으면, "위상-세포 정합 붕괴" 문장은 낮추고 `세포 내부 제어 붕괴`까지만 유지한다.
-2. PBZ가 기계적/분자적으로 healthy와 구분되지 않으면, "병적 장이 core 밖으로 확장된다"는 문장은 내린다.
-3. niche는 분리되지만 면역억제나 재발과 연결되지 않으면, 공간 분리는 인정하되 `통제 이탈의 핵심 원인`으로는 승격하지 않는다.
-4. 다른 암종에서 이 패턴이 반복되지 않으면, 이 절은 GBM-특이 현상론으로 제한한다.
+2. hyperexcitability / `NLGN3` / AMPA 신호가 tumor field와 무관하면, `V_ctx -> w_r` 직접축은 낮추고 "신경계는 배경 조절자" 수준으로 내린다.
+3. PBZ가 기계적/분자적으로 healthy와 구분되지 않으면, "병적 장이 core 밖으로 확장된다"는 문장은 내린다.
+4. glymphatic / perivascular marker가 immune / mech mismatch와 연결되지 않으면, 수면축은 systemic burden까지만 유지하고 GBM-specific bridge는 내린다.
+5. niche는 분리되지만 면역억제나 재발과 연결되지 않으면, 공간 분리는 인정하되 `통제 이탈의 핵심 원인`으로는 승격하지 않는다.
+6. 다른 암종에서 이 패턴이 반복되지 않으면, 이 절은 GBM-특이 현상론으로 제한한다.
 
 ---
 
@@ -889,7 +1061,29 @@ $$
 
 #### 12.3.4.1 지역별 상태변수
 
-뇌 영역 또는 공간 spot/voxel $r$마다 두 상태를 둔다.
+뇌 영역 또는 공간 spot/voxel $r$마다 상태를 두되, 이제부터 `r`는 막연한 voxel이 아니라 brain graph $G_{\text{brain}}=(V_{\text{brain}},E_{\text{brain}})$의 정점으로 읽는다.
+
+최소 분할은
+
+$$
+V_{\text{brain}}
+=
+V_{\text{ctx}}
+\sqcup
+V_{\text{thal}}
+\sqcup
+V_{\text{hip}}
+\sqcup
+V_{\text{sal}}
+\sqcup
+V_{\text{hyp}}
+\sqcup
+V_{\text{stem}}
+\sqcup
+V_{\text{aut}}
+$$
+
+로 둔다.
 
 1. 뇌의 에너지 3분배 상태:
 
@@ -911,7 +1105,24 @@ $$
 
 이다.
 
-2. 종양 mismatch 상태:
+2. 뇌-몸 조절 상태:
+
+$$
+q_n
+=
+\big(
+q_{\text{sleep},n},
+q_{\text{arousal},n},
+q_{\text{aut},n},
+q_{\text{endo},n},
+q_{\text{immune},n},
+q_{\text{met},n}
+\big)
+$$
+
+건강한 set-point는 $q^*$로 둔다. 이 벡터는 수면 부채, hyperarousal, sympathetic-vagal balance, endocrine stress, inflammatory tone, metabolic reserve를 묶는다.
+
+3. 종양 mismatch 상태:
 
 $$
 w_r(t)=\big(w_{\text{cell},r},\;w_{\text{niche},r},\;w_{\text{mech},r},\;w_{\text{immune},r}\big)\in\mathbb{R}_{\ge0}^4
@@ -927,16 +1138,24 @@ $$
 
 #### 12.3.4.2 뇌 상태에서 종양 취약도로 가는 결합
 
-암 쪽으로 넘어가는 최소 결합은 "구조/배경 reserve 부족 + 과활성"을 하나의 취약도 변수로 압축하는 것이다.
+암 쪽으로 넘어가는 최소 결합은 "구조/배경 reserve 부족 + 과활성 + 뇌-몸 조절 부하"를 하나의 취약도 변수로 압축하는 것이다.
 
 $$
-s_r(t)
+\ell_r(n) = d_r^\top \big(q_n-q^*\big)_+,
+\qquad
+d_r\ge 0
+$$
+
+$$
+s_r(n)
 =
-\eta_a\big(x_{a,r}(t)-x_a^*\big)_+
+\eta_a\big(x_{a,r}(n)-x_a^*\big)_+
 \;+\;
-\eta_s\big(x_s^*-x_{s,r}(t)\big)_+
+\eta_s\big(x_s^*-x_{s,r}(n)\big)_+
 \;+\;
-\eta_b\big(x_b^*-x_{b,r}(t)\big)_+
+\eta_b\big(x_b^*-x_{b,r}(n)\big)_+
+\;+\;
+\eta_q \ell_r(n)
 $$
 
 여기서 $(u)_+ = \max(u,0)$이고, 해석은 다음과 같다.
@@ -944,6 +1163,7 @@ $$
 - $x_a > x_a^*$: 병적 과흥분 또는 응급성 대사 부담
 - $x_s < x_s^*$: 구조 유지/복원 여력 감소
 - $x_b < x_b^*$: 배경 항상성/완충 여력 감소
+- $\ell_r > 0$: 수면 부채, hyperarousal, 자율신경 불균형, 내분비/면역/대사 부하가 해당 영역에 투사됨
 
 그러면 종양 상태의 최소 결합식은
 
@@ -958,12 +1178,25 @@ $$
 이 식의 의미:
 
 - $A_r w_{r,n}$: 종양 내부의 자기증폭, niche-ECM-immune 재결합
-- $b_r s_r(n)$: 해당 영역의 항상성 reserve 저하가 병적 상태를 더 밀어 올리는 항
+- $b_r s_r(n)$: 해당 영역의 항상성 reserve 저하와 body-loop load가 병적 상태를 더 밀어 올리는 항
 - $u_{r,n}$: 외부 forcing (hypoxia, mutation hit, vessel failure, therapy pressure 등)
 
 #### 12.3.4.3 종양 상태에서 뇌 3분배로 돌아오는 역결합
 
-반대로 종양 burden은 국소 뇌 상태를 기준점에서 밀어낸다. 가장 단순한 식은
+반대로 종양 burden은 국소 뇌 상태를 기준점에서 밀어내고, 그 이탈은 brain graph를 따라 퍼지거나 완충된다. 먼저
+
+$$
+\Delta_G p_{r,n}
+=
+\sum_{s:(s,r)\in E_{\text{brain}}}
+a_{rs}\big(p_{s,n}-p_{r,n}\big),
+\qquad
+a_{rs}\ge 0
+$$
+
+로 둔다.
+
+가장 단순한 식은
 
 $$
 \tilde p_{r,n+1}
@@ -971,6 +1204,10 @@ $$
 p^*
 \;+\;
 \rho\big(p_{r,n}-p^*\big)
+\;+\;
+\gamma_p \Delta_G p_{r,n}
+\;+\;
+H_r(q_n-q^*)
 \;+\;
 C_r w_{r,n}
 \;+\;
@@ -988,7 +1225,9 @@ $$
 보존 조건은
 
 $$
-\mathbf{1}^\top C_r = 0
+\mathbf{1}^\top C_r = 0,
+\qquad
+\mathbf{1}^\top H_r = 0
 $$
 
 로 둔다. 즉 종양이 에너지 분배를 바꾸더라도 성분 합은 유지된다.
@@ -1003,7 +1242,11 @@ $$
 (\forall\, w\ge0)
 $$
 
-이다. 해석은 "종양 burden이 커질수록 비정상 활성 부담은 커지고, 구조/배경 reserve는 줄어드는 방향"이다.
+이다. 해석은 "종양 burden이 커질수록 비정상 활성 부담은 커지고, 구조/배경 reserve는 줄어드는 방향"이다. 또한
+
+- $\gamma_p \Delta_G p_{r,n}$: 인접 피질, 시상 relay, 해마 replay, 시상하부-뇌간 제어를 통한 spread/buffering
+- $H_r(q_n-q^*)$: 수면-각성, 자율신경, 내분비/면역/대사 부하가 지역 3분배에 주는 느린 forcing
+- $C_r w_{r,n}$: 종양 burden의 국소 역작용
 
 편차를
 
@@ -1014,7 +1257,13 @@ $$
 로 두면
 
 $$
-e_{r,n+1} = \rho e_{r,n} + C_r w_{r,n} + \xi_{r,n}
+e_{r,n+1}
+=
+\rho e_{r,n}
++ \gamma_p \Delta_G e_{r,n}
++ H_r(q_n-q^*)
++ C_r w_{r,n}
++ \xi_{r,n}
 $$
 
 이고 따라서
@@ -1023,6 +1272,10 @@ $$
 \|e_{r,n+1}\|
 \le
 \rho \|e_{r,n}\|
++
+\gamma_p \|\Delta_G e_{r,n}\|
++
+\|H_r\|\,\|q_n-q^*\|
 +
 \|C_r\|\,\|w_{r,n}\|
 +
@@ -1035,16 +1288,18 @@ $$
 
 #### 12.3.4.4 공동 안정성 조건
 
-$s_r(n)$은 $e_{r,n}$에 대해 Lipschitz다. 예를 들어
+$s_r(n)$은 $e_{r,n}$과 $q_n-q^*$에 대해 Lipschitz다. 예를 들어
 
 $$
-\kappa := \sqrt{\eta_a^2+\eta_s^2+\eta_b^2}
+\kappa_p := \sqrt{\eta_a^2+\eta_s^2+\eta_b^2},
+\qquad
+\kappa_q := \eta_q \|d_r\|
 $$
 
 를 두면
 
 $$
-s_r(n)\le \kappa \|e_{r,n}\|
+s_r(n)\le \kappa_p \|e_{r,n}\| + \kappa_q \|q_n-q^*\|
 $$
 
 이다.
@@ -1056,9 +1311,31 @@ $$
 \le
 \|A_r\|\,\|w_{r,n}\|
 +
-\|b_r\|\,\kappa\,\|e_{r,n}\|
+\|b_r\|\,\kappa_p\,\|e_{r,n}\|
++
+\|b_r\|\,\kappa_q\,\|q_n-q^*\|
 +
 \|u_{r,n}\|
+$$
+
+또한
+
+$$
+g_{r,n} := \gamma_p \Delta_G e_{r,n} + H_r(q_n-q^*)
+$$
+
+로 두면
+
+$$
+\|e_{r,n+1}\|
+\le
+\rho \|e_{r,n}\|
++
+\|C_r\|\,\|w_{r,n}\|
++
+\|g_{r,n}\|
++
+\|\xi_{r,n}\|
 $$
 
 이고, 두 노름을 합친 상태벡터
@@ -1080,14 +1357,14 @@ y_{r,n+1}
 K_r\, y_{r,n}
 +
 \begin{pmatrix}
-\|\xi_{r,n}\|\\
-\|u_{r,n}\|
+\|g_{r,n}\|+\|\xi_{r,n}\|\\
+\|u_{r,n}\|+\|b_r\|\,\kappa_q\,\|q_n-q^*\|
 \end{pmatrix},
 \qquad
 K_r=
 \begin{pmatrix}
 \rho & \|C_r\|\\
-\kappa\|b_r\| & \|A_r\|
+\kappa_p\|b_r\| & \|A_r\|
 \end{pmatrix}
 $$
 
@@ -1106,7 +1383,7 @@ $$
 - $\rho(K_r)<1$: 뇌 항상성과 국소 제어가 병적 burden을 눌러 다시 복원권으로 들어온다
 - $\rho(K_r)\ge1$: 뇌 3분배 이탈과 종양 mismatch가 서로 밀어 올리는 결합계가 된다
 
-즉 기존의 `\rho(A_{\text{tumor}})\ge1` 조건은 종양 단독 기준이고, 이 절의 `\rho(K_r)\ge1`은 **뇌-종양 결합 전체의 임계 조건**이다.
+여기서 `g_{r,n}`가 바로 graph coupling과 sleep-autonomic-body forcing을 묶은 항이다. 즉 기존의 `\rho(A_{\text{tumor}})\ge1` 조건은 종양 단독 기준이고, 이 절의 `\rho(K_r)\ge1`은 **뇌-종양 결합 전체의 임계 조건**이다.
 
 #### 12.3.4.5 경계-코어 예측의 공간형 정식
 
@@ -1354,7 +1631,7 @@ $$
 
 1. 공간 데이터에서 먼저 $w_r$와 `M_{\text{eff}}(h)`를 추정한다.
 2. `\hat A_r`, `\hat\rho(A_r)`, `M_{\text{eff}}(h^\dagger)-M_{\text{edge}}`, `M_{\text{eff}}(h^\dagger)-M_{\text{core}}`, `R^*`, `A^*`를 계산한다.
-3. 이후 EEG/fMRI/metabolic imaging이 붙으면 같은 영역에서 $p_r$를 추정하고, `C_r`, `b_r`, `K_r`를 적합한다.
+3. 이후 EEG/fMRI/metabolic imaging과 수면/자율신경 지표가 붙으면 같은 영역에서 $p_r$를 추정하고, `C_r`, `H_r`, `b_r`, `K_r`를 적합한다.
 
 즉 지금 단계에서 가장 강한 수식은
 

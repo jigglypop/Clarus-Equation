@@ -3,6 +3,8 @@
 > 관련: `6_뇌/homeomorphism.md`(고정점 에너지 분배), `6_뇌/sleep.md` 5.4절(부트스트랩 수렴 네트워크), `6_뇌/agi.md` 6.7절(네트워크 희소성), `6_뇌/evidence.md`(실험 근거)
 >
 > 이 장은 CE 부트스트랩 고정점에 의해 네트워크의 활성/구조/배경 비율이 자기일관적으로 결정된다는 가설을 희소 아키텍처로 변환한다. `6_뇌/evidence.md` 기준으로, `4.87/26.2/68.9`는 현재 뇌 데이터와 꽤 강하게 정합하며 특히 `26.2`, `68.9`는 직접 범위 안에 들어간다.
+>
+> 메인라인 정의는 `6_뇌/evidence.md`를 따른다. 특히 `p^*=(0.0487,0.2623,0.6891)`의 해부학/관측 해석은 `evidence.md` 8장의 full-stack 모델을 우선하고, 이 문서는 그 고정점을 희소 네트워크 규칙으로 가져오는 응용 장이다.
 
 ---
 
@@ -61,6 +63,16 @@ p^* = (0.0487,\; 0.2623,\; 0.6891) \in [0.01,0.05] \times [0.25,0.35] \times [0.
 $$
 
 가 성립한다.
+
+### 2.3 메인라인 뇌 구조와의 연결
+
+| 성분 | full-stack 뇌 해석 | 현재 판정 |
+|---|---|---|
+| 활성 ($4.87\%$) | cortical-thalamic task recruitment와 sparse ensemble | `bridge` |
+| 구조 ($26.2\%$) | cortex-hippocampus-salience loop의 maintenance / plasticity backbone | `bridge` |
+| 배경 ($68.9\%$) | DMN / intrinsic background + hypothalamus-brainstem-autonomic reserve | `bridge` |
+
+즉 이 장의 `4.87/26.2/68.9`는 더 이상 막연한 세 비율이 아니라, `evidence.md`에서 정의한 `p_r`의 지역 관측을 향한 고정점 앵커다. 동일 위치의 multimodal data로 `p_r`를 완전히 닫는 것은 아직 `hypothesis`다.
 
 ---
 

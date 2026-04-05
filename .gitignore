@@ -10,3 +10,9 @@ __pycache__/
 *.png
 *.pt
 examples/biology/data/
+
+data/
+data/*
+data/**
+data
+data/**/*
