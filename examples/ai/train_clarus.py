@@ -31,19 +31,32 @@ class CharTokenizer:
         return ''.join(self.itos.get(i, '?') for i in ids)
 
 
-def get_batch(data, seq_len, batch_size, device):
-    ix = torch.randint(len(data) - seq_len - 1, (batch_size,))
+def seed_everything(seed):
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+
+
+def build_generator(seed):
+    gen = torch.Generator()
+    gen.manual_seed(seed)
+    return gen
+
+
+def get_batch(data, seq_len, batch_size, device, generator=None):
+    ix = torch.randint(len(data) - seq_len - 1, (batch_size,), generator=generator)
     x = torch.stack([data[i:i + seq_len] for i in ix]).to(device)
     y = torch.stack([data[i + 1:i + seq_len + 1] for i in ix]).to(device)
     return x, y
 
 
 @torch.no_grad()
-def estimate_loss(model, data, seq_len, batch_size, device, n_eval=10):
+def estimate_loss(model, data, seq_len, batch_size, device, generator_seed, n_eval=10):
     model.eval()
     losses = []
+    generator = build_generator(generator_seed)
     for _ in range(n_eval):
-        x, y = get_batch(data, seq_len, batch_size, device)
+        x, y = get_batch(data, seq_len, batch_size, device, generator=generator)
         _, loss = model(x, y)
         losses.append(loss.item())
     model.train()
@@ -61,6 +74,11 @@ def main():
     p.add_argument('--lr', type=float, default=3e-4)
     p.add_argument('--steps', type=int, default=5000)
     p.add_argument('--lambda_curv', type=float, default=0.01)
+    p.add_argument('--ffn_hidden_dim', type=int, default=None)
+    p.add_argument('--mix_rank', type=int, default=None)
+    p.add_argument('--seed', type=int, default=1337)
+    p.add_argument('--c3_passes', type=int, default=1)
+    p.add_argument('--c3_candidates', type=int, default=1)
     p.add_argument('--device', type=str,
                    default='cuda' if torch.cuda.is_available() else 'cpu')
     p.add_argument('--save', type=str, default='clarus_lm.pt')
@@ -73,6 +91,7 @@ def main():
     data = torch.tensor(tok.encode(text), dtype=torch.long)
     n_val = max(1000, int(len(data) * 0.05))
     train_data, val_data = data[:-n_val], data[-n_val:]
+    seed_everything(args.seed)
 
     model = ClarusLM(
         vocab_size=tok.vocab_size,
@@ -80,6 +99,8 @@ def main():
         n_layers=args.n_layers,
         n_heads=args.n_heads,
         max_seq_len=args.seq_len,
+        ffn_hidden_dim=args.ffn_hidden_dim,
+        mix_rank=args.mix_rank,
         lambda_curv=args.lambda_curv,
     ).to(args.device)
 
@@ -87,9 +108,12 @@ def main():
     print(f'ClarusLM  {n_params / 1e6:.2f}M params')
     print(f'  vocab={tok.vocab_size}  dim={args.dim}  layers={args.n_layers}  heads={args.n_heads}')
     print(f'  train={len(train_data)}  val={len(val_data)} chars')
-    print(f'  device={args.device}  lambda_curv={args.lambda_curv}')
+    print(f'  device={args.device}  lambda_curv={args.lambda_curv}  seed={args.seed}')
+    print(f'  ffn_hidden_dim={args.ffn_hidden_dim}  mix_rank={args.mix_rank}')
+    print(f'  c3_passes={args.c3_passes}  c3_candidates={args.c3_candidates}')
     print(f'\n3x3+1 lattice:')
-    print(f'  {model.lattice_summary()}')
+    for line in model.lattice_summary().splitlines():
+        print(f'  {line}')
     print()
 
     opt = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.01)
@@ -106,10 +130,17 @@ def main():
 
     best_val = float('inf')
     t0 = time.time()
+    train_generator = build_generator(args.seed + 1)
 
     for step in range(1, args.steps + 1):
         model.train()
-        x, y = get_batch(train_data, args.seq_len, args.batch_size, args.device)
+        x, y = get_batch(
+            train_data,
+            args.seq_len,
+            args.batch_size,
+            args.device,
+            generator=train_generator,
+        )
         _, loss = model(x, y)
 
         opt.zero_grad(set_to_none=True)
@@ -121,7 +152,8 @@ def main():
         if step % 200 == 0 or step == 1:
             val_loss = estimate_loss(
                 model, val_data, args.seq_len,
-                min(args.batch_size, 8), args.device)
+                min(args.batch_size, 8), args.device,
+                generator_seed=args.seed + 2)
             curv = sum(b.curvature for b in model.blocks) / len(model.blocks)
             elapsed = time.time() - t0
             print(f'step {step:5d} | loss {loss.item():.4f} | val {val_loss:.4f} '
@@ -137,7 +169,10 @@ def main():
                         'n_layers': args.n_layers,
                         'n_heads': args.n_heads,
                         'max_seq_len': args.seq_len,
+                        'ffn_hidden_dim': args.ffn_hidden_dim,
+                        'mix_rank': args.mix_rank,
                         'lambda_curv': args.lambda_curv,
+                        'seed': args.seed,
                     },
                     'tokenizer': {'stoi': tok.stoi, 'itos': tok.itos},
                 }, args.save)
@@ -146,7 +181,12 @@ def main():
             model.eval()
             seed = tok.encode('\n')
             ctx = torch.tensor([seed], dtype=torch.long, device=args.device)
-            gen = model.generate(ctx, 300)
+            gen = model.generate(
+                ctx,
+                300,
+                c3_passes=max(1, args.c3_passes),
+                c3_candidates=max(1, args.c3_candidates),
+            )
             print('--- generated sample ---')
             print(tok.decode(gen[0].tolist()))
             print('-' * 50)

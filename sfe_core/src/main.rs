@@ -110,6 +110,15 @@ enum Commands {
     MultiModeScan,
     /// [NEW] 연속 스펙트럼 레이리 경계 스캔
     ContinuousBounds,
+    /// CE Brain 통합 엔진 시뮬레이션 (arc+core+geometric+suppression)
+    Brain {
+        #[arg(short, long, default_value_t = 256)]
+        size: usize,
+        #[arg(short, long, default_value_t = 5000)]
+        steps: usize,
+        #[arg(short, long, default_value = "brain_output.csv")]
+        output: String,
+    },
 }
 
 fn configure_fez_suppresson(noise: f64, steps: usize) {
@@ -635,6 +644,40 @@ fn main() {
         Commands::ContinuousBounds => {
             println!("모드: 연속 스펙트럼 레이리 경계 스캔");
             sfe_core::engine::suppresson_physics::run_continuous_ratio_bounds();
+        }
+        Commands::Brain {
+            size,
+            steps,
+            output,
+        } => {
+            println!("모드: CE Brain 통합 엔진 (arc+core+geo+suppression)");
+            println!("  장 크기: {size}, 스텝: {steps}");
+            let mut brain = sfe_core::BrainEngine::new(size);
+            let pb = ProgressBar::new(steps as u64);
+            pb.set_style(
+                ProgressStyle::default_bar()
+                    .template("{spinner:.green} {bar:40} {pos}/{len}")
+                    .unwrap(),
+            );
+
+            let mut file = File::create(&output).unwrap();
+            writeln!(file, "Step,R,K,PhiGlobal,PiGlobal,Energy,Suppression,MemNorm").unwrap();
+
+            for t in 0..steps {
+                let state = brain.step(None);
+                if t % 10 == 0 {
+                    writeln!(
+                        file,
+                        "{},{:.6},{:.6},{:.6},{:.6},{:.6},{:.6},{:.6}",
+                        t, state.r, state.k, state.phi_global, state.pi_global,
+                        state.field_energy, state.suppression_factor, state.memory_norm
+                    )
+                    .unwrap();
+                }
+                pb.inc(1);
+            }
+            pb.finish();
+            println!("Brain 시뮬레이션 완료. 결과 저장됨: {output}");
         }
     }
 

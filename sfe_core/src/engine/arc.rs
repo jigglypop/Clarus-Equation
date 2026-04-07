@@ -337,6 +337,10 @@ impl CeArcController {
     pub fn total_estimation_uncertainty(&self) -> f64 {
         self.state.p[0][0]
     }
+
+    pub fn estimated_state(&self) -> [f64; 4] {
+        self.state.x
+    }
 }
 
 /// Simulation: 3+1 CE coupled dynamics

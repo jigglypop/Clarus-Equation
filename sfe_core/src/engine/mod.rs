@@ -1,5 +1,6 @@
 pub mod arc;
 pub mod benchmark;
+pub mod brain;
 pub mod config;
 pub mod constants;
 pub mod core;
@@ -16,3 +17,4 @@ pub mod qec;
 pub mod suppression_filter;
 pub mod suppresson;
 pub mod suppresson_physics;
+pub mod nn_ops;

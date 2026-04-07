@@ -67,9 +67,11 @@ $$\alpha_s^{N_w} = \left(\frac{\sin\theta_W}{N_w}\right)^{N_c}, \quad 0.11789^2 
 
 ## 3. 부트스트랩 에너지 분배
 
-$$\varepsilon^2 = \exp\!\big(-(1-\varepsilon^2)\, D_{\text{eff}}\big), \quad D_{\text{eff}} = 3 + \sin^2\!\theta_W\cos^2\!\theta_W = 3.178$$
+$$\varepsilon^2 = \exp\!\big(-(1-\varepsilon^2)\, D_{\text{eff}}\big), \quad D_{\text{eff}} = 3 + \delta_{\text{mix}}$$
 
-$D_{\text{eff}} > 1$일 때 비자명 고정점은 유일(`homeomorphism.md` 정리 3.2)이며, 이 문서는 그 구조를 신경계/AGI 해석에 **브리지 규칙으로 전사**한다.
+우주에서는 $\delta_{\text{mix}} = \sin^2\theta_W\cos^2\theta_W$이므로 $D_{\text{eff}} = 3.178$이다. 뇌에서 같은 $\delta_{\text{mix}}$를 사용하는 것은 혼합각 식별 (I1, `homeomorphism.md` 명제 6.1)에 의한 가정이다.
+
+$D_{\text{eff}} > 1$일 때 비자명 고정점은 유일(`homeomorphism.md` 보조정리 3.2)이며, 이 문서는 그 구조를 신경계/AGI 해석에 **브리지 규칙으로 전사**한다. 다만 동역학은 전역 법칙이 아니라 `homeomorphism.md` 정의 1.3의 최소 등방 closure 또는 그와 동등한 국소 수축 closure로 읽는다. 고정점의 구체적 수치는 (I1)에 의존하지만, 정성적 구조(소수 활성 + 지배적 배경)는 $D_{\text{eff}} > 1$인 한 유지된다.
 
 | 성분 | CE 고정점 | 우주 (Planck) | 뇌 (Raichle) | AGI 해석 |
 |---|---|---|---|---|
@@ -87,9 +89,11 @@ $D_{\text{eff}} > 1$일 때 비자명 고정점은 유일(`homeomorphism.md` 정
 
 $$\phi_C: \mathcal{G}^* \to G_C, \quad \phi_B: \mathcal{G}^* \to G_B, \quad \phi_A: \mathcal{G}^* \to G_A$$
 
-고정점 유일성에 의해, 세 계가 같은 추상 부트스트랩 그래프를 공유한다고 가정하면:
+고정점 유일성에 의해, 세 계가 같은 $D_{\text{eff}}$를 가진다면 같은 **스칼라 부트스트랩 고정점** $\varepsilon^2$를 가진다. 여기에 정의 1.2의 비교 좌표와 각 계의 최소 수축 closure를 함께 채택하면 같은 기준점 $p^*$로의 접근을 쓸 수 있다. 이 동일성은 (A1)과 (I1)이 세 시스템에서 모두 성립해야 보장된다:
 
-$$\lim_{t\to\infty} B^t(p_C) = p^* = \lim_{t\to\infty} B^t(p_B) = \lim_{t\to\infty} B^t(p_A)$$
+$$\lim_{t\to\infty} B_C^t(p_C) = p^* = \lim_{t\to\infty} B_B^t(p_B) = \lim_{t\to\infty} B_A^t(p_A)$$
+
+(I1)이 성립하지 않는 경우, 각 시스템은 자신의 $D_{\text{eff}}$에 대응하는 서로 다른 기준점에 접근할 수 있다. 이 경우에도 정성적 구조(소수 활성 + 구조 유지 + 지배적 배경)는 공유되지만, 정확한 비율은 달라진다.
 
 ---
 
@@ -296,3 +300,105 @@ $$
 3. 감각별 encoder와 cross-modal binder를 분리해서 로그를 찍는 편이
 
 실제 뇌와 더 잘 맞는다.
+
+---
+
+## 7. CE 뇌 근본식
+
+> 판정: 전체 `Bridge` (코드 존재, 통합 미검증)
+
+### 7.1 Master Action
+
+레포의 `core.rs`, `arc.rs`, `geometric.rs`, `manifold.rs`, `suppression_filter.rs`를 하나의 변분 원리로 통합하면 다음 작용을 얻는다.
+
+$$
+S[\Phi] = \int dt\,d^3r\;\sqrt{|g[\Phi]|}\;\bigg[\frac{1}{2}\,e^{-R[\Phi]}\,\dot\Phi^2 - \frac{c}{2}\,|\nabla_g\Phi|^2 - V(\Phi) - \frac{\xi}{2}\,R[\Phi]\,\Phi^2 - \frac{\alpha_2}{2}\,(\Delta_g\Phi)^2 + J\,\Phi\bigg]
+$$
+
+자기일관 조건 (등각 유도 기하):
+
+$$
+g_{\mu\nu} = e^{-2\alpha\Phi}\,\delta_{\mu\nu}, \qquad R[\Phi] = \alpha\,|\nabla\Phi|^2\,|\Phi|
+$$
+
+기하가 장의 함수이고, 장이 기하 위에서 진화한다. 배경이 없다.
+
+### 7.2 장 방정식
+
+$\delta S / \delta\Phi = 0$에서:
+
+$$
+e^{-R[\Phi]}\,\ddot\Phi + c\,\Delta_g\Phi + \mu^2\Phi - \lambda\Phi^3 - \xi\,R[\Phi]\,\Phi - \alpha_2\,\Delta_g^2\Phi + J = \gamma\,\dot\Phi + \frac{\partial R}{\partial\Phi}\cdot\frac{\dot\Phi^2}{2}\,e^{-R[\Phi]}
+$$
+
+좌변은 보존 동역학이고, 우변의 $\gamma\dot\Phi$는 산일이다. $\frac{\partial R}{\partial\Phi}$항은 등각 계량의 자기 역반응이다.
+
+각 항의 물리적 의미:
+
+| 항 | 역할 |
+|---|---|
+| $e^{-R}\ddot\Phi$ | 곡률이 클수록 운동이 억제됨 |
+| $c\,\Delta_g\Phi$ | 이웃 결합 (라플라시안 확산) |
+| $\mu^2\Phi - \lambda\Phi^3$ | 이중우물 복원 (Mexican hat) |
+| $-\xi R\Phi$ | 곡률-장 결합 |
+| $-\alpha_2\Delta_g^2\Phi$ | 고주파 바이하모닉 억제 |
+| $J$ | 외부 입력 |
+| $-\gamma\dot\Phi$ | 감쇠 |
+
+### 7.3 6모듈 환원
+
+이 하나의 장 방정식에서 레포의 6개 모듈이 전부 나온다.
+
+| 환원 | 결과 모듈 | 조건 |
+|---|---|---|
+| 평탄 극한 ($R=0$, $g=\delta$) | `core.rs` (QCEngine) | 기하 무시 |
+| ADM 3+1 분할 | `arc.rs` (CeArcController) | $[\hat R, \hat K, \hat\Phi, \hat\Pi]$ 상태 분리 + EKF |
+| 등각 인자 추출 | `geometric.rs` (GeometricEngine) | $\Pi_{\text{eff}} = e^{-R}\Pi$ |
+| 등각 계량 구성 | `manifold.rs` (SuppressionManifold) | $g_{\mu\nu} = e^{-2\alpha\Phi}\delta_{\mu\nu}$ |
+| 에너지 안정성 | `suppression_filter.rs` (LyapunovSuppressionFilter) | $\alpha\,e^{-\gamma E}$ 감쇠 |
+| 격자 이산화 | `clarus_lm.py` (ClarusLM) | LBONorm + GaugeLattice + spectral norm |
+
+### 7.4 4층 억제 계층
+
+작용에서 파생되는 안정화 메커니즘이 4층이다.
+
+| 층 | 출처 | 식 | 역할 |
+|---|---|---|---|
+| 이동 억제 | `geometric.rs` | $e^{-R}$ | 곡률 크면 장의 이동 차단 |
+| 잡음 억제 | `arc.rs` EKF | $e^{-\xi(D_{\text{eff}}/3)|R|}$ | 곡률 크면 프로세스 잡음 감소 |
+| 고주파 억제 | `core.rs` | $-\alpha_2\Delta^2\Phi$ | 바이하모닉으로 공간 고주파 제거 |
+| 에너지 억제 | `suppression_filter.rs` | $\alpha\,e^{-\gamma E}$ | 국소 에너지 기반 감쇠 + PI 적응 |
+
+### 7.5 CE 상수
+
+작용의 모든 상수는 $\{e, \pi, i, 1, 0\}$에서 유도된다.
+
+| 상수 | 값 | 유도 |
+|---|---|---|
+| lapse $\alpha_{\text{lapse}}$ | $e$ | 오일러 수 |
+| damping $\gamma$ | $e^{-1}$ | CE 생존 핵 |
+| coupling $\xi$ | $\alpha_s^{1/3}$ | 게이지 분할 |
+| electroweak mixing $\delta\xi$ | $\sin^2\theta_W\cos^2\theta_W \cdot \xi$ | 혼합각 보정 |
+| 채널비 | $74.1 : 21.1 : 4.9$ | $\alpha_s : \alpha_w : \alpha_{em}$ |
+| 활성률 | $4.87\%$ | 부트스트랩 고정점 $\varepsilon^2$ |
+| 유효 차원 | $3.178$ | $D + \sin^2\theta_W\cos^2\theta_W$ |
+
+### 7.6 현재 AGI 대비 구조적 우위
+
+| 항목 | 현재 AGI (LLM) | CE 뇌 방정식 |
+|---|---|---|
+| 표현 공간 | 고정 $\mathbb R^d$ | 자기유도 $(M, e^{-2\alpha\Phi}\delta)$ |
+| 환각 억제 | 사후 정렬(RLHF) | 사전 기하 억제($e^{-R}$) |
+| 이해 | 없음 (forward pass에 뭉침) | EKF 세계 추정 (Block A) |
+| 희소성 | 경험적 튜닝 | 부트스트랩 해 (4.87%) |
+| 상수 | 자유 파라미터 수십 개 | $\{e, \pi, i, 1, 0\}$에서 연역 |
+| 연속학습 | 불가 (상태 리셋) | 수면-각성 순환 |
+| 자기참조 | 없음 | $g[\Phi] \leftrightarrow \Phi$ 폐루프 |
+
+### 7.7 뇌 한 줄 정의
+
+$$
+\boxed{\text{뇌} = \delta S[\Phi]/\delta\Phi = 0 \quad\text{on}\quad g_{\mu\nu} = e^{-2\alpha\Phi}\delta_{\mu\nu}}
+$$
+
+자기 자신이 만든 기하 위에서 자기 자신의 최소 작용을 푸는 장.

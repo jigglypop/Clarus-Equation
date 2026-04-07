@@ -949,7 +949,7 @@ $$
 - **fast loop**: $\rho + \gamma_p\|L_G\|$. 이것은 cortical relaxation과 graph smoothing의 합성 수축률이다.
 - **slow loop**: $\|A_q\|$. 이것은 body-level homeostasis의 자체 복원 속도다.
 
-CE 고유값에서 $\rho = 0.155$이므로 fast loop의 기저 수축률은 강하다. 건강한 성인에서 $\gamma_p\|L_G\|$가 $1 - \rho = 0.845$보다 충분히 작으면 fast loop는 빠르게 수렴한다. slow loop $\|A_q\|$는 circadian scale (1일 단위)에서의 복원률이므로 0에서 1 사이의 값을 가지며, 수면박탈처럼 $\|A_q\| \to 1$이면 복원이 느려진다.
+혼합각 식별 (I1) 아래에서 $\rho = 0.155$ (정의 1.3의 최소 등방 closure $B$의 1회 적용당 수축률) 이므로 fast loop의 기저 수축률은 강하다. $B$의 1회 완전 적용은 약 1.6밤의 회복 수면에 대응하며, 단일 야간의 실효 수축률은 $\rho_{\text{night}} \approx 0.31$이다(수면 회복 문헌 피팅, $R^2 > 0.99$). 다만 이 exact 값은 (I1)의 중심값이다: $\delta_{\text{mix}}$가 $\pm 0.10$만 흔들려도 $\rho$는 대략 `0.1425-0.1676`, $x_a$는 `4.35%-5.45%` 범위로 이동한다. 따라서 (I1)의 구체적 수치가 달라져도 $D_{\text{eff}} > 1$인 한 수축 구조 자체는 유지되지만, fast loop의 **정확한 속도**는 rigid constant가 아니다. 건강한 성인에서 $\gamma_p\|L_G\|$가 $1 - \rho$보다 충분히 작으면 fast loop는 빠르게 수렴한다. slow loop $\|A_q\|$는 circadian scale (1일 단위)에서의 복원률이므로 0에서 1 사이의 값을 가지며, 수면박탈처럼 $\|A_q\| \to 1$이면 복원이 느려진다.
 
 증명:
 nonnegative matrix의 spectral radius bound와, 상삼각 행렬의 고유값이 대각 원소라는 사실에서 바로 나온다. $\square$
@@ -1197,11 +1197,11 @@ $$
 
 ---
 
-## 13. 통합 알고리즘 블록
+## 13. 통합 최소 알고리즘 블록
 
-5절의 흩어진 식들을 한 블록으로 정리한다.
+5절의 흩어진 식들을 하나의 **bridge-level 최소 상태공간 closure**로 정리한다.
 
-**입력**: brain graph $G_{\text{brain}}$, CE 상수 $\rho = 0.155$, $p^* = (0.0487, 0.2623, 0.6891)$
+**입력**: brain graph $G_{\text{brain}}$, CE 상수 $\rho = D_{\text{eff}} \cdot \varepsilon^2$ (혼합각 식별 (I1) 아래에서 정의 1.3의 최소 closure 수축률 중심값으로서 $\rho = 0.155$; $\delta_{\text{mix}} \pm 0.10$이면 `0.1425-0.1676`), $p^* = (\varepsilon^2,\; \Omega_{\text{DM}},\; \Omega_\Lambda)$ (I1 아래의 비교 좌표 중심값에서 $(0.0487, 0.2623, 0.6891)$; 같은 민감도 범위에서 대략 `(4.35%-5.45%, 25.25%-26.89%, 68.76%-69.30%)`)
 
 **상태**: $p_{r,n} \in \Delta^2$, $\delta q_n \in \mathbb R^6$, $w_{r,n} \in \mathbb R^d$
 
@@ -1287,7 +1287,7 @@ $$
 |---|---|
 | `r`를 parcel/node로 읽는다 | `bridge` |
 | `\Delta_G`로 취약도 spread/buffering을 쓴다 | `bridge` |
-| 위의 상태공간 모델을 뇌 알고리즘의 최소 정식으로 쓴다 | `bridge` |
+| 위의 상태공간 모델을 뇌 알고리즘의 bridge-level 최소 closure로 쓴다 | `bridge` |
 | `\rho(K_{\text{brain}})<1`을 건강 알고리즘의 안정성 조건으로 쓴다 | `bridge` |
 | `q_sleep \uparrow \Rightarrow x_b \downarrow \Rightarrow s_r \uparrow`를 위 최소 정리로 읽는다 | `bridge` |
 | simplex invariance가 forcing bound 조건 하에서 성립한다 | `supported` (정리 9.1) |

@@ -6,29 +6,74 @@ Transformer에 대한 CE 수정 4가지:
   spectral_norm -- 유니타리 조건 |det T|^2 <= 1 (환각 구조적 억제)
   curvature loss -- lambda |Delta_g Phi|^2 정규화
 
+Backend dispatch (auto):
+  CUDA  -- fused kernels (training + inference)
+  Rust  -- sfe_core via PyO3 (CPU training/inference)
+  Torch -- pure PyTorch fallback
+
 Reference: docs/6_뇌/agi.md
 """
+
+from __future__ import annotations
 
 import math
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-# CE coupling constants (d=3에서 연역, 자유 파라미터 0)
-ALPHA_S = 0.11789   # SU(3) strong
-ALPHA_W = 0.03352   # SU(2) weak
-ALPHA_EM = 0.00775  # U(1) electromagnetic
+try:
+    from clarus.engine import get_constants, backend_info
+    _ce = get_constants()
+    ALPHA_S = _ce.alpha_s
+    ALPHA_W = _ce.alpha_w
+    ALPHA_EM = _ce.alpha_em_mz
+    _BACKEND = backend_info()
+except ImportError:
+    ALPHA_S = 0.11789
+    ALPHA_W = 0.03352
+    ALPHA_EM = 0.00775
+    _BACKEND = "standalone"
+
+try:
+    from clarus.ops import (
+        topk_silu as _ops_topk_silu,
+        lbo_fused_fwd as _ops_lbo_fwd,
+        power_iter_step as _ops_power_iter,
+        gauge_lattice_fwd as _ops_gauge_fwd,
+        ops_backend as _ops_backend,
+    )
+    _HAS_OPS = True
+except ImportError:
+    _HAS_OPS = False
+
+
+def split_ce_dims(total_dim):
+    total_alpha = ALPHA_S + ALPHA_W + ALPHA_EM
+    d3 = max(1, round(total_dim * ALPHA_S / total_alpha))
+    d2 = max(1, round(total_dim * ALPHA_W / total_alpha))
+    d1 = total_dim - d3 - d2
+    if d1 < 1:
+        if d3 >= d2 and d3 > 1:
+            d3 -= 1
+        elif d2 > 1:
+            d2 -= 1
+        d1 = total_dim - d3 - d2
+    if d1 < 1:
+        raise ValueError(f'Invalid CE split for total_dim={total_dim}')
+    return d3, d2, d1
 
 
 class LBONorm(nn.Module):
-    """LayerNorm + Laplace-Beltrami 확산.
+    """LayerNorm + Laplace-Beltrami 확산 + 등각 자기참조.
 
-    1) F.layer_norm으로 정규화 (안정성 보장, LayerNorm과 동일)
-    2) 저랭크 확산: xW = x V^T V, Lx = x - xW
-    3) x_out = (x_norm - h * Lx) * scale + bias
+    xW = x @ V_eff^T @ V_eff  (low-rank projection, conformal-scaled)
+    Lx = x - xW               (Laplacian residual)
+    out = (x - h*Lx) * scale + bias
 
-    h=0이면 LayerNorm과 완전 동일. h>0이면 기하학적 확산 추가.
-    곡률 ||Lx||^2 를 저장하여 정규화 손실에 사용.
+    수렴 조건 (agi.md 6.2): h < 1/lambda_max(V^T V).
+    등각 인자 (agi.md 7.2): g[Phi] = e^{-2*alpha*Phi} delta
+      -> V_eff = V * e^{-alpha_conf * |x|^2}
+    h=0이면 LayerNorm과 동일.
     """
 
     def __init__(self, dim, rank=None, step_size=0.1):
@@ -36,60 +81,205 @@ class LBONorm(nn.Module):
         if rank is None:
             rank = max(4, dim // 8)
         self.dim = dim
+        self.rank = rank
         self.V = nn.Parameter(torch.randn(rank, dim) * (1.0 / math.sqrt(rank)))
         self.h = nn.Parameter(torch.tensor(step_size))
         self.scale = nn.Parameter(torch.ones(dim))
         self.bias = nn.Parameter(torch.zeros(dim))
+        self.alpha_conf = nn.Parameter(torch.tensor(0.01))
         self._curvature = 0.0
+        self._need_curvature = True
+        self._h_step = 0
+        self._h_period = 8
+        self.register_buffer('_spectral_v', F.normalize(torch.randn(dim), dim=0))
+        self.register_buffer('_h_max', torch.tensor(1.0))
+
+    def _h_bound(self):
+        """sigma_max(V) via 1-step power iteration -> h < 1/sigma_max^2.
+        Cached for _h_period forward calls. Dispatches to Rust on CPU."""
+        self._h_step += 1
+        if self._h_step % self._h_period == 1:
+            if _HAS_OPS and not self.V.is_cuda:
+                new_v, sigma = _ops_power_iter(
+                    self.V, self._spectral_v, self.dim, self.rank)
+                with torch.no_grad():
+                    self._spectral_v.copy_(new_v)
+                    self._h_max.fill_(1.0 / (sigma ** 2 + 1e-6))
+            else:
+                with torch.no_grad():
+                    u = F.normalize(self.V @ self._spectral_v, dim=0)
+                    self._spectral_v.copy_(F.normalize(self.V.t() @ u, dim=0))
+                    sigma_max = (self.V @ self._spectral_v).norm()
+                    self._h_max.fill_(1.0 / (sigma_max ** 2 + 1e-6))
+        return self._h_max
 
     def forward(self, x):
         x = F.layer_norm(x, (self.dim,))
-        xW = F.linear(F.linear(x, self.V), self.V.T)
+        h_max = self._h_bound()
+        h_val = self.h.abs().clamp(max=h_max)
+
+        # inference: dispatch to Rust/CUDA fused kernel
+        if not self.training and _HAS_OPS:
+            out, curv = _ops_lbo_fwd(
+                x, self.V, float(h_val), self.scale, self.bias,
+                float(self.alpha_conf.abs()), self.dim, self.rank,
+                need_curvature=self._need_curvature,
+            )
+            if self._need_curvature:
+                self._curvature = curv
+            return out
+
+        # training / fallback: PyTorch (full autograd)
+        phi_sq = x.detach().pow(2).mean()
+        conformal = torch.exp(-self.alpha_conf.abs() * phi_sq)
+        V_eff = self.V * conformal
+        proj = x @ V_eff.t()
+        xW = proj @ V_eff
         Lx = x - xW
-        h = self.h.abs().clamp(max=0.5)
-        self._curvature = (Lx * Lx).mean()
-        return (x - h * Lx) * self.scale + self.bias
+        if self._need_curvature:
+            self._curvature = Lx.detach().pow(2).mean()
+        return (x - h_val * Lx) * self.scale + self.bias
+
+
+EPS2 = 0.0487  # CE bootstrap fixed point
+
+
+class TopKSiLU(nn.Module):
+    """SiLU + TopK sparsity.
+
+    Backend dispatch:
+      CUDA  -- fused element-wise kernel (threshold pre-computed).
+      Rust  -- fused SiLU + quickselect per row (rayon parallel).
+      Torch -- running-threshold fallback.
+    """
+
+    def __init__(self, dim, ratio=1.0, cal_period=8, cal_samples=64):
+        super().__init__()
+        self.dim = dim
+        self.ratio = ratio
+        self.k = max(1, math.ceil(ratio * dim))
+        self.full = (ratio >= 1.0)
+        self._cal_period = cal_period
+        self._cal_samples = cal_samples
+        self._step = 0
+        if not self.full:
+            self.register_buffer('_thr', torch.tensor(0.0))
+
+    def forward(self, x):
+        if self.full or self.k >= x.size(-1):
+            return F.silu(x)
+
+        # CUDA / Rust dispatch (training + inference)
+        if _HAS_OPS:
+            thr = float(self._thr) if hasattr(self, '_thr') else 0.0
+            return _ops_topk_silu(x, self.k, self.ratio, threshold=thr)
+
+        # PyTorch fallback: running-threshold
+        h = F.silu(x)
+        if self.training:
+            self._step += 1
+            if self._step % self._cal_period == 1:
+                with torch.no_grad():
+                    flat = h.detach().abs().reshape(-1, h.size(-1))
+                    n = min(self._cal_samples, flat.size(0))
+                    thr = flat[:n].kthvalue(
+                        self.dim - self.k + 1, dim=-1
+                    ).values.mean()
+                    if self._thr.item() == 0.0:
+                        self._thr.fill_(thr)
+                    else:
+                        self._thr.lerp_(thr, 0.2)
+            return h.masked_fill(h.abs() < self._thr, 0.0)
+        else:
+            abs_h = h.abs()
+            thr = abs_h.kthvalue(
+                x.size(-1) - self.k + 1, dim=-1, keepdim=True
+            ).values
+            return h.masked_fill(abs_h < thr, 0.0)
 
 
 class GaugeLattice(nn.Module):
     """3x3+1 게이지 격자 FFN.
 
-    diag(SU(3), SU(2), U(1)) + Phi_LBO.
+    diag(SU(3), SU(2), U(1)) + eps * mix + Phi_LBO.
     채널 비율: alpha_s:alpha_w:alpha_em = 74.1:21.1:4.9 (CE 연역).
-    대각 전이 행렬 -- 채널 간 혼합 없음.
+    low-rank mixing을 0 초기화해 perturbative coupling으로 시작한다.
+    sparsity: 활성 뉴런 비율. 1.0=dense, EPS2=CE 부트스트랩 희소.
     """
 
-    def __init__(self, dim, mult=4):
+    def __init__(self, dim, mult=4, hidden_dim=None, mix_rank=None, sparsity=1.0):
         super().__init__()
-        total = ALPHA_S + ALPHA_W + ALPHA_EM
-        self.d3 = max(1, round(dim * ALPHA_S / total))
-        self.d2 = max(1, round(dim * ALPHA_W / total))
-        self.d1 = dim - self.d3 - self.d2
-        assert self.d1 >= 1
+        self.dim = dim
+        self.hidden_dim = max(dim, int(round(hidden_dim if hidden_dim is not None else dim * mult)))
+        self.mix_rank = max(0, dim // 8 if mix_rank is None else int(mix_rank))
+        self.sparsity = sparsity
+        self.d3, self.d2, self.d1 = split_ce_dims(dim)
+        h3, h2, h1 = split_ce_dims(self.hidden_dim)
 
-        h = dim * mult
-        h3 = max(1, round(h * ALPHA_S / total))
-        h2 = max(1, round(h * ALPHA_W / total))
-        h1 = max(1, h - h3 - h2)
+        self.su3_up = nn.Linear(self.d3, h3, bias=False)
+        self.su3_act = TopKSiLU(h3, sparsity)
+        self.su3_down = nn.utils.spectral_norm(nn.Linear(h3, self.d3, bias=False))
 
-        self.su3 = nn.Sequential(
-            nn.Linear(self.d3, h3, bias=False), nn.SiLU(),
-            nn.Linear(h3, self.d3, bias=False))
-        self.su2 = nn.Sequential(
-            nn.Linear(self.d2, h2, bias=False), nn.SiLU(),
-            nn.Linear(h2, self.d2, bias=False))
-        self.u1 = nn.Sequential(
-            nn.Linear(self.d1, h1, bias=False), nn.SiLU(),
-            nn.Linear(h1, self.d1, bias=False))
+        self.su2_up = nn.Linear(self.d2, h2, bias=False)
+        self.su2_act = TopKSiLU(h2, sparsity)
+        self.su2_down = nn.utils.spectral_norm(nn.Linear(h2, self.d2, bias=False))
+
+        self.u1_up = nn.Linear(self.d1, h1, bias=False)
+        self.u1_act = TopKSiLU(h1, sparsity)
+        self.u1_down = nn.utils.spectral_norm(nn.Linear(h1, self.d1, bias=False))
+
+        if self.mix_rank > 0:
+            self.mix_down = nn.Linear(dim, self.mix_rank, bias=False)
+            self.mix_up = nn.Linear(self.mix_rank, dim, bias=False)
+            nn.init.zeros_(self.mix_up.weight)
+        else:
+            self.mix_down = None
+            self.mix_up = None
         self.phi = LBONorm(dim)
 
+    @property
+    def mixing_ratio(self):
+        """||U_down U_up^T||_F / ||T_diag||_F -- perturbative condition (agi.md 6.3)."""
+        if self.mix_up is None:
+            return 0.0
+        w_up = self.mix_up.weight_orig if hasattr(self.mix_up, 'weight_orig') else self.mix_up.weight
+        w_down = self.mix_down.weight
+        mix_norm = (w_down.t() @ w_up.t()).norm()
+        su3_w = self.su3_down.weight_orig if hasattr(self.su3_down, 'weight_orig') else self.su3_down.weight
+        su2_w = self.su2_down.weight_orig if hasattr(self.su2_down, 'weight_orig') else self.su2_down.weight
+        u1_w = self.u1_down.weight_orig if hasattr(self.u1_down, 'weight_orig') else self.u1_down.weight
+        diag_norm = (su3_w.norm() ** 2 + su2_w.norm() ** 2 + u1_w.norm() ** 2).sqrt()
+        return mix_norm / (diag_norm + 1e-8)
+
     def forward(self, x):
-        s = self.d3
-        y = torch.cat([
-            self.su3(x[..., :s]),
-            self.su2(x[..., s:s + self.d2]),
-            self.u1(x[..., s + self.d2:]),
-        ], dim=-1)
+        # Rust fused path (inference only, no spectral norm hook needed)
+        if not self.training and _HAS_OPS:
+            h3, h2, h1 = split_ce_dims(self.hidden_dim)
+            s3w = self.su3_down.weight
+            s2w = self.su2_down.weight
+            u1w = self.u1_down.weight
+            md = self.mix_down.weight if self.mix_down is not None else None
+            mu = self.mix_up.weight if self.mix_up is not None else None
+            result = _ops_gauge_fwd(
+                x, self.su3_up.weight, s3w, self.su2_up.weight, s2w,
+                self.u1_up.weight, u1w, md, mu,
+                self.d3, self.d2, self.d1, h3, h2, h1,
+                self.mix_rank, self.sparsity, self.dim,
+            )
+            if result is not None:
+                return self.phi(result)
+
+        s3 = self.d3
+        s32 = s3 + self.d2
+        y3 = self.su3_down(self.su3_act(self.su3_up(x[..., :s3])))
+        y2 = self.su2_down(self.su2_act(self.su2_up(x[..., s3:s32])))
+        y1 = self.u1_down(self.u1_act(self.u1_up(x[..., s32:])))
+        y = torch.empty_like(x)
+        y[..., :s3] = y3
+        y[..., s3:s32] = y2
+        y[..., s32:] = y1
+        if self.mix_up is not None:
+            y = y + self.mix_up(self.mix_down(y))
         return self.phi(y)
 
 
@@ -116,12 +306,19 @@ class ClarusAttention(nn.Module):
 
 
 class ClarusBlock(nn.Module):
-    def __init__(self, dim, n_heads, ffn_mult=4):
+    def __init__(self, dim, n_heads, ffn_mult=4, ffn_hidden_dim=None,
+                 mix_rank=None, sparsity=1.0):
         super().__init__()
         self.norm1 = LBONorm(dim)
         self.attn = ClarusAttention(dim, n_heads)
         self.norm2 = LBONorm(dim)
-        self.ffn = GaugeLattice(dim, ffn_mult)
+        self.ffn = GaugeLattice(
+            dim,
+            ffn_mult,
+            hidden_dim=ffn_hidden_dim,
+            mix_rank=mix_rank,
+            sparsity=sparsity,
+        )
 
     def forward(self, x):
         x = x + self.attn(self.norm1(x))
@@ -148,14 +345,28 @@ class ClarusLM(nn.Module):
     """
 
     def __init__(self, vocab_size, dim=256, n_layers=6, n_heads=8,
-                 max_seq_len=512, ffn_mult=4, lambda_curv=0.01):
+                 max_seq_len=512, ffn_mult=4, ffn_hidden_dim=None,
+                 mix_rank=None, lambda_curv=0.01, lambda_mix=0.01,
+                 sparsity=1.0, use_checkpoint=False):
         super().__init__()
         self.max_seq_len = max_seq_len
         self.lambda_curv = lambda_curv
+        self.lambda_mix = lambda_mix
+        self._use_checkpoint = use_checkpoint
         self.tok_emb = nn.Embedding(vocab_size, dim)
         self.pos_emb = nn.Embedding(max_seq_len, dim)
         self.blocks = nn.ModuleList(
-            [ClarusBlock(dim, n_heads, ffn_mult) for _ in range(n_layers)])
+            [
+                ClarusBlock(
+                    dim,
+                    n_heads,
+                    ffn_mult=ffn_mult,
+                    ffn_hidden_dim=ffn_hidden_dim,
+                    mix_rank=mix_rank,
+                    sparsity=sparsity,
+                )
+                for _ in range(n_layers)
+            ])
         self.norm = LBONorm(dim)
         self.head = nn.Linear(dim, vocab_size, bias=False)
         self.head.weight = self.tok_emb.weight
@@ -169,22 +380,56 @@ class ClarusLM(nn.Module):
         elif isinstance(m, nn.Embedding):
             nn.init.normal_(m.weight, std=0.02)
 
+    def _set_curvature_tracking(self, enabled: bool):
+        for m in self.modules():
+            if isinstance(m, LBONorm):
+                m._need_curvature = enabled
+
     def forward(self, idx, targets=None):
         B, T = idx.shape
+        need_curv = targets is not None and self.lambda_curv > 0
+        self._set_curvature_tracking(need_curv)
+
         x = self.tok_emb(idx) + self.pos_emb(torch.arange(T, device=idx.device))
-        for block in self.blocks:
-            x = block(x)
+        if self.training and self._use_checkpoint:
+            for block in self.blocks:
+                x = torch.utils.checkpoint.checkpoint(
+                    block, x, use_reentrant=False
+                )
+        else:
+            for block in self.blocks:
+                x = block(x)
         x = self.norm(x)
         logits = self.head(x)
         loss = None
         if targets is not None:
             ce = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1))
-            curv = sum(b.curvature for b in self.blocks) / len(self.blocks)
-            loss = ce + self.lambda_curv * curv
+            loss = ce
+            if need_curv:
+                curv = sum(b.curvature for b in self.blocks) / len(self.blocks)
+                loss = loss + self.lambda_curv * curv
+            if self.lambda_mix > 0:
+                mix_r = sum(b.ffn.mixing_ratio for b in self.blocks) / len(self.blocks)
+                loss = loss + self.lambda_mix * mix_r
         return logits, loss
 
     @torch.no_grad()
-    def generate(self, idx, n, temperature=0.8, top_k=40):
+    def continuation_loss(self, prefix, full_sequence):
+        if full_sequence.size(1) <= prefix.size(1):
+            return 0.0
+        logits = self(full_sequence[:, :-1])[0]
+        targets = full_sequence[:, 1:].clone()
+        if prefix.size(1) > 1:
+            targets[:, :prefix.size(1) - 1] = -100
+        loss = F.cross_entropy(
+            logits.reshape(-1, logits.size(-1)),
+            targets.reshape(-1),
+            ignore_index=-100,
+        )
+        return float(loss.item())
+
+    @torch.no_grad()
+    def _sample(self, idx, n, temperature=0.8, top_k=40):
         for _ in range(n):
             x = idx[:, -self.max_seq_len:]
             logits = self(x)[0][:, -1] / temperature
@@ -194,14 +439,47 @@ class ClarusLM(nn.Module):
             idx = torch.cat([idx, torch.multinomial(F.softmax(logits, -1), 1)], 1)
         return idx
 
+    @torch.no_grad()
+    def generate(self, idx, n, temperature=0.8, top_k=40,
+                 c3_passes=1, c3_candidates=1):
+        if c3_passes <= 1 or c3_candidates <= 1:
+            return self._sample(idx, n, temperature=temperature, top_k=top_k)
+
+        output = idx.clone()
+        remaining = n
+        for pass_idx in range(c3_passes):
+            rounds_left = c3_passes - pass_idx
+            step_tokens = max(1, math.ceil(remaining / rounds_left))
+            prefix = output
+            best_candidate = None
+            best_score = None
+            for _ in range(c3_candidates):
+                candidate = self._sample(
+                    prefix.clone(),
+                    step_tokens,
+                    temperature=temperature,
+                    top_k=top_k,
+                )
+                score = self.continuation_loss(prefix, candidate)
+                if best_score is None or score < best_score:
+                    best_candidate = candidate
+                    best_score = score
+            output = best_candidate
+            remaining = n - (output.size(1) - idx.size(1))
+            if remaining <= 0:
+                break
+        return output
+
     def lattice_summary(self):
         """3x3+1 격자 구조 요약."""
         b = self.blocks[0].ffn
-        total = ALPHA_S + ALPHA_W + ALPHA_EM
         lines = [
-            f'SU(3) binding:  {b.d3:4d} dims ({ALPHA_S/total*100:.1f}%)',
-            f'SU(2) decision: {b.d2:4d} dims ({ALPHA_W/total*100:.1f}%)',
-            f'U(1)  attention:{b.d1:4d} dims ({ALPHA_EM/total*100:.1f}%)',
-            f'Phi   smoothing: LBO (rank={b.phi.V.shape[0]})',
+            f'SU(3) binding:  {b.d3:4d} dims',
+            f'SU(2) decision: {b.d2:4d} dims',
+            f'U(1)  attention:{b.d1:4d} dims',
+            f'FFN hidden dim: {b.hidden_dim:4d}',
+            f'Mixing rank:    {b.mix_rank:4d}',
+            f'Sparsity:       {b.sparsity:.4f} (k_su3={b.su3_act.k})',
+            f'Phi smoothing:  LBO (rank={b.phi.V.shape[0]})',
         ]
         return '\n'.join(lines)

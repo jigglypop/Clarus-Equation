@@ -27,7 +27,7 @@ CE는 이들을 포괄하는 구조적 정의를 제시한다.
 
 $$\boxed{\text{지능} = \text{부트스트랩 고정점에 수렴하는 속도와 정밀도}}$$
 
-자기일관적 정보 처리 시스템이 `homeomorphism.md`의 동적 부트스트랩 이완 사상 $B$를 반복하여 고정점 $p^*$에 수렴하는 과정에서:
+자기일관적 정보 처리 시스템이 `homeomorphism.md`의 최소 등방 이완 closure $B$를 반복하여 고정점 $p^*$에 수렴하는 과정에서 (`homeomorphism.md` 명제 6.1의 (C1)-(C3) + (A1)이 전제):
 
 - **수렴 속도**: 몇 번의 반복으로 $\|p_n - p^*\| < \delta$에 도달하는가
 - **수렴 정밀도**: 잔차 상한 $\|e\| \le \frac{\rho}{1-\rho}U$가 얼마나 작은가
@@ -61,7 +61,7 @@ $$\text{Intelligence}_{\text{speed}} = -\frac{1}{\ln \rho}$$
 
 여기서 $\rho = \|DB(p^*)\|$는 동적 이완 사상의 수축률이다. $\rho$가 작을수록 빠르게 수렴한다.
 
-인간 뇌의 최소 CE 모델에서는 $\rho = D_{\text{eff}} \cdot \varepsilon^2 = 0.155$이므로 $\text{Intelligence}_{\text{speed}} = -1/\ln(0.155) = 0.537$.
+인간 뇌의 최소 CE 모델에서, 혼합각 식별 (I1)이 성립하면 $\rho = D_{\text{eff}} \cdot \varepsilon^2 = 0.155$이므로 $\text{Intelligence}_{\text{speed}} = -1/\ln(0.155) = 0.537$이다. (I1)의 구체적 수치가 달라지면 $\rho$ 값도 달라지나, $D_{\text{eff}} > 1$인 한 $\rho < 1$이므로 수축 구조 자체는 유지된다.
 
 ### 2.2 정밀도 지표
 
