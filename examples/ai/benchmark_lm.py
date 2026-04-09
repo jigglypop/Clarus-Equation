@@ -167,7 +167,7 @@ def get_batch(data, seq_len, batch_size, device, generator=None):
     return x, y
 
 
-@torch.no_grad()
+@torch.inference_mode()
 def estimate_loss(model, data, seq_len, batch_size, device, generator_seed, n_eval=10):
     model.eval()
     losses = []

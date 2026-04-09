@@ -17,6 +17,8 @@ Reference: docs/6_뇌/agi.md
 from __future__ import annotations
 
 import math
+from typing import Tuple
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -63,6 +65,33 @@ def split_ce_dims(total_dim):
     return d3, d2, d1
 
 
+def _lbo_cpu_fwd_fn(
+    x: torch.Tensor, V: torch.Tensor, h_val: torch.Tensor,
+    scale: torch.Tensor, bias: torch.Tensor,
+    alpha_conf_abs: torch.Tensor, dim: int,
+    need_curvature: bool,
+) -> Tuple[torch.Tensor, float]:
+    x_n = F.layer_norm(x, [dim])
+    phi_sq = x_n.detach().pow(2).mean()
+    conformal = torch.exp(-alpha_conf_abs * phi_sq)
+    V_eff = V * conformal
+    proj = x_n @ V_eff.t()
+    xW = proj @ V_eff
+    curvature: float = 0.0
+    if need_curvature:
+        Lx = x_n - xW
+        nrm = Lx.detach().norm()
+        curvature = (nrm * nrm / Lx.numel()).item()
+    pre = torch.lerp(x_n, xW, h_val)
+    return torch.addcmul(bias, pre, scale), curvature
+
+
+try:
+    _lbo_cpu_fwd = torch.jit.script(_lbo_cpu_fwd_fn)
+except Exception:
+    _lbo_cpu_fwd = _lbo_cpu_fwd_fn
+
+
 class LBONorm(nn.Module):
     """LayerNorm + Laplace-Beltrami 확산 + 등각 자기참조.
 
@@ -90,7 +119,8 @@ class LBONorm(nn.Module):
         self._curvature = 0.0
         self._need_curvature = True
         self._h_step = 0
-        self._h_period = 8
+        self._h_period = 16
+        self._h_next_update = 1
         self.register_buffer('_spectral_v', F.normalize(torch.randn(dim), dim=0))
         self.register_buffer('_h_max', torch.tensor(1.0))
 
@@ -98,7 +128,8 @@ class LBONorm(nn.Module):
         """sigma_max(V) via 1-step power iteration -> h < 1/sigma_max^2.
         Cached for _h_period forward calls. Dispatches to Rust on CPU."""
         self._h_step += 1
-        if self._h_step % self._h_period == 1:
+        if self._h_step >= self._h_next_update:
+            self._h_next_update = self._h_step + self._h_period
             if _HAS_OPS and not self.V.is_cuda:
                 new_v, sigma = _ops_power_iter(
                     self.V, self._spectral_v, self.dim, self.rank)
@@ -114,31 +145,29 @@ class LBONorm(nn.Module):
         return self._h_max
 
     def forward(self, x):
-        x = F.layer_norm(x, (self.dim,))
         h_max = self._h_bound()
         h_val = self.h.abs().clamp(max=h_max)
 
-        # inference: dispatch to Rust/CUDA fused kernel
-        if not self.training and _HAS_OPS:
+        # CUDA: dispatch to fused kernel (training + inference)
+        if _HAS_OPS and x.is_cuda:
+            x = F.layer_norm(x, (self.dim,))
             out, curv = _ops_lbo_fwd(
-                x, self.V, float(h_val), self.scale, self.bias,
-                float(self.alpha_conf.abs()), self.dim, self.rank,
+                x, self.V, float(h_val.detach()), self.scale, self.bias,
+                float(self.alpha_conf.detach().abs()), self.dim, self.rank,
                 need_curvature=self._need_curvature,
             )
             if self._need_curvature:
                 self._curvature = curv
             return out
 
-        # training / fallback: PyTorch (full autograd)
-        phi_sq = x.detach().pow(2).mean()
-        conformal = torch.exp(-self.alpha_conf.abs() * phi_sq)
-        V_eff = self.V * conformal
-        proj = x @ V_eff.t()
-        xW = proj @ V_eff
-        Lx = x - xW
+        # CPU: JIT-fused (layer_norm + conformal + LBO + scale/bias)
+        out, curv = _lbo_cpu_fwd(
+            x, self.V, h_val, self.scale, self.bias,
+            self.alpha_conf.abs(), self.dim, self._need_curvature,
+        )
         if self._need_curvature:
-            self._curvature = Lx.detach().pow(2).mean()
-        return (x - h_val * Lx) * self.scale + self.bias
+            self._curvature = curv
+        return out
 
 
 EPS2 = 0.0487  # CE bootstrap fixed point
@@ -162,6 +191,7 @@ class TopKSiLU(nn.Module):
         self._cal_period = cal_period
         self._cal_samples = cal_samples
         self._step = 0
+        self._next_cal = 1
         if not self.full:
             self.register_buffer('_thr', torch.tensor(0.0))
 
@@ -169,16 +199,17 @@ class TopKSiLU(nn.Module):
         if self.full or self.k >= x.size(-1):
             return F.silu(x)
 
-        # CUDA / Rust dispatch (training + inference)
-        if _HAS_OPS:
+        # CUDA: fused kernel (faster than per-element PyTorch)
+        if _HAS_OPS and x.is_cuda:
             thr = float(self._thr) if hasattr(self, '_thr') else 0.0
             return _ops_topk_silu(x, self.k, self.ratio, threshold=thr)
 
-        # PyTorch fallback: running-threshold
+        # CPU: PyTorch running-threshold
         h = F.silu(x)
         if self.training:
             self._step += 1
-            if self._step % self._cal_period == 1:
+            if self._step >= self._next_cal:
+                self._next_cal = self._step + self._cal_period
                 with torch.no_grad():
                     flat = h.detach().abs().reshape(-1, h.size(-1))
                     n = min(self._cal_samples, flat.size(0))
@@ -191,6 +222,8 @@ class TopKSiLU(nn.Module):
                         self._thr.lerp_(thr, 0.2)
             return h.masked_fill(h.abs() < self._thr, 0.0)
         else:
+            if self._thr.item() > 0:
+                return h.masked_fill(h.abs() < self._thr, 0.0)
             abs_h = h.abs()
             thr = abs_h.kthvalue(
                 x.size(-1) - self.k + 1, dim=-1, keepdim=True
@@ -252,32 +285,13 @@ class GaugeLattice(nn.Module):
         return mix_norm / (diag_norm + 1e-8)
 
     def forward(self, x):
-        # Rust fused path (inference only, no spectral norm hook needed)
-        if not self.training and _HAS_OPS:
-            h3, h2, h1 = split_ce_dims(self.hidden_dim)
-            s3w = self.su3_down.weight
-            s2w = self.su2_down.weight
-            u1w = self.u1_down.weight
-            md = self.mix_down.weight if self.mix_down is not None else None
-            mu = self.mix_up.weight if self.mix_up is not None else None
-            result = _ops_gauge_fwd(
-                x, self.su3_up.weight, s3w, self.su2_up.weight, s2w,
-                self.u1_up.weight, u1w, md, mu,
-                self.d3, self.d2, self.d1, h3, h2, h1,
-                self.mix_rank, self.sparsity, self.dim,
-            )
-            if result is not None:
-                return self.phi(result)
-
         s3 = self.d3
         s32 = s3 + self.d2
-        y3 = self.su3_down(self.su3_act(self.su3_up(x[..., :s3])))
-        y2 = self.su2_down(self.su2_act(self.su2_up(x[..., s3:s32])))
-        y1 = self.u1_down(self.u1_act(self.u1_up(x[..., s32:])))
-        y = torch.empty_like(x)
-        y[..., :s3] = y3
-        y[..., s3:s32] = y2
-        y[..., s32:] = y1
+        y = torch.cat([
+            self.su3_down(self.su3_act(self.su3_up(x[..., :s3]))),
+            self.su2_down(self.su2_act(self.su2_up(x[..., s3:s32]))),
+            self.u1_down(self.u1_act(self.u1_up(x[..., s32:]))),
+        ], dim=-1)
         if self.mix_up is not None:
             y = y + self.mix_up(self.mix_down(y))
         return self.phi(y)
@@ -370,7 +384,10 @@ class ClarusLM(nn.Module):
         self.norm = LBONorm(dim)
         self.head = nn.Linear(dim, vocab_size, bias=False)
         self.head.weight = self.tok_emb.weight
+        self.register_buffer('_pos_idx', torch.arange(max_seq_len), persistent=False)
         self.apply(self._init)
+        self._lbo_modules = [m for m in self.modules() if isinstance(m, LBONorm)]
+        self._curv_enabled = None
 
     @staticmethod
     def _init(m):
@@ -381,16 +398,18 @@ class ClarusLM(nn.Module):
             nn.init.normal_(m.weight, std=0.02)
 
     def _set_curvature_tracking(self, enabled: bool):
-        for m in self.modules():
-            if isinstance(m, LBONorm):
-                m._need_curvature = enabled
+        if enabled == self._curv_enabled:
+            return
+        self._curv_enabled = enabled
+        for m in self._lbo_modules:
+            m._need_curvature = enabled
 
     def forward(self, idx, targets=None):
         B, T = idx.shape
         need_curv = targets is not None and self.lambda_curv > 0
         self._set_curvature_tracking(need_curv)
 
-        x = self.tok_emb(idx) + self.pos_emb(torch.arange(T, device=idx.device))
+        x = self.tok_emb(idx) + self.pos_emb(self._pos_idx[:T])
         if self.training and self._use_checkpoint:
             for block in self.blocks:
                 x = torch.utils.checkpoint.checkpoint(
@@ -409,8 +428,9 @@ class ClarusLM(nn.Module):
                 curv = sum(b.curvature for b in self.blocks) / len(self.blocks)
                 loss = loss + self.lambda_curv * curv
             if self.lambda_mix > 0:
-                mix_r = sum(b.ffn.mixing_ratio for b in self.blocks) / len(self.blocks)
-                loss = loss + self.lambda_mix * mix_r
+                with torch.no_grad():
+                    mix_r = sum(b.ffn.mixing_ratio for b in self.blocks) / len(self.blocks)
+                loss = loss + self.lambda_mix * float(mix_r)
         return logits, loss
 
     @torch.no_grad()

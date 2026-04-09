@@ -1,8 +1,10 @@
 //! Fused neural-network ops for ClarusLM.
 //!
 //! All functions operate on flat f32 slices laid out row-major.
+//! Matrix multiplications use ndarray (matrixmultiply SIMD backend).
 //! Row-parallel via rayon where beneficial.
 
+use ndarray::{Array1, Array2, ArrayView1, ArrayView2, Axis};
 use rayon::prelude::*;
 use std::cmp;
 
@@ -23,7 +25,7 @@ fn sigmoid_f32(x: f32) -> f32 {
 /// Fused SiLU + TopK sparse masking (forward).
 ///
 /// `input`: flat `[n_rows * dim]`, `dim`: row width, `ratio`: keep fraction.
-/// Returns `(output, mask)` where mask is `Vec<u8>` (1=kept, 0=zeroed).
+/// Returns `(output, mask)`.
 pub fn topk_silu_fwd(input: &[f32], dim: usize, ratio: f32) -> (Vec<f32>, Vec<u8>) {
     let k = cmp::max(1, (ratio * dim as f32).ceil() as usize).min(dim);
     let n = input.len();
@@ -54,7 +56,6 @@ pub fn topk_silu_fwd(input: &[f32], dim: usize, ratio: f32) -> (Vec<f32>, Vec<u8
             for j in 0..dim {
                 out[j] = silu_f32(src[j]);
             }
-            // quickselect for kth-largest absolute value
             let mut abs_vals: Vec<f32> = out.iter().map(|x| x.abs()).collect();
             abs_vals.select_nth_unstable_by(dim - k, |a, b| {
                 a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal)
@@ -65,7 +66,6 @@ pub fn topk_silu_fwd(input: &[f32], dim: usize, ratio: f32) -> (Vec<f32>, Vec<u8
                     msk[j] = 1;
                 } else {
                     out[j] = 0.0;
-                    msk[j] = 0;
                 }
             }
         });
@@ -73,11 +73,6 @@ pub fn topk_silu_fwd(input: &[f32], dim: usize, ratio: f32) -> (Vec<f32>, Vec<u8
 }
 
 /// TopK SiLU backward.
-///
-/// `grad`:  flat `[n_rows * dim]` upstream gradient.
-/// `input`: flat `[n_rows * dim]` original input to SiLU.
-/// `mask`:  flat `[n_rows * dim]` kept-mask (1/0).
-/// Returns `grad_input`.
 pub fn topk_silu_bwd(grad: &[f32], input: &[f32], mask: &[u8], dim: usize) -> Vec<f32> {
     let n = grad.len();
     let mut grad_in = vec![0.0f32; n];
@@ -98,19 +93,11 @@ pub fn topk_silu_bwd(grad: &[f32], input: &[f32], mask: &[u8], dim: usize) -> Ve
     grad_in
 }
 
-// ---- LBO Norm ---------------------------------------------------------------
+// ---- LBO Norm (ndarray-backed matmul) ---------------------------------------
 
 /// Fused LBO normalization forward (post-LayerNorm).
 ///
-/// Inputs (all flat row-major):
-///   `normed`: `[n_rows * dim]` -- already layer-normalised.
-///   `v`:      `[rank * dim]`   -- projection matrix V.
-///   `h`:      step size (clamped by caller).
-///   `scale`:  `[dim]`
-///   `bias`:   `[dim]`
-///   `alpha_conf`: conformal self-reference coefficient.
-///
-/// Returns `(output [n_rows*dim], curvature)`.
+/// Uses ndarray `dot()` (matrixmultiply SIMD) for projections.
 pub fn lbo_fused_fwd(
     normed: &[f32],
     v: &[f32],
@@ -127,181 +114,158 @@ pub fn lbo_fused_fwd(
     let phi_sq: f32 = normed.iter().map(|&x| x * x).sum::<f32>() / normed.len() as f32;
     let conformal = (-alpha_conf.abs() * phi_sq).exp();
 
-    // V_eff = V * conformal
-    let v_eff: Vec<f32> = v.iter().map(|&x| x * conformal).collect();
+    // V_eff = V * conformal  [rank, dim]
+    let v_scaled: Vec<f32> = v.iter().map(|&x| x * conformal).collect();
+    let x_mat = ArrayView2::from_shape((n_rows, dim), normed).unwrap();
+    let v_mat = ArrayView2::from_shape((rank, dim), &v_scaled).unwrap();
 
+    // proj = X @ V_eff^T  -> [n_rows, rank]   (ndarray SIMD dot)
+    let proj = x_mat.dot(&v_mat.t());
+    // xW = proj @ V_eff   -> [n_rows, dim]    (ndarray SIMD dot)
+    let xw = proj.dot(&v_mat);
+
+    // output + curvature
+    let scale_v = ArrayView1::from(scale);
+    let bias_v = ArrayView1::from(bias);
+    let one_minus_h = 1.0 - h;
     let mut output = vec![0.0f32; normed.len()];
+    let mut curv_sum = 0.0f64;
 
-    let curvature_sum: f64 = output
-        .par_chunks_mut(dim)
-        .enumerate()
-        .map(|(r, out)| {
-            let x = &normed[r * dim..(r + 1) * dim];
-            let mut row_curv = 0.0f64;
-
-            // proj = x @ V_eff^T  [rank]
-            let mut proj = vec![0.0f32; rank];
-            for i in 0..rank {
-                let mut s = 0.0f32;
-                let v_row = &v_eff[i * dim..(i + 1) * dim];
-                for j in 0..dim {
-                    s += x[j] * v_row[j];
-                }
-                proj[i] = s;
-            }
-
-            // out = (x - h*(x - xW)) * scale + bias
-            //     = (x*(1-h) + h*xW) * scale + bias
-            let one_minus_h = 1.0 - h;
-            for j in 0..dim {
-                let mut xw_j = 0.0f32;
-                for i in 0..rank {
-                    xw_j += proj[i] * v_eff[i * dim + j];
-                }
-                let lx = x[j] - xw_j;
-                row_curv += (lx as f64) * (lx as f64);
-                out[j] = (one_minus_h * x[j] + h * xw_j) * scale[j] + bias[j];
-            }
-            row_curv
-        })
-        .sum();
-
-    let curvature = (curvature_sum / (n_rows * dim) as f64) as f32;
-    (output, curvature)
+    for r in 0..n_rows {
+        let base = r * dim;
+        for j in 0..dim {
+            let lx = x_mat[[r, j]] - xw[[r, j]];
+            curv_sum += (lx as f64) * (lx as f64);
+            output[base + j] = (one_minus_h * x_mat[[r, j]] + h * xw[[r, j]])
+                * scale_v[j]
+                + bias_v[j];
+        }
+    }
+    (output, (curv_sum / (n_rows * dim) as f64) as f32)
 }
 
 /// Power iteration: 1 step for sigma_max(V).
-/// `v_mat`: `[rank * dim]`, `spectral_v`: `[dim]` (unit vector).
-/// Returns `(new_spectral_v, sigma_max)`.
-pub fn power_iter_step(v_mat: &[f32], spectral_v: &[f32], dim: usize, rank: usize) -> (Vec<f32>, f32) {
-    // u = normalize(V @ spectral_v)  [rank]
-    let mut u = vec![0.0f32; rank];
-    for i in 0..rank {
-        let mut s = 0.0f32;
-        for j in 0..dim {
-            s += v_mat[i * dim + j] * spectral_v[j];
-        }
-        u[i] = s;
-    }
-    let u_norm = u.iter().map(|x| x * x).sum::<f32>().sqrt().max(1e-12);
-    for x in u.iter_mut() {
-        *x /= u_norm;
-    }
+pub fn power_iter_step(
+    v_mat: &[f32],
+    spectral_v: &[f32],
+    dim: usize,
+    rank: usize,
+) -> (Vec<f32>, f32) {
+    let v_nd = ArrayView2::from_shape((rank, dim), v_mat).unwrap();
+    let sv = ArrayView1::from_shape(dim, spectral_v).unwrap();
 
-    // new_v = normalize(V^T @ u)  [dim]
-    let mut new_v = vec![0.0f32; dim];
-    for j in 0..dim {
-        let mut s = 0.0f32;
-        for i in 0..rank {
-            s += v_mat[i * dim + j] * u[i];
-        }
-        new_v[j] = s;
-    }
-    let v_norm = new_v.iter().map(|x| x * x).sum::<f32>().sqrt().max(1e-12);
-    for x in new_v.iter_mut() {
-        *x /= v_norm;
-    }
+    // u = V @ sv  [rank]
+    let u_raw = v_nd.dot(&sv);
+    let u_norm = u_raw.mapv(|x| x * x).sum().sqrt().max(1e-12);
+    let u = u_raw.mapv(|x| x / u_norm);
 
-    // sigma_max = ||V @ new_v||
-    let mut vv = vec![0.0f32; rank];
-    for i in 0..rank {
-        let mut s = 0.0f32;
-        for j in 0..dim {
-            s += v_mat[i * dim + j] * new_v[j];
-        }
-        vv[i] = s;
-    }
-    let sigma = vv.iter().map(|x| x * x).sum::<f32>().sqrt();
+    // new_v = V^T @ u  [dim]
+    let vt = v_nd.t();
+    let nv_raw = vt.dot(&u);
+    let nv_norm = nv_raw.mapv(|x| x * x).sum().sqrt().max(1e-12);
+    let new_v = nv_raw.mapv(|x| x / nv_norm);
 
-    (new_v, sigma)
+    // sigma = ||V @ new_v||
+    let sigma = v_nd.dot(&new_v).mapv(|x| x * x).sum().sqrt();
+
+    (new_v.to_vec(), sigma)
 }
 
-/// Gauge lattice 3-channel forward (fused up+silu+topk+down+mix).
-///
-/// `input`:    `[n_rows * dim]`
-/// `su3_up`:   `[h3 * d3]` (row-major)  ... etc.
-/// `mix_down`: `[mix_rank * dim]`, `mix_up`: `[dim * mix_rank]` (optional, empty=skip)
-///
-/// Returns `output [n_rows * dim]`.
+// ---- Gauge lattice (ndarray matmul per channel) ----------------------------
+
+/// Single gauge channel: up -> SiLU -> TopK -> down.
+fn channel_fwd(
+    x: &ArrayView1<f32>,
+    up_w: &ArrayView2<f32>,   // [hid, d_in]
+    down_w: &ArrayView2<f32>, // [d_in, hid]
+    k: usize,
+) -> Array1<f32> {
+    // hidden = x @ up^T  -> [hid]
+    let hidden_raw = up_w.dot(x);
+    let hid = hidden_raw.len();
+
+    // SiLU + TopK
+    let mut hidden: Vec<f32> = hidden_raw.iter().map(|&v| silu_f32(v)).collect();
+    if k < hid {
+        let mut abs_h: Vec<f32> = hidden.iter().map(|v| v.abs()).collect();
+        abs_h.select_nth_unstable_by(hid - k, |a, b| {
+            a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal)
+        });
+        let thr = abs_h[hid - k];
+        for v in hidden.iter_mut() {
+            if v.abs() < thr {
+                *v = 0.0;
+            }
+        }
+    }
+
+    // output = down @ hidden  -> [d_in]  (down is [d_in, hid])
+    let h_arr = ArrayView1::from(&hidden);
+    down_w.dot(&h_arr)
+}
+
+/// Gauge lattice 3-channel forward.
 #[allow(clippy::too_many_arguments)]
 pub fn gauge_lattice_fwd(
     input: &[f32],
-    su3_up: &[f32], su3_down: &[f32],
-    su2_up: &[f32], su2_down: &[f32],
-    u1_up: &[f32],  u1_down: &[f32],
-    mix_down: &[f32], mix_up: &[f32],
+    su3_up: &[f32],
+    su3_down: &[f32],
+    su2_up: &[f32],
+    su2_down: &[f32],
+    u1_up: &[f32],
+    u1_down: &[f32],
+    mix_down: &[f32],
+    mix_up: &[f32],
     d3: usize, d2: usize, d1: usize,
     h3: usize, h2: usize, h1: usize,
     mix_rank: usize,
     ratio: f32,
     dim: usize,
 ) -> Vec<f32> {
-    let n_rows = input.len() / dim;
+    let _n_rows = input.len() / dim;
     let k3 = cmp::max(1, (ratio * h3 as f32).ceil() as usize).min(h3);
     let k2 = cmp::max(1, (ratio * h2 as f32).ceil() as usize).min(h2);
     let k1 = cmp::max(1, (ratio * h1 as f32).ceil() as usize).min(h1);
     let has_mix = mix_rank > 0 && !mix_down.is_empty() && !mix_up.is_empty();
 
+    let su3_up_nd = ArrayView2::from_shape((h3, d3), su3_up).unwrap();
+    let su3_dn_nd = ArrayView2::from_shape((d3, h3), su3_down).unwrap();
+    let su2_up_nd = ArrayView2::from_shape((h2, d2), su2_up).unwrap();
+    let su2_dn_nd = ArrayView2::from_shape((d2, h2), su2_down).unwrap();
+    let u1_up_nd = ArrayView2::from_shape((h1, d1), u1_up).unwrap();
+    let u1_dn_nd = ArrayView2::from_shape((d1, h1), u1_down).unwrap();
+
+    let x_mat = ArrayView2::from_shape((_n_rows, dim), input).unwrap();
     let mut output = vec![0.0f32; input.len()];
+
+    let s3 = d3;
+    let s32 = d3 + d2;
 
     output
         .par_chunks_mut(dim)
         .enumerate()
         .for_each(|(r, out)| {
-            let x = &input[r * dim..(r + 1) * dim];
+            let x_row = x_mat.row(r);
+            let x3 = x_row.slice(ndarray::s![..s3]);
+            let x2 = x_row.slice(ndarray::s![s3..s32]);
+            let x1 = x_row.slice(ndarray::s![s32..]);
 
-            // ---- channel helper (inline) ----
-            macro_rules! channel_fwd {
-                ($x_slice:expr, $up:expr, $down:expr, $din:expr, $hid:expr, $k:expr, $out_slice:expr) => {{
-                    let mut hidden = vec![0.0f32; $hid];
-                    for i in 0..$hid {
-                        let mut s = 0.0f32;
-                        for j in 0..$din {
-                            s += $x_slice[j] * $up[i * $din + j];
-                        }
-                        hidden[i] = silu_f32(s);
-                    }
-                    if $k < $hid {
-                        let mut abs_h: Vec<f32> = hidden.iter().map(|v| v.abs()).collect();
-                        abs_h.select_nth_unstable_by($hid - $k, |a, b| {
-                            a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal)
-                        });
-                        let thr = abs_h[$hid - $k];
-                        for v in hidden.iter_mut() {
-                            if v.abs() < thr { *v = 0.0; }
-                        }
-                    }
-                    for j in 0..$din {
-                        let mut s = 0.0f32;
-                        for i in 0..$hid {
-                            s += hidden[i] * $down[j * $hid + i];
-                        }
-                        $out_slice[j] = s;
-                    }
-                }};
-            }
+            let y3 = channel_fwd(&x3, &su3_up_nd, &su3_dn_nd, k3);
+            let y2 = channel_fwd(&x2, &su2_up_nd, &su2_dn_nd, k2);
+            let y1 = channel_fwd(&x1, &u1_up_nd, &u1_dn_nd, k1);
 
-            let s3 = d3;
-            let s32 = d3 + d2;
-            channel_fwd!(&x[..s3], su3_up, su3_down, d3, h3, k3, &mut out[..s3]);
-            channel_fwd!(&x[s3..s32], su2_up, su2_down, d2, h2, k2, &mut out[s3..s32]);
-            channel_fwd!(&x[s32..], u1_up, u1_down, d1, h1, k1, &mut out[s32..]);
+            out[..s3].copy_from_slice(y3.as_slice().unwrap());
+            out[s3..s32].copy_from_slice(y2.as_slice().unwrap());
+            out[s32..].copy_from_slice(y1.as_slice().unwrap());
 
             if has_mix {
-                let mut proj = vec![0.0f32; mix_rank];
-                for i in 0..mix_rank {
-                    let mut s = 0.0f32;
-                    for j in 0..dim {
-                        s += out[j] * mix_down[i * dim + j];
-                    }
-                    proj[i] = s;
-                }
+                let md = ArrayView2::from_shape((mix_rank, dim), mix_down).unwrap();
+                let mu = ArrayView2::from_shape((dim, mix_rank), mix_up).unwrap();
+                let out_view = ArrayView1::from(&*out);
+                let proj = md.dot(&out_view);
+                let mix_result = mu.dot(&proj);
                 for j in 0..dim {
-                    let mut s = 0.0f32;
-                    for i in 0..mix_rank {
-                        s += proj[i] * mix_up[j * mix_rank + i];
-                    }
-                    out[j] += s;
+                    out[j] += mix_result[j];
                 }
             }
         });

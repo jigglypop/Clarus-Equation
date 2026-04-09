@@ -1,0 +1,121 @@
+{
+  "config": {
+    "dim": 128,
+    "n_layers": 4,
+    "n_heads": 4,
+    "seq_len": 128,
+    "batch_size": 32,
+    "steps": 500,
+    "lr": 0.0003,
+    "lambda_curv": 0.001,
+    "vocab_size": 65,
+    "data_chars": 1115394,
+    "device": "cpu",
+    "seed": 1337,
+    "sparsity": 0.0487
+  },
+  "params": {
+    "clarus_M": 0.81,
+    "baseline_M": 0.81,
+    "ratio": 0.9987
+  },
+  "active_param_ratio": {
+    "clarus": 0.9922,
+    "baseline": 1.0
+  },
+  "flops_per_token_M": 0.8,
+  "best_val_loss": {
+    "clarus": 2.3955,
+    "baseline": 2.393,
+    "delta": -0.0025
+  },
+  "train_time_s": {
+    "clarus": 112.6,
+    "baseline": 62.3
+  },
+  "curvature": {
+    "avg": 13.524994,
+    "per_layer": [
+      13.85054,
+      13.8175,
+      14.464829,
+      11.967106
+    ]
+  },
+  "log_baseline": [
+    {
+      "step": 1,
+      "train_loss": 4.1231,
+      "val_loss": 4.123,
+      "elapsed": 0.2
+    },
+    {
+      "step": 100,
+      "train_loss": 2.7426,
+      "val_loss": 2.7342,
+      "elapsed": 11.9
+    },
+    {
+      "step": 200,
+      "train_loss": 2.532,
+      "val_loss": 2.508,
+      "elapsed": 24.9
+    },
+    {
+      "step": 300,
+      "train_loss": 2.4661,
+      "val_loss": 2.4351,
+      "elapsed": 37.1
+    },
+    {
+      "step": 400,
+      "train_loss": 2.4166,
+      "val_loss": 2.4024,
+      "elapsed": 49.4
+    },
+    {
+      "step": 500,
+      "train_loss": 2.4234,
+      "val_loss": 2.393,
+      "elapsed": 62.3
+    }
+  ],
+  "log_clarus": [
+    {
+      "step": 1,
+      "train_loss": 4.1837,
+      "val_loss": 4.1833,
+      "elapsed": 0.4
+    },
+    {
+      "step": 100,
+      "train_loss": 2.6771,
+      "val_loss": 2.6496,
+      "elapsed": 23.1
+    },
+    {
+      "step": 200,
+      "train_loss": 2.5105,
+      "val_loss": 2.4875,
+      "elapsed": 45.1
+    },
+    {
+      "step": 300,
+      "train_loss": 2.444,
+      "val_loss": 2.432,
+      "elapsed": 67.5
+    },
+    {
+      "step": 400,
+      "train_loss": 2.4193,
+      "val_loss": 2.4031,
+      "elapsed": 90.2
+    },
+    {
+      "step": 500,
+      "train_loss": 2.4145,
+      "val_loss": 2.3955,
+      "elapsed": 112.6
+    }
+  ]
+}
