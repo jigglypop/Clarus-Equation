@@ -27,11 +27,11 @@ try:
         pq_scores,
     )
     from .hopfield import (
+        block_hidden,
         build_codebook,
         decode_direct,
         decode_inject,
         generate_multiround,
-        get_initial_state,
         relax as hopfield_relax,
         resolve_device,
         safe_print,
@@ -44,11 +44,11 @@ except ImportError:
         pq_scores,
     )
     from clarus.hopfield import (
+        block_hidden,
         build_codebook,
         decode_direct,
         decode_inject,
         generate_multiround,
-        get_initial_state,
         relax as hopfield_relax,
         resolve_device,
         safe_print,
@@ -67,7 +67,7 @@ DEFAULT_PROMPTS = (
 class PromptContext:
     prompt: str
     prompt_ids: torch.Tensor
-    h_true: torch.Tensor
+    h_true: torch.Tensor | None
     m0: torch.Tensor
     phi: torch.Tensor
     best_layer: int
@@ -113,6 +113,9 @@ class CEEngine:
 
         self.W = data["W"].float().to(self.device)
         self.W_pack = self._load_w_pack(data)
+        self._dense_relax_w = None
+        if self.W_pack[0].numel() == self.W.numel():
+            self._dense_relax_w = self.W
         emb_weight = data.get("emb_weight")
         self.emb = emb_weight.float().to(self.device) if emb_weight is not None else None
         self.ln_w = data["ln_f_weight"].float().to(self.device)
@@ -465,6 +468,7 @@ class CEEngine:
                     running_ids,
                     init_layer=init_layer,
                     phi=phi_state,
+                    need_teacher=False,
                 )
                 refresh_result = self.relax_context(refresh_ctx, refresh_args)
                 h = self.ce_hidden(refresh_result["m_star"])
@@ -473,7 +477,8 @@ class CEEngine:
                 refresh_count += 1
                 refresh_steps += int(refresh_result["steps"])
                 refresh_time_s += float(refresh_result["elapsed_s"])
-                refresh_cos.append(float(refresh_result["cos_ms_h"]))
+                if refresh_result["cos_ms_h"] is not None:
+                    refresh_cos.append(float(refresh_result["cos_ms_h"]))
 
         meta = {
             "refresh_interval": refresh_interval,
@@ -539,6 +544,37 @@ class CEEngine:
         prompt_ids = self.tok.encode(prompt, return_tensors="pt").to(self.device)
         return self.context_from_ids(prompt_ids, prompt=prompt)
 
+    def _analyze_prompt_ids(
+        self,
+        prompt_ids: torch.Tensor,
+        *,
+        candidate_layers: list[int],
+        need_teacher: bool,
+    ) -> tuple[torch.Tensor, dict[int, torch.Tensor], torch.Tensor | None]:
+        with torch.no_grad():
+            seq_len = prompt_ids.shape[1]
+            pos_ids = torch.arange(seq_len, device=prompt_ids.device).unsqueeze(0)
+            emb = self.model.transformer.wte(prompt_ids) + self.model.transformer.wpe(pos_ids)
+            phi_base = emb.squeeze(0).var(dim=0)
+
+            capture = sorted(set(int(layer) for layer in candidate_layers))
+            h = emb
+            captured: dict[int, torch.Tensor] = {}
+            target_layer = capture[-1] if capture else -1
+            if need_teacher:
+                target_layer = max(target_layer, self.n_layer - 1)
+
+            for layer_idx in range(target_layer + 1):
+                h = block_hidden(self.model.transformer.h[layer_idx], h)
+                if layer_idx in capture:
+                    captured[layer_idx] = h[:, -1, :].squeeze(0).clone()
+
+            h_true = None
+            if need_teacher:
+                h_true = self.model.transformer.ln_f(h)[:, -1, :]
+
+        return phi_base, captured, h_true
+
     def context_from_ids(
         self,
         prompt_ids: torch.Tensor,
@@ -546,16 +582,41 @@ class CEEngine:
         *,
         init_layer: int | None = None,
         phi: torch.Tensor | None = None,
+        need_teacher: bool = True,
     ) -> PromptContext:
-        with torch.no_grad():
-            h_true = self.model.transformer(prompt_ids).last_hidden_state[:, -1, :]
+        h_true = None
+        if need_teacher:
+            candidate_layers = (
+                [int(init_layer)]
+                if init_layer is not None
+                else sorted({
+                    0,
+                    self.n_layer // 4,
+                    self.n_layer // 2,
+                    (3 * self.n_layer) // 4,
+                    self.n_layer - 1,
+                })
+            )
+            phi_base, captured, h_true = self._analyze_prompt_ids(
+                prompt_ids,
+                candidate_layers=candidate_layers,
+                need_teacher=True,
+            )
+        elif init_layer is None:
+            raise ValueError("need_teacher=False requires a fixed init_layer")
+        else:
+            phi_base, captured, h_true = self._analyze_prompt_ids(
+                prompt_ids,
+                candidate_layers=[int(init_layer)],
+                need_teacher=False,
+            )
 
         layer_states: dict[int, tuple[torch.Tensor, torch.Tensor]] = {}
         layer_scores: dict[int, float] = {}
         if init_layer is not None:
             best_layer = int(init_layer)
-            m0, phi_base = get_initial_state(self.model, prompt_ids, init_layer=best_layer)
-            score = F.cosine_similarity(m0.unsqueeze(0), h_true).item()
+            m0 = captured[best_layer]
+            score = float("nan") if h_true is None else F.cosine_similarity(m0.unsqueeze(0), h_true).item()
             layer_states[best_layer] = (
                 m0,
                 phi_base if phi is None else phi.detach().float().to(self.device),
@@ -570,7 +631,7 @@ class CEEngine:
                 self.n_layer - 1,
             })
             for candidate_layer in candidates:
-                m0, phi_base = get_initial_state(self.model, prompt_ids, init_layer=candidate_layer)
+                m0 = captured[candidate_layer]
                 score = F.cosine_similarity(m0.unsqueeze(0), h_true).item()
                 layer_states[candidate_layer] = (m0, phi_base)
                 layer_scores[candidate_layer] = score
@@ -610,9 +671,12 @@ class CEEngine:
             noise_scale=args.noise_scale,
             seed=args.seed,
             w_eigvecs=self._get_w_eigvecs(args.metric_rank),
+            dense_w=self._dense_relax_w,
         )
         elapsed = time.time() - t0
-        cos_ms = F.cosine_similarity(m_star.unsqueeze(0), ctx.h_true).item()
+        cos_ms = None
+        if ctx.h_true is not None:
+            cos_ms = F.cosine_similarity(m_star.unsqueeze(0), ctx.h_true).item()
         phi_var = hist.get("phi_var")
         if phi_var:
             phi_updated = update_phi(ctx.phi, m_star, phi_var=m_star.new_tensor(phi_var))
@@ -707,7 +771,13 @@ class CEEngine:
         def run_standalone():
             refresh_args = None
             if args.standalone_refresh_interval > 0:
-                refresh_args = self._copy_args(args, steps=args.standalone_refresh_steps)
+                refresh_args = self._copy_args(
+                    args,
+                    steps=args.standalone_refresh_steps,
+                    cb_topk=args.standalone_refresh_cb_topk,
+                    metric_rank=args.standalone_refresh_metric_rank,
+                    noise_scale=args.standalone_refresh_noise_scale,
+                )
             text, token_ids, standalone_meta = self.standalone_generate(
                 ctx.prompt_ids,
                 relax_result["m_star"],
@@ -811,7 +881,10 @@ def main():
     ap.add_argument("--top-k", type=int, default=40)
     ap.add_argument("--repeat-penalty", type=float, default=3.0)
     ap.add_argument("--standalone-refresh-interval", type=int, default=2)
-    ap.add_argument("--standalone-refresh-steps", type=int, default=64)
+    ap.add_argument("--standalone-refresh-steps", type=int, default=48)
+    ap.add_argument("--standalone-refresh-cb-topk", type=int, default=128)
+    ap.add_argument("--standalone-refresh-metric-rank", type=int, default=0)
+    ap.add_argument("--standalone-refresh-noise-scale", type=float, default=0.0)
     ap.add_argument(
         "--residual",
         type=float,

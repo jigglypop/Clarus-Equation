@@ -224,6 +224,7 @@ def relax(
     noise_scale=1.0,
     seed=0,
     w_eigvecs=None,
+    dense_w=None,
 ):
     if isinstance(W, tuple):
         values, col_idx, row_ptr = W
@@ -261,6 +262,7 @@ def relax(
         metric_rank=metric_rank,
         backend=backend,
         seed=seed,
+        dense_w=dense_w,
     )
 
 

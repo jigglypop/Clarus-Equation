@@ -232,17 +232,24 @@ def _spmv_torch(
     col_idx: torch.Tensor,
     row_ptr: torch.Tensor,
     x: torch.Tensor,
+    *,
+    sparse_mat: torch.Tensor | None = None,
+    dense_w: torch.Tensor | None = None,
 ) -> torch.Tensor:
+    if dense_w is not None:
+        return dense_w @ x
     dim = x.numel()
-    sparse = torch.sparse_csr_tensor(
-        row_ptr.to(torch.int64),
-        col_idx.to(torch.int64),
-        values,
-        size=(dim, dim),
-        device=x.device,
-        dtype=x.dtype,
-        check_invariants=False,
-    )
+    sparse = sparse_mat
+    if sparse is None:
+        sparse = torch.sparse_csr_tensor(
+            row_ptr.to(torch.int64),
+            col_idx.to(torch.int64),
+            values,
+            size=(dim, dim),
+            device=x.device,
+            dtype=x.dtype,
+            check_invariants=False,
+        )
     return torch.sparse.mm(sparse, x.unsqueeze(1)).squeeze(1)
 
 
@@ -357,6 +364,7 @@ def _relax_packed_torch(
     anneal_ratio: float,
     noise_scale: float,
     seed: int,
+    dense_w: Optional[torch.Tensor] = None,
 ) -> Tuple[torch.Tensor, Dict[str, list[float]], int]:
     scale = float(m0.norm().item() or 1.0)
     m = m0 / scale
@@ -389,10 +397,21 @@ def _relax_packed_torch(
     best_m = m.clone()
     best_e = float("inf")
     tail_states: deque[torch.Tensor] = deque(maxlen=min(16, max_steps))
+    sparse_mat = None
+    if dense_w is None:
+        sparse_mat = torch.sparse_csr_tensor(
+            row_ptr.to(torch.int64),
+            col_idx.to(torch.int64),
+            values,
+            size=(m.numel(), m.numel()),
+            device=m.device,
+            dtype=m.dtype,
+            check_invariants=False,
+        )
 
     for k in range(max_steps):
         c_k = torch.norm(m - 2 * m1 + m2).item()
-        w_m = _spmv_torch(values, col_idx, row_ptr, m)
+        w_m = _spmv_torch(values, col_idx, row_ptr, m, sparse_mat=sparse_mat, dense_w=dense_w)
         grad = w_m + b_n + float(portal) * phi_n + (c_k * float(bypass)) * phi_n
 
         if codebook_n.numel():
@@ -427,7 +446,7 @@ def _relax_packed_torch(
         m = m + dm
         tail_states.append(m.detach().clone())
 
-        w_m_new = _spmv_torch(values, col_idx, row_ptr, m)
+        w_m_new = _spmv_torch(values, col_idx, row_ptr, m, sparse_mat=sparse_mat, dense_w=dense_w)
         e_total, (e_hop, e_bias, e_portal, e_cb) = _energy_parts_torch(
             m, w_m_new, b_n, phi_n, codebook_n,
             portal, beta, cb_w,
@@ -499,6 +518,7 @@ def relax_packed(
     metric_rank: int = 8,
     backend: str = "auto",
     seed: int = 0,
+    dense_w: Optional[torch.Tensor] = None,
 ) -> Tuple[torch.Tensor, Dict[str, list[float]], int]:
     codebook = codebook if codebook is not None else m0.new_empty((0, m0.numel()))
     metric_basis = metric_basis if metric_basis is not None else build_metric_basis(
@@ -604,6 +624,7 @@ def relax_packed(
         anneal_ratio,
         noise_scale,
         seed,
+        dense_w=dense_w,
     )
 
 
@@ -636,6 +657,7 @@ def relax(
         bypass=bypass,
         t_wake=t_wake,
         backend=backend,
+        dense_w=w if backend != "rust" else None,
         **kwargs,
     )
 
