@@ -1,6 +1,6 @@
 """Clarus Equation -- CE Field Theory Engine.
 
-Rust backend (sfe_core via PyO3) + PyTorch frontend + CUDA fused kernels.
+Rust backend (clarus/core via PyO3) + PyTorch frontend + CUDA fused kernels.
 """
 
 __version__ = "1.2.0"
@@ -30,3 +30,17 @@ try:
     HAS_CUDA_KERNELS = get_cuda_ops() is not None
 except ImportError:
     HAS_CUDA_KERNELS = False
+
+try:
+    from clarus.ce_ops import (
+        has_rust as ce_has_rust,
+        has_cuda as ce_has_cuda,
+        ce_backend,
+        pack_sparse as ce_pack_sparse,
+        build_metric_basis as ce_build_metric_basis,
+        codebook_pull as ce_codebook_pull,
+        relax as ce_relax,
+        relax_packed as ce_relax_packed,
+    )
+except ImportError:
+    pass

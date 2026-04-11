@@ -1,0 +1,109 @@
+{
+  "model": "skt/kogpt2-base-v2",
+  "device": "cpu",
+  "backend": "rust",
+  "d_model": 768,
+  "n_layers": 12,
+  "tau": 2.000009,
+  "dt": 0.01,
+  "codebook_k": 1024,
+  "metric_rank": 8,
+  "metric_params": {
+    "lambda0": 1.0,
+    "lambda_phi": 0.5,
+    "lambda_var": 0.25,
+    "noise_scale": 1.0
+  },
+  "inject_layer": 6,
+  "ce_strength": 0.3,
+  "memory_dense_kb": 2304.0,
+  "memory_sparse_kb": 243.1,
+  "constants": {
+    "portal": 0.031203,
+    "bypass": 0.489236,
+    "T_wake": 0.314798
+  },
+  "w_hop_sources": [
+    "Q@K^T (attention routing)",
+    "V@O (output pathway)",
+    "FFN (linearized GELU)"
+  ],
+  "prompts": [
+    {
+      "prompt": "대한민국의 수도는",
+      "best_init_layer": 9,
+      "init_layer_sweep": {
+        "0": 0.4387,
+        "3": 0.5849,
+        "6": 0.7648,
+        "9": 0.8697,
+        "11": 0.8427
+      },
+      "n_steps": 20,
+      "relax_time_s": 0.045,
+      "energy_start": -0.9374,
+      "energy_end": -0.9515,
+      "energy_best": -0.9515,
+      "energy_decomp": {
+        "hopfield": 0.3061,
+        "bias": -1.0412,
+        "portal": -0.0,
+        "codebook": -0.2164
+      },
+      "max_bypass_C": 0.07847,
+      "m_star_norm": 36.0214,
+      "cos_m0_h": 0.8697,
+      "cos_ms_h": 0.8624,
+      "oracle_cos": 0.9997,
+      "oracle_drift": 0.3922,
+      "geometry_compare": {
+        "cos_euclidean": 0.873,
+        "cos_riemann": 0.873,
+        "cos_gain": -0.0,
+        "oracle_drift_euclidean": 0.3922,
+        "oracle_drift_riemann": 0.3922,
+        "oracle_drift_gain": 0.0,
+        "top1_euclidean": {
+          "id": 5,
+          "token": ""
+        },
+        "top1_riemann": {
+          "id": 5,
+          "token": ""
+        }
+      },
+      "phi_norm": 9.5272,
+      "decode_direct": "대한민국의 수도는",
+      "decode_inject": "대한민국의 수도는▁",
+      "decode_multiround": "대한민국의 수도는",
+      "multiround_time_s": 0.25,
+      "multiround_phi_evolution": [
+        0.34,
+        0.53
+      ],
+      "decode_standard": "���������",
+      "energy_sample": [
+        -0.9374,
+        -0.9384,
+        -0.9397,
+        -0.9389,
+        -0.9386,
+        -0.939,
+        -0.9385,
+        -0.9391,
+        -0.9398,
+        -0.9407,
+        -0.9417,
+        -0.9431,
+        -0.9442,
+        -0.9453,
+        -0.9463,
+        -0.9474,
+        -0.9484,
+        -0.9494,
+        -0.9505,
+        -0.9515
+      ]
+    }
+  ]
+}

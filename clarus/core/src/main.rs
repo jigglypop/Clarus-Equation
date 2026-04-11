@@ -1,10 +1,10 @@
 use clap::{Parser, Subcommand};
 use indicatif::{ProgressBar, ProgressStyle};
-use sfe_core::engine::core::QCEngine;
-use sfe_core::engine::geometric::GeometricEngine;
-use sfe_core::engine::manifold::Manifold; // Trait import added
-use sfe_core::engine::qec::CE_PHASE_SCALE;
-use sfe_core::{run_pulse_optimizer, run_sweep_benchmark, IbmClient, CeController};
+use ce_core::engine::core::QCEngine;
+use ce_core::engine::geometric::GeometricEngine;
+use ce_core::engine::manifold::Manifold; // Trait import added
+use ce_core::engine::qec::CE_PHASE_SCALE;
+use ce_core::{run_pulse_optimizer, run_sweep_benchmark, IbmClient, CeController};
 use std::fs::File;
 use std::io::Write;
 use std::time::Instant;
@@ -263,7 +263,7 @@ fn main() {
 
                 for (label, pn, mn, lat) in &configs {
                     let mut env =
-                        sfe_core::engine::arc::ArcSimulationEnv::with_params(*pn, *mn, *lat);
+                        ce_core::engine::arc::ArcSimulationEnv::with_params(*pn, *mn, *lat);
                     let mut sn = 0.0_f64;
                     let mut sr = 0.0_f64;
                     let mut n = 0_usize;
@@ -294,7 +294,7 @@ fn main() {
             println!("모드: CE-ARC (3+1 ADM Coupled Cancellation) 시뮬레이션");
             println!("  결합 모델: 3+1 ADM + CE [R,K,Phi,Pi] 4D 결합 칼만");
 
-            let mut env = sfe_core::engine::arc::ArcSimulationEnv::new();
+            let mut env = ce_core::engine::arc::ArcSimulationEnv::new();
 
             let mut file = File::create(&output).unwrap();
             writeln!(file, "Step,TrueNoise,ResidualNoise").unwrap();
@@ -336,7 +336,7 @@ fn main() {
             println!("모드: CE 금융 시장 시뮬레이션 (Surfing Strategy)");
 
             use rand::Rng;
-            use sfe_core::engine::market::CeTradingBot;
+            use ce_core::engine::market::CeTradingBot;
 
             let initial_cash = 10_000.0;
             let mut bot = CeTradingBot::new(initial_cash);
@@ -394,7 +394,7 @@ fn main() {
             println!("  기간: {years}년 (Quarterly Data)");
 
             use rand::Rng;
-            use sfe_core::engine::market::MacroEconomy;
+            use ce_core::engine::market::MacroEconomy;
 
             let mut economy = MacroEconomy::new();
             let mut rng = rand::thread_rng();
@@ -513,7 +513,7 @@ fn main() {
             println!("   CE 결맞음 점수: {ce_score:.4}");
 
             println!("2. 반복 코드(Repetition Code) 시뮬레이션 (QEC 계층)...");
-            let res = sfe_core::engine::qec::simulate_repetition_code(
+            let res = ce_core::engine::qec::simulate_repetition_code(
                 distance, &pulse_seq, noise, steps, 50, 2000,
             );
 
@@ -550,7 +550,7 @@ fn main() {
             println!("   CE 결맞음 점수: {ce_score:.4}");
             println!("2. Surface Code(d=3) 시뮬레이션 (QEC 계층)...");
             let res =
-                sfe_core::engine::qec::simulate_surface_code_d3(&pulse_seq, noise, steps, 50, 2000);
+                ce_core::engine::qec::simulate_surface_code_d3(&pulse_seq, noise, steps, 50, 2000);
             println!("---------------------------------------------");
             println!("물리적 오류율 (p_phy): {:.6}", res.physical_error_rate);
             println!("논리적 오류율 (P_L):   {:.6}", res.logical_error_rate);
@@ -635,15 +635,15 @@ fn main() {
         }
         Commands::SuppressonScan => {
             println!("모드: 클라루스 보손 증거 스캔 및 분석");
-            sfe_core::run_suppresson_evidence_analysis();
+            ce_core::run_suppresson_evidence_analysis();
         }
         Commands::MultiModeScan => {
             println!("모드: 3-모드 클라루스 보손 Yukawa 스캔");
-            sfe_core::engine::suppresson_physics::run_multimode_yukawa_scan();
+            ce_core::engine::suppresson_physics::run_multimode_yukawa_scan();
         }
         Commands::ContinuousBounds => {
             println!("모드: 연속 스펙트럼 레이리 경계 스캔");
-            sfe_core::engine::suppresson_physics::run_continuous_ratio_bounds();
+            ce_core::engine::suppresson_physics::run_continuous_ratio_bounds();
         }
         Commands::Brain {
             size,
@@ -652,7 +652,7 @@ fn main() {
         } => {
             println!("모드: CE Brain 통합 엔진 (arc+core+geo+suppression)");
             println!("  장 크기: {size}, 스텝: {steps}");
-            let mut brain = sfe_core::BrainEngine::new(size);
+            let mut brain = ce_core::BrainEngine::new(size);
             let pb = ProgressBar::new(steps as u64);
             pb.set_style(
                 ProgressStyle::default_bar()

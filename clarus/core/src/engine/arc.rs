@@ -1,0 +1,455 @@
+use std::f64::consts::E;
+use rand::Rng;
+const R_MEAS_ERR: f64 = 1e-10;
+
+use std::collections::VecDeque;
+/// sin^2(theta_W) * cos^2(theta_W): electroweak mixing correction from 5-constant theory
+const DELTA: f64 = 0.17776;
+/// D_eff = d + delta: effective folding dimension
+const D_EFF: f64 = 3.17776;
+
+/// Error feedback measurement variance.
+/// Signal is computed from true state (noise-free); only staleness uncertainty remains.
+
+use crate::engine::constants::{CE, NW, D};
+
+    // (alpha_lapse, beta_damp, xi, m_phi, gamma_phi)
+fn epsilon2() -> f64 { CE.epsilon2 }
+fn f_factor() -> f64 { CE.f_factor }
+fn alpha_s() -> f64 { CE.alpha_s }
+fn delta() -> f64 { CE.delta }
+fn d_eff() -> f64 { CE.d_eff }
+fn alpha_em_mz() -> f64 { CE.alpha_em_mz }
+
+fn r_meas_err() -> f64 {
+    let alpha_0 = 1.0 / CE.alpha_inv_0;
+    alpha_0.powi(5)
+}
+
+fn ce_physics_params() -> (f64, f64, f64, f64, f64) {
+    let e = std::f64::consts::E;
+    let alpha_lapse = e;                              // ADM lapse = e (Euler number, one of {e,pi,i,1,0})
+    let xi = alpha_s().powf(D.recip());               // xi = alpha_s^(1/D), D=3
+    let beta_damp = (-1.0_f64).exp();                 // e^{-1}: CE survival kernel
+    let m_phi = 1.0;                                  // unit mass in CE normalization (= 1 from {1})
+    let gamma_phi = (-1.0_f64).exp();                 // e^{-1}: dissipation rate
+    (alpha_lapse, beta_damp, xi, m_phi, gamma_phi)
+}
+
+/// CE 3+1 state: [R, K, Phi, Pi] coupled through the Clarus field equation.
+/// R: Ricci scalar (spatial curvature)
+/// K: extrinsic curvature (geometry velocity, from ADM lapse)
+/// Phi: Clarus field amplitude
+/// Pi: field momentum
+///
+/// ADM + CE evolution:
+///   dR/dt  = -2*alpha*K          (ADM lapse coupling)
+///   dK/dt  = alpha*R/2 - beta*K + xi*Phi^2   (Raychaudhuri + CE restoring)
+///   dPhi/dt = Pi
+///   dPi/dt  = -(m^2 + xi*R)*Phi - gamma_phi*Pi   (field equation in curved bg)
+#[derive(Clone, Debug)]
+struct CeState {
+    x: [f64; 4],
+    p: [[f64; 4]; 4],
+    q: [[f64; 4]; 4],
+}
+
+impl CeState {
+    fn new(process_noise: f64, dt: f64) -> Self {
+        // noise in K per step: process_noise * U[-1,1] * sqrt(dt) * dt
+        // variance = process_noise^2 * dt^3 / 3
+        let p0 = NW;
+        let mut p = [[0.0; 4]; 4];
+        for i in 0..4 {
+            p[i][i] = p0;
+        }
+
+        let q_k = process_noise * process_noise * dt * dt * dt / 3.0;
+        let q_pi = q_k / (NW * NW);
+
+        let q_scale = NW;
+        let mut q = [[0.0; 4]; 4];
+        q[1][1] = q_k * q_scale;
+        q[3][3] = q_pi * q_scale;
+
+        Self {
+            x: [0.0; 4],
+            p,
+            q,
+        }
+    }
+
+    fn transition_matrix(&self, dt: f64, alpha_lapse: f64, beta_damp: f64,
+                         xi: f64, m_phi: f64, gamma_phi: f64) -> [[f64; 4]; 4] {
+        let r = self.x[0];
+        let kk = self.x[1];
+        let phi = self.x[2];
+        let xi_ew = delta() * xi;
+
+        // K' = K + (alpha*R/2 - beta*K + xi*Phi^2 + xi_ew*R*Phi)*dt
+        let dk_dr = (alpha_lapse / 2.0 + xi_ew * phi) * dt;
+        let dk_dk = 1.0 - beta_damp * dt;
+        let dk_dphi = (2.0 * xi * phi + xi_ew * r) * dt;
+
+        // Pi' = Pi + (-(m^2+xi*R+xi_ew*K)*Phi - gamma*Pi)*dt
+        let dpi_dr = -xi * phi * dt;
+        let dpi_dk = -xi_ew * phi * dt;
+        let dpi_dphi = -(m_phi * m_phi + xi * r + xi_ew * kk) * dt;
+        let dpi_dpi = 1.0 - gamma_phi * dt;
+
+        // R' = R + (-2*alpha*K')*dt
+        let dr_dr = 1.0 - 2.0 * alpha_lapse * dk_dr * dt;
+        let dr_dk = -2.0 * alpha_lapse * dk_dk * dt;
+        //   dPhi'/dR = dPi'/dR*dt
+        //   dPhi'/dK = 0
+        //   dPhi'/dPhi = 1 + dPi'/dPhi*dt
+        //   dPhi'/dPi = dPi'/dPi*dt
+        let dr_dphi = -2.0 * alpha_lapse * dk_dphi * dt;
+        //             R        K        Phi        Pi
+
+        // Phi' = Phi + Pi'*dt
+        let dphi_dr = dpi_dr * dt;
+        let dphi_dk = dpi_dk * dt;
+        let dphi_dphi = 1.0 + dpi_dphi * dt;
+        let dphi_dpi = dpi_dpi * dt;
+
+        [
+            [dr_dr,    dr_dk,   dr_dphi,   0.0      ],
+            [dk_dr,    dk_dk,   dk_dphi,   0.0      ],
+            [dphi_dr,  dphi_dk, dphi_dphi, dphi_dpi ],
+            [dpi_dr,   dpi_dk,  dpi_dphi,  dpi_dpi  ],
+        ]
+    }
+
+    fn predict(&mut self, dt: f64, alpha_lapse: f64, beta_damp: f64,
+               xi: f64, m_phi: f64, gamma_phi: f64) {
+        // Jacobian at OLD state (before evolution) -- EKF requires this
+        let a = self.transition_matrix(dt, alpha_lapse, beta_damp, xi, m_phi, gamma_phi);
+
+        let r = self.x[0];
+        let kk = self.x[1];
+        let phi = self.x[2];
+        let pi = self.x[3];
+        let xi_ew = delta() * xi;
+
+        let dk = alpha_lapse * r / 2.0 - beta_damp * kk + xi * phi * phi + xi_ew * r * phi;
+        let dpi = -(m_phi * m_phi + xi * r) * phi - gamma_phi * pi - xi_ew * kk * phi;
+
+        let k_new = kk + dk * dt;
+        let pi_new = pi + dpi * dt;
+
+        let r_new = r + (-2.0 * alpha_lapse * k_new) * dt;
+        let phi_new = phi + pi_new * dt;
+
+        self.x = [r_new, k_new, phi_new, pi_new];
+
+        // P = A * P * A^T + Q * q_factor
+        let mut ap = [[0.0_f64; 4]; 4];
+        for i in 0..4 {
+            for j in 0..4 {
+                for k in 0..4 {
+                    ap[i][j] += a[i][k] * self.p[k][j];
+                }
+            }
+        }
+
+        let q_factor = (-2.0 * xi * (d_eff() / 3.0) * self.x[0].abs()).exp();
+        let mut p_new = [[0.0_f64; 4]; 4];
+        for i in 0..4 {
+            for j in 0..4 {
+                for k in 0..4 {
+                    p_new[i][j] += ap[i][k] * a[j][k];
+                }
+                p_new[i][j] += self.q[i][j] * q_factor;
+            }
+        }
+
+        self.p = p_new;
+    }
+
+    /// General scalar Kalman update for observation z with H vector and noise r_meas.
+    fn update_observation(&mut self, z: f64, h: [f64; 4], r_meas: f64) {
+        let mut z_pred = 0.0;
+        for i in 0..4 {
+            z_pred += h[i] * self.x[i];
+        }
+
+        // S = H * P * H^T + R
+        let mut hph = 0.0_f64;
+        for i in 0..4 {
+            for j in 0..4 {
+                hph += h[i] * self.p[i][j] * h[j];
+            }
+        }
+        let s = hph + r_meas;
+        if s.abs() < 1e-20 {
+            return;
+        }
+        let s_inv = 1.0 / s;
+        let innovation = z - z_pred;
+
+        // K = P * H^T / S
+        let mut k = [0.0_f64; 4];
+        for i in 0..4 {
+            for j in 0..4 {
+                k[i] += self.p[i][j] * h[j];
+            }
+            k[i] *= s_inv;
+        }
+
+        for i in 0..4 {
+            self.x[i] += k[i] * innovation;
+        }
+
+        // P = (I - K*H) * P
+        let mut hp = [0.0_f64; 4];
+        for j in 0..4 {
+            for l in 0..4 {
+                hp[j] += h[l] * self.p[l][j];
+            }
+        }
+
+        for i in 0..4 {
+            for j in 0..4 {
+                self.p[i][j] -= k[i] * hp[j];
+            }
+        }
+
+        // Symmetrize + floor
+        for i in 0..4 {
+            for j in (i + 1)..4 {
+                let avg = 0.5 * (self.p[i][j] + self.p[j][i]);
+                self.p[i][j] = avg;
+                self.p[j][i] = avg;
+            }
+            if self.p[i][i] < 1e-15 {
+                self.p[i][i] = 1e-15;
+            }
+        }
+    }
+
+    fn predict_future(&self, t: f64, alpha_lapse: f64, beta_damp: f64,
+                      xi: f64, m_phi: f64, gamma_phi: f64) -> [f64; 4] {
+        let steps = (t / 0.001).ceil() as usize;
+        if steps == 0 {
+            return self.x;
+        }
+        let sub_dt = t / steps as f64;
+
+        let mut x = self.x;
+
+        for _ in 0..steps {
+            let xi_ew = delta() * xi;
+            let dk = alpha_lapse * x[0] / 2.0 - beta_damp * x[1] + xi * x[2] * x[2] + xi_ew * x[0] * x[2];
+            let dpi = -(m_phi * m_phi + xi * x[0]) * x[2] - gamma_phi * x[3] - xi_ew * x[1] * x[2];
+
+            x[1] += dk * sub_dt;
+            x[3] += dpi * sub_dt;
+
+            x[0] += (-2.0 * alpha_lapse * x[1]) * sub_dt;
+            x[2] += x[3] * sub_dt;
+        }
+
+        x
+    }
+}
+
+/// CE 3+1 ARC Controller
+pub struct CeArcController {
+    pub alpha: f64,
+    pub beta: f64,
+    pub latency: usize,
+
+    state: CeState,
+    pub r_meas: f64,
+    prev_z: Option<f64>,
+
+    alpha_lapse: f64,
+    beta_damp: f64,
+    xi: f64,
+    m_phi: f64,
+    gamma_phi: f64,
+}
+
+impl CeArcController {
+    pub fn new(alpha: f64, beta: f64, latency: usize,
+               process_noise: f64, measure_noise: f64) -> Self {
+        let (alpha_lapse, beta_damp, xi, m_phi, gamma_phi) = ce_physics_params();
+        let dt = 0.01;
+
+        let r_meas = measure_noise * measure_noise / D;
+
+        Self {
+            alpha,
+            beta,
+            latency,
+            state: CeState::new(process_noise, dt),
+            r_meas,
+            prev_z: None,
+            alpha_lapse,
+            beta_damp,
+            xi,
+            m_phi,
+            gamma_phi,
+        }
+    }
+
+    pub fn step(&mut self, measured_r: f64, dt: f64) -> f64 {
+        self.state.predict(dt, self.alpha_lapse, self.beta_damp,
+                           self.xi, self.m_phi, self.gamma_phi);
+
+        let r_meas = self.r_meas * (-2.0 * self.xi * (d_eff() / 3.0) * self.state.x[0].abs()).exp();
+        self.state.update_observation(measured_r, [1.0, 0.0, 0.0, 0.0], r_meas);
+
+        // Obs 2: dR/dt = -2*alpha*K (velocity from forward difference)
+        if let Some(prev) = self.prev_z {
+            let dr_dt = (measured_r - prev) / dt;
+            let h1 = -2.0 * self.alpha_lapse;
+            let r_meas_vel = NW * self.r_meas / (dt * dt);
+            self.state.update_observation(dr_dt, [0.0, h1, 0.0, 0.0], r_meas_vel);
+        }
+        self.prev_z = Some(measured_r);
+
+        let lookahead = self.latency as f64 * dt;
+        let x_future = self.state.predict_future(
+            lookahead, self.alpha_lapse, self.beta_damp,
+            self.xi, self.m_phi, self.gamma_phi,
+        );
+
+        -(self.alpha * x_future[0] + self.beta * x_future[1])
+    }
+
+    pub fn update_error(&mut self, error_signal: f64, _r_meas_err: f64) {
+        self.state.update_observation(
+            error_signal,
+            [self.alpha, self.beta, 0.0, 0.0],
+            r_meas_err(),
+        );
+    }
+
+    pub fn mode_energies(&self) -> Vec<f64> {
+        vec![
+            self.state.x[0] * self.state.x[0],
+            self.state.x[2] * self.state.x[2],
+        ]
+    }
+
+    pub fn total_estimation_uncertainty(&self) -> f64 {
+        self.state.p[0][0]
+    }
+
+    pub fn estimated_state(&self) -> [f64; 4] {
+        self.state.x
+    }
+}
+
+/// Simulation: 3+1 CE coupled dynamics
+pub struct ArcSimulationEnv {
+    true_state: [f64; 4],
+    process_noise: f64,
+    measure_noise: f64,
+
+    alpha_lapse: f64,
+    beta_damp: f64,
+    xi: f64,
+    m_phi: f64,
+    gamma_phi: f64,
+
+    pub controller: CeArcController,
+    pulse_queue: VecDeque<f64>,
+    prev_residual: f64,
+    prev_delayed_pulse: f64,
+}
+
+impl Default for ArcSimulationEnv {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl ArcSimulationEnv {
+    pub fn new() -> Self {
+        Self::with_params(0.08, 0.005, 2)
+    }
+
+    pub fn with_params(process_noise: f64, measure_noise: f64, latency: usize) -> Self {
+        // Initial: R=1.0, K=0.3, Phi=0.5, Pi=0.0
+        let true_state = [1.0, 0.3, 0.5, 0.0];
+
+        let (alpha_lapse, beta_damp, xi, m_phi, gamma_phi) = ce_physics_params();
+
+        let mut env = Self {
+            true_state,
+            process_noise,
+            measure_noise,
+            alpha_lapse,
+            beta_damp,
+            xi,
+            m_phi,
+            gamma_phi,
+            controller: CeArcController::new(1.0, alpha_s(), latency, process_noise, measure_noise),
+            pulse_queue: VecDeque::with_capacity(latency),
+            prev_residual: 0.0,
+            prev_delayed_pulse: 0.0,
+        };
+
+        for _ in 0..latency {
+            env.pulse_queue.push_back(0.0);
+        }
+
+        env
+    }
+
+    pub fn step(&mut self, dt: f64) -> (f64, f64) {
+        let mut rng = rand::thread_rng();
+
+        let r = self.true_state[0];
+        let k = self.true_state[1];
+        let phi = self.true_state[2];
+        let pi = self.true_state[3];
+
+        let noise_k: f64 = rng.gen_range(-1.0..1.0);
+        let noise_pi: f64 = rng.gen_range(-1.0..1.0);
+
+        let xi_ew = delta() * self.xi;
+        let noise_suppression = (-self.xi * (d_eff() / 3.0) * r.abs()).exp();
+
+        let dk = self.alpha_lapse * r / 2.0 - self.beta_damp * k
+            + self.xi * phi * phi + xi_ew * r * phi
+            + self.process_noise * noise_k * dt.sqrt() * noise_suppression;
+        let dpi = -(self.m_phi * self.m_phi + self.xi * r) * phi
+            - self.gamma_phi * pi - xi_ew * k * phi
+            + self.process_noise * 0.5 * noise_pi * dt.sqrt() * noise_suppression;
+
+        let k_new = k + dk * dt;
+        let pi_new = pi + dpi * dt;
+
+        let r_new = r + (-2.0 * self.alpha_lapse * k_new) * dt;
+        let phi_new = phi + pi_new * dt;
+
+        self.true_state = [r_new, k_new, phi_new, pi_new];
+
+        let actual_noise_influence =
+            self.controller.alpha * r_new + self.controller.beta * k_new;
+
+        let meas_noise: f64 = rng.gen_range(-1.0..1.0);
+        let curvature_suppression = (-self.xi * (d_eff() / 3.0) * r_new.abs()).exp();
+        let measured_r = r_new + self.measure_noise * meas_noise * curvature_suppression;
+
+        // Feed back previous residual as error observation before controller step
+        let error_signal = self.prev_residual - self.prev_delayed_pulse;
+        self.controller.update_error(error_signal, r_meas_err());
+
+        let new_pulse = self.controller.step(measured_r, dt);
+
+        self.pulse_queue.push_back(new_pulse);
+        let delayed_pulse = self.pulse_queue.pop_front().unwrap_or(0.0);
+
+        let residual = actual_noise_influence + delayed_pulse;
+
+        self.prev_residual = residual;
+        self.prev_delayed_pulse = delayed_pulse;
+
+        (actual_noise_influence, residual)
+    }
+}

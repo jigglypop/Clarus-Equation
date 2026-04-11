@@ -99,6 +99,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "ce_core"
+version = "1.1.0"
+dependencies = [
+ "clap",
+ "csv",
+ "indicatif",
+ "ndarray",
+ "numpy",
+ "pyo3",
+ "rand",
+ "rand_distr",
+ "rayon",
+ "reqwest",
+ "rustfft",
+ "serde",
+ "serde_json",
+ "tokio",
+]
+
+[[package]]
 name = "cfg-if"
 version = "1.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1180,26 +1200,6 @@ dependencies = [
  "itoa",
  "ryu",
  "serde",
-]
-
-[[package]]
-name = "sfe_core"
-version = "1.1.0"
-dependencies = [
- "clap",
- "csv",
- "indicatif",
- "ndarray",
- "numpy",
- "pyo3",
- "rand",
- "rand_distr",
- "rayon",
- "reqwest",
- "rustfft",
- "serde",
- "serde_json",
- "tokio",
 ]
 
 [[package]]

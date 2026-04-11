@@ -32,7 +32,7 @@ requires = ["maturin>=1.5,<2"]
 build-backend = "maturin"
 
 [tool.maturin]
-manifest-path = "sfe_core/Cargo.toml"
+manifest-path = "clarus/core/Cargo.toml"
 python-source = "."
 module-name = "clarus._rust"
 features = ["python"]

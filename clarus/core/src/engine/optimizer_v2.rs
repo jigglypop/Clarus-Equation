@@ -1,0 +1,401 @@
+use crate::engine::filter::FilterFunction;
+use crate::engine::optimizer::evaluate_sequence_with_pool;
+use std::f64::consts::PI;
+
+#[derive(Clone, Debug)]
+pub struct HardwareConstraints {
+    pub min_first_pulse: f64,
+    pub min_interval: f64,
+    pub max_last_pulse: f64,
+}
+
+impl Default for HardwareConstraints {
+    fn default() -> Self {
+        Self {
+            min_first_pulse: 0.10,
+            min_interval: 0.05,
+            max_last_pulse: 0.98,
+        }
+    }
+}
+
+pub struct CeOptimizerV2 {
+    pub beta: f64,
+    pub constraints: HardwareConstraints,
+}
+
+impl CeOptimizerV2 {
+    pub fn new(beta: f64) -> Self {
+        Self {
+            beta,
+            constraints: HardwareConstraints::default(),
+        }
+    }
+
+    pub fn new_with_constraints(beta: f64, constraints: HardwareConstraints) -> Self {
+        Self { beta, constraints }
+    }
+
+    fn initialize_feasible(&self, n_pulses: usize) -> Vec<f64> {
+        let mut seq: Vec<f64> = (1..=n_pulses)
+            .map(|j| {
+                ((j as f64 * PI) / (2.0 * n_pulses as f64 + 2.0))
+                    .sin()
+                    .powi(2)
+            })
+            .collect();
+        seq.sort_by(|a, b| a.partial_cmp(b).unwrap());
+
+        if !self.is_feasible(&seq) {
+            seq = self.project_to_feasible(seq);
+        }
+
+        seq
+    }
+
+    /// 수치적 구배 계산 (Numerical Gradient for Filter Function)
+    fn compute_gradient(
+        &self,
+        seq: &[f64],
+        spectrum_fn: &impl Fn(f64) -> f64,
+        duration: f64,
+    ) -> Vec<f64> {
+        let n = seq.len();
+        let mut grad = vec![0.0; n];
+        let eps = 1e-5;
+
+        // 현재 점수 계산
+        let ff_curr = FilterFunction::compute(seq, duration, 512);
+        let score_curr = -ff_curr.integrate_with_spectrum(spectrum_fn);
+
+        for i in 0..n {
+            let mut cand = seq.to_vec();
+            cand[i] += eps;
+            // 미소 변동
+
+            let ff_cand = FilterFunction::compute(&cand, duration, 512);
+            let score_cand = -ff_cand.integrate_with_spectrum(spectrum_fn);
+
+            grad[i] = (score_cand - score_curr) / eps;
+        }
+
+        grad
+    }
+
+    /// 리만 기하학적 최적화 (Riemannian Gradient Descent)
+    /// 8장 이론의 Reality_Stone 개념 적용: 다양체(Manifold) 위에서의 구배 하강
+    pub fn optimize_riemannian(
+        &self,
+        n_pulses: usize,
+        spectrum_fn: impl Fn(f64) -> f64 + Send + Sync,
+    ) -> Vec<f64> {
+        let mut seq = self.initialize_feasible(n_pulses);
+        let duration = 100.0;
+
+        let mut step_size = 0.01;
+        let min_step = 1e-6;
+        let max_iter = 200;
+
+        for _iter in 0..max_iter {
+            if step_size < min_step {
+                break;
+            }
+
+            // 1. 리만 구배 근사 (유클리드 구배 계산)
+            let grad = self.compute_gradient(&seq, &spectrum_fn, duration);
+
+            // 2. 접공간 업데이트 (Tangent Space Step)
+            let mut new_seq = seq.clone();
+            let mut norm_grad = 0.0;
+            for g in &grad {
+                norm_grad += g * g;
+            }
+            norm_grad = norm_grad.sqrt();
+
+            if norm_grad < 1e-9 {
+                break;
+            }
+
+            for i in 0..n_pulses {
+                new_seq[i] += step_size * grad[i] / norm_grad; // 정규화된 구배 방향 이동
+            }
+
+            // 3. Retraction (다양체 위로 투영)
+            new_seq.sort_by(|a, b| a.partial_cmp(b).unwrap());
+            if !self.is_feasible(&new_seq) {
+                new_seq = self.project_to_feasible(new_seq);
+            }
+
+            // 4. 라인 서치 (Line Search)와 유사한 수락 조건
+            let ff_prev = FilterFunction::compute(&seq, duration, 512);
+            let score_prev = -ff_prev.integrate_with_spectrum(&spectrum_fn);
+
+            let ff_new = FilterFunction::compute(&new_seq, duration, 512);
+            let score_new = -ff_new.integrate_with_spectrum(&spectrum_fn);
+
+            if score_new > score_prev {
+                seq = new_seq;
+                step_size *= 1.05; // 가속
+            } else {
+                step_size *= 0.5; // 감속
+            }
+        }
+
+        seq
+    }
+
+    fn is_feasible(&self, seq: &[f64]) -> bool {
+        if seq.is_empty() {
+            return true;
+        }
+
+        if seq[0] < self.constraints.min_first_pulse {
+            return false;
+        }
+
+        for i in 0..seq.len() - 1 {
+            if seq[i + 1] - seq[i] < self.constraints.min_interval {
+                return false;
+            }
+        }
+
+        if let Some(&last) = seq.last() {
+            if last > self.constraints.max_last_pulse {
+                return false;
+            }
+        }
+
+        true
+    }
+
+    fn project_to_feasible(&self, mut seq: Vec<f64>) -> Vec<f64> {
+        if seq.is_empty() {
+            return seq;
+        }
+
+        // Stack Overflow 방지를 위한 반복문 구조 변경 (최대 10회 재시도)
+        for _ in 0..10 {
+            seq.sort_by(|a, b| a.partial_cmp(b).unwrap());
+
+            // 1. 첫 펄스 보정
+            seq[0] = seq[0].max(self.constraints.min_first_pulse);
+
+            // 2. 간격 보정 (밀어내기)
+            let mut interval_violated = false;
+            for i in 0..seq.len() - 1 {
+                if seq[i + 1] - seq[i] < self.constraints.min_interval {
+                    seq[i + 1] = seq[i] + self.constraints.min_interval;
+                    interval_violated = true;
+                }
+            }
+
+            // 3. 마지막 펄스 체크 및 스케일링
+            let mut range_violated = false;
+            if let Some(&last) = seq.last() {
+                if last > self.constraints.max_last_pulse {
+                    let scale = self.constraints.max_last_pulse / last;
+                    for x in seq.iter_mut() {
+                        *x *= scale;
+                    }
+                    range_violated = true;
+                }
+            }
+
+            if !interval_violated && !range_violated {
+                return seq;
+            }
+        }
+
+        // 수렴하지 못한 경우 안전장치: 마지막으로 강제 스케일링만 하고 반환
+        if let Some(&last) = seq.last() {
+            if last > self.constraints.max_last_pulse {
+                let scale = self.constraints.max_last_pulse / last;
+                for x in seq.iter_mut() {
+                    *x *= scale;
+                }
+            }
+        }
+
+        seq
+    }
+
+    fn project_single_move(&self, seq: &[f64], idx: usize, new_val: f64) -> f64 {
+        let mut val = new_val;
+
+        if idx == 0 {
+            val = val.max(self.constraints.min_first_pulse);
+        }
+
+        if idx > 0 {
+            val = val.max(seq[idx - 1] + self.constraints.min_interval);
+        }
+
+        if idx < seq.len() - 1 {
+            val = val.min(seq[idx + 1] - self.constraints.min_interval);
+        }
+
+        val = val.clamp(0.0, self.constraints.max_last_pulse);
+
+        val
+    }
+
+    pub fn optimize_constrained(
+        &self,
+        steps: usize,
+        n_pulses: usize,
+        noise_level: f64,
+        noise_pool: &[Vec<f64>],
+    ) -> Vec<f64> {
+        let mut seq = self.initialize_feasible(n_pulses);
+
+        let best_idx: Vec<usize> = seq
+            .iter()
+            .map(|&t| (t * steps as f64).round() as usize)
+            .collect();
+        let mut best_score = evaluate_sequence_with_pool(&best_idx, noise_level, noise_pool);
+
+        let mut step_size = 0.02;
+        let min_step = 1e-3;
+        let max_iterations = 200;
+        let mut iteration = 0;
+
+        while step_size > min_step && iteration < max_iterations {
+            let mut improved = false;
+
+            for i in 0..n_pulses {
+                for dir in [-1.0, 1.0] {
+                    let mut cand = seq.clone();
+                    let new_val = cand[i] + dir * step_size;
+
+                    cand[i] = self.project_single_move(&cand, i, new_val);
+
+                    if (cand[i] - seq[i]).abs() < 1e-6 {
+                        continue;
+                    }
+
+                    cand.sort_by(|a, b| a.partial_cmp(b).unwrap());
+
+                    if !self.is_feasible(&cand) {
+                        cand = self.project_to_feasible(cand);
+                    }
+
+                    let cand_idx: Vec<usize> = cand
+                        .iter()
+                        .map(|&t| (t * steps as f64).round() as usize)
+                        .collect();
+
+                    let score = evaluate_sequence_with_pool(&cand_idx, noise_level, noise_pool);
+
+                    if score > best_score {
+                        best_score = score;
+                        seq = cand;
+                        improved = true;
+                        break;
+                    }
+                }
+
+                if improved {
+                    break;
+                }
+            }
+
+            if !improved {
+                step_size *= 0.7;
+            }
+
+            iteration += 1;
+        }
+
+        seq
+    }
+
+    pub fn optimize_with_filter_function(
+        &self,
+        _steps: usize,
+        n_pulses: usize,
+        spectrum_fn: impl Fn(f64) -> f64 + Send + Sync,
+    ) -> Vec<f64> {
+        let mut seq = self.initialize_feasible(n_pulses);
+
+        let duration = 100.0;
+        let ff = FilterFunction::compute(&seq, duration, 512);
+        let mut best_score = -ff.integrate_with_spectrum(&spectrum_fn);
+
+        let mut step_size = 0.02;
+        let min_step = 1e-3;
+
+        while step_size > min_step {
+            let mut improved = false;
+
+            for i in 0..n_pulses {
+                for dir in [-1.0, 1.0] {
+                    let mut cand = seq.clone();
+                    let new_val = cand[i] + dir * step_size;
+
+                    cand[i] = self.project_single_move(&cand, i, new_val);
+
+                    if (cand[i] - seq[i]).abs() < 1e-6 {
+                        continue;
+                    }
+
+                    cand.sort_by(|a, b| a.partial_cmp(b).unwrap());
+
+                    if !self.is_feasible(&cand) {
+                        cand = self.project_to_feasible(cand);
+                    }
+
+                    let ff_cand = FilterFunction::compute(&cand, duration, 512);
+                    let score = -ff_cand.integrate_with_spectrum(&spectrum_fn);
+
+                    if score > best_score {
+                        best_score = score;
+                        seq = cand;
+                        improved = true;
+                        break;
+                    }
+                }
+            }
+
+            if !improved {
+                step_size *= 0.7;
+            }
+        }
+
+        seq
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::engine::noise::PinkNoiseGenerator;
+
+    #[test]
+    fn test_feasibility_projection() {
+        let optimizer = CeOptimizerV2::new(50.0);
+
+        let infeasible = vec![0.05, 0.06, 0.99];
+        let feasible = optimizer.project_to_feasible(infeasible);
+
+        assert!(optimizer.is_feasible(&feasible));
+        assert!(feasible[0] >= 0.10);
+        assert!(feasible[1] - feasible[0] >= 0.05);
+    }
+
+    #[test]
+    fn test_constrained_optimization() {
+        let optimizer = CeOptimizerV2::new(50.0);
+
+        let mut gen = PinkNoiseGenerator::new_with_params(2000, 0.8, 1.5);
+        let mut noise_pool = Vec::with_capacity(50);
+        for _ in 0..50 {
+            noise_pool.push(gen.generate_new());
+        }
+
+        let seq = optimizer.optimize_constrained(2000, 8, 0.15, &noise_pool);
+
+        assert!(optimizer.is_feasible(&seq));
+        assert_eq!(seq.len(), 8);
+        assert!(seq[0] >= 0.10);
+    }
+}

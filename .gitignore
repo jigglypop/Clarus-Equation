@@ -1,5 +1,5 @@
-/sfe_core/target/
-/sfe_core/*.csv
+/clarus/core/target/
+/clarus/core/*.csv
 /.venv/
 .env
 /data/

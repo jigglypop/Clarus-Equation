@@ -1,0 +1,140 @@
+{
+  "engine": "skt_kogpt2-base-v2.ce.pt",
+  "model_name": "skt/kogpt2-base-v2",
+  "device": "cpu",
+  "backend": "torch",
+  "decode_mode": "standalone",
+  "tokens": 6,
+  "steps": 180,
+  "temperature": 0.9,
+  "memory": {
+    "W_dense_MB": 2.25,
+    "W_packed_MB": 4.502933502197266,
+    "W_layers_MB": 27.0,
+    "Embedding_MB": 150.0,
+    "PQ_MB": 0.0,
+    "CloneArtifact_MB": 238.7314453125,
+    "PrevProj_MB": 2.25,
+    "StateProj_MB": 2.25,
+    "TokenHead_MB": 2.489227294921875,
+    "ln_f_KB": 6.0,
+    "runtime_core_MB": 11.49802017211914,
+    "runtime_total_MB": 161.49802017211914,
+    "file_total_MB": 424.9765319824219,
+    "model_MB": 477.462890625
+  },
+  "prompts": [
+    {
+      "prompt": "서울의 교통은",
+      "best_init_layer": 11,
+      "init_layer_sweep": {
+        "0": 0.4868,
+        "3": 0.5685,
+        "6": 0.6725,
+        "9": 0.7382,
+        "11": 0.807
+      },
+      "mode": "standalone",
+      "cos_m0_h": 0.807,
+      "cos_ms_h": 0.5318,
+      "phi_norm": {
+        "initial": 1.34,
+        "updated": 0.6845
+      },
+      "relax_steps": 180,
+      "relax_time_s": 0.368,
+      "energy_start": 5.0327,
+      "energy_end": -0.2782,
+      "outputs": {
+        "standalone": "서울의 교통은물론 김졌고근을 추접한"
+      },
+      "multiround_phi_norms": [],
+      "multiround_energies": [],
+      "gpt2_reference": null
+    },
+    {
+      "prompt": "인공지능의 미래는",
+      "best_init_layer": 9,
+      "init_layer_sweep": {
+        "0": 0.3766,
+        "3": 0.5396,
+        "6": 0.6986,
+        "9": 0.8048,
+        "11": 0.8027
+      },
+      "mode": "standalone",
+      "cos_m0_h": 0.8048,
+      "cos_ms_h": 0.5574,
+      "phi_norm": {
+        "initial": 0.4518,
+        "updated": 0.231
+      },
+      "relax_steps": 180,
+      "relax_time_s": 0.33,
+      "energy_start": 4.7133,
+      "energy_end": -0.2774,
+      "outputs": {
+        "standalone": "인공지능의 미래는우리 인간공학화바위천지"
+      },
+      "multiround_phi_norms": [],
+      "multiround_energies": [],
+      "gpt2_reference": null
+    },
+    {
+      "prompt": "맛있는 음식을",
+      "best_init_layer": 11,
+      "init_layer_sweep": {
+        "0": 0.4982,
+        "3": 0.5952,
+        "6": 0.685,
+        "9": 0.7651,
+        "11": 0.8264
+      },
+      "mode": "standalone",
+      "cos_m0_h": 0.8264,
+      "cos_ms_h": 0.5644,
+      "phi_norm": {
+        "initial": 1.3671,
+        "updated": 0.6983
+      },
+      "relax_steps": 180,
+      "relax_time_s": 0.337,
+      "energy_start": 4.6907,
+      "energy_end": -0.2711,
+      "outputs": {
+        "standalone": "맛있는 음식을먹 즐겨 마음 마시다가깁"
+      },
+      "multiround_phi_norms": [],
+      "multiround_energies": [],
+      "gpt2_reference": null
+    },
+    {
+      "prompt": "한국의 역사에서",
+      "best_init_layer": 9,
+      "init_layer_sweep": {
+        "0": 0.4831,
+        "3": 0.5723,
+        "6": 0.7156,
+        "9": 0.7987,
+        "11": 0.7802
+      },
+      "mode": "standalone",
+      "cos_m0_h": 0.7987,
+      "cos_ms_h": 0.5412,
+      "phi_norm": {
+        "initial": 1.2524,
+        "updated": 0.6397
+      },
+      "relax_steps": 180,
+      "relax_time_s": 0.3364,
+      "energy_start": 4.7892,
+      "energy_end": -0.2847,
+      "outputs": {
+        "standalone": "한국의 역사에서\n 가장 추 중요한 사건이었다.\n 사건은"
+      },
+      "multiround_phi_norms": [],
+      "multiround_energies": [],
+      "gpt2_reference": null
+    }
+  ]
+}

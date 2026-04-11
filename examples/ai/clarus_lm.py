@@ -8,7 +8,7 @@ Transformer에 대한 CE 수정 4가지:
 
 Backend dispatch (auto):
   CUDA  -- fused kernels (training + inference)
-  Rust  -- sfe_core via PyO3 (CPU training/inference)
+  Rust  -- clarus/core via PyO3 (CPU training/inference)
   Torch -- pure PyTorch fallback
 
 Reference: docs/6_뇌/agi.md
