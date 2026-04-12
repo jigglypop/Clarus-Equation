@@ -16,3 +16,16 @@ data/*
 data/**
 data
 data/**/*
+# Outputs and models
+*.json
+*.pt
+*.pth
+*.csv
+
+# Python caches
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Rust artifacts
+target/

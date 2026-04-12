@@ -246,37 +246,52 @@ fn symmetric_eigen(a: &Array2<f32>) -> (Array1<f32>, Array2<f32>) {
     let mut mat = a.clone();
     let mut vecs = Array2::<f32>::eye(n);
 
-    for _ in 0..100 {
-        let mut off_diag = 0.0f32;
+    let diag_norm: f32 = (0..n).map(|i| mat[[i, i]] * mat[[i, i]]).sum::<f32>().sqrt().max(1e-30);
+    let rel_tol = 1e-7 * diag_norm;
+    let max_sweeps = n.max(30) * 5;
+
+    for sweep in 0..max_sweeps {
+        let mut off_diag_sq = 0.0f32;
         for i in 0..n {
             for j in (i + 1)..n {
-                off_diag += mat[[i, j]].abs();
+                off_diag_sq += 2.0 * mat[[i, j]] * mat[[i, j]];
             }
         }
-        if off_diag < 1e-10 {
+        if off_diag_sq.sqrt() < rel_tol {
             break;
         }
+
+        // Adaptive threshold: classical Jacobi with threshold decay
+        let threshold = if sweep < 4 {
+            0.2 * off_diag_sq.sqrt() / (n * n) as f32
+        } else {
+            0.0
+        };
 
         for p in 0..n {
             for q in (p + 1)..n {
                 let apq = mat[[p, q]];
-                if apq.abs() < 1e-12 {
+                if apq.abs() < threshold {
                     continue;
                 }
-                let tau = (mat[[q, q]] - mat[[p, p]]) / (2.0 * apq);
-                let t = if tau.abs() > 1e12 {
-                    1.0 / (2.0 * tau)
+                let diff = mat[[q, q]] - mat[[p, p]];
+                let t = if diff.abs() < 1e-30 * apq.abs() {
+                    1.0_f32.copysign(apq / diff.abs().max(1e-30))
                 } else {
-                    let sign = if tau >= 0.0 { 1.0 } else { -1.0 };
-                    sign / (tau.abs() + (1.0 + tau * tau).sqrt())
+                    let tau = diff / (2.0 * apq);
+                    if tau.abs() > 1e12 {
+                        1.0 / (2.0 * tau)
+                    } else {
+                        let sign = if tau >= 0.0 { 1.0 } else { -1.0 };
+                        sign / (tau.abs() + (1.0 + tau * tau).sqrt())
+                    }
                 };
                 let c = 1.0 / (1.0 + t * t).sqrt();
                 let s = t * c;
+                let rho = s / (1.0 + c);
 
-                let app = mat[[p, p]];
-                let aqq = mat[[q, q]];
-                mat[[p, p]] = app - t * apq;
-                mat[[q, q]] = aqq + t * apq;
+                mat[[p, p]] -= t * apq;
+                mat[[q, q]] += t * apq;
                 mat[[p, q]] = 0.0;
                 mat[[q, p]] = 0.0;
 
@@ -286,17 +301,17 @@ fn symmetric_eigen(a: &Array2<f32>) -> (Array1<f32>, Array2<f32>) {
                     }
                     let rp = mat[[r, p]];
                     let rq = mat[[r, q]];
-                    mat[[r, p]] = c * rp - s * rq;
+                    mat[[r, p]] = rp - s * (rq + rho * rp);
                     mat[[p, r]] = mat[[r, p]];
-                    mat[[r, q]] = s * rp + c * rq;
+                    mat[[r, q]] = rq + s * (rp - rho * rq);
                     mat[[q, r]] = mat[[r, q]];
                 }
 
                 for r in 0..n {
                     let vp = vecs[[r, p]];
                     let vq = vecs[[r, q]];
-                    vecs[[r, p]] = c * vp - s * vq;
-                    vecs[[r, q]] = s * vp + c * vq;
+                    vecs[[r, p]] = vp - s * (vq + rho * vp);
+                    vecs[[r, q]] = vq + s * (vp - rho * vq);
                 }
             }
         }

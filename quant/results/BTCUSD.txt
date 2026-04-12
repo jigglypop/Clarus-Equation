@@ -1,0 +1,100 @@
+=== Clarus Stability Quant ===
+
+--- CE Quant Constants ---
+  alpha_total  = 0.159155
+  alpha_s      = 0.117859
+  alpha_w      = 0.033543
+  alpha_em(MZ) = 0.007753
+  sin2_tw      = 0.231141
+  D_eff        = 3.177715
+  epsilon^2    = 0.048649
+  Omega_b      = 0.048649
+  Omega_Lambda = 0.690505
+  Omega_DM     = 0.260846
+  R_dark       = 0.377761
+  rho_contract = 0.154593
+  epsilon_obs  = 0.381010
+  F_factor     = 1.374523
+
+Loading data: data/BTCUSD.csv
+
+Bars loaded: 1827
+Period: 2021-04-12 ~ 2026-04-12
+Price: 59893.45 -> 70915.80
+
+Strategy                  Return%   Sharpe  Sortino   Calmar   MaxDD%  Utility     Win%    Whip%    HoldD     Turn   Trades
+----------------------------------------------------------------------------------------------------------------------------------
+BuyAndHold                 +18.40    0.284    0.291    0.031    76.63    0.299      0.0      0.0      0.0     0.00        0
+StabilityTrend              +0.00    0.000    0.000    0.000     0.00    0.250      0.0      0.0      0.0     0.00        0
+StabilityMeanRevert         +0.00    0.000    0.000    0.000     0.00    0.250      0.0      0.0      0.0     0.00        0
+----------------------------------------------------------------------------------------------------------------------------------
+
+=== Clarus Stability Benchmark ===
+
+  StabilityTrend vs BuyAndHold:
+    Return: +0.00% vs +18.40% (WORSE)
+    Sharpe: 0.000 vs 0.284 (WORSE)
+    MaxDD:  0.00% vs 76.63% (BETTER)
+    Whipsaw: 0.0% vs 0.0% (BETTER)
+    Turnover: 0.00x vs 0.00x (BETTER)
+    Utility: 0.250 vs 0.299 (WORSE)
+
+  StabilityMeanRevert vs BuyAndHold:
+    Return: +0.00% vs +18.40% (WORSE)
+    Sharpe: 0.000 vs 0.284 (WORSE)
+    MaxDD:  0.00% vs 76.63% (BETTER)
+    Whipsaw: 0.0% vs 0.0% (BETTER)
+    Turnover: 0.00x vs 0.00x (BETTER)
+    Utility: 0.250 vs 0.299 (WORSE)
+
+  Summary: 2/2 strategies beat BuyAndHold on stability-adjusted basis
+  Avg Sharpe (stability strategies): 0.000
+  Avg Utility (stability strategies): 0.250
+  BuyAndHold Sharpe: 0.284
+  BuyAndHold Utility: 0.299
+
+=== Walk-Forward Validation ===
+
+Config: train 504 bars | test 126 bars | step 126 bars
+Strategy                    WinN   TrainSc    Return%   Sharpe   Calmar   MaxDD%  Utility    Whip%    HoldD     Turn   Trades
+----------------------------------------------------------------------------------------------------------------------------------------------
+WF BuyAndHold                 10     0.000    +231.31    0.801    0.549    49.74    0.741      0.0      0.0     0.00        0
+WF StabilityTrend             10     1.133      +0.00    0.000    0.000     0.00    0.250      0.0      0.0     0.00        0
+WF StabilityMeanRevert        10    -0.100      +0.00    0.000    0.000     0.00    0.250      0.0      0.0     0.00        0
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+  WF StabilityTrend vs WF BuyAndHold:
+    Return: +0.00% vs +231.31% (WORSE)
+    Sharpe: 0.000 vs 0.801 (WORSE)
+    MaxDD:  0.00% vs 49.74% (BETTER)
+    Whipsaw: 0.0% vs 0.0% (BETTER)
+    Turnover: 0.00x vs 0.00x (BETTER)
+    Utility: 0.250 vs 0.741 (WORSE)
+    W01 train 2021-04-12~2022-08-28 | test 2022-08-29~2023-01-01 | base | train -0.100/0.250 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W02 train 2021-08-16~2023-01-01 | test 2023-01-02~2023-05-07 | base | train -0.100/0.250 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W03 train 2021-12-20~2023-05-07 | test 2023-05-08~2023-09-10 | base | train -0.100/0.250 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W04 train 2022-04-25~2023-09-10 | test 2023-09-11~2024-01-14 | base | train -0.100/0.250 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W05 train 2022-08-29~2024-01-14 | test 2024-01-15~2024-05-19 | base | train -0.100/0.250 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W06 train 2023-01-02~2024-05-19 | test 2024-05-20~2024-09-22 | fast | train 0.291/0.435 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W07 train 2023-05-08~2024-09-22 | test 2024-09-23~2025-01-26 | base | train -0.100/0.250 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W08 train 2023-09-11~2025-01-26 | test 2025-01-27~2025-06-01 | fast | train 11.839/11.845 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W09 train 2024-01-15~2025-06-01 | test 2025-06-02~2025-10-05 | base | train -0.100/0.250 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W10 train 2024-05-20~2025-10-05 | test 2025-10-06~2026-02-08 | base | train -0.100/0.250 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+
+  WF StabilityMeanRevert vs WF BuyAndHold:
+    Return: +0.00% vs +231.31% (WORSE)
+    Sharpe: 0.000 vs 0.801 (WORSE)
+    MaxDD:  0.00% vs 49.74% (BETTER)
+    Whipsaw: 0.0% vs 0.0% (BETTER)
+    Turnover: 0.00x vs 0.00x (BETTER)
+    Utility: 0.250 vs 0.741 (WORSE)
+    W01 train 2021-04-12~2022-08-28 | test 2022-08-29~2023-01-01 | base | train -0.100/0.250 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W02 train 2021-08-16~2023-01-01 | test 2023-01-02~2023-05-07 | base | train -0.100/0.250 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W03 train 2021-12-20~2023-05-07 | test 2023-05-08~2023-09-10 | base | train -0.100/0.250 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W04 train 2022-04-25~2023-09-10 | test 2023-09-11~2024-01-14 | base | train -0.100/0.250 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W05 train 2022-08-29~2024-01-14 | test 2024-01-15~2024-05-19 | base | train -0.100/0.250 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W06 train 2023-01-02~2024-05-19 | test 2024-05-20~2024-09-22 | base | train -0.100/0.250 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W07 train 2023-05-08~2024-09-22 | test 2024-09-23~2025-01-26 | base | train -0.100/0.250 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W08 train 2023-09-11~2025-01-26 | test 2025-01-27~2025-06-01 | base | train -0.100/0.250 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W09 train 2024-01-15~2025-06-01 | test 2025-06-02~2025-10-05 | base | train -0.100/0.250 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W10 train 2024-05-20~2025-10-05 | test 2025-10-06~2026-02-08 | base | train -0.100/0.250 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0

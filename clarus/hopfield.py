@@ -190,7 +190,7 @@ def codebook_grad(m, codebook, beta):
     return -(w @ codebook)
 
 
-def energy_full(m, W, b, phi, codebook=None, beta=1.0, cb_w=0.5, bypass_c=0.0):
+def energy_full(m, W, b, phi, codebook=None, beta=1.0, cb_w=PORTAL, bypass_c=0.0):
     e_hop = -0.5 * (m @ W @ m)
     e_bias = -(m @ b)
     phi_hat = F.normalize(phi, dim=0)
@@ -211,7 +211,7 @@ def relax(
     m0,
     codebook=None,
     beta=1.0,
-    cb_w=0.5,
+    cb_w=PORTAL,
     tau=1.0,
     dt=0.01,
     max_steps=500,
@@ -266,25 +266,44 @@ def relax(
     )
 
 
+def _normalized_residual(x: torch.Tensor) -> torch.Tensor:
+    x = x.detach().float()
+    norm = x.norm()
+    if not torch.isfinite(norm) or norm.item() < 1e-8:
+        return torch.zeros_like(x)
+    return x / norm
+
+
 def update_phi(phi, m_star, phi_var=None):
-    alpha = BYPASS
-    if phi_var is None:
-        v = m_star.detach().pow(2).clamp(max=1.0)
+    v = _normalized_residual(m_star)
+    if phi_var is not None and phi_var.numel() == phi.numel():
+        var_mean = phi_var.mean().clamp(min=1e-8)
+        alpha = (BYPASS * var_mean / (var_mean + 1.0)).item()
     else:
-        v = phi_var.detach().clamp(min=0.0)
+        alpha = BYPASS
     return (1 - alpha) * phi + alpha * v
+
+
+def prompt_state(mdl, prompt_ids):
+    seq_len = prompt_ids.shape[1]
+    pos_ids = torch.arange(seq_len, device=prompt_ids.device).unsqueeze(0)
+    emb = mdl.transformer.wte(prompt_ids) + mdl.transformer.wpe(pos_ids)
+    emb_seq = emb.squeeze(0)
+    if emb_seq.shape[0] <= 1:
+        phi = torch.zeros_like(emb_seq[-1])
+    else:
+        residual = emb_seq[:-1].mean(dim=0) - emb_seq[-1]
+        phi = _normalized_residual(residual)
+    return emb, phi
 
 
 def get_initial_state(mdl, prompt_ids, init_layer=0):
     with torch.no_grad():
-        seq_len = prompt_ids.shape[1]
-        pos_ids = torch.arange(seq_len, device=prompt_ids.device).unsqueeze(0)
-        emb = mdl.transformer.wte(prompt_ids) + mdl.transformer.wpe(pos_ids)
+        emb, phi = prompt_state(mdl, prompt_ids)
         h = emb
         for i in range(init_layer + 1):
             h = block_hidden(mdl.transformer.h[i], h)
         m0 = h[:, -1, :].squeeze(0)
-        phi = emb.squeeze(0).var(dim=0)
     return m0, phi
 
 
@@ -365,7 +384,7 @@ def generate_multiround(
     n_layer,
     cb_topk=1024,
     beta=1.0,
-    cb_w=0.031,
+    cb_w=PORTAL,
     tau=1.0,
     dt=0.05,
     relax_steps=100,
@@ -393,16 +412,14 @@ def generate_multiround(
 
     for step in range(max_tok):
         with torch.no_grad():
-            seq_len = gen_ids.shape[1]
-            pos_ids = torch.arange(seq_len, device=gen_ids.device).unsqueeze(0)
-            emb = mdl.transformer.wte(gen_ids) + mdl.transformer.wpe(pos_ids)
+            emb, phi_base = prompt_state(mdl, gen_ids)
             h = emb
             best_l = min(n_layer - 2, 9)
             for i in range(best_l + 1):
                 h = block_hidden(mdl.transformer.h[i], h)
             m_context = h[:, -1, :].squeeze(0)
             if phi_state is None:
-                phi_state = emb.squeeze(0).var(dim=0)
+                phi_state = phi_base
 
         codebook = build_codebook(mdl, m_context, top_k=cb_topk, verbose=False)
         phi_norms.append(phi_state.norm().item())

@@ -39,6 +39,10 @@ except ImportError:
     _cuda_mod = None
 
 
+_ad = 4 / (math.e ** (4 / 3) * math.pi ** (4 / 3))
+DEFAULT_CB_W = (_ad * (1 - _ad)) ** 2
+
+
 def has_rust() -> bool:
     return bool(_RUST)
 
@@ -306,6 +310,8 @@ def _fdt_noise_torch(
         return z * inv_sqrt_diag
 
     Q = metric_basis * inv_sqrt_diag.unsqueeze(0)
+    if not torch.isfinite(Q).all():
+        Q = torch.where(torch.isfinite(Q), Q, torch.zeros_like(Q))
     _, s_q, Vh_q = torch.linalg.svd(Q, full_matrices=False)
 
     factors = 1.0 - 1.0 / torch.sqrt(1.0 + s_q.square())
@@ -381,6 +387,23 @@ def _relax_packed_torch(
     anneal_end = max(1, int(round(anneal_ratio * max_steps)))
     t_eff = float(t_wake) / max(1, m.numel())
 
+    sparse_mat = None
+    if dense_w is None:
+        sparse_mat = torch.sparse_csr_tensor(
+            row_ptr.to(torch.int64),
+            col_idx.to(torch.int64),
+            values,
+            size=(m.numel(), m.numel()),
+            device=m.device,
+            dtype=m.dtype,
+            check_invariants=False,
+        )
+
+    w_m_probe = _spmv_torch(values, col_idx, row_ptr, m, sparse_mat=sparse_mat, dense_w=dense_w)
+    spectral_est = w_m_probe.norm().item() / max(m.norm().item(), 1e-8)
+    cfl_lambda0 = 2.0 * spectral_est * dt_eff / tau
+    lambda0 = max(lambda0, cfl_lambda0)
+
     gen = None
     if noise_scale > 0.0:
         gen = torch.Generator(device=m.device)
@@ -397,17 +420,6 @@ def _relax_packed_torch(
     best_m = m.clone()
     best_e = float("inf")
     tail_states: deque[torch.Tensor] = deque(maxlen=min(16, max_steps))
-    sparse_mat = None
-    if dense_w is None:
-        sparse_mat = torch.sparse_csr_tensor(
-            row_ptr.to(torch.int64),
-            col_idx.to(torch.int64),
-            values,
-            size=(m.numel(), m.numel()),
-            device=m.device,
-            dtype=m.dtype,
-            check_invariants=False,
-        )
 
     for k in range(max_steps):
         c_k = torch.norm(m - 2 * m1 + m2).item()
@@ -443,6 +455,8 @@ def _relax_packed_torch(
         m2 = m1.clone()
         m1 = m.clone()
         dm = (dt_eff / tau) * nat_grad + noise
+        if not torch.isfinite(dm).all():
+            dm = torch.where(torch.isfinite(dm), dm, torch.zeros_like(dm))
         m = m + dm
         tail_states.append(m.detach().clone())
 
@@ -505,7 +519,7 @@ def relax_packed(
     bypass: float,
     t_wake: float,
     beta: float = 1.0,
-    cb_w: float = 0.0312,
+    cb_w: float = DEFAULT_CB_W,
     lambda0: float = 1.0,
     lambda_phi: float = 0.5,
     lambda_var: float = 0.25,
@@ -644,6 +658,9 @@ def relax(
     **kwargs,
 ) -> Tuple[torch.Tensor, Dict[str, list[float]], int]:
     values, col_idx, row_ptr = pack_sparse(w, zero_tol=zero_tol, backend=backend)
+    dense_w = None
+    if backend != "rust" and values.numel() == w.numel():
+        dense_w = w
     return relax_packed(
         values,
         col_idx,
@@ -657,7 +674,7 @@ def relax(
         bypass=bypass,
         t_wake=t_wake,
         backend=backend,
-        dense_w=w if backend != "rust" else None,
+        dense_w=dense_w,
         **kwargs,
     )
 

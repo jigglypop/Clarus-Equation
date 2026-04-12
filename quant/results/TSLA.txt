@@ -1,0 +1,90 @@
+=== Clarus Stability Quant ===
+
+--- CE Quant Constants ---
+  alpha_total  = 0.159155
+  alpha_s      = 0.117859
+  alpha_w      = 0.033543
+  alpha_em(MZ) = 0.007753
+  sin2_tw      = 0.231141
+  D_eff        = 3.177715
+  epsilon^2    = 0.048649
+  Omega_b      = 0.048649
+  Omega_Lambda = 0.690505
+  Omega_DM     = 0.260846
+  R_dark       = 0.377761
+  rho_contract = 0.154593
+  epsilon_obs  = 0.381010
+  F_factor     = 1.374523
+
+Loading data: data/TSLA.csv
+
+Bars loaded: 1256
+Period: 2021-04-12 ~ 2026-04-10
+Price: 233.99 -> 348.95
+
+Strategy                  Return%   Sharpe  Sortino   Calmar   MaxDD%  Utility     Win%    Whip%    HoldD     Turn   Trades
+----------------------------------------------------------------------------------------------------------------------------------
+BuyAndHold                 +49.13    0.430    0.441    0.113    73.63    0.401      0.0      0.0      0.0     0.00        0
+StabilityTrend              +0.00    0.000    0.000    0.000     0.00    0.250      0.0      0.0      0.0     0.00        0
+StabilityMeanRevert         +0.00    0.000    0.000    0.000     0.00    0.250      0.0      0.0      0.0     0.00        0
+----------------------------------------------------------------------------------------------------------------------------------
+
+=== Clarus Stability Benchmark ===
+
+  StabilityTrend vs BuyAndHold:
+    Return: +0.00% vs +49.13% (WORSE)
+    Sharpe: 0.000 vs 0.430 (WORSE)
+    MaxDD:  0.00% vs 73.63% (BETTER)
+    Whipsaw: 0.0% vs 0.0% (BETTER)
+    Turnover: 0.00x vs 0.00x (BETTER)
+    Utility: 0.250 vs 0.401 (WORSE)
+
+  StabilityMeanRevert vs BuyAndHold:
+    Return: +0.00% vs +49.13% (WORSE)
+    Sharpe: 0.000 vs 0.430 (WORSE)
+    MaxDD:  0.00% vs 73.63% (BETTER)
+    Whipsaw: 0.0% vs 0.0% (BETTER)
+    Turnover: 0.00x vs 0.00x (BETTER)
+    Utility: 0.250 vs 0.401 (WORSE)
+
+  Summary: 2/2 strategies beat BuyAndHold on stability-adjusted basis
+  Avg Sharpe (stability strategies): 0.000
+  Avg Utility (stability strategies): 0.250
+  BuyAndHold Sharpe: 0.430
+  BuyAndHold Utility: 0.401
+
+=== Walk-Forward Validation ===
+
+Config: train 504 bars | test 126 bars | step 126 bars
+Strategy                    WinN   TrainSc    Return%   Sharpe   Calmar   MaxDD%  Utility    Whip%    HoldD     Turn   Trades
+----------------------------------------------------------------------------------------------------------------------------------------------
+WF BuyAndHold                  5     0.000    +164.84    0.946    0.893    53.77    0.889      0.0      0.0     0.00        0
+WF StabilityTrend              5    -0.100      +0.00    0.000    0.000     0.00    0.250      0.0      0.0     0.00        0
+WF StabilityMeanRevert         5    -0.100      +0.00    0.000    0.000     0.00    0.250      0.0      0.0     0.00        0
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+  WF StabilityTrend vs WF BuyAndHold:
+    Return: +0.00% vs +164.84% (WORSE)
+    Sharpe: 0.000 vs 0.946 (WORSE)
+    MaxDD:  0.00% vs 53.77% (BETTER)
+    Whipsaw: 0.0% vs 0.0% (BETTER)
+    Turnover: 0.00x vs 0.00x (BETTER)
+    Utility: 0.250 vs 0.889 (WORSE)
+    W01 train 2021-04-12~2023-04-11 | test 2023-04-12~2023-10-10 | base | train -0.100/0.250 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W02 train 2021-10-08~2023-10-10 | test 2023-10-11~2024-04-11 | base | train -0.100/0.250 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W03 train 2022-04-08~2024-04-11 | test 2024-04-12~2024-10-10 | base | train -0.100/0.250 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W04 train 2022-10-10~2024-10-10 | test 2024-10-11~2025-04-14 | base | train -0.100/0.250 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W05 train 2023-04-12~2025-04-14 | test 2025-04-15~2025-10-14 | base | train -0.100/0.250 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+
+  WF StabilityMeanRevert vs WF BuyAndHold:
+    Return: +0.00% vs +164.84% (WORSE)
+    Sharpe: 0.000 vs 0.946 (WORSE)
+    MaxDD:  0.00% vs 53.77% (BETTER)
+    Whipsaw: 0.0% vs 0.0% (BETTER)
+    Turnover: 0.00x vs 0.00x (BETTER)
+    Utility: 0.250 vs 0.889 (WORSE)
+    W01 train 2021-04-12~2023-04-11 | test 2023-04-12~2023-10-10 | base | train -0.100/0.250 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W02 train 2021-10-08~2023-10-10 | test 2023-10-11~2024-04-11 | base | train -0.100/0.250 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W03 train 2022-04-08~2024-04-11 | test 2024-04-12~2024-10-10 | base | train -0.100/0.250 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W04 train 2022-10-10~2024-10-10 | test 2024-10-11~2025-04-14 | base | train -0.100/0.250 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W05 train 2023-04-12~2025-04-14 | test 2025-04-15~2025-10-14 | base | train -0.100/0.250 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0

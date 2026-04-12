@@ -1,0 +1,119 @@
+=== Clarus Stability Quant ===
+
+--- CE Quant Constants ---
+  alpha_total  = 0.159155
+  alpha_s      = 0.117859
+  alpha_w      = 0.033543
+  alpha_em(MZ) = 0.007753
+  sin2_tw      = 0.231141
+  D_eff        = 3.177715
+  epsilon^2    = 0.048649
+  Omega_b      = 0.048649
+  Omega_Lambda = 0.690505
+  Omega_DM     = 0.260846
+  R_dark       = 0.377761
+  rho_contract = 0.154593
+  epsilon_obs  = 0.381010
+  F_factor     = 1.374523
+
+Loading data: data/AAPL.csv
+
+Bars loaded: 1256
+Period: 2021-04-12 ~ 2026-04-10
+Price: 127.83 -> 260.48
+
+Strategy                  Return%   Sharpe  Sortino   Calmar   MaxDD%  Utility     Win%    Whip%    HoldD     Turn   Trades
+----------------------------------------------------------------------------------------------------------------------------------
+BuyAndHold                +103.78    0.657    0.664    0.460    33.36    0.655      0.0      0.0      0.0     0.00        0
+StabilityTrend              +1.83    0.094    0.047    0.026    13.96    0.156     50.0     18.2     10.6    23.86       22
+StabilityMeanRevert         -0.65   -0.438   -0.054   -0.143     0.91    0.068     50.0      0.0      5.8     0.87        4
+----------------------------------------------------------------------------------------------------------------------------------
+
+=== Clarus Stability Benchmark ===
+
+  StabilityTrend vs BuyAndHold:
+    Return: +1.83% vs +103.78% (WORSE)
+    Sharpe: 0.094 vs 0.657 (WORSE)
+    MaxDD:  13.96% vs 33.36% (BETTER)
+    Whipsaw: 18.2% vs 0.0% (WORSE)
+    Turnover: 23.86x vs 0.00x (WORSE)
+    Utility: 0.156 vs 0.655 (WORSE)
+
+  StabilityMeanRevert vs BuyAndHold:
+    Return: -0.65% vs +103.78% (WORSE)
+    Sharpe: -0.438 vs 0.657 (WORSE)
+    MaxDD:  0.91% vs 33.36% (BETTER)
+    Whipsaw: 0.0% vs 0.0% (BETTER)
+    Turnover: 0.87x vs 0.00x (WORSE)
+    Utility: 0.068 vs 0.655 (WORSE)
+
+  Summary: 1/2 strategies beat BuyAndHold on stability-adjusted basis
+  Avg Sharpe (stability strategies): -0.172
+  Avg Utility (stability strategies): 0.112
+  BuyAndHold Sharpe: 0.657
+  BuyAndHold Utility: 0.655
+
+--- StabilityTrend Trades (22) ---
+  #  1 2021-07-12 -> 2021-07-20 | 141.05 -> 142.52 | +1.04% | 6d | ChaosCut
+  #  2 2021-08-02 -> 2021-09-01 | 142.05 -> 148.94 | +4.86% | 22d | ChaosCut
+  #  3 2021-09-03 -> 2021-09-10 | 150.84 -> 145.49 | -3.55% | 4d | ChaosCut
+  #  4 2021-10-22 -> 2021-10-29 | 145.36 -> 146.30 | +0.65% | 5d | ChaosCut
+  #  5 2021-11-04 -> 2021-11-29 | 147.58 -> 156.72 | +6.20% | 16d | ChaosCut
+  #  6 2023-05-02 -> 2023-05-05 | 166.22 -> 171.01 | +2.88% | 3d | ChaosCut
+  #  7 2023-05-17 -> 2023-06-30 | 170.54 -> 191.37 | +12.21% | 30d | TakeProfit
+  #  8 2023-07-07 -> 2023-08-07 | 188.31 -> 176.45 | -6.30% | 21d | ChaosCut
+  #  9 2023-10-16 -> 2023-10-26 | 176.74 -> 164.87 | -6.71% | 8d | TrendFlip
+  # 10 2023-11-08 -> 2023-11-14 | 180.86 -> 185.42 | +2.52% | 4d | ChaosCut
+  # 11 2023-11-20 -> 2023-11-27 | 189.58 -> 187.74 | -0.97% | 4d | ChaosCut
+  # 12 2023-11-30 -> 2023-12-06 | 188.09 -> 190.25 | +1.15% | 4d | ChaosCut
+  # 13 2023-12-13 -> 2024-01-03 | 196.02 -> 182.26 | -7.02% | 13d | TrendFlip
+  # 14 2024-01-29 -> 2024-02-07 | 189.85 -> 187.37 | -1.31% | 7d | TrendFlip
+  # 15 2024-05-20 -> 2024-05-24 | 189.67 -> 188.43 | -0.65% | 4d | ChaosCut
+  # 16 2024-05-31 -> 2024-06-11 | 190.87 -> 205.46 | +7.64% | 7d | ChaosCut
+  # 17 2024-11-27 -> 2025-01-10 | 233.77 -> 235.45 | +0.72% | 28d | TrendFlip
+  # 18 2025-02-24 -> 2025-03-03 | 246.15 -> 236.88 | -3.77% | 5d | ChaosCut
+  # 19 2025-07-24 -> 2025-08-04 | 213.22 -> 202.63 | -4.97% | 7d | ChaosCut
+  # 20 2025-10-03 -> 2025-10-13 | 257.66 -> 247.07 | -4.11% | 6d | ChaosCut
+  ... and 2 more trades
+
+--- StabilityMeanRevert Trades (4) ---
+  #  1 2021-09-20 -> 2021-09-29 | 139.74 -> 139.49 | -0.18% | 7d | Relapse
+  #  2 2023-09-12 -> 2023-09-19 | 174.34 -> 176.91 | +1.47% | 5d | MeanRevert
+  #  3 2024-01-31 -> 2024-02-02 | 182.60 -> 183.85 | +0.69% | 2d | Relapse
+  #  4 2026-01-06 -> 2026-01-20 | 262.25 -> 246.35 | -6.06% | 9d | Relapse
+
+=== Walk-Forward Validation ===
+
+Config: train 504 bars | test 126 bars | step 126 bars
+Strategy                    WinN   TrainSc    Return%   Sharpe   Calmar   MaxDD%  Utility    Whip%    HoldD     Turn   Trades
+----------------------------------------------------------------------------------------------------------------------------------------------
+WF BuyAndHold                  5     0.000     +55.45    0.801    0.582    33.36    0.760      0.0      0.0     0.00        0
+WF StabilityTrend              5     0.619     -13.57   -0.824   -0.305    18.68   -0.256     14.3     12.6     9.80        7
+WF StabilityMeanRevert         5     0.540      +0.20    0.451    0.621     0.13    0.525      0.0      3.5     0.41        2
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+  WF StabilityTrend vs WF BuyAndHold:
+    Return: -13.57% vs +55.45% (WORSE)
+    Sharpe: -0.824 vs 0.801 (WORSE)
+    MaxDD:  18.68% vs 33.36% (BETTER)
+    Whipsaw: 14.3% vs 0.0% (WORSE)
+    Turnover: 9.80x vs 0.00x (WORSE)
+    Utility: -0.256 vs 0.760 (WORSE)
+    W01 train 2021-04-12~2023-04-11 | test 2023-04-12~2023-10-10 | loose | train 0.857/0.689 | test -3.35% | sh -0.650 | dd 8.62% | whip 0.0% | turn 1.87x | trades 1
+    W02 train 2021-10-08~2023-10-10 | test 2023-10-11~2024-04-11 | fast | train 1.098/0.790 | test -4.26% | sh -1.385 | dd 7.22% | whip 0.0% | turn 2.19x | trades 2
+    W03 train 2022-04-08~2024-04-11 | test 2024-04-12~2024-10-10 | loose | train 0.293/0.258 | test +3.01% | sh 1.103 | dd 1.55% | whip 0.0% | turn 1.93x | trades 1
+    W04 train 2022-10-10~2024-10-10 | test 2024-10-11~2025-04-14 | loose | train 0.642/0.449 | test -7.11% | sh -1.891 | dd 10.91% | whip 50.0% | turn 3.21x | trades 2
+    W05 train 2023-04-12~2025-04-14 | test 2025-04-15~2025-10-14 | late | train 0.208/0.200 | test -2.38% | sh -1.503 | dd 2.85% | whip 0.0% | turn 1.11x | trades 1
+
+  WF StabilityMeanRevert vs WF BuyAndHold:
+    Return: +0.20% vs +55.45% (WORSE)
+    Sharpe: 0.451 vs 0.801 (WORSE)
+    MaxDD:  0.13% vs 33.36% (BETTER)
+    Whipsaw: 0.0% vs 0.0% (BETTER)
+    Turnover: 0.41x vs 0.00x (WORSE)
+    Utility: 0.525 vs 0.760 (WORSE)
+    W01 train 2021-04-12~2023-04-11 | test 2023-04-12~2023-10-10 | base | train 0.070/0.221 | test +0.14% | sh 0.806 | dd 0.13% | whip 0.0% | turn 0.20x | trades 1
+    W02 train 2021-10-08~2023-10-10 | test 2023-10-11~2024-04-11 | base | train 0.343/0.489 | test +0.06% | sh 0.613 | dd 0.07% | whip 0.0% | turn 0.21x | trades 1
+    W03 train 2022-04-08~2024-04-11 | test 2024-04-12~2024-10-10 | loose | train 0.762/0.716 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W04 train 2022-10-10~2024-10-10 | test 2024-10-11~2025-04-14 | loose | train 0.762/0.716 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W05 train 2023-04-12~2025-04-14 | test 2025-04-15~2025-10-14 | loose | train 0.762/0.716 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0

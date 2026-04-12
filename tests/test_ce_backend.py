@@ -4,9 +4,11 @@ import math
 
 import pytest
 import torch
+import torch.nn as nn
 import torch.nn.functional as F
 
 from clarus.ce_ops import (
+    DEFAULT_CB_W,
     build_metric_basis,
     ce_backend,
     codebook_pull,
@@ -16,8 +18,10 @@ from clarus.ce_ops import (
     pq_build_codebook,
     pq_reconstruct_tokens,
     pq_scores,
+    relax,
     relax_packed,
 )
+from clarus.hopfield import PORTAL as HOPFIELD_PORTAL, get_initial_state, update_phi
 
 
 PORTAL = 0.031203
@@ -56,6 +60,26 @@ def relax_kwargs():
         metric_rank=4,
         seed=7,
     )
+
+
+def test_default_codebook_weight_matches_portal_constant():
+    assert DEFAULT_CB_W == pytest.approx(HOPFIELD_PORTAL, abs=1e-12)
+
+
+class IdentityBlock(nn.Module):
+    def forward(self, h):
+        return h
+
+
+class FakeModel(nn.Module):
+    def __init__(self, vocab: int = 8, dim: int = 4, layers: int = 3):
+        super().__init__()
+        transformer = nn.Module()
+        transformer.wte = nn.Embedding(vocab, dim)
+        transformer.wpe = nn.Embedding(32, dim)
+        transformer.h = nn.ModuleList(IdentityBlock() for _ in range(layers))
+        transformer.ln_f = nn.LayerNorm(dim)
+        self.transformer = transformer
 
 
 def test_backend_policy_prefers_torch_without_native_on_cpu():
@@ -140,6 +164,23 @@ def test_relax_torch_produces_finite_histories():
     assert all(math.isfinite(v) for v in hist["delta"])
     assert len(hist["E"]) == steps
     assert min(hist["E"]) <= hist["E"][0]
+
+
+def test_get_initial_state_single_token_keeps_phi_finite():
+    mdl = FakeModel()
+    prompt_ids = torch.tensor([[1]], dtype=torch.long)
+    _, phi = get_initial_state(mdl, prompt_ids, init_layer=1)
+    assert torch.isfinite(phi).all()
+    assert torch.equal(phi, torch.zeros_like(phi))
+
+
+def test_update_phi_preserves_signed_residual_direction():
+    phi = torch.zeros(3)
+    m_star = torch.tensor([1.0, -2.0, 0.0])
+    updated = update_phi(phi, m_star)
+    assert torch.isfinite(updated).all()
+    assert updated[0] > 0
+    assert updated[1] < 0
 
 
 @pytest.mark.skipif(not has_rust(), reason="Rust backend unavailable")
@@ -247,6 +288,46 @@ def test_pq_scores_rank_reconstructed_self_highest_on_small_case():
     assert torch.isfinite(scores).all()
     top_idx = int(scores.argmax().item())
     assert top_idx == 5
+
+
+def test_relax_zero_tol_matches_thresholded_matrix_behavior():
+    w, b, phi, m0, codebook = make_case(dim=6, n_code=4, seed=23)
+    zero_tol = float(w.abs().median().item())
+    kwargs = dict(
+        portal=PORTAL,
+        bypass=BYPASS,
+        t_wake=T_WAKE,
+        zero_tol=zero_tol,
+        backend="torch",
+        beta=1.0,
+        cb_w=PORTAL,
+        lambda0=1.0,
+        lambda_phi=0.5,
+        lambda_var=0.25,
+        tau=1.0,
+        dt=0.01,
+        max_steps=16,
+        tol=1e-7,
+        anneal_ratio=0.6,
+        noise_scale=0.0,
+        metric_rank=0,
+        seed=3,
+    )
+    m_thr, hist_thr, steps_thr = relax(w, b, phi, m0, codebook, **kwargs)
+
+    w_thr = w.clone()
+    w_thr[w_thr.abs() <= zero_tol] = 0
+    m_ref, hist_ref, steps_ref = relax(
+        w_thr,
+        b,
+        phi,
+        m0,
+        codebook,
+        **{**kwargs, "zero_tol": 0.0},
+    )
+    assert steps_thr == steps_ref
+    assert torch.allclose(m_thr, m_ref, atol=1e-6, rtol=1e-6)
+    assert hist_thr["E"] == hist_ref["E"]
 
 
 @pytest.mark.skipif(not torch.cuda.is_available() or not has_cuda(), reason="CUDA CE backend unavailable")
