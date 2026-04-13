@@ -59,17 +59,21 @@ $$W_{ij}(g) = \exp\!\left(-\frac{d_g(i,j)^2}{\sigma^2}\right)$$
 
 ### 2.1 Layer A: 순수 셀 동역학
 
-셀 $i$의 최소 상태:
+셀 $i$의 최소 상태 (15_Equations.md A.1):
 
-$$s_i^t = (a_i^t,\; r_i^t,\; b_i^t)$$
+$$s_i^t = (a_i^t,\; r_i^t,\; m_i^t,\; w_i^t,\; b_i^t)$$
 
 - $a_i$: activation
 - $r_i$: refractory / inhibition
-- $b_i$: hysteretic bit
+- $m_i$: memory trace (NMDA-like, $\tau \approx 100\text{ms}$)
+- $w_i$: spike-frequency adaptation (AHP, $\tau_w \approx 200\text{ms}$)
+- $b_i$: hysteretic bit (UP/DOWN state)
 
-최소 입력:
+최소 입력 (STP 적용):
 
-$$I_i^t = u_i^t + \sum_j W_{ij}\,a_j^t - \lambda_r^{(M_t)}\,r_i^t + \lambda_m^{(M_t)}\,m_i^t + \eta_i^t$$
+$$I_i^t = u_i^t + \sum_j W_{ij}^{\text{eff}}(t)\,a_j^{t-\delta_{ij}} - \lambda_r^{(M_t)}\,r_i^t - \beta_w\,w_i^t + \lambda_m^{(M_t)}\,m_i^t + \eta_i^t$$
+
+여기서 $W_{ij}^{\text{eff}}(t) = W_{ij}\,u_j(t)\,x_j(t)$ (Tsodyks-Markram STP), $\sigma_\eta \approx 0.27$.
 
 활성 갱신:
 
@@ -77,11 +81,22 @@ $$a_i^{t+1} = (1-\gamma_a^{(M_t)})\,a_i^t + \kappa_a^{(M_t)}\,\tanh(I_i^t)$$
 
 억제 갱신:
 
-$$r_i^{t+1} = (1-\gamma_r^{(M_t)})\,r_i^t + \kappa_r^{(M_t)}\,(a_i^t)^2$$
+$$r_i^{t+1} = (1-\gamma_r^{(M_t)})\,r_i^t + \kappa_r^{(M_t)}\,(a_i^{t+1})^2$$
 
-비트 갱신 (히스테리시스):
+기억 흔적 갱신 ($\gamma_m = 0.01$, NMDA):
+
+$$m_i^{t+1} = (1-\gamma_m)\,m_i^t + \gamma_m\,a_i^{t+1}$$
+
+적응 변수 갱신 ($\gamma_w = 0.005$, AHP):
+
+$$w_i^{t+1} = (1-\gamma_w)\,w_i^t + \kappa_w\,(a_i^{t+1})^2$$
+
+비트 갱신 (히스테리시스, UP/DOWN state):
 
 $$b_i^{t+1} = \begin{cases} 1, & a_i^{t+1} > \tau_i^+ \\ 0, & a_i^{t+1} < \tau_i^- \\ b_i^t, & \tau_i^- \le a_i^{t+1} \le \tau_i^+ \end{cases}$$
+
+> **코드 대응**: `kernel.rs::brain_step()` - 상태 벡터 `(activation, refractory, memory_trace, adaptation, stp_u, stp_x, bitfield)`.
+> Dale's Law: `apply_dale_sign()` - E/I=80:20, $w_I/w_E=4$.
 
 이 Layer A는 순수하고 작아야 한다. 해마도, 자아도, sleep도 넣지 않는다.
 

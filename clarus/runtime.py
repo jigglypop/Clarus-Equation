@@ -305,6 +305,9 @@ class BrainRuntime:
         self.activation = torch.zeros(self.config.dim, device=self.device)
         self.refractory = torch.zeros(self.config.dim, device=self.device)
         self.memory_trace = torch.zeros(self.config.dim, device=self.device)
+        self.adaptation = torch.zeros(self.config.dim, device=self.device)
+        self.stp_u = torch.full((self.config.dim,), 0.5, device=self.device)
+        self.stp_x = torch.ones(self.config.dim, device=self.device)
         self.bitfield = torch.zeros(self.config.dim, dtype=torch.uint8, device=self.device)
         self.goal = torch.zeros(self.config.dim, device=self.device)
         self.lifecycle = torch.full(
@@ -376,14 +379,24 @@ class BrainRuntime:
         return RuntimeMode.REM
 
     def _update_sleep_state(self, mode: RuntimeMode, active_count: int, external_norm: float) -> None:
+        """Borbely 2-Process model (15_Equations.md C.2).
+
+        Process S: homeostatic sleep pressure
+          WAKE:  dS/dt = (S_max - S) / tau_w   (tau_w = 18.2h ~ 65520 steps @1ms)
+          SLEEP: dS/dt = -S / tau_s             (tau_s = 4.2h  ~ 15120 steps @1ms)
+        Process C: 24.2h circadian (simplified as constant modulation)
+        """
         self.arousal = float(external_norm)
+        tau_w_inv = 1.0 / 65520.0
+        tau_s_inv = 1.0 / 15120.0
+        s_max = 2.0
         if mode is RuntimeMode.WAKE:
-            self.sleep_pressure += 0.04 + 0.01 * active_count
+            self.sleep_pressure += (s_max - self.sleep_pressure) * tau_w_inv
         elif mode is RuntimeMode.NREM:
-            self.sleep_pressure *= 0.78
+            self.sleep_pressure -= self.sleep_pressure * tau_s_inv
         else:
-            self.sleep_pressure *= 0.90
-        self.sleep_pressure = float(max(0.0, min(self.sleep_pressure, 2.0)))
+            self.sleep_pressure -= self.sleep_pressure * tau_s_inv * 0.5
+        self.sleep_pressure = float(max(0.0, min(self.sleep_pressure, s_max)))
 
     def _update_lifecycle(self, salience: torch.Tensor, active_mask: torch.Tensor) -> None:
         self.inactive_steps = torch.where(
@@ -434,6 +447,9 @@ class BrainRuntime:
         act_np = self.activation.detach().cpu().numpy().astype(np.float32)
         ref_np = self.refractory.detach().cpu().numpy().astype(np.float32)
         mem_np = self.memory_trace.detach().cpu().numpy().astype(np.float32)
+        adapt_np = self.adaptation.detach().cpu().numpy().astype(np.float32)
+        su_np = self.stp_u.detach().cpu().numpy().astype(np.float32)
+        sx_np = self.stp_x.detach().cpu().numpy().astype(np.float32)
         bit_np = self.bitfield.detach().cpu().numpy().astype(np.uint8)
         ext_np = external.detach().cpu().numpy().astype(np.float32)
         goal_np = self.goal.detach().cpu().numpy().astype(np.float32)
@@ -442,15 +458,19 @@ class BrainRuntime:
         col_np = self.col_idx.detach().cpu().numpy().astype(np.int32)
         row_np = self.row_ptr.detach().cpu().numpy().astype(np.int32)
 
-        new_act, new_ref, new_mem, new_bit, active_count, energy = _rust_brain_step(
+        (new_act, new_ref, new_mem, new_adapt,
+         new_su, new_sx, new_bit, active_count, energy) = _rust_brain_step(
             val_np, col_np, row_np,
-            act_np, ref_np, mem_np, bit_np,
+            act_np, ref_np, mem_np, adapt_np, su_np, sx_np, bit_np,
             ext_np, goal_np, replay_np,
             mode_int, budget,
         )
         self.activation = torch.from_numpy(np.array(new_act, dtype=np.float32)).to(self.device)
         self.refractory = torch.from_numpy(np.array(new_ref, dtype=np.float32)).to(self.device)
         self.memory_trace = torch.from_numpy(np.array(new_mem, dtype=np.float32)).to(self.device)
+        self.adaptation = torch.from_numpy(np.array(new_adapt, dtype=np.float32)).to(self.device)
+        self.stp_u = torch.from_numpy(np.array(new_su, dtype=np.float32)).to(self.device)
+        self.stp_x = torch.from_numpy(np.array(new_sx, dtype=np.float32)).to(self.device)
         self.bitfield = torch.from_numpy(np.array(new_bit, dtype=np.uint8)).to(self.device)
         return int(active_count), float(energy)
 
@@ -460,7 +480,7 @@ class BrainRuntime:
         replay: torch.Tensor,
         mode: RuntimeMode,
     ) -> tuple[int, float]:
-        """Pure-torch cell step (fallback path)."""
+        """Pure-torch cell step (fallback path). Eq A.1--A.7."""
         recurrent = self._matvec(self.activation * self.active_mask().float())
         drive = (
             recurrent
@@ -468,6 +488,7 @@ class BrainRuntime:
             + self.config.goal_gain * self.goal
             + self.config.replay_mix(mode) * replay
             - self.config.refractory_scale * self.refractory
+            - 0.5 * self.adaptation
         )
         activation = (
             (1.0 - self.config.activation_decay(mode)) * self.activation
@@ -477,7 +498,8 @@ class BrainRuntime:
             (1.0 - self.config.refractory_decay(mode)) * self.refractory
             + self.config.refractory_gain(mode) * activation.square()
         )
-        memory_trace = 0.92 * self.memory_trace + 0.08 * activation
+        memory_trace = 0.99 * self.memory_trace + 0.01 * activation
+        adaptation = 0.995 * self.adaptation + 0.01 * activation.square()
 
         bitfield = self.bitfield.clone()
         bitfield[activation >= self.config.bit_upper_threshold] = 1
@@ -495,6 +517,7 @@ class BrainRuntime:
         self.activation = activation
         self.refractory = refractory
         self.memory_trace = memory_trace
+        self.adaptation = adaptation
         self.bitfield = bitfield
 
         active_count = int(active_mask.sum().item())

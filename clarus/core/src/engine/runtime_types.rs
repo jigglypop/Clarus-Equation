@@ -11,10 +11,12 @@ pub enum Mode {
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CellState {
-    /// Local activation state for one runtime cell/module.
     pub activation: f32,
     pub refractory: f32,
     pub memory_trace: f32,
+    pub adaptation: f32,
+    pub stp_u: f32,
+    pub stp_x: f32,
     pub bit: u8,
 }
 
@@ -24,6 +26,9 @@ impl Default for CellState {
             activation: 0.0,
             refractory: 0.0,
             memory_trace: 0.0,
+            adaptation: 0.0,
+            stp_u: 0.5,
+            stp_x: 1.0,
             bit: 0,
         }
     }

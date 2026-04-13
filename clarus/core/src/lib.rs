@@ -4,7 +4,7 @@
 pub mod engine;
 
 pub use engine::field::{BoundaryMode, FieldConfig, FieldEngine, FieldState, FieldStepOutput};
-pub use engine::kernel::{ModeParams, StepConfig, StepOutput, brain_step};
+pub use engine::kernel::{ModeParams, StepConfig, StepOutput, StpParams, apply_dale_sign, brain_step};
 pub use engine::runtime_types::{CellState, Mode, RelaxInput, RelaxOutput, SnapshotMeta};
 
 #[cfg(feature = "python")]
@@ -278,6 +278,9 @@ mod python_binding {
         activation: PyReadonlyArray1<'py, f32>,
         refractory: PyReadonlyArray1<'py, f32>,
         memory_trace: PyReadonlyArray1<'py, f32>,
+        adaptation: PyReadonlyArray1<'py, f32>,
+        stp_u: PyReadonlyArray1<'py, f32>,
+        stp_x: PyReadonlyArray1<'py, f32>,
         bitfield: PyReadonlyArray1<'py, u8>,
         external: PyReadonlyArray1<'py, f32>,
         goal: PyReadonlyArray1<'py, f32>,
@@ -285,6 +288,9 @@ mod python_binding {
         mode: u8,
         energy_budget: usize,
     ) -> (
+        &'py PyArray1<f32>,
+        &'py PyArray1<f32>,
+        &'py PyArray1<f32>,
         &'py PyArray1<f32>,
         &'py PyArray1<f32>,
         &'py PyArray1<f32>,
@@ -305,6 +311,9 @@ mod python_binding {
         let mut act = activation.as_slice().expect("contiguous").to_vec();
         let mut refr = refractory.as_slice().expect("contiguous").to_vec();
         let mut mem = memory_trace.as_slice().expect("contiguous").to_vec();
+        let mut adapt = adaptation.as_slice().expect("contiguous").to_vec();
+        let mut su = stp_u.as_slice().expect("contiguous").to_vec();
+        let mut sx = stp_x.as_slice().expect("contiguous").to_vec();
         let mut bit = bitfield.as_slice().expect("contiguous").to_vec();
         let out = kernel::brain_step(
             w_values.as_slice().expect("contiguous"),
@@ -313,6 +322,9 @@ mod python_binding {
             &mut act,
             &mut refr,
             &mut mem,
+            &mut adapt,
+            &mut su,
+            &mut sx,
             &mut bit,
             external.as_slice().expect("contiguous"),
             goal.as_slice().expect("contiguous"),
@@ -324,6 +336,9 @@ mod python_binding {
             act.into_pyarray(py),
             refr.into_pyarray(py),
             mem.into_pyarray(py),
+            adapt.into_pyarray(py),
+            su.into_pyarray(py),
+            sx.into_pyarray(py),
             bit.into_pyarray(py),
             out.active_count,
             out.energy,
