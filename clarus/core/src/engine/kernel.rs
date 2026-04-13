@@ -29,8 +29,8 @@ impl ModeParams {
             refractory_decay: 0.12,   // J.2: tau_rel ~5-10ms
             refractory_gain: 0.20,    // J.12: clamped to [0.05,0.2]
             adaptation_decay: 0.005,  // J.20: tau_w=200ms, dt=1ms
-            adaptation_gain: 0.01,
-            adaptation_coupling: 0.5, // beta_w
+            adaptation_gain: 0.005,   // matched to decay -> w* = E[a^2]
+            adaptation_coupling: 0.12, // beta_w: ~24% suppression at w=2
             memory_decay: 0.01,       // J.3: tau_NMDA=100ms -> 1/100
             memory_gain: 0.01,
             replay_mix: 0.002,        // J.16: SWR ~2Hz * dt
@@ -44,8 +44,8 @@ impl ModeParams {
             refractory_decay: 0.26,
             refractory_gain: 0.12,
             adaptation_decay: 0.005,
-            adaptation_gain: 0.01,
-            adaptation_coupling: 0.5,
+            adaptation_gain: 0.005,
+            adaptation_coupling: 0.12,
             memory_decay: 0.01,
             memory_gain: 0.01,
             replay_mix: 0.10,         // C.3: NREM strong replay
@@ -59,8 +59,8 @@ impl ModeParams {
             refractory_decay: 0.18,
             refractory_gain: 0.18,
             adaptation_decay: 0.005,
-            adaptation_gain: 0.01,
-            adaptation_coupling: 0.5,
+            adaptation_gain: 0.005,
+            adaptation_coupling: 0.12,
             memory_decay: 0.01,
             memory_gain: 0.01,
             replay_mix: 0.20,         // C.3: REM strongest replay
@@ -253,15 +253,18 @@ pub fn brain_step(
                 + goal_g * goal[i]
                 + rep_m * replay[i]
                 - ref_s * refractory[i]
-                - adapt_c * adaptation[i]
+                - adapt_c * adaptation[i].min(2.0)
         })
         .collect();
 
-    // 4. activation update: a' = (1-gamma_a)*a + kappa_a*tanh(drive) (A.3)
+    // 4. activation update: a' = clamp[(1-gamma_a)*a + kappa_a*tanh(drive), -1, 1] (A.3)
     let decay = mode_params.activation_decay;
     let gain = mode_params.activation_gain;
     let new_act: Vec<f32> = (0..dim)
-        .map(|i| (1.0 - decay) * activation[i] + gain * drive[i].tanh())
+        .map(|i| {
+            let raw = (1.0 - decay) * activation[i] + gain * drive[i].tanh();
+            raw.clamp(-1.0, 1.0)
+        })
         .collect();
 
     // 5. refractory update: r' = (1-gamma_r)*r + kappa_r*a'^2 (A.4)
@@ -279,10 +282,14 @@ pub fn brain_step(
         .collect();
 
     // 7. adaptation update: w' = (1-gamma_w)*w + kappa_w*a'^2 (A.6, J.20 AHP)
+    // gamma_w = kappa_w = 0.005 ensures w* = E[a^2] at steady state, clamped to [0,2]
     let w_decay = mode_params.adaptation_decay;
     let w_gain = mode_params.adaptation_gain;
     let new_adapt: Vec<f32> = (0..dim)
-        .map(|i| (1.0 - w_decay) * adaptation[i] + w_gain * new_act[i] * new_act[i])
+        .map(|i| {
+            let raw = (1.0 - w_decay) * adaptation[i] + w_gain * new_act[i] * new_act[i];
+            raw.clamp(0.0, 2.0)
+        })
         .collect();
 
     // 8. bitfield hysteresis (A.7, J.17 UP/DOWN)

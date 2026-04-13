@@ -485,26 +485,45 @@ class BrainRuntime:
         replay: torch.Tensor,
         mode: RuntimeMode,
     ) -> tuple[int, float]:
-        """Pure-torch cell step (fallback path). Eq A.1--A.7."""
-        recurrent = self._matvec(self.activation * self.active_mask().float())
+        """Pure-torch cell step (fallback path). Eq A.1--A.7, J.19--J.20."""
+        prev_active = self.active_mask().float()
+
+        # STP update (Tsodyks-Markram, J.19)
+        tau_fac_inv = 0.0015
+        tau_rec = 0.008
+        u_base = 0.5
+        spike = prev_active
+        stp_u = self.stp_u + (-tau_fac_inv * self.stp_u + u_base * (1.0 - self.stp_u) * spike)
+        stp_x = self.stp_x + (tau_rec * (1.0 - self.stp_x) - self.stp_u * self.stp_x * spike)
+        stp_u = stp_u.clamp(0.0, 1.0)
+        stp_x = stp_x.clamp(0.0, 1.0)
+
+        # W_eff = u * x * a (STP-modulated presynaptic)
+        pre = stp_u * stp_x * self.activation * prev_active
+        recurrent = self._matvec(pre)
+
+        # adaptation coupling: beta_w = 0.12 bounds steady-state suppression to ~24%
+        adapt_force = 0.12 * self.adaptation
+
         drive = (
             recurrent
             + self.config.external_gain * external
             + self.config.goal_gain * self.goal
             + self.config.replay_mix(mode) * replay
             - self.config.refractory_scale * self.refractory
-            - 0.5 * self.adaptation
+            - adapt_force
         )
         activation = (
             (1.0 - self.config.activation_decay(mode)) * self.activation
             + self.config.activation_gain(mode) * torch.tanh(drive)
-        )
+        ).clamp(-1.0, 1.0)
         refractory = (
             (1.0 - self.config.refractory_decay(mode)) * self.refractory
             + self.config.refractory_gain(mode) * activation.square()
         )
         memory_trace = 0.99 * self.memory_trace + 0.01 * activation
-        adaptation = 0.995 * self.adaptation + 0.01 * activation.square()
+        # J.20: tau_w=200ms -> gamma_w=kappa_w=0.005, w* = E[a^2], bounded [0,2]
+        adaptation = ((1.0 - 0.005) * self.adaptation + 0.005 * activation.square()).clamp(0.0, 2.0)
 
         bitfield = self.bitfield.clone()
         bitfield[activation >= self.config.bit_upper_threshold] = 1
@@ -523,6 +542,8 @@ class BrainRuntime:
         self.refractory = refractory
         self.memory_trace = memory_trace
         self.adaptation = adaptation
+        self.stp_u = stp_u
+        self.stp_x = stp_x
         self.bitfield = bitfield
 
         active_count = int(active_mask.sum().item())
