@@ -1,4 +1,4 @@
-=== Clarus Stability Quant ===
+=== Clarus Profit-First Quant ===
 
 --- CE Quant Constants ---
   alpha_total  = 0.159155
@@ -22,95 +22,96 @@ Bars loaded: 1256
 Period: 2021-04-12 ~ 2026-04-10
 Price: 384.46 -> 679.46
 
-Strategy                  Return%   Sharpe  Sortino   Calmar   MaxDD%  Utility     Win%    Whip%    HoldD     Turn   Trades
+Strategy                  Return%    CAGR%     Cap%   Sharpe   MaxDD%  Utility     Win%    HoldD     Turn   Trades
+------------------------------------------------------------------------------------------------------------------------------
+BuyAndHold                 +76.73    12.10    100.0    0.755    24.50    0.375      0.0      0.0     0.00        0
+ClarusContinuation          -2.02    -0.41     -2.6   -0.100     8.67   -0.145     37.8     13.9    91.28       45
+ClarusTransition            -1.60    -0.32     -2.1   -0.463     1.60   -0.210      0.0      3.0     2.30        2
 ----------------------------------------------------------------------------------------------------------------------------------
-BuyAndHold                 +76.73    0.755    0.739    0.494    24.50    0.723      0.0      0.0      0.0     0.00        0
-StabilityTrend              -0.56   -0.027   -0.016   -0.011    10.59    0.154     60.0      0.0     44.1     7.93       15
-StabilityMeanRevert         -0.35   -0.165   -0.033   -0.076     0.93    0.118     42.9     42.9      3.3     1.82        7
-----------------------------------------------------------------------------------------------------------------------------------
 
-=== Clarus Stability Benchmark ===
+=== Profit-First Benchmark ===
 
-  StabilityTrend vs BuyAndHold:
-    Return: -0.56% vs +76.73% (WORSE)
-    Sharpe: -0.027 vs 0.755 (WORSE)
-    MaxDD:  10.59% vs 24.50% (BETTER)
-    Whipsaw: 0.0% vs 0.0% (BETTER)
-    Turnover: 7.93x vs 0.00x (WORSE)
-    Utility: 0.154 vs 0.723 (WORSE)
+  ClarusContinuation vs BuyAndHold:
+    Return: -2.02% vs +76.73% (WORSE)
+    CAGR:   -0.41% vs +12.10% (WORSE)
+    Capture: -2.6% vs 100.0% (WORSE)
+    MaxDD:   8.67% vs 24.50% (BETTER)
+    Turnover: 91.28x vs 0.00x (WORSE)
+    Utility: -0.145 vs 0.375 (WORSE)
 
-  StabilityMeanRevert vs BuyAndHold:
-    Return: -0.35% vs +76.73% (WORSE)
-    Sharpe: -0.165 vs 0.755 (WORSE)
-    MaxDD:  0.93% vs 24.50% (BETTER)
-    Whipsaw: 42.9% vs 0.0% (WORSE)
-    Turnover: 1.82x vs 0.00x (WORSE)
-    Utility: 0.118 vs 0.723 (WORSE)
+  ClarusTransition vs BuyAndHold:
+    Return: -1.60% vs +76.73% (WORSE)
+    CAGR:   -0.32% vs +12.10% (WORSE)
+    Capture: -2.1% vs 100.0% (WORSE)
+    MaxDD:   1.60% vs 24.50% (BETTER)
+    Turnover: 2.30x vs 0.00x (WORSE)
+    Utility: -0.210 vs 0.375 (WORSE)
 
-  Summary: 1/2 strategies beat BuyAndHold on stability-adjusted basis
-  Avg Sharpe (stability strategies): -0.096
-  Avg Utility (stability strategies): 0.136
-  BuyAndHold Sharpe: 0.755
-  BuyAndHold Utility: 0.723
+  Summary: 0/2 strategies beat BuyAndHold on profit-first basis within DD budget
+  Avg Sharpe (profit strategies): -0.282
+  Avg Utility (profit strategies): -0.177
+  BuyAndHold CAGR: +12.10%
+  BuyAndHold Utility: 0.375
 
---- StabilityTrend Trades (15) ---
-  #  1 2021-07-12 -> 2021-09-21 | 409.77 -> 407.43 | -0.57% | 50d | TrendFlip
-  #  2 2021-10-21 -> 2021-11-30 | 426.61 -> 428.03 | +0.33% | 27d | ChaosCut
-  #  3 2021-12-28 -> 2022-01-19 | 450.08 -> 425.94 | -5.36% | 15d | TrendFlip
-  #  4 2022-03-30 -> 2022-04-22 | 434.27 -> 402.95 | -7.21% | 16d | TrendFlip
-  #  5 2022-08-17 -> 2022-08-26 | 405.67 -> 385.00 | -5.10% | 7d | ChaosCut
-  #  6 2023-01-18 -> 2023-02-28 | 375.49 -> 379.68 | +1.12% | 28d | TrendFlip
-  #  7 2023-04-03 -> 2023-08-15 | 395.66 -> 427.56 | +8.06% | 92d | TrendFlip
-  #  8 2023-11-09 -> 2024-01-23 | 420.73 -> 471.64 | +12.10% | 49d | TakeProfit
-  #  9 2024-01-24 -> 2024-04-17 | 472.63 -> 488.41 | +3.34% | 58d | TrendFlip
-  # 10 2024-05-13 -> 2024-07-30 | 508.79 -> 530.56 | +4.28% | 53d | TrendFlip
-  # 11 2024-08-21 -> 2024-12-27 | 549.34 -> 586.21 | +6.71% | 89d | TrendFlip
-  # 12 2025-01-27 -> 2025-02-28 | 591.10 -> 585.39 | -0.96% | 23d | TrendFlip
-  # 13 2025-06-24 -> 2025-10-14 | 601.98 -> 658.15 | +9.33% | 78d | ChaosCut
-  # 14 2025-10-16 -> 2025-11-20 | 657.23 -> 648.51 | -1.33% | 25d | TrendFlip
-  # 15 2025-12-04 -> 2026-02-20 | 680.86 -> 687.21 | +0.93% | 52d | TrendFlip
+--- ClarusContinuation Trades (45) ---
+  #  1 2021-07-12 -> 2021-09-20 | 418.13 -> 407.81 | -2.47% | 49d | NoEdge
+  #  2 2021-10-20 -> 2021-11-30 | 437.93 -> 428.03 | -2.26% | 28d | HardChaos
+  #  3 2021-12-17 -> 2021-12-21 | 433.32 -> 436.61 | +0.76% | 2d | NoEdge
+  #  4 2021-12-29 -> 2022-01-13 | 442.87 -> 437.99 | -1.10% | 11d | NoEdge
+  #  5 2022-03-29 -> 2022-04-04 | 433.06 -> 432.04 | -0.24% | 4d | NoEdge
+  #  6 2022-04-06 -> 2022-04-14 | 421.78 -> 414.06 | -1.83% | 6d | NoEdge
+  #  7 2022-08-01 -> 2022-08-04 | 390.58 -> 393.41 | +0.73% | 3d | HardChaos
+  #  8 2022-08-05 -> 2022-08-10 | 393.06 -> 398.94 | +1.50% | 3d | NoEdge
+  #  9 2022-08-15 -> 2022-08-26 | 395.68 -> 385.00 | -2.70% | 9d | HardChaos
+  # 10 2022-10-26 -> 2022-10-28 | 364.73 -> 371.04 | +1.73% | 2d | NoEdge
+  # 11 2022-11-08 -> 2022-11-09 | 364.71 -> 356.84 | -2.16% | 1d | TransitionLost
+  # 12 2022-11-15 -> 2022-11-16 | 380.46 -> 377.18 | -0.86% | 1d | HardChaos
+  # 13 2022-11-17 -> 2022-11-18 | 376.40 -> 377.73 | +0.35% | 1d | HardChaos
+  # 14 2022-11-22 -> 2022-11-23 | 381.80 -> 383.82 | +0.53% | 1d | HardChaos
+  # 15 2022-12-07 -> 2022-12-08 | 375.37 -> 377.93 | +0.68% | 1d | HardChaos
+  # 16 2022-12-09 -> 2022-12-12 | 375.48 -> 380.51 | +1.34% | 1d | HardChaos
+  # 17 2022-12-13 -> 2022-12-21 | 370.26 -> 370.07 | -0.05% | 6d | NoEdge
+  # 18 2023-01-17 -> 2023-02-08 | 394.06 -> 393.47 | -0.15% | 16d | TransitionLost
+  # 19 2023-02-09 -> 2023-02-21 | 390.65 -> 382.40 | -2.11% | 7d | NoEdge
+  # 20 2023-04-04 -> 2023-05-05 | 394.59 -> 396.88 | +0.58% | 22d | NoEdge
+  ... and 25 more trades
 
---- StabilityMeanRevert Trades (7) ---
-  #  1 2022-01-21 -> 2022-01-25 | 413.37 -> 409.65 | -0.90% | 2d | Relapse
-  #  2 2022-02-11 -> 2022-02-24 | 415.71 -> 403.83 | -2.86% | 8d | Relapse
-  #  3 2022-03-07 -> 2022-03-10 | 395.86 -> 401.17 | +1.34% | 3d | ChaosCut
-  #  4 2022-04-22 -> 2022-04-26 | 403.35 -> 393.55 | -2.43% | 2d | ChaosCut
-  #  5 2022-10-07 -> 2022-10-13 | 346.37 -> 349.06 | +0.78% | 4d | Relapse
-  #  6 2024-08-02 -> 2024-08-06 | 522.18 -> 511.13 | -2.12% | 2d | Relapse
-  #  7 2026-03-27 -> 2026-03-31 | 634.41 -> 650.01 | +2.46% | 2d | Relapse
+--- ClarusTransition Trades (2) ---
+  #  1 2022-02-17 -> 2022-02-24 | 406.97 -> 403.83 | -0.77% | 4d | Relapse
+  #  2 2022-06-10 -> 2022-06-14 | 369.04 -> 353.61 | -4.18% | 2d | HardChaos
 
 === Walk-Forward Validation ===
 
 Config: train 504 bars | test 126 bars | step 126 bars
-Strategy                    WinN   TrainSc    Return%   Sharpe   Calmar   MaxDD%  Utility    Whip%    HoldD     Turn   Trades
+Strategy                    WinN   TrainSc    Return%    CAGR%     Cap%   Sharpe   MaxDD%  Utility    HoldD     Turn   Trades
 ----------------------------------------------------------------------------------------------------------------------------------------------
-WF BuyAndHold                  5     0.000     +68.81    1.434    1.251    18.76    1.255      0.0      0.0     0.00        0
-WF StabilityTrend              5     0.989      +9.90    1.147    1.172     3.30    0.961      0.0     33.9     5.76        7
-WF StabilityMeanRevert         5     0.388      +0.36    0.588    1.410     0.10    0.737      0.0      3.0     0.31        1
+WF BuyAndHold                  5     0.000     +68.81    23.46    100.0    1.434    18.76    0.616      0.0     0.00        0
+WF ClarusContinuation          5    -0.041      +3.58     1.43      5.2    0.417     4.87    0.028     25.8    40.11       10
+WF ClarusTransition            5    -1.228      +0.00     0.00      0.0    0.000     0.00    0.000      0.0     0.00        0
 ----------------------------------------------------------------------------------------------------------------------------------------------
 
-  WF StabilityTrend vs WF BuyAndHold:
-    Return: +9.90% vs +68.81% (WORSE)
-    Sharpe: 1.147 vs 1.434 (WORSE)
-    MaxDD:  3.30% vs 18.76% (BETTER)
-    Whipsaw: 0.0% vs 0.0% (BETTER)
-    Turnover: 5.76x vs 0.00x (WORSE)
-    Utility: 0.961 vs 1.255 (WORSE)
-    W01 train 2021-04-12~2023-04-11 | test 2023-04-12~2023-10-10 | loose | train -0.005/0.048 | test +0.64% | sh 0.290 | dd 3.30% | whip 0.0% | turn 1.98x | trades 2
-    W02 train 2021-10-08~2023-10-10 | test 2023-10-11~2024-04-11 | late | train -0.046/-0.009 | test +1.92% | sh 1.610 | dd 0.73% | whip 0.0% | turn 0.74x | trades 1
-    W03 train 2022-04-08~2024-04-11 | test 2024-04-12~2024-10-10 | defensive | train 1.623/1.429 | test +0.77% | sh 1.189 | dd 0.88% | whip 0.0% | turn 0.43x | trades 1
-    W04 train 2022-10-10~2024-10-10 | test 2024-10-11~2025-04-14 | base | train 1.611/1.442 | test -0.23% | sh -0.401 | dd 1.00% | whip 0.0% | turn 0.43x | trades 1
-    W05 train 2023-04-12~2025-04-14 | test 2025-04-15~2025-10-14 | fast | train 1.762/1.482 | test +6.47% | sh 2.627 | dd 1.61% | whip 0.0% | turn 2.07x | trades 2
+  WF ClarusContinuation vs WF BuyAndHold:
+    Return: +3.58% vs +68.81% (WORSE)
+    CAGR:   +1.43% vs +23.46% (WORSE)
+    Capture: 5.2% vs 100.0% (WORSE)
+    MaxDD:  4.87% vs 18.76% (BETTER)
+    Turnover: 40.11x vs 0.00x (WORSE)
+    Utility: 0.028 vs 0.616 (WORSE)
+    W01 train 2021-04-12~2023-04-11 | test 2023-04-12~2023-10-10 | singlePulse | train -0.874/-0.299 | test -0.72% | sh -0.475 | dd 3.01% | whip 33.3% | turn 6.44x | trades 3
+    W02 train 2021-10-08~2023-10-10 | test 2023-10-11~2024-04-11 | etfBalance | train -0.564/-0.204 | test +3.49% | sh 2.031 | dd 1.05% | whip 0.0% | turn 7.31x | trades 1
+    W03 train 2022-04-08~2024-04-11 | test 2024-04-12~2024-10-10 | etfBalance | train 0.345/0.105 | test -1.64% | sh -0.763 | dd 3.18% | whip 0.0% | turn 10.16x | trades 3
+    W04 train 2022-10-10~2024-10-10 | test 2024-10-11~2025-04-14 | etfBalance | train 0.845/0.289 | test -2.44% | sh -2.027 | dd 2.44% | whip 0.0% | turn 5.07x | trades 2
+    W05 train 2023-04-12~2025-04-14 | test 2025-04-15~2025-10-14 | highVolCarry | train 0.041/-0.015 | test +4.92% | sh 2.193 | dd 1.41% | whip 0.0% | turn 10.97x | trades 1
 
-  WF StabilityMeanRevert vs WF BuyAndHold:
-    Return: +0.36% vs +68.81% (WORSE)
-    Sharpe: 0.588 vs 1.434 (WORSE)
-    MaxDD:  0.10% vs 18.76% (BETTER)
-    Whipsaw: 0.0% vs 0.0% (BETTER)
-    Turnover: 0.31x vs 0.00x (WORSE)
-    Utility: 0.737 vs 1.255 (WORSE)
-    W01 train 2021-04-12~2023-04-11 | test 2023-04-12~2023-10-10 | deep | train 0.179/0.180 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
-    W02 train 2021-10-08~2023-10-10 | test 2023-10-11~2024-04-11 | deep | train 0.179/0.180 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
-    W03 train 2022-04-08~2024-04-11 | test 2024-04-12~2024-10-10 | deep | train 0.197/0.345 | test +0.36% | sh 1.314 | dd 0.10% | whip 0.0% | turn 0.31x | trades 1
-    W04 train 2022-10-10~2024-10-10 | test 2024-10-11~2025-04-14 | deep | train 0.692/0.833 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
-    W05 train 2023-04-12~2025-04-14 | test 2025-04-15~2025-10-14 | deep | train 0.692/0.833 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+  WF ClarusTransition vs WF BuyAndHold:
+    Return: +0.00% vs +68.81% (WORSE)
+    CAGR:   +0.00% vs +23.46% (WORSE)
+    Capture: 0.0% vs 100.0% (WORSE)
+    MaxDD:  0.00% vs 18.76% (BETTER)
+    Turnover: 0.00x vs 0.00x (BETTER)
+    Utility: 0.000 vs 0.616 (WORSE)
+    W01 train 2021-04-12~2023-04-11 | test 2023-04-12~2023-10-10 | etfTransition | train -0.712/-0.273 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W02 train 2021-10-08~2023-10-10 | test 2023-10-11~2024-04-11 | etfTransition | train -0.712/-0.273 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W03 train 2022-04-08~2024-04-11 | test 2024-04-12~2024-10-10 | singleReflex | train -0.715/-0.277 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W04 train 2022-10-10~2024-10-10 | test 2024-10-11~2025-04-14 | etfTransition | train -2.000/0.000 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0
+    W05 train 2023-04-12~2025-04-14 | test 2025-04-15~2025-10-14 | etfTransition | train -2.000/0.000 | test +0.00% | sh 0.000 | dd 0.00% | whip 0.0% | turn 0.00x | trades 0

@@ -2,6 +2,10 @@
 
 Phase 1 is inference-only. Public API keeps standard torch tensors while
 moving the hot path (sparse relax loop) into native code when available.
+
+This module is the canonical Python backend-dispatch layer. Higher-level
+runtime policy should stay in Python modules such as `clarus.engine` and
+`clarus.runtime`, while pure numerics route through here.
 """
 
 from __future__ import annotations
@@ -18,7 +22,7 @@ _CUDA = False
 _cuda_mod = None
 
 try:
-    from clarus._rust import (
+    from ._rust import (
         nn_ce_pack_sparse as _rust_ce_pack_sparse,
         nn_ce_metric_basis_fwd as _rust_ce_metric_basis_fwd,
         nn_ce_codebook_pull as _rust_ce_codebook_pull,

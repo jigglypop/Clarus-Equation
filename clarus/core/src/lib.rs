@@ -1,6 +1,11 @@
 #![allow(non_local_definitions)]
+//! Canonical Rust compute surface for the Clarus runtime.
 
 pub mod engine;
+
+pub use engine::field::{BoundaryMode, FieldConfig, FieldEngine, FieldState, FieldStepOutput};
+pub use engine::kernel::{ModeParams, StepConfig, StepOutput, brain_step};
+pub use engine::runtime_types::{CellState, Mode, RelaxInput, RelaxOutput, SnapshotMeta};
 
 #[cfg(feature = "python")]
 mod python_binding {
@@ -8,6 +13,8 @@ mod python_binding {
     use numpy::{PyReadonlyArray1, PyArray1, IntoPyArray};
     use crate::engine::nn_ops;
     use crate::engine::ce_riemann;
+    use crate::engine::kernel;
+    use crate::engine::runtime_types;
 
     #[pyfunction]
     fn topk_sparse(data: Vec<f64>, ratio: f64) -> (Vec<f64>, usize) {
@@ -261,6 +268,68 @@ mod python_binding {
         )
     }
 
+    #[pyfunction]
+    #[allow(clippy::too_many_arguments)]
+    fn nn_brain_step<'py>(
+        py: Python<'py>,
+        w_values: PyReadonlyArray1<'py, f32>,
+        w_col_idx: PyReadonlyArray1<'py, i32>,
+        w_row_ptr: PyReadonlyArray1<'py, i32>,
+        activation: PyReadonlyArray1<'py, f32>,
+        refractory: PyReadonlyArray1<'py, f32>,
+        memory_trace: PyReadonlyArray1<'py, f32>,
+        bitfield: PyReadonlyArray1<'py, u8>,
+        external: PyReadonlyArray1<'py, f32>,
+        goal: PyReadonlyArray1<'py, f32>,
+        replay: PyReadonlyArray1<'py, f32>,
+        mode: u8,
+        energy_budget: usize,
+    ) -> (
+        &'py PyArray1<f32>,
+        &'py PyArray1<f32>,
+        &'py PyArray1<f32>,
+        &'py PyArray1<u8>,
+        usize,
+        f32,
+    ) {
+        let mode_enum = match mode {
+            1 => runtime_types::Mode::Nrem,
+            2 => runtime_types::Mode::Rem,
+            _ => runtime_types::Mode::Wake,
+        };
+        let mp = kernel::ModeParams::from_mode(mode_enum);
+        let cfg = kernel::StepConfig {
+            energy_budget,
+            ..Default::default()
+        };
+        let mut act = activation.as_slice().expect("contiguous").to_vec();
+        let mut refr = refractory.as_slice().expect("contiguous").to_vec();
+        let mut mem = memory_trace.as_slice().expect("contiguous").to_vec();
+        let mut bit = bitfield.as_slice().expect("contiguous").to_vec();
+        let out = kernel::brain_step(
+            w_values.as_slice().expect("contiguous"),
+            w_col_idx.as_slice().expect("contiguous"),
+            w_row_ptr.as_slice().expect("contiguous"),
+            &mut act,
+            &mut refr,
+            &mut mem,
+            &mut bit,
+            external.as_slice().expect("contiguous"),
+            goal.as_slice().expect("contiguous"),
+            replay.as_slice().expect("contiguous"),
+            &mp,
+            &cfg,
+        );
+        (
+            act.into_pyarray(py),
+            refr.into_pyarray(py),
+            mem.into_pyarray(py),
+            bit.into_pyarray(py),
+            out.active_count,
+            out.energy,
+        )
+    }
+
     #[pymodule]
     fn _rust(_py: Python, m: &PyModule) -> PyResult<()> {
         m.add_function(wrap_pyfunction!(topk_sparse, m)?)?;
@@ -274,6 +343,7 @@ mod python_binding {
         m.add_function(wrap_pyfunction!(nn_ce_metric_basis_fwd, m)?)?;
         m.add_function(wrap_pyfunction!(nn_ce_codebook_pull, m)?)?;
         m.add_function(wrap_pyfunction!(nn_ce_relax_fwd, m)?)?;
+        m.add_function(wrap_pyfunction!(nn_brain_step, m)?)?;
         Ok(())
     }
 }

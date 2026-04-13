@@ -1,35 +1,32 @@
 """Clarus Equation -- CE Field Theory Engine.
 
-Rust backend (clarus/core via PyO3) + PyTorch frontend + CUDA fused kernels.
+Rust backend (clarus/core via PyO3) + PyTorch frontend.
 """
 
 __version__ = "1.2.0"
 
 from clarus.device import auto_device
 
-try:
-    from clarus._rust import (
-        QCEngine,
-        BrainEngine,
-        BrainState,
-        CeConstants,
-        topk_sparse,
-        topk_sparse_batch,
-        nn_topk_silu_fwd,
-        nn_topk_silu_bwd,
-        nn_lbo_fused_fwd,
-        nn_power_iter,
-        nn_gauge_lattice_fwd,
-    )
-    HAS_RUST = True
-except ImportError:
-    HAS_RUST = False
+topk_sparse = None
+topk_sparse_batch = None
+nn_topk_silu_fwd = None
+nn_topk_silu_bwd = None
+nn_lbo_fused_fwd = None
+nn_power_iter = None
+nn_gauge_lattice_fwd = None
 
 try:
-    from clarus.kernels import get_cuda_ops
-    HAS_CUDA_KERNELS = get_cuda_ops() is not None
+    from . import _rust as _rust_mod
+
+    topk_sparse = _rust_mod.topk_sparse
+    topk_sparse_batch = _rust_mod.topk_sparse_batch
+    nn_topk_silu_fwd = _rust_mod.nn_topk_silu_fwd
+    nn_topk_silu_bwd = _rust_mod.nn_topk_silu_bwd
+    nn_lbo_fused_fwd = _rust_mod.nn_lbo_fused_fwd
+    nn_power_iter = _rust_mod.nn_power_iter
+    nn_gauge_lattice_fwd = _rust_mod.nn_gauge_lattice_fwd
 except ImportError:
-    HAS_CUDA_KERNELS = False
+    pass
 
 try:
     from clarus.ce_ops import (
@@ -44,3 +41,31 @@ try:
     )
 except ImportError:
     pass
+
+from .runtime import (
+    BrainRuntime,
+    BrainRuntimeConfig,
+    BrainRuntimeSnapshot,
+    HippocampusMemory,
+    ModuleLifecycle,
+    RuntimeMode,
+    RuntimeStep,
+)
+
+__all__ = [
+    "topk_sparse",
+    "topk_sparse_batch",
+    "nn_topk_silu_fwd",
+    "nn_topk_silu_bwd",
+    "nn_lbo_fused_fwd",
+    "nn_power_iter",
+    "nn_gauge_lattice_fwd",
+    "BrainRuntime",
+    "BrainRuntimeConfig",
+    "BrainRuntimeSnapshot",
+    "HippocampusMemory",
+    "ModuleLifecycle",
+    "RuntimeMode",
+    "RuntimeStep",
+    "auto_device",
+]

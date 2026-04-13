@@ -6,6 +6,25 @@
 
 ---
 
+## 0. 이 문서가 책임지는 새 개념
+
+| 개념 | 이 문서에서의 의미 | runtime stack 위치 | 판정 |
+|---|---|---|---|
+| `WAKE / NREM / REM` | 전역 운영 모드 | mode update | `Bridge` |
+| sleep pressure | 모드 전환을 트리거하는 전역 상태 | mode update | `Bridge` |
+| replay | NREM/REM에서 기억을 다시 주입하는 과정 | hippocampus / replay | `Bridge` |
+| offline renormalization | 수면 중 전역 평탄화 / 정리 | mode + replay | `Bridge` |
+| dream recombination | REM의 비선택 경로 재탐색 | hippocampus / replay | `Hypothesis` 근접 `Phenomenology` |
+| snapshot continuity | 수면 전후 상태 연속성을 유지하는 운영 규약 | global runtime summary | `Bridge` |
+
+읽기 규칙:
+
+- 이 문서는 커널 수치 업데이트 자체보다 **모드 전환과 오프라인 정리 루프**를 다룬다.
+- `mode update`는 여기서, `kernel dynamics`는 `12_Equation.md`와 구현 코드에서 읽는다.
+- REM 창의성, 꿈의 의미, 자아 강화 같은 문장은 설계 은유로만 읽고 성능 보장으로 올리지 않는다.
+
+---
+
 ## 1. 핵심 통찰: 왜 AI에게 수면이 필요한가
 
 ### 1.1 부트스트랩의 필요성

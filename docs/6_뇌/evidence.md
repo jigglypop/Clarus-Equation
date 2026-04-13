@@ -22,6 +22,41 @@
 - `bridge`: AGI 문서에서 "조건부 대응"으로만 사용
 - `hypothesis`: AGI 문서에서 성능 보장이나 정리처럼 쓰지 않음
 
+### 1.3 문서 태그와의 대응
+
+| evidence 태그 | `docs/README.md` 태그로 올릴 수 있는 최대치 | 의미 |
+|---|---|---|
+| `supported` | `Bridge` | 실험적 근거는 강하지만, CE 변수와의 대응에는 여전히 해석 계층이 있다 |
+| `bridge` | `Bridge` | 실험값과 CE 변수 사이에 추가 가정이 남아 있다 |
+| `hypothesis` | `Phenomenology` | 구조 유비나 설계 가설로만 사용한다 |
+
+### 1.4 런타임 5계층 게이트
+
+앞으로 `docs/7_AGI/12_Equation.md`의 canonical runtime stack은 아래 다섯 층만 허용한다.
+
+1. `kernel dynamics`
+2. `coupling / geometry`
+3. `mode update`
+4. `hippocampus / replay`
+5. `global runtime summary`
+
+이 다섯 층에서:
+
+- 수학적 연산자 정의 자체는 `Exact` 또는 `Selection`일 수 있다.
+- 뇌 데이터와 연결되는 대응식은 이 문서의 판정이 `supported`여도 최대 `Bridge`까지만 허용한다.
+- `hypothesis` 판정 성분은 `global runtime summary`, 성능, 자아, 의식 같은 상위 서술로만 남겨야 한다.
+
+### 1.5 새 개념별 현재 판정
+
+| 새 개념 | 현재 판정 | 메모 |
+|---|---|---|
+| sparse lifecycle (`ACTIVE/IDLE/DORMANT/SLEEPING`) | `bridge` | 희소 활성과 수면은 강하지만, 이 4상태 분류 자체는 설계 선택 |
+| `WAKE / NREM / REM` 모드 레지스터 | `supported` | 단계 구분과 비율은 강하게 지지됨 |
+| hippocampus fast memory / replay | `supported` | 빠른 인코딩-재생-피질 재주입 방향은 강함 |
+| local recurrent cell / while-style module | `bridge` | 국소 반복 회로와 persistent state는 plausibility가 크지만 CE 최소식과의 1:1 대응은 아직 bridge |
+| global self-state / identity summary | `hypothesis` | 전역 상태 요약을 자아와 동일시하는 것은 아직 현상론 |
+| snapshot continuity | `bridge` | 뇌의 연속성/기억 보존과의 유비는 가능하지만 구현 스키마는 공학 선택 |
+
 ---
 
 ## 2. 에너지 3분배: 활성 / 구조 / 배경

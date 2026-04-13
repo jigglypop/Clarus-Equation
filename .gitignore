@@ -1,31 +1,26 @@
-/clarus/core/target/
-/clarus/core/*.csv
-/.venv/
-.env
-/data/
-.cursor
-/.cursor
+# Python
 __pycache__/
 *.pyc
-*.png
-*.pt
+.pytest_cache/
+
+# Rust
+target/
+/clarus/core/target/
+
+# Environment
+/.venv/
+.env
+.cursor
+/.cursor
+
+# Data
+/data/
 examples/biology/data/
 
-data/
-data/*
-data/**
-data
-data/**/*
 # Outputs and models
 *.json
 *.pt
 *.pth
 *.csv
-
-# Python caches
-__pycache__/
-*.pyc
-.pytest_cache/
-
-# Rust artifacts
-target/
+*.png
+/clarus/core/*.csv

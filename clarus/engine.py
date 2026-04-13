@@ -19,39 +19,19 @@ import torch.nn.functional as F
 
 try:
     from .ce_ops import (
+        build_metric_basis as ce_build_metric_basis,
         pack_sparse as ce_pack_sparse,
         pq_reconstruct_tokens,
         pq_scores,
-    )
-    from .hopfield import (
-        block_hidden,
-        build_codebook,
-        decode_direct,
-        decode_inject,
-        generate_multiround,
-        prompt_state,
-        relax as hopfield_relax,
-        resolve_device,
-        safe_print,
-        update_phi,
+        relax_packed as ce_relax_packed,
     )
 except ImportError:
     from clarus.ce_ops import (
+        build_metric_basis as ce_build_metric_basis,
         pack_sparse as ce_pack_sparse,
         pq_reconstruct_tokens,
         pq_scores,
-    )
-    from clarus.hopfield import (
-        block_hidden,
-        build_codebook,
-        decode_direct,
-        decode_inject,
-        generate_multiround,
-        prompt_state,
-        relax as hopfield_relax,
-        resolve_device,
-        safe_print,
-        update_phi,
+        relax_packed as ce_relax_packed,
     )
 
 
@@ -60,6 +40,29 @@ DEFAULT_PROMPTS = (
     "오늘 날씨가",
     "한국어로 대답해줘",
 )
+_AD = 4 / (math.e ** (4 / 3) * math.pi ** (4 / 3))
+PORTAL = (_AD * (1 - _AD)) ** 2
+BYPASS = 1 / (math.e ** (1 / 3) * math.pi ** (1 / 3))
+T_WAKE = 1 / (3 + _AD * (1 - _AD))
+
+
+def safe_print(text):
+    try:
+        print(text, flush=True)
+    except UnicodeEncodeError:
+        data = (str(text) + "\n").encode("utf-8", errors="replace")
+        sys.stdout.buffer.write(data)
+        sys.stdout.flush()
+
+
+def resolve_device(name):
+    if name == "cuda":
+        if not torch.cuda.is_available():
+            raise RuntimeError("CUDA requested but torch.cuda.is_available() is False")
+        return torch.device("cuda")
+    if name == "auto":
+        return torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    return torch.device("cpu")
 
 
 def _rounded_count(total: int, ratio: float) -> int:
@@ -72,6 +75,16 @@ def _normalized_residual(x: torch.Tensor) -> torch.Tensor:
     if not torch.isfinite(norm) or norm.item() < 1e-8:
         return torch.zeros_like(x)
     return x / norm
+
+
+def update_phi(phi: torch.Tensor, m_star: torch.Tensor, phi_var: torch.Tensor | None = None) -> torch.Tensor:
+    v = _normalized_residual(m_star)
+    if phi_var is not None and phi_var.numel() == phi.numel():
+        var_mean = phi_var.mean().clamp(min=1e-8)
+        alpha = (BYPASS * var_mean / (var_mean + 1.0)).item()
+    else:
+        alpha = BYPASS
+    return (1 - alpha) * phi + alpha * v
 
 
 def _optional_float(value) -> float | None:
@@ -406,6 +419,26 @@ class CEEngine:
         self._dense_relax_w = self.W if values.numel() == self.W.numel() else None
         self._stored_eigvecs = None
         self._eigvec_cache.clear()
+
+    def build_brain_runtime(
+        self,
+        *,
+        active_ratio: float | None = None,
+        backend: str | None = None,
+    ):
+        from clarus.runtime import BrainRuntime, BrainRuntimeConfig
+
+        runtime_cfg = BrainRuntimeConfig(
+            dim=self.d,
+            active_ratio=self.active_ratio if active_ratio is None else float(active_ratio),
+        )
+        runtime_backend = "auto" if backend is None else backend
+        return BrainRuntime(
+            self.W.detach().cpu(),
+            config=runtime_cfg,
+            backend=runtime_backend,
+            device=self.device,
+        )
 
     def apply_state_partition(
         self,
@@ -1008,7 +1041,7 @@ class CEEngine:
             scores = self.lexical_scores(query)
             top_ids = torch.topk(scores, min(top_k, scores.numel())).indices
             return self.token_embedding(top_ids)
-        return build_codebook(self.model, m_ref, top_k=top_k, verbose=False)
+        raise RuntimeError("legacy teacher-dependent codebook path was removed from clarus/")
 
     def ce_hidden(self, m_star: torch.Tensor) -> torch.Tensor:
         return F.layer_norm(m_star, (self.d,), self.ln_w, self.ln_b)
@@ -1448,26 +1481,7 @@ class CEEngine:
         candidate_layers: list[int],
         need_teacher: bool,
     ) -> tuple[torch.Tensor, dict[int, torch.Tensor], torch.Tensor | None]:
-        with torch.no_grad():
-            emb, phi_base = prompt_state(self.model, prompt_ids)
-
-            capture = sorted(set(int(layer) for layer in candidate_layers))
-            h = emb
-            captured: dict[int, torch.Tensor] = {}
-            target_layer = capture[-1] if capture else -1
-            if need_teacher:
-                target_layer = max(target_layer, self.n_layer - 1)
-
-            for layer_idx in range(target_layer + 1):
-                h = block_hidden(self.model.transformer.h[layer_idx], h)
-                if layer_idx in capture:
-                    captured[layer_idx] = h[:, -1, :].squeeze(0).clone()
-
-            h_true = None
-            if need_teacher:
-                h_true = self.model.transformer.ln_f(h)[:, -1, :]
-
-        return phi_base, captured, h_true
+        raise RuntimeError("legacy teacher-analysis path was removed from clarus/")
 
     def context_from_ids(
         self,
@@ -1499,26 +1513,40 @@ class CEEngine:
         dt_eff = min(float(args.dt), 0.9 * self.tau)
         cb_weight = self.portal if args.cb_weight is None else float(args.cb_weight)
         codebook = self.build_runtime_codebook(ctx.m0, top_k=args.cb_topk)
+        metric_basis = ce_build_metric_basis(
+            codebook,
+            ctx.m0,
+            int(args.metric_rank),
+            w_eigvecs=self._get_w_eigvecs(args.metric_rank),
+            backend=args.backend,
+        )
         t0 = time.time()
-        m_star, hist, n_steps = hopfield_relax(
-            self.W_pack,
+        m_star, hist, n_steps = ce_relax_packed(
+            self.W_pack[0],
+            self.W_pack[1],
+            self.W_pack[2],
             ctx.m0,
             ctx.phi,
             ctx.m0,
             codebook,
-            args.beta,
-            cb_weight,
+            metric_basis,
+            portal=self.portal,
+            bypass=self.bypass,
+            t_wake=self.t_wake,
+            beta=args.beta,
+            cb_w=cb_weight,
             tau=self.tau,
             dt=dt_eff,
             max_steps=args.steps,
-            backend=args.backend,
             metric_rank=args.metric_rank,
             lambda0=args.lambda0,
             lambda_phi=args.lambda_phi,
             lambda_var=args.lambda_var,
             noise_scale=args.noise_scale,
+            anneal_ratio=0.6,
+            tol=1e-4,
+            backend=args.backend,
             seed=args.seed,
-            w_eigvecs=self._get_w_eigvecs(args.metric_rank),
             dense_w=self._dense_relax_w,
         )
         elapsed = time.time() - t0

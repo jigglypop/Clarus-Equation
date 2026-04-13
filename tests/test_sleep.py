@@ -6,8 +6,8 @@ import torch
 import torch.nn as nn
 
 from clarus.ce_ops import pack_sparse
-from clarus.convert import PORTAL, BYPASS, T_WAKE, transplant_phase1
 from clarus.engine import CEEngine
+from tests.bench_gpt2 import build_prompt_weights, select_topical_chunks, sleep_curriculum_stage
 from clarus.sleep import (
     PromptReplayBuffer,
     SleepBatch,
@@ -25,6 +25,10 @@ from clarus.sleep import (
     run_guarded_microsleep_step,
     should_accept_guard_update,
 )
+
+PORTAL = 0.031203
+BYPASS = 0.489236
+T_WAKE = 0.314798
 
 
 def test_fit_decoder_from_batch_recovers_linear_targets():
@@ -253,26 +257,6 @@ def make_runtime_artifact(tmp_path, *, decoder_query_blend=1.0):
     return path
 
 
-def test_phase1_transplant_preserves_small_gpt2_logits():
-    transformers = pytest.importorskip("transformers")
-    cfg = transformers.GPT2Config(
-        vocab_size=32,
-        n_positions=16,
-        n_ctx=16,
-        n_embd=16,
-        n_layer=2,
-        n_head=2,
-    )
-    model = transformers.GPT2LMHeadModel(cfg).eval()
-    ids = torch.tensor([[1, 2, 3, 4]], dtype=torch.long)
-    with torch.no_grad():
-        ref = model(ids).logits
-    transplant_phase1(model, device="cpu")
-    with torch.no_grad():
-        out = model(ids).logits
-    assert torch.allclose(ref, out, atol=1e-5, rtol=1e-5)
-
-
 def test_runtime_only_artifact_loads_without_clone_state(tmp_path):
     path = make_runtime_artifact(tmp_path, decoder_query_blend=1.0)
     eng = CEEngine(str(path), device="cpu", backend="torch")
@@ -474,6 +458,24 @@ def test_prioritize_documents_for_prompts_prefers_overlapping_docs():
     ]
     ordered = prioritize_documents_for_prompts(docs, ["건강한 식단을 유지하려면"])
     assert ordered[0] == docs[1]
+
+
+def test_select_topical_chunks_prefers_overlapping_chunks():
+    prompt_weights = build_prompt_weights(["건강한 식단을 유지하려면", "대한민국의 교육 제도는"])
+    chunks = [
+        "베토벤의 교향곡은 유럽 음악사에서 중요하다.",
+        "건강한 식단은 단백질과 채소의 균형이 중요하다.",
+        "대한민국의 교육 제도는 입시와 공교육 구조를 포함한다.",
+    ]
+    picked = select_topical_chunks(chunks, prompt_weights, keep_limit=2)
+    assert chunks[1] in picked
+    assert chunks[2] in picked
+
+
+def test_sleep_curriculum_stage_advances_by_cycle():
+    assert sleep_curriculum_stage(1)["name"] == "wiki"
+    assert sleep_curriculum_stage(3)["name"] == "wiki+alpaca"
+    assert sleep_curriculum_stage(5)["name"] == "wiki+alpaca+squad"
 
 
 def test_analyze_prompt_ids_single_token_stays_finite():

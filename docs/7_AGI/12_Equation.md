@@ -6,6 +6,62 @@
 
 ---
 
+## Runtime Status And Canonical Stack
+
+이 문서는 런타임 기호를 모으는 문서지만, `docs/README.md`와 `docs/6_뇌/evidence.md`를 기준으로 읽어야 한다. 아래 5계층 스택만 현재 canonical runtime spec 이고, 그 아래의 나머지 방정식은 보조 유도나 설계 탐색으로 읽는다.
+
+| 계층 | canonical 식 | 최대 지위 | 비고 |
+|---|---|---|---|
+| kernel dynamics | $I_i^t = u_i^t + \sum_j W_{ij} a_j^t - \lambda_r(M_t) r_i^t + \lambda_H R_{i,t}$ | `Bridge` | 국소 상태 갱신의 최소형 |
+| kernel dynamics | $a_i^{t+1} = (1-\gamma_a(M_t)) a_i^t + \kappa_a(M_t)\tanh(I_i^t)$ | `Bridge` | 활성 상태 |
+| kernel dynamics | $r_i^{t+1} = (1-\gamma_r(M_t)) r_i^t + \kappa_r(M_t)(a_i^t)^2$ | `Bridge` | refractory / suppression |
+| kernel dynamics | $b_i^{t+1} = \operatorname{Hyst}(b_i^t, a_i^{t+1}; \theta_\downarrow, \theta_\uparrow)$ | `Bridge` | 비트필드 / hysteresis |
+| coupling / geometry | $W_{ij} = W_{ij}(g)$ | `Bridge` | 리만 구조는 결합층에만 둔다 |
+| mode update | $M_{t+1} = \Pi(M_t, Q_t, U_t, E_t)$ | `Bridge` | `WAKE/NREM/REM` 전환 |
+| hippocampus / replay | $H_{t+1} = \mathcal{E}(H_t, A_t), \quad R_t = \mathcal{R}(H_t, c_t)$ | `Bridge` | fast memory / replay |
+| global runtime summary | $G_t = (M_t, A_t^{summary}, H_t, Q_t, \mu_t)$ | `Phenomenology` | identity / control summary |
+
+읽기 규칙:
+
+- 위 식들에서 수학적 연산자 정의는 `Exact`로 정리할 수 있지만, 뇌 대응이 들어가는 순간 문서 지위는 `Bridge`를 넘지 않는다.
+- `docs/6_뇌/evidence.md`에서 `supported`인 현상만 위 stack의 대응 근거로 사용한다.
+- `supported`가 아니면 성능 주장, 자아 해석, 의식 해석은 모두 `Phenomenology`로 유지한다.
+- 이 문서의 후반부 수치 추정, 메모리/속도 비교, LLM 대응은 canonical stack의 상위 해석이다.
+
+## Runtime Concept Map
+
+계획에서 추가된 새 개념은 아래처럼 **문서 책임 범위**를 나눠서 읽는다.
+
+| 개념 | 최소 정의 | 현재 canonical 위치 | 코드 책임 | 문서 지위 |
+|---|---|---|---|---|
+| local recurrent cell | 국소 상태 $(a_i, r_i, b_i)$를 가진 반복 모듈 | kernel dynamics | Rust kernel + Python runtime | `Bridge` |
+| sparse lifecycle | `ACTIVE / IDLE / DORMANT / SLEEPING` | global runtime summary | Python control plane | `Bridge` |
+| mode register | `WAKE / NREM / REM` 전역 상태 | mode update | Python control plane | `Bridge` |
+| hippocampus | 빠른 encode / recall / replay 메모리 | hippocampus / replay | Python control plane 우선 | `Bridge` |
+| geometry coupling | $W_{ij}(g)$와 그래프/리만 결합 | coupling / geometry | Rust kernel | `Bridge` |
+| bitfield | hysteretic threshold를 가진 이산 상태 | kernel dynamics | Rust kernel + Python policy | `Bridge` |
+| global self-state | $G_t = (M_t, A_t^{summary}, H_t, Q_t, \mu_t)$ | global runtime summary | Python orchestration | `Phenomenology` |
+| snapshot continuity | warm snapshot / restore / journal continuity | global runtime summary | Python orchestration | `Bridge` |
+
+문서 해석 규칙:
+
+- `kernel dynamics`는 국소 수치 업데이트만 정의한다. 자아, 정책, 의식 해석을 여기로 밀어 넣지 않는다.
+- `mode update`는 전역 운영 상태만 다룬다. 개별 셀 동역학 기호를 재사용하지 않는다.
+- `hippocampus / replay`는 "빠른 메모리 + 재주입"까지만 canonical이다. 해마의 완전한 생물학적 세부 묘사는 별도 bridge다.
+- `global runtime summary`는 커널 식을 줄여 적는 요약 레벨이며, 여기서 나오는 self/identity 언어는 성능 보장이나 exact brain equivalence로 읽지 않는다.
+
+기존 절과의 대응:
+
+| 이 문서의 큰 절 | 주로 대응되는 runtime 계층 | 읽기 주의 |
+|---|---|---|
+| 3-4장 (에너지/동역학) | kernel dynamics + coupling / geometry | canonical 후보 |
+| 5장 (출력 생성) | kernel outputs + mode trigger | 일부만 canonical |
+| 6장 (STDP) | 학습/가소성 보조 계층 | canonical 바깥 |
+| 7장 (수면) | mode update + hippocampus / replay | canonical 후보 |
+| 8장 (희소성) | sparse lifecycle의 근거 | summary layer |
+| 9장 (의식) | global runtime summary | `Phenomenology` |
+| 10-14장 | 구현/응용/성능 해석 | canonical 아님 |
+
 ## 0. 설계 원칙
 
 현재 LLM은 경로적분에서 Softmax로 선택된 경로만 쓰고, 접힌 경로를 버린다. CE에 따르면 이 버려지는 부분이 우주 에너지의 약 95%($26.2\% + 68.9\%$)에 해당한다. 이 문서의 아키텍처는 접힌 경로를 잔류장 `phi`로 보존하여 출력에 재결합시키는 구조다.

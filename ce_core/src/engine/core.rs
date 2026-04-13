@@ -1,8 +1,40 @@
 use ndarray::{s, Array1};
 use rayon::prelude::*;
 
-const COUPLING_K: f64 = 50.0;
-const DT: f64 = 0.01;
+#[derive(Clone, Debug)]
+pub struct QCEngineConfig {
+    pub mu: f64,
+    pub lam: f64,
+    pub alpha2: f64,
+    pub coupling_k: f64,
+    pub dt: f64,
+    pub damping: f64,
+    pub localized_source_radius: usize,
+    pub localized_source_amplitude: f64,
+}
+
+impl Default for QCEngineConfig {
+    fn default() -> Self {
+        Self {
+            mu: 1.0,
+            lam: 1.0,
+            alpha2: 0.0,
+            coupling_k: 50.0,
+            dt: 0.01,
+            damping: 0.1,
+            localized_source_radius: 0,
+            localized_source_amplitude: 0.0,
+        }
+    }
+}
+
+impl QCEngineConfig {
+    pub fn with_localized_source(mut self, radius: usize, amplitude: f64) -> Self {
+        self.localized_source_radius = radius;
+        self.localized_source_amplitude = amplitude;
+        self
+    }
+}
 
 pub struct QCEngine {
     pub phi: Array1<f64>,
@@ -12,34 +44,49 @@ pub struct QCEngine {
     pub mu: f64,
     pub lam: f64,
     pub alpha2: f64, // Curvature suppression coupling (CE Master Action)
+    pub coupling_k: f64,
+    pub dt: f64,
+    pub damping: f64,
 }
 
 impl QCEngine {
     pub fn new(size: usize) -> Self {
-        let mu: f64 = 1.0;
-        let lam: f64 = 1.0;
-        let alpha2: f64 = 0.0; // Default to 0, enable via Python
-        let vacuum_vev = mu / lam.sqrt();
+        Self::with_config(size, QCEngineConfig::default())
+    }
+
+    pub fn with_config(size: usize, config: QCEngineConfig) -> Self {
+        let vacuum_vev = config.mu / config.lam.sqrt();
         let phi = Array1::from_elem(size, vacuum_vev);
         let dphi = Array1::zeros(size);
         let mut source_j = Array1::zeros(size);
         let forces_buffer = Array1::zeros(size);
 
-        // 국소화된 소스 물질 생성
-        let mid = size / 2;
-        if size > 20 {
-            let range = 10;
-            let mut slice = source_j.slice_mut(s![mid - range..mid + range]);
-            slice.fill(-5.0);
+        // Default construction still supports a localized source, but it is now
+        // configured explicitly instead of being baked into the integrator.
+        if size > 0
+            && config.localized_source_radius > 0
+            && config.localized_source_amplitude != 0.0
+        {
+            let mid = size / 2;
+            let start = mid.saturating_sub(config.localized_source_radius);
+            let end = (mid + config.localized_source_radius).min(size);
+            if start < end {
+                let mut slice = source_j.slice_mut(s![start..end]);
+                slice.fill(config.localized_source_amplitude);
+            }
         }
+
         QCEngine {
             phi,
             dphi,
             source_j,
             forces_buffer,
-            mu,
-            lam,
-            alpha2,
+            mu: config.mu,
+            lam: config.lam,
+            alpha2: config.alpha2,
+            coupling_k: config.coupling_k,
+            dt: config.dt,
+            damping: config.damping,
         }
     }
 
@@ -65,6 +112,9 @@ impl QCEngine {
         let mu = self.mu;
         let lam = self.lam;
         let alpha2 = self.alpha2;
+        let coupling_k = self.coupling_k;
+        let damping_coeff = self.damping;
+        let dt = self.dt;
 
         // 힘의 병렬 계산
         forces_slice
@@ -111,9 +161,9 @@ impl QCEngine {
                 };
 
                 let pot_f = Self::potential_force(phi_slice[i], mu, lam);
-                let damping = -0.1 * dphi_slice[i];
+                let damping = -damping_coeff * dphi_slice[i];
 
-                *force = pot_f + COUPLING_K * laplacian - alpha2 * biharmonic
+                *force = pot_f + coupling_k * laplacian - alpha2 * biharmonic
                     + source_slice[i]
                     + damping;
             });
@@ -132,14 +182,14 @@ impl QCEngine {
             .par_iter_mut()
             .zip(forces_slice.par_iter())
             .for_each(|(v, f)| {
-                *v += f * DT;
+                *v += f * dt;
             });
 
         phi_slice
             .par_iter_mut()
             .zip(dphi_slice.par_iter())
             .for_each(|(p, v)| {
-                *p += v * DT;
+                *p += v * dt;
             });
     }
 

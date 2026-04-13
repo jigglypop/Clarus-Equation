@@ -1,10 +1,11 @@
-"""Runtime-only standalone benchmark: convert -> relax -> evaluate."""
+"""Runtime-only standalone benchmark: relax -> evaluate."""
 from __future__ import annotations
 
 import argparse
 import json
 import math
 import os
+import re
 import sys
 import time
 import traceback
@@ -194,6 +195,48 @@ def interleave_document_groups(groups):
     return ordered
 
 
+def content_terms(text):
+    return {match.group(0).lower() for match in re.finditer(r"[0-9A-Za-z가-힣]{2,}", text)}
+
+
+def build_prompt_weights(prompts):
+    weights = {}
+    for prompt in prompts or []:
+        for token in content_terms(prompt):
+            weights[token] = weights.get(token, 0) + 1
+    return weights
+
+
+def topical_document_score(text, prompt_weights):
+    if not prompt_weights:
+        return 0.0
+    tokens = content_terms(text)
+    if not tokens:
+        return 0.0
+    overlaps = [prompt_weights[token] for token in tokens if token in prompt_weights]
+    if not overlaps:
+        return 0.0
+    overlap_mass = float(sum(overlaps))
+    coverage = float(len(overlaps)) / max(len(prompt_weights), 1)
+    density = float(len(overlaps)) / max(len(tokens), 1)
+    return overlap_mass + 2.0 * coverage + density
+
+
+def select_topical_chunks(chunks, prompt_weights, keep_limit):
+    if not chunks:
+        return []
+    if not prompt_weights:
+        return chunks[:keep_limit]
+    scored = [
+        (topical_document_score(chunk, prompt_weights), idx, chunk)
+        for idx, chunk in enumerate(chunks)
+    ]
+    positive = [item for item in scored if item[0] > 0.0]
+    chosen = positive if positive else scored
+    chosen.sort(key=lambda item: (item[0], -item[1]), reverse=True)
+    return [chunk for _, _, chunk in chosen[:keep_limit]]
+
+
 def format_mixed_corpus_row(row, row_format):
     if row_format == "wiki":
         title = str(row.get("title", "")).strip()
@@ -242,6 +285,7 @@ def load_mixed_runtime_docs(
     *,
     doc_limit,
     text_limit,
+    topical_prompts=None,
 ):
     from datasets import load_dataset
     from clarus.sleep import _chunk_document
@@ -250,6 +294,7 @@ def load_mixed_runtime_docs(
     weights = [source.get("weight", 1.0) for source in sources]
     doc_budgets = allocate_budgets(doc_limit, weights)
     text_budgets = allocate_budgets(text_limit, weights)
+    prompt_weights = build_prompt_weights(topical_prompts)
     groups = []
     for source, source_doc_limit, source_text_limit in zip(sources, doc_budgets, text_budgets, strict=False):
         if source_doc_limit <= 0 or source_text_limit <= 0:
@@ -260,20 +305,31 @@ def load_mixed_runtime_docs(
             source.get("dataset_config"),
             split=source.get("dataset_split", "train"),
         )
-        source_docs = []
+        source_chunks = []
         total_chars = 0
+        row_scan_limit = max(source_doc_limit * 24, 256) if prompt_weights else None
+        scanned_rows = 0
         for row in ds:
+            scanned_rows += 1
             text = format_mixed_corpus_row(row, source["format"])
             if not text:
                 continue
             for chunk in _chunk_document(text):
-                source_docs.append(chunk)
+                source_chunks.append(chunk)
                 total_chars += len(chunk)
-                if len(source_docs) >= source_doc_limit or total_chars >= source_text_limit:
+                if (
+                    not prompt_weights
+                    and (len(source_chunks) >= source_doc_limit or total_chars >= source_text_limit)
+                ):
                     break
-            if len(source_docs) >= source_doc_limit or total_chars >= source_text_limit:
+            if (
+                not prompt_weights
+                and (len(source_chunks) >= source_doc_limit or total_chars >= source_text_limit)
+            ):
                 break
-        groups.append(source_docs)
+            if prompt_weights and scanned_rows >= row_scan_limit and source_chunks:
+                break
+        groups.append(select_topical_chunks(source_chunks, prompt_weights, source_doc_limit))
     return interleave_document_groups(groups)[: max(int(doc_limit), 1)]
 
 
@@ -287,6 +343,7 @@ def load_runtime_docs(
     doc_limit=64,
     text_limit=200000,
     fallback_docs=None,
+    topical_prompts=None,
 ):
     from clarus.sleep import load_corpus_documents
 
@@ -305,6 +362,7 @@ def load_runtime_docs(
             dataset_name,
             doc_limit=doc_limit,
             text_limit=text_limit,
+            topical_prompts=topical_prompts,
         )
     if dataset_name:
         return load_corpus_documents(
@@ -336,6 +394,7 @@ def build_sleep_curriculum_docs(
     doc_limit,
     text_limit,
     fallback_docs,
+    topical_prompts,
 ):
     cache = {DEFAULT_WIKI_DATASET: list(fallback_docs)}
     schedule = []
@@ -353,6 +412,7 @@ def build_sleep_curriculum_docs(
                     doc_limit=doc_limit,
                     text_limit=text_limit,
                     fallback_docs=fallback_docs,
+                    topical_prompts=topical_prompts,
                 )
             except Exception as exc:
                 log(f"  [WARN] curriculum stage '{stage['name']}' fallback: {exc}")
@@ -384,42 +444,6 @@ def section(title):
     log(f"{'='*60}")
 
 
-def phase_convert(model_name, artifact_path, device, phase, save_clone):
-    section("PHASE 1: Convert Runtime-Only CE Artifact")
-    from clarus.convert import convert
-
-    if save_clone:
-        raise RuntimeError("save_clone is forbidden for runtime-only benchmarking")
-
-    def run():
-        convert(
-            model_name,
-            artifact_path,
-            device,
-            sparse=False,
-            phase=phase,
-            phase2_steps=200 if phase >= 2 else 0,
-            save_pq=True,
-            pq_only=False,
-            pq_subdim=64,
-            pq_bits=8,
-            pq_iters=8,
-            pq_batch_size=2048,
-            pq_sample_size=8192,
-            distill_tokens=64,
-            distill_cb_topk=512,
-            distill_teacher_topk=16,
-            distill_ridge=1e-3,
-            relax_steps=32,
-            metric_rank=8,
-            save_clone=False,
-        )
-
-    _, elapsed = measure_time(run, "convert")
-    file_size = os.path.getsize(artifact_path)
-    log(f"  artifact: {artifact_path}")
-    log(f"  size: {file_size / 1024 / 1024:.2f} MB")
-    return {"convert_time_s": elapsed, "artifact_mb": file_size / 1024 / 1024}
 
 
 def phase_engine_bench(
@@ -840,9 +864,7 @@ def main():
     ap.add_argument("--device", default="cpu")
     ap.add_argument("--phase", type=int, default=1, choices=[1, 2])
     ap.add_argument("--sleep-cycles", type=int, default=8)
-    ap.add_argument("--skip-convert", action="store_true")
     ap.add_argument("--artifact", default=None)
-    ap.add_argument("--save-clone", action="store_true")
     ap.add_argument("--train-data", default=None)
     ap.add_argument("--eval-data", default=None)
     ap.add_argument("--train-dataset", default="lcw99/wikipedia-korean-20221001")
@@ -928,6 +950,7 @@ def main():
         doc_limit=args.train_doc_limit,
         text_limit=args.text_limit,
         fallback_docs=train_prompts,
+        topical_prompts=[*bench_prompts, *guard_prompts, *train_prompts],
     )
     train_schedule = None
     if (
@@ -943,6 +966,7 @@ def main():
             doc_limit=args.train_doc_limit,
             text_limit=args.text_limit,
             fallback_docs=train_docs,
+            topical_prompts=[*bench_prompts, *guard_prompts, *train_prompts],
         )
     eval_docs = load_runtime_docs(
         data_path=args.eval_data,
@@ -953,17 +977,13 @@ def main():
         doc_limit=args.eval_doc_limit,
         text_limit=args.text_limit,
         fallback_docs=guard_prompts,
+        topical_prompts=[*bench_prompts, *guard_prompts],
     )
     report["corpus"] = {
         "train_docs": len(train_docs),
         "eval_docs": len(eval_docs),
         "sleep_curriculum": None if train_schedule is None else [entry["name"] for entry in train_schedule],
     }
-
-    if not args.skip_convert:
-        report["convert"] = phase_convert(
-            args.model, artifact_path, args.device, args.phase, args.save_clone,
-        )
 
     eng, engine_report = phase_engine_bench(
         artifact_path,

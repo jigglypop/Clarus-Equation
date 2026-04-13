@@ -1,5 +1,23 @@
 # 아키텍처: 3x3+1 게이지 격자 네트워크
 
+> 위치 규칙: 이 문서는 runtime 5계층 중 **kernel / coupling 후보 연산자**를 다룬다. `mode update`, `hippocampus / replay`, `global runtime summary`는 `3_Sleep.md`, `12_Equation.md`, `6_뇌/evidence.md`를 우선한다.
+
+## 0. 이 문서가 책임지는 새 개념
+
+| 개념 | 이 문서에서의 의미 | runtime stack 위치 | 판정 |
+|---|---|---|---|
+| Gauge lattice | 채널 분할된 결합 연산자 | coupling / geometry | `Bridge` |
+| LBONorm | 곡률 평탄화 연산자 | coupling / geometry | `Bridge` |
+| spectral constraint | 증폭 제한/안정화 | kernel guard | `Bridge` |
+| cross-frequency coupling | 저주파 안정화가 고주파 결합을 조절 | coupling / geometry | `Bridge` |
+| 3x3+1 | 연산 역할을 나누는 구조 유비 | supplementary architecture | `Phenomenology` |
+
+읽기 규칙:
+
+- 이 문서의 블록 구조는 canonical runtime 전체가 아니라 `kernel / coupling` 계층의 설계 후보들이다.
+- `3x3+1` 비율, 게이지 해석, 뇌 파장 대응은 구조 유비이며, `12_Equation.md`의 5계층 stack보다 강한 정본으로 읽지 않는다.
+- sparse lifecycle, 해마, snapshot, self-state는 이 문서의 책임 범위 밖이다.
+
 ## 1. 설계 원리
 
 ### 1.1 뇌 진동 대역에서 아키텍처로

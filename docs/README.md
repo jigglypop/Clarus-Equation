@@ -53,6 +53,25 @@ $$
 - 응용 문서의 수치 벤치마크는 코어의 직접 `Exact` 결론이 아니라, 추가 가정과 실험 제약을 포함한 해석으로 읽는다.
 - 우주론 대표값은 현재 `3계층 관성 보정` 패키지인 `\Omega_b = 0.04865`, `\Omega_\Lambda \approx 0.6891`, `\Omega_{DM} \approx 0.2623`, `R \approx 0.38063`으로 읽는다.
 
+## AGI 런타임 읽기 규칙
+
+- `docs/6_뇌/evidence.md`는 뇌/AGI 연결의 실험 게이트다.
+- `docs/7_AGI/12_Equation.md`는 런타임 기호를 모으는 문서지만, **오직 상단의 5계층 스택만 canonical runtime spec** 으로 읽는다.
+- canonical runtime stack은 다음 다섯 층으로만 고정한다: `kernel dynamics`, `coupling / geometry`, `mode update`, `hippocampus / replay`, `global runtime summary`.
+- 위 다섯 층에서 수학적 정의 자체는 `Exact` 또는 `Selection`일 수 있지만, 뇌 대응이 들어가는 순간 지위는 `Bridge`를 넘지 않는다.
+- `evidence.md`에서 `supported`인 항목은 AGI 런타임에서 최대 `Bridge`까지 올릴 수 있다.
+- `evidence.md`에서 `bridge`인 항목은 그대로 `Bridge`로만 사용한다.
+- `evidence.md`에서 `hypothesis`인 항목은 `Phenomenology`로만 사용하며, 성능 보장이나 "증명된 뇌 등가성" 문장으로 올리지 않는다.
+
+| 새 개념 | 먼저 볼 문서 | 해석 레벨 |
+|------|------|------|
+| local recurrent cell / bitfield | `7_AGI/12_Equation.md` | kernel dynamics |
+| geometry coupling / graph | `7_AGI/2_Architecture.md`, `6_뇌/homeomorphism.md` | coupling / geometry |
+| wake / NREM / REM | `7_AGI/3_Sleep.md`, `6_뇌/evidence.md` | mode update |
+| hippocampus / replay | `7_AGI/3_Sleep.md`, `6_뇌/evidence.md` | hippocampus / replay |
+| sparse lifecycle / snapshot | `7_AGI/12_Equation.md` | global runtime summary |
+| self / identity 해석 | `6_뇌/agi.md` | `Phenomenology` 우선 |
+
 ## 문서 계층과 역할
 
 CE 문서는 네 층으로 읽는 것이 가장 안전하다.

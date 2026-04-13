@@ -21,12 +21,22 @@ from clarus.ce_ops import (
     relax,
     relax_packed,
 )
-from clarus.hopfield import PORTAL as HOPFIELD_PORTAL, get_initial_state, update_phi
 
 
 PORTAL = 0.031203
 BYPASS = 0.489236
 T_WAKE = 0.314798
+
+
+def update_phi(phi: torch.Tensor, m_star: torch.Tensor, phi_var: torch.Tensor | None = None) -> torch.Tensor:
+    norm = m_star.detach().float().norm()
+    residual = torch.zeros_like(m_star) if norm.item() < 1e-8 else m_star.detach().float() / norm
+    if phi_var is not None and phi_var.numel() == phi.numel():
+        var_mean = phi_var.mean().clamp(min=1e-8)
+        alpha = float(BYPASS * var_mean / (var_mean + 1.0))
+    else:
+        alpha = BYPASS
+    return (1 - alpha) * phi + alpha * residual
 
 
 def make_case(dim: int = 12, n_code: int = 10, seed: int = 0):
@@ -63,7 +73,9 @@ def relax_kwargs():
 
 
 def test_default_codebook_weight_matches_portal_constant():
-    assert DEFAULT_CB_W == pytest.approx(HOPFIELD_PORTAL, abs=1e-12)
+    ad = 4 / (math.e ** (4 / 3) * math.pi ** (4 / 3))
+    expected = (ad * (1 - ad)) ** 2
+    assert DEFAULT_CB_W == pytest.approx(expected, abs=1e-12)
 
 
 class IdentityBlock(nn.Module):
@@ -164,14 +176,6 @@ def test_relax_torch_produces_finite_histories():
     assert all(math.isfinite(v) for v in hist["delta"])
     assert len(hist["E"]) == steps
     assert min(hist["E"]) <= hist["E"][0]
-
-
-def test_get_initial_state_single_token_keeps_phi_finite():
-    mdl = FakeModel()
-    prompt_ids = torch.tensor([[1]], dtype=torch.long)
-    _, phi = get_initial_state(mdl, prompt_ids, init_layer=1)
-    assert torch.isfinite(phi).all()
-    assert torch.equal(phi, torch.zeros_like(phi))
 
 
 def test_update_phi_preserves_signed_residual_direction():

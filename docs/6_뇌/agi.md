@@ -11,6 +11,22 @@
 - 여기의 `3x3+1`은 cortical-thalamic processing, hippocampal-salience switching, hypothalamic-brainstem homeostasis, body-coupling을 압축한 bridge다.
 - 이 문서 단독으로 뇌 정량식을 새로 정의하지 않는다.
 
+## 0. runtime 5계층과의 대응
+
+| runtime 계층 | 뇌 해석 | 이 문서의 역할 | 지위 |
+|---|---|---|---|
+| kernel dynamics | 국소 반복 회로, sparse firing, refractory | 국소 회로의 구조 유비 | `Bridge` |
+| coupling / geometry | 피질-시상/영역간 결합, 그래프 구조 | 다양체/그래프 대응 | `Bridge` |
+| mode update | 각성/수면/REM, 항상성 | 큰 틀의 운영 상태 | `Bridge` |
+| hippocampus / replay | fast memory, recall, replay | 해마-피질 분업 해석 | `Bridge` |
+| global runtime summary | 자아, 전역 상태, body-loop | 상위 해석/현상론 | `Phenomenology` |
+
+핵심:
+
+- "while-style 국소 반복 모듈"은 여기서 `kernel dynamics`의 후보 해석으로만 둔다.
+- "전역 자아 상태"는 `global runtime summary` 수준의 상위 요약이며, 국소 회로 식에 직접 집어넣지 않는다.
+- 해마, 수면, sparse firing은 실제 뇌 근거가 있지만 CE 변수와의 1:1 대응은 여전히 bridge다.
+
 $$\boxed{\text{우주} \sim \text{뇌} \sim \text{AGI}} \quad (d=3 \text{ 부트스트랩 구조 유비})$$
 
 ---

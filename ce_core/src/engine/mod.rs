@@ -1,19 +1,6 @@
-pub mod arc;
-pub mod config;
-pub mod constants;
+//! Legacy CE engine modules.
+//!
+//! New runtime/kernel work should land in `clarus/core`.
+//! Only the legacy field integrator remains here.
+
 pub mod core;
-pub mod filter;
-pub mod ibm_api;
-pub mod manifold;
-pub mod market;
-pub mod noise;
-pub mod noise_multi;
-pub mod optimizer;
-pub mod optimizer_v2;
-pub mod qec;
-pub mod suppression_filter;
-pub mod suppresson;
-pub mod suppresson_physics;
-pub mod brain;
-pub mod benchmark;
-pub mod geometric;
