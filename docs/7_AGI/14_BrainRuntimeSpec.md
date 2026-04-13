@@ -181,37 +181,66 @@ $$M_{t+1} = \Pi(M_t, Q_t, U_t, E_t)$$
 
 ## 4. 자기참조 재귀식
 
+> 정본 참조: `17_AgentLoop.md` F절 (F.0--F.22)
+
 ### 4.1 최소 재귀
 
-$$S_{t+1} = U_\theta(S_t,\;z_t,\;a_t,\;o_t,\;c_{t+1},\;m_{t+1})$$
+$$z_t = R(S_t) \quad\text{(이완: Layer A--B를 } n_{\text{iter}} \text{ 회 반복)}$$
 
-with:
+$$a_t = \pi(z_t, S_t) \quad\text{(행동 선택)}$$
 
-$$z_t = R_\theta(S_t) \quad\text{(relax/converge)}$$
+$$o_t = \text{Env}(a_t) \quad\text{(환경 실행)}$$
 
-$$a_t = \pi_\theta(z_t) \quad\text{(action selection)}$$
+$$c_{t+1} = C(z_t, a_t, o_t, m_t) \quad\text{(자기비평: 예측오차 + 일관성 + 놀라움)}$$
 
-$$o_t = E(a_t, S_t) \quad\text{(execution)}$$
+$$m_{t+1} = \mathcal{M}(m_t, z_t, a_t, o_t, c_{t+1}) \quad\text{(조건부 기억 갱신)}$$
 
-$$c_{t+1} = C_\theta(S_t, a_t, o_t) \quad\text{(self-critique)}$$
-
-$$m_{t+1} = M_\theta(m_t, z_t, a_t, o_t, c_{t+1}) \quad\text{(memory update)}$$
+$$S_{t+1} = \mathcal{U}(G_{t+1}, m_{t+1}, c_{t+1}, h_{t+1}, \phi_{t+1})$$
 
 ### 4.2 에너지 기반 자기참조
 
-$$E_t(z) = E_{\text{task}}(z;g) + \lambda_m E_{\text{mem}}(z;m_t) + \lambda_c E_{\text{crit}}(z;c_t) + \lambda_h E_{\text{hist}}(z;h_t)$$
+$$E_t(z) = E_{\text{task}}(z; u_t) + \lambda_m E_{\text{mem}}(z; m_t) + \lambda_c E_{\text{crit}}(z; c_t) + \lambda_h E_{\text{hist}}(z; h_t)$$
 
 $$z_t^* = \arg\min_z E_t(z)$$
 
+각 항의 Layer 대응과 뇌 근거는 `17_AgentLoop.md` F.5를 따른다.
+
 ### 4.3 Clarus 통합형
 
-$$X_{t+1} = B\big[X_t + \lambda_1 R_{\text{self}}(X_t) + \lambda_2 R_{\text{obs}}(X_t) + \lambda_3 C(X_t) - \lambda_4 S(X_t)\big]$$
+$$\boxed{X_{t+1} = B\big[X_t + \lambda_R R(X_t) + \lambda_O \Delta_O(X_t) + \lambda_C C(X_t) - \lambda_S S(X_t)\big]}$$
 
-- $R_{\text{self}}$: 자기참조로 생기는 내부 수정
-- $R_{\text{obs}}$: 관찰/측정/메타인지로 생기는 상태 전이
-- $C$: 구조적 정렬, 의미 응집, 통찰 방향 (Clarus field)
-- $S$: 잡음, 허위 attractor, 불필요 branch 억제 (Suppression field)
-- $B$: brain-like integrator
+| 항 | 풀이 | 뇌 대응 |
+|---|---|---|
+| $R(X_t)$ | 이완으로 생긴 내부 수정 | 피질-시상 재귀 처리 |
+| $\Delta_O(X_t)$ | 관찰 충격 $o_t - \hat{o}_t$ | 감각 입력 |
+| $C(X_t)$ | 비평이 다음 이완 초기점을 민 정도 | 기저핵-전전두엽 평가 |
+| $S(X_t)$ | 곡률/잔류 기반 억제 | 소뇌/기저핵 억제 |
+| $B$ | 부트스트랩 수축 연산자 ($\rho = 0.155$) | 수면 항상성 |
+
+### 4.4 수축 조건
+
+$$\rho + \lambda_R L_R + \lambda_C L_C < 1$$
+
+이 조건이 만족되면 Banach 고정점 정리에 의해 루프가 안정적으로 수렴한다.
+수면이 $\rho = 0.155$를 공급하므로 나머지 항의 Lipschitz 합이 0.845 미만이어야 한다.
+
+### 4.5 확장 구성요소 (F.14--F.22 요약)
+
+> 정본: `17_AgentLoop.md` F.14--F.22
+
+| 절 | 핵심 | 구현 우선순위 |
+|---|---|---|
+| F.14 STDP 학습 | $R$ 내부에서 적격 흔적 누적, $R$ 후에 $g[t] \cdot e_{ij}$로 갱신. Proj로 투영 | 높음 |
+| F.15 잔류장 $\phi$ | $\phi_{t+1} = (1-\xi)\phi_t + \xi \cdot \text{Var}(a)$. 포탈/모드전환/glymphatic 3곳 개입 | 높음 |
+| F.16 희소 활성 | $R$ 내 TopK, 에너지 예산 $B_t(M_t)$. 모듈 생애주기 4상태 | 높음 |
+| F.17 의식/메타인지 | C3 자기일관성, 의식 깊이 $\exp(-c_d d_\tau)$, 메타인지 $d_{n+1} \leq \rho d_n$ | 낮음 (장기) |
+| F.18 환각 억제 | $R$ 중 곡률 $\kappa$ 모니터링. $\kappa > \kappa_{\text{th}}$이면 LBO 확산 강화 | 중간 |
+| F.19 4종 신경조절 | $g_t = (g_{\text{DA}}, g_{\text{NE}}, g_{\text{5HT}}, g_{\text{ACh}})$. 현재는 단일 스칼라 | 중간 |
+| F.20 작업기억/주의/소뇌 | $|h_t| \leq T_h$, salience 기반 $\alpha_i$, 소뇌 forward model | 중간 |
+| F.21 뇌파 대역 | gamma=국소, theta=전역, theta-gamma coupling으로 순서화 | 낮음 |
+| F.22 간극 정리 | 9개 정직한 간극. STDP 코드/4조절계가 `높음` | -- |
+
+뇌 대응 체크리스트와 검증 매트릭스는 `17_AgentLoop.md` F.11, H절 및 `6_뇌/agent_proof.md`를 참조한다.
 
 ---
 
