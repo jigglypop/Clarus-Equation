@@ -155,6 +155,9 @@ class BrainRuntimeSnapshot:
     activation: torch.Tensor
     refractory: torch.Tensor
     memory_trace: torch.Tensor
+    adaptation: torch.Tensor
+    stp_u: torch.Tensor
+    stp_x: torch.Tensor
     bitfield: torch.Tensor
     goal: torch.Tensor
     lifecycle: torch.Tensor
@@ -421,7 +424,9 @@ class BrainRuntime:
 
     def _energy(self, recurrent: torch.Tensor, replay: torch.Tensor) -> float:
         coupling = 0.5 * torch.dot(self.activation, recurrent).abs()
-        local = self.refractory.mean() + 0.25 * self.memory_trace.abs().mean()
+        local = (self.refractory.mean()
+                 + 0.25 * self.memory_trace.abs().mean()
+                 + 0.10 * self.adaptation.abs().mean())
         replay_term = 0.1 * replay.abs().mean()
         total = coupling + local + replay_term
         return float(total.item())
@@ -586,6 +591,9 @@ class BrainRuntime:
             activation=self.activation.detach().cpu(),
             refractory=self.refractory.detach().cpu(),
             memory_trace=self.memory_trace.detach().cpu(),
+            adaptation=self.adaptation.detach().cpu(),
+            stp_u=self.stp_u.detach().cpu(),
+            stp_x=self.stp_x.detach().cpu(),
             bitfield=self.bitfield.detach().cpu(),
             goal=self.goal.detach().cpu(),
             lifecycle=self.lifecycle.detach().cpu(),
@@ -614,6 +622,9 @@ class BrainRuntime:
         runtime.activation = snapshot.activation.to(runtime.device).float()
         runtime.refractory = snapshot.refractory.to(runtime.device).float()
         runtime.memory_trace = snapshot.memory_trace.to(runtime.device).float()
+        runtime.adaptation = snapshot.adaptation.to(runtime.device).float()
+        runtime.stp_u = snapshot.stp_u.to(runtime.device).float()
+        runtime.stp_x = snapshot.stp_x.to(runtime.device).float()
         runtime.bitfield = snapshot.bitfield.to(runtime.device).to(torch.uint8)
         runtime.goal = snapshot.goal.to(runtime.device).float()
         runtime.lifecycle = snapshot.lifecycle.to(runtime.device).to(torch.int64)
