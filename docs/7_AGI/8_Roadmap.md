@@ -21,17 +21,33 @@
 | 곡률 기반 환각 억제 | `examples/ai/sfe_hallucination_suppressor.py` | V1 완료 | 6장 |
 | GPT-2 CE 이식 | `examples/ai/ce_gpt2.py` | 완료 | 2장 |
 | 학습 스크립트 | `examples/ai/train_clarus.py` | 완료 | -- |
+| CE 에너지 이완 엔진 | `clarus/engine.py` | 완료 (standalone) | 12장 |
+| 메트릭 기반 CE ops | `clarus/ce_ops.py` | 완료 (Rust/CUDA/Torch) | 12장 |
+| Wake/NREM/REM 학습 순환 | `clarus/sleep.py` | **구현 완료** | 3장 |
+| NREM 가중치 갱신 (LBO 확산 + 가소성) | `clarus/sleep.py::apply_nrem_weight_update` | **구현 완료** | 3장 |
+| REM 가중치 갱신 (비선택 경로 재조합) | `clarus/sleep.py::apply_rem_weight_update` | **구현 완료** | 3장 |
+| BrainRuntime (모드 전환 + 셀 동역학) | `clarus/runtime.py` | **구현 완료** | 14장 |
+| 해마 기억 (encode/recall/replay) | `clarus/runtime.py::HippocampusMemory` | **구현 완료** | 14장 |
+| 모듈 생애주기 (ACTIVE/IDLE/DORMANT/SLEEPING) | `clarus/runtime.py::_update_lifecycle` | **구현 완료** | 14장 |
+| Borbely 2-Process 수면 압력 | `clarus/runtime.py::_update_sleep_state` | **구현 완료** | 14장 |
+| STP (Tsodyks-Markram) | `clarus/runtime.py::_step_torch`, Rust kernel | **구현 완료** | 15장 |
+| Rust brain_step 커널 | `clarus/core/src/engine/kernel.rs` | **구현 완료** | 14장 |
+| 3분배 상태 분할 ($\varepsilon^2/\Omega_{\text{DM}}/\Omega_\Lambda$) | `clarus/engine.py::state_partition_counts` | **구현 완료** | 5장 |
+| 곡률 기반 로짓 조정 | `clarus/engine.py::_curvature_adjust_logits` | **구현 완료** | 6장 |
+| 스냅샷 연속성 (warm snapshot) | `clarus/runtime.py::snapshot/from_snapshot` | **구현 완료** | 14장 |
+| 가드셋 평가 (top1/top10/top50) | `clarus/sleep.py::evaluate_guard_set` | **구현 완료** | -- |
 
-### 1.2 미구현
+### 1.2 미구현 / 부분 구현
 
 | 원리 | 장 | 상태 | 우선순위 |
 |---|---|---|---|
-| 섭동적 채널 혼합 | 2장 | 미구현 | 높음 |
-| 수면-각성 학습 순환 | 3장 | 미구현 | 높음 |
-| STDP 국소 학습 | 4장 | 미구현 | 중간 |
-| 부트스트랩 수렴 희소성 | 5장 | 미구현 | 높음 |
-| LBO 곡률 추론 억제 | 6장 | V2 필요 | 중간 |
-| 메타인지 루프 | 7장 | 미구현 | 낮음 |
+| 섭동적 채널 혼합 ($U_{\text{down}} U_{\text{up}}^\top x$) | 2장 | 미구현 | 높음 |
+| STDP 국소 학습 (적격 흔적 기반) | 4장 | 미구현 | 중간 |
+| LBO 곡률 추론 억제 V2 (재추론 메커니즘) | 6장 | V1 완료, V2 필요 | 중간 |
+| 메타인지 루프 (C3 자기참조) | 7장 | 미구현 | 낮음 |
+| Cold checkpoint (장기 저장) | 14장 | 미구현 (warm snapshot만 구현) | 낮음 |
+| 4종 신경조절 (DA/NE/5HT/ACh) | 17장 | 미구현 (단일 스칼라만 사용) | 중간 |
+| 작업 기억 / 소뇌 전방 모델 | 17장 | 미구현 | 낮음 |
 
 ---
 
@@ -74,21 +90,33 @@
 
 ---
 
-### Phase 2: 수면 학습 (3장)
+### Phase 2: 수면 학습 (3장) -- 구현 완료
 
 **목표:** 각성-NREM-REM 3위상 학습 순환 구현.
 
-**작업:**
+**현재 상태: 핵심 파이프라인 구현 완료.**
 
-1. 그래디언트 누적 (각성 위상)
-2. LBO 확산 + 곡률 기반 가지치기 (NREM 위상)
-3. 비선택 그래디언트 재조합 (REM 위상)
-4. 수면 압력 모니터링 및 자동 전환
+| 작업 | 구현 위치 | 상태 |
+|---|---|---|
+| 각성 위상 (경로 누적) | `sleep.py::collect_sleep_batch` | 완료 |
+| NREM 위상 (LBO 확산 + 가소적 업데이트) | `sleep.py::apply_nrem_weight_update` | 완료 |
+| REM 위상 (비선택 경로 재조합) | `sleep.py::apply_rem_weight_update` | 완료 |
+| 3위상 통합 순환 | `sleep.py::run_sleep_cycle` | 완료 |
+| 위상별 샘플 비율 분배 ($69\%/26\%/5\%$) | `sleep.py::allocate_phase_sample_counts` | 완료 |
+| 가드셋 품질 보호 | `sleep.py::evaluate_guard_set` | 완료 |
+| 디코더 리피팅 (NREM/REM 각각) | `sleep.py::fit_decoder_from_batch` | 완료 |
+| 어휘 헤드 미세조정 | `sleep.py::finetune_vocab_head_from_batch` | 완료 |
+| 수면 압력 자동 전환 | `runtime.py::_auto_mode` + `_update_sleep_state` | 완료 (Borbely 2-Process) |
 
-**검증:**
+**구현 상세:**
+
+- `apply_nrem_weight_update`: 상태 그래프 라플라시안 기반 확산 (`smooth_weight_matrix`) + 상위 `active_ratio` 가소적 업데이트
+- `apply_rem_weight_update`: 비선택 잔차 (`~selected_mask`)를 저랭크 랜덤 투영 + 노이즈로 재조합
+- `run_sleep_cycle`: Wake 수집 -> NREM W 갱신 -> NREM 디코더 리피팅 -> REM W 갱신 -> REM 디코더 리피팅 -> 가드셋 평가 -> 롤백 판정
+
+**남은 검증:**
 
 - 지속 학습(continual learning) 벤치마크: 수면 순환 vs 연속 학습
-  - Split-CIFAR-100, Permuted-MNIST, 또는 텍스트 도메인 벤치마크
 - 파괴적 망각 측정: 이전 태스크 성능 보존율
 - 수렴 속도: 부트스트랩 이탈 $\delta_n$ 감소 곡선
 - 과도 응답: 균등 초기화에서 `33.3 -> 9.28 -> 5.55 -> 4.98%` 예측과 실제 재분배 비교
@@ -99,20 +127,31 @@
 - `G2-B`: 잔차 곡선이 최소한 `2회 ~2.4%`, `3회 ~0.37%` 목표 수렴률에 근접할 것
 - `G2-C`: sleep-on에서는 bounded residual, wake-only에서는 누적 drift가 관측될 것
 
-**예상 기간:** 4주
+**예상 기간:** ~~4주~~ 핵심 구현 완료. 대규모 벤치마크 검증 잔여
 
 ---
 
-### Phase 3: 희소성 (5장)
+### Phase 3: 희소성 (5장) -- 기반 구현 완료
 
 **목표:** 부트스트랩 수렴 희소 네트워크 구현.
 
-**작업:**
+**현재 상태:**
 
-1. Top-k 활성화 ($k = \lceil \varepsilon^2 \cdot d \rceil$) 구현
-2. 3분배 가중치 분류 (활성/구조/동결) 구현
-3. 동적 재분류 (수면 순환마다)
-4. 자기수렴 실험: 초기 균등에서 $\varepsilon^2$로의 수렴 관측
+| 작업 | 구현 위치 | 상태 |
+|---|---|---|
+| 3분배 상태 분할 ($4.87\%/26.2\%/68.9\%$) | `engine.py::state_partition_counts` | 완료 |
+| 활성/구조/배경 마스크 적용 | `engine.py::state_partition`, `apply_state_partition` | 완료 |
+| TopK 활성 선택 | `runtime.py::_select_active` | 완료 |
+| 에너지 예산 모드별 제어 | `runtime.py::BrainRuntimeConfig.energy_budget` | 완료 |
+| 모듈 생애주기 4상태 관리 | `runtime.py::_update_lifecycle` | 완료 |
+| 수면 순환 시 동적 재분류 | `sleep.py::classify_state_dimensions` | 완료 |
+
+**잔여 작업:**
+
+1. ~~Top-k 활성화 구현~~ -> 완료
+2. ~~3분배 가중치 분류 구현~~ -> 완료
+3. ~~동적 재분류~~ -> 완료
+4. 자기수렴 실험: 초기 균등에서 $\varepsilon^2$로의 수렴 관측 (벤치마크 필요)
 
 **검증:**
 

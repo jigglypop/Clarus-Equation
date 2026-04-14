@@ -17,7 +17,22 @@ from typing import Dict
 import numpy as np
 import torch
 
-from clarus.ce_ops import pack_sparse
+try:
+    from .ce_ops import pack_sparse
+    from .constants import (
+        MEMORY_TRACE_DECAY, ADAPTATION_DECAY, ADAPTATION_COUPLING,
+        STP_TAU_FAC_INV, STP_TAU_REC, STP_U_BASE, ADAPTATION_CLAMP,
+        TAU_W_STEPS, TAU_S_STEPS, SLEEP_PRESSURE_MAX, REM_TAU_FACTOR,
+        NORM_EPS,
+    )
+except ImportError:
+    from clarus.ce_ops import pack_sparse
+    from clarus.constants import (
+        MEMORY_TRACE_DECAY, ADAPTATION_DECAY, ADAPTATION_COUPLING,
+        STP_TAU_FAC_INV, STP_TAU_REC, STP_U_BASE, ADAPTATION_CLAMP,
+        TAU_W_STEPS, TAU_S_STEPS, SLEEP_PRESSURE_MAX, REM_TAU_FACTOR,
+        NORM_EPS,
+    )
 
 try:
     from clarus._rust import nn_brain_step as _rust_brain_step
@@ -54,12 +69,10 @@ _LIFECYCLE_TO_CODE = {
 _CODE_TO_LIFECYCLE = {value: key for key, value in _LIFECYCLE_TO_CODE.items()}
 
 
-def _normalize(x: torch.Tensor) -> torch.Tensor:
-    x = x.detach().float()
-    norm = x.norm()
-    if not torch.isfinite(norm) or norm.item() < 1e-8:
-        return torch.zeros_like(x)
-    return x / norm
+try:
+    from .utils import normalize_vector as _normalize
+except ImportError:
+    from clarus.utils import normalize_vector as _normalize
 
 
 @dataclass
@@ -382,24 +395,17 @@ class BrainRuntime:
         return RuntimeMode.REM
 
     def _update_sleep_state(self, mode: RuntimeMode, active_count: int, external_norm: float) -> None:
-        """Borbely 2-Process model (15_Equations.md C.2).
-
-        Process S: homeostatic sleep pressure
-          WAKE:  dS/dt = (S_max - S) / tau_w   (tau_w = 18.2h ~ 65520 steps @1ms)
-          SLEEP: dS/dt = -S / tau_s             (tau_s = 4.2h  ~ 15120 steps @1ms)
-        Process C: 24.2h circadian (simplified as constant modulation)
-        """
+        """Borbely 2-Process model (15_Equations.md C.2)."""
         self.arousal = float(external_norm)
-        tau_w_inv = 1.0 / 65520.0
-        tau_s_inv = 1.0 / 15120.0
-        s_max = 2.0
+        tau_w_inv = 1.0 / TAU_W_STEPS
+        tau_s_inv = 1.0 / TAU_S_STEPS
         if mode is RuntimeMode.WAKE:
-            self.sleep_pressure += (s_max - self.sleep_pressure) * tau_w_inv
+            self.sleep_pressure += (SLEEP_PRESSURE_MAX - self.sleep_pressure) * tau_w_inv
         elif mode is RuntimeMode.NREM:
             self.sleep_pressure -= self.sleep_pressure * tau_s_inv
         else:
-            self.sleep_pressure -= self.sleep_pressure * tau_s_inv * 0.5
-        self.sleep_pressure = float(max(0.0, min(self.sleep_pressure, s_max)))
+            self.sleep_pressure -= self.sleep_pressure * tau_s_inv * REM_TAU_FACTOR
+        self.sleep_pressure = float(max(0.0, min(self.sleep_pressure, SLEEP_PRESSURE_MAX)))
 
     def _update_lifecycle(self, salience: torch.Tensor, active_mask: torch.Tensor) -> None:
         self.inactive_steps = torch.where(
@@ -479,31 +485,44 @@ class BrainRuntime:
         self.bitfield = torch.from_numpy(np.array(new_bit, dtype=np.uint8)).to(self.device)
         return int(active_count), float(energy)
 
+    def _compute_salience(
+        self,
+        activation: torch.Tensor,
+        external: torch.Tensor,
+        replay: torch.Tensor,
+        refractory: torch.Tensor,
+    ) -> torch.Tensor:
+        """Compute module salience for active selection (shared by step logic)."""
+        return (
+            activation.abs()
+            + 0.35 * external.abs()
+            + 0.25 * replay.abs()
+            + 0.20 * self.goal.abs()
+            - 0.15 * refractory
+        )
+
     def _step_torch(
         self,
         external: torch.Tensor,
         replay: torch.Tensor,
         mode: RuntimeMode,
-    ) -> tuple[int, float]:
-        """Pure-torch cell step (fallback path). Eq A.1--A.7, J.19--J.20."""
+    ) -> tuple[torch.Tensor, torch.Tensor, float]:
+        """Pure-torch cell step (fallback path). Eq A.1--A.7, J.19--J.20.
+
+        Returns (salience, recurrent, energy) to avoid recomputation in step().
+        """
         prev_active = self.active_mask().float()
 
-        # STP update (Tsodyks-Markram, J.19)
-        tau_fac_inv = 0.0015
-        tau_rec = 0.008
-        u_base = 0.5
         spike = prev_active
-        stp_u = self.stp_u + (-tau_fac_inv * self.stp_u + u_base * (1.0 - self.stp_u) * spike)
-        stp_x = self.stp_x + (tau_rec * (1.0 - self.stp_x) - self.stp_u * self.stp_x * spike)
+        stp_u = self.stp_u + (-STP_TAU_FAC_INV * self.stp_u + STP_U_BASE * (1.0 - self.stp_u) * spike)
+        stp_x = self.stp_x + (STP_TAU_REC * (1.0 - self.stp_x) - self.stp_u * self.stp_x * spike)
         stp_u = stp_u.clamp(0.0, 1.0)
         stp_x = stp_x.clamp(0.0, 1.0)
 
-        # W_eff = u * x * a (STP-modulated presynaptic)
         pre = stp_u * stp_x * self.activation * prev_active
         recurrent = self._matvec(pre)
 
-        # adaptation coupling: beta_w = 0.12 bounds steady-state suppression to ~24%
-        adapt_force = 0.12 * self.adaptation
+        adapt_force = ADAPTATION_COUPLING * self.adaptation
 
         drive = (
             recurrent
@@ -521,22 +540,14 @@ class BrainRuntime:
             (1.0 - self.config.refractory_decay(mode)) * self.refractory
             + self.config.refractory_gain(mode) * activation.square()
         )
-        memory_trace = 0.99 * self.memory_trace + 0.01 * activation
-        # J.20: tau_w=200ms -> gamma_w=kappa_w=0.005, w* = E[a^2], bounded [0,2]
-        adaptation = ((1.0 - 0.005) * self.adaptation + 0.005 * activation.square()).clamp(0.0, 2.0)
+        memory_trace = (1.0 - MEMORY_TRACE_DECAY) * self.memory_trace + MEMORY_TRACE_DECAY * activation
+        adaptation = (
+            (1.0 - ADAPTATION_DECAY) * self.adaptation + ADAPTATION_DECAY * activation.square()
+        ).clamp(0.0, ADAPTATION_CLAMP)
 
         bitfield = self.bitfield.clone()
         bitfield[activation >= self.config.bit_upper_threshold] = 1
         bitfield[activation <= self.config.bit_lower_threshold] = 0
-
-        salience = (
-            activation.abs()
-            + 0.35 * external.abs()
-            + 0.25 * replay.abs()
-            + 0.20 * self.goal.abs()
-            - 0.15 * refractory
-        )
-        active_mask = self._select_active(salience, self.config.energy_budget(mode))
 
         self.activation = activation
         self.refractory = refractory
@@ -546,9 +557,9 @@ class BrainRuntime:
         self.stp_x = stp_x
         self.bitfield = bitfield
 
-        active_count = int(active_mask.sum().item())
+        salience = self._compute_salience(activation, external, replay, refractory)
         energy = self._energy(recurrent, replay)
-        return active_count, energy
+        return salience, recurrent, energy
 
     def step(
         self,
@@ -571,22 +582,17 @@ class BrainRuntime:
 
         if self._use_rust():
             active_count, energy = self._step_rust(external, replay, mode)
+            salience = self._compute_salience(self.activation, external, replay, self.refractory)
         else:
-            active_count, energy = self._step_torch(external, replay, mode)
+            salience, _recurrent, energy = self._step_torch(external, replay, mode)
 
-        salience = (
-            self.activation.abs()
-            + 0.35 * external.abs()
-            + 0.25 * replay.abs()
-            + 0.20 * self.goal.abs()
-            - 0.15 * self.refractory
-        )
         active_mask = self._select_active(salience, self.config.energy_budget(mode))
+        active_count = int(active_mask.sum().item())
         self.mode = mode
         self._update_lifecycle(salience, active_mask)
 
         priority = float((salience[active_mask].mean().item() if active_count else salience.mean().item()) + external_norm)
-        if mode is RuntimeMode.WAKE and (external_norm > 1e-6 or self.goal.norm().item() > 1e-6):
+        if mode is RuntimeMode.WAKE and (external_norm > NORM_EPS or self.goal.norm().item() > NORM_EPS):
             self.hippocampus.encode(self.activation, value=self.memory_trace, priority=priority)
         elif mode is not RuntimeMode.WAKE and len(self.hippocampus) > 0:
             consolidated = 0.85 * self.activation + 0.15 * replay

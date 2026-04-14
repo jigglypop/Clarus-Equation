@@ -17,6 +17,11 @@ from typing import Dict, Optional, Tuple
 import torch
 import torch.nn.functional as F
 
+try:
+    from .constants import PORTAL as DEFAULT_CB_W, NORM_EPS, SOFTMAX_EPS, CLAMP_EPS
+except ImportError:
+    from clarus.constants import PORTAL as DEFAULT_CB_W, NORM_EPS, SOFTMAX_EPS, CLAMP_EPS
+
 _RUST = False
 _CUDA = False
 _cuda_mod = None
@@ -41,10 +46,6 @@ try:
 except ImportError:
     _CUDA = False
     _cuda_mod = None
-
-
-_ad = 4 / (math.e ** (4 / 3) * math.pi ** (4 / 3))
-DEFAULT_CB_W = (_ad * (1 - _ad)) ** 2
 
 
 def has_rust() -> bool:

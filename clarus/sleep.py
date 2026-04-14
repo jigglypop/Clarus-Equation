@@ -18,9 +18,11 @@ import torch.nn.functional as F
 try:
     from .engine import CEEngine, DEFAULT_PROMPTS, state_partition_counts
     from .ce_ops import pq_build_codebook
+    from .utils import safe_print
 except ImportError:
     from clarus.engine import CEEngine, DEFAULT_PROMPTS, state_partition_counts
     from clarus.ce_ops import pq_build_codebook
+    from clarus.utils import safe_print
 
 
 @dataclass
@@ -66,13 +68,6 @@ class PromptReplayBuffer:
 
     def items(self) -> list[str]:
         return list(self.prompts)
-
-
-def safe_print(text):
-    try:
-        print(text, flush=True)
-    except UnicodeEncodeError:
-        print(str(text).encode("utf-8", errors="replace").decode("utf-8"), flush=True)
 
 
 DEFAULT_CORPUS_DATASET = "lcw99/wikipedia-korean-20221001"

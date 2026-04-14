@@ -524,18 +524,91 @@ $$Q_{\text{brain}} = Q_{\text{base}} - \Delta_{\text{lang-prior}} - \Delta_{\tex
 
 ---
 
-## 14. 현재 brain.rs와의 대응
+## 14. 현재 코드와의 대응
 
-| formal 변수 | brain.rs 구현 |
-|---|---|
-| $m_t$ (주 상태) | `field.phi`, `field.dphi` |
-| $\phi_t$ (잔류장) | `field` + `pooled memory` |
-| $q_t$ (제어) | `arc` 추정 상태 (`r_est`, `k_est`) |
-| $g$ (goal) | `goal` 직접 존재 |
-| $h_t$ (memory) | `memory` EMA |
-| suppression | `geo_sup`, `suppression.apply_to_signal` |
+### 14.1 runtime.py (`BrainRuntime`) -- Layer A-E 정합
 
-현재 구현은 brain-field core가 있으나, critic/action/output loop는 아직 부족하다.
+| formal 변수 | Python 구현 (`runtime.py`) | 상태 |
+|---|---|---|
+| $a_i$ (activation) | `self.activation` | 구현 완료 |
+| $r_i$ (refractory) | `self.refractory` | 구현 완료 |
+| $m_i$ (memory_trace) | `self.memory_trace` | 구현 완료 |
+| $w_i$ (adaptation) | `self.adaptation` | 구현 완료 |
+| $b_i$ (bitfield) | `self.bitfield` | 구현 완료 |
+| $u_j, x_j$ (STP) | `self.stp_u`, `self.stp_x` | 구현 완료 (Tsodyks-Markram) |
+| $W_{ij}$ (coupling) | `self.sparse_weight` (CSR) | 구현 완료 |
+| $M_t$ (mode) | `self.mode: RuntimeMode` | 구현 완료 (WAKE/NREM/REM) |
+| $\Pi$ (mode switch) | `_auto_mode(external_norm)` | 구현 완료 (규칙 기반) |
+| $Q_t$ (sleep pressure) | `self.sleep_pressure` | 구현 완료 (Borbely 2-Process) |
+| $H_t$ (hippocampus) | `self.hippocampus: HippocampusMemory` | 구현 완료 |
+| $B_t$ (energy budget) | `config.energy_budget(mode)` | 구현 완료 |
+| $Z_i$ (lifecycle) | `self.lifecycle` (ACTIVE/IDLE/DORMANT/SLEEPING) | 구현 완료 |
+| $G_t$ (global summary) | `RuntimeStep` | 구현 완료 |
+| $\mathcal{W}$ (warm snapshot) | `BrainRuntimeSnapshot` + `snapshot()/from_snapshot()` | 구현 완료 |
+
+### 14.2 engine.py (`CEEngine`) -- CE 에너지 이완 경로
+
+| formal 변수 | Python 구현 (`engine.py`) | 상태 |
+|---|---|---|
+| $m$ (state vector) | 이완 루프 내부 `m` | 구현 완료 |
+| $\phi$ (auxiliary field) | `update_phi(phi, m_star, phi_var)` | 구현 완료 |
+| $W$ (Hopfield weight) | `self.W` (CSR packed) | 구현 완료 |
+| Portal / Bypass / T_wake | `engine.PORTAL`, `BYPASS`, `T_WAKE` | 구현 완료 |
+| $\varepsilon^2/\Omega_{\text{DM}}/\Omega_\Lambda$ | `active_ratio/struct_ratio/wake_ratio` | 구현 완료 |
+| 곡률 억제 | `_curvature_adjust_logits` | V1 구현 완료 |
+| PQ codebook | `pq_centroids`, `pq_codes` | 구현 완료 |
+
+### 14.3 sleep.py -- 3위상 학습 순환
+
+| formal 개념 | 코드 함수 | 상태 |
+|---|---|---|
+| Wake (경로 누적) | `collect_sleep_batch` | 구현 완료 |
+| NREM (LBO 확산 + 가소적 업데이트) | `apply_nrem_weight_update` | 구현 완료 |
+| REM (비선택 경로 재조합) | `apply_rem_weight_update` | 구현 완료 |
+| 3위상 통합 순환 | `run_sleep_cycle` | 구현 완료 |
+| 가드셋 보호 | `evaluate_guard_set` | 구현 완료 |
+
+### 14.4 Rust 커널 (`clarus/core/`) -- 핵심 수치
+
+| Rust 모듈 | 역할 | Python 바인딩 |
+|---|---|---|
+| `kernel.rs` | brain_step (셀 동역학), Dale's Law | `nn_brain_step` |
+| `field.rs` | 필드 결합, 리만 거리 기반 W | PyO3 |
+| `manifold.rs` | 다양체 연산 | PyO3 |
+| `nn_ops.rs` | topk_sparse, LBO, gauge lattice | `nn_topk_sparse`, `nn_lbo_fused_fwd`, `nn_gauge_lattice_fwd` |
+| `ce_riemann.rs` | CE 리만 수치 (물리 검증용) | PyO3 |
+| `constants.rs` | 물리 상수 유도 (`CeConstants`) | PyO3 |
+| `config.rs` | 런타임 설정 | PyO3 |
+| `runtime_types.rs` | `CellState`, `Mode`, 스냅샷 타입 | PyO3 |
+
+### 14.5 정합 현황 요약
+
+| Layer | 수식 정본 | 코드 구현 | 정합도 |
+|---|---|---|---|
+| A (셀 동역학) | `15_Equations.md` A절 | `runtime.py::_step_torch` + `kernel.rs` | 완전 일치 |
+| B (필드 결합) | `15_Equations.md` B절 | `runtime.py::_matvec` + `field.rs` | 완전 일치 |
+| C (전역 모드) | `15_Equations.md` C절 | `runtime.py::_auto_mode` + `_update_sleep_state` | 완전 일치 |
+| D (해마/기억) | `15_Equations.md` D절 | `runtime.py::HippocampusMemory` | 완전 일치 |
+| E (전역 요약) | `15_Equations.md` E절 | `runtime.py::RuntimeStep` + `BrainRuntimeSnapshot` | 완전 일치 |
+| F (에이전트 루프) | `17_AgentLoop.md` F절 | `engine.py` + `sleep.py` (부분) | 핵심 구현, STDP/메타인지 미구현 |
+
+### 14.6 남은 간극
+
+| 간극 | 문서 위치 | 우선순위 |
+|---|---|---|
+| STDP 적격 흔적 | F.14 | 높음 |
+| 4종 신경조절 분리 | F.19 | 중간 |
+| Cold checkpoint + Live journal | 7절 | 낮음 |
+| 작업 기억 / 소뇌 | F.20 | 중간 |
+| (C3) 메타인지 재귀 루프 | F.17 | 낮음 |
+
+현재 구현은 **셀 동역학 + 모드 전환 + 해마 + 수면 학습 순환**의 핵심 스택이 완성되어 있으며, critic/action/output 에이전트 루프와 STDP 학습이 남아 있다.
+
+---
+
+## 15. 한 줄 원칙
+
+$$\boxed{\text{뇌 전체를 만들지 말고, 살아남는 최소 코어를 먼저 만들어라}}$$
 
 ---
 

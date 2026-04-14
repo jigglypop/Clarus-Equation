@@ -25,6 +25,8 @@ try:
         pq_scores,
         relax_packed as ce_relax_packed,
     )
+    from .constants import AD, PORTAL, BYPASS, T_WAKE, NORM_EPS
+    from .utils import safe_print, normalize_vector, resolve_device
 except ImportError:
     from clarus.ce_ops import (
         build_metric_basis as ce_build_metric_basis,
@@ -33,6 +35,8 @@ except ImportError:
         pq_scores,
         relax_packed as ce_relax_packed,
     )
+    from clarus.constants import AD, PORTAL, BYPASS, T_WAKE, NORM_EPS
+    from clarus.utils import safe_print, normalize_vector, resolve_device
 
 
 DEFAULT_PROMPTS = (
@@ -40,45 +44,14 @@ DEFAULT_PROMPTS = (
     "오늘 날씨가",
     "한국어로 대답해줘",
 )
-_AD = 4 / (math.e ** (4 / 3) * math.pi ** (4 / 3))
-PORTAL = (_AD * (1 - _AD)) ** 2
-BYPASS = 1 / (math.e ** (1 / 3) * math.pi ** (1 / 3))
-T_WAKE = 1 / (3 + _AD * (1 - _AD))
-
-
-def safe_print(text):
-    try:
-        print(text, flush=True)
-    except UnicodeEncodeError:
-        data = (str(text) + "\n").encode("utf-8", errors="replace")
-        sys.stdout.buffer.write(data)
-        sys.stdout.flush()
-
-
-def resolve_device(name):
-    if name == "cuda":
-        if not torch.cuda.is_available():
-            raise RuntimeError("CUDA requested but torch.cuda.is_available() is False")
-        return torch.device("cuda")
-    if name == "auto":
-        return torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    return torch.device("cpu")
 
 
 def _rounded_count(total: int, ratio: float) -> int:
     return int(math.floor(max(float(ratio), 0.0) * float(total) + 0.5))
 
 
-def _normalized_residual(x: torch.Tensor) -> torch.Tensor:
-    x = x.detach().float()
-    norm = x.norm()
-    if not torch.isfinite(norm) or norm.item() < 1e-8:
-        return torch.zeros_like(x)
-    return x / norm
-
-
 def update_phi(phi: torch.Tensor, m_star: torch.Tensor, phi_var: torch.Tensor | None = None) -> torch.Tensor:
-    v = _normalized_residual(m_star)
+    v = normalize_vector(m_star)
     if phi_var is not None and phi_var.numel() == phi.numel():
         var_mean = phi_var.mean().clamp(min=1e-8)
         alpha = (BYPASS * var_mean / (var_mean + 1.0)).item()
@@ -1807,13 +1780,8 @@ def main():
                 f"->{relax_result['hist']['E'][-1]:.4f}"
             )
 
-        if chosen_mode == "all":
-            for name in ("direct", "inject", "multiround", "standalone"):
-                if name in outputs:
-                    safe_print(f"    [{name}] -> {outputs[name]}")
-        else:
-            output_text = outputs.get(chosen_mode, "")
-            safe_print(f"    [{chosen_mode}] -> {output_text}")
+        output_text = outputs.get(chosen_mode, "")
+        safe_print(f"    [{chosen_mode}] -> {output_text}")
         if "standalone_refresh_count" in decode_meta:
             safe_print(
                 f"    [standalone-refresh] interval={decode_meta['standalone_refresh_interval']}  "
@@ -1825,11 +1793,6 @@ def main():
                 f"    [standalone-guard] risk={_format_optional(decode_meta['standalone_curvature_risk'])}  "
                 f"suppression_hits={int(decode_meta.get('standalone_suppression_hits', 0))}"
             )
-
-        reference = None
-        if args.compare_gpt2:
-            reference = eng.reference_generate(prompt, args.tokens)
-            safe_print(f"    [gpt2] -> {reference}")
 
         results.append(
             {
@@ -1863,7 +1826,7 @@ def main():
                 "multiround_energies": [
                     round(v, 4) for v in decode_meta.get("multiround_energies", [])[:32]
                 ],
-                "gpt2_reference": reference,
+                "gpt2_reference": None,
             }
         )
 
@@ -1912,12 +1875,6 @@ def main():
                     f"guard_top50={event['guard_before']['top50_acc']:.3f}"
                     f"->{event['guard_effective']['top50_acc']:.3f}"
                 )
-
-    if args.compare_gpt2:
-        safe_print("\n--- Summary ---")
-        safe_print(f"  CE runtime: {mem['runtime_total_MB']:.1f} MB")
-        safe_print(f"  GPT2 model: {mem['model_MB']:.1f} MB")
-        safe_print(f"  Ratio: {mem['runtime_total_MB'] / max(mem['model_MB'], 1e-6) * 100:.1f}%")
 
     mem_after = mem
     microsleep_report = None

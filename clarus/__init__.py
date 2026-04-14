@@ -5,7 +5,12 @@ Rust backend (clarus/core via PyO3) + PyTorch frontend.
 
 __version__ = "1.2.0"
 
-from clarus.device import auto_device
+from .device import auto_device
+from .constants import (
+    AD, PORTAL, BYPASS, T_WAKE,
+    ACTIVE_RATIO, STRUCT_RATIO, BACKGROUND_RATIO,
+)
+from .utils import safe_print, normalize_vector, resolve_device
 
 topk_sparse = None
 topk_sparse_batch = None
@@ -29,7 +34,7 @@ except ImportError:
     pass
 
 try:
-    from clarus.ce_ops import (
+    from .ce_ops import (
         has_rust as ce_has_rust,
         has_cuda as ce_has_cuda,
         ce_backend,
@@ -68,4 +73,9 @@ __all__ = [
     "RuntimeMode",
     "RuntimeStep",
     "auto_device",
+    "safe_print",
+    "normalize_vector",
+    "resolve_device",
+    "AD", "PORTAL", "BYPASS", "T_WAKE",
+    "ACTIVE_RATIO", "STRUCT_RATIO", "BACKGROUND_RATIO",
 ]
