@@ -23,7 +23,12 @@ try:
         MEMORY_TRACE_DECAY, ADAPTATION_DECAY, ADAPTATION_COUPLING,
         STP_TAU_FAC_INV, STP_TAU_REC, STP_U_BASE, ADAPTATION_CLAMP,
         TAU_W_STEPS, TAU_S_STEPS, SLEEP_PRESSURE_MAX, REM_TAU_FACTOR,
-        NORM_EPS,
+        NORM_EPS, NOISE_SIGMA, DALE_EI_RATIO, DALE_INH_GAIN,
+        AXON_DELAY_MAX, CIRCADIAN_PERIOD, CIRCADIAN_AMP, CIRCADIAN_BASE,
+        NREM_LENGTH_DECAY, FORGET_TAU, RECALL_SIMILARITY_THRESHOLD,
+        ACTIVE_RATIO, STRUCT_RATIO, BACKGROUND_RATIO,
+        BOOTSTRAP_CONTRACTION, BAND_DELTA, BAND_THETA, BAND_ALPHA,
+        BAND_BETA, BAND_GAMMA,
     )
 except ImportError:
     from clarus.ce_ops import pack_sparse
@@ -31,7 +36,12 @@ except ImportError:
         MEMORY_TRACE_DECAY, ADAPTATION_DECAY, ADAPTATION_COUPLING,
         STP_TAU_FAC_INV, STP_TAU_REC, STP_U_BASE, ADAPTATION_CLAMP,
         TAU_W_STEPS, TAU_S_STEPS, SLEEP_PRESSURE_MAX, REM_TAU_FACTOR,
-        NORM_EPS,
+        NORM_EPS, NOISE_SIGMA, DALE_EI_RATIO, DALE_INH_GAIN,
+        AXON_DELAY_MAX, CIRCADIAN_PERIOD, CIRCADIAN_AMP, CIRCADIAN_BASE,
+        NREM_LENGTH_DECAY, FORGET_TAU, RECALL_SIMILARITY_THRESHOLD,
+        ACTIVE_RATIO, STRUCT_RATIO, BACKGROUND_RATIO,
+        BOOTSTRAP_CONTRACTION, BAND_DELTA, BAND_THETA, BAND_ALPHA,
+        BAND_BETA, BAND_GAMMA,
     )
 
 try:
@@ -94,6 +104,11 @@ class BrainRuntimeConfig:
     wake_threshold: float = 0.18
     memory_capacity: int = 32
     memory_topk: int = 4
+    noise_sigma: float = NOISE_SIGMA
+    dale_law: bool = True
+    axon_delay: bool = True
+    max_axon_delay: int = AXON_DELAY_MAX
+    forget_tau: float = FORGET_TAU
 
     def __post_init__(self) -> None:
         self.dim = int(self.dim)
@@ -219,6 +234,14 @@ class HippocampusMemory:
         self._values.append(value)
         self._priority.append(priority)
 
+    def decay_priorities(self, steps: int = 1) -> None:
+        """Exponential priority decay: P *= exp(-dt/tau_forget). (15_Equations D)"""
+        import math as _math
+        if not self._priority:
+            return
+        factor = _math.exp(-steps / FORGET_TAU)
+        self._priority = [p * factor for p in self._priority]
+
     def recall(self, cue: torch.Tensor, *, topk: int = 4) -> torch.Tensor:
         if not self._keys:
             return torch.zeros(self.dim, device=self.device)
@@ -226,9 +249,13 @@ class HippocampusMemory:
         keys = torch.stack(self._keys, dim=0)
         values = torch.stack(self._values, dim=0)
         priority = torch.tensor(self._priority, dtype=torch.float32, device=self.device)
-        score = keys @ cue
-        score = score + priority.log()
-        k = min(max(int(topk), 1), score.numel())
+        similarity = keys @ cue
+        above_threshold = similarity >= RECALL_SIMILARITY_THRESHOLD
+        if not above_threshold.any():
+            return torch.zeros(self.dim, device=self.device)
+        score = similarity + priority.log()
+        score = score.masked_fill(~above_threshold, float("-inf"))
+        k = min(max(int(topk), 1), int(above_threshold.sum().item()))
         top_score, top_idx = torch.topk(score, k=k)
         weights = torch.softmax(top_score, dim=0)
         return torch.sum(values[top_idx] * weights.unsqueeze(1), dim=0)
@@ -337,11 +364,108 @@ class BrainRuntime:
         self.sleep_pressure = 0.0
         self.arousal = 0.0
         self.step_index = 0
+        self.circadian_phase = 0.0
+        self.nrem_cycle_count = 0
+
+        # Dale's Law: E:I = 80:20 sign mask
+        n_exc = int(self.config.dim * DALE_EI_RATIO)
+        self.dale_sign = torch.ones(self.config.dim, device=self.device)
+        self.dale_sign[n_exc:] = -DALE_INH_GAIN
+        if self.config.dale_law:
+            self.weight = self.weight.abs() * self.dale_sign.unsqueeze(1)
+            self._rebuild_sparse()
+
+        # Axon delay buffer: ring buffer of recent activations
+        if self.config.axon_delay:
+            self._delay_buffer = torch.zeros(
+                self.config.max_axon_delay, self.config.dim, device=self.device
+            )
+            self._delay_idx = 0
+        else:
+            self._delay_buffer = None
+            self._delay_idx = 0
+
+        # Brainwave history for FFT
+        self._brainwave_history: list[float] = []
+        self._brainwave_max_len = 1024
+
         self.hippocampus = HippocampusMemory(
             self.config.dim,
             capacity=self.config.memory_capacity,
             device=self.device,
         )
+
+    def _rebuild_sparse(self) -> None:
+        """Rebuild CSR sparse weight from dense weight."""
+        pack_backend = "torch" if self.backend == "cuda" else self.backend
+        values, col_idx, row_ptr = pack_sparse(
+            self.weight.detach().cpu(),
+            zero_tol=self.config.zero_tol,
+            backend=pack_backend,
+        )
+        self.values = values.to(self.device)
+        self.col_idx = col_idx.to(self.device)
+        self.row_ptr = row_ptr.to(self.device)
+        self.sparse_weight = torch.sparse_csr_tensor(
+            self.row_ptr.to(torch.int64),
+            self.col_idx.to(torch.int64),
+            self.values,
+            size=self.weight.shape,
+            device=self.device,
+            dtype=self.weight.dtype,
+            check_invariants=False,
+        )
+
+    def brainwave_observable(self) -> dict[str, float]:
+        """Compute global brainwave and band powers via FFT (Layer B / F.21)."""
+        psi = float(self.activation.abs().mean().item())
+        self._brainwave_history.append(psi)
+        if len(self._brainwave_history) > self._brainwave_max_len:
+            self._brainwave_history = self._brainwave_history[-self._brainwave_max_len:]
+        result: dict[str, float] = {"psi_global": psi}
+        if len(self._brainwave_history) < 8:
+            return result
+        sig = torch.tensor(self._brainwave_history, dtype=torch.float32)
+        fft_vals = torch.fft.rfft(sig - sig.mean())
+        power = (fft_vals.abs() ** 2) / len(sig)
+        fs = 1000.0  # 1 step = 1ms
+        freqs = torch.fft.rfftfreq(len(sig), d=1.0 / fs)
+        for name, (lo, hi) in [
+            ("delta", BAND_DELTA), ("theta", BAND_THETA),
+            ("alpha", BAND_ALPHA), ("beta", BAND_BETA), ("gamma", BAND_GAMMA),
+        ]:
+            mask = (freqs >= lo) & (freqs < hi)
+            result[name] = float(power[mask].sum().item()) if mask.any() else 0.0
+        return result
+
+    def energy_full(self) -> float:
+        """Full energy E({a_i}) per 15_Equations.md B.3."""
+        coupling = -0.5 * torch.dot(self.activation, self._matvec(self.activation))
+        local = -(self.refractory * self.activation).sum()
+        adapt = -ADAPTATION_COUPLING * (self.adaptation * self.activation).sum()
+        return float((coupling + local + adapt).item())
+
+    def compute_self_state(self) -> dict[str, float]:
+        """Layer E: Self_t = S(G_t) -- global self-state summary."""
+        active_frac = float(self.active_mask().float().mean().item())
+        target = torch.tensor([ACTIVE_RATIO, STRUCT_RATIO, BACKGROUND_RATIO])
+        lc = self.lifecycle_counts()
+        total = max(sum(lc.values()), 1)
+        current = torch.tensor([
+            lc.get("ACTIVE", 0) / total,
+            (lc.get("IDLE", 0) + lc.get("SLEEPING", 0)) / total,
+            lc.get("DORMANT", 0) / total,
+        ])
+        bootstrap_deviation = float((current - target).norm().item())
+        return {
+            "active_fraction": active_frac,
+            "bootstrap_deviation": bootstrap_deviation,
+            "sleep_pressure": self.sleep_pressure,
+            "arousal": self.arousal,
+            "mode": self.mode.value,
+            "energy": self.energy_full(),
+            "consciousness_depth": 0.0,  # filled by agent layer
+        }
 
     def set_goal(self, goal: torch.Tensor | None) -> None:
         if goal is None:
@@ -395,17 +519,33 @@ class BrainRuntime:
         return RuntimeMode.REM
 
     def _update_sleep_state(self, mode: RuntimeMode, active_count: int, external_norm: float) -> None:
-        """Borbely 2-Process model (15_Equations.md C.2)."""
+        """Borbely 2-Process model with circadian (15_Equations.md C.2)."""
+        import math as _math
         self.arousal = float(external_norm)
         tau_w_inv = 1.0 / TAU_W_STEPS
         tau_s_inv = 1.0 / TAU_S_STEPS
+
+        # Process C: circadian modulation
+        self.circadian_phase += 1.0
+        circadian = CIRCADIAN_BASE + CIRCADIAN_AMP * _math.cos(
+            2.0 * _math.pi * self.circadian_phase / CIRCADIAN_PERIOD
+        )
+
+        # Process S: homeostatic pressure
         if mode is RuntimeMode.WAKE:
             self.sleep_pressure += (SLEEP_PRESSURE_MAX - self.sleep_pressure) * tau_w_inv
         elif mode is RuntimeMode.NREM:
             self.sleep_pressure -= self.sleep_pressure * tau_s_inv
+            self.nrem_cycle_count += 1
         else:
             self.sleep_pressure -= self.sleep_pressure * tau_s_inv * REM_TAU_FACTOR
         self.sleep_pressure = float(max(0.0, min(self.sleep_pressure, SLEEP_PRESSURE_MAX)))
+        self._circadian_value = circadian
+
+    def nrem_target_length(self) -> float:
+        """T_NREM(n) = T0 * alpha^n -- decreasing NREM length within a night."""
+        base = TAU_S_STEPS * 2.0
+        return base * (NREM_LENGTH_DECAY ** self.nrem_cycle_count)
 
     def _update_lifecycle(self, salience: torch.Tensor, active_mask: torch.Tensor) -> None:
         self.inactive_steps = torch.where(
@@ -520,9 +660,30 @@ class BrainRuntime:
         stp_x = stp_x.clamp(0.0, 1.0)
 
         pre = stp_u * stp_x * self.activation * prev_active
-        recurrent = self._matvec(pre)
+
+        # Axon delay: use delayed activation for recurrent input
+        if self._delay_buffer is not None:
+            delayed = self._delay_buffer[self._delay_idx % self.config.max_axon_delay]
+            pre_delayed = stp_u * stp_x * delayed * prev_active
+            recurrent = self._matvec(pre_delayed)
+            self._delay_buffer[self._delay_idx % self.config.max_axon_delay] = self.activation.detach()
+            self._delay_idx += 1
+        else:
+            recurrent = self._matvec(pre)
 
         adapt_force = ADAPTATION_COUPLING * self.adaptation
+
+        # Noise injection (15_Equations A.2): mode-scaled, seeded for reproducibility
+        noise_scale = {
+            RuntimeMode.WAKE: 1.0,
+            RuntimeMode.NREM: 0.3,
+            RuntimeMode.REM: 0.7,
+        }[mode]
+        gen = torch.Generator(device=self.activation.device)
+        gen.manual_seed(self.step_index * 31337 + 7)
+        noise = self.config.noise_sigma * noise_scale * torch.randn(
+            self.activation.shape, generator=gen, device=self.activation.device, dtype=self.activation.dtype
+        )
 
         drive = (
             recurrent
@@ -531,6 +692,7 @@ class BrainRuntime:
             + self.config.replay_mix(mode) * replay
             - self.config.refractory_scale * self.refractory
             - adapt_force
+            + noise
         )
         activation = (
             (1.0 - self.config.activation_decay(mode)) * self.activation
@@ -598,7 +760,9 @@ class BrainRuntime:
             consolidated = 0.85 * self.activation + 0.15 * replay
             self.hippocampus.encode(consolidated, value=self.memory_trace, priority=priority * 0.5)
 
+        self.hippocampus.decay_priorities()
         self._update_sleep_state(mode, active_count, external_norm)
+        self.brainwave_observable()
         self.step_index += 1
         return RuntimeStep(
             step=self.step_index,

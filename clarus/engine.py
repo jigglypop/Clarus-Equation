@@ -741,7 +741,7 @@ class CEEngine:
         phi_base = (
             torch.zeros_like(last_emb)
             if emb_seq.shape[0] <= 1
-            else _normalized_residual(emb_seq[:-1].mean(dim=0) - emb_seq[-1])
+            else normalize_vector(emb_seq[:-1].mean(dim=0) - emb_seq[-1])
         )
         len_ratio = float(min(emb_seq.shape[0], 0 if self.pos is None else self.pos.shape[0]) or emb_seq.shape[0])
         if self.pos is not None and self.pos.shape[0] > 0:
