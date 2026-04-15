@@ -579,6 +579,7 @@ def _target_distribution(
     target_id: int,
     *,
     topk: int,
+    teacher_logits: torch.Tensor | None = None,
 ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
     target_emb = eng.token_embedding([target_id]).squeeze(0).detach()
     k = min(max(int(topk), 1), eng.vocab)
@@ -586,6 +587,19 @@ def _target_distribution(
         top_idx = torch.tensor([target_id], dtype=torch.long, device=eng.device)
         probs = torch.tensor([1.0], dtype=torch.float32, device=eng.device)
         return target_emb, top_idx.cpu(), probs.cpu(), target_emb
+
+    if teacher_logits is not None:
+        top_vals, top_idx_raw = torch.topk(teacher_logits.float(), min(k, teacher_logits.numel()))
+        probs = F.softmax(top_vals, dim=0)
+        ordered_ids = top_idx_raw.tolist()
+        if target_id not in ordered_ids:
+            ordered_ids = [target_id] + ordered_ids[:-1]
+            probs_list = [0.5] + [p * 0.5 for p in probs.tolist()[:-1]]
+            probs = torch.tensor(probs_list, dtype=torch.float32)
+            probs = probs / probs.sum()
+        top_idx = torch.tensor(ordered_ids, dtype=torch.long, device=eng.device)
+        soft_target = (eng.token_embedding(ordered_ids).detach() * probs.unsqueeze(1).to(eng.device)).sum(0)
+        return target_emb, top_idx.cpu(), probs.cpu(), soft_target
 
     soft_scores = eng.lexical_scores(target_emb)
     gather_k = min(max(k * 2, k + 1), soft_scores.numel())
@@ -691,9 +705,15 @@ def collect_sleep_batch(
                 cursor += max(1, int(max_new_tokens))
                 continue
             ctx = eng.context_from_ids(ids)
-            relax_result = eng.relax_context(ctx, ce_args)
-            ce_hidden = eng.ce_hidden(relax_result["m_star"]).detach()
-            phi_state = relax_result["phi_updated"].detach()
+            if eng.model is not None:
+                with torch.no_grad():
+                    teacher_out = eng.model(ids, output_hidden_states=True)
+                    ce_hidden = teacher_out.hidden_states[-1][0, -1].float().detach()
+                phi_state = ctx.phi.detach()
+            else:
+                relax_result = eng.relax_context(ctx, ce_args)
+                ce_hidden = eng.ce_hidden(relax_result["m_star"]).detach()
+                phi_state = relax_result["phi_updated"].detach()
             init_layer = ctx.best_layer
             history_ids = ids[0].tolist()
             prev_hidden = None
@@ -705,10 +725,18 @@ def collect_sleep_batch(
                 target_id = int(full_ids[0, target_pos].item())
                 prev_id = int(ids[0, -1].item())
                 prev_emb = eng.token_embedding([prev_id]).squeeze(0).detach()
+
+                teacher_logits = None
+                if eng.model is not None:
+                    with torch.no_grad():
+                        teacher_out = eng.model(ids)
+                        teacher_logits = teacher_out.logits[0, -1].detach().cpu()
+
                 target_emb, top_idx, probs, soft_target = _target_distribution(
                     eng,
                     target_id,
                     topk=teacher_topk,
+                    teacher_logits=teacher_logits,
                 )
 
                 standalone_logits, step_meta = eng.standalone_logits(

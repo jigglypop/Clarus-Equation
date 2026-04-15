@@ -484,11 +484,17 @@ class CEEngine:
 
     def _compress_runtime_projections(self):
         if self.decoder_state_proj is not None:
-            self.decoder_state_proj = self._compress_state_proj(self.decoder_state_proj.detach().cpu())
-            self.data["decoder_state_proj"] = self.decoder_state_proj.detach().cpu()
+            if self.decoder_state_proj.shape[0] == self.d and self.decoder_state_proj.shape[1] == self.d:
+                self.decoder_state_proj = self.decoder_state_proj.float().to(self.device)
+            else:
+                self.decoder_state_proj = self._compress_state_proj(self.decoder_state_proj.detach().cpu())
+                self.data["decoder_state_proj"] = self.decoder_state_proj.detach().cpu()
         if self.decoder_prev_proj is not None:
-            self.decoder_prev_proj = self._compress_prev_proj(self.decoder_prev_proj.detach().cpu())
-            self.data["decoder_prev_proj"] = self.decoder_prev_proj.detach().cpu()
+            if self.decoder_prev_proj.shape[0] == self.d and self.decoder_prev_proj.shape[1] == self.d:
+                self.decoder_prev_proj = self.decoder_prev_proj.float().to(self.device)
+            else:
+                self.decoder_prev_proj = self._compress_prev_proj(self.decoder_prev_proj.detach().cpu())
+                self.data["decoder_prev_proj"] = self.decoder_prev_proj.detach().cpu()
         if self.decoder_token_state_proj is not None:
             self.decoder_token_state_proj = self._compress_token_state_proj(self.decoder_token_state_proj.detach().cpu())
             self.data["decoder_token_state_proj"] = self.decoder_token_state_proj.detach().cpu()
@@ -812,6 +818,13 @@ class CEEngine:
         query = state_query + float(self.decoder_prev_scale) * prev_query
         if self.decoder_query_bias is not None:
             query = query + self.decoder_query_bias
+
+        blend = float(self.decoder_query_blend)
+        if blend <= 0.0:
+            query = state_hidden.float()
+        elif blend < 1.0:
+            query = blend * query + (1.0 - blend) * state_hidden.float()
+
         query = self._rescale_to_reference(query, state_hidden.float())
         finite_mask = torch.isfinite(query).all(dim=-1) if query.ndim > 1 else torch.isfinite(query).all()
         if query.ndim == 1:
@@ -1297,7 +1310,10 @@ class CEEngine:
             raise RuntimeError("Standalone decoder requires embeddings or PQ lexical memory")
 
         refresh_interval = max(int(refresh_interval), 0)
-        h = F.layer_norm(m_star, (self.d,), self.ln_w, self.ln_b)
+        if getattr(self, '_skip_ln_for_standalone', False):
+            h = m_star.float().to(self.device)
+        else:
+            h = F.layer_norm(m_star, (self.d,), self.ln_w, self.ln_b)
         prev_id = int(prompt_ids[0, -1].item())
         running_ids = prompt_ids.clone()
         out_ids: list[int] = []
@@ -1465,7 +1481,7 @@ class CEEngine:
         phi: torch.Tensor | None = None,
         need_teacher: bool = True,
     ) -> PromptContext:
-        if need_teacher and self.model is not None:
+        if need_teacher and self.model is not None and not getattr(self, 'allow_pretrained_fallback', False):
             raise RuntimeError("teacher path is disabled in runtime-only mode")
         m0, phi_base = self.runtime_prompt_state(prompt_ids, phi=phi)
         best_layer = int(init_layer) if init_layer is not None else int(
