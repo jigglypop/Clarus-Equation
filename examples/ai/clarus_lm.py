@@ -1,17 +1,18 @@
 """ClarusLM: CE 3x3+1 격자 위상동형 AGI의 LLM 구현.
 
-Transformer에 대한 CE 수정 4가지:
-  LBONorm      -- LayerNorm 대체 (라플라스-벨트라미 확산)
-  GaugeLattice -- FFN 대체 (SU(3) x SU(2) x U(1) + Phi)
-  spectral_norm -- 유니타리 조건 |det T|^2 <= 1 (환각 구조적 억제)
-  curvature loss -- lambda |Delta_g Phi|^2 정규화
+Transformer에 대한 CE 수정 5가지 (docs/7_AGI/2_Architecture.md):
+  LBONorm      -- LayerNorm 대체 (라플라스-벨트라미 확산, 3절)
+  GaugeLattice -- FFN 대체 (SU(3) x SU(2) x U(1) + Phi, 2절)
+  spectral_norm -- 유니타리 조건 |det T|^2 <= 1 (4절)
+  curvature loss -- lambda(t) |Delta_g Phi|^2 (5절, 스케줄 포함)
+  CFC          -- 교차 주파수 결합 T_i*(1 - xi*E_curv), xi = alpha_s^(1/3) (6절)
 
 Backend dispatch (auto):
   CUDA  -- fused kernels (training + inference)
   Rust  -- clarus/core via PyO3 (CPU training/inference)
   Torch -- pure PyTorch fallback
 
-Reference: docs/6_뇌/agi.md
+Reference: docs/7_AGI/2_Architecture.md, docs/6_뇌/agi.md
 """
 
 from __future__ import annotations
@@ -35,6 +36,10 @@ except ImportError:
     ALPHA_W = 0.03352
     ALPHA_EM = 0.00775
     _BACKEND = "standalone"
+
+# CFC (Cross-Frequency Coupling) coefficient: xi = alpha_s^(1/3) = 0.490
+# docs/7_AGI/2_Architecture.md 6.2: T_i^coupled(x_i) = T_i(x_i) * (1 - xi * E_curv)
+CFC_XI = ALPHA_S ** (1.0 / 3.0)
 
 try:
     from clarus.ops import (
@@ -238,43 +243,70 @@ class GaugeLattice(nn.Module):
     채널 비율: alpha_s:alpha_w:alpha_em = 74.1:21.1:4.9 (CE 연역).
     low-rank mixing을 0 초기화해 perturbative coupling으로 시작한다.
     sparsity: 활성 뉴런 비율. 1.0=dense, EPS2=CE 부트스트랩 희소.
+
+    CFC (cross-frequency coupling, docs/7_AGI/2_Architecture.md 6.2):
+      forward(x, curv_gate=E_curv)에서 각 채널 출력에 (1 - xi*E_curv)를 곱함.
+      xi = alpha_s^(1/3) = 0.490. curv_gate는 직전 LBONorm이 측정한
+      곡률 에너지 ||Delta_g h||^2 (detach된 안전 게이트).
+
+    dense=True: full-dim MLP (GPT-2 파라미터 전이 시 cross-channel 보존).
+    증류 학습 후 decompose_to_gauge()로 CE 채널 구조로 분해 가능.
     """
 
-    def __init__(self, dim, mult=4, hidden_dim=None, mix_rank=None, sparsity=1.0):
+    def __init__(self, dim, mult=4, hidden_dim=None, mix_rank=None, sparsity=1.0,
+                 bias=True, dense=False, act_fn="silu"):
         super().__init__()
         self.dim = dim
         self.hidden_dim = max(dim, int(round(hidden_dim if hidden_dim is not None else dim * mult)))
         self.mix_rank = max(0, dim // 8 if mix_rank is None else int(mix_rank))
         self.sparsity = sparsity
+        self.dense = dense
+        self.act_fn_name = act_fn
         self.d3, self.d2, self.d1 = split_ce_dims(dim)
-        h3, h2, h1 = split_ce_dims(self.hidden_dim)
 
-        self.su3_up = nn.Linear(self.d3, h3, bias=False)
-        self.su3_act = TopKSiLU(h3, sparsity)
-        self.su3_down = nn.utils.spectral_norm(nn.Linear(h3, self.d3, bias=False))
-
-        self.su2_up = nn.Linear(self.d2, h2, bias=False)
-        self.su2_act = TopKSiLU(h2, sparsity)
-        self.su2_down = nn.utils.spectral_norm(nn.Linear(h2, self.d2, bias=False))
-
-        self.u1_up = nn.Linear(self.d1, h1, bias=False)
-        self.u1_act = TopKSiLU(h1, sparsity)
-        self.u1_down = nn.utils.spectral_norm(nn.Linear(h1, self.d1, bias=False))
-
-        if self.mix_rank > 0:
-            self.mix_down = nn.Linear(dim, self.mix_rank, bias=False)
-            self.mix_up = nn.Linear(self.mix_rank, dim, bias=False)
-            nn.init.zeros_(self.mix_up.weight)
+        if dense:
+            self.fc_up = nn.Linear(dim, self.hidden_dim, bias=bias)
+            self.fc_down = nn.Linear(self.hidden_dim, dim, bias=bias)
+            if act_fn == "gelu":
+                self.act = nn.GELU()
+            else:
+                self.act = TopKSiLU(self.hidden_dim, sparsity)
         else:
-            self.mix_down = None
-            self.mix_up = None
+            h3, h2, h1 = split_ce_dims(self.hidden_dim)
+
+            self.su3_up = nn.Linear(self.d3, h3, bias=bias)
+            self.su3_act = TopKSiLU(h3, sparsity)
+            self.su3_down = nn.utils.spectral_norm(nn.Linear(h3, self.d3, bias=bias))
+
+            self.su2_up = nn.Linear(self.d2, h2, bias=bias)
+            self.su2_act = TopKSiLU(h2, sparsity)
+            self.su2_down = nn.utils.spectral_norm(nn.Linear(h2, self.d2, bias=bias))
+
+            self.u1_up = nn.Linear(self.d1, h1, bias=bias)
+            self.u1_act = TopKSiLU(h1, sparsity)
+            self.u1_down = nn.utils.spectral_norm(nn.Linear(h1, self.d1, bias=bias))
+
+            if self.mix_rank > 0:
+                self.mix_down = nn.Linear(dim, self.mix_rank, bias=False)
+                self.mix_up = nn.Linear(self.mix_rank, dim, bias=False)
+                nn.init.zeros_(self.mix_up.weight)
+            else:
+                self.mix_down = None
+                self.mix_up = None
         self.phi = LBONorm(dim)
 
     @property
     def mixing_ratio(self):
-        """||U_down U_up^T||_F / ||T_diag||_F -- perturbative condition (agi.md 6.3)."""
-        if self.mix_up is None:
-            return 0.0
+        """||U_down U_up^T||_F / ||T_diag||_F -- perturbative condition (agi.md 6.3).
+
+        Returns a differentiable scalar tensor so the regularizer can backprop
+        into mix_down/mix_up. dense / no-mix paths return a zero tensor on the
+        same device as the diagonal weights.
+        """
+        if self.dense:
+            return self.fc_up.weight.new_zeros(())
+        if not hasattr(self, 'mix_up') or self.mix_up is None:
+            return self.su3_up.weight.new_zeros(())
         w_up = self.mix_up.weight_orig if hasattr(self.mix_up, 'weight_orig') else self.mix_up.weight
         w_down = self.mix_down.weight
         mix_norm = (w_down.t() @ w_up.t()).norm()
@@ -284,15 +316,41 @@ class GaugeLattice(nn.Module):
         diag_norm = (su3_w.norm() ** 2 + su2_w.norm() ** 2 + u1_w.norm() ** 2).sqrt()
         return mix_norm / (diag_norm + 1e-8)
 
-    def forward(self, x):
+    @staticmethod
+    def _cfc_gate(curv_gate):
+        """CFC scalar (1 - xi * E_curv) clamped to [0.1, 1.0]. Detached.
+
+        docs/7_AGI/2_Architecture.md 6.2. E_curv는 LBONorm의 곡률 에너지
+        ||Delta_g h||^2. 곡률이 매우 크면 게이트가 0으로 가지 않도록
+        하한 0.1을 두어 표현력 붕괴를 막는다 (안전 메커니즘).
+        """
+        if curv_gate is None:
+            return 1.0
+        gate = 1.0 - CFC_XI * float(curv_gate)
+        if gate < 0.1:
+            gate = 0.1
+        elif gate > 1.0:
+            gate = 1.0
+        return gate
+
+    def forward(self, x, curv_gate=None):
+        gate = self._cfc_gate(curv_gate)
+        if self.dense:
+            y = self.fc_down(self.act(self.fc_up(x)))
+            if gate != 1.0:
+                y = y * gate
+            return self.phi(y)
         s3 = self.d3
         s32 = s3 + self.d2
-        y = torch.cat([
-            self.su3_down(self.su3_act(self.su3_up(x[..., :s3]))),
-            self.su2_down(self.su2_act(self.su2_up(x[..., s3:s32]))),
-            self.u1_down(self.u1_act(self.u1_up(x[..., s32:]))),
-        ], dim=-1)
-        if self.mix_up is not None:
+        y3 = self.su3_down(self.su3_act(self.su3_up(x[..., :s3])))
+        y2 = self.su2_down(self.su2_act(self.su2_up(x[..., s3:s32])))
+        y1 = self.u1_down(self.u1_act(self.u1_up(x[..., s32:])))
+        if gate != 1.0:
+            y3 = y3 * gate
+            y2 = y2 * gate
+            y1 = y1 * gate
+        y = torch.cat([y3, y2, y1], dim=-1)
+        if hasattr(self, 'mix_up') and self.mix_up is not None:
             y = y + self.mix_up(self.mix_down(y))
         return self.phi(y)
 
@@ -303,13 +361,13 @@ class ClarusAttention(nn.Module):
     F.scaled_dot_product_attention 사용 (Flash Attention 자동 디스패치).
     """
 
-    def __init__(self, dim, n_heads):
+    def __init__(self, dim, n_heads, bias=True):
         super().__init__()
         assert dim % n_heads == 0
         self.n_heads = n_heads
         self.head_dim = dim // n_heads
-        self.qkv = nn.Linear(dim, 3 * dim, bias=False)
-        self.proj = nn.utils.spectral_norm(nn.Linear(dim, dim, bias=False))
+        self.qkv = nn.Linear(dim, 3 * dim, bias=bias)
+        self.proj = nn.utils.spectral_norm(nn.Linear(dim, dim, bias=bias))
 
     def forward(self, x):
         B, T, D = x.shape
@@ -321,10 +379,10 @@ class ClarusAttention(nn.Module):
 
 class ClarusBlock(nn.Module):
     def __init__(self, dim, n_heads, ffn_mult=4, ffn_hidden_dim=None,
-                 mix_rank=None, sparsity=1.0):
+                 mix_rank=None, sparsity=1.0, bias=True, dense=False, act_fn="silu"):
         super().__init__()
         self.norm1 = LBONorm(dim)
-        self.attn = ClarusAttention(dim, n_heads)
+        self.attn = ClarusAttention(dim, n_heads, bias=bias)
         self.norm2 = LBONorm(dim)
         self.ffn = GaugeLattice(
             dim,
@@ -332,11 +390,17 @@ class ClarusBlock(nn.Module):
             hidden_dim=ffn_hidden_dim,
             mix_rank=mix_rank,
             sparsity=sparsity,
+            bias=bias,
+            dense=dense,
+            act_fn=act_fn,
         )
 
     def forward(self, x):
         x = x + self.attn(self.norm1(x))
-        x = x + self.ffn(self.norm2(x))
+        x_norm2 = self.norm2(x)
+        # CFC: norm2가 측정한 곡률을 ffn 게이트로 전달 (2_Architecture.md 6.2).
+        # _need_curvature가 꺼져 있으면 norm2._curvature는 0이고, _cfc_gate는 1.0을 반환.
+        x = x + self.ffn(x_norm2, curv_gate=self.norm2._curvature)
         return x
 
     @property
@@ -361,11 +425,17 @@ class ClarusLM(nn.Module):
     def __init__(self, vocab_size, dim=256, n_layers=6, n_heads=8,
                  max_seq_len=512, ffn_mult=4, ffn_hidden_dim=None,
                  mix_rank=None, lambda_curv=0.01, lambda_mix=0.01,
-                 sparsity=1.0, use_checkpoint=False):
+                 sparsity=1.0, use_checkpoint=False, bias=True,
+                 dense=False, act_fn="silu"):
         super().__init__()
         self.max_seq_len = max_seq_len
+        # lambda_curv: 학습 시 곡률 정규화 강도. set_lambda_schedule()로 스케줄 활성화.
         self.lambda_curv = lambda_curv
+        self.lambda_curv_base = lambda_curv
         self.lambda_mix = lambda_mix
+        self._lambda_step = 0
+        self._lambda_total_steps = 0  # 0이면 스케줄 비활성 (상수 lambda_curv 사용)
+        self._lambda_warmup = 0
         self._use_checkpoint = use_checkpoint
         self.tok_emb = nn.Embedding(vocab_size, dim)
         self.pos_emb = nn.Embedding(max_seq_len, dim)
@@ -378,6 +448,9 @@ class ClarusLM(nn.Module):
                     ffn_hidden_dim=ffn_hidden_dim,
                     mix_rank=mix_rank,
                     sparsity=sparsity,
+                    bias=bias,
+                    dense=dense,
+                    act_fn=act_fn,
                 )
                 for _ in range(n_layers)
             ])
@@ -388,6 +461,26 @@ class ClarusLM(nn.Module):
         self.apply(self._init)
         self._lbo_modules = [m for m in self.modules() if isinstance(m, LBONorm)]
         self._curv_enabled = None
+
+    def set_lambda_schedule(self, total_steps: int, warmup_steps: int = 0):
+        """곡률 정규화 스케줄 활성화 (docs/7_AGI/2_Architecture.md 5.2).
+
+        lambda(t) = lambda_0 * min(1, t/warmup) * 0.5*(1 + cos(pi*t/total)).
+        total_steps=0이면 스케줄 비활성 = 상수 lambda_curv 사용.
+        """
+        self._lambda_total_steps = max(0, int(total_steps))
+        self._lambda_warmup = max(0, int(warmup_steps))
+        self._lambda_step = 0
+
+    def _current_lambda_curv(self) -> float:
+        """현재 step에 해당하는 lambda(t)."""
+        if self._lambda_total_steps <= 0:
+            return float(self.lambda_curv_base)
+        t = float(self._lambda_step)
+        warm = float(self._lambda_warmup)
+        warm_factor = min(1.0, t / warm) if warm > 0 else 1.0
+        cos_factor = 0.5 * (1.0 + math.cos(math.pi * min(t / self._lambda_total_steps, 1.0)))
+        return float(self.lambda_curv_base) * warm_factor * cos_factor
 
     @staticmethod
     def _init(m):
@@ -406,7 +499,9 @@ class ClarusLM(nn.Module):
 
     def forward(self, idx, targets=None):
         B, T = idx.shape
-        need_curv = targets is not None and self.lambda_curv > 0
+        # CFC 게이트가 항상 활성화되도록, training 시에는 곡률 추적을 강제.
+        # 이 비용은 무시할 수 있고, CFC가 forward에 들어가는 안전 메커니즘이다.
+        need_curv = targets is not None or self.training
         self._set_curvature_tracking(need_curv)
 
         x = self.tok_emb(idx) + self.pos_emb(self._pos_idx[:T])
@@ -424,13 +519,21 @@ class ClarusLM(nn.Module):
         if targets is not None:
             ce = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1))
             loss = ce
-            if need_curv:
+            lam_curv = self._current_lambda_curv()
+            if lam_curv > 0:
+                # NOTE: block.curvature는 fast-path LBONorm fwd가 .item()으로 캐시한
+                # 스칼라 float들의 평균이라 미분 불가. 따라서 이 항은 V를 직접 학습하지
+                # 못하고 모니터링용 페널티로만 동작. V는 forward 잔차 경로(out = bias +
+                # lerp(x_n, xW, h)*scale, xW = x @ V^T V)로 이미 task loss를 통해 학습됨.
+                # 진짜 곡률 학습 신호가 필요하면 differentiable LBO 경로(JIT 우회)를 켜야 함.
                 curv = sum(b.curvature for b in self.blocks) / len(self.blocks)
-                loss = loss + self.lambda_curv * curv
+                loss = loss + lam_curv * curv
             if self.lambda_mix > 0:
-                with torch.no_grad():
-                    mix_r = sum(b.ffn.mixing_ratio for b in self.blocks) / len(self.blocks)
-                loss = loss + self.lambda_mix * float(mix_r)
+                # mix_r는 mix_down/mix_up/diag_down 가중치의 함수 -> differentiable.
+                mix_r = sum(b.ffn.mixing_ratio for b in self.blocks) / len(self.blocks)
+                loss = loss + self.lambda_mix * mix_r
+            if self.training and self._lambda_total_steps > 0:
+                self._lambda_step += 1
         return logits, loss
 
     @torch.no_grad()
