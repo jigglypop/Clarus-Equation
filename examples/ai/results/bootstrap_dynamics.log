@@ -1,0 +1,58 @@
+============================================================
+ CE bootstrap dynamics direct test
+  dim=128  max_steps=100  seed=42
+  spec: rho=0.1550, p*=(0.0487, 0.2623, 0.6891)
+============================================================
+
+============================================================
+  W variant: random
+============================================================
+E:\Clarus-Equation\clarus\ce_ops.py:397: UserWarning: Sparse invariant checks are implicitly disabled. Memory errors (e.g. SEGFAULT) will occur when operating on a sparse tensor which violates the invariants, but checks incur performance overhead. To silence this warning, explicitly opt in or out. See `torch.sparse.check_sparse_tensor_invariants.__doc__` for guidance.  (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\aten\src\ATen\Context.cpp:767.)
+  sparse_mat = torch.sparse_csr_tensor(
+E:\Clarus-Equation\clarus\ce_ops.py:397: UserWarning: Sparse CSR tensor support is in beta state. If you miss a functionality in the sparse tensor support, please submit a feature request to https://github.com/pytorch/pytorch/issues. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\aten\src\ATen\SparseCsrTensorImpl.cpp:51.)
+  sparse_mat = torch.sparse_csr_tensor(
+  m_star norm: 688.0500  |m_star_max|: 370.6649
+  observed rho (per relax step): 0.9987  (spec: 0.1550)
+  final dist to m_star  : 575.094971
+  final active fraction : 46.09%  (spec: 4.87%)
+  energy distribution top 4.9% / next 26.2% / rest:
+    40.10% / 44.00% / 15.90%
+    spec target: 4.87% / 26.23% / 68.91%
+
+============================================================
+  W variant: sym_psd
+============================================================
+  m_star norm: 84.6640  |m_star_max|: 20.3451
+  observed rho (per relax step): 0.9964  (spec: 0.1550)
+  final dist to m_star  : 33.366100
+  final active fraction : 60.16%  (spec: 4.87%)
+  energy distribution top 4.9% / next 26.2% / rest:
+    24.85% / 53.33% / 21.82%
+    spec target: 4.87% / 26.23% / 68.91%
+
+============================================================
+  W variant: sym_sparse
+============================================================
+  m_star norm: 50.5211  |m_star_max|: 10.6868
+  observed rho (per relax step): 0.9940  (spec: 0.1550)
+  final dist to m_star  : 51.854332
+  final active fraction : 61.72%  (spec: 4.87%)
+  energy distribution top 4.9% / next 26.2% / rest:
+    24.60% / 53.49% / 21.91%
+    spec target: 4.87% / 26.23% / 68.91%
+
+[SAVED] examples/ai/results/bootstrap_dynamics.json
+
+============================================================
+ Summary: spec validation in CE relax substrate
+============================================================
+variant           rho_obs   rho_spec   active_obs   active_spec
+random             0.9987     0.1550       46.09%         4.87%
+sym_psd            0.9964     0.1550       60.16%         4.87%
+sym_sparse         0.9940     0.1550       61.72%         4.87%
+
+해석:
+  - rho_observed가 0.155 +/- 0.05 안에 들어오는 변형이 있으면
+    -> 사양은 그 substrate에서 valid
+  - active_obs가 ~4.87% 근방이면 -> emergent sparsity 확인
+  - 둘 다 멀면 -> 수식 자체가 이 W 동역학에서도 안 맞음

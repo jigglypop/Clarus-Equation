@@ -1,0 +1,2789 @@
+[
+  {
+    "name": "random",
+    "dim": 128,
+    "rho_observed": 0.9987229291203706,
+    "rho_spec": 0.155,
+    "final_active_frac": 0.4609375,
+    "active_frac_spec": 0.0487,
+    "final_energy_distribution": [
+      0.40102303022634445,
+      0.4399977427837741,
+      0.1589792269898814
+    ],
+    "spec_distribution": [
+      0.0487,
+      0.2623,
+      0.6891
+    ],
+    "history": [
+      {
+        "step": 0,
+        "dist_to_mstar": 654.8536987304688,
+        "m_norm": 128.0,
+        "active_frac": 0.5859375,
+        "energy_active": 0.24289810699831801,
+        "energy_struct": 0.542508212178456,
+        "energy_bg": 0.2145936808232259
+      },
+      {
+        "step": 1,
+        "dist_to_mstar": 654.2156982421875,
+        "m_norm": 128.23159790039062,
+        "active_frac": 0.5859375,
+        "energy_active": 0.2442312115686554,
+        "energy_struct": 0.5418921662876327,
+        "energy_bg": 0.2138766221437119
+      },
+      {
+        "step": 2,
+        "dist_to_mstar": 653.574951171875,
+        "m_norm": 128.46885681152344,
+        "active_frac": 0.578125,
+        "energy_active": 0.24557879653066306,
+        "energy_struct": 0.5412467406365461,
+        "energy_bg": 0.21317446283279087
+      },
+      {
+        "step": 3,
+        "dist_to_mstar": 652.9313354492188,
+        "m_norm": 128.71177673339844,
+        "active_frac": 0.578125,
+        "energy_active": 0.24694040961202016,
+        "energy_struct": 0.5405722828348897,
+        "energy_bg": 0.21248730755309017
+      },
+      {
+        "step": 4,
+        "dist_to_mstar": 652.2849731445312,
+        "m_norm": 128.96035766601562,
+        "active_frac": 0.5703125,
+        "energy_active": 0.24831561808174987,
+        "energy_struct": 0.5398691590382017,
+        "energy_bg": 0.21181522288004845
+      },
+      {
+        "step": 5,
+        "dist_to_mstar": 651.6358032226562,
+        "m_norm": 129.21461486816406,
+        "active_frac": 0.5703125,
+        "energy_active": 0.24970398902236662,
+        "energy_struct": 0.5391376922945434,
+        "energy_bg": 0.2111583186830899
+      },
+      {
+        "step": 6,
+        "dist_to_mstar": 650.9838256835938,
+        "m_norm": 129.47450256347656,
+        "active_frac": 0.5703125,
+        "energy_active": 0.2511050856908723,
+        "energy_struct": 0.5383782856745726,
+        "energy_bg": 0.21051662863455511
+      },
+      {
+        "step": 7,
+        "dist_to_mstar": 650.3289184570312,
+        "m_norm": 129.74008178710938,
+        "active_frac": 0.5625,
+        "energy_active": 0.25251830138416687,
+        "energy_struct": 0.5375914133691937,
+        "energy_bg": 0.2098902852466394
+      },
+      {
+        "step": 8,
+        "dist_to_mstar": 649.6712036132812,
+        "m_norm": 130.01132202148438,
+        "active_frac": 0.5625,
+        "energy_active": 0.25394335490332787,
+        "energy_struct": 0.5367772990693881,
+        "energy_bg": 0.20927934602728399
+      },
+      {
+        "step": 9,
+        "dist_to_mstar": 649.0105590820312,
+        "m_norm": 130.2882080078125,
+        "active_frac": 0.5546875,
+        "energy_active": 0.255379689451685,
+        "energy_struct": 0.5359364889207576,
+        "energy_bg": 0.20868382162755741
+      },
+      {
+        "step": 10,
+        "dist_to_mstar": 648.3471069335938,
+        "m_norm": 130.57073974609375,
+        "active_frac": 0.5625,
+        "energy_active": 0.25682681047215494,
+        "energy_struct": 0.5350693280482722,
+        "energy_bg": 0.2081038614795728
+      },
+      {
+        "step": 11,
+        "dist_to_mstar": 647.6806640625,
+        "m_norm": 130.8589324951172,
+        "active_frac": 0.5546875,
+        "energy_active": 0.2582842568282006,
+        "energy_struct": 0.5342139283766553,
+        "energy_bg": 0.20750181479514415
+      },
+      {
+        "step": 12,
+        "dist_to_mstar": 647.0113525390625,
+        "m_norm": 131.15277099609375,
+        "active_frac": 0.5546875,
+        "energy_active": 0.25975160262870056,
+        "energy_struct": 0.5334746348247977,
+        "energy_bg": 0.2067737625465017
+      },
+      {
+        "step": 13,
+        "dist_to_mstar": 646.3391723632812,
+        "m_norm": 131.45225524902344,
+        "active_frac": 0.5546875,
+        "energy_active": 0.26122830052376717,
+        "energy_struct": 0.5327096711206634,
+        "energy_bg": 0.20606202835556942
+      },
+      {
+        "step": 14,
+        "dist_to_mstar": 645.6640014648438,
+        "m_norm": 131.7573699951172,
+        "active_frac": 0.5625,
+        "energy_active": 0.26271395258259134,
+        "energy_struct": 0.5319193995886597,
+        "energy_bg": 0.20536664782874892
+      },
+      {
+        "step": 15,
+        "dist_to_mstar": 644.9859008789062,
+        "m_norm": 132.06813049316406,
+        "active_frac": 0.5546875,
+        "energy_active": 0.26420801483376716,
+        "energy_struct": 0.5311042930315686,
+        "energy_bg": 0.20468769213466428
+      },
+      {
+        "step": 16,
+        "dist_to_mstar": 644.3048095703125,
+        "m_norm": 132.38453674316406,
+        "active_frac": 0.546875,
+        "energy_active": 0.26571009531207795,
+        "energy_struct": 0.5302646867078922,
+        "energy_bg": 0.20402521798002987
+      },
+      {
+        "step": 17,
+        "dist_to_mstar": 643.6207275390625,
+        "m_norm": 132.70657348632812,
+        "active_frac": 0.546875,
+        "energy_active": 0.2672196388793712,
+        "energy_struct": 0.5294010429475443,
+        "energy_bg": 0.20337931817308452
+      },
+      {
+        "step": 18,
+        "dist_to_mstar": 642.9336547851562,
+        "m_norm": 133.0342254638672,
+        "active_frac": 0.546875,
+        "energy_active": 0.26873612301634847,
+        "energy_struct": 0.5285138363512667,
+        "energy_bg": 0.20275004063238475
+      },
+      {
+        "step": 19,
+        "dist_to_mstar": 642.24365234375,
+        "m_norm": 133.3675079345703,
+        "active_frac": 0.5390625,
+        "energy_active": 0.27025922576405903,
+        "energy_struct": 0.5276033920698268,
+        "energy_bg": 0.20213738216611427
+      },
+      {
+        "step": 20,
+        "dist_to_mstar": 641.550537109375,
+        "m_norm": 133.70639038085938,
+        "active_frac": 0.53125,
+        "energy_active": 0.2717883566495593,
+        "energy_struct": 0.5266701654320614,
+        "energy_bg": 0.20154147791837934
+      },
+      {
+        "step": 21,
+        "dist_to_mstar": 640.8544311523438,
+        "m_norm": 134.0509033203125,
+        "active_frac": 0.53125,
+        "energy_active": 0.2733230520526619,
+        "energy_struct": 0.5257147024636856,
+        "energy_bg": 0.20096224548365257
+      },
+      {
+        "step": 22,
+        "dist_to_mstar": 640.1552124023438,
+        "m_norm": 134.40103149414062,
+        "active_frac": 0.53125,
+        "energy_active": 0.27486290364010274,
+        "energy_struct": 0.5247372728896686,
+        "energy_bg": 0.2003998234702286
+      },
+      {
+        "step": 23,
+        "dist_to_mstar": 639.4530029296875,
+        "m_norm": 134.7567596435547,
+        "active_frac": 0.5390625,
+        "energy_active": 0.27640741343195874,
+        "energy_struct": 0.5237384090929776,
+        "energy_bg": 0.19985417747506357
+      },
+      {
+        "step": 24,
+        "dist_to_mstar": 638.7476806640625,
+        "m_norm": 135.11807250976562,
+        "active_frac": 0.5390625,
+        "energy_active": 0.27795608173502434,
+        "energy_struct": 0.5227185778551553,
+        "energy_bg": 0.19932534040982033
+      },
+      {
+        "step": 25,
+        "dist_to_mstar": 638.039306640625,
+        "m_norm": 135.4849853515625,
+        "active_frac": 0.5234375,
+        "energy_active": 0.27950843789075114,
+        "energy_struct": 0.5216782525917607,
+        "energy_bg": 0.19881330951748813
+      },
+      {
+        "step": 26,
+        "dist_to_mstar": 637.3278198242188,
+        "m_norm": 135.85748291015625,
+        "active_frac": 0.5234375,
+        "energy_active": 0.28106410445459634,
+        "energy_struct": 0.5206177638781241,
+        "energy_bg": 0.19831813166727963
+      },
+      {
+        "step": 27,
+        "dist_to_mstar": 636.6132202148438,
+        "m_norm": 136.23556518554688,
+        "active_frac": 0.5234375,
+        "energy_active": 0.2826225013829823,
+        "energy_struct": 0.519537733037692,
+        "energy_bg": 0.1978397655793257
+      },
+      {
+        "step": 28,
+        "dist_to_mstar": 635.8955078125,
+        "m_norm": 136.61923217773438,
+        "active_frac": 0.5234375,
+        "energy_active": 0.2841832863337854,
+        "energy_struct": 0.5184384421464756,
+        "energy_bg": 0.19737827151973897
+      },
+      {
+        "step": 29,
+        "dist_to_mstar": 635.1746215820312,
+        "m_norm": 137.0084686279297,
+        "active_frac": 0.5234375,
+        "energy_active": 0.2857459832983163,
+        "energy_struct": 0.5173204461832194,
+        "energy_bg": 0.1969335705184643
+      },
+      {
+        "step": 30,
+        "dist_to_mstar": 634.4505615234375,
+        "m_norm": 137.40328979492188,
+        "active_frac": 0.5234375,
+        "energy_active": 0.28731013233511826,
+        "energy_struct": 0.5161842134971367,
+        "energy_bg": 0.19650565416774504
+      },
+      {
+        "step": 31,
+        "dist_to_mstar": 633.723388671875,
+        "m_norm": 137.80364990234375,
+        "active_frac": 0.5234375,
+        "energy_active": 0.2888752908402083,
+        "energy_struct": 0.5150937868953956,
+        "energy_bg": 0.196030922264396
+      },
+      {
+        "step": 32,
+        "dist_to_mstar": 632.9930419921875,
+        "m_norm": 138.20956420898438,
+        "active_frac": 0.5234375,
+        "energy_active": 0.2904409806680028,
+        "energy_struct": 0.5141635070297446,
+        "energy_bg": 0.19539551230225266
+      },
+      {
+        "step": 33,
+        "dist_to_mstar": 632.2593994140625,
+        "m_norm": 138.62103271484375,
+        "active_frac": 0.5234375,
+        "energy_active": 0.2920068814458446,
+        "energy_struct": 0.5132128705083372,
+        "energy_bg": 0.19478024804581823
+      },
+      {
+        "step": 34,
+        "dist_to_mstar": 631.5226440429688,
+        "m_norm": 139.0380401611328,
+        "active_frac": 0.5234375,
+        "energy_active": 0.2935724431490794,
+        "energy_struct": 0.5122423884002426,
+        "energy_bg": 0.194185168450678
+      },
+      {
+        "step": 35,
+        "dist_to_mstar": 630.7825927734375,
+        "m_norm": 139.46058654785156,
+        "active_frac": 0.5234375,
+        "energy_active": 0.2951373418995459,
+        "energy_struct": 0.511252383365189,
+        "energy_bg": 0.19361027473526515
+      },
+      {
+        "step": 36,
+        "dist_to_mstar": 630.039306640625,
+        "m_norm": 139.88865661621094,
+        "active_frac": 0.5234375,
+        "energy_active": 0.296701095993343,
+        "energy_struct": 0.5103324534682344,
+        "energy_bg": 0.1929664505384226
+      },
+      {
+        "step": 37,
+        "dist_to_mstar": 629.2928466796875,
+        "m_norm": 140.32225036621094,
+        "active_frac": 0.5234375,
+        "energy_active": 0.2982633106818343,
+        "energy_struct": 0.5094734369612631,
+        "energy_bg": 0.19226325235690256
+      },
+      {
+        "step": 38,
+        "dist_to_mstar": 628.5430908203125,
+        "m_norm": 140.76136779785156,
+        "active_frac": 0.515625,
+        "energy_active": 0.2998235645722984,
+        "energy_struct": 0.5085942745416085,
+        "energy_bg": 0.191582160886093
+      },
+      {
+        "step": 39,
+        "dist_to_mstar": 627.7900390625,
+        "m_norm": 141.20599365234375,
+        "active_frac": 0.515625,
+        "energy_active": 0.3013815336724742,
+        "energy_struct": 0.5078000326285991,
+        "energy_bg": 0.1908184336989268
+      },
+      {
+        "step": 40,
+        "dist_to_mstar": 627.03369140625,
+        "m_norm": 141.6561279296875,
+        "active_frac": 0.515625,
+        "energy_active": 0.30293672120354764,
+        "energy_struct": 0.5070361900972413,
+        "energy_bg": 0.190027088699211
+      },
+      {
+        "step": 41,
+        "dist_to_mstar": 626.2740478515625,
+        "m_norm": 142.1117401123047,
+        "active_frac": 0.515625,
+        "energy_active": 0.3044888209562296,
+        "energy_struct": 0.506252880967069,
+        "energy_bg": 0.18925829807670141
+      },
+      {
+        "step": 42,
+        "dist_to_mstar": 625.5111083984375,
+        "m_norm": 142.57286071777344,
+        "active_frac": 0.515625,
+        "energy_active": 0.30603737390714847,
+        "energy_struct": 0.5054505866587345,
+        "energy_bg": 0.18851203943411704
+      },
+      {
+        "step": 43,
+        "dist_to_mstar": 624.7448120117188,
+        "m_norm": 143.03945922851562,
+        "active_frac": 0.515625,
+        "energy_active": 0.30758208889684646,
+        "energy_struct": 0.5046296396285511,
+        "energy_bg": 0.18778827147460242
+      },
+      {
+        "step": 44,
+        "dist_to_mstar": 623.97509765625,
+        "m_norm": 143.5115203857422,
+        "active_frac": 0.515625,
+        "energy_active": 0.30912258718538027,
+        "energy_struct": 0.5037904187408226,
+        "energy_bg": 0.18708699407379709
+      },
+      {
+        "step": 45,
+        "dist_to_mstar": 623.2020874023438,
+        "m_norm": 143.98907470703125,
+        "active_frac": 0.515625,
+        "energy_active": 0.31065843465167287,
+        "energy_struct": 0.5029518459434951,
+        "energy_bg": 0.18638971940483204
+      },
+      {
+        "step": 46,
+        "dist_to_mstar": 622.4257202148438,
+        "m_norm": 144.4720916748047,
+        "active_frac": 0.5078125,
+        "energy_active": 0.3121893446911221,
+        "energy_struct": 0.5021178533597751,
+        "energy_bg": 0.18569280194910281
+      },
+      {
+        "step": 47,
+        "dist_to_mstar": 621.6459350585938,
+        "m_norm": 144.96054077148438,
+        "active_frac": 0.5078125,
+        "energy_active": 0.31371497545942684,
+        "energy_struct": 0.5012666730048049,
+        "energy_bg": 0.18501835153576834
+      },
+      {
+        "step": 48,
+        "dist_to_mstar": 620.86279296875,
+        "m_norm": 145.4544677734375,
+        "active_frac": 0.5078125,
+        "energy_active": 0.3152349291696241,
+        "energy_struct": 0.5003987291487076,
+        "energy_bg": 0.18436634168166827
+      },
+      {
+        "step": 49,
+        "dist_to_mstar": 620.076171875,
+        "m_norm": 145.95382690429688,
+        "active_frac": 0.5,
+        "energy_active": 0.31674893844049357,
+        "energy_struct": 0.49951435513501913,
+        "energy_bg": 0.18373670642448733
+      },
+      {
+        "step": 50,
+        "dist_to_mstar": 619.2861328125,
+        "m_norm": 146.4586181640625,
+        "active_frac": 0.5,
+        "energy_active": 0.318256598032443,
+        "energy_struct": 0.4986139552125795,
+        "energy_bg": 0.18312944675497753
+      },
+      {
+        "step": 51,
+        "dist_to_mstar": 618.49267578125,
+        "m_norm": 146.96884155273438,
+        "active_frac": 0.5,
+        "energy_active": 0.3197576199114613,
+        "energy_struct": 0.4976979628936051,
+        "energy_bg": 0.18254441719493364
+      },
+      {
+        "step": 52,
+        "dist_to_mstar": 617.6957397460938,
+        "m_norm": 147.48448181152344,
+        "active_frac": 0.5,
+        "energy_active": 0.3212517446294595,
+        "energy_struct": 0.49684241008318664,
+        "energy_bg": 0.18190584528735387
+      },
+      {
+        "step": 53,
+        "dist_to_mstar": 616.8953857421875,
+        "m_norm": 148.0055389404297,
+        "active_frac": 0.4921875,
+        "energy_active": 0.3227386316638226,
+        "energy_struct": 0.49606646422033673,
+        "energy_bg": 0.1811949041158407
+      },
+      {
+        "step": 54,
+        "dist_to_mstar": 616.0914306640625,
+        "m_norm": 148.53201293945312,
+        "active_frac": 0.4921875,
+        "energy_active": 0.32421795029162404,
+        "energy_struct": 0.4952750939822125,
+        "energy_bg": 0.18050695572616346
+      },
+      {
+        "step": 55,
+        "dist_to_mstar": 615.2840576171875,
+        "m_norm": 149.06387329101562,
+        "active_frac": 0.4921875,
+        "energy_active": 0.3256894495923557,
+        "energy_struct": 0.4944685824945849,
+        "energy_bg": 0.17984196791305937
+      },
+      {
+        "step": 56,
+        "dist_to_mstar": 614.47314453125,
+        "m_norm": 149.6011505126953,
+        "active_frac": 0.4921875,
+        "energy_active": 0.3271528533427584,
+        "energy_struct": 0.49364734912139174,
+        "energy_bg": 0.17919979753584986
+      },
+      {
+        "step": 57,
+        "dist_to_mstar": 613.65869140625,
+        "m_norm": 150.14381408691406,
+        "active_frac": 0.5078125,
+        "energy_active": 0.32860784664593595,
+        "energy_struct": 0.4928117773364971,
+        "energy_bg": 0.1785803760175669
+      },
+      {
+        "step": 58,
+        "dist_to_mstar": 612.8407592773438,
+        "m_norm": 150.6918487548828,
+        "active_frac": 0.5078125,
+        "energy_active": 0.3300542012211721,
+        "energy_struct": 0.49196221339390955,
+        "energy_bg": 0.17798358538491832
+      },
+      {
+        "step": 59,
+        "dist_to_mstar": 612.0192260742188,
+        "m_norm": 151.24526977539062,
+        "active_frac": 0.5078125,
+        "energy_active": 0.3315658897599326,
+        "energy_struct": 0.49105108820889976,
+        "energy_bg": 0.1773830220311676
+      },
+      {
+        "step": 60,
+        "dist_to_mstar": 611.194091796875,
+        "m_norm": 151.80404663085938,
+        "active_frac": 0.4921875,
+        "energy_active": 0.3333618815116968,
+        "energy_struct": 0.48995649376273864,
+        "energy_bg": 0.17668162472556456
+      },
+      {
+        "step": 61,
+        "dist_to_mstar": 610.3654174804688,
+        "m_norm": 152.36819458007812,
+        "active_frac": 0.5,
+        "energy_active": 0.3351468770386619,
+        "energy_struct": 0.4888492963079138,
+        "energy_bg": 0.17600382665342434
+      },
+      {
+        "step": 62,
+        "dist_to_mstar": 609.5330810546875,
+        "m_norm": 152.9376983642578,
+        "active_frac": 0.5,
+        "energy_active": 0.33692064776283304,
+        "energy_struct": 0.4877297876603509,
+        "energy_bg": 0.17534956457681602
+      },
+      {
+        "step": 63,
+        "dist_to_mstar": 608.6972045898438,
+        "m_norm": 153.51255798339844,
+        "active_frac": 0.5078125,
+        "energy_active": 0.3387176090326707,
+        "energy_struct": 0.48656370467893895,
+        "energy_bg": 0.17471868628839035
+      },
+      {
+        "step": 64,
+        "dist_to_mstar": 607.857666015625,
+        "m_norm": 154.09274291992188,
+        "active_frac": 0.5,
+        "energy_active": 0.34068678805308505,
+        "energy_struct": 0.48520211925878054,
+        "energy_bg": 0.1741110926881344
+      },
+      {
+        "step": 65,
+        "dist_to_mstar": 607.0144653320312,
+        "m_norm": 154.6782684326172,
+        "active_frac": 0.5,
+        "energy_active": 0.34264215372693674,
+        "energy_struct": 0.48383115994551334,
+        "energy_bg": 0.17352668632754994
+      },
+      {
+        "step": 66,
+        "dist_to_mstar": 606.1676635742188,
+        "m_norm": 155.26913452148438,
+        "active_frac": 0.4921875,
+        "energy_active": 0.3445835372859389,
+        "energy_struct": 0.4825585078657249,
+        "energy_bg": 0.17285795484833621
+      },
+      {
+        "step": 67,
+        "dist_to_mstar": 605.317138671875,
+        "m_norm": 155.86532592773438,
+        "active_frac": 0.484375,
+        "energy_active": 0.34651067554914805,
+        "energy_struct": 0.48129309505354484,
+        "energy_bg": 0.17219622939730714
+      },
+      {
+        "step": 68,
+        "dist_to_mstar": 604.4629516601562,
+        "m_norm": 156.46682739257812,
+        "active_frac": 0.484375,
+        "energy_active": 0.3484233290459079,
+        "energy_struct": 0.48001851657207273,
+        "energy_bg": 0.17155815438201938
+      },
+      {
+        "step": 69,
+        "dist_to_mstar": 603.6050415039062,
+        "m_norm": 157.0736541748047,
+        "active_frac": 0.484375,
+        "energy_active": 0.35032126108401057,
+        "energy_struct": 0.4787351715701045,
+        "energy_bg": 0.17094356734588492
+      },
+      {
+        "step": 70,
+        "dist_to_mstar": 602.7434692382812,
+        "m_norm": 157.68577575683594,
+        "active_frac": 0.484375,
+        "energy_active": 0.35220432179699585,
+        "energy_struct": 0.4774433414070068,
+        "energy_bg": 0.17035233679599737
+      },
+      {
+        "step": 71,
+        "dist_to_mstar": 601.8781127929688,
+        "m_norm": 158.30320739746094,
+        "active_frac": 0.484375,
+        "energy_active": 0.35407224368013446,
+        "energy_struct": 0.4761433977837093,
+        "energy_bg": 0.16978435853615623
+      },
+      {
+        "step": 72,
+        "dist_to_mstar": 601.009033203125,
+        "m_norm": 158.92593383789062,
+        "active_frac": 0.484375,
+        "energy_active": 0.35592483259165153,
+        "energy_struct": 0.47483571476308073,
+        "energy_bg": 0.16923945264526774
+      },
+      {
+        "step": 73,
+        "dist_to_mstar": 600.1361694335938,
+        "m_norm": 159.553955078125,
+        "active_frac": 0.484375,
+        "energy_active": 0.3577619636800696,
+        "energy_struct": 0.4735205502499919,
+        "energy_bg": 0.1687174860699385
+      },
+      {
+        "step": 74,
+        "dist_to_mstar": 599.259521484375,
+        "m_norm": 160.187255859375,
+        "active_frac": 0.484375,
+        "energy_active": 0.3595834181151021,
+        "energy_struct": 0.47219824313970793,
+        "energy_bg": 0.16821833874519
+      },
+      {
+        "step": 75,
+        "dist_to_mstar": 598.379150390625,
+        "m_norm": 160.82583618164062,
+        "active_frac": 0.484375,
+        "energy_active": 0.3613889764046497,
+        "energy_struct": 0.4708692015019196,
+        "energy_bg": 0.16774182209343075
+      },
+      {
+        "step": 76,
+        "dist_to_mstar": 597.4949340820312,
+        "m_norm": 161.46966552734375,
+        "active_frac": 0.4765625,
+        "energy_active": 0.3631785390447628,
+        "energy_struct": 0.46954055492100377,
+        "energy_bg": 0.16728090603423343
+      },
+      {
+        "step": 77,
+        "dist_to_mstar": 596.60693359375,
+        "m_norm": 162.11880493164062,
+        "active_frac": 0.4765625,
+        "energy_active": 0.36495191194698245,
+        "energy_struct": 0.46826285850532817,
+        "energy_bg": 0.16678522954768937
+      },
+      {
+        "step": 78,
+        "dist_to_mstar": 595.715087890625,
+        "m_norm": 162.773193359375,
+        "active_frac": 0.4765625,
+        "energy_active": 0.36670898174075345,
+        "energy_struct": 0.4669791764168164,
+        "energy_bg": 0.16631184184243014
+      },
+      {
+        "step": 79,
+        "dist_to_mstar": 594.8193969726562,
+        "m_norm": 163.43283081054688,
+        "active_frac": 0.4765625,
+        "energy_active": 0.3684495271373668,
+        "energy_struct": 0.46568982104402834,
+        "energy_bg": 0.1658606518186049
+      },
+      {
+        "step": 80,
+        "dist_to_mstar": 593.9197998046875,
+        "m_norm": 164.0977325439453,
+        "active_frac": 0.4765625,
+        "energy_active": 0.3701735515763406,
+        "energy_struct": 0.46439499420094893,
+        "energy_bg": 0.16543145422271047
+      },
+      {
+        "step": 81,
+        "dist_to_mstar": 593.0164184570312,
+        "m_norm": 164.76788330078125,
+        "active_frac": 0.4765625,
+        "energy_active": 0.3718808517275367,
+        "energy_struct": 0.46309504055339246,
+        "energy_bg": 0.1650241077190708
+      },
+      {
+        "step": 82,
+        "dist_to_mstar": 592.1090698242188,
+        "m_norm": 165.44326782226562,
+        "active_frac": 0.4765625,
+        "energy_active": 0.37357127682478675,
+        "energy_struct": 0.46179028860789245,
+        "energy_bg": 0.16463843456732077
+      },
+      {
+        "step": 83,
+        "dist_to_mstar": 591.1978759765625,
+        "m_norm": 166.1239013671875,
+        "active_frac": 0.4765625,
+        "energy_active": 0.3752447696096346,
+        "energy_struct": 0.4604809730680666,
+        "energy_bg": 0.1642742573222988
+      },
+      {
+        "step": 84,
+        "dist_to_mstar": 590.28271484375,
+        "m_norm": 166.8097686767578,
+        "active_frac": 0.4765625,
+        "energy_active": 0.3769011829863794,
+        "energy_struct": 0.4591673653101472,
+        "energy_bg": 0.16393145170347342
+      },
+      {
+        "step": 85,
+        "dist_to_mstar": 589.3635864257812,
+        "m_norm": 167.50086975097656,
+        "active_frac": 0.4765625,
+        "energy_active": 0.3785404667987335,
+        "energy_struct": 0.45789560408463686,
+        "energy_bg": 0.16356392911662965
+      },
+      {
+        "step": 86,
+        "dist_to_mstar": 588.4405517578125,
+        "m_norm": 168.19720458984375,
+        "active_frac": 0.4765625,
+        "energy_active": 0.38016246494625366,
+        "energy_struct": 0.4567290274145552,
+        "energy_bg": 0.16310850763919119
+      },
+      {
+        "step": 87,
+        "dist_to_mstar": 587.5135498046875,
+        "m_norm": 168.89874267578125,
+        "active_frac": 0.4765625,
+        "energy_active": 0.3817671289469313,
+        "energy_struct": 0.45555763312906167,
+        "energy_bg": 0.162675237924007
+      },
+      {
+        "step": 88,
+        "dist_to_mstar": 586.5825805664062,
+        "m_norm": 169.6055145263672,
+        "active_frac": 0.4765625,
+        "energy_active": 0.3833543610131471,
+        "energy_struct": 0.45438164702476325,
+        "energy_bg": 0.1622639919620896
+      },
+      {
+        "step": 89,
+        "dist_to_mstar": 585.6476440429688,
+        "m_norm": 170.31748962402344,
+        "active_frac": 0.46875,
+        "energy_active": 0.38492415300353655,
+        "energy_struct": 0.45320130460156677,
+        "energy_bg": 0.1618745423948967
+      },
+      {
+        "step": 90,
+        "dist_to_mstar": 584.7086791992188,
+        "m_norm": 171.03468322753906,
+        "active_frac": 0.46875,
+        "energy_active": 0.3864764046296414,
+        "energy_struct": 0.45201689397841593,
+        "energy_bg": 0.16150670139194268
+      },
+      {
+        "step": 91,
+        "dist_to_mstar": 583.7656860351562,
+        "m_norm": 171.75709533691406,
+        "active_frac": 0.46875,
+        "energy_active": 0.3880110411928108,
+        "energy_struct": 0.4508286017336538,
+        "energy_bg": 0.16116035707353538
+      },
+      {
+        "step": 92,
+        "dist_to_mstar": 582.818603515625,
+        "m_norm": 172.4846954345703,
+        "active_frac": 0.46875,
+        "energy_active": 0.38952803579425455,
+        "energy_struct": 0.44963668309086874,
+        "energy_bg": 0.16083528111487672
+      },
+      {
+        "step": 93,
+        "dist_to_mstar": 581.8674926757812,
+        "m_norm": 173.217529296875,
+        "active_frac": 0.46875,
+        "energy_active": 0.3910272788278403,
+        "energy_struct": 0.44844139256813814,
+        "energy_bg": 0.16053132860402156
+      },
+      {
+        "step": 94,
+        "dist_to_mstar": 580.9122924804688,
+        "m_norm": 173.95555114746094,
+        "active_frac": 0.46875,
+        "energy_active": 0.3925087673670416,
+        "energy_struct": 0.44724294225702615,
+        "energy_bg": 0.16024829037593222
+      },
+      {
+        "step": 95,
+        "dist_to_mstar": 579.953125,
+        "m_norm": 174.69874572753906,
+        "active_frac": 0.4609375,
+        "energy_active": 0.39397246078334486,
+        "energy_struct": 0.4460415305859136,
+        "energy_bg": 0.15998600863074153
+      },
+      {
+        "step": 96,
+        "dist_to_mstar": 578.98974609375,
+        "m_norm": 175.44715881347656,
+        "active_frac": 0.4609375,
+        "energy_active": 0.3954182904333428,
+        "energy_struct": 0.4448374272692676,
+        "energy_bg": 0.15974428229738957
+      },
+      {
+        "step": 97,
+        "dist_to_mstar": 578.0222778320312,
+        "m_norm": 176.20074462890625,
+        "active_frac": 0.4609375,
+        "energy_active": 0.3968463084129986,
+        "energy_struct": 0.44363076208137364,
+        "energy_bg": 0.15952292950562774
+      },
+      {
+        "step": 98,
+        "dist_to_mstar": 577.0506591796875,
+        "m_norm": 176.9595184326172,
+        "active_frac": 0.4609375,
+        "energy_active": 0.39825648339830433,
+        "energy_struct": 0.44242176601535055,
+        "energy_bg": 0.1593217505863451
+      },
+      {
+        "step": 99,
+        "dist_to_mstar": 576.074951171875,
+        "m_norm": 177.72348022460938,
+        "active_frac": 0.4609375,
+        "energy_active": 0.39964869815744003,
+        "energy_struct": 0.4412107076445438,
+        "energy_bg": 0.1591405941980162
+      },
+      {
+        "step": 100,
+        "dist_to_mstar": 575.094970703125,
+        "m_norm": 178.49264526367188,
+        "active_frac": 0.4609375,
+        "energy_active": 0.40102303022634445,
+        "energy_struct": 0.4399977427837741,
+        "energy_bg": 0.1589792269898814
+      }
+    ]
+  },
+  {
+    "name": "sym_psd",
+    "dim": 128,
+    "rho_observed": 0.9963975254856998,
+    "rho_spec": 0.155,
+    "final_active_frac": 0.6015625,
+    "active_frac_spec": 0.0487,
+    "final_energy_distribution": [
+      0.24854405198128102,
+      0.5332873825448504,
+      0.21816856547386854
+    ],
+    "spec_distribution": [
+      0.0487,
+      0.2623,
+      0.6891
+    ],
+    "history": [
+      {
+        "step": 0,
+        "dist_to_mstar": 47.96699523925781,
+        "m_norm": 128.0,
+        "active_frac": 0.5859375,
+        "energy_active": 0.24289810699831801,
+        "energy_struct": 0.542508212178456,
+        "energy_bg": 0.2145936808232259
+      },
+      {
+        "step": 1,
+        "dist_to_mstar": 47.81052780151367,
+        "m_norm": 127.85556030273438,
+        "active_frac": 0.59375,
+        "energy_active": 0.24295923533584737,
+        "energy_struct": 0.5424197737370721,
+        "energy_bg": 0.21462099092708062
+      },
+      {
+        "step": 2,
+        "dist_to_mstar": 47.65427780151367,
+        "m_norm": 127.71134948730469,
+        "active_frac": 0.59375,
+        "energy_active": 0.24302028111835727,
+        "energy_struct": 0.5423311732598327,
+        "energy_bg": 0.21464854562181002
+      },
+      {
+        "step": 3,
+        "dist_to_mstar": 47.49824905395508,
+        "m_norm": 127.56734466552734,
+        "active_frac": 0.59375,
+        "energy_active": 0.2430812188437463,
+        "energy_struct": 0.5422424641397409,
+        "energy_bg": 0.21467631701651285
+      },
+      {
+        "step": 4,
+        "dist_to_mstar": 47.342445373535156,
+        "m_norm": 127.4235610961914,
+        "active_frac": 0.59375,
+        "energy_active": 0.2431420815497479,
+        "energy_struct": 0.5421536186664062,
+        "energy_bg": 0.21470429978384586
+      },
+      {
+        "step": 5,
+        "dist_to_mstar": 47.18686294555664,
+        "m_norm": 127.2800064086914,
+        "active_frac": 0.59375,
+        "energy_active": 0.2432028477173376,
+        "energy_struct": 0.5420646662012178,
+        "energy_bg": 0.21473248608144455
+      },
+      {
+        "step": 6,
+        "dist_to_mstar": 47.03150177001953,
+        "m_norm": 127.13666534423828,
+        "active_frac": 0.59375,
+        "energy_active": 0.24326352739970436,
+        "energy_struct": 0.5419755675582111,
+        "energy_bg": 0.21476090504208453
+      },
+      {
+        "step": 7,
+        "dist_to_mstar": 46.87635803222656,
+        "m_norm": 126.99354553222656,
+        "active_frac": 0.59375,
+        "energy_active": 0.24332414020470083,
+        "energy_struct": 0.541886316276576,
+        "energy_bg": 0.2147895435187232
+      },
+      {
+        "step": 8,
+        "dist_to_mstar": 46.721439361572266,
+        "m_norm": 126.85064697265625,
+        "active_frac": 0.59375,
+        "energy_active": 0.24338460709347418,
+        "energy_struct": 0.5417969838028098,
+        "energy_bg": 0.214818409103716
+      },
+      {
+        "step": 9,
+        "dist_to_mstar": 46.56673812866211,
+        "m_norm": 126.70795440673828,
+        "active_frac": 0.59375,
+        "energy_active": 0.24344502214165223,
+        "energy_struct": 0.5417074805590026,
+        "energy_bg": 0.2148474972993451
+      },
+      {
+        "step": 10,
+        "dist_to_mstar": 46.41225051879883,
+        "m_norm": 126.56549072265625,
+        "active_frac": 0.59375,
+        "energy_active": 0.2435053670684665,
+        "energy_struct": 0.5416178171737046,
+        "energy_bg": 0.21487681575782885
+      },
+      {
+        "step": 11,
+        "dist_to_mstar": 46.25798797607422,
+        "m_norm": 126.4232406616211,
+        "active_frac": 0.59375,
+        "energy_active": 0.24356559197048788,
+        "energy_struct": 0.5415280699070243,
+        "energy_bg": 0.21490633812248786
+      },
+      {
+        "step": 12,
+        "dist_to_mstar": 46.10394287109375,
+        "m_norm": 126.28121185302734,
+        "active_frac": 0.59375,
+        "energy_active": 0.24362571358602386,
+        "energy_struct": 0.5414382200351741,
+        "energy_bg": 0.2149360663788021
+      },
+      {
+        "step": 13,
+        "dist_to_mstar": 45.95011520385742,
+        "m_norm": 126.13939666748047,
+        "active_frac": 0.59375,
+        "energy_active": 0.2436857907321506,
+        "energy_struct": 0.541348150808684,
+        "energy_bg": 0.2149660584591654
+      },
+      {
+        "step": 14,
+        "dist_to_mstar": 45.796504974365234,
+        "m_norm": 125.99779510498047,
+        "active_frac": 0.59375,
+        "energy_active": 0.2437457230452235,
+        "energy_struct": 0.5412580251580672,
+        "energy_bg": 0.2149962517967093
+      },
+      {
+        "step": 15,
+        "dist_to_mstar": 45.64311218261719,
+        "m_norm": 125.85641479492188,
+        "active_frac": 0.59375,
+        "energy_active": 0.24380560055060438,
+        "energy_struct": 0.5411677544033693,
+        "energy_bg": 0.21502664504602637
+      },
+      {
+        "step": 16,
+        "dist_to_mstar": 45.48993682861328,
+        "m_norm": 125.71524810791016,
+        "active_frac": 0.59375,
+        "energy_active": 0.2438653818496502,
+        "energy_struct": 0.5410773326313894,
+        "energy_bg": 0.21505728551896044
+      },
+      {
+        "step": 17,
+        "dist_to_mstar": 45.33698272705078,
+        "m_norm": 125.57430267333984,
+        "active_frac": 0.59375,
+        "energy_active": 0.24392507468249142,
+        "energy_struct": 0.5409867954258031,
+        "energy_bg": 0.2150881298917055
+      },
+      {
+        "step": 18,
+        "dist_to_mstar": 45.18423843383789,
+        "m_norm": 125.43356323242188,
+        "active_frac": 0.59375,
+        "energy_active": 0.24398467170406793,
+        "energy_struct": 0.5408961169319382,
+        "energy_bg": 0.21511921136399392
+      },
+      {
+        "step": 19,
+        "dist_to_mstar": 45.031715393066406,
+        "m_norm": 125.29304504394531,
+        "active_frac": 0.59375,
+        "energy_active": 0.24404418825883728,
+        "energy_struct": 0.5408052876287964,
+        "energy_bg": 0.21515052411236635
+      },
+      {
+        "step": 20,
+        "dist_to_mstar": 44.87940979003906,
+        "m_norm": 125.1527328491211,
+        "active_frac": 0.59375,
+        "energy_active": 0.24410360185344906,
+        "energy_struct": 0.5407143722326361,
+        "energy_bg": 0.21518202591391483
+      },
+      {
+        "step": 21,
+        "dist_to_mstar": 44.72731399536133,
+        "m_norm": 125.01264190673828,
+        "active_frac": 0.59375,
+        "energy_active": 0.24416291147592653,
+        "energy_struct": 0.5406233042005298,
+        "energy_bg": 0.21521378432354366
+      },
+      {
+        "step": 22,
+        "dist_to_mstar": 44.575435638427734,
+        "m_norm": 124.87276458740234,
+        "active_frac": 0.59375,
+        "energy_active": 0.24422215777859757,
+        "energy_struct": 0.5405320807596983,
+        "energy_bg": 0.21524576146170415
+      },
+      {
+        "step": 23,
+        "dist_to_mstar": 44.42377853393555,
+        "m_norm": 124.73310089111328,
+        "active_frac": 0.59375,
+        "energy_active": 0.24428128873309862,
+        "energy_struct": 0.5404407856143965,
+        "energy_bg": 0.21527792565250495
+      },
+      {
+        "step": 24,
+        "dist_to_mstar": 44.27233123779297,
+        "m_norm": 124.5936508178711,
+        "active_frac": 0.59375,
+        "energy_active": 0.24434028257071577,
+        "energy_struct": 0.5403493825130147,
+        "energy_bg": 0.21531033491626955
+      },
+      {
+        "step": 25,
+        "dist_to_mstar": 44.121097564697266,
+        "m_norm": 124.45441436767578,
+        "active_frac": 0.59375,
+        "energy_active": 0.24439926620208352,
+        "energy_struct": 0.5402577308740895,
+        "energy_bg": 0.21534300292382705
+      },
+      {
+        "step": 26,
+        "dist_to_mstar": 43.97007751464844,
+        "m_norm": 124.31538391113281,
+        "active_frac": 0.59375,
+        "energy_active": 0.24445811776759613,
+        "energy_struct": 0.5401660476231008,
+        "energy_bg": 0.21537583460930304
+      },
+      {
+        "step": 27,
+        "dist_to_mstar": 43.81926727294922,
+        "m_norm": 124.17656707763672,
+        "active_frac": 0.59375,
+        "energy_active": 0.2445168617077879,
+        "energy_struct": 0.5400742091616274,
+        "energy_bg": 0.2154089291305847
+      },
+      {
+        "step": 28,
+        "dist_to_mstar": 43.66867446899414,
+        "m_norm": 124.0379638671875,
+        "active_frac": 0.59375,
+        "energy_active": 0.2445755477500024,
+        "energy_struct": 0.5399822246319491,
+        "energy_bg": 0.2154422276180485
+      },
+      {
+        "step": 29,
+        "dist_to_mstar": 43.51829528808594,
+        "m_norm": 123.89957427978516,
+        "active_frac": 0.59375,
+        "energy_active": 0.24463412778446586,
+        "energy_struct": 0.5398901188661341,
+        "energy_bg": 0.21547575334939997
+      },
+      {
+        "step": 30,
+        "dist_to_mstar": 43.36812973022461,
+        "m_norm": 123.76139831542969,
+        "active_frac": 0.59375,
+        "energy_active": 0.2446926107170691,
+        "energy_struct": 0.539797894273092,
+        "energy_bg": 0.21550949500983893
+      },
+      {
+        "step": 31,
+        "dist_to_mstar": 43.21817398071289,
+        "m_norm": 123.62342834472656,
+        "active_frac": 0.59375,
+        "energy_active": 0.2447510115154191,
+        "energy_struct": 0.5397054826982444,
+        "energy_bg": 0.21554350578633658
+      },
+      {
+        "step": 32,
+        "dist_to_mstar": 43.06843566894531,
+        "m_norm": 123.48566436767578,
+        "active_frac": 0.59375,
+        "energy_active": 0.2448093033995559,
+        "energy_struct": 0.5396130054992965,
+        "energy_bg": 0.21557769110114766
+      },
+      {
+        "step": 33,
+        "dist_to_mstar": 42.91890335083008,
+        "m_norm": 123.34811401367188,
+        "active_frac": 0.59375,
+        "energy_active": 0.24486749806301078,
+        "energy_struct": 0.5395203808493484,
+        "energy_bg": 0.2156121210876408
+      },
+      {
+        "step": 34,
+        "dist_to_mstar": 42.76958084106445,
+        "m_norm": 123.21078491210938,
+        "active_frac": 0.59375,
+        "energy_active": 0.2449256164492303,
+        "energy_struct": 0.5394276369393637,
+        "energy_bg": 0.215646746611406
+      },
+      {
+        "step": 35,
+        "dist_to_mstar": 42.62047576904297,
+        "m_norm": 123.07365417480469,
+        "active_frac": 0.59375,
+        "energy_active": 0.24498363794140804,
+        "energy_struct": 0.5393347582785066,
+        "energy_bg": 0.2156816037800853
+      },
+      {
+        "step": 36,
+        "dist_to_mstar": 42.47157669067383,
+        "m_norm": 122.93673706054688,
+        "active_frac": 0.6015625,
+        "energy_active": 0.24504158031545706,
+        "energy_struct": 0.5392416948044277,
+        "energy_bg": 0.21571672488011523
+      },
+      {
+        "step": 37,
+        "dist_to_mstar": 42.32289123535156,
+        "m_norm": 122.8000259399414,
+        "active_frac": 0.6015625,
+        "energy_active": 0.245099393450048,
+        "energy_struct": 0.5391485764383624,
+        "energy_bg": 0.2157520301115896
+      },
+      {
+        "step": 38,
+        "dist_to_mstar": 42.174415588378906,
+        "m_norm": 122.66352081298828,
+        "active_frac": 0.6015625,
+        "energy_active": 0.24515714433949612,
+        "energy_struct": 0.5390552833973756,
+        "energy_bg": 0.2157875722631282
+      },
+      {
+        "step": 39,
+        "dist_to_mstar": 42.02614212036133,
+        "m_norm": 122.5272216796875,
+        "active_frac": 0.6015625,
+        "energy_active": 0.2452147704866786,
+        "energy_struct": 0.5389618899722819,
+        "energy_bg": 0.21582333954103955
+      },
+      {
+        "step": 40,
+        "dist_to_mstar": 41.87808609008789,
+        "m_norm": 122.3911361694336,
+        "active_frac": 0.6015625,
+        "energy_active": 0.24527230694171212,
+        "energy_struct": 0.5388683707919328,
+        "energy_bg": 0.21585932226635507
+      },
+      {
+        "step": 41,
+        "dist_to_mstar": 41.73023986816406,
+        "m_norm": 122.25525665283203,
+        "active_frac": 0.6015625,
+        "energy_active": 0.24532975146799074,
+        "energy_struct": 0.5387746990811519,
+        "energy_bg": 0.2158955494508573
+      },
+      {
+        "step": 42,
+        "dist_to_mstar": 41.58259582519531,
+        "m_norm": 122.11958312988281,
+        "active_frac": 0.6015625,
+        "energy_active": 0.24538712685154573,
+        "energy_struct": 0.538680893094943,
+        "energy_bg": 0.21593198005351116
+      },
+      {
+        "step": 43,
+        "dist_to_mstar": 41.43516540527344,
+        "m_norm": 121.98411560058594,
+        "active_frac": 0.6015625,
+        "energy_active": 0.24544437122475324,
+        "energy_struct": 0.5385869850916002,
+        "energy_bg": 0.21596864368364657
+      },
+      {
+        "step": 44,
+        "dist_to_mstar": 41.28794479370117,
+        "m_norm": 121.8488540649414,
+        "active_frac": 0.59375,
+        "energy_active": 0.2455015100411161,
+        "energy_struct": 0.5384929470162145,
+        "energy_bg": 0.21600554294266935
+      },
+      {
+        "step": 45,
+        "dist_to_mstar": 41.14093017578125,
+        "m_norm": 121.71381378173828,
+        "active_frac": 0.59375,
+        "energy_active": 0.2455585994337101,
+        "energy_struct": 0.5383987289213086,
+        "energy_bg": 0.2160426716449813
+      },
+      {
+        "step": 46,
+        "dist_to_mstar": 40.99412155151367,
+        "m_norm": 121.5789566040039,
+        "active_frac": 0.59375,
+        "energy_active": 0.24561556447585625,
+        "energy_struct": 0.5383044405386128,
+        "energy_bg": 0.21607999498553096
+      },
+      {
+        "step": 47,
+        "dist_to_mstar": 40.84751892089844,
+        "m_norm": 121.44432830810547,
+        "active_frac": 0.59375,
+        "energy_active": 0.24567242714080378,
+        "energy_struct": 0.5382099760757884,
+        "energy_bg": 0.2161175967834079
+      },
+      {
+        "step": 48,
+        "dist_to_mstar": 40.70112609863281,
+        "m_norm": 121.30988311767578,
+        "active_frac": 0.59375,
+        "energy_active": 0.24572921135438186,
+        "energy_struct": 0.538115445801398,
+        "energy_bg": 0.21615534284422017
+      },
+      {
+        "step": 49,
+        "dist_to_mstar": 40.55493927001953,
+        "m_norm": 121.17565155029297,
+        "active_frac": 0.59375,
+        "energy_active": 0.24578588993860678,
+        "energy_struct": 0.5380207408985848,
+        "energy_bg": 0.21619336916280849
+      },
+      {
+        "step": 50,
+        "dist_to_mstar": 40.40896224975586,
+        "m_norm": 121.04163360595703,
+        "active_frac": 0.59375,
+        "energy_active": 0.24584247404759244,
+        "energy_struct": 0.5379259170139513,
+        "energy_bg": 0.21623160893845625
+      },
+      {
+        "step": 51,
+        "dist_to_mstar": 40.263187408447266,
+        "m_norm": 120.90780639648438,
+        "active_frac": 0.59375,
+        "energy_active": 0.24589896150329335,
+        "energy_struct": 0.5378309466851426,
+        "energy_bg": 0.21627009181156404
+      },
+      {
+        "step": 52,
+        "dist_to_mstar": 40.117618560791016,
+        "m_norm": 120.7741928100586,
+        "active_frac": 0.59375,
+        "energy_active": 0.24595535122508874,
+        "energy_struct": 0.5377358590043902,
+        "energy_bg": 0.21630878977052106
+      },
+      {
+        "step": 53,
+        "dist_to_mstar": 39.972251892089844,
+        "m_norm": 120.6407699584961,
+        "active_frac": 0.59375,
+        "energy_active": 0.2460116451522261,
+        "energy_struct": 0.5376406354005052,
+        "energy_bg": 0.2163477194472687
+      },
+      {
+        "step": 54,
+        "dist_to_mstar": 39.82709503173828,
+        "m_norm": 120.507568359375,
+        "active_frac": 0.59375,
+        "energy_active": 0.24606782098655242,
+        "energy_struct": 0.5375452986827334,
+        "energy_bg": 0.2163868803307142
+      },
+      {
+        "step": 55,
+        "dist_to_mstar": 39.6821403503418,
+        "m_norm": 120.37455749511719,
+        "active_frac": 0.59375,
+        "energy_active": 0.24612389768621454,
+        "energy_struct": 0.5374498613599619,
+        "energy_bg": 0.21642624095382365
+      },
+      {
+        "step": 56,
+        "dist_to_mstar": 39.537391662597656,
+        "m_norm": 120.24175262451172,
+        "active_frac": 0.59375,
+        "energy_active": 0.24617991154416988,
+        "energy_struct": 0.5373542321836953,
+        "energy_bg": 0.21646585627213483
+      },
+      {
+        "step": 57,
+        "dist_to_mstar": 39.392845153808594,
+        "m_norm": 120.10916137695312,
+        "active_frac": 0.59375,
+        "energy_active": 0.2462358275753689,
+        "energy_struct": 0.5372585105626106,
+        "energy_bg": 0.21650566186202047
+      },
+      {
+        "step": 58,
+        "dist_to_mstar": 39.24850082397461,
+        "m_norm": 119.97674560546875,
+        "active_frac": 0.59375,
+        "energy_active": 0.24629160946642392,
+        "energy_struct": 0.5371626372933032,
+        "energy_bg": 0.2165457532402729
+      },
+      {
+        "step": 59,
+        "dist_to_mstar": 39.10436248779297,
+        "m_norm": 119.84454345703125,
+        "active_frac": 0.59375,
+        "energy_active": 0.2463473157367622,
+        "energy_struct": 0.5370666551804012,
+        "energy_bg": 0.2165860290828366
+      },
+      {
+        "step": 60,
+        "dist_to_mstar": 38.96043014526367,
+        "m_norm": 119.7125473022461,
+        "active_frac": 0.59375,
+        "energy_active": 0.24640292292218624,
+        "energy_struct": 0.5369705295522192,
+        "energy_bg": 0.2166265475255945
+      },
+      {
+        "step": 61,
+        "dist_to_mstar": 38.81669616699219,
+        "m_norm": 119.58074951171875,
+        "active_frac": 0.59375,
+        "energy_active": 0.24645842122881906,
+        "energy_struct": 0.5368743085633376,
+        "energy_bg": 0.21666727020784335
+      },
+      {
+        "step": 62,
+        "dist_to_mstar": 38.67316436767578,
+        "m_norm": 119.44915771484375,
+        "active_frac": 0.59375,
+        "energy_active": 0.24651381691361746,
+        "energy_struct": 0.5367779482407729,
+        "energy_bg": 0.2167082348456097
+      },
+      {
+        "step": 63,
+        "dist_to_mstar": 38.52983856201172,
+        "m_norm": 119.31776428222656,
+        "active_frac": 0.59375,
+        "energy_active": 0.24656911727183128,
+        "energy_struct": 0.5366814626911369,
+        "energy_bg": 0.21674942003703182
+      },
+      {
+        "step": 64,
+        "dist_to_mstar": 38.386714935302734,
+        "m_norm": 119.18656158447266,
+        "active_frac": 0.59375,
+        "energy_active": 0.24662431623179606,
+        "energy_struct": 0.5365848460692189,
+        "energy_bg": 0.21679083769898502
+      },
+      {
+        "step": 65,
+        "dist_to_mstar": 38.24378967285156,
+        "m_norm": 119.05557250976562,
+        "active_frac": 0.59375,
+        "energy_active": 0.24667943363389497,
+        "energy_struct": 0.5364880739815109,
+        "energy_bg": 0.21683249238459412
+      },
+      {
+        "step": 66,
+        "dist_to_mstar": 38.10106658935547,
+        "m_norm": 118.92477416992188,
+        "active_frac": 0.59375,
+        "energy_active": 0.24673442448551955,
+        "energy_struct": 0.536391202638364,
+        "energy_bg": 0.2168743728761164
+      },
+      {
+        "step": 67,
+        "dist_to_mstar": 37.95854568481445,
+        "m_norm": 118.79417419433594,
+        "active_frac": 0.59375,
+        "energy_active": 0.24678933103541278,
+        "energy_struct": 0.536294206951423,
+        "energy_bg": 0.2169164620131642
+      },
+      {
+        "step": 68,
+        "dist_to_mstar": 37.816226959228516,
+        "m_norm": 118.66378021240234,
+        "active_frac": 0.59375,
+        "energy_active": 0.24684413759087118,
+        "energy_struct": 0.5361970750059747,
+        "energy_bg": 0.21695878740315408
+      },
+      {
+        "step": 69,
+        "dist_to_mstar": 37.674102783203125,
+        "m_norm": 118.53358459472656,
+        "active_frac": 0.59375,
+        "energy_active": 0.2468988479358723,
+        "energy_struct": 0.5360998043064059,
+        "energy_bg": 0.2170013477577218
+      },
+      {
+        "step": 70,
+        "dist_to_mstar": 37.53218078613281,
+        "m_norm": 118.40357208251953,
+        "active_frac": 0.59375,
+        "energy_active": 0.24695346799715587,
+        "energy_struct": 0.536002392052451,
+        "energy_bg": 0.21704413995039312
+      },
+      {
+        "step": 71,
+        "dist_to_mstar": 37.390464782714844,
+        "m_norm": 118.27377319335938,
+        "active_frac": 0.59375,
+        "energy_active": 0.24700795788225613,
+        "energy_struct": 0.5359048893727869,
+        "energy_bg": 0.21708715274495696
+      },
+      {
+        "step": 72,
+        "dist_to_mstar": 37.248939514160156,
+        "m_norm": 118.14417266845703,
+        "active_frac": 0.59375,
+        "energy_active": 0.24706235898181822,
+        "energy_struct": 0.5358072511844885,
+        "energy_bg": 0.21713038983369332
+      },
+      {
+        "step": 73,
+        "dist_to_mstar": 37.10762023925781,
+        "m_norm": 118.01475524902344,
+        "active_frac": 0.59375,
+        "energy_active": 0.247116682971944,
+        "energy_struct": 0.5357094688815199,
+        "energy_bg": 0.2171738481465361
+      },
+      {
+        "step": 74,
+        "dist_to_mstar": 36.966495513916016,
+        "m_norm": 117.88555145263672,
+        "active_frac": 0.59375,
+        "energy_active": 0.24717087155777953,
+        "energy_struct": 0.5356115664271418,
+        "energy_bg": 0.21721756201507872
+      },
+      {
+        "step": 75,
+        "dist_to_mstar": 36.82556915283203,
+        "m_norm": 117.75653839111328,
+        "active_frac": 0.59375,
+        "energy_active": 0.24722495751977122,
+        "energy_struct": 0.535513552254207,
+        "energy_bg": 0.2172614902260217
+      },
+      {
+        "step": 76,
+        "dist_to_mstar": 36.684844970703125,
+        "m_norm": 117.62771606445312,
+        "active_frac": 0.6015625,
+        "energy_active": 0.24727896184676107,
+        "energy_struct": 0.535415393950383,
+        "energy_bg": 0.21730564420285592
+      },
+      {
+        "step": 77,
+        "dist_to_mstar": 36.544315338134766,
+        "m_norm": 117.49909973144531,
+        "active_frac": 0.6015625,
+        "energy_active": 0.2473328691738775,
+        "energy_struct": 0.5353171092556522,
+        "energy_bg": 0.2173500215704703
+      },
+      {
+        "step": 78,
+        "dist_to_mstar": 36.403987884521484,
+        "m_norm": 117.37066650390625,
+        "active_frac": 0.6015625,
+        "energy_active": 0.2473866649804459,
+        "energy_struct": 0.5352187034966018,
+        "energy_bg": 0.21739463152295227
+      },
+      {
+        "step": 79,
+        "dist_to_mstar": 36.26385498046875,
+        "m_norm": 117.24243927001953,
+        "active_frac": 0.6015625,
+        "energy_active": 0.24744036499528957,
+        "energy_struct": 0.5351201470535527,
+        "energy_bg": 0.21743948795115778
+      },
+      {
+        "step": 80,
+        "dist_to_mstar": 36.12391662597656,
+        "m_norm": 117.1144027709961,
+        "active_frac": 0.6015625,
+        "energy_active": 0.2474939592222493,
+        "energy_struct": 0.5350214877746563,
+        "energy_bg": 0.2174845530030944
+      },
+      {
+        "step": 81,
+        "dist_to_mstar": 35.98417663574219,
+        "m_norm": 116.98656463623047,
+        "active_frac": 0.6015625,
+        "energy_active": 0.24754746333865088,
+        "energy_struct": 0.5349226985133382,
+        "energy_bg": 0.217529838148011
+      },
+      {
+        "step": 82,
+        "dist_to_mstar": 35.84463119506836,
+        "m_norm": 116.85891723632812,
+        "active_frac": 0.6015625,
+        "energy_active": 0.24760082698127325,
+        "energy_struct": 0.5348237846702181,
+        "energy_bg": 0.2175753883485087
+      },
+      {
+        "step": 83,
+        "dist_to_mstar": 35.705284118652344,
+        "m_norm": 116.7314682006836,
+        "active_frac": 0.6015625,
+        "energy_active": 0.247654115194839,
+        "energy_struct": 0.5347247425405267,
+        "energy_bg": 0.21762114226463428
+      },
+      {
+        "step": 84,
+        "dist_to_mstar": 35.566131591796875,
+        "m_norm": 116.60420989990234,
+        "active_frac": 0.6015625,
+        "energy_active": 0.24770729544178358,
+        "energy_struct": 0.5346255775933361,
+        "energy_bg": 0.21766712696488033
+      },
+      {
+        "step": 85,
+        "dist_to_mstar": 35.42717742919922,
+        "m_norm": 116.47714233398438,
+        "active_frac": 0.6015625,
+        "energy_active": 0.2477603928369785,
+        "energy_struct": 0.5345262764839921,
+        "energy_bg": 0.21771333067902943
+      },
+      {
+        "step": 86,
+        "dist_to_mstar": 35.28841781616211,
+        "m_norm": 116.35026550292969,
+        "active_frac": 0.6015625,
+        "energy_active": 0.2478133516646095,
+        "energy_struct": 0.534434092393621,
+        "energy_bg": 0.2177525559417694
+      },
+      {
+        "step": 87,
+        "dist_to_mstar": 35.14985275268555,
+        "m_norm": 116.22358703613281,
+        "active_frac": 0.6015625,
+        "energy_active": 0.2478662289726409,
+        "energy_struct": 0.5343529124156065,
+        "energy_bg": 0.21778085861175261
+      },
+      {
+        "step": 88,
+        "dist_to_mstar": 35.01148223876953,
+        "m_norm": 116.09710693359375,
+        "active_frac": 0.6015625,
+        "energy_active": 0.2479190188278921,
+        "energy_struct": 0.5342716064159581,
+        "energy_bg": 0.21780937475614986
+      },
+      {
+        "step": 89,
+        "dist_to_mstar": 34.8733024597168,
+        "m_norm": 115.97080993652344,
+        "active_frac": 0.6015625,
+        "energy_active": 0.2479716742902807,
+        "energy_struct": 0.534190230671823,
+        "energy_bg": 0.21783809503789625
+      },
+      {
+        "step": 90,
+        "dist_to_mstar": 34.735321044921875,
+        "m_norm": 115.84471130371094,
+        "active_frac": 0.6015625,
+        "energy_active": 0.2480242388391464,
+        "energy_struct": 0.5341086988868441,
+        "energy_bg": 0.21786706227400957
+      },
+      {
+        "step": 91,
+        "dist_to_mstar": 34.5975341796875,
+        "m_norm": 115.71880340576172,
+        "active_frac": 0.6015625,
+        "energy_active": 0.24807667014422136,
+        "energy_struct": 0.5340270721268614,
+        "energy_bg": 0.21789625772891724
+      },
+      {
+        "step": 92,
+        "dist_to_mstar": 34.45993423461914,
+        "m_norm": 115.59307861328125,
+        "active_frac": 0.6015625,
+        "energy_active": 0.24812904858461413,
+        "energy_struct": 0.5339453341439828,
+        "energy_bg": 0.217925617271403
+      },
+      {
+        "step": 93,
+        "dist_to_mstar": 34.322532653808594,
+        "m_norm": 115.46755981445312,
+        "active_frac": 0.6015625,
+        "energy_active": 0.2481812903158468,
+        "energy_struct": 0.533863471020566,
+        "energy_bg": 0.21795523866358718
+      },
+      {
+        "step": 94,
+        "dist_to_mstar": 34.18532180786133,
+        "m_norm": 115.34222412109375,
+        "active_frac": 0.6015625,
+        "energy_active": 0.24823342141459848,
+        "energy_struct": 0.5337815321713835,
+        "energy_bg": 0.2179850464140181
+      },
+      {
+        "step": 95,
+        "dist_to_mstar": 34.048309326171875,
+        "m_norm": 115.21707916259766,
+        "active_frac": 0.6015625,
+        "energy_active": 0.2482854629537385,
+        "energy_struct": 0.5336994229571584,
+        "energy_bg": 0.218015114089103
+      },
+      {
+        "step": 96,
+        "dist_to_mstar": 33.91148376464844,
+        "m_norm": 115.09212493896484,
+        "active_frac": 0.6015625,
+        "energy_active": 0.24833739033394775,
+        "energy_struct": 0.5336172468877002,
+        "energy_bg": 0.21804536277835207
+      },
+      {
+        "step": 97,
+        "dist_to_mstar": 33.77484893798828,
+        "m_norm": 114.96736145019531,
+        "active_frac": 0.6015625,
+        "energy_active": 0.24838922511283487,
+        "energy_struct": 0.5335349384037525,
+        "energy_bg": 0.21807583648341256
+      },
+      {
+        "step": 98,
+        "dist_to_mstar": 33.63840866088867,
+        "m_norm": 114.84278106689453,
+        "active_frac": 0.6015625,
+        "energy_active": 0.24844091969744245,
+        "energy_struct": 0.5334525498619145,
+        "energy_bg": 0.21810653044064307
+      },
+      {
+        "step": 99,
+        "dist_to_mstar": 33.502159118652344,
+        "m_norm": 114.71839904785156,
+        "active_frac": 0.6015625,
+        "energy_active": 0.2484925183709149,
+        "energy_struct": 0.5333700327116571,
+        "energy_bg": 0.218137448917428
+      },
+      {
+        "step": 100,
+        "dist_to_mstar": 33.3661003112793,
+        "m_norm": 114.59420776367188,
+        "active_frac": 0.6015625,
+        "energy_active": 0.24854405198128102,
+        "energy_struct": 0.5332873825448504,
+        "energy_bg": 0.21816856547386854
+      }
+    ]
+  },
+  {
+    "name": "sym_sparse",
+    "dim": 128,
+    "rho_observed": 0.9939802144295711,
+    "rho_spec": 0.155,
+    "final_active_frac": 0.6171875,
+    "active_frac_spec": 0.0487,
+    "final_energy_distribution": [
+      0.24598635681080006,
+      0.5348999960969615,
+      0.2191136470922385
+    ],
+    "spec_distribution": [
+      0.0487,
+      0.2623,
+      0.6891
+    ],
+    "history": [
+      {
+        "step": 0,
+        "dist_to_mstar": 95.05139923095703,
+        "m_norm": 128.0,
+        "active_frac": 0.5859375,
+        "energy_active": 0.24289810699831801,
+        "energy_struct": 0.542508212178456,
+        "energy_bg": 0.2145936808232259
+      },
+      {
+        "step": 1,
+        "dist_to_mstar": 94.48233795166016,
+        "m_norm": 127.49385070800781,
+        "active_frac": 0.59375,
+        "energy_active": 0.24303252480974719,
+        "energy_struct": 0.5423287386784231,
+        "energy_bg": 0.21463873651182971
+      },
+      {
+        "step": 2,
+        "dist_to_mstar": 93.91674041748047,
+        "m_norm": 126.9910888671875,
+        "active_frac": 0.59375,
+        "energy_active": 0.24316487010868457,
+        "energy_struct": 0.5421451352082395,
+        "energy_bg": 0.21468999468307592
+      },
+      {
+        "step": 3,
+        "dist_to_mstar": 93.35456085205078,
+        "m_norm": 126.49169921875,
+        "active_frac": 0.59375,
+        "energy_active": 0.24329511810444035,
+        "energy_struct": 0.5419574551403809,
+        "energy_bg": 0.21474742675517883
+      },
+      {
+        "step": 4,
+        "dist_to_mstar": 92.79579162597656,
+        "m_norm": 125.99565124511719,
+        "active_frac": 0.59375,
+        "energy_active": 0.24342328845927125,
+        "energy_struct": 0.5417657089027021,
+        "energy_bg": 0.21481100263802658
+      },
+      {
+        "step": 5,
+        "dist_to_mstar": 92.24039459228516,
+        "m_norm": 125.50292205810547,
+        "active_frac": 0.59375,
+        "energy_active": 0.24354930919810386,
+        "energy_struct": 0.5415699129438145,
+        "energy_bg": 0.21488077785808168
+      },
+      {
+        "step": 6,
+        "dist_to_mstar": 91.68836975097656,
+        "m_norm": 125.01349639892578,
+        "active_frac": 0.59375,
+        "energy_active": 0.2436732533948721,
+        "energy_struct": 0.5413700556090814,
+        "energy_bg": 0.21495669099604656
+      },
+      {
+        "step": 7,
+        "dist_to_mstar": 91.13965606689453,
+        "m_norm": 124.52734375,
+        "active_frac": 0.6015625,
+        "energy_active": 0.24379507834432396,
+        "energy_struct": 0.5411661818981834,
+        "energy_bg": 0.21503873975749263
+      },
+      {
+        "step": 8,
+        "dist_to_mstar": 90.5942611694336,
+        "m_norm": 124.04442596435547,
+        "active_frac": 0.6015625,
+        "energy_active": 0.24391483823900062,
+        "energy_struct": 0.5409582368078437,
+        "energy_bg": 0.21512692495315566
+      },
+      {
+        "step": 9,
+        "dist_to_mstar": 90.0521469116211,
+        "m_norm": 123.56473541259766,
+        "active_frac": 0.6015625,
+        "energy_active": 0.2440324454967702,
+        "energy_struct": 0.5407463615543809,
+        "energy_bg": 0.2152211929488489
+      },
+      {
+        "step": 10,
+        "dist_to_mstar": 89.51329040527344,
+        "m_norm": 123.08824157714844,
+        "active_frac": 0.6015625,
+        "energy_active": 0.24414791541711647,
+        "energy_struct": 0.5405304975168849,
+        "energy_bg": 0.2153215870659987
+      },
+      {
+        "step": 11,
+        "dist_to_mstar": 88.97766876220703,
+        "m_norm": 122.61491394042969,
+        "active_frac": 0.6015625,
+        "energy_active": 0.24426128758535062,
+        "energy_struct": 0.540310648545442,
+        "energy_bg": 0.2154280638692074
+      },
+      {
+        "step": 12,
+        "dist_to_mstar": 88.44525909423828,
+        "m_norm": 122.14473724365234,
+        "active_frac": 0.609375,
+        "energy_active": 0.24437254157910338,
+        "energy_struct": 0.5400868338156279,
+        "energy_bg": 0.21554062460526865
+      },
+      {
+        "step": 13,
+        "dist_to_mstar": 87.9160385131836,
+        "m_norm": 121.67768096923828,
+        "active_frac": 0.609375,
+        "energy_active": 0.24448168158527764,
+        "energy_struct": 0.5398590973751581,
+        "energy_bg": 0.21565922103956428
+      },
+      {
+        "step": 14,
+        "dist_to_mstar": 87.38998413085938,
+        "m_norm": 121.21372985839844,
+        "active_frac": 0.609375,
+        "energy_active": 0.2445886808926246,
+        "energy_struct": 0.5396274471543894,
+        "energy_bg": 0.215783871952986
+      },
+      {
+        "step": 15,
+        "dist_to_mstar": 86.8670654296875,
+        "m_norm": 120.75285339355469,
+        "active_frac": 0.609375,
+        "energy_active": 0.24469357449096238,
+        "energy_struct": 0.5393918631033211,
+        "energy_bg": 0.21591456240571652
+      },
+      {
+        "step": 16,
+        "dist_to_mstar": 86.34728240966797,
+        "m_norm": 120.29502868652344,
+        "active_frac": 0.609375,
+        "energy_active": 0.2447963301335736,
+        "energy_struct": 0.5391524042467788,
+        "energy_bg": 0.21605126561964763
+      },
+      {
+        "step": 17,
+        "dist_to_mstar": 85.8305892944336,
+        "m_norm": 119.84024810791016,
+        "active_frac": 0.609375,
+        "energy_active": 0.24489696280817738,
+        "energy_struct": 0.5389090893265973,
+        "energy_bg": 0.21619394786522528
+      },
+      {
+        "step": 18,
+        "dist_to_mstar": 85.31697845458984,
+        "m_norm": 119.38845825195312,
+        "active_frac": 0.609375,
+        "energy_active": 0.24499547049513468,
+        "energy_struct": 0.5386618834282264,
+        "energy_bg": 0.21634264607663894
+      },
+      {
+        "step": 19,
+        "dist_to_mstar": 84.80640411376953,
+        "m_norm": 118.93965911865234,
+        "active_frac": 0.609375,
+        "energy_active": 0.24509182469822494,
+        "energy_struct": 0.5384109145538026,
+        "energy_bg": 0.21649726074797243
+      },
+      {
+        "step": 20,
+        "dist_to_mstar": 84.29887390136719,
+        "m_norm": 118.49382019042969,
+        "active_frac": 0.6015625,
+        "energy_active": 0.2451860478598013,
+        "energy_struct": 0.5381560855196866,
+        "energy_bg": 0.21665786662051206
+      },
+      {
+        "step": 21,
+        "dist_to_mstar": 83.79435729980469,
+        "m_norm": 118.0509262084961,
+        "active_frac": 0.59375,
+        "energy_active": 0.24527816090633076,
+        "energy_struct": 0.5378974573447859,
+        "energy_bg": 0.21682438174888335
+      },
+      {
+        "step": 22,
+        "dist_to_mstar": 83.2928237915039,
+        "m_norm": 117.61094665527344,
+        "active_frac": 0.59375,
+        "energy_active": 0.2453681387902264,
+        "energy_struct": 0.5377509524554017,
+        "energy_bg": 0.21688090875437185
+      },
+      {
+        "step": 23,
+        "dist_to_mstar": 82.79425811767578,
+        "m_norm": 117.17385864257812,
+        "active_frac": 0.59375,
+        "energy_active": 0.24545597819197432,
+        "energy_struct": 0.5376138102606667,
+        "energy_bg": 0.216930211547359
+      },
+      {
+        "step": 24,
+        "dist_to_mstar": 82.29863739013672,
+        "m_norm": 116.73965454101562,
+        "active_frac": 0.59375,
+        "energy_active": 0.24554171354428161,
+        "energy_struct": 0.5374733751090944,
+        "energy_bg": 0.21698491134662393
+      },
+      {
+        "step": 25,
+        "dist_to_mstar": 81.80593872070312,
+        "m_norm": 116.30829620361328,
+        "active_frac": 0.59375,
+        "energy_active": 0.2456252559257972,
+        "energy_struct": 0.5373297435276322,
+        "energy_bg": 0.2170450005465706
+      },
+      {
+        "step": 26,
+        "dist_to_mstar": 81.3161392211914,
+        "m_norm": 115.8797607421875,
+        "active_frac": 0.59375,
+        "energy_active": 0.24570666879024203,
+        "energy_struct": 0.5371828954731845,
+        "energy_bg": 0.21711043573657338
+      },
+      {
+        "step": 27,
+        "dist_to_mstar": 80.82923889160156,
+        "m_norm": 115.45404815673828,
+        "active_frac": 0.59375,
+        "energy_active": 0.245785940734883,
+        "energy_struct": 0.5370328040923262,
+        "energy_bg": 0.21718125517279072
+      },
+      {
+        "step": 28,
+        "dist_to_mstar": 80.34518432617188,
+        "m_norm": 115.03111267089844,
+        "active_frac": 0.59375,
+        "energy_active": 0.24586310430247926,
+        "energy_struct": 0.5368794757931769,
+        "energy_bg": 0.21725741990434383
+      },
+      {
+        "step": 29,
+        "dist_to_mstar": 79.86398315429688,
+        "m_norm": 114.6109390258789,
+        "active_frac": 0.59375,
+        "energy_active": 0.2459381555137373,
+        "energy_struct": 0.5367229318832868,
+        "energy_bg": 0.21733891260297597
+      },
+      {
+        "step": 30,
+        "dist_to_mstar": 79.3855972290039,
+        "m_norm": 114.19352722167969,
+        "active_frac": 0.5859375,
+        "energy_active": 0.24601104580471206,
+        "energy_struct": 0.5365632416803738,
+        "energy_bg": 0.2174257125149141
+      },
+      {
+        "step": 31,
+        "dist_to_mstar": 78.9100112915039,
+        "m_norm": 113.7788314819336,
+        "active_frac": 0.59375,
+        "energy_active": 0.2460817736932513,
+        "energy_struct": 0.5364004195132026,
+        "energy_bg": 0.21751780679354604
+      },
+      {
+        "step": 32,
+        "dist_to_mstar": 78.43721008300781,
+        "m_norm": 113.36683654785156,
+        "active_frac": 0.59375,
+        "energy_active": 0.24615041864514234,
+        "energy_struct": 0.536277886928142,
+        "energy_bg": 0.21757169442671567
+      },
+      {
+        "step": 33,
+        "dist_to_mstar": 77.96717071533203,
+        "m_norm": 112.95753479003906,
+        "active_frac": 0.59375,
+        "energy_active": 0.2462169209173817,
+        "energy_struct": 0.5362293564062859,
+        "energy_bg": 0.21755372267633244
+      },
+      {
+        "step": 34,
+        "dist_to_mstar": 77.49986267089844,
+        "m_norm": 112.55088806152344,
+        "active_frac": 0.59375,
+        "energy_active": 0.24628127773580188,
+        "energy_struct": 0.5361777194355077,
+        "energy_bg": 0.21754100282869043
+      },
+      {
+        "step": 35,
+        "dist_to_mstar": 77.03529357910156,
+        "m_norm": 112.14688873291016,
+        "active_frac": 0.5859375,
+        "energy_active": 0.24634349814900816,
+        "energy_struct": 0.5361228955775361,
+        "energy_bg": 0.21753360627345575
+      },
+      {
+        "step": 36,
+        "dist_to_mstar": 76.57341766357422,
+        "m_norm": 111.7455062866211,
+        "active_frac": 0.5859375,
+        "energy_active": 0.24640359628542804,
+        "energy_struct": 0.5360649814885515,
+        "energy_bg": 0.21753142222602043
+      },
+      {
+        "step": 37,
+        "dist_to_mstar": 76.11421966552734,
+        "m_norm": 111.34674072265625,
+        "active_frac": 0.5859375,
+        "energy_active": 0.2464615932834635,
+        "energy_struct": 0.5360038857402384,
+        "energy_bg": 0.21753452097629813
+      },
+      {
+        "step": 38,
+        "dist_to_mstar": 75.65769958496094,
+        "m_norm": 110.95055389404297,
+        "active_frac": 0.5859375,
+        "energy_active": 0.24651744330594363,
+        "energy_struct": 0.535939726464694,
+        "energy_bg": 0.2175428302293624
+      },
+      {
+        "step": 39,
+        "dist_to_mstar": 75.20381927490234,
+        "m_norm": 110.55693054199219,
+        "active_frac": 0.5859375,
+        "energy_active": 0.24657118428770272,
+        "energy_struct": 0.535872445944236,
+        "energy_bg": 0.21755636976806128
+      },
+      {
+        "step": 40,
+        "dist_to_mstar": 74.7525634765625,
+        "m_norm": 110.16584777832031,
+        "active_frac": 0.5859375,
+        "energy_active": 0.24662279135161005,
+        "energy_struct": 0.5358020527055769,
+        "energy_bg": 0.21757515594281301
+      },
+      {
+        "step": 41,
+        "dist_to_mstar": 74.30391693115234,
+        "m_norm": 109.77731323242188,
+        "active_frac": 0.5859375,
+        "energy_active": 0.24667227026609803,
+        "energy_struct": 0.5357285783368412,
+        "energy_bg": 0.2175991513970608
+      },
+      {
+        "step": 42,
+        "dist_to_mstar": 73.85786437988281,
+        "m_norm": 109.39126586914062,
+        "active_frac": 0.5859375,
+        "energy_active": 0.2467196288712158,
+        "energy_struct": 0.5356520476684323,
+        "energy_bg": 0.21762832346035188
+      },
+      {
+        "step": 43,
+        "dist_to_mstar": 73.41438293457031,
+        "m_norm": 109.00770568847656,
+        "active_frac": 0.5859375,
+        "energy_active": 0.24676492137281272,
+        "energy_struct": 0.5355724278663513,
+        "energy_bg": 0.21766265076083602
+      },
+      {
+        "step": 44,
+        "dist_to_mstar": 72.97345733642578,
+        "m_norm": 108.62662506103516,
+        "active_frac": 0.59375,
+        "energy_active": 0.24680803555310435,
+        "energy_struct": 0.5354897815943253,
+        "energy_bg": 0.21770218285257043
+      },
+      {
+        "step": 45,
+        "dist_to_mstar": 72.5350570678711,
+        "m_norm": 108.24800109863281,
+        "active_frac": 0.59375,
+        "energy_active": 0.2468490841103347,
+        "energy_struct": 0.535404073014482,
+        "energy_bg": 0.21774684287518328
+      },
+      {
+        "step": 46,
+        "dist_to_mstar": 72.09918212890625,
+        "m_norm": 107.87179565429688,
+        "active_frac": 0.5859375,
+        "energy_active": 0.2468880389758046,
+        "energy_struct": 0.5353153293403877,
+        "energy_bg": 0.21779663168380772
+      },
+      {
+        "step": 47,
+        "dist_to_mstar": 71.66580200195312,
+        "m_norm": 107.49801635742188,
+        "active_frac": 0.5859375,
+        "energy_active": 0.24692485010136342,
+        "energy_struct": 0.5352235915283174,
+        "energy_bg": 0.21785155837031908
+      },
+      {
+        "step": 48,
+        "dist_to_mstar": 71.23490905761719,
+        "m_norm": 107.12662506103516,
+        "active_frac": 0.5859375,
+        "energy_active": 0.24695957946960231,
+        "energy_struct": 0.535128819919397,
+        "energy_bg": 0.21791160061100073
+      },
+      {
+        "step": 49,
+        "dist_to_mstar": 70.80648040771484,
+        "m_norm": 106.75762176513672,
+        "active_frac": 0.5859375,
+        "energy_active": 0.24699220054596885,
+        "energy_struct": 0.5350310519596658,
+        "energy_bg": 0.21797674749436532
+      },
+      {
+        "step": 50,
+        "dist_to_mstar": 70.3804931640625,
+        "m_norm": 106.39096069335938,
+        "active_frac": 0.5859375,
+        "energy_active": 0.2470227408298416,
+        "energy_struct": 0.5349303070204424,
+        "energy_bg": 0.21804695214971598
+      },
+      {
+        "step": 51,
+        "dist_to_mstar": 69.9569320678711,
+        "m_norm": 106.02665710449219,
+        "active_frac": 0.5859375,
+        "energy_active": 0.24705119199882014,
+        "energy_struct": 0.5348265680379294,
+        "energy_bg": 0.2181222399632505
+      },
+      {
+        "step": 52,
+        "dist_to_mstar": 69.53579711914062,
+        "m_norm": 105.66468048095703,
+        "active_frac": 0.5859375,
+        "energy_active": 0.24707755107770746,
+        "energy_struct": 0.5347198829561932,
+        "energy_bg": 0.21820256596609935
+      },
+      {
+        "step": 53,
+        "dist_to_mstar": 69.11705017089844,
+        "m_norm": 105.30500030517578,
+        "active_frac": 0.578125,
+        "energy_active": 0.24710181155326555,
+        "energy_struct": 0.5346102338444582,
+        "energy_bg": 0.21828795460227632
+      },
+      {
+        "step": 54,
+        "dist_to_mstar": 68.70068359375,
+        "m_norm": 104.94761657714844,
+        "active_frac": 0.578125,
+        "energy_active": 0.2471240057406504,
+        "energy_struct": 0.5344976448769992,
+        "energy_bg": 0.21837834938235032
+      },
+      {
+        "step": 55,
+        "dist_to_mstar": 68.28667449951172,
+        "m_norm": 104.5925064086914,
+        "active_frac": 0.578125,
+        "energy_active": 0.24714411235546377,
+        "energy_struct": 0.5344689285240126,
+        "energy_bg": 0.21838695912052367
+      },
+      {
+        "step": 56,
+        "dist_to_mstar": 67.8750228881836,
+        "m_norm": 104.23965454101562,
+        "active_frac": 0.578125,
+        "energy_active": 0.24716214956158336,
+        "energy_struct": 0.534448684750066,
+        "energy_bg": 0.21838916568835065
+      },
+      {
+        "step": 57,
+        "dist_to_mstar": 67.46569061279297,
+        "m_norm": 103.88904571533203,
+        "active_frac": 0.5859375,
+        "energy_active": 0.2471781371699246,
+        "energy_struct": 0.5344253987085643,
+        "energy_bg": 0.2183964641215111
+      },
+      {
+        "step": 58,
+        "dist_to_mstar": 67.05867767333984,
+        "m_norm": 103.5406494140625,
+        "active_frac": 0.5859375,
+        "energy_active": 0.24719203934263667,
+        "energy_struct": 0.5343991078854772,
+        "energy_bg": 0.21840885277188613
+      },
+      {
+        "step": 59,
+        "dist_to_mstar": 66.6539535522461,
+        "m_norm": 103.19447326660156,
+        "active_frac": 0.5859375,
+        "energy_active": 0.24720389458596043,
+        "energy_struct": 0.5343697724549646,
+        "energy_bg": 0.21842633295907493
+      },
+      {
+        "step": 60,
+        "dist_to_mstar": 66.25151824951172,
+        "m_norm": 102.85047149658203,
+        "active_frac": 0.5859375,
+        "energy_active": 0.24721366861805086,
+        "energy_struct": 0.5343374755982735,
+        "energy_bg": 0.21844885578367568
+      },
+      {
+        "step": 61,
+        "dist_to_mstar": 65.8513412475586,
+        "m_norm": 102.50865173339844,
+        "active_frac": 0.5859375,
+        "energy_active": 0.24722141975489062,
+        "energy_struct": 0.5343021676190252,
+        "energy_bg": 0.21847641262608425
+      },
+      {
+        "step": 62,
+        "dist_to_mstar": 65.45341491699219,
+        "m_norm": 102.16899108886719,
+        "active_frac": 0.5859375,
+        "energy_active": 0.24722714458608555,
+        "energy_struct": 0.5342638546176305,
+        "energy_bg": 0.21850900079628394
+      },
+      {
+        "step": 63,
+        "dist_to_mstar": 65.05772399902344,
+        "m_norm": 101.83147430419922,
+        "active_frac": 0.5859375,
+        "energy_active": 0.2472308107945847,
+        "energy_struct": 0.5342429234774388,
+        "energy_bg": 0.21852626572797643
+      },
+      {
+        "step": 64,
+        "dist_to_mstar": 64.66425323486328,
+        "m_norm": 101.4960708618164,
+        "active_frac": 0.5859375,
+        "energy_active": 0.24723241023343498,
+        "energy_struct": 0.5342510526251052,
+        "energy_bg": 0.2185165371414598
+      },
+      {
+        "step": 65,
+        "dist_to_mstar": 64.27298736572266,
+        "m_norm": 101.16278076171875,
+        "active_frac": 0.5859375,
+        "energy_active": 0.247232018179456,
+        "energy_struct": 0.534256120377252,
+        "energy_bg": 0.21851186144329204
+      },
+      {
+        "step": 66,
+        "dist_to_mstar": 63.88389587402344,
+        "m_norm": 100.83158111572266,
+        "active_frac": 0.5859375,
+        "energy_active": 0.2472295694071002,
+        "energy_struct": 0.5342581325148158,
+        "energy_bg": 0.218512298078084
+      },
+      {
+        "step": 67,
+        "dist_to_mstar": 63.496986389160156,
+        "m_norm": 100.5024642944336,
+        "active_frac": 0.6015625,
+        "energy_active": 0.24722514168960835,
+        "energy_struct": 0.5342571094002602,
+        "energy_bg": 0.21851774891013154
+      },
+      {
+        "step": 68,
+        "dist_to_mstar": 63.11222839355469,
+        "m_norm": 100.1754150390625,
+        "active_frac": 0.6015625,
+        "energy_active": 0.24721867098438366,
+        "energy_struct": 0.5342530564250949,
+        "energy_bg": 0.21852827259052146
+      },
+      {
+        "step": 69,
+        "dist_to_mstar": 62.729618072509766,
+        "m_norm": 99.85039520263672,
+        "active_frac": 0.6015625,
+        "energy_active": 0.24721020155524556,
+        "energy_struct": 0.5342460164959014,
+        "energy_bg": 0.21854378194885304
+      },
+      {
+        "step": 70,
+        "dist_to_mstar": 62.34912872314453,
+        "m_norm": 99.52742004394531,
+        "active_frac": 0.609375,
+        "energy_active": 0.2471997122673593,
+        "energy_struct": 0.5342359425892246,
+        "energy_bg": 0.21856434514341616
+      },
+      {
+        "step": 71,
+        "dist_to_mstar": 61.97075653076172,
+        "m_norm": 99.20645904541016,
+        "active_frac": 0.609375,
+        "energy_active": 0.2471872069690722,
+        "energy_struct": 0.5342264588777415,
+        "energy_bg": 0.21858633415318635
+      },
+      {
+        "step": 72,
+        "dist_to_mstar": 61.59447479248047,
+        "m_norm": 98.88750457763672,
+        "active_frac": 0.609375,
+        "energy_active": 0.24717275232477234,
+        "energy_struct": 0.5342851287148028,
+        "energy_bg": 0.2185421189604248
+      },
+      {
+        "step": 73,
+        "dist_to_mstar": 61.22028350830078,
+        "m_norm": 98.57052612304688,
+        "active_frac": 0.609375,
+        "energy_active": 0.24715631776834152,
+        "energy_struct": 0.5343412364403012,
+        "energy_bg": 0.21850244579135733
+      },
+      {
+        "step": 74,
+        "dist_to_mstar": 60.8481559753418,
+        "m_norm": 98.25552368164062,
+        "active_frac": 0.609375,
+        "energy_active": 0.24713788455825653,
+        "energy_struct": 0.5343947361519906,
+        "energy_bg": 0.21846737928975288
+      },
+      {
+        "step": 75,
+        "dist_to_mstar": 60.47808837890625,
+        "m_norm": 97.9424819946289,
+        "active_frac": 0.609375,
+        "energy_active": 0.2471174853412877,
+        "energy_struct": 0.5344456801836698,
+        "energy_bg": 0.21843683447504253
+      },
+      {
+        "step": 76,
+        "dist_to_mstar": 60.11005783081055,
+        "m_norm": 97.63137817382812,
+        "active_frac": 0.609375,
+        "energy_active": 0.24709511570757126,
+        "energy_struct": 0.5344940482326935,
+        "energy_bg": 0.21841083605973527
+      },
+      {
+        "step": 77,
+        "dist_to_mstar": 59.744049072265625,
+        "m_norm": 97.32220458984375,
+        "active_frac": 0.609375,
+        "energy_active": 0.24707074661479428,
+        "energy_struct": 0.5345398649882067,
+        "energy_bg": 0.21838938839699903
+      },
+      {
+        "step": 78,
+        "dist_to_mstar": 59.38005447387695,
+        "m_norm": 97.01494598388672,
+        "active_frac": 0.609375,
+        "energy_active": 0.24704447803272656,
+        "energy_struct": 0.5345830602221054,
+        "energy_bg": 0.21837246174516797
+      },
+      {
+        "step": 79,
+        "dist_to_mstar": 59.018062591552734,
+        "m_norm": 96.70958709716797,
+        "active_frac": 0.609375,
+        "energy_active": 0.24701625003523991,
+        "energy_struct": 0.5346237578584995,
+        "energy_bg": 0.2183599921062606
+      },
+      {
+        "step": 80,
+        "dist_to_mstar": 58.658058166503906,
+        "m_norm": 96.40611267089844,
+        "active_frac": 0.6171875,
+        "energy_active": 0.24698608446800618,
+        "energy_struct": 0.5346618756032254,
+        "energy_bg": 0.21835203992876842
+      },
+      {
+        "step": 81,
+        "dist_to_mstar": 58.300018310546875,
+        "m_norm": 96.1045150756836,
+        "active_frac": 0.6171875,
+        "energy_active": 0.24695397075829903,
+        "energy_struct": 0.5346974818754993,
+        "energy_bg": 0.21834854736620177
+      },
+      {
+        "step": 82,
+        "dist_to_mstar": 57.943931579589844,
+        "m_norm": 95.80476379394531,
+        "active_frac": 0.6171875,
+        "energy_active": 0.24691995843209666,
+        "energy_struct": 0.5347305024639615,
+        "energy_bg": 0.21834953910394192
+      },
+      {
+        "step": 83,
+        "dist_to_mstar": 57.58979797363281,
+        "m_norm": 95.50686645507812,
+        "active_frac": 0.6171875,
+        "energy_active": 0.24688399608419434,
+        "energy_struct": 0.5347610188776323,
+        "energy_bg": 0.21835498503817344
+      },
+      {
+        "step": 84,
+        "dist_to_mstar": 57.23759078979492,
+        "m_norm": 95.2107925415039,
+        "active_frac": 0.6171875,
+        "energy_active": 0.24684615496279366,
+        "energy_struct": 0.5347890012851654,
+        "energy_bg": 0.21836484375204093
+      },
+      {
+        "step": 85,
+        "dist_to_mstar": 56.887298583984375,
+        "m_norm": 94.91654205322266,
+        "active_frac": 0.6171875,
+        "energy_active": 0.24680635446582755,
+        "energy_struct": 0.5348145241108345,
+        "energy_bg": 0.21837912142333799
+      },
+      {
+        "step": 86,
+        "dist_to_mstar": 56.538909912109375,
+        "m_norm": 94.62409210205078,
+        "active_frac": 0.6171875,
+        "energy_active": 0.2467647077268822,
+        "energy_struct": 0.5348374330562192,
+        "energy_bg": 0.21839785921689853
+      },
+      {
+        "step": 87,
+        "dist_to_mstar": 56.19241714477539,
+        "m_norm": 94.33343505859375,
+        "active_frac": 0.609375,
+        "energy_active": 0.2467211457395677,
+        "energy_struct": 0.5348579279753588,
+        "energy_bg": 0.21842092628507356
+      },
+      {
+        "step": 88,
+        "dist_to_mstar": 55.847801208496094,
+        "m_norm": 94.04454803466797,
+        "active_frac": 0.609375,
+        "energy_active": 0.24667569263873707,
+        "energy_struct": 0.5348759359463492,
+        "energy_bg": 0.21844837141491374
+      },
+      {
+        "step": 89,
+        "dist_to_mstar": 55.50505065917969,
+        "m_norm": 93.7574234008789,
+        "active_frac": 0.609375,
+        "energy_active": 0.24662838847343774,
+        "energy_struct": 0.534891401237665,
+        "energy_bg": 0.21848021028889728
+      },
+      {
+        "step": 90,
+        "dist_to_mstar": 55.16415023803711,
+        "m_norm": 93.47205352783203,
+        "active_frac": 0.609375,
+        "energy_active": 0.24657921891769424,
+        "energy_struct": 0.5349043794179629,
+        "energy_bg": 0.2185164016643429
+      },
+      {
+        "step": 91,
+        "dist_to_mstar": 54.825096130371094,
+        "m_norm": 93.18843078613281,
+        "active_frac": 0.609375,
+        "energy_active": 0.24652813476164928,
+        "energy_struct": 0.5349149694991574,
+        "energy_bg": 0.21855689573919326
+      },
+      {
+        "step": 92,
+        "dist_to_mstar": 54.487857818603516,
+        "m_norm": 92.9065170288086,
+        "active_frac": 0.609375,
+        "energy_active": 0.24647527015959017,
+        "energy_struct": 0.5349230172341936,
+        "energy_bg": 0.21860171260621622
+      },
+      {
+        "step": 93,
+        "dist_to_mstar": 54.15245056152344,
+        "m_norm": 92.6263198852539,
+        "active_frac": 0.6171875,
+        "energy_active": 0.2464205345887816,
+        "energy_struct": 0.5349286579728998,
+        "energy_bg": 0.21865080743831866
+      },
+      {
+        "step": 94,
+        "dist_to_mstar": 53.81883239746094,
+        "m_norm": 92.34782409667969,
+        "active_frac": 0.6171875,
+        "energy_active": 0.24636392953746059,
+        "energy_struct": 0.5349318667545919,
+        "energy_bg": 0.2187042037079475
+      },
+      {
+        "step": 95,
+        "dist_to_mstar": 53.48700714111328,
+        "m_norm": 92.07101440429688,
+        "active_frac": 0.6171875,
+        "energy_active": 0.2463055292378561,
+        "energy_struct": 0.5349325880172366,
+        "energy_bg": 0.21876188274490727
+      },
+      {
+        "step": 96,
+        "dist_to_mstar": 53.15696716308594,
+        "m_norm": 91.79588317871094,
+        "active_frac": 0.6171875,
+        "energy_active": 0.24624531884891449,
+        "energy_struct": 0.5349308819153848,
+        "energy_bg": 0.2188237992357007
+      },
+      {
+        "step": 97,
+        "dist_to_mstar": 52.82868957519531,
+        "m_norm": 91.52241516113281,
+        "active_frac": 0.6171875,
+        "energy_active": 0.24618327730421335,
+        "energy_struct": 0.5349267871268457,
+        "energy_bg": 0.21888993556894087
+      },
+      {
+        "step": 98,
+        "dist_to_mstar": 52.50216293334961,
+        "m_norm": 91.25059509277344,
+        "active_frac": 0.6171875,
+        "energy_active": 0.2461194412415255,
+        "energy_struct": 0.5349202349542641,
+        "energy_bg": 0.2189603238042104
+      },
+      {
+        "step": 99,
+        "dist_to_mstar": 52.1773796081543,
+        "m_norm": 90.98041534423828,
+        "active_frac": 0.6171875,
+        "energy_active": 0.24605379825033785,
+        "energy_struct": 0.5349113362187428,
+        "energy_bg": 0.21903486553091941
+      },
+      {
+        "step": 100,
+        "dist_to_mstar": 51.854331970214844,
+        "m_norm": 90.71185302734375,
+        "active_frac": 0.6171875,
+        "energy_active": 0.24598635681080006,
+        "energy_struct": 0.5348999960969615,
+        "energy_bg": 0.2191136470922385
+      }
+    ]
+  }
+]
