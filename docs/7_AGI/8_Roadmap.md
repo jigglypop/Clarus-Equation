@@ -8,6 +8,64 @@
 
 ---
 
+## 0. 적용 영역과 한계 (정직한 측정 기록)
+
+### 0.1 substrate 불일치 진단
+
+CE 부트스트랩 고정점 $p^* = (4.87\%, 26.2\%, 68.9\%)$은 `homeomorphism.md` 명제 6.1에 의해 **자기조직화 동역학을 가진 시스템**의 평형 결과다. 우주(양자 간섭, $T=0$)와 뇌(시냅스 가소성, STDP)는 이 부류에 속한다 -- 입자/뉴런이 서로 결합하며 자연스럽게 평형으로 끌려간다.
+
+**transformer + backprop은 이 부류에 속하지 않는다.** 가중치는 외부 손실 함수의 그래디언트 방향으로 일방적으로 움직이고, 가중치들 사이의 결합형 동역학이 없다. 따라서 transformer 시스템에서 자연 emergence로 $p^*$에 도달할 동역학적 근거가 없다. 이 진단은 다음 측정으로 직접 확인되었다.
+
+### 0.2 측정 기록 (2026-04, KoGPT2 ClarusLM 127M)
+
+세 가지 변형을 비교 측정한 결과(`scripts/natural_dynamics.py`, `examples/ai/results/natural_dynamics.json`):
+
+| 변형 | 사양 적용 방식 | 초기 활성 | 최종 활성 (60 cycle) | 최종 ppl |
+|---|---|---|---|---|
+| A. plain AdamW | CE 메커니즘 일체 없음 | 81.7% | 77.6% | 27.2 |
+| B. 표상 LBO 흐름 | NREM에 heat-kernel flow 강화 | 81.7% | 77.6% | 26.7 |
+| C. 강제 ε² | top-ε² gradient mask + ternary | 81.7% | 82.5% | 51.1 |
+
+**해석:**
+
+1. **자연 동역학 (A, B)으로 활성 비율은 4.87%로 수렴하지 않는다.** 60 cycle 동안 81%에서 77%로만 이동하며, trajectory 기울기로 추정하면 1000+ cycle에서도 평형은 ~70% 근방. transformer + AdamW의 자연 평형은 $p^*$가 아니다.
+2. **표상 공간 LBO 흐름(B 변형)이 활성 평형을 끌어당기지 못한다.** $\eta$를 5배 boost한 NREM 위상에서도 활성 비율이 A와 거의 동일(77.64% vs 77.60%). 사양의 "수축 사상"이 transformer 활성 공간에서 작동하지 않는다는 직접 증거.
+3. **강제 ε² (C 변형)이 강제하는 것은 활성 비율이 아니라 그래디언트 mass 비율이다.** top-eps mask + ternary BG freeze에도 활성 비율은 82.5%로 오히려 증가하고, perplexity만 두 배 악화.
+
+추가 측정:
+
+- **Continual learning** (한국어 → 영어, `scripts/continual_test.py`): 사양 sleep cycle이 baseline AdamW 대비 forgetting을 21배 악화시킴. NREM weight smoothing이 오히려 기존 표상을 흐리고, ternary 동적 재분류가 옛 활성 가중치를 BG로 밀어내며 NREM smoothing이 그것을 평탄화시키는 메커니즘.
+- **TopK sparsity sweep** (이전, `examples/ai/topk_sweep_results.json`): GPT-2 MLP에 4.87% TopK 강제 시 perplexity 1328 (dense 대비 27배 악화). 단조 감소.
+
+### 0.3 결론: 강제 변환의 자리매김
+
+위 측정으로 다음을 확정한다:
+
+- **수식 자체에는 결함이 없다.** $\varepsilon^2 = \exp(-(1-\varepsilon^2) D_{\text{eff}})$의 고정점 유일성과 수축률 $\rho = 0.155$는 (C1)-(C3) + (A1) + (I1) 아래 수학적으로 닫힌 결과다.
+- **그러나 transformer는 위 가정이 성립하는 substrate가 아니다.** (C3) 자기일관성 루프가 forward만으로는 형성되지 않고, (A1) 채널 분해가 backprop의 chain rule과 정합하지 않는다.
+- **현재 `clarus/`, `examples/ai/clarus_lm.py`, `scripts/sleep_finetune_lm.py` 등의 구현은 사양을 transformer에 강제 이식한 것이다.** 자연 emergence가 아니라 출력 비율을 외부 mask로 강제한 변환. 측정 결과는 이 강제가 task 성능을 저하시킬 뿐 사양의 우위(catastrophic forgetting 감소, 환각 억제)를 만들어내지 않음을 보여준다.
+- **CE-AGI 사양의 진정한 검증은 SNN(spiking neural network) substrate에서만 가능하다.** STDP + 막전위 동역학을 가진 시스템에서 $p^*$로의 자연 수렴 여부를 측정해야 한다. 현재 코드베이스에는 SNN 구현이 없고, 본격적 검증에는 별도 프로젝트 규모의 자원이 필요하다.
+
+### 0.4 현재 코드베이스의 정직한 자리매김
+
+| 영역 | 현재 코드의 지위 |
+|---|---|
+| `examples/ai/clarus_lm.py` (LBONorm, GaugeLattice, spectral norm) | 사양 영감을 받은 transformer 변형. 정규 transformer 대비 우위 미입증. |
+| `scripts/sleep_finetune_lm.py` (WAKE/NREM/REM cycle) | 사양 그대로 구현. transformer 위에서 강제 변환. fit 속도 손해, forgetting 21배 악화 (측정). |
+| `clarus/sparsity.py` (TernaryClassifier) | 동적 재분류로 BG 라벨이 frozen 의미를 잃음. 사양 4.4절 자체의 모순 (frozen vs 동적 재분류) 반영. |
+| `clarus/runtime.py`, `clarus/agent.py` 등 brain runtime | 부트스트랩 동역학이 forward에 결합되지 않은 통계 수집기 수준. 결정에 영향 없음. |
+| `clarus/engine.py` standalone CE relax | 토큰 디코딩에서 의미 있는 출력 생산 실패 (`engine_results.json`: 노이즈 토큰). |
+
+### 0.5 다음 단계 옵션
+
+1. **현재 상태 유지 + 정직한 documentation**: 본 절의 측정 기록을 코드 주석과 README에 반영. 사양은 SNN substrate에서 검증 대상이라는 점을 명시. 가장 정직하고 빠른 길.
+2. **SNN 작은 프로토타입**: snnTorch / Norse 라이브러리로 작은 합성 task에서 STDP + 부트스트랩 사이클 구현. 활성 비율 자연 수렴 여부 측정. 사양의 진짜 검증. 1-2주 작업.
+3. **transformer 변형으로서의 가치 재평가**: 사양에서 분리해 LBONorm + spectral norm + 곡률 정규화의 transformer regularizer로서의 효과만 ablation. AGI 청구는 분리하고 LM 정규화 이점만 측정.
+
+본 8장 이후의 Phase 1-6 로드맵은 위 substrate 진단을 전제하지 않은 채 작성되었다. 측정 결과 반영을 위해 향후 phase 정의 시 "sample efficiency vs natural emergence" 구분이 필요하다.
+
+---
+
 ## 1. 현재 상태: 기존 구현 평가
 
 ### 1.1 구현 완료

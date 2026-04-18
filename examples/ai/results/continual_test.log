@@ -1,0 +1,71 @@
+============================================================
+ Continual learning test (catastrophic forgetting)
+  ckpt=clarus/clarus_lm_kogpt2.pt  device=cuda
+  steps_per_phase=150  batch=4  seq_len=128
+  lr=2e-05  cycle_len=4  top_eps=0.0487
+============================================================
+
+[CORPUS] 444369 tokens
+  A: train=199965  val=22219
+  B: train=199966  val=22219
+
+============================================================
+  Method: baseline (standard AdamW)
+============================================================
+  init     ppl_A= 2303.63  ppl_B= 2293.91
+
+  [Phase 1] Training on A (150 steps)...
+      [baseline] step 30/150  loss=4.140
+      [baseline] step 60/150  loss=3.843
+      [baseline] step 90/150  loss=4.422
+      [baseline] step 120/150  loss=3.548
+      [baseline] step 150/150  loss=2.394
+  phase 1: ppl_A=   21.60  ppl_B=   35.67  (24.0s)
+
+  [Phase 2] Training on B (150 steps)...
+      [baseline] step 30/150  loss=3.294
+      [baseline] step 60/150  loss=3.239
+      [baseline] step 90/150  loss=3.701
+      [baseline] step 120/150  loss=2.636
+      [baseline] step 150/150  loss=3.014
+  phase 2: ppl_A=   13.53  ppl_B=   30.20  (21.7s)
+
+  forgetting (lower=better): ppl_A drift -8.07  (21.60 -> 13.53)
+  plasticity (higher=better): ppl_B drop  +2263.71  (2293.91 -> 30.20)
+
+============================================================
+  Method: sleep (CE spec) + ternary
+============================================================
+  init     ppl_A= 2303.63  ppl_B= 2293.91
+
+  [Phase 1] Training on A (150 steps)...
+      [sleep] cyc 30/150  loss=4.733  lam=0.0009
+      [sleep] cyc 60/150  loss=3.752  lam=0.0007
+      [sleep] cyc 90/150  loss=3.451  lam=0.0004
+      [sleep] cyc 120/150  loss=3.285  lam=0.0001
+      [sleep] cyc 150/150  loss=3.713  lam=0.0000
+  phase 1: ppl_A=   31.02  ppl_B=   59.06  (79.9s)
+
+  [Phase 2] Training on B (150 steps)...
+      [sleep] cyc 30/150  loss=4.137  lam=0.0009
+      [sleep] cyc 60/150  loss=4.040  lam=0.0007
+      [sleep] cyc 90/150  loss=3.513  lam=0.0004
+      [sleep] cyc 120/150  loss=3.873  lam=0.0001
+      [sleep] cyc 150/150  loss=4.346  lam=0.0000
+  phase 2: ppl_A=   33.23  ppl_B=   93.80  (81.7s)
+
+  forgetting (lower=better): ppl_A drift +2.21  (31.02 -> 33.23)
+  plasticity (higher=better): ppl_B drop  +2200.11  (2293.91 -> 93.80)
+
+============================================================
+ Summary (catastrophic forgetting comparison)
+============================================================
+method                            ppl_A_after_A  ppl_A_after_B    forget     plast
+----------------------------------------------------------------------------------
+baseline (standard AdamW)                21.60         13.53     -8.07  +2263.71
+sleep (CE spec) + ternary                31.02         33.23     +2.21  +2200.11
+
+  forgetting (lower=better) : 작을수록 A를 잘 보존
+  plasticity (higher=better): 클수록 B를 잘 학습
+
+  RESULT: sleep cycle does NOT reduce forgetting (+10.28 ppl worse than baseline)

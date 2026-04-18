@@ -4,6 +4,8 @@
 >
 > 이 문서 시리즈(7_AGI)는 CE 뇌 연구(`6_뇌/`)에서 도출된 원리를 **AGI 구현 방법론으로 구체화**하는 설계 문서다. `Bridge`/`Phenomenology` 층이며, 실험 근거의 강도는 `6_뇌/evidence.md`의 `supported / bridge / hypothesis` 구분을 따른다.
 
+> **substrate 경고 (2026-04 측정 기준)**: 본 시리즈가 제시하는 부트스트랩 동역학 (특히 $p^* = (4.87\%, 26.2\%, 68.9\%)$로의 자연 수렴, 수면 순환의 catastrophic forgetting 방지)은 **STDP 기반 결합형 자기조직화 시스템**(우주의 양자 간섭, 뇌의 시냅스 가소성, SNN)에서 성립하는 명제다. **transformer + backprop 시스템은 이 부류에 속하지 않음**이 직접 측정으로 확인되었다(`8_Roadmap.md` 0절). 따라서 `clarus/` 및 `examples/ai/clarus_lm.py`의 현재 구현은 사양을 transformer 위에 **강제 이식한 변환**이며, 사양의 진정한 검증은 SNN substrate 위에서만 가능하다. 이 한계는 본 시리즈의 모든 청구를 읽을 때 전제로 둔다.
+
 ---
 
 ## 0. 핵심 논제

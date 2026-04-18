@@ -115,6 +115,9 @@ def parse_args():
                     help="REM exploration trials per REM phase (3_Sleep.md 5.2).")
     ap.add_argument("--rem-noise-sigma", type=float, default=0.001,
                     help="REM exploration noise std (3_Sleep.md 5.2).")
+    ap.add_argument("--rem-accept-margin", type=float, default=0.01,
+                    help="REM relative loss-improvement threshold for acceptance "
+                         "(held-out batch). 1%% 미만 개선은 reject (drift 방지).")
     ap.add_argument("--ternary", action="store_true",
                     help="3분배 가중치 분류 활성화 (5_Sparsity.md 4절). "
                          "ACTIVE만 WAKE에서 학습, STRUCT는 NREM에서, BG 동결.")
@@ -212,6 +215,10 @@ def wake_phase(model, optim, train_data, batch, seq_len, gen,
         (loss / float(cycle_len)).backward()
         sum_loss += float(loss.item())
         sum_curv += curv
+        # ClarusLM.forward(targets=None) path는 _lambda_step을 증가시키지 않으므로
+        # 여기서 수동 증가 (스케줄이 사이클별로 진행되도록).
+        if hasattr(model, '_lambda_total_steps') and model._lambda_total_steps > 0:
+            model._lambda_step += 1
     return sum_loss / cycle_len, sum_curv / cycle_len
 
 
@@ -316,38 +323,45 @@ def nrem_phase(model, optim, eta_nrem: float, top_eps: float) -> tuple[float, fl
 
 def rem_phase(model, optim, train_data, batch, seq_len, gen,
               n_trials: int, lam_curv: float, noise_sigma: float,
-              top_eps: float) -> tuple[int, int]:
+              top_eps: float, accept_margin: float = 0.01) -> tuple[int, int]:
     """3_Sleep.md 5.2: pruned (1 - eps^2) 영역 + 노이즈 탐색.
 
-    각 trial마다:
-      1. 새 batch로 grad 계산
+    각 trial:
+      1. trial용 batch로 grad 계산 (gradient batch)
       2. G_pruned = (1 - top_eps_mask) * G  (NREM에서 버려진 영역)
-      3. proposal_grad = G_pruned + noise_sigma * randn
-      4. 임시로 -lr * proposal_grad 적용 후 같은 batch loss 측정
-      5. loss 감소하면 채택, 아니면 원복
+      3. proposal = G_pruned + noise_sigma * randn
+      4. 임시로 -lr * proposal 적용
+      5. **다른** held-out batch로 loss_pre / loss_post 측정 (overfitting 방지)
+      6. (loss_pre - loss_post) > accept_margin*|loss_pre| 이면 채택, 아니면 원복
+
+    accept_margin: relative improvement 요구치 (기본 1%). 같은 batch로 평가하면
+    노이즈 자체가 거의 항상 작은 손실 감소를 만들어내는 trivial acceptance가 발생,
+    실제 일반화 개선이 아니라 점진적 weight drift만 일으킨다. Held-out batch +
+    상대 임계로 이를 방지한다.
 
     Returns (accepted, tried).
     """
     if n_trials <= 0:
         return 0, 0
     accepted = 0
-    # AdamW의 lr을 사용 (param_group[0]의 lr을 대표값으로).
     lr = float(optim.param_groups[0]['lr'])
     params = [p for p in model.parameters() if p.requires_grad]
     for _ in range(n_trials):
-        x, y = make_batch(train_data, batch, seq_len, gen)
-        # Baseline loss
+        # Gradient용 batch.
+        x_g, y_g = make_batch(train_data, batch, seq_len, gen)
+        # Held-out 평가용 batch (서로 다름 보장).
+        x_e, y_e = make_batch(train_data, batch, seq_len, gen)
+        # Baseline loss on held-out.
         with torch.no_grad():
-            logits_pre, _ = model(x)
+            logits_pre, _ = model(x_e)
             loss_pre = float(F.cross_entropy(
-                logits_pre.view(-1, logits_pre.size(-1)), y.view(-1)
+                logits_pre.view(-1, logits_pre.size(-1)), y_e.view(-1)
             ).item())
-        # Compute fresh gradient (don't disturb optim state).
+        # Compute fresh gradient on grad batch.
         optim.zero_grad(set_to_none=True)
-        loss_t, _ = _ce_loss(model, x, y, lam_curv)
+        loss_t, _ = _ce_loss(model, x_g, y_g, lam_curv)
         loss_t.backward()
         threshold, _, _ = _grad_global_threshold(params, top_eps)
-        # Build proposal: pruned = grad where |grad| < threshold (the rejected mass).
         snapshot = []
         for p in params:
             if p.grad is None:
@@ -360,17 +374,16 @@ def rem_phase(model, optim, train_data, batch, seq_len, gen,
             old = p.data.detach().clone()
             p.data.add_(proposal, alpha=-lr)
             snapshot.append((old, proposal))
-        # Evaluate on same batch.
         with torch.no_grad():
-            logits_post, _ = model(x)
+            logits_post, _ = model(x_e)
             loss_post = float(F.cross_entropy(
-                logits_post.view(-1, logits_post.size(-1)), y.view(-1)
+                logits_post.view(-1, logits_post.size(-1)), y_e.view(-1)
             ).item())
-        if loss_post < loss_pre:
+        improvement = loss_pre - loss_post
+        threshold_improve = accept_margin * abs(loss_pre)
+        if improvement > threshold_improve:
             accepted += 1
-            # Keep change. Continue loop with next trial.
         else:
-            # Revert.
             for p, snap in zip(params, snapshot):
                 if snap is None:
                     continue
@@ -485,9 +498,21 @@ def main():
             f"extra_mem={classifier.memory_bytes()/1024/1024:.1f}MB"
         )
 
+    # CLI lambda_curv가 checkpoint config의 값을 override (논문 사양 적용 강제).
+    # checkpoint 저장 시 lambda_curv=0.0이 들어가 있어도 CLI 값이 우선.
+    if hasattr(model, 'lambda_curv_base'):
+        model.lambda_curv_base = float(args.lambda_curv)
+        model.lambda_curv = float(args.lambda_curv)
     # Curvature schedule (2_Architecture.md 5.2): warmup + cosine decay.
+    # 주의: ClarusLM.forward()가 호출될 때마다 _lambda_step이 +1되므로,
+    # 실제 step 단위는 batch (cycle_len * cycles) 임. total_steps도 그에 맞춤.
     if hasattr(model, 'set_lambda_schedule'):
-        model.set_lambda_schedule(total_steps=args.steps, warmup_steps=args.curv_warmup)
+        total_forward_steps = args.steps * args.cycle_len
+        warmup_forward_steps = args.curv_warmup * args.cycle_len
+        model.set_lambda_schedule(
+            total_steps=total_forward_steps,
+            warmup_steps=warmup_forward_steps,
+        )
 
     model.train()
     t_start = time.perf_counter()
@@ -528,6 +553,7 @@ def main():
                     args.batch, args.seq_len, train_gen,
                     args.rem_replay, lam_eff,
                     args.rem_noise_sigma, args.top_eps,
+                    accept_margin=args.rem_accept_margin,
                 )
 
             stat = CycleStat(
