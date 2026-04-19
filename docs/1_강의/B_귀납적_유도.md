@@ -142,7 +142,7 @@ $$\Delta a_\mu = 249 \pm 48 \times 10^{-11} \quad (5.0\sigma,\;\text{WP20})$$
 
 $$M_{\text{CE}} = v_{\text{EW}} \cdot \delta = 246.22 \times 0.17776 = 43.77\;\text{GeV}$$
 
-이 식은 히그스 포탈 질량항 전개로 닫힌다:
+이 식은 힉스 포탈 질량항 전개로 닫힌다:
 
 $$\mathcal{L}_{\text{portal}} = -\lambda_{\text{HP}}|H|^2\Phi^2,\quad H=\frac{1}{\sqrt{2}}(0,v_{\text{EW}}+h)$$
 

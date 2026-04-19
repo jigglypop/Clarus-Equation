@@ -91,13 +91,13 @@ print("=" * 72)
 #   3층 (SU(3)): 색전하를 가짐 -> 강하게 참여
 #   2층 (SU(2)): 약한 이소스핀 가짐 -> 약하게 참여
 #   1층 (U(1)): 전하 가짐 -> 약하게 참여
-#   잔여 (delta): 히그스 포탈 -> 간접 참여
+#   잔여 (delta): 힉스 포탈 -> 간접 참여
 #
 # 각 층의 결합 세기:
 #   3층: alpha_s (강한 결합)
 #   2층: alpha_w = alpha_em / sin^2(tW) (약한 결합)
 #   1층: alpha_em (전자기 결합)
-#   잔여: delta^2 = lambda_HP (히그스 포탈)
+#   잔여: delta^2 = lambda_HP (힉스 포탈)
 
 alpha_em = 1/129.0  # at M_Z scale
 alpha_w = alpha_em / sin2_tW
@@ -196,7 +196,7 @@ R_gauge = alpha_s * (
 # 바리온 = QCD bound state -> QCD(강한 핵력)를 통해 피드백
 # 바리온 = 전하를 가짐 -> 전자기력을 통해서도 피드백
 # 바리온 = 약한 이소스핀 -> 약한 핵력을 통해서도 피드백
-# 바리온 = 질량을 가짐 -> 히그스 포탈을 통해서도 피드백
+# 바리온 = 질량을 가짐 -> 힉스 포탈을 통해서도 피드백
 
 # 각 "힘"의 기여는 결합 상수의 크기에 비례:
 # 전체 피드백 = eps^2 * (alpha_s + alpha_w + alpha_em + lambda_HP)
@@ -235,7 +235,7 @@ print("=" * 72)
 # 바리온이 QCD 진공에 피드백하는 경로:
 # (1) 직접: 바리온 -> QCD -> R. 세기 = eps^2 자체
 # (2) 전자약 경유: 바리온 -> EW 혼합 -> QCD -> R. 세기 = eps^2 * delta
-# (3) 히그스 경유: 바리온 -> Higgs -> Phi -> R. 세기 = eps^2 * lambda_HP = eps^2*delta^2
+# (3) 힉스 경유: 바리온 -> Higgs -> Phi -> R. 세기 = eps^2 * lambda_HP = eps^2*delta^2
 #
 # CE에서 이미 쓰고 있는 것: (2) eps^2 * delta
 
