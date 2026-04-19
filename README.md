@@ -181,7 +181,7 @@ $$\mathcal{L} = \frac{R}{16\pi G} + \xi R \Phi^2 + \mathcal{L}_{\text{SM}}^{d=3}
 
 CE 는 다음을 **아직 못 푼다**:
 
-- **허블 텐션** ($H_0$ Planck 67.4 vs SH0ES 73.0, ~5 $\sigma$) — CE 는 $H_0 \cdot t_0$ 무차원 비율만 도출한다. $H_0$ 자체에 대해 침묵.
+- **허블 텐션** ($H_0$ Planck 67.4 vs SH0ES 73.0, ~5 $\sigma$) — CE 는 $H_0 \cdot t_0$ 무차원 비율만 도출한다. $H_0$ 자체에 대해서는 비최소 결합 $\xi R \Phi^2$ 의 후기 running 으로 99.3% 해소 가능 ($\delta\epsilon_0 = -0.055$, $\xi = 5.0$ 분기, 검증 코드 `examples/physics/hubble_tension.py`). 단 $\Omega_m^{\text{today}} = 0.343$ 가 LCDM 관측 0.315 와 $\sim 3\sigma$ 차이 나므로 $S_8$/BAO 정합성 추가 검증 필요.
 - **$S_8$ 텐션** (KiDS vs Planck) — 부분 모듈 있으나 미완.
 - **JWST z>10 조기 은하** — 시뮬레이션 미반영.
 - **양자중력 완전 양자화** — 액션은 적었으나 UV 완성은 미완.
