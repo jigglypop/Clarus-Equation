@@ -38,6 +38,34 @@ except ImportError:
     from clarus.constants import AD, PORTAL, BYPASS, T_WAKE, NORM_EPS
     from clarus.utils import safe_print, normalize_vector, resolve_device
 
+try:
+    from .clarus_lm_runtime import load_clarus_lm_generator, ClarusLMGenerator
+except Exception:
+    load_clarus_lm_generator = None
+    ClarusLMGenerator = None
+
+
+import re as _re
+
+_REPEATED_CHAR = _re.compile(r"(.)\1{4,}")
+_REPEATED_WORD = _re.compile(r"((?:\S{2,}\s*){1,3}?)(?:\s*\1){3,}")
+_MULTI_SPACE = _re.compile(r"[ \t]{2,}")
+_MULTI_NEWLINE = _re.compile(r"\n{3,}")
+
+
+def postprocess_output(text: str) -> str:
+    """Normalize generated text from any decoder path (CE standalone / ClarusLM).
+
+    Collapses character-level and token-level repetition, trims whitespace,
+    and limits newlines so outputs from different decoders look consistent.
+    """
+    text = text.strip()
+    text = _REPEATED_CHAR.sub(lambda m: m.group(1) * 3, text)
+    text = _REPEATED_WORD.sub(lambda m: m.group(1), text)
+    text = _MULTI_SPACE.sub(" ", text)
+    text = _MULTI_NEWLINE.sub("\n\n", text)
+    return text
+
 
 DEFAULT_PROMPTS = (
     "인공지능의 미래는",
@@ -192,6 +220,20 @@ class CEEngine:
             self._dense_relax_w = self.W
         emb_weight = data.get("emb_weight")
         self.emb = emb_weight.float().to(self.device) if emb_weight is not None else None
+        # Vocab pruning (V1): emb stores top-K rows in compact id space [0, K).
+        # vocab_id_map maps a global tokenizer id -> compact id (or -1 if pruned).
+        # kept_token_ids[k] is the global id of compact row k. unk_emb is the
+        # fallback embedding used when a global id has been pruned.
+        self.kept_token_ids = None
+        self.vocab_id_map = None
+        self.unk_emb = None
+        if data.get("kept_token_ids") is not None and data.get("vocab_id_map") is not None:
+            self.kept_token_ids = data["kept_token_ids"].long().to(self.device)
+            self.vocab_id_map = data["vocab_id_map"].long().to(self.device)
+            if data.get("pruned_unk_emb") is not None:
+                self.unk_emb = data["pruned_unk_emb"].float().to(self.device)
+            elif self.emb is not None:
+                self.unk_emb = self.emb.mean(dim=0)
         pos_weight = data.get("pos_weight")
         self.pos = pos_weight.float().to(self.device) if pos_weight is not None else None
         self.ln_w = data["ln_f_weight"].float().to(self.device)
@@ -250,6 +292,16 @@ class CEEngine:
                 active_mask, struct_mask, _ = self.state_partition(seed, use_stored=False)
                 self.apply_state_partition(active_mask, struct_mask)
         self._compress_runtime_projections()
+        self._clm_generator: "ClarusLMGenerator | None" = None
+
+    def attach_clarus_lm(self, checkpoint_path: str, *, device: str | None = None):
+        if load_clarus_lm_generator is None:
+            raise ImportError("clarus_lm_runtime module is not available")
+        gen = load_clarus_lm_generator(
+            checkpoint_path,
+            device=device or str(self.device),
+        )
+        self._clm_generator = gen
 
     def _load_w_pack(self, data):
         values = data.get("W_values")
@@ -778,7 +830,16 @@ class CEEngine:
             if not torch.is_tensor(token_ids):
                 token_ids = torch.tensor(token_ids, device=self.device, dtype=torch.long)
             token_ids = token_ids.to(device=self.device, dtype=torch.long).view(-1)
-            return self.emb.index_select(0, token_ids)
+            if self.vocab_id_map is None:
+                return self.emb.index_select(0, token_ids)
+            compact_ids = self.vocab_id_map.index_select(0, token_ids)
+            kept = compact_ids >= 0
+            safe = compact_ids.clamp_min(0)
+            out = self.emb.index_select(0, safe)
+            if not bool(kept.all().item()):
+                fallback = self.unk_emb if self.unk_emb is not None else torch.zeros_like(out[0])
+                out = torch.where(kept.unsqueeze(1), out, fallback.unsqueeze(0).expand_as(out))
+            return out
         if self.pq_centroids is not None and self.pq_codes is not None:
             if not torch.is_tensor(token_ids):
                 token_ids = torch.tensor(token_ids, device=self.device, dtype=torch.long)
@@ -792,7 +853,12 @@ class CEEngine:
 
     def lexical_scores(self, query: torch.Tensor) -> torch.Tensor:
         if self.emb is not None:
-            return self.emb @ query
+            scores = self.emb @ query
+            if self.kept_token_ids is None:
+                return scores
+            full = torch.full((self.vocab,), float("-inf"), dtype=scores.dtype, device=scores.device)
+            full.index_copy_(0, self.kept_token_ids, scores)
+            return full
         if self.pq_centroids is not None and self.pq_codes is not None:
             return pq_scores(query, self.pq_centroids, self.pq_codes)
         raise RuntimeError("No lexical memory is available for scoring")
@@ -1424,6 +1490,7 @@ class CEEngine:
         used = set()
         m = self.emb[token_ids].mean(dim=0)
         phi = self.emb.var(dim=0).clamp(min=1e-8).sqrt()
+        m_hist: list[torch.Tensor] = [m.clone()]
 
         for _ in range(n_tokens):
             m_out = m.clone()
@@ -1436,7 +1503,13 @@ class CEEngine:
 
             phi_hat = F.normalize(phi, dim=0)
             m_out = m_out + self.portal * phi_hat * self.h_norm_ref
-            m_out = m_out + self.bypass * phi
+
+            # Bypass force per E20 (docs/7_AGI/12_Equation.md 1.5/3.1):
+            #   F_bypass(k) = (C_k / alpha_b) * phi,   C_k = ||m_k - 2 m_{k-1} + m_{k-2}||.
+            # Until 3 trajectory samples are available C_k = 0, matching ce_ops.relax.
+            if len(m_hist) >= 3:
+                c_k = float((m_hist[-1] - 2.0 * m_hist[-2] + m_hist[-3]).norm().item())
+                m_out = m_out + (c_k * self.bypass) * phi
 
             h = F.layer_norm(m_out, (self.d,), self.ln_w, self.ln_b)
             logits = h @ self.emb.T
@@ -1456,6 +1529,9 @@ class CEEngine:
             used.add(next_id)
             new_emb = self.emb[next_id]
             m = 0.3 * m + 0.7 * new_emb
+            m_hist.append(m.clone())
+            if len(m_hist) > 3:
+                m_hist.pop(0)
 
         return generated
 
@@ -1470,7 +1546,54 @@ class CEEngine:
         candidate_layers: list[int],
         need_teacher: bool,
     ) -> tuple[torch.Tensor, dict[int, torch.Tensor], torch.Tensor | None]:
-        raise RuntimeError("legacy teacher-analysis path was removed from clarus/")
+        """Run a teacher forward pass and capture hidden states by layer.
+
+        Returns ``(phi, captured, h_true)`` where ``phi`` is the normalized
+        difference between the mean of all-but-last token hidden states and the
+        last token hidden state (zero for single-token prompts), ``captured``
+        is a dict of ``{layer_idx: hidden_state}`` for the requested layers,
+        and ``h_true`` is the last-layer hidden state at the final position.
+
+        Requires a teacher ``self.model`` to be present (e.g. for offline
+        analysis or unit tests that inject a ``FakeModel``). Runtime-only
+        artifacts must use :meth:`runtime_prompt_state` instead.
+        """
+        if self.model is None:
+            raise RuntimeError(
+                "_analyze_prompt_ids requires a teacher model; runtime artifacts must "
+                "use runtime_prompt_state() / context_from_ids(need_teacher=False)"
+            )
+
+        ids = prompt_ids.to(device=self.device, dtype=torch.long)
+        transformer = getattr(self.model, "transformer", None)
+        if transformer is None:
+            raise RuntimeError("teacher model is missing the .transformer attribute")
+
+        with torch.no_grad():
+            wte = transformer.wte(ids)
+            pos_idx = torch.arange(ids.shape[1], device=self.device, dtype=torch.long)
+            wpe = transformer.wpe(pos_idx).unsqueeze(0)
+            h = wte + wpe
+
+            seq = h[0]
+            if seq.shape[0] <= 1:
+                phi = torch.zeros(seq.shape[-1], device=self.device, dtype=seq.dtype)
+            else:
+                phi = normalize_vector(seq[:-1].mean(dim=0) - seq[-1])
+
+            capture_set = sorted({int(layer) for layer in candidate_layers})
+            captured: dict[int, torch.Tensor] = {}
+            blocks = transformer.h
+            target_layer = max(capture_set[-1] if capture_set else -1, len(blocks) - 1)
+            for layer_idx in range(target_layer + 1):
+                h = blocks[layer_idx](h)
+                if isinstance(h, tuple):
+                    h = h[0]
+                if layer_idx in capture_set:
+                    captured[layer_idx] = h[:, -1, :].squeeze(0).detach().float()
+
+            h_true = transformer.ln_f(h)[:, -1, :].detach().float() if need_teacher else None
+        return phi, captured, h_true
 
     def context_from_ids(
         self,
@@ -1559,8 +1682,15 @@ class CEEngine:
         }
 
     def select_mode(self, phi_updated: torch.Tensor, args) -> str:
-        if args.decode_mode not in ("auto", "standalone"):
-            raise RuntimeError("runtime-only mode supports standalone decoding only")
+        mode = getattr(args, "decode_mode", "auto")
+        if mode == "clarus_lm":
+            if self._clm_generator is None:
+                raise RuntimeError("decode_mode='clarus_lm' requires attach_clarus_lm() first")
+            return "clarus_lm"
+        if mode not in ("auto", "standalone"):
+            raise RuntimeError("runtime-only mode supports standalone or clarus_lm decoding")
+        if mode == "auto" and self._clm_generator is not None:
+            return "clarus_lm"
         return "standalone"
 
     @staticmethod
@@ -1609,9 +1739,24 @@ class CEEngine:
             meta["standalone_chosen_suppression_mean"] = standalone_meta["chosen_suppression_mean"]
             meta["standalone_suppression_hits"] = standalone_meta["suppression_hits"]
 
-        if chosen_mode != "standalone":
-            raise RuntimeError("runtime-only mode supports standalone decoding only")
-        run_standalone()
+        def run_clarus_lm():
+            gen = self._clm_generator
+            top_k = getattr(args, "top_k", 40)
+            raw = gen.generate(
+                ctx.prompt,
+                max_tokens=args.tokens,
+                temperature=args.temperature,
+                top_k=top_k,
+            )
+            text = postprocess_output(raw)
+            outputs["clarus_lm"] = ctx.prompt + text
+            meta["clarus_lm_raw_len"] = len(raw)
+            meta["clarus_lm_trimmed_len"] = len(text)
+
+        if chosen_mode == "clarus_lm":
+            run_clarus_lm()
+        else:
+            run_standalone()
 
         return chosen_mode, outputs, meta
 
@@ -1682,8 +1827,10 @@ def main():
     ap.add_argument(
         "--decode-mode",
         default="auto",
-        choices=["auto", "standalone"],
+        choices=["auto", "standalone", "clarus_lm"],
     )
+    ap.add_argument("--clarus-lm-checkpoint", default=None,
+                     help="Path to a ClarusLM .pt checkpoint for clarus_lm decode mode")
     ap.add_argument("--phi-threshold", type=float, default=1.0)
     ap.add_argument("--sleep-threshold", type=float, default=2.0)
     ap.add_argument("--sleep-decay", type=float, default=0.9)
@@ -1722,6 +1869,12 @@ def main():
     eng = CEEngine(args.engine, device=args.device, backend=args.backend)
     if eng.model is not None or eng.model_source != "runtime":
         raise RuntimeError("runtime-only execution requires a clone-free runtime artifact")
+
+    clm_ckpt = getattr(args, "clarus_lm_checkpoint", None)
+    if clm_ckpt:
+        eng.attach_clarus_lm(clm_ckpt, device=args.device)
+        safe_print(f"  clarus_lm attached from {clm_ckpt}")
+
     mem = eng.memory_usage()
     prompts = build_prompt_list(args)
     microsleep_events: list[dict[str, object]] = []

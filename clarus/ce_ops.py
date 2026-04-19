@@ -17,6 +17,8 @@ from typing import Dict, Optional, Tuple
 import torch
 import torch.nn.functional as F
 
+from .quantum import ALPHA_B_DEFAULT, estimate_mu, iss_ball_radius
+
 try:
     from .constants import PORTAL as DEFAULT_CB_W, NORM_EPS, SOFTMAX_EPS, CLAMP_EPS
 except ImportError:
@@ -449,7 +451,7 @@ def _relax_packed_torch(
         t_k = t_eff * max(0.0, 1.0 - k / anneal_end)
         noise_std = math.sqrt(max(0.0, 2.0 * t_k * dt_eff / tau)) * max(0.0, noise_scale)
         if noise_std > 0.0:
-            z_raw = torch.randn_like(m, generator=gen)
+            z_raw = torch.randn(m.shape, dtype=m.dtype, device=m.device, generator=gen)
             noise = noise_std * _fdt_noise_torch(
                 z_raw, phi_n, recent_var, metric_basis_n,
                 lambda0, lambda_phi, lambda_var,
@@ -496,6 +498,18 @@ def _relax_packed_torch(
         hist_phi_var = phi_var.detach().cpu().tolist()
     else:
         hist_phi_var = []
+
+    iss_report = _iss_from_tail(
+        tail_states=tail_states,
+        scale=scale,
+        best_m=best_m,
+        c_k_history=hist_bypass,
+        delta_history=hist_delta,
+        phi=phi,
+        dt=dt_eff,
+        tau=tau,
+    )
+
     hist = {
         "E": hist_e,
         "delta": hist_delta,
@@ -505,8 +519,56 @@ def _relax_packed_torch(
         "E_cb": hist_e_cb,
         "bypass_C": hist_bypass,
         "phi_var": hist_phi_var,
+        "iss": iss_report,
     }
     return best_m, hist, len(hist_e)
+
+
+def _iss_from_tail(
+    *,
+    tail_states: deque,
+    scale: float,
+    best_m: torch.Tensor,
+    c_k_history: list[float],
+    delta_history: list[float],
+    phi: torch.Tensor,
+    dt: float,
+    tau: float,
+) -> Dict[str, float]:
+    """Compute gate F2 ISS report from a relaxation trajectory (12_Equation appendix A.1).
+
+    mu is estimated from the global ||dm_k|| contraction curve (full trajectory),
+    not from `tail_states`, since the tail is post-convergence noise plateau.
+    """
+    if not delta_history:
+        return {
+            "samples": 0,
+            "c_k_max": 0.0,
+            "phi_inf_norm": 0.0,
+            "mu": 0.0,
+            "iss_ball_radius": float("inf"),
+        }
+    c_k_max = float(max(c_k_history) if c_k_history else 0.0)
+    phi_inf_norm = float(phi.detach().abs().max().item())
+    dt_over_tau = float(dt) / float(tau) if tau > 0.0 else 0.0
+    mu = (
+        estimate_mu(delta_history, dt_over_tau=dt_over_tau, skip=1)
+        if dt_over_tau > 0.0
+        else 0.0
+    )
+    radius = iss_ball_radius(
+        c_k_max=c_k_max,
+        phi_inf_norm=phi_inf_norm,
+        mu=mu,
+        alpha_b=ALPHA_B_DEFAULT,
+    )
+    return {
+        "samples": len(delta_history),
+        "c_k_max": c_k_max,
+        "phi_inf_norm": phi_inf_norm,
+        "mu": mu,
+        "iss_ball_radius": radius,
+    }
 
 
 @torch.no_grad()
