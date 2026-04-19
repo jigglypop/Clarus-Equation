@@ -1,447 +1,331 @@
-# CE: Clarus Equation (빛의 방정식)
+# Clarus Equation (CE)
 
-*To you, two thousand years from now.*
-
-
-차원이 없는 상태($d=0$)에서 3차원 시공간($d=3$)이 결정화될 때, 결정화되지 못한 잔여($\delta$)가 스칼라장 $\Phi$로 남는다. 최신 정본에서는 이 구조를 **무차원 코어 + 선택 규칙 + 브리지 규칙 + 스케일 승격** 체인으로 읽는다. 즉 $\delta$, $D_{\text{eff}}$, $\varepsilon^2$, $R$ 같은 무차원 중간량을 먼저 고정하고, 차원 있는 물리량은 `v_{\text{EW}}`, `m_p`, `M_Z` 같은 기준 스케일로 복원한다.
-
-$$
-D_{\text{eff}} = d + \delta, \quad d = 3, \quad \delta = \sin^2\theta_W \cos^2\theta_W = 0.17776
-$$
-
-$$
-\varepsilon^2 = \exp\!\big[-(1 - \varepsilon^2) \cdot D_{\text{eff}}\big] = 0.04865
-$$
-
-여기서 $\Omega_b$는 위 고정점 변수를 관측 가능한 바리온 분율로 읽는 `Bridge` 단계에서 대응된다.
-
-
-## 출발점: $e^{i\pi} + 1 = 0$
-
-오일러 항등식의 다섯 상수 $\{e, \pi, i, 1, 0\}$만으로 시작한다.
-
-$$
-0 \xrightarrow{d(d-3)=0} d = 3, \quad \pi \xrightarrow{1/(2\pi)} \alpha_{\text{total}} \xrightarrow{\text{자기일관 연립}} \alpha_s,\; \alpha_w,\; \alpha_{em}
-$$
-
-$$
-\sin^2\theta_W = 4\,\alpha_s^{4/3} = 0.23122 \quad (0.02\sigma)
-$$
-
-무차원 코어에서는 추가 적합 파라미터를 두지 않는다. 다만 GeV, MeV, K 같은 차원 있는 값은 마지막 단계에서 기준 스케일을 곱해 복원한다.
+> **상태:** 미발표 신이론. arXiv 미등록, 동료 심사 없음. 자기 검증만 통과.
+> **요지:** "왜 우주가 지금 이 모습인가" 를 자유 매개변수 0 개로 계산해 본 시도.
 
 ---
 
-## d=0 기원: 차원 결정화
+## 한 문단 요약 (비전공자용)
 
-CE의 핵심 통찰은 $\Phi$가 입자가 아니라 **차원의 잔여물**이라는 것이다.
+오늘날의 표준 우주 모형(ΛCDM)과 표준 입자 모형(SM)은 합쳐서 **약 25 개의 숫자를 실험에 맞춰 직접 입력**해야만 작동한다. 이 25 개가 바뀌면 우주가 완전히 다른 모습이 된다. 왜 하필 그 값인지는 누구도 모른다.
 
-| $d=0$ (무차원) | 결정화 | $d=3$ (시공간) |
-|---|---|---|
-| 정수 부분 없음 | $\to$ | 정수 $d=3$이 시공간으로 결정화 |
-| $D_{\text{eff}} = \delta$ 만 존재 | $\to$ | 비정수 $\delta = 0.178$이 스칼라장 $\Phi$로 잔류 |
-| $\varepsilon^2 \approx 1$ | $\to$ | $\varepsilon^2 = 0.049$ (바리온 5%) |
+**Clarus Equation (CE)** 은 이 25 개 중 가장 많은 항목을, **단 하나의 숫자** $\alpha_s = 0.1179$ (강력 결합 상수, 측정값) 에서 출발해 계산해 본다. 우주의 평균 물질 밀도, 암흑에너지 비율, 힉스 보손 질량, 중성미자 질량, 우주의 나이 ÷ 허블 시간, ... 18 가지를 같은 한 가지 출발점에서 도출하고, 측정값과 평균 1% 안쪽으로 맞는다.
 
-$d=0$에서는 공간도 게이지도 없으므로, $\Phi$의 성질이 자동으로 결정된다:
-
-- **게이지 싱글렛** (게이지 대칭 자체가 없으므로)
-- **실수 스칼라** (복소 표현을 만들 내부 공간이 없으므로)
-- **Z2 대칭** ($\Phi \to -\Phi$, 가능한 유일한 이산 대칭)
-- **$\Phi^2$ 결합** ($\lambda_{\text{HP}} = \delta^2$, Z2에 의해 홀수차 금지)
-- **히그스 혼합각 $= 0$** (Z2가 정확하면 선형 혼합 불가)
-- **절대 안정** (Z2에 의해 붕괴 금지)
-
-이전에 가정이었던 10가지 성질이, $d=0$ 기원으로부터 전부 유도된다.
+이게 우연인지 진짜 구조인지 - 그걸 가리는 게 본 저장소의 목적이다.
 
 ---
 
-## 핵심 결과
+## 1. 기존 모형은 어떤 모습인가
 
-| 영역 | 관측량 | CE 예측 | 관측값 (Planck 2020) | 차이 |
-|---|---|---|---|---|
-| 통합 | $\sin^2\theta_W$ | 0.23122 | $0.23122 \pm 0.00003$ | $0.02\sigma$ |
-| 우주론 | $\Omega_b$ | 0.04865 | $0.0486 \pm 0.0010$ | $0.05\sigma$ |
-| 우주론 | $\Omega_\Lambda$ | 0.6891 | 0.6847 | 0.64% |
-| 우주론 | $\Omega_{DM}$ | 0.2623 | 0.2589 | 1.3% |
-| 우주론 | $w_0$ | $-0.769$ | $-0.770 \pm 0.06$ (DESI) | $0.02\sigma$ |
-| 입자물리 | $\Delta a_\mu$ (뮤온 $g\text{-}2$) | 접촉 249.0 / 완전 134.9 | WP20 / WP25 외부 HVP 해석 | 조건부 비교 |
-| 입자물리 | $m_\phi$ | 29.65 MeV | 22-30 MeV | 범위 내 |
-| 입자물리 | $\Delta r_p^2$ (양성자 반경) | $0.0601\;\text{fm}^2$ | $0.0587 \pm 0.0033$ | $0.4\sigma$ |
-| 교차검증 | DM/DE 비율 | 0.3806 | 0.3808 | 0.03% |
-| 입자물리 | $M_H$ (히그스 질량) | 125.35 GeV | $125.25 \pm 0.17$ | $0.6\sigma$ |
-| 입자물리 | $|V_{cb}|$ | 0.04048 | 0.0408 | 0.8% |
-| 입자물리 | Jarlskog $J$ | $3.13 \times 10^{-5}$ | $3.08 \times 10^{-5}$ | 1.5% |
-| 입자물리 | $\sin^2\theta_{13}$ (PMNS) | 0.02222 | 0.02220 | 0.1% |
-| 입자물리 | $m_{\nu_3}$ (중성미자) | 51.5 meV | ~50.5 meV | 2.0% |
-| 입자물리 | Koide $Q_K$ | 2/3 | 0.66661 | 0.001% |
+| 무엇을 설명하는가 | 표준 입자 모형 (SM) | 표준 우주 모형 (ΛCDM) |
+| --- | --- | --- |
+| 입력 매개변수 개수 | 약 19 개 (질량, 혼합각, 결합 상수) | 약 6 개 ($H_0$, $\Omega_b$, $\Omega_m$, $A_s$, $n_s$, $\tau$) |
+| 어디서 오는가 | 측정값을 그대로 넣음 | 측정값을 그대로 넣음 |
+| 왜 그 값인가 | 미해결 | 미해결 |
 
-**코어 적합 파라미터 0개.** 무차원 코어는 추가 피팅 없이 닫히며, 차원 있는 관측량은 기준 스케일 복원을 거쳐 읽는다. 따라서 이 README의 수치들은 `경로적분.md`의 계산 체인과 `상수.md`의 집계 규약을 함께 따른다.
+이 모형들은 **놀랍도록 정확**하다. 다만 "왜?" 를 묻지 않을 뿐이다. 예를 들어 우주에서 보통 물질이 약 5 % 라는 사실은 **측정해서 알아낸 결과**이지, **계산해서 나온 결과**가 아니다.
+
+CE 가 묻는 질문은 단순하다 — **이 25 개를 더 적은 수로 줄일 수 있는가?**
 
 ---
 
-## 차원당 결합: $\alpha_{\text{dim}}$
+## 2. CE 의 출발점
 
-경로적분이 차원별로 곱적 분해될 때, 각 차원의 유효 결합 강도는:
+### 2-1. 단 하나의 입력
+실험에서 측정된 강력 결합 상수 한 개:
 
-$$\alpha_{\text{dim}} = \alpha_s^{1/d} = \alpha_s^{1/3} = 0.490$$
+$$\alpha_s = 0.1179 \quad (M_Z\ \text{스케일},\ \text{입자물리데이터그룹 PDG 2024})$$
 
-이 하나의 양이 CE의 나머지 구조 전체를 관통한다:
+### 2-2. 단 하나의 가정
+시공간은 **3 차원이고 약간 빠져나간다**. "정확히 3 이 아니라 $3 + \delta$ 라는 작은 잔여물을 남기며 만들어진다" 라는 그림.
 
-| 관계식 | 유도 |
-|---|---|
-| $\sin\theta_W = 2\,\alpha_{\text{dim}}^2$ | 전자약 혼합각 |
-| $\xi = \alpha_{\text{dim}}$ | 비최소 중력 결합 |
-| $\|V_{cb}\| = \alpha_{\text{dim}}^{9/2} = \alpha_s^{3/2}$ | CKM 2-3 세대 전이 |
-| $m_\mu/m_\tau = \alpha_{\text{dim}}^4 = \alpha_s^{4/3}$ | 렙톤 세대비 |
+이 잔여물 $\delta$ 가 다름 아닌 우리가 이미 알고 있는 양으로 결정된다:
 
-$\alpha_{\text{dim}}$은 "한 차원이 접히는 세기"이다. 클라루스장 $\Phi$는 $d=0$ 잔여물이므로, 중력과의 결합 강도도 정확히 $\alpha_{\text{dim}}$이다.
+$$\delta = \sin^2\theta_W \cdot \cos^2\theta_W = 0.178$$
 
----
+여기서 $\theta_W$ 는 **전자기력과 약력이 섞이는 각도**(바인베르크 각, 측정값). CE 는 이를 다시 $\alpha_s$ 에서 도출한다:
 
-## 히그스 질량과 QCD 폼팩터
+$$\sin^2\theta_W = 4\,\alpha_s^{4/3} = 0.2312$$
 
-$$M_H = M_Z \times F, \quad F = 1 + \alpha_s D_{\text{eff}} = 1.3746$$
+(측정값 $0.23122 \pm 0.00003$ 와 0.02$\sigma$ 일치.)
 
-$F$는 QCD 진공이 전자약 스케일을 증폭하는 폼팩터이다. 같은 $F$가 양성자 반경에도 적용된다:
+### 2-3. 그 다음은 자기참조 방정식 한 줄
+유효 차원과 잔여물에서 우주의 **보통 물질 비율** 이 자기일관 방정식으로 닫힌다:
 
-$$\Delta r_p^2 = \frac{\alpha \lambda_{HP}}{6\pi m_\phi^2} \times F, \quad F = 1 + \alpha_s D_{\text{eff}}$$
+$$\varepsilon^2 = \exp\!\left[-(1 - \varepsilon^2)\,(3 + \delta)\right] = 0.0486$$
 
-히그스 질량과 양성자 반경이 동일한 폼팩터에서 나온다. 예측: $M_H = 125.35$ GeV (관측 $125.25 \pm 0.17$, $0.6\sigma$).
+이 $\varepsilon^2$ 가 곧 $\Omega_b$ — **우주의 보통(바리온) 물질 비율**이다. 측정값 $0.0493 \pm 0.0010$ 과 0.7 % 차이.
 
----
-
-## CKM 혼합과 Jarlskog 불변량
-
-세대 간 전이 진폭은 접힘 깊이에 의해 결정된다:
-
-$$|V_{us}| = \frac{\sin^2\theta_W}{1 + \alpha_s/(2\pi)} = 0.227 \quad (1.2\%)$$
-
-$$|V_{cb}| = \alpha_s^{d/2} = \alpha_s^{3/2} = 0.0405 \quad (0.8\%)$$
-
-$$|V_{ub}| = \alpha_s^{8/3} \cdot F^{1/3} = 0.00372 \quad (2.7\%)$$
-
-세 원소의 $\alpha_s$ 지수를 더하면:
-
-$$\frac{4}{3} + \frac{3}{2} + \frac{8}{3} = \frac{11}{2}$$
-
-$$J = 4\,\alpha_s^{11/2} = 3.13 \times 10^{-5} \quad (\text{관측 } 3.08 \times 10^{-5},\; 1.5\%)$$
-
-Jarlskog 불변량의 지수 $11/2$는 자유 매개변수가 아니라 세 CKM 원소의 접힘 지수의 산술적 합이다.
+요약: **하나의 측정값 + 하나의 이상한 가정 + 하나의 방정식** 이 CE 의 전부다. 나머지는 전부 따라 나온다 — 적어도 그렇게 주장한다.
 
 ---
 
-## 중성미자 질량
+## 3. 무엇을 맞추는가 (핵심 결과 18 종)
 
-2-loop Weinberg 연산자를 통해, 중성미자 질량은 하전 렙톤 질량에 비례한다:
+| 영역 | 양 | CE 예측 | 측정값 | 차이 |
+| --- | --- | --- | --- | --- |
+| 통합 | $\sin^2\theta_W$ | 0.23122 | $0.23122 \pm 0.00003$ | 0.02 $\sigma$ |
+| 우주론 | 보통 물질 $\Omega_b$ | 0.0486 | $0.0493 \pm 0.0010$ | 0.7 % |
+| 우주론 | 암흑에너지 $\Omega_\Lambda$ | 0.6904 | 0.6847 | 0.8 % |
+| 우주론 | 암흑물질 $\Omega_{DM}$ | 0.2609 | 0.2589 | 0.8 % |
+| 우주론 | DE 상태방정식 $w_0$ | $-0.768$ | $-0.770 \pm 0.066$ (DESI DR2) | 0.04 $\sigma$ |
+| 우주론 | 우주 나이 $H_0 t_0$ | 0.956 | 0.951 | 0.5 % |
+| 우주론 | 인플레이션 지수 $n_s$ | 0.965 | $0.9649 \pm 0.0042$ | 0.03 $\sigma$ |
+| 입자물리 | 힉스 질량 $M_H$ | 125.35 GeV | $125.25 \pm 0.17$ | 0.6 $\sigma$ |
+| 입자물리 | 양성자 반경 $\Delta r_p^2$ | 0.0601 fm$^2$ | $0.0587 \pm 0.0033$ | 0.4 $\sigma$ |
+| 입자물리 | $\|V_{cb}\|$ | 0.0405 | 0.0408 | 0.8 % |
+| 입자물리 | Jarlskog $J$ | $3.13 \times 10^{-5}$ | $3.08 \times 10^{-5}$ | 1.5 % |
+| 입자물리 | $\sin^2\theta_{13}$ (PMNS) | 0.0222 | 0.0222 | 0.1 % |
+| 입자물리 | $m_{\nu_3}$ (중성미자) | 51.5 meV | ~50.5 meV | 2.0 % |
+| 입자물리 | Koide $Q_K$ | 2/3 | 0.66661 | 0.001 % |
+| 입자물리 | 새 스칼라 $m_\phi$ | 29.65 MeV | 22-30 MeV (제약) | 범위 안 |
+| 입자물리 | 뮤온 $g\text{-}2$ BSM | 0 | $38 \pm 63 \times 10^{-11}$ (BMW lattice 2026) | 0.6 $\sigma$ |
+| 입자물리 | 전자 $g\text{-}2$ ($a_e$) | $1.159653 \times 10^{-3}$ | $1.15965218059 \times 10^{-3}$ (Harvard 2023) | 0.2 $\sigma$ |
+| 교차 | DM/DE 비율 | 0.378 | 0.380 | 0.5 % |
 
-$$m_{\nu_l} = \frac{\delta^4 \cdot m_l}{(16\pi^2)^2 \cdot (1+R)}$$
+19 개 관측치를 한 입력 ($\alpha_s$) 으로 맞추는 종합 점수는 다음과 같다 (자세한 계산은 `examples/physics/scorecard.py`).
 
-$1/(1+R)$은 DE 분율이다. 중성미자는 QCD에 참여하지 않으므로, 질량 생성은 클라루스장의 DE 모드에만 의존한다.
+| 항목 | 값 |
+| --- | --- |
+| $\chi^2$ / 자유도 | 1.000 |
+| p-value | 0.457 |
+| 1 $\sigma$ 안 | 13 / 19 |
+| 2-3 $\sigma$ | 1 / 19 (Planck+BAO $\Omega_b$) |
 
-| 세대 | CE 예측 | 관측 |
-|---|---|---|
-| $\nu_\tau$ | **51.5 meV** | **~50.5 meV** (2%) |
-| $\nu_\mu$ | 3.1 meV | ~8.7 meV |
-| $\sum m_\nu$ | **55 meV** | **< 120 meV** (Planck) |
-
-CE는 **정상 계층(NH)**을 예측한다. JUNO (~2026)에서 검증된다.
-
-
-## 페르미온 질량 계층
-
-세대 간 질량비의 $\alpha_s$ 지수가 하강 분할 $\{3,2,1\}$과 직접 연결된다:
-
-| 비율 | 지수 $n$ | 정합 |
-|---|---|---|
-| $m_\mu/m_\tau$ | $\alpha_s^{4/3}$ = $\alpha_s^{(d+1)/d}$ | 2.8% |
-| $m_e/m_\mu$ | $\alpha_s^{5/2}$ = $\alpha_s^{(d+2)/(d-1)}$ | 1.3% |
-| $m_c/m_t$ | $\alpha_s^{7/3}$ = $\alpha_s^{(d+4)/d}$ | 7.3% |
-| $m_u/m_c$ | $\alpha_s^{3}$ = $\alpha_s^{d}$ | 3.7% |
-| $m_s/m_b$ | $\alpha_s^{9/5}$ | 4.6% |
-| $m_d/m_s$ | $\alpha_s^{7/5}$ | 0.3% |
-
-지수의 분모에 $d=3, 2, 1$이 반복 출현한다. Koide 공식 $Q_K = 2/d = 2/3$은 0.001% 정합.
+> **솔직한 한계**: 위 목록은 CE 가 "잘 푸는" 것들이다. CE 가 **아직 못 푸는 것들** 은 본 README 마지막 절 [솔직한 한계] 에 나열한다.
 
 ---
 
-## 유도 체인
+## 4. 핵심 개념 4 개 (그림으로)
+
+### 4-1. 극장
+양자역학에서 입자는 모든 가능한 경로를 동시에 간다. 대부분 서로 취소되고 하나의 현실만 남는다. 이 "취소" 를 지배하는 게 무엇인가?
+
+매진된 극장을 떠올려 보자. 새 관객은 앉을 자리가 없다. 누군가 취소해야 비로소 앉을 수 있다. 양자역학에서 "확률" 이라 부르는 것은 **이 취소표 경쟁**이다.
+
+- 3 층 발코니 — 강력 (3 가지 색)
+- 2 층 발코니 — 약력 (2 가지 상태)
+- 1 층 객석 — 전자기력 (1 가지 전하)
+- 층 사이 계단 — **중력**
+
+### 4-2. 에스컬레이터
+중력은 다른 세 힘과 다르다. 그것은 **층** 이 아니라 **층 사이를 접는 메커니즘** 이다.
+
+- 1 층까지 내려온 사람 — 보통 물질 (5 %)
+- 에스컬레이터 위의 사람 — 암흑물질 (26 %)
+- 에스컬레이터의 전기 — 암흑에너지 (69 %)
+
+그래서 우리는 **암흑물질을 직접 잡지 못한다**. 그것은 입자가 아니라 "에스컬레이터에 잠시 머물러 있는 보통 물질" 이기 때문이다 — CE 의 해석이다. (검증 필요.)
+
+### 4-3. 종이접기
+종이 위에 무한한 선을 그린다. 대부분이 접혀서 사라진다. **남은 선이 보통 물질, 접는 데 쓴 에너지가 암흑에너지** 다. 3 차원에서 접으면 약 5 % 가 남는다 — 관측된 바리온 비율 4.86 % 와 일치한다.
+
+### 4-4. AI 와 자연이 같은 수식을 쓴다
+ChatGPT 가 다음 단어를 고르는 식 (Softmax) 과 자연이 양자 경로를 고르는 식은 **수학적으로 같다**:
+
+$$P(\gamma) = \frac{e^{-S(\gamma)}}{\sum_{\gamma'} e^{-S(\gamma')}}$$
+
+AI 연구자는 Softmax 가 "잘 돼서" 썼다. CE 의 입장: **그게 잘 되는 이유는 자연이 원래 그렇게 작동하기 때문이다**.
+
+---
+
+## 5. 라그랑지안 (전공자용 한 줄)
+
+$$\mathcal{L} = \frac{R}{16\pi G} + \xi R \Phi^2 + \mathcal{L}_{\text{SM}}^{d=3} + \tfrac{1}{2}(\partial_\mu \Phi)^2 - V(\Phi) + \delta^2 \Phi^2 |H|^2$$
+
+- $\Phi$ : $d=0$ 잔여물 (게이지 싱글렛, 실수 스칼라, $Z_2$ 대칭)
+- $\xi R \Phi^2$ : 비최소 중력 결합, $\xi = \alpha_s^{1/3} = 0.490$
+- $\delta^2 \Phi^2 |H|^2$ : 힉스 포탈, $\lambda_{HP} = \delta^2 = 0.032$
+- $V(\Phi) = \tfrac{1}{2} m_\phi^2 \Phi^2 + \tfrac{1}{4}\lambda \Phi^4$ : 양의 질량항 (VEV 없음)
+
+---
+
+## 6. 검증 가능한 미래 예측
+
+본 이론이 **틀렸음을 증명** 할 수 있는 실험들 (반증 가능성):
+
+| 예측 | 실험 | 결과 시점 |
+| --- | --- | --- |
+| $w_0 = -0.769$, $w_a = -0.22$ | DESI DR3 BAO | 2026-2028 |
+| 정상 계층 (NH), $\sum m_\nu \approx 55$ meV | JUNO | ~2026 |
+| 22-30 MeV 새 스칼라 보손 | NA64, PADME | 2025-2027 |
+| BR$(H \to \text{invisible}) \approx 0.5 \%$ | HL-LHC | 2029-2035 |
+| $r = 0.0014$ (인플레이션 텐서) | LiteBIRD | ~2032 |
+| $\Omega_b = 0.0486$ 정밀 측정 | CMB-S4 | ~2030 |
+
+이 중 하나라도 **CE 가 틀린 방향으로 빗나가면** 이론 전체를 폐기한다. 이게 과학의 룰이다.
+
+---
+
+## 7. CE vs ΛCDM (직접 비교)
+
+| 항목 | CE | ΛCDM |
+| --- | --- | --- |
+| 외부 입력 매개변수 | 1 ($\alpha_s$) | 6 |
+| $\Omega_b$ 유도 | 첫 원리 | 측정 후 입력 |
+| DM/DE 비율 | 유도 (0.5 %) | 미설명 |
+| 힉스 질량 | 유도 (0.6 $\sigma$) | 미설명 |
+| CKM/PMNS 19 매개변수 | 유도 (0.1-2.7 %) | 측정 후 입력 |
+| 중성미자 질량 | 정상 계층 예측, $m_3$ 2 % | 미설명 |
+| 우주상수 문제 | $10^{122}$ → 0.8 % | 미해결 |
+| 동적 DE ($w_0$) | 유도 (0.04 $\sigma$) | w0waCDM 확장 필요 |
+| 평균 적합도 | ~1 % | 보통 < 0.1 % (입력했으니까) |
+| 반증 가능 | 가능 | 유연 |
+
+**CE 는 정확도가 다소 낮은 대신, "왜 이 값인가" 에 답하려 시도한다.**
+ΛCDM 은 정확하지만, **왜 그 값인지에는 침묵**한다.
+
+---
+
+## 8. 솔직한 한계
+
+CE 는 다음을 **아직 못 푼다**:
+
+- **허블 텐션** ($H_0$ Planck 67.4 vs SH0ES 73.0, ~5 $\sigma$) — CE 는 $H_0 \cdot t_0$ 무차원 비율만 도출한다. $H_0$ 자체에 대해 침묵.
+- **$S_8$ 텐션** (KiDS vs Planck) — 부분 모듈 있으나 미완.
+- **JWST z>10 조기 은하** — 시뮬레이션 미반영.
+- **양자중력 완전 양자화** — 액션은 적었으나 UV 완성은 미완.
+- **수치 계산이 동료 심사를 통과한 적 없음** — 코드는 공개되어 있으니 누구든 재현/반증 가능.
+
+발표 안 된 이론을 신뢰하지 말 것. 이 README 의 모든 수치는 **재현 코드** ([13 절](#13-수치-검증-코드)) 로 직접 돌려 확인할 수 있다.
+
+---
+
+## 9. 유도 체인 (한눈에)
 
 ```mermaid
 graph TD
-    E["e^(i pi) + 1 = 0<br/>{e, pi, i, 1, 0}"]
+    E["e^(i pi) + 1 = 0<br/>(e, pi, i, 1, 0)"]
 
-    E -->|"0 : d(d-3)=0"| D["d = 3"]
-    E -->|"pi : 1/(2 pi)"| A["alpha_total = 0.1592"]
+    E -->|"0 -> d(d-3)=0"| D["d = 3"]
+    E -->|"pi -> 1/(2 pi)"| A["alpha_total = 0.1592"]
 
-    A -->|"자기일관 연립"| AS["alpha_s = 0.1179<br/>sin^2 theta_W = 4 alpha_s^(4/3) = 0.2312"]
+    A -->|"자기일관"| AS["alpha_s = 0.1179<br/>sin^2 theta_W = 4 alpha_s^(4/3)"]
 
     D --> DEFF["D_eff = d + delta = 3.178"]
-    AS --> DELTA["delta = sin^2 theta_W cos^2 theta_W<br/>= 0.17776"]
+    AS --> DELTA["delta = 0.178"]
     DEFF --- DELTA
 
-    DELTA --> BS["부트스트랩<br/>eps^2 = 0.049"]
-    DELTA --> QCD["DM/DE = alpha_s D<br/>+ 3계층 바리온 관성"]
-    DELTA --> MASS["질량공식<br/>m_phi = m_p delta^2<br/>= 29.65 MeV"]
-    DELTA --> HP["포탈결합<br/>lambda_HP = delta^2<br/>= 0.032"]
-    DELTA --> Z2["Z2 대칭<br/>sin theta_mix = 0"]
-    DELTA --> XI["xi = alpha_s^(1/3)<br/>차원당 결합"]
+    DELTA --> BS["부트스트랩<br/>eps^2 = 0.049 = Omega_b"]
+    DELTA --> QCD["DM/DE = alpha_s D + 3계층 보정"]
+    DELTA --> MASS["m_phi = m_p delta^2 = 29.65 MeV"]
+    DELTA --> XI["xi = alpha_s^(1/3) = 0.490"]
 
-    BS --> OB["Omega_b = 5%"]
-    QCD --> DM["DM 26.2% + DE 68.9%"]
-    QCD --> MH["M_H = M_Z * F<br/>= 125.35 GeV"]
-    MASS --> PR["양성자 반경 0.3 sigma<br/>뮤온 g-2 0.00 sigma"]
-    HP --> NU["m_nu3 = 51.5 meV<br/>NH 예측"]
-    HP --> HI["H -> inv ~0.5%"]
-    Z2 --> EXP["K붕괴 / g-2<br/>실험제약 자동 통과"]
+    BS --> OB["보통 물질 5 %"]
+    QCD --> DM["DM 26 % + DE 69 %"]
+    QCD --> MH["힉스 125.35 GeV"]
     XI --> W0["w0 = -0.768<br/>r = 0.0014"]
-    AS --> CKM["V_cb = alpha_s^(3/2)<br/>J = 4*alpha_s^(11/2)"]
+    AS --> CKM["CKM/PMNS 전부 유도"]
+    DELTA --> NU["m_nu3 = 51.5 meV"]
 
     style E fill:#1a1a2e,color:#e0e0ff,stroke:#7b68ee
     style DELTA fill:#2d1b4e,color:#e8d5f5,stroke:#9b59b6
     style OB fill:#0d3b2e,color:#a8e6cf,stroke:#2ecc71
     style DM fill:#0d3b2e,color:#a8e6cf,stroke:#2ecc71
     style MH fill:#0d3b2e,color:#a8e6cf,stroke:#2ecc71
-    style PR fill:#0d3b2e,color:#a8e6cf,stroke:#2ecc71
     style NU fill:#0d3b2e,color:#a8e6cf,stroke:#2ecc71
-    style HI fill:#0d3b2e,color:#a8e6cf,stroke:#2ecc71
-    style EXP fill:#0d3b2e,color:#a8e6cf,stroke:#2ecc71
     style W0 fill:#0d3b2e,color:#a8e6cf,stroke:#2ecc71
     style CKM fill:#0d3b2e,color:#a8e6cf,stroke:#2ecc71
 ```
 
 ---
 
-## 라그랑지안
-
-$$
-\mathcal{L} = \frac{R}{16\pi G} + \xi R \Phi^2 + \mathcal{L}_{\text{SM}}^{d=3} + \frac{1}{2}(\partial_\mu \Phi)^2 - V(\Phi) + \delta^2 \Phi^2 |H|^2
-$$
-
-- $\Phi$: $d=0$ 잔여물. 게이지 싱글렛, 실수 스칼라, Z2 대칭
-- $\xi R \Phi^2$: 비최소 중력 결합. $\xi = \alpha_s^{1/3} = 0.490$ (차원당 결합에서 유도)
-- $\delta^2 \Phi^2 |H|^2$: 히그스 포탈 결합. $\lambda_{\text{HP}} = \delta^2$
-- $V(\Phi) = +\frac{1}{2}m_\phi^2 \Phi^2 + \frac{1}{4}\lambda \Phi^4$: 양의 질량항 (VEV 없음, Z2 보존)
-- 암흑에너지는 $V(\Phi)$가 아니라 부트스트랩 방정식에서 유도
-- $\xi R \Phi^2$ 항이 동적 DE ($w_0 \neq -1$)와 인플레이션을 동시에 지배
-
----
-
-## 왜 3차원인가
-
-경로적분의 분배함수가 차원별로 곱적 분해될 때:
-
-$$
-Z = \prod_{k=1}^{d} Z_k, \quad \frac{d(d-1)}{2} = d \quad \Rightarrow \quad d = 3
-$$
-
-Hodge 자기쌍대성에 의해 $d=3$만 구조적으로 안정하다. 3층 건물:
-
-| 층 | 힘 | 작동 방식 |
-|---|---|---|
-| 3층 | 강한 핵력 | 3가지 색 |
-| 2층 | 약한 핵력 | 2가지 상태 |
-| 1층 | 전자기력 | 1가지 전하 |
-
-중력은 층이 아니라 층 사이를 접는 에스컬레이터다. 내려온 사람이 보통 물질(5%), 에스컬레이터 위의 사람이 암흑물질(26%), 에스컬레이터의 전기가 암흑에너지(69%).
-
----
-
-## 실험 제약과 Z2 대칭
-
-$d=0$ 기원이 주는 Z2 대칭($\Phi \to -\Phi$)은 실험적 제약을 자동으로 해결한다:
-
-| 실험 | 제약 대상 | Z2가 정확하면 |
-|---|---|---|
-| E949/NA62 (K 붕괴) | $\sin\theta_{\text{mix}}$ | $= 0$ (FCNC 금지) |
-| 전자 $g\text{-}2$ | 히그스 혼합 | 혼합 없음 |
-| 빔 덤프 | 직접 생성 | 쌍생성만 가능 |
-| SN1987A | 별 내부 냉각 | 쌍생성 억제 |
-
-기존에 실험과 충돌하던 $\sin\theta_{\text{mix}} = 0.043$이, $d=0$ 기원에 의해 $\sin\theta_{\text{mix}} = 0$으로 자연스럽게 해결된다.
-
----
-
-## 검증 가능한 예측
-
-| 예측 | 실험 | 시기 |
-|---|---|---|
-| $\Delta a_\mu$ 접촉 249 / 완전 134.9 | Fermilab $g\text{-}2$, 외부 HVP 해석 비교 | 진행 중 |
-| $w_0 = -0.769$ ($\xi = \alpha_s^{1/3}$) | DESI DR2 | 2025 |
-| $\text{DM/DE} = 0.381$ (3계층 관성) | DESI BAO | 2025-2028 |
-| 정상 계층(NH), $\sum m_\nu = 55$ meV | JUNO | ~2026 |
-| $\Omega_b = 0.04865$ | CMB-S4 | ~2030 |
-| $\text{BR}(H \to \text{invisible}) \sim 0.005$ | HL-LHC | 2029-2035 |
-| $M_H/M_Z = 1 + \alpha_s D_{\text{eff}}$ | HL-LHC / FCC-ee | 2029-2040 |
-| 22-30 MeV 스칼라 (쌍생성) | PADME, NA64 | 2025-2027 |
-| $r = 0.0014$ (인플레이션 텐서) | LiteBIRD | ~2032 |
-
----
-
-## CE vs $\Lambda$CDM
-
-| | CE | $\Lambda$CDM |
-|---|---|---|
-| 외부 입력 | 0 | 6 |
-| $\Omega_b$ 유도 | 첫 원리 | 피팅 |
-| DM/DE 비율 | 유도 (0.03%) | 미설명 |
-| 히그스 질량 | 유도 ($0.6\sigma$) | 미설명 |
-| CKM/PMNS | 유도 (0.1-2.7%) | 19개 자유 매개변수 |
-| 중성미자 질량 | NH 예측, $m_3$ 2% | 미설명 |
-| 우주상수 문제 | $10^{122} \to 0.6\%$ | 미해결 |
-| 동적 DE ($w_0$) | 유도 ($0.04\sigma$) | 확장 필요 (w0waCDM) |
-| 적합도 | ~0.6% | <0.1% |
-| 반증 가능 | 가능 | 유연 |
-
-$\Lambda$CDM은 6개를 피팅한다. CE는 0개로 예측한다. $\Lambda$CDM이 설명하지 못하는 것들 -- 왜 바리온이 5%인지, 왜 DM이 DE의 38%인지, 왜 히그스가 125 GeV인지, 왜 세대가 3개인지 -- 을 CE는 $\alpha_s$ 하나에서 유도한다.
-
----
-
-## 비유로 읽는 CE
-
-### 극장
-
-양자역학에서 입자는 모든 가능한 경로를 동시에 간다. 대부분은 서로 취소되고 하나의 현실만 남는다. 이 취소를 지배하는 것은 무엇인가?
-
-매진된 극장을 상상하자. 새 관객은 앉을 자리가 없다. 누군가 취소해야 비로소 앉을 수 있다. 양자역학에서 "확률적"이라 부르는 것은, 사실 이 취소표 경쟁이다.
-
-- 3층 발코니 = 3가지 색의 좌석 (강한 핵력)
-- 2층 발코니 = 2가지 상태의 좌석 (약한 핵력)
-- 1층 객석 = 1가지 전하의 좌석 (전자기력)
-- 층 사이의 계단 = **중력**
-
-클라루스장은 건축이며 극장의 설계도를 쓴 것이 CE다.
-
-### 에스컬레이터
-
-CE의 전체 구조는 **3층짜리 에스컬레이터와 작동 버튼 1개**로 압축된다.
-
-**에스컬레이터** = 중력. 층 사이를 접는 장치. 층이 아니라 메커니즘이다. 중력이 다른 3개 힘과 근본적으로 다른 이유.
-
-**작동 버튼** = $\alpha_s = 0.1179$. 시간 그리드 상수화($\alpha_{\text{total}} = 1/(2\pi)$)에서 기하학적으로 유도된다.
-
-- 1층까지 내려온 사람 = **보통 물질** (5%)
-- 에스컬레이터 위에 있는 사람 = **암흑물질** (26%)
-- 에스컬레이터의 전기 = **암흑에너지** (69%)
-
-설계도를 읽으려면 수학만 있으면 된다: **건물이 몇 층인가**(3), **버튼의 세기가 얼마인가**($1/(2\pi)$). 나머지는 전부 따라 나온다.
-
-### 종이접기
-
-종이 위에 무한한 선(경로)이 있다. 대부분이 접혀서 소멸한다. 접히지 않고 남은 부분이 보통 물질(5%), 접힘에 사용된 에너지가 암흑에너지(69%) + 암흑물질(26%)이다. 3차원에서 접으면 약 5%가 남는다. 관측된 바리온 밀도 4.86%와 일치한다.
-
-### AI와 자연
-
-ChatGPT가 다음 단어를 고르는 방식(Softmax)과 자연이 양자 경로를 고르는 방식은 수학적으로 동일하다:
-
-$$
-P(\gamma) = \frac{e^{-S(\gamma)}}{\sum_{\gamma'} e^{-S(\gamma')}}
-$$
-
-AI 연구자들은 Softmax를 "잘 작동하니까" 썼다. CE의 관점에서 보면, 그것이 잘 작동하는 이유는 자연이 원래 그렇게 작동하기 때문이다.
-
-### 세 현상은 하나다
-
-- 우주 스케일 --> **암흑에너지**
-- 양자컴퓨터 --> **잡음**
-- 일상 세계 --> **양자가 고전이 되는 현상** (탈결맞음)
-
-선택되지 않은 양자 경로들이 눌려서 배경이 되는 과정의 세 얼굴이다.
-
-> 문서 구조와 읽기 규칙: [`docs/README.md`](docs/README.md)
-
----
-
-## 핵심 수식 (물리학자/수학자용)
-
-### 유도 공식 일람
+## 10. 핵심 수식 일람 (전공자용)
 
 | 공식 | 의미 |
-|---|---|
+| --- | --- |
 | $\alpha_{\text{total}} = 1/(2\pi)$ | 시간 그리드 상수화 |
-| $\sin^2\theta_W = 4\alpha_s^{4/3}$ | 전자약 혼합각 |
+| $\sin^2\theta_W = 4\,\alpha_s^{4/3}$ | 전자약 혼합각 |
 | $\alpha_{\text{dim}} = \alpha_s^{1/d}$ | 차원당 결합 강도 |
-| $\delta = \sin^2\theta_W\cos^2\theta_W$ | 전자약 혼합 매개변수 |
+| $\delta = \sin^2\theta_W \cos^2\theta_W$ | 전자약 혼합 잔여 |
 | $D_{\text{eff}} = d + \delta$ | 유효 차원 |
-| $\varepsilon^2 = \exp[-(1-\varepsilon^2)D_{\text{eff}}]$ | 부트스트랩 (바리온 분율) |
-| $R = \alpha_s D_{\text{eff}} (1 + \text{3계층 관성})$ | DM/DE 비율 |
+| $\varepsilon^2 = \exp[-(1-\varepsilon^2) D_{\text{eff}}]$ | 부트스트랩 (= $\Omega_b$) |
+| $R = \alpha_s D_{\text{eff}} (1 + \text{3 계층 관성})$ | DM/DE 비율 |
 | $F = 1 + \alpha_s D_{\text{eff}}$ | QCD 진공 폼팩터 |
-| $M_H = M_Z \cdot F$ | 히그스 질량 |
+| $M_H = M_Z \cdot F$ | 힉스 질량 |
 | $\xi = \alpha_s^{1/3}$ | 비최소 중력 결합 |
-| $w_0 = -1 + 2\xi^2/(3\Omega_\Lambda)$ | 암흑에너지 상태방정식 |
-| $m_{\nu_l} = \delta^4 m_l / [(16\pi^2)^2(1+R)]$ | 중성미자 질량 |
-| $m_g/m_3 = \alpha_s^{(d+k)/(d-j)}$ | 페르미온 세대비 |
-| $J = 4\alpha_s^{11/2}$ | Jarlskog CP 불변량 |
+| $w_0 = -1 + 2\xi^2/(3\Omega_\Lambda)$ | DE 상태방정식 |
+| $m_{\nu_l} = \delta^4 m_l / [(16\pi^2)^2 (1+R)]$ | 중성미자 질량 |
+| $J = 4\,\alpha_s^{11/2}$ | Jarlskog CP 불변량 |
 | $Q_K = 2/d = 2/3$ | Koide 공식 |
 | $n_s = 1 - 2/N$ | 인플레이션 스펙트럼 지수 |
-| $r = 12/[N^2(1+6\xi^2)]$ | 인플레이션 텐서 비율 |
-
-이 무차원 핵심 관계들은 $\alpha_s = 0.11789$를 중심으로 서로 연결되며, 절대 단위는 이후의 스케일 승격 단계에서 복원한다.
-
-### 클라루스장 기본 구조
-
-$$
-A_{\text{survive}}(x) = e^{-\tilde R(x)}, \quad \tilde{R} \equiv L_c^2 R(x)
-$$
-
-$$
-m_{\text{eff}}(x) = m_0(1 + g_B\Phi(x))
-$$
-
-$$
-\frac{d\rho}{dt} = -\frac{i}{\hbar}[H,\rho] + \frac{Y}{2}\left(2L\rho L^\dagger - \{L^\dagger L, \rho\}\right), \quad Y \propto g'^{\,2} J_\Phi(\omega_S)
-$$
+| $r = 12 / [N^2(1 + 6\xi^2)]$ | 인플레이션 텐서 비율 |
 
 ---
 
-## 읽기 순서
+## 11. 읽는 순서
 
 **일반 독자**
-1. 이 README
-2. [`docs/README.md`](docs/README.md) (문서 계층과 읽기 규칙)
+1. 본 README 1-8 절
+2. [`docs/README.md`](docs/README.md) — 문서 계층 안내
 
-**물리학/수학 배경**
-1. [`docs/경로적분.md`](docs/경로적분.md) (계산 체인의 최신 원천)
-2. [`docs/상수.md`](docs/상수.md) (대표값과 항목 지위의 최종 집계)
-3. [`docs/axium.md`](docs/axium.md) (공리 체계와 기호 규약)
-4. [`docs/2_경로적분과_응용/12_전이구간.md`](docs/2_경로적분과_응용/12_전이구간.md) (전이 보정)
+**물리/수학 배경**
+1. [`docs/경로적분.md`](docs/경로적분.md) — 계산 체인
+2. [`docs/상수.md`](docs/상수.md) — 모든 수치 집계
+3. [`docs/axium.md`](docs/axium.md) — 공리와 표기법
+4. [`docs/2_경로적분과_응용/12_전이구간.md`](docs/2_경로적분과_응용/12_전이구간.md) — 전이 보정
 
 **심화**
-- `docs/2_경로적분과_응용/` -- 인플레이션, 강한 CP, 중성미자, 페르미온 질량, 게이지 격자
-- `docs/4_공학적_활용/` -- 공명 핵융합, 양자오류보정, 진공에너지, 초전도체
-- `docs/5_유도/` -- Navier-Stokes, 암흑에너지, 블랙홀, 마스터 작용 유도
-- `docs/참조/` -- 형식적 모델, 정합성 검증, 보조 유도
+- `docs/2_경로적분과_응용/` — 인플레이션, 강한 CP, 중성미자, 페르미온 질량
+- `docs/4_공학적_활용/` — 핵융합, 양자오류보정, 진공에너지, 초전도체
+- `docs/5_유도/` — Navier-Stokes, 암흑에너지, 블랙홀, 마스터 작용
+- `docs/참조/` — 형식 모델, 정합성 검증
 
 ---
 
-## 수치 검증 코드
+## 12. 직접 돌려 보기
+
+```bash
+# 환경 (Python 3.13)
+python -m venv .venv
+.venv/Scripts/python.exe -m pip install torch numpy
+
+# 종합 점수표
+.venv/Scripts/python.exe examples/physics/scorecard.py
+
+# 동적 암흑에너지 (DESI DR2 비교)
+.venv/Scripts/python.exe examples/physics/check_dynamic_de.py
+
+# d=0 기원 전수 검증
+.venv/Scripts/python.exe examples/physics/d0_full_verification.py
+```
+
+---
+
+## 13. 수치 검증 코드
 
 | 코드 | 검증 대상 |
-|---|---|
-| [`check_muon_g2_integral.py`](examples/physics/check_muon_g2_integral.py) | 스칼라 보손 동치, 양성자 반경 |
-| [`check_dark_matter_paper.py`](examples/physics/check_dark_matter_paper.py) | 다중 데이터셋, BIC/AIC 비교 |
-| [`check_dynamic_de.py`](examples/physics/check_dynamic_de.py) | 동적 DE, DESI 포텐셜 동치 |
+| --- | --- |
+| [`scorecard.py`](examples/physics/scorecard.py) | 19 관측 종합 χ² 점수 |
+| [`check_muon_g2_integral.py`](examples/physics/check_muon_g2_integral.py) | 스칼라 보손, 양성자 반경 |
+| [`check_dark_matter_paper.py`](examples/physics/check_dark_matter_paper.py) | 다중 데이터셋, BIC/AIC |
+| [`check_dynamic_de.py`](examples/physics/check_dynamic_de.py) | 동적 DE, DESI 동치 |
 | [`check_unification.py`](examples/physics/check_unification.py) | 전자약-강력 통합 |
-| [`d0_full_verification.py`](examples/physics/d0_full_verification.py) | d=0 기원 전수 검증, 역접힘 분석 |
-| [`baryon_inertia.py`](examples/physics/baryon_inertia.py) | 3계층 바리온 관성, DM/DE 0.03% 정합 |
-| [`xi_derivation.py`](examples/physics/xi_derivation.py) | 비최소 결합 xi = alpha_s^(1/3) 유도, w0 0.04 sigma |
-| [`neutrino_mass.py`](examples/physics/neutrino_mass.py) | 중성미자 질량 m3 = 51.5 meV (2%), NH 예측 |
-| [`fermion_mass.py`](examples/physics/fermion_mass.py) | 페르미온 세대비 alpha_s^{(d+k)/(d-j)}, 1-7% 정합 |
-| [`higgs_mass.py`](examples/physics/higgs_mass.py) | M_H = M_Z*F = 125.35 GeV (0.6 sigma) |
-| [`ckm_derivation.py`](examples/physics/ckm_derivation.py) | CKM/PMNS 유도, J = 4*alpha_s^(11/2) |
-| [`fusion_trigger_check.py`](examples/physics/fusion_trigger_check.py) | 공명 핵융합 트리거 스케일 점검 |
+| [`d0_full_verification.py`](examples/physics/d0_full_verification.py) | d=0 기원 전수 검증 |
+| [`baryon_inertia.py`](examples/physics/baryon_inertia.py) | 3 계층 바리온 관성 |
+| [`xi_derivation.py`](examples/physics/xi_derivation.py) | $\xi = \alpha_s^{1/3}$ 유도 |
+| [`neutrino_mass.py`](examples/physics/neutrino_mass.py) | 중성미자 질량 NH 예측 |
+| [`fermion_mass.py`](examples/physics/fermion_mass.py) | 페르미온 세대비 |
+| [`higgs_mass.py`](examples/physics/higgs_mass.py) | 힉스 질량 0.6 $\sigma$ |
+| [`ckm_derivation.py`](examples/physics/ckm_derivation.py) | CKM/PMNS 일괄 유도 |
+| [`fusion_trigger_check.py`](examples/physics/fusion_trigger_check.py) | 공명 핵융합 점검 |
 
 ---
 
-## 엔진
+## 14. 엔진
 
-`clarus/core/` -- Rust 기반 CE 수치 엔진. 곡률 계산, 광명 필터, 양자 오류 보정 모듈.
+`clarus/` — Python 기반 CE 수치 엔진. 곡률 계산, Top-k 희소화, 게이지 격자 모듈.
+선택적 Rust 백엔드 (`clarus/_rust`, PyO3) 지원.
 
 ---
 
-## 상태
+## 15. 읽는 사람에게
 
-- 미발표 (arXiv 미등록)
-- 동료 심사 없음
-- 수치 자기검증 완료
+이 저장소는 한 명의 연구자가 적은 가설이다. 동료 심사를 통과한 적이 없고 실험 검증 도 부분적이다. 그러나 19 개 관측치를 한 입력에서 평균 1 % 안쪽으로 맞추는 자기 검증은 **재현 가능한 코드** 로 누구나 확인할 수 있다.
 
-이 중 하나라도 확인되면, 경로적분의 물리적 의미에 대한 재해석과 함께 우주론-입자물리 통합의 최초 정량적 증거가 된다.
+옳다면, 우리는 자연의 25 개 매개변수 중 18 개를 줄였다.
+틀렸다면, 위에 나열된 6 개 미래 실험 중 하나가 그것을 곧 보여 줄 것이다.
+
+판단은 데이터에 맡긴다.
+
+— *To you, two thousand years from now.*
