@@ -24,6 +24,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from cosmology import (
     Background,
     linspace,
+    logspace,
     interp_linear,
     solve_growth,
     parse_fsigma8_triplets,
@@ -65,7 +66,7 @@ def predict_fsig8_curve(
     n_pts: int = 2001,
     eps_grav: float = 0.0,
 ) -> list[float]:
-    a_grid = linspace(a_min, 1.0, n_pts)
+    a_grid = logspace(a_min, 1.0, n_pts)
     ln_a_grid = [math.log(a) for a in a_grid]
     mu_grid = [1.0 - eps_grav * (1.0 - bg.omega_m_of_a(a)) for a in a_grid]
     d_norm, f_ln = solve_growth(bg, a_grid, mu_grid)
@@ -136,7 +137,7 @@ def calibrate_sigma8_to_fsig8(
             break
     if target is None:
         return 0.811
-    a_grid = linspace(1.0e-3, 1.0, 2001)
+    a_grid = logspace(1.0e-3, 1.0, 2001)
     ln_a_grid = [math.log(a) for a in a_grid]
     mu_grid = [1.0 - eps_grav * (1.0 - bg.omega_m_of_a(a)) for a in a_grid]
     d_norm, f_ln = solve_growth(bg, a_grid, mu_grid)

@@ -5,12 +5,23 @@
 관측 대비 잔차, σ, 누적 χ², p-value 를 한 페이지로 출력한다.
 
 CE 코어 (격자기본량) :
-    α_s = 0.1179      (M_Z, PDG 2024)
+    α_s = 0.11789     (CE 자기일관 도출, docs/3_상수/1_격자기본량.md §α_s
+                       4 α_s^(4/3) = 0.23122 → α_s = 0.05781^(3/4) = 0.11789.
+                       PDG 2024 측정 0.1179 ± 0.0009 와 0.01 σ.)
     sin²θ_W = 4 α_s^(4/3)
     δ = sin²θ_W cos²θ_W
     D_eff = 3 + δ
     ε² = exp(-(1-ε²) D_eff)        (부트스트랩 고정점)
-    R = α_s D_eff (1 + ε² δ)       (3계층 관성 보정 패키지)
+
+    R = 3계층 바리온 관성 (하강 분할 {3,2,1} + 잔여):
+        f_U(1)  = ε² · α_em / α_total          (cos²θ_W 분리: α_1 = α_em/cos²θ_W)
+        f_SU(2) = ε² · α_w  / α_total          (α_w = α_em / sin²θ_W)
+        f_SU(3) = ε² · α_s  / α_total
+        f_δ     = ε² · δ
+        R = α_s · [(1+f_U(1)) + (1+f_SU(2)) + (1+f_SU(3)) + δ·(1+f_δ)]
+        (docs/3_상수/3_부트스트랩.md, examples/physics/baryon_inertia.py)
+
+    α_em = 1/129  (M_Z),   α_total = 1/(2π)
     Ω_b = ε²;  Ω_Λ = (1-ε²)/(1+R);  Ω_DM = (1-ε²) R / (1+R)
 
 ξ = α_s^(1/3)  →  1+w_0 = 2ξ²/(3 Ω_Λ)
@@ -39,7 +50,9 @@ PI = math.pi
 # 1. CE core (lattice fundamentals)
 # --------------------------------------------------------------------------- #
 
-ALPHA_S = 0.1179
+ALPHA_S = 0.11789
+ALPHA_EM = 1.0 / 129.0          # M_Z 스케일
+ALPHA_TOTAL = 1.0 / (2.0 * PI)  # 시간 그리드 상수화
 
 
 def _bootstrap(d_eff: float, tol: float = 1e-15, maxiter: int = 400) -> float:
@@ -69,10 +82,22 @@ class Core:
 
 def derive_core(alpha_s: float = ALPHA_S) -> Core:
     sin2_tw = 4.0 * alpha_s ** (4.0 / 3.0)
-    delta = sin2_tw * (1.0 - sin2_tw)
+    cos2_tw = 1.0 - sin2_tw
+    delta = sin2_tw * cos2_tw
     d_eff = 3.0 + delta
     eps2 = _bootstrap(d_eff)
-    R = alpha_s * d_eff * (1.0 + eps2 * delta)
+
+    # 3계층 하강 분할 {3,2,1} + 잔여(δ) 바리온 관성 피드백
+    alpha_w = ALPHA_EM / sin2_tw          # SU(2)
+    alpha_1 = ALPHA_EM / cos2_tw          # U(1) hypercharge
+    fb_u1 = eps2 * alpha_1 / ALPHA_TOTAL
+    fb_su2 = eps2 * alpha_w / ALPHA_TOTAL
+    fb_su3 = eps2 * alpha_s / ALPHA_TOTAL
+    fb_delta = eps2 * delta
+    R = alpha_s * (
+        (1.0 + fb_u1) + (1.0 + fb_su2) + (1.0 + fb_su3) + delta * (1.0 + fb_delta)
+    )
+
     sigma = 1.0 - eps2
     omega_l = sigma / (1.0 + R)
     omega_dm = sigma * R / (1.0 + R)
@@ -314,10 +339,11 @@ def _gamma_q_cf(a: float, x: float, eps: float = 1e-12, maxiter: int = 400) -> f
 OPEN_TENSIONS: tuple[tuple[str, str, str], ...] = (
     ("H_0 텐션",
      "Planck 67.4 ± 0.5 vs SH0ES 73.0 ± 1.0 (5σ)",
-     "docs/3_상수/7_우주론.md 의 H_0 t_0 절은 H_0 텐션 자체를 다루지 않음."),
+     "docs/경로적분.md §16 + examples/physics/hubble_tension.py 에서 99.3% 해소 메커니즘"
+     " (δε_0=-0.055, ξ=5.0 자유매개변수). 두 매개변수의 제1원리 유도가 열린 과제."),
     ("S_8 텐션",
      "KiDS-1000 0.759 vs Planck 0.832 (~3σ)",
-     "f σ_8 코드는 있으나 S_8 자체 비교 절 미수록."),
+     "f σ_8(z) 코드는 있으나 S_8 자체의 직접 예측 절 미수록 (구조 성장 ξ R Φ^2 결합으로 정성적 완화 예상)."),
     ("JWST high-z",
      "z>10 과밀 은하 (UNCOVER, CEERS, JADES)",
      "인플레이션/구조형성 절 미반영."),
@@ -400,7 +426,7 @@ def main(argv: list[str] | None = None) -> int:
         description="CE 우주론 정합성 카드 (오프라인, 2026-04 데이터 hard-coded).",
     )
     parser.add_argument("--alpha-s", type=float, default=ALPHA_S,
-                        help="α_s 입력 (기본 0.1179, M_Z 스케일 PDG 2024).")
+                        help="α_s 입력 (기본 0.11789, CE 자기일관 도출; PDG 0.1179±0.0009).")
     parser.add_argument("--json", action="store_true",
                         help="텍스트 표 대신 JSON 으로 출력.")
     args = parser.parse_args(argv)
