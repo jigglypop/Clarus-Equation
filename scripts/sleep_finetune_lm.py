@@ -14,7 +14,7 @@ Run (논문 사양):
     .venv/Scripts/python.exe scripts/sleep_finetune_lm.py \
         --ckpt-in clarus/clarus_lm_kogpt2.pt \
         --ckpt-out clarus/clarus_lm_kogpt2_tuned.pt \
-        --data examples/ai/train_data.txt \
+        --dataset lcw99/wikipedia-korean-20221001 --doc-limit 2000 \
         --device cuda --steps 600 --batch 4 --seq-len 128 \
         --cycle-len 4 --eta-nrem 0.01 --top-eps 0.0487
 
@@ -86,8 +86,8 @@ def parse_args():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--ckpt-in", default="clarus/clarus_lm_kogpt2.pt")
     ap.add_argument("--ckpt-out", default="clarus/clarus_lm_kogpt2_tuned.pt")
-    ap.add_argument("--data", default="examples/ai/train_data.txt",
-                    help="Local text file (used only when --dataset is empty).")
+    ap.add_argument("--data", default=None,
+                    help="Local UTF-8 text file (required when --dataset is empty).")
     ap.add_argument("--dataset", default=None,
                     help="HuggingFace dataset id (e.g. lcw99/wikipedia-korean-20221001).")
     ap.add_argument("--dataset-split", default="train")
@@ -118,11 +118,6 @@ def parse_args():
     ap.add_argument("--rem-accept-margin", type=float, default=0.01,
                     help="REM relative loss-improvement threshold for acceptance "
                          "(held-out batch). 1%% 미만 개선은 reject (drift 방지).")
-    ap.add_argument("--ternary", action="store_true",
-                    help="3분배 가중치 분류 활성화 (5_Sparsity.md 4절). "
-                         "ACTIVE만 WAKE에서 학습, STRUCT는 NREM에서, BG 동결.")
-    ap.add_argument("--reclassify-every", type=int, default=10,
-                    help="3분배 재분류 주기 (사이클 단위).")
     ap.add_argument("--val-every", type=int, default=100)
     ap.add_argument("--seed", type=int, default=1337)
     ap.add_argument("--log-every", type=int, default=20)
@@ -483,21 +478,6 @@ def main():
     train_gen = torch.Generator(device=device); train_gen.manual_seed(args.seed + 2)
     cycle_log: list[CycleStat] = []
 
-    # 3분배 가중치 분류기 (5_Sparsity.md 4절). 옵션: --ternary.
-    classifier = None
-    if args.ternary:
-        from clarus.sparsity import TernaryClassifier
-        from clarus.constants import ACTIVE_RATIO, STRUCT_RATIO
-        classifier = TernaryClassifier(
-            model, active_ratio=ACTIVE_RATIO, struct_ratio=STRUCT_RATIO,
-        )
-        s = classifier.stats()
-        safe_print(
-            f"  [TERNARY] tracked={s['tracked_params']} weights={s['total_weights']:,}  "
-            f"active={s['active_pct']:.2f}%  struct={s['struct_pct']:.2f}%  bg={s['bg_pct']:.2f}%  "
-            f"extra_mem={classifier.memory_bytes()/1024/1024:.1f}MB"
-        )
-
     # CLI lambda_curv가 checkpoint config의 값을 override (논문 사양 적용 강제).
     # checkpoint 저장 시 lambda_curv=0.0이 들어가 있어도 CLI 값이 우선.
     if hasattr(model, 'lambda_curv_base'):
@@ -531,19 +511,10 @@ def main():
                 args.cycle_len, lam_eff,
             )
 
-            # 3분배 ternary: WAKE에서 freq 업데이트, NREM step에서 ACTIVE+STRUCT만 통과.
-            if classifier is not None:
-                classifier.update_freq()
-                classifier.apply_grad_mask(allow_struct=True)  # NREM step이므로 struct 허용
-
             # ---- NREM: weight LBO smoothing + top-eps mask + step ----
             kept_frac, raw_grad_norm = nrem_phase(
                 model, optim, args.eta_nrem, args.top_eps,
             )
-
-            # NREM 후 분류 재계산 (사양 5_Sparsity.md 4.4).
-            if classifier is not None and cycle_idx % args.reclassify_every == 0:
-                classifier.reclassify()
 
             # ---- REM (주기적): 비선택 영역 + 노이즈 탐색 ----
             rem_acc, rem_tried = 0, 0

@@ -232,12 +232,13 @@ $$\boxed{X_{t+1} = B\big[X_t + \lambda_R R(X_t) + \lambda_O \Delta_O(X_t) + \lam
 | $S(X_t)$ | 곡률/잔류 기반 억제 | 소뇌/기저핵 억제 |
 | $B$ | 부트스트랩 수축 연산자 ($\rho = 0.155$) | 수면 항상성 |
 
-### 4.4 수축 조건
+### 4.4 수축 조건 (게이트 `F2`)
 
 $$\rho + \lambda_R L_R + \lambda_C L_C < 1$$
 
-이 조건이 만족되면 Banach 고정점 정리에 의해 루프가 안정적으로 수렴한다.
-수면이 $\rho = 0.155$를 공급하므로 나머지 항의 Lipschitz 합이 0.845 미만이어야 한다.
+이 조건이 만족되면 Banach 고정점 정리에 의해 루프가 수축한다. 수면이 $\rho = 0.155$ 를 공급하므로 나머지 항의 Lipschitz 합이 $0.845$ 미만이어야 한다.
+
+> 단 $R$ 내부의 비보존 바이패스 $F_{\text{bypass}}$ 는 위 Banach 수축의 가정을 깨뜨릴 수 있다(`12_Equation.md` 0.0절 게이트 `F2`). 따라서 위 부등식은 ISS 의미의 유계 수렴 (`12_Equation.md` 부록 A.1) 으로 격상되어, 끌개 ball 반경이 닫힌 식으로 표현된다. "안정적으로 수렴" 은 ball 안에서의 수렴으로 읽는다.
 
 ### 4.5 확장 구성요소 (F.14--F.22 요약)
 
@@ -248,7 +249,7 @@ $$\rho + \lambda_R L_R + \lambda_C L_C < 1$$
 | F.14 STDP 학습 | $R$ 내부에서 적격 흔적 누적, $R$ 후에 $g[t] \cdot e_{ij}$로 갱신. Proj로 투영 | 높음 |
 | F.15 잔류장 $\phi$ | $\phi_{t+1} = (1-\xi)\phi_t + \xi \cdot \text{Var}(a)$. 포탈/모드전환/glymphatic 3곳 개입 | 높음 |
 | F.16 희소 활성 | $R$ 내 TopK, 에너지 예산 $B_t(M_t)$. 모듈 생애주기 4상태 | 높음 |
-| F.17 의식/메타인지 | C3 자기일관성, 의식 깊이 $\exp(-c_d d_\tau)$, 메타인지 $d_{n+1} \leq \rho d_n$ | 낮음 (장기) |
+| F.17 메타인지 모니터링 (게이트 `F4`) | C3 자기참조 측정, 안정도 $\exp(-c_d d_\tau)$, 조건부 수축 $d_{n+1} \leq \rho d_n$ | 낮음 (장기) |
 | F.18 환각 억제 | $R$ 중 곡률 $\kappa$ 모니터링. $\kappa > \kappa_{\text{th}}$이면 LBO 확산 강화 | 중간 |
 | F.19 4종 신경조절 | $g_t = (g_{\text{DA}}, g_{\text{NE}}, g_{\text{5HT}}, g_{\text{ACh}})$. 현재는 단일 스칼라 | 중간 |
 | F.20 작업기억/주의/소뇌 | $|h_t| \leq T_h$, salience 기반 $\alpha_i$, 소뇌 forward model | 중간 |

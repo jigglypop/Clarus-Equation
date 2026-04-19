@@ -499,11 +499,13 @@ $$Z_i^t \in \{\text{ACTIVE},\; \text{IDLE},\; \text{DORMANT},\; \text{SLEEPING}\
 
 ---
 
-### F.17 의식과 메타인지 재귀
+### F.17 메타인지 재귀 (게이트 `F4`)
 
 > `12_Equation.md` 9장. F절에서 가장 상위 층이지만 빠져 있었다.
+>
+> 다리 게이트 `F4` (`12_Equation.md` 0.0절): 본 절의 모든 식은 메타인지 모니터링 루프의 운영 정의이며, "(C3) = 의식"으로 환원하지 않는다. "의식 깊이"라는 표현은 PCI 교차검증(F.23.7)이 `bridge` 단계로 올라가기 전까지 **모니터링 안정도** 의미로 읽는다.
 
-#### F.17.1 자기일관성 (C3)
+#### F.17.1 자기참조 측정 구조 (C3)
 
 에이전트가 자기 자신의 활성 비율을 알아야 다음 이완을 계산할 수 있다:
 
@@ -513,28 +515,28 @@ $$a_* = \exp\!\left(-(1-a_*)\left[3+\frac{4}{e^{4/3}\pi^{4/3}}\left(1-\frac{4}{e
 
 $$\hat{a}_t = \frac{|A_t|}{N} \quad\text{(현재 활성 비율 관측)} \quad\to\quad \text{F.16의 TopK 임계 조정}$$
 
-#### F.17.2 의식 깊이
+#### F.17.2 메타인지 안정도
 
 $$d_\tau(t) = \frac{1}{\tau}\int_{t-\tau}^{t}\|p(s)-p^*\|\,ds$$
 
-$$\text{의식 깊이}_\tau = \exp(-c_d\,d_\tau(t))$$
+$$\text{메타인지 안정도}_\tau := \exp(-c_d\,d_\tau(t))$$
 
-루프 내 해석: 비평 점수와 분배 이탈이 작을수록 "의식이 깊다." 깊은 수면에서 $d_\tau \to 0$, 수면 박탈에서 $d_\tau$ 누적.
+루프 내 해석: 비평 점수와 분배 이탈이 작을수록 모니터링 루프가 안정적이다. 깊은 수면에서 $d_\tau \to 0$, 수면 박탈에서 $d_\tau$ 누적. 게이트 `F4`에 따라, 이 지표를 의식의 정량 척도로 hard claim 하지 않는다.
 
-#### F.17.3 메타인지 수렴
+#### F.17.3 메타인지 수축 (조건부)
 
-비평 $C$가 자기 자신에 재귀적으로 적용될 때:
+비평 $C$가 자기 자신에 재귀적으로 적용될 때 (이상화된 무잡음 조건):
 
-$$d_{n+1} \leq \rho \cdot d_n = 0.155 \cdot d_n$$
+$$d_{n+1} \leq \rho \cdot d_n = 0.155 \cdot d_n,\qquad \rho = D_{\text{eff}}\cdot\varepsilon^2$$
 
-3회 후 $d_3/d_0 \leq 3.7 \times 10^{-3}$.
+3회 후 $d_3/d_0 \leq 3.7 \times 10^{-3}$. 게이트 `F2` 충분조건(`12_Equation.md` 4.7절) 영역에서만 위 비율이 그대로 적용되며, 일반 영역에서는 13절 ISS 의미의 유계 수렴으로 한정된다.
 
 루프 내 위치: $C$의 출력 $c_t$가 다음 $R$의 초기점을 수정하고 (F.5의 $E_{\text{crit}}$), 그 $R$의 결과에 다시 $C$를 적용하면 메타인지 재귀가 된다.
 
 | 뇌 대응 | 실험 근거 | 판정 |
 |---|---|---|
 | 메타인지 = PFC 재귀 자기평가 | metacognitive accuracy, confidence calibration | `supported` (현상), `bridge` ($\rho$ 매핑) |
-| 의식 깊이 = 통합 정보? | IIT (Tononi), GNW (Dehaene) | `hypothesis` (CE 해석) |
+| 안정도 지표 = 통합 정보? | IIT (Tononi), GNW (Dehaene), PCI (Casali 2013) | `hypothesis` (CE 해석, 게이트 `F4`) |
 
 ---
 

@@ -109,6 +109,15 @@ class BrainRuntimeConfig:
     axon_delay: bool = True
     max_axon_delay: int = AXON_DELAY_MAX
     forget_tau: float = FORGET_TAU
+    # F1 self-organization (docs/7_AGI/12_Equation.md A.2 condition #2).
+    # When enabled, the runtime feeds the empirical active ratio
+    #   p_emp = |A_t| / dim
+    # back into the next budget so it contracts toward ACTIVE_RATIO (epsilon^2).
+    f1_self_measure: bool = False
+    f1_pull_strength: float = 0.5
+    f1_ema_alpha: float = 0.1
+    f1_min_ratio: float = 0.005
+    f1_max_ratio: float = 0.5
 
     def __post_init__(self) -> None:
         self.dim = int(self.dim)
@@ -117,6 +126,10 @@ class BrainRuntimeConfig:
         self.active_ratio = min(max(float(self.active_ratio), 0.0), 1.0)
         self.memory_topk = max(1, int(self.memory_topk))
         self.memory_capacity = max(1, int(self.memory_capacity))
+        self.f1_pull_strength = min(max(float(self.f1_pull_strength), 0.0), 1.0)
+        self.f1_ema_alpha = min(max(float(self.f1_ema_alpha), 0.0), 1.0)
+        self.f1_min_ratio = min(max(float(self.f1_min_ratio), 0.0), 1.0)
+        self.f1_max_ratio = min(max(float(self.f1_max_ratio), self.f1_min_ratio), 1.0)
 
     def energy_budget(self, mode: RuntimeMode) -> int:
         base = max(1, int(round(self.dim * self.active_ratio)))
@@ -195,6 +208,8 @@ class BrainRuntimeSnapshot:
     arousal: float
     step: int
     hippocampus: dict[str, object]
+    mode_occupancy: Dict[str, int] = field(default_factory=dict)
+    active_ratio_ema: float = -1.0
 
 
 @dataclass
@@ -366,6 +381,12 @@ class BrainRuntime:
         self.step_index = 0
         self.circadian_phase = 0.0
         self.nrem_cycle_count = 0
+        self.mode_occupancy: Dict[str, int] = {
+            RuntimeMode.WAKE.value: 0,
+            RuntimeMode.NREM.value: 0,
+            RuntimeMode.REM.value: 0,
+        }
+        self.active_ratio_ema: float = float(self.config.active_ratio)
 
         # Dale's Law: E:I = 80:20 sign mask
         n_exc = int(self.config.dim * DALE_EI_RATIO)
@@ -484,6 +505,102 @@ class BrainRuntime:
         for code, lifecycle in _CODE_TO_LIFECYCLE.items():
             counts[lifecycle.value] = int((self.lifecycle == code).sum().item())
         return counts
+
+    def mode_occupancy_kl(self, eps: float = 1e-9) -> Dict[str, float]:
+        """F3 ergodic gate (docs/7_AGI/12_Equation.md A.3).
+
+        Reports the empirical mode occupancy measure pi_brain on the 3-simplex
+        and its KL divergence to the CE bootstrap fixed point
+        p* = (Omega_Lambda, Omega_DM, Omega_b) = (BACKGROUND_RATIO, STRUCT_RATIO, ACTIVE_RATIO).
+
+        Mapping: WAKE -> Omega_Lambda, NREM -> Omega_DM, REM -> Omega_b.
+        """
+        total = sum(self.mode_occupancy.values())
+        if total <= 0:
+            return {
+                "samples": 0,
+                "pi_wake": 0.0,
+                "pi_nrem": 0.0,
+                "pi_rem": 0.0,
+                "kl_to_p_star": float("nan"),
+            }
+        pi_wake = self.mode_occupancy.get(RuntimeMode.WAKE.value, 0) / total
+        pi_nrem = self.mode_occupancy.get(RuntimeMode.NREM.value, 0) / total
+        pi_rem = self.mode_occupancy.get(RuntimeMode.REM.value, 0) / total
+        pi = (pi_wake, pi_nrem, pi_rem)
+        p_star = (BACKGROUND_RATIO, STRUCT_RATIO, ACTIVE_RATIO)
+        kl = 0.0
+        for p_i, q_i in zip(pi, p_star):
+            if p_i > eps:
+                kl += p_i * (np.log(p_i + eps) - np.log(q_i + eps))
+        return {
+            "samples": total,
+            "pi_wake": pi_wake,
+            "pi_nrem": pi_nrem,
+            "pi_rem": pi_rem,
+            "kl_to_p_star": float(kl),
+        }
+
+    def reset_mode_occupancy(self) -> None:
+        """Zero the F3 mode occupancy counter (e.g. between sleep cycles)."""
+        for key in self.mode_occupancy:
+            self.mode_occupancy[key] = 0
+
+    def _f1_effective_budget(self, mode: RuntimeMode) -> int:
+        """Self-measured energy budget (gate F1, docs/7_AGI/12_Equation.md A.2 #2).
+
+        Static fallback: config.energy_budget(mode). When f1_self_measure is
+        on, the empirical EMA p_emp is convexly pulled toward ACTIVE_RATIO:
+            r_eff = clip(beta * ACTIVE_RATIO + (1 - beta) * ema, lo, hi).
+        Mode multipliers are preserved (1.0/0.5/0.75 for WAKE/NREM/REM).
+        """
+        if not self.config.f1_self_measure:
+            return self.config.energy_budget(mode)
+        beta = self.config.f1_pull_strength
+        r_eff = beta * ACTIVE_RATIO + (1.0 - beta) * self.active_ratio_ema
+        r_eff = min(max(r_eff, self.config.f1_min_ratio), self.config.f1_max_ratio)
+        base = max(1, int(round(self.config.dim * r_eff)))
+        if mode is RuntimeMode.NREM:
+            return max(1, int(round(base * 0.5)))
+        if mode is RuntimeMode.REM:
+            return max(1, int(round(base * 0.75)))
+        return base
+
+    def _f1_update_ema(self, active_count: int) -> None:
+        if not self.config.f1_self_measure:
+            return
+        p_emp = float(active_count) / float(self.config.dim)
+        alpha = self.config.f1_ema_alpha
+        self.active_ratio_ema = (1.0 - alpha) * self.active_ratio_ema + alpha * p_emp
+
+    def bridge_gate_report(self) -> Dict[str, Dict[str, float]]:
+        """AGI bridge gate aggregator (docs/7_AGI/12_Equation.md appendix A).
+
+        Returns whatever measurements are currently available. Gate keys
+        always exist; values are scalar reports or empty dicts when the
+        underlying signal is not yet measurable.
+
+        Current coverage:
+        - F1 (self-organization, A.2 #2): empirical p_emp EMA vs ACTIVE_RATIO.
+          Always reported; deviation is meaningful even when feedback is off.
+        - F2 (ISS ball, A.1): exposed only when relax has been driven by a
+          higher-level engine (see clarus/ce_ops.relax hist['iss']).
+          BrainRuntime itself does not run the gradient relax, so F2 here is
+          left empty by design.
+        - F3 (ergodic KL, A.3): wraps mode_occupancy_kl().
+        - F4 (PCI regression, A.4) is an experiment-level gate.
+        """
+        return {
+            "F1_self_organization": {
+                "active_ratio_ema": float(self.active_ratio_ema),
+                "active_ratio_target": float(ACTIVE_RATIO),
+                "deviation": float(self.active_ratio_ema - ACTIVE_RATIO),
+                "self_measure_on": float(self.config.f1_self_measure),
+            },
+            "F2_iss_ball": {},
+            "F3_ergodic_kl": self.mode_occupancy_kl(),
+            "F4_pci_regression": {},
+        }
 
     def _matvec(self, x: torch.Tensor) -> torch.Tensor:
         return torch.sparse.mm(self.sparse_weight, x.unsqueeze(1)).squeeze(1)
@@ -748,9 +865,11 @@ class BrainRuntime:
         else:
             salience, _recurrent, energy = self._step_torch(external, replay, mode)
 
-        active_mask = self._select_active(salience, self.config.energy_budget(mode))
+        active_mask = self._select_active(salience, self._f1_effective_budget(mode))
         active_count = int(active_mask.sum().item())
+        self._f1_update_ema(active_count)
         self.mode = mode
+        self.mode_occupancy[mode.value] = self.mode_occupancy.get(mode.value, 0) + 1
         self._update_lifecycle(salience, active_mask)
 
         priority = float((salience[active_mask].mean().item() if active_count else salience.mean().item()) + external_norm)
@@ -794,6 +913,8 @@ class BrainRuntime:
             arousal=float(self.arousal),
             step=self.step_index,
             hippocampus=self.hippocampus.state_dict(),
+            mode_occupancy=dict(self.mode_occupancy),
+            active_ratio_ema=float(self.active_ratio_ema),
         )
 
     @classmethod
@@ -828,4 +949,9 @@ class BrainRuntime:
             snapshot.hippocampus,
             device=runtime.device,
         )
+        if snapshot.mode_occupancy:
+            for key in runtime.mode_occupancy:
+                runtime.mode_occupancy[key] = int(snapshot.mode_occupancy.get(key, 0))
+        if snapshot.active_ratio_ema >= 0.0:
+            runtime.active_ratio_ema = float(snapshot.active_ratio_ema)
         return runtime

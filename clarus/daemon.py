@@ -5,7 +5,7 @@ When input arrives, it wakes. Hippocampus encodes during wake, replays during sl
 STDP updates weights continuously. Energy budget enforces 4.87% active ceiling.
 
 Usage:
-    daemon = BrainDaemon(engine_path="clarus/gpt2_v2.ce.pt")
+    daemon = BrainDaemon(engine_path="clarus/skt_kogpt2-base-v2.ce.pt")
     daemon.start()                     # background loop begins
     response = daemon.query("prompt")  # wake, process, return
     daemon.stop()                      # graceful shutdown with checkpoint
