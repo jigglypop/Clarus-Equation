@@ -341,9 +341,11 @@ OPEN_TENSIONS: tuple[tuple[str, str, str], ...] = (
      "Planck 67.4 ± 0.5 vs SH0ES 73.0 ± 1.0 (5σ)",
      "docs/경로적분.md §16 + examples/physics/hubble_tension.py 에서 99.3% 해소 메커니즘"
      " (δε_0=-0.055, ξ=5.0 자유매개변수). 두 매개변수의 제1원리 유도가 열린 과제."),
-    ("S_8 텐션",
-     "KiDS-1000 0.759 vs Planck 0.832 (~3σ)",
-     "f σ_8(z) 코드는 있으나 S_8 자체의 직접 예측 절 미수록 (구조 성장 ξ R Φ^2 결합으로 정성적 완화 예상)."),
+    ("S_8 텐션 (부분 해결)",
+     "KiDS-1000 0.766 vs Planck 0.832 (~3σ); DES-Y3 0.776",
+     "examples/physics/s8_tension.py: CE Ω_m=0.343 (H_0 해소값) + σ_8=0.7707"
+     " (BOSS z=0.51 캘리브) → S_8=0.824 (Planck -0.61σ, KiDS +2.91σ)."
+     " fσ_8 18점 χ²/N=0.775 (LCDM 0.946) → Δχ²=-2.91 CE 우세. KiDS 잔차 0.34σ 완화."),
     ("JWST high-z",
      "z>10 과밀 은하 (UNCOVER, CEERS, JADES)",
      "인플레이션/구조형성 절 미반영."),
