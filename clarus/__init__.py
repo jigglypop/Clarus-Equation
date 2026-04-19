@@ -1,16 +1,13 @@
 """Clarus Equation -- CE Field Theory Engine.
 
-Rust backend (clarus/core via PyO3) + PyTorch frontend.
+CORE (모든 도메인 브랜치 공통):
+    engine.py, ce_ops.py, quantum.py
+브랜치에 따라 device/constants/utils/runtime 등 brain-agi 전용 모듈은
+존재하지 않을 수 있으므로 모든 비-CORE import 는 try/except 로 감싼다.
+이 한 파일이 main / domain/* 모든 브랜치에서 동일하게 import-safe 하게 동작한다.
 """
 
 __version__ = "1.2.0"
-
-from .device import auto_device
-from .constants import (
-    AD, PORTAL, BYPASS, T_WAKE,
-    ACTIVE_RATIO, STRUCT_RATIO, BACKGROUND_RATIO,
-)
-from .utils import safe_print, normalize_vector, resolve_device
 
 topk_sparse = None
 topk_sparse_batch = None
@@ -19,6 +16,39 @@ nn_topk_silu_bwd = None
 nn_lbo_fused_fwd = None
 nn_power_iter = None
 nn_gauge_lattice_fwd = None
+
+auto_device = None
+safe_print = None
+normalize_vector = None
+resolve_device = None
+AD = PORTAL = BYPASS = T_WAKE = None
+ACTIVE_RATIO = STRUCT_RATIO = BACKGROUND_RATIO = None
+
+BrainRuntime = None
+BrainRuntimeConfig = None
+BrainRuntimeSnapshot = None
+HippocampusMemory = None
+ModuleLifecycle = None
+RuntimeMode = None
+RuntimeStep = None
+
+try:
+    from .device import auto_device  # type: ignore[no-redef]
+except ImportError:
+    pass
+
+try:
+    from .constants import (  # type: ignore[no-redef]
+        AD, PORTAL, BYPASS, T_WAKE,
+        ACTIVE_RATIO, STRUCT_RATIO, BACKGROUND_RATIO,
+    )
+except ImportError:
+    pass
+
+try:
+    from .utils import safe_print, normalize_vector, resolve_device  # type: ignore[no-redef]
+except ImportError:
+    pass
 
 try:
     from . import _rust as _rust_mod
@@ -47,15 +77,18 @@ try:
 except ImportError:
     pass
 
-from .runtime import (
-    BrainRuntime,
-    BrainRuntimeConfig,
-    BrainRuntimeSnapshot,
-    HippocampusMemory,
-    ModuleLifecycle,
-    RuntimeMode,
-    RuntimeStep,
-)
+try:
+    from .runtime import (  # type: ignore[no-redef]
+        BrainRuntime,
+        BrainRuntimeConfig,
+        BrainRuntimeSnapshot,
+        HippocampusMemory,
+        ModuleLifecycle,
+        RuntimeMode,
+        RuntimeStep,
+    )
+except ImportError:
+    pass
 
 __all__ = [
     "topk_sparse",
