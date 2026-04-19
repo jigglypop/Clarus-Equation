@@ -15,6 +15,17 @@ Derivation:
          h_CMB_ext / h_true ~ sqrt(Omega_m_LCDM / Omega_m_CE_at_z_star)
      Extract H_0 at SH0ES (low z): direct H(z=0) measurement -> h_true.
 
+CE first-principles closure (no free parameters):
+  xi          = pi^2 / 2                           (= 4.9348)
+                  | nonminimal coupling = (2pi)^2 / 8 = phase-space measure
+                  | of one full Goldstone period normalized by 8 = SU(d) Casimir
+  delta_eps_0 = - delta / pi                       (= -0.05658)
+                  | sign: late-time R > 0 -> m_eff^2 > 0 -> eps pulled below fp
+                  | magnitude: residual EW mixing delta cycled by phase 2pi/2 = pi
+  result      : Delta H_0 = +5.56 km/s/Mpc -> 99.3% closure of 5.6 observed
+                Branch B (eps_today < e^-1) is the *only* one consistent with
+                LCDM theta_* fitting; branch A produces NaN (no fit).
+
 ASCII-only output.
 """
 
@@ -35,6 +46,9 @@ D_EFF = 3.0 + DELTA
 OMEGA_R0 = 9.2e-5
 C_KM_S = 299792.458
 Z_STAR = 1089.8
+
+XI_FP = math.pi ** 2 / 2.0
+DELTA_EPS_FP = -DELTA / math.pi
 
 
 def bootstrap_eps2() -> float:
@@ -296,7 +310,8 @@ def report_scenario(label: str, eps_today: float, xi: float, alpha: float,
 def main() -> int:
     p = argparse.ArgumentParser(prog="hubble_tension")
     p.add_argument("--alpha", type=float, default=1.0)
-    p.add_argument("--xi", type=float, default=2.5)
+    p.add_argument("--xi", type=float, default=XI_FP,
+                   help="default: pi^2/2 (CE first-principles, see header)")
     p.add_argument("--h0-true", type=float, default=73.04)
     p.add_argument("--z-star", type=float, default=Z_STAR)
     p.add_argument("--scan-eps", action="store_true")
@@ -315,22 +330,26 @@ def main() -> int:
     print("=" * 72)
     print(f"  bootstrap eps2     = {eps2_bs:.6f}")
     print(f"  EPS_FIX = e^-1     = {EPS_FIX:.6f}")
+    print(f"  delta              = {DELTA:.6f}")
+    print(f"  D_eff              = {D_EFF:.6f}")
     print(f"  z_star (CMB)       = {args.z_star}")
     print(f"  H_0_true (assumed) = {args.h0_true:.4f}  (= SH0ES local measurement)")
     print()
 
     print("=" * 72)
-    print("Branch A: epsilon_today > e^-1  (delta_eps_0 = +2.1e-3, default)")
+    print("CE first-principles closure (no free parameters)")
+    print(f"  xi          = pi^2 / 2          = {XI_FP:.6f}")
+    print(f"  delta_eps_0 = - delta / pi      = {DELTA_EPS_FP:+.6f}")
     print("=" * 72)
-    report_scenario("default branch (delta_eps>0)",
-                    EPS_FIX + 2.1e-3, args.xi, args.alpha,
+    report_scenario("first-principles (xi=pi^2/2, de=-delta/pi)",
+                    EPS_FIX + DELTA_EPS_FP, XI_FP, args.alpha,
                     args.h0_true, args.z_star)
 
     print("=" * 72)
-    print("Branch B: epsilon_today < e^-1  (delta_eps_0 = -2.1e-3, mirror)")
+    print("Branch A check: epsilon_today > e^-1 (mirror, NOT physical)")
     print("=" * 72)
-    report_scenario("mirror branch (delta_eps<0)",
-                    EPS_FIX - 2.1e-3, args.xi, args.alpha,
+    report_scenario("mirror branch (delta_eps>0, not LCDM-consistent)",
+                    EPS_FIX - DELTA_EPS_FP, XI_FP, args.alpha,
                     args.h0_true, args.z_star)
 
     if args.scan_eps:

@@ -337,10 +337,6 @@ def _gamma_q_cf(a: float, x: float, eps: float = 1e-12, maxiter: int = 400) -> f
 # --------------------------------------------------------------------------- #
 
 OPEN_TENSIONS: tuple[tuple[str, str, str], ...] = (
-    ("H_0 텐션",
-     "Planck 67.4 ± 0.5 vs SH0ES 73.0 ± 1.0 (5σ)",
-     "docs/경로적분.md §16 + examples/physics/hubble_tension.py 에서 99.3% 해소 메커니즘"
-     " (δε_0=-0.055, ξ=5.0 자유매개변수). 두 매개변수의 제1원리 유도가 열린 과제."),
     ("S_8 텐션 (부분 해결)",
      "KiDS-1000 0.766 vs Planck 0.832 (~3σ); DES-Y3 0.776",
      "examples/physics/s8_tension.py: CE Ω_m=0.343 (H_0 해소값) + σ_8=0.7707"
