@@ -28,10 +28,13 @@ import torch.nn.functional as F
 from clarus.ce_softmax import (
     CESoftmaxAttention,
     grav_attention,
+    grav_scores,
     lang_attention,
+    lang_scores,
     metric_family_attention,
     mode_gate,
 )
+import torch.nn.functional as _F
 
 
 def seed_everything(seed: int = 0) -> None:
@@ -145,23 +148,39 @@ def check_event_recovery(
     noise: float = 0.25,
     n_trials: int = 20,
 ) -> dict:
-    scores = {"wake": [], "nrem": [], "lang_only": [], "grav_only": []}
+    scores = {
+        "wake_convex": [], "nrem_convex": [],
+        "wake_logit": [], "nrem_logit": [],
+        "lang_only": [], "grav_only": [],
+    }
+    sigma = math.sqrt(d)
     for trial in range(n_trials):
         tokens, event_id = make_event_task(n_events, members_per_event, d, noise, seed=trial)
-        n = tokens.shape[0]
-        q = tokens
-        k = tokens
+        q = tokens.unsqueeze(0)
+        k = tokens.unsqueeze(0)
 
-        a_lang = lang_attention(q.unsqueeze(0), k.unsqueeze(0)).squeeze(0)
-        a_grav = grav_attention(k.unsqueeze(0), sigma=math.sqrt(d)).squeeze(0)
+        # raw logits
+        s_lang = lang_scores(q, k).squeeze(0)
+        s_grav = grav_scores(k, sigma=sigma).squeeze(0)
+
+        # individual attentions
+        a_lang = _F.softmax(s_lang, dim=-1)
+        a_grav = _F.softmax(s_grav, dim=-1)
 
         g_wake = mode_gate("wake")
         g_nrem = mode_gate("nrem")
-        a_wake = g_wake.omega_lang * a_lang + g_wake.omega_grav * a_grav
-        a_nrem = g_nrem.omega_lang * a_lang + g_nrem.omega_grav * a_grav
 
-        scores["wake"].append(event_recovery_score(a_wake, event_id))
-        scores["nrem"].append(event_recovery_score(a_nrem, event_id))
+        # convex
+        a_wake_c = g_wake.omega_lang * a_lang + g_wake.omega_grav * a_grav
+        a_nrem_c = g_nrem.omega_lang * a_lang + g_nrem.omega_grav * a_grav
+        # logit
+        a_wake_l = _F.softmax(g_wake.omega_lang * s_lang + g_wake.omega_grav * s_grav, dim=-1)
+        a_nrem_l = _F.softmax(g_nrem.omega_lang * s_lang + g_nrem.omega_grav * s_grav, dim=-1)
+
+        scores["wake_convex"].append(event_recovery_score(a_wake_c, event_id))
+        scores["nrem_convex"].append(event_recovery_score(a_nrem_c, event_id))
+        scores["wake_logit"].append(event_recovery_score(a_wake_l, event_id))
+        scores["nrem_logit"].append(event_recovery_score(a_nrem_l, event_id))
         scores["lang_only"].append(event_recovery_score(a_lang, event_id))
         scores["grav_only"].append(event_recovery_score(a_grav, event_id))
 
@@ -250,11 +269,13 @@ def main() -> None:
         print(f"\nwrote {args.out}")
 
     # Decision summary
-    improvement = (
-        h3["nrem"]["mean"] - h3["lang_only"]["mean"]
-    ) / max(h3["lang_only"]["std"], 1e-6)
-    print(f"\nNREM vs lang_only improvement: {improvement:.2f} sigma")
-    print(f"Throughput overhead: {thr['overhead_x']:.2f}x")
+    def sigma_vs_lang(key):
+        return (h3[key]["mean"] - h3["lang_only"]["mean"]) / max(h3["lang_only"]["std"], 1e-6)
+
+    print(f"\nsigma vs lang_only:")
+    for key in ("wake_convex", "nrem_convex", "wake_logit", "nrem_logit", "grav_only"):
+        print(f"  {key:14s} {sigma_vs_lang(key):+.2f} sigma")
+    print(f"\nThroughput overhead: {thr['overhead_x']:.2f}x")
 
 
 if __name__ == "__main__":

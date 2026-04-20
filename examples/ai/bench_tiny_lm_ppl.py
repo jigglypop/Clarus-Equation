@@ -26,7 +26,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from clarus.ce_softmax import grav_attention, lang_attention, mode_gate
+from clarus.ce_softmax import (
+    grav_attention, grav_scores, lang_attention, lang_scores, mode_gate,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -73,14 +75,15 @@ class Head(nn.Module):
         self.q = nn.Linear(d_model, d_head, bias=False)
         self.k = nn.Linear(d_model, d_head, bias=False)
         self.v = nn.Linear(d_model, d_head, bias=False)
-        self.attn_mode = attn_mode  # "std" | "ce"
+        self.attn_mode = attn_mode  # "std" | "ce_convex" | "ce_logit"
         self.d_head = d_head
         self.block = block
         self.register_buffer(
             "tril", torch.tril(torch.ones(block, block, dtype=torch.bool))
         )
-        if attn_mode == "ce":
-            self.L_grav = nn.Parameter(torch.eye(d_head) * 0.3 + torch.randn(d_head, d_head) * 0.05)
+        if attn_mode.startswith("ce"):
+            # init L_grav with identity-scale so grav starts informative
+            self.L_grav = nn.Parameter(torch.eye(d_head) + 0.1 * torch.randn(d_head, d_head))
             self.sigma = math.sqrt(d_head)
         else:
             self.L_grav = None
@@ -91,16 +94,26 @@ class Head(nn.Module):
         k = self.k(x)
         v = self.v(x)
         mask = self.tril[:n, :n].unsqueeze(0).expand(b, n, n)
+
         if self.attn_mode == "std":
             scores = (q @ k.transpose(-1, -2)) / math.sqrt(self.d_head)
             scores = scores.masked_fill(~mask, float("-inf"))
             a = F.softmax(scores, dim=-1)
             return a @ v
-        # CE: metric family
-        a_lang = lang_attention(q, k, mask=mask)
-        a_grav = grav_attention(k, sigma=self.sigma, mask=mask, L=self.L_grav)
+
         gate = mode_gate(mode)
-        a = gate.omega_lang * a_lang + gate.omega_grav * a_grav
+        if self.attn_mode == "ce_convex":
+            a_lang = lang_attention(q, k, mask=mask)
+            a_grav = grav_attention(k, sigma=self.sigma, mask=mask, L=self.L_grav)
+            a = gate.omega_lang * a_lang + gate.omega_grav * a_grav
+        elif self.attn_mode == "ce_logit":
+            s_lang = lang_scores(q, k)
+            s_grav = grav_scores(k, sigma=self.sigma, L=self.L_grav)
+            s = gate.omega_lang * s_lang + gate.omega_grav * s_grav
+            s = s.masked_fill(~mask, float("-inf"))
+            a = F.softmax(s, dim=-1)
+        else:
+            raise ValueError(f"unknown attn_mode: {self.attn_mode}")
         return a @ v
 
 
@@ -247,7 +260,7 @@ def main():
     print(f"corpus: {n} chars, vocab {vocab}, train {len(train_data)}, val {len(val_data)}")
 
     results = {}
-    for attn_mode in ("std", "ce"):
+    for attn_mode in ("std", "ce_convex", "ce_logit"):
         print(f"\n=== training attn={attn_mode} ===")
         r = train_one(
             train_data, val_data, vocab, attn_mode,
@@ -263,22 +276,21 @@ def main():
 
     # Decision
     std_ppl = results["std"]["final_val_ppl"]
-    ce_ppl = results["ce"]["final_val_ppl"]
-    ratio = ce_ppl / std_ppl
     print("\n=== verdict ===")
-    print(f"  std PPL: {std_ppl:.3f}")
-    print(f"  ce  PPL: {ce_ppl:.3f}")
-    print(f"  ratio (ce/std): {ratio:.3f}  ({'better' if ratio < 1 else 'worse'})")
-    print(f"  train time overhead: "
-          f"{results['ce']['time_sec'] / results['std']['time_sec']:.2f}x")
+    for k, r in results.items():
+        ppl = r["final_val_ppl"]
+        ratio = ppl / std_ppl
+        overhead = r["time_sec"] / results["std"]["time_sec"]
+        verdict = "baseline" if k == "std" else ("better" if ratio < 1 else "worse")
+        print(f"  {k:10s}  PPL {ppl:7.3f}  "
+              f"vs_std {ratio:+.3f} ({verdict})  "
+              f"time {overhead:.2f}x")
 
     summary = {
         "config": vars(args),
         "vocab_size": vocab,
         "corpus_chars": n,
-        "std": results["std"],
-        "ce": results["ce"],
-        "ce_over_std_ppl": ratio,
+        "results": {k: {**v, "final_val_ppl": v["final_val_ppl"]} for k, v in results.items()},
     }
 
     os.makedirs(os.path.dirname(args.out), exist_ok=True)

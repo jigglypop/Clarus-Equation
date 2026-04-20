@@ -67,16 +67,37 @@ def mode_gate(mode: str) -> ModeGate:
 # ---------------------------------------------------------------------------
 
 
+def lang_scores(q: torch.Tensor, k: torch.Tensor) -> torch.Tensor:
+    """Raw scaled-dot-product logits (pre-softmax)."""
+    d = q.shape[-1]
+    return torch.matmul(q, k.transpose(-1, -2)) / (d ** 0.5)
+
+
 def lang_attention(q: torch.Tensor, k: torch.Tensor, mask: Optional[torch.Tensor] = None) -> torch.Tensor:
     """Standard scaled-dot-product kernel (linguistic metric).
 
     Shapes: q, k in (..., n, d). Returns (..., n, n).
     """
-    d = q.shape[-1]
-    scores = torch.matmul(q, k.transpose(-1, -2)) / (d ** 0.5)
+    scores = lang_scores(q, k)
     if mask is not None:
         scores = scores.masked_fill(~mask, float("-inf"))
     return F.softmax(scores, dim=-1)
+
+
+def grav_scores(
+    z: torch.Tensor,
+    sigma: float = 1.0,
+    L: Optional[torch.Tensor] = None,
+) -> torch.Tensor:
+    """Raw Mahalanobis score matrix (pre-softmax) = -d^2 / 2 sigma^2."""
+    if L is not None:
+        zp = torch.matmul(z, L)
+    else:
+        zp = z
+    sq = (zp * zp).sum(dim=-1, keepdim=True)
+    d2 = sq + sq.transpose(-1, -2) - 2.0 * torch.matmul(zp, zp.transpose(-1, -2))
+    d2 = d2.clamp_min(0.0)
+    return -d2 / (2.0 * sigma * sigma)
 
 
 def grav_attention(
@@ -91,19 +112,9 @@ def grav_attention(
 
         d_G^2(z_i, z_j) = (z_i - z_j)^T (L L^T) (z_i - z_j)
 
-    When ``L`` is None, reduces to identity metric (pure Euclidean),
-    implemented without the pairwise diff tensor via the expansion
-    ``||z_i - z_j||^2 = ||z_i||^2 + ||z_j||^2 - 2 z_i^T z_j``.
+    When ``L`` is None, reduces to identity metric (pure Euclidean).
     """
-    if L is not None:
-        zp = torch.matmul(z, L)  # (..., n, r)
-    else:
-        zp = z
-
-    sq = (zp * zp).sum(dim=-1, keepdim=True)  # (..., n, 1)
-    d2 = sq + sq.transpose(-1, -2) - 2.0 * torch.matmul(zp, zp.transpose(-1, -2))
-    d2 = d2.clamp_min(0.0)
-    scores = -d2 / (2.0 * sigma * sigma)
+    scores = grav_scores(z, sigma=sigma, L=L)
     if mask is not None:
         scores = scores.masked_fill(~mask, float("-inf"))
     return F.softmax(scores, dim=-1)
@@ -118,26 +129,45 @@ def metric_family_attention(
     sigma_grav: float = 1.0,
     mask: Optional[torch.Tensor] = None,
     L_grav: Optional[torch.Tensor] = None,
+    combine: str = "logit",
 ) -> torch.Tensor:
     """Full MFA — equation 6.B.1 with two metrics (lang, grav).
 
-    A_total = omega_lang * A_lang + omega_grav * A_grav
-    output  = A_total @ v
+    Two ways to combine:
+      ``combine='convex'``:
+          A_total = omega_lang * softmax(scores_lang)
+                  + omega_grav * softmax(scores_grav)
+      ``combine='logit'``  (default, recommended):
+          A_total = softmax(omega_lang * scores_lang
+                          + omega_grav * scores_grav)
 
-    When ``z_grav`` is None, the projection defaults to k (no separate
-    event embedding). ``L_grav`` is the low-rank Cholesky-like factor
-    of the gravity metric (G = L L^T); if None, identity is used.
-    Returns (..., n, d_v).
+    The convex form mechanically dilutes sharp distributions (any
+    uniform-ish component drags the mixed attention toward uniform).
+    The logit form preserves sharpness; the two kernels vote in log
+    space, which is equivalent to a product of Boltzmann kernels.
+
+    ``L_grav`` is the low-rank factor of the gravity metric
+    (G = L L^T); if None, identity is used. Returns (..., n, d_v).
     """
     if gate is None:
         gate = mode_gate("wake")
     if z_grav is None:
         z_grav = k
 
-    a_lang = lang_attention(q, k, mask=mask)
-    a_grav = grav_attention(z_grav, sigma=sigma_grav, mask=mask, L=L_grav)
+    if combine == "convex":
+        a_lang = lang_attention(q, k, mask=mask)
+        a_grav = grav_attention(z_grav, sigma=sigma_grav, mask=mask, L=L_grav)
+        a_total = gate.omega_lang * a_lang + gate.omega_grav * a_grav
+    elif combine == "logit":
+        s_lang = lang_scores(q, k)
+        s_grav = grav_scores(z_grav, sigma=sigma_grav, L=L_grav)
+        s = gate.omega_lang * s_lang + gate.omega_grav * s_grav
+        if mask is not None:
+            s = s.masked_fill(~mask, float("-inf"))
+        a_total = F.softmax(s, dim=-1)
+    else:
+        raise ValueError(f"unknown combine mode: {combine!r}")
 
-    a_total = gate.omega_lang * a_lang + gate.omega_grav * a_grav
     return torch.matmul(a_total, v)
 
 
@@ -160,6 +190,7 @@ class CESoftmaxAttention(nn.Module):
         sigma_grav: float = 1.0,
         mode: str = "wake",
         dropout: float = 0.0,
+        combine: str = "logit",
     ) -> None:
         super().__init__()
         if d_model % n_heads != 0:
@@ -169,6 +200,7 @@ class CESoftmaxAttention(nn.Module):
         self.d_head = d_model // n_heads
         self.sigma_grav = sigma_grav
         self.mode = mode
+        self.combine = combine
 
         self.w_q = nn.Linear(d_model, d_model, bias=False)
         self.w_k = nn.Linear(d_model, d_model, bias=False)
@@ -191,7 +223,11 @@ class CESoftmaxAttention(nn.Module):
         v = self.w_v(x).view(b, n, self.n_heads, self.d_head).transpose(1, 2)
 
         gate = mode_gate(self.mode)
-        out = metric_family_attention(q, k, v, gate=gate, sigma_grav=self.sigma_grav, mask=mask)
+        out = metric_family_attention(
+            q, k, v,
+            gate=gate, sigma_grav=self.sigma_grav, mask=mask,
+            combine=self.combine,
+        )
         out = out.transpose(1, 2).contiguous().view(b, n, self.d_model)
         return self.dropout(self.w_o(out))
 
@@ -199,7 +235,9 @@ class CESoftmaxAttention(nn.Module):
 __all__ = [
     "ModeGate",
     "mode_gate",
+    "lang_scores",
     "lang_attention",
+    "grav_scores",
     "grav_attention",
     "metric_family_attention",
     "CESoftmaxAttention",
