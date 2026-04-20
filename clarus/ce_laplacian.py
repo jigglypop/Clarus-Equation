@@ -1,23 +1,26 @@
-"""Dual-Laplacian diffusion layer — user's 5.2-5.6 proposal.
+"""Dual-graph attention via row-stochastic Laplacian kernels.
 
-Instead of mixing two attention distributions, maintain two separate
-projections of the common latent h_i:
+Restructured from the earlier residual-Laplacian form (which had
+asymmetry bugs and a dead-gradient alpha=0 path). The block is now an
+attention head whose kernel is built from explicit graph adjacency:
 
-    z_i^{lang} = P_lang(h_i)
-    z_i^{grav} = P_grav(h_i)
+    A_lang_ij  = cosine(P_lang h_i, P_lang h_j)_+    (symmetric)
+    A_grav_ij  = exp(-||P_grav h_i - P_grav h_j||^2 / 2sigma^2)
 
-Each projection lives in its own metric. Similarity adjacencies
-A_lang, A_grav are built from cosine / RBF kernels in the respective
-spaces. The Laplacian diffusion update
+Both graphs are SYMMETRIC (no mask-induced asymmetry in A), so the
+normalized Laplacian has eigenvalues in [0, 2] as expected. Causal
+constraints are enforced ONLY on the row-normalized transition
+matrices P_lang_rw, P_grav_rw (D^-1 A with upper-tri zeroed and rows
+renormalized) — this is mathematically equivalent to restricting the
+random walk to past neighbors.
 
-    h^{t+1} = h^t - eta_lang L_lang h^t - eta_grav L_grav h^t
+Output per head:
+    y_i = sum_j [omega_lang * P_lang_rw + omega_grav * P_grav_rw]_ij
+            * V(h)_j
 
-acts as a RESIDUAL (GNN message passing) rather than replacing
-attention. Because the two operators add in h-space (not in the
-softmax-normalized distribution space), sharpness is preserved.
-
-Mode gating enters through eta_lang / eta_grav, which scale with
-Borbely T_WAKE: wake favors lang diffusion, nrem favors grav.
+which is a convex mixture of two row-stochastic kernels acting on V,
+i.e. a concrete instantiation of the compendium 6.B.1 attention
+kernel family with interpretable graph-theoretic weights.
 """
 
 from __future__ import annotations
@@ -33,57 +36,53 @@ import torch.nn.functional as F
 from .constants import T_WAKE
 
 
-def _rbf_adjacency(z: torch.Tensor, sigma: float) -> torch.Tensor:
-    """Dense RBF kernel adjacency A_ij = exp(-||z_i - z_j||^2 / 2sigma^2).
-
-    Returns (..., n, n), diagonal zeroed. Uses the BLAS expansion.
-    """
-    sq = (z * z).sum(dim=-1, keepdim=True)
-    d2 = sq + sq.transpose(-1, -2) - 2.0 * torch.matmul(z, z.transpose(-1, -2))
-    d2 = d2.clamp_min(0.0)
-    A = torch.exp(-d2 / (2.0 * sigma * sigma))
-    # zero the diagonal in a shape-agnostic way
-    eye = torch.eye(A.shape[-1], device=A.device, dtype=A.dtype)
-    A = A * (1.0 - eye)
-    return A
-
-
 def _cosine_adjacency(z: torch.Tensor, eps: float = 1e-8) -> torch.Tensor:
-    """Cosine similarity adjacency, diagonal zeroed, thresholded at 0."""
+    """A_ij = max(0, cos(z_i, z_j)), diagonal zeroed. Symmetric."""
     norm = z.norm(dim=-1, keepdim=True).clamp_min(eps)
     zn = z / norm
-    A = torch.matmul(zn, zn.transpose(-1, -2))
-    A = A.clamp_min(0.0)
+    A = torch.matmul(zn, zn.transpose(-1, -2)).clamp_min(0.0)
     eye = torch.eye(A.shape[-1], device=A.device, dtype=A.dtype)
-    A = A * (1.0 - eye)
-    return A
+    return A * (1.0 - eye)
 
 
-def _normalized_laplacian(A: torch.Tensor, eps: float = 1e-6) -> torch.Tensor:
-    """Symmetric normalized Laplacian L = I - D^{-1/2} A D^{-1/2}.
+def _rbf_adjacency(z: torch.Tensor, sigma: float) -> torch.Tensor:
+    """A_ij = exp(-||z_i - z_j||^2 / 2 sigma^2), diagonal zeroed. Symmetric."""
+    sq = (z * z).sum(dim=-1, keepdim=True)
+    d2 = (sq + sq.transpose(-1, -2) - 2.0 * torch.matmul(z, z.transpose(-1, -2))).clamp_min(0.0)
+    A = torch.exp(-d2 / (2.0 * sigma * sigma))
+    eye = torch.eye(A.shape[-1], device=A.device, dtype=A.dtype)
+    return A * (1.0 - eye)
 
-    eps-clamped degree avoids NaN from isolated nodes (e.g., position 0
-    under a causal mask).
+
+def _row_stochastic_causal(A: torch.Tensor, causal_mask: Optional[torch.Tensor],
+                           eps: float = 1e-8) -> torch.Tensor:
+    """Convert symmetric adjacency into a causal row-stochastic transition.
+
+    Order of ops matters:
+      1. A is symmetric here (both i->j and j->i).
+      2. Apply causal mask: (i,j) with j > i dropped.
+      3. Re-normalize rows so each row sums to 1 (random-walk kernel).
     """
+    if causal_mask is not None:
+        A = A * causal_mask.to(A.dtype)
+    deg = A.sum(dim=-1, keepdim=True).clamp_min(eps)
+    return A / deg
+
+
+def _sym_normalized_laplacian(A: torch.Tensor, eps: float = 1e-8) -> torch.Tensor:
+    """L = I - D^{-1/2} A D^{-1/2} for SYMMETRIC A. Eigenvalues in [0, 2]."""
     deg = A.sum(dim=-1).clamp_min(eps)
     inv_sqrt = deg.pow(-0.5)
-    D_is = inv_sqrt.unsqueeze(-1)
-    D_isT = inv_sqrt.unsqueeze(-2)
-    A_norm = A * D_is * D_isT
+    A_norm = A * inv_sqrt.unsqueeze(-1) * inv_sqrt.unsqueeze(-2)
     eye = torch.eye(A.shape[-1], device=A.device, dtype=A.dtype)
     return eye - A_norm
 
 
 class DualLaplacianBlock(nn.Module):
-    """Residual dual-Laplacian diffusion block.
+    """Dual-graph attention head.
 
-    Args:
-        d_model:    feature dimension of h
-        d_lang:     dim of language projection
-        d_grav:     dim of gravity projection
-        sigma_grav: RBF bandwidth for gravity graph (cosine for lang)
-        mode:       "wake" | "nrem" | "rem" for default eta scaling
-        max_steps:  diffusion steps per forward pass (1 is usual)
+    Produces attention output as a convex mix of two row-stochastic
+    causal random-walk kernels (cosine on P_lang h, RBF on P_grav h).
     """
 
     def __init__(
@@ -93,54 +92,63 @@ class DualLaplacianBlock(nn.Module):
         d_grav: Optional[int] = None,
         sigma_grav: float = 1.0,
         mode: str = "wake",
-        max_steps: int = 1,
     ) -> None:
         super().__init__()
         d_lang = d_lang or d_model
         d_grav = d_grav or d_model
         self.P_lang = nn.Linear(d_model, d_lang, bias=False)
         self.P_grav = nn.Linear(d_model, d_grav, bias=False)
-        # per-channel residual projection back to h-space
-        self.O_lang = nn.Linear(d_lang, d_model, bias=False)
-        self.O_grav = nn.Linear(d_grav, d_model, bias=False)
+        self.V = nn.Linear(d_model, d_model, bias=False)
+        self.O = nn.Linear(d_model, d_model, bias=False)
         self.sigma_grav = sigma_grav
         self.mode = mode
-        self.max_steps = max_steps
 
-    def eta_pair(self) -> tuple[float, float]:
-        # wake: lang-heavy diffusion; nrem: grav-heavy
+    def gate_weights(self) -> tuple[float, float]:
         if self.mode == "wake":
             return (1.0 - T_WAKE, T_WAKE)
         if self.mode == "nrem":
             return (T_WAKE, 1.0 - T_WAKE)
         return (0.5, 0.5)
 
-    def forward(self, h: torch.Tensor, mask: Optional[torch.Tensor] = None) -> torch.Tensor:
-        # h: (b, n, d_model)
+    def forward(self, h: torch.Tensor,
+                causal_mask: Optional[torch.Tensor] = None) -> torch.Tensor:
         z_l = self.P_lang(h)
         z_g = self.P_grav(h)
+        v = self.V(h)
 
         A_l = _cosine_adjacency(z_l)
         A_g = _rbf_adjacency(z_g, sigma=self.sigma_grav)
-        if mask is not None:
-            # mask is (b, n, n) bool
-            A_l = A_l * mask.to(A_l.dtype)
-            A_g = A_g * mask.to(A_g.dtype)
 
-        L_l = _normalized_laplacian(A_l)
-        L_g = _normalized_laplacian(A_g)
+        K_l = _row_stochastic_causal(A_l, causal_mask)
+        K_g = _row_stochastic_causal(A_g, causal_mask)
 
-        eta_l, eta_g = self.eta_pair()
-        # Diffusion in the projected spaces, then mix back via O
-        dz_l = torch.matmul(L_l, z_l)
-        dz_g = torch.matmul(L_g, z_g)
-
-        for _ in range(self.max_steps - 1):
-            dz_l = torch.matmul(L_l, dz_l)
-            dz_g = torch.matmul(L_g, dz_g)
-
-        update = eta_l * self.O_lang(dz_l) + eta_g * self.O_grav(dz_g)
-        return h - update
+        w_l, w_g = self.gate_weights()
+        K = w_l * K_l + w_g * K_g  # still row-stochastic (convex comb of stochastic)
+        return self.O(torch.matmul(K, v))
 
 
-__all__ = ["DualLaplacianBlock"]
+def graph_spectrum(
+    adjacency_fn,
+    h: torch.Tensor,
+    *,
+    symmetric: bool = True,
+) -> torch.Tensor:
+    """Compute eigenvalues of the symmetric normalized Laplacian of a
+    graph whose adjacency is ``adjacency_fn(h)``. Returns sorted real
+    eigenvalues (only valid when adjacency is symmetric)."""
+    A = adjacency_fn(h)
+    if not symmetric:
+        A = 0.5 * (A + A.transpose(-1, -2))
+    L = _sym_normalized_laplacian(A)
+    L = 0.5 * (L + L.transpose(-1, -2))  # numeric cleanup
+    return torch.linalg.eigvalsh(L).sort().values
+
+
+__all__ = [
+    "DualLaplacianBlock",
+    "graph_spectrum",
+    "_cosine_adjacency",
+    "_rbf_adjacency",
+    "_sym_normalized_laplacian",
+    "_row_stochastic_causal",
+]

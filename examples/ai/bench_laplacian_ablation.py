@@ -32,8 +32,9 @@ import torch.nn.functional as F
 from clarus.ce_laplacian import (
     DualLaplacianBlock,
     _cosine_adjacency,
-    _normalized_laplacian,
     _rbf_adjacency,
+    _sym_normalized_laplacian,
+    graph_spectrum,
 )
 
 
@@ -70,33 +71,71 @@ class StdAttnBlock(nn.Module):
         return x
 
 
-class CELaplacianBlock(nn.Module):
-    def __init__(self, d_model, n_heads, block, max_steps=1):
+class CEDualBlock(nn.Module):
+    """Replaces std attention with dual-graph attention (no std fallback)."""
+
+    def __init__(self, d_model, n_heads, block, mode="wake"):
         super().__init__()
+        self.ln1 = nn.LayerNorm(d_model)
+        self.ln2 = nn.LayerNorm(d_model)
+        self.dual = DualLaplacianBlock(
+            d_model=d_model,
+            d_lang=d_model,
+            d_grav=d_model,
+            sigma_grav=math.sqrt(d_model),
+            mode=mode,
+        )
+        self.ffn = nn.Sequential(
+            nn.Linear(d_model, 4 * d_model), nn.GELU(), nn.Linear(4 * d_model, d_model)
+        )
+        self.register_buffer("tril", torch.tril(torch.ones(block, block, dtype=torch.bool)))
+
+    def forward(self, x):
+        n = x.shape[1]
+        mask = self.tril[:n, :n].unsqueeze(0).expand(x.shape[0], n, n)
+        x = x + self.dual(self.ln1(x), causal_mask=mask)
+        x = x + self.ffn(self.ln2(x))
+        return x
+
+
+class CEParallelBlock(nn.Module):
+    """Parallel: std attn + dual attn, concat-projected.
+
+    attn_out = W_cat @ concat([std_out, dual_out])
+    Total params similar to std with slightly larger projection.
+    """
+
+    def __init__(self, d_model, n_heads, block, mode="wake"):
+        super().__init__()
+        self.ln1 = nn.LayerNorm(d_model)
+        self.ln2 = nn.LayerNorm(d_model)
         self.std = StdAttnBlock(d_model, n_heads, block)
-        self.ln_lap = nn.LayerNorm(d_model)
-        self.lap = DualLaplacianBlock(
+        self.dual = DualLaplacianBlock(
             d_model=d_model,
             d_lang=d_model // 2,
             d_grav=d_model // 2,
             sigma_grav=math.sqrt(d_model // 2),
-            mode="wake",
-            max_steps=max_steps,
+            mode=mode,
         )
-        self.alpha = nn.Parameter(torch.tensor(0.0))
+        self.cat_proj = nn.Linear(2 * d_model, d_model, bias=False)
+        self.ffn = nn.Sequential(
+            nn.Linear(d_model, 4 * d_model), nn.GELU(), nn.Linear(4 * d_model, d_model)
+        )
         self.register_buffer("tril", torch.tril(torch.ones(block, block, dtype=torch.bool)))
 
     def forward(self, x):
-        x = self.std(x)
         n = x.shape[1]
         mask = self.tril[:n, :n].unsqueeze(0).expand(x.shape[0], n, n)
-        y = self.ln_lap(x)
-        delta = self.lap(y, mask=mask) - y
-        return x + self.alpha * delta
+        y = self.ln1(x)
+        s_out = self.std.attn(y)
+        d_out = self.dual(y, causal_mask=mask)
+        x = x + self.cat_proj(torch.cat([s_out, d_out], dim=-1))
+        x = x + self.ffn(self.ln2(x))
+        return x
 
 
 class TinyLM(nn.Module):
-    def __init__(self, vocab, d_model, n_heads, n_layers, block, variant="std", lap_steps=1):
+    def __init__(self, vocab, d_model, n_heads, n_layers, block, variant="std"):
         super().__init__()
         self.tok = nn.Embedding(vocab, d_model)
         self.pos = nn.Embedding(block, d_model)
@@ -104,9 +143,13 @@ class TinyLM(nn.Module):
             self.blocks = nn.ModuleList(
                 [StdAttnBlock(d_model, n_heads, block) for _ in range(n_layers)]
             )
-        elif variant == "ce_lap":
+        elif variant == "ce_dual":
             self.blocks = nn.ModuleList(
-                [CELaplacianBlock(d_model, n_heads, block, max_steps=lap_steps) for _ in range(n_layers)]
+                [CEDualBlock(d_model, n_heads, block) for _ in range(n_layers)]
+            )
+        elif variant == "ce_par":
+            self.blocks = nn.ModuleList(
+                [CEParallelBlock(d_model, n_heads, block) for _ in range(n_layers)]
             )
         else:
             raise ValueError(variant)
@@ -160,10 +203,9 @@ def eval_loss(model, data, n_batches, batch, block):
 
 
 def train_one(data_train, data_val, vocab, variant, d_model, n_heads, n_layers,
-              block, batch, steps, lr, seed, lap_steps=1):
+              block, batch, steps, lr, seed):
     torch.manual_seed(seed)
-    model = TinyLM(vocab, d_model, n_heads, n_layers, block,
-                   variant=variant, lap_steps=lap_steps)
+    model = TinyLM(vocab, d_model, n_heads, n_layers, block, variant=variant)
     opt = torch.optim.AdamW(model.parameters(), lr=lr)
     it = batch_iter(data_train, batch, block, seed=seed)
     t0 = time.perf_counter()
@@ -177,55 +219,55 @@ def train_one(data_train, data_val, vocab, variant, d_model, n_heads, n_layers,
         opt.step()
     val_loss = eval_loss(model, data_val, 8, batch, block)
     n_params = sum(p.numel() for p in model.parameters())
-    alphas = []
-    if variant == "ce_lap":
-        alphas = [float(b.alpha.detach().item()) for b in model.blocks]
     return {
         "val_loss": val_loss,
         "val_ppl": math.exp(val_loss),
         "n_params": n_params,
         "time_sec": time.perf_counter() - t0,
-        "alphas": alphas,
         "model": model,
     }
 
 
-def spectral_analysis(model, data_train, batch, block, sigma_factor=0.5):
-    """Compute eigenvalues of L_lang, L_grav on a sample batch at the first
-    CELaplacianBlock. Returns sorted eigenvalue arrays.
+def spectral_analysis(model, data_train, batch, block):
+    """Eigenvalues of SYMMETRIC normalized Laplacian of A_lang, A_grav
+    (pre-mask). Expect all eigenvalues in [0, 2]. Returns sorted arrays.
     """
-    if not isinstance(model.blocks[0], CELaplacianBlock):
+    blk = model.blocks[0]
+    if not isinstance(blk, (CEDualBlock, CEParallelBlock)):
         return None
     model.eval()
     with torch.no_grad():
         it = batch_iter(data_train, 1, block, seed=7)
         x, _ = next(it)
         n = x.shape[1]
-        # run through embeddings + first std to get h
         h = model.tok(x) + model.pos(torch.arange(n))
-        h = model.blocks[0].std(h)
-        h = model.blocks[0].ln_lap(h)
-        lap = model.blocks[0].lap
-        z_l = lap.P_lang(h)[0]  # (n, d_lang)
-        z_g = lap.P_grav(h)[0]
+        if isinstance(blk, CEDualBlock):
+            h = blk.ln1(h)
+            dual = blk.dual
+        else:  # CEParallelBlock
+            h = blk.ln1(h)
+            dual = blk.dual
+        z_l = dual.P_lang(h)[0]
+        z_g = dual.P_grav(h)[0]
         A_l = _cosine_adjacency(z_l)
-        A_g = _rbf_adjacency(z_g, sigma=lap.sigma_grav)
-        # apply causal mask
-        tril = torch.tril(torch.ones(n, n, dtype=torch.bool))
-        A_l = A_l * tril.to(A_l.dtype)
-        A_g = A_g * tril.to(A_g.dtype)
-        L_l = _normalized_laplacian(A_l)
-        L_g = _normalized_laplacian(A_g)
-        eigs_l = torch.linalg.eigvalsh(0.5 * (L_l + L_l.T)).sort().values
-        eigs_g = torch.linalg.eigvalsh(0.5 * (L_g + L_g.T)).sort().values
+        A_g = _rbf_adjacency(z_g, sigma=dual.sigma_grav)
+        # Use sym normalized Laplacian on UNMASKED (symmetric) adjacency
+        L_l = _sym_normalized_laplacian(A_l)
+        L_g = _sym_normalized_laplacian(A_g)
+        eigs_l = torch.linalg.eigvalsh(0.5 * (L_l + L_l.transpose(-1, -2))).sort().values
+        eigs_g = torch.linalg.eigvalsh(0.5 * (L_g + L_g.transpose(-1, -2))).sort().values
     model.train()
     return {
-        "eigs_lang": eigs_l.tolist(),
-        "eigs_grav": eigs_g.tolist(),
-        "lang_spread": float((eigs_l[-1] - eigs_l[0]).item()),
-        "grav_spread": float((eigs_g[-1] - eigs_g[0]).item()),
-        "lang_mean": float(eigs_l.mean().item()),
-        "grav_mean": float(eigs_g.mean().item()),
+        "eigs_lang_min": float(eigs_l[0].item()),
+        "eigs_lang_max": float(eigs_l[-1].item()),
+        "eigs_lang_mean": float(eigs_l.mean().item()),
+        "eigs_grav_min": float(eigs_g[0].item()),
+        "eigs_grav_max": float(eigs_g[-1].item()),
+        "eigs_grav_mean": float(eigs_g.mean().item()),
+        "spectra_distinct_sigma": float(
+            (eigs_l.mean() - eigs_g.mean()).abs().item()
+            / max(eigs_l.std().item(), eigs_g.std().item(), 1e-9)
+        ),
     }
 
 
@@ -249,14 +291,12 @@ def main():
     vocab = len(stoi)
     print(f"corpus: {len(data)} chars, vocab {vocab}\n")
 
-    # pick d_model for "std matched" so params ≈ ce_lap d_model=96
-    # ce_lap adds roughly +37K to std_96 (325K). std at d=104 ~ 382K, close enough.
+    # params-matched: std at d=104 ~ 382K to match ce_dual/ce_par at d=96.
     configs = [
-        ("std_96",       dict(variant="std",    d_model=96,  lap_steps=1)),
-        ("std_104",      dict(variant="std",    d_model=104, lap_steps=1)),
-        ("ce_lap_s1",    dict(variant="ce_lap", d_model=96,  lap_steps=1)),
-        ("ce_lap_s2",    dict(variant="ce_lap", d_model=96,  lap_steps=2)),
-        ("ce_lap_s3",    dict(variant="ce_lap", d_model=96,  lap_steps=3)),
+        ("std_96",    dict(variant="std",     d_model=96)),
+        ("std_112",   dict(variant="std",     d_model=112)),
+        ("ce_dual",   dict(variant="ce_dual", d_model=96)),
+        ("ce_par",    dict(variant="ce_par",  d_model=96)),
     ]
 
     results = {}
@@ -266,20 +306,17 @@ def main():
         ppls = []
         params = None
         times = []
-        alphas = []
         for seed in range(args.seeds):
             r = train_one(
                 train_data, val_data, vocab,
                 variant=cfg["variant"], d_model=cfg["d_model"], n_heads=4, n_layers=2,
                 block=args.block, batch=args.batch, steps=args.steps, lr=3e-4,
-                seed=seed, lap_steps=cfg["lap_steps"],
+                seed=seed,
             )
             ppls.append(r["val_ppl"])
             times.append(r["time_sec"])
             params = r["n_params"]
-            if r["alphas"]:
-                alphas.append(r["alphas"])
-            if name == "ce_lap_s1" and seed == 0:
+            if name in ("ce_dual", "ce_par") and seed == 0 and trained_for_spectrum is None:
                 trained_for_spectrum = r["model"]
         mean_ppl = sum(ppls) / len(ppls)
         std_ppl = (sum((p - mean_ppl) ** 2 for p in ppls) / max(len(ppls) - 1, 1)) ** 0.5
@@ -290,42 +327,33 @@ def main():
             "ppls": ppls,
             "params": params,
             "mean_time": mean_time,
-            "alphas": alphas,
         }
         print(f"  params {params/1e3:.1f}K   PPL {mean_ppl:.3f} ± {std_ppl:.3f}   "
               f"time {mean_time:.1f}s")
 
-    # Spectral analysis
+    # Spectral analysis (should have eigenvalues in [0, 2])
     if trained_for_spectrum is not None:
-        print("\n=== spectral analysis (trained ce_lap_s1, seed 0, first block) ===")
+        print("\n=== spectral analysis (symmetric L, expect eigenvalues ∈ [0,2]) ===")
         spec = spectral_analysis(trained_for_spectrum, train_data, args.batch, args.block)
-        # report quantiles
-        import statistics as st
-        el = spec["eigs_lang"]
-        eg = spec["eigs_grav"]
-        print(f"  lang  spread {spec['lang_spread']:.3f}  mean {spec['lang_mean']:.3f}  "
-              f"q05 {el[len(el)//20]:.3f}  q95 {el[-len(el)//20]:.3f}")
-        print(f"  grav  spread {spec['grav_spread']:.3f}  mean {spec['grav_mean']:.3f}  "
-              f"q05 {eg[len(eg)//20]:.3f}  q95 {eg[-len(eg)//20]:.3f}")
+        print(f"  lang  min={spec['eigs_lang_min']:.4f}  "
+              f"max={spec['eigs_lang_max']:.4f}  mean={spec['eigs_lang_mean']:.4f}")
+        print(f"  grav  min={spec['eigs_grav_min']:.4f}  "
+              f"max={spec['eigs_grav_max']:.4f}  mean={spec['eigs_grav_mean']:.4f}")
+        print(f"  spectra_distinct_sigma = {spec['spectra_distinct_sigma']:.2f}")
         results["spectrum"] = spec
 
-    # Statistical conclusion: ce_lap_s1 vs std_104 (matched) and vs std_96 (raw)
     def z(a, b):
         m1, s1 = results[a]["mean_ppl"], results[a]["std_ppl"]
         m2, s2 = results[b]["mean_ppl"], results[b]["std_ppl"]
-        # pooled-ish, just a rough sigma
         se = (s1 ** 2 / max(1, args.seeds) + s2 ** 2 / max(1, args.seeds)) ** 0.5
         return (m1 - m2) / max(se, 1e-9)
 
-    print("\n=== verdict (sigma = positive means first is worse) ===")
-    print(f"  ce_lap_s1 vs std_96   z = {z('ce_lap_s1','std_96'):+.2f}  "
-          f"(Δ={results['ce_lap_s1']['mean_ppl'] - results['std_96']['mean_ppl']:+.3f})")
-    print(f"  ce_lap_s1 vs std_104  z = {z('ce_lap_s1','std_104'):+.2f}  "
-          f"(Δ={results['ce_lap_s1']['mean_ppl'] - results['std_104']['mean_ppl']:+.3f})")
-    print(f"  ce_lap_s2 vs ce_lap_s1 z = {z('ce_lap_s2','ce_lap_s1'):+.2f}  "
-          f"(Δ={results['ce_lap_s2']['mean_ppl'] - results['ce_lap_s1']['mean_ppl']:+.3f})")
-    print(f"  ce_lap_s3 vs ce_lap_s1 z = {z('ce_lap_s3','ce_lap_s1'):+.2f}  "
-          f"(Δ={results['ce_lap_s3']['mean_ppl'] - results['ce_lap_s1']['mean_ppl']:+.3f})")
+    print("\n=== verdict (positive z means first variant is WORSE) ===")
+    for v in ("ce_dual", "ce_par"):
+        for base in ("std_96", "std_112"):
+            zval = z(v, base)
+            d = results[v]['mean_ppl'] - results[base]['mean_ppl']
+            print(f"  {v:10s} vs {base:8s}  z = {zval:+.2f}   Δ = {d:+.3f}")
 
     # drop non-serializable model references
     for k in list(results.keys()):
