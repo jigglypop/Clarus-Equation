@@ -76,7 +76,7 @@ $$\varepsilon^2 = \exp\!\left[-(1 - \varepsilon^2)\,(3 + \delta)\right] = 0.0486
 | 입자물리 | $\|V_{cb}\|$ | 0.0405 | 0.0408 | 0.8 % |
 | 입자물리 | Jarlskog $J$ | $3.13 \times 10^{-5}$ | $3.08 \times 10^{-5}$ | 1.5 % |
 | 입자물리 | $\sin^2\theta_{13}$ (PMNS) | 0.0222 | 0.0222 | 0.1 % |
-| 입자물리 | $m_{\nu_2}, m_{\nu_3}$ (중성미자, $m_l^{5/8} m_\tau^{3/8}$) | 8.90, 51.93 meV | 8.66, ~50.5 meV | 2.8 %, 2.8 % |
+| 입자물리 | $m_{\nu_2}, m_{\nu_3}$ (중성미자, $m_l^{5/8} m_\tau^{3/8}$ + NLO $1-\alpha_s/\pi$) | 8.566, 49.99 meV | 8.66, ~50.5 meV | −1.09 %, −1.02 % |
 | 입자물리 | Koide $Q_K$ | 2/3 | 0.66661 | 0.001 % |
 | 입자물리 | 새 스칼라 $m_\phi$ | 29.65 MeV | 22-30 MeV (제약) | 범위 안 |
 | 입자물리 | 뮤온 $g\text{-}2$ BSM | 0 | $38 \pm 63 \times 10^{-11}$ (BMW lattice 2026) | 0.6 $\sigma$ |
@@ -164,7 +164,7 @@ $$\mathcal{L} = \frac{R}{16\pi G} + \xi R \Phi^2 + \mathcal{L}_{\text{SM}}^{d=3}
 | DM/DE 비율 | 유도 (0.5 %) | 미설명 |
 | 힉스 질량 | 유도 (0.6 $\sigma$) | 미설명 |
 | CKM/PMNS 19 매개변수 | 유도 (0.1-2.7 %) | 측정 후 입력 |
-| 중성미자 질량 | 정상 계층 예측, $m_2$ 2.8 % / $m_3$ 2.8 % (Casimir 멱) | 미설명 |
+| 중성미자 질량 | NH 예측, $m_2$ −1.09 % / $m_3$ −1.02 %, $\Delta m_{31}^2$ +1.85 % (Casimir 멱 + NLO RG) | 미설명 |
 | 우주상수 문제 | $10^{122}$ → 0.8 % | 미해결 |
 | 동적 DE ($w_0$) | 유도 (0.04 $\sigma$) | w0waCDM 확장 필요 |
 | $H_0$ 텐션 (5σ) | **99.28% 해소, 자유매개변수 0개** ($\xi = \pi^2/2$, $\delta\epsilon_0 = -\delta/\pi$ 첫원리 닫음) | 미해결 |
@@ -202,7 +202,7 @@ graph TD
     QCD --> MH["힉스 125.35 GeV"]
     XI --> W0["w0 = -0.768<br/>r = 0.0014"]
     AS --> CKM["CKM/PMNS 전부 유도"]
-    DELTA --> NU["m_nu_l = (delta^4)/[(16pi^2)^2 . 32pi^3 . (1+R)] . m_l^(5/8) m_tau^(3/8)<br/>m_nu2 = 8.9 meV, m_nu3 = 51.9 meV"]
+    DELTA --> NU["m_nu_l = (delta^4 . (1-alpha_s/pi))/[(16pi^2)^2 . 32pi^3 . (1+R)] . m_l^(5/8) m_tau^(3/8)<br/>m_nu2 = 8.566 meV, m_nu3 = 49.99 meV"]
 
     style E fill:#1a1a2e,color:#e0e0ff,stroke:#7b68ee
     style DELTA fill:#2d1b4e,color:#e8d5f5,stroke:#9b59b6
@@ -231,7 +231,7 @@ graph TD
 | $M_H = M_Z \cdot F$ | 힉스 질량 |
 | $\xi = \alpha_s^{1/3}$ | 비최소 중력 결합 |
 | $w_0 = -1 + 2\xi^2/(3\Omega_\Lambda)$ | DE 상태방정식 |
-| $m_{\nu_l} = \dfrac{\delta^4}{(16\pi^2)^2 \cdot 32\pi^3 \cdot (1+R)} \cdot m_l^{5/8} m_\tau^{3/8}$ | 중성미자 질량 ($d=3$ Casimir 멱 분배) |
+| $m_{\nu_l} = \dfrac{\delta^4 (1-\alpha_s/\pi)}{(16\pi^2)^2 \cdot 32\pi^3 \cdot (1+R)} \cdot m_l^{5/8} m_\tau^{3/8}$ | 중성미자 질량 ($d=3$ Casimir 멱 분배 + Weinberg op anomalous-dim NLO) |
 | $J = 4\,\alpha_s^{11/2}$ | Jarlskog CP 불변량 |
 | $Q_K = 2/d = 2/3$ | Koide 공식 |
 | $n_s = 1 - 2/N$ | 인플레이션 스펙트럼 지수 |

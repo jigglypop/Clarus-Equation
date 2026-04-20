@@ -1257,21 +1257,21 @@ $$A=\frac{\sqrt{m_\tau}}{1+\sqrt{2}\cos\phi_0}$$
 
 ### 9.6 중성미자 질량: $\delta$와 $\pi$에서 ($e$의 역할)
 
-힉스 포탈을 통한 2-loop Weinberg 연산자 + Majorana 위상 통과의 1-loop 위상공간 + DE 분율 + SU(d) Casimir 멱 분배 (외부 ν chiral flip + 내부 lepton dominance)에서 중성미자 질량이 복사적으로 생성된다:
+힉스 포탈을 통한 2-loop Weinberg 연산자 + Majorana 위상 통과의 1-loop 위상공간 + DE 분율 + SU(d) Casimir 멱 분배 (외부 ν chiral flip + 내부 lepton dominance) + Weinberg op anomalous-dim NLO RG running에서 중성미자 질량이 복사적으로 생성된다:
 
-$$m_{\nu_l} = \frac{\delta^4}{(16\pi^2)^2 \cdot 32\pi^3 \cdot (1+R)} \cdot m_l^{(d+2)/(d^2-1)} \cdot m_\tau^{(d^2-d-3)/(d^2-1)}$$
+$$m_{\nu_l} = \frac{\delta^4 \,(1 - \alpha_s/\pi)}{(16\pi^2)^2 \cdot 32\pi^3 \cdot (1+R)} \cdot m_l^{(d+2)/(d^2-1)} \cdot m_\tau^{(d^2-d-3)/(d^2-1)}$$
 
 $d = 3$ 대입: $m_l^{5/8} \cdot m_\tau^{3/8}$ (멱 합 $= 1$ → 질량 1제곱 보존; $d^2-1 = 8$ 은 SU(3) adjoint Casimir, $|V_{ub}|$ 도출과 동일 기하).
 
-여기서 $\delta^4 = \lambda_{\text{HP}}^2$는 $\pi$와 $0$에서($\sin^2\theta_W \cos^2\theta_W$), $(16\pi^2)^2$는 2-loop 인자로 $\pi$에서, $32\pi^3 = 2\pi \cdot 16\pi^2$는 Majorana 위상 1-loop 위상공간, $1/(1+R)$ ($R = 0.38063$)은 DE 분율, $m_l^{5/8}$은 외부 ν chiral flip, $m_\tau^{3/8}$은 내부 lepton sum의 무거운 lepton dominance (CKM W-loop top dominance와 동형).
+여기서 $\delta^4 = \lambda_{\text{HP}}^2$는 $\pi$와 $0$에서($\sin^2\theta_W \cos^2\theta_W$), $(16\pi^2)^2$는 2-loop 인자로 $\pi$에서, $32\pi^3 = 2\pi \cdot 16\pi^2$는 Majorana 위상 1-loop 위상공간, $1/(1+R)$ ($R = 0.38063$)은 DE 분율, $(1 - \alpha_s/\pi) = 0.9625$는 Weinberg dim-5 연산자 anomalous-dim NLO 보편 보정 (SM Wilson 계수 leading-log 형식), $m_l^{5/8}$은 외부 ν chiral flip, $m_\tau^{3/8}$은 내부 lepton sum의 무거운 lepton dominance (CKM W-loop top dominance와 동형).
 
 | 세대 | $m_l$ (MeV) | $m_\nu$ (meV) | 관측 (meV) | 잔차 |
 |---|---|---|---|---|
-| $e$ → $\nu_1$ | 0.511 | **0.318** | ≲ 1 | 양립 |
-| $\mu$ → $\nu_2$ | 105.66 | **8.90** | 8.66 | **2.8%** |
-| $\tau$ → $\nu_3$ | 1776.86 | **51.93** | 50.5 | **2.8%** |
+| $e$ → $\nu_1$ | 0.511 | **0.306** | ≲ 1 | 양립 |
+| $\mu$ → $\nu_2$ | 105.66 | **8.566** | 8.66 | **−1.09%** |
+| $\tau$ → $\nu_3$ | 1776.86 | **49.986** | 50.5 | **−1.02%** |
 
-$\sum m_\nu = 61.15$ meV $= 0.0612$ eV. 관측 상한($< 0.12$ eV, Planck+BAO)과 양립. 질량 제곱차 직접 도출: $\Delta m_{21}^2 = 7.91 \times 10^{-5}$ eV² (관측 $7.53\times 10^{-5}$, +5.0%), $\Delta m_{31}^2 = 2.70 \times 10^{-3}$ eV² (관측 $2.453\times 10^{-3}$, +10.0%). 정상 계층(NH) 자동 선호. 유도 레벨: **반정량 닫힘 (자유 매개변수 0개, 세 세대 동시 2.8% 잔차)**.
+$\sum m_\nu = 58.86$ meV $= 0.0589$ eV. 관측 상한($< 0.12$ eV, Planck+BAO)과 양립. 질량 제곱차 직접 도출: $\Delta m_{21}^2 = 7.33 \times 10^{-5}$ eV² (관측 $7.53\times 10^{-5}$, **−2.69%**), $\Delta m_{31}^2 = 2.498 \times 10^{-3}$ eV² (관측 $2.453\times 10^{-3}$, **+1.85%**). NLO 도입으로 $\Delta m_{31}^2$ 잔차가 +9.95% → +1.85% (5.4× 닫음). 정상 계층(NH) 자동 선호. 유도 레벨: **반정량 닫힘 (자유 매개변수 0개, 세 세대 동시 ±1.1% 이내)**.
 
 ### 9.7 5개 상수에서 페르미온 질량까지
 
@@ -1711,7 +1711,7 @@ $$\frac{v_{\text{EW}}}{M_{\text{Pl}}} \bigg|_{\text{pred}} = \frac{2.741 \times 
 | 20 | $\delta_{\text{CP}}^{\text{CKM}}$ | $\pi/2$ ($i$의 단일 생성원) | $\pi/2$ | 1.20 rad | 7% ($\sin$) | $i$ | 가설 |
 | | $J$ (Jarlskog) | $4\alpha_s^{11/2}\sin\delta_{CP}$ | $3.12 \times 10^{-5}$ | $3.08 \times 10^{-5}$ | **1.3%** | $\pi, i$ | 가설 |
 | **확장: 중성미자 (7)** | | | | | | | |
-| 21-23 | $m_{\nu_{1,2,3}}$ | $\dfrac{\delta^4}{(16\pi^2)^2 \cdot 32\pi^3 \cdot (1+R)} m_l^{5/8} m_\tau^{3/8}$ ($d=3$ Casimir 멱) | $m_2=8.90$, $m_3=51.93$ meV; $\sum=61.2$ meV | $8.66$, $50.5$; $<120$ meV | **2.8%**, **2.8%**; 양립 | $\pi, 0$ | 반정량 닫힘 |
+| 21-23 | $m_{\nu_{1,2,3}}$ | $\dfrac{\delta^4 (1-\alpha_s/\pi)}{(16\pi^2)^2 \cdot 32\pi^3 \cdot (1+R)} m_l^{5/8} m_\tau^{3/8}$ ($d=3$ Casimir 멱 + NLO RG) | $m_2=8.566$, $m_3=49.99$ meV; $\sum=58.9$ meV | $8.66$, $50.5$; $<120$ meV | **−1.09%**, **−1.02%**; 양립 | $\pi, 0$ | 반정량 닫힘 |
 | 24 | $\sin^2\theta_{13}^{\text{PMNS}}$ | $\delta/(d^2-1)$ | 0.02222 | 0.02200 | **1.0%** | $0, \pi$ | 가설 |
 | 25 | $\sin^2\theta_{12}^{\text{PMNS}}$ | $(1/d)(1-3\delta/(d^2-1))$ | 0.3111 | 0.304 | 2.3% | $0, \pi$ | 가설 |
 | 26 | $\sin^2\theta_{23}^{\text{PMNS}}$ | $(1+\delta(d^2-2)/(d^2-1))/2$ | 0.5778 | 0.573 | **0.86%** | $0, \pi$ | 가설 |
@@ -1837,8 +1837,8 @@ $$e^{i\pi} + 1 = 0$$
 
 0.2% 이내: $|V_{cb}| = \alpha_s^{3/2}$ (0.1%), $M_H/M_Z = F$ (0.20%).
 1% 이내: $\sin^2\theta_{23}^{\text{PMNS}}$ (0.86%), $\sin^2\theta_{13}^{\text{PMNS}}$ (1.0%), $A_s$ ($-1.0\%$, 보정 후), $v_{\text{EW}}/M_{\text{Pl}}$ (1.1%), $T_{\text{CMB}}$ ($+1.3\%$, 보정 후), $J$ (1.3%).
-3% 이내: $\eta$ ($+0.2\%$, 보정 후), $|V_{ub}|$ (2.7%, $F^{1/3}$ 보정 후), $m_{\nu_2}$ (2.8%, $m_l^{5/8} m_\tau^{3/8}$ Casimir 멱), $m_{\nu_3}$ (2.8%).
+3% 이내: $\eta$ ($+0.2\%$, 보정 후), $|V_{ub}|$ (2.7%, $F^{1/3}$ 보정 후), $m_{\nu_2}$ (−1.09%, $m_l^{5/8} m_\tau^{3/8}$ Casimir 멱 + NLO), $m_{\nu_3}$ (−1.02%), $\Delta m_{31}^2$ (+1.85%, NLO $1-\alpha_s/\pi$ 도입으로 +9.95% → +1.85%).
 우주론 텐션: $H_0$ (**99.28% 해소, 자유매개변수 0개** — $\xi = \pi^2/2$, $\delta\epsilon_0 = -\delta/\pi$ 첫원리 닫음, `docs/참조/epsilon_제1원리_유도.md` §16.6), $S_8$ (LCDM 대비 $\Delta\chi^2_{f\sigma_8} = -2.91$, KiDS 잔차 0.34σ 완화).
-열린 가정: $\Delta m_{31}^2$ (+10%, $m_1$ NLO 보정 미완), $\delta_{\text{CP}}^{\text{PMNS}}$ ($1$-$2\sigma$ 양립), $\xi = \pi^2/2$ 의 보다 엄밀한 미시 도출 (현재는 $(2\pi)^2/8$ 위상공간 측도 후보).
+열린 가정: $\Delta m_{31}^2/\Delta m_{21}^2$ 비율 (+4.6%, 5/8 멱의 NLO 보정 미완), $\delta_{\text{CP}}^{\text{PMNS}}$ ($1$-$2\sigma$ 양립), $\xi = \pi^2/2$ 의 보다 엄밀한 미시 도출 (현재는 $(2\pi)^2/8$ 위상공간 측도 후보).
 
 우주는 이 한 줄을 출발점으로 한 해석 사슬로 읽을 수 있다는 것이 이 장의 결론이다. 다만 위 간극들은 "이미 완전한 정리"가 아니라, 핵심 문서가 구분한 `Exact / Selection / Bridge / Phenomenology` 층을 따라 더 엄밀히 분리해 다루어야 할 다음 단계의 과제다.
