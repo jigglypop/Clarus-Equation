@@ -162,6 +162,8 @@ __all__ = [
     "EulerAttnBlock",
     "EulerCEAttention",
     "EulerCEBlock",
+    "RecursiveEulerCEBlock",
+    "fixed_point_loss",
 ]
 
 
@@ -308,3 +310,110 @@ class EulerCEBlock(nn.Module):
         x = x + self.attn(self.ln1(x))
         x = x + self.ffn(self.ln2(x))
         return x
+
+
+# ---------------------------------------------------------------------------
+# RecursiveEulerCEBlock — self-referential fixed-point iteration (ClarusCell)
+# ---------------------------------------------------------------------------
+#
+# CE bootstrap equation:   epsilon^2 = exp[-(1 - epsilon^2) * D_eff]
+# This is a fixed-point equation x* = F(x*). A CE-faithful transformer
+# block should therefore be allowed to apply itself repeatedly to its
+# own output until convergence, rather than being a one-shot function.
+#
+# Two semantics offered:
+#
+# 1. FIXED DEPTH RECURSION (``max_iters=k``, ``tol=None``):
+#    h_0 = x;  h_{t+1} = F(h_t);  out = h_k
+#    "Universal Transformer" style, weights shared across depth.
+#
+# 2. WHILE-LOOP RECURSION (``tol>0``):
+#    halt when ||h_{t+1} - h_t|| / ||h_t|| < tol  OR  t == max_iters.
+#    The halting depth is recorded in ``.last_depths`` for analysis.
+#    Non-differentiable halt; backprop flows through the final path.
+#
+# The optional self-consistency loss
+#
+#    L_fp = || F(F(h*)) - F(h*) ||^2
+#
+# pulls the output h* = F(x) toward being a true fixed point.
+
+
+class RecursiveEulerCEBlock(nn.Module):
+    """Self-referential transformer block — ClarusCell as while-loop.
+
+    Args:
+        d_model, n_heads, block: standard
+        max_iters: maximum number of self-applications (>=1)
+        tol: if not None, halt when relative change is below this
+             threshold. If None, always run ``max_iters`` iterations.
+        learnable_gates: forwarded to EulerCEAttention
+    """
+
+    def __init__(
+        self,
+        d_model: int,
+        n_heads: int,
+        block: int,
+        max_iters: int = 1,
+        tol: Optional[float] = None,
+        learnable_gates: bool = True,
+    ) -> None:
+        super().__init__()
+        self.core = EulerCEBlock(d_model, n_heads, block,
+                                 learnable_gates=learnable_gates)
+        self.max_iters = max_iters
+        self.tol = tol
+        # per-batch halt depths, useful for diagnostics
+        self.last_depths: Optional[torch.Tensor] = None
+
+    def _step(self, h: torch.Tensor) -> torch.Tensor:
+        return self.core(h)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        h = x
+        depths = torch.full((x.shape[0],), self.max_iters,
+                            dtype=torch.long, device=x.device)
+
+        if self.tol is None:
+            # Fixed-depth recursion (differentiable through all steps).
+            for _ in range(self.max_iters):
+                h = self._step(h)
+            self.last_depths = depths
+            return h
+
+        # While-loop recursion with halting on tolerance.
+        for t in range(self.max_iters):
+            h_new = self._step(h)
+            # per-example relative change (detached — halt decision is not diff)
+            with torch.no_grad():
+                num = (h_new - h).flatten(1).norm(dim=-1)
+                den = h.flatten(1).norm(dim=-1).clamp_min(1e-8)
+                rel = num / den
+                # mark examples that have newly halted
+                halted = rel < self.tol
+                not_yet = depths == self.max_iters
+                just_halted = halted & not_yet
+                depths = torch.where(just_halted,
+                                     torch.full_like(depths, t + 1),
+                                     depths)
+                if halted.all():
+                    h = h_new
+                    break
+            h = h_new
+        self.last_depths = depths
+        return h
+
+
+def fixed_point_loss(block: RecursiveEulerCEBlock, h: torch.Tensor,
+                     scale: float = 1.0) -> torch.Tensor:
+    """||F(F(h)) - F(h)||^2 averaged over batch and positions.
+
+    Pulls h toward being a fixed point of ``block.core``. Use as a
+    regularizer added to cross-entropy.
+    """
+    with torch.no_grad():
+        fh = block.core(h)
+    ffh = block.core(fh)
+    diff = (ffh - fh).flatten(1)
+    return scale * diff.pow(2).mean()
