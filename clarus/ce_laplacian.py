@@ -45,11 +45,17 @@ def _cosine_adjacency(z: torch.Tensor, eps: float = 1e-8) -> torch.Tensor:
     return A * (1.0 - eye)
 
 
-def _rbf_adjacency(z: torch.Tensor, sigma: float) -> torch.Tensor:
-    """A_ij = exp(-||z_i - z_j||^2 / 2 sigma^2), diagonal zeroed. Symmetric."""
+def _rbf_adjacency(z: torch.Tensor, sigma) -> torch.Tensor:
+    """A_ij = exp(-||z_i - z_j||^2 / 2 sigma^2), diagonal zeroed. Symmetric.
+
+    ``sigma`` may be a float or a torch.Tensor scalar (for learnable sigma).
+    """
     sq = (z * z).sum(dim=-1, keepdim=True)
     d2 = (sq + sq.transpose(-1, -2) - 2.0 * torch.matmul(z, z.transpose(-1, -2))).clamp_min(0.0)
-    A = torch.exp(-d2 / (2.0 * sigma * sigma))
+    if isinstance(sigma, torch.Tensor):
+        A = torch.exp(-d2 / (2.0 * sigma * sigma))
+    else:
+        A = torch.exp(-d2 / (2.0 * float(sigma) ** 2))
     eye = torch.eye(A.shape[-1], device=A.device, dtype=A.dtype)
     return A * (1.0 - eye)
 
@@ -79,10 +85,17 @@ def _sym_normalized_laplacian(A: torch.Tensor, eps: float = 1e-8) -> torch.Tenso
 
 
 class DualLaplacianBlock(nn.Module):
-    """Dual-graph attention head.
+    """Dual-graph attention head with optional learnable gate and sigma.
 
     Produces attention output as a convex mix of two row-stochastic
     causal random-walk kernels (cosine on P_lang h, RBF on P_grav h).
+
+    Args:
+        learnable_gate: if True, omega_lang is a free parameter
+            (initialized from the Borbely mode), passed through sigmoid
+            so the mix stays convex. Otherwise frozen at mode_gate(mode).
+        learnable_sigma: if True, sigma_grav is trainable in log-space
+            (init from the provided scalar).
     """
 
     def __init__(
@@ -92,6 +105,8 @@ class DualLaplacianBlock(nn.Module):
         d_grav: Optional[int] = None,
         sigma_grav: float = 1.0,
         mode: str = "wake",
+        learnable_gate: bool = False,
+        learnable_sigma: bool = False,
     ) -> None:
         super().__init__()
         d_lang = d_lang or d_model
@@ -100,15 +115,39 @@ class DualLaplacianBlock(nn.Module):
         self.P_grav = nn.Linear(d_model, d_grav, bias=False)
         self.V = nn.Linear(d_model, d_model, bias=False)
         self.O = nn.Linear(d_model, d_model, bias=False)
-        self.sigma_grav = sigma_grav
         self.mode = mode
+        self.learnable_gate = learnable_gate
+        self.learnable_sigma = learnable_sigma
 
-    def gate_weights(self) -> tuple[float, float]:
-        if self.mode == "wake":
-            return (1.0 - T_WAKE, T_WAKE)
-        if self.mode == "nrem":
-            return (T_WAKE, 1.0 - T_WAKE)
-        return (0.5, 0.5)
+        # initial gate from Borbely constant for the declared mode
+        if mode == "wake":
+            init_w_lang = 1.0 - T_WAKE
+        elif mode == "nrem":
+            init_w_lang = T_WAKE
+        else:
+            init_w_lang = 0.5
+
+        # store logit so sigmoid(logit) == init_w_lang
+        p = max(min(init_w_lang, 0.9999), 0.0001)
+        logit = math.log(p / (1.0 - p))
+        if learnable_gate:
+            self.gate_logit = nn.Parameter(torch.tensor(logit, dtype=torch.float32))
+        else:
+            self.register_buffer("gate_logit", torch.tensor(logit, dtype=torch.float32))
+
+        log_sigma = math.log(max(sigma_grav, 1e-4))
+        if learnable_sigma:
+            self.log_sigma_grav = nn.Parameter(torch.tensor(log_sigma, dtype=torch.float32))
+        else:
+            self.register_buffer("log_sigma_grav",
+                                 torch.tensor(log_sigma, dtype=torch.float32))
+
+    def current_gate(self) -> tuple[torch.Tensor, torch.Tensor]:
+        w_l = torch.sigmoid(self.gate_logit)
+        return w_l, 1.0 - w_l
+
+    def current_sigma(self) -> torch.Tensor:
+        return torch.exp(self.log_sigma_grav)
 
     def forward(self, h: torch.Tensor,
                 causal_mask: Optional[torch.Tensor] = None) -> torch.Tensor:
@@ -117,13 +156,13 @@ class DualLaplacianBlock(nn.Module):
         v = self.V(h)
 
         A_l = _cosine_adjacency(z_l)
-        A_g = _rbf_adjacency(z_g, sigma=self.sigma_grav)
+        A_g = _rbf_adjacency(z_g, sigma=self.current_sigma())
 
         K_l = _row_stochastic_causal(A_l, causal_mask)
         K_g = _row_stochastic_causal(A_g, causal_mask)
 
-        w_l, w_g = self.gate_weights()
-        K = w_l * K_l + w_g * K_g  # still row-stochastic (convex comb of stochastic)
+        w_l, w_g = self.current_gate()
+        K = w_l * K_l + w_g * K_g  # still row-stochastic
         return self.O(torch.matmul(K, v))
 
 
