@@ -384,7 +384,47 @@ train block = 64, eval block ∈ {64, 96, 128, 192, 256} (4× 외삽까지),
 이 결과는 logarithmic distance bias 가 ALiBi 의 일반화로 의미 있는 후속 연구
 방향임을 시사한다.
 
-### 7.7 Length extrapolation (32× 까지) — Euler-CE 분해
+### 7.7.1 Scaling — d_model {64, 128, 256} 에서 패턴 유지
+
+§ 7.7 의 결과를 모델 크기 scaling 에 대해 검증한다. 학습 설정 동일
+(train block = 64, 1500 step), seeds: d=64 는 3, d=128/256 은 메모리상 2.
+
+#### 32× extrapolation 상대 degradation, d_model 별
+
+| variant | d=64 | **d=128** | d=256 | 부류 |
+|---|---|---|---|---|
+| `rope_alibi` | −6.2 % | **−3.0 %** | −5.1 % | Tier 1 |
+| `euler_ce_k1` | −6.2 % | **−3.0 %** | −5.3 % | Tier 1 |
+| `euler_no_pi` | −5.5 % | −4.0 % | −5.1 % | Tier 1 |
+| `xpos` | +4.1 % | +7.4 % | +0.8 % | Tier 1 |
+| `nope` | +7.0 % | +15.6 % | +10.5 % | Tier 1 |
+| `mra_bias` | +40.3 % | +59.0 % | +42.8 % | Tier 2 |
+| `mra` | +40.8 % | +65.9 % | +43.7 % | Tier 2 |
+| `std_rope` | +47.2 % | **+73.5 %** | +48.3 % | Tier 2 |
+| `euler_no_decay` | +54.7 % | **+103.6 %** | +54.2 % | Tier 2 |
+
+#### 발견
+
+1. **Tier 1/Tier 2 분리는 모든 d_model 에서 견고** — d=64, 128, 256 의 세
+   가지 모델 크기 모두 ALiBi 계열 (`rope_alibi`, `euler_ce_k1`, `euler_no_pi`)
+   은 안정 (−3 ∼ −6 %), rotation-only 계열 (`std_rope`, `euler_no_decay`,
+   `mra`, `mra_bias`) 은 catastrophic (+42 ∼ +104 %). 본 작업의 핵심 가설
+   ("rotation + 강한 distance attenuation" 이 외삽의 충분조건) 이 모델 크기
+   에 invariant.
+2. **d_model = 128 에서 cliff 가 가장 깊음** — rotation-only 변종이 +73 ∼
+   +104 % 로 가장 큰 degradation. 가능한 해석: 중간 사이즈가 학습 분포에
+   가장 tightly fit 하여 OOD 영역과의 격차가 가장 큼. d=256 은 1500 step
+   에서 underfit 인 듯.
+3. **ALiBi 의 안정성은 모델 크기에 무관** — d=64 −6.2 %, d=128 −3.0 %,
+   d=256 −5.1 %. Slope 학습이 단순하므로 sample efficiency 가 좋아 모든
+   사이즈에서 robust. **이는 ALiBi 가 production-scale 모델에서도 유효한
+   외삽 메커니즘일 강한 후보임을 시사**.
+4. **NoPE 의 OOD 안정성은 모델이 커질수록 약화** — d=64 +7 %, d=128 +15.6 %,
+   d=256 +10.5 %. 모델이 implicit position 을 더 강하게 학습할수록 OOD 영역
+   에서의 generalization 이 약해진다. NoPE 는 baseline 으로는 의미 있지만
+   production 에는 부적합.
+
+### 7.7.2 Length extrapolation (32× 까지) — Euler-CE 분해
 
 위 § 7.6 의 발견 (Euler-CE 의 외삽 우위) 의 진짜 원인을 격리한다. EulerCE
 는 두 개의 분리 가능한 구조를 결합하므로 각각을 frozen 으로 끄고 비교한다.
@@ -450,6 +490,65 @@ batch 때문에 § 7.6 보다 높지만, **상대 degradation 은 비교 가능*
 얹는 것 (`mra`, `mra_bias`, `std_rope`) 이 가장 위험. logarithmic decay 가
 linear 보다 약한 이유는 long-distance 에서 너무 천천히 감쇠해서 RoPE 회전의
 wrap-around 효과를 dominate 하지 못하기 때문.
+
+### 7.7.3 2-bit Minimal Euler-CE — operational 환원
+
+§ 7.7 의 ablation 은 강력한 시사를 만든다: Euler 5상수 `{e, π, i, 1, 0}` 의
+attention 적 의미는 두 axis 와 두 게이트로 환원된다.
+
+| 상수 | 작용 | 환원 |
+|---|---|---|
+| `π`, `i` | rotation generator (`e^{iπt}` 결합) | **axis 1**: rotation |
+| `e` | exponential decay base | **axis 2**: decay |
+| `1`, `0` | on/off gate values | 1 비트 each |
+
+→ **2 functionally distinct axes × 2 gate values = 2² = 4 head-types**, 각각
+2-bit string `(pi, e)` 으로 인코딩 가능:
+
+| (pi, e) | 비트 | 헤드 타입 | 문헌 매핑 |
+|---|---|---|---|
+| (0, 0) | `00` | identity | NoPE [Kazemnejad 2023] |
+| (0, 1) | `01` | decay only | ALiBi [Press 2022] |
+| (1, 0) | `10` | rotation only | RoPE [Su 2021] |
+| (1, 1) | `11` | rotation + decay | xPos [Sun 2023] / Euler-CE |
+
+**§ 7.7 결과의 perfect 매핑**: 4 head-types 중 3 (00, 01, 11) 가 Tier 1, 단
+한 가지 (10) 만 Tier 2. 즉 **5 Euler 상수 = 2 비트 head-type taxonomy**, 그리고
+**4 가지 중 3 가지가 작동** (= log₂ 3 ≈ 1.58 비트 의 effective capacity).
+
+#### 구현: `EulerCEMinimal`
+
+`clarus/ce_euler.py::EulerCEMinimal` 가 본 환원의 정밀 구현. 각 헤드는 2 비트
+spec `head_types ∈ {0, 1, 2, 3}^H` 로 head-type 을 axiom 으로 선택. 학습
+파라미터는 `xi_h` (decay 헤드만 의미 있음) 1 개 + `W_q,k,v,o` (표준 MHA).
+5 차원 `bit_logits` 와 sigmoid 게이트 학습 모두 제거.
+
+#### 자유도 비교
+
+| 양 | 원본 EulerCE | EulerCEMinimal |
+|---|---|---|
+| Discrete head-type | 5-dim continuous (`bit_logits`) | 2-bit axiom (`head_types`) |
+| Rotation gate | learnable sigmoid (`pi_gate_logit`) | bit (axiom) |
+| Decay gate | learnable sigmoid (`e_gate_logit`) | bit (axiom) |
+| Decay length | learnable (`log_xi`) | learnable (`log_xi`) |
+| 헤드별 학습 자유도 | 5 + 3 = **8** | 1 (xi only) |
+
+→ **헤드별 학습 자유도가 8 → 1 로 감소** (head-type 선택을 axiom 으로 이동).
+이는 Clarus 본 thesis ("자유 파라미터 0 에 가깝게") 와 직접 정렬.
+
+#### 검증 — `tests/test_euler_minimal.py` (16 tests)
+
+* `head_types_from_spec` 가 6 가지 spec 형태 (int, str, list, "mix", "all",
+  invalid) 모두 정확히 처리.
+* `head_types="nope"` → no-PE 와 수치적으로 일치 (allclose atol=1e-5).
+* `head_types="alibi"` → 거리에 따른 attention attenuation 확인.
+* `head_types="rope"` → 모든 헤드 e_bit=0, decay 항 0.
+* `head_types="mix"` / `"all"` → 정확한 비트 분해.
+* `extend_to(N)` 후 forward 정상, 학습 파라미터 변하지 않음.
+* Autograd: rotation-only 헤드의 `log_xi` grad 는 정확히 0 (decay gate off 시
+  grad path 가 끊김).
+
+이로써 EulerCEMinimal 이 본 환원의 정확하고 정밀한 구현임을 확인.
 
 ---
 

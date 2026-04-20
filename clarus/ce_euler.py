@@ -197,8 +197,11 @@ __all__ = [
     "EulerAttnBlock",
     "EulerCEAttention",
     "EulerCEBlock",
+    "EulerCEMinimal",
+    "EulerCEMinimalBlock",
     "RecursiveEulerCEBlock",
     "fixed_point_loss",
+    "head_types_from_spec",
 ]
 
 
@@ -490,3 +493,236 @@ def fixed_point_loss(block: RecursiveEulerCEBlock, h: torch.Tensor,
     ffh = block.core(fh)
     diff = (ffh - fh).flatten(1)
     return scale * diff.pow(2).mean()
+
+
+# ---------------------------------------------------------------------------
+# EulerCEMinimal — 2-bit head-type taxonomy
+# ---------------------------------------------------------------------------
+#
+# Operational reduction of {e, π, i, 1, 0}:
+#   {π, i}  → rotation generator   (always paired as e^{iπt} = (cos, sin))
+#   {e}     → exponential decay
+#   {0, 1}  → on/off gate values   (1 bit each, by definition)
+#
+# → 2 functionally distinct axes (rotation, decay) × 2 gate values
+#   = 2² = 4 head-types, each encoded by a 2-bit string (pi_bit, e_bit):
+#
+#       (pi, e)   head-type       canonical literature analogue
+#       --------  --------------  -------------------------------
+#       (0, 0)    identity        NoPE      (Kazemnejad 2023)
+#       (0, 1)    decay only      ALiBi     (Press 2022)
+#       (1, 0)    rotation only   RoPE      (Su 2021)
+#       (1, 1)    rotation+decay  xPos      (Sun 2023) / EulerCE
+#
+# Per-head continuous parameters (only meaningful when bit is on):
+#       pi_base : rotary base (RoPE-style geometric, defaults to 10000)
+#       xi_h    : decay length (per-head learnable, default block/8)
+#
+# Empirical finding (`docs/8_리만/mra_paper.md` § 7.7, length extrap. ablation):
+#   Head-type (1, 0) — pure rotation — is the only Tier 2 (catastrophic
+#   length-OOD). The other three head-types are Tier 1 (extrapolate).
+#   So among the 2² = 4 types, 3 are operationally useful → log₂ 3 ≈ 1.58
+#   bits is the effective head-type capacity.
+
+
+_HEAD_TYPE_NAMES = ("nope", "alibi", "rope", "xpos")  # indexed by 2*pi + e
+
+
+def head_types_from_spec(spec, n_heads: int) -> torch.Tensor:
+    """Convert a head-type spec into a (n_heads,) int tensor in {0,1,2,3}.
+
+    Acceptable spec forms:
+      * int in [0, 3]           — uniform (all heads same type)
+      * list/tuple of length n  — per-head type values
+      * str  in {"nope", "alibi", "rope", "xpos"} — uniform name
+      * str  "mix" — alternating alibi / xpos
+      * str  "all" — round-robin {nope, alibi, rope, xpos}
+    """
+    name_to_idx = {n: i for i, n in enumerate(_HEAD_TYPE_NAMES)}
+    if isinstance(spec, str):
+        if spec == "mix":
+            ts = [(1 if h % 2 == 0 else 3) for h in range(n_heads)]
+            return torch.tensor(ts, dtype=torch.long)
+        if spec == "all":
+            ts = [h % 4 for h in range(n_heads)]
+            return torch.tensor(ts, dtype=torch.long)
+        if spec in name_to_idx:
+            return torch.full((n_heads,), name_to_idx[spec], dtype=torch.long)
+        raise ValueError(f"unknown head-type spec: {spec!r}")
+    if isinstance(spec, int):
+        if not 0 <= spec <= 3:
+            raise ValueError(f"head-type int must be in [0, 3], got {spec}")
+        return torch.full((n_heads,), spec, dtype=torch.long)
+    spec = torch.as_tensor(spec, dtype=torch.long)
+    if spec.shape != (n_heads,):
+        raise ValueError(f"head-type tensor must have shape ({n_heads},), got {tuple(spec.shape)}")
+    if (spec < 0).any() or (spec > 3).any():
+        raise ValueError("head-type values must be in [0, 3]")
+    return spec
+
+
+class EulerCEMinimal(nn.Module):
+    """2-bit minimal Euler-CE attention.
+
+    Each head commits to one of four operational types via a 2-bit
+    spec (pi_bit, e_bit). The continuous parameters `xi_h` (decay
+    length, per-head) and the rotary base are the only learnable
+    positional state — head-type itself is an axiomatic design choice,
+    not learned.
+
+    Args:
+        d_model, n_heads, block: standard.
+        head_types: spec for per-head types. See `head_types_from_spec`.
+            Default "alibi" (all decay-only, the strongest single tier-1
+            choice from the length-extrap ablation).
+        rope_base: base for the RoPE-style geometric frequencies used by
+            heads with pi_bit = 1. Defaults to 10000 (RoFormer).
+        xi_init: initial decay length for heads with e_bit = 1.
+            Defaults to block/8 (the EulerCE original).
+        learnable_xi: if False, freeze xi at its init value.
+    """
+
+    def __init__(
+        self,
+        d_model: int,
+        n_heads: int,
+        block: int,
+        head_types: object = "alibi",
+        rope_base: float = 10000.0,
+        xi_init: Optional[float] = None,
+        learnable_xi: bool = True,
+    ) -> None:
+        super().__init__()
+        if d_model % n_heads != 0:
+            raise ValueError(f"d_model {d_model} must be divisible by n_heads {n_heads}")
+        self.d_model = d_model
+        self.n_heads = n_heads
+        self.d_head = d_model // n_heads
+        if self.d_head % 2 != 0:
+            raise ValueError(f"d_head must be even (got {self.d_head})")
+        self.block = block
+        self.rope_base = float(rope_base)
+
+        # 2-bit head-type assignment (axiom — buffer, not learned).
+        types = head_types_from_spec(head_types, n_heads)            # (h,)
+        pi_bits = ((types // 2) > 0).float()
+        e_bits = ((types % 2) > 0).float()
+        self.register_buffer("head_types", types)
+        self.register_buffer("pi_bits", pi_bits)
+        self.register_buffer("e_bits", e_bits)
+
+        self.qkv = nn.Linear(d_model, 3 * d_model, bias=False)
+        self.o = nn.Linear(d_model, d_model, bias=False)
+
+        # Position / distance buffers.
+        self.register_buffer(
+            "tril", torch.tril(torch.ones(block, block, dtype=torch.bool)))
+        self.register_buffer(
+            "pos", torch.arange(block, dtype=torch.float32))
+        d_mat = (torch.arange(block).unsqueeze(1)
+                 - torch.arange(block).unsqueeze(0)).abs().float()
+        self.register_buffer("d_mat", d_mat)
+
+        # RoPE-style frequencies for heads with rotation bit on.
+        k = torch.arange(0, self.d_head, 2, dtype=torch.float32) / self.d_head
+        self.register_buffer("inv_freq", self.rope_base ** (-k))   # (d_head/2,)
+
+        # Per-head decay length.
+        if xi_init is None:
+            xi_init = block / 8.0
+        if xi_init <= 0.0:
+            raise ValueError("xi_init must be positive")
+        log_xi = torch.full((n_heads,), math.log(xi_init), dtype=torch.float32)
+        if learnable_xi:
+            self.log_xi = nn.Parameter(log_xi)
+        else:
+            self.register_buffer("log_xi", log_xi)
+
+    # ------------------------------------------------------------------
+    @torch.no_grad()
+    def extend_to(self, new_block: int) -> None:
+        """Grow positional / distance buffers for length-extrap eval.
+        Learnable parameters (qkv, o, log_xi) are unchanged."""
+        cur = self.pos.shape[0]
+        if new_block <= cur:
+            return
+        dev = self.pos.device
+        self.pos = torch.arange(new_block, dtype=torch.float32, device=dev)
+        self.tril = torch.tril(
+            torch.ones(new_block, new_block, dtype=torch.bool, device=dev))
+        self.d_mat = (torch.arange(new_block).unsqueeze(1)
+                      - torch.arange(new_block).unsqueeze(0)).abs().float().to(dev)
+
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _rotate(x: torch.Tensor, cos: torch.Tensor, sin: torch.Tensor) -> torch.Tensor:
+        x1 = x[..., 0::2]
+        x2 = x[..., 1::2]
+        rx1 = x1 * cos - x2 * sin
+        rx2 = x1 * sin + x2 * cos
+        out = torch.empty_like(x)
+        out[..., 0::2] = rx1
+        out[..., 1::2] = rx2
+        return out
+
+    # ------------------------------------------------------------------
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        b, n, _ = x.shape
+        H = self.n_heads
+        qkv = self.qkv(x).view(b, n, 3, H, self.d_head)
+        q, k, v = qkv.unbind(dim=2)
+        q = q.transpose(1, 2)             # (b, H, n, d_head)
+        k = k.transpose(1, 2)
+        v = v.transpose(1, 2)
+
+        # Rotation (gated per-head by pi_bit). For pi_bit=0 heads the
+        # angle is identically zero → cos=1, sin=0 → identity rotation.
+        theta = self.pos[:n].view(1, 1, n, 1) * self.inv_freq.view(1, 1, 1, -1)
+        theta = theta * self.pi_bits.view(1, H, 1, 1)
+        cos = theta.cos()
+        sin = theta.sin()
+        q_rot = self._rotate(q, cos, sin)
+        k_rot = self._rotate(k, cos, sin)
+
+        # Score.
+        scores = (q_rot @ k_rot.transpose(-1, -2)) / math.sqrt(self.d_head)
+
+        # Decay (gated per-head by e_bit). For e_bit=0 the bias is zero.
+        xi = torch.exp(self.log_xi)                                 # (H,)
+        decay = -self.d_mat[:n, :n].view(1, 1, n, n) / xi.view(1, H, 1, 1)
+        decay = decay * self.e_bits.view(1, H, 1, 1)
+        scores = scores + decay
+
+        scores = scores.masked_fill(~self.tril[:n, :n], float("-inf"))
+        attn = F.softmax(scores, dim=-1)
+        out = (attn @ v).transpose(1, 2).contiguous().view(b, n, self.d_model)
+        return self.o(out)
+
+
+class EulerCEMinimalBlock(nn.Module):
+    """Pre-LN block wrapping `EulerCEMinimal` + standard 4× FFN."""
+
+    def __init__(self, d_model: int, n_heads: int, block: int,
+                 head_types: object = "alibi",
+                 rope_base: float = 10000.0,
+                 xi_init: Optional[float] = None,
+                 learnable_xi: bool = True) -> None:
+        super().__init__()
+        self.ln1 = nn.LayerNorm(d_model)
+        self.ln2 = nn.LayerNorm(d_model)
+        self.attn = EulerCEMinimal(
+            d_model, n_heads, block,
+            head_types=head_types,
+            rope_base=rope_base,
+            xi_init=xi_init,
+            learnable_xi=learnable_xi,
+        )
+        self.ffn = nn.Sequential(
+            nn.Linear(d_model, 4 * d_model), nn.GELU(),
+            nn.Linear(4 * d_model, d_model),
+        )
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        x = x + self.attn(self.ln1(x))
+        x = x + self.ffn(self.ln2(x))
+        return x

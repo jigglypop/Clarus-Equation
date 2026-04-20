@@ -37,7 +37,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from tqdm import tqdm
 
-from clarus.ce_euler import EulerCEBlock
+from clarus.ce_euler import EulerCEBlock, EulerCEMinimalBlock
 from clarus.ce_mra import MRABlock
 
 from examples.ai.bench_recursive_euler import (
@@ -95,6 +95,13 @@ class ExtrapLM(nn.Module):
         elif variant == "mra_bias":
             blocks = [MRABlock(d_model, n_heads, train_block,
                                decay_mode="bias")
+                      for _ in range(n_layers)]
+        elif variant.startswith("min_"):
+            # 2-bit minimal Euler-CE: head_types = {"nope","alibi","rope",
+            # "xpos","mix","all"} corresponds to literature analogues.
+            spec = variant[len("min_"):]
+            blocks = [EulerCEMinimalBlock(d_model, n_heads, train_block,
+                                          head_types=spec)
                       for _ in range(n_layers)]
         else:
             raise ValueError(variant)
@@ -199,6 +206,9 @@ def main():
                    default="cuda" if torch.cuda.is_available() else "cpu")
     p.add_argument("--out", type=str,
                    default="examples/ai/results/mra_extrap.json")
+    p.add_argument("--variants", type=str, default="default",
+                   help="comma-separated variant names, or 'default' / "
+                        "'minimal' / 'all'")
     args = p.parse_args()
 
     eval_mults = [float(s) for s in args.eval_mults.split(",")]
@@ -214,7 +224,7 @@ def main():
     print(f"corpus: {len(data)} chars, vocab {vocab}, device {args.device}")
     print(f"train_block = {args.train_block}, eval_blocks = {eval_blocks}\n")
 
-    variants = [
+    DEFAULT_VARIANTS = [
         "nope",
         "std_rope",
         "rope_alibi",
@@ -225,6 +235,18 @@ def main():
         "euler_no_decay",
         "euler_ce_k1",
     ]
+    MINIMAL_VARIANTS = [
+        "min_nope", "min_alibi", "min_rope", "min_xpos",
+        "min_mix", "min_all",
+    ]
+    if args.variants == "default":
+        variants = DEFAULT_VARIANTS
+    elif args.variants == "minimal":
+        variants = MINIMAL_VARIANTS
+    elif args.variants == "all":
+        variants = DEFAULT_VARIANTS + MINIMAL_VARIANTS
+    else:
+        variants = args.variants.split(",")
     results = {}
     for variant in variants:
         print(f"=== {variant} ({args.seeds} seeds) ===")
