@@ -134,6 +134,9 @@ def make_ffn(kind: str, d: int, mult: int = 4) -> nn.Module:
         return EulerPhaseFFN(d, mult)
     if kind == "euler_full":
         return EulerFullFFN(d, mult)
+    if kind == "zeta":
+        from .ce_zeta import ZetaFFN
+        return ZetaFFN(d, mult)
     raise ValueError(f"unknown ffn kind: {kind!r}")
 
 

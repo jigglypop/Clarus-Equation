@@ -515,3 +515,123 @@ pub fn ce_dual_attn_fwd(
 
     (out, k_combined)
 }
+
+// ---- EulerCE attention (pi-phase rotary + e-decay) -------------------------
+//
+// Implements clarus::ce_euler::EulerCEAttention in native code for a
+// single head (one call per (batch, head) element). Inputs are assumed
+// pre-projected and reshaped to (n, d_head), d_head even.
+//
+//   Q', K' = rotate_pi(Q, K)   with theta = pi_gate * pos * pi^{1-k/(d/2)}
+//   scores_ij = (Q'_i . K'_j) / sqrt(d_head)
+//                + e_gate * (-|i-j| / xi)         [decay bias]
+//   scores masked causally, softmax, out = A @ V
+//
+// Scalar gates (pi_gate, e_gate, xi) are per-head -- supplied by the
+// caller for the relevant head. pi_inv_freq is the precomputed
+// pi^{1-k/(d/2)} array of length d_head/2.
+
+pub fn ce_euler_fwd(
+    q: &[f32],
+    k: &[f32],
+    v: &[f32],
+    pi_inv_freq: &[f32],
+    n: usize,
+    d_head: usize,
+    pi_gate: f32,
+    e_gate: f32,
+    xi: f32,
+    causal: bool,
+) -> (Vec<f32>, Vec<f32>) {
+    debug_assert_eq!(q.len(), n * d_head);
+    debug_assert_eq!(k.len(), n * d_head);
+    debug_assert_eq!(v.len(), n * d_head);
+    debug_assert_eq!(pi_inv_freq.len(), d_head / 2);
+    debug_assert!(d_head % 2 == 0);
+
+    let scale = 1.0 / (d_head as f32).sqrt();
+    let inv_xi = e_gate * (1.0 / xi.max(1e-6));
+
+    // Build rotated Q, K once (n * d_head each).
+    let mut q_rot = vec![0.0f32; n * d_head];
+    let mut k_rot = vec![0.0f32; n * d_head];
+
+    q_rot
+        .par_chunks_mut(d_head)
+        .zip(k_rot.par_chunks_mut(d_head))
+        .enumerate()
+        .for_each(|(i, (qr, kr))| {
+            let qi = &q[i * d_head..(i + 1) * d_head];
+            let ki = &k[i * d_head..(i + 1) * d_head];
+            let pos = i as f32;
+            for (pair, &inv_f) in pi_inv_freq.iter().enumerate() {
+                let theta = pi_gate * pos * inv_f;
+                let c = theta.cos();
+                let s = theta.sin();
+                let idx0 = 2 * pair;
+                let idx1 = idx0 + 1;
+                let q0 = qi[idx0]; let q1 = qi[idx1];
+                qr[idx0] = q0 * c - q1 * s;
+                qr[idx1] = q0 * s + q1 * c;
+                let k0 = ki[idx0]; let k1 = ki[idx1];
+                kr[idx0] = k0 * c - k1 * s;
+                kr[idx1] = k0 * s + k1 * c;
+            }
+        });
+
+    let mut attn = vec![0.0f32; n * n];
+    let mut out = vec![0.0f32; n * d_head];
+
+    attn.par_chunks_mut(n)
+        .zip(out.par_chunks_mut(d_head))
+        .enumerate()
+        .for_each(|(i, (a_row, out_row))| {
+            let qi = &q_rot[i * d_head..(i + 1) * d_head];
+            let mut max_s = f32::NEG_INFINITY;
+            for j in 0..n {
+                if causal && j > i {
+                    a_row[j] = f32::NEG_INFINITY;
+                    continue;
+                }
+                let kj = &k_rot[j * d_head..(j + 1) * d_head];
+                // dot
+                let mut dot = 0.0f32;
+                for t in 0..d_head {
+                    dot += qi[t] * kj[t];
+                }
+                let decay = -((i as f32 - j as f32).abs()) * inv_xi;
+                let s = dot * scale + decay;
+                a_row[j] = s;
+                if s > max_s { max_s = s; }
+            }
+            // softmax
+            let mut denom = 0.0f32;
+            for j in 0..n {
+                if a_row[j].is_finite() {
+                    let e = (a_row[j] - max_s).exp();
+                    a_row[j] = e;
+                    denom += e;
+                } else {
+                    a_row[j] = 0.0;
+                }
+            }
+            let inv_denom = if denom > 0.0 { 1.0 / denom } else { 0.0 };
+            for j in 0..n {
+                a_row[j] *= inv_denom;
+            }
+            // out = a_row @ V
+            for t in 0..d_head {
+                out_row[t] = 0.0;
+            }
+            for j in 0..n {
+                let w = a_row[j];
+                if w == 0.0 { continue; }
+                let vj = &v[j * d_head..(j + 1) * d_head];
+                for t in 0..d_head {
+                    out_row[t] += w * vj[t];
+                }
+            }
+        });
+
+    (out, attn)
+}
