@@ -3,6 +3,9 @@
 
 pub mod engine;
 
+#[cfg(feature = "cuda")]
+pub mod cuda;
+
 pub use engine::field::{BoundaryMode, FieldConfig, FieldEngine, FieldState, FieldStepOutput};
 pub use engine::kernel::{ModeParams, StepConfig, StepOutput, StpParams, apply_dale_sign, brain_step};
 pub use engine::runtime_types::{CellState, Mode, RelaxInput, RelaxOutput, SnapshotMeta};
@@ -393,6 +396,98 @@ mod python_binding {
         (out.into_pyarray(py), attn.into_pyarray(py))
     }
 
+    /// Batched Riemann-surface attention (CPU). Inputs are flat row-major
+    /// with leading dim `bh = batch * heads`. Returns the output tensor
+    /// (bh * n * d_head); the attention matrix is not materialized.
+    #[pyfunction]
+    #[allow(clippy::too_many_arguments)]
+    fn nn_ce_riemann_fwd<'py>(
+        py: Python<'py>,
+        q: PyReadonlyArray1<'py, f32>,
+        k: PyReadonlyArray1<'py, f32>,
+        v: PyReadonlyArray1<'py, f32>,
+        cos: PyReadonlyArray1<'py, f32>,
+        sin: PyReadonlyArray1<'py, f32>,
+        sheet_bias: PyReadonlyArray1<'py, f32>,
+        bh: usize,
+        n: usize,
+        d_head: usize,
+        causal: bool,
+    ) -> &'py PyArray1<f32> {
+        let out = nn_ops::ce_riemann_fwd(
+            q.as_slice().expect("contiguous q"),
+            k.as_slice().expect("contiguous k"),
+            v.as_slice().expect("contiguous v"),
+            cos.as_slice().expect("contiguous cos"),
+            sin.as_slice().expect("contiguous sin"),
+            sheet_bias.as_slice().expect("contiguous sheet_bias"),
+            bh, n, d_head, causal,
+        );
+        out.into_pyarray(py)
+    }
+
+    /// Batched Riemann-surface attention (CUDA, host staging). Convenience
+    /// path for CPU-resident tensors that should compute on GPU.
+    #[cfg(feature = "cuda")]
+    #[pyfunction]
+    #[allow(clippy::too_many_arguments)]
+    fn nn_ce_riemann_fwd_cuda<'py>(
+        py: Python<'py>,
+        q: PyReadonlyArray1<'py, f32>,
+        k: PyReadonlyArray1<'py, f32>,
+        v: PyReadonlyArray1<'py, f32>,
+        cos: PyReadonlyArray1<'py, f32>,
+        sin: PyReadonlyArray1<'py, f32>,
+        sheet_bias: PyReadonlyArray1<'py, f32>,
+        bh: usize,
+        n: usize,
+        d_head: usize,
+        causal: bool,
+    ) -> PyResult<&'py PyArray1<f32>> {
+        use crate::cuda;
+        let out = cuda::ce_riemann_fwd_cuda(
+            q.as_slice().expect("contiguous q"),
+            k.as_slice().expect("contiguous k"),
+            v.as_slice().expect("contiguous v"),
+            cos.as_slice().expect("contiguous cos"),
+            sin.as_slice().expect("contiguous sin"),
+            sheet_bias.as_slice().expect("contiguous sheet_bias"),
+            bh, n, d_head, causal,
+        )
+        .map_err(pyo3::exceptions::PyRuntimeError::new_err)?;
+        Ok(out.into_pyarray(py))
+    }
+
+    /// Zero-copy CUDA entry. Inputs are raw CUDA device pointers
+    /// (`tensor.data_ptr()` from PyTorch). The kernel writes the result
+    /// directly into the buffer at `out_ptr`. Caller MUST ensure that
+    /// PyTorch's current stream has been synchronized before this call.
+    #[cfg(feature = "cuda")]
+    #[pyfunction]
+    #[allow(clippy::too_many_arguments)]
+    fn nn_ce_riemann_fwd_cuda_devptr(
+        q_ptr: u64,
+        k_ptr: u64,
+        v_ptr: u64,
+        cos_ptr: u64,
+        sin_ptr: u64,
+        sb_ptr: u64,
+        out_ptr: u64,
+        bh: usize,
+        n: usize,
+        d_head: usize,
+        causal: bool,
+    ) -> PyResult<()> {
+        use crate::cuda;
+        unsafe {
+            cuda::ce_riemann_fwd_cuda_devptr(
+                q_ptr, k_ptr, v_ptr, cos_ptr, sin_ptr, sb_ptr, out_ptr,
+                bh, n, d_head, causal,
+            )
+        }
+        .map_err(pyo3::exceptions::PyRuntimeError::new_err)
+    }
+
     #[pyfunction]
     #[allow(clippy::too_many_arguments)]
     fn nn_ce_dual_attn_fwd<'py>(
@@ -435,6 +530,11 @@ mod python_binding {
         m.add_function(wrap_pyfunction!(nn_ce_mfa_fwd, m)?)?;
         m.add_function(wrap_pyfunction!(nn_ce_dual_attn_fwd, m)?)?;
         m.add_function(wrap_pyfunction!(nn_ce_euler_fwd, m)?)?;
+        m.add_function(wrap_pyfunction!(nn_ce_riemann_fwd, m)?)?;
+        #[cfg(feature = "cuda")]
+        m.add_function(wrap_pyfunction!(nn_ce_riemann_fwd_cuda, m)?)?;
+        #[cfg(feature = "cuda")]
+        m.add_function(wrap_pyfunction!(nn_ce_riemann_fwd_cuda_devptr, m)?)?;
         Ok(())
     }
 }

@@ -23,4 +23,12 @@ examples/biology/data/
 *.pth
 *.csv
 *.png
+*.log
 /clarus/core/*.csv
+
+# Build artifacts
+*.so
+*.pyd
+*.dll
+*.dylib
+*.ptx

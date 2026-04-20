@@ -38,6 +38,41 @@ EULER_BASIS = (1.0, math.pi, math.e, math.pi * math.e, math.pi / math.e)
 EULER_BASIS_NAMES = ("1", "pi", "e", "pi*e", "pi/e")
 
 
+# ---------------------------------------------------------------------------
+# CE first-principle constants for rotary base.
+# ---------------------------------------------------------------------------
+# Φ-relaxation coupling from CE physics layer (alpha_s at M_Z).
+ALPHA_S = 0.11789
+# CE effective dimension D_eff = 3 + δ where δ = sin²θ_W·(1-sin²θ_W) is the
+# electroweak residual induced by Φ-relaxation. Numerically D_eff ≈ 3.178.
+_SIN2 = 4.0 * ALPHA_S ** (4.0 / 3.0)
+D_EFF = 3.0 + _SIN2 * (1.0 - _SIN2)
+
+
+def ce_rotary_base(block: int, layer_idx: int = 0, n_layers: int = 1,
+                   depth_aware: bool = False) -> float:
+    """CE-faithful rotary base for π-phase encoding.
+
+    base = π^(D_eff · depth_factor) · block
+
+    Two first-principle factors:
+      * π^D_eff : CE dimensional volume (replaces RoPE's empirical 10⁴).
+      * × block : causal-cone scaling — keeps the slowest rotary mode
+                  near-DC inside the context window for any block size.
+                  This is the "step커지면 그만큼" correction: if the
+                  sequence length grows N×, the base also grows N×, so
+                  the longest period stays a fixed fraction of the window.
+      * depth_factor (when depth_aware=True): per-layer RG-running of the
+        effective dimension. depth_factor_ℓ = 1 + ℓ/(L-1) ∈ [1, 2].
+        Compensates the cumulative phase added by stacking L layers.
+    """
+    if depth_aware and n_layers > 1:
+        depth_factor = 1.0 + layer_idx / (n_layers - 1)
+    else:
+        depth_factor = 1.0
+    return (math.pi ** (D_EFF * depth_factor)) * float(block)
+
+
 def _rotate_pairs(x: torch.Tensor, cos: torch.Tensor, sin: torch.Tensor) -> torch.Tensor:
     """Apply 2D rotation to adjacent dim pairs: [x0, x1] -> [x0·c - x1·s, x0·s + x1·c]."""
     # x: (..., n, d_head) with d_head even
@@ -210,6 +245,9 @@ class EulerCEAttention(nn.Module):
         block: int,
         xi_init: Optional[float] = None,
         learnable_gates: bool = True,
+        layer_idx: int = 0,
+        n_layers: int = 1,
+        depth_aware_freq: bool = False,
     ) -> None:
         super().__init__()
         assert d_model % n_heads == 0
@@ -223,24 +261,26 @@ class EulerCEAttention(nn.Module):
         self.register_buffer("tril",
                              torch.tril(torch.ones(block, block, dtype=torch.bool)))
 
-        # π-phase rotary: fundamental frequency is π, log-scaled across
-        # d_head pairs (cleaner than RoPE's 10^4 because π is the only
-        # periodic-normalization constant in the CE grammar).
+        # π-phase rotary base — see ce_rotary_base() for derivation.
+        base = ce_rotary_base(block, layer_idx=layer_idx,
+                              n_layers=n_layers,
+                              depth_aware=depth_aware_freq)
         k = torch.arange(0, self.d_head, 2, dtype=torch.float32) / self.d_head
-        # theta_k = pos · π · (1/π)^k = pos · π^{1-k}   (log-spaced over π)
-        self.register_buffer("pi_inv_freq", math.pi ** (1.0 - k))
+        self.register_buffer("pi_inv_freq", base ** (-k))
         self.register_buffer("pos", torch.arange(block, dtype=torch.float32))
 
-        # e-decay: log xi so xi > 0 strictly. Initialize xi = block/2.
+        # e-decay: log xi so xi > 0 strictly. Initialize xi = block/8 so the
+        # decay actually bites in [0, block]: e^{-block/xi} = e^{-8} ≈ 3e-4.
+        # block/2 made the decay numerically negligible.
         if xi_init is None:
-            xi_init = block / 2.0
+            xi_init = block / 8.0
         self.log_xi = nn.Parameter(torch.full((n_heads,),
                                               math.log(xi_init), dtype=torch.float32))
 
-        # Per-head gates on the two constants (π and e). sigmoid(logit).
+        # Per-head gates. sigmoid(1.0) ≈ 0.73 starts mild but learnable.
         if learnable_gates:
-            self.pi_gate_logit = nn.Parameter(torch.full((n_heads,), 2.0))
-            self.e_gate_logit = nn.Parameter(torch.full((n_heads,), 2.0))
+            self.pi_gate_logit = nn.Parameter(torch.full((n_heads,), 1.0))
+            self.e_gate_logit = nn.Parameter(torch.full((n_heads,), 1.0))
         else:
             self.register_buffer("pi_gate_logit", torch.full((n_heads,), 1e4))
             self.register_buffer("e_gate_logit", torch.full((n_heads,), 1e4))
@@ -248,6 +288,23 @@ class EulerCEAttention(nn.Module):
         # Precompute |i-j| distance matrix (non-negative, upper-tri set by mask)
         d_mat = (torch.arange(block).unsqueeze(1) - torch.arange(block).unsqueeze(0)).abs().float()
         self.register_buffer("d_mat", d_mat)
+
+    @torch.no_grad()
+    def extend_to(self, new_block: int) -> None:
+        """Grow positional / distance buffers for length-extrapolation eval.
+        Learnable parameters (log_xi, gates, qkv, o) are unchanged. The
+        rotary base (pi_inv_freq) is intentionally kept at its training-time
+        value — that is the *block-aware* design point of EulerCE."""
+        cur = self.pos.shape[0]
+        if new_block <= cur:
+            return
+        dev = self.pos.device
+        self.pos = torch.arange(new_block, dtype=torch.float32, device=dev)
+        self.tril = torch.tril(
+            torch.ones(new_block, new_block, dtype=torch.bool, device=dev))
+        d = (torch.arange(new_block).unsqueeze(1)
+             - torch.arange(new_block).unsqueeze(0)).abs().float().to(dev)
+        self.d_mat = d
 
     def _rotate(self, x, cos, sin):
         x1 = x[..., 0::2]; x2 = x[..., 1::2]
@@ -295,12 +352,16 @@ class EulerCEAttention(nn.Module):
 
 class EulerCEBlock(nn.Module):
     def __init__(self, d_model: int, n_heads: int, block: int,
-                 learnable_gates: bool = True):
+                 learnable_gates: bool = True,
+                 layer_idx: int = 0, n_layers: int = 1,
+                 depth_aware_freq: bool = False):
         super().__init__()
         self.ln1 = nn.LayerNorm(d_model)
         self.ln2 = nn.LayerNorm(d_model)
         self.attn = EulerCEAttention(d_model, n_heads, block,
-                                     learnable_gates=learnable_gates)
+                                     learnable_gates=learnable_gates,
+                                     layer_idx=layer_idx, n_layers=n_layers,
+                                     depth_aware_freq=depth_aware_freq)
         self.ffn = nn.Sequential(
             nn.Linear(d_model, 4 * d_model), nn.GELU(),
             nn.Linear(4 * d_model, d_model),
@@ -358,13 +419,25 @@ class RecursiveEulerCEBlock(nn.Module):
         max_iters: int = 1,
         tol: Optional[float] = None,
         learnable_gates: bool = True,
+        layer_idx: int = 0,
+        n_layers: int = 1,
+        depth_aware_freq: bool = False,
+        depth_aware_iters: bool = False,
     ) -> None:
         super().__init__()
         self.core = EulerCEBlock(d_model, n_heads, block,
-                                 learnable_gates=learnable_gates)
-        self.max_iters = max_iters
+                                 learnable_gates=learnable_gates,
+                                 layer_idx=layer_idx, n_layers=n_layers,
+                                 depth_aware_freq=depth_aware_freq)
+        # depth_aware_iters: deeper layers get more self-iterations to
+        # compensate accumulated representational complexity. Schedule:
+        #   iters_ℓ = max_iters + ℓ
+        # so a 4-layer stack with max_iters=1 yields {1,2,3,4} effective.
+        if depth_aware_iters:
+            self.max_iters = max_iters + layer_idx
+        else:
+            self.max_iters = max_iters
         self.tol = tol
-        # per-batch halt depths, useful for diagnostics
         self.last_depths: Optional[torch.Tensor] = None
 
     def _step(self, h: torch.Tensor) -> torch.Tensor:

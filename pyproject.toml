@@ -35,7 +35,7 @@ build-backend = "maturin"
 manifest-path = "clarus/core/Cargo.toml"
 python-source = "."
 module-name = "clarus._rust"
-features = ["python"]
+features = ["python", "cuda"]
 
 [tool.ruff]
 line-length = 100

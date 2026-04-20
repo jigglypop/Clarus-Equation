@@ -4,7 +4,7 @@
 //! Matrix multiplications use ndarray (matrixmultiply SIMD backend).
 //! Row-parallel via rayon where beneficial.
 
-use ndarray::{Array1, Array2, ArrayView1, ArrayView2, Axis};
+use ndarray::{Array1, ArrayView1, ArrayView2};
 use rayon::prelude::*;
 use std::cmp;
 
@@ -530,6 +530,131 @@ pub fn ce_dual_attn_fwd(
 // Scalar gates (pi_gate, e_gate, xi) are per-head -- supplied by the
 // caller for the relevant head. pi_inv_freq is the precomputed
 // pi^{1-k/(d/2)} array of length d_head/2.
+
+// ---- Riemann-surface PE attention -----------------------------------------
+//
+// Mirrors `clarus.ce_riemann_attn.RiemannRotaryAttention` per
+// `docs/8_리만/riemann_pe_spec.md`.
+//
+// Batched layout — a single call processes (BH, N, D) at once. cos/sin are
+// pre-broadcast to (BH, N, D/2); sheet_bias to (BH, N, N). All slices are
+// row-major contiguous.
+//
+// Pipeline (per (bh, i)):
+//   1. Rotate q[bh, i, :] (RoPE-style 2D rotation per pair) into q_rot.
+//   2. score_ij = (q_rot[bh,i] · k_rot[bh,j]) / sqrt(D) + sheet_bias[bh,i,j]
+//   3. causal mask + softmax + weighted sum over j → out[bh, i, :]
+//
+// Per-(bh, i) rotation of k_j is recomputed inside the j-loop to keep the
+// hot path cache-resident; the cost is dominated by the dot product anyway.
+
+#[allow(clippy::too_many_arguments)]
+pub fn ce_riemann_fwd(
+    q: &[f32],          // (bh * n * d_head)
+    k: &[f32],          // (bh * n * d_head)
+    v: &[f32],          // (bh * n * d_head)
+    cos: &[f32],        // (bh * n * d_head/2)
+    sin: &[f32],        // (bh * n * d_head/2)
+    sheet_bias: &[f32], // (bh * n * n)
+    bh: usize,
+    n: usize,
+    d_head: usize,
+    causal: bool,
+) -> Vec<f32> {
+    debug_assert!(d_head % 2 == 0);
+    let half = d_head / 2;
+    debug_assert_eq!(q.len(), bh * n * d_head);
+    debug_assert_eq!(k.len(), bh * n * d_head);
+    debug_assert_eq!(v.len(), bh * n * d_head);
+    debug_assert_eq!(cos.len(), bh * n * half);
+    debug_assert_eq!(sin.len(), bh * n * half);
+    debug_assert_eq!(sheet_bias.len(), bh * n * n);
+
+    let scale = 1.0 / (d_head as f32).sqrt();
+    let mut out = vec![0.0f32; bh * n * d_head];
+
+    // Pre-rotate the entire q tensor once per (bh, n) row.
+    let mut q_rot = vec![0.0f32; bh * n * d_head];
+    let mut k_rot = vec![0.0f32; bh * n * d_head];
+    q_rot
+        .par_chunks_mut(d_head)
+        .zip(k_rot.par_chunks_mut(d_head))
+        .enumerate()
+        .for_each(|(row, (qr, kr))| {
+            let qi = &q[row * d_head..(row + 1) * d_head];
+            let ki = &k[row * d_head..(row + 1) * d_head];
+            let ci = &cos[row * half..(row + 1) * half];
+            let si = &sin[row * half..(row + 1) * half];
+            for p in 0..half {
+                let c = ci[p];
+                let s = si[p];
+                let q0 = qi[2 * p]; let q1 = qi[2 * p + 1];
+                qr[2 * p]     = q0 * c - q1 * s;
+                qr[2 * p + 1] = q0 * s + q1 * c;
+                let k0 = ki[2 * p]; let k1 = ki[2 * p + 1];
+                kr[2 * p]     = k0 * c - k1 * s;
+                kr[2 * p + 1] = k0 * s + k1 * c;
+            }
+        });
+
+    // Outer-parallelize over (bh, i) rows.
+    out.par_chunks_mut(d_head)
+        .enumerate()
+        .for_each(|(row, out_row)| {
+            let bh_idx = row / n;
+            let i = row % n;
+            let q_rot_base = bh_idx * n * d_head;
+            let v_base     = bh_idx * n * d_head;
+            let bias_base  = bh_idx * n * n;
+
+            let qi = &q_rot[q_rot_base + i * d_head..q_rot_base + (i + 1) * d_head];
+            let bias_row = &sheet_bias[bias_base + i * n..bias_base + (i + 1) * n];
+
+            // First pass: raw scores + max
+            let mut scratch = vec![0.0f32; n];
+            let mut max_s = f32::NEG_INFINITY;
+            for j in 0..n {
+                if causal && j > i {
+                    scratch[j] = f32::NEG_INFINITY;
+                    continue;
+                }
+                let kj = &k_rot[q_rot_base + j * d_head..q_rot_base + (j + 1) * d_head];
+                let mut dot = 0.0f32;
+                for t in 0..d_head {
+                    dot += qi[t] * kj[t];
+                }
+                let s = dot * scale + bias_row[j];
+                scratch[j] = s;
+                if s > max_s { max_s = s; }
+            }
+
+            // Softmax (numerically stable)
+            let mut denom = 0.0f32;
+            for j in 0..n {
+                if scratch[j].is_finite() {
+                    let e = (scratch[j] - max_s).exp();
+                    scratch[j] = e;
+                    denom += e;
+                } else {
+                    scratch[j] = 0.0;
+                }
+            }
+            let inv = if denom > 0.0 { 1.0 / denom } else { 0.0 };
+
+            // out_i = sum_j (e_j * inv) * v_j
+            for t in 0..d_head { out_row[t] = 0.0; }
+            for j in 0..n {
+                let w = scratch[j] * inv;
+                if w == 0.0 { continue; }
+                let vj = &v[v_base + j * d_head..v_base + (j + 1) * d_head];
+                for t in 0..d_head {
+                    out_row[t] += w * vj[t];
+                }
+            }
+        });
+
+    out
+}
 
 pub fn ce_euler_fwd(
     q: &[f32],

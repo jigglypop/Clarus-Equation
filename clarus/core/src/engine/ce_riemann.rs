@@ -3,7 +3,7 @@
 //! Mirrors `clarus/ce_ops.py` Python fallback with exact numerical parity.
 //! All arrays are flat f32 slices (row-major).
 
-use ndarray::{Array1, Array2, ArrayView1, ArrayView2, Axis, s};
+use ndarray::{Array1, Array2, ArrayView1, ArrayView2};
 use rand::rngs::StdRng;
 use rand::{Rng, SeedableRng};
 use rand_distr::StandardNormal;
