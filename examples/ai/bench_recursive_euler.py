@@ -104,6 +104,113 @@ class RoPEAttnBlock(nn.Module):
         return x
 
 
+class NoPEAttnBlock(nn.Module):
+    """Causal attention with NO positional encoding (Kazemnejad et al. 2023).
+    Implicit position via causal mask only. Used as a baseline to isolate
+    the contribution of positional encoding choices."""
+
+    def __init__(self, d_model, n_heads, block):
+        super().__init__()
+        self.ln1 = nn.LayerNorm(d_model)
+        self.ln2 = nn.LayerNorm(d_model)
+        self.n_heads = n_heads
+        self.d_head = d_model // n_heads
+        self.qkv = nn.Linear(d_model, 3 * d_model, bias=False)
+        self.o = nn.Linear(d_model, d_model, bias=False)
+        self.ffn = nn.Sequential(
+            nn.Linear(d_model, 4 * d_model), nn.GELU(),
+            nn.Linear(4 * d_model, d_model),
+        )
+        self.register_buffer("tril",
+                             torch.tril(torch.ones(block, block, dtype=torch.bool)))
+
+    @torch.no_grad()
+    def extend_to(self, new_block: int) -> None:
+        cur = self.tril.shape[0]
+        if new_block <= cur:
+            return
+        dev = self.tril.device
+        self.tril = torch.tril(
+            torch.ones(new_block, new_block, dtype=torch.bool, device=dev))
+
+    def attn(self, x):
+        b, n, d = x.shape
+        qkv = self.qkv(x).view(b, n, 3, self.n_heads, self.d_head)
+        q, k, v = qkv.unbind(dim=2)
+        q = q.transpose(1, 2); k = k.transpose(1, 2); v = v.transpose(1, 2)
+        s = (q @ k.transpose(-1, -2)) / math.sqrt(self.d_head)
+        s = s.masked_fill(~self.tril[:n, :n], float("-inf"))
+        a = F.softmax(s, dim=-1)
+        return (a @ v).transpose(1, 2).contiguous().view(b, n, d)
+
+    def forward(self, x):
+        x = x + self.o(self.attn(self.ln1(x)))
+        x = x + self.ffn(self.ln2(x))
+        return x
+
+
+class XPosAttnBlock(RoPEAttnBlock):
+    """xPos (Sun et al. 2023) — RoPE + per-channel multiplicative decay.
+
+    After RoPE rotation, multiply Q_p by ζ^(p/scale_base) and K_p by
+    ζ^(−p/scale_base) per channel, where ζ_k depends on the channel:
+        ζ_k = (k + 0.4 · D/2) / (1.4 · D/2),  k = 0, …, D/2 − 1.
+    The dot product then carries ζ_k^((i−j)/scale_base) — multiplicative
+    magnitude decay with relative distance.
+
+    `scale_base` is set to `block` so the decay actually bites within the
+    training context (the original paper used 512 for 32k context;
+    the equivalent ratio for our setup is base ≈ block).
+    """
+
+    def __init__(self, d_model, n_heads, block, base=10000.0,
+                 scale_base: int = None):
+        super().__init__(d_model, n_heads, block, base=base)
+        if scale_base is None:
+            scale_base = block
+        self.scale_base = float(scale_base)
+        # ζ_k per dim-pair, slightly below 1 for high k (faster decay).
+        half = self.d_head // 2
+        k = torch.arange(0, half, dtype=torch.float32)
+        zeta = (k + 0.4 * half) / (1.4 * half)               # in (0, 1)
+        self.register_buffer("zeta", zeta)
+        # ζ_k^(p / scale_base) for each (p, k).
+        log_z = torch.log(zeta).clamp_min(-10.0)
+        scale_p = (self.pos.view(-1, 1) / self.scale_base) * log_z.view(1, -1)
+        self.register_buffer("scale_p", torch.exp(scale_p))   # (block, half)
+
+    @torch.no_grad()
+    def extend_to(self, new_block: int) -> None:
+        cur = self.pos.shape[0]
+        if new_block <= cur:
+            return
+        super().extend_to(new_block)
+        log_z = torch.log(self.zeta).clamp_min(-10.0).to(self.pos.device)
+        scale_p = (self.pos.view(-1, 1) / self.scale_base) * log_z.view(1, -1)
+        self.scale_p = torch.exp(scale_p)
+
+    def attn(self, x):
+        b, n, d = x.shape
+        qkv = self.qkv(x).view(b, n, 3, self.n_heads, self.d_head)
+        q, k, v = qkv.unbind(dim=2)
+        q = q.transpose(1, 2); k = k.transpose(1, 2); v = v.transpose(1, 2)
+        # RoPE rotation
+        theta = self.pos[:n].view(1, 1, n, 1) * self.inv_freq.view(1, 1, 1, -1)
+        cos = theta.cos(); sin = theta.sin()
+        q = self._rotate(q, cos, sin); k = self._rotate(k, cos, sin)
+        # xPos multiplicative scale: Q gets ζ^p, K gets ζ^(-p), per channel.
+        # scale_p[p, k] = ζ_k^(p / scale_base). Apply to even/odd dim pair
+        # equally (each pair shares one zeta value).
+        sp = self.scale_p[:n].view(1, 1, n, -1)              # (1,1,n,half)
+        sp_full = sp.repeat_interleave(2, dim=-1)            # (1,1,n,d_head)
+        q = q * sp_full
+        k = k / sp_full
+        s = (q @ k.transpose(-1, -2)) / math.sqrt(self.d_head)
+        s = s.masked_fill(~self.tril[:n, :n], float("-inf"))
+        a = F.softmax(s, dim=-1)
+        return (a @ v).transpose(1, 2).contiguous().view(b, n, d)
+
+
 class RoPEAlibiAttnBlock(RoPEAttnBlock):
     """RoPE + ALiBi-style linear distance decay (per-head learnable slope).
 

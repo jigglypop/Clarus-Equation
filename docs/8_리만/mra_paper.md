@@ -30,20 +30,22 @@ score 를 직접 유도한 새로운 attention 변종 **Mellin–Riemann Attenti
   extrapolation 에서 RoPE 보다 **8 %p 안정** (degrad +18.5 % vs +26.7 %).
 * **새로운 큰 발견 (4× extrap)**: `euler_ce_k1` 이 4× length extrapolation
   에서 **degrad +6.0 % 만 발생** (RoPE +26.7 %, MRA +18.5 % 대비 압도적).
-* **결정적 분해 (32× extrap, § 7.7)**: Euler-CE 외삽 우위의 **100 % 가
-  e-decay 단독 기여**. π-rotation 을 끄면 외삽 성능 그대로 유지되고
-  (`euler_no_pi` ≈ `euler_ce_k1` at 32×: −5.5 % vs −6.2 %), e-decay 를
-  끄면 RoPE 보다 더 나빠진다 (`euler_no_decay` +54.7 % vs RoPE +47.2 %).
-  **`rope_alibi` (RoPE + ALiBi linear decay) 가 32× 에서 Euler-CE 와 정확
-  히 동등** (−6.2 % vs −6.2 %) — Euler-CE 의 외삽 우위는 ALiBi 의 재발견.
-  Logarithmic decay (`mra_bias`) 는 linear 보다 외삽에 명확히 약함
-  (+40.3 % at 32×).
+* **결정적 분해 (32× extrap, 9 변종, § 7.7)**: 외삽 능력은 두 tier 로 명확히
+  갈린다. Tier 1 (외삽 OK, ≤ +10 %): `rope_alibi`, `euler_no_pi`, `euler_ce_k1`,
+  `xpos`, `nope`. Tier 2 (외삽 BAD, +29 ∼ +55 %): `mra`, `mra_bias`, `std_rope`,
+  `euler_no_decay`. **공통 패턴**: Tier 1 = "강한 distance attenuation 존재
+  (linear/multiplicative)" OR "rotation 자체 부재". Tier 2 = "rotation 존재
+  + attenuation 부재 또는 너무 약함 (log)".
+* **Euler-CE 외삽 = ALiBi 재발견**: `euler_no_pi` (e-decay only) ≈ `euler_ce_k1`
+  ≈ `rope_alibi` (32× 모두 −6 % 근방). π-rotation 은 외삽에 zero 기여.
+* **NoPE > RoPE 7 배 차이** (NoPE +7 % vs RoPE +47.2 %): RoPE 의 회전 자체가
+  OOD 의 직접 원인. Kazemnejad et al. (2023) 의 finding 을 재현.
 
-결론: (a) ζ 영점을 frequency 로 쓰는 직설적 시도는 실패. (b) RoPE 위에
-logarithmic decay 를 얹는 lean MRA 는 평균 PPL 동급 + 분산 절반.
-(c) **Length extrapolation 에는 linear additive distance bias (= ALiBi)
-만이 작동** — Euler-CE 의 e-decay 는 ALiBi 와 동치이고, π-rotation /
-log decay / ζ frequency 모두 외삽에 무력하다.
+결론: (a) ζ 영점을 frequency 로 쓰는 직설적 시도는 실패. (b) RoPE + ζ amp 의
+lean MRA 는 평균 PPL 동급 + 분산 절반. (c) **Length extrapolation 의
+구조적 결정성**: rotation 을 그대로 두면 강한 distance attenuation (linear
+ALiBi 또는 multiplicative xPos) 이 필수, 그렇지 않으면 차라리 rotation 자체
+가 없는 NoPE 가 낫다.
 
 ---
 
@@ -406,41 +408,48 @@ batch 때문에 § 7.6 보다 높지만, **상대 degradation 은 비교 가능*
 
 #### Relative degradation (PPL(N)/PPL(64) − 1, 낮을수록 좋음)
 
-| variant | ×2 | ×4 | ×8 | ×16 | **×32** |
-|---|---|---|---|---|---|
-| `std_rope` | −10.0 % | +12.6 % | +19.9 % | +37.7 % | **+47.2 %** |
-| `mra` | −9.2 % | +10.4 % | +14.1 % | +29.7 % | +40.8 % |
-| `mra_bias` | −8.8 % | +10.0 % | +13.9 % | +28.6 % | +40.3 % |
-| `euler_no_decay` (π only) | −8.2 % | +14.6 % | +24.3 % | +44.4 % | **+54.7 %** |
-| **`rope_alibi`** | −13.0 % | −3.3 % | −9.2 % | −7.6 % | **−6.2 %** |
-| **`euler_no_pi`** (e only) | −12.0 % | −2.4 % | −7.9 % | −6.5 % | **−5.5 %** |
-| **`euler_ce_k1`** | −13.1 % | −3.4 % | −9.5 % | −7.9 % | **−6.2 %** |
+| variant | ×2 | ×4 | ×8 | ×16 | **×32** | tier |
+|---|---|---|---|---|---|---|
+| **`rope_alibi`** | −13.0 % | −3.3 % | −9.2 % | −7.6 % | **−6.2 %** | **1** |
+| **`euler_no_pi`** (e only) | −12.0 % | −2.4 % | −7.9 % | −6.5 % | **−5.5 %** | **1** |
+| **`euler_ce_k1`** | −13.1 % | −3.4 % | −9.5 % | −7.9 % | **−6.2 %** | **1** |
+| **`xpos`** | −12.3 % | −2.0 % | −5.8 % | −1.2 % | **+4.1 %** | **1** |
+| **`nope`** | −7.4 % | +3.2 % | +1.8 % | +6.0 % | **+7.0 %** | **1** |
+| `mra_bias` | −8.8 % | +10.0 % | +13.9 % | +28.6 % | +40.3 % | 2 |
+| `mra` | −9.2 % | +10.4 % | +14.1 % | +29.7 % | +40.8 % | 2 |
+| `std_rope` | −10.0 % | +12.6 % | +19.9 % | +37.7 % | **+47.2 %** | 2 |
+| `euler_no_decay` (π only) | −8.2 % | +14.6 % | +24.3 % | +44.4 % | **+54.7 %** | 2 |
 
-#### 결정적 분해
+#### 결정적 분해 — Tier 1 vs Tier 2
 
-이 표는 세 개의 깨끗한 결론을 만든다.
+| Tier | 기준 | 메커니즘 |
+|---|---|---|
+| **1 (외삽 OK, ≤ +10 %)** | rope_alibi, euler_no_pi, euler_ce_k1, xpos, nope | distance attenuation **존재** OR rotation **부재** |
+| **2 (외삽 BAD, +29 ∼ +55 %)** | mra, mra_bias, std_rope, euler_no_decay | rotation **존재** + 강한 distance attenuation **부재** |
 
-1. **Euler-CE 의 외삽 우위는 100 % e-decay (linear additive distance
-   bias) 단독 효과** —
-   `euler_no_pi` (e-decay only) 는 32× 외삽에서 −5.5 %, 풀 `euler_ce_k1`
-   −6.2 % 와 사실상 동일. π-rotation 을 빼도 외삽 성능이 유지된다.
-2. **π-rotation 단독은 외삽 무력** —
-   `euler_no_decay` (π only) 는 32× 에서 +54.7 % 로 RoPE (+47.2 %) 보다
-   오히려 더 나쁨. block-aware base `π^D_eff · N` 도 long-context 안정성에
-   기여하지 않는다 (in-distribution 에서는 도움일 수 있음).
-3. **`rope_alibi` (RoPE + ALiBi-style learnable linear decay) ≈ Euler-CE** —
-   32× 외삽 −6.2 % vs Euler-CE −6.2 %, 16× 에서도 −7.6 % vs −7.9 %. EulerCE
-   의 e-decay 는 ALiBi (Press et al., 2022) 의 per-head learnable slope
-   변종으로 정확히 환원된다. **EulerCE 의 외삽 우위는 새로운 발견이 아니라
-   ALiBi 의 재발견**이다.
-4. **logarithmic decay (`mra_bias`) 는 linear decay 보다 외삽에 약함** —
-   32× 에서 +40.3 % vs ALiBi −6.2 %. logarithmic 감쇠는 long distance 에서
-   너무 천천히 줄어들어 학습 분포 안에서 weak signal 만 제공하고, 외삽 시
-   새 거리에 대한 강한 인덕티브 바이어스가 없다. **Length extrapolation
-   에는 linear additive bias 가 명확히 우수.**
+이 분리는 다섯 개의 깨끗한 결론을 만든다.
 
-이 분해는 본 작업의 가장 명확한 결론이다 — π/e/log/RoPE 의 4 가지 distance
-처리 방식 중 **linear additive (= ALiBi) 만이 외삽한다**.
+1. **Euler-CE 의 외삽 우위는 100 % e-decay (linear additive distance bias)
+   단독 효과** — `euler_no_pi` (e-decay only) ≈ 풀 `euler_ce_k1` (32× 에서
+   −5.5 % vs −6.2 %). π-rotation 을 빼도 외삽 성능 유지.
+2. **π-rotation 단독은 외삽 무력** — `euler_no_decay` (π only) 는 32× 에서
+   +54.7 % 로 RoPE 보다 오히려 더 나쁨. block-aware base `π^D_eff · N` 도
+   long-context 안정성에 무관 (in-distribution 에서는 도움일 수 있음).
+3. **`rope_alibi` ≈ Euler-CE** — 32× 외삽 −6.2 % vs −6.2 %. EulerCE 의
+   e-decay 는 ALiBi (Press 2022) 의 per-head learnable slope 변종으로 정확
+   히 환원. **EulerCE 의 외삽 우위는 ALiBi 의 재발견**.
+4. **xPos 도 외삽 OK** (+4.1 %) — multiplicative magnitude decay 도 linear
+   additive 정도는 아니지만 명확히 작동. distance attenuation 의 *형태* 보다
+   존재 자체가 더 결정적.
+5. **NoPE 가 RoPE 보다 외삽 잘 함** (+7.0 % vs +47.2 %, ×7 차이) — 회전 자체
+   가 OOD 의 직접 원인. Kazemnejad et al. (2023) 의 finding 을 본 setup
+   에서 재현.
+
+종합 결론: **OOD 외삽 = "강한 distance attenuation 존재" 또는 "rotation
+부재" 의 OR 조건**. RoPE 의 회전을 그대로 두고 attenuation 만 빼거나 약하게
+얹는 것 (`mra`, `mra_bias`, `std_rope`) 이 가장 위험. logarithmic decay 가
+linear 보다 약한 이유는 long-distance 에서 너무 천천히 감쇠해서 RoPE 회전의
+wrap-around 효과를 dominate 하지 못하기 때문.
 
 ---
 
@@ -526,12 +535,13 @@ batch 때문에 § 7.6 보다 높지만, **상대 degradation 은 비교 가능*
    범위가 RoPE 의 다중 스케일 해상도를 따라가지 못한다. 본격 검증 후 폐기.
 2. **분산 감소** — lean MRA 변종들이 RoPE 의 1/3 ~ 1/2 σ_PPL 을 달성. 평균
    PPL 동급 + reproducibility 우위.
-3. **Length extrapolation 의 진짜 메커니즘은 linear additive distance bias
-   (= ALiBi)** — § 7.7 의 32× 분해가 보여주듯, π-rotation / log decay /
-   block-aware base / ζ frequency 모두 외삽에 무력하고 오직 e-decay (=
-   ALiBi 변종) 만이 외삽한다. EulerCE 의 외삽 우위는 ALiBi 의 재발견이며,
-   이 결론은 향후 **long-context attention 설계는 linear additive bias
-   계열에 집중**해야 함을 시사.
+3. **Length extrapolation 의 구조적 결정성** — § 7.7 의 9 변종 32× 분해가
+   보여주듯, OOD 외삽 능력은 두 tier 로 명확히 갈린다. Tier 1 (외삽 OK)
+   는 (a) 강한 distance attenuation 이 존재하거나 (linear ALiBi, multiplicative
+   xPos) (b) rotation 이 아예 없는 (NoPE) 경우 모두. Tier 2 (외삽 BAD) 는
+   rotation 이 존재하면서 attenuation 이 부재 또는 약한 (log) 경우. EulerCE
+   의 외삽 우위는 ALiBi 의 재발견이며, **NoPE 가 RoPE 보다 7 배 잘 외삽**
+   한다는 사실은 RoPE 의 회전 자체가 OOD 의 원인임을 명확히 보여준다.
 
 본 작업의 가장 큰 가치는 ζ-attention 가설의 negative findings 를 명시하고,
 Euler-CE 외삽 우위의 진짜 메커니즘 (e-decay = ALiBi) 을 32× extrapolation

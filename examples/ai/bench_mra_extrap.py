@@ -41,7 +41,8 @@ from clarus.ce_euler import EulerCEBlock
 from clarus.ce_mra import MRABlock
 
 from examples.ai.bench_recursive_euler import (
-    RoPEAttnBlock, RoPEAlibiAttnBlock, load_docs, encode,
+    RoPEAttnBlock, RoPEAlibiAttnBlock, NoPEAttnBlock, XPosAttnBlock,
+    load_docs, encode,
 )
 
 
@@ -62,6 +63,12 @@ class ExtrapLM(nn.Module):
         self.variant = variant
         if variant == "std_rope":
             blocks = [RoPEAttnBlock(d_model, n_heads, train_block)
+                      for _ in range(n_layers)]
+        elif variant == "nope":
+            blocks = [NoPEAttnBlock(d_model, n_heads, train_block)
+                      for _ in range(n_layers)]
+        elif variant == "xpos":
+            blocks = [XPosAttnBlock(d_model, n_heads, train_block)
                       for _ in range(n_layers)]
         elif variant == "rope_alibi":
             blocks = [RoPEAlibiAttnBlock(d_model, n_heads, train_block)
@@ -208,8 +215,10 @@ def main():
     print(f"train_block = {args.train_block}, eval_blocks = {eval_blocks}\n")
 
     variants = [
+        "nope",
         "std_rope",
         "rope_alibi",
+        "xpos",
         "mra",
         "mra_bias",
         "euler_no_pi",
