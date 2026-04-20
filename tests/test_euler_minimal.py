@@ -196,6 +196,41 @@ def test_forward_after_extend_to():
 # --- autograd --------------------------------------------------------------
 
 
+def test_uniform_fast_path_matches_mixed_reference():
+    """The SDPA-based fast path (uniform head-type) must produce
+    numerically identical output to the per-head-gated reference path.
+    We force the reference path by mixing types but tying all heads to
+    the same logical type."""
+    torch.manual_seed(0)
+    x = torch.randn(2, 32, 64)
+    for spec in ["nope", "alibi", "rope", "xpos"]:
+        # Fast path
+        a_fast = EulerCEMinimal(64, 4, 32, head_types=spec).eval()
+        # Reference: same head_types but force mixed dispatch
+        a_ref = EulerCEMinimal(64, 4, 32, head_types=spec).eval()
+        a_ref._uniform_type = -1  # force fallback to _forward_mixed
+        # Tie weights so only the dispatch path differs.
+        a_ref.qkv.load_state_dict(a_fast.qkv.state_dict())
+        a_ref.o.load_state_dict(a_fast.o.state_dict())
+        with torch.no_grad():
+            a_ref.log_xi.copy_(a_fast.log_xi)
+        with torch.no_grad():
+            y_fast = a_fast(x)
+            y_ref = a_ref(x)
+        diff = (y_fast - y_ref).abs().max().item()
+        assert diff < 1e-4, f"{spec}: fast vs reference diverged: {diff}"
+
+
+def test_uniform_fast_path_dispatch_flag():
+    """Sanity: _uniform_type is set correctly."""
+    assert EulerCEMinimal(32, 4, 16, head_types="nope")._uniform_type == 0
+    assert EulerCEMinimal(32, 4, 16, head_types="alibi")._uniform_type == 1
+    assert EulerCEMinimal(32, 4, 16, head_types="rope")._uniform_type == 2
+    assert EulerCEMinimal(32, 4, 16, head_types="xpos")._uniform_type == 3
+    assert EulerCEMinimal(32, 4, 16, head_types="mix")._uniform_type == -1
+    assert EulerCEMinimal(32, 4, 16, head_types="all")._uniform_type == -1
+
+
 def test_autograd_flows_through_xi():
     torch.manual_seed(0)
     attn = EulerCEMinimal(32, 4, 16, head_types="alibi", learnable_xi=True)
@@ -204,9 +239,35 @@ def test_autograd_flows_through_xi():
     y.backward()
     assert attn.log_xi.grad is not None
     assert torch.isfinite(attn.log_xi.grad).all()
-    # heads with e_bit = 0 should have zero grad on log_xi (decay path is gated off)
-    attn2 = EulerCEMinimal(32, 4, 16, head_types="rope", learnable_xi=True)
-    y2 = attn2(x).sum()
-    y2.backward()
-    assert attn2.log_xi.grad is not None
-    assert torch.equal(attn2.log_xi.grad, torch.zeros_like(attn2.log_xi.grad))
+
+
+def test_autograd_skips_xi_when_decay_off_in_uniform_path():
+    """Uniform rope/nope head-types skip the decay term entirely (SDPA
+    fast path doesn't touch log_xi), so log_xi.grad stays None."""
+    torch.manual_seed(0)
+    x = torch.randn(1, 16, 32, requires_grad=True)
+    for spec in ("rope", "nope"):
+        attn = EulerCEMinimal(32, 4, 16, head_types=spec, learnable_xi=True)
+        attn(x).sum().backward()
+        # log_xi never participates → no grad accumulated.
+        assert attn.log_xi.grad is None or torch.equal(
+            attn.log_xi.grad, torch.zeros_like(attn.log_xi))
+
+
+def test_autograd_zero_xi_grad_in_mixed_path_for_decay_off_heads():
+    """In the mixed (per-head gated) path, decay-off heads contribute
+    zero gradient to their log_xi entry."""
+    torch.manual_seed(0)
+    x = torch.randn(1, 16, 32, requires_grad=True)
+    # head types [rope, alibi, rope, alibi] forces mixed path.
+    attn = EulerCEMinimal(32, 4, 16, head_types=[2, 1, 2, 1],
+                          learnable_xi=True)
+    assert attn._uniform_type == -1, "should be mixed dispatch"
+    attn(x).sum().backward()
+    g = attn.log_xi.grad
+    assert g is not None
+    # heads 0 and 2 (rope, e_bit=0) → grad must be zero
+    assert g[0].item() == 0.0 and g[2].item() == 0.0
+    # heads 1 and 3 (alibi, e_bit=1) → grad must be nonzero & finite
+    assert g[1].item() != 0.0 and g[3].item() != 0.0
+    assert torch.isfinite(g).all()

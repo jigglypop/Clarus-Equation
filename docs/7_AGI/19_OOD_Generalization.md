@@ -188,6 +188,33 @@ n-shot in-context learning 에서 n 외삽 능력은 토큰 attention 의 distan
 
 ---
 
+## 5.5. 5 Euler 상수 → 2 비트 head-type taxonomy
+
+본 발견에는 추가적인 구조적 환원이 따른다. Euler 5상수 `{e, π, i, 1, 0}` 의 attention 에서의 작용은:
+
+| 상수 | 작용 | 환원 |
+|---|---|---|
+| `π`, `i` | rotation generator (`e^{iπt}` 결합) | **axis 1**: rotation |
+| `e` | exponential decay base | **axis 2**: decay |
+| `1`, `0` | on/off gate values | 각 axis 의 1 비트 |
+
+→ **2 axis × 2 gate value = 2² = 4 head-types**, 2-bit string `(pi, e)` 으로 인코딩:
+
+| (pi, e) | 헤드 타입 | 문헌 분석 |
+|---|---|---|
+| (0, 0) | NoPE [Kazemnejad 2023] | Tier 1 |
+| (0, 1) | ALiBi [Press 2022] | Tier 1 (best) |
+| (1, 0) | RoPE [Su 2021] | **Tier 2** (외삽 fail) |
+| (1, 1) | xPos [Sun 2023] / Euler-CE | Tier 1 |
+
+**§ 2.2 의 모든 9 변종이 이 4 가지 중 하나로 정확히 매핑**되며, 4 가지 중 단 한 가지 (10 = pure rotation) 만 Tier 2 (외삽 catastrophic). 즉 effective head-type capacity = log₂ 3 ≈ 1.58 비트.
+
+`clarus/ce_euler.py::EulerCEMinimal` 구현 + 16 개 테스트로 정확성 검증. 2-bit minimal 변종이 canonical PE (NoPE, RoPE, ALiBi, xPos) 를 수치적으로 reproduce (`min_alibi` ≈ `rope_alibi`, `min_xpos` ≈ `euler_ce_k1`, `min_rope` = `std_rope` 정확 일치).
+
+이는 Clarus 본 thesis ("자유 파라미터 0 에 가깝게") 의 또 다른 사례 — **5 차원 continuous bit_logits 가 사실상 2 비트 axiom 으로 환원**되며, 학습은 axis 선택을 풀 필요 없이 axiom 으로 받고 continuous parameter (xi, slope) 만 학습하면 된다.
+
+---
+
 ## 6. AGI 아키텍처 설계 권고
 
 본 발견이 직접적으로 시사하는 설계 원칙:

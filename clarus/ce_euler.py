@@ -610,6 +610,10 @@ class EulerCEMinimal(nn.Module):
         self.register_buffer("head_types", types)
         self.register_buffer("pi_bits", pi_bits)
         self.register_buffer("e_bits", e_bits)
+        # Fast-path detector: when all heads share the same type we can
+        # bypass the per-head gating and dispatch to PyTorch SDPA
+        # (FlashAttention / Memory-Efficient backend).
+        self._uniform_type = int(types[0].item()) if (types == types[0]).all() else -1
 
         self.qkv = nn.Linear(d_model, 3 * d_model, bias=False)
         self.o = nn.Linear(d_model, d_model, bias=False)
@@ -666,6 +670,10 @@ class EulerCEMinimal(nn.Module):
         return out
 
     # ------------------------------------------------------------------
+    # Forward dispatch:
+    #   uniform head-type → SDPA fast path (Flash / Memory-Efficient)
+    #   mixed head-type   → per-head-gated reference path (slower but generic)
+    # ------------------------------------------------------------------
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         b, n, _ = x.shape
         H = self.n_heads
@@ -675,8 +683,52 @@ class EulerCEMinimal(nn.Module):
         k = k.transpose(1, 2)
         v = v.transpose(1, 2)
 
-        # Rotation (gated per-head by pi_bit). For pi_bit=0 heads the
-        # angle is identically zero → cos=1, sin=0 → identity rotation.
+        if self._uniform_type >= 0:
+            out = self._forward_uniform(q, k, v, n, H)
+        else:
+            out = self._forward_mixed(q, k, v, n, H)
+        out = out.transpose(1, 2).contiguous().view(b, n, self.d_model)
+        return self.o(out)
+
+    # ------------------------------------------------------------------
+    def _forward_uniform(self, q, k, v, n, H):
+        """Fast path when all heads share the same 2-bit type.
+
+        Dispatches to torch.nn.functional.scaled_dot_product_attention,
+        which selects FlashAttention (no attn_mask) or Memory-Efficient
+        Attention (with attn_mask) automatically.
+        """
+        ht = self._uniform_type
+        rotate = (ht & 0b10) != 0
+        decay = (ht & 0b01) != 0
+
+        if rotate:
+            theta = self.pos[:n].view(1, 1, n, 1) * self.inv_freq.view(1, 1, 1, -1)
+            cos = theta.cos()
+            sin = theta.sin()
+            q = self._rotate(q, cos, sin)
+            k = self._rotate(k, cos, sin)
+
+        if not decay:
+            # No additive bias → SDPA can use FlashAttention with is_causal.
+            return F.scaled_dot_product_attention(q, k, v, is_causal=True)
+
+        # Decay path: build (H, n, n) bias = causal_mask + (-d/xi_h).
+        xi = torch.exp(self.log_xi)                                  # (H,)
+        d = self.d_mat[:n, :n]                                       # (n, n)
+        bias = -d.unsqueeze(0) / xi.view(H, 1, 1)                    # (H, n, n)
+        # Apply causal mask additively (-inf above diagonal).
+        causal = torch.where(self.tril[:n, :n],
+                             torch.zeros((), device=q.device, dtype=bias.dtype),
+                             torch.full((), float("-inf"),
+                                        device=q.device, dtype=bias.dtype))
+        attn_mask = (bias + causal).unsqueeze(0)                     # (1, H, n, n)
+        return F.scaled_dot_product_attention(q, k, v, attn_mask=attn_mask)
+
+    # ------------------------------------------------------------------
+    def _forward_mixed(self, q, k, v, n, H):
+        """Reference path for mixed head-types (gating instead of branching)."""
+        # Per-head rotation amplitude scaled by pi_bit ∈ {0, 1}.
         theta = self.pos[:n].view(1, 1, n, 1) * self.inv_freq.view(1, 1, 1, -1)
         theta = theta * self.pi_bits.view(1, H, 1, 1)
         cos = theta.cos()
@@ -684,19 +736,16 @@ class EulerCEMinimal(nn.Module):
         q_rot = self._rotate(q, cos, sin)
         k_rot = self._rotate(k, cos, sin)
 
-        # Score.
         scores = (q_rot @ k_rot.transpose(-1, -2)) / math.sqrt(self.d_head)
 
-        # Decay (gated per-head by e_bit). For e_bit=0 the bias is zero.
-        xi = torch.exp(self.log_xi)                                 # (H,)
-        decay = -self.d_mat[:n, :n].view(1, 1, n, n) / xi.view(1, H, 1, 1)
-        decay = decay * self.e_bits.view(1, H, 1, 1)
-        scores = scores + decay
+        xi = torch.exp(self.log_xi)
+        decay_bias = -self.d_mat[:n, :n].view(1, 1, n, n) / xi.view(1, H, 1, 1)
+        decay_bias = decay_bias * self.e_bits.view(1, H, 1, 1)
+        scores = scores + decay_bias
 
         scores = scores.masked_fill(~self.tril[:n, :n], float("-inf"))
         attn = F.softmax(scores, dim=-1)
-        out = (attn @ v).transpose(1, 2).contiguous().view(b, n, self.d_model)
-        return self.o(out)
+        return attn @ v
 
 
 class EulerCEMinimalBlock(nn.Module):
