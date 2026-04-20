@@ -345,6 +345,54 @@ mod python_binding {
         )
     }
 
+    #[pyfunction]
+    #[allow(clippy::too_many_arguments)]
+    fn nn_ce_mfa_fwd<'py>(
+        py: Python<'py>,
+        q: PyReadonlyArray1<'py, f32>,
+        k: PyReadonlyArray1<'py, f32>,
+        v: PyReadonlyArray1<'py, f32>,
+        n: usize,
+        d: usize,
+        sigma_grav: f32,
+        w_lang: f32,
+        w_grav: f32,
+        causal: bool,
+    ) -> (&'py PyArray1<f32>, &'py PyArray1<f32>) {
+        let (out, attn) = nn_ops::ce_mfa_fwd(
+            q.as_slice().expect("contiguous q"),
+            k.as_slice().expect("contiguous k"),
+            v.as_slice().expect("contiguous v"),
+            n, d, sigma_grav, w_lang, w_grav, causal,
+        );
+        (out.into_pyarray(py), attn.into_pyarray(py))
+    }
+
+    #[pyfunction]
+    #[allow(clippy::too_many_arguments)]
+    fn nn_ce_dual_attn_fwd<'py>(
+        py: Python<'py>,
+        z_l: PyReadonlyArray1<'py, f32>,
+        z_g: PyReadonlyArray1<'py, f32>,
+        v: PyReadonlyArray1<'py, f32>,
+        n: usize,
+        d_l: usize,
+        d_g: usize,
+        d_m: usize,
+        sigma_grav: f32,
+        w_lang: f32,
+        w_grav: f32,
+        causal: bool,
+    ) -> (&'py PyArray1<f32>, &'py PyArray1<f32>) {
+        let (out, k) = nn_ops::ce_dual_attn_fwd(
+            z_l.as_slice().expect("contiguous z_l"),
+            z_g.as_slice().expect("contiguous z_g"),
+            v.as_slice().expect("contiguous v"),
+            n, d_l, d_g, d_m, sigma_grav, w_lang, w_grav, causal,
+        );
+        (out.into_pyarray(py), k.into_pyarray(py))
+    }
+
     #[pymodule]
     fn _rust(_py: Python, m: &PyModule) -> PyResult<()> {
         m.add_function(wrap_pyfunction!(topk_sparse, m)?)?;
@@ -359,6 +407,8 @@ mod python_binding {
         m.add_function(wrap_pyfunction!(nn_ce_codebook_pull, m)?)?;
         m.add_function(wrap_pyfunction!(nn_ce_relax_fwd, m)?)?;
         m.add_function(wrap_pyfunction!(nn_brain_step, m)?)?;
+        m.add_function(wrap_pyfunction!(nn_ce_mfa_fwd, m)?)?;
+        m.add_function(wrap_pyfunction!(nn_ce_dual_attn_fwd, m)?)?;
         Ok(())
     }
 }

@@ -271,3 +271,247 @@ pub fn gauge_lattice_fwd(
         });
     output
 }
+
+// ---- CE Softmax / Metric-Family Attention (MFA) ----------------------------
+//
+// Equation 6.B.1 (applied compendium): compute
+//   s_lang_ij = (q_i . k_j) / sqrt(d)
+//   s_grav_ij = -||k_i - k_j||^2 / (2 sigma^2)     (identity metric)
+//   s_ij      = w_lang * s_lang_ij + w_grav * s_grav_ij   (logit mixing)
+//   A_ij      = softmax_j(s_ij)  (with optional causal mask)
+//   out_i     = sum_j A_ij * v_j
+//
+// `q`, `k`, `v` are `(n, d)` row-major f32 slices for a single head.
+// `causal = true` applies a lower-triangular mask.
+
+#[inline(always)]
+fn dot_f32(a: &[f32], b: &[f32]) -> f32 {
+    let mut s = 0.0f32;
+    for i in 0..a.len() {
+        s += a[i] * b[i];
+    }
+    s
+}
+
+#[inline(always)]
+fn sq_dist_f32(a: &[f32], b: &[f32]) -> f32 {
+    let mut s = 0.0f32;
+    for i in 0..a.len() {
+        let d = a[i] - b[i];
+        s += d * d;
+    }
+    s
+}
+
+/// Fused CE MFA forward (single head, logit-mixing, identity gravity metric).
+///
+/// Returns (out `(n, d)`, attn `(n, n)`).
+pub fn ce_mfa_fwd(
+    q: &[f32],
+    k: &[f32],
+    v: &[f32],
+    n: usize,
+    d: usize,
+    sigma_grav: f32,
+    w_lang: f32,
+    w_grav: f32,
+    causal: bool,
+) -> (Vec<f32>, Vec<f32>) {
+    let scale_lang = 1.0 / (d as f32).sqrt();
+    let scale_grav = -1.0 / (2.0 * sigma_grav * sigma_grav);
+
+    let mut attn = vec![0.0f32; n * n];
+    let mut out = vec![0.0f32; n * d];
+
+    // Row-parallel over queries.
+    attn.par_chunks_mut(n)
+        .zip(out.par_chunks_mut(d))
+        .enumerate()
+        .for_each(|(i, (attn_row, out_row))| {
+            let q_i = &q[i * d..(i + 1) * d];
+            let k_i = &k[i * d..(i + 1) * d];
+
+            // compute raw scores for row i
+            let mut max_s = f32::NEG_INFINITY;
+            for j in 0..n {
+                if causal && j > i {
+                    attn_row[j] = f32::NEG_INFINITY;
+                    continue;
+                }
+                let k_j = &k[j * d..(j + 1) * d];
+                let s_lang = dot_f32(q_i, k_j) * scale_lang;
+                let s_grav = sq_dist_f32(k_i, k_j) * scale_grav;
+                let s = w_lang * s_lang + w_grav * s_grav;
+                attn_row[j] = s;
+                if s > max_s {
+                    max_s = s;
+                }
+            }
+
+            // softmax (numerically stable)
+            let mut denom = 0.0f32;
+            for j in 0..n {
+                if attn_row[j].is_finite() {
+                    let e = (attn_row[j] - max_s).exp();
+                    attn_row[j] = e;
+                    denom += e;
+                } else {
+                    attn_row[j] = 0.0;
+                }
+            }
+            let inv = if denom > 0.0 { 1.0 / denom } else { 0.0 };
+            for j in 0..n {
+                attn_row[j] *= inv;
+            }
+
+            // out_i = A_i @ V
+            for t in 0..d {
+                out_row[t] = 0.0;
+            }
+            for j in 0..n {
+                let a = attn_row[j];
+                if a == 0.0 {
+                    continue;
+                }
+                let v_j = &v[j * d..(j + 1) * d];
+                for t in 0..d {
+                    out_row[t] += a * v_j[t];
+                }
+            }
+        });
+
+    (out, attn)
+}
+
+// ---- Dual-graph attention (precise mirror of ce_laplacian.DualLaplacianBlock) ----
+//
+// Inputs per forward (single head, already projected):
+//   z_l: (n, d_l)  = P_lang(h)
+//   z_g: (n, d_g)  = P_grav(h)
+//   v:   (n, d_m)  = V(h)
+//   sigma_grav: RBF bandwidth for the gravity graph
+//   w_lang, w_grav: convex gate (expect w_lang + w_grav == 1)
+//   causal: lower-triangular transition mask
+//
+// Computes:
+//   A_l[i,j] = max(0, cos(z_l[i], z_l[j])), with diag = 0, symmetric
+//   A_g[i,j] = exp(-||z_g[i] - z_g[j]||^2 / 2 sigma^2), diag = 0, symmetric
+//   K_l = row_norm(apply_causal(A_l))
+//   K_g = row_norm(apply_causal(A_g))
+//   K   = w_lang * K_l + w_grav * K_g              (still row-stochastic)
+//   out[i, t] = sum_j K[i,j] * v[j, t]
+//
+// Returns (out, K) for validation. K is flattened row-major (n * n).
+
+pub fn ce_dual_attn_fwd(
+    z_l: &[f32],
+    z_g: &[f32],
+    v: &[f32],
+    n: usize,
+    d_l: usize,
+    d_g: usize,
+    d_m: usize,
+    sigma_grav: f32,
+    w_lang: f32,
+    w_grav: f32,
+    causal: bool,
+) -> (Vec<f32>, Vec<f32>) {
+    debug_assert_eq!(z_l.len(), n * d_l);
+    debug_assert_eq!(z_g.len(), n * d_g);
+    debug_assert_eq!(v.len(), n * d_m);
+
+    let inv_2s2 = -1.0f32 / (2.0 * sigma_grav * sigma_grav);
+    let eps = 1e-8f32;
+
+    // Pre-compute row norms for cosine.
+    let mut norm_l = vec![0.0f32; n];
+    for i in 0..n {
+        let row = &z_l[i * d_l..(i + 1) * d_l];
+        let mut s = 0.0f32;
+        for &x in row {
+            s += x * x;
+        }
+        norm_l[i] = s.sqrt().max(eps);
+    }
+
+    let mut k_combined = vec![0.0f32; n * n];
+    let mut out = vec![0.0f32; n * d_m];
+
+    // Row-parallel over query positions.
+    k_combined
+        .par_chunks_mut(n)
+        .zip(out.par_chunks_mut(d_m))
+        .enumerate()
+        .for_each(|(i, (k_row, out_row))| {
+            let zi_l = &z_l[i * d_l..(i + 1) * d_l];
+            let zi_g = &z_g[i * d_g..(i + 1) * d_g];
+            let ni_l = norm_l[i];
+
+            // First pass: raw unnormalized A_l, A_g for this row, applying causal.
+            // We compute on-the-fly the two row sums for renormalization.
+            let mut sum_l = 0.0f32;
+            let mut sum_g = 0.0f32;
+            // Scratch row stored as (lang, grav) in k_row in halves -- we will
+            // overwrite twice: first with A_l, then combine with A_g.
+            // To save a buffer we accumulate per-j into two scalars and then
+            // pass through again; but that's two loops. Instead allocate a
+            // small scratch here.
+            let mut row_l = vec![0.0f32; n];
+            let mut row_g = vec![0.0f32; n];
+            for j in 0..n {
+                if causal && j > i {
+                    continue;
+                }
+                if j == i {
+                    continue; // diagonal zero
+                }
+                let zj_l = &z_l[j * d_l..(j + 1) * d_l];
+                let zj_g = &z_g[j * d_g..(j + 1) * d_g];
+
+                // Cosine
+                let mut dot = 0.0f32;
+                for k in 0..d_l {
+                    dot += zi_l[k] * zj_l[k];
+                }
+                let cos = (dot / (ni_l * norm_l[j])).max(0.0);
+                row_l[j] = cos;
+                sum_l += cos;
+
+                // RBF
+                let mut d2 = 0.0f32;
+                for k in 0..d_g {
+                    let diff = zi_g[k] - zj_g[k];
+                    d2 += diff * diff;
+                }
+                let rbf = (d2 * inv_2s2).exp();
+                row_g[j] = rbf;
+                sum_g += rbf;
+            }
+
+            // Row-normalize each kernel separately, then convex combine.
+            let inv_l = if sum_l > eps { 1.0 / sum_l } else { 0.0 };
+            let inv_g = if sum_g > eps { 1.0 / sum_g } else { 0.0 };
+            for j in 0..n {
+                let kl = row_l[j] * inv_l;
+                let kg = row_g[j] * inv_g;
+                k_row[j] = w_lang * kl + w_grav * kg;
+            }
+
+            // out_i = K_i @ V
+            for t in 0..d_m {
+                out_row[t] = 0.0;
+            }
+            for j in 0..n {
+                let a = k_row[j];
+                if a == 0.0 {
+                    continue;
+                }
+                let vj = &v[j * d_m..(j + 1) * d_m];
+                for t in 0..d_m {
+                    out_row[t] += a * vj[t];
+                }
+            }
+        });
+
+    (out, k_combined)
+}
