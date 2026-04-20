@@ -83,15 +83,26 @@ def grav_attention(
     z: torch.Tensor,
     sigma: float = 1.0,
     mask: Optional[torch.Tensor] = None,
+    L: Optional[torch.Tensor] = None,
 ) -> torch.Tensor:
     """Distance-kernel attention (event/gravity metric).
 
-    Uses squared Euclidean distance in the latent space. A learned or
-    fixed metric tensor ``G`` can be provided via whitening ``z``
-    before calling this function. Equation 6.B.1 with G = I.
+    Equation 6.B.1 with squared Mahalanobis distance:
+
+        d_G^2(z_i, z_j) = (z_i - z_j)^T (L L^T) (z_i - z_j)
+
+    When ``L`` is None, reduces to identity metric (pure Euclidean),
+    implemented without the pairwise diff tensor via the expansion
+    ``||z_i - z_j||^2 = ||z_i||^2 + ||z_j||^2 - 2 z_i^T z_j``.
     """
-    diff = z.unsqueeze(-2) - z.unsqueeze(-3)  # (..., n, n, d)
-    d2 = (diff * diff).sum(dim=-1)  # (..., n, n)
+    if L is not None:
+        zp = torch.matmul(z, L)  # (..., n, r)
+    else:
+        zp = z
+
+    sq = (zp * zp).sum(dim=-1, keepdim=True)  # (..., n, 1)
+    d2 = sq + sq.transpose(-1, -2) - 2.0 * torch.matmul(zp, zp.transpose(-1, -2))
+    d2 = d2.clamp_min(0.0)
     scores = -d2 / (2.0 * sigma * sigma)
     if mask is not None:
         scores = scores.masked_fill(~mask, float("-inf"))
@@ -106,6 +117,7 @@ def metric_family_attention(
     gate: ModeGate = None,
     sigma_grav: float = 1.0,
     mask: Optional[torch.Tensor] = None,
+    L_grav: Optional[torch.Tensor] = None,
 ) -> torch.Tensor:
     """Full MFA — equation 6.B.1 with two metrics (lang, grav).
 
@@ -113,7 +125,9 @@ def metric_family_attention(
     output  = A_total @ v
 
     When ``z_grav`` is None, the projection defaults to k (no separate
-    event embedding). Returns (..., n, d_v).
+    event embedding). ``L_grav`` is the low-rank Cholesky-like factor
+    of the gravity metric (G = L L^T); if None, identity is used.
+    Returns (..., n, d_v).
     """
     if gate is None:
         gate = mode_gate("wake")
@@ -121,7 +135,7 @@ def metric_family_attention(
         z_grav = k
 
     a_lang = lang_attention(q, k, mask=mask)
-    a_grav = grav_attention(z_grav, sigma=sigma_grav, mask=mask)
+    a_grav = grav_attention(z_grav, sigma=sigma_grav, mask=mask, L=L_grav)
 
     a_total = gate.omega_lang * a_lang + gate.omega_grav * a_grav
     return torch.matmul(a_total, v)
