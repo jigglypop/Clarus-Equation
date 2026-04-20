@@ -345,6 +345,29 @@ mod python_binding {
         )
     }
 
+    #[pyfunction]
+    #[allow(clippy::too_many_arguments)]
+    fn nn_ce_mfa_fwd<'py>(
+        py: Python<'py>,
+        q: PyReadonlyArray1<'py, f32>,
+        k: PyReadonlyArray1<'py, f32>,
+        v: PyReadonlyArray1<'py, f32>,
+        n: usize,
+        d: usize,
+        sigma_grav: f32,
+        w_lang: f32,
+        w_grav: f32,
+        causal: bool,
+    ) -> (&'py PyArray1<f32>, &'py PyArray1<f32>) {
+        let (out, attn) = nn_ops::ce_mfa_fwd(
+            q.as_slice().expect("contiguous q"),
+            k.as_slice().expect("contiguous k"),
+            v.as_slice().expect("contiguous v"),
+            n, d, sigma_grav, w_lang, w_grav, causal,
+        );
+        (out.into_pyarray(py), attn.into_pyarray(py))
+    }
+
     #[pymodule]
     fn _rust(_py: Python, m: &PyModule) -> PyResult<()> {
         m.add_function(wrap_pyfunction!(topk_sparse, m)?)?;
@@ -359,6 +382,7 @@ mod python_binding {
         m.add_function(wrap_pyfunction!(nn_ce_codebook_pull, m)?)?;
         m.add_function(wrap_pyfunction!(nn_ce_relax_fwd, m)?)?;
         m.add_function(wrap_pyfunction!(nn_brain_step, m)?)?;
+        m.add_function(wrap_pyfunction!(nn_ce_mfa_fwd, m)?)?;
         Ok(())
     }
 }

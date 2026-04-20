@@ -271,3 +271,114 @@ pub fn gauge_lattice_fwd(
         });
     output
 }
+
+// ---- CE Softmax / Metric-Family Attention (MFA) ----------------------------
+//
+// Equation 6.B.1 (applied compendium): compute
+//   s_lang_ij = (q_i . k_j) / sqrt(d)
+//   s_grav_ij = -||k_i - k_j||^2 / (2 sigma^2)     (identity metric)
+//   s_ij      = w_lang * s_lang_ij + w_grav * s_grav_ij   (logit mixing)
+//   A_ij      = softmax_j(s_ij)  (with optional causal mask)
+//   out_i     = sum_j A_ij * v_j
+//
+// `q`, `k`, `v` are `(n, d)` row-major f32 slices for a single head.
+// `causal = true` applies a lower-triangular mask.
+
+#[inline(always)]
+fn dot_f32(a: &[f32], b: &[f32]) -> f32 {
+    let mut s = 0.0f32;
+    for i in 0..a.len() {
+        s += a[i] * b[i];
+    }
+    s
+}
+
+#[inline(always)]
+fn sq_dist_f32(a: &[f32], b: &[f32]) -> f32 {
+    let mut s = 0.0f32;
+    for i in 0..a.len() {
+        let d = a[i] - b[i];
+        s += d * d;
+    }
+    s
+}
+
+/// Fused CE MFA forward (single head, logit-mixing, identity gravity metric).
+///
+/// Returns (out `(n, d)`, attn `(n, n)`).
+pub fn ce_mfa_fwd(
+    q: &[f32],
+    k: &[f32],
+    v: &[f32],
+    n: usize,
+    d: usize,
+    sigma_grav: f32,
+    w_lang: f32,
+    w_grav: f32,
+    causal: bool,
+) -> (Vec<f32>, Vec<f32>) {
+    let scale_lang = 1.0 / (d as f32).sqrt();
+    let scale_grav = -1.0 / (2.0 * sigma_grav * sigma_grav);
+
+    let mut attn = vec![0.0f32; n * n];
+    let mut out = vec![0.0f32; n * d];
+
+    // Row-parallel over queries.
+    attn.par_chunks_mut(n)
+        .zip(out.par_chunks_mut(d))
+        .enumerate()
+        .for_each(|(i, (attn_row, out_row))| {
+            let q_i = &q[i * d..(i + 1) * d];
+            let k_i = &k[i * d..(i + 1) * d];
+
+            // compute raw scores for row i
+            let mut max_s = f32::NEG_INFINITY;
+            for j in 0..n {
+                if causal && j > i {
+                    attn_row[j] = f32::NEG_INFINITY;
+                    continue;
+                }
+                let k_j = &k[j * d..(j + 1) * d];
+                let s_lang = dot_f32(q_i, k_j) * scale_lang;
+                let s_grav = sq_dist_f32(k_i, k_j) * scale_grav;
+                let s = w_lang * s_lang + w_grav * s_grav;
+                attn_row[j] = s;
+                if s > max_s {
+                    max_s = s;
+                }
+            }
+
+            // softmax (numerically stable)
+            let mut denom = 0.0f32;
+            for j in 0..n {
+                if attn_row[j].is_finite() {
+                    let e = (attn_row[j] - max_s).exp();
+                    attn_row[j] = e;
+                    denom += e;
+                } else {
+                    attn_row[j] = 0.0;
+                }
+            }
+            let inv = if denom > 0.0 { 1.0 / denom } else { 0.0 };
+            for j in 0..n {
+                attn_row[j] *= inv;
+            }
+
+            // out_i = A_i @ V
+            for t in 0..d {
+                out_row[t] = 0.0;
+            }
+            for j in 0..n {
+                let a = attn_row[j];
+                if a == 0.0 {
+                    continue;
+                }
+                let v_j = &v[j * d..(j + 1) * d];
+                for t in 0..d {
+                    out_row[t] += a * v_j[t];
+                }
+            }
+        });
+
+    (out, attn)
+}
