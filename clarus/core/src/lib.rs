@@ -370,6 +370,31 @@ mod python_binding {
 
     #[pyfunction]
     #[allow(clippy::too_many_arguments)]
+    fn nn_ce_euler_fwd<'py>(
+        py: Python<'py>,
+        q: PyReadonlyArray1<'py, f32>,
+        k: PyReadonlyArray1<'py, f32>,
+        v: PyReadonlyArray1<'py, f32>,
+        pi_inv_freq: PyReadonlyArray1<'py, f32>,
+        n: usize,
+        d_head: usize,
+        pi_gate: f32,
+        e_gate: f32,
+        xi: f32,
+        causal: bool,
+    ) -> (&'py PyArray1<f32>, &'py PyArray1<f32>) {
+        let (out, attn) = nn_ops::ce_euler_fwd(
+            q.as_slice().expect("contiguous q"),
+            k.as_slice().expect("contiguous k"),
+            v.as_slice().expect("contiguous v"),
+            pi_inv_freq.as_slice().expect("contiguous pi_inv_freq"),
+            n, d_head, pi_gate, e_gate, xi, causal,
+        );
+        (out.into_pyarray(py), attn.into_pyarray(py))
+    }
+
+    #[pyfunction]
+    #[allow(clippy::too_many_arguments)]
     fn nn_ce_dual_attn_fwd<'py>(
         py: Python<'py>,
         z_l: PyReadonlyArray1<'py, f32>,
@@ -409,6 +434,7 @@ mod python_binding {
         m.add_function(wrap_pyfunction!(nn_brain_step, m)?)?;
         m.add_function(wrap_pyfunction!(nn_ce_mfa_fwd, m)?)?;
         m.add_function(wrap_pyfunction!(nn_ce_dual_attn_fwd, m)?)?;
+        m.add_function(wrap_pyfunction!(nn_ce_euler_fwd, m)?)?;
         Ok(())
     }
 }
