@@ -1046,17 +1046,27 @@ class ContinuousClarusCell(nn.Module):
             self._state = torch.zeros_like(like)
 
     def _rotate(self, h: torch.Tensor, angle: torch.Tensor) -> torch.Tensor:
-        """Rotate adjacent dim-pairs of h by per-pair angle (K_pairs,)."""
-        cos = angle.cos().view(1, 1, -1)
-        sin = angle.sin().view(1, 1, -1)
+        """Rotate adjacent dim-pairs of h by per-pair angle (K_pairs,).
+
+        Non-in-place implementation (stack instead of empty+assign) so
+        that backward works correctly across persistent-state BPTT cuts
+        — with `torch.empty_like` the fresh uninitialized buffer can
+        alias memory that holds saved-for-backward tensors from the
+        previous step, which triggers 'backward through the graph a
+        second time' when autograd then tries to reuse them.
+        """
+        cos = angle.cos().view(1, 1, 1, -1)
+        sin = angle.sin().view(1, 1, 1, -1)
         B, N, D = h.shape
         x = h.view(B, N, -1, self.K_pairs * 2)      # (B, N, H, 2K)
         x1 = x[..., 0::2]
         x2 = x[..., 1::2]
-        out = torch.empty_like(x)
-        out[..., 0::2] = x1 * cos - x2 * sin
-        out[..., 1::2] = x1 * sin + x2 * cos
-        return out.view(B, N, D)
+        rx1 = x1 * cos - x2 * sin
+        rx2 = x1 * sin + x2 * cos
+        # Interleave (rx1[:, :, :, k], rx2[:, :, :, k]) pairs back into
+        # 2K — torch.stack + view preserves autograd history cleanly.
+        out = torch.stack([rx1, rx2], dim=-1)       # (B, N, H, K, 2)
+        return out.reshape(B, N, D)
 
     # ------------------------------------------------------------------
     # Borbely 2-process + arousal transitions
@@ -1284,7 +1294,12 @@ class ContinuousClarusCell(nn.Module):
                 self._meta_events.append(
                     (self._clock, iters, float(depth_before), float(depth_after))
                 )
-        return self._state
+        # Return the value with the current step's autograd graph
+        # intact, but detach the PERSISTENT state so future .step()
+        # calls start a fresh graph (BPTT cut at step boundary).
+        step_output = self._state
+        self._state = self._state.detach()
+        return step_output
 
     def autonomous(self, n_steps: int) -> torch.Tensor:
         """Run `n_steps` iterations with no external input.
