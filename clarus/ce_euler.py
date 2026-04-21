@@ -769,12 +769,9 @@ class EulerCEMinimal(nn.Module):
             # No additive bias → SDPA can use FlashAttention with is_causal.
             return F.scaled_dot_product_attention(q, k, v, is_causal=True)
 
-        # Decay path: build (H, n, n) bias = causal_mask + (-d/xi_h).
-        # Uses the cached `_causal_bias` (no per-call `torch.where`).
+        # Decay path: Q-tiled to keep attn_mask peak at O(H·Q_CHUNK·N).
         xi = torch.exp(self.log_xi)                                  # (H,)
-        bias = -self.d_mat[:n, :n].unsqueeze(0) / xi.view(H, 1, 1)   # (H, n, n)
-        attn_mask = (bias + self._causal_bias[:n, :n]).unsqueeze(0)  # (1, H, n, n)
-        return F.scaled_dot_product_attention(q, k, v, attn_mask=attn_mask)
+        return self._chunked_decay_sdpa(q, k, v, xi, n, H)
 
     # ------------------------------------------------------------------
     def _forward_mixed(self, q, k, v, n, H):
@@ -816,13 +813,7 @@ class EulerCEMinimal(nn.Module):
 
             if t & 1:  # decay bit
                 xi = torch.exp(self.log_xi.index_select(0, idx))        # (h_t,)
-                bias = -self.d_mat[:n, :n].unsqueeze(0) / xi.view(h_t, 1, 1)
-                if causal_view is None:
-                    causal_view = self._causal_bias[:n, :n]
-                attn_mask = (bias + causal_view).unsqueeze(0)            # (1, h_t, n, n)
-                out_t = F.scaled_dot_product_attention(
-                    q_t, k_t, v_t, attn_mask=attn_mask
-                )
+                out_t = self._chunked_decay_sdpa(q_t, k_t, v_t, xi, n, h_t)
             else:
                 out_t = F.scaled_dot_product_attention(
                     q_t, k_t, v_t, is_causal=True
@@ -830,6 +821,57 @@ class EulerCEMinimal(nn.Module):
 
             out.index_copy_(1, idx, out_t)
 
+        return out
+
+    # ------------------------------------------------------------------
+    # FlashAttention-style Q-tiled SDPA for decay buckets.
+    #
+    # The ALiBi additive mask `-|i-j|/ξ_h + causal` has shape (h_t, N, N),
+    # which dominates peak memory for long context (1 GB at H=16 N=4096).
+    # We process queries in tiles of `Q_CHUNK` rows so only the mask slab
+    # for that tile is materialized. Output math is identical to a single
+    # SDPA call — each row's softmax is independent over the full K axis.
+    Q_CHUNK = 256
+    # Tiling below this N is pure overhead (single SDPA call is cheaper
+    # than N / Q_CHUNK Python-level dispatches).
+    Q_CHUNK_THRESHOLD = 1024
+    # ------------------------------------------------------------------
+    def _chunked_decay_sdpa(self, q_t, k_t, v_t, xi, n, h_t):
+        """SDPA with per-head ALiBi mask built on the fly per Q-chunk.
+
+        Peak attn_mask memory: `h_t * Q_CHUNK * n * 4` bytes — for N=4096
+        Q_CHUNK=256 h_t=8 this is 32 MB versus the 512 MB of the full mask.
+        """
+        if n < self.Q_CHUNK_THRESHOLD:
+            # Small N: tile overhead outweighs savings, fall back to the
+            # single-mask path with the cached causal bias.
+            bias = -self.d_mat[:n, :n].unsqueeze(0) / xi.view(h_t, 1, 1)
+            attn_mask = (bias + self._causal_bias[:n, :n]).unsqueeze(0)
+            return F.scaled_dot_product_attention(
+                q_t, k_t, v_t, attn_mask=attn_mask
+            )
+
+        out = torch.empty_like(q_t)
+        xi_inv = (1.0 / xi).view(h_t, 1, 1)                              # (h_t, 1, 1)
+        cols = self.pos[:n].view(1, 1, n)                                # (1, 1, n)
+        for qs in range(0, n, self.Q_CHUNK):
+            qe = min(qs + self.Q_CHUNK, n)
+            rows = self.pos[qs:qe].view(1, qe - qs, 1)                   # (1, chunk, 1)
+            # |i - j|, broadcast to (1, chunk, n).
+            d_chunk = (rows - cols).abs()
+            # Causal: 0 below/on diagonal, -inf above. Fused into the
+            # same allocation as the decay bias.
+            causal_chunk = torch.where(
+                rows >= cols,
+                torch.zeros((), dtype=d_chunk.dtype, device=d_chunk.device),
+                torch.full((), float("-inf"),
+                           dtype=d_chunk.dtype, device=d_chunk.device),
+            )
+            # (h_t, chunk, n) = -|i-j| / ξ_h + causal
+            mask_chunk = (-d_chunk * xi_inv + causal_chunk).unsqueeze(0)
+            out[:, :, qs:qe] = F.scaled_dot_product_attention(
+                q_t[:, :, qs:qe], k_t, v_t, attn_mask=mask_chunk
+            )
         return out
 
 
