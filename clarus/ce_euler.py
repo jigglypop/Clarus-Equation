@@ -306,6 +306,7 @@ __all__ = [
     "EulerCEMinimalBlock",
     "RecursiveEulerCEBlock",
     "ContinuousClarusCell",
+    "ContinuousClarusStack",
     "fixed_point_loss",
     "head_types_from_spec",
 ]
@@ -1403,6 +1404,205 @@ class ContinuousClarusCell(nn.Module):
         var = sum((v - mean) ** 2 for v in log) / len(log)
         rel_std = (var ** 0.5) / mean
         return float(max(0.0, 1.0 - rel_std))
+
+
+# ---------------------------------------------------------------------------
+# ContinuousClarusStack — synchronized multi-cell sleep cycle
+# ---------------------------------------------------------------------------
+#
+# Biology: the whole cortex oscillates coherently during slow-wave sleep,
+# not independently per column. REM theta is globally entrained. In our
+# model that translates to: the whole stack must share mode, sleep
+# pressure, and phase clock. Individual cells keep their OWN persistent
+# state, STDP matrix, and hippocampus, but transitions and rhythm are
+# stack-level.
+#
+# The stack's `step(x)` pushes its master state (mode, pressure, clock)
+# into every cell, then runs a standard transformer-style feedforward
+# pass `x → cell_0 → cell_1 → ... → cell_{L-1}`.  Each cell advances
+# its own state with the shared mode/clock. The stack then measures
+# cross-layer coherence (Pearson correlation of state_norm_trace
+# between adjacent layers) as a slow-wave coherence analogue.
+
+
+class ContinuousClarusStack(nn.Module):
+    """Stack of ContinuousClarusCells sharing mode, sleep pressure, and
+    phase clock. All cells see the same wake/NREM/REM transitions and
+    advance their depth-phase rotations in lock-step.
+
+    Every `cell_*` kwarg is forwarded to each internal cell.  Borbely
+    parameters and mode thresholds are owned by the stack and
+    mirrored down to cells on every step. Per-cell memory / STDP /
+    neuromodulator traces remain independent so you can still inspect
+    them individually.
+    """
+
+    def __init__(
+        self,
+        n_layers: int,
+        d_model: int,
+        n_heads: int,
+        block: int,
+        *,
+        # stack-level Borbely / arousal (mirrors ContinuousClarusCell)
+        auto_mode: bool = False,
+        tau_wake: float = 100.0,
+        tau_sleep: float = 30.0,
+        s_max: float = 2.0,
+        wake_to_nrem_threshold: float = 1.0,
+        nrem_to_rem_threshold: float = 0.45,
+        rem_to_wake_threshold: float = 0.15,
+        wake_arousal_trigger: float = 1.5,
+        rem_arousal_trigger: float = 1.0,
+        **cell_kwargs,
+    ) -> None:
+        super().__init__()
+        if n_layers < 1:
+            raise ValueError("n_layers must be ≥ 1")
+        # Each cell's own auto_mode is forced off — the stack drives.
+        cell_kwargs.pop("auto_mode", None)
+        cells = []
+        for _ in range(n_layers):
+            cells.append(ContinuousClarusCell(
+                d_model=d_model, n_heads=n_heads, block=block,
+                auto_mode=False,
+                **cell_kwargs,
+            ))
+        self.cells = nn.ModuleList(cells)
+        self.n_layers = n_layers
+
+        # Stack-level Borbely state.
+        self.auto_mode: bool = bool(auto_mode)
+        self._tau_w_inv = 1.0 / max(tau_wake, 1.0)
+        self._tau_s_inv = 1.0 / max(tau_sleep, 1.0)
+        self._s_max = float(s_max)
+        self._t_w2n = float(wake_to_nrem_threshold)
+        self._t_n2r = float(nrem_to_rem_threshold)
+        self._t_r2w = float(rem_to_wake_threshold)
+        self._arousal_nrem = float(wake_arousal_trigger)
+        self._arousal_rem = float(rem_arousal_trigger)
+        self._sleep_pressure: float = 0.0
+        self._mode: str = _MODE_WAKE
+        self._clock: int = 0
+        self._transitions: list[tuple[int, str, str, str]] = []
+
+    # --------------------------------------------------------------
+    @property
+    def mode(self) -> str:
+        return self._mode
+
+    @property
+    def clock(self) -> int:
+        return self._clock
+
+    @property
+    def sleep_pressure(self) -> float:
+        return self._sleep_pressure
+
+    def set_mode(self, mode: str) -> None:
+        if mode not in _VALID_MODES:
+            raise ValueError(f"mode must be one of {_VALID_MODES}, got {mode!r}")
+        self._mode = mode
+        for c in self.cells:
+            c.set_mode(mode)
+
+    def transitions(self) -> list[tuple[int, str, str, str]]:
+        return list(self._transitions)
+
+    def reset(self, clear_memory: bool = False) -> None:
+        self._sleep_pressure = 0.0
+        self._mode = _MODE_WAKE
+        self._clock = 0
+        self._transitions.clear()
+        for c in self.cells:
+            c.reset(clear_memory=clear_memory)
+
+    # --------------------------------------------------------------
+    def _update_pressure(self) -> None:
+        if self._mode == _MODE_WAKE:
+            self._sleep_pressure += (self._s_max - self._sleep_pressure) * self._tau_w_inv
+        elif self._mode == _MODE_NREM:
+            self._sleep_pressure -= self._sleep_pressure * self._tau_s_inv
+        else:
+            self._sleep_pressure -= self._sleep_pressure * self._tau_s_inv * 0.5
+        self._sleep_pressure = max(0.0, min(self._s_max, self._sleep_pressure))
+
+    def _auto_transition(self, input_norm: float) -> tuple[str, Optional[str]]:
+        cur = self._mode
+        p = self._sleep_pressure
+        if cur == _MODE_WAKE:
+            if p > self._t_w2n and input_norm < 1.0:
+                return _MODE_NREM, "pressure_saturated"
+            return cur, None
+        if cur == _MODE_NREM:
+            if input_norm > self._arousal_nrem:
+                return _MODE_WAKE, "external_arousal"
+            if p < self._t_n2r:
+                return _MODE_REM, "pressure_relaxed"
+            return cur, None
+        if input_norm > self._arousal_rem:
+            return _MODE_WAKE, "external_arousal"
+        if p < self._t_r2w:
+            return _MODE_WAKE, "pressure_dissipated"
+        return cur, None
+
+    def step(self, x: Optional[torch.Tensor] = None) -> torch.Tensor:
+        """Advance one step through every cell with shared mode/clock."""
+        if self.auto_mode:
+            if x is None:
+                input_norm = 0.0
+            else:
+                input_norm = float(x.detach().norm().item()) / max(float(x.numel()) ** 0.5, 1e-8)
+            self._update_pressure()
+            next_mode, reason = self._auto_transition(input_norm)
+            if next_mode != self._mode:
+                self._transitions.append((self._clock, self._mode, next_mode, reason or ""))
+                for c in self.cells:
+                    c.set_mode(next_mode)
+                self._mode = next_mode
+
+        # Synchronize clocks so all cells rotate in phase (slow-wave coherence).
+        for c in self.cells:
+            c._clock = self._clock
+            c._mode = self._mode
+
+        # Feedforward: x → cell_0 → cell_1 → ...
+        h = x
+        for c in self.cells:
+            h = c.step(h)
+
+        self._clock += 1
+        return h
+
+    def forward(self, x: torch.Tensor, n_steps: int = 1) -> torch.Tensor:
+        for _ in range(n_steps):
+            self.step(x)
+        return self.cells[-1]._state
+
+    # --------------------------------------------------------------
+    def layer_coherence(self, window: int = 16) -> float:
+        """Mean Pearson correlation of `||h_t||` across adjacent layers.
+
+        Near 1.0: cells oscillate in phase (slow-wave coherence / REM
+        global theta). Near 0.0: layers are independent. Near -1.0:
+        antiphase (unusual, signals disorganisation).
+        """
+        traces = [c.state_norm_trace()[-window:] for c in self.cells]
+        if any(len(t) < 2 for t in traces):
+            return 0.0
+        corrs: list[float] = []
+        for i in range(len(traces) - 1):
+            a = torch.tensor(traces[i], dtype=torch.float32)
+            b = torch.tensor(traces[i + 1], dtype=torch.float32)
+            if len(a) != len(b):
+                m = min(len(a), len(b))
+                a = a[-m:]; b = b[-m:]
+            a0 = a - a.mean()
+            b0 = b - b.mean()
+            sa = a0.std().clamp_min(1e-8)
+            sb = b0.std().clamp_min(1e-8)
+            corrs.append(float((a0 / sa * b0 / sb).mean().item()))
+        return sum(corrs) / max(1, len(corrs))
 
 
 # ---------------------------------------------------------------------------
