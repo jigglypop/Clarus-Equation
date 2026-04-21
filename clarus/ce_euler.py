@@ -497,6 +497,34 @@ class EulerCEBlock(nn.Module):
 #    L_fp = || F(F(h*)) - F(h*) ||^2
 #
 # pulls the output h* = F(x) toward being a true fixed point.
+#
+# ---------------------------------------------------------------------------
+# Depth-phase rotation (U(1) on the recursion axis)
+# ---------------------------------------------------------------------------
+#
+# RoPE encodes *position* as U(1) rotation of dim-pairs (cos/sin). Self-
+# recursion is structurally the same symmetry on a *depth* axis:
+#
+#    z_i^(t+1) = e^{i·phi_k·t} · F(z_i^(t))
+#
+# giving attention scores that depend on (position diff, depth) jointly —
+# a U(1)×U(1) gauge structure (2-torus). Biologically this is the theta-
+# gamma nesting pattern: gamma cycles bind perceptual features within a
+# theta cycle, and theta phase precession encodes sequence order. Here
+# position plays the role of gamma phase (fast-varying, RoPE) and depth
+# plays the role of theta phase (slow-varying, phi).
+#
+# CE bootstrap gives the natural convergence radius: the contraction
+# factor rho = 0.155 means the depth spiral decays as rho^t, so k=3
+# iterations reach rho^3 ≈ 0.0037 ~ 10x float32 precision — explaining
+# the empirical saturation at k=3 without a free parameter.
+#
+# The depth phase can be turned off (`depth_phase="off"`, default) to
+# preserve the original ClarusCell behaviour. When on, `log_phi` is a
+# per-dim-pair learnable parameter initialised by one of:
+#   - "zero" (start identity, fully learnable)
+#   - "rho"  (init at log(0.155) — CE contraction)
+#   - a float value (init at log(value))
 
 
 class RecursiveEulerCEBlock(nn.Module):
@@ -508,6 +536,8 @@ class RecursiveEulerCEBlock(nn.Module):
         tol: if not None, halt when relative change is below this
              threshold. If None, always run ``max_iters`` iterations.
         learnable_gates: forwarded to EulerCEAttention
+        depth_phase: "off" (default, backward compat), "zero", "rho",
+            or a float. Enables U(1) rotation on the recursion axis.
     """
 
     def __init__(
@@ -522,6 +552,7 @@ class RecursiveEulerCEBlock(nn.Module):
         n_layers: int = 1,
         depth_aware_freq: bool = False,
         depth_aware_iters: bool = False,
+        depth_phase: object = "off",
     ) -> None:
         super().__init__()
         self.core = EulerCEBlock(d_model, n_heads, block,
@@ -539,8 +570,57 @@ class RecursiveEulerCEBlock(nn.Module):
         self.tol = tol
         self.last_depths: Optional[torch.Tensor] = None
 
+        # --- depth-phase U(1) setup -----------------------------------
+        self.depth_phase_mode: str = "off"
+        self.log_phi: Optional[nn.Parameter] = None
+        if depth_phase != "off" and depth_phase is not False and depth_phase is not None:
+            # Per-dim-pair phase (same for every head — a global theta rhythm).
+            d_head = d_model // n_heads
+            assert d_head % 2 == 0, "d_head must be even for depth-phase rotation"
+            K = d_head // 2
+            if depth_phase == "zero":
+                init_val = 1e-4           # ~zero but log-defined
+                self.depth_phase_mode = "zero"
+            elif depth_phase == "rho":
+                init_val = 0.155          # CE contraction rate
+                self.depth_phase_mode = "rho"
+            elif isinstance(depth_phase, (int, float)):
+                init_val = float(depth_phase)
+                assert init_val > 0, "depth_phase float must be > 0"
+                self.depth_phase_mode = f"float({init_val:.4g})"
+            else:
+                raise ValueError(f"unknown depth_phase: {depth_phase!r}")
+            self.log_phi = nn.Parameter(torch.full((K,), math.log(init_val)))
+
     def _step(self, h: torch.Tensor) -> torch.Tensor:
         return self.core(h)
+
+    def _apply_depth_phase(self, h: torch.Tensor, t: int) -> torch.Tensor:
+        """Rotate adjacent dim pairs by angle `phi_k · t` per pair.
+
+        Expects `h` shape `(B, N, d_model)`. Phase advances linearly with
+        iteration index `t`, so at convergence the trajectory traces a
+        spiral in the complex plane defined by each `(dim_{2k}, dim_{2k+1})`
+        pair. When the core is contractive (Banach), the spiral damps into
+        the fixed point; when `phi_k ≠ 0` the orbit is a limit cycle.
+        """
+        if self.log_phi is None:
+            return h
+        phi = torch.exp(self.log_phi)            # (K,)
+        angle = phi * float(t)                    # (K,)
+        cos = angle.cos().view(1, 1, -1)          # (1, 1, K)
+        sin = angle.sin().view(1, 1, -1)
+        # Reshape h to (B, N, H, d_head) then apply to adjacent pairs.
+        B, N, D = h.shape
+        x = h.view(B, N, -1, cos.shape[-1] * 2)   # (B, N, H, 2K=d_head)
+        x1 = x[..., 0::2]
+        x2 = x[..., 1::2]
+        rx1 = x1 * cos - x2 * sin
+        rx2 = x1 * sin + x2 * cos
+        out = torch.empty_like(x)
+        out[..., 0::2] = rx1
+        out[..., 1::2] = rx2
+        return out.view(B, N, D)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         h = x
@@ -549,14 +629,16 @@ class RecursiveEulerCEBlock(nn.Module):
 
         if self.tol is None:
             # Fixed-depth recursion (differentiable through all steps).
-            for _ in range(self.max_iters):
+            for t in range(self.max_iters):
                 h = self._step(h)
+                h = self._apply_depth_phase(h, t + 1)
             self.last_depths = depths
             return h
 
         # While-loop recursion with halting on tolerance.
         for t in range(self.max_iters):
             h_new = self._step(h)
+            h_new = self._apply_depth_phase(h_new, t + 1)
             # per-example relative change (detached — halt decision is not diff)
             with torch.no_grad():
                 num = (h_new - h).flatten(1).norm(dim=-1)
