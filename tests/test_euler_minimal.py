@@ -70,6 +70,31 @@ def test_pi_e_bits_correctly_decoded():
     assert torch.equal(attn.e_bits, torch.tensor([0., 1., 0., 1.]))
 
 
+def test_packed_bitmask_matches_per_head_bits():
+    """The packed int bitmasks must encode the same pi/e bits as the
+    float buffers — one python int replaces an (H,) tensor of floats."""
+    attn = EulerCEMinimal(32, 4, 8, head_types="all")   # [0,1,2,3]
+    # pi bit per head h0..h3 = [0,0,1,1] → mask = 0b1100 = 12
+    # e  bit per head h0..h3 = [0,1,0,1] → mask = 0b1010 = 10
+    assert attn._pi_mask == 0b1100
+    assert attn._e_mask == 0b1010
+    for h in range(4):
+        assert ((attn._pi_mask >> h) & 1) == int(attn.pi_bits[h].item())
+        assert ((attn._e_mask >> h) & 1) == int(attn.e_bits[h].item())
+
+
+def test_bucket_partition_covers_all_heads():
+    """Every head lands in exactly one bucket; inv_perm is a valid perm."""
+    attn = EulerCEMinimal(64, 8, 16, head_types=[0, 3, 1, 2, 3, 1, 0, 2])
+    seen = []
+    for t in attn._present_buckets:
+        idx = getattr(attn, f"_bucket_{t}_idx")
+        seen.extend(idx.tolist())
+    assert sorted(seen) == list(range(8)), "buckets must cover every head once"
+    # inv_perm is a permutation of [0..7]
+    assert sorted(attn._bucket_inv_perm.tolist()) == list(range(8))
+
+
 # --- forward sanity --------------------------------------------------------
 
 
@@ -271,3 +296,74 @@ def test_autograd_zero_xi_grad_in_mixed_path_for_decay_off_heads():
     # heads 1 and 3 (alibi, e_bit=1) → grad must be nonzero & finite
     assert g[1].item() != 0.0 and g[3].item() != 0.0
     assert torch.isfinite(g).all()
+
+
+# --- bucketed mixed path ----------------------------------------------------
+
+
+def _per_head_reference(attn: EulerCEMinimal, x: torch.Tensor) -> torch.Tensor:
+    """Head-by-head attention using the same math as the gated path,
+    written without any bucketing or SDPA. Used as the ground truth
+    for the mixed-path equivalence test."""
+    b, n, _ = x.shape
+    H, d = attn.n_heads, attn.d_head
+    qkv = attn.qkv(x).view(b, n, 3, H, d)
+    q, k, v = qkv.unbind(dim=2)
+    q = q.transpose(1, 2); k = k.transpose(1, 2); v = v.transpose(1, 2)
+    outs = []
+    for h in range(H):
+        t = int(attn.head_types[h].item())
+        q_h = q[:, h:h + 1]; k_h = k[:, h:h + 1]; v_h = v[:, h:h + 1]
+        if (t >> 1) & 1:
+            theta = attn.pos[:n].view(1, 1, n, 1) * attn.inv_freq.view(1, 1, 1, -1)
+            c = theta.cos(); s = theta.sin()
+            q_h = attn._rotate(q_h, c, s)
+            k_h = attn._rotate(k_h, c, s)
+        s = (q_h @ k_h.transpose(-1, -2)) / math.sqrt(d)
+        if t & 1:
+            xi = torch.exp(attn.log_xi[h])
+            dmat = attn.d_mat[:n, :n]
+            s = s + (-dmat / xi).view(1, 1, n, n)
+        s = s.masked_fill(~attn.tril[:n, :n], float("-inf"))
+        a = torch.softmax(s, dim=-1)
+        outs.append(a @ v_h)
+    heads_out = torch.cat(outs, dim=1)
+    return attn.o(heads_out.transpose(1, 2).contiguous().view(b, n, attn.d_model))
+
+
+def test_mixed_path_matches_per_head_reference():
+    """Bucketed SDPA mixed path == head-by-head manual reference."""
+    torch.manual_seed(0)
+    x = torch.randn(2, 32, 64)
+    for spec in ("mix", "all", [1, 3, 0, 2, 2, 1, 3, 0]):
+        attn = EulerCEMinimal(64, 8, 32, head_types=spec).eval()
+        assert attn._uniform_type == -1
+        with torch.no_grad():
+            actual = attn(x)
+            expected = _per_head_reference(attn, x)
+        diff = (actual - expected).abs().max().item()
+        assert diff < 1e-4, f"{spec}: mixed bucketed diverged: {diff}"
+
+
+def test_bucketed_path_permutation_invariant():
+    """Shuffling head_types must permute output heads but preserve the
+    underlying per-head attention. The bucketed dispatch's inv_perm must
+    restore the original order exactly."""
+    torch.manual_seed(0)
+    x = torch.randn(1, 16, 32)
+    # Two equivalent specs that differ only in head ordering.
+    order_a = [0, 1, 2, 3]
+    order_b = [2, 0, 3, 1]
+    attn_a = EulerCEMinimal(32, 4, 16, head_types=order_a).eval()
+    attn_b = EulerCEMinimal(32, 4, 16, head_types=order_b).eval()
+    # Tie Q/K/V/O so the only difference is head-type position.
+    attn_b.qkv.load_state_dict(attn_a.qkv.state_dict())
+    attn_b.o.load_state_dict(attn_a.o.state_dict())
+    with torch.no_grad():
+        attn_b.log_xi.copy_(attn_a.log_xi)
+    with torch.no_grad():
+        y_a = _per_head_reference(attn_a, x)
+        y_b = _per_head_reference(attn_b, x)
+        # Both must agree with the bucketed path.
+        assert (attn_a(x) - y_a).abs().max().item() < 1e-4
+        assert (attn_b(x) - y_b).abs().max().item() < 1e-4
