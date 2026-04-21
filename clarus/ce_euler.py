@@ -667,6 +667,16 @@ class EulerCEMinimal(nn.Module):
         d_mat = (torch.arange(block).unsqueeze(1)
                  - torch.arange(block).unsqueeze(0)).abs().float()
         self.register_buffer("d_mat", d_mat)
+        # Pre-materialized causal bias (0 on/below diagonal, -inf above).
+        # Computed once here (and on extend_to) so forward never pays
+        # the N·N `torch.where` cost. For N=4096 this saves 64 MB of
+        # per-call allocation.
+        causal_bias = torch.where(
+            self.tril,
+            torch.zeros((), dtype=torch.float32),
+            torch.full((), float("-inf"), dtype=torch.float32),
+        )
+        self.register_buffer("_causal_bias", causal_bias)
 
         # RoPE-style frequencies for heads with rotation bit on.
         k = torch.arange(0, self.d_head, 2, dtype=torch.float32) / self.d_head
@@ -697,6 +707,11 @@ class EulerCEMinimal(nn.Module):
             torch.ones(new_block, new_block, dtype=torch.bool, device=dev))
         self.d_mat = (torch.arange(new_block).unsqueeze(1)
                       - torch.arange(new_block).unsqueeze(0)).abs().float().to(dev)
+        self._causal_bias = torch.where(
+            self.tril,
+            torch.zeros((), dtype=torch.float32, device=dev),
+            torch.full((), float("-inf"), dtype=torch.float32, device=dev),
+        )
 
     # ------------------------------------------------------------------
     @staticmethod
@@ -755,15 +770,10 @@ class EulerCEMinimal(nn.Module):
             return F.scaled_dot_product_attention(q, k, v, is_causal=True)
 
         # Decay path: build (H, n, n) bias = causal_mask + (-d/xi_h).
+        # Uses the cached `_causal_bias` (no per-call `torch.where`).
         xi = torch.exp(self.log_xi)                                  # (H,)
-        d = self.d_mat[:n, :n]                                       # (n, n)
-        bias = -d.unsqueeze(0) / xi.view(H, 1, 1)                    # (H, n, n)
-        # Apply causal mask additively (-inf above diagonal).
-        causal = torch.where(self.tril[:n, :n],
-                             torch.zeros((), device=q.device, dtype=bias.dtype),
-                             torch.full((), float("-inf"),
-                                        device=q.device, dtype=bias.dtype))
-        attn_mask = (bias + causal).unsqueeze(0)                     # (1, H, n, n)
+        bias = -self.d_mat[:n, :n].unsqueeze(0) / xi.view(H, 1, 1)   # (H, n, n)
+        attn_mask = (bias + self._causal_bias[:n, :n]).unsqueeze(0)  # (1, H, n, n)
         return F.scaled_dot_product_attention(q, k, v, attn_mask=attn_mask)
 
     # ------------------------------------------------------------------
@@ -777,11 +787,17 @@ class EulerCEMinimal(nn.Module):
         this drops `cos`/`sin` on rotation-off heads, the `(1, H, n, n)`
         decay bias on decay-off heads, the full `(b, H, n, n)` scores
         tensor, and the explicit softmax — SDPA tiles internally and
-        picks FlashAttention when the mask allows it.
+        picks FlashAttention when the mask allows it. Output is placed
+        directly into the final head slot via `index_copy_`, avoiding
+        a `cat` + permutation round-trip.
         """
+        b = q.shape[0]
+        d_head = q.shape[-1]
+        out = torch.empty(b, H, n, d_head, dtype=q.dtype, device=q.device)
+
         theta_cos: Optional[torch.Tensor] = None
         theta_sin: Optional[torch.Tensor] = None
-        outputs: list[torch.Tensor] = []
+        causal_view: Optional[torch.Tensor] = None
 
         for t in self._present_buckets:
             idx = getattr(self, f"_bucket_{t}_idx")
@@ -800,14 +816,10 @@ class EulerCEMinimal(nn.Module):
 
             if t & 1:  # decay bit
                 xi = torch.exp(self.log_xi.index_select(0, idx))        # (h_t,)
-                d = self.d_mat[:n, :n]                                   # (n, n)
-                bias = -d.unsqueeze(0) / xi.view(h_t, 1, 1)              # (h_t, n, n)
-                causal = torch.where(
-                    self.tril[:n, :n],
-                    torch.zeros((), device=bias.device, dtype=bias.dtype),
-                    torch.full((), float("-inf"), device=bias.device, dtype=bias.dtype),
-                )
-                attn_mask = (bias + causal).unsqueeze(0)                 # (1, h_t, n, n)
+                bias = -self.d_mat[:n, :n].unsqueeze(0) / xi.view(h_t, 1, 1)
+                if causal_view is None:
+                    causal_view = self._causal_bias[:n, :n]
+                attn_mask = (bias + causal_view).unsqueeze(0)            # (1, h_t, n, n)
                 out_t = F.scaled_dot_product_attention(
                     q_t, k_t, v_t, attn_mask=attn_mask
                 )
@@ -816,12 +828,9 @@ class EulerCEMinimal(nn.Module):
                     q_t, k_t, v_t, is_causal=True
                 )
 
-            outputs.append(out_t)
+            out.index_copy_(1, idx, out_t)
 
-        concat_out = outputs[0] if len(outputs) == 1 else torch.cat(outputs, dim=1)
-        if self._bucket_is_identity:
-            return concat_out
-        return concat_out.index_select(1, self._bucket_inv_perm)
+        return out
 
 
 class EulerCEMinimalBlock(nn.Module):
