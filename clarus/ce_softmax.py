@@ -155,20 +155,33 @@ def metric_family_attention(
         z_grav = k
 
     if combine == "convex":
+        # Convex blend of two softmax outputs — needs explicit attention
+        # weights, so we keep the two-softmax manual path.
         a_lang = lang_attention(q, k, mask=mask)
         a_grav = grav_attention(z_grav, sigma=sigma_grav, mask=mask, L=L_grav)
         a_total = gate.omega_lang * a_lang + gate.omega_grav * a_grav
-    elif combine == "logit":
-        s_lang = lang_scores(q, k)
-        s_grav = grav_scores(z_grav, sigma=sigma_grav, L=L_grav)
-        s = gate.omega_lang * s_lang + gate.omega_grav * s_grav
-        if mask is not None:
-            s = s.masked_fill(~mask, float("-inf"))
-        a_total = F.softmax(s, dim=-1)
-    else:
-        raise ValueError(f"unknown combine mode: {combine!r}")
+        return torch.matmul(a_total, v)
 
-    return torch.matmul(a_total, v)
+    if combine == "logit":
+        # softmax(omega_l·<q,k>/√d + omega_g·grav_score + mask)
+        # = SDPA(q·√omega_l, k·√omega_l, v, attn_mask = omega_g·grav + mask)
+        # since SDPA internally divides (q_scaled)·(k_scaled) by √d which
+        # yields omega_l·<q,k>/√d exactly. `grav_score` is still
+        # materialized once but fused softmax + matmul avoid the
+        # `(B,H,N,N)` attn tensor and let SDPA pick FlashAttention on GPU.
+        import math as _math
+        s_grav = grav_scores(z_grav, sigma=sigma_grav, L=L_grav)
+        bias = gate.omega_grav * s_grav                  # (..., N, N)
+        if mask is not None:
+            neg_inf_s = torch.full((), float("-inf"),
+                                   dtype=bias.dtype, device=bias.device)
+            bias = torch.where(mask, bias, neg_inf_s)
+        scale = _math.sqrt(float(gate.omega_lang))
+        q_s = q * scale
+        k_s = k * scale
+        return F.scaled_dot_product_attention(q_s, k_s, v, attn_mask=bias)
+
+    raise ValueError(f"unknown combine mode: {combine!r}")
 
 
 # ---------------------------------------------------------------------------
