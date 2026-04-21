@@ -861,6 +861,16 @@ class ContinuousClarusCell(nn.Module):
         meta_max_depth: int = 3,            # cap on recursive self-examination
         meta_tol: float = 0.05,             # stop meta when step is small
         meta_damping: float = 0.5,          # fraction of delta to apply per meta step
+        # --- STDP-during-sleep learning --------------------------------
+        stdp_enabled: bool = False,
+        stdp_lr: float = 0.01,              # per-NREM-step synaptic lr
+        stdp_gain: float = 0.05,             # how strongly W_syn mixes into h
+        stdp_spike_threshold: float = 0.3,
+        stdp_r_plus: float = 0.95,          # pre-trace decay
+        stdp_r_minus: float = 0.95,         # post-trace decay
+        stdp_r_e: float = 0.99,             # eligibility decay
+        stdp_a_plus: float = 0.01,          # LTP amplitude
+        stdp_a_minus: float = 0.012,        # LTD amplitude
     ) -> None:
         super().__init__()
         self.core = EulerCEBlock(
@@ -922,6 +932,26 @@ class ContinuousClarusCell(nn.Module):
         self._meta_events: list[tuple[int, int, float, float]] = []
         # each entry: (clock, iters_run, depth_before, depth_after)
 
+        # STDP synaptic matrix + eligibility traces.
+        # W_syn is a local-plasticity weight NOT updated by backprop —
+        # STDP mutates it directly during NREM replay. It acts as a
+        # residual recurrent mixer on h during every mode.
+        self.stdp_enabled: bool = bool(stdp_enabled)
+        self.stdp_lr: float = float(stdp_lr)
+        self.stdp_gain: float = float(stdp_gain)
+        self.stdp_spike_threshold: float = float(stdp_spike_threshold)
+        self.stdp_r_plus: float = float(stdp_r_plus)
+        self.stdp_r_minus: float = float(stdp_r_minus)
+        self.stdp_r_e: float = float(stdp_r_e)
+        self.stdp_a_plus: float = float(stdp_a_plus)
+        self.stdp_a_minus: float = float(stdp_a_minus)
+        if self.stdp_enabled:
+            self.register_buffer("W_syn", torch.zeros(d_model, d_model), persistent=False)
+            self.register_buffer("_pre_trace", torch.zeros(d_model), persistent=False)
+            self.register_buffer("_post_trace", torch.zeros(d_model), persistent=False)
+            self.register_buffer("_eligibility", torch.zeros(d_model, d_model), persistent=False)
+        self._stdp_updates: int = 0
+
         # State held across calls.
         self.register_buffer("_state", torch.empty(0), persistent=False)
         self._clock: int = 0
@@ -966,6 +996,7 @@ class ContinuousClarusCell(nn.Module):
         self._transitions.clear()
         self._last_replayed = None
         self._meta_events.clear()
+        self.reset_stdp()
         if clear_memory and self.memory is not None:
             self.memory.clear()
 
@@ -1080,6 +1111,25 @@ class ContinuousClarusCell(nn.Module):
                 self._state = self._state + strength * replayed.unsqueeze(0).to(self._state.device)
                 self._last_replayed = replayed.detach()
 
+        # --- STDP eligibility update + W_syn residual ----------------
+        # Runs every step when enabled. Pools the per-position state
+        # into a (d,) activation vector, updates pre/post traces, and
+        # accumulates the outer-product eligibility matrix.
+        if self.stdp_enabled:
+            act = self._state.detach().mean(dim=(0, 1))              # (d,)
+            spike = (act.abs() > self.stdp_spike_threshold).float()
+            self._pre_trace = self.stdp_r_plus * self._pre_trace + spike
+            self._post_trace = self.stdp_r_minus * self._post_trace + spike
+            ltp = self.stdp_a_plus * torch.outer(self._pre_trace, spike)
+            ltd = self.stdp_a_minus * torch.outer(spike, self._post_trace)
+            self._eligibility = self.stdp_r_e * self._eligibility + (ltp - ltd)
+
+            # Apply W_syn as a recurrent residual on the hidden state
+            # (pre-core). The einsum maps (d_in, d_out) so columns of
+            # W_syn act as output features.
+            h_syn = torch.matmul(self._state, self.W_syn)
+            self._state = self._state + self.stdp_gain * h_syn
+
         # core transform (attention + FFN, both already SDPA-optimized)
         h = self.core(self._state)
         # contraction (mode-dependent damping)
@@ -1106,6 +1156,19 @@ class ContinuousClarusCell(nn.Module):
             self.memory.encode(
                 self._state[0], priority=1.0, tag=self._clock,
             )
+
+        # --- STDP W_syn update (during NREM, after state is finalized) ---
+        # 3-factor learning: delta_W = lr * gate * eligibility. The gate
+        # is implicit = 1.0 during NREM (canonical "consolidation gate"),
+        # 0.0 in wake/REM. Update in place on the buffer.
+        if self.stdp_enabled and self._mode == _MODE_NREM:
+            dw = self.stdp_lr * self._eligibility
+            self.W_syn = self.W_syn + dw
+            # Bound the matrix norm for numerical stability.
+            norm = self.W_syn.norm()
+            if norm > 10.0:
+                self.W_syn = self.W_syn * (10.0 / norm)
+            self._stdp_updates += 1
 
         # --- Metacognition: C3 self-consistency recovery --------------
         # When the trailing consciousness_depth falls below threshold
@@ -1197,6 +1260,26 @@ class ContinuousClarusCell(nn.Module):
     def clear_memory(self) -> None:
         if self.memory is not None:
             self.memory.clear()
+
+    def stdp_updates(self) -> int:
+        """Number of W_syn updates applied during NREM so far."""
+        return self._stdp_updates
+
+    def synaptic_norm(self) -> float:
+        """Frobenius norm of the STDP-learned recurrent matrix W_syn."""
+        if not self.stdp_enabled:
+            return 0.0
+        return float(self.W_syn.norm().item())
+
+    def reset_stdp(self) -> None:
+        """Zero W_syn, traces, eligibility, and the update counter."""
+        if not self.stdp_enabled:
+            return
+        self.W_syn.zero_()
+        self._pre_trace.zero_()
+        self._post_trace.zero_()
+        self._eligibility.zero_()
+        self._stdp_updates = 0
 
     def meta_events(self) -> list[tuple[int, int, float, float]]:
         """Log of metacognition events.

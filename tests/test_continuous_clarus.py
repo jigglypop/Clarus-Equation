@@ -582,6 +582,117 @@ def test_meta_logs_state_during_extra_iters():
     assert len(cell.pressure_trace()) == expected_len
 
 
+# --- STDP during sleep learning ---------------------------------------------
+
+
+def test_stdp_disabled_by_default():
+    cell = ContinuousClarusCell(32, 4, 16)
+    assert cell.stdp_enabled is False
+    assert cell.synaptic_norm() == 0.0
+    assert cell.stdp_updates() == 0
+
+
+def test_stdp_buffers_allocated_when_enabled():
+    cell = ContinuousClarusCell(32, 4, 16, stdp_enabled=True)
+    assert hasattr(cell, "W_syn")
+    assert cell.W_syn.shape == (32, 32)
+    assert cell._eligibility.shape == (32, 32)
+
+
+def test_stdp_does_not_update_during_wake():
+    torch.manual_seed(0)
+    cell = ContinuousClarusCell(32, 4, 16, stdp_enabled=True, stdp_lr=0.1).eval()
+    x = torch.randn(1, 16, 32)
+    with torch.no_grad():
+        for _ in range(10):
+            cell.step(x)
+    # wake only → no NREM transitions → no stdp updates → W_syn untouched
+    assert cell.stdp_updates() == 0
+    assert cell.synaptic_norm() == 0.0
+
+
+def test_stdp_updates_during_nrem():
+    torch.manual_seed(0)
+    cell = ContinuousClarusCell(32, 4, 16, stdp_enabled=True,
+                                stdp_lr=0.1).eval()
+    x = torch.randn(1, 16, 32)
+    with torch.no_grad():
+        # build eligibility during wake
+        for _ in range(5):
+            cell.step(x)
+        n0 = cell.synaptic_norm()
+        cell.set_mode("nrem")
+        for _ in range(10):
+            cell.step(x=None)
+    assert cell.stdp_updates() == 10
+    # W_syn has moved away from zero as eligibility accumulates.
+    assert cell.synaptic_norm() > n0
+    # Bounded below 10 (the numerical clip).
+    assert cell.synaptic_norm() <= 10.0 + 1e-3
+
+
+def test_stdp_bounded_norm():
+    """Even with aggressive lr and many NREM steps, W_syn norm is
+    clipped at 10."""
+    torch.manual_seed(0)
+    cell = ContinuousClarusCell(32, 4, 16, stdp_enabled=True,
+                                stdp_lr=1.0).eval()
+    x = torch.randn(1, 16, 32)
+    with torch.no_grad():
+        for _ in range(20):
+            cell.step(x)
+        cell.set_mode("nrem")
+        for _ in range(100):
+            cell.step(x=None)
+    assert cell.synaptic_norm() <= 10.0 + 1e-3
+
+
+def test_stdp_reset_zeros_everything():
+    torch.manual_seed(0)
+    cell = ContinuousClarusCell(32, 4, 16, stdp_enabled=True).eval()
+    x = torch.randn(1, 16, 32)
+    with torch.no_grad():
+        for _ in range(5):
+            cell.step(x)
+        cell.set_mode("nrem")
+        for _ in range(5):
+            cell.step(x=None)
+    assert cell.stdp_updates() > 0
+    cell.reset_stdp()
+    assert cell.synaptic_norm() == 0.0
+    assert cell.stdp_updates() == 0
+    assert cell._eligibility.abs().sum().item() == 0.0
+
+
+def test_stdp_w_syn_changes_state_after_sleep():
+    """After NREM learning, W_syn is non-trivial → a fresh wake step
+    with the same input produces different state than before sleep,
+    even holding the core weights fixed."""
+    torch.manual_seed(0)
+    cell = ContinuousClarusCell(32, 4, 16, stdp_enabled=True,
+                                stdp_lr=0.1, stdp_gain=0.2).eval()
+    x = torch.randn(1, 16, 32)
+    with torch.no_grad():
+        for _ in range(3):
+            cell.step(x)
+        state_pre_sleep = cell._state.clone()
+
+        cell.set_mode("nrem")
+        for _ in range(20):
+            cell.step(x=None)
+        assert cell.synaptic_norm() > 0.0
+
+        cell.set_mode("wake")
+        # reset only the state, keep W_syn
+        cell._state = state_pre_sleep.clone()
+        cell.step(x)
+        state_post_sleep = cell._state.clone()
+
+    diff = (state_post_sleep - state_pre_sleep).abs().max().item()
+    assert diff > 1e-3, \
+        f"W_syn should shift behaviour after sleep learning: diff={diff}"
+
+
 def test_auto_cycle_with_memory_end_to_end():
     """Full auto cycle + memory: after several wake/sleep transitions
     the memory buffer accumulates tagged experiences spanning multiple
