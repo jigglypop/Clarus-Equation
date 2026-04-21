@@ -714,6 +714,89 @@ _MODE_REM = "rem"
 _VALID_MODES = (_MODE_WAKE, _MODE_NREM, _MODE_REM)
 
 
+class _ExperienceReplay:
+    """Lightweight hippocampus for ContinuousClarusCell.
+
+    Stores snapshots of `(N, d_model)` activations with priorities.
+    During sleep, returns a priority-weighted mixture of stored
+    snapshots — the "replay" that drives memory consolidation.
+
+    This is a purpose-built sequence-level analog of
+    `clarus.runtime.HippocampusMemory` (which stores flat vectors).
+    The same eviction rule (drop lowest priority when full) applies.
+    """
+
+    def __init__(self, capacity: int = 32) -> None:
+        self.capacity = max(1, int(capacity))
+        self._snapshots: list[torch.Tensor] = []      # each (N, d)
+        self._priorities: list[float] = []
+        self._tags: list[int] = []                    # clock-tag per snapshot
+
+    def __len__(self) -> int:
+        return len(self._snapshots)
+
+    def clear(self) -> None:
+        self._snapshots.clear()
+        self._priorities.clear()
+        self._tags.clear()
+
+    def encode(self, snapshot: torch.Tensor, priority: float = 1.0,
+               tag: int = 0) -> None:
+        """Store a `(N, d)` sequence snapshot. Evicts lowest-priority
+        entry when over capacity."""
+        priority = float(max(priority, 1e-6))
+        if len(self._snapshots) >= self.capacity:
+            drop = min(range(len(self._priorities)), key=self._priorities.__getitem__)
+            self._snapshots.pop(drop)
+            self._priorities.pop(drop)
+            self._tags.pop(drop)
+        # Detach + clone so the buffer doesn't hold autograd refs.
+        self._snapshots.append(snapshot.detach().clone())
+        self._priorities.append(priority)
+        self._tags.append(int(tag))
+
+    def replay(self, topk: int = 4, temperature: float = 1.0) -> Optional[torch.Tensor]:
+        """Priority-weighted softmax mixture over the top-k snapshots.
+        Returns None if the buffer is empty."""
+        if not self._snapshots:
+            return None
+        k = min(int(topk), len(self._snapshots))
+        prio = torch.tensor(self._priorities, dtype=torch.float32)
+        top_scores, top_idx = torch.topk(prio, k=k)
+        weights = torch.softmax(top_scores / max(temperature, 1e-6), dim=0)
+        stack = torch.stack([self._snapshots[i] for i in top_idx.tolist()], dim=0)
+        return (stack * weights.view(-1, 1, 1)).sum(dim=0)
+
+    def recall(self, cue: torch.Tensor, topk: int = 4,
+               sim_floor: float = 0.1) -> Optional[torch.Tensor]:
+        """Cosine-similarity recall: match `cue` (shape `(N, d)`)
+        against stored snapshots via mean-pooled cosine, return the
+        priority+similarity-weighted mixture of the top-k matches."""
+        if not self._snapshots:
+            return None
+        cue_mean = cue.mean(dim=0)
+        cue_norm = cue_mean / cue_mean.norm().clamp_min(1e-8)
+        sims = []
+        for s in self._snapshots:
+            sm = s.mean(dim=0)
+            sn = sm / sm.norm().clamp_min(1e-8)
+            sims.append(float((cue_norm * sn).sum().item()))
+        sims_t = torch.tensor(sims)
+        if (sims_t < sim_floor).all():
+            return None
+        prio = torch.tensor(self._priorities)
+        scores = sims_t + prio.log()
+        scores = scores.masked_fill(sims_t < sim_floor, float("-inf"))
+        k = min(int(topk), int((sims_t >= sim_floor).sum().item()))
+        top_scores, top_idx = torch.topk(scores, k=k)
+        weights = torch.softmax(top_scores, dim=0)
+        stack = torch.stack([self._snapshots[i] for i in top_idx.tolist()], dim=0)
+        return (stack * weights.view(-1, 1, 1)).sum(dim=0)
+
+    def snapshot_tags(self) -> list[int]:
+        return list(self._tags)
+
+
 class ContinuousClarusCell(nn.Module):
     """Persistent self-recursive block with wake/NREM/REM modes.
 
@@ -764,6 +847,13 @@ class ContinuousClarusCell(nn.Module):
         rem_to_wake_threshold: float = 0.15,
         wake_arousal_trigger: float = 1.5,  # NREM → wake if input_norm > this
         rem_arousal_trigger: float = 1.0,   # REM → wake if input_norm > this
+        # --- Hippocampus / experience replay ---------------------------
+        memory_enabled: bool = False,
+        memory_capacity: int = 32,
+        encode_interval: int = 10,          # encode every N wake steps
+        replay_strength_nrem: float = 0.3,  # blending during NREM
+        replay_strength_rem: float = 0.15,  # blending during REM
+        replay_topk: int = 4,
     ) -> None:
         super().__init__()
         self.core = EulerCEBlock(
@@ -802,6 +892,19 @@ class ContinuousClarusCell(nn.Module):
         self._arousal_rem: float = float(rem_arousal_trigger)
         self._sleep_pressure: float = 0.0
 
+        # Hippocampus / experience replay.
+        self.memory_enabled: bool = bool(memory_enabled)
+        self.encode_interval: int = max(1, int(encode_interval))
+        self._replay_strength = {
+            _MODE_NREM: float(replay_strength_nrem),
+            _MODE_REM:  float(replay_strength_rem),
+        }
+        self._replay_topk = int(replay_topk)
+        self.memory: Optional[_ExperienceReplay] = (
+            _ExperienceReplay(capacity=memory_capacity) if memory_enabled else None
+        )
+        self._last_replayed: Optional[torch.Tensor] = None
+
         # State held across calls.
         self.register_buffer("_state", torch.empty(0), persistent=False)
         self._clock: int = 0
@@ -832,9 +935,11 @@ class ContinuousClarusCell(nn.Module):
     def sleep_pressure(self) -> float:
         return self._sleep_pressure
 
-    def reset(self) -> None:
+    def reset(self, clear_memory: bool = False) -> None:
         """Clear persistent state, phase clock, and sleep pressure.
-        Mode is preserved."""
+        Mode is preserved. Memory is preserved by default (so a new
+        wake phase can benefit from previously-consolidated traces);
+        pass `clear_memory=True` to wipe the replay buffer too."""
         self._state = torch.empty(0, device=self._state.device if self._state.numel() else "cpu")
         self._clock = 0
         self._sleep_pressure = 0.0
@@ -842,6 +947,9 @@ class ContinuousClarusCell(nn.Module):
         self._mode_log.clear()
         self._pressure_log.clear()
         self._transitions.clear()
+        self._last_replayed = None
+        if clear_memory and self.memory is not None:
+            self.memory.clear()
 
     def has_state(self) -> bool:
         return self._state.numel() > 0
@@ -941,6 +1049,19 @@ class ContinuousClarusCell(nn.Module):
             # residual mix of external input with persistent state
             self._state = in_gate * x + (1.0 - in_gate) * self._state
 
+        # --- Hippocampus replay (during sleep, BEFORE core) -----------
+        # Replayed content perturbs the state so the next `core(h)`
+        # attends over a mixture of live state + consolidated memory.
+        if (self.memory is not None
+                and self._mode in self._replay_strength
+                and len(self.memory) > 0
+                and self._state.numel() > 0):
+            replayed = self.memory.replay(topk=self._replay_topk)
+            if replayed is not None:
+                strength = self._replay_strength[self._mode]
+                self._state = self._state + strength * replayed.unsqueeze(0).to(self._state.device)
+                self._last_replayed = replayed.detach()
+
         # core transform (attention + FFN, both already SDPA-optimized)
         h = self.core(self._state)
         # contraction (mode-dependent damping)
@@ -956,6 +1077,17 @@ class ContinuousClarusCell(nn.Module):
         self._state_norm_log.append(float(h.detach().norm().item()))
         self._mode_log.append(self._mode)
         self._pressure_log.append(float(self._sleep_pressure))
+
+        # --- Hippocampus encode (after step completes, during wake) ---
+        # Encode the finalized state at clock tick matching the
+        # interval. The post-step ordering ensures that the very first
+        # wake step with encode_interval=1 produces tag=1, not tag=0.
+        if (self.memory is not None
+                and self._mode == _MODE_WAKE
+                and (self._clock % self.encode_interval) == 0):
+            self.memory.encode(
+                self._state[0], priority=1.0, tag=self._clock,
+            )
         return self._state
 
     def autonomous(self, n_steps: int) -> torch.Tensor:
@@ -999,6 +1131,23 @@ class ContinuousClarusCell(nn.Module):
     def transitions(self) -> list[tuple[int, str, str, str]]:
         """List of auto-mode transitions as (clock, from, to, reason)."""
         return list(self._transitions)
+
+    def memory_size(self) -> int:
+        """Number of consolidated experiences currently stored."""
+        return 0 if self.memory is None else len(self.memory)
+
+    def memory_tags(self) -> list[int]:
+        """Clock tags of stored memories (when they were encoded)."""
+        return [] if self.memory is None else self.memory.snapshot_tags()
+
+    def last_replayed(self) -> Optional[torch.Tensor]:
+        """Most recently replayed memory snapshot (shape `(N, d)`),
+        or None if no replay has happened yet."""
+        return self._last_replayed
+
+    def clear_memory(self) -> None:
+        if self.memory is not None:
+            self.memory.clear()
 
     def consciousness_depth(self, window: int = 32) -> float:
         """Approximate self-consistency index over the last `window`

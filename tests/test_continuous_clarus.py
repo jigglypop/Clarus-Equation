@@ -315,3 +315,183 @@ def test_reset_zeros_sleep_pressure_and_transitions():
     assert cell.sleep_pressure == 0.0
     assert cell.transitions() == []
     assert cell.pressure_trace() == []
+
+
+# --- Hippocampus / experience replay ----------------------------------------
+
+
+def test_memory_disabled_by_default():
+    cell = ContinuousClarusCell(32, 4, 16)
+    assert cell.memory is None
+    assert cell.memory_size() == 0
+    assert cell.last_replayed() is None
+
+
+def test_memory_encode_during_wake():
+    torch.manual_seed(0)
+    cell = ContinuousClarusCell(32, 4, 16,
+                                memory_enabled=True,
+                                memory_capacity=8,
+                                encode_interval=5).eval()
+    x = torch.randn(1, 16, 32)
+    with torch.no_grad():
+        for _ in range(20):
+            cell.step(x)
+    # clock runs 1..20; encode at clock=5,10,15,20 → 4 snapshots.
+    assert cell.memory_size() == 4
+    assert cell.memory_tags() == [5, 10, 15, 20]
+
+
+def test_memory_encode_capacity_evicts_lowest_priority():
+    torch.manual_seed(0)
+    cell = ContinuousClarusCell(32, 4, 16,
+                                memory_enabled=True,
+                                memory_capacity=3,
+                                encode_interval=1).eval()
+    x = torch.randn(1, 16, 32)
+    with torch.no_grad():
+        for _ in range(10):
+            cell.step(x)
+    # Capacity is 3, so no more than 3 snapshots ever live at once.
+    assert cell.memory_size() == 3
+
+
+def test_memory_replay_during_nrem_changes_state():
+    """With stored memory and NREM mode, replay injects into state —
+    compare a NREM-autonomous run with vs without memory."""
+    torch.manual_seed(0)
+    x = torch.randn(1, 16, 32)
+
+    # Run A: build memory in wake, then NREM autonomous, memory-on.
+    cell_a = ContinuousClarusCell(32, 4, 16,
+                                  memory_enabled=True,
+                                  encode_interval=2,
+                                  replay_strength_nrem=0.5).eval()
+    with torch.no_grad():
+        for _ in range(10):
+            cell_a.step(x)
+        assert cell_a.memory_size() > 0
+        cell_a.set_mode("nrem")
+        for _ in range(8):
+            cell_a.step(x=None)
+    state_a = cell_a._state.clone()
+
+    # Run B: same seed/weights, memory-off.
+    cell_b = ContinuousClarusCell(32, 4, 16,
+                                  memory_enabled=False).eval()
+    # Copy core weights and log_phi so only memory-injection differs.
+    cell_b.core.load_state_dict(cell_a.core.state_dict())
+    with torch.no_grad():
+        cell_b.log_phi.copy_(cell_a.log_phi)
+        for _ in range(10):
+            cell_b.step(x)
+        cell_b.set_mode("nrem")
+        for _ in range(8):
+            cell_b.step(x=None)
+    state_b = cell_b._state
+
+    diff = (state_a - state_b).abs().max().item()
+    assert diff > 1e-3, f"replay should perturb state: diff={diff}"
+    # last_replayed is recorded for cell_a, not for cell_b
+    assert cell_a.last_replayed() is not None
+    assert cell_b.last_replayed() is None
+
+
+def test_memory_replay_during_rem_uses_lower_strength():
+    """REM injects replayed content at a lower gain than NREM (dream
+    is less instructed than consolidation)."""
+    torch.manual_seed(0)
+    x = torch.randn(1, 16, 32)
+    cell = ContinuousClarusCell(32, 4, 16,
+                                memory_enabled=True,
+                                encode_interval=1,
+                                replay_strength_nrem=0.5,
+                                replay_strength_rem=0.1).eval()
+    assert cell._replay_strength["rem"] < cell._replay_strength["nrem"]
+
+    with torch.no_grad():
+        for _ in range(6):
+            cell.step(x)
+        cell.set_mode("rem")
+        cell.step(x=None)
+    # replay has been injected into state (not None) and is the same
+    # shape as a per-sequence snapshot.
+    replayed = cell.last_replayed()
+    assert replayed is not None
+    assert replayed.shape == (16, 32)
+
+
+def test_memory_preserved_across_reset_by_default():
+    torch.manual_seed(0)
+    cell = ContinuousClarusCell(32, 4, 16,
+                                memory_enabled=True,
+                                encode_interval=1).eval()
+    x = torch.randn(1, 16, 32)
+    with torch.no_grad():
+        for _ in range(5):
+            cell.step(x)
+    assert cell.memory_size() == 5
+    cell.reset()
+    assert cell.memory_size() == 5, "default reset must preserve memory"
+    cell.reset(clear_memory=True)
+    assert cell.memory_size() == 0
+
+
+def test_memory_cue_recall_returns_similar_snapshot():
+    """A recall with a cue matching a specific stored snapshot should
+    return something weighted toward that snapshot — so cosine
+    similarity with the cue is higher than cosine with a random
+    unrelated vector."""
+    torch.manual_seed(0)
+    cell = ContinuousClarusCell(32, 4, 16,
+                                memory_enabled=True,
+                                encode_interval=1).eval()
+    # Force two clearly distinct memories.
+    x1 = torch.randn(1, 16, 32)
+    x2 = torch.randn(1, 16, 32)
+    with torch.no_grad():
+        cell.step(x1)
+        cell.step(x2)
+    assert cell.memory_size() == 2
+    # Cue closer to x1's state should recall something closer to x1.
+    snap1 = cell.memory._snapshots[0]  # was the processed x1 state
+    snap2 = cell.memory._snapshots[1]
+    r = cell.memory.recall(snap1 + 0.01 * torch.randn_like(snap1), topk=1)
+    # Similarity to snap1 should exceed similarity to snap2.
+    def cos(a, b):
+        a = a.mean(0); b = b.mean(0)
+        return float((a / a.norm() * b / b.norm()).sum().item())
+    assert cos(r, snap1) > cos(r, snap2), \
+        f"cue-matching recall failed: cos(r,snap1)={cos(r,snap1):.3f} "\
+        f"cos(r,snap2)={cos(r,snap2):.3f}"
+
+
+def test_auto_cycle_with_memory_end_to_end():
+    """Full auto cycle + memory: after several wake/sleep transitions
+    the memory buffer accumulates tagged experiences spanning multiple
+    wake phases."""
+    torch.manual_seed(0)
+    cell = ContinuousClarusCell(32, 4, 16,
+                                auto_mode=True,
+                                tau_wake=8.0, tau_sleep=8.0,
+                                wake_to_nrem_threshold=1.0,
+                                nrem_to_rem_threshold=0.5,
+                                rem_to_wake_threshold=0.15,
+                                memory_enabled=True,
+                                memory_capacity=16,
+                                encode_interval=3).eval()
+    x = 0.01 * torch.randn(1, 16, 32)
+    with torch.no_grad():
+        for _ in range(400):
+            cell.step(x)
+    # Several transitions occurred AND memory was populated.
+    assert len(cell.transitions()) >= 4
+    assert cell.memory_size() > 0
+    assert cell.last_replayed() is not None
+    # Tags should span multiple wake phases (i.e. mode labels at those
+    # clocks must include 'wake').
+    tags = cell.memory_tags()
+    trace = cell.mode_trace()
+    wake_tags = [t for t in tags if 0 <= t - 1 < len(trace)
+                 and trace[t - 1] == "wake"]
+    assert len(wake_tags) > 0
