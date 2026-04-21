@@ -1630,46 +1630,134 @@ class ContinuousClarusStack(nn.Module):
     # can sample one and apply a gradient step — this is the classic
     # experience / generative replay that actually prevents catastrophic
     # forgetting in continual learning.
+    #
+    # Refinements (PER + age decay):
+    #   * each entry carries a `loss` field — the model's most recent
+    #     observed CE on that sample. Used as the sampling temperature.
+    #   * each entry carries an `age` tag — the stack clock at encode.
+    #     Sampling weight is attenuated by `exp(-(now - age) / age_tau)`
+    #     so stale memories naturally fade out of rotation.
+    #   * `update_replay_priority(losses)` lets the training loop
+    #     refresh the stored losses after rehearsal (the standard PER
+    #     feedback loop).
 
-    def enable_experience_replay(self, capacity: int = 128) -> None:
-        """Allocate a (x, y, priority) replay buffer at the stack level."""
+    def enable_experience_replay(
+        self,
+        capacity: int = 128,
+        age_tau: float = 1000.0,
+        per_alpha: float = 0.6,
+    ) -> None:
+        """Allocate a stack-level (x, y) replay buffer.
+
+        Args:
+            capacity  : max stored pairs; evicts lowest-priority when full.
+            age_tau   : time constant for age-based weight decay (clock
+                        units). Weight multiplier = exp(-Δclock / age_tau).
+            per_alpha : PER exponent on per-entry loss (0 = uniform, 1 =
+                        proportional to loss). Standard PER uses 0.6.
+        """
         self._xp_cap = int(capacity)
+        self._xp_age_tau = float(age_tau)
+        self._xp_alpha = float(per_alpha)
         self._xp_x: list[torch.Tensor] = []
         self._xp_y: list[torch.Tensor] = []
-        self._xp_p: list[float] = []
+        self._xp_p: list[float] = []        # base priority scalar
+        self._xp_age: list[int] = []        # clock-tag at encode
+        self._xp_loss: list[float] = []     # last observed loss
+        self._last_dream_indices: list[int] = []
 
     def experience_size(self) -> int:
         return len(getattr(self, "_xp_x", []))
 
-    def observe(self, x: torch.Tensor, y: torch.Tensor,
-                priority: float = 1.0) -> None:
-        """Record a (x, y) training pair — called from the training loop
-        each wake step. Evicts lowest priority when full."""
+    def _effective_priority_vector(self) -> Optional[torch.Tensor]:
+        """Combine base priority, loss, and age decay into a single
+        weight per stored entry. Returns None if buffer empty."""
+        if not getattr(self, "_xp_x", None):
+            return None
+        base = torch.tensor(self._xp_p, dtype=torch.float32)
+        loss = torch.tensor(self._xp_loss, dtype=torch.float32).clamp_min(1e-6)
+        age = torch.tensor(self._xp_age, dtype=torch.float32)
+        age_factor = torch.exp(-(self._clock - age) / max(self._xp_age_tau, 1e-6))
+        return base * loss.pow(self._xp_alpha) * age_factor
+
+    def observe(
+        self,
+        x: torch.Tensor,
+        y: torch.Tensor,
+        priority: float = 1.0,
+        loss_at_observe: Optional[float] = None,
+    ) -> None:
+        """Record a (x, y) training pair. `loss_at_observe` is the
+        model's current CE on this pair — used as PER weight. If None,
+        defaults to 1.0 (uniform priority degenerates)."""
         if not hasattr(self, "_xp_x"):
             return
         if len(self._xp_x) >= self._xp_cap:
-            drop = min(range(len(self._xp_p)), key=self._xp_p.__getitem__)
-            self._xp_x.pop(drop); self._xp_y.pop(drop); self._xp_p.pop(drop)
+            # Evict the entry with the smallest EFFECTIVE priority.
+            eff = self._effective_priority_vector()
+            drop = int(torch.argmin(eff).item())
+            self._xp_x.pop(drop); self._xp_y.pop(drop)
+            self._xp_p.pop(drop); self._xp_age.pop(drop); self._xp_loss.pop(drop)
         self._xp_x.append(x.detach().clone())
         self._xp_y.append(y.detach().clone())
         self._xp_p.append(float(max(priority, 1e-6)))
+        self._xp_age.append(int(self._clock))
+        self._xp_loss.append(float(loss_at_observe) if loss_at_observe is not None else 1.0)
 
-    def dream_batch(self) -> Optional[tuple[torch.Tensor, torch.Tensor]]:
-        """Sample a (x, y) pair weighted by stored priority. Returns
-        None if the buffer is empty. Use during sleep mode to run an
-        off-policy gradient update."""
-        if not getattr(self, "_xp_x", None):
+    def dream_batch(
+        self, k: int = 1
+    ) -> Optional[tuple[torch.Tensor, torch.Tensor, list[int]]]:
+        """Sample K (x, y) pairs using PER + age-decay weights.
+        Returns (x_batch, y_batch, indices) or None if the buffer is
+        empty. The indices can be fed back to `update_replay_priority`
+        after rehearsal to refresh per-entry losses."""
+        eff = self._effective_priority_vector()
+        if eff is None or eff.numel() == 0:
             return None
-        prio = torch.tensor(self._xp_p)
-        w = torch.softmax(prio, dim=0)
-        idx = int(torch.multinomial(w, num_samples=1).item())
-        return self._xp_x[idx], self._xp_y[idx]
+        probs = eff / eff.sum().clamp_min(1e-12)
+        # replacement=True allows K > buffer size (rehearsing the same
+        # high-priority entry multiple times in one dream step).
+        idx = torch.multinomial(probs, num_samples=int(k), replacement=True).tolist()
+        xs = torch.cat([self._xp_x[i] for i in idx], dim=0)
+        ys = torch.cat([self._xp_y[i] for i in idx], dim=0)
+        self._last_dream_indices = idx
+        return xs, ys, idx
+
+    def update_replay_priority(
+        self,
+        indices: list[int],
+        new_losses: list[float] | torch.Tensor,
+    ) -> None:
+        """Refresh per-entry loss after rehearsal (standard PER feedback)."""
+        if not hasattr(self, "_xp_x"):
+            return
+        if isinstance(new_losses, torch.Tensor):
+            new_losses = new_losses.detach().tolist()
+        for i, l in zip(indices, new_losses):
+            if 0 <= i < len(self._xp_loss):
+                self._xp_loss[i] = float(max(l, 1e-6))
+
+    def replay_diagnostics(self) -> dict[str, float]:
+        """Summary stats on the current buffer — useful for plots."""
+        if not getattr(self, "_xp_x", None):
+            return {"size": 0}
+        eff = self._effective_priority_vector()
+        age_now = [self._clock - a for a in self._xp_age]
+        return {
+            "size": len(self._xp_x),
+            "mean_loss": float(sum(self._xp_loss) / len(self._xp_loss)),
+            "max_loss": float(max(self._xp_loss)),
+            "mean_age": float(sum(age_now) / len(age_now)),
+            "max_age": float(max(age_now)),
+            "effective_entropy": float(
+                -(eff / eff.sum() * (eff / eff.sum()).clamp_min(1e-12).log()).sum().item()
+            ),
+        }
 
     def clear_experience(self) -> None:
         if hasattr(self, "_xp_x"):
-            self._xp_x.clear()
-            self._xp_y.clear()
-            self._xp_p.clear()
+            self._xp_x.clear(); self._xp_y.clear()
+            self._xp_p.clear(); self._xp_age.clear(); self._xp_loss.clear()
 
 
 # ---------------------------------------------------------------------------

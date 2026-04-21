@@ -173,3 +173,145 @@ def test_stack_memory_independent_per_cell():
     snap_a = stack.cells[0].memory._snapshots[-1]
     snap_b = stack.cells[1].memory._snapshots[-1]
     assert (snap_a - snap_b).abs().max().item() > 1e-4
+
+
+# --- Generative experience replay (PER + age decay) -------------------------
+
+
+def test_experience_replay_disabled_by_default():
+    stack = ContinuousClarusStack(2, 32, 4, 16)
+    assert stack.experience_size() == 0
+    assert stack.dream_batch() is None
+
+
+def test_experience_replay_enable_and_observe():
+    stack = ContinuousClarusStack(2, 32, 4, 16)
+    stack.enable_experience_replay(capacity=4)
+    x = torch.randint(0, 16, (3, 16))
+    y = torch.randint(0, 16, (3, 16))
+    for _ in range(3):
+        stack.observe(x, y, loss_at_observe=2.5)
+    assert stack.experience_size() == 3
+
+
+def test_experience_replay_capacity_eviction_uses_effective_priority():
+    """When full, the lowest-effective-priority entry should be evicted.
+    A high-loss entry must survive while uniform-loss ones are evicted."""
+    stack = ContinuousClarusStack(2, 32, 4, 16)
+    stack.enable_experience_replay(capacity=3, age_tau=1e9, per_alpha=1.0)
+    x = torch.randint(0, 16, (1, 16))
+    # Three uniform-loss entries.
+    for _ in range(3):
+        stack.observe(x.clone(), x.clone(), loss_at_observe=1.0)
+    # Inject a high-loss entry — one of the uniform ones must drop.
+    stack.observe(x.clone(), x.clone(), loss_at_observe=10.0)
+    losses = list(stack._xp_loss)
+    assert max(losses) == 10.0
+    assert stack.experience_size() == 3
+
+
+def test_dream_batch_priority_weighted():
+    """A high-loss entry should be sampled more often than low-loss
+    ones over many trials."""
+    torch.manual_seed(0)
+    stack = ContinuousClarusStack(2, 32, 4, 16)
+    stack.enable_experience_replay(capacity=10, age_tau=1e9, per_alpha=1.0)
+    n = 5
+    high_idx = 2
+    for i in range(n):
+        x = torch.full((1, 4), i, dtype=torch.long)
+        y = torch.full((1, 4), i, dtype=torch.long)
+        loss = 50.0 if i == high_idx else 1.0
+        stack.observe(x, y, loss_at_observe=loss)
+
+    counts = [0] * n
+    for _ in range(500):
+        sample = stack.dream_batch(k=1)
+        assert sample is not None
+        idx = sample[2][0]
+        counts[idx] += 1
+    # The high-loss entry should be the most-sampled.
+    assert counts[high_idx] == max(counts)
+    # And it should account for the majority of samples.
+    assert counts[high_idx] > 0.5 * 500
+
+
+def test_age_decay_makes_old_memories_fade():
+    """Without age decay (tau=∞) old uniform entries are sampled
+    uniformly. With short tau they should be sampled much less than
+    a fresh entry of equal nominal priority."""
+    torch.manual_seed(0)
+    stack = ContinuousClarusStack(2, 32, 4, 16)
+    # Short age constant so a 100-clock difference matters.
+    stack.enable_experience_replay(capacity=10, age_tau=20.0, per_alpha=0.0)
+    # Add an entry then advance the clock without recording new ones.
+    old_x = torch.full((1, 4), 0, dtype=torch.long)
+    stack.observe(old_x, old_x, loss_at_observe=1.0)   # age tag 0
+    stack._clock = 200                                  # 200 clocks later
+    fresh_x = torch.full((1, 4), 1, dtype=torch.long)
+    stack.observe(fresh_x, fresh_x, loss_at_observe=1.0)  # age tag 200
+    # Sample many times — the fresh entry should dominate.
+    counts = [0, 0]
+    for _ in range(500):
+        sample = stack.dream_batch(k=1)
+        idx = sample[2][0]
+        counts[idx] += 1
+    assert counts[1] > counts[0] * 5, f"age decay weak: {counts}"
+
+
+def test_dream_batch_k_returns_concatenated_pairs():
+    stack = ContinuousClarusStack(2, 32, 4, 16)
+    stack.enable_experience_replay(capacity=10)
+    for i in range(3):
+        x = torch.full((2, 4), i, dtype=torch.long)
+        y = torch.full((2, 4), i + 1, dtype=torch.long)
+        stack.observe(x, y, loss_at_observe=1.0)
+    sample = stack.dream_batch(k=4)
+    xs, ys, idx = sample
+    assert xs.shape == (8, 4)            # 4 pairs × batch dim 2
+    assert ys.shape == (8, 4)
+    assert len(idx) == 4
+
+
+def test_update_replay_priority_changes_weights():
+    """After rehearsal, calling update_replay_priority shifts the
+    sampling distribution toward the new losses."""
+    torch.manual_seed(0)
+    stack = ContinuousClarusStack(2, 32, 4, 16)
+    stack.enable_experience_replay(capacity=4, age_tau=1e9, per_alpha=1.0)
+    for i in range(3):
+        x = torch.full((1, 2), i, dtype=torch.long)
+        stack.observe(x, x, loss_at_observe=1.0)
+    # Now boost the loss of entry 1 — it should become the most sampled.
+    stack.update_replay_priority([1], [50.0])
+    counts = [0, 0, 0]
+    for _ in range(200):
+        sample = stack.dream_batch(k=1)
+        counts[sample[2][0]] += 1
+    assert counts[1] == max(counts)
+
+
+def test_replay_diagnostics_basic_stats():
+    stack = ContinuousClarusStack(2, 32, 4, 16)
+    stack.enable_experience_replay(capacity=4)
+    diag_empty = stack.replay_diagnostics()
+    assert diag_empty == {"size": 0}
+    x = torch.randint(0, 8, (1, 4))
+    stack.observe(x, x, loss_at_observe=2.0)
+    stack.observe(x, x, loss_at_observe=4.0)
+    d = stack.replay_diagnostics()
+    assert d["size"] == 2
+    assert d["mean_loss"] == 3.0
+    assert d["max_loss"] == 4.0
+    assert d["mean_age"] >= 0.0
+    assert "effective_entropy" in d
+
+
+def test_clear_experience():
+    stack = ContinuousClarusStack(2, 32, 4, 16)
+    stack.enable_experience_replay(capacity=4)
+    x = torch.randint(0, 8, (1, 4))
+    stack.observe(x, x)
+    assert stack.experience_size() == 1
+    stack.clear_experience()
+    assert stack.experience_size() == 0
