@@ -1619,6 +1619,58 @@ class ContinuousClarusStack(nn.Module):
             corrs.append(float((a0 / sa * b0 / sb).mean().item()))
         return sum(corrs) / max(1, len(corrs))
 
+    # ------------------------------------------------------------------
+    # Generative replay buffer — (x, y) pairs for off-policy training
+    # ------------------------------------------------------------------
+    # The per-cell `ExperienceReplay` stores activation snapshots; that
+    # is enough for activation-level blending during sleep but does not
+    # carry a gradient signal for task-preservation. The stack-level
+    # buffer below stores the TRAINING PAIRS (input ids, target ids,
+    # priority) the user passes in during wake. During sleep the user
+    # can sample one and apply a gradient step — this is the classic
+    # experience / generative replay that actually prevents catastrophic
+    # forgetting in continual learning.
+
+    def enable_experience_replay(self, capacity: int = 128) -> None:
+        """Allocate a (x, y, priority) replay buffer at the stack level."""
+        self._xp_cap = int(capacity)
+        self._xp_x: list[torch.Tensor] = []
+        self._xp_y: list[torch.Tensor] = []
+        self._xp_p: list[float] = []
+
+    def experience_size(self) -> int:
+        return len(getattr(self, "_xp_x", []))
+
+    def observe(self, x: torch.Tensor, y: torch.Tensor,
+                priority: float = 1.0) -> None:
+        """Record a (x, y) training pair — called from the training loop
+        each wake step. Evicts lowest priority when full."""
+        if not hasattr(self, "_xp_x"):
+            return
+        if len(self._xp_x) >= self._xp_cap:
+            drop = min(range(len(self._xp_p)), key=self._xp_p.__getitem__)
+            self._xp_x.pop(drop); self._xp_y.pop(drop); self._xp_p.pop(drop)
+        self._xp_x.append(x.detach().clone())
+        self._xp_y.append(y.detach().clone())
+        self._xp_p.append(float(max(priority, 1e-6)))
+
+    def dream_batch(self) -> Optional[tuple[torch.Tensor, torch.Tensor]]:
+        """Sample a (x, y) pair weighted by stored priority. Returns
+        None if the buffer is empty. Use during sleep mode to run an
+        off-policy gradient update."""
+        if not getattr(self, "_xp_x", None):
+            return None
+        prio = torch.tensor(self._xp_p)
+        w = torch.softmax(prio, dim=0)
+        idx = int(torch.multinomial(w, num_samples=1).item())
+        return self._xp_x[idx], self._xp_y[idx]
+
+    def clear_experience(self) -> None:
+        if hasattr(self, "_xp_x"):
+            self._xp_x.clear()
+            self._xp_y.clear()
+            self._xp_p.clear()
+
 
 # ---------------------------------------------------------------------------
 # EulerCEMinimal — 2-bit head-type taxonomy
