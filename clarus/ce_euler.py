@@ -86,6 +86,74 @@ def _rotate_pairs(x: torch.Tensor, cos: torch.Tensor, sin: torch.Tensor) -> torc
     return out
 
 
+# ---------------------------------------------------------------------------
+# Shared SDPA helpers — used by EulerRotaryAttention, EulerCEAttention,
+# and EulerCEMinimal so the FlashAttention-style Q-tiling + cached causal
+# bias live in a single place.
+# ---------------------------------------------------------------------------
+Q_CHUNK_DEFAULT: int = 256
+Q_CHUNK_THRESHOLD: int = 1024
+
+
+def _causal_softmax_sdpa(q: torch.Tensor, k: torch.Tensor, v: torch.Tensor) -> torch.Tensor:
+    """Plain causal SDPA (no additive bias). FlashAttention on CUDA, tiled
+    math path on CPU — either way the `(B, H, N, N)` scores tensor never
+    materializes."""
+    return F.scaled_dot_product_attention(q, k, v, is_causal=True)
+
+
+def _chunked_decay_sdpa(
+    q: torch.Tensor,
+    k: torch.Tensor,
+    v: torch.Tensor,
+    xi_per_head: torch.Tensor,
+    pos: torch.Tensor,
+    n: int,
+    *,
+    e_gate: Optional[torch.Tensor] = None,
+    q_chunk: int = Q_CHUNK_DEFAULT,
+    q_chunk_threshold: int = Q_CHUNK_THRESHOLD,
+) -> torch.Tensor:
+    """SDPA with per-head ALiBi-style decay + causal mask, Q-tiled.
+
+    Mask:  `m[h, i, j] = -|i-j| · e_gate[h] / xi[h]`  for `j ≤ i`,
+                         `-inf`                       otherwise.
+
+    Tiling cuts peak mask memory from `O(H·N·N)` to `O(H·Q_CHUNK·N)` —
+    at N=4096, H=16, that is 32 MB instead of 1 GB. The per-row softmax
+    is independent over the K axis, so the tiling is exact.
+    """
+    h = q.shape[1]
+    rate_dev = q.device
+    rate_dtype = q.dtype
+    if e_gate is not None:
+        bias_rate = (e_gate.to(rate_dtype) / xi_per_head.to(rate_dtype)).view(h, 1, 1)
+    else:
+        bias_rate = (1.0 / xi_per_head.to(rate_dtype)).view(h, 1, 1)
+    cols = pos[:n].to(rate_dtype).view(1, 1, n)
+    zero_s = torch.zeros((), dtype=rate_dtype, device=rate_dev)
+    neg_inf_s = torch.full((), float("-inf"), dtype=rate_dtype, device=rate_dev)
+
+    if n < q_chunk_threshold:
+        rows = pos[:n].to(rate_dtype).view(1, n, 1)
+        d_full = (rows - cols).abs()
+        causal = torch.where(rows >= cols, zero_s, neg_inf_s)
+        mask = (-d_full * bias_rate + causal).unsqueeze(0)
+        return F.scaled_dot_product_attention(q, k, v, attn_mask=mask)
+
+    out = torch.empty_like(q)
+    for qs in range(0, n, q_chunk):
+        qe = min(qs + q_chunk, n)
+        rows = pos[qs:qe].to(rate_dtype).view(1, qe - qs, 1)
+        d_chunk = (rows - cols).abs()
+        causal_chunk = torch.where(rows >= cols, zero_s, neg_inf_s)
+        mask_chunk = (-d_chunk * bias_rate + causal_chunk).unsqueeze(0)
+        out[:, :, qs:qe] = F.scaled_dot_product_attention(
+            q[:, :, qs:qe], k, v, attn_mask=mask_chunk
+        )
+    return out
+
+
 class EulerRotaryAttention(nn.Module):
     """Multi-head attention with Euler-bitfield rotary positional encoding.
 
@@ -162,10 +230,11 @@ class EulerRotaryAttention(nn.Module):
         q = _rotate_pairs(q, cos, sin)
         k = _rotate_pairs(k, cos, sin)
 
-        scores = (q @ k.transpose(-1, -2)) / math.sqrt(self.d_head)
-        scores = scores.masked_fill(~self.tril[:n, :n], float("-inf"))
-        attn = F.softmax(scores, dim=-1)
-        out = (attn @ v).transpose(1, 2).contiguous().view(b, n, self.d_model)
+        # SDPA with causal mask — no `(B, H, N, N)` scores tensor, no
+        # explicit softmax. Output is bit-identical to the prior manual
+        # path within float precision.
+        out = _causal_softmax_sdpa(q, k, v)
+        out = out.transpose(1, 2).contiguous().view(b, n, self.d_model)
         return self.o(out)
 
 
@@ -327,29 +396,21 @@ class EulerCEAttention(nn.Module):
         pi_g = torch.sigmoid(self.pi_gate_logit)      # (h,)
         e_g = torch.sigmoid(self.e_gate_logit)        # (h,)
 
-        # π-phase rotation (per-head amplitude scaled by pi_g)
+        # π-phase rotation (per-head amplitude scaled by pi_g).
         theta = self.pos[:n].view(1, 1, n, 1) * self.pi_inv_freq.view(1, 1, 1, -1)
-        # Modulate rotation magnitude per head: if pi_g=0, no rotation;
-        # if pi_g=1, full π-phase rotation.
         theta = theta * pi_g.view(1, self.n_heads, 1, 1)
         cos = theta.cos(); sin = theta.sin()
         q_rot = self._rotate(q, cos, sin)
         k_rot = self._rotate(k, cos, sin)
 
-        # dot-product scores
-        scores = (q_rot @ k_rot.transpose(-1, -2)) / math.sqrt(self.d_head)
-
-        # e-decay bias: -|i-j|/xi_h, multiplied by e_gate
+        # SDPA with per-head ALiBi decay, Q-tiled (FlashAttention-style).
+        # Algebraically identical to `softmax(QK/√d - e_g·|i-j|/ξ + causal)·V`
+        # but never materializes the `(B, H, N, N)` scores tensor.
         xi = torch.exp(self.log_xi)                   # (h,)
-        d_sub = self.d_mat[:n, :n]                    # (n, n)
-        # decay bias added to scores in log-space (equiv to multiplying A by e^{...})
-        decay_bias = -d_sub.view(1, 1, n, n) / xi.view(1, self.n_heads, 1, 1)
-        decay_bias = decay_bias * e_g.view(1, self.n_heads, 1, 1)
-        scores = scores + decay_bias
-
-        scores = scores.masked_fill(~self.tril[:n, :n], float("-inf"))
-        attn = F.softmax(scores, dim=-1)
-        out = (attn @ v).transpose(1, 2).contiguous().view(b, n, self.d_model)
+        out = _chunked_decay_sdpa(
+            q_rot, k_rot, v, xi, self.pos, n, e_gate=e_g
+        )
+        out = out.transpose(1, 2).contiguous().view(b, n, self.d_model)
         return self.o(out)
 
 
@@ -604,9 +665,12 @@ class EulerCEMinimal(nn.Module):
         self.rope_base = float(rope_base)
 
         # 2-bit head-type assignment (axiom — buffer, not learned).
+        # High bit = rotation (π), low bit = decay (e). Extracted with
+        # bitwise shift/mask — semantically the 2-bit field the name
+        # implies, and cheaper than the old `// 2` / `% 2` form.
         types = head_types_from_spec(head_types, n_heads)            # (h,)
-        pi_bits = ((types // 2) > 0).float()
-        e_bits = ((types % 2) > 0).float()
+        pi_bits = ((types >> 1) & 1).float()
+        e_bits = (types & 1).float()
         self.register_buffer("head_types", types)
         self.register_buffer("pi_bits", pi_bits)
         self.register_buffer("e_bits", e_bits)
@@ -614,6 +678,44 @@ class EulerCEMinimal(nn.Module):
         # bypass the per-head gating and dispatch to PyTorch SDPA
         # (FlashAttention / Memory-Efficient backend).
         self._uniform_type = int(types[0].item()) if (types == types[0]).all() else -1
+
+        # Packed bitmask form of the head-type assignment. For n_heads
+        # ≤ 64 this collapses the (H,) float buffers (pi_bits, e_bits =
+        # 8·H bytes) to two Python ints (≤ 16 bytes total). Python's
+        # arbitrary-precision int transparently handles larger widths.
+        pi_mask_int, e_mask_int = 0, 0
+        for h, t in enumerate(types.tolist()):
+            pi_mask_int |= ((t >> 1) & 1) << h
+            e_mask_int |= (t & 1) << h
+        self._pi_mask = pi_mask_int
+        self._e_mask = e_mask_int
+
+        # Pre-bucket heads by 2-bit type so the mixed path dispatches
+        # SDPA once per present bucket. This eliminates:
+        #   * `cos`/`sin` materialization on rotation-off heads,
+        #   * `decay_bias` materialization on decay-off heads,
+        #   * the `(b, H, n, n)` scores tensor (SDPA tiles internally),
+        #   * explicit `softmax` (FlashAttention / mem-efficient path).
+        present: list[int] = []
+        bucket_heads: list[torch.Tensor] = []
+        for t in range(4):
+            idx = (types == t).nonzero(as_tuple=True)[0].long().contiguous()
+            if idx.numel() > 0:
+                present.append(t)
+                self.register_buffer(f"_bucket_{t}_idx", idx, persistent=False)
+                bucket_heads.append(idx)
+        self._present_buckets: tuple[int, ...] = tuple(present)
+        concat_idx = (
+            torch.cat(bucket_heads, dim=0)
+            if bucket_heads
+            else torch.arange(n_heads, dtype=torch.long)
+        )
+        inv_perm = torch.empty(n_heads, dtype=torch.long)
+        inv_perm[concat_idx] = torch.arange(n_heads, dtype=torch.long)
+        self.register_buffer("_bucket_inv_perm", inv_perm.contiguous(), persistent=False)
+        self._bucket_is_identity: bool = bool(
+            (concat_idx == torch.arange(n_heads, dtype=torch.long)).all().item()
+        )
 
         self.qkv = nn.Linear(d_model, 3 * d_model, bias=False)
         self.o = nn.Linear(d_model, d_model, bias=False)
@@ -710,42 +812,60 @@ class EulerCEMinimal(nn.Module):
             k = self._rotate(k, cos, sin)
 
         if not decay:
-            # No additive bias → SDPA can use FlashAttention with is_causal.
-            return F.scaled_dot_product_attention(q, k, v, is_causal=True)
+            return _causal_softmax_sdpa(q, k, v)
 
-        # Decay path: build (H, n, n) bias = causal_mask + (-d/xi_h).
+        # Decay path: Q-tiled to keep attn_mask peak at O(H·Q_CHUNK·N).
         xi = torch.exp(self.log_xi)                                  # (H,)
-        d = self.d_mat[:n, :n]                                       # (n, n)
-        bias = -d.unsqueeze(0) / xi.view(H, 1, 1)                    # (H, n, n)
-        # Apply causal mask additively (-inf above diagonal).
-        causal = torch.where(self.tril[:n, :n],
-                             torch.zeros((), device=q.device, dtype=bias.dtype),
-                             torch.full((), float("-inf"),
-                                        device=q.device, dtype=bias.dtype))
-        attn_mask = (bias + causal).unsqueeze(0)                     # (1, H, n, n)
-        return F.scaled_dot_product_attention(q, k, v, attn_mask=attn_mask)
+        return _chunked_decay_sdpa(q, k, v, xi, self.pos, n)
 
     # ------------------------------------------------------------------
     def _forward_mixed(self, q, k, v, n, H):
-        """Reference path for mixed head-types (gating instead of branching)."""
-        # Per-head rotation amplitude scaled by pi_bit ∈ {0, 1}.
-        theta = self.pos[:n].view(1, 1, n, 1) * self.inv_freq.view(1, 1, 1, -1)
-        theta = theta * self.pi_bits.view(1, H, 1, 1)
-        cos = theta.cos()
-        sin = theta.sin()
-        q_rot = self._rotate(q, cos, sin)
-        k_rot = self._rotate(k, cos, sin)
+        """Bucketed zero-waste path for mixed head-types.
 
-        scores = (q_rot @ k_rot.transpose(-1, -2)) / math.sqrt(self.d_head)
+        Heads are grouped by 2-bit type at init. Each present bucket
+        dispatches to `scaled_dot_product_attention` once with exactly
+        the PE it needs (rotation for `pi_bit=1`, additive distance
+        mask for `e_bit=1`). Compared to the prior scalar-gated path
+        this drops `cos`/`sin` on rotation-off heads, the `(1, H, n, n)`
+        decay bias on decay-off heads, the full `(b, H, n, n)` scores
+        tensor, and the explicit softmax — SDPA tiles internally and
+        picks FlashAttention when the mask allows it. Output is placed
+        directly into the final head slot via `index_copy_`, avoiding
+        a `cat` + permutation round-trip.
+        """
+        b = q.shape[0]
+        d_head = q.shape[-1]
+        out = torch.empty(b, H, n, d_head, dtype=q.dtype, device=q.device)
 
-        xi = torch.exp(self.log_xi)
-        decay_bias = -self.d_mat[:n, :n].view(1, 1, n, n) / xi.view(1, H, 1, 1)
-        decay_bias = decay_bias * self.e_bits.view(1, H, 1, 1)
-        scores = scores + decay_bias
+        theta_cos: Optional[torch.Tensor] = None
+        theta_sin: Optional[torch.Tensor] = None
+        causal_view: Optional[torch.Tensor] = None
 
-        scores = scores.masked_fill(~self.tril[:n, :n], float("-inf"))
-        attn = F.softmax(scores, dim=-1)
-        return attn @ v
+        for t in self._present_buckets:
+            idx = getattr(self, f"_bucket_{t}_idx")
+            h_t = idx.numel()
+            q_t = q.index_select(1, idx)
+            k_t = k.index_select(1, idx)
+            v_t = v.index_select(1, idx)
+
+            if (t >> 1) & 1:  # rotation bit
+                if theta_cos is None:
+                    theta = self.pos[:n].view(1, 1, n, 1) * self.inv_freq.view(1, 1, 1, -1)
+                    theta_cos = theta.cos()
+                    theta_sin = theta.sin()
+                q_t = self._rotate(q_t, theta_cos, theta_sin)
+                k_t = self._rotate(k_t, theta_cos, theta_sin)
+
+            if t & 1:  # decay bit
+                xi = torch.exp(self.log_xi.index_select(0, idx))        # (h_t,)
+                out_t = _chunked_decay_sdpa(q_t, k_t, v_t, xi, self.pos, n)
+            else:
+                out_t = _causal_softmax_sdpa(q_t, k_t, v_t)
+
+            out.index_copy_(1, idx, out_t)
+
+        return out
+
 
 
 class EulerCEMinimalBlock(nn.Module):
