@@ -754,6 +754,16 @@ class ContinuousClarusCell(nn.Module):
         layer_idx: int = 0,
         n_layers: int = 1,
         depth_aware_freq: bool = False,
+        # --- Borbely 2-process autonomous switching --------------------
+        auto_mode: bool = False,
+        tau_wake: float = 100.0,            # pressure rises toward s_max
+        tau_sleep: float = 30.0,            # pressure falls during sleep
+        s_max: float = 2.0,
+        wake_to_nrem_threshold: float = 1.0,
+        nrem_to_rem_threshold: float = 0.45,
+        rem_to_wake_threshold: float = 0.15,
+        wake_arousal_trigger: float = 1.5,  # NREM → wake if input_norm > this
+        rem_arousal_trigger: float = 1.0,   # REM → wake if input_norm > this
     ) -> None:
         super().__init__()
         self.core = EulerCEBlock(
@@ -780,6 +790,18 @@ class ContinuousClarusCell(nn.Module):
         }
         self._mode: str = _MODE_WAKE
 
+        # Borbely / arousal transition thresholds.
+        self.auto_mode: bool = bool(auto_mode)
+        self._tau_w_inv: float = 1.0 / max(tau_wake, 1.0)
+        self._tau_s_inv: float = 1.0 / max(tau_sleep, 1.0)
+        self._s_max: float = float(s_max)
+        self._t_w2n: float = float(wake_to_nrem_threshold)
+        self._t_n2r: float = float(nrem_to_rem_threshold)
+        self._t_r2w: float = float(rem_to_wake_threshold)
+        self._arousal_nrem: float = float(wake_arousal_trigger)
+        self._arousal_rem: float = float(rem_arousal_trigger)
+        self._sleep_pressure: float = 0.0
+
         # State held across calls.
         self.register_buffer("_state", torch.empty(0), persistent=False)
         self._clock: int = 0
@@ -787,6 +809,8 @@ class ContinuousClarusCell(nn.Module):
         # pressure analysis. Bounded length to avoid unbounded growth.
         self._state_norm_log: deque[float] = deque(maxlen=256)
         self._mode_log: deque[str] = deque(maxlen=256)
+        self._pressure_log: deque[float] = deque(maxlen=256)
+        self._transitions: list[tuple[int, str, str, str]] = []  # (clock, from, to, reason)
 
     # ------------------------------------------------------------------
     # State management
@@ -804,12 +828,20 @@ class ContinuousClarusCell(nn.Module):
     def clock(self) -> int:
         return self._clock
 
+    @property
+    def sleep_pressure(self) -> float:
+        return self._sleep_pressure
+
     def reset(self) -> None:
-        """Clear persistent state and phase clock. Mode is preserved."""
+        """Clear persistent state, phase clock, and sleep pressure.
+        Mode is preserved."""
         self._state = torch.empty(0, device=self._state.device if self._state.numel() else "cpu")
         self._clock = 0
+        self._sleep_pressure = 0.0
         self._state_norm_log.clear()
         self._mode_log.clear()
+        self._pressure_log.clear()
+        self._transitions.clear()
 
     def has_state(self) -> bool:
         return self._state.numel() > 0
@@ -834,12 +866,56 @@ class ContinuousClarusCell(nn.Module):
         out[..., 1::2] = x1 * sin + x2 * cos
         return out.view(B, N, D)
 
+    # ------------------------------------------------------------------
+    # Borbely 2-process + arousal transitions
+    # ------------------------------------------------------------------
+    def _update_sleep_pressure(self) -> None:
+        """Exponential approach to s_max in WAKE, exponential decay in
+        sleep (REM decays at half the NREM rate — canonical Borbely)."""
+        if self._mode == _MODE_WAKE:
+            self._sleep_pressure += (self._s_max - self._sleep_pressure) * self._tau_w_inv
+        elif self._mode == _MODE_NREM:
+            self._sleep_pressure -= self._sleep_pressure * self._tau_s_inv
+        else:                                   # REM
+            self._sleep_pressure -= self._sleep_pressure * self._tau_s_inv * 0.5
+        # numerical safety
+        if self._sleep_pressure < 0.0:
+            self._sleep_pressure = 0.0
+        elif self._sleep_pressure > self._s_max:
+            self._sleep_pressure = self._s_max
+
+    def _auto_transition(self, input_norm: float) -> tuple[str, Optional[str]]:
+        """Decide next mode given current mode, sleep pressure, and
+        external arousal signal. Returns (next_mode, reason_or_None)."""
+        cur = self._mode
+        p = self._sleep_pressure
+        if cur == _MODE_WAKE:
+            if p > self._t_w2n and input_norm < 1.0:
+                return _MODE_NREM, "pressure_saturated"
+            return cur, None
+        if cur == _MODE_NREM:
+            if input_norm > self._arousal_nrem:
+                return _MODE_WAKE, "external_arousal"
+            if p < self._t_n2r:
+                return _MODE_REM, "pressure_relaxed"
+            return cur, None
+        # REM
+        if input_norm > self._arousal_rem:
+            return _MODE_WAKE, "external_arousal"
+        if p < self._t_r2w:
+            return _MODE_WAKE, "pressure_dissipated"
+        return cur, None
+
     def step(self, x: Optional[torch.Tensor] = None) -> torch.Tensor:
         """Advance one iteration.
 
         If `x` is provided it is mixed with the persistent state
         according to the current mode's input gate. If `x` is None,
         the block runs autonomously (dream / NREM replay).
+
+        When `auto_mode=True`, sleep pressure is updated every step
+        (Borbely 2-process) and the mode may switch automatically
+        based on pressure thresholds or external arousal.
         """
         if x is None and not self.has_state():
             raise ValueError(
@@ -848,6 +924,16 @@ class ContinuousClarusCell(nn.Module):
             )
         if x is not None:
             self._ensure_state(x)
+
+        # --- autonomous mode update (before compute) ------------------
+        if self.auto_mode:
+            input_norm = float(x.detach().norm().item()) / max(float(x.numel()) ** 0.5, 1e-8) \
+                         if x is not None else 0.0
+            self._update_sleep_pressure()
+            next_mode, reason = self._auto_transition(input_norm)
+            if next_mode != self._mode:
+                self._transitions.append((self._clock, self._mode, next_mode, reason or ""))
+                self._mode = next_mode
 
         in_gate, contraction, phase_scale = self._mode_table[self._mode]
 
@@ -869,6 +955,7 @@ class ContinuousClarusCell(nn.Module):
         self._clock += 1
         self._state_norm_log.append(float(h.detach().norm().item()))
         self._mode_log.append(self._mode)
+        self._pressure_log.append(float(self._sleep_pressure))
         return self._state
 
     def autonomous(self, n_steps: int) -> torch.Tensor:
@@ -904,6 +991,14 @@ class ContinuousClarusCell(nn.Module):
 
     def mode_trace(self) -> list[str]:
         return list(self._mode_log)
+
+    def pressure_trace(self) -> list[float]:
+        """Rolling sleep-pressure trajectory (Borbely S)."""
+        return list(self._pressure_log)
+
+    def transitions(self) -> list[tuple[int, str, str, str]]:
+        """List of auto-mode transitions as (clock, from, to, reason)."""
+        return list(self._transitions)
 
     def consciousness_depth(self, window: int = 32) -> float:
         """Approximate self-consistency index over the last `window`

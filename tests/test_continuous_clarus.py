@@ -195,3 +195,123 @@ def test_invalid_mode_rejected():
     cell = ContinuousClarusCell(32, 4, 16)
     with pytest.raises(ValueError):
         cell.set_mode("sleep")       # typo
+
+
+# --- Borbely 2-process autonomous mode switching ----------------------------
+
+
+def test_sleep_pressure_rises_during_wake():
+    """Borbely process S: ||S|| approaches s_max exponentially during wake."""
+    torch.manual_seed(0)
+    cell = ContinuousClarusCell(32, 4, 16, auto_mode=True,
+                                tau_wake=50.0, tau_sleep=20.0).eval()
+    x = torch.randn(1, 16, 32)
+    with torch.no_grad():
+        assert cell.sleep_pressure == 0.0
+        for _ in range(10):
+            cell.step(x)
+        assert cell.sleep_pressure > 0.0
+        assert cell.sleep_pressure < cell._s_max
+
+
+def test_auto_transition_wake_to_nrem():
+    """With small tau_wake, pressure saturates quickly and the cell
+    transitions wake → nrem once it crosses wake_to_nrem_threshold."""
+    torch.manual_seed(0)
+    cell = ContinuousClarusCell(32, 4, 16, auto_mode=True,
+                                tau_wake=5.0, tau_sleep=20.0,
+                                wake_to_nrem_threshold=1.0).eval()
+    # Use small-norm input so arousal_trigger (1.0) is not tripped.
+    x = 0.01 * torch.randn(1, 16, 32)
+    with torch.no_grad():
+        for _ in range(60):
+            cell.step(x)
+            if cell.mode != "wake":
+                break
+    assert cell.mode == "nrem", f"never entered NREM; final={cell.mode}"
+    ts = cell.transitions()
+    assert any(f == "wake" and t == "nrem" for (_, f, t, _) in ts)
+
+
+def test_auto_full_cycle_wake_nrem_rem_wake():
+    """Full cycle: wake → nrem → rem → wake emerges autonomously."""
+    torch.manual_seed(0)
+    cell = ContinuousClarusCell(32, 4, 16, auto_mode=True,
+                                tau_wake=5.0, tau_sleep=5.0,
+                                wake_to_nrem_threshold=1.0,
+                                nrem_to_rem_threshold=0.5,
+                                rem_to_wake_threshold=0.15).eval()
+    x = 0.01 * torch.randn(1, 16, 32)
+    with torch.no_grad():
+        for _ in range(500):
+            cell.step(x)
+    seen_modes = set(cell.mode_trace())
+    assert seen_modes == {"wake", "nrem", "rem"}, \
+        f"missing mode in cycle; seen={seen_modes}"
+
+
+def test_auto_transition_arousal_wakes_from_nrem():
+    """External arousal (large-norm input) during NREM snaps back to wake."""
+    torch.manual_seed(0)
+    cell = ContinuousClarusCell(32, 4, 16, auto_mode=True,
+                                tau_wake=5.0, tau_sleep=20.0,
+                                wake_arousal_trigger=1.5).eval()
+    # Drive into NREM with tiny input.
+    weak = 0.01 * torch.randn(1, 16, 32)
+    with torch.no_grad():
+        for _ in range(60):
+            cell.step(weak)
+            if cell.mode == "nrem":
+                break
+        assert cell.mode == "nrem"
+        # Loud external stimulus.
+        loud = 5.0 * torch.randn(1, 16, 32)
+        cell.step(loud)
+    assert cell.mode == "wake", f"arousal did not wake; mode={cell.mode}"
+    # The transition log records a reason tag.
+    reasons = [r for (_, _, _, r) in cell.transitions()]
+    assert any("arousal" in r for r in reasons)
+
+
+def test_auto_mode_off_by_default():
+    """Default auto_mode=False → mode stays put regardless of pressure."""
+    torch.manual_seed(0)
+    cell = ContinuousClarusCell(32, 4, 16).eval()
+    assert cell.auto_mode is False
+    x = torch.randn(1, 16, 32)
+    with torch.no_grad():
+        for _ in range(30):
+            cell.step(x)
+    assert cell.mode == "wake", "mode must not switch when auto is off"
+    assert cell.sleep_pressure == 0.0, "pressure must not accumulate when auto off"
+
+
+def test_pressure_log_aligned_with_mode_log():
+    """pressure_trace and mode_trace grow in lockstep."""
+    torch.manual_seed(0)
+    cell = ContinuousClarusCell(32, 4, 16, auto_mode=True,
+                                tau_wake=20.0).eval()
+    x = torch.randn(1, 16, 32)
+    with torch.no_grad():
+        for _ in range(15):
+            cell.step(x)
+    assert len(cell.pressure_trace()) == len(cell.mode_trace()) == 15
+    # Pressure should be monotone non-decreasing during wake.
+    p = cell.pressure_trace()
+    for i in range(1, len(p)):
+        assert p[i] >= p[i - 1] - 1e-6
+
+
+def test_reset_zeros_sleep_pressure_and_transitions():
+    torch.manual_seed(0)
+    cell = ContinuousClarusCell(32, 4, 16, auto_mode=True,
+                                tau_wake=3.0).eval()
+    x = 0.01 * torch.randn(1, 16, 32)
+    with torch.no_grad():
+        for _ in range(30):
+            cell.step(x)
+    assert cell.sleep_pressure > 0.0
+    cell.reset()
+    assert cell.sleep_pressure == 0.0
+    assert cell.transitions() == []
+    assert cell.pressure_trace() == []
