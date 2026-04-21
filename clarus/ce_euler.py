@@ -86,6 +86,74 @@ def _rotate_pairs(x: torch.Tensor, cos: torch.Tensor, sin: torch.Tensor) -> torc
     return out
 
 
+# ---------------------------------------------------------------------------
+# Shared SDPA helpers — used by EulerRotaryAttention, EulerCEAttention,
+# and EulerCEMinimal so the FlashAttention-style Q-tiling + cached causal
+# bias live in a single place.
+# ---------------------------------------------------------------------------
+Q_CHUNK_DEFAULT: int = 256
+Q_CHUNK_THRESHOLD: int = 1024
+
+
+def _causal_softmax_sdpa(q: torch.Tensor, k: torch.Tensor, v: torch.Tensor) -> torch.Tensor:
+    """Plain causal SDPA (no additive bias). FlashAttention on CUDA, tiled
+    math path on CPU — either way the `(B, H, N, N)` scores tensor never
+    materializes."""
+    return F.scaled_dot_product_attention(q, k, v, is_causal=True)
+
+
+def _chunked_decay_sdpa(
+    q: torch.Tensor,
+    k: torch.Tensor,
+    v: torch.Tensor,
+    xi_per_head: torch.Tensor,
+    pos: torch.Tensor,
+    n: int,
+    *,
+    e_gate: Optional[torch.Tensor] = None,
+    q_chunk: int = Q_CHUNK_DEFAULT,
+    q_chunk_threshold: int = Q_CHUNK_THRESHOLD,
+) -> torch.Tensor:
+    """SDPA with per-head ALiBi-style decay + causal mask, Q-tiled.
+
+    Mask:  `m[h, i, j] = -|i-j| · e_gate[h] / xi[h]`  for `j ≤ i`,
+                         `-inf`                       otherwise.
+
+    Tiling cuts peak mask memory from `O(H·N·N)` to `O(H·Q_CHUNK·N)` —
+    at N=4096, H=16, that is 32 MB instead of 1 GB. The per-row softmax
+    is independent over the K axis, so the tiling is exact.
+    """
+    h = q.shape[1]
+    rate_dev = q.device
+    rate_dtype = q.dtype
+    if e_gate is not None:
+        bias_rate = (e_gate.to(rate_dtype) / xi_per_head.to(rate_dtype)).view(h, 1, 1)
+    else:
+        bias_rate = (1.0 / xi_per_head.to(rate_dtype)).view(h, 1, 1)
+    cols = pos[:n].to(rate_dtype).view(1, 1, n)
+    zero_s = torch.zeros((), dtype=rate_dtype, device=rate_dev)
+    neg_inf_s = torch.full((), float("-inf"), dtype=rate_dtype, device=rate_dev)
+
+    if n < q_chunk_threshold:
+        rows = pos[:n].to(rate_dtype).view(1, n, 1)
+        d_full = (rows - cols).abs()
+        causal = torch.where(rows >= cols, zero_s, neg_inf_s)
+        mask = (-d_full * bias_rate + causal).unsqueeze(0)
+        return F.scaled_dot_product_attention(q, k, v, attn_mask=mask)
+
+    out = torch.empty_like(q)
+    for qs in range(0, n, q_chunk):
+        qe = min(qs + q_chunk, n)
+        rows = pos[qs:qe].to(rate_dtype).view(1, qe - qs, 1)
+        d_chunk = (rows - cols).abs()
+        causal_chunk = torch.where(rows >= cols, zero_s, neg_inf_s)
+        mask_chunk = (-d_chunk * bias_rate + causal_chunk).unsqueeze(0)
+        out[:, :, qs:qe] = F.scaled_dot_product_attention(
+            q[:, :, qs:qe], k, v, attn_mask=mask_chunk
+        )
+    return out
+
+
 class EulerRotaryAttention(nn.Module):
     """Multi-head attention with Euler-bitfield rotary positional encoding.
 
@@ -162,10 +230,11 @@ class EulerRotaryAttention(nn.Module):
         q = _rotate_pairs(q, cos, sin)
         k = _rotate_pairs(k, cos, sin)
 
-        scores = (q @ k.transpose(-1, -2)) / math.sqrt(self.d_head)
-        scores = scores.masked_fill(~self.tril[:n, :n], float("-inf"))
-        attn = F.softmax(scores, dim=-1)
-        out = (attn @ v).transpose(1, 2).contiguous().view(b, n, self.d_model)
+        # SDPA with causal mask — no `(B, H, N, N)` scores tensor, no
+        # explicit softmax. Output is bit-identical to the prior manual
+        # path within float precision.
+        out = _causal_softmax_sdpa(q, k, v)
+        out = out.transpose(1, 2).contiguous().view(b, n, self.d_model)
         return self.o(out)
 
 
@@ -327,29 +396,21 @@ class EulerCEAttention(nn.Module):
         pi_g = torch.sigmoid(self.pi_gate_logit)      # (h,)
         e_g = torch.sigmoid(self.e_gate_logit)        # (h,)
 
-        # π-phase rotation (per-head amplitude scaled by pi_g)
+        # π-phase rotation (per-head amplitude scaled by pi_g).
         theta = self.pos[:n].view(1, 1, n, 1) * self.pi_inv_freq.view(1, 1, 1, -1)
-        # Modulate rotation magnitude per head: if pi_g=0, no rotation;
-        # if pi_g=1, full π-phase rotation.
         theta = theta * pi_g.view(1, self.n_heads, 1, 1)
         cos = theta.cos(); sin = theta.sin()
         q_rot = self._rotate(q, cos, sin)
         k_rot = self._rotate(k, cos, sin)
 
-        # dot-product scores
-        scores = (q_rot @ k_rot.transpose(-1, -2)) / math.sqrt(self.d_head)
-
-        # e-decay bias: -|i-j|/xi_h, multiplied by e_gate
+        # SDPA with per-head ALiBi decay, Q-tiled (FlashAttention-style).
+        # Algebraically identical to `softmax(QK/√d - e_g·|i-j|/ξ + causal)·V`
+        # but never materializes the `(B, H, N, N)` scores tensor.
         xi = torch.exp(self.log_xi)                   # (h,)
-        d_sub = self.d_mat[:n, :n]                    # (n, n)
-        # decay bias added to scores in log-space (equiv to multiplying A by e^{...})
-        decay_bias = -d_sub.view(1, 1, n, n) / xi.view(1, self.n_heads, 1, 1)
-        decay_bias = decay_bias * e_g.view(1, self.n_heads, 1, 1)
-        scores = scores + decay_bias
-
-        scores = scores.masked_fill(~self.tril[:n, :n], float("-inf"))
-        attn = F.softmax(scores, dim=-1)
-        out = (attn @ v).transpose(1, 2).contiguous().view(b, n, self.d_model)
+        out = _chunked_decay_sdpa(
+            q_rot, k_rot, v, xi, self.pos, n, e_gate=e_g
+        )
+        out = out.transpose(1, 2).contiguous().view(b, n, self.d_model)
         return self.o(out)
 
 
@@ -667,16 +728,6 @@ class EulerCEMinimal(nn.Module):
         d_mat = (torch.arange(block).unsqueeze(1)
                  - torch.arange(block).unsqueeze(0)).abs().float()
         self.register_buffer("d_mat", d_mat)
-        # Pre-materialized causal bias (0 on/below diagonal, -inf above).
-        # Computed once here (and on extend_to) so forward never pays
-        # the N·N `torch.where` cost. For N=4096 this saves 64 MB of
-        # per-call allocation.
-        causal_bias = torch.where(
-            self.tril,
-            torch.zeros((), dtype=torch.float32),
-            torch.full((), float("-inf"), dtype=torch.float32),
-        )
-        self.register_buffer("_causal_bias", causal_bias)
 
         # RoPE-style frequencies for heads with rotation bit on.
         k = torch.arange(0, self.d_head, 2, dtype=torch.float32) / self.d_head
@@ -707,11 +758,6 @@ class EulerCEMinimal(nn.Module):
             torch.ones(new_block, new_block, dtype=torch.bool, device=dev))
         self.d_mat = (torch.arange(new_block).unsqueeze(1)
                       - torch.arange(new_block).unsqueeze(0)).abs().float().to(dev)
-        self._causal_bias = torch.where(
-            self.tril,
-            torch.zeros((), dtype=torch.float32, device=dev),
-            torch.full((), float("-inf"), dtype=torch.float32, device=dev),
-        )
 
     # ------------------------------------------------------------------
     @staticmethod
@@ -766,12 +812,11 @@ class EulerCEMinimal(nn.Module):
             k = self._rotate(k, cos, sin)
 
         if not decay:
-            # No additive bias → SDPA can use FlashAttention with is_causal.
-            return F.scaled_dot_product_attention(q, k, v, is_causal=True)
+            return _causal_softmax_sdpa(q, k, v)
 
         # Decay path: Q-tiled to keep attn_mask peak at O(H·Q_CHUNK·N).
         xi = torch.exp(self.log_xi)                                  # (H,)
-        return self._chunked_decay_sdpa(q, k, v, xi, n, H)
+        return _chunked_decay_sdpa(q, k, v, xi, self.pos, n)
 
     # ------------------------------------------------------------------
     def _forward_mixed(self, q, k, v, n, H):
@@ -813,66 +858,14 @@ class EulerCEMinimal(nn.Module):
 
             if t & 1:  # decay bit
                 xi = torch.exp(self.log_xi.index_select(0, idx))        # (h_t,)
-                out_t = self._chunked_decay_sdpa(q_t, k_t, v_t, xi, n, h_t)
+                out_t = _chunked_decay_sdpa(q_t, k_t, v_t, xi, self.pos, n)
             else:
-                out_t = F.scaled_dot_product_attention(
-                    q_t, k_t, v_t, is_causal=True
-                )
+                out_t = _causal_softmax_sdpa(q_t, k_t, v_t)
 
             out.index_copy_(1, idx, out_t)
 
         return out
 
-    # ------------------------------------------------------------------
-    # FlashAttention-style Q-tiled SDPA for decay buckets.
-    #
-    # The ALiBi additive mask `-|i-j|/ξ_h + causal` has shape (h_t, N, N),
-    # which dominates peak memory for long context (1 GB at H=16 N=4096).
-    # We process queries in tiles of `Q_CHUNK` rows so only the mask slab
-    # for that tile is materialized. Output math is identical to a single
-    # SDPA call — each row's softmax is independent over the full K axis.
-    Q_CHUNK = 256
-    # Tiling below this N is pure overhead (single SDPA call is cheaper
-    # than N / Q_CHUNK Python-level dispatches).
-    Q_CHUNK_THRESHOLD = 1024
-    # ------------------------------------------------------------------
-    def _chunked_decay_sdpa(self, q_t, k_t, v_t, xi, n, h_t):
-        """SDPA with per-head ALiBi mask built on the fly per Q-chunk.
-
-        Peak attn_mask memory: `h_t * Q_CHUNK * n * 4` bytes — for N=4096
-        Q_CHUNK=256 h_t=8 this is 32 MB versus the 512 MB of the full mask.
-        """
-        if n < self.Q_CHUNK_THRESHOLD:
-            # Small N: tile overhead outweighs savings, fall back to the
-            # single-mask path with the cached causal bias.
-            bias = -self.d_mat[:n, :n].unsqueeze(0) / xi.view(h_t, 1, 1)
-            attn_mask = (bias + self._causal_bias[:n, :n]).unsqueeze(0)
-            return F.scaled_dot_product_attention(
-                q_t, k_t, v_t, attn_mask=attn_mask
-            )
-
-        out = torch.empty_like(q_t)
-        xi_inv = (1.0 / xi).view(h_t, 1, 1)                              # (h_t, 1, 1)
-        cols = self.pos[:n].view(1, 1, n)                                # (1, 1, n)
-        for qs in range(0, n, self.Q_CHUNK):
-            qe = min(qs + self.Q_CHUNK, n)
-            rows = self.pos[qs:qe].view(1, qe - qs, 1)                   # (1, chunk, 1)
-            # |i - j|, broadcast to (1, chunk, n).
-            d_chunk = (rows - cols).abs()
-            # Causal: 0 below/on diagonal, -inf above. Fused into the
-            # same allocation as the decay bias.
-            causal_chunk = torch.where(
-                rows >= cols,
-                torch.zeros((), dtype=d_chunk.dtype, device=d_chunk.device),
-                torch.full((), float("-inf"),
-                           dtype=d_chunk.dtype, device=d_chunk.device),
-            )
-            # (h_t, chunk, n) = -|i-j| / ξ_h + causal
-            mask_chunk = (-d_chunk * xi_inv + causal_chunk).unsqueeze(0)
-            out[:, :, qs:qe] = F.scaled_dot_product_attention(
-                q_t[:, :, qs:qe], k_t, v_t, attn_mask=mask_chunk
-            )
-        return out
 
 
 class EulerCEMinimalBlock(nn.Module):
