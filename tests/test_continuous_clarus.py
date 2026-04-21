@@ -466,6 +466,122 @@ def test_memory_cue_recall_returns_similar_snapshot():
         f"cos(r,snap2)={cos(r,snap2):.3f}"
 
 
+# --- Metacognition (C3 self-consistency recovery) ---------------------------
+
+
+def test_meta_disabled_by_default():
+    cell = ContinuousClarusCell(32, 4, 16)
+    assert cell.meta_enabled is False
+    assert cell.meta_events() == []
+
+
+def test_meta_dormant_when_depth_is_high():
+    """With stable input, consciousness_depth stays near 1. The meta
+    loop must not fire."""
+    torch.manual_seed(0)
+    cell = ContinuousClarusCell(
+        32, 4, 16, meta_enabled=True,
+        meta_window=8, meta_threshold=0.6, meta_max_depth=3,
+    ).eval()
+    x = torch.randn(1, 16, 32)
+    with torch.no_grad():
+        for _ in range(30):
+            cell.step(x)
+    # With constant input, consciousness stays stable → no trigger.
+    assert cell.consciousness_depth(window=8) > 0.9
+    assert cell.meta_events() == []
+
+
+def test_meta_fires_when_depth_drops():
+    """Feed deliberately volatile inputs to drive ||h|| around, then
+    switch to autonomous so depth recovers. The meta-loop must fire
+    at least once during the volatile phase."""
+    torch.manual_seed(0)
+    cell = ContinuousClarusCell(
+        32, 4, 16,
+        meta_enabled=True, meta_window=8,
+        meta_threshold=0.95, meta_max_depth=3, meta_tol=0.0,
+    ).eval()
+    # Volatile inputs: each step large random norm → ||h|| is unstable.
+    with torch.no_grad():
+        for _ in range(20):
+            x = (2.0 + torch.rand(1)) * torch.randn(1, 16, 32)
+            cell.step(x)
+    events = cell.meta_events()
+    assert len(events) > 0, "meta never fired despite high threshold"
+    # Each event records 1..meta_max_depth iterations.
+    for (_, iters, before, after) in events:
+        assert 1 <= iters <= 3
+        assert 0.0 <= before <= 1.0
+        assert 0.0 <= after <= 1.0
+
+
+def test_meta_cap_respected():
+    """meta_max_depth=1 must cap every event at exactly 1 iteration."""
+    torch.manual_seed(0)
+    cell = ContinuousClarusCell(
+        32, 4, 16,
+        meta_enabled=True, meta_window=4,
+        meta_threshold=0.99, meta_max_depth=1, meta_tol=0.0,
+    ).eval()
+    with torch.no_grad():
+        for _ in range(15):
+            cell.step((0.5 + torch.rand(1)) * torch.randn(1, 16, 32))
+    for (_, iters, _, _) in cell.meta_events():
+        assert iters == 1
+
+
+def test_meta_tolerance_exit_early():
+    """With a large meta_tol, every meta event should stop at 1
+    iteration (the first step is always within tolerance trivially)."""
+    torch.manual_seed(0)
+    cell = ContinuousClarusCell(
+        32, 4, 16,
+        meta_enabled=True, meta_window=4,
+        meta_threshold=0.99, meta_max_depth=10, meta_tol=1e6,
+    ).eval()
+    with torch.no_grad():
+        for _ in range(10):
+            cell.step((0.5 + torch.rand(1)) * torch.randn(1, 16, 32))
+    assert len(cell.meta_events()) > 0
+    for (_, iters, _, _) in cell.meta_events():
+        assert iters == 1, f"tol did not short-circuit: iters={iters}"
+
+
+def test_meta_reset_clears_events():
+    torch.manual_seed(0)
+    cell = ContinuousClarusCell(
+        32, 4, 16,
+        meta_enabled=True, meta_window=4, meta_threshold=0.99,
+    ).eval()
+    with torch.no_grad():
+        for _ in range(10):
+            cell.step(torch.randn(1, 16, 32))
+    assert len(cell.meta_events()) > 0
+    cell.reset()
+    assert cell.meta_events() == []
+
+
+def test_meta_logs_state_during_extra_iters():
+    """The extra core iterations must also extend the state_norm/mode
+    logs so that `consciousness_depth` 'sees' them in the next window."""
+    torch.manual_seed(0)
+    cell = ContinuousClarusCell(
+        32, 4, 16,
+        meta_enabled=True, meta_window=4, meta_threshold=0.99,
+        meta_max_depth=3, meta_tol=0.0,
+    ).eval()
+    with torch.no_grad():
+        for _ in range(10):
+            cell.step(torch.randn(1, 16, 32))
+    # state_norm_log length equals regular steps plus sum of meta iters.
+    meta_iters = sum(iters for (_, iters, _, _) in cell.meta_events())
+    expected_len = 10 + meta_iters
+    assert len(cell.state_norm_trace()) == expected_len
+    assert len(cell.mode_trace()) == expected_len
+    assert len(cell.pressure_trace()) == expected_len
+
+
 def test_auto_cycle_with_memory_end_to_end():
     """Full auto cycle + memory: after several wake/sleep transitions
     the memory buffer accumulates tagged experiences spanning multiple

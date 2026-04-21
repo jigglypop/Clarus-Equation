@@ -854,6 +854,13 @@ class ContinuousClarusCell(nn.Module):
         replay_strength_nrem: float = 0.3,  # blending during NREM
         replay_strength_rem: float = 0.15,  # blending during REM
         replay_topk: int = 4,
+        # --- Metacognition (C3 self-consistency) -----------------------
+        meta_enabled: bool = False,
+        meta_window: int = 16,              # window for consciousness_depth
+        meta_threshold: float = 0.6,        # trigger meta when depth < this
+        meta_max_depth: int = 3,            # cap on recursive self-examination
+        meta_tol: float = 0.05,             # stop meta when step is small
+        meta_damping: float = 0.5,          # fraction of delta to apply per meta step
     ) -> None:
         super().__init__()
         self.core = EulerCEBlock(
@@ -905,6 +912,16 @@ class ContinuousClarusCell(nn.Module):
         )
         self._last_replayed: Optional[torch.Tensor] = None
 
+        # Metacognition configuration.
+        self.meta_enabled: bool = bool(meta_enabled)
+        self.meta_window: int = max(2, int(meta_window))
+        self.meta_threshold: float = float(meta_threshold)
+        self.meta_max_depth: int = max(1, int(meta_max_depth))
+        self.meta_tol: float = float(meta_tol)
+        self.meta_damping: float = float(meta_damping)
+        self._meta_events: list[tuple[int, int, float, float]] = []
+        # each entry: (clock, iters_run, depth_before, depth_after)
+
         # State held across calls.
         self.register_buffer("_state", torch.empty(0), persistent=False)
         self._clock: int = 0
@@ -948,6 +965,7 @@ class ContinuousClarusCell(nn.Module):
         self._pressure_log.clear()
         self._transitions.clear()
         self._last_replayed = None
+        self._meta_events.clear()
         if clear_memory and self.memory is not None:
             self.memory.clear()
 
@@ -1088,6 +1106,37 @@ class ContinuousClarusCell(nn.Module):
             self.memory.encode(
                 self._state[0], priority=1.0, tag=self._clock,
             )
+
+        # --- Metacognition: C3 self-consistency recovery --------------
+        # When the trailing consciousness_depth falls below threshold
+        # the cell pauses and applies the core transform to its own
+        # state (no new input) for up to `meta_max_depth` additional
+        # iterations, with a damped Banach update. Stops early when the
+        # relative step size is below `meta_tol`. This implements the
+        # "think about your thinking" loop from agent.py::ConsciousnessMonitor
+        # at the cell level: depth drops → extra recursion → depth
+        # recovers.
+        if self.meta_enabled and self._clock >= self.meta_window:
+            depth_before = self.consciousness_depth(self.meta_window)
+            if depth_before < self.meta_threshold:
+                iters = 0
+                for _ in range(self.meta_max_depth):
+                    h_meta = self.core(self._state)
+                    delta = h_meta - self._state
+                    # Damped update: h = h + alpha * (core(h) - h)
+                    self._state = self._state + self.meta_damping * delta
+                    iters += 1
+                    step_rel = (delta.norm() / self._state.norm().clamp_min(1e-8)).item()
+                    # Log the state norm so consciousness_depth updates.
+                    self._state_norm_log.append(float(self._state.detach().norm().item()))
+                    self._mode_log.append(self._mode)
+                    self._pressure_log.append(float(self._sleep_pressure))
+                    if step_rel < self.meta_tol:
+                        break
+                depth_after = self.consciousness_depth(self.meta_window)
+                self._meta_events.append(
+                    (self._clock, iters, float(depth_before), float(depth_after))
+                )
         return self._state
 
     def autonomous(self, n_steps: int) -> torch.Tensor:
@@ -1148,6 +1197,16 @@ class ContinuousClarusCell(nn.Module):
     def clear_memory(self) -> None:
         if self.memory is not None:
             self.memory.clear()
+
+    def meta_events(self) -> list[tuple[int, int, float, float]]:
+        """Log of metacognition events.
+
+        Each entry is `(clock, iters_run, depth_before, depth_after)`
+        — the clock at which the meta-loop triggered, how many extra
+        recursive self-examinations it ran, and the consciousness
+        depth before vs after.
+        """
+        return list(self._meta_events)
 
     def consciousness_depth(self, window: int = 32) -> float:
         """Approximate self-consistency index over the last `window`
