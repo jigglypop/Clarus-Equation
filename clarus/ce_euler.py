@@ -27,6 +27,7 @@ Why this could help:
 from __future__ import annotations
 
 import math
+from collections import deque
 from typing import Optional
 
 import torch
@@ -304,6 +305,7 @@ __all__ = [
     "EulerCEMinimal",
     "EulerCEMinimalBlock",
     "RecursiveEulerCEBlock",
+    "ContinuousClarusCell",
     "fixed_point_loss",
     "head_types_from_spec",
 ]
@@ -671,6 +673,257 @@ def fixed_point_loss(block: RecursiveEulerCEBlock, h: torch.Tensor,
     ffh = block.core(fh)
     diff = (ffh - fh).flatten(1)
     return scale * diff.pow(2).mean()
+
+
+# ---------------------------------------------------------------------------
+# ContinuousClarusCell — persistent self-recursion (wake / NREM / REM)
+# ---------------------------------------------------------------------------
+#
+# `RecursiveEulerCEBlock` runs k iterations per forward call and resets
+# `h = x` each time. That is the right semantic for feed-forward use
+# (one prediction per input), but it precludes the phenomena that
+# self-reference actually needs:
+#
+#   * **sleep / dream**: the network keeps running when external input
+#     is absent. Dream = self-driven dynamics, no `x`.
+#   * **memory consolidation**: NREM damps the state toward invariants
+#     (replay loop) without re-reading the environment.
+#   * **self-awareness**: continuous monitoring of `||h_t||` and its
+#     stability across iterations, not a one-shot snapshot.
+#
+# ContinuousClarusCell keeps `h_t` alive across forward calls, advances
+# a global phase clock, and supports three modes that modulate the
+# contraction / depth-phase / external-input gating in a way that maps
+# 1:1 onto the `BrainRuntime` wake/NREM/REM dynamics (see `clarus/
+# runtime.py`).
+#
+# Mode summary:
+#   wake: external input dominates; contraction ≈ 1; phase = rho
+#   nrem: input gated low; contraction < 1 (damp toward fixed point);
+#         phase is slow (delta-band analogue)
+#   rem:  input gated off; contraction ≈ 1; phase is faster/chaotic
+#         (theta-gamma coupling analogue)
+#
+# The clock never resets across mode switches — one continuous rhythm.
+# This is the architectural bridge between transformer-level attention
+# and the brain-runtime sleep cycle.
+
+_MODE_WAKE = "wake"
+_MODE_NREM = "nrem"
+_MODE_REM = "rem"
+_VALID_MODES = (_MODE_WAKE, _MODE_NREM, _MODE_REM)
+
+
+class ContinuousClarusCell(nn.Module):
+    """Persistent self-recursive block with wake/NREM/REM modes.
+
+    State is held across `forward` / `step` calls. A single `log_phi`
+    parameter (per dim-pair) is shared across modes, but the effective
+    angular velocity scales by a mode-dependent multiplier.
+
+    Args:
+        d_model, n_heads, block: forwarded to `EulerCEBlock`
+        phi_init: base depth-phase magnitude (shared across modes;
+            modes apply multiplicative rescaling). Default = CE
+            contraction rho = 0.155.
+        input_gate_*: per-mode external-input gating coefficient in
+            [0, 1]. 1.0 = full input, 0.0 = ignore input (dream).
+        contraction_*: per-mode multiplicative damping applied to h
+            after each step. < 1 damps toward zero (NREM consolidation).
+        phase_scale_*: per-mode multiplier on base phi (REM fast,
+            NREM slow, wake normal).
+        learnable_gates: forwarded to EulerCEAttention.
+    """
+
+    def __init__(
+        self,
+        d_model: int,
+        n_heads: int,
+        block: int,
+        phi_init: float = 0.155,
+        input_gate_wake: float = 1.0,
+        input_gate_nrem: float = 0.1,
+        input_gate_rem: float = 0.0,
+        contraction_wake: float = 1.0,
+        contraction_nrem: float = 0.97,
+        contraction_rem: float = 1.0,
+        phase_scale_wake: float = 1.0,
+        phase_scale_nrem: float = 0.3,       # delta-band slow
+        phase_scale_rem: float = 2.0,        # theta-gamma fast
+        learnable_gates: bool = True,
+        layer_idx: int = 0,
+        n_layers: int = 1,
+        depth_aware_freq: bool = False,
+    ) -> None:
+        super().__init__()
+        self.core = EulerCEBlock(
+            d_model, n_heads, block,
+            learnable_gates=learnable_gates,
+            layer_idx=layer_idx, n_layers=n_layers,
+            depth_aware_freq=depth_aware_freq,
+        )
+        d_head = d_model // n_heads
+        assert d_head % 2 == 0, "d_head must be even"
+        self.d_head = d_head
+        self.K_pairs = d_head // 2
+
+        # Base per-pair depth frequency (learnable).
+        self.log_phi = nn.Parameter(
+            torch.full((self.K_pairs,), math.log(max(phi_init, 1e-6)))
+        )
+
+        # Mode-dependent coefficients (fixed / not learned by default).
+        self._mode_table = {
+            _MODE_WAKE: (input_gate_wake, contraction_wake, phase_scale_wake),
+            _MODE_NREM: (input_gate_nrem, contraction_nrem, phase_scale_nrem),
+            _MODE_REM:  (input_gate_rem,  contraction_rem,  phase_scale_rem),
+        }
+        self._mode: str = _MODE_WAKE
+
+        # State held across calls.
+        self.register_buffer("_state", torch.empty(0), persistent=False)
+        self._clock: int = 0
+        # Rolling trajectory of ||h|| — used for consciousness / sleep
+        # pressure analysis. Bounded length to avoid unbounded growth.
+        self._state_norm_log: deque[float] = deque(maxlen=256)
+        self._mode_log: deque[str] = deque(maxlen=256)
+
+    # ------------------------------------------------------------------
+    # State management
+    # ------------------------------------------------------------------
+    @property
+    def mode(self) -> str:
+        return self._mode
+
+    def set_mode(self, mode: str) -> None:
+        if mode not in _VALID_MODES:
+            raise ValueError(f"mode must be one of {_VALID_MODES}, got {mode!r}")
+        self._mode = mode
+
+    @property
+    def clock(self) -> int:
+        return self._clock
+
+    def reset(self) -> None:
+        """Clear persistent state and phase clock. Mode is preserved."""
+        self._state = torch.empty(0, device=self._state.device if self._state.numel() else "cpu")
+        self._clock = 0
+        self._state_norm_log.clear()
+        self._mode_log.clear()
+
+    def has_state(self) -> bool:
+        return self._state.numel() > 0
+
+    # ------------------------------------------------------------------
+    # Core dynamics
+    # ------------------------------------------------------------------
+    def _ensure_state(self, like: torch.Tensor) -> None:
+        if self._state.numel() == 0 or self._state.shape != like.shape:
+            self._state = torch.zeros_like(like)
+
+    def _rotate(self, h: torch.Tensor, angle: torch.Tensor) -> torch.Tensor:
+        """Rotate adjacent dim-pairs of h by per-pair angle (K_pairs,)."""
+        cos = angle.cos().view(1, 1, -1)
+        sin = angle.sin().view(1, 1, -1)
+        B, N, D = h.shape
+        x = h.view(B, N, -1, self.K_pairs * 2)      # (B, N, H, 2K)
+        x1 = x[..., 0::2]
+        x2 = x[..., 1::2]
+        out = torch.empty_like(x)
+        out[..., 0::2] = x1 * cos - x2 * sin
+        out[..., 1::2] = x1 * sin + x2 * cos
+        return out.view(B, N, D)
+
+    def step(self, x: Optional[torch.Tensor] = None) -> torch.Tensor:
+        """Advance one iteration.
+
+        If `x` is provided it is mixed with the persistent state
+        according to the current mode's input gate. If `x` is None,
+        the block runs autonomously (dream / NREM replay).
+        """
+        if x is None and not self.has_state():
+            raise ValueError(
+                "ContinuousClarusCell.step(x=None) requires prior state — "
+                "call with x at least once, or reset() after providing x."
+            )
+        if x is not None:
+            self._ensure_state(x)
+
+        in_gate, contraction, phase_scale = self._mode_table[self._mode]
+
+        if x is not None:
+            # residual mix of external input with persistent state
+            self._state = in_gate * x + (1.0 - in_gate) * self._state
+
+        # core transform (attention + FFN, both already SDPA-optimized)
+        h = self.core(self._state)
+        # contraction (mode-dependent damping)
+        if contraction != 1.0:
+            h = h * contraction
+        # depth-phase rotation with GLOBAL clock
+        phi = torch.exp(self.log_phi) * phase_scale
+        angle = phi * float(self._clock + 1)
+        h = self._rotate(h, angle)
+
+        self._state = h
+        self._clock += 1
+        self._state_norm_log.append(float(h.detach().norm().item()))
+        self._mode_log.append(self._mode)
+        return self._state
+
+    def autonomous(self, n_steps: int) -> torch.Tensor:
+        """Run `n_steps` iterations with no external input.
+
+        This is the sleep-mode entry point: NREM consolidation (if
+        `mode=='nrem'`) or REM dream (if `mode=='rem'`). Returns the
+        final state.
+        """
+        for _ in range(n_steps):
+            self.step(x=None)
+        return self._state
+
+    def forward(self, x: torch.Tensor, n_steps: int = 1) -> torch.Tensor:
+        """Feed-forward entry: drive the cell with `x` for `n_steps`.
+
+        After the first step, subsequent steps within the call still
+        use `x` (wake-style persistent drive) unless the mode's input
+        gate is zero. For one-shot behaviour set `n_steps=1`. For the
+        full iterative ClarusCell semantics use `n_steps` > 1.
+        """
+        for _ in range(n_steps):
+            self.step(x)
+        return self._state
+
+    # ------------------------------------------------------------------
+    # Self-monitoring signals
+    # ------------------------------------------------------------------
+    def state_norm_trace(self) -> list[float]:
+        """Rolling log of ||h_t|| — for consciousness / sleep pressure
+        analysis. Bounded to the last 256 iterations."""
+        return list(self._state_norm_log)
+
+    def mode_trace(self) -> list[str]:
+        return list(self._mode_log)
+
+    def consciousness_depth(self, window: int = 32) -> float:
+        """Approximate self-consistency index over the last `window`
+        iterations: 1 - normalized standard deviation of ||h_t||.
+
+        * ≈ 1.0: stable oscillation (conscious / aware)
+        * ≈ 0.0: frozen (unconscious) OR diverging (seizure)
+
+        This is a rough proxy and is not a substitute for the full
+        C3 self-consistency metric in `clarus/agent.py`.
+        """
+        log = list(self._state_norm_log)[-window:]
+        if len(log) < 2:
+            return 0.0
+        mean = sum(log) / len(log)
+        if mean <= 1e-12:
+            return 0.0
+        var = sum((v - mean) ** 2 for v in log) / len(log)
+        rel_std = (var ** 0.5) / mean
+        return float(max(0.0, 1.0 - rel_std))
 
 
 # ---------------------------------------------------------------------------
