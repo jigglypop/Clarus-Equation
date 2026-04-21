@@ -871,6 +871,12 @@ class ContinuousClarusCell(nn.Module):
         stdp_r_e: float = 0.99,             # eligibility decay
         stdp_a_plus: float = 0.01,          # LTP amplitude
         stdp_a_minus: float = 0.012,        # LTD amplitude
+        # --- 4-neuromodulator coupling ---------------------------------
+        neuromod_enabled: bool = False,
+        neuromod_beta_da: float = 1.0,      # DA → stdp_lr scale
+        neuromod_beta_ne: float = 0.5,      # NE → phase_scale shift
+        neuromod_beta_5ht: float = 0.2,     # 5HT → extra contraction
+        neuromod_beta_ach: float = 0.3,     # ACh → input_gate scale
     ) -> None:
         super().__init__()
         self.core = EulerCEBlock(
@@ -952,6 +958,30 @@ class ContinuousClarusCell(nn.Module):
             self.register_buffer("_eligibility", torch.zeros(d_model, d_model), persistent=False)
         self._stdp_updates: int = 0
 
+        # Neuromodulator coupling (DA / NE / 5HT / ACh).
+        self.neuromod_enabled: bool = bool(neuromod_enabled)
+        self.neuromod_beta_da: float = float(neuromod_beta_da)
+        self.neuromod_beta_ne: float = float(neuromod_beta_ne)
+        self.neuromod_beta_5ht: float = float(neuromod_beta_5ht)
+        self.neuromod_beta_ach: float = float(neuromod_beta_ach)
+        if self.neuromod_enabled:
+            try:
+                from clarus.neuromod import (
+                    NeuromodulatorState, step_neuromodulators,
+                )
+            except Exception:  # pragma: no cover
+                NeuromodulatorState = None
+                step_neuromodulators = None
+            self._NeuromodulatorState = NeuromodulatorState
+            self._step_neuromodulators = step_neuromodulators
+            self._neuromod_state = (
+                NeuromodulatorState() if NeuromodulatorState is not None else None
+            )
+        else:
+            self._neuromod_state = None
+        self._last_state_for_nm: Optional[torch.Tensor] = None
+        self._neuromod_trace: deque[tuple[float, float, float, float]] = deque(maxlen=256)
+
         # State held across calls.
         self.register_buffer("_state", torch.empty(0), persistent=False)
         self._clock: int = 0
@@ -997,6 +1027,10 @@ class ContinuousClarusCell(nn.Module):
         self._last_replayed = None
         self._meta_events.clear()
         self.reset_stdp()
+        if self.neuromod_enabled and self._NeuromodulatorState is not None:
+            self._neuromod_state = self._NeuromodulatorState()
+        self._last_state_for_nm = None
+        self._neuromod_trace.clear()
         if clear_memory and self.memory is not None:
             self.memory.clear()
 
@@ -1094,9 +1128,50 @@ class ContinuousClarusCell(nn.Module):
 
         in_gate, contraction, phase_scale = self._mode_table[self._mode]
 
+        # --- Neuromodulator update (before mode params are applied) ---
+        # Internal signals derived from the state trajectory:
+        #   c_pred   : how large is the change from last step (prediction error)
+        #   c_nov    : how different is the current state from recent ones
+        #   salience : normalized input norm (external stimulus strength)
+        # The result is a NeuromodulatorState (DA, NE, 5HT, ACh) in
+        # [0, 2] that shifts the effective mode parameters.
+        nm_da = nm_ne = nm_5ht = nm_ach = 0.5
+        if self.neuromod_enabled and self._neuromod_state is not None:
+            c_pred = 0.0
+            c_nov = 0.0
+            if self._last_state_for_nm is not None and self._state.numel() > 0:
+                diff = (self._state - self._last_state_for_nm).flatten()
+                base = self._state.flatten().norm().clamp_min(1e-8)
+                c_pred = float((diff.norm() / base).item())
+                # novelty via 1 - cosine with last state
+                curr = self._state.flatten() / base
+                last = self._last_state_for_nm.flatten()
+                last = last / last.norm().clamp_min(1e-8)
+                c_nov = float(max(0.0, 1.0 - (curr * last).sum().item()))
+            sal = 0.0 if x is None else float(
+                x.flatten().abs().mean().item()
+            )
+            self._neuromod_state = self._step_neuromodulators(
+                self._neuromod_state,
+                c_pred=c_pred, c_nov=c_nov,
+                discount=0.0, salience=sal,
+            )
+            nm_da, nm_ne, nm_5ht, nm_ach = self._neuromod_state.as_tuple()
+
+            # Apply multipliers to mode params.  Clipped for stability.
+            phase_scale = phase_scale * (1.0 + self.neuromod_beta_ne * (nm_ne - 0.5))
+            in_gate = max(0.0, min(1.0,
+                in_gate * (1.0 + self.neuromod_beta_ach * (nm_ach - 0.5))
+            ))
+            contraction = max(0.5, min(1.2,
+                contraction - self.neuromod_beta_5ht * (nm_5ht - 0.5)
+            ))
+        self._neuromod_trace.append((nm_da, nm_ne, nm_5ht, nm_ach))
+
         if x is not None:
             # residual mix of external input with persistent state
             self._state = in_gate * x + (1.0 - in_gate) * self._state
+        self._last_state_for_nm = self._state.detach().clone() if self._state.numel() else None
 
         # --- Hippocampus replay (during sleep, BEFORE core) -----------
         # Replayed content perturbs the state so the next `core(h)`
@@ -1162,7 +1237,15 @@ class ContinuousClarusCell(nn.Module):
         # is implicit = 1.0 during NREM (canonical "consolidation gate"),
         # 0.0 in wake/REM. Update in place on the buffer.
         if self.stdp_enabled and self._mode == _MODE_NREM:
-            dw = self.stdp_lr * self._eligibility
+            # DA scales the effective learning rate (reward-biased
+            # consolidation). Clipped to non-negative.
+            effective_lr = self.stdp_lr
+            if self.neuromod_enabled and self._neuromod_state is not None:
+                da = self._neuromod_state.da
+                effective_lr = max(
+                    0.0, self.stdp_lr * (1.0 + self.neuromod_beta_da * (da - 0.5))
+                )
+            dw = effective_lr * self._eligibility
             self.W_syn = self.W_syn + dw
             # Bound the matrix norm for numerical stability.
             norm = self.W_syn.norm()
@@ -1260,6 +1343,16 @@ class ContinuousClarusCell(nn.Module):
     def clear_memory(self) -> None:
         if self.memory is not None:
             self.memory.clear()
+
+    def neuromodulators(self) -> Optional[tuple[float, float, float, float]]:
+        """Current (DA, NE, 5HT, ACh) tuple or None if neuromod is off."""
+        if not self.neuromod_enabled or self._neuromod_state is None:
+            return None
+        return self._neuromod_state.as_tuple()
+
+    def neuromodulator_trace(self) -> list[tuple[float, float, float, float]]:
+        """Rolling (DA, NE, 5HT, ACh) log per step (last 256)."""
+        return list(self._neuromod_trace)
 
     def stdp_updates(self) -> int:
         """Number of W_syn updates applied during NREM so far."""

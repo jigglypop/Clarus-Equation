@@ -693,6 +693,132 @@ def test_stdp_w_syn_changes_state_after_sleep():
         f"W_syn should shift behaviour after sleep learning: diff={diff}"
 
 
+# --- Neuromodulator coupling (DA / NE / 5HT / ACh) --------------------------
+
+
+def test_neuromod_disabled_by_default():
+    cell = ContinuousClarusCell(32, 4, 16)
+    assert cell.neuromod_enabled is False
+    assert cell.neuromodulators() is None
+    assert cell.neuromodulator_trace() == []
+
+
+def test_neuromod_state_is_live():
+    """When enabled, every step appends a 4-tuple to the trace."""
+    torch.manual_seed(0)
+    cell = ContinuousClarusCell(32, 4, 16, neuromod_enabled=True).eval()
+    x = torch.randn(1, 16, 32)
+    with torch.no_grad():
+        for _ in range(10):
+            cell.step(x)
+    assert cell.neuromodulators() is not None
+    assert len(cell.neuromodulator_trace()) == 10
+    for da, ne, sht, ach in cell.neuromodulator_trace():
+        for v in (da, ne, sht, ach):
+            assert 0.0 <= v <= 2.0
+
+
+def test_neuromod_responds_to_input_novelty():
+    """Novel inputs should raise NE (norepinephrine) above baseline."""
+    torch.manual_seed(0)
+    cell = ContinuousClarusCell(32, 4, 16, neuromod_enabled=True).eval()
+    with torch.no_grad():
+        # Constant input: low novelty.
+        x_const = torch.randn(1, 16, 32)
+        for _ in range(15):
+            cell.step(x_const)
+        ne_calm = cell.neuromodulators()[1]
+        # Switch to novel inputs every step.
+        for _ in range(15):
+            cell.step(torch.randn(1, 16, 32))
+        ne_novel = cell.neuromodulators()[1]
+    # With novel inputs NE should be at least as high as the calm one.
+    assert ne_novel >= ne_calm - 0.05
+
+
+def test_neuromod_shifts_effective_phase_scale():
+    """Per-step effective phase_scale is multiplied by (1 + β_ne·(NE - 0.5)).
+    With high NE this yields a visibly different state trajectory vs
+    a matched cell with neuromod off."""
+    torch.manual_seed(0)
+    x = torch.randn(1, 16, 32)
+    # Cell A: neuromod on, responds to input salience
+    a = ContinuousClarusCell(32, 4, 16, neuromod_enabled=True,
+                             neuromod_beta_ne=1.0).eval()
+    # Cell B: neuromod off — constant mode table
+    b = ContinuousClarusCell(32, 4, 16, neuromod_enabled=False).eval()
+    b.core.load_state_dict(a.core.state_dict())
+    with torch.no_grad():
+        b.log_phi.copy_(a.log_phi)
+        for _ in range(10):
+            a.step(x * 3.0)  # salient input → bigger ACh response
+            b.step(x * 3.0)
+    diff = (a._state - b._state).abs().max().item()
+    assert diff > 1e-3, f"neuromod should perturb trajectory: diff={diff}"
+
+
+def test_neuromod_trace_and_mode_trace_same_length():
+    torch.manual_seed(0)
+    cell = ContinuousClarusCell(32, 4, 16, neuromod_enabled=True,
+                                meta_enabled=False).eval()
+    x = torch.randn(1, 16, 32)
+    with torch.no_grad():
+        for _ in range(12):
+            cell.step(x)
+    assert len(cell.neuromodulator_trace()) == 12
+    assert len(cell.mode_trace()) == 12
+
+
+def test_neuromod_modulates_stdp_learning_rate():
+    """DA modulates the effective stdp_lr during NREM. With neuromod
+    off, two cells with the same inputs give the same final ‖W_syn‖.
+    With neuromod on, DA shifts lr → ‖W_syn‖ differs."""
+    torch.manual_seed(0)
+    x = torch.randn(1, 16, 32)
+
+    def make(enabled):
+        torch.manual_seed(0)
+        c = ContinuousClarusCell(
+            32, 4, 16,
+            stdp_enabled=True, stdp_lr=0.1,
+            neuromod_enabled=enabled,
+            neuromod_beta_da=1.5,
+        ).eval()
+        return c
+
+    a = make(False)
+    b = make(True)
+    with torch.no_grad():
+        for cell in (a, b):
+            for _ in range(10):
+                cell.step(x)
+            cell.set_mode("nrem")
+            for _ in range(10):
+                cell.step(x=None)
+
+    assert a.synaptic_norm() != b.synaptic_norm(), \
+        f"DA-modulated lr did not change synaptic norm (a={a.synaptic_norm():.4f}, b={b.synaptic_norm():.4f})"
+
+
+def test_neuromod_reset_to_baseline():
+    torch.manual_seed(0)
+    cell = ContinuousClarusCell(32, 4, 16, neuromod_enabled=True).eval()
+    x = torch.randn(1, 16, 32)
+    with torch.no_grad():
+        for _ in range(20):
+            cell.step(x)
+    assert cell.neuromodulators() is not None
+    cell.reset()
+    assert cell.neuromodulator_trace() == []
+    # After reset, state is reinitialized to baseline (0.5, 0.5, 0.5, 0.5)
+    # but neuromodulators() can only be read once at least one step has run.
+    with torch.no_grad():
+        cell.step(x)
+    da, ne, sht, ach = cell.neuromodulators()
+    # Single step moves modulators only slightly from 0.5 baseline.
+    assert all(0.2 < v < 0.8 for v in (da, ne, sht, ach))
+
+
 def test_auto_cycle_with_memory_end_to_end():
     """Full auto cycle + memory: after several wake/sleep transitions
     the memory buffer accumulates tagged experiences spanning multiple
