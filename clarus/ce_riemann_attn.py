@@ -172,13 +172,65 @@ def _attention_torch(
     causal_mask: torch.Tensor,
     d_head: int,
 ) -> torch.Tensor:
+    """Single-shot SDPA with (rotated q, rotated k, v) and a pre-built
+    `(1, H, N, N)` sheet bias. Used only on short context — long context
+    takes the Q-tiled path in `_attention_torch_tiled` so the sheet bias
+    (which itself has an intermediate `(1, H, N, N, K)` factor) never
+    materializes at full size.
+    """
     q_rot = _rotate_pairs(q, cos, sin)
     k_rot = _rotate_pairs(k, cos, sin)
-    scores = (q_rot @ k_rot.transpose(-1, -2)) / math.sqrt(d_head)
-    scores = scores + sheet_bias
-    scores = scores.masked_fill(~causal_mask, float("-inf"))
-    attn = F.softmax(scores, dim=-1)
-    return attn @ v
+    zero_s = torch.zeros((), dtype=sheet_bias.dtype, device=sheet_bias.device)
+    neg_inf_s = torch.full((), float("-inf"), dtype=sheet_bias.dtype, device=sheet_bias.device)
+    mask = torch.where(causal_mask, sheet_bias, neg_inf_s)
+    return F.scaled_dot_product_attention(q_rot, k_rot, v, attn_mask=mask)
+
+
+def _attention_torch_tiled(
+    q: torch.Tensor, k: torch.Tensor, v: torch.Tensor,
+    cos: torch.Tensor, sin: torch.Tensor,
+    sheet: torch.Tensor,           # (1, h, n, K) int32 sheet indices
+    lambda_sigma: torch.Tensor,    # (h,)
+    causal_mask: torch.Tensor,     # (n, n) bool
+    n: int,
+) -> torch.Tensor:
+    """Q-tiled SDPA for Riemann rotary attention.
+
+    Rebuilds the sheet bias per Q-chunk:
+        diff_chunk = s[:, :, qs:qe, :, None, :] - s[:, :, None, :, :]
+                     → (1, H, chunk, N, K)      ← materialized per chunk
+        mean_abs   = diff_chunk.abs().mean(-1)  → (1, H, chunk, N)
+        sb_chunk   = -λ_σ · mean_abs
+
+    Peak intermediate memory drops from `O(H·N²·K)` to
+    `O(H·Q_CHUNK·N·K)`. At H=8 N=4096 K=32 q_chunk=256 that is
+    **≈64× reduction** (17 GB → 256 MB, and most of that is the
+    `(1, H, chunk, N, K)` diff which is reallocated per chunk so the
+    peak RSS is one chunk's worth).
+    """
+    from clarus.ce_euler import Q_CHUNK_DEFAULT, Q_CHUNK_THRESHOLD, _chunked_bias_sdpa
+
+    q_rot = _rotate_pairs(q, cos, sin)
+    k_rot = _rotate_pairs(k, cos, sin)
+
+    h = q_rot.shape[1]
+    s = sheet.float()                                    # (1, h, n, K)
+    lam = lambda_sigma.view(1, h, 1, 1)
+    neg_inf_s = torch.full((), float("-inf"), dtype=q_rot.dtype, device=q_rot.device)
+
+    def bias_builder(qs: int, qe: int) -> torch.Tensor:
+        s_rows = s[:, :, qs:qe, :].unsqueeze(-2)         # (1, h, chunk, 1, K)
+        diff = s_rows - s.unsqueeze(-3)                  # (1, h, chunk, n, K)
+        mean_abs = diff.abs().mean(dim=-1)               # (1, h, chunk, n)
+        sheet_bias_chunk = -lam * mean_abs                # (1, h, chunk, n)
+        return torch.where(
+            causal_mask[qs:qe, :], sheet_bias_chunk, neg_inf_s
+        )
+
+    return _chunked_bias_sdpa(
+        q_rot, k_rot, v, bias_builder, n,
+        q_chunk=Q_CHUNK_DEFAULT, q_chunk_threshold=Q_CHUNK_THRESHOLD,
+    )
 
 
 class RiemannRotaryAttention(nn.Module):
@@ -269,6 +321,8 @@ class RiemannRotaryAttention(nn.Module):
     # forward
     # ------------------------------------------------------------------
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        from clarus.ce_euler import Q_CHUNK_THRESHOLD
+
         b, n, _ = x.shape
         qkv = self.qkv(x).view(b, n, 3, self.n_heads, self.d_head)
         q, k, v = qkv.unbind(dim=2)
@@ -283,16 +337,24 @@ class RiemannRotaryAttention(nn.Module):
         )                                       # (1, h, n, K)
         cos = theta.cos()
         sin = theta.sin()
-
         lambda_sigma = torch.exp(self.log_lambda_sigma)   # (h,)
-        sheet_bias = _sheet_bias(sheet, lambda_sigma)     # (1, h, n, n)
 
         if backend == "torch":
-            out = _attention_torch(
-                q, k, v, cos, sin, sheet_bias,
-                self.tril[:n, :n], self.d_head,
-            )
+            if n >= Q_CHUNK_THRESHOLD:
+                # Long context: rebuild sheet bias per Q-chunk inside SDPA,
+                # skipping the O(H·N²·K) full diff tensor.
+                out = _attention_torch_tiled(
+                    q, k, v, cos, sin, sheet, lambda_sigma,
+                    self.tril[:n, :n], n,
+                )
+            else:
+                sheet_bias = _sheet_bias(sheet, lambda_sigma)   # (1, h, n, n)
+                out = _attention_torch(
+                    q, k, v, cos, sin, sheet_bias,
+                    self.tril[:n, :n], self.d_head,
+                )
         else:
+            sheet_bias = _sheet_bias(sheet, lambda_sigma)
             out = self._forward_native(
                 q, k, v, cos, sin, sheet_bias, n, backend,
             )

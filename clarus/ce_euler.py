@@ -102,6 +102,41 @@ def _causal_softmax_sdpa(q: torch.Tensor, k: torch.Tensor, v: torch.Tensor) -> t
     return F.scaled_dot_product_attention(q, k, v, is_causal=True)
 
 
+def _chunked_bias_sdpa(
+    q: torch.Tensor,
+    k: torch.Tensor,
+    v: torch.Tensor,
+    bias_builder,
+    n: int,
+    *,
+    q_chunk: int = Q_CHUNK_DEFAULT,
+    q_chunk_threshold: int = Q_CHUNK_THRESHOLD,
+) -> torch.Tensor:
+    """Q-tiled SDPA with a caller-supplied additive mask builder.
+
+    `bias_builder(qs, qe)` must return a float tensor broadcastable to
+    `(1, H, qe - qs, n)` that already includes whatever causal mask
+    the caller wants (typically `-inf` above the diagonal in the
+    corresponding Q rows).
+
+    Peak mask memory is `O(H · q_chunk · n)`; at N=4096 with
+    q_chunk=256 this is ~32 MB regardless of how expensive the bias
+    itself is to compute. Short-context (n < threshold) takes the
+    single-shot path.
+    """
+    if n < q_chunk_threshold:
+        return F.scaled_dot_product_attention(
+            q, k, v, attn_mask=bias_builder(0, n)
+        )
+    out = torch.empty_like(q)
+    for qs in range(0, n, q_chunk):
+        qe = min(qs + q_chunk, n)
+        out[:, :, qs:qe] = F.scaled_dot_product_attention(
+            q[:, :, qs:qe], k, v, attn_mask=bias_builder(qs, qe)
+        )
+    return out
+
+
 def _chunked_decay_sdpa(
     q: torch.Tensor,
     k: torch.Tensor,

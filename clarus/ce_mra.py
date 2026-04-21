@@ -241,37 +241,75 @@ class MellinRiemannAttention(nn.Module):
         qhat_re = w_re * qt_re - w_im * qt_im
         qhat_im = w_re * qt_im + w_im * qt_re
 
-        # Two real matmuls → Re(Σ_k w_k q̃_i · conj(k̃_j)).
-        qhat_re = qhat_re.transpose(1, 2)
+        # Concatenate real and imaginary channels so the two separate
+        # real matmuls collapse into one SDPA-eligible dot product:
+        #   Re(Σ_k w_k q̃ · conj(k̃)) = <q_full, k_full>,
+        # where `q_full = [q̂_re | q̂_im]` and `k_full = [k̃_re | k̃_im]`.
+        qhat_re = qhat_re.transpose(1, 2)          # (B, H, N, K)
         qhat_im = qhat_im.transpose(1, 2)
         kt_re_t = kt_re.transpose(1, 2)
         kt_im_t = kt_im.transpose(1, 2)
+        v_t = v.transpose(1, 2)                    # (B, H, N, dh)
 
+        # Fast path: no hermitian symmetrization, no post-softmax
+        # sparsification, and decay is either absent or additive (bias).
+        # These are the conditions under which the whole block reduces
+        # to `softmax((Q K^T)/√d + bias + causal) · V` which is what
+        # SDPA fuses without ever materializing `(B, H, N, N)` scores.
+        fast_path = (
+            not self.hermitian
+            and self.sparse_eps2 == 0.0
+            and self.decay_mode in ("none", "bias")
+        )
+        if fast_path:
+            from clarus.ce_euler import (
+                Q_CHUNK_DEFAULT, Q_CHUNK_THRESHOLD,
+                _chunked_bias_sdpa, _causal_softmax_sdpa,
+            )
+
+            q_full = torch.cat([qhat_re, qhat_im], dim=-1)    # (B, H, N, 2K=dh)
+            k_full = torch.cat([kt_re_t, kt_im_t], dim=-1)    # (B, H, N, 2K=dh)
+            # Note: SDPA internally divides by sqrt(q_full.shape[-1]) =
+            # sqrt(2K) = sqrt(dh), matching the original /√dh exactly.
+
+            if self.decay_mode == "none":
+                out = _causal_softmax_sdpa(q_full, k_full, v_t)
+            else:  # "bias"
+                log_decay_full = self.log_decay  # (N_max, N_max)
+                causal_mask = self.tril
+                neg_inf_s = torch.full(
+                    (), float("-inf"),
+                    dtype=q_full.dtype, device=q_full.device,
+                )
+
+                def bias_builder(qs: int, qe: int) -> torch.Tensor:
+                    ld = log_decay_full[qs:qe, :N]            # (chunk, N)
+                    cm = causal_mask[qs:qe, :N]               # (chunk, N)
+                    return torch.where(cm, ld, neg_inf_s).view(1, 1, qe - qs, N)
+
+                out = _chunked_bias_sdpa(
+                    q_full, k_full, v_t, bias_builder, N,
+                    q_chunk=Q_CHUNK_DEFAULT, q_chunk_threshold=Q_CHUNK_THRESHOLD,
+                )
+
+            out = out.transpose(1, 2).contiguous().view(B, N, self.d_model)
+            return self.o(out)
+
+        # Legacy path: hermitian / multiplicative decay / sparsification.
         scores = (
             qhat_re @ kt_re_t.transpose(-1, -2)
             + qhat_im @ kt_im_t.transpose(-1, -2)
         )
         scores = scores / math.sqrt(dh)
-
-        # Critical-line decay.
-        if self.decay_mode == "bias":
-            scores = scores + self.log_decay[:N, :N].view(1, 1, N, N)
-        elif self.decay_mode == "mult":
+        if self.decay_mode == "mult":
             scores = scores * torch.exp(self.log_decay[:N, :N]).view(1, 1, N, N)
-
-        # Self-adjoint projection (bidirectional only — will contaminate
-        # causal scores with future-direction info).
         if self.hermitian:
             scores = 0.5 * (scores + scores.transpose(-1, -2))
-
         scores = scores.masked_fill(~self.tril[:N, :N], float("-inf"))
-
         attn = F.softmax(scores, dim=-1)
         if self.sparse_eps2 > 0.0:
             attn = bootstrap_sparse(attn, self.sparse_eps2)
-
-        v = v.transpose(1, 2)
-        out = (attn @ v).transpose(1, 2).contiguous().view(B, N, self.d_model)
+        out = (attn @ v_t).transpose(1, 2).contiguous().view(B, N, self.d_model)
         return self.o(out)
 
 
