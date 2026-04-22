@@ -190,11 +190,15 @@ class TestModeOccupancyKl:
             "F2_iss_ball",
             "F3_ergodic_kl",
             "F4_pci_regression",
+            "boolean_spectral_carrier",
         }
         assert report["F3_ergodic_kl"]["samples"] == 1
         f1 = report["F1_self_organization"]
         assert math.isclose(f1["active_ratio_target"], ACTIVE_RATIO)
         assert "active_ratio_ema" in f1
+        carrier = report["boolean_spectral_carrier"]
+        assert carrier["head_type"] in {"nope", "alibi", "rope", "xpos"}
+        assert "pi_bit" in carrier and "e_bit" in carrier and "xi_steps" in carrier
 
 
 class TestF1SelfMeasure:

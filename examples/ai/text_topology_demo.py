@@ -57,7 +57,13 @@ def main() -> int:
     result = engine.analyze(_load_text(args))
 
     print("dominant_euler_basis", result.dominant_euler_basis)
+    print(
+        "euler_basis_activation",
+        " ".join(f"{k}={v:.6f}" for k, v in sorted(result.euler_basis_activation.items())),
+    )
     print("bridge_energy", f"{result.bridge_energy:.6f}")
+    print("token_sentence_bridge", f"{result.token_sentence_bridge:.6f}")
+    print("sentence_paragraph_bridge", f"{result.sentence_paragraph_bridge:.6f}")
     print("token_sentence_alignment", f"{result.token_sentence_alignment:.6f}")
     print("sentence_paragraph_alignment", f"{result.sentence_paragraph_alignment:.6f}")
     print("")
@@ -66,6 +72,8 @@ def main() -> int:
         result.token_summary.count,
         "edges",
         result.token_summary.edges,
+        "faces",
+        result.token_summary.faces,
         "components",
         result.token_summary.components,
         "euler",
@@ -78,24 +86,32 @@ def main() -> int:
         result.sentence_summary.count,
         "edges",
         result.sentence_summary.edges,
+        "faces",
+        result.sentence_summary.faces,
         "components",
         result.sentence_summary.components,
         "euler",
         result.sentence_summary.euler_characteristic,
         "density",
         f"{result.sentence_summary.edge_density:.6f}",
+        "fiedler",
+        f"{result.sentence_summary.algebraic_connectivity:.6f}",
     )
     print(
         "paragraphs",
         result.paragraph_summary.count,
         "edges",
         result.paragraph_summary.edges,
+        "faces",
+        result.paragraph_summary.faces,
         "components",
         result.paragraph_summary.components,
         "euler",
         result.paragraph_summary.euler_characteristic,
         "density",
         f"{result.paragraph_summary.edge_density:.6f}",
+        "fiedler",
+        f"{result.paragraph_summary.algebraic_connectivity:.6f}",
     )
     print("")
     print("token_state_norm", f"{result.token_state_norm:.6f}")

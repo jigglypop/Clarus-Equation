@@ -56,6 +56,30 @@ _MODE_TO_INT = {
     "REM": 2,
 }
 
+# 2-bit head-type taxonomy mirrored from `clarus.ce_euler.EulerCEMinimal`.
+# The HippocampusMemory uses the same (pi_bit, e_bit) reduction so that
+# replay/recall picks up the Tier 1 length-OOD safety properties documented
+# in docs/8_리만/mra_paper.md sec 7.7.3:
+#   nope  (0,0) -- identity (no carrier)
+#   alibi (0,1) -- additive distance decay only (Tier 1 default)
+#   rope  (1,0) -- rotation only (Tier 2, length-OOD catastrophic)
+#   xpos  (1,1) -- rotation + decay (Tier 1)
+_HEAD_TYPE_BITS: Dict[str, tuple[int, int]] = {
+    "nope": (0, 0),
+    "alibi": (0, 1),
+    "rope": (1, 0),
+    "xpos": (1, 1),
+}
+
+
+def _resolve_head_bits(head_type: str) -> tuple[int, int]:
+    bits = _HEAD_TYPE_BITS.get(str(head_type).lower())
+    if bits is None:
+        raise ValueError(
+            f"unknown pe_head_type {head_type!r}; expected one of {list(_HEAD_TYPE_BITS)}"
+        )
+    return bits
+
 
 class RuntimeMode(str, Enum):
     WAKE = "WAKE"
@@ -119,6 +143,15 @@ class BrainRuntimeConfig:
     f1_min_ratio: float = 0.005
     f1_max_ratio: float = 0.5
 
+    # EulerCEMinimal (docs/8_리만/mra_paper.md sec 7.7.3) head-type passed
+    # down to HippocampusMemory.recall so replay inherits the same Tier 1
+    # length-extrap properties of ALiBi additive decay. Default "alibi"
+    # picks the (0,1) bucket -- the strongest single-tier choice in the
+    # 32x extrapolation ablation. pe_xi_steps controls the additive
+    # log-distance bias slope; None -> 2 * memory_capacity.
+    pe_head_type: str = "alibi"
+    pe_xi_steps: int | None = None
+
     def __post_init__(self) -> None:
         self.dim = int(self.dim)
         if self.dim <= 0:
@@ -130,6 +163,9 @@ class BrainRuntimeConfig:
         self.f1_ema_alpha = min(max(float(self.f1_ema_alpha), 0.0), 1.0)
         self.f1_min_ratio = min(max(float(self.f1_min_ratio), 0.0), 1.0)
         self.f1_max_ratio = min(max(float(self.f1_max_ratio), self.f1_min_ratio), 1.0)
+        _resolve_head_bits(self.pe_head_type)
+        if self.pe_xi_steps is not None:
+            self.pe_xi_steps = max(1, int(self.pe_xi_steps))
 
     def energy_budget(self, mode: RuntimeMode) -> int:
         base = max(1, int(round(self.dim * self.active_ratio)))
@@ -214,21 +250,71 @@ class BrainRuntimeSnapshot:
 
 @dataclass
 class HippocampusMemory:
-    """Minimal fast-memory subsystem: encode, recall, replay priority."""
+    """Fast-memory subsystem with EulerCEMinimal-style head-type carriers.
+
+    Recall scores are augmented by the (pi_bit, e_bit) head-type taxonomy:
+
+      * e_bit on -> ALiBi-style additive decay -|t_now - t_i| / xi on the
+        score. Insertion order plays the role of the position index, so
+        recent memories dominate -- the same Tier 1 length-OOD safety the
+        EulerCEMinimal paper observes for `head_types="alibi"`.
+      * pi_bit on -> RoPE-style rotation on key/cue using the encoded
+        insertion step as position. Provides a phase carrier for the P axis
+        of graph.md sec 10.6 directly on the replay buffer.
+
+    The default head_type is "alibi" (Tier 1 best in 32x extrapolation).
+    """
     dim: int
     capacity: int = 32
     device: str | torch.device = "cpu"
+    head_type: str = "alibi"
+    xi_steps: int | None = None
+    rope_base: float = 10000.0
     _keys: list[torch.Tensor] = field(default_factory=list, init=False, repr=False)
     _values: list[torch.Tensor] = field(default_factory=list, init=False, repr=False)
     _priority: list[float] = field(default_factory=list, init=False, repr=False)
+    _insert_steps: list[int] = field(default_factory=list, init=False, repr=False)
+    _step_counter: int = field(default=0, init=False, repr=False)
 
     def __post_init__(self) -> None:
         self.dim = int(self.dim)
         self.capacity = max(1, int(self.capacity))
         self.device = torch.device(self.device)
+        self.pi_bit, self.e_bit = _resolve_head_bits(self.head_type)
+        if self.xi_steps is None:
+            self.xi_steps = max(2, 2 * self.capacity)
+        else:
+            self.xi_steps = max(1, int(self.xi_steps))
+        self._inv_freq: torch.Tensor | None = None
+        if self.pi_bit and self.dim >= 2:
+            half = self.dim // 2
+            k = torch.arange(half, dtype=torch.float32) * (2.0 / self.dim)
+            self._inv_freq = (self.rope_base ** (-k)).to(self.device)
 
     def __len__(self) -> int:
         return len(self._priority)
+
+    def _rotate_inplace(self, vec: torch.Tensor, position: float) -> torch.Tensor:
+        """Apply RoPE-style rotation on adjacent dim pairs of `vec`.
+
+        No-op when pi_bit is off or dim < 2. Operates out-of-place to keep
+        the original tensor referenced elsewhere (e.g. activation snapshots)
+        untouched.
+        """
+        if not self.pi_bit or self._inv_freq is None or vec.numel() < 2:
+            return vec
+        out = vec.clone()
+        usable = (self.dim // 2) * 2
+        slice_re = out[:usable:2]
+        slice_im = out[1:usable:2]
+        theta = float(position) * self._inv_freq[: slice_re.numel()]
+        cos_t = torch.cos(theta)
+        sin_t = torch.sin(theta)
+        new_re = slice_re * cos_t - slice_im * sin_t
+        new_im = slice_re * sin_t + slice_im * cos_t
+        out[:usable:2] = new_re
+        out[1:usable:2] = new_im
+        return out
 
     def encode(
         self,
@@ -240,14 +326,17 @@ class HippocampusMemory:
         key = _normalize(key).to(self.device)
         value = key if value is None else value.detach().float().to(self.device)
         priority = float(max(priority, 1e-6))
+        self._step_counter += 1
         if len(self._priority) >= self.capacity:
             drop_idx = min(range(len(self._priority)), key=self._priority.__getitem__)
             self._keys.pop(drop_idx)
             self._values.pop(drop_idx)
             self._priority.pop(drop_idx)
+            self._insert_steps.pop(drop_idx)
         self._keys.append(key)
         self._values.append(value)
         self._priority.append(priority)
+        self._insert_steps.append(self._step_counter)
 
     def decay_priorities(self, steps: int = 1) -> None:
         """Exponential priority decay: P *= exp(-dt/tau_forget). (15_Equations D)"""
@@ -257,18 +346,40 @@ class HippocampusMemory:
         factor = _math.exp(-steps / FORGET_TAU)
         self._priority = [p * factor for p in self._priority]
 
+    def _scored_keys(self, cue: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+        """Return (similarity, ALiBi distance bias) for the current cue."""
+        cue_pos = float(self._step_counter + 1)
+        cue_rot = self._rotate_inplace(cue, cue_pos) if self.pi_bit else cue
+        if self.pi_bit and self._inv_freq is not None:
+            rotated = [
+                self._rotate_inplace(k, float(step))
+                for k, step in zip(self._keys, self._insert_steps)
+            ]
+            keys = torch.stack(rotated, dim=0)
+        else:
+            keys = torch.stack(self._keys, dim=0)
+        similarity = keys @ cue_rot
+        if self.e_bit and self.xi_steps:
+            steps_t = torch.tensor(
+                self._insert_steps, dtype=torch.float32, device=self.device
+            )
+            distance = (cue_pos - steps_t).abs()
+            bias = -distance / float(self.xi_steps)
+        else:
+            bias = torch.zeros(len(self._keys), dtype=torch.float32, device=self.device)
+        return similarity, bias
+
     def recall(self, cue: torch.Tensor, *, topk: int = 4) -> torch.Tensor:
         if not self._keys:
             return torch.zeros(self.dim, device=self.device)
         cue = _normalize(cue).to(self.device)
-        keys = torch.stack(self._keys, dim=0)
-        values = torch.stack(self._values, dim=0)
         priority = torch.tensor(self._priority, dtype=torch.float32, device=self.device)
-        similarity = keys @ cue
+        similarity, distance_bias = self._scored_keys(cue)
+        values = torch.stack(self._values, dim=0)
         above_threshold = similarity >= RECALL_SIMILARITY_THRESHOLD
         if not above_threshold.any():
             return torch.zeros(self.dim, device=self.device)
-        score = similarity + priority.log()
+        score = similarity + priority.log() + distance_bias
         score = score.masked_fill(~above_threshold, float("-inf"))
         k = min(max(int(topk), 1), int(above_threshold.sum().item()))
         top_score, top_idx = torch.topk(score, k=k)
@@ -280,9 +391,18 @@ class HippocampusMemory:
             return torch.zeros(self.dim, device=self.device)
         k = 1 if mode is RuntimeMode.NREM else min(3, len(self._keys))
         priority = torch.tensor(self._priority, dtype=torch.float32, device=self.device)
-        top_idx = torch.topk(priority, k=k).indices
+        if self.e_bit and self.xi_steps:
+            cue_pos = float(self._step_counter + 1)
+            steps_t = torch.tensor(
+                self._insert_steps, dtype=torch.float32, device=self.device
+            )
+            recency = -((cue_pos - steps_t).abs() / float(self.xi_steps))
+            ranking = priority + recency
+        else:
+            ranking = priority
+        top_idx = torch.topk(ranking, k=k).indices
         values = torch.stack(self._values, dim=0)[top_idx]
-        weights = torch.softmax(priority[top_idx], dim=0)
+        weights = torch.softmax(ranking[top_idx], dim=0)
         return torch.sum(values * weights.unsqueeze(1), dim=0)
 
     def state_dict(self) -> dict[str, object]:
@@ -294,6 +414,11 @@ class HippocampusMemory:
             "keys": keys,
             "values": values,
             "priority": list(self._priority),
+            "insert_steps": list(self._insert_steps),
+            "step_counter": int(self._step_counter),
+            "head_type": str(self.head_type),
+            "xi_steps": int(self.xi_steps),
+            "rope_base": float(self.rope_base),
         }
 
     @classmethod
@@ -303,15 +428,26 @@ class HippocampusMemory:
         *,
         device: str | torch.device = "cpu",
     ) -> "HippocampusMemory":
-        mem = cls(int(state["dim"]), capacity=int(state["capacity"]), device=device)
+        mem = cls(
+            int(state["dim"]),
+            capacity=int(state["capacity"]),
+            device=device,
+            head_type=str(state.get("head_type", "alibi")),
+            xi_steps=int(state["xi_steps"]) if state.get("xi_steps") is not None else None,
+            rope_base=float(state.get("rope_base", 10000.0)),
+        )
         keys = state.get("keys", torch.empty((0, mem.dim)))
         values = state.get("values", torch.empty((0, mem.dim)))
         priority = state.get("priority", [])
+        steps = list(state.get("insert_steps", []))
         if isinstance(keys, torch.Tensor) and isinstance(values, torch.Tensor):
             for idx, score in enumerate(priority):
                 mem._keys.append(keys[idx].to(mem.device).float())
                 mem._values.append(values[idx].to(mem.device).float())
                 mem._priority.append(float(score))
+                step = steps[idx] if idx < len(steps) else (idx + 1)
+                mem._insert_steps.append(int(step))
+        mem._step_counter = int(state.get("step_counter", len(mem._priority)))
         return mem
 
 
@@ -414,6 +550,8 @@ class BrainRuntime:
             self.config.dim,
             capacity=self.config.memory_capacity,
             device=self.device,
+            head_type=self.config.pe_head_type,
+            xi_steps=self.config.pe_xi_steps,
         )
 
     def _rebuild_sparse(self) -> None:
@@ -600,6 +738,14 @@ class BrainRuntime:
             "F2_iss_ball": {},
             "F3_ergodic_kl": self.mode_occupancy_kl(),
             "F4_pci_regression": {},
+            "boolean_spectral_carrier": {
+                "head_type": self.hippocampus.head_type,
+                "pi_bit": float(self.hippocampus.pi_bit),
+                "e_bit": float(self.hippocampus.e_bit),
+                "xi_steps": float(self.hippocampus.xi_steps or 0),
+                "memory_size": float(len(self.hippocampus)),
+                "step_counter": float(self.hippocampus._step_counter),
+            },
         }
 
     def _matvec(self, x: torch.Tensor) -> torch.Tensor:

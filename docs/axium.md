@@ -50,6 +50,54 @@ $$
 - 표준모형 또는 우주론 변수에 대응시키는 추가 규칙이 필요한가 (`Bridge`)
 - 관측 적합이나 보정이 붙는가 (`Phenomenology`)
 
+#### 1.2a.1 5상수의 통일 boolean axis 분해 (런타임 정합성)
+
+CE 런타임 (`clarus/`) 안에서 5상수가 두 곳에 다른 형태로 나타난다 — `bitfield.py` 의 cell-state 표기와 `ce_euler.py::EulerCEMinimal` 의 head-type 표기. 두 표기는 같은 `{e,\pi,i,1,0}` 의 *서로 다른 부분 lattice* 이며, 통일 분해는 다음과 같다.
+
+5상수를 3개의 직교 1비트 generator 로 분해한다 (각 axis 는 idempotent + commutative → boolean lattice).
+
+| axis | 비트 | 의미 | 5상수 generator | 코드 위치 |
+|---|---|---|---|---|
+| **G** (gate) | 1 | 활성/완전 vs 영점/소거 | $\{1, 0\}$ | `BitfieldRuntime.active_mask` |
+| **E** (decay) | 1 | 지수 감쇠 적용 여부 | $\{e\}$ | `EulerCEMinimal.e_bits`, EMA trace 갱신 |
+| **P** (phase) | 1 | 주기 회전 적용 여부 | $\{\pi, i\}$ (페어, $e^{i\pi t}$로 결합) | `EulerCEMinimal.pi_bits` |
+
+→ 통일 cell-state algebra: $2^3 = 8$ entry. 별도 직교 축으로 모드 register $M \in \{$WAKE, NREM, REM$\}$ 가 더 있으며, 이는 cell-state 와 commute 한다.
+
+| 사용처 | 비트 | 통일 분해와의 관계 |
+|---|---|---|
+| `EulerCEMinimal.head_types` (4 head-type) | (P, E) 2비트 | **G=1 슬라이스의 (P,E) 부분 lattice** |
+| `BitfieldRuntime` cell-state | (G, E, P) 3비트 | **전체 cell algebra** |
+| `RuntimeMode` | (M0, M1) 2비트 | 직교 register (cell-state 와 commute) |
+
+지위: 이 분해 자체는 `Selection` 이다 (5상수의 어떤 묶음을 axis 로 볼지 *선택*). 분해 결과가 boolean lattice 임은 `Exact` (각 axis 가 idempotent + commute, 검증 가능). 어떤 물리/런타임 변수가 이 axis 의 어느 슬라이스에 대응하는지는 `Bridge`.
+
+> **읽기 규약**. 문서나 코드가 5상수를 "5개 별도 op (`CLEAR/IDENTITY/DECAY/RADIUS/MODE`)" 로 1:1 매핑하는 narrative 표현을 쓰는 경우, 위 통일 분해를 canonical 로 우선한다 (`bitfield.py` docstring 의 5op 매핑은 narrative 이며 실행 algebra 가 아니다).
+
+#### 1.2a.2 따름정리: Boolean lattice 와 simplex 의 비매핑성
+
+위 통일 분해는 **cell-state 의 boolean axis (G, E, P)** 와 **부트스트랩 simplex 좌표 $(x_a, x_s, x_b) \in \Delta^2$** 를 모두 다루지만, 두 representation 사이에 algebra-preserving bijection 은 *존재하지 않는다*. 두 frame 의 정합성 한계를 다음 정리로 명시한다.
+
+**정리 1.2a.2** (boolean lattice 와 simplex 의 비매핑).
+다음이 성립한다:
+
+$$\nexists\,\Phi: \{0,1\}^3 \xrightarrow{\sim} \Delta^2 \text{ (algebra-preserving bijection)}$$
+
+증명:
+(a) **Cardinality**. $|\{0,1\}^3| = 8 < |\Delta^2| = \mathfrak{c}$ (continuum). bijection 자체가 불가 (Cantor).
+(b) **Operation 비호환**. boolean lattice 의 자연 연산은 $(\vee, \wedge, \neg)$ 이며 idempotent ($x \vee x = x$). simplex 의 자연 연산은 affine 결합 $\lambda x + (1-\lambda) y$ ($\lambda \in [0,1]$) 이며 일반적으로 idempotent 가 아니다. 두 algebra structure 는 서로 다른 카테고리에 산다 — boolean ∈ **DistLat** (분배격자), simplex ∈ **Conv** (볼록집합). $\square$
+
+**해석**. 같은 뇌 상태가 두 frame 에 동시에 사는 것은 단일 representation 으로 환원되지 않으며, 정확한 carrier space 는 데카르트 곱
+
+$$\text{state} \in \{0,1\}^3 \times \Delta^2$$
+
+이다. cell-state algebra (boolean) 는 *어떤 axis 의 게이트가 켜져 있는지* 를 분류하고, simplex 좌표 (convex) 는 *세 부트스트랩 비율의 위치* 를 표현한다.
+
+지위: cardinality + 카테고리 비교는 `Exact`. 두 representation 의 결합이 데카르트 곱이라는 주장은 `Selection` (다른 결합 구조를 인위적으로 부여할 수 있으나, 가장 자연스러운 forgetful 결합이 데카르트 곱).
+
+**따름정리 1.2a.2.1** (정합화의 한계).
+1.2a.1 의 통일 분해는 cell-state algebra 의 *generator* 만 통일한다. simplex 좌표 $(x_a, x_s, x_b)$ 와의 매핑은 본 정리에 의해 boolean 동형으로 닫히지 않으며, 동역학 (graph.md § 10.3) 을 통해서만 두 frame 이 연결된다 — 즉 **bridge** 수준.
+
 ### 1.3 공통 기호 사전과 문서 간 대응
 
 핵심 문서와 참조 문서가 서로 다른 기호를 사용하더라도, 아래 대응을 기준으로 읽는다.

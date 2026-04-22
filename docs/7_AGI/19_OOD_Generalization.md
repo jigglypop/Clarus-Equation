@@ -200,16 +200,23 @@ n-shot in-context learning 에서 n 외삽 능력은 토큰 attention 의 distan
 
 → **2 axis × 2 gate value = 2² = 4 head-types**, 2-bit string `(pi, e)` 으로 인코딩:
 
-| (pi, e) | 헤드 타입 | 문헌 분석 |
+| (pi, e) | 헤드 타입 (정확 등가) | 문헌 분석 |
 |---|---|---|
 | (0, 0) | NoPE [Kazemnejad 2023] | Tier 1 |
-| (0, 1) | ALiBi [Press 2022] | Tier 1 (best) |
+| (0, 1) | ALiBi [Press 2022] (`m_h = 1/ξ_h`) | Tier 1 (best) |
 | (1, 0) | RoPE [Su 2021] | **Tier 2** (외삽 fail) |
-| (1, 1) | xPos [Sun 2023] / Euler-CE | Tier 1 |
+| (1, 1) | RoPE + ALiBi 가산 (≡ `rope_alibi`) | Tier 1 |
 
-**§ 2.2 의 모든 9 변종이 이 4 가지 중 하나로 정확히 매핑**되며, 4 가지 중 단 한 가지 (10 = pure rotation) 만 Tier 2 (외삽 catastrophic). 즉 effective head-type capacity = log₂ 3 ≈ 1.58 비트.
+> **라벨링 주의**. (1,1) 의 코드 spec 별칭 `head_types="xpos"` 는 backward compat 유지용 colloquial alias 이며, 정확한 수학적 등가는 **RoPE + ALiBi 가산** (= § 2.2 표의 `rope_alibi`) 이다. 진짜 xPos (Sun 2023) 는 q/k 에 대한 곱셈형 magnitude decay 로 본 환원과 family 가 다르다 — § 2.2 표에서 `xpos` 행은 진짜 multiplicative xPos 를 가리키며, `rope_alibi` 와 다른 모델이다 (둘 다 Tier 1 이지만 식이 다름).
 
-`clarus/ce_euler.py::EulerCEMinimal` 구현 + 16 개 테스트로 정확성 검증. 2-bit minimal 변종이 canonical PE (NoPE, RoPE, ALiBi, xPos) 를 수치적으로 reproduce (`min_alibi` ≈ `rope_alibi`, `min_xpos` ≈ `euler_ce_k1`, `min_rope` = `std_rope` 정확 일치).
+**§ 2.2 의 9 변종 중 6 가지가 이 4 head-type 중 하나로 정확히 매핑** 되며 (NoPE, RoPE, `rope_alibi`/`euler_ce_k1`/`euler_no_pi` 모두 (1,1) 또는 (0,1) 계열, `nope` 는 (0,0)), 4 가지 중 단 한 가지 (10 = pure rotation) 만 Tier 2. 즉 effective head-type capacity = log₂ 3 ≈ 1.58 비트. (진짜 multiplicative xPos 와 MRA 두 변종은 본 2-bit 환원의 정확 등가 대상이 아니지만 외삽 거동상 같은 tier 분류를 받는다.)
+
+`clarus/ce_euler.py::EulerCEMinimal` 구현 + 24 개 테스트 + 독립 audit (canonical 식 직접 비교, max-diff ≤ 1.2e-7) 로 정확성 검증. 2-bit minimal 변종 매핑 정정:
+
+* `min_nope` (00) ≡ `nope` (NoPE 정확 일치)
+* `min_alibi` (01) ≡ 순수 ALiBi (Press 2022) — § 2.2 set 에 단독 baseline 없음
+* `min_rope` (10) ≡ `std_rope` (RoPE 정확 일치)
+* `min_xpos` (11) ≡ `rope_alibi` (RoPE + ALiBi 가산) ≈ `euler_ce_k1` (rope_base 만 다름)
 
 이는 Clarus 본 thesis ("자유 파라미터 0 에 가깝게") 의 또 다른 사례 — **5 차원 continuous bit_logits 가 사실상 2 비트 axiom 으로 환원**되며, 학습은 axis 선택을 풀 필요 없이 axiom 으로 받고 continuous parameter (xi, slope) 만 학습하면 된다.
 

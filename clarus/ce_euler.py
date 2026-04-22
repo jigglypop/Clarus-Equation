@@ -570,10 +570,14 @@ def fixed_point_loss(block: RecursiveEulerCEBlock, h: torch.Tensor,
 #
 #       (pi, e)   head-type       canonical literature analogue
 #       --------  --------------  -------------------------------
-#       (0, 0)    identity        NoPE      (Kazemnejad 2023)
-#       (0, 1)    decay only      ALiBi     (Press 2022)
-#       (1, 0)    rotation only   RoPE      (Su 2021)
-#       (1, 1)    rotation+decay  xPos      (Sun 2023) / EulerCE
+#       (0, 0)    identity        NoPE         (Kazemnejad 2023)
+#       (0, 1)    additive decay  ALiBi        (Press 2022), m_h = 1/xi_h
+#       (1, 0)    rotation only   RoPE         (Su 2021)
+#       (1, 1)    rotation +      RoPE + ALiBi (additive); the spec string
+#                 additive decay  "xpos" is kept as a colloquial alias.
+#                                 NOT identical to true xPos (Sun 2023),
+#                                 which uses *multiplicative* magnitude
+#                                 decay (q_i ← q_i ρ^i, k_j ← k_j ρ^{-j}).
 #
 # Per-head continuous parameters (only meaningful when bit is on):
 #       pi_base : rotary base (RoPE-style geometric, defaults to 10000)
@@ -598,6 +602,15 @@ def head_types_from_spec(spec, n_heads: int) -> torch.Tensor:
       * str  in {"nope", "alibi", "rope", "xpos"} — uniform name
       * str  "mix" — alternating alibi / xpos
       * str  "all" — round-robin {nope, alibi, rope, xpos}
+
+    Spec-string semantics (see header comment for full table):
+      "nope"  = (0,0) — NoPE
+      "alibi" = (0,1) — ALiBi (Press 2022)
+      "rope"  = (1,0) — RoPE (Su 2021)
+      "xpos"  = (1,1) — RoPE + ALiBi additive bias.
+                The "xpos" name is a colloquial alias kept for backward
+                compatibility; the exact equivalent is `rope_alibi`,
+                not the multiplicative xPos of Sun (2023).
     """
     name_to_idx = {n: i for i, n in enumerate(_HEAD_TYPE_NAMES)}
     if isinstance(spec, str):

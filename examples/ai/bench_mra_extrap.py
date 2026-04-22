@@ -97,8 +97,14 @@ class ExtrapLM(nn.Module):
                                decay_mode="bias")
                       for _ in range(n_layers)]
         elif variant.startswith("min_"):
-            # 2-bit minimal Euler-CE: head_types = {"nope","alibi","rope",
-            # "xpos","mix","all"} corresponds to literature analogues.
+            # 2-bit minimal Euler-CE. Spec-string maps to (pi_bit, e_bit):
+            #   min_nope  = (0,0) NoPE
+            #   min_alibi = (0,1) pure ALiBi (Press 2022)
+            #   min_rope  = (1,0) RoPE
+            #   min_xpos  = (1,1) RoPE + ALiBi additive
+            #               (== `rope_alibi`; NOT multiplicative xPos)
+            #   min_mix   = alternating (0,1) / (1,1)
+            #   min_all   = round-robin all 4 head-types
             spec = variant[len("min_"):]
             blocks = [EulerCEMinimalBlock(d_model, n_heads, train_block,
                                           head_types=spec)

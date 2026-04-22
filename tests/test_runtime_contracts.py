@@ -5,7 +5,7 @@ import torch
 
 import clarus
 from clarus.engine import CEEngine
-from clarus.runtime import BrainRuntime, BrainRuntimeConfig, RuntimeMode
+from clarus.runtime import BrainRuntime, BrainRuntimeConfig, HippocampusMemory, RuntimeMode
 from tests.test_sleep import make_runtime_artifact
 
 
@@ -94,6 +94,61 @@ def test_brain_runtime_mode_transitions_cover_wake_nrem_rem():
 
     step_wake = runtime.step(external_input=torch.ones(64))
     assert step_wake.mode is RuntimeMode.WAKE
+
+
+def test_hippocampus_alibi_decay_prefers_recent_memory():
+    """e_bit on (alibi/xpos) -> Tier 1 length-OOD safe, recency wins."""
+    mem = HippocampusMemory(dim=8, capacity=16, head_type="alibi", xi_steps=2)
+    early = torch.zeros(8); early[0] = 1.0
+    late = torch.zeros(8); late[0] = 1.0
+    mem.encode(early, value=torch.full((8,), 0.1), priority=1.0)
+    for _ in range(8):
+        mem.encode(torch.randn(8), value=torch.randn(8), priority=0.5)
+    mem.encode(late, value=torch.full((8,), 0.9), priority=1.0)
+
+    cue = torch.zeros(8); cue[0] = 1.0
+    out = mem.recall(cue, topk=2)
+    assert float(out.mean().item()) > 0.5  # late dominates due to ALiBi decay
+
+
+def test_hippocampus_nope_head_disables_distance_bias():
+    """nope (0,0) -> no carrier. Identical priority/similarity = identical recall."""
+    mem_alibi = HippocampusMemory(dim=4, capacity=4, head_type="alibi", xi_steps=2)
+    mem_nope = HippocampusMemory(dim=4, capacity=4, head_type="nope")
+    cue = torch.tensor([1.0, 0.0, 0.0, 0.0])
+    a = torch.tensor([1.0, 0.0, 0.0, 0.0])
+    b = torch.tensor([1.0, 0.0, 0.0, 0.0])
+    for mem in (mem_alibi, mem_nope):
+        mem.encode(a.clone(), value=torch.full((4,), 0.2), priority=1.0)
+        for _ in range(3):
+            mem.encode(torch.randn(4), value=torch.randn(4), priority=0.5)
+        mem.encode(b.clone(), value=torch.full((4,), 0.8), priority=1.0)
+    out_alibi = mem_alibi.recall(cue, topk=2)
+    out_nope = mem_nope.recall(cue, topk=2)
+    assert not torch.allclose(out_alibi, out_nope, atol=1e-3)
+
+
+def test_runtime_bridge_gate_reports_boolean_spectral_carrier():
+    w = make_weight(seed=11)
+    runtime = BrainRuntime(
+        w,
+        config=BrainRuntimeConfig(
+            dim=64, active_ratio=0.125, memory_capacity=8,
+            pe_head_type="xpos", pe_xi_steps=12,
+        ),
+        backend="torch",
+        device="cpu",
+    )
+    report = runtime.bridge_gate_report()["boolean_spectral_carrier"]
+    assert report["head_type"] == "xpos"
+    assert report["pi_bit"] == 1.0
+    assert report["e_bit"] == 1.0
+    assert report["xi_steps"] == 12.0
+
+
+def test_runtime_config_rejects_unknown_head_type():
+    with pytest.raises(ValueError, match="unknown pe_head_type"):
+        BrainRuntimeConfig(dim=8, pe_head_type="bogus")
 
 
 def test_brain_runtime_snapshot_restore_is_continuous():

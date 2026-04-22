@@ -28,6 +28,7 @@ try:
     from .engine import CEEngine, PromptContext
     from .stdp import STDPConfig, EligibilityTracker, compute_learning_gate, apply_stdp_update
     from .neuromod import NeuromodulatorState, step_neuromodulators, apply_modulation
+    from .text_intent import TopologyIntentClassifier
     from .agent import (
         ConsciousnessMonitor, WorkingMemory, CerebellumPredictor,
         compute_critic, select_action_discrete, agent_step,
@@ -41,6 +42,7 @@ except ImportError:
     from clarus.engine import CEEngine, PromptContext
     from clarus.stdp import STDPConfig, EligibilityTracker, compute_learning_gate, apply_stdp_update
     from clarus.neuromod import NeuromodulatorState, step_neuromodulators, apply_modulation
+    from clarus.text_intent import TopologyIntentClassifier
     from clarus.agent import (
         ConsciousnessMonitor, WorkingMemory, CerebellumPredictor,
         compute_critic, select_action_discrete, agent_step,
@@ -78,6 +80,8 @@ class DaemonStats:
     avg_active_ratio: float = 0.0
     consciousness_depth: float = 0.0
     energy_total: float = 0.0
+    intent_predictions: int = 0
+    intent_consolidations: int = 0
 
 
 class BrainDaemon:
@@ -109,6 +113,7 @@ class BrainDaemon:
         self.runtime = BrainRuntime(w, config=rt_cfg, backend=backend, device=device)
 
         self.neuro = NeuromodulatorState()
+        self.intent = TopologyIntentClassifier(dim=32)
         self.consciousness = ConsciousnessMonitor()
         self.wm = WorkingMemory(capacity=7)
         self.cerebellum = CerebellumPredictor(dim=dim)
@@ -235,9 +240,22 @@ class BrainDaemon:
         )
         return text, rr["m_star"].detach()
 
+    def _intent_external(self, prompt: str, *, mode: str = "WAKE", reward: float = 0.0) -> torch.Tensor:
+        prediction = self.intent.predict_step(prompt, mode=mode, reward=reward)
+        self.stats.intent_predictions += 1
+        signal = self.intent.runtime_signal_from_prediction(
+            prompt,
+            prediction,
+            dim=self.runtime.config.dim,
+        )
+        tensor = torch.tensor(signal, dtype=torch.float32, device=self.runtime.device)
+        self.runtime.set_goal(0.30 * tensor)
+        return tensor
+
     def _handle_query(self, prompt, event, result, max_tokens) -> None:
         self._idle_counter = 0
         ext = self._encode_prompt(prompt)
+        ext = ext + 0.20 * self._intent_external(prompt, mode="WAKE")
         for _ in range(3):
             step = self.runtime.step(external_input=ext, force_mode=RuntimeMode.WAKE)
             self._post_step(step, ext)
@@ -261,6 +279,7 @@ class BrainDaemon:
         Each repetition strengthens the trace through spaced encoding."""
         self._idle_counter = 0
         ext = self._encode_prompt(fact)
+        ext = ext + 0.15 * self._intent_external(fact, mode="WAKE", reward=0.25)
         ids = self.eng.tok.encode(fact, return_tensors="pt")
         m0, phi = self.eng.runtime_prompt_state(ids)
         ce_args = self._make_ce_args(steps=30)
@@ -304,6 +323,7 @@ class BrainDaemon:
         self._idle_counter = 0
         thoughts: list[str] = []
         ext = self._encode_prompt(topic)
+        ext = ext + 0.20 * self._intent_external(topic, mode="WAKE")
 
         self.runtime.step(external_input=ext, force_mode=RuntimeMode.WAKE)
 
@@ -356,6 +376,7 @@ class BrainDaemon:
         """Recall: search hippocampus for memories related to the cue."""
         self._idle_counter = 0
         ext = self._encode_prompt(cue)
+        ext = ext + 0.20 * self._intent_external(cue, mode="WAKE")
 
         recalled = self.runtime.hippocampus.recall(ext[:self.runtime.config.dim], topk=6)
         recall_norm = float(recalled.norm().item())
@@ -460,6 +481,9 @@ class BrainDaemon:
 
         if step.mode != RuntimeMode.WAKE and len(self.runtime.hippocampus) > 0:
             self.stats.hippocampus_replays += 1
+            report = self.intent.consolidate(mode=step.mode.value)
+            if report.get("consolidated", 0.0) > 0.0:
+                self.stats.intent_consolidations += 1
 
     def _encode_prompt(self, prompt: str) -> torch.Tensor:
         """Encode prompt into an external input vector."""
@@ -473,12 +497,41 @@ class BrainDaemon:
             "runtime": snap,
             "stats": self.stats,
             "neuro": self.neuro,
+            "intent_state": self.intent.session_state_dict(),
             "consciousness_history": list(self.consciousness._deviation_history),
             "wm": self.wm.contents(),
         }, self.config.checkpoint_path)
         self.stats.checkpoints_saved += 1
 
+    def load_checkpoint(self, path: str | None = None) -> None:
+        checkpoint_path = path or self.config.checkpoint_path
+        payload = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
+        runtime_snap = payload.get("runtime")
+        if runtime_snap is not None:
+            self.runtime = BrainRuntime.from_snapshot(
+                runtime_snap,
+                backend=self.eng.backend,
+                device=self.eng.device,
+            )
+        stats = payload.get("stats")
+        if isinstance(stats, DaemonStats):
+            self.stats = stats
+        neuro = payload.get("neuro")
+        if isinstance(neuro, NeuromodulatorState):
+            self.neuro = neuro
+        intent_state = payload.get("intent_state")
+        if isinstance(intent_state, dict):
+            self.intent.load_session_state_dict(intent_state)
+        for value in payload.get("consciousness_history", []):
+            self.consciousness._deviation_history.append(float(value))
+        for action, observation in payload.get("wm", []):
+            self.wm.append(action, observation)
+
     def status(self) -> dict:
+        intent_report = self.intent.bridge_gate_report()
+        runtime_carrier = self.runtime.bridge_gate_report().get(
+            "boolean_spectral_carrier", {}
+        )
         return {
             "running": self._running,
             "mode": self.runtime.mode.value,
@@ -490,6 +543,15 @@ class BrainDaemon:
             "sleep_pressure": f"{self.runtime.sleep_pressure:.4f}",
             "hippocampus": len(self.runtime.hippocampus),
             "stdp_updates": self.stats.stdp_updates,
+            "intent_predictions": self.stats.intent_predictions,
+            "intent_consolidations": self.stats.intent_consolidations,
+            "intent_replay": len(self.intent.state.replay_buffer),
+            "intent_f1": f"{intent_report['F1_deviation']:.3f}",
+            "pe_head_type": self.runtime.hippocampus.head_type,
+            "pe_xi_steps": self.runtime.hippocampus.xi_steps,
+            "Pcarrier_align": f"{intent_report['Pcarrier_alignment']:.3f}",
+            "Pcarrier_decay": f"{intent_report['Pcarrier_decay']:.3f}",
+            "Ecarrier_bit": int(runtime_carrier.get("e_bit", 0.0)),
             "energy_avg": f"{sum(self._tick_energies) / max(len(self._tick_energies), 1):.4f}",
             "neuro_da": f"{self.neuro.da:.3f}",
             "checkpoints": self.stats.checkpoints_saved,
