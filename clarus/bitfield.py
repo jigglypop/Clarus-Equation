@@ -37,19 +37,16 @@ except ImportError:
     )
 
 
-def quantize_4bit(x: torch.Tensor) -> tuple[torch.Tensor, float, float]:
-    """Quantize float tensor to 4-bit signed [-7, 7] with scale/zero."""
-    x_min = x.min().item()
-    x_max = x.max().item()
-    span = max(x_max - x_min, 1e-8)
-    scale = span / 15.0
-    zero = x_min
-    q = ((x - zero) / scale).round().clamp(0, 15).to(torch.uint8)
-    return q, scale, zero
+def quantize_4bit(x: torch.Tensor) -> tuple[torch.Tensor, float]:
+    """Quantize float tensor to symmetric int4 represented in int8 [-7, 7]."""
+    max_abs = max(x.abs().max().item(), 1e-8)
+    scale = max_abs / 7.0
+    q = (x / scale).round().clamp(-7, 7).to(torch.int8)
+    return q, scale
 
 
-def dequantize_4bit(q: torch.Tensor, scale: float, zero: float) -> torch.Tensor:
-    return q.float() * scale + zero
+def dequantize_4bit(q: torch.Tensor, scale: float) -> torch.Tensor:
+    return q.float() * scale
 
 
 def quantize_8bit(x: torch.Tensor) -> tuple[torch.Tensor, float, float]:
@@ -139,8 +136,7 @@ class BitfieldRuntime:
 
         w_sparse = weight.clone()
         w_sparse[weight.abs() < 1e-4] = 0
-        self.w_q, self.w_scale, self.w_zero = quantize_4bit(w_sparse)
-        self.w_mask = w_sparse != 0
+        self.w_q, self.w_scale = quantize_4bit(w_sparse)
 
         self.activation_q = torch.zeros(self.dim, dtype=torch.uint8)
         self.act_scale = 2.0 / 255.0
@@ -156,46 +152,61 @@ class BitfieldRuntime:
 
         self.active_mask = torch.zeros(self.dim, dtype=torch.bool)
         self.mode = 0b01  # wake
+        self._state_overhead_bytes = 6 * 4  # three scales + three zeros as float32 scalars
 
-        self._float_activation = torch.zeros(self.dim)
-        self._float_refractory = torch.zeros(self.dim)
-        self._float_trace = torch.zeros(self.dim)
+    def _activation_float(self) -> torch.Tensor:
+        return dequantize_8bit(self.activation_q, self.act_scale, self.act_zero)
+
+    def _refractory_float(self) -> torch.Tensor:
+        return dequantize_8bit(self.refractory_q, self.ref_scale, self.ref_zero)
+
+    def _trace_float(self) -> torch.Tensor:
+        return dequantize_8bit(self.trace_q, self.trace_scale, self.trace_zero)
+
+    def _write_quantized_state(
+        self,
+        activation: torch.Tensor,
+        refractory: torch.Tensor,
+        trace: torch.Tensor,
+    ) -> None:
+        self.activation_q, self.act_scale, self.act_zero = quantize_8bit(activation.clamp(-1.0, 1.0))
+        self.refractory_q, self.ref_scale, self.ref_zero = quantize_8bit(refractory.clamp(0.0, ADAPTATION_CLAMP))
+        self.trace_q, self.trace_scale, self.trace_zero = quantize_8bit(trace.clamp(-1.0, 1.0))
 
     def step(self, external: torch.Tensor | None = None) -> dict[str, float]:
-        """One tick: sparse active-only computation, minimal dequantize."""
+        """One tick using quantized persistent state and dequantized compute."""
         if external is None:
             external = torch.zeros(self.dim)
 
+        activation = self._activation_float()
+        refractory = self._refractory_float()
+        trace = self._trace_float()
         active_idx = self.active_mask.nonzero(as_tuple=True)[0]
         n_active = active_idx.numel()
 
         if n_active == 0:
             recurrent = torch.zeros(self.dim)
         else:
-            active_vals = self._float_activation[active_idx]
-            w_cols = self.w_q[:, active_idx].float() * self.w_scale + self.w_zero
-            w_cols = w_cols * self.w_mask[:, active_idx].float()
+            active_vals = activation[active_idx]
+            w_cols = self.w_q[:, active_idx].float() * self.w_scale
             recurrent = w_cols @ active_vals
 
-        drive = recurrent + 0.45 * external - 0.35 * self._float_refractory - ADAPTATION_COUPLING * self._float_trace
+        drive = recurrent + 0.45 * external - 0.35 * refractory - ADAPTATION_COUPLING * trace
 
         gamma_a = 0.18 if self.mode == 0b01 else 0.34
         kappa_a = 0.82 if self.mode == 0b01 else 0.52
 
-        new_act = ((1.0 - gamma_a) * self._float_activation + kappa_a * torch.tanh(drive)).clamp(-1, 1)
-        new_ref = (1.0 - 0.12) * self._float_refractory + 0.24 * new_act.square()
-        new_trace = (1.0 - MEMORY_TRACE_DECAY) * self._float_trace + MEMORY_TRACE_DECAY * new_act
-
-        self._float_activation = new_act
-        self._float_refractory = new_ref
-        self._float_trace = new_trace
+        new_act = ((1.0 - gamma_a) * activation + kappa_a * torch.tanh(drive)).clamp(-1, 1)
+        new_ref = ((1.0 - 0.12) * refractory + 0.24 * new_act.square()).clamp(0.0, ADAPTATION_CLAMP)
+        new_trace = ((1.0 - MEMORY_TRACE_DECAY) * trace + MEMORY_TRACE_DECAY * new_act).clamp(-1, 1)
+        self._write_quantized_state(new_act, new_ref, new_trace)
 
         k = max(1, int(self.active_ratio * self.dim))
         topk_idx = torch.topk(new_act.abs(), k).indices
         self.active_mask.zero_()
         self.active_mask[topk_idx] = True
 
-        energy = -0.5 * torch.dot(new_act[active_idx], recurrent[active_idx]).item() if n_active > 0 else 0.0
+        energy = -0.5 * torch.dot(new_act, recurrent).item()
         active_count = int(self.active_mask.sum().item())
 
         return {
@@ -206,16 +217,24 @@ class BitfieldRuntime:
         }
 
     def get_activation(self) -> torch.Tensor:
-        return self._float_activation
+        return self._activation_float()
 
     def memory_bytes(self) -> int:
-        """Actual quantized memory usage."""
-        w_bytes = self.w_q.numel()  # uint8, but 4-bit packed would halve
+        """Best-effort runtime memory including masks and quantized state."""
+        w_bytes = self.w_q.numel() // 2
         act_bytes = self.activation_q.numel()
         ref_bytes = self.refractory_q.numel()
         trace_bytes = self.trace_q.numel()
-        mask_bytes = math.ceil(self.dim / 8)
-        return w_bytes // 2 + act_bytes + ref_bytes + trace_bytes + mask_bytes + 1
+        active_mask_bytes = self.active_mask.numel()
+        return (
+            w_bytes
+            + act_bytes
+            + ref_bytes
+            + trace_bytes
+            + active_mask_bytes
+            + self._state_overhead_bytes
+            + 1
+        )
 
 
 class Float32Runtime:
@@ -268,7 +287,7 @@ class Float32Runtime:
 
 
 def benchmark(dim: int = 768, steps: int = 200, seed: int = 42) -> dict:
-    """Compare bitfield vs float32 runtime on identical inputs."""
+    """Compare quantized-state runtime vs float32 runtime on identical inputs."""
     torch.manual_seed(seed)
     w = torch.randn(dim, dim) * 0.01
     w = 0.5 * (w + w.T)
@@ -322,5 +341,6 @@ def benchmark(dim: int = 768, steps: int = 200, seed: int = 42) -> dict:
         "float32_memory_KB": fp_mem / 1024,
         "memory_ratio": bf_mem / max(fp_mem, 1),
         "theoretical_engine_KB": layout.total_engine_bytes / 1024,
+        "runtime_layout_note": "bitfield_memory_KB includes q-state, active-mask bytes, and scalar quant metadata",
         "layout": layout.summary(),
     }
