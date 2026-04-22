@@ -111,6 +111,48 @@ def is_close(a: float, b: float, tol: float) -> bool:
     return abs(a - b) <= tol
 
 
+def solve_bootstrap(d_eff: float, tol: float = 1e-15, maxiter: int = 400) -> float:
+    """Solve eps^2 = exp(-(1 - eps^2) * D_eff) by fixed-point iteration."""
+    x = 0.05
+    for _ in range(maxiter):
+        nxt = math.exp(-(1.0 - x) * d_eff)
+        if abs(nxt - x) < tol:
+            return nxt
+        x = nxt
+    return x
+
+
+def canonical_density_split(alpha_s: float) -> tuple[float, float, float, float, float]:
+    """Return the canonical CE density split used by the latest scorecard/docs."""
+    alpha_em = 1.0 / 129.0
+    alpha_total = 1.0 / (2.0 * math.pi)
+
+    sin2_tw = 4.0 * alpha_s ** (4.0 / 3.0)
+    cos2_tw = 1.0 - sin2_tw
+    delta = sin2_tw * cos2_tw
+    d_eff = 3.0 + delta
+    eps2 = solve_bootstrap(d_eff)
+
+    alpha_w = alpha_em / sin2_tw
+    alpha_1 = alpha_em / cos2_tw
+    fb_u1 = eps2 * alpha_1 / alpha_total
+    fb_su2 = eps2 * alpha_w / alpha_total
+    fb_su3 = eps2 * alpha_s / alpha_total
+    fb_delta = eps2 * delta
+    r = alpha_s * (
+        (1.0 + fb_u1)
+        + (1.0 + fb_su2)
+        + (1.0 + fb_su3)
+        + delta * (1.0 + fb_delta)
+    )
+
+    sigma = 1.0 - eps2
+    omega_b = eps2
+    omega_l = sigma / (1.0 + r)
+    omega_dm = sigma * r / (1.0 + r)
+    return omega_b, omega_l, omega_dm, eps2, r
+
+
 @dataclass(frozen=True)
 class Background:
     omega_m0: float
@@ -235,15 +277,11 @@ def luminosity_distance_mpc(bg: Background, h0_km_s_mpc: float, z: float, n: int
 
 
 def h0_t0(bg: Background, a_min: float, n: int) -> float:
-    if a_min <= 0.0:
-        raise ValueError("a_min must be > 0")
-    ln_a_grid = linspace(math.log(a_min), 0.0, n)
-    integrand = []
-    for ln_a in ln_a_grid:
-        a = math.exp(ln_a)
-        e = bg.e_of_a(a)
-        integrand.append(1.0 / e)
-    return simpson(integrand, ln_a_grid)
+    if bg.omega_m0 <= 0.0 or bg.omega_l0 <= 0.0:
+        raise ValueError("flat LCDM closed form requires omega_m0 > 0 and omega_l0 > 0")
+    return (2.0 / (3.0 * math.sqrt(bg.omega_l0))) * math.asinh(
+        math.sqrt(bg.omega_l0 / bg.omega_m0)
+    )
 
 
 def make_mu_grid(s_grid: list[float], epsilon_grav: float) -> list[float]:
@@ -343,16 +381,8 @@ def main() -> int:
 
     if args.model == "bootstrap":
         alpha_s = args.alpha_s
-        sin2_tw = 4.0 * alpha_s ** (4.0 / 3.0)
-        delta = sin2_tw * (1.0 - sin2_tw)
-        d_eff = 3.0 + delta
-        x = 0.05
-        for _ in range(200):
-            x = math.exp(-(1.0 - x) * d_eff)
-        eps2 = x
-        r_lo = alpha_s * d_eff
-        omega_l0 = (1.0 - eps2) / (1.0 + r_lo)
-        omega_m0 = 1.0 - omega_l0
+        omega_b0, omega_l0, omega_dm0, eps2, r_lo = canonical_density_split(alpha_s)
+        omega_m0 = omega_b0 + omega_dm0
     else:
         omega_l0 = args.omega_lambda
         omega_m0 = args.omega_m
