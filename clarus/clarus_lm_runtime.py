@@ -30,6 +30,12 @@ _OPTIONAL_CONFIG_KEYS = {
     "lambda_curv": 0.0,
     "lambda_mix": 0.0,
     "sparsity": 1.0,
+    "attention_backend": "standard",
+    "euler_head_types": "alibi",
+    "euler_xi_init": None,
+    "euler_learnable_xi": True,
+    "euler_rope_base": 10000.0,
+    "use_abs_pos": None,
 }
 
 
@@ -265,6 +271,14 @@ def _build_model(config: dict, device: str) -> torch.nn.Module:
         bias=bool(config.get("bias", True)),
         dense=bool(config.get("dense", False)),
         act_fn=str(config.get("act_fn", "silu")),
+        attention_backend=str(config.get("attention_backend", _OPTIONAL_CONFIG_KEYS["attention_backend"])),
+        euler_head_types=config.get("euler_head_types", _OPTIONAL_CONFIG_KEYS["euler_head_types"]),
+        euler_xi_init=config.get("euler_xi_init", _OPTIONAL_CONFIG_KEYS["euler_xi_init"]),
+        euler_learnable_xi=bool(
+            config.get("euler_learnable_xi", _OPTIONAL_CONFIG_KEYS["euler_learnable_xi"])
+        ),
+        euler_rope_base=float(config.get("euler_rope_base", _OPTIONAL_CONFIG_KEYS["euler_rope_base"])),
+        use_abs_pos=config.get("use_abs_pos", _OPTIONAL_CONFIG_KEYS["use_abs_pos"]),
     ).to(device)
 
 
@@ -327,6 +341,12 @@ def init_from_ce_artifact(
     n_layers: int = 6,
     n_heads: int = 8,
     max_seq_len: int = 512,
+    attention_backend: str = "standard",
+    euler_head_types: object = "alibi",
+    euler_xi_init: float | None = None,
+    euler_learnable_xi: bool = True,
+    euler_rope_base: float = 10000.0,
+    use_abs_pos: bool | None = None,
     device: str = "cpu",
     save_path: str | None = None,
 ) -> ClarusLMGenerator:
@@ -357,6 +377,12 @@ def init_from_ce_artifact(
         "n_layers": n_layers,
         "n_heads": n_heads,
         "max_seq_len": max_seq_len,
+        "attention_backend": attention_backend,
+        "euler_head_types": euler_head_types,
+        "euler_xi_init": euler_xi_init,
+        "euler_learnable_xi": euler_learnable_xi,
+        "euler_rope_base": euler_rope_base,
+        "use_abs_pos": use_abs_pos,
     }
     model = _build_model(config, "cpu")
 
@@ -431,16 +457,12 @@ def _transfer_attention(clarus_attn, gpt2_c_attn_weight, gpt2_c_attn_bias,
     clarus_attn.qkv.weight.copy_(gpt2_c_attn_weight.t())
     if clarus_attn.qkv.bias is not None:
         clarus_attn.qkv.bias.copy_(gpt2_c_attn_bias)
-    else:
-        clarus_attn.qkv.bias = torch.nn.Parameter(gpt2_c_attn_bias.clone())
 
     _copy_to_spectral_normed(clarus_attn.proj, gpt2_c_proj_weight.t())
 
     if gpt2_c_proj_bias is not None:
         if clarus_attn.proj.bias is not None:
             clarus_attn.proj.bias.copy_(gpt2_c_proj_bias)
-        else:
-            clarus_attn.proj.bias = torch.nn.Parameter(gpt2_c_proj_bias.clone())
 
 
 def _transfer_ffn_dense(gauge: torch.nn.Module, gpt2_fc_weight, gpt2_fc_bias,
@@ -514,6 +536,12 @@ def init_from_gpt2(
     *,
     max_seq_len: int = 1024,
     sparsity: float = 1.0,
+    attention_backend: str = "standard",
+    euler_head_types: object = "alibi",
+    euler_xi_init: float | None = None,
+    euler_learnable_xi: bool = True,
+    euler_rope_base: float = 10000.0,
+    use_abs_pos: bool | None = None,
     device: str = "cpu",
     save_path: str | None = None,
     tokenizer=None,
@@ -567,6 +595,12 @@ def init_from_gpt2(
         "mix_rank": None,
         "lambda_curv": 0.0,
         "lambda_mix": 0.0,
+        "attention_backend": attention_backend,
+        "euler_head_types": euler_head_types,
+        "euler_xi_init": euler_xi_init,
+        "euler_learnable_xi": euler_learnable_xi,
+        "euler_rope_base": euler_rope_base,
+        "use_abs_pos": use_abs_pos,
     }
     model = _build_model(config, "cpu")
 

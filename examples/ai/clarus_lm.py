@@ -25,6 +25,11 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 try:
+    from clarus.ce_euler import EulerCEMinimal
+except ImportError:
+    EulerCEMinimal = None
+
+try:
     from clarus.engine import get_constants, backend_info
     _ce = get_constants()
     ALPHA_S = _ce.alpha_s
@@ -377,12 +382,81 @@ class ClarusAttention(nn.Module):
         return self.proj(out.transpose(1, 2).reshape(B, T, D))
 
 
+class ClarusEulerMinimalAttention(nn.Module):
+    """Adapter that makes EulerCEMinimal a ClarusBlock attention backend.
+
+    This is the runtime-facing use of the Euler-RoPE research path:
+    `head_types="alibi"` maps to the Tier 1 distance-decay-only bucket,
+    while `rope` / `xpos` enable the P-axis rotation carrier from graph.md
+    sec 10.6. Existing checkpoints stay on `ClarusAttention` unless their
+    config explicitly selects this backend.
+    """
+
+    def __init__(
+        self,
+        dim,
+        n_heads,
+        block,
+        *,
+        head_types="alibi",
+        xi_init=None,
+        learnable_xi=True,
+        rope_base=10000.0,
+        bias=True,
+    ):
+        super().__init__()
+        _ = bias
+        if EulerCEMinimal is None:
+            raise ImportError("clarus.ce_euler.EulerCEMinimal is required")
+        self.inner = EulerCEMinimal(
+            d_model=dim,
+            n_heads=n_heads,
+            block=block,
+            head_types=head_types,
+            rope_base=rope_base,
+            xi_init=xi_init,
+            learnable_xi=learnable_xi,
+        )
+
+    @property
+    def qkv(self):
+        return self.inner.qkv
+
+    @property
+    def proj(self):
+        return self.inner.o
+
+    def forward(self, x):
+        return self.inner(x)
+
+
 class ClarusBlock(nn.Module):
     def __init__(self, dim, n_heads, ffn_mult=4, ffn_hidden_dim=None,
-                 mix_rank=None, sparsity=1.0, bias=True, dense=False, act_fn="silu"):
+                 mix_rank=None, sparsity=1.0, bias=True, dense=False, act_fn="silu",
+                 max_seq_len=512, attention_backend="standard",
+                 euler_head_types="alibi", euler_xi_init=None,
+                 euler_learnable_xi=True, euler_rope_base=10000.0):
         super().__init__()
         self.norm1 = LBONorm(dim)
-        self.attn = ClarusAttention(dim, n_heads, bias=bias)
+        self.attention_backend = str(attention_backend)
+        if self.attention_backend in {"standard", "sdpa"}:
+            self.attn = ClarusAttention(dim, n_heads, bias=bias)
+        elif self.attention_backend in {"euler_minimal", "euler"}:
+            self.attn = ClarusEulerMinimalAttention(
+                dim,
+                n_heads,
+                max_seq_len,
+                head_types=euler_head_types,
+                xi_init=euler_xi_init,
+                learnable_xi=euler_learnable_xi,
+                rope_base=euler_rope_base,
+                bias=bias,
+            )
+        else:
+            raise ValueError(
+                f"unknown attention_backend={attention_backend!r}; "
+                "expected 'standard' or 'euler_minimal'"
+            )
         self.norm2 = LBONorm(dim)
         self.ffn = GaugeLattice(
             dim,
@@ -426,9 +500,18 @@ class ClarusLM(nn.Module):
                  max_seq_len=512, ffn_mult=4, ffn_hidden_dim=None,
                  mix_rank=None, lambda_curv=0.01, lambda_mix=0.01,
                  sparsity=1.0, use_checkpoint=False, bias=True,
-                 dense=False, act_fn="silu"):
+                 dense=False, act_fn="silu", attention_backend="standard",
+                 euler_head_types="alibi", euler_xi_init=None,
+                 euler_learnable_xi=True, euler_rope_base=10000.0,
+                 use_abs_pos=None):
         super().__init__()
         self.max_seq_len = max_seq_len
+        self.attention_backend = str(attention_backend)
+        self.euler_head_types = euler_head_types
+        self.use_abs_pos = (
+            self.attention_backend in {"standard", "sdpa"}
+            if use_abs_pos is None else bool(use_abs_pos)
+        )
         # lambda_curv: 학습 시 곡률 정규화 강도. set_lambda_schedule()로 스케줄 활성화.
         self.lambda_curv = lambda_curv
         self.lambda_curv_base = lambda_curv
@@ -451,6 +534,12 @@ class ClarusLM(nn.Module):
                     bias=bias,
                     dense=dense,
                     act_fn=act_fn,
+                    max_seq_len=max_seq_len,
+                    attention_backend=attention_backend,
+                    euler_head_types=euler_head_types,
+                    euler_xi_init=euler_xi_init,
+                    euler_learnable_xi=euler_learnable_xi,
+                    euler_rope_base=euler_rope_base,
                 )
                 for _ in range(n_layers)
             ])
@@ -504,7 +593,9 @@ class ClarusLM(nn.Module):
         need_curv = targets is not None or self.training
         self._set_curvature_tracking(need_curv)
 
-        x = self.tok_emb(idx) + self.pos_emb(self._pos_idx[:T])
+        x = self.tok_emb(idx)
+        if self.use_abs_pos:
+            x = x + self.pos_emb(self._pos_idx[:T])
         if self.training and self._use_checkpoint:
             for block in self.blocks:
                 x = torch.utils.checkpoint.checkpoint(
