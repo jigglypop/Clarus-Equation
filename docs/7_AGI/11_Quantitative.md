@@ -1,8 +1,8 @@
 # CE-AI 정량적 성능 분석: 메모리, 속도, 정확도
 
-> 관련: 2장(아키텍처), 4장(STDP), 5장(희소성), 6장(환각 억제), `6_뇌/agi.md` 6절(파라미터 절감), `6_뇌/evidence.md`
+> 관련: 2장(아키텍처), 4장(STDP), 5장(희소성), 6장(환각 억제), `7_AGI/12_Equation.md` 6절(파라미터 절감), `6_뇌/05_실험근거.md`
 >
-> 이 장은 CE 각 원리가 메모리, 속도, 정확도에 미치는 영향을 정량화한다. 다만 `6_뇌/evidence.md` 기준으로, P1의 연산자 수준 절감식은 비교적 직접적이지만, P2/P4/P5의 태스크 수준 성능 수치는 아직 `bridge` 또는 `hypothesis`가 섞여 있다.
+> 이 장은 CE 각 원리가 메모리, 속도, 정확도에 미치는 영향을 정량화한다. 다만 `6_뇌/05_실험근거.md` 기준으로, P1의 연산자 수준 절감식은 비교적 직접적이지만, P2/P4/P5의 태스크 수준 성능 수치는 아직 `bridge` 또는 `hypothesis`가 섞여 있다.
 
 ---
 
@@ -183,7 +183,7 @@ $P = 85\text{M}$: $M_{\text{total}}^{\text{BP}} = 85 \times 10^6 \times 16 = 1{,
 
 ### 4.2 STDP 메모리
 
-아래 계산은 **layer-shared 또는 neuron-local trace 근사**를 둔 낙관적 경우다. `synapse.md`의 순수한 synapse-local eligibility trace $e_{ij}$를 그대로 쓰면 추가 상태는 일반적으로 $O(P)$다.
+아래 계산은 **layer-shared 또는 neuron-local trace 근사**를 둔 낙관적 경우다. `08_시냅스가소성.md`의 순수한 synapse-local eligibility trace $e_{ij}$를 그대로 쓰면 추가 상태는 일반적으로 $O(P)$다.
 
 근사적 STDP는 국소 trace만 저장한다고 두면:
 
@@ -324,7 +324,7 @@ $$\text{Forget}_{\text{CE}} \leq \varepsilon^2$$
 
 ### 6.3 수렴 속도
 
-`homeomorphism.md`와 `evidence.md`의 동적 이완 사상 기준으로, 최소 수축률은
+`05_실험근거.md`와 `05_실험근거.md`의 동적 이완 사상 기준으로, 최소 수축률은
 
 $$\rho = \|DB(p^*)\| = D_{\text{eff}} \cdot \varepsilon^2 = 0.155$$
 

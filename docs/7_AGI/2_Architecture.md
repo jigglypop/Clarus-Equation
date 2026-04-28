@@ -1,6 +1,6 @@
 # 아키텍처: 3x3+1 게이지 격자 네트워크
 
-> 위치 규칙: 이 문서는 runtime 5계층 중 **kernel / coupling 후보 연산자**를 다룬다. `mode update`, `hippocampus / replay`, `global runtime summary`는 `3_Sleep.md`, `12_Equation.md`, `6_뇌/evidence.md`를 우선한다.
+> 위치 규칙: 이 문서는 runtime 5계층 중 **kernel / coupling 후보 연산자**를 다룬다. `mode update`, `hippocampus / replay`, `global runtime summary`는 `3_Sleep.md`, `12_Equation.md`, `6_뇌/05_실험근거.md`를 우선한다.
 
 ## 0. 이 문서가 책임지는 새 개념
 
@@ -22,7 +22,7 @@
 
 ### 1.1 뇌 진동 대역에서 아키텍처로
 
-뇌의 진동 대역은 CE 게이지 구조와 대응한다(`sleep.md` 2.1절):
+뇌의 진동 대역은 CE 게이지 구조와 대응한다(`07_수면과복구.md` 2.1절):
 
 | 진동 대역 | 주파수 | 게이지 층 | 연산 역할 | 에너지 비율 |
 |---|---|---|---|---|
@@ -70,7 +70,7 @@ $$\mathcal{T}_i(x_i) = \sigma(x_i W_i^{(1)}) W_i^{(2)}$$
 
 ### 2.3 섭동적 혼합항
 
-순수 블록 대각은 채널 간 정보 교환이 없어 표현력이 부족하다(`agi.md` 6.3절). 게이지 이론에서 물질장은 여러 게이지군의 전하를 동시에 갖는다. 이를 섭동적 혼합으로 구현한다:
+순수 블록 대각은 채널 간 정보 교환이 없어 표현력이 부족하다(`7_AGI/12_Equation.md` 6.3절). 게이지 이론에서 물질장은 여러 게이지군의 전하를 동시에 갖는다. 이를 섭동적 혼합으로 구현한다:
 
 $$\text{FFN}(x) = \text{concat}(\mathcal{T}_3(x_3),\; \mathcal{T}_2(x_2),\; \mathcal{T}_1(x_1)) + U_{\text{down}}\, U_{\text{up}}^\top\, x$$
 
@@ -170,7 +170,7 @@ $$\lambda(t) = \lambda_0 \cdot \min\!\left(1,\; \frac{t}{t_{\text{warmup}}}\righ
 
 ### 6.1 원리
 
-뇌에서 세타 위상이 감마 진폭을 변조하는 교차 주파수 결합(CFC)은 CE의 비최소 결합 $\xi R\Phi^2$에 대응한다(`sleep.md` 2.2절):
+뇌에서 세타 위상이 감마 진폭을 변조하는 교차 주파수 결합(CFC)은 CE의 비최소 결합 $\xi R\Phi^2$에 대응한다(`07_수면과복구.md` 2.2절):
 
 $$\Phi \text{ (세타/델타)} \leftrightarrow \text{SU(3) (감마)}: \quad \xi R\Phi^2$$
 

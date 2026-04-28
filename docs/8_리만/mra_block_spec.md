@@ -12,7 +12,7 @@
 - **A2 (CE 결합 상수).** `α_s : α_w : α_em = 0.118 : 0.034 : 0.008` (`docs/3_상수`).
   이 비율은 채널 분할의 유일한 자유도다.
 - **A3 (부트스트랩 고정점).** 활성 비율은 `ε² = 4.87 %`로 자연 수렴한다
-  (`docs/6_뇌/sleep.md`). attention 행렬도 이 sparsity를 상한으로 갖는다.
+  (`docs/6_뇌/07_수면과복구.md`). attention 행렬도 이 sparsity를 상한으로 갖는다.
 - **A4 (유니타리).** `|det T|² ≤ 1`. 정보 증폭 = 환각이므로 출력 사영의 spectral
   norm은 1 이하로 제약한다.
 
@@ -168,4 +168,4 @@ PyTorch 참조 우선. Rust/CUDA 포트는 식이 안정화된 후 별도 작업
 - Su et al. (2021), *RoFormer* — RoPE 원본.
 - Press et al. (2022), *ALiBi*.
 - `docs/7_AGI/2_Architecture.md` — ClarusBlock 5계층 stack.
-- `docs/6_뇌/sleep.md` — 부트스트랩 고정점 `ε² = 4.87 %`.
+- `docs/6_뇌/07_수면과복구.md` — 부트스트랩 고정점 `ε² = 4.87 %`.

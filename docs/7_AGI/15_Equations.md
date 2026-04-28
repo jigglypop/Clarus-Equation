@@ -1,8 +1,8 @@
 # Layer A--E 방정식 정본
 
 > 위치: `12_Equation.md`의 canonical runtime 5계층에 대한 **수식 전용** 참조 문서.
-> 의존: `14_BrainRuntimeSpec.md`(설계 사양), `6_뇌/evidence.md`(근거 판정), `6_뇌/proof.md`(검증 매트릭스)
-> F절(에이전트 루프) 전체: `17_AgentLoop.md`로 분리됨. F절 검증: `6_뇌/agent_proof.md`.
+> 의존: `14_BrainRuntimeSpec.md`(설계 사양), `6_뇌/05_실험근거.md`(근거 판정), `6_뇌/06_검증기준.md`(검증 매트릭스)
+> F절(에이전트 루프) 전체: `17_AgentLoop.md`로 분리됨. F절 검증: `6_뇌/06_검증기준.md`.
 >
 > 이 문서에는 서사 설명을 넣지 않는다. 식, 정의, 증명/검증 기준만 둔다.
 
@@ -409,7 +409,7 @@ $$\text{Self}_t = \mathcal{S}(G_t)$$
 > **정본: `17_AgentLoop.md`로 분리됨.**
 >
 > F절(F.0--F.22)의 전체 방정식, 뇌 대응, 검증 체크리스트는 `17_AgentLoop.md`를 참조한다.
-> 검증 매트릭스는 `6_뇌/agent_proof.md`를 참조한다.
+> 검증 매트릭스는 `6_뇌/06_검증기준.md`를 참조한다.
 
 ### 요약
 
@@ -422,7 +422,7 @@ $$\boxed{X_{t+1} = B\big[X_t + \lambda_R R(X_t) + \lambda_O \Delta_O(X_t) + \lam
 | F.0--F.13 | 핵심 루프: 상태, 이완, 비평, 에너지, 모드, 행동, 기억, 수축, 뇌 대응 | `17_AgentLoop.md` |
 | F.14--F.15 | 학습: STDP + 도파민 게이트, 잔류장 $\phi$ 갱신 | `17_AgentLoop.md` |
 | F.16--F.22 | 희소성, 의식, 환각억제, 4종조절계, 작업기억, 뇌파, 간극 | `17_AgentLoop.md` |
-| 검증 매트릭스 | 4중 게이트, 반증 조건, 미결 항목 | `6_뇌/agent_proof.md` |
+| 검증 매트릭스 | 4중 게이트, 반증 조건, 미결 항목 | `6_뇌/06_검증기준.md` |
 
 ---
 
@@ -454,7 +454,7 @@ $$\boxed{X_{t+1} = B\big[X_t + \lambda_R R(X_t) + \lambda_O \Delta_O(X_t) + \lam
 
 ## H. 검증 게이트 대응
 
-`proof.md`의 4중 게이트를 이 문서의 식에 적용.
+`06_검증기준.md`의 4중 게이트를 이 문서의 식에 적용.
 
 ### H.1 Layer A--E 게이트
 
@@ -589,7 +589,7 @@ $$\text{ALFF}_i^{\text{DMN}} = \sqrt{\frac{1}{T}\sum_{f=0.01}^{0.1} |\hat{\phi}_
 
 ### H.2 Layer F 검증 게이트
 
-> 상세 테이블은 `17_AgentLoop.md` H절 및 `6_뇌/agent_proof.md` 참조.
+> 상세 테이블은 `17_AgentLoop.md` H절 및 `6_뇌/06_검증기준.md` 참조.
 
 ---
 

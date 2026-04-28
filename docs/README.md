@@ -55,22 +55,22 @@ $$
 
 ## AGI 런타임 읽기 규칙
 
-- `docs/6_뇌/evidence.md`는 뇌/AGI 연결의 실험 게이트다.
+- `docs/6_뇌/05_실험근거.md`는 뇌/AGI 연결의 실험 게이트다.
 - `docs/7_AGI/12_Equation.md`는 런타임 기호를 모으는 문서지만, **오직 상단의 5계층 스택만 canonical runtime spec** 으로 읽는다.
 - canonical runtime stack은 다음 다섯 층으로만 고정한다: `kernel dynamics`, `coupling / geometry`, `mode update`, `hippocampus / replay`, `global runtime summary`.
 - 위 다섯 층에서 수학적 정의 자체는 `Exact` 또는 `Selection`일 수 있지만, 뇌 대응이 들어가는 순간 지위는 `Bridge`를 넘지 않는다.
-- `evidence.md`에서 `supported`인 항목은 AGI 런타임에서 최대 `Bridge`까지 올릴 수 있다.
-- `evidence.md`에서 `bridge`인 항목은 그대로 `Bridge`로만 사용한다.
-- `evidence.md`에서 `hypothesis`인 항목은 `Phenomenology`로만 사용하며, 성능 보장이나 "증명된 뇌 등가성" 문장으로 올리지 않는다.
+- `05_실험근거.md`에서 `supported`인 항목은 AGI 런타임에서 최대 `Bridge`까지 올릴 수 있다.
+- `05_실험근거.md`에서 `bridge`인 항목은 그대로 `Bridge`로만 사용한다.
+- `05_실험근거.md`에서 `hypothesis`인 항목은 `Phenomenology`로만 사용하며, 성능 보장이나 "증명된 뇌 등가성" 문장으로 올리지 않는다.
 
 | 새 개념 | 먼저 볼 문서 | 해석 레벨 |
 |------|------|------|
 | local recurrent cell / bitfield | `7_AGI/12_Equation.md` | kernel dynamics |
-| geometry coupling / graph | `7_AGI/2_Architecture.md`, `6_뇌/homeomorphism.md` | coupling / geometry |
-| wake / NREM / REM | `7_AGI/3_Sleep.md`, `6_뇌/evidence.md` | mode update |
-| hippocampus / replay | `7_AGI/3_Sleep.md`, `6_뇌/evidence.md` | hippocampus / replay |
+| geometry coupling / graph | `7_AGI/2_Architecture.md`, `6_뇌/05_실험근거.md` | coupling / geometry |
+| wake / NREM / REM | `7_AGI/3_Sleep.md`, `6_뇌/05_실험근거.md` | mode update |
+| hippocampus / replay | `7_AGI/3_Sleep.md`, `6_뇌/05_실험근거.md` | hippocampus / replay |
 | sparse lifecycle / snapshot | `7_AGI/12_Equation.md` | global runtime summary |
-| self / identity 해석 | `6_뇌/agi.md` | `Phenomenology` 우선 |
+| self / identity 해석 | `7_AGI/12_Equation.md` | `Phenomenology` 우선 |
 
 ## 문서 계층과 역할
 
@@ -119,7 +119,7 @@ CE 문서는 네 층으로 읽는 것이 가장 안전하다.
 - `P_{\text{survive}} \leftrightarrow \Omega_b`는 유클리드 등분배 정리 + 부트스트랩 자기일관성 + Cauchy 유일성으로 정당화되었으며, `Selection` 근접 `Bridge`로 격상되었다. 잔여 불확도: 상호작용 보정 $O(\alpha_s/(2\pi)) \sim 2\%$.
 - `\alpha_s^{1/d}` 및 `\sin^2\theta_W = 4\alpha_s^{4/3}` 체인은 수치적으로 강하며, 독립 실험 검증 경로(FCC-ee, 격자 QCD, EIC)가 `상수.md`에 정리되었다. 코어 기준으로는 `Bridge`.
 - `N_c = d`는 구조적 유비를 넘어 동역학적 동일성으로 닫히지 않았다.
-- 뇌 문서는 (C1)-(C3) 조건부 정리에 의해 `Phenomenology`에서 `Bridge`로 격상되었다(`6_뇌/homeomorphism.md`). AGI/게임 밸런스는 여전히 응용 가설층.
+- 뇌 문서는 (C1)-(C3) 조건부 정리에 의해 `Phenomenology`에서 `Bridge`로 격상되었다(`6_뇌/05_실험근거.md`). AGI/게임 밸런스는 여전히 응용 가설층.
 - 공학/블랙홀 문서의 수치는 최신 정본과 양립하도록 정리되었지만, 대부분 설계 벤치마크 또는 유효 모델 수준이다.
 - $\mathcal{K}$의 구체적 동역학(경로적분 헤시안 구성)과 $\chi$의 장 방정식(유클리드 열핵 흐름)이 `axium.md`에서 닫혔다.
 

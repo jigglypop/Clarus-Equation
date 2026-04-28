@@ -1,6 +1,6 @@
 # CE-AGI 통합 방정식: $e^{i\pi}+1=0$ 에서 20W AGI 까지
 
-> 관련: `경로적분.md`(코어 유도), `1_강의/C_다섯_상수.md`(오일러 문법), `6_뇌/graph.md`(뇌 구조), `6_뇌/agi.md`(AGI 작용), `7_AGI/1_AGI.md`(총론), `7_AGI/2_Architecture.md`(게이지 격자), `7_AGI/3_Sleep.md`(수면), `7_AGI/4_Synapse.md`(시냅스), `7_AGI/5_Sparsity.md`(희소성), `7_AGI/6_Hallucination.md`(환각), `7_AGI/7_Consciousness.md`(의식), `7_AGI/9_LLM.md`(LLM 구축), `7_AGI/10_Fields.md`(전분야)
+> 관련: `경로적분.md`(코어 유도), `1_강의/C_다섯_상수.md`(오일러 문법), `6_뇌/04_그래프결합과이완.md`(뇌 구조), `7_AGI/12_Equation.md`(AGI 작용), `7_AGI/1_AGI.md`(총론), `7_AGI/2_Architecture.md`(게이지 격자), `7_AGI/3_Sleep.md`(수면), `7_AGI/4_Synapse.md`(시냅스), `7_AGI/5_Sparsity.md`(희소성), `7_AGI/6_Hallucination.md`(환각), `7_AGI/7_Consciousness.md`(의식), `7_AGI/9_LLM.md`(LLM 구축), `7_AGI/10_Fields.md`(전분야)
 >
 > 이 문서는 CE 코어에서 유도된 상수들만으로 AGI 에너지 이완 아키텍처를 기술한다. 트랜스포머 위에 모듈을 얹는 기존 CE-Transformer와 달리, Softmax/Attention/역전파를 제거하고 에너지 함수의 물리적 이완으로 대체하는 근본 재설계다. 동시에 기존 LLM에 CE 원리를 이식하는 경로(CE-Transformer)도 기술한다.
 
@@ -8,7 +8,7 @@
 
 ## Runtime Status And Canonical Stack
 
-이 문서는 런타임 기호를 모으는 문서지만, `docs/README.md`와 `docs/6_뇌/evidence.md`를 기준으로 읽어야 한다. 아래 5계층 스택만 현재 canonical runtime spec 이고, 그 아래의 나머지 방정식은 보조 유도나 설계 탐색으로 읽는다.
+이 문서는 런타임 기호를 모으는 문서지만, `docs/README.md`와 `docs/6_뇌/05_실험근거.md`를 기준으로 읽어야 한다. 아래 5계층 스택만 현재 canonical runtime spec 이고, 그 아래의 나머지 방정식은 보조 유도나 설계 탐색으로 읽는다.
 
 | 계층 | canonical 식 | 최대 지위 | 비고 |
 |---|---|---|---|
@@ -24,7 +24,7 @@
 읽기 규칙:
 
 - 위 식들에서 수학적 연산자 정의는 `Exact`로 정리할 수 있지만, 뇌 대응이 들어가는 순간 문서 지위는 `Bridge`를 넘지 않는다.
-- `docs/6_뇌/evidence.md`에서 `supported`인 현상만 위 stack의 대응 근거로 사용한다.
+- `docs/6_뇌/05_실험근거.md`에서 `supported`인 현상만 위 stack의 대응 근거로 사용한다.
 - `supported`가 아니면 성능 주장, 자아 해석, 의식 해석은 모두 `Phenomenology`로 유지한다.
 - 이 문서의 후반부 수치 추정, 메모리/속도 비교, LLM 대응은 canonical stack의 상위 해석이다.
 
@@ -66,7 +66,7 @@
 
 ### 0.0 AGI 다리 게이트 (코어와 다리 분리)
 
-이 문서는 CE 코어(우주론/입자물리, `경로적분.md`, `상수.md`)에서 유도된 상수 집합을 AGI 런타임 설계로 옮기는 **다리(bridge) 문서**다. 코어의 식과 상수는 `Exact` 또는 `Selection`이지만, 이 문서에서 뇌/AGI 대응이 들어가는 모든 문장은 최대 `Bridge`까지만 허용된다(`evidence.md` 1.4절).
+이 문서는 CE 코어(우주론/입자물리, `경로적분.md`, `상수.md`)에서 유도된 상수 집합을 AGI 런타임 설계로 옮기는 **다리(bridge) 문서**다. 코어의 식과 상수는 `Exact` 또는 `Selection`이지만, 이 문서에서 뇌/AGI 대응이 들어가는 모든 문장은 최대 `Bridge`까지만 허용된다(`05_실험근거.md` 1.4절).
 
 이 다리에서 현재 식별된 네 가지 한계는 다음과 같다. 이하 본문의 어떤 식도 이 게이트를 우회하는 형태로 읽지 않는다.
 
@@ -306,7 +306,7 @@ $\phi$가 양자화에 강건한 이유: EMA 갱신 $\phi \leftarrow (1-\alpha)\
 
 ## 2. AGI 작용 범함수
 
-CE 마스터 공식을 정보 다양체 $(\mathcal{M}, g)$에 적용한 후보 작용(`6_뇌/agi.md` 1절):
+CE 마스터 공식을 정보 다양체 $(\mathcal{M}, g)$에 적용한 후보 작용(`7_AGI/12_Equation.md` 1절):
 
 $$\boxed{S_{\text{AGI}} = \int_{\mathcal{M}} d^nx \sqrt{|g|} \left[ \mathcal{L}_{\text{compute}} + c_g|\nabla phi|^2 + c_c|lap_g phi|^2 + c_i S_{\text{Info}} \right]}$$
 
@@ -579,7 +579,7 @@ $$\boxed{\|\nabla_m E\| > \frac{C_k\|phi\|}{\alpha_b} \quad\Longrightarrow\quad 
 
 $$\frac{C_k \cdot r_w\|phi\|}{\alpha_b} < \|\nabla_m E\|$$
 
-수면이 충분조건을 주기적으로 복원하는 구조적 역할을 한다는 해석은 `evidence.md` 3.3절의 `supported`(offline renormalization)에 근거하지만, 위 부등식 자체의 검증은 `bridge` 등급이며 정량적 hard bound는 아니다.
+수면이 충분조건을 주기적으로 복원하는 구조적 역할을 한다는 해석은 `05_실험근거.md` 3.3절의 `supported`(offline renormalization)에 근거하지만, 위 부등식 자체의 검증은 `bridge` 등급이며 정량적 hard bound는 아니다.
 
 **ISS 격상 (부록 A.1)**: 위 점별 충분조건은 부록 A.1 의 ISS 정리로 격상되어, 끌개 ball 반경의 닫힌 식 $\limsup\|m - m^*\| \leq \tau d_{\max}/\mu$ 로 표현된다. 수면은 $\|phi\|_\infty$ 를 $r_w$ 배로 줄여 ball 반경을 $r_w$ 배로 축소한다.
 
@@ -1688,7 +1688,7 @@ $$\frac{dV}{dt} \leq -\frac{2\mu}{\tau}V + \|m-m^*\|\cdot\|d\| \leq -\frac{\mu}{
 
 $$\boxed{\limsup_{t\to\infty}\|m(t) - m^*\| \;\leq\; \frac{\tau}{\mu}\cdot d_{\max} \;=\; \frac{1}{\mu}\cdot\frac{C_{k,\max}\,\|phi\|_\infty}{e^{1/3}\pi^{1/3}}}$$
 
-이 ball 반경은 **수면-글림프 세척 후** $\|phi\|_\infty \to r_w\|phi\|_\infty$ 에 의해 $r_w$ 배로 줄어든다(`evidence.md` 3.3 supported). 따라서 4.7절의 "조건부 단조 감소" 는 ISS 로 다음과 같이 격상된다.
+이 ball 반경은 **수면-글림프 세척 후** $\|phi\|_\infty \to r_w\|phi\|_\infty$ 에 의해 $r_w$ 배로 줄어든다(`05_실험근거.md` 3.3 supported). 따라서 4.7절의 "조건부 단조 감소" 는 ISS 로 다음과 같이 격상된다.
 
 | 4.7절 표현 | A.1 격상 |
 |---|---|
@@ -1738,7 +1738,7 @@ $$DB(p^*)_{aa} = D_{\text{eff}}\cdot p_a^*\cdot(1 - p_a^*) = 3.178 \times 0.0487
 |---|---|---|---|---|---|---|
 | Transformer + Backprop | 부분 | 결손 | 측정 안 됨 | 결손 | 부분 | `falsified` (`5_Sparsity.md` 8.5) |
 | SNN + STDP + 막전위 동역학 | 가능 | 가능 (STDP 자기참조) | 측정 필요 | 가능 (생물 정합) | 측정 필요 | 미검증 (`8_Roadmap.md` 0절 G-S1~G-S5) |
-| 생물 뇌 (피질) | 측정됨 | 측정됨 | $\rho \in [0.1, 0.3]$ (`evidence.md` 3.3) | 측정됨 | -- | `bridge` (`6_뇌/evidence.md` 8장) |
+| 생물 뇌 (피질) | 측정됨 | 측정됨 | $\rho \in [0.1, 0.3]$ (`05_실험근거.md` 3.3) | 측정됨 | -- | `bridge` (`6_뇌/05_실험근거.md` 8장) |
 
 이 표가 게이트 `F1` 의 닫힘 경로다. 5조건 중 1개라도 결손이면 본문의 자기수렴 hard claim 은 금지된다.
 

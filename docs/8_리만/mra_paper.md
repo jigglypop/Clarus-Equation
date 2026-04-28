@@ -688,7 +688,7 @@ Euler-CE 외삽 우위의 진짜 메커니즘(e-decay = ALiBi)을 32× extrapola
 
 [6] M. V. Berry, J. P. Keating, "H = xp and the Riemann zeros," 1999.
 
-[7] (Internal) `docs/6_뇌/sleep.md` — CE 부트스트랩 고정점 `ε² = 4.87 %`.
+[7] (Internal) `docs/6_뇌/07_수면과복구.md` — CE 부트스트랩 고정점 `ε² = 4.87 %`.
 
 [8] (Internal) `docs/7_AGI/2_Architecture.md` § 4 — 유니타리 제약.
 

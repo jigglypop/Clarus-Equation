@@ -345,7 +345,7 @@ def generate_with_curvature_check(model, idx, n_tokens,
 
 ### 4.5 Grounded CE-LLM: 감각 발화 집합 추가
 
-텍스트-only LLM보다 AGI 쪽으로 가려면, 앞단에 모달리티별 sparse encoder를 두는 편이 더 자연스럽다(`6_뇌/agi.md` 6.8-6.9절).
+텍스트-only LLM보다 AGI 쪽으로 가려면, 앞단에 모달리티별 sparse encoder를 두는 편이 더 자연스럽다(`7_AGI/12_Equation.md` 6.8-6.9절).
 
 ```python
 class GroundedCELLM(nn.Module):

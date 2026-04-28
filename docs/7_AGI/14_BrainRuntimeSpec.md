@@ -1,7 +1,7 @@
 # Brain Runtime Specification v0.1
 
 > 위치: `12_Equation.md`의 canonical runtime 5계층을 구현 관점에서 재정의한다.
-> 의존: `12_Equation.md`(수식 정본), `6_뇌/evidence.md`(근거 판정), `6_뇌/proof.md`(검증 매트릭스)
+> 의존: `12_Equation.md`(수식 정본), `6_뇌/05_실험근거.md`(근거 판정), `6_뇌/06_검증기준.md`(검증 매트릭스)
 >
 > 이 문서는 수식 체계 정비, 라이브러리 아키텍처 분리, 단계별 개발 계획, 검증 루프 설계를 다룬다.
 
@@ -256,7 +256,7 @@ $$\rho + \lambda_R L_R + \lambda_C L_C < 1$$
 | F.21 뇌파 대역 | gamma=국소, theta=전역, theta-gamma coupling으로 순서화 | 낮음 |
 | F.22 간극 정리 | 9개 정직한 간극. STDP 코드/4조절계가 `높음` | -- |
 
-뇌 대응 체크리스트와 검증 매트릭스는 `17_AgentLoop.md` F.11, H절 및 `6_뇌/agent_proof.md`를 참조한다.
+뇌 대응 체크리스트와 검증 매트릭스는 `17_AgentLoop.md` F.11, H절 및 `6_뇌/06_검증기준.md`를 참조한다.
 
 ---
 
