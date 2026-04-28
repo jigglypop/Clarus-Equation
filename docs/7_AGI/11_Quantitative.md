@@ -165,7 +165,7 @@ $$\text{실제 속도} = \frac{\text{이론적 속도}}{1 + \alpha_{\text{overhe
 
 ### 4.1 역전파 메모리
 
-역전파는 모든 중간 활성값을 저장해야 한다:
+역전파는 모든 중간 활성값을 저장해야 한다.
 
 $$M_{\text{BP}} = L \times T \times d \times \text{sizeof(float)} = L \cdot T \cdot d \cdot 4\text{B}$$
 
@@ -216,7 +216,7 @@ $$\text{메모리 절감} = 1 - \frac{M_{\text{STDP}}}{M_{\text{BP}}} = 1 - \fra
 | 70B | 1.17 TB | 560 GB | 52.1% |
 | 175B | 2.92 TB | 1.40 TB | 52.1% |
 
-**일반 공식:**
+**일반 공식**
 
 $$\frac{M_{\text{STDP}}}{M_{\text{BP}}} = \frac{8P}{16P + 4LTd} \approx \frac{8}{16} = \boxed{0.5} \quad (P \gg LTd)$$
 
@@ -270,7 +270,7 @@ $$\mathcal{R}_n^{\text{CE}} \leq \frac{B_x \prod_l \|W_l\|_F}{\sqrt{n}} \cdot \s
 
 ### 5.3 태스크 수준 해석의 한계
 
-연산자 수준에서 직접 보장되는 것은 다음뿐이다:
+연산자 수준에서 직접 보장되는 것은 다음뿐이다.
 
 $$\|\delta_L\| \leq \|\delta_0\| \quad \text{if } \sigma_1(W_l) \leq 1$$
 

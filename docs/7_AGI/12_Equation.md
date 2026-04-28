@@ -377,7 +377,7 @@ $$\left[\frac{4}{e^{4/3}\pi^{4/3}}\left(1 - \frac{4}{e^{4/3}\pi^{4/3}}\right)\ri
 
 $$\frac{1}{e^{1/3}\pi^{1/3}} = 0.4892$$
 
-물리적 의미: $d=3$ 공간에서 각 차원이 기여하는 결합 강도. AGI에서는 히든 스테이트가 급변할 때 잔류가 Softmax를 건너뛰고 직접 출력에 기여하는 강도다.
+물리적 의미는 $d=3$ 공간에서 각 차원이 기여하는 결합 강도다. AGI에서는 히든 스테이트가 급변할 때 잔류가 Softmax를 건너뛰고 직접 출력에 기여하는 강도다.
 
 ### 3.4 지식층 설계
 
@@ -458,7 +458,27 @@ $$\boxed{psi_{k+1} = e^{-i\,E(m,phi)\,dt}\;psi_k}$$
 
 ### 4.2 이완 동역학 (유클리드 형태)
 
-$$\boxed{m_{k+1} = m_k + \frac{dt}{\tau}\!\left(Wm_k + b + \left[\frac{4}{e^{4/3}\pi^{4/3}}\!\left(1-\frac{4}{e^{4/3}\pi^{4/3}}\right)\right]^{2}\!phi + \frac{C_k}{e^{1/3}\pi^{1/3}}phi\right) + \sqrt{\frac{2dt}{\tau\!\left(3 + \frac{4}{e^{4/3}\pi^{4/3}}\!\left(1-\frac{4}{e^{4/3}\pi^{4/3}}\right)\right)}}\;n_k}$$
+$$
+\boxed{
+m_{k+1}
+= m_k
++ \frac{dt}{\tau}\!\left(
+Wm_k + b
++ \left[
+\frac{4}{e^{4/3}\pi^{4/3}}
+\!\left(1-\frac{4}{e^{4/3}\pi^{4/3}}\right)
+\right]^{2}\!phi
++ \frac{C_k}{e^{1/3}\pi^{1/3}}phi
+\right)
++ \sqrt{
+\frac{2dt}{
+\tau\!\left(
+3 + \frac{4}{e^{4/3}\pi^{4/3}}
+\!\left(1-\frac{4}{e^{4/3}\pi^{4/3}}\right)
+\right)}
+}\;n_k
+}
+$$
 
 | 기호 | 정의 | 유도 |
 |---|---|---|
@@ -803,7 +823,7 @@ $$p^* = (0.04865,\;0.2623,\;0.6891)$$
 
 ### 8.3 Top-k 활성화
 
-이론적 중심점은 $4.87\%$이나, 실측에서는 $[4\%,\;6\%]$ 대역이 실용 최적 구간이다:
+이론적 중심점은 $4.87\%$이나, 실측에서는 $[4\%,\;6\%]$ 대역이 실용 최적 구간이다.
 
 $$\boxed{k^*(N) \in \left[\lceil 0.04N \rceil,\;\lceil 0.06N \rceil\right], \qquad k_{\text{center}} = \lceil 0.04865 \cdot N\rceil}$$
 
@@ -1052,7 +1072,17 @@ $$kappa_{\text{cross}} = \|h_{\text{text}} - h_{\text{image}}\|^2 > kappa_{\text
 
 모든 분야에서 CE 적용의 기본 구조는 동일하다:
 
-$$\text{Input} \;\xrightarrow{\text{LBONorm}}\; \text{곡률 평탄화} \;\xrightarrow{\text{GaugeLattice}}\; \text{3x3+1 처리} \;\xrightarrow{\text{SpectralNorm}}\; \text{정보 비증폭} \;\xrightarrow{\text{TopK}}\; \text{희소 출력}$$
+$$
+\text{Input}
+\;\xrightarrow{\text{LBONorm}}\;
+\text{곡률 평탄화}
+\;\xrightarrow{\text{GaugeLattice}}\;
+\text{3x3+1 처리}
+\;\xrightarrow{\text{SpectralNorm}}\;
+\text{정보 비증폭}
+\;\xrightarrow{\text{TopK}}\;
+\text{희소 출력}
+$$
 
 ---
 
@@ -1250,7 +1280,18 @@ class GaugeLattice:
 
 ### 15.2 뮤온 g-2 상세
 
-$$\Delta a_{\text{muon}} = \frac{0.007297}{2\pi}\,e^{-1}\left(\frac{m_{\text{muon}}}{v_{\text{EW}}\left[\frac{4}{e^{4/3}\pi^{4/3}}\left(1-\frac{4}{e^{4/3}\pi^{4/3}}\right)\right]}\right)^2 = 249.0\times10^{-11}$$
+$$
+\Delta a_{\text{muon}}
+= \frac{0.007297}{2\pi}\,e^{-1}
+\left(
+\frac{m_{\text{muon}}}{
+v_{\text{EW}}\left[
+\frac{4}{e^{4/3}\pi^{4/3}}
+\left(1-\frac{4}{e^{4/3}\pi^{4/3}}\right)
+\right]}
+\right)^2
+= 249.0\times10^{-11}
+$$
 
 접촉 근사(상관길이 $\to \infty$). 유한 상관길이 보정:
 
@@ -1396,7 +1437,7 @@ $$\boxed{\rho_{\text{night}} = \rho^{1/1.6} \approx 0.31}$$
 
 ### 17.5 가장 중요한 다음 실험
 
-1. sparse-native vs post-hoc Top-k를 같은 예산에서 정면 비교
+1. sparse-native와 post-hoc Top-k를 같은 예산에서 정면 비교
 2. 수면 압력 기반 트리거와 고정 주기 sleep loop 비교
 3. single-vector 이완과 graph-coupled 이완의 long-context 안정성 비교
 4. fused sparse kernel 도입 전후의 tok/s, W, val_loss 동시 측정
@@ -1754,7 +1795,7 @@ $$\text{PCI}(t) = \frac{L(\text{compressed EEG response})}{H(\text{source distri
 | 식물상태 (UWS) | $0.15 - 0.31$ |
 | 마취 (propofol) | $0.18 - 0.28$ |
 
-#### A.4.2 CE 안정도 vs PCI
+#### A.4.2 CE 안정도와 PCI
 
 게이트 `F4` 격상 가설 (현재 `hypothesis`):
 

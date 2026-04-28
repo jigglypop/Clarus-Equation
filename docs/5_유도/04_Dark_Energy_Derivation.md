@@ -536,7 +536,7 @@ $$
 -\Delta \phi + \lambda_\text{cos}\,\Delta^2\phi = 0
 $$
 
-를 만족한다. 외력(소스) $f$를 포함해 $E[\phi]-2\langle f,\phi\rangle$를 최소화하면 우변에 $f$가 추가된다:
+를 만족한다. 외력(소스) $f$를 포함해 $E[\phi]-2\langle f,\phi\rangle$를 최소화하면 우변에 $f$가 추가된다.
 
 $$
 -\Delta \phi + \lambda_\text{cos}\,\Delta^2\phi = f.

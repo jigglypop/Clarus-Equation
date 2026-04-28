@@ -44,9 +44,15 @@
 
 ### 2.1 기본 구조
 
-표준 FFN $\text{FFN}(x) = \sigma(xW_1)W_2$를 3x3+1 격자로 대체한다:
+표준 FFN $\text{FFN}(x) = \sigma(xW_1)W_2$를 3x3+1 격자로 대체한다.
 
-$$\text{Layer}(x) = \underbrace{\text{Bind}(x_3)}_{\text{SU(3), 74.1\%}} + \underbrace{\text{Decide}(x_2)}_{\text{SU(2), 21.1\%}} + \underbrace{\text{Attend}(x_1)}_{\text{U(1), 4.9\%}} + \underbrace{\text{Smooth}(x)}_{\Phi}$$
+$$
+\text{Layer}(x)
+= \underbrace{\text{Bind}(x_3)}_{\text{SU(3), 74.1\%}}
++ \underbrace{\text{Decide}(x_2)}_{\text{SU(2), 21.1\%}}
++ \underbrace{\text{Attend}(x_1)}_{\text{U(1), 4.9\%}}
++ \underbrace{\text{Smooth}(x)}_{\Phi}
+$$
 
 채널 분할:
 
@@ -80,7 +86,7 @@ $d = 768$, $r_m = 96$:
 
 - 블록 대각: $\sum_i 2 d_i h_i \approx 2.81\text{M}$
 - 혼합: $2 d r_m \approx 0.15\text{M}$
-- 총: $\approx 2.96\text{M}$ vs 표준 FFN $4.72\text{M}$ = **37% 감소**
+- 총: $\approx 2.96\text{M}$, 표준 FFN $4.72\text{M}$ 대비 **37% 감소**
 
 파라미터가 줄어도 성능이 보존되는 이유: CE 결합 비율이 정보 처리의 최적 분배를 반영하기 때문이다.
 
@@ -89,7 +95,7 @@ $d = 768$, $r_m = 96$:
 
 ### 3.1 LayerNorm의 CE 확장
 
-표준 LayerNorm에 라플라스-벨트라미 확산을 추가한다:
+표준 LayerNorm에 라플라스-벨트라미 확산을 추가한다.
 
 $$\hat{h} = \frac{h - \mu(h)}{\sigma(h)}, \qquad h' = (\hat{h} - \eta\,\Delta_g \hat{h}) \odot \gamma + \beta$$
 
@@ -123,7 +129,7 @@ Attention 출력 사영 $W_{\text{proj}}$의 최대 특이값이 1 이하이면,
 
 ### 4.2 환각 억제 메커니즘
 
-정보 증폭이 차단되면 잘못된 패턴의 자기강화가 강하게 억제된다:
+정보 증폭이 차단되면 잘못된 패턴의 자기강화가 강하게 억제된다.
 
 - 증폭 없음 $\to$ 국소 오류의 자기증폭 경향이 줄어듦 $\to$ 안정화 편향
 - 기존 RLHF는 사후 교정이지만, 유니타리 제약은 사전 구조 제약
@@ -170,7 +176,7 @@ $$\Phi \text{ (세타/델타)} \leftrightarrow \text{SU(3) (감마)}: \quad \xi 
 
 ### 6.2 아키텍처 구현
 
-LBONorm의 곡률 에너지가 GaugeLattice의 각 게이지 채널에 영향을 미치도록 결합한다:
+LBONorm의 곡률 에너지가 GaugeLattice의 각 게이지 채널에 영향을 미치도록 결합한다.
 
 $$\mathcal{T}_i^{\text{coupled}}(x_i) = \mathcal{T}_i(x_i) \cdot (1 - \xi \cdot E_{\text{curv}})$$
 
@@ -195,7 +201,7 @@ ClarusBlock(x):
 
 ### 7.1 기존 구현 (`clarus_lm.py`)과의 관계
 
-기존 `clarus_lm.py`는 이 구조의 **V1 구현**이다:
+기존 `clarus_lm.py`는 이 구조의 **V1 구현**이다.
 - `LBONorm`: 구현 완료 (저랭크 LBO 확산)
 - `GaugeLattice`: V1 (채널 혼합 없는 순수 블록 대각)
 - `ClarusAttention`: 구현 완료 (spectral norm)

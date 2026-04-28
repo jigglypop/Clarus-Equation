@@ -104,7 +104,7 @@ $$b_i^{(k+1)} = \text{Hyst}(b_i^{(k)},\; a_i^{(k+1)};\; \tau_i^-,\; \tau_i^+)$$
 4. 수렴 판정: $\|a^{(k+1)} - a^{(k)}\| < \epsilon_R \|a^{(0)}\|$이면 조기 종료
 5. 출력: $z_t = a^{(n_{\text{iter}})}$ (수렴한 활성 패턴)
 
-$R$의 반복 횟수 $n_{\text{iter}}$는 모드에 의존한다:
+$R$의 반복 횟수 $n_{\text{iter}}$는 모드에 의존한다.
 
 | 모드 | $n_{\text{iter}}$ | 해석 |
 |---|---|---|
@@ -121,7 +121,7 @@ $R$의 반복 횟수 $n_{\text{iter}}$는 모드에 의존한다:
 
 $$c_{t+1} = C(z_t,\; a_t,\; o_t,\; m_t)$$
 
-자기비평은 세 항의 합으로 분해한다:
+자기비평은 세 항의 합으로 분해한다.
 
 $$c_{t+1} = c_{\text{pred}} + c_{\text{cons}} + c_{\text{nov}}$$
 
@@ -135,7 +135,7 @@ $$c_{t+1} = c_{\text{pred}} + c_{\text{cons}} + c_{\text{nov}}$$
 
 $$\bar{c}_{t+1} = w_p \|c_{\text{pred}}\| + w_c \|c_{\text{cons}}\| + w_n \|c_{\text{nov}}\|, \qquad w_p + w_c + w_n = 1$$
 
-이 스칼라는 `12_Equation.md` 6.4절의 도파민 신호 $g[t]$와 구조적으로 대응한다:
+이 스칼라는 `12_Equation.md` 6.4절의 도파민 신호 $g[t]$와 구조적으로 대응한다.
 
 $$g[t] \approx \frac{d\bar{c}_t}{dt}$$
 
@@ -214,7 +214,13 @@ $$a_t = W_{\text{act}}\, z_t^{(\text{out})} + b_{\text{act}}$$
 
 ### F.8 기억 갱신 $\mathcal{M}$
 
-$$\mathcal{M}(m_t, z_t, a_t, o_t, c_{t+1}) = \begin{cases} \text{Layer D encode if } \bar{c}_{t+1} > \theta_{\text{encode}} \\ m_t \quad\text{otherwise (놀랍지 않으면 저장하지 않음)} \end{cases}$$
+$$
+\mathcal{M}(m_t, z_t, a_t, o_t, c_{t+1})
+= \begin{cases}
+\text{Layer D encode} & \bar{c}_{t+1} > \theta_{\text{encode}} \\
+m_t & \text{otherwise (놀랍지 않으면 저장하지 않음)}
+\end{cases}
+$$
 
 인코딩 조건: 비평 점수가 임계를 넘을 때만 새 기억을 해마에 기록한다.
 
@@ -436,13 +442,13 @@ $$\text{Proj}(W) = \text{TopK}\big(\text{RowNorm}\big(\text{Hyst}(W;\; \theta_{\
 
 > `12_Equation.md` 4.3절 (E4). F.2의 $\phi_{t+1}$ 갱신이 비어 있었다.
 
-이완 $R$ 실행 후, 잔류장은 선택되지 않은 경로의 분산을 축적한다:
+이완 $R$ 실행 후, 잔류장은 선택되지 않은 경로의 분산을 축적한다.
 
 $$\phi_{t+1} = (1 - \xi) \phi_t + \xi \cdot \text{Var}(a^{(0:n_{\text{iter}})})$$
 
 여기서 $\xi = 1/(e^{1/3}\pi^{1/3}) \approx 0.489$ 는 잔류 이득이다.
 
-잔류장은 세 곳에서 루프에 개입한다:
+잔류장은 세 곳에서 루프에 개입한다.
 
 | 개입 지점 | 수식 | 효과 |
 |---|---|---|
@@ -466,7 +472,7 @@ $$\phi_{t+1} = (1 - \xi) \phi_t + \xi \cdot \text{Var}(a^{(0:n_{\text{iter}})})$
 
 #### F.16.1 이완 내부 희소성
 
-$R$의 매 반복에서 활성 셀 수를 제한한다:
+$R$의 매 반복에서 활성 셀 수를 제한한다.
 
 $$A_t = \{i : |a_i^{(k)}| \geq Q_{1-x_a^*}(|a^{(k)}|)\}, \qquad |A_t| = \lceil x_a^* \cdot N \rceil$$
 
@@ -574,7 +580,7 @@ $$\mathcal{T}_i^{\text{coupled}}(x_i) = \mathcal{T}_i(x_i) \cdot \left(1 - \frac
 
 > evidence.md 5절, synapse.md 참조. F.4에서 도파민만 다뤘으나, 실제 뇌는 4대 조절계를 가진다.
 
-F.4의 학습 게이트 $g[t]$를 4차원 벡터로 확장한다:
+F.4의 학습 게이트 $g[t]$를 4차원 벡터로 확장한다.
 
 $$g_t = (g_{\text{DA}},\; g_{\text{NE}},\; g_{\text{5HT}},\; g_{\text{ACh}})$$
 
@@ -603,7 +609,7 @@ $$T_{\text{effective}} = T_{\text{wake}} \cdot (1 + \beta \cdot g_{\text{5HT}}) 
 
 #### F.20.1 작업 기억 용량
 
-이력 버퍼 $h_t$의 유한 창 $T_h$는 작업 기억의 모델이다:
+이력 버퍼 $h_t$의 유한 창 $T_h$는 작업 기억의 모델이다.
 
 $$|h_t| \leq T_h, \qquad T_h \approx 7 \pm 2 \quad\text{(Miller 1956)}$$
 
@@ -620,7 +626,7 @@ $$h_{t+1} = \text{append}(h_t, (a_t, o_t))[-T_h:]$$
 
 #### F.20.2 주의 (Attention)
 
-주의는 $R$ 내부에서 입력 가중치를 조절하는 메커니즘이다:
+주의는 $R$ 내부에서 입력 가중치를 조절하는 메커니즘이다.
 
 $$u_i^0 = \alpha_i \cdot \text{encode}(S_t), \qquad \alpha_i = \text{softmax}(\text{salience}(i, S_t))$$
 
@@ -655,7 +661,7 @@ $$\hat{o}_{t+1}^{\text{cb}} = \hat{o}_t^{\text{cb}} + \alpha_{\text{cb}} \cdot (
 
 > `14_BrainRuntimeSpec.md` 5절. 루프의 시간 구조가 빠져 있었다.
 
-에이전트 루프의 각 단계는 다른 시간 척도에서 작동한다:
+에이전트 루프의 각 단계는 다른 시간 척도에서 작동한다.
 
 | 루프 단계 | 시간 척도 | 뇌파 대역 | 뇌 대응 |
 |---|---|---|---|
@@ -932,7 +938,15 @@ $$\tau_{\text{sleep}} \approx 4.2 \text{ h} \quad\text{(NREM decay)}$$
 
 CE 매핑:
 
-$$\sum_{\tau=0}^{T_{\text{wake}}} \bar{c}_\tau^2 = \frac{T_{\text{wake}}}{\tau_{\text{wake}}} \cdot P_{\text{th}} \quad\Longrightarrow\quad \bar{c}_{\text{avg}}^2 = \frac{P_{\text{th}}}{\tau_{\text{wake}}} \approx \frac{1}{65520} \text{ (if } P_{\text{th}} = 1\text{)}$$
+$$
+\sum_{\tau=0}^{T_{\text{wake}}} \bar{c}_\tau^2
+= \frac{T_{\text{wake}}}{\tau_{\text{wake}}} \cdot P_{\text{th}}
+\quad\Longrightarrow\quad
+\bar{c}_{\text{avg}}^2
+= \frac{P_{\text{th}}}{\tau_{\text{wake}}}
+\approx \frac{1}{65520}
+\quad\text{(if } P_{\text{th}} = 1\text{)}
+$$
 
 이것은 비평 점수의 적분이 16시간 각성 후 수면 임계에 도달하는 제약이다.
 

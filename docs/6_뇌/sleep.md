@@ -80,15 +80,15 @@ $$\delta(t) \propto e^{-t/\tau_{\text{fold}}}\cos(2\pi f_\delta t), \quad f_\del
 
 REM 수면은 접힘에서 **비선택된 경로를 재조합하는 위상**이다.
 
-CE에서 비선택 경로의 에너지는 사라지지 않고 클라루스장으로 전환된다:
+CE에서 비선택 경로의 에너지는 사라지지 않고 클라루스장으로 전환된다.
 
 $$\Omega_{\text{non-selected}} = 1 - \varepsilon^2 = 95.1\%$$
 
-REM 수면 동안 뇌는 이 비선택 경로 풀(pool)에서 새로운 조합을 탐색한다:
+REM 수면 동안 뇌는 이 비선택 경로 풀(pool)에서 새로운 조합을 탐색한다.
 
 $$Z_{\text{REM}} = \int_{\gamma \in \Gamma_{\text{non-selected}}} \mathcal{D}\gamma\; e^{iS[\gamma]/\hbar} \cdot \eta_{\text{noise}}$$
 
-이것이 **꿈의 CE 해석**이다:
+이것이 **꿈의 CE 해석**이다.
 - 꿈의 내용이 기이한 이유: 비선택 경로(고곡률 영역)를 탐색하기 때문
 - 꿈에서 감정이 강한 이유: 비선택 경로의 에너지가 전체의 95%이기 때문
 - 악몽이 가끔 창의적 통찰을 주는 이유: 위상 간섭($e^{iS}$)이 새로운 경로 조합을 생성하기 때문
@@ -211,7 +211,7 @@ $$\Omega_{\text{non-selected}} = \underbrace{\Omega_{DM}}_{\text{암묵 기억 (
 
 ### 3.4 프루스트 효과: 비선택 경로의 재활성화
 
-갑작스러운 감각 자극(냄새, 음악)이 오래된 기억을 불러일으키는 프루스트 효과(involuntary memory)는 CE에서 다음과 같이 해석된다:
+갑작스러운 감각 자극(냄새, 음악)이 오래된 기억을 불러일으키는 프루스트 효과(involuntary memory)는 CE에서 다음과 같이 해석된다.
 
 감각 자극이 비선택 경로 풀에서 특정 경로와 공명하면:
 
@@ -229,7 +229,7 @@ $$\langle\Phi(x)\Phi(y)\rangle \neq 0 \quad \text{for}\quad |x-y| < \xi$$
 
 $$\Delta w_{ij}[t] = \eta\Big(A_+\,p_i[t]\,s_j[t] - A_-\,s_i[t]\,q_j[t]\Big)$$
 
-이것을 CE 부트스트랩의 미시적 실현으로 해석한다:
+이것을 CE 부트스트랩의 미시적 실현으로 해석한다.
 
 - **LTP** ($\Delta w > 0$, pre $\to$ post 인과): 경로가 접힘을 통과 = 생존 ($\varepsilon^2$ 기여)
 - **LTD** ($\Delta w < 0$, post $\to$ pre 역인과): 경로가 접힘에 의해 억제 = 비선택 ($1-\varepsilon^2$ 기여)
@@ -246,7 +246,7 @@ $$\delta[t] = \frac{d}{dt}\|p(t) - p^*\|$$
 
 $$W_{t+1} = \Pi\!\big(W_t + \Delta W_t\big)$$
 
-투영 연산자 $\Pi$는 CE의 접힘에 대응한다:
+투영 연산자 $\Pi$는 CE의 접힘에 대응한다.
 - **top-k pruning**: 뉴런당 상위 $k$개만 유지 = 생존율 $\varepsilon^2$에 의한 경로 선택
 - **synaptic scaling**: 행/열 정규화 = 에너지 보존 (C2)
 - **히스테리시스**: on/off 임계치 = 접힘 임계 곡률
@@ -309,7 +309,7 @@ $$\text{Layer}(x) = \underbrace{\text{Bind}(x_3)}_{\text{SU(3), 74.1\%}} + \unde
 
 $$d_3 : d_2 : d_1 = \alpha_s : \alpha_w : \alpha_{em} = 0.118 : 0.034 : 0.008$$
 
-**유니타리 제약.** 각 층의 전이 행렬에 스펙트럼 정규화를 적용한다:
+**유니타리 제약.** 각 층의 전이 행렬에 스펙트럼 정규화를 적용한다.
 
 $$\sigma_1(W_{\text{proj}}) \leq 1$$
 
@@ -565,7 +565,7 @@ $d \neq 3$이면 같은 형태의 반복이 불필요할 수 있다: $D_{\text{e
 
 **(B) CE 해석.** 비선택 경로 풀(95.1%)과 현재 경로 사이의 **일시적 공명**이다.
 
-3.4절에서 프루스트 효과를 상관함수 $\langle\Phi(x)\Phi(y)\rangle \neq 0$으로 설명했다. 데자뷔는 그 역방향이다:
+3.4절에서 프루스트 효과를 상관함수 $\langle\Phi(x)\Phi(y)\rangle \neq 0$으로 설명했다. 데자뷔는 그 역방향이다.
 
 - 프루스트 효과: 감각 자극 $\to$ 비선택 경로 재활성화 (외부 트리거)
 - 데자뷔: 현재 경로가 비선택 경로와 **우연히 공명** (내부 트리거)
@@ -629,7 +629,7 @@ $$\langle\Phi_{\text{limb}}(t)\Phi_{\text{limb}}(0)\rangle \propto e^{-t/\tau_{\
 
 **(B) CE 해석 [`Hypothesis`].** CE 생존함수 $S(D) = e^{-D}$를 출발점으로 삼는다.
 
-지각된 강도를 "생존율의 정보량(surprise)"으로 정의한다:
+지각된 강도를 "생존율의 정보량(surprise)"으로 정의한다.
 
 $$\psi = -\ln P_{\text{survive}}$$
 
@@ -679,7 +679,7 @@ $N_w = 2$의 쌍대성이 완전 대칭이 아니라 **약간 깨진** 대칭을
 
 `homeomorphism.md` 5절에서 잔차 상한은 $\|e\| \le \frac{\rho}{1-\rho}U$이다. (I1) 아래에서 $\rho/(1-\rho) \approx 0.183$.
 
-명상은 내부 잡음을 감소시켜 섭동 $U \to 0$에 접근한다:
+명상은 내부 잡음을 감소시켜 섭동 $U \to 0$에 접근한다.
 - 잡념 감소 = 비최적 경로 누적 감소 = 곡률 에너지 축적 속도 감소
 - 주의 집중 = 접힘 효율 증가 = NREM 없이도 부분적 접힘 실행
 - 반복 수련 = $B$의 수축률 개선
@@ -766,7 +766,7 @@ $$\langle\Phi_{\text{emotional}}\Phi_{\text{emotional}}\rangle \gg \langle\Phi_{
 
 $$R_{\mu\nu} - \frac{1}{2}Rg_{\mu\nu} = \kappa \cdot T_{\mu\nu}(\mathcal{K})$$
 
-연산 복잡도 텐서 $\mathcal{K}$에 **기대(expectation)가 포함**된다. "치유될 것이다"라는 기대는 내부 상태공간의 곡률을 변경한다:
+연산 복잡도 텐서 $\mathcal{K}$에는 **기대(expectation)가 포함**된다. "치유될 것이다"라는 기대는 내부 상태공간의 곡률을 변경한다.
 
 - 기대 = 미래 경로의 사전 접힘 (predictive folding)
 - 사전 접힘이 실제 생리적 경로에 영향을 준다

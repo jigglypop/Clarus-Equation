@@ -54,7 +54,7 @@ $|\kappa|$가 크면 "그 방향으로 설계가 예민하다" = 살얼음판.
 | 1 | U(1) | $4.9\%$ | **자원 배분(attention)**: 집중/분산 |
 | $\Phi$ | 중력 | 전역 | **LBO 안정화**: 밸런스 곡률 평탄화 |
 
-설계 파라미터 공간도 이 비율을 따라야 한다:
+설계 파라미터 공간도 이 비율을 따라야 한다.
 
 $$\dim(\text{유닛 스펙}) : \dim(\text{전략 옵션}) : \dim(\text{자원 변수}) \approx 74 : 21 : 5$$
 
@@ -108,7 +108,7 @@ $$Z = \int \mathcal{D}\Phi\, e^{-S[\Phi]}$$
 
 $$Z_{\text{design}} = \int \mathcal{D}x\, e^{-S_{\text{balance}}[x]}$$
 
-이 적분을 몬테카를로로 근사하면 자연스럽게 ES(Evolution Strategy)가 된다:
+이 적분을 몬테카를로로 근사하면 자연스럽게 ES(Evolution Strategy)가 된다.
 
 $$\nabla_x S_\sigma = \frac{1}{\sigma} \mathbb{E}_{\epsilon \sim \mathcal{N}(0,I)}\!\left[S_{\text{balance}}(x + \sigma\epsilon)\, \epsilon\right]$$
 
@@ -142,7 +142,7 @@ $$\hat{S}(x) = \frac{1}{N} \sum_{s=1}^{N} \left[ L_{\text{win}}(x; \omega_s) + \
 
 ## 8. 퇴화 해 방지
 
-CE 정보 엔트로피 항 $\gamma S_{\text{Info}}$가 퇴화를 구조적으로 방지한다:
+CE 정보 엔트로피 항 $\gamma S_{\text{Info}}$가 퇴화를 구조적으로 방지한다.
 
 - **교전 없는 50:50**: $S_{\text{meta}} \to 0$ (정보 소멸) → 엔트로피 항이 패널티
 - **극단적 게임 길이**: $|\nabla P|^2 \to \infty$ → 1차 항이 패널티

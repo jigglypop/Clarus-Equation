@@ -20,7 +20,7 @@
 
 ### 2.1 기존 코드 구조
 
-`examples/ai/clarus_lm.py`가 CE-LLM의 완전한 모델 정의를 포함한다:
+`examples/ai/clarus_lm.py`가 CE-LLM의 완전한 모델 정의를 포함한다.
 
 ```
 ClarusLM
@@ -197,7 +197,7 @@ def transplant_mlp(model, distill_steps=500):
 
 ### 3.4 미세조정
 
-이식 후 CE 파라미터(LBO의 h, V, 곡률 정규화)를 미세조정한다:
+이식 후 CE 파라미터(LBO의 h, V, 곡률 정규화)를 미세조정한다.
 
 ```python
 # CE 파라미터만 학습 (나머지 동결)
@@ -478,9 +478,9 @@ Phi   smoothing: LBO (rank=32)      # 안정화: 전역 평탄화
    - 수면 루프 잔차 `1회 15.5%`, `2회 2.4%`, `3회 0.37%`
    - 곡률 제약은 hard bound가 아니라 안정화 편향
 2. **A/B 측정**
-   - Dense vs Sparse
-   - Wake-only vs Sleep
-   - Text-only vs Grounded
+   - Dense와 Sparse
+   - Wake-only와 Sleep
+   - Text-only와 Grounded
 3. **게이트 판정**
    - 최적점이 `4-5%` 근방인가
    - sleep이 wake-only보다 drift를 줄이는가

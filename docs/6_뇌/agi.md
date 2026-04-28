@@ -181,11 +181,11 @@ $r_m = 0$이면 V1(순수 대각, dense 근사 불가). $r_m \sim d/8$이면 충
 
 **파라미터**: block-diagonal 부분 $\sum_i 2 d_i h_i$ + 혼합 $2 d r_m$ + LBO $rd + 2d + 1$.
 
-**vs 표준 FFN** ($2 \times d \times 4d = 8d^2$):
+**표준 FFN 대비** ($2 \times d \times 4d = 8d^2$):
 
 $$\text{CE 비율} = \frac{\sum_i 2 d_i h_i + 2dr_m}{8d^2}$$
 
-$d=768$, $r_m = 96$일 때: block-diagonal $\approx 2.81\text{M}$, 혼합 $\approx 0.15\text{M}$, 총 $\approx 2.96\text{M}$ vs 표준 $4.72\text{M}$ = **37% 감소**.
+$d=768$, $r_m = 96$일 때 block-diagonal은 $\approx 2.81\text{M}$, 혼합은 $\approx 0.15\text{M}$, 총합은 $\approx 2.96\text{M}$이다. 표준 $4.72\text{M}$ 대비 **37% 감소**한다.
 
 ### 6.4 연산자 3: 유니타리 사영
 
@@ -203,7 +203,7 @@ Attention 출력 사영 $W_{\text{proj}}$의 최대 특이값이 1을 넘지 않
 
 $$\mathcal{L} = \mathcal{L}_{\text{CE}} + \lambda(t) \cdot \frac{1}{N_{\text{layers}}} \sum_l \|\Delta_g h_l\|^2$$
 
-$\lambda(t)$는 학습 초반에 켜고 후반에 감쇄해야 한다:
+$\lambda(t)$는 학습 초반에 켜고 후반에 감쇄해야 한다.
 
 $$\lambda(t) = \lambda_0 \cdot \min\!\left(1,\; \frac{t}{t_{\text{warmup}}}\right) \cdot \frac{1}{2}\!\left(1 + \cos\frac{\pi t}{t_{\max}}\right)$$
 
@@ -220,7 +220,7 @@ $$\lambda(t) = \lambda_0 \cdot \min\!\left(1,\; \frac{t}{t_{\text{warmup}}}\righ
 
 ### 6.7 부트스트랩 조건과 네트워크 희소성
 
-부트스트랩 고정점(3절)은 네트워크의 에너지 분배를 제약한다:
+부트스트랩 고정점(3절)은 네트워크의 에너지 분배를 제약한다.
 
 | 성분 | 고정점 | LLM 해석 |
 |---|---|---|
@@ -349,7 +349,7 @@ $$
 
 좌변은 보존 동역학이고, 우변의 $\gamma\dot\Phi$는 산일이다. $\frac{\partial R}{\partial\Phi}$항은 등각 계량의 자기 역반응이다.
 
-각 항의 물리적 의미:
+각 항의 물리적 의미는 다음과 같다.
 
 | 항 | 역할 |
 |---|---|

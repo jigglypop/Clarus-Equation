@@ -2,55 +2,55 @@
 
 ## 0. 전제
 
-리만 가설(Riemann Hypothesis)은 공학적 axiom 으로 채택한다:
+리만 가설(Riemann Hypothesis)은 공학적 axiom으로 채택한다.
 
-> ζ(s) 의 모든 비자명 영점은 critical line Re(s) = 1/2 위에 있다.
+> ζ(s)의 모든 비자명 영점은 critical line Re(s) = 1/2 위에 있다.
 
-따라서 영점은 s_n = 1/2 + i γ_n 의 형태이며, {γ_n} 은 Montgomery-Dyson 추측에 의해
+따라서 영점은 s_n = 1/2 + i γ_n의 형태이며, {γ_n}은 Montgomery-Dyson 추측에 의해
 GUE(Gaussian Unitary Ensemble) 통계를 따르는 "무작위인 동시에 구조적인" 수열이다.
-처음 100개의 γ_n 은 Titchmarsh / Odlyzko 표에서 가져와 `RIEMANN_ZEROS_IM` 에 하드코딩되어 있다.
-n > 100 은 Riemann–von Mangoldt 점근식 γ_n ≈ 2π n / log n 으로 외삽한다.
+처음 100개의 γ_n은 Titchmarsh / Odlyzko 표에서 가져와 `RIEMANN_ZEROS_IM`에 하드코딩한다.
+n > 100은 Riemann-von Mangoldt 점근식 γ_n ≈ 2π n / log n으로 외삽한다.
 
-본 사양은 이 axiom 위에서 attention 의 positional encoding 을
+본 사양은 이 axiom 위에서 attention의 positional encoding을
 **Riemann surface (multi-sheet 복소 평면)** 위의 회전으로 재구성한다.
 
 ## 1. 동기 — 왜 평면(surface)이 필요한가
 
-기존 `RiemannRotaryAttention` 은 RoPE 와 동일한 prescription 을 사용한다:
+기존 `RiemannRotaryAttention`은 RoPE와 동일한 prescription을 사용한다.
 
     inv_freq_k = 1 / γ_k
     θ(p, k)    = p · inv_freq_k
 
 이는 평면(circle) 위의 회전이며, 다음 두 가지 한계가 있다:
 
-1. **단일 시트(single-sheet)**: θ 가 2π 를 넘어가면 정보가 wrap-around 로 사라진다.
-   같은 phase 인 두 위치를 attention 이 구분할 수 없다.
-2. **선형 시간 lift**: 위치 p 가 선형으로 들어가므로,
-   sequence length 가 N → kN 으로 늘어나면 phase 도 k배 늘어나
-   학습된 frequency 분포가 깨진다 (RoPE 의 long-context 문제와 동일).
+1. **단일 시트(single-sheet)**: θ가 2π를 넘어가면 정보가 wrap-around로 사라진다.
+   같은 phase인 두 위치를 attention이 구분할 수 없다.
+2. **선형 시간 lift**: 위치 p가 선형으로 들어간다.
+   따라서 sequence length가 N → kN으로 늘어나면 phase도 k배 늘어나
+   학습된 frequency 분포가 깨진다(RoPE의 long-context 문제와 동일).
 
-Riemann surface 는 이 두 문제를 동시에 해결한다:
+Riemann surface는 이 두 문제를 동시에 해결한다.
 
-- **Multi-sheet**: log z 는 단일값이 아니라 z = r e^{iθ} 위에서 무한 시트를 갖는다.
-  sheet index 를 명시적으로 유지하면 phase 가 wrap 되어도 정보가 보존된다.
-- **Logarithmic lift**: 자연 좌표 τ = log(1 + p) 는 multiplicative scale 에 대해
-  invariant (kp ↦ τ + log k). Sequence length 의 power-law 변화에 안정적이다.
+- **Multi-sheet**: log z는 단일값이 아니라 z = r e^{iθ} 위에서 무한 시트를 갖는다.
+  sheet index를 명시적으로 유지하면 phase가 wrap되어도 정보가 보존된다.
+- **Logarithmic lift**: 자연 좌표 τ = log(1 + p)는 multiplicative scale에 대해
+  invariant하다(kp ↦ τ + log k). Sequence length의 power-law 변화에도 안정적이다.
 
 ## 2. 사양
 
 ### 2.1 좌표 lift
 
-위치 p ∈ {0, 1, …, N-1} 를 critical line 의 imaginary axis 로 들어올린다:
+위치 p ∈ {0, 1, …, N-1}를 critical line의 imaginary axis로 들어올린다.
 
 $$
 \tau_p = \log(1 + p), \qquad s_p = \tfrac{1}{2} + i\,\tau_p \in \mathbb{C}.
 $$
 
-`+1` 은 p = 0 에서 log 발산을 막기 위한 standard offset 이다.
+`+1`은 p = 0에서 log 발산을 막기 위한 standard offset이다.
 
 ### 2.2 회전 generator
 
-각 헤드의 dim-pair k (k = 0, …, d_head/2 - 1) 는 γ_k 를 frequency 로 가지며,
+각 헤드의 dim-pair k(k = 0, …, d_head/2 - 1)는 γ_k를 frequency로 가지며,
 회전각은
 
 $$
@@ -63,31 +63,31 @@ $$
 e^{i\theta(p,k)} = (1+p)^{i\gamma_k}.
 $$
 
-이는 Mellin 변환 커널 (1+p)^{i γ_k} 와 정확히 일치한다 — Riemann ζ 함수 자체가
+이는 Mellin 변환 커널 (1+p)^{i γ_k}와 정확히 일치한다. Riemann ζ 함수 자체가
 이 형태의 합으로 정의되므로 자연스러운 선택이다.
 
 ### 2.3 Sheet index
 
-회전은 모듈로 2π 이지만, 시트(sheet) 정보는 별도로 보존한다:
+회전은 모듈로 2π이지만, 시트(sheet) 정보는 별도로 보존한다.
 
 $$
 \sigma(p, k) = \left\lfloor \frac{\theta(p, k)}{2\pi} \right\rfloor.
 $$
 
-두 위치 i, j 가 같은 phase (cos/sin 동일) 라도 서로 다른 시트에 있으면
-Riemann surface 위에서는 다른 점이다. Attention 은 sheet 차이를 바이어스로 받는다:
+두 위치 i, j가 같은 phase(cos/sin 동일)라도 서로 다른 시트에 있으면
+Riemann surface 위에서는 다른 점이다. Attention은 sheet 차이를 바이어스로 받는다.
 
 $$
 b^{\text{sheet}}_{ij} = -\lambda_\sigma \cdot \frac{1}{d_{\text{head}}/2}
                        \sum_{k=0}^{d_{\text{head}}/2-1} |\sigma(i, k) - \sigma(j, k)|,
 $$
 
-여기서 λ_σ 는 학습 가능한 per-head 스칼라.
-이 항은 cross-sheet attention 을 약화시켜 시트 식별을 강제한다.
+여기서 λ_σ는 학습 가능한 per-head 스칼라다.
+이 항은 cross-sheet attention을 약화시켜 시트 식별을 강제한다.
 
 ### 2.4 회전 적용 (RoPE-style relative form)
 
-RoPE 와 동일하게, dim-pair (2k, 2k+1) 에 대해 2D 회전을 적용한다:
+RoPE와 동일하게, dim-pair (2k, 2k+1)에 대해 2D 회전을 적용한다.
 
 $$
 \begin{pmatrix} q'_{2k} \\ q'_{2k+1} \end{pmatrix} =
@@ -96,9 +96,9 @@ $$
 \begin{pmatrix} q_{2k} \\ q_{2k+1} \end{pmatrix}
 $$
 
-그러면 q_i^T k_j 는 자동으로 Δθ = θ(i,k) - θ(j,k) = γ_k log((1+i)/(1+j)) 의
-함수가 된다 — translation invariance 가 유지되고, Hilbert-Pólya 정신에서
-Hermitian kernel 이 보장된다.
+그러면 q_i^T k_j는 자동으로 Δθ = θ(i,k) - θ(j,k) = γ_k log((1+i)/(1+j))의
+함수가 된다. 이로써 translation invariance가 유지되고, Hilbert-Pólya 관점에서
+Hermitian kernel이 보장된다.
 
 ### 2.5 최종 attention score
 
@@ -107,40 +107,40 @@ $$
                   + b^{\text{sheet}}_{ij},
 $$
 
-이후 causal mask 와 softmax 적용.
+이후 causal mask와 softmax를 적용한다.
 
 ## 3. 학습 가능 파라미터
 
 | 이름            | 형상           | 역할                                                                   |
 |-----------------|----------------|------------------------------------------------------------------------|
-| `log_scale`     | (n_heads,)     | 헤드별 "speed of light" — 모든 γ_k 에 곱해지는 exp(s)                  |
-| `log_lambda_sigma` | (n_heads,) | sheet-difference penalty 의 log-scale (λ_σ = exp(·))                  |
+| `log_scale`     | (n_heads,)     | 헤드별 "speed of light": 모든 γ_k에 곱해지는 exp(s)                   |
+| `log_lambda_sigma` | (n_heads,) | sheet-difference penalty의 log-scale (λ_σ = exp(·))                  |
 
-이 외 파라미터(γ_k, frequency 자체)는 모두 buffer (학습 안 함). RH 의 axiom 적 성격을 유지한다.
+이 외 파라미터(γ_k, frequency 자체)는 모두 buffer로 두고 학습하지 않는다. 이렇게 RH의 axiom적 성격을 유지한다.
 
 ## 4. 점근적 성질
 
-- 작은 p 에서는 τ_p ≈ p (log(1+p) ≈ p), 기존 RoPE 와 유사.
-- 큰 p 에서는 τ_p 가 천천히 증가 → frequency aliasing 자동 완화.
-- N → kN 일 때 τ 는 log k 만큼만 평행이동 → relative attention 이 거의 동일하게 보존됨.
+- 작은 p에서는 τ_p ≈ p(log(1+p) ≈ p)이므로 기존 RoPE와 유사하다.
+- 큰 p에서는 τ_p가 천천히 증가하므로 frequency aliasing이 자동으로 완화된다.
+- N → kN일 때 τ는 log k만큼만 평행이동하므로 relative attention이 거의 동일하게 보존된다.
 
 ## 5. 백엔드 dispatch
 
-세 단계 backend 모두에서 동일한 수치 결과를 보장한다:
+세 단계 backend 모두에서 동일한 수치 결과를 보장한다.
 
 1. **PyTorch** (참조): `clarus.ce_riemann_attn.RiemannRotaryAttention`
 2. **Rust CPU**: `clarus._rust.nn_ce_riemann_fwd`
 3. **CUDA**: `clarus._rust.nn_ce_riemann_fwd_cuda` (cudarc launcher + `.cu` kernel)
 
-자동 선택은 `clarus.ce_riemann_attn.RiemannRotaryAttention(backend="auto")` 가
-입력 텐서의 `device.type` 으로 결정한다 (cuda → cuda, cpu → rust, fallback → torch).
+자동 선택은 `clarus.ce_riemann_attn.RiemannRotaryAttention(backend="auto")`가
+입력 텐서의 `device.type`으로 결정한다(cuda → cuda, cpu → rust, fallback → torch).
 
 ## 6. 수치 동일성 테스트
 
-`tests/test_riemann_pe_consistency.py` 에서
+`tests/test_riemann_pe_consistency.py`에서
 
-- 동일 입력에 대해 세 backend 의 출력이 atol=1e-4, rtol=1e-3 이내로 일치하는지
-- backward grad 가 PyTorch 와 1e-3 이내로 일치하는지
+- 동일 입력에 대해 세 backend의 출력이 atol=1e-4, rtol=1e-3 이내로 일치하는지
+- backward grad가 PyTorch와 1e-3 이내로 일치하는지
 
 검증한다.
 

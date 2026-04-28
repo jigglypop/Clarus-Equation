@@ -26,9 +26,14 @@
 
 **P1: 3x3+1 격자 합성곱**
 
-표준 CNN의 합성곱 필터를 3x3+1 격자로 분해한다:
+표준 CNN의 합성곱 필터를 3x3+1 격자로 분해한다.
 
-$$\text{Conv}(x) = \underbrace{\text{Conv}_3(x_{\text{high}})}_{\text{SU(3): 텍스처 결합, 74.1\%}} + \underbrace{\text{Conv}_2(x_{\text{mid}})}_{\text{SU(2): 경계 결정, 21.1\%}} + \underbrace{\text{Conv}_1(x_{\text{low}})}_{\text{U(1): 주의 게이팅, 4.9\%}}$$
+$$
+\text{Conv}(x)
+= \underbrace{\text{Conv}_3(x_{\text{high}})}_{\text{SU(3): 텍스처 결합, 74.1\%}}
++ \underbrace{\text{Conv}_2(x_{\text{mid}})}_{\text{SU(2): 경계 결정, 21.1\%}}
++ \underbrace{\text{Conv}_1(x_{\text{low}})}_{\text{U(1): 주의 게이팅, 4.9\%}}
+$$
 
 채널 분할: 64채널 CNN이면 SU(3)=47, SU(2)=14, U(1)=3.
 
@@ -62,7 +67,7 @@ ViT는 Transformer 기반이므로 LLM과 동일한 방식으로 적용:
 
 **추가: 패치 토큰의 공간 곡률**
 
-이미지 패치 토큰 사이의 공간 관계에서 곡률을 정의한다:
+이미지 패치 토큰 사이의 공간 관계에서 곡률을 정의한다.
 
 $$\kappa_{\text{spatial}} = \sum_{(i,j) \in \text{neighbors}} \|h_i - h_j\|^2$$
 
@@ -74,7 +79,12 @@ YOLO/DETR 등의 물체 감지에서:
 
 **P1: 앵커/쿼리 분할**
 
-$$\text{detection queries} = \underbrace{\text{class queries}}_{\text{SU(3), 74.1\%}} + \underbrace{\text{box queries}}_{\text{SU(2), 21.1\%}} + \underbrace{\text{attention queries}}_{\text{U(1), 4.9\%}}$$
+$$
+\text{detection queries}
+= \underbrace{\text{class queries}}_{\text{SU(3), 74.1\%}}
++ \underbrace{\text{box queries}}_{\text{SU(2), 21.1\%}}
++ \underbrace{\text{attention queries}}_{\text{U(1), 4.9\%}}
+$$
 
 100개 쿼리면: 분류 74개, 박스 21개, 주의 5개.
 
@@ -158,7 +168,7 @@ $$\kappa(s, a) = \|\Delta_g h(s, a)\|^2 < \kappa_{\text{safe}}$$
 
 **P1: 3x3+1 주파수 분할**
 
-음성 스펙트로그램을 세 주파수 대역으로 분할한다:
+음성 스펙트로그램을 세 주파수 대역으로 분할한다.
 
 | 대역 | 주파수 | CE 대응 | 비율 | 역할 |
 |---|---|---|---|---|
@@ -362,7 +372,7 @@ $$\Delta_g \approx L = D - W$$
 
 **P5: 곡률 = 과평활화(over-smoothing) 제어**
 
-GNN의 핵심 문제인 과평활화를 곡률로 진단한다:
+GNN의 핵심 문제인 과평활화를 곡률로 진단한다.
 
 $$\kappa_{\text{graph}} = \sum_v \|\Delta_g h_v\|^2$$
 

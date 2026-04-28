@@ -2,7 +2,7 @@
 
 ## 7.1 동기
 
-`docs/경로적분.md` §51-67은 `{e, π, i, 1, 0}`을 CE의 **최소 생성 문법** 으로 규정한다:
+`docs/경로적분.md` §51-67은 `{e, π, i, 1, 0}`을 CE의 **최소 생성 문법**으로 규정한다.
 
 | 상수 | 코어 역할 | 대표 출력 | 등급 |
 |---|---|---|---|
@@ -93,7 +93,7 @@ $W_{\text{up}}$의 한 축을 $\gamma_n$ 간격으로 스케일. 키 좌표가 G
 
 ### 7.3.1 Position Encoding (5 seeds × 500 steps, PR #1 commit 3bbc558)
 
-| 변형 | PPL | vs RoPE |
+| 변형 | PPL | RoPE 대비 |
 |---|---|---|
 | std_abs (absolute PE) | 25.29 ± 0.22 | +64σ worse |
 | std_rope | 14.94 ± 0.28 | baseline |
@@ -105,7 +105,7 @@ $W_{\text{up}}$의 한 축을 $\gamma_n$ 간격으로 스케일. 키 좌표가 G
 
 ### 7.3.2 Recursive ClarusCell (3 seeds × 300 steps, commit f7f17f4)
 
-| 변형 | PPL | vs RoPE | vs k1 | time |
+| 변형 | PPL | RoPE 대비 | k1 대비 | 시간 |
 |---|---|---|---|---|
 | std_rope | 22.99 ± 0.67 | baseline | — | 1.0x |
 | euler_ce_k1 | 21.36 ± 0.54 | −2.2σ | — | 1.15x |
@@ -120,7 +120,7 @@ $W_{\text{up}}$의 한 축을 $\gamma_n$ 간격으로 스케일. 키 좌표가 G
 
 모두 k=3 recursive 위:
 
-| 변형 | PPL | vs euler_ce_std |
+| 변형 | PPL | euler_ce_std 대비 |
 |---|---|---|
 | euler_ce_std (baseline) | 18.42 ± 0.47 | — |
 | **euler_ce_swiglu** | **17.78 ± 0.78** | **−1.21σ WIN** |
@@ -173,8 +173,8 @@ Dual-graph attention의 gate를 학습 자유도로 풀었을 때, Borbély 2-pr
 
 | 층 | 채택 | 공헌 |
 |---|---|---|
-| Position encoding | **EulerCEAttention** (π-phase + e-decay) | −5.17σ (vs RoPE) |
-| Depth structure | **Recursive k=3** (bootstrap fixed-point) | −9.0σ (vs single-pass) |
+| Position encoding | **EulerCEAttention** (π-phase + e-decay) | RoPE 대비 −5.17σ |
+| Depth structure | **Recursive k=3** (bootstrap fixed-point) | single-pass 대비 −9.0σ |
 | FFN | **SwiGLU + Riemann init** | −1.21σ + 분산 3x 감소 |
 
 **최종 PPL**: 22.99 (RoPE 기준) → 17.51 (= **−23.8% reduction**)
