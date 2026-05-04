@@ -218,6 +218,71 @@ def module_block_loss(values: np.ndarray, modules: list[str]) -> tuple[float, di
     return block_loss(values, module_families)
 
 
+def labels_for_model(modules: list[str], model: str) -> list[str]:
+    if model == "all_one":
+        return ["all"] * len(modules)
+    if model == "layer":
+        return [module_layer(module) for module in modules]
+    if model == "module_family":
+        return [module.rsplit("_", 1)[1] for module in modules]
+    if model == "module":
+        return list(modules)
+    if model == "lateral_vs_other":
+        return [
+            "lateral" if module.endswith("_Lateral") or module.endswith("_LatSub") else "other"
+            for module in modules
+        ]
+    if model == "avoidance_vs_other":
+        return ["avoidance" if module.endswith("_Avoidance") else "other" for module in modules]
+    if model == "taxis_vs_other":
+        return ["taxis" if module.endswith("_Taxis") else "other" for module in modules]
+    raise ValueError(f"unknown model: {model}")
+
+
+def compare_layer_countermodels(
+    matrix: np.ndarray,
+    modules: list[str],
+    permutations: int,
+) -> dict[str, object]:
+    out = {}
+    n = matrix.size
+    for model in (
+        "all_one",
+        "layer",
+        "module_family",
+        "lateral_vs_other",
+        "avoidance_vs_other",
+        "taxis_vs_other",
+        "module",
+    ):
+        labels = labels_for_model(modules, model)
+        gate = permutation_gate(matrix, labels, permutations)
+        label_count = len(set(labels))
+        k = label_count * label_count
+        saturated = k >= n or float(gate["layer_block_loss"]) <= 1e-12
+        rss = max(float(gate["layer_block_loss"]), 1e-12)
+        bic = n * float(np.log(rss / max(n, 1))) + k * float(np.log(max(n, 1)))
+        out[model] = {
+            "label_count": label_count,
+            "parameter_count": k,
+            "saturated": saturated,
+            "gate": gate,
+            "bic_like": bic,
+        }
+    eligible = {name: row for name, row in out.items() if not bool(row["saturated"])}
+    best_bic = min(eligible.items(), key=lambda item: float(item[1]["bic_like"]))
+    best_loss = min(eligible.items(), key=lambda item: float(item[1]["gate"]["layer_block_loss"]))
+    return {
+        "models": out,
+        "best_bic_like_model_excluding_saturated": best_bic[0],
+        "best_loss_model_excluding_saturated": best_loss[0],
+        "warning": (
+            "Countermodels test whether L1/L2/L3 is uniquely supported. "
+            "Saturated module labels are excluded from best-model calls."
+        ),
+    }
+
+
 def robustness_gates(
     matrices: dict[str, np.ndarray],
     modules: list[str],
@@ -312,6 +377,7 @@ def write_report(output: dict[str, object], path: Path) -> None:
     direction = output["directionality"]  # type: ignore[assignment]
     stability = output["laplacian_stability"]  # type: ignore[assignment]
     robustness = output["robustness"]  # type: ignore[assignment]
+    counter = output["countermodel_check"]  # type: ignore[assignment]
     lines = [
         "# C. elegans 원시 신경계 그래프 게이트",
         "",
@@ -370,6 +436,27 @@ def write_report(output: dict[str, object], path: Path) -> None:
             "",
             "weighted all/chemical/binary 조건에서 L1/L2/L3 층화가 유지되는지 본다. electrical-only는 gap junction 성격상 층화보다 lateral coupling이 강할 수 있으므로 별도 해석한다.",
             "",
+            "## 반례 점검",
+            "",
+            "| model | labels | params | block/flat | p | BIC-like | saturated |",
+            "|---|---:|---:|---:|---:|---:|---|",
+        ]
+    )
+    for name, row in counter["models"].items():
+        layer_gate = row["gate"]
+        lines.append(
+            f"| {name} | {row['label_count']} | {row['parameter_count']} | "
+            f"{layer_gate['layer_over_flat']:.6f} | "
+            f"{layer_gate['p_value_loss_le_observed']:.6f} | "
+            f"{row['bic_like']:.3f} | {row['saturated']} |"
+        )
+    lines.extend(
+        [
+            "",
+            f"포화모델을 제외한 BIC-like 최저 모델은 `{counter['best_bic_like_model_excluding_saturated']}`이다.",
+            f"포화모델을 제외한 순수 손실 최저 모델은 `{counter['best_loss_model_excluding_saturated']}`이다.",
+            "따라서 L1/L2/L3 층화가 유일한 설명인지, 아니면 module family가 더 경제적인지 함께 봐야 한다.",
+            "",
             "## 안정성",
             "",
             "| 항목 | 값 |",
@@ -402,6 +489,7 @@ def main() -> None:
     labels = [module_layer(module) for module in modules]
     gate = permutation_gate(matrix, labels, args.permutations)
     robustness = robustness_gates(matrices, modules, args.permutations)
+    countermodel_check = compare_layer_countermodels(matrix, modules, args.permutations)
     output = {
         "dataset": DATASET,
         "source_url": SOURCE_URL,
@@ -412,6 +500,7 @@ def main() -> None:
         "edge_summary": edge_summary,
         "gate": gate,
         "robustness": robustness,
+        "countermodel_check": countermodel_check,
         "directionality": directionality(matrix, modules),
         "bow_tie_indices": bow_tie_indices(matrix, modules),
         "laplacian_stability": laplacian_stability(matrix),
@@ -445,6 +534,14 @@ def main() -> None:
             f"p={layer_gate['p_value_loss_le_observed']:.6f}, "
             f"pass={row['passed_layer_gate']}"
         )
+    print(
+        "  counter best BIC    = "
+        f"{countermodel_check['best_bic_like_model_excluding_saturated']}"
+    )
+    print(
+        "  counter best loss   = "
+        f"{countermodel_check['best_loss_model_excluding_saturated']}"
+    )
     print(f"  passed               = {output['passed']}")
     print(f"Saved: {out_json}")
     print(f"Saved: {out_md}")

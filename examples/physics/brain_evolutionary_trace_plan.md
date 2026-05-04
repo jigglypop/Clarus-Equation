@@ -358,3 +358,327 @@ $$
 이것은 인간 뇌 방정식에 다음 함의를 준다.
 
 전역 그래프 항 \(\Delta_G\)는 고차 피질의 후기 산물이 아니라, 신경계 발생 초기부터 등장하는 weighted chemical connectivity의 안정화 문법일 가능성이 있다.
+
+## 3차 실행: C. elegans 다음 단계, Drosophila larva
+
+원시 3층 회로 다음에 무엇이 생기는지 보기 위해 Drosophila larva brain connectome을 분석했다.
+
+자료:
+
+- `fly_larva` Netzschleuder CSV
+- 원 논문: Winding et al., *The connectome of an insect brain*, Science 2023
+- 노드: 2956
+- edge: 116922
+- synapse count: 352611
+
+검증 질문:
+
+$$
+\mathrm{primitive\ 3\ class}
+\quad\text{vs}\quad
+\mathrm{primitive + mushroom\ body\ memory/action\ loop}
+$$
+
+결과:
+
+| 항목 | 값 |
+|---|---:|
+| memory node fraction | 0.129229 |
+| primitive block/flat | 0.921003 |
+| primitive permutation p | 0.106579 |
+| extended block/flat | 0.824371 |
+| extended permutation p | 0.299340 |
+| extended improvement over primitive | 0.104920 |
+| memory-loop touched fraction | 0.325455 |
+| strict gate | fail |
+
+정확한 해석:
+
+- mushroom body를 따로 분리하면 primitive 3-class 모델보다 block loss가 약 10.5% 감소한다.
+- 그러나 extended label permutation p=0.299340으로, 엄격한 random-label 기준은 통과하지 못했다.
+- 따라서 이것은 “검증 완료”가 아니라 “다음 단계 후보 발견”이다.
+
+그럼에도 중요한 관측:
+
+| 지표 | 의미 |
+|---|---|
+| memory node fraction 12.9% | 신경계의 상당 부분이 memory/action-selection 계열로 분화 |
+| memory internal synapse fraction 18.4% | mushroom body 내부 loop가 강함 |
+| memory-loop touched fraction 32.5% | memory 계열이 projection/lateral/action 회로와 넓게 얽힘 |
+| sensory->projection / sensory->action ≈ 6.4 | 직접 반사보다 relay/projection 경로가 강함 |
+
+따라서 C. elegans 다음 단계에서 보이는 후보는 다음이다.
+
+$$
+\boxed{
+\text{primitive weighted chemical control}
+\rightarrow
+\text{projection relay + mushroom-body memory/action-selection loop}
+}
+$$
+
+이것은 지능으로 가는 첫 추가항 후보와 연결된다.
+
+$$
+P_{n+1}
+=
+\Pi[
+\cdots
++F_{\mathrm{syn}}
++M_{\mathrm{memory/action}}
+]
+$$
+
+단, 현재 자료만으로는 \(M_{\mathrm{memory/action}}\) 항을 최종 확정하지 않는다. 다음에는 Drosophila mushroom body만 분리한 더 세밀한 connectome 또는 adult hemibrain/FlyWire에서 같은 부등식을 다시 봐야 한다.
+
+### 예상식 반례 점검
+
+우리 예상은 “C. elegans 다음에 mushroom-body memory/action loop가 추가된다”였다. 이 예상은 일부 지표에서는 맞지만, 엄격 검증에서는 아직 부족하다.
+
+competing model을 비교했다.
+
+| model | block/flat | permutation p | 해석 |
+|---|---:|---:|---|
+| primitive 3-class | 0.921003 | 0.111296 | 원시 감각-relay-action만으로는 약함 |
+| extended memory | 0.824371 | 0.301233 | 손실은 줄지만 permutation 실패 |
+| action split | 0.815008 | 0.135288 | memory보다 순수 손실은 더 낮음 |
+| cell type | 0.000000 | 1.000000 | 포화모델, 과적합 상한선 |
+
+비포화 모델 중 순수 손실 최저는 `action_split`이고, BIC-like 벌점까지 주면 `all_one`이 최저다. 따라서 현재 Drosophila larva 자료만으로는 “다음 단계가 memory loop 하나다”라고 확정하면 안 된다.
+
+수정된 결론:
+
+$$
+\boxed{
+\text{C. elegans 다음 단계에서는 memory loop 후보와 action/descending 분화가 함께 나타난다.}
+}
+$$
+
+즉 다음 항은 하나가 아닐 수 있다.
+
+$$
+P_{n+1}
+=
+\Pi[
+\cdots
++M_{\mathrm{memory}}
++A_{\mathrm{descending/action}}
+]
+$$
+
+현재 가장 안전한 표현은 다음이다.
+
+> Drosophila larva에서는 원시 weighted chemical control 위에 memory/action-selection 관련 내부 loop가 강하게 보이지만, block model 기준으로는 action/descending 분화도 같은 수준 이상의 설명력을 가진다. 따라서 우리의 예상식은 “memory 단독 추가”가 아니라 “memory + action-selection loop의 공동 분화”로 수정해야 한다.
+
+## 4차 실행: 최초 신경계와 2스텝 모두 반례 상정
+
+두 단계 모두에 대해 예상식이 틀렸을 가능성을 명시적으로 점검했다.
+
+### 4.1 최초 신경계: C. elegans 반례
+
+예상식:
+
+$$
+\mathrm{weighted\ chemical\ L1/L2/L3}
+$$
+
+반례 후보:
+
+- L1/L2/L3가 아니라 module family가 설명한 것일 수 있다.
+- 특정 축 하나, 예를 들어 taxis/avoidance/lateral만 설명한 것일 수 있다.
+- 단순히 더 세밀한 module label을 쓰면 다 설명되는 포화모델일 수 있다.
+
+결과:
+
+| model | block/flat | p | BIC-like | 해석 |
+|---|---:|---:|---:|---|
+| all one | 1.000000 | 1.000000 | 1364.250 | baseline |
+| layer L1/L2/L3 | 0.719382 | 0.026795 | 1356.580 | 경제성 기준 최저 |
+| module family | 0.704610 | 0.266347 | 1433.110 | 손실은 더 낮지만 파라미터가 많고 p 실패 |
+| lateral vs other | 0.960934 | 0.435713 | 1373.421 | 약함 |
+| avoidance vs other | 0.933393 | 0.248550 | 1369.234 | 약함 |
+| taxis vs other | 0.915743 | 0.180764 | 1366.485 | 약함 |
+| module | 0.000000 | 1.000000 | saturated | 포화모델 |
+
+판정:
+
+$$
+\boxed{
+\text{C. elegans 최초 신경계에서는 L1/L2/L3가 가장 경제적인 coarse 설명으로 살아남는다.}
+}
+$$
+
+단, 순수 손실만 보면 `module_family`가 더 낮다. 따라서 L1/L2/L3는 유일한 설명이 아니라 **최소 coarse 문법**으로 보는 것이 정확하다.
+
+### 4.2 2스텝: Drosophila larva 반례
+
+예상식:
+
+$$
+\mathrm{primitive}
+\rightarrow
+\mathrm{memory/action\ loop}
+$$
+
+반례 후보:
+
+- memory가 아니라 action/descending 분화가 핵심일 수 있다.
+- sensory modality 분화가 핵심일 수 있다.
+- cell type 전체 분화가 핵심일 수 있다.
+- coarse model 자체가 너무 약해서 all-one과 큰 차이가 없을 수 있다.
+
+결과:
+
+| model | block/flat | p | BIC-like | 해석 |
+|---|---:|---:|---:|---|
+| all one | 1.000000 | 1.000000 | 5034.912 | BIC-like 최저, coarse 벌점 때문 |
+| primitive | 0.921003 | 0.111296 | 5054.495 | 약함 |
+| extended memory | 0.824371 | 0.301233 | 5174.662 | 개선되나 p 실패 |
+| action split | 0.815008 | 0.135288 | 5107.373 | 비포화 순수 손실 최저 |
+| sensory modality | 0.824371 | 0.301233 | 5174.662 | memory와 같은 label 수/성능 |
+| cell type | 0.000000 | 1.000000 | saturated | 포화모델 |
+
+판정:
+
+$$
+\boxed{
+\text{Drosophila larva에서는 memory 단독 추가 가설이 충분히 강하지 않다.}
+}
+$$
+
+더 안전한 수정식:
+
+$$
+\boxed{
+\mathrm{primitive\ weighted\ chemical\ control}
+\rightarrow
+\mathrm{cell\ type\ diversification}
+\rightarrow
+\mathrm{memory/action\ selection\ loop}
+}
+$$
+
+또는 방정식 항으로 쓰면:
+
+$$
+P_{n+1}
+=
+\Pi[
+\cdots
++D_{\mathrm{celltype}}
++M_{\mathrm{memory}}
++A_{\mathrm{descending/action}}
+]
+$$
+
+현재 2스텝의 진짜 함의는 “memory가 생겼다” 하나가 아니라, **세포형 분화, action 출력 분화, memory loop가 동시에 나타나며 이 중 무엇이 가장 근본인지는 더 세밀한 adult fly/FlyWire 자료에서 다시 검증해야 한다**는 것이다.
+
+## 수정된 전체 가설
+
+처음 가설:
+
+$$
+\mathrm{primitive}
+\rightarrow
+\mathrm{memory}
+\rightarrow
+\mathrm{intelligence}
+$$
+
+수정된 가설:
+
+$$
+\boxed{
+\mathrm{weighted\ chemical\ control}
+\rightarrow
+\mathrm{celltype/action/memory\ differentiation}
+\rightarrow
+\mathrm{stable\ recurrent\ workspace}
+}
+$$
+
+즉 양적 증가보다 먼저 오는 것은 **기능 분화**다. memory는 그 중 하나이며, action-selection과 분리해서 생각하면 안 된다.
+
+## 5차 실행: 최초 신경계-행동 proxy
+
+인간 행동은 아직 무리지만, C. elegans에서는 connectome만으로 자극-domain이 행동-output domain으로 보존되는지 1차 proxy를 만들 수 있다.
+
+검증식:
+
+$$
+\mathrm{Flow}(L1_d\to L3_d)
+>
+\mathrm{Flow}(L1_d\to L3_{d'\ne d})
+$$
+
+여기서 flow는 row-normalized weighted chemical graph의 direct path와 two-step path를 평균한 값이다.
+
+실행:
+
+```bash
+python examples\physics\c_elegans_stimulus_behavior_gate.py --permutations 5000
+```
+
+결과:
+
+| matrix | matched/wrong | p | pass |
+|---|---:|---:|---|
+| chemical weighted | 3.431872 | 0.034393 | pass |
+| all weighted | 3.357210 | 0.034393 | pass |
+| all binary | 1.113045 | 0.034393 | fail |
+
+효과크기 기준을 \(matched/wrong>1.5\)로 두었기 때문에 binary graph는 실패한다.
+
+이 결과의 의미:
+
+$$
+\boxed{
+\text{C. elegans에서는 weighted chemical graph가 자극 domain을 같은 output domain으로 보존하는 구조 경로를 갖는다.}
+}
+$$
+
+즉 최초 신경계 분석은 단순 구조 계층을 넘어서, 행동 proxy까지 어느 정도 가능하다.
+
+단, 이것은 실제 행동 기록이 아니라 connectome proxy다. 최종 행동 방정식은 실제 자극-행동 trial 자료와 함께 검증해야 한다.
+
+## 6차 실행: C. elegans 자극-행동 channel 발달 확장
+
+adult dataset 8에서 통과한 자극-domain to output-domain 구조 proxy를 Witvliet dataset 1-8 전체로 확장했다.
+
+실행:
+
+```bash
+python examples\physics\c_elegans_developmental_stimulus_behavior_gate.py --permutations 5000
+```
+
+결과:
+
+| stage | chemical matched/wrong | p | chemical pass | binary matched/wrong | binary pass |
+|---:|---:|---:|---|---:|---|
+| 1 | 3.186427 | 0.034393 | pass | 1.446780 | fail |
+| 2 | 2.600517 | 0.034393 | pass | 1.264549 | fail |
+| 3 | 3.302136 | 0.034393 | pass | 1.380026 | fail |
+| 4 | 3.464723 | 0.034393 | pass | 1.328685 | fail |
+| 5 | 3.297920 | 0.034393 | pass | 1.208942 | fail |
+| 6 | 2.995919 | 0.034393 | pass | 1.193745 | fail |
+| 7 | 3.428513 | 0.034393 | pass | 1.040436 | fail |
+| 8 | 3.431872 | 0.034393 | pass | 1.113045 | fail |
+
+요약:
+
+| 항목 | 값 |
+|---|---:|
+| chemical weighted pass | 8 / 8 |
+| binary pass | 0 / 8 |
+| mean chemical matched/wrong | 3.213504 |
+| Spearman stage vs matched/wrong | 0.476190 |
+
+함의:
+
+$$
+\boxed{
+\text{C. elegans의 stimulus-output domain channel은 발달 초기부터 안정적이며, binary가 아니라 weighted chemical graph에 실려 있다.}
+}
+$$
+
+이 결과는 최초 신경계에서 “행동으로 이어지는 domain routing”이 매우 이른 단계의 핵심 기능일 수 있음을 시사한다.
