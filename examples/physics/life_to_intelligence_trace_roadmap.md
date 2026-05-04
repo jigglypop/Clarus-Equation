@@ -137,8 +137,11 @@ $$
 
 1. optic tectum spontaneous activity: 국소 회로의 assembly/recurrent structure.
 2. freely swimming figure5/S8 chunk: 자유수영 조건에서도 region activity가 저차원 recurrent state로 닫히는지.
+3. freely swimming figure8/c/LR chunk: 방향성 optogenetic perturbation이 회전 행동으로 닫히는지.
+4. freely swimming figure8/g chunk: neural activity가 행동 bout frame과 baseline frame을 구분하는지.
+5. freely swimming figure8/f chunk: neural activity window가 left/right 방향 조건을 구분하는지.
 
-다만 아직 시간 정렬된 tail-behavior label을 붙인 최종 gate는 아니다.
+다만 아직 연속적인 tail speed/heading/turn angle을 직접 예측하는 최종 continuous decoding gate는 아니다.
 
 검증한 식:
 
@@ -167,6 +170,25 @@ $$
 |---|---:|---:|---:|---:|---:|
 | figure5/S8 | 18 | 0.476526 | 0.011651 | 0.154988 | 0.157001 |
 
+방향성 perturbation -> behavior:
+
+| group | left mean angle | right mean angle | left-right | p |
+|---|---:|---:|---:|---:|
+| control | -0.753407 | -1.333287 | 0.579880 | 0.871826 |
+| experimental | 48.403138 | -42.963969 | 91.367107 | 0.000200 |
+
+activity -> behavior-frame association:
+
+| activity shape | bout frames | mean AUC | balanced accuracy | p |
+|---|---:|---:|---:|---:|
+| 3987 x 3360 | 147 | 0.887293 | 0.812500 | 0.000167 |
+
+activity -> direction association:
+
+| trials L/R | window | AUC | balanced accuracy | p |
+|---:|---:|---:|---:|---:|
+| 11 / 10 | 5 frames | 1.000000 | 1.000000 | 0.001996 |
+
 의의:
 
 $$
@@ -175,7 +197,7 @@ $$
 }
 $$
 
-이 단계에서 밝혀진 것은 아직 “행동 방정식” 전체가 아니라 “척추동물 활동 방정식 후보”다. assembly 공유 쌍은 random membership보다 상관구조를 훨씬 잘 설명했고, 저차원 recurrent state는 평균 baseline보다 다음 시점을 잘 예측했다. 자유수영 chunk에서도 activity state 자체는 강하게 닫혔다.
+이 단계에서 밝혀진 것은 아직 “연속 움직임 전체를 읽는 방정식”은 아니지만, 네 가지는 닫혔다. 첫째, assembly 공유 쌍은 random membership보다 상관구조를 훨씬 잘 설명했고, 저차원 recurrent state는 평균 baseline보다 다음 시점을 잘 예측했다. 둘째, 자유수영 chunk에서 activity state 자체는 강하게 닫혔다. 셋째, 방향성 perturbation은 방향성 회전 행동으로 강하게 닫혔다. 넷째, neural activity는 행동 bout frame과 baseline frame을 구분했고, left/right 방향 조건도 leave-one-trial-out에서 구분했다.
 
 ## 현재 구조의 전체 의의
 
@@ -208,4 +230,4 @@ $$
 | adult fly hemibrain/FlyWire | mushroom body, central complex, action selection 검증 | annotation 처리 필요 |
 | mouse Neuropixels/IBL | 포유류 영역 루프 검증 | 인간 전 단계, 계산 부담 큼 |
 
-현재 흐름상 우선순위는 zebrafish whole-brain + behavior다. 이유는 C. elegans/Drosophila에서 구조를 봤고, 이번 zebrafish에서 자유수영 activity state까지 봤으므로, 다음에는 neural trace와 tail/stage tracking이 시간 정렬된 파일을 찾아 activity가 behavior로 닫히는지를 확인해야 하기 때문이다.
+현재 흐름상 우선순위는 zebrafish continuous behavior decoding이다. 이유는 C. elegans/Drosophila에서 구조를 봤고, 이번 zebrafish에서 자유수영 activity state, perturbation-to-behavior, activity-to-bout-frame, activity-to-direction association까지 봤으므로, 다음에는 neural trace와 tail/stage tracking을 시간 정렬해 speed, heading, turn angle 자체를 예측해야 하기 때문이다.
