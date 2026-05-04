@@ -16,14 +16,14 @@ $$
 
 | stage | synapses | chem matched/wrong | chem p | chem pass | binary matched/wrong | binary pass |
 |---:|---:|---:|---:|---|---:|---|
-| 1 | 1235.0 | 3.186427 | 0.034393 | True | 1.446780 | False |
-| 2 | 1791.0 | 2.600517 | 0.034393 | True | 1.264549 | False |
-| 3 | 1957.0 | 3.302136 | 0.034393 | True | 1.380026 | False |
-| 4 | 2697.0 | 3.464723 | 0.034393 | True | 1.328685 | False |
-| 5 | 3958.0 | 3.297920 | 0.034393 | True | 1.208942 | False |
-| 6 | 4113.0 | 2.995919 | 0.034393 | True | 1.193745 | False |
-| 7 | 6624.0 | 3.428513 | 0.034393 | True | 1.040436 | False |
-| 8 | 7222.0 | 3.431872 | 0.034393 | True | 1.113045 | False |
+| 1 | 1235.0 | 3.186427 | 0.035482 | True | 1.446780 | False |
+| 2 | 1791.0 | 2.600517 | 0.035482 | True | 1.264549 | False |
+| 3 | 1957.0 | 3.302136 | 0.035482 | True | 1.380026 | False |
+| 4 | 2697.0 | 3.464723 | 0.035482 | True | 1.328685 | False |
+| 5 | 3958.0 | 3.297920 | 0.035482 | True | 1.208942 | False |
+| 6 | 4113.0 | 2.995919 | 0.035482 | True | 1.193745 | False |
+| 7 | 6624.0 | 3.428513 | 0.035482 | True | 1.040436 | False |
+| 8 | 7222.0 | 3.431872 | 0.035482 | True | 1.113045 | False |
 
 ## 요약
 
@@ -34,7 +34,7 @@ $$
 | mean chemical matched/wrong | 3.213504 |
 | min chemical matched/wrong | 2.600517 |
 | max chemical matched/wrong | 3.464723 |
-| mean p value | 0.034393 |
+| mean p value | 0.035482 |
 | Spearman stage vs matched/wrong | 0.476190 |
 | Spearman stage vs synapses | 1.000000 |
 

@@ -38,8 +38,8 @@ $$
 
 | model | block/flat | block/random mean | permutation p |
 |---|---:|---:|---:|
-| primitive 3-class | 0.921003 | 0.965091 | 0.111296 |
-| extended 5-class with mushroom body | 0.824371 | 0.980333 | 0.301233 |
+| primitive 3-class | 0.921003 | 0.964755 | 0.106579 |
+| extended 5-class with mushroom body | 0.824371 | 0.980404 | 0.299340 |
 
 extended 5-class는 primitive 3-class보다 손실을 낮추지만, permutation p 기준은 통과하지 못한다. 따라서 이것은 최종 게이트 통과가 아니라 다음 진화 단계 후보의 정량적 신호로 둔다.
 
@@ -48,10 +48,10 @@ extended 5-class는 primitive 3-class보다 손실을 낮추지만, permutation 
 | model | labels | params | block/flat | p | BIC-like | saturated |
 |---|---:|---:|---:|---:|---:|---|
 | all_one | 1 | 1 | 1.000000 | 1.000000 | 5034.912 | False |
-| primitive | 3 | 9 | 0.921003 | 0.111296 | 5054.495 | False |
-| extended_memory | 6 | 36 | 0.824371 | 0.301233 | 5174.662 | False |
-| action_split | 5 | 25 | 0.815008 | 0.135288 | 5107.373 | False |
-| sensory_modality | 6 | 36 | 0.824371 | 0.301233 | 5174.662 | False |
+| primitive | 3 | 9 | 0.921003 | 0.106579 | 5054.495 | False |
+| extended_memory | 6 | 36 | 0.824371 | 0.299340 | 5174.662 | False |
+| action_split | 5 | 25 | 0.815008 | 0.145571 | 5107.373 | False |
+| sensory_modality | 6 | 36 | 0.824371 | 0.299340 | 5174.662 | False |
 | cell_type | 18 | 324 | 0.000000 | 1.000000 | -8952.451 | True |
 
 포화모델을 제외한 BIC-like 최저 모델은 `all_one`이다.
@@ -89,3 +89,18 @@ extended 5-class는 primitive 3-class보다 손실을 낮추지만, permutation 
 - 그러나 현재 cell-type block permutation은 통과하지 못했으므로, 이 단계는 '검증 완료'가 아니라 '후보 발견'이다.
 - 가장 강한 정량 신호는 mushroom-body 내부 synapse가 전체 synapse의 큰 비중을 차지하고, projection/lateral/action class와 반복적으로 연결된다는 점이다.
 - 따라서 지능으로 가는 다음 스텝 후보는 양 증가 자체가 아니라 학습 가능한 내부 상태 loop의 출현이다.
+
+## adult FlyWire follow-up
+
+larva에서 후보였던 항은 adult FlyWire gate에서 닫혔다.
+
+| adult gate | 값 |
+|---|---:|
+| primitive block/flat | 0.981755 |
+| adult refined block/flat | 0.955373 |
+| adult refined p | 0.000999 |
+| memory/action loop observed/random | 3.738545 |
+| loop p | 0.012987 |
+| closed | True |
+
+따라서 Drosophila 단계의 최종 표현은 memory 단독 추가가 아니라 `celltype/action/memory co-differentiation`이다.
