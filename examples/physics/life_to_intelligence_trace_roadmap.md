@@ -140,6 +140,7 @@ $$
 3. freely swimming figure8/c/LR chunk: 방향성 optogenetic perturbation이 회전 행동으로 닫히는지.
 4. freely swimming figure8/g chunk: neural activity가 행동 bout frame과 baseline frame을 구분하는지.
 5. freely swimming figure8/f chunk: neural activity window가 left/right 방향 조건을 구분하는지.
+6. continuous alignment audit: 현재 partial chunk만으로 speed/heading/turn angle 직접 decoding이 가능한지.
 
 다만 아직 연속적인 tail speed/heading/turn angle을 직접 예측하는 최종 continuous decoding gate는 아니다.
 
@@ -189,6 +190,14 @@ activity -> direction association:
 |---:|---:|---:|---:|---:|
 | 11 / 10 | 5 frames | 1.000000 | 1.000000 | 0.001996 |
 
+continuous alignment audit:
+
+| question | result |
+|---|---|
+| activity -> behavior-frame 가능 | True |
+| activity -> direction 가능 | True |
+| 현재 partial만으로 continuous movement decoding 가능 | False |
+
 의의:
 
 $$
@@ -198,6 +207,8 @@ $$
 $$
 
 이 단계에서 밝혀진 것은 아직 “연속 움직임 전체를 읽는 방정식”은 아니지만, 네 가지는 닫혔다. 첫째, assembly 공유 쌍은 random membership보다 상관구조를 훨씬 잘 설명했고, 저차원 recurrent state는 평균 baseline보다 다음 시점을 잘 예측했다. 둘째, 자유수영 chunk에서 activity state 자체는 강하게 닫혔다. 셋째, 방향성 perturbation은 방향성 회전 행동으로 강하게 닫혔다. 넷째, neural activity는 행동 bout frame과 baseline frame을 구분했고, left/right 방향 조건도 leave-one-trial-out에서 구분했다.
+
+중요한 한계도 닫혔다. 현재 partial chunk에는 stage/head/yolk tracking txt와 neural `e2` matrix가 따로 존재하지만, `e2`의 각 column을 tracking frame에 직접 붙이는 per-frame alignment가 없다. 따라서 지금 가진 partial만으로 speed, heading, turn angle을 직접 예측하면 임의 정렬이 되므로 검증으로 인정하면 안 된다.
 
 ## 현재 구조의 전체 의의
 
@@ -230,4 +241,14 @@ $$
 | adult fly hemibrain/FlyWire | mushroom body, central complex, action selection 검증 | annotation 처리 필요 |
 | mouse Neuropixels/IBL | 포유류 영역 루프 검증 | 인간 전 단계, 계산 부담 큼 |
 
-현재 흐름상 우선순위는 zebrafish continuous behavior decoding이다. 이유는 C. elegans/Drosophila에서 구조를 봤고, 이번 zebrafish에서 자유수영 activity state, perturbation-to-behavior, activity-to-bout-frame, activity-to-direction association까지 봤으므로, 다음에는 neural trace와 tail/stage tracking을 시간 정렬해 speed, heading, turn angle 자체를 예측해야 하기 때문이다.
+현재 흐름상 우선순위는 zebrafish continuous behavior decoding이다. 다만 다음 실행에는 추가 자료가 필요하다.
+
+필요한 파일:
+
+| 필요한 것 | 이유 |
+|---|---|
+| e2 column별 timestamp | neural frame을 tracking frame에 붙이기 위해 |
+| 또는 e2 frame으로 resample된 speed/heading/turn angle | 바로 regression gate 가능 |
+| 또는 raw light-field + synchronized tracking chunk | 직접 정렬/추출 가능 |
+
+이유는 C. elegans/Drosophila에서 구조를 봤고, 이번 zebrafish에서 자유수영 activity state, perturbation-to-behavior, activity-to-bout-frame, activity-to-direction association까지 봤으므로, 마지막으로 neural trace와 tail/stage tracking을 시간 정렬해 speed, heading, turn angle 자체를 예측해야 하기 때문이다.
