@@ -992,3 +992,157 @@ R_t,
 $$
 
 여기서 \(P_t^{\mathrm{policy/history?}}\)는 아직 승격된 항이 아니라 다음 병목이다. Choice는 innovation이 전혀 없어서 실패한 것이 아니라, 공개 IBL task 구조에서는 stimulus, prior block, previous choice/reward, policy history와 더 강하게 겹쳐 있을 가능성이 크다. 다음 식 후보는 action subspace를 더 키우는 것이 아니라 choice-specific policy/history latent를 분리하는 쪽으로 가야 한다.
+
+### Mouse IBL/OpenAlyx choice policy/history gate
+
+Nested subspace 뒤의 다음 질문은 choice가 왜 약한지다. Action에서는 train-selected innovation subspace가 남았지만, choice에서는 \(5/12\)였다. 따라서 choice에 같은 innovation 항을 억지로 넣기보다, task/history 또는 policy-like covariate가 choice를 얼마나 먼저 설명하는지 확인했다.
+
+비교한 model은 다음 순서다.
+
+$$
+M_X:
+y_{\mathrm{choice}}\sim X_{\mathrm{policy/history}},
+$$
+
+$$
+M_{XR}:
+y_{\mathrm{choice}}\sim [X_{\mathrm{policy/history}},R],
+$$
+
+$$
+M_{XRH}:
+y_{\mathrm{choice}}\sim [X_{\mathrm{policy/history}},R,\hat H],
+$$
+
+$$
+M_{XRH\epsilon}:
+y_{\mathrm{choice}}\sim
+[X_{\mathrm{policy/history}},R,\hat H,\epsilon_{S_{\mathrm{train}}}].
+$$
+
+실행:
+
+```bash
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_choice_policy_history_gate.py
+```
+
+12-panel model summary:
+
+| model | mean BA | median BA |
+|---|---:|---:|
+| policy/history | 0.836522 | 0.843374 |
+| policy/history + region | 0.839474 | 0.844699 |
+| policy/history + region + predicted latent | 0.841794 | 0.849048 |
+| policy/history + region + predicted latent + nested eps | 0.848266 | 0.843158 |
+
+증분:
+
+| increment | positive | mean dBA | median dBA | supported |
+|---|---:|---:|---:|---|
+| region after policy/history | 4/12 | 0.002952 | -0.000510 | `False` |
+| predicted latent after policy/history + region | 7/12 | 0.002320 | 0.002501 | `True` |
+| nested eps after policy/history + region + predicted latent | 5/12 | 0.006472 | -0.000203 | `False` |
+| all neural after policy/history | 5/12 | 0.011744 | -0.000156 | `False` |
+
+판정:
+
+$$
+\boxed{
+\epsilon_{S_{\mathrm{train}}}
+\ \mathrm{does\ not\ become\ a\ replicated\ choice\ term.}
+}
+$$
+
+그러나 이것을 "choice는 policy만으로 완전히 닫혔다"라고 읽으면 과하다. Policy/history baseline 자체가 mean BA \(0.836522\)로 매우 강하고, nested eps는 반복 기준에 못 닿지만 mean dBA는 양수다. 또한 \(\hat H\)는 \(7/12\), mean \(0.002320\)으로 매우 작은 양성이다. 따라서 다음 식 후보는 policy/history를 더 세밀한 latent로 만들고, 그 뒤에 남는 neural residual을 다시 보는 형태가 되어야 한다.
+
+현재 choice 후보식은 다음이다.
+
+$$
+\boxed{
+y_{\mathrm{choice},t}
+=
+g_c
+\left(
+P_t^{\mathrm{policy/history}},
+R_t,
+\hat H_t
+\right)
+\eta_t,
+\qquad
+\epsilon_{t,S_{\mathrm{train}}}
+\ \mathrm{not\ promoted\ for\ choice.}
+}
+$$
+
+### Mouse IBL/OpenAlyx richer choice policy/history gate
+
+다음에는 hand-built richer policy/history block을 만들었다. 기존 \(X_{\mathrm{policy/history}}\)는 current stimulus/probability와 previous trial history의 선형 묶음이었다. Richer block은 여기에 multi-lag choice/outcome, win-stay/lose-switch, stimulus-prior interaction, previous choice interaction, decayed choice/reward/feedback trace를 추가했다.
+
+질문은 두 개다.
+
+1. 이 richer policy block이 기존 linear policy/history를 반복적으로 이기는가.
+2. richer policy 뒤에도 neural residual이 남는가.
+
+실행:
+
+```bash
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_richer_choice_policy_gate.py
+```
+
+12-panel model summary:
+
+| model | mean BA | median BA |
+|---|---:|---:|
+| linear policy/history | 0.836522 | 0.843374 |
+| richer policy/history | 0.837102 | 0.850950 |
+| richer policy/history + region | 0.839692 | 0.846948 |
+| richer policy/history + region + predicted latent | 0.840482 | 0.851776 |
+| richer policy/history + region + predicted latent + nested eps | 0.846516 | 0.853543 |
+
+증분:
+
+| increment | positive | mean dBA | median dBA | supported |
+|---|---:|---:|---:|---|
+| richer policy after linear policy | 5/12 | 0.000580 | -0.000956 | `False` |
+| region after richer policy | 5/12 | 0.002590 | 0.001219 | `False` |
+| predicted latent after richer policy + region | 5/12 | 0.000791 | 0.000021 | `False` |
+| nested eps after richer policy + region + predicted latent | 5/12 | 0.006033 | 0.001085 | `False` |
+| all neural after richer policy | 7/12 | 0.009414 | 0.002078 | `True` |
+
+판정:
+
+$$
+\boxed{
+P_{\mathrm{rich}}
+\not\gg
+X_{\mathrm{linear}},
+\qquad
+[R,\hat H,\epsilon_{S_{\mathrm{train}}}]
+\mid
+P_{\mathrm{rich}}
+\ \mathrm{survives.}
+}
+$$
+
+즉 손으로 만든 richer policy feature는 기존 linear policy/history를 반복적으로 이기지 못했다. 반대로 \(R\), \(\hat H\), \(\epsilon_{S_{\mathrm{train}}}\) 각각은 단독 증분으로는 약하지만, 셋을 모두 합친 all-neural residual은 \(7/12\), mean \(0.009414\)로 살아났다.
+
+따라서 choice 병목은 "policy feature를 더 많이 넣으면 닫힌다"도 아니고 "action-style innovation subspace 하나를 넣으면 닫힌다"도 아니다. 다음 식 후보는 block synergy를 직접 검사해야 한다.
+
+$$
+\boxed{
+y_{\mathrm{choice},t}
+=
+g_c
+\left(
+X_t,
+\Phi_{\mathrm{policy}}(h_{<t}),
+R_t,
+\hat H_t,
+\epsilon_{t,S_{\mathrm{train}}}
+\right),
+\qquad
+\Delta_{\mathrm{all\ neural}\mid P_{\mathrm{rich}}}>0.
+}
+$$
+
+다음 병목은 \(R\), \(\hat H\), \(\epsilon\) 중 어느 하나의 단독 승격이 아니라, \(P_{\mathrm{rich}}\) 뒤에서 세 neural block이 함께 남는 이유를 ablation/Shapley식으로 분해하는 것이다.
