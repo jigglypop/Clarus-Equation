@@ -1246,3 +1246,252 @@ R_t,\hat H_t
 \ \mathrm{are\ auxiliary/unstable\ for\ choice.}
 }
 $$
+
+### Mouse IBL/OpenAlyx choice innovation-axis reproducibility gate
+
+마지막으로 \(P+\epsilon\) 신호가 진짜 choice용 반복 subspace인지 확인했다. Synergy gate의 \(P+\epsilon\)는 이전 nested 선택을 재사용한 결과라, 이번에는 outer train 안에서 \(P\)만 baseline으로 두고 choice용 \(\epsilon\) 축을 새로 골랐다.
+
+식은 다음이다.
+
+$$
+S_{c,\mathrm{train}}
+=
+\mathrm{TopK}_{k=3}
+\left[
+\Delta_{\mathrm{inner}}
+\left(
+\epsilon_{t,k}
+\mid
+P_t^{\mathrm{rich}}
+\right)
+\right],
+\qquad
+y_{\mathrm{choice},t}
+=
+g_c
+\left(
+P_t^{\mathrm{rich}},
+\epsilon_{t,S_{c,\mathrm{train}}}
+\right).
+$$
+
+실행:
+
+```bash
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_choice_innovation_reproducibility_gate.py
+```
+
+12-panel 결과:
+
+| metric | value |
+|---|---:|
+| supported | 3/12 |
+| mean dBA | 0.002016 |
+| median dBA | -0.001667 |
+| replicated | `False` |
+
+Global axis summary:
+
+| metric | value |
+|---|---:|
+| top1 axis | 5 |
+| top1 count | 20/180 |
+| top1 share | 0.111111 |
+| top3 axes | `[5, 6, 4]` |
+| top3 count | 58/180 |
+| top3 share | 0.322222 |
+| entropy | 0.991867 |
+| top1 null p | 0.857200 |
+| stable identity | `False` |
+| concentrated subspace | `True` |
+
+판정:
+
+$$
+\boxed{
+P_{\mathrm{rich}}+\epsilon_{S_{c,\mathrm{train}}}
+\quad
+\mathrm{does\ not\ replicate\ for\ choice.}
+}
+$$
+
+축 선택에는 top3 \([5,6,4]\) 쪽으로 약한 몰림이 있지만, 정작 outer test 증분이 \(3/12\), median \(-0.001667\)이라 행동식으로 승격할 수 없다. 따라서 choice는 안정된 innovation subspace로 닫히지 않았다.
+
+이 실패가 의미하는 것은 두 가지다.
+
+1. \(P+\epsilon\) 신호는 있다. 그러나 choice-only train selection으로 다시 걸면 반복되지 않는다.
+2. 따라서 현재 mouse choice 항은 stable neural axis가 아니라 session-adaptive residual로 남긴다.
+
+현재 choice 식은 다음처럼 보수적으로 내려간다.
+
+$$
+\boxed{
+y_{\mathrm{choice},t}^{(s)}
+=
+g_{c,s}
+\left(
+P_t^{(s,\mathrm{rich})}
+\right)
+\eta_t^{(s)},
+\qquad
+\eta_t^{(s)}
+\sim
+\mathrm{session\text{-}adaptive\ neural\ residual}.
+}
+$$
+
+24-session top-candidate panel에서도 같은 질문을 다시 걸었다. 이번에는 ranker의 `top_candidates` 24개를 사용했고, 반복 기준은 \(13/24\)로 올렸다.
+
+실행:
+
+```bash
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_choice_innovation_reproducibility_gate.py --candidate-key top_candidates --candidate-limit 24 --min-replications 13 --min-global-top1-count 40 --min-global-top3-count 64 --output-json examples/physics/evolution/mouse_ibl_choice_innovation_reproducibility_24panel_results.json --report-md examples/physics/evolution/mouse_ibl_choice_innovation_reproducibility_24panel_report.md
+```
+
+24-panel 결과:
+
+| metric | value |
+|---|---:|
+| supported | 8/24 |
+| mean dBA | 0.001288 |
+| median dBA | 0.000298 |
+| replicated | `False` |
+
+Global axis summary:
+
+| metric | value |
+|---|---:|
+| top1 axis | 3 |
+| top1 count | 36/360 |
+| top1 share | 0.100000 |
+| top3 axes | `[3, 6, 1]` |
+| top3 count | 107/360 |
+| top3 share | 0.297222 |
+| entropy | 0.995436 |
+| top1 null p | 0.930300 |
+| stable identity | `False` |
+| concentrated subspace | `True` |
+
+판정:
+
+$$
+\boxed{
+P_{\mathrm{rich}}+\epsilon_{S_{c,\mathrm{train}}}
+\quad
+\mathrm{still\ does\ not\ replicate\ for\ choice\ in\ the\ 24\ panel.}
+}
+$$
+
+따라서 12-panel 실패는 표본이 너무 작아서 생긴 음성으로 보기 어렵다. Choice에는 작은 양의 평균 증분이 있지만, session을 넓히면 반복 수와 axis identity가 같이 부족하다. 현재 mouse choice 항은 안정된 neural subspace가 아니라 policy-dominant, session-adaptive residual로 고정한다.
+
+반대로 action 식은 아직 살아 있다.
+
+$$
+\boxed{
+y_{\mathrm{action},t}^{(s)}
+=
+g_{a,s}
+\left(
+X_t^{(s)},
+R_t^{(s)},
+\hat H_t^{(s)},
+\epsilon_{t,S_{\mathrm{train}}}^{(s)}
+\right).
+}
+$$
+
+### Mouse IBL/OpenAlyx action innovation-subspace mechanism map
+
+Choice 쪽은 stable innovation subspace로 닫히지 않았으므로, 다음에는 이미 통과한 action subspace가 어디에 걸려 있는지 보았다. 이 map은 causal localization이 아니다. Train-selected action \(\epsilon\) axis를 target-window unit PCA loading으로 되돌린 뒤, loading 절댓값 mass를 probe와 CCF id로 집계한 descriptive mechanism map이다.
+
+실행:
+
+```bash
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_action_subspace_mechanism_map.py
+uv run --no-project --with iblatlas python examples/physics/evolution/mouse_ibl_action_ccf_annotation.py
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_action_subspace_region_ablation.py --conditions full drop_top_ccf only_top_ccf
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_action_subspace_region_ablation.py --conditions full drop_probe only_probe --output-json examples/physics/evolution/mouse_ibl_action_subspace_probe_ablation_results.json --report-md examples/physics/evolution/mouse_ibl_action_subspace_probe_ablation_report.md
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_action_top_unit_sufficiency.py
+```
+
+12-panel target summary:
+
+| target | supported | mean dBA | median dBA |
+|---|---:|---:|---:|
+| first movement speed | 9/12 | 0.013697 | 0.011018 |
+| wheel action direction | 8/12 | 0.020350 | 0.017363 |
+
+상위 CCF-id loading mass를 `iblatlas.atlas.BrainRegions`로 해부학 이름에 붙이면 다음이다.
+
+| target | rank | CCF id | acronym | anatomical name | mean mass |
+|---|---:|---:|---|---|---:|
+| first movement speed | 1 | 215 | `APN` | Anterior pretectal nucleus | 0.112423 |
+| first movement speed | 2 | 1020 | `PO` | Posterior complex of the thalamus | 0.082453 |
+| first movement speed | 3 | 946 | `PH` | Posterior hypothalamic nucleus | 0.075238 |
+| first movement speed | 4 | 128 | `MRN` | Midbrain reticular nucleus | 0.066257 |
+| first movement speed | 5 | 313 | `MB` | Midbrain | 0.064130 |
+| wheel action direction | 1 | 215 | `APN` | Anterior pretectal nucleus | 0.108823 |
+| wheel action direction | 2 | 1020 | `PO` | Posterior complex of the thalamus | 0.082451 |
+| wheel action direction | 3 | 946 | `PH` | Posterior hypothalamic nucleus | 0.077436 |
+| wheel action direction | 4 | 128 | `MRN` | Midbrain reticular nucleus | 0.072745 |
+| wheel action direction | 5 | 313 | `MB` | Midbrain | 0.066272 |
+
+Speed와 wheel이 공유하는 top-12 구조는 `APN`, `PO`, `PH`, `MRN`, `MB`, `PRNr`, `SNr`, `VPMpc`, `PRNc`, `CA1`, `CENT2`, `SUB`다. 거칠게 읽으면 thalamic/midbrain/pons-heavy map이고, 일부 hippocampal/subicular와 cerebellar label도 뒤쪽에 섞인다.
+
+Probe loading mass:
+
+| target | probe00 | probe00a | probe01 | probe00b |
+|---|---:|---:|---:|---:|
+| first movement speed | 0.634586 | 0.166667 | 0.115414 | 0.083333 |
+| wheel action direction | 0.638429 | 0.166667 | 0.111571 | 0.083333 |
+
+판정:
+
+$$
+\boxed{
+\epsilon_{S_{\mathrm{train}}}^{\mathrm{action}}
+\quad
+\mathrm{has\ a\ repeated\ loading\ map.}
+}
+$$
+
+Speed와 wheel의 상위 CCF id 순서가 거의 같고, 이름을 붙이면 같은 thalamic/midbrain/pons 계열 구조가 반복된다. 따라서 action innovation subspace는 단지 target마다 임의로 고른 축이라기보다, 두 action readout이 공유하는 loading map 위에 놓인 것으로 보인다.
+
+이제 descriptive map을 한 단계 더 걸기 위해 top anatomical block ablation을 실행했다. Top block은 `APN`, `PO`, `PH`, `MRN`, `MB`로 두었다. `drop_top_ccf`는 이 block을 unit matrix에서 제거한 뒤 low-rank transition과 nested action-subspace readout을 다시 돌린 것이다. `only_top_ccf`는 반대로 이 block만 남긴 것이다.
+
+| target | condition | evaluated | supported | mean dBA | median dBA | mean delta vs full | passed |
+|---|---|---:|---:|---:|---:|---:|---|
+| first movement speed | full | 12/12 | 9/12 | 0.013697 | 0.011018 | 0.000000 | `True` |
+| first movement speed | drop top CCF | 11/12 | 4/11 | 0.008413 | 0.000000 | -0.005284 | `False` |
+| first movement speed | only top CCF | 9/12 | 5/9 | 0.009357 | 0.002854 | -0.004340 | `False` |
+| wheel action direction | full | 12/12 | 8/12 | 0.020350 | 0.017363 | 0.000000 | `True` |
+| wheel action direction | drop top CCF | 11/12 | 10/11 | 0.018655 | 0.010498 | -0.001695 | `True` |
+| wheel action direction | only top CCF | 9/12 | 4/9 | 0.014889 | 0.000601 | -0.005461 | `False` |
+
+판정은 둘로 갈린다. Speed는 top anatomical block을 제거하면 \(9/12\rightarrow4/11\)로 내려가므로 이 block에 더 의존한다. Wheel은 제거해도 \(10/11\), mean \(0.018655\)로 남으므로 더 분산된 action map이다. Top block만 단독으로 쓰는 조건은 두 target 모두 replication rule을 통과하지 못한다. 따라서 action map은 하나의 작은 핵이 전부를 설명하는 구조가 아니라, speed 쪽에서는 top block 의존성이 강하고 wheel 쪽에서는 보상 가능한 distributed readout으로 남긴다.
+
+Probe block도 같은 방식으로 걸었다. Mechanism map에서 probe00 mass가 speed \(0.634586\), wheel \(0.638429\)로 가장 컸기 때문에 `probe00`을 제거하거나 단독으로 남겼다.
+
+| target | condition | evaluated | supported | mean dBA | median dBA | mean delta vs full | passed |
+|---|---|---:|---:|---:|---:|---:|---|
+| first movement speed | full | 12/12 | 9/12 | 0.013697 | 0.011018 | 0.000000 | `True` |
+| first movement speed | drop probe00 | 6/12 | 3/6 | 0.009880 | 0.001420 | -0.003817 | `False` |
+| first movement speed | only probe00 | 9/12 | 7/9 | 0.008768 | 0.002841 | -0.004929 | `True` |
+| wheel action direction | full | 12/12 | 8/12 | 0.020350 | 0.017363 | 0.000000 | `True` |
+| wheel action direction | drop probe00 | 6/12 | 4/6 | 0.007663 | 0.004311 | -0.012687 | `False` |
+| wheel action direction | only probe00 | 9/12 | 6/9 | 0.020289 | 0.008952 | -0.000061 | `False` |
+
+여기서는 wheel 쪽이 더 선명하다. probe00을 빼면 wheel mean dBA가 \(0.020350\rightarrow0.007663\)으로 크게 떨어진다. probe00만 남기면 mean은 \(0.020289\)로 full과 거의 같지만 \(6/9\)라 현 \(7\)-replication rule에는 닿지 않는다. Speed는 probe00만으로도 \(7/9\)라 rule은 통과하지만 full보다 평균이 낮다. 따라서 probe00은 action map의 강한 carrier이고, 특히 wheel action에서는 거의 충분한 carrier에 가깝지만, replication rule 기준에서는 완전한 단독 충분조건이라고 쓰면 아직 과하다.
+
+마지막으로 probe00 안에서도 소수 unit만으로 닫히는지 보았다. 여기서는 cluster 번호를 세션 사이에서 같은 unit처럼 취급하지 않는다. 각 outer fold의 train set에서 target-window PCA loading과 train-selected action axes로 probe00 안 top 16 units를 새로 고른 뒤, 그 units만 남기거나 제거했다.
+
+| target | condition | evaluated | supported | mean dBA | median dBA | mean delta vs full | passed |
+|---|---|---:|---:|---:|---:|---:|---|
+| first movement speed | full | 12/12 | 9/12 | 0.013697 | 0.011018 | 0.000000 | `True` |
+| first movement speed | drop top units | 12/12 | 6/12 | 0.005858 | 0.002820 | -0.007839 | `False` |
+| first movement speed | only top units | 9/12 | 6/9 | 0.008726 | 0.004545 | -0.004971 | `False` |
+| wheel action direction | full | 12/12 | 8/12 | 0.020350 | 0.017363 | 0.000000 | `True` |
+| wheel action direction | drop top units | 12/12 | 6/12 | 0.007747 | 0.001398 | -0.012603 | `False` |
+| wheel action direction | only top units | 9/12 | 7/9 | 0.023757 | 0.008952 | 0.003407 | `True` |
+
+이 결과는 wheel을 더 강하게 좁힌다. Wheel은 fold-local top 16 probe00 units만으로 \(7/9\), mean \(0.023757\)이라 full보다 평균이 높고 현 replication rule도 통과한다. 반대로 top units를 제거하면 mean이 \(0.007747\)로 내려간다. Speed는 top units를 제거하면 약해지지만, top units만으로는 \(6/9\)라 한 번 부족하다. 따라서 wheel action은 `probe00` 안의 fold-local top-unit carrier로 거의 닫힌다. Speed action은 top anatomical block과 probe00에 의존하지만, 소수 top units만으로 충분하다고 쓰기에는 아직 모자란다.
