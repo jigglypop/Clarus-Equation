@@ -1146,3 +1146,103 @@ R_t,
 $$
 
 다음 병목은 \(R\), \(\hat H\), \(\epsilon\) 중 어느 하나의 단독 승격이 아니라, \(P_{\mathrm{rich}}\) 뒤에서 세 neural block이 함께 남는 이유를 ablation/Shapley식으로 분해하는 것이다.
+
+### Mouse IBL/OpenAlyx choice neural-block synergy gate
+
+Synergy gate는 같은 outer fold 안에서 \(P_{\mathrm{rich}}\) 뒤에 붙는 neural block 조합을 모두 비교했다.
+
+$$
+P,\quad
+P+R,\quad
+P+\hat H,\quad
+P+\epsilon,\quad
+P+R+\hat H,\quad
+P+R+\epsilon,\quad
+P+\hat H+\epsilon,\quad
+P+R+\hat H+\epsilon.
+$$
+
+여기서 \(\epsilon\)은 outer train 내부에서 고른 top-3 innovation subspace다.
+
+실행:
+
+```bash
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_choice_neural_synergy_gate.py
+```
+
+12-panel model summary:
+
+| model | mean BA | median BA |
+|---|---:|---:|
+| \(P\) | 0.837102 | 0.850950 |
+| \(P+\epsilon\) | 0.842266 | 0.852734 |
+| \(P+\hat H\) | 0.840806 | 0.854294 |
+| \(P+R\) | 0.839692 | 0.846948 |
+| \(P+\hat H+\epsilon\) | 0.848622 | 0.859746 |
+| \(P+R+\epsilon\) | 0.844350 | 0.850032 |
+| \(P+R+\hat H\) | 0.840482 | 0.851776 |
+| \(P+R+\hat H+\epsilon\) | 0.846516 | 0.853543 |
+
+증분:
+
+| increment | positive | mean dBA | median dBA | supported |
+|---|---:|---:|---:|---|
+| full after policy | 7/12 | 0.009414 | 0.002078 | `True` |
+| full minus best single | 3/12 | -0.000933 | -0.000822 | `False` |
+| full minus best pair | 1/12 | -0.003688 | -0.004323 | `False` |
+| best single after policy | 8/12 | 0.010347 | 0.002667 | `True` |
+| best pair after policy | 5/12 | 0.013102 | 0.001518 | `False` |
+
+각 fixed model을 \(P\)와 직접 비교하면:
+
+| model | positive | mean dBA | median dBA |
+|---|---:|---:|---:|
+| \(P+R\) | 5/12 | 0.002590 | 0.001219 |
+| \(P+\hat H\) | 5/12 | 0.003704 | 0.000532 |
+| \(P+\epsilon\) | 7/12 | 0.005164 | 0.002361 |
+| \(P+R+\hat H\) | 3/12 | 0.003381 | 0.000869 |
+| \(P+R+\epsilon\) | 3/12 | 0.007248 | -0.000623 |
+| \(P+\hat H+\epsilon\) | 5/12 | 0.011520 | -0.000603 |
+| \(P+R+\hat H+\epsilon\) | 7/12 | 0.009414 | 0.002078 |
+
+판정:
+
+$$
+\boxed{
+\mathrm{three\text{-}way\ synergy}
+\quad
+\mathrm{does\ not\ pass.}
+}
+$$
+
+Full neural block은 \(P\) 뒤에서 살아나지만, best single이나 best pair를 반복적으로 이기지 못한다. 따라서 choice residual을 "세 neural block의 삼중 결합"으로 승격하면 안 된다.
+
+대신 더 좁은 신호가 보인다.
+
+$$
+\boxed{
+P_{\mathrm{rich}}+\epsilon_{S_{\mathrm{train}}}
+\quad
+\mathrm{survives\ for\ choice}
+}
+$$
+
+\(P+\epsilon\)는 \(7/12\), mean \(0.005164\), median \(0.002361\)로 통과한다. 단, \(\epsilon\) subspace는 train fold 안에서 \(P,R,\hat H\) 조건으로 고른 축이므로 완전히 독립적인 choice-only axis는 아니다. 현재 해석은 "choice에는 innovation이 없다"가 아니라, "policy 뒤에 남는 choice innovation은 \(R,\hat H\)를 함께 partial out하면 불안정해지고, \(P+\epsilon\) 형태에서는 반복된다"이다.
+
+따라서 choice 식은 다시 좁힌다.
+
+$$
+\boxed{
+y_{\mathrm{choice},t}
+=
+g_c
+\left(
+P_t^{\mathrm{rich}},
+\epsilon_{t,S_{\mathrm{train}}}
+\right)
+\eta_t,
+\qquad
+R_t,\hat H_t
+\ \mathrm{are\ auxiliary/unstable\ for\ choice.}
+}
+$$
