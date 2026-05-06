@@ -72,6 +72,12 @@ ARTIFACTS = (
         "brain_depth_hypothesis",
     ),
     Artifact(
+        "brain_depth_verification_alignment",
+        "brain_clarus_depth_verification_alignment_gate.py",
+        "brain_clarus_depth_verification_alignment_report.md",
+        "verification_alignment",
+    ),
+    Artifact(
         "c_elegans_trial_boundary",
         "c_elegans_trial_behavior_boundary_audit.py",
         "c_elegans_trial_behavior_boundary_audit_report.md",
