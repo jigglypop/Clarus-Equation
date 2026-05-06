@@ -23,4 +23,4 @@ def test_evolution_lightweight_closure_suite_passes() -> None:
     summary = json.loads(completed.stdout)
 
     assert summary["passed"] is True
-    assert summary["passed_count"] == summary["total"] == 16
+    assert summary["passed_count"] == summary["total"] == 17

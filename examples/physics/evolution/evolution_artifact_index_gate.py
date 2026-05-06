@@ -66,6 +66,12 @@ ARTIFACTS = (
         "exact_mechanism_spec",
     ),
     Artifact(
+        "brain_clarus_depth_hierarchy",
+        "brain_clarus_depth_hierarchy_gate.py",
+        "brain_clarus_depth_hierarchy_report.md",
+        "brain_depth_hypothesis",
+    ),
+    Artifact(
         "c_elegans_trial_boundary",
         "c_elegans_trial_behavior_boundary_audit.py",
         "c_elegans_trial_behavior_boundary_audit_report.md",

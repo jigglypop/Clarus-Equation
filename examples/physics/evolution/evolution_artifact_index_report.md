@@ -1,7 +1,7 @@
 # Evolution artifact index
 
 - passed: `True`
-- artifacts: 17
+- artifacts: 18
 
 | gate | role | script | report | script exists | report exists |
 |---|---|---|---|---|---|
@@ -12,6 +12,7 @@
 | `clarus_cell_to_human_ladder` | `human_mechanism_ladder` | `clarus_cell_to_human_ladder_gate.py` | `clarus_cell_to_human_ladder_report.md` | `True` | `True` |
 | `human_clarus_cell_multiscale` | `human_multiscale_ablation` | `human_clarus_cell_multiscale_dynamics_gate.py` | `human_clarus_cell_multiscale_dynamics_report.md` | `True` | `True` |
 | `clarus_cell_exact_mechanism` | `exact_mechanism_spec` | `clarus_cell_exact_mechanism_spec_gate.py` | `clarus_cell_exact_mechanism_spec_report.md` | `True` | `True` |
+| `brain_clarus_depth_hierarchy` | `brain_depth_hypothesis` | `brain_clarus_depth_hierarchy_gate.py` | `brain_clarus_depth_hierarchy_report.md` | `True` | `True` |
 | `c_elegans_trial_boundary` | `empirical_boundary` | `c_elegans_trial_behavior_boundary_audit.py` | `c_elegans_trial_behavior_boundary_audit_report.md` | `True` | `True` |
 | `drosophila_trial_boundary` | `empirical_boundary` | `drosophila_trial_dynamics_boundary_audit.py` | `drosophila_trial_dynamics_boundary_audit_report.md` | `True` | `True` |
 | `zebrafish_continuous_boundary` | `empirical_boundary` | `zebrafish_continuous_boundary_final_audit.py` | `zebrafish_continuous_boundary_final_audit_report.md` | `True` | `True` |

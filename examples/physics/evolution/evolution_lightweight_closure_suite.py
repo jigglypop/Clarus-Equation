@@ -23,6 +23,7 @@ SUITE = (
     ("clarus_cell_to_human_ladder", "clarus_cell_to_human_ladder_gate.py"),
     ("human_clarus_cell_multiscale", "human_clarus_cell_multiscale_dynamics_gate.py"),
     ("clarus_cell_exact_mechanism", "clarus_cell_exact_mechanism_spec_gate.py"),
+    ("brain_clarus_depth_hierarchy", "brain_clarus_depth_hierarchy_gate.py"),
     ("c_elegans_trial_boundary", "c_elegans_trial_behavior_boundary_audit.py"),
     ("drosophila_trial_boundary", "drosophila_trial_dynamics_boundary_audit.py"),
     ("zebrafish_continuous_boundary", "zebrafish_continuous_boundary_final_audit.py"),
@@ -104,6 +105,9 @@ def summarize_parsed(parsed: dict[str, Any] | None) -> str:
             "human_clarus_cell_forms",
             "full_pass_rates",
             "exact_mechanism",
+            "minimal_brain_depth",
+            "minimal_brain_hypothesis",
+            "mind_candidate_depth",
         }
     }
     return ", ".join(f"{key}={value}" for key, value in keep.items())
