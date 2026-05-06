@@ -678,3 +678,407 @@ CE 우주론 관측량은 적어도 다음 다섯 종류로 나눠야 한다.
 - 판정: 현재 H0 readout law의 가장 강한 결과는 "수치를 사후 fitting했다"가 아니라,
   public source likelihood composition에서 readout branch transition이 재현된다는 점이다.
 
+2026-05-06, external H0 channel roadmap:
+
+- `examples/physics/h0_readout/h0_external_channel_roadmap_gate.py`를 추가했다.
+- full suite에 external roadmap gate를 포함했다.
+- 후보 채널:
+  - BAO+SN inverse distance ladder: global standard-ruler closure, low-side branch 예상.
+  - SH0ES-style local ladder: local calibrator endpoint closure, high-side branch 예상.
+  - GW standard sirens: distance-redshift bridge, intermediate branch 예상.
+  - CMB acoustic-scale inference: early global horizon closure, low-side branch 예상.
+- gate 결과: 다음 반증 타깃은 BAO+SN inverse-distance-ladder covariance provenance.
+- full suite 결과: PASS.
+- 판정: 다음 단계는 최종 H0 숫자를 넣는 것이 아니라,
+  BAO+SN covariance/compressed likelihood의 label을 observable/local/global role set으로 변환하는 adapter다.
+
+2026-05-06, BAO+SN source scout and BAO role adapter:
+
+- `examples/physics/h0_readout/h0_external_source_targets.json`를 추가했다.
+- `examples/physics/h0_readout/h0_bao_sn_source_scout_gate.py`를 추가했다.
+- source scout:
+  - `CobayaSampler/bao_data` HEAD `bb0c1c9009dc...` 확인 PASS.
+  - `PantheonPlusSH0ES/DataRelease` HEAD `c447f0fea703...` 확인 PASS.
+  - Pantheon+는 Windows full checkout에서 긴 경로/대소문자 충돌 문제가 있으므로 sparse/direct fetch가 필요하다.
+- `examples/physics/h0_readout/h0_bao_mean_cov_role_adapter_gate.py`를 추가했다.
+- BAO adapter 입력:
+  - `desi_2024_gaussian_bao_ALL_GCcomb_mean.txt`
+  - `desi_2024_gaussian_bao_ALL_GCcomb_cov.txt`
+- BAO adapter 결과:
+  - measurements: 12
+  - quantities: `DH_over_rs`, `DM_over_rs`, `DV_over_rs`
+  - local nodes: 0
+  - global nodes: 14
+- 판정: DESI BAO mean/covariance labels는 global standard-ruler closure 후보로 매핑된다.
+- 다음 단계: 이 role graph를 H0 readout JSON으로 투입 가능한 aggregate covariance channel로 만들지,
+  아니면 BAO+SN joint likelihood adapter를 먼저 만들지 결정한다.
+
+2026-05-06, BAO branch-only readout:
+
+- `examples/physics/h0_readout/h0_bao_global_readout_gate.py`를 추가했다.
+- full suite에 BAO/SN source scout, BAO role adapter, BAO global readout gate를 포함했다.
+- BAO branch-only gate는 관측 H0 값을 붙이지 않는다.
+- 목적: DESI BAO source role이 local branch가 아니라 global branch를 선택하는지 확인.
+- 결과:
+  - nodes: 14
+  - local nodes: 0
+  - global nodes: 13
+  - local conductance: 0
+  - global conductance: positive
+  - selector: global endpoint
+  - branch prediction: low-side H0 branch
+- full suite 결과: PASS.
+- 판정: TDCOSMO 밖의 독립 계열인 DESI BAO에서도 source role 기준 branch 방향은 이론 기대와 일치한다.
+- 다음 단계: Pantheon+SH0ES sparse/direct fetch adapter로 local ladder contrast를 만들거나,
+  BAO+SN joint source role graph를 구성한다.
+
+2026-05-06, Pantheon+SH0ES local-ladder readout:
+
+- `examples/physics/h0_readout/h0_pantheon_shoes_role_adapter_gate.py`를 추가했다.
+- `examples/physics/h0_readout/h0_pantheon_shoes_local_readout_gate.py`를 추가했다.
+- full suite에 두 gate를 포함했다.
+- public source:
+  - `Pantheon+SH0ES.dat`
+  - `Pantheon+SH0ES_STAT+SYS.cov`
+  - repo HEAD `c447f0fea703...`
+- role adapter 결과:
+  - rows: 1701
+  - columns: 47
+  - surveys: 20
+  - Cepheid calibrator rows: 77
+  - SH0ES Hubble-flow rows: 277
+  - calibrator/Hubble-flow overlap: 0
+  - local nodes: 3
+  - global nodes: 0
+- branch-only readout 결과:
+  - local conductance: positive
+  - global conductance: 0
+  - selector: local endpoint
+  - branch prediction: high-side H0 branch
+- full suite 결과: PASS.
+- 판정:
+  - DESI BAO는 global/low-side branch.
+  - Pantheon+SH0ES는 local/high-side branch.
+  - Hubble tension의 대표 외부 두 계열이 source role 기준으로 이론 기대 방향을 고른다.
+- 다음 단계:
+  - BAO+Pantheon+SH0ES joint source-role contrast gate를 만든다.
+  - 그 뒤 최종 H0 숫자 비교가 아니라 branch separation/ablation 비교로 논문용 핵심 그림을 만든다.
+
+2026-05-06, cross-channel branch contrast:
+
+- `examples/physics/h0_readout/h0_cross_channel_branch_contrast_gate.py`를 추가했다.
+- full suite에 포함했다.
+- 포함 채널:
+  - TDCOSMO-only: local/high
+  - TDCOSMO+IFU: local/high
+  - TDCOSMO+SLACS: global/low
+  - TDCOSMO+SLACS+IFU: global/low
+  - DESI BAO: global/low
+  - Pantheon+SH0ES: local/high
+- 결과:
+  - local family mean selector: 0.894119
+  - global family mean selector: 0.001853
+  - cross-channel separation: 0.892266
+- full suite 결과: PASS.
+- 판정: joint H0 refit 이전의 source role만으로도 독립 H0 채널들이 local/high와 global/low로 강하게 분리된다.
+- 논문 핵심 그림 후보:
+  - x축: source readout role 또는 selector
+  - y축: H0 branch
+  - 점: TDCOSMO-only, TDCOSMO+IFU, TDCOSMO+SLACS, TDCOSMO+SLACS+IFU, DESI BAO, Pantheon+SH0ES
+
+2026-05-06, cross-channel role ablation:
+
+- `examples/physics/h0_readout/h0_cross_channel_role_ablation_gate.py`를 추가했다.
+- full suite에 포함했다.
+- 결과:
+  - declared source-aware roles: 6/6
+  - all-local ablation: 3/6
+  - all-global ablation: 3/6
+  - flipped-role ablation: 0/6
+- full suite 결과: PASS.
+- 판정: cross-channel branch split은 모든 채널을 local 또는 global로 고정해서 얻는 trivial result가 아니다.
+  source-aware role assignment가 필요하다.
+- 논문 방어선:
+  - "역할을 임의로 붙였으니 당연히 갈라진 것 아니냐"라는 비판에 대해,
+    static/flipped role map이 실패한다는 ablation table로 답한다.
+
+2026-05-06, cross-channel threshold robustness:
+
+- `examples/physics/h0_readout/h0_cross_channel_threshold_robustness_gate.py`를 추가했다.
+- full suite에 포함했다.
+- threshold sweep:
+  - 0.55: 6/6
+  - 0.60: 6/6
+  - 0.65: 6/6
+  - 0.70: 6/6
+  - 0.75: 6/6
+  - 0.80: 6/6
+- bridge count: 모든 threshold에서 0.
+- min local selector: 0.830134
+- max global selector: 0.003704
+- full suite 결과: PASS.
+- 판정: branch split은 특정 classification threshold 하나를 손으로 고른 결과가 아니다.
+  local/high와 global/low가 selector space에서 충분히 멀리 분리되어 있다.
+
+2026-05-06, paper figure table:
+
+- `examples/physics/h0_readout/h0_paper_figure_table_gate.py`를 추가했다.
+- full suite에 포함했다.
+- paper-ready table:
+  - DESI BAO: standard ruler, global, global/low
+  - TDCOSMO+SLACS: time-delay lensing, global, global/low
+  - TDCOSMO+SLACS+IFU: time-delay lensing, global, global/low
+  - Pantheon+SH0ES: distance ladder, local, local/high
+  - TDCOSMO+IFU: time-delay lensing, local, local/high
+  - TDCOSMO-only: time-delay lensing, local, local/high
+- local rows: 3
+- global rows: 3
+- full suite 결과: PASS.
+- 판정: 논문 Figure 1 또는 Table 1 후보가 재현 가능한 gate로 고정됐다.
+
+2026-05-06, paper claim audit:
+
+- `examples/physics/h0_readout/h0_paper_claim_audit_gate.py`를 추가했다.
+- full suite에 포함했다.
+- claim map:
+  - C1: TDCOSMO role metadata는 likelihood factor에서 재현된다.
+  - C2: 공개 notebook sampler composition은 likelihood-factor graph와 일치한다.
+  - C3: TDCOSMO는 SLACS population closure가 들어오면 local/high에서 global/low로 branch 전이한다.
+  - C4: static TDCOSMO role map은 source-aware transition보다 나쁘다.
+  - C5: DESI BAO는 H0 refit 이전에 global/low branch를 고른다.
+  - C6: Pantheon+SH0ES는 H0 refit 이전에 local/high branch를 고른다.
+  - C7: 6개 channel row가 source role만으로 local/high와 global/low family로 갈라진다.
+  - C8: all-local, all-global, flipped role ablation은 cross-channel split을 만들지 못한다.
+  - C9: threshold sweep에서도 split이 유지된다.
+  - L1: full joint BAO/SN/TDCOSMO posterior refit은 아직 남은 한계다.
+- 판정: 이제 논문에서 주장 가능한 문장과 아직 한계로 남겨야 할 문장이 gate 단위로 분리됐다.
+
+2026-05-06, next expansion plan:
+
+- 일반 설명에서 정리한 다음 확장축을 plan에 고정했다.
+- 우선순위:
+  - CMB acoustic-scale inference: early global horizon closure이므로 global/low branch 예상.
+  - GW standard sirens: detector distance와 redshift anchor가 섞인 bridge/intermediate branch 예상.
+  - quantum measurement/readout: 측정값이 대상의 절대값이 아니라 coupling/source role이 고른 branch일 가능성.
+  - black-hole/holographic readout: local horizon observer와 global boundary observer의 readout 차이로 확장 가능.
+- 즉시 진행 방향:
+  - CMB를 branch-only gate로 먼저 추가한다.
+  - 이후 public Planck covariance/likelihood ingestion으로 source-role-only 예측을 실제 data-facing test로 승격한다.
+
+2026-05-06, CMB acoustic-scale global branch:
+
+- `examples/physics/h0_readout/h0_cmb_acoustic_global_readout_gate.py`를 추가했다.
+- CMB acoustic angle을 early global horizon closure로 놓는 branch-only payload를 만들었다.
+- local nodes: 0.
+- global nodes:
+  - sound horizon
+  - last scattering surface
+  - early density closure
+  - angular diameter distance to recombination
+  - recombination history
+- 예상:
+  - q_F = 0
+  - global/low branch
+- full suite와 cross-channel table에 포함했다.
+- 한계:
+  - 아직 Planck likelihood/covariance를 직접 ingest한 것은 아니다.
+  - 현재 단계는 CMB의 source role이 어떤 branch를 예측하는지 고정하는 예비 gate다.
+
+2026-05-06, CMB source scout:
+
+- `examples/physics/h0_readout/h0_cmb_source_scout_gate.py`를 추가했다.
+- 목적:
+  - CMB branch-only gate를 실제 Planck covariance/likelihood ingestion으로 올리기 전,
+    어떤 공개 source를 기준으로 삼을지 고정한다.
+- source targets:
+  - Planck Legacy Archive cosmological parameter chains:
+    `https://wiki.cosmos.esa.int/planck-legacy-archive/index.php/Cosmological_Parameters`
+  - Planck 2018 likelihood paper:
+    `https://arxiv.org/abs/1907.12875`
+  - Planck 2018 cosmological parameters paper:
+    `https://arxiv.org/abs/1807.06209`
+- next ingest target:
+  - `base_plikHM_TTTEEE_lowl_lowE_lensing` chain covariance.
+- 판정:
+  - CMB는 cross-channel table에 들어갔지만 아직 `claimable-with-scope`다.
+  - 다음 단계에서 실제 Planck chain/covariance를 읽어야 CMB도 BAO/Pantheon처럼 data-facing gate가 된다.
+
+2026-05-06, Planck PR3 CMB covariance adapter:
+
+- IRSA Planck PR3 ancillary data에서 63 MB package를 내려받았다.
+  - source: `https://irsa.ipac.caltech.edu/data/Planck/release_3/ancillary-data/`
+  - package: `COM_CosmoParams_base-plikHM-TTTEEE-lowl-lowE_R3.00.zip`
+- 필요한 파일만 `h0_real_data/Planck_PR3/extract/` 아래 추출했다.
+  - `base_plikHM_TTTEEE_lowl_lowE_lensing.paramnames`
+  - `dist/base_plikHM_TTTEEE_lowl_lowE_lensing.covmat`
+  - `dist/base_plikHM_TTTEEE_lowl_lowE_lensing.margestats`
+- `examples/physics/h0_readout/h0_cmb_planck_covariance_adapter_gate.py`를 추가했다.
+- 실제 Planck covariance adapter 결과:
+  - parameters: 27
+  - observable: `theta`
+  - local nodes: 0
+  - global nodes: 26
+  - q_F = 0
+  - H0 branch prediction: low/global
+  - Planck marginal H0: 약 67.36 +/- 0.54
+  - pull: 1 sigma 안쪽
+- cross-channel row를 synthetic CMB acoustic row에서 Planck CMB covariance row로 교체했다.
+- 판정:
+  - CMB는 이제 `claimable-with-scope`에서 `claimable`에 가까워졌다.
+  - 정확한 표현은 "Planck PR3 covariance selects the global/low branch under the acoustic-scale source-role map"이다.
+
+2026-05-06, GW standard-siren bridge:
+
+- `examples/physics/h0_readout/h0_gw_source_scout_gate.py`를 추가했다.
+- `examples/physics/h0_readout/h0_gw_standard_siren_bridge_gate.py`를 추가했다.
+- source targets:
+  - GW170817 bright siren H0 posterior reference.
+  - LIGO/Virgo GW170817 standard-siren provenance.
+  - O4a standard-siren population extension.
+- role interpretation:
+  - GW amplitude/distance: local absolute-distance readout.
+  - host/counterpart redshift and velocity correction: global/environment anchor.
+  - expected readout: bridge/intermediate.
+- result:
+  - local nodes: 1
+  - global nodes: 1
+  - q_F = 0.5
+  - H0 branch prediction: about 70.15
+  - reference GW170817 H0: about 70.3 +/- 5.15
+  - pull: near zero.
+- 판정:
+  - GW standard siren은 local/high 또는 global/low endpoint가 아니라 bridge branch를 고른다.
+  - 이론이 양끝 분류뿐 아니라 중간 readout도 예측할 수 있음을 보여주는 첫 게이트다.
+
+2026-05-06, three-family H0 readout table:
+
+- `examples/physics/h0_readout/h0_three_family_readout_table_gate.py`를 추가했다.
+- 목적:
+  - endpoint-only paper table과 별도로, GW bridge까지 포함한 3-family table을 만든다.
+- rows:
+  - global/low:
+    - DESI BAO
+    - Planck CMB
+    - TDCOSMO+SLACS
+    - TDCOSMO+SLACS+IFU
+  - bridge/intermediate:
+    - GW170817 bright siren
+  - local/high:
+    - Pantheon+SH0ES
+    - TDCOSMO+IFU
+    - TDCOSMO-only
+- 판정:
+  - H0 readout law는 local/high와 global/low 양끝만 분류하는 법칙이 아니라,
+    source coupling이 섞이면 intermediate readout도 낼 수 있다.
+
+2026-05-06, paper package:
+
+- `examples/physics/h0_readout/h0_paper_package_gate.py`를 추가했다.
+- 목적:
+  - 논문 그림과 한계 문장을 gate로 묶는다.
+- Figure package:
+  - Figure 1: endpoint source-role split.
+  - Figure 2: three-family readout law.
+- required limitations:
+  - full joint BAO/SN/TDCOSMO posterior refit은 아직 남았다.
+  - GW bridge는 event-level posterior samples가 아니라 source-role covariance abstraction이다.
+  - CMB는 Planck PR3 parameter covariance를 읽은 것이고, Planck likelihood 전체를 새로 최적화한 것은 아니다.
+- 판정:
+  - 논문 초안의 최소 골격이 gate로 고정됐다.
+
+2026-05-06, H0 paper draft spine:
+
+- `docs/3_상수/12_H0_source_role_readout_paper_draft.md`를 추가했다.
+- 포함 내용:
+  - working title
+  - abstract draft
+  - core claim
+  - Figure 1 endpoint split
+  - Figure 2 three-family readout law
+  - TDCOSMO, BAO/CMB, Pantheon+SH0ES, GW results narrative
+  - ablations
+  - required limitations
+  - next tests
+- `examples/physics/h0_readout/h0_paper_draft_gate.py`를 추가했다.
+- 판정:
+  - 이제 논문 초안의 주장/그림/한계/다음 테스트 spine이 gate로 고정됐다.
+
+2026-05-06, H0 paper methods spine:
+
+- `docs/3_상수/12_H0_source_role_readout_paper_draft.md`에 Methods 섹션을 추가했다.
+- 정의한 것:
+  - Fisher/covariance payload.
+  - normalized edge reliability.
+  - local endpoint conductance `C_L`.
+  - global closure conductance `C_G`.
+  - selector `q_F = C_L/(C_L+C_G)`.
+  - branch readout `H0(q_F)`.
+- `h0_paper_draft_gate.py`가 methods section과 핵심 기호를 검사하도록 강화했다.
+- 판정:
+  - 초안이 이제 단순 설명 문서가 아니라, 계산 가능한 method spine을 갖는다.
+
+2026-05-06, H0 paper reviewer safeguards:
+
+- `docs/3_상수/12_H0_source_role_readout_paper_draft.md`에 reviewer objections 섹션을 추가했다.
+- 선제 대응:
+  - H0 값을 보고 family를 나눈 것 아닌가?
+  - local/global role assignment가 임의 아닌가?
+  - threshold를 튜닝한 것 아닌가?
+  - full cosmological inference가 아닌데 과장 아닌가?
+  - GW bridge result가 아직 약하지 않은가?
+- `h0_paper_draft_gate.py`가 reviewer-safeguard section과 핵심 방어 문구를 검사하도록 강화했다.
+- 판정:
+  - 초안은 이제 주장뿐 아니라 예상 반론과 방어선까지 포함한다.
+
+2026-05-06, H0 paper provenance table:
+
+- `examples/physics/h0_readout/h0_paper_provenance_table_gate.py`를 추가했다.
+- `docs/3_상수/12_H0_source_role_readout_paper_draft.md`에 Data provenance 섹션을 추가했다.
+- 목적:
+  - 모든 H0 readout row가 public source, source role, primary gate, status와 연결되도록 한다.
+- rows:
+  - TDCOSMO-only
+  - TDCOSMO+IFU
+  - TDCOSMO+SLACS
+  - TDCOSMO+SLACS+IFU
+  - DESI BAO
+  - Planck CMB
+  - Pantheon+SH0ES
+  - GW170817 bright siren
+- 판정:
+  - 논문 초안이 결과 표뿐 아니라 data provenance table도 갖는다.
+
+2026-05-06, H0 paper numeric results table:
+
+- `examples/physics/h0_readout/h0_paper_numeric_results_gate.py`를 추가했다.
+- `docs/3_상수/12_H0_source_role_readout_paper_draft.md`에 Numeric results 섹션을 추가했다.
+- table scope:
+  - selector `q_F`
+  - readout family
+  - H0 readout
+  - reference status
+  - branch-only rows는 branch-only로 표시한다.
+- 판정:
+  - 논문 초안은 이제 provenance table과 numeric result table을 모두 가진다.
+
+2026-05-06, H0 paper figure captions:
+
+- Added `examples/physics/h0_readout/h0_paper_caption_gate.py`.
+- Expanded the paper draft Figure 1 and Figure 2 captions.
+- Figure 1 now states the endpoint split and the key ordering: source roles are assigned before H0 comparison.
+- Figure 2 now states the bridge/intermediate interpretation and explicitly warns that the diagram is not a joint posterior fit.
+- Added the caption gate to the full suite and claim audit as C19.
+
+2026-05-06, H0 paper plain significance:
+
+- Added `examples/physics/h0_readout/h0_paper_plain_significance_gate.py`.
+- Added `## Plain-language significance` to the H0 paper draft.
+- The new section explains the result without equations: CMB/BAO close through global rulers, distance ladders close through nearby anchors, and standard sirens sit between distance and redshift anchoring.
+- Added the significance gate to the full suite and claim audit as C18.
+
+2026-05-06, H0 paper prediction ledger:
+
+- Added `examples/physics/h0_readout/h0_paper_prediction_ledger_gate.py`.
+- The ledger turns the source-role readout into future-facing tests: GW event-level posteriors, TRGB/JAGB/CCHP ladders, BAO+SN inverse-distance-ladder covariance, CMB covariance variants, and alternative TDCOSMO notebooks/chains.
+- Updated the paper draft with `## Predictions and falsification`, including explicit ways the proposal could weaken or fail after source roles are fixed first.
+- Wired the prediction ledger into `h0_fisher_io_full_suite.py` and `h0_paper_claim_audit_gate.py`.

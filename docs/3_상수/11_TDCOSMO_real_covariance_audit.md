@@ -589,3 +589,475 @@ lens model이 흡수할 수 있는 endpoint freedom을 더 많이 남겨둔 read
 이 문장은 값 자체를 부정하지 않는다. 값은 그대로 둔다. 대신 값이 생성되는 readout 구조를
 드러낸다. 이 점이 현재 결과의 가장 큰 의의다.
 
+## Next external channel
+
+TDCOSMO 내부에서는 provenance loop가 닫혔다. 다음 질문은 이 readout transition이 lensing
+전용 효과인지, 아니면 Hubble tension 전체에서 반복되는 구조인지다.
+
+이를 위해 `examples/physics/h0_readout/h0_external_channel_roadmap_gate.py`를 추가했다.
+
+결과적으로 다음 반증 타깃은 BAO+SN inverse distance ladder다.
+
+이유:
+
+1. TDCOSMO+SLACS와 마찬가지로 global ruler/closure 성격이 강하다.
+2. SH0ES local ladder와 반대편 branch를 대표하므로, 논문에서 대조군으로 쓰기 좋다.
+3. 필요한 것은 최종 H0 숫자가 아니라 covariance label과 likelihood role map이다.
+4. 만약 BAO+SN의 source graph가 global closure인데도 readout이 local처럼 나온다면 현재 이론은
+   약해진다. 반대로 global readout으로 나오면 TDCOSMO 밖에서도 같은 구조가 보이는 셈이다.
+
+따라서 다음 작업은 "새 값을 맞추기"가 아니라, BAO+SN compressed likelihood 또는 covariance의
+라벨을 읽어서 observable/local/global role set으로 변환하는 adapter를 만드는 것이다.
+
+## BAO source scout and role adapter
+
+BAO+SN 확장의 첫 단계로 public source를 고정했다.
+
+BAO source:
+
+- repo: `https://github.com/CobayaSampler/bao_data`
+- fixed HEAD: `bb0c1c9009dc76d1391300e169e8df38fd1096db`
+- candidate files:
+  - `desi_bao_dr2/desi_gaussian_bao_ALL_GCcomb_mean.txt`
+  - `desi_bao_dr2/desi_gaussian_bao_ALL_GCcomb_cov.txt`
+  - `desi_2024_gaussian_bao_ALL_GCcomb_mean.txt`
+  - `desi_2024_gaussian_bao_ALL_GCcomb_cov.txt`
+
+SN source:
+
+- repo: `https://github.com/PantheonPlusSH0ES/DataRelease`
+- fixed HEAD: `c447f0fea703fcd0fff57de5000947b5ca81286b`
+- note: Windows에서는 full checkout이 긴 경로와 대소문자 충돌 때문에 실패할 수 있으므로,
+  sparse checkout 또는 direct raw file fetch가 필요하다.
+
+추가한 gate:
+
+```bash
+python examples/physics/h0_readout/h0_bao_sn_source_scout_gate.py
+python examples/physics/h0_readout/h0_bao_mean_cov_role_adapter_gate.py
+```
+
+source scout 결과:
+
+- `CobayaSampler/bao_data`: remote HEAD 일치, candidate files 확인 PASS.
+- `PantheonPlusSH0ES/DataRelease`: remote HEAD 일치, Git tree에서 핵심 후보 확인 PASS.
+
+BAO role adapter 결과:
+
+- 입력: `desi_2024_gaussian_bao_ALL_GCcomb_mean.txt`
+- covariance: `desi_2024_gaussian_bao_ALL_GCcomb_cov.txt`
+- measurements: 12
+- quantities: `DH_over_rs`, `DM_over_rs`, `DV_over_rs`
+- local nodes: 0
+- global nodes: 14
+- 판정: DESI BAO mean/covariance labels는 global standard-ruler closure 후보로 매핑된다.
+
+일반어로 말하면, BAO 데이터는 "근처 보정 사다리"가 아니라 "우주에 새겨진 표준 길이자"로
+거리를 재는 채널이다. 따라서 우리 이론의 다음 예측은 BAO가 local endpoint 쪽이 아니라 global
+closure 쪽으로 읽혀야 한다는 것이다. 이 단계에서는 아직 H0 숫자를 만들지 않았다. 먼저 source
+role이 이론의 기대와 맞는지 확인한 것이다.
+
+## BAO branch-only readout
+
+BAO role adapter를 실제 H0 readout pipeline에 넣기 위한 branch-only gate를 추가했다.
+
+```bash
+python examples/physics/h0_readout/h0_bao_global_readout_gate.py
+```
+
+이 gate는 최종 관측 H0 값을 붙이지 않는다. 목적은 하나다. DESI BAO mean/covariance에서
+생성된 source role이 local branch가 아니라 global branch를 선택하는지 확인한다.
+
+결과:
+
+- channel: DESI 2024 BAO global standard-ruler branch check
+- nodes: 14
+- local nodes: 0
+- global nodes: 13
+- local conductance: 0
+- global conductance: positive
+- branch selector: global endpoint
+- branch prediction: low-side H0 branch
+
+해석:
+
+BAO는 TDCOSMO+SLACS와 같은 수치 데이터가 아니다. 관측 방식도 다르고, likelihood 구조도 다르다.
+그런데 readout role 관점에서는 같은 방향을 가리킨다. 둘 다 개별 local endpoint를 열어두는
+분석이 아니라, 더 큰 기준자로 거리를 닫는 분석이다.
+
+따라서 현재까지의 구조는 다음처럼 넓어졌다.
+
+```text
+TDCOSMO-only / TDCOSMO+IFU
+  -> local endpoint readout
+  -> high-side branch
+
+TDCOSMO+SLACS / TDCOSMO+SLACS+IFU
+  -> population/global closure readout
+  -> low-side branch
+
+DESI BAO mean/covariance
+  -> standard-ruler/global closure readout
+  -> low-side branch
+```
+
+이 결과의 의미는 "BAO H0를 맞췄다"가 아니다. 아직 그렇게 하지 않았다. 의미는 더 좁고 더
+강하다. TDCOSMO 밖의 독립 관측 계열에서도, source role만 보면 이론이 예측한 branch 방향이
+먼저 맞아떨어진다는 것이다.
+
+## Pantheon+SH0ES local-ladder readout
+
+BAO가 global/low-side branch를 고르는지 확인한 뒤, 반대편 대조군으로 Pantheon+SH0ES local
+distance ladder를 검사했다.
+
+추가한 gate:
+
+```bash
+python examples/physics/h0_readout/h0_pantheon_shoes_role_adapter_gate.py
+python examples/physics/h0_readout/h0_pantheon_shoes_local_readout_gate.py
+```
+
+사용한 public source:
+
+- repo: `https://github.com/PantheonPlusSH0ES/DataRelease`
+- fixed HEAD: `c447f0fea703fcd0fff57de5000947b5ca81286b`
+- distance table: `Pantheon+SH0ES.dat`
+- covariance table: `Pantheon+SH0ES_STAT+SYS.cov`
+
+source role adapter 결과:
+
+- rows: 1701
+- columns: 47
+- surveys: 20
+- Cepheid calibrator rows: 77
+- SH0ES Hubble-flow rows: 277
+- calibrator/Hubble-flow overlap: 0
+- local nodes: 3
+- global nodes: 0
+
+branch-only readout 결과:
+
+- channel: Pantheon+SH0ES local distance-ladder branch check
+- nodes: 4
+- local nodes: 3
+- global nodes: 0
+- local conductance: positive
+- global conductance: 0
+- branch selector: local endpoint
+- branch prediction: high-side H0 branch
+
+해석:
+
+Pantheon+SH0ES는 BAO와 정반대의 역할 구조를 갖는다. BAO는 표준 길이자를 기준으로 우주 거리를
+닫는 global closure 채널이고, Pantheon+SH0ES는 Cepheid calibrator와 Hubble-flow SN endpoint를
+연결해 local distance ladder를 닫는 채널이다.
+
+따라서 현재까지의 외부 채널 그림은 다음처럼 정리된다.
+
+```text
+DESI BAO
+  -> global standard-ruler closure
+  -> low-side branch
+
+Pantheon+SH0ES
+  -> local distance-ladder endpoint closure
+  -> high-side branch
+```
+
+이 단계의 의의는 크다. TDCOSMO 안에서 보였던 readout role transition이, Hubble tension의
+대표적인 두 외부 계열에서도 같은 방향으로 나타났다. 아직 최종 joint H0 likelihood를 다시
+계산한 것은 아니지만, source label만으로 branch 방향이 먼저 갈라진다는 점은 논문에서 강한
+구조적 근거가 된다.
+
+## Cross-channel branch contrast
+
+개별 source gate들을 논문용 핵심 표로 묶기 위해 cross-channel contrast gate를 추가했다.
+
+```bash
+python examples/physics/h0_readout/h0_cross_channel_branch_contrast_gate.py
+```
+
+결과:
+
+| channel | family | source role | readout |
+|---|---|---|---|
+| TDCOSMO-only | time-delay lensing | local | high-side |
+| TDCOSMO+IFU | time-delay lensing | local | high-side |
+| TDCOSMO+SLACS | time-delay lensing | global | low-side |
+| TDCOSMO+SLACS+IFU | time-delay lensing | global | low-side |
+| DESI BAO | standard ruler | global | low-side |
+| Pantheon+SH0ES | distance ladder | local | high-side |
+
+수치 요약:
+
+- local family mean selector: high-side 쪽
+- global family mean selector: low-side 쪽
+- cross-channel separation: strong
+- status: PASS
+
+의미:
+
+이제 주장은 한 계열의 우연이 아니다. time-delay lensing 내부에서는 likelihood composition이
+branch를 바꾼다. 외부 채널에서는 관측 family 자체가 source role을 이미 갖고 있다. BAO는
+global standard ruler, SH0ES는 local distance ladder다. 그리고 둘은 예상대로 서로 반대 branch를
+고른다.
+
+논문에서 가장 조심스럽고 강한 문장은 다음이다.
+
+> Hubble tension channels separate by source readout role before any joint
+> refit of H0 is performed.
+
+즉, 우리는 최종값을 억지로 맞추는 것이 아니라, 최종값이 나오기 전의 source structure만으로
+branch 방향이 갈라지는지를 보고 있다. 이 점이 현재까지의 가장 강한 결과다.
+
+## Cross-channel role ablation
+
+cross-channel contrast가 단순히 역할을 임의로 붙였기 때문에 생긴 결과인지 검사하기 위해
+ablation gate를 추가했다.
+
+```bash
+python examples/physics/h0_readout/h0_cross_channel_role_ablation_gate.py
+```
+
+결과:
+
+| model | correct / total | interpretation |
+|---|---:|---|
+| declared source-aware roles | 6/6 | all channels classified correctly |
+| all local | 3/6 | global channels collapse to the wrong high-side branch |
+| all global | 3/6 | local channels collapse to the wrong low-side branch |
+| flipped roles | 0/6 | every channel goes to the opposite branch |
+
+이 ablation은 중요하다. 만약 어떤 static rule도 모든 채널을 잘 분리했다면, source-aware role
+transition은 별 의미가 없었을 것이다. 하지만 실제로는 declared source role만 6/6을 맞추고,
+all-local/all-global/flipped는 실패한다.
+
+따라서 현재 주장은 다음처럼 더 강해진다.
+
+> The branch split is not produced by assigning every channel to a fixed local
+> or global class; it requires source-aware role assignment.
+
+논문에서는 이 표가 핵심 방어선이다. "역할을 네가 붙였으니 당연히 갈라진 것 아니냐"라는
+비판에 대해, 역할을 고정하거나 뒤집으면 바로 깨진다고 답할 수 있다.
+
+## Threshold robustness
+
+다음으로 branch classifier의 threshold를 넓게 흔들었다.
+
+```bash
+python examples/physics/h0_readout/h0_cross_channel_threshold_robustness_gate.py
+```
+
+결과:
+
+| threshold | correct / total | bridge count |
+|---:|---:|---:|
+| 0.55 | 6/6 | 0 |
+| 0.60 | 6/6 | 0 |
+| 0.65 | 6/6 | 0 |
+| 0.70 | 6/6 | 0 |
+| 0.75 | 6/6 | 0 |
+| 0.80 | 6/6 | 0 |
+
+추가 요약:
+
+- minimum local selector: high-side region에 안정적으로 남음.
+- maximum global selector: low-side region에 안정적으로 남음.
+- bridge midpoint로부터의 최소 거리도 충분히 큼.
+
+따라서 branch split은 특정 threshold 하나를 골라서 만든 결과가 아니다. local/high 채널과
+global/low 채널이 selector 공간에서 멀리 떨어져 있기 때문에, 넓은 threshold sweep에서도
+classification이 변하지 않는다.
+
+## Paper figure table
+
+논문용 핵심 표를 재현하는 gate를 추가했다.
+
+```bash
+python examples/physics/h0_readout/h0_paper_figure_table_gate.py
+```
+
+표:
+
+| channel | observational family | source role | branch |
+|---|---|---|---|
+| DESI BAO | standard ruler | global | global/low |
+| TDCOSMO+SLACS | time-delay lensing | global | global/low |
+| TDCOSMO+SLACS+IFU | time-delay lensing | global | global/low |
+| Pantheon+SH0ES | distance ladder | local | local/high |
+| TDCOSMO+IFU | time-delay lensing | local | local/high |
+| TDCOSMO-only | time-delay lensing | local | local/high |
+
+이 표가 현재 논문 Figure 1 또는 Table 1의 가장 좋은 후보이다. 이유는 단순하다.
+
+1. source role이 먼저 제시된다.
+2. branch readout이 그 다음에 나온다.
+3. TDCOSMO 내부 전이와 외부 채널 대조가 한 표에 들어간다.
+4. ablation과 threshold robustness가 바로 뒤에서 방어한다.
+
+따라서 논문의 중심 구조는 다음 순서가 좋다.
+
+1. Source role definition.
+2. TDCOSMO provenance and role transition.
+3. External BAO/SH0ES branch contrast.
+4. Cross-channel ablation.
+5. Threshold robustness.
+6. Interpretation: Hubble tension channels separate before joint H0 refit.
+
+## Paper claim audit
+
+논문에 넣을 수 있는 주장과 아직 한계로 남겨야 하는 문장을 분리하기 위해 claim audit gate를
+추가했다.
+
+```bash
+python examples/physics/h0_readout/h0_paper_claim_audit_gate.py
+```
+
+현재 claim map:
+
+| id | 논문에서 말할 수 있는 범위 | 방어 gate |
+|---|---|---|
+| C1 | TDCOSMO role metadata는 임의 표기가 아니라 likelihood factor에서 재현된다. | `h0_tdcosmo_factor_role_gate.py` |
+| C2 | 공개 notebook sampler 구성이 likelihood-factor graph와 일치한다. | `h0_tdcosmo_notebook_factor_extract_gate.py` |
+| C3 | TDCOSMO는 SLACS population closure가 들어오면 local/high에서 global/low로 branch가 바뀐다. | `h0_tdcosmo_role_transition_gate.py` |
+| C4 | static TDCOSMO role map은 source-aware transition보다 나쁘다. | `h0_tdcosmo_role_ablation_gate.py` |
+| C5 | DESI BAO source labels는 H0 refit 이전에 global/low branch를 고른다. | `h0_bao_mean_cov_role_adapter_gate.py`, `h0_bao_global_readout_gate.py` |
+| C6 | Pantheon+SH0ES source labels는 H0 refit 이전에 local/high branch를 고른다. | `h0_pantheon_shoes_role_adapter_gate.py`, `h0_pantheon_shoes_local_readout_gate.py` |
+| C7 | 6개 channel row가 source role만으로 local/high와 global/low family로 갈라진다. | `h0_cross_channel_branch_contrast_gate.py`, `h0_paper_figure_table_gate.py` |
+| C8 | 이 분리는 all-local, all-global, flipped role map으로 만들 수 없다. | `h0_cross_channel_role_ablation_gate.py` |
+| C9 | 이 분리는 classification threshold를 넓게 흔들어도 유지된다. | `h0_cross_channel_threshold_robustness_gate.py` |
+| C10 | Planck PR3 CMB covariance는 acoustic-scale source-role map 아래 global/low branch를 고른다. | `h0_cmb_source_scout_gate.py`, `h0_cmb_acoustic_global_readout_gate.py`, `h0_cmb_planck_covariance_adapter_gate.py` |
+| C11 | GW170817-like standard siren은 endpoint가 아니라 bridge/intermediate branch를 고른다. | `h0_gw_source_scout_gate.py`, `h0_gw_standard_siren_bridge_gate.py` |
+| C12 | H0 readout table은 global/low, bridge/intermediate, local/high 세 family를 모두 포함한다. | `h0_three_family_readout_table_gate.py` |
+| C13 | 논문 패키지는 endpoint figure, three-family figure, required limitations를 재현한다. | `h0_paper_package_gate.py` |
+| L1 | 아직 full joint BAO/SN/TDCOSMO H0 posterior refit은 하지 않았다. | `h0_external_channel_roadmap_gate.py` |
+
+이 audit의 의미는 "우리가 어디까지 밝혔는가"를 논문 문장 단위로 고정하는 데 있다. 현재
+가장 강한 문장은 다음이다.
+
+> Hubble-tension channels separate into local/high and global/low readout
+> branches by source role before a joint H0 refit is performed.
+
+반대로 아직 말하면 안 되는 문장은 다음이다.
+
+> We have replaced the full standard H0 likelihood analysis with a complete new
+> posterior refit.
+
+현재 결과는 그 직전 단계다. 즉 full posterior를 다시 계산한 것이 아니라, 각 관측 계열의
+source structure가 어느 H0 branch를 읽는지 독립적으로 가른 것이다. 이 차이를 명확히 쓰면
+주장이 과장되지 않고, 오히려 더 단단해진다.
+
+## CMB source scout
+
+CMB branch-only gate를 data-facing test로 승격하기 위한 source scout를 추가했다.
+
+```bash
+python examples/physics/h0_readout/h0_cmb_source_scout_gate.py
+```
+
+고정한 source targets:
+
+| target | 역할 |
+|---|---|
+| Planck 2018 cosmological parameter chains | early global horizon closure의 parameter covariance 후보 |
+| Planck 2018 likelihood paper | TT/TE/EE, low-ell, lowE, lensing likelihood provenance |
+| Planck 2018 cosmological-parameters paper | base-LambdaCDM low-H0 branch reference |
+
+이 source scout 다음으로 실제 IRSA Planck PR3 cosmological parameter package를 내려받아
+`base_plikHM_TTTEEE_lowl_lowE_lensing` covariance를 읽는 adapter를 추가했다.
+
+```bash
+python examples/physics/h0_readout/h0_cmb_planck_covariance_adapter_gate.py
+```
+
+결과:
+
+- package: `COM_CosmoParams_base-plikHM-TTTEEE-lowl-lowE_R3.00.zip`
+- root: `base_plikHM_TTTEEE_lowl_lowE_lensing`
+- covariance parameters: 27
+- observable: `theta` (`100 theta_MC`)
+- local nodes: 0
+- global nodes: 26
+- selector: `q_F = 0`
+- branch prediction: global/low
+- Planck marginal H0: about 67.36 with about 0.54 uncertainty
+
+따라서 CMB는 이제 단순 예비 role model이 아니라, Planck PR3 covariance-backed global branch
+row가 되었다. 다만 여기서도 주장은 "Planck covariance의 source role이 global/low branch를
+고른다"이지, Planck likelihood 전체를 새 이론으로 재최적화했다는 뜻은 아니다.
+
+## GW standard-siren bridge
+
+양끝 branch가 아니라 중간 branch를 검사하기 위해 GW standard siren gate를 추가했다.
+
+```bash
+python examples/physics/h0_readout/h0_gw_standard_siren_bridge_gate.py
+```
+
+source-role 해석:
+
+- GW strain/amplitude: absolute luminosity distance를 직접 준다.
+- EM counterpart/host galaxy: redshift anchor와 peculiar-velocity correction을 준다.
+- 따라서 GW bright siren은 local distance와 global/environment redshift closure가 함께 들어간
+  bridge channel이다.
+
+결과:
+
+- local nodes: 1
+- global nodes: 1
+- selector: `q_F = 0.5`
+- classified readout: bridge
+- branch prediction: about 70.15 km/s/Mpc
+- GW170817 reference H0: about 70.3 +/- 5.15 km/s/Mpc
+
+이 gate는 중요하다. 지금까지 local/high와 global/low 양끝이 잘 갈라지는 것을 보았다면,
+GW standard siren은 그 사이가 비어 있지 않다는 것을 보여준다. 즉 readout law가 단순한
+이분법이 아니라, 관측 채널의 source coupling 비율에 따라 intermediate branch도 낼 수 있다.
+
+## Three-family readout table
+
+endpoint-only table은 Hubble tension의 양끝 분리를 보여주기에 좋지만, GW bridge까지 들어오면
+논문 그림은 세 family로 확장하는 것이 더 좋다.
+
+```bash
+python examples/physics/h0_readout/h0_three_family_readout_table_gate.py
+```
+
+현재 family:
+
+| family | channels |
+|---|---|
+| global/low | DESI BAO, Planck CMB, TDCOSMO+SLACS, TDCOSMO+SLACS+IFU |
+| bridge/intermediate | GW170817 bright siren |
+| local/high | Pantheon+SH0ES, TDCOSMO+IFU, TDCOSMO-only |
+
+이 표의 의의는 H0 readout law가 단순히 "낮은 값과 높은 값을 둘로 나누는 경험적 분류기"가
+아니라는 데 있다. source role이 완전히 global이면 low branch, 완전히 local이면 high branch,
+둘이 균형을 이루면 intermediate branch가 나온다.
+
+## Paper package
+
+현재 결과를 논문 그림 단위로 묶기 위해 paper package gate를 추가했다.
+
+```bash
+python examples/physics/h0_readout/h0_paper_package_gate.py
+```
+
+논문용 그림 구조:
+
+| figure | 역할 |
+|---|---|
+| Figure 1 | endpoint source-role split: Hubble tension의 local/high와 global/low 양끝 분리 |
+| Figure 2 | three-family readout law: global/low, bridge/intermediate, local/high의 연속 구조 |
+
+반드시 명시해야 할 한계:
+
+1. 아직 full joint BAO/SN/TDCOSMO posterior refit은 하지 않았다.
+2. GW bridge gate는 event-level posterior samples가 아니라 source-role covariance abstraction이다.
+3. CMB gate는 Planck PR3 parameter covariance를 읽은 것이며, Planck likelihood 전체를 새로 최적화한 것은 아니다.
+
+이제 논문 초안에서 과장 없이 말할 수 있는 핵심은 다음이다.
+
+> Source-role conductance separates H0 channels into reproducible readout
+> families: global/low, bridge/intermediate, and local/high.
+
