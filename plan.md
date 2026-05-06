@@ -1,4 +1,4 @@
-# CE 우주론 다음 연구 플랜
+﻿# CE 우주론 다음 연구 플랜
 
 ## 0. 현재 결론
 
@@ -355,7 +355,7 @@ CE 우주론 관측량은 적어도 다음 다섯 종류로 나눠야 한다.
 
 2026-05-06, H0 branch falsification:
 
-- `examples/physics/h0_dataset_falsification_gate.py`를 추가했다.
+- `examples/physics/h0_readout/h0_dataset_falsification_gate.py`를 추가했다.
 - boundary invariant
   \[
   \log S_{\rm dS}(H_0)+\pi\delta\sigma\simeq(\pi^2/2)N_e
@@ -372,7 +372,7 @@ CE 우주론 관측량은 적어도 다음 다섯 종류로 나눠야 한다.
 
 2026-05-06, H0 late branch correction:
 
-- `examples/physics/h0_late_branch_correction_gate.py`를 추가했다.
+- `examples/physics/h0_readout/h0_late_branch_correction_gate.py`를 추가했다.
 - low branch:
   \[
   \log S_{\rm low}=(\pi^2/2)N_e-\pi\delta\sigma,
@@ -395,7 +395,7 @@ CE 우주론 관측량은 적어도 다음 다섯 종류로 나눠야 한다.
 
 2026-05-06, H0 readout selector:
 
-- `examples/physics/h0_readout_selector_gate.py`를 추가했다.
+- `examples/physics/h0_readout/h0_readout_selector_gate.py`를 추가했다.
 - branch를 하나의 식으로 묶었다.
   \[
   \log S(q)=(\pi^2/2)N_e-\pi\delta\sigma-q\delta\sigma.
@@ -415,7 +415,7 @@ CE 우주론 관측량은 적어도 다음 다섯 종류로 나눠야 한다.
 
 2026-05-06, H0 channel topology:
 
-- `examples/physics/h0_channel_topology_gate.py`를 추가했다.
+- `examples/physics/h0_readout/h0_channel_topology_gate.py`를 추가했다.
 - selector를 topology 값으로 압축했다.
   \[
   q_{\rm topo}=\frac{L}{L+G}.
@@ -434,7 +434,7 @@ CE 우주론 관측량은 적어도 다음 다섯 종류로 나눠야 한다.
 
 2026-05-06, H0 prospective external channels:
 
-- `examples/physics/h0_prospective_channel_gate.py`를 추가했다.
+- `examples/physics/h0_readout/h0_prospective_channel_gate.py`를 추가했다.
 - 기존 selector table에 쓰지 않은 외부 채널에 대해 \(H_0\) 값을 맞추기 전에 \(L:G\)를 먼저 선언했다.
 - 예측:
   - H0LiCOW/TDCOSMO power-law lenses: \(L:G=1:0\), \(q=1\), \(H_0^{\rm pred}=73.181\), 관측 \(73.3\pm1.75\), pull \(-0.07\).
@@ -444,3 +444,237 @@ CE 우주론 관측량은 적어도 다음 다섯 종류로 나눠야 한다.
   - O4a dark+bright sirens: \(1:1\), \(q=0.5\), \(H_0^{\rm pred}=70.151\), 관측 \(68.0\pm4.1\), pull \(+0.52\).
 - 합산 \(\chi^2/{\rm dof}=0.462/5\).
 - 판정: \(q_{\rm topo}\)는 외부채널에서도 high/local, low/hierarchical, middle/GW 구조를 재현한다. 다음 과제는 \(L,G\)를 손배정하지 않고 covariance graph에서 자동 계산하는 것.
+
+2026-05-06, H0 covariance graph selector:
+
+- `examples/physics/h0_readout/h0_covariance_graph_selector_gate.py`를 추가했다.
+- 손배정 \(L,G\) 대신 관측 graph의 conductance로 selector를 계산한다.
+  \[
+  C_{\rm path}=\frac{\prod_{e\in p}r_e}{|p|},
+  \qquad
+  q_{\rm graph}=\frac{C_L}{C_L+C_G}.
+  \]
+- toy graph 결과:
+  - Planck: \(C_L:C_G=0:1\), \(q=0\), \(H_0=67.247\).
+  - DESI BAO+BBN: \(1:3\), \(q=0.25\), \(H_0=68.684\).
+  - CCHP JAGB: \(1:9\), \(q=0.1\), \(H_0=67.818\).
+  - CCHP TRGB JWST-only: \(1:3\), \(q=0.25\), \(H_0=68.684\).
+  - CCHP TRGB HST+JWST: \(1:1\), \(q=0.5\), \(H_0=70.151\).
+  - SH0ES/Cepheid, megamaser: \(1:0\), \(q=1\), \(H_0=73.181\).
+  - GW representative: \(1:1\), \(q=0.5\), \(H_0=70.151\).
+- 합산 \(\chi^2/{\rm dof}=0.402/10\).
+- 판정: \(q\)는 이제 자유상수 \(\to\) topology ratio \(\to\) graph conductance selector로 승격. 아직 edge reliability \(r_e\)가 실제 covariance matrix에서 온 것은 아니므로 다음은 Fisher/covariance 기반 edge 자동화다.
+
+2026-05-06, H0 Fisher-edge robustness:
+
+- `examples/physics/h0_readout/h0_fisher_edge_robustness_gate.py`를 추가했다.
+- 각 nonzero conductance를
+  \[
+  C\to C e^\eta,\qquad \eta\sim\mathcal N(0,0.25^2)
+  \]
+  로 20,000회 흔들었다.
+- 결과:
+  - Planck \(q=0\): \(H_0=67.247\) 완전 고정.
+  - JAGB \(q=0.1\): 16-84% \(H_0=67.662{-}68.029\), stability 0.968.
+  - BAO/TRGB/TDCOSMO hierarchical \(q=0.25\): \(H_0\simeq68.34{-}69.10\), stability \(\sim0.89\).
+  - TRGB mixed/GW \(q=0.5\): \(H_0\simeq69.63{-}70.67\), stability \(\sim0.78\).
+  - SH0ES/megamaser \(q=1\): \(H_0=73.181\) 완전 고정.
+- 중심값 \(\chi^2/{\rm dof}=0.402/10\).
+- 판정: graph selector는 synthetic Fisher-edge perturbation에 대해 branch 순서를 보존한다. 다음은 실제 covariance/Fisher matrix를 edge reliability로 넣는 것이다.
+
+2026-05-06, H0 Fisher matrix selector:
+
+- `examples/physics/h0_readout/h0_fisher_matrix_selector_gate.py`를 추가했다.
+- normalized Fisher edge:
+  \[
+  r_{ij}=\frac{|F_{ij}|}{\sqrt{F_{ii}F_{jj}}}.
+  \]
+- selector:
+  \[
+  q_F=\frac{C_L(F)}{C_L(F)+C_G(F)}.
+  \]
+- schematic Fisher matrix 검산:
+  - Planck \(q_F=0\), \(H_0=67.247\).
+  - DESI \(q_F=0.25\), \(H_0=68.684\).
+  - JAGB \(q_F=0.1\), \(H_0=67.818\).
+  - TRGB mixed/GW \(q_F=0.5\), \(H_0=70.151\).
+  - SH0ES \(q_F=1\), \(H_0=73.181\).
+- 파라미터 단위 rescaling \(F\to DFD\)에 대해 \(\max|\Delta q_F|\sim10^{-16}\).
+- 합산 \(\chi^2/{\rm dof}=0.199/6\).
+- 판정: \(q\)는 Fisher endpoint conductance로 쓸 수 있는 형태까지 내려왔다. 남은 과제는 실제 공개 likelihood/covariance에서 \(F\)를 읽어 \(q_F\)를 계산하는 것.
+
+2026-05-06, Fisher/covariance IO gate:
+
+- `examples/physics/h0_readout/h0_fisher_matrix_io_gate.py`를 추가했다.
+- JSON 입력으로 실제 Fisher 또는 covariance matrix를 받을 수 있다.
+- `matrix_type="covariance"`이면 내부에서 \(F=C^{-1}\)로 변환한다.
+- edge:
+  \[
+  r_{ij}=|F_{ij}|/\sqrt{F_{ii}F_{jj}}.
+  \]
+- smoke test:
+  - \(C_L=0.2\), \(C_G=0.2\), \(q_F=0.5\).
+  - \(H_0^{\rm pred}=70.151263\).
+  - GW-like \(70.3\pm5.15\) 대비 pull \(-0.029\).
+- 판정: 실제 likelihood/covariance를 넣을 data-facing interface가 준비되었다.
+
+2026-05-06, Fisher/covariance IO regression:
+
+- 예제 JSON 추가:
+  - `examples/physics/h0_readout/h0_fisher_io_examples/gw_like_fisher.json`
+  - `examples/physics/h0_readout/h0_fisher_io_examples/gw_like_covariance.json`
+- 회귀 게이트 추가:
+  - `examples/physics/h0_readout/h0_fisher_io_regression_gate.py`
+- 결과:
+  - Fisher 입력: \(C_L=0.2\), \(C_G=0.2\), \(q_F=0.5\), \(H_0=70.151263\).
+  - Covariance 입력: \(C_L=0.2\), \(C_G=0.2\), \(q_F=0.5\), \(H_0=70.151263\).
+  - \(\Delta q_F=0\), \(\Delta H_0=0\).
+- 판정: Fisher/covariance 입력 경로가 동등하게 작동한다.
+
+2026-05-06, Fisher/covariance IO batch:
+
+- `examples/physics/h0_readout/h0_fisher_io_batch_gate.py`를 추가했다.
+- JSON 파일 하나 또는 JSON 디렉터리를 입력받아 \(q_F\), \(H_0^{\rm pred}\), pull, \(\chi^2\)를 batch 출력한다.
+- 예제 디렉터리 실행:
+  \[
+  \chi^2/{\rm dof}=0.001668/2.
+  \]
+- 판정: 실제 공개 covariance를 채널별 JSON으로 변환하면 전체 readout table을 자동 생성할 수 있다.
+
+2026-05-06, Fisher/covariance IO validation:
+
+- `examples/physics/h0_readout/h0_fisher_io_validate_gate.py`를 추가했다.
+- 검사 항목: 필수 필드, unique nodes, node 참조 무결성, `matrix_type`, 정방행렬, finite number, 대칭성, 양의 대각, covariance 역행렬 가능성.
+- 예제 디렉터리 결과:
+  - `gw_like_covariance.json`: PASS.
+  - `gw_like_fisher.json`: PASS.
+- 실제 데이터 실행 순서:
+  1. `python examples/physics/h0_readout/h0_fisher_io_validate_gate.py path/to/channels`
+  2. `python examples/physics/h0_readout/h0_fisher_io_batch_gate.py path/to/channels`
+
+2026-05-06, Fisher/covariance negative validation:
+
+- `examples/physics/h0_readout/h0_fisher_io_negative_gate.py`를 추가했다.
+- 네 가지 깨진 입력을 검사:
+  - unknown local node
+  - nonsymmetric matrix
+  - nonpositive diagonal
+  - singular covariance
+- 결과: 4/4 negative cases PASS.
+- 판정: 좋은 JSON뿐 아니라 나쁜 JSON을 거부하는 입력 방어선도 생겼다.
+
+2026-05-06, CSV covariance/Fisher adapter:
+
+- `examples/physics/h0_readout/h0_covariance_csv_to_json.py`를 추가했다.
+- `examples/physics/h0_readout/h0_fisher_io_examples/gw_like_fisher.csv` 예제를 추가했다.
+- CSV -> JSON 변환 결과:
+  - `examples/physics/h0_readout/h0_fisher_io_examples/gw_like_fisher_from_csv.json`
+- validate 결과: 3/3 PASS.
+- batch 결과: fisher, covariance, csv->json 세 입력 모두 \(q_F=0.5\), \(H_0=70.151263\).
+- 판정: 실제 공개 covariance/Fisher matrix가 CSV로 제공되면 변환 후 validate/batch 파이프라인에 바로 넣을 수 있다.
+
+2026-05-06, labelled CSV adapter:
+
+- `examples/physics/h0_readout/h0_covariance_labelled_csv_to_json.py`를 추가했다.
+- `examples/physics/h0_readout/h0_fisher_io_examples/gw_like_fisher_labelled.csv` 예제를 추가했다.
+- labelled CSV -> JSON 결과:
+  - `examples/physics/h0_readout/h0_fisher_io_examples/gw_like_fisher_from_labelled_csv.json`
+- manifest에 labelled CSV 변환 산출물을 등록했다.
+- full suite 결과: PASS, batch \(\chi^2/{\rm dof}=0.003336/4\).
+- 판정: 공개 covariance가 header/row label이 있는 table 형태여도 변환 가능하다.
+
+2026-05-06, H0 readout law audit:
+
+- `docs/3_상수/10_H0_readout_law_audit.md`를 추가했다.
+- 핵심 수식:
+  \[
+  \log S(q)=\frac{\pi^2}{2}N_e-\pi\delta\sigma-q\delta\sigma,
+  \qquad
+  q_F=\frac{C_L(F)}{C_L(F)+C_G(F)}.
+  \]
+- 평가:
+  - low/high branch 수식 구조는 충분히 압축됨.
+  - \(q\)는 자유 parameter에서 Fisher endpoint conductance로 내려옴.
+  - IO/validation/batch/full-suite 준비 완료.
+  - 아직 실제 공개 covariance로 \(q_F\)를 계산하지 않았으므로 `Bridge/Open test`.
+- 진행 판단: 계속 진행 가능. 단, 다음은 새 수식 추가가 아니라 실제 covariance 투입이어야 한다.
+- 추천 첫 실제 채널: GW standard siren 또는 TDCOSMO 계열.
+
+2026-05-06, first real source scout:
+
+- `examples/physics/h0_readout/h0_real_covariance_targets.json`를 추가했다.
+- `examples/physics/h0_readout/h0_real_source_scout_gate.py`를 추가했다.
+- 첫 후보: TDCOSMO/hierarchy_analysis_2020_public.
+- 고정 commit: `6c293af582c398a5c9de60a51cb0c44432a3c598`.
+- `git ls-remote` 결과 remote HEAD 일치: PASS.
+- 후보 HDF5 chain:
+  - `JointAnalysis/tdcosmo_ifu_chain_slope_log_scatter.h5`
+  - `JointAnalysis/tdcosmo_slacs_chain_slope_log_scatter.h5`
+  - `JointAnalysis/tdcosmo_slacs_ifu_chainifu_separate_slope_log_scatter.h5`
+  - `TDCOSMO_sample/tdcosmo_chain_alpha_free.h5`
+  - `TDCOSMO_sample/tdcosmo_chain_alpha_free_om.h5`
+  - `TDCOSMO_sample/tdcosmo_chain_alpha_fixed_om.h5`
+- 환경 상태: `h5py` 없음.
+- 판정: 실제 source는 reachable. 다음은 HDF5 reader 설치 또는 CSV/text likelihood product 우회 탐색이다.
+
+2026-05-06, Fisher/covariance IO full suite:
+
+- `examples/physics/h0_readout/h0_fisher_io_full_suite.py`를 추가했다.
+- 포함:
+  - manifest validation gate
+  - validate gate
+  - negative validation gate
+  - Fisher/covariance regression gate
+  - batch gate
+- 실행 결과: full Fisher/covariance IO suite passed.
+- 판정: 실제 covariance를 넣기 전후의 회귀 기준 명령으로 사용한다.
+
+2026-05-06, source manifest:
+
+- `examples/physics/h0_readout/h0_fisher_io_examples/manifest.json`을 추가했다.
+- `examples/physics/h0_readout/h0_fisher_manifest_validate_gate.py`를 추가했다.
+- manifest 필수 항목: dataset bundle, version, channels, channel file, source, matrix role, channel class, notes, non-synthetic source URL.
+- `validate`와 `batch` runner는 `manifest.json`을 channel JSON에서 제외하도록 수정했다.
+- full suite에 manifest validation을 포함했다.
+- 판정: 실제 공개 covariance는 matrix뿐 아니라 출처/버전 manifest까지 함께 있어야 채택한다.
+
+2026-05-06, source manifest negative validation:
+
+- `examples/physics/h0_readout/h0_fisher_manifest_negative_gate.py`를 추가했다.
+- 네 가지 깨진 manifest를 검사:
+  - missing channel file
+  - non-synthetic missing source URL
+  - duplicate channel file
+  - missing channel field
+- 결과: 4/4 manifest negative cases PASS.
+- full suite에 포함했고 통과했다.
+- 판정: 실제 공개 covariance bundle은 matrix-level validation과 source-level validation을 모두 통과해야 채택한다.
+
+2026-05-06, H0 readout file organization and TDCOSMO provenance closure:
+
+- H0/TDCOSMO readout gate들을 `examples/physics/h0_readout/` 아래로 정리했다.
+- zebrafish 관련 산출물은 `examples/physics/evolution/` 쪽으로 분리했다.
+- 새 실행 기준:
+  - `python examples/physics/h0_readout/h0_fisher_io_full_suite.py`
+- `examples/physics/h0_readout/README.md`를 추가해 main entry point와 provenance chain을 문서화했다.
+- `h0_real_data/`는 공개 HDF5 chain과 notebook cache이므로 git ignore에 추가했다.
+- TDCOSMO converter의 기본 factor source를 `ast`로 바꾸었다.
+- 이제 covariance JSON의 likelihood factor graph는 public notebook의 `MCMCSampler` 첫 번째 인자에서 직접 생성된다.
+- 네 chain의 AST factor extraction:
+  - TDCOSMO-only: local endpoint branch
+  - TDCOSMO+IFU: local endpoint branch
+  - TDCOSMO+SLACS: global closure branch
+  - TDCOSMO+SLACS+IFU: global closure branch
+- full suite 결과: PASS.
+- batch 결과:
+  - TDCOSMO-only: local branch, predicted high-side readout, observed chain과 within error.
+  - TDCOSMO+IFU: local branch, predicted high-side readout, observed chain과 within error.
+  - TDCOSMO+SLACS: global branch, predicted low-side readout, observed chain과 within error.
+  - TDCOSMO+SLACS+IFU: global branch, predicted low-side readout, observed chain과 within error.
+- role ablation 결과:
+  - 모든 MST freedom을 local 또는 global로 고정하면 branch structure 설명력이 나빠진다.
+  - source-aware role transition이 필요하다는 반증 게이트를 통과했다.
+- `docs/3_상수/11_TDCOSMO_real_covariance_audit.md`에 논문용 significance 섹션을 추가했다.
+- 판정: 현재 H0 readout law의 가장 강한 결과는 "수치를 사후 fitting했다"가 아니라,
+  public source likelihood composition에서 readout branch transition이 재현된다는 점이다.
+

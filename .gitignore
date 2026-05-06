@@ -16,6 +16,7 @@ target/
 # Data
 /data/
 examples/biology/data/
+examples/physics/h0_readout/h0_real_data/
 
 # Outputs and models
 *.json
