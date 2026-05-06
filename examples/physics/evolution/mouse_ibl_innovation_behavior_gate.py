@@ -66,56 +66,34 @@ def probe_label(collection: str) -> str:
 
 
 def load_probe(one, eid: str, collection: str) -> dict[str, object]:
-    try:
-        cluster_acronyms = np.asarray(
-            one.load_dataset(
+    def load_probe_dataset(dataset: str):
+        try:
+            return one.load_dataset(
                 eid,
-                "clusters.brainLocationAcronyms_ccf_2017.npy",
+                dataset,
                 collection=collection,
                 query_type="remote",
-            ),
-            dtype=object,
-        )
+            )
+        except Exception:
+            return one.load_dataset(
+                eid,
+                f"{collection}/{dataset}",
+                query_type="remote",
+            )
+
+    try:
+        cluster_acronyms = np.asarray(load_probe_dataset("clusters.brainLocationAcronyms_ccf_2017.npy"), dtype=object)
     except Exception:
         cluster_acronyms = np.asarray([], dtype=object)
     return {
         "collection": collection,
         "label": probe_label(collection),
-        "spike_times": np.asarray(
-            one.load_dataset(
-                eid,
-                "spikes.times.npy",
-                collection=collection,
-                query_type="remote",
-            ),
-            dtype=float,
-        ),
-        "spike_clusters": np.asarray(
-            one.load_dataset(
-                eid,
-                "spikes.clusters.npy",
-                collection=collection,
-                query_type="remote",
-            ),
-            dtype=np.int64,
-        ),
+        "spike_times": np.asarray(load_probe_dataset("spikes.times.npy"), dtype=float),
+        "spike_clusters": np.asarray(load_probe_dataset("spikes.clusters.npy"), dtype=np.int64),
         "cluster_acronyms": cluster_acronyms,
-        "cluster_channels": np.asarray(
-            one.load_dataset(
-                eid,
-                "clusters.channels.npy",
-                collection=collection,
-                query_type="remote",
-            ),
-            dtype=np.int64,
-        ),
+        "cluster_channels": np.asarray(load_probe_dataset("clusters.channels.npy"), dtype=np.int64),
         "channel_region_ids": np.asarray(
-            one.load_dataset(
-                eid,
-                "channels.brainLocationIds_ccf_2017.npy",
-                collection=collection,
-                query_type="remote",
-            ),
+            load_probe_dataset("channels.brainLocationIds_ccf_2017.npy"),
             dtype=np.int64,
         ),
     }

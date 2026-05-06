@@ -259,6 +259,129 @@ CE 우주론 관측량은 적어도 다음 다섯 종류로 나눠야 한다.
 
 2026-05-06, 자기재귀참조 수학/물리 근거 보강:
 
+2026-05-06, A3c 중력 환경 readout 증명 후보:
+
+- `docs/2_경로적분과_응용/14_자기재귀성_대칭.md`에 중력 환경 읽기 원리를 추가했다.
+- 핵심 해석: \(D/(D+1)\)의 \(+1\)은 임의 bulk/boundary 보정이 아니라, 내부 게이지-물질 재귀 \(D\)를 관측 가능하게 만드는 중력/시공간 환경이다.
+- A3c를 세 성분으로 분해했다.
+  - \(x(1-x)\): 자기재귀 잔차 \(r_{\mathcal R}\)의 국소 구동력.
+  - \(2/\pi\): \(d=0\to d=3\) 반주기 위상 투영.
+  - \(\sigma^{D_{\rm eff}/(D_{\rm eff}+1)}\): \(+1\) 중력 환경에서 읽는 결핍 측도.
+- `examples/physics/gravitational_environment_readout_gate.py`를 추가했다.
+- `docs/3_상수/9_우주론_수식_의미와_후보.md`에 A3c 중력 환경 읽기 원리 섹션을 추가했다.
+- 현재 판정: raw susceptibility readout은 계속 기각. GER/A3c readout은 \(A_s=2.1038\times10^{-9}\)로 broad gate를 통과하지만, 아직 `Selection candidate`.
+- 다음 승격 조건: 같은 \(+1\) 중력 환경 readout을 horizon entropy, FLRW scale map, CMB large-angle anomaly 중 하나 이상에서 반복 검산한다.
+
+2026-05-06, A3c 반복 readout 검증:
+
+- `examples/physics/a3c_readout_closure_gate.py`를 추가했다.
+- 공통 투영 계수:
+  \[
+  P_{\rm GER}=(2/\pi)\sigma^{D_{\rm eff}/(D_{\rm eff}+1)}=0.61292326.
+  \]
+- 같은 \(P_{\rm GER}\)로 세 값을 반복 계산했다.
+  - \(Q_{\rm A3c}=P_{\rm GER}x(1-x)=0.02836622\).
+  - \(A_s=2.10380875\times10^{-9}\), pull \(+0.13\sigma\).
+  - quadrupole power handle \(P_{\rm GER}^2=0.37567493\), quadrupole scale \(-0.99\sigma\) cosmic variance.
+  - hemispherical handle \(2Q_{\rm A3c}/\sigma=2P_{\rm GER}x=0.05963341\).
+- `docs/3_상수/9_우주론_수식_의미와_후보.md`에 반복 검산 섹션을 추가했다.
+- `examples/physics/cosmology_gate_summary.py`에 A3c common projection 행을 추가했다.
+- 판정: A3c/GER은 \(A_s\) 하나의 보정식에서 벗어나 CMB large-angle amplitude handle까지 재사용됐다. 하지만 preferred axis, phase correlation, full CMB likelihood가 없으므로 아직 `Selection candidate/Open test`.
+- horizon entropy는 같은 \(+1\) 철학이지만 별도 phase-area bridge로 분리했다:
+  \[
+  \log S_{\rm dS}\simeq(\pi^2/2)N_e-\pi\delta\sigma.
+  \]
+
+2026-05-06, A3c preferred-axis no-go:
+
+- `examples/physics/a3c_preferred_axis_no_go_gate.py`를 추가했다.
+- `docs/3_상수/9_우주론_수식_의미와_후보.md`에 preferred-axis no-go 섹션을 추가했다.
+- 판정: 현재 GER 입력 \(\alpha_s,\delta,D_{\rm eff},x,\sigma,P_{\rm GER},Q_{\rm A3c}\)는 모두 SO(3) 스칼라이므로 preferred unit vector \(n_i\), traceless tensor \(T_{ij}\), phase map \(\phi_{\ell m}\)을 만들 수 없다.
+- 따라서 스칼라 A3c/GER은 amplitude handle을 닫는 후보이지, CMB preferred-axis/phase/likelihood closure가 아니다.
+- 다음 bridge 조건:
+  1. early-late horizon gradient에서 \(n_i\)를 유도,
+  2. anisotropic recursive defect flow에서 \(T_{ij}\)를 유도,
+  3. CMB map/covariance data-facing bridge에서 축을 추정하고 CE는 \(P_{\rm GER}\) 진폭만 사전등록.
+- `examples/physics/cosmology_gate_summary.py`에 preferred-axis no-go 행을 추가했다.
+
+2026-05-06, A3c 조건부 axis bridge:
+
+- `examples/physics/a3c_conditional_axis_bridge_gate.py`를 추가했다.
+- 스칼라 GER이 축 \(n_i\)를 만들지는 못하지만, 축이 별도 브리지에서 주어지면 CE가 닫는 양을 수식으로 고정했다.
+- 고정 진폭:
+  \[
+  P_{\rm GER}=0.61292326,\quad Q_{\rm A3c}=0.02836622.
+  \]
+- quadrupole power handle:
+  \[
+  S_Q=P_{\rm GER}^2=0.37567493.
+  \]
+- hemispherical modulation:
+  \[
+  A_H=2Q_{\rm A3c}/\sigma=2P_{\rm GER}x=0.05963341.
+  \]
+- 조건부 tensor:
+  \[
+  T_{ij}=S_Q(n_in_j-\delta_{ij}/3),\quad {\rm Tr}\,T=0,\quad
+  \|T\|_F=S_Q\sqrt{2/3}=0.30673729.
+  \]
+- 기본 \(z\)-축과 \((1,1,1)\) 축에서 모두 \(|m|=0.05963341\), \(\|T\|_F=0.30673729\) 검증.
+- 판정: 남은 완성 문제는 더 이상 amplitude가 아니라 \(n_i\)를 유도하거나 CMB data-facing bridge에서 ingest하는 것이다.
+
+2026-05-06, A3c CMB data-facing axis ingest:
+
+- `examples/physics/a3c_cmb_axis_ingest_gate.py`를 추가했다.
+- 대표 관측축/진폭을 ingest하되 CE는 \(A_H=0.05963341\), \(S_Q=0.37567493\), \(\|T\|_F=0.30673729\)만 사전등록값으로 검산한다.
+- Planck/PR3 temperature HPA representative:
+  - 축 \((l,b)=(205^\circ,-20^\circ)\), 관측 진폭 \(0.070\pm0.021\).
+  - CE \(A_H=0.05963341\), pull \(-0.49\sigma\).
+- Planck PR4 Sevem E-mode local variance:
+  - 축 \((l,b)=(234^\circ,-14^\circ)\), broad modulation range \(0.060{-}0.130\).
+  - CE \(A_H=0.05963341\), lower edge와 \(-0.0004\) 차이로 edge-compatible.
+- temperature/polarization 대표축 각거리: \(28.33^\circ\).
+- 판정: CE amplitude는 representative HPA amplitude와 양립한다. 축은 여전히 유도된 것이 아니라 관측 ingest이며, full CMB map/covariance likelihood가 다음 병목이다.
+
+2026-05-06, A3c CMB amplitude likelihood proxy:
+
+- `examples/physics/a3c_cmb_likelihood_proxy_gate.py`를 추가했다.
+- representative HPA amplitude rows를 단순 가우시안 proxy로 묶어 \(A=0\), CE fixed \(A=A_H\), one-parameter best-fit \(A\)를 비교했다.
+- 입력:
+  - temperature representative \(A=0.070\pm0.021\)
+  - PR4 Sevem E-mode proxy \(A=0.090\pm0.035\)
+- weighted best-fit:
+  \[
+  A_{\rm fit}=0.07529412\pm0.01800735.
+  \]
+- CE fixed:
+  \[
+  A_{\rm CE}=0.05963341,\quad (A_{\rm CE}-A_{\rm fit})/\sigma_{\rm fit}=-0.87.
+  \]
+- proxy likelihood:
+  \[
+  \chi^2(A=0)=17.7234,\quad
+  \chi^2(A_{\rm CE})=0.9964,\quad
+  \chi^2(A_{\rm fit})=0.2401.
+  \]
+- 판정: CE fixed amplitude는 null 대비 \(\Delta\chi^2=-16.7269\) 개선이고 best-fit 대비 \(+0.7564\)만 나쁘다. 단, 이건 full CMB likelihood가 아니라 pre-likelihood amplitude compatibility.
+
+2026-05-06, A3c/GER closure package 마무리:
+
+- `examples/physics/a3c_closure_package_gate.py`를 추가했다.
+- 최종 판정:
+  - raw scalar readout \(A_s[|dx/dD|]\)는 \(+191.18\sigma\)로 기각.
+  - GER scalar readout \(A_s[Q_{\rm A3c}]\)는 \(+0.13\sigma\)로 broad gate 통과.
+  - \(P_{\rm GER}=0.61292326\), \(Q_{\rm A3c}=0.02836622\), \(A_H=0.05963341\), \(S_Q=0.37567493\).
+  - 조건부 tensor norm \(\|T\|_F=0.30673729\).
+  - representative HPA proxy에서 \(\Delta\chi^2_{\rm CE-null}=-16.7269\), \(\Delta\chi^2_{\rm CE-fit}=+0.7564\).
+- 승격 문장: A3c/GER은 `Selection candidate scalar readout principle` 및 `pre-likelihood CMB large-angle amplitude bridge`.
+- 승격하지 않는 문장: `Exact theorem` 또는 `full CMB anomaly closure`.
+- 남은 blocker:
+  \[
+  \text{derive }n_i\quad\text{or}\quad
+  \text{run map/covariance likelihood with }A=A_H\text{ fixed}.
+  \]
+- 반증 조건을 gate에 명시했다: \(A_s/running/tensor\) family rejection, robust HPA amplitude mismatch, full likelihood failure, \(n_i\) phase test failure.
+
 - `docs/2_경로적분과_응용/14_자기재귀성_대칭.md`에 "풀 경로 보존에서 자기재귀가 나오는 이유" 절을 추가했다.
 - 핵심 정리: 경로 측도공간 \(\mathcal M(\Gamma)\)에서 닫힌 연산자 \(\mathcal T_D:\mathcal M(\Gamma)\to\mathcal M(\Gamma)\), 외부 선택자 금지, 차원 깊이의 곱적 감쇠를 함께 두면 \(x=\exp[-D(1-x)]\)가 나온다.
 - 물리 해석: CE는 stationary phase처럼 경로 하나를 고르거나 Wilsonian coarse graining처럼 자유도를 버리는 것이 아니라, 풀 경로공간이 자기 억압률을 만들고 그 잔차를 관측 채널로 읽는 구조다.

@@ -105,6 +105,7 @@ def main() -> int:
     s_q_phase = (2.0 / math.pi) ** 2
     s_q_geom = ((2.0 / math.pi) * sigma**gamma_eff) ** 2
     a_hemi = 2.0 * q_a3c / sigma
+    p_ger = (2.0 / math.pi) * sigma**gamma_eff
 
     print("# Integrated CE Cosmology Gate Summary")
     print()
@@ -124,6 +125,7 @@ def main() -> int:
     print(f"| A primitive spectrum | `n_s=1-2/N_e` | {n_s:.8f} | scored/closed |")
     print(f"| A scalar amplitude raw | `A_s[|dx/dD|]` | {as_raw:.8e} | rejected raw, {rel_error(as_raw, A_S_REF):+.1f}% |")
     print(f"| A scalar amplitude A3c | `A_s[Q_A3c]` | {as_a3c:.8e} | Open candidate, {rel_error(as_a3c, A_S_REF):+.2f}% |")
+    print(f"| A3c common projection | `(2/pi)sigma^gamma` | {p_ger:.8f} | GER Selection candidate |")
     print(f"| A running | `-2/N_e^2` | {alpha_spec:.8e} | Open test |")
     print(f"| A tensor | `12/N_e^2` | {r_tensor:.8f} | Open test |")
     print(f"| B dark matter | `sigma R/(1+R)` | {omega_dm:.8f} | density closed |")
@@ -134,6 +136,11 @@ def main() -> int:
     print(f"| D contraction | `D_eff x` | {contraction:.8f} | stable; n60={n60:.2f} |")
     print(f"| E quadrupole suppression | `[(2/pi)sigma^gamma]^2` | {s_q_geom:.8f} | Open test |")
     print(f"| E hemispherical contrast | `2 Q_A3c/sigma` | {a_hemi:.8f} | Open test |")
+    print("| E preferred axis | scalar GER no-go | -- | needs vector/tensor bridge |")
+    print(f"| E conditional axis tensor | `S_Q(n_i n_j-delta_ij/3)` | norm {s_q_geom * math.sqrt(2.0 / 3.0):.8f} | conditional on n_i |")
+    print(f"| E data-axis ingest | `A_H fixed, n_i observed` | {a_hemi:.8f} | compatible with representative HPA |")
+    print("| E amplitude proxy likelihood | `A_H fixed vs HPA rows` | dchi2 null -16.727 | pre-likelihood only |")
+    print("| A3c/GER closure package | `ledger + falsification handles` | pass | Selection candidate, not Exact |")
     print()
 
     print("## Growth comparison")

@@ -54,16 +54,16 @@ def probe_label(collection: str) -> str:
 
 
 def load_common(one, eid: str) -> dict[str, object]:
+    def load_alf_dataset(dataset: str):
+        try:
+            return one.load_dataset(eid, dataset, collection="alf", query_type="remote")
+        except Exception:
+            return one.load_dataset(eid, dataset, query_type="remote")
+
     return {
-        "trials": one.load_dataset(
-            eid, "_ibl_trials.table.pqt", collection="alf", query_type="remote"
-        ),
-        "wheel_timestamps": one.load_dataset(
-            eid, "_ibl_wheel.timestamps.npy", collection="alf", query_type="remote"
-        ),
-        "wheel_position": one.load_dataset(
-            eid, "_ibl_wheel.position.npy", collection="alf", query_type="remote"
-        ),
+        "trials": load_alf_dataset("_ibl_trials.table.pqt"),
+        "wheel_timestamps": load_alf_dataset("_ibl_wheel.timestamps.npy"),
+        "wheel_position": load_alf_dataset("_ibl_wheel.position.npy"),
     }
 
 
