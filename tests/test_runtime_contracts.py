@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 import torch
 
@@ -15,6 +17,14 @@ def make_weight(dim: int = 64, seed: int = 0) -> torch.Tensor:
     w = 0.5 * (w + w.t())
     w.fill_diagonal_(0.0)
     return w.float()
+
+
+def test_pyproject_metadata_matches_import_version_and_runtime_deps():
+    pyproject = Path(__file__).resolve().parents[1] / "pyproject.toml"
+    text = pyproject.read_text(encoding="utf-8")
+    assert f'version = "{clarus.__version__}"' in text
+    for dep in ("numpy", "tokenizers", "torch", "tqdm", "transformers"):
+        assert f'"{dep}>=' in text
 
 
 def test_clarus_import_surface_exposes_runtime_without_missing_rust_symbols():
@@ -74,6 +84,79 @@ def test_brain_runtime_respects_sparse_energy_budget_and_uses_hippocampus():
     step = runtime.step(external_input=torch.linspace(0.0, 1.0, 64))
     assert step.active_modules <= runtime.config.energy_budget(RuntimeMode.WAKE)
     assert len(runtime.hippocampus) >= 1
+
+
+def test_brain_runtime_rust_backend_smoke_contract():
+    from clarus.runtime import _HAS_RUST_KERNEL
+
+    if not _HAS_RUST_KERNEL:
+        pytest.skip("Rust runtime kernel unavailable")
+    w = make_weight(dim=32, seed=3) * 0.05
+    runtime = BrainRuntime(
+        w,
+        config=BrainRuntimeConfig(
+            dim=32,
+            active_ratio=0.25,
+            noise_sigma=0.0,
+            dale_law=False,
+            axon_delay=False,
+            memory_capacity=4,
+        ),
+        backend="rust",
+        device="cpu",
+    )
+    runtime.set_goal(torch.linspace(-0.2, 0.2, 32))
+    step = runtime.step(
+        external_input=torch.linspace(0.0, 0.5, 32),
+        force_mode=RuntimeMode.WAKE,
+    )
+    assert step.active_modules <= runtime.config.energy_budget(RuntimeMode.WAKE)
+    assert torch.isfinite(runtime.activation).all()
+    assert torch.isfinite(runtime.refractory).all()
+    assert torch.isfinite(runtime.memory_trace).all()
+
+
+def test_brain_runtime_rust_backend_matches_torch_cell_step():
+    from clarus.runtime import _HAS_RUST_KERNEL, _LIFECYCLE_TO_CODE, ModuleLifecycle
+
+    if not _HAS_RUST_KERNEL:
+        pytest.skip("Rust runtime kernel unavailable")
+
+    dim = 24
+    w = make_weight(dim=dim, seed=11) * 0.03
+    cfg = BrainRuntimeConfig(
+        dim=dim,
+        active_ratio=0.25,
+        noise_sigma=0.0,
+        dale_law=False,
+        axon_delay=False,
+        memory_capacity=4,
+    )
+    rt_torch = BrainRuntime(w, config=cfg, backend="torch", device="cpu")
+    rt_rust = BrainRuntime(w, config=cfg, backend="rust", device="cpu")
+
+    base = torch.linspace(-0.4, 0.5, dim)
+    for rt in (rt_torch, rt_rust):
+        rt.activation = base.clone()
+        rt.refractory = torch.linspace(0.0, 0.2, dim)
+        rt.memory_trace = torch.linspace(-0.1, 0.1, dim)
+        rt.adaptation = torch.linspace(0.0, 0.3, dim)
+        rt.stp_u = torch.linspace(0.3, 0.7, dim)
+        rt.stp_x = torch.linspace(0.6, 1.0, dim)
+        rt.bitfield.zero_()
+        rt.lifecycle[:] = _LIFECYCLE_TO_CODE[ModuleLifecycle.DORMANT]
+        rt.lifecycle[:6] = _LIFECYCLE_TO_CODE[ModuleLifecycle.ACTIVE]
+        rt.set_goal(torch.linspace(0.2, -0.2, dim))
+
+    external = torch.linspace(0.1, 0.6, dim)
+    step_torch = rt_torch.step(external_input=external, force_mode=RuntimeMode.WAKE)
+    step_rust = rt_rust.step(external_input=external, force_mode=RuntimeMode.WAKE)
+
+    assert step_rust.active_modules == step_torch.active_modules
+    assert step_rust.energy == pytest.approx(step_torch.energy, abs=1e-5)
+    for name in ("activation", "refractory", "memory_trace", "adaptation", "stp_u", "stp_x"):
+        assert torch.allclose(getattr(rt_rust, name), getattr(rt_torch, name), atol=1e-5, rtol=1e-5)
+    assert torch.equal(rt_rust.bitfield, rt_torch.bitfield)
 
 
 def test_brain_runtime_mode_transitions_cover_wake_nrem_rem():

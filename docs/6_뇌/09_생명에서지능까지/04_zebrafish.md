@@ -313,6 +313,18 @@ verdict:
 
 Others_Supplementary supplies Z-position/stage alignment and calcium trace/interpolation QA, but not an explicit e2 timestamp or e2-resampled speed/turn trace.
 
+### Zebrafish continuous boundary final audit
+
+기존 alignment audit, e2-LR probe, candidate continuous decoding, supplementary audit을 하나로 묶어 final audit를 수행했다. 결론은 변하지 않는다. Activity-to-bout-frame과 activity-to-direction bridge는 가능하지만, timestamp-certified alignment는 \(0/10\)이고 e2 timestamp 또는 e2-resampled behavior trace가 없다. inferred alignment에서 speed는 \(R^2=0.123460\) 후보지만 shift \(p=0.066667\)이고 final gate는 아니다. Turn은 \(R^2=0.010998\)라 후보가 아니다.
+
+| 항목 | 값 |
+|---|---|
+| timestamp-certified continuous ready | False |
+| final continuous gate pass | False |
+| laser-schedule matches | 1/10 |
+| timestamp-certified alignment | 0/10 |
+| candidate inferred alignment | 1/10 |
+
 따라서 zebrafish continuous movement는 다음처럼 닫는다.
 
 $$

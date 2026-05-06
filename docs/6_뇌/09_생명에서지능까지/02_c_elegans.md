@@ -260,6 +260,18 @@ $$
 2. 실제 행동 trial은 아니지만 connectome proxy에서 domain-preserving channel이 닫혔다.
 3. 이 결과로 최소 primitive neural control 식의 \(\mathcal L(W_{\mathrm{chem}})\)와 \(U_d\rightarrow b_d\) 항은 다음 단계로 넘길 수 있다.
 
+### C. elegans trial-behavior boundary audit
+
+이 proxy를 실제 empirical behavior gate로 승격할 수 있는지도 별도로 감사했다. 로컬 `data/`와 evolution 산출물에는 `trial_id`, stimulus label/time, behavior trace/label, `worm_id`, timebase를 동시에 가진 C. elegans trial table이 없다. 따라서 C. elegans의 weighted routing과 stimulus-output channel은 proxy로는 닫혔지만, 실제 trial behavior는 data-boundary로 둔다.
+
+| 항목 | 값 |
+|---|---|
+| empirical trial gate ready | False |
+| verdict | data-boundary |
+| proxy supported | True |
+| adult matched/wrong | 3.431872 |
+| developmental weighted stages | 8/8 |
+
 정리:
 
 $$

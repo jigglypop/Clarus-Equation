@@ -20,6 +20,8 @@ examples/physics/h0_readout/h0_real_data/
 
 # Outputs and models
 *.json
+!examples/physics/h0_readout/h0_fisher_io_examples/
+!examples/physics/h0_readout/h0_fisher_io_examples/*.json
 *.pt
 *.pth
 *.csv

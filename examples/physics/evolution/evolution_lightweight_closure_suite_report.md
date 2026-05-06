@@ -1,0 +1,23 @@
+# Evolution lightweight closure suite
+
+- passed: `True`
+- passed gates: 16/16
+
+| gate | script | return code | seconds | parsed summary |
+|---|---|---:|---:|---|
+| `life_minimum_dynamics` | `life_minimum_dynamics_gate.py` | 0 | 16.135 | passed=True |
+| `self_reference_origin_ladder` | `self_reference_origin_ladder_gate.py` | 0 | 0.140 | passed=True, first_minimum_self_reference=template_bearing_protocell, first_behavioral_self_reference=chemotactic_bacterium_or_archaeon, first_local_neural_self_reference_proxy=c_elegans_primitive_neural_proxy |
+| `clarus_cell_origin_timeline` | `clarus_cell_origin_timeline_gate.py` | 0 | 0.129 | passed=True, structural_window_ga=[4.5, 3.7], evidence_by_window_ga=[3.8, 3.4], minimal_form=semi-permeable boundary + autocatalytic core + heritable copying template + gradient ports + division threshold |
+| `clarus_cell_mechanism` | `clarus_cell_mechanism_gate.py` | 0 | 2.080 | passed=True, full_pass_rate=0.86875 |
+| `clarus_cell_to_human_ladder` | `clarus_cell_to_human_ladder_gate.py` | 0 | 0.141 | passed=True, human_clarus_cell_forms=['human_proliferative_clarus_cell', 'human_postmitotic_neural_clarus_cell'] |
+| `human_clarus_cell_multiscale` | `human_clarus_cell_multiscale_dynamics_gate.py` | 0 | 25.378 | passed=True, full_pass_rates={'human_proliferative_clarus_cell': 1.0, 'human_postmitotic_neural_clarus_cell': 1.0} |
+| `clarus_cell_exact_mechanism` | `clarus_cell_exact_mechanism_spec_gate.py` | 0 | 0.196 | passed=True, exact_mechanism=A Clarus cell is an open bounded identity loop.  Context enters through regulated ports; ports feed energy; energy maintains boundary, identity, metabolism, and repair; repair keeps damage below the closure boundary; identity rebuilds the metabolic machinery; recurrence projects the whole state into either daughters or long-lived maintenance. |
+| `c_elegans_trial_boundary` | `c_elegans_trial_behavior_boundary_audit.py` | 0 | 0.161 | verdict=data_boundary |
+| `drosophila_trial_boundary` | `drosophila_trial_dynamics_boundary_audit.py` | 0 | 0.158 | verdict=data_boundary |
+| `zebrafish_continuous_boundary` | `zebrafish_continuous_boundary_final_audit.py` | 0 | 0.165 | verdict=data_boundary |
+| `mouse_action_carrier_split` | `mouse_ibl_action_carrier_split_gate.py` | 0 | 0.163 | passed=True |
+| `cross_species_action_carrier` | `cross_species_action_carrier_invariant_gate.py` | 0 | 0.176 | passed=True |
+| `evolution_ladder_package` | `evolution_ladder_closure_package_gate.py` | 0 | 0.178 | passed=True, promoted_terms=7, blocked_terms=5 |
+| `external_dataset_requirements` | `external_dataset_requirements_gate.py` | 0 | 0.158 | ready_count=0, total=5 |
+| `chapter9_consistency` | `chapter9_consistency_audit.py` | 0 | 0.159 | passed=True |
+| `chapter9_split_docs_consistency` | `chapter9_split_docs_consistency_audit.py` | 0 | 0.163 | passed=True |

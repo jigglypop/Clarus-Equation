@@ -1,0 +1,28 @@
+{
+  "name": "GW-like mixed Fisher example",
+  "nodes": ["gw", "gw_distance", "host_redshift"],
+  "observable": "gw",
+  "local_nodes": ["gw_distance"],
+  "global_nodes": ["host_redshift"],
+  "matrix_type": "fisher",
+  "conductance_mode": "path",
+  "matrix": [
+    [1.0, 0.2, 0.2],
+    [0.2, 1.0, 0.0],
+    [0.2, 0.0, 1.0]
+  ],
+  "h0_obs": 70.3,
+  "h0_sigma": 5.15,
+  "likelihood_factors": [
+    {
+      "name": "gw_distance_likelihood",
+      "closure_scope": "local",
+      "nodes": ["gw", "gw_distance"]
+    },
+    {
+      "name": "host_redshift_environment",
+      "closure_scope": "global",
+      "nodes": ["gw", "host_redshift"]
+    }
+  ]
+}

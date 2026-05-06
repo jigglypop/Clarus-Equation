@@ -719,9 +719,24 @@ class BrainRuntime:
         su_np = self.stp_u.detach().cpu().numpy().astype(np.float32)
         sx_np = self.stp_x.detach().cpu().numpy().astype(np.float32)
         bit_np = self.bitfield.detach().cpu().numpy().astype(np.uint8)
+        active_np = self.active_mask().detach().cpu().numpy().astype(np.uint8)
         ext_np = external.detach().cpu().numpy().astype(np.float32)
         goal_np = self.goal.detach().cpu().numpy().astype(np.float32)
         replay_np = replay.detach().cpu().numpy().astype(np.float32)
+        noise_scale = {
+            RuntimeMode.WAKE: 1.0,
+            RuntimeMode.NREM: 0.3,
+            RuntimeMode.REM: 0.7,
+        }[mode]
+        gen = torch.Generator(device=self.activation.device)
+        gen.manual_seed(self.step_index * 31337 + 7)
+        noise = self.config.noise_sigma * noise_scale * torch.randn(
+            self.activation.shape,
+            generator=gen,
+            device=self.activation.device,
+            dtype=self.activation.dtype,
+        )
+        noise_np = noise.detach().cpu().numpy().astype(np.float32)
         val_np = self.values.detach().cpu().numpy().astype(np.float32)
         col_np = self.col_idx.detach().cpu().numpy().astype(np.int32)
         row_np = self.row_ptr.detach().cpu().numpy().astype(np.int32)
@@ -730,8 +745,25 @@ class BrainRuntime:
          new_su, new_sx, new_bit, active_count, energy) = _rust_brain_step(
             val_np, col_np, row_np,
             act_np, ref_np, mem_np, adapt_np, su_np, sx_np, bit_np,
-            ext_np, goal_np, replay_np,
+            active_np, ext_np, goal_np, replay_np, noise_np,
             mode_int, budget,
+            self.config.activation_decay(mode),
+            self.config.activation_gain(mode),
+            self.config.refractory_decay(mode),
+            self.config.refractory_gain(mode),
+            self.config.replay_mix(mode),
+            self.config.refractory_scale,
+            self.config.goal_gain,
+            self.config.external_gain,
+            self.config.bit_lower_threshold,
+            self.config.bit_upper_threshold,
+            STP_TAU_FAC_INV,
+            STP_TAU_REC,
+            STP_U_BASE,
+            ADAPTATION_COUPLING,
+            ADAPTATION_DECAY,
+            MEMORY_TRACE_DECAY,
+            ADAPTATION_CLAMP,
         )
         self.activation = torch.from_numpy(np.array(new_act, dtype=np.float32)).to(self.device)
         self.refractory = torch.from_numpy(np.array(new_ref, dtype=np.float32)).to(self.device)

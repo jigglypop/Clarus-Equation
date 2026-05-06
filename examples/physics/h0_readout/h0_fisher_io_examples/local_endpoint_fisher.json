@@ -1,0 +1,22 @@
+{
+  "name": "Local endpoint Fisher example",
+  "nodes": ["ladder", "endpoint_anchor"],
+  "observable": "ladder",
+  "local_nodes": ["endpoint_anchor"],
+  "global_nodes": [],
+  "matrix_type": "fisher",
+  "conductance_mode": "path",
+  "matrix": [
+    [1.0, 0.2],
+    [0.2, 1.0]
+  ],
+  "h0_obs": 73.17,
+  "h0_sigma": 0.86,
+  "likelihood_factors": [
+    {
+      "name": "endpoint_anchor_likelihood",
+      "closure_scope": "local",
+      "nodes": ["ladder", "endpoint_anchor"]
+    }
+  ]
+}

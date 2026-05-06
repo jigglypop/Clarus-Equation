@@ -285,11 +285,30 @@ mod python_binding {
         stp_u: PyReadonlyArray1<'py, f32>,
         stp_x: PyReadonlyArray1<'py, f32>,
         bitfield: PyReadonlyArray1<'py, u8>,
+        active_mask: PyReadonlyArray1<'py, u8>,
         external: PyReadonlyArray1<'py, f32>,
         goal: PyReadonlyArray1<'py, f32>,
         replay: PyReadonlyArray1<'py, f32>,
+        noise: PyReadonlyArray1<'py, f32>,
         mode: u8,
         energy_budget: usize,
+        activation_decay: f32,
+        activation_gain: f32,
+        refractory_decay: f32,
+        refractory_gain: f32,
+        replay_mix: f32,
+        refractory_scale: f32,
+        goal_gain: f32,
+        external_gain: f32,
+        bit_lower: f32,
+        bit_upper: f32,
+        stp_tau_fac_inv: f32,
+        stp_tau_rec: f32,
+        stp_u_base: f32,
+        adaptation_coupling: f32,
+        adaptation_decay: f32,
+        memory_decay: f32,
+        adaptation_clamp: f32,
     ) -> (
         &'py PyArray1<f32>,
         &'py PyArray1<f32>,
@@ -306,9 +325,31 @@ mod python_binding {
             2 => runtime_types::Mode::Rem,
             _ => runtime_types::Mode::Wake,
         };
-        let mp = kernel::ModeParams::from_mode(mode_enum);
+        let mut mp = kernel::ModeParams::from_mode(mode_enum);
+        mp.activation_decay = activation_decay;
+        mp.activation_gain = activation_gain;
+        mp.refractory_decay = refractory_decay;
+        mp.refractory_gain = refractory_gain;
+        mp.replay_mix = replay_mix;
+        mp.adaptation_coupling = adaptation_coupling;
+        mp.adaptation_decay = adaptation_decay;
+        mp.adaptation_gain = adaptation_decay;
+        mp.memory_decay = memory_decay;
+        mp.memory_gain = memory_decay;
         let cfg = kernel::StepConfig {
             energy_budget,
+            refractory_scale,
+            goal_gain,
+            external_gain,
+            active_threshold: 0.22,
+            bit_lower,
+            bit_upper,
+            stp: kernel::StpParams {
+                tau_fac: stp_tau_fac_inv,
+                tau_rec: stp_tau_rec,
+                u_base: stp_u_base,
+            },
+            adaptation_clamp,
             ..Default::default()
         };
         let mut act = activation.as_slice().expect("contiguous").to_vec();
@@ -329,9 +370,11 @@ mod python_binding {
             &mut su,
             &mut sx,
             &mut bit,
+            active_mask.as_slice().expect("contiguous"),
             external.as_slice().expect("contiguous"),
             goal.as_slice().expect("contiguous"),
             replay.as_slice().expect("contiguous"),
+            noise.as_slice().expect("contiguous"),
             &mp,
             &cfg,
         );

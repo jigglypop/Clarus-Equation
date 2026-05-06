@@ -1,15 +1,19 @@
 [project]
 name = "clarus-equation"
-version = "1.1.0"
+version = "1.2.0"
 description = "CE Field Theory -- Rust-backed Brain/AGI Engine"
 requires-python = ">=3.10"
 dependencies = [
     "numpy>=1.24",
+    "tokenizers>=0.15,<1",
     "torch>=2.0",
+    "tqdm>=4.66,<5",
+    "transformers>=4.40,<6",
 ]
 
 [project.optional-dependencies]
 science = [
+    "datasets>=2.18,<5",
     "scipy>=1.10",
     "matplotlib>=3.7",
     "pandas>=2.0",

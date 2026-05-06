@@ -239,3 +239,15 @@ $$
 3. 그 분화된 역할들이 닫힌 loop를 만들 때 C. elegans의 primitive routing을 넘어선다.
 4. 따라서 "신경계 양이 늘면 지능이 생긴다"보다 "weighted routing 위에 역할 분화와 내부 loop가 붙는다"가 더 정확하다.
 
+### Drosophila trial-dynamics boundary audit
+
+Adult FlyWire 결과는 구조 connectome closure다. 이를 실제 시간동역학 behavior equation으로 승격할 수 있는지 audit하면, 로컬에는 `trial_id`, timebase, neural activity/spikes, behavior trace, stimulus/task epoch, celltype/region mapping을 함께 가진 Drosophila trial dynamics table이 없다. 따라서 Drosophila 항은 structural closed로 유지하지만, trial dynamics는 data-boundary로 둔다.
+
+| 항목 | 값 |
+|---|---|
+| empirical trial dynamics ready | False |
+| verdict | data-boundary |
+| structural closed | True |
+| adult observed/random memory-action loop | 3.738545 |
+| adult loop p | 0.012987 |
+

@@ -108,6 +108,7 @@ pub struct StepConfig {
     pub ei_ratio: f32,
     /// Inhibitory gain multiplier (w_I/w_E ~= 4)
     pub inh_gain: f32,
+    pub adaptation_clamp: f32,
 }
 
 impl Default for StepConfig {
@@ -123,6 +124,7 @@ impl Default for StepConfig {
             stp: StpParams::default(),
             ei_ratio: 0.80,
             inh_gain: 4.0,
+            adaptation_clamp: 2.0,
         }
     }
 }
@@ -204,9 +206,11 @@ pub fn brain_step(
     stp_u: &mut [f32],
     stp_x: &mut [f32],
     bitfield: &mut [u8],
+    active_mask: &[u8],
     external: &[f32],
     goal: &[f32],
     replay: &[f32],
+    noise: &[f32],
     mode_params: &ModeParams,
     cfg: &StepConfig,
 ) -> StepOutput {
@@ -217,11 +221,12 @@ pub fn brain_step(
 
     // 0. STP update (Tsodyks-Markram, J.19): per-neuron approximation
     let stp_p = &cfg.stp;
-    let prev_active: Vec<bool> = bitfield.iter().map(|&b| b > 0).collect();
+    let prev_active: Vec<bool> = active_mask.iter().map(|&b| b > 0).collect();
     for i in 0..dim {
         let spike = if prev_active[i] { 1.0_f32 } else { 0.0 };
-        stp_u[i] += -stp_p.tau_fac * stp_u[i] + stp_p.u_base * (1.0 - stp_u[i]) * spike;
-        stp_x[i] += stp_p.tau_rec * (1.0 - stp_x[i]) - stp_u[i] * stp_x[i] * spike;
+        let old_u = stp_u[i];
+        stp_u[i] += -stp_p.tau_fac * old_u + stp_p.u_base * (1.0 - old_u) * spike;
+        stp_x[i] += stp_p.tau_rec * (1.0 - stp_x[i]) - old_u * stp_x[i] * spike;
         stp_u[i] = stp_u[i].clamp(0.0, 1.0);
         stp_x[i] = stp_x[i].clamp(0.0, 1.0);
     }
@@ -253,7 +258,8 @@ pub fn brain_step(
                 + goal_g * goal[i]
                 + rep_m * replay[i]
                 - ref_s * refractory[i]
-                - adapt_c * adaptation[i].min(2.0)
+                - adapt_c * adaptation[i].min(cfg.adaptation_clamp)
+                + noise[i]
         })
         .collect();
 
@@ -288,7 +294,7 @@ pub fn brain_step(
     let new_adapt: Vec<f32> = (0..dim)
         .map(|i| {
             let raw = (1.0 - w_decay) * adaptation[i] + w_gain * new_act[i] * new_act[i];
-            raw.clamp(0.0, 2.0)
+            raw.clamp(0.0, cfg.adaptation_clamp)
         })
         .collect();
 
@@ -378,6 +384,8 @@ mod tests {
         let mut su = vec![0.5_f32; dim];
         let mut sx = vec![1.0_f32; dim];
         let mut bit = vec![1_u8; dim];
+        let active = bit.clone();
+        let noise = vec![0.0_f32; dim];
         let ext = vec![0.1_f32; dim];
         let goal = vec![0.0_f32; dim];
         let replay = vec![0.0_f32; dim];
@@ -387,7 +395,7 @@ mod tests {
             &vals, &cols, &rows,
             &mut act, &mut refr, &mut mem, &mut adapt,
             &mut su, &mut sx, &mut bit,
-            &ext, &goal, &replay, &mp, &cfg,
+            &active, &ext, &goal, &replay, &noise, &mp, &cfg,
         );
         assert!(out.active_count <= 4);
         assert!(out.energy >= 0.0);
@@ -406,6 +414,8 @@ mod tests {
         let mut su = vec![0.5_f32; dim];
         let mut sx = vec![1.0_f32; dim];
         let mut bit = vec![1_u8; dim];
+        let active = bit.clone();
+        let noise = vec![0.0_f32; dim];
         let ext = vec![0.0_f32; dim];
         let goal = vec![0.0_f32; dim];
         let replay = vec![0.0_f32; dim];
@@ -417,7 +427,7 @@ mod tests {
                 &vals, &cols, &rows,
                 &mut act, &mut refr, &mut mem, &mut adapt,
                 &mut su, &mut sx, &mut bit,
-                &ext, &goal, &replay, &mp, &cfg,
+                &active, &ext, &goal, &replay, &noise, &mp, &cfg,
             );
             energies.push(out.energy);
         }
@@ -435,6 +445,8 @@ mod tests {
         let mut su = vec![0.5_f32; dim];
         let mut sx = vec![1.0_f32; dim];
         let mut bit = vec![1_u8; dim];
+        let active = bit.clone();
+        let noise = vec![0.0_f32; dim];
         let ext = vec![0.5_f32; dim];
         let goal = vec![0.0_f32; dim];
         let replay = vec![0.0_f32; dim];
@@ -445,7 +457,7 @@ mod tests {
                 &vals, &cols, &rows,
                 &mut act, &mut refr, &mut mem, &mut adapt,
                 &mut su, &mut sx, &mut bit,
-                &ext, &goal, &replay, &mp, &cfg,
+                &active, &ext, &goal, &replay, &noise, &mp, &cfg,
             );
         }
         let max_adapt = adapt.iter().cloned().fold(0.0_f32, f32::max);
@@ -463,6 +475,8 @@ mod tests {
         let mut su = vec![0.5_f32; dim];
         let mut sx = vec![1.0_f32; dim];
         let mut bit = vec![1_u8; dim];
+        let active = bit.clone();
+        let noise = vec![0.0_f32; dim];
         let ext = vec![0.5_f32; dim];
         let goal = vec![0.0_f32; dim];
         let replay = vec![0.0_f32; dim];
@@ -474,7 +488,7 @@ mod tests {
                 &vals, &cols, &rows,
                 &mut act, &mut refr, &mut mem, &mut adapt,
                 &mut su, &mut sx, &mut bit,
-                &ext, &goal, &replay, &mp, &cfg,
+                &active, &ext, &goal, &replay, &noise, &mp, &cfg,
             );
         }
         assert!(sx[0] < x0, "STP resource x should deplete with sustained spiking");
