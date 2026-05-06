@@ -160,7 +160,7 @@ OBSERVATIONS: tuple[Obs, ...] = (
     Obs("eta", "η × 10^10", "BBN+CMB", 6.14, 0.02, "C-corrected"),
 
     # A_s : Planck 2018
-    Obs("a_s", "A_s × 10^9", "Planck 2018", 2.10, 0.030, "C-corrected"),
+    Obs("a_s", "A_s × 10^9", "Planck 2018", 2.10, 0.030, "Open"),
 
     # a_e : 7_우주론.md 표기 정밀도 6자리 → σ_int = 5e-9
     Obs("a_e", "a_e × 10^3", "Harvard 2023", 1.15965218059, 0.00000000013, "particle",
@@ -188,10 +188,19 @@ def predictions(core: Core) -> dict[str, float]:
     h0t0 = (2.0 / (3.0 * math.sqrt(core.omega_l))
             * math.asinh(math.sqrt(core.omega_l / omega_m)))
 
-    # τ* 보정 후 (docs/2_경로적분과_응용/12_전이구간.md §4.3)
-    a_s_corr = 2.08e-9                               # ΔN = 1.5
+    # A_s is reopened under the self-recursive audit.  The exact implicit
+    # derivative of x = exp(-(1-x)D) is dx/dD = -x(1-x)/(1-Dx), giving the raw
+    # fixed-point value below.  The older tau<1 package used a different
+    # W-derivative and is not used in the scorecard now.
+    dx_dD = -core.eps2 * (1.0 - core.eps2) / (1.0 - core.d_eff * core.eps2)
+    a_s_corr = (
+        (dx_dD * dx_dD)
+        / ((1.0 - core.eps2) * (1.0 - core.eps2))
+        * core.eps2
+        / (2.0 * math.pi * n_e * n_e)
+    )
     eta_corr = 6.11e-10                              # h = 0.0166
-    t_cmb_corr = 2.76                                # K
+    t_cmb_corr = 2.7295168165286197                  # Saha, X_dec = pi^-5
     a_e_pred = 1.159653e-3                           # 7_우주론.md §g_e-2
 
     # 동적 DE
@@ -234,6 +243,8 @@ class Row:
 
     @property
     def verdict(self) -> str:
+        if self.tag == "Open":
+            return "open"
         s = abs(self.sigma_off)
         if s < 1.0:
             return "ok"
@@ -242,6 +253,35 @@ class Row:
         if s < 3.0:
             return "tension"
         return "broken"
+
+
+@dataclass(frozen=True)
+class CandidatePrediction:
+    label: str
+    ce_pred: float
+    equation: str
+    status: str
+
+
+def candidate_predictions(core: Core) -> list[CandidatePrediction]:
+    """Non-scored predictions that are useful falsification targets."""
+    n_gauge = 12.0
+    d = 3.0
+    n_e = (d / 2.0) * core.d_eff * n_gauge
+    return [
+        CandidatePrediction(
+            label="alpha_spec = dn_s/dlnk",
+            ce_pred=-2.0 / (n_e * n_e),
+            equation="-2/N_e^2",
+            status="A3c next scalar test; not included in chi2",
+        ),
+        CandidatePrediction(
+            label="r_tensor",
+            ce_pred=12.0 / (n_e * n_e),
+            equation="12/N_e^2",
+            status="plateau-class tensor benchmark; not included in chi2",
+        ),
+    ]
 
 
 def score(core: Core) -> tuple[list[Row], dict[str, float]]:
@@ -264,8 +304,9 @@ def score(core: Core) -> tuple[list[Row], dict[str, float]]:
             sigma_off=sigma_off, tag=o.tag,
             precision_limited=o.sigma_int > o.sigma,
         ))
-        chi2_total += sigma_off ** 2
-        n_used += 1
+        if o.tag != "Open":
+            chi2_total += sigma_off ** 2
+            n_used += 1
 
     return rows, {
         "chi2_total": chi2_total,
@@ -355,7 +396,7 @@ OPEN_TENSIONS: tuple[tuple[str, str, str], ...] = (
 # 7. Reporting
 # --------------------------------------------------------------------------- #
 
-_VERDICT_COLOR = {"ok": " ", "marginal": "~", "tension": "!", "broken": "X"}
+_VERDICT_COLOR = {"ok": " ", "marginal": "~", "tension": "!", "broken": "X", "open": "o"}
 
 
 def render_text(core: Core, rows: list[Row], summary: dict[str, float]) -> str:
@@ -390,8 +431,13 @@ def render_text(core: Core, rows: list[Row], summary: dict[str, float]) -> str:
         f"χ²/DOF = {summary['chi2_per_dof']:.3f}   p = {summary['p_value']:.3f}"
     )
     out.append("")
-    out.append("  Verdict   :   (blank)<1σ    ~ 1-2σ    ! 2-3σ    X >3σ")
+    out.append("  Verdict   :   (blank)<1σ    ~ 1-2σ    ! 2-3σ    X >3σ    o open/non-scored")
     out.append("  σ_eff *   :   CE 표기 정밀도(σ_int) 가 측정 σ 보다 거칠어 σ_eff 로 대체된 행")
+    out.append("")
+    out.append("NON-SCORED CANDIDATE PREDICTIONS")
+    out.append("-" * 80)
+    for c in candidate_predictions(core):
+        out.append(f"  - {c.label:<24} {c.ce_pred:>12.5g}   {c.equation:<16} {c.status}")
     out.append("")
     out.append("OPEN TENSIONS (CE 우주론 묶음 미반영)")
     out.append("-" * 80)
@@ -407,6 +453,7 @@ def to_json(core: Core, rows: list[Row], summary: dict[str, float]) -> dict[str,
     return {
         "core": asdict(core),
         "rows": [asdict(r) | {"verdict": r.verdict} for r in rows],
+        "candidate_predictions": [asdict(c) for c in candidate_predictions(core)],
         "summary": summary,
         "open_tensions": [
             {"name": n, "fact": f, "note": x} for n, f, x in OPEN_TENSIONS
