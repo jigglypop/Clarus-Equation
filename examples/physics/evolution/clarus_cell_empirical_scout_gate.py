@@ -91,6 +91,31 @@ LOCAL_EMPIRICAL_FILES = {
     / "evolution"
     / "clarus_cell"
     / "jump_crispr_mito_direct_gene_summary.csv",
+    "jump_compound_mito_direct_feature_subset": REPO_ROOT
+    / "data"
+    / "evolution"
+    / "clarus_cell"
+    / "jump_compound_mito_direct_features.parquet",
+    "jump_compound_mito_positive_control_summary": REPO_ROOT
+    / "data"
+    / "evolution"
+    / "clarus_cell"
+    / "jump_compound_mito_positive_control_summary.csv",
+    "replogle_k562_essential_normalized_bulk": REPO_ROOT
+    / "data"
+    / "evolution"
+    / "clarus_cell"
+    / "replogle_k562_essential_normalized_bulk_01.h5ad",
+    "replogle_rpe1_normalized_bulk": REPO_ROOT
+    / "data"
+    / "evolution"
+    / "clarus_cell"
+    / "replogle_rpe1_normalized_bulk_01.h5ad",
+    "replogle_perturbseq_clarus_state_summary": REPO_ROOT
+    / "data"
+    / "evolution"
+    / "clarus_cell"
+    / "replogle_perturbseq_clarus_state_summary.csv",
 }
 
 

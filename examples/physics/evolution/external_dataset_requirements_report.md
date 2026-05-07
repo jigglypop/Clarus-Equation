@@ -12,7 +12,7 @@
 | `c_elegans_empirical_trial_behavior` | 0.000 | 0 | `trial_id`, `stimulus_label_or_time`, `behavior_label_or_trace`, `worm_id`, `timebase` | `c_elegans_empirical_trial_behavior_gate.py` |
 | `drosophila_trial_dynamics` | 0.000 | 0 | `trial_id`, `timebase`, `neural_activity_or_spikes`, `behavior_label_or_trace`, `stimulus_or_task_epoch`, `celltype_or_region_mapping` | `drosophila_trial_dynamics_gate.py` |
 | `life_empirical_origin` | 0.000 | 0 | `reaction_network_or_sequence`, `autocatalysis_or_growth_measure`, `boundary_or_compartment_condition`, `copying_or_template_measure`, `control_or_ablation_condition` | `life_empirical_origin_gate.py` |
-| `mammalian_action_replication_or_perturbation` | 0.000 | 0 | `registered_sessions_or_subjects`, `spike_or_activity_matrix`, `action_targets`, `region_or_probe_metadata`, `perturbation_or_larger_panel_indicator` | `mammalian_phi_action_replication_gate.py` |
+| `mammalian_action_replication_or_perturbation` | 0.000 | 1 | `registered_sessions_or_subjects`, `spike_or_activity_matrix`, `action_targets`, `region_or_probe_metadata`, `perturbation_or_larger_panel_indicator` | `mammalian_phi_action_replication_gate.py` |
 
 ## details
 
@@ -49,4 +49,8 @@
 - reason: Mouse Phi_action and carrier split are candidate-panel/mechanism candidates.
 - ready: `False`
 - found fields: none
+
+| candidate file | size bytes | keyword hits |
+|---|---:|---|
+| `data\evolution\clarus_cell\replogle_perturbseq_clarus_state_summary.csv` | 1200 | perturb |
 

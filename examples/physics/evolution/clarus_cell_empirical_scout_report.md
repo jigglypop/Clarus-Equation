@@ -22,6 +22,11 @@
 - `jump_operator_morphology_subset`: `True` at `C:\Users\dongh\OneDrive\Desktop\Clarus-Equation\data\evolution\clarus_cell\jump_crispr_clarus_operator_morphology_subset.csv`
 - `jump_mito_direct_feature_subset`: `True` at `C:\Users\dongh\OneDrive\Desktop\Clarus-Equation\data\evolution\clarus_cell\jump_crispr_mito_direct_features.parquet`
 - `jump_mito_direct_gene_summary`: `True` at `C:\Users\dongh\OneDrive\Desktop\Clarus-Equation\data\evolution\clarus_cell\jump_crispr_mito_direct_gene_summary.csv`
+- `jump_compound_mito_direct_feature_subset`: `True` at `C:\Users\dongh\OneDrive\Desktop\Clarus-Equation\data\evolution\clarus_cell\jump_compound_mito_direct_features.parquet`
+- `jump_compound_mito_positive_control_summary`: `True` at `C:\Users\dongh\OneDrive\Desktop\Clarus-Equation\data\evolution\clarus_cell\jump_compound_mito_positive_control_summary.csv`
+- `replogle_k562_essential_normalized_bulk`: `True` at `C:\Users\dongh\OneDrive\Desktop\Clarus-Equation\data\evolution\clarus_cell\replogle_k562_essential_normalized_bulk_01.h5ad`
+- `replogle_rpe1_normalized_bulk`: `True` at `C:\Users\dongh\OneDrive\Desktop\Clarus-Equation\data\evolution\clarus_cell\replogle_rpe1_normalized_bulk_01.h5ad`
+- `replogle_perturbseq_clarus_state_summary`: `True` at `C:\Users\dongh\OneDrive\Desktop\Clarus-Equation\data\evolution\clarus_cell\replogle_perturbseq_clarus_state_summary.csv`
 
 ## ranked sources
 

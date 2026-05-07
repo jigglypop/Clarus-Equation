@@ -156,6 +156,32 @@ GATES = (
         partial_weight=0.02,
         claim="JUMP direct Mito-channel E specificity check",
     ),
+    EvidenceGate(
+        key="jump_chemical_mito_positive_control",
+        result_path=Path(__file__).with_name(
+            "clarus_cell_jump_chemical_mitochondria_positive_control_results.json"
+        ),
+        branch="human compound direct mitochondrial image-channel assay control",
+        operators=(),
+        evidence_kind="public empirical assay control",
+        max_weight=0.04,
+        pass_weight=0.04,
+        partial_weight=0.01,
+        claim="JUMP compound direct Mito-channel positive control",
+    ),
+    EvidenceGate(
+        key="perturbseq_state_reconstruction",
+        result_path=Path(__file__).with_name(
+            "clarus_cell_perturbseq_state_reconstruction_results.json"
+        ),
+        branch="human Perturb-seq transcriptomic operator state",
+        operators=("E", "A", "I", "D", "Q", "R"),
+        evidence_kind="public empirical transcriptome state",
+        max_weight=0.16,
+        pass_weight=0.16,
+        partial_weight=0.06,
+        claim="Replogle K562/RPE1 pseudo-bulk operator state reconstruction",
+    ),
 )
 
 DEPMAP_OPERATOR_MAP = {
@@ -241,6 +267,9 @@ def gate_status(gate: EvidenceGate) -> dict[str, Any]:
         operator_support = tuple(operator for operator in OPERATORS if operator in supported)
     elif gate.key == "jump_mitochondria_channel_gate":
         operator_support = ("E",) if passed else ()
+    elif gate.key == "perturbseq_state_reconstruction" and passed:
+        supported = set(result.get("operators_supported", []))
+        operator_support = tuple(operator for operator in OPERATORS if operator in supported)
 
     return {
         "key": gate.key,
@@ -322,17 +351,18 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
     return {
         "gate": "clarus_cell_empirical_closure",
         "passed": passed,
-        "claim_level": "five_branch_empirical_partial_closure" if passed else "partial_closure",
+        "claim_level": "six_branch_empirical_partial_closure" if passed else "partial_closure",
         "mechanism_percent_estimate": {
-            "overall_clarus_cell": [57, 67],
+            "overall_clarus_cell": [60, 70],
             "postmitotic_neuron_D_Q_R_branch": [60, 70],
             "proliferative_cell_recurrence_branch": [60, 70],
+            "perturbseq_transcriptomic_state_branch": [55, 65],
             "glia_tissue_support_context_branch": [60, 70],
             "subcellular_operator_blueprint_branch": [70, 80],
             "image_morphology_operator_activity_branch": [50, 60],
             "jump_direct_mitochondrial_E_branch": [20, 30],
             "origin_cell_full_loop": [30, 40],
-            "human_brain_full_mechanism": [36, 43],
+            "human_brain_full_mechanism": [37, 44],
         },
         "total_weight": round(total_weight, 6),
         "max_weight": round(max_weight, 6),
@@ -342,8 +372,7 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
         "gate_statuses": statuses,
         "operator_scores": scores,
         "next_bottleneck_gates": [
-            "clarus_cell_perturbseq_state_reconstruction_gate.py",
-            "clarus_cell_jump_chemical_mitochondria_positive_control_gate.py",
+            "clarus_cell_jump_dose_or_cell_health_mitochondria_gate.py",
             "clarus_cell_protocell_boundary_recurrence_gate.py",
             "clarus_cell_neuron_glia_coculture_recurrence_gate.py",
         ],
