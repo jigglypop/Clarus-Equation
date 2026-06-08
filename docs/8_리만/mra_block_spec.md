@@ -141,7 +141,7 @@ MRABlock(x):
   return x
 ```
 
-`LBONorm`, `GaugeLattice`는 `examples/ai/clarus_lm.py`에 이미 구현되어 있다.
+`LBONorm`, `GaugeLattice`는 `legacy examples/ai/clarus_lm.py` (removed)에 이미 구현되어 있다.
 
 ## 6. Hermitian 옵션 (Hilbert-Pólya 직접 구현)
 

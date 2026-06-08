@@ -2,7 +2,7 @@
 
 import torch
 import pytest
-from clarus.quantum import convergence_inequality
+from reality_stone.clarus.quantum import convergence_inequality
 
 
 class TestConvergenceCheck:
@@ -36,7 +36,7 @@ class TestCurvatureSleepPressure:
 
 class TestPhiThreeInterventions:
     def test_portal_coupling(self):
-        from clarus.constants import PORTAL
+        from reality_stone.clarus.constants import PORTAL
         m = torch.randn(16)
         phi = torch.randn(16)
         phi_hat = phi / phi.norm().clamp(min=1e-8)

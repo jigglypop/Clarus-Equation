@@ -2,8 +2,8 @@
 
 import torch
 import pytest
-from clarus.runtime import HippocampusMemory, RuntimeMode
-from clarus.constants import FORGET_TAU, RECALL_SIMILARITY_THRESHOLD
+from reality_stone.clarus.runtime import HippocampusMemory, RuntimeMode
+from reality_stone.clarus.constants import FORGET_TAU, RECALL_SIMILARITY_THRESHOLD
 
 
 class TestForgetDecay:

@@ -2,7 +2,7 @@
 
 import torch
 import pytest
-from clarus.quantum import (
+from reality_stone.clarus.quantum import (
     quantum_phase_step, wick_rotate, quantum_to_real,
     check_norm_conservation, convergence_inequality,
 )

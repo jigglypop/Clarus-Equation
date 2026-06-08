@@ -353,7 +353,9 @@ $$e \xrightarrow{e^{-(1-\varepsilon^2)D_{\text{eff}}}} \varepsilon^2 = 0.04865 \
 $$\Omega_\Lambda = \frac{1 - \varepsilon^2}{1 + R} = 0.6891, \qquad \Omega_{DM} = \frac{(1-\varepsilon^2) R}{1 + R} = 0.2623$$
 
 **6층: 입자물리**
-$$\delta \xrightarrow{v_{\text{EW}} \delta} M_{\text{CE}} = 43.77 \text{ GeV} \xrightarrow{(\alpha/2\pi) e^{-1} (m_\mu/M)^2} \Delta a_\mu = 249 \times 10^{-11}$$
+$$\delta \xrightarrow{v_{\text{EW}} \delta} M_{\text{CE}} = 43.77 \text{ GeV} \xrightarrow{(\alpha/2\pi) e^{-1} (m_\mu/M)^2} \Delta a_\mu = 249 \times 10^{-11}\;(\text{보손 근사·역사값})$$
+
+(정본 g-2 예측은 BSM 기여 = 0이다. d=0 기원에서 클라루스장은 새 보손이 아니라 경로적분 수렴 구조이므로 격자 QCD가 이미 포함한다. 249는 접힘을 보손 교환으로 모형화한 역사적 비교값이며 `경로적분.md` 9.0·11.7.2a절을 따른다.)
 
 $$\delta^2 \xrightarrow{m_p \delta^2} m_\phi = 29.65 \text{ MeV} \xrightarrow{F = 1 + \alpha_s D_{\text{eff}}} \Delta r_p^2 = 0.060 \text{ fm}^2$$
 
@@ -550,7 +552,8 @@ Planck 관측: $\Omega_\Lambda = 0.6847$, $\Omega_{DM} = 0.2589$. 차이: 0.64%,
 | $\Omega_b$ | 0.04865 | $0.0486 \pm 0.0010$ | 0.05$\sigma$ |
 | $\Omega_\Lambda$ | 0.6891 | 0.6847 | 0.64% |
 | $\Omega_{DM}$ | 0.2623 | 0.2589 | 1.3% |
-| $\Delta a_\mu$ | $249 \times 10^{-11}$ | $249 \pm 48$ | 0.00$\sigma$ |
+| $\Delta a_\mu$ (정본) | BSM 기여 = 0 (d=0 기원) | BMW 2026 SM=exp | 정합 |
+| $\Delta a_\mu$ (보손 근사·역사값) | $249 \times 10^{-11}$ | WP20 $249 \pm 48$ | 0.00$\sigma$ (역사적 비교) |
 | $m_\phi$ | 29.65 MeV | 22-30 MeV | 범위 내 |
 | $\Delta r_p^2$ | 0.060 fm$^2$ | $0.059 \pm 0.003$ | 0.4$\sigma$ |
 | 보른 규칙 | 유도됨 | $P = |c|^2$ | -- |
@@ -1865,7 +1868,7 @@ $$e^{i\pi} + 1 = 0$$
 0.2% 이내: $|V_{cb}| = \alpha_s^{3/2}$ (0.1%), $M_H/M_Z = F$ (0.20%).
 1% 이내: $\sin^2\theta_{23}^{\text{PMNS}}$ (0.86%), $\sin^2\theta_{13}^{\text{PMNS}}$ (1.0%), $A_s$ ($-1.0\%$, 보정 후), $v_{\text{EW}}/M_{\text{Pl}}$ (1.1%), $T_{\text{CMB}}$ ($+1.3\%$, 보정 후), $J$ (1.3%).
 3% 이내: $\eta$ ($+0.2\%$, 보정 후), $|V_{ub}|$ (2.7%, $F^{1/3}$ 보정 후), $m_{\nu_2}$ (−1.09%, $m_l^{5/8} m_\tau^{3/8}$ Casimir 멱 + NLO), $m_{\nu_3}$ (−1.02%), $\Delta m_{31}^2$ (+1.85%, NLO $1-\alpha_s/\pi$ 도입으로 +9.95% → +1.85%).
-우주론 텐션: $H_0$ (**99.28% 해소, 자유매개변수 0개** — $\xi = \pi^2/2$, $\delta\epsilon_0 = -\delta/\pi$ 첫원리 닫음, `docs/참조/epsilon_제1원리_유도.md` §16.6), $S_8$ (LCDM 대비 $\Delta\chi^2_{f\sigma_8} = -2.91$, KiDS 잔차 0.34σ 완화).
-열린 가정: $\Delta m_{31}^2/\Delta m_{21}^2$ 비율 (+4.6%, 5/8 멱의 NLO 보정 미완), $\delta_{\text{CP}}^{\text{PMNS}}$ ($1$-$2\sigma$ 양립), $\xi = \pi^2/2$ 의 보다 엄밀한 미시 도출 (현재는 $(2\pi)^2/8$ 위상공간 측도 후보).
+우주론 텐션: $H_0$ (**99.28% 해소, 자유매개변수 0개** — $\delta\epsilon_0=-\delta/\pi$(제1원리) → $\Omega_{m,\text{today}}=0.343$, 전이 강성 $S_{\text{tr}}=\pi^2/2$ = 반주기 위상면적 측도 $(2\pi)^2/8$(제1원리, 비최소 결합 아님). 검증 코드 실행 시 요구 강성 $\approx5.0$이 $\pi^2/2$와 +0.002%, 독립 horizon-entropy 읽기도 같은 $\pi^2/2$로 $H_0=67.25$(유일 생존자) → 교차 확증. EoS의 $\tilde\xi_w=\alpha_s^{1/3}=0.49$와는 별개 양(기호 충돌 해소), `docs/참조/epsilon_제1원리_유도.md` §16.6), $S_8$ (LCDM 대비 $\Delta\chi^2_{f\sigma_8} = -2.91$, KiDS 잔차 0.34σ 완화).
+열린 가정: $\Delta m_{31}^2/\Delta m_{21}^2$ 비율 (+4.6%, 5/8 멱의 NLO 보정 미완), $\delta_{\text{CP}}^{\text{PMNS}}$ ($1$-$2\sigma$ 양립), H_0 위상면적 $\pi^2/2$가 e-fold readout으로 들어가는 해석적 환원(Bridge 한정, 자유 파라미터 아님, `경로적분.md` §13.1·17.3.1-E).
 
 우주는 이 한 줄을 출발점으로 한 해석 사슬로 읽을 수 있다는 것이 이 장의 결론이다. 다만 위 간극들은 "이미 완전한 정리"가 아니라, 핵심 문서가 구분한 `Exact / Selection / Bridge / Phenomenology` 층을 따라 더 엄밀히 분리해 다루어야 할 다음 단계의 과제다.

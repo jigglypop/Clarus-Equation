@@ -12,7 +12,7 @@ import math
 import torch
 import torch.nn as nn
 
-from clarus.ce_mra import (
+from reality_stone.clarus.ce_mra import (
     MRABlock,
     MellinRiemannAttention,
     bootstrap_sparse,
@@ -105,7 +105,7 @@ def test_axiomatic_buffers_not_learnable():
 
 
 def test_amplitude_weighting_changes_output():
-    """w_k ≠ 1 must produce different scores than w_k = 1 (otherwise the
+    """w_k ??1 must produce different scores than w_k = 1 (otherwise the
     whole novel contribution collapses to RoPE)."""
     torch.manual_seed(0)
     x = torch.randn(1, 16, 32)
@@ -131,13 +131,13 @@ def test_spectral_norm_constrains_output_projection():
     attn.eval()
     w = attn.o.weight.detach()
     sigma1 = torch.linalg.svdvals(w)[0].item()
-    assert sigma1 <= 1.0 + 1e-2, f"σ₁ = {sigma1}"
+    assert sigma1 <= 1.0 + 1e-2, f"???= {sigma1}"
 
 
 def test_hermitian_score_symmetric_without_causal_mask():
     """Sanity: with Hermitian+no mask, the final attention row-sums are
     self-consistent. (Full self-adjointness is not meaningful with the
-    causal mask — that's by design, see module docstring.)"""
+    causal mask ??that's by design, see module docstring.)"""
     torch.manual_seed(0)
     attn = MellinRiemannAttention(
         16, 2, 8, hermitian=True, spectral_norm_o=False).eval()

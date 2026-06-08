@@ -199,9 +199,9 @@ ClarusBlock(x):
   return x
 ```
 
-### 7.1 기존 구현 (`clarus_lm.py`)과의 관계
+### 7.1 기존 구현 (`legacy clarus_lm.py` (removed))과의 관계
 
-기존 `clarus_lm.py`는 이 구조의 **V1 구현**이다.
+기존 `legacy clarus_lm.py` (removed)는 이 구조의 **V1 구현**이다.
 - `LBONorm`: 구현 완료 (저랭크 LBO 확산)
 - `GaugeLattice`: V1 (채널 혼합 없는 순수 블록 대각)
 - `ClarusAttention`: 구현 완료 (spectral norm)

@@ -380,80 +380,6 @@ wheels = [
 ]
 
 [[package]]
-name = "clarus-equation"
-version = "1.2.0"
-source = { editable = "." }
-dependencies = [
-    { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "tokenizers" },
-    { name = "torch" },
-    { name = "tqdm" },
-    { name = "transformers" },
-]
-
-[package.optional-dependencies]
-all = [
-    { name = "datasets" },
-    { name = "joblib" },
-    { name = "matplotlib" },
-    { name = "nibabel" },
-    { name = "pandas" },
-    { name = "pytest" },
-    { name = "qiskit" },
-    { name = "qiskit-aer" },
-    { name = "qiskit-ibm-runtime" },
-    { name = "ruff" },
-    { name = "scipy", version = "1.15.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "scipy", version = "1.16.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "seaborn" },
-]
-dev = [
-    { name = "pytest" },
-    { name = "ruff" },
-]
-neuro = [
-    { name = "nibabel" },
-]
-quantum = [
-    { name = "qiskit" },
-    { name = "qiskit-aer" },
-    { name = "qiskit-ibm-runtime" },
-]
-science = [
-    { name = "datasets" },
-    { name = "joblib" },
-    { name = "matplotlib" },
-    { name = "pandas" },
-    { name = "scipy", version = "1.15.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "scipy", version = "1.16.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "seaborn" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "clarus-equation", extras = ["science", "quantum", "neuro", "dev"], marker = "extra == 'all'" },
-    { name = "datasets", marker = "extra == 'science'", specifier = ">=2.18,<5" },
-    { name = "joblib", marker = "extra == 'science'", specifier = ">=1.3" },
-    { name = "matplotlib", marker = "extra == 'science'", specifier = ">=3.7" },
-    { name = "nibabel", marker = "extra == 'neuro'", specifier = ">=5.4" },
-    { name = "numpy", specifier = ">=1.24" },
-    { name = "pandas", marker = "extra == 'science'", specifier = ">=2.0" },
-    { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.0" },
-    { name = "qiskit", marker = "extra == 'quantum'", specifier = ">=1.0" },
-    { name = "qiskit-aer", marker = "extra == 'quantum'", specifier = ">=0.14" },
-    { name = "qiskit-ibm-runtime", marker = "extra == 'quantum'", specifier = ">=0.20" },
-    { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.4" },
-    { name = "scipy", marker = "extra == 'science'", specifier = ">=1.10" },
-    { name = "seaborn", marker = "extra == 'science'", specifier = ">=0.13" },
-    { name = "tokenizers", specifier = ">=0.15,<1" },
-    { name = "torch", specifier = ">=2.0" },
-    { name = "tqdm", specifier = ">=4.66,<5" },
-    { name = "transformers", specifier = ">=4.40,<6" },
-]
-provides-extras = ["science", "quantum", "neuro", "dev", "all"]
-
-[[package]]
 name = "click"
 version = "8.3.3"
 source = { registry = "https://pypi.org/simple" }
@@ -2745,6 +2671,80 @@ sdist = { url = "https://files.pythonhosted.org/packages/42/ab/0fb220423ded04af3
 wheels = [
     { url = "https://files.pythonhosted.org/packages/20/37/765ca468d0a242eb3806c08421e009712d6487857d1b1821633ac92aaef1/qiskit_ibm_runtime-0.43.1-py3-none-any.whl", hash = "sha256:7448bb808589686079c50b097c804bbac738ad6a7ba30f8939164dcc99b4f625", size = 1424850, upload-time = "2025-10-23T17:05:48.556Z" },
 ]
+
+[[package]]
+name = "reality-stone"
+version = "0.2.10"
+source = { editable = "." }
+dependencies = [
+    { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "tokenizers" },
+    { name = "torch" },
+    { name = "tqdm" },
+    { name = "transformers" },
+]
+
+[package.optional-dependencies]
+all = [
+    { name = "datasets" },
+    { name = "joblib" },
+    { name = "matplotlib" },
+    { name = "nibabel" },
+    { name = "pandas" },
+    { name = "pytest" },
+    { name = "qiskit" },
+    { name = "qiskit-aer" },
+    { name = "qiskit-ibm-runtime" },
+    { name = "ruff" },
+    { name = "scipy", version = "1.15.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "scipy", version = "1.16.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "seaborn" },
+]
+dev = [
+    { name = "pytest" },
+    { name = "ruff" },
+]
+neuro = [
+    { name = "nibabel" },
+]
+quantum = [
+    { name = "qiskit" },
+    { name = "qiskit-aer" },
+    { name = "qiskit-ibm-runtime" },
+]
+science = [
+    { name = "datasets" },
+    { name = "joblib" },
+    { name = "matplotlib" },
+    { name = "pandas" },
+    { name = "scipy", version = "1.15.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "scipy", version = "1.16.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "seaborn" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "datasets", marker = "extra == 'science'", specifier = ">=2.18,<5" },
+    { name = "joblib", marker = "extra == 'science'", specifier = ">=1.3" },
+    { name = "matplotlib", marker = "extra == 'science'", specifier = ">=3.7" },
+    { name = "nibabel", marker = "extra == 'neuro'", specifier = ">=5.4" },
+    { name = "numpy", specifier = ">=1.24" },
+    { name = "pandas", marker = "extra == 'science'", specifier = ">=2.0" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.0" },
+    { name = "qiskit", marker = "extra == 'quantum'", specifier = ">=1.0" },
+    { name = "qiskit-aer", marker = "extra == 'quantum'", specifier = ">=0.14" },
+    { name = "qiskit-ibm-runtime", marker = "extra == 'quantum'", specifier = ">=0.20" },
+    { name = "reality-stone", extras = ["science", "quantum", "neuro", "dev"], marker = "extra == 'all'" },
+    { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.4" },
+    { name = "scipy", marker = "extra == 'science'", specifier = ">=1.10" },
+    { name = "seaborn", marker = "extra == 'science'", specifier = ">=0.13" },
+    { name = "tokenizers", specifier = ">=0.15,<1" },
+    { name = "torch", specifier = ">=2.0" },
+    { name = "tqdm", specifier = ">=4.66,<5" },
+    { name = "transformers", specifier = ">=4.40,<6" },
+]
+provides-extras = ["science", "quantum", "neuro", "dev", "all"]
 
 [[package]]
 name = "regex"

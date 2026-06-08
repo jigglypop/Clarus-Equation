@@ -2,15 +2,15 @@
 
 import torch
 import pytest
-from clarus.runtime import BrainRuntime, BrainRuntimeConfig, RuntimeMode
-from clarus.agent import (
+from reality_stone.clarus.runtime import BrainRuntime, BrainRuntimeConfig, RuntimeMode
+from reality_stone.clarus.agent import (
     compute_critic, select_action_discrete, bootstrap_operator,
     agent_step, ConsciousnessMonitor, WorkingMemory, CerebellumPredictor,
 )
-from clarus.stdp import STDPConfig, EligibilityTracker, compute_learning_gate, apply_stdp_update
-from clarus.neuromod import NeuromodulatorState, step_neuromodulators, apply_modulation
-from clarus.quantum import quantum_phase_step, wick_rotate, check_norm_conservation
-from clarus.constants import ACTIVE_RATIO, BOOTSTRAP_CONTRACTION
+from reality_stone.clarus.stdp import STDPConfig, EligibilityTracker, compute_learning_gate, apply_stdp_update
+from reality_stone.clarus.neuromod import NeuromodulatorState, step_neuromodulators, apply_modulation
+from reality_stone.clarus.quantum import quantum_phase_step, wick_rotate, check_norm_conservation
+from reality_stone.clarus.constants import ACTIVE_RATIO, BOOTSTRAP_CONTRACTION
 
 
 def make_runtime(dim=32):
@@ -123,15 +123,15 @@ class TestFullAgentLoop:
         assert s1.step == s2.step
 
     def test_all_modules_importable(self):
-        import clarus.constants
-        import clarus.utils
-        import clarus.runtime
-        import clarus.engine
-        import clarus.ce_ops
-        import clarus.stdp
-        import clarus.agent
-        import clarus.neuromod
-        import clarus.quantum
+        import reality_stone.clarus.constants
+        import reality_stone.clarus.utils
+        import reality_stone.clarus.runtime
+        import reality_stone.clarus.engine
+        import reality_stone.clarus.ce_ops
+        import reality_stone.clarus.stdp
+        import reality_stone.clarus.agent
+        import reality_stone.clarus.neuromod
+        import reality_stone.clarus.quantum
         assert True
 
 

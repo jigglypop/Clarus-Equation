@@ -38,7 +38,7 @@ $$
 A_{ij} = \text{softmax}_j\!\Bigl(\underbrace{Q_i\cdot R_\pi(i{-}j)\cdot K_j / \sqrt d}_{\pi\text{ phase}} + \underbrace{A_{ij}^{\text{bias}}}_{e\text{ decay}}\Bigr)\cdot\text{mask}_{\text{causal}}
 $$
 
-구현: `clarus/ce_euler.py::EulerCEAttention`
+구현: `reality_stone/python/reality_stone/clarus/ce_euler.py::EulerCEAttention`
 
 ### 7.2.2 Recursive ClarusCell
 
@@ -55,7 +55,7 @@ $$
 - **While-loop**: halt when $\|h^{t+1} - h^t\| / \|h^t\| < \text{tol}$
 - **Fixed-point regularizer**: $\mathcal L_{\text{FP}} = \lambda\,\|F(F(h)) - F(h)\|^2$
 
-구현: `clarus/ce_euler.py::RecursiveEulerCEBlock`
+구현: `reality_stone/python/reality_stone/clarus/ce_euler.py::RecursiveEulerCEBlock`
 
 ### 7.2.3 Riemann Rotary (RH axiom)
 
@@ -68,7 +68,7 @@ $$
 
 Montgomery–Dyson 대응: $\gamma_n$ 간격은 Gaussian Unitary Ensemble (GUE) 고유값 간격과 동일 통계. "maximal disorder + maximal order" 구조.
 
-구현: `clarus/ce_riemann_attn.py::RiemannRotaryAttention`
+구현: `reality_stone/python/reality_stone/clarus/ce_riemann_attn.py::RiemannRotaryAttention`
 
 ### 7.2.4 FFN 변형
 
@@ -81,11 +81,11 @@ Montgomery–Dyson 대응: $\gamma_n$ 간격은 Gaussian Unitary Ensemble (GUE) 
 | euler_full | $\text{GELU}(h)\cdot (1 + \eta\cos(\pi h/\tau))\cdot e^{-|h|/\xi}$ |
 | zeta | $x\cdot\sigma(x)\cdot(1 + \lambda\cdot z(x))$, $z = |\zeta(1/2 + ix)|^2$ |
 
-구현: `clarus/ce_ffn.py`, `clarus/ce_zeta.py`
+구현: `reality_stone/python/reality_stone/clarus/ce_ffn.py`, `reality_stone/python/reality_stone/clarus/ce_zeta.py`
 
 ### 7.2.5 Riemann FFN init
 
-$W_{\text{up}}$의 한 축을 $\gamma_n$ 간격으로 스케일. 키 좌표가 GUE 분포. 구현: `clarus/ce_riemann_attn.py::riemann_zero_init`
+$W_{\text{up}}$의 한 축을 $\gamma_n$ 간격으로 스케일. 키 좌표가 GUE 분포. 구현: `reality_stone/python/reality_stone/clarus/ce_riemann_attn.py::riemann_zero_init`
 
 ---
 
@@ -213,7 +213,7 @@ python3 examples/ai/bench_riemann_ffn_init.py --steps 300 --seeds 3
 
 ## 7.8 이론 상수 출처
 
-- Riemann 영점 첫 100개: `clarus/ce_riemann_attn.py::RIEMANN_ZEROS_IM` (Titchmarsh 표, Odlyzko 검증)
-- Euler 상수 bitfield: `clarus/ce_euler.py::EULER_BASIS`
-- Borbély $T_{\text{WAKE}} = 1/(3 + \text{AD}(1-\text{AD}))$: `clarus/constants.py`
+- Riemann 영점 첫 100개: `reality_stone/python/reality_stone/clarus/ce_riemann_attn.py::RIEMANN_ZEROS_IM` (Titchmarsh 표, Odlyzko 검증)
+- Euler 상수 bitfield: `reality_stone/python/reality_stone/clarus/ce_euler.py::EULER_BASIS`
+- Borbély $T_{\text{WAKE}} = 1/(3 + \text{AD}(1-\text{AD}))$: `reality_stone/python/reality_stone/clarus/constants.py`
 - 모든 유도는 `docs/경로적분.md` §51-67 최소생성문법과 `docs/1_강의/A_연역적_유도.md` §801 고정점 개념에 근거.

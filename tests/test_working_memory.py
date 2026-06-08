@@ -2,8 +2,8 @@
 
 import torch
 import pytest
-from clarus.agent import WorkingMemory, CerebellumPredictor
-from clarus.constants import WM_CAPACITY
+from reality_stone.clarus.agent import WorkingMemory, CerebellumPredictor
+from reality_stone.clarus.constants import WM_CAPACITY
 
 
 class TestWorkingMemory:

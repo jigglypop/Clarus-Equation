@@ -2,11 +2,11 @@
 
 import torch
 import pytest
-from clarus.stdp import (
+from reality_stone.clarus.stdp import (
     STDPConfig, EligibilityTracker, compute_learning_gate,
     structural_projection, apply_stdp_update,
 )
-from clarus.constants import STDP_R_E, ACTIVE_RATIO
+from reality_stone.clarus.constants import STDP_R_E, ACTIVE_RATIO
 
 
 class TestEligibilityTracker:

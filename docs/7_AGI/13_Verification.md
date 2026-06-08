@@ -1,6 +1,6 @@
 # CE-AGI Hopfield Engine: 논문 vs 구현 검증 보고서
 
-> `12_Equation.md` 수식 기반. 구현: `clarus/convert.py`, `clarus/engine.py`
+> `12_Equation.md` 수식 기반. 구현: `reality_stone/python/reality_stone/clarus/engine.py`, `reality_stone/python/reality_stone/clarus/engine.py`
 
 ---
 
@@ -99,7 +99,7 @@
 
 ## 8. 현재 시스템 검증: BrainRuntime + Sleep Cycle
 
-> 이 절은 위 1-7절의 초기 Hopfield 엔진 이후 진행된 `clarus/runtime.py`, `clarus/engine.py`, `clarus/sleep.py` 구현에 대한 검증이다.
+> 이 절은 위 1-7절의 초기 Hopfield 엔진 이후 진행된 `reality_stone/python/reality_stone/clarus/runtime.py`, `reality_stone/python/reality_stone/clarus/engine.py`, `reality_stone/python/reality_stone/clarus/sleep.py` 구현에 대한 검증이다.
 
 ### 8.1 BrainRuntime: 수식-코드 대조
 
@@ -202,10 +202,10 @@
 
 | 게이트 | 본 시스템에서의 측정점 | 측정 가능 여부 | 코드 위치 |
 |---|---|---|---|
-| `F1` 자기조직 5조건 (부록 A.2 #2) | 활성 비율 $\hat p_a$ EMA 의 $\varepsilon^2 \to$ 자기 피드백 | **구현됨** (`f1_self_measure`) | `clarus/runtime.py::BrainRuntime._f1_effective_budget`, `_f1_update_ema` |
-| `F2` ISS ball 반경 (부록 A.1) | 끌개 근방 헤시안 $H \succeq \mu I$, 외란 상한 $d_{\max}$ | **자동 산출** (`relax().hist["iss"]`) | `clarus/quantum.py::iss_report`, `clarus/ce_ops.py::_iss_from_tail` |
-| `F3` 에르고딕 KL 거리 (부록 A.3) | 모드 점유 $(t_W, t_N, t_R)/T$ vs $p^*$ 의 $d_{\text{KL}}$ | **구현됨** (`mode_occupancy_kl`) | `clarus/runtime.py::BrainRuntime.mode_occupancy_kl` |
-| `F4` PCI 회귀 (부록 A.4) | 메타인지 안정도 $\exp(-c_d d_\tau)$ vs 외부 PCI | **회귀 프리미티브 구현됨** (PCI 데이터 외부 의존) | `clarus/quantum.py::pci_regression`, `clarus/agent.py::ConsciousnessMonitor.consciousness_depth` |
+| `F1` 자기조직 5조건 (부록 A.2 #2) | 활성 비율 $\hat p_a$ EMA 의 $\varepsilon^2 \to$ 자기 피드백 | **구현됨** (`f1_self_measure`) | `reality_stone/python/reality_stone/clarus/runtime.py::BrainRuntime._f1_effective_budget`, `_f1_update_ema` |
+| `F2` ISS ball 반경 (부록 A.1) | 끌개 근방 헤시안 $H \succeq \mu I$, 외란 상한 $d_{\max}$ | **자동 산출** (`relax().hist["iss"]`) | `reality_stone/python/reality_stone/clarus/quantum.py::iss_report`, `reality_stone/python/reality_stone/clarus/ce_ops.py::_iss_from_tail` |
+| `F3` 에르고딕 KL 거리 (부록 A.3) | 모드 점유 $(t_W, t_N, t_R)/T$ vs $p^*$ 의 $d_{\text{KL}}$ | **구현됨** (`mode_occupancy_kl`) | `reality_stone/python/reality_stone/clarus/runtime.py::BrainRuntime.mode_occupancy_kl` |
+| `F4` PCI 회귀 (부록 A.4) | 메타인지 안정도 $\exp(-c_d d_\tau)$ vs 외부 PCI | **회귀 프리미티브 구현됨** (PCI 데이터 외부 의존) | `reality_stone/python/reality_stone/clarus/quantum.py::pci_regression`, `reality_stone/python/reality_stone/clarus/agent.py::ConsciousnessMonitor.consciousness_depth` |
 
 ### 9.1 측정 API (구현 완료)
 
@@ -226,7 +226,7 @@
 2. `F2` ISS ball 반경 (외부 호출):
 
    ```python
-   from clarus.quantum import iss_report
+   from reality_stone.clarus.quantum import iss_report
    iss_report(m_history, phi, dt_over_tau=dt/tau)
    # -> {'c_k_max': .., 'phi_inf_norm': .., 'mu': .., 'iss_ball_radius': ..}
    ```
@@ -235,7 +235,7 @@
 
    $$R_{\text{ball}} = \frac{C_{k,\max} \cdot \|\phi\|_\infty}{\mu \cdot \alpha_b}, \quad \alpha_b = e^{1/3}\pi^{1/3} \approx 2.044.$$
 
-3. `F2` 자동 측정: `clarus/ce_ops.py::relax` 가 매 호출 시 `hist["iss"]` 에 동일 형식의 보고를 자동 산출 (전 궤적 `delta` 곡선에서 $\mu$ 추정, `bypass_C` 에서 $C_{k,\max}$, $\phi$ 에서 $\|\phi\|_\infty$).
+3. `F2` 자동 측정: `reality_stone/python/reality_stone/clarus/ce_ops.py::relax` 가 매 호출 시 `hist["iss"]` 에 동일 형식의 보고를 자동 산출 (전 궤적 `delta` 곡선에서 $\mu$ 추정, `bypass_C` 에서 $C_{k,\max}$, $\phi$ 에서 $\|\phi\|_\infty$).
 
 4. `BrainRuntime.bridge_gate_report()` 집계기: F1\~F4 키를 일관 반환. F1 은 항상 EMA·target·deviation 노출, F3 은 `mode_occupancy_kl()`, F2 는 `relax` 호출 결과를 별도 주입, F4 는 외부 회귀 워크플로 의존.
 
@@ -256,7 +256,7 @@
 6. `F4` PCI 회귀 (외부 데이터 정렬 후 호출):
 
    ```python
-   from clarus.quantum import pci_regression
+   from reality_stone.clarus.quantum import pci_regression
    pci_regression(stability_series, pci_series)
    # -> {'n': N, 'alpha': .., 'beta': .., 'r2': .., 'pearson_r': ..}
    ```
@@ -269,7 +269,7 @@
 
 $$F_{\text{bypass}}(k) = \tfrac{C_k}{\alpha_b}\,\phi, \quad C_k = \|m_k - 2 m_{k-1} + m_{k-2}\|$$
 
-으로 교정하여 `clarus/ce_ops.py::relax` 와 동일한 비보존 외력으로 동작한다. 첫 두 토큰은 궤적 부족으로 $C_k = 0$ (관성 단계).
+으로 교정하여 `reality_stone/python/reality_stone/clarus/ce_ops.py::relax` 와 동일한 비보존 외력으로 동작한다. 첫 두 토큰은 궤적 부족으로 $C_k = 0$ (관성 단계).
 
 ### 9.3 잔여 작업
 
@@ -287,7 +287,7 @@ F1 자기측정 ②, F2, F3, F4 회귀 프리미티브 모두 코드 레벨 구�
 | F3 ergodic KL | 구현 | (없음, 세션 누적) |
 | F4 PCI 회귀 | 구현 (회귀 호출) | PCI 외부 데이터셋 |
 
-## 10. 한국어 KoGPT2 실측 (`scripts/bench_gates.py`)
+## 10. 한국어 KoGPT2 실측 (legacy `scripts/bench_gates.py`, removed)
 
 `skt/kogpt2-base-v2` 의 13 layer x 8 한국어 프롬프트 hidden state 공분산 (403 x 768) 으로 Hopfield $W$ ($\dim = 768$, $\lambda \in [-677.08, -0.001]$) 를 빌드하고 `BrainRuntime` 200 step + `ce_ops.relax` 300 step 을 구동한 결과.
 
@@ -323,17 +323,17 @@ F1 자기측정 ②, F2, F3, F4 회귀 프리미티브 모두 코드 레벨 구�
 
 1. **F1 ② 충족**: 자기측정 피드백이 활성 비율을 200 step 만에 $\varepsilon^2$ 의 0.16% 이내로 락온. 부록 A.2 의 사용 가능한 충분조건 ② "자기측정 → 다음 임계 피드백" 이 한국어 실모델 공분산 위에서도 동작함을 실증.
 2. **F2 격상 가능**: $R_{\text{ball}}$ 이 유한 (5.93) 으로 산출됨. 부록 A.1 의 ISS bound 가 한국어 KoGPT2 covariance Hopfield 기질 위에서 적용 가능함이 확인됨.
-3. **F3 메터 정합 확인 / 자기조직 보류**: `force_mode` 로 $p^*$ 비율 스케줄을 주입한 세션에서 경험적 모드 점유 $\pi$ 가 $p^*$ 와 round-off 오차 ($\sim 10^{-4}$) 내에서 일치 — `mode_occupancy_kl` 메터 자체의 정합성은 한국어 실모델 위에서 검증됨. 단, **자동 모드 정책**이 $p^*$ 로 자기수렴하는지는 별개 질문이며, 현재 `TAU_W_STEPS = 65520` (1 ms step 기준 18.2 h) 가속도와 200 step 벤치 간 시간 스케일 불일치로 미관측. 격상 경로: (a) `clarus.constants.TAU_W_STEPS` 를 ms→s 단위로 재캘리브레이션, 또는 (b) `scripts/sleep_finetune_lm.py` 와 결합한 1000+ step 수면 사이클 sweep.
+3. **F3 메터 정합 확인 / 자기조직 보류**: `force_mode` 로 $p^*$ 비율 스케줄을 주입한 세션에서 경험적 모드 점유 $\pi$ 가 $p^*$ 와 round-off 오차 ($\sim 10^{-4}$) 내에서 일치 — `mode_occupancy_kl` 메터 자체의 정합성은 한국어 실모델 위에서 검증됨. 단, **자동 모드 정책**이 $p^*$ 로 자기수렴하는지는 별개 질문이며, 현재 `TAU_W_STEPS = 65520` (1 ms step 기준 18.2 h) 가속도와 200 step 벤치 간 시간 스케일 불일치로 미관측. 격상 경로: (a) `reality_stone.clarus.constants.TAU_W_STEPS` 를 ms→s 단위로 재캘리브레이션, 또는 (b) `legacy scripts/sleep_finetune_lm.py` (removed) 와 결합한 1000+ step 수면 사이클 sweep.
 4. **F4 미실측**: 외부 PCI 데이터셋 미보유. `pci_regression()` 호출 경로만 확보된 상태.
 
 ### 10.4 격리 / 사용자 룰 부합 확인
 
-- 측정 대상 $W$ 는 KoGPT2 hidden state 의 covariance 한 번 계산 후 KoGPT2 모델 객체는 `del + gc.collect()` 로 해제 (`bench_gates.py`).
+- 측정 대상 $W$ 는 KoGPT2 hidden state 의 covariance 한 번 계산 후 KoGPT2 모델 객체는 `del + gc.collect()` 로 해제 (legacy `bench_gates.py`, removed).
 - 측정 단계의 어떤 코드도 teacher logits/hidden 을 추론에 재주입하지 않음 (`runtime-isolation` 부합).
 - 한국어 프롬프트 8개 + 한국어 베이스 모델로 측정 (`korean-runtime-eval` 부합).
 - BrainRuntime 가중치 (768x768, 2.36 MB) 가 베이스 모델 (174 MB) 의 1.4% 수준 — `agi-artifact` 메모리 분리 부합.
 
-## 11. 격리 아티팩트 빌드 (`scripts/build_artifact.py` + `scripts/distill_decoder.py`)
+## 11. 격리 아티팩트 빌드 (legacy scripts, removed)
 
 `agi-artifact` §4 추가 (양자화 / 비트폭 축소 엄격 금지) 에 따라 PQ / int8 / int4 / fp16 / bf16 / VQ / GPTQ / AWQ 류 일체 사용 금지. 본 절은 **fp32 전용 격리 아티팩트** 의 빌드, 실측, 그리고 메모리 룰까지 동시 충족하기 위한 비양자화 격상 경로를 기록한다.
 
@@ -341,11 +341,11 @@ F1 자기측정 ②, F2, F3, F4 회귀 프리미티브 모두 코드 레벨 구�
 
 세 단계로 분리:
 
-1. `python scripts/build_artifact.py --model skt/kogpt2-base-v2 --device cpu` — KoGPT2 hidden state 공분산으로 Hopfield $W$ 빌드, 51200 × 768 임베딩을 fp32 그대로 보존, decoder 프로젝션은 단순 통계량으로 초기화, base 모델은 `del` + `gc.collect()` 후 직렬화.
-2. `python scripts/distill_decoder.py --device cpu --ridge 1.0 --blend 0.5` — 60 한국어 문장 × sliding window (692 페어) 에서 `(state_hidden, prev_emb, teacher_h_after_ln_f)` 추출, ridge regression 으로 `decoder_state_proj`, `decoder_prev_proj`, `decoder_query_bias` 를 closed-form fit, `decoder_query_blend = 0.5` 설정, teacher `del + gc.collect()` 후 아티팩트 in-place 갱신.
-3. `python scripts/prune_vocab.py --top-k 16384` — 동일 한국어 corpus 로 BPE 토큰 빈도 측정, 빈도 top-K + 항상유지 셋 (eos / pad / unk / bos / `decoder_token_ids`) 만 남기고 `emb_weight` 를 (K, 768) fp32 로 row-pruning. 매핑 (`kept_token_ids`, `vocab_id_map`) 과 fallback (`pruned_unk_emb` = pruned 행 평균) 을 함께 저장. 양자화 / 비트폭 축소 없음 — fp32 유지.
+1. legacy `scripts/build_artifact.py` (removed) — KoGPT2 hidden state 공분산으로 Hopfield $W$ 빌드, 51200 × 768 임베딩을 fp32 그대로 보존, decoder 프로젝션은 단순 통계량으로 초기화, base 모델은 `del` + `gc.collect()` 후 직렬화.
+2. legacy `scripts/distill_decoder.py` (removed) — 60 한국어 문장 × sliding window (692 페어) 에서 `(state_hidden, prev_emb, teacher_h_after_ln_f)` 추출, ridge regression 으로 `decoder_state_proj`, `decoder_prev_proj`, `decoder_query_bias` 를 closed-form fit, `decoder_query_blend = 0.5` 설정, teacher `del + gc.collect()` 후 아티팩트 in-place 갱신.
+3. legacy `scripts/prune_vocab.py` (removed) — 동일 한국어 corpus 로 BPE 토큰 빈도 측정, 빈도 top-K + 항상유지 셋 (eos / pad / unk / bos / `decoder_token_ids`) 만 남기고 `emb_weight` 를 (K, 768) fp32 로 row-pruning. 매핑 (`kept_token_ids`, `vocab_id_map`) 과 fallback (`pruned_unk_emb` = pruned 행 평균) 을 함께 저장. 양자화 / 비트폭 축소 없음 — fp32 유지.
 
-### 11.2 룰 부합 표 (현 baseline `clarus/skt_kogpt2-base-v2.ce.pt`, V1 적용)
+### 11.2 룰 부합 표 (현 baseline `legacy clarus/skt_kogpt2-base-v2.ce.pt` (removed), V1 적용)
 
 | 룰 | 측정 | 판정 |
 |---|---|---|
@@ -408,11 +408,11 @@ corpus 토큰 coverage 는 100% (60 문장에서 unique 576 토큰 모두 kept s
 | ID | 상태 | 작업 | 예상 효과 | 룰 영향 |
 |---|---|---|---|---|
 | V1 | **완료** | Vocab pruning (top-K=16384, fp32 row deletion) | 디스크 -100 MB, RAM -100 MB, +20% tok/s | `agi-artifact` §3 충족 |
-| V2 | 대기 | Context projection bottleneck distillation (`scripts/distill_decoder.py` 확장, fp32 유지) | 디스크 -10 MB, R² 유지 | `agi-artifact` §3 추가 절감 |
+| V2 | 대기 | Context projection bottleneck distillation (legacy `distill_decoder.py` removed; 재구현 필요, fp32 유지) | 디스크 -10 MB, R² 유지 | `agi-artifact` §3 추가 절감 |
 | V3 | 대기 | `pos_weight` 한국어 평균 길이로 절단 | 디스크 -2 MB | `agi-artifact` §3 추가 절감 |
 | V4 | 대기 | `decoder_token_*` head 통합 또는 제거 | 디스크 -1.5 MB | `agi-artifact` §3 추가 절감 |
 | D1 | 대기 | Distillation corpus 다양화 (60 → 500+ 한국어 문장, "하나인" 류 편향 해소) | 부분 collapse 잔존 항목 해소 | `korean-runtime-eval` 품질 |
-| D2 | 대기 | MLP 디코더 헤드 (`distill_decoder.py` 확장, 가중치 fp32 유지) | R² 0.85+ 가능, 빌드 시간 ↑ | `korean-runtime-eval` 품질 |
-| E1 | 대기 | 한국어 홀드아웃 perplexity / top1 / top10 / top50 측정 (`scripts/eval_runtime_lm.py` 신설) | 정량 평가표 완성 | `korean-runtime-eval` 보고 형식 |
+| D2 | 대기 | MLP 디코더 헤드 (legacy `distill_decoder.py` removed; 재구현 필요, 가중치 fp32 유지) | R² 0.85+ 가능, 빌드 시간 ↑ | `korean-runtime-eval` 품질 |
+| E1 | 대기 | 한국어 홀드아웃 perplexity / top1 / top10 / top50 측정 (새 평가 모듈 재구현 필요) | 정량 평가표 완성 | `korean-runtime-eval` 보고 형식 |
 
-현 아티팩트 `clarus/skt_kogpt2-base-v2.ce.pt` (79.41 MB, fp32, R² 0.7227) 는 **격리 / 양자화 미사용 / 속도 / 메모리 / 품질 baseline 5종 모두 충족** — `agi-artifact` 룰 4개 + `runtime-isolation` 룰 7개 + `korean-runtime-eval` 룰 모두 통과. 추가 격상은 D1, D2, V2-V4 로 진행.
+현 아티팩트 `legacy clarus/skt_kogpt2-base-v2.ce.pt` (removed) (79.41 MB, fp32, R² 0.7227) 는 **격리 / 양자화 미사용 / 속도 / 메모리 / 품질 baseline 5종 모두 충족** — `agi-artifact` 룰 4개 + `runtime-isolation` 룰 7개 + `korean-runtime-eval` 룰 모두 통과. 추가 격상은 D1, D2, V2-V4 로 진행.

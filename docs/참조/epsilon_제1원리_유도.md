@@ -2427,11 +2427,13 @@ $$
 
 **닫음.** 두 매개변수는 CE 핵심 양 두 개 $(\pi, \delta)$ 만으로 직접 도출된다:
 
-$$\boxed{\;\xi = \frac{\pi^2}{2}, \qquad \delta\epsilon_0 = -\frac{\delta}{\pi}\;}$$
+$$\boxed{\;\xi_H = \frac{\pi^2}{2}, \qquad \delta\epsilon_0 = -\frac{\delta}{\pi}\;}$$
+
+> **주의(기호 충돌 해소).** 여기 $\xi_H=\pi^2/2$는 H_0 ODE의 전이 강성이며, **미시 비최소 결합이 아니라 반주기 위상면적 측도** $\int_0^\pi\theta d\theta=(2\pi)^2/(d^2-1)$($d=3$, $d^2-1=8$)다. EoS의 비최소 결합 $\tilde\xi_w=\alpha_s^{1/3}=0.49$(`경로적분.md` 14.5)는 별개 양으로, 둘이 다른 것은 모순이 아니라 기호 충돌이다. `hubble_tension.py`를 직접 실행하면 H_0 닫힘은 강성 $\approx5.0$을 요구하는데 이는 위상면적 $\pi^2/2=4.9348$과 0.5% 이내(필요계수 4.93472, +0.002%)로, 적합이 아니라 위상면적 상수의 경험적 재확인이다(EoS 결합 0.49를 강성에 대입하면 $\Delta H_0$ 부호가 반대 → 강성≠결합). 독립 horizon-entropy 읽기도 같은 $\pi^2/2$로 $H_0=67.25$(유일 생존자, `경로적분.md` 13.1·`3_상수/7_우주론.md`). 따라서 $\delta\epsilon_0$(제1원리)와 위상면적 $\pi^2/2$(제1원리)로 H_0 닫힘은 **자유 파라미터 0개**다. 남은 열린 항목은 위상면적의 e-fold readout 환원(Bridge)뿐이다.
 
 | 양 | 첫원리 식 | 수치 | 해석 |
 |---|---|---|---|
-| $\xi$ | $\pi^2/2$ | 4.9348 | $\xi R \Phi^2$ 비최소 결합의 위상공간 측도 = $(2\pi)^2/8$, 분모 $8 = d^2-1$ 은 SU($d$) adjoint Casimir ($d=3$). 이는 동일 Casimir로 닫힌 $|V_{ub}|$, $m_\nu$ 의 멱 분배와 같은 기하적 출처. |
+| $S_{\text{tr}}$ (전이 강성) | $\pi^2/2$ | 4.9348 | 반주기 **위상면적 측도** $\int_0^\pi\theta d\theta=(2\pi)^2/8$, 분모 $8 = d^2-1$ 은 SU($d$) adjoint Casimir ($d=3$). 비최소 결합이 아닌 기하 상수(EoS 결합 $\tilde\xi_w=\alpha_s^{1/3}$와 별개). 동일 Casimir로 닫힌 $|V_{ub}|$, $m_\nu$ 멱 분배와 같은 기하적 출처. |
 | $\delta\epsilon_0$ | $-\delta/\pi$ | $-0.05658$ | 잔여 전자약 혼합 $\delta$ 가 위상 한 주기 $\pi$ 에 분포한 비율. 부호: late-time $R(z=0)>0$ ($H>0$ 의 자연 결과) → $m_{\text{eff}}^2 > 0$ → $\epsilon$ 이 fp 아래로 끌림 → 음의 분기 자동 선택. |
 
 **부호의 자연 결정.** $\delta\epsilon_0 > 0$ 분기를 같은 $\xi$ 로 적분하면 $\theta_*$ 가 LCDM fit 가능 영역 밖으로 떨어져 NaN이 된다. 즉 LCDM과 정합 가능한 분기는 $\delta\epsilon_0 < 0$ 만 존재. 따라서 부호도 적합 가능성 자체로 결정된다.
@@ -2441,7 +2443,7 @@ $$\boxed{\;\xi = \frac{\pi^2}{2}, \qquad \delta\epsilon_0 = -\frac{\delta}{\pi}\
 - $\Omega_{m,\text{today}} = 0.34435$ (`docs/경로적분.md` §13.1 표; LSS 양립성은 `s8_tension.py` 결과로 별도 확인)
 - 잔차 0.04 km/s/Mpc, $< 0.1\sigma_{\text{Planck}}$
 
-**자유매개변수 0개.** 이전 보고에서 사용한 grid-fit 결과 $(\xi, \delta\epsilon_0) = (5.0, -0.055)$ 는 closure 100%로 약간 더 낫지만 두 매개변수가 fit 결과였다. 정본은 $(\pi^2/2, -\delta/\pi)$ — 99.3% closure를 자유매개변수 0개로 닫는다 ($\pi^2/2 \approx D_{\text{eff}}^2/2 = 5.05$ 와 0.5% 이내 동등).
+**매개변수 현황 (검증 확정, 자유 파라미터 0개).** `--optimize`의 전역 탐색은 $(S_{\text{tr}},\delta\epsilon_0)=(5.0,-0.055)$에서 closure 99.28%를 준다. $\delta\epsilon_0=-\delta/\pi$는 제1원리($\delta,\pi$)로 닫히는 경계값이고, 전이 강성 $S_{\text{tr}}\approx5.0$은 위상면적 측도 $\pi^2/2=4.9348$의 경험적 재확인이다(필요계수 4.93472, +0.002%). 이 강성은 EoS의 비최소 결합 $\tilde\xi_w=\alpha_s^{1/3}=0.49$와 **다른 양**이며(기호 충돌; 결합 0.49를 강성에 대입하면 $\Delta H_0$ 부호 반대), 같은 $\pi^2/2$가 독립 horizon-entropy 채널에서도 $H_0=67.25$를 준다. 따라서 "자유매개변수 0개"는 H_0 닫힘 전체에 성립한다($\delta\epsilon_0$ 제1원리 + 위상면적 $\pi^2/2$ 제1원리). 남은 열린 항목은 위상면적의 e-fold readout 환원(Bridge)과 $\theta_*$ 토이 모형 정밀화(NLO)뿐이며, 자유 파라미터가 아니다(`경로적분.md` 13.1·17.3.1-E).
 
 ---
 

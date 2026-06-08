@@ -1,10 +1,10 @@
 """Neuromodulation tests (F.19)."""
 
 import pytest
-from clarus.neuromod import (
+from reality_stone.clarus.neuromod import (
     NeuromodulatorState, step_neuromodulators, apply_modulation, ModulationEffect,
 )
-from clarus.constants import NEURO_BASELINE_DA
+from reality_stone.clarus.constants import NEURO_BASELINE_DA
 
 
 class TestNeuromodulatorDynamics:

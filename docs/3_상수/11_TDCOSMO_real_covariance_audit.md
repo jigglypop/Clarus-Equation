@@ -109,11 +109,13 @@ chi2/dof = 2.185252/8
 
 ## Next tests
 
-1. TDCOSMO-only, IFU-only, SLACS+IFU chain을 같은 변환기로 모두 계산한다.
-2. local/global node partition을 물리적으로 더 엄격히 정의한다.
-3. \(q_F\) 계산에서 direct edge만 쓸지, path conductance까지 쓸지 비교한다.
-4. posterior covariance 대신 likelihood Fisher에 가까운 block을 얻을 수 있는지 확인한다.
-5. H0 tension 설명으로 쓰려면 hierarchical lens closure가 어느 노드를 global conductance로 만드는지 독립적으로 증명해야 한다.
+초기 next test 중 1--3은 아래 conductance diagnostic과 source-aware closure rule로 한 차례 수행되었다. 남은 next test는 다음처럼 좁힌다.
+
+1. posterior covariance 대신 likelihood Fisher에 가까운 block을 얻을 수 있는지 확인한다.
+2. hierarchical lens closure가 어느 노드를 global conductance로 만드는지 TDCOSMO 외부의 분석 규약에서 독립적으로 증명한다.
+3. 같은 role-map 규칙을 GW standard siren, BAO, SH0ES/Pantheon+, Planck/CMB covariance 중 최소 하나에 적용한다.
+4. \(q_F=q_F(F,R)\)가 lensing 특수 규칙인지, 관측 topology 일반 규칙인지 분리한다.
+5. source-aware rule을 쓸 때 \(R\)이 결과를 맞추기 위해 사후 조정된 것이 아님을 manifest와 provenance로 고정한다.
 
 ## Conductance diagnostic
 

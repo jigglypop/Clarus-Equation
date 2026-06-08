@@ -7,7 +7,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from clarus.ce_ops import (
+from reality_stone.clarus.ce_ops import (
     DEFAULT_CB_W,
     build_metric_basis,
     ce_backend,

@@ -30,10 +30,35 @@
 | 희소성 (5장) | computational regime | $\varepsilon^2$ 활성 비율로 conservative inference |
 | 곡률 정규화 (6장) | latent geometry | 잠재 공간의 spurious peak 억제 |
 | STDP (4장) | continual learning | 국소 학습으로 분포 변화 적응 |
+| 자기참조재귀 (17장) | long-horizon task / agent drift | 자기비평, 기억, 잔류장을 다음 상태로 접어 오류를 닫힌 루프에서 수정 |
 
 각 원리는 "학습 분포 밖에서 무엇이 작동하는가" 를 구조 선택으로 풀려는 시도이다.
 
 본 장은 가장 측정 가능한 OOD axis — **시퀀스 길이** — 에서 이 thesis 를 정량 검증한다.
+
+여기서 자기참조재귀는 별도 원리라기보다 다른 원리들을 장기 작업으로 묶는 닫힘 조건이다. length extrapolation 실험에서는 distance attenuation 하나만으로도 OOD 구조가 드러나지만, agentic OOD에서는 모델이 자기 출력, 실패, 수정 내역을 다음 state에 다시 넣어야 한다. 즉 장문 추론, tool-use, multi-turn planning에서는 \(S_t \to R(S_t) \to C_t \to S_{t+1}\) 재귀가 없으면 error propagation을 유니타리 제약으로 줄여도 자기수정은 일어나지 않는다.
+
+이를 수학적으로 쓰면 OOD 입력열 \(e_{0:T}\)에 대한 closed-loop 안정성 문제다.
+
+$$
+S_{t+1}=\mathcal T_{\theta,e_t}(S_t),
+\qquad
+e_t\sim \mathcal D_{\rm out}.
+$$
+
+훈련 분포 \(\mathcal D_{\rm train}\)에서만 작은 손실을 갖는 것은 충분하지 않다. OOD 일반화에는 다음 조건이 필요하다.
+
+$$
+\mathbb E_{e_t\sim\mathcal D_{\rm out}}
+\left[
+\log
+\frac{\|S_{t+1}-S_t\|}
+{\|S_t-S_{t-1}\|+\epsilon}
+\right]
+<0.
+$$
+
+즉 평균 로그 수축률이 음수여야 한다. 이 조건은 단일 token PPL보다 agent drift를 더 직접적으로 본다. length extrapolation에서 distance attenuation이 하는 역할은 위치 상태의 \(\hat\rho_t\)를 낮추는 것이고, agentic OOD에서 자기참조재귀가 하는 역할은 critique/memory/residual state의 \(\hat\rho_t\)를 낮추는 것이다.
 
 ### 1.1 왜 length 인가
 
@@ -209,7 +234,7 @@ n-shot in-context learning 에서 n 외삽 능력은 토큰 attention 의 distan
 
 **§ 2.2 의 모든 9 변종이 이 4 가지 중 하나로 정확히 매핑**되며, 4 가지 중 단 한 가지 (10 = pure rotation) 만 Tier 2 (외삽 catastrophic). 즉 effective head-type capacity = log₂ 3 ≈ 1.58 비트.
 
-`clarus/ce_euler.py::EulerCEMinimal` 구현 + 16 개 테스트로 정확성 검증. 2-bit minimal 변종이 canonical PE (NoPE, RoPE, ALiBi, xPos) 를 수치적으로 reproduce (`min_alibi` ≈ `rope_alibi`, `min_xpos` ≈ `euler_ce_k1`, `min_rope` = `std_rope` 정확 일치).
+`reality_stone/python/reality_stone/clarus/ce_euler.py::EulerCEMinimal` 구현 + 16 개 테스트로 정확성 검증. 2-bit minimal 변종이 canonical PE (NoPE, RoPE, ALiBi, xPos) 를 수치적으로 reproduce (`min_alibi` ≈ `rope_alibi`, `min_xpos` ≈ `euler_ce_k1`, `min_rope` = `std_rope` 정확 일치).
 
 이는 Clarus 본 thesis ("자유 파라미터 0 에 가깝게") 의 또 다른 사례 — **5 차원 continuous bit_logits 가 사실상 2 비트 axiom 으로 환원**되며, 학습은 axis 선택을 풀 필요 없이 axiom 으로 받고 continuous parameter (xi, slope) 만 학습하면 된다.
 

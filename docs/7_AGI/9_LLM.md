@@ -1,8 +1,213 @@
 # CE-LLM 실전 구축 가이드
 
-> 관련: 2-6장(이론), `examples/ai/clarus_lm.py`(처음부터 학습), `examples/ai/ce_gpt2.py`(기존 모델 이식), `examples/ai/train_clarus.py`(학습 스크립트)
+> 관련: 2-6장(이론), `legacy examples/ai/clarus_lm.py` (removed)(처음부터 학습), `examples/ai/ce_gpt2.py`(기존 모델 이식), `legacy examples/ai/train_clarus.py` (removed)(학습 스크립트)
 >
 > 이 장은 CE-AGI 원리를 적용한 LLM을 실제로 만드는 세 가지 경로를 다룬다. 이론이 아니라 코드와 명령어 중심.
+
+---
+
+## 0. 핵심 원리: 자기참조재귀
+
+CE-LLM의 중심은 특정 attention 변형이나 곡률 regularizer 하나가 아니다. 핵심은 모델이 만든 내부 상태를 다시 자기 입력으로 접어 넣는 **자기참조재귀**다.
+
+일반 Transformer의 한 토큰 추론은
+
+$$
+h_{t+1}=F_\theta(h_t, x_t)
+$$
+
+처럼 고정 가중치가 입력을 한 번 통과시키는 구조에 가깝다. CE식으로 바꾸면 최소형은
+
+$$
+z_t = R(S_t), \qquad
+c_{t+1}=C(z_t,a_t,o_t,m_t), \qquad
+S_{t+1}=\mathcal U(S_t,z_t,c_{t+1},m_{t+1},\phi_{t+1})
+$$
+
+이다. 즉 모델은 출력 직전의 hidden state만 쓰는 것이 아니라, 자기비평 \(c_t\), 기억 \(m_t\), 잔류장 \(\phi_t\), 모드 \(M_t\)를 다시 다음 추론의 조건으로 넣는다. 이것이 `17_AgentLoop.md`의 Layer F이고, LLM 응용에서 가장 먼저 보존해야 할 구조다.
+
+실전 구현에서 자기참조재귀는 세 단계로 나뉜다.
+
+| 단계 | 구현 형태 | 바로 가능한 응용 | 지위 |
+|---|---|---|---|
+| 내부 재귀 | 한 block 또는 hidden state를 \(k\)회 이완해 고정점 근처로 보냄 | recursive block, long-context 안정화 | 구현/벤치 가능 |
+| 비평 재귀 | 출력 후보를 자기비평 점수 \(c_t\)로 평가하고 다음 decoding에 반영 | hallucination suppressor, verifier, reranker | 프로토타입 가능 |
+| 기억 재귀 | 행동/관찰/비평을 memory에 쓰고 다음 step의 context로 회수 | agent memory, sleep replay, RAG state | 구현 가능 |
+
+따라서 CE-LLM 이식의 우선순위는 다음 순서다.
+
+1. **한 번 더 생각하는 내부 이완**: \(h \to F(h) \to F(F(h))\) 구조를 넣어 hidden state를 자기 고정점으로 보낸다.
+2. **자기비평을 다음 입력으로 접기**: 답변 후 평가가 로그로만 남지 않고, 다음 token 또는 다음 turn의 state에 들어가야 한다.
+3. **잔류장을 버리지 않기**: softmax에서 탈락한 후보, 높은 곡률 구간, 불확실성 신호를 \(\phi\)로 보존한다.
+4. **수면/리플레이로 재정렬**: online 추론 중 쌓인 \(m,c,\phi\)를 offline replay에서 다시 압축한다.
+
+이 기준으로 보면 Euler-CE attention, LBONorm, spectral norm, MRA, curvature penalty는 모두 보조 장치다. 이 장치들이 의미를 가지려면 결국 \(S_t \to R(S_t) \to C \to \mathcal U(S_{t+1})\) 루프 안에서 자기 상태를 갱신해야 한다.
+
+### 0.1 수학적 최소형
+
+상태공간을
+
+$$
+\mathcal S
+=
+\mathcal G
+\times \mathcal M
+\times \mathcal C
+\times \mathcal H
+\times \Phi
+$$
+
+로 둔다. 각각 전역 요약, 기억, 자기비평, 이력, 잔류장이다. 한 step의 CE-LLM은 외부 입력 \(x_t\)와 관찰 \(o_t\)에 대해 다음 자기 사상으로 정의된다.
+
+$$
+\mathcal T_{\theta,x_t,o_t}:\mathcal S\to\mathcal S,
+\qquad
+S_{t+1}=\mathcal T_{\theta,x_t,o_t}(S_t).
+$$
+
+이를 구성요소로 풀면
+
+$$
+\begin{aligned}
+z_t &= R_\theta(S_t,x_t),\\
+a_t &= \pi_\theta(z_t,S_t),\\
+\hat{o}_t &= P_\theta(z_t,a_t),\\
+c_{t+1}
+&=
+C_\theta(z_t,a_t,o_t,m_t)
+=
+\begin{bmatrix}
+d_{\rm pred}(\hat{o}_t,o_t)\\
+d_{\rm cons}(z_t,\mathcal R(H_t,c_t))\\
+\kappa(z_t)\\
+\Delta_{\rm nov}(o_t)
+\end{bmatrix},\\
+m_{t+1}&=\mathcal M(m_t,z_t,a_t,o_t,c_{t+1}),\\
+\phi_{t+1}
+&=(1-\alpha_\phi)\phi_t
++\alpha_\phi\,\Pi_{\rm res}(z_t,a_t,c_{t+1}),\\
+S_{t+1}&=(G_{t+1},m_{t+1},c_{t+1},h_{t+1},\phi_{t+1}).
+\end{aligned}
+$$
+
+여기서 중요한 항은 \(c_{t+1}\)이다. 자기비평이 단순 로그나 평가 리포트로 끝나면 루프는 열려 있다. CE식 응용에서는 \(c_{t+1}\)가 다음 step의 에너지에 들어가야 한다.
+
+$$
+E_{t+1}(z)
+=
+E_{\rm task}(z;x_{t+1})
++\lambda_m E_{\rm mem}(z;m_{t+1})
++\lambda_c E_{\rm crit}(z;c_{t+1})
++\lambda_\phi E_{\rm res}(z;\phi_{t+1}).
+$$
+
+따라서 CE-LLM의 최소 판정 조건은 다음이다.
+
+$$
+\boxed{
+\frac{\partial S_{t+1}}{\partial c_{t+1}}\ne0,
+\qquad
+\frac{\partial E_{t+1}}{\partial c_{t+1}}\ne0
+}
+$$
+
+이 두 조건이 없으면 모델은 자기비평을 생성할 수는 있어도, 자기비평으로 자기 동역학을 바꾸지는 않는다.
+
+### 0.2 안정성 조건
+
+고정된 task regime에서 이상적인 자기참조재귀는 어떤 attractor \(S^\star\) 근처로 수축해야 한다.
+
+$$
+S^\star=\mathcal T(S^\star).
+$$
+
+충분조건은 가중 norm \(\|\cdot\|_Q\)에 대해
+
+$$
+\|\mathcal T(S)-\mathcal T(S')\|_Q
+\le \rho\|S-S'\|_Q,
+\qquad 0\le\rho<1
+$$
+
+이다. 실제 LLM은 외부 입력과 tool observation 때문에 완전 수축이 아니라 입력-상태 안정성(ISS)으로 읽는다.
+
+$$
+\|S_t-S_t^\star\|_Q
+\le
+\rho^t\|S_0-S_0^\star\|_Q
++
+\sum_{\tau=0}^{t-1}\rho^{t-1-\tau}
+\left(
+\beta_x\|x_\tau-x_\tau^\star\|
++\beta_o\|o_\tau-o_\tau^\star\|
+\right).
+$$
+
+AI 응용에서 측정할 값은 \(S^\star\) 자체가 아니라 수축률과 잔류 반경이다.
+
+$$
+\hat\rho_t
+=
+\frac{\|S_{t+1}-S_t\|_Q}{\|S_t-S_{t-1}\|_Q+\epsilon},
+\qquad
+r_{\rm res}
+=
+\limsup_{t\to\infty}\|S_t-S_t^\star\|_Q.
+$$
+
+좋은 CE-LLM 보강은 accuracy만 올리는 모듈이 아니라, \(\hat\rho_t\)를 낮추거나 \(r_{\rm res}\)를 줄이는 모듈이다.
+
+### 0.3 계층화 가능성
+
+여러 CE-LLM 모듈을 쌓을 때는 각 모듈을 하나의 작은 자기 사상으로 본다.
+
+$$
+S_{i,t+1}^{(\ell)}
+=
+\mathcal T_i^{(\ell)}
+\left(
+S_{i,t}^{(\ell)},\;
+u_{i,t}^{(\ell)}
+\right).
+$$
+
+하위 모듈들의 상태 요약이 상위 상태가 되고,
+
+$$
+S_t^{(\ell+1)}
+=
+A_\ell(S_{1,t}^{(\ell)},\dots,S_{n,t}^{(\ell)}),
+$$
+
+상위 critic/goal은 다시 하위 입력으로 내려간다.
+
+$$
+u_{i,t}^{(\ell)}
+=
+B_i^{(\ell)}(S_t^{(\ell+1)}).
+$$
+
+이 구조가 안정하려면 `17_AgentLoop.md` F.-1.5의 gain matrix \(G\)가
+
+$$
+\rho(G)<1
+$$
+
+을 만족해야 한다. 실전적으로는 모듈을 추가할 때마다 세 값을 기록한다.
+
+| 값 | 의미 | 너무 크면 생기는 문제 |
+|---|---|---|
+| \(\rho_\ell\) | 해당 모듈 자체의 수축률 | 내부 사고가 수렴하지 않음 |
+| \(g_\uparrow\) | 하위 요약이 상위 상태를 흔드는 gain | 작은 오류가 global state로 증폭 |
+| \(g_\downarrow\) | 상위 critic/goal이 하위 모듈을 흔드는 gain | top-down 명령이 하위 루프를 파괴 |
+
+자기유사하게 같은 모듈을 반복 배치하는 경우 충분조건은
+
+$$
+\rho_0+2\sqrt{g_\uparrow g_\downarrow}<1.
+$$
+
+따라서 프랙탈형 CE-LLM은 "재귀 모듈을 많이 쌓는 것"이 아니라, 상향 요약과 하향 피드백의 곱을 small-gain 영역 안에 유지하는 설계다.
 
 ---
 
@@ -20,7 +225,7 @@
 
 ### 2.1 기존 코드 구조
 
-`examples/ai/clarus_lm.py`가 CE-LLM의 완전한 모델 정의를 포함한다.
+`legacy examples/ai/clarus_lm.py` (removed)가 CE-LLM의 완전한 모델 정의를 포함한다.
 
 ```
 ClarusLM

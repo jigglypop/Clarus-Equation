@@ -12,7 +12,7 @@ import math
 import torch
 import torch.nn.functional as F
 
-from clarus.ce_euler import (
+from reality_stone.clarus.ce_euler import (
     EulerRotaryAttention,
     EulerAttnBlock,
     EulerCEAttention,
@@ -103,7 +103,7 @@ def test_rotary_block_forward():
 
 
 def test_cea_sdpa_matches_manual_softmax_short():
-    """Under Q_CHUNK_THRESHOLD=1024 → helper takes the single-mask path."""
+    """Under Q_CHUNK_THRESHOLD=1024 ??helper takes the single-mask path."""
     torch.manual_seed(0)
     for block in (16, 64, 256, 512):
         attn = EulerCEAttention(64, 4, block).eval()
@@ -116,7 +116,7 @@ def test_cea_sdpa_matches_manual_softmax_short():
 
 
 def test_cea_sdpa_matches_manual_softmax_long_chunked():
-    """Above threshold → helper takes the Q-chunked path. Mathematically
+    """Above threshold ??helper takes the Q-chunked path. Mathematically
     identical (each row's softmax is independent of other rows)."""
     torch.manual_seed(0)
     attn = EulerCEAttention(64, 4, 2048).eval()

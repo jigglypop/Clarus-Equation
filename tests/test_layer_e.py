@@ -2,7 +2,7 @@
 
 import torch
 import pytest
-from clarus.runtime import BrainRuntime, BrainRuntimeConfig, RuntimeMode
+from reality_stone.clarus.runtime import BrainRuntime, BrainRuntimeConfig, RuntimeMode
 
 
 def make_runtime(dim=32):

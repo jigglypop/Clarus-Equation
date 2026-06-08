@@ -13,7 +13,7 @@ import pytest
 import torch
 import torch.nn as nn
 
-from clarus.ce_riemann_attn import (
+from reality_stone.clarus.ce_riemann_attn import (
     RiemannRotaryAttention,
     has_cuda_riemann,
     has_rust_riemann,
@@ -78,13 +78,13 @@ def test_torch_vs_cuda_consistency():
 
 
 def test_sheet_bias_inactive_at_init_gives_pure_rope_on_log_time():
-    """At init log_lambda_sigma=-6 → λ_σ ≈ 2.5e-3 → sheet bias near zero.
+    """At init log_lambda_sigma=-6 ??λ_? ??2.5e-3 ??sheet bias near zero.
     Output should be very close to torch backend with sheet bias forced to 0."""
     attn = _make_attn()
     x = torch.randn(1, 12, 32)
     with torch.no_grad():
         y_default = attn(x)
-        attn.log_lambda_sigma.data.fill_(-1e6)  # force λ_σ ≈ 0
+        attn.log_lambda_sigma.data.fill_(-1e6)  # force λ_? ??0
         y_no_sheet = attn(x)
     diff = (y_default - y_no_sheet).abs().max().item()
     # init sheet contribution should be small
@@ -92,8 +92,8 @@ def test_sheet_bias_inactive_at_init_gives_pure_rope_on_log_time():
 
 
 def test_sheet_bias_changes_output_when_active():
-    """Sheet bias only fires when phase exceeds 2π — needs long-enough
-    sequence (or large frequency scale). Use N=128 to ensure σ varies."""
+    """Sheet bias only fires when phase exceeds 2? ??needs long-enough
+    sequence (or large frequency scale). Use N=128 to ensure ? varies."""
     attn = _make_attn(D=32, H=4, N=128)
     x = torch.randn(1, 128, 32)
     with torch.no_grad():
@@ -109,7 +109,7 @@ def test_riemann_zero_init_finite_and_modulated():
     lin = nn.Linear(32, 64, bias=False)
     riemann_zero_init(lin, axis="in")
     assert torch.isfinite(lin.weight).all()
-    # column norms shouldn't all be equal — Riemann modulation breaks isotropy
+    # column norms shouldn't all be equal ??Riemann modulation breaks isotropy
     col_norms = lin.weight.norm(dim=0)
     cv = col_norms.std() / col_norms.mean().clamp_min(1e-8)
     assert cv > 0.05

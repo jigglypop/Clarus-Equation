@@ -2,10 +2,10 @@
 
 import torch
 import pytest
-from clarus.constants import (
+from reality_stone.clarus.constants import (
     ACTIVE_RATIO, STRUCT_RATIO, BACKGROUND_RATIO, BOOTSTRAP_CONTRACTION,
 )
-from clarus.agent import bootstrap_operator
+from reality_stone.clarus.agent import bootstrap_operator
 
 
 class TestSelfConvergence:

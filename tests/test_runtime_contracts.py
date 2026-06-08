@@ -5,9 +5,10 @@ from pathlib import Path
 import pytest
 import torch
 
-import clarus
-from clarus.engine import CEEngine
-from clarus.runtime import BrainRuntime, BrainRuntimeConfig, RuntimeMode
+import reality_stone
+import reality_stone.clarus as clarus
+from reality_stone.clarus.engine import CEEngine
+from reality_stone.clarus.runtime import BrainRuntime, BrainRuntimeConfig, RuntimeMode
 from tests.test_sleep import make_runtime_artifact
 
 
@@ -22,7 +23,7 @@ def make_weight(dim: int = 64, seed: int = 0) -> torch.Tensor:
 def test_pyproject_metadata_matches_import_version_and_runtime_deps():
     pyproject = Path(__file__).resolve().parents[1] / "pyproject.toml"
     text = pyproject.read_text(encoding="utf-8")
-    assert f'version = "{clarus.__version__}"' in text
+    assert f'version = "{reality_stone.__version__}"' in text
     for dep in ("numpy", "tokenizers", "torch", "tqdm", "transformers"):
         assert f'"{dep}>=' in text
 
@@ -87,7 +88,7 @@ def test_brain_runtime_respects_sparse_energy_budget_and_uses_hippocampus():
 
 
 def test_brain_runtime_rust_backend_smoke_contract():
-    from clarus.runtime import _HAS_RUST_KERNEL
+    from reality_stone.clarus.runtime import _HAS_RUST_KERNEL
 
     if not _HAS_RUST_KERNEL:
         pytest.skip("Rust runtime kernel unavailable")
@@ -117,7 +118,7 @@ def test_brain_runtime_rust_backend_smoke_contract():
 
 
 def test_brain_runtime_rust_backend_matches_torch_cell_step():
-    from clarus.runtime import _HAS_RUST_KERNEL, _LIFECYCLE_TO_CODE, ModuleLifecycle
+    from reality_stone.clarus.runtime import _HAS_RUST_KERNEL, _LIFECYCLE_TO_CODE, ModuleLifecycle
 
     if not _HAS_RUST_KERNEL:
         pytest.skip("Rust runtime kernel unavailable")
@@ -204,3 +205,67 @@ def test_brain_runtime_snapshot_restore_is_continuous():
     assert out_a.energy == pytest.approx(out_b.energy, rel=1e-6, abs=1e-6)
     assert torch.allclose(rt_a.activation, rt_b.activation, atol=1e-6, rtol=1e-6)
     assert torch.equal(rt_a.lifecycle, rt_b.lifecycle)
+
+
+def test_brain_runtime_optional_stdp_updates_weight():
+    w = make_weight(dim=24, seed=4) * 0.05
+    runtime = BrainRuntime(
+        w,
+        config=BrainRuntimeConfig(
+            dim=24,
+            active_ratio=0.5,
+            active_threshold=0.0,
+            noise_sigma=0.0,
+            dale_law=False,
+            axon_delay=False,
+            stdp_enabled=True,
+            stdp_apply_interval=2,
+            stdp_lr=0.05,
+            stdp_density=1.0,
+            stdp_gate_threshold=0.0,
+            stdp_spike_threshold=0.0,
+        ),
+        backend="torch",
+        device="cpu",
+    )
+    before = runtime.weight.clone()
+
+    for _ in range(4):
+        step = runtime.step(
+            external_input=torch.linspace(0.1, 0.7, 24),
+            force_mode=RuntimeMode.WAKE,
+        )
+
+    assert step.stdp_updates > 0
+    assert not torch.allclose(runtime.weight, before)
+    assert torch.isfinite(runtime._matvec(torch.ones(24))).all()
+
+
+def test_brain_runtime_snapshot_restore_preserves_stdp_tracker():
+    w = make_weight(dim=16, seed=5) * 0.05
+    runtime = BrainRuntime(
+        w,
+        config=BrainRuntimeConfig(
+            dim=16,
+            active_ratio=0.5,
+            active_threshold=0.0,
+            noise_sigma=0.0,
+            dale_law=False,
+            axon_delay=False,
+            stdp_enabled=True,
+            stdp_apply_interval=100,
+            stdp_spike_threshold=0.0,
+        ),
+        backend="torch",
+        device="cpu",
+    )
+    runtime.step(
+        external_input=torch.linspace(0.1, 0.5, 16),
+        force_mode=RuntimeMode.WAKE,
+    )
+
+    restored = BrainRuntime.from_snapshot(runtime.snapshot(), backend="torch", device="cpu")
+
+    assert restored.stdp_tracker is not None
+    assert runtime.stdp_tracker is not None
+    assert torch.allclose(restored.stdp_tracker.eligibility, runtime.stdp_tracker.eligibility)

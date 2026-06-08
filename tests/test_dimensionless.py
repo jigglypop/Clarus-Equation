@@ -5,15 +5,18 @@ from fractions import Fraction
 
 import pytest
 
-from clarus.dimensionless import (
+from reality_stone.clarus.dimensionless import (
     CURVATURE,
     DIMENSIONLESS,
     LENGTH,
     Quantity,
+    audit_dimensionless,
     buckingham_pi_groups,
+    check_dimensionless,
     dim,
     evaluate_group,
     exp_argument,
+    exp_arguments,
     group_dimension,
     nondimensionalize,
     require_dimensionless,
@@ -63,3 +66,41 @@ def test_dimensionless_guard_accepts_ce_core_ratio() -> None:
     epsilon2 = Quantity("epsilon^2", 0.04865)
 
     assert require_dimensionless(epsilon2).value == 0.04865
+
+
+def test_dimensionless_gate_result_composes_value_transform() -> None:
+    epsilon2 = Quantity("epsilon^2", 0.25)
+
+    result = check_dimensionless(epsilon2).map(lambda q: q.value).bind(
+        lambda value: check_dimensionless(Quantity("sqrt_epsilon2", math.sqrt(value)))
+    )
+
+    assert result.passed
+    assert math.isclose(result.unwrap().value, 0.5)
+
+
+def test_dimensionless_audit_accumulates_all_failures() -> None:
+    checks = [
+        Quantity("epsilon^2", 0.04865),
+        Quantity("R", 2.5, CURVATURE),
+        Quantity("L", 3.0, LENGTH),
+    ]
+
+    result = audit_dimensionless(checks, context="CE selection gate")
+
+    assert not result.passed
+    assert len(result.errors) == 2
+    assert "R must be dimensionless for CE selection gate" in result.errors[0]
+    assert "L must be dimensionless for CE selection gate" in result.errors[1]
+    with pytest.raises(ValueError, match="CE selection gate"):
+        result.unwrap()
+
+
+def test_exp_arguments_validates_batch_before_kernel_use() -> None:
+    args = exp_arguments([
+        Quantity("D_eff", 0.31),
+        Quantity("phi", 1.7),
+    ])
+
+    assert args.passed
+    assert args.unwrap() == (0.31, 1.7)

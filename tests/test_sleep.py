@@ -1,18 +1,19 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import argparse
 import pytest
 import torch
 import torch.nn as nn
 
-from clarus.ce_ops import pack_sparse
-from clarus.engine import CEEngine
-from tests.bench_gpt2 import build_prompt_weights, select_topical_chunks, sleep_curriculum_stage
-from clarus.sleep import (
+from reality_stone.clarus.ce_ops import pack_sparse
+from reality_stone.clarus.engine import CEEngine
+from tests.sleep_helpers import build_prompt_weights, select_topical_chunks, sleep_curriculum_stage
+from reality_stone.clarus.sleep import (
     PromptReplayBuffer,
     SleepBatch,
     _target_distribution,
     allocate_phase_sample_counts,
+    batch_stats,
     classify_state_dimensions,
     evaluate_guard_set,
     finetune_vocab_head_from_batch,
@@ -66,6 +67,24 @@ def test_fit_decoder_from_batch_recovers_linear_targets():
     pred = state_x @ state_proj + prev_scale * (prev_x @ prev_proj) + bias
     mse = torch.mean((pred - target_y) ** 2).item()
     assert mse < 3e-4
+
+
+def test_batch_stats_reports_phase_grounding_risk():
+    batch = SleepBatch(
+        state_x=torch.zeros(2, 3),
+        prev_x=torch.zeros(2, 3),
+        target_y=torch.zeros(2, 3),
+        soft_y=torch.zeros(2, 3),
+        hard_mask=torch.tensor([False, True]),
+        top1_hits=torch.tensor([True, False]),
+        top50_hits=torch.tensor([True, True]),
+        target_ids=torch.zeros(2, dtype=torch.long),
+        phase_risk_scores=torch.tensor([0.25, 0.75]),
+    )
+
+    stats = batch_stats(batch)
+
+    assert stats["phase_grounding_risk"] == pytest.approx(0.5)
 
 
 def test_fit_decoder_from_batch_accepts_rem_weighting():
@@ -299,6 +318,49 @@ def test_standalone_logits_reports_repeat_suppression(tmp_path):
     assert meta["suppressed_count"] >= 1
 
 
+def test_standalone_logits_uses_phase_grounding_gate(tmp_path):
+    path = make_runtime_artifact(tmp_path, decoder_query_blend=1.0)
+    eng = CEEngine(str(path), device="cpu", backend="torch")
+    eng.curvature_lambda = 0.0
+    eng.phase_grounding_lambda = 6.0
+    eng.decoder_token_bias = torch.tensor([1.5, 0.0])
+    ce_hidden = torch.tensor([0.0, 1.0, 0.0, 0.0])
+
+    logits, meta = eng.standalone_logits(
+        ce_hidden,
+        prev_id=2,
+        temperature=1.0,
+        top_k=4,
+        context_anchor=ce_hidden,
+        return_meta=True,
+    )
+
+    assert logits[3].item() > logits[2].item()
+    assert "phase_grounding_risk" in meta
+    assert float(meta["phase_grounding_risk"].max().item()) > 0.0
+
+
+def test_standalone_logits_can_disable_phase_grounding_gate(tmp_path):
+    path = make_runtime_artifact(tmp_path, decoder_query_blend=1.0)
+    eng = CEEngine(str(path), device="cpu", backend="torch")
+    eng.curvature_lambda = 0.0
+    eng.phase_grounding_lambda = 0.0
+    eng.decoder_token_bias = torch.tensor([1.5, 0.0])
+    ce_hidden = torch.tensor([0.0, 1.0, 0.0, 0.0])
+
+    logits, meta = eng.standalone_logits(
+        ce_hidden,
+        prev_id=2,
+        temperature=1.0,
+        top_k=4,
+        context_anchor=ce_hidden,
+        return_meta=True,
+    )
+
+    assert logits[2].item() > logits[3].item()
+    assert float(meta["phase_grounding_risk"].max().item()) == 0.0
+
+
 def test_standalone_logits_biases_sentence_closure_later(tmp_path):
     path = make_runtime_artifact(tmp_path, decoder_query_blend=1.0)
     eng = CEEngine(str(path), device="cpu", backend="torch")
@@ -441,31 +503,32 @@ def test_evaluate_guard_set_runs_without_teacher_model(tmp_path):
     )
     assert metrics["samples"] > 0
     assert 0.0 <= metrics["curvature_risk"] <= 1.0
+    assert 0.0 <= metrics["phase_grounding_risk"] <= 1.0
 
 
 def test_load_corpus_documents_reads_text_file(tmp_path):
     corpus = tmp_path / "corpus.txt"
-    corpus.write_text("첫 문장입니다.\n둘째 문장입니다.\n\n셋째 문장입니다.", encoding="utf-8")
+    corpus.write_text("first sentence.\nsecond sentence.\n\nthird sentence.", encoding="utf-8")
     docs = load_corpus_documents(str(corpus), doc_limit=8, text_limit=1024)
-    assert docs == ["첫 문장입니다. 둘째 문장입니다.", "셋째 문장입니다."]
+    assert docs == ["first sentence. second sentence.", "third sentence."]
 
 
 def test_prioritize_documents_for_prompts_prefers_overlapping_docs():
     docs = [
-        "경제 전망과 금융 시장의 흐름을 설명한다.",
-        "건강한 식단은 채소와 단백질의 균형이 중요하다.",
-        "대한민국의 교육 제도는 입시 구조와 연결된다.",
+        "economic outlook explains market flow.",
+        "a healthy diet balances vegetables and protein.",
+        "the education system connects to admissions.",
     ]
-    ordered = prioritize_documents_for_prompts(docs, ["건강한 식단을 유지하려면"])
+    ordered = prioritize_documents_for_prompts(docs, ["healthy diet habits"])
     assert ordered[0] == docs[1]
 
 
 def test_select_topical_chunks_prefers_overlapping_chunks():
-    prompt_weights = build_prompt_weights(["건강한 식단을 유지하려면", "대한민국의 교육 제도는"])
+    prompt_weights = build_prompt_weights(["healthy diet habits", "education system"])
     chunks = [
-        "베토벤의 교향곡은 유럽 음악사에서 중요하다.",
-        "건강한 식단은 단백질과 채소의 균형이 중요하다.",
-        "대한민국의 교육 제도는 입시와 공교육 구조를 포함한다.",
+        "a symphony can matter in music history.",
+        "a healthy diet balances protein and vegetables.",
+        "the education system includes admissions and public schools.",
     ]
     picked = select_topical_chunks(chunks, prompt_weights, keep_limit=2)
     assert chunks[1] in picked
@@ -506,6 +569,22 @@ def test_should_accept_guard_update_rejects_regression():
     after = {"top10_acc": 0.20, "top50_acc": 0.55}
     assert not should_accept_guard_update(before, after)
     assert should_accept_guard_update(before, {"top10_acc": 0.25, "top50_acc": 0.55})
+
+
+def test_should_accept_guard_update_can_reject_phase_risk_increase():
+    before = {"top10_acc": 0.25, "top50_acc": 0.50, "phase_grounding_risk": 0.10}
+    after = {"top10_acc": 0.25, "top50_acc": 0.55, "phase_grounding_risk": 0.25}
+
+    assert not should_accept_guard_update(
+        before,
+        after,
+        max_phase_grounding_risk_increase=0.05,
+    )
+    assert should_accept_guard_update(
+        before,
+        after,
+        max_phase_grounding_risk_increase=0.20,
+    )
 
 
 def test_classify_state_dimensions_matches_target_partition():

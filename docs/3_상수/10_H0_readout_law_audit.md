@@ -173,8 +173,9 @@ $$
 
 1. \(\log S\)가 왜 정확히 primordial phase-area count \((\pi^2/2)N_e\)를 읽는지의 물리 유도.
 2. \(\pi\delta\sigma\)와 \(\delta\sigma\)가 각각 global horizon integral과 local endpoint defect로 들어가는 정식 경로적분 유도.
-3. 실제 공개 likelihood covariance에서 \(q_F\)를 계산한 결과.
+3. 실제 공개 likelihood covariance에서 \(q_F\)를 계산한 결과의 채널 간 반복성. TDCOSMO 첫 투입은 `11_TDCOSMO_real_covariance_audit.md`에 기록되어 있으나, 아직 여러 독립 관측군으로 일반화된 것은 아니다.
 4. \(L,G\) 또는 \(C_L,C_G\)의 graph 노드 정의가 관측 pipeline마다 고유하게 정해지는지.
+5. 같은 파라미터가 likelihood closure에 따라 local endpoint 또는 global closure로 바뀌는 role map \(R\)을 외부 분석 규약에서 독립적으로 정할 수 있는지.
 
 ## 5. 반증 조건
 
@@ -192,7 +193,7 @@ $$
 
 $$
 \boxed{
-\text{계속 진행해도 된다. 단, 다음 진행은 새 수식 추가가 아니라 실제 covariance 투입이어야 한다.}
+\text{계속 진행해도 된다. 단, 다음 진행은 새 수식 추가가 아니라 실제 covariance와 role map 반증이어야 한다.}
 }
 $$
 
@@ -201,21 +202,22 @@ $$
 1. 수식 구조는 현재 충분히 압축되었다.
 2. \(q\)는 더 이상 임의 fitting parameter가 아니다.
 3. IO/validation/batch/full-suite가 준비되었다.
-4. 남은 핵심은 이론 내부 조작이 아니라 외부 covariance로 반증하는 것이다.
+4. TDCOSMO 계열에서는 실제 covariance 투입이 시작되었다.
+5. 남은 핵심은 이론 내부 조작이 아니라 외부 covariance와 관측 pipeline별 role map으로 반증하는 것이다.
 
 따라서 다음 우선순위는 다음이다.
 
-1. 공개 covariance가 가장 얻기 쉬운 채널 하나를 고른다.
-2. CSV 또는 labelled CSV로 변환한다.
-3. manifest에 source/version을 기록한다.
-4. full suite를 돌린다.
-5. \(q_F\), \(H_0(q_F)\), pull을 문서에 추가한다.
+1. TDCOSMO 결과는 `11_TDCOSMO_real_covariance_audit.md`를 정본으로 삼는다.
+2. 다음 독립 채널은 GW standard siren, BAO, SH0ES/Pantheon+, Planck covariance 중 하나로 잡는다.
+3. 각 채널의 source/version, likelihood closure, role map \(R\), conductance mode를 manifest에 기록한다.
+4. 같은 \(F\)에서 \(R\)을 바꿔도 결론이 버티는지, 같은 \(R\)에서 독립 covariance를 바꿔도 branch ordering이 유지되는지 본다.
+5. \(q_F\), \(H_0(q_F)\), pull뿐 아니라 role-map 선택의 사유를 함께 문서에 추가한다.
 
-추천 첫 채널은 GW standard siren 또는 TDCOSMO 계열이다. 이유는 covariance 구조가 비교적 작고, \(q\simeq0.5\) 또는 \(q\simeq0.25/1\)이라는 명확한 readout 분기를 테스트하기 좋기 때문이다.
+추천 다음 채널은 GW standard siren 또는 Planck/CMB covariance다. 이유는 TDCOSMO와 관측 topology가 달라서, \(q_F=q_F(F,R)\) 규칙이 lensing 특수 규칙인지 더 빨리 반증할 수 있기 때문이다.
 
 ## 7. 첫 실제 소스 스카우트
 
-첫 실제 covariance 후보로 TDCOSMO IV public hierarchy analysis repository를 등록했다.
+첫 실제 covariance 후보로 TDCOSMO IV public hierarchy analysis repository를 등록했다. 이 절은 스카우트 기록이며, 실제 posterior covariance 투입 결과와 source-aware role rule은 후속 문서 `11_TDCOSMO_real_covariance_audit.md`를 우선한다.
 
 ```text
 https://github.com/TDCOSMO/hierarchy_analysis_2020_public.git

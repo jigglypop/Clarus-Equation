@@ -11,8 +11,8 @@ import math
 import pytest
 import torch
 
-from clarus.ce_ops import relax
-from clarus.quantum import (
+from reality_stone.clarus.ce_ops import relax
+from reality_stone.clarus.quantum import (
     ALPHA_B_DEFAULT,
     estimate_mu,
     iss_ball_radius,
@@ -20,8 +20,8 @@ from clarus.quantum import (
     pci_regression,
     time_curvature,
 )
-from clarus.constants import ACTIVE_RATIO
-from clarus.runtime import BrainRuntime, BrainRuntimeConfig, RuntimeMode
+from reality_stone.clarus.constants import ACTIVE_RATIO
+from reality_stone.clarus.runtime import BrainRuntime, BrainRuntimeConfig, RuntimeMode
 
 
 def _negdef_weight(n: int = 32, *, scale: float = 0.05, margin: float = 0.1) -> torch.Tensor:

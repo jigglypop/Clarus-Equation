@@ -17,7 +17,7 @@ import math
 import torch
 import torch.nn as nn
 
-from clarus.ce_euler import (
+from reality_stone.clarus.ce_euler import (
     EulerCEMinimal,
     EulerCEMinimalBlock,
     head_types_from_spec,
@@ -65,17 +65,17 @@ def test_head_types_from_spec_invalid_raises():
 
 def test_pi_e_bits_correctly_decoded():
     attn = EulerCEMinimal(d_model=32, n_heads=4, block=8, head_types="all")
-    # head_types = [0, 1, 2, 3] → pi = [0, 0, 1, 1], e = [0, 1, 0, 1]
+    # head_types = [0, 1, 2, 3] ??pi = [0, 0, 1, 1], e = [0, 1, 0, 1]
     assert torch.equal(attn.pi_bits, torch.tensor([0., 0., 1., 1.]))
     assert torch.equal(attn.e_bits, torch.tensor([0., 1., 0., 1.]))
 
 
 def test_packed_bitmask_matches_per_head_bits():
     """The packed int bitmasks must encode the same pi/e bits as the
-    float buffers — one python int replaces an (H,) tensor of floats."""
+    float buffers ??one python int replaces an (H,) tensor of floats."""
     attn = EulerCEMinimal(32, 4, 8, head_types="all")   # [0,1,2,3]
-    # pi bit per head h0..h3 = [0,0,1,1] → mask = 0b1100 = 12
-    # e  bit per head h0..h3 = [0,1,0,1] → mask = 0b1010 = 10
+    # pi bit per head h0..h3 = [0,0,1,1] ??mask = 0b1100 = 12
+    # e  bit per head h0..h3 = [0,1,0,1] ??mask = 0b1010 = 10
     assert attn._pi_mask == 0b1100
     assert attn._e_mask == 0b1010
     for h in range(4):
@@ -274,7 +274,7 @@ def test_autograd_skips_xi_when_decay_off_in_uniform_path():
     for spec in ("rope", "nope"):
         attn = EulerCEMinimal(32, 4, 16, head_types=spec, learnable_xi=True)
         attn(x).sum().backward()
-        # log_xi never participates → no grad accumulated.
+        # log_xi never participates ??no grad accumulated.
         assert attn.log_xi.grad is None or torch.equal(
             attn.log_xi.grad, torch.zeros_like(attn.log_xi))
 
@@ -291,9 +291,9 @@ def test_autograd_zero_xi_grad_in_mixed_path_for_decay_off_heads():
     attn(x).sum().backward()
     g = attn.log_xi.grad
     assert g is not None
-    # heads 0 and 2 (rope, e_bit=0) → grad must be zero
+    # heads 0 and 2 (rope, e_bit=0) ??grad must be zero
     assert g[0].item() == 0.0 and g[2].item() == 0.0
-    # heads 1 and 3 (alibi, e_bit=1) → grad must be nonzero & finite
+    # heads 1 and 3 (alibi, e_bit=1) ??grad must be nonzero & finite
     assert g[1].item() != 0.0 and g[3].item() != 0.0
     assert torch.isfinite(g).all()
 

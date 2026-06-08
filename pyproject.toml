@@ -1,7 +1,7 @@
 [project]
-name = "clarus-equation"
-version = "1.2.0"
-description = "CE Field Theory -- Rust-backed Brain/AGI Engine"
+name = "reality_stone"
+version = "0.2.10"
+description = "Unified Reality Stone library with the Clarus runtime"
 requires-python = ">=3.10"
 dependencies = [
     "numpy>=1.24",
@@ -28,7 +28,7 @@ quantum = [
 neuro = ["nibabel>=5.4"]
 dev = ["pytest>=7.0", "ruff>=0.4"]
 all = [
-    "clarus-equation[science,quantum,neuro,dev]",
+    "reality_stone[science,quantum,neuro,dev]",
 ]
 
 [build-system]
@@ -36,14 +36,17 @@ requires = ["maturin>=1.5,<2"]
 build-backend = "maturin"
 
 [tool.maturin]
-manifest-path = "clarus/core/Cargo.toml"
-python-source = "."
-module-name = "clarus._rust"
-features = ["python", "cuda"]
+manifest-path = "reality_stone/python/reality_stone/clarus/core/Cargo.toml"
+python-source = "reality_stone/python"
+module-name = "reality_stone.clarus._rust"
+features = ["python"]
 
 [tool.ruff]
 line-length = 100
 target-version = "py310"
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["tests", "reality_stone/tests"]
+markers = [
+    "cuda: tests that require CUDA kernels",
+]

@@ -128,11 +128,11 @@ $$
 
 세 단계 backend 모두에서 동일한 수치 결과를 보장한다.
 
-1. **PyTorch** (참조): `clarus.ce_riemann_attn.RiemannRotaryAttention`
-2. **Rust CPU**: `clarus._rust.nn_ce_riemann_fwd`
-3. **CUDA**: `clarus._rust.nn_ce_riemann_fwd_cuda` (cudarc launcher + `.cu` kernel)
+1. **PyTorch** (참조): `reality_stone.clarus.ce_riemann_attn.RiemannRotaryAttention`
+2. **Rust CPU**: `reality_stone.clarus._rust.nn_ce_riemann_fwd`
+3. **CUDA**: `reality_stone.clarus._rust.nn_ce_riemann_fwd_cuda` (cudarc launcher + `.cu` kernel)
 
-자동 선택은 `clarus.ce_riemann_attn.RiemannRotaryAttention(backend="auto")`가
+자동 선택은 `reality_stone.clarus.ce_riemann_attn.RiemannRotaryAttention(backend="auto")`가
 입력 텐서의 `device.type`으로 결정한다(cuda → cuda, cpu → rust, fallback → torch).
 
 ## 6. 수치 동일성 테스트

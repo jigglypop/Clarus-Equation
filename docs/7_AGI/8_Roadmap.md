@@ -18,7 +18,7 @@ CE 부트스트랩 고정점 $p^* = (4.87\%, 26.2\%, 68.9\%)$은 `05_실험근�
 
 ### 0.2 측정 기록 (2026-04, KoGPT2 ClarusLM 127M)
 
-세 가지 변형을 비교 측정한 결과(`scripts/natural_dynamics.py`, `examples/ai/results/natural_dynamics.json`):
+세 가지 변형을 비교 측정한 결과(legacy `scripts/natural_dynamics.py` and `examples/ai/results/natural_dynamics.json`, removed):
 
 | 변형 | 사양 적용 방식 | 초기 활성 | 최종 활성 (60 cycle) | 최종 ppl |
 |---|---|---|---|---|
@@ -34,7 +34,7 @@ CE 부트스트랩 고정점 $p^* = (4.87\%, 26.2\%, 68.9\%)$은 `05_실험근�
 
 추가 측정:
 
-- **Continual learning** (한국어 → 영어, `scripts/continual_test.py`): 사양 sleep cycle이 baseline AdamW 대비 forgetting을 21배 악화시킴. NREM weight smoothing이 오히려 기존 표상을 흐리고, ternary 동적 재분류가 옛 활성 가중치를 BG로 밀어내며 NREM smoothing이 그것을 평탄화시키는 메커니즘.
+- **Continual learning** (한국어 → 영어, legacy `scripts/continual_test.py`, removed): 사양 sleep cycle이 baseline AdamW 대비 forgetting을 21배 악화시킴. NREM weight smoothing이 오히려 기존 표상을 흐리고, ternary 동적 재분류가 옛 활성 가중치를 BG로 밀어내며 NREM smoothing이 그것을 평탄화시키는 메커니즘.
 - **TopK sparsity sweep** (이전, `examples/ai/topk_sweep_results.json`): GPT-2 MLP에 4.87% TopK 강제 시 perplexity 1328 (dense 대비 27배 악화). 단조 감소.
 
 ### 0.3 결론: 강제 변환의 자리매김
@@ -43,18 +43,18 @@ CE 부트스트랩 고정점 $p^* = (4.87\%, 26.2\%, 68.9\%)$은 `05_실험근�
 
 - **수식 자체에는 결함이 없다.** $\varepsilon^2 = \exp(-(1-\varepsilon^2) D_{\text{eff}})$의 고정점 유일성과 수축률 $\rho = 0.155$는 (C1)-(C3) + (A1) + (I1) 아래 수학적으로 닫힌 결과다.
 - **그러나 transformer는 위 가정이 성립하는 substrate가 아니다.** (C3) 자기일관성 루프가 forward만으로는 형성되지 않고, (A1) 채널 분해가 backprop의 chain rule과 정합하지 않는다.
-- **현재 `clarus/`, `examples/ai/clarus_lm.py`, `scripts/sleep_finetune_lm.py` 등의 구현은 사양을 transformer에 강제 이식한 것이다.** 자연 emergence가 아니라 출력 비율을 외부 mask로 강제한 변환. 측정 결과는 이 강제가 task 성능을 저하시킬 뿐 사양의 우위(catastrophic forgetting 감소, 환각 억제)를 만들어내지 않음을 보여준다.
+- **현재 `legacy clarus/` (removed), `legacy examples/ai/clarus_lm.py` (removed), `legacy scripts/sleep_finetune_lm.py` (removed) 등의 구현은 사양을 transformer에 강제 이식한 것이다.** 자연 emergence가 아니라 출력 비율을 외부 mask로 강제한 변환. 측정 결과는 이 강제가 task 성능을 저하시킬 뿐 사양의 우위(catastrophic forgetting 감소, 환각 억제)를 만들어내지 않음을 보여준다.
 - **CE-AGI 사양의 진정한 검증은 SNN(spiking neural network) substrate에서만 가능하다.** STDP + 막전위 동역학을 가진 시스템에서 $p^*$로의 자연 수렴 여부를 측정해야 한다. 현재 코드베이스에는 SNN 구현이 없고, 본격적 검증에는 별도 프로젝트 규모의 자원이 필요하다.
 
 ### 0.4 현재 코드베이스의 정직한 자리매김
 
 | 영역 | 현재 코드의 지위 |
 |---|---|
-| `examples/ai/clarus_lm.py` (LBONorm, GaugeLattice, spectral norm) | 사양 영감을 받은 transformer 변형. 정규 transformer 대비 우위 미입증. |
-| `scripts/sleep_finetune_lm.py` (WAKE/NREM/REM cycle) | 사양 그대로 구현. transformer 위에서 강제 변환. fit 속도 손해, forgetting 21배 악화 (측정). |
-| `clarus/sparsity.py` (TernaryClassifier) | 동적 재분류로 BG 라벨이 frozen 의미를 잃음. 사양 4.4절 자체의 모순 (frozen vs 동적 재분류) 반영. |
-| `clarus/runtime.py`, `clarus/agent.py` 등 brain runtime | 부트스트랩 동역학이 forward에 결합되지 않은 통계 수집기 수준. 결정에 영향 없음. |
-| `clarus/engine.py` standalone CE relax | 토큰 디코딩에서 의미 있는 출력 생산 실패 (`engine_results.json`: 노이즈 토큰). |
+| `legacy examples/ai/clarus_lm.py` (removed) (LBONorm, GaugeLattice, spectral norm) | 사양 영감을 받은 transformer 변형. 정규 transformer 대비 우위 미입증. |
+| `legacy scripts/sleep_finetune_lm.py` (removed) (WAKE/NREM/REM cycle) | 사양 그대로 구현. transformer 위에서 강제 변환. fit 속도 손해, forgetting 21배 악화 (측정). |
+| `legacy clarus/sparsity.py` (removed) (TernaryClassifier) | 동적 재분류로 BG 라벨이 frozen 의미를 잃음. 사양 4.4절 자체의 모순 (frozen vs 동적 재분류) 반영. |
+| `reality_stone/python/reality_stone/clarus/runtime.py`, `reality_stone/python/reality_stone/clarus/agent.py` 등 brain runtime | 부트스트랩 동역학이 forward에 결합되지 않은 통계 수집기 수준. 결정에 영향 없음. |
+| `reality_stone/python/reality_stone/clarus/engine.py` standalone CE relax | 토큰 디코딩에서 의미 있는 출력 생산 실패 (`engine_results.json`: 노이즈 토큰). |
 
 ### 0.5 다음 단계 옵션
 
@@ -72,28 +72,28 @@ CE 부트스트랩 고정점 $p^* = (4.87\%, 26.2\%, 68.9\%)$은 `05_실험근�
 
 | 구현 | 파일 | 상태 | 장 |
 |---|---|---|---|
-| LBONorm | `examples/ai/clarus_lm.py` | V1 완료 | 2장 |
-| GaugeLattice (블록 대각) | `examples/ai/clarus_lm.py` | V1 (혼합 없음) | 2장 |
-| Spectral Norm | `examples/ai/clarus_lm.py` | 완료 | 2장 |
-| 곡률 정규화 손실 | `examples/ai/clarus_lm.py` | 완료 | 2장 |
+| LBONorm | `legacy examples/ai/clarus_lm.py` (removed) | V1 완료 | 2장 |
+| GaugeLattice (블록 대각) | `legacy examples/ai/clarus_lm.py` (removed) | V1 (혼합 없음) | 2장 |
+| Spectral Norm | `legacy examples/ai/clarus_lm.py` (removed) | 완료 | 2장 |
+| 곡률 정규화 손실 | `legacy examples/ai/clarus_lm.py` (removed) | 완료 | 2장 |
 | 곡률 기반 환각 억제 | `examples/ai/sfe_hallucination_suppressor.py` | V1 완료 | 6장 |
 | GPT-2 CE 이식 | `examples/ai/ce_gpt2.py` | 완료 | 2장 |
-| 학습 스크립트 | `examples/ai/train_clarus.py` | 완료 | -- |
-| CE 에너지 이완 엔진 | `clarus/engine.py` | 완료 (standalone) | 12장 |
-| 메트릭 기반 CE ops | `clarus/ce_ops.py` | 완료 (Rust/CUDA/Torch) | 12장 |
-| Wake/NREM/REM 학습 순환 | `clarus/sleep.py` | **구현 완료** | 3장 |
-| NREM 가중치 갱신 (LBO 확산 + 가소성) | `clarus/sleep.py::apply_nrem_weight_update` | **구현 완료** | 3장 |
-| REM 가중치 갱신 (비선택 경로 재조합) | `clarus/sleep.py::apply_rem_weight_update` | **구현 완료** | 3장 |
-| BrainRuntime (모드 전환 + 셀 동역학) | `clarus/runtime.py` | **구현 완료** | 14장 |
-| 해마 기억 (encode/recall/replay) | `clarus/runtime.py::HippocampusMemory` | **구현 완료** | 14장 |
-| 모듈 생애주기 (ACTIVE/IDLE/DORMANT/SLEEPING) | `clarus/runtime.py::_update_lifecycle` | **구현 완료** | 14장 |
-| Borbely 2-Process 수면 압력 | `clarus/runtime.py::_update_sleep_state` | **구현 완료** | 14장 |
-| STP (Tsodyks-Markram) | `clarus/runtime.py::_step_torch`, Rust kernel | **구현 완료** | 15장 |
-| Rust brain_step 커널 | `clarus/core/src/engine/kernel.rs` | **구현 완료** | 14장 |
-| 3분배 상태 분할 ($\varepsilon^2/\Omega_{\text{DM}}/\Omega_\Lambda$) | `clarus/engine.py::state_partition_counts` | **구현 완료** | 5장 |
-| 곡률 기반 로짓 조정 | `clarus/engine.py::_curvature_adjust_logits` | **구현 완료** | 6장 |
-| 스냅샷 연속성 (warm snapshot) | `clarus/runtime.py::snapshot/from_snapshot` | **구현 완료** | 14장 |
-| 가드셋 평가 (top1/top10/top50) | `clarus/sleep.py::evaluate_guard_set` | **구현 완료** | -- |
+| 학습 스크립트 | `legacy examples/ai/train_clarus.py` (removed) | 완료 | -- |
+| CE 에너지 이완 엔진 | `reality_stone/python/reality_stone/clarus/engine.py` | 완료 (standalone) | 12장 |
+| 메트릭 기반 CE ops | `reality_stone/python/reality_stone/clarus/ce_ops.py` | 완료 (Rust/CUDA/Torch) | 12장 |
+| Wake/NREM/REM 학습 순환 | `reality_stone/python/reality_stone/clarus/sleep.py` | **구현 완료** | 3장 |
+| NREM 가중치 갱신 (LBO 확산 + 가소성) | `reality_stone/python/reality_stone/clarus/sleep.py::apply_nrem_weight_update` | **구현 완료** | 3장 |
+| REM 가중치 갱신 (비선택 경로 재조합) | `reality_stone/python/reality_stone/clarus/sleep.py::apply_rem_weight_update` | **구현 완료** | 3장 |
+| BrainRuntime (모드 전환 + 셀 동역학) | `reality_stone/python/reality_stone/clarus/runtime.py` | **구현 완료** | 14장 |
+| 해마 기억 (encode/recall/replay) | `reality_stone/python/reality_stone/clarus/runtime.py::HippocampusMemory` | **구현 완료** | 14장 |
+| 모듈 생애주기 (ACTIVE/IDLE/DORMANT/SLEEPING) | `reality_stone/python/reality_stone/clarus/runtime.py::_update_lifecycle` | **구현 완료** | 14장 |
+| Borbely 2-Process 수면 압력 | `reality_stone/python/reality_stone/clarus/runtime.py::_update_sleep_state` | **구현 완료** | 14장 |
+| STP (Tsodyks-Markram) | `reality_stone/python/reality_stone/clarus/runtime.py::_step_torch`, Rust kernel | **구현 완료** | 15장 |
+| Rust brain_step 커널 | `reality_stone/python/reality_stone/clarus/core/src/engine/kernel.rs` | **구현 완료** | 14장 |
+| 3분배 상태 분할 ($\varepsilon^2/\Omega_{\text{DM}}/\Omega_\Lambda$) | `reality_stone/python/reality_stone/clarus/engine.py::state_partition_counts` | **구현 완료** | 5장 |
+| 곡률 기반 로짓 조정 | `reality_stone/python/reality_stone/clarus/engine.py::_curvature_adjust_logits` | **구현 완료** | 6장 |
+| 스냅샷 연속성 (warm snapshot) | `reality_stone/python/reality_stone/clarus/runtime.py::snapshot/from_snapshot` | **구현 완료** | 14장 |
+| 가드셋 평가 (top1/top10/top50) | `reality_stone/python/reality_stone/clarus/sleep.py::evaluate_guard_set` | **구현 완료** | -- |
 
 ### 1.2 미구현 / 부분 구현
 

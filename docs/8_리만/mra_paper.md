@@ -230,7 +230,7 @@ LM에서는 mask 전 symmetrize가 future leakage를 일으킨다**. 본 작업�
 
 ## 5. Implementation
 
-`clarus/ce_mra.py`는 PyTorch 참조 구현(~250 LOC)이다. 현재 backend는 PyTorch only이며,
+`reality_stone/python/reality_stone/clarus/ce_mra.py`는 PyTorch 참조 구현(~250 LOC)이다. 현재 backend는 PyTorch only이며,
 `RiemannRotaryAttention`의 Rust/CUDA 패턴을 그대로 이식할 수 있다.
 
 테스트 (`tests/test_mra.py`, 11/11 pass):
@@ -515,7 +515,7 @@ attention적 의미는 두 axis와 두 게이트로 환원된다.
 
 #### 구현: `EulerCEMinimal`
 
-`clarus/ce_euler.py::EulerCEMinimal`가 본 환원의 정밀 구현이다. 각 헤드는 2비트
+`reality_stone/python/reality_stone/clarus/ce_euler.py::EulerCEMinimal`가 본 환원의 정밀 구현이다. 각 헤드는 2비트
 spec `head_types ∈ {0, 1, 2, 3}^H`로 head-type을 axiom으로 선택한다. 학습
 파라미터는 `xi_h`(decay 헤드만 의미 있음) 1개 + `W_q,k,v,o`(표준 MHA)다.
 5차원 `bit_logits`와 sigmoid 게이트 학습은 모두 제거했다.
@@ -692,7 +692,7 @@ Euler-CE 외삽 우위의 진짜 메커니즘(e-decay = ALiBi)을 32× extrapola
 
 [8] (Internal) `docs/7_AGI/2_Architecture.md` § 4 — 유니타리 제약.
 
-[9] (Internal) `clarus/ce_euler.py` — Euler-CE attention.
+[9] (Internal) `reality_stone/python/reality_stone/clarus/ce_euler.py` — Euler-CE attention.
 
 [10] Y. Sun et al., "A Length-Extrapolatable Transformer (xPos)," ACL 2023.
 

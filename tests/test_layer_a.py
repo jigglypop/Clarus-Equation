@@ -2,8 +2,8 @@
 
 import torch
 import pytest
-from clarus.runtime import BrainRuntime, BrainRuntimeConfig, RuntimeMode
-from clarus.constants import NOISE_SIGMA, DALE_EI_RATIO, DALE_INH_GAIN
+from reality_stone.clarus.runtime import BrainRuntime, BrainRuntimeConfig, RuntimeMode
+from reality_stone.clarus.constants import NOISE_SIGMA, DALE_EI_RATIO, DALE_INH_GAIN
 
 
 def make_weight(dim=64, seed=0):

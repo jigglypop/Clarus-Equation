@@ -15,6 +15,317 @@
 
 ---
 
+### F.-1 왜 자기참조재귀가 핵심인가
+
+Layer A--E만 있으면 시스템은 한 틱의 상태를 갱신할 수 있다. 그러나 AGI 응용에서 필요한 것은 한 틱의 계산이 아니라, 계산 결과가 다시 다음 계산의 조건을 바꾸는 닫힌 루프다. 이 닫힘이 없으면 모델은 긴 작업에서 자기 오류를 축적만 하고, 수정하지 못한다.
+
+가장 짧게 쓰면 CE 에이전트는 다음 사상을 반복한다.
+
+$$
+S_{t+1}
+=\mathcal U\!\left(
+S_t,\;
+R(S_t),\;
+C(R(S_t),a_t,o_t),\;
+\mathcal M_t,\;
+\phi_t
+\right)
+$$
+
+여기서 핵심은 \(R(S_t)\)가 단순 출력이 아니라 다음 상태 \(S_{t+1}\)를 만드는 항으로 다시 들어간다는 점이다. 즉 시스템은 자기 상태를 읽고, 그 읽기의 잔차를 비평하고, 비평 결과로 다음 자기 상태를 바꾼다.
+
+Transformer에 CE 모듈을 얹는 것과 CE식 에이전트 루프의 차이는 여기서 갈린다.
+
+| 구조 | 상태 갱신 | 자기비평 | 기억 재주입 | 한계 |
+|---|---|---|---|---|
+| 표준 LLM inference | hidden state는 token 생성 후 대부분 폐기 | 외부 evaluator 또는 RLHF 사후 보정 | context window에 수동 주입 | turn 사이 자기수정 약함 |
+| CE module transplant | attention/norm/FFN은 안정화 | 일부 curvature score 가능 | 별도 구현 필요 | 아직 열린 루프 |
+| CE 자기참조재귀 | \(S_t\)가 \(S_{t+1}\)로 닫힘 | \(c_t\)가 다음 이완 에너지에 들어감 | \(m_t,\phi_t\)가 다음 입력 조건 | agentic 지속성의 최소형 |
+
+따라서 이 문서에서 F절은 부가 기능이 아니라 A--E를 AGI 응용으로 올리는 최소 닫힘 조건이다. attention, sparsity, sleep, hallucination 억제는 모두 이 루프 안에 들어갈 때만 장기 상태 유지와 자기수정으로 이어진다.
+
+#### F.-1.1 상태공간 사상
+
+F절의 전체 루프를 하나의 동역학계로 쓰면 다음과 같다.
+
+$$
+S_{t+1}=\mathcal T_{\theta,e_t}(S_t),
+\qquad
+e_t=(u_t,o_t)
+$$
+
+여기서 \(e_t\)는 외부 입력과 환경 관찰을 묶은 외생 신호다. 외생 신호를 고정하면 자기참조재귀의 핵심 질문은 \(\mathcal T\)가 고정점을 갖는지다.
+
+$$
+S^\star=\mathcal T_{\theta,e}(S^\star).
+$$
+
+이 고정점은 "정답"이 아니라, 주어진 task/environment regime에서 자기 상태, 기억, 비평, 잔류장이 서로 모순 없이 닫힌 상태다.
+
+#### F.-1.2 분해와 Jacobian
+
+\(\mathcal T\)를 구성요소로 분해한다.
+
+$$
+\mathcal T
+=
+\mathcal U
+\circ
+\left(
+I,\;
+R,\;
+C\circ(R,\pi,\text{Env}),\;
+\mathcal M,\;
+\Phi
+\right).
+$$
+
+국소 안정성은 고정점 근방 Jacobian으로 판정한다.
+
+$$
+J_\star
+=
+D_S\mathcal T_{\theta,e}(S^\star).
+$$
+
+충분조건:
+
+$$
+\boxed{
+\rho(J_\star)<1
+}
+$$
+
+여기서 \(\rho(\cdot)\)는 spectral radius다. 전역 수축을 요구하려면 어떤 norm에 대해
+
+$$
+\sup_{S\ne S'}
+\frac{\|\mathcal T(S)-\mathcal T(S')\|}
+{\|S-S'\|}
+<1
+$$
+
+이면 된다. 실제 에이전트는 tool observation과 novelty가 들어오므로 전역 수축보다 ISS 조건이 더 현실적이다.
+
+$$
+\|S_{t+1}-S_{t+1}'\|
+\le
+\rho\|S_t-S_t'\|
++
+\beta\|e_t-e_t'\|,
+\qquad
+\rho<1.
+$$
+
+이 식이 의미하는 바는 단순하다. 같은 환경을 보면 자기 상태 차이는 줄어야 하고, 다른 환경을 보면 그 차이는 외부 차이에 비례해 유계여야 한다.
+
+#### F.-1.3 자기비평의 닫힘 조건
+
+자기비평 \(C\)가 진짜 재귀 항이 되려면 다음 step의 이완 에너지에 들어가야 한다.
+
+$$
+E_{t+1}(z)
+=
+E_{\rm base}(z;u_{t+1})
++\lambda_c E_{\rm crit}(z;c_{t+1})
++\lambda_m E_{\rm mem}(z;m_{t+1})
++\lambda_\phi E_{\rm res}(z;\phi_{t+1}).
+$$
+
+닫힘 조건:
+
+$$
+\boxed{
+D_c R(S_{t+1})\ne0
+}
+$$
+
+즉 \(c_{t+1}\)가 다음 \(R\)의 초기점, 에너지, 온도, budget, 또는 decoding policy 중 적어도 하나를 바꿔야 한다. 이 조건이 0이면 self-critique는 관찰량일 뿐 제어량이 아니다.
+
+#### F.-1.4 재귀 품질의 측정량
+
+구현에서 직접 측정할 지표는 다음이다.
+
+| 지표 | 식 | 의미 |
+|---|---|---|
+| 수축률 | \(\hat\rho_t=\|S_{t+1}-S_t\|/(\|S_t-S_{t-1}\|+\epsilon)\) | 자기 상태가 안정화되는가 |
+| 비평 영향도 | \(I_c=\|R(S_{t+1};c_{t+1})-R(S_{t+1};0)\|\) | critique가 실제 동역학을 바꾸는가 |
+| 기억 영향도 | \(I_m=\|R(S_{t+1};m_{t+1})-R(S_{t+1};0)\|\) | memory가 context 장식이 아니라 상태항인가 |
+| 잔류 반경 | \(r_\phi=\limsup_t\|\phi_t\|\) | 탈락 경로/불확실성이 유계인가 |
+| 재귀 이득 | \(G_{\rm rec}=\Delta{\rm score}_{\rm closed}-\Delta{\rm score}_{\rm open}\) | 닫힌 루프가 open-loop 대비 개선하는가 |
+
+이 지표들이 없으면 자기참조재귀는 철학적 설명에 머문다. CE-LLM의 실험은 최소한 open-loop baseline과 closed-loop variant를 나누고 \(I_c,I_m,\hat\rho_t\)를 함께 보고해야 한다.
+
+#### F.-1.5 계층적 자기참조재귀 정리
+
+하위 재귀들이 모여 상위 재귀가 되고, 상위 재귀가 다시 하위 재귀의 boundary condition을 바꾸는 구조를 다음처럼 둔다. 레벨 \(\ell=0,\dots,L\)의 상태공간을 Banach 공간 \(\mathcal X_\ell\)라 하고, 레벨별 상태를 \(X_t^\ell\in\mathcal X_\ell\)라 한다.
+
+레벨 \(\ell\)의 갱신은
+
+$$
+X_{t+1}^\ell
+=
+T_\ell\!\left(
+X_t^\ell,\;
+U_t^\ell
+\right)
+$$
+
+이고 입력 \(U_t^\ell\)은 이웃 레벨의 요약과 피드백으로 구성된다.
+
+$$
+U_t^\ell
+=
+\left(
+A_{\ell-1\to\ell}(X_t^{\ell-1}),\;
+B_{\ell+1\to\ell}(X_t^{\ell+1})
+\right).
+$$
+
+경계에서는 존재하지 않는 항을 0으로 둔다. 각 항은 다음 Lipschitz 조건을 만족한다고 가정한다.
+
+$$
+\|T_\ell(x,u)-T_\ell(x',u')\|_\ell
+\le
+\rho_\ell\|x-x'\|_\ell
++
+\beta_\ell\|u-u'\|_{U_\ell},
+$$
+
+$$
+\|A_{\ell\to\ell+1}(x)-A_{\ell\to\ell+1}(x')\|_{U_{\ell+1}}
+\le
+a_\ell\|x-x'\|_\ell,
+$$
+
+$$
+\|B_{\ell\to\ell-1}(x)-B_{\ell\to\ell-1}(x')\|_{U_{\ell-1}}
+\le
+b_\ell\|x-x'\|_\ell.
+$$
+
+이때 전체 상태
+
+$$
+X_t=(X_t^0,\dots,X_t^L)
+$$
+
+의 차이 벡터를
+
+$$
+d_t=
+\begin{bmatrix}
+\|X_t^0-X_t^{0\prime}\|_0\\
+\vdots\\
+\|X_t^L-X_t^{L\prime}\|_L
+\end{bmatrix}
+$$
+
+로 두면,
+
+$$
+d_{t+1}\le Gd_t
+$$
+
+를 만족하는 비음수 gain matrix \(G\)가 존재한다. 삼대각 근사에서
+
+$$
+G_{\ell,\ell}=\rho_\ell,\qquad
+G_{\ell,\ell-1}=\beta_\ell a_{\ell-1},\qquad
+G_{\ell,\ell+1}=\beta_\ell b_{\ell+1}.
+$$
+
+**정리.** 만약
+
+$$
+\boxed{
+\rho(G)<1
+}
+$$
+
+이면 계층 전체 사상
+
+$$
+\mathcal T:\prod_{\ell=0}^L\mathcal X_\ell\to\prod_{\ell=0}^L\mathcal X_\ell
+$$
+
+은 어떤 가중 sup norm에서 수축이다. 따라서 외생 입력이 고정된 경우 유일한 고정점 \(X^\star\)가 존재하고,
+
+$$
+\|X_t-X^\star\|_w
+\le
+c\,\rho(G)^t\|X_0-X^\star\|_w
+$$
+
+로 수렴한다.
+
+**증명.** 위 Lipschitz 부등식들을 레벨별로 모으면 각 성분에 대해 \(d_{t+1,\ell}\le (Gd_t)_\ell\)가 된다. \(G\ge0\)이고 \(\rho(G)<1\)이면 Perron-Frobenius/Collatz-Wielandt에 의해 양의 가중치 \(w>0\)와 어떤 \(\alpha<1\)가 존재하여
+
+$$
+Gw\le \alpha w
+$$
+
+가 된다. 가중 sup norm을
+
+$$
+\|X-X'\|_w
+=
+\max_\ell
+\frac{\|X^\ell-X^{\ell\prime}\|_\ell}{w_\ell}
+$$
+
+로 정의하면
+
+$$
+\|\mathcal T(X)-\mathcal T(X')\|_w
+\le
+\alpha\|X-X'\|_w.
+$$
+
+따라서 Banach 고정점 정리에 의해 고정점 존재성과 유일성, 지수 수렴이 따른다. \(\square\)
+
+#### F.-1.6 프랙탈/자기유사 재귀의 조건
+
+모든 레벨이 같은 구조 계수를 공유하는 자기유사 경우를 생각한다.
+
+$$
+\rho_\ell=\rho_0,\qquad
+\beta_\ell a_{\ell-1}=g_\uparrow,\qquad
+\beta_\ell b_{\ell+1}=g_\downarrow.
+$$
+
+무한 깊이 또는 충분히 깊은 체인에서는 gain matrix의 상한 spectral radius가
+
+$$
+\rho(G)
+\le
+\rho_0+2\sqrt{g_\uparrow g_\downarrow}
+$$
+
+이다. 따라서 자기유사 재귀가 깊이를 늘려도 안정하려면
+
+$$
+\boxed{
+\rho_0+2\sqrt{g_\uparrow g_\downarrow}<1
+}
+$$
+
+가 충분조건이다.
+
+이 식이 의미하는 것은 명확하다. 하위 재귀의 자체 수축률 \(\rho_0\)가 작아도, 상향 요약 \(g_\uparrow\)과 하향 피드백 \(g_\downarrow\)의 곱이 크면 전체는 폭주한다. 반대로 상향/하향 결합의 기하평균을 작게 유지하면 같은 형태의 재귀를 여러 층 쌓아도 하나의 큰 수축 사상으로 남는다.
+
+CE 관점에서 이것이 "프랙탈"로 읽히려면 단순히 비슷한 모듈을 반복 배치하는 것으로는 부족하다. 각 레벨이 다음 다섯 항을 가져야 한다.
+
+$$
+\boxed{
+(\text{state},\; \text{relaxation},\; \text{critic},\; \text{memory},\; \text{residual})
+}
+$$
+
+그리고 레벨 사이 전달은 \(G\)의 small-gain 조건을 만족해야 한다. 이때 하위 모듈의 닫힌 루프들이 상위 루프의 상태변수가 되고, 상위 루프의 critic/goal이 하위 루프의 boundary condition으로 내려가는 계층적 자기참조재귀가 된다.
+
+---
+
 ### F.0 Layer A--E와의 관계
 
 | 계층 | 역할 | F절에서의 위치 |
@@ -699,7 +1010,7 @@ F.11.5를 갱신하여, F.14--F.21에서도 남는 간극을 정리한다.
 | 4종 조절계 구현 | 단일 $g[t]$만 존재 | 높 | F.19의 4차원 벡터 구현 |
 | 장소/격자 세포 | 공간 표상 없음 | 저 (도메인 특화) | spatial module 추가 |
 | 거울 뉴런 | 타인 행동 모방/이해 없음 | 저 (장기) | 관찰 학습 모듈 |
-| STDP 코드 미구현 | 수식만 존재, 코드 없음 | 높 | clarus/core 또는 Python 구현 |
+| STDP 코드 미구현 | 수식만 존재, 코드 없음 | 높 | reality_stone/python/reality_stone/clarus/core 또는 Python 구현 |
 
 ---
 
@@ -847,7 +1158,7 @@ F.11.5를 갱신하여, F.14--F.21에서도 남는 간극을 정리한다.
 2. 각 조절계의 독립적 조작(DA agonist, NE clonidine, 5HT SSRI, ACh donepezil)에 의한 개별 효과가 CE 예측과 일치
 
 경로:
-- 코드 구현이 선행 조건. F.19의 수식을 clarus/core에 구현.
+- 코드 구현이 선행 조건. F.19의 수식을 reality_stone/python/reality_stone/clarus/core에 구현.
 - 구현 후 약리학적 조작 시뮬레이션으로 각 축의 독립 효과 확인.
 - 4축 독립성 + 개별 효과 일치가 확인되면 `supported`.
 

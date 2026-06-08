@@ -3,8 +3,8 @@
 import math
 import torch
 import pytest
-from clarus.runtime import BrainRuntime, BrainRuntimeConfig, RuntimeMode
-from clarus.constants import CIRCADIAN_PERIOD, NREM_LENGTH_DECAY
+from reality_stone.clarus.runtime import BrainRuntime, BrainRuntimeConfig, RuntimeMode
+from reality_stone.clarus.constants import CIRCADIAN_PERIOD, NREM_LENGTH_DECAY
 
 
 def make_runtime(dim=32):

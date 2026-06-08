@@ -1,11 +1,16 @@
 # Python
 __pycache__/
 *.pyc
+*.pyo
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+*.egg-info/
 
 # Rust
 target/
-/clarus/core/target/
+/reality_stone/python/reality_stone/clarus/core/target/
 
 # Environment
 /.venv/
@@ -15,23 +20,33 @@ target/
 
 # Data
 /data/
-examples/biology/data/
-examples/physics/h0_readout/h0_real_data/
 
 # Outputs and models
 *.json
-!examples/physics/h0_readout/h0_fisher_io_examples/
-!examples/physics/h0_readout/h0_fisher_io_examples/*.json
 *.pt
 *.pth
 *.csv
 *.png
 *.log
-/clarus/core/*.csv
+/reality_stone/artifacts/
+/reality_stone/python/reality_stone/clarus/core/*.csv
 
 # Build artifacts
+build/
+dist/
+*.whl
 *.so
 *.pyd
 *.dll
 *.dylib
+*.exp
+*.lib
+*.pdb
 *.ptx
+
+# Coverage/profiling
+.coverage
+.coverage.*
+htmlcov/
+*.profraw
+*.profdata

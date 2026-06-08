@@ -1,5 +1,9 @@
 # CE 문서 인덱스
 
+> Runtime integration note (2026-05-09): executable examples were consolidated into `reality_stone/examples/unified_clarus_demo.py`.
+> Clarus runtime code now lives under `reality_stone/python/reality_stone/clarus`; the old top-level `clarus/` package was removed.
+> Historical notes may still mention removed `examples/...` and `scripts/...` artifacts; the only executable example kept in this checkout is `reality_stone/examples/unified_clarus_demo.py`.
+
 ## 문서 사용 규칙
 
 - **입력(캘리브레이션)**: 관측값을 사용해 CE 내부 파라미터를 고정하는 단계
@@ -119,7 +123,7 @@ CE 문서는 네 층으로 읽는 것이 가장 안전하다.
 - `P_{\text{survive}} \leftrightarrow \Omega_b`는 유클리드 등분배 정리 + 부트스트랩 자기일관성 + Cauchy 유일성으로 정당화되었으며, `Selection` 근접 `Bridge`로 격상되었다. 잔여 불확도: 상호작용 보정 $O(\alpha_s/(2\pi)) \sim 2\%$.
 - `\alpha_s^{1/d}` 및 `\sin^2\theta_W = 4\alpha_s^{4/3}` 체인은 수치적으로 강하며, 독립 실험 검증 경로(FCC-ee, 격자 QCD, EIC)가 `상수.md`에 정리되었다. 코어 기준으로는 `Bridge`.
 - `N_c = d`는 구조적 유비를 넘어 동역학적 동일성으로 닫히지 않았다.
-- 뇌 문서는 (C1)-(C3) 조건부 정리에 의해 `Phenomenology`에서 `Bridge`로 격상되었다(`6_뇌/05_실험근거.md`). AGI/게임 밸런스는 여전히 응용 가설층.
+- 뇌 문서의 항목은 `6_뇌/05_실험근거.md`의 실험 게이트에서 `supported`로 판정될 때만 `Phenomenology`에서 `Bridge`로 격상된다(등급 기준: `6_뇌/05_실험근거/01_판정기준과핵심주장.md` 1절의 supported/bridge/testable). 격상 근거는 실험 게이트이지 닫힘 가정 자체가 아니다. 부트스트랩 닫힘 가정 (C1)-(C3)은 `1_강의/A_연역적_유도.md` 2.5절에, 의식의 (C1)-(C3) 자기일관 조건은 `7_AGI/7_Consciousness.md` 1절에 별도로 정의된다(서로 다른 (C1)-(C3) 집합이며 `05_실험근거`에는 정의되지 않는다). AGI/게임 밸런스는 여전히 응용 가설층.
 - 공학/블랙홀 문서의 수치는 최신 정본과 양립하도록 정리되었지만, 대부분 설계 벤치마크 또는 유효 모델 수준이다.
 - $\mathcal{K}$의 구체적 동역학(경로적분 헤시안 구성)과 $\chi$의 장 방정식(유클리드 열핵 흐름)이 `axium.md`에서 닫혔다.
 
@@ -129,6 +133,7 @@ CE 문서는 네 층으로 읽는 것이 가장 안전하다.
 
 | 질문 | 먼저 볼 문서 | 이어서 볼 문서 |
 |------|------|------|
+| 문서군 전체 완성도와 다음 정리 순서는 무엇인가 | [문서_전체_완성도_감사.md](문서_전체_완성도_감사.md) | [참조/정합성_검증.md](참조/정합성_검증.md) |
 | CE의 최소 공리가 무엇인가 | [axium.md](axium.md) | [경로적분.md](경로적분.md) 3절 |
 | 오일러 항등식이 어떤 역할을 하는가 | [axium.md](axium.md) | [경로적분.md](경로적분.md) 15.14절 |
 | 바리온/DM/DE가 어떻게 유도되는가 | [경로적분.md](경로적분.md) 3절 | [상수.md](상수.md) 3층 |
@@ -136,7 +141,8 @@ CE 문서는 네 층으로 읽는 것이 가장 안전하다.
 | 45개 상수가 어디서 나오는가 | [상수.md](상수.md) | `3_상수/` 하위 문서 |
 | 어떤 부분이 정리이고 어떤 부분이 가정인가 | [axium.md](axium.md) | [경로적분.md](경로적분.md) 19절 |
 | 차원 있는 물리량은 어떻게 읽어야 하는가 | [경로적분.md](경로적분.md) | [상수.md](상수.md) 7-8층 |
-| 계산 게이트에서 무차원성을 어떻게 검사하는가 | [참조/무차원_감사_수학.md](참조/무차원_감사_수학.md) | `clarus/dimensionless.py` |
+| 계산 게이트에서 무차원성을 어떻게 검사하는가 | [참조/무차원_감사_수학.md](참조/무차원_감사_수학.md) | `reality_stone/python/reality_stone/clarus/dimensionless.py` |
+| 등호 이전의 모호함/후보 상태는 어떻게 형식화하는가 | [9_등호이전/README.md](9_등호이전/README.md) | [9_등호이전/01_공리와증명.md](9_등호이전/01_공리와증명.md) |
 | 우주론 밖 응용은 어디까지 연결되었는가 | `2_경로적분과_응용/`, `4_공학적_활용/` | `5_유도/`, `6_뇌/` |
 
 ## 폴더 구조
@@ -149,4 +155,8 @@ CE 문서는 네 층으로 읽는 것이 가장 안전하다.
 | 4 | [4_공학적_활용/](4_공학적_활용/) | 핵융합 설계, 양자오류보정, 진공에너지, 초전도체. 정본 호환 응용 벤치마크 문서 |
 | 5 | [5_유도/](5_유도/) | Navier-Stokes, Riemann Zeta, 단백질 접힘, 암흑에너지, 블랙홀, 마스터 작용 유도. 유효 모델/투영 문서 포함 |
 | 6 | [6_뇌/](6_뇌/) | Laplace-Beltrami 기반 뇌 모델링, 수면/가소성, 생명에서 지능까지의 진화 trace, 3x3+1 구조 유비 AGI. 구조 유비와 현상론 중심 |
+| 7 | [7_AGI/](7_AGI/) | CE-AGI 총론, 아키텍처, 수면/시냅스/희소성, hallucination, runtime equation, verification, code map, OOD 일반화 |
+| 8 | [8_리만/](8_리만/) | Mellin-Riemann Attention, Riemann positional encoding, MRA 논문/블록 사양 |
+| 9 | [9_등호이전/](9_등호이전/) | 등호 이전의 모호함 동역학, 후보분포, manifest 극한, `PreEq_fin` 범주, CE pre-selection layer |
 | - | [참조/](참조/) | 형식적 수학 증명, epsilon 제1원리 유도, SCQE, Reality Stone, 정합성 검증 |
+| - | [문서_전체_완성도_감사.md](문서_전체_완성도_감사.md) | docs 전체 완성도 점검, 폴더별 점수, 우선 보강 순서 |

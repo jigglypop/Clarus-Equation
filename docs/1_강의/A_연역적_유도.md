@@ -1456,11 +1456,11 @@ $$a^{(1)}_{\text{QED}} = \frac{\alpha}{2\pi} = \frac{1}{137.036 \times 2\pi} = 0
 
 $$\Delta a_\mu = a_\mu^{\text{Exp}} - a_\mu^{\text{SM}} = 249 \pm 48 \times 10^{-11} \quad (5.0\sigma,\;\text{WP20 기준})$$
 
-5$\sigma$는 통계적으로 "거의 확실한" 불일치를 의미한다. 이것은 표준모형 너머의 새로운 물리(Beyond the Standard Model, BSM)의 증거로 여겨진다.
+5$\sigma$는 통계적으로 "거의 확실한" 불일치를 의미했고, 한때 표준모형 너머의 새로운 물리(Beyond the Standard Model, BSM)의 증거로 여겨졌다. 수백 개의 BSM 모델이 이를 설명하려 시도하며, 각 모델은 2-5개의 자유 파라미터(새 입자의 질량, 결합 상수 등)를 도입했다.
 
-수백 개의 BSM 모델이 이를 설명하려 시도하며, 각 모델은 2-5개의 자유 파라미터(새 입자의 질량, 결합 상수 등)를 도입한다.
-
-**CE는 추가 적합 파라미터를 두지 않는 브리지 체인 위에서 이 값을 계산한다.** 다만 최신 정본 기준에서 이 단계는 완전한 `Exact` 정리가 아니라, 선택 규칙과 표준모형 스케일 연결을 포함한 `Bridge` 층으로 읽는다.
+> **현재 판정 (정본: `경로적분.md` 9.0·11.7.2a절).** 위 WP20 변칙은 더 이상 살아있지 않다. WP2025(격자 HVP)+Fermilab 최종은 $\Delta a_\mu = 38(63)\times10^{-11}$(제로와 $\sim0.6\sigma$ 정합), BMW/DMZ 2026(0.45% 격자)은 SM=실험을 확인했다. CE의 **살아있는 예측은 "BSM 기여 = 0"이다**: d=0 기원에서 클라루스장은 $Z_2$ 보존·$v_\Phi=0$으로 전파하는 새 보손이 아니라 경로적분의 수렴 구조($\Phi=\delta^2 S/\delta\gamma^2$)이므로, 격자 QCD가 그 효과를 이미 포함한다. 따라서 별도 BSM 루프 기여를 더하면 이중 계산이다.
+>
+> 아래 4.2–4.6의 $M_{\text{CE}}=v_{\text{EW}}\delta$ 스케일과 접촉 근사값 $249\times10^{-11}$은 **접힘을 보손 교환으로 모형화한 역사적 비교값**이며, 확정 예측이 아니다. 옛 WP20 중앙값과의 "$0.00\sigma$"는 그 보손 근사 모형 안에서의 값일 뿐이다. 이하 절은 그 브리지 모형의 구조를 설명하는 교육용 전개로 읽는다.
 
 ### 4.2 에너지 스케일: 왜 $M_{\text{CE}} = v_{\text{EW}} \cdot \delta$인가
 
@@ -1629,7 +1629,9 @@ $$\Delta a_\mu^{\text{CE, contact}} = 249.0 \times 10^{-11}$$
 
 전자 예측: $\Delta a_e = 249.0 \times 10^{-11} \times (0.511/105.658)^2 = 5.82 \times 10^{-14}$. 현재 실험 감도 미만이지만 차세대 실험에서 검증 가능.
 
-### 4.5 역검증: g-2에서 와인버그 각 복원
+### 4.5 역검증: g-2에서 와인버그 각 복원 (조건부·역사적)
+
+> **주의 (정본 예측 8).** 이 역추출은 유의한 g-2 변칙이 존재할 때만 정의된다. WP2025에서 $\Delta a_\mu=38(63)\times10^{-11}$(제로와 정합)이므로 현재는 적용 불가이며, 아래는 보손 근사 모형 안에서의 교차검증으로만 유지한다. BSM=0 기준 예측은 4.1절을 본다.
 
 공식을 거꾸로 풀어, 실험값으로부터 $\delta$를 추출한다:
 
@@ -1746,7 +1748,8 @@ bare 비율식은 관측과 가까운 값을 주지만, 최신 정본에서는 $
 | 예측 | 공식 | 값 | 관측 일치도 |
 |------|------|-----|:---:|
 | $M_{\text{CE}}$ | $v_{\text{EW}} \cdot \delta$ | 43.77 GeV | -- |
-| $\Delta a_\mu$ | $\frac{\alpha}{2\pi} e^{-1} (m_\mu/M_{\text{CE}})^2$ | $249 \times 10^{-11}$ | $0.00\sigma$ |
+| $\Delta a_\mu$ (정본) | d=0 기원: 격자가 접힘을 포함 | BSM 기여 = 0 | BMW 2026 SM=exp |
+| $\Delta a_\mu$ (보손 근사·역사값) | $\frac{\alpha}{2\pi} e^{-1} (m_\mu/M_{\text{CE}})^2$ | $249 \times 10^{-11}$ | WP20 $0.00\sigma$ (역사적 비교) |
 | $\Delta a_e$ | 같은 공식, $m_e$ 대입 | $5.82 \times 10^{-14}$ | 검증 대기 |
 | $m_\phi$ | $m_p \cdot \delta^2$ | 29.65 MeV | 범위 내 |
 | $\Delta r_p^2$ | 광명 보손 교환 | 0.0597 fm$^2$ | $0.3\sigma$ |
@@ -2437,7 +2440,9 @@ $$\Omega_\Lambda = 0.6891, \quad \Omega_{DM} = 0.2623$$
 
 $$\downarrow \;\delta \to M_{\text{CE}} = v_{\text{EW}} \delta = 43.77\;\text{GeV}$$
 
-$$\Delta a_\mu = \frac{\alpha}{2\pi} e^{-1} \left(\frac{m_\mu}{M_{\text{CE}}}\right)^2 = 249 \times 10^{-11} \quad (0.00\sigma)$$
+$$\Delta a_\mu^{\text{BSM, CE}} = 0 \quad (\text{d=0 기원; 격자가 접힘 포함, BMW 2026 SM=exp})$$
+
+$$\Delta a_\mu^{\text{보손 근사·역사값}} = \frac{\alpha}{2\pi} e^{-1} \left(\frac{m_\mu}{M_{\text{CE}}}\right)^2 = 249 \times 10^{-11} \quad (\text{WP20과 } 0.00\sigma, \text{ 역사적 비교})$$
 
 $$\downarrow \; m_\phi = m_p \delta^2$$
 
@@ -2493,7 +2498,8 @@ $$\text{보른 규칙 유도}, \quad \text{ARC 94.6\% 노이즈 감소}$$
 | 1 | $\Omega_b$ | 0.04865 | `Bridge` |
 | 2 | $\Omega_\Lambda$ | 0.6891 | `Phenomenology` |
 | 3 | $\Omega_{DM}$ | 0.2623 | `Phenomenology` |
-| 4 | $\Delta a_\mu$ | $249 \times 10^{-11}$ | `Bridge` |
+| 4 | $\Delta a_\mu$ (정본) | BSM 기여 = 0 (d=0 기원, 격자 포함) | `Bridge` |
+| 4b | $\Delta a_\mu$ (보손 근사·역사값) | $249 \times 10^{-11}$ | 역사적 비교값 |
 | 5 | $\Delta r_p^2$ | 0.0597 fm$^2$ | `Bridge` |
 | 6 | $\sin^2\theta_W$ | 0.2312 | `Bridge` |
 | 7 | 게이지 군 | $\text{SU}(3)\times\text{SU}(2)\times\text{U}(1)$ | `Selection + Bridge` |

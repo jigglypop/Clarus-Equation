@@ -59,6 +59,8 @@ $$W_{ij}(g) = \exp\!\left(-\frac{d_g(i,j)^2}{\sigma^2}\right)$$
 
 ### 2.1 Layer A: 순수 셀 동역학
 
+> **canonical과의 관계 (중요).** `12_Equation.md` §0의 canonical 최소형 상태는 $(a_i, r_i, b_i)$ 3성분이며 지위 채점의 기준이다. 본 절의 $m_i$(기억 흔적), $w_i$(적응)와 STP $W_{ij}^{\text{eff}}=W_{ij}u_j x_j$는 **구현 관점의 확장**(모두 `Bridge` 등급)이다. $m_i=w_i=0$, $u_j x_j\to 1$ 극한에서 아래 drive는 canonical 식 $I_i^t = u_i^t + \sum_j W_{ij}a_j^t - \lambda_r r_i^t + \lambda_H R_{i,t}$로 정확히 환원된다($\lambda_m m_i$ 항이 canonical의 리만 결합 항 $\lambda_H R_{i,t}$를 구현 수준에서 대체·확장). 따라서 본 스펙은 canonical을 위반하지 않고 그 위의 구현 정본이며, 두 문서의 단일 진실원천은 "canonical = 채점/지위, 본 스펙 = 환원 가능한 구현"으로 읽는다.
+
 셀 $i$의 최소 상태 (15_Equations.md A.1):
 
 $$s_i^t = (a_i^t,\; r_i^t,\; m_i^t,\; w_i^t,\; b_i^t)$$
@@ -577,7 +579,7 @@ $$
 | 3위상 통합 순환 | `run_sleep_cycle` | 구현 완료 |
 | 가드셋 보호 | `evaluate_guard_set` | 구현 완료 |
 
-### 14.4 Rust 커널 (`clarus/core/`) -- 핵심 수치
+### 14.4 Rust 커널 (`reality_stone/python/reality_stone/clarus/core/`) -- 핵심 수치
 
 | Rust 모듈 | 역할 | Python 바인딩 |
 |---|---|---|

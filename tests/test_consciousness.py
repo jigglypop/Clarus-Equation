@@ -1,8 +1,8 @@
 """Consciousness / metacognition tests (F.17)."""
 
 import pytest
-from clarus.agent import ConsciousnessMonitor
-from clarus.constants import BOOTSTRAP_CONTRACTION, ACTIVE_RATIO
+from reality_stone.clarus.agent import ConsciousnessMonitor
+from reality_stone.clarus.constants import BOOTSTRAP_CONTRACTION, ACTIVE_RATIO
 
 
 class TestConsciousnessDepth:
@@ -55,7 +55,7 @@ class TestMetacognition:
 class TestC3SelfConsistency:
     def test_fixed_point_equation(self):
         import math
-        from clarus.constants import AD
+        from reality_stone.clarus.constants import AD
         d_eff = 3.0 + AD * (1 - AD)
         eps2 = math.exp(-(1 - ACTIVE_RATIO) * d_eff)
         assert eps2 == pytest.approx(ACTIVE_RATIO, abs=0.02)

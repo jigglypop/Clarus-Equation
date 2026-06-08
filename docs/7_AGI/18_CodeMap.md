@@ -314,8 +314,8 @@ phase_budget = allocate_phase_sample_counts(total_cycle_samples, phase_profile)
 ```
 ce_ops.ce_backend(device, requested) -> "cuda" | "rust" | "torch"
     |
-    +-- "cuda":  clarus.kernels (CUDA custom ops)    -- 미포함 (선택적)
-    +-- "rust":  clarus._rust   (PyO3 바인딩)         -- clarus/core/
+    +-- "cuda":  reality_stone.clarus.kernels (CUDA custom ops)    -- 미포함 (선택적)
+    +-- "rust":  reality_stone.clarus._rust   (PyO3 바인딩)         -- reality_stone/python/reality_stone/clarus/core/
     +-- "torch": pure PyTorch fallback               -- ce_ops 내부
 ```
 
@@ -333,27 +333,111 @@ ce_ops.ce_backend(device, requested) -> "cuda" | "rust" | "torch"
 
 ---
 
-## 10. 파일 책임 분리
+## 10. 자기참조재귀 구현 대응
 
-| 파일 | 책임 | Layer |
+AI 응용에서 핵심은 단일 모듈 성능이 아니라 \(S_t \to R(S_t) \to C_t \to S_{t+1}\) 루프가 닫히는지다. 현재 코드 대응은 다음처럼 읽는다.
+
+| 재귀 항 | 의미 | 현재 코드 위치 | 구현 판정 |
+|---|---|---|---|
+| \(S_t\) | 전역 상태: mode, activation, memory, pressure, lifecycle | `runtime.py::BrainRuntime`, `BrainRuntimeSnapshot` | 부분 구현 |
+| \(R(S_t)\) | 내부 이완/수렴: 셀 동역학 반복, sparse activation | `runtime.py::step`, `engine.py::CEEngine`, `ce_ops.py::relax` | 구현됨 |
+| \(C_t\) | 자기비평: 예측오차, 일관성, 놀라움, 곡률 점수 | `agent.py`, `stdp.py`, `ce_laplacian.py` 후보 | 부분/분산 구현 |
+| \(\mathcal M\) | 기억 갱신과 replay | `runtime.py::HippocampusMemory`, `sleep.py` | 구현됨 |
+| \(\phi_t\) | 잔류장/불확실성/탈락 경로 보존 | `engine.py`, `sleep.py` | 부분 구현 |
+| \(\mathcal U\) | 다음 전역 상태 구성 | `runtime.py::step`, `snapshot()/from_snapshot()` | 구현됨 |
+
+따라서 현재 구현의 강점은 `runtime.py`의 상태-기억-모드 루프이고, 약점은 \(C_t\)가 하나의 표준 self-critic API로 아직 고정되지 않았다는 점이다. LLM 응용을 강화하려면 새 attention 변형을 늘리기보다, `agent.py`/`runtime.py`/`sleep.py` 사이에 self-critic score와 잔류장 업데이트를 표준 계약으로 묶는 것이 우선이다.
+
+### 10.1 수학량과 로그 항목
+
+닫힌 루프 실험에서는 아래 양을 같은 run에서 기록해야 한다.
+
+| 수학량 | 코드에서 읽을 후보 | 필수성 |
 |---|---|---|
-| `clarus/runtime.py` | 셀 동역학, 모드 전환, 해마, 생애주기, 스냅샷 | A, B, C, D, E |
-| `clarus/engine.py` | CE 에너지 이완, 디코딩, 상태 분할, 곡률 억제 | F (이완), 6장 |
-| `clarus/ce_ops.py` | 수치 백엔드 분기, 에너지/이완/메트릭/PQ | F (수치 핵심) |
-| `clarus/sleep.py` | Wake/NREM/REM 학습 순환, 가드셋, 디코더 리피팅 | F (학습) |
-| `clarus/device.py` | 디바이스 자동 감지 | 인프라 |
-| `clarus/core/src/engine/kernel.rs` | brain_step 핵심 루프, Dale's Law | A |
-| `clarus/core/src/engine/field.rs` | 필드 결합, 리만 거리 | B |
-| `clarus/core/src/engine/manifold.rs` | 다양체 연산 | B |
-| `clarus/core/src/engine/nn_ops.rs` | NN 연산 (topk, LBO, gauge) | 2장 |
-| `clarus/core/src/engine/ce_riemann.rs` | CE 리만 수치 | 물리 |
-| `clarus/core/src/engine/constants.rs` | 물리 상수 유도 | 3_상수 |
-| `clarus/core/src/engine/config.rs` | 런타임 설정 | 인프라 |
-| `clarus/core/src/engine/runtime_types.rs` | CellState, Mode 등 타입 | A, C |
+| \(\|S_{t+1}-S_t\|\) | `RuntimeStep`, snapshot tensor 차이 | 수축률 \(\hat\rho_t\) 계산 |
+| \(\bar c_t\) | agent critic score, STDP learning gate, curvature score | 자기비평 강도 |
+| \(I_c\) | critic on/off ablation의 `activation` 또는 logits 차이 | critique가 제어량인지 검증 |
+| \(I_m\) | hippocampus recall on/off ablation | memory 재주입 영향 |
+| \(\|\phi_t\|\) | `engine.py` / `sleep.py` 잔류장 후보 | 잔류장 유계성 |
+| \(M_t\) | `RuntimeMode` | WAKE/NREM/REM 별 \(\rho\) 분리 |
+| active ratio | `active_modules / dim` | \(\varepsilon^2\) 근처 수렴 여부 |
+
+최소 closed-loop 판정:
+
+$$
+I_c>0,\qquad I_m>0,\qquad
+\operatorname{median}_t \hat\rho_t < 1.
+$$
+
+더 강한 판정은 open-loop baseline 대비 task score가 좋아지는 동시에 잔류 반경이 커지지 않는 것이다.
+
+$$
+G_{\rm rec}>0,
+\qquad
+\Delta r_\phi \le 0.
+$$
+
+### 10.2 계층 gain 로그
+
+`17_AgentLoop.md` F.-1.5의 계층 정리를 코드 실험으로 옮기려면 각 모듈 또는 agent마다 아래 값을 로그로 남긴다.
+
+| 수학량 | 코드 추정 방법 | 판정 |
+|---|---|---|
+| \(\rho_\ell\) | 같은 입력에서 연속 state delta 비율 `state_delta_next / state_delta` | 모듈 자체 수축률 |
+| \(g_\uparrow\) | 하위 모듈 state perturbation이 상위 summary를 바꾸는 norm ratio | aggregation gain |
+| \(g_\downarrow\) | 상위 goal/critic perturbation이 하위 activation을 바꾸는 norm ratio | feedback gain |
+| \(\rho(G)\) | 추정 gain matrix의 spectral radius | 전체 계층 안정성 |
+
+최소 2층 실험에서는 solver agent와 critic agent만 둔다.
+
+$$
+G=
+\begin{bmatrix}
+\rho_{\rm solver} & g_{\rm down}\\
+g_{\rm up} & \rho_{\rm critic}
+\end{bmatrix}.
+$$
+
+안정 조건은
+
+$$
+\rho(G)<1,
+$$
+
+또는 보수적으로
+
+$$
+\max(\rho_{\rm solver},\rho_{\rm critic})
++
+\sqrt{g_{\rm up}g_{\rm down}}
+<1
+$$
+
+로 로그 판정할 수 있다. 이 값이 1에 가까워지면 상위 critic이 하위 solver를 교정하는 것이 아니라 흔들어 불안정하게 만드는 regime으로 본다.
 
 ---
 
-## 11. 미구현 대조
+## 11. 파일 책임 분리
+
+| 파일 | 책임 | Layer |
+|---|---|---|
+| `reality_stone/python/reality_stone/clarus/runtime.py` | 셀 동역학, 모드 전환, 해마, 생애주기, 스냅샷 | A, B, C, D, E |
+| `reality_stone/python/reality_stone/clarus/engine.py` | CE 에너지 이완, 디코딩, 상태 분할, 곡률 억제 | F (이완), 6장 |
+| `reality_stone/python/reality_stone/clarus/ce_ops.py` | 수치 백엔드 분기, 에너지/이완/메트릭/PQ | F (수치 핵심) |
+| `reality_stone/python/reality_stone/clarus/sleep.py` | Wake/NREM/REM 학습 순환, 가드셋, 디코더 리피팅 | F (학습) |
+| `reality_stone/python/reality_stone/clarus/device.py` | 디바이스 자동 감지 | 인프라 |
+| `reality_stone/python/reality_stone/clarus/core/src/engine/kernel.rs` | brain_step 핵심 루프, Dale's Law | A |
+| `reality_stone/python/reality_stone/clarus/core/src/engine/field.rs` | 필드 결합, 리만 거리 | B |
+| `reality_stone/python/reality_stone/clarus/core/src/engine/manifold.rs` | 다양체 연산 | B |
+| `reality_stone/python/reality_stone/clarus/core/src/engine/nn_ops.rs` | NN 연산 (topk, LBO, gauge) | 2장 |
+| `reality_stone/python/reality_stone/clarus/core/src/engine/ce_riemann.rs` | CE 리만 수치 | 물리 |
+| `reality_stone/python/reality_stone/clarus/core/src/engine/constants.rs` | 물리 상수 유도 | 3_상수 |
+| `reality_stone/python/reality_stone/clarus/core/src/engine/config.rs` | 런타임 설정 | 인프라 |
+| `reality_stone/python/reality_stone/clarus/core/src/engine/runtime_types.rs` | CellState, Mode 등 타입 | A, C |
+
+---
+
+## 12. 미구현 대조
 
 | 수식/개념 | 문서 위치 | 코드 상태 |
 |---|---|---|

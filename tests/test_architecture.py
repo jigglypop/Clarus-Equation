@@ -2,7 +2,7 @@
 
 import torch
 import pytest
-from clarus.constants import CFC_XI, GAUGE_ALPHA_S, GAUGE_ALPHA_W, GAUGE_ALPHA_EM
+from reality_stone.clarus.constants import CFC_XI, GAUGE_ALPHA_S, GAUGE_ALPHA_W, GAUGE_ALPHA_EM
 
 
 class TestGaugeLattice:

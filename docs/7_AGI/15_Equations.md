@@ -463,7 +463,7 @@ $$\boxed{X_{t+1} = B\big[X_t + \lambda_R R(X_t) + \lambda_O \Delta_O(X_t) + \lam
 | $G_{\text{formal}}$ | A-bound, R-bound, W-bound, E-decrease, Zero-attract, Local-contract, EI-balance, STP-bound, Homeo-stable, Borbely-cycle, Hip-capacity, Consolidate | **pass** |
 | $G_{\text{obs}}$ | EEG/fMRI에서 $a_i^t$ proxy 추출 → H.3 관측 방정식 | **pass** (방정식 완비) |
 | $G_{\text{causal}}$ | 약물/수면박탈/자극 실험에서 모드 전환 방향 일치 | partial |
-| $G_{\text{pred}}$ | 모델 시뮬레이션 vs 뇌 실험값 비교 (`sim_brain_validation.py`) | **pass** (7/7 항목 통과, 아래 H.4) |
+| $G_{\text{pred}}$ | 모델 시뮬레이션 vs 뇌 실험값 비교 (legacy `sim_brain_validation.py`, removed) | **pass** (7/7 항목 통과, 아래 H.4) |
 
 ### H.3 관측 방정식 (Observation Equations)
 
@@ -568,7 +568,7 @@ $$\text{ALFF}_i^{\text{DMN}} = \sqrt{\frac{1}{T}\sum_{f=0.01}^{0.1} |\hat{\phi}_
 
 ### H.4 시뮬레이션 검증 결과 ($G_{\text{pred}}$)
 
-`scripts/sim_brain_validation.py` -- dim=256, 6000 steps (WAKE 3000 / NREM 2000 / REM 1000).
+legacy `scripts/sim_brain_validation.py` (removed) -- dim=256, 6000 steps (WAKE 3000 / NREM 2000 / REM 1000).
 
 | 검증 항목 | 측정값 | 뇌 실험 목표 | 결과 |
 |---|---|---|---|
@@ -1045,7 +1045,7 @@ $$0.8 \cdot \bar{w}_{\text{exc}} \approx 0.2 \cdot \bar{w}_{\text{inh}} \quad\Lo
 
 ### J.12 코드(`kernel.rs`) 파라미터와 실험 대응
 
-> `clarus/core/src/engine/kernel.rs`의 `ModeParams`, `StepConfig` 값과 J.11 실험 구간의 정합성을 점검.
+> `reality_stone/python/reality_stone/clarus/core/src/engine/kernel.rs`의 `ModeParams`, `StepConfig` 값과 J.11 실험 구간의 정합성을 점검.
 
 코드의 $\Delta t$는 명시되어 있지 않으므로, 코드 파라미터가 이미 이산화된 비율($\Delta t / \tau$)임을 가정한다.
 
