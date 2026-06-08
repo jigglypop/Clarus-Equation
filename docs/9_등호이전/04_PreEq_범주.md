@@ -261,3 +261,5 @@ $$
 | tropical 극한 | min-plus 합성 | 완전 manifest 경로 |
 
 이 구조는 Markov category, Kleisli category, tropical category와 친화적이다. 다만 이 폴더에서는 우선 유한 커널 범주만 `Exact`로 사용한다.
+
+표준 범주론과의 정확한 위치는 [04a_Markov_Kleisli.md](04a_Markov_Kleisli.md)에서 분리해 정리한다. Gibbs kernel 합성이 zero-temperature에서 tropical/min-plus 합성으로 내려가는 functorial 극한은 [04b_Tropical_Functor.md](04b_Tropical_Functor.md)에 둔다.

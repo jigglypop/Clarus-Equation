@@ -158,20 +158,14 @@ $$
 | 분지별 경로 가중치 \(W_k\) | 후보 prior와 조건 재가중 |
 | 접힘은 붕괴가 아님 | manifest는 농축 극한 |
 | 비고전 경로는 소멸하지 않음 | 비선택 잔류 \(\mu_{\mathrm{ns}}\) |
-| Born rule은 접힘 역학 결과 | Born prior 유도는 아직 bridge |
+| Born rule은 접힘 역학 결과 | finite branch prior 조건은 06a에서 분리, CE 경로적분 유도는 bridge |
 
 ## 7. 다음 작업
 
-Born bridge를 닫으려면 별도 문서가 필요하다.
+Born prior의 finite branch 유도 조건은 [06a_Born_prior_유도.md](06a_Born_prior_유도.md)로 분리했다.
 
-가능한 제목:
+남은 작업:
 
-`06a_Born_prior_유도.md`
-
-필요한 항목:
-
-1. 상태공간이 Hilbert space일 때 확률측도 선택 공리
-2. 위상 불변성
-3. 직교분해 가법성
-4. \(\mu(i)=|c_i|^2\) 유일성
-5. CE 경로적분 prior와의 대응
+1. 06a의 branch refinement 공리를 실제 측정장치 모델과 연결
+2. CE 경로적분의 분지 가중치 \(W_k\)에서 \(|c_k|^2\)가 내려오는 조건 정리
+3. \(E_{\mathrm{meas}}\)와 장치 상호작용/접힘 에너지의 대응 검토

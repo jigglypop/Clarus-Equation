@@ -14,7 +14,7 @@
 |---|---|---|
 | 후보분포 재가중 | `Exact` | 01장의 유한공간 정리 |
 | token/action 후보공간 적용 | `Bridge` | 모델 logits와 energy 식별 필요 |
-| 잔류장 \(\phi\) 업데이트 | `Bridge/Open` | runtime 구현 규약 필요 |
+| 잔류장 \(\phi\) 업데이트 | `Bridge/Tooling` | toy 규약은 07a에서 분리, 실제 구현은 실험 필요 |
 | hallucination gate 연결 | `Bridge` | claim residual gate와 연결 가능 |
 
 ## 1. Token 후보공간
@@ -207,10 +207,12 @@ $$
 
 ## 8. 다음 구현 후보
 
-작은 실험:
+작은 실험 규약은 [07a_toy_runtime_gate.md](07a_toy_runtime_gate.md)로 분리했다.
 
-1. Toy vocabulary에서 \(\mu_0\), \(E\), \(\mu_\beta\), \(\phi\) 계산
-2. \(\phi\) 재주입 있음/없음 next-token prediction 비교
+남은 구현 후보:
+
+1. toy vocabulary에서 \(\mu_0\), \(E\), \(\mu_\beta\), \(\phi\) 계산 코드 작성
+2. \(\phi\) 재주입 있음/없음 next-token prediction ablation
 3. claim residual gate에서 rejected claim을 \(\phi\)로 저장하고 다음 답변 안정성 비교
 
-이 장은 아직 이론 bridge다. 하지만 도구화하면 가장 빠르게 실험 가능한 응용 축이다.
+이 장은 아직 이론 bridge다. 하지만 07a 덕분에 가장 빠르게 실험 가능한 응용 축이 되었다.
