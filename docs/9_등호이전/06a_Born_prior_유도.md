@@ -197,7 +197,28 @@ $$
 | B4 refinement 실패 | 미세분지 표현에 따라 prior가 바뀜 |
 | B5 연속성 실패 | 유리 진폭에서 일반 진폭으로 확장 불가 |
 
-## 7. 결론
+## 7. 코드 검증
+
+finite branch 수준의 닫힌 부분은 `reality_stone.clarus.pre_eq`에 구현했다.
+
+| 함수 | 의미 |
+|---|---|
+| `born_prior(amplitudes)` | \(|c_i|^2\) 정규화 prior |
+| `refined_branch_prior(counts)` | 동일 진폭 미세분지 count에서 coarse prior |
+
+회귀검사:
+
+```powershell
+python -m pytest tests\test_pre_eq.py -q
+```
+
+검증되는 항목:
+
+1. 유리 branch count \((n_i/N)\)와 \(|c_i|^2\) prior가 일치한다.
+2. 전체 위상 \(e^{i\theta}\)를 곱해도 prior는 변하지 않는다.
+
+이 코드는 B0-B4의 finite branch 결과만 검산한다. Hilbert space 전체 측정장치 모델이나 Gleason류 일반 정리는 여전히 이 문서 밖의 bridge다.
+
+## 8. 결론
 
 Born rule은 PreEq가 자동으로 만드는 것이 아니다. 그러나 Born prior를 위 공리들로 닫으면, PreEq는 그 prior가 측정 조건 아래 어떻게 하나의 manifest outcome으로 농축되는지를 설명한다.
-

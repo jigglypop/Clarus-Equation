@@ -38,6 +38,12 @@ RuntimeTextAgent = None
 RuntimeTextAgentTurn = None
 TextEnvironment = None
 TextEnvironmentStep = None
+gibbs_reweight = None
+manifest_indices = None
+nonselected_residual = None
+compose_weighted_kernels = None
+tropical_compose = None
+born_prior = None
 
 try:
     from .device import auto_device  # type: ignore[no-redef]
@@ -119,6 +125,18 @@ try:
 except ImportError:
     pass
 
+try:
+    from .pre_eq import (  # type: ignore[no-redef]
+        born_prior,
+        compose_weighted_kernels,
+        gibbs_reweight,
+        manifest_indices,
+        nonselected_residual,
+        tropical_compose,
+    )
+except ImportError:
+    pass
+
 __all__ = [
     "topk_sparse",
     "topk_sparse_batch",
@@ -144,6 +162,12 @@ __all__ = [
     "RuntimeTextAgentTurn",
     "TextEnvironment",
     "TextEnvironmentStep",
+    "gibbs_reweight",
+    "manifest_indices",
+    "nonselected_residual",
+    "compose_weighted_kernels",
+    "tropical_compose",
+    "born_prior",
     "auto_device",
     "safe_print",
     "normalize_vector",
