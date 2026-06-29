@@ -169,6 +169,7 @@ python -m bench.all     # 6개 벤치 스코어보드 + CI 게이트(exit code)
 | `bench.firewall_run` | 메모리 poisoning (ASB 축) | poison 100% 차단 / 무단덮어쓰기 0 / HELD |
 | `bench.test_capability` | capability 소프트니스 (탐지 무관) | fuzz 150회 0실행 / SOUND |
 | `bench.agentdojo_suite` | AgentDojo-style (utility+ASR) 재현 | utility 100% / ASR 0% (F1·F2) |
+| `bench.test_interception` | interception 무우회 chokepoint | 직접호출 불가 / NON-VACUOUS |
 
 ### 탐지에 의존하지 않는 구조 방어 (capability layer)
 
@@ -220,5 +221,7 @@ design*, 2025)이 이 capability/dataflow 분리의 본격판.
 - [x] capability/taint 집행 레이어 (`capability.py`, `executor.py`) — 탐지 무관 구조 방어, soundness 증명 (`bench/test_capability.py`)
 - [x] executor를 PolicyCell allow-path에 정식 결선 — salience가 권한 발급(I1), policy가 refuse/approval 구분, read-only는 chokepoint 실행
 - [x] AgentDojo/InjecAgent 위협모델 재현 (`bench/agentdojo_suite.py`) — 4 env, F1/F2 공격족, utility 100% / ASR 0% (※동형 재현; 공식 repo+LLM 실측은 미수행)
+- [x] interception 배관 (`interception.py`) — `@gate.guarded`로 툴 봉인, `dispatch()`만이 호출 경로; 직접 호출/함수참조 누수 불가 (`bench/test_interception.py`)
+- [ ] `@guarded`를 실제 MCP 서버 / function-call 스키마 / 셸 래퍼에 적용 (현재는 in-proc 봉인까지 증명)
 - [ ] 학습 힌트 + 메모리 영속화(SQLite) + 운영 중 false-block 모니터링
 - [ ] 룰 셀 → small classifier 셀 교체 (recall↑/false-block↓; under-allow는 capability가 0 고정)

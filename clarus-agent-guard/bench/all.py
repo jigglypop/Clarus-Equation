@@ -30,6 +30,8 @@ BENCHES = [
      r"STRUCTURAL DEFENSE: \[(\w+)\]", "SOUND"),
     ("bench.agentdojo_suite", "AgentDojo-style (utility + ASR)",
      r"RESULT: \[(\w+)\]", "PASS"),
+    ("bench.test_interception", "interception (no-bypass chokepoint)",
+     r"CHOKEPOINT: \[([\w-]+)\]", "NON-VACUOUS"),
 ]
 
 
