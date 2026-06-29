@@ -62,8 +62,8 @@ impl SuppressionConfig {
         let omega2 = env_f64("CE_SUPPRESSON_OMEGA2", 0.0);
         let amp2 = env_f64("CE_SUPPRESSON_AMP2", 0.0);
         let anc_flag = env_i32("CE_SUPPRESSON_ANC", 0);
-        let anc_enabled = anc_flag != 0
-            && ((omega != 0.0 && amp != 0.0) || (omega2 != 0.0 && amp2 != 0.0));
+        let anc_enabled =
+            anc_flag != 0 && ((omega != 0.0 && amp != 0.0) || (omega2 != 0.0 && amp2 != 0.0));
 
         Self {
             omega,

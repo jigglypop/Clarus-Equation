@@ -163,31 +163,34 @@ impl FieldEngine {
             .expect("contiguous forces buffer");
         let cfg = self.config.clone();
 
-        forces_slice.par_iter_mut().enumerate().for_each(|(i, force)| {
-            let i = i as isize;
-            let left = Self::sample(phi_slice, i - 1, cfg.boundary);
-            let center = Self::sample(phi_slice, i, cfg.boundary);
-            let right = Self::sample(phi_slice, i + 1, cfg.boundary);
-            let laplacian = left + right - 2.0 * center;
+        forces_slice
+            .par_iter_mut()
+            .enumerate()
+            .for_each(|(i, force)| {
+                let i = i as isize;
+                let left = Self::sample(phi_slice, i - 1, cfg.boundary);
+                let center = Self::sample(phi_slice, i, cfg.boundary);
+                let right = Self::sample(phi_slice, i + 1, cfg.boundary);
+                let laplacian = left + right - 2.0 * center;
 
-            let biharmonic = if cfg.alpha2 != 0.0 {
-                let p_2l = Self::sample(phi_slice, i - 2, cfg.boundary);
-                let p_1l = left;
-                let p_1r = right;
-                let p_2r = Self::sample(phi_slice, i + 2, cfg.boundary);
-                p_2l - 4.0 * p_1l + 6.0 * center - 4.0 * p_1r + p_2r
-            } else {
-                0.0
-            };
+                let biharmonic = if cfg.alpha2 != 0.0 {
+                    let p_2l = Self::sample(phi_slice, i - 2, cfg.boundary);
+                    let p_1l = left;
+                    let p_1r = right;
+                    let p_2r = Self::sample(phi_slice, i + 2, cfg.boundary);
+                    p_2l - 4.0 * p_1l + 6.0 * center - 4.0 * p_1r + p_2r
+                } else {
+                    0.0
+                };
 
-            let idx = i as usize;
-            let pot_f = Self::potential_force(center, cfg.mu, cfg.lam);
-            let damping = -cfg.damping * dphi_slice[idx];
+                let idx = i as usize;
+                let pot_f = Self::potential_force(center, cfg.mu, cfg.lam);
+                let damping = -cfg.damping * dphi_slice[idx];
 
-            *force = pot_f + cfg.coupling_k * laplacian - cfg.alpha2 * biharmonic
-                + source_slice[idx]
-                + damping;
-        });
+                *force = pot_f + cfg.coupling_k * laplacian - cfg.alpha2 * biharmonic
+                    + source_slice[idx]
+                    + damping;
+            });
 
         let dphi_slice = self.dphi.as_slice_mut().expect("contiguous dphi");
         let phi_slice = self.phi.as_slice_mut().expect("contiguous phi");
@@ -215,10 +218,7 @@ impl FieldEngine {
         } else {
             forces_slice.iter().map(|f| f.abs()).sum::<f64>() / n as f64
         };
-        let max_abs_force = forces_slice
-            .iter()
-            .map(|f| f.abs())
-            .fold(0.0_f64, f64::max);
+        let max_abs_force = forces_slice.iter().map(|f| f.abs()).fold(0.0_f64, f64::max);
 
         FieldStepOutput {
             center_value: self.get_center_value(),

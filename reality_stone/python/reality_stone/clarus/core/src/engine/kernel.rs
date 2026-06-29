@@ -24,17 +24,17 @@ impl ModeParams {
     /// 15_Equations.md C.3 / J.12 brain-grounded values.
     pub fn wake() -> Self {
         Self {
-            activation_decay: 0.18,   // J.13: tau_m_eff ~5ms
+            activation_decay: 0.18, // J.13: tau_m_eff ~5ms
             activation_gain: 0.82,
-            refractory_decay: 0.12,   // J.2: tau_rel ~5-10ms
-            refractory_gain: 0.20,    // J.12: clamped to [0.05,0.2]
-            adaptation_decay: 0.005,  // J.20: tau_w=200ms, dt=1ms
-            adaptation_gain: 0.005,   // matched to decay -> w* = E[a^2]
+            refractory_decay: 0.12,    // J.2: tau_rel ~5-10ms
+            refractory_gain: 0.20,     // J.12: clamped to [0.05,0.2]
+            adaptation_decay: 0.005,   // J.20: tau_w=200ms, dt=1ms
+            adaptation_gain: 0.005,    // matched to decay -> w* = E[a^2]
             adaptation_coupling: 0.12, // beta_w: ~24% suppression at w=2
-            memory_decay: 0.01,       // J.3: tau_NMDA=100ms -> 1/100
+            memory_decay: 0.01,        // J.3: tau_NMDA=100ms -> 1/100
             memory_gain: 0.01,
-            replay_mix: 0.002,        // J.16: SWR ~2Hz * dt
-            noise_sigma: 0.27,        // J.15: sigma_V/delta_V
+            replay_mix: 0.002, // J.16: SWR ~2Hz * dt
+            noise_sigma: 0.27, // J.15: sigma_V/delta_V
         }
     }
     pub fn nrem() -> Self {
@@ -48,8 +48,8 @@ impl ModeParams {
             adaptation_coupling: 0.12,
             memory_decay: 0.01,
             memory_gain: 0.01,
-            replay_mix: 0.10,         // C.3: NREM strong replay
-            noise_sigma: 0.07,        // J.15: DOWN state low noise
+            replay_mix: 0.10,  // C.3: NREM strong replay
+            noise_sigma: 0.07, // J.15: DOWN state low noise
         }
     }
     pub fn rem() -> Self {
@@ -63,8 +63,8 @@ impl ModeParams {
             adaptation_coupling: 0.12,
             memory_decay: 0.01,
             memory_gain: 0.01,
-            replay_mix: 0.20,         // C.3: REM strongest replay
-            noise_sigma: 0.27,        // J.15: WAKE-like
+            replay_mix: 0.20,  // C.3: REM strongest replay
+            noise_sigma: 0.27, // J.15: WAKE-like
         }
     }
     pub fn from_mode(mode: super::runtime_types::Mode) -> Self {
@@ -216,7 +216,10 @@ pub fn brain_step(
 ) -> StepOutput {
     let dim = activation.len();
     if dim == 0 {
-        return StepOutput { active_count: 0, energy: 0.0 };
+        return StepOutput {
+            active_count: 0,
+            energy: 0.0,
+        };
     }
 
     // 0. STP update (Tsodyks-Markram, J.19): per-neuron approximation
@@ -243,7 +246,14 @@ pub fn brain_step(
         .collect();
     let mut recurrent = vec![0.0_f32; dim];
     let all_true = vec![true; dim];
-    spmv_masked(values, col_idx, row_ptr, &masked_act, &all_true, &mut recurrent);
+    spmv_masked(
+        values,
+        col_idx,
+        row_ptr,
+        &masked_act,
+        &all_true,
+        &mut recurrent,
+    );
 
     // 3. drive = recurrent + ext + goal + replay - refractory - adaptation (A.2 + A.6)
     let ext_g = cfg.external_gain;
@@ -253,10 +263,7 @@ pub fn brain_step(
     let adapt_c = mode_params.adaptation_coupling;
     let drive: Vec<f32> = (0..dim)
         .map(|i| {
-            recurrent[i]
-                + ext_g * external[i]
-                + goal_g * goal[i]
-                + rep_m * replay[i]
+            recurrent[i] + ext_g * external[i] + goal_g * goal[i] + rep_m * replay[i]
                 - ref_s * refractory[i]
                 - adapt_c * adaptation[i].min(cfg.adaptation_clamp)
                 + noise[i]
@@ -336,7 +343,11 @@ pub fn brain_step(
 
     // 11. energy estimate (B.3)
     let coupling_energy = {
-        let dot: f32 = new_act.iter().zip(recurrent.iter()).map(|(a, r)| a * r).sum();
+        let dot: f32 = new_act
+            .iter()
+            .zip(recurrent.iter())
+            .map(|(a, r)| a * r)
+            .sum();
         0.5 * dot.abs()
     };
     let dimf = dim as f32;
@@ -353,7 +364,10 @@ pub fn brain_step(
     adaptation.copy_from_slice(&new_adapt);
     bitfield.copy_from_slice(&new_bit);
 
-    StepOutput { active_count, energy }
+    StepOutput {
+        active_count,
+        energy,
+    }
 }
 
 #[cfg(test)]
@@ -390,12 +404,13 @@ mod tests {
         let goal = vec![0.0_f32; dim];
         let replay = vec![0.0_f32; dim];
         let mp = ModeParams::wake();
-        let cfg = StepConfig { energy_budget: 4, ..Default::default() };
+        let cfg = StepConfig {
+            energy_budget: 4,
+            ..Default::default()
+        };
         let out = brain_step(
-            &vals, &cols, &rows,
-            &mut act, &mut refr, &mut mem, &mut adapt,
-            &mut su, &mut sx, &mut bit,
-            &active, &ext, &goal, &replay, &noise, &mp, &cfg,
+            &vals, &cols, &rows, &mut act, &mut refr, &mut mem, &mut adapt, &mut su, &mut sx,
+            &mut bit, &active, &ext, &goal, &replay, &noise, &mp, &cfg,
         );
         assert!(out.active_count <= 4);
         assert!(out.energy >= 0.0);
@@ -420,14 +435,15 @@ mod tests {
         let goal = vec![0.0_f32; dim];
         let replay = vec![0.0_f32; dim];
         let mp = ModeParams::nrem();
-        let cfg = StepConfig { energy_budget: 8, ..Default::default() };
+        let cfg = StepConfig {
+            energy_budget: 8,
+            ..Default::default()
+        };
         let mut energies = Vec::new();
         for _ in 0..20 {
             let out = brain_step(
-                &vals, &cols, &rows,
-                &mut act, &mut refr, &mut mem, &mut adapt,
-                &mut su, &mut sx, &mut bit,
-                &active, &ext, &goal, &replay, &noise, &mp, &cfg,
+                &vals, &cols, &rows, &mut act, &mut refr, &mut mem, &mut adapt, &mut su, &mut sx,
+                &mut bit, &active, &ext, &goal, &replay, &noise, &mp, &cfg,
             );
             energies.push(out.energy);
         }
@@ -454,14 +470,15 @@ mod tests {
         let cfg = StepConfig::default();
         for _ in 0..50 {
             brain_step(
-                &vals, &cols, &rows,
-                &mut act, &mut refr, &mut mem, &mut adapt,
-                &mut su, &mut sx, &mut bit,
-                &active, &ext, &goal, &replay, &noise, &mp, &cfg,
+                &vals, &cols, &rows, &mut act, &mut refr, &mut mem, &mut adapt, &mut su, &mut sx,
+                &mut bit, &active, &ext, &goal, &replay, &noise, &mp, &cfg,
             );
         }
         let max_adapt = adapt.iter().cloned().fold(0.0_f32, f32::max);
-        assert!(max_adapt > 0.0, "adaptation should accumulate with sustained input");
+        assert!(
+            max_adapt > 0.0,
+            "adaptation should accumulate with sustained input"
+        );
     }
 
     #[test]
@@ -485,12 +502,13 @@ mod tests {
         let x0 = sx[0];
         for _ in 0..10 {
             brain_step(
-                &vals, &cols, &rows,
-                &mut act, &mut refr, &mut mem, &mut adapt,
-                &mut su, &mut sx, &mut bit,
-                &active, &ext, &goal, &replay, &noise, &mp, &cfg,
+                &vals, &cols, &rows, &mut act, &mut refr, &mut mem, &mut adapt, &mut su, &mut sx,
+                &mut bit, &active, &ext, &goal, &replay, &noise, &mp, &cfg,
             );
         }
-        assert!(sx[0] < x0, "STP resource x should deplete with sustained spiking");
+        assert!(
+            sx[0] < x0,
+            "STP resource x should deplete with sustained spiking"
+        );
     }
 }

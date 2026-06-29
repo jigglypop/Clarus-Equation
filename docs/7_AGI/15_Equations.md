@@ -385,6 +385,69 @@ NREM replay 시: $\Delta t_{\text{replay}} = \Delta t_{\text{experience}} / 10$.
 
 $$\lambda_H^{\text{NREM}} = f_{\text{SWR}} \cdot \Delta t_{\text{sim}} \approx 2 \times 0.001 = 0.002 \text{ (매 step replay 확률)}$$
 
+### D.7 LLM 장기기억 SOTA 대응
+
+위 D.1--D.6은 생물학적 해마/replay 수식이다. LLM 장기기억 SOTA와 비교할 때는 `H_t`를 모델 내부 hidden state가 아니라 외부 memory manager로 해석한다.
+
+| 문헌 / benchmark | 핵심 메커니즘 | CE 대응 | 검증 축 |
+|---|---|---|---|
+| MemoryBank (Zhong et al., 2023, <https://arxiv.org/abs/2305.10250>) | conversation/event/persona memory, retrieval, Ebbinghaus-inspired update | \(P_j(t)\), \(\tau_{\text{forget}}\), event summary | memory recall, user portrait, long-term personalization |
+| MemGPT (Packer et al., 2023, <https://arxiv.org/abs/2310.08560>) | main context / external context / function-call paging | \(K_t,V_t\)는 외부 storage, \(R_t=\mathcal R(H_t,c_t)\)는 page-in | deep memory retrieval, document QA, context pressure |
+| LoCoMo (Maharana et al., ACL 2024, <https://aclanthology.org/2024.acl-long.747/>) | very long-term multi-session dialogue benchmark | temporal event graph \(G_t\), multi-hop recall | single-hop, multi-hop, temporal, open-domain, adversarial QA |
+| LongMemEval (Wu et al., 2025, <https://github.com/xiaowu0162/LongMemEval>) | 115k/1.5M-token assistant memory benchmark | online \(S=[(t_i,S_i)]\) processing and memory readout | information extraction, multi-session reasoning, knowledge update, temporal reasoning, abstention |
+| HippoRAG (Gutierrez et al., NeurIPS 2024, <https://openreview.net/forum?id=hkujvAPVsg>) | schemaless KG + Personalized PageRank as hippocampal index | \(K_t\)를 graph index, recall을 PPR pattern completion으로 해석 | multi-hop QA, associative retrieval, cost/latency |
+| Mem0 (Chhikara et al., 2025, <https://arxiv.org/abs/2504.19413>) | ADD/UPDATE/DELETE/NOOP memory operation, graph memory | \(H_{t+1}=\mathcal E(H_t,A_t,U_t)\)를 explicit operation으로 분해 | LoCoMo score, LLM-as-judge, token cost, p95 latency |
+
+LLM memory에서 핵심 연산은 다음 네 가지로 쪼갠다.
+
+$$
+\Omega_t=\phi_{\rm extract}(S_t,m_{t-1},m_t),
+\qquad
+o_{tj}\in\{\operatorname{ADD},\operatorname{UPDATE},\operatorname{DELETE},\operatorname{NOOP}\},
+$$
+
+$$
+H_{t+1}
+=
+\mathcal U
+\left(
+H_t,
+\{(\omega_{tj},o_{tj})\}_{j=1}^{|\Omega_t|}
+\right),
+\qquad
+R_t
+=
+\mathcal R(H_t,q_t,t_q).
+$$
+
+여기서 \(\Omega_t\)는 새 interaction에서 추출된 candidate memory, \(o_{tj}\)는 기존 기억과의 관계에 따른 update operation, \(q_t\)는 현재 질의, \(t_q\)는 질의 시각이다. 기존 D.2의 surprise-gated encoding은 \(\phi_{\rm extract}\)와 ADD gate에 해당하고, D.5 replay priority는 retrieval ranking과 background consolidation에 해당한다.
+
+장기기억 성능은 단순 recall accuracy로 충분하지 않다. 최소 metric vector는 다음이다.
+
+$$
+M_{\rm mem}
+:=
+\big[
+\operatorname{Acc}_{\rm IE},
+\operatorname{Acc}_{\rm MR},
+\operatorname{Acc}_{\rm KU},
+\operatorname{Acc}_{\rm TR},
+\operatorname{Acc}_{\rm ABS},
+\operatorname{Recall@k}_{\rm evidence},
+\operatorname{Cost}_{\rm tok},
+\operatorname{Latency}_{p95}
+\big].
+$$
+
+- \(\operatorname{Acc}_{\rm IE}\): 단일 정보 추출.
+- \(\operatorname{Acc}_{\rm MR}\): 여러 session의 정보를 합성하는 multi-session reasoning.
+- \(\operatorname{Acc}_{\rm KU}\): 사용자의 최신 상태로 갱신했는가.
+- \(\operatorname{Acc}_{\rm TR}\): explicit timestamp와 상대 시간 표현을 처리했는가.
+- \(\operatorname{Acc}_{\rm ABS}\): 기억에 없는 질문을 모른다고 답했는가.
+- \(\operatorname{Recall@k}_{\rm evidence}\): 답을 낸 근거 turn/session을 실제로 회수했는가.
+
+따라서 CE가 장기기억 SOTA를 주장하려면 \(H_t\)의 존재가 아니라 LoCoMo/LongMemEval류에서 \(M_{\rm mem}\)을 baseline과 같은 base model, 같은 context budget, 같은 judge policy로 보고해야 한다.
+
 ---
 
 ## E. 자아/전역 상태 (global runtime summary)

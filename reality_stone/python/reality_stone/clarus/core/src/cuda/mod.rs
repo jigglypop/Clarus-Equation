@@ -115,8 +115,12 @@ pub fn ce_riemann_fwd_cuda(
     let q_d = stream.clone_htod(q).map_err(|e| format!("htod q: {e:?}"))?;
     let k_d = stream.clone_htod(k).map_err(|e| format!("htod k: {e:?}"))?;
     let v_d = stream.clone_htod(v).map_err(|e| format!("htod v: {e:?}"))?;
-    let cos_d = stream.clone_htod(cos).map_err(|e| format!("htod cos: {e:?}"))?;
-    let sin_d = stream.clone_htod(sin).map_err(|e| format!("htod sin: {e:?}"))?;
+    let cos_d = stream
+        .clone_htod(cos)
+        .map_err(|e| format!("htod cos: {e:?}"))?;
+    let sin_d = stream
+        .clone_htod(sin)
+        .map_err(|e| format!("htod sin: {e:?}"))?;
     let sb_d = stream
         .clone_htod(sheet_bias)
         .map_err(|e| format!("htod sb: {e:?}"))?;

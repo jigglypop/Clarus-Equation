@@ -17,17 +17,26 @@ target/
 .env
 .cursor
 /.cursor
+.claude/
 
 # Data
 /data/
 
 # Outputs and models
+/llm_extract/
 *.json
 *.pt
 *.pth
 *.csv
 *.png
 *.log
+*.db
+*.sqlite
+*.sqlite3
+*.npy
+*.npz
+*.parquet
+*.feather
 /reality_stone/artifacts/
 /reality_stone/python/reality_stone/clarus/core/*.csv
 

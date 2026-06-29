@@ -16,7 +16,11 @@ fn lambert_w0(x: f64) -> f64 {
         // For small-moderate x, use the approximation W ~ ln(1+x) which
         // is better than W ~ x for x near 1
         let l = (1.0 + x).ln();
-        if l > 0.0 { l } else { x }
+        if l > 0.0 {
+            l
+        } else {
+            x
+        }
     } else {
         let lx = x.ln();
         lx - lx.ln()
@@ -100,9 +104,11 @@ fn leptonic_running() -> f64 {
     const M_Z_MEV: f64 = 91_188.0;
     let mz2 = M_Z_MEV * M_Z_MEV;
     let masses = [0.51100_f64, 105.658, 1776.86]; // e, mu, tau
-    masses.iter()
+    masses
+        .iter()
         .map(|&m| (mz2 / (m * m)).ln() - 5.0 / 3.0)
-        .sum::<f64>() / (3.0 * PI)
+        .sum::<f64>()
+        / (3.0 * PI)
 }
 
 fn solve_alpha_s() -> f64 {
@@ -275,23 +281,19 @@ impl CeConstants {
         let lambda_h = (M_Z_GEV * f_factor).powi(2) / (2.0 * 246.22_f64.powi(2));
 
         // ===== Layer 7 =====
-        let n_gauge_val =
-            (NC * NC - 1.0) + (NW * NW - 1.0) + 1.0; // 8 + 3 + 1 = 12
+        let n_gauge_val = (NC * NC - 1.0) + (NW * NW - 1.0) + 1.0; // 8 + 3 + 1 = 12
         let d_total = d_eff * n_gauge_val;
         let v_ew_over_m_pl = (-d_total).exp() / f_factor;
         let omega_m = omega_b + omega_dm;
-        let h0_t0 = (2.0 / (3.0 * omega_lambda.sqrt()))
-            * (omega_lambda / omega_m).sqrt().asinh();
+        let h0_t0 = (2.0 / (3.0 * omega_lambda.sqrt())) * (omega_lambda / omega_m).sqrt().asinh();
         let n_e = (D / 2.0) * d_eff * n_gauge_val;
         let n_s = 1.0 - 2.0 / n_e;
 
         // Schwinger series: a_e = alpha/(2pi) - 0.328 alpha^2/pi^2 + ...
         let alpha_0 = 1.0 / alpha_inv_0;
         let a_pi = alpha_0 / PI;
-        let a_e = a_pi / 2.0
-            - 0.32848 * a_pi.powi(2)
-            + 1.18124 * a_pi.powi(3)
-            - 1.5098 * a_pi.powi(4);
+        let a_e =
+            a_pi / 2.0 - 0.32848 * a_pi.powi(2) + 1.18124 * a_pi.powi(3) - 1.5098 * a_pi.powi(4);
 
         // A_s: primordial scalar amplitude from d=0 -> d=3 transition
         //
@@ -302,8 +304,7 @@ impl CeConstants {
         // Verified by symmetric finite difference at D_eff +/- 1e-8
         let w0_val = -d_eff * epsilon2;
 
-        let depsilon2_dd_analytic =
-            w0_val * (d_eff + w0_val) / (d_eff.powi(2) * (1.0 + w0_val));
+        let depsilon2_dd_analytic = w0_val * (d_eff + w0_val) / (d_eff.powi(2) * (1.0 + w0_val));
 
         // Cross-check with symmetric numerical derivative
         let dd = 1e-8;
@@ -324,9 +325,8 @@ impl CeConstants {
             depsilon2_dd_numerical
         };
 
-        let a_s_amplitude = depsilon2_dd.powi(2) / (1.0 - epsilon2).powi(2)
-            * epsilon2
-            / (2.0 * PI * n_e.powi(2));
+        let a_s_amplitude =
+            depsilon2_dd.powi(2) / (1.0 - epsilon2).powi(2) * epsilon2 / (2.0 * PI * n_e.powi(2));
 
         Self {
             alpha_total,
@@ -385,7 +385,11 @@ impl CeConstants {
         println!("  alpha_total    = {:.6}  [1/(2pi)]", self.alpha_total);
         println!("  alpha_s        = {:.5}", self.alpha_s);
         println!("  alpha_w        = {:.5}", self.alpha_w);
-        println!("  alpha_em(M_Z)  = {:.5}  [1/{:.1}]", self.alpha_em_mz, 1.0 / self.alpha_em_mz);
+        println!(
+            "  alpha_em(M_Z)  = {:.5}  [1/{:.1}]",
+            self.alpha_em_mz,
+            1.0 / self.alpha_em_mz
+        );
         println!("  sin2_theta_W   = {:.5}", self.sin2_theta_w);
         println!("  alpha^-1(0)    = {:.3}", self.alpha_inv_0);
 
@@ -497,7 +501,10 @@ impl CeConstants {
     pub fn print_verification(&self) {
         let discrepancies = self.verify();
         println!("\n=== CE vs Observation ===\n");
-        println!("{:<22} {:>14} {:>14} {:>10}", "Constant", "CE", "Observed", "Error%");
+        println!(
+            "{:<22} {:>14} {:>14} {:>10}",
+            "Constant", "CE", "Observed", "Error%"
+        );
         println!("{}", "-".repeat(64));
         for d in &discrepancies {
             if d.predicted.abs() > 1e-4 {

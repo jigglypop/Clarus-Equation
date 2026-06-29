@@ -262,3 +262,76 @@ def refined_branch_prior(counts: Iterable[int]) -> np.ndarray:
         raise ValueError("counts must be non-negative with positive total")
     return ns.astype(float) / float(ns.sum())
 
+
+def _checked_cost(prior: ArrayLike, cost: ArrayLike, *, name: str) -> tuple[np.ndarray, np.ndarray]:
+    p = normalize_weights(prior)
+    c = _as_float_array(cost, name=name, ndim=1)
+    if p.shape != c.shape:
+        raise ValueError(f"prior and {name} must have the same shape")
+    if np.any(np.isnan(c)) or np.any(c < 0.0):
+        raise ValueError(f"{name} must be non-negative and not NaN")
+    return p, c
+
+
+def survival_fraction(prior: ArrayLike, energy: ArrayLike, threshold: float) -> float:
+    """Finite hard-constraint survival fraction ``mu(E < threshold)``.
+
+    Finite analogue of the threshold reading in ``docs/9_등호이전/05k``.
+    """
+    p, e = _checked_cost(prior, energy, name="energy")
+    return float(p[e < float(threshold)].sum())
+
+
+def conditioned_prior(prior: ArrayLike, energy: ArrayLike, threshold: float) -> np.ndarray:
+    """Condition a finite prior on the hard-constraint set ``{E < threshold}``.
+
+    Raises when the constraint set carries zero prior mass, the finite shadow
+    of the continuum obstruction in ``05k`` section 2.
+    """
+    p, e = _checked_cost(prior, energy, name="energy")
+    mask = (p > 0.0) & (e < float(threshold))
+    mass = float(p[mask].sum())
+    if mass <= 0.0:
+        raise ValueError("hard constraint set has zero prior mass")
+    return np.where(mask, p, 0.0) / mass
+
+
+def tilt_survival(prior: ArrayLike, phi: ArrayLike) -> float:
+    """Smooth-tilt survival probability ``<e^{-Phi}>`` on a finite space."""
+    p, f = _checked_cost(prior, phi, name="phi")
+    decay = np.exp(-f, where=np.isfinite(f), out=np.zeros_like(f))
+    return float(np.sum(p * decay))
+
+
+def layer_cake_survival(prior: ArrayLike, phi: ArrayLike) -> float:
+    """Survival via the layer-cake integral of threshold fractions.
+
+    Computes ``int_0^inf e^{-t} mu(Phi <= t) dt`` exactly as a step-function
+    integral.  By ``05k`` theorem 5.1 this equals :func:`tilt_survival`.
+    """
+    p, f = _checked_cost(prior, phi, name="phi")
+    order = np.argsort(f)
+    cumulative = np.cumsum(p[order])
+    decay = np.exp(-f[order], where=np.isfinite(f[order]), out=np.zeros_like(f))
+    next_decay = np.append(decay[1:], 0.0)
+    return float(np.sum(cumulative * (decay - next_decay)))
+
+
+def mean_field_bounds(prior: ArrayLike, phi: ArrayLike) -> tuple[float, float]:
+    """Jensen lower and second-order upper bound for ``<e^{-Phi}>``.
+
+    Implements ``05k`` theorem 5.3: the mean-field value ``e^{-<Phi>}`` is a
+    lower bound, and for bounded ``Phi`` the error is controlled by the
+    variance.  Requires finite ``phi`` on the support.
+    """
+    p, f = _checked_cost(prior, phi, name="phi")
+    support = p > 0.0
+    if not np.all(np.isfinite(f[support])):
+        raise ValueError("phi must be finite on the support for mean-field bounds")
+    mean = float(np.sum(p * np.where(support, f, 0.0)))
+    var = float(np.sum(p * np.where(support, (f - mean) ** 2, 0.0)))
+    bound = float(np.max(f[support]))
+    lower = math.exp(-mean)
+    upper = math.exp(-mean + 0.5 * math.exp(bound) * var)
+    return lower, upper
+

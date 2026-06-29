@@ -2,535 +2,456 @@
 
 ## 0. 목표
 
-[05h_CE_finite_to_continuum.md](05h_CE_finite_to_continuum.md)까지의 결과는 다음이었다.
+[05f_CE_action_topology_package.md](05f_CE_action_topology_package.md)는 CE continuum 코어를
 
 $$
-W^{1,p}/C^0
-+\text{ good-rate }W
-+\text{ recovery prior}
-+\text{ finite-to-continuum scale}
-\Longrightarrow
-\text{manifest path concentration}.
-$$
-
-남은 병목은 recovery prior 자리에 들어갈 **물리적 continuum prior**의 실제 선택이었다. 이 문서는 후보를 Brownian bridge, Gaussian/Sobolev, dense atomic으로 분류하고, 각 후보가 \(W^{1,p}/C^0\) 경로공간에서 어떤 support와 recovery를 주는지 닫는다.
-
-핵심 결론:
-
-> raw kinetic action \(S_E/\hbar\)를 density로 두고 Brownian bridge를 prior로 쓰면 recovery mass는 **실패**한다. Brownian path는 a.s. \(W^{1,1}\) 바깥이라 \(W=\infty\) a.s.이기 때문이다. 닫히는 길은 두 개다. kinetic 항을 prior 안으로 흡수하는 Wiener packaging(Route W), 그리고 \(\sqrt\hbar\)-scaled bridge의 LDP rate로 kinetic 항을 받는 Schilder packaging(Route S)이다. Route S에서는 LDP rate가 정확히 \(S_E-\min S_E\), 즉 CE의 \(E_{\mathrm{fold}}\) kinetic part로 나온다.
-
-현재 판정:
-
-| 항목 | 판정 | 이유 |
-|---|---|---|
-| Brownian bridge의 \(C^0\) full support | `Exact under assumptions` | Gaussian support 정리 import, 정리 3.1 |
-| raw kinetic density + Brownian prior recovery | `False` | 장애물 정리 2.1, 따름정리 2.2 |
-| Route W: Wiener packaging recovery | `Exact under assumptions` | 정리 3.2 |
-| Route W만으로 zero-temperature 농축 | `False in general` | 주의 3.3 |
-| Route S: scaled bridge LDP rate \(=S_E-\min S_E\) | `Exact under assumptions` | 정리 4.2 |
-| bounded \(S_{\mathrm{supp}}\)는 manifest set을 못 바꿈 | `Exact` | 정리 5.1 |
-| \(\beta\)-coupled \(S_{\mathrm{supp}}\) 농축 | `Exact under assumptions` | 정리 5.2 |
-| manifold target, unbounded potential | `Open` | 8절 |
-
-## 1. 후보 prior 분류
-
-경로공간은 [05f_CE_action_topology_package.md](05f_CE_action_topology_package.md)를 따라
-
-$$
-\mathcal P_I=W^{1,p}_{x_i,x_f}(I,\mathbb R^d),
-\qquad
-I=[0,1],
+\mathcal P_I=W^{1,p}_{x_i,x_f}(I,M),
 \qquad
 \text{readout topology}=C^0
 $$
 
-로 두고, 이 문서에서는 target을 \(\mathbb R^d\)로 제한한다. readout 공간은
+로 고정했다. [05g_CE_prior_support_package.md](05g_CE_prior_support_package.md)는 recovery mass 조건을, [05h_CE_finite_to_continuum.md](05h_CE_finite_to_continuum.md)는 finite-to-continuum scale 조건을 닫았다.
+
+이제 남은 질문은 실제 physical prior다.
+
+핵심 결론:
+
+> Brownian bridge는 \(C^0\) path prior로는 full support를 갖지만, \(W^{1,p}\) kinetic/Tonelli action과 그대로 결합하면 맞지 않는다. Brownian path는 거의 surely \(W^{1,p}\)가 아니기 때문이다. 현재 \(W^{1,p}/C^0\) 코어와 가장 직접적으로 맞는 continuum prior는 Sobolev-Gaussian prior다.
+
+현재 판정:
+
+| prior route | 판정 | 이유 |
+|---|---|---|
+| Sobolev-Gaussian on \(H^1\) | `Exact under assumptions` | \(H^1\) 안에 살고 full support를 가짐 |
+| Brownian bridge on \(C^0\) | `Exact for C^0 support`, `Bridge for Tonelli` | \(C^0\) full support지만 \(W^{1,p}\) 질량은 0 |
+| dense atomic prior | `Tooling/Exact` | separable pathspace에서 항상 만들 수 있음 |
+| finite mesh prior | `Tooling/Exact` | 05h의 scaled recovery 조건과 결합 |
+| physical \(\mathcal D\gamma\) | `Bridge/Open` | 어떤 route를 물리 원리로 채택할지 선택 필요 |
+
+## 1. 두 후보공간을 섞으면 안 된다
+
+CE에는 서로 다른 두 층이 있다.
+
+| 층 | 공간 | prior 예 |
+|---|---|---|
+| variational/Tonelli route | \(W^{1,p}_{x_i,x_f}\) with \(C^0\) readout | Sobolev-Gaussian, dense atomic, finite mesh limit |
+| stochastic/Brownian route | \(C^0_{x_i,x_f}\) | Brownian bridge, diffusion bridge |
+
+둘은 같은 것이 아니다.
+
+Tonelli action
 
 $$
-\Gamma
-=
-C^0_{x_i,x_f}
-=
-\{\gamma\in C^0(I,\mathbb R^d):\gamma(0)=x_i,\ \gamma(1)=x_f\}
+S_E[\gamma]=\int_I L(t,\gamma(t),\dot\gamma(t))dt
 $$
 
-이다. kinetic action은
+은 \(\dot\gamma\)가 있는 absolutely continuous path에서 자연스럽다. 반면 Brownian bridge path는 연속이지만 almost surely absolutely continuous가 아니다.
+
+따라서 Brownian prior를 쓰려면 다음 둘 중 하나를 택해야 한다.
+
+1. kinetic term을 Brownian reference measure 안으로 흡수하고, 남은 potential/suppression action만 \(C^0\) 위에서 쓴다.
+2. Brownian을 continuum prior로 쓰지 않고 finite mesh approximation 또는 Sobolev prior로 바꾼다.
+
+## 2. Brownian bridge의 정확한 지위
+
+여기서는 \(I=[0,1]\), \(M=\mathbb R^d\)로 둔다. endpoint \(x_i,x_f\)를 잇는 Brownian bridge를
 
 $$
-S_E[\gamma]
+B^{x_i,x_f}_t
 =
-\frac12\int_0^1|\dot\gamma(t)|^2dt
-\qquad(\gamma\in H^1),
+(1-t)x_i+tx_f+\sqrt{\sigma}\,\widetilde B_t
+$$
+
+라 쓰자. 여기서 \(\widetilde B\)는 \(0\)에서 시작해 \(0\)에서 끝나는 표준 Brownian bridge다.
+
+### 정리 2.1: Brownian bridge는 \(C^0\) full support
+
+\(\mu_{\mathrm{BB}}\)를 \(C^0_{x_i,x_f}([0,1],\mathbb R^d)\) 위의 Brownian bridge law라고 하자. 그러면 임의의 \(h\in C^0_{x_i,x_f}\)와 \(\varepsilon>0\)에 대해
+
+$$
+\mu_{\mathrm{BB}}
+\{\gamma:\|\gamma-h\|_\infty<\varepsilon\}>0.
+$$
+
+즉 \(\mu_{\mathrm{BB}}\)는 \(C^0\) topology에서 full support다.
+
+증명:
+
+polygonal path는 \(C^0_{x_i,x_f}\)에서 조밀하다. 따라서 먼저 \(h\)가 polygonal이고 \(h(0)=x_i,h(1)=x_f\)라고 하자. endpoint 선형 경로를 뺀
+
+$$
+k(t)=h(t)-((1-t)x_i+tx_f)
+$$
+
+는 \(H^1_0\)에 속한다. Brownian bridge의 Cameron-Martin space는 \(H^1_0\)이고, Cameron-Martin theorem에 의해 \(k\)만큼 shift한 bridge law는 원래 bridge law와 서로 absolutely continuous다. 따라서
+
+$$
+\mu_{\mathrm{BB}}\{\|\gamma-h\|_\infty<\varepsilon\}
+>0
+$$
+
+는
+
+$$
+\mu_{\mathrm{BB}}\{\|\gamma-\ell\|_\infty<\varepsilon\}>0,
 \qquad
-S_E[\gamma]=\infty
-\quad(\gamma\in C^0\setminus H^1).
+\ell(t)=(1-t)x_i+tx_f
 $$
 
-후보 prior:
+와 동치다. 마지막 확률은 Brownian bridge가 작은 sup-norm tube 안에 머무는 사건이며 양수다.
 
-| 후보 | endpoint 조건 | support | 비고 |
-|---|---|---|---|
-| Brownian bridge \(\mathbb B_{x_i,x_f}\) | 자동 | \(C^0_{x_i,x_f}\) 전체 | 정리 3.1 |
-| Gaussian on \(H^1\) (Cameron-Martin \(H^1_{0,0}\)) | 자동 | \(C^0_{x_i,x_f}\)의 닫힘 | CM 공간 자체는 null set |
-| dense atomic \(\sum2^{-n}\delta_{\gamma_n}\) | 선택 가능 | full support 가능 | 05g 정리 5.1, `Tooling` |
-| finite mesh pushforward \((\iota_N)_*\mu_N\) | 자동 | finite | 05h package |
-
-dense atomic prior는 수학적 proof device이지 물리적 \(\mathcal D\gamma\) 후보가 아니다. 따라서 물리 후보는 Brownian bridge 계열로 좁혀진다.
-
-## 2. 장애물 정리: kinetic density는 Brownian prior에서 a.s. 무한
-
-CE 문서의 형식적 표기
+일반 \(h\in C^0_{x_i,x_f}\)는 polygonal \(h_m\)으로 \(\|h_m-h\|_\infty<\varepsilon/2\)가 되게 근사한다. 그러면
 
 $$
-d\mu_{\mathrm{CE}}
-\propto
-e^{-S_E[\gamma]/\hbar-S_{\mathrm{supp}}[\gamma]}\,\mathcal D\gamma
+\{\|\gamma-h_m\|_\infty<\varepsilon/2\}
+\subset
+\{\|\gamma-h\|_\infty<\varepsilon\}
 $$
 
-를 \(\mathcal D\gamma=\mathbb B_{x_i,x_f}\)로 읽고 \(S_E/\hbar\)를 density에 남겨두면 어떻게 되는지 먼저 확인한다.
+이므로 양의 질량이 따라온다. 끝.
 
-### 정리 2.1: \(\mathbb B_{x_i,x_f}(W^{1,p})=0\)
+### 정리 2.2: Brownian bridge는 \(W^{1,p}\) prior가 아니다
 
-\(\mathbb B=\mathbb B_{x_i,x_f}\)를 \([0,1]\) 위 Brownian bridge의 law라고 하자. 모든 \(p\ge1\)에 대해
+\(p\ge1\)라고 하자. Brownian bridge law는
 
 $$
-\mathbb B\big(W^{1,p}(I,\mathbb R^d)\big)=0.
+\mu_{\mathrm{BB}}(W^{1,p}_{x_i,x_f})=0.
 $$
 
 증명:
 
-bounded interval에서 \(W^{1,p}\subset W^{1,1}\)이므로 \(p=1\)만 보이면 된다.
+\(W^{1,p}\subset W^{1,1}\)이고 \(W^{1,1}\) path는 absolutely continuous이다. 따라서 각 path는 finite variation을 갖는다.
 
-(i) \(\gamma\in W^{1,1}\)이면 \(\gamma\)는 absolutely continuous이고 total variation \(V(\gamma)=\int_0^1|\dot\gamma|dt<\infty\)이다. partition \(0=t_0<\dots<t_n=1\)에 대해
+finite variation continuous path \(f\)는 임의의 mesh size가 0으로 가는 partition \(\Pi_n\)에 대해 quadratic variation이 0이다.
 
 $$
-\sum_k|\gamma(t_{k+1})-\gamma(t_k)|^2
+\sum_{[u,v]\in\Pi_n}|f(v)-f(u)|^2
 \le
-\max_k|\gamma(t_{k+1})-\gamma(t_k)|
-\cdot
-\sum_k|\gamma(t_{k+1})-\gamma(t_k)|
-\le
-\omega_\gamma(\mathrm{mesh})\cdot V(\gamma).
+\max_{[u,v]\in\Pi_n}|f(v)-f(u)|
+\operatorname{Var}(f)
+\to0.
 $$
 
-\(\gamma\)는 \([0,1]\)에서 uniformly continuous이므로 mesh가 0으로 가면 우변이 0으로 간다. 따라서 \(W^{1,1}\) path의 quadratic variation은 0이다.
-
-(ii) Brownian bridge는 dyadic partition 열을 따라 a.s.
+반면 Brownian bridge는 Brownian motion과 같은 quadratic variation을 갖는다. 균등 partition에 대해
 
 $$
-\sum_k|\gamma(t_{k+1})-\gamma(t_k)|^2
-\to d
+\sum_i |B^{x_i,x_f}_{t_{i+1}}-B^{x_i,x_f}_{t_i}|^2
+\to \sigma
 $$
 
-를 만족한다. 이는 Brownian motion의 quadratic variation 정리의 bridge 버전으로 표준 결과다(외부 import).
+almost surely다. 따라서 Brownian bridge sample path는 finite variation일 수 없고, \(W^{1,1}\), 따라서 \(W^{1,p}\)에도 속하지 않는다. 끝.
 
-(i)과 (ii)는 양립할 수 없으므로 \(\mathbb B(W^{1,1})=0\)이다. 끝.
-
-### 따름정리 2.2: raw kinetic recovery 실패
-
-\(\mu_{\mathrm{base}}=\mathbb B_{x_i,x_f}\)이고
+결론:
 
 $$
-W[\gamma]\ge S_E[\gamma]/\hbar
+S_E[\gamma]=\int |\dot\gamma|^pdt
 $$
 
-라고 하자(\(S_{\mathrm{supp}}\ge0\)). 그러면
-
-1. \(\{W<\infty\}\subset H^1\)이므로 \(\mu_{\mathrm{base}}\{W<\infty\}=0\).
-2. \(Z_\beta=\int e^{-\beta W}d\mu_{\mathrm{base}}=0\)이라 Gibbs 측도 자체가 정의되지 않는다.
-3. \(\operatorname{supp}\mu_{\mathrm{base}}=C^0_{x_i,x_f}\) 안에 \(H^1\) path가 있어 \(W_{\min}<\infty\)인데도
+를 finite-energy action으로 두고 \(S_E=\infty\) outside \(W^{1,p}\)로 확장하면
 
 $$
-\mu_{\mathrm{base}}\{\gamma:W[\gamma]<W_{\min}+\eta\}
-\le
-\mu_{\mathrm{base}}(H^1)
-=0.
+\mu_{\mathrm{BB}}\{S_E<\infty\}=0.
 $$
 
-즉 [05g_CE_prior_support_package.md](05g_CE_prior_support_package.md)의 recovery mass가 실패한다.
+즉 Brownian bridge를 \(\mu_{\mathrm{base}}\)로 두고 kinetic action을 다시 Gibbs reweight하면 분모가 살아나지 않는다.
 
-해석:
+## 3. Sobolev-Gaussian prior
 
-> 이는 05g 반례 2.1의 물리 버전이다. full support는 성립하지만 near-minimum set이 prior null set이다. Feynman의 \(e^{-S_E/\hbar}\mathcal D\gamma\)가 측도 곱 density로 읽히지 않는 고전적 이유가 recovery mass 언어로 정확히 재현된다. kinetic 항은 density가 아니라 **측도 안**에 살아야 한다.
+현재 CE 코어와 가장 잘 맞는 physical-looking continuum prior는 Sobolev 공간 안에 사는 Gaussian prior다. 여기서는 가장 깨끗한 \(p=2\) package를 쓴다.
 
-## 3. Route W: Wiener packaging
+### 세팅
 
-kinetic 항을 prior로 흡수한다.
+endpoint 선형 경로를
 
 $$
-\mu_{\mathrm{base}}:=\mathbb B_{x_i,x_f},
-\qquad
-W:=S_{\mathrm{supp}}.
+\ell(t)=(1-t)x_i+tx_f
 $$
 
-### 정리 3.1: Brownian bridge full support
+라 두고
 
-\(\mathbb B_{x_i,x_f}\)는 \(C^0_{x_i,x_f}\)에서 full support다.
+$$
+H=H^1_0([0,1],\mathbb R^d)
+$$
+
+라 하자. 그러면 endpoint 고정 경로공간은 affine Hilbert space
+
+$$
+\ell+H=H^1_{x_i,x_f}
+$$
+
+다.
+
+\(\{e_n\}_{n\ge1}\)을 \(H\)의 orthonormal basis라 하고, 양수열 \(\lambda_n>0\)이
+
+$$
+\sum_{n=1}^\infty \lambda_n<\infty
+$$
+
+를 만족한다고 하자. 독립 표준정규 \(\xi_n\)으로
+
+$$
+X=\sum_{n=1}^\infty \sqrt{\lambda_n}\xi_ne_n
+$$
+
+를 정의한다.
+
+### 정리 3.1: Sobolev-Gaussian은 \(H^1\) 안에 산다
+
+위 조건 아래에서 \(X\in H\) almost surely이고
+
+$$
+\mu_{\mathrm{SG}}:=\operatorname{Law}(\ell+X)
+$$
+
+는 \(H^1_{x_i,x_f}\) 위의 Borel probability measure다.
 
 증명:
 
-\(\mathbb B_{x_i,x_f}\)는 \(C^0_{x_i,x_f}\) 위 Gaussian measure로, 평균은 직선 경로
+Hilbert norm에 대해
 
 $$
-\gamma_{\mathrm{lin}}(t)=x_i+t(x_f-x_i)
-$$
-
-이고 Cameron-Martin 공간은
-
-$$
-H^1_{0,0}
+\mathbb E\|X\|_H^2
 =
-\{h\in H^1(I,\mathbb R^d):h(0)=h(1)=0\},
-\qquad
-\|h\|_{\mathrm{CM}}^2=\int_0^1|\dot h|^2dt
+\sum_{n=1}^\infty \lambda_n
+<\infty.
 $$
 
-이다. Gaussian measure의 support는 평균 더하기 Cameron-Martin 공간의 닫힘이다(외부 import). \(H^1_{0,0}\)은 \(C^0_{0,0}\)에서 dense이므로
+따라서 \(\|X\|_H<\infty\) almost surely이고 \(X\in H\) almost surely다. 끝.
+
+### 정리 3.2: Sobolev-Gaussian은 \(H^1\) full support
+
+\(\lambda_n>0\) for all \(n\)이면 \(\mu_{\mathrm{SG}}\)는 \(H^1_{x_i,x_f}\)에서 full support다. 즉 임의의 \(g\in H^1_{x_i,x_f}\), \(r>0\)에 대해
 
 $$
-\operatorname{supp}\mathbb B_{x_i,x_f}
-=
-\gamma_{\mathrm{lin}}+\overline{H^1_{0,0}}^{\,C^0}
-=
-C^0_{x_i,x_f}.
-$$
-
-끝.
-
-### 정리 3.2: Route W recovery와 fixed-\(\beta\) CE 측도
-
-\(S_{\mathrm{supp}}:C^0_{x_i,x_f}\to[0,\infty]\)가 어떤 minimizer에서 continuous이면(예: \(S_{\mathrm{supp}}[\gamma]=\int_0^1V(\gamma(t))dt\), \(V\ge0\) continuous) recovery mass가 성립하고, fixed \(\beta\)에서
-
-$$
-d\mu_{\mathrm{CE}}
-=
-\frac{e^{-\beta S_{\mathrm{supp}}}}{Z_\beta}
-d\mathbb B_{x_i,x_f}
-$$
-
-는 well-defined probability다.
-
-증명:
-
-정리 3.1의 full support와 minimizer continuity에 05g 정리 3.3을 적용하면 recovery mass가 나온다. recovery mass는 \(Z_\beta>0\)을 주고, \(S_{\mathrm{supp}}\ge0\)이므로 \(Z_\beta\le1<\infty\)다. 끝.
-
-이는 Euclidean Feynman-Kac packaging과 동일하다. 05d에서 요구한 \(0<\int e^{-W}d\mu_{\mathrm{ref}}<\infty\)가 이 route에서 닫힌다.
-
-### 주의 3.3: Route W만으로는 zero-temperature 농축이 안 닫힌다
-
-\(E=S_{\mathrm{supp}}\)는 일반적으로 \(C^0\)에서 good rate function이 아니다.
-
-반례: \(V\equiv0\)이면 \(S_{\mathrm{supp}}\equiv0\)이고 sublevel set이 \(C^0_{x_i,x_f}\) 전체라 compact가 아니다. \(V\)가 bounded여도 sublevel set은 진폭이 큰 진동 경로를 모두 포함해 compact가 아니다.
-
-따라서 [05e_CE_good_rate_theorem.md](05e_CE_good_rate_theorem.md)의 정리를 \(E=S_{\mathrm{supp}}\)에 적용할 수 없다. 물리적으로도 fixed Brownian prior에서 \(\beta\to\infty\)는 potential만 조이는 극한이지 semiclassical 극한이 아니다. kinetic 선택 정보가 빠진다. 이를 닫는 것이 Route S다.
-
-## 4. Route S: scaled bridge와 Schilder packaging
-
-semiclassical 파라미터를 prior에 직접 넣는다.
-
-$$
-\mu^\varepsilon
-:=
-\text{law of }\ \gamma_{\mathrm{lin}}+\sqrt\varepsilon\,B^0,
-\qquad
-\varepsilon=\hbar,
-$$
-
-여기서 \(B^0\)는 \(0\)에서 \(0\)으로 가는 standard Brownian bridge다. 각 \(\mu^\varepsilon\)은 endpoint 조건을 자동으로 만족하고 정리 3.1과 같은 이유로 \(C^0_{x_i,x_f}\) full support다.
-
-### 보조정리 4.1: kinetic sublevel의 compactness와 l.s.c.
-
-\(J_0:C^0_{x_i,x_f}\to[0,\infty]\)를
-
-$$
-J_0[\gamma]=S_E[\gamma]
-$$
-
-로 두면 \(J_0\)는 \(C^0\)에서 l.s.c.이고 모든 sublevel \(\{J_0\le c\}\)는 compact다.
-
-증명:
-
-(compactness) \(\gamma\in\{J_0\le c\}\)이면 Cauchy-Schwarz로
-
-$$
-|\gamma(t)-\gamma(s)|
-\le
-\Big(\int_s^t|\dot\gamma|^2\Big)^{1/2}|t-s|^{1/2}
-\le
-\sqrt{2c}\,|t-s|^{1/2}.
-$$
-
-equi-Hölder이고 \(|\gamma(t)|\le|x_i|+\sqrt{2c}\)로 균등유계이므로 Arzelà-Ascoli에 의해 \(C^0\) precompact다.
-
-(l.s.c.) \(\gamma_n\to\gamma\) uniformly이고 \(\liminf J_0[\gamma_n]=c<\infty\)라 하자. 부분열에서 \(\dot\gamma_n\)이 \(L^2\) bounded이므로 weak limit \(v\in L^2\)를 갖는다(Banach-Alaoglu, 외부 import). \(\gamma_n(t)=x_i+\int_0^t\dot\gamma_n\)에서 극한을 취하면 \(\gamma(t)=x_i+\int_0^tv\), 즉 \(\gamma\in H^1\)이고 \(\dot\gamma=v\)다. norm의 weak l.s.c.로
-
-$$
-J_0[\gamma]=\tfrac12\|v\|_{L^2}^2
-\le
-\liminf_n\tfrac12\|\dot\gamma_n\|_{L^2}^2
-=c.
-$$
-
-따라서 sublevel은 닫혀 있고, precompact와 합쳐 compact다. 끝.
-
-### 정리 4.2: scaled bridge LDP와 rate의 \(E_{\mathrm{fold}}\) 형태
-
-\(\{\mu^\varepsilon\}\)은 \(C^0_{x_i,x_f}\)에서 good rate function
-
-$$
-J[\gamma]
-=
-\frac12\int_0^1|\dot\gamma-\dot\gamma_{\mathrm{lin}}|^2dt
-\quad(\gamma\in H^1_{x_i,x_f}),
-\qquad
-J=\infty\ \text{otherwise}
-$$
-
-를 갖는 large deviation principle을 만족한다. 또한
-
-$$
-J[\gamma]
-=
-S_E[\gamma]-S_E[\gamma_{\mathrm{lin}}]
-=
-S_E[\gamma]-\min_{H^1_{x_i,x_f}}S_E.
+\mu_{\mathrm{SG}}\{\gamma:\|\gamma-g\|_{H^1}<r\}>0.
 $$
 
 증명:
 
-(LDP) centered Gaussian measure의 \(\sqrt\varepsilon\)-scaling은 Cameron-Martin norm 제곱의 절반을 rate로 갖는 LDP를 만족한다(generalized Schilder, 외부 import). \(B^0\)의 CM norm은 \(\|\dot h\|_{L^2}\)이므로 \(\sqrt\varepsilon B^0\)의 rate는 \(\frac12\int|\dot h|^2\) (\(h\in H^1_{0,0}\))이고, 상수 shift \(\gamma_{\mathrm{lin}}\)는 contraction principle로 rate를 \(J[\gamma]=\frac12\int|\dot\gamma-\dot\gamma_{\mathrm{lin}}|^2\)로 옮긴다. goodness는 보조정리 4.1과 같은 Arzelà-Ascoli 논리로 성립한다.
-
-(rate 항등식) \(\gamma\in H^1_{x_i,x_f}\)이면 \(\dot\gamma_{\mathrm{lin}}\equiv v:=x_f-x_i\)이고 \(\int_0^1\dot\gamma=x_f-x_i=v\)이므로
+\(g=\ell+h\), \(h\in H\)라 하자. finite span이 \(H\)에서 조밀하므로 \(h^{(k)}=\sum_{n=1}^k a_ne_n\)을 골라
 
 $$
-J[\gamma]
-=
-\frac12\int|\dot\gamma|^2
--\int\dot\gamma\cdot v
-+\frac12|v|^2
-=
-S_E[\gamma]-\frac12|v|^2.
+\|h-h^{(k)}\|_H<r/4
 $$
 
-Jensen 부등식으로 \(S_E[\gamma]\ge\frac12|\int\dot\gamma|^2=\frac12|v|^2=S_E[\gamma_{\mathrm{lin}}]\)이고 등호는 \(\dot\gamma\) 상수, 즉 \(\gamma=\gamma_{\mathrm{lin}}\)일 때다. 따라서 \(\frac12|v|^2=\min S_E\)이고 항등식이 성립한다. 끝.
+로 만든다.
 
-해석:
-
-> prior 자체의 LDP rate가 정확히 \(S_E-\min S_E\)다. 이는 CE 문서의 \(E_{\mathrm{fold}}=W-W_{\min}\) 정규화가 kinetic part에서 인위적 선택이 아니라 scaled Brownian prior의 표준 rate로 자동으로 나온다는 뜻이다.
-
-또한 LDP lower bound는 open ball에 대해
+이제
 
 $$
-\liminf_{\varepsilon\to0}
-\varepsilon\log\mu^\varepsilon\big(B(\gamma,\delta)\big)
-\ge
--\inf_{B(\gamma,\delta)}J
+X=X_{\le k}+X_{>k}
 $$
 
-를 주므로, [05h_CE_finite_to_continuum.md](05h_CE_finite_to_continuum.md)의 scaled recovery mass 조건
+로 나눈다. \(X_{\le k}\)는 \(\mathbb R^{kd}\)의 nondegenerate Gaussian이므로
 
 $$
-\frac1{\beta_\varepsilon}\log\frac1{\mu^\varepsilon(B_\eta)}\to0
-\qquad(\beta_\varepsilon=1/\varepsilon)
+\mathbb P(\|X_{\le k}-h^{(k)}\|_H<r/4)>0.
 $$
 
-이 minimizer 근방에서 **정리로** 닫힌다. 05g에서 공리로 남겨야 했던 recovery가 Route S에서는 prior의 구조에서 나온다.
-
-## 5. \(S_{\mathrm{supp}}\)의 scaling 선택
-
-CE 문서의 \(W=S_E/\hbar+S_{\mathrm{supp}}\)에서 \(S_{\mathrm{supp}}\)에 \(1/\hbar\)가 붙는지 여부가 manifest set을 바꾼다. Route S에서 이 갈림길이 정리로 분리된다.
-
-### 정리 5.1: bounded tilt는 manifest set을 바꾸지 못한다
-
-\(S_{\mathrm{supp}}:C^0_{x_i,x_f}\to[0,C]\)가 bounded measurable이고
+또한 \(\mathbb E\|X_{>k}\|_H^2=\sum_{n>k}\lambda_n\)이므로 \(k\)를 더 키우면
 
 $$
-d\nu^\varepsilon
-=
-\frac{e^{-S_{\mathrm{supp}}}}{Z^\varepsilon}d\mu^\varepsilon
+\mathbb P(\|X_{>k}\|_H<r/2)>0
 $$
 
-라고 하자. 그러면 \(\{\nu^\varepsilon\}\)은 \(\{\mu^\varepsilon\}\)과 **같은** rate \(J\)의 LDP를 만족하고, 따라서 \(\varepsilon\to0\)에서 \(\operatorname*{argmin}J=\{\gamma_{\mathrm{lin}}\}\) 근방으로 농축한다.
+가 된다. 두 사건은 독립이므로 동시에 일어날 확률도 양수다. 그 사건 위에서
+
+$$
+\|X-h\|_H
+\le
+\|X_{\le k}-h^{(k)}\|_H
++\|X_{>k}\|_H
++\|h^{(k)}-h\|_H
+<r.
+$$
+
+따라서 \(H^1\)-ball은 양의 질량을 갖는다. 끝.
+
+### 정리 3.3: \(C^0\) readout full support
+
+1차원 Sobolev embedding에 의해
+
+$$
+H^1_{x_i,x_f}\hookrightarrow C^0_{x_i,x_f}
+$$
+
+는 continuous다. 따라서 \(\mu_{\mathrm{SG}}\)를 \(C^0\) Borel measure로 보아도, 모든 \(g\in H^1_{x_i,x_f}\)와 \(\varepsilon>0\)에 대해
+
+$$
+\mu_{\mathrm{SG}}\{\gamma:\|\gamma-g\|_\infty<\varepsilon\}>0.
+$$
+
+또한 \(H^1_{x_i,x_f}\)는 \(C^0_{x_i,x_f}\)에서 조밀하므로, \(\mu_{\mathrm{SG}}\)의 \(C^0\)-support는 전체 \(C^0_{x_i,x_f}\)다.
 
 증명:
 
-\(e^{-C}\le e^{-S_{\mathrm{supp}}}\le1\)이므로 \(Z^\varepsilon\in[e^{-C},1]\)이고 모든 Borel \(A\)에 대해
+embedding continuity로 어떤 \(r>0\)가 존재해서
 
 $$
-e^{-C}\mu^\varepsilon(A)
-\le
-\nu^\varepsilon(A)
-\le
-e^{C}\mu^\varepsilon(A).
+\|\gamma-g\|_{H^1}<r
+\quad\Longrightarrow\quad
+\|\gamma-g\|_\infty<\varepsilon
 $$
 
-양변에 \(\varepsilon\log\)를 취하면 상수항이 사라지므로 \(\nu^\varepsilon\)의 \(\varepsilon\log\) 점근은 \(\mu^\varepsilon\)과 동일하다. LDP rate가 같으므로 good rate \(J\)의 유일 minimizer \(\gamma_{\mathrm{lin}}\)(정리 4.2의 Jensen 등호 조건) 근방으로 농축한다. 끝.
+이다. 정리 3.2로 왼쪽 \(H^1\)-ball은 양의 질량을 갖는다. 따라서 \(C^0\)-ball도 양의 질량을 갖는다.
 
-해석:
+일반 \(c\in C^0_{x_i,x_f}\)에 대해서는 \(H^1\) path \(g\)를 \(\|g-c\|_\infty<\varepsilon/2\)로 잡고 위 논리를 적용한다. 끝.
 
-> \(\hbar\)-bounded suppression은 finite-\(\varepsilon\) weight만 바꾸고 manifest 극한에는 흔적을 남기지 못한다. CE가 \(S_{\mathrm{supp}}\)로 선택 결과를 바꾸려면 \(S_{\mathrm{supp}}\)가 \(1/\hbar\) scale로 결합하거나(정리 5.2) \(\{0,\infty\}\)값 hard constraint여야 한다.
+## 4. Sobolev-Gaussian recovery
 
-### 정리 5.2: \(\beta\)-coupled tilt 농축
+### 정리 4.1: continuity route
 
-\(S_{\mathrm{supp}}:C^0_{x_i,x_f}\to[0,\infty)\)가 continuous bounded라고 하자.
-
-$$
-d\nu^\varepsilon
-=
-\frac{e^{-S_{\mathrm{supp}}/\varepsilon}}{Z^\varepsilon}d\mu^\varepsilon
-$$
-
-로 두면 \(\{\nu^\varepsilon\}\)은 good rate
+\(\mu_{\mathrm{base}}=\mu_{\mathrm{SG}}\)라고 하자. \(W:H^1_{x_i,x_f}\to[0,\infty]\)가 어떤 minimizer \(\gamma_*\in H^1_{x_i,x_f}\)에서 \(H^1\)-continuous이고
 
 $$
-K[\gamma]=J[\gamma]+S_{\mathrm{supp}}[\gamma]-m_*,
-\qquad
-m_*=\inf_{C^0_{x_i,x_f}}\big(J+S_{\mathrm{supp}}\big)
+W(\gamma_*)=W_{\min}<\infty
 $$
 
-의 LDP를 만족하고, 모든 open \(U\supset M_*:=\operatorname*{argmin}(J+S_{\mathrm{supp}})\)에 대해
+이면 recovery mass가 성립한다.
 
 $$
-\nu^\varepsilon(U)\to1
-\qquad(\varepsilon\to0).
+\mu_{\mathrm{SG}}\{\gamma:W[\gamma]<W_{\min}+\eta\}>0
+\qquad(\eta>0).
 $$
 
 증명:
 
-bounded continuous tilt에 대한 tilted LDP(Varadhan, 외부 import)로 \(\nu^\varepsilon\)은 rate \(K\)의 LDP를 만족한다. \(K\)의 goodness: \(S_{\mathrm{supp}}\ge0\)이므로 \(\{J+S_{\mathrm{supp}}\le c\}\subset\{J\le c\}\)이고 후자는 compact(정리 4.2), 전자는 l.s.c. 합의 sublevel이라 닫혀 있어 compact다. minimizer 존재는 05e 정리 1.1의 첫 단락과 같다.
-
-농축: \(F=C^0_{x_i,x_f}\setminus U\)는 닫힌집합이고 05e의 gap 논리로
+\(W\)가 \(\gamma_*\)에서 \(H^1\)-continuous이므로 임의의 \(\eta>0\)에 대해 어떤 \(H^1\)-open ball \(B_{H^1}(\gamma_*,r)\)가 존재해서
 
 $$
-\delta_U:=\inf_F\big(J+S_{\mathrm{supp}}\big)-m_*>0
+B_{H^1}(\gamma_*,r)
+\subset
+\{\gamma:W[\gamma]<W_{\min}+\eta\}
 $$
 
-이다. LDP upper bound로
+이다. 정리 3.2로 이 ball은 양의 \(\mu_{\mathrm{SG}}\)-질량을 갖는다. 끝.
+
+### 정리 4.2: \(C^0\)-continuity route
+
+만약 \(W\)가 \(\gamma_*\)에서 \(C^0\)-continuous이면 같은 결론이 성립한다.
+
+증명:
+
+\(C^0\)-continuity로 어떤 \(C^0\)-ball이 near-minimum set 안에 들어간다. 정리 3.3이 그 \(C^0\)-ball의 양질량을 준다. 끝.
+
+주의:
+
+- \(W\)가 l.s.c.일 뿐이면 05g의 반례 때문에 recovery mass가 자동이 아니다.
+- 이 경우에는 positive tube recovery를 별도 공리로 두어야 한다.
+
+## 5. Brownian route를 살리는 방법
+
+Brownian bridge를 쓰고 싶다면 kinetic action을 다시 penalty로 곱하면 안 된다. 대신 다음처럼 읽어야 한다.
+
+### Package B: kinetic term absorbed into prior
+
+경로공간:
 
 $$
-\limsup_{\varepsilon\to0}\varepsilon\log\nu^\varepsilon(F)
-\le
--\inf_FK
-\le
--\delta_U<0,
+\Gamma=C^0_{x_i,x_f}.
 $$
 
-따라서 \(\nu^\varepsilon(F)\to0\)이다. 끝.
+base prior:
 
-해석:
+$$
+\mu_{\mathrm{base}}=\mu_{\mathrm{BB}}.
+$$
 
-> 이것이 CE \(W=S_E/\hbar+S_{\mathrm{supp}}\)의 올바른 Route S 독법이다. 농축 대상은
->
-> $$
-> \operatorname*{argmin}\big(S_E+S_{\mathrm{supp}}^{\mathrm{phys}}\big),
-> \qquad
-> S_{\mathrm{supp}}^{\mathrm{phys}}:=\varepsilon S_{\mathrm{supp}}/\varepsilon
-> $$
->
-> 즉 kinetic과 suppression이 **같은 \(1/\hbar\) scale**로 경쟁할 때만 둘 다 선택에 참여한다.
+energy:
 
-## 6. 05e/05g/05h 조건과의 매핑
+$$
+W_{\mathrm{B}}[\gamma]
+=
+S_{\mathrm{pot}}[\gamma]/\hbar
++S_{\mathrm{supp}}[\gamma],
+$$
 
-Route S package가 이전 문서의 가정을 어디까지 정리로 바꾸는지 정리한다.
+where \(S_{\mathrm{pot}}\) and \(S_{\mathrm{supp}}\) are defined on \(C^0\). In this route the Brownian covariance already carries the kinetic reference.
 
-| 이전 문서의 가정 | Route S에서의 지위 |
+필요 조건:
+
+| 조건 | 이유 |
 |---|---|
-| 05e: \(W\) good rate | 정리 4.2 + 정리 5.2의 \(K\) goodness로 닫힘 |
-| 05e: recovery mass | LDP lower bound로 닫힘 (공리에서 정리로 강등) |
-| 05f: \(W^{1,p}/C^0\) topology | rate의 유효 domain이 \(H^1_{x_i,x_f}\), readout이 \(C^0\)로 일치 |
-| 05g A2'' prior/support axiom | 정리 3.1 full support + LDP lower bound로 닫힘 |
-| 05h A3 scaled recovery mass | \(\beta_\varepsilon=1/\varepsilon\)에서 LDP lower bound와 동일 |
-| 05h finite mesh consistency | random walk bridge의 invariance principle(Donsker, 외부 import)로 후보 존재, 세부 검증은 `Open` |
+| \(W_{\mathrm{B}}\) is l.s.c. good-rate on \(C^0\) 또는 tightness 대체 정리 | Brownian route의 compactness 확보 |
+| Brownian full support | open tube recovery |
+| \(W_{\mathrm{B}}\) continuous at minimizer 또는 positive tube recovery | 05g recovery mass |
+| finite mesh approximation consistency | 05h scale condition |
 
-## 7. 권장 A2''' physical prior 공리
+판정:
 
-05f의 A2'(action/topology), 05g의 A2''(prior/support)에 이어 다음을 둔다.
+`Bridge/Open`
 
-> **A2''' physical path prior axiom.**
-> CE continuum prior는 scaled Brownian bridge family
-> \[
-> \mu^\hbar=\text{law of }\gamma_{\mathrm{lin}}+\sqrt\hbar\,B^0
-> \]
-> 로 둔다. 이때
+이 route는 물리적으로 자연스러울 수 있지만, 05f의 Tonelli proof를 그대로 쓰는 route가 아니다. 새로운 \(C^0\)/Brownian good-rate 또는 large-deviation package가 필요하다.
+
+## 6. CE 권장 A4 공리
+
+05f-05h까지의 선택을 유지하려면 현재 가장 안전한 physical path prior 공리는 다음이다.
+
+> **A4 physical path prior axiom.**  
+> CE continuum prior는 다음 중 하나로 명시한다.
 >
-> 1. endpoint 조건 \(\gamma(0)=x_i,\gamma(1)=x_f\)는 construction으로 성립한다.
-> 2. \(\mu^\hbar\)는 \(C^0_{x_i,x_f}\) full support이고 good rate \(J=S_E-\min S_E\)의 LDP를 만족한다.
-> 3. 선택에 참여하는 suppression은 \(e^{-S_{\mathrm{supp}}/\hbar}\)로 결합한다. \(\hbar\)-bounded suppression은 finite-\(\hbar\) reweighting으로만 쓴다.
-> 4. fixed-\(\hbar\) CE probability는 Route W packaging \(d\mu_{\mathrm{CE}}\propto e^{-S_{\mathrm{supp}}/\hbar}d\mu^\hbar\)로 정의한다.
+> **S-route.** \(H^1_{x_i,x_f}\) 또는 더 강한 Sobolev pathspace 위의 trace-class Gaussian prior \(\mu_{\mathrm{SG}}\)를 쓴다. 이 prior는 chosen Sobolev topology에서 full support를 갖고 \(C^0\) readout support도 충분하다. \(W\)는 minimizer에서 continuous이거나 positive tube recovery를 만족해야 한다.
+>
+> **B-route.** Brownian bridge prior \(\mu_{\mathrm{BB}}\)를 \(C^0_{x_i,x_f}\) 위에 둔다. 이때 kinetic action은 prior에 흡수된 것으로 보고, 별도의 \(W^{1,p}\) kinetic Gibbs penalty를 다시 곱하지 않는다.
+>
+> **F-route.** finite mesh prior를 쓰고 [05h_CE_finite_to_continuum.md](05h_CE_finite_to_continuum.md)의 scaled recovery condition을 확인한다.
 
-이 공리 아래에서 manifest 극한은
+현재 문서군의 canonical continuum proof는 S-route다.
 
-$$
-\nu^\hbar
-\Longrightarrow
-\delta_{\gamma_*},
-\qquad
-\gamma_*
-=
-\operatorname*{argmin}\big(S_E+S_{\mathrm{supp}}\big)
-$$
-
-(유일 minimizer일 때)로 닫힌다.
-
-## 8. 닫힌 것과 남은 것
+## 7. 닫힌 것과 남은 것
 
 닫힌 것:
 
 | 항목 | 상태 |
 |---|---|
-| \(\mathbb B(W^{1,p})=0\) 장애물 | 정리 2.1 |
-| raw kinetic density recovery 실패 | 따름정리 2.2 |
-| Brownian bridge full support | 정리 3.1 |
-| Route W fixed-\(\beta\) CE 측도 존재 | 정리 3.2 |
-| \(S_{\mathrm{supp}}\) 단독 good-rate 실패 | 주의 3.3 |
-| kinetic sublevel compactness/l.s.c. | 보조정리 4.1 |
-| scaled bridge LDP, rate \(=S_E-\min S_E\) | 정리 4.2 |
-| bounded tilt의 manifest 불변 | 정리 5.1 |
-| \(\beta\)-coupled tilt 농축 | 정리 5.2 |
-
-외부 import로 쓴 표준 정리:
-
-| import | 사용 위치 |
-|---|---|
-| Brownian quadratic variation | 정리 2.1 (ii) |
-| Gaussian support 정리 | 정리 3.1 |
-| Banach-Alaoglu와 norm weak l.s.c. | 보조정리 4.1 |
-| generalized Schilder LDP | 정리 4.2 |
-| Varadhan tilted LDP | 정리 5.2 |
+| Brownian bridge \(C^0\) full support | 정리 2.1 |
+| Brownian bridge not \(W^{1,p}\) | 정리 2.2 |
+| Sobolev-Gaussian \(H^1\) support | 정리 3.1, 3.2 |
+| Sobolev-Gaussian \(C^0\) readout support | 정리 3.3 |
+| Sobolev-Gaussian recovery under continuity | 정리 4.1, 4.2 |
 
 남은 것:
 
 | 병목 | 다음 작업 |
 |---|---|
-| CE 문서군의 \(S_{\mathrm{supp}}\) scaling 규약 | 실제 CE 문서에서 \(S_{\mathrm{supp}}\)가 bounded tilt인지 \(\beta\)-coupled인지 감사 (05d 후속) |
-| unbounded potential | \(V\) unbounded일 때 Varadhan moment 조건 또는 exponential tightness 확인 |
-| hard constraint suppression | \(S_{\mathrm{supp}}\in\{0,\infty\}\) 조건부 bridge의 recovery 확인 |
-| manifold target \(M\) | \(\mathbb R^d\)를 Riemannian manifold로 올리는 Brownian bridge 구성 |
-| finite mesh consistency 세부 | random walk bridge가 05h A3의 outer gap/lower consistency를 만족하는지 |
+| CE physical choice | S-route, B-route, F-route 중 하나를 CE 본문 공리로 채택 |
+| \(S_{\mathrm{supp}}\) physical form | residual/curvature/obstacle/fold penalty 중 무엇을 실제 action으로 둘지 결정 |
+| Brownian route good-rate | \(C^0\) Brownian package에서 compactness 또는 tightness 기반 농축 정리 작성 |
+| manifold support theorem | \(M\)이 일반 manifold일 때 chart/localization 또는 embedded manifold prior로 확장 |
 
-## 9. 결론
+## 8. 결론
 
-CE physical path prior는 다음으로 고정한다.
+CE가 현재의 \(W^{1,p}/C^0\) Tonelli proof를 유지하려면 physical continuum prior는
 
 $$
 \boxed{
-\mu^\hbar=\text{law of }\gamma_{\mathrm{lin}}+\sqrt\hbar\,B^0,
-\qquad
-d\nu^\hbar\propto e^{-S_{\mathrm{supp}}/\hbar}d\mu^\hbar.
+\mu_{\mathrm{base}}=\mu_{\mathrm{SG}}
+\quad\text{on}\quad
+H^1_{x_i,x_f}
 }
 $$
 
-이 선택 아래에서
+처럼 Sobolev 안에 사는 full-support probability로 두는 것이 가장 깨끗하다.
+
+그러면
 
 $$
 \boxed{
-\text{full support}
-+\text{LDP rate }S_E-\min S_E
-+\beta\text{-coupled }S_{\mathrm{supp}}
+H^1/C^0
++\text{ Sobolev-Gaussian full support}
++\text{ good-rate }W
++\text{ continuity/tube recovery}
 \Longrightarrow
-\nu^\hbar\ \text{concentrates on}\
-\operatorname*{argmin}(S_E+S_{\mathrm{supp}}).
+\text{manifest path concentration}.
 }
 $$
 
-05g에서 공리였던 recovery mass와 05h에서 공리였던 scaled recovery mass가 이 prior에서는 LDP lower bound 정리로 내려온다. 남은 병목은 실제 CE 문서가 \(S_{\mathrm{supp}}\)를 bounded tilt로 쓰는지 \(\beta\)-coupled로 쓰는지의 규약 감사다.
+반대로 Brownian bridge를 쓰려면 결론은 이렇게 바뀐다.
+
+$$
+\boxed{
+\text{Brownian bridge is a }C^0\text{ prior, not a }W^{1,p}\text{ prior}.
+}
+$$
+
+따라서 다음 병목은 \(S_{\mathrm{supp}}\)의 실제 물리 형태다. prior/topology/action의 뼈대는 이제 닫혔고, 남은 것은 어떤 suppression/fold/residual penalty가 CE의 물리 내용을 담는지 정하는 일이다.

@@ -77,19 +77,16 @@ pub fn topk_silu_bwd(grad: &[f32], input: &[f32], mask: &[u8], dim: usize) -> Ve
     let n = grad.len();
     let mut grad_in = vec![0.0f32; n];
 
-    grad_in
-        .par_chunks_mut(dim)
-        .enumerate()
-        .for_each(|(r, gi)| {
-            let base = r * dim;
-            for j in 0..dim {
-                if mask[base + j] == 1 {
-                    let x = input[base + j];
-                    let s = sigmoid_f32(x);
-                    gi[j] = grad[base + j] * s * (1.0 + x * (1.0 - s));
-                }
+    grad_in.par_chunks_mut(dim).enumerate().for_each(|(r, gi)| {
+        let base = r * dim;
+        for j in 0..dim {
+            if mask[base + j] == 1 {
+                let x = input[base + j];
+                let s = sigmoid_f32(x);
+                gi[j] = grad[base + j] * s * (1.0 + x * (1.0 - s));
             }
-        });
+        }
+    });
     grad_in
 }
 
@@ -136,9 +133,8 @@ pub fn lbo_fused_fwd(
         for j in 0..dim {
             let lx = x_mat[[r, j]] - xw[[r, j]];
             curv_sum += (lx as f64) * (lx as f64);
-            output[base + j] = (one_minus_h * x_mat[[r, j]] + h * xw[[r, j]])
-                * scale_v[j]
-                + bias_v[j];
+            output[base + j] =
+                (one_minus_h * x_mat[[r, j]] + h * xw[[r, j]]) * scale_v[j] + bias_v[j];
         }
     }
     (output, (curv_sum / (n_rows * dim) as f64) as f32)
@@ -216,8 +212,12 @@ pub fn gauge_lattice_fwd(
     u1_down: &[f32],
     mix_down: &[f32],
     mix_up: &[f32],
-    d3: usize, d2: usize, d1: usize,
-    h3: usize, h2: usize, h1: usize,
+    d3: usize,
+    d2: usize,
+    d1: usize,
+    h3: usize,
+    h2: usize,
+    h1: usize,
     mix_rank: usize,
     ratio: f32,
     dim: usize,
@@ -241,34 +241,31 @@ pub fn gauge_lattice_fwd(
     let s3 = d3;
     let s32 = d3 + d2;
 
-    output
-        .par_chunks_mut(dim)
-        .enumerate()
-        .for_each(|(r, out)| {
-            let x_row = x_mat.row(r);
-            let x3 = x_row.slice(ndarray::s![..s3]);
-            let x2 = x_row.slice(ndarray::s![s3..s32]);
-            let x1 = x_row.slice(ndarray::s![s32..]);
+    output.par_chunks_mut(dim).enumerate().for_each(|(r, out)| {
+        let x_row = x_mat.row(r);
+        let x3 = x_row.slice(ndarray::s![..s3]);
+        let x2 = x_row.slice(ndarray::s![s3..s32]);
+        let x1 = x_row.slice(ndarray::s![s32..]);
 
-            let y3 = channel_fwd(&x3, &su3_up_nd, &su3_dn_nd, k3);
-            let y2 = channel_fwd(&x2, &su2_up_nd, &su2_dn_nd, k2);
-            let y1 = channel_fwd(&x1, &u1_up_nd, &u1_dn_nd, k1);
+        let y3 = channel_fwd(&x3, &su3_up_nd, &su3_dn_nd, k3);
+        let y2 = channel_fwd(&x2, &su2_up_nd, &su2_dn_nd, k2);
+        let y1 = channel_fwd(&x1, &u1_up_nd, &u1_dn_nd, k1);
 
-            out[..s3].copy_from_slice(y3.as_slice().unwrap());
-            out[s3..s32].copy_from_slice(y2.as_slice().unwrap());
-            out[s32..].copy_from_slice(y1.as_slice().unwrap());
+        out[..s3].copy_from_slice(y3.as_slice().unwrap());
+        out[s3..s32].copy_from_slice(y2.as_slice().unwrap());
+        out[s32..].copy_from_slice(y1.as_slice().unwrap());
 
-            if has_mix {
-                let md = ArrayView2::from_shape((mix_rank, dim), mix_down).unwrap();
-                let mu = ArrayView2::from_shape((dim, mix_rank), mix_up).unwrap();
-                let out_view = ArrayView1::from(&*out);
-                let proj = md.dot(&out_view);
-                let mix_result = mu.dot(&proj);
-                for j in 0..dim {
-                    out[j] += mix_result[j];
-                }
+        if has_mix {
+            let md = ArrayView2::from_shape((mix_rank, dim), mix_down).unwrap();
+            let mu = ArrayView2::from_shape((dim, mix_rank), mix_up).unwrap();
+            let out_view = ArrayView1::from(&*out);
+            let proj = md.dot(&out_view);
+            let mix_result = mu.dot(&proj);
+            for j in 0..dim {
+                out[j] += mix_result[j];
             }
-        });
+        }
+    });
     output
 }
 
@@ -588,11 +585,13 @@ pub fn ce_riemann_fwd(
             for p in 0..half {
                 let c = ci[p];
                 let s = si[p];
-                let q0 = qi[2 * p]; let q1 = qi[2 * p + 1];
-                qr[2 * p]     = q0 * c - q1 * s;
+                let q0 = qi[2 * p];
+                let q1 = qi[2 * p + 1];
+                qr[2 * p] = q0 * c - q1 * s;
                 qr[2 * p + 1] = q0 * s + q1 * c;
-                let k0 = ki[2 * p]; let k1 = ki[2 * p + 1];
-                kr[2 * p]     = k0 * c - k1 * s;
+                let k0 = ki[2 * p];
+                let k1 = ki[2 * p + 1];
+                kr[2 * p] = k0 * c - k1 * s;
                 kr[2 * p + 1] = k0 * s + k1 * c;
             }
         });
@@ -604,8 +603,8 @@ pub fn ce_riemann_fwd(
             let bh_idx = row / n;
             let i = row % n;
             let q_rot_base = bh_idx * n * d_head;
-            let v_base     = bh_idx * n * d_head;
-            let bias_base  = bh_idx * n * n;
+            let v_base = bh_idx * n * d_head;
+            let bias_base = bh_idx * n * n;
 
             let qi = &q_rot[q_rot_base + i * d_head..q_rot_base + (i + 1) * d_head];
             let bias_row = &sheet_bias[bias_base + i * n..bias_base + (i + 1) * n];
@@ -625,7 +624,9 @@ pub fn ce_riemann_fwd(
                 }
                 let s = dot * scale + bias_row[j];
                 scratch[j] = s;
-                if s > max_s { max_s = s; }
+                if s > max_s {
+                    max_s = s;
+                }
             }
 
             // Softmax (numerically stable)
@@ -642,10 +643,14 @@ pub fn ce_riemann_fwd(
             let inv = if denom > 0.0 { 1.0 / denom } else { 0.0 };
 
             // out_i = sum_j (e_j * inv) * v_j
-            for t in 0..d_head { out_row[t] = 0.0; }
+            for t in 0..d_head {
+                out_row[t] = 0.0;
+            }
             for j in 0..n {
                 let w = scratch[j] * inv;
-                if w == 0.0 { continue; }
+                if w == 0.0 {
+                    continue;
+                }
                 let vj = &v[v_base + j * d_head..v_base + (j + 1) * d_head];
                 for t in 0..d_head {
                     out_row[t] += w * vj[t];
@@ -695,10 +700,12 @@ pub fn ce_euler_fwd(
                 let s = theta.sin();
                 let idx0 = 2 * pair;
                 let idx1 = idx0 + 1;
-                let q0 = qi[idx0]; let q1 = qi[idx1];
+                let q0 = qi[idx0];
+                let q1 = qi[idx1];
                 qr[idx0] = q0 * c - q1 * s;
                 qr[idx1] = q0 * s + q1 * c;
-                let k0 = ki[idx0]; let k1 = ki[idx1];
+                let k0 = ki[idx0];
+                let k1 = ki[idx1];
                 kr[idx0] = k0 * c - k1 * s;
                 kr[idx1] = k0 * s + k1 * c;
             }
@@ -727,7 +734,9 @@ pub fn ce_euler_fwd(
                 let decay = -((i as f32 - j as f32).abs()) * inv_xi;
                 let s = dot * scale + decay;
                 a_row[j] = s;
-                if s > max_s { max_s = s; }
+                if s > max_s {
+                    max_s = s;
+                }
             }
             // softmax
             let mut denom = 0.0f32;
@@ -750,7 +759,9 @@ pub fn ce_euler_fwd(
             }
             for j in 0..n {
                 let w = a_row[j];
-                if w == 0.0 { continue; }
+                if w == 0.0 {
+                    continue;
+                }
                 let vj = &v[j * d_head..(j + 1) * d_head];
                 for t in 0..d_head {
                     out_row[t] += w * vj[t];

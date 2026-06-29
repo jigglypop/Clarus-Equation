@@ -20,11 +20,7 @@ pub struct RelaxOutput {
     pub steps: usize,
 }
 
-pub fn pack_sparse_csr(
-    w: &[f32],
-    dim: usize,
-    zero_tol: f32,
-) -> (Vec<f32>, Vec<i32>, Vec<i32>) {
+pub fn pack_sparse_csr(w: &[f32], dim: usize, zero_tol: f32) -> (Vec<f32>, Vec<i32>, Vec<i32>) {
     let mut values = Vec::new();
     let mut col_idx = Vec::new();
     let mut row_ptr = vec![0i32; dim + 1];
@@ -77,8 +73,16 @@ pub fn codebook_pull(
 
     let logits: Vec<f32> = (0..n_code).map(|i| beta * cb.row(i).dot(&m_arr)).collect();
     let max_l = logits.iter().cloned().fold(f32::NEG_INFINITY, f32::max);
-    let exp_sum: f32 = logits.iter().map(|&l| (l - max_l).exp()).collect::<Vec<_>>().iter().sum();
-    let weights: Vec<f32> = logits.iter().map(|&l| (l - max_l).exp() / exp_sum).collect();
+    let exp_sum: f32 = logits
+        .iter()
+        .map(|&l| (l - max_l).exp())
+        .collect::<Vec<_>>()
+        .iter()
+        .sum();
+    let weights: Vec<f32> = logits
+        .iter()
+        .map(|&l| (l - max_l).exp() / exp_sum)
+        .collect();
 
     let mut grad = vec![0.0f32; dim];
     for i in 0..n_code {
@@ -107,7 +111,10 @@ pub fn metric_basis_from_codebook(
     let logits: Vec<f32> = (0..n_code).map(|i| cb.row(i).dot(&m_arr)).collect();
     let max_l = logits.iter().cloned().fold(f32::NEG_INFINITY, f32::max);
     let exp_sum: f32 = logits.iter().map(|&l| (l - max_l).exp()).sum();
-    let probs: Vec<f32> = logits.iter().map(|&l| (l - max_l).exp() / exp_sum).collect();
+    let probs: Vec<f32> = logits
+        .iter()
+        .map(|&l| (l - max_l).exp() / exp_sum)
+        .collect();
 
     let mut mean = vec![0.0f32; dim];
     for i in 0..n_code {
@@ -246,7 +253,11 @@ fn symmetric_eigen(a: &Array2<f32>) -> (Array1<f32>, Array2<f32>) {
     let mut mat = a.clone();
     let mut vecs = Array2::<f32>::eye(n);
 
-    let diag_norm: f32 = (0..n).map(|i| mat[[i, i]] * mat[[i, i]]).sum::<f32>().sqrt().max(1e-30);
+    let diag_norm: f32 = (0..n)
+        .map(|i| mat[[i, i]] * mat[[i, i]])
+        .sum::<f32>()
+        .sqrt()
+        .max(1e-30);
     let rel_tol = 1e-7 * diag_norm;
     let max_sweeps = n.max(30) * 5;
 
@@ -371,7 +382,11 @@ fn solve_small_system(a: &Array2<f32>, b: &Array1<f32>) -> Array1<f32> {
 
 fn normalize(v: &Array1<f32>) -> Array1<f32> {
     let n = v.dot(v).sqrt();
-    if n < 1e-8 { v.clone() } else { v / n }
+    if n < 1e-8 {
+        v.clone()
+    } else {
+        v / n
+    }
 }
 
 fn norm(v: &Array1<f32>) -> f32 {
@@ -458,7 +473,10 @@ pub fn relax_forward(
             let (cb_grad, _) = codebook_pull(
                 m.as_slice().unwrap(),
                 cb_n.as_slice().unwrap(),
-                n_code, dim, beta, cb_w,
+                n_code,
+                dim,
+                beta,
+                cb_w,
             );
             let cb_g = Array1::from(cb_grad);
             grad = &grad + &cb_g;
@@ -469,8 +487,13 @@ pub fn relax_forward(
         let recent_var = 0.5 * (&diff_m_m1.mapv(|x| x * x) + &diff_m1_m2.mapv(|x| x * x));
 
         let (nat_grad, _diag) = natural_direction(
-            &grad, &phi_hat, &recent_var, &basis_n,
-            lambda0, lambda_phi, lambda_var,
+            &grad,
+            &phi_hat,
+            &recent_var,
+            &basis_n,
+            lambda0,
+            lambda_phi,
+            lambda_var,
         );
 
         let t_k = t_eff * (1.0 - k as f32 / anneal_end as f32).max(0.0);
@@ -478,12 +501,16 @@ pub fn relax_forward(
         let noise_std = noise_var.sqrt() * noise_scale.max(0.0);
 
         let noise: Array1<f32> = if noise_std > 0.0 {
-            let z: Array1<f32> = Array1::from_iter(
-                (0..dim).map(|_| rng.sample::<f32, _>(StandardNormal))
-            );
+            let z: Array1<f32> =
+                Array1::from_iter((0..dim).map(|_| rng.sample::<f32, _>(StandardNormal)));
             let transformed = fdt_noise(
-                &z, &phi_hat, &recent_var, &basis_n,
-                lambda0, lambda_phi, lambda_var,
+                &z,
+                &phi_hat,
+                &recent_var,
+                &basis_n,
+                lambda0,
+                lambda_phi,
+                lambda_var,
             );
             transformed * noise_std
         } else {
@@ -501,9 +528,7 @@ pub fn relax_forward(
         let e_portal_v = -portal * m.dot(&phi_hat);
         let e_bypass_v = -bypass * c_k * m.dot(&phi_hat);
         let e_cb_v = if n_code > 0 {
-            let logits: Vec<f32> = (0..n_code)
-                .map(|i| beta * cb_n.row(i).dot(&m))
-                .collect();
+            let logits: Vec<f32> = (0..n_code).map(|i| beta * cb_n.row(i).dot(&m)).collect();
             let max_l = logits.iter().cloned().fold(f32::NEG_INFINITY, f32::max);
             let lse = max_l + logits.iter().map(|&l| (l - max_l).exp()).sum::<f32>().ln();
             -(cb_w / beta.max(1e-6)) * lse

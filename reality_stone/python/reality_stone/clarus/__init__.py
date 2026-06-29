@@ -44,6 +44,30 @@ nonselected_residual = None
 compose_weighted_kernels = None
 tropical_compose = None
 born_prior = None
+survival_fraction = None
+conditioned_prior = None
+tilt_survival = None
+layer_cake_survival = None
+mean_field_bounds = None
+CandidateAnswer = None
+EvidenceClaim = None
+ClaimAudit = None
+ClaimActionWeights = None
+ClaimAxisEvidence = None
+ClaimGraphEdge = None
+DefectWeights = None
+PreEqVerifierConfig = None
+PreEqVerifier = None
+ClaimResidualVerifierConfig = None
+ClaimResidualVerifier = None
+ManifestDecision = None
+ResidualAnswerCandidate = None
+ResidualAnswerState = None
+ResidualClaim = None
+ResidualManifestDecision = None
+LabeledCandidateSet = None
+VerificationMetrics = None
+evaluate_labeled_sets = None
 
 try:
     from .device import auto_device  # type: ignore[no-redef]
@@ -129,10 +153,40 @@ try:
     from .pre_eq import (  # type: ignore[no-redef]
         born_prior,
         compose_weighted_kernels,
+        conditioned_prior,
         gibbs_reweight,
+        layer_cake_survival,
         manifest_indices,
+        mean_field_bounds,
         nonselected_residual,
+        survival_fraction,
+        tilt_survival,
         tropical_compose,
+    )
+except ImportError:
+    pass
+
+try:
+    from .llm_pre_eq import (  # type: ignore[no-redef]
+        CandidateAnswer,
+        ClaimActionWeights,
+        ClaimAudit,
+        ClaimAxisEvidence,
+        ClaimGraphEdge,
+        ClaimResidualVerifier,
+        ClaimResidualVerifierConfig,
+        DefectWeights,
+        EvidenceClaim,
+        LabeledCandidateSet,
+        ManifestDecision,
+        PreEqVerifier,
+        PreEqVerifierConfig,
+        ResidualAnswerCandidate,
+        ResidualAnswerState,
+        ResidualClaim,
+        ResidualManifestDecision,
+        VerificationMetrics,
+        evaluate_labeled_sets,
     )
 except ImportError:
     pass
@@ -168,6 +222,30 @@ __all__ = [
     "compose_weighted_kernels",
     "tropical_compose",
     "born_prior",
+    "survival_fraction",
+    "conditioned_prior",
+    "tilt_survival",
+    "layer_cake_survival",
+    "mean_field_bounds",
+    "CandidateAnswer",
+    "EvidenceClaim",
+    "ClaimAudit",
+    "ClaimActionWeights",
+    "ClaimAxisEvidence",
+    "ClaimGraphEdge",
+    "DefectWeights",
+    "PreEqVerifierConfig",
+    "PreEqVerifier",
+    "ClaimResidualVerifierConfig",
+    "ClaimResidualVerifier",
+    "ManifestDecision",
+    "ResidualAnswerCandidate",
+    "ResidualAnswerState",
+    "ResidualClaim",
+    "ResidualManifestDecision",
+    "LabeledCandidateSet",
+    "VerificationMetrics",
+    "evaluate_labeled_sets",
     "auto_device",
     "safe_print",
     "normalize_vector",

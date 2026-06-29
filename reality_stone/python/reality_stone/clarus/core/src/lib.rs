@@ -17,6 +17,7 @@ mod python_binding {
     use crate::engine::nn_ops;
     use crate::engine::ce_riemann;
     use crate::engine::kernel;
+    use crate::engine::llm_pre_eq;
     use crate::engine::runtime_types;
 
     #[pyfunction]
@@ -556,6 +557,122 @@ mod python_binding {
         (out.into_pyarray(py), k.into_pyarray(py))
     }
 
+    #[pyfunction]
+    #[allow(clippy::too_many_arguments)]
+    fn nn_llm_pre_eq_fwd<'py>(
+        py: Python<'py>,
+        prior: PyReadonlyArray1<'py, f64>,
+        supported: PyReadonlyArray1<'py, f64>,
+        unsupported: PyReadonlyArray1<'py, f64>,
+        contradicted: PyReadonlyArray1<'py, f64>,
+        instruction: PyReadonlyArray1<'py, f64>,
+        self_contradiction: PyReadonlyArray1<'py, f64>,
+        uncertainty: PyReadonlyArray1<'py, f64>,
+        beta: f64,
+        w_contradicted: f64,
+        w_unsupported: f64,
+        w_no_evidence: f64,
+        w_coverage: f64,
+        w_instruction: f64,
+        w_self_contradiction: f64,
+        w_uncertainty: f64,
+    ) -> PyResult<(&'py PyArray1<f64>, &'py PyArray1<f64>)> {
+        let weights = llm_pre_eq::LlmPreEqWeights {
+            contradicted: w_contradicted,
+            unsupported: w_unsupported,
+            no_evidence: w_no_evidence,
+            coverage: w_coverage,
+            instruction: w_instruction,
+            self_contradiction: w_self_contradiction,
+            uncertainty: w_uncertainty,
+        };
+        let energy = llm_pre_eq::defect_energies(
+            supported.as_slice().expect("contiguous supported"),
+            unsupported.as_slice().expect("contiguous unsupported"),
+            contradicted.as_slice().expect("contiguous contradicted"),
+            instruction.as_slice().expect("contiguous instruction"),
+            self_contradiction.as_slice().expect("contiguous self_contradiction"),
+            uncertainty.as_slice().expect("contiguous uncertainty"),
+            weights,
+        )
+        .map_err(pyo3::exceptions::PyValueError::new_err)?;
+        let posterior = llm_pre_eq::gibbs_posterior(
+            prior.as_slice().expect("contiguous prior"),
+            &energy,
+            beta,
+        )
+        .map_err(pyo3::exceptions::PyValueError::new_err)?;
+        Ok((energy.into_pyarray(py), posterior.into_pyarray(py)))
+    }
+
+    #[pyfunction]
+    #[allow(clippy::too_many_arguments)]
+    fn nn_llm_claim_pre_eq_fwd<'py>(
+        py: Python<'py>,
+        prior: PyReadonlyArray1<'py, f64>,
+        residual: PyReadonlyArray1<'py, f64>,
+        graph: PyReadonlyArray1<'py, f64>,
+        tau: PyReadonlyArray1<'py, f64>,
+        source_unreliability: PyReadonlyArray1<'py, f64>,
+        independence: PyReadonlyArray1<'py, f64>,
+        missing: PyReadonlyArray1<'py, f64>,
+        instruction: PyReadonlyArray1<'py, f64>,
+        schema: PyReadonlyArray1<'py, f64>,
+        coverage: PyReadonlyArray1<'py, f64>,
+        unsupported: PyReadonlyArray1<'py, f64>,
+        ce_penalty: PyReadonlyArray1<'py, f64>,
+        beta: f64,
+        w_residual: f64,
+        w_graph: f64,
+        w_tau: f64,
+        w_source: f64,
+        w_independence: f64,
+        w_missing: f64,
+        w_instruction: f64,
+        w_schema: f64,
+        w_coverage: f64,
+        w_unsupported: f64,
+        w_ce_penalty: f64,
+    ) -> PyResult<(&'py PyArray1<f64>, &'py PyArray1<f64>)> {
+        let weights = llm_pre_eq::ClaimActionWeights {
+            residual: w_residual,
+            graph: w_graph,
+            tau: w_tau,
+            source: w_source,
+            independence: w_independence,
+            missing: w_missing,
+            instruction: w_instruction,
+            schema: w_schema,
+            coverage: w_coverage,
+            unsupported: w_unsupported,
+            ce_penalty: w_ce_penalty,
+        };
+        let actions = llm_pre_eq::claim_answer_actions(
+            residual.as_slice().expect("contiguous residual"),
+            graph.as_slice().expect("contiguous graph"),
+            tau.as_slice().expect("contiguous tau"),
+            source_unreliability
+                .as_slice()
+                .expect("contiguous source_unreliability"),
+            independence.as_slice().expect("contiguous independence"),
+            missing.as_slice().expect("contiguous missing"),
+            instruction.as_slice().expect("contiguous instruction"),
+            schema.as_slice().expect("contiguous schema"),
+            coverage.as_slice().expect("contiguous coverage"),
+            unsupported.as_slice().expect("contiguous unsupported"),
+            ce_penalty.as_slice().expect("contiguous ce_penalty"),
+            weights,
+        )
+        .map_err(pyo3::exceptions::PyValueError::new_err)?;
+        let posterior = llm_pre_eq::gibbs_posterior(
+            prior.as_slice().expect("contiguous prior"),
+            &actions,
+            beta,
+        )
+        .map_err(pyo3::exceptions::PyValueError::new_err)?;
+        Ok((actions.into_pyarray(py), posterior.into_pyarray(py)))
+    }
+
     #[pymodule]
     fn _rust(_py: Python, m: &PyModule) -> PyResult<()> {
         m.add_function(wrap_pyfunction!(topk_sparse, m)?)?;
@@ -574,6 +691,8 @@ mod python_binding {
         m.add_function(wrap_pyfunction!(nn_ce_dual_attn_fwd, m)?)?;
         m.add_function(wrap_pyfunction!(nn_ce_euler_fwd, m)?)?;
         m.add_function(wrap_pyfunction!(nn_ce_riemann_fwd, m)?)?;
+        m.add_function(wrap_pyfunction!(nn_llm_pre_eq_fwd, m)?)?;
+        m.add_function(wrap_pyfunction!(nn_llm_claim_pre_eq_fwd, m)?)?;
         #[cfg(feature = "cuda")]
         m.add_function(wrap_pyfunction!(nn_ce_riemann_fwd_cuda, m)?)?;
         #[cfg(feature = "cuda")]

@@ -164,6 +164,39 @@ $$I_i^t \leftarrow I_i^t + \lambda_H\,R_{i,t}$$
 
 기억은 셀 로컬 상태가 아니라 **외부 메모리 루프**로 둔다.
 
+LLM 장기기억 구현에서는 이 루프를 다음 explicit memory API로 둔다.
+
+$$
+\Omega_t=\phi_{\rm extract}(S_t,m_{t-1},m_t),
+\qquad
+o_{tj}\in
+\{\operatorname{ADD},\operatorname{UPDATE},\operatorname{DELETE},\operatorname{NOOP}\},
+$$
+
+$$
+H_{t+1}
+=
+\mathcal U(H_t,\{(\omega_{tj},o_{tj})\}),
+\qquad
+R_t
+=
+\mathcal R(H_t,q_t,t_q).
+$$
+
+여기서 \(H_t=(K_t,V_t,P_t)\)는 MemGPT/MemoryBank류의 외부 context, vector store, graph store, replay priority를 포괄한다. HippoRAG/Mem0 계열을 쓰는 경우 \(K_t\)는 단순 dense index가 아니라 entity/relation graph 또는 hippocampal index가 될 수 있다.
+
+검증은 “기억이 있다”가 아니라 다음 불변조건으로 한다.
+
+| invariant | 의미 |
+|---|---|
+| evidence recall | 답을 뒷받침하는 turn/session id가 \(R_t\) 안에 있다 |
+| temporal update | 오래된 정보와 새 정보가 충돌할 때 최신 상태를 선택한다 |
+| abstention | \(H_t\)에 없는 정보는 생성하지 않고 모른다고 답한다 |
+| deletion/update audit | DELETE/UPDATE가 기존 memory를 조용히 오염시키지 않는다 |
+| cost bound | full-context 대비 token/latency를 함께 보고한다 |
+
+LoCoMo, LongMemEval, MemoryBank probe 같은 benchmark에서 single-hop, multi-hop, temporal reasoning, knowledge update, abstention을 분리 보고하기 전까지는 memory SOTA 주장을 금지한다.
+
 ### 2.5 Layer E: 자아/전역 상태
 
 전역 상태:
