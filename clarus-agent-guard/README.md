@@ -157,6 +157,28 @@ python -m bench.inject_run
 python -m bench.all     # 6개 벤치 스코어보드 + CI 게이트(exit code)
 ```
 
+### 공식 AgentDojo 공격 데이터 실측
+
+자작 벤치가 아니라 **AgentDojo v1의 실제 4 스위트**(workspace/travel/banking/
+slack)를 설치해, 27개 injection task의 *공격자 ground-truth 툴콜*을 우리 실제
+`Executor`에 흘려보낸 결과. 전체 user×injection 매트릭스 = **629 보안 조합**
+(AgentDojo 공식 수치와 일치).
+
+```bash
+python -m venv .venv-adojo && source .venv-adojo/Scripts/activate
+pip install agentdojo
+PYTHONUTF8=1 python -m bench.agentdojo_official
+# TOTAL security combinations : 629
+# ASR (any injected side effect) : 0/629 = 0.0%
+# BENIGN authorized calls execute : 80/80 = 100%  (blanket-deny 아님)
+```
+
+범위/정직성: **보안(ASR) 차원만** 측정 — utility는 라이브 LLM 실행이 필요해
+미수행(별도 유료 런). 측정 중 발견한 분류 버그(`get_scheduled_transactions`의
+`"scheduled"`가 `schedule` 동사로 오매칭 → 무해한 read를 side-effect로 오판,
+초기 0.5% 거짓 ASR)는 read-접두사 우선으로 수정 후 0%로 정정. 진짜 공격
+(send_money 등)은 처음부터 전부 차단돼 있었음.
+
 ### 벤치마크 한눈에
 
 | bench | 측정 | 결과 |

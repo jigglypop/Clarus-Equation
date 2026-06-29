@@ -67,9 +67,9 @@ class Executor:
         if tool.side_effecting:
             # check 1: authority
             if tool.required_cap not in granted:
+                cap = getattr(tool.required_cap, "value", tool.required_cap)
                 raise CapabilityError(
-                    f"'{name}' requires {tool.required_cap.value!r}; "
-                    f"not granted by the user turn")
+                    f"'{name}' requires {cap!r}; not granted by the user turn")
             # check 2: argument integrity
             for arg_name in tool.critical_args:
                 v = args.get(arg_name)

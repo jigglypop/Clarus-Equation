@@ -1,0 +1,3 @@
+.venv-adojo/
+__pycache__/
+*.pyc
