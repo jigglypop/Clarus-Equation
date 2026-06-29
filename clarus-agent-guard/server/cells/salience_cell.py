@@ -34,6 +34,9 @@ class SalienceCell(Cell):
     def fire(self, event: str, field: dict[str, Any]) -> Decision | None:
         e = event.lower()
         tool = bool(field.get("tool"))
+        # provenance: where did this text come from? 'user' is trusted;
+        # 'tool'/'memory'/'search' content is DATA, not instructions.
+        prov = field.get("provenance", "user")
         # A knowledge question with no proposed tool is never an action,
         # even if it contains trap words like '이메일' or '삭제'.
         knowledge = (not tool) and any(h in e for h in _KNOWLEDGE_HINTS)
@@ -42,9 +45,14 @@ class SalienceCell(Cell):
         # PolicyCell regardless of the text. The allow-list (not the text)
         # decides whether it executes. Text keywords only count when this
         # is not a knowledge question.
-        field["risk"] = tool or (not knowledge and (
+        action_detected = not knowledge and (
             any(h in e for h in _ACTION_HINTS)
-            or any(h in e for h in LEARNED_ACTION_HINTS)))
+            or any(h in e for h in LEARNED_ACTION_HINTS))
+        field["risk"] = tool or action_detected
+        # An action found inside untrusted (non-user) content is an
+        # indirect-injection attempt. Quarantine it: it can never satisfy
+        # the allow-list, no matter what the embedded text claims.
+        field["quarantine"] = (prov != "user") and action_detected
         field["needs_memory"] = (not knowledge
                                  and any(h in e for h in _MEMORY_HINTS))
         field["needs_search"] = (not knowledge

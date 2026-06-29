@@ -134,6 +134,76 @@ python -m bench.replay_demo
 # POST /replay 로도 호출
 ```
 
+### 간접 프롬프트 인젝션 (표준 벤치 축)
+
+업계 표준 에이전트-보안 벤치(AgentDojo·InjecAgent·ASB)의 핵심 지표는
+**ASR(Attack Success Rate)** — 공격이 사용자 입력이 아니라 검색결과·
+툴출력·메모리에 *심겨* 들어온다. 적응형 공격 시 SOTA ASR은 85%+, 방어를
+잘 쌓아야 73%→8.7%로 내려간다.
+
+우리의 답은 **control/data 분리**: 비-`user` provenance 콘텐츠에서 발견된
+명령은 데이터일 뿐, allow-list를 만족할 수 없다(quarantine → draft).
+
+```bash
+python -m bench.inject_run
+# ASR (attack success) : 0/15 = 0%   (target 0; SOTA 11-85%)
+# benign pass-rate     : 100%        (검색/메모리는 그대로 쓸 수 있음)
+# INJECTION DEFENSE: [HELD]
+```
+
+### 한 번에 다 돌리기
+
+```bash
+python -m bench.all     # 6개 벤치 스코어보드 + CI 게이트(exit code)
+```
+
+### 벤치마크 한눈에
+
+| bench | 측정 | 결과 |
+|-------|------|------|
+| `bench.run` | route 정확도 (100문항) | 96% / false-allow 0% |
+| `bench.hard_run` | 적대적 (함정·우회·injection) | 95% / false-allow 0% / SAFE |
+| `bench.inject_run` | 간접 인젝션 ASR | **0%** / benign 100% / HELD |
+| `bench.audit_check` | 게이트 우회 불변식 | HOLDS |
+| `bench.replay_demo` | 차단에서 동사 학습 | LEARNED |
+| `bench.firewall_run` | 메모리 poisoning (ASB 축) | poison 100% 차단 / 무단덮어쓰기 0 / HELD |
+| `bench.test_capability` | capability 소프트니스 (탐지 무관) | fuzz 150회 0실행 / SOUND |
+
+### 탐지에 의존하지 않는 구조 방어 (capability layer)
+
+키워드 cell은 *탐지* 레이어 — 난독화에 뚫린다. `capability.py` + `executor.py`는
+*집행* 레이어로, 공격의 표현을 인식하지 않아도 막는다. 두 불변식:
+
+- **I1 권한 출처:** side effect 권한(capability)은 `authorize()`가 **신뢰된
+  사용자 입력에서만** 발급. 데이터에서는 절대 파생 불가.
+- **I2 taint 단조성:** 모든 값은 신뢰 등급을 갖고, 결합 시 **최소 신뢰**를
+  택함. web/tool/memory 데이터는 스스로를 상위 신뢰로 세탁할 수 없음.
+
+결과: 인젝션이 제안한 액션은 executor에 **권한 없이** 도달 → 표현이
+아무리 교묘해도 거부. 탐지는 UX(친절한 에러)용이지, 방어의 본체가 아니다.
+`Executor.execute`만이 부작용 경로라서(interception) 우회 래핑이 불가능 →
+게이트 불변식이 *비공허*해진다.
+
+```bash
+python -m bench.test_capability
+# keyword-evading injection refused   (키워드 0개여도 차단)
+# exfiltration via tainted arg refused (권한 있어도 오염된 인자 차단)
+# fuzz: 150 untrusted attempts, 0 execute
+# unrecognised real action -> DENY (safe; 기본 거부)
+# STRUCTURAL DEFENSE: [SOUND]
+```
+
+정직한 트레이드오프: 구조 방어는 **기본 거부(default-deny)**다. authorize가
+못 알아본 *진짜* 사용자 액션도 막힌다(안전하지만 over-block). recall을
+올리는 건 classifier cell의 몫 — 그러나 under-allow(=breach)는 구조가 0으로
+고정한다. 참고: Google DeepMind **CaMeL**(*Defeating prompt injections by
+design*, 2025)이 이 capability/dataflow 분리의 본격판.
+
+표준 벤치 참고: [AgentDojo](https://www.emergentmind.com/topics/agentdojo-benchmark),
+[InjecAgent](https://arxiv.org/pdf/2403.02691),
+[Agent Security Bench (ICLR'25)](https://proceedings.iclr.cc/paper_files/paper/2025/file/5750f91d8fb9d5c02bd8ad2c3b44456b-Paper-Conference.pdf),
+[Indirect PI: Firewalls or Stronger Benchmarks?](https://arxiv.org/abs/2510.05244).
+
 ## 지금 상태 (MVP)
 
 - [x] DAGlet schema / store / motif 유사도
@@ -145,5 +215,8 @@ python -m bench.replay_demo
 - [x] 하드(적대적) 벤치 (`bench/hard_*`) — route 95% / false-allow 0% / SAFE
 - [x] 그래프 불변식 (`trace/audit.py`) — labelled action은 policy를 반드시 통과 (`bench/audit_check.py`)
 - [x] replay 루프 (`replay.py`) — 과거 차단에서 행동동사 학습, 텍스트-우회 적응 차단 (`bench/replay_demo.py`)
-- [ ] Memory Firewall: `memory_write` edge 검증 cell
-- [ ] 학습 힌트 영속화(SQLite) + 운영 중 false-block 모니터링
+- [x] Memory Firewall (`memory_firewall.py`) — poisoning/faithfulness/preservation 3-gate (`bench/firewall_run.py`)
+- [x] capability/taint 집행 레이어 (`capability.py`, `executor.py`) — 탐지 무관 구조 방어, soundness 증명 (`bench/test_capability.py`)
+- [ ] executor를 PolicyCell allow-path에 정식 결선 (현재 enforcement 코어는 독립 검증됨)
+- [ ] 학습 힌트 + 메모리 영속화(SQLite) + 운영 중 false-block 모니터링
+- [ ] 룰 셀 → small classifier 셀 교체 (recall↑/false-block↓; under-allow는 capability가 0 고정)

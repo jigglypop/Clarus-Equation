@@ -12,6 +12,7 @@ from __future__ import annotations
 from fastapi import APIRouter
 from pydantic import BaseModel
 
+from .memory_firewall import STORE as MEM, MemoryUpdate
 from .replay import replay
 from .scheduler import run_event
 from .trace.store import STORE
@@ -62,3 +63,18 @@ def get_audit():
 def post_replay():
     """Idle consolidation: learn action verbs from past blocked actions."""
     return replay(STORE)
+
+
+class MemoryIn(BaseModel):
+    key: str
+    value: str
+    provenance: str = "user"
+    raw_episode_id: str | None = None
+
+
+@router.post("/memory/propose")
+def post_memory(body: MemoryIn):
+    """Propose a long-term memory write; the firewall verifies it first."""
+    v = MEM.commit(MemoryUpdate(body.key, body.value, body.provenance,
+                                body.raw_episode_id))
+    return {"action": v.action, "ok": v.ok, "reasons": v.reasons}

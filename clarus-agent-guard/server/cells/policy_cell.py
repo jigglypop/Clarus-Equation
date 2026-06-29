@@ -19,6 +19,13 @@ class PolicyCell(Cell):
         self.allow = allow or set()
 
     def fire(self, event: str, field: dict[str, Any]) -> Decision | None:
+        # control/data separation: an action surfaced from untrusted
+        # content is quarantined regardless of the allow-list. This is the
+        # defense against indirect prompt injection.
+        if field.get("quarantine"):
+            return Decision(self.name, "draft", EdgeKind.CONTROL,
+                            "action found in untrusted content -> quarantined",
+                            note="blocked")
         tool = field.get("tool", "")
         if tool in self.allow:
             return Decision(self.name, "answer", EdgeKind.EXTERNAL_ACTION,
