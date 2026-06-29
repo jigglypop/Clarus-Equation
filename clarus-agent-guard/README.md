@@ -168,6 +168,7 @@ python -m bench.all     # 6개 벤치 스코어보드 + CI 게이트(exit code)
 | `bench.replay_demo` | 차단에서 동사 학습 | LEARNED |
 | `bench.firewall_run` | 메모리 poisoning (ASB 축) | poison 100% 차단 / 무단덮어쓰기 0 / HELD |
 | `bench.test_capability` | capability 소프트니스 (탐지 무관) | fuzz 150회 0실행 / SOUND |
+| `bench.agentdojo_suite` | AgentDojo-style (utility+ASR) 재현 | utility 100% / ASR 0% (F1·F2) |
 
 ### 탐지에 의존하지 않는 구조 방어 (capability layer)
 
@@ -217,6 +218,7 @@ design*, 2025)이 이 capability/dataflow 분리의 본격판.
 - [x] replay 루프 (`replay.py`) — 과거 차단에서 행동동사 학습, 텍스트-우회 적응 차단 (`bench/replay_demo.py`)
 - [x] Memory Firewall (`memory_firewall.py`) — poisoning/faithfulness/preservation 3-gate (`bench/firewall_run.py`)
 - [x] capability/taint 집행 레이어 (`capability.py`, `executor.py`) — 탐지 무관 구조 방어, soundness 증명 (`bench/test_capability.py`)
-- [ ] executor를 PolicyCell allow-path에 정식 결선 (현재 enforcement 코어는 독립 검증됨)
+- [x] executor를 PolicyCell allow-path에 정식 결선 — salience가 권한 발급(I1), policy가 refuse/approval 구분, read-only는 chokepoint 실행
+- [x] AgentDojo/InjecAgent 위협모델 재현 (`bench/agentdojo_suite.py`) — 4 env, F1/F2 공격족, utility 100% / ASR 0% (※동형 재현; 공식 repo+LLM 실측은 미수행)
 - [ ] 학습 힌트 + 메모리 영속화(SQLite) + 운영 중 false-block 모니터링
 - [ ] 룰 셀 → small classifier 셀 교체 (recall↑/false-block↓; under-allow는 capability가 0 고정)

@@ -28,6 +28,8 @@ BENCHES = [
      r"ADAPTIVE GUARD: \[(\w+)\]", "LEARNED"),
     ("bench.test_capability", "capability soundness (detection-free)",
      r"STRUCTURAL DEFENSE: \[(\w+)\]", "SOUND"),
+    ("bench.agentdojo_suite", "AgentDojo-style (utility + ASR)",
+     r"RESULT: \[(\w+)\]", "PASS"),
 ]
 
 

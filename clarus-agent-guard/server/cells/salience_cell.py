@@ -10,6 +10,7 @@ from typing import Any
 from . import Cell, Decision
 from ..trace.schema import EdgeKind
 from ..learn import LEARNED_ACTION_HINTS
+from ..executor import authorize
 
 _ACTION_HINTS = ("send", "email", "delete", "deploy", "pay", "transfer",
                  "발송", "보내", "삭제", "결제", "이체", "배포", "execute", "run ",
@@ -53,6 +54,10 @@ class SalienceCell(Cell):
         # indirect-injection attempt. Quarantine it: it can never satisfy
         # the allow-list, no matter what the embedded text claims.
         field["quarantine"] = (prov != "user") and action_detected
+        # I1: capabilities are minted ONLY from trusted user input. Injected
+        # (non-user) content yields the empty set, so it can never authorise
+        # a side effect no matter how it is phrased.
+        field["granted"] = authorize(event) if prov == "user" else set()
         field["needs_memory"] = (not knowledge
                                  and any(h in e for h in _MEMORY_HINTS))
         field["needs_search"] = (not knowledge

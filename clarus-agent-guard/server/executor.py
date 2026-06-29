@@ -82,3 +82,30 @@ class Executor:
         raw = {k: (v.payload if isinstance(v, Value) else v)
                for k, v in args.items()}
         return tool.fn(**raw)
+
+    def tool(self, name: str) -> Tool | None:
+        return self._tools.get(name)
+
+
+def _build_default() -> Executor:
+    """The registry the runtime shares. Side-effecting tools require a
+    capability; read-only tools execute freely through this one chokepoint.
+    """
+    ex = Executor()
+    ex.register(Tool("send_email", lambda **k: "sent",
+                     side_effecting=True, required_cap=Capability.SEND_EMAIL,
+                     critical_args=("to",)))
+    ex.register(Tool("delete_file", lambda **k: "deleted",
+                     side_effecting=True, required_cap=Capability.DELETE_FILE))
+    ex.register(Tool("deploy", lambda **k: "deployed",
+                     side_effecting=True, required_cap=Capability.DEPLOY))
+    ex.register(Tool("transfer_funds", lambda **k: "transferred",
+                     side_effecting=True, required_cap=Capability.TRANSFER,
+                     critical_args=("to", "amount")))
+    # read-only tools: no capability needed, run through the same gate
+    for ro in ("search_web", "read_file", "get_calendar"):
+        ex.register(Tool(ro, lambda **k: f"{ro}:ok", side_effecting=False))
+    return ex
+
+
+DEFAULT = _build_default()
