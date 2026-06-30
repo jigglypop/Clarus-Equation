@@ -481,8 +481,17 @@ class BrainRuntime:
             return
         self.weight = self.weight.abs() * self.dale_sign.unsqueeze(1)
 
-    def _apply_runtime_stdp(self, active_count: int, energy: float) -> float:
-        """Optional F14 closed-loop plasticity over the runtime weight matrix."""
+    def _apply_runtime_stdp(
+        self, active_count: int, energy: float, critic_score: float | None = None
+    ) -> float:
+        """Optional F14 closed-loop plasticity over the runtime weight matrix.
+
+        The learning gate (F.14.2) is ``g = alpha_g * d(c_bar)/dt + (1-alpha_g) *
+        bootstrap_dev``. ``c_bar`` is the critic signal. When a Layer-F agent
+        supplies its own critic via ``critic_score`` it drives the gate; otherwise
+        the runtime falls back to internal ``energy`` as a critic proxy so that
+        standalone (agent-less) runtimes still self-organize.
+        """
         if self.stdp_tracker is None:
             self._last_stdp_gate = 0.0
             return 0.0
@@ -497,9 +506,10 @@ class BrainRuntime:
             self._last_stdp_gate = 0.0
             return 0.0
 
+        gate_drive = float(energy if critic_score is None else critic_score)
         active_ratio = float(active_count) / float(max(self.config.dim, 1))
         gate = compute_learning_gate(
-            critic_score=float(energy),
+            critic_score=gate_drive,
             prev_critic_score=self._stdp_prev_critic_score,
             active_ratio=active_ratio,
             alpha_g=self.stdp_tracker.config.alpha_g,
@@ -964,6 +974,7 @@ class BrainRuntime:
         external_input: torch.Tensor | None = None,
         cue: torch.Tensor | None = None,
         force_mode: RuntimeMode | None = None,
+        critic_score: float | None = None,
     ) -> RuntimeStep:
         external = (
             torch.zeros(self.config.dim, device=self.device)
@@ -986,7 +997,7 @@ class BrainRuntime:
         active_mask = self._select_active(salience, self._f1_effective_budget(mode))
         active_count = int(active_mask.sum().item())
         self._f1_update_ema(active_count)
-        stdp_gate = self._apply_runtime_stdp(active_count, energy)
+        stdp_gate = self._apply_runtime_stdp(active_count, energy, critic_score=critic_score)
         self.mode = mode
         self.mode_occupancy[mode.value] = self.mode_occupancy.get(mode.value, 0) + 1
         self._update_lifecycle(salience, active_mask)

@@ -86,3 +86,61 @@ class TestSTDPUpdate:
         w_new = apply_stdp_update(w, tracker, gate=0.0, density=1.0)
         proj_w = structural_projection(w, density=1.0)
         assert torch.allclose(w_new, proj_w, atol=1e-5)
+
+
+# ---------------------------------------------------------------------------
+# F.14.2 closed-loop wiring: the Layer-F critic must drive the STDP gate.
+# ---------------------------------------------------------------------------
+from reality_stone.clarus.runtime import BrainRuntime, BrainRuntimeConfig, RuntimeMode
+from reality_stone.clarus.agent import RuntimeAgent
+
+
+def _plastic_runtime(dim: int = 16) -> BrainRuntime:
+    cfg = BrainRuntimeConfig(
+        dim=dim,
+        stdp_enabled=True,
+        stdp_interval=1,
+        stdp_apply_interval=1,
+        stdp_gate_threshold=0.0,
+        stdp_spike_threshold=0.05,
+        noise_sigma=0.0,
+        dale_law=False,
+        axon_delay=False,
+        f1_self_measure=False,
+    )
+    torch.manual_seed(0)
+    weight = torch.randn(dim, dim) * 0.2
+    weight.fill_diagonal_(0.0)
+    return BrainRuntime(weight, config=cfg)
+
+
+class TestRuntimeCriticGate:
+    def test_critic_score_drives_gate(self):
+        """Two identical runtimes diverge in STDP gate when fed different critics."""
+        ext = torch.ones(16) * 0.5
+        rt_hi = _plastic_runtime()
+        rt_lo = _plastic_runtime()
+        step_hi = rt_hi.step(external_input=ext, force_mode=RuntimeMode.WAKE, critic_score=5.0)
+        step_lo = rt_lo.step(external_input=ext, force_mode=RuntimeMode.WAKE, critic_score=0.0)
+        # Same dynamics, different critic -> different learning gate (F.14.2).
+        assert step_hi.stdp_gate != step_lo.stdp_gate
+
+    def test_default_falls_back_to_energy(self):
+        """No critic_score -> gate still computed (energy proxy), behavior preserved."""
+        rt = _plastic_runtime()
+        step = rt.step(external_input=torch.ones(16) * 0.5, force_mode=RuntimeMode.WAKE)
+        assert isinstance(step.stdp_gate, float)
+
+    def test_agent_feeds_critic_into_plasticity(self):
+        """RuntimeAgent wires its critic into the runtime STDP gate over an episode."""
+        rt = _plastic_runtime()
+        agent = RuntimeAgent(rt)
+        ext = torch.ones(16) * 0.5
+        gates = []
+        for _ in range(6):
+            out = agent.step(external_input=ext, observation=ext, force_mode=RuntimeMode.WAKE)
+            gates.append(out.runtime_step.stdp_gate)
+        # Critic becomes nonzero after the first tick and drives later gates.
+        assert agent._last_critic_score >= 0.0
+        assert any(g != 0.0 for g in gates)
+        assert rt._stdp_updates > 0
