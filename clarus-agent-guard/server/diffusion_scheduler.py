@@ -149,7 +149,8 @@ def diffusion_route(pi: dict[str, float], field: dict[str, Any]) -> str:
     return "answer"
 
 
-def run_event_diffusion(event: str, field: dict[str, Any] | None = None) -> DAGlet:
+def run_event_diffusion(event: str, field: dict[str, Any] | None = None,
+                        enforce: bool = True) -> DAGlet:
     """Build a DAGlet using diffusion as an orchestration prior.
 
     Safety: the execution path is still produced by the same forward cell
@@ -199,5 +200,6 @@ def run_event_diffusion(event: str, field: dict[str, Any] | None = None) -> DAGl
 
     # Same structural invariant as the walk scheduler — must stay 0.
     daglet.violations = audit(daglet)
-    STORE.commit(daglet)
+    # fail-closed, same policy as the walk scheduler.
+    STORE.commit(daglet, enforce=enforce)
     return daglet

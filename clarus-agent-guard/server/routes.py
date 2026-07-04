@@ -15,7 +15,7 @@ from pydantic import BaseModel
 from .memory_firewall import STORE as MEM, MemoryUpdate
 from .replay import replay
 from .scheduler import run_event
-from .trace.store import STORE
+from .trace.store import STORE, AuditError
 
 router = APIRouter()
 
@@ -28,7 +28,13 @@ class EventIn(BaseModel):
 @router.post("/event")
 def post_event(body: EventIn):
     field = {"tool": body.tool} if body.tool else {}
-    d = run_event(body.event, field)
+    try:
+        d = run_event(body.event, field)
+    except AuditError as e:
+        # fail-closed: the DAGlet breached a structural invariant and was
+        # refused before any store mutation. Report an explicit denial.
+        return {"refused": True, "daglet_id": e.daglet_id,
+                "violations": e.violations}
     return d.to_dict()
 
 
@@ -52,11 +58,12 @@ def get_trace():
 
 @router.get("/audit")
 def get_audit():
-    """DAGlets that breached the gate invariant. Should always be empty."""
-    bad = [d for d in STORE.all() if d.violations]
-    return {"breaches": len(bad),
-            "daglets": [{"id": d.id, "event": d.event,
-                         "violations": d.violations} for d in bad]}
+    """Every gate-invariant breach the store has refused (fail-closed) or
+    logged under an explicit enforce=False opt-out. Committed DAGlets are
+    breach-free by construction, so this reads the audit log, not the store.
+    """
+    log = STORE.audit_log()
+    return {"breaches": len(log), "daglets": log}
 
 
 @router.post("/replay")

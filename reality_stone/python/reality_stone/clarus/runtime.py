@@ -514,7 +514,12 @@ class BrainRuntime:
             active_ratio=active_ratio,
             alpha_g=self.stdp_tracker.config.alpha_g,
         )
-        self._stdp_prev_critic_score = float(energy)
+        # F.14.2 gate is a *time derivative of the critic signal* d(c_bar)/dt.
+        # prev must therefore hold the SAME quantity used as this tick's drive
+        # (critic when supplied, else the energy proxy). Storing energy while
+        # driving with critic mixed two incommensurate scales and made the
+        # derivative near-random in sign (diagnosed 2026-07; see 18_CodeMap F.14.2).
+        self._stdp_prev_critic_score = gate_drive
         self._last_stdp_gate = float(gate)
 
         if abs(gate) <= self.config.stdp_gate_threshold:

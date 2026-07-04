@@ -362,6 +362,8 @@ AI 응용에서 핵심은 단일 모듈 성능이 아니라 \(S_t \to R(S_t) \to
 | \(M_t\) | `RuntimeMode` | WAKE/NREM/REM 별 \(\rho\) 분리 |
 | active ratio | `active_modules / dim` | \(\varepsilon^2\) 근처 수렴 여부 |
 
+> 정정 노트 (2026-07, F.14.2 게이트): $g[t]=\alpha_g\,d\bar c/dt+(1-\alpha_g)\,\text{bootstrap\_dev}$ 의 미분항은 **같은 척도의 critic 신호 차분**이어야 한다. `runtime.py::_apply_runtime_stdp` 가 이전에는 drive로 `critic_score`(≈1.0), prev로 `energy`(≈0.3)를 써서 서로 다른 척도를 빼는 바람에 게이트 부호가 거의 무작위였다. 현재는 `_stdp_prev_critic_score` 에 이번 tick의 `gate_drive`(critic, 없으면 energy proxy)를 그대로 저장해 일관된 시간미분이 되도록 수정됨. `stdp_enabled=False` 극한 환원 불변식은 그대로 유지(트래커 미생성 시 조기 반환).
+
 최소 closed-loop 판정:
 
 $$

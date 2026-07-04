@@ -15,15 +15,55 @@ Derivation:
          h_CMB_ext / h_true ~ sqrt(Omega_m_LCDM / Omega_m_CE_at_z_star)
      Extract H_0 at SH0ES (low z): direct H(z=0) measurement -> h_true.
 
-CE first-principles closure (no free parameters):
-  xi          = pi^2 / 2                           (= 4.9348)
-                  | nonminimal coupling = (2pi)^2 / 8 = phase-space measure
-                  | of one full Goldstone period normalized by 8 = SU(d) Casimir
-  delta_eps_0 = - delta / pi                       (= -0.05658)
-                  | sign: late-time R > 0 -> m_eff^2 > 0 -> eps pulled below fp
-                  | magnitude: residual EW mixing delta cycled by phase 2pi/2 = pi
-  result      : Delta H_0 = +5.56 km/s/Mpc -> 99.3% closure of 5.6 observed
-                Branch B (eps_today < e^-1) is the *only* one consistent with
+CE closure HYPOTHESIS (status: Open/Phenomenology, NOT a zero-parameter
+prediction; the former "first-principles closure (no free parameters)"
+wording is retracted):
+  xi_flow     = pi^2 / 2                           (= 4.9348)
+                  | SYMBOL NOTE: this xi_flow is the eps-flow transition
+                  | stiffness. It is a DIFFERENT quantity from the nonminimal
+                  | gravitational coupling xi = alpha_s^(1/3) = 0.490 of
+                  | xi_derivation.py (dark-energy EoS). The two must never be
+                  | conflated; code constant is XI_FLOW, not XI.
+                  | independently constructed in phase_area_principle_gate.py
+                  | (half-cycle phase area = (2pi)^2/(d^2-1) at d=3) and reused
+                  | in the holographic Lambda hierarchy exponent 122.6.
+  delta_eps_0 = - delta / pi                       (= -0.056582)
+                  | NO independent derivation. In ckm_vcb_nlo_gate.py the form
+                  | 1 + delta/pi appears only as a REJECTED wrong-phase control
+                  | (a multiplicative NLO phase correction to a tunneling
+                  | amplitude -- mathematically a different object from this
+                  | additive eps-offset, so the CKM rejection does not
+                  | logically transfer; but it also lends NO support).
+                  | However it coincides to 0.5% with the canonical anchor
+                  |   delta_eps_0 = Omega_m^canon - e^-1 = 0.3110 - 0.36788
+                  |               = -0.056879
+                  | (Omega_m^canon from cosmology_ratio_audit). Prefer the
+                  | anchored form: it removes one free choice.
+  robustness  : the closure is a PLATEAU, not a point. Any delta_eps_0 in
+                [-0.15, -0.06] gives 80-108% closure (see --scan-eps), so the
+                real content is "sign + order of magnitude + branch exclusion",
+                not a fine-tuned 99.3%.
+  systematics : constant c_s = c/sqrt(3) vs baryon-loaded c_s(a) shifts
+                Delta H_0 from +5.56 to +5.95. Honest report:
+                  Delta H_0 = +5.6 +/- 0.4 (model)  vs observed ~ +5.6
+  two epsilons: docs/참조/epsilon_제1원리_유도.md separates eps_* (= e^-1,
+                universal fixed point) from eps_obs ( = (Om_L-Om_m)/(Om_L+Om_m),
+                cosmological asymmetry) and forbids conflating them. With
+                canonical ratios eps_obs = 0.3781 and Om_m = (1-eps_obs)/2
+                = 0.3110 exactly — no conflict with cosmology_ratio_audit.
+                The flow variable here is a THIRD object eps_field; the gate's
+                eps_to_omegas feeds eps_field through the eps_obs map, so its
+                Om_m0 = 0.344 is an effective background weight, NOT the
+                observed Omega_m. The single identification that replaces the
+                former conflict:
+                  eps_field(a=1) = Omega_m^canon = (1 - eps_obs)/2
+                which yields delta_eps_0 = Om_m - e^-1 = -0.0569 ~ -delta/pi.
+                Open item is now one hypothesis (why the field's today-value
+                equals the matter fraction), not a contradiction. Naive
+                alternatives remain excluded: forcing Om_m0=0.311 in the
+                eps_obs map -> dead mirror branch (NaN); identity map
+                Omega_m(a)=eps(a) -> Delta H_0 ~ +15 (overshoot).
+  branches    : Branch B (eps_today < e^-1) is the only one consistent with
                 LCDM theta_* fitting; branch A produces NaN (no fit).
 
 ASCII-only output.
@@ -47,8 +87,10 @@ OMEGA_R0 = 9.2e-5
 C_KM_S = 299792.458
 Z_STAR = 1089.8
 
-XI_FP = math.pi ** 2 / 2.0
+XI_FLOW = math.pi ** 2 / 2.0
 DELTA_EPS_FP = -DELTA / math.pi
+OMEGA_M_CANON = 0.3110  # canonical CE ratio (cosmology_ratio_audit)
+DELTA_EPS_CANON = OMEGA_M_CANON - EPS_FIX  # anchored form, = -0.056879
 
 
 def bootstrap_eps2() -> float:
@@ -310,8 +352,9 @@ def report_scenario(label: str, eps_today: float, xi: float, alpha: float,
 def main() -> int:
     p = argparse.ArgumentParser(prog="hubble_tension")
     p.add_argument("--alpha", type=float, default=1.0)
-    p.add_argument("--xi", type=float, default=XI_FP,
-                   help="default: pi^2/2 (CE first-principles, see header)")
+    p.add_argument("--xi", type=float, default=XI_FLOW,
+                   help="eps-flow stiffness xi_flow; default pi^2/2 "
+                        "(NOT the nonminimal coupling xi=alpha_s^(1/3), see header)")
     p.add_argument("--h0-true", type=float, default=73.04)
     p.add_argument("--z-star", type=float, default=Z_STAR)
     p.add_argument("--scan-eps", action="store_true")
@@ -337,19 +380,31 @@ def main() -> int:
     print()
 
     print("=" * 72)
-    print("CE first-principles closure (no free parameters)")
-    print(f"  xi          = pi^2 / 2          = {XI_FP:.6f}")
-    print(f"  delta_eps_0 = - delta / pi      = {DELTA_EPS_FP:+.6f}")
+    print("CE closure HYPOTHESIS (status: Open/Phenomenology; see header)")
+    print(f"  xi_flow     = pi^2 / 2          = {XI_FLOW:.6f}  (eps-flow stiffness; != nonminimal xi=alpha_s^(1/3))")
+    print(f"  delta_eps_0 = - delta / pi      = {DELTA_EPS_FP:+.6f}  (hypothesis: NO independent derivation;")
+    print(f"                                                 1+delta/pi is a rejected control in ckm_vcb_nlo_gate.py)")
+    print(f"  delta_eps_0 = Om_m_canon - e^-1 = {DELTA_EPS_CANON:+.6f}  (anchored to canonical Omega_m=0.311)")
     print("=" * 72)
-    report_scenario("first-principles (xi=pi^2/2, de=-delta/pi)",
-                    EPS_FIX + DELTA_EPS_FP, XI_FP, args.alpha,
-                    args.h0_true, args.z_star)
+    r_fp = report_scenario("closed form (xi=pi^2/2, de=-delta/pi)",
+                           EPS_FIX + DELTA_EPS_FP, XI_FLOW, args.alpha,
+                           args.h0_true, args.z_star)
+    r_an = report_scenario("anchored (xi=pi^2/2, de=Om_m_canon-e^-1)",
+                           OMEGA_M_CANON, XI_FLOW, args.alpha,
+                           args.h0_true, args.z_star)
+    if not math.isnan(r_fp["delta_h0"]) and not math.isnan(r_an["delta_h0"]):
+        print(f"  honest summary: Delta H_0 = {r_an['delta_h0']:+.1f} +/- 0.4 (model, c_s systematic)"
+              f"  vs observed ~ +5.6")
+        print("  NOTE: model systematics (constant c_s=c/sqrt(3), toy theta_* matching) limit")
+        print("        effective precision to the few-percent level; '99.3% closure' is NOT a")
+        print("        sub-percent claim.")
+        print()
 
     print("=" * 72)
     print("Branch A check: epsilon_today > e^-1 (mirror, NOT physical)")
     print("=" * 72)
     report_scenario("mirror branch (delta_eps>0, not LCDM-consistent)",
-                    EPS_FIX - DELTA_EPS_FP, XI_FP, args.alpha,
+                    EPS_FIX - DELTA_EPS_FP, XI_FLOW, args.alpha,
                     args.h0_true, args.z_star)
 
     if args.scan_eps:
