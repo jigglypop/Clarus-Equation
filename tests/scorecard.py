@@ -147,11 +147,13 @@ class ConstantsScorecard:
             "Baryon density parameter",
             "Omega_b h^2",
             0.04865 * (0.674**2),
-            0.02242,
-            0.00014,
-            "Planck 2018 local reference",
+            0.02237,
+            0.00015,
+            "Planck 2018 (TT,TE,EE+lowE+lensing), official value",
             "Bridge",
-            "Bootstrap fixed point is solved; baryon identification is a bridge.",
+            "Bootstrap fixed point is solved; baryon identification is a bridge. "
+            "Value corrected from 0.02242+/-0.00014 to the official Planck 2018 "
+            "0.02237+/-0.00015 to match the hubble_tension.py baseline.",
         )
         self.add_constant(
             "Dark matter density parameter",
@@ -168,10 +170,13 @@ class ConstantsScorecard:
             "Omega_Lambda",
             0.6891,
             0.6847,
-            0.0016,
-            "Planck 2018 local reference",
+            0.0073,
+            "Planck 2018 (TT,TE,EE+lowE+lensing)",
             "Phenomenology",
-            "Strict scorecard gives a 2-3 sigma tension.",
+            "Baseline unified to a single dataset (was a hybrid of the Planck "
+            "central value with an undersized sigma). Alternative baselines: "
+            "Planck+BAO 0.6889+/-0.0056 (CE offset +0.04 sigma); "
+            "DESI DR2+CMB 0.693+/-0.005 (CE offset -0.78 sigma).",
         )
         self.add_constant(
             "Higgs boson mass",
@@ -229,17 +234,23 @@ class ConstantsScorecard:
             -0.769,
             -0.776,
             0.034,
-            "Planck-family local reference",
+            "Planck-family (CMB+BAO+SN, w0waCDM), NOT the current DESI-era "
+            "consensus baseline",
             "Phenomenology",
-            "Reference dependent; DESI-era comparisons must be handled separately.",
+            "Reference dependent. DESI DR2+CMB+SN(Pantheon+) gives w_0="
+            "-0.838+/-0.055, under which the CE value -0.769 sits at "
+            "+1.25 sigma (CAUTION instead of PASS). Kept here for reference "
+            "continuity; the honesty fix is the label/annotation, not forcing "
+            "a grade.",
         )
         self.add_constant(
             "Primordial spectrum amplitude",
             "A_s x 10^9",
             effective_geometry_drive().as_1e9,
-            2.1056,
-            0.0034,
-            "Planck 2018 local reference",
+            2.099,
+            0.029,
+            "Planck 2018 ln(10^10 A_s)=3.044+/-0.014, converted to A_s x 10^9 "
+            "(was previously reported with an undersized sigma=0.0034)",
             "Phenomenology",
             "Projected residual-drive readout passes; total-response raw readout is rejected.",
         )

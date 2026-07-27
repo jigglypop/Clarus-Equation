@@ -364,6 +364,9 @@ def main() -> int:
     p.add_argument("--optimize", action="store_true",
                    help="find (delta_eps, xi) that closes the observed tension")
     p.add_argument("--target-tension", type=float, default=5.6,
+                   # Baseline: Planck 2018 (67.4) vs SH0ES 2022 (73.04). This is a
+                   # moving target -- JWST/CCHP 2024-25 updates shift it by
+                   # roughly +/-0.3-0.5 km/s/Mpc.
                    help="observed tension to close (km/s/Mpc)")
     args = p.parse_args()
 
