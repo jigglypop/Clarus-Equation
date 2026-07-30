@@ -1,4 +1,3 @@
-from __future__ import annotations
 """Reference brain runtime for the Python control plane.
 
 This module intentionally keeps policy in Python while delegating reusable
@@ -10,6 +9,9 @@ Concept layout from the refactor plan:
 - `BrainRuntime`: sparse lifecycle + mode switching + snapshot continuity
 """
 
+from __future__ import annotations
+
+from copy import deepcopy
 from dataclasses import dataclass, field
 from enum import Enum
 import math
@@ -28,7 +30,7 @@ try:
         AXON_DELAY_MAX, CIRCADIAN_PERIOD, CIRCADIAN_AMP, CIRCADIAN_BASE,
         NREM_LENGTH_DECAY, FORGET_TAU, RECALL_SIMILARITY_THRESHOLD,
         ACTIVE_RATIO, STRUCT_RATIO, BACKGROUND_RATIO,
-        BOOTSTRAP_CONTRACTION, BAND_DELTA, BAND_THETA, BAND_ALPHA,
+        BAND_DELTA, BAND_THETA, BAND_ALPHA,
         BAND_BETA, BAND_GAMMA,
     )
     from .stdp import (
@@ -44,7 +46,7 @@ except ImportError:
         AXON_DELAY_MAX, CIRCADIAN_PERIOD, CIRCADIAN_AMP, CIRCADIAN_BASE,
         NREM_LENGTH_DECAY, FORGET_TAU, RECALL_SIMILARITY_THRESHOLD,
         ACTIVE_RATIO, STRUCT_RATIO, BACKGROUND_RATIO,
-        BOOTSTRAP_CONTRACTION, BAND_DELTA, BAND_THETA, BAND_ALPHA,
+        BAND_DELTA, BAND_THETA, BAND_ALPHA,
         BAND_BETA, BAND_GAMMA,
     )
     from reality_stone.clarus.stdp import (
@@ -237,6 +239,13 @@ class BrainRuntimeSnapshot:
     stdp_tracker: dict[str, torch.Tensor] | None = None
     stdp_prev_critic_score: float = 0.0
     stdp_updates: int = 0
+    circadian_phase: float = 0.0
+    circadian_value: float = 0.0
+    nrem_cycle_count: int = 0
+    delay_buffer: torch.Tensor | None = None
+    delay_idx: int = 0
+    brainwave_history: tuple[float, ...] = ()
+    last_stdp_gate: float = 0.0
 
 
 @dataclass
@@ -406,6 +415,7 @@ class BrainRuntime:
         self.arousal = 0.0
         self.step_index = 0
         self.circadian_phase = 0.0
+        self._circadian_value = CIRCADIAN_BASE + CIRCADIAN_AMP
         self.nrem_cycle_count = 0
         self.mode_occupancy: Dict[str, int] = {
             RuntimeMode.WAKE.value: 0,
@@ -1033,30 +1043,43 @@ class BrainRuntime:
 
     def snapshot(self) -> BrainRuntimeSnapshot:
         return BrainRuntimeSnapshot(
-            config=self.config,
-            weight=self.weight.detach().cpu(),
-            activation=self.activation.detach().cpu(),
-            refractory=self.refractory.detach().cpu(),
-            memory_trace=self.memory_trace.detach().cpu(),
-            adaptation=self.adaptation.detach().cpu(),
-            stp_u=self.stp_u.detach().cpu(),
-            stp_x=self.stp_x.detach().cpu(),
-            bitfield=self.bitfield.detach().cpu(),
-            goal=self.goal.detach().cpu(),
-            lifecycle=self.lifecycle.detach().cpu(),
-            inactive_steps=self.inactive_steps.detach().cpu(),
+            config=deepcopy(self.config),
+            weight=self.weight.detach().cpu().clone(),
+            activation=self.activation.detach().cpu().clone(),
+            refractory=self.refractory.detach().cpu().clone(),
+            memory_trace=self.memory_trace.detach().cpu().clone(),
+            adaptation=self.adaptation.detach().cpu().clone(),
+            stp_u=self.stp_u.detach().cpu().clone(),
+            stp_x=self.stp_x.detach().cpu().clone(),
+            bitfield=self.bitfield.detach().cpu().clone(),
+            goal=self.goal.detach().cpu().clone(),
+            lifecycle=self.lifecycle.detach().cpu().clone(),
+            inactive_steps=self.inactive_steps.detach().cpu().clone(),
             mode=self.mode,
             sleep_pressure=float(self.sleep_pressure),
             arousal=float(self.arousal),
             step=self.step_index,
-            hippocampus=self.hippocampus.state_dict(),
+            hippocampus=deepcopy(self.hippocampus.state_dict()),
             mode_occupancy=dict(self.mode_occupancy),
             active_ratio_ema=float(self.active_ratio_ema),
             stdp_tracker=(
-                self.stdp_tracker.state_dict() if self.stdp_tracker is not None else None
+                deepcopy(self.stdp_tracker.state_dict())
+                if self.stdp_tracker is not None
+                else None
             ),
             stdp_prev_critic_score=float(self._stdp_prev_critic_score),
             stdp_updates=int(self._stdp_updates),
+            circadian_phase=float(self.circadian_phase),
+            circadian_value=float(self._circadian_value),
+            nrem_cycle_count=int(self.nrem_cycle_count),
+            delay_buffer=(
+                self._delay_buffer.detach().cpu().clone()
+                if self._delay_buffer is not None
+                else None
+            ),
+            delay_idx=int(self._delay_idx),
+            brainwave_history=tuple(float(value) for value in self._brainwave_history),
+            last_stdp_gate=float(self._last_stdp_gate),
         )
 
     @classmethod
@@ -1068,25 +1091,42 @@ class BrainRuntime:
         device: str | torch.device | None = None,
     ) -> "BrainRuntime":
         runtime = cls(
-            snapshot.weight,
-            config=snapshot.config,
+            snapshot.weight.detach().cpu().clone(),
+            config=deepcopy(snapshot.config),
             backend=backend,
             device=device,
         )
-        runtime.activation = snapshot.activation.to(runtime.device).float()
-        runtime.refractory = snapshot.refractory.to(runtime.device).float()
-        runtime.memory_trace = snapshot.memory_trace.to(runtime.device).float()
-        runtime.adaptation = snapshot.adaptation.to(runtime.device).float()
-        runtime.stp_u = snapshot.stp_u.to(runtime.device).float()
-        runtime.stp_x = snapshot.stp_x.to(runtime.device).float()
-        runtime.bitfield = snapshot.bitfield.to(runtime.device).to(torch.uint8)
-        runtime.goal = snapshot.goal.to(runtime.device).float()
-        runtime.lifecycle = snapshot.lifecycle.to(runtime.device).to(torch.int64)
-        runtime.inactive_steps = snapshot.inactive_steps.to(runtime.device).to(torch.int64)
+        runtime.activation = snapshot.activation.to(runtime.device).float().clone()
+        runtime.refractory = snapshot.refractory.to(runtime.device).float().clone()
+        runtime.memory_trace = snapshot.memory_trace.to(runtime.device).float().clone()
+        runtime.adaptation = snapshot.adaptation.to(runtime.device).float().clone()
+        runtime.stp_u = snapshot.stp_u.to(runtime.device).float().clone()
+        runtime.stp_x = snapshot.stp_x.to(runtime.device).float().clone()
+        runtime.bitfield = snapshot.bitfield.to(runtime.device).to(torch.uint8).clone()
+        runtime.goal = snapshot.goal.to(runtime.device).float().clone()
+        runtime.lifecycle = snapshot.lifecycle.to(runtime.device).to(torch.int64).clone()
+        runtime.inactive_steps = snapshot.inactive_steps.to(runtime.device).to(torch.int64).clone()
         runtime.mode = snapshot.mode
         runtime.sleep_pressure = float(snapshot.sleep_pressure)
         runtime.arousal = float(snapshot.arousal)
         runtime.step_index = int(snapshot.step)
+        runtime.circadian_phase = float(snapshot.circadian_phase)
+        runtime._circadian_value = float(snapshot.circadian_value)
+        runtime.nrem_cycle_count = int(snapshot.nrem_cycle_count)
+        if runtime._delay_buffer is not None and snapshot.delay_buffer is None:
+            raise ValueError("snapshot delay buffer is required when axon delay is enabled")
+        if runtime._delay_buffer is None and snapshot.delay_buffer is not None:
+            raise ValueError("snapshot delay buffer requires axon delay to be enabled")
+        if runtime._delay_buffer is not None and snapshot.delay_buffer is not None:
+            expected_shape = (runtime.config.max_axon_delay, runtime.config.dim)
+            if tuple(snapshot.delay_buffer.shape) != expected_shape:
+                raise ValueError(
+                    "snapshot delay buffer shape must match "
+                    f"(max_axon_delay, dim)={expected_shape}"
+                )
+            runtime._delay_buffer = snapshot.delay_buffer.to(runtime.device).float().clone()
+        runtime._delay_idx = int(snapshot.delay_idx)
+        runtime._brainwave_history = [float(value) for value in snapshot.brainwave_history]
         runtime.hippocampus = HippocampusMemory.from_state_dict(
             snapshot.hippocampus,
             device=runtime.device,
@@ -1098,6 +1138,7 @@ class BrainRuntime:
             runtime.active_ratio_ema = float(snapshot.active_ratio_ema)
         runtime._stdp_prev_critic_score = float(snapshot.stdp_prev_critic_score)
         runtime._stdp_updates = int(snapshot.stdp_updates)
+        runtime._last_stdp_gate = float(snapshot.last_stdp_gate)
         if runtime.stdp_tracker is not None and snapshot.stdp_tracker is not None:
             runtime.stdp_tracker.load_state_dict(snapshot.stdp_tracker)
         return runtime

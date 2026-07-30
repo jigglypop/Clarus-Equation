@@ -1,0 +1,123 @@
+{
+  "artifact_type": "clarus_cloudcell_latent_closure_gate",
+  "artifact_version": 1,
+  "source": {
+    "url": "https://osf.io/download/evhrg/",
+    "archive_name": "AML310_moving.tar.gz",
+    "archive_bytes": 348444164,
+    "sha256": "144126ee9a49d311c3393deea434e1a0963d55de35318e25d98d48f9c175250a",
+    "expected_sha256": "144126ee9a49d311c3393deea434e1a0963d55de35318e25d98d48f9c175250a",
+    "integrity_passed": true
+  },
+  "method": {
+    "state": "train-only population PCA latent with fixed lag order",
+    "transition": "ridge affine map",
+    "composition": "repeat the held-out one-step map h times",
+    "coupling_control": "per-latent-axis diagonal autoregression",
+    "status": "exploratory refinement after per-neuron cloud gate failure"
+  },
+  "gate_passed": false,
+  "result": {
+    "recording_count": 4,
+    "recordings_passed": 1,
+    "min_recordings_passed": 3,
+    "recordings": [
+      {
+        "recording_id": "BrainScanner20200130_110803",
+        "n_units": 134,
+        "n_timepoints": 1466,
+        "n_components": 8,
+        "state_order": 1,
+        "horizon_steps": 6,
+        "n_train": 775,
+        "n_validation": 270,
+        "n_test": 265,
+        "r2_persistence": 0.8179418521681557,
+        "r2_diagonal": 0.8318878981762995,
+        "r2_direct": 0.8310003069830528,
+        "r2_composed": 0.8198031405955326,
+        "delta_coupling": -0.0008875911932466618,
+        "delta_direct_over_persistence": 0.013058454814897091,
+        "delta_composed_over_persistence": 0.0018612884273768726,
+        "composition_gap": 0.011197166387520219,
+        "criteria": {
+          "min_transition_delta": 0.01,
+          "max_composition_gap": 0.05
+        },
+        "passed": true
+      },
+      {
+        "recording_id": "BrainScanner20200130_105254",
+        "n_units": 128,
+        "n_timepoints": 1525,
+        "n_components": 8,
+        "state_order": 1,
+        "horizon_steps": 6,
+        "n_train": 422,
+        "n_validation": 175,
+        "n_test": 214,
+        "r2_persistence": 0.9232100462333295,
+        "r2_diagonal": 0.883681393471436,
+        "r2_direct": 0.8527213179528512,
+        "r2_composed": 0.9122961156902831,
+        "delta_coupling": -0.030960075518584818,
+        "delta_direct_over_persistence": -0.07048872828047825,
+        "delta_composed_over_persistence": -0.010913930543046346,
+        "composition_gap": -0.059574797737431906,
+        "criteria": {
+          "min_transition_delta": 0.01,
+          "max_composition_gap": 0.05
+        },
+        "passed": false
+      },
+      {
+        "recording_id": "BrainScanner20200310_141211",
+        "n_units": 116,
+        "n_timepoints": 1495,
+        "n_components": 8,
+        "state_order": 1,
+        "horizon_steps": 6,
+        "n_train": 393,
+        "n_validation": 168,
+        "n_test": 87,
+        "r2_persistence": 0.8040019302755738,
+        "r2_diagonal": 0.6969569785634302,
+        "r2_direct": 0.6659775792606272,
+        "r2_composed": 0.7665445123065348,
+        "delta_coupling": -0.030979399302803023,
+        "delta_direct_over_persistence": -0.1380243510149466,
+        "delta_composed_over_persistence": -0.03745741796903901,
+        "composition_gap": -0.10056693304590758,
+        "criteria": {
+          "min_transition_delta": 0.01,
+          "max_composition_gap": 0.05
+        },
+        "passed": false
+      },
+      {
+        "recording_id": "BrainScanner20200310_142022",
+        "n_units": 97,
+        "n_timepoints": 1480,
+        "n_components": 8,
+        "state_order": 1,
+        "horizon_steps": 6,
+        "n_train": 751,
+        "n_validation": 246,
+        "n_test": 259,
+        "r2_persistence": 0.7212867763454147,
+        "r2_diagonal": 0.7270539495996167,
+        "r2_direct": 0.6989445222151309,
+        "r2_composed": 0.7185808473908737,
+        "delta_coupling": -0.02810942738448574,
+        "delta_direct_over_persistence": -0.02234225413028379,
+        "delta_composed_over_persistence": -0.002705928954541026,
+        "composition_gap": -0.019636325175742764,
+        "criteria": {
+          "min_transition_delta": 0.01,
+          "max_composition_gap": 0.05
+        },
+        "passed": false
+      }
+    ]
+  }
+}
