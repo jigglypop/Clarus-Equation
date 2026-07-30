@@ -12,6 +12,20 @@ CE 이론은 우주의 물리적 현상과 정보적 연산 과정을 하나의 
   를 추가로 명시해야 한다.
 - 본 문서의 목표는 "어떤 추가 선택이 필요해지는지"를 숨기지 않고 드러내는 것이다(재현성/반증가능성 강화 목적).
 
+> **2026-07-30 type 정정.** 이 문서의 과거 bare 표기
+> \(\Phi=\delta^2S/\delta\gamma^2\)는 scalar equality가 아니다. 작용의
+> 2차 변분은 Hessian kernel/operator \(\mathcal H_\gamma\)이고, scalar가
+> 필요하면 probe와 boundary condition을 고정해
+> \[
+> \Phi_H[\gamma,\eta]
+> =
+> \frac{\langle\eta,\mathcal H_\gamma\eta\rangle}
+> {\langle\eta,\eta\rangle}
+> \]
+> 같은 투영을 정의한다. 활성 물리 분기는 독립 스칼라장
+> \(\phi\ne R\)이며 \(\phi\), \(\Phi_H\), Ricci scalar \(R\)를 서로
+> 동일시하지 않는다. 아래의 과거 \(\Phi\) 표기는 이 규약에 따라 읽는다.
+
 ### 1.2 문서 레벨 규약
 
 CE 문서를 읽을 때는 수식의 내용보다 먼저 그 수식의 **지위**를 고정한다.
@@ -56,7 +70,9 @@ $$
 
 | 기호 | 기본 의미 | 차원/형식 | 지위 | 문서 간 대응 |
 |---|---|---|---|---|
-| $\Phi(x)$ | 물리적 클라루스장 또는 경로 헤시안에서 유도된 억압 자유도 | 문맥 의존. 물리 장으로 쓰일 때는 장, 경로공간 유도에서 쓰일 때는 유효 억압량 | 정의 | `경로적분.md`의 핵심 장, 대상-대응 필드와 구분 |
+| \(\phi(x)\) | 독립 물리장 branch A | 시공간 scalar field; \(\phi\ne R\) | `Bridge` | action·EOM·결합을 별도로 고정 |
+| \(\mathcal H_\gamma\), \(\Phi_H[\gamma,\eta]\) | 경로공간 Hessian operator와 probe별 scalar readout | operator/kernel, 투영 후 scalar | `Tooling/Bridge` | 물리장 \(\phi\)와 동일하지 않음 |
+| 과거 \(\Phi(x)\) | 위 두 층을 섞어 쓴 legacy 기호 | 문맥 의존 | `Deprecated ambiguous notation` | 새 문서에서는 \(\phi\) 또는 \(\Phi_H\)로 분리 |
 | $\sigma(x)$ | 무차원 억압 계수 또는 차원당 억압 강도 | 무차원 | 정의 또는 유효 식별 | `참조/형식적_수학_모델과_증명.md`의 주기호. 핵심 문서의 무차원 억압량과 대응 |
 | $R(x)$ | Ricci scalar | 길이$^{-2}$ | 정의 | 물리적 곡률 |
 | $\tilde R(x)$ | 무차원화된 곡률 | 무차원 | 정의 | $\tilde R = R/R_c$ |
@@ -69,7 +85,8 @@ $$
 | $P_{\mathrm{survive}}$ | 접힘을 통과한 경로 분율 | 무차원 확률 | 정의 | $\varepsilon^2$와 동일시하려면 별도 식별 단계가 필요 |
 
 이 규약의 핵심은 다음 두 가지다.
-- $\Phi$와 $\sigma$는 자동으로 같은 기호가 아니다. 후속 문서에서 무차원화, 평균화, 곡률 식별을 거쳐 연결될 때만 대응된다.
+- \(\phi\), \(\Phi_H\), \(R\), \(\sigma\)는 자동으로 같은 양이 아니다. 후속
+  문서에서 단위, probe, 무차원화와 mapping을 명시할 때만 연결된다.
 - $\epsilon_*$, $\epsilon_{\mathrm{obs}}$, $\epsilon_{\mathrm{mass}}$, $\varepsilon^2$는 모두 "억압"과 관련 있지만 서로 다른 층의 변수다. 동등성은 정리가 아니라 별도의 동일시 조건 또는 모형 선택이다.
 
 ---
@@ -94,33 +111,46 @@ CE에서 $\mathcal{K}$는 "직관"이 아니라 최소한 아래 조건을 만�
 - (ii) 차원/단위가 명확(예: 에너지 밀도 혹은 이에 비례하는 양으로 환산 가능)
 - (iii) 표준 극한에서 $T_{\mu\nu}$와의 대응이 가능(대응원리)
 
-**구체적 구성 (A1로부터의 유도).** A1($\Phi = \delta^2 S/\delta\gamma^2$)으로부터 $\mathcal{K}_{\mu\nu}$를 경로적분 헤시안의 기댓값으로 정의한다:
+**구체적 구성 후보.** A1의 정정된 operator 표기에서
+\(\mathcal K_{\mu\nu}\)를 경로적분 Hessian component의 기댓값으로 두는
+후보는 다음과 같다.
 
 $$
 \mathcal{K}_{\mu\nu}(x) \;=\; \frac{1}{Z}\int\mathcal{D}\gamma\;\frac{\delta^2 S[\gamma]}{\delta\gamma^\mu(x)\,\delta\gamma^\nu(x)}\;e^{-S[\gamma]/\hbar}
 $$
 
-세 가지 요구사항의 충족:
+이 식만으로 세 요구사항이 자동 충족되지는 않는다.
 
-- **(i) 공변성.** $S[\gamma]$는 스칼라이고 $\gamma^\mu$는 벡터로 변환하므로, $\delta^2 S/\delta\gamma^\mu\delta\gamma^\nu$는 2계 공변 텐서이다. 경로적분 측도가 좌표불변이므로 $\mathcal{K}_{\mu\nu}$ 역시 텐서로 변환한다.
-- **(ii) 차원.** $[S]=[\hbar]$, $[\gamma^\mu]=\text{길이}$이므로 $[\delta^2 S/\delta\gamma^\mu\delta\gamma^\nu]=\text{에너지}\cdot\text{시간}/\text{길이}^2$이다. 시공간 체적 정규화 후 에너지 밀도와 동일한 차원을 갖는다.
-- **(iii) 대응원리.** 안장점 근사($\hbar\to 0$)에서 고전 경로 $\gamma_{\text{cl}}$이 지배하므로 $\mathcal{K}_{\mu\nu}\to\delta^2 S/\delta\gamma_{\text{cl}}^\mu\delta\gamma_{\text{cl}}^\nu$가 되며, 이것은 전파함수(propagator)를 결정하는 2차 변분으로서 $T_{\mu\nu}$에 대응한다.
+- **(i) 공변성.** 보통의 second partial derivative는 좌표변환 아래 tensor가
+  아니다. configuration-space connection, gauge fixing과 measure를 고정한
+  covariant Hessian이 필요하다.
+- **(ii) 차원.** Hessian의 차원은 경로 좌표와 delta-function/measure
+  convention에 의존한다. “체적 정규화 후 에너지 밀도” mapping을 별도로
+  정의해야 한다.
+- **(iii) 대응원리.** Hessian은 fluctuation propagator를 정하지만
+  \(T_{\mu\nu}\)와 자동으로 같지 않다. metric variation으로 얻는 stress
+  tensor와의 bridge를 따로 증명해야 한다.
 
 **동역학.** $\mathcal{K}$는 두 성분으로 분해된다:
 
 $$
-\mathcal{K}_{\mu\nu} = T_{\mu\nu}^{\text{visible}} + T_{\mu\nu}^{\Phi}
+\mathcal{K}_{\mu\nu} = T_{\mu\nu}^{\text{visible}} + T_{\mu\nu}^{\phi}
 $$
 
-여기서 $T_{\mu\nu}^{\Phi}$는 클라루스장의 에너지-운동량 텐서이다:
+여기서 독립장 action을 별도로 채택했을 때의 stress tensor 후보는
 
 $$
-T_{\mu\nu}^{\Phi} = \nabla_\mu\Phi\nabla_\nu\Phi - g_{\mu\nu}\!\left[\tfrac{1}{2}(\nabla\Phi)^2+V(\Phi)\right] + \xi\!\left(g_{\mu\nu}\Box-\nabla_\mu\nabla_\nu+G_{\mu\nu}\right)\!\Phi^2
+T_{\mu\nu}^{\phi} = \nabla_\mu\phi\nabla_\nu\phi - g_{\mu\nu}\!\left[\tfrac{1}{2}(\nabla\phi)^2+V(\phi)\right] + \xi\!\left(g_{\mu\nu}\Box-\nabla_\mu\nabla_\nu+G_{\mu\nu}\right)\!\phi^2
 $$
 
-Bianchi 항등식으로부터 $\nabla^\mu\mathcal{K}_{\mu\nu}=0$이 따르며, 이는 **연산 비용의 보존 법칙**이다. 물질과 클라루스장이 개별적으로 보존되는 것이 아니라, $\mathcal{K}$ 전체가 보존된다. 에너지가 물질에서 접힘(클라루스장)으로 이전될 수 있지만 총 연산 비용은 불변이다.
+Bianchi 항등식만으로 위 후보
+\(\nabla^\mu\mathcal K_{\mu\nu}=0\)이 따르지는 않는다. diffeomorphism-invariant
+action과 전체 field equation에서 Noether identity를 유도해야 보존식을
+주장할 수 있다.
 
-**지위:** 이 구성은 A1의 직접적 귀결이므로 `Selection` 층이다. 구체적 모형(우주론 배경, 블랙홀 근방 등)에서 $T_{\mu\nu}^{\Phi}$를 계산하려면 $\Phi$의 동역학을 함께 풀어야 하며, 이는 `Bridge` 층이다.
+**지위:** \(\mathcal K_{\mu\nu}\) 구성과 stress-tensor 대응은
+`Bridge/Open`이다. 독립장 \(\phi\)의 \(T_{\mu\nu}^{\phi}\)는 명시한
+covariant action을 metric으로 변분해 별도로 얻어야 한다.
 
 ### 제2공리: 최소 연산 작용의 원리 (Principle of Least Computational Action)
 > **"우주는 자신의 총 연산 비용(Global Computational Cost)을 최소화하는 경로를 선택한다."**
@@ -291,7 +321,7 @@ CE 마스터 공식은 단순히 물리 현상을 설명하는 식을 넘어, **
 
 | 공리 | 내용 | 상태 |
 |------|------|------|
-| **A1** | $\Phi = \delta^2 S / \delta\gamma^2$ (경로적분 수렴을 매개하는 유효 억압 자유도) | 공리 |
+| **A1** | \(\mathcal H_\gamma=\delta^2S[\gamma]\)는 경로공간 Hessian operator이고 \(\Phi_H[\gamma,\eta]\)는 probe별 투영값 | 형식 공리; 물리장 대응은 `Bridge` |
 | **A2** | $D_{\text{eff}} = d + \delta$, $\delta = \sin^2\theta_W\cos^2\theta_W$ | `Selection`에서 `Bridge`로 넘어가는 정리 |
 | **A3a** | $\varepsilon^2 = \exp(-(1-\varepsilon^2)\cdot D_{\text{eff}})$ (부트스트랩 고정점 식) | 자기일관 `Selection` 규칙 |
 | **A3b** | $P_{\mathrm{survive}} \leftrightarrow \Omega_b$ | 관측 가능한 선택 측도에 대한 `Bridge` 규칙 |
@@ -309,7 +339,7 @@ A2는 원래 독립 공리였으나, A1과 표준모형 전자약 대칭 깨짐(
 
 | 3대 공리 (본 문서) | 경로적분 공리 (A1-A4) | 관계 |
 |---|---|---|
-| 제1공리 (연산-기하 등가성) | A1 ($\Phi = \delta^2 S/\delta\gamma^2$), 곡률 식별 | 헤시안과 곡률의 대응 규칙으로 구체화 |
+| 제1공리 (연산-기하 등가성) | A1 (\(\mathcal H_\gamma\)와 \(\Phi_H\)), 곡률 operator 항 | Hessian--curvature--독립장 mapping은 별도 `Bridge` |
 | 제2공리 (최소 연산 작용) | A3a (자기일관성 부트스트랩) | 최소 비용 경로를 고정점 구조로 표현 |
 | 제2공리의 관측 연결 | A3b ($P_{\mathrm{survive}} \leftrightarrow \Omega_b$) | 고정점 해를 우주론 양에 대응시키는 식별 단계 |
 | 제3공리 (해상도 한계) | 힉스 포탈 동정 ($\lambda_{\text{HP}} = \delta^2$) 및 성분 분해 규칙 $R$ | 플랑크 이하 보정과 우주 성분 읽기의 유효 구현 |
@@ -349,7 +379,9 @@ A2는 원래 독립 공리였으나, A1과 표준모형 전자약 대칭 깨짐(
 
 ### 6.5 동료평가 직전 체크리스트
 
-- 정의가 완결되었는가: $\mathcal{K}$는 경로적분 헤시안 기댓값으로 구성되었고(2절), $\chi$의 동역학은 유클리드 열핵 흐름으로 닫혔다(2절). 잔여 열린 항목: $\chi$를 독립 장으로 승격할 경우의 $f(\Phi)$ 구체형.
+- 정의가 완결되었는가: \(\mathcal K\)는 후보 구성까지이며 공변 Hessian,
+  gauge/measure, stress-tensor mapping이 열려 있다. 독립장 \(\phi\)와
+  Hessian readout \(\Phi_H\)도 분리해야 한다.
 - 정리와 가정이 분리되었는가: A2는 정리, A3a는 자기일관 조건, A3b와 A4는 식별/현상론으로 분리한다.
 - 증명되지 않은 단계가 숨겨져 있지 않은가: 공리 문서 자체는 관측량 대응을 직접 증명하지 않는다.
 - 다른 문서와 지위 충돌이 없는가: 후속 문서는 본 문서의 기호 사전과 지위 규약을 따라야 한다.

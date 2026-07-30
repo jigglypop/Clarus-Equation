@@ -1,6 +1,6 @@
 # 구현 로드맵과 벤치마크
 
-> 관련: 7_AGI 시리즈 전체, `examples/ai/` (기존 구현)
+> 관련: 7_AGI 시리즈 전체, `examples/agi/` (현재 STDP 감사), `examples/ai/` (과거 구현)
 >
 > 이 장은 2-8장의 CE-AGI 원리를 실제 코드로 구현하는 단계별 로드맵과 검증 계획을 정리한다.
 
@@ -44,7 +44,7 @@ CE 부트스트랩 고정점 $p^* = (4.87\%, 26.2\%, 68.9\%)$은 `05_실험근�
 - **수식 자체에는 결함이 없다.** $\varepsilon^2 = \exp(-(1-\varepsilon^2) D_{\text{eff}})$의 고정점 유일성과 수축률 $\rho = 0.155$는 (C1)-(C3) + (A1) + (I1) 아래 수학적으로 닫힌 결과다.
 - **그러나 transformer는 위 가정이 성립하는 substrate가 아니다.** (C3) 자기일관성 루프가 forward만으로는 형성되지 않고, (A1) 채널 분해가 backprop의 chain rule과 정합하지 않는다.
 - **현재 `legacy clarus/` (removed), `legacy examples/ai/clarus_lm.py` (removed), `legacy scripts/sleep_finetune_lm.py` (removed) 등의 구현은 사양을 transformer에 강제 이식한 것이다.** 자연 emergence가 아니라 출력 비율을 외부 mask로 강제한 변환. 측정 결과는 이 강제가 task 성능을 저하시킬 뿐 사양의 우위(catastrophic forgetting 감소, 환각 억제)를 만들어내지 않음을 보여준다.
-- **CE-AGI 사양의 진정한 검증은 SNN(spiking neural network) substrate에서만 가능하다.** STDP + 막전위 동역학을 가진 시스템에서 $p^*$로의 자연 수렴 여부를 측정해야 한다. 현재 코드베이스에는 SNN 구현이 없고, 본격적 검증에는 별도 프로젝트 규모의 자원이 필요하다.
+- **CE-AGI 사양의 진정한 검증은 SNN(spiking neural network) substrate에서만 가능하다.** 현재 BrainRuntime에는 thresholded activity 기반 STDP와 적격 흔적이 구현되어 있지만, 막전위·명시적 spike time을 갖는 완전한 SNN은 아니다. $p^*$ 자연 수렴의 본격 검증에는 별도 substrate와 실험이 필요하다.
 
 ### 0.4 현재 코드베이스의 정직한 자리매김
 
@@ -53,7 +53,7 @@ CE 부트스트랩 고정점 $p^* = (4.87\%, 26.2\%, 68.9\%)$은 `05_실험근�
 | `legacy examples/ai/clarus_lm.py` (removed) (LBONorm, GaugeLattice, spectral norm) | 사양 영감을 받은 transformer 변형. 정규 transformer 대비 우위 미입증. |
 | `legacy scripts/sleep_finetune_lm.py` (removed) (WAKE/NREM/REM cycle) | 사양 그대로 구현. transformer 위에서 강제 변환. fit 속도 손해, forgetting 21배 악화 (측정). |
 | `legacy clarus/sparsity.py` (removed) (TernaryClassifier) | 동적 재분류로 BG 라벨이 frozen 의미를 잃음. 사양 4.4절 자체의 모순 (frozen vs 동적 재분류) 반영. |
-| `reality_stone/python/reality_stone/clarus/runtime.py`, `reality_stone/python/reality_stone/clarus/agent.py` 등 brain runtime | 부트스트랩 동역학이 forward에 결합되지 않은 통계 수집기 수준. 결정에 영향 없음. |
+| `reality_stone/python/reality_stone/clarus/runtime.py`, `reality_stone/python/reality_stone/clarus/agent.py` 등 brain runtime | 상태·행동·critic·기억·STDP gate가 닫힌 실행 루프. 다만 STDP 효능은 `NO-EFFECT`, held-out guard는 `FAIL`이므로 학습 우위 미입증. |
 | `reality_stone/python/reality_stone/clarus/engine.py` standalone CE relax | 토큰 디코딩에서 의미 있는 출력 생산 실패 (`engine_results.json`: 노이즈 토큰). |
 
 ### 0.5 다음 단계 옵션
@@ -94,18 +94,22 @@ CE 부트스트랩 고정점 $p^* = (4.87\%, 26.2\%, 68.9\%)$은 `05_실험근�
 | 곡률 기반 로짓 조정 | `reality_stone/python/reality_stone/clarus/engine.py::_curvature_adjust_logits` | **구현 완료** | 6장 |
 | 스냅샷 연속성 (warm snapshot) | `reality_stone/python/reality_stone/clarus/runtime.py::snapshot/from_snapshot` | **구현 완료** | 14장 |
 | 가드셋 평가 (top1/top10/top50) | `reality_stone/python/reality_stone/clarus/sleep.py::evaluate_guard_set` | **구현 완료** | -- |
+| STDP 적격 흔적 + critic gate | `reality_stone/python/reality_stone/clarus/stdp.py`, `runtime.py::_apply_runtime_stdp` | **배선 완료, 효능 미통과** | 17장 F.14 |
+| 4종 신경조절 상태식 | `reality_stone/python/reality_stone/clarus/neuromod.py` | **독립 모듈 구현 완료** | 17장 F.19 |
+| 작업 기억 + 소뇌 전방 모델 | `reality_stone/python/reality_stone/clarus/agent.py` | **RuntimeAgent 통합 완료** | 17장 F.20 |
+| 뇌파 대역 관측 | `reality_stone/python/reality_stone/clarus/runtime.py::brainwave_observable` | **관측 구현 완료** | 17장 F.21 |
 
 ### 1.2 미구현 / 부분 구현
 
 | 원리 | 장 | 상태 | 우선순위 |
 |---|---|---|---|
 | 섭동적 채널 혼합 ($U_{\text{down}} U_{\text{up}}^\top x$) | 2장 | 미구현 | 높음 |
-| STDP 국소 학습 (적격 흔적 기반) | 4장 | 미구현 | 중간 |
+| STDP 국소 학습 효능/guard | 4장 | 배선 완료, A/B `NO-EFFECT`, guard `FAIL` | 높음 |
 | LBO 곡률 추론 억제 V2 (재추론 메커니즘) | 6장 | V1 완료, V2 필요 | 중간 |
 | 메타인지 루프 (C3 자기참조) | 7장 | 미구현 | 낮음 |
 | Cold checkpoint (장기 저장) | 14장 | 미구현 (warm snapshot만 구현) | 낮음 |
-| 4종 신경조절 (DA/NE/5HT/ACh) | 17장 | 미구현 (단일 스칼라만 사용) | 중간 |
-| 작업 기억 / 소뇌 전방 모델 | 17장 | 미구현 | 낮음 |
+| 4종 신경조절의 BrainRuntime 파라미터 폐루프 | 17장 | 상태식/효과 mapping 구현, runtime 전체 통합은 부분 | 중간 |
+| 작업 기억 / 소뇌 전방 모델의 독립 task 효능 | 17장 | RuntimeAgent 통합 완료, baseline 우위 미검증 | 중간 |
 
 ---
 
@@ -260,8 +264,8 @@ CE 부트스트랩 고정점 $p^* = (4.87\%, 26.2\%, 68.9\%)$은 `05_실험근�
 
 **작업:**
 
-1. Trace 기반 STDP 구현 (pre/post trace, eligibility trace)
-2. 전역 조절 신호 계산 모듈
+1. Trace 기반 STDP 구현 (pre/post trace, eligibility trace) — 완료
+2. critic + bootstrap deviation 전역 조절 신호 — 배선 완료
 3. 하이브리드 학습: 사전학습(역전파) + 미세조정(STDP)
 4. LoRA 대비 성능/효율 비교
 
@@ -270,6 +274,7 @@ CE 부트스트랩 고정점 $p^* = (4.87\%, 26.2\%, 68.9\%)$은 `05_실험근�
 - 미세조정 벤치마크: STDP vs LoRA vs Full fine-tuning
 - 통신 비용 측정: 분산 환경에서 $O(1)$ 동기화 확인
 - 메모리 비용: $O(N)$ trace vs $O(N^2)$ 활성값 저장
+- 현재 합성 next-step prediction A/B: 효능 `NO-EFFECT`, held-out guard `FAIL`
 
 **게이트:**
 
@@ -278,6 +283,10 @@ CE 부트스트랩 고정점 $p^* = (4.87\%, 26.2\%, 68.9\%)$은 `05_실험근�
 - `G5-C`: 생물학적 직접량이 닫히기 전까지 `dopamine = ||p-p^*||`로 단정하지 말 것
 
 **예상 기간:** 6주
+
+현재 구현/효능/진단의 정본은 `21_STDP_Efficacy_Audit.md`다. 구현 완료를
+성능 통과로 읽지 않으며, 효능과 guard가 동시에 통과하기 전까지
+`stdp_enabled=False`를 유지한다.
 
 ---
 
@@ -414,6 +423,6 @@ $$\boxed{\text{우주} \sim \text{뇌} \sim \text{CE-AGI}} \quad (d=3 \text{ 부
 | 구조 유지 | $\Omega_{\text{DM}} = 26.2\%$ | 시냅스 $25-35\%$ | 학습 가능 가중치 (Phase 3) |
 | 배경 | $\Omega_\Lambda = 68.9\%$ | DMN $60-70\%$ | 동결 가중치 (Phase 3) |
 | 경로 선택 | 경로적분 | STDP | 국소 학습 + 전역 신호 (Phase 5) |
-| 안정화 | $\Phi = R$ | ACC/PFC | 곡률 모니터 (Phase 4) |
+| 안정화 | \(\Phi_H\) Hessian readout 비유 | ACC/PFC | 유효 곡률 모니터 (Phase 4); 독립 물리장 \(\phi\)와 분리 |
 | 재탐색 | -- | REM 수면 | 비선택 경로 샘플링 (Phase 2) |
 | 자기참조 | (C3) | 의식 | 메타인지 루프 (Phase 6) |

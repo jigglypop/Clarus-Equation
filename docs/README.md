@@ -417,7 +417,8 @@ $$
 2. [7_AGI/14_BrainRuntimeSpec.md](7_AGI/14_BrainRuntimeSpec.md)
 3. [7_AGI/17_AgentLoop.md](7_AGI/17_AgentLoop.md)
 4. [7_AGI/18_CodeMap.md](7_AGI/18_CodeMap.md)
-5. [4_공학적_활용/10_PreEq_LLM_manifest_verifier.md](4_공학적_활용/10_PreEq_LLM_manifest_verifier.md)
+5. [7_AGI/21_STDP_Efficacy_Audit.md](7_AGI/21_STDP_Efficacy_Audit.md)
+6. [4_공학적_활용/10_PreEq_LLM_manifest_verifier.md](4_공학적_활용/10_PreEq_LLM_manifest_verifier.md)
 
 ## 8. 폴더 지도
 
@@ -429,7 +430,7 @@ $$
 | [3_상수/](3_상수/) | 입자·우주론 수치, Hubble readout 감사 |
 | [4_공학적_활용/](4_공학적_활용/) | 공학, graph residual, LLM 검증 |
 | [5_유도/](5_유도/) | 유체·단백질·암흑에너지·블랙홀 파생 모델 |
-| [6_뇌/](6_뇌/) | 뇌 동역학, 수면, 공개 데이터, 생명 종별 gate |
+| [6_뇌/](6_뇌/) | 뇌 동역학, 수면, 공개 데이터, 생명 종별 gate 기록 |
 | [7_AGI/](7_AGI/) | runtime, memory, sleep, agent loop, OOD 사양 |
 | [8_리만/](8_리만/) | Mellin-Riemann Attention과 positional encoding |
 | [9_등호이전/](9_등호이전/) | 후보분포, manifest, 범주론, 경로공간 승격 |
@@ -456,7 +457,11 @@ python tests/scorecard.py
 python tests/run_validation.py
 ```
 
-일부 오래된 문서에는 현재 checkout에서 제거된 `scripts/...`, `examples/ai/...`, `quant/...` 경로가 남아 있다. 이런 참조는 현재 구현이 아니라 역사적 실험 또는 추가 예정 코드일 수 있으므로, 실제 파일 존재 여부를 먼저 확인해야 한다.
+일부 오래된 문서에는 현재 checkout에서 제거된 `scripts/...`,
+`examples/ai/...`, `examples/physics/evolution/...`, `data/evolution/...`,
+`quant/...` 경로가 남아 있다. 이런 참조는 현재 구현이 아니라 역사적 실험
+기록 또는 추가 예정 코드일 수 있으므로, 실제 파일 존재 여부와 문서의
+`recorded result`/`reproducible local gate` 등급을 먼저 확인해야 한다.
 
 ## 10. 현재 결론과 남은 질문
 

@@ -360,7 +360,7 @@ $$\delta \xrightarrow{v_{\text{EW}} \delta} M_{\text{CE}} = 43.77 \text{ GeV} \x
 $$\delta^2 \xrightarrow{m_p \delta^2} m_\phi = 29.65 \text{ MeV} \xrightarrow{F = 1 + \alpha_s D_{\text{eff}}} \Delta r_p^2 = 0.060 \text{ fm}^2$$
 
 **7층: 양자역학 기초**
-$$i \xrightarrow{e^{iS}} \text{간섭} \xrightarrow{\Phi = R} \text{접힘} \xrightarrow{} P_k = |c_k|^2 \text{ (보른 규칙)}$$
+$$i \xrightarrow{e^{iS}} \text{간섭} \xrightarrow{\mathcal H_\gamma,\Phi_H} \text{접힘 후보} \xrightarrow{\text{instrument 미구현}} |c_k|^2 \text{ prior}$$
 
 여기서도 레벨 구분을 유지한다.
 
@@ -370,7 +370,10 @@ $$i \xrightarrow{e^{iS}} \text{간섭} \xrightarrow{\Phi = R} \text{접힘} \xri
 
 #### 4층 유도: $\delta$와 $D_{\text{eff}}$의 물리적 기원
 
-$D_{\text{eff}}$는 접힘 헤시안 $\Phi = \delta^2 S/\delta\gamma^2$의 독립 접힘 채널 수이다.
+\(D_{\text{eff}}\)를 Hessian operator
+\(\mathcal H_\gamma=\delta^2S[\gamma]\)의 독립 접힘 채널 수로 읽는 것은
+`Selection/Bridge`다. probe별 scalar readout \(\Phi_H\), 독립장
+\(\phi\ne R\), Ricci scalar는 서로 다른 수학적 type이다.
 
 **(i) 공간 기여.** 자유 입자의 작용은 공간 차원에 대해 분해된다. 등방성에 의해 각 차원이 동등하게 기여한다.
 

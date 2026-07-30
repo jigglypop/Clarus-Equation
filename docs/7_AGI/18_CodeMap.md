@@ -364,6 +364,10 @@ AI 응용에서 핵심은 단일 모듈 성능이 아니라 \(S_t \to R(S_t) \to
 
 > 정정 노트 (2026-07, F.14.2 게이트): $g[t]=\alpha_g\,d\bar c/dt+(1-\alpha_g)\,\text{bootstrap\_dev}$ 의 미분항은 **같은 척도의 critic 신호 차분**이어야 한다. `runtime.py::_apply_runtime_stdp` 가 이전에는 drive로 `critic_score`(≈1.0), prev로 `energy`(≈0.3)를 써서 서로 다른 척도를 빼는 바람에 게이트 부호가 거의 무작위였다. 현재는 `_stdp_prev_critic_score` 에 이번 tick의 `gate_drive`(critic, 없으면 energy proxy)를 그대로 저장해 일관된 시간미분이 되도록 수정됨. `stdp_enabled=False` 극한 환원 불변식은 그대로 유지(트래커 미생성 시 조기 반환).
 
+> 효능 판정 (2026-07-30): 인과 배선 테스트는 통과했지만 기본 STDP A/B는
+> next-step prediction에서 `NO-EFFECT`, held-out guard에서 `FAIL`이다.
+> 구현과 효능을 분리한 수치·재현 명령은 `21_STDP_Efficacy_Audit.md`를 따른다.
+
 최소 closed-loop 판정:
 
 $$
@@ -443,12 +447,12 @@ $$
 
 | 수식/개념 | 문서 위치 | 코드 상태 |
 |---|---|---|
-| STDP 적격 흔적 | F.14 | 미구현 |
-| 4종 신경조절 (DA/NE/5HT/ACh) | F.19 | 미구현 (단일 스칼라) |
-| 소뇌 전방 모델 | F.20 | 미구현 |
-| 작업 기억 용량 제한 $|h_t| \le T_h$ | F.20 | 미구현 |
-| 뇌파 대역 분해 | F.21 | 미구현 |
-| (C3) 메타인지 재귀 루프 | F.17 | 미구현 |
+| STDP 적격 흔적 | F.14 | 구현·runtime 연결 완료; 효능 `NO-EFFECT`, guard `FAIL`, 기본 off |
+| 4종 신경조절 (DA/NE/5HT/ACh) | F.19 | `neuromod.py` 상태식/효과 mapping 구현; 전체 runtime 폐루프는 부분 |
+| 소뇌 전방 모델 | F.20 | `agent.py::CerebellumPredictor`와 RuntimeAgent 연결 구현; 독립 효능 미검증 |
+| 작업 기억 용량 제한 $|h_t| \le T_h$ | F.20 | `agent.py::WorkingMemory` FIFO capacity 구현·RuntimeAgent 연결 |
+| 뇌파 대역 분해 | F.21 | `runtime.py::brainwave_observable` FFT 5대역 구현 |
+| (C3) 메타인지 재귀 루프 | F.17 | `ConsciousnessMonitor.metacognition_step` 수축 toy 구현; 실제 agent feedback 미구현 |
 | Cold checkpoint ($\mathcal{C}$) | 14장 7절 | 미구현 (warm만 있음) |
 | Live journal ($\mathcal{J}$) | 14장 7절 | 미구현 |
 | 섭동적 채널 혼합 | 2장 2.3절 | 미구현 |

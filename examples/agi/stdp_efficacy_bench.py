@@ -78,7 +78,7 @@ from reality_stone.clarus.agent import RuntimeAgent, RuntimeAgentConfig
 from reality_stone.clarus.runtime import BrainRuntime, BrainRuntimeConfig, RuntimeMode
 
 
-GUARD_TOL = 0.02  # allowed guard-probe critic increase before we call it regression
+GUARD_TOL = 0.02  # allowed held-out next-step prediction-error increase
 
 
 def _make_runtime(weight: torch.Tensor, *, stdp: bool, dim: int) -> BrainRuntime:
@@ -282,9 +282,9 @@ def main() -> None:
 
     # Verdicts (thresholds fixed before running; not tuned to output).
     if mi > si and mi > 0:
-        efficacy = "PASS (improves surprise beyond 1 sigma)"
+        efficacy = "PASS (improves next-step prediction beyond 1 sigma)"
     elif mi < -si:
-        efficacy = "WORSE (degrades surprise beyond 1 sigma)"
+        efficacy = "WORSE (degrades next-step prediction beyond 1 sigma)"
     else:
         efficacy = "NO-EFFECT (within 1 sigma of zero)"
 

@@ -11,6 +11,7 @@
 | [VALIDATION_FRAMEWORK.md](VALIDATION_FRAMEWORK.md) | 남은 증명 요구사항과 tier별 blocker | 참고 정본 |
 | [MATHEMATICAL_PHYSICS_ISSUES.md](MATHEMATICAL_PHYSICS_ISSUES.md) | 수학/물리 문제점 감사 목록 | 참고 정본 |
 | [BRIDGE_B2_DERIVATION.md](BRIDGE_B2_DERIVATION.md) | \(P_{\text{survive}}\leftrightarrow\Omega_b\) bridge 보강 기록 | bridge 보조 |
+| [우주론_양자론_루프_감사.md](우주론_양자론_루프_감사.md) | DESI 잔차·\(H_0r_d\) 원인 분해와 표준 QM/\(\Phi\) 형식 감사 | 실행 감사 |
 | [문서_전체_완성도_감사.md](문서_전체_완성도_감사.md) | docs 전체 완성도와 보강 순서 | 운영 감사 |
 | [미해결_난제_목록.md](미해결_난제_목록.md) | 인류/CE 미해결 난제 카탈로그 | open-problem index |
 
@@ -35,7 +36,8 @@
 2. [PROOF_VALIDATION_LEDGER.md](PROOF_VALIDATION_LEDGER.md): 왜 그 판정이 되었는지 검산 이력을 본다.
 3. [미해결_난제_목록.md](미해결_난제_목록.md): CE가 아직 못 닫은 외부/내부 난제를 확인한다.
 4. [VALIDATION_FRAMEWORK.md](VALIDATION_FRAMEWORK.md): 남은 blocker와 필요한 증명/실험을 본다.
-5. [문서_전체_완성도_감사.md](문서_전체_완성도_감사.md): 문서군 정리 우선순위를 본다.
+5. [우주론_양자론_루프_감사.md](우주론_양자론_루프_감사.md): 우주론·양자론의 최신 실행 잔차와 최소 보강을 본다.
+6. [문서_전체_완성도_감사.md](문서_전체_완성도_감사.md): 문서군 정리 우선순위를 본다.
 
 ## 운영 규칙
 

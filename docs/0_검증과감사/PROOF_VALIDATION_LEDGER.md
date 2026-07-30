@@ -296,3 +296,184 @@ Scored pass rate: 84.6%
 | 그 외 | `open_test` |
 
 X17류 17 MeV 신호는 질량창 밖이므로 Clarus pole hit로 세지 않는다. 이 gate는 발견 주장이 아니라 실험 판정표다. `bridge_rejected`가 나오더라도 반증되는 것은 국소 스칼라/포탈 readout이지, 경로적분 수렴 구조로서의 클라루스장 자체가 아니다.
+
+## 13. 2026-07-30 우주론·양자론 루프 감사
+
+### 13.1 DESI BAO 고정모델
+
+`examples/physics/ce_residual_forward_model.py`에 p-value, 판정, covariance
+기여도와 parameter provenance를 추가했다.
+
+| 모드 | \(\chi^2\) | dof | \(p\) | 판정 |
+|---|---:|---:|---:|---|
+| CE density + 외부 \(H_0=67.4,r_d=147.09\) 고정 | 37.100260857 | 13 | \(3.9957\times10^{-4}\) | `REJECT` |
+| 동일 shape + \(H_0r_d\) scale 1개 진단 fit | 12.608346862 | 12 | 0.398138 | `PASS/Diagnostic` |
+
+복잡도 패널티는 고정모델
+\({\rm AIC}={\rm BIC}=37.1003\), scale fit
+\({\rm AIC}=14.6083,\ {\rm BIC}=15.1733\)이다.
+
+analytic scale은
+
+$$
+q_*
+=
+\frac{y^\top C^{-1}d}{y^\top C^{-1}y}
+=
+0.986476933470
+$$
+
+이다. 이는 \(r_d=149.106375\,{\rm Mpc}\) 또는
+\(H_0=68.323949\,{\rm km\,s^{-1}Mpc^{-1}}\)와 등가다. 같은 DESI 데이터에
+맞춘 값이므로 CE 예측으로 세지 않는다. 현재 판정은 “고정 패키지 실패의 주된
+원인이 외부 \(H_0r_d\) scale”이라는 원인 분해다.
+
+### 13.2 표준 QM reference gate
+
+`reality_stone.clarus.quantum`에 다음 표준 기준선을 추가했다.
+
+- \(U=\exp(-iH\Delta t/\hbar)\) 일반 Hermitian Hamiltonian 진화
+- density matrix와 Born probability/sampling
+- GKSL/Lindblad RHS와 positivity를 보존하는 small-system step
+
+이 기준선은 CE 고유 효과가 아니다. 기존 scalar phase step은 \(H=EI\)의
+전역위상이라 population·상대위상·간섭을 만들지 못한다는 반례를 회귀로
+고정했다.
+
+동시에
+
+$$
+\frac{\delta^2S}{\delta\gamma^2}=R
+$$
+
+은 Hessian kernel/operator와 Ricci scalar의 type이 다르므로 현 형태로는
+승격 불가라고 판정했다. 독립장 \(\phi\ne R\) 또는 constrained curvature
+readout 중 하나를 선택해야 한다. Born 분지식은 이미 \(|c_k|^2\)를 입력하므로
+Born prior 보존 조건이지 Born rule의 완전 유도가 아니다.
+
+검증:
+
+```text
+tests/test_ce_residual_forward_model.py: 21 passed
+tests/test_quantum.py: 19 passed
+```
+
+상세 수식과 kill rule은
+`docs/0_검증과감사/우주론_양자론_루프_감사.md`에 고정한다.
+
+### 13.3 우선순위 보강 실행
+
+외부 \(r_d\)를 대체할 첫 계산 경로로
+
+$$
+z_d^{\rm EH}=1020.020419907,
+\qquad
+r_d^{\rm EH\ hybrid}=151.318753028\ {\rm Mpc}
+$$
+
+를 얻었다. 입력은 CE \(\Omega_b,\Omega_m\), 외부 \(H_0,T_{\rm CMB}\),
+표준모형 가정 \(N_{\rm eff}=3.044\)와 Eisenstein--Hu fit이다. DESI DR2
+13점 full covariance에 넣으면
+
+$$
+\chi^2=40.468225544,\qquad
+p=1.16176098\times10^{-4},
+$$
+
+로 `REJECT`이며 외부 \(r_d=147.09\,{\rm Mpc}\)보다 악화된다. 수치 적분은
+물질--복사 닫힌형과 약 \(1.4\times10^{-10}\) 상대오차로 맞으므로 실패 원인은
+적분기가 아니라 empirical \(z_d\)와 미구현 precision recombination이다.
+DESI는 runtime 입력이 아니지만 이 경로는 DR2 확인 후 추가됐으므로 DR2를
+holdout으로 세지 않는다.
+
+EH fit 다음 단계로 외부 \(x_e(z)\) history adapter도 구현했다. convention은
+
+$$
+\frac{d\tau_{\rm drag}}{dz}
+=
+\frac{c\sigma_Tn_e(z)}
+{H(z)(1+z)R(z)},
+\qquad
+R=\frac{3\rho_b}{4\rho_\gamma},
+\qquad
+\tau_{\rm drag}(z_d)=1
+$$
+
+이다. raw SHA-256, solver/version/backend, cosmology, \(Y_p\), 단위,
+column/delimiter/order, \(z=0\), 단조성과 crossing 해상도를 강제한다. 합성
+history에서 \(z_d=1059.25,\ r_d=147.649757605\,{\rm Mpc}\)를 회수했지만,
+실제 CLASS/CAMB/HyRec history가 로컬에 없으므로 이 수치를 precision 결과로
+세지 않는다. 닫힌 등급은 외부 solver output의 `Tooling/Bridge` adapter다.
+
+양자 쪽은 독립장 branch A \(\phi\ne R\)를 선택했다.
+
+- Hessian/Jacobi scalar는
+  \(\Phi_{\rm eff}=\langle\eta,\mathcal J\eta\rangle/\langle\eta,\eta\rangle\)
+  로 읽고 독립장과 동일시하지 않는다.
+- \(29.64757\,{\rm MeV}\)는
+  \(f=7.1687505314\times10^{21}\,{\rm Hz}\),
+  \(\omega=4.5042588010\times10^{22}\,{\rm s^{-1}}\)로 변환되지만 이것은
+  pole의 존재 증거가 아니다.
+- \(H_{\rm int}/\hbar=gA\otimes O\)의 reduced frequency convention에서는
+  \(\gamma=g^2J_{\rm red}\)이고, SI Hamiltonian과 무차원 \(O\)의 raw
+  correlator에서는 \(\gamma=(g_J/\hbar)^2G\)다. 코드는 두 변환을 분리하며
+  action·bath·결합이나 그 사이 단위 mapping을 유도하지 않는다.
+- \(G(\omega)=\int dt\,e^{+i\omega t}\langle O(t)O(0)\rangle\) convention,
+  \(G(-\omega)=e^{-\hbar\omega/k_BT}G(+\omega)\) 단일 Hermitian scalar KMS
+  gate와 strict-default PSD Kossakowski jump decomposition을 reference
+  tooling으로 구현했다. 명시적 PSD 투영·mode cutoff는 residual을 보고한다.
+- 2준위 Gibbs 고정점과 cross-term dissipator 동등성은 통과했지만, CE
+  action에서 실제 \(G_\phi,J_\phi\)를 유도하는 과정, CPTP instrument와
+  no-signalling은 `Open`이다.
+
+현재 focused 회귀는
+
+```text
+cosmology forward + drag adapter: 30 passed
+quantum baseline + KMS/Kossakowski: 50 passed
+future-holdout manifest validator: 21 passed
+combined focused gate: 101 passed
+full repository: 670 passed, 13 skipped
+```
+
+다. 이 증가는 CE의 참일 확률이 아니라 type·단위·수치·generic physicality
+게이트의 구현 범위 증가다.
+
+같은 checkout의 상수 장부는
+
+```text
+Scored bridge/phenom rows: 13
+PASS: 12
+CAUTION: 1
+Scored pass rate: 92.3%
+OPEN TEST: 1
+```
+
+이다. 이 92.3%는 상수별 snapshot score이며 DESI full-cov 적합도나 양자
+실험 게이트와 다른 질문이다.
+
+### 13.4 미래 holdout preregistration
+
+`experiments/preregistration/`에 우주론·양자론 v1 manifest와 validator를
+추가했다. 두 manifest는 canonical JSON self-hash와 계산 코드 artifact
+hash를 별도로 고정한다.
+
+| domain | manifest SHA-256 | 현재 상태 |
+|---|---|---|
+| cosmology | `0f79d9fb27abc7326e3bd136768f0a2b560f720b2db42c1079d9d82c3efe7692` | `VALID / unassigned / NOT_READY` |
+| quantum | `4bd3d9777c47465dd419012bbf2622fb0d5c91a312003010dede50cb1c4e853a` | `VALID / unassigned / NOT_READY` |
+
+DESI DR2는 freeze 전에 잔차와 scale 진단에 사용했으므로
+`exploratory_calibration`, `holdout_eligible=false`로 고정했다. 과거 ARC
+94.6%도 raw artifact가 없는 이미 알려진 기록이므로 future holdout으로
+재라벨하지 않는다. 우주론은 full covariance와 holdout fit 0개를 강제하며
+\(p<0.0027\)인 고정 후보를 사후 scale 보정 없이 기각한다. 양자론은 CP/Choi,
+Born, no-signalling, \(J(\omega)\), GKSL/Kossakowski PSD, KMS와 predictive
+density gate를 모두 동결했다.
+
+기본 validator의 성공은 동결 파일의 구조·hash 무결성만 뜻한다.
+`--require-assigned-holdout`은 두 manifest 모두 exit code 1로 실패한다.
+실제 평가에는 데이터를 보기 전 새 ID와 revision \(\ge2\), v1 supersession,
+release metadata와 `holdout_data` artifact SHA-256이 필요하다. 양자 쪽은
+그 전에 아직 열려 있는 \(g,A,\mathcal O_\phi\), bath, \(J(\omega)\), instrument
+및 단위 mapping도 새 revision에서 고정해야 한다.

@@ -634,25 +634,23 @@ $$
 | C (전역 모드) | `15_Equations.md` C절 | `runtime.py::_auto_mode` + `_update_sleep_state` | 완전 일치 |
 | D (해마/기억) | `15_Equations.md` D절 | `runtime.py::HippocampusMemory` | 완전 일치 |
 | E (전역 요약) | `15_Equations.md` E절 | `runtime.py::RuntimeStep` + `BrainRuntimeSnapshot` | 완전 일치 |
-| F (에이전트 루프) | `17_AgentLoop.md` F절 | `engine.py` + `sleep.py` (부분) | 핵심 구현, STDP/메타인지 미구현 |
+| F (에이전트 루프) | `17_AgentLoop.md` F절 | `agent.py` + `runtime.py` + `stdp.py` + `neuromod.py` + `sleep.py` | 실행 루프·STDP 배선 구현, 독립 효능은 부분/미통과 |
 
 ### 14.6 남은 간극
 
 | 간극 | 문서 위치 | 우선순위 |
 |---|---|---|
-| STDP 적격 흔적 | F.14 | 높음 |
-| 4종 신경조절 분리 | F.19 | 중간 |
+| STDP 효능 + held-out guard | F.14, `21_STDP_Efficacy_Audit.md` | 높음 |
+| 4종 신경조절의 runtime 폐루프 통합 | F.19 | 중간 |
 | Cold checkpoint + Live journal | 7절 | 낮음 |
-| 작업 기억 / 소뇌 | F.20 | 중간 |
-| (C3) 메타인지 재귀 루프 | F.17 | 낮음 |
+| 작업 기억 / 소뇌의 독립 task 효능 | F.20 | 중간 |
+| (C3) 메타인지 재귀의 실제 agent feedback | F.17 | 낮음 |
 
-현재 구현은 **셀 동역학 + 모드 전환 + 해마 + 수면 학습 순환**의 핵심 스택이 완성되어 있으며, critic/action/output 에이전트 루프와 STDP 학습이 남아 있다.
+현재 구현은 **셀 동역학 + 모드 전환 + 해마 + 수면 학습 순환 +
+critic/action/output 에이전트 루프 + STDP 인과 배선**까지 닫혀 있다. 남은
+핵심은 모듈의 존재가 아니라 독립 baseline 대비 효능이다. 특히 STDP는 현재
+합성 A/B에서 `NO-EFFECT`, held-out guard `FAIL`이므로 기본 비활성 상태를 유지한다.
 
----
-
-## 15. 한 줄 원칙
-
-$$\boxed{\text{뇌 전체를 만들지 말고, 살아남는 최소 코어를 먼저 만들어라}}$$
 
 ---
 
