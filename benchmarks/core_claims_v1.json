@@ -1,0 +1,140 @@
+{
+  "schema_version": "ce-core-model-selection/v1",
+  "recursion_scope": "scalar_equal_row_sum",
+  "description": "Preregistered structural controls for the scalar equal-row-sum invariant sector, not the full vector A recursion. Vector, anisotropic, and unequal-row-sum modes remain outside this gate.",
+  "model_spec": {
+    "recursion_scope": "scalar_equal_row_sum",
+    "equation": "x = S(D_eff * K(x))",
+    "scope_note": "Only the scalar invariant sector induced by equal row sums is compared. Vector, anisotropic, and unequal-row-sum modes are outside this gate.",
+    "branch_rule": "Scan every root in [0,1]; only stable nontrivial roots are eligible for selection scoring."
+  },
+  "candidate_grid": {
+    "survival": [
+      {
+        "id": "exponential",
+        "formula": "exp(-z)",
+        "parameter_count": 0,
+        "note": "CE multiplicative survival law."
+      },
+      {
+        "id": "rational_q1",
+        "formula": "(1+z)^(-1)",
+        "parameter_count": 0,
+        "note": "Normalized same-initial-slope nonfactorizing control."
+      },
+      {
+        "id": "rational_q2",
+        "formula": "(1+z/2)^(-2)",
+        "parameter_count": 0,
+        "note": "Second normalized same-initial-slope nonfactorizing control."
+      }
+    ],
+    "feedback": [
+      {
+        "id": "linear",
+        "formula": "1-x",
+        "parameter_count": 0,
+        "note": "CE linear suppression closure."
+      },
+      {
+        "id": "residual_square",
+        "formula": "(1-x)^2",
+        "parameter_count": 0,
+        "note": "Quadratic residual control with the same endpoints."
+      },
+      {
+        "id": "state_square",
+        "formula": "1-x^2",
+        "parameter_count": 0,
+        "note": "Quadratic state control with the same endpoints."
+      }
+    ],
+    "d_eff": [
+      {
+        "id": "bare_d",
+        "formula": "d",
+        "parameter_count": 0,
+        "note": "No electroweak correction control."
+      },
+      {
+        "id": "ce_delta",
+        "formula": "d+delta",
+        "parameter_count": 0,
+        "note": "CE effective-dimension map."
+      },
+      {
+        "id": "double_delta",
+        "formula": "d+2*delta",
+        "parameter_count": 0,
+        "note": "Fixed doubled-correction control."
+      }
+    ]
+  },
+  "root_scan": {
+    "interval": [
+      0.0,
+      1.0
+    ],
+    "scan_points": 4096,
+    "residual_tolerance": 1e-12,
+    "x_tolerance": 1e-14,
+    "merge_tolerance": 1e-9,
+    "stability_tolerance": 1e-10,
+    "selection_policy": "stable_nontrivial"
+  },
+  "algebraic_audit": {
+    "tolerance": 1e-12,
+    "factorization_tolerance": 1e-12,
+    "survival_grid": [
+      0.0,
+      0.25,
+      0.5,
+      1.0,
+      2.0,
+      4.0
+    ],
+    "feedback_grid": [
+      0.0,
+      0.1,
+      0.25,
+      0.5,
+      0.75,
+      0.9,
+      1.0
+    ]
+  },
+  "selection": {
+    "minimum_independent_observations": 2,
+    "competitive_max_abs_z": 2.0,
+    "rule": "One independent selection observable is always UNDERIDENTIFIED. Inputs, references, and prospective rows never enter selection scores."
+  },
+  "observations": [
+    {
+      "key": "spatial_dimension",
+      "adapter": "spatial_dimension",
+      "value": 3.0,
+      "sigma": 0.0,
+      "role": "input",
+      "correlation_group": "ce_structure",
+      "source": "Scalar invariant-sector structural input."
+    },
+    {
+      "key": "delta_legacy",
+      "adapter": "delta",
+      "value": 0.17776,
+      "sigma": 0.0,
+      "role": "input",
+      "correlation_group": "ce_structure",
+      "source": "Rounded local CE delta retained for exact legacy solver regression."
+    },
+    {
+      "key": "omega_b_fraction",
+      "adapter": "omega_b_bridge",
+      "value": 0.0486,
+      "sigma": 0.001,
+      "role": "selection",
+      "correlation_group": "cmb_baryon_fraction",
+      "source": "Local Planck-family baryon-fraction comparison used only as a retrospective selection row."
+    }
+  ]
+}

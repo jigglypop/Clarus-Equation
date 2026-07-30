@@ -1,6 +1,6 @@
 # CE 이론 검증 프레임워크 (Clarus Equation Proof Requirements)
 
-**최종 업데이트:** 2026-06-06  
+**최종 업데이트:** 2026-07-30
 **목표:** 이전 분석(I-XIII)의 모든 "미증명 부분", "순환논리", "검증 부재" 항목을 체계적으로 정리하고 각각의 증명 경로를 명확히 함
 
 ---
@@ -16,6 +16,77 @@ CE 이론의 검증은 7개 계층으로 구분된다:
 5. **TIER 5: BRAIN & NEUROSCIENCE** - 거의 모두 미검증
 6. **TIER 6: ENGINEERING APPLICATIONS** - 기술 공극 극심
 7. **TIER 7: CODE & COMPUTATIONAL** - 구현상 미완성
+
+---
+
+## 현재 코어 모델선택 게이트 읽기
+
+코어의 수치 검산과 물리 모형 선택을 한 판정으로 합치지 않기 위해, 다음 게이트와 사전등록 manifest를 정본 실행 경로로 둔다.
+
+- 실행 게이트: `examples/physics/core_model_selection_gate.py`
+- 후보·관측 역할 manifest: `benchmarks/core_claims_v1.json`
+- 구현: `reality_stone/python/reality_stone/clarus/core_model_selection.py`
+- 회귀 테스트: `tests/test_core_model_selection.py`
+
+```powershell
+python examples/physics/core_model_selection_gate.py
+python -m pytest tests/test_core_model_selection.py tests/test_bootstrap_solver.py -q
+```
+
+이 게이트는 일반화된 스칼라 고정점
+
+$$
+x=S\!\left(D_{\mathrm{eff}}K(x)\right)
+$$
+
+에서 생존 법칙 $S$ 3개, 피드백 닫힘 $K$ 3개, $D_{\mathrm{eff}}$ 사상 3개를 조합한 **27개 후보**를 모두 순회한다. 설정 구간의 모든 수치근을 스캔하고 각 근의 residual과 국소 안정반경을 별도로 기록한다.
+
+판정 필드는 다음처럼 읽는다.
+
+| 필드 | 묻는 질문 | 현재 의미 |
+|---|---|---|
+| `algebraic_status` | 식과 수치 구현이 정규화, 경계조건, root residual, 안정성 계산 등의 계약을 만족하는가 | 현재 manifest의 27개 대조 후보는 `PASS`. 이는 수학·수치 계약 통과이지 물리 이론의 실험적 확증이 아니다 |
+| `selection_status` | 입력·참조행을 제외한 독립 관측으로 후보군을 선택할 수 있는가 | 현재 `UNDERIDENTIFIED`. 독립 selection 관측이 1개뿐이므로 27개 구조 가운데 승자를 정하거나 CE를 검증했다고 말할 수 없다 |
+
+`UNDERIDENTIFIED`는 실패를 숨기는 완곡어가 아니라 **현재 데이터 설계로는 모형 식별이 불가능하다는 중지 판정**이다. 각 후보의 $\chi^2$와 표준화 residual은 진단값으로 남기되, 독립 selection 관측이 최소 2개가 되기 전에는 `COMPETITIVE` 또는 `DISFAVORED`로 승격하지 않는다.
+
+또한 이 비교의 범위는 manifest와 결과에
+
+```text
+recursion_scope = scalar_equal_row_sum
+```
+
+으로 고정된다. 즉 결합행렬 $A$의 행합이 같은 경우 나타나는 **스칼라 불변 부문**만 비교하며, 일반 벡터 $A$ 전체의 재귀를 검증하지 않는다. 행합이 다르거나 비등방적인 다공간 재귀는 `reality_stone/python/reality_stone/clarus/multispace_bootstrap.py`와 별도 게이트에서 다룬다.
+
+```powershell
+python examples/physics/multispace_recursion_gate.py
+python -m pytest tests/test_multispace_bootstrap.py -q
+```
+
+따라서 스칼라 모델선택 게이트의 `algebraic_status=PASS`를 벡터 다공간 게이트의 통과로 전용해서는 안 된다.
+
+### 양자 jump에서 분지과정으로 가는 구조 게이트
+
+복소 양자진폭이나 Hessian의 비대각 원소를 곧바로 비음수 Poisson
+offspring로 읽지 않기 위해 다음 조건부 게이트를 둔다.
+
+- 실행 게이트: `examples/physics/quantum_jump_bridge_gate.py`
+- 구현: `reality_stone/python/reality_stone/clarus/quantum_jump_bridge.py`
+- 회귀 테스트: `tests/test_quantum_jump_bridge.py`
+
+```powershell
+python examples/physics/quantum_jump_bridge_gate.py
+python -m pytest tests/test_quantum_jump_bridge.py -q
+```
+
+이 게이트는 이미 주어진 Kossakowski 행렬, Hamiltonian, jump operator,
+sector projector에 대해 양의 준정부호, population–coherence 폐쇄,
+constant hazard, 행-출발 방향을 검사한다. 구조상 통과해도
+`ce_sm_derivation_complete=False`와
+`poisson_branching_derived=False`를 유지한다. 즉 이 결과는 CE+SM
+작용에서 jump operator를 유도했다는 판정도, jump 전이율 \(W\)가 독립
+offspring 행렬 \(A\)라는 판정도 아니다. 전체 조건과 실패 대안은
+`CORE_STRENGTHENING_LOOP.md`의 Q-loop를 따른다.
 
 ---
 

@@ -3,6 +3,30 @@
 ## 1. 서론 (Introduction)
 CE 이론은 우주의 물리적 현상과 정보적 연산 과정을 하나의 통합된 기하학적 프레임워크로 설명하는 이론이다. 이 문서는 CE 이론의 가장 밑바닥에 존재하는 **3대 공리(Axioms)**와 이를 통해 유도된 **마스터 공식(Master Formula)**을 정의한다.
 
+### 1.0 수식 전 개념 지도
+
+재귀 코어는 방 하나가 자기 연기를 다시 받는 모형이 아니라, 환기구로
+연결된 여러 방에서 trigger가 다음 방으로 번지는 모형이다. 자기 방으로
+돌아오는 전달은 자기재귀이고, 다른 방으로 가는 전달은 타공간 재귀다.
+닫힌 전달 고리의 집단 증폭이 임계값을 넘을 때 비자명한 최소 상태가
+생긴다.
+
+기존의 한 변수 부트스트랩은 각 출발방이 다음 세대로 내보내는 총 재귀
+세기가 같고 모든 방이 같은 상태에서 시작하는 균일 부분공간 또는 실제
+한 종류 모형이다. 따라서 이 문서에서 스칼라 공리를 볼 때는 다음 순서로
+읽는다.
+
+1. 상위 구조는 다공간 Poisson 재귀다.
+2. 공통 행합 조건 아래에서만 균일 스칼라식이 정확히 닫힌다.
+3. 이차 요동 연산자는 모드·혼합 정보를 주지만 곧바로 비음수 offspring
+   행렬 \(A\)는 아니다. 상호작용 vertex와 환경 correlator에서
+   완전양의 jump rate를 얻고, 계보 극한에서 \(A\)를 유도해야 한다.
+4. 스칼라 또는 벡터 고정점을 관측량에 대응시키는 일은 별도 bridge다.
+
+처음 읽는 독자는 [코어 독자 가이드](코어_독자_가이드.md)를 먼저 보고,
+정리와 반례는
+[코어 강화 루프](0_검증과감사/CORE_STRENGTHENING_LOOP.md)에서 확인한다.
+
 ### 1.1 (보강) 이 문서의 역할과 주장 범위
 - 이 문서는 "CE의 공리(가정)와 표기/기호"를 고정하기 위한 **정의 문서**이다.
 - 아래 공리들은 직관을 제공하지만, 공리만으로 곧바로 개별 현상의 정량 예측이 나오는 것은 아니다. 정량 예측은
@@ -14,7 +38,8 @@ CE 이론은 우주의 물리적 현상과 정보적 연산 과정을 하나의 
 - 코어 공리를 반례군과 실행 gate로 반복 보강하는 최신 정본은
   `0_검증과감사/CORE_STRENGTHENING_LOOP.md`다. 본 문서와 표현이
   충돌하면 해당 문서의 정리 가정과 용어(`Hodge type closure`,
-  `mixture affinity`, `quadratic channel rule`)를 우선한다.
+  `mixture affinity`, `multitype Poisson recursion`,
+  `homogeneous diagonal sector`)를 우선한다.
 
 ### 1.2 문서 레벨 규약
 
@@ -22,12 +47,17 @@ CE 문서를 읽을 때는 수식의 내용보다 먼저 그 수식의 **지위*
 
 | 레벨 | 의미 | 이 문서에서의 역할 |
 |---|---|---|
-| Exact | 정의, 기능방정식, 순수 수학으로 닫히는 단계 | 기호 사전, $S(D)=e^{-D}$류의 형식 규약 |
-| Selection | 유일성, 분기 선택, 정규화 선택으로 닫히는 단계 | $d=3$ 선택, 주기 정규화 선택 |
-| Bridge | 물리량 식별, 매칭 조건, 표준모형 연결이 필요한 단계 | A3b, $P_{\mathrm{survive}}\leftrightarrow\Omega_b$, 게이지 연결 |
+| Definition | 기호와 대상의 뜻을 고정 | 기호 사전, 상태공간, 연산자 정의 |
+| Exact conditional | 명시된 가정에서 수학·SM 대수로 따라오는 정리 | 지수 생존 정리, 고정점 구조, 지정 \(W^3/B\) 부분공간의 대수 |
+| Convention | 단위와 정규화 선택 | optical depth에서 \(\kappa=1\), 방향 규약 |
+| Selection | 여러 수학적 가지·물리 모형 가운데 하나를 채택 | \(d=3\) 가지의 물리 채택, 안정 가지 선택 |
+| Bridge | 수학량을 실제 물리량·관측량에 잇는 추가 연결 가정 | A3b, $P_{\mathrm{survive}}\leftrightarrow\Omega_b$, 게이지 연결 |
 | Phenomenology | 관측 적합, 유효 보정, 응용 닫힘 | 후속 문서의 NLO/전이/응용 절 |
 
-이 구분이 흐려지면 "공리", "발견된 관계식", "관측에 맞는 근사"가 한 문장 안에서 섞이게 된다. 본 문서는 그 혼선을 줄이는 기준점으로 유지한다.
+레거시 문서의 `Exact` 표시는 위 표의 `Definition`, `Exact conditional`,
+`Convention` 중 무엇인지 다시 확인해야 한다. 이 구분이 흐려지면 "공리",
+"발견된 관계식", "관측에 맞는 근사"가 한 문장 안에서 섞이게 된다.
+본 문서는 그 혼선을 줄이는 기준점으로 유지한다.
 
 ### 1.2a 오일러 항등식의 문서상 지위
 
@@ -41,9 +71,9 @@ $$
 
 | 상수 | 문법적 역할 | 이 문서에서의 지위 |
 |---|---|---|
-| $e$ | 지수형 생존/감쇠 | `Exact` 또는 `Selection` |
+| $e$ | 지수형 생존/감쇠 | `Exact conditional`과 optical-depth `Convention` |
 | $\pi$ | 주기와 정규화 | `Selection` |
-| $i$ | 위상과 간섭 | `Exact` |
+| $i$ | 위상과 간섭 | `Definition` |
 | $1$ | 정규화된 완전 상태 | `Selection` |
 | $0$ | 영점과 분기 선택 | `Selection` |
 
@@ -296,8 +326,8 @@ CE 마스터 공식은 단순히 물리 현상을 설명하는 식을 넘어, **
 | 공리 | 내용 | 상태 |
 |------|------|------|
 | **A1** | $\Phi = \delta^2 S / \delta\gamma^2$ (경로적분 수렴을 매개하는 유효 억압 자유도) | 공리 |
-| **A2** | $D_{\text{eff}} = d + \delta$, $\delta = \sin^2\theta_W\cos^2\theta_W$ | SM 혼합 대수 + additive quadratic fold-operator의 조건부 정리; microscopic Hessian gate 진행 중 |
-| **A3a** | $\varepsilon^2 = \exp(-(1-\varepsilon^2)\cdot D_{\text{eff}})$ (부트스트랩 고정점 식) | 자기일관 `Selection` 규칙 |
+| **A2** | $D_{\text{eff}} = d + \delta$, $\delta = \sin^2\theta_W\cos^2\theta_W$ | SM coherence 대수 + additive fold-operator의 조건부 구성; quantum-to-branching gate 진행 중 |
+| **A3a** | $\varepsilon^2 = \exp(-(1-\varepsilon^2)\cdot D_{\text{eff}})$ (부트스트랩 고정점 식) | 비음수 \(A\)와 독립 Poisson 재귀를 주면 1종류 또는 공통 행합 균일 sector에서 닫히는 `Exact conditional`. 그 sector를 실제 물리에 채택하는 일은 별도 `Selection/Bridge` |
 | **A3b** | $P_{\mathrm{survive}} \leftrightarrow \Omega_b$ | 관측 가능한 선택 측도에 대한 `Bridge` 규칙 |
 | **A4** | $\Omega_{\text{DM}}/\Omega_\Lambda = R$ | `Bridge`에서 `Phenomenology`로 넘어가는 성분 분해 규칙 |
 
@@ -313,7 +343,8 @@ A2는 다음 두 명제로 나눈다.
    =\left(\frac{gg'}{g^2+g'^2}\right)^2
    =\sin^2\theta_W\cos^2\theta_W
    \]
-   가 나온다.
+   라는 normalized coherence intensity가 나온다. 이는 정확한 대수적
+   통계량이지만 그 자체가 decay 또는 offspring rate는 아니다.
 2. **CE 조건부 operator 정리:** normalized fold-depth operator를
    \[
    \mathcal D_{\rm fold}=I_d\oplus C_Z^\dagger C_Z,
@@ -322,9 +353,14 @@ A2는 다음 두 명제로 나눈다.
    로 구성하면 trace additivity에 의해
    \(D_{\rm eff}=\operatorname{Tr}\mathcal D_{\rm fold}=d+\delta\)다.
 
-둘째 명제의 단위계수 1을 최종적으로 닫으려면 이 operator가 CE+SM의
-실제 gauge-fixed quadratic Hessian에서 나와야 한다. \(W^\pm\), fermion,
-ghost, loop block까지 포함한 spectral trace 계산이 다음 gate다.
+둘째 명제의 단위계수 1을 최종적으로 닫으려면 복소·부호 있는 CE+SM
+동역학에서 양의 물리 jump rate와 next-generation operator가 나와야
+한다. 정본의 \(Z_2\), \(v_\Phi=0\) 진공에서는 \(h\)-\(\Phi\)
+quadratic cross-Hessian이 0이므로 quadratic block 하나만으로는 충분하지
+않다. cubic/quartic vertex, loop self-energy, physical spectral density,
+완전양의 reduced dynamics, classical population closure를 차례로 검사해야
+한다. \(W^\pm\), fermion, ghost와 gauge/scheme 의존성도 이 gate에
+포함한다.
 따라서 “Z가 유일한 거대 중성 보손이므로 자동으로 \(+\delta\)”라는
 문장만으로는 충분하지 않다.
 
@@ -379,8 +415,8 @@ ghost, loop block까지 포함한 spectral trace 계산이 다음 gate다.
 
 - 정의가 완결되었는가: $\mathcal{K}$는 경로적분 헤시안 기댓값으로 구성되었고(2절), $\chi$의 동역학은 유클리드 열핵 흐름으로 닫혔다(2절). 잔여 열린 항목: $\chi$를 독립 장으로 승격할 경우의 $f(\Phi)$ 구체형.
 - 정리와 가정이 분리되었는가: A2에서 SM 혼합 대수와 additive
-  fold-operator 선택을 분리하고, A3a는 자기일관 조건, A3b와 A4는
-  식별/현상론으로 분리한다.
+  fold-operator 선택 및 quantum-to-branching bridge를 분리하고,
+  A3a는 균일 scalar 자기일관 조건, A3b와 A4는 식별/현상론으로 분리한다.
 - 증명되지 않은 단계가 숨겨져 있지 않은가: 공리 문서 자체는 관측량 대응을 직접 증명하지 않는다.
 - 다른 문서와 지위 충돌이 없는가: 후속 문서는 본 문서의 기호 사전과 지위 규약을 따라야 한다.
 - 반증 조건이 정량적으로 고정되어 있는가: 반증은 `경로적분.md`와 정당화 문서에서 정량화한다.
@@ -420,10 +456,12 @@ ghost, loop block까지 포함한 spectral trace 계산이 다음 gate다.
 | $\alpha_s$ 수치값 | P1은 형식만, P2는 보존만 → 환원 불가능한 **단일 입력** (17.3.1 A3, 17.3.2 확인) |
 | 차원 있는 절대값 ($\rho_\Lambda$, 질량) | P1은 정의상 무차원만 생성 → 외부 기준($v_{\text{EW}},m_p,M_Z$)에 대한 스케일 승격 필요(3.3절) |
 | 추가 memory state의 부재 | 완전 이분할 + scalar sufficiency + mixture-affinity 아래 \(K(x)=1-x\)는 유일. 비국소 memory kernel은 별도 상태공간을 가진 대안모형으로 남음 |
-| \(D_{\rm eff}\)의 microscopic unit coefficient | additive operator에서는 1로 닫히지만, CE+SM 전체 quadratic Hessian/spectral trace에서 같은 operator가 나오는지 계산 필요 |
+| \(D_{\rm eff}\)의 microscopic unit coefficient | additive operator에서는 1로 닫히지만, CE+SM의 vertex·spectral density·CP jump process·offspring genealogy에서 같은 operator가 나오는지 계산 필요 |
 
 요약: CE의 강화된 코어는
 **“형식(P1) + 보존 되먹임(P2) + 연결 국소성 + mixture-affinity +
 최소 재귀 타입 폐쇄 + additive quadratic channel rule”** 체계다.
 각 추가 원리는 장식이 아니라 특정 반례군을 제거한다. 관측 입력과
-스케일 승격의 수는 별도 provenance 표에서 센다.
+스케일 승격의 수는 별도 provenance 표에서 센다. 이 체계를 복소
+경로진폭에 적용하려면 decoherence·완전양성·classical jump closure가
+추가로 필요하며, 이는 현재 Q-loop의 열린 bridge다.

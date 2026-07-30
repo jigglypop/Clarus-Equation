@@ -6,6 +6,7 @@ __pycache__/
 .mypy_cache/
 .ruff_cache/
 .hypothesis/
+/.tmp/
 *.egg-info/
 
 # Rust
@@ -25,6 +26,7 @@ target/
 # Outputs and models
 /llm_extract/
 *.json
+!benchmarks/core_claims_v1.json
 *.pt
 *.pth
 *.csv

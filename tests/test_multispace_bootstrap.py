@@ -9,14 +9,20 @@ from reality_stone.clarus.core_axioms import low_bootstrap_fixed_point
 from reality_stone.clarus.multispace_bootstrap import (
     branching_regime,
     fixed_point_stability_radius,
+    homogeneous_reduction_depth,
     identity_branch_radius,
     is_irreducible,
+    linear_stability_class,
     minimal_multispace_fixed_point,
+    multispace_jacobian,
     multispace_bootstrap_map,
     multispace_residual,
     nearest_neighbor_coupling,
     normalized_transfer_coupling,
+    strongly_connected_components,
+    supercritical_components,
     symmetric_reduction_depth,
+    types_reaching_supercritical,
 )
 
 
@@ -81,7 +87,7 @@ def test_asymmetric_neighbor_coupling_produces_vector_not_scalar_survival() -> N
 
 def test_equal_row_sums_are_exact_scalar_reduction_condition() -> None:
     coupling = np.array([[2.0, 0.5], [0.2, 2.3]])
-    depth = symmetric_reduction_depth(coupling)
+    depth = homogeneous_reduction_depth(coupling)
     scalar = low_bootstrap_fixed_point(depth)
     vector = np.array([scalar, scalar])
 
@@ -157,3 +163,102 @@ def test_additive_coefficient_requires_transfer_normalization() -> None:
             0.17776,
             [[0.0, 2.0], [2.0, 0.0]],
         )
+
+
+def test_critical_poisson_component_returns_extinction_analytically() -> None:
+    coupling = np.array([[1.0]])
+    result = minimal_multispace_fixed_point(coupling)
+
+    assert result.survival == (1.0,)
+    assert result.iterations == 0
+    assert result.residual == 0.0
+    assert result.stability_radius == pytest.approx(1.0)
+    assert linear_stability_class(result.stability_radius) == (
+        "linearization_inconclusive"
+    )
+
+
+def test_near_critical_supercritical_branch_uses_accelerated_minimal_solve() -> None:
+    depth = 1.0001
+    result = minimal_multispace_fixed_point([[depth]], max_iterations=128)
+
+    assert result.survival[0] < 1.0
+    assert result.survival[0] == pytest.approx(
+        low_bootstrap_fixed_point(depth),
+        abs=1e-10,
+    )
+    assert result.residual < 1e-12
+    assert result.iterations < 128
+
+
+def test_reducible_critical_component_does_not_stall_solver() -> None:
+    coupling = np.diag([2.0, 1.0])
+    result = minimal_multispace_fixed_point(coupling)
+
+    assert result.survival[0] == pytest.approx(
+        low_bootstrap_fixed_point(2.0),
+        abs=1e-12,
+    )
+    assert result.survival[1] == 1.0
+    assert result.stability_radius == pytest.approx(1.0)
+
+
+def test_upstream_type_inherits_survival_from_reachable_supercritical_scc() -> None:
+    coupling = np.array([[0.0, 1.0], [0.0, 2.0]])
+    result = minimal_multispace_fixed_point(coupling)
+    downstream = low_bootstrap_fixed_point(2.0)
+    upstream = math.exp(-(1.0 - downstream))
+
+    assert strongly_connected_components(coupling) == ((0,), (1,))
+    assert supercritical_components(coupling) == ((1,),)
+    assert types_reaching_supercritical(coupling) == (0, 1)
+    assert result.survival == pytest.approx((upstream, downstream), abs=1e-12)
+
+
+def test_disconnected_subcritical_type_has_certain_extinction() -> None:
+    coupling = np.diag([2.0, 0.5])
+    result = minimal_multispace_fixed_point(coupling)
+
+    assert types_reaching_supercritical(coupling) == (0,)
+    assert result.survival[0] == pytest.approx(
+        low_bootstrap_fixed_point(2.0),
+        abs=1e-12,
+    )
+    assert result.survival[1] == 1.0
+
+
+def test_multispace_jacobian_matches_finite_difference() -> None:
+    coupling = np.array([[1.6, 0.9], [0.3, 1.2]])
+    result = minimal_multispace_fixed_point(coupling)
+    survival = result.as_array()
+    step = 1e-6
+    numerical = np.empty_like(coupling)
+
+    for column in range(coupling.shape[1]):
+        offset = np.zeros(coupling.shape[0])
+        offset[column] = step
+        numerical[:, column] = (
+            multispace_bootstrap_map(survival + offset, coupling)
+            - multispace_bootstrap_map(survival - offset, coupling)
+        ) / (2.0 * step)
+
+    assert np.allclose(
+        multispace_jacobian(survival, coupling),
+        numerical,
+        rtol=1e-9,
+        atol=1e-9,
+    )
+
+
+def test_nonsymmetric_normalized_transfer_keeps_additive_perron_depth() -> None:
+    spatial_depth = 3.0
+    cross_depth = 0.17776
+    coupling = normalized_transfer_coupling(
+        spatial_depth,
+        cross_depth,
+        [[0.2, 0.8], [0.6, 0.4]],
+    )
+
+    assert identity_branch_radius(coupling) == pytest.approx(
+        spatial_depth + cross_depth
+    )

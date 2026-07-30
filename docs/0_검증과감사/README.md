@@ -32,12 +32,14 @@
 
 ## 읽는 순서
 
-1. [CORE_STRENGTHENING_LOOP.md](CORE_STRENGTHENING_LOOP.md): 코어를 어떤 반례와 gate로 강화하는지 본다.
-2. [PROOF_STATUS_MATRIX.md](PROOF_STATUS_MATRIX.md): 지금 무엇이 닫혔고 무엇이 열려 있는지 본다.
-3. [PROOF_VALIDATION_LEDGER.md](PROOF_VALIDATION_LEDGER.md): 왜 그 판정이 되었는지 검산 이력을 본다.
-4. [미해결_난제_목록.md](미해결_난제_목록.md): CE가 아직 못 닫은 외부/내부 난제를 확인한다.
-5. [VALIDATION_FRAMEWORK.md](VALIDATION_FRAMEWORK.md): 남은 blocker와 필요한 증명/실험을 본다.
-6. [문서_전체_완성도_감사.md](문서_전체_완성도_감사.md): 문서군 정리 우선순위를 본다.
+1. [코어 독자 가이드](../코어_독자_가이드.md): 수식 전에 환기구 비유,
+   다공간 재귀, 증명과 bridge의 경계를 잡는다.
+2. [CORE_STRENGTHENING_LOOP.md](CORE_STRENGTHENING_LOOP.md): 코어를 어떤 반례와 gate로 강화하는지 본다.
+3. [PROOF_STATUS_MATRIX.md](PROOF_STATUS_MATRIX.md): 지금 무엇이 닫혔고 무엇이 열려 있는지 본다.
+4. [PROOF_VALIDATION_LEDGER.md](PROOF_VALIDATION_LEDGER.md): 왜 그 판정이 되었는지 검산 이력을 본다.
+5. [미해결_난제_목록.md](미해결_난제_목록.md): CE가 아직 못 닫은 외부/내부 난제를 확인한다.
+6. [VALIDATION_FRAMEWORK.md](VALIDATION_FRAMEWORK.md): 남은 blocker와 필요한 증명/실험을 본다.
+7. [문서_전체_완성도_감사.md](문서_전체_완성도_감사.md): 문서군 정리 우선순위를 본다.
 
 ## 운영 규칙
 

@@ -26,9 +26,9 @@ def report(name: str, coupling: np.ndarray) -> None:
     try:
         depth = symmetric_reduction_depth(coupling)
     except ValueError:
-        print("  scalar reduction    none (unequal row sums)")
+        print("  homogeneous sector none (unequal row sums)")
     else:
-        print(f"  scalar reduction    exact, D={depth:.12g}")
+        print(f"  homogeneous sector numerical gate passed, D={depth:.12g}")
 
 
 def main() -> None:
@@ -74,8 +74,8 @@ def main() -> None:
     )
 
     print(
-        "scope: A_ii=self recursion; A_ij=cross-space recursion; "
-        "the scalar CE equation is only an equal-row-sum reduction"
+        "scope: row i is the source and column j is the next-generation type; "
+        "the scalar CE equation is the homogeneous equal-row-sum sector"
     )
 
 

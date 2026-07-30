@@ -9,10 +9,15 @@ is the one-type member of a larger family.  For non-negative coupling matrix
 
     x_i = exp(-sum_j A_ij * (1-x_j)).
 
-``A_ii`` measures self-recursion and ``A_ij`` for ``i != j`` measures directed
-cross-space recursion.  The same equation is the extinction-probability
-equation of a multitype Poisson branching process.  This gives the smallest
-fixed point a meaning that does not depend on matching an observed number.
+The row-source convention is used throughout: ``A_ij`` is the expected number
+of type-``j`` next-generation triggers spawned by one type-``i`` trigger.
+Thus ``A_ii`` measures self-recursion and off-diagonal entries measure directed
+cross-space recursion.  A physical incoming-influence matrix uses the transpose
+convention and must be converted explicitly.
+
+The equation is the extinction-probability equation of a multitype Poisson
+branching process.  This gives the smallest fixed point a meaning that does not
+depend on matching an observed number.
 """
 
 from __future__ import annotations
@@ -52,7 +57,7 @@ def _as_survival_vector(survival: ArrayLike, size: int) -> FloatVector:
 
 @dataclass(frozen=True)
 class MultispaceFixedPoint:
-    """Result of monotone iteration from the zero vector."""
+    """Result of the componentwise-minimal fixed-point solve."""
 
     survival: tuple[float, ...]
     iterations: int
@@ -64,7 +69,7 @@ class MultispaceFixedPoint:
 
 
 def multispace_trigger_mean(survival: ArrayLike, coupling: ArrayLike) -> FloatVector:
-    """Expected trigger counts for every target row."""
+    """Total non-extinct descendant-trigger mean for every source row."""
     matrix = _as_coupling_matrix(coupling)
     vector = _as_survival_vector(survival, matrix.shape[0])
     return matrix @ (1.0 - vector)
@@ -121,38 +126,212 @@ def branching_regime(coupling: ArrayLike, *, tolerance: float = 1e-12) -> str:
     return "critical"
 
 
+def linear_stability_class(radius: float, *, tolerance: float = 1e-12) -> str:
+    """Classify a Jacobian radius without overclaiming the critical case."""
+    if radius < 0.0 or not np.isfinite(radius):
+        raise ValueError("radius must be finite and non-negative")
+    if tolerance <= 0.0:
+        raise ValueError("tolerance must be positive")
+    if radius < 1.0 - tolerance:
+        return "locally_asymptotically_stable"
+    if radius > 1.0 + tolerance:
+        return "unstable"
+    return "linearization_inconclusive"
+
+
+def strongly_connected_components(coupling: ArrayLike) -> tuple[tuple[int, ...], ...]:
+    """Return deterministic Tarjan SCCs for the row-source coupling graph."""
+    matrix = _as_coupling_matrix(coupling)
+    adjacency = matrix > 0.0
+    size = matrix.shape[0]
+    next_index = 0
+    indices = [-1] * size
+    lowlinks = [0] * size
+    stack: list[int] = []
+    on_stack = [False] * size
+    components: list[tuple[int, ...]] = []
+
+    def visit(source: int) -> None:
+        nonlocal next_index
+        indices[source] = next_index
+        lowlinks[source] = next_index
+        next_index += 1
+        stack.append(source)
+        on_stack[source] = True
+
+        for raw_target in np.flatnonzero(adjacency[source]):
+            target = int(raw_target)
+            if indices[target] == -1:
+                visit(target)
+                lowlinks[source] = min(lowlinks[source], lowlinks[target])
+            elif on_stack[target]:
+                lowlinks[source] = min(lowlinks[source], indices[target])
+
+        if lowlinks[source] == indices[source]:
+            component: list[int] = []
+            while True:
+                node = stack.pop()
+                on_stack[node] = False
+                component.append(node)
+                if node == source:
+                    break
+            components.append(tuple(sorted(component)))
+
+    for source in range(size):
+        if indices[source] == -1:
+            visit(source)
+
+    return tuple(sorted(components, key=lambda component: component[0]))
+
+
+def supercritical_components(
+    coupling: ArrayLike,
+    *,
+    tolerance: float = 1e-12,
+) -> tuple[tuple[int, ...], ...]:
+    """SCCs whose internal mean-offspring block has Perron radius above one."""
+    matrix = _as_coupling_matrix(coupling)
+    if tolerance <= 0.0:
+        raise ValueError("tolerance must be positive")
+    return tuple(
+        component
+        for component in strongly_connected_components(matrix)
+        if spectral_radius(matrix[np.ix_(component, component)]) > 1.0 + tolerance
+    )
+
+
+def types_reaching_supercritical(
+    coupling: ArrayLike,
+    *,
+    tolerance: float = 1e-12,
+) -> tuple[int, ...]:
+    """Types with positive survival probability in the branching convention.
+
+    A type is included exactly when a directed path starting at that type can
+    reach an internally supercritical SCC.
+    """
+    matrix = _as_coupling_matrix(coupling)
+    critical_components = supercritical_components(matrix, tolerance=tolerance)
+    reachable = {node for component in critical_components for node in component}
+    frontier = list(reachable)
+    adjacency = matrix > 0.0
+    while frontier:
+        target = frontier.pop()
+        for raw_source in np.flatnonzero(adjacency[:, target]):
+            source = int(raw_source)
+            if source not in reachable:
+                reachable.add(source)
+                frontier.append(source)
+    return tuple(sorted(reachable))
+
+
 def minimal_multispace_fixed_point(
     coupling: ArrayLike,
     *,
     tolerance: float = 1e-13,
     max_iterations: int = 100_000,
 ) -> MultispaceFixedPoint:
-    """Compute the minimal fixed point by monotone iteration from ``x=0``.
+    """Compute the minimal fixed point from the zero-vector Newton sequence.
 
-    For a multitype probability-generating map, iteration from zero converges
-    to the componentwise minimal fixed point.  In the branching interpretation
-    this is the vector of eventual extinction probabilities.
+    For a multitype probability-generating map, the minimal fixed point is the
+    vector of eventual extinction probabilities.  SCC reachability first fixes
+    types that cannot reach a supercritical class to one.  On the remaining
+    system, safeguarded Newton steps start at zero and stay on the minimal
+    branch.  A Picard step is used as a monotone fallback.
     """
     matrix = _as_coupling_matrix(coupling)
     if tolerance <= 0.0 or max_iterations < 1:
         raise ValueError("invalid solver controls")
 
-    survival = np.zeros(matrix.shape[0], dtype=np.float64)
+    active_types = types_reaching_supercritical(
+        matrix,
+        tolerance=max(tolerance, 1e-12),
+    )
+    if not active_types:
+        survival = np.ones(matrix.shape[0], dtype=np.float64)
+        return MultispaceFixedPoint(
+            survival=tuple(float(value) for value in survival),
+            iterations=0,
+            residual=0.0,
+            stability_radius=fixed_point_stability_radius(survival, matrix),
+        )
+
+    active_matrix = matrix[np.ix_(active_types, active_types)]
+    active_survival = np.zeros(len(active_types), dtype=np.float64)
     for iteration in range(1, max_iterations + 1):
-        updated = multispace_bootstrap_map(survival, matrix)
-        if np.any(updated + tolerance < survival):
-            raise RuntimeError("probability-generating iteration lost monotonicity")
-        step = float(np.max(np.abs(updated - survival)))
-        survival = updated
-        if step <= tolerance:
+        mapped = multispace_bootstrap_map(active_survival, active_matrix)
+        equation_residual = mapped - active_survival
+        residual_norm = float(np.max(np.abs(equation_residual)))
+        if residual_norm <= tolerance:
+            survival = np.ones(matrix.shape[0], dtype=np.float64)
+            survival[np.asarray(active_types)] = active_survival
             residual = float(np.max(np.abs(multispace_residual(survival, matrix))))
+            if residual > max(10.0 * tolerance, 1e-12):
+                raise RuntimeError("fixed-point step converged before its residual")
             return MultispaceFixedPoint(
                 survival=tuple(float(value) for value in survival),
                 iterations=iteration,
                 residual=residual,
                 stability_radius=fixed_point_stability_radius(survival, matrix),
             )
-    raise RuntimeError("multispace fixed-point iteration did not converge")
+
+        linearization = (
+            np.eye(len(active_types), dtype=np.float64)
+            - np.diag(mapped) @ active_matrix
+        )
+        try:
+            newton_step = np.linalg.solve(linearization, equation_residual)
+        except np.linalg.LinAlgError:
+            newton_step = np.full_like(active_survival, np.nan)
+
+        accepted = False
+        damping = 1.0
+        for _ in range(64):
+            candidate = active_survival + damping * newton_step
+            if (
+                np.all(np.isfinite(candidate))
+                and np.all(candidate + tolerance >= active_survival)
+                and np.all(candidate <= 1.0 + tolerance)
+            ):
+                candidate = np.clip(candidate, active_survival, 1.0)
+                candidate_residual = (
+                    multispace_bootstrap_map(candidate, active_matrix) - candidate
+                )
+                if float(np.max(np.abs(candidate_residual))) < residual_norm:
+                    active_survival = candidate
+                    accepted = True
+                    break
+            damping *= 0.5
+
+        if not accepted:
+            if np.any(mapped + tolerance < active_survival):
+                raise RuntimeError(
+                    "probability-generating fallback lost monotonicity"
+                )
+            active_survival = mapped
+    raise RuntimeError(
+        "supercritical multispace fixed-point iteration did not converge"
+    )
+
+
+def homogeneous_reduction_depth(
+    coupling: ArrayLike,
+    *,
+    tolerance: float = 1e-12,
+) -> float:
+    """Return depth of a numerically homogeneous diagonal invariant sector.
+
+    Equal row sums are necessary and sufficient for invariance of the full
+    diagonal set ``x_i=x``.  They do not classify every possible nonlinear or
+    lower-dimensional invariant manifold.
+    """
+    matrix = _as_coupling_matrix(coupling)
+    if tolerance <= 0.0:
+        raise ValueError("tolerance must be positive")
+    row_sums = matrix.sum(axis=1)
+    if not np.allclose(row_sums, row_sums[0], rtol=0.0, atol=tolerance):
+        raise ValueError("row sums differ; no homogeneous diagonal reduction")
+    return float(row_sums[0])
 
 
 def symmetric_reduction_depth(
@@ -160,18 +339,8 @@ def symmetric_reduction_depth(
     *,
     tolerance: float = 1e-12,
 ) -> float:
-    """Return scalar depth when the diagonal subspace ``x_i=x`` is invariant.
-
-    The scalar reduction is exact precisely when every row has the same total
-    coupling.  It does not require the matrix itself to be symmetric.
-    """
-    matrix = _as_coupling_matrix(coupling)
-    if tolerance <= 0.0:
-        raise ValueError("tolerance must be positive")
-    row_sums = matrix.sum(axis=1)
-    if not np.allclose(row_sums, row_sums[0], rtol=0.0, atol=tolerance):
-        raise ValueError("row sums differ; no exact one-scalar diagonal reduction")
-    return float(row_sums[0])
+    """Backward-compatible alias for :func:`homogeneous_reduction_depth`."""
+    return homogeneous_reduction_depth(coupling, tolerance=tolerance)
 
 
 def is_irreducible(coupling: ArrayLike) -> bool:
