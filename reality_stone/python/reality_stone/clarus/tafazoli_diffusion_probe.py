@@ -42,7 +42,7 @@ from .tafazoli_session_operator_probe import (
 
 
 SCHEMA_VERSION = "clarus-tafazoli-diffusion-probe/v1"
-IMPLEMENTATION_REVISION = "semigroup-common-complexity-basis/v2"
+IMPLEMENTATION_REVISION = "semigroup-explicit-common-bic-reference/v3"
 PROBE_SCOPE = "label_blind_session_local_diffusion_covariance_proxy"
 
 YES = "YES"
@@ -193,6 +193,7 @@ class GaussianCodelengthResult:
 
     family: str
     oof_train_vector_count: int
+    bic_reference_vector_count: int
     test_vector_count: int
     latent_rank: int
     drift_parameter_count: int
@@ -884,6 +885,7 @@ def score_multivariate_gaussian(
     noise: NoiseModel,
     *,
     oof_train_vector_count: int,
+    bic_reference_vector_count: int | None = None,
     drift_parameter_count: int,
     anchor_indices: np.ndarray,
     current: np.ndarray,
@@ -910,13 +912,19 @@ def score_multivariate_gaussian(
         + noise.covariance_parameter_count
         + noise.gate_parameter_count
     )
-    bic_bits = 0.5 * parameter_count * log2(
-        float(max(oof_train_vector_count, 2))
+    reference_count = (
+        int(oof_train_vector_count)
+        if bic_reference_vector_count is None
+        else int(bic_reference_vector_count)
     )
+    if oof_train_vector_count < 1 or reference_count < 1:
+        raise ValueError("training and BIC reference vector counts must be positive")
+    bic_bits = 0.5 * parameter_count * log2(float(max(reference_count, 2)))
     total = nll_bits + bic_bits + noise.model_selection_bits
     return GaussianCodelengthResult(
         family=family,
         oof_train_vector_count=int(oof_train_vector_count),
+        bic_reference_vector_count=reference_count,
         test_vector_count=int(residuals.shape[0]),
         latent_rank=int(residuals.shape[1]),
         drift_parameter_count=int(drift_parameter_count),
@@ -1385,7 +1393,8 @@ def _semigroup_sensitivity(
             f"DIRECT_{horizon}_STEP_FULL",
             direct_residuals,
             direct_noise,
-            oof_train_vector_count=comparison_train_vector_count,
+            oof_train_vector_count=direct_oof.vector_count,
+            bic_reference_vector_count=comparison_train_vector_count,
             drift_parameter_count=direct_drift.parameter_count,
             anchor_indices=anchors,
             current=current,
@@ -1423,7 +1432,8 @@ def _semigroup_sensitivity(
             f"FROZEN_SEMIGROUP_{horizon}",
             frozen_residuals,
             propagated_noise,
-            oof_train_vector_count=comparison_train_vector_count,
+            oof_train_vector_count=primary.linear_oof.vector_count,
+            bic_reference_vector_count=comparison_train_vector_count,
             drift_parameter_count=primary.linear_drift.parameter_count,
             anchor_indices=anchors,
             current=current,
@@ -2404,6 +2414,7 @@ __all__ = [
     "DirectionClassification",
     "DriftModel",
     "GaussianCodelengthResult",
+    "IMPLEMENTATION_REVISION",
     "MarkovOrderSensitivity",
     "NO",
     "NoiseModel",

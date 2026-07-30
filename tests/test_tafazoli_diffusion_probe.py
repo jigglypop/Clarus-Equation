@@ -253,6 +253,60 @@ def test_ou_semigroup_composes_but_switching_operator_does_not() -> None:
     assert np.linalg.norm(composed - switching_truth) > 0.1
 
 
+def test_semigroup_candidates_share_one_complexity_basis(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    rng = np.random.default_rng(830)
+    train = rng.normal(size=(6, 71, 2))
+    test = rng.normal(size=(2, 71, 2))
+    config = DiffusionProbeConfig(
+        covariance_oof_fold_count=2,
+        kmeans_restarts=2,
+        kmeans_max_iterations=20,
+    )
+    _, primary = diffusion._evaluate_primary_ladder(
+        train,
+        test,
+        config=config,
+        seed_tokens=("semigroup-complexity-test",),
+    )
+    original_score = diffusion.score_multivariate_gaussian
+    captured: dict[int, dict[str, tuple[int, int, float]]] = {}
+
+    def capture_score(family, test_residuals, noise, **kwargs):
+        score = original_score(family, test_residuals, noise, **kwargs)
+        if family.startswith("DIRECT_"):
+            horizon = int(family.split("_")[1])
+            captured.setdefault(horizon, {})["direct"] = (
+                score.oof_train_vector_count,
+                score.bic_reference_vector_count,
+                score.bic_parameter_bits,
+            )
+        elif family.startswith("FROZEN_SEMIGROUP_"):
+            horizon = int(family.rsplit("_", 1)[1])
+            captured.setdefault(horizon, {})["frozen"] = (
+                score.oof_train_vector_count,
+                score.bic_reference_vector_count,
+                score.bic_parameter_bits,
+            )
+        return score
+
+    monkeypatch.setattr(diffusion, "score_multivariate_gaussian", capture_score)
+    sensitivity = diffusion._semigroup_sensitivity(
+        train,
+        test,
+        primary=primary,
+        config=config,
+        seed_tokens=("semigroup-complexity-test",),
+    )
+
+    assert {item.horizon_steps for item in sensitivity} == {2, 3}
+    assert set(captured) == {2, 3}
+    for comparison in captured.values():
+        assert comparison["frozen"][0] > comparison["direct"][0]
+        assert comparison["direct"][1:] == comparison["frozen"][1:]
+
+
 def test_reverse_classification_is_explicitly_descriptive_not_a_gate() -> None:
     assert not diffusion.DirectionClassification(
         forward_full_bits_per_scalar=2.0,
