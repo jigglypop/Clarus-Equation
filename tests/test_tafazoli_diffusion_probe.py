@@ -302,6 +302,18 @@ def test_semigroup_candidates_share_one_complexity_basis(
 
     assert {item.horizon_steps for item in sensitivity} == {2, 3}
     assert set(captured) == {2, 3}
+    for item in sensitivity:
+        assert (
+            item.bic_reference_vector_count
+            == item.direct_oof_train_vector_count
+        )
+        assert item.frozen_oof_train_vector_count > item.direct_oof_train_vector_count
+        expected_bic = (
+            0.5
+            * item.shared_parameter_count
+            * np.log2(item.bic_reference_vector_count)
+        )
+        assert item.shared_bic_parameter_bits == pytest.approx(expected_bic)
     for comparison in captured.values():
         assert comparison["frozen"][0] > comparison["direct"][0]
         assert comparison["direct"][1:] == comparison["frozen"][1:]
@@ -401,10 +413,20 @@ def test_small_report_is_deterministic_serializable_and_leakage_locked() -> None
     }
     assert {item.dimension for item in first.results} == {1, 3}
     assert first.source_file_md5 is None
+    assert not first.official_checksum_verified
+    assert (
+        "official_checksum_verified"
+        not in inspect.signature(
+            run_tafazoli_diffusion_probe_from_arrays
+        ).parameters
+    )
     assert first.blind_fields_used == ()
     assert first.saved_test_role == "not_used"
     assert first.train_only_preprocessing
     assert not any(first.claim_locks.__dict__.values())
+    assert first.verdict("gaussian_innovation_law_identified").answer == "NO"
+    assert first.verdict("continuous_time_ou_process_identified").answer == "NO"
+    assert first.verdict("semigroup_sensitivity_completed").answer == "PENDING"
     assert all(
         fold.covariance_fit_from_outer_train_trial_oof
         and not fold.outer_test_used_for_covariance_or_gate
@@ -412,6 +434,72 @@ def test_small_report_is_deterministic_serializable_and_leakage_locked() -> None
         for item in first.results
         for fold in item.fold_results
     )
+
+
+def test_checkpoint_and_report_validators_recompute_derived_values() -> None:
+    rng = np.random.default_rng(1903)
+    dim1 = rng.lognormal(mean=1.0, sigma=0.15, size=(6, 2, 71))
+    dim3 = rng.lognormal(mean=1.0, sigma=0.15, size=(6, 2, 71))
+    config = DiffusionProbeConfig(
+        outer_fold_count=2,
+        covariance_oof_fold_count=2,
+        kmeans_restarts=2,
+        kmeans_max_iterations=20,
+        run_event_mean_removed_sensitivity=False,
+        run_reverse_classification=False,
+        run_markov_order_sensitivity=False,
+        run_semigroup_sensitivity=False,
+    )
+    specs = (
+        SessionSpec(1, "animal_a", 0, 1),
+        SessionSpec(2, "animal_b", 1, 2),
+    )
+    report = run_tafazoli_diffusion_probe_from_arrays(
+        dim1,
+        dim3,
+        config=config,
+        session_specs=specs,
+    )
+    checkpoint = report.checkpoints[0]
+    unit = checkpoint.results[0]
+    fold = unit.fold_results[0]
+    score = fold.scores[0]
+    bad_score = replace(
+        score,
+        total_codelength_bits=score.total_codelength_bits + 1.0,
+    )
+    bad_fold = replace(fold, scores=(bad_score, *fold.scores[1:]))
+    bad_unit = replace(unit, fold_results=(bad_fold, *unit.fold_results[1:]))
+    bad_checkpoint = replace(
+        checkpoint,
+        results=(bad_unit, *checkpoint.results[1:]),
+    )
+    with pytest.raises(ValueError, match="score arithmetic"):
+        diffusion.validate_diffusion_session_checkpoint(
+            bad_checkpoint,
+            config=config,
+        )
+
+    bad_aggregate = replace(
+        report.aggregates[0],
+        median_state_advantage_over_full_bits_per_scalar=(
+            report.aggregates[0].median_state_advantage_over_full_bits_per_scalar
+            + 1.0
+        ),
+    )
+    with pytest.raises(ValueError, match="aggregates"):
+        validate_tafazoli_diffusion_report(
+            replace(
+                report,
+                aggregates=(bad_aggregate, *report.aggregates[1:]),
+            )
+        )
+
+    bad_verdict = replace(report.verdicts[0], answer="NO")
+    with pytest.raises(ValueError, match="verdicts"):
+        validate_tafazoli_diffusion_report(
+            replace(report, verdicts=(bad_verdict, *report.verdicts[1:]))
+        )
 
 
 def test_protocol_and_official_result_keep_diffusion_claims_separate() -> None:

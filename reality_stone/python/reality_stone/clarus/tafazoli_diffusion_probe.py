@@ -42,7 +42,8 @@ from .tafazoli_session_operator_probe import (
 
 
 SCHEMA_VERSION = "clarus-tafazoli-diffusion-probe/v1"
-IMPLEMENTATION_REVISION = "semigroup-explicit-common-bic-reference/v3"
+CHECKPOINT_SCHEMA_VERSION = "clarus-tafazoli-diffusion-checkpoint/v2"
+IMPLEMENTATION_REVISION = "auditable-semigroup-scores/v5"
 PROBE_SCOPE = "label_blind_session_local_diffusion_covariance_proxy"
 
 YES = "YES"
@@ -225,6 +226,13 @@ class SemigroupSensitivity:
     horizon_steps: int
     horizon_milliseconds: int
     test_vector_count: int
+    direct_oof_train_vector_count: int
+    frozen_oof_train_vector_count: int
+    bic_reference_vector_count: int
+    shared_parameter_count: int
+    shared_bic_parameter_bits: float
+    frozen_score: GaussianCodelengthResult
+    direct_score: GaussianCodelengthResult
     frozen_semigroup_sse: float
     direct_refit_sse: float
     frozen_semigroup_bits_per_scalar: float
@@ -1471,6 +1479,23 @@ def _semigroup_sensitivity(
                     * config.time_bin_milliseconds
                 ),
                 test_vector_count=frozen_score.test_vector_count,
+                direct_oof_train_vector_count=(
+                    direct_score.oof_train_vector_count
+                ),
+                frozen_oof_train_vector_count=(
+                    frozen_score.oof_train_vector_count
+                ),
+                bic_reference_vector_count=(
+                    direct_score.bic_reference_vector_count
+                ),
+                shared_parameter_count=(
+                    direct_score.drift_parameter_count
+                    + direct_score.covariance_parameter_count
+                    + direct_score.gate_parameter_count
+                ),
+                shared_bic_parameter_bits=direct_score.bic_parameter_bits,
+                frozen_score=frozen_score,
+                direct_score=direct_score,
                 frozen_semigroup_sse=frozen_score.test_sse,
                 direct_refit_sse=direct_score.test_sse,
                 frozen_semigroup_bits_per_scalar=frozen_score.bits_per_test_scalar,
@@ -1826,7 +1851,7 @@ def run_diffusion_session_checkpoint(
                 )
             )
     checkpoint = DiffusionSessionCheckpoint(
-        schema_version=SCHEMA_VERSION,
+        schema_version=CHECKPOINT_SCHEMA_VERSION,
         config_fingerprint=config_fingerprint(config),
         source_file_md5=source_file_md5,
         session=session,
@@ -1961,8 +1986,32 @@ def _state_noise_survives(
     )
 
 
+def _is_model_relative_iso_winner(
+    results: Sequence[DiffusionUnitResult],
+) -> bool:
+    items = tuple(results)
+    if not items:
+        return False
+    for item in items:
+        totals = {
+            family: sum(
+                fold.score(family).total_codelength_bits
+                for fold in item.fold_results
+            )
+            for family in PRIMARY_FAMILIES
+        }
+        if not all(
+            totals[OU_ISO] < total
+            for family, total in totals.items()
+            if family != OU_ISO
+        ):
+            return False
+    return True
+
+
 def _build_verdicts(
     aggregates: Sequence[DiffusionAggregateResult],
+    results: Sequence[DiffusionUnitResult],
     *,
     config: DiffusionProbeConfig,
 ) -> tuple[ClaimVerdict, ...]:
@@ -1976,11 +2025,45 @@ def _build_verdicts(
             else PENDING
         )
     )
+    iso_winner = _is_model_relative_iso_winner(results)
     return (
         ClaimVerdict(
             "session_local_diffusion_covariance_ladder_completed",
             YES,
             "Six covariance/drift families share outer targets and OOF covariance fits.",
+        ),
+        ClaimVerdict(
+            "model_relative_local_affine_isotropic_gaussian_proxy_winner",
+            YES if iso_winner else NO,
+            (
+                "OU_ISO has the lowest aggregate codelength in every session x "
+                "dimension x preprocessing analysis cell."
+                if iso_winner
+                else "OU_ISO is not the strict winner in every analysis cell."
+            ),
+        ),
+        ClaimVerdict(
+            "gaussian_innovation_law_identified",
+            NO,
+            "Only Gaussian residual families were compared; Gaussianity was not tested.",
+        ),
+        ClaimVerdict(
+            "continuous_time_ou_process_identified",
+            NO,
+            (
+                "No stability, stationary law, continuous-time generator, or "
+                "embeddability test was performed."
+            ),
+        ),
+        ClaimVerdict(
+            "semigroup_sensitivity_completed",
+            YES if config.run_semigroup_sensitivity else PENDING,
+            (
+                "Frozen 100 ms discrete affine-Gaussian composition was compared "
+                "with direct 200/300 ms refits using a common complexity basis."
+                if config.run_semigroup_sensitivity
+                else "The optional semigroup sensitivity was not run."
+            ),
         ),
         ClaimVerdict(
             "state_dependent_noise_proxy_survived_controls",
@@ -2039,6 +2122,180 @@ def validate_diffusion_claim_locks(locks: DiffusionClaimLocks) -> None:
         raise ValueError(f"diffusion claim locks must remain false: {unlocked}")
 
 
+def _close(left: float, right: float) -> bool:
+    return bool(np.isclose(left, right, rtol=1e-12, atol=1e-9))
+
+
+def _validate_gaussian_score(score: GaussianCodelengthResult) -> None:
+    if not isinstance(score, GaussianCodelengthResult):
+        raise TypeError("Gaussian score has an unexpected type")
+    positive_counts = (
+        score.oof_train_vector_count,
+        score.bic_reference_vector_count,
+        score.test_vector_count,
+        score.latent_rank,
+    )
+    if any(
+        isinstance(value, bool) or not isinstance(value, int) or value < 1
+        for value in positive_counts
+    ):
+        raise ValueError("Gaussian score vector counts and rank must be positive integers")
+    parameter_counts = (
+        score.drift_parameter_count,
+        score.covariance_parameter_count,
+        score.gate_parameter_count,
+    )
+    if any(
+        isinstance(value, bool) or not isinstance(value, int) or value < 0
+        for value in parameter_counts
+    ):
+        raise ValueError("Gaussian score parameter counts must be non-negative integers")
+    finite_values = (
+        score.model_selection_bits,
+        score.heldout_multivariate_gaussian_nll_bits,
+        score.bic_parameter_bits,
+        score.total_codelength_bits,
+        score.bits_per_test_vector,
+        score.bits_per_test_scalar,
+        score.test_sse,
+    )
+    if not all(np.isfinite(float(value)) for value in finite_values):
+        raise ValueError("Gaussian score contains a non-finite value")
+    if score.model_selection_bits < 0.0 or score.test_sse < 0.0:
+        raise ValueError("Gaussian model code and SSE must be non-negative")
+    parameter_count = sum(parameter_counts)
+    expected_bic = 0.5 * parameter_count * log2(
+        float(max(score.bic_reference_vector_count, 2))
+    )
+    expected_total = (
+        score.heldout_multivariate_gaussian_nll_bits
+        + expected_bic
+        + score.model_selection_bits
+    )
+    expected_vector_bits = expected_total / score.test_vector_count
+    expected_scalar_bits = expected_total / (
+        score.test_vector_count * score.latent_rank
+    )
+    if not (
+        _close(score.bic_parameter_bits, expected_bic)
+        and _close(score.total_codelength_bits, expected_total)
+        and _close(score.bits_per_test_vector, expected_vector_bits)
+        and _close(score.bits_per_test_scalar, expected_scalar_bits)
+    ):
+        raise ValueError("Gaussian score arithmetic drifted")
+
+
+def _validate_semigroup_sensitivity(
+    item: SemigroupSensitivity,
+    *,
+    config: DiffusionProbeConfig,
+) -> None:
+    if item.horizon_steps not in config.semigroup_horizons:
+        raise ValueError("unexpected semigroup horizon")
+    expected_milliseconds = (
+        item.horizon_steps
+        * config.lag_bins
+        * config.time_bin_milliseconds
+    )
+    if item.horizon_milliseconds != expected_milliseconds:
+        raise ValueError("semigroup horizon milliseconds drifted")
+    positive_counts = (
+        item.test_vector_count,
+        item.direct_oof_train_vector_count,
+        item.frozen_oof_train_vector_count,
+        item.bic_reference_vector_count,
+    )
+    if any(
+        isinstance(value, bool) or not isinstance(value, int) or value < 1
+        for value in positive_counts
+    ):
+        raise ValueError("semigroup vector counts must be positive integers")
+    if (
+        isinstance(item.shared_parameter_count, bool)
+        or not isinstance(item.shared_parameter_count, int)
+        or item.shared_parameter_count < 0
+    ):
+        raise ValueError("semigroup parameter count must be a non-negative integer")
+    if item.bic_reference_vector_count != item.direct_oof_train_vector_count:
+        raise ValueError("semigroup candidates do not share the direct-horizon BIC basis")
+    expected_bic = 0.5 * item.shared_parameter_count * log2(
+        float(max(item.bic_reference_vector_count, 2))
+    )
+    finite_values = (
+        item.shared_bic_parameter_bits,
+        item.frozen_semigroup_sse,
+        item.direct_refit_sse,
+        item.frozen_semigroup_bits_per_scalar,
+        item.direct_refit_bits_per_scalar,
+        item.frozen_advantage_over_direct_bits_per_scalar,
+        item.frozen_excess_over_direct_bits_per_scalar,
+    )
+    if not all(np.isfinite(float(value)) for value in finite_values):
+        raise ValueError("semigroup sensitivity contains a non-finite value")
+    if item.frozen_semigroup_sse < 0.0 or item.direct_refit_sse < 0.0:
+        raise ValueError("semigroup SSE must be non-negative")
+    expected_excess = (
+        item.frozen_semigroup_bits_per_scalar
+        - item.direct_refit_bits_per_scalar
+    )
+    if not (
+        _close(item.shared_bic_parameter_bits, expected_bic)
+        and _close(item.frozen_excess_over_direct_bits_per_scalar, expected_excess)
+        and _close(
+            item.frozen_advantage_over_direct_bits_per_scalar,
+            -expected_excess,
+        )
+    ):
+        raise ValueError("semigroup comparison arithmetic drifted")
+    expected_tolerance = (
+        item.frozen_excess_over_direct_bits_per_scalar
+        <= config.semigroup_max_excess_bits_per_scalar
+    )
+    if item.frozen_semigroup_within_tolerance != expected_tolerance:
+        raise ValueError("semigroup tolerance flag drifted")
+    if item.used_in_primary_diffusion_gate:
+        raise ValueError("semigroup sensitivity entered the primary gate")
+
+
+def _validate_direction_classification(item: DirectionClassification) -> None:
+    if item.test_scalar_count < 1:
+        raise ValueError("direction comparison must contain test scalars")
+    values = (
+        item.forward_full_bits_per_scalar,
+        item.reverse_full_bits_per_scalar,
+        item.forward_full_total_bits,
+        item.reverse_full_total_bits,
+    )
+    if not all(np.isfinite(float(value)) for value in values):
+        raise ValueError("direction comparison contains a non-finite value")
+    if not (
+        _close(
+            item.forward_full_bits_per_scalar,
+            item.forward_full_total_bits / item.test_scalar_count,
+        )
+        and _close(
+            item.reverse_full_bits_per_scalar,
+            item.reverse_full_total_bits / item.test_scalar_count,
+        )
+    ):
+        raise ValueError("direction comparison arithmetic drifted")
+    expected_direction = (
+        "FORWARD_LOWER_CODE"
+        if item.forward_full_total_bits + 1e-12
+        < item.reverse_full_total_bits
+        else (
+            "REVERSE_LOWER_CODE"
+            if item.reverse_full_total_bits + 1e-12
+            < item.forward_full_total_bits
+            else "TIE"
+        )
+    )
+    if item.lower_code_direction != expected_direction:
+        raise ValueError("direction classification label drifted")
+    if item.used_in_primary_diffusion_gate:
+        raise ValueError("forward/reverse classification entered the gate")
+
+
 def validate_diffusion_session_checkpoint(
     checkpoint: DiffusionSessionCheckpoint,
     *,
@@ -2046,7 +2303,7 @@ def validate_diffusion_session_checkpoint(
 ) -> None:
     if not isinstance(checkpoint, DiffusionSessionCheckpoint):
         raise TypeError("checkpoint must be DiffusionSessionCheckpoint")
-    if checkpoint.schema_version != SCHEMA_VERSION:
+    if checkpoint.schema_version != CHECKPOINT_SCHEMA_VERSION:
         raise ValueError("checkpoint schema version drifted")
     if checkpoint.config_fingerprint != config_fingerprint(config):
         raise ValueError("checkpoint config fingerprint does not match")
@@ -2089,11 +2346,17 @@ def validate_diffusion_session_checkpoint(
             raise ValueError("checkpoint result crossed a session boundary")
         if len(item.fold_results) != config.outer_fold_count:
             raise ValueError("outer diffusion fold silently disappeared")
+        if tuple(
+            fold.fold_index_zero_based for fold in item.fold_results
+        ) != tuple(range(config.outer_fold_count)):
+            raise ValueError("outer diffusion fold indices drifted")
         if not item.complete_outer_folds:
             raise ValueError("checkpoint contains an incomplete outer fold")
         for fold in item.fold_results:
-            if set(score.family for score in fold.scores) != set(
-                PRIMARY_FAMILIES
+            score_families = tuple(score.family for score in fold.scores)
+            if (
+                len(score_families) != len(PRIMARY_FAMILIES)
+                or set(score_families) != set(PRIMARY_FAMILIES)
             ):
                 raise ValueError("primary diffusion family set drifted")
             if (
@@ -2107,21 +2370,76 @@ def validate_diffusion_session_checkpoint(
                 {score.test_vector_count for score in fold.scores}
             ) != 1:
                 raise ValueError("primary scores used different outer targets")
+            if (
+                fold.common_outer_test_vector_count < 1
+                or any(
+                    score.test_vector_count
+                    != fold.common_outer_test_vector_count
+                    or score.latent_rank != fold.latent_rank
+                    for score in fold.scores
+                )
+            ):
+                raise ValueError("primary score metadata drifted")
+            for score in fold.scores:
+                _validate_gaussian_score(score)
+            expected_orders = (
+                config.markov_orders
+                if config.run_markov_order_sensitivity
+                else ()
+            )
+            if tuple(
+                markov.order for markov in fold.markov_order_sensitivity
+            ) != expected_orders:
+                raise ValueError("Markov sensitivity order grid drifted")
             for markov in fold.markov_order_sensitivity:
+                _validate_gaussian_score(markov.score)
+                expected_family = (
+                    OU_FULL
+                    if markov.order == 1
+                    else f"MARKOV_ORDER_{markov.order}_FULL"
+                )
                 if (
                     markov.common_anchor_depth
                     != config.global_anchor_depth
                     or markov.used_in_primary_diffusion_gate
+                    or markov.score.family != expected_family
+                    or markov.score.latent_rank != fold.latent_rank
                 ):
-                    raise ValueError("Markov sensitivity entered the primary gate")
+                    raise ValueError("Markov sensitivity metadata drifted")
+            if fold.markov_order_sensitivity and len(
+                {
+                    markov.score.test_vector_count
+                    for markov in fold.markov_order_sensitivity
+                }
+            ) != 1:
+                raise ValueError("Markov sensitivity used different outer targets")
+            expected_horizons = (
+                config.semigroup_horizons
+                if config.run_semigroup_sensitivity
+                else ()
+            )
+            if tuple(
+                semigroup.horizon_steps
+                for semigroup in fold.semigroup_sensitivity
+            ) != expected_horizons:
+                raise ValueError("semigroup horizon grid drifted")
             for semigroup in fold.semigroup_sensitivity:
-                if semigroup.used_in_primary_diffusion_gate:
-                    raise ValueError("semigroup sensitivity entered the primary gate")
-            if (
-                fold.direction_classification is not None
-                and fold.direction_classification.used_in_primary_diffusion_gate
-            ):
-                raise ValueError("forward/reverse classification entered the gate")
+                _validate_semigroup_sensitivity(semigroup, config=config)
+            if config.run_reverse_classification:
+                if fold.direction_classification is None:
+                    raise ValueError("forward/reverse classification disappeared")
+                _validate_direction_classification(fold.direction_classification)
+            elif fold.direction_classification is not None:
+                raise ValueError("disabled forward/reverse classification appeared")
+        expected_item = summarize_diffusion_unit(
+            session=checkpoint.session,
+            dimension=item.dimension,
+            event_mean_removed=item.event_mean_removed,
+            fold_results=item.fold_results,
+            config=config,
+        )
+        if item != expected_item:
+            raise ValueError("diffusion unit summary does not match its fold scores")
     if checkpoint.complete != all(
         item.complete_outer_folds for item in checkpoint.results
     ):
@@ -2158,12 +2476,20 @@ def assemble_tafazoli_diffusion_report(
     config: DiffusionProbeConfig,
     session_specs: Sequence[SessionSpec],
     source_file_md5: str | None = None,
-    official_checksum_verified: bool = False,
+    verified_classifier_file: str | Path | None = None,
 ) -> TafazoliDiffusionProbeReport:
     """Assemble a deterministic report from independently saved checkpoints."""
 
     items = tuple(checkpoints)
     specs = tuple(session_specs)
+    official_checksum_verified = False
+    if verified_classifier_file is not None:
+        verified_md5 = verify_official_classifier_checksum(
+            verified_classifier_file
+        )
+        if source_file_md5 != verified_md5:
+            raise ValueError("verified classifier file does not match checkpoint source")
+        official_checksum_verified = True
     if not items:
         raise ValueError("at least one checkpoint is required")
     if tuple(item.session for item in items) != specs:
@@ -2195,24 +2521,31 @@ def assemble_tafazoli_diffusion_report(
         blind_fields_used=(),
         saved_test_role="not_used",
         train_only_preprocessing=True,
-        primary_inference_unit="recording_session_x_dimension",
+        primary_inference_unit="physical_recording_session",
         codelength_name="heldout multivariate Gaussian/BIC proxy",
         checkpoints=items,
         results=results,
         aggregates=aggregates,
-        verdicts=_build_verdicts(aggregates, config=config),
+        verdicts=_build_verdicts(aggregates, results, config=config),
         claim_locks=locks,
         limitations=(
             "The 36 rows are processed pseudotrials from one overwritten classifier fold.",
             "Covariances use three-fold OOF residuals inside each outer-training set.",
             "The outer-training latent coordinate frame is frozen before residual cross-fitting.",
-            "The 27 sessions, not vectors, time anchors, or neurons, are inference units.",
+            (
+                "There are 27 independent recording sessions; D1 and D3 form 54 "
+                "within-session analysis units per preprocessing mode."
+            ),
             "D1 and D3 folds are independently seeded and rows are never paired.",
             "The 100 ms stride prevents overlapping observation windows becoming replicates.",
             "Fixed 0.1 shrinkage is a regularizer, not a learned biological prior.",
             "Markov order and semigroup sensitivities are not duplicate primary evidence.",
             "Forward/reverse is descriptive and cannot identify a generative reverse process.",
             "The codelength is a held-out Gaussian/BIC proxy, not strict prequential MDL.",
+            (
+                "The semigroup sensitivity is a discrete affine-Gaussian composition "
+                "test, not an OU, stationarity, or continuous-time embedding test."
+            ),
         ),
         conclusion=(
             "The probe can decide whether a restricted current-state noise scale "
@@ -2243,7 +2576,6 @@ def run_tafazoli_diffusion_probe_from_arrays(
     config: DiffusionProbeConfig = DiffusionProbeConfig(),
     session_specs: Sequence[SessionSpec] | None = None,
     source_file_md5: str | None = None,
-    official_checksum_verified: bool = False,
 ) -> TafazoliDiffusionProbeReport:
     """Run every session checkpoint and assemble the NumPy-only report."""
 
@@ -2283,7 +2615,6 @@ def run_tafazoli_diffusion_probe_from_arrays(
         config=config,
         session_specs=specs,
         source_file_md5=source_file_md5,
-        official_checksum_verified=official_checksum_verified,
     )
 
 
@@ -2296,12 +2627,18 @@ def run_tafazoli_diffusion_probe(
 
     observed_md5 = verify_official_classifier_checksum(classifier_file)
     dim1, dim3 = load_tafazoli_train_dimensions(classifier_file)
-    return run_tafazoli_diffusion_probe_from_arrays(
+    unverified_report = run_tafazoli_diffusion_probe_from_arrays(
         dim1,
         dim3,
         config=config,
         source_file_md5=observed_md5,
-        official_checksum_verified=(observed_md5 == OFFICIAL_CLASSIFIER_MD5),
+    )
+    return assemble_tafazoli_diffusion_report(
+        unverified_report.checkpoints,
+        config=config,
+        session_specs=unverified_report.session_specs,
+        source_file_md5=observed_md5,
+        verified_classifier_file=classifier_file,
     )
 
 
@@ -2352,6 +2689,12 @@ def validate_tafazoli_diffusion_report(
     expected_result_count = len(report.session_specs) * 2 * expected_events
     if len(report.results) != expected_result_count:
         raise ValueError("report session x dimension unit count drifted")
+    expected_aggregates = aggregate_diffusion_results(
+        report.results,
+        config=report.config,
+    )
+    if report.aggregates != expected_aggregates:
+        raise ValueError("report aggregates do not match the unit results")
     for event_mean_removed in (
         (False, True)
         if report.config.run_event_mean_removed_sensitivity
@@ -2369,6 +2712,10 @@ def validate_tafazoli_diffusion_report(
     verdict_map = {item.key: item.answer for item in report.verdicts}
     required = {
         "session_local_diffusion_covariance_ladder_completed",
+        "model_relative_local_affine_isotropic_gaussian_proxy_winner",
+        "gaussian_innovation_law_identified",
+        "continuous_time_ou_process_identified",
+        "semigroup_sensitivity_completed",
         "state_dependent_noise_proxy_survived_controls",
         "biological_diffusion_identified",
         "biological_diffusion_exists_or_is_absent",
@@ -2380,6 +2727,8 @@ def validate_tafazoli_diffusion_report(
     if set(verdict_map) != required:
         raise ValueError("diffusion verdict key set drifted")
     for key in (
+        "gaussian_innovation_law_identified",
+        "continuous_time_ou_process_identified",
         "biological_diffusion_identified",
         "generative_reverse_process_identified",
         "score_function_identified",
@@ -2388,20 +2737,13 @@ def validate_tafazoli_diffusion_report(
     ):
         if verdict_map[key] != NO:
             raise ValueError(f"observational proxy overclaimed {key}")
-    expected_state = (
-        YES
-        if _state_noise_survives(report.aggregates, config=report.config)
-        else (
-            NO
-            if report.config.run_event_mean_removed_sensitivity
-            else PENDING
-        )
+    expected_verdicts = _build_verdicts(
+        report.aggregates,
+        report.results,
+        config=report.config,
     )
-    if (
-        verdict_map["state_dependent_noise_proxy_survived_controls"]
-        != expected_state
-    ):
-        raise ValueError("state-dependent noise verdict does not match aggregates")
+    if report.verdicts != expected_verdicts:
+        raise ValueError("report verdicts do not match the validated results")
 
 
 __all__ = [

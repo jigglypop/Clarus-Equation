@@ -24,6 +24,7 @@ from reality_stone.clarus.tafazoli_diffusion_probe import (
     DiffusionUnitResult,
     DirectionClassification,
     GaussianCodelengthResult,
+    IMPLEMENTATION_REVISION,
     MarkovOrderSensitivity,
     SemigroupSensitivity,
     assemble_tafazoli_diffusion_report,
@@ -91,6 +92,12 @@ def _parser(repository_root: Path) -> argparse.ArgumentParser:
         "--json",
         action="store_true",
         help="print a compact deterministic JSON summary",
+    )
+    parser.add_argument(
+        "--result-file",
+        type=Path,
+        default=None,
+        help="atomically write the validated compact payload to this path",
     )
     return parser
 
@@ -175,6 +182,23 @@ def _write_checkpoint(path: Path, checkpoint: DiffusionSessionCheckpoint) -> Non
     temporary.write_text(
         json.dumps(
             checkpoint.to_dict(),
+            ensure_ascii=False,
+            indent=2,
+            sort_keys=True,
+            allow_nan=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    temporary.replace(path)
+
+
+def _write_json_payload(path: Path, payload: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(f"{path.suffix}.tmp")
+    temporary.write_text(
+        json.dumps(
+            payload,
             ensure_ascii=False,
             indent=2,
             sort_keys=True,
@@ -408,13 +432,53 @@ def _compact_payload(report) -> dict[str, Any]:
         for horizon in report.config.semigroup_horizons
         if any(item.horizon_steps == horizon for item in semigroup_records)
     }
+    preprocessing_mode_count = (
+        2 if report.config.run_event_mean_removed_sensitivity else 1
+    )
+    checkpoint_fingerprints = {
+        checkpoint.config_fingerprint for checkpoint in report.checkpoints
+    }
+    if len(checkpoint_fingerprints) != 1:
+        raise RuntimeError("checkpoint config fingerprints are not unique")
     return {
+        "result_schema_version": "clarus-tafazoli-diffusion-probe-result/v2",
         "schema_version": report.schema_version,
+        "implementation_revision": IMPLEMENTATION_REVISION,
         "method_status": report.method_status,
         "source_file_md5": report.source_file_md5,
         "official_checksum_verified": report.official_checksum_verified,
         "session_count": len(report.session_specs),
         "unit_count": len(report.results),
+        "independent_recording_session_count": len(report.session_specs),
+        "analysis_unit": "recording_session_x_dimension",
+        "analysis_unit_count_per_preprocessing_mode": (
+            len(report.results) // preprocessing_mode_count
+        ),
+        "preprocessing_mode_count": preprocessing_mode_count,
+        "analysis_cell_count": len(report.results),
+        "primary_inference_unit": report.primary_inference_unit,
+        "checkpoint_config_fingerprint": next(iter(checkpoint_fingerprints)),
+        "amendment_provenance": {
+            "amendment_id": (
+                "2026-07-30-transition-composition-bic-reference"
+            ),
+            "status": "AMENDED_COMPOSITION_RESULT",
+            "reason": (
+                "The superseded semigroup comparison used unequal BIC reference "
+                "counts for frozen and direct candidates. This revision preserves "
+                "actual OOF counts but shares one explicit direct-horizon BIC basis."
+            ),
+            "superseded_interpretation": (
+                "The 300 ms frozen composition failed scale consistency."
+            ),
+            "unaffected_components": (
+                "primary_covariance_ladder",
+                "state_noise_verdict",
+                "markov_order",
+                "time_direction_description",
+                "biological_and_generative_claim_locks",
+            ),
+        },
         "thresholds": {
             "minimum_codelength_advantage_bits_per_scalar": (
                 report.config.minimum_codelength_advantage_bits_per_scalar
@@ -443,7 +507,12 @@ def _compact_payload(report) -> dict[str, Any]:
 def _print_report(payload: dict[str, Any]) -> None:
     print("TAFAZOLI DRIFT--DIFFUSION PROXY SCREEN")
     print(f"  checksum       {payload['source_file_md5']}")
-    print(f"  sessions/units {payload['session_count']}/{payload['unit_count']}")
+    print(
+        "  sessions/cells "
+        f"{payload['session_count']}/{payload['analysis_cell_count']} "
+        f"({payload['analysis_unit_count_per_preprocessing_mode']} "
+        "session×dimension units per preprocessing mode)"
+    )
     print("  state-scale advantages (positive favors state-conditioned noise)")
     print("    eventmean  animal  >full       >time       >quadratic  joint wins")
     for item in payload["aggregates"]:
@@ -520,24 +589,13 @@ def main() -> None:
         config=config,
         session_specs=session_specs,
         source_file_md5=source_file_md5,
-        official_checksum_verified=True,
+        verified_classifier_file=args.classifier_file,
     )
     payload = _compact_payload(report)
     summary_path = args.checkpoint_dir / "summary.json"
-    summary_path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = summary_path.with_suffix(".json.tmp")
-    temporary.write_text(
-        json.dumps(
-            payload,
-            ensure_ascii=False,
-            indent=2,
-            sort_keys=True,
-            allow_nan=False,
-        )
-        + "\n",
-        encoding="utf-8",
-    )
-    temporary.replace(summary_path)
+    _write_json_payload(summary_path, payload)
+    if args.result_file is not None:
+        _write_json_payload(args.result_file, payload)
     if args.json:
         print(
             json.dumps(
