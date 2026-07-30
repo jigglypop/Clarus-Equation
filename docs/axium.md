@@ -11,6 +11,10 @@ CE 이론은 우주의 물리적 현상과 정보적 연산 과정을 하나의 
   - 어떤 근사(평균화/스케일 분리)를 쓰는지
   를 추가로 명시해야 한다.
 - 본 문서의 목표는 "어떤 추가 선택이 필요해지는지"를 숨기지 않고 드러내는 것이다(재현성/반증가능성 강화 목적).
+- 코어 공리를 반례군과 실행 gate로 반복 보강하는 최신 정본은
+  `0_검증과감사/CORE_STRENGTHENING_LOOP.md`다. 본 문서와 표현이
+  충돌하면 해당 문서의 정리 가정과 용어(`Hodge type closure`,
+  `mixture affinity`, `quadratic channel rule`)를 우선한다.
 
 ### 1.2 문서 레벨 규약
 
@@ -292,18 +296,42 @@ CE 마스터 공식은 단순히 물리 현상을 설명하는 식을 넘어, **
 | 공리 | 내용 | 상태 |
 |------|------|------|
 | **A1** | $\Phi = \delta^2 S / \delta\gamma^2$ (경로적분 수렴을 매개하는 유효 억압 자유도) | 공리 |
-| **A2** | $D_{\text{eff}} = d + \delta$, $\delta = \sin^2\theta_W\cos^2\theta_W$ | `Selection`에서 `Bridge`로 넘어가는 정리 |
+| **A2** | $D_{\text{eff}} = d + \delta$, $\delta = \sin^2\theta_W\cos^2\theta_W$ | SM 혼합 대수 + additive quadratic fold-operator의 조건부 정리; microscopic Hessian gate 진행 중 |
 | **A3a** | $\varepsilon^2 = \exp(-(1-\varepsilon^2)\cdot D_{\text{eff}})$ (부트스트랩 고정점 식) | 자기일관 `Selection` 규칙 |
 | **A3b** | $P_{\mathrm{survive}} \leftrightarrow \Omega_b$ | 관측 가능한 선택 측도에 대한 `Bridge` 규칙 |
 | **A4** | $\Omega_{\text{DM}}/\Omega_\Lambda = R$ | `Bridge`에서 `Phenomenology`로 넘어가는 성분 분해 규칙 |
 
-### 6.1 A2의 유도 (공리에서 정리로 격상)
+### 6.1 A2의 강화: 혼합 대수와 fold-depth operator의 분리
 
-A2는 원래 독립 공리였으나, A1과 표준모형 전자약 대칭 깨짐(EWSB)으로부터 유도되었다.
+A2는 다음 두 명제로 나눈다.
 
-유도 골자: EWSB 이후 중성 게이지 보손 $(W^3, B)$ 기저의 질량 행렬에서, Z 보손의 비대각 혼합 원소를 $M_Z^2$로 정규화하고 제곱하면 $\delta = (gg'/(g^2+g'^2))^2 = \sin^2\theta_W\cos^2\theta_W$가 직접 나온다. Z 보손만이 유일한 거대 중성 보손이므로, 이것이 공간 접힘($d = 3$)에 추가되는 유일한 분수 차원이다.
+1. **SM 조건부 Exact:** EWSB 이후 물리적으로 지정된
+   \(W^3/B\) gauge subspace의 중성 질량행렬에서 cross amplitude를
+   \(M_Z^2\)로 정규화하고 제곱하면
+   \[
+   \delta
+   =\left(\frac{gg'}{g^2+g'^2}\right)^2
+   =\sin^2\theta_W\cos^2\theta_W
+   \]
+   가 나온다.
+2. **CE 조건부 operator 정리:** normalized fold-depth operator를
+   \[
+   \mathcal D_{\rm fold}=I_d\oplus C_Z^\dagger C_Z,
+   \qquad \|C_Z\|_{\rm HS}^2=\delta
+   \]
+   로 구성하면 trace additivity에 의해
+   \(D_{\rm eff}=\operatorname{Tr}\mathcal D_{\rm fold}=d+\delta\)다.
 
-상세 유도: `경로적분.md` 3.2.2절, `1_강의/A_연역적_유도.md` 2.4절 참조.
+둘째 명제의 단위계수 1을 최종적으로 닫으려면 이 operator가 CE+SM의
+실제 gauge-fixed quadratic Hessian에서 나와야 한다. \(W^\pm\), fermion,
+ghost, loop block까지 포함한 spectral trace 계산이 다음 gate다.
+따라서 “Z가 유일한 거대 중성 보손이므로 자동으로 \(+\delta\)”라는
+문장만으로는 충분하지 않다.
+
+상세 유도와 대안
+\(d+c_1\delta+c_2\delta^2+\cdots\) 배제 계획:
+`경로적분.md` 3.2.2절,
+`0_검증과감사/CORE_STRENGTHENING_LOOP.md` 5절.
 
 ### 6.2 두 공리 체계의 대응
 
@@ -350,7 +378,9 @@ A2는 원래 독립 공리였으나, A1과 표준모형 전자약 대칭 깨짐(
 ### 6.5 동료평가 직전 체크리스트
 
 - 정의가 완결되었는가: $\mathcal{K}$는 경로적분 헤시안 기댓값으로 구성되었고(2절), $\chi$의 동역학은 유클리드 열핵 흐름으로 닫혔다(2절). 잔여 열린 항목: $\chi$를 독립 장으로 승격할 경우의 $f(\Phi)$ 구체형.
-- 정리와 가정이 분리되었는가: A2는 정리, A3a는 자기일관 조건, A3b와 A4는 식별/현상론으로 분리한다.
+- 정리와 가정이 분리되었는가: A2에서 SM 혼합 대수와 additive
+  fold-operator 선택을 분리하고, A3a는 자기일관 조건, A3b와 A4는
+  식별/현상론으로 분리한다.
 - 증명되지 않은 단계가 숨겨져 있지 않은가: 공리 문서 자체는 관측량 대응을 직접 증명하지 않는다.
 - 다른 문서와 지위 충돌이 없는가: 후속 문서는 본 문서의 기호 사전과 지위 규약을 따라야 한다.
 - 반증 조건이 정량적으로 고정되어 있는가: 반증은 `경로적분.md`와 정당화 문서에서 정량화한다.
@@ -366,14 +396,22 @@ A2는 원래 독립 공리였으나, A1과 표준모형 전자약 대칭 깨짐(
 
 | 산물 | 어느 원천 | 내용 |
 |---|---|---|
-| 생존율 $\propto e^{-S}$ 지수형 | P1 | $S$ 무차원 → 접힘 인자가 지수형 ($S(D)=e^{-D}$) |
-| $d=3$ | P1 | Hodge 자기쌍대(장세기 2-form ↔ 벡터)의 유일해 |
+| 생존율 \(S(D)=e^{-D}\) | P1 + 연결 국소성 | 무차원성만으로는 부족. 양의 정규화, 깊이의 가법성, 생존 character의 곱성, 비자명성에서 지수형; optical-depth 단위로 rate 1 |
+| $d=3$ | P1 + 최소 재귀 타입 폐쇄 | metric/orientation 외 추가구조 없이 2-form fold를 1-form 입력 타입으로 되돌리는 Hodge type closure의 유일해 |
 | $\alpha_{\text{total}}=1/(2\pi)$ | P1 | 주기 정규화($\pi,i$)에 의한 시간 그리드 상수화 |
 | $(1-\varepsilon^2)$ 되먹임 | P2 | 단순 $e^{-D_{\text{eff}}}$가 아니라 나머지가 되먹임 → **부트스트랩 고정점** |
 | $\nabla^\mu\mathcal{K}_{\mu\nu}=0$ | P2 | 물질↔접힘 에너지 이전, 총 연산비용 불변 |
 | $\sum\Omega=1$, 나머지=암흑섹터 | P2 | 살아남음=바리온(A3b), 나머지=DM+DE(A4) |
 
-**검증 (P1+P2+입력 $\alpha_s$ 하나):** $\sin^2\theta_W=4\alpha_s^{4/3}=0.23122$ → $D_{\text{eff}}=3+\sin^2\theta_W\cos^2\theta_W=3.178$ → 고정점 $\varepsilon^2=e^{-(1-\varepsilon^2)D_{\text{eff}}}=0.04865=\Omega_b$ (관측 +0.10%), 나머지 $1-\varepsilon^2=0.95135$ = 암흑섹터, 합 $=1.000$. 체인이 두 원천에서 닫힌다.
+**조건부 코어 계산 (관측 bridge와 분리):**
+\(\sin^2\theta_W=0.23122\)를 사용하면
+\(\delta=0.1777573\)이다. additive quadratic fold-operator를 조건으로
+\(D_{\text{eff}}=3.1777573\), 안정한 비자명 고정점은
+\(\varepsilon^2=0.0486468\)이고 multiplier는
+\(D_{\rm eff}\varepsilon^2\simeq0.15459<1\)이다.
+\(\varepsilon^2\leftrightarrow\Omega_b\)와
+\(1-\varepsilon^2\leftrightarrow\) 암흑섹터는 이 수학 체인 뒤에 붙는
+별도 A3b/A4 bridge다.
 
 **두 원천에서 나오지 않는 것 (정직):**
 
@@ -381,6 +419,11 @@ A2는 원래 독립 공리였으나, A1과 표준모형 전자약 대칭 깨짐(
 |---|---|
 | $\alpha_s$ 수치값 | P1은 형식만, P2는 보존만 → 환원 불가능한 **단일 입력** (17.3.1 A3, 17.3.2 확인) |
 | 차원 있는 절대값 ($\rho_\Lambda$, 질량) | P1은 정의상 무차원만 생성 → 외부 기준($v_{\text{EW}},m_p,M_Z$)에 대한 스케일 승격 필요(3.3절) |
-| 되먹임 함수형 $(1-\varepsilon^2)\!\cdot\!D_{\text{eff}}$의 선형·연장성($\kappa=1$) | P2가 동기부여하나 이 특정 형태를 유일하게 강제하지는 않음 — 모델링 선택 |
+| 추가 memory state의 부재 | 완전 이분할 + scalar sufficiency + mixture-affinity 아래 \(K(x)=1-x\)는 유일. 비국소 memory kernel은 별도 상태공간을 가진 대안모형으로 남음 |
+| \(D_{\rm eff}\)의 microscopic unit coefficient | additive operator에서는 1로 닫히지만, CE+SM 전체 quadratic Hessian/spectral trace에서 같은 operator가 나오는지 계산 필요 |
 
-요약: CE는 **"형식(P1) + 보존 되먹임(P2) + 입력 1개($\alpha_s$) + 스케일 승격"** 체계다. "조정 파라미터 0개"는 "이 입력 외 조정량 0개"라는 의미이며 "입력 0개"가 아니다.
+요약: CE의 강화된 코어는
+**“형식(P1) + 보존 되먹임(P2) + 연결 국소성 + mixture-affinity +
+최소 재귀 타입 폐쇄 + additive quadratic channel rule”** 체계다.
+각 추가 원리는 장식이 아니라 특정 반례군을 제거한다. 관측 입력과
+스케일 승격의 수는 별도 provenance 표에서 센다.
