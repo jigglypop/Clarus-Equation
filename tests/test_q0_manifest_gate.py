@@ -8,10 +8,18 @@ from pathlib import Path
 import pytest
 
 from reality_stone.clarus.q0_manifest_gate import (
+    ACTION_KIND,
     ACTION_CONVENTION,
+    BACKGROUND_CONVENTION,
     COVARIANT_DERIVATIVE_CONVENTION,
+    FIELD_SPACE_CONNECTION_CONVENTION,
+    FIELD_SPACE_METRIC_CONVENTION,
+    FIXED_BACKGROUND_METRIC,
     GAUGE_TRANSFORMATION_CONVENTION,
     GHOST_CONVENTION,
+    NATURAL_UNITS,
+    NOT_APPLIED_STATUS,
+    POTENTIAL_CONVENTION,
     R_XI_CONVENTION,
     SIGNATURE_CONVENTION,
     TOY_CONDITIONAL_PASS,
@@ -44,7 +52,14 @@ def test_fixed_benchmark_loads_and_manifest_is_complete(benchmark) -> None:
 
     assert benchmark.manifest.scope_id == TOY_SCOPE
     assert benchmark.manifest.spacetime_signature == SIGNATURE_CONVENTION
+    assert benchmark.manifest.action_kind == ACTION_KIND
+    assert (
+        benchmark.manifest.fixed_background_metric
+        == FIXED_BACKGROUND_METRIC
+    )
+    assert benchmark.manifest.units == NATURAL_UNITS
     assert benchmark.manifest.action_convention == ACTION_CONVENTION
+    assert benchmark.manifest.potential_convention == POTENTIAL_CONVENTION
     assert (
         benchmark.manifest.covariant_derivative
         == COVARIANT_DERIVATIVE_CONVENTION
@@ -55,6 +70,19 @@ def test_fixed_benchmark_loads_and_manifest_is_complete(benchmark) -> None:
     )
     assert benchmark.manifest.gauge_fixing == R_XI_CONVENTION
     assert benchmark.manifest.ghost_action == GHOST_CONVENTION
+    assert benchmark.manifest.background_declaration == BACKGROUND_CONVENTION
+    assert (
+        benchmark.manifest.field_space_metric
+        == FIELD_SPACE_METRIC_CONVENTION
+    )
+    assert (
+        benchmark.manifest.field_space_connection
+        == FIELD_SPACE_CONNECTION_CONVENTION
+    )
+    assert benchmark.manifest.counterterm_status == NOT_APPLIED_STATUS
+    assert benchmark.manifest.renormalization_status == NOT_APPLIED_STATUS
+    assert "phi" in benchmark.manifest.field_declarations
+    assert "counterterms" not in benchmark.manifest.action_terms
     assert not benchmark.manifest.full_ce_sm_complete
     assert audit.complete
     assert audit.excluded_sectors_explicit
@@ -89,15 +117,30 @@ def test_manifest_rejects_scope_spoof_and_full_theory_claim(benchmark) -> None:
     assert not audit.complete
 
 
-def test_manifest_duplicate_entries_are_invalid(benchmark) -> None:
+def test_manifest_forbids_extra_counterterm_action(benchmark) -> None:
     manifest = replace(
         benchmark.manifest,
-        counterterms=("delta_Z_A", "delta_Z_A"),
+        action_terms=benchmark.manifest.action_terms + ("counterterms",),
     )
 
     audit = audit_q0_manifest(manifest)
 
-    assert "counterterms" in audit.invalid_sections
+    assert "required_action_terms" in audit.convention_issues
+    assert not audit.complete
+
+
+def test_manifest_duplicate_boundary_entries_are_invalid(benchmark) -> None:
+    manifest = replace(
+        benchmark.manifest,
+        boundary_conditions=(
+            "integration_by_parts_surface_terms_vanish",
+            "integration_by_parts_surface_terms_vanish",
+        ),
+    )
+
+    audit = audit_q0_manifest(manifest)
+
+    assert "boundary_conditions" in audit.invalid_sections
     assert not audit.complete
 
 
@@ -107,7 +150,7 @@ def test_nonlinear_coordinate_has_extra_ordinary_hessian_term() -> None:
         action_hessian_x=5.0,
         dx_dy=2.0,
         d2x_dy2=4.0,
-        field_metric_x=1.5,
+        field_metric_x=1.0,
     )
 
     assert audit.tensor_pullback_hessian_y == pytest.approx(20.0)
@@ -126,7 +169,7 @@ def test_stationary_point_is_not_a_counterexample_to_ordinary_hessian() -> None:
         action_hessian_x=5.0,
         dx_dy=2.0,
         d2x_dy2=4.0,
-        field_metric_x=1.5,
+        field_metric_x=1.0,
     )
 
     assert audit.stationary
@@ -154,7 +197,7 @@ def test_field_space_audit_rejects_invalid_inputs(
         "action_hessian_x": 5.0,
         "dx_dy": 2.0,
         "d2x_dy2": 4.0,
-        "field_metric_x": 1.5,
+        "field_metric_x": 1.0,
     }
     arguments[keyword] = value
 
@@ -165,29 +208,61 @@ def test_field_space_audit_rejects_invalid_inputs(
 def test_background_tadpole_passes_only_on_supplied_stationary_point() -> None:
     on_shell = audit_background_tadpole(
         mu_squared=2.0,
-        scalar_self_coupling=0.5,
-        scalar_vev=2.0,
+        higgs_self_coupling=0.5,
+        higgs_vev=2.0,
+        singlet_bare_mass_squared=1.0,
+        singlet_self_coupling=0.25,
+        lambda_hp=0.13,
+        singlet_background=0.0,
     )
     off_shell = audit_background_tadpole(
         mu_squared=2.1,
-        scalar_self_coupling=0.5,
-        scalar_vev=2.0,
+        higgs_self_coupling=0.5,
+        higgs_vev=2.0,
+        singlet_bare_mass_squared=1.0,
+        singlet_self_coupling=0.25,
+        lambda_hp=0.13,
+        singlet_background=0.0,
     )
 
-    assert on_shell.tadpole == pytest.approx(0.0)
+    assert on_shell.higgs_tadpole == pytest.approx(0.0)
+    assert on_shell.singlet_tadpole == pytest.approx(0.0)
     assert on_shell.goldstone_curvature == pytest.approx(0.0)
     assert on_shell.radial_curvature == pytest.approx(4.0)
+    assert on_shell.singlet_effective_mass_squared == pytest.approx(1.52)
+    assert on_shell.singlet_curvature == pytest.approx(1.52)
+    assert on_shell.z2_symmetric_background
+    assert on_shell.portal_coupling_is_independent_input
     assert on_shell.on_shell_background
-    assert off_shell.tadpole == pytest.approx(-0.2)
+    assert off_shell.higgs_tadpole == pytest.approx(-0.2)
+    assert off_shell.singlet_tadpole == pytest.approx(0.0)
     assert not off_shell.on_shell_background
+
+
+def test_nonzero_singlet_background_fails_unbroken_z2_control() -> None:
+    audit = audit_background_tadpole(
+        mu_squared=2.0,
+        higgs_self_coupling=0.5,
+        higgs_vev=2.0,
+        singlet_bare_mass_squared=1.0,
+        singlet_self_coupling=0.25,
+        lambda_hp=0.13,
+        singlet_background=0.1,
+    )
+
+    assert not audit.z2_symmetric_background
+    assert audit.singlet_tadpole != pytest.approx(0.0)
+    assert not audit.on_shell_background
 
 
 @pytest.mark.parametrize(
     ("keyword", "value", "message"),
     [
         ("mu_squared", 0.0, "mu_squared must be positive"),
-        ("scalar_self_coupling", -0.1, "must be positive"),
-        ("scalar_vev", 0.0, "scalar_vev must be positive"),
+        ("higgs_self_coupling", -0.1, "must be positive"),
+        ("higgs_vev", 0.0, "higgs_vev must be positive"),
+        ("singlet_self_coupling", 0.0, "must be positive"),
+        ("lambda_hp", math.inf, "must be finite"),
         ("tolerance", math.nan, "must be finite"),
     ],
 )
@@ -198,8 +273,12 @@ def test_background_audit_rejects_invalid_inputs(
 ) -> None:
     arguments = {
         "mu_squared": 2.0,
-        "scalar_self_coupling": 0.5,
-        "scalar_vev": 2.0,
+        "higgs_self_coupling": 0.5,
+        "higgs_vev": 2.0,
+        "singlet_bare_mass_squared": 1.0,
+        "singlet_self_coupling": 0.25,
+        "lambda_hp": 0.13,
+        "singlet_background": 0.0,
         "tolerance": 1.0e-12,
     }
     arguments[keyword] = value
@@ -211,7 +290,7 @@ def test_background_audit_rejects_invalid_inputs(
 def test_r_xi_signs_cancel_mixing_and_match_fp_ghost_mass() -> None:
     audit = audit_abelian_higgs_r_xi(
         gauge_coupling=0.4,
-        scalar_vev=2.0,
+        higgs_vev=2.0,
         xi=2.0,
         gauge_fixing_goldstone_coefficient=1.6,
         declared_ghost_mass_squared=1.28,
@@ -233,7 +312,7 @@ def test_r_xi_signs_cancel_mixing_and_match_fp_ghost_mass() -> None:
 def test_wrong_gauge_fixing_sign_is_a_structural_counterexample() -> None:
     audit = audit_abelian_higgs_r_xi(
         gauge_coupling=0.4,
-        scalar_vev=2.0,
+        higgs_vev=2.0,
         xi=2.0,
         gauge_fixing_goldstone_coefficient=-1.6,
         declared_ghost_mass_squared=1.28,
@@ -248,7 +327,7 @@ def test_wrong_gauge_fixing_sign_is_a_structural_counterexample() -> None:
 def test_wrong_declared_ghost_mass_fails_fp_identity() -> None:
     audit = audit_abelian_higgs_r_xi(
         gauge_coupling=0.4,
-        scalar_vev=2.0,
+        higgs_vev=2.0,
         xi=2.0,
         gauge_fixing_goldstone_coefficient=1.6,
         declared_ghost_mass_squared=1.0,
@@ -264,7 +343,7 @@ def test_wrong_declared_ghost_mass_fails_fp_identity() -> None:
     ("keyword", "value", "message"),
     [
         ("gauge_coupling", 0.0, "gauge_coupling must be positive"),
-        ("scalar_vev", -1.0, "scalar_vev must be positive"),
+        ("higgs_vev", -1.0, "higgs_vev must be positive"),
         ("xi", 0.0, "xi must be positive"),
         (
             "declared_ghost_mass_squared",
@@ -280,7 +359,7 @@ def test_r_xi_audit_rejects_invalid_inputs(
 ) -> None:
     arguments = {
         "gauge_coupling": 0.4,
-        "scalar_vev": 2.0,
+        "higgs_vev": 2.0,
         "xi": 2.0,
         "gauge_fixing_goldstone_coefficient": 1.6,
         "declared_ghost_mass_squared": 1.28,
@@ -302,56 +381,59 @@ def test_report_passes_only_control_slice_and_locks_full_claims(
 
     assert report.structural_status == TOY_CONDITIONAL_PASS
     assert report.control_scope == TOY_SCOPE
-    assert report.control_q0_0_manifest_pass
-    assert report.control_q0_1_field_space_pass
-    assert report.control_q0_2_background_pass
-    assert report.control_q0_3_gauge_pass
+    assert report.control_q0_0_pass
+    assert report.control_q0_1_pass
+    assert report.control_q0_2_pass
+    assert report.control_q0_3_pass
+    assert report.control_through_q0_3_pass
     assert report.abelian_control_slice_pass
-    assert not report.q0_0_scope_complete
-    assert not report.q0_1_field_space_complete
-    assert not report.q0_2_background_complete
-    assert not report.q0_3_gauge_complete
+    assert not report.full_q0_0_complete
+    assert not report.full_q0_1_complete
+    assert not report.full_q0_2_complete
+    assert not report.full_q0_3_complete
     assert not report.full_q0_pass
     assert not report.full_ce_sm_complete
     assert not report.stress_tensor_derived
     assert not report.spectral_density_derived
-    assert payload["q0_0_scope_complete"] is False
-    assert payload["q0_1_field_space_complete"] is False
-    assert payload["q0_2_background_complete"] is False
-    assert payload["q0_3_gauge_complete"] is False
+    assert payload["full_q0_0_complete"] is False
+    assert payload["full_q0_1_complete"] is False
+    assert payload["full_q0_2_complete"] is False
+    assert payload["full_q0_3_complete"] is False
     assert payload["full_q0_pass"] is False
     assert payload["full_ce_sm_complete"] is False
     assert report.excluded_sectors
     assert "full Q0" in report.conclusion
 
 
-def test_report_flags_are_cumulative_after_background_failure(
+def test_report_local_flags_remain_independent_after_background_failure(
     benchmark,
 ) -> None:
     inputs = replace(benchmark.control_inputs, mu_squared=2.1)
 
     report = q0_manifest_gate_report(benchmark.manifest, inputs)
 
-    assert report.control_q0_0_manifest_pass
-    assert report.control_q0_1_field_space_pass
-    assert not report.control_q0_2_background_pass
-    assert not report.control_q0_3_gauge_pass
+    assert report.control_q0_0_pass
+    assert report.control_q0_1_pass
+    assert not report.control_q0_2_pass
+    assert report.control_q0_3_pass
+    assert not report.control_through_q0_3_pass
     assert report.gauge_audit.structural_pass
     assert not report.abelian_control_slice_pass
     assert not report.full_q0_pass
 
 
-def test_report_flags_are_cumulative_after_manifest_failure(
+def test_report_local_flags_remain_independent_after_manifest_failure(
     benchmark,
 ) -> None:
-    manifest = replace(benchmark.manifest, regularization="")
+    manifest = replace(benchmark.manifest, counterterm_status="")
 
     report = q0_manifest_gate_report(manifest, benchmark.control_inputs)
 
-    assert not report.control_q0_0_manifest_pass
-    assert not report.control_q0_1_field_space_pass
-    assert not report.control_q0_2_background_pass
-    assert not report.control_q0_3_gauge_pass
+    assert not report.control_q0_0_pass
+    assert report.control_q0_1_pass
+    assert report.control_q0_2_pass
+    assert report.control_q0_3_pass
+    assert not report.control_through_q0_3_pass
     assert report.field_space_audit.structural_pass
     assert report.background_audit.on_shell_background
     assert report.gauge_audit.structural_pass
@@ -386,4 +468,7 @@ def test_manifest_dataclass_requires_explicit_full_completion_flag() -> None:
 
     assert "excluded_sectors" in fields
     assert "full_ce_sm_complete" in fields
+    assert "action_kind" in fields
+    assert "lambda_hp" in inputs
+    assert "singlet_background" in inputs
     assert "declared_ghost_mass_squared" in inputs

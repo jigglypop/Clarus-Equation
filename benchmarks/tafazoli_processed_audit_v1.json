@@ -1,0 +1,174 @@
+{
+  "schema_version": "clarus-tafazoli-processed-figure-audit/v1",
+  "scope": "official_processed_neural_figure_outputs_integrity_and_descriptive_audit_only",
+  "description": "Checksum-locked extraction of official processed Figure 2 classifier curves and Figure 3 dynamic-transformation matrices from Tafazoli et al. This is not a raw-spike reanalysis, independent replication, assembly discovery, or brain-language test.",
+  "source": {
+    "article_url": "https://www.nature.com/articles/s41586-025-09805-2",
+    "data_doi": "https://doi.org/10.6084/m9.figshare.30276238.v1",
+    "code_url": "https://github.com/buschman-lab/CompositionalTasks",
+    "license": "CC BY 4.0"
+  },
+  "required_files": [
+    {
+      "filename": "PFC_ClassifierData.mat",
+      "md5": "04e42460ccae245ec16fcd9801ddea4a"
+    },
+    {
+      "filename": "DynamicTransformationData.mat",
+      "md5": "d73c9aeea6a61268ee880b192c38006b"
+    }
+  ],
+  "expected_shapes": {
+    "classifier_resample_count": 250,
+    "classifier_timepoint_count": 81,
+    "dynamic_timepoint_count": 81,
+    "decoder_moving_mean_width": 15
+  },
+  "decoder_curves": [
+    {
+      "name": "within_color_C2_to_C2",
+      "figure_panel": "2a",
+      "feature": "color",
+      "train_task": "C2",
+      "test_task": "C2",
+      "trip_index_zero_based": 1,
+      "curve_index_zero_based": 0,
+      "stat_dimension_one_based": 3,
+      "stat_condition_one_based": 1
+    },
+    {
+      "name": "within_color_C1_to_C1",
+      "figure_panel": "2a",
+      "feature": "color",
+      "train_task": "C1",
+      "test_task": "C1",
+      "trip_index_zero_based": 1,
+      "curve_index_zero_based": 1,
+      "stat_dimension_one_based": 3,
+      "stat_condition_one_based": 2
+    },
+    {
+      "name": "irrelevant_color_S1_to_S1",
+      "figure_panel": "2a",
+      "feature": "color",
+      "train_task": "S1",
+      "test_task": "S1",
+      "trip_index_zero_based": 1,
+      "curve_index_zero_based": 2,
+      "stat_dimension_one_based": 3,
+      "stat_condition_one_based": 5
+    },
+    {
+      "name": "within_response_S1_to_S1",
+      "figure_panel": "2c",
+      "feature": "response",
+      "train_task": "S1",
+      "test_task": "S1",
+      "trip_index_zero_based": 0,
+      "curve_index_zero_based": 0,
+      "stat_dimension_one_based": 1,
+      "stat_condition_one_based": 1
+    },
+    {
+      "name": "within_response_C1_to_C1",
+      "figure_panel": "2c",
+      "feature": "response",
+      "train_task": "C1",
+      "test_task": "C1",
+      "trip_index_zero_based": 0,
+      "curve_index_zero_based": 1,
+      "stat_dimension_one_based": 1,
+      "stat_condition_one_based": 2
+    },
+    {
+      "name": "cross_color_C1_to_C2",
+      "figure_panel": "2f",
+      "feature": "color",
+      "train_task": "C1",
+      "test_task": "C2",
+      "trip_index_zero_based": 5,
+      "curve_index_zero_based": 0,
+      "stat_dimension_one_based": 3,
+      "stat_condition_one_based": 4
+    },
+    {
+      "name": "cross_color_C2_to_C1",
+      "figure_panel": "2f",
+      "feature": "color",
+      "train_task": "C2",
+      "test_task": "C1",
+      "trip_index_zero_based": 5,
+      "curve_index_zero_based": 1,
+      "stat_dimension_one_based": 3,
+      "stat_condition_one_based": 6
+    },
+    {
+      "name": "cross_response_C1_to_S1",
+      "figure_panel": "2i",
+      "feature": "response",
+      "train_task": "C1",
+      "test_task": "S1",
+      "trip_index_zero_based": 2,
+      "curve_index_zero_based": 0,
+      "stat_dimension_one_based": 1,
+      "stat_condition_one_based": 5
+    },
+    {
+      "name": "cross_response_S1_to_C1",
+      "figure_panel": "2i",
+      "feature": "response",
+      "train_task": "S1",
+      "test_task": "C1",
+      "trip_index_zero_based": 2,
+      "curve_index_zero_based": 1,
+      "stat_dimension_one_based": 1,
+      "stat_condition_one_based": 6
+    }
+  ],
+  "dynamic_correlations": [
+    {
+      "name": "C1_to_C2_nonmatching_response_axis",
+      "figure_panel": "3",
+      "correlation_variable": "aCorrC1C2",
+      "pvalue_variable": "pCorrC1C2"
+    },
+    {
+      "name": "C1_to_S1_matching_response_axis",
+      "figure_panel": "3",
+      "correlation_variable": "aCorrC1S1",
+      "pvalue_variable": "pCorrC1S1"
+    },
+    {
+      "name": "C2_to_S1_nonmatching_response_axis",
+      "figure_panel": "S7",
+      "correlation_variable": "aCorrC2S1",
+      "pvalue_variable": "pCorrC2S1"
+    },
+    {
+      "name": "C2_to_C2_matching_response_axis",
+      "figure_panel": "S7",
+      "correlation_variable": "aCorrC2C2",
+      "pvalue_variable": "pCorrC2C2"
+    }
+  ],
+  "claim_locks": {
+    "raw_trial_or_spike_reanalysis": false,
+    "classifier_refit": false,
+    "independent_replication": false,
+    "independent_statistical_reanalysis": false,
+    "transfer_entropy_validated": false,
+    "causal_information_flow_validated": false,
+    "unseen_composition_tested": false,
+    "neural_clarus_assembly_validated": false,
+    "causal_instruction_set_validated": false,
+    "full_brain_language_identified": false
+  },
+  "excluded_inferences": [
+    "raw_spike_level_reproduction",
+    "independent_statistical_replication",
+    "assembly_boundary_discovery",
+    "recursive_neural_syntax",
+    "causal_neural_instruction_semantics",
+    "whole_brain_programming_language"
+  ]
+}

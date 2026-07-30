@@ -93,6 +93,50 @@ python -m pytest tests/test_a1_q0_action_bridge.py -q
 전체 CE+SM action, field-space geometry, gauge/ghost, measure,
 renormalization, metric variation과 물리 pole은 아직 `OPEN`이다.
 
+### Q0.0–Q0.3 최소 manifest와 gauge/ghost 통제 게이트
+
+앞 절의 국소 반례를 실제 작용 convention과 배경에 연결하기 위해, 깨진
+\(U(1)\) Abelian-Higgs 모형에 \(Z_2\)-odd 실수 싱글릿을 붙인 최소 통제
+절단을 둔다. 이는 전체 전약력 또는 CE+SM 작용이 아니라, 부호·tadpole·
+gauge/ghost 항등식을 재현하는 풍동 모형이다.
+
+- 정식 범위 문서:
+  `Q0_0_Q0_3_MINIMAL_MANIFEST.md`
+- 고정 입력 manifest:
+  `benchmarks/q0_minimal_abelian_higgs_v1.json`
+- 실행 게이트:
+  `examples/physics/q0_manifest_gate.py`
+- 구현:
+  `reality_stone/python/reality_stone/clarus/q0_manifest_gate.py`
+- 회귀 테스트:
+  `tests/test_q0_manifest_gate.py`
+
+```powershell
+python examples/physics/q0_manifest_gate.py
+python -m pytest tests/test_q0_manifest_gate.py -q
+```
+
+게이트는 다음 네 결과를 독립적으로 기록한다.
+
+1. `control_q0_0_pass`: 장, 고전 bare tree-level 작용, 부호, 고정
+   Minkowski 배경, 경계조건과 제외 sector가 manifest에 모두 있는가.
+2. `control_q0_1_pass`: \((h,\chi,\phi)\)의 평탄한 Cartesian scalar
+   metric과 한 방향 비선형 좌표 대조군에서 공변 Hessian이 복원되는가.
+3. `control_q0_2_pass`: Higgs tadpole이 0이고 \(Z_2\) 배경
+   \(\phi=0\)에서 singlet tadpole도 0인가.
+4. `control_q0_3_pass`: \(R_\xi\) 항이 \(A^\mu\partial_\mu\chi\)
+   혼합을 상쇄하고 FP ghost와 Goldstone의 게이지 의존 질량 장부가
+   일치하는가.
+
+틀린 Higgs 배경, gauge-fixing 부호, ghost 질량과 scope 위장 manifest는
+같은 테스트에서 실패해야 한다. 네 통제 표시가 모두 참이어도
+`full_q0_0_complete`–`full_q0_3_complete`, `full_q0_pass`,
+`full_ce_sm_complete`, `stress_tensor_derived`,
+`spectral_density_derived`는 모두 `False`다. 빠진 전체
+\(SU(3)\times SU(2)\times U(1)\) sector, fermion/Yukawa, graded
+field-space, 동적 중력, 전역 gauge orbit, regulator/counterterm와
+BRST/Slavnov–Taylor 복구를 통제 모형의 성공으로 대신할 수 없다.
+
 ### 양자 jump에서 분지과정으로 가는 구조 게이트
 
 복소 양자진폭이나 Hessian의 비대각 원소를 곧바로 비음수 Poisson

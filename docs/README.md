@@ -77,7 +77,8 @@ $$
 
 | 새 개념 | 먼저 볼 문서 | 해석 레벨 |
 |------|------|------|
-| local recurrent cell / bitfield | `7_AGI/12_Equation.md` | kernel dynamics |
+| runtime Clarus cell / bitfield | `7_AGI/12_Equation.md` | software kernel dynamics; 발견된 생물학적 assembly가 아님 |
+| neural Clarus assembly / instruction 후보 | `6_뇌/10_신경프로그래밍언어_역공학.md` | task-code·표현 interface 골격 `YES`; stationary·switching·common-successor·state-hierarchy proxy와 language identification `NO`; 다음은 다영역 local-DSL/interface·최소 충분 회로·실제 합성·인과 gate |
 | geometry coupling / graph | `7_AGI/2_Architecture.md`, `6_뇌/05_실험근거.md` | coupling / geometry |
 | wake / NREM / REM | `7_AGI/3_Sleep.md`, `6_뇌/05_실험근거.md` | mode update |
 | hippocampus / replay | `7_AGI/3_Sleep.md`, `6_뇌/05_실험근거.md` | hippocampus / replay |

@@ -167,3 +167,18 @@ ACTION_SET = ["THINK", "PLAN", "CRITIC", "REVISE", "SLEEP", "FINALIZE"]
 | `phi_global` (brain core state) | backend observable | brain runtime core가 아님 |
 | `pi_global` (brain core state) | backend observable | brain runtime core가 아님 |
 | `BrainState(r,k,phi,pi,...)` | `BrainRuntimeSnapshot(activation, refractory, memory_trace, bitfield, ...)` | 물리장 시뮬레이터 상태에 묶이지 않게 |
+
+---
+
+## 12. 생물학과 런타임의 경계 명명
+
+| canonical 이름 | 뜻 | 현재 지위 |
+|---|---|---|
+| biological Clarus cell | 막·대사·수리로 자기동일성을 유지하는 실제 세포 | 생명 문서의 개념 |
+| neural Clarus assembly | 여러 뉴런에 걸친 국소 재귀 계산 단위 후보 | 실데이터에서 찾아야 하는 `Open` 객체 |
+| Clarus instruction | assembly 수준에서 문맥을 건너 재사용되는 상태 전이 후보 | `Open` |
+| runtime `ClarusCell` | `runtime.py`의 소프트웨어 상태 단위 | 구현 명세 |
+
+`runtime ClarusCell ≠ biological Clarus cell ≠ neural Clarus assembly`를
+기본 규칙으로 삼는다. 신경 집단을 말할 때 unqualified `cell`을 쓰지
+않으며, synthetic gate 통과를 생물학적 assembly 확인으로 번역하지 않는다.

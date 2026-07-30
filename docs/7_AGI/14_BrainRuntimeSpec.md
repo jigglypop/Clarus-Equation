@@ -37,6 +37,12 @@ $$s_i^{t+1} = F_i^{(M_t)}\big(s_i^t,\; u_i^t,\; \sum_j W_{ij}(g)\,s_j^t,\; h_i^t
 
 각 단위가 상태를 가지고, 그 상태가 계속 돌고, 모듈마다 깨어났다 잠들고, 전역 모드가 바뀌고, 해마 같은 별도 기억계가 있고, sleep/REM/wake가 계산 모드이며, 전역 출력은 국소 모듈들의 집단 리듬이다.
 
+이 문서의 `ClarusCell`은 **런타임 소프트웨어 단위**다. 실제 생물학적
+Clarus cell이나 여러 뉴런으로 이루어진 `neural Clarus assembly`가
+발견되었다는 뜻이 아니다. 후자의 경계·입출력·재사용·합성·인과 검증은
+[`../6_뇌/10_신경프로그래밍언어_역공학.md`](../6_뇌/10_신경프로그래밍언어_역공학.md)의
+별도 gate를 따른다.
+
 ### 1.3 왜 while 모듈인가: 주기함수 병목의 해결
 
 리만기하학의 표현력은 무궁무진하지만, 사인/코사인 같은 전역 주기 기저를 쓰면 다음 문제가 생긴다.
@@ -557,7 +563,7 @@ $$
 
 | 개념 | Clarus 대응 | 프론트엔드 비유 |
 |---|---|---|
-| 국소 회로 | ClarusCell | 자기 상태를 갖는 스마트 컴포넌트 |
+| 국소 회로의 공학적 대리모형 | runtime `ClarusCell` | 자기 상태를 갖는 스마트 컴포넌트 |
 | 뇌파 | 모듈 활성도의 집단 리듬 | 전체 UI의 분위기/활동량 |
 | 해마 | HippocampusIndex | 최근 활동 캐시 + 중요 상태 저장소 |
 | 수면 | NREM/REM 모드 전환 | 백그라운드 정리/압축 |
@@ -629,11 +635,11 @@ $$
 
 | Layer | 수식 정본 | 코드 구현 | 정합도 |
 |---|---|---|---|
-| A (셀 동역학) | `15_Equations.md` A절 | `runtime.py::_step_torch` + `kernel.rs` | 완전 일치 |
-| B (필드 결합) | `15_Equations.md` B절 | `runtime.py::_matvec` + `field.rs` | 완전 일치 |
-| C (전역 모드) | `15_Equations.md` C절 | `runtime.py::_auto_mode` + `_update_sleep_state` | 완전 일치 |
-| D (해마/기억) | `15_Equations.md` D절 | `runtime.py::HippocampusMemory` | 완전 일치 |
-| E (전역 요약) | `15_Equations.md` E절 | `runtime.py::RuntimeStep` + `BrainRuntimeSnapshot` | 완전 일치 |
+| A (셀 동역학) | `15_Equations.md` A절 | `runtime.py::_step_torch` + `kernel.rs` | software conformance |
+| B (필드 결합) | `15_Equations.md` B절 | `runtime.py::_matvec` + `field.rs` | software conformance |
+| C (전역 모드) | `15_Equations.md` C절 | `runtime.py::_auto_mode` + `_update_sleep_state` | software conformance |
+| D (해마/기억) | `15_Equations.md` D절 | `runtime.py::HippocampusMemory` | software conformance |
+| E (전역 요약) | `15_Equations.md` E절 | `runtime.py::RuntimeStep` + `BrainRuntimeSnapshot` | software conformance |
 | F (에이전트 루프) | `17_AgentLoop.md` F절 | `engine.py` + `sleep.py` (부분) | 핵심 구현, STDP/메타인지 미구현 |
 
 ### 14.6 남은 간극
@@ -646,7 +652,12 @@ $$
 | 작업 기억 / 소뇌 | F.20 | 중간 |
 | (C3) 메타인지 재귀 루프 | F.17 | 낮음 |
 
-현재 구현은 **셀 동역학 + 모드 전환 + 해마 + 수면 학습 순환**의 핵심 스택이 완성되어 있으며, critic/action/output 에이전트 루프와 STDP 학습이 남아 있다.
+현재 구현은 **셀 동역학 + 모드 전환 + 해마 + 수면 학습 순환**의
+소프트웨어 스택을 제공한다. 이 정합은 구현과 명세 사이의 conformance이며,
+뇌가 같은 모듈 경계나 언어를 쓴다는 생물학적 검증이 아니다. 또한
+STDP/eligibility의 실제 구현 상태는 `stdp.py`, `runtime.py`와 회귀
+테스트를 기준으로 다시 감사해야 하며, 이 표의 과거 “미구현” 문구를
+생물학적 결손으로 읽지 않는다.
 
 ---
 

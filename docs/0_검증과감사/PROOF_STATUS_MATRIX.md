@@ -51,6 +51,7 @@
 |---|---|---|
 | 공학적 활용 | `Phenomenology/Open test` | 수식 구조는 제안 가능하지만 물성/소자/초전도체 설계는 외부 실험 gate 없이는 증명 아님 |
 | 뇌/생명 문서 | `Phenomenology/Open test` | 데이터셋 gate와 식별성 검사가 핵심이며 코어 정리의 직접 귀결이 아님 |
+| 뇌 프로그래밍 언어 / neural Clarus assembly | `Open test` | 과제 설계의 `READ_*→ROUTE_*` 골격, 공유 표현 frontend/backend 후보와 빠진 `S2` 예측은 `YES`; 공식 processed cross-decoding과 27개 session 경계도 재현했다. 그러나 stationary·state-switching·잠재 common-successor·D1↔D3 frozen transfer·state-parent+rank1 proxy는 모두 `NO`다. 생물학적 callee·과제 상속·고정-neuron opcode·언어 식별도 `NO`, 그 구조의 보편적 존재·부재, unseen composition과 인과 검사는 `TEST_UNAVAILABLE`다. |
 | AGI/런타임 문서 | `Open test` | 구현 명세와 벤치마크 영역이다. 물리 상수 증명과 분리해야 함 |
 | 리만/attention 문서 | `Phenomenology/Open test` | 구조적 아이디어와 엔지니어링 성능 검증의 문제 |
 
@@ -77,6 +78,14 @@ uv run --extra dev python -m pytest tests\test_bootstrap_solver.py tests\test_di
 8. 전체 CE 문서의 정직한 상태는 “일부 코어는 증명됨, 핵심 작용 bridge는
    열려 있음, 다수 물리 출력은 브리지/현상론, 미관측 예측은 Open
    test”이다.
+9. 뇌 과제의 `READ_SHAPE/READ_COLOR → ROUTE_AXIS_1/2` 후보 골격은
+   복원했지만 이것은 task design의 factorization이다. 공식 snapshot의
+   session-local stationary operator뿐 아니라 같은 parameter budget의
+   \(K=2/3\) switching, 잠재 common successor, D1↔D3 frozen transfer와
+   state-parent+rank1 proxy도 대조군을 이기지 못했다. 이 snapshot 안의
+   shared execution instruction 판정은 `NO`다. 다음 `Open test`는 전뇌
+   공통 opcode가 아니라 다영역 `local DSL + narrow communication
+   interface`, 최소 충분 회로, 실제 unseen composition과 인과 개입이다.
 
 ## 증명 완료 경계
 
@@ -88,6 +97,7 @@ uv run --extra dev python -m pytest tests\test_bootstrap_solver.py tests\test_di
 |---|---|
 | A1/Q0 공변 작용 bridge | `A1_Q0_COVARIANT_ACTION_LOOP.md`의 `Q0.0`–`Q0.8`: field-space 공변성, background, gauge/ghost, operator/vertex, stress, renormalization과 재현 gate |
 | Clarus field pole bridge | 장 상관함수 pole gate는 등록됐다. 미관측 예측이므로 실제 실험 hit 또는 bridge exclusion 전까지 scorecard 통과/실패로 세지 않는다. 배제되더라도 코어 클라루스장 자체가 아니라 입자언어 readout/coupling bridge가 내려간다. |
+| 뇌 프로그래밍 언어 | `NL0`–`NL6` 가운데 실제 자료의 경계·상태·재사용·보지 않은 합성·호출·선택적 인과 개입·동물/세션 밖 복제가 필요하다. oracle-labelled synthetic method pass는 생물학적 통과로 세지 않는다. |
 | Phenomenology 항목 전체 | `Exact` 승격에는 각 bridge readout의 독립 유도 또는 외부 독립 데이터 gate가 필요하다. |
 
 $A_s$는 총 고정점 응답 $dx/dD$가 아니라 잔차 방정식의 국소 구동력 $\partial_D r=x(1-x)$를 반주기 위상과 유효 기하 깊이로 투영하는 readout으로 조건부 채택했다. $|V_{cb}|$는 LO QCD tunneling 실패를 유지하고, $Z_{cb}^{(1)}=1+\delta/(2\pi)$를 1-loop electroweak projector bridge로 채택했다. Clarus boson은 독립 입자를 먼저 가정한 것이 아니라 클라루스장 상관함수의 pole을 입자언어로 읽은 bridge이며, `examples/physics/clarus_boson_search_gate.py`로 그 pole/readout 조건을 사전등록했다. 따라서 현재 가장 강한 판정은 `부분 증명 + 열린 A1/Q0 작용 bridge + 조건부 현상론 + 사전등록된 미관측 Open test`이다.

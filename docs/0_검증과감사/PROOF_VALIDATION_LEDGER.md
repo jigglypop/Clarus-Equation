@@ -357,3 +357,238 @@ spectral density derived      False
 \(\mathrm{BR}_{\rm inv}\simeq0.772\)로, 문서가 공급한 상한 \(0.11\)을
 통과하지 못한다. 이는 선택적 포탈 benchmark의 반증이며, 독립 on-shell
 scalar를 두지 않는 코어 분기 자체의 반증은 아니다.
+
+## 14. 뇌 프로그래밍 언어 역공학 구조 gate
+
+`docs/6_뇌/10_신경프로그래밍언어_역공학.md`에 fixed neuron opcode,
+population latent IR, 재사용 instruction과 language-like composition을
+서로 다른 가설로 분리했다. 첫 실행물은 실제 신경 데이터 분석이 아니라,
+알려진 finite-state stochastic transducer를 회수하는 synthetic 방법
+대조군이다.
+
+```powershell
+python examples/brain/neural_language_gate.py
+python -m pytest tests/test_neural_language_gate.py -q
+```
+
+고정 manifest 실행 결과:
+
+| 항목 | 값 | 판정 |
+|---|---:|---|
+| held-out context boundary accuracy | 0.921875 | pass |
+| held-out vs leave-one-out context TV | 0.043852 | pass |
+| nuisance predictive gain | 0.000000 | pass |
+| early-to-late reuse | 0.920750 | pass |
+| held-out-tuple `A→B` composition | 0.859677 | pass |
+| same-target shuffled-transition control | 0.250806 | reject |
+| held-out tuple lookup | 0.220161 | reject |
+| seen-tuple lookup memorization | 0.848670 | positive control pass |
+| self-feedback open-loop / severed | 1.000000 / 0.000000 | pass |
+| cross-assembly feedback open-loop / severed | 1.000000 / 0.207500 | pass |
+
+종합 상태는 `SYNTHETIC_ORACLE_LABELED_METHOD_CONTROL_PASS`다. 이것은
+선언된 경계·상태·primitive label을 알고 있는 생성 모형에서 분석 구현이
+같은 held-out target의 operator 합성과 tuple lookup을 구별하고,
+open-loop feedback가 edge severing보다 낫다는 뜻뿐이다. assembly 경계를
+spike-like 관측에서 역추정한 결과도 아니고, base case와 call/return을
+가진 언어적 재귀, `NL4` 호출 제어, `NL5` 선택적 인과 교란/rescue,
+`NL6` 동물·세션 밖 복제를 통과한 결과도 아니다.
+
+다음 세 플래그는 strict manifest와 report에서 항상 `False`이고, `True`로
+입력하면 loader가 거부한다.
+
+```text
+full_brain_language_identified = False
+neural_clarus_assembly_validated = False
+causal_instruction_set_validated = False
+```
+
+다음 병목은 공개 다과제 영장류 자료에서 primitive 정의 자료와 시험 자료를
+분리하고, 보지 않은 조합에서 frozen primitive composition을 lookup,
+동일 차원 latent, monolithic recurrent model, movement/arousal 대조군과
+비교하는 일이다. 이 실제 자료 loop가 실패하면 language 주장을 올리지 않고
+연속 population dynamics 가설로 돌아간다.
+
+## 15. 실제 processed-data neural-code 역추적 gate
+
+합성 방법 대조군 다음으로 Tafazoli et al.의 공식 processed 자료와 공개
+MATLAB 코드를 checksum 기준으로 역추적했다. 이 loop는 하나의 전역
+`maybe` 대신 주장별 `YES / NO / TEST_UNAVAILABLE`를 출력한다.
+
+### 15.1 과제 코드 골격
+
+세 기록 과제는 다음 두-slot 후보로 정확히 분해된다.
+
+```text
+S1 = READ_SHAPE → ROUTE_AXIS_1
+C1 = READ_COLOR → ROUTE_AXIS_1
+C2 = READ_COLOR → ROUTE_AXIS_2
+S2 = READ_SHAPE → ROUTE_AXIS_2  [predicted, not recorded]
+```
+
+따라서 task-design factorization과 missing-cell prediction은 `YES`다.
+그러나 `S2`가 기록되지 않아 이것을 neural compositional grammar의
+통과로 세지 않는다.
+
+### 15.2 classifier snapshot 구조 감사
+
+`PFC_ClassifierData.mat`의 403열은 한 번에 기록한 population이 아니라
+서로 다른 날짜를 붙인 pseudopopulation이다. `TrainStimInds`의 동일
+signature로 27개 기록 session을 복원했다.
+
+```text
+session neuron counts:
+21,17,14,8,12,7,9,7,2,21,30,27,19,29,23,25,25,15,9,9,15,6,14,8,6,12,13
+
+Chico: 97 neurons
+Silas: 306 neurons
+time: 81 bins, -0.25..0.55 s, 10 ms step
+counting window: 100 ms
+adjacent-window overlap: 90%
+saved classifier snapshots: 1
+```
+
+250개 classifier 행은 독립 동물이나 trial이 아니라 재표집 반복이다.
+저장 코드는 첫 CV fold 필드를 반복마다 덮어써 마지막 snapshot 하나만
+남긴다. 둘째 차원은 train/test 분리 전 rule 전체 평균을 뺀 transductive
+전처리가 있어 primary discovery에서 제외했다. 그러므로 403-wide
+PCA/HMM은 금지하고 session-local 분석만 허용한다.
+
+### 15.3 공식 processed 결과의 허용 범위
+
+cross-task decoder artifact는 다음과 같이 재현됐다.
+
+| 곡선 | raw peak | post-event mean |
+|---|---:|---:|
+| color C1→C2 | 0.7182 | 0.5973 |
+| color C2→C1 | 0.6621 | 0.5830 |
+| response C1→S1 | 0.9597 | 0.7958 |
+| response S1→C1 | 0.9581 | 0.7947 |
+
+이는 population reuse의 후보 증거이지 blind operator discovery가 아니다.
+angle artifact의 직접 shared-colour 비교는 C1↔C2 한 항목이며,
+100–300ms 평균 76.81도, lower-tail 0.000999다. 해당 MAT에는
+`ResponseLoc` axis가 없으므로 나머지 color–shape 항목을 shared-response
+증거로 재해석하지 않는다.
+
+공식 코드의 `TransferEntropyAnalysis` 경로는 transfer entropy가 아니라
+smoothed decoder score의 Pearson correlation이다. 양수 대각선 투영에도
+유의성 mask를 쓰지 않는다. 따라서 causal information flow 플래그는
+계속 `False`다.
+
+### 15.4 session-local stationary operator 반례
+
+27개 session의 첫째·셋째 차원 train trial만 사용했다. label, test set,
+`AllFactors`와 둘째 차원은 보지 않았다. 고정 6-fold whole-trial CV에서
+train-only Anscombe 변환, 표준화와 PCA를 수행하고, 겹치지 않는 100ms
+간격의 선형 operator를 맞췄다.
+
+중앙값 결과:
+
+| 경로 | source-grand-mean 대비 설명력 | 정방향의 역방향 대비 이득 | trial-shuffle 대비 이득 |
+|---|---:|---:|---:|
+| D1 within | 0.79% | 0.59% | 2.07% |
+| D3 within | 1.68% | 0.34% | 2.59% |
+| D1→D3 frozen | 1.22% | 0.19% | 2.87% |
+| D3→D1 frozen | 2.56% | 0.97% | 3.18% |
+
+event-locked 시간 평균을 train fold에서 제거하면 정방향의 역방향 대비
+이득은 -0.26%에서 +0.13% 사이로 사실상 사라졌다. frozen transfer는
+target 좌표에 operator를 다시 맞춘 oracle 대조보다 열세였고, 27개 중
+D1→D3는 4개, D3→D1은 3개 session에서만 이겼다. rank cap
+1/2/3/5에서도 정방향 이득은 1% 미만이었다.
+
+100ms 창을 10ms씩 옮긴 anchor를 반복 가중하는 영향을 없애기 위해
+시작점 자체도 100ms 간격으로 제한한 민감도 분석을 추가했다. 이때 네
+경로의 방향성 이득은 `+0.66%, -0.02%, -0.12%, +0.46%`였고 frozen
+transfer는 두 방향 모두 target-refit보다 열세여서 판정은 변하지 않았다.
+
+따라서 현재 판정은 다음처럼 분리한다.
+
+```text
+YES              session_local_short_memory
+NO               shared_stationary_directed_operator
+NO               state_dependent_switching_operator
+NO               latent_common_successor_proxy
+NO               frontend_to_common_callee_observational_candidate
+NO               state_parent_rank1_proxy
+NO               task_inheritance_tree_identified
+TEST_UNAVAILABLE common_callee_or_task_inheritance_exists_or_is_absent
+NO               brain_programming_language_identified
+```
+
+약한 `YES`는 같은 trial의 100ms 자기기억이 successor-shuffle보다
+2–3% 낫다는 뜻이다. shared instruction이나 방향성 계산 규칙의 `YES`가
+아니다.
+
+### 15.5 상태 전환·공통 callee·상태 계층 대조
+
+stationary operator가 여러 epoch를 평균내 실패했을 가능성을 실제로
+시험했다. 상태 수 \(S=2,3\), 기억 깊이 \(P=1,2,3\)을 분리하고,
+현재·과거만 받는 train-frozen gate를 사용했다. 판정 비교 \(S=P\)에서
+상태별 map과 `VAR(order=S)`의 동역학 parameter 수를 맞췄고, gate와
+모형 선택 비용은 held-out Gaussian codelength/BIC proxy에 더했다.
+strict 또는 prequential MDL로 부르지 않는다.
+
+54개 `session×dimension` 중앙값:
+
+| \(S=P\) | switching−VAR 설명력 | switching code 이득 | state-parent+rank1 code 이득 | hub−time 설명력 | hub code 이득 |
+|---:|---:|---:|---:|---:|---:|
+| 2 | −1.41% | −0.4712 bit/scalar | −0.5084 bit/scalar | −0.33% | +0.2284 bit/scalar |
+| 3 | −1.80% | −1.1854 bit/scalar | −1.0538 bit/scalar | −0.73% | −0.0138 bit/scalar |
+
+\(S=P=2\)의 event-time mean 제거 민감도에서도 switching−VAR 설명력은
+`−1.20%`, code 이득은 `−0.4725 bit/scalar`, hub−time 설명력은
+`−1.52%`였다. 일부 hub 모형은 caller-specific 모형보다 훨씬 짧았지만
+time-only보다 예측 오차가 컸고 정방향이 역방향보다 나빴다. 따라서
+caller 정보를 버릴 수 있다는 압축 결과를 공통 callee로 승격하지 않는다.
+
+frontend→callee 후보는 within-dimension hub와 같은 상태 수의 D1↔D3
+frozen transfer가 동시에 모든 대조를 통과해야 한다. 이 결합 gate도
+`NO`다. 상태-parent+rank1은 task inheritance가 아니라 상태 수준
+low-rank proxy이며, 이것조차 matched VAR보다 짧지 않았다. 실제 과제
+상속은 D1·D3를 paired trial처럼 취급하지 않고 정당화한 공통 과제좌표가
+필요하므로 현재 artifact에서는 `identified=NO`,
+`exists_or_absent=TEST_UNAVAILABLE`로 분리한다.
+
+이 결과는 matched stationary VAR가 시험한 두 discrete proxy보다 나은
+상대 승자였음을 뜻한다. 비선형 연속 동역학 전체를 배제하거나 확정한
+결과는 아니므로 `continuous_dynamics_ruled_out=NO`를 유지한다.
+
+### 15.6 실행물과 판정
+
+```powershell
+uv run --isolated --with scipy python `
+  examples/brain/neural_code_reverse_engineering.py
+uv run --isolated --with scipy python `
+  examples/brain/tafazoli_session_operator_probe.py
+uv run --isolated --with scipy python `
+  examples/brain/tafazoli_call_graph_probe.py
+python -m pytest tests/test_neural_code_reverse_engineering.py -q
+python -m pytest tests/test_tafazoli_session_operator_probe.py -q
+python -m pytest tests/test_tafazoli_call_graph_probe.py -q
+```
+
+실제 claim gate 상태:
+
+```text
+YES              task_design_two_slot_code_skeleton_reconstructed
+YES              session_local_operator_pilot_possible
+NO               shared_population_transition_primitive_identified
+NO               state_dependent_switching_operator_identified
+NO               frontend_to_common_callee_observational_candidate_supported
+NO               task_inheritance_tree_identified
+NO               fixed_neuron_opcode_identified
+NO               continuous_dynamics_ruled_out
+NO               brain_programming_language_identified
+TEST_UNAVAILABLE common_callee_architecture_exists_or_is_absent
+TEST_UNAVAILABLE task_inheritance_architecture_exists_or_is_absent
+TEST_UNAVAILABLE fixed_neuron_opcode_refuted
+TEST_UNAVAILABLE unseen_composition_validated
+TEST_UNAVAILABLE causal_instruction_set_validated
+TEST_UNAVAILABLE brain_programming_language_exists
+```
+
+이 판정은 `benchmarks/neural_code_reverse_engineering_v1.json`에서 잠근다.
+현재 상태명은
+`TASK_CODE_SKELETON_RECONSTRUCTED_NEURAL_LANGUAGE_NOT_IDENTIFIED`다.

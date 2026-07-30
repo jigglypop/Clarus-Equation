@@ -1,0 +1,64 @@
+{
+  "schema_version": "clarus-neural-language-partial-blind-synthetic/v1",
+  "scope": "partial_blind_synthetic_inverse_method_control_only",
+  "description": "Partial-blind inverse method control. The inverse sees mixed neuron-like observations plus tokens, operation cues, supplied candidate partitions and their cross-session identity, paired pre/post boundaries, session identities, calibration split, and latent cardinality. Latent labels and the generator-target candidate are withheld. Training sessions select among supplied candidates; early held-out calibration aligns labels; late held-out samples alone evaluate it.",
+  "known_to_inverse": {
+    "external_input_token": true,
+    "task_operation_cue": true,
+    "candidate_group_partition": true,
+    "cross_session_candidate_identity": true,
+    "latent_cardinality": true,
+    "operation_label_and_cardinality": true,
+    "paired_pre_post_transition_boundary": true,
+    "cross_session_operation_token_semantics": true,
+    "calibration_split_location": true,
+    "context_session_identity": true
+  },
+  "hidden_from_inverse": [
+    "latent_state_labels",
+    "generator_target_candidate"
+  ],
+  "generator": {
+    "seed": 271828,
+    "state_count": 5,
+    "token_count": 5,
+    "context_count": 5,
+    "candidate_group_count": 3,
+    "neurons_per_candidate": 20,
+    "samples_per_context": 1400,
+    "transition_noise": 0.05,
+    "observation_noise": 0.22,
+    "neuron_dropout_fraction": 0.20,
+    "mixing_strength": 0.45,
+    "prototype_scale": 2.50,
+    "stable_monolithic_distractor_count": 0
+  },
+  "inference": {
+    "train_context_count": 4,
+    "early_calibration_fraction": 0.40,
+    "kmeans_max_iterations": 80
+  },
+  "thresholds": {
+    "selected_candidate_train_accuracy_min": 0.85,
+    "selected_candidate_margin_min": 0.20,
+    "distractor_train_accuracy_max": 0.65,
+    "heldout_late_transition_accuracy_min": 0.85,
+    "late_state_recovery_accuracy_min": 0.90,
+    "alignment_over_permutation_null_gain_min": 0.20
+  },
+  "claim_locks": {
+    "real_neural_data_used": false,
+    "full_brain_language_identified": false,
+    "neural_clarus_assembly_validated": false,
+    "causal_instruction_set_validated": false,
+    "fully_blind_inverse_recovery_validated": false
+  },
+  "excluded_inferences": [
+    "brain_programming_language_identification",
+    "biological_clarus_assembly_existence",
+    "causal_neural_instruction_semantics",
+    "fully_blind_neural_reverse_engineering",
+    "whole_brain_program_reconstruction",
+    "clinical_or_cognitive_validity"
+  ]
+}
