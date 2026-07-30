@@ -275,19 +275,59 @@ $$\kappa_{\text{cross}} = \|h_{\text{text}} - h_{\text{image}}\|^2$$
 
 ### 5.1 확산 모델 (Diffusion)
 
-**CE 해석: 확산 = 열핵 흐름 = NREM**
+먼저 같은 `diffusion`이라는 이름을 쓰는 세 연산을 분리한다.
+
+| 이름 | 핵심 연산 | 이 절에서의 관계 |
+|---|---|---|
+| graph heat diffusion | 라플라시안으로 이웃 표현 차이를 평활화 | CE의 LBO·그래프 연산과 직접 비교 가능 |
+| stochastic drift-diffusion / sampling | drift에 Wiener 잡음을 더해 경로·분포를 진화 | CE의 잡음 이완과 비교할 수 있으나 별도 확률 검증 필요 |
+| score-based generative diffusion | forward noising 뒤 학습한 score로 역시간 표본 생성 | 현재는 application bridge이며 구현 claim이 아님 |
+
+따라서 **열핵 흐름, 확률적 drift-diffusion과 score-based 생성 확산은
+동일어가 아니다.**
 
 확산 모델의 forward process:
 
 $$dz_t = -\frac{1}{2}\beta(t) z_t\,dt + \sqrt{\beta(t)}\,dW_t$$
 
-이것은 CE의 열핵 흐름 $\partial_t\Phi = -\Delta_g\Phi$과 구조적으로 동일하다. 확산 모델의 순방향 과정은 NREM 수면에서의 곡률 평탄화에 대응한다.
+여기에는 결정론적 drift뿐 아니라 Wiener 잡음이 있다. 반면 CE의
+열핵 흐름 $\partial_t\Phi=-\Delta_g\Phi$은 그 자체로는 결정론적
+평활화다. 특정 metric과 잡음 가정을 추가하면 두 식의 일부 구조를
+비교할 수 있지만, 하나가 다른 하나와 동일하다고 결론내릴 수는 없다.
 
-**역방향 과정 = REM 재탐색**
+역방향 시간 $\tau=T-t$를 앞으로 증가시키는 convention에서는
+variance-preserving SDE의 역과정을 다음처럼 쓸 수 있다.
 
-$$dz_t = \left[-\frac{1}{2}\beta(t) z_t + \beta(t) \nabla_z \log p_t(z_t)\right]dt + \sqrt{\beta(t)}\,dW_t$$
+$$
+dz_\tau
+=
+\left[
+\frac{1}{2}\beta(T-\tau)z_\tau
++\beta(T-\tau)\nabla_z\log p_{T-\tau}(z_\tau)
+\right]d\tau
++\sqrt{\beta(T-\tau)}\,d\overline W_\tau
+$$
 
-점수 함수 $\nabla_z \log p_t$가 비선택 경로 풀에서 새로운 조합을 찾는 REM 재탐색에 대응한다.
+핵심은 시간에 따라 달라지는 점수 함수
+$\nabla_z\log p_t(z)$를 자료로 학습해야 한다는 점이다. 비선택 경로를
+재조합하는 REM update가 있다는 사실만으로 이 score나 역과정이 생기지
+않는다.
+
+**NREM=forward, REM=reverse는 검증된 동일성이 아니다.** NREM의
+평활화·consolidation과 REM의 재조합·탐색을 각각 forward와 reverse에
+비교해 보는 연구 비유일 뿐이다. 생물학적 두 단계가 서로의 역확률
+과정이라는 증거도, 현재 코드가 그 동일성을 학습했다는 결과도 없다.
+
+현재 구현 경계는 다음처럼 잠근다.
+
+| 코드 항목 | 구현 여부 | 허용되는 표현 |
+|---|---|---|
+| 그래프/LBO 평활화와 row-stochastic mixing | 구현 | deterministic graph diffusion 또는 smoothing primitive |
+| metric-aware Langevin형 잡음 이완과 mode별 seeded noise | 구현 | stochastic relaxation primitive; neural sampling 검증은 아님 |
+| `RiemannianDiffusionModule`의 geodesic flow update | 구현 | 결정론적 flow interpolation; score generator가 아님 |
+| NREM 평활화·선택 update와 REM residual remix | 구현 | phase-labeled heuristic update |
+| 시간조건부 score network와 denoising score-matching loss | 미구현 | score-based diffusion claim 잠금 |
+| forward noise schedule과 짝을 이룬 reverse-SDE/ODE sampler | 미구현 | 생성·NREM/REM 역과정 claim 잠금 |
 
 **P1: 3x3+1 U-Net**
 
@@ -298,7 +338,9 @@ U-Net의 채널을 SU(3)/SU(2)/U(1)로 분할:
 
 **P5: 곡률 기반 생성 품질 제어**
 
-생성 과정에서 곡률을 모니터링하여, 고곡률 영역(부자연스러운 생성물)을 실시간 보정한다.
+후보 설계에서는 생성 과정의 곡률을 모니터링하고 고곡률 영역을 보정
+항으로 누를 수 있다. 다만 현재 저장소에는 이를 score-based 생성기와
+결합해 품질 향상을 검증한 구현이 없다.
 
 ### 5.2 GAN
 
@@ -368,7 +410,9 @@ GNN에서 CE의 적용은 가장 자연스럽다. LBO의 이산화가 곧 그래
 
 $$\Delta_g \approx L = D - W$$
 
-기존 GNN의 message passing이 CE의 LBO 확산과 정확히 일치한다.
+라플라시안 또는 확산형 GNN의 message passing은 CE의 LBO 연산과 같은
+이산 그래프 평활화 꼴로 쓸 수 있다. 다만 attention, edge update와
+비선형 aggregation을 쓰는 모든 GNN이 LBO와 정확히 같은 것은 아니다.
 
 **P5: 곡률 = 과평활화(over-smoothing) 제어**
 
@@ -569,7 +613,7 @@ $$\kappa_{\text{drive}}(s) = \|\Delta_g h(s)\|^2$$
 | 강화학습 | 행동 분할 | 경험 재생 | TD-유사 전역 신호 | 희소 정책 | 안전 제약 |
 | 음성/오디오 | 주파수 분할 | 화자 적응 | -- | 희소 인코딩 | 환각 억제 |
 | 멀티모달 | 모달 분할 | 모달 적응 | -- | 모달 활성 | 교차 환각 |
-| 생성(Diffusion) | U-Net 분할 | 열핵흐름 | -- | 희소 샘플링 | 품질 제어 |
+| 생성(Diffusion) | U-Net 분할 | 수면 단계와의 연구 비유 | -- | 희소 샘플링 | 품질 제어 |
 | 로보틱스 | 감각운동 분할 | 충전=수면 | 국소 학습 | 희소 제어 | 안전 정지 |
 | GNN | 노드 분할 | 그래프 적응 | message=STDP | 노드 활성 | 과평활화 제어 |
 | 시계열 | 주파수 분할 | 분포 이동 | -- | 희소 예측 | 이상 감지 |
@@ -585,13 +629,15 @@ $$\kappa_{\text{drive}}(s) = \|\Delta_g h(s)\|^2$$
 |---|---|---|---|
 | 1 | ViT | P1+P4+P5 | LLM과 동일 아키텍처, 코드 재사용 |
 | 2 | GNN | P5 | LBO가 그래프 라플라시안과 직접 대응 |
-| 3 | 확산 모델 | P5+P2 | 열핵 흐름이 확산 과정과 동일 |
+| 3 | 확산 모델 | P5+P2 | 열·확률·score 확산을 분리한 뒤 구조 비교 가능 |
 | 4 | 강화학습 | P2+P5 | TD error와 CE 전역 신호의 구조적 유사성을 점검 가능 |
 | 5 | 자율주행 | P1+P5 | 안전 임계적 분야, 곡률 기반 안전 보장 |
 
 ### 13.3 공통 구현 패턴
 
-모든 분야에서 CE 적용의 기본 패턴은 동일하다:
+다음은 여러 분야에서 비교할 구조를 요약한 **개념 pseudocode**다.
+`LBONorm`이라는 그대로 import 가능한 현재 API나 score-based diffusion
+구현을 뜻하지 않는다.
 
 ```python
 class CEModule(nn.Module):
