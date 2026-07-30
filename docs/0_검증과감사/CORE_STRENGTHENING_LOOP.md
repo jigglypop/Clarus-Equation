@@ -1,12 +1,13 @@
 # CE 코어 강화 루프
 
-상태: `Working canonical / loop 3 complete, Q-loop structural gate active`
+상태: `Working canonical / loop 4, A1-Q0 covariant-action gate active`
 
 범위: 생존함수, 자기·타공간 재귀, 공간 차원 선택, 전자약 유효 깊이,
 양자 jump에서 고전 분지과정으로의 조건부 축약
 
 코드 게이트: `core_axioms.py`, `multispace_bootstrap.py`,
-`core_model_selection.py`, `quantum_jump_bridge.py`
+`core_model_selection.py`, `a1_q0_action_bridge.py`,
+`quantum_jump_bridge.py`
 
 실행:
 
@@ -14,13 +15,14 @@
 python examples/physics/core_axiom_loop.py
 python examples/physics/multispace_recursion_gate.py
 python examples/physics/core_model_selection_gate.py
+python examples/physics/a1_q0_action_gate.py
 python examples/physics/quantum_jump_bridge_gate.py
 ```
 
 회귀 검증:
 
 ```powershell
-python -m pytest -q tests/test_core_axioms.py tests/test_multispace_bootstrap.py tests/test_core_model_selection.py tests/test_quantum_jump_bridge.py
+python -m pytest -q tests/test_core_axioms.py tests/test_multispace_bootstrap.py tests/test_core_model_selection.py tests/test_a1_q0_action_bridge.py tests/test_quantum_jump_bridge.py
 ```
 
 ## 0. 목적
@@ -680,8 +682,12 @@ functional을 선택하는지를 묻는 경쟁적 강화 후보다.
 
 ### 5.3 다음 증명 병목
 
-아직 남은 핵은 이 operator를 정의하는 것이 아니라 CE+SM의 실제 quadratic
-Hessian에서 동일한 block이 나오는지다. 일반형을 먼저 열면
+동일한 block을 찾기 전에 “CE+SM의 실제 quadratic Hessian” 자체를
+물리적으로 정의해야 한다. 보통 Hessian은 비선형 장 재정의 아래 off-shell
+텐서가 아니며, gauge zero mode와 coincident divergence도 가진다. 따라서
+[A1/Q0 공변 작용 루프](A1_Q0_COVARIANT_ACTION_LOOP.md)의 `Q0.0`–`Q0.8`을
+먼저 통과한 공변·gauge-fixed·재규격화 fluctuation operator에 대해서만
+다음 일반형을 계산한다.
 
 $$
 D_{\mathrm{eff}}
@@ -691,13 +697,14 @@ $$
 이고, 다음 루프는 아래 계산으로 \(c_1=1\), \(c_{n\ge2}\)의 억제를
 도출해야 한다.
 
-1. CE master action과 SM EWSB action의 quadratic fluctuation operator 작성.
-2. spatial, neutral mixing, charged, fermion block을 모두 열거.
-3. gauge fixing과 ghost를 포함한 normalized trace 또는 heat-kernel functional 고정.
-4. Ward identity 아래 gauge/scheme 독립성 검사.
-5. \(\partial D_{\mathrm{eff}}/\partial\delta|_{\delta=0}=1\)인지 계산.
-6. \(W^\pm\), loop correction, cross block이 사라지거나 별도 항으로 남는지 확인.
-7. matching scale을 관측 비교 전에 고정.
+1. 전체 field content, signature, background, boundary와 CE+SM 작용을 고정.
+2. field-space metric/connection, gauge fixing, ghost와 measure를 고정.
+3. background EOM 또는 off-shell tadpole·connection 항을 보존.
+4. spatial, neutral mixing, charged, fermion block을 모두 열거.
+5. regulator, counterterm, RG scale과 normalized spectral functional을 고정.
+6. Ward/BRST 및 gauge/scheme holdout을 통과.
+7. \(\partial D_{\mathrm{eff}}/\partial\delta|_{\delta=0}=1\)인지 계산.
+8. \(W^\pm\), loop correction, cross block이 별도 항으로 남는지 확인.
 
 이 단계가 성공하면 \(d+\delta\)는 “잘 맞는 ansatz”에서
 “명시적 Hessian의 spectral trace”로 승격된다. 실패하면 실패한 block이
@@ -848,11 +855,31 @@ compound-Poisson 후보가 된다.
 곧바로 decay rate로 읽지 않고, 물리 고유상태, on-shell matrix element,
 phase space와 흡수 self-energy를 거쳐야 한다.
 
+#### 현재 A1/Q0 국소 대수 게이트
+
+`a1_q0_action_bridge.py`는 아직 전체 Q0를 풀지 않는다. 대신 다음 두
+과장을 실행 가능한 반례와 항등식으로 잠근다.
+
+- 비정상점의 비선형 좌표변환 예에서 tensor pullback은 \(20\), 보통
+  Hessian은 \(32\), 비텐서 추가항은 \(12\)다. connection 보정 후 공변
+  Hessian은 다시 \(20\)이다.
+- \(Z_2,\ v_\Phi=0\) 포탈에서는 \(h\)-\(\Phi\) cross-Hessian이 0이지만
+  \(h\Phi^2\), \(h^2\Phi^2\) vertex는 0이 아니다.
+- 레거시 \(\lambda_{\mathrm{HP}}=0.0316,\ m_\Phi=43.77\,\mathrm{GeV}\)
+  benchmark는 같은 vertex 정규화에서
+  \(\mathrm{BR}(h\to\Phi\Phi)\simeq0.772\)여서, 문서가 공급한 상한
+  \(0.11\)을 통과하지 못한다.
+
+게이트가 통과해도 `covariant_action_complete`,
+`stress_tensor_derived`, `spectral_density_derived`는 모두 `False`로
+고정된다. 즉 이것은 `Q0.1`과 `Q0.5`의 국소 필요조건 일부를 검산한
+것이지 Q0 전체 통과가 아니다.
+
 ### 5A.7 실행 gate
 
 | Gate | 계산 대상 | 통과 조건 |
 |---|---|---|
-| `Q0-action` | quadratic operator와 cubic/quartic vertex | pole spectrum·Ward/BRST 통과, \(Z_2\) 진공의 cross-Hessian 0 재현 |
+| `Q0-action` | [Q0.0–Q0.8](A1_Q0_COVARIANT_ACTION_LOOP.md#7-q0-acceptance-gates)의 공변 작용·quadratic operator·vertex | field-space 공변성, background, gauge/ghost, renormalization, stress Noether gate와 pole spectrum을 모두 통과 |
 | `Q1-spectral` | bath correlator, spectral matrix, 흡수 self-energy | Hermitian residual 작음, spectral matrix 양의 준정부호, gauge/scheme 안정 |
 | `Q2-Markov` | bath correlation tail과 시간척도 분리 | coarse window에서 exact reduced map과 CP semigroup의 holdout 오차 통과 |
 | `Q3-CP` | finite-time reduced map의 Choi matrix와 trace | Choi 최소고유값과 trace residual이 사전등록 허용치 안 |
@@ -862,9 +889,14 @@ phase space와 흡수 self-energy를 거쳐야 한다.
 | `Q7-branching` | 여러 초기 type의 extinction trajectory | training에서 정한 \(A\)로 독립 Monte Carlo extinction을 예측 |
 | `Q8-robustness` | gauge, scale, pointer grouping, coarse window | \(A\), Perron 반지름, 최소 고정점이 사전등록 범위 안에서 안정 |
 
-현재 최소 실행 게이트
-`reality_stone/python/reality_stone/clarus/quantum_jump_bridge.py`는 이미
-주어진 후보 객체에 한해 다음을 감사한다.
+현재 A1/Q0 국소 게이트
+`reality_stone/python/reality_stone/clarus/a1_q0_action_bridge.py`는
+보통 Hessian 반례와 포탈 진공 미분만 감사한다. 전체 작용, gauge/ghost,
+재규격화와 stress tensor는 의도적으로 미완료다.
+
+그보다 후단의 최소 구조 게이트
+`reality_stone/python/reality_stone/clarus/quantum_jump_bridge.py`는
+이미 주어진 후보 객체에 한해 다음을 감사한다.
 
 - Kossakowski 행렬의 Hermitian/양의 준정부호 조건
 - 선택한 type 기저에서 population–coherence 양방향 leakage
@@ -874,8 +906,8 @@ phase space와 흡수 self-energy를 거쳐야 한다.
   \(A_{ij}=\tau_i b_{ij}\)로 가는 행별 변환
 
 이는 `Q1` 후단의 대수 조건, `Q4`의 불변 sector 충분조건, `Q5`의 정확
-폐쇄 조건을 실행 가능하게 만든 최소 구조 게이트다. `Q0`의 CE+SM 작용
-계산, `Q1`의 물리 spectral density, `Q2-Q3`의 reduced-map 유도,
+폐쇄 조건을 실행 가능하게 만든 최소 구조 게이트다. `Q0`의 CE+SM 공변
+작용 계산, `Q1`의 물리 spectral density, `Q2-Q3`의 reduced-map 유도,
 `Q6-Q8`의 독립 계보·holdout·강건성은 아직 구현되지 않았다. 따라서
 게이트가 통과해도 보고서는
 `ce_sm_derivation_complete=False`,
@@ -1014,24 +1046,30 @@ quantum-jump structural gate
   만족한다는 뜻이다. coherent Hamiltonian과 collective jump 반례는 같은
   게이트에서 실제로 실패하며, CE+SM 유도 완료 플래그는 의도적으로
   `False`다.
+- A1/Q0 국소 게이트는 보통 Hessian의 비텐서 추가항과 포탈 vertex를
+  재현하지만, 공변 작용·stress tensor·spectral density 완료 플래그는
+  모두 `False`다.
 
 ## 8. 다음 루프
 
 우선순위는 다음과 같다.
 
-1. `Q-loop`: 현재 구조 게이트의 입력을 CE+SM action, interaction
-   vertex, spectral density에서 실제로 계산하고, decoherence와
-   coarse-graining을 거쳐 비음수 jump rate 및 독립 offspring가
-   나오는지 검증.
-2. `A-loop`: 위 양의 rate가 존재할 경우 실제 action/Hessian에서 자기·타공간 결합
+1. `A1/Q0-action loop`: CE+SM field manifest, 배경, field-space
+   metric/connection, gauge fixing·ghost, measure·counterterm을 한
+   작용에 고정하고 `Q0.0`–`Q0.8`을 순서대로 통과. 이 단계 전에는
+   spectral density 계산으로 건너뛰지 않는다.
+2. `Q1-Q8 loop`: 통과한 physical operator와 vertex에서 spectral
+   density를 계산하고, decoherence와 coarse-graining을 거쳐 비음수
+   jump rate 및 독립 offspring가 나오는지 검증.
+3. `A-loop`: 위 양의 rate가 존재할 경우 실제 action/Hessian에서 자기·타공간 결합
    \(A_{ij}\)와 strongly connected components를 계산.
-3. `D-loop`: homogeneous scalar invariant sector가 존재할 경우 CE+SM quadratic
+4. `D-loop`: homogeneous scalar invariant sector가 존재할 경우 CE+SM quadratic
    Hessian에서 공통 행합과 unit coefficient를 계산.
-4. `variance-loop`: \(\langle e^{-\Phi}\rangle\)와
+5. `variance-loop`: \(\langle e^{-\Phi}\rangle\)와
    \(e^{-\langle\Phi\rangle}\) 사이의 cumulant/variance bound를 실제 모형에서 계산.
-5. `bridge-loop`: \(\boldsymbol x\)의 어느 projection이
+6. `bridge-loop`: \(\boldsymbol x\)의 어느 projection이
    \(\Omega_b\)인지 대안 물질화 channel과 독립 데이터에서 비교.
-6. `vector model-selection loop`: 현재 사전등록된 scalar 후보군을
+7. `vector model-selection loop`: 현재 사전등록된 scalar 후보군을
    \(A\)의 topology, boundary, reducibility 후보까지 확장하고
    `confirmation/prospective` 관측을 추가.
 

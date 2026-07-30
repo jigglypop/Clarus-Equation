@@ -12,6 +12,7 @@
 | [MATHEMATICAL_PHYSICS_ISSUES.md](MATHEMATICAL_PHYSICS_ISSUES.md) | 수학/물리 문제점 감사 목록 | 참고 정본 |
 | [BRIDGE_B2_DERIVATION.md](BRIDGE_B2_DERIVATION.md) | \(P_{\text{survive}}\leftrightarrow\Omega_b\) bridge 보강 기록 | bridge 보조 |
 | [CORE_STRENGTHENING_LOOP.md](CORE_STRENGTHENING_LOOP.md) | 코어 반례군을 최소 원리·정리·코드 gate로 줄이는 반복 보강 정본 | working canonical |
+| [A1_Q0_COVARIANT_ACTION_LOOP.md](A1_Q0_COVARIANT_ACTION_LOOP.md) | 보통 Hessian 반례, 공변 장공간 Hessian, metric variation과 Q0 통과 조건 | working canonical |
 | [문서_전체_완성도_감사.md](문서_전체_완성도_감사.md) | docs 전체 완성도와 보강 순서 | 운영 감사 |
 | [미해결_난제_목록.md](미해결_난제_목록.md) | 인류/CE 미해결 난제 카탈로그 | open-problem index |
 
@@ -34,12 +35,14 @@
 
 1. [코어 독자 가이드](../코어_독자_가이드.md): 수식 전에 환기구 비유,
    다공간 재귀, 증명과 bridge의 경계를 잡는다.
-2. [CORE_STRENGTHENING_LOOP.md](CORE_STRENGTHENING_LOOP.md): 코어를 어떤 반례와 gate로 강화하는지 본다.
-3. [PROOF_STATUS_MATRIX.md](PROOF_STATUS_MATRIX.md): 지금 무엇이 닫혔고 무엇이 열려 있는지 본다.
-4. [PROOF_VALIDATION_LEDGER.md](PROOF_VALIDATION_LEDGER.md): 왜 그 판정이 되었는지 검산 이력을 본다.
-5. [미해결_난제_목록.md](미해결_난제_목록.md): CE가 아직 못 닫은 외부/내부 난제를 확인한다.
-6. [VALIDATION_FRAMEWORK.md](VALIDATION_FRAMEWORK.md): 남은 blocker와 필요한 증명/실험을 본다.
-7. [문서_전체_완성도_감사.md](문서_전체_완성도_감사.md): 문서군 정리 우선순위를 본다.
+2. [A1/Q0 공변 작용 루프](A1_Q0_COVARIANT_ACTION_LOOP.md): Hessian,
+   stress tensor와 보존법칙 사이의 열린 조건을 먼저 본다.
+3. [CORE_STRENGTHENING_LOOP.md](CORE_STRENGTHENING_LOOP.md): 코어를 어떤 반례와 gate로 강화하는지 본다.
+4. [PROOF_STATUS_MATRIX.md](PROOF_STATUS_MATRIX.md): 지금 무엇이 닫혔고 무엇이 열려 있는지 본다.
+5. [PROOF_VALIDATION_LEDGER.md](PROOF_VALIDATION_LEDGER.md): 왜 그 판정이 되었는지 검산 이력을 본다.
+6. [미해결_난제_목록.md](미해결_난제_목록.md): CE가 아직 못 닫은 외부/내부 난제를 확인한다.
+7. [VALIDATION_FRAMEWORK.md](VALIDATION_FRAMEWORK.md): 남은 blocker와 필요한 증명/실험을 본다.
+8. [문서_전체_완성도_감사.md](문서_전체_완성도_감사.md): 문서군 정리 우선순위를 본다.
 
 ## 운영 규칙
 

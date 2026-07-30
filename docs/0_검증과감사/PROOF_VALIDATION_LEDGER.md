@@ -280,7 +280,7 @@ Scored pass rate: 84.6%
 | 항목 | 값 |
 |---|---:|
 | $\delta$ | 0.17775842 |
-| $\lambda_{HP}=\delta^2$ | 0.03159806 |
+| coupling matching 후보 $\lambda_{HP}=\delta^2$ | 0.03159806 |
 | $m_\phi=m_p\delta^2$ | 29.64757 MeV |
 | 3-sigma 질량창 | 28.388--30.908 MeV |
 | Compton length | 6.65575 fm |
@@ -295,4 +295,65 @@ Scored pass rate: 84.6%
 | 질량창만 부분 배제하거나 coupling benchmark 미도달 | `bridge_constrained` |
 | 그 외 | `open_test` |
 
-X17류 17 MeV 신호는 질량창 밖이므로 Clarus pole hit로 세지 않는다. 이 gate는 발견 주장이 아니라 실험 판정표다. `bridge_rejected`가 나오더라도 반증되는 것은 국소 스칼라/포탈 readout이지, 경로적분 수렴 구조로서의 클라루스장 자체가 아니다.
+X17류 17 MeV 신호는 질량창 밖이므로 Clarus pole hit로 세지 않는다. 이
+gate는 발견 주장이 아니라 실험 판정표다. 여기의 \(29.65\) MeV light-pole
+후보와 \(m_\Phi\simeq v\sqrt{\lambda_{HP}}=43.77\) GeV 포탈 질량
+benchmark는 서로 다른 bridge 가정이며 같은 pole로 동시에 읽지 않는다.
+`bridge_rejected`가 나오더라도 반증되는 것은 국소 스칼라/포탈 readout이지,
+경로적분 수렴 구조로서의 클라루스장 자체가 아니다.
+
+## 13. A1/Q0 공변 작용 루프
+
+### 13.1 재개방된 명제
+
+기존의 “스칼라 action의 보통 Hessian이므로 공변 텐서이고,
+\(T_{\mu\nu}\)에 대응한다”는 사슬을 철회했다. 비선형 field
+reparameterization 아래 보통 Hessian에는 action gradient에 비례하는
+추가항이 생긴다. 경로 평균도 이 변환 실패를 자동으로 없애지 않는다.
+
+현재 판정:
+
+| 명제 | 판정 |
+|---|---|
+| 보통 functional Hessian은 일반 field redefinition 아래 tensor다 | 반례 때문에 채택 불가 |
+| connection을 포함한 field-space Hessian은 공변화 후보가 된다 | `Conditional` |
+| A1 Hessian kernel이 국소 \(\mathcal K_{\mu\nu}\)다 | `Open` |
+| \(\mathcal K_{\mu\nu}=T_{\mu\nu}\) | `Open` |
+| 총 stress tensor 보존 | diffeomorphism invariant \(\Gamma_{\rm ren}\), anomaly 부재, EOM과 경계조건 아래 `Conditional` |
+| CE+SM Q0 작용 완료 | `Open` |
+
+상세 증명 의무는
+`docs/0_검증과감사/A1_Q0_COVARIANT_ACTION_LOOP.md`의
+`Q0.0`–`Q0.8`에 고정한다.
+
+### 13.2 실행 게이트
+
+```powershell
+python examples/physics/a1_q0_action_gate.py
+python -m pytest -q tests/test_a1_q0_action_bridge.py
+```
+
+현재 국소 결과:
+
+```text
+tensor pullback Hessian       20
+ordinary Hessian              32
+non-tensor extra term         12
+covariant Hessian             20
+h-phi cross Hessian           0
+legacy portal invisible BR    0.771656
+supplied upper limit           0.11
+legacy benchmark allowed      False
+covariant action complete     False
+stress tensor derived         False
+spectral density derived      False
+```
+
+\(Z_2,\ v_\Phi=0\) 포탈에서 cross-Hessian 0은 상호작용 부재를 뜻하지
+않는다. \(h\Phi^2\), \(h^2\Phi^2\) vertex가 남는다. 그 정규화를 그대로
+사용한 레거시
+\(\lambda_{\rm HP}=0.0316,\ m_\Phi=43.77\,\mathrm{GeV}\) benchmark는
+\(\Gamma_{\rm inv}\simeq13.75\,\mathrm{MeV}\),
+\(\mathrm{BR}_{\rm inv}\simeq0.772\)로, 문서가 공급한 상한 \(0.11\)을
+통과하지 못한다. 이는 선택적 포탈 benchmark의 반증이며, 독립 on-shell
+scalar를 두지 않는 코어 분기 자체의 반증은 아니다.

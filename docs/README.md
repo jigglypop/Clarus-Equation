@@ -133,7 +133,12 @@ CE 문서는 네 층으로 읽는 것이 가장 안전하다.
 - `N_c = d`는 구조적 유비를 넘어 동역학적 동일성으로 닫히지 않았다.
 - 뇌 문서의 항목은 `6_뇌/05_실험근거.md`의 실험 게이트에서 `supported`로 판정될 때만 `Phenomenology`에서 `Bridge`로 격상된다(등급 기준: `6_뇌/05_실험근거/01_판정기준과핵심주장.md` 1절의 supported/bridge/testable). 격상 근거는 실험 게이트이지 닫힘 가정 자체가 아니다. 부트스트랩 닫힘 가정 (C1)-(C3)은 `1_강의/A_연역적_유도.md` 2.5절에, 의식의 (C1)-(C3) 자기일관 조건은 `7_AGI/7_Consciousness.md` 1절에 별도로 정의된다(서로 다른 (C1)-(C3) 집합이며 `05_실험근거`에는 정의되지 않는다). AGI/게임 밸런스는 여전히 응용 가설층.
 - 공학/블랙홀 문서의 수치는 최신 정본과 양립하도록 정리되었지만, 대부분 설계 벤치마크 또는 유효 모델 수준이다.
-- $\mathcal{K}$의 구체적 동역학(경로적분 헤시안 구성)과 $\chi$의 장 방정식(유클리드 열핵 흐름)이 `axium.md`에서 닫혔다.
+- A1의 보통 경로적분 Hessian은 아직 공변
+  \(\mathcal K_{\mu\nu}\)나 stress tensor로 닫히지 않았다. field-space
+  connection, gauge/ghost, renormalization과 metric-variation matching의
+  통과 조건은
+  [A1/Q0 공변 작용 루프](0_검증과감사/A1_Q0_COVARIANT_ACTION_LOOP.md)를
+  따른다.
 
 ## 빠른 탐색 지도
 

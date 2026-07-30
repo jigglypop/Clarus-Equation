@@ -22,6 +22,9 @@
 | Newton/bracketed solver | `Exact` for code residual | residual $2.08e-17$, Newton vs bracketed $1.25e-13$ | 없음 |
 | Hodge 기반 $d=3$ 선택 | `Selection` | 2-form의 쌍대가 다시 1-form/벡터가 되려면 $d-2=1$ | $N_c=d$ 동일시는 `Bridge` |
 | 무차원성 검사 | `Exact` for listed formulas | 7/7 dimensionally consistent | 차원 일치는 참/거짓 판정일 뿐 물리 진실을 보장하지 않음 |
+| A1 보통 Hessian $\to$ 공변 $\mathcal K$ | `Open` | 비선형 좌표 반례에서 tensor pullback 20, 보통 Hessian 32, connection 보정 뒤 20을 재현 | 전체 field-space metric/connection, bi-local-to-local projection, gauge quotient와 measure |
+| Hessian $\to T_{\mu\nu}$ 및 보존 | `Open/Conditional` | stress tensor는 $\Gamma_{\rm ren}$의 metric variation이고 on-shell Noether identity 아래 보존됨 | A1 kernel과 metric variation의 matching, anomaly·경계항·EOM |
+| CE+SM Q0 공변 작용 | `Open` | 포탈 국소 미분과 반례 gate만 통과; 완료 플래그 3개는 모두 `False` | `Q0.0`–`Q0.8` 전체 |
 
 ## 상수와 관측량
 
@@ -40,6 +43,7 @@
 | $n_s$ | `Phenomenology` | $1-2/(dD_{\rm eff}12/2)=0.96503$, +0.03 sigma | 전이수 12와 inflationary readout을 받아야 닫힘 |
 | $w_0$ | `Phenomenology` | 로컬 Planck-family 기준 PASS | DESI-era 기준과 분리 필요 |
 | Clarus field pole bridge | `Open test` | $m_\phi=29.64757$ MeV, 3-sigma window $28.388$--$30.908$ MeV | 클라루스장 2점 상관함수 pole / 입자언어 bridge gate 사전등록 완료 |
+| 레거시 $Z_2$ 포탈 $(\lambda_{\rm HP}=0.0316,\ m_\Phi=43.77\,{\rm GeV})$ | `Phenomenology` benchmark rejected | 같은 라그랑지안 정규화에서 $\Gamma_{\rm inv}=13.75$ MeV, $\mathrm{BR}_{\rm inv}=0.772$; 공급된 상한 0.11 실패 | coupling을 낮추거나 채널을 닫고 새 benchmark로 재검증; CE 동일시는 별도 |
 
 ## 응용 문서 판정
 
@@ -68,15 +72,22 @@ uv run --extra dev python -m pytest tests\test_bootstrap_solver.py tests\test_di
 4. $|V_{us}|$와 $n_s$는 조건부 `Phenomenology`로 올릴 수 있다.
 5. $A_s$는 projected residual-drive gate로 `Phenomenology`까지 올렸다.
 6. $|V_{cb}|$는 LO 실패를 유지하되, NLO electroweak projector bridge로 `Phenomenology`까지 올렸다.
-7. 전체 CE 문서의 정직한 상태는 “일부 코어는 증명됨, 다수 물리 출력은 브리지/현상론, 미관측 예측은 Open test”이다.
+7. A1의 보통 Hessian을 공변 spacetime tensor나 stress tensor로 읽는
+   단계와 CE+SM Q0 작용은 `Open`이다.
+8. 전체 CE 문서의 정직한 상태는 “일부 코어는 증명됨, 핵심 작용 bridge는
+   열려 있음, 다수 물리 출력은 브리지/현상론, 미관측 예측은 Open
+   test”이다.
 
 ## 증명 완료 경계
 
-현재 scorecard의 `Open` 항목은 없다. 남은 것은 `Open test`와 `Phenomenology` 경계다.
+현재 관측 scorecard의 채점 행에는 `Open` 항목이 없지만, 이것이 전체
+증명의 폐쇄를 뜻하지 않는다. A1/Q0는 관측 scorecard 밖의 선행 구조
+의무이며 `Open`이다.
 
 | 항목 | 닫히기 위한 필요조건 |
 |---|---|
+| A1/Q0 공변 작용 bridge | `A1_Q0_COVARIANT_ACTION_LOOP.md`의 `Q0.0`–`Q0.8`: field-space 공변성, background, gauge/ghost, operator/vertex, stress, renormalization과 재현 gate |
 | Clarus field pole bridge | 장 상관함수 pole gate는 등록됐다. 미관측 예측이므로 실제 실험 hit 또는 bridge exclusion 전까지 scorecard 통과/실패로 세지 않는다. 배제되더라도 코어 클라루스장 자체가 아니라 입자언어 readout/coupling bridge가 내려간다. |
 | Phenomenology 항목 전체 | `Exact` 승격에는 각 bridge readout의 독립 유도 또는 외부 독립 데이터 gate가 필요하다. |
 
-$A_s$는 총 고정점 응답 $dx/dD$가 아니라 잔차 방정식의 국소 구동력 $\partial_D r=x(1-x)$를 반주기 위상과 유효 기하 깊이로 투영하는 readout으로 조건부 채택했다. $|V_{cb}|$는 LO QCD tunneling 실패를 유지하고, $Z_{cb}^{(1)}=1+\delta/(2\pi)$를 1-loop electroweak projector bridge로 채택했다. Clarus boson은 독립 입자를 먼저 가정한 것이 아니라 클라루스장 상관함수의 pole을 입자언어로 읽은 bridge이며, `examples/physics/clarus_boson_search_gate.py`로 그 pole/readout 조건을 사전등록했다. 따라서 현재 가장 강한 판정은 `부분 증명 + 조건부 현상론 + 사전등록된 미관측 Open test`이다.
+$A_s$는 총 고정점 응답 $dx/dD$가 아니라 잔차 방정식의 국소 구동력 $\partial_D r=x(1-x)$를 반주기 위상과 유효 기하 깊이로 투영하는 readout으로 조건부 채택했다. $|V_{cb}|$는 LO QCD tunneling 실패를 유지하고, $Z_{cb}^{(1)}=1+\delta/(2\pi)$를 1-loop electroweak projector bridge로 채택했다. Clarus boson은 독립 입자를 먼저 가정한 것이 아니라 클라루스장 상관함수의 pole을 입자언어로 읽은 bridge이며, `examples/physics/clarus_boson_search_gate.py`로 그 pole/readout 조건을 사전등록했다. 따라서 현재 가장 강한 판정은 `부분 증명 + 열린 A1/Q0 작용 bridge + 조건부 현상론 + 사전등록된 미관측 Open test`이다.

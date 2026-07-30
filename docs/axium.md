@@ -121,40 +121,89 @@ $$
 *   $\mathcal{K}$: 연산 복잡도 텐서 (Computational Complexity Tensor)
 *   $\kappa$: 연산-기하 변환 상수
 
-#### $\mathcal{K}$의 최소 요구사항과 구체적 구성
+#### $\mathcal{K}$의 최소 요구사항과 현재 후보
 
 CE에서 $\mathcal{K}$는 "직관"이 아니라 최소한 아래 조건을 만족하는 물리량으로 정의되어야 한다.
 - (i) 좌표변환에 대해 텐서로 변환(공변성)
 - (ii) 차원/단위가 명확(예: 에너지 밀도 혹은 이에 비례하는 양으로 환산 가능)
 - (iii) 표준 극한에서 $T_{\mu\nu}$와의 대응이 가능(대응원리)
 
-**구체적 구성 (A1로부터의 유도).** A1($\Phi = \delta^2 S/\delta\gamma^2$)으로부터 $\mathcal{K}_{\mu\nu}$를 경로적분 헤시안의 기댓값으로 정의한다:
+**현재 후보이며 아직 유도가 아니다.** A1의 직관을 형식화하는 첫 후보로
+경로적분 Hessian의 기댓값을 DeWitt condensed index \(A=(I,x)\),
+\(B=(J,y)\)를 써서
 
 $$
-\mathcal{K}_{\mu\nu}(x) \;=\; \frac{1}{Z}\int\mathcal{D}\gamma\;\frac{\delta^2 S[\gamma]}{\delta\gamma^\mu(x)\,\delta\gamma^\nu(x)}\;e^{-S[\gamma]/\hbar}
+\widetilde{\mathcal H}_{AB}
+=
+\frac{1}{Z}\int\mathcal{D}\gamma\;
+\frac{\delta^2 S[\gamma]}
+{\delta\gamma^A\,\delta\gamma^B}
+e^{-S[\gamma]/\hbar}
 $$
 
-세 가지 요구사항의 충족:
+처럼 형식적으로 쓸 수 있다. 이것은 일반적으로 두 장 index와 두 시공간
+점을 가진 bi-local kernel이다. 이를 같은 점의 국소
+\(\widetilde{\mathcal K}_{\mu\nu}(x)\)로 읽으려면 smearing, trace,
+spacetime-index projection과 composite-operator renormalization을
+별도로 지정해야 한다.
 
-- **(i) 공변성.** $S[\gamma]$는 스칼라이고 $\gamma^\mu$는 벡터로 변환하므로, $\delta^2 S/\delta\gamma^\mu\delta\gamma^\nu$는 2계 공변 텐서이다. 경로적분 측도가 좌표불변이므로 $\mathcal{K}_{\mu\nu}$ 역시 텐서로 변환한다.
-- **(ii) 차원.** $[S]=[\hbar]$, $[\gamma^\mu]=\text{길이}$이므로 $[\delta^2 S/\delta\gamma^\mu\delta\gamma^\nu]=\text{에너지}\cdot\text{시간}/\text{길이}^2$이다. 시공간 체적 정규화 후 에너지 밀도와 동일한 차원을 갖는다.
-- **(iii) 대응원리.** 안장점 근사($\hbar\to 0$)에서 고전 경로 $\gamma_{\text{cl}}$이 지배하므로 $\mathcal{K}_{\mu\nu}\to\delta^2 S/\delta\gamma_{\text{cl}}^\mu\delta\gamma_{\text{cl}}^\nu$가 되며, 이것은 전파함수(propagator)를 결정하는 2차 변분으로서 $T_{\mu\nu}$에 대응한다.
-
-**동역학.** $\mathcal{K}$는 두 성분으로 분해된다:
-
-$$
-\mathcal{K}_{\mu\nu} = T_{\mu\nu}^{\text{visible}} + T_{\mu\nu}^{\Phi}
-$$
-
-여기서 $T_{\mu\nu}^{\Phi}$는 클라루스장의 에너지-운동량 텐서이다:
+더 근본적으로 보통의 이차 미분은 비선형 field-space 좌표변환에서
+기울기에 비례하는 추가 항을 얻으므로 자동으로 텐서가 아니다. 정지점에서는
+그 추가 항이 사라질 수 있지만, off-shell 양을 쓰려면 field-space
+connection을 지정한 공변 Hessian
 
 $$
-T_{\mu\nu}^{\Phi} = \nabla_\mu\Phi\nabla_\nu\Phi - g_{\mu\nu}\!\left[\tfrac{1}{2}(\nabla\Phi)^2+V(\Phi)\right] + \xi\!\left(g_{\mu\nu}\Box-\nabla_\mu\nabla_\nu+G_{\mu\nu}\right)\!\Phi^2
+\nabla_A\nabla_BS
+=
+\partial_A\partial_BS
+-\Gamma^C{}_{AB}\partial_CS
 $$
 
-Bianchi 항등식으로부터 $\nabla^\mu\mathcal{K}_{\mu\nu}=0$이 따르며, 이는 **연산 비용의 보존 법칙**이다. 물질과 클라루스장이 개별적으로 보존되는 것이 아니라, $\mathcal{K}$ 전체가 보존된다. 에너지가 물질에서 접힘(클라루스장)으로 이전될 수 있지만 총 연산 비용은 불변이다.
+가 필요하다. 무한차원 장공간에서는 다음 증명 의무가 추가된다.
 
-**지위:** 이 구성은 A1의 직접적 귀결이므로 `Selection` 층이다. 구체적 모형(우주론 배경, 블랙홀 근방 등)에서 $T_{\mu\nu}^{\Phi}$를 계산하려면 $\Phi$의 동역학을 함께 풀어야 하며, 이는 `Bridge` 층이다.
+1. field-space metric 또는 connection과 좌표 chart를 명시한다.
+2. gauge zero mode를 제거하는 gauge fixing과 ghost determinant를 포함한다.
+3. 경로적분 measure, 국소 coincident divergence, counterterm과
+   renormalization scheme·scale을 고정한다.
+4. Ward/BRST identity와 anomaly 부재를 검사한다.
+
+Hessian은 quadratic fluctuation과 역전파자 정보를 주지만, 그 사실만으로
+에너지-운동량 텐서가 되지는 않는다. 양자 수준의 물리적 stress tensor는
+완결된 재규격화 유효작용을 metric으로 변분해
+
+$$
+T_{\mu\nu}
+=
+-\frac{2}{\sqrt{-g}}
+\frac{\delta\Gamma_{\mathrm{ren}}}{\delta g^{\mu\nu}}
+$$
+
+로 정의해야 한다. 미분동형사상 불변 작용의 Noether identity는 일반적으로
+장 운동방정식 \(E_a=0\)을 쓰기 전에는
+
+$$
+\nabla^\mu T_{\mu\nu}
+=
+\sum_a E_a\,\nabla_\nu\varphi^a
+$$
+
+형태다. 따라서 총 stress tensor의 보존은 완결된 불변 작용과 on-shell
+운동방정식 아래에서 따라온다. Bianchi 항등식만으로 임의의 Hessian 후보가
+stress tensor와 같아지거나 보존되는 것은 아니다.
+
+별도 스칼라 작용을 채택하고 metric variation을 수행하면
+\(T_{\mu\nu}^{\Phi}\)를 구성하고
+\(\mathcal K_{\mu\nu}=T_{\mu\nu}^{\mathrm{visible}}+
+T_{\mu\nu}^{\Phi}\)라는 모형을 제안할 수 있다. 이 동일시는 A1만의 직접
+귀결이 아니라 검증해야 할 `Bridge`다.
+
+**현재 지위:** `Open covariant-action bridge`. 공변 Hessian, gauge/ghost,
+renormalization, metric variation과 Noether identity가 한 작용에서
+함께 닫히기 전에는 \(\widetilde{\mathcal H}_{AB}\)의 국소 projection을
+물리적 \(T_{\mu\nu}\)로 판정하지 않는다. 상세 반례와 `Q0.0`–`Q0.8`
+통과 조건은
+[A1/Q0 공변 작용 루프](0_검증과감사/A1_Q0_COVARIANT_ACTION_LOOP.md)에
+고정한다.
 
 ### 제2공리: 최소 연산 작용의 원리 (Principle of Least Computational Action)
 > **"우주는 자신의 총 연산 비용(Global Computational Cost)을 최소화하는 경로를 선택한다."**
@@ -311,7 +360,10 @@ $$
 ---
 
 ## 5. 결론 (Conclusion)
-CE 마스터 공식은 단순히 물리 현상을 설명하는 식을 넘어, **"우주가 정보를 처리하는 알고리즘"**을 수식화한 것이다. 이 식은 미시 세계(양자)부터 거시 세계(우주), 그리고 복잡계(뇌, 생명)까지 관통하는 **보편적 안정성 및 최적화 원리(Universal Principle of Stability & Optimization)**를 제공한다.
+CE 마스터 공식은 **"우주가 정보를 처리하는 알고리즘"**이라는 관점을
+수식화하려는 후보 작용이다. 현재 증명 상태에서는 미시 세계부터 복잡계까지
+관통하는 보편적 안정성 원리를 제공한다고 결론내리기보다, 그러한 원리를
+검사할 공변 작용과 관측 bridge를 제안한다.
 
 ### 5.1 (보강) 문서 레벨에서의 최소 약속
 - 이 공리 문서는 "철학적 구호"가 아니라, 후속 문서들에서 표기 혼선/순환성을 줄이기 위한 기준점으로 유지한다.
@@ -373,7 +425,7 @@ quadratic cross-Hessian이 0이므로 quadratic block 하나만으로는 충분�
 
 | 3대 공리 (본 문서) | 경로적분 공리 (A1-A4) | 관계 |
 |---|---|---|
-| 제1공리 (연산-기하 등가성) | A1 ($\Phi = \delta^2 S/\delta\gamma^2$), 곡률 식별 | 헤시안과 곡률의 대응 규칙으로 구체화 |
+| 제1공리 (연산-기하 등가성) | A1 ($\Phi = \delta^2 S/\delta\gamma^2$), 곡률 식별 | 보통 Hessian은 공변 텐서가 아니며, 공변 장공간 Hessian과 metric variation을 잇는 열린 bridge |
 | 제2공리 (최소 연산 작용) | A3a (자기일관성 부트스트랩) | 최소 비용 경로를 고정점 구조로 표현 |
 | 제2공리의 관측 연결 | A3b ($P_{\mathrm{survive}} \leftrightarrow \Omega_b$) | 고정점 해를 우주론 양에 대응시키는 식별 단계 |
 | 제3공리 (해상도 한계) | 힉스 포탈 동정 ($\lambda_{\text{HP}} = \delta^2$) 및 성분 분해 규칙 $R$ | 플랑크 이하 보정과 우주 성분 읽기의 유효 구현 |
@@ -413,7 +465,10 @@ quadratic cross-Hessian이 0이므로 quadratic block 하나만으로는 충분�
 
 ### 6.5 동료평가 직전 체크리스트
 
-- 정의가 완결되었는가: $\mathcal{K}$는 경로적분 헤시안 기댓값으로 구성되었고(2절), $\chi$의 동역학은 유클리드 열핵 흐름으로 닫혔다(2절). 잔여 열린 항목: $\chi$를 독립 장으로 승격할 경우의 $f(\Phi)$ 구체형.
+- 정의가 완결되었는가: \(\widetilde{\mathcal K}\)는 보통 Hessian
+  기댓값인 후보일 뿐이다. field-space connection, gauge/ghost,
+  renormalization과 metric variation을 포함한 공변 작용이 아직 열려
+  있다. \(\chi\)를 독립 장으로 승격할 경우의 \(f(\Phi)\)도 미정이다.
 - 정리와 가정이 분리되었는가: A2에서 SM 혼합 대수와 additive
   fold-operator 선택 및 quantum-to-branching bridge를 분리하고,
   A3a는 균일 scalar 자기일관 조건, A3b와 A4는 식별/현상론으로 분리한다.
@@ -436,7 +491,7 @@ quadratic cross-Hessian이 0이므로 quadratic block 하나만으로는 충분�
 | $d=3$ | P1 + 최소 재귀 타입 폐쇄 | metric/orientation 외 추가구조 없이 2-form fold를 1-form 입력 타입으로 되돌리는 Hodge type closure의 유일해 |
 | $\alpha_{\text{total}}=1/(2\pi)$ | P1 | 주기 정규화($\pi,i$)에 의한 시간 그리드 상수화 |
 | $(1-\varepsilon^2)$ 되먹임 | P2 | 단순 $e^{-D_{\text{eff}}}$가 아니라 나머지가 되먹임 → **부트스트랩 고정점** |
-| $\nabla^\mu\mathcal{K}_{\mu\nu}=0$ | P2 | 물질↔접힘 에너지 이전, 총 연산비용 불변 |
+| $\nabla^\mu T_{\mu\nu}^{\mathrm{total}}=0$ | P2 + 미분동형사상 불변 작용 + on-shell 운동방정식 | Noether identity 아래의 조건부 총 stress 보존. P2나 Bianchi만으로 임의의 Hessian 후보에 강제되지 않음 |
 | $\sum\Omega=1$, 나머지=암흑섹터 | P2 | 살아남음=바리온(A3b), 나머지=DM+DE(A4) |
 
 **조건부 코어 계산 (관측 bridge와 분리):**

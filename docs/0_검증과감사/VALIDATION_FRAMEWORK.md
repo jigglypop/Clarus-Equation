@@ -65,6 +65,34 @@ python -m pytest tests/test_multispace_bootstrap.py -q
 
 따라서 스칼라 모델선택 게이트의 `algebraic_status=PASS`를 벡터 다공간 게이트의 통과로 전용해서는 안 된다.
 
+### A1에서 Q0 공변 작용으로 가는 국소 게이트
+
+보통 action Hessian을 곧바로 공변 텐서나 stress tensor로 읽는 비약을
+막기 위해 다음 국소 게이트를 둔다.
+
+- 실행 게이트: `examples/physics/a1_q0_action_gate.py`
+- 구현: `reality_stone/python/reality_stone/clarus/a1_q0_action_bridge.py`
+- 회귀 테스트: `tests/test_a1_q0_action_bridge.py`
+- 전체 통과 조건:
+  `A1_Q0_COVARIANT_ACTION_LOOP.md`의 `Q0.0`–`Q0.8`
+
+```powershell
+python examples/physics/a1_q0_action_gate.py
+python -m pytest tests/test_a1_q0_action_bridge.py -q
+```
+
+이 게이트는 비선형 장 좌표변환에서 보통 Hessian에 기울기 비례 추가항이
+생기고 connection 보정이 이를 제거한다는 국소 반례를 재현한다. 또한
+\(Z_2,\ v_\Phi=0\) 포탈에서 \(h\)-\(\Phi\) cross-Hessian은 0이지만
+\(h\Phi^2\), \(h^2\Phi^2\) vertex가 남는다는 대수도 검산한다. 같은
+정규화의 레거시 \(43.77\,\mathrm{GeV}\) 포탈 benchmark는 공급된
+비가시 분기비 상한 \(0.11\)에 대해 약 \(0.772\)를 내므로 실패한다.
+
+통과해도 `covariant_action_complete=False`,
+`stress_tensor_derived=False`, `spectral_density_derived=False`다.
+전체 CE+SM action, field-space geometry, gauge/ghost, measure,
+renormalization, metric variation과 물리 pole은 아직 `OPEN`이다.
+
 ### 양자 jump에서 분지과정으로 가는 구조 게이트
 
 복소 양자진폭이나 Hessian의 비대각 원소를 곧바로 비음수 Poisson
