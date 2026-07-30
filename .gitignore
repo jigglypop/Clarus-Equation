@@ -31,6 +31,8 @@ target/
 !benchmarks/neural_language_blind_synthetic_v1.json
 !benchmarks/tafazoli_processed_audit_v1.json
 !benchmarks/neural_code_reverse_engineering_v1.json
+!benchmarks/tafazoli_diffusion_probe_v1.json
+!benchmarks/tafazoli_diffusion_probe_v1_result.json
 *.pt
 *.pth
 *.csv

@@ -79,6 +79,7 @@ $$
 |------|------|------|
 | runtime Clarus cell / bitfield | `7_AGI/12_Equation.md` | software kernel dynamics; 발견된 생물학적 assembly가 아님 |
 | neural Clarus assembly / instruction 후보 | `6_뇌/10_신경프로그래밍언어_역공학.md` | task-code·표현 interface 골격 `YES`; stationary·switching·common-successor·state-hierarchy proxy와 language identification `NO`; 다음은 다영역 local-DSL/interface·최소 충분 회로·실제 합성·인과 gate |
+| neural transition-noise / diffusion probe | `6_뇌/10_신경프로그래밍언어_역공학.md` §19 | 시험한 여섯 family 중 local affine+isotropic Gaussian proxy가 model-relative winner; Gaussianity 자체, state·time·anisotropic 지문, 300ms stationary single-OU scale consistency는 `NO`; 생물학적·생성형·score·인과·spatial graph 기전도 식별되지 않음 |
 | geometry coupling / graph | `7_AGI/2_Architecture.md`, `6_뇌/05_실험근거.md` | coupling / geometry |
 | wake / NREM / REM | `7_AGI/3_Sleep.md`, `6_뇌/05_실험근거.md` | mode update |
 | hippocampus / replay | `7_AGI/3_Sleep.md`, `6_뇌/05_실험근거.md` | hippocampus / replay |

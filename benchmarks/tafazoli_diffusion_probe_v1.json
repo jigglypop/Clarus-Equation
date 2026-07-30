@@ -1,0 +1,160 @@
+{
+  "schema_version": "clarus-tafazoli-diffusion-probe/v1",
+  "scope": "label_blind_session_local_drift_diffusion_screen",
+  "description": "A low-cost screen of Gaussian transition-noise structure around a continuous drift model. This can identify predictive diffusion fingerprints in the processed snapshot; it cannot identify a biological diffusion algorithm or score-based generative reverse diffusion.",
+  "snapshot_constraints": {
+    "official_classifier_md5": "04e42460ccae245ec16fcd9801ddea4a",
+    "recording_session_count": 27,
+    "pseudo_trial_row_count": 36,
+    "timepoint_count": 81,
+    "count_window_seconds": 0.1,
+    "time_step_seconds": 0.01,
+    "primary_lag_bins": 10,
+    "primary_stride_bins": 10,
+    "allowed_dimensions_one_based": [
+      1,
+      3
+    ],
+    "dimension_rows_are_paired_trials": false,
+    "simultaneous_403_neuron_population": false
+  },
+  "cross_validation": {
+    "outer_whole_trial_folds": 6,
+    "outer_train_residual_calibration_folds": 3,
+    "preprocessing": "outer_train_only_anscombe_standardize_event_mean_optional_pca_axis_scale",
+    "primary_inference_unit": "recording_session_x_dimension",
+    "event_mean_modes": [
+      "raw",
+      "train_fold_event_mean_removed"
+    ],
+    "animals_reported_separately": [
+      "Chico",
+      "Silas"
+    ]
+  },
+  "primary_covariance_ladder": [
+    {
+      "family_id": "ou_iso",
+      "drift": "affine_var_order_1",
+      "diffusion": "one_global_isotropic_variance",
+      "role": "incumbent"
+    },
+    {
+      "family_id": "ou_diag",
+      "drift": "same_affine_var_order_1",
+      "diffusion": "one_constant_variance_per_latent_axis",
+      "role": "constant_anisotropy_screen"
+    },
+    {
+      "family_id": "ou_full_shrink",
+      "drift": "same_affine_var_order_1",
+      "diffusion": "constant_full_covariance",
+      "fixed_isotropic_shrinkage": 0.1,
+      "role": "constant_correlated_diffusion_screen"
+    },
+    {
+      "family_id": "ou_time_scale",
+      "drift": "same_affine_var_order_1",
+      "diffusion": "event_anchor_dependent_scalar_scale_of_constant_full_covariance",
+      "role": "event_time_confound_control"
+    },
+    {
+      "family_id": "ou_state_scale_k2",
+      "drift": "same_affine_var_order_1",
+      "diffusion": "current_state_k2_dependent_scalar_scale_of_constant_full_covariance",
+      "gate": "outer_train_current_state_only",
+      "role": "state_dependent_transition_noise_screen"
+    },
+    {
+      "family_id": "quadratic_drift_full_q",
+      "drift": "fixed_ridge_quadratic_current_state",
+      "ridge_alpha": 1.0,
+      "diffusion": "constant_full_covariance",
+      "fixed_isotropic_shrinkage": 0.1,
+      "role": "mean_misspecification_control"
+    }
+  ],
+  "secondary_sensitivities": {
+    "observed_markov_order": {
+      "orders": [
+        1,
+        2,
+        3
+      ],
+      "common_anchor_depth": 3,
+      "covariance": "constant_full_shrink",
+      "interpretation": "A deeper-order win rejects first-order Markovity only for the observed rank-limited latent projection."
+    },
+    "ou_semigroup": {
+      "base_lag_bins": 10,
+      "heldout_horizons": [
+        2,
+        3
+      ],
+      "comparison": "frozen_composition_of_the_100ms_model_vs_direct_horizon_refit",
+      "interpretation": "Lag scores are sensitivities on one trajectory and are not independent evidence units."
+    },
+    "time_reversal": {
+      "enabled": true,
+      "role": "equilibrium_or_driven_descriptive_classification_only",
+      "not_required_for_diffusion_survival": true,
+      "not_score_based_reverse_diffusion": true
+    }
+  },
+  "screening_thresholds": {
+    "minimum_codelength_advantage_bits_per_scalar": 0.01,
+    "minimum_session_unit_win_fraction": 0.5,
+    "semigroup_max_excess_bits_per_scalar_vs_direct_refit": 0.02,
+    "required_groups": [
+      "raw_all",
+      "raw_Chico",
+      "raw_Silas",
+      "event_mean_removed_all",
+      "event_mean_removed_Chico",
+      "event_mean_removed_Silas"
+    ]
+  },
+  "state_dependent_survivor_requires_advantage_over": [
+    "ou_full_shrink",
+    "ou_time_scale",
+    "quadratic_drift_full_q"
+  ],
+  "synthetic_positive_controls": [
+    "rotated_anisotropic_ou",
+    "state_dependent_scalar_diffusion",
+    "time_only_variance_schedule",
+    "gaussian_ar2",
+    "reversible_ou",
+    "rotational_irreversible_ou"
+  ],
+  "synthetic_negative_controls": [
+    "homoscedastic_isotropic_ou",
+    "quadratic_drift_with_constant_noise",
+    "event_time_mean_and_variance_only",
+    "trial_deranged_successor"
+  ],
+  "checkpoint_key_fields": [
+    "source_md5",
+    "schema_version",
+    "config_fingerprint",
+    "session_index_one_based"
+  ],
+  "checkpoint_contents": [
+    "dimension_1_and_3",
+    "raw_and_event_mean_removed",
+    "every_declared_outer_fold",
+    "every_primary_family"
+  ],
+  "claim_locks": [
+    "gaussian_transition_is_not_a_biological_diffusion_algorithm",
+    "anisotropic_residual_can_include_measurement_or_hidden_state_noise",
+    "state_dependent_variance_can_reflect_mean_drift_misspecification",
+    "coarse_semigroup_compatibility_is_not_a_continuous_time_generator_identification",
+    "projected_non_markovity_is_not_full_neural_state_non_markovity",
+    "forward_reverse_asymmetry_is_not_causality",
+    "reverse_fit_is_not_score_based_reverse_diffusion",
+    "processed_snapshot_cannot_test_denoising_diffusion",
+    "single_lpfc_snapshot_cannot_test_spatial_graph_diffusion",
+    "failure_is_not_absence_of_diffusion_in_the_brain"
+  ]
+}

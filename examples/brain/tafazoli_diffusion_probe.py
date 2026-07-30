@@ -476,10 +476,9 @@ def main() -> None:
         run_reverse_classification=not args.no_reverse_classification,
     )
     source_file_md5 = verify_official_classifier_checksum(args.classifier_file)
-    dimension_one, dimension_three = load_tafazoli_train_dimensions(
-        args.classifier_file
-    )
     session_specs = recovered_session_specs()
+    dimension_one = None
+    dimension_three = None
     checkpoints = []
     for ordinal, session in enumerate(session_specs, start=1):
         path = _checkpoint_path(args.checkpoint_dir, session)
@@ -492,6 +491,10 @@ def main() -> None:
             )
             action = "resumed"
         else:
+            if dimension_one is None or dimension_three is None:
+                dimension_one, dimension_three = load_tafazoli_train_dimensions(
+                    args.classifier_file
+                )
             columns = slice(
                 session.column_start_zero_based,
                 session.column_stop_exclusive,

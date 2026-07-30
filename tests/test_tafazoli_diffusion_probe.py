@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import replace
 import inspect
 import json
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -356,4 +357,59 @@ def test_small_report_is_deterministic_serializable_and_leakage_locked() -> None
         and not fold.d1_d3_rows_treated_as_paired_trials
         for item in first.results
         for fold in item.fold_results
+    )
+
+
+def test_protocol_and_official_result_keep_diffusion_claims_separate() -> None:
+    repository_root = Path(__file__).resolve().parents[1]
+    protocol = json.loads(
+        (
+            repository_root / "benchmarks" / "tafazoli_diffusion_probe_v1.json"
+        ).read_text(encoding="utf-8")
+    )
+    result = json.loads(
+        (
+            repository_root
+            / "benchmarks"
+            / "tafazoli_diffusion_probe_v1_result.json"
+        ).read_text(encoding="utf-8")
+    )
+
+    assert protocol["schema_version"] == "clarus-tafazoli-diffusion-probe/v1"
+    assert protocol["snapshot_constraints"]["allowed_dimensions_one_based"] == [1, 3]
+    assert protocol["screening_thresholds"] == {
+        "minimum_codelength_advantage_bits_per_scalar": 0.01,
+        "minimum_session_unit_win_fraction": 0.5,
+        "semigroup_max_excess_bits_per_scalar_vs_direct_refit": 0.02,
+        "required_groups": [
+            "raw_all",
+            "raw_Chico",
+            "raw_Silas",
+            "event_mean_removed_all",
+            "event_mean_removed_Chico",
+            "event_mean_removed_Silas",
+        ],
+    }
+    assert result["official_checksum_verified"]
+    assert result["completed_grid"]["session_dimension_mode_units"] == 108
+    assert result["observed_markov_order"]["order_1_units"] == 108
+    assert (
+        result["claim_verdicts"][
+            "model_relative_local_affine_isotropic_gaussian_proxy_winner"
+        ]
+        == "YES"
+    )
+    for key in (
+        "gaussian_innovation_law_identified",
+        "state_dependent_noise_proxy_survived_controls",
+        "biological_diffusion_identified",
+        "generative_reverse_process_identified",
+        "score_function_identified",
+        "causal_diffusion_mechanism_identified",
+        "spatial_graph_diffusion_identified",
+    ):
+        assert result["claim_verdicts"][key] == "NO"
+    assert (
+        result["claim_verdicts"]["biological_diffusion_exists_or_is_absent"]
+        == "TEST_UNAVAILABLE"
     )

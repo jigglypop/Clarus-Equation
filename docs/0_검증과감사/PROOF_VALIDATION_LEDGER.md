@@ -592,3 +592,63 @@ TEST_UNAVAILABLE brain_programming_language_exists
 이 판정은 `benchmarks/neural_code_reverse_engineering_v1.json`에서 잠근다.
 현재 상태명은
 `TASK_CODE_SKELETON_RECONSTRUCTED_NEURAL_LANGUAGE_NOT_IDENTIFIED`다.
+
+### 15.7 session-local 확산·잡음 프록시 판정
+
+공식 classifier MAT의 MD5를 검증한 뒤, 복원된 27개 physical session에서
+D1·D3를 서로 대응하는 trial로 취급하지 않고 각각 분석했다. raw와
+train-fold event-time mean 제거 민감도를 합쳐
+`27 sessions × 2 dimensions × 2 preprocessing = 108`개
+session-level unit을 얻었다. 공분산은 outer-training trial 내부 OOF
+residual로만 맞췄고, outer-test target은 공분산이나 state gate에
+사용하지 않았다.
+
+```powershell
+uv run --isolated --with scipy python `
+  examples/brain/tafazoli_diffusion_probe.py
+python -m pytest tests/test_tafazoli_diffusion_probe.py -q
+```
+
+공분산 ladder 실행은 `YES`다. 그러나 current-state scale이
+full covariance, event-time scale, quadratic-mean drift를 모두 이겨야
+한다는 사전등록 gate에서 state-dependent noise proxy는 `NO`였다.
+
+| 판정량 | raw | event-time mean 제거 |
+|---|---:|---:|
+| state scale의 full covariance 대비 code 이득 (bit/scalar) | -0.2521 | -0.2544 |
+| 세 대조군 동시 승리 unit 비율 | 0 | 0 |
+| 200 ms semigroup median excess (bit/scalar) | 0.01935 | 0.01720 |
+| 200 ms semigroup 통과 비율 | 0.519 | 0.648 |
+| 300 ms semigroup median excess (bit/scalar) | 0.06677 | 0.05927 |
+| 300 ms semigroup 통과 비율 | 0.0185 | 0.0185 |
+
+공통 anchor와 parameter penalty로 비교한 Markov order는 108/108 unit에서
+order 1이 선택됐다. order 1의 code 이득은 order 2 대비
+`+0.3177 bit/scalar`, order 3 대비 `+0.6411 bit/scalar`였다. 시험한
+family 안에서는 **국소 affine + isotropic Gaussian proxy가 상대
+승자**라는 뜻이다. 비-Gaussian family와 절대 적합도는 비교하지 않았으므로
+Gaussian innovation law 자체는 식별하지 않았다. 하나의 stationary OU
+법칙이 300 ms까지 성립한다는 주장도 지지하지 않는다.
+
+forward/reverse 비교는 primary gate가 아닌 기술적 분류다. 108개 unit 중
+reverse lower-code가 73개, forward lower-code가 35개였으며, 이를
+generative reverse process나 인과 방향의 증거로 세지 않는다.
+
+```text
+YES              session_local_covariance_ladder_completed
+YES              model_relative_local_affine_isotropic_proxy_winner
+NO               gaussian_innovation_law_identified
+NO               state_dependent_noise_proxy_survived_controls
+NO               biological_diffusion_identified
+NO               generative_reverse_process_identified
+NO               score_function_identified
+NO               causal_diffusion_mechanism_identified
+NO               spatial_graph_diffusion_identified
+TEST_UNAVAILABLE biological_diffusion_exists_or_is_absent
+```
+
+따라서 다음 식별 난제는 non-autonomous/input-driven 또는 hidden-state SDE와
+generic regression/noise를 구분하는 일이다. 이를 위해서는 raw simultaneous
+trials, 더 조밀하면서 서로 독립인 시간창, multi-area 기록, 선택적
+perturbation이 필요하다. 현재 processed snapshot만으로 생물학적 확산의
+보편적 존재나 부재를 판정하지 않는다.

@@ -52,6 +52,7 @@
 | 공학적 활용 | `Phenomenology/Open test` | 수식 구조는 제안 가능하지만 물성/소자/초전도체 설계는 외부 실험 gate 없이는 증명 아님 |
 | 뇌/생명 문서 | `Phenomenology/Open test` | 데이터셋 gate와 식별성 검사가 핵심이며 코어 정리의 직접 귀결이 아님 |
 | 뇌 프로그래밍 언어 / neural Clarus assembly | `Open test` | 과제 설계의 `READ_*→ROUTE_*` 골격, 공유 표현 frontend/backend 후보와 빠진 `S2` 예측은 `YES`; 공식 processed cross-decoding과 27개 session 경계도 재현했다. 그러나 stationary·state-switching·잠재 common-successor·D1↔D3 frozen transfer·state-parent+rank1 proxy는 모두 `NO`다. 생물학적 callee·과제 상속·고정-neuron opcode·언어 식별도 `NO`, 그 구조의 보편적 존재·부재, unseen composition과 인과 검사는 `TEST_UNAVAILABLE`다. |
+| Tafazoli 확산/잡음 프록시 | `Open test` | 공식 파일 MD5와 27개 session을 검증하고 session×D1/D3×raw/demean 108개 단위를 완주했다. covariance ladder 완료는 `YES`지만 state-dependent noise proxy는 `NO`: state-vs-full은 raw -0.2521, demean -0.2544 bits/scalar이고 joint win은 0이다. Markov order 1은 108/108이며 order 2·3 대비 이점은 각각 +0.3177, +0.6411 bits/scalar다. 200 ms semigroup은 경계선(raw median excess 0.01935, pass 0.519; demean 0.01720, pass 0.648), 300 ms는 실패(raw 0.06677, 0.0185; demean 0.05927, 0.0185)했다. reverse 73/forward 35는 기술적 분류일 뿐 gate가 아니다. 시험한 family 중 local affine+isotropic Gaussian proxy가 상대 승자지만 비-Gaussian family와 절대 적합도를 검사하지 않아 Gaussianity는 식별하지 않았다. 생물학적 확산의 보편적 존재·부재는 `TEST_UNAVAILABLE`; 생물학적 확산, 생성적 reverse, score, 인과 기전, 공간 그래프 식별은 모두 `NO`다. |
 | AGI/런타임 문서 | `Open test` | 구현 명세와 벤치마크 영역이다. 물리 상수 증명과 분리해야 함 |
 | 리만/attention 문서 | `Phenomenology/Open test` | 구조적 아이디어와 엔지니어링 성능 검증의 문제 |
 
@@ -86,6 +87,11 @@ uv run --extra dev python -m pytest tests\test_bootstrap_solver.py tests\test_di
    shared execution instruction 판정은 `NO`다. 다음 `Open test`는 전뇌
    공통 opcode가 아니라 다영역 `local DSL + narrow communication
    interface`, 최소 충분 회로, 실제 unseen composition과 인과 개입이다.
+10. 같은 snapshot의 diffusion probe는 covariance ladder와 1차 Markov
+    적합성을 확인했지만 state-dependent noise proxy와 300 ms semigroup을
+    통과하지 못했다. reverse 우세 방향은 기술 통계일 뿐이며, 이 결과로
+    생물학적 확산·생성적 reverse·score·인과 기전·공간 그래프를 식별하지
+    않는다.
 
 ## 증명 완료 경계
 

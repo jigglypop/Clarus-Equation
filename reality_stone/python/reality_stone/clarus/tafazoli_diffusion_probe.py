@@ -42,6 +42,7 @@ from .tafazoli_session_operator_probe import (
 
 
 SCHEMA_VERSION = "clarus-tafazoli-diffusion-probe/v1"
+IMPLEMENTATION_REVISION = "semigroup-common-complexity-basis/v2"
 PROBE_SCOPE = "label_blind_session_local_diffusion_covariance_proxy"
 
 YES = "YES"
@@ -394,7 +395,10 @@ def _derived_seed(base_seed: int, *tokens: Any) -> int:
 
 def config_fingerprint(config: DiffusionProbeConfig) -> str:
     payload = json.dumps(
-        asdict(config),
+        {
+            "config": asdict(config),
+            "implementation_revision": IMPLEMENTATION_REVISION,
+        },
         sort_keys=True,
         separators=(",", ":"),
     ).encode("utf-8")
@@ -1376,11 +1380,12 @@ def _semigroup_sensitivity(
             state_gate=direct_noise.state_gate,
             model_selection_bits=log2(2.0),
         )
+        comparison_train_vector_count = direct_oof.vector_count
         direct_score = score_multivariate_gaussian(
             f"DIRECT_{horizon}_STEP_FULL",
             direct_residuals,
             direct_noise,
-            oof_train_vector_count=direct_oof.vector_count,
+            oof_train_vector_count=comparison_train_vector_count,
             drift_parameter_count=direct_drift.parameter_count,
             anchor_indices=anchors,
             current=current,
@@ -1418,13 +1423,28 @@ def _semigroup_sensitivity(
             f"FROZEN_SEMIGROUP_{horizon}",
             frozen_residuals,
             propagated_noise,
-            oof_train_vector_count=primary.linear_oof.vector_count,
+            oof_train_vector_count=comparison_train_vector_count,
             drift_parameter_count=primary.linear_drift.parameter_count,
             anchor_indices=anchors,
             current=current,
         )
         if frozen_score.test_vector_count != direct_score.test_vector_count:
             raise RuntimeError("semigroup and direct refit used different targets")
+        if (
+            frozen_score.drift_parameter_count
+            != direct_score.drift_parameter_count
+            or frozen_score.covariance_parameter_count
+            != direct_score.covariance_parameter_count
+            or frozen_score.gate_parameter_count
+            != direct_score.gate_parameter_count
+            or frozen_score.model_selection_bits
+            != direct_score.model_selection_bits
+            or frozen_score.bic_parameter_bits
+            != direct_score.bic_parameter_bits
+        ):
+            raise RuntimeError(
+                "semigroup comparison candidates must share one complexity basis"
+            )
         scalar_count = (
             frozen_score.test_vector_count * frozen_score.latent_rank
         )

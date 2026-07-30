@@ -1,0 +1,134 @@
+{
+  "schema_version": "clarus-tafazoli-diffusion-probe-result/v1",
+  "protocol_schema_version": "clarus-tafazoli-diffusion-probe/v1",
+  "source_file_md5": "04e42460ccae245ec16fcd9801ddea4a",
+  "official_checksum_verified": true,
+  "scope": "processed_session_local_linear_gaussian_diffusion_proxy",
+  "completed_grid": {
+    "physical_sessions": 27,
+    "dimensions": [
+      1,
+      3
+    ],
+    "event_mean_modes": [
+      "raw",
+      "train_fold_event_mean_removed"
+    ],
+    "session_dimension_mode_units": 108,
+    "outer_whole_trial_folds": 6,
+    "covariance_oof_folds": 3
+  },
+  "thresholds": {
+    "minimum_codelength_advantage_bits_per_scalar": 0.01,
+    "minimum_session_unit_win_fraction": 0.5,
+    "semigroup_max_excess_bits_per_scalar": 0.02
+  },
+  "primary_all_unit_medians": {
+    "raw": {
+      "diag_over_iso_total_bits_per_scalar": -0.06896893672906979,
+      "full_over_iso_total_bits_per_scalar": -0.17553066472058987,
+      "full_over_iso_heldout_nll_bits_per_scalar": -0.002741847741564829,
+      "time_over_full_total_bits_per_scalar": -0.1777631067134351,
+      "time_over_full_heldout_nll_bits_per_scalar": -0.0036667929094577056,
+      "state_over_full_total_bits_per_scalar": -0.2521114645990677,
+      "state_over_full_heldout_nll_bits_per_scalar": -0.000060669810606373,
+      "state_over_time_total_bits_per_scalar": -0.07545581856163591,
+      "state_over_quadratic_total_bits_per_scalar": 0.40644930179017347,
+      "joint_state_survivor_win_fraction": 0.0
+    },
+    "train_fold_event_mean_removed": {
+      "diag_over_iso_total_bits_per_scalar": -0.06941204313499982,
+      "full_over_iso_total_bits_per_scalar": -0.17760004935197116,
+      "full_over_iso_heldout_nll_bits_per_scalar": -0.004464422112340771,
+      "time_over_full_total_bits_per_scalar": -0.1847976177047086,
+      "time_over_full_heldout_nll_bits_per_scalar": -0.009302400358075946,
+      "state_over_full_total_bits_per_scalar": -0.2543840128827319,
+      "state_over_full_heldout_nll_bits_per_scalar": -0.0023332180942701175,
+      "state_over_time_total_bits_per_scalar": -0.0713320213607597,
+      "state_over_quadratic_total_bits_per_scalar": 0.40856814352353166,
+      "joint_state_survivor_win_fraction": 0.0
+    }
+  },
+  "animal_state_control_medians": {
+    "raw": {
+      "Chico": {
+        "state_over_full_bits_per_scalar": -0.2517603781081446,
+        "state_over_time_bits_per_scalar": -0.07437891292548952,
+        "joint_state_survivor_win_fraction": 0.0
+      },
+      "Silas": {
+        "state_over_full_bits_per_scalar": -0.25246226963384777,
+        "state_over_time_bits_per_scalar": -0.07583616026576948,
+        "joint_state_survivor_win_fraction": 0.0
+      }
+    },
+    "train_fold_event_mean_removed": {
+      "Chico": {
+        "state_over_full_bits_per_scalar": -0.2537107873582455,
+        "state_over_time_bits_per_scalar": -0.07108071399190688,
+        "joint_state_survivor_win_fraction": 0.0
+      },
+      "Silas": {
+        "state_over_full_bits_per_scalar": -0.2543840128827319,
+        "state_over_time_bits_per_scalar": -0.0713320213607597,
+        "joint_state_survivor_win_fraction": 0.0
+      }
+    }
+  },
+  "observed_markov_order": {
+    "order_1_units": 108,
+    "order_2_units": 0,
+    "order_3_units": 0,
+    "order_1_median_advantage_over_order_2_bits_per_scalar": 0.31769556767699103,
+    "order_1_median_advantage_over_order_3_bits_per_scalar": 0.6411264829126782,
+    "interpretation": "Compatibility of the rank-limited processed projection only."
+  },
+  "semigroup_unit_summary": {
+    "raw": {
+      "200ms": {
+        "median_frozen_excess_bits_per_scalar": 0.019349801618960546,
+        "within_tolerance_fraction": 0.5185185185185185
+      },
+      "300ms": {
+        "median_frozen_excess_bits_per_scalar": 0.06677429295445599,
+        "within_tolerance_fraction": 0.018518518518518517
+      }
+    },
+    "train_fold_event_mean_removed": {
+      "200ms": {
+        "median_frozen_excess_bits_per_scalar": 0.017197985207545306,
+        "within_tolerance_fraction": 0.6481481481481481
+      },
+      "300ms": {
+        "median_frozen_excess_bits_per_scalar": 0.059265114469181895,
+        "within_tolerance_fraction": 0.018518518518518517
+      }
+    },
+    "interpretation": "The stationary 100ms affine-Gaussian law is borderline at 200ms and not scale-consistent at 300ms."
+  },
+  "time_direction_descriptive_only": {
+    "forward_lower_code_units": 35,
+    "reverse_lower_code_units": 73,
+    "used_as_diffusion_gate": false,
+    "interpretation": "Not causality and not score-based reverse diffusion."
+  },
+  "claim_verdicts": {
+    "session_local_covariance_ladder_completed": "YES",
+    "model_relative_local_affine_isotropic_gaussian_proxy_winner": "YES",
+    "gaussian_innovation_law_identified": "NO",
+    "single_stationary_ou_proxy_scale_consistent_through_300ms": "NO",
+    "state_dependent_noise_proxy_survived_controls": "NO",
+    "time_dependent_noise_proxy_survived_controls": "NO",
+    "anisotropic_noise_proxy_survived_controls": "NO",
+    "biological_diffusion_identified": "NO",
+    "biological_diffusion_exists_or_is_absent": "TEST_UNAVAILABLE",
+    "generative_reverse_process_identified": "NO",
+    "score_function_identified": "NO",
+    "causal_diffusion_mechanism_identified": "NO",
+    "spatial_graph_diffusion_identified": "NO"
+  },
+  "interpretive_lock": "The local affine-isotropic Gaussian family is only a winner among the tested proxies; Gaussianity itself and a neural diffusion algorithm were not identified.",
+  "checkpoint_directory": ".tmp/tafazoli_diffusion_probe_v1",
+  "checkpoint_file_count": 27,
+  "checkpoint_bytes": 6321766
+}
