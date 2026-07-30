@@ -267,6 +267,18 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--max-null-p", type=float, default=0.05)
     parser.add_argument("--min-subject-fraction", type=float, default=2.0 / 3.0)
     parser.add_argument(
+        "--probe-feature-variant",
+        choices=("raw", "innovation"),
+        default="raw",
+        help="Use raw probe rates or probe-minus-late-maintenance innovation",
+    )
+    parser.add_argument(
+        "--persistence-baseline",
+        choices=("mean", "task_load"),
+        default="mean",
+        help="Use a train mean or train-fitted memory-load task baseline",
+    )
+    parser.add_argument(
         "--include-all-locations",
         action="store_true",
         help="Diagnostic override: include MFC as well as MTL units",
@@ -290,6 +302,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             min_full_over_best_gain=args.min_full_over_best_gain,
             max_null_p=args.max_null_p,
             min_subject_fraction=args.min_subject_fraction,
+            probe_feature_variant=args.probe_feature_variant,
+            persistence_baseline=args.persistence_baseline,
         )
     except ValueError as exc:
         parser.error(str(exc))

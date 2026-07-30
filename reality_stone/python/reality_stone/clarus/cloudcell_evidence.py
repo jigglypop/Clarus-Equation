@@ -109,6 +109,8 @@ class CloudCellGateConfig:
     min_full_over_best_gain: float = 0.01
     max_null_p: float = 0.05
     min_subject_fraction: float = 2.0 / 3.0
+    probe_feature_variant: str = "raw"
+    persistence_baseline: str = "mean"
 
     def __post_init__(self) -> None:
         if not 0.5 <= self.train_fraction < 1.0:
@@ -125,6 +127,10 @@ class CloudCellGateConfig:
             raise ValueError("max_null_p must be in (0, 1]")
         if not 0.0 < self.min_subject_fraction <= 1.0:
             raise ValueError("min_subject_fraction must be in (0, 1]")
+        if self.probe_feature_variant not in {"raw", "innovation"}:
+            raise ValueError("probe_feature_variant must be 'raw' or 'innovation'")
+        if self.persistence_baseline not in {"mean", "task_load"}:
+            raise ValueError("persistence_baseline must be 'mean' or 'task_load'")
 
     def to_dict(self) -> dict[str, object]:
         return {
@@ -139,6 +145,8 @@ class CloudCellGateConfig:
             "min_full_over_best_gain": self.min_full_over_best_gain,
             "max_null_p": self.max_null_p,
             "min_subject_fraction": self.min_subject_fraction,
+            "probe_feature_variant": self.probe_feature_variant,
+            "persistence_baseline": self.persistence_baseline,
         }
 
 
@@ -404,6 +412,7 @@ def maintenance_persistence_gate(
     early: object,
     late: object,
     *,
+    covariates: object | None = None,
     train_fraction: float = 0.70,
     inner_train_fraction: float = 0.75,
     ridge_grid: Sequence[float] = DEFAULT_RIDGE_GRID,
@@ -418,6 +427,18 @@ def maintenance_persistence_gate(
         raise ValueError("persistence gate requires at least two units")
     if not np.isfinite(x).all() or not np.isfinite(y).all():
         raise ValueError("persistence arrays must be finite")
+    if covariates is None:
+        baseline_features = None
+    else:
+        baseline_features = np.asarray(covariates, dtype=float)
+        if (
+            baseline_features.ndim != 2
+            or baseline_features.shape[0] != x.shape[0]
+            or baseline_features.shape[1] < 1
+        ):
+            raise ValueError("covariates must be trials x features")
+        if not np.isfinite(baseline_features).all():
+            raise ValueError("covariates must be finite")
     split = _split_index(x.shape[0], train_fraction)
 
     baseline_scores: list[float] = []
@@ -433,6 +454,10 @@ def maintenance_persistence_gate(
         local = x[:, unit : unit + 1]
         cloud = x[:, other_units]
         full = x
+        if baseline_features is not None:
+            local = np.column_stack((baseline_features, local))
+            cloud = np.column_stack((baseline_features, cloud))
+            full = np.column_stack((baseline_features, full))
         model_scores = []
         for features in (local, cloud, full):
             ridge, _ = _select_regression_ridge(
@@ -448,8 +473,25 @@ def maintenance_persistence_gate(
                 ridge,
             )
             model_scores.append(_r2(target_test, prediction))
-        baseline = np.full(target_test.shape, float(np.mean(target_train)))
-        baseline_scores.append(_r2(target_test, baseline))
+        if baseline_features is None:
+            baseline_prediction = np.full(
+                target_test.shape,
+                float(np.mean(target_train)),
+            )
+        else:
+            baseline_ridge, _ = _select_regression_ridge(
+                baseline_features[:split],
+                target_train,
+                inner_train_fraction,
+                ridge_grid,
+            )
+            baseline_prediction = _fit_predict_regression(
+                baseline_features[:split],
+                target_train,
+                baseline_features[split:],
+                baseline_ridge,
+            )
+        baseline_scores.append(_r2(target_test, baseline_prediction))
         local_scores.append(model_scores[0])
         cloud_scores.append(model_scores[1])
         full_scores.append(model_scores[2])
@@ -484,9 +526,15 @@ def evaluate_subject(
         "inner_train_fraction": config.inner_train_fraction,
         "ridge_grid": config.ridge_grid,
     }
+    probe_features = data.probe
+    if config.probe_feature_variant == "innovation":
+        probe_features = data.probe - data.maintenance_late
     coding_inputs = {
         "memory_load_from_encoding": (data.encoding, data.memory_load),
-        "probe_membership_from_probe_epoch": (data.probe, data.probe_in_out),
+        "probe_membership_from_probe_epoch": (
+            probe_features,
+            data.probe_in_out,
+        ),
     }
     coding: dict[str, object] = {}
     coding_passes: list[bool] = []
@@ -520,9 +568,16 @@ def evaluate_subject(
             "passed": passed,
         }
 
+    persistence_covariates = None
+    if config.persistence_baseline == "task_load":
+        load_classes = np.unique(data.memory_load)
+        persistence_covariates = np.column_stack(
+            [data.memory_load == label for label in load_classes[1:]]
+        ).astype(float)
     persistence = maintenance_persistence_gate(
         data.maintenance_early,
         data.maintenance_late,
+        covariates=persistence_covariates,
         **common,
     )
     persistence_criteria = {
@@ -547,6 +602,8 @@ def evaluate_subject(
             "maintenance_late": "[maintenance midpoint, Probe onset)",
             "probe": "[Probe onset, Response onset)",
             "rates": "spike count divided by each causal window duration",
+            "probe_feature_variant": config.probe_feature_variant,
+            "persistence_baseline": config.persistence_baseline,
         },
         "coding": coding,
         "maintenance_persistence": {

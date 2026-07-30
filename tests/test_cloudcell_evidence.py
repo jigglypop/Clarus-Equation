@@ -66,6 +66,40 @@ def test_maintenance_persistence_separates_local_cloud_and_full_models():
     assert persistence.full_gain_over_best_partial > 0.01
 
 
+def test_task_covariate_baseline_is_shared_by_all_persistence_models():
+    data = make_cloudcell_trials(seed=19)
+    load_classes = np.unique(data.memory_load)
+    task_load = np.column_stack(
+        [data.memory_load == label for label in load_classes[1:]]
+    ).astype(float)
+
+    persistence = maintenance_persistence_gate(
+        data.maintenance_early,
+        data.maintenance_late,
+        covariates=task_load,
+    )
+
+    assert persistence.valid_units == data.n_units
+    assert persistence.local_gain_over_baseline > 0.25
+    assert persistence.full_gain_over_best_partial > 0.01
+
+
+def test_probe_innovation_and_task_baseline_are_explicit_exploratory_variants():
+    data = make_cloudcell_trials(seed=21)
+    config = CloudCellGateConfig(
+        n_shifts=9,
+        block_size=11,
+        max_null_p=0.10,
+        probe_feature_variant="innovation",
+        persistence_baseline="task_load",
+    )
+
+    subject = evaluate_panel([data], config)["subjects"][0]
+
+    assert subject["window_policy"]["probe_feature_variant"] == "innovation"
+    assert subject["window_policy"]["persistence_baseline"] == "task_load"
+
+
 def test_panel_can_pass_operational_signature_but_never_identifies_literal_monad():
     datasets = [
         make_cloudcell_trials(seed=23, subject_id="synthetic-a"),
