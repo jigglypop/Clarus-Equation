@@ -1,0 +1,143 @@
+{
+  "proof_type": "preregistered_computational_gate_verification",
+  "proof_passed": true,
+  "errors": [],
+  "scope": "held-out predictive information in measured same-unit history, conditional on the fixed nonlinear current-only baseline",
+  "non_scope": "biological causation, anatomical graph, CloudCell, monad, consciousness, or AGI",
+  "horizons": {
+    "1": {
+      "recordings_passed": 7,
+      "recording_count": 7,
+      "required": 5,
+      "recomputed_passed": true,
+      "recordings": [
+        {
+          "recording_id": "BrainScanner20170610_105634",
+          "recomputed_passed": true,
+          "median_delta_memory": 0.02298528194016669,
+          "positive_fraction_memory": 0.9906542056074766,
+          "null_p_value": 0.05
+        },
+        {
+          "recording_id": "BrainScanner20170613_134800",
+          "recomputed_passed": true,
+          "median_delta_memory": 0.022303793670028382,
+          "positive_fraction_memory": 1.0,
+          "null_p_value": 0.05
+        },
+        {
+          "recording_id": "BrainScanner20170424_105620",
+          "recomputed_passed": true,
+          "median_delta_memory": 0.030941130890747293,
+          "positive_fraction_memory": 1.0,
+          "null_p_value": 0.05
+        },
+        {
+          "recording_id": "BrainScanner20180709_100433",
+          "recomputed_passed": true,
+          "median_delta_memory": 0.01305756386797785,
+          "positive_fraction_memory": 1.0,
+          "null_p_value": 0.05
+        },
+        {
+          "recording_id": "BrainScanner20200309_151024",
+          "recomputed_passed": true,
+          "median_delta_memory": 0.042678490718421114,
+          "positive_fraction_memory": 1.0,
+          "null_p_value": 0.05
+        },
+        {
+          "recording_id": "BrainScanner20200309_153839",
+          "recomputed_passed": true,
+          "median_delta_memory": 0.042539937641564274,
+          "positive_fraction_memory": 0.9923664122137404,
+          "null_p_value": 0.05
+        },
+        {
+          "recording_id": "BrainScanner20200309_162140",
+          "recomputed_passed": true,
+          "median_delta_memory": 0.03762107171960383,
+          "positive_fraction_memory": 1.0,
+          "null_p_value": 0.05
+        }
+      ]
+    },
+    "6": {
+      "recordings_passed": 7,
+      "recording_count": 7,
+      "required": 5,
+      "recomputed_passed": true,
+      "recordings": [
+        {
+          "recording_id": "BrainScanner20170610_105634",
+          "recomputed_passed": true,
+          "median_delta_memory": 0.1949491153391012,
+          "positive_fraction_memory": 0.9906542056074766,
+          "null_p_value": 0.05
+        },
+        {
+          "recording_id": "BrainScanner20170613_134800",
+          "recomputed_passed": true,
+          "median_delta_memory": 0.2097530680129015,
+          "positive_fraction_memory": 1.0,
+          "null_p_value": 0.05
+        },
+        {
+          "recording_id": "BrainScanner20170424_105620",
+          "recomputed_passed": true,
+          "median_delta_memory": 0.21349441004032121,
+          "positive_fraction_memory": 0.990909090909091,
+          "null_p_value": 0.05
+        },
+        {
+          "recording_id": "BrainScanner20180709_100433",
+          "recomputed_passed": true,
+          "median_delta_memory": 0.11528660711230665,
+          "positive_fraction_memory": 1.0,
+          "null_p_value": 0.05
+        },
+        {
+          "recording_id": "BrainScanner20200309_151024",
+          "recomputed_passed": true,
+          "median_delta_memory": 0.23879615135639742,
+          "positive_fraction_memory": 0.9504132231404959,
+          "null_p_value": 0.05
+        },
+        {
+          "recording_id": "BrainScanner20200309_153839",
+          "recomputed_passed": true,
+          "median_delta_memory": 0.2561289580882753,
+          "positive_fraction_memory": 0.9694656488549618,
+          "null_p_value": 0.05
+        },
+        {
+          "recording_id": "BrainScanner20200309_162140",
+          "recomputed_passed": true,
+          "median_delta_memory": 0.2430184725009642,
+          "positive_fraction_memory": 0.9925373134328358,
+          "null_p_value": 0.05
+        }
+      ]
+    }
+  },
+  "inputs": {
+    "preregistration": {
+      "path": "artifacts\\agi\\local_memory_aml32_preregistration.json",
+      "sha256": "a6481c4819732765049966422d02ae034d3cd68d667c789c0f83738a7ecedb51"
+    },
+    "implementation": {
+      "path": "reality_stone\\python\\reality_stone\\clarus\\local_memory.py",
+      "sha256": "6032a76d33a0a2adc2671972248c550b00c600be418919c3c296924106475f86"
+    },
+    "results": {
+      "1": {
+        "path": "artifacts\\agi\\local_memory_aml32_h1_confirmatory.json",
+        "sha256": "690fad1e815299257131e197195982090f92805b9b7579bca6631636776f91fc"
+      },
+      "6": {
+        "path": "artifacts\\agi\\local_memory_aml32_h6_confirmatory.json",
+        "sha256": "8a6cc6336ab3eed0a701b022292431df4a12c2a421f4d7d1eea4c6e01dff491a"
+      }
+    }
+  }
+}

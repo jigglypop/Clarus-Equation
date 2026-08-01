@@ -42,7 +42,8 @@ _CRITIC = _CELLS["critic"]
 _TERMINALS = {"answer", "search", "draft"}
 
 
-def run_event(event: str, field: dict[str, Any] | None = None) -> DAGlet:
+def run_event(event: str, field: dict[str, Any] | None = None,
+              enforce: bool = True) -> DAGlet:
     field = field or {}
     daglet = DAGlet(id=f"d_{next(_ids):04d}", event=event)
 
@@ -84,5 +85,7 @@ def run_event(event: str, field: dict[str, Any] | None = None) -> DAGlet:
     # structural invariant: no labelled action bypassed the gate.
     daglet.violations = audit(daglet)
 
-    STORE.commit(daglet)
+    # fail-closed: a breaching DAGlet is refused by the store (AuditError)
+    # and never enters memory. enforce=False is an explicit diagnostic opt-out.
+    STORE.commit(daglet, enforce=enforce)
     return daglet

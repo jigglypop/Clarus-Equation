@@ -30,6 +30,26 @@ DAGlet이 **생성**된다. 같은 substrate가 입력에 따라 다른 DAGlet�
 - **runtime D_t** — 이번 이벤트의 실제 DAGlet (`server/scheduler.py`)
 - **memory M** — 과거 DAGlet, 점수, motif 조회 (`server/trace/store.py`)
 
+## 개발자 SDK (3줄 통합)
+
+```python
+from server.capability import Capability
+from server.sdk import ClarusGuard
+
+guard = ClarusGuard(db_path="guard.db")          # 영속화
+
+@guard.tool(side_effecting=True, cap=Capability.SEND_EMAIL, critical_args=("to",))
+def send_email(to, body): ...
+
+r = guard.call("send_email", user_text=user_msg, args={"to": to, "body": draft})
+if r.status == "pending":                         # human-in-the-loop
+    guard.approve(r.token)
+```
+
+`ClarusGuard`가 4개 코어(interception·capability·DAGlet·firewall)를 하나로
+묶는다. injected→refused, side-effect→승인 대기, read-only→실행, 전부
+SQLite에 기록·감사. 데모: `python -m examples.integrated_agent`.
+
 ## 빠른 실행
 
 서버 없이 헤드리스로 돌아간다:

@@ -1,3 +1,6 @@
 .venv-adojo/
 __pycache__/
 *.pyc
+guard.db
+guard.db-shm
+guard.db-wal

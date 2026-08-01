@@ -16,6 +16,14 @@ Interpretation: the 2->3 transition is QCD-dominant at LO, while the observed
 charged-current CKM element includes one electroweak-mixing projector averaged
 over a closed phase loop.  This is a Bridge/Phenomenology closure, not an Exact
 theorem.
+
+Cross-reference: among the wrong-phase controls below, "1 + delta/pi" is
+REJECTED as a multiplicative NLO phase correction to this tunneling amplitude.
+hubble_tension.py uses the same numerical ratio delta/pi as an ADDITIVE offset
+delta_eps_0 = -delta/pi in the eps-flow sector -- mathematically a different
+object (different layer, different role), so this rejection does not transfer
+there; but neither does this gate provide any support for it.  The cosmology
+usage remains an underived closure hypothesis (Open/Phenomenology).
 """
 
 from __future__ import annotations

@@ -41,6 +41,20 @@ CE 이론은 우주의 물리적 현상과 정보적 연산 과정을 하나의 
   `mixture affinity`, `multitype Poisson recursion`,
   `homogeneous diagonal sector`)를 우선한다.
 
+> **2026-07-30 type 정정.** 이 문서의 과거 bare 표기
+> \(\Phi=\delta^2S/\delta\gamma^2\)는 scalar equality가 아니다. 작용의
+> 2차 변분은 Hessian kernel/operator \(\mathcal H_\gamma\)이고, scalar가
+> 필요하면 probe와 boundary condition을 고정해
+> \[
+> \Phi_H[\gamma,\eta]
+> =
+> \frac{\langle\eta,\mathcal H_\gamma\eta\rangle}
+> {\langle\eta,\eta\rangle}
+> \]
+> 같은 투영을 정의한다. 활성 물리 분기는 독립 스칼라장
+> \(\phi\ne R\)이며 \(\phi\), \(\Phi_H\), Ricci scalar \(R\)를 서로
+> 동일시하지 않는다. 아래의 과거 \(\Phi\) 표기는 이 규약에 따라 읽는다.
+
 ### 1.2 문서 레벨 규약
 
 CE 문서를 읽을 때는 수식의 내용보다 먼저 그 수식의 **지위**를 고정한다.
@@ -90,7 +104,9 @@ $$
 
 | 기호 | 기본 의미 | 차원/형식 | 지위 | 문서 간 대응 |
 |---|---|---|---|---|
-| $\Phi(x)$ | 물리적 클라루스장 또는 경로 헤시안에서 유도된 억압 자유도 | 문맥 의존. 물리 장으로 쓰일 때는 장, 경로공간 유도에서 쓰일 때는 유효 억압량 | 정의 | `경로적분.md`의 핵심 장, 대상-대응 필드와 구분 |
+| \(\phi(x)\) | 독립 물리장 branch A | 시공간 scalar field; \(\phi\ne R\) | `Bridge` | action·EOM·결합을 별도로 고정 |
+| \(\mathcal H_\gamma\), \(\Phi_H[\gamma,\eta]\) | 경로공간 Hessian operator와 probe별 scalar readout | operator/kernel, 투영 후 scalar | `Tooling/Bridge` | 물리장 \(\phi\)와 동일하지 않음 |
+| 과거 \(\Phi(x)\) | 위 두 층을 섞어 쓴 legacy 기호 | 문맥 의존 | `Deprecated ambiguous notation` | 새 문서에서는 \(\phi\) 또는 \(\Phi_H\)로 분리 |
 | $\sigma(x)$ | 무차원 억압 계수 또는 차원당 억압 강도 | 무차원 | 정의 또는 유효 식별 | `참조/형식적_수학_모델과_증명.md`의 주기호. 핵심 문서의 무차원 억압량과 대응 |
 | $R(x)$ | Ricci scalar | 길이$^{-2}$ | 정의 | 물리적 곡률 |
 | $\tilde R(x)$ | 무차원화된 곡률 | 무차원 | 정의 | $\tilde R = R/R_c$ |
@@ -103,7 +119,8 @@ $$
 | $P_{\mathrm{survive}}$ | 접힘을 통과한 경로 분율 | 무차원 확률 | 정의 | $\varepsilon^2$와 동일시하려면 별도 식별 단계가 필요 |
 
 이 규약의 핵심은 다음 두 가지다.
-- $\Phi$와 $\sigma$는 자동으로 같은 기호가 아니다. 후속 문서에서 무차원화, 평균화, 곡률 식별을 거쳐 연결될 때만 대응된다.
+- \(\phi\), \(\Phi_H\), \(R\), \(\sigma\)는 자동으로 같은 양이 아니다. 후속
+  문서에서 단위, probe, 무차원화와 mapping을 명시할 때만 연결된다.
 - $\epsilon_*$, $\epsilon_{\mathrm{obs}}$, $\epsilon_{\mathrm{mass}}$, $\varepsilon^2$는 모두 "억압"과 관련 있지만 서로 다른 층의 변수다. 동등성은 정리가 아니라 별도의 동일시 조건 또는 모형 선택이다.
 
 ---
@@ -128,9 +145,9 @@ CE에서 $\mathcal{K}$는 "직관"이 아니라 최소한 아래 조건을 만�
 - (ii) 차원/단위가 명확(예: 에너지 밀도 혹은 이에 비례하는 양으로 환산 가능)
 - (iii) 표준 극한에서 $T_{\mu\nu}$와의 대응이 가능(대응원리)
 
-**현재 후보이며 아직 유도가 아니다.** A1의 직관을 형식화하는 첫 후보로
-경로적분 Hessian의 기댓값을 DeWitt condensed index \(A=(I,x)\),
-\(B=(J,y)\)를 써서
+**현재의 구체적 구성 후보이며 아직 유도가 아니다.** A1의 정정된 operator
+표기에서 경로적분 Hessian의 기댓값을 DeWitt condensed index
+\(A=(I,x)\), \(B=(J,y)\)로 쓰면
 
 $$
 \widetilde{\mathcal H}_{AB}
@@ -145,7 +162,9 @@ $$
 점을 가진 bi-local kernel이다. 이를 같은 점의 국소
 \(\widetilde{\mathcal K}_{\mu\nu}(x)\)로 읽으려면 smearing, trace,
 spacetime-index projection과 composite-operator renormalization을
-별도로 지정해야 한다.
+별도로 지정해야 한다. Hessian의 차원도 경로 좌표와
+delta-function/measure convention에 의존하므로, “체적 정규화 후 에너지
+밀도” 같은 차원 mapping을 따로 정의해야 한다.
 
 더 근본적으로 보통의 이차 미분은 비선형 field-space 좌표변환에서
 기울기에 비례하는 추가 항을 얻으므로 자동으로 텐서가 아니다. 정지점에서는
@@ -191,11 +210,23 @@ $$
 운동방정식 아래에서 따라온다. Bianchi 항등식만으로 임의의 Hessian 후보가
 stress tensor와 같아지거나 보존되는 것은 아니다.
 
-별도 스칼라 작용을 채택하고 metric variation을 수행하면
-\(T_{\mu\nu}^{\Phi}\)를 구성하고
+별도 독립 스칼라장 \(\phi\)의 공변 작용을 채택하고 metric variation을
+수행하면
 \(\mathcal K_{\mu\nu}=T_{\mu\nu}^{\mathrm{visible}}+
-T_{\mu\nu}^{\Phi}\)라는 모형을 제안할 수 있다. 이 동일시는 A1만의 직접
-귀결이 아니라 검증해야 할 `Bridge`다.
+T_{\mu\nu}^{\phi}\)라는 동역학 모형을 제안할 수 있다. 비최소 결합까지
+포함한 stress tensor 후보는
+
+$$
+T_{\mu\nu}^{\phi}
+=\nabla_\mu\phi\nabla_\nu\phi
+-g_{\mu\nu}\!\left[\tfrac12(\nabla\phi)^2+V(\phi)\right]
++\xi\!\left(g_{\mu\nu}\Box-\nabla_\mu\nabla_\nu+G_{\mu\nu}\right)\!\phi^2.
+$$
+
+이 식은 명시한 covariant action을 metric으로 변분했을 때만 정당화된다.
+Bianchi 항등식만으로 \(\nabla^\mu\mathcal K_{\mu\nu}=0\)이 자동으로
+따르지 않으며, 전체 field equation의 Noether identity가 필요하다. 따라서
+이 동일시는 A1만의 직접 귀결이 아니라 검증해야 할 `Bridge`다.
 
 **현재 지위:** `Open covariant-action bridge`. 공변 Hessian, gauge/ghost,
 renormalization, metric variation과 Noether identity가 한 작용에서
@@ -377,7 +408,7 @@ CE 마스터 공식은 **"우주가 정보를 처리하는 알고리즘"**이라
 
 | 공리 | 내용 | 상태 |
 |------|------|------|
-| **A1** | $\Phi = \delta^2 S / \delta\gamma^2$ (경로적분 수렴을 매개하는 유효 억압 자유도) | 공리 |
+| **A1** | \(\mathcal H_\gamma=\delta^2S[\gamma]\)는 경로공간 Hessian operator이고 \(\Phi_H[\gamma,\eta]\)는 probe별 투영값 | 형식 공리; 공변 국소장·stress tensor 대응은 `Bridge/Open` |
 | **A2** | $D_{\text{eff}} = d + \delta$, $\delta = \sin^2\theta_W\cos^2\theta_W$ | SM coherence 대수 + additive fold-operator의 조건부 구성; quantum-to-branching gate 진행 중 |
 | **A3a** | $\varepsilon^2 = \exp(-(1-\varepsilon^2)\cdot D_{\text{eff}})$ (부트스트랩 고정점 식) | 비음수 \(A\)와 독립 Poisson 재귀를 주면 1종류 또는 공통 행합 균일 sector에서 닫히는 `Exact conditional`. 그 sector를 실제 물리에 채택하는 일은 별도 `Selection/Bridge` |
 | **A3b** | $P_{\mathrm{survive}} \leftrightarrow \Omega_b$ | 관측 가능한 선택 측도에 대한 `Bridge` 규칙 |
@@ -425,7 +456,7 @@ quadratic cross-Hessian이 0이므로 quadratic block 하나만으로는 충분�
 
 | 3대 공리 (본 문서) | 경로적분 공리 (A1-A4) | 관계 |
 |---|---|---|
-| 제1공리 (연산-기하 등가성) | A1 ($\Phi = \delta^2 S/\delta\gamma^2$), 곡률 식별 | 보통 Hessian은 공변 텐서가 아니며, 공변 장공간 Hessian과 metric variation을 잇는 열린 bridge |
+| 제1공리 (연산-기하 등가성) | A1 (\(\mathcal H_\gamma\), probe 투영 \(\Phi_H\), 지정 sector의 곡률 operator 항) | 보통 Hessian은 공변 텐서가 아니며, Hessian--곡률--독립장--metric variation을 잇는 mapping은 별도 `Bridge/Open` |
 | 제2공리 (최소 연산 작용) | A3a (자기일관성 부트스트랩) | 최소 비용 경로를 고정점 구조로 표현 |
 | 제2공리의 관측 연결 | A3b ($P_{\mathrm{survive}} \leftrightarrow \Omega_b$) | 고정점 해를 우주론 양에 대응시키는 식별 단계 |
 | 제3공리 (해상도 한계) | 힉스 포탈 동정 ($\lambda_{\text{HP}} = \delta^2$) 및 성분 분해 규칙 $R$ | 플랑크 이하 보정과 우주 성분 읽기의 유효 구현 |
@@ -468,7 +499,8 @@ quadratic cross-Hessian이 0이므로 quadratic block 하나만으로는 충분�
 - 정의가 완결되었는가: \(\widetilde{\mathcal K}\)는 보통 Hessian
   기댓값인 후보일 뿐이다. field-space connection, gauge/ghost,
   renormalization과 metric variation을 포함한 공변 작용이 아직 열려
-  있다. \(\chi\)를 독립 장으로 승격할 경우의 \(f(\Phi)\)도 미정이다.
+  있다. 독립장 \(\phi\), Hessian readout \(\Phi_H\), Ricci scalar를
+  분리하고, \(\chi\)를 독립 장으로 승격할 경우의 \(f(\Phi)\)도 정해야 한다.
 - 정리와 가정이 분리되었는가: A2에서 SM 혼합 대수와 additive
   fold-operator 선택 및 quantum-to-branching bridge를 분리하고,
   A3a는 균일 scalar 자기일관 조건, A3b와 A4는 식별/현상론으로 분리한다.
@@ -517,6 +549,8 @@ quadratic cross-Hessian이 0이므로 quadratic block 하나만으로는 충분�
 **“형식(P1) + 보존 되먹임(P2) + 연결 국소성 + mixture-affinity +
 최소 재귀 타입 폐쇄 + additive quadratic channel rule”** 체계다.
 각 추가 원리는 장식이 아니라 특정 반례군을 제거한다. 관측 입력과
-스케일 승격의 수는 별도 provenance 표에서 센다. 이 체계를 복소
+스케일 승격의 수는 별도 provenance 표에서 센다. 현재 환원 불가능한
+수치 입력은 \(\alpha_s\) 하나이며, “조정 파라미터 0개”는 이 입력 외의
+조정량이 0개라는 뜻이지 “입력 0개”라는 뜻이 아니다. 이 체계를 복소
 경로진폭에 적용하려면 decoherence·완전양성·classical jump closure가
 추가로 필요하며, 이는 현재 Q-loop의 열린 bridge다.

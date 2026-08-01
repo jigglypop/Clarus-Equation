@@ -35,6 +35,8 @@ class Capability(str, Enum):
     TRANSFER = "transfer_funds"
     READ = "read"
     SEARCH = "search"
+    WRITE_FILE = "write_file"
+    RUN_COMMAND = "run_command"
 
 
 # trust lattice: higher = more trusted. USER is the only source of authority.
