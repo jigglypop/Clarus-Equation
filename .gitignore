@@ -43,6 +43,8 @@ target/
 !/artifacts/
 !/artifacts/agi/
 !/artifacts/agi/*.json
+!/artifacts/biology/
+!/artifacts/biology/origin_life_*.json
 
 # Build artifacts
 build/

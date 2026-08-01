@@ -1105,3 +1105,27 @@ prediction hash, hyperparameter, effect를 반드시 남긴다.
 형식 결과와 경험 결과를 섞지 않는다. 확률·상태 monad와 완전 snapshot에 대한
 소프트웨어 정리는 `Exact/PASS`지만, 그것은 실제 뉴런이 그 객체라는 증명이
 아니다.
+
+---
+
+## 16. 2026-07-31 후속 루프 결론
+
+후속 우선순위 루프의 완전한 수치와 판정은 다음 문서로 분리했다.
+
+- `23_Graph_Dynamics_Loop.md`: directed graph, AML310 0/4
+- `24_Manifold_Diffusion_Loop.md`: diffusion, AML310 최대 1/4
+- `25_Local_Temporal_Memory_Confirmation.md`: local temporal memory,
+  untouched AML32에서 \(h=1\) 7/7 및 \(h=6\) 7/7
+
+따라서 원래 CloudCell 명제는 두 부분으로 분해된다.
+
+\[
+\underbrace{\text{뉴런 측정 신호가 시간적 local state를 가진다}}
+_{\text{확인 패널에서 지지}}
+\quad\not\Rightarrow\quad
+\underbrace{\text{뉴런이 coded monadic CloudCell이다}}
+_{\text{현재 미증명}}.
+\]
+
+AGI에 의미 있는 최소 가정은 local recurrent state이며, population cloud,
+graph, diffusion은 이번 자료에서 그 위의 필수 구조로 확인되지 않았다.

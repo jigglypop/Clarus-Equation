@@ -1,0 +1,67 @@
+{
+  "artifact_type": "clarus_local_temporal_memory_preregistration",
+  "artifact_version": 1,
+  "status": "locked_before_any_AML32_activity_evaluation",
+  "claim": "aligned same-unit measurements at t-1 and t-2 contain held-out predictive information about x_i(t+h) beyond a nonlinear function of x_i(t)",
+  "claim_not_identified": "biological mechanism, anatomical graph, CloudCell, monad, consciousness, or AGI architecture",
+  "equation": "xhat_i[t+h] = beta0 + g(x_i[t]) + beta1*x_i[t-1] + beta2*x_i[t-2], g=[x,x^2,x^3,tanh(x)]",
+  "horizons_required": [
+    1,
+    6
+  ],
+  "split": {
+    "policy": "chronological 60/20/20",
+    "embargo_samples": 5,
+    "ridge_grid": [
+      0.01,
+      0.1,
+      1.0,
+      10.0,
+      100.0
+    ],
+    "selection": "validation only; test is never used for transform, fit, or selection"
+  },
+  "null": {
+    "count": 19,
+    "policy": "jointly circular-shift t-1 and t-2 columns within each train, validation, and test block; refit every null model",
+    "p_value": "(1 + number(null median delta >= observed median delta)) / 20"
+  },
+  "recording_gate": {
+    "min_targets": 20,
+    "min_median_delta_r2": 0.01,
+    "min_positive_target_fraction": 0.8,
+    "max_null_p_value": 0.05,
+    "all_conditions_required": true
+  },
+  "panel_gate": {
+    "recording_count": 7,
+    "min_recordings_passed_per_horizon": 5,
+    "both_horizons_must_pass": true,
+    "replicate_unit": "independently recorded animal"
+  },
+  "confirmatory_panel": {
+    "archive": "AML32_moving.tar.gz",
+    "bytes": 1218075251,
+    "sha256": "6b71a6ba1a5d2f1ef3bf9661e845e1e52634bae217fc0c2630a83fca07daed63",
+    "recording_ids": [
+      "BrainScanner20170610_105634",
+      "BrainScanner20170613_134800",
+      "BrainScanner20170424_105620",
+      "BrainScanner20180709_100433",
+      "BrainScanner20200309_151024",
+      "BrainScanner20200309_153839",
+      "BrainScanner20200309_162140"
+    ]
+  },
+  "implementation": {
+    "path": "reality_stone/python/reality_stone/clarus/local_memory.py",
+    "sha256": "6032a76d33a0a2adc2671972248c550b00c600be418919c3c296924106475f86",
+    "synthetic_checks": [
+      "AR(2) aligned memory passes",
+      "AR(1) current-state process fails",
+      "test mutation leaves fitted-model hash unchanged",
+      "samples crossing acquisition gaps are excluded"
+    ]
+  },
+  "decision_rule": "No threshold, feature, horizon, or exclusion change is allowed after AML32 activity scores are computed."
+}
