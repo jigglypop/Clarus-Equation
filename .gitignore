@@ -34,6 +34,10 @@ target/
 !benchmarks/neural_code_reverse_engineering_v1.json
 !benchmarks/tafazoli_diffusion_probe_v1.json
 !benchmarks/tafazoli_diffusion_probe_v1_result.json
+!benchmarks/q0_minimal_abelian_higgs_v1.json
+!benchmarks/neural_tree_algorithm_census_v1.json
+!experiments/preregistration/cosmology_future_holdout_v2.json
+!experiments/preregistration/quantum_future_holdout_v2.json
 *.pt
 *.pth
 *.csv

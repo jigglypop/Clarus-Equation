@@ -25,8 +25,8 @@ from typing import Any, Mapping, Sequence
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST_DIR = Path(__file__).resolve().parent
 DEFAULT_MANIFEST_PATHS = (
-    MANIFEST_DIR / "cosmology_future_holdout_v1.json",
-    MANIFEST_DIR / "quantum_future_holdout_v1.json",
+    MANIFEST_DIR / "cosmology_future_holdout_v2.json",
+    MANIFEST_DIR / "quantum_future_holdout_v2.json",
 )
 
 SCHEMA_VERSION = 1
@@ -37,6 +37,14 @@ FROZEN_V1_MANIFEST_SHA256 = {
     ),
     "ce-quantum-future-holdout-v1": (
         "4bd3d9777c47465dd419012bbf2622fb0d5c91a312003010dede50cb1c4e853a"
+    ),
+}
+FROZEN_V2_MANIFEST_SHA256 = {
+    "ce-cosmology-future-holdout-v2": (
+        "787541ccf52c4290c0c809d3f984b9552cdd149b0f9b9533e64d8160327bcf7b"
+    ),
+    "ce-quantum-future-holdout-v2": (
+        "340ceb208d769e3fd2a85cef59b00164812918153abc5db4b2d4f69ca88b0994"
     ),
 }
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
@@ -889,6 +897,12 @@ def validate_manifest(
     if frozen_v1_hash is not None and expected_manifest_hash != frozen_v1_hash:
         errors.append(
             "frozen v1 digest mismatch: preserve v1 and create a higher-revision "
+            "manifest with a new manifest_id"
+        )
+    frozen_v2_hash = FROZEN_V2_MANIFEST_SHA256.get(manifest_id)
+    if frozen_v2_hash is not None and expected_manifest_hash != frozen_v2_hash:
+        errors.append(
+            "frozen v2 digest mismatch: preserve v2 and create a higher-revision "
             "manifest with a new manifest_id"
         )
 

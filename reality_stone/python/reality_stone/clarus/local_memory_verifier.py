@@ -9,12 +9,31 @@ from pathlib import Path
 from typing import Mapping, Sequence
 
 
-def _sha256(path: str | Path) -> str:
-    digest = hashlib.sha256()
-    with Path(path).open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
+CANONICAL_TEXT_SHA256_SCHEME = "sha256_utf8_lf_normalized_v1"
+
+
+def canonical_text_sha256(path: str | Path) -> str:
+    """Hash UTF-8 text after platform-independent newline normalization.
+
+    Git may materialize the same text with LF or CRLF depending on checkout
+    settings.  The confirmatory lock commits every code character while
+    treating those two transport encodings as the same implementation.
+    """
+
+    payload = Path(path).read_bytes()
+    text = payload.decode("utf-8")
+    canonical = text.replace("\r\n", "\n").replace("\r", "\n")
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+def _portable_path(path: Path) -> str:
+    """Use a reproducible workspace-relative path when one is available."""
+
+    resolved = path.resolve()
+    try:
+        return resolved.relative_to(Path.cwd().resolve()).as_posix()
+    except ValueError:
+        return resolved.as_posix()
 
 
 def verify_confirmation(
@@ -165,19 +184,23 @@ def build_verification_artifact(
     verification = verify_confirmation(
         preregistration,
         results,
-        implementation_sha256=_sha256(implementation_path),
+        implementation_sha256=canonical_text_sha256(implementation_path),
     )
+    verification["input_hash_scheme"] = CANONICAL_TEXT_SHA256_SCHEME
     verification["inputs"] = {
         "preregistration": {
-            "path": str(preregistration_path),
-            "sha256": _sha256(preregistration_path),
+            "path": _portable_path(preregistration_path),
+            "sha256": canonical_text_sha256(preregistration_path),
         },
         "implementation": {
-            "path": str(implementation_path),
-            "sha256": _sha256(implementation_path),
+            "path": _portable_path(implementation_path),
+            "sha256": canonical_text_sha256(implementation_path),
         },
         "results": {
-            str(horizon): {"path": str(path), "sha256": _sha256(path)}
+            str(horizon): {
+                "path": _portable_path(path),
+                "sha256": canonical_text_sha256(path),
+            }
             for horizon, path in result_paths.items()
         },
     }
@@ -209,7 +232,9 @@ def main(argv: Sequence[str] | None = None) -> int:
 
 
 __all__ = [
+    "CANONICAL_TEXT_SHA256_SCHEME",
     "build_verification_artifact",
+    "canonical_text_sha256",
     "verify_confirmation",
 ]
 

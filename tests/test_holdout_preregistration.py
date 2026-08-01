@@ -15,8 +15,10 @@ from experiments.preregistration.validate_holdout_manifest import (
 
 
 MANIFEST_DIR = ROOT / "experiments" / "preregistration"
-COSMOLOGY_PATH = MANIFEST_DIR / "cosmology_future_holdout_v1.json"
-QUANTUM_PATH = MANIFEST_DIR / "quantum_future_holdout_v1.json"
+COSMOLOGY_V1_PATH = MANIFEST_DIR / "cosmology_future_holdout_v1.json"
+QUANTUM_V1_PATH = MANIFEST_DIR / "quantum_future_holdout_v1.json"
+COSMOLOGY_PATH = MANIFEST_DIR / "cosmology_future_holdout_v2.json"
+QUANTUM_PATH = MANIFEST_DIR / "quantum_future_holdout_v2.json"
 
 
 def _load(path: Path) -> dict:
@@ -29,10 +31,13 @@ def _rehash(manifest: dict) -> None:
 
 def _assign_synthetic_future_holdout(manifest: dict) -> None:
     prior_manifest_id = manifest["manifest_id"]
-    manifest["manifest_id"] = f"{prior_manifest_id}-assignment-v2"
+    assignment_revision = manifest["freeze"]["protocol_revision"] + 1
+    manifest["manifest_id"] = (
+        f"{prior_manifest_id}-assignment-v{assignment_revision}"
+    )
     manifest["supersedes_manifest_id"] = prior_manifest_id
     manifest["status"] = "frozen_with_assigned_holdout"
-    manifest["freeze"]["protocol_revision"] = 2
+    manifest["freeze"]["protocol_revision"] = assignment_revision
     manifest["freeze"]["phase"] = "holdout_assigned_pre_access"
     holdout_path = "future/synthetic-holdout.bin"
     holdout_hash = "a" * 64
@@ -50,11 +55,11 @@ def _assign_synthetic_future_holdout(manifest: dict) -> None:
             "assignment_status": "assigned",
             "dataset_id": "synthetic-future-dataset",
             "release_id": "release-1",
-            "release_date": "2026-07-31",
+            "release_date": "2026-08-03",
             "source_uri": "https://example.invalid/frozen-before-access",
             "local_artifact_path": holdout_path,
             "sha256": holdout_hash,
-            "assigned_at": "2026-07-31",
+            "assigned_at": "2026-08-03",
             "assignment_manifest_id": manifest["manifest_id"],
         }
     )
@@ -94,7 +99,7 @@ def test_manifest_self_digest_detects_frozen_content_tampering(path):
 
 
 def test_rehashing_an_edited_v1_does_not_overwrite_the_frozen_trust_anchor():
-    manifest = _load(COSMOLOGY_PATH)
+    manifest = _load(COSMOLOGY_V1_PATH)
     manifest["scope"]["interpretation"] += " edited in place"
     _rehash(manifest)
 
@@ -102,6 +107,17 @@ def test_rehashing_an_edited_v1_does_not_overwrite_the_frozen_trust_anchor():
 
     assert not report.structurally_valid
     assert any("frozen v1 digest mismatch" in error for error in report.errors)
+
+
+def test_rehashing_an_edited_v2_does_not_overwrite_the_frozen_trust_anchor():
+    manifest = _load(COSMOLOGY_PATH)
+    manifest["scope"]["interpretation"] += " edited in place"
+    _rehash(manifest)
+
+    report = validate_manifest(manifest, verify_artifacts=False)
+
+    assert not report.structurally_valid
+    assert any("frozen v2 digest mismatch" in error for error in report.errors)
 
 
 def test_artifact_digest_is_independent_of_manifest_self_digest():
@@ -127,7 +143,7 @@ def test_partial_placeholder_assignment_is_not_silently_accepted():
     assert any("dataset_id must be null while unassigned" in error for error in report.errors)
 
 
-@pytest.mark.parametrize("path", [COSMOLOGY_PATH, QUANTUM_PATH])
+@pytest.mark.parametrize("path", [COSMOLOGY_V1_PATH, QUANTUM_V1_PATH])
 def test_assignment_requires_a_higher_revision_pre_access_manifest(path):
     manifest = _load(path)
     future = manifest["data_roles"]["future_holdout"]

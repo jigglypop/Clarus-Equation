@@ -1,11 +1,15 @@
 from __future__ import annotations
 
 import copy
-import hashlib
 import json
 from pathlib import Path
 
-from reality_stone.clarus.local_memory_verifier import verify_confirmation
+from reality_stone.clarus.local_memory_verifier import (
+    CANONICAL_TEXT_SHA256_SCHEME,
+    build_verification_artifact,
+    canonical_text_sha256,
+    verify_confirmation,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -17,6 +21,7 @@ RESULT_PATHS = {
 IMPLEMENTATION = (
     ROOT / "reality_stone/python/reality_stone/clarus/local_memory.py"
 )
+PROOF = ROOT / "artifacts/agi/local_memory_aml32_proof.json"
 
 
 def _inputs() -> tuple[dict[str, object], dict[int, dict[str, object]], str]:
@@ -25,7 +30,7 @@ def _inputs() -> tuple[dict[str, object], dict[int, dict[str, object]], str]:
         horizon: json.loads(path.read_text(encoding="utf-8"))
         for horizon, path in RESULT_PATHS.items()
     }
-    implementation_hash = hashlib.sha256(IMPLEMENTATION.read_bytes()).hexdigest()
+    implementation_hash = canonical_text_sha256(IMPLEMENTATION)
     return preregistration, results, implementation_hash
 
 
@@ -68,3 +73,28 @@ def test_tampered_implementation_hash_is_rejected() -> None:
 
     assert not proof["proof_passed"]
     assert "implementation hash differs from preregistration" in proof["errors"]
+
+
+def test_implementation_lock_is_independent_of_checkout_newlines(tmp_path: Path) -> None:
+    source = IMPLEMENTATION.read_text(encoding="utf-8").replace("\r\n", "\n")
+    lf_path = tmp_path / "implementation_lf.py"
+    crlf_path = tmp_path / "implementation_crlf.py"
+    lf_path.write_bytes(source.encode("utf-8"))
+    crlf_path.write_bytes(source.replace("\n", "\r\n").encode("utf-8"))
+
+    assert canonical_text_sha256(lf_path) == canonical_text_sha256(crlf_path)
+    assert canonical_text_sha256(lf_path) == _inputs()[2]
+
+
+def test_proof_generator_records_canonical_cross_platform_hashes() -> None:
+    proof = build_verification_artifact(
+        PREREGISTRATION,
+        RESULT_PATHS[1],
+        RESULT_PATHS[6],
+        IMPLEMENTATION,
+    )
+
+    assert proof["proof_passed"]
+    assert proof["input_hash_scheme"] == CANONICAL_TEXT_SHA256_SCHEME
+    assert proof["inputs"]["implementation"]["sha256"] == _inputs()[2]
+    assert proof == json.loads(PROOF.read_text(encoding="utf-8"))
