@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import math
+from numbers import Integral
 
 from .clarus_negative_source_search import HBAR_J_S
 from .spatial_folding import ELECTRON_VOLT_J, SPEED_OF_LIGHT_M_S
@@ -72,15 +73,23 @@ def flux_multiplicity_control(
     *,
     wormhole_length_m: float,
     magnetic_radius_m: float,
-    flux_zero_mode_count: int,
+    flux_zero_mode_count: Integral,
 ) -> FluxMultiplicityControl:
-    """Apply the parametric DSNEC control ``q >= length / magnetic_radius``."""
+    """Apply the parametric DSNEC control ``q >= length / magnetic_radius``.
+
+    Python and NumPy integer scalars are accepted through ``numbers.Integral``.
+    Booleans and floating-point values are rejected instead of being truncated.
+    """
 
     length = float(wormhole_length_m)
     radius = float(magnetic_radius_m)
-    count = int(flux_zero_mode_count)
     if not all(math.isfinite(value) and value > 0.0 for value in (length, radius)):
         raise ValueError("length scales must be finite and positive")
+    if isinstance(flux_zero_mode_count, bool) or not isinstance(
+        flux_zero_mode_count, Integral
+    ):
+        raise ValueError("flux_zero_mode_count must be a positive integer")
+    count = int(flux_zero_mode_count)
     if count <= 0:
         raise ValueError("flux_zero_mode_count must be positive")
     lower_bound = length / radius

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import math
+from typing import Iterable
 
 from .spatial_folding import SPEED_OF_LIGHT_M_S
 
@@ -33,9 +34,29 @@ class AveragedNonminimalAudit:
     gradient_squared_integral: float
     endpoint_field_squared_derivative_jump: float
     averaged_null_numerator: float
-    averaged_nec_violated: bool
+    averaged_null_numerator_negative: bool
+    physical_effective_anec_computed: bool
     localized_vacuum_boundary_conditions: bool
     boundary_or_topology_support_required: bool
+
+
+@dataclass(frozen=True)
+class PhysicalAveragedNonminimalAudit:
+    nonminimal_coupling: float
+    sample_count: int
+    minimum_effective_planck_factor: float
+    positive_effective_planck_factor_everywhere: bool
+    local_effective_nec_violation_sampled: bool
+    direct_effective_anec: float
+    kinetic_over_planck_integral: float
+    log_planck_gradient_squared_integral: float
+    endpoint_log_planck_derivative_jump: float
+    identity_reconstructed_anec: float
+    identity_residual: float
+    identity_numerically_verified: bool
+    localized_log_planck_boundary_conditions: bool
+    physical_effective_anec_violated: bool
+    healthy_localized_profile_anec_nonnegative: bool
 
 
 @dataclass(frozen=True)
@@ -129,7 +150,12 @@ def averaged_nonminimal_null_audit(
     gradient_squared_integral: float,
     endpoint_field_squared_derivative_jump: float,
 ) -> AveragedNonminimalAudit:
-    """Integrate the unrearranged local numerator along an affine null curve."""
+    """Integrate only the unrearranged numerator along an affine null curve.
+
+    This legacy control is not the physical effective ANEC when ``F`` varies:
+    that quantity contains ``N_kk/F`` and requires the field profile.  Use
+    :func:`physical_averaged_nonminimal_null_audit` for that calculation.
+    """
 
     xi = float(nonminimal_coupling)
     gradient = float(gradient_squared_integral)
@@ -146,9 +172,137 @@ def averaged_nonminimal_null_audit(
         gradient_squared_integral=gradient,
         endpoint_field_squared_derivative_jump=endpoint_jump,
         averaged_null_numerator=averaged,
-        averaged_nec_violated=violates,
+        averaged_null_numerator_negative=violates,
+        physical_effective_anec_computed=False,
         localized_vacuum_boundary_conditions=localized,
         boundary_or_topology_support_required=not violates and localized,
+    )
+
+
+def _trapezoid(values: list[float], coordinates: list[float]) -> float:
+    return math.fsum(
+        0.5
+        * (values[index] + values[index + 1])
+        * (coordinates[index + 1] - coordinates[index])
+        for index in range(len(values) - 1)
+    )
+
+
+def physical_averaged_nonminimal_null_audit(
+    *,
+    nonminimal_coupling: float,
+    affine_parameter: Iterable[float],
+    field_value_planck: Iterable[float],
+    affine_first_derivative: Iterable[float],
+    affine_second_derivative: Iterable[float],
+    numerical_tolerance: float = 1.0e-10,
+) -> PhysicalAveragedNonminimalAudit:
+    """Integrate the physical ``N_kk/F`` source and verify its exact identity.
+
+    For ``F=1-xi*phi**2`` and an affinely parametrized null curve,
+
+    ``N_kk = phi'**2 + F''``.
+
+    Consequently,
+
+    ``integral N_kk/F = integral[phi'**2/F + (F'/F)**2]``
+    ``                     + [F'/F]_endpoints``.
+
+    The two bulk terms are non-negative while ``F>0``.  A localized profile
+    with a vanishing endpoint logarithmic derivative therefore cannot turn a
+    local negative pocket into a negative physical effective ANEC.  Supplied
+    first and second derivatives permit an analytic-profile control without
+    numerical differentiation; the returned residual checks the identity.
+    """
+
+    xi = float(nonminimal_coupling)
+    tolerance = float(numerical_tolerance)
+    coordinates = [float(value) for value in affine_parameter]
+    field = [float(value) for value in field_value_planck]
+    first = [float(value) for value in affine_first_derivative]
+    second = [float(value) for value in affine_second_derivative]
+    arrays = (coordinates, field, first, second)
+    if not math.isfinite(xi) or xi < 0.0:
+        raise ValueError("nonminimal_coupling must be finite and non-negative")
+    if not math.isfinite(tolerance) or tolerance < 0.0:
+        raise ValueError("numerical_tolerance must be finite and non-negative")
+    if len(coordinates) < 3 or any(
+        len(values) != len(coordinates) for values in arrays[1:]
+    ):
+        raise ValueError("affine profile arrays must have the same length of at least three")
+    if not all(math.isfinite(value) for values in arrays for value in values):
+        raise ValueError("affine profile arrays must be finite")
+    if any(
+        coordinates[index + 1] <= coordinates[index]
+        for index in range(len(coordinates) - 1)
+    ):
+        raise ValueError("affine_parameter must be strictly increasing")
+
+    planck_factor = [1.0 - xi * value * value for value in field]
+    minimum_planck_factor = min(planck_factor)
+    if minimum_planck_factor <= 0.0:
+        raise ValueError("effective Planck factor F must remain strictly positive")
+
+    planck_first = [
+        -2.0 * xi * value * derivative
+        for value, derivative in zip(field, first, strict=True)
+    ]
+    planck_second = [
+        -2.0 * xi * (derivative * derivative + value * curvature)
+        for value, derivative, curvature in zip(field, first, second, strict=True)
+    ]
+    numerator = [
+        derivative * derivative + factor_second
+        for derivative, factor_second in zip(first, planck_second, strict=True)
+    ]
+    effective_source = [
+        value / factor
+        for value, factor in zip(numerator, planck_factor, strict=True)
+    ]
+    kinetic_over_planck = [
+        derivative * derivative / factor
+        for derivative, factor in zip(first, planck_factor, strict=True)
+    ]
+    log_planck_gradient_squared = [
+        (factor_first / factor) ** 2
+        for factor_first, factor in zip(planck_first, planck_factor, strict=True)
+    ]
+
+    direct = _trapezoid(effective_source, coordinates)
+    kinetic_integral = _trapezoid(kinetic_over_planck, coordinates)
+    log_gradient_integral = _trapezoid(
+        log_planck_gradient_squared,
+        coordinates,
+    )
+    endpoint_jump = (
+        planck_first[-1] / planck_factor[-1]
+        - planck_first[0] / planck_factor[0]
+    )
+    reconstructed = kinetic_integral + log_gradient_integral + endpoint_jump
+    residual = direct - reconstructed
+    scale = max(1.0, abs(direct), abs(reconstructed))
+    identity_verified = abs(residual) <= tolerance * scale
+    localized = abs(endpoint_jump) <= tolerance
+    physical_violation = direct < -tolerance * scale
+
+    return PhysicalAveragedNonminimalAudit(
+        nonminimal_coupling=xi,
+        sample_count=len(coordinates),
+        minimum_effective_planck_factor=minimum_planck_factor,
+        positive_effective_planck_factor_everywhere=True,
+        local_effective_nec_violation_sampled=min(effective_source) < 0.0,
+        direct_effective_anec=direct,
+        kinetic_over_planck_integral=kinetic_integral,
+        log_planck_gradient_squared_integral=log_gradient_integral,
+        endpoint_log_planck_derivative_jump=endpoint_jump,
+        identity_reconstructed_anec=reconstructed,
+        identity_residual=residual,
+        identity_numerically_verified=identity_verified,
+        localized_log_planck_boundary_conditions=localized,
+        physical_effective_anec_violated=physical_violation,
+        healthy_localized_profile_anec_nonnegative=(
+            identity_verified and localized and not physical_violation
+        ),
     )
 
 

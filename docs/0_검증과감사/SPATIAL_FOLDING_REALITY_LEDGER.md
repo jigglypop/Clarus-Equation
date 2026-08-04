@@ -39,11 +39,13 @@
 | one-species smooth quantum layer | `Physical-scale fail`: `d<=2.50e-24 m`, `UV>=7.90e16 eV` |
 | nonlocal/internal-mode defect | `Open`: 명시적 action 없음 |
 
-수동적인 안정 내부모드 mixing은 Schur complement
-`K_eff=K_rr-B C^-1 B^T` 때문에 음의 radial eigenvalue를 더 낮춘다. 따라서
-`passive multimode resonance`는 안정화 수단으로 소거된다. 직접 양의 radial
-stiffness를 생성하는 새 작용 또는 driven/feedback 제어만 남으며, 후자는 정적
-해가 아닌 시간의존 안정성 문제다.
+임의의 유한 수동 안정 내부모드 mixing은 Schur complement
+`K_eff=K_rr+D-B^T C^-1 B` 때문에 radial curvature를 높이지 못한다.
+`C>0`이면 전체 Hessian의 inertia도 `diag(K_eff,C)`와 같아 음의 radial
+방향을 숨길 수 없다. 등호는 marginal이고 strict 안정에는
+`D>-K_rr+B^T C^-1 B`가 필요하다. 따라서 `passive multimode resonance`는
+`Exact finite-dimensional static no-go`로 안정화 후보에서 소거된다. 시간의존
+driven/feedback 제어는 별도의 Floquet/closed-loop 문제다.
 
 driven 후보는 exact monodromy 계산에서 `Gamma/Omega=0.05`,
 `epsilon=0.1`일 때 안정화됨을 확인했다. 따라서 Floquet 제어 자체는

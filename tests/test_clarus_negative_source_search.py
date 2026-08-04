@@ -2,12 +2,15 @@ from __future__ import annotations
 
 import math
 
+import pytest
+
 from reality_stone.clarus.clarus_negative_source_search import (
     averaged_nonminimal_null_audit,
     casimir_plate_scale_audit,
     clarus_negative_source_funnel,
     effective_planck_amplification_audit,
     nonminimal_scalar_null_audit,
+    physical_averaged_nonminimal_null_audit,
 )
 from reality_stone.clarus.spatial_folding import (
     casimir_cell_conversion_audit,
@@ -65,7 +68,8 @@ def test_localized_complete_profile_loses_nonminimal_boundary_advantage() -> Non
     )
 
     assert audit.averaged_null_numerator == 2.0
-    assert not audit.averaged_nec_violated
+    assert not audit.averaged_null_numerator_negative
+    assert not audit.physical_effective_anec_computed
     assert audit.localized_vacuum_boundary_conditions
     assert audit.boundary_or_topology_support_required
 
@@ -78,8 +82,126 @@ def test_nonzero_boundary_term_can_make_the_unrearranged_average_negative() -> N
     )
 
     assert math.isclose(audit.averaged_null_numerator, -0.45)
-    assert audit.averaged_nec_violated
+    assert audit.averaged_null_numerator_negative
     assert not audit.localized_vacuum_boundary_conditions
+
+
+def test_physical_effective_anec_keeps_local_negative_pocket_but_positive_average() -> None:
+    sample_count = 4_001
+    coordinates = [
+        -8.0 + 16.0 * index / (sample_count - 1)
+        for index in range(sample_count)
+    ]
+    field = [0.5 * math.exp(-value * value / 2.0) for value in coordinates]
+    first = [-value * profile for value, profile in zip(coordinates, field, strict=True)]
+    second = [
+        (value * value - 1.0) * profile
+        for value, profile in zip(coordinates, field, strict=True)
+    ]
+    audit = physical_averaged_nonminimal_null_audit(
+        nonminimal_coupling=0.49,
+        affine_parameter=coordinates,
+        field_value_planck=field,
+        affine_first_derivative=first,
+        affine_second_derivative=second,
+    )
+
+    assert audit.local_effective_nec_violation_sampled
+    assert math.isclose(audit.minimum_effective_planck_factor, 0.8775)
+    assert math.isclose(audit.direct_effective_anec, 0.2535027873638524)
+    assert audit.kinetic_over_planck_integral > 0.0
+    assert audit.log_planck_gradient_squared_integral > 0.0
+    assert abs(audit.endpoint_log_planck_derivative_jump) < 1.0e-20
+    assert abs(audit.identity_residual) < 1.0e-12
+    assert audit.identity_numerically_verified
+    assert audit.localized_log_planck_boundary_conditions
+    assert not audit.physical_effective_anec_violated
+    assert audit.healthy_localized_profile_anec_nonnegative
+
+
+def test_unrearranged_numerator_can_false_positive_against_physical_anec() -> None:
+    xi = 0.2796948642528183
+    coefficients = (-0.3830363518, 0.6322527182, -0.6385472402, 0.1632003273)
+    sample_count = 20_001
+    coordinates = [
+        -1.0 + 2.0 * index / (sample_count - 1)
+        for index in range(sample_count)
+    ]
+    field = [
+        coefficients[0]
+        + coefficients[1] * value
+        + coefficients[2] * value**2
+        + coefficients[3] * value**3
+        for value in coordinates
+    ]
+    first = [
+        coefficients[1]
+        + 2.0 * coefficients[2] * value
+        + 3.0 * coefficients[3] * value**2
+        for value in coordinates
+    ]
+    second = [
+        2.0 * coefficients[2] + 6.0 * coefficients[3] * value
+        for value in coordinates
+    ]
+    gradient_integral = math.fsum(
+        0.5
+        * (first[index] ** 2 + first[index + 1] ** 2)
+        * (coordinates[index + 1] - coordinates[index])
+        for index in range(sample_count - 1)
+    )
+    endpoint_jump = 2.0 * (
+        field[-1] * first[-1] - field[0] * first[0]
+    )
+
+    numerator_only = averaged_nonminimal_null_audit(
+        nonminimal_coupling=xi,
+        gradient_squared_integral=gradient_integral,
+        endpoint_field_squared_derivative_jump=endpoint_jump,
+    )
+    physical = physical_averaged_nonminimal_null_audit(
+        nonminimal_coupling=xi,
+        affine_parameter=coordinates,
+        field_value_planck=field,
+        affine_first_derivative=first,
+        affine_second_derivative=second,
+    )
+
+    assert numerator_only.averaged_null_numerator < -0.06
+    assert numerator_only.averaged_null_numerator_negative
+    assert physical.minimum_effective_planck_factor > 0.07
+    assert physical.direct_effective_anec > 0.07
+    assert not physical.physical_effective_anec_violated
+    assert not physical.localized_log_planck_boundary_conditions
+
+
+def test_physical_effective_anec_rejects_planck_factor_zero_crossing() -> None:
+    with pytest.raises(ValueError, match="Planck factor"):
+        physical_averaged_nonminimal_null_audit(
+            nonminimal_coupling=0.49,
+            affine_parameter=[-1.0, 0.0, 1.0],
+            field_value_planck=[0.0, 2.0, 0.0],
+            affine_first_derivative=[2.0, 0.0, -2.0],
+            affine_second_derivative=[0.0, -4.0, 0.0],
+        )
+
+
+@pytest.mark.parametrize(
+    "coordinates",
+    [[0.0, 1.0], [0.0, 1.0, 1.0]],
+)
+def test_physical_effective_anec_rejects_invalid_affine_grid(
+    coordinates: list[float],
+) -> None:
+    values = [0.0] * len(coordinates)
+    with pytest.raises(ValueError):
+        physical_averaged_nonminimal_null_audit(
+            nonminimal_coupling=0.49,
+            affine_parameter=coordinates,
+            field_value_planck=values,
+            affine_first_derivative=values,
+            affine_second_derivative=values,
+        )
 
 
 def test_candidate_funnel_demotes_boundary_route_after_physical_scale_failure() -> None:

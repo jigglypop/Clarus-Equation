@@ -1,10 +1,12 @@
 import math
 
+import numpy as np
 import pytest
 
 from reality_stone.clarus.thin_shell_defect_reality import (
     C,
     G,
+    audit_passive_multimode_schur,
     audit_static_schwarzschild_thin_shell,
     audit_minimal_elastic_defect,
     audit_quantum_negative_layer,
@@ -157,7 +159,8 @@ def test_passive_stable_internal_mode_cannot_cure_radial_tachyon(
     assert audit.relaxed_effective_radial_curvature <= -2.0
     assert not audit.passive_mixing_stiffens_radial_mode
     assert not audit.radially_stable_after_relaxation
-    assert audit.active_or_nonadiabatic_control_required
+    assert audit.additional_direct_or_time_dependent_control_required
+    assert audit.finite_dimensional_static_no_go_proved
 
 
 def test_direct_stiffness_not_mixing_is_what_can_close_radial_gate() -> None:
@@ -165,9 +168,113 @@ def test_direct_stiffness_not_mixing_is_what_can_close_radial_gate() -> None:
     stable = audit_relaxed_internal_mode(-2.0, 4.0, 2.0, direct_radial_stiffness=3.1)
 
     assert marginal.relaxed_effective_radial_curvature == 0.0
-    assert math.isclose(marginal.minimum_direct_stiffness_required, 3.0)
+    assert math.isclose(marginal.strict_direct_stiffness_lower_bound, 3.0)
+    assert marginal.marginal_after_relaxation
+    assert not marginal.direct_stiffness_exceeds_lower_bound
     assert not marginal.radially_stable_after_relaxation
     assert stable.radially_stable_after_relaxation
+    assert stable.direct_stiffness_exceeds_lower_bound
+
+
+def test_multimode_schur_softening_and_inertia_are_exact() -> None:
+    audit = audit_passive_multimode_schur(
+        -2.0,
+        [[2.0, 0.0], [0.0, 8.0]],
+        [2.0, 4.0],
+    )
+
+    assert audit.internal_mode_count == 2
+    assert math.isclose(audit.mixing_softening, 4.0, rel_tol=1.0e-14)
+    assert math.isclose(
+        audit.relaxed_effective_radial_curvature,
+        -6.0,
+        rel_tol=1.0e-14,
+    )
+    assert audit.passive_mixing_strictly_softens
+    assert audit.unstable
+    assert audit.full_hessian_positive_eigenvalue_count == 2
+    assert audit.full_hessian_negative_eigenvalue_count == 1
+    assert audit.full_hessian_zero_eigenvalue_count == 0
+    assert audit.constant_linear_controls_cannot_cure_unstable_mode
+
+
+def test_nondiagonal_multimode_threshold_equality_is_only_marginal() -> None:
+    audit = audit_passive_multimode_schur(
+        -1.0,
+        [[2.0, 1.0], [1.0, 3.0]],
+        [1.0, -2.0],
+        direct_radial_stiffness=4.0,
+    )
+
+    assert math.isclose(audit.mixing_softening, 3.0, rel_tol=1.0e-14)
+    assert math.isclose(audit.strict_direct_stiffness_lower_bound, 4.0)
+    assert audit.marginal
+    assert not audit.strictly_stable
+    assert audit.full_hessian_zero_eigenvalue_count == 1
+
+
+def test_multimode_schur_is_invariant_under_internal_basis_rotation() -> None:
+    internal = np.array([[4.0, 1.0], [1.0, 2.0]])
+    mixing = np.array([0.5, -1.5])
+    angle = 0.37
+    rotation = np.array(
+        [
+            [math.cos(angle), -math.sin(angle)],
+            [math.sin(angle), math.cos(angle)],
+        ]
+    )
+    original = audit_passive_multimode_schur(-0.25, internal, mixing)
+    rotated = audit_passive_multimode_schur(
+        -0.25,
+        rotation.T @ internal @ rotation,
+        rotation.T @ mixing,
+    )
+
+    assert math.isclose(
+        original.mixing_softening,
+        rotated.mixing_softening,
+        rel_tol=1.0e-14,
+    )
+    assert math.isclose(
+        original.relaxed_effective_radial_curvature,
+        rotated.relaxed_effective_radial_curvature,
+        rel_tol=1.0e-14,
+    )
+
+
+def test_zero_mixing_and_negative_threshold_are_reported_without_clipping() -> None:
+    audit = audit_passive_multimode_schur(
+        2.0,
+        [[3.0, 0.5], [0.5, 1.0]],
+        [0.0, 0.0],
+        direct_radial_stiffness=-1.0,
+    )
+
+    assert audit.mixing_softening == 0.0
+    assert not audit.passive_mixing_strictly_softens
+    assert audit.strict_direct_stiffness_lower_bound == -2.0
+    assert audit.direct_stiffness_exceeds_lower_bound
+    assert audit.strictly_stable
+
+
+@pytest.mark.parametrize(
+    ("internal", "mixing", "message"),
+    [
+        ([[1.0, 0.0]], [1.0], "square"),
+        ([[1.0, 0.0], [0.0, 1.0]], [1.0], "one entry"),
+        ([[1.0, 0.1], [0.0, 1.0]], [1.0, 1.0], "symmetric"),
+        ([[1.0, 0.0], [0.0, 0.0]], [1.0, 1.0], "positive definite"),
+        ([[1.0, 0.0], [0.0, -1.0]], [1.0, 1.0], "positive definite"),
+        ([[1.0, math.nan], [math.nan, 1.0]], [1.0, 1.0], "finite"),
+    ],
+)
+def test_multimode_schur_rejects_uncertified_internal_blocks(
+    internal: list[list[float]],
+    mixing: list[float],
+    message: str,
+) -> None:
+    with pytest.raises(ValueError, match=message):
+        audit_passive_multimode_schur(-1.0, internal, mixing)
 
 
 def test_floquet_monodromy_preserves_phase_space_volume() -> None:

@@ -37,21 +37,124 @@ Einstein tensor를 역으로 읽은 무차원 응력은
 이므로 목에서는 정확히 이상적 Casimir 비율을 만족한다. 하지만 바깥에서는 압력비를
 고정하지 않는다. 이것이 앞선 고정-EoS no-go와 모순되지 않는 핵심이다.
 
-## 전역 gate 결과
+## 표본 없이 닫히는 전구간 기하
 
-| gate | 결과 |
-|---|---:|
-| flare-out \(b'(r_0)<1\) | PASS |
-| \(x>1\)에서 \(b/r<1\) | PASS |
-| 유한 lapse, 지평선 없음 | PASS |
-| 보존식 최대 잔차 | \(1.33\times10^{-15}\) |
-| \(b/r\to0,\ \Phi\to0\) | PASS |
-| \(b(\infty)=2r_0/3\) | PASS |
-| ADM 질량 길이 \(M=b(\infty)/2\) | \(r_0/3\), finite |
-| 양쪽 throat로 기하학적 연장 | AVAILABLE |
+\(s=e^{1-x}\), \(y=b/r_0=(2+s)/3\)라 쓰면 shape gap은
 
-따라서 **전역 기하/제어 target의 존재**는 통과했다. 이것은 물질장을 먼저 가정한
-해가 아니라, 필요한 \(T_{\mu\nu}(r)\)를 Einstein 방정식으로 역산한 결과다.
+\[
+g=x-y,qquad g(1)=0,qquad g'=1+\frac{s}{3}\ge1.
+\]
+
+따라서 \(x>1\)에서 \(b/r<1\)은 유한 격자 검사가 아니라 해석적으로 성립한다.
+또한 \(1-b/r=4(x-1)/3+O((x-1)^2)\)라 proper radial distance의 throat
+특이점은 적분 가능하고 양쪽 end로 연장할 수 있다. 기존 lapse는
+\(e^{2\Phi}=e^s\ge1\)이고
+
+\[
+y/x\to0,qquad \Phi\to0,qquad
+\frac{M_{\rm ADM}}{r_0}=\frac{y(\infty)}2=\frac13
+\]
+
+이므로 각 asymptotic end의 점근평탄성과 유한 ADM 질량도 cutoff와 무관하게
+exact다. 과거 API가 `radial_cutoff=2`에서 점근평탄을 `False`로 바꾸던 것은
+유한-cutoff 진단값을 전역 성질로 오인한 버그였으며 교정했다.
+
+일반 \(f=1-y/x\)에 대해 Einstein tensor를 역산한 응력은
+
+\[
+\rho=\frac{1-f-xf'}{x^2},\quad
+p_r=\frac{f-1}{x^2}+\frac{2f\Phi'}x,
+\]
+
+\[
+p_t=f\left(\Phi''+\Phi'^2+\frac{\Phi'}x\right)
+ +\frac{f'\Phi'}2+\frac{f'}{2x}.
+\]
+
+이를 대입하면
+
+\[
+\boxed{p_r'+(\rho+p_r)\Phi'-\frac2x(p_t-p_r)\equiv0}
+\]
+
+에서 모든 항이 정확히 소거된다. 실행값 `1.33e-15`는 증명이 아니라 이 항등식의
+부동소수점 회귀 residual이다. 더구나 이것은 `T=G/kappa`로 역정의한 source의
+Bianchi identity이지, 독립 CE 물질 작용의 EOM/Noether 보존 증명이 아니다.
+
+## 기존 exponential redshift에서 새로 확인한 꼬리 결함
+
+기존 target은 전구간에서
+
+\[
+\rho=-\frac{s}{3x^2},\qquad
+\rho+p_r=-\frac{2+s(3x^2-x+1)-xs^2}{3x^3}<0.
+\]
+
+즉 radial NEC 위반은 목 부근에 국소화되지 않고 모든 \(x\ge1\)에서 지속된다.
+무한대 꼬리는
+
+\[
+x^3p_r\to-\frac23,qquad x^3p_t\to\frac13.
+\]
+
+완전한 양쪽 radial null geodesic의 affine ANEC는 throat에서
+`(x-1)^(-1/2)`, 무한대에서 `x^(-3)`이므로 유한하고 엄밀히 음수다. asymptotic
+Killing energy를 1로 둔 무차원 수치 control은 `-2.49755541`이다. 반면
+
+\[
+\int_1^X x^2(\rho+p_r)\,dx
+=-\frac23\ln X+O(1)\to-\infty
+\]
+
+이고 proper-volume weight도 같은 로그 발산을 갖는다. 따라서 `finite positive
+ADM`과 `finite negative affine ANEC`는 맞지만, 기존 target은 **공간적으로
+국소화된 finite exotic source가 아니다**.
+
+## 1순위 꼬리 보강: ADM-matched redshift
+
+shape는 유지하고 redshift만
+
+\[
+\boxed{
+\Phi_{\rm match}
+=\frac12\ln\left(1-\frac{2}{3x}\right)+\frac32e^{1-x}}
+\]
+
+로 바꾼다. 그러면 \(\Phi'_{\rm match}(1)=-1/2\)라 throat Casimir tensor를
+그대로 보존하고
+
+\[
+e^{2\Phi_{\rm match}}
+=\left(1-\frac{2}{3x}\right)e^{3s}\ge\frac13
+\]
+
+이므로 지평선도 없다. 무한대에서는 ADM 질량 \(M/r_0=1/3\)에 맞는
+Schwarzschild lapse와 지수감쇠 보정만 남는다. 직접 계산하면
+
+\[
+\boxed{
+\rho+p_r=-\frac{s}{x^2}
+\left[\frac13+\frac1{3x-2}+(3x-2-s)\right]<0}
+\]
+
+이고 `x^2(rho+p_r) ~ -3x exp(1-x)`라 affine ANEC, coordinate-volume NEC,
+proper-volume NEC가 모두 유한·음수다. 즉 NEC 자체는 제거하지 않지만 기존의
+로그 무한 source burden은 제거한다.
+
+이 보강 profile은 throat에서 비최소장 국소 계수 `K/F=7/12>0`도 만들지만,
+전역 reconstruction에서는 `min K/F≈-1.83055` at `x≈1.15638`로 다시 실패한다.
+따라서 `tail repair PASS`를 `healthy global scalar PASS`로 승격하지 않는다.
+
+| gate | 기존 exponential | ADM-matched 보강 |
+|---|---:|---:|
+| throat Casimir tensor | exact | exact |
+| shape gap·flare-out·양쪽 연장 | exact | exact |
+| lapse lower bound | 1 | 1/3 |
+| 각 end ADM 질량 \(M/r_0\) | 1/3 | 1/3 |
+| Bianchi identity | exact | exact |
+| radial affine ANEC | finite, negative | finite, negative |
+| coordinate/proper volume NEC burden | log divergent | finite |
+| 독립 CE matter EOM·stability | not derived | not derived |
 
 ## 유한 다중 모드 분해
 
@@ -82,7 +185,8 @@ Einstein tensor를 역으로 읽은 무차원 응력은
 | 층 | 판정 |
 |---|---|
 | 고정 Casimir EoS 전역해 | `REFUTED` |
-| 가변 비등방 전역 기하 target | `EXACT/FINITE CONTROL PASS` |
+| 기존 exponential 전역 기하 target | `EXACT GEOMETRY / SOURCE-TAIL FAIL` |
+| ADM-matched 전역 기하 target | `EXACT GEOMETRY + FINITE-TAIL CONTROL` |
 | 유한 모드 target 근사 | `NUMERICAL CONTROL PASS` |
 | CE 물리 공명 spectrum과의 동일시 | `OPEN` |
 | renormalized negative stress | `OPEN` |

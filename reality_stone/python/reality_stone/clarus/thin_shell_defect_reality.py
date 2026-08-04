@@ -9,7 +9,11 @@ isotropic scale-free (2+1)-dimensional edge QFT.
 from __future__ import annotations
 
 import math
+from collections.abc import Sequence
 from dataclasses import dataclass
+from numbers import Real
+
+import numpy as np
 
 
 C = 299_792_458.0
@@ -100,11 +104,50 @@ class InternalModeStabilityAudit:
     internal_mode_curvature: float
     mixing: float
     direct_radial_stiffness: float
+    mixing_softening: float
     relaxed_effective_radial_curvature: float
     passive_mixing_stiffens_radial_mode: bool
     radially_stable_after_relaxation: bool
-    minimum_direct_stiffness_required: float
-    active_or_nonadiabatic_control_required: bool
+    marginal_after_relaxation: bool
+    strict_direct_stiffness_lower_bound: float
+    direct_stiffness_exceeds_lower_bound: bool
+    additional_direct_or_time_dependent_control_required: bool
+    constant_linear_controls_cannot_cure_unstable_mode: bool
+    finite_dimensional_static_no_go_proved: bool
+
+    @property
+    def minimum_direct_stiffness_required(self) -> float:
+        """Backward-compatible alias; equality is only marginal, not stable."""
+
+        return self.strict_direct_stiffness_lower_bound
+
+    @property
+    def active_or_nonadiabatic_control_required(self) -> bool:
+        """Backward-compatible alias for the more precise control verdict."""
+
+        return self.additional_direct_or_time_dependent_control_required
+
+
+@dataclass(frozen=True)
+class PassiveMultimodeSchurAudit:
+    bare_radial_curvature: float
+    direct_radial_stiffness: float
+    internal_mode_count: int
+    minimum_internal_curvature: float
+    mixing_softening: float
+    relaxed_effective_radial_curvature: float
+    passive_mixing_strictly_softens: bool
+    strictly_stable: bool
+    marginal: bool
+    unstable: bool
+    strict_direct_stiffness_lower_bound: float
+    direct_stiffness_exceeds_lower_bound: bool
+    full_hessian_positive_eigenvalue_count: int
+    full_hessian_negative_eigenvalue_count: int
+    full_hessian_zero_eigenvalue_count: int
+    positive_mass_matrix_required_for_dynamical_claim: bool
+    constant_linear_controls_cannot_cure_unstable_mode: bool
+    finite_dimensional_static_no_go_proved: bool
 
 
 @dataclass(frozen=True)
@@ -320,6 +363,105 @@ def audit_quantum_negative_layer(
     )
 
 
+def audit_passive_multimode_schur(
+    bare_radial_curvature: float,
+    internal_curvature_matrix: Sequence[Sequence[float]] | np.ndarray,
+    mixing_vector: Sequence[float] | np.ndarray,
+    *,
+    direct_radial_stiffness: float = 0.0,
+    absolute_tolerance: float = 1.0e-12,
+) -> PassiveMultimodeSchurAudit:
+    """Certify the finite passive-mode Schur-complement no-go.
+
+    For
+
+    ``V2 = (Krr+D)x^2/2 + x B^T y + y^T C y/2``
+
+    with a finite real symmetric positive-definite internal block ``C``, the
+    relaxed curvature is ``Keff=Krr+D-B^T C^-1 B``.  Cholesky factorisation
+    makes the subtraction manifest as ``||L^-1 B||^2 >= 0``.  Congruence then
+    gives ``inertia(H)=inertia(C)+inertia(Keff)`` for the full Hessian.
+
+    The dynamical statement about damping and gyroscopic terms additionally
+    assumes a positive-definite mass matrix and constant linear coefficients.
+    Time-dependent drive, feedback, clamping, singular ``C``, and continuum
+    spectra are outside this finite-dimensional static theorem.
+    """
+
+    scalars = (
+        bare_radial_curvature,
+        direct_radial_stiffness,
+        absolute_tolerance,
+    )
+    if not all(
+        not isinstance(value, bool)
+        and isinstance(value, Real)
+        and math.isfinite(value)
+        for value in scalars
+    ):
+        raise ValueError("Schur-audit scalar inputs must be finite real numbers")
+    if absolute_tolerance < 0.0:
+        raise ValueError("absolute_tolerance must be non-negative")
+
+    try:
+        internal = np.asarray(internal_curvature_matrix, dtype=float)
+        mixing = np.asarray(mixing_vector, dtype=float)
+    except (TypeError, ValueError) as error:
+        raise ValueError("internal curvature and mixing inputs must be real arrays") from error
+
+    if internal.ndim != 2 or internal.shape[0] == 0 or internal.shape[0] != internal.shape[1]:
+        raise ValueError("internal_curvature_matrix must be a non-empty square matrix")
+    if mixing.ndim != 1 or mixing.shape[0] != internal.shape[0]:
+        raise ValueError("mixing_vector must have one entry per internal mode")
+    if not np.all(np.isfinite(internal)) or not np.all(np.isfinite(mixing)):
+        raise ValueError("internal curvature and mixing inputs must be finite")
+    if not np.allclose(internal, internal.T, rtol=0.0, atol=absolute_tolerance):
+        raise ValueError("internal_curvature_matrix must be symmetric")
+
+    symmetric_internal = 0.5 * (internal + internal.T)
+    minimum_internal_curvature = float(np.linalg.eigvalsh(symmetric_internal)[0])
+    if minimum_internal_curvature <= absolute_tolerance:
+        raise ValueError(
+            "internal_curvature_matrix must be numerically positive definite"
+        )
+
+    cholesky = np.linalg.cholesky(symmetric_internal)
+    whitened_mixing = np.linalg.solve(cholesky, mixing)
+    mixing_softening = float(whitened_mixing @ whitened_mixing)
+    effective = (
+        float(bare_radial_curvature)
+        + float(direct_radial_stiffness)
+        - mixing_softening
+    )
+    lower_bound = -float(bare_radial_curvature) + mixing_softening
+
+    strictly_stable = effective > absolute_tolerance
+    marginal = abs(effective) <= absolute_tolerance
+    unstable = effective < -absolute_tolerance
+    mode_count = int(internal.shape[0])
+
+    return PassiveMultimodeSchurAudit(
+        bare_radial_curvature=float(bare_radial_curvature),
+        direct_radial_stiffness=float(direct_radial_stiffness),
+        internal_mode_count=mode_count,
+        minimum_internal_curvature=minimum_internal_curvature,
+        mixing_softening=mixing_softening,
+        relaxed_effective_radial_curvature=effective,
+        passive_mixing_strictly_softens=mixing_softening > absolute_tolerance,
+        strictly_stable=strictly_stable,
+        marginal=marginal,
+        unstable=unstable,
+        strict_direct_stiffness_lower_bound=lower_bound,
+        direct_stiffness_exceeds_lower_bound=strictly_stable,
+        full_hessian_positive_eigenvalue_count=mode_count + int(strictly_stable),
+        full_hessian_negative_eigenvalue_count=int(unstable),
+        full_hessian_zero_eigenvalue_count=int(marginal),
+        positive_mass_matrix_required_for_dynamical_claim=True,
+        constant_linear_controls_cannot_cure_unstable_mode=unstable,
+        finite_dimensional_static_no_go_proved=True,
+    )
+
+
 def audit_relaxed_internal_mode(
     bare_radial_curvature: float,
     internal_mode_curvature: float,
@@ -334,32 +476,39 @@ def audit_relaxed_internal_mode(
     mixing alone therefore cannot raise a negative radial eigenvalue.
     """
 
-    values = (
+    multimode = audit_passive_multimode_schur(
         bare_radial_curvature,
-        internal_mode_curvature,
-        mixing,
-        direct_radial_stiffness,
+        [[internal_mode_curvature]],
+        [mixing],
+        direct_radial_stiffness=direct_radial_stiffness,
     )
-    if not all(math.isfinite(value) for value in values):
-        raise ValueError("internal-mode inputs must be finite")
-    if internal_mode_curvature <= 0.0:
-        raise ValueError("internal_mode_curvature must be positive")
-
-    mixing_softening = mixing**2 / internal_mode_curvature
-    effective = bare_radial_curvature + direct_radial_stiffness - mixing_softening
-    minimum_direct = max(0.0, -bare_radial_curvature + mixing_softening)
 
     return InternalModeStabilityAudit(
-        bare_radial_curvature=bare_radial_curvature,
-        internal_mode_curvature=internal_mode_curvature,
-        mixing=mixing,
-        direct_radial_stiffness=direct_radial_stiffness,
-        relaxed_effective_radial_curvature=effective,
+        bare_radial_curvature=multimode.bare_radial_curvature,
+        internal_mode_curvature=float(internal_mode_curvature),
+        mixing=float(mixing),
+        direct_radial_stiffness=multimode.direct_radial_stiffness,
+        mixing_softening=multimode.mixing_softening,
+        relaxed_effective_radial_curvature=(
+            multimode.relaxed_effective_radial_curvature
+        ),
         passive_mixing_stiffens_radial_mode=False,
-        radially_stable_after_relaxation=effective > 0.0,
-        minimum_direct_stiffness_required=minimum_direct,
-        active_or_nonadiabatic_control_required=(
-            bare_radial_curvature < 0.0 and direct_radial_stiffness <= minimum_direct
+        radially_stable_after_relaxation=multimode.strictly_stable,
+        marginal_after_relaxation=multimode.marginal,
+        strict_direct_stiffness_lower_bound=(
+            multimode.strict_direct_stiffness_lower_bound
+        ),
+        direct_stiffness_exceeds_lower_bound=(
+            multimode.direct_stiffness_exceeds_lower_bound
+        ),
+        additional_direct_or_time_dependent_control_required=(
+            not multimode.strictly_stable
+        ),
+        constant_linear_controls_cannot_cure_unstable_mode=(
+            multimode.constant_linear_controls_cannot_cure_unstable_mode
+        ),
+        finite_dimensional_static_no_go_proved=(
+            multimode.finite_dimensional_static_no_go_proved
         ),
     )
 

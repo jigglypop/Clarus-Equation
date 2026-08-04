@@ -115,6 +115,35 @@ b/r_0=1-\frac z3+\frac\gamma2z^2+\cdots,
 점근평탄성, \(0.1<F/F_0<10\)을 함께 요구한 후보도
 \(r\simeq1.62r_0\)에서 kinetic/F \(<-1.3\)으로 실패했다.
 
+### 유한 격자 판정의 범위
+
+`global_nonminimal_codesign_audit`의 수치 출력은 연속 radial 구간에 대한 전역
+증명이 아니다. 따라서 최솟값과 통과 판정은
+`sampled_minimum_kinetic_over_planck_factor`, `sampled_minimum_shape_gap`,
+`sampled_regular_planck_factor_control`, `sampled_codesign_pass`처럼
+`sampled_*`로 표기한다. 기존의 `global_codesign_pass` 등은 호출 호환성을 위한
+읽기 전용 property일 뿐이며 같은 표본 판정을 돌려준다. 반환값의
+`continuous_domain_certification`은 명시적으로
+`not established by finite-grid sampling`이다.
+
+입력 gate는 `radial_cutoff`가 유한한 실수이고 2보다 큰지, `sample_count`가
+`bool`이 아닌 정수이며 256 이상인지 검사한다. 계수 입력이 유한하더라도 profile
+계산에서 overflow, pole 또는 0으로 나누기가 생기면 모든 `min`/`argmin` 이전에
+비유한 배열을 거부한다.
+
+각 호출은 같은 cutoff에서 N, 2N, 4N 격자를 독립 계산하고 raw delta를
+`resolution_convergence`에 기록한다. 단순 연장 control의 N=2400 결과는
+
+\[
+K_{\min}^{(N)}=-2.0980194543,
+\quad K_{\min}^{(2N)}-K_{\min}^{(N)}=4.79\times10^{-6},
+\quad K_{\min}^{(4N)}-K_{\min}^{(2N)}=9.29\times10^{-7}.
+\]
+
+세 해상도에서 실패 분류는 일치한다. 이것은 해당 음의 pocket이 단순한 저해상도
+표본 오류일 가능성을 낮추는 수렴 control이지만, 격자 사이를 덮는 해석적 bound나
+interval arithmetic가 아니므로 연속 전역 pass를 발행하지 않는다.
+
 이 수치 실패는 알려진 전역 정리와 일치한다. 유효 Newton 상수가 양수·유한하고 scalar
 field-space metric이 ghost-free인 정적 구면대칭 scalar-tensor 이론은 양 끝이 잘 behaved인
 traversable wormhole을 scalar만으로 지탱할 수 없다. scalar 수, potential과 비최소결합 값도
@@ -139,5 +168,6 @@ traversable wormhole을 scalar만으로 지탱할 수 없다. scalar 수, potent
 
 ```powershell
 uv run pytest tests/test_nonminimal_global_reconstruction.py -q
+uv run pytest tests/test_nonminimal_global_codesign.py -q
 uv run python examples/physics/nonminimal_global_reconstruction_gate.py
 ```

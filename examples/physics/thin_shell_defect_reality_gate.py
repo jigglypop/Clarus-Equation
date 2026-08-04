@@ -1,6 +1,7 @@
 from reality_stone.clarus.thin_shell_defect_reality import (
     audit_floquet_radial_control,
     audit_floquet_junction_actuator,
+    audit_passive_multimode_schur,
     audit_quantum_negative_layer,
     audit_static_schwarzschild_thin_shell,
     barotropic_radial_stability,
@@ -37,6 +38,27 @@ def main() -> None:
     print(f"  UV energy [eV]                  {quantum.ultraviolet_energy_ev:.6e}")
     print(f"  sampling time [s]               {quantum.sampling_time_s:.6e}")
     print(f"  boundary completion required    {quantum.boundary_completion_required}")
+
+    passive = audit_passive_multimode_schur(
+        -2.0,
+        [[4.0, 1.0], [1.0, 3.0]],
+        [1.0, -2.0],
+    )
+    print("finite passive-mode Schur no-go")
+    print(f"  B^T C^-1 B softening            {passive.mixing_softening:.6e}")
+    print(
+        "  relaxed radial curvature        "
+        f"{passive.relaxed_effective_radial_curvature:.6e}"
+    )
+    print(
+        "  strict direct-stiffness bound   "
+        f"D > {passive.strict_direct_stiffness_lower_bound:.6e}"
+    )
+    print(f"  full-Hessian negative modes     {passive.full_hessian_negative_eigenvalue_count}")
+    print(
+        "  constant damping/gyro cure      "
+        f"{not passive.constant_linear_controls_cannot_cure_unstable_mode}"
+    )
 
     floquet = audit_floquet_radial_control(0.05, 0.1)
     print("active Floquet radial control")

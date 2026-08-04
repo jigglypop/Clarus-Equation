@@ -171,25 +171,53 @@ deferred, full stress required`이다.
 
 ## 내부 공명 mode-mixing 루프
 
-방사형 변위 `x`와 안정한 내부 모드 `y`의 가장 일반적인 국소 2차 potential을
+방사형 변위 `x`와 유한개의 안정한 내부 모드 벡터 `y`의 가장 일반적인 국소 2차 potential을
 
 \[
-V_2=\frac12(K_{rr}+D)x^2+Bxy+\frac12Cy^2,\qquad C>0
+V_2=\frac12(K_{rr}+D)x^2+xB^{\mathsf T}y
+    +\frac12y^{\mathsf T}Cy,\qquad C=C^{\mathsf T}\succ0
 \]
 
-로 둔다. 내부 모드가 수동적으로 완화되면 `y=-B x/C`이고
+로 둔다. 내부 모드가 수동적으로 완화되면
 
 \[
-K_{\rm eff}=K_{rr}+D-\frac{B^2}{C}
+y_*=-C^{-1}Bx,qquad
+K_{\rm eff}=K_{rr}+D-B^{\mathsf T}C^{-1}B
 \]
 
-이다. 따라서 안정한 mode를 결합하는 공명 mixing 자체는 음의 방사형
-고유값을 올리지 못하고 항상 그대로 두거나 더 낮춘다. 안정화를 수행하는 것은
-mixing이 아니라 별도의 직접 강성 `D > -K_rr+B^2/C`이다.
+이다. Cholesky 분해 `C=LL^T`를 쓰면
+
+\[
+B^{\mathsf T}C^{-1}B=\|L^{-1}B\|^2\ge0
+\]
+
+이므로 안정한 mode를 결합하는 공명 mixing 자체는 음의 방사형 고유값을
+올리지 못하고 항상 그대로 두거나 더 낮춘다. 더 강하게 전체 Hessian `H`는
+
+\[
+P^{\mathsf T}HP=\operatorname{diag}(K_{\rm eff},C),\qquad
+P=\begin{pmatrix}1&0\\-C^{-1}B&I\end{pmatrix}
+\]
+
+로 합동변환된다. 따라서 `C>0`일 때 `K_eff<0`이면 음의 고유방향은 정확히
+하나이고, `K_eff=0`은 안정이 아니라 marginal zero mode다. strict 안정화 조건은
+
+\[
+D>-K_{rr}+B^{\mathsf T}C^{-1}B
+\]
+
+이며 우변은 minimum이 아니라 **strict lower bound**다.
+
+또한 양의 질량행렬 `M`과 상수 감쇠·gyroscopic 행렬을 갖는
+`M q¨+(R+G)q˙+Hq=0`, `G^T=-G`에서도 `K_eff<0`이면
+`det H<0`이다. 실수 특성식은 `p(0)<0`, `p(λ)→+∞`이므로 양의 실수 성장률을
+반드시 갖는다. 상수 감쇠나 gyroscopic coupling은 이 tachyon을 제거하지 못한다.
+시간주기 drive, feedback, clamping, singular 내부 블록, 연속 스펙트럼은 이
+유한차원 정적 정리의 범위 밖이다.
 
 | 후보 | 판정 |
 |---|---|
-| passive stable internal resonance mixing | `Refuted as stabilizer` |
+| finite passive stable internal resonance mixing | `Exact static quadratic no-go` |
 | explicit positive direct radial stiffness | `Mathematically possible / source open` |
 | driven Floquet 또는 feedback stabilization | `Open, non-static and noise/backreaction required` |
 

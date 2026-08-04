@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import numpy as np
 import pytest
 
 from reality_stone.clarus.fermion_topological_reality import (
@@ -44,6 +45,31 @@ def test_flux_multiplicity_is_a_physical_count_not_free_quality_factor() -> None
     assert passed.scale_bound_satisfied
     assert passed.dsnec_scale_lower_bound == 1000.0
     assert not passed.exact_integer_flux_action_specified
+
+
+def test_flux_multiplicity_accepts_numpy_integer_scalars() -> None:
+    audit = flux_multiplicity_control(
+        wormhole_length_m=7.0,
+        magnetic_radius_m=1.0,
+        flux_zero_mode_count=np.int64(7),
+    )
+
+    assert audit.flux_zero_mode_count == 7
+    assert type(audit.flux_zero_mode_count) is int
+    assert audit.scale_bound_satisfied
+
+
+@pytest.mark.parametrize(
+    "count",
+    [1.5, 1.0, True, False, float("nan"), float("inf"), -float("inf")],
+)
+def test_flux_multiplicity_rejects_non_integer_inputs(count: object) -> None:
+    with pytest.raises(ValueError, match="positive integer"):
+        flux_multiplicity_control(
+            wormhole_length_m=1.0,
+            magnetic_radius_m=1.0,
+            flux_zero_mode_count=count,  # type: ignore[arg-type]
+        )
 
 
 @pytest.mark.parametrize("length", [0.0, -1.0])

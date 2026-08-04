@@ -60,7 +60,7 @@
 | CE resonance의 물리적 pole과 residue | `Open` | 문서가 pole 형식을 ansatz로 제시하나 Q0 gate는 spectral density와 LSZ를 미유도 판정 | $\Gamma_Q^{(2)}$, positivity, pole/cut, $Z_Q$ 계산 필요 |
 | CE 공간접힘 가능성 단계 | `W1/Kinematic` | W0 선택·제어와 W1 주어진 기하 shortcut은 통과; W2 renormalized 음의 $T_{\mu\nu}$ 미도달 | W2 stress source가 전체 사슬의 현재 병목 |
 | CE $\xi R\Phi^2$ 비최소장의 국소 null source | `Conditional pass/W2a` | 선택한 Jordan-frame convention에서 $N_{kk}=(\Phi')^2-\xi(\Phi^2)''$; $\xi=0.49$와 $F=1-\xi\Phi^2>0$인 음의 국소 반례 실행 | CE Q0 부호·정규화, EOM과 전체 perturbation 안정성 필요 |
-| 국소화 비최소 CE profile의 단순 ANEC 우회 | `Refuted in boundary-zero control` | endpoint jump 0이면 $\int N_{kk}=\int(\Phi')^2\ge0$ | Casimir 경계·곡률 진공상태·가변 $F$의 완전 계산 필요 |
+| 국소화 비최소 CE profile의 effective-source ANEC 우회 | `Refuted for healthy localized F>0 control` | 기존 $\int N_{kk}$ 표기를 교정; $\int N_{kk}/F=\int[(\Phi')^2/F+(F'/F)^2]+[F'/F]_{\rm end}\ge0$ | 비영 endpoint·Casimir 경계·양자 재규격화 stress는 별도 계산 필요 |
 | 이상적 Casimir plate의 1m 목 scale | `Negative control` | normal null stress 역산에서 $a=3.66\times10^{-18}$ m, CE $\xi$의 $5.5\times10^{-4}$ | 실제 구면 경계, 물질, 전체 보존 stress와 backreaction 미해결 |
 | 비최소 $1/F$만의 CE 밀도격차 증폭 | `Singular-limit control` | $2.85\times10^{16}$배에는 $F=3.51\times10^{-17}$, 중력 pole 상대거리 $1.75\times10^{-17}$ 필요 | regular effective gravity/strong-coupling gate 실패 가능성 큼 |
 | 이상적 Casimir의 zero-redshift throat tensor matching | `Negative control` | $\rho,p_r$ matching은 $b'=-1/3$이나 tangential pressure residual $\Delta p_t=C/3$ | 비최소 scalar 또는 redshift gradient의 보조 stress 필요 |
@@ -185,9 +185,13 @@ $A_s$는 총 고정점 응답 $dx/dD$가 아니라 잔차 방정식의 국소 �
 
 ## 다중 모드 전역 throat 추가 판정 (2026-08-04)
 
+이번 재감사의 수식·반례·점수와 다음 stop condition은
+[텔레포트 루프 엔지니어링 감사](./TELEPORT_LOOP_ENGINEERING_2026-08-04.md)에 묶었다.
+
 | 항목 | 현재 판정 | 검증 결과 | 남은 bridge |
 |---|---|---|---|
-| 가변 비등방 전역 throat target | `Exact/Finite control` | 목의 정확한 Casimir tensor, 유한 lapse, 응력 보존, 점근 평탄성, 유한 ADM 질량 $M/r_0=1/3$ | 실제 물질장 구현 |
+| 기존 exponential 전역 throat target | `Exact geometry / source-tail fail` | 목의 정확한 Casimir tensor, cutoff-independent 점근평탄성, 각 end ADM $M/r_0=1/3$, Bianchi exact. 그러나 $p_r\sim-2/(3x^3)$라 coordinate/proper volume NEC가 $-(2/3)\ln X$로 발산 | 공간적으로 국소화된 실제 물질장 |
+| ADM-matched redshift 보강 | `Exact geometry + finite-tail control` | $\Phi=\frac12\ln(1-2/3x)+\frac32e^{1-x}$가 throat data와 ADM을 보존하고 lapse$^2\ge1/3$; 모든 volume-NEC burden이 유한 | radial NEC는 여전히 전구간 음수, CE matter EOM·전역 scalar kinetic·안정성 미도출 |
 | 유한 공간 모드 표현 | `Numerical control` | $1\le r/r_0\le10$에서 32모드 최대 정규화 오차 $1.66\times10^{-7}$ | 구현 가능한 공진기 spectrum과의 동일시 |
 | CE 공명 음의 응력 | `Open` | 필요한 target tensor는 특정됨 | 재규격화된 CE $\langle T_{\mu\nu}\rangle$, carrier-envelope 결합, 양자부등식, 안정성 |
 
@@ -223,6 +227,12 @@ beyond-Horndeski는 더 많은 구조 gate를 만족하지만 현재 CE 작용 �
 \(r\simeq1.62r_0\)에 음의 kinetic 영역을 남겼다. 양수·유한 \(F\)와 ghost-free field-space
 metric을 유지하는 scalar-tensor 전역 no-go와 합쳐, standalone CE \(\xi R\Phi^2\)
 단일·다중 scalar source는 `Refuted globally`로 갱신한다.
+
+여기서 코드가 직접 제공하는 것은 `sampled_*` 판정뿐이다. N/2N/4N에서 kinetic
+최솟값 변화가 각각 `4.79e-6`, `9.29e-7`로 줄고 실패 분류가 유지되지만 interval
+bound는 아니다. 따라서 finite-grid 결과 자체에는 continuous-domain PASS/FAIL을
+발행하지 않으며, 위 `Refuted globally`의 연속 명제는 별도의 scalar-tensor 전역
+no-go 가정에 의존한다.
 
 ## Beyond-Horndeski 현실화 추가 판정 (2026-08-04)
 
@@ -289,10 +299,14 @@ scale/strong-coupling bridge는 같은 모델에서 열려 있어 전체 현실�
 해석식으로 제공되지 않아 slow-spectrum 독립 재현은 현재 불가능하다. 판정은
 `complete criteria derived / passing explicit wormhole still open`이다.
 
-thin-shell 내부 공명은 안정한 passive mode를 적분소거하면
-`K_eff=K_rr-B C^-1 B^T`가 되어 radial tachyon을 개선하지 못한다. 따라서
-수동 다중공명 mixing 단독 안정화는 `Refuted`; 별도 직접 radial stiffness나
-driven/Floquet feedback만 `Open`이다.
+thin-shell 내부 공명은 임의의 유한 대칭 양의 정부호 내부 블록 `C`에 대해
+`K_eff=K_rr+D-B^T C^-1 B`가 된다. `B^T C^-1 B>=0`이고 전체 Hessian은
+`diag(K_eff,C)`와 합동이므로, `K_eff<0`이면 음의 방향이 정확히 하나 남고
+등호는 marginal이다. 필요한 직접 강성은 strict bound
+`D>-K_rr+B^T C^-1 B`이다. 양의 질량행렬 아래 상수 감쇠·gyroscopic 결합도
+양의 실수 성장근을 없애지 못한다. 판정은
+`Exact / finite-dimensional static quadratic no-go`; 시간의존 drive·feedback,
+singular block, 연속 스펙트럼은 별도 `Open`이다.
 
 Floquet radial control은 exact monodromy 적분에서
 `Gamma/Omega=0.05, epsilon=0.1`이 `|tr M|<2`, `det M=1`을 만족해

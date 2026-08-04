@@ -62,19 +62,87 @@ canonical kinetic sign을 뒤집지 않고 국소 effective NEC 위반 gate가
 CE Q0 전체 작용, 운동방정식과 perturbation operator가 미완성이므로 전역
 해나 안정성 증명은 아니다.
 
-## 3. 평균 null gate: 경계 또는 곡률상태가 필요하다
+## 3. 평균 null gate 교정: 물리량은 \(N_{kk}/F\)다
 
-위 numerator를 완전 affine null curve에서 적분하면
+이전 구현은
 
 \[
 \int N_{kk}\,d\lambda
 =\int(\Phi')^2d\lambda
--\xi\left[(\Phi^2)'\right]_{-\infty}^{+\infty}.
+-\xi\left[(\Phi^2)'\right]_{-\infty}^{+\infty}
 \]
 
-국소화된 profile이 양끝에서 같은 진공으로 돌아가 boundary jump가 0이면
-첫 항만 남아 비음수다. 따라서 국소 음의 pocket만으로 averaged gate를
-통과하지 못한다.
+를 곧바로 averaged NEC라고 불렀다. 이것은 **unrearranged numerator의 적분**일
+뿐이다. 선택한 Jordan-frame Einstein 식에서 실제 effective null source는
+
+\[
+\mathcal A_{\rm eff}
+=\int\frac{N_{kk}}{F}\,d\lambda,
+\qquad
+F=1-\xi\Phi^2,
+\qquad
+N_{kk}=(\Phi')^2+F''
+\]
+
+이다. 따라서 \(F\)가 변하면 기존 경계항 식을 그대로 적용할 수 없다.
+
+실제로 \([-1,1]\)의 한 cubic profile control에서는 전 구간
+`min F=0.07655>0`인데도 numerator-only 값은 `-0.06258`, 물리적
+`integral(N_kk/F)`는 `+0.07563`이다. 즉 기존 boolean은 실제 판정을 뒤집는
+false positive를 만들 수 있었다. 이 회귀 반례를 테스트에 고정했다.
+
+다만 \(F>0\)인 건강한 구간에서는 정확한 항등식
+
+\[
+\frac{F''}{F}
+=\left(\frac{F'}F\right)'
++\left(\frac{F'}F\right)^2
+\]
+
+을 사용해
+
+\[
+\boxed{
+\mathcal A_{\rm eff}
+=\int\left[
+\frac{(\Phi')^2}{F}
++\left(\frac{F'}F\right)^2
+\right]d\lambda
++\left[\frac{F'}F\right]_{-\infty}^{+\infty}}
+\]
+
+를 얻는다. 양끝의 logarithmic Planck-factor derivative가 0이면 두 bulk 항은
+모두 비음수다. 즉 기존 localized no-go의 **계산식은 틀렸지만 결론은 더 강한
+물리적 항등식으로 복구된다**.
+
+실행 Gaussian control
+
+\[
+\Phi(\lambda)=0.5e^{-\lambda^2/2},\qquad \xi=0.49
+\]
+
+에서는 \(F_{\min}=0.8775\)이고 국소 \(N_{kk}/F<0\) pocket이 실제로 존재한다.
+그럼에도
+
+\[
+\mathcal A_{\rm eff}=0.2535027873638524>0,
+\]
+
+이며 direct 적분과 위 항등식의 잔차는 \(3.4\times10^{-16}\) 이하다. 반대로
+\(F\le0\) 교차는 effective gravity pole이므로 이 건강한 정리의 후보에서 즉시
+제외한다.
+
+따라서 국소 음의 pocket만으로 averaged gate를 통과하지 못하며, 음의 평균에는
+비영 endpoint \([F'/F]\), 추가 물질·경계 stress, 또는 이 가정 밖의 전역 구조가
+필요하다. 이는 선택한 Jordan-frame rearrangement의 effective-source 정리이지
+모든 conformal frame과 양자 재규격화 stress에 대한 보편 정리는 아니다.
+
+[Fewster--Osterbrink의 고전 비최소장 평균 부등식](https://arxiv.org/abs/gr-qc/0606009)은
+점별 에너지조건 실패와 평균 제약을 구분하며, Ricci-flat 배경에서의 ANEC 조건을
+분석한다. 반면 [Barcelo--Visser](https://arxiv.org/abs/gr-qc/0003025)는 다른
+전역 branch에서 ANEC 위반과 wormhole을 얻을 수 있지만 scalar가 trans-Planckian
+영역에 도달해야 함을 보인다. 따라서 여기서 닫힌 것은 오직 \(F>0\), localized
+endpoint를 가진 현재 control class다.
 
 이 때문에 현재 CE-native 최상위 후보는 다음 두 하이브리드다.
 

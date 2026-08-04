@@ -46,6 +46,9 @@ q\gtrsim\frac{\ell}{r_e}\gg1
 
 을 요구한다. 예를 들어 \(\ell/r_e=1000\)이면 적어도 1000개의 flux zero mode가 필요하다.
 정확한 integer flux는 gauge bundle과 magnetic charge를 포함한 작용에서 나와야 한다.
+계산 gate도 이 이산성을 보존한다. Python 정수와 `numbers.Integral`을 구현하는 NumPy 정수
+스칼라는 허용하지만, `bool`과 실수형 및 `NaN`/`Inf`는 정수 변환 전에 거부한다. 따라서
+예를 들어 `999.9`가 `999`로 조용히 절삭되어 물리적 flux 수로 오인되는 경로는 없다.
 
 ## CE mapping
 
