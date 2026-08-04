@@ -170,3 +170,11 @@ $A_s$는 총 고정점 응답 $dx/dD$가 아니라 잔차 방정식의 국소 �
 | 다중모드에 의한 총량 감소 | `Refuted for fixed geometry` | 모드 분할은 같은 Einstein tensor의 적분 에너지를 바꾸지 않음 |
 | 동적 squeezed-state 정적 source | `Refuted/Control` | 1 m 광통과시간/QI 지속시간 규모비 $2.70\times10^{17}$ |
 | CE 비물질 경계 또는 수정중력 | `Open/Decisive` | 현재 shortcut 현실화에 필요한 새 물리 bridge |
+
+## 현실화 경로 funnel 추가 판정 (2026-08-04)
+
+10개 경로를 작용·음의 응력·backreaction·shortcut·안정성·공학 bridge로 감사했다.
+현재 6/6 통과 경로는 없다. CE 내부에서는 기존 \(\xi R\Phi^2\) 비최소결합 scalar의
+전역 inverse reconstruction과 quadratic perturbation spectrum이 다음 결정적 gate다.
+beyond-Horndeski는 더 많은 구조 gate를 만족하지만 현재 CE 작용 밖이며 안정성 검사가
+불완전하다.
