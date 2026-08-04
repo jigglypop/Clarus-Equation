@@ -266,3 +266,17 @@ Floquet radial control은 exact monodromy 적분에서
 `Gamma/Omega=0.05, epsilon=0.1`이 `|tr M|<2`, `det M=1`을 만족해
 `Finite control`로 승격했다. 다만 static negative stress를 공급하지 않고
 drive loss 후 tachyon이 복귀하므로 물리 source/realization 판정은 변하지 않는다.
+
+Floquet-to-Israel 역산은 1 m, `f=1/3` control에 `0.954 GHz`, pressure
+stiffness `6.68e44 N/m^2`, peak reactive power bound `5.03e43 W`, drive-loss
+e-fold `3.34 ns`를 요구한다. 명시적 stress actuator가 없어 engineering gate는
+`Fail/Absent`이고 negative-energy source 문제도 그대로다.
+
+negative-tension brane에 local `alpha K^2` rigidity를 추가한 propagator는
+`1/(Tz+alpha z^2)=(1/T)/z-(1/T)/(z+T/alpha)`다. `T<0`에서 IR bending
+pole의 residue가 계속 음수이므로 minimal rigid-brane completion은 `Refuted`다.
+
+induced-gravity defect는 ghost-free coupling 영역 자체는 존재하지만 CE의
+localized EH coefficient, modified junction equation, bulk boundary condition,
+KK/brane-bending spectrum이 없다. `External open frontier / CE mapping absent`로
+판정하며 thin-shell 경로 안에서만 집계한다.

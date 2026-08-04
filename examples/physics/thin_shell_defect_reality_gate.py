@@ -1,5 +1,6 @@
 from reality_stone.clarus.thin_shell_defect_reality import (
     audit_floquet_radial_control,
+    audit_floquet_junction_actuator,
     audit_quantum_negative_layer,
     audit_static_schwarzschild_thin_shell,
     barotropic_radial_stability,
@@ -44,6 +45,15 @@ def main() -> None:
     print(f"  monodromy determinant           {floquet.monodromy_determinant:.6e}")
     print(f"  exact stable                    {floquet.exact_floquet_stable}")
     print(f"  static source supplied          {floquet.supplies_static_negative_stress}")
+
+    actuator = audit_floquet_junction_actuator()
+    print("Floquet-to-Israel actuator map")
+    print(f"  drive frequency [Hz]            {actuator.drive_frequency_hz:.6e}")
+    print(f"  pressure stiffness [N/m^2]      {actuator.pressure_stiffness_n_m2:.6e}")
+    print(f"  pressure modulation [N/m]       {actuator.pressure_modulation_n_m:.6e}")
+    print(f"  peak reactive power [W]         {actuator.peak_reactive_mechanical_power_w:.6e}")
+    print(f"  drive-loss e-fold [s]           {actuator.drive_loss_efold_s:.6e}")
+    print(f"  physical actuator specified     {actuator.actuator_action_specified}")
 
 
 if __name__ == "__main__":

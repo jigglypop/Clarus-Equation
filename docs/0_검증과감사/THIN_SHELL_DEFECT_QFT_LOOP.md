@@ -227,6 +227,95 @@ stress, 발열, noise, payload coupling도 아직 없다.
 판정: `Floquet stabilization = demonstrated control`, `wormhole realization =
 not advanced unless a physical stress actuator is derived`.
 
+## Floquet-to-Israel actuator 역산
+
+동적 대칭 shell의 Israel pressure 식을 선형화하면 추가 표면압력은
+
+\[
+\delta\ddot a=\frac{4\pi G\sqrt f}{c^2}\delta p
+\]
+
+의 정상 가속도를 만든다. Floquet 항 `-h cos(Omega t) delta a`와 맞추면
+
+\[
+\frac{\partial p}{\partial a}
+=\frac{c^2h}{4\pi G\sqrt f}
+\]
+
+가 필요하다. `a=1 m`, `f=1/3`, `a^2V''=-2`, `Gamma/Omega=0.05`,
+`epsilon=h/Omega^2=0.1`, 허용 변위 `delta a/a=1e-6`의 결과는 다음과 같다.
+
+| 양 | 결과 |
+|---|---:|
+| instability growth rate | `2.998e8 s^-1` |
+| drive frequency | `9.543e8 Hz` |
+| parametric coefficient `h` | `3.595e18 s^-2` |
+| pressure stiffness | `6.68e44 N/m^2` |
+| pressure modulation | `6.68e38 N/m` |
+| background pressure 대비 | `6.00e-5` |
+| peak reactive mechanical power bound | `5.03e43 W` |
+| drive-loss e-fold | `3.34 ns` |
+
+피크 반응성 출력은 `area * |delta p| * peak velocity`이며 평균 소비전력과
+동일하다고 가정하지 않는다. 손실과 actuator action이 없으므로 평균 실전력은
+아직 계산할 수 없다. 그러나 actuator가 취급해야 할 stress와 bandwidth가
+중력 규모라는 사실은 변하지 않는다.
+
+판정: `mathematical feedback control PASS`, `physical stress actuator FAIL/ABSENT`,
+`negative-energy source still absent`.
+
+## rigid negative-tension brane 루프
+
+음의 장력 막의 bending ghost를 국소 extrinsic-curvature rigidity
+`alpha K^2`로 고치는 최소 시도를 검사했다. 굽힘 모드의 2차 inverse
+propagator를
+
+\[
+P(z)=Tz+\alpha z^2,\qquad T<0
+\]
+
+로 쓰면
+
+\[
+\frac1{P(z)}=\frac1T\frac1z-\frac1T\frac1{z+T/\alpha}.
+\]
+
+원래 massless pole의 residue `1/T`는 계속 음수이고 새 pole은 반대 residue를
+갖는다. `alpha`의 크기를 바꾸면 새 pole의 위치만 움직일 뿐 두 residue를 모두
+양수로 만들 수 없다.
+
+판정: `local K^2 rigidity cure = Refuted`. 유도중력이나 추가 healthy field가
+전체 2차 kinetic coefficient를 양수로 뒤집어야 하며, 이는 별도의 수정중력
+작용과 backreaction 문제다.
+
+## induced-gravity/nonlocal defect 분기
+
+DGP형 localized Einstein--Hilbert 항은 계수 선택에 따라 ghost-free 영역이
+가능하므로 이론 클래스 전체를 반증할 수는 없다. 다만 현재 문제의 shell
+worldvolume은 2+1차원이고, 순수 2+1 Einstein gravity 자체에는 국소 graviton
+자유도가 없다. 새로운 bending kinetic은 ambient bulk와의 혼합에서 와야 한다.
+
+따라서 다음 자료가 모두 새로 필요하다.
+
+1. bulk action과 localized EH coefficient
+2. 기존 Israel 식을 대체하는 modified junction equation
+3. 음의 장력 background를 실제로 만족하는 global solution
+4. brane-bending, bulk KK, scalar mode의 전체 pole/residue
+5. crossover/strong-coupling scale와 1 m throat의 hierarchy
+
+현재 CE에는 1, 2가 없으며 3--5도 계산할 입력이 없다. 비국소 kernel 역시
+spectral density와 retarded boundary condition이 없으면 안정성·인과성·손실을
+판정할 수 없다.
+
+판정: `induced gravity = external open frontier`, `CE completion = absent`,
+`reality pass = no`. 이 항목은 thin-shell active branch 내부에 유지하며 독립
+현실화 성공으로 중복 집계하지 않는다.
+
+관련 근거:
+
+- [Brane induced gravity: Ghosts and naturalness](https://arxiv.org/abs/1506.02666)
+- [Ghost problem and constraints on brane-localized gravity](https://arxiv.org/abs/2310.16297)
+
 ## 재현
 
 ```powershell

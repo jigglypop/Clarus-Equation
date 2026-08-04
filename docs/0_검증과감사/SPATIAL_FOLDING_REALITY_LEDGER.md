@@ -50,6 +50,20 @@ driven 후보는 exact monodromy 계산에서 `Gamma/Omega=0.05`,
 `Demonstrated control`이다. 그러나 음의 junction stress를 공급하지 않고
 drive loss 시 불안정성이 복귀하므로 realization gate 수는 올리지 않는다.
 
+Floquet 계수를 Israel pressure로 역산하면 1 m control에 `0.954 GHz`,
+`6.68e44 N/m^2`의 pressure stiffness, `5.03e43 W`의 피크 반응성 기계출력
+상한과 `3.34 ns`의 drive-loss e-fold가 나온다. 물리 actuator action이 없으므로
+`control PASS / engineering FAIL`이다.
+
+negative-tension 막의 local `K^2` rigidity 보강도 pole decomposition에서
+massless bending residue `1/T<0`를 보존하고 추가 pole에 반대 residue를 만든다.
+따라서 최소 rigid-brane cure는 `Refuted`다.
+
+induced-gravity defect는 ghost-free parameter class가 존재해 반증하지 않는다.
+그러나 2+1 localized EH 단독에는 국소 graviton이 없고 bulk mixing 전체가
+필요하다. CE에는 localized coefficient, modified junction solution, KK/bending
+spectrum이 없어 `external open frontier`로만 남는다.
+
 ## beyond-Horndeski 생존 조건
 
 2022 covariant 예시는 odd/even parity의 high-energy ghost 및 radial/angular

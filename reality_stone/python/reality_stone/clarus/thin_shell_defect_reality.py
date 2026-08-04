@@ -122,6 +122,55 @@ class FloquetRadialControlAudit:
     control_pass: bool
 
 
+@dataclass(frozen=True)
+class FloquetActuatorAudit:
+    radius_m: float
+    lapse: float
+    radial_potential_curvature_times_radius_squared: float
+    displacement_fraction: float
+    growth_rate_s_inv: float
+    drive_angular_frequency_s_inv: float
+    drive_frequency_hz: float
+    modulation_coefficient_s_inv2: float
+    pressure_stiffness_n_m2: float
+    pressure_modulation_n_m: float
+    background_pressure_n_m: float
+    pressure_modulation_fraction: float
+    peak_reactive_mechanical_power_w: float
+    drive_loss_efold_s: float
+    exact_floquet_control_pass: bool
+    actuator_action_specified: bool
+    supplies_required_negative_surface_energy: bool
+    realization_pass: bool
+
+
+@dataclass(frozen=True)
+class RigidNegativeTensionBraneAudit:
+    tension_kinetic_coefficient: float
+    rigidity_coefficient: float
+    massless_pole_residue: float
+    additional_pole_residue: float
+    additional_pole_scale_squared: float
+    infrared_bending_ghost: bool
+    residues_have_opposite_sign: bool
+    rigidity_removes_all_ghosts: bool
+    minimal_rigid_brane_reality_pass: bool
+
+
+@dataclass(frozen=True)
+class InducedGravityDefectAudit:
+    worldvolume_spacetime_dimensions: int
+    pure_worldvolume_eh_local_graviton_dof: int
+    localized_gravity_coupling_nonnegative: bool
+    explicit_modified_junction_solution: bool
+    negative_tension_bending_mode_cured: bool
+    full_bulk_brane_spectrum_closed: bool
+    localized_eh_coefficient_in_ce_action: bool
+    bulk_boundary_conditions_specified: bool
+    current_reality_pass: bool
+    verdict: str
+
+
 def barotropic_radial_stability(
     lapse: float,
     sound_speed_squared: float,
@@ -469,4 +518,153 @@ def audit_static_schwarzschild_thin_shell(
         species_cutoff_to_radius=species_cutoff / radius_m,
         explicit_defect_action_present=False,
         microscopic_stability_closed=False,
+    )
+
+
+def audit_floquet_junction_actuator(
+    radius_m: float = 1.0,
+    lapse: float = 1.0 / 3.0,
+    *,
+    radial_potential_curvature_times_radius_squared: float = -2.0,
+    instability_to_drive_frequency: float = 0.05,
+    modulation_over_drive_squared: float = 0.1,
+    displacement_fraction: float = 1.0e-6,
+) -> FloquetActuatorAudit:
+    """Map dimensionless Floquet control to a junction-pressure actuator.
+
+    Linearising the dynamic Israel pressure gives an actuator acceleration
+    ``delta a_ddot = 4 pi G sqrt(f) delta p / c^2``.  Matching the parametric
+    term ``-h cos(Omega t) delta a`` therefore fixes the pressure stiffness.
+    The reported power is a peak reactive mechanical bound ``area*dp*v``;
+    it is not a claim about cycle-averaged power consumption.
+    """
+
+    values = (
+        radius_m,
+        lapse,
+        radial_potential_curvature_times_radius_squared,
+        instability_to_drive_frequency,
+        modulation_over_drive_squared,
+        displacement_fraction,
+    )
+    if not all(math.isfinite(value) for value in values):
+        raise ValueError("Floquet actuator inputs must be finite")
+    if radius_m <= 0.0:
+        raise ValueError("radius_m must be positive")
+    if not 0.0 < lapse <= 1.0:
+        raise ValueError("lapse must lie in (0, 1]")
+    if radial_potential_curvature_times_radius_squared >= 0.0:
+        raise ValueError("radial potential curvature must be negative")
+    if instability_to_drive_frequency <= 0.0:
+        raise ValueError("instability_to_drive_frequency must be positive")
+    if modulation_over_drive_squared < 0.0:
+        raise ValueError("modulation_over_drive_squared must be non-negative")
+    if displacement_fraction <= 0.0:
+        raise ValueError("displacement_fraction must be positive")
+
+    control = audit_floquet_radial_control(
+        instability_to_drive_frequency,
+        modulation_over_drive_squared,
+    )
+    shell = audit_static_schwarzschild_thin_shell(radius_m, lapse)
+    growth_rate = (
+        C
+        / radius_m
+        * math.sqrt(-0.5 * radial_potential_curvature_times_radius_squared)
+    )
+    drive_angular_frequency = growth_rate / instability_to_drive_frequency
+    modulation_coefficient = (
+        modulation_over_drive_squared * drive_angular_frequency**2
+    )
+    pressure_stiffness = (
+        C**2 * modulation_coefficient / (4.0 * math.pi * G * math.sqrt(lapse))
+    )
+    displacement = displacement_fraction * radius_m
+    pressure_modulation = pressure_stiffness * displacement
+    area = 4.0 * math.pi * radius_m**2
+    peak_velocity = drive_angular_frequency * displacement
+    peak_reactive_power = area * pressure_modulation * peak_velocity
+
+    return FloquetActuatorAudit(
+        radius_m=radius_m,
+        lapse=lapse,
+        radial_potential_curvature_times_radius_squared=(
+            radial_potential_curvature_times_radius_squared
+        ),
+        displacement_fraction=displacement_fraction,
+        growth_rate_s_inv=growth_rate,
+        drive_angular_frequency_s_inv=drive_angular_frequency,
+        drive_frequency_hz=drive_angular_frequency / (2.0 * math.pi),
+        modulation_coefficient_s_inv2=modulation_coefficient,
+        pressure_stiffness_n_m2=pressure_stiffness,
+        pressure_modulation_n_m=pressure_modulation,
+        background_pressure_n_m=shell.tangential_pressure_n_m,
+        pressure_modulation_fraction=(
+            pressure_modulation / shell.tangential_pressure_n_m
+        ),
+        peak_reactive_mechanical_power_w=peak_reactive_power,
+        drive_loss_efold_s=1.0 / growth_rate,
+        exact_floquet_control_pass=control.control_pass,
+        actuator_action_specified=False,
+        supplies_required_negative_surface_energy=False,
+        realization_pass=False,
+    )
+
+
+def audit_rigid_negative_tension_brane(
+    tension_kinetic_coefficient: float = -1.0,
+    rigidity_coefficient: float = 1.0,
+) -> RigidNegativeTensionBraneAudit:
+    """Audit whether a local ``K^2`` rigidity term cures negative tension.
+
+    The quadratic inverse propagator is ``P(z)=T*z+alpha*z^2``.  Its inverse
+    decomposes as ``1/P=(1/T)/z-(1/T)/(z+T/alpha)``.  For ``T<0`` the original
+    massless bending pole keeps negative residue, while the new pole has the
+    opposite residue.  Higher derivatives do not turn both poles healthy.
+    """
+
+    if not math.isfinite(tension_kinetic_coefficient):
+        raise ValueError("tension_kinetic_coefficient must be finite")
+    if not math.isfinite(rigidity_coefficient) or rigidity_coefficient == 0.0:
+        raise ValueError("rigidity_coefficient must be finite and nonzero")
+    if tension_kinetic_coefficient >= 0.0:
+        raise ValueError("this audit requires a negative tension coefficient")
+
+    massless_residue = 1.0 / tension_kinetic_coefficient
+    additional_residue = -massless_residue
+    return RigidNegativeTensionBraneAudit(
+        tension_kinetic_coefficient=tension_kinetic_coefficient,
+        rigidity_coefficient=rigidity_coefficient,
+        massless_pole_residue=massless_residue,
+        additional_pole_residue=additional_residue,
+        additional_pole_scale_squared=abs(
+            tension_kinetic_coefficient / rigidity_coefficient
+        ),
+        infrared_bending_ghost=massless_residue < 0.0,
+        residues_have_opposite_sign=(massless_residue * additional_residue < 0.0),
+        rigidity_removes_all_ghosts=False,
+        minimal_rigid_brane_reality_pass=False,
+    )
+
+
+def audit_induced_gravity_defect_frontier() -> InducedGravityDefectAudit:
+    """Keep a DGP-like shell extension separate from the current CE action.
+
+    A 2+1 dimensional Einstein--Hilbert term has no local graviton by itself.
+    Any new kinetic response comes from its mixing with the ambient bulk and
+    therefore requires a modified junction solution and the complete coupled
+    spectrum.  No such coefficient or boundary problem is specified in CE.
+    """
+
+    return InducedGravityDefectAudit(
+        worldvolume_spacetime_dimensions=3,
+        pure_worldvolume_eh_local_graviton_dof=0,
+        localized_gravity_coupling_nonnegative=True,
+        explicit_modified_junction_solution=False,
+        negative_tension_bending_mode_cured=False,
+        full_bulk_brane_spectrum_closed=False,
+        localized_eh_coefficient_in_ce_action=False,
+        bulk_boundary_conditions_specified=False,
+        current_reality_pass=False,
+        verdict="EXTERNAL INDUCED-GRAVITY FRONTIER / TARGET SOLUTION ABSENT",
     )

@@ -10,6 +10,9 @@ from reality_stone.clarus.thin_shell_defect_reality import (
     audit_quantum_negative_layer,
     audit_relaxed_internal_mode,
     audit_floquet_radial_control,
+    audit_floquet_junction_actuator,
+    audit_rigid_negative_tension_brane,
+    audit_induced_gravity_defect_frontier,
     barotropic_radial_stability,
 )
 
@@ -191,6 +194,65 @@ def test_drive_below_averaged_threshold_does_not_stabilize() -> None:
     assert audit.averaged_curvature < 0.0
     assert not audit.exact_floquet_stable
     assert not audit.control_pass
+
+
+def test_one_metre_floquet_actuator_mapping_is_exactly_reproducible() -> None:
+    audit = audit_floquet_junction_actuator()
+
+    assert math.isclose(audit.growth_rate_s_inv, C, rel_tol=1e-14)
+    assert 9.5e8 < audit.drive_frequency_hz < 9.6e8
+    assert 3.5e18 < audit.modulation_coefficient_s_inv2 < 3.7e18
+    assert 6.5e44 < audit.pressure_stiffness_n_m2 < 6.8e44
+    assert math.isclose(audit.pressure_modulation_fraction, 6.0e-5, rel_tol=1e-14)
+    assert 4.9e43 < audit.peak_reactive_mechanical_power_w < 5.2e43
+    assert 3.3e-9 < audit.drive_loss_efold_s < 3.4e-9
+    assert audit.exact_floquet_control_pass
+    assert not audit.actuator_action_specified
+    assert not audit.supplies_required_negative_surface_energy
+    assert not audit.realization_pass
+
+
+def test_floquet_actuator_scale_laws_with_radius() -> None:
+    one = audit_floquet_junction_actuator(radius_m=1.0)
+    ten = audit_floquet_junction_actuator(radius_m=10.0)
+
+    assert math.isclose(ten.drive_frequency_hz / one.drive_frequency_hz, 0.1)
+    assert math.isclose(
+        ten.pressure_stiffness_n_m2 / one.pressure_stiffness_n_m2,
+        0.01,
+    )
+    assert math.isclose(ten.drive_loss_efold_s / one.drive_loss_efold_s, 10.0)
+
+
+@pytest.mark.parametrize("rigidity", [0.1, 1.0, 10.0])
+def test_local_rigidity_does_not_cure_negative_tension_bending_ghost(
+    rigidity: float,
+) -> None:
+    audit = audit_rigid_negative_tension_brane(
+        tension_kinetic_coefficient=-2.0,
+        rigidity_coefficient=rigidity,
+    )
+
+    assert audit.massless_pole_residue == -0.5
+    assert audit.additional_pole_residue == 0.5
+    assert audit.infrared_bending_ghost
+    assert audit.residues_have_opposite_sign
+    assert not audit.rigidity_removes_all_ghosts
+    assert not audit.minimal_rigid_brane_reality_pass
+
+
+def test_induced_gravity_is_an_external_coupled_problem_not_a_ce_completion() -> None:
+    audit = audit_induced_gravity_defect_frontier()
+
+    assert audit.worldvolume_spacetime_dimensions == 3
+    assert audit.pure_worldvolume_eh_local_graviton_dof == 0
+    assert audit.localized_gravity_coupling_nonnegative
+    assert not audit.explicit_modified_junction_solution
+    assert not audit.negative_tension_bending_mode_cured
+    assert not audit.full_bulk_brane_spectrum_closed
+    assert not audit.localized_eh_coefficient_in_ce_action
+    assert not audit.bulk_boundary_conditions_specified
+    assert not audit.current_reality_pass
 
 
 @pytest.mark.parametrize(
