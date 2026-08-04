@@ -159,3 +159,14 @@ $A_s$는 총 고정점 응답 $dx/dD$가 아니라 잔차 방정식의 국소 �
 | 가변 비등방 전역 throat target | `Exact/Finite control` | 목의 정확한 Casimir tensor, 유한 lapse, 응력 보존, 점근 평탄성, 유한 ADM 질량 $M/r_0=1/3$ | 실제 물질장 구현 |
 | 유한 공간 모드 표현 | `Numerical control` | $1\le r/r_0\le10$에서 32모드 최대 정규화 오차 $1.66\times10^{-7}$ | 구현 가능한 공진기 spectrum과의 동일시 |
 | CE 공명 음의 응력 | `Open` | 필요한 target tensor는 특정됨 | 재규격화된 CE $\langle T_{\mu\nu}\rangle$, carrier-envelope 결합, 양자부등식, 안정성 |
+
+## 다중 공명 현실화 추가 판정 (2026-08-04)
+
+| 항목 | 현재 판정 | 정량 결과 |
+|---|---|---|
+| 1 m exact-target Casimir boundary | `Deferred/Physical fail` | $a=4.05$ am, $hf=152.93$ GeV; 물리적 반사경 모델 없음 |
+| 양쪽 적분 음의 에너지 | `Exact for target` | $4.03\times10^{43}$ J, 질량환산 지구 75.2개 |
+| 핵 크기 경계 해상도 trade-off | `Negative control` | $r_0=42.9$ km가 필요하고 질량환산 태양 9.69개 |
+| 다중모드에 의한 총량 감소 | `Refuted for fixed geometry` | 모드 분할은 같은 Einstein tensor의 적분 에너지를 바꾸지 않음 |
+| 동적 squeezed-state 정적 source | `Refuted/Control` | 1 m 광통과시간/QI 지속시간 규모비 $2.70\times10^{17}$ |
+| CE 비물질 경계 또는 수정중력 | `Open/Decisive` | 현재 shortcut 현실화에 필요한 새 물리 bridge |

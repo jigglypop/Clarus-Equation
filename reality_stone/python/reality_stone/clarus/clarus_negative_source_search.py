@@ -222,14 +222,14 @@ def clarus_negative_source_funnel() -> tuple[NegativeSourceCandidate, ...]:
     return (
         NegativeSourceCandidate(
             name="CE Casimir boundary + general-redshift throat",
-            frontier="FRONTIER_A",
+            frontier="DEFERRED_PHYSICAL_BOUNDARY",
             ce_native_components="CE Casimir estimate and GR throat geometry",
             local_null_gate="PASS IN GLOBAL VARIABLE-ANISOTROPY TARGET",
             averaged_null_gate="GLOBAL CONSERVATION PASS FOR TARGET",
-            ghost_gradient_gate="BOUNDARY FIELD MODES OPEN",
+            ghost_gradient_gate="NO SUBNUCLEAR REFLECTOR MODEL",
             renormalized_stress_gate="OPEN",
             backreaction_gate="GLOBAL INVERSE-GEOMETRY CONTROL PASS",
-            decisive_next_calculation="CE boundary spectrum and renormalized mode stress",
+            decisive_next_calculation="derive non-material CE boundary before further geometry work",
         ),
         NegativeSourceCandidate(
             name="CE nonminimal scalar + Casimir completion",
@@ -244,14 +244,14 @@ def clarus_negative_source_funnel() -> tuple[NegativeSourceCandidate, ...]:
         ),
         NegativeSourceCandidate(
             name="CE specific-wavelength multi-mode boundary resonance",
-            frontier="FRONTIER_A_RESONANCE",
-            ce_native_components="Casimir boundary ansatz; 169 GeV mode not derived",
+            frontier="DEFERRED_PHYSICAL_RESONANCE",
+            ce_native_components="Casimir boundary ansatz; corrected target is 153 GeV",
             local_null_gate="PASS IN IDEAL CASIMIR CONTROL",
             averaged_null_gate="VARIABLE ANISOTROPY REQUIRED",
-            ghost_gradient_gate="OPEN",
+            ghost_gradient_gate="NO PHYSICAL 4.05 AM BOUNDARY",
             renormalized_stress_gate="OPEN",
-            backreaction_gate="LOCAL PASS / GLOBAL OPEN",
-            decisive_next_calculation="derive radial multi-mode pressure transition",
+            backreaction_gate="GLOBAL TARGET PASS / PHYSICAL SCALE FAIL",
+            decisive_next_calculation="derive CE renormalized stress without material mirrors",
         ),
         NegativeSourceCandidate(
             name="CE nonminimal scalar vacuum polarization",

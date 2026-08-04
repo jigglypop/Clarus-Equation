@@ -82,14 +82,20 @@ def test_nonzero_boundary_term_can_make_the_unrearranged_average_negative() -> N
     assert not audit.localized_vacuum_boundary_conditions
 
 
-def test_candidate_funnel_keeps_two_ce_native_frontier_a_options() -> None:
+def test_candidate_funnel_demotes_boundary_route_after_physical_scale_failure() -> None:
     funnel = clarus_negative_source_funnel()
     frontier_a = [candidate for candidate in funnel if candidate.frontier == "FRONTIER_A"]
+    deferred_boundary = [
+        candidate
+        for candidate in funnel
+        if candidate.frontier == "DEFERRED_PHYSICAL_BOUNDARY"
+    ]
     rejected = [candidate for candidate in funnel if candidate.frontier == "REJECTED"]
 
     assert len(funnel) == 9
-    assert len(frontier_a) == 2
-    assert "Casimir" in frontier_a[0].name
+    assert len(frontier_a) == 1
+    assert len(deferred_boundary) == 1
+    assert "Casimir" in deferred_boundary[0].name
     assert rejected[0].name == "phantom Clarus scalar"
 
 
