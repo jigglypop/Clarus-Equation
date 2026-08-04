@@ -5,6 +5,7 @@ import math
 import pytest
 
 from reality_stone.clarus.clarus_backreaction_candidates import (
+    ideal_casimir_general_redshift_throat_series,
     ideal_casimir_zero_redshift_match_audit,
     vacuum_polarization_scale_audit,
 )
@@ -43,6 +44,28 @@ def test_large_mass_control_is_not_applicable_below_correlation_length() -> None
     )
 
     assert not audit.large_mass_control_applicable
+
+
+def test_general_redshift_and_radial_boundary_close_the_local_casimir_series() -> None:
+    audit = ideal_casimir_general_redshift_throat_series()
+
+    assert math.isclose(audit.shape_derivative, -1.0 / 3.0)
+    assert math.isclose(audit.dimensionless_redshift_slope, -1.0 / 2.0)
+    assert math.isclose(audit.dimensionless_plate_separation_slope, 1.0 / 2.0)
+    assert audit.geometry_stress_over_scale == audit.casimir_stress_over_scale
+    assert math.isclose(audit.radial_pressure_derivative_over_scale_per_radius, 2.0)
+    assert math.isclose(
+        audit.conservation_required_derivative_over_scale_per_radius,
+        2.0,
+    )
+    assert audit.stress_components_match
+    assert audit.anisotropic_conservation_matches
+    assert audit.flare_out_satisfied
+    assert audit.finite_redshift_slope
+    assert audit.local_throat_series_exists
+    assert not audit.global_asymptotically_regular_solution_derived
+    assert not audit.physical_boundary_realization_derived
+    assert not audit.perturbative_stability_derived
 
 
 @pytest.mark.parametrize(

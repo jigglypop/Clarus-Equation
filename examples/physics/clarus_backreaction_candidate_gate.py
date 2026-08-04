@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from reality_stone.clarus.clarus_backreaction_candidates import (
+    ideal_casimir_general_redshift_throat_series,
     ideal_casimir_zero_redshift_match_audit,
     vacuum_polarization_scale_audit,
 )
@@ -12,6 +13,7 @@ def main() -> None:
         throat_radius_m=1.0,
         field_correlation_length_m=6.65e-15,
     )
+    series = ideal_casimir_general_redshift_throat_series()
 
     print("CE CLARUS BACKREACTION CANDIDATE LOOP")
     print(" Casimir b-prime", casimir.shape_derivative_from_radial_match)
@@ -21,6 +23,10 @@ def main() -> None:
     print(" vacuum backreaction ratio", vacuum.backreaction_ratio)
     print(" required field multiplicity", vacuum.multiplicity_required)
     print(" order-one backreaction", vacuum.order_one_backreaction_reached)
+    print(" general-redshift b-prime", series.shape_derivative)
+    print(" r*redshift-prime", series.dimensionless_redshift_slope)
+    print(" r*plate-prime/plate", series.dimensionless_plate_separation_slope)
+    print(" local throat series", series.local_throat_series_exists)
 
 
 if __name__ == "__main__":

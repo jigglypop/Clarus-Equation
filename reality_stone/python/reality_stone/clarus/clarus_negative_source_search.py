@@ -221,15 +221,26 @@ def clarus_negative_source_funnel() -> tuple[NegativeSourceCandidate, ...]:
 
     return (
         NegativeSourceCandidate(
-            name="CE nonminimal scalar + Casimir boundary hybrid",
+            name="CE Casimir boundary + general-redshift throat",
+            frontier="FRONTIER_A",
+            ce_native_components="CE Casimir estimate and GR throat geometry",
+            local_null_gate="PASS IN IDEAL THROAT SERIES",
+            averaged_null_gate="LOCAL CONSERVATION PASS",
+            ghost_gradient_gate="BOUNDARY FIELD MODES OPEN",
+            renormalized_stress_gate="OPEN",
+            backreaction_gate="LOCAL THROAT SERIES PASS",
+            decisive_next_calculation="global ODE and CE boundary heat kernel",
+        ),
+        NegativeSourceCandidate(
+            name="CE nonminimal scalar + Casimir completion",
             frontier="FRONTIER_A",
             ce_native_components="xi R Phi^2 and CE Casimir estimate",
             local_null_gate="CONDITIONAL PASS",
             averaged_null_gate="OPEN WITH BOUNDARY TERMS",
             ghost_gradient_gate="CANONICAL SIGN; FULL MODES OPEN",
             renormalized_stress_gate="OPEN",
-            backreaction_gate="OPEN",
-            decisive_next_calculation="boundary heat kernel and metric variation",
+            backreaction_gate="OPTIONAL COMPLETION IF GLOBAL CASIMIR ODE FAILS",
+            decisive_next_calculation="coupled scalar-boundary throat series",
         ),
         NegativeSourceCandidate(
             name="CE nonminimal scalar vacuum polarization",

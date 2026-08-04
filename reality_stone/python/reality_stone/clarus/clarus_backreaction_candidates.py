@@ -40,6 +40,25 @@ class VacuumPolarizationScaleAudit:
     exact_renormalized_stress_derived: bool
 
 
+@dataclass(frozen=True)
+class CasimirThroatSeriesAudit:
+    shape_derivative: float
+    dimensionless_redshift_slope: float
+    dimensionless_plate_separation_slope: float
+    geometry_stress_over_scale: tuple[float, float, float]
+    casimir_stress_over_scale: tuple[float, float, float]
+    radial_pressure_derivative_over_scale_per_radius: float
+    conservation_required_derivative_over_scale_per_radius: float
+    stress_components_match: bool
+    anisotropic_conservation_matches: bool
+    flare_out_satisfied: bool
+    finite_redshift_slope: bool
+    local_throat_series_exists: bool
+    global_asymptotically_regular_solution_derived: bool
+    physical_boundary_realization_derived: bool
+    perturbative_stability_derived: bool
+
+
 def ideal_casimir_zero_redshift_match_audit() -> CasimirTensorMatchAudit:
     """Compare ideal parallel-plate stress ratios with a throat Einstein tensor.
 
@@ -116,4 +135,69 @@ def vacuum_polarization_scale_audit(
         large_mass_control_applicable=radius / correlation > 10.0,
         order_one_backreaction_reached=ratio >= 1.0,
         exact_renormalized_stress_derived=False,
+    )
+
+
+def ideal_casimir_general_redshift_throat_series() -> CasimirThroatSeriesAudit:
+    """Solve the zeroth/first-order throat conditions for ideal Casimir stress.
+
+    With ``u=r0*Phi'(r0)``, the regular throat limit is
+
+    ``(rho,p_r,p_t)/C = (b', -1, (1-b')*(1+u)/2)``.
+
+    Matching ideal radial-plate Casimir stress fixes ``b'=-1/3`` and ``u=-1/2``.
+    Stress conservation then fixes ``r0*a'/a=+1/2`` for ``rho ~ -a^-4``.
+    This is a local series result only.
+    """
+
+    shape_derivative = -1.0 / 3.0
+    redshift_slope = -1.0 / 2.0
+    plate_slope = 1.0 / 2.0
+    geometry = (
+        shape_derivative,
+        -1.0,
+        (1.0 - shape_derivative) * (1.0 + redshift_slope) / 2.0,
+    )
+    casimir = (-1.0 / 3.0, -1.0, 1.0 / 3.0)
+
+    # rho=-u_C, p_r=-3u_C and u_C proportional to a^-4.  Values below are
+    # coefficients of C/r0.  r0*a'/a=1/2 gives r0*u_C'/u_C=-2.
+    casimir_magnitude_over_scale = 1.0 / 3.0
+    radial_derivative = (
+        -3.0 * casimir_magnitude_over_scale * (-4.0 * plate_slope)
+    )
+    rho, radial, tangential = casimir
+    conservation_required = (
+        -(rho + radial) * redshift_slope + 2.0 * (tangential - radial)
+    )
+    component_match = all(
+        math.isclose(left, right, abs_tol=1e-15)
+        for left, right in zip(geometry, casimir, strict=True)
+    )
+    conservation_match = math.isclose(
+        radial_derivative,
+        conservation_required,
+        abs_tol=1e-15,
+    )
+    return CasimirThroatSeriesAudit(
+        shape_derivative=shape_derivative,
+        dimensionless_redshift_slope=redshift_slope,
+        dimensionless_plate_separation_slope=plate_slope,
+        geometry_stress_over_scale=geometry,
+        casimir_stress_over_scale=casimir,
+        radial_pressure_derivative_over_scale_per_radius=radial_derivative,
+        conservation_required_derivative_over_scale_per_radius=conservation_required,
+        stress_components_match=component_match,
+        anisotropic_conservation_matches=conservation_match,
+        flare_out_satisfied=shape_derivative < 1.0,
+        finite_redshift_slope=math.isfinite(redshift_slope),
+        local_throat_series_exists=(
+            component_match
+            and conservation_match
+            and shape_derivative < 1.0
+            and math.isfinite(redshift_slope)
+        ),
+        global_asymptotically_regular_solution_derived=False,
+        physical_boundary_realization_derived=False,
+        perturbative_stability_derived=False,
     )

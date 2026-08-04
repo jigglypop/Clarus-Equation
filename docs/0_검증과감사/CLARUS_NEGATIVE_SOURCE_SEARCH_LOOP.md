@@ -136,8 +136,8 @@ $\xi=0.49$의 중력 pole은 $\Phi_c=1/\sqrt\xi\simeq1.4286$이고,
 
 | 순위층 | 후보 | 현재 판정 | 결정적 다음 계산 |
 |---|---|---|---|
-| `FRONTIER_A` | 비최소 CE + Casimir 경계 | 국소 부호 통과, 평균·전체 stress 열림 | boundary heat kernel과 metric variation |
-| `FRONTIER_A` | 비최소 CE 진공편극 | 국소 부호 통과, curved state 필요 | long-throat의 DeWitt--Schwinger stress |
+| `FRONTIER_A` | Casimir 경계 + 일반 redshift | 후속 국소 tensor·보존 통과 | 전역 ODE와 boundary heat kernel |
+| `FRONTIER_A` | 비최소 CE + Casimir completion | 국소 부호 통과, 전체 stress 열림 | coupled scalar-boundary ODE |
 | `FRONTIER_B` | CE+SM fermion magnetic Casimir | MMP 외부모형 W3, CE mapping 없음 | magnetic topology와 fermion zero mode |
 | `FRONTIER_B` | CE double-trace 경계 | GJW AdS에서 통과, CE coupling 없음 | CE 두 경계 상호작용 유도 |
 | `DEFERRED` | resonance-$Q$ 단독 | stress 부호·residue 비식별 | spectral residue 선행 |
@@ -176,8 +176,8 @@ renormalized $T_{\mu\nu}$를 계산하는 것이다.
 후속 `CLARUS_BACKREACTION_CANDIDATE_LOOP.md`에서 두 `FRONTIER_A`를
 backreaction scale로 비교했다. 이상적 Casimir는 zero-redshift throat에서
 tangential pressure $C/3$이 부족하고, 6.65fm massive vacuum polarization은
-1m에서 $2.90\times10^{-97}$에 불과했다. 따라서 거시적 최상위 후보는
-비최소 CE + Casimir 경계 하이브리드 하나로 좁혀졌다.
+1m에서 $2.90\times10^{-97}$에 불과했다. 이후 일반 redshift를 허용한
+Casimir 국소 throat series가 별도 `FRONTIER_A`로 승격됐다.
 
 ## 8. 실행
 

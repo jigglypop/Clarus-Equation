@@ -63,7 +63,9 @@
 | 비최소 $1/F$만의 CE 밀도격차 증폭 | `Singular-limit control` | $2.85\times10^{16}$배에는 $F=3.51\times10^{-17}$, 중력 pole 상대거리 $1.75\times10^{-17}$ 필요 | regular effective gravity/strong-coupling gate 실패 가능성 큼 |
 | 이상적 Casimir의 zero-redshift throat tensor matching | `Negative control` | $\rho,p_r$ matching은 $b'=-1/3$이나 tangential pressure residual $\Delta p_t=C/3$ | 비최소 scalar 또는 redshift gradient의 보조 stress 필요 |
 | 6.65fm CE massive vacuum polarization의 1m backreaction | `Refuted as order-one macroscopic source` | large-mass 차원 estimate $\rho_{vac}/\rho_{req}=2.90\times10^{-97}$, 필요 multiplicity $3.44\times10^{96}$ | massless/collective sector가 없다면 단독 후보 탈락 |
-| CE-native 거시적 음의 source 최상위 후보 | `Frontier A/Open` | 비최소 $\xi R\Phi^2$ + Casimir boundary hybrid만 1차 funnel 생존 | 전체 anisotropic $T_{\mu\nu}$, 보존, throat series, perturbation 안정성 필요 |
+| CE-native 거시적 음의 source 최상위 후보 | `Frontier A/Open` | 일반-redshift Casimir 국소 series와 비최소 CE+Casimir completion이 생존 | CE boundary $T_{\mu\nu}$, 전역 ODE와 perturbation 안정성 필요 |
+| 이상적 Casimir 일반-redshift 국소 throat series | `Exact/Finite control` | $b'_0=-1/3$, $r_0\varphi'_0=-1/2$에서 $\rho,p_r,p_t$ 전부 matching; $r_0a'_0/a_0=1/2$에서 보존식 matching | 전역 ODE, CE renormalized boundary stress와 안정성 필요 |
+| CE 공간접힘 source frontier | `W2b-local/Control` | 일반-redshift Casimir control은 국소 전체 tensor·보존 통과 | CE 물리 전체는 boundary realization 미유도로 W2 미완성 |
 
 ## 상수와 관측량
 

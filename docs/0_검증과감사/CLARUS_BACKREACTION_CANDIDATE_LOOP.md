@@ -145,6 +145,12 @@ G_{\mu\nu}[b,\varphi]
 profile이 공급하면서 $F=1-\xi\Phi^2>0$이고 ghost/gradient eigenvalue가
 양수인지 검사해야 한다.
 
+후속 `CASIMIR_GENERAL_REDSHIFT_THROAT_LOOP.md`에서 일반 redshift를 먼저
+허용하자 이상적 Casimir tensor 단독의 국소 throat series가
+$b'_0=-1/3$, $r_0\varphi'_0=-1/2$로 닫혔다. 보존식은 radially varying
+boundary에 $r_0a'_0/a_0=1/2$를 요구한다. 따라서 비최소 scalar는 국소
+잔차의 필수항이 아니라 전역 연장 실패 시의 completion 후보로 재분류됐다.
+
 ## 6. 실행
 
 ```powershell
