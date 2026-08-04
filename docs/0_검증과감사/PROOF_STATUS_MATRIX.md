@@ -24,7 +24,12 @@
 | 무차원성 검사 | `Exact` for listed formulas | 7/7 dimensionally consistent | 차원 일치는 참/거짓 판정일 뿐 물리 진실을 보장하지 않음 |
 | A1 보통 Hessian $\to$ 공변 $\mathcal K$ | `Open` | 비선형 좌표 반례에서 tensor pullback 20, 보통 Hessian 32, connection 보정 뒤 20을 재현 | 전체 field-space metric/connection, bi-local-to-local projection, gauge quotient와 measure |
 | Hessian $\to T_{\mu\nu}$ 및 보존 | `Open/Conditional` | stress tensor는 $\Gamma_{\rm ren}$의 metric variation이고 on-shell Noether identity 아래 보존됨 | A1 kernel과 metric variation의 matching, anomaly·경계항·EOM |
-| CE+SM Q0 공변 작용 | `Open` | 포탈 국소 미분과 반례 gate만 통과; 완료 플래그 3개는 모두 `False` | `Q0.0`–`Q0.8` 전체 |
+| CE+SM Q0 공변 작용 | `Open` | Abelian-Higgs+$Z_2$ 통제 절단의 Q0.0–Q0.3과 singlet Q0.4–Q0.5 국소 계산만 조건부 통과; full 완료 플래그는 `False` | full field content의 `Q0.0`–`Q0.8`, renormalization과 CE matching |
+| 선택적 $Z_2$ portal singlet Q0.4–Q0.5 | `Exact conditional/tree control` | $K_F=p^2-(m_0^2+\lambda_{HP}v^2)+i0$, invariant residue $+1$, $h\Phi^2,h^2\Phi^2,\chi^2\Phi^2$ vertex를 action 미분으로 재현 | bare parameter는 공급값; self-energy·counterterm·RG·LSZ와 CE field 동일시는 미유도 |
+| renormalized scalar pole 인증 절차 | `Exact numerical control / CE data absent` | action·counterterm·background hash, gauge/scale kernel replica에서 root·residue·cut·dispersion을 재계산하고 ghost/double-zero/complex/cut/drift 반례를 fail-closed 처리 | 현재 CE는 manifest와 kernel data 부재로 `REGISTERED_SCALE`; KL positivity·LSZ·CE identity는 hard false |
+| CE Euclidean connected correlator·spectral 복원 | `Method control / CE data absent` | raw paired 표본의 unbiased connected covariance와 delete-one jackknife, parity-correct Hausdorff 조건, covariance-aware screening fit을 재계산; augmented nullspace에서 동일 표본·총 weight를 갖는 서로 다른 두 비음수 spectrum 구성 | 실제 CE ensemble·action/operator provenance 없음; 유한 positivity 통과는 full OS positivity·unique spectrum·Minkowski pole·LSZ가 아님 |
+| 선택적 portal light-pole one-loop 방사 안정성 | `Conditional diagnostic / not stable` | two-real-scalar $\overline{\rm MS}$ finite control에서 $\Sigma_{fin}=4.672293\,\mathrm{GeV}^2=5315.59m_\phi^2$, $\Sigma'=4.8868\times10^{-5}$; $\mu/2$–$2\mu$에서 finite 합 부호 변화 | gauge/Goldstone·CT·running input 없는 물리 pole 예측이 아니며 additive retuning 필요 |
+| A1 Hessian에서 cubic/quartic vertex 유일 복원 | `Refuted` | $\Delta S=C\eta^3/3!+D\eta^4/4!$는 배경 gradient/Hessian을 보존하면서 higher vertex를 임의 변경 | 독립 higher action jet 또는 full action 필요 |
 | 시간여행/CTC no-go | `Refuted/Conditional` | $N\ge0$, $|\det T|\le1$만의 no-go는 주기적 시간 반례로 기각; 전역 시간함수 A1 아래 no-CTC 정리는 증명 | A1은 현재 가정이며 완전한 CE+중력 작용에서의 유도는 `Open` |
 | 완전역사 유한 readout | `Exact/Finite` | 모든 역사·시간표본의 이중 유한합으로 유일하게 정의; 실행 gate 통과 | 연속 경로공간 적분은 측도·적분가능성 필요 |
 | 조건부 미래 가능성 shift | `Exact/Finite` | $q(u)=e^uq/(1-q+e^uq)$, $0<q<1$이면 $q'(u)>0$; log-domain 구현으로 빈 target, $u=1000$도 NaN 없이 prior 보존 | 물리적 제어 $u$와 CE 작용의 대응은 `Bridge/Open` |
@@ -57,7 +62,7 @@
 | phantom scalar 목 지지 | `Refuted as stable source` | kinetic sign 반전은 $T_{kk}<0$이나 최소 ghost-free gate 실패 | ghost-free UV completion 없이는 채택 불가 |
 | 외부 양자장 웜홀 대조군의 CE 승격 | `Open` | GJW와 MMP는 각자의 장·경계조건에서 구조를 닫지만 CE 유도가 아님 | CE field content, state, boundary coupling과 backreaction mapping 필요 |
 | $\xi(Q)$에서 웜홀 stress exponent $p$ 식별 | `Refuted` | 같은 $\xi(Q)=Q\xi_0$에 대해 $Z(Q)=Q^{d+p}Z_0$로 임의의 프록시 exponent $p$를 구성 | pole residue·spectral density·renormalization 필요 |
-| CE resonance의 물리적 pole과 residue | `Open` | 문서가 pole 형식을 ansatz로 제시하나 Q0 gate는 spectral density와 LSZ를 미유도 판정 | $\Gamma_Q^{(2)}$, positivity, pole/cut, $Z_Q$ 계산 필요 |
+| CE resonance의 물리적 pole과 residue | `Open / inverse-length implication refuted` | 같은 장거리 감쇠 scale에 residue $1,10^{-12},-1$ pole 및 delta pole 없는 continuum threshold 반례 구성; 선택적 portal tree pole은 별도 control | renormalized $\Gamma_{CE,R}^{(2)}$, positivity, pole/cut, $Z_*$와 gauge/scheme holdout 필요 |
 | CE 공간접힘 가능성 단계 | `W1/Kinematic` | W0 선택·제어와 W1 주어진 기하 shortcut은 통과; W2 renormalized 음의 $T_{\mu\nu}$ 미도달 | W2 stress source가 전체 사슬의 현재 병목 |
 | CE $\xi R\Phi^2$ 비최소장의 국소 null source | `Conditional pass/W2a` | 선택한 Jordan-frame convention에서 $N_{kk}=(\Phi')^2-\xi(\Phi^2)''$; $\xi=0.49$와 $F=1-\xi\Phi^2>0$인 음의 국소 반례 실행 | CE Q0 부호·정규화, EOM과 전체 perturbation 안정성 필요 |
 | 국소화 비최소 CE profile의 effective-source ANEC 우회 | `Refuted for healthy localized F>0 control` | 기존 $\int N_{kk}$ 표기를 교정; $\int N_{kk}/F=\int[(\Phi')^2/F+(F'/F)^2]+[F'/F]_{\rm end}\ge0$ | 비영 endpoint·Casimir 경계·양자 재규격화 stress는 별도 계산 필요 |
@@ -69,8 +74,16 @@
 | 이상적 Casimir 일반-redshift 국소 throat series | `Exact/Finite control` | $b'_0=-1/3$, $r_0\varphi'_0=-1/2$에서 $\rho,p_r,p_t$ 전부 matching; $r_0a'_0/a_0=1/2$에서 보존식 matching | 전역 ODE, CE renormalized boundary stress와 안정성 필요 |
 | CE 공간접힘 source frontier | `W2b-local/Control` | 일반-redshift Casimir control은 국소 전체 tensor·보존 통과 | CE 물리 전체는 boundary realization 미유도로 W2 미완성 |
 | 고정 Casimir EoS의 전역 공명-envelope 연장 | `Refuted` | 유한 redshift는 tail $n=8/3$, 유한 energy/ADM mass는 $n>3$을 요구해 양립 불가 | 공간적으로 변하는 anisotropy 또는 junction/completion 필요 |
-| 1m 목 Casimir 특정 파장 | `Finite control` | $a=3.66\times10^{-18}$m에서 $\lambda=2a=7.33\times10^{-18}$m, $hf\simeq169$GeV | 실제 CE boundary mode와 negative stress 유도 필요 |
-| CE 29.65MeV light pole의 high-$Q$ 해결 | `Refuted as linear resonance` | 요구 carrier는 약 5708배 높고 $Q$는 선형계 carrier frequency를 바꾸지 않음 | 고차 harmonic/독립 mode와 multi-mode pressure engineering은 `Open` |
+| 1m 목 ideal-planar 형식 scale | `Finite control` | 정확한 $b'=-1/3$ tensor가 $a=4.0536\times10^{-18}$m를 고정; 추가 $\lambda=2a$ planar-mode 선택은 $hf=152.932$GeV | spherical boundary eigenmode가 아님; 169GeV legacy 분리, causal response와 negative net stress 미유도 |
+| CE 29.65MeV inverse-correlation scale과 current formal scale | `Open bridge / linear-Q refuted` | scale 비는 5158.34지만 inverse-correlation scale은 물리 pole이 아니며 high-$Q$는 중심 주파수를 이동시키지 않음 | physical pole·dispersion·고운동량 pump 또는 비선형 vertex를 유도해야 함 |
+| phase-aware $\Phi^2$ sum/difference spectrum | `Exact conditional` | Fourier-key와 cancellation tolerance가 모두 0일 때 $2K_i,K_i\pm K_j$를 복소 phasor로 합산; $\pi+10^{-13}$ 잔차 삭제 반례 차단 | tolerance clustering은 근사로 강등; line-shape 없는 linewidth 합 금지, physical normalization·vertex는 `Open` |
+| collinear daughter pair invariant gate | `Exact conditional` | $p_\perp=0$인 1+1D control에서 strict $Q^0>0,\ Q^2\ge4m_\chi^2$; tolerance-only와 null COM 부재를 분리 | full 3+1 momentum spectrum과 production rate는 미도출 |
+| smooth finite-pulse daughter excitation | `Conditional numerical control` | mean-subtracted toy modulation에서 $n_{4N}=1.1814792170$, Wronskian $3.29\times10^{-12}$; same $Q,m,p$, N·2N·4N Floquet monodromy와 보수적 tachyon-free 하한 통과 | $\Phi^2$ DC shift, CE pole·vertex·pump energy 장부 미유도; metadata bool로 physical 승격 금지 |
+| resonantly generated boundary matter | `Not reached` | 단일 real-frequency reflectivity는 Lifshitz/Keldysh stress에 불충분 | $n_\chi\to\epsilon,\mu\to r_{TE/TM}(i\xi,k_\parallel)\to\langle T_{\mu\nu}\rangle_{ren}$ 필요 |
+| 기존 explicit global throat geometry | `Exact geometry / source-tail fail` | 각 end $M_{\rm ADM}/r_0=1/3$, horizon-free와 Bianchi exact; affine ANEC $-2.4975554$는 유한·음수 | $p_r\sim-2/(3x^3)$, volume NEC가 $-\frac23\log X$ 발산; 독립 matter EOM 아님 |
+| localized $\Phi_{\rm match}$ throat target | `Improved target / scalar refuted` | 같은 throat·ADM을 유지하고 affine/coordinate/proper NEC 적분을 모두 유한화 | throat $K/F=7/12$이나 $x=37/32$에서 $K/F<-1.8$; healthy global scalar·potential·stability 미도달 |
+| probe-selective private dressing pilot | `Conditional synthetic control` | pump×controller 2×2 contrast, reference equivalence, bias-corrected phase order parameter와 held-out-designated measured-$R$ 조건부 response prediction을 반례와 함께 구현; raw streams·single sweep config 재검산, 4-train interpolation과 regression Student-$t$ floor 적용 | designation은 외부 사전등록이 아니며 noise→$R(D)$ dynamics도 미도출; 실제 phase trace의 autocorrelation $N_{\rm eff}$, common-clock·equal-power control과 Adler dynamics 미실행; consciousness/observer causation 아님 |
+| pump-off public response kernel pilot | `Conditional schema control / physical not reached` | 서로 다른 사전 calibration의 2-probe fit이 held-out probe를 예측하고 residual/nuisance-gain·apparatus-memory bound와 raw-stream·raw-trial·raw-covariance-bound energy ledger를 통과하는 합성 control; unmeasured worst-case correlation SE 적용 | designation·calibration·blind·separate-chain은 미검증 선언이고 probe/gain covariance 및 shared-run provenance도 미측정; 실제 pump-off data·frequency-dependent causal kernel·blinded sample swap 없음; public scaffold, new matter, boundary $T_{\mu\nu}$ 모두 `False` |
 
 ## 상수와 관측량
 
@@ -88,7 +101,9 @@
 | $A_s$ | `Phenomenology` | raw 총응답은 실패; projected residual-drive readout은 -0.53 sigma | 관측 readout bridge로 조건부 통과, `Exact` 아님 |
 | $n_s$ | `Phenomenology` | $1-2/(dD_{\rm eff}12/2)=0.96503$, +0.03 sigma | 전이수 12와 inflationary readout을 받아야 닫힘 |
 | $w_0$ | `Phenomenology` | 상수 scorecard의 Planck-family 기준은 PASS; CE density+외부 \(H_0r_d\)+\(w=-1\) 고정 DESI BAO 패키지는 `REJECT` | 단일 상수 일치와 full-cov model fit을 분리 |
-| Clarus field pole bridge | `Open test` | $m_\phi=29.64757$ MeV, 3-sigma window $28.388$--$30.908$ MeV | 클라루스장 2점 상관함수 pole / 입자언어 bridge gate 사전등록 완료 |
+| Clarus inverse-correlation / particle-language bridge | `Open test` | $m_\xi=29.64757$ MeV, 3-sigma window $28.388$--$30.908$ MeV; 5-sigma window hit도 `experimental_bridge_signal`일 뿐 | 실제 correlator fit, renormalized pole·residue·field identity가 없으므로 physical pole 확인으로 승격 금지 |
+| 29.65 MeV와 $\lambda_{HP}=\delta^2$ portal dominance의 same-field 동일시 | `Refuted under nonnegative bare mass` | $m_{\rm pole}\ge v\sqrt{\lambda_{HP}}=43.7677$ GeV; light target은 $m_0^2=-1915.6085\,{\rm GeV}^2$와 $4.5885\times10^{-7}$ 잔차 상쇄 필요 | 별도 field/scale로 분리하거나 상쇄의 동역학·RG 안정성을 새로 유도 |
+| light $Z_2$ portal $(\lambda_{HP}=\delta^2,\ m_\Phi=29.65\,{\rm MeV})$ | `Phenomenology` benchmark rejected | 공급 상한 0.11에 대해 $\Gamma_{\rm inv}=19.2287$ MeV, $\mathrm{BR}_{\rm inv}=0.8253$; 허용 $|\lambda_{HP}|\le0.0051107$ | limit은 공급 입력; coupling/branch 변경과 최신 global fit은 별도 |
 | 레거시 $Z_2$ 포탈 $(\lambda_{\rm HP}=0.0316,\ m_\Phi=43.77\,{\rm GeV})$ | `Phenomenology` benchmark rejected | 같은 라그랑지안 정규화에서 $\Gamma_{\rm inv}=13.75$ MeV, $\mathrm{BR}_{\rm inv}=0.772$; 공급된 상한 0.11 실패 | coupling을 낮추거나 채널을 닫고 새 benchmark로 재검증; CE 동일시는 별도 |
 
 ## 우주론·양자론 실행 게이트
@@ -177,11 +192,11 @@ uv run --extra dev python -m pytest tests\test_ce_residual_forward_model.py test
 | 항목 | 닫히기 위한 필요조건 |
 |---|---|
 | A1/Q0 공변 작용 bridge | `A1_Q0_COVARIANT_ACTION_LOOP.md`의 `Q0.0`–`Q0.8`: field-space 공변성, background, gauge/ghost, operator/vertex, stress, renormalization과 재현 gate |
-| Clarus field pole bridge | 장 상관함수 pole gate는 등록됐다. 미관측 예측이므로 실제 실험 hit 또는 bridge exclusion 전까지 scorecard 통과/실패로 세지 않는다. 배제되더라도 코어 클라루스장 자체가 아니라 입자언어 readout/coupling bridge가 내려간다. |
+| Clarus inverse-correlation bridge | 29.65 MeV scale와 실험 질량창은 등록됐지만 CE 상관함수 pole은 유도되지 않았다. 5-sigma 질량창 hit도 실험 bridge 신호이며 pole residue·field identity를 확인하지 않는다. 배제되더라도 우선 내려가는 것은 입자언어 readout/coupling bridge다. |
 | 뇌 프로그래밍 언어 | `NL0`–`NL6` 가운데 실제 자료의 경계·상태·재사용·보지 않은 합성·호출·선택적 인과 개입·동물/세션 밖 복제가 필요하다. oracle-labelled synthetic method pass는 생물학적 통과로 세지 않는다. |
 | Phenomenology 항목 전체 | `Exact` 승격에는 각 bridge readout의 독립 유도 또는 외부 독립 데이터 gate가 필요하다. |
 
-$A_s$는 총 고정점 응답 $dx/dD$가 아니라 잔차 방정식의 국소 구동력 $\partial_D r=x(1-x)$를 반주기 위상과 유효 기하 깊이로 투영하는 readout으로 조건부 채택했다. $|V_{cb}|$는 LO QCD tunneling 실패를 유지하고, $Z_{cb}^{(1)}=1+\delta/(2\pi)$를 1-loop electroweak projector bridge로 채택했다. Clarus boson은 독립 입자를 먼저 가정한 것이 아니라 클라루스장 상관함수의 pole을 입자언어로 읽은 bridge이며, `examples/physics/clarus_boson_search_gate.py`로 그 pole/readout 조건을 사전등록했다. 따라서 현재 가장 강한 판정은 `부분 증명 + 열린 A1/Q0 작용 bridge + 조건부 현상론 + 사전등록된 미관측 Open test`이다.
+$A_s$는 총 고정점 응답 $dx/dD$가 아니라 잔차 방정식의 국소 구동력 $\partial_D r=x(1-x)$를 반주기 위상과 유효 기하 깊이로 투영하는 readout으로 조건부 채택했다. $|V_{cb}|$는 LO QCD tunneling 실패를 유지하고, $Z_{cb}^{(1)}=1+\delta/(2\pi)$를 1-loop electroweak projector bridge로 채택했다. Clarus 29.65 MeV 값은 상관함수에서 추출한 pole이 아니라 입자언어 탐색을 위한 inverse-correlation scale ansatz이며, `examples/physics/clarus_boson_search_gate.py`는 실험 bridge signal만 판정한다. 따라서 현재 가장 강한 판정은 `부분 증명 + 열린 A1/Q0 작용 bridge + 조건부 현상론 + 사전등록된 미관측 Open test`이다.
 
 ## 다중 모드 전역 throat 추가 판정 (2026-08-04)
 
@@ -190,8 +205,8 @@ $A_s$는 총 고정점 응답 $dx/dD$가 아니라 잔차 방정식의 국소 �
 
 | 항목 | 현재 판정 | 검증 결과 | 남은 bridge |
 |---|---|---|---|
-| 기존 exponential 전역 throat target | `Exact geometry / source-tail fail` | 목의 정확한 Casimir tensor, cutoff-independent 점근평탄성, 각 end ADM $M/r_0=1/3$, Bianchi exact. 그러나 $p_r\sim-2/(3x^3)$라 coordinate/proper volume NEC가 $-(2/3)\ln X$로 발산 | 공간적으로 국소화된 실제 물질장 |
-| ADM-matched redshift 보강 | `Exact geometry + finite-tail control` | $\Phi=\frac12\ln(1-2/3x)+\frac32e^{1-x}$가 throat data와 ADM을 보존하고 lapse$^2\ge1/3$; 모든 volume-NEC burden이 유한 | radial NEC는 여전히 전구간 음수, CE matter EOM·전역 scalar kinetic·안정성 미도출 |
+| 기존 exponential 전역 throat target | `Exact geometry / source-tail fail` | 목의 정확한 Casimir tensor, cutoff-independent 점근평탄성, 각 end ADM $M/r_0=1/3$, Bianchi exact; affine ANEC $=-2.4975554173$은 유한·음수이나 volume NEC는 $-(2/3)\ln X$로 발산 | 공간적으로 국소화된 실제 물질장 |
+| ADM-matched redshift 보강 | `Exact geometry + finite-tail control` | $\Phi=\frac12\ln(1-2/3x)+\frac32e^{1-x}$가 throat·ADM·lapse$^2\ge1/3$을 보존; affine ANEC $=-2.2927281338$, coordinate/proper volume NEC/end $=-4.2189353455,-6.0917872476$ | explicit $x=37/32$에서 scalar $K/F=-1.8305467$이므로 healthy global scalar는 refuted; EOM·안정성 미도출 |
 | 유한 공간 모드 표현 | `Numerical control` | $1\le r/r_0\le10$에서 32모드 최대 정규화 오차 $1.66\times10^{-7}$ | 구현 가능한 공진기 spectrum과의 동일시 |
 | CE 공명 음의 응력 | `Open` | 필요한 target tensor는 특정됨 | 재규격화된 CE $\langle T_{\mu\nu}\rangle$, carrier-envelope 결합, 양자부등식, 안정성 |
 
@@ -199,7 +214,7 @@ $A_s$는 총 고정점 응답 $dx/dD$가 아니라 잔차 방정식의 국소 �
 
 | 항목 | 현재 판정 | 정량 결과 |
 |---|---|---|
-| 1 m exact-target Casimir boundary | `Deferred/Physical fail` | $a=4.05$ am, $hf=152.93$ GeV; 물리적 반사경 모델 없음 |
+| 1 m exact-target ideal-planar boundary control | `Deferred/Physical fail` | $a=4.05$ am; 선택적 $\lambda=2a$ 형식 scale은 $hf=152.93$ GeV, spherical eigenmode·물리 반사경 없음 |
 | 양쪽 areal-coordinate/Misner--Sharp energy drop | `Exact for target` | proper energy가 아님; $4.03\times10^{43}$ J, 질량환산 지구 75.2개 |
 | 양쪽 static-slice proper matter energy | `Numerical control` | $I=0.631466179317807$, $7.642\times10^{43}$ J, 질량환산 지구 142.38개 |
 | 핵 크기 경계 해상도 trade-off | `Negative control` | $r_0=42.9$ km가 필요하고 coordinate/proper 질량환산은 각각 태양 9.69/18.36개 |

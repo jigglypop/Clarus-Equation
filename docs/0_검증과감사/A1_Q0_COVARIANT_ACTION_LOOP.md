@@ -480,11 +480,45 @@ vertex/pole 자료**를 제공하는 데까지만 책임진다.
 | `Q0.1-field-space` | \(G_{AB}\), connection, measure와 nonlinear reparametrization test | 보통 Hessian의 비텐서 항을 재현하고 공변 Hessian의 두 좌표계 residual이 허용치 이하 | `OPEN` |
 | `Q0.2-background` | background EOM과 tadpole residual | on-shell이면 EOM residual 통과, off-shell이면 connection·tadpole 항을 보존 | `OPEN` |
 | `Q0.3-gauge` | gauge fixing, ghost action, BRST/Slavnov–Taylor 또는 background Ward 검사 | zero mode 처리가 명시되고 identity residual과 gauge-parameter holdout이 사전 기준 통과 | `OPEN` |
-| `Q0.4-operator` | 전체 quadratic fluctuation operator와 propagator pole 표 | 물리 pole, constraint, negative/zero mode와 higher-derivative ghost의 처분이 일관됨 | `OPEN` |
-| `Q0.5-vertices` | cubic/quartic vertex 목록과 symmetry selection rule | \(Z_2,v_\Phi=0\)에서 \(h\)-\(\Phi\) cross-Hessian 0, \(h\Phi^2,h^2\Phi^2\) vertex 및 누락 sector 재현 | `OPEN` |
+| `Q0.4-operator` | 전체 quadratic fluctuation operator와 propagator pole 표 | 물리 pole, constraint, negative/zero mode와 higher-derivative ghost의 처분이 일관됨 | singlet bare tree block `CONTROL PASS`; full `OPEN` |
+| `Q0.5-vertices` | cubic/quartic vertex 목록과 symmetry selection rule | \(Z_2,v_\Phi=0\)에서 \(h\)-\(\Phi\) cross-Hessian 0, \(h\Phi^2,h^2\Phi^2\) vertex 및 누락 sector 재현 | singlet portal local block `CONTROL PASS`; full `OPEN` |
 | `Q0.6-stress` | \(\Gamma_{\rm ren}\)의 metric variation과 off-shell Noether identity | Hessian과 stress tensor를 분리하고, on-shell conservation 및 경계항을 명시적으로 검증 | `OPEN` |
-| `Q0.7-quantum` | measure, regulator, counterterm, anomaly와 RG manifest | 필요한 발산이 흡수되고 물리 pole/cut이 scheme·scale·gauge holdout에서 안정 | `OPEN` |
+| `Q0.7-quantum` | measure, regulator, counterterm, anomaly와 RG manifest | 필요한 발산이 흡수되고 물리 pole/cut이 scheme·scale·gauge holdout에서 안정 | two-real-scalar finite 1-loop `DIAGNOSTIC`; full `OPEN` |
 | `Q0.8-reproduction` | symbolic derivation, 수치 spectrum, test와 고정 입력 manifest | 깨끗한 환경에서 동일 결과 재현, 실패 반례와 허용치를 함께 보존 | `OPEN` |
+
+Q0.4–Q0.5의 `CONTROL PASS`는 선택적 \(Z_2\) singlet block에만 적용된다.
+canonical bare tree kernel
+
+\[
+K_F=p^2-(m_0^2+\lambda_{HP}v^2)+i0
+\]
+
+의 residue와 dispersion, 그리고
+\(h\Phi^2,h^2\Phi^2,\chi^2\Phi^2\) local derivative를 재현했다. 그러나
+29.64757 MeV는 bare mass를 목표에서 역산해야만 이 tree pole이 되고,
+renormalized CE pole·LSZ·full vertex 목록은 여전히 `OPEN`이다. 상세 반례와
+수치는 [CE_TWO_POINT_AND_VERTEX_LOOP.md](CE_TWO_POINT_AND_VERTEX_LOOP.md)에
+둔다.
+
+후속 loop에서는 Q0 action definition을 canonical SHA-256에 묶고, 수치
+\(\Gamma_R^{(2)}\) replica가 들어올 경우 simple root, residue, first cut,
+gauge/scale drift와 dispersion을 caller bool 없이 재계산하는 gate를 추가했다.
+현재 CE에는 complete renormalized action/counterterm manifest와 kernel data가
+없어 최고 단계는 `REGISTERED_SCALE`이다. 선택적 portal의 two-real-scalar
+finite one-loop 합은 light target 질량제곱의 약 5316배지만 subtraction scale에
+따라 부호가 바뀌므로 물리 pole correction으로 승격하지 않는다. 상세 식은
+[CE_RENORMALIZED_POLE_AND_ONE_LOOP_LOOP.md](CE_RENORMALIZED_POLE_AND_ONE_LOOP_LOOP.md)에
+둔다.
+
+그 다음 Q1 입력을 저장소 전체에서 찾았지만 CE operator에 묶인 raw paired
+Euclidean ensemble과 covariance는 없었다. connected subtraction·delete-one
+jackknife와 유한 two-point positivity 필요조건을 계산하는 scaffold를 추가했고,
+fixed exponential kernel의 augmented nullspace에서 같은 유한 correlator와
+총 weight를 만드는 서로 다른 두 비음수 spectrum을 구성했다. 따라서 합성 대조군이 screening control을
+통과해도 unique spectrum, full reflection positivity, Minkowski pole과 LSZ로
+승격하지 않는다. 상세 범위는
+[CE_EUCLIDEAN_CORRELATOR_AND_SPECTRAL_LOOP.md](CE_EUCLIDEAN_CORRELATOR_AND_SPECTRAL_LOOP.md)에
+둔다.
 
 ### 7.1 Q0 통과 판정 규칙
 
@@ -543,7 +577,9 @@ renormalized effective action
           → on-shell conservation
 
 Q0 산출물
-  └─[아직 수행하지 않음]→ Q1 spectral positivity
+  └─[수치 pole control gate 구현; 실제 CE kernel 없음]→ Q1 spectral positivity
+       └─[Euclidean scaffold 구현; 실제 paired ensemble 없음;
+          finite-grid spectrum 비유일성 구성]→ REGISTERED_SCALE 유지
        → Q2–Q5 CP/Markov/classical closure
        → Q6 offspring genealogy
        → 실제 next-generation matrix A

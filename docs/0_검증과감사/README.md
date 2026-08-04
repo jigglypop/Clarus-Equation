@@ -13,6 +13,13 @@
 | [BRIDGE_B2_DERIVATION.md](BRIDGE_B2_DERIVATION.md) | \(P_{\text{survive}}\leftrightarrow\Omega_b\) bridge 보강 기록 | bridge 보조 |
 | [CORE_STRENGTHENING_LOOP.md](CORE_STRENGTHENING_LOOP.md) | 코어 반례군을 최소 원리·정리·코드 gate로 줄이는 반복 보강 정본 | working canonical |
 | [A1_Q0_COVARIANT_ACTION_LOOP.md](A1_Q0_COVARIANT_ACTION_LOOP.md) | 보통 Hessian 반례, 공변 장공간 Hessian, metric variation과 Q0 통과 조건 | working canonical |
+| [CE_TWO_POINT_AND_VERTEX_LOOP.md](CE_TWO_POINT_AND_VERTEX_LOOP.md) | 역상관 scale의 pole 비식별 반례, 선택적 포탈 Q0.4–Q0.5 tree pole·vertex와 29.65 MeV/43.77 GeV 양립성 정리 | control certificate |
+| [CE_RENORMALIZED_POLE_AND_ONE_LOOP_LOOP.md](CE_RENORMALIZED_POLE_AND_ONE_LOOP_LOOP.md) | action provenance, renormalized pole fail-closed gate와 선택적 portal scalar one-loop 방사 안정성 감사 | control certificate |
+| [CE_EUCLIDEAN_CORRELATOR_AND_SPECTRAL_LOOP.md](CE_EUCLIDEAN_CORRELATOR_AND_SPECTRAL_LOOP.md) | 실제 CE ensemble 부재 감사, connected/jackknife·유한 positivity gate와 spectral 비유일성 구성 반례 | control certificate |
+| [CLARUS_RESONANT_MATTER_LOOP.md](CLARUS_RESONANT_MATTER_LOOP.md) | 위상 중첩·invariant pair·Floquet/Bogoliubov toy와 cutoff-independent global throat source-tail 감사 | working canonical |
+| [PROBE_SELECTIVE_DRESSING_AND_PUBLIC_SCAFFOLD_LOOP.md](PROBE_SELECTIVE_DRESSING_AND_PUBLIC_SCAFFOLD_LOOP.md) | pump×controller 선택성, phase/noise held-out, pump-off 3-probe common-kernel과 signed energy ledger; public scaffold/new matter claim 잠금 | working canonical |
+| [CAUSAL_MASK_AND_SPACELIKE_MARGINAL_LOOP.md](CAUSAL_MASK_AND_SPACELIKE_MARGINAL_LOOP.md) | \((g,R,S,\tau)\) 결합 crossed-holdout, block/provenance·동시구간 gate와 local-QFT spacelike no-signalling 감사 | control certificate |
+| [MULTIMODE_GLOBAL_THROAT_LOOP.md](MULTIMODE_GLOBAL_THROAT_LOOP.md) | cutoff-independent global throat, finite-tail redshift 보강과 explicit scalar \(K/F<0\) 반례 | working canonical |
 | [Q0_0_Q0_3_MINIMAL_MANIFEST.md](Q0_0_Q0_3_MINIMAL_MANIFEST.md) | 깨진 \(U(1)\)+\(Z_2\) 싱글릿 통제 절단에서 범위·장공간·배경·게이지/ghost를 한 convention으로 고정 | control manifest |
 | [우주론_양자론_루프_감사.md](우주론_양자론_루프_감사.md) | DESI 잔차·\(H_0r_d\) 원인 분해와 표준 QM/\(\Phi\) 형식 감사 | 실행 감사 |
 | [문서_전체_완성도_감사.md](문서_전체_완성도_감사.md) | docs 전체 완성도와 보강 순서 | 운영 감사 |
@@ -41,13 +48,19 @@
    stress tensor와 보존법칙 사이의 열린 조건을 먼저 본다.
 3. [Q0.0–Q0.3 최소 manifest](Q0_0_Q0_3_MINIMAL_MANIFEST.md):
    전체 CE+SM과 통제 절단의 통과 표시를 왜 분리하는지 본다.
-4. [CORE_STRENGTHENING_LOOP.md](CORE_STRENGTHENING_LOOP.md): 코어를 어떤 반례와 gate로 강화하는지 본다.
-5. [PROOF_STATUS_MATRIX.md](PROOF_STATUS_MATRIX.md): 지금 무엇이 닫혔고 무엇이 열려 있는지 본다.
-6. [PROOF_VALIDATION_LEDGER.md](PROOF_VALIDATION_LEDGER.md): 왜 그 판정이 되었는지 검산 이력을 본다.
-7. [미해결_난제_목록.md](미해결_난제_목록.md): CE가 아직 못 닫은 외부/내부 난제를 확인한다.
-8. [VALIDATION_FRAMEWORK.md](VALIDATION_FRAMEWORK.md): 남은 blocker와 필요한 증명/실험을 본다.
-9. [우주론_양자론_루프_감사.md](우주론_양자론_루프_감사.md): 우주론·양자론의 최신 실행 잔차와 최소 보강을 본다.
-10. [문서_전체_완성도_감사.md](문서_전체_완성도_감사.md): 문서군 정리 우선순위를 본다.
+4. [CE two-point–vertex 루프](CE_TWO_POINT_AND_VERTEX_LOOP.md): 역상관
+   scale, tree pole, physical pole과 vertex의 층을 분리한다.
+5. [CE renormalized pole–one-loop 루프](CE_RENORMALIZED_POLE_AND_ONE_LOOP_LOOP.md):
+   실제 action provenance, pole holdout과 방사 안정성의 첫 blocker를 본다.
+6. [CE Euclidean correlator–spectral 루프](CE_EUCLIDEAN_CORRELATOR_AND_SPECTRAL_LOOP.md):
+   실제 표본, 유한 positivity, screening energy와 실시간 pole의 경계를 본다.
+7. [CORE_STRENGTHENING_LOOP.md](CORE_STRENGTHENING_LOOP.md): 코어를 어떤 반례와 gate로 강화하는지 본다.
+8. [PROOF_STATUS_MATRIX.md](PROOF_STATUS_MATRIX.md): 지금 무엇이 닫혔고 무엇이 열려 있는지 본다.
+9. [PROOF_VALIDATION_LEDGER.md](PROOF_VALIDATION_LEDGER.md): 왜 그 판정이 되었는지 검산 이력을 본다.
+10. [미해결_난제_목록.md](미해결_난제_목록.md): CE가 아직 못 닫은 외부/내부 난제를 확인한다.
+11. [VALIDATION_FRAMEWORK.md](VALIDATION_FRAMEWORK.md): 남은 blocker와 필요한 증명/실험을 본다.
+12. [우주론_양자론_루프_감사.md](우주론_양자론_루프_감사.md): 우주론·양자론의 최신 실행 잔차와 최소 보강을 본다.
+13. [문서_전체_완성도_감사.md](문서_전체_완성도_감사.md): 문서군 정리 우선순위를 본다.
 
 ## 운영 규칙
 

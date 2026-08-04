@@ -47,6 +47,18 @@ def test_adaptive_remote_command_obeys_light_cone_delay() -> None:
     assert audit.preinstalled_receiver_required
 
 
+@pytest.mark.parametrize("candidate_count", [True, 1.9])
+def test_target_count_rejects_bool_and_nonintegral_values(
+    candidate_count: object,
+) -> None:
+    with pytest.raises(ValueError, match="candidate_count must be an integer"):
+        causal_target_delivery_audit(
+            distance_m=1.0,
+            candidate_count=candidate_count,  # type: ignore[arg-type]
+            requested_activation_s=1.0,
+        )
+
+
 def test_ce_cell_density_and_coherence_radius_bounds_do_not_overlap() -> None:
     density = casimir_cell_conversion_audit().energy_density_j_m3
     audit = throat_scale_window_audit(

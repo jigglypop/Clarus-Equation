@@ -77,8 +77,8 @@ volume-NEC가 로그 발산한다. 같은 shape에
 |---|---:|---|
 | 닫힌 명제의 수식 정합성 | 9.3/10 | 독립 부호 검산, exact identity·Schur congruence·전구간 부등식 |
 | 반례·적대 입력 강도 | 9.1/10 | ANEC sign flip, fractional flux, NaN/Inf, singular/asymmetric `C`, cutoff 독립성 |
-| 수치 재현성 | 9.5/10 | 대상 131개와 전체 1,257개 테스트 통과, 변경 파일 Ruff 통과 |
-| 연속 영역 인증 | 8.0/10 | throat/tail은 exact; nonminimal code-sign은 아직 finite-grid convergence control |
+| 수치 재현성 | 9.5/10 | 공명·global focused 107개, 삭제 artifact 의존 4파일 제외 저장소 1,258개 통과·13 skip, 변경 파일 Ruff 통과 |
+| 연속 영역 인증 | 8.8/10 | throat/tail은 exact; \(x=37/32\)의 explicit `K/F<0` 반례로 healthy global scalar 실패도 cutoff 없이 고정 |
 | 미시 물질원 실현 | 2.0/10 | CE action/EOM, renormalized stress, backreaction, spectrum이 미도출 |
 | 통과가능 장치 전체 증명 | 1.5/10 | 기하 target은 있으나 source와 선형·비선형 안정성이 열려 있음 |
 
@@ -89,10 +89,10 @@ volume-NEC가 로그 발산한다. 같은 shape에
 
 1. ADM-matched target을 독립 matter action/EOM에서 재구성하고 Bianchi 자동보존과
    실제 on-shell Noether 보존을 분리한다.
-2. `x≈1.15638`의 nonminimal `K/F<0` pocket을 interval bound 또는 해석 부등식으로
-   인증해 finite-grid 의존성을 제거한다.
-3. ADM-matched background의 gauge-fixed quadratic perturbation operator와 negative,
+2. ADM-matched background의 gauge-fixed quadratic perturbation operator와 negative,
    zero, ghost mode를 계산한다.
+3. 실제 CE pole·vertex 또는 causal boundary response에서 localized source를
+   유도하고 self-reported bool 승격을 금지한다.
 4. 일반 redshift travel-time 식과 print-only gate의 exit contract를 교정한다.
 
 이 네 항목 가운데 1–3을 닫기 전에는 `wormhole realization` 또는 `teleportation

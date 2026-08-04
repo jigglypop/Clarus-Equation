@@ -38,6 +38,17 @@ def test_ce_required_coherence_q_still_leaves_p_underdetermined() -> None:
     assert not audit.stress_scaling_unique_from_correlation_length
 
 
+def test_requesting_one_exponent_does_not_make_stress_scaling_unique() -> None:
+    audit = pole_family_countermodel_audit(
+        resonance_q=10.0,
+        requested_stress_exponents=(0.0,),
+    )
+
+    assert len(audit.countermodels) == 1
+    assert not audit.stress_scaling_unique_from_correlation_length
+    assert not audit.physical_null_stress_derived
+
+
 def test_documented_ce_bridge_stops_before_physical_pole_and_stress() -> None:
     audit = ce_resonance_bridge_audit()
 

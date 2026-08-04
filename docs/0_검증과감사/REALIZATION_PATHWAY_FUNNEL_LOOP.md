@@ -36,7 +36,7 @@ Gate 개수는 확률이 아니다. ghost, 잘못된 점근구조, shortcut 부�
 최우선은 기존 라그랑지안에 이미 적힌
 
 \[
-\mathcal L\supset \xi R\Phi^2+rac12(\partial\Phi)^2-V(\Phi)
+\mathcal L\supset \xi R\Phi^2+\frac12(\partial\Phi)^2-V(\Phi)
 \]
 
 경로다. 물질판 없이 scalar의 여러 radial eigenmode를 중첩할 수 있으므로 다중공명 허용과

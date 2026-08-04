@@ -287,14 +287,14 @@ class ConstantsScorecard:
         )
         self.add_constant("Boltzmann constant", "k_B", 1.380649e-23, 1.380649e-23, None, "SI definition", "Exact")
         self.add_constant(
-            "Clarus field pole bridge",
-            "m_chi",
+            "Clarus inverse-correlation bridge",
+            "m_xi",
             M_PHI_MEV,
             None,
             None,
             "CE prediction gate",
             "Open test",
-            "Field-pole gate registered; probes the Clarus-field correlation pole, not a standalone particle assumption.",
+            "Inverse-correlation scale gate registered; a physical CE pole, residue, and field identity remain open.",
         )
         self.add_constant("Electron mass", "m_e", 0.5109989, 0.5109989, 0.000015, "CODATA local reference", "Exact")
         self.add_constant("Muon mass", "m_mu", 105.6583745, 105.6583745, 0.0000024, "PDG local reference", "Exact")

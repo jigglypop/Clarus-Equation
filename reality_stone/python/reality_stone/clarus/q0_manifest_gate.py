@@ -30,6 +30,7 @@ Conventions are fixed to Lorentzian signature ``(-,+,+,+)``,
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+import hashlib
 import json
 from math import isfinite
 from numbers import Real
@@ -37,9 +38,7 @@ from pathlib import Path
 from typing import Any, Mapping
 
 
-TOY_SCOPE = (
-    "q0_minimal_abelian_higgs_z2_singlet_rxi_control_slice_only"
-)
+TOY_SCOPE = "q0_minimal_abelian_higgs_z2_singlet_rxi_control_slice_only"
 TOY_CONDITIONAL_PASS = "Q0_ABELIAN_Z2_CONTROL_SLICE_PASS"
 TOY_CONDITIONAL_FAIL = "Q0_ABELIAN_Z2_CONTROL_SLICE_FAIL"
 
@@ -48,40 +47,71 @@ ACTION_KIND = "classical_bare_tree_level_control"
 FIXED_BACKGROUND_METRIC = "eta_mu_nu=diag(-1,+1,+1,+1);not_varied"
 NATURAL_UNITS = "natural_units_hbar=c=1"
 ACTION_CONVENTION = (
-    "S=int d^4x L;L_gauge=-F_mu_nu*F^mu_nu/4;"
-    "L_scalar=-|D_mu H|^2-(partial_mu phi)^2/2-V(H,phi)"
+    "S=int d^4x L;L_gauge=-F_mu_nu*F^mu_nu/4;L_scalar=-|D_mu H|^2-(partial_mu phi)^2/2-V(H,phi)"
 )
 POTENTIAL_CONVENTION = (
-    "V=-mu_H^2*|H|^2+lambda_H*|H|^4+(m0_phi^2/2)*phi^2"
-    "+(lambda_phi/4)*phi^4+lambda_HP*|H|^2*phi^2"
+    "V=-mu_H^2*|H|^2+lambda_H*|H|^4+(m0_phi^2/2)*phi^2+(lambda_phi/4)*phi^4+lambda_HP*|H|^2*phi^2"
 )
 COVARIANT_DERIVATIVE_CONVENTION = "D_mu=partial_mu-i*g*A_mu"
-GAUGE_TRANSFORMATION_CONVENTION = (
-    "A_mu->A_mu+partial_mu(alpha);H->exp(i*g*alpha)*H"
-)
-R_XI_CONVENTION = (
-    "F=partial_dot_A-xi*g*v*chi;L_gf=-F^2/(2*xi)"
-)
-GHOST_CONVENTION = (
-    "L_gh=-c_bar*(delta_F/delta_alpha)*c;"
-    "m_ghost^2=xi*g^2*v^2"
-)
-BACKGROUND_CONVENTION = (
-    "H=(v+h+i*chi)/sqrt(2);phi=0;A_mu=0;h=chi=0"
-)
+GAUGE_TRANSFORMATION_CONVENTION = "A_mu->A_mu+partial_mu(alpha);H->exp(i*g*alpha)*H"
+R_XI_CONVENTION = "F=partial_dot_A-xi*g*v*chi;L_gf=-F^2/(2*xi)"
+GHOST_CONVENTION = "L_gh=-c_bar*(delta_F/delta_alpha)*c;m_ghost^2=xi*g^2*v^2"
+BACKGROUND_CONVENTION = "H=(v+h+i*chi)/sqrt(2);phi=0;A_mu=0;h=chi=0"
 FIELD_SPACE_METRIC_CONVENTION = (
-    "G_(h,chi,phi)=diag(1,1,1);"
-    "local_jet_audits_one_scalar_direction_only"
+    "G_(h,chi,phi)=diag(1,1,1);local_jet_audits_one_scalar_direction_only"
 )
 FIELD_SPACE_CONNECTION_CONVENTION = (
-    "Gamma=0_in_Cartesian_(h,chi,phi);"
-    "Gamma_y=(d2x/dy2)/(dx/dy)_on_one_direction_local_jet"
+    "Gamma=0_in_Cartesian_(h,chi,phi);Gamma_y=(d2x/dy2)/(dx/dy)_on_one_direction_local_jet"
 )
 NOT_APPLIED_STATUS = "not_applied_excluded_from_control_scope"
 
-_REQUIRED_FIELDS = frozenset(
-    {"A_mu", "h", "chi", "phi", "c", "c_bar"}
-)
+
+def q0_control_action_definition_payload() -> dict[str, object]:
+    """Return the canonical declarations that define the Q0 control action.
+
+    Numerical benchmark values are deliberately excluded: this digest identifies
+    the selected action, field basis, background, and conventions rather than one
+    parameter point.  Full CE and renormalized-action claims remain excluded by
+    the payload itself.
+    """
+
+    return {
+        "scope_id": TOY_SCOPE,
+        "action_kind": ACTION_KIND,
+        "spacetime_signature": SIGNATURE_CONVENTION,
+        "fixed_background_metric": FIXED_BACKGROUND_METRIC,
+        "units": NATURAL_UNITS,
+        "action_convention": ACTION_CONVENTION,
+        "potential_convention": POTENTIAL_CONVENTION,
+        "covariant_derivative": COVARIANT_DERIVATIVE_CONVENTION,
+        "gauge_transformation": GAUGE_TRANSFORMATION_CONVENTION,
+        "background_declaration": BACKGROUND_CONVENTION,
+        "field_space_metric": FIELD_SPACE_METRIC_CONVENTION,
+        "field_space_connection": FIELD_SPACE_CONNECTION_CONVENTION,
+        "gauge_fixing": R_XI_CONVENTION,
+        "ghost_action": GHOST_CONVENTION,
+        "counterterm_status": NOT_APPLIED_STATUS,
+        "renormalization_status": NOT_APPLIED_STATUS,
+        "field_declarations": sorted(_REQUIRED_FIELDS),
+        "action_terms": sorted(_REQUIRED_ACTION_TERMS),
+        "excluded_sectors": sorted(_REQUIRED_EXCLUDED_SECTORS),
+        "full_ce_sm_complete": False,
+    }
+
+
+def q0_control_action_definition_sha256() -> str:
+    """Hash the canonical Q0 action declarations without filesystem state."""
+
+    canonical = json.dumps(
+        q0_control_action_definition_payload(),
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return hashlib.sha256(canonical).hexdigest()
+
+
+_REQUIRED_FIELDS = frozenset({"A_mu", "h", "chi", "phi", "c", "c_bar"})
 _REQUIRED_ACTION_TERMS = frozenset(
     {
         "abelian_gauge_kinetic",
@@ -381,13 +411,9 @@ def audit_q0_manifest(
         raise TypeError("manifest must be a Q0StructuralManifest")
 
     present = tuple(
-        name
-        for name in _REQUIRED_MANIFEST_SECTIONS
-        if _section_is_present(manifest, name)
+        name for name in _REQUIRED_MANIFEST_SECTIONS if _section_is_present(manifest, name)
     )
-    missing = tuple(
-        name for name in _REQUIRED_MANIFEST_SECTIONS if name not in present
-    )
+    missing = tuple(name for name in _REQUIRED_MANIFEST_SECTIONS if name not in present)
     tuple_sections = (
         "field_declarations",
         "action_terms",
@@ -397,8 +423,7 @@ def audit_q0_manifest(
     invalid = tuple(
         name
         for name in tuple_sections
-        if _section_is_present(manifest, name)
-        and not _valid_string_tuple(getattr(manifest, name))
+        if _section_is_present(manifest, name) and not _valid_string_tuple(getattr(manifest, name))
     )
 
     scope_locked = manifest.scope_id == TOY_SCOPE
@@ -406,17 +431,11 @@ def audit_q0_manifest(
     fields_valid = _valid_string_tuple(manifest.field_declarations)
     terms_valid = _valid_string_tuple(manifest.action_terms)
     excluded_valid = _valid_string_tuple(manifest.excluded_sectors)
-    fields_declared = fields_valid and set(
-        manifest.field_declarations
-    ) == _REQUIRED_FIELDS
-    action_terms_declared = terms_valid and set(
-        manifest.action_terms
-    ) == _REQUIRED_ACTION_TERMS
+    fields_declared = fields_valid and set(manifest.field_declarations) == _REQUIRED_FIELDS
+    action_terms_declared = terms_valid and set(manifest.action_terms) == _REQUIRED_ACTION_TERMS
     boundary_conditions_declared = _valid_string_tuple(
         manifest.boundary_conditions
-    ) and _REQUIRED_BOUNDARY_CONDITIONS.issubset(
-        manifest.boundary_conditions
-    )
+    ) and _REQUIRED_BOUNDARY_CONDITIONS.issubset(manifest.boundary_conditions)
     excluded_explicit = excluded_valid and _REQUIRED_EXCLUDED_SECTORS.issubset(
         manifest.excluded_sectors
     )
@@ -438,13 +457,11 @@ def audit_q0_manifest(
         ),
         (
             "covariant_derivative",
-            manifest.covariant_derivative
-            == COVARIANT_DERIVATIVE_CONVENTION,
+            manifest.covariant_derivative == COVARIANT_DERIVATIVE_CONVENTION,
         ),
         (
             "gauge_transformation",
-            manifest.gauge_transformation
-            == GAUGE_TRANSFORMATION_CONVENTION,
+            manifest.gauge_transformation == GAUGE_TRANSFORMATION_CONVENTION,
         ),
         (
             "background_declaration",
@@ -457,8 +474,7 @@ def audit_q0_manifest(
         ),
         (
             "field_space_connection",
-            manifest.field_space_connection
-            == FIELD_SPACE_CONNECTION_CONVENTION,
+            manifest.field_space_connection == FIELD_SPACE_CONNECTION_CONVENTION,
         ),
         ("gauge_fixing", manifest.gauge_fixing == R_XI_CONVENTION),
         ("ghost_action", manifest.ghost_action == GHOST_CONVENTION),
@@ -475,9 +491,7 @@ def audit_q0_manifest(
         ("excluded_sectors", excluded_explicit),
         ("full_ce_sm_complete", full_claim_locked_false),
     )
-    convention_issues = tuple(
-        name for name, passed in convention_checks if not passed
-    )
+    convention_issues = tuple(name for name, passed in convention_checks if not passed)
     complete = not missing and not invalid and not convention_issues
     return ManifestCompletenessAudit(
         required_sections=_REQUIRED_MANIFEST_SECTIONS,
@@ -526,9 +540,7 @@ def audit_field_space_local_jet(
     if abs(jacobian) <= threshold:
         raise ValueError("dx_dy must be nonzero at the audited point")
     if abs(curvature) <= threshold:
-        raise ValueError(
-            "d2x_dy2 must be nonzero for a nonlinear local jet"
-        )
+        raise ValueError("d2x_dy2 must be nonzero for a nonlinear local jet")
 
     gradient_y = jacobian * gradient_x
     tensor_pullback = jacobian**2 * hessian_x
@@ -539,16 +551,10 @@ def audit_field_space_local_jet(
     metric_derivative_y = 2.0 * metric_x * jacobian * curvature
     levi_civita_connection = 0.5 * metric_derivative_y / metric_y
     induced_connection = curvature / jacobian
-    covariant_hessian = (
-        ordinary_hessian - levi_civita_connection * gradient_y
-    )
+    covariant_hessian = ordinary_hessian - levi_civita_connection * gradient_y
 
-    chain_rule_residual = abs(
-        ordinary_hessian - tensor_pullback - extra_term
-    )
-    metric_connection_residual = abs(
-        levi_civita_connection - induced_connection
-    )
+    chain_rule_residual = abs(ordinary_hessian - tensor_pullback - extra_term)
+    metric_connection_residual = abs(levi_civita_connection - induced_connection)
     covariance_residual = abs(covariant_hessian - tensor_pullback)
     stationary = abs(gradient_x) <= threshold
     ordinary_tensorial = _close(
@@ -642,32 +648,18 @@ def audit_background_tadpole(
     )
 
     goldstone_curvature = (
-        -mass_parameter
-        + higgs_coupling * vev**2
-        + portal_coupling * singlet_vev**2
+        -mass_parameter + higgs_coupling * vev**2 + portal_coupling * singlet_vev**2
     )
     higgs_tadpole = vev * goldstone_curvature
     radial_curvature = (
-        -mass_parameter
-        + 3.0 * higgs_coupling * vev**2
-        + portal_coupling * singlet_vev**2
+        -mass_parameter + 3.0 * higgs_coupling * vev**2 + portal_coupling * singlet_vev**2
     )
     singlet_effective_mass = singlet_mass + portal_coupling * vev**2
-    singlet_bracket = (
-        singlet_effective_mass
-        + singlet_coupling * singlet_vev**2
-    )
+    singlet_bracket = singlet_effective_mass + singlet_coupling * singlet_vev**2
     singlet_tadpole = singlet_vev * singlet_bracket
-    singlet_curvature = (
-        singlet_effective_mass
-        + 3.0 * singlet_coupling * singlet_vev**2
-    )
-    higgs_identity_residual = abs(
-        higgs_tadpole - vev * goldstone_curvature
-    )
-    singlet_identity_residual = abs(
-        singlet_tadpole - singlet_vev * singlet_bracket
-    )
+    singlet_curvature = singlet_effective_mass + 3.0 * singlet_coupling * singlet_vev**2
+    higgs_identity_residual = abs(higgs_tadpole - vev * goldstone_curvature)
+    singlet_identity_residual = abs(singlet_tadpole - singlet_vev * singlet_bracket)
     higgs_scale = max(
         1.0,
         abs(mass_parameter * vev),
@@ -755,9 +747,7 @@ def audit_abelian_higgs_r_xi(
     expected_mass = gauge_parameter * vector_mass_squared
     mixing_residual = abs(net_mixing)
     fp_residual = abs(declared_ghost_mass - fp_ghost_mass)
-    identity_residual = abs(
-        gauge_fixing_goldstone_mass - declared_ghost_mass
-    )
+    identity_residual = abs(gauge_fixing_goldstone_mass - declared_ghost_mass)
     expected_residual = abs(declared_ghost_mass - expected_mass)
     scale = max(
         1.0,
@@ -770,12 +760,9 @@ def audit_abelian_higgs_r_xi(
     mixing_cancelled = mixing_residual <= threshold * scale
     fp_consistent = fp_residual <= threshold * scale
     ghost_masses_match = (
-        identity_residual <= threshold * scale
-        and expected_residual <= threshold * scale
+        identity_residual <= threshold * scale and expected_residual <= threshold * scale
     )
-    structural_pass = (
-        mixing_cancelled and fp_consistent and ghost_masses_match
-    )
+    structural_pass = mixing_cancelled and fp_consistent and ghost_masses_match
     return AbelianRXiAudit(
         gauge_coupling=coupling,
         higgs_vev=vev,
@@ -822,9 +809,7 @@ def q0_manifest_gate_report(
         mu_squared=control_inputs.mu_squared,
         higgs_self_coupling=control_inputs.higgs_self_coupling,
         higgs_vev=control_inputs.higgs_vev,
-        singlet_bare_mass_squared=(
-            control_inputs.singlet_bare_mass_squared
-        ),
+        singlet_bare_mass_squared=(control_inputs.singlet_bare_mass_squared),
         singlet_self_coupling=control_inputs.singlet_self_coupling,
         lambda_hp=control_inputs.lambda_hp,
         singlet_background=control_inputs.singlet_background,
@@ -834,12 +819,8 @@ def q0_manifest_gate_report(
         gauge_coupling=control_inputs.gauge_coupling,
         higgs_vev=control_inputs.higgs_vev,
         xi=control_inputs.xi,
-        gauge_fixing_goldstone_coefficient=(
-            control_inputs.gauge_fixing_goldstone_coefficient
-        ),
-        declared_ghost_mass_squared=(
-            control_inputs.declared_ghost_mass_squared
-        ),
+        gauge_fixing_goldstone_coefficient=(control_inputs.gauge_fixing_goldstone_coefficient),
+        declared_ghost_mass_squared=(control_inputs.declared_ghost_mass_squared),
         tolerance=tolerance,
     )
 
@@ -847,17 +828,14 @@ def q0_manifest_gate_report(
     control_q0_1 = field_space_audit.structural_pass
     control_q0_2 = background_audit.on_shell_background
     control_q0_3 = gauge_audit.structural_pass
-    control_through_q0_3 = all(
-        (control_q0_0, control_q0_1, control_q0_2, control_q0_3)
-    )
+    control_through_q0_3 = all((control_q0_0, control_q0_1, control_q0_2, control_q0_3))
     conclusion = (
         "The declared minimal Abelian-Higgs plus Z2-singlet R_xi control "
         "slice passes all control Q0.0--Q0.3 structural gates. The excluded "
         "sectors keep full Q0, full CE+SM, stress-tensor, and spectral claims "
         "open."
         if control_through_q0_3
-        else
-        "At least one local control Q0.0--Q0.3 gate failed. The independent "
+        else "At least one local control Q0.0--Q0.3 gate failed. The independent "
         "control flags identify which one; no full-Q0 or full-CE+SM "
         "conclusion follows."
     )
@@ -865,11 +843,7 @@ def q0_manifest_gate_report(
         schema_version="1.0",
         scope=TOY_SCOPE,
         control_scope=TOY_SCOPE,
-        structural_status=(
-            TOY_CONDITIONAL_PASS
-            if control_through_q0_3
-            else TOY_CONDITIONAL_FAIL
-        ),
+        structural_status=(TOY_CONDITIONAL_PASS if control_through_q0_3 else TOY_CONDITIONAL_FAIL),
         control_q0_0_pass=control_q0_0,
         control_q0_1_pass=control_q0_1,
         control_q0_2_pass=control_q0_2,
@@ -934,9 +908,7 @@ def _string_tuple(
         or not all(_is_nonempty_string(item) for item in value)
         or len(set(value)) != len(value)
     ):
-        raise ValueError(
-            f"{parent}.{key} must be a non-empty list of unique strings"
-        )
+        raise ValueError(f"{parent}.{key} must be a non-empty list of unique strings")
     return tuple(value)
 
 

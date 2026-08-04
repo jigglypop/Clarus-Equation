@@ -1,9 +1,12 @@
 # CloudCell-모나드 경험적 감사
 
 > 작성 기준: 2026-07-31
+> 결과 갱신: 2026-08-04
 > 범위: 실제 뉴런 시계열에서 `stateful local-cell + population-cloud` 가설을
 > 검증하는 통계 게이트와 인간 MTL coded-memory 교차 검증
-> 현재 상태: `formal PASS / C. elegans primary 0/4 FAIL / human MTL pilot running`
+> 현재 상태: `formal PASS / C. elegans primary 0/4 FAIL /
+> human MTL Sternberg operational proxy 0/3 FAIL /
+> concept-coded H1+H2 NOT EVALUATED / 1 subject NOT EVALUABLE`
 
 ## 0. 현재 결론과 증명의 범위
 
@@ -849,13 +852,17 @@ $$
 p_{\mathrm{stimulus\ block}}<0.05.
 $$
 
+단순히 $\mathrm{AUC}>0.5$인 것만으로는 실질 효과를 보장하지 않는다.
+Confirmatory 실행 전 $\mathrm{AUC}_{\min}>0.5$인 SESOI와 unit-concept pair
+다중검정의 FWER 또는 FDR 보정법을 고정한다.
+
 다른 사진, 글자, 음성 등 같은 개념의 variant가 있다면 leave-variant-out을
 primary로 둔다. 모든 trial에서 가장 잘 반응한 뉴런을 고른 뒤 같은 trial로
 평가하는 것은 circular selection이므로 무효다.
 
 | dataset/subject | selected pairs in train | held-out variants | held-out AUC/effect | block-null $p$ | status |
 |---|---:|---:|---|---:|---|
-| `[TO FILL]` | `[TO FILL]` | `[TO FILL]` | `[TO FILL]` | `[TO FILL]` | `[TO FILL]` |
+| Sternberg NWB panel | N/E — concept identity label 없음 | N/E — concept variant 없음 | -- | -- | `NOT EVALUATED` |
 
 ### 10.3 Gate H2: local code 뒤의 population-cloud 증분
 
@@ -871,6 +878,15 @@ M_F &: Y_j\sim M_0+\text{local state}+\text{population state}.
 $$
 
 Primary metric은 held-out log loss, secondary는 Brier score와 balanced accuracy다.
+Log-loss effect는
+
+$$
+\Delta\mathrm{LL}_{F-B}
+=\mathrm{LL}(M_B)-\mathrm{LL}(M_F),
+\qquad B\in\{0,L,P\},
+$$
+
+로 정의해 양수가 full의 개선을 뜻하게 한다.
 Split은 최소 두 종류를 모두 보고한다.
 
 - leave-stimulus-variant/repeat-out
@@ -883,9 +899,13 @@ Human MTL의 neuron identity가 subject 사이에서 공유되지 않으므로 n
 
 | contrast | held-out log-loss effect | simultaneous 95% CI | positive subjects | corrected $p$ | status |
 |---|---:|---|---:|---:|---|
-| full vs task/history | `[TO FILL]` | `[TO FILL]` | `[TO FILL]` | `[TO FILL]` | `[TO FILL]` |
-| full vs local coded-cell | `[TO FILL]` | `[TO FILL]` | `[TO FILL]` | `[TO FILL]` | `[TO FILL]` |
-| full vs population-only | `[TO FILL]` | `[TO FILL]` | `[TO FILL]` | `[TO FILL]` | `[TO FILL]` |
+| full vs task/history | -- | -- | -- | -- | `NOT EVALUATED` |
+| full vs local coded-cell | -- | -- | -- | -- | `NOT EVALUATED` |
+| full vs population-only | -- | -- | -- | -- | `NOT EVALUATED` |
+
+현재 Sternberg panel 실행에는 concept-selected cell과 later-memory outcome가 없고,
+PCA population 및 위 log-loss contrast도 사용하지 않았다. 따라서 아래 proxy
+결과를 이 H2 표에 대입하지 않는다.
 
 ### 10.4 Human MTL null
 
@@ -897,8 +917,30 @@ Human MTL의 neuron identity가 subject 사이에서 공유되지 않으므로 n
 - previous exposure, reaction time, confidence, stimulus frequency를 포함한
   task/history baseline
 
-H1만 통과하면 `local sparse/concept code`다. H2에서 full이 local-only와
-population-only를 모두 이겨야 `coded CloudCell bridge`로 올린다.
+H1만 통과하면 `local sparse/concept code`다. H2에서 full이 task/history,
+local-only, population-only를 모두 이겨야 `coded CloudCell bridge`로 올린다.
+
+### 10.5 완료된 Sternberg operational proxy
+
+이 분석은 concept-cell H1/H2의 대체 검증이 아니다. Memory-load cardinality와
+probe membership의 population-vs-best-single decoding, 그리고 maintenance
+early-to-late firing-rate persistence를 평가한 exploratory operational proxy다.
+`n_shifts=1000` 요청에서 가능한 모든 서로 다른 5-trial block offset이 사용되어
+subject별 유효 shift 수는 26 또는 21이었다.
+
+| subject | trials | MTL units | load $\Delta$BA / null $p$ | probe $\Delta$BA / null $p$ | persistence full-vs-best $\Delta R^2$ | status |
+|---|---:|---:|---:|---:|---:|---|
+| 18 | 135 | 64 | -0.104843 / 0.851852 | +0.223684 / 0.111111 | -0.693539 | `FAIL` |
+| 19 | 108 | 11 | +0.019048 / 0.545455 | +0.051923 / 0.318182 | -0.053921 | `FAIL` |
+| 7 | 108 | 16 | +0.039881 / 0.454545 | -0.076923 / 0.909091 | -0.830916 | `FAIL` |
+| 20 | 135 | 1 | -- | -- | -- | `NOT EVALUABLE` |
+
+평가 가능한 subject는 3명이고 operational pass는 `0/3`이다. Subject 18의 probe
+population gain은 기술적으로 크지만 block-shift null $p=0.111111$이므로
+통과가 아니다. 이 convenience panel에서 subject-independent population 추론은
+하지 않는다. 2026-08-04 all-shift 결과는 현재
+`.tmp/cloudcell-data/human_mtl_recheck_all_shifts.json`에만 있으므로 tracked
+artifact로 승격하기 전까지 `exploratory/non-durable`이다.
 
 ---
 
@@ -945,7 +987,7 @@ sham, 반대 방향 $-\delta v$를 control로 둔다. 결과가 전체 각성 �
 | `L1 IMPLEMENTED` | 네 모델, split, leakage tests, artifact hash | `PARTIAL PASS` — primary gate·hash 구현, whole-pipeline bootstrap null은 미구현 | 검증기가 현재 명세 범위에서 동작 |
 | `L2 WITHIN-RECORDING` | 네 C. elegans recording의 future transition | `FAIL 0/4` — full이 local-only를 이기지 못함 | joint CloudCell 문장 불허 |
 | `L3 CROSS-RECORDING` | 최소 8 untouched recording, exact sign/CI | `NOT EVALUATED` | 불허 |
-| `L4 CROSS-SPECIES/CODED` | human MTL H1+H2 | `RUNNING / pilot only` | 아직 불허 |
+| `L4 CROSS-SPECIES/CODED` | human MTL concept H1+H2 | `NOT EVALUATED` — Sternberg proxy `FAIL 0/3`, sub-20 N/E | coded-memory/CloudCell bridge 불허 |
 | `L5 CAUSAL` | matched perturbation | `NOT EVALUATED` | 불허 |
 | `L6 AGI EFFICACY` | 동일 parameter/FLOP AGI ablation | `NOT EVALUATED` | 불허 |
 
@@ -1093,13 +1135,24 @@ prediction hash, hyperparameter, effect를 반드시 남긴다.
 
 ## 15. 현재 최종 판정
 
+```text
+FORMAL SOFTWARE CONTRACT:       PASS / Exact
+C. ELEGANS CLOUD INCREMENT:     FAIL / 0 of 4 recordings
+HUMAN MTL STERNBERG PROXY:      FAIL / 0 of 3 evaluable subjects
+HUMAN CONCEPT-CODE H1+H2:       NOT EVALUATED
+CAUSAL / ONTOLOGICAL MONAD:     NOT IDENTIFIED
+OVERALL STRONG CODED-MONAD:     NOT SUPPORTED
+WEAK LOCAL TEMPORAL FEATURE:    SUPPORTED / AML32 7 of 7 at h=1 and h=6
+```
+
 > Causal held-out transition에서 full model은 local-only를 네 recording 모두에서
 > 이기지 못했다. equal-recording mean $\Delta R^2_{\rm full-local}$은
 > $-1.28\times10^{-4}$이고 방향 통과는 `0/4`였다. 약 1초와 5초 진단에서도
 > 각각 네 recording 모두 음수였다. 따라서 현재 C. elegans 자료는 target의
 > 현재 상태를 넘는 local history는 지지하지만, 그 위의 독립 population-cloud
 > 증분은 지지하지 않는다. `뉴런 = coded monadic CloudCell`이라는 생물학적
-> joint-state 가설은 이 데이터 경계에서 `REJECTED`; 남는 것은
+> 동일성은 이 관측 자료로 식별되지 않았고, 사전 정의한 C. elegans operational
+> joint-state gate는 이 데이터 경계에서 `FAIL`; 남는 것은
 > `stateful local units embedded in a population`이라는 더 약한 설계 가설이다.
 
 형식 결과와 경험 결과를 섞지 않는다. 확률·상태 monad와 완전 snapshot에 대한
@@ -1127,5 +1180,44 @@ _{\text{확인 패널에서 지지}}
 _{\text{현재 미증명}}.
 \]
 
-AGI에 의미 있는 최소 가정은 local recurrent state이며, population cloud,
-graph, diffusion은 이번 자료에서 그 위의 필수 구조로 확인되지 않았다.
+AGI에 의미 있는 최소 가정은 local temporal-history/state feature이며,
+population cloud, graph, diffusion은 이번 자료에서 그 위의 필수 구조로
+확인되지 않았다.
+
+2026-08-04 AML32 원자료 재실행에서는 $h=1$과 $h=6$ 결과 JSON이 기존 커밋의
+두 confirmatory artifact와 각각 정확히 일치했고, 구현 정규화 SHA-256
+`6032a76d33a0a2adc2671972248c550b00c600be418919c3c296924106475f86`에 대해
+독립 verifier가 `proof_passed=true`, 오류 0개를 반환했다. 이것은 measured
+same-unit history의 held-out 예측 정보에 대한 재현이지, 인과적 recurrence의
+증명이 아니다.
+
+---
+
+## 17. 비증거적 설계 힌트: private inference와 shared intervention
+
+수행자에게만 물이 땅처럼 성립한다는 서사와 다른 사람도 건너는 다리의 대비는
+물리적 증거가 아니라 다음 AGI 판별식을 주는 설계 은유로만 사용한다. 세계상태를
+$s$, agent $i$의 내부상태를 $z_i$, 관측 kernel을 $O_i$, 환경 전이를 $T$라 두면
+
+$$
+\begin{aligned}
+\text{private inference}:\quad
+&z_i\to z_i',\quad O_i,\pi_i\ \text{변화},\quad T'=T,\\
+\text{shared intervention}:\quad
+&s'\sim T(\cdot\mid s,a_i),\quad
+\exists j\ne i:\ \Delta\mathrm{utility}_j>0.
+\end{aligned}
+$$
+
+CloudCell의 경험적 핵심은 내부 표상의 인상적인 변화가 아니라 다른 단위의 정보를
+썼을 때 untouched future가 더 잘 예측되는지다.
+
+$$
+G_{i\leftarrow -i}
+=R^2(M_F)-R^2(M_L)>\varepsilon.
+$$
+
+현재 C. elegans에서는 이 shared gain이 네 recording 모두 음수였고, local-history
+gain만 양성이었다. 따라서 AGI 구현에서도 우선 local temporal state를 유지하되,
+shared workspace는 parameter/FLOP-matched 외부 과제와 cross-module ablation에서
+전이 가능한 증분을 보일 때만 필수 구조로 승격한다.

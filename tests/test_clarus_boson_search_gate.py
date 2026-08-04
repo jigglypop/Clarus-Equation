@@ -18,24 +18,25 @@ def test_clarus_mass_and_range_are_registered():
 
 def test_x17_is_not_a_clarus_mass_hit():
     assert not in_mass_window(17.0)
-    decision = classify_result(
-        ExperimentalResult("X17-like", 17.0, 6.0, pole_compatible=True)
-    )
+    decision = classify_result(ExperimentalResult("X17-like", 17.0, 6.0, pole_compatible=True))
     assert decision.status == "open_test"
 
 
 def test_sub_discovery_excess_in_window_is_candidate_only():
-    decision = classify_result(
-        ExperimentalResult("window excess", 29.7, 3.0, pole_compatible=True)
-    )
-    assert decision.status == "pole_candidate"
+    decision = classify_result(ExperimentalResult("window excess", 29.7, 3.0, pole_compatible=True))
+    assert decision.status == "experimental_bridge_candidate"
+    assert not decision.physical_pole_derived
+    assert not decision.ce_field_identity_derived
 
 
-def test_five_sigma_pole_hit_in_window_promotes_bridge():
+def test_five_sigma_hit_supports_experimental_bridge_not_theory_pole():
     decision = classify_result(
         ExperimentalResult("window discovery", 29.7, 5.1, pole_compatible=True)
     )
-    assert decision.status == "pole_confirmed"
+    assert decision.status == "experimental_bridge_signal"
+    assert "does not derive a CE two-point pole" in decision.reason
+    assert not decision.physical_pole_derived
+    assert not decision.ce_field_identity_derived
 
 
 def test_full_mass_and_coupling_exclusion_rejects_bridge_not_core_field():

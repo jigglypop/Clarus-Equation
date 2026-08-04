@@ -1,11 +1,9 @@
-"""
-Clarus-field pole/correlation search gate.
+"""Experimental search gate for the registered Clarus correlation-scale bridge.
 
-The 29.65 MeV object is registered here as the inverse correlation length /
-two-point-function pole of the Clarus field, then read in particle language as
-a local scalar bridge.  A resonance-like signal would support that pole bridge;
-a null result constrains or rejects the particle-language readout, not the core
-definition of the Clarus field.
+The 29.65 MeV value is a registered inverse-correlation scale ansatz, not a pole
+already derived from a renormalized CE two-point function.  A mass-window signal
+can support the experimental bridge candidate.  It cannot, by itself, establish
+the CE field identity, pole residue, spectral positivity, dispersion, or LSZ.
 """
 
 from __future__ import annotations
@@ -48,6 +46,8 @@ class ExperimentalResult:
 class GateDecision:
     status: str
     reason: str
+    physical_pole_derived: bool = False
+    ce_field_identity_derived: bool = False
 
 
 def in_mass_window(mass_mev: float | None) -> bool:
@@ -72,14 +72,17 @@ def classify_result(result: ExperimentalResult) -> GateDecision:
         and result.significance_sigma >= 5
     ):
         return GateDecision(
-            "pole_confirmed",
-            "Five-sigma pole-compatible structure inside the CE mass window.",
+            "experimental_bridge_signal",
+            "Five-sigma pole-compatible structure inside the registered mass "
+            "window supports the experimental bridge; it does not derive a CE "
+            "two-point pole, residue, or field identity.",
         )
 
     if in_mass_window(result.mass_mev) and result.pole_compatible:
         return GateDecision(
-            "pole_candidate",
-            "Pole-compatible excess in the CE mass window, below discovery threshold.",
+            "experimental_bridge_candidate",
+            "Pole-compatible excess in the registered mass window, below the "
+            "discovery threshold and without a CE pole certificate.",
         )
 
     if result.excludes_mass_window:
@@ -113,7 +116,7 @@ def registered_search_channels() -> list[dict[str, str]]:
 
 def main() -> None:
     print("=" * 96)
-    print("CE CLARUS FIELD-POLE SEARCH GATE")
+    print("CE REGISTERED CORRELATION-SCALE BRIDGE SEARCH GATE")
     print("=" * 96)
     print(f"delta={DELTA:.8f}")
     print(f"lambda_HP=delta^2={LAMBDA_HP:.8f}")

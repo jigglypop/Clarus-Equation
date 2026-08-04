@@ -197,7 +197,7 @@ WARN:
 - Omega_Lambda: +2.75 sigma
 
 OPEN/excluded:
-- Clarus field pole bridge
+- Clarus inverse-correlation / particle-language bridge
 ```
 
 주의: `tests/run_validation.py`는 `Open` 항목도 일부 strict scorecard에 강제로 넣어 실패를 드러내는 감사 도구이고, `tests/scorecard.py`는 현재 문서 판정에 맞춰 `Open`을 채점에서 제외하는 장부 도구다. 따라서 두 도구의 숫자는 서로 다른 질문에 대한 답이다.
@@ -271,9 +271,13 @@ Scored pass rate: 84.6%
 
 판정: `Phenomenology`. LO 식은 그대로 실패로 보존하고, 관측 CKM 원소에는 charged-current electroweak projector가 한 폐위상 루프 평균으로 붙는다고 읽는다. 이는 `Exact`가 아니라 no-free-parameter NLO bridge다.
 
-## 12. Clarus field pole/correlation gate
+## 12. Clarus inverse-correlation / particle-language gate
 
-`examples/physics/clarus_boson_search_gate.py`를 추가해 미관측 예측의 판정 조건을 사전등록했다. 여기서 "Clarus boson"은 코어에서 독립 입자를 먼저 가정한 것이 아니라, 클라루스장 2점 상관함수의 pole을 입자언어로 읽은 bridge다.
+`examples/physics/clarus_boson_search_gate.py`는 미관측 실험 bridge의 판정
+조건을 사전등록한다. 여기서 29.65 MeV는 실제 CE connected 2점함수에서
+추출한 pole이 아니라 \(m_p\delta^2\)로 등록한 inverse-correlation scale
+ansatz다. 따라서 질량창 hit는 particle-language bridge를 지지할 수 있지만
+pole residue, spectral positivity나 CE field identity를 증명하지 않는다.
 
 등록값:
 
@@ -281,7 +285,7 @@ Scored pass rate: 84.6%
 |---|---:|
 | $\delta$ | 0.17775842 |
 | coupling matching 후보 $\lambda_{HP}=\delta^2$ | 0.03159806 |
-| $m_\phi=m_p\delta^2$ | 29.64757 MeV |
+| $m_\xi=m_p\delta^2$ | 29.64757 MeV |
 | 3-sigma 질량창 | 28.388--30.908 MeV |
 | Compton length | 6.65575 fm |
 
@@ -289,16 +293,17 @@ Scored pass rate: 84.6%
 
 | 실험 결과 | gate 판정 |
 |---|---|
-| 질량창 안의 pole-compatible 5 sigma 신호 | `pole_confirmed` |
-| 질량창 안의 5 sigma 미만 excess | `pole_candidate` |
+| 질량창 안의 pole-compatible 5 sigma 신호 | `experimental_bridge_signal` |
+| 질량창 안의 5 sigma 미만 excess | `experimental_bridge_candidate` |
 | 질량창 전체와 bridge coupling benchmark 동시 배제 | `bridge_rejected` |
 | 질량창만 부분 배제하거나 coupling benchmark 미도달 | `bridge_constrained` |
 | 그 외 | `open_test` |
 
-X17류 17 MeV 신호는 질량창 밖이므로 Clarus pole hit로 세지 않는다. 이
-gate는 발견 주장이 아니라 실험 판정표다. 여기의 \(29.65\) MeV light-pole
-후보와 \(m_\Phi\simeq v\sqrt{\lambda_{HP}}=43.77\) GeV 포탈 질량
-benchmark는 서로 다른 bridge 가정이며 같은 pole로 동시에 읽지 않는다.
+X17류 17 MeV 신호는 질량창 밖이므로 Clarus bridge hit로 세지 않는다. 이
+gate는 이론 pole certificate가 아니라 실험 판정표다. 여기의 \(29.65\) MeV
+inverse-correlation 후보와
+\(m_\Phi\simeq v\sqrt{\lambda_{HP}}=43.77\) GeV 포탈 질량 benchmark는
+서로 다른 bridge 가정이며 같은 pole로 동시에 읽지 않는다.
 `bridge_rejected`가 나오더라도 반증되는 것은 국소 스칼라/포탈 readout이지,
 경로적분 수렴 구조로서의 클라루스장 자체가 아니다.
 
@@ -357,6 +362,173 @@ spectral density derived      False
 \(\mathrm{BR}_{\rm inv}\simeq0.772\)로, 문서가 공급한 상한 \(0.11\)을
 통과하지 못한다. 이는 선택적 포탈 benchmark의 반증이며, 독립 on-shell
 scalar를 두지 않는 코어 분기 자체의 반증은 아니다.
+
+### 13.3 Q0.4–Q0.5 singlet pole·vertex 통제 인증서
+
+선택적 \(Z_2\) singlet portal action의 singlet block을 실제 미분해
+
+\[
+K_F(p)=p^2-(m_0^2+\lambda_{HP}v^2)+i0,
+\qquad
+\operatorname{Res}(G_F/i)=+1
+\]
+
+과 \(h\Phi^2,h^2\Phi^2,\chi^2\Phi^2\) vertex를 조건부로 닫았다. 동시에
+
+\[
+\Delta S=C\eta^3/3!+D\eta^4/4!
+\]
+
+가 배경 gradient/Hessian을 보존하면서 higher vertex를 임의 변경하므로 A1
+Hessian만으로 production vertex를 복원할 수 없음을 반례로 고정했다.
+
+29.64757 MeV를 같은 portal field의 tree pole로 역산한 결과는 다음과 같다.
+
+```text
+portal-dominated pole                  43.767675473 GeV
+required bare mass squared            -1915.608537374 GeV^2
+target squared / portal mass shift    4.588505357e-7
+portal / target mass ratio            1476.265187
+minimum lambda_phi for EW tree vacuum 0.00772
+selected EW/Z2 tree vacuum global     True (lambda_phi=0.1 control)
+BR(h -> phi phi)                      0.825312044
+supplied BR limit                     0.11
+maximum |lambda_HP| from that limit   0.005110743
+physical Clarus pole derived          False
+full LSZ passed                       False
+physical SM production rate derived  False
+```
+
+따라서 tree pole은 bare mass를 목표에서 역산하면 `constructible`이지만 예측이
+아니다. \(m_0^2\ge0\)이면 정확한 하한
+\(m_{\rm pole}\ge v\sqrt{\lambda_{HP}}\) 때문에 light same-field pole은
+반증된다. 세부 식과 countermodel은
+`CE_TWO_POINT_AND_VERTEX_LOOP.md`에 기록했다.
+
+```powershell
+uv --cache-dir .uv-cache run python examples/physics/ce_two_point_vertex_gate.py
+uv --cache-dir .uv-cache run --extra dev python -m pytest `
+  tests/test_ce_two_point_vertex_certificate.py -q
+```
+
+### 13.4 action provenance · renormalized pole · scalar one-loop 통제
+
+저장소의 action 후보를 다시 감사한 결과 physical renormalized
+\(\Gamma_{CE,R}^{(2)}\)의 입력으로 채택 가능한 complete CE action은 없었다.
+Q0 선택적 portal은 가장 엄격하지만 고전·bare·tree Abelian control이고
+counterterm, renormalization, CE/중력과 full SM sector를 명시적으로 제외한다.
+형식적 \(\sigma\) action은 \((-+++ )\) 아래 kinetic/EOM 부호와 무차원장
+차원이 맞지 않고 \(\sigma f(R)\) metric variation도 빠져 있어 입력에서
+격리했다.
+
+Q0 tree action definition은 다음 digest에 묶었다.
+
+```text
+c6e1f448c388900d3a70f997d2c133580f1a87a0682e6fe2309fe58bf21ed233
+```
+
+별도 fail-closed 인증서는 action/counterterm/background hash와 gauge/scale
+kernel replica에서 root, derivative/residue, imaginary part, first-cut gap과
+dispersion을 재계산한다. 현재 CE 결과는 다음과 같다.
+
+```text
+maximum stage                         REGISTERED_SCALE
+first blocker                         renormalized action manifest is absent
+physical LSZ particle derived         False
+CE field identity derived             False
+```
+
+선택적 portal의 \(h,\phi\) two-real-scalar finite one-loop control은
+
+```text
+finite scalar sum                     4.672293184 GeV^2
+finite sum / target mass squared      5315.594954
+Sigma'(m_phi^2)                       4.886763794e-5
+linearized residue                    0.999951135
+first h-phi cut                       125.279647570 GeV
+finite sum at mu/2,mu,2mu             -1.804844, 4.672293, 11.149430 GeV^2
+renormalized pole predicted           False
+```
+
+이다. 결합의 loop parameter는 작지만 additive light-mass retuning이 필요한
+진단이다. raw finite 합의 scale 의존성은 counterterm/running input이 빠졌다는
+표지이며 물리 uncertainty나 pole shift가 아니다. 전체 식과 재현 명령은
+`CE_RENORMALIZED_POLE_AND_ONE_LOOP_LOOP.md`에 기록했다.
+
+```powershell
+uv --cache-dir .uv-cache run python examples/physics/ce_renormalized_pole_gate.py
+uv --cache-dir .uv-cache run --extra dev python -m pytest `
+  tests/test_renormalized_pole_certificate.py `
+  tests/test_portal_one_loop_control.py -q
+```
+
+### 13.5 CE Euclidean connected correlator · spectral 비유일성 통제
+
+저장소 전체에서 CE action/operator identity에 묶인 원시 paired
+\(O_n(t),O_n(0)\) ensemble, chain/configuration ID, Euclidean lattice
+spacing·volume·boundary condition과 covariance artifact를 감사했다. 실제 CE
+자료는 없었다. `quantum.py`의 bath Fourier transform, TDCOSMO covariance,
+RAGTruth ensemble, 생물학 형광·spike 원자료는 각각 convention과 대상이 달라
+CE Källén–Lehmann 자료로 재사용하지 않았다.
+
+새 fail-closed scaffold는 원시 paired 표본에서
+
+\[
+\widehat C_t=\frac1{N-1}\sum_n
+(O_n(t)-\bar O_t)(O_n(0)-\bar O_0)
+\]
+
+를 직접 계산하고 delete-one jackknife로 full estimator covariance를 만든다.
+진공·비주기적 Hermitian bosonic Laplace control에서 equal-grid 유한차분,
+log-convexity와 truncated Hankel 조건을 검사하고, covariance-aware exponential
+window fit으로 screening control을 분리한다. finite-temperature wraparound,
+contact term, fermionic/tensor kernel은 이 scope 밖이다.
+
+유한 시간 \(N_t\)개와 더 많은 energy bin으로 만든
+\(K_{ij}=e^{-E_jt_i}\)에 총 weight 보존 행을 붙인 augmented SVD에서
+null vector \(v\ne0\)를 택해
+
+\[
+\rho_\pm=\rho_0\pm\epsilon v\ge0,
+\qquad K\rho_+=K\rho_-,
+\qquad \sum_j(\rho_+)_j=\sum_j(\rho_-)_j
+\]
+
+인 서로 다른 두 spectrum을 실제로 구성한다. 따라서 correlator 표본과 알려진
+정규화를 함께 고정해도 유한 표본에서 pointwise
+spectrum 유일성은 알고리즘 종류와 무관하게 성립하지 않는다. positivity
+통과는 오직 `FINITE TWO-POINT POSITIVITY NOT REJECTED`, 안정한 exponential
+window는 `EUCLIDEAN_SCREENING_CONTROL`까지 허용한다.
+
+현재 CE 실행 판정은 다음과 같다.
+
+```text
+maximum stage                         REGISTERED_SCALE
+first blocker                         raw paired O(t), O(0) ensemble is absent
+actual CE connected correlator        absent
+unique spectral density               False
+Minkowski pole / LSZ                   False / False
+CE field identity                     False
+```
+
+합성 single-exponential control은 covariance-aware screening mass
+\(29.647570000\,\mathrm{MeV}\), augmented nullity 8,
+correlator-pair 상대잔차 \(1.77\times10^{-16}\), 총 weight 잔차 0을
+재현했다. 이 경우에도 unique spectrum, Minkowski pole, LSZ와 CE identity는
+모두 False다.
+
+2026-08-04 검증은 전용 21개와 관련 통합 92개 테스트를 통과했다. 작업
+트리에서 이미 삭제된 fixture를 직접 요구하는 테스트 파일 5개만 제외한 전체
+회귀는 1350 passed, 13 skipped, 0 failed였다. Ruff check/format과 full
+certificate JSON 직렬화도 통과했다.
+
+```powershell
+uv --cache-dir .uv-cache run python examples/physics/ce_euclidean_correlator_gate.py
+uv --cache-dir .uv-cache run --extra dev python -m pytest tests/test_euclidean_correlator_certificate.py -q
+```
+
+전체 수식, 범위와 실제 데이터 계약은
+`CE_EUCLIDEAN_CORRELATOR_AND_SPECTRAL_LOOP.md`에 기록했다.
 
 ## 14. 뇌 프로그래밍 언어 역공학 구조 gate
 
@@ -782,7 +954,7 @@ history에서 \(z_d=1059.25,\ r_d=147.649757605\,{\rm Mpc}\)를 회수했지만,
   action에서 실제 \(G_\phi,J_\phi\)를 유도하는 과정, CPTP instrument와
   no-signalling은 `Open`이다.
 
-현재 focused 회귀는
+이 절을 작성했을 당시 historical focused 회귀는
 
 ```text
 cosmology forward + drag adapter: 30 passed
@@ -833,3 +1005,284 @@ density gate를 모두 동결했다.
 release metadata와 `holdout_data` artifact SHA-256이 필요하다. 양자 쪽은
 그 전에 아직 열려 있는 \(g,A,\mathcal O_\phi\), bath, \(J(\omega)\), instrument
 및 단위 mapping도 새 revision에서 고정해야 한다.
+
+## 17. 2026-08-04 클라루스 공명 물질생성 루프
+
+### 17.1 목표 스케일 정정
+
+1 m 목의 현재 정본은 \(b'(r_0)=-1/3\) full tensor다.
+
+\[
+a=4.0535640043\times10^{-18}\ {\rm m},\qquad
+\lambda_*=2a=8.1071280086\times10^{-18}\ {\rm m},
+\]
+
+\[
+E_*=\frac{hc}{\lambda_*}
+=152.932330938\ {\rm GeV}.
+\]
+
+\(a\)는 ideal Casimir density matching으로 고정되지만 \(\lambda_*=2a\)는
+평행판 최저 normal-mode 선택이다. spherical throat의 eigenmode나
+single-mode Casimir stress가 유도된 것은 아니므로 152.932 GeV는 형식적
+ideal-planar scale로만 기록한다.
+
+과거 \(b'(r_0)=-1\) control의 \(169.247445587\) GeV는 별도 legacy
+control로 격리했다. 29.64757 MeV CE pole-mass 후보와 현재 형식 scale의 비는
+5158.342857이며 최근접 5158배와도 약 10.16 MeV 어긋난다. 이 비는 고차
+vertex의 존재 증명이 아니며, pole mass도 propagating mode의 에너지 상한이
+아니다.
+
+### 17.2 정확히 닫힌 부분
+
+고전 pump를
+
+\[
+\Phi(x)=\sum_i A_i\cos(K_i\cdot x+\theta_i)
+\]
+
+로 공급했을 때 \(\Phi^2\)의 \(2K_i\), \(K_i+K_j\), \(K_i-K_j\), DC 선을
+복소 phasor로 합산하는 항등식을 구현했다. 따라서 같은 spectral line에
+기여하는 항의 위상 상쇄도 보존한다. 예를 들어
+
+\[
+\Phi=A\cos t-\frac A2\cos 3t
+\]
+
+에서는 \(2\omega\) 선이 정확히 소거된다.
+Fourier-key grouping과 cancellation tolerance가 모두 0일 때만 exact flag를
+유지한다. line-shape model이 없으므로 pump linewidth도 보편적인 합 규칙으로
+quadratic line에 전파하지 않는다.
+
+현재 구현은 \(p_\perp=0\)인 1+1D collinear sector다. 이 sector에서 동일
+daughter pair의 정확한 운동학 gate는
+
+\[
+Q^0>0,\qquad Q^2\ge4m_\chi^2
+\]
+
+다. 같은 방향 massless pump는 에너지가 커도 \(Q^2=0\)이라 massive pair를
+만들지 못한다. 반대 방향 pump의 합은 timelike channel을 열 수 있다.
+strict threshold에는 tolerance를 더하지 않으며 tolerance-only channel은
+ambiguous로 남는다. null massless channel에는 COM frame도 만들지 않는다.
+full 3+1 momentum spectrum은 아직 open이다.
+
+현재 간격에 맞춘 standing wave의 pump 파장은 \(2a\), pump quantum은
+약 152.932 GeV다. 29.64757 MeV pole mass를 가정하면 그 제곱장의 timelike
+pair line과 \(2E_*\) 사이에 5747.5 eV detuning이 남는다. 따라서 실제
+linewidth 없이 정확한 factor-2라 부르지 않는다. 정적 grating 주기는
+\(a\)다. formal scale, pump, pair-total, daughter mass를
+같은 값으로 취급하지 않는다.
+
+### 17.3 수치적으로 닫힌 toy gate
+
+끝점에서 정확히 꺼지는 smooth finite pulse에 대해 복소 mode equation을
+RK4로 풀고 in/out Bogoliubov occupation을 계산했다. 이 solver는
+\(\Phi^2\)의 DC shift를 제외한 mean-subtracted generic mass modulation
+control이다. 현재 고정 control은
+
+\[
+n_N=1.181479166,\quad
+n_{2N}=1.181479214,\quad
+n_{4N}=1.181479217,
+\]
+
+\[
+\left|f\dot f^*-f^*\dot f-i\right|
+=3.29\times10^{-12}
+\]
+
+를 준다. occupation과 Wronskian 외에 one-cycle monodromy의
+\(|\operatorname{Tr}M|>2\), \(\det M\simeq1\)을 N, 2N, 4N으로 수렴시킨다.
+no-drive, \(g=0\), sudden-switching-only, unresolved tachyon lower bound,
+co-propagating false positive 외에 근접 mode beat 삭제, 선택 mode의
+off-resonant pulse leakage, leading-band false positive, 서로 다른 \(Q,m,p\)
+provenance 결합, 문자열 bool, downstream self-certification을
+성공으로 승격하지 않는 반례도 고정했다.
+
+이 결과의 최고 지위는
+
+\[
+\boxed{\text{CONDITIONAL ASYMPTOTIC DAUGHTER EXCITATION}}
+\]
+
+이다. CE 작용에서 physical pole, positive residue, nonlinear vertex,
+pump work와 depletion이 유도되지 않았으므로 실제 Clarus particle
+production 증명은 아니다.
+
+### 17.4 음의 응력과의 분리
+
+canonical daughter의 dephased particle stress는
+
+\[
+\langle:T_{kk}:\rangle
+=\int\frac{d^3p}{(2\pi)^3\omega_p}
+(k\cdot p)^2n_p\ge0
+\]
+
+다. 따라서 occupation 증가를 throat의 음의 source로 해석하지 않는다.
+Casimir 응력에는 단일 real-frequency 반사율이 아니라 imaginary-frequency,
+횡운동량, TE/TM 전 응답과 renormalization이 필요하다. active driven
+boundary에는 equilibrium Lifshitz shortcut도 허용하지 않는다.
+
+현재 stage ledger는 다음에서 멈춘다.
+
+| gate | 판정 |
+|---|---|
+| formal ideal-planar scale calibration | PASS |
+| phase-aware squared-field spectrum | EXACT CONDITIONAL |
+| invariant pair kinematics | EXACT CONDITIONAL |
+| same-\(Q,m,p\) smooth finite-pulse daughter excitation | CONDITIONAL PASS |
+| physical Clarus pole and action vertex | OPEN |
+| finite particle spectrum and energy ledger | NOT REACHED |
+| persistent boundary matter phase | NOT REACHED |
+| causal full boundary response | NOT REACHED |
+| renormalized negative net stress | NOT REACHED |
+| stable backreacted throat | NOT REACHED |
+
+새 구현은 casimir_carrier_target.py와 clarus_resonant_matter.py, 재현 예제는
+clarus_resonant_matter_gate.py에 둔다. 조건부 toy maximum은
+`CONDITIONAL_ASYMPTOTIC_DAUGHTER_EXCITATION`이지만 CE 물리 maximum은
+`TARGET_SCALE_CALIBRATION_ONLY`다. global certificate까지 묶은 focused
+6-file 회귀는 91개가 통과했다. 이 숫자는 조건부 모형의
+수치·반례 일관성을 뜻하며 실제 물질이나 wormhole의 실험적 정확도를 뜻하지
+않는다.
+
+## 18. 2026-08-04 cutoff-independent global throat certificate
+
+기존 기하와 ADM-matched redshift 보강을 cutoff 판정에서 분리한
+`global_throat_exact_certificate()`를 추가했다. 기존 ansatz는 throat,
+flare-out, horizon-free, 각 end \(M_{\rm ADM}/r_0=1/3\)과 Bianchi 항등식을
+exact로 만족한다. Killing energy를 1로 고정한 양쪽 radial affine ANEC는
+
+\[
+\mathcal A_{\rm old}=-2.49755541727731
+\]
+
+로 유한·음수지만 coordinate/proper volume-NEC는
+\(-(2/3)\ln X\)로 발산하므로 localized finite source가 아니다.
+
+\[
+\Phi_{\rm match}
+=\frac12\ln\left(1-\frac{2}{3x}\right)+\frac32e^{1-x}
+\]
+
+보강은 같은 throat tensor, lapse 제곱 하한 \(1/3\), 각 end ADM \(1/3\)을
+보존하면서 stress tail을 지수감쇠시킨다. 수치 적분은
+
+\[
+\mathcal A_{\rm match}=-2.29272813381626,
+\]
+
+\[
+\mathcal V_{\rm coord}/\text{end}=-4.21893534547003,\qquad
+\mathcal V_{\rm proper}/\text{end}=-6.09178724755025
+\]
+
+로 모두 유한·음수다. 그러나 throat의 \(K/F=7/12>0\)만으로 healthy scalar를
+선언할 수 없다. 명시적 유리점
+
+\[
+x=\frac{37}{32},\qquad \frac KF=-1.83054671559
+\]
+
+이 전역 양성 조건을 바로 반박한다. 따라서 최종 판정은
+`EXACT GEOMETRY + FINITE-TAIL CONTROL / HEALTHY GLOBAL SCALAR REFUTED`다.
+Bianchi exact도 \(T=G/\kappa\) 역정의의 결과이지 독립 CE matter EOM 증명은
+아니다.
+
+아래 수치는 `19` probe pilot 추가 전인 `18` 종료 시점 snapshot이다. 전체
+저장소에서는 사용자가 삭제 상태로 둔 artifact/benchmark를 직접 읽는
+4개 테스트 파일을 제외하고 `1304 passed, 13 skipped`다. 제외하지 않은 전체
+실행은 `1342 passed, 13 skipped, 15 failed, 9 errors`였으며, 실패와 오류는 모두
+`test_local_memory_verifier.py`, `test_neural_tree_algorithm_census.py`,
+`test_origin_life_branching_verifier.py`, `test_q0_manifest_gate.py`에 한정됐다.
+각 원인은 삭제된 artifact/benchmark의 부재이며, 관련 45개 tracked deletion은 이
+루프에서 복구하거나 수정하지 않았다.
+
+## 19. Probe-selective dressing / public-response kernel pilot
+
+추가 구현:
+
+- `reality_stone/python/reality_stone/clarus/probe_scaffold_pilot.py`
+- `tests/test_probe_scaffold_pilot.py`
+- `examples/physics/probe_scaffold_pilot_gate.py`
+- `docs/0_검증과감사/PROBE_SELECTIVE_DRESSING_AND_PUBLIC_SCAFFOLD_LOOP.md`
+
+private branch는 단순 on/off 대신
+
+\[
+I_i=(\mu_{i,1,1}-\mu_{i,1,0})-(\mu_{i,0,1}-\mu_{i,0,0}),
+\qquad S_{AB}=I_A-I_B
+\]
+
+의 pump×controller factorial contrast를 쓴다. reference의 비유의성만으로 통과하지
+않고 전체 신뢰구간이 equivalence bound 안에 들어가야 한다. phase resultant는
+finite-sample bias를 줄인 \(R_{\rm bc}\)로 변환하며, noise level 하나를 held-out으로
+남겨 training \(S_{AB}(R_{\rm bc})\)가 그 응답을 예측해야 한다. 여기서 held-out
+\(R_{\rm bc}\)는 실제 측정값이므로 response만 조건부 예측하며 noise→\(R(D)\)
+동역학을 예측한 것은 아니다. held-out 지정도 외부 hash/timestamp가 없는 선언
+metadata다. 현재
+effective sample size는 Kish weight 값으로만 계산하므로 시계열 autocorrelation과
+Adler dynamics는 아직 `OPEN`이다.
+모든 raw mean interval은 최소 4개 관측과 \(df=3\) Student-\(t\) floor를
+사용하고, held-out 선형 회귀는 최소 4 training level·interpolation·\(df=2\)
+floor를 강제한다. 95% 미만 confidence 요청은 거부한다.
+각 level의 raw phase/8개 response stream과 sweep-wide 단일 sign·threshold·confidence
+config를 audit에 보존하고 point summary를 재계산한다.
+
+public branch는 최소 세 calibrated probe에서
+
+\[
+d_p=c_pK_{\rm post}+\epsilon_p
+\]
+
+를 검사한다. 두 training probe의 normalized response로 scalar kernel을 맞추고
+held-out으로 지정했다고 선언한 probe를 예측한다. residual pump의 최대 response,
+apparatus-memory
+상한, pre-pump null, dwell/time ordering과 nuisance monitor를 동시에 veto로 둔다.
+raw response 크기만 같은 반례와 잘못된 calibration 반례는 실패한다. training
+probe에는 `UNMEASURED_WORST_CASE_CORRELATION`을 적용해 pooled 표준오차 floor와
+모든 probe 차이의 additive worst-case 표준오차를 사용했다. probe covariance
+자체는 아직 측정하지 않았고
+fixed-before-pump calibration·blinding·별도 readout chain도 선언 metadata다.
+probe raw pre/post/sham과 residual/nuisance raw monitor stream도 보존·재검산한다.
+nuisance에는 별도 nuisance→kernel gain 상한을 적용해 kernel 설명량에서 차감한다.
+
+에너지 gate는 pump/controller/probe/transfer/reservoir-release 입력과
+candidate/radiation/thermal-mechanical/reservoir-storage/recovered-work 출력을 고정한
+10열 signed ledger다. 전체 covariance \(C\)로
+
+\[
+\epsilon_E=s^Te,\qquad \sigma_E^2=s^TCs
+\]
+
+를 계산하고 residual과 uncertainty의 candidate-energy 대비 상한을 모두 요구한다.
+따라서 giant covariance 또는 giant absolute tolerance로 보존을 가장하는 반례는
+실패한다. raw 10채널 trial tuple과 10×10 covariance를 audit에 보존하고
+mean/minimum/trial scatter 및 declared sigma를 report validation에서 재계산하므로
+sampling sigma·음수 channel minimum·covariance sigma summary만 축소하는 변조도
+실패한다. sampling/calibration error의 미측정 상관은 triangle SE로 처리하고,
+모든 declaration/pass flag는 문자열 truthiness가 아닌 strict bool만 허용한다.
+
+합성 control의 결과는
+
+```text
+private  CONDITIONAL_PHASE_LOCKED_PRIVATE_DRESSING
+public   CONDITIONAL_PUBLIC_RESPONSE_KERNEL_CANDIDATE
+public scaffold candidate  False
+physical scaffold          False
+new matter                 False
+```
+
+다. 두 branch는 독립이며 public kernel 후보도 blinded sample transfer와
+frequency-dependent causal response가 없으므로 scaffold로 승격하지 않는다. 새
+suite는 `21 passed`, 기존 관련 회귀까지 묶은 7-file suite는 `112 passed`다.
+physical/new-matter/boundary/stress/wormhole claim-lock
+변조도 반례로 고정했다.
+
+`§19`까지 포함한 최신 전체 회귀는 사용자가 삭제 상태로 둔 리소스를 읽는 위
+4개 파일을 제외하면 `1337 passed, 13 skipped`다. 제외하지 않은 원본 전체 실행은
+`1375 passed, 13 skipped, 15 failed, 9 errors`이며, 실패·오류 파일과 원인은
+위 `§18` snapshot과 동일하다. 관련 45개 tracked deletion은 복구하거나 수정하지
+않았다.

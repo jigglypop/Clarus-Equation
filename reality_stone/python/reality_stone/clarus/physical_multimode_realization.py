@@ -5,9 +5,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 import math
 
+from .casimir_carrier_target import exact_casimir_carrier_target
 from .clarus_negative_source_search import HBAR_J_S
 from .spatial_folding import (
-    ELECTRON_VOLT_J,
     NEWTON_G_M3_KG_S2,
     SPEED_OF_LIGHT_M_S,
 )
@@ -67,24 +67,14 @@ def _proper_volume_integrand(s: float) -> float:
     s_squared = s * s
     exponential = math.exp(-s_squared)
     one_minus_exponential = -math.expm1(-s_squared)
-    one_minus_b_over_r = (
-        s_squared + one_minus_exponential / 3.0
-    ) / (1.0 + s_squared)
-    return (
-        2.0 * s * exponential / 3.0 / math.sqrt(one_minus_b_over_r)
-    )
+    one_minus_b_over_r = (s_squared + one_minus_exponential / 3.0) / (1.0 + s_squared)
+    return 2.0 * s * exponential / 3.0 / math.sqrt(one_minus_b_over_r)
 
 
 def _composite_simpson_proper_volume(steps: int) -> float:
     spacing = _PROPER_VOLUME_S_MAX / steps
-    odd_sum = math.fsum(
-        _proper_volume_integrand(index * spacing)
-        for index in range(1, steps, 2)
-    )
-    even_sum = math.fsum(
-        _proper_volume_integrand(index * spacing)
-        for index in range(2, steps, 2)
-    )
+    odd_sum = math.fsum(_proper_volume_integrand(index * spacing) for index in range(1, steps, 2))
+    even_sum = math.fsum(_proper_volume_integrand(index * spacing) for index in range(2, steps, 2))
     weighted_sum = (
         _proper_volume_integrand(0.0)
         + _proper_volume_integrand(_PROPER_VOLUME_S_MAX)
@@ -99,15 +89,9 @@ def _proper_volume_integral(
 ) -> tuple[float, float, float]:
     """Numerically evaluate the dimensionless proper matter-energy integral."""
 
-    if (
-        isinstance(steps, bool)
-        or not isinstance(steps, int)
-        or steps < 1_000
-        or steps % 4 != 0
-    ):
+    if isinstance(steps, bool) or not isinstance(steps, int) or steps < 1_000 or steps % 4 != 0:
         raise ValueError(
-            "proper-volume integration steps must be an integer multiple "
-            "of four and at least 1000"
+            "proper-volume integration steps must be an integer multiple of four and at least 1000"
         )
 
     integral = _composite_simpson_proper_volume(steps)
@@ -151,11 +135,10 @@ def physical_multimode_realization_audit(
     gravitational_scale = c**4 / (8.0 * math.pi * NEWTON_G_M3_KG_S2 * radius**2)
     density = gravitational_scale / 3.0
     null_magnitude = 4.0 * gravitational_scale / 3.0
-    separation = (
-        math.pi**2 * HBAR_J_S * c / (720.0 * density)
-    ) ** 0.25
-    wavelength = 2.0 * separation
-    carrier_energy = 2.0 * math.pi * HBAR_J_S * c / wavelength / ELECTRON_VOLT_J
+    carrier_target = exact_casimir_carrier_target(throat_radius_m=radius)
+    separation = carrier_target.separation_m
+    wavelength = carrier_target.wavelength_m
+    carrier_energy = carrier_target.carrier_energy_ev
 
     # Since a(r0) is proportional to sqrt(r0), invert the one-point result.
     resolved_radius = radius * (boundary / separation) ** 2
@@ -165,25 +148,17 @@ def physical_multimode_realization_audit(
     # identity is distinct from integrating rho over the proper spatial volume.
     coordinate_energy = c**4 * radius / (3.0 * NEWTON_G_M3_KG_S2)
     coordinate_mass = coordinate_energy / c**2
-    proper_integral, proper_tail_bound, proper_quadrature_delta = (
-        _proper_volume_integral(proper_volume_integration_steps)
+    proper_integral, proper_tail_bound, proper_quadrature_delta = _proper_volume_integral(
+        proper_volume_integration_steps
     )
-    proper_energy = (
-        c**4 * radius * proper_integral / NEWTON_G_M3_KG_S2
-    )
+    proper_energy = c**4 * radius * proper_integral / NEWTON_G_M3_KG_S2
     proper_mass = proper_energy / c**2
-    resolved_coordinate_mass = (
-        c**2 * resolved_radius / (3.0 * NEWTON_G_M3_KG_S2)
-    )
-    resolved_proper_mass = (
-        c**2 * resolved_radius * proper_integral / NEWTON_G_M3_KG_S2
-    )
+    resolved_coordinate_mass = c**2 * resolved_radius / (3.0 * NEWTON_G_M3_KG_S2)
+    resolved_proper_mass = c**2 * resolved_radius * proper_integral / NEWTON_G_M3_KG_S2
 
     # Fewster--Eveson/Ford--Roman style Lorentzian-sampling scale control:
     # rho >= -3*hbar/(32*pi^2*c^3*tau^4) for a massless scalar in flat space.
-    qi_duration = (
-        3.0 * HBAR_J_S / (32.0 * math.pi**2 * c**3 * density)
-    ) ** 0.25
+    qi_duration = (3.0 * HBAR_J_S / (32.0 * math.pi**2 * c**3 * density)) ** 0.25
     crossing_time = radius / c
 
     boundary_resolved = separation >= boundary
@@ -199,9 +174,7 @@ def physical_multimode_realization_audit(
         radius_for_boundary_resolution_m=resolved_radius,
         two_sided_coordinate_density_integral_magnitude_j=coordinate_energy,
         two_sided_coordinate_mass_equivalent_kg=coordinate_mass,
-        two_sided_coordinate_mass_equivalent_earths=(
-            coordinate_mass / EARTH_MASS_KG
-        ),
+        two_sided_coordinate_mass_equivalent_earths=(coordinate_mass / EARTH_MASS_KG),
         proper_volume_integral_dimensionless=proper_integral,
         proper_volume_tail_bound_dimensionless=proper_tail_bound,
         proper_volume_quadrature_delta_dimensionless=proper_quadrature_delta,
@@ -209,12 +182,8 @@ def physical_multimode_realization_audit(
         two_sided_proper_matter_energy_magnitude_j=proper_energy,
         two_sided_proper_mass_equivalent_kg=proper_mass,
         two_sided_proper_mass_equivalent_earths=proper_mass / EARTH_MASS_KG,
-        resolved_radius_coordinate_mass_equivalent_solar=(
-            resolved_coordinate_mass / SOLAR_MASS_KG
-        ),
-        resolved_radius_proper_mass_equivalent_solar=(
-            resolved_proper_mass / SOLAR_MASS_KG
-        ),
+        resolved_radius_coordinate_mass_equivalent_solar=(resolved_coordinate_mass / SOLAR_MASS_KG),
+        resolved_radius_proper_mass_equivalent_solar=(resolved_proper_mass / SOLAR_MASS_KG),
         light_crossing_time_s=crossing_time,
         flat_scalar_qi_duration_control_s=qi_duration,
         crossing_to_qi_duration_ratio=crossing_time / qi_duration,

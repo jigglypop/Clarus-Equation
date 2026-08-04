@@ -94,7 +94,7 @@ Bianchi identity이지, 독립 CE 물질 작용의 EOM/Noether 보존 증명이 
 무한대 꼬리는
 
 \[
-x^3p_r\to-\frac23,qquad x^3p_t\to\frac13.
+x^3p_r\to-\frac23,\qquad x^3p_t\to\frac13.
 \]
 
 완전한 양쪽 radial null geodesic의 affine ANEC는 throat에서
@@ -142,7 +142,8 @@ proper-volume NEC가 모두 유한·음수다. 즉 NEC 자체는 제거하지 �
 로그 무한 source burden은 제거한다.
 
 이 보강 profile은 throat에서 비최소장 국소 계수 `K/F=7/12>0`도 만들지만,
-전역 reconstruction에서는 `min K/F≈-1.83055` at `x≈1.15638`로 다시 실패한다.
+명시적 유리점 \(x=37/32\)에서 `K/F=-1.8305467`이다. 더 넓은 수치 scan의
+최솟값도 `-1.8305471` at `x≈1.15634`라 전역 reconstruction은 실패한다.
 따라서 `tail repair PASS`를 `healthy global scalar PASS`로 승격하지 않는다.
 
 | gate | 기존 exponential | ADM-matched 보강 |
@@ -176,7 +177,7 @@ proper-volume NEC가 모두 유한·음수다. 즉 NEC 자체는 제거하지 �
 다음 명제들은 이번 결과로 증명되지 않았다.
 
 1. Chebyshev 기저가 실제 경계장치의 고유 공명 spectrum이라는 명제
-2. 약 169 GeV carrier와 거시적 radial envelope 사이의 결합
+2. ideal-planar 152.932 GeV 형식 scale과 거시적 radial envelope 사이의 결합
 3. 양자화·재규격화된 CE 모드가 목표 부호와 크기의 음의 \(T_{\mu\nu}\)를 낸다는 명제
 4. 양자부등식, backreaction, 선형 섭동 안정성의 동시 통과
 
@@ -196,5 +197,6 @@ proper-volume NEC가 모두 유한·음수다. 즉 NEC 자체는 제거하지 �
 
 ```powershell
 uv run pytest tests/test_multimode_global_throat.py -q
+uv run pytest tests/test_global_throat_exact_certificate.py -q
 uv run python examples/physics/multimode_global_throat_gate.py
 ```

@@ -10,18 +10,40 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 from pathlib import Path
+import sys
 from typing import Mapping, Sequence
 
 import numpy as np
 
-from reality_stone.clarus.cloudcell_evidence import (
-    CloudCellGateConfig,
-    TrialPopulation,
-    build_cloudcell_artifact,
-    evaluate_panel,
-)
+try:
+    from reality_stone.clarus.cloudcell_evidence import (
+        CloudCellGateConfig,
+        TrialPopulation,
+        build_cloudcell_artifact,
+        evaluate_panel,
+    )
+except ModuleNotFoundError as error:
+    if error.name not in {"reality_stone", "torch"}:
+        raise
+    # The empirical core is NumPy-only.  Permit a source-tree run in a small
+    # h5py environment without importing the torch-heavy top-level package.
+    module_path = (
+        Path(__file__).resolve().parents[2]
+        / "reality_stone/python/reality_stone/clarus/cloudcell_evidence.py"
+    )
+    spec = importlib.util.spec_from_file_location("_cloudcell_evidence_numpy", module_path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"cannot load empirical core from {module_path}") from error
+    evidence_module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = evidence_module
+    spec.loader.exec_module(evidence_module)
+    CloudCellGateConfig = evidence_module.CloudCellGateConfig
+    TrialPopulation = evidence_module.TrialPopulation
+    build_cloudcell_artifact = evidence_module.build_cloudcell_artifact
+    evaluate_panel = evidence_module.evaluate_panel
 
 
 MTL_LOCATION_TOKENS = ("amygdala", "hippocampus", "entorhinal", "parahippocampal")
@@ -245,6 +267,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("nwb", nargs="+", help="One or more Sternberg-task NWB files")
     parser.add_argument("--output", help="Optional JSON artifact output path")
+    parser.add_argument("--quiet", action="store_true", help="Suppress JSON on stdout")
     parser.add_argument(
         "--expected-sha256",
         action="append",
@@ -351,7 +374,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         output = Path(args.output)
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(rendered + "\n", encoding="utf-8")
-    print(rendered)
+    if not args.quiet:
+        print(rendered)
     return 0 if artifact["gate_passed"] else 2
 
 

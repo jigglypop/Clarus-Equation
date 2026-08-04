@@ -11,6 +11,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import math
+from numbers import Integral
 from typing import Iterable
 
 import numpy as np
@@ -108,6 +109,8 @@ def causal_target_delivery_audit(
     distance = float(distance_m)
     deadline = float(requested_activation_s)
     beta = float(signal_speed_fraction_c)
+    if isinstance(candidate_count, bool) or not isinstance(candidate_count, Integral):
+        raise ValueError("candidate_count must be an integer")
     count = int(candidate_count)
     if not math.isfinite(distance) or distance < 0.0:
         raise ValueError("distance_m must be finite and non-negative")

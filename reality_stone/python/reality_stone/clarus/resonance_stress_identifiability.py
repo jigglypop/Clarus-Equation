@@ -75,13 +75,16 @@ def pole_family_countermodel_audit(
         )
         for exponent in exponents
     )
-    proxy_gains = {model.dimensional_stress_proxy_gain for model in countermodels}
     return StressIdentifiabilityAudit(
         resonance_q=q_value,
         stress_mass_dimension=dimension,
         countermodels=countermodels,
         all_countermodels_have_same_correlation_length=True,
-        stress_scaling_unique_from_correlation_length=len(proxy_gains) == 1,
+        # Asking the constructor for only one exponent does not make that
+        # exponent identifiable.  The construction above works for every
+        # finite exponent, so correlation length alone never fixes the stress
+        # scaling within this countermodel family.
+        stress_scaling_unique_from_correlation_length=False,
         pole_residue_required=True,
         spectral_density_required=True,
         renormalization_required=True,
