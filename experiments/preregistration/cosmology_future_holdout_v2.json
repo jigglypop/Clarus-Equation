@@ -1,0 +1,360 @@
+{
+  "schema_version": 1,
+  "manifest_id": "ce-cosmology-future-holdout-v2",
+  "manifest_hash_policy": "sha256-canonical-json-excluding-manifest_sha256",
+  "manifest_sha256": "787541ccf52c4290c0c809d3f984b9552cdd149b0f9b9533e64d8160327bcf7b",
+  "domain": "cosmology",
+  "status": "frozen_with_unassigned_holdout",
+  "supersedes_manifest_id": "ce-cosmology-future-holdout-v1",
+  "freeze": {
+    "freeze_date": "2026-08-02",
+    "timezone": "Asia/Seoul",
+    "phase": "pre_holdout_assignment",
+    "protocol_revision": 2,
+    "gate_scores_are_not_truth_probabilities": true,
+    "amendment_policy": "Any change requires a new manifest_id and higher protocol revision before any future-holdout access; retain this manifest and explain the delta."
+  },
+  "scope": {
+    "claim_target": "CE density-boundary to fixed BAO forward-model bridge",
+    "excluded_claims": [
+      "CE core mathematical consistency",
+      "particle dark-matter identity",
+      "a CE-internal recombination or nuclear-physics derivation",
+      "a precision sound-horizon calculation"
+    ],
+    "interpretation": "A rejection kills the registered cosmology bridge candidate, not the CE core."
+  },
+  "input_artifacts": [
+    {
+      "path": "reality_stone/python/reality_stone/clarus/constants.py",
+      "sha256": "cdfdb6de5ce4843798366ec402b434819a147a92bb88c2af5eb313e286f248b5",
+      "kind": "implementation_snapshot",
+      "role": "CE density-ratio constants",
+      "provenance": "Repository-local constants snapshot frozen before future-holdout assignment."
+    },
+    {
+      "path": "examples/physics/cosmology_ratio_audit.py",
+      "sha256": "d07efcf9ac6f5d53440f4930b0e57e1ffbe1aef92412557af5a344de396832f0",
+      "kind": "implementation_snapshot",
+      "role": "density-ratio provenance adapter",
+      "provenance": "Repository-local audit code that maps CE constants to omega_b0, omega_dm0, and omega_lambda0."
+    },
+    {
+      "path": "examples/physics/ce_residual_forward_model.py",
+      "sha256": "d72d250452fabbb2576f953c0d517bdc2cd63243c739513e13910d6c60667df8",
+      "kind": "implementation_and_exploratory_data_snapshot",
+      "role": "fixed BAO forward model and embedded DESI DR2 exploratory vector",
+      "provenance": "Repository-local forward model snapshot; its embedded DESI DR2 data were inspected before this freeze."
+    }
+  ],
+  "frozen_inputs": [
+    {
+      "name": "omega_b0",
+      "value": 0.0487,
+      "unit": "dimensionless",
+      "role": "ce_prediction_bridge",
+      "source": "ACTIVE_RATIO in reality_stone.clarus.constants"
+    },
+    {
+      "name": "omega_dm0",
+      "value": 0.2623,
+      "unit": "dimensionless",
+      "role": "ce_prediction_bridge",
+      "source": "STRUCT_RATIO in reality_stone.clarus.constants"
+    },
+    {
+      "name": "omega_lambda0",
+      "value": 0.6891,
+      "unit": "dimensionless",
+      "role": "ce_prediction_bridge",
+      "source": "BACKGROUND_RATIO in reality_stone.clarus.constants"
+    },
+    {
+      "name": "h0",
+      "value": 67.4,
+      "unit": "km/s/Mpc",
+      "role": "external_input",
+      "source": "Frozen observational baseline; not a CE prediction"
+    },
+    {
+      "name": "rd_external_candidate",
+      "value": 147.09,
+      "unit": "Mpc",
+      "role": "external_input",
+      "source": "Frozen external sound-horizon calibration for ce_density_external_rd_v1"
+    },
+    {
+      "name": "tcmb_k",
+      "value": 2.7255,
+      "unit": "K",
+      "role": "external_input",
+      "source": "Frozen standard CMB-temperature input for ce_density_eh_hybrid_v1"
+    },
+    {
+      "name": "n_eff",
+      "value": 3.044,
+      "unit": "dimensionless",
+      "role": "model_assumption",
+      "source": "Frozen Standard-Model relativistic-species assumption"
+    },
+    {
+      "name": "sigma8_0",
+      "value": 0.811,
+      "unit": "dimensionless",
+      "role": "external_input",
+      "source": "Frozen growth-amplitude baseline; not a CE prediction"
+    },
+    {
+      "name": "w0",
+      "value": -1.0,
+      "unit": "dimensionless",
+      "role": "model_assumption",
+      "source": "Frozen conservative LambdaCDM-limit assumption"
+    },
+    {
+      "name": "wa",
+      "value": 0.0,
+      "unit": "dimensionless",
+      "role": "model_assumption",
+      "source": "Frozen conservative LambdaCDM-limit assumption"
+    },
+    {
+      "name": "gravity_mu_coupling",
+      "value": 0.0,
+      "unit": "dimensionless",
+      "role": "model_assumption",
+      "source": "Frozen general-relativity limit"
+    },
+    {
+      "name": "early_rd_integration_points",
+      "value": 10001,
+      "unit": "grid_points",
+      "role": "protocol_constant",
+      "source": "EARLY_RD_INTEGRATION_POINTS in ce_residual_forward_model.py"
+    },
+    {
+      "name": "early_rd_selection",
+      "value": "Eisenstein-Hu drag fit plus standard early-universe radiation",
+      "unit": "categorical",
+      "role": "derived_selection",
+      "source": "Frozen approximation implemented in ce_residual_forward_model.py"
+    }
+  ],
+  "registered_models": [
+    {
+      "model_id": "ce_density_external_rd_v1",
+      "fixed_before_holdout": true,
+      "select_after_unblinding": false,
+      "parameters": {
+        "omega_b0": 0.0487,
+        "omega_dm0": 0.2623,
+        "omega_lambda0": 0.6891,
+        "h0": 67.4,
+        "rd_mode": "external",
+        "rd_mpc": 147.09,
+        "sigma8_0": 0.811,
+        "w0": -1.0,
+        "wa": 0.0,
+        "gravity_mu_coupling": 0.0
+      },
+      "reporting_rule": "Evaluate and report this candidate even if the other registered candidate performs better."
+    },
+    {
+      "model_id": "ce_density_eh_hybrid_v1",
+      "fixed_before_holdout": true,
+      "select_after_unblinding": false,
+      "parameters": {
+        "omega_b0": 0.0487,
+        "omega_dm0": 0.2623,
+        "omega_lambda0": 0.6891,
+        "h0": 67.4,
+        "rd_mode": "early-universe",
+        "tcmb_k": 2.7255,
+        "n_eff": 3.044,
+        "early_rd_integration_points": 10001,
+        "sigma8_0": 0.811,
+        "w0": -1.0,
+        "wa": 0.0,
+        "gravity_mu_coupling": 0.0
+      },
+      "frozen_reference_output": {
+        "z_drag": 1020.020419907,
+        "rd_mpc": 151.318753028
+      },
+      "reporting_rule": "Evaluate and report this candidate even if the other registered candidate performs better."
+    }
+  ],
+  "data_roles": {
+    "exploratory_or_calibration": [
+      {
+        "dataset_id": "desi_dr2_all_13_point_compressed_bao",
+        "role": "exploratory_calibration",
+        "holdout_eligible": false,
+        "observed_before_freeze": true,
+        "provenance": "CobayaSampler/bao_data desi_bao_dr2 Gaussian BAO mean/covariance ASCII, embedded as 13 points and a 13x13 covariance matrix.",
+        "why_not_holdout": "DESI DR2 was inspected and used for residual and sound-horizon scale diagnosis before this manifest; it cannot be relabelled as untouched future evidence.",
+        "local_snapshot_artifact_path": "examples/physics/ce_residual_forward_model.py",
+        "local_snapshot_sha256": "d72d250452fabbb2576f953c0d517bdc2cd63243c739513e13910d6c60667df8",
+        "raw_release_sha256": null,
+        "raw_release_hash_status": "No standalone raw release artifact is stored in this repository snapshot.",
+        "permitted_uses": [
+          "exploratory residual diagnosis",
+          "calibration sensitivity diagnosis",
+          "regression testing of the embedded vector"
+        ]
+      }
+    ],
+    "future_holdout": {
+      "placeholder_id": "future_public_bao_full_covariance_release",
+      "assignment_status": "unassigned",
+      "holdout_eligible": true,
+      "dataset_id": null,
+      "release_id": null,
+      "release_date": null,
+      "source_uri": null,
+      "local_artifact_path": null,
+      "sha256": null,
+      "assigned_at": null,
+      "assignment_manifest_id": null,
+      "assignment_requires_new_manifest": true,
+      "manifest_version_must_increase": true,
+      "access_before_assignment_forbidden": true,
+      "access_log_required": true,
+      "prohibited_dataset_ids": [
+        "desi_dr2_all_13_point_compressed_bao"
+      ],
+      "selection_policy": {
+        "release_after_freeze_required": true,
+        "choose_first_qualifying_release": true,
+        "assignment_before_access_required": true,
+        "qualification_criteria": [
+          "A public, versioned BAO likelihood or numerical data vector is released after 2026-08-02.",
+          "The release provides the full covariance and an unambiguous observable and redshift-bin definition.",
+          "No maintainer involved in model or threshold design has inspected the numerical holdout values before assignment.",
+          "The release is not a repackaging or relabelling of the DESI DR2 13-point vector already used here.",
+          "Any sample overlap with exploratory data is declared before evaluation and handled by a frozen joint-covariance rule."
+        ],
+        "disqualification_rule": "If the first release fails any criterion, record the reason without viewing additional numerical values and consider the next chronological release."
+      }
+    }
+  },
+  "fit_policy": {
+    "fitted_parameter_count_on_holdout": 0,
+    "allow_profile_fit": false,
+    "allow_post_unblinding_model_selection": false,
+    "allow_post_unblinding_threshold_changes": false,
+    "allow_bin_or_outlier_removal": false,
+    "nuisance_parameter_policy": "No nuisance parameter may be fit on holdout data. Any unavoidable release-defined nuisance treatment must be fixed by the data producer and copied verbatim into the assignment manifest before access.",
+    "forbidden_on_holdout": [
+      "omega_b0",
+      "omega_dm0",
+      "omega_lambda0",
+      "h0",
+      "rd_mpc",
+      "rd_mode",
+      "tcmb_k",
+      "n_eff",
+      "sigma8_0",
+      "w0",
+      "wa",
+      "gravity_mu_coupling",
+      "covariance",
+      "redshift_bins",
+      "observable_selection",
+      "integration_grid",
+      "candidate_selection",
+      "error_inflation"
+    ]
+  },
+  "numeric_tolerances": [
+    {
+      "name": "covariance_symmetry_absolute_error",
+      "comparison": "absolute<=",
+      "value": 1e-10,
+      "unit": "covariance_units",
+      "scope": "Maximum absolute C_ij-C_ji before likelihood evaluation"
+    },
+    {
+      "name": "distance_integration_relative_error",
+      "comparison": "relative<=",
+      "value": 2e-08,
+      "unit": "dimensionless",
+      "scope": "Registered BAO distance observables under grid refinement"
+    },
+    {
+      "name": "chi_square_regression_absolute_error",
+      "comparison": "absolute<=",
+      "value": 1e-09,
+      "unit": "chi_square",
+      "scope": "Repeated fixed-input full-covariance chi-square calculation"
+    },
+    {
+      "name": "early_sound_horizon_relative_error",
+      "comparison": "relative<=",
+      "value": 5e-08,
+      "unit": "dimensionless",
+      "scope": "Eisenstein-Hu hybrid r_d under permitted numerical grid refinement only"
+    }
+  ],
+  "acceptance_criteria": {
+    "primary_endpoint": "full_covariance_fixed_model_chi_square_p_value",
+    "covariance_required": "full",
+    "report_all_registered_candidates": true,
+    "degrees_of_freedom_rule": "number_of_released_observations_minus_zero_fitted_parameters",
+    "thresholds": {
+      "pass_minimum_p_value": 0.05,
+      "reject_below_p_value": 0.0027
+    },
+    "verdict_bands": {
+      "PASS": "p >= 0.05",
+      "TENSION": "0.0027 <= p < 0.05",
+      "REJECT": "p < 0.0027"
+    },
+    "multiplicity_policy": "Both registered candidates are evaluated and reported as separate fixed bridge candidates; no winner is selected after unblinding.",
+    "interpretation": "PASS means this goodness-of-fit gate did not reject the fixed candidate. It is not a posterior probability that CE is true."
+  },
+  "hard_kill_rules": [
+    {
+      "rule_id": "COS-SCI-001",
+      "scope": "scientific_candidate",
+      "condition": "A registered candidate has full-covariance fixed-model p < 0.0027 with zero parameters fit on the holdout.",
+      "action": "Mark that registered cosmology bridge candidate REJECTED and do not rescue it by rescaling H0*rd or changing bins.",
+      "target": "The failing registered density-boundary BAO bridge candidate, not the CE core."
+    },
+    {
+      "rule_id": "COS-PROT-001",
+      "scope": "protocol_validity",
+      "condition": "The manifest digest, an input artifact digest, or the assigned holdout digest does not match.",
+      "action": "Invalidate the evaluation and require a documented higher-revision manifest before any rerun.",
+      "target": "Evaluation validity."
+    },
+    {
+      "rule_id": "COS-PROT-002",
+      "scope": "protocol_validity",
+      "condition": "Any forbidden parameter, covariance element, redshift bin, observable, error scale, or candidate choice is adjusted after holdout access.",
+      "action": "Invalidate the confirmatory evaluation; any result may be reported only as exploratory.",
+      "target": "Confirmatory status."
+    },
+    {
+      "rule_id": "COS-PROT-003",
+      "scope": "protocol_validity",
+      "condition": "The full released covariance is unavailable, altered, or replaced by a diagonal approximation.",
+      "action": "Do not issue PASS, TENSION, or REJECT from the future-holdout gate.",
+      "target": "Confirmatory likelihood gate."
+    },
+    {
+      "rule_id": "COS-PROT-004",
+      "scope": "protocol_validity",
+      "condition": "The future dataset is accessed before its identifier, release, URI, and checksum are frozen in a higher-revision assignment manifest.",
+      "action": "Classify the accessed dataset as exploratory forever and allocate a new future holdout.",
+      "target": "Future-holdout status."
+    },
+    {
+      "rule_id": "COS-PROT-005",
+      "scope": "protocol_validity",
+      "condition": "DESI DR2 or another already inspected vector is assigned as the future holdout.",
+      "action": "Reject the assignment without evaluating it as confirmatory evidence.",
+      "target": "Future-holdout assignment."
+    }
+  ]
+}

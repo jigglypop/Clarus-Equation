@@ -111,6 +111,87 @@ $$
 
 현재 이 셋은 이 폴더에서 증명하지 않는다.
 
+### 4.1 표준 측정 기준선과 CE가 추가해야 할 것
+
+표준 finite-dimensional 측정 instrument는 Kraus operator \(M_k\)로
+
+$$
+p(k)
+=
+\operatorname{Tr}\!\left(M_k\rho M_k^\dagger\right),
+\qquad
+\rho_k
+=
+\frac{M_k\rho M_k^\dagger}{p(k)},
+$$
+
+$$
+\sum_k M_k^\dagger M_k=I
+$$
+
+를 만족한다. 현재 `reality_stone.clarus.quantum`에는 일반 Hermitian
+Hamiltonian 진화, density matrix, Born sampling, GKSL/Lindblad 기준선이
+구현되어 있다. 이는 CE 증거가 아니라 CE 측정 bridge가 반드시 회복해야 할
+baseline이다.
+
+이번 감사에서는 독립 스칼라장 분기 \(\phi\ne R\)만 채택했다. 최소 action
+후보는
+
+$$
+S_\phi
+=
+\int d^4x\sqrt{-g}
+\left[
+-\frac12(\nabla\phi)^2
+-\frac12m_\phi^2\phi^2
+-\frac12\xi R\phi^2
+-V_{\rm int}(\phi)
+\right]
+$$
+
+이다. 반면 Hessian/Jacobi의 scalar 투영
+
+$$
+\Phi_{\rm eff}[\gamma,\eta]
+=
+\frac{\langle\eta,\mathcal J_\gamma\eta\rangle}
+{\langle\eta,\eta\rangle}
+$$
+
+은 별도 readout이다. `jacobi_rayleigh_scalar`는 이 투영의 유한차원 형식
+게이트를 구현하지만 \(\Phi_{\rm eff}=\phi\)라는 mapping은 만들지 않는다.
+`ScalarFieldMassGap`도 \(E=\hbar\omega=hf\)의 단위 변환일 뿐
+\(m_\phi=29.64757\,{\rm MeV}\)의 측정 또는 유도가 아니다.
+
+분지 억압 후보를 확률로 쓰면 정규화된 식은
+
+$$
+\widetilde p_k
+=
+\frac{
+p(k)e^{-\Phi_k/\Lambda_\Phi}
+}{
+\sum_jp(j)e^{-\Phi_j/\Lambda_\Phi}
+}
+$$
+
+다. \(\Phi_k\)가 모든 분지에서 같으면 표준 \(p(k)\)를 그대로 보존한다. 이
+경우 CE 고유 예측은 없다. \(\Phi_k\)가 다르면 Born 확률에서 벗어나므로,
+\(\Phi_k\)를 apparatus/action에서 계산하고 수정된 map이 CPTP와 no-signalling을
+만족함을 보여야 한다.
+
+PreEq의
+
+$$
+\mu_\beta(i)
+\propto
+e^{-\beta E_{\rm meas}(i)}\mu_0(i)
+$$
+
+는 \(\mu_0\)를 조건부로 농축한다. 유일 최소 에너지가 있으면
+\(\beta\to\infty\)에서 그 최소점을 결정론적으로 고르므로, 반복 실험에서 Born
+빈도로 single-shot outcome을 생성하는 stochastic instrument는 별도 과제다.
+
 ## 5. 측정 조건도 후보가 된다
 
 03장의 조건공간을 쓰면 measurement operator도 후보다.
@@ -158,7 +239,7 @@ $$
 | 분지별 경로 가중치 \(W_k\) | 후보 prior와 조건 재가중 |
 | 접힘은 붕괴가 아님 | manifest는 농축 극한 |
 | 비고전 경로는 소멸하지 않음 | 비선택 잔류 \(\mu_{\mathrm{ns}}\) |
-| Born rule은 접힘 역학 결과 | finite branch prior 조건은 06a에서 분리, CE 경로적분 유도는 bridge |
+| Born rule은 접힘 역학 결과라는 과거 주장 | 현재는 finite branch prior 보존 후보로 강등, CE 경로적분 유도는 `Open` |
 
 ## 7. 다음 작업
 
@@ -169,3 +250,8 @@ Born prior의 finite branch 유도 조건은 [06a_Born_prior_유도.md](06a_Born
 1. 06a의 branch refinement 공리를 실제 측정장치 모델과 연결
 2. CE 경로적분의 분지 가중치 \(W_k\)에서 \(|c_k|^2\)가 내려오는 조건 정리
 3. \(E_{\mathrm{meas}}\)와 장치 상호작용/접힘 에너지의 대응 검토
+4. \(M_k\), CPTP, no-signalling을 회복하는 장치 map 구현
+5. 표준 Born sampling과 CE 수정안의 동일-seed preregistered ablation
+6. 독립장 결합 \(H_{\rm int}=gA\otimes\mathcal O_\phi\), bath state와
+   \(J_\phi(\omega,T)\)를 고정한 뒤
+   \(\gamma_\phi(\omega)=g^2J_\phi(\omega)\ge0\)의 유효 범위를 검증

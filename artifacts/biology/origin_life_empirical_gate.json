@@ -1,0 +1,276 @@
+{
+  "artifact_type": "clarus_origin_life_component_evidence_gate",
+  "artifact_version": 2,
+  "phase": "retrospective_external_source_data",
+  "empirical_component_support_gate_passed": true,
+  "confirmatory_statistical_gate_at_alpha_0_05_passed": false,
+  "single_system_joint_cycle_proven": false,
+  "autonomous_growth_division_heredity_proven": false,
+  "universal_minimality_or_necessity_proven": false,
+  "claim_supported": "across two engineered systems, source data support seeded autocatalytic replication, serial-transfer persistence, compartment-associated persistence, and heritable sequence change at the component level",
+  "claim_not_supported": "no single system here jointly demonstrates autonomous growth, division, and heredity; this is not proof of the historical first organism or the universal necessity/sufficiency of exactly three terms",
+  "equation_scope": "X[n+1] = Pi_C[X[n] + A_auto(X,E) + B_compartment(X) + C_copy(X) - L_leak(X)]",
+  "sources": {
+    "salibi_2023": {
+      "doi": "10.1038/s41467-023-36940-z",
+      "source_data_sha256": "d39d7b0b9a30091fe848e1bb12737030da043025a5b96ab54b577444f37b7fc7",
+      "expected_sha256": "d39d7b0b9a30091fe848e1bb12737030da043025a5b96ab54b577444f37b7fc7",
+      "verified": true
+    },
+    "abil_2024": {
+      "doi": "10.1038/s41467-024-53226-0",
+      "source_zip_sha256": "9ba3b9bbca80be0371bb7efb54f2ac954731cd07f316700cce4d090e1d98bf4a",
+      "source_zip_expected_sha256": "9ba3b9bbca80be0371bb7efb54f2ac954731cd07f316700cce4d090e1d98bf4a",
+      "fig3_sha256": "3f61c11bae6d92f63ef9b18c86829683fd82f11634b992f285f3febdf0c97aa9",
+      "fig3_expected_sha256": "3f61c11bae6d92f63ef9b18c86829683fd82f11634b992f285f3febdf0c97aa9",
+      "supplementary_sha256": "2488340879755750114099e38f511666c1704f07be9f6893cadf9fafb1b3c5f1",
+      "supplementary_expected_sha256": "2488340879755750114099e38f511666c1704f07be9f6893cadf9fafb1b3c5f1",
+      "verified": true
+    }
+  },
+  "gates": {
+    "autocatalysis_and_serial_transfer": {
+      "passed": true,
+      "autocatalysis": {
+        "passed": true,
+        "cycle3_negative": [
+          0.322,
+          1.009,
+          1.138
+        ],
+        "cycle3_seed_1uM": [
+          7.665,
+          5.838,
+          6.158
+        ],
+        "cycle3_seed_2uM": [
+          12.169,
+          12.486,
+          14.173
+        ],
+        "seed_1uM_median_ratio_over_negative": 6.103072348860259,
+        "seed_2uM_median_ratio_over_negative": 12.374628344895939,
+        "seed_1uM_minimum_leave_one_each_out_ratio": 5.587331159757802,
+        "seed_2uM_minimum_leave_one_each_out_ratio": 11.48346530041919,
+        "seed_1uM_exact_one_sided_median_permutation_p": 0.1,
+        "seed_2uM_exact_one_sided_median_permutation_p": 0.1,
+        "complete_seed_vs_negative_separation": true,
+        "dose_ordered": true,
+        "small_sample_caveat": "with n=3 per condition, the one-sided exact median-permutation p-value is 0.10 despite complete separation; the effect-size gate is retrospective support, not an alpha=0.05 confirmation"
+      },
+      "serial_transfer": {
+        "passed": true,
+        "generations": 7,
+        "conditions": {
+          "seed_1uM": {
+            "generation1_median": 5.109,
+            "generation7_median": 4.529,
+            "generation7_over_generation1": 0.8864748483069094,
+            "generation7_over_negative": 2.3466321243523316,
+            "complete_separation_at_generation7": true,
+            "minimum_leave_one_each_out_generation7_over_negative": 1.8056164984642389
+          },
+          "seed_2uM": {
+            "generation1_median": 9.897,
+            "generation7_median": 11.335,
+            "generation7_over_generation1": 1.1452965545114682,
+            "generation7_over_negative": 5.873056994818653,
+            "complete_separation_at_generation7": true,
+            "minimum_leave_one_each_out_generation7_over_negative": 4.784774023694603
+          }
+        }
+      }
+    },
+    "compartment_associated_persistence": {
+      "passed": true,
+      "late_rounds_liposome_over_bulk": true,
+      "round5_amplification_ratio_liposome_over_bulk": 5.8756412530885465,
+      "liposome_round5_over_round1_final_DNA": 4.069958918258225,
+      "bulk_round6_over_round1_final_DNA": 0.02576321992957132,
+      "important_caveat": "the liposome and bulk campaigns use different transfer schemes, and the semi-continuous liposome condition permits some extra-vesicular amplification; this supports compartment-associated persistence, not a clean factorial proof that a boundary is universally necessary"
+    },
+    "heritable_sequence_change": {
+      "passed": true,
+      "campaigns_passed": 2,
+      "campaigns_required": 2,
+      "campaigns": {
+        "Int-WT(1)": {
+          "passed": true,
+          "qualifying_variants": [
+            {
+              "mutation": "514A>G",
+              "region": "DNAP S79G",
+              "initial_frequency": 0.0003537470387085017,
+              "final_frequency": 0.6672284686559736,
+              "fold_enrichment": 1886.1740047124188,
+              "trajectory": [
+                0.0003537470387085017,
+                0.011239624745193877,
+                0.1223677481043339,
+                0.5016692191580084,
+                0.5695426369576143,
+                0.6672284686559736
+              ]
+            },
+            {
+              "mutation": "517G>A",
+              "region": "DNAP A80T",
+              "initial_frequency": 0.00018244258424554626,
+              "final_frequency": 0.25912576773222845,
+              "fold_enrichment": 1420.3140610170028,
+              "trajectory": [
+                0.00018244258424554626,
+                0.007070718443541214,
+                0.23392233977732232,
+                0.29432211939120134,
+                0.3061498364110242,
+                0.25912576773222845
+              ]
+            },
+            {
+              "mutation": "1020G>A",
+              "region": "DNAP V247 silent",
+              "initial_frequency": 0.0002448038410512351,
+              "final_frequency": 0.6991919933890368,
+              "fold_enrichment": 2856.1316292529195,
+              "trajectory": [
+                0.0002448038410512351,
+                0.0007284407856628811,
+                0.08614714068161529,
+                0.5884045063899898,
+                0.6377849929785959,
+                0.6991919933890368
+              ]
+            },
+            {
+              "mutation": "2736A>G",
+              "region": "TP S189G",
+              "initial_frequency": 0.00015910718141628121,
+              "final_frequency": 0.3609909704833447,
+              "fold_enrichment": 2268.854034557142,
+              "trajectory": [
+                0.00015910718141628121,
+                0.002789529964201032,
+                0.17889047199041092,
+                0.3673596260008952,
+                0.383040142113444,
+                0.3609909704833447
+              ]
+            }
+          ]
+        },
+        "Int-WT(2)": {
+          "passed": true,
+          "qualifying_variants": [
+            {
+              "mutation": "264 A>G",
+              "region": "RBS 264 A>G",
+              "initial_frequency": 8.84623040007077e-05,
+              "final_frequency": 0.921199928291138,
+              "fold_enrichment": 10413.474289385096,
+              "trajectory": [
+                8.84623040007077e-05,
+                8.326914669941919e-05,
+                0.9562471552116523,
+                0.921199928291138
+              ]
+            },
+            {
+              "mutation": "503 G>A",
+              "region": "p2 G75D",
+              "initial_frequency": 0.00027620952149462496,
+              "final_frequency": 0.3987391148501908,
+              "fold_enrichment": 1443.6110409682249,
+              "trajectory": [
+                0.00027620952149462496,
+                0.001729757095695647,
+                0.0056407137914403745,
+                0.3987391148501908
+              ]
+            },
+            {
+              "mutation": "520 G>A",
+              "region": "p2 D81N",
+              "initial_frequency": 0.0001801000084752945,
+              "final_frequency": 0.33095070776026503,
+              "fold_enrichment": 1837.5940709945257,
+              "trajectory": [
+                0.0001801000084752945,
+                0.001246697735165781,
+                0.008287779932992418,
+                0.33095070776026503
+              ]
+            },
+            {
+              "mutation": "1102 G>A",
+              "region": "p2 D275N",
+              "initial_frequency": 7.027900766041184e-05,
+              "final_frequency": 0.9519045265390074,
+              "fold_enrichment": 13544.649508123535,
+              "trajectory": [
+                7.027900766041184e-05,
+                0.0001705214857071991,
+                0.9616717797521813,
+                0.9519045265390074
+              ]
+            },
+            {
+              "mutation": "1261 G>A",
+              "region": "p2 V328I",
+              "initial_frequency": 0.00018195464780403485,
+              "final_frequency": 0.9510906317329014,
+              "fold_enrichment": 5227.075225675059,
+              "trajectory": [
+                0.00018195464780403485,
+                0.0002294209415435441,
+                0.964522340550949,
+                0.9510906317329014
+              ]
+            },
+            {
+              "mutation": "1334 C>T",
+              "region": "p2 A352V",
+              "initial_frequency": 0.00033378090318078027,
+              "final_frequency": 0.9525957406471183,
+              "fold_enrichment": 2853.95518907557,
+              "trajectory": [
+                0.00033378090318078027,
+                0.0005507974927077516,
+                0.9649842519685039,
+                0.9525957406471183
+              ]
+            },
+            {
+              "mutation": "1710 G>T",
+              "region": "p2 L477 silent",
+              "initial_frequency": 4.609923628931881e-05,
+              "final_frequency": 0.6169358465878889,
+              "fold_enrichment": 13382.778029466683,
+              "trajectory": [
+                4.609923628931881e-05,
+                0.0008296287020224156,
+                0.39742678593309644,
+                0.6169358465878889
+              ]
+            },
+            {
+              "mutation": "2591 C>T",
+              "region": "p3 T140M",
+              "initial_frequency": 0.00032403555633401935,
+              "final_frequency": 0.9963048546923141,
+              "fold_enrichment": 3074.677563055186,
+              "trajectory": [
+                0.00032403555633401935,
+                0.0005541375604513702,
+                0.9450973842974344,
+                0.9963048546923141
+              ]
+            }
+          ]
+        }
+      },
+      "important_caveat": "the intermittent campaigns include experimenter-mediated extraction, PCR, and re-encapsulation; they establish heritable molecular change under compartmentalized selection, not autonomous organismal heredity"
+    }
+  },
+  "evidence_grade": "cross-study component-level empirical support, not a joint single-system existence proof; necessity remains open because there is no clean 2^3 factorial ablation or autonomous growth-division-heredity cycle"
+}

@@ -635,35 +635,33 @@ $$
 
 | Layer | 수식 정본 | 코드 구현 | 정합도 |
 |---|---|---|---|
-| A (셀 동역학) | `15_Equations.md` A절 | `runtime.py::_step_torch` + `kernel.rs` | software conformance |
-| B (필드 결합) | `15_Equations.md` B절 | `runtime.py::_matvec` + `field.rs` | software conformance |
-| C (전역 모드) | `15_Equations.md` C절 | `runtime.py::_auto_mode` + `_update_sleep_state` | software conformance |
-| D (해마/기억) | `15_Equations.md` D절 | `runtime.py::HippocampusMemory` | software conformance |
-| E (전역 요약) | `15_Equations.md` E절 | `runtime.py::RuntimeStep` + `BrainRuntimeSnapshot` | software conformance |
-| F (에이전트 루프) | `17_AgentLoop.md` F절 | `engine.py` + `sleep.py` (부분) | 핵심 구현, STDP/메타인지 미구현 |
+| A (셀 동역학) | `15_Equations.md` A절 | `runtime.py::_step_torch` + `kernel.rs` | software conformance (구현-명세 일치) |
+| B (필드 결합) | `15_Equations.md` B절 | `runtime.py::_matvec` + `field.rs` | software conformance (구현-명세 일치) |
+| C (전역 모드) | `15_Equations.md` C절 | `runtime.py::_auto_mode` + `_update_sleep_state` | software conformance (구현-명세 일치) |
+| D (해마/기억) | `15_Equations.md` D절 | `runtime.py::HippocampusMemory` | software conformance (구현-명세 일치) |
+| E (전역 요약) | `15_Equations.md` E절 | `runtime.py::RuntimeStep` + `BrainRuntimeSnapshot` | software conformance (구현-명세 일치) |
+| F (에이전트 루프) | `17_AgentLoop.md` F절 | `agent.py` + `engine.py` + `runtime.py` + `stdp.py` + `neuromod.py` + `sleep.py` | 실행 루프·STDP 인과 배선 구현, 독립 효능은 부분/미통과 |
 
 ### 14.6 남은 간극
 
 | 간극 | 문서 위치 | 우선순위 |
 |---|---|---|
-| STDP 적격 흔적 | F.14 | 높음 |
-| 4종 신경조절 분리 | F.19 | 중간 |
+| STDP 효능 + held-out guard | F.14, `21_STDP_Efficacy_Audit.md` | 높음 |
+| 4종 신경조절의 runtime 폐루프 통합 | F.19 | 중간 |
 | Cold checkpoint + Live journal | 7절 | 낮음 |
-| 작업 기억 / 소뇌 | F.20 | 중간 |
-| (C3) 메타인지 재귀 루프 | F.17 | 낮음 |
+| 작업 기억 / 소뇌의 독립 task 효능 | F.20 | 중간 |
+| (C3) 메타인지 재귀의 실제 agent feedback | F.17 | 낮음 |
 
-현재 구현은 **셀 동역학 + 모드 전환 + 해마 + 수면 학습 순환**의
-소프트웨어 스택을 제공한다. 이 정합은 구현과 명세 사이의 conformance이며,
-뇌가 같은 모듈 경계나 언어를 쓴다는 생물학적 검증이 아니다. 또한
-STDP/eligibility의 실제 구현 상태는 `stdp.py`, `runtime.py`와 회귀
-테스트를 기준으로 다시 감사해야 하며, 이 표의 과거 “미구현” 문구를
-생물학적 결손으로 읽지 않는다.
+현재 구현은 **셀 동역학 + 모드 전환 + 해마 + 수면 학습 순환 +
+critic/action/output 에이전트 루프 + STDP 인과 배선**까지 닫혀 있다. 남은
+핵심은 모듈의 존재가 아니라 독립 baseline 대비 효능이다. 특히 STDP는 현재
+합성 A/B에서 `NO-EFFECT`, held-out guard `FAIL`이므로 기본 비활성 상태를
+유지한다. 이 표의 정합은 구현과 명세 사이의 software conformance이며,
+뇌가 같은 모듈 경계나 언어를 쓴다는 생물학적 검증이 아니다.
+STDP/eligibility의 상태도 `stdp.py`, `runtime.py`와 회귀 테스트를 기준으로
+감사하며, 과거의 “미구현” 문구나 현재의 효능 실패를 생물학적 결손으로
+읽지 않는다.
 
----
-
-## 15. 한 줄 원칙
-
-$$\boxed{\text{뇌 전체를 만들지 말고, 살아남는 최소 코어를 먼저 만들어라}}$$
 
 ---
 

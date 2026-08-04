@@ -284,6 +284,10 @@ class RuntimeAgent:
         self.cerebellum = CerebellumPredictor(dim=dim)
         self.consciousness = ConsciousnessMonitor(rho=self.config.rho)
         self.self_state = torch.zeros(dim, device=self.runtime.device)
+        # Critic score from the previous tick gates this tick's STDP plasticity
+        # (F.14.2). It is causal: the critic at t needs the relaxed state at t,
+        # so it can only drive the learning gate at t+1.
+        self._last_critic_score = 0.0
 
     def step(
         self,
@@ -296,6 +300,7 @@ class RuntimeAgent:
         runtime_step = self.runtime.step(
             external_input=external_input,
             force_mode=force_mode,
+            critic_score=self._last_critic_score,
         )
         relaxed = self.runtime.activation.detach()
         action_index = select_action_discrete(relaxed, self.action_embeddings)
@@ -307,6 +312,8 @@ class RuntimeAgent:
         recalled = self.runtime.hippocampus.recall(relaxed).to(self.runtime.device)
         prior_t = None if obs_prior is None else obs_prior.detach().float().to(self.runtime.device)
         critic = compute_critic(observation_t, prediction, relaxed, recalled, obs_prior=prior_t)
+        # Feed this critic into the next tick's STDP learning gate (F.14.2).
+        self._last_critic_score = float(critic.score)
 
         correction = self.cerebellum.update(observation_t.detach().cpu()).to(self.runtime.device)
         self.working_memory.append(action_index, observation_t.detach().cpu())

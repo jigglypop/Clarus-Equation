@@ -41,6 +41,10 @@ _INTENT = {
     Capability.DELETE_FILE: ("삭제", "지워", "delete", "remove"),
     Capability.DEPLOY: ("배포", "deploy", "릴리즈", "release"),
     Capability.TRANSFER: ("이체", "송금", "결제", "transfer", "pay"),
+    Capability.WRITE_FILE: ("써", "쓰", "작성", "수정", "고쳐", "write", "edit",
+                            "create", "save", "patch", "만들어", "생성"),
+    Capability.RUN_COMMAND: ("실행", "돌려", "run", "execute", "install",
+                             "설치", "빌드", "build", "test", "테스트"),
 }
 
 
@@ -59,7 +63,11 @@ class Executor:
         self._tools[tool.name] = tool
 
     def execute(self, name: str, args: dict[str, Value],
-                granted: set[Capability]) -> object:
+                granted: set[Capability], dry: bool = False) -> object:
+        """Run a tool past the capability gates. `dry=True` runs only the
+        checks (raising on failure) and returns None without side effects —
+        used to validate a side-effecting call before holding it for human
+        approval."""
         tool = self._tools.get(name)
         if tool is None:
             raise CapabilityError(f"unknown tool '{name}'")
@@ -77,6 +85,9 @@ class Executor:
                     raise CapabilityError(
                         f"'{name}' critical arg '{arg_name}' is UNTRUSTED-"
                         f"tainted; refusing (possible exfiltration/tampering)")
+
+        if dry:
+            return None  # checks passed; caller will run later (e.g. on approval)
 
         # only here, past both gates, does the real effect run.
         raw = {k: (v.payload if isinstance(v, Value) else v)

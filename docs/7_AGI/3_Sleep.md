@@ -64,7 +64,7 @@ $$
 | 수면 단계 | CE 대응 | 지배 항 | 기능 |
 |---|---|---|---|
 | 각성(Wake) | 경로 누적 ($\int\mathcal{D}\gamma\,e^{iS}$) | $\mathcal{L}_{\text{compute}}$ | 새 경로 탐색, 정보 획득 |
-| NREM | 접힘 실행 ($\Phi = \delta^2 S/\delta\gamma^2$) | $\lambda\|\Delta_g\Phi\|^2$ | 고곡률 경로 억제, 전역 평탄화 |
+| NREM | Hessian readout 비유 \(\Phi_H[\eta]\) | \(\lambda\|\Delta_g\Phi_H\|^2\) | AGI 유효 평탄화 항; 물리장 \(\phi\)와 동일하지 않음 |
 | REM | 재탐색 ($e^{iS}$ 위상 간섭) | $\gamma S_{\text{Info}}$ | 비선택 경로 재조합 |
 
 ### 2.2 AI 학습 순환으로의 변환

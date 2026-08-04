@@ -1,0 +1,390 @@
+{
+  "schema_version": 1,
+  "manifest_id": "ce-quantum-future-holdout-v2",
+  "manifest_hash_policy": "sha256-canonical-json-excluding-manifest_sha256",
+  "manifest_sha256": "340ceb208d769e3fd2a85cef59b00164812918153abc5db4b2d4f69ca88b0994",
+  "domain": "quantum",
+  "status": "frozen_with_unassigned_holdout",
+  "supersedes_manifest_id": "ce-quantum-future-holdout-v1",
+  "freeze": {
+    "freeze_date": "2026-08-02",
+    "timezone": "Asia/Seoul",
+    "phase": "pre_model_completion_and_pre_holdout_assignment",
+    "protocol_revision": 2,
+    "gate_scores_are_not_truth_probabilities": true,
+    "amendment_policy": "Freeze the unresolved physical model in a new higher-revision manifest before assigning or accessing a future holdout; retain this manifest and explain every delta."
+  },
+  "scope": {
+    "claim_target": "Branch-A independent-scalar coupling to finite-dimensional quantum dynamics and a held-out hardware outcome",
+    "excluded_claims": [
+      "Identification of the independent scalar phi with the Ricci scalar R",
+      "A prediction of a 29.64757 MeV particle",
+      "A universal bath spectral density",
+      "Reproduction of the historical ARC 94.6 percent record"
+    ],
+    "interpretation": "A rejection kills only the tested action, coupling, measurement, or ARC bridge; standard QM reference utilities and the CE core are separate targets."
+  },
+  "input_artifacts": [
+    {
+      "path": "reality_stone/python/reality_stone/clarus/quantum.py",
+      "sha256": "3d8af1c867ab1fb07b97583c4e876d7d17915391b5a7d77c043a344ef0c58ac5",
+      "kind": "implementation_snapshot",
+      "role": "standard-QM references, branch-A scalar scaffolding, and explicit spectrum/KMS/Kossakowski gates",
+      "provenance": "Repository-local code snapshot frozen before physical model completion and future-holdout assignment."
+    }
+  ],
+  "frozen_inputs": [
+    {
+      "name": "scalar_branch",
+      "value": "A_independent_scalar_field",
+      "unit": "categorical",
+      "role": "protocol_constant",
+      "source": "Audit-selected type-safe branch; phi is not R"
+    },
+    {
+      "name": "reference_scalar_mass_mev",
+      "value": 29.64757,
+      "unit": "MeV",
+      "role": "reference_not_prediction",
+      "source": "REFERENCE_SCALAR_MASS_MEV in quantum.py"
+    },
+    {
+      "name": "metric_signature",
+      "value": "mostly_minus",
+      "unit": "categorical",
+      "role": "model_assumption",
+      "source": "IndependentScalarFieldAction convention in quantum.py"
+    },
+    {
+      "name": "confidence_level",
+      "value": 0.95,
+      "unit": "probability",
+      "role": "protocol_constant",
+      "source": "Frozen future comparison protocol"
+    },
+    {
+      "name": "paired_cluster_bootstrap_resamples",
+      "value": 10000,
+      "unit": "resamples",
+      "role": "protocol_constant",
+      "source": "Frozen future comparison protocol"
+    },
+    {
+      "name": "paired_cluster_bootstrap_seed",
+      "value": 1729,
+      "unit": "integer_seed",
+      "role": "protocol_constant",
+      "source": "Frozen future comparison protocol"
+    }
+  ],
+  "model_contract": {
+    "branch": "A_independent_scalar_field",
+    "phi_equals_ricci_scalar": false,
+    "evaluation_readiness": "blocked_open_model",
+    "scalar_mass": {
+      "value_mev": 29.64757,
+      "role": "reference_not_prediction",
+      "fit_status": "forbidden_on_holdout"
+    },
+    "jacobi_rayleigh_readout": {
+      "formula": "real(<v,Jv>/<v,v>)",
+      "role": "external_operator_readout",
+      "establishes_physical_field_existence": false,
+      "jacobi_operator_and_probe_status": "unresolved_external_inputs"
+    },
+    "interaction_template": {
+      "formula": "H_int = g A tensor O_phi",
+      "status": "template_only",
+      "g": null,
+      "A": null,
+      "O_phi": null,
+      "unit_convention": null,
+      "allowed_preassignment_conventions": [
+        "Reduced generator convention H_int/hbar with g squared times J in inverse seconds.",
+        "SI energy-coupling convention with gamma=(g_J/hbar)^2 times an unsymmetrized correlation spectrum in seconds."
+      ]
+    },
+    "open_system_rate_template": {
+      "formula": "gamma(omega) = g^2 J(omega)",
+      "status": "template_only",
+      "spectral_density_J": null,
+      "bath_state": null,
+      "rate_unit_convention": null,
+      "kossakowski_matrix_or_jump_basis": null
+    },
+    "unresolved_physical_inputs": [
+      "scalar_action_parameters",
+      "system_coupling_g",
+      "system_operator_A",
+      "field_operator_O_phi",
+      "bath_state",
+      "spectral_density_J",
+      "rate_unit_convention_and_spectrum_units",
+      "kossakowski_matrix_or_jump_basis",
+      "jacobi_operator_and_probe"
+    ],
+    "required_before_assignment": [
+      "Freeze a dimensional scalar action and all unit conventions.",
+      "Freeze g, A, O_phi, bath state, and J(omega) from non-holdout information.",
+      "Freeze the device-level candidate likelihood and standard-QM baseline likelihood.",
+      "Freeze the measurement instrument, decoder or ARC map, and every nuisance treatment.",
+      "Change evaluation_readiness to ready only in a higher-revision manifest created before holdout access."
+    ]
+  },
+  "registered_models": [
+    {
+      "model_id": "standard_qm_device_baseline_v1",
+      "role": "comparison_baseline",
+      "status": "class_frozen_parameters_pending_non_holdout_calibration",
+      "post_unblinding_selection_allowed": false
+    },
+    {
+      "model_id": "ce_branch_a_independent_scalar_v1",
+      "role": "candidate",
+      "status": "blocked_open_model",
+      "post_unblinding_selection_allowed": false
+    }
+  ],
+  "data_roles": {
+    "exploratory_or_calibration": [
+      {
+        "dataset_id": "historical_arc_94_6_percent_record",
+        "role": "historical_record_exploratory_only",
+        "holdout_eligible": false,
+        "observed_before_freeze": true,
+        "provenance": "Repository documentation records a 94.6 percent ARC simulation result, but the current checkout has no raw artifact, seed, executable benchmark, device data, or decoder configuration that reproduces it.",
+        "why_not_holdout": "The value was known before this freeze and lacks a reproducible raw artifact, so it is neither untouched nor evaluation-ready.",
+        "raw_release_sha256": null,
+        "reproducibility_artifact_available": false,
+        "permitted_uses": [
+          "historical context",
+          "hypothesis generation",
+          "requirements discovery"
+        ]
+      }
+    ],
+    "future_holdout": {
+      "placeholder_id": "future_multi_device_quantum_hardware_release",
+      "assignment_status": "unassigned",
+      "holdout_eligible": true,
+      "dataset_id": null,
+      "release_id": null,
+      "release_date": null,
+      "source_uri": null,
+      "local_artifact_path": null,
+      "sha256": null,
+      "assigned_at": null,
+      "assignment_manifest_id": null,
+      "assignment_requires_new_manifest": true,
+      "manifest_version_must_increase": true,
+      "access_before_assignment_forbidden": true,
+      "access_log_required": true,
+      "prohibited_dataset_ids": [
+        "historical_arc_94_6_percent_record"
+      ],
+      "selection_policy": {
+        "release_after_freeze_required": true,
+        "choose_first_qualifying_release": true,
+        "assignment_before_access_required": true,
+        "qualification_criteria": [
+          "A public, versioned raw or shot-level quantum-hardware dataset is released after 2026-08-02.",
+          "The release contains device and calibration metadata, timestamps or sequence order, circuit or control definitions, and outcome records sufficient for both frozen likelihoods.",
+          "At least two devices or independently isolated device epochs are available for cluster-level uncertainty estimation.",
+          "No candidate-model developer has inspected the numerical holdout outcomes before assignment.",
+          "Training and non-holdout calibration records are disjoint from the assigned evaluation records."
+        ],
+        "disqualification_rule": "If the first release fails any criterion, record the reason without inspecting outcome-dependent candidate performance and consider the next chronological release."
+      }
+    }
+  },
+  "fit_policy": {
+    "fitted_parameter_count_on_holdout": 0,
+    "allow_profile_fit": false,
+    "allow_post_unblinding_model_selection": false,
+    "allow_post_unblinding_threshold_changes": false,
+    "allow_bin_or_outlier_removal": false,
+    "nuisance_parameter_policy": "All device, drift, SPAM, decoder, and noise nuisance treatment must be frozen from disjoint training or calibration data in the higher-revision assignment manifest; none may be estimated from holdout outcomes.",
+    "forbidden_on_holdout": [
+      "scalar_mass",
+      "curvature_coupling",
+      "quartic_coupling",
+      "system_coupling_g",
+      "system_operator_A",
+      "field_operator_O_phi",
+      "bath_state",
+      "spectral_density_J",
+      "rate_unit_convention",
+      "spectrum_units",
+      "kossakowski_matrix",
+      "jump_operator_basis",
+      "jacobi_operator",
+      "rayleigh_probe",
+      "measurement_threshold",
+      "model_choice",
+      "branch_choice",
+      "device_selection",
+      "time_window",
+      "circuit_selection",
+      "decoder_parameters",
+      "ARC_noise_matrices",
+      "baseline_parameters",
+      "bootstrap_seed",
+      "physicality_tolerances"
+    ]
+  },
+  "numeric_tolerances": [
+    {
+      "name": "density_trace_absolute_error",
+      "comparison": "absolute<=",
+      "value": 1e-10,
+      "unit": "dimensionless",
+      "scope": "Absolute error of Tr(rho)-1 for every evaluated state or channel output"
+    },
+    {
+      "name": "density_hermiticity_absolute_error",
+      "comparison": "absolute<=",
+      "value": 1e-10,
+      "unit": "matrix_entry",
+      "scope": "Maximum absolute element of rho-rho_dagger"
+    },
+    {
+      "name": "minimum_choi_eigenvalue",
+      "comparison": ">=",
+      "value": -1e-10,
+      "unit": "dimensionless",
+      "scope": "Minimum Choi eigenvalue for each registered quantum channel"
+    },
+    {
+      "name": "born_probability_sum_absolute_error",
+      "comparison": "absolute<=",
+      "value": 1e-10,
+      "unit": "probability",
+      "scope": "Absolute error of the complete Born-probability sum from one"
+    },
+    {
+      "name": "minimum_born_probability",
+      "comparison": ">=",
+      "value": -1e-12,
+      "unit": "probability",
+      "scope": "Minimum registered Born or instrument outcome probability"
+    },
+    {
+      "name": "no_signalling_max_probability_variation",
+      "comparison": "absolute<=",
+      "value": 1e-08,
+      "unit": "probability",
+      "scope": "Maximum remote-marginal variation under local setting changes"
+    },
+    {
+      "name": "minimum_spectral_density",
+      "comparison": ">=",
+      "value": -1e-12,
+      "unit": "registered_spectral_density_unit",
+      "scope": "Minimum evaluated J(omega) before multiplying by g squared"
+    },
+    {
+      "name": "minimum_kossakowski_eigenvalue",
+      "comparison": ">=",
+      "value": -1e-10,
+      "unit": "registered_rate_unit",
+      "scope": "Minimum eigenvalue of every registered Kossakowski matrix"
+    },
+    {
+      "name": "kms_log_detailed_balance_absolute_error",
+      "comparison": "absolute<=",
+      "value": 1e-08,
+      "unit": "dimensionless",
+      "scope": "For a registered thermal bath, absolute error of log(gamma_up/gamma_down)+beta*DeltaE"
+    }
+  ],
+  "acceptance_criteria": {
+    "primary_endpoint": "paired_delta_log_predictive_density_per_observation",
+    "comparison": "CE branch-A candidate minus standard-QM device baseline on identical held-out records",
+    "all_physicality_gates_must_pass": true,
+    "baseline_and_candidate_use_identical_holdout_records": true,
+    "uncertainty": {
+      "method": "paired_cluster_bootstrap_by_device_or_predeclared_independent_device_epoch",
+      "confidence_level": 0.95,
+      "resamples": 10000,
+      "seed": 1729
+    },
+    "verdict_bands": {
+      "PASS": "All physicality gates pass and the lower 95 percent confidence bound of paired delta log predictive density is greater than zero.",
+      "OPEN": "All physicality gates pass and the confidence interval includes zero.",
+      "REJECT": "A physicality hard kill fires or the upper 95 percent confidence bound is less than or equal to zero."
+    },
+    "interpretation": "PASS promotes only the frozen branch-A experimental bridge. It is not a posterior probability that CE or a 29.64757 MeV particle is true."
+  },
+  "hard_kill_rules": [
+    {
+      "rule_id": "QUA-SCI-001",
+      "scope": "scientific_candidate",
+      "condition": "The candidate identifies phi with R, or changes from branch A after holdout access.",
+      "action": "Reject the tested scalar-identification bridge.",
+      "target": "Branch-A independent-scalar bridge."
+    },
+    {
+      "rule_id": "QUA-SCI-002",
+      "scope": "scientific_candidate",
+      "condition": "A registered channel violates trace preservation, Hermiticity, positivity, complete positivity, or the frozen Choi-eigenvalue tolerance.",
+      "action": "Reject the tested open-system dynamics bridge regardless of predictive score.",
+      "target": "Registered CE quantum-dynamics candidate."
+    },
+    {
+      "rule_id": "QUA-SCI-003",
+      "scope": "scientific_candidate",
+      "condition": "Born nonnegativity, Born normalization, or the frozen no-signalling tolerance fails.",
+      "action": "Reject the tested measurement or instrument bridge regardless of predictive score.",
+      "target": "Registered CE measurement bridge."
+    },
+    {
+      "rule_id": "QUA-SCI-004",
+      "scope": "scientific_candidate",
+      "condition": "J(omega) is below the frozen tolerance, a GKSL rate is negative, the Kossakowski representation is not positive semidefinite within tolerance, or a bath registered as thermal violates the frozen KMS detailed-balance tolerance.",
+      "action": "Reject the tested spectral-density and dissipative-rate bridge.",
+      "target": "Registered CE open-system coupling bridge."
+    },
+    {
+      "rule_id": "QUA-SCI-005",
+      "scope": "scientific_candidate",
+      "condition": "All physicality gates pass but the upper 95 percent paired confidence bound of candidate-minus-baseline log predictive density is less than or equal to zero.",
+      "action": "Reject the frozen empirical candidate at the registered data sensitivity.",
+      "target": "Registered branch-A hardware-outcome candidate."
+    },
+    {
+      "rule_id": "QUA-PROT-001",
+      "scope": "protocol_validity",
+      "condition": "The manifest digest, input artifact digest, or assigned holdout digest does not match.",
+      "action": "Invalidate the evaluation and require a documented higher-revision manifest before any rerun.",
+      "target": "Evaluation validity."
+    },
+    {
+      "rule_id": "QUA-PROT-002",
+      "scope": "protocol_validity",
+      "condition": "Any forbidden physics, device, decoder, threshold, baseline, or nuisance value is fit or selected after holdout access.",
+      "action": "Invalidate confirmatory status; report the result only as exploratory.",
+      "target": "Confirmatory status."
+    },
+    {
+      "rule_id": "QUA-PROT-003",
+      "scope": "protocol_validity",
+      "condition": "The same records are used for calibration or training and holdout scoring.",
+      "action": "Invalidate the split and allocate a new future holdout.",
+      "target": "Data independence."
+    },
+    {
+      "rule_id": "QUA-PROT-004",
+      "scope": "protocol_validity",
+      "condition": "The future dataset is accessed before model completion and assignment are frozen in a higher-revision manifest.",
+      "action": "Classify the accessed dataset as exploratory forever and allocate a new future holdout.",
+      "target": "Future-holdout status."
+    },
+    {
+      "rule_id": "QUA-PROT-005",
+      "scope": "protocol_validity",
+      "condition": "The action, correlator, spectral-density provenance, measurement instrument, or rate units remain unspecified at evaluation time.",
+      "action": "Do not run or score the confirmatory evaluation.",
+      "target": "Physical-model readiness."
+    }
+  ]
+}
