@@ -99,15 +99,25 @@ CE 후보의 S6를 통과시키지는 않는다.
 |---|---|---|
 | CE 정적 Casimir 셀 | 밀도·coherence 및 S1 | `FAIL / OPEN` |
 | CE resonance-$Q$ | $T_{kk}(Q)$ 법칙과 S1 | `OPEN` |
-| CE canonical scalar | S0 | `REFUTED` |
+| CE 최소결합 canonical scalar 채널 | S0 | `REFUTED` |
 | phantom scalar | S5 ghost | `REFUTED AS STABLE SOURCE` |
 | 양자 음의 에너지 상태 | S3 지속 평균, S4 backreaction | `OPEN CONTROL` |
 | GJW AdS double trace | S6 CE mapping | `PASS IN OTHER MODEL` |
 | MMP 4D fermion Casimir | S6 CE field mapping | `PASS IN OTHER MODEL` |
 
-현재 CE 내부에서 가장 먼저 연구할 후보는 resonance-$Q$다. 다음 루프의
-반증 질문은 “CE의 명시적 2점함수/유효작용에서 $Q$에 따른 renormalized
-$T_{kk}$의 부호와 scaling exponent $p$를 계산할 수 있는가?”이다.
+1차 screening 시점에는 resonance-$Q$를 먼저 검사했다. 반증 질문은
+“CE의 명시적 2점함수/유효작용에서 $Q$에 따른 renormalized $T_{kk}$의
+부호와 scaling exponent $p$를 계산할 수 있는가?”였다.
+
+후속 `RESONANCE_STRESS_IDENTIFIABILITY_LOOP.md`의 반례로 $\xi(Q)$만으로
+$p$를 식별할 수 없음을 증명했다. residue, spectral density와 metric
+variation이 없는 현재 resonance 후보는 `W1 / KINEMATIC ONLY`에 머문다.
+
+후속 `CLARUS_NEGATIVE_SOURCE_SEARCH_LOOP.md`에서 CE 문서의
+$\xi R\Phi^2$ 비최소 결합을 분리해 재검사했다. 최소결합 no-go와 달리
+canonical kinetic sign을 유지한 국소 effective NEC 위반 영역이 존재한다.
+따라서 우선순위는 resonance-$Q$ 단독에서 비최소 CE + Casimir/곡률
+진공편극 하이브리드로 이동했다.
 
 ## 8. 실행
 

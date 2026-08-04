@@ -168,7 +168,7 @@ def source_candidate_catalog() -> tuple[CandidateStatus, ...]:
             first_failed_or_open_gate="negative-stress Q scaling OPEN",
         ),
         CandidateStatus(
-            name="CE canonical scalar",
+            name="CE minimally coupled canonical scalar channel",
             nec_or_anec_violation="FAIL",
             renormalized_full_stress="CLASSICAL FORM ONLY",
             conservation="CONDITIONAL ON SHELL",

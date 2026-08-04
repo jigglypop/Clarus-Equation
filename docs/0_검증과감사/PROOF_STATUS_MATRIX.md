@@ -51,9 +51,16 @@
 | mouth 센서 fault 처리 | `Exact/Code` | NaN 포함 프레임에서 모든 edge를 disable하는 fail-closed gate 통과 | 독립 하드웨어 차단 latency 검증 필요 |
 | 동적 graph interlock의 물리적 chronology 보호 | `Open/Conditional` | 입력된 uncertainty·drift bound 안에서는 enabled graph 안전 | bound의 실험적 보장과 연속 시공간 causal curve 검증 필요 |
 | CE resonance-$Q$ 웜홀 응력 후보 | `Open/Ansatz` | $T_{kk}\propto Q^p$, $\xi\propto Q$ 가정 시 1m 목은 $p=1$에서 $Q=2.85\times10^{16}$, $p=2$에서 coherence 병목 $Q=1.50\times10^{14}$ | $p$, 부호, 포화와 renormalized $T_{\mu\nu}$를 CE 작용에서 유도해야 함 |
-| CE canonical scalar의 고전 목 지지 | `Refuted` | null contraction $T_{kk}=(k\cdot\partial\sigma)^2\ge0$ | 비최소 결합·양자상태는 별도 후보이며 자동 해결 아님 |
+| CE 최소결합 canonical scalar의 고전 목 지지 | `Refuted` | null contraction $T_{kk}=(k\cdot\partial\sigma)^2\ge0$ | 비최소 결합·양자상태는 별도 후보 |
 | phantom scalar 목 지지 | `Refuted as stable source` | kinetic sign 반전은 $T_{kk}<0$이나 최소 ghost-free gate 실패 | ghost-free UV completion 없이는 채택 불가 |
 | 외부 양자장 웜홀 대조군의 CE 승격 | `Open` | GJW와 MMP는 각자의 장·경계조건에서 구조를 닫지만 CE 유도가 아님 | CE field content, state, boundary coupling과 backreaction mapping 필요 |
+| $\xi(Q)$에서 웜홀 stress exponent $p$ 식별 | `Refuted` | 같은 $\xi(Q)=Q\xi_0$에 대해 $Z(Q)=Q^{d+p}Z_0$로 임의의 프록시 exponent $p$를 구성 | pole residue·spectral density·renormalization 필요 |
+| CE resonance의 물리적 pole과 residue | `Open` | 문서가 pole 형식을 ansatz로 제시하나 Q0 gate는 spectral density와 LSZ를 미유도 판정 | $\Gamma_Q^{(2)}$, positivity, pole/cut, $Z_Q$ 계산 필요 |
+| CE 공간접힘 가능성 단계 | `W1/Kinematic` | W0 선택·제어와 W1 주어진 기하 shortcut은 통과; W2 renormalized 음의 $T_{\mu\nu}$ 미도달 | W2 stress source가 전체 사슬의 현재 병목 |
+| CE $\xi R\Phi^2$ 비최소장의 국소 null source | `Conditional pass/W2a` | 선택한 Jordan-frame convention에서 $N_{kk}=(\Phi')^2-\xi(\Phi^2)''$; $\xi=0.49$와 $F=1-\xi\Phi^2>0$인 음의 국소 반례 실행 | CE Q0 부호·정규화, EOM과 전체 perturbation 안정성 필요 |
+| 국소화 비최소 CE profile의 단순 ANEC 우회 | `Refuted in boundary-zero control` | endpoint jump 0이면 $\int N_{kk}=\int(\Phi')^2\ge0$ | Casimir 경계·곡률 진공상태·가변 $F$의 완전 계산 필요 |
+| 이상적 Casimir plate의 1m 목 scale | `Negative control` | normal null stress 역산에서 $a=3.66\times10^{-18}$ m, CE $\xi$의 $5.5\times10^{-4}$ | 실제 구면 경계, 물질, 전체 보존 stress와 backreaction 미해결 |
+| 비최소 $1/F$만의 CE 밀도격차 증폭 | `Singular-limit control` | $2.85\times10^{16}$배에는 $F=3.51\times10^{-17}$, 중력 pole 상대거리 $1.75\times10^{-17}$ 필요 | regular effective gravity/strong-coupling gate 실패 가능성 큼 |
 
 ## 상수와 관측량
 

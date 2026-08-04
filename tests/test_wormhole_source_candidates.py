@@ -70,7 +70,10 @@ def test_catalog_keeps_literature_controls_separate_from_ce_derivation() -> None
     by_name = {candidate.name: candidate for candidate in catalog}
 
     assert len(catalog) == 7
-    assert by_name["CE canonical scalar"].nec_or_anec_violation == "FAIL"
+    assert (
+        by_name["CE minimally coupled canonical scalar channel"].nec_or_anec_violation
+        == "FAIL"
+    )
     assert by_name["Gao-Jafferis-Wall control"].derived_from_ce == "NO"
     assert by_name["Maldacena-Milekhin-Popov control"].derived_from_ce == "NO"
 
