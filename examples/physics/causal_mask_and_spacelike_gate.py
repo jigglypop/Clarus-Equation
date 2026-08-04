@@ -76,7 +76,6 @@ def mask_control():
         "familywise_alpha": 0.05,
         "equivalence_bound": 0.05,
         "minimum_target_response": 0.5,
-        "maximum_training_reduced_chi_square": 4.0,
         "maximum_covariance_condition_number": 1.0e8,
         "covariance_rank_relative_tolerance": 1.0e-10,
         "minimum_paired_covariance_eigenvalue": 1.0e-8,

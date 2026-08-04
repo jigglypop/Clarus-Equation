@@ -81,7 +81,6 @@ class ResonantMaskRawInputs:
     familywise_alpha: float
     equivalence_bound: float
     minimum_target_response: float
-    maximum_training_reduced_chi_square: float
     maximum_covariance_condition_number: float
     covariance_rank_relative_tolerance: float
     minimum_paired_covariance_eigenvalue: float
@@ -131,7 +130,6 @@ class ResonantSpatiotemporalMaskAudit:
     covariance_nonvacuous: bool
     fitted_global_amplitude: float | None
     fitted_global_amplitude_standard_error: float | None
-    training_reduced_chi_square: float | None
     maximum_training_absolute_residual: float | None
     maximum_training_residual_upper_bound: float | None
     maximum_heldout_residual_upper_bound: float | None
@@ -408,7 +406,6 @@ def _validate_canonical_raw_structure(raw: ResonantMaskRawInputs) -> None:
         "familywise_alpha",
         "equivalence_bound",
         "minimum_target_response",
-        "maximum_training_reduced_chi_square",
         "maximum_covariance_condition_number",
         "covariance_rank_relative_tolerance",
         "minimum_paired_covariance_eigenvalue",
@@ -484,7 +481,6 @@ def _validate_canonical_report_structure(report: ResonantSpatiotemporalMaskAudit
         "heldout_residual_covariance_condition_number",
         "fitted_global_amplitude",
         "fitted_global_amplitude_standard_error",
-        "training_reduced_chi_square",
         "maximum_training_absolute_residual",
         "maximum_training_residual_upper_bound",
         "maximum_heldout_residual_upper_bound",
@@ -532,7 +528,6 @@ def _manifest_values(
     familywise_alpha: Real,
     equivalence_bound: Real,
     minimum_target_response: Real,
-    maximum_training_reduced_chi_square: Real,
     maximum_covariance_condition_number: Real,
     covariance_rank_relative_tolerance: Real,
     minimum_paired_covariance_eigenvalue: Real,
@@ -540,7 +535,7 @@ def _manifest_values(
     minimum_trials: Integral,
     observations_are_independent_blocks: bool,
     gaussian_mean_model_declared: bool,
-) -> tuple[int, float, float, float, float, float, float, float, float, int, bool, bool]:
+) -> tuple[int, float, float, float, float, float, float, float, int, bool, bool]:
     sign = _strict_integer(expected_response_sign, name="expected_response_sign", minimum=-1)
     if sign not in {-1, 1}:
         raise ValueError("expected_response_sign must be -1 or +1")
@@ -553,10 +548,6 @@ def _manifest_values(
     )
     if equivalence >= target_minimum:
         raise ValueError("equivalence_bound must be smaller than minimum_target_response")
-    chi_limit = _finite_positive(
-        maximum_training_reduced_chi_square,
-        name="maximum_training_reduced_chi_square",
-    )
     condition_limit = _finite_positive(
         maximum_covariance_condition_number,
         name="maximum_covariance_condition_number",
@@ -599,7 +590,6 @@ def _manifest_values(
         alpha,
         equivalence,
         target_minimum,
-        chi_limit,
         condition_limit,
         rank_tolerance,
         paired_eigen_floor,
@@ -630,7 +620,6 @@ def resonant_mask_manifest_sha256(
     familywise_alpha: Real = 0.05,
     equivalence_bound: Real = 0.05,
     minimum_target_response: Real = 0.5,
-    maximum_training_reduced_chi_square: Real = 4.0,
     maximum_covariance_condition_number: Real = 1.0e8,
     covariance_rank_relative_tolerance: Real = 1.0e-10,
     minimum_paired_covariance_eigenvalue: Real = 1.0e-12,
@@ -674,7 +663,6 @@ def resonant_mask_manifest_sha256(
         familywise_alpha=familywise_alpha,
         equivalence_bound=equivalence_bound,
         minimum_target_response=minimum_target_response,
-        maximum_training_reduced_chi_square=maximum_training_reduced_chi_square,
         maximum_covariance_condition_number=maximum_covariance_condition_number,
         covariance_rank_relative_tolerance=covariance_rank_relative_tolerance,
         minimum_paired_covariance_eigenvalue=minimum_paired_covariance_eigenvalue,
@@ -694,7 +682,7 @@ def resonant_mask_manifest_sha256(
         raise ValueError("per-comparison Student-t tail must be at least 1e-15")
 
     digest = hashlib.sha256()
-    digest.update(b"resonant-spatiotemporal-mask-manifest/v3\0")
+    digest.update(b"resonant-spatiotemporal-mask-manifest/v5\0")
     _hash_text(digest, "cell_shape", repr(shape))
     digest.update(np.asarray(design, dtype="<f8", order="C").tobytes())
     for name, mask in masks:
@@ -714,7 +702,6 @@ def resonant_mask_manifest_sha256(
         "familywise_alpha",
         "equivalence_bound",
         "minimum_target_response",
-        "maximum_training_reduced_chi_square",
         "maximum_covariance_condition_number",
         "covariance_rank_relative_tolerance",
         "minimum_paired_covariance_eigenvalue",
@@ -803,7 +790,7 @@ def _stage(
     *,
     paired_pass: bool,
     manifest_pass: bool,
-    gls_pass: bool,
+    fixed_weight_pass: bool,
     heldout_pass: bool,
     conditional_pass: bool,
 ) -> ResonantMaskStage:
@@ -811,7 +798,7 @@ def _stage(
         return ResonantMaskStage.INPUT_VALIDATION_ONLY
     if not manifest_pass:
         return ResonantMaskStage.PAIRED_RESPONSE_CONTROL
-    if not gls_pass:
+    if not fixed_weight_pass:
         return ResonantMaskStage.FROZEN_MANIFEST_CONTROL
     if not heldout_pass:
         return ResonantMaskStage.JOINT_MASK_FIXED_WEIGHT_CONTROL
@@ -904,7 +891,6 @@ def _build_report(raw: ResonantMaskRawInputs) -> ResonantSpatiotemporalMaskAudit
         familywise_alpha=raw.familywise_alpha,
         equivalence_bound=raw.equivalence_bound,
         minimum_target_response=raw.minimum_target_response,
-        maximum_training_reduced_chi_square=raw.maximum_training_reduced_chi_square,
         maximum_covariance_condition_number=raw.maximum_covariance_condition_number,
         covariance_rank_relative_tolerance=raw.covariance_rank_relative_tolerance,
         minimum_paired_covariance_eigenvalue=raw.minimum_paired_covariance_eigenvalue,
@@ -918,7 +904,6 @@ def _build_report(raw: ResonantMaskRawInputs) -> ResonantSpatiotemporalMaskAudit
         alpha,
         equivalence,
         target_minimum,
-        chi_limit,
         condition_limit,
         rank_tolerance,
         paired_eigen_floor,
@@ -963,7 +948,6 @@ def _build_report(raw: ResonantMaskRawInputs) -> ResonantSpatiotemporalMaskAudit
         familywise_alpha=alpha,
         equivalence_bound=equivalence,
         minimum_target_response=target_minimum,
-        maximum_training_reduced_chi_square=chi_limit,
         maximum_covariance_condition_number=condition_limit,
         covariance_rank_relative_tolerance=rank_tolerance,
         minimum_paired_covariance_eigenvalue=paired_eigen_floor,
@@ -1056,7 +1040,6 @@ def _build_report(raw: ResonantMaskRawInputs) -> ResonantSpatiotemporalMaskAudit
     train_mean = cell_mean[flat_training]
     amplitude: float | None = None
     amplitude_error: float | None = None
-    train_reduced_chi: float | None = None
     maximum_train_residual: float | None = None
     maximum_train_upper: float | None = None
     train_residual_diagnostics = _CovarianceDiagnostics(0, None, 0.0, False)
@@ -1068,12 +1051,17 @@ def _build_report(raw: ResonantMaskRawInputs) -> ResonantSpatiotemporalMaskAudit
     heldout_residual_covariance: np.ndarray | None = None
 
     if train_diagnostics.valid and training_design_non_saturated:
-        precision_design = np.linalg.solve(train_covariance, train_design)
-        denominator = float(train_design @ precision_design)
+        # The weights depend only on the frozen design, not on the observed
+        # covariance.  Every residual is therefore a preregistered fixed linear
+        # contrast, for which the Gaussian Student-t pivot is exact.
+        denominator = float(train_design @ train_design)
         if math.isfinite(denominator) and denominator > 0.0:
-            weights = precision_design / denominator
+            weights = train_design / denominator
             amplitude = float(weights @ train_mean)
-            amplitude_error = math.sqrt(1.0 / denominator)
+            amplitude_variance = float(weights @ train_covariance @ weights)
+            if not math.isfinite(amplitude_variance) or amplitude_variance <= 0.0:
+                raise ValueError("fixed-weight amplitude variance must be positive")
+            amplitude_error = math.sqrt(amplitude_variance)
             train_residual = train_mean - amplitude * train_design
             train_operator = np.eye(train_count) - np.outer(train_design, weights)
             train_residual_covariance = (
@@ -1086,11 +1074,6 @@ def _build_report(raw: ResonantMaskRawInputs) -> ResonantSpatiotemporalMaskAudit
                 minimum_positive_eigenvalue=residual_variance_floor,
                 minimum_diagonal=residual_variance_floor,
                 maximum_condition_number=condition_limit,
-            )
-            train_reduced_chi = float(
-                train_residual
-                @ np.linalg.solve(train_covariance, train_residual)
-                / train_dof
             )
             maximum_train_residual = float(np.max(np.abs(train_residual)))
             train_error = _standard_errors(
@@ -1108,7 +1091,6 @@ def _build_report(raw: ResonantMaskRawInputs) -> ResonantSpatiotemporalMaskAudit
             covariance_hh = mean_covariance[np.ix_(flat_heldout, flat_heldout)]
             covariance_ht = mean_covariance[np.ix_(flat_heldout, flat_training)]
             covariance_heldout_alpha = covariance_ht @ weights
-            amplitude_variance = float(weights @ train_covariance @ weights)
             heldout_residual_covariance = (
                 covariance_hh
                 + np.outer(heldout_design, heldout_design) * amplitude_variance
@@ -1142,18 +1124,16 @@ def _build_report(raw: ResonantMaskRawInputs) -> ResonantSpatiotemporalMaskAudit
         training_covariance_nonvacuous and heldout_covariance_nonvacuous
     )
     model_assumptions = bool(block_control and gaussian_declared)
-    gls_pass = bool(
+    fixed_weight_pass = bool(
         manifest_pass
         and model_assumptions
         and training_design_non_saturated
         and training_covariance_nonvacuous
-        and train_reduced_chi is not None
-        and train_reduced_chi <= chi_limit
         and maximum_train_upper is not None
         and maximum_train_upper <= equivalence
     )
     heldout_prediction_pass = bool(
-        gls_pass
+        fixed_weight_pass
         and heldout_covariance_nonvacuous
         and maximum_heldout_upper is not None
         and maximum_heldout_upper <= equivalence
@@ -1247,13 +1227,8 @@ def _build_report(raw: ResonantMaskRawInputs) -> ResonantSpatiotemporalMaskAudit
         blockers.append("full paired covariance is rank deficient, vacuous, or ill-conditioned")
     if not heldout_covariance_nonvacuous:
         blockers.append("heldout residual covariance is rank deficient or vacuous")
-    if (
-        train_reduced_chi is None
-        or maximum_train_upper is None
-        or train_reduced_chi > chi_limit
-        or maximum_train_upper > equivalence
-    ):
-        blockers.append("one-amplitude design fails its simultaneous training GLS gate")
+    if maximum_train_upper is None or maximum_train_upper > equivalence:
+        blockers.append("one-amplitude design fails its fixed-weight simultaneous training gate")
     if maximum_heldout_upper is None or maximum_heldout_upper > equivalence:
         blockers.append("crossed heldout response is not predicted within simultaneous bounds")
     if not prearrival_pass:
@@ -1271,7 +1246,7 @@ def _build_report(raw: ResonantMaskRawInputs) -> ResonantSpatiotemporalMaskAudit
     )
 
     return ResonantSpatiotemporalMaskAudit(
-        schema_version="resonant-spatiotemporal-mask/v3",
+        schema_version="resonant-spatiotemporal-mask/v5",
         raw_inputs=raw,
         cell_shape=shape,
         trial_count=trial_count,
@@ -1315,7 +1290,6 @@ def _build_report(raw: ResonantMaskRawInputs) -> ResonantSpatiotemporalMaskAudit
         covariance_nonvacuous=covariance_nonvacuous,
         fitted_global_amplitude=amplitude,
         fitted_global_amplitude_standard_error=amplitude_error,
-        training_reduced_chi_square=train_reduced_chi,
         maximum_training_absolute_residual=maximum_train_residual,
         maximum_training_residual_upper_bound=maximum_train_upper,
         maximum_heldout_residual_upper_bound=maximum_heldout_upper,
@@ -1323,7 +1297,7 @@ def _build_report(raw: ResonantMaskRawInputs) -> ResonantSpatiotemporalMaskAudit
         maximum_off_support_response_upper_bound=off_support_upper,
         minimum_target_response_lower_bound=target_lower,
         heldout_localization_margin=localization_margin,
-        joint_mask_fixed_weight_pass=gls_pass,
+        joint_mask_fixed_weight_pass=fixed_weight_pass,
         heldout_prediction_pass=heldout_prediction_pass,
         prearrival_equivalence_pass=prearrival_pass,
         off_support_equivalence_pass=off_support_pass,
@@ -1335,7 +1309,7 @@ def _build_report(raw: ResonantMaskRawInputs) -> ResonantSpatiotemporalMaskAudit
         maximum_supported_stage=_stage(
             paired_pass=paired_control,
             manifest_pass=manifest_pass,
-            gls_pass=gls_pass,
+            fixed_weight_pass=fixed_weight_pass,
             heldout_pass=heldout_prediction_pass,
             conditional_pass=conditional_pass,
         ),
@@ -1368,7 +1342,6 @@ def resonant_spatiotemporal_mask_audit(
     familywise_alpha: Real = 0.05,
     equivalence_bound: Real = 0.05,
     minimum_target_response: Real = 0.5,
-    maximum_training_reduced_chi_square: Real = 4.0,
     maximum_covariance_condition_number: Real = 1.0e8,
     covariance_rank_relative_tolerance: Real = 1.0e-10,
     minimum_paired_covariance_eigenvalue: Real = 1.0e-12,
@@ -1424,7 +1397,6 @@ def resonant_spatiotemporal_mask_audit(
         familywise_alpha=familywise_alpha,
         equivalence_bound=equivalence_bound,
         minimum_target_response=minimum_target_response,
-        maximum_training_reduced_chi_square=maximum_training_reduced_chi_square,
         maximum_covariance_condition_number=maximum_covariance_condition_number,
         covariance_rank_relative_tolerance=covariance_rank_relative_tolerance,
         minimum_paired_covariance_eigenvalue=minimum_paired_covariance_eigenvalue,
@@ -1438,7 +1410,6 @@ def resonant_spatiotemporal_mask_audit(
         alpha,
         equivalence,
         target_minimum,
-        chi_limit,
         condition_limit,
         rank_tolerance,
         paired_eigen_floor,
@@ -1474,7 +1445,6 @@ def resonant_spatiotemporal_mask_audit(
         familywise_alpha=alpha,
         equivalence_bound=equivalence,
         minimum_target_response=target_minimum,
-        maximum_training_reduced_chi_square=chi_limit,
         maximum_covariance_condition_number=condition_limit,
         covariance_rank_relative_tolerance=rank_tolerance,
         minimum_paired_covariance_eigenvalue=paired_eigen_floor,

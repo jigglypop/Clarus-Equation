@@ -41,7 +41,6 @@ CONFIG = {
     "familywise_alpha": 0.05,
     "equivalence_bound": 0.05,
     "minimum_target_response": 0.5,
-    "maximum_training_reduced_chi_square": 4.0,
     "maximum_covariance_condition_number": 1.0e8,
     "covariance_rank_relative_tolerance": 1.0e-10,
     "minimum_paired_covariance_eigenvalue": 1.0e-8,
@@ -159,7 +158,7 @@ def test_frozen_joint_design_predicts_crossed_holdout_cells() -> None:
         3.020753839710795,
         abs=1.0e-12,
     )
-    assert report.joint_mask_gls_pass
+    assert report.joint_mask_fixed_weight_pass
     assert report.heldout_prediction_pass
     assert report.prearrival_equivalence_pass
     assert report.off_support_equivalence_pass
@@ -184,20 +183,43 @@ def test_heldout_mutation_does_not_change_training_fit_and_fails_prediction() ->
     report = _audit(matched=mutated, sham=sham)
 
     assert report.fitted_global_amplitude == baseline.fitted_global_amplitude
-    assert report.joint_mask_gls_pass
+    assert report.joint_mask_fixed_weight_pass
     assert not report.heldout_prediction_pass
     assert not report.conditional_declared_block_spatiotemporal_response_mask
 
 
-def test_rank_two_training_interaction_fails_one_amplitude_gls() -> None:
+def test_frozen_design_weights_do_not_adapt_to_observed_training_covariance() -> None:
+    trials = 256
+    rng = np.random.default_rng(119)
+    mean_offset = np.zeros_like(DESIGN)
+    mean_offset[0, 0] = 0.006
+    mean_offset[0, 1] = -0.004
+    noise = rng.normal(0.0, 0.02, size=(trials, *DESIGN.shape))
+    noise -= np.mean(noise, axis=0, keepdims=True)
+    rescaled_noise = noise.copy()
+    rescaled_noise[:, 0, 0] *= 2.5
+    sham = np.zeros_like(noise)
+    first = _audit(matched=2.0 * DESIGN + mean_offset + noise, sham=sham)
+    second = _audit(matched=2.0 * DESIGN + mean_offset + rescaled_noise, sham=sham)
+    training_design = DESIGN[TRAINING]
+    expected = float(
+        training_design @ (2.0 * training_design + mean_offset[TRAINING])
+        / (training_design @ training_design)
+    )
+
+    assert first.fitted_global_amplitude == pytest.approx(expected, abs=1.0e-14)
+    assert second.fitted_global_amplitude == pytest.approx(expected, abs=1.0e-14)
+
+
+def test_rank_two_training_interaction_fails_one_fixed_amplitude() -> None:
     matched, sham = _responses()
     interacted = matched.copy()
     interacted[:, 0, 0] += 0.2
     report = _audit(matched=interacted, sham=sham)
 
-    assert not report.joint_mask_gls_pass
+    assert not report.joint_mask_fixed_weight_pass
     assert not report.heldout_prediction_pass
-    assert "training GLS gate" in " ".join(report.blockers)
+    assert "fixed-weight simultaneous training gate" in " ".join(report.blockers)
 
 
 def test_prearrival_response_is_an_early_window_failure_not_a_causality_claim() -> None:
@@ -232,7 +254,7 @@ def test_posthoc_design_change_breaks_frozen_manifest_hash() -> None:
     )
 
     assert not report.manifest_hash_matches
-    assert not report.joint_mask_gls_pass
+    assert not report.joint_mask_fixed_weight_pass
     assert report.maximum_supported_stage is ResonantMaskStage.PAIRED_RESPONSE_CONTROL
     assert "hash does not match" in report.first_blocker
 
@@ -249,7 +271,7 @@ def test_exact_zero_covariance_returns_a_structured_failure() -> None:
 
     assert not report.covariance_nonvacuous
     assert report.fitted_global_amplitude is None
-    assert not report.joint_mask_gls_pass
+    assert not report.joint_mask_fixed_weight_pass
     assert not report.conditional_declared_block_spatiotemporal_response_mask
 
 
@@ -270,7 +292,7 @@ def test_validator_recomputes_every_field_and_rejects_adversarial_tampering() ->
         computed_manifest_sha256="f" * 64,
         manifest_hash_matches=True,
         covariance_nonvacuous=False,
-        training_reduced_chi_square=float("nan"),
+        fitted_global_amplitude=float("nan"),
         first_blocker="PASS",
         blockers=(),
     )
@@ -287,7 +309,7 @@ def test_validator_recomputes_every_field_and_rejects_adversarial_tampering() ->
 
 def test_unfrozen_manifest_stage_and_claim_tampering_fail_closed() -> None:
     unfrozen = _audit(frozen=False)
-    assert not unfrozen.joint_mask_gls_pass
+    assert not unfrozen.joint_mask_fixed_weight_pass
     assert unfrozen.maximum_supported_stage is ResonantMaskStage.PAIRED_RESPONSE_CONTROL
 
     report = _audit()
@@ -304,7 +326,7 @@ def test_unfrozen_manifest_stage_and_claim_tampering_fail_closed() -> None:
         )
 
 
-def test_one_training_cell_is_saturated_and_cannot_pass_gls() -> None:
+def test_one_training_cell_is_saturated_and_cannot_pass_fixed_weight_fit() -> None:
     design = np.array([[1.0, 0.0], [0.0, 1.0]])
     training = np.array([[True, False], [False, False]])
     heldout = ~training
@@ -330,7 +352,7 @@ def test_one_training_cell_is_saturated_and_cannot_pass_gls() -> None:
 
     assert report.training_model_degrees_of_freedom == 0
     assert not report.training_design_non_saturated
-    assert not report.joint_mask_gls_pass
+    assert not report.joint_mask_fixed_weight_pass
     assert report.maximum_supported_stage is ResonantMaskStage.FROZEN_MANIFEST_CONTROL
 
 
@@ -405,9 +427,9 @@ def test_duplicated_or_permuted_block_ids_fail_independence_control() -> None:
 
     assert not duplicate_report.paired_block_ids_unique
     assert not duplicate_report.minimum_unique_block_ids_met
-    assert not duplicate_report.joint_mask_gls_pass
+    assert not duplicate_report.joint_mask_fixed_weight_pass
     assert not permuted_report.paired_block_ids_aligned
-    assert not permuted_report.joint_mask_gls_pass
+    assert not permuted_report.joint_mask_fixed_weight_pass
     assert permuted_report.maximum_supported_stage is ResonantMaskStage.INPUT_VALIDATION_ONLY
 
 
@@ -424,7 +446,7 @@ def test_high_variance_exact_mean_fails_simultaneous_training_interval() -> None
     assert report.maximum_training_absolute_residual < 1.0e-12
     assert report.maximum_training_residual_upper_bound is not None
     assert report.maximum_training_residual_upper_bound > CONFIG["equivalence_bound"]
-    assert not report.joint_mask_gls_pass
+    assert not report.joint_mask_fixed_weight_pass
 
 
 def test_exact_paired_row_replication_with_fresh_ids_is_rejected() -> None:
@@ -443,7 +465,7 @@ def test_exact_paired_row_replication_with_fresh_ids_is_rejected() -> None:
     assert report.paired_block_ids_unique
     assert not report.paired_difference_rows_unique
     assert not report.paired_response_control_pass
-    assert not report.joint_mask_gls_pass
+    assert not report.joint_mask_fixed_weight_pass
     assert report.maximum_supported_stage is ResonantMaskStage.INPUT_VALIDATION_ONLY
 
 

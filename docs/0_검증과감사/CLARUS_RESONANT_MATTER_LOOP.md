@@ -558,8 +558,9 @@ D_{npfxta}=Y^{\rm matched}_{npfxta}-Y^{\rm sham}_{npfxta},
 M_{pfxta}=g_pR_fS_{xa}T_t(\tau_{xa})
 \]
 
-를 직접 비교한다. training cell에서는 global amplitude 하나만 full-rank GLS로
-맞추고, pre-arrival·off-support·target을 포함한 disjoint heldout cell을 예측한다.
+를 직접 비교한다. training cell에서는 manifest design으로만 정해진 fixed-weight
+amplitude 하나를 맞추고, pre-arrival·off-support·target을 포함한 disjoint heldout
+cell을 예측한다.
 unique paired block ID, 전처리·calibration hash, 최소 64 block과 Student-t Bonferroni
 simultaneous bound를 요구하며 validator가 raw rows에서 인증서 전체를 재계산한다.
 별도 spacelike marginal gate는 selector 전후의 전체 finite-bin 결과분포에
