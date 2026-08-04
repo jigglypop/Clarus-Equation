@@ -8,6 +8,7 @@ from reality_stone.clarus.possibility_space import (
     complete_history_readout,
     dimension_origin_audit,
     possibility_shift_audit,
+    target_possibility_shift,
 )
 
 
@@ -31,6 +32,11 @@ def main() -> None:
         strength=3.0,
     )
     origin = dimension_origin_audit()
+    extreme_empty_target, _, _ = target_possibility_shift(
+        [0.5, 0.5],
+        [False, False],
+        strength=1000.0,
+    )
 
     print("CE POSSIBILITY-SPACE LOOP")
     print(f"  complete histories read     {complete.all_histories_used}")
@@ -40,10 +46,19 @@ def main() -> None:
     print(f"  target mass after           {shift.posterior_target_mass:.12g}")
     print(f"  target mass increased       {shift.target_mass_increased}")
     print(
+        "  target mass numerically up  "
+        f"{shift.target_mass_numerically_increased}"
+    )
+    print(
         "  incompatible pasts zero    "
         f"{shift.incompatible_pasts_remain_impossible}"
     )
     print(f"  support preserved           {shift.support_preserved_by_finite_tilt}")
+    print(
+        "  float support resolved      "
+        f"{shift.floating_point_support_fully_resolved}"
+    )
+    print(f"  u=1000 empty target finite  {np.all(np.isfinite(extreme_empty_target))}")
     print(f"  dimension roots             {origin.algebraic_roots}")
     print(f"  d0 internal observer        {origin.d0_supports_internal_observer}")
     print(f"  d0 temporally prior proved  {origin.temporal_predecessor_derived}")

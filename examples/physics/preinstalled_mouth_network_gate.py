@@ -39,6 +39,10 @@ def main() -> None:
         np.array([[math.inf, -2.0], [1.0, math.inf]]),
         future_margin_s=0.0,
     )
+    zero_margin_strict = clock_synchronization_audit(
+        np.array([[math.inf, 0.0], [1.0, math.inf]]),
+        future_margin_s=0.0,
+    )
     interlock = realtime_chronology_interlock(
         np.array([[[math.inf, -2.0], [1.0, math.inf]]]),
         measurement_uncertainty_s=0.0,
@@ -57,6 +61,8 @@ def main() -> None:
     print(" positive-cycle sync", synchronizable.synchronization_exists)
     print(" synchronized minimum edge s", synchronizable.minimum_synchronized_edge_s)
     print(" negative-cycle sync", impossible_sync.synchronization_exists)
+    print(" zero-margin strict exists", zero_margin_strict.strict_graph_time_function_exists)
+    print(" strict witness margin s", zero_margin_strict.strict_witness_margin_s)
     print(" interlock enabled edges", interlock.enabled_edge_counts)
     print(" interlock disabled edges", interlock.disabled_edge_counts)
     print(" network physics derived", route.preinstalled_network_physics_derived)

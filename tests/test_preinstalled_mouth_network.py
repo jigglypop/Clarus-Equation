@@ -104,6 +104,7 @@ def test_clock_offsets_make_edges_strictly_future_directed_when_cycle_allows() -
     audit = clock_synchronization_audit(edges, future_margin_s=0.4)
 
     assert audit.synchronization_exists
+    assert audit.strict_witness_margin_s == 0.4
     assert audit.minimum_synchronized_edge_s >= 0.4 - 1e-12
     assert audit.strict_graph_time_function_exists
     assert audit.cycle_sums_are_gauge_invariant
@@ -135,6 +136,32 @@ def test_zero_time_cycle_fails_strict_future_margin() -> None:
     assert nonstrict.synchronization_exists
     assert not nonstrict.strict_graph_time_function_exists
     assert not strict.synchronization_exists
+
+
+def test_zero_requested_margin_finds_existing_strict_time_function() -> None:
+    edges = np.array([[math.inf, 0.0], [1.0, math.inf]])
+    audit = clock_synchronization_audit(edges, future_margin_s=0.0)
+
+    assert audit.synchronization_exists
+    assert audit.minimum_directed_cycle_time_s == 1.0
+    assert audit.strict_witness_margin_s > 0.0
+    assert audit.minimum_synchronized_edge_s > 0.0
+    assert audit.strict_graph_time_function_exists
+
+
+def test_acyclic_graph_has_unbounded_positive_clock_margin() -> None:
+    edges = np.array(
+        [
+            [math.inf, -10.0, math.inf],
+            [math.inf, math.inf, -20.0],
+            [math.inf, math.inf, math.inf],
+        ]
+    )
+    audit = clock_synchronization_audit(edges, future_margin_s=0.0)
+
+    assert math.isinf(audit.minimum_directed_cycle_time_s)
+    assert audit.minimum_synchronized_edge_s >= 1.0
+    assert audit.strict_graph_time_function_exists
 
 
 def test_realtime_interlock_cuts_an_edge_that_would_close_a_negative_cycle() -> None:

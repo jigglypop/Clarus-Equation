@@ -57,6 +57,25 @@ p_i'=\frac{w_ip_i}{\sum_jw_jp_j}.
 양립하지 않아 조건부 질량이 0인 과거·CTC 역사는 재가중만으로 생성되지
 않는다. 후보공간 자체 또는 역사 사이의 전이 kernel을 새로 정의해야 한다.
 
+### 부동소수점 구현 경계
+
+유한 \(u\)에서 위 정리는 정확하지만, binary64로 `exp(-u)`를 먼저 계산하면
+\(u=1000\)에서 0으로 underflow한다. 이전 구현은 목표 집합이 비었을 때
+정규화 분자와 분모가 모두 0이 되어 `NaN`을 만들었다. 현재 구현은 목표 prior 질량
+\(q\)와 비목표 질량 \(1-q\)를 log-domain에서 정규화한다.
+
+\[
+\log A=\log q,\qquad
+\log B=\log(1-q)-u,\qquad
+q'={A\over A+B}.
+\]
+
+\(q=0\) 또는 \(q=1\)이면 공통 tilt가 상쇄되므로 prior를 그대로 반환한다. 회귀
+반례 `prior=(0.5,0.5)`, 빈 target, `u=1000`은 이제 유한한 `(0.5,0.5)`를
+반환한다. 매우 작은 양의 posterior가 표현범위 아래로 내려갈 수 있으므로
+`support_preserved_by_finite_tilt`라는 해석 정리와
+`floating_point_support_fully_resolved`라는 표현 상태도 분리했다.
+
 ## 5. (d=0) 관찰자 조건부 불가능 정리
 
 CE 문서의 (d=0) 정의를 채택하면 공간 경로, 게이지 상호작용, 내부 상태

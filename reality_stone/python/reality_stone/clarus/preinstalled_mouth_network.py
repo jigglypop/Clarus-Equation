@@ -56,6 +56,8 @@ class NetworkChronologyAudit:
 @dataclass(frozen=True)
 class ClockSynchronizationAudit:
     requested_future_margin_s: float
+    strict_witness_margin_s: float
+    minimum_directed_cycle_time_s: float
     clock_offsets_s: np.ndarray
     synchronized_time_edges_s: np.ndarray
     synchronization_exists: bool
@@ -76,6 +78,68 @@ class RealtimeInterlockAudit:
     fail_closed_on_sensor_fault: bool
     uncertainty_and_drift_bounded: bool
     continuous_spacetime_protection_derived: bool
+
+
+def _clock_offset_solution(
+    original: list[tuple[int, int, float]],
+    count: int,
+    margin: float,
+) -> tuple[bool, np.ndarray]:
+    """Solve ``w_ij+s_j-s_i >= margin`` as difference constraints."""
+
+    # s_i <= s_j + w_ij - margin, represented as j -> i constraints.
+    constraints = [
+        (target, source, elapsed - margin)
+        for source, target, elapsed in original
+    ]
+    offsets = np.zeros(count, dtype=float)
+    feasible = True
+    for iteration in range(count):
+        changed = False
+        for source, target, bound in constraints:
+            candidate = offsets[source] + bound
+            if candidate < offsets[target]:
+                offsets[target] = candidate
+                changed = True
+                if iteration == count - 1:
+                    feasible = False
+        if not changed:
+            break
+    if not feasible:
+        offsets = np.full(count, math.nan)
+    return feasible, offsets
+
+
+def _minimum_directed_cycle_time(
+    original: list[tuple[int, int, float]],
+    count: int,
+) -> float:
+    """Return the least total weight of a directed cycle, or infinity for a DAG."""
+
+    shortest = np.full((count, count), math.inf)
+    np.fill_diagonal(shortest, 0.0)
+    for source, target, elapsed in original:
+        shortest[source, target] = min(shortest[source, target], elapsed)
+
+    for intermediate in range(count):
+        for source in range(count):
+            left = float(shortest[source, intermediate])
+            if not math.isfinite(left):
+                continue
+            for target in range(count):
+                right = float(shortest[intermediate, target])
+                if not math.isfinite(right):
+                    continue
+                candidate = left + right
+                if candidate < shortest[source, target]:
+                    shortest[source, target] = candidate
+
+    minimum = math.inf
+    for source, target, elapsed in original:
+        return_path = float(shortest[target, source])
+        if math.isfinite(return_path):
+            minimum = min(minimum, elapsed + return_path)
+    return minimum
 
 
 def _positions(value: ArrayLike) -> np.ndarray:
@@ -245,6 +309,12 @@ def clock_synchronization_audit(
     returns offsets or proves that the requested margin conflicts with a cycle.
     Clock relabelling telescopes around cycles and therefore cannot change their
     total elapsed time.
+
+    A zero-margin feasible witness is not enough to decide whether some strict
+    witness exists.  If the requested margin is zero, we separately find the
+    minimum directed-cycle total.  A positive total for every cycle (or no
+    directed cycle) guarantees a positive uniform margin; the function then
+    resolves the constraints at such a margin and returns that strict witness.
     """
 
     edges = np.asarray(coordinate_time_edges_s, dtype=float)
@@ -263,23 +333,31 @@ def clock_synchronization_audit(
         for target in range(count)
         if source != target and math.isfinite(float(edges[source, target]))
     ]
-    # s_i <= s_j + w_ij - margin, represented as j -> i constraints.
-    constraints = [
-        (target, source, elapsed - margin) for source, target, elapsed in original
-    ]
-    offsets = np.zeros(count, dtype=float)
-    feasible = True
-    for iteration in range(count):
-        changed = False
-        for source, target, bound in constraints:
-            candidate = offsets[source] + bound
-            if candidate < offsets[target]:
-                offsets[target] = candidate
-                changed = True
-                if iteration == count - 1:
-                    feasible = False
-        if not changed:
-            break
+    feasible, offsets = _clock_offset_solution(original, count, margin)
+    minimum_cycle_time = math.inf
+    witness_margin = margin
+    strict_exists = False
+    if feasible and original:
+        minimum_cycle_time = _minimum_directed_cycle_time(original, count)
+        if margin > 0.0:
+            strict_exists = True
+        elif minimum_cycle_time > 0.0:
+            if math.isinf(minimum_cycle_time):
+                witness_margin = 1.0
+            else:
+                # Every simple cycle has at most count edges.  If delta is the
+                # least positive cycle total, delta/(2*count) is feasible.
+                witness_margin = minimum_cycle_time / (2.0 * count)
+                if witness_margin == 0.0:
+                    witness_margin = math.nextafter(0.0, 1.0)
+            strict_feasible, strict_offsets = _clock_offset_solution(
+                original,
+                count,
+                witness_margin,
+            )
+            if strict_feasible:
+                offsets = strict_offsets
+                strict_exists = True
 
     synchronized = np.full_like(edges, math.inf)
     minimum = math.inf
@@ -288,18 +366,16 @@ def clock_synchronization_audit(
             adjusted = elapsed + offsets[target] - offsets[source]
             synchronized[source, target] = adjusted
             minimum = min(minimum, adjusted)
-    else:
-        offsets = np.full(count, math.nan)
-
-    strict = feasible and bool(original) and minimum > 0.0
     return ClockSynchronizationAudit(
         requested_future_margin_s=margin,
+        strict_witness_margin_s=witness_margin if strict_exists else 0.0,
+        minimum_directed_cycle_time_s=minimum_cycle_time,
         clock_offsets_s=offsets,
         synchronized_time_edges_s=synchronized,
         synchronization_exists=feasible,
         minimum_synchronized_edge_s=minimum,
         cycle_sums_are_gauge_invariant=True,
-        strict_graph_time_function_exists=strict,
+        strict_graph_time_function_exists=strict_exists,
         spacetime_chronology_protection_derived=False,
     )
 

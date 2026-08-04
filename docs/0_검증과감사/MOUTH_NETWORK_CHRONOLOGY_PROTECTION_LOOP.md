@@ -54,6 +54,30 @@ $w_{01}=-2$초, $w_{10}=1$초인 총 $-1$초 회로는 $\epsilon=0$에서도
 어떤 $\epsilon>0$도 허용하지 않는다. chronology protection에는 엄격한
 양의 margin이 필요하다.
 
+반대로 요청 margin이 0일 때 Bellman--Ford가 반환한 임의의 offset에 0인 edge가
+남는다는 이유만으로 엄격 시간함수의 **존재**를 기각하면 안 된다. 예를 들어
+
+\[
+w_{01}=0,\qquad w_{10}=1
+\]
+
+에서 offset $(0,0)$은 adjusted edge $(0,1)$을 주지만, $(s_0,s_1)=(0,0.5)$는
+$(0.5,0.5)$를 주므로 엄격 해가 존재한다. 이전 코드는 첫 witness만 보고 이를
+거짓 음성으로 판정했다.
+
+유한 graph에서 가능한 최대 균일 margin은 cycle mean으로 특징지어진다.
+
+\[
+\epsilon_*=\min_C\frac{\sum_C w_{ij}}{|C|}.
+\]
+
+따라서 directed cycle이 있으면 모든 cycle total이 양수일 때, DAG이면 제한 없이
+엄격 시간함수가 존재한다. 구현은 all-pairs shortest paths로 최소 directed-cycle
+total $\delta$를 구한다. $\delta>0$이면 node 수를 $n$이라 할 때
+\(\epsilon=\delta/(2n)>0\)을 안전한 witness margin으로 선택해 difference
+constraints를 다시 푼다. 위 2-node 반례에서는 최소 cycle total 1초와 양의 strict
+witness가 실제로 반환된다.
+
 ## 4. 공학적 보호 규칙
 
 유한 제어망에서는 다음 순서가 필요하다.
@@ -77,6 +101,8 @@ $w_{01}=-2$초, $w_{10}=1$초인 총 $-1$초 회로는 $\epsilon=0$에서도
 | cycle 총시간의 clock-offset 불변성 | `PROVED` |
 | 음의 시간 cycle을 시계 재설정으로 제거 | `REFUTED` |
 | zero-time cycle이 엄격한 미래 margin 허용 | `REFUTED` |
+| margin 0의 임의 witness만으로 strict 존재를 판정 | `REFUTED / CODE CORRECTED` |
+| 모든 cycle total 양수 또는 DAG일 때 strict witness 구성 | `PROVED / FINITE` |
 | 양의 cycle budget 안에서 미래 margin 배분 | `PROVED / FINITE` |
 | graph interlock만으로 연속 시공간 chronology 보호 | `OPEN` |
 

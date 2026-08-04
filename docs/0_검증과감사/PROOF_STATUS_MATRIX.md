@@ -27,12 +27,14 @@
 | CE+SM Q0 공변 작용 | `Open` | 포탈 국소 미분과 반례 gate만 통과; 완료 플래그 3개는 모두 `False` | `Q0.0`–`Q0.8` 전체 |
 | 시간여행/CTC no-go | `Refuted/Conditional` | $N\ge0$, $|\det T|\le1$만의 no-go는 주기적 시간 반례로 기각; 전역 시간함수 A1 아래 no-CTC 정리는 증명 | A1은 현재 가정이며 완전한 CE+중력 작용에서의 유도는 `Open` |
 | 완전역사 유한 readout | `Exact/Finite` | 모든 역사·시간표본의 이중 유한합으로 유일하게 정의; 실행 gate 통과 | 연속 경로공간 적분은 측도·적분가능성 필요 |
-| 조건부 미래 가능성 shift | `Exact/Finite` | $q(u)=e^uq/(1-q+e^uq)$, $0<q<1$이면 $q'(u)>0$; 과거 조건화와 실행 gate 통과 | 물리적 제어 $u$와 CE 작용의 대응은 `Bridge/Open` |
+| 조건부 미래 가능성 shift | `Exact/Finite` | $q(u)=e^uq/(1-q+e^uq)$, $0<q<1$이면 $q'(u)>0$; log-domain 구현으로 빈 target, $u=1000$도 NaN 없이 prior 보존 | 물리적 제어 $u$와 CE 작용의 대응은 `Bridge/Open` |
 | zero-support 역사 생성 | `Refuted` | 유한 양의 재가중은 support를 보존하므로 prior 질량 0인 과거·CTC를 생성하지 못함 | 후보공간 확장 또는 역사간 전이 kernel 필요 |
 | 이미 벌어진 과거의 미래개입 불변성 | `Exact/Finite` | 정규화 kernel에서 $\sum_f p(h)K_u(f\mid h)=p(h)$; 서로 다른 미래 제어에 대해 실행 residual 0 | 연속 장론·양자중력 개입으로의 승격은 별도 |
 | 미래 증거의 과거 역추론 | `Exact/Finite` | Bayes posterior는 과거 믿음을 바꾸지만 support를 확장하지 않음; zero-prior 과거는 계속 0 | posterior 변화는 물리적 과거 변경이 아님 |
 | $d=0$ 선재 우주 | `Open` | $d(d-3)=0$의 근 $0,3$만 산술적으로 증명; 시간순서·전이진폭·초기조건은 나오지 않음 | 차원 동역학, 양자중력 측도, 관측 흔적 필요 |
 | 공간접힘 shortcut 기하 | `Exact/Kinematic` | $L\gg\ell$, $0<\beta<1$에서 $v_{\rm app}/c=\beta L/\ell\gg1$, 국소 고유시간 양수; 실행 gate 통과 | 실제 입구·목 생성은 별도 물리 문제 |
+| 정규화 Alcubierre wall | `Numerical/Negative control` | smooth profile, $u=(r-R)/\Delta$ 적분, Eulerian WEC 위반과 $E\propto-v^2$ 계산; 10m/1m, $v=c$에서 $-3.3727\times10^{44}$ J | 직접 null projection, material action, backreaction, 전체 안정성 |
+| 초광속 warp 축 지평선 | `Finite/Kinematic` | $f(r_h)=1-1/\beta$를 직접 풀어 $\beta=2$에서 $r_h=10.000000004$m; $\beta\le1$에는 root 없음 | 가속·형성·정지 과정과 horizon 제어 |
 | CE 통과 가능 웜홀 물질원 | `Open/Negative control` | 1 m control throat NEC 요구량은 정적 CE 셀보다 $2.85\times10^{16}$배 큼; 기존 SI 변환 오류 정정 | renormalized $T_{\mu\nu}^{\rm CE,res}$, 보존, quantum inequality, backreaction, 안정성 |
 | 입력 없는 0차원 관찰자의 위치 식별 | `Refuted` | 0차원 단일 상태의 내부 위치 정보는 0 bit; $N>1$개 후보의 식별에는 외부에서 최소 $\log_2N$ bit가 필요 | 3차원 또는 경로공간 readout이 필요 |
 | 전체 이력 readout의 0차원 목표 선택 | `Exact/Finite` | $J(x)=\sum_{h,t}p(h)w(t)C(h,t,x)$ 뒤 $\arg\min_xJ(x)$ 또는 Gibbs 분포로 목표 선택; 실행 gate 통과 | 위치 정보는 0차원에 내재하지 않고 경계 입력으로 수입됨 |
@@ -46,7 +48,7 @@
 | 입구망 좌표시간 negative-cycle gate | `Exact/Finite` | directed cycle의 총 $\Delta t<0$을 Bellman--Ford 반례로 검출 | 통과는 연속 시공간의 전역 시간함수 증명이 아님 |
 | mouth clock-offset 동기화 | `Exact/Finite` | $w_{ij}+s_j-s_i\ge\epsilon$을 difference constraints로 풀고 실행 gate 통과 | drift·jitter보다 큰 $\epsilon$을 운용 입력으로 정해야 함 |
 | 음의 시간 cycle의 clock relabel 제거 | `Refuted` | cycle에서 offset이 telescoping되므로 $\sum_Cw'_{ij}=\sum_Cw_{ij}$ | 실패 cycle의 edge 차단 필요 |
-| 엄격한 graph 시간함수 | `Exact/Finite` | 모든 cycle에 $\sum_Cw_{ij}\ge|C|\epsilon$, $\epsilon>0$일 때 유한 graph offset 해 존재 | 연속 시공간의 전역 시간함수는 별도 `Open` |
+| 엄격한 graph 시간함수 | `Exact/Finite` | 모든 cycle total 양수 또는 DAG이면 strict 해 존재; margin 0의 임의 witness 거짓 음성을 최소 cycle total과 양의 재해결로 교정 | 연속 시공간의 전역 시간함수는 별도 `Open` |
 | 실시간 chronology interlock | `Exact/Finite` | $\underline w=\hat w-u-r\Delta t$에서 edge를 순차 enable하고 각 단계 difference-constraint 재검사; 위험 cycle edge 차단 | greedy 정책은 최소 차단·최대 처리량을 보장하지 않음 |
 | mouth 센서 fault 처리 | `Exact/Code` | NaN 포함 프레임에서 모든 edge를 disable하는 fail-closed gate 통과 | 독립 하드웨어 차단 latency 검증 필요 |
 | 동적 graph interlock의 물리적 chronology 보호 | `Open/Conditional` | 입력된 uncertainty·drift bound 안에서는 enabled graph 안전 | bound의 실험적 보장과 연속 시공간 causal curve 검증 필요 |
@@ -165,8 +167,9 @@ $A_s$는 총 고정점 응답 $dx/dD$가 아니라 잔차 방정식의 국소 �
 | 항목 | 현재 판정 | 정량 결과 |
 |---|---|---|
 | 1 m exact-target Casimir boundary | `Deferred/Physical fail` | $a=4.05$ am, $hf=152.93$ GeV; 물리적 반사경 모델 없음 |
-| 양쪽 적분 음의 에너지 | `Exact for target` | $4.03\times10^{43}$ J, 질량환산 지구 75.2개 |
-| 핵 크기 경계 해상도 trade-off | `Negative control` | $r_0=42.9$ km가 필요하고 질량환산 태양 9.69개 |
+| 양쪽 areal-coordinate/Misner--Sharp energy drop | `Exact for target` | proper energy가 아님; $4.03\times10^{43}$ J, 질량환산 지구 75.2개 |
+| 양쪽 static-slice proper matter energy | `Numerical control` | $I=0.631466179317807$, $7.642\times10^{43}$ J, 질량환산 지구 142.38개 |
+| 핵 크기 경계 해상도 trade-off | `Negative control` | $r_0=42.9$ km가 필요하고 coordinate/proper 질량환산은 각각 태양 9.69/18.36개 |
 | 다중모드에 의한 총량 감소 | `Refuted for fixed geometry` | 모드 분할은 같은 Einstein tensor의 적분 에너지를 바꾸지 않음 |
 | 동적 squeezed-state 정적 source | `Refuted/Control` | 1 m 광통과시간/QI 지속시간 규모비 $2.70\times10^{17}$ |
 | CE 비물질 경계 또는 수정중력 | `Open/Decisive` | 현재 shortcut 현실화에 필요한 새 물리 bridge |

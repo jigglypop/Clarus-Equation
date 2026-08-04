@@ -67,6 +67,50 @@ def test_finite_reweighting_cannot_create_a_zero_support_history() -> None:
     assert posterior[2] == 0.0
 
 
+def test_extreme_tilt_with_empty_target_stays_finite_and_preserves_prior() -> None:
+    posterior, before, after = target_possibility_shift(
+        [0.5, 0.5],
+        [False, False],
+        strength=1000.0,
+    )
+
+    assert np.all(np.isfinite(posterior))
+    assert np.allclose(posterior, [0.5, 0.5])
+    assert math.isclose(float(posterior.sum()), 1.0)
+    assert before == 0.0
+    assert after == 0.0
+
+
+def test_extreme_tilt_toward_zero_prior_target_does_not_create_support() -> None:
+    posterior, before, after = target_possibility_shift(
+        [0.6, 0.4, 0.0],
+        [False, False, True],
+        strength=1000.0,
+    )
+
+    assert np.all(np.isfinite(posterior))
+    assert np.allclose(posterior, [0.6, 0.4, 0.0])
+    assert before == 0.0
+    assert after == 0.0
+
+
+def test_extreme_nontrivial_tilt_separates_theorem_from_float_resolution() -> None:
+    audit = possibility_shift_audit(
+        [0.25, 0.25, 0.5],
+        past_ids=[1, 1, 1],
+        realized_past_id=1,
+        target=[False, True, False],
+        strength=1000.0,
+    )
+
+    assert np.all(np.isfinite(audit.posterior))
+    assert math.isclose(float(audit.posterior.sum()), 1.0)
+    assert audit.target_mass_increased
+    assert audit.target_mass_numerically_increased
+    assert audit.support_preserved_by_finite_tilt
+    assert not audit.floating_point_support_fully_resolved
+
+
 def test_possibility_shift_changes_future_mass_without_rewriting_past() -> None:
     audit = possibility_shift_audit(
         [0.2, 0.2, 0.2, 0.4],
@@ -77,8 +121,10 @@ def test_possibility_shift_changes_future_mass_without_rewriting_past() -> None:
     )
 
     assert audit.target_mass_increased
+    assert audit.target_mass_numerically_increased
     assert audit.incompatible_pasts_remain_impossible
     assert audit.support_preserved_by_finite_tilt
+    assert audit.floating_point_support_fully_resolved
     assert audit.posterior[2] == 0.0
 
 

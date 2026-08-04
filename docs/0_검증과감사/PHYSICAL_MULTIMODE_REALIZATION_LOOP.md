@@ -51,15 +51,57 @@ Casimir 간격은 \(a\propto\sqrt{r_0}\)이므로 간격을 0.84 fm까지 키우
 r_0\simeq4.294\times10^4\ {\rm m}
 \]
 
-가 필요하다. 반면 전역 target의 양쪽 적분 음의 에너지 크기는
+가 필요하다. 에너지 비용에는 서로 다른 적분을 혼동하지 않는 것이 중요하다.
+한쪽 asymptotic end에서 Misner--Sharp 질량은
 
 \[
-|E_-|_{\rm two-sided}=\frac{c^4r_0}{3G}
+m_{\rm MS}(r)=\frac{c^2b(r)}{2G},\qquad
+M_{\rm ADM}=m_{\rm MS}(\infty)=\frac{c^2r_0}{3G}
 \]
 
-로 반지름에 선형 증가한다. 1 m에서는 \(4.03\times10^{43}\) J, 질량환산 지구 약
-75.2개이고, 42.9 km에서는 태양 약 9.69개 질량환산이다. 경계 해상도를 개선하면
-중력 비용이 커지므로 현재 모형 안에는 공학적으로 유리한 크기 구간이 없다.
+이고, areal-coordinate measure로 적분한 한쪽 density는
+
+\[
+\int_{r_0}^{\infty}\rho\,4\pi r^2dr
+=\left[m_{\rm MS}(\infty)-m_{\rm MS}(r_0)\right]c^2
+=-\frac{c^4r_0}{6G}.
+\]
+
+따라서 양쪽 변화량의 절댓값은
+
+\[
+|\Delta E_{\rm MS}|_{\rm two-sided}=\frac{c^4r_0}{3G}
+\]
+
+이다. 이 양은 양쪽 ADM energy도, proper-volume matter energy도 아니다. 정적 공간절편의
+proper volume은
+
+\[
+dV=\frac{4\pi r^2dr}{\sqrt{1-b(r)/r}}
+\]
+
+이므로, \(x=r/r_0\), \(y=b/r_0=2/3+e^{-(x-1)}/3\)에 대해
+
+\[
+I=\int_1^\infty\frac{-y'(x)}{\sqrt{1-y(x)/x}}dx
+=0.631466179317807\ldots,
+\]
+
+\[
+|E_{\rm proper}|_{\rm two-sided}
+=I\frac{c^4r_0}{G}.
+\]
+
+목의 적분가능 특이점은 \(x=1+s^2\)로 제거했다. 이때 integrand의 \(s=0\) 극한은
+\(1/\sqrt3\)이고, \(s=8\) 이후 analytic tail bound는 \(5.4\times10^{-29}\)보다
+작다. Simpson 4,000/2,000 분할의 차이도 코드에서 별도로 기록한다. 다만 interval
+arithmetic 인증은 아니므로 소수값의 상태는 `Numerical control`이다.
+
+1 m에서 coordinate-density 적분은 \(4.03\times10^{43}\) J, 질량환산 지구 약
+75.2개지만 proper matter energy는 \(7.642\times10^{43}\) J, 지구 약 142.38개다.
+42.9 km에서는 각각 태양 약 9.69개와 18.36개 질량환산이다. 두 비용 모두 반지름에
+선형 증가하므로 경계 해상도를 개선해도 현재 모형 안에는 공학적으로 유리한 크기
+구간이 없다.
 
 ## 다중 모드가 해결하지 못하는 것
 

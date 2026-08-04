@@ -35,8 +35,10 @@ class PossibilityShiftAudit:
     prior_target_mass: float
     posterior_target_mass: float
     target_mass_increased: bool
+    target_mass_numerically_increased: bool
     incompatible_pasts_remain_impossible: bool
     support_preserved_by_finite_tilt: bool
+    floating_point_support_fully_resolved: bool
 
 
 @dataclass(frozen=True)
@@ -118,13 +120,27 @@ def target_possibility_shift(
     if not math.isfinite(strength) or strength < 0.0:
         raise ValueError("strength must be finite and non-negative")
 
-    # Shifting the two log-weights by their maximum avoids overflow.
-    target_factor = 1.0
-    non_target_factor = math.exp(-strength)
-    weights = np.where(mask, target_factor, non_target_factor)
-    unnormalized = p * weights
-    posterior = unnormalized / float(unnormalized.sum())
-    return posterior, float(p[mask].sum()), float(posterior[mask].sum())
+    target_mass = float(p[mask].sum())
+    if target_mass == 0.0 or target_mass == 1.0:
+        # A common finite factor cancels when one partition has no mass.
+        return p.copy(), target_mass, target_mass
+
+    # Work with the two partition masses in log space.  Computing exp(-u)
+    # first produced 0/0 and NaN for an empty target at u=1000.  Within each
+    # partition the tilt is common, so its prior conditional ratios are kept.
+    log_target = math.log(target_mass)
+    log_non_target = math.log1p(-target_mass) - strength
+    log_normalization = float(np.logaddexp(log_target, log_non_target))
+    posterior_target_mass = math.exp(log_target - log_normalization)
+    posterior_non_target_mass = math.exp(log_non_target - log_normalization)
+
+    posterior = np.zeros_like(p)
+    posterior[mask] = (p[mask] / target_mass) * posterior_target_mass
+    posterior[~mask] = (
+        p[~mask] / (1.0 - target_mass)
+    ) * posterior_non_target_mass
+    posterior /= float(posterior.sum())
+    return posterior, target_mass, posterior_target_mass
 
 
 def possibility_shift_audit(
@@ -146,20 +162,29 @@ def possibility_shift_audit(
         strength=strength,
     )
     incompatible = labels != int(realized_past_id)
+    analytically_increased = (
+        0.0 < before < 1.0 and strength > 0.0
+    )
+    floating_support_resolved = bool(
+        np.array_equal(conditioned > 0.0, posterior > 0.0)
+    )
 
     return PossibilityShiftAudit(
         conditioned_prior=conditioned,
         posterior=posterior,
         prior_target_mass=before,
         posterior_target_mass=after,
-        target_mass_increased=(0.0 < before < 1.0 and strength > 0.0 and after > before),
+        target_mass_increased=analytically_increased,
+        target_mass_numerically_increased=after > before,
         incompatible_pasts_remain_impossible=bool(
             np.all(conditioned[incompatible] == 0.0)
             and np.all(posterior[incompatible] == 0.0)
         ),
-        support_preserved_by_finite_tilt=bool(
-            np.array_equal(conditioned > 0.0, posterior > 0.0)
-        ),
+        # For finite strength, exp(-strength) is mathematically positive even
+        # when its binary64 representation underflows.  Keep the theorem apart
+        # from whether every tiny posterior entry remains representable.
+        support_preserved_by_finite_tilt=True,
+        floating_point_support_fully_resolved=floating_support_resolved,
     )
 
 
