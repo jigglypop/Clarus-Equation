@@ -25,6 +25,35 @@
 | A1 보통 Hessian $\to$ 공변 $\mathcal K$ | `Open` | 비선형 좌표 반례에서 tensor pullback 20, 보통 Hessian 32, connection 보정 뒤 20을 재현 | 전체 field-space metric/connection, bi-local-to-local projection, gauge quotient와 measure |
 | Hessian $\to T_{\mu\nu}$ 및 보존 | `Open/Conditional` | stress tensor는 $\Gamma_{\rm ren}$의 metric variation이고 on-shell Noether identity 아래 보존됨 | A1 kernel과 metric variation의 matching, anomaly·경계항·EOM |
 | CE+SM Q0 공변 작용 | `Open` | 포탈 국소 미분과 반례 gate만 통과; 완료 플래그 3개는 모두 `False` | `Q0.0`–`Q0.8` 전체 |
+| 시간여행/CTC no-go | `Refuted/Conditional` | $N\ge0$, $|\det T|\le1$만의 no-go는 주기적 시간 반례로 기각; 전역 시간함수 A1 아래 no-CTC 정리는 증명 | A1은 현재 가정이며 완전한 CE+중력 작용에서의 유도는 `Open` |
+| 완전역사 유한 readout | `Exact/Finite` | 모든 역사·시간표본의 이중 유한합으로 유일하게 정의; 실행 gate 통과 | 연속 경로공간 적분은 측도·적분가능성 필요 |
+| 조건부 미래 가능성 shift | `Exact/Finite` | $q(u)=e^uq/(1-q+e^uq)$, $0<q<1$이면 $q'(u)>0$; 과거 조건화와 실행 gate 통과 | 물리적 제어 $u$와 CE 작용의 대응은 `Bridge/Open` |
+| zero-support 역사 생성 | `Refuted` | 유한 양의 재가중은 support를 보존하므로 prior 질량 0인 과거·CTC를 생성하지 못함 | 후보공간 확장 또는 역사간 전이 kernel 필요 |
+| 이미 벌어진 과거의 미래개입 불변성 | `Exact/Finite` | 정규화 kernel에서 $\sum_f p(h)K_u(f\mid h)=p(h)$; 서로 다른 미래 제어에 대해 실행 residual 0 | 연속 장론·양자중력 개입으로의 승격은 별도 |
+| 미래 증거의 과거 역추론 | `Exact/Finite` | Bayes posterior는 과거 믿음을 바꾸지만 support를 확장하지 않음; zero-prior 과거는 계속 0 | posterior 변화는 물리적 과거 변경이 아님 |
+| $d=0$ 선재 우주 | `Open` | $d(d-3)=0$의 근 $0,3$만 산술적으로 증명; 시간순서·전이진폭·초기조건은 나오지 않음 | 차원 동역학, 양자중력 측도, 관측 흔적 필요 |
+| 공간접힘 shortcut 기하 | `Exact/Kinematic` | $L\gg\ell$, $0<\beta<1$에서 $v_{\rm app}/c=\beta L/\ell\gg1$, 국소 고유시간 양수; 실행 gate 통과 | 실제 입구·목 생성은 별도 물리 문제 |
+| CE 통과 가능 웜홀 물질원 | `Open/Negative control` | 1 m control throat NEC 요구량은 정적 CE 셀보다 $2.85\times10^{16}$배 큼; 기존 SI 변환 오류 정정 | renormalized $T_{\mu\nu}^{\rm CE,res}$, 보존, quantum inequality, backreaction, 안정성 |
+| 입력 없는 0차원 관찰자의 위치 식별 | `Refuted` | 0차원 단일 상태의 내부 위치 정보는 0 bit; $N>1$개 후보의 식별에는 외부에서 최소 $\log_2N$ bit가 필요 | 3차원 또는 경로공간 readout이 필요 |
+| 전체 이력 readout의 0차원 목표 선택 | `Exact/Finite` | $J(x)=\sum_{h,t}p(h)w(t)C(h,t,x)$ 뒤 $\arg\min_xJ(x)$ 또는 Gibbs 분포로 목표 선택; 실행 gate 통과 | 위치 정보는 0차원에 내재하지 않고 경계 입력으로 수입됨 |
+| 모든 시간을 포함한 목표 선택의 자기일관 해가 항상 유일 | `Refuted` | $x_*\in\arg\min_xJ(x;\gamma_{x_*})$가 필요하며 유한 반례에서 고정점은 0개·여러 개·1개 모두 가능 | 실제 계의 존재·유일성 조건을 별도로 증명해야 함 |
+| 0차원 목표 라벨의 원격 공간접힘 작동 | `Open` | 목표 선택과 목적지 응력 텐서·두 번째 입구 생성은 서로 다른 단계 | 국소 작동 사상과 인과적 정보 경로가 필요 |
+| broadcast 응력장의 목적지 국소화 | `Refuted` | 동일한 열을 갖는 rank-1 응답은 목표 명령에 따라 위치를 구별하지 못함 | 위치별 독립 actuator가 필요 |
+| 적응적 원격 목표 명령의 즉시 전달 | `Refuted/Local causality` | $N$개 목표에는 $\log_2N$ bit가 필요하고 거리 $L$의 전달시간은 $t\ge L/c$; 1광년은 최소 1년 | 비국소 작용을 추가하면 no-signalling·보존 재증명 필요 |
+| CE 셀의 목 반지름 밀도–coherence 창 | `Open/Negative control` | $b'=-1$ 제어모형에서 $r_{\min}=1.6883\times10^8$ m, $r_{\max}=6.65\times10^{-15}$ m로 교집합 없음 | 장거리 coherent 다중셀 $T_{\mu\nu}$ 유도 필요 |
+| 사전 설치 입구망의 최소시간 경로 | `Exact/Finite` | 양의 유한 edge 통과시간에 대해 최단경로 계산; 1광년 외부거리·10m 목·$0.1c$에서 $3.3356\times10^{-7}$ s | 입구 제작·유지 물리는 `Open` |
+| 유한 입구망의 임의 연속좌표 도착 | `Refuted` | 도착점은 설치 mouth의 유한 집합이며 허용오차 밖의 좌표는 덮지 못함 | 연속 배치 또는 이동 가능한 입구 필요 |
+| 입구망 좌표시간 negative-cycle gate | `Exact/Finite` | directed cycle의 총 $\Delta t<0$을 Bellman--Ford 반례로 검출 | 통과는 연속 시공간의 전역 시간함수 증명이 아님 |
+| mouth clock-offset 동기화 | `Exact/Finite` | $w_{ij}+s_j-s_i\ge\epsilon$을 difference constraints로 풀고 실행 gate 통과 | drift·jitter보다 큰 $\epsilon$을 운용 입력으로 정해야 함 |
+| 음의 시간 cycle의 clock relabel 제거 | `Refuted` | cycle에서 offset이 telescoping되므로 $\sum_Cw'_{ij}=\sum_Cw_{ij}$ | 실패 cycle의 edge 차단 필요 |
+| 엄격한 graph 시간함수 | `Exact/Finite` | 모든 cycle에 $\sum_Cw_{ij}\ge|C|\epsilon$, $\epsilon>0$일 때 유한 graph offset 해 존재 | 연속 시공간의 전역 시간함수는 별도 `Open` |
+| 실시간 chronology interlock | `Exact/Finite` | $\underline w=\hat w-u-r\Delta t$에서 edge를 순차 enable하고 각 단계 difference-constraint 재검사; 위험 cycle edge 차단 | greedy 정책은 최소 차단·최대 처리량을 보장하지 않음 |
+| mouth 센서 fault 처리 | `Exact/Code` | NaN 포함 프레임에서 모든 edge를 disable하는 fail-closed gate 통과 | 독립 하드웨어 차단 latency 검증 필요 |
+| 동적 graph interlock의 물리적 chronology 보호 | `Open/Conditional` | 입력된 uncertainty·drift bound 안에서는 enabled graph 안전 | bound의 실험적 보장과 연속 시공간 causal curve 검증 필요 |
+| CE resonance-$Q$ 웜홀 응력 후보 | `Open/Ansatz` | $T_{kk}\propto Q^p$, $\xi\propto Q$ 가정 시 1m 목은 $p=1$에서 $Q=2.85\times10^{16}$, $p=2$에서 coherence 병목 $Q=1.50\times10^{14}$ | $p$, 부호, 포화와 renormalized $T_{\mu\nu}$를 CE 작용에서 유도해야 함 |
+| CE canonical scalar의 고전 목 지지 | `Refuted` | null contraction $T_{kk}=(k\cdot\partial\sigma)^2\ge0$ | 비최소 결합·양자상태는 별도 후보이며 자동 해결 아님 |
+| phantom scalar 목 지지 | `Refuted as stable source` | kinetic sign 반전은 $T_{kk}<0$이나 최소 ghost-free gate 실패 | ghost-free UV completion 없이는 채택 불가 |
+| 외부 양자장 웜홀 대조군의 CE 승격 | `Open` | GJW와 MMP는 각자의 장·경계조건에서 구조를 닫지만 CE 유도가 아님 | CE field content, state, boundary coupling과 backreaction mapping 필요 |
 
 ## 상수와 관측량
 
