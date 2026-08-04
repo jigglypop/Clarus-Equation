@@ -397,6 +397,34 @@ uv --cache-dir .uv-cache run --extra dev python -m pytest `
   tests/test_resonance_stress_identifiability.py -q
 ```
 
+## 10. 다음 루프: acquisition을 독립 cluster로 접기
+
+이번 저장소 감사 범위에서 실제 공명 장비가 기록한 raw acquisition tensor는 **0개**다.
+현재 예제와 시험 자료는 모두 합성이므로, 아래 gate는 발견의 재분석이 아니라 실제
+자료를 받을 때 가짜 반복 수로 정밀도를 부풀리지 않기 위한 입력 계약이다.
+
+같은 장비 상태·시각 묶음·생물 표본 등 하나의 획득 단위에서 나온 반복 측정은 서로
+독립 표본으로 세지 않는다. 먼저 각 cluster 안의 matched−sham 차이를 평균해 cluster당
+행 하나로 접고, 그 뒤에만 기존 mask gate로 넘긴다. 독립 cluster 수를 \(C\)라 하면
+현재 exact-\(t\) 층이 사용하는 표본 수와 자유도는 acquisition 행 수가 아니라
+
+\[
+n=C,\qquad \nu=C-1
+\]
+
+이다. 현재 exact-\(t\) 층은 모든 cluster가 같은 수의 matched/sham 반복을 갖는
+**균형 cluster**만 받는다. 이 조건과 manifest의 고정만으로 실제 독립성이 증명되는
+것은 아니며, cluster 평균이 iid multivariate Gaussian이라는 선언 아래에서만 기존
+Student-\(t\)·Bonferroni 해석을 유지한다. 불균형 cluster와 비가우시안 자료는 별도의
+사전등록 cluster max-\(T\) 또는 그에 상응하는 강건한 검정 층으로 보내야 한다.
+
+ledger hash는 행 누락·순서 변경·payload 변경을 탐지하지만, 외부 세계에서 그 행이
+언제 어느 장비로 획득됐는지 인증하지는 못한다. 따라서
+`external_acquisition_provenance_verified`는 계속 `False`로 잠근다. 상관 복제에
+매번 새로운 `cluster_id`와 미세 jitter를 붙이는 공격은 저장소 내부 숫자만으로 실제
+새 획득과 구별할 수 없다. 이를 해제하려면 신뢰 가능한 외부 timestamp/signature,
+장비 로그, clock·readout 식별자와 raw payload의 보관 연쇄가 별도로 필요하다.
+
 ## 참고
 
 - Kitajima, [Local Operations and Completely Positive Maps in Algebraic Quantum Field Theory](https://arxiv.org/abs/1704.01229)
