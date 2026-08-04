@@ -102,9 +102,9 @@ def spatial_folding_realization_funnel() -> tuple[RealizationPathway, ...]:
             ambient_shortcut=True,
             complete_linear_stability=False,
             engineering_scale_bridge=False,
-            fatal_veto=False,
-            verdict="CE FRONTIER / Q0 OPEN",
-            decisive_next_gate="extend the surviving second-order throat co-design globally",
+            fatal_veto=True,
+            verdict="REFUTED AS STANDALONE HEALTHY SOURCE",
+            decisive_next_gate="requires additional exotic matter or a theory beyond scalar-tensor",
         ),
         RealizationPathway(
             name="CE massive vacuum polarization",

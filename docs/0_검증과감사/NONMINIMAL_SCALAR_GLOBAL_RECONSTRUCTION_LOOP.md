@@ -103,6 +103,38 @@ b/r_0=1-\frac z3+\frac\gamma2z^2+\cdots,
 다음 루프는 \(3\gamma+8v+12\le0\) 영역에서 전역 \(b(r),\Phi(r)\)를 구성하고,
 \(F>0\), kinetic \(\ge0\), 점근평탄성, 단일값 potential을 동시에 검사하는 것이다.
 
+## 전역 연장 탐색 결과
+
+유한 ADM 질량과 유한 redshift를 자동으로 갖도록 shape와 redshift를
+`quartic polynomial × exp[-(x-1)]` 계열로 확장했다. 3차·4차 계수는 목의 Casimir
+값과 1·2차 co-design 조건을 바꾸지 않는다.
+
+첫 단순 연장은 목에서 kinetic/F \(+0.25\)였지만
+\(r\simeq1.366r_0\)에서 약 \(-2.10\)으로 실패했다. 이어 7개 계수를 대상으로
+전역 최솟값을 올리는 탐색을 수행했다. 국소 kinetic을 양수로 강제하고 shape gap,
+점근평탄성, \(0.1<F/F_0<10\)을 함께 요구한 후보도
+\(r\simeq1.62r_0\)에서 kinetic/F \(<-1.3\)으로 실패했다.
+
+이 수치 실패는 알려진 전역 정리와 일치한다. 유효 Newton 상수가 양수·유한하고 scalar
+field-space metric이 ghost-free인 정적 구면대칭 scalar-tensor 이론은 양 끝이 잘 behaved인
+traversable wormhole을 scalar만으로 지탱할 수 없다. scalar 수, potential과 비최소결합 값도
+이 결론을 피하지 못한다. 가능한 우회는 \(F\)가 0 또는 음수가 되는 graviton-ghost 영역,
+추가 exotic matter, 또는 scalar-tensor 밖의 중력 작용인데 첫 번째는 현실성 gate에서 폐기한다.
+
+- [Butcher, Traversable Wormholes and Classical Scalar Fields](https://arxiv.org/abs/1503.04145)
+- [Bronnikov–Skvortsova–Starobinsky, scalar-tensor/F(R) wormhole notes](https://arxiv.org/abs/1005.3262)
+- [Bronnikov–Starobinsky, no realistic ghost-free scalar-tensor wormholes](https://arxiv.org/abs/gr-qc/0612032)
+
+따라서 최종 갱신은 다음과 같다.
+
+| 명제 | 최종 판정 |
+|---|---|
+| 2차 co-design의 목 근방 | `LOCAL PASS ONLY` |
+| \(F>0\), ghost-free scalar만으로 전역 wormhole | `REFUTED` |
+| 건강한 scalar 다중공명으로 우회 | `REFUTED` |
+| \(F=0\) crossing | `REJECTED: graviton ghost/strong coupling` |
+| 추가 비-scalar source 또는 beyond-Horndeski | `NEXT FRONTIER` |
+
 ## 재현
 
 ```powershell

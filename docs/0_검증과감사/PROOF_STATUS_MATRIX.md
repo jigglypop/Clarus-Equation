@@ -186,3 +186,8 @@ beyond-Horndeski는 더 많은 구조 gate를 만족하지만 현재 CE 작용 �
 다만 Casimir 목의 0차·1차 자료를 유지한 2차 co-design은
 \(3b''_0+8r_0^2\Phi''_0+12\le0\)에서 양의 kinetic을 허용한다.
 \(b''_0=-5, r_0^2\Phi''_0=0\)은 `Local conditional pass`이며 전역 연장은 `Open`이다.
+
+후속 전역 polynomial-exponential co-design 탐색은 국소 양의 kinetic 후보에서도
+\(r\simeq1.62r_0\)에 음의 kinetic 영역을 남겼다. 양수·유한 \(F\)와 ghost-free field-space
+metric을 유지하는 scalar-tensor 전역 no-go와 합쳐, standalone CE \(\xi R\Phi^2\)
+단일·다중 scalar source는 `Refuted globally`로 갱신한다.
