@@ -87,7 +87,7 @@ def test_candidate_funnel_keeps_two_ce_native_frontier_a_options() -> None:
     frontier_a = [candidate for candidate in funnel if candidate.frontier == "FRONTIER_A"]
     rejected = [candidate for candidate in funnel if candidate.frontier == "REJECTED"]
 
-    assert len(funnel) == 8
+    assert len(funnel) == 9
     assert len(frontier_a) == 2
     assert "Casimir" in frontier_a[0].name
     assert rejected[0].name == "phantom Clarus scalar"

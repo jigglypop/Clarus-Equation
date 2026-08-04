@@ -66,6 +66,9 @@
 | CE-native 거시적 음의 source 최상위 후보 | `Frontier A/Open` | 일반-redshift Casimir 국소 series와 비최소 CE+Casimir completion이 생존 | CE boundary $T_{\mu\nu}$, 전역 ODE와 perturbation 안정성 필요 |
 | 이상적 Casimir 일반-redshift 국소 throat series | `Exact/Finite control` | $b'_0=-1/3$, $r_0\varphi'_0=-1/2$에서 $\rho,p_r,p_t$ 전부 matching; $r_0a'_0/a_0=1/2$에서 보존식 matching | 전역 ODE, CE renormalized boundary stress와 안정성 필요 |
 | CE 공간접힘 source frontier | `W2b-local/Control` | 일반-redshift Casimir control은 국소 전체 tensor·보존 통과 | CE 물리 전체는 boundary realization 미유도로 W2 미완성 |
+| 고정 Casimir EoS의 전역 공명-envelope 연장 | `Refuted` | 유한 redshift는 tail $n=8/3$, 유한 energy/ADM mass는 $n>3$을 요구해 양립 불가 | 공간적으로 변하는 anisotropy 또는 junction/completion 필요 |
+| 1m 목 Casimir 특정 파장 | `Finite control` | $a=3.66\times10^{-18}$m에서 $\lambda=2a=7.33\times10^{-18}$m, $hf\simeq169$GeV | 실제 CE boundary mode와 negative stress 유도 필요 |
+| CE 29.65MeV light pole의 high-$Q$ 해결 | `Refuted as linear resonance` | 요구 carrier는 약 5708배 높고 $Q$는 선형계 carrier frequency를 바꾸지 않음 | 고차 harmonic/독립 mode와 multi-mode pressure engineering은 `Open` |
 
 ## 상수와 관측량
 
@@ -148,3 +151,11 @@ uv run --extra dev python -m pytest tests\test_bootstrap_solver.py tests\test_di
 | Phenomenology 항목 전체 | `Exact` 승격에는 각 bridge readout의 독립 유도 또는 외부 독립 데이터 gate가 필요하다. |
 
 $A_s$는 총 고정점 응답 $dx/dD$가 아니라 잔차 방정식의 국소 구동력 $\partial_D r=x(1-x)$를 반주기 위상과 유효 기하 깊이로 투영하는 readout으로 조건부 채택했다. $|V_{cb}|$는 LO QCD tunneling 실패를 유지하고, $Z_{cb}^{(1)}=1+\delta/(2\pi)$를 1-loop electroweak projector bridge로 채택했다. Clarus boson은 독립 입자를 먼저 가정한 것이 아니라 클라루스장 상관함수의 pole을 입자언어로 읽은 bridge이며, `examples/physics/clarus_boson_search_gate.py`로 그 pole/readout 조건을 사전등록했다. 따라서 현재 가장 강한 판정은 `부분 증명 + 열린 A1/Q0 작용 bridge + 조건부 현상론 + 사전등록된 미관측 Open test`이다.
+
+## 다중 모드 전역 throat 추가 판정 (2026-08-04)
+
+| 항목 | 현재 판정 | 검증 결과 | 남은 bridge |
+|---|---|---|---|
+| 가변 비등방 전역 throat target | `Exact/Finite control` | 목의 정확한 Casimir tensor, 유한 lapse, 응력 보존, 점근 평탄성, 유한 ADM 질량 $M/r_0=1/3$ | 실제 물질장 구현 |
+| 유한 공간 모드 표현 | `Numerical control` | $1\le r/r_0\le10$에서 32모드 최대 정규화 오차 $1.66\times10^{-7}$ | 구현 가능한 공진기 spectrum과의 동일시 |
+| CE 공명 음의 응력 | `Open` | 필요한 target tensor는 특정됨 | 재규격화된 CE $\langle T_{\mu\nu}\rangle$, carrier-envelope 결합, 양자부등식, 안정성 |
