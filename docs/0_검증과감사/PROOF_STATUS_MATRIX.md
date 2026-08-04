@@ -178,3 +178,11 @@ $A_s$는 총 고정점 응답 $dx/dD$가 아니라 잔차 방정식의 국소 �
 전역 inverse reconstruction과 quadratic perturbation spectrum이 다음 결정적 gate다.
 beyond-Horndeski는 더 많은 구조 gate를 만족하지만 현재 CE 작용 밖이며 안정성 검사가
 불완전하다.
+
+## 비최소결합 scalar 역산 추가 판정 (2026-08-04)
+
+기존 지수형 전역 target은 목에서 건강한 scalar 총 kinetic을
+\(-17F/12\)로 요구하므로, \(F>0\)인 단일·다중 canonical scalar source로는 반증됐다.
+다만 Casimir 목의 0차·1차 자료를 유지한 2차 co-design은
+\(3b''_0+8r_0^2\Phi''_0+12\le0\)에서 양의 kinetic을 허용한다.
+\(b''_0=-5, r_0^2\Phi''_0=0\)은 `Local conditional pass`이며 전역 연장은 `Open`이다.

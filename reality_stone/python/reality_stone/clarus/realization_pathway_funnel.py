@@ -104,7 +104,7 @@ def spatial_folding_realization_funnel() -> tuple[RealizationPathway, ...]:
             engineering_scale_bridge=False,
             fatal_veto=False,
             verdict="CE FRONTIER / Q0 OPEN",
-            decisive_next_gate="complete Q0.0-Q0.8 and solve the coupled global background",
+            decisive_next_gate="extend the surviving second-order throat co-design globally",
         ),
         RealizationPathway(
             name="CE massive vacuum polarization",
