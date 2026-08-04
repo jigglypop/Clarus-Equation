@@ -30,12 +30,13 @@ ArrayLike = Iterable[float] | np.ndarray
 class ResonantMaskStage(str, Enum):
     """Monotone control stages; none is a physical-field claim."""
 
+    INPUT_VALIDATION_ONLY = "INPUT_VALIDATION_ONLY"
     PAIRED_RESPONSE_CONTROL = "PAIRED_RESPONSE_CONTROL"
     FROZEN_MANIFEST_CONTROL = "FROZEN_MANIFEST_CONTROL"
-    JOINT_MASK_GLS_CONTROL = "JOINT_MASK_GLS_CONTROL"
+    JOINT_MASK_FIXED_WEIGHT_CONTROL = "JOINT_MASK_FIXED_WEIGHT_CONTROL"
     CROSSED_HELDOUT_PREDICTION_CONTROL = "CROSSED_HELDOUT_PREDICTION_CONTROL"
-    CONDITIONAL_SPATIOTEMPORAL_RESPONSE_MASK = (
-        "CONDITIONAL_SPATIOTEMPORAL_RESPONSE_MASK"
+    CONDITIONAL_DECLARED_BLOCK_SPATIOTEMPORAL_RESPONSE_MASK = (
+        "CONDITIONAL_DECLARED_BLOCK_SPATIOTEMPORAL_RESPONSE_MASK"
     )
 
 
@@ -51,6 +52,7 @@ class ResonantMaskClaimLocks:
     observer_relative_reality_derived: bool = False
     renormalized_stress_tensor_derived: bool = False
     externally_timestamped_manifest_verified: bool = False
+    independent_acquisition_provenance_verified: bool = False
 
 
 @dataclass(frozen=True)
@@ -93,7 +95,7 @@ class ResonantSpatiotemporalMaskAudit:
     raw_inputs: ResonantMaskRawInputs
     cell_shape: tuple[int, ...]
     trial_count: int
-    independent_block_count: int
+    unique_block_id_count: int
     training_cell_count: int
     heldout_cell_count: int
     training_model_degrees_of_freedom: int
@@ -109,9 +111,11 @@ class ResonantSpatiotemporalMaskAudit:
     protected_masks_cover_exactly_heldout: bool
     paired_block_ids_aligned: bool
     paired_block_ids_unique: bool
-    minimum_independent_blocks_met: bool
+    paired_difference_rows_unique: bool
+    minimum_unique_block_ids_met: bool
     independent_block_model_declared: bool
     gaussian_mean_model_declared: bool
+    paired_response_control_pass: bool
     training_design_non_saturated: bool
     paired_covariance_rank: int
     paired_covariance_condition_number: float | None
@@ -135,7 +139,7 @@ class ResonantSpatiotemporalMaskAudit:
     maximum_off_support_response_upper_bound: float | None
     minimum_target_response_lower_bound: float | None
     heldout_localization_margin: float | None
-    joint_mask_gls_pass: bool
+    joint_mask_fixed_weight_pass: bool
     heldout_prediction_pass: bool
     prearrival_equivalence_pass: bool
     off_support_equivalence_pass: bool
@@ -143,7 +147,7 @@ class ResonantSpatiotemporalMaskAudit:
     heldout_localization_pass: bool
     factor_rescaling_counterexample_exact: bool
     individual_factor_normalizations_identifiable: bool
-    conditional_spatiotemporal_response_mask: bool
+    conditional_declared_block_spatiotemporal_response_mask: bool
     maximum_supported_stage: ResonantMaskStage
     first_blocker: str
     blockers: tuple[str, ...]
@@ -226,36 +230,40 @@ def _regularized_incomplete_beta(a: float, b: float, x: float) -> float:
     return 1.0 - front * _continued_beta_fraction(b, a, 1.0 - x) / b
 
 
-def _student_t_cdf(value: float, degrees_of_freedom: int) -> float:
+def _student_t_upper_tail(value: float, degrees_of_freedom: int) -> float:
     if degrees_of_freedom < 1:
         raise ValueError("Student-t degrees of freedom must be positive")
+    if value < 0.0:
+        raise ValueError("Student-t upper-tail evaluation requires a nonnegative value")
     if value == 0.0:
         return 0.5
     x = degrees_of_freedom / (degrees_of_freedom + value * value)
-    tail_twice = _regularized_incomplete_beta(degrees_of_freedom / 2.0, 0.5, x)
-    if value > 0.0:
-        return 1.0 - 0.5 * tail_twice
-    return 0.5 * tail_twice
+    return 0.5 * _regularized_incomplete_beta(degrees_of_freedom / 2.0, 0.5, x)
 
 
-def _student_t_quantile(probability: float, degrees_of_freedom: int) -> float:
-    """Dependency-free inverse CDF for the positive Student-t tail."""
+def _student_t_upper_tail_quantile(
+    upper_tail_probability: float,
+    degrees_of_freedom: int,
+) -> float:
+    """Dependency-free inverse using the upper tail directly, without ``1-p`` loss."""
 
-    if not 0.5 < probability < 1.0:
-        raise ValueError("Student-t quantile probability must lie in (0.5, 1)")
+    if not 0.0 < upper_tail_probability < 0.5:
+        raise ValueError("Student-t upper-tail probability must lie in (0, 0.5)")
     lower = 0.0
     upper = 1.0
-    while _student_t_cdf(upper, degrees_of_freedom) < probability:
+    while _student_t_upper_tail(upper, degrees_of_freedom) > upper_tail_probability:
         upper *= 2.0
         if not math.isfinite(upper):
             raise ValueError("Student-t quantile could not be bracketed")
     for _ in range(96):
         midpoint = 0.5 * (lower + upper)
-        if _student_t_cdf(midpoint, degrees_of_freedom) < probability:
+        if _student_t_upper_tail(midpoint, degrees_of_freedom) > upper_tail_probability:
             lower = midpoint
         else:
             upper = midpoint
-    return 0.5 * (lower + upper)
+    # Return the rejecting (larger) bracket endpoint so floating-point inversion
+    # cannot make the confidence interval anti-conservative.
+    return upper
 
 
 def _finite_real(value: Real, *, name: str) -> float:
@@ -314,12 +322,13 @@ def _bool_mask(value: object, *, name: str, shape: tuple[int, ...]) -> np.ndarra
 
 
 def _hex_digest(value: str, *, name: str) -> str:
-    if not isinstance(value, str) or len(value) != 64:
+    hexadecimal = frozenset("0123456789abcdefABCDEF")
+    if (
+        type(value) is not str
+        or len(value) != 64
+        or any(character not in hexadecimal for character in value)
+    ):
         raise ValueError(f"{name} must be a 64-character hex digest")
-    try:
-        bytes.fromhex(value)
-    except ValueError as error:
-        raise ValueError(f"{name} must be hexadecimal") from error
     return value.lower()
 
 
@@ -329,9 +338,183 @@ def _block_ids(value: Sequence[str], *, name: str) -> tuple[str, ...]:
     result = tuple(value)
     if not result:
         raise ValueError(f"{name} must be non-empty")
-    if any(not isinstance(item, str) or not item or len(item) > 256 for item in result):
-        raise ValueError(f"{name} must contain non-empty strings of at most 256 characters")
+    allowed_punctuation = frozenset("._:/-")
+    invalid = any(
+        type(item) is not str
+        or not 1 <= len(item) <= 256
+        or not item.isascii()
+        or not item[0].isalnum()
+        or any(not character.isalnum() and character not in allowed_punctuation for character in item)
+        for item in result
+    )
+    if invalid:
+        raise ValueError(
+            f"{name} must contain canonical ASCII acquisition IDs of at most 256 characters"
+        )
     return result
+
+
+def _validate_canonical_raw_structure(raw: ResonantMaskRawInputs) -> None:
+    if type(raw) is not ResonantMaskRawInputs:
+        raise ValueError("raw_inputs must be exactly ResonantMaskRawInputs")
+    if type(raw.cell_shape) is not tuple or any(
+        type(size) is not int for size in raw.cell_shape
+    ):
+        raise ValueError("raw cell_shape must be an immutable tuple of built-in integers")
+    for name in ("matched_response_flat", "sham_response_flat"):
+        rows = getattr(raw, name)
+        if type(rows) is not tuple or any(
+            type(row) is not tuple or any(type(value) is not float for value in row)
+            for row in rows
+        ):
+            raise ValueError(f"raw {name} must be an immutable tuple of float tuples")
+    if type(raw.design_flat) is not tuple or any(
+        type(value) is not float for value in raw.design_flat
+    ):
+        raise ValueError("raw design_flat must be an immutable tuple of floats")
+    for name in (
+        "training_mask_flat",
+        "heldout_mask_flat",
+        "prearrival_mask_flat",
+        "off_support_mask_flat",
+        "target_mask_flat",
+    ):
+        mask = getattr(raw, name)
+        if type(mask) is not tuple or any(type(value) is not bool for value in mask):
+            raise ValueError(f"raw {name} must be an immutable tuple of bools")
+    for name in ("matched_block_ids", "sham_block_ids"):
+        identifiers = getattr(raw, name)
+        if type(identifiers) is not tuple or any(type(value) is not str for value in identifiers):
+            raise ValueError(f"raw {name} must be an immutable tuple of strings")
+    for name in (
+        "preprocessing_artifact_sha256",
+        "design_calibration_artifact_sha256",
+        "declared_manifest_sha256",
+    ):
+        if type(getattr(raw, name)) is not str:
+            raise ValueError(f"raw {name} must be a built-in string")
+    for name in (
+        "manifest_frozen_before_data",
+        "masks_fixed_before_holdout",
+        "observations_are_independent_blocks",
+        "gaussian_mean_model_declared",
+    ):
+        if type(getattr(raw, name)) is not bool:
+            raise ValueError(f"raw {name} must be a built-in bool")
+    for name in ("expected_response_sign", "minimum_trials"):
+        if type(getattr(raw, name)) is not int:
+            raise ValueError(f"raw {name} must be a built-in int")
+    for name in (
+        "familywise_alpha",
+        "equivalence_bound",
+        "minimum_target_response",
+        "maximum_training_reduced_chi_square",
+        "maximum_covariance_condition_number",
+        "covariance_rank_relative_tolerance",
+        "minimum_paired_covariance_eigenvalue",
+        "minimum_residual_mean_variance",
+    ):
+        if type(getattr(raw, name)) is not float:
+            raise ValueError(f"raw {name} must be a built-in float")
+
+
+def _validate_canonical_report_structure(report: ResonantSpatiotemporalMaskAudit) -> None:
+    if type(report) is not ResonantSpatiotemporalMaskAudit:
+        raise ValueError("report must be exactly ResonantSpatiotemporalMaskAudit")
+    _validate_canonical_raw_structure(report.raw_inputs)
+    if type(report.claim_locks) is not ResonantMaskClaimLocks or any(
+        type(getattr(report.claim_locks, item.name)) is not bool
+        for item in fields(report.claim_locks)
+    ):
+        raise ValueError("claim_locks must contain only built-in bool fields")
+    if type(report.cell_shape) is not tuple or any(
+        type(size) is not int for size in report.cell_shape
+    ):
+        raise ValueError("report cell_shape must be an immutable tuple of integers")
+    string_fields = (
+        "schema_version",
+        "manifest_sha256",
+        "computed_manifest_sha256",
+        "first_blocker",
+    )
+    integer_fields = (
+        "trial_count",
+        "unique_block_id_count",
+        "training_cell_count",
+        "heldout_cell_count",
+        "training_model_degrees_of_freedom",
+        "simultaneous_comparison_count",
+        "paired_covariance_rank",
+        "training_covariance_rank",
+        "training_residual_covariance_rank",
+        "heldout_residual_covariance_rank",
+    )
+    boolean_fields = (
+        "manifest_hash_matches",
+        "manifest_frozen_before_data",
+        "masks_fixed_before_holdout",
+        "train_holdout_disjoint_and_complete",
+        "protected_masks_pairwise_disjoint",
+        "protected_masks_cover_exactly_heldout",
+        "paired_block_ids_aligned",
+        "paired_block_ids_unique",
+        "paired_difference_rows_unique",
+        "minimum_unique_block_ids_met",
+        "independent_block_model_declared",
+        "gaussian_mean_model_declared",
+        "paired_response_control_pass",
+        "training_design_non_saturated",
+        "training_covariance_nonvacuous",
+        "heldout_covariance_nonvacuous",
+        "covariance_nonvacuous",
+        "joint_mask_fixed_weight_pass",
+        "heldout_prediction_pass",
+        "prearrival_equivalence_pass",
+        "off_support_equivalence_pass",
+        "target_response_pass",
+        "heldout_localization_pass",
+        "factor_rescaling_counterexample_exact",
+        "individual_factor_normalizations_identifiable",
+        "conditional_declared_block_spatiotemporal_response_mask",
+    )
+    optional_float_fields = (
+        "paired_covariance_condition_number",
+        "training_covariance_condition_number",
+        "training_residual_covariance_condition_number",
+        "heldout_residual_covariance_condition_number",
+        "fitted_global_amplitude",
+        "fitted_global_amplitude_standard_error",
+        "training_reduced_chi_square",
+        "maximum_training_absolute_residual",
+        "maximum_training_residual_upper_bound",
+        "maximum_heldout_residual_upper_bound",
+        "maximum_prearrival_response_upper_bound",
+        "maximum_off_support_response_upper_bound",
+        "minimum_target_response_lower_bound",
+        "heldout_localization_margin",
+    )
+    if any(type(getattr(report, name)) is not str for name in string_fields):
+        raise ValueError("report string fields must use built-in str")
+    if any(type(getattr(report, name)) is not int for name in integer_fields):
+        raise ValueError("report integer fields must use built-in int")
+    if any(type(getattr(report, name)) is not bool for name in boolean_fields):
+        raise ValueError("report boolean fields must use built-in bool")
+    for name in (
+        "simultaneous_confidence_multiplier",
+        "paired_covariance_minimum_eigenvalue",
+    ):
+        if type(getattr(report, name)) is not float:
+            raise ValueError(f"report {name} must use built-in float")
+    for name in optional_float_fields:
+        value = getattr(report, name)
+        if value is not None and type(value) is not float:
+            raise ValueError(f"report {name} must be None or a built-in float")
+    if type(report.maximum_supported_stage) is not ResonantMaskStage:
+        raise ValueError("maximum_supported_stage must be exactly ResonantMaskStage")
+    if type(report.blockers) is not tuple or any(
+        type(blocker) is not str for blocker in report.blockers
+    ):
+        raise ValueError("blockers must be an immutable tuple of built-in strings")
 
 
 def _hash_text(digest: Any, label: str, value: str) -> None:
@@ -362,6 +545,8 @@ def _manifest_values(
     if sign not in {-1, 1}:
         raise ValueError("expected_response_sign must be -1 or +1")
     alpha = _probability(familywise_alpha, name="familywise_alpha")
+    if not 1.0e-12 <= alpha <= 0.2:
+        raise ValueError("familywise_alpha must lie between 1e-12 and 0.2")
     equivalence = _finite_positive(equivalence_bound, name="equivalence_bound")
     target_minimum = _finite_positive(
         minimum_target_response, name="minimum_target_response"
@@ -376,12 +561,22 @@ def _manifest_values(
         maximum_covariance_condition_number,
         name="maximum_covariance_condition_number",
     )
-    if condition_limit < 1.0:
-        raise ValueError("maximum_covariance_condition_number must be at least one")
-    rank_tolerance = _probability(
+    if not 1.0 <= condition_limit <= 1.0e12:
+        raise ValueError(
+            "maximum_covariance_condition_number must lie between one and 1e12"
+        )
+    rank_tolerance = _finite_positive(
         covariance_rank_relative_tolerance,
         name="covariance_rank_relative_tolerance",
     )
+    if not 1.0e-12 <= rank_tolerance <= 1.0e-2:
+        raise ValueError(
+            "covariance_rank_relative_tolerance must lie between 1e-12 and 1e-2"
+        )
+    if condition_limit > 1.0 / rank_tolerance:
+        raise ValueError(
+            "maximum covariance condition number cannot exceed inverse rank tolerance"
+        )
     paired_eigen_floor = _finite_positive(
         minimum_paired_covariance_eigenvalue,
         name="minimum_paired_covariance_eigenvalue",
@@ -427,6 +622,8 @@ def resonant_mask_manifest_sha256(
     sham_block_ids: Sequence[str],
     preprocessing_artifact_sha256: str,
     design_calibration_artifact_sha256: str,
+    manifest_frozen_before_data: bool,
+    masks_fixed_before_holdout: bool,
     observations_are_independent_blocks: bool,
     gaussian_mean_model_declared: bool,
     expected_response_sign: Integral = 1,
@@ -464,6 +661,14 @@ def resonant_mask_manifest_sha256(
         design_calibration_artifact_sha256,
         name="design_calibration_artifact_sha256",
     )
+    frozen = _strict_bool(
+        manifest_frozen_before_data,
+        name="manifest_frozen_before_data",
+    )
+    fixed = _strict_bool(
+        masks_fixed_before_holdout,
+        name="masks_fixed_before_holdout",
+    )
     values = _manifest_values(
         expected_response_sign=expected_response_sign,
         familywise_alpha=familywise_alpha,
@@ -478,9 +683,18 @@ def resonant_mask_manifest_sha256(
         observations_are_independent_blocks=observations_are_independent_blocks,
         gaussian_mean_model_declared=gaussian_mean_model_declared,
     )
+    comparison_count = int(
+        np.count_nonzero(masks[0][1])
+        + np.count_nonzero(masks[1][1])
+        + np.count_nonzero(masks[2][1])
+        + np.count_nonzero(masks[3][1])
+        + np.count_nonzero(masks[4][1])
+    )
+    if comparison_count < 1 or values[1] / (2.0 * comparison_count) < 1.0e-15:
+        raise ValueError("per-comparison Student-t tail must be at least 1e-15")
 
     digest = hashlib.sha256()
-    digest.update(b"resonant-spatiotemporal-mask-manifest/v2\0")
+    digest.update(b"resonant-spatiotemporal-mask-manifest/v3\0")
     _hash_text(digest, "cell_shape", repr(shape))
     digest.update(np.asarray(design, dtype="<f8", order="C").tobytes())
     for name, mask in masks:
@@ -508,8 +722,10 @@ def resonant_mask_manifest_sha256(
         "minimum_trials",
         "observations_are_independent_blocks",
         "gaussian_mean_model_declared",
+        "manifest_frozen_before_data",
+        "masks_fixed_before_holdout",
     )
-    for name, value in zip(value_names, values, strict=True):
+    for name, value in zip(value_names, (*values, frozen, fixed), strict=True):
         _hash_text(digest, name, repr(value))
     return digest.hexdigest()
 
@@ -531,8 +747,12 @@ def _covariance_diagnostics(
         or not np.all(np.isfinite(matrix))
     ):
         return _CovarianceDiagnostics(0, None, 0.0, False)
+    effective_relative_tolerance = max(
+        relative_tolerance,
+        64.0 * np.finfo(float).eps * matrix.shape[0],
+    )
     scale = max(float(np.max(np.abs(matrix))), 1.0)
-    symmetry_tolerance = relative_tolerance * scale
+    symmetry_tolerance = effective_relative_tolerance * scale
     symmetric = bool(np.allclose(matrix, matrix.T, rtol=0.0, atol=symmetry_tolerance))
     symmetrized = 0.5 * (matrix + matrix.T)
     eigenvalues = np.linalg.eigvalsh(symmetrized)
@@ -540,9 +760,12 @@ def _covariance_diagnostics(
     spectral_scale = max(float(np.max(np.abs(eigenvalues))), 1.0e-300)
     rank_threshold = max(
         minimum_positive_eigenvalue,
-        relative_tolerance * spectral_scale,
+        effective_relative_tolerance * spectral_scale,
     )
-    negative_tolerance = max(1.0e-15, relative_tolerance * spectral_scale)
+    negative_tolerance = max(
+        1.0e-15,
+        effective_relative_tolerance * spectral_scale,
+    )
     positive = eigenvalues[eigenvalues > rank_threshold]
     rank = int(positive.size)
     condition = None
@@ -578,20 +801,23 @@ def _standard_errors(
 
 def _stage(
     *,
+    paired_pass: bool,
     manifest_pass: bool,
     gls_pass: bool,
     heldout_pass: bool,
     conditional_pass: bool,
 ) -> ResonantMaskStage:
+    if not paired_pass:
+        return ResonantMaskStage.INPUT_VALIDATION_ONLY
     if not manifest_pass:
         return ResonantMaskStage.PAIRED_RESPONSE_CONTROL
     if not gls_pass:
         return ResonantMaskStage.FROZEN_MANIFEST_CONTROL
     if not heldout_pass:
-        return ResonantMaskStage.JOINT_MASK_GLS_CONTROL
+        return ResonantMaskStage.JOINT_MASK_FIXED_WEIGHT_CONTROL
     if not conditional_pass:
         return ResonantMaskStage.CROSSED_HELDOUT_PREDICTION_CONTROL
-    return ResonantMaskStage.CONDITIONAL_SPATIOTEMPORAL_RESPONSE_MASK
+    return ResonantMaskStage.CONDITIONAL_DECLARED_BLOCK_SPATIOTEMPORAL_RESPONSE_MASK
 
 
 def _raw_arrays(
@@ -606,8 +832,7 @@ def _raw_arrays(
     np.ndarray,
     np.ndarray,
 ]:
-    if not isinstance(raw, ResonantMaskRawInputs):
-        raise ValueError("raw_inputs must be ResonantMaskRawInputs")
+    _validate_canonical_raw_structure(raw)
     shape = raw.cell_shape
     if (
         not isinstance(shape, tuple)
@@ -730,6 +955,8 @@ def _build_report(raw: ResonantMaskRawInputs) -> ResonantSpatiotemporalMaskAudit
         sham_block_ids=sham_ids,
         preprocessing_artifact_sha256=preprocessing_hash,
         design_calibration_artifact_sha256=calibration_hash,
+        manifest_frozen_before_data=frozen,
+        masks_fixed_before_holdout=fixed,
         observations_are_independent_blocks=independent_declared,
         gaussian_mean_model_declared=gaussian_declared,
         expected_response_sign=sign,
@@ -756,15 +983,24 @@ def _build_report(raw: ResonantMaskRawInputs) -> ResonantSpatiotemporalMaskAudit
         and protected_cover
     )
 
+    paired = matched - sham
     ids_aligned = matched_ids == sham_ids
     ids_unique = len(set(matched_ids)) == trial_count and len(set(sham_ids)) == trial_count
-    independent_count = len(set(matched_ids) & set(sham_ids))
-    minimum_blocks_met = independent_count >= min_trials
-    block_control = bool(
+    unique_id_count = len(set(matched_ids) & set(sham_ids))
+    paired_row_bytes = np.asarray(paired, dtype="<f8", order="C").copy()
+    paired_row_bytes[paired_row_bytes == 0.0] = 0.0
+    paired_rows_unique = len(
+        {paired_row_bytes[index].tobytes() for index in range(trial_count)}
+    ) == trial_count
+    minimum_ids_met = unique_id_count >= min_trials
+    paired_control = bool(
         ids_aligned
         and ids_unique
-        and minimum_blocks_met
-        and independent_declared
+        and paired_rows_unique
+        and minimum_ids_met
+    )
+    block_control = bool(
+        paired_control and independent_declared
     )
 
     flat_training = training.reshape(-1)
@@ -787,15 +1023,14 @@ def _build_report(raw: ResonantMaskRawInputs) -> ResonantSpatiotemporalMaskAudit
         + np.count_nonzero(off_support)
         + np.count_nonzero(target)
     )
-    critical_degrees = max(independent_count - 1, 1)
-    critical = _student_t_quantile(
-        1.0 - alpha / (2.0 * comparison_count),
+    critical_degrees = max(unique_id_count - 1, 1)
+    critical = _student_t_upper_tail_quantile(
+        alpha / (2.0 * comparison_count),
         critical_degrees,
     )
     if not math.isfinite(critical) or critical <= 0.0:
         raise ValueError("simultaneous Student-t critical value is not finite")
 
-    paired = matched - sham
     cell_mean = np.mean(paired, axis=0)
     sample_covariance = np.asarray(np.cov(paired, rowvar=False, ddof=1), dtype=float)
     sample_covariance = np.atleast_2d(sample_covariance)
@@ -995,9 +1230,11 @@ def _build_report(raw: ResonantMaskRawInputs) -> ResonantSpatiotemporalMaskAudit
     if not ids_aligned:
         blockers.append("matched and sham block identifiers are not pairwise aligned")
     if not ids_unique:
-        blockers.append("block identifiers are duplicated; rows are not independent blocks")
-    if not minimum_blocks_met:
-        blockers.append("the preregistered minimum number of independent blocks is not met")
+        blockers.append("block identifiers are duplicated; paired rows are not uniquely labeled")
+    if not paired_rows_unique:
+        blockers.append("exact duplicate paired-difference rows were not preaggregated")
+    if not minimum_ids_met:
+        blockers.append("the preregistered minimum number of unique block IDs is not met")
     if not independent_declared:
         blockers.append("independent or preblocked observation model was not declared")
     if not gaussian_declared:
@@ -1029,15 +1266,16 @@ def _build_report(raw: ResonantMaskRawInputs) -> ResonantSpatiotemporalMaskAudit
         blockers.append("target lower bound does not exceed off-support upper bound")
     blockers.append(
         "response-mask control does not establish relativistic causality, identify individual "
-        "factors, derive CE coupling, create matter, or verify an external manifest timestamp"
+        "factors, derive CE coupling, create matter, verify independent acquisition provenance, "
+        "or verify an external manifest timestamp"
     )
 
     return ResonantSpatiotemporalMaskAudit(
-        schema_version="resonant-spatiotemporal-mask/v2",
+        schema_version="resonant-spatiotemporal-mask/v3",
         raw_inputs=raw,
         cell_shape=shape,
         trial_count=trial_count,
-        independent_block_count=independent_count,
+        unique_block_id_count=unique_id_count,
         training_cell_count=train_count,
         heldout_cell_count=heldout_count,
         training_model_degrees_of_freedom=train_dof,
@@ -1053,9 +1291,11 @@ def _build_report(raw: ResonantMaskRawInputs) -> ResonantSpatiotemporalMaskAudit
         protected_masks_cover_exactly_heldout=protected_cover,
         paired_block_ids_aligned=ids_aligned,
         paired_block_ids_unique=ids_unique,
-        minimum_independent_blocks_met=minimum_blocks_met,
+        paired_difference_rows_unique=paired_rows_unique,
+        minimum_unique_block_ids_met=minimum_ids_met,
         independent_block_model_declared=independent_declared,
         gaussian_mean_model_declared=gaussian_declared,
+        paired_response_control_pass=paired_control,
         training_design_non_saturated=training_design_non_saturated,
         paired_covariance_rank=full_diagnostics.rank,
         paired_covariance_condition_number=full_diagnostics.condition_number,
@@ -1083,7 +1323,7 @@ def _build_report(raw: ResonantMaskRawInputs) -> ResonantSpatiotemporalMaskAudit
         maximum_off_support_response_upper_bound=off_support_upper,
         minimum_target_response_lower_bound=target_lower,
         heldout_localization_margin=localization_margin,
-        joint_mask_gls_pass=gls_pass,
+        joint_mask_fixed_weight_pass=gls_pass,
         heldout_prediction_pass=heldout_prediction_pass,
         prearrival_equivalence_pass=prearrival_pass,
         off_support_equivalence_pass=off_support_pass,
@@ -1091,8 +1331,9 @@ def _build_report(raw: ResonantMaskRawInputs) -> ResonantSpatiotemporalMaskAudit
         heldout_localization_pass=localization_pass,
         factor_rescaling_counterexample_exact=True,
         individual_factor_normalizations_identifiable=False,
-        conditional_spatiotemporal_response_mask=conditional_pass,
+        conditional_declared_block_spatiotemporal_response_mask=conditional_pass,
         maximum_supported_stage=_stage(
+            paired_pass=paired_control,
             manifest_pass=manifest_pass,
             gls_pass=gls_pass,
             heldout_pass=heldout_prediction_pass,
@@ -1248,8 +1489,7 @@ def validate_resonant_spatiotemporal_mask_audit(
 ) -> ResonantSpatiotemporalMaskAudit:
     """Recompute the complete certificate and reject any field-level tampering."""
 
-    if not isinstance(report, ResonantSpatiotemporalMaskAudit):
-        raise ValueError("report must be ResonantSpatiotemporalMaskAudit")
+    _validate_canonical_report_structure(report)
     if any(asdict(report.claim_locks).values()):
         raise ValueError("resonant-mask physical claim locks must remain false")
     expected = _build_report(report.raw_inputs)

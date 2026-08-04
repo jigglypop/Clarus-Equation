@@ -566,7 +566,8 @@ simultaneous bound를 요구하며 validator가 raw rows에서 인증서 전체�
 simultaneous TV bound를 적용한다.
 
 합성 control의 최대 단계는
-`CONDITIONAL_SPATIOTEMPORAL_RESPONSE_MASK`다. caller-supplied pre-arrival mask는
+`CONDITIONAL_DECLARED_BLOCK_SPATIOTEMPORAL_RESPONSE_MASK`다. 이는 block 독립성을
+외부에서 검증했다는 뜻이 아니다. caller-supplied pre-arrival mask는
 causal proof가 아니므로 relativistic causality도 hard-false다. factor normalization은
 scale-gauge 때문에 비식별이고, 실제 tensor 자료가 없으므로 public scaffold, CE
 coupling, new matter, causal boundary와 재규격화 stress는 계속 `False`다.

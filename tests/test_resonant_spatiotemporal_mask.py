@@ -8,6 +8,7 @@ import pytest
 
 from reality_stone.clarus.resonant_spatiotemporal_mask import (
     ResonantMaskStage,
+    _student_t_upper_tail_quantile,
     resonant_mask_manifest_sha256,
     resonant_spatiotemporal_mask_audit,
     validate_resonant_spatiotemporal_mask_audit,
@@ -87,6 +88,8 @@ def _manifest_hash(
         sham_block_ids=sham_ids or ids,
         preprocessing_artifact_sha256=PREPROCESSING_HASH,
         design_calibration_artifact_sha256=CALIBRATION_HASH,
+        manifest_frozen_before_data=True,
+        masks_fixed_before_holdout=True,
         **effective_config,
     )
 
@@ -162,9 +165,9 @@ def test_frozen_joint_design_predicts_crossed_holdout_cells() -> None:
     assert report.off_support_equivalence_pass
     assert report.target_response_pass
     assert report.heldout_localization_pass
-    assert report.conditional_spatiotemporal_response_mask
+    assert report.conditional_declared_block_spatiotemporal_response_mask
     assert report.maximum_supported_stage is (
-        ResonantMaskStage.CONDITIONAL_SPATIOTEMPORAL_RESPONSE_MASK
+        ResonantMaskStage.CONDITIONAL_DECLARED_BLOCK_SPATIOTEMPORAL_RESPONSE_MASK
     )
     assert report.fitted_global_amplitude is not None
     assert abs(report.fitted_global_amplitude - 2.0) < 0.01
@@ -183,7 +186,7 @@ def test_heldout_mutation_does_not_change_training_fit_and_fails_prediction() ->
     assert report.fitted_global_amplitude == baseline.fitted_global_amplitude
     assert report.joint_mask_gls_pass
     assert not report.heldout_prediction_pass
-    assert not report.conditional_spatiotemporal_response_mask
+    assert not report.conditional_declared_block_spatiotemporal_response_mask
 
 
 def test_rank_two_training_interaction_fails_one_amplitude_gls() -> None:
@@ -217,7 +220,7 @@ def test_broadcast_off_support_response_fails_localization() -> None:
 
     assert not report.off_support_equivalence_pass
     assert not report.heldout_localization_pass
-    assert not report.conditional_spatiotemporal_response_mask
+    assert not report.conditional_declared_block_spatiotemporal_response_mask
 
 
 def test_posthoc_design_change_breaks_frozen_manifest_hash() -> None:
@@ -247,7 +250,7 @@ def test_exact_zero_covariance_returns_a_structured_failure() -> None:
     assert not report.covariance_nonvacuous
     assert report.fitted_global_amplitude is None
     assert not report.joint_mask_gls_pass
-    assert not report.conditional_spatiotemporal_response_mask
+    assert not report.conditional_declared_block_spatiotemporal_response_mask
 
 
 def test_zero_product_and_non_boolean_masks_are_rejected() -> None:
@@ -370,7 +373,7 @@ def test_rank_deficient_protected_cells_cannot_create_zero_width_certainty() -> 
     assert not report.heldout_covariance_nonvacuous
     assert not report.heldout_prediction_pass
     assert report.maximum_heldout_residual_upper_bound is None
-    assert not report.conditional_spatiotemporal_response_mask
+    assert not report.conditional_declared_block_spatiotemporal_response_mask
 
 
 def test_minimum_trials_and_inference_settings_are_manifest_bound() -> None:
@@ -401,10 +404,11 @@ def test_duplicated_or_permuted_block_ids_fail_independence_control() -> None:
     )
 
     assert not duplicate_report.paired_block_ids_unique
-    assert not duplicate_report.minimum_independent_blocks_met
+    assert not duplicate_report.minimum_unique_block_ids_met
     assert not duplicate_report.joint_mask_gls_pass
     assert not permuted_report.paired_block_ids_aligned
     assert not permuted_report.joint_mask_gls_pass
+    assert permuted_report.maximum_supported_stage is ResonantMaskStage.INPUT_VALIDATION_ONLY
 
 
 def test_high_variance_exact_mean_fails_simultaneous_training_interval() -> None:
@@ -421,3 +425,105 @@ def test_high_variance_exact_mean_fails_simultaneous_training_interval() -> None
     assert report.maximum_training_residual_upper_bound is not None
     assert report.maximum_training_residual_upper_bound > CONFIG["equivalence_bound"]
     assert not report.joint_mask_gls_pass
+
+
+def test_exact_paired_row_replication_with_fresh_ids_is_rejected() -> None:
+    rng = np.random.default_rng(177)
+    base = rng.normal(0.0, 0.1, size=(20, *DESIGN.shape))
+    base -= np.mean(base, axis=0, keepdims=True)
+    repeated = np.repeat(base, 13, axis=0)
+    sham = np.zeros_like(repeated)
+    matched = 2.0 * DESIGN + repeated
+    report = _audit(
+        matched=matched,
+        sham=sham,
+        matched_ids=_block_ids(repeated.shape[0]),
+    )
+
+    assert report.paired_block_ids_unique
+    assert not report.paired_difference_rows_unique
+    assert not report.paired_response_control_pass
+    assert not report.joint_mask_gls_pass
+    assert report.maximum_supported_stage is ResonantMaskStage.INPUT_VALIDATION_ONLY
+
+
+def test_signed_zero_cannot_disguise_an_exact_duplicate_paired_row() -> None:
+    matched, sham = _responses()
+    paired = matched - sham
+    paired[1] = paired[0]
+    paired[0, 1, 1] = 0.0
+    paired[1, 1, 1] = -0.0
+    zero_sham = np.zeros_like(sham)
+    report = _audit(matched=paired, sham=zero_sham)
+
+    assert np.array_equal(paired[0], paired[1])
+    assert not report.paired_difference_rows_unique
+    assert not report.paired_response_control_pass
+
+
+def test_tail_inversion_uses_direct_upper_tail_without_one_minus_loss() -> None:
+    tail_probability = 5.0e-14 / (2.0 * 9.0)
+    critical = _student_t_upper_tail_quantile(tail_probability, 63)
+
+    assert critical == pytest.approx(10.208928843790972, abs=5.0e-12)
+
+    with pytest.raises(ValueError, match="familywise_alpha must lie"):
+        _audit(config={"familywise_alpha": 2.0e-322})
+
+
+def test_whitespace_hashes_and_block_ids_are_rejected() -> None:
+    with pytest.raises(ValueError, match="64-character hex digest"):
+        resonant_mask_manifest_sha256(
+            design_tensor=DESIGN,
+            training_mask=TRAINING,
+            heldout_mask=HELDOUT,
+            prearrival_mask=PREARRIVAL,
+            off_support_mask=OFF_SUPPORT,
+            target_mask=TARGET,
+            matched_block_ids=_block_ids(256),
+            sham_block_ids=_block_ids(256),
+            preprocessing_artifact_sha256=" " * 64,
+            design_calibration_artifact_sha256=CALIBRATION_HASH,
+            manifest_frozen_before_data=True,
+            masks_fixed_before_holdout=True,
+            **CONFIG,
+        )
+
+    matched, sham = _responses()
+    whitespace_ids = tuple(" " * (index + 1) for index in range(256))
+    with pytest.raises(ValueError, match="canonical ASCII acquisition IDs"):
+        _audit(
+            matched=matched,
+            sham=sham,
+            matched_ids=whitespace_ids,
+            sham_ids=whitespace_ids,
+        )
+
+
+def test_validator_rejects_bool_int_and_string_enum_type_confusion() -> None:
+    report = _audit()
+    with pytest.raises(ValueError, match="boolean fields"):
+        validate_resonant_spatiotemporal_mask_audit(
+            replace(report, manifest_hash_matches=1)
+        )
+    with pytest.raises(ValueError, match="maximum_supported_stage"):
+        validate_resonant_spatiotemporal_mask_audit(
+            replace(
+                report,
+                maximum_supported_stage=report.maximum_supported_stage.value,
+            )
+        )
+
+
+def test_float64_rank_tolerance_and_condition_number_have_hard_safety_bounds() -> None:
+    with pytest.raises(ValueError, match="rank_relative_tolerance must lie"):
+        _audit(config={"covariance_rank_relative_tolerance": 1.0e-18})
+    with pytest.raises(ValueError, match="condition_number must lie"):
+        _audit(config={"maximum_covariance_condition_number": 1.0e18})
+    with pytest.raises(ValueError, match="cannot exceed inverse rank tolerance"):
+        _audit(
+            config={
+                "covariance_rank_relative_tolerance": 1.0e-8,
+                "maximum_covariance_condition_number": 1.0e9,
+            }
+        )

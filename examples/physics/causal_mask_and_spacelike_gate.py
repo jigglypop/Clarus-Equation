@@ -94,6 +94,8 @@ def mask_control():
         sham_block_ids=block_ids,
         preprocessing_artifact_sha256=preprocessing_hash,
         design_calibration_artifact_sha256=calibration_hash,
+        manifest_frozen_before_data=True,
+        masks_fixed_before_holdout=True,
         **config,
     )
 
@@ -137,8 +139,8 @@ def main() -> None:
         f"{mask.maximum_heldout_residual_upper_bound:.9f}"
     )
     print(
-        "  conditional mask control   "
-        f"{mask.conditional_spatiotemporal_response_mask}"
+        "  declared-block mask        "
+        f"{mask.conditional_declared_block_spatiotemporal_response_mask}"
     )
     print("  CE/new matter/stress        False (claim locked)")
 

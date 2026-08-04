@@ -28,12 +28,14 @@
 QFT의 결정론적 국소 연산으로 표현되지 않는다.
 
 현재 실제 CE 자료가 없으므로 이번 코드가 도달할 수 있는 최대 단계는 합성 control의
-`CONDITIONAL_SPATIOTEMPORAL_RESPONSE_MASK`다. 이 이름에서 `CAUSAL`을 제거했다.
+`CONDITIONAL_DECLARED_BLOCK_SPATIOTEMPORAL_RESPONSE_MASK`다. 이 이름은 독립성이
+검증된 것이 아니라 block ID와 iid/Gaussian 선언에 조건부라는 점을 명시한다.
+또한 기존 이름에서 `CAUSAL`을 제거했다.
 caller가 지정한 `prearrival_mask`만으로 광원뿔을 증명할 수 없기 때문이다. 인과성은
 별도의 randomized spacelike-marginal gate에서만 검사한다. public scaffold, 새 물질,
 CE actuator, physical pole, 재규격화 응력은 모두 `False`로 잠근다.
 
-### 0.1 2026-08-05 v2 합성 회귀 결과
+### 0.1 2026-08-05 v3 합성 회귀 결과
 
 고정 seed의 protocol-validation fixture에서만 다음 수치가 나온다.
 
@@ -45,13 +47,18 @@ CE actuator, physical pole, 재규격화 응력은 모두 `False`로 잠근다.
 | Student-(t) Bonferroni multiplier | 3.020753840 | FWER (0.05), 18 comparisons |
 | max crossed-heldout residual UCB | 0.006658500 | (\le0.05) |
 
-6개 관련 모듈의 focused suite는 110 tests를 통과했다. 이 숫자는 코드와 protocol의
+6개 관련 모듈의 focused suite는 115 tests를 통과했다. 이 숫자는 코드와 protocol의
 회귀 결과이지 CE 실험 정확도가 아니다. 실제 CE raw tensor가 0개이므로 new matter,
 public scaffold와 causal field에 대한 경험적 정확도는 산정 불가다.
 
 v1을 깨던 certificate boolean 변조, 1-cell 포화 GLS, protected zero-variance,
 exact-zero covariance, posthoc minimum-(N), duplicated/permuted block ID와 고분산
-exact-mean 반례는 v2에서 모두 실패하도록 회귀 테스트로 고정했다.
+exact-mean 반례는 v3에서 모두 실패하도록 회귀 테스트로 고정했다. 여기에 극단
+Student-\(t\) tail, 공백 SHA/ID, bool--int·string--Enum type confusion과 exact paired-row
+복제 반례도 추가했다. float64 roundoff를 rank로 오인하지 않도록 rank tolerance는
+\([10^{-12},10^{-2}]\), condition cap은 \(\le10^{12}\)이면서 rank tolerance의 역수
+이하로 강제했다. subnormal tail 역산도 막기 위해
+\(10^{-12}\le\alpha_{\rm FWER}\le0.2\)와 cell별 tail \(\ge10^{-15}\)을 요구한다.
 
 ## 1. observer-scope no-go
 
@@ -224,9 +231,11 @@ t-t_{{\rm cmd},a}<\frac{L_{xa}}{v}-\Delta_{\rm sync}
 아니므로 early-time control일 뿐 causal certificate가 아니다.
 
 각 paired row에는 matched/sham 양쪽의 block ID를 붙인다. 두 ID 열은 같은 순서로
-일치하고 모두 유일해야 한다. 반복 측정은 먼저 독립 block 단위로 집계해야 하며,
-동일 row 복제로 표본 수를 늘릴 수 없다. block ID, 최소 표본 수, 전처리 artifact hash,
-design calibration hash와 모든 통계 threshold는 manifest hash에 포함된다.
+일치하고 모두 유일해야 한다. exact paired-difference row 복제도 거부한다. 그러나
+새 ID와 미세 jitter를 붙이면 내용 비교만으로 실제 독립 획득을 증명할 수 없다.
+반복 측정은 먼저 외부에서 인증된 acquisition/cluster block 단위로 집계해야 한다.
+block ID, 최소 표본 수, 전처리 artifact hash, design calibration hash와 모든 통계
+threshold는 manifest hash에 포함되지만, hash 문자열 자체는 외부 서명이 아니다.
 
 훈련 cell에서는 global amplitude 하나만 paired covariance GLS로 적합한다.
 
@@ -287,9 +296,10 @@ t_{1-\alpha_{\rm FWER}/(2m),\,N_{\rm block}-1}
 \]
 
 을 적용한다. training residual도 point estimate가 아니라 simultaneous UCB가
-equivalence bound 아래여야 한다. 이는 Gaussian mean model과 독립/preblocked row를
-명시한 조건부 finite-sample control이며, 비가우시안 실제 자료에는 preregistered
-block max-\(T\) bootstrap이 다음 보강이다.
+equivalence bound 아래여야 한다. 고정 raw-mean contrast의 Student-\(t\) bound와 달리,
+같은 표본 covariance에서 (w\)를 추정하는 feasible-GLS residual 구간은 exact pivot이
+아닌 조건부 plug-in 근사다. 실제 자료 승격에는 독립 covariance calibration/split 또는
+covariance와 (w\)를 매 반복 재적합하는 preregistered block max-\(T\)가 필요하다.
 
 위치 \(a\)의 held-out localization에는
 
@@ -337,7 +347,7 @@ K=D_A/g_A
 | 로컬 \(A\) 효과 없음 | selector 가설 기각 |
 | \(A\)만 반응, spacelike null | `CONDITIONAL_LOCAL_PROBE_INSTRUMENT` |
 | pre-lightcone 차이 | 누설·동기화 오류 또는 local-QFT class 실패 |
-| 사전 지정 early-window null + crossed holdout 예측 | `CONDITIONAL_SPATIOTEMPORAL_RESPONSE_MASK` |
+| 선언된 block 모형 + early-window null + crossed holdout | `CONDITIONAL_DECLARED_BLOCK_SPATIOTEMPORAL_RESPONSE_MASK` |
 | 위 결과 + 좌표에서 유도한 광원뿔 mask + spacelike null | public causal response의 추가 후보 |
 | pole·spectrum·양자수·입자 inventory까지 독립 확인 | 그 뒤에만 new-matter 검사 시작 |
 
@@ -346,13 +356,16 @@ K=D_A/g_A
 ## 8. 현재 blocker
 
 1. block ID용 API와 artifact hash gate는 생겼지만, 외부 timestamp/signature와 실제
-   장치 ID를 가진 tensor가 없다.
-2. 현재 phase resultant는 실제 시계열 autocorrelation 교정이 없다.
-3. probe 간 covariance와 독립 전원·clock·readout 자료가 없다.
-4. 현재 public kernel은 scalar이고 측정된 \(D^R(\omega,\mathbf k,x,t)\)가 없다.
-5. spatial actuator map은 caller가 공급하며 CE 작용에서 유도되지 않았다.
-6. CE는 실제 connected correlator, physical pole, residue, LSZ, vertex가 없다.
-7. controller를 포함한 local 4-momentum 및 Ward identity가 없다.
+   acquisition/cluster mapping을 가진 tensor가 없다. exact 복제는 막지만 새 ID와
+   미세 jitter를 붙인 상관 복제를 독립 획득과 구별할 수 없다.
+2. feasible-GLS의 covariance와 weight를 같은 표본에서 추정한다. 실제 인증에는 독립
+   covariance split 또는 refit block max-\(T\)가 필요하다.
+3. 현재 phase resultant는 실제 시계열 autocorrelation 교정이 없다.
+4. probe 간 covariance와 독립 전원·clock·readout 자료가 없다.
+5. 현재 public kernel은 scalar이고 측정된 \(D^R(\omega,\mathbf k,x,t)\)가 없다.
+6. spatial actuator map은 caller가 공급하며 CE 작용에서 유도되지 않았다.
+7. CE는 실제 connected correlator, physical pole, residue, LSZ, vertex가 없다.
+8. controller를 포함한 local 4-momentum 및 Ward identity가 없다.
 
 따라서 현재 CE 물리 단계는 계속 `REGISTERED_SCALE`이며, 29.64757 MeV를
 observer-dependent pole로 사용할 근거는 없다.
@@ -361,6 +374,8 @@ observer-dependent pole로 사용할 근거는 없다.
 
 ```powershell
 uv --cache-dir .uv-cache run --extra dev python -m pytest `
+  tests/test_clarus_resonant_matter.py `
+  tests/test_probe_scaffold_pilot.py `
   tests/test_spacelike_marginal_gate.py `
   tests/test_resonant_spatiotemporal_mask.py `
   tests/test_targeted_spatial_actuation.py `
