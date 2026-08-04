@@ -266,14 +266,14 @@ def clarus_negative_source_funnel() -> tuple[NegativeSourceCandidate, ...]:
         ),
         NegativeSourceCandidate(
             name="CE+SM charged-fermion magnetic Casimir mapping",
-            frontier="FRONTIER_B",
+            frontier="DEFERRED_HUMAN_SCALE",
             ce_native_components="SM charged fermions plus gravity sectors",
             local_null_gate="PASS IN MMP CONTROL",
             averaged_null_gate="PASS IN MMP CONTROL",
             ghost_gradient_gate="CONDITIONAL IN CONTROL",
-            renormalized_stress_gate="NOT MAPPED TO CE",
+            renormalized_stress_gate="EXTERNAL LONG-WORMHOLE CONTROL ONLY",
             backreaction_gate="PASS IN EXTERNAL 4D MODEL",
-            decisive_next_calculation="CE magnetic topology and fermion zero-mode map",
+            decisive_next_calculation="requires a new sub-micro-eV charged CE fermion and flux action",
         ),
         NegativeSourceCandidate(
             name="CE two-boundary/double-trace state",

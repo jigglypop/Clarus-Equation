@@ -191,3 +191,78 @@ beyond-Horndeski는 더 많은 구조 gate를 만족하지만 현재 CE 작용 �
 \(r\simeq1.62r_0\)에 음의 kinetic 영역을 남겼다. 양수·유한 \(F\)와 ghost-free field-space
 metric을 유지하는 scalar-tensor 전역 no-go와 합쳐, standalone CE \(\xi R\Phi^2\)
 단일·다중 scalar source는 `Refuted globally`로 갱신한다.
+
+## Beyond-Horndeski 현실화 추가 판정 (2026-08-04)
+
+Beyond-Horndeski가 기존 no-go를 회피하고 명시적 점근평탄 배경을 갖는 control model은
+존재한다. 그러나 공변 작용·완전 안정성·GR weak-field asymptotics·견고한 \(c_T=1\)·공학
+bridge가 한 모델에서 닫힌 사례는 확인되지 않았다. 또한 CE의 단독
+\(\alpha_2\|\nabla^2\phi\|^2\)는 최고미분 Hessian이 \(2\alpha_2\ne0\)인 비퇴화 항이므로
+DHOST completion으로 읽을 수 없다. 판정은 `External theory frontier / reality open`이다.
+
+## Charged-fermion 위상 경계 추가 판정 (2026-08-04)
+
+MMP 외부 control은 magnetic flux의 charged massless fermion zero mode로 음의 Casimir
+backreaction을 명시적으로 만들지만 long wormhole이라 ambient shortcut이 아니다. 1 m에서
+유효 무질량 한계는 \(1.97\times10^{-7}\) eV이고 전자는 이보다 \(2.59\times10^{12}\)배
+무겁다. 현재 CE에는 이보다 가벼운 charged fermion이나 quantized magnetic flux action이
+없으므로 사람 크기 CE mapping은 `Deferred/field content absent`다.
+
+## 순수 위상 경계 응력 추가 판정 (2026-08-04)
+
+상수계수 4D Euler/Gauss–Bonnet, gravitational Pontryagin, gauge
+\(\theta F\wedge F\), 3D boundary Chern–Simons를 metric variation gate로 감사했다.
+이들은 순수 위상항으로서 국소 bulk \(T_{\mu\nu}\)를 공급하지 않으므로 standalone throat
+source는 `Refuted`다. 위상은 flux와 edge sector를 선택할 수 있지만, 실제 음의 응력에는
+별도의 동역학적 edge QFT가 필요하다. 현재 CE edge action은 `Not specified`다.
+
+## 박막/결함 QFT 추가 판정 (2026-08-04)
+
+대칭 Schwarzschild cut-and-paste 목의 Israel 접합조건을 SI 단위로 구현했다.
+1 m 평탄 외부 껍질은 `-1.926e43 J/m^2`, 총량으로 음의 450.95 지구질량을
+요구한다. 지평선 근접 극한에서는 음의 에너지가 `sqrt(f)`로 줄지만 횡압이
+`1/sqrt(f)`로 발산하므로 비용 전체를 제거하지 못한다. 또한 등방 2+1차원
+scale-free edge QFT는 `p=sigma/2<0`인 반면 접합조건은 모든 허용 `f`에서
+`sigma<0`, `p>0`를 요구한다. 따라서 conformal/Casimir edge 단독 후보는
+`Refuted by EoS sign`이다. massive·비등방·상호작용 defect QFT 전체는
+`Open`, CE의 명시적 defect action은 `Absent`다.
+
+후속 방사형 안정성 계산은
+`a^2 V''=2 eta(1-3f)-(1+3f^2)/(2f)`를 준다. 전 Schwarzschild 허용
+구간에서 `0<=eta=c_s^2<=1`과 `V''>0`은 교차하지 않는다. 따라서 인과적
+gradient-stable barotropic defect fluid completion은 `Refuted`이며,
+비barotropic·비등방 elastic defect만 다음 후보로 남는다.
+
+최소 등방 elastic membrane의 전단응답은 구면 `l=0`에서 정확히 사라져
+radial no-overlap을 고치지 못한다. `p=-sigma`인 negative-tension
+Nambu--Goto 막은 `f=1/3`에서 배경 응력은 맞지만 `a^2V''=-2`이고 transverse
+bending kinetic의 부호가 뒤집혀 ghost다. 두 최소 elastic completion은
+`Refuted`; 내부 자유도/mode mixing/nonlocality를 가진 비최소 defect만 `Open`이다.
+
+smooth free-field QEI control을 1 m 박막에 적용하면 한 species의 음의 층은
+`d<=2.50e-24 m`, sampling time `8.35e-33 s`, UV energy `>=7.89e16 eV`가
+필요하다. 이는 boundary Casimir 자체에 대한 엄밀 no-go가 아니라 규모 gate다.
+경계 loophole에는 반사체/결함의 전체 stress와 backreaction이 필요하며 CE에는
+그 미시 completion이 없다.
+
+2022 beyond-Horndeski 재감사에서 한 covariant 모델이 odd/even parity의
+고에너지 ghost 및 radial/angular gradient gate를 모두 통과함을 반영했다.
+따라서 이 경로는 `high-energy stable existence control`까지 승격한다. 다만
+slow tachyon, 먼 거리 GR 복귀, physical-frame luminal GW, CE 유도, throat
+scale/strong-coupling bridge는 같은 모델에서 열려 있어 전체 현실성은 `Open`이다.
+
+후속 `arXiv:2404.06297v2`는 tachyon과 superluminal mode까지 포함한 일반
+정적 구면대칭 안정성 조건을 유도했다. 하지만 2022 explicit wormhole에 이를
+적용한 통과 결과는 없고, 그 예시의 최종 Lagrangian coefficient functions도
+해석식으로 제공되지 않아 slow-spectrum 독립 재현은 현재 불가능하다. 판정은
+`complete criteria derived / passing explicit wormhole still open`이다.
+
+thin-shell 내부 공명은 안정한 passive mode를 적분소거하면
+`K_eff=K_rr-B C^-1 B^T`가 되어 radial tachyon을 개선하지 못한다. 따라서
+수동 다중공명 mixing 단독 안정화는 `Refuted`; 별도 직접 radial stiffness나
+driven/Floquet feedback만 `Open`이다.
+
+Floquet radial control은 exact monodromy 적분에서
+`Gamma/Omega=0.05, epsilon=0.1`이 `|tr M|<2`, `det M=1`을 만족해
+`Finite control`로 승격했다. 다만 static negative stress를 공급하지 않고
+drive loss 후 tachyon이 복귀하므로 물리 source/realization 판정은 변하지 않는다.

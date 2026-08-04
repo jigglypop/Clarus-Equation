@@ -81,3 +81,14 @@ beyond-Horndeski가 현재 가장 많은 구조 gate를 만족하지만 CE의 �
 uv run pytest tests/test_realization_pathway_funnel.py -q
 uv run python examples/physics/realization_pathway_funnel_gate.py
 ```
+
+## 2026-08-04 연속 루프 갱신
+
+- thin-shell의 scale-free edge, causal barotropic fluid, minimal elastic
+  membrane, negative-tension brane를 각각 소거했다.
+- 2022 beyond-Horndeski 결과를 반영해 해당 경로는 한 모델에서 high-energy
+  odd/even radial/angular stability가 닫힌 `4/6 active frontier`로 갱신했다.
+- 치명적 class veto가 없는 경로는 beyond-Horndeski와 비최소 thin-shell
+  defect 두 개뿐이며, 6/6 통과 경로는 여전히 0개다.
+
+전체 원장: `SPATIAL_FOLDING_REALITY_LEDGER.md`.

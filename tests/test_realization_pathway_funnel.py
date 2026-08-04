@@ -19,6 +19,21 @@ def test_no_current_pathway_passes_every_realization_gate() -> None:
     )
 
 
+def test_only_two_frontiers_remain_without_a_class_level_veto() -> None:
+    active = [
+        candidate
+        for candidate in spatial_folding_realization_funnel()
+        if not candidate.fatal_veto
+    ]
+
+    assert [candidate.name for candidate in active] == [
+        "beyond-Horndeski wormhole",
+        "thin-shell cut-and-paste wormhole",
+    ]
+    assert active[0].physical_gate_count == 4
+    assert active[1].physical_gate_count == 3
+
+
 def test_known_semiclassical_long_wormhole_sacrifices_shortcut() -> None:
     candidate = next(
         item for item in spatial_folding_realization_funnel() if "charged-fermion" in item.name

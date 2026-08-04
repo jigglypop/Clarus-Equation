@@ -129,8 +129,10 @@ def spatial_folding_realization_funnel() -> tuple[RealizationPathway, ...]:
             complete_linear_stability=False,
             engineering_scale_bridge=False,
             fatal_veto=False,
-            verdict="EXTERNAL FRONTIER / STABILITY INCOMPLETE",
-            decisive_next_gate="close all parity-even angular and slow-tachyon modes",
+            verdict="HIGH-ENERGY STABLE CONTROL / REALITY INCOMPLETE",
+            decisive_next_gate=(
+                "close slow tachyons, GR weak-field limit, luminal GW, and scale bridge"
+            ),
         ),
         RealizationPathway(
             name="thin-shell cut-and-paste wormhole",
@@ -142,8 +144,10 @@ def spatial_folding_realization_funnel() -> tuple[RealizationPathway, ...]:
             complete_linear_stability=False,
             engineering_scale_bridge=False,
             fatal_veto=False,
-            verdict="GEOMETRY ONLY / EXOTIC SHELL UNSOURCED",
-            decisive_next_gate="derive the shell equation of state from a quantum field",
+            verdict="GEOMETRY EXACT / SCALE-FREE EDGE QFT REFUTED",
+            decisive_next_gate=(
+                "derive a stable massive or anisotropic defect QFT with the junction EoS"
+            ),
         ),
         RealizationPathway(
             name="CE non-material topological boundary",
@@ -154,9 +158,9 @@ def spatial_folding_realization_funnel() -> tuple[RealizationPathway, ...]:
             ambient_shortcut=True,
             complete_linear_stability=False,
             engineering_scale_bridge=False,
-            fatal_veto=False,
-            verdict="DECISIVE OPEN HYPOTHESIS",
-            decisive_next_gate="write a local covariant boundary/topology action and spectrum",
+            fatal_veto=True,
+            verdict="REFUTED AS PURE SOURCE / EDGE QFT REQUIRED",
+            decisive_next_gate="specify a dynamical edge theory and derive its renormalized stress",
         ),
         RealizationPathway(
             name="phantom or wrong-sign kinetic field",
