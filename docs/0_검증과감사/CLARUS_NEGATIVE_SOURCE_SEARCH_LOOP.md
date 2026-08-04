@@ -173,6 +173,12 @@ no-go를 일부 우회하는 예를 주지만 안정성 분석이 불완전하�
 가장 가치 있는 다음 루프는 `비최소 CE + Casimir/곡률 진공편극`의
 renormalized $T_{\mu\nu}$를 계산하는 것이다.
 
+후속 `CLARUS_BACKREACTION_CANDIDATE_LOOP.md`에서 두 `FRONTIER_A`를
+backreaction scale로 비교했다. 이상적 Casimir는 zero-redshift throat에서
+tangential pressure $C/3$이 부족하고, 6.65fm massive vacuum polarization은
+1m에서 $2.90\times10^{-97}$에 불과했다. 따라서 거시적 최상위 후보는
+비최소 CE + Casimir 경계 하이브리드 하나로 좁혀졌다.
+
 ## 8. 실행
 
 ```powershell

@@ -233,14 +233,14 @@ def clarus_negative_source_funnel() -> tuple[NegativeSourceCandidate, ...]:
         ),
         NegativeSourceCandidate(
             name="CE nonminimal scalar vacuum polarization",
-            frontier="FRONTIER_A",
+            frontier="DEFERRED_MACRO",
             ce_native_components="xi R Phi^2 with xi about 0.49",
             local_null_gate="CONDITIONAL PASS",
             averaged_null_gate="CURVED-SPACE STATE REQUIRED",
             ghost_gradient_gate="FULL QUADRATIC MODES OPEN",
             renormalized_stress_gate="OPEN",
-            backreaction_gate="OPEN; EXTERNAL CONTROL EXISTS",
-            decisive_next_calculation="DeWitt-Schwinger stress on long-throat ansatz",
+            backreaction_gate="1 m LARGE-MASS SCALE FAILS",
+            decisive_next_calculation="seek massless/collective sector; heavy CE pole is insufficient",
         ),
         NegativeSourceCandidate(
             name="CE+SM charged-fermion magnetic Casimir mapping",
