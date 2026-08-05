@@ -1286,3 +1286,480 @@ physical/new-matter/boundary/stress/wormhole claim-lock
 `1375 passed, 13 skipped, 15 failed, 9 errors`이며, 실패·오류 파일과 원인은
 위 `§18` snapshot과 동일하다. 관련 45개 tracked deletion은 복구하거나 수정하지
 않았다.
+
+## 20. 2026-08-05 외부 원자료 field-to-matter 재분석
+
+추가 구현:
+
+- `benchmarks/external_field_to_matter_v1.json`
+- `reality_stone/python/reality_stone/clarus/external_field_to_matter.py`
+- `tests/test_external_field_to_matter.py`
+- `examples/physics/external_field_to_matter_reanalysis.py`
+- `docs/0_검증과감사/EXTERNAL_FIELD_TO_MATTER_REANALYSIS.md`
+
+이 루프는 합성 detector를 만들지 않고 세 독립 공개자료를 감사했다. Vezzoli et
+al.의 figure source에서
+
+\[
+\beta_2\Delta\omega^2+\frac{\beta_4}{12}\Delta\omega^4=mK
+\]
+
+를 다시 풀어 (954.3127/1173.0601) nm를 얻었고, 공개 CAR 최대 cell
+(953.9375/1172.888889) nm의 inverse-wavelength energy residual은
+(2.8233\times10^{-4})였다. (g^{(2)}(0)=0.38095\pm0.06), CAR=0
+control (g^{(2)}(0)=1.00\pm0.04)도 source table에서 재계산했다. 다만 자료는
+처리된 figure source이며 event-level TDC count가 아니고, lab-frame 식은
+quasi-phase-matched SFWM과 동일하므로 literal moving-mirror DCE나 Clarus
+고유 증거로 승격하지 않는다.
+
+CMS HEPData의 7개 (p_{T,ee}) bin을 직접 적분해
+
+\[
+\sigma_{\rm fid}=263.3930128\ \mu\mathrm b
+\]
+
+를 얻어 논문값 (263.5\pm1.8_{\rm stat}\pm17.8_{\rm syst}\ \mu\mathrm b)를
+재현했다. 통계오차 적분은 (1.7238\ \mu\mathrm b)이고, systematic 공분산
+미공개를 반영한 uncorrelated/fully-correlated 두 극한은
+(16.4958\)–(19.3189\ \mu\mathrm b)라서 게재값을 포함한다. 이는 quasi-real
+photon fusion에 의한 보통 (e^+e^-) 생성을 지지하지만 event four-vector가
+공개된 것은 아니며 자유 on-shell photon 두 개의 고립 충돌로 과장하지 않는다.
+
+1T-TaS2 `10.nxs`는 (256\times344\times45), 두 펌프 합산
+(0.60\ \mathrm{mJ/cm^2}), 보고 임계 (0.50\ \mathrm{mJ/cm^2}), 25 fs 간격을
+직접 확인했다. 보고 (2.2\pm0.1) THz는 (454.5\pm20.7) fs와 주기당 18.2
+sample이다. 그러나 본문/원자료의 고정 delay가 35/25 ps, 대응표/NeXus의 온도가
+160/20 K로 충돌하고 fit code·bound와 acquisition-level lifetime curve가 없어
+exact frequency/lifetime refit은 `False`로 잠갔다. 이는 기존 Ta/S 원자·전자의
+준안정 전자·구조 상 재배열이지 새 입자·원자 생성이 아니다.
+
+가장 중요한 bridge 반례는 에너지와 provenance다. 관측 optical pair는
+(2.3567938) eV이고 (e^+e^-) 정지질량 문턱은 (1.0219979) MeV이므로
+
+\[
+\frac{2m_ec^2}{E_{s+i}}=4.33639\times10^5.
+\]
+
+두 결과는 다른 장치·run·입력에서 얻었고 중간 전달 기록이 없다. 따라서
+`pump_to_nonclassical_photon_pairs_supported=True`와
+`electromagnetic_field_to_ordinary_massive_pairs_supported=True`는 유지하지만
+`same_apparatus_end_to_end_chain_proven`, `clarus_field_observed`,
+`clarus_coupling_measured`, `new_material_species_created`,
+`pump_off_persistent_structure_proven`,
+`free_energy_or_vacuum_energy_extraction_proven`은 모두 `False`다.
+
+snapshot은 SHA-256
+`8c78bccb0e8d197bcea80c229e068baa72c1c7a2b920c6b8ddd7f473efc0997f`로
+고정했다. focused suite 결과는 최종 검증 명령 결과를 따른다.
+
+## 21. 2026-08-05 핵융합 공명 루프 엔지니어링
+
+추가 구현:
+
+- `reality_stone/python/reality_stone/clarus/fusion_resonance_loop.py`
+- `examples/physics/fusion_resonance_loop_gate.py`
+- `tests/test_fusion_resonance_loop.py`
+- `docs/0_검증과감사/FUSION_RESONANCE_LOOP_ENGINEERING.md`
+
+핵심 반례는 폭의 크기가 아니라 전달 사차원운동량이다. 정적 핵간 교환은
+(q^0=0), 따라서 (q^2=-|\mathbf q|^2<0)이고 양의 질량 scalar pole
+(q^2=m_\Phi^2>0)에 도달하지 못한다. 그러므로 진공 line의
+(Q=m_\Phi/\Gamma_\Phi)를 정적 Yukawa potential에 곱하는 bridge는 `REJECT`다.
+별도 시간의존 background는 source amplitude, 공간 mode, pump work와
+backreaction을 푼 뒤 D--T scattering amplitude에 연결해야 한다.
+
+레거시 산술을 독립 재계산한 결과는 다음과 같다.
+
+```text
+vacuum Q                       3.092181401e15
+angular frequency rad/s        4.504324130e22
+cyclic frequency Hz            7.168854507e21
+cyclic linewidth Hz            2.318380967e6
+collision sigma ansatz m^2     6.099961571e-34
+collision width ansatz MeV     2.384950180e-15
+plasma Q under ansatz           2.476237489e15
+scalar one-loop delta a_e       2.132519487e-19
+```
+
+반사실 (Q\alpha_\Phi) Yukawa WKB는 (Q=10^9)에서
+(\gamma_0=2.813647838), (\gamma_Q=0.958673329),
+(\Sigma=40.851723790)을 준다. 핵반경에서 attraction과 Coulomb 항이 같아지는
+값은 (6.0392\times10^7)이지만 전체 바깥 hump가 20 keV 이하가 되는 analytic
+임계는 (6.2974\times10^{10}), 형식적 대역폭은 (1.5880\times10^{-11})이다.
+이 수치 통과는 `COUNTERFACTUAL_Q_TIMES_YUKAWA_WKB_CONTROL_ONLY`이며 physical
+barrier reduction으로 승격하지 않는다.
+
+정본 Z2 분기에서는 단일 scalar--핵자 결합이 0이라 기존 힘이 `CLOSED_OFF`다.
+thermal D--T reactivity, Lawson condition, NIF capsule gain과 점화에너지는 모두
+`NOT_REACHED/False`로 잠갔다. 다음 허용 루프는 Z2 쌍 vertex, 명시적 Z2 파괴의
+비공명 spacelike amplitude, 또는 source-normalized 시간주기 background 가운데
+하나에서 표준모형 대비 부호·크기가 고정된 D--T amplitude 잔차를 먼저 유도하는
+것이다.
+
+## 22. 2026-08-05 핵융합 전분기 루프 엔지니어링
+
+추가 구현:
+
+- `reality_stone/python/reality_stone/clarus/fusion_full_loop.py`
+- `examples/physics/fusion_full_loop_gate.py`
+- `tests/test_fusion_full_loop.py`
+- `docs/0_검증과감사/FUSION_FULL_LOOP_ENGINEERING.md`
+
+1차 감사가 남긴 세 물리 분기와 두 후속 공학 분기를 모두 fail-closed gate로
+연결했다. 정본 Z2 분기는 h-Phi-Phi tree vertex를 재현하지만 단일 source가 없고,
+두-scalar cut 문턱은 59.29514 MeV다. 공급 portal benchmark는 Higgs invisible
+BR 0.825312로 공급 상한 0.11을 실패하며 renormalized pair D--T amplitude는 없다.
+
+명시적 Z2 파괴의 레거시 mixing 0.04344는 공급 상한 0.0038의 11.4316배이고
+rate-like 제곱비는 130.681이다. 상한에서 핵반경 정적 힘은 Coulomb의
+1.2671e-10이며 timelike Q를 곱하지 않는다. coherent 분기는 1% 핵자질량 변조에
+필요한 prescribed free-field energy density 3.2656e38 J/m^3, 수명별 보충 power
+density 4.7569e45 W/m^3를 음의 대조군으로 고정했으나 source·pump·backreaction·
+Floquet D--T scattering은 모두 미도달이다.
+
+표준 기준선은 10 keV에서 Bosch--Hale <sigma v>=1.136165471e-16 cm^3/s와
+0차원 n tau=3.000523249e14 cm^-3 s를 재현했다. 후보 sigma(E)가 없으므로 수정
+reactivity/Lawson은 False다. NIF 2.05 MJ 기준을 반사실 WKB 40.8517로 나눈
+50.1815 kJ는 계산되지만 `rejected_linear_rescale_energy_kj`로만 저장하며 capsule
+radiation hydrodynamics와 점화 예측은 False로 잠갔다. 최대 지지 단계는
+`STANDARD_DT_BASELINE_PLUS_SOURCE_ENERGY_NEGATIVE_CONTROLS`다.
+
+## 23. 2026-08-05 핵융합 식-수정 반복 루프
+
+추가 구현:
+
+- `reality_stone/python/reality_stone/clarus/fusion_equation_iteration_loop.py`
+- `examples/physics/fusion_equation_iteration_gate.py`
+- `tests/test_fusion_equation_iteration_loop.py`
+- `docs/0_검증과감사/FUSION_EQUATION_ITERATION_LOOP.md`
+
+레거시 Q-times-Yukawa 식을 제거하고 두 action-traceable EFT 식을 실제
+Bosch--Hale cross section과 Maxwellian kernel까지 전파했다. 명시적 Z2 파괴
+확장에서는 g_PhiNN=sin(theta) f_N m_N/v의 단일 exchange를 사용했고, 정본
+Z2에서는 Higgs를 적분한 C_N=2 lambda_HP f_N m_N/m_h^2 접촉항의 두-scalar
+퍼텐셜 (V=-C_N^2 m K1(2mr)/(32 pi^3 r^2))을 사용했다. 수정 nuclear S-factor는
+유도되지 않았으므로 표준 S(E)를 고정하고 외부 장벽 WKB 비만 곱하는 조건부
+bridge로 명시했다.
+
+deuteron/triton coherent point-nucleus scalar charge product A_D A_T=6을 포함했다.
+이는 유한 핵 form factor를 1로 둔 낙관적 상한이다. 10 keV에서 공급 mixing 상한
+0.0038의 열반응률 증가율은 6.1813e-10, invisible-width 상한
+lambda_HP=0.005110743의 두-scalar 증가율은 3.8335e-18다.
+질량 0, unit mixing은 모든 양의 질량과 |sin(theta)|<=1 Higgs-비례 단일-scalar
+분기의 점별 상한이며 증가율 4.0194e-4로 선언한 1% 목표를 실패한다. 두-scalar
+질량 0 상한도 2.0218e-17이다. turning point에는 sin-squared 변수변환을 적용했고
+공급 mixing 증가율은 coarse/default/fine 격자에서 6.181088/6.181294/6.181505e-10으로
+수렴했다.
+
+1%를 수학적으로 달성하는 질량 0 직접 핵자 결합은 g_N=0.00569352이고 Higgs
+mixing 환산값은 4.97583이다. 현재 선택 작용에 직접 Phi Nbar N 연산자가 없고
+unit mixing 범위도 넘으므로 `MATHEMATICAL_TARGET_ONLY_NEW_DIRECT_OPERATOR_REQUIRED`
+로 잠갔다. 계산 사슬의 최대 지지 단계는
+`CONDITIONAL_STATIC_POTENTIAL_TO_THERMAL_REACTIVITY_CHAIN`이며 물리적 CE 핵융합
+upgrade와 NIF 점화 예측은 False다.
+
+## 24. 2026-08-05 핵융합 잔여분기 최종 루프
+
+추가 구현:
+
+- `reality_stone/python/reality_stone/clarus/fusion_remaining_branches_loop.py`
+- `examples/physics/fusion_remaining_branches_gate.py`
+- `tests/test_fusion_remaining_branches_loop.py`
+- `docs/0_검증과감사/FUSION_REMAINING_BRANCHES_LOOP.md`
+
+1% 열반응률 목표의 직접 핵자 결합을 등록 질량 29.64757 MeV에서 다시 풀어
+g_N=0.0174265를 얻었다. massless 하한 0.00569352보다 크며 Higgs-mixing 등가값은
+약 15.23이다. 질량비례 quark completion으로 환산한 scale은 16.153 GeV로 scalar
+질량보다 545배 높지만 electroweak vev의 0.0657뿐이다. 핵포화밀도 uniform
+mean-field 에너지 진단은 0.2124 MeV/nucleon이다. 저에너지 결합은 perturbative이나
+선택 portal 작용, gauge-invariant UV completion, NN scattering·nuclear binding·
+rare-decay joint likelihood가 없어 physical gate는 False다.
+
+published dynamically assisted electromagnetic control의 1e15--1e16 V/m를 독립
+장부화했다. 에너지밀도는 4.427e18--4.427e20 J/m3이고, D--T 상대유효전하로
+1 keV·1e16 V/m quiver는 68.98 fm다. 반면 29.64757 MeV CE 주파수에서 같은
+field의 quiver는 7.85e-8 fm이며 3.24 fm에는 4.13e23 V/m가 필요하다. 이는
+electromagnetic 비교일 뿐 scalar source가 아니다. CE 1% mass-modulation
+free-field density는 published max EM density의 7.38e17배이고 source·pump·
+backreaction·Floquet scattering은 모두 미도달이다.
+
+허용 정적 gain 6.181e-10과 Higgs-비례 모델계열 상한 4.019e-4를 Lawson/power
+경계까지 전파했다. 후자를 NIF 2.05 MJ에 선형 적용한 823.65 J는 명시적으로
+rejected upper bound이며 radiation hydrodynamic prediction이 아니다. 선언된
+모든 정적·시간의존 분기를 감사했지만 물리적 1% reactivity gain과 reactor/ICF
+upgrade는 False, 최대 지지 단계는 `MODEL_CLASS_NO_GO_PLUS_SOURCE_ENERGY_CONTROLS`다.
+
+## 25. 2026-08-05 직접 핵자 연산자 저에너지 핵산란 루프
+
+추가 구현:
+
+- `reality_stone/python/reality_stone/clarus/fusion_direct_scattering_loop.py`
+- `examples/physics/fusion_direct_scattering_gate.py`
+- `tests/test_fusion_direct_scattering_loop.py`
+- `docs/0_검증과감사/FUSION_DIRECT_SCATTERING_LOOP.md`
+
+D--T coherent scalar charge product 6을 포함한 등록질량 1% 해 g_N=0.0174265를
+저에너지 핵관측량으로 내렸다. 자유 Born Yukawa scattering-length 이동은
+-0.00509035 fm로 np triplet/singlet 분석의 보고 오차 0.0015/0.0043 fm 대비
+3.39/1.18배다. normalized Hulthén deuteron에서 1차 expectation은 -2.07696 keV,
+binding fraction 9.34e-4다.
+
+두 값은 fixed/free controls라서 strong interaction을 함께 재적합한 exclusion이
+아니다. distorted-wave Born, NN phase shifts, deuteron/triton/helium few-body fit이
+모두 False이므로 physical direct-operator gate도 False다. 최대 지지 단계는
+`FREE_BORN_AND_HULTHEN_TENSION_CONTROL_FULL_NUCLEAR_REFIT_REQUIRED`다.
+
+## 26. 2026-08-05 핵융합 Floquet/source 식-수정 루프
+
+추가 구현:
+
+- `reality_stone/python/reality_stone/clarus/fusion_floquet_source_loop.py`
+- `examples/physics/fusion_floquet_source_gate.py`
+- `tests/test_fusion_floquet_source_loop.py`
+- `docs/0_검증과감사/FUSION_FLOQUET_SOURCE_LOOP.md`
+
+Lindsey et al.의 Floquet--Volkov generalized-Bessel sideband를 Bosch--Hale
+D--T 단면적에 적용한 뒤 10 keV Maxwellian과 등방 각도분포를 적분했다.
+0.3 keV photon에서 (10^{16}) V/m는 반응률을 4.223237599% 높이고, 정확히
+1%에 필요한 장은 (4.861597077\times10^{15}) V/m이다. sideband 확률합,
+무구동 복원, Bosch--Hale fit-domain 질량, 에너지·각도·위상 격자 수렴을 모두
+통과했다. 다만 Lindsey et al.의 thermal benchmark는 1 keV이고 CN/FV 대조는
+0.1--10 keV 충돌에너지다. 10 keV plasma gain의 95.8%는 10 keV보다 높은
+에너지에서 누적되므로 이 점은 수치적으로 수렴한 **FV 식 외삽**이지 공개
+validation pass가 아니다. 1 keV benchmark의 1% 임계장 8.680352e14 V/m는
+별도 published-support gate를 통과한다.
+
+임계장의 에너지밀도는 (1.04635\times10^{20}) J/m³이다. 10 fs, 반지름
+10 nm의 선언된 평면파 pulse는 0.09855 J이며, 총 D/T ion density
+(10^{31}\,\mathrm{m^{-3}}) microvolume에서 추가 fusion/pulse 비는
+(7.65\times10^{-9})이다. 따라서 source 숫자는 닫혔지만 net-energy reactor
+upgrade는 아니다.
+
+29.64757 MeV CE scalar는 0.3 keV QED mode와 동일하지 않다. exact-Z2에서 두
+on-shell scalar mode의 차주파수 beat는 kinematically 가능하고 그 reduced
+wavelength 1479.5 fm는 Gamow turning radius보다 길다. 그러나 허용 portal
+계수로 1% kinetic-phase toy를 맞추려면 30.24396% mass modulation,
+1.7570e6 MeV mode amplitude와 5.65824e40 J/m³가
+필요하다. DC 및 59.3 MeV sum-frequency 성분도 피할 수 없고 scalar-specific
+finite-pulse Crank--Nicolson 해가 없다. 최종 단계는
+`QED_FV_10KEV_FORMULA_EXTRAPOLATION_CE_SCALAR_SOURCE_NO_GO`이며 CE scalar 1%와
+reactor/ICF upgrade는 계속 `False`다.
+
+## 27. 2026-08-05 flavor-aligned 직접 scalar 후보 루프
+
+추가 구현:
+
+- `reality_stone/python/reality_stone/clarus/fusion_flavor_aligned_loop.py`
+- `examples/physics/fusion_flavor_aligned_gate.py`
+- `tests/test_fusion_flavor_aligned_loop.py`
+- `docs/0_검증과감사/FUSION_FLAVOR_ALIGNED_LOOP.md`
+
+등록질량 1% 해 (g_N=0.0174265)의 D/T charge product를 flavor-aligned
+(u,d,s) scalar에 정확히 맞췄다. (g_p=0.154\,\mathrm{GeV}/f_phi),
+(g_n=0.158\,\mathrm{GeV}/f_phi) matching은 (f_phi=8.9710) GeV,
+(g_p=0.0171664), (g_n=0.0176123)을 준다. 5 TeV VLQ 예시의 실제 새
+Yukawa 최대값은 0.299이고 left mixing은 0.0104 이하라 표시 coupling의
+perturbativity는 통과한다. 큰 kappa-phi=557은 단일 Lagrangian coupling이
+아니라 유효 계수비다. full SMEFT--WET RG matching과 29.65 MeV 질량의
+radiative stability는 아직 통과하지 않았다.
+
+Broggini et al.의 equal-coupling neutron 상한을 29.64757 MeV로 외삽하면
+0.0175796이고 flavor-matched Pb 유효 coupling은 0.0175242라 중앙 여유는
+0.3159%다. 그러나 원 signal 범위는 약 6.05 MeV 이하이고 representative
+(q^2/m^2=0.198) correction scale이 여유보다 훨씬 크며 mass-specific
+differential likelihood가 없다. Delaunay et al. invisible uds 중앙곡선은
+후보보다 6.64배 위지만 논문이 partial-NLO correction 최대 10배를 명시한다.
+prompt invisible decay 예시는 존재하나 cosmology/SN/direct-detection joint
+gate가 없다. 따라서 최종 분류는
+`CLOSEST_CONDITIONAL_CANDIDATE_NOT_CONSTRAINT_CLEARED`이며 물리 branch는
+계속 `False`다.
+
+## 28. 2026-08-05 핵융합 직접 연산자 대체분기 루프
+
+추가 구현:
+
+- `reality_stone/python/reality_stone/clarus/fusion_operator_alternatives_loop.py`
+- `examples/physics/fusion_operator_alternatives_gate.py`
+- `tests/test_fusion_operator_alternatives_loop.py`
+- `docs/0_검증과감사/FUSION_OPERATOR_ALTERNATIVES_LOOP.md`
+
+pure trace/gluon 방향은 D/T 1%에 (|K_\Theta|v/f=5.48)이 필요해 digitized
+one-parameter rare-decay bound (1.38\times10^{-3})을 3968배 넘는다.
+Protophobic endpoint는 Pb neutron bound를 1.336배 넘고, neutron-phobic
+endpoint는 kaon combinations를 (9.47\times10^3), (2.75\times10^4)배
+넘는다. Pb charge cancellation은 D/T charge product를 음수로 바꾸므로
+attraction blind spot이 아니다.
+
+massless disformal (r^{-7}) potential을 WKB--Bosch--Hale--Maxwellian chain에
+전파하면 1%에 (M=180.705) MeV가 필요하다. (M=200) MeV에서는 gain
+0.004396, 810 MeV에서 (6.02\times10^{-8}), 1.2 TeV에서
+(2.60\times10^{-33})이다. 등록 scalar mass를 넣으면 더 작아지므로 이는
+낙관적 상한이다. 200/810 MeV 분광·stellar 숫자는 massless scalar 참고값이라
+29.65 MeV mass-specific 배제로 쓰지 않았다. 적용 가능한 light-mediator collider
+bound 약 1.2 TeV만으로도 필요한 180.705 MeV scale은 닫힌다. 모든 대체분기의
+physical gate는 False이고 최대 단계는
+`ALTERNATIVE_OPERATOR_MODEL_CLASS_NO_GO`다.
+
+## 29. 2026-08-05 flavor-aligned 후보 여유 강건성 루프
+
+추가 구현:
+
+- `reality_stone/python/reality_stone/clarus/fusion_flavor_margin_robustness_loop.py`
+- `examples/physics/fusion_flavor_margin_robustness_gate.py`
+- `tests/test_fusion_flavor_margin_robustness_loop.py`
+- `docs/0_검증과감사/FUSION_FLAVOR_MARGIN_ROBUSTNESS_LOOP.md`
+
+정규화 Gaussian D/T one-body density로 29.64757 MeV Yukawa potential을 접고
+10 keV WKB--Bosch--Hale Maxwell 평균의 1% 지점을 다시 풀었다. 필요한 charge
+product는 점핵 대비 0.97902--0.98579, coupling은 0.98946--0.99287이다.
+Gaussian·3차원 exponential·균일구와 두 반지름 세트의 선형응답 외피까지 넓히면
+가장 유리한 coupling 비는 0.987857이다. 이 정도 finite-size 효과는 후보를 크게
+이동시키지 않으며 ab-initio one/two-body scalar current와 covariance는 아직 없다.
+
+25 keV neutron--Pb에서 30--150도 운동량 전달은 3.531--13.178 MeV다. 유한
+propagator와 Pb form factor의 국소 response는 0.925--1.109로 중앙 통과 임계
+1.00633을 가로지른다. 자유 normalization을 둔 각분포 p-wave projection은
+0.9096--0.9225로 상한을 완화하지만, 10 eV--10 keV 총단면적의 (k^2) 계수
+projection은 1.0498--1.0797로 상한을 강화한다. 원 covariance, strong phase,
+distorted-wave 및 finite-density provenance가 없어 어느 쪽도 hard likelihood로
+승격하지 않았다. sigma2 proxy는 181×241과 1001×1001 격자를 비교했고 최대 상대
+이동 3.82e-5가 선언한 1e-4 수치 허용치 안임을 확인했다.
+
+rare-kaon 중앙곡선의 NLO tightening 임계는 점핵 6.6371, 가장 유리한 D/T proxy
+6.7187로 논문이 인정한 최대 10배 이론오차보다 작다. 최신 NA62 2016--2022 결과의
+전 질량 BR 개선 1--3배는 coupling bound에 (1/\sqrt I)로 전달했다. 추가로 JHEP
+Figure 2-a PDF 벡터 축과 후보를 감싸는 선분을 코드에 고정해 29.64757 MeV에서
+
+\[
+\mathcal B_{2016\text{--}22}^{90\%}=2.4763\times10^{-11},\qquad
+\mathcal B_{2016\text{--}18}^{90\%}=3.2968\times10^{-11}
+\]
+
+을 보간했다. 중앙 개선 proxy 1.33137은 coupling bound multiplier 0.866665와 점핵
+NLO 임계 5.75212를 준다. old/new BR 각각의 독립 5% readout box까지 전파하면
+개선은 1.20457--1.47151, 점핵 NLO 임계는 5.47136--6.04729다. 이는 재현 가능한
+그림 판독이지만 tabulated CLs bin, acceptance 또는 full uds weak-ChPT recast가
+아니므로 `exact_candidate_mass_observed_limit_entered=False`로 유지했다. 최종
+`margin_robustness_gate_pass`와 `physical_ce_fusion_branch_accepted`는 모두
+`False`다.
+
+## 30. 2026-08-05 핵융합 spin/operator 전수 루프
+
+추가 구현:
+
+- `reality_stone/python/reality_stone/clarus/fusion_spin_operator_loop.py`
+- `examples/physics/fusion_spin_operator_gate.py`
+- `tests/test_fusion_spin_operator_loop.py`
+- `docs/0_검증과감사/FUSION_SPIN_OPERATOR_LOOP.md`
+
+deuteron spin 1과 triton spin 1/2에서
+\(O=\Sigma_D\cdot\Sigma_T\)의 quartet/doublet 고유값 \(+1,-2\)를 사용했다.
+raw 비편극 trace는 0이지만 저에너지 D–T의 \(J^\pi=3/2^+\) quartet projector를
+통과한 trace는 \(2/3\)이므로 spin-dependent 장거리 힘의 1차항을 기계적으로
+0으로 버리지 않았다.
+
+기존 scalar의 1% 필요 charge product \(1.822097176\times10^{-3}\)와 같은 장거리
+세기를 맞추면 pseudoscalar는
+\(|g_{PD}g_{PT}|=131.0561\), axial-vector는
+\(g_{AD}g_{AT}=2.73315\times10^{-3}\)이다. Pseudoscalar는
+\(g_P^2/(4\pi)=10.43\)으로 one-boson perturbation 범위를 벗어난다. Axial은 수치상
+섭동적이지만 보편 quark K proxy와 약 \(5.9\times10^4\)의 간격이 있고 비보편
+flavor/UV completion은 공급되지 않았다.
+
+Vector에서는 attraction을 유지하는 minimax 해
+\((g_p,g_n)=(0.12073,-0.09055)\)와 \(^{208}\)Pb의 \(q=0\) charge를 지우는
+\((0.13153,-0.08560)\) 해를 찾았다. 후자는 D–T에는 정확히 attractive이지만
+finite-\(q\) Pb form factor, π/K likelihood와 anomaly-free gauge completion이 없다.
+Spin-2의 보편 등가값 \(c/\Lambda=0.0227767\,\mathrm{GeV^{-1}}\)은 BaBar proxy보다
+visible/invisible 각각 759/114배 크며, nucleon-only 비보편에는 그 proxy를 직접
+적용하지 않고 보존된 UV completion 부재로 닫았다. Analytic on-shell derivative
+node는 같은 Yukawa pole residue도 제거해 contact 연산자로 줄어든다. 정확한
+NCSMC/R-matrix와 29.64757 MeV 질량별 likelihood가 없어 모든 physical gate는
+`False`, 최대 단계는 `OPERATOR_LEVEL_MATCHES_ONLY_FAIL_CLOSED`다.
+
+## 31. 2026-08-05 D–T 스핀 편극 표준모형 대조 루프
+
+추가 구현:
+
+- `reality_stone/python/reality_stone/clarus/fusion_spin_polarization_control_loop.py`
+- `examples/physics/fusion_spin_polarization_control_gate.py`
+- `tests/test_fusion_spin_polarization_control_loop.py`
+- `docs/0_검증과감사/FUSION_SPIN_POLARIZATION_CONTROL_LOOP.md`
+
+새 입자 없이 이상적인 \(J^\pi=3/2^+\), \(s\)-wave quartet만 반응한다고 두면
+\(A_J=1+P_DP_T/2\)다. 이 상수배율은 Bosch–Hale Maxwellian 평균과 교환되므로
+10 keV에서 \(P_DP_T=0.02\)인 **조건부 projector 대조군**의 비는 1.01이다.
+실제 \(C_{zz}(E)\)는 직접 측정되지 않았고 energy-dependent 편극 단면적을 새로
+적분하지 않았으므로 물리적 반응률 pass로 세지 않는다. 설계 대조점
+\(P_D=0.50,P_T=0.10\)은 주입 시 2.5% 여유를 가지며,
+반응 시점에 각 종이 같은 비율로 감소하면 63.25% 이상을 보존해야 1%가 남는다.
+
+현장 열평형 편극은 spin-1/spin-1/2 Brillouin 분포를 직접 역산했다. 10 keV에서
+필요한 균일장은 \(3.50136\times10^{10}\) T, 에너지밀도는
+\(4.87790\times10^{26}\,\mathrm{J/m^3}\)이고 전자 QED 임계장의 7.93배라 탈락한다.
+사전 편극 source 장부는 임의 처리량 대신 fusion power 500 MW와 single-pass burn
+1%를 선언해 \(1.77316\times10^{22}\) D–T pair/s와
+\(1.48075\times10^{-4}\,\mathrm{kg/s}\)를 요구한다. 공개된
+\(10^{18}\) D atoms/s는 달성값이 아니라 이상적 편극 deuterium neutral-beam
+개발 목표이고 pair rate가 아니므로, per-species D 처리율과의 \(1.77\times10^4\)배
+비교만 기록한다. 기준 기대 융합에너지는 pair당 176 keV다. 선형 1% 증분은
+1.76 keV/pair = 5 MW지만, 고정 노출의 hazard
+\(\tau=-\ln(1-f)\)를 1.01배 하여 \(f'=1-(1-f)^{1.01}\)로 바꾼 보수적 장부는
+\(\Delta f=9.94933\times10^{-5}\), 1.75108 keV/pair = 4.97467 MW다.
+전기변환효율 40%의 fixed-exposure wall-plug break-even은 700.433 eV/pair =
+1.98987 MW, 10배 공학 여유 기준은 70.0433 eV/pair = 0.198987 MW다. 편극 tritium
+source, 극저온·마이크로파·재순환의 실측
+pair당 비용, 실제 burn-weighted D–T plasma retention이 없으므로 source/pump gate는
+`False`다. 이 branch는 CE가 아닌 표준모형 조건부 대조군이며 최대 단계는
+`STANDARD_MODEL_IDEAL_QUARTET_ONE_PERCENT_CONTROL_SOURCE_THROUGHPUT_AND_RETENTION_FAIL_CLOSED`다.
+
+최종 물리 gate는 retention/pump aggregate만 신뢰하지 않는다. 실제 burn-weighted
+편극 곱의 수치가 source 곱 이하이면서 0.02 이상인지, 측정한 wall-plug eV/pair가
+700.433 eV/pair **미만**인지까지 직접 다시 비교하고 D/T source, plasma retention,
+cryo/microwave,
+tritium handling, recycle/repolarization과 net-positive leaf를 하나씩 논리곱한다.
+tiny gain은 cancellation-safe `expm1/log1p` 식으로 계산하며, Bosch–Hale 및 열평형
+fusion-domain 입력은 0.2--100 keV 밖에서 거부한다.
+reaction·source·retention·pump의 목표가 모두 같은 1% 이상인지도 최종 함수가
+교차검사해, 다른 목표에서 계산한 느슨한 pump ceiling을 섞을 수 없게 했다.
+또한 저장된 파생 ceiling을 신뢰하지 않고 temperature·polarization·fusion power·burn
+fraction·efficiency에서 Bosch–Hale baseline, pair rate, fixed-exposure increment와
+wall-plug ceiling을 canonical 식으로 재계산한다.
+
+## 32. 2026-08-05 D–T scalar-current 핵응답 루프
+
+추가 구현:
+
+- `reality_stone/python/reality_stone/clarus/fusion_scalar_current_loop.py`
+- `examples/physics/fusion_scalar_current_gate.py`
+- `tests/test_fusion_scalar_current_loop.py`
+- `docs/0_검증과감사/FUSION_SCALAR_CURRENT_LOOP.md`
+
+기존 flavor-aligned 후보의 0.154/0.158은 dimensionless fraction이 아니라 각각
+GeV 단위 p/n sigma numerator임을 코드 명칭에서 바로잡았다. 현대 isoscalar
+입력은 조건부로 p=n=72.3 MeV라고 두고, 고정 scale에서 p/n 평균의 제곱 대신
+실제 D/T charge 조합을 계산한다. product 비는 0.21388257, 중심값만 맞춘 scale
+진단은 4.148854 GeV다.
+이는 covariance와 UV·Pb·kaon likelihood를 다시 fit한 새 후보가 아니다.
+
+Körber Helm과 기존 Gaussian의 D/T product는 등록된
+\(q=(0,10,20,29.64757,40)\) MeV 5점에서 최대 표본 잔차
+\(8.99074\times10^{-5}\)다. \(q=i m_\phi\) 잔차
+\(-4.94119\times10^{-5}\)는 exterior-residue 해석 진단일 뿐 full folded
+실공간 response나 측정점이 아니다. \(q=40\) MeV scalar-radius 양 끝점의 중심
+coupling 진단은 +1.2336--+1.2973%지만 strange-slope와 공동 covariance를 포함한
+완전한 불확실성 띠가 아니다.
+
+2026 lattice D/He3 sigma-term을 T proxy로 쓰면 공통 coupling 진단은
++1.10567% ± 1.48046%다. 실제 T 값과 D/T covariance가 없으므로 likelihood가
+아니다. Andreoli의 D two-body fraction 0.7--3.0%를
+\((1-\Delta^{(2b)})^{-1/2}-1\)로 exact amplitude 변환하고 현대 light weight를
+곱한 범위는 +0.21267--+0.92756%다. T 부호, 동일 regulator의 current/potential,
+fit된 short-range contact와 공동 covariance는 여전히 없다.
+
+최종 scalar-current certification은 p/n·sigma covariance, normalization likelihood,
+ab-initio density, full scalar form factor, 실제 T, uncertainty propagation,
+regulator 일치, two-body likelihood/covariance와 3.24--50 fm 실공간 응답 leaf를
+직접 재검사한다. 이 인증 뒤에도 upstream UV/action 및 Pb·kaon·dark-sector 제약을
+다시 논리곱한다. 현재 모든 단계에서 `scalar_current_certification_pass=False`,
+`physical_ce_fusion_branch_accepted=False`다.

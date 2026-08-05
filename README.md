@@ -308,7 +308,18 @@ python -m venv .venv
 | [`fermion_mass.py`](examples/physics/fermion_mass.py) | 페르미온 세대비 |
 | [`higgs_mass.py`](examples/physics/higgs_mass.py) | 힉스 질량 0.6 $\sigma$ |
 | [`ckm_derivation.py`](examples/physics/ckm_derivation.py) | CKM/PMNS 일괄 유도 |
-| [`fusion_trigger_check.py`](examples/physics/fusion_trigger_check.py) | 공명 핵융합 점검 |
+| [`fusion_resonance_loop_gate.py`](examples/physics/fusion_resonance_loop_gate.py) | 핵융합 공명 fail-closed 루프 감사 |
+| [`fusion_full_loop_gate.py`](examples/physics/fusion_full_loop_gate.py) | 핵융합 Z2·구동·열반응률·Lawson·NIF 전분기 감사 |
+| [`fusion_equation_iteration_gate.py`](examples/physics/fusion_equation_iteration_gate.py) | 허용 퍼텐셜부터 열반응률까지 식-수정 반복 루프 |
+| [`fusion_remaining_branches_gate.py`](examples/physics/fusion_remaining_branches_gate.py) | 직접 연산자 UV·시간의존 source·reactor/ICF 잔여분기 감사 |
+| [`fusion_direct_scattering_gate.py`](examples/physics/fusion_direct_scattering_gate.py) | 직접 scalar의 Born 산란길이·Hulthén deuteron 핵물리 control |
+| [`fusion_floquet_source_gate.py`](examples/physics/fusion_floquet_source_gate.py) | QED Floquet 10 keV 식 외삽·1 keV 공개 benchmark·pump 장부와 CE scalar beat 비동일성 감사 |
+| [`fusion_flavor_aligned_gate.py`](examples/physics/fusion_flavor_aligned_gate.py) | flavor-aligned 직접 scalar의 UV·neutron·kaon·invisible 경계 감사 |
+| [`fusion_flavor_margin_robustness_gate.py`](examples/physics/fusion_flavor_margin_robustness_gate.py) | D/T finite-size·Pb recast·최신 NA62 Figure 2 보간을 포함한 flavor 후보 여유 강건성 감사 |
+| [`fusion_operator_alternatives_gate.py`](examples/physics/fusion_operator_alternatives_gate.py) | trace/gluon·isospin-phobic·disformal 대체 연산자 no-go 감사 |
+| [`fusion_spin_operator_gate.py`](examples/physics/fusion_spin_operator_gate.py) | pseudoscalar·axial·vector·spin-2·derivative-node의 quartet 투영과 제약 fail-closed 감사 |
+| [`fusion_spin_polarization_control_gate.py`](examples/physics/fusion_spin_polarization_control_gate.py) | 표준모형 D–T 편극의 이상적 quartet 1% 조건부 대조군과 열평형·retention·wall-plug source 장부 감사 |
+| [`fusion_scalar_current_gate.py`](examples/physics/fusion_scalar_current_gate.py) | flavor-aligned 후보의 D/T one-body·scalar-radius·sigma-term proxy·chiral two-body current와 공동 covariance 결손 감사 |
 
 ---
 

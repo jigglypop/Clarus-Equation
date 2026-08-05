@@ -1,0 +1,457 @@
+{
+  "schema": "clarus.public_resonance_source_manifest.v1",
+  "retrieved_at": "2026-08-05T08:06:39+09:00",
+  "data_root": "data/external/public_resonance",
+  "raw_files_committed": false,
+  "claim_scope": {
+    "public_measurements_are_not_clarus_specific_evidence": true,
+    "new_matter_created": false,
+    "clarus_field_detected": false,
+    "purpose": "Checksum-locked source collection for response-mask and control-pipeline development."
+  },
+  "datasets": [
+    {
+      "dataset_id": "graphite_ued_zenodo_14760926",
+      "title": "Dataset of Ultrafast momentum-resolved visualization of the interplay between phonon-mediated scattering and plasmons in graphite",
+      "dataset_doi": "10.5281/zenodo.14760926",
+      "paper_doi": "10.1126/sciadv.adu1001",
+      "landing_url": "https://zenodo.org/records/14760926",
+      "license": "CC BY 4.0",
+      "status": "selected_files_verified",
+      "record_file_count": 5,
+      "evidence_role": "paired_on_off_spatiotemporal_gate_candidate",
+      "measurement": {
+        "modality": "ultrafast electron diffraction",
+        "axes": [
+          "Delay_ps",
+          "detector_x",
+          "detector_y"
+        ],
+        "controls": [
+          "imagesON",
+          "imagesOFF"
+        ],
+        "repeat_unit": "one acquisition row with exposure and apparatus metadata",
+        "verified_structure": "Three gzip-compressed pandas DataFrame pickles with 38, 38, and 32 rows; pickle opcodes expose imagesON and imagesOFF columns."
+      },
+      "gate_readiness": {
+        "paired_control": true,
+        "independent_repeats": true,
+        "raw_measurement": true,
+        "spatiotemporal": true,
+        "cluster_count_sufficient_for_current_gate": false,
+        "clarus_specific_evidence": false
+      },
+      "limitations": [
+        "Only the raw UED archive and README were selected from a five-file record.",
+        "The 108 acquisition rows have not yet been audited for statistically independent cluster identity.",
+        "External pickle payloads must not be unpickled before a restricted loader or isolated conversion step is implemented.",
+        "A pump response in graphite does not identify a Clarus field or demonstrate creation of new matter."
+      ],
+      "files": [
+        {
+          "relative_path": "graphite_ued_zenodo_14760926/UED_RAW_sorted.zip",
+          "source_url": "https://zenodo.org/api/records/14760926/files/UED_RAW_sorted.zip/content",
+          "bytes": 139286365,
+          "source_checksum": {
+            "algorithm": "md5",
+            "digest": "9ec380a67c718638126fc6b1963d7e2e"
+          },
+          "local_sha256": "2328b1c33208d1e9ab0d200aa8e04f92419bc4a24be768e4109129b5fddd2cb8",
+          "downloaded": true
+        },
+        {
+          "relative_path": "graphite_ued_zenodo_14760926/README.txt",
+          "source_url": "https://zenodo.org/api/records/14760926/files/README.txt/content",
+          "bytes": 1089,
+          "source_checksum": {
+            "algorithm": "md5",
+            "digest": "1fad2e39efae438561c6ed7a7ae41da3"
+          },
+          "local_sha256": "7ca681536e605feaa8c6dbd7aa8517bb9b4406fb87a5b158ff3bd09910ac6415",
+          "downloaded": true
+        }
+      ]
+    },
+    {
+      "dataset_id": "ferrioxalate_ta_zenodo_8121259",
+      "title": "Data for Ultrafast deep-ultraviolet study of photoexcited aqueous Ferrioxalate",
+      "dataset_doi": "10.5281/zenodo.8121259",
+      "landing_url": "https://zenodo.org/records/8121259",
+      "license": "CC BY 4.0",
+      "status": "selected_files_verified",
+      "record_file_count": 2,
+      "evidence_role": "paired_spectral_control_pilot",
+      "measurement": {
+        "modality": "transient absorption spectroscopy",
+        "axes": [
+          "pump_probe_delay",
+          "calibrated_wavelength"
+        ],
+        "controls": [
+          "six ferrioxalate scans",
+          "one pure-water scan",
+          "signal pumped/unpumped",
+          "reference pumped/unpumped"
+        ],
+        "repeat_unit": "independent transient-absorption scan"
+      },
+      "gate_readiness": {
+        "paired_control": true,
+        "independent_repeats": true,
+        "raw_measurement": true,
+        "spatiotemporal": false,
+        "cluster_count_sufficient_for_current_gate": false,
+        "clarus_specific_evidence": false
+      },
+      "limitations": [
+        "There are six treatment scans and one solvent-control scan, below the current 64-cluster target.",
+        "The data test a known photochemical response rather than a new-material or Clarus-specific hypothesis.",
+        "Only Data_FeOx_v2.zip was selected; the record also exposes a nearly equal-sized earlier archive."
+      ],
+      "files": [
+        {
+          "relative_path": "ferrioxalate_ta_zenodo_8121259/Data_FeOx_v2.zip",
+          "source_url": "https://zenodo.org/api/records/8121259/files/Data_FeOx_v2.zip/content",
+          "bytes": 15514041,
+          "source_checksum": {
+            "algorithm": "md5",
+            "digest": "6a88d8748bd532cbd42b823629ab4bdb"
+          },
+          "local_sha256": "9f87c4120c931fea8d1f65ba9974a0639bea319a02d80c41b048d5cdf33597c8",
+          "downloaded": true
+        }
+      ]
+    },
+    {
+      "dataset_id": "tas2_ued_zenodo_17351337",
+      "title": "Observation of a hidden charge density wave liquid",
+      "dataset_doi": "10.5281/zenodo.17351337",
+      "paper_doi": "10.1038/s41567-025-03108-z",
+      "landing_url": "https://zenodo.org/records/17351337",
+      "license": "CC BY 4.0",
+      "status": "selected_files_verified",
+      "record_file_count": 71,
+      "evidence_role": "spatial_mask_reference",
+      "measurement": {
+        "modality": "ultrafast electron diffraction",
+        "axes": [
+          "temperature",
+          "pump_probe_delay",
+          "detector_x",
+          "detector_y"
+        ],
+        "controls": [
+          "negative-delay reference",
+          "360 K ordered phase",
+          "520 K liquid phase"
+        ],
+        "repeat_unit": "averaged differential diffraction frame",
+        "selected_frames": {
+          "360K": 26,
+          "520K": 31
+        }
+      },
+      "gate_readiness": {
+        "paired_control": false,
+        "independent_repeats": false,
+        "raw_measurement": false,
+        "spatiotemporal": true,
+        "cluster_count_sufficient_for_current_gate": false,
+        "clarus_specific_evidence": false
+      },
+      "limitations": [
+        "The selected files are averaged differential TIFF frames, not shot-level raw acquisitions.",
+        "Only two small averaged archives were selected from a 71-file, 4.7 GB record.",
+        "The result concerns an electronic-order transition inside an existing material, not creation of a new substance."
+      ],
+      "files": [
+        {
+          "relative_path": "tas2_ued_zenodo_17351337/360K_differential_averaged_data.zip",
+          "source_url": "https://zenodo.org/api/records/17351337/files/360K_differential_averaged_data.zip/content",
+          "bytes": 14767964,
+          "source_checksum": {
+            "algorithm": "md5",
+            "digest": "276533e068576d98afa3e456ba00d330"
+          },
+          "local_sha256": "1544c5b3f468731eed4dc97a921f9f4a595ebc7fa521411561c5257ec6ff1b3a",
+          "downloaded": true
+        },
+        {
+          "relative_path": "tas2_ued_zenodo_17351337/520K_differential_averaged_data.zip",
+          "source_url": "https://zenodo.org/api/records/17351337/files/520K_differential_averaged_data.zip/content",
+          "bytes": 18143479,
+          "source_checksum": {
+            "algorithm": "md5",
+            "digest": "42dfd71c97bc6a8e29706993999ffd01"
+          },
+          "local_sha256": "23be53c2ba6b5558b05c87d8c1cb6071780377ee235a1b36c9005210d1080229",
+          "downloaded": true
+        }
+      ]
+    },
+    {
+      "dataset_id": "nanorod_ta_zenodo_7074260",
+      "title": "Transient Absorption Spectroscopy for The Other Dimension - Tuning Hole Extraction via Nanorod Width",
+      "dataset_doi": "10.5281/zenodo.7074260",
+      "landing_url": "https://zenodo.org/records/7074260",
+      "license": "CC BY 4.0",
+      "status": "complete_record_verified",
+      "record_file_count": 1,
+      "evidence_role": "repeatability_pilot",
+      "measurement": {
+        "modality": "transient absorption spectroscopy",
+        "axes": [
+          "pump_probe_delay_ps",
+          "wavelength_nm"
+        ],
+        "controls": [
+          "nanorod width groups",
+          "repeated dates for selected samples"
+        ],
+        "repeat_unit": "analysis-level source acquisition",
+        "archive_inventory": "Nine SIA acquisitions, nine chirp files, ten corrected matrices, analysis code, and fit outputs."
+      },
+      "gate_readiness": {
+        "paired_control": false,
+        "independent_repeats": true,
+        "raw_measurement": false,
+        "spatiotemporal": false,
+        "cluster_count_sufficient_for_current_gate": false,
+        "clarus_specific_evidence": false
+      },
+      "limitations": [
+        "The SIA files are wavelength-by-time transient-absorption matrices, not detector-level pump-on/off counts.",
+        "Only two or three acquisitions exist for repeated sample conditions.",
+        "The raw-to-corrected lineage is incomplete for several named acquisitions."
+      ],
+      "files": [
+        {
+          "relative_path": "nanorod_transient_absorption_zenodo_7074260/transientAbsorption.zip",
+          "source_url": "https://zenodo.org/api/records/7074260/files/transientAbsorption.zip/content",
+          "bytes": 15532035,
+          "source_checksum": {
+            "algorithm": "md5",
+            "digest": "1fe45ca7ee4dd3e715bb0baa66eca89b"
+          },
+          "local_sha256": "c8f5774b4be27ad65c42c1dbbb644efdaad6556c01f349a2e5749e35a12b74c0",
+          "downloaded": true
+        }
+      ]
+    },
+    {
+      "dataset_id": "wse2_ta_zenodo_12783607",
+      "title": "WSe2 and WSe2-graphene transient absorption and transient grating experimental data",
+      "dataset_doi": "10.5281/zenodo.12783607",
+      "landing_url": "https://zenodo.org/records/12783607",
+      "license": "CC BY 4.0",
+      "status": "complete_record_verified",
+      "record_file_count": 8,
+      "evidence_role": "reference_calibration_only",
+      "measurement": {
+        "modality": "transient absorption and transient grating spectroscopy",
+        "axes": [
+          "pump_probe_delay",
+          "probe_wavelength_or_grating_coordinate"
+        ],
+        "controls": [
+          "bare WSe2",
+          "WSe2-graphene heterostructure",
+          "three grating periods",
+          "three fluences"
+        ],
+        "repeat_unit": "processed response matrix"
+      },
+      "gate_readiness": {
+        "paired_control": false,
+        "independent_repeats": false,
+        "raw_measurement": false,
+        "spatiotemporal": false,
+        "cluster_count_sufficient_for_current_gate": false,
+        "clarus_specific_evidence": false
+      },
+      "limitations": [
+        "The files are processed response matrices without independent acquisition IDs or original pump-on/off intensities.",
+        "Axis units are not embedded in the files and one absorption matrix is transposed relative to the other three.",
+        "The fluence table is ragged and must be parsed defensively.",
+        "Bare and heterostructure measurements use different pump energies, so they are not a clean causal pair."
+      ],
+      "files": [
+        {
+          "relative_path": "wse2_transient_absorption_zenodo_12783607/Transient absorption WSe2_Gr HS_Pump 1p44eV.dat",
+          "source_url": "https://zenodo.org/api/records/12783607/files/Transient%20absorption%20WSe2_Gr%20HS_Pump%201p44eV.dat/content",
+          "bytes": 537364,
+          "source_checksum": {
+            "algorithm": "md5",
+            "digest": "b403c2df193739a85fe64be65c30dd2b"
+          },
+          "local_sha256": "9646a7cdc3a7b42dee5c089d377238bdc618b5c6ea4e76bd48a399fb10891f73",
+          "downloaded": true
+        },
+        {
+          "relative_path": "wse2_transient_absorption_zenodo_12783607/Transient absorption WSe2_Gr HS_Pump 1p59eV.dat",
+          "source_url": "https://zenodo.org/api/records/12783607/files/Transient%20absorption%20WSe2_Gr%20HS_Pump%201p59eV.dat/content",
+          "bytes": 534239,
+          "source_checksum": {
+            "algorithm": "md5",
+            "digest": "a22b1599006d3bd3d92f2d1d3ff93bdf"
+          },
+          "local_sha256": "e47017fb7561ce5dd09e3b02c44ac8ade3df8e84c51d3db9a4bbb85ab919c8a4",
+          "downloaded": true
+        },
+        {
+          "relative_path": "wse2_transient_absorption_zenodo_12783607/Transient absorption WSe2_Pump 1p55eV.dat",
+          "source_url": "https://zenodo.org/api/records/12783607/files/Transient%20absorption%20WSe2_Pump%201p55eV.dat/content",
+          "bytes": 529306,
+          "source_checksum": {
+            "algorithm": "md5",
+            "digest": "882488f35ea842cc36f7ebfe8f4d8457"
+          },
+          "local_sha256": "eae4adee7bc22a4515fa6c7049415d3a2dcf30c68f0b63d48eeb9a827922ee5c",
+          "downloaded": true
+        },
+        {
+          "relative_path": "wse2_transient_absorption_zenodo_12783607/Transient absorption WSe2_Pump 1p65eV.dat",
+          "source_url": "https://zenodo.org/api/records/12783607/files/Transient%20absorption%20WSe2_Pump%201p65eV.dat/content",
+          "bytes": 518459,
+          "source_checksum": {
+            "algorithm": "md5",
+            "digest": "3044b6d441612c61547e79544a3abcce"
+          },
+          "local_sha256": "35abdd61d6b501194bdaeb9f5c49f8511ae97d53eaf309586261e3bda181a64a",
+          "downloaded": true
+        },
+        {
+          "relative_path": "wse2_transient_absorption_zenodo_12783607/Transient Grating_Grating 1p6um.dat",
+          "source_url": "https://zenodo.org/api/records/12783607/files/Transient%20Grating_Grating%201p6um.dat/content",
+          "bytes": 10888,
+          "source_checksum": {
+            "algorithm": "md5",
+            "digest": "9e65d103bcceeb1fe1b360562418ed5b"
+          },
+          "local_sha256": "e9fa731de9cb0971b25be27b320fdd7936973e553d45b566cf57d6aef6f7c75f",
+          "downloaded": true
+        },
+        {
+          "relative_path": "wse2_transient_absorption_zenodo_12783607/Transient Grating_Grating 2um.dat",
+          "source_url": "https://zenodo.org/api/records/12783607/files/Transient%20Grating_Grating%202um.dat/content",
+          "bytes": 10888,
+          "source_checksum": {
+            "algorithm": "md5",
+            "digest": "8bb67cd94c083b302c9d46f2013aa979"
+          },
+          "local_sha256": "81f0351721a14d5146078d90617b15cc1b596713fcc83eb5adbfabf911b87f41",
+          "downloaded": true
+        },
+        {
+          "relative_path": "wse2_transient_absorption_zenodo_12783607/Transient Grating_Grating 4um.dat",
+          "source_url": "https://zenodo.org/api/records/12783607/files/Transient%20Grating_Grating%204um.dat/content",
+          "bytes": 10891,
+          "source_checksum": {
+            "algorithm": "md5",
+            "digest": "bb4f6d8663caa8970bce2f1227e2cac3"
+          },
+          "local_sha256": "6b6c9c39f72c71f94738b3134f7c3ade4ed27c107ca2b89f62e737521a75e786",
+          "downloaded": true
+        },
+        {
+          "relative_path": "wse2_transient_absorption_zenodo_12783607/Transient Grating_Grating_Fluence 0p25_0p5_1 muJcm-2.dat",
+          "source_url": "https://zenodo.org/api/records/12783607/files/Transient%20Grating_Grating_Fluence%200p25_0p5_1%20muJcm-2.dat/content",
+          "bytes": 744,
+          "source_checksum": {
+            "algorithm": "md5",
+            "digest": "57cddd351624ded03ac256fb22dd74fd"
+          },
+          "local_sha256": "26850c545e8203845e457f8c0aa4076e7d52070796fe28caace86e6bd2198b27",
+          "downloaded": true
+        }
+      ]
+    },
+    {
+      "dataset_id": "molecular_spin_dryad_v6wwpzh55",
+      "title": "Ultrafast, all-optical coherence of molecular electron spins in room-temperature water solution",
+      "dataset_doi": "10.5061/dryad.v6wwpzh55",
+      "paper_doi": "10.1126/science.ads0512",
+      "landing_url": "https://datadryad.org/dataset/doi:10.5061/dryad.v6wwpzh55",
+      "license": "CC0 1.0",
+      "status": "metadata_only",
+      "record_file_count": 1,
+      "evidence_role": "repeat_and_solvent_control_candidate",
+      "measurement": {
+        "modality": "transient absorption and time-resolved Faraday ellipticity",
+        "axes": [
+          "pump_probe_delay",
+          "wavelength_or_voltage"
+        ],
+        "controls": [
+          "five individual scans and average",
+          "pure-water and solvent controls"
+        ],
+        "repeat_unit": "individual scan"
+      },
+      "gate_readiness": {
+        "paired_control": false,
+        "independent_repeats": false,
+        "raw_measurement": false,
+        "spatiotemporal": false,
+        "cluster_count_sufficient_for_current_gate": false,
+        "clarus_specific_evidence": false
+      },
+      "limitations": [
+        "Dryad metadata were accessible, but binary download returned repository 401/403 responses in this environment.",
+        "The declared archive contains processed scans rather than retained pump-on/off intensities."
+      ],
+      "files": [
+        {
+          "relative_path": "molecular_spin_pump_probe_dryad_v6wwpzh55/Data.zip",
+          "source_url": "https://datadryad.org/api/v2/files/3629360/download",
+          "bytes": 29946988,
+          "source_checksum": {
+            "algorithm": "sha256",
+            "digest": "2c5e920bb559ee944c45644f2d4329838fb87f1101b60cde8b41dccd5ba062c1"
+          },
+          "local_sha256": "2c5e920bb559ee944c45644f2d4329838fb87f1101b60cde8b41dccd5ba062c1",
+          "downloaded": false
+        }
+      ]
+    },
+    {
+      "dataset_id": "gap_plasmon_acoustic_dryad_63xsj3vcq",
+      "title": "Data from Acoustic wave modulation of gap plasmon cavities",
+      "dataset_doi": "10.5061/dryad.63xsj3vcq",
+      "landing_url": "https://datadryad.org/dataset/doi:10.5061/dryad.63xsj3vcq",
+      "license": "CC0 1.0",
+      "status": "metadata_only",
+      "record_file_count": 0,
+      "evidence_role": "direct_acoustic_resonance_candidate",
+      "measurement": {
+        "modality": "RF-driven gap-plasmon spectroscopy and time-correlated photon counting",
+        "axes": [
+          "wavelength",
+          "RF_state",
+          "arrival_time"
+        ],
+        "controls": [
+          "RF off/on spectra",
+          "background",
+          "21 wavelength settings"
+        ],
+        "repeat_unit": "wavelength-resolved TCSPC acquisition"
+      },
+      "gate_readiness": {
+        "paired_control": false,
+        "independent_repeats": false,
+        "raw_measurement": false,
+        "spatiotemporal": false,
+        "cluster_count_sufficient_for_current_gate": false,
+        "clarus_specific_evidence": false
+      },
+      "limitations": [
+        "The 6.30 GB Dryad record was not downloaded; the most relevant figure bundle alone is about 2.45 GB.",
+        "Dryad binary endpoints returned repository 401/403 responses in this environment.",
+        "DataCite metadata and the associated arXiv paper are cached locally, but they are not substitutes for the core data archive."
+      ],
+      "files": []
+    }
+  ]
+}

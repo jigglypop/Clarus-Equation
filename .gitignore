@@ -36,6 +36,7 @@ target/
 !benchmarks/tafazoli_diffusion_probe_v1_result.json
 !benchmarks/q0_minimal_abelian_higgs_v1.json
 !benchmarks/neural_tree_algorithm_census_v1.json
+!benchmarks/external_field_to_matter_v1.json
 !experiments/preregistration/cosmology_future_holdout_v2.json
 !experiments/preregistration/quantum_future_holdout_v2.json
 *.pt
@@ -57,6 +58,8 @@ target/
 !/artifacts/agi/*.json
 !/artifacts/biology/
 !/artifacts/biology/origin_life_*.json
+!/artifacts/physics/
+!/artifacts/physics/public_resonance_source_manifest.json
 
 # Build artifacts
 build/

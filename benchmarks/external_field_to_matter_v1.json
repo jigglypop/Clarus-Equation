@@ -1,0 +1,298 @@
+{
+  "schema": "clarus.external_field_to_matter.v1",
+  "retrieved_on": "2026-08-05",
+  "analogue_dce": {
+    "source": {
+      "article_doi": "10.1038/s42005-019-0183-z",
+      "article_url": "https://www.nature.com/articles/s42005-019-0183-z",
+      "dataset_doi": "10.17861/9b7e182a-e985-4912-862a-ff6cd8fe54f4",
+      "dataset_url": "https://researchportal.hw.ac.uk/en/datasets/optical-analogue-of-the-dynamical-casimir-eect-in-a-dispersion-os/",
+      "archive_url": "https://pure.hw.ac.uk/ws/portalfiles/portal/24342689/Vezzoli_et_al.zip",
+      "archive_sha256": "5aad353ad779e0ced16e35c2f809a33ed4a71e024f0f77a071e60d0c7d807af1",
+      "archive_bytes": 214779,
+      "figure_2_sha256": "b1de859846a4e103112264bece13c72203c7a3632678b7f7f2b63fd0028e37fd",
+      "figure_3_sha256": "d13f686475ba1a69f78b97bafd9618fc28a761a5ceaf86091923a927d6fe0b73",
+      "figure_4_sha256": "be7fe423ac79a5a33dce38f83a0167098010bac5f170072b0e9e537b8ee4675a",
+      "license": "CC BY",
+      "subset_note": "Exact experimental rows transcribed from Figure 3.txt and Figure 4.txt; hashes refer to the complete source files in the public archive."
+    },
+    "paper_parameters": {
+      "pump_wavelength_nm": 1052.44,
+      "predicted_signal_wavelength_nm": 954.0,
+      "predicted_idler_wavelength_nm": 1173.0,
+      "pump_pulse_duration_ps": 600.0,
+      "fibre_length_m": 80.0,
+      "fibre_modulation_period_m": 5.0,
+      "average_beta2_ps2_per_km": 0.45,
+      "average_beta4_s4_per_m": -1.2e-55,
+      "modulation_harmonic": 3,
+      "nonlinearity": "chi3",
+      "interpretation": "optical analogue DCE, equivalently quasi-phase-matched spontaneous four-wave mixing in the laboratory frame"
+    },
+    "figure_3_car_map": {
+      "signal_wavelengths_nm": [
+        949.4375,
+        950.5625,
+        951.6875,
+        952.8125,
+        953.9375,
+        955.0625,
+        956.1875
+      ],
+      "rows": [
+        {
+          "idler_wavelength_nm": 1176.777778,
+          "car": [-0.14, 2.91, 1.59, -0.04, -0.36, -0.24, -0.1]
+        },
+        {
+          "idler_wavelength_nm": 1176.0,
+          "car": [0.02, 0.03, 3.63, -0.16, -0.26, -0.15, -0.17]
+        },
+        {
+          "idler_wavelength_nm": 1175.222222,
+          "car": [0.01, -0.06, 0.13, -0.15, 0.12, -0.14, -0.27]
+        },
+        {
+          "idler_wavelength_nm": 1174.444444,
+          "car": [0.13, -0.09, 0.16, 0.96, 0.45, 0.0, -0.09]
+        },
+        {
+          "idler_wavelength_nm": 1173.666667,
+          "car": [-0.22, -0.17, -0.11, 4.5, 4.2, -0.18, -0.21]
+        },
+        {
+          "idler_wavelength_nm": 1172.888889,
+          "car": [0.06, -0.16, -0.23, 2.52, 5.1, 1.2, -0.21]
+        },
+        {
+          "idler_wavelength_nm": 1172.111111,
+          "car": [-0.18, 0.01, 0.22, 0.08, 2.04, 1.95, -0.14]
+        },
+        {
+          "idler_wavelength_nm": 1171.333333,
+          "car": [-0.19, -0.05, -0.2, -0.07, 0.22, 3.21, 1.2]
+        }
+      ]
+    },
+    "figure_4_experimental_rows": [
+      {
+        "pump_peak_power_w": 0.03,
+        "car_240_ps": 7.0,
+        "car_240_ps_std": 0.8,
+        "car_1_7_ns": 5.07,
+        "car_1_7_ns_std": 0.3,
+        "heralded_car": 4.745,
+        "g2_zero": 0.380952381,
+        "g2_zero_err": 0.06
+      },
+      {
+        "pump_peak_power_w": 0.036,
+        "car_240_ps": 5.85,
+        "car_240_ps_std": 0.74,
+        "car_1_7_ns": 4.38,
+        "car_1_7_ns_std": 0.3,
+        "heralded_car": 4.2,
+        "g2_zero": 0.495238095,
+        "g2_zero_err": 0.07
+      },
+      {
+        "pump_peak_power_w": 0.042,
+        "car_240_ps": 5.59,
+        "car_240_ps_std": 0.62,
+        "car_1_7_ns": 4.08,
+        "car_1_7_ns_std": 0.24,
+        "heralded_car": 2.74,
+        "g2_zero": 0.59047619,
+        "g2_zero_err": 0.07
+      },
+      {
+        "pump_peak_power_w": 0.048,
+        "car_240_ps": 5.25,
+        "car_240_ps_std": 0.6,
+        "car_1_7_ns": 3.82,
+        "car_1_7_ns_std": 0.23,
+        "heralded_car": 1.96,
+        "g2_zero": 0.695238095,
+        "g2_zero_err": 0.05
+      },
+      {
+        "pump_peak_power_w": 0.066,
+        "car_240_ps": 3.1,
+        "car_240_ps_std": 0.3,
+        "car_1_7_ns": 2.57,
+        "car_1_7_ns_std": 0.13,
+        "heralded_car": 1.0,
+        "g2_zero": 0.828571429,
+        "g2_zero_err": 0.02
+      },
+      {
+        "pump_peak_power_w": 0.09,
+        "car_240_ps": 2.3,
+        "car_240_ps_std": 0.2,
+        "car_1_7_ns": 1.89,
+        "car_1_7_ns_std": 0.09,
+        "heralded_car": 0.0,
+        "g2_zero": 1.0,
+        "g2_zero_err": 0.04
+      },
+      {
+        "pump_peak_power_w": 0.15,
+        "car_240_ps": 1.23,
+        "car_240_ps_std": 0.08,
+        "car_1_7_ns": 1.0,
+        "car_1_7_ns_std": 0.04,
+        "heralded_car": null,
+        "g2_zero": null,
+        "g2_zero_err": null
+      }
+    ]
+  },
+  "breit_wheeler": {
+    "source": {
+      "collaboration": "CMS",
+      "article_doi": "10.1007/JHEP08(2025)006",
+      "article_url": "https://arxiv.org/abs/2412.15413",
+      "hepdata_record_doi": "10.17182/hepdata.155674",
+      "hepdata_record_url": "https://www.hepdata.net/record/ins2861858",
+      "hepdata_table_doi": "10.17182/hepdata.155674.v1/t2",
+      "hepdata_table_name": "Figure 4 (upper left)",
+      "hepdata_table_record_id": 1713300,
+      "hepdata_api_url": "https://www.hepdata.net/record/data/tabledata/1713300/1",
+      "hepdata_api_payload_sha256": "f2a6b865131884f8a3d12a9784585b01e2fa4d9e1e4b5b599516210958212595",
+      "hepdata_api_payload_bytes": 3735,
+      "subset_note": "All seven measured pT bins and all three model columns from the HEPData table are included below."
+    },
+    "fiducial_selection": {
+      "reaction": "Pb Pb -> Pb Pb e+ e-",
+      "sqrt_s_nn_gev": 5020.0,
+      "electron_pt_min_gev": 2.0,
+      "electron_abs_eta_max": 2.2,
+      "pair_mass_min_gev": 5.0,
+      "pair_pt_max_gev": 1.0,
+      "integrated_luminosity_nb_inverse": 1.7
+    },
+    "published_summary": {
+      "fiducial_cross_section_microbarn": 263.5,
+      "stat_uncertainty_microbarn": 1.8,
+      "syst_uncertainty_microbarn": 17.8,
+      "exclusive_pair_candidates": 19689,
+      "interpretation": "quasi-real photon fusion in ultraperipheral PbPb collisions, described as the Breit-Wheeler process by CMS"
+    },
+    "figure_4_pair_pt_bins": [
+      {
+        "low_gev": 0.0,
+        "high_gev": 0.14286,
+        "measured_microbarn_per_gev": 1683.0,
+        "stat_microbarn_per_gev": 12.0,
+        "syst_microbarn_per_gev": 115.0,
+        "gamma_upc_microbarn_per_gev": 1688.0,
+        "superchic_microbarn_per_gev": 1676.0,
+        "starlight_microbarn_per_gev": 1433.0
+      },
+      {
+        "low_gev": 0.14286,
+        "high_gev": 0.28571,
+        "measured_microbarn_per_gev": 72.07,
+        "stat_microbarn_per_gev": 0.81,
+        "syst_microbarn_per_gev": 8.72,
+        "gamma_upc_microbarn_per_gev": 78.87,
+        "superchic_microbarn_per_gev": 70.51,
+        "starlight_microbarn_per_gev": 65.87
+      },
+      {
+        "low_gev": 0.28571,
+        "high_gev": 0.42857,
+        "measured_microbarn_per_gev": 34.64,
+        "stat_microbarn_per_gev": 0.6,
+        "syst_microbarn_per_gev": 4.19,
+        "gamma_upc_microbarn_per_gev": 38.11,
+        "superchic_microbarn_per_gev": 33.01,
+        "starlight_microbarn_per_gev": 31.08
+      },
+      {
+        "low_gev": 0.42857,
+        "high_gev": 0.57143,
+        "measured_microbarn_per_gev": 21.21,
+        "stat_microbarn_per_gev": 0.46,
+        "syst_microbarn_per_gev": 2.56,
+        "gamma_upc_microbarn_per_gev": 22.15,
+        "superchic_microbarn_per_gev": 19.36,
+        "starlight_microbarn_per_gev": 18.62
+      },
+      {
+        "low_gev": 0.57143,
+        "high_gev": 0.71429,
+        "measured_microbarn_per_gev": 14.7,
+        "stat_microbarn_per_gev": 0.42,
+        "syst_microbarn_per_gev": 1.78,
+        "gamma_upc_microbarn_per_gev": 14.29,
+        "superchic_microbarn_per_gev": 12.66,
+        "starlight_microbarn_per_gev": 12.55
+      },
+      {
+        "low_gev": 0.71429,
+        "high_gev": 0.85714,
+        "measured_microbarn_per_gev": 10.57,
+        "stat_microbarn_per_gev": 0.35,
+        "syst_microbarn_per_gev": 1.74,
+        "gamma_upc_microbarn_per_gev": 10.19,
+        "superchic_microbarn_per_gev": 8.77,
+        "starlight_microbarn_per_gev": 8.46
+      },
+      {
+        "low_gev": 0.85714,
+        "high_gev": 1.0,
+        "measured_microbarn_per_gev": 7.53,
+        "stat_microbarn_per_gev": 0.26,
+        "syst_microbarn_per_gev": 1.24,
+        "gamma_upc_microbarn_per_gev": 7.67,
+        "superchic_microbarn_per_gev": 6.27,
+        "starlight_microbarn_per_gev": 6.09
+      }
+    ]
+  },
+  "metastable_material_phase": {
+    "source": {
+      "article_title": "Coherent light control of a metastable hidden state",
+      "article_doi": "10.1126/sciadv.adi4661",
+      "article_url": "https://pure.mpg.de/rest/items/item_3559512_3/component/file_3560624/content",
+      "dataset_concept_doi": "10.5281/zenodo.8238530",
+      "dataset_version_doi": "10.5281/zenodo.8238531",
+      "dataset_url": "https://zenodo.org/records/8238531",
+      "dataset_total_bytes": 631000000,
+      "summary_xlsx_md5": "961e70d41f5e56551c4fed50debdd00c",
+      "summary_xlsx_bytes": 11118,
+      "figure_3_nexus_filename": "10.nxs",
+      "figure_3_nexus_md5": "0e1e418419ad94fd2ad68e4773bfdf68",
+      "figure_3_nexus_bytes": 15888248,
+      "static_c_phase_nexus_filename": "1.nxs",
+      "static_c_phase_nexus_md5": "b10c4b8fcd670fed62bd15d6751cddb1",
+      "static_c_phase_nexus_bytes": 36032664,
+      "license": "CC BY-NC 4.0 article; Zenodo record terms apply"
+    },
+    "figure_3_acquisition": {
+      "intensity_shape": [256, 344, 45],
+      "pump_photon_energy_ev": 1.55,
+      "pump_1_fluence_mj_cm2": 0.3,
+      "pump_2_fluence_mj_cm2": 0.3,
+      "single_pulse_threshold_mj_cm2": 0.5,
+      "initial_delay_step_fs": 25.0,
+      "published_coherent_frequency_thz": 2.2,
+      "published_coherent_frequency_error_thz": 0.1,
+      "laser_repetition_rate_hz": 10000.0,
+      "published_160k_lifetime_upper_bound_us": 100.0
+    },
+    "provenance_conflicts": {
+      "paper_fixed_pump_probe_delay_ps": 35.0,
+      "supplement_and_nexus_fixed_pump_probe_delay_ps": 25.0,
+      "summary_temperature_k": 160.0,
+      "nexus_internal_temperature_k": 20.0,
+      "analysis_code_and_fit_bounds_public": false,
+      "acquisition_level_lifetime_curve_public": false
+    },
+    "interpretation": {
+      "supported": "light-controlled metastable electronic and structural phase in pre-existing 1T-TaS2",
+      "not_supported": "creation of new atoms, a new particle pole, a Clarus field, or matter from vacuum"
+    }
+  }
+}

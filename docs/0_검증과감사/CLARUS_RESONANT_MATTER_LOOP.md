@@ -41,6 +41,15 @@ mode를 여기할 수 있다는 수치 control은 닫혔다. CE-physical chain�
 pole/vertex에서 막혀 있으며 현재 최고 지위는 target-scale calibration뿐이다.
 경계물질과 재규격화 응력도 열려 있다.
 
+2026-08-05에는 합성 gate를 넘어 외부 공개자료도 직접 재분석했다. 광학 analogue
+DCE의 sideband/CAR, CMS의 quasi-real photon fusion 단면적은 수치 재현에
+성공했지만 서로 다른 장치이며 광학 광자쌍과 (e^+e^-) 문턱 사이에는
+(4.34\times10^5)의 에너지 간극이 있다. 1T-TaS2 원자료는 pump-off 준안정
+물질상 후보를 지지하지만 기존 원자·전자의 상 재배열이며 exact (2.2) THz와
+수명 refit은 provenance 충돌로 닫히지 않았다. 전체 계산과 경계는
+[외부 원자료 기반 장→광자쌍→물질상 재분석](EXTERNAL_FIELD_TO_MATTER_REANALYSIS.md)에
+고정한다.
+
 ## 2. ideal-planar 형식 scale 기준 통합
 
 과거 코드에는 서로 다른 두 scale이 함께 있었다.
