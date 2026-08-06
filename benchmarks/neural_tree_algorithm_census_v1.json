@@ -1,0 +1,223 @@
+{
+  "schema_version": "clarus-neural-tree-algorithm-census/v1",
+  "scope": "finite_behavioral_equivalence_census_for_neural_reverse_engineering",
+  "description": "A preregistered finite census of tree and hierarchical algorithm families. Names and minor variants are collapsed when they imply the same observable behavior. TESTABLE means that the processed snapshot can screen a predictive fingerprint, not that it can identify a biological implementation.",
+  "snapshot_constraints": {
+    "recording_session_count": 27,
+    "pseudo_trial_row_count": 36,
+    "timepoint_count": 81,
+    "count_window_seconds": 0.1,
+    "time_step_seconds": 0.01,
+    "primary_nonoverlap_stride_bins": 10,
+    "simultaneous_403_neuron_population": false,
+    "allowed_dimensions_one_based": [
+      1,
+      3
+    ],
+    "dimension_rows_are_paired_trials": false
+  },
+  "status_definitions": {
+    "TESTABLE": "The snapshot can support a held-out predictive screen of the defining fingerprint.",
+    "PARTIAL": "Only a proxy can be screened because at least one defining observation is absent.",
+    "UNAVAILABLE": "The observations required to distinguish the family are absent."
+  },
+  "required_controls": [
+    "whole_trial_outer_cv",
+    "outer_train_only_nested_selection",
+    "recording_session_local_fit",
+    "dimension_one_and_three_rows_unpaired",
+    "one_hundred_ms_nonoverlap",
+    "event_time_only_baseline",
+    "train_fold_event_mean_removal",
+    "forward_reverse_control",
+    "matched_heldout_codelength",
+    "family_grid_topology_split_search_cost",
+    "chico_and_silas_separate_direction_check",
+    "synthetic_positive_control_before_real_data"
+  ],
+  "families": [
+    {
+      "family_id": "continuous_var",
+      "equivalence_class": "state_space_routing",
+      "observable_fingerprint": "One continuous history-dependent vector field predicts the next latent state without discrete routing.",
+      "status": "TESTABLE",
+      "current_round": "ROUND_1_BASELINE",
+      "required_observations": "Current and past latent states with held-out successors.",
+      "reference_url": "https://www.statsmodels.org/stable/vector_ar.html"
+    },
+    {
+      "family_id": "cart_m5_model_tree",
+      "equivalence_class": "state_space_routing",
+      "observable_fingerprint": "Hard axis-aligned thresholds route a trajectory to leaves with constant or local linear successor laws.",
+      "status": "TESTABLE",
+      "current_round": "ROUND_1",
+      "required_observations": "Repeated crossings of candidate thresholds and enough held-out samples per leaf.",
+      "reference_url": "https://weka.sourceforge.io/doc.stable/weka/classifiers/trees/M5P.html"
+    },
+    {
+      "family_id": "oblique_model_tree",
+      "equivalence_class": "state_space_routing",
+      "observable_fingerprint": "Hard boundaries depend on combinations of latent coordinates rather than one coordinate.",
+      "status": "TESTABLE",
+      "current_round": "ROUND_1",
+      "required_observations": "Train-only latent coordinates and repeated samples near multivariate boundaries.",
+      "reference_url": "https://arxiv.org/abs/cs/9408103"
+    },
+    {
+      "family_id": "soft_decision_tree",
+      "equivalence_class": "state_space_routing",
+      "observable_fingerprint": "Routing probability changes smoothly near a boundary and approaches one branch away from it.",
+      "status": "TESTABLE",
+      "current_round": "ROUND_2",
+      "required_observations": "Repeated trials sufficient to calibrate held-out routing probabilities.",
+      "reference_url": "https://research.isikun.edu.tr/entities/publication/f391d643-bc48-480d-9f47-6fda40a70ac5"
+    },
+    {
+      "family_id": "hierarchical_mixture_of_experts",
+      "equivalence_class": "state_space_routing",
+      "observable_fingerprint": "A coarse gate selects a context and lower gates select specialized local experts.",
+      "status": "TESTABLE",
+      "current_round": "ROUND_2",
+      "required_observations": "Nested held-out routing with a flat-mixture capacity control.",
+      "reference_url": "https://direct.mit.edu/neco/article/6/2/181/5779/Hierarchical-Mixtures-of-Experts-and-the-EM"
+    },
+    {
+      "family_id": "flat_or_recurrent_slds",
+      "equivalence_class": "state_space_routing",
+      "observable_fingerprint": "A continuous trajectory switches among a small number of local vector fields, optionally as a function of the current state.",
+      "status": "TESTABLE",
+      "current_round": "ROUND_1_EXISTING_PROXY_ROUND_2_FULL",
+      "required_observations": "Repeated regimes and a same-capacity continuous dynamics baseline.",
+      "reference_url": "https://proceedings.mlr.press/v54/linderman17a.html"
+    },
+    {
+      "family_id": "tree_structured_rslds",
+      "equivalence_class": "state_space_routing",
+      "observable_fingerprint": "Coarse parent dynamics are refined by smaller child residuals at increasing tree depth.",
+      "status": "TESTABLE",
+      "current_round": "ROUND_1_PROXY_ROUND_2_FULL",
+      "required_observations": "Repeated trajectories at several scales and a flat rSLDS with matched capacity.",
+      "reference_url": "https://openreview.net/forum?id=HkzRQhR9YX"
+    },
+    {
+      "family_id": "tree_sparse_routing",
+      "equivalence_class": "state_space_routing",
+      "observable_fingerprint": "Only a root-to-leaf subset is active, so active computation scales with path depth rather than total capacity.",
+      "status": "PARTIAL",
+      "current_round": "PREDICTIVE_PROXY_ONLY",
+      "required_observations": "Simultaneous multi-area activity, causal latency, energy, active fraction, and branch perturbation.",
+      "reference_url": "https://proceedings.mlr.press/v97/tanno19a.html"
+    },
+    {
+      "family_id": "hidden_markov_model",
+      "equivalence_class": "latent_temporal_segmentation",
+      "observable_fingerprint": "Observations occupy a few regimes and older history adds little once the current regime is known.",
+      "status": "TESTABLE",
+      "current_round": "ROUND_2_LOW_POWER",
+      "required_observations": "Multiple independent sequences with repeated state-specific emissions.",
+      "reference_url": "https://doi.org/10.1214/aoms/1177699147"
+    },
+    {
+      "family_id": "hidden_semi_markov_model",
+      "equivalence_class": "latent_temporal_segmentation",
+      "observable_fingerprint": "Exit probability depends on elapsed dwell time and repeated chunks have non-geometric durations.",
+      "status": "PARTIAL",
+      "current_round": "ROUND_2_DURATION_PROXY",
+      "required_observations": "Many complete episodes with diverse durations and non-event-locked controls.",
+      "reference_url": "https://www.jmlr.org/papers/v14/johnson13a.html"
+    },
+    {
+      "family_id": "hierarchical_hidden_markov_model",
+      "equivalence_class": "latent_temporal_segmentation",
+      "observable_fingerprint": "A parent remains active while a child sequence completes, after which the parent transitions.",
+      "status": "PARTIAL",
+      "current_round": "FIT_PROXY_ONLY",
+      "required_observations": "Long variable-length sequences with recurring boundaries and multiple nesting depths.",
+      "reference_url": "https://www.cs.princeton.edu/courses/archive/spr06/cos598C/papers/FineSingerTishby1998.pdf"
+    },
+    {
+      "family_id": "context_tree_vlmc",
+      "equivalence_class": "latent_temporal_segmentation",
+      "observable_fingerprint": "The useful history length varies by context; some suffixes need one step and others need deeper memory.",
+      "status": "TESTABLE",
+      "current_round": "ROUND_2_SHALLOW_DEPTH",
+      "required_observations": "Discretized trajectories long enough to compare suffix depths on held-out trials.",
+      "reference_url": "https://research.tue.nl/en/publications/the-context-tree-weighting-method-basic-properties/"
+    },
+    {
+      "family_id": "options_semimarkov_control",
+      "equivalence_class": "control_semantics",
+      "observable_fingerprint": "An initiation set starts a temporally extended policy and a termination event returns control to the parent.",
+      "status": "UNAVAILABLE",
+      "current_round": "NEW_DATA_REQUIRED",
+      "required_observations": "Actions, state, reward or goal, initiation, termination, and long behavioral trajectories.",
+      "reference_url": "https://www.sciencedirect.com/science/article/pii/S0004370299000521"
+    },
+    {
+      "family_id": "behavior_tree",
+      "equivalence_class": "control_semantics",
+      "observable_fingerprint": "Root ticks and Sequence or Fallback nodes generate retries, preemption, and Success, Failure, or Running outcomes.",
+      "status": "UNAVAILABLE",
+      "current_round": "NEW_DATA_REQUIRED",
+      "required_observations": "Conditions, actions, success, failure, running state, and failure trials.",
+      "reference_url": "https://kth.diva-portal.org/smash/get/diva2:808739/FULLTEXT01"
+    },
+    {
+      "family_id": "hierarchical_task_network",
+      "equivalence_class": "control_semantics",
+      "observable_fingerprint": "A non-primitive goal is repeatedly decomposed into reusable subtasks and primitive actions.",
+      "status": "UNAVAILABLE",
+      "current_round": "NEW_DATA_REQUIRED",
+      "required_observations": "Goals, world state, alternative decompositions, plans, and primitive actions.",
+      "reference_url": "https://auld.aaai.org/Library/AAAI/1994/aaai94-173.php"
+    },
+    {
+      "family_id": "pushdown_call_return",
+      "equivalence_class": "recursive_memory",
+      "observable_fingerprint": "Nested calls return in LIFO order to suspended continuations and generalize beyond trained depth.",
+      "status": "UNAVAILABLE",
+      "current_round": "NEW_DATA_REQUIRED",
+      "required_observations": "Variable nesting depth, long traces, resume state, and call or return intervention.",
+      "reference_url": "https://www.cis.upenn.edu/~alur/Stoc04.pdf"
+    },
+    {
+      "family_id": "hierarchical_clustering_tree_metric",
+      "equivalence_class": "relational_tree",
+      "observable_fingerprint": "Held-out pairwise relations obey stable ultrametric or tree-metric constraints and predict where a new leaf attaches.",
+      "status": "PARTIAL",
+      "current_round": "S2_OR_ADDITIONAL_TASK_REQUIRED",
+      "required_observations": "At least four comparable tasks or states with independent repeats and a held-out leaf.",
+      "reference_url": "https://doi.org/10.1080/01621459.1963.10500845"
+    },
+    {
+      "family_id": "chow_liu_dependency_tree",
+      "equivalence_class": "relational_tree",
+      "observable_fingerprint": "Simultaneous variables have a stable conditional-dependence tree that improves held-out likelihood.",
+      "status": "UNAVAILABLE",
+      "current_round": "SIMULTANEOUS_RAW_DATA_REQUIRED",
+      "required_observations": "Truly simultaneous neurons and intact trial-by-trial noise correlations.",
+      "reference_url": "https://research.ibm.com/publications/approximating-discrete-probability-distributions-with-dependence-trees"
+    }
+  ],
+  "screening_order": [
+    "continuous_var",
+    "flat_or_recurrent_slds",
+    "cart_m5_model_tree",
+    "oblique_model_tree",
+    "tree_structured_rslds",
+    "soft_decision_tree",
+    "hierarchical_mixture_of_experts",
+    "hidden_markov_model",
+    "context_tree_vlmc",
+    "hidden_semi_markov_model"
+  ],
+  "claim_locks": [
+    "tree_shaped_predictor_is_not_a_biological_tree",
+    "state_hierarchy_is_not_task_inheritance",
+    "fixed_depth_hierarchy_is_not_recursion",
+    "predictive_routing_is_not_call_return",
+    "processed_time_bins_do_not_measure_latency_or_throughput",
+    "screening_winner_is_not_confirmed_on_independent_data",
+    "optimizer_identity_is_not_available"
+  ]
+}

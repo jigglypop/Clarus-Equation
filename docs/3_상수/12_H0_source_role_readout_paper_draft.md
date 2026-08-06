@@ -1,28 +1,28 @@
 # H0 source-role readout paper draft
 
-Status: draft spine, backed by `examples/physics/h0_readout/h0_paper_package_gate.py`.
+Status: **post-hoc calibration draft; not submission-ready**. The package gate
+reproduces tables and classifications but does not establish physical or
+statistical validation.
 
 ## Working title
 
-Source-role conductance separates Hubble-constant measurements into global,
-bridge, and local readout families.
+A post-hoc source-role conductance diagnostic for Hubble-constant channels.
 
 ## Abstract draft
 
 The Hubble tension is usually framed as a disagreement between inferred values
-of the same cosmological parameter. Here we test a different possibility: that
-different observational channels read different source-role closures of the
-same underlying H0 structure. We define a source-role conductance selector from
-Fisher or covariance structure, separating local endpoint conductance from
-global closure conductance. Applying this selector to time-delay lensing,
-standard-ruler, CMB, distance-ladder, and standard-siren channels yields a
-reproducible family split. DESI BAO, Planck PR3 CMB covariance, and
-TDCOSMO+SLACS channels select the global/low branch. Pantheon+SH0ES and
-TDCOSMO-only or TDCOSMO+IFU channels select the local/high branch. GW170817-like
-standard sirens select an intermediate bridge branch. Static role ablations and
-classification-threshold sweeps fail to reproduce the split. These results do
-not replace a full joint posterior refit, but they show that H0 channels can
-separate by source role before such a refit is performed.
+of the same cosmological parameter. We describe an exploratory source-role
+conductance diagnostic built from Fisher or covariance structure. Under the
+declared map, selected time-delay-lensing, standard-ruler, CMB,
+distance-ladder, and standard-siren channels are replayed as global/low,
+bridge/intermediate, or local/high families. The map and its endpoint law were
+constructed after the relevant channel structures and published \(H_0\) values
+were known. Static-role ablations and threshold sweeps therefore test only
+internal sensitivity of this calibration; they are not a model-selection test.
+No full joint posterior refit, blinded role assignment, or untouched-channel
+holdout has been performed. The present result is a reproducible hypothesis
+generator for a future preregistered test, not evidence that source role
+physically explains the Hubble tension.
 
 ## Plain-language significance
 
@@ -38,23 +38,23 @@ endpoint measurements. Standard sirens naturally sit between those cases:
 gravitational waves give an absolute distance, while the host galaxy or
 redshift environment supplies the cosmic anchor.
 
-In this reading, the same universe can be read through different closures. The
-Hubble tension is therefore not only a "which number is correct?" problem. It
-is a source-role problem: which part of the inference graph is allowed to close
-the measurement?
+The diagnostic asks whether the same universe could be summarized through
+different closures. Whether this is a physical explanation, rather than a
+post-hoc classification of known channels, remains an open empirical question.
 
-## Core claim
+## Calibration hypothesis
 
-H0 tension is not only a conflict between numerical estimates. It is also a
-conflict between readout roles:
+The declared map encodes the following hypothesis:
 
 - global closure channels read a low H0 branch,
 - local endpoint channels read a high H0 branch,
 - mixed source channels read an intermediate bridge branch.
 
-The important point is temporal order. The source role is assigned before the
-final H0 comparison. This makes the result stronger than a post-hoc grouping of
-high and low values.
+Within each replay run the source role is loaded before the numeric readout is
+computed. Historically, however, the role ontology and endpoints were designed
+after the published high/low pattern was known. The current result therefore is
+a post-hoc grouping. Only a frozen automatic role extractor applied to an
+untouched channel can change that status.
 
 ## Methods: source-role conductance
 
@@ -97,9 +97,21 @@ endpoints:
 H_0(q_F) = H_0\!\left(\log S_{\rm global} - q_F \Delta_{\rm endpoint}\right).
 \]
 
-The important methodological constraint is that \(L\) and \(G\) are assigned
-from source provenance and likelihood structure before comparing the resulting
-branch to an observed H0 value.
+The numeric contract used throughout this draft is
+
+\[
+N_e=57.20243399,\qquad \delta_N\sigma_D=0.16925962,
+\qquad
+H_0(q_F)=66.802746\exp\!\left(\frac{q_F\delta_N\sigma_D}{2}\right),
+\]
+
+with \(H_0(0)=66.802746\) and \(H_0(1)=72.702371\) in
+\({\rm km\,s^{-1}Mpc^{-1}}\).
+
+The future methodological constraint is that \(L\), \(G\), all thresholds and
+both endpoint coefficients must be frozen from source provenance alone before
+opening an untouched channel's \(H_0\) result. Existing rows do not satisfy that
+historical blinding condition.
 
 ## Data provenance
 
@@ -136,17 +148,18 @@ Rows:
 
 Claim supported:
 
-> Hubble-tension channels split into local/high and global/low branches before
-> a joint H0 refit.
+> Under the post-hoc role map, selected Hubble-tension channels replay as
+> local/high and global/low families.
 
 Caption: Figure 1 visualizes the endpoint split of the H0 source-role readout.
-Each point is placed by its source-role selector rather than by a fitted
-cosmological preference chosen after the fact. The local/high endpoint contains
+Each point is placed by the declared source-role selector. The selector was
+designed after the channel context was known, so the figure is a calibration
+diagram rather than a blinded branch-selection test. The local/high endpoint contains
 distance-ladder and time-delay-only channels whose closure is anchored by local
 endpoint information. The global/low endpoint contains BAO, CMB, and
 population-closure channels whose closure is anchored by global standard-ruler
-or hierarchy information. The figure is a branch-selection test: source roles
-are assigned before H0 comparison, and the endpoint separation is then checked.
+or hierarchy information. It becomes a branch-selection test only after the
+complete role rule is frozen and applied to untouched data.
 
 ### Figure 2: three-family readout law
 
@@ -180,18 +193,17 @@ be presented as posterior refits.
 
 | channel | source role | selector | readout | H0 readout | reference status |
 |---|---|---:|---|---:|---|
-| DESI BAO | global | 0.000000 | global/low | 67.247245 | branch-only |
-| Planck CMB | global | 0.000000 | global/low | 67.247245 | Planck covariance H0 attached |
-| TDCOSMO+SLACS+IFU | global | 0.001855 | global/low | 67.257791 | chain H0 attached |
-| TDCOSMO+SLACS | global | 0.003704 | global/low | 67.268309 | chain H0 attached |
-| GW170817 bright siren | bridge | 0.500000 | bridge/intermediate | 70.151263 | scoped reference H0 attached |
-| TDCOSMO-only | local | 0.830134 | local/high | 72.137101 | chain H0 attached |
-| TDCOSMO+IFU | local | 0.852221 | local/high | 72.271948 | chain H0 attached |
-| Pantheon+SH0ES | local | 1.000000 | local/high | 73.180689 | branch-only |
+| DESI BAO | global | 0.000000 | global/low | 66.802746 | branch-only |
+| Planck CMB | global | 0.000000 | global/low | 66.802746 | Planck covariance H0 attached |
+| TDCOSMO+SLACS+IFU | global | 0.001855 | global/low | 66.813234 | chain H0 attached |
+| TDCOSMO+SLACS | global | 0.003704 | global/low | 66.823690 | chain H0 attached |
+| GW170817 bright siren | bridge | 0.500000 | bridge/intermediate | 69.690157 | scoped reference H0 attached |
+| TDCOSMO-only | local | 0.830134 | local/high | 71.664698 | chain H0 attached |
+| TDCOSMO+IFU | local | 0.852221 | local/high | 71.798780 | chain H0 attached |
+| Pantheon+SH0ES | local | 1.000000 | local/high | 72.702371 | branch-only |
 
-This table should not be described as a joint H0 fit. It is a branch-readout
-table. The important result is the ordering and family separation of
-\(q_F\), not a replacement posterior.
+This table is neither a joint \(H_0\) fit nor an independent validation table.
+It records the ordering produced by a post-hoc branch-readout calibration.
 
 ## Results narrative
 
@@ -228,43 +240,43 @@ branch.
 
 ## Ablations
 
-The split is not produced by assigning every channel to a fixed role:
+Within the declared calibration, the split is not reproduced by assigning every
+channel to one fixed role:
 
 - all-local maps fail on global channels,
 - all-global maps fail on local channels,
 - flipped maps fail on every channel.
 
 Threshold sweeps from broad local/global cuts also preserve the endpoint split.
-This means the result is not tuned to one arbitrary classifier threshold.
+This checks local threshold sensitivity, but it cannot remove the earlier
+post-hoc choice of role ontology, partitions and endpoint law.
 
 ## Reviewer objections and safeguards
 
 ### Objection 1: the families were assigned after seeing H0
 
-Safeguard: the role map is assigned from source provenance and likelihood
-structure before H0 comparison. TDCOSMO roles are derived from likelihood
-factors and public notebook sampler composition. BAO roles are derived from
-standard-ruler distance-ratio labels. Planck CMB roles are derived from
-acoustic-scale covariance structure. Pantheon+SH0ES roles are derived from
-calibrator and Hubble-flow source labels. GW roles are derived from the split
-between luminosity distance and host-redshift anchoring.
+Current answer: this objection is valid. The assignments have defensible
+source-provenance descriptions, but the ontology was not preregistered or
+blinded. The required safeguard is a versioned automatic extractor and an
+untouched release; provenance arguments alone do not supply independence.
 
 ### Objection 2: local/global assignment is arbitrary
 
-Safeguard: static and flipped role ablations are run. All-local maps fail on
-global channels, all-global maps fail on local channels, and flipped maps fail
-on every endpoint channel. The split therefore requires source-aware role
-assignment.
+Current result: static and flipped role ablations show that outputs depend on
+the source-aware assignment. They do not prove that the assignment is unique or
+non-arbitrary. Competing preregistered role maps and out-of-sample comparison
+are still required.
 
 ### Objection 3: the classifier threshold was tuned
 
-Safeguard: the endpoint result survives broad threshold sweeps. The local and
-global endpoint channels are far from the bridge midpoint in selector space.
+Current result: the endpoint replay survives the tested threshold sweep. This
+is robustness conditional on the chosen features and role map, not protection
+against post-hoc feature engineering.
 
 ### Objection 4: this is not a full cosmological inference
 
-Safeguard: the paper states this explicitly. The result is a source-role
-readout law and a branch-selection test. It does not claim to replace full
+The draft states this explicitly. The current result is a calibration
+diagnostic, not yet a validated branch-selection law, and does not replace full
 posterior analyses or likelihood optimization.
 
 ### Objection 5: the GW bridge result is still weak
@@ -302,20 +314,22 @@ These limitations must stay in the paper:
    posterior samples yet.
 3. The CMB gate reads Planck PR3 parameter covariance, not a fresh Planck
    likelihood optimization.
-4. The theory is currently a readout law, not a replacement for all standard
-   cosmological inference machinery.
+4. The role ontology and endpoint law were constructed post hoc; current rows
+   are not holdouts.
+5. The diagnostic is not a replacement for standard cosmological inference
+   machinery and is not yet a validated physical law.
 
 ## What the paper gains
 
-The main gain is not a single new H0 number. The gain is a structural
-explanation of why H0 measurements cluster where they do:
+The present gain is a reproducible schema for expressing a possible structural
+explanation. Under the calibration map:
 
 - low branch measurements are global closures,
 - high branch measurements are local endpoints,
 - intermediate measurements are mixed source-role bridges.
 
-This changes the question from "which H0 value is correct?" to "which source
-role does a given observation use to read H0?"
+This motivates, but does not answer, the question: can source role predict a
+channel family after the rule is frozen and before its \(H_0\) result is seen?
 
 ## Next tests
 

@@ -80,28 +80,31 @@ C_D\frac{\hbar c\,\xi^2}{r_0^6}
 \rho_{\rm req}\sim\frac{c^4}{8\pi G r_0^2}.
 \]
 
-$C_D=1$, $r_0=1$m, $\xi=6.65\times10^{-15}$m를 사용하면
+\(C_D=1\), \(r_0=1\,\mathrm m\),
+\(\xi=6.644194076\times10^{-15}\,\mathrm m\)를 사용하면
 
 \[
-\frac{r_0}{\xi}=1.5038\times10^{14}
+\frac{r_0}{\xi}=1.505073435\times10^{14}
 \]
 
 로 large-mass control은 충분히 깊지만
 
 \[
 \frac{\rho_{\rm vac}}{\rho_{\rm req}}
-=2.90\times10^{-97}.
+=2.89831\times10^{-97}.
 \]
 
 order-one coefficient의 같은 field가
 
 \[
-N\sim3.44\times10^{96}
+N\sim3.45029\times10^{96}
 \]
 
 개 필요할 규모다. 정확한 tensor coefficient나 부호는 아직 계산하지
 않았지만, order-one 또는 통상적인 loop 계수 변화로 97자릿수 격차를
-메울 수 없다. 따라서 CE의 29.65MeV/6.65fm heavy pole을 이용한 **거시적
+메울 수 없다. 따라서 CE의 canonical
+\(29.6991596\,\mathrm{MeV}/6.6441941\,\mathrm{fm}\)
+inverse-correlation 후보를 heavy pole로 가장해 이용한 **거시적
 1m vacuum-polarization 단독 후보는 negative control에서 탈락**한다.
 
 이 결론은 massless/near-zero mode, 거대한 species 수, nonperturbative
@@ -113,7 +116,7 @@ spectral density에 없다.
 | 후보 | 새 판정 |
 |---|---|
 | 비최소 CE + Casimir 경계 | `FRONTIER_A`, 보조 tangential pressure 필요 |
-| 비최소 CE massive vacuum polarization | `DEFERRED_MACRO`, $2.90\times10^{-97}$ |
+| 비최소 CE massive vacuum polarization | `DEFERRED_MACRO`, \(2.89831\times10^{-97}\) |
 | CE+SM fermion magnetic Casimir | `FRONTIER_B`, CE topology mapping 필요 |
 | CE double-trace | `FRONTIER_B`, CE boundary interaction 필요 |
 | resonance-$Q$ | `DEFERRED`, stress 미식별 |
@@ -137,7 +140,7 @@ CE-native 후보 중 W2b로 가장 가까운 경로는 하나다.
 \[
 G_{\mu\nu}[b,\varphi]
 =\frac{8\pi G}{c^4}
-\left(langle T_{\mu\nu}^{\rm Casimir}\rangle_{\rm ren}
+\left(\langle T_{\mu\nu}^{\rm Casimir}\rangle_{\rm ren}
 +T_{\mu\nu}^{\Phi,\xi}\right)
 \]
 

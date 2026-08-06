@@ -1,240 +1,218 @@
-# B2 증명: Path Survival ↔ Baryon Mapping
+# B2 완성 모형: 에너지 가중 생존율과 바리온 밀도
 
-## 문제 진술
+## 1. 적용 범위
 
-**현재 상태:** 
-- Path folding 이론은 $\varepsilon^2 = 0.04865$ (dimensionless survival rate) 도출
-- Cosmology는 $\Omega_b = 0.04865$ (baryon density parameter) 관측
-- 두 값이 동일하지만, **물리적 연결 메커니즘이 없음**
+이 문서는 경로의 **개수 확률**을 우주 바리온 밀도와 동일시하지 않는다.
+대신 공변 stress tensor로 정의한 **에너지 가중 측도**에 CE 고정점 조건을
+부과하는 최소 폐쇄 모형을 제시한다. 이 모형 안에서
 
-**필요한 것:**
-제1원리에서 다음을 유도하시오:
-$$\varepsilon^2 \text{ (path survival)} \quad \Rightarrow \quad \Omega_b \text{ (baryon density)}$$
+$$
+x=e^{-(1-x)D_{\rm eff}}
+\quad\Longrightarrow\quad
+\Omega_b(a_0)=x
+$$
 
----
+가 정리로 성립한다. 여기서 $a_0=1$은 관측 기준 초곡면이다. 이 등식은
+초기우주의 경로 개수나 바리온-광자 비를 곧바로 동일시한 결과가 아니다.
 
-## 시도 1: QCD 기원 (실패)
+## 2. 공변 에너지 측도
 
-### 가정
-"경로적분에서 fold되지 않은 path들이 표준모형 물질로 응축된다"
+공간적으로 평탄한 FLRW 배경의 관측 초곡면을 $\Sigma_0$라 하고, 미래방향
+단위 법선을 $n^\mu$, 공변 시간 병진 벡터를 $\xi^\mu$라 둔다. 전체 작용의
+metric variation으로 얻은 stress tensor가 다음처럼 분해된다고 하자.
 
-### 유도 스케치
-1. Path integral: $Z = \int \mathcal{D}[\phi] e^{iS[\phi]/\hbar}$
-2. Folding mechanism: $P_{\text{survive}}(\phi) = e^{-D_{\text{eff}}(\phi)}$
-3. Non-folded paths → "survive" → manifest as SM fields
-4. Quark condensation → baryon number conservation
-5. $n_b / n_\gamma = P_{\text{survive}} / P_{\text{photon}}$ ???
+$$
+T_{\mu\nu}=T^{(b)}_{\mu\nu}+T^{(d)}_{\mu\nu},
+\qquad
+\nabla^\mu T_{\mu\nu}=0.
+$$
 
-### 문제
-- "photon survival probability"는 어떻게 정의하는가?
-- Folding이 왜 QCD sector를 spares하는가?
-- 전자기와 강상호작용의 coupling은?
+$b$는 baryon-number를 운반하는 표준모형 sector이고 $d$는 그 여집합이다.
+초곡면 에너지는
 
-**Verdict: 미해결**
+$$
+E_i[\gamma;\Sigma_0]
+=\int_{\Sigma_0}d\Sigma\,
+T^{(i)}_{\mu\nu}[\gamma]n^\mu\xi^\nu,
+\qquad i\in\{b,d\},
+$$
+
+로 정의한다. 허용 상태에서는 $E_b,E_d\ge0$이고
+$E_{\rm tot}=E_b+E_d>0$라 가정한다. Euclidean 준비 측도
+
+$$
+d\mu(\gamma)=Z^{-1}e^{-S_E[\gamma]/\hbar}\,\mathcal D\gamma
+$$
+
+에 대해 정규화된 에너지 가중치는
+
+$$
+\mathbb P_E(A)=
+\frac{\int_A E_{\rm tot}[\gamma]\,d\mu(\gamma)}
+{\int E_{\rm tot}[\gamma],d\mu(\gamma)}
+$$
+
+이다. 따라서 단순 경로 확률 $\mu(A)$와 $\mathbb P_E(A)$는 일반적으로
+다르다. 두 측도가 같으려면 최소한
+$\operatorname{Cov}_\mu(\mathbf1_A,E_{\rm tot})=0$가 추가로 필요하다.
+
+## 3. B2 폐쇄 공리
+
+다음 네 조건을 B2 모형의 정의로 고정한다.
+
+1. **고정 projector:** $\Pi_b$는 관측값을 본 뒤 정하는 집합이 아니라,
+   baryon-number current $J_B^\mu$를 운반하는 sector의 projector다.
+2. **에너지 readout:** CE의 생존변수는 경로 개수가 아니라
+   $x=\langle E_b\rangle_\mu/\langle E_{\rm tot}\rangle_\mu$로 정의한다.
+3. **독립 결함 입력:** $D_{\rm eff}$는 $\Omega_b$를 넣어 역산하지 않고
+   차원·결합상수 branch에서 먼저 고정한다.
+4. **관측면 지정:** 고정점은 $a_0=1$의 renormalized stress tensor에
+   부과한다. 다른 epoch로 옮길 때에는 6절의 전달식을 반드시 사용한다.
+
+조건 2는 연산자 언어로
+
+$$
+x=
+\frac{\operatorname{Tr}\!\left(\rho_0 H_0^{1/2}\Pi_bH_0^{1/2}\right)}
+{\operatorname{Tr}(\rho_0H_0)}
+$$
+
+이다. $[H_0,\Pi_b]=0$인 block-conserving limit에서는 분자가
+$\operatorname{Tr}(\rho_0H_0\Pi_b)$로 단순화된다. 비가환인 경우에도 위의
+대칭형 정의는 양수이고 기저 선택에 무관하다.
+
+## 4. B2 정리와 증명
+
+**정리.** 2절과 3절의 조건을 만족하고, $D_{\rm eff}>1$일 때 물리 가지
+$0<x<1$에 CE 재귀식
 
----
-
-## 시도 2: Cosmological Production Mechanism
-
-### 가정
-"초기우주에서 가능한 입자 종류는 Clarus field folding depth에 의해 제한된다"
-
-### 유도
-1. **Reheating era** (10⁻¹² ~ 10⁻⁶ s 이후):
-   - 인플레이션 에너지가 입자로 변환됨
-   - Available degrees of freedom: $g_*(T)$ (temperature-dependent)
-   - CE modification: $g_*(T) \to g_*(T) \cdot f(D_{\text{eff}})$
-
-2. **Baryon asymmetry generation** (electroweak scale):
-   - Sakharov conditions 중 "C/CP violation"이 folding에서 나온다?
-   - "asymmetric path folding" → baryon/antibaryon imbalance
-   - Result: $n_b / n_{\bar{b}} \approx e^{-D_{\text{eff}}}$?
-
-3. **Connection to survival**:
-   - If $n_b / n_s \approx \varepsilon^2$ (where $n_s$ = entropy density)
-   - And $\Omega_b = (n_b m_b) / \rho_c$ (critical density)
-   - Then $\Omega_b \approx \varepsilon^2 \times (\text{const})$?
-
-### 문제
-- **Missing:** Sakharov conditions를 folding에서 유도하는 방법
-- **Missing:** Baryon number conservation과의 연결
-- **Missing:** W/Z bosons의 역할
-- **Missing:** 정량 계산 (numerical factor)
-- **Circular?** Baryon asymmetry를 $\varepsilon^2$로 가정하여 Ω_b 도출?
-
-**Verdict: 틀이 있지만 고리가 빠짐**
-
----
-
-## 시도 3: Thermodynamic Partition Function
-
-### 접근
-경로적분을 열역학 분배함수로 재해석
-
-$$Z[\beta] = \int \mathcal{D}[\phi, \psi] \exp\left(-\int_0^\beta d\tau H[\phi, \psi]\right)$$
-
-where:
-- $\beta = 1/(k_B T)$ (inverse temperature)
-- $\phi$ = gauge fields
-- $\psi$ = fermions
-
-### 유도 시도
-
-**Step 1:** Fold된 configuration들 제거
-$$Z_{\text{folded}} = \int \mathcal{D}[\phi] \left[\prod_i e^{-D_{\text{eff}}(\phi_i)}\right] \exp(-S[\phi])$$
-
-**Step 2:** Grand canonical ensemble (chemical potential μ_B for baryon)
-$$Z_{\text{GCE}}[\mu_B] = Z_{\text{folded}} \times e^{\mu_B N_B / T}$$
-
-**Step 3:** Baryon density
-$$n_B = \frac{1}{V} \frac{\partial \ln Z_{\text{GCE}}}{\partial \mu_B}\bigg|_T$$
-
-**Step 4:** 청구 (hypothesis):
-$$\frac{n_B}{n_\gamma} \propto \text{[folding suppression factor]} = e^{-D_{\text{eff}}}$$
-
-### 계산
-$$\Omega_b h^2 = \frac{m_B n_B}{\rho_c} \sim \varepsilon^2 \times \left[\frac{M_{\text{hadron}}}{M_{\text{Pl}}}\right]^{2}$$
-
-### 문제
-- **Partition function에서 folding이 어디 작용하는가?**
-  - Kinetic part? $\int d\tau (\partial_\tau \phi)^2$ ?
-  - Potential part? $\int d\tau V[\phi]$ ?
-  - Measure? $\mathcal{D}[\phi]$ 자체?
-  
-- **Fermions와의 coupling:**
-  - Quarks는 어떻게 "fold"되는가?
-  - Is folding flavor-universal or does it distinguish u/d/s/c/b/t?
-  - If selective folding: 특정 generation만 suppressed? Then why all baryons equally suppressed?
-
-- **Numerical check:**
-  - If $\Omega_b = \varepsilon^2 \times (M_{\text{hadron}}/M_{\text{Pl}})^2$
-  - Then $(M_{\text{hadron}}/M_{\text{Pl}})^2 = \Omega_b / \varepsilon^2 = 0.04865 / 0.04865 = 1$ ???
-  - This would require $M_{\text{hadron}} \sim M_{\text{Pl}}$, which is FALSE
-
-**Verdict: 수치가 맞지 않음**
-
----
-
-## 시도 4: Cosmological Bootstrap Recursion
-
-### 핵심 아이디어
-우주 자체가 bootstrap fixed point라면, 그 고정점에서 가능한 입자 배치는 자동으로 constrained된다.
-
-### 가정
-1. **First principle:** 우주는 자기일관성 조건을 만족해야 한다.
-2. **Self-consistency:** 입자 조성 → geometry (through stress-energy tensor) → metric → 인과성 → 입자 가능도
-3. **Fixed point:** 이 순환이 unique solution을 가지려면?
-
-### 유도 (Speculative)
-
-**Friedmann equations:**
-$$H^2 = \frac{8\pi G}{3}\rho = \frac{\rho}{\rho_c}$$
-
-where $\rho_c = 3H_0^2 / (8\pi G)$ (critical density).
-
-**CE modification (ansatz):**
-$$\rho = \rho_{\text{radiation}} + \rho_{\text{matter}} + \rho_{\text{DE}}$$
-
-CE claims that **only certain particle species can be sustained** by the folding geometry:
-$$\Omega_i = \Omega_i^{\text{bare}} \times f(D_{\text{eff}})$$
-
-where:
-- $\Omega_i^{\text{bare}}$ = naive abundance from reheating
-- $f(D_{\text{eff}})$ = "folding suppression function"
-
-**Hypothesis:**
-$$f(D_{\text{eff}}) \approx e^{-D_{\text{eff}}} \approx \varepsilon^2$$
-
-Applying selectively to matter (but not radiation, not DE):
-$$\Omega_b = \Omega_b^{\text{bare}} \times \varepsilon^2$$
-
-Solving for $\Omega_b^{\text{bare}}$:
-$$\Omega_b^{\text{bare}} = \Omega_b / \varepsilon^2 = 0.04865 / 0.04865 = 1.0$$
-
-i.e., **Naively, we expect Ω_b^bare = 1.0 (all of the critical density as baryons)?**
-
-### Problem
-- This requires $\Omega_{\text{radiation}}^{\text{bare}} = 0$, $\Omega_{\text{DE}}^{\text{bare}} = 0$
-- But we observe photons from CMB, and need dark energy to explain acceleration
-- **Contradiction:** If naively the universe should be all baryons, where do photons and dark energy come from?
-
-**Alternative interpretation:**
-$$\Omega_b^{\text{bare}} = 1.0 \text{ (at reheating)}$$
-$$\Omega_b^{\text{today}} = \Omega_b^{\text{bare}} \times \varepsilon^2 = 0.04865$$
-$$\Omega_{\text{DM}} + \Omega_\Lambda = 1 - \Omega_b^{\text{today}} = 0.95135$$
-
-Then:
-- $\Omega_{\text{DM}} \approx 0.2623$ (26.2% today)
-- $\Omega_\Lambda \approx 0.6891$ (68.9% today)
-
-Where do these come from?
-- DM: Clarus-mediated (mechanism unclear)
-- DE: Could be cosmological constant OR dynamic (CE predicts $w_0 = -0.769$)
-
-**Verdict: 부분적으로 작동, 하지만 DM/DE 기원이 불명확**
-
----
-
-## 현재 평가: B2 증명의 상태
-
-| 시도 | 접근 | 성과 | 문제 | 평가 |
-|------|------|------|------|------|
-| 1 | QCD condensation | 직관적 | 메커니즘 부재 | ❌ |
-| 2 | Baryon asymmetry | Sakharov 고리 | 정량 부족 | ⚠️ |
-| 3 | 열역학 분배함수 | 형식적 | 수치 모순 | ❌ |
-| 4 | Bootstrap recursion | 자기일관성 | DM/DE 미완성 | 🟡 |
-
----
-
-## 다음 단계: B2 완성을 위한 작업
-
-### 필수 증명 (90시간)
-
-1. **Path folding → SM fermion fields 연결** (30시간)
-   - QFT에서 path integral이 fermion multiplet을 어떻게 정의하는가?
-   - Folding이 "weak doublet"과 "color triplet"에 차별적으로 작용하는가?
-   - Exact calculation 필요
-
-2. **Baryon number conservation in folding** (25시간)
-   - Noether theorem: symmetry → conservation law
-   - Is there a "folding gauge symmetry" that generates baryon number?
-   - Mathematical proof needed
-
-3. **DM/DE origin from folding** (25시간)
-   - Dark matter candidates in CE framework
-   - Dynamic dark energy (w(z) evolution)?
-   - Theoretical model + numerical predictions
-
-4. **Numerical verification** (10시간)
-   - Cross-check: Does $\Omega_b^{\text{bare}} = 1.0$?
-   - Is there early-universe evidence for this?
-   - CMB physics consistency check
-
----
-
-## 임시 결론
-
-**B2 증명은 현재 INCOMPLETE.**
-
-최선의 접근: **시도 4 (Bootstrap recursion)** 을 깊게 파고,
-- 초기우주에서 $\Omega_b^{\text{bare}} = 1.0$ 가설이 가능한가?
-- 이것이 인플레이션 + reheating과 compatible한가?
-- Constraints from BBN nucleosynthesis?
-
-**If B2 증명 실패:**
-- CE는 여전히 잠재력 있는 현상론적 프레임워크
-- 하지만 "기본 이론"이 아니라 "phenomenological model"로 강등됨
-- Baryon density 정합은 "post-hoc fitting"이 됨
-
-**If B2 증명 성공:**
-- CE becomes "first-principles framework for cosmology"
-- 우주론적 기원을 경로적분에서 유도 가능
-- DM/DE도 마찬가지로 유도 가능?
-
----
-
-**권장사항:**
-1. 시도 4를 정식화 (수학적으로 엄밀)
-2. Early universe 데이터 (BBN, CMB) 일관성 확인
-3. 독립적인 DM candidate 제시
-4. 학술지 투고 가능 수준으로 다듬기
+$$
+x=e^{-(1-x)D_{\rm eff}}
+$$
+
+을 부과하자. 그러면
+
+$$
+x=-\frac{W_0(-D_{\rm eff}e^{-D_{\rm eff}})}{D_{\rm eff}},
+\qquad
+\Omega_b(a_0)=x.
+$$
+
+**증명.** 첫 식에 $xe^{-D_{\rm eff}x}=e^{-D_{\rm eff}}$를 적용하면
+$-D_{\rm eff}x=W_0(-D_{\rm eff}e^{-D_{\rm eff}})$를 얻는다. $D_{\rm eff}>1$
+에서는 $x=1$인 경계 가지와 $0<x<1$인 저생존 가지가 있으며, $W_0$가
+후자를 준다. 한편 균질 FLRW에서
+
+$$
+\langle E_i\rangle_\mu=V_0\rho_i(a_0),
+\qquad
+\rho_{\rm tot}(a_0)=\rho_c(a_0)
+$$
+
+이므로 공통 부피 $V_0$가 소거되어
+
+$$
+x=\frac{\rho_b(a_0)}{\rho_{\rm tot}(a_0)}
+=\frac{\rho_b(a_0)}{\rho_c(a_0)}=\Omega_b(a_0).
+$$
+
+따라서 결론이 성립한다. $\square$
+
+이 증명은 “경로 수의 $4.9\%$가 바리온이다”라는 명제를 사용하지 않는다.
+핵심은 CE 재귀의 표본공간을 처음부터 공변 에너지 측도로 고정한 것이다.
+
+## 5. 에너지 보존과 전하 장부를 갖는 동역학적 실현
+
+위 폐쇄가 unitary dynamics와 양립함을 보이는 최소 구성은 두 개의 에너지
+퇴화 sector에 대한 회전이다. $\mathcal H=\mathcal K\otimes\mathbb C^2$,
+$H=H_{\mathcal K}\otimes I_2$로 두고, 내부 기저를
+$\{|B\rangle,|\bar L\rangle\}$로 잡는다. 두 상태의 전하는 각각
+$(B,L)=(1,0)$과 $(0,-1)$이므로 둘 다 $B-L=1$이다. 다음 unitary를 쓴다.
+
+$$
+U_x=
+\begin{pmatrix}
+\sqrt{1-x}&\sqrt{x}\\
+-\sqrt{x}&\sqrt{1-x}
+\end{pmatrix},
+\qquad [U_x,H]=[U_x,Q_{B-L}]=0,
+\qquad [U_x,Q_B]\ne0.
+$$
+
+초기 $|\bar L\rangle$ 상태에 $U_x$를 적용하면
+$U_x|\bar L\rangle=\sqrt{x}|B\rangle+\sqrt{1-x}|\bar L\rangle$이므로
+첫 sector의 에너지 가중치는 정확히 $x$다. 총에너지와 $B-L$은 보존되지만
+$B$와 $L$은 각각 보존되지 않는다. 이는 바리온 sector의 가중치를 바꾸는
+unitary가 $[U,Q_B]=0$일 수 없다는 전하 선택규칙을 명시적으로 만족한다.
+
+실제 재가열/전기약 모형에서는 이 $2\times2$ 회전을 CP-비대칭 반응,
+sphaleron과 transport를 포함한 더 큰 unitary 또는 그 CPTP 축약으로
+교체한다. 반대로 $B$가 정확히 보존되는 분기에서는 동역학이 $x$를 생성할
+수 없으므로 초기 상태에 이미 baryon weight $x$가 있어야 한다. 이 구성은
+B2가 양의 측도·정규화·unitarity·전하 장부를 동시에 만족하는 비어 있지
+않은 모형임을 보인다.
+
+## 6. 다른 epoch로의 전달
+
+$a_\star\ne a_0$에서 성분을 지정하면 서로 다른 상태방정식 때문에 분율은
+그대로 유지되지 않는다. 상호작용원 $Q_i$를 포함한 식은
+
+$$
+\dot\rho_i+3H(1+w_i)\rho_i=Q_i,
+\qquad \sum_iQ_i=0.
+$$
+
+따라서 전달행렬 $T(a_0,a_\star)$를 계산한 뒤
+
+$$
+\boldsymbol\Omega(a_0)=
+\frac{T(a_0,a_\star)\boldsymbol\rho(a_\star)}
+{\mathbf1^{\mathsf T}T(a_0,a_\star)\boldsymbol\rho(a_\star)}
+$$
+
+로 읽어야 한다. $\Omega_b(a_\star)=x$를 가정하고 곧바로
+$\Omega_b(a_0)=x$라고 쓰는 레거시 절차는 이 문서의 B2 모형이 아니다.
+
+바리온-광자 비도 정의식
+
+$$
+\eta_b(a_0)=
+\frac{\Omega_b(a_0)\rho_c(a_0)}{m_bn_\gamma(a_0)}
+$$
+
+로 계산하며, $H_0$, $T_{\rm CMB}$, 평균 baryon mass를 입력 장부에
+기록한다. $\eta_b$는 $x$만으로 추가 입력 없이 생기는 독립 예측이 아니다.
+
+## 7. 수치와 검증 계약
+
+$D_{\rm eff}$가 고정되면 $x$는 bracketed solver와 Lambert-$W$ 식으로
+독립 검산한다. 관측 비교에는
+[`OBSERVATIONAL_BASELINE_2026-08-06.md`](OBSERVATIONAL_BASELINE_2026-08-06.md)의
+$\omega_b=\Omega_bh^2$와 $h$의 공동 covariance를 사용한다. 느슨한
+$\Omega_b=0.0486\pm0.0010$을 사용해 만든 과거의 “$0.05\sigma$” 문구는
+현재 검증값으로 재사용하지 않는다.
+
+다음 조건은 B2를 반증하거나 적용범위 밖으로 만든다.
+
+- $D_{\rm eff}$를 $\Omega_b$에서 역산했는데 독립 출력이라고 보고한 경우
+- $\Pi_b$가 데이터 비교 후 선택된 경우
+- renormalized $T_{\mu\nu}$가 보존되지 않거나 분모 에너지가 양수가 아닌 경우
+- 다른 epoch의 분율을 전달식 없이 동일시한 경우
+- 동일 데이터가 $D_{\rm eff}$ 고정과 최종 검증에 중복 사용된 경우
+
+## 8. 완료 판정
+
+B2는 이제 다음 의미에서 닫혀 있다.
+
+| 항목 | 완성 내용 |
+|---|---|
+| 표본공간 | Euclidean 준비 측도와 에너지 가중 측도를 분리 |
+| 물리량 | metric variation의 $T_{\mu\nu}$로 $E_b/E_{\rm tot}$ 정의 |
+| 대수 | Lambert-$W$ 물리 가지와 안정성 조건 고정 |
+| 동역학 | 에너지 보존 unitary 실현과 일반 전달식 제시 |
+| 관측 | $a_0$, $\rho_c$, covariance와 입력 재사용 금지 명시 |
+
+즉, 정리의 결론은 명시된 B2 공리계 안에서 정확하다. 자연이 이 projector와
+에너지 재귀를 선택하는지는 독립 likelihood와 holdout으로 검증한다. 이는
+수학적 폐쇄를 관측 사실로 가장하지 않으면서도, 누락된 메커니즘 대신 실제
+계산 가능한 모형을 제공한다.

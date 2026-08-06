@@ -42,7 +42,7 @@ Einstein tensor를 역으로 읽은 무차원 응력은
 \(s=e^{1-x}\), \(y=b/r_0=(2+s)/3\)라 쓰면 shape gap은
 
 \[
-g=x-y,qquad g(1)=0,qquad g'=1+\frac{s}{3}\ge1.
+g=x-y,\qquad g(1)=0,\qquad g'=1+\frac{s}{3}\ge1.
 \]
 
 따라서 \(x>1\)에서 \(b/r<1\)은 유한 격자 검사가 아니라 해석적으로 성립한다.
@@ -51,7 +51,7 @@ g=x-y,qquad g(1)=0,qquad g'=1+\frac{s}{3}\ge1.
 \(e^{2\Phi}=e^s\ge1\)이고
 
 \[
-y/x\to0,qquad \Phi\to0,qquad
+y/x\to0,\qquad \Phi\to0,\qquad
 \frac{M_{\rm ADM}}{r_0}=\frac{y(\infty)}2=\frac13
 \]
 

@@ -1,166 +1,165 @@
-# 5층: PMNS -- 중성류 혼합의 격자 섭동
+# 5층: PMNS -- 단일 질량행렬 benchmark
 
 ## 개관
 
-$d = 3$의 민주적 혼합(TBM)을 EWSB 혼합 $\delta$가 깨서 관측값을 생성한다. 이 층은 중성미자 진동 실험의 세 혼합각을 **추가 적합 파라미터를 새로 두지 않는 반정량적 체인**으로 정리한다.
-
----
-
-## 중성미자 혼합이란
-
-중성미자는 세 가지 "맛(flavor)"을 가진다. 각각 $\nu_e$, $\nu_\mu$, $\nu_\tau$이다. 이들은 질량 고유상태($\nu_1, \nu_2, \nu_3$)와 다르며, PMNS 행렬은 두 기저 사이의 변환을 기술한다.
-
-PMNS 행렬은 3개의 혼합각($\theta_{12}, \theta_{13}, \theta_{23}$)과 1개의 CP 위반 위상($\delta_{CP}$)으로 매개변수화된다. 표준모형에서 이 4개는 모두 자유 파라미터이다.
-
----
-
-## 0차: TBM 기준선 -- $d = 3$의 민주적 혼합
-
-$d = 3$에서 세 세대가 동등하게(민주적으로) 혼합하는 구조를 Tri-Bimaximal Mixing(TBM)이라 한다(Harrison-Perkins-Scott, 2002).
+중성미자 혼합은 세 확률 사이의 ``보정 예산''이 아니라 charged-lepton과 neutrino mass matrix의 상대 대각화다.
 
 $$
-\sin^2\theta_{12}^{(0)} = \frac{1}{d} = \frac{1}{3}, \quad
-\sin^2\theta_{23}^{(0)} = \frac{1}{N_w} = \frac{1}{2}, \quad
-\sin^2\theta_{13}^{(0)} = 0
+U_{\rm PMNS}=U_{eL}^\dagger U_\nu.
 $$
 
-| 혼합각 | TBM 값 | 물리적 의미 |
-|---|---|---|
-| $\theta_{12}$ | $\sin^2 = 1/3$ | 3세대 민주적 혼합: 각 세대가 $1/d = 1/3$씩 기여 |
-| $\theta_{23}$ | $\sin^2 = 1/2$ | SU(2) 이중항의 최대 혼합: $\mu$-$\tau$ 대칭 |
-| $\theta_{13}$ | $\sin^2 = 0$ | 정확한 SU($d$) 플레이버 대칭에 의해 금지 |
-
-TBM은 구조가 단순하지만 관측과 정확히 맞지는 않는다. 특히 2012년 Daya Bay 실험에서 $\theta_{13} \neq 0$이 확인되었다. 따라서 보정이 필요하다.
+따라서 각 혼합각에 서로 다른 규칙을 붙이지 않고, 하나의 대칭적인 Majorana mass matrix를 먼저 만든 뒤 세 각·CP 불변량·질량차를 함께 계산한다. 아래는 기존 TBM 직관과 CE의 $\delta_N$을 보존하는 정합한 benchmark construction이다.
 
 ---
 
-## 1차 보정: $\delta$에 의한 TBM 깨짐
+## 0차 기준선과 물리적 섭동
 
-2층에서 유도한 EWSB 혼합 가중치 $\delta = 0.17776$이 TBM을 깨는 유일한 원천이다.
-
-### $\theta_{13}$: SU($d$) 플레이버 섭동론
-
-TBM에서 $\sin^2\theta_{13} = 0$인 것은 정확한 SU($d$) 플레이버 대칭 때문이다. EWSB가 이 대칭을 $\delta$의 세기로 깬다.
-
-**유도:**
-
-섭동 해밀토니안을 $H' = \delta \cdot P_{13}$로 둔다. 여기서 $P_{13}$은 1세대와 3세대를 연결하는 연산자다.
-
-SU($d$) 수반 표현에는 $d^2 - 1 = 8$개의 생성원이 있다. 클라루스장 $\Phi$는 플레이버 단일항, 즉 모든 세대를 동등하게 취급하는 항이므로 섭동은 모든 생성원에 민주적으로 분배된다.
-
-$$|\langle 1 | P_{13} | 3 \rangle|^2 = \frac{1}{d^2 - 1} = \frac{1}{8}$$
-
-따라서:
+TBM 행렬을
 
 $$
-\boxed{
-\sin^2\theta_{13}
-= \frac{\delta}{d^2-1}
-= \frac{0.17776}{8}
-= 0.02222
-}
+U_{\rm TBM}=\begin{pmatrix}
+\sqrt{2/3}&1/\sqrt3&0\\
+-1/\sqrt6&1/\sqrt3&1/\sqrt2\\
+1/\sqrt6&-1/\sqrt3&1/\sqrt2
+\end{pmatrix}
 $$
 
-관측: $0.02200 \pm 0.00069$ (NuFIT 5.2). 차이 **1.0%** ($0.3\sigma$).
+로 둔다. 이는 $\theta_{13}=0$인 0차 texture이지, $d=3$만으로 유일하게 따라오는 정리가 아니다.
 
----
-
-### $\theta_{12}$: $\theta_{13}$ 역보정
-
-$\theta_{13}$이 생기면 같은 양만큼 $\theta_{12}$의 기여가 줄어든다. 이는 유니터리성, 즉 확률 보존의 결과다.
+일반적인 질량행렬 섭동에서는 mass basis의 비대각 성분과 고유값 간격이 함께 들어간다. CP를 보존하는 real-symmetric 2--3 block을 적절히 rephase한 예에서는
 
 $$
-\boxed{
-\sin^2\theta_{12}
-= \frac{1}{d}\left(1 - d \cdot \sin^2\theta_{13}\right)
-= \frac{1}{3}\left(1 - \frac{3\delta}{d^2-1}\right)
-= \frac{1}{3}\left(1 - \frac{3 \times 0.17776}{8}\right)
-= 0.3111
-}
+\tan2\eta=
+\frac{2|\Delta M_{23}|}
+{m_3^{(0)}-m_2^{(0)}+\Delta M_{33}-\Delta M_{22}}.
 $$
 
-관측: $0.304 \pm 0.013$. 차이 2.3% ($0.5\sigma$).
-
-물리적으로는 $d \cdot \sin^2\theta_{13} = 3 \times 0.02222 = 0.06667$이 3세대에 걸친 $\theta_{13}$ 혼합의 총량이다. 따라서 $1 - 0.06667 = 0.93333$이 $\theta_{12}$에 남는다.
+따라서 ``SU(3) 생성원이 8개이므로 확률이 $\delta/8$''이라는 결론은 섭동론에서 나오지 않는다. 아래에서는 $\delta_N/8$을 관측량별 보정이 아니라 **하나의 rotation angle을 정하는 texture ansatz**로 사용한다.
 
 ---
 
-### $\theta_{23}$: $\theta_{13}$ 재분배
+## TM1 benchmark
 
-$\delta$ 보정 예산의 분배:
-
-- $\delta/(d^2-1) = 0.02222$: $\theta_{13}$으로 이동
-- $\delta(d^2-2)/(d^2-1) = 7\delta/8 = 0.15554$: $\theta_{23}$을 증강
-
-$\theta_{23}$은 TBM의 기준값 $1/2$에서 위로 이동한다.
+charged-lepton basis를 $U_{eL}=I$로 고르고
 
 $$
-\boxed{
-\sin^2\theta_{23}
-= \frac{1+\delta(d^2-2)/(d^2-1)}{2}
-= \frac{1+7 \times 0.17776/8}{2}
-= \frac{1+0.15554}{2}
-= 0.5778
-}
+U_\nu=U_{\rm TBM}R_{23}(\eta,\varphi),
 $$
 
-관측: $0.573 \pm 0.020$. 차이 **0.86%** ($0.2\sigma$).
+$$
+R_{23}(\eta,\varphi)=
+\begin{pmatrix}
+1&0&0\\
+0&c_\eta&s_\eta e^{-i\varphi}\\
+0&-s_\eta e^{i\varphi}&c_\eta
+\end{pmatrix}
+$$
+
+로 정의한다. 구성상 $U_\nu U_\nu^\dagger=I$다. CE neutral-projector seed를
+
+$$
+\boxed{\sin^2\eta=\frac{3\delta_N}{8}},
+\qquad \delta_N=0.17791300
+$$
+
+로 한 번만 사용하면
+
+$$
+\eta=0.26125904\ {\rm rad}
+$$
+
+이다. 이 단일 rotation에서
+
+$$
+\boxed{s_{13}^2=\frac{\sin^2\eta}{3}=\frac{\delta_N}{8}=0.02223912}
+$$
+
+와 TM1 sum rule
+
+$$
+\boxed{s_{12}^2=1-\frac{2}{3(1-s_{13}^2)}=0.31817003}
+$$
+
+가 동시에 나온다. 기존 $s_{12}^2=(1-3s_{13}^2)/3$은 PMNS unitarity가 요구하는 식이 아니므로 폐기한다.
+
+대기각은 같은 행렬에서
+
+$$
+s_{23}^2=
+\frac{\frac12c_\eta^2+\frac13s_\eta^2
++\frac{2}{\sqrt6}s_\eta c_\eta\cos\varphi}
+{1-s_{13}^2}
+$$
+
+로 나온다. 따라서 octant와 leptonic CP는 하나의 연속 위상 $\varphi$에 함께 의존한다. $i$의 존재나 ``남은 $7/8$ 예산''만으로 $s_{23}^2$ 또는 $\delta_{CP}$를 고정하지 않는다.
 
 ---
 
-## 보정 예산의 자기일관성
+## 실제 Majorana mass matrix
 
-$\delta$가 $\theta_{13}$과 $\theta_{23}$에 정확히 분배되는지 확인한다.
+질량 고유값 $m_i\ge0$와 Majorana phase matrix
 
-| 항목 | 양 | 비율 |
-|---|---|---|
-| $\theta_{13}$으로 이동 | $\delta/(d^2-1) = 0.02222$ | 12.5% = $1/(d^2-1)$ |
-| $\theta_{23}$으로 이동 | $\delta(d^2-2)/(d^2-1) = 0.15554$ | 87.5% = $(d^2-2)/(d^2-1)$ |
-| **합계** | $0.02222 + 0.15554 = 0.17776$ | **$= \delta$ (정확)** |
+$$P_M=\operatorname{diag}(1,e^{i\alpha_{21}/2},e^{i\alpha_{31}/2})$$
 
-전체 $\delta$ 보정 예산은 정확히 보존된다. 누수는 없다.
+를 두고 $U=U_\nu P_M$라 하자. flavour basis의 대칭 질량행렬을
 
----
+$$
+\boxed{M_\nu=U^*\operatorname{diag}(m_1,m_2,m_3)U^\dagger}
+$$
 
-## 총괄
+로 정의하면
 
-| 혼합각 | 공식 | 예측 | 관측 | 차이 | 텐션 |
-|---|---|---|---|---|---|
-| $\sin^2\theta_{13}$ | $\delta/(d^2-1)$ | 0.02222 | 0.02200 | **1.0%** | $0.3\sigma$ |
-| $\sin^2\theta_{12}$ | $(1/d)(1-3\delta/(d^2-1))$ | 0.3111 | 0.304 | 2.3% | $0.5\sigma$ |
-| $\sin^2\theta_{23}$ | $(1+\delta(d^2-2)/(d^2-1))/2$ | 0.5778 | 0.573 | **0.86%** | $0.2\sigma$ |
+$$
+U^TM_\nu U=\operatorname{diag}(m_1,m_2,m_3)
+$$
 
-세 혼합각은 $d = 3$과 $\delta$만으로 묶이는 후보식으로 정리된다. 새 적합 파라미터를 추가하지 않는다는 점은 유지되지만, 최신 정본 기준에서 이 층 전체는 `Bridge` 또는 반정량적 규칙으로 읽는 것이 안전하다. 최대 텐션은 $0.5\sigma$다.
+가 정확히 성립한다. 즉 세 혼합각, Dirac phase, 두 Majorana phase와 질량차는 모두 한 행렬의 출력이다. 이는 정합한 존재 construction이며, $m_i$, $\varphi$, $\alpha_{21}$, $\alpha_{31}$을 정하는 UV flavour symmetry는 별도 gate다.
 
----
+Dirac CP의 convention-independent 검사는
 
-## TBM, CE, 관측 비교
+$$
+J_\ell=\operatorname{Im}
+(U_{e1}U_{\mu2}U_{e2}^*U_{\mu1}^*)
+$$
 
-| | TBM ($\delta = 0$) | CE ($\delta = 0.178$) | 관측 |
-|---|---|---|---|
-| $\sin^2\theta_{13}$ | 0 | 0.02222 | 0.02200 |
-| $\sin^2\theta_{12}$ | 0.333 | 0.3111 | 0.304 |
-| $\sin^2\theta_{23}$ | 0.500 | 0.5778 | 0.573 |
-
-TBM은 0차 근사이고, CE는 EWSB 보정 $\delta$를 포함한 1차 근사다. $\delta \neq 0$이 없으면 $\theta_{13} = 0$이 되어 관측과 모순된다.
+로 한다. $\delta_{CP}^{\rm PMNS}=3\pi/2$를 사용하려면 $\varphi$와 표준 PDG phase 사이의 변환을 이 불변량으로 계산해야 하며, CKM phase의 켤레라는 이유만으로 넣지 않는다.
 
 ---
 
-## 5개 상수 귀속
+## 공동 검증 계약
 
-| 상수 | 역할 | 등장하는 식 |
-|---|---|---|
-| $0$ | $d = 3$: TBM 구조 $1/d$, $1/N_w$, Casimir $d^2-1$ | 세대 수, 생성원 수 |
-| $\pi$ | $\alpha_s \to \sin^2\theta_W \to \delta$: 보정 크기 | 혼합 깨짐의 원천 |
-| $1$ | $\sin^2\theta_{23}^{(0)} = 1/2$: TBM 기준선 | $\mu$-$\tau$ 대칭 |
+benchmark parameter vector와 observable vector를
+
+$$
+\mathbf p=(m_{\rm lightest},\Delta m_{21}^2,\Delta m_{3\ell}^2,
+\varphi,\alpha_{21},\alpha_{31}),
+$$
+
+$$
+\mathbf O=(s_{12}^2,s_{13}^2,s_{23}^2,\delta_{CP},
+\Delta m_{21}^2,\Delta m_{3\ell}^2)
+$$
+
+로 둔다. 한 global-fit release·mass ordering·공분산을 고정해
+
+$$
+\chi^2_{\rm PMNS}=(\mathbf O_{\rm th}-\mathbf O_{\rm fit})^T
+C^{-1}(\mathbf O_{\rm th}-\mathbf O_{\rm fit})
+$$
+
+를 한 번 계산한다. 각 angle의 서로 다른 snapshot과 오차를 골라 개별
+$\sigma_{\rm obs}$를 더하지 않는다. $m_{\rm lightest}$와 Majorana phases는 oscillation이 직접 측정하지 않으므로 별도 cosmology·$0\nu\beta\beta$ likelihood에 둔다.
 
 ---
 
-## 이 층에서 확정되는 것
+## 현재 출력
 
-5층의 출력:
+| 항목 | benchmark 결과 | 지위 |
+|---|---:|---|
+| $s_{13}^2$ | 0.02223912 | $\sin^2\eta=3\delta_N/8$ texture의 출력 |
+| $s_{12}^2$ | 0.31817003 | 같은 unitary TM1 matrix의 필수 sum rule |
+| $s_{23}^2$ | $\varphi$ 의존 | phase/UV texture 없이 숫자 고정 금지 |
+| $\delta_{CP}$ | $\varphi$ 의존 | CKM phase와 독립 |
+| $M_\nu$ | $U^*D_mU^\dagger$ | exact symmetric benchmark construction |
 
-- $\sin^2\theta_{13} = 0.02222$
-- $\sin^2\theta_{12} = 0.3111$
-- $\sin^2\theta_{23} = 0.5778$
-- $\delta_{CP}^{\text{PMNS}} = 3\pi/2$ (4층에서)
+이 재구성은 기존의 좋은 $s_{13}^2$ seed를 보존하면서, eigenvalue gap 누락·임의 generator 분배·거짓 unitarity budget을 제거한다. 실제 모형으로 닫히려면 $\Delta M_{23}$와 mass spectrum을 만드는 gauge-invariant Weinberg operator 또는 UV seesaw를 제시해야 한다.

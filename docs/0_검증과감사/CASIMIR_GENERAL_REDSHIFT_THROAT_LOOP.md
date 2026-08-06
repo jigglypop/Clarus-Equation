@@ -113,8 +113,8 @@ b(r)<r,\qquad e^{2\varphi(r)}>0,\qquad b(r)/r\to0
 를 유지하는 전역 branch가 존재하는지 검사하는 것이다.
 
 후속 `CASIMIR_GLOBAL_AND_WAVELENGTH_RESONANCE_LOOP.md`에서 고정 Casimir
-압력비의 전역 asymptotic 조건을 풀었다. 유한 redshift는 $\rho\sim
-r^{-8/3}$을, 유한 질량은 $n>3$을 요구해 amplitude-only envelope는
+압력비의 전역 asymptotic 조건을 풀었다. 유한 redshift는
+\(\rho\sim r^{-8/3}\)을, 유한 질량은 \(n>3\)을 요구해 amplitude-only envelope는
 전역 no-go다. 특정 파장 역산은 $7.33\times10^{-18}$m, 약 169GeV로 CE
 light pole보다 5708배 높은 mode를 요구했다. 이는 $b'=-1$인 legacy null
 control의 역사값이다. 현재 $b'=-1/3$ full tensor는

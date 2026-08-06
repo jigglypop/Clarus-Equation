@@ -382,7 +382,8 @@ K=D_A/g_A
 7. CE는 실제 connected correlator, physical pole, residue, LSZ, vertex가 없다.
 8. controller를 포함한 local 4-momentum 및 Ward identity가 없다.
 
-따라서 현재 CE 물리 단계는 계속 `REGISTERED_SCALE`이며, 29.64757 MeV를
+따라서 현재 CE 물리 단계는 계속 `REGISTERED_SCALE`이며, canonical
+\(29.6991596174\,\mathrm{MeV}\) inverse-correlation scale을
 observer-dependent pole로 사용할 근거는 없다.
 
 ## 9. 재현

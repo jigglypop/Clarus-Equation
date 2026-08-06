@@ -57,8 +57,9 @@ fermion 및 tensor reflection factor에 단순 exponential gate를 적용하지 
 | 기존 CE tree two-point 인증서 | 선택적 portal action의 해석적 bare kernel | 측정·시뮬레이션된 connected correlator가 아님 |
 | 신경·원시생명 원자료 | 형광, spike 또는 분자 실험 | CE Euclidean action/operator와 KL convention이 없음 |
 
-그러므로 29.64757 MeV는 아직 correlator fit 결과가 아니라
-\(m_p\delta^2\)에서 등록된 inverse-correlation scale ansatz다.
+그러므로 canonical \(29.6991596174\,\mathrm{MeV}\)는 아직 correlator fit
+결과가 아니라 \(m_p\delta_N^2\)에서 등록된 inverse-correlation scale
+ansatz다.
 
 ## 3. connected estimator와 covariance
 
@@ -317,13 +318,14 @@ ID를 결합해야 한다.
 - tests/test_euclidean_correlator_certificate.py
 - examples/physics/ce_euclidean_correlator_gate.py
 
-합성 method control의 실행값:
+합성 method control의 실행값은 2026-08-04 구형 질량으로 생성된
+**frozen historical fixture**다. 이를 canonical 질량 fit으로 재명명하지 않는다.
 
     current CE stage                         REGISTERED_SCALE
     current CE first blocker                 raw paired O(t), O(0) ensemble is absent
     synthetic stage                          EUCLIDEAN_SCREENING_CONTROL
-    synthetic mean screening mass            29.647570000 MeV
-    registered mass relative error            0
+    synthetic mean screening mass            29.647570000 MeV (frozen legacy)
+    legacy-fixture relative error              0
     normalization-augmented nullity           8
     correlator pair relative residual         1.767588592e-16
     total spectral-weight pair residual       0

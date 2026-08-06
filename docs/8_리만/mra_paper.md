@@ -1,51 +1,33 @@
-# Mellin-Riemann Attention: ζ explicit-formula 유도 attention의 ablation 분석과 분산 절감, 그리고 Euler-CE의 length extrapolation 우위 발견
+# Mellin-Riemann Attention: ζ explicit-formula 영감 feature의 ablation 분석
 
-> 본 문서는 `mra_block_spec.md`의 사양과 `tests/test_mra.py`의 검증, 그리고
-> `examples/ai/bench_recursive_euler.py --mode mra`와 `bench_mra_extrap.py`의
-> ablation 실측을 한 편의 짧은 논문 형태로 정리한다. **정직한 negative-positive
-> 혼합 결과**를 담은 internal write-up이다.
+> 본 문서는 `mra_block_spec.md`의 사양과 `tests/test_mra.py`의 연산 검증을
+> 논문 형태로 정리한다. 과거 인용된 `bench_recursive_euler.py`,
+> `bench_mra_extrap.py`, 결과 JSON/checkpoint/config는 현재 checkout에 없다.
+> 따라서 6--7절의 수치는 `recorded historical result / non-evidence`이며,
+> 재현된 실측 결론으로 사용하지 않는다.
+>
+> **수식 교정 (2026-08-06).** 기록된 실험은 3절의 directed score와 표준
+> row-softmax를 사용했다. 이는 self-adjoint attention이 아니다. 교정된
+> bidirectional Hermitian construction은 `mra_block_spec.md`의
+> \(H=(D+D^\dagger)/2\) 및 symmetric normalization이며 아직 이 표의
+> benchmark 대상이 아니다. 따라서 아래 실험을 Hilbert–Pólya, RH 또는 GUE의
+> 검증으로 읽지 않는다.
 
 ## Abstract
 
-Riemann ζ 함수의 explicit formula의 critical-strip 합으로부터 attention
-score를 직접 유도한 새로운 attention 변종 **Mellin-Riemann Attention
-(MRA)**를 제안하고, 7개 설계 요소를 ablation으로 검증한다. 또한 비교
-대상으로 기존 `euler_ce_k1`의 length extrapolation 성능을 처음으로 직접
-측정한다.
+Riemann ζ 함수 explicit formula의 유한 positive-zero 항에서 영감을 받은
+attention 변종 **Mellin-Riemann Attention (MRA)**와 7개 설계 knob를 제안한다.
+유한 truncation과 attention feature 삽입은 explicit formula 자체도,
+Hilbert--Pólya/RH 검증도 아닌 공학 설계다.
 
-`docs` Markdown 코퍼스 (400 K chars, vocab 788) 에서 char-level LM,
-1500-step × 3-seed (in-distribution) + 1000-step × 3-seed (extrapolation):
-
-* **부정적**: ζ 영점 `γ_k`를 attention frequency로 직접 사용하는 방식
-  (Mellin 커널 `θ_k(p) = γ_k log(1+p)`)은 `γ_k/γ_1`의 범위가 ~5×에 불과해
-  RoPE의 ~3000× 다중 스케일 해상도를 잃고, **PPL 14.29(RoPE 12.29 대비
-  +2.0)**로 명확히 부진했다.
-* **부정적**: ζ amplitude weighting (`w_k = 1/(1/2 + iγ_k)`) 단독 효과 미미
-  (`mra` 12.46 vs `mra_noamp` 12.27, +0.17 손해).
-* **부정적**: 부트스트랩 sparsity(`ε² = 4.87 %`)와 출력 spectral norm 모두
-  1500-step 시점 PPL 손해 (+0.33).
-* **긍정적 (분산)**: `MRABlock(decay_mode="bias")`가 평균 PPL 12.24(RoPE
-  대비 -0.05)에 도달하고 **seed 분산이 RoPE의 절반(0.10 vs 0.21)**으로 줄었다.
-* **긍정적 (외삽)**: `mra_bias`의 logarithmic distance bias가 4× length
-  extrapolation에서 RoPE보다 **8 %p 안정**했다(degrad +18.5 % vs +26.7 %).
-* **새로운 큰 발견 (4× extrap)**: `euler_ce_k1` 이 4× length extrapolation
-  에서 **degrad +6.0 % 만 발생** (RoPE +26.7 %, MRA +18.5 % 대비 압도적).
-* **결정적 분해 (32× extrap, 9 변종, § 7.7)**: 외삽 능력은 두 tier로 명확히
-  갈린다. Tier 1 (외삽 OK, ≤ +10 %): `rope_alibi`, `euler_no_pi`, `euler_ce_k1`,
-  `xpos`, `nope`. Tier 2 (외삽 BAD, +29 ∼ +55 %): `mra`, `mra_bias`, `std_rope`,
-  `euler_no_decay`. **공통 패턴**: Tier 1 = "강한 distance attenuation 존재
-  (linear/multiplicative)" OR "rotation 자체 부재". Tier 2 = "rotation 존재
-  + attenuation 부재 또는 너무 약함 (log)".
-* **Euler-CE 외삽 = ALiBi 재발견**: `euler_no_pi`(e-decay only) ≈ `euler_ce_k1`
-  ≈ `rope_alibi`(32× 모두 -6 % 근방). π-rotation은 외삽에 기여하지 않았다.
-* **NoPE > RoPE 7배 차이**(NoPE +7 % vs RoPE +47.2 %): RoPE의 회전 자체가
-  OOD의 직접 원인임을 보였다. Kazemnejad et al. (2023)의 finding을 재현했다.
-
-결론은 세 가지다. (a) ζ 영점을 frequency로 쓰는 직설적 시도는 실패했다.
-(b) RoPE + ζ amp의 lean MRA는 평균 PPL은 동급이고 분산은 절반이다.
-(c) **Length extrapolation의 구조적 결정성**: rotation을 그대로 두려면 강한
-distance attenuation(linear ALiBi 또는 multiplicative xPos)이 필수이며,
-그렇지 않으면 rotation 자체가 없는 NoPE가 낫다.
+현재 재현 가능한 length-OOD toy는 MRA가 아니라 tracked
+`../experiments/ood_length_repro.py`의 네 canonical head뿐이다. 약 127 K
+parameter, 3 seed, train 64/eval 2048에서 ALiBi와 xPos는 각각
+$-9.1\%\pm5.7\%$, $-8.8\%\pm5.4\%$, NoPE와 RoPE는
+$+31.7\%\pm10.2\%$, $+505\%\pm41.4\%$ degradation을 기록했다. 이 toy는
+강한 distance attenuation의 방향성 근거지만 MRA, scaling, 자연어, AGI-OOD의
+결론이 아니다. MRA의 성능은 7.8절 acceptance protocol을 새 artifact로
+통과하기 전까지 `open`이다.
 
 ---
 
@@ -57,28 +39,29 @@ invariant라는 근본 한계를 외부 주입으로 해결하는 inductive bias
 현대 LLM의 표준이 된 후, ALiBi [2], YaRN [3], LongRoPE [4] 등 후속 연구는
 대체로 경험적 튜닝으로 long-context extrapolation을 공략해왔다.
 
-본 연구의 출발점은 다른 방향이다. **수학적 axiom에서 attention 식을 직접
-유도**하면 어떻게 되는가? Hilbert-Pólya 추측 [5]은 Riemann ζ의 비자명
-영점 `{ρ_n = 1/2 + iγ_n}`의 허수부가 어떤 self-adjoint operator의 고유값
-임을 가정한다. Berry-Keating [6]은 이 operator가 `H = (xp + px)/2`의
-양자화일 가능성을 제시했다.
+본 연구의 출발점은 다른 방향이다. **수론적 frequency bank가 attention의
+inductive bias로 유용한가?** Hilbert–Pólya는 Riemann ζ의 비자명 영점
+ordinate를 어떤 self-adjoint operator의 spectrum으로 실현하려는 추측이다.
+Berry–Keating의 \(H=(xp+px)/2\)는 후보적 프로그램이지 완성된 연산자가
+아니다.
 
-본 연구는 RH(Riemann Hypothesis)를 **engineering axiom**으로 채택하고,
-attention score를 ζ의 explicit formula의 critical-strip 합으로부터 유도
-한다. 식 자체는 단순하지만, 어느 부분이 실제로 도움이 되고 어느 부분이
+본 연구는 유한하게 검증된 positive-zero ordinate를 deterministic buffer로
+사용한다. 이 유한 사용에는 전체 RH가 필요하지 않으며, 해당 ordinate를
+attention frequency로 쓰는 것 역시 Hilbert–Pólya operator의 구성이 아니다.
+식은 단순하지만 어느 부분이 실제로 도움이 되고 어느 부분이
 도움이 되지 않는지는 **실증으로만 확인 가능**하다. 본 논문의 기여는 이를
 ablation으로 분리한 데에 있다.
 
 ### 1.1 Contributions
 
-1. ζ explicit formula의 critical-strip 합으로부터 attention score를
-   폐쇄형으로 유도 (§ 3).
+1. ζ explicit formula의 유한 positive-zero 항을 directed attention
+   feature로 옮긴 convention을 고정 (§ 3).
 2. 7가지 설계 knob(frequency 방식, amplitude weighting, decay 형태,
    sparsity, spectral norm, Hermitian)을 노출하는 단일 ablation 표면 (§ 4).
-3. **부정적 발견 명시**: 직설적 ζ-frequency, multiplicative decay,
-   bootstrap sparsity, spectral-norm 모두 1500-step 시점 LOSS (§ 6).
-4. **긍정적 발견**: lean variant(`mra` / `mra_bias`)는 RoPE와 평균 PPL
-   동급 + **seed 분산 2-3× 감소** (§ 7).
+3. 과거 1500-step/length 표를 재현 artifact 부재의 historical ledger로
+   보존하고 경험적 결론과 분리 (§6--7).
+4. MRA와 canonical PE를 재검증할 artifact schema와 acceptance protocol을
+   명시 (§7.8).
 
 ---
 
@@ -113,14 +96,18 @@ von Mangoldt:
 ψ(x) = x − Σ_ρ x^ρ / ρ − log(2π) − ½ log(1 − x^{-2})
 ```
 
-핵심 합 `Σ_ρ x^ρ / ρ`는 RH 하에서
+explicit formula의 zero 합은 모든 영점과 적절한 대칭 truncation을 포함한다.
+RH를 추가로 가정하고 conjugate pair를 묶으면 양의 ordinate에 대해
 
 ```
-Σ_n x^{1/2 + iγ_n} / (1/2 + iγ_n) = √x · Σ_n e^{iγ_n log x} / (1/2 + iγ_n)
+Σ_ρ x^ρ/ρ
+= 2 Re Σ_{γ_n>0} [√x · e^{iγ_n log x}/(1/2+iγ_n)]
 ```
 
-으로 정리된다. **Mellin 커널** `e^{iγ_n log x}`와 **ζ 진폭** `1/(1/2 + iγ_n)`
-의 곱이 자연스럽게 나타난다.
+형태다. positive-\(\gamma\) 복소합 하나만은 full real zero contribution과
+같지 않다. MRA는 이 유한 positive-zero 항의 **Mellin phase**와 **amplitude**
+를 feature로 차용한다. finite truncation, token-pair \(x_{ij}\), query/key
+곱은 explicit formula에서 정해지는 것이 아니라 공학적 삽입이다.
 
 ---
 
@@ -128,34 +115,56 @@ von Mangoldt:
 
 ### 3.1 단순 score 식
 
-위치쌍 `(i, j)`에 `x = (1+i)/(1+j)`를 대입한다. dim-pair `k`를 복소채널로
-압축하면
+모든 관련 문서와 같은 convention으로
+
+```
+τ_i = log(1+i),  Δ_ij = τ_i-τ_j,
+x_ij = exp(-Δ_ij) = (1+j)/(1+i)
+```
+
+를 둔다. 기록된 backend는 raw zero가 아니라
+
+```
+ν_k = γ_k/γ_0,  a_k = 1/(1/2+iν_k)
+```
+
+를 사용한다. 따라서 \(a_k\)는 zeta amplitude가 아니라 normalized design
+weight다. dim-pair `k`를 복소채널로 압축하면
 
 ```
 q_i^(k) := q_i^{2k} + i · q_i^{2k+1},     k_j^(k) := k_j^{2k} + i · k_j^{2k+1},
 ```
 
-attention raw score는 다음과 같다.
+`freq_mode="zeta_log"`, `amp_weight=True`, `decay_mode="mult"`를 모두 켠
+**full directed reference score**는 다음과 같다.
 
 ```
-S_{ij} = √((1+j)/(1+i)) · Σ_k w_k · e^{−iγ_k log((1+i)/(1+j))} · q_i^(k) · conj(k_j^(k))
+S_{ij} = √((1+j)/(1+i)) · Σ_k a_k · e^{−iν_k log((1+i)/(1+j))} · q_i^(k) · conj(k_j^(k))
 ```
 
-여기서 `w_k = 1/(1/2 + iγ_k)`. 토큰별 attention 입력은 `Re(S_{ij})`.
+토큰별 attention 입력은 `Re(S_{ij})`.
+prefactor와 complex \(a_k\) 때문에 tied query/key를 사용해도 일반적으로
+\(S_{ji}\ne\overline{S_{ij}}\)다.
 
-### 3.2 폐쇄형 분해
+기록된 primary `mra`/`mra_bias`는 `freq_mode="rope"`이므로 위
+\(e^{-i\nu_k\Delta_{ij}}\) 대신 표준 RoPE phase를 사용한다. 또한
+`decay_mode="none"`이면 \(\sqrt{x_{ij}}\)를 생략한다. 따라서 위 한 식을
+모든 ablation variant의 실제 forward라고 읽지 않는다. `mra_zeta`가
+normalized zero-frequency 분기를 격리한다.
 
-`(1+i)^{−iγ_k}`와 `(1+j)^{−iγ_k}`가 각각 `i`, `j`만의 함수이므로 사전 변환
+### 3.2 full directed reference의 폐쇄형 분해
+
+`(1+i)^{−iν_k}`와 `(1+j)^{−iν_k}`가 각각 `i`, `j`만의 함수이므로 사전 변환
 
 ```
-q̃_i^(k) = (1/√(1+i)) · e^{−iγ_k log(1+i)} · q_i^(k)
-k̃_j^(k) = √(1+j) · e^{−iγ_k log(1+j)} · k_j^(k)
+q̃_i^(k) = (1/√(1+i)) · e^{−iν_k log(1+i)} · q_i^(k)
+k̃_j^(k) = √(1+j) · e^{−iν_k log(1+j)} · k_j^(k)
 ```
 
 후
 
 ```
-S_{ij} = Σ_k w_k · q̃_i^(k) · conj(k̃_j^(k))
+S_{ij} = Σ_k a_k · q̃_i^(k) · conj(k̃_j^(k))
 ```
 
 이는 표준 dot-product attention과 동일한 `O(N²K)` 계산이다. 실수 분해는 다음과 같다.
@@ -172,9 +181,9 @@ Re(S) = q̂_re @ k̃_re^T + q̂_im @ k̃_im^T
 
 | 양 | 형상 | 자유도 |
 |---|---|---|
-| `γ_k` | buffer | 0 (RH axiom) |
-| `w_k = 1/(1/2 + iγ_k)` | buffer | 0 (RH axiom) |
-| `cos_p, sin_p, log_decay` | buffer | 0 (위치-axiom) |
+| `ν_k=γ_k/γ_0` | buffer | 0 (verified table + engineering normalization) |
+| `a_k = 1/(1/2 + iν_k)` | buffer | 0 (normalized design weight) |
+| `cos_p, sin_p, log_decay` | buffer | 0 (deterministic design buffer) |
 | `W_q, W_k, W_v, W_o` | learnable | 표준 attention 동일 |
 
 표준 multi-head attention 대비 **추가 학습 파라미터 0**.
@@ -189,29 +198,32 @@ knob은 다음과 같다.
 | knob | 값 | 기본 | 의미 |
 |---|---|---|---|
 | `freq_mode` | `"rope"` / `"zeta_log"` | `"rope"` | 위치 주파수 형태 |
-| `amp_weight` | `True` / `False` | `True` | ζ 진폭 weighting `w_k` 사용 |
+| `amp_weight` | `True` / `False` | `True` | normalized complex weight \(a_k\) 사용 |
 | `decay_mode` | `"none"` / `"bias"` / `"mult"` | `"none"` | critical-line decay 형태 |
-| `sparse_eps2` | `0.0` ∼ `0.0487` | `0.0` | top-k retention 비율 |
-| `hermitian` | `False` / `True` | `False` | `W_q = W_k` tied + score symmetrize |
+| `sparse_eps2` | `0.0` ∼ `0.0487` | `0.0` | 당시 ablation의 top-k retention 비율; 정준 target은 `0.04863825851598632` |
+| `hermitian` | `False` / `True` | `False` | tied projection + pre-mask real-score symmetrize; operator Hermiticity는 별도 |
 | `spectral_norm_o` | `False` / `True` | `False` | `σ₁(W_o) ≤ 1` 강제 |
 | `rope_base` | f32 | `10000` | RoPE base freq (freq_mode="rope" 일 때만) |
 
 ### 4.1 `freq_mode`
 
 - `"rope"`: `θ_k(p) = p · base^{−k/K}`. RoPE 기하 급수(~3000× 범위).
-- `"zeta_log"`: `θ_k(p) = γ_k · log(1+p)`. Mellin 커널이며, ζ 영점이 곧 frequency다.
-  `γ_k/γ_1`의 범위가 K=16에서 ~5×에 불과해 다중 스케일 해상도가 손실된다.
+- `"zeta_log"`: `θ_k(p) = ν_k · log(1+p)`. zero ordinate의
+  정규화 비가 frequency다. \(ν_k\) 범위가 K=16에서 약 5배라 다중 스케일
+  해상도가 손실된다.
 
 ### 4.2 `amp_weight`
 
-- `True`: `w_k = 1/(1/2 + iγ_k)`를 score에 곱한다. `Re(w_k)·Re_part −
-  Im(w_k)·Im_part` 형태로 standard RoPE의 `cos` 채널과 보조 `sin` 채널이
+- `True`: `a_k = 1/(1/2 + iν_k)`를 score에 곱한다.
+  `Re(a_k)·Re_part − Im(a_k)·Im_part` 형태로 standard RoPE의
+  `cos` 채널과 보조 `sin` 채널이
   혼합된다.
-- `False`: `w_k = 1`. attention 식이 표준 RoPE와 일치한다(control).
+- `False`: `a_k = 1`. attention 식이 표준 RoPE와 일치한다(control).
 
 ### 4.3 `decay_mode`
 
-ζ explicit-formula의 `√x` factor(`x = (1+i)/(1+j)`)를 처리한다.
+positive-zero feature의 `√x` factor
+(`x = (1+j)/(1+i)`)를 처리한다.
 
 - `"none"`: 무시.
 - `"bias"`: log-space additive. `bias_{ij} = ½(log(1+j) − log(1+i))`를 score에 더한다.
@@ -221,10 +233,29 @@ knob은 다음과 같다.
 
 ### 4.4 `hermitian` (causal LM에서 비추천)
 
-`W_q = W_k` tied + score symmetrize `S ← (S + Sᵀ)/2` 구조다. Bidirectional encoder에서는
-self-adjoint operator의 이산화(Hilbert-Pólya 직접 구현)이지만, **causal
-LM에서는 mask 전 symmetrize가 future leakage를 일으킨다**. 본 작업의 ablation
-표에서 이 knob은 제외했다.
+`W_q = W_k`만으로는 directed score가 Hermitian이 아니다. 실수 logits
+\(L=\operatorname{Re}S\)를
+
+```
+H_R = (L + L^T)/2
+```
+
+로 사영하면 \(H_R^T=H_R\)는 exact다. 그러나 표준 row-softmax
+\(P=D^{-1}\exp(H_R)\)는 일반적으로 \(P^T\ne P\)다. ordinary Euclidean
+inner product에서 self-adjoint operator가 필요하면
+
+```
+K_ij = exp(H_R,ij),  d_i = Σ_j K_ij,
+A_sym = diag(d)^{-1/2} K diag(d)^{-1/2}
+```
+
+를 써야 한다. 현재 구현은 symmetric normalization까지 구현하지 않으므로
+`hermitian=True`는 “pre-mask real score symmetrization”만 뜻한다.
+Hilbert–Pólya 직접 구현이라고 부르지 않는다.
+
+strict causal mask는 비자명한 symmetric operator와 양립하지 않는다.
+causal decoder에서는 directed score만 쓰고 Hermitian claim을 하지 않는다.
+이 knob은 기록된 causal ablation 표에서 제외했다.
 
 ---
 
@@ -240,13 +271,19 @@ LM에서는 mask 전 symmetrize가 future leakage를 일으킨다**. 본 작업�
 - 모든 ablation knob 조합 finite output
 - bootstrap sparsity 정확한 retention 수
 - 학습 파라미터 수 == 표준 MHA (4·d²) / Hermitian 모드 == 3·d²
-- ζ amplitude가 실제로 출력을 바꾸는지 확인(회귀 가드)
+- 정규화 complex weight가 실제로 출력을 바꾸는지 확인(회귀 가드)
 - 공리적 buffer들이 학습되지 않는지 확인
 - spectral norm이 σ₁ ≤ 1을 강제하는지 확인
 
 ---
 
 ## 6. Experiments - Setup
+
+> **Historical protocol only.** 아래 설정을 실행한 script, corpus snapshot,
+> split hash, checkpoint, raw result가 현재 checkout에 없다. 6--7.7.3의 표는
+> 과거 기록을 보존한 evidence ledger이며 통계적 판정이나 성능 주장의 근거가
+> 아니다. 현재 실행 가능한 canonical-head toy와 새 acceptance protocol은
+> 7.8절에 분리한다.
 
 | 항목 | 값 |
 |---|---|
@@ -268,16 +305,16 @@ LM에서는 mask 전 symmetrize가 future leakage를 일으킨다**. 본 작업�
 | `std_rope` | RoPE | — | — | baseline (`RoPEAttnBlock`) |
 | `euler_ce_k1` | π-rotation | — | e-decay | 기존 winner [9] |
 | **`mra`** | rope | True | none | primary lean MRA |
-| `mra_noamp` | rope | False | none | ablate ζ amplitude |
+| `mra_noamp` | rope | False | none | ablate normalized complex weight |
 | `mra_zeta` | zeta_log | True | none | ablate frequency |
 | `mra_bias` | rope | True | bias | + additive log decay |
 | `mra_mult` | rope | True | mult | + multiplicative decay |
-| `mra_sparse` | rope | True | none | + ε² = 0.0487 sparsity |
+| `mra_sparse` | rope | True | none | + 당시 반올림값 ε² = 0.0487 sparsity |
 | `mra_sn` | rope | True | none | + spectral_norm(W_o) |
 
 ---
 
-## 7. Results
+## 7. Historical result ledger (현재 non-evidence)
 
 ### 7.1 1500-step × 3-seed PPL ablation
 
@@ -293,36 +330,37 @@ LM에서는 mask 전 symmetrize가 future leakage를 일으킨다**. 본 작업�
 | `mra_sparse` | 210 K | 12.621 | 0.232 | 14.1 |
 | `mra_sn` | 210 K | 12.621 | 0.172 | 18.7 |
 
-### 7.2 Verdicts (`std_rope`, `euler_ce_k1` 대비)
+### 7.2 과거 verdict label (`std_rope`, `euler_ce_k1` 대비; 현재 무효)
 
 | 비교 | z | Δ PPL | 판정 |
 |---|---|---|---|
-| `mra_zeta` vs `std_rope` | +8.84 | +1.999 | **LOSS** (γ-freq 붕괴 확정) |
-| `mra` vs `std_rope` | +1.35 | +0.170 | LOSS (mean), 분산 −67 % |
-| `mra_noamp` vs `std_rope` | −0.16 | −0.022 | TIE (≈ pure RoPE) |
-| `mra_bias` vs `std_rope` | −0.36 | −0.048 | TIE+ |
-| `mra_mult` vs `std_rope` | −0.22 | −0.028 | TIE+ |
-| `mra_sparse` vs `std_rope` | +1.86 | +0.334 | LOSS |
-| `mra_sn` vs `std_rope` | +2.14 | +0.334 | LOSS |
-| `euler_ce_k1` vs `std_rope` | (best baseline) | −0.424 | WIN |
+| `mra_zeta` vs `std_rope` | +8.84 | +1.999 | archived LOSS label; current unverified |
+| `mra` vs `std_rope` | +1.35 | +0.170 | archived LOSS/variance label; current unverified |
+| `mra_noamp` vs `std_rope` | −0.16 | −0.022 | archived TIE label; current unverified |
+| `mra_bias` vs `std_rope` | −0.36 | −0.048 | archived TIE+ label; current unverified |
+| `mra_mult` vs `std_rope` | −0.22 | −0.028 | archived TIE+ label; current unverified |
+| `mra_sparse` vs `std_rope` | +1.86 | +0.334 | archived LOSS label; current unverified |
+| `mra_sn` vs `std_rope` | +2.14 | +0.334 | archived LOSS label; current unverified |
+| `euler_ce_k1` vs `std_rope` | (historical baseline) | −0.424 | archived WIN label; current unverified |
 
-### 7.3 부정적 발견
+### 7.3 과거 부정적 기록 (재검증 필요)
 
-1. **`mra_zeta` (PPL 14.29)**: ζ 영점을 frequency로 직접 사용하면 RoPE의
+1. **`mra_zeta` (PPL 14.29)**: 정규화한 zero ordinate를 frequency로 사용하면 RoPE의
    다중 스케일 해상도가 깨진다. `γ_k/γ_1`의 범위는 K=16에서 ~5×에 불과하다.
    RoPE의 `10000^{−k/K}`가 갖는 ~3000× 범위와 비교하면 다중 스케일 해상도가
-   거의 없다. 이 한계는 `riemann_rope`의 PPL 19.29(별도 측정)의 직접 원인이며,
-   ζ 영점을 frequency로 직접 사용하는 모든 변종에서 재현된다.
-2. **ζ amplitude 단독 효과 미미**: `mra` (12.46) − `mra_noamp` (12.27) =
-   +0.17 PPL **손해**(z = +1.35). amp_weight가 표준 RoPE attention에서
-   별다른 정보 이득을 주지 못한다.
+   거의 없다는 구조적 차이는 계산 가능하다. 다만 이것이 과거 PPL 차이의
+   직접 원인인지는 artifact와 개입 ablation이 없어 현재 미판정이다.
+2. **정규화 complex weight 단독 효과 미미**: `mra` (12.46) − `mra_noamp` (12.27) =
+   +0.17 PPL로 기록됐다. raw seed 결과가 없어 정보 이득의 부재 또는 손해를
+   현재 통계적으로 판정하지 않는다.
 3. **부트스트랩 sparsity / spectral norm**: 1500 step 충분 수렴 시점에서는 모두
-   PPL 손해(+0.33)를 보였다. 짧은 학습(200 step)에서는 도움이지만 long-run에서는 over-
-   regularization.
+   PPL +0.33으로 기록됐다. long-run over-regularization이라는 인과 해석은
+   재현 전에는 사용하지 않는다.
 
-### 7.4 긍정적 발견 - seed 분산 절감
+### 7.4 과거 seed 분산 기록 (재검증 필요)
 
-mean PPL은 거의 동등하지만 seed-to-seed 분산은 명확히 감소한다.
+아래 표는 과거 요약값이다. 3 seed의 표본 표준편차만으로 분산 감소를
+확정할 수 없고 raw run도 없으므로 재현 전에는 방향성 기록으로만 남긴다.
 
 ```
 σ_PPL across 3 seeds (lower = more reproducible):
@@ -334,12 +372,11 @@ mean PPL은 거의 동등하지만 seed-to-seed 분산은 명확히 감소한다
   euler_ce_k1  : 0.126         1.7×  (다른 메커니즘)
 ```
 
-`mra` 계열(RoPE freq + amp/decay 변종)은 모두 **σ_PPL이 RoPE의 1/3 ∼ 1/2** 수준이다.
-`mra_noamp`도 분산이 작은 것으로 보아, 분산 감소는 ζ amplitude 단독 효과가
-아니라 RoPE의 `qkv` fused linear 대신 **`W_q, W_k` 분리 + RoPE-style
-회전**을 조합한 데서 나오는 것으로 추정된다(추가 조사 필요).
+이 기록에서 보인 비율의 원인을 normalized weight 또는 분리된 $W_q,W_k$에
+귀속하지 않는다. 최소 10 seed와 Levene/Brown--Forsythe 또는 bootstrap
+variance-ratio CI가 필요하다.
 
-### 7.5 가장 좋은 lean 변종
+### 7.5 과거 lean 후보
 
 `decay_mode="bias"` (`mra_bias`):
 - mean PPL 12.240: **RoPE보다 0.05 낮음**(z = −0.36, statistically TIE
@@ -347,12 +384,13 @@ mean PPL은 거의 동등하지만 seed-to-seed 분산은 명확히 감소한다
 - σ_PPL 0.097: RoPE 분산의 47 %
 - 시간 비용은 RoPE와 동일
 
-이는 ALiBi의 logarithmic 일반화로 해석할 수 있다.
+이는 ALiBi와 다른 logarithmic bias 후보로 쓸 수 있다.
 ```
 bias_{ij} = ½ (log(1+j) − log(1+i))
 ```
 선형 거리 `−|i−j|`가 아닌 logarithmic 거리다. critical line `Re(s) = 1/2`의
-지수 `½`가 직접 도출된다.
+지수 `½`를 critical-line 실수부에서 가져온 설계 선택이다. 이 선택이 성능을
+유도하거나 유일하게 만든다는 뜻은 아니다.
 
 ### 7.6 Length extrapolation (4×까지)
 
@@ -367,26 +405,15 @@ train block = 64, eval block ∈ {64, 96, 128, 192, 256} (4× 외삽까지),
 | `mra_bias`    | 14.96 | 17.06 | 14.39 | 16.62 | 17.72 | **+18.5 %** |
 | `mra_zeta`    | 17.39 | 19.76 | 16.93 | 18.67 | 19.16 | +10.2 % |
 
-발견:
+과거 표의 단순 산술에서는 `euler_ce_k1`과 `mra_zeta`의 상대 degradation이
+작고 `mra_bias`가 RoPE보다 8.2 percentage points 작았다. 그러나 raw artifact가
+없으므로 우월성, RoPE 붕괴 재현, logarithmic bias의 효과라는 결론은 모두
+철회한다. 동일 설정의 새 paired runs가 7.8절을 통과해야 한다.
 
-1. **`euler_ce_k1`의 extrapolation이 압도적**이다. 4× 외삽에서 PPL은 +6 %만
-   증가했다. 다른 모든 변종(RoPE 포함)이 +18 ~ +27 %인 것과 명확히 다른 영역이다.
-   Euler-CE의 `e^{-|i-j|/ξ}` decay가 정확한 long-context 인덕티브 바이어스를
-   제공하는 것으로 해석된다.
-2. **`mra_bias`의 logarithmic decay는 RoPE보다 8 %p 더 부드럽게 degrade한다**
-   (+18.5 % vs +26.7 %). lean MRA의 자그마한 long-context 우위다. 다만
-   `euler_ce_k1` 만큼은 아님.
-3. **`mra_zeta`는 짧은 base에서는 부진해도 외삽은 비교적 잘한다**(+10.2 %).
-   `log(1+p)` lift의 진짜 가치는 long-context에서 발현된다. 짧은 학습 + 긴
-   외삽 시나리오에 한정해서는 검토 가치 있음.
-4. **`std_rope`의 빠른 붕괴**(+26.7 %): 알려진 RoPE periodicity 한계를 재현했다.
+### 7.7.1 과거 scaling 표: d_model {64, 128, 256}
 
-이 결과는 logarithmic distance bias가 ALiBi의 일반화로 의미 있는 후속 연구
-방향임을 시사한다.
-
-### 7.7.1 Scaling: d_model {64, 128, 256}에서 패턴 유지
-
-§ 7.7의 결과를 모델 크기 scaling에 대해 검증한다. 학습 설정은 동일하다
+과거 기록은 다음 설정을 사용했다고 적고 있으나 artifact가 없어 scaling
+검증으로 인정하지 않는다. 학습 설정은
 (train block = 64, 1500 step). seeds는 d=64에서 3, d=128/256에서 메모리상 2다.
 
 #### 32× extrapolation 상대 degradation, d_model 별
@@ -403,36 +430,23 @@ train block = 64, eval block ∈ {64, 96, 128, 192, 256} (4× 외삽까지),
 | `std_rope` | +47.2 % | **+73.5 %** | +48.3 % | Tier 2 |
 | `euler_no_decay` | +54.7 % | **+103.6 %** | +54.2 % | Tier 2 |
 
-#### 발견
+#### 현재 판정
 
-1. **Tier 1/Tier 2 분리는 모든 d_model에서 견고**하다. d=64, 128, 256의 세
-   가지 모델 크기 모두 ALiBi 계열 (`rope_alibi`, `euler_ce_k1`, `euler_no_pi`)
-   은 안정적이고(−3 ∼ −6 %), rotation-only 계열(`std_rope`, `euler_no_decay`,
-   `mra`, `mra_bias`)은 catastrophic하다(+42 ∼ +104 %). 본 작업의 핵심 가설
-   "rotation + 강한 distance attenuation이 외삽의 충분조건"은 모델 크기에
-   invariant하다.
-2. **d_model = 128에서 cliff가 가장 깊다**. rotation-only 변종이 +73 ∼
-   +104 %로 가장 큰 degradation을 보였다. 가능한 해석은 중간 사이즈가 학습 분포에
-   가장 tightly fit하여 OOD 영역과의 격차가 가장 크다는 것이다. d=256은 1500 step에서
-   underfit으로 보인다.
-3. **ALiBi의 안정성은 모델 크기에 무관**하다. d=64 −6.2 %, d=128 −3.0 %,
-   d=256 −5.1 %다. Slope 학습이 단순하므로 sample efficiency가 좋아 모든
-   사이즈에서 robust하다. **이는 ALiBi가 production-scale 모델에서도 유효한
-   외삽 메커니즘일 강한 후보임을 시사**.
-4. **NoPE의 OOD 안정성은 모델이 커질수록 약화**된다. d=64 +7 %, d=128 +15.6 %,
-   d=256 +10.5 %다. 모델이 implicit position을 더 강하게 학습할수록 OOD 영역에서의
-   generalization이 약해진다. NoPE는 baseline으로는 의미 있지만 production에는 부적합하다.
+이 표에서 보이는 tier와 $d_{\rm model}$ 패턴은 historical hypothesis다.
+d=128/256가 2 seed뿐이고 raw run·학습곡선이 없으므로 모델 크기 불변성,
+underfit, production-scale ALiBi, NoPE 부적합 중 어느 것도 결론내리지 않는다.
+현재 tracked toy는 오히려 NoPE를 안정 tier로 재현하지 못했다.
 
-### 7.7.2 Length extrapolation (32×까지): Euler-CE 분해
+### 7.7.2 과거 32× Euler-CE 분해 표
 
-위 § 7.6의 발견(Euler-CE의 외삽 우위)의 진짜 원인을 격리한다. EulerCE는
-두 개의 분리 가능한 구조를 결합하므로 각각을 frozen으로 끄고 비교한다.
+과거 실험은 EulerCE의 두 구조를 frozen ablation으로 비교했다고 기록한다.
+artifact 부재 때문에 원인 격리로 인정하지 않는다.
 
 | 변종 | 구성 | 학습 자유도 |
 |---|---|---|
 | `std_rope` | RoPE | baseline |
 | `rope_alibi` | RoPE + ALiBi linear decay (per-head learnable slope) | + n_heads |
-| `mra` / `mra_bias` | RoPE + ζ amplitude / + log decay | + n_heads (`mra_bias`) |
+| `mra` / `mra_bias` | RoPE + normalized complex weight / + log decay | + n_heads (`mra_bias`) |
 | `euler_no_decay` | EulerCE with `e_gate` frozen → π-rotation 만 | (gate 1개 frozen) |
 | `euler_no_pi` | EulerCE with `pi_gate` frozen → e-decay 만 | (gate 1개 frozen) |
 | `euler_ce_k1` | full Euler-CE | original |
@@ -442,8 +456,8 @@ train block = 64, eval block ∈ {64, 128, 256, 512, 1024, 2048} (최대 32×).
 grow한다. EulerCE의 block-aware base `π^D_eff · N`도 train 시점 N=64로
 계산.
 
-1500 step × 3 seed × batch=4(메모리 한계)로 측정했다. 절대 PPL은 짧은 학습 + 작은
-batch 때문에 § 7.6보다 높지만, **상대 degradation은 비교 가능**하다.
+1500 step × 3 seed × batch=4로 측정했다고 기록돼 있다. checkpoint와 동일
+evaluation sample이 없으므로 상대 degradation의 공정 비교도 현재 확인할 수 없다.
 
 #### Relative degradation (PPL(N)/PPL(64) − 1, 낮을수록 좋음)
 
@@ -459,44 +473,29 @@ batch 때문에 § 7.6보다 높지만, **상대 degradation은 비교 가능**�
 | `std_rope` | −10.0 % | +12.6 % | +19.9 % | +37.7 % | **+47.2 %** | 2 |
 | `euler_no_decay` (π only) | −8.2 % | +14.6 % | +24.3 % | +44.4 % | **+54.7 %** | 2 |
 
-#### 결정적 분해: Tier 1과 Tier 2
+#### 과거 tier 분류 (현재 철회)
 
 | Tier | 기준 | 메커니즘 |
 |---|---|---|
 | **1 (외삽 OK, ≤ +10 %)** | rope_alibi, euler_no_pi, euler_ce_k1, xpos, nope | distance attenuation **존재** OR rotation **부재** |
 | **2 (외삽 BAD, +29 ∼ +55 %)** | mra, mra_bias, std_rope, euler_no_decay | rotation **존재** + 강한 distance attenuation **부재** |
 
-이 분리는 다섯 개의 깨끗한 결론을 만든다.
+이 표로부터 과거에 내렸던 "e-decay 100% 단독 효과", "NoPE 안전",
+"rotation이 직접 원인", "ALiBi와 정확한 환원" 결론은 철회한다. 현재 tracked
+toy는 ALiBi/xPos의 안정 방향과 RoPE의 큰 악화를 재현했지만 NoPE도
+$+31.7\%$ 악화됐다. MRA와 log bias는 그 toy에 포함되지 않았다. 따라서
+현재 허용되는 가설은 **강한 distance attenuation이 이 tiny length task에서
+도움이 될 수 있다**까지다.
 
-1. **Euler-CE의 외삽 우위는 100 % e-decay(linear additive distance bias) 단독 효과**다.
-   `euler_no_pi`(e-decay only)는 풀 `euler_ce_k1`과 거의 같다(32×에서 −5.5 % vs −6.2 %).
-   π-rotation을 빼도 외삽 성능은 유지된다.
-2. **π-rotation 단독은 외삽에 무력**하다. `euler_no_decay`(π only)는 32×에서
-   +54.7 %로 RoPE보다 오히려 더 나쁘다. block-aware base `π^D_eff · N`도
-   long-context 안정성에는 무관하다(in-distribution에서는 도움일 수 있음).
-3. **`rope_alibi` ≈ Euler-CE**다. 32× 외삽은 −6.2 % vs −6.2 %다. EulerCE의
-   e-decay는 ALiBi(Press 2022)의 per-head learnable slope 변종으로 정확히
-   환원된다. **EulerCE의 외삽 우위는 ALiBi의 재발견**이다.
-4. **xPos도 외삽 OK**다(+4.1 %). multiplicative magnitude decay도 linear
-   additive 정도는 아니지만 명확히 작동한다. distance attenuation의 *형태*보다
-   존재 자체가 더 결정적.
-5. **NoPE가 RoPE보다 외삽을 잘한다**(+7.0 % vs +47.2 %, ×7 차이). 회전 자체가
-   OOD의 직접 원인임을 본 setup에서 재현했다(Kazemnejad et al. 2023).
+### 7.7.3 2-bit Minimal Euler-CE: 구현 taxonomy
 
-종합 결론은 **OOD 외삽 = "강한 distance attenuation 존재" 또는 "rotation 부재"의 OR 조건**이다.
-RoPE의 회전을 그대로 두고 attenuation만 빼거나 약하게 얹는 것(`mra`, `mra_bias`, `std_rope`)이 가장 위험하다.
-logarithmic decay가 linear보다 약한 이유는 long-distance에서 너무 천천히 감쇠해 RoPE 회전의
-wrap-around 효과를 dominate하지 못하기 때문이다.
-
-### 7.7.3 2-bit Minimal Euler-CE: operational 환원
-
-§ 7.7의 ablation은 강력한 시사를 만든다. Euler 5상수 `{e, π, i, 1, 0}`의
-attention적 의미는 두 axis와 두 게이트로 환원된다.
+Euler 5상수 `{e, π, i, 1, 0}`에서 가져온 두 구현 axis를 다음처럼 둔다.
+이는 성능에서 연역된 정보이론적 환원이 아니라 코드 taxonomy다.
 
 | 상수 | 작용 | 환원 |
 |---|---|---|
 | `π`, `i` | rotation generator (`e^{iπt}` 결합) | **axis 1**: rotation |
-| `e` | exponential decay base | **axis 2**: decay |
+| `e` | exponential decay base | **axis 2**: strong distance attenuation |
 | `1`, `0` | on/off gate values | 1 비트 each |
 
 → **2 functionally distinct axes × 2 gate values = 2² = 4 head-types**, 각각
@@ -509,9 +508,16 @@ attention적 의미는 두 axis와 두 게이트로 환원된다.
 | (1, 0) | `10` | rotation only | RoPE [Su 2021] |
 | (1, 1) | `11` | rotation + decay | xPos [Sun 2023] / Euler-CE |
 
-**§ 7.7 결과의 perfect 매핑**: 4 head-types 중 3개(00, 01, 11)가 Tier 1이고,
-단 한 가지(10)만 Tier 2다. 즉 **5 Euler 상수 = 2비트 head-type taxonomy**이며,
-**4가지 중 3가지가 작동**한다(= log₂ 3 ≈ 1.58비트의 effective capacity).
+strong attenuation bit는 additive logit $b(d)$에 대해
+$\liminf_{d\to\infty}-b(d)/d>0$일 때 1로 정의한다. 그러면 linear ALiBi와
+$0<\zeta<1$인 multiplicative $\zeta^d$는 1, $-c\log d$와 distance에 따라
+충분히 줄지 않는 MRA amplitude는 0이다. 이 threshold 없이 "attenuation
+있음"이라 부르면 MRA/MRA-bias의 과거 Tier-2 표와 모순된다.
+
+4개 상태의 fixed binary register는 2 bit가 필요하다. $\log_2 3\simeq1.58$
+bit는 세 상태의 균등 Shannon entropy/평균 code-length 하한이지 fixed code
+길이가 아니다. 현재 toy에서 NoPE도 악화됐으므로 3/4 상태가 작동한다는
+perfect mapping은 철회한다.
 
 #### 구현: `EulerCEMinimal`
 
@@ -530,10 +536,11 @@ spec `head_types ∈ {0, 1, 2, 3}^H`로 head-type을 axiom으로 선택한다. �
 | Decay length | learnable (`log_xi`) | learnable (`log_xi`) |
 | 헤드별 학습 자유도 | 5 + 3 = **8** | 1 (xi only) |
 
-→ **헤드별 학습 자유도가 8 → 1로 감소**한다(head-type 선택을 axiom으로 이동).
-이는 Clarus 본 thesis("자유 파라미터 0에 가깝게")와 직접 정렬된다.
+표의 parameterization에서는 연속 gate를 고정해 학습 scalar를 줄인다. 이는
+더 작은 hypothesis class라는 구현 선택이지, 동일 표현력이나 일반화를
+보존한다는 증명이 아니다.
 
-#### 검증 — `tests/test_euler_minimal.py` (16 tests)
+#### 연산 검증 — `tests/test_euler_minimal.py`
 
 * `head_types_from_spec`가 6가지 spec 형태(int, str, list, "mix", "all",
   invalid) 모두 정확히 처리.
@@ -545,11 +552,12 @@ spec `head_types ∈ {0, 1, 2, 3}^H`로 head-type을 axiom으로 선택한다. �
 * Autograd: rotation-only 헤드의 `log_xi` grad는 정확히 0(decay gate off 시
   grad path가 끊김).
 
-이로써 EulerCEMinimal이 본 환원의 정확하고 정밀한 구현임을 확인했다.
+이 테스트는 head 연산과 gate 경로의 코드 회귀를 검사한다. OOD 성능이나
+5상수의 정보이론적 환원을 검증하지 않는다.
 
-#### 실증: minimal 변종이 canonical baseline을 정확히 reproduce
+#### 과거 minimal 성능표 (현재 non-evidence)
 
-`bench_mra_extrap.py --variants minimal` (1500 step × 3 seed × d_model=64) 결과:
+missing `bench_mra_extrap.py --variants minimal`의 과거 기록:
 
 | 2-bit variant | head_types | x32 degrad | canonical 매핑 | x32 (canonical) |
 |---|---|---|---|---|
@@ -560,22 +568,30 @@ spec `head_types ∈ {0, 1, 2, 3}^H`로 head-type을 axiom으로 선택한다. �
 | `min_mix` | half 01, half 11 | −5.5 % | (신규) | — |
 | `min_all` | one of each 00/01/10/11 | −0.6 % | (신규) | — |
 
-**검증 결과**: 5 Euler 상수의 2-bit reduction이 정확히 작동한다. 4 canonical
-positional encoding(NoPE, RoPE, ALiBi, xPos)이 모두 `EulerCEMinimal`의
-단일 head-type spec으로 정확히(≤ 0.5 %p) reproduce된다.
+raw artifact가 없으므로 $\le0.5$ percentage-point 재현, mix/all 비교,
+단일 head-type 권고를 현재 결과로 쓰지 않는다. 네 canonical 연산을 하나의
+2-bit API로 표현할 수 있다는 코드 사실만 남는다.
 
-**부수 발견**:
+### 7.8 현재 toy와 MRA acceptance protocol
 
-* **`min_mix`(half ALiBi + half xPos) ≈ 단독 best와 동등**하다(−5.5 % vs −5.7
-  ∼ −5.8 %). 두 tier-1 type을 섞어도 외삽 우위는 없으므로 실용적으로 head-type
-  diversity는 도움이 되지 않는다.
-* **`min_all`(4 type 골고루)은 best보다 약간 worse**다(−0.6 %). rotation-only와
-  nope 헤드가 평균 attention capacity를 깎는다. **실용적 권고**: 모든 헤드를
-  단일 tier-1 type(`alibi` 또는 `xpos`)으로 통일하는 것이 최적이다.
+현재 tracked `../experiments/ood_length_repro.py`는 약 127 K parameter,
+3 seed, 500 step, repository Python char corpus에서 네 canonical head만
+비교한다.
 
-이는 본 작업의 가장 강한 결정적 결론이다. **현존하는 모든 main-stream PE는
-사실상 같은 2-bit taxonomy의 인스턴스이며, 4가지 중 단 한 가지(10 = pure
-rotation)만 외삽 catastrophic**이다.
+| head | 32× degradation mean ± sample std | 범위 |
+|---|---:|---|
+| ALiBi | $-9.1\%\pm5.7\%$ | current toy |
+| xPos | $-8.8\%\pm5.4\%$ | current toy |
+| NoPE | $+31.7\%\pm10.2\%$ | current toy; 과거 Tier-1 반증 |
+| RoPE | $+505\%\pm41.4\%$ | current toy |
+
+MRA를 경험적으로 판정하려면 `std_rope`, ALiBi, xPos, NoPE, `mra`,
+`mra_noamp`, `mra_zeta`, `mra_bias`를 같은 tokenizer/corpus split SHA256,
+parameter count $\pm0.1\%$, train tokens, optimizer schedule로 비교한다. 최소
+10 seed와 두 corpus, length $\{64,128,256,512,1024,2048\}$를 사용하고
+각 run의 config/commit/environment hash, raw PPL, wall-clock을 JSONL로 남긴다.
+사전등록한 paired bootstrap 또는 mixed-effects CI가 unseen corpus에서도
+재현될 때만 평균/분산/length claim을 승격한다.
 
 ---
 
@@ -583,23 +599,18 @@ rotation)만 외삽 catastrophic**이다.
 
 ### 8.1 무엇이 작동했나
 
-* **Logarithmic distance bias**(ζ explicit-formula의 `√x`로부터 유도)는
-  ALiBi의 합리적 일반화다.
-* **Seed 분산 감소**(RoPE 대비 50-70 % 감소)는 reproducibility 관점에서
-  실용적 가치가 있다. 큰 모델 / 비싼 학습에서 한 자릿수 작은 분산은 평균
-  0.05 PPL 우위보다 훨씬 큰 비용 절감.
+* **코드 수준**: directed MRA와 교정된 Hermitian 후보의 convention 및 unit
+  tests가 명시됐다.
+* **현재 canonical-head toy**: ALiBi/xPos가 NoPE/RoPE보다 안정 방향을 보였다.
+  MRA의 logarithmic bias와 seed 분산은 현재 artifact가 없어 미판정이다.
 
 ### 8.2 무엇이 작동하지 않았나
 
-* **ζ 영점을 frequency로 직접 사용(`zeta_log`)**: 이론적으로 매력적이지만
-  실측에서 다중 스케일 해상도 손실로 인한 명확한 LOSS. 이 결과는 "Riemann
-  영점이 LM positional structure를 직접 부여한다"는 strong한 가설이 적어도
-  소규모에서는 성립하지 않음을 시사한다.
-* **ζ amplitude weighting 단독**: 식적으로는 RoPE의 `cos` 채널에 `sin` 채널을
-  섞는 효과지만, 실측 영향은 거의 없거나 약간 부정적이다.
-* **부트스트랩 sparsity, spectral norm**: 작은 모델 / 짧은 학습에서는 도움이지만
-  충분 수렴 시점에서는 over-regularization으로 작동한다. CE 부트스트랩 비율이
-  LM attention에 직접 transfer되지 않는다는 시사다.
+* **정규화 zero ordinate frequency, complex weighting, sparsity, spectral
+  norm**: 과거 표에는 negative/tie 값이 기록돼 있지만 현재 재현되지 않았다.
+  성능 방향은 open이다.
+* **강한 수론 해석**: 유한 zero feature는 RH/Hilbert--Pólya 증거가 아니며,
+  성능이 재현되더라도 수론적 동일성을 뜻하지 않는다.
 
 ### 8.3 어떤 가설이 다음 단계에서 검증 가능한가
 
@@ -607,8 +618,9 @@ rotation)만 외삽 catastrophic**이다.
   `mra_bias`의 logarithmic decay는 RoPE의 wrap-around 한계를 넘어설 가능성
   이 있다. 별도 측정 필요.
 * **대형 모델 분산**: 분산 감소가 모델 크기와 함께 어떻게 변하는지.
-* **Attention 스펙트럼**: 학습된 MRA의 attention 행렬 고유값 분포가 GUE
-  통계 [13]를 따르는지 직접 측정.
+* **Attention 스펙트럼**: bidirectional \(A_{\rm sym}\)의 unfolded local
+  spacing을 Poisson/GOE/GUE null과 비교. GUE 적합이 나오더라도 이는 유한
+  random-matrix 진단이며 RH나 Hilbert–Pólya의 증거로 해석하지 않는다.
 
 ---
 
@@ -621,9 +633,8 @@ rotation)만 외삽 catastrophic**이다.
 - **Geometric Deep Learning** [11]: 기하학적 inductive bias 일반.
 - **Equivariant Transformers** [12]: 대칭성 내장.
 
-본 연구는 ζ 영점이라는 **수론** 객체에서 식을 직접 유도하려 시도했다는 점에서 새롭다.
-결과는 mixed다. ζ amplitude와 logarithmic decay는 작은 효과를 보였고,
-ζ frequency는 negative 효과를 보였다.
+본 연구는 ζ 영점이라는 **수론** 객체를 attention feature로 옮기는 ablation
+설계를 명시한다. MRA의 과거 mixed 결과는 artifact 부재로 현재 미판정이다.
 
 ---
 
@@ -631,14 +642,16 @@ rotation)만 외삽 catastrophic**이다.
 
 ### 10.1 한계
 
-1. **소규모 실험**: 210 K 파라미터, 400 K char 코퍼스다. 본격 결론을 위해서는
-   1 M+ 파라미터 × 1 M+ 토큰 × 5+ seed가 필요하다.
+1. **MRA artifact 부재**: 과거 210 K/400 K-char 표의 script, raw result,
+   checkpoint가 없다. 7.8절의 10+ seed protocol부터 재실행해야 한다.
 2. **Char-level only**: BPE / sentencepiece 토큰화에서의 거동 미검증.
-3. **Length extrapolation 미정밀 측정**: 별도 실험 필요.
+3. **Length extrapolation 범위 제한**: 현재 tracked toy는 canonical 4-head,
+   tiny char-LM, single corpus뿐이며 MRA/scaling을 검증하지 않는다.
 4. **Native 백엔드 부재**: PyTorch-only, wall-clock 비교 손해. Rust/CUDA 포팅
    가능.
-5. **Causal LM 가정**: bidirectional encoder에서는 Hermitian knob의 본격
-   효과 검증 가능하나 본 작업 범위 밖.
+5. **Self-adjoint backend 미검증**: 기록된 causal 실험은 standard
+   row-softmax를 사용했다. bidirectional \(A_{\rm sym}\)의 성능과 spectrum은
+   본 작업 범위 밖이다.
 
 ### 10.2 후속
 
@@ -648,29 +661,25 @@ rotation)만 외삽 catastrophic**이다.
 2. Scale law: `d_model ∈ {128, 256, 512}` × `n_layers ∈ {4, 8, 12}`에서
    분산 감소 효과의 안정성.
 3. Attention spectrum: 학습된 attention의 spectral statistics 측정.
-4. Bidirectional MRA: `hermitian=True` 모드를 BERT-style 인코더에서 검증.
+4. Bidirectional MRA: \(H=(D+D^\dagger)/2\),
+   \(K_{ij}=\exp(\operatorname{Re}H_{ij})\),
+   \(A_{\rm sym}=D_d^{-1/2}KD_d^{-1/2}\)를 구현한 뒤
+   BERT-style 인코더에서 검증.
 5. GaugeLattice FFN 결합: AGI 5대 원리 중 채널 분할까지 묶은 full ClarusBlock.
 
 ---
 
 ## 11. Conclusion
 
-본 작업의 핵심 결론은 세 가지다.
+현재 닫힌 결론은 세 가지다.
 
-1. **ζ 영점을 attention frequency로 직접 사용하는 시도는 실패**했다. γ_k의
-   범위가 RoPE의 다중 스케일 해상도를 따라가지 못한다. 본격 검증 후 폐기.
-2. **분산 감소**: lean MRA 변종들이 RoPE의 1/3 ~ 1/2 σ_PPL을 달성했다. 평균
-   PPL 동급 + reproducibility 우위.
-3. **Length extrapolation의 구조적 결정성**: § 7.7의 9 변종 32× 분해가
-   보여주듯, OOD 외삽 능력은 두 tier로 명확히 갈린다. Tier 1(외삽 OK)은
-   (a) 강한 distance attenuation이 존재하거나(linear ALiBi, multiplicative xPos)
-   (b) rotation이 아예 없는(NoPE) 경우다. Tier 2(외삽 BAD)는 rotation이 존재하면서
-   attenuation이 없거나 약한(log) 경우다. EulerCE의 외삽 우위는 ALiBi의 재발견이며,
-   **NoPE가 RoPE보다 7배 잘 외삽**한다는 사실은 RoPE의 회전 자체가 OOD의 원인임을 보여준다.
-
-본 작업의 가장 큰 가치는 ζ-attention 가설의 negative findings를 명시하고,
-Euler-CE 외삽 우위의 진짜 메커니즘(e-decay = ALiBi)을 32× extrapolation
-까지 분해한 데에 있다.
+1. MRA는 ζ explicit-formula에서 영감을 받은 **공학 feature**이며 RH,
+   Hilbert--Pólya, GUE의 검증이 아니다.
+2. MRA의 평균 PPL, seed 분산, 4×/32× extrapolation에 관한 과거 표는 생성
+   artifact 부재로 non-evidence다. 성공/실패 방향을 현재 결론내리지 않는다.
+3. tracked canonical-head tiny toy에서는 강한 distance attenuation을 가진
+   ALiBi/xPos가 안정 방향을 보였지만 NoPE도 악화됐다. 이 결과는 MRA,
+   production scaling, OOD 일반의 정리가 아니며 7.8절 protocol이 다음 gate다.
 
 ---
 
@@ -688,7 +697,7 @@ Euler-CE 외삽 우위의 진짜 메커니즘(e-decay = ALiBi)을 32× extrapola
 
 [6] M. V. Berry, J. P. Keating, "H = xp and the Riemann zeros," 1999.
 
-[7] (Internal) `docs/6_뇌/07_수면과복구.md` — CE 부트스트랩 고정점 `ε² = 4.87 %`.
+[7] (Internal) `docs/6_뇌/07_수면과복구.md` — CE 부트스트랩 고정점; 현재 정준값 `ε² = 0.04863825851598632`.
 
 [8] (Internal) `docs/7_AGI/2_Architecture.md` § 4 — 유니타리 제약.
 

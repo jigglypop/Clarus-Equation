@@ -44,7 +44,7 @@ pole/vertex에서 막혀 있으며 현재 최고 지위는 target-scale calibrat
 2026-08-05에는 합성 gate를 넘어 외부 공개자료도 직접 재분석했다. 광학 analogue
 DCE의 sideband/CAR, CMS의 quasi-real photon fusion 단면적은 수치 재현에
 성공했지만 서로 다른 장치이며 광학 광자쌍과 (e^+e^-) 문턱 사이에는
-(4.34\times10^5)의 에너지 간극이 있다. 1T-TaS2 원자료는 pump-off 준안정
+\(4.34\times10^5\)의 에너지 간극이 있다. 1T-TaS2 원자료는 pump-off 준안정
 물질상 후보를 지지하지만 기존 원자·전자의 상 재배열이며 exact (2.2) THz와
 수명 refit은 provenance 충돌로 닫히지 않았다. 전체 계산과 경계는
 [외부 원자료 기반 장→광자쌍→물질상 재분석](EXTERNAL_FIELD_TO_MATTER_REANALYSIS.md)에
@@ -84,17 +84,17 @@ E_*=\frac{hc}{2a}
 경계 고유모드에서 유도된 carrier가 아니며, Casimir stress를 한 photon 또는 한
 파장이 만드는 것도 아니다. 전체 진공 spectrum의 재규격화 적분이 필요하다.
 
-1 m target과 29.64757 MeV pole 후보의 에너지 비는
+1 m target과 최신 canonical 29.6991596174 MeV pole 후보의 에너지 비는
 
 \[
-\frac{152.9323309\ {\rm GeV}}{29.64757\ {\rm MeV}}
-=5158.342857\ldots
+\frac{152.9323309\ {\rm GeV}}{29.6991596174\ {\rm MeV}}
+=5149.382437\ldots
 \]
 
-이다. 최근접 정수 5158을 곱해도 약 \(10.16\) MeV detuning이 남는다.
+이다. 최근접 정수 5149를 곱해도 약 \(11.3581\) MeV detuning이 남는다.
 
-단, 이 비를 곧바로 “5158차 harmonic이 필수”라고 읽는 것도 틀리다.
-29.64757 MeV가 실제 입자의 pole mass라면
+단, 이 비를 곧바로 “5149차 harmonic이 필수”라고 읽는 것도 틀리다.
+29.6991596174 MeV가 실제 입자의 pole mass라면
 
 \[
 E_\Phi^2=p_\Phi^2+m_\Phi^2
@@ -233,10 +233,10 @@ null이라 실패하고 sum line \(Q=(20,0)\) 하나만 \(m_\chi=4\) pair gate�
 
 pump wavelength를 현재 \(2a=8.1071280\times10^{-18}\) m로 잡으면 static
 grating의 주기는 정확히 \(a=4.0535640\times10^{-18}\) m가 된다. 이때 pump
-quantum은 약 152.93 GeV이고 timelike pair line은 약 305.86 GeV다. 29.64757
-MeV pole mass를 가정하면 \(E_{\rm pump}=\sqrt{p^2+m_\Phi^2}\)라
-\(E_{\rm pump}-E_*=2873.749\) eV,
-\(2E_{\rm pump}-2E_*=5747.499\) eV가 남는다. 따라서 “정확한 factor 2”가
+quantum은 약 152.93 GeV이고 timelike pair line은 약 305.86 GeV다. 최신 canonical
+29.6991596174 MeV pole mass를 가정하면 \(E_{\rm pump}=\sqrt{p^2+m_\Phi^2}\)라
+\(E_{\rm pump}-E_*=2883.759\) eV,
+\(2E_{\rm pump}-2E_*=5767.519\) eV가 남는다. 따라서 “정확한 factor 2”가
 아니라 pair-line detuning과 실제 linewidth를 비교해야 한다. 현재 API의
 linewidth는 사용자가 공급하는 비교 폭일 뿐이며 Lorentzian FWHM 또는 유한 지지
 선모양이 유도된 값은 아니다.
@@ -439,7 +439,7 @@ T_{\mu\nu}^{\rm vacuum}
 | 단계 | 판정 | 이유 |
 |---|---|---|
 | ideal-planar scale calibration | `PASS` | \(a\)와 선택적 \(\lambda=2a\) scale을 169 GeV legacy와 분리 |
-| physical Clarus pole | `OPEN` | 29.64757 MeV는 inverse-correlation bridge |
+| physical Clarus pole | `OPEN` | 29.6991596174 MeV는 최신 inverse-correlation bridge이며 LSZ pole 유도는 없음 |
 | optional portal local pair vertex | `EXACT CONDITIONAL` | 선택적 $Z_2$ action에서 $h\Phi^2,h^2\Phi^2,\chi^2\Phi^2$ bare derivative 재현; A1 유도 아님 |
 | CE nonlinear production vertex | `OPEN` | A1 Hessian은 higher jet를 식별하지 못하고 직접 \(\Phi^2\chi^2\)는 toy EFT |
 | phase-aware \(\Phi^2\) spectrum | `EXACT CONDITIONAL` | 정확히 같은 Fourier key를 쓰는 classical modes의 항등식 |
@@ -479,13 +479,21 @@ G_F(p)=\frac{i}{p^2-m_0^2-\lambda_{HP}v^2+i0},
 과 local pair vertex를 닫았다. 그러나 \(m_0^2\ge0\)이면
 
 \[
-m_{\rm pole}\ge v\sqrt{\lambda_{HP}}=43.7677\,\mathrm{GeV}
+m_{\rm pole}\ge v_{\rm EW}\sqrt{\lambda_{HP}}=43.8056765\,\mathrm{GeV}
 \]
 
-여서 29.64757 MeV same-field pole은 불가능하다. light pole을 강제로 만들면
-\(m_0^2=-1915.6085\,\mathrm{GeV}^2\)이고 portal shift 중
-\(4.5885\times10^{-7}\)만 남는 상쇄가 필요하다. 이 light benchmark의
-공급된 비가시폭 gate도 \(\mathrm{BR}_{inv}=0.8253>0.11\)로 실패한다.
+여서 29.6991596 MeV same-field pole은 불가능하다. light pole을 강제로
+만들면 \(m_0^2=-1918.9364090\,\mathrm{GeV}^2\)이고 portal shift 중
+\(4.5965029\times10^{-7}\)만 남는 상쇄가 필요하다. 이 fixed-light
+stress-test도
+\(\mathrm{BR}_{inv}=0.8249150>0.107\)로
+[PDG 2026 Higgs review](https://pdg.lbl.gov/2026/reviews/rpp2026-rev-higgs-boson.pdf)에
+정리된 ATLAS direct Run-2 observed 95% CL gate를 실패한다. 같은 fixed-light 질량에서
+이 직접 한계는
+\(\lvert\lambda_{HP}\rvert<0.00504779076\)을 요구하므로 canonical
+\(\lambda_{HP}=0.0316530354\)도 `REJECT`다. canonical \(m_0=0\) portal
+branch는 별도로 \(m_\Phi=43.8056765\,\mathrm{GeV}\),
+\(\mathrm{BR}_{inv}=0.7708222\)이며 같은 gate에서 `REJECT`다.
 
 따라서 현재 살아있는 생산 구조는 조건부
 \(\Phi\Phi\to h^*\to\mathrm{SM}\) 후보이며, physical external \(\Phi\) pole,
@@ -555,7 +563,7 @@ measurement, physical pump-off, apparatus-memory 제거와 blinded sample swap�
 없으므로 `conditional_public_scaffold_candidate=False`, new matter와 physical
 boundary도 `False`다.
 
-### 10.3 (g,R,S,\tau) 결합 시공간 응답 마스크
+### 10.3 \((g,R,S,\tau)\) 결합 시공간 응답 마스크
 
 위 네 축을 각각 통과시키는 것으로는 joint response를 증명할 수 없다. 후속 루프는
 [`CAUSAL_MASK_AND_SPACELIKE_MARGINAL_LOOP.md`](CAUSAL_MASK_AND_SPACELIKE_MARGINAL_LOOP.md)
@@ -659,6 +667,16 @@ uv --cache-dir .uv-cache run --extra dev python -m pytest `
 uv --cache-dir .uv-cache run python examples/physics/clarus_resonant_matter_gate.py
 uv --cache-dir .uv-cache run python examples/physics/ce_two_point_vertex_gate.py
 ```
+
+최신 질량을 공개 함수 인자로 넣은 standing-wave 재계산은 다음 명령으로 수행했다.
+
+```powershell
+.\.venv\Scripts\python.exe -c "from reality_stone.clarus.clarus_resonant_matter import standing_wave_target_audit as f; r=f(clarus_pole_mass_mev=29.69915961743591); print(r.pump_energy_detuning_from_boundary_carrier_ev, r.pair_line_detuning_from_twice_boundary_carrier_ev)"
+```
+
+출력은 각각 `2883.7593341348825 eV`, `5767.518668269765 eV`다. 위 5149차
+정수비 detuning은 같은 carrier energy와 canonical 질량의 독립 산술값이며, harmonic
+vertex가 유도되었다는 뜻이 아니다.
 
 위 3-file primary suite는 현재 69 passed다. 기존 carrier·multimode·stress
 연결 회귀 3개를 더한 6-file focused suite는 91 passed다.

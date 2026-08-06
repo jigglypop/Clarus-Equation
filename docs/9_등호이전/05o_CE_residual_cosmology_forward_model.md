@@ -25,15 +25,21 @@
 
 ## 1. 현재 경계조건
 
-코드는 CE 상수 파일에서 다음 값을 읽는다.
+2026-08-06 canonical manifest의 Track A 성분 벡터는 다음과 같다.
+
+> **실행 계약:** workspace 바깥 `examples/physics` runner의 무인자 기본값은
+> 아직 구형 성분벡터를 고정한 회귀 fixture다. 아래 현행 표와 likelihood는
+> `CEForwardParams`에 세 canonical 성분을 명시적으로 override해 재실행한
+> 결과이며, 무인자 CLI 출력을 현행값으로 승인하지 않는다.
 
 $$
-\Omega_b=0.0487,\qquad
-\Omega_{\mathrm{DM}}=0.2623,\qquad
-\Omega_\Lambda=0.6891.
+\Omega_b=0.048638258516,\qquad
+\Omega_{\mathrm{DM}}=0.261088174358,\qquad
+\Omega_\Lambda=0.690273567126.
 $$
 
-반올림으로 합이 \(1.0001\)이므로 background 계산에는 내부 정규화 값을 쓴다.
+합은 부동소수점 정밀도에서 1이다. background 구현은 입력을 다시 정규화하므로
+표시 자릿수 반올림에도 flat closure를 보존한다.
 
 $$
 \widehat\Omega_m
@@ -185,8 +191,8 @@ python examples\physics\ce_residual_forward_model.py --bao-dataset desi-dr2-all
 python examples\physics\ce_residual_forward_model.py --rd-mode early-universe --bao-dataset desi-dr2-all
 ```
 
-현재 CE 기본 \(\Lambda\)CDM boundary에서 `desi-dr2-all` full covariance 결과는
-\(\chi^2=37.100260857\), \(N=13\)이다. 이것은 compressed BAO layer의 직접 검산값이며,
+현재 canonical CE \(\Lambda\)CDM boundary에서 `desi-dr2-all` full covariance 결과는
+\(\chi^2=40.201450858\), \(N=13\)이다. 이것은 compressed BAO layer의 직접 검산값이며,
 아직 CMB/SN joint fit이나 nuisance marginalization을 포함하지 않는다.
 
 ### 2.1 초기우주 \(r_d\) 근사
@@ -252,21 +258,21 @@ $$
 현재 고정 입력은
 
 $$
-z_d^{\rm EH}=1020.020419907,
+z_d^{\rm EH}=1019.907163886,
 \qquad
-r_d^{\rm EH\ hybrid}=151.318753028\ {\rm Mpc}
+r_d^{\rm EH\ hybrid}=151.505227530\ {\rm Mpc}
 $$
 
 를 준다. DESI DR2 13점 full covariance 결과는
 
 $$
-\chi^2=40.468225544,\qquad
+\chi^2=41.194553577,\qquad
 \nu=13,\qquad
-p=1.16176098\times10^{-4},
+p=8.86018138\times10^{-5},
 $$
 
 즉 `REJECT`다. 외부 \(r_d=147.09\,{\rm Mpc}\)의
-\(\chi^2=37.100260857\)보다 오히려 나빠졌다.
+\(\chi^2=40.201450858\)보다 오히려 나빠졌다.
 
 이 결과는 “초기우주 수식을 넣었으니 CE가 \(r_d\)를 유도했다”는 뜻이
 아니다. 이 계산은 외부 \(H_0,T_{\rm CMB}\), 표준 \(N_{\rm eff}\)와 경험적
@@ -322,9 +328,9 @@ $$
 없으므로 \(\nu=13\)이고,
 
 $$
-\frac{\chi^2}{\nu}=2.853866220,
+\frac{\chi^2}{\nu}=3.092419297,
 \qquad
-p=3.9957326\times10^{-4}
+p=1.28283168\times10^{-4}
 $$
 
 라서 `REJECT`다. 이것은 “CE core 전체 기각”이 아니라
@@ -370,17 +376,17 @@ q_*
 \frac{y^\top C^{-1}d}
 {y^\top C^{-1}y}
 =
-0.986476933470
+0.985555780095
 $$
 
 이다. 진단 결과는
 
 $$
-\chi^2_{\rm scale}=12.608346862,
+\chi^2_{\rm scale}=12.206911338,
 \qquad
 \nu=12,
 \qquad
-p=0.398138
+p=0.429208739
 $$
 
 로 `PASS`다. \(k\)를 BAO 데이터로 fit한 파라미터 수로 두고
@@ -391,11 +397,11 @@ $$
 {\rm BIC}=\chi^2+k\ln N
 $$
 
-를 적용하면 고정모델은 \({\rm AIC}={\rm BIC}=37.1003\), scale fit은
-\({\rm AIC}=14.6083,\ {\rm BIC}=15.1733\)이다. 즉 1개 자유도 패널티로는
+를 적용하면 고정모델은 \({\rm AIC}={\rm BIC}=40.2015\), scale fit은
+\({\rm AIC}=14.2069,\ {\rm BIC}=14.7719\)이다. 즉 1개 자유도 패널티로는
 개선이 사라지지 않는다. 이는 \(H_0=67.4\)를 고정하면
-\(r_d=149.106375\,{\rm Mpc}\), \(r_d=147.09\,{\rm Mpc}\)를 고정하면
-\(H_0=68.323949\,{\rm km\,s^{-1}Mpc^{-1}}\)에 해당한다.
+\(r_d=149.245738\,{\rm Mpc}\), \(r_d=147.09\,{\rm Mpc}\)를 고정하면
+\(H_0=68.387809\,{\rm km\,s^{-1}Mpc^{-1}}\)에 해당한다.
 
 따라서 현재 불일치의 1차 원인은 density shape보다 외부 \(H_0r_d\)
 normalization이다. 그러나 같은 DESI 데이터로 맞춘 1-parameter 진단이므로 이
@@ -461,17 +467,17 @@ python examples\physics\ce_residual_forward_model.py
 
 | 양 | 값 |
 |---|---:|
-| \(\Omega_b\) | 0.048700 |
-| \(\Omega_{\mathrm{DM}}\) | 0.262300 |
-| \(\Omega_m\) | 0.311000 |
-| \(\Omega_\Lambda\) | 0.689100 |
-| \(S_8(0)\) | 0.825734 |
-| \(E(1)\) at \(z=1\) | 1.782353 |
-| \(D_L(z=1)\) Mpc | 6818.454 |
-| \(D_M(z=1)/r_d\) | 23.178 |
-| \(D_H(z=1)/r_d\) | 16.966 |
-| \(D_V(z=1)/r_d\) | 20.889 |
-| \(f\sigma_8(z=0.5)\) | 0.473314 |
+| \(\Omega_b\) | 0.048638 |
+| \(\Omega_{\mathrm{DM}}\) | 0.261088 |
+| \(\Omega_m\) | 0.309726 |
+| \(\Omega_\Lambda\) | 0.690274 |
+| \(S_8(0)\) | 0.824042 |
+| \(E(1)\) at \(z=1\) | 1.779912 |
+| \(D_L(z=1)\) Mpc | 6823.393 |
+| \(D_M(z=1)/r_d\) | 23.195 |
+| \(D_H(z=1)/r_d\) | 16.989 |
+| \(D_V(z=1)/r_d\) | 20.908 |
+| \(f\sigma_8(z=0.5)\) | 0.472926 |
 
 해석:
 
@@ -550,8 +556,8 @@ $$
 
 > CE 성분비는 background/growth boundary로 실행 가능하지만, 외부
 > \(r_d=147.09\,{\rm Mpc}\) 패키지와 EH hybrid
-> \(r_d=151.318753\,{\rm Mpc}\) 패키지는 DESI DR2 compressed BAO에서 모두
+> \(r_d=151.505228\,{\rm Mpc}\) 패키지는 DESI DR2 compressed BAO에서 모두
 > `REJECT`다. 단일 \(H_0r_d\) scale 진단은
-> \(r_d=149.106375\,{\rm Mpc}\)에서 적합도를 회복하지만 같은 데이터로 맞춘
+> \(r_d=149.245738\,{\rm Mpc}\)에서 적합도를 회복하지만 같은 데이터로 맞춘
 > 값이다. 다음 병목은 새 density 식이 아니라 precision recombination과 독립
 > sound-horizon/distance calibration이다.

@@ -1,6 +1,28 @@
 # CE 증명 보강 및 검증 Ledger
 
-이 문서는 CE 문서군을 처음부터 검증할 때의 진행 순서를 고정한다. 목적은 모든 주장을 한 번에 `Exact`로 올리는 것이 아니라, 각 단계가 어느 등급에서 닫히는지와 어떤 코드/반증 조건으로 검증되는지를 분리하는 것이다.
+이 문서는 CE 문서군을 처음부터 검증할 때의 진행 순서를 고정한다. 최신
+실제 수선은
+[전체 정합성 완성 루프](FULL_CONSISTENCY_COMPLETION_LOOP_2026-08-06.md)를
+따른다. 상태 변경 자체를 수정으로 세지 않고, 각 단계에 정확한 대체식,
+코드/반례 조건, 입력 provenance와 관측 gate가 모두 있을 때만 완료로
+기록한다.
+
+> 2026-08-06 수치 계약: 이 ledger의 과거 실행 블록은 당시 fixture를
+> 보존한 감사 로그다. \(29.64757\,\mathrm{MeV}\),
+> \(43.7677\,\mathrm{GeV}\), \(\mathrm{BR}_{\rm inv}<0.11\) 등이 로그에
+> 남아 있어도 현행 acceptance 값이 아니다. 현재 중앙값과 gate는
+> `CANONICAL_NUMERIC_MANIFEST_2026-08-06.json`의
+> \(29.6991596\,\mathrm{MeV}\), \(43.8056765\,\mathrm{GeV}\),
+> \(\mathrm{BR}_{\rm inv}<0.107\)을 따른다.
+>
+> **상태-history 격리:** `6 이후의 “판정 변경”, `PASS`, scorecard,
+> \(A_s\) readout 및 CKM projector 서술은 당시 후보를 탐색한
+> **역사적(historical) 실행 기록**이며 현행(current) acceptance가 아니다.
+> 현행 계약에서는 \(A_s=2.10\times10^{-9}\)가 외부 정규화 입력이고
+> \(n_s,r\)만 그 입력과 \(N_*\)에 조건부인 출력이다. CKM/PMNS는 하나의
+> unitary texture를 공동으로 유도·holdout 검증하지 못했으므로
+> `Bridge/Open`이다. 이 문서의 과거 `6 이후 상태표로
+> `PROOF_STATUS_MATRIX.md`의 현행 판정을 덮어쓰지 않는다.
 
 ## 0. 등급 규칙
 
@@ -59,10 +81,10 @@ $$
 
 | 항목 | 값 |
 |---|---:|
-| $D_{\text{eff}}$ | 3.17776 |
-| $x=\varepsilon^2$ | 0.0486466333 |
-| residual | $2.08\times10^{-17}$ |
-| Newton vs bracketed 차이 | $1.25\times10^{-13}$ |
+| $D_N$ | 3.177912999513294 |
+| $x$ | 0.04863825851598632 |
+| multiplier $D_Nx$ | 0.1545681540116411 |
+| Lambert-$W$/bracketed/inverse | numeric gate tolerance 안에서 일치 |
 
 실행:
 
@@ -73,11 +95,18 @@ uv run --extra dev python -m pytest tests\test_bootstrap_solver.py -q
 
 ### 1.3 바리온 대응
 
-**명제 후보:** 생존분율 $P_{\text{survive}}$를 관측 가능한 선택 측도 $I(P)$로 읽고, 연속성/정규화/독립 곱성을 부과하면 $I(P)=P^c$이며 약억압 한계의 1차항 일치로 $c=1$이 고정된다.
+**완성 모형:** 단순 생존확률이 아니라 renormalized stress의 에너지 가중
+측도에서 $x=\langle E_b\rangle/\langle E_{\rm tot}\rangle$를 정의한다.
+곱적 사상의 일반해는 $I(P)=P^c$이고 $c=1$에는 접선 정규화가 추가로
+필요하다. B2 projector와 평탄 관측 초곡면 아래 $\Omega_b=x$다.
 
-**현재 판정:** 함수형 고정은 `Selection`, 현재 우주의 $\Omega_b$와 동일시하는 마지막 단계는 `Bridge`.
+**현재 판정:** B2 작용·측도 모형 안에서 exact; 자연의 projector 선택은
+공동 cosmology likelihood로 검증한다.
 
-**반증 조건:** CMB-S4 등에서 $\Omega_b$가 $0.0486466333$과 3 sigma 이상 안정적으로 불일치하면 A3b 브리지를 하향 또는 폐기한다.
+**반증 조건:** 입력과 겹치지 않는 공동 likelihood에서
+$\Omega_b=0.0486382585$를 포함한 동일 parameter vector가 기각되면 해당
+B2+dark benchmark를 교체한다. 현재 고정 cosmology package는 이미 full-cov
+gate에서 reject됨을 별도 기록한다.
 
 ## 2. 차원 선택
 
@@ -92,12 +121,16 @@ uv run --extra dev python -m pytest tests\test_bootstrap_solver.py -q
 **명제 후보:**
 
 $$
-\sin^2\theta_W=4\alpha_s^{4/3}.
+s_A^2:=4\alpha_s^{4/3}.
 $$
 
-**현재 판정:** 강하게 제약된 `Bridge`.
+**현재 판정:** registered matching ansatz. \(s_A^2\)를 물리적 weak-angle
+scheme에 보내는 map 전에는 정밀 score를 주지 않는다.
 
-**검증 코드:** `examples/physics/alpha_s_closure_gate.py`
+**현행 검증 코드:** `docs/0_검증과감사/verify_numeric_consistency.py`.
+`examples/physics/alpha_s_closure_gate.py`는 낮은 Track-B 근을 숨기고
+zero-parameter verdict를 출력하는 legacy/noncanonical diagnostic이라
+acceptance에서 제외한다.
 
 **남은 간극:** Yang-Mills 작용의 차원 비분리와 결합상수 곱적 분배의 동일시. 비섭동 상계는 간극을 줄이지만, 엄밀한 `Exact` 승격은 아니다.
 
@@ -108,8 +141,8 @@ $$
 | `reality_stone/python/reality_stone/clarus/bootstrap_solver.py` | Newton 야코비안 부호 수정, SciPy 없는 bracketed fallback 추가, 콘솔 출력 ASCII 안정화 |
 | `tests/run_validation.py` | standalone bootstrap 야코비안 부호 수정 |
 | `tests/test_bootstrap_solver.py` | Newton/bracketed 일치, residual, 야코비안 수치미분 회귀 테스트 추가 |
-| `docs/2_경로적분과_응용/10_공리_정당화.md` | 삭제된 `check_unification.py` 참조를 현재 `alpha_s_closure_gate.py`로 갱신 |
-| `docs/경로적분.md` | 동일 재현 경로 갱신 |
+| `docs/2_경로적분과_응용/10_공리_정당화.md` | 당시 삭제된 `check_unification.py` 참조를 legacy `alpha_s_closure_gate.py`로 갱신했던 기록; 현행 acceptance는 numeric manifest verifier |
+| `docs/경로적분.md` | 현행 Track A/두-root Track B verifier로 재교정 |
 
 ## 5. 이번 패스 검증 결과
 
@@ -134,6 +167,12 @@ Dimensional analysis: PASS
 Overall: VALIDATED
 Remaining warning: Omega_Lambda WARN (+2.75 sigma)
 ```
+
+위 블록은 당시 실행 기록이며 마지막 electroweak verdict와 `Overall:
+VALIDATED`는 현행 판정으로 **무효**다. 외부 \(\alpha_{em}(M_Z)\) 입력,
+Track-B branch selection과 낮은 양의 근을 누락했고, legacy scorecard가 서로
+다른 snapshot을 섞었기 때문이다. 최신 acceptance는 numeric manifest와
+전체 consistency gate의 출력만 사용한다.
 
 경고는 PyTorch sparse CSR beta/invariant 안내이며, 이번 수학 검증 실패는 아니다.
 
@@ -175,8 +214,8 @@ Remaining warning: Omega_Lambda WARN (+2.75 sigma)
 | solver와 무차원성 검산 | 코드 기준 `Exact` |
 | $d=3$ 선택 | `Selection` |
 | $\Omega_b$, $\sin^2\theta_W$, Higgs, PMNS | `Bridge` |
-| $\Omega_\Lambda$, $\Omega_{DM}$, $w_0$, $|V_{us}|$, $n_s$ | `Phenomenology` |
-| $|V_{cb}|$ | `Phenomenology` |
+| $\Omega_\Lambda$, $\Omega_{DM}$, $w_0$, $\lvert V_{us}\rvert$, $n_s$ | `Phenomenology` |
+| $\lvert V_{cb}\rvert$ | `Phenomenology` |
 | Clarus boson, 공학/뇌/AGI 응용 gate | `Open test` 또는 `Phenomenology` |
 
 추가 검산:
@@ -220,9 +259,9 @@ A_s readout candidate        conditional_pass  2.104e-09    sigma -0.47
 
 | 항목 | 이전 | 이후 | 이유 |
 |---|---|---|---|
-| $|V_{us}|$ | `Open` | `Phenomenology` | tree 식은 실패하지만 $1/(1+\alpha_s/2\pi)$ 보정이 strict 기준 1 sigma 안에 들어온다. |
+| $\lvert V_{us}\rvert$ | `Open` | `Phenomenology` | tree 식은 실패하지만 $1/(1+\alpha_s/2\pi)$ 보정이 strict 기준 1 sigma 안에 들어온다. |
 | $n_s$ | `Open` | `Phenomenology` | $1-2/(dD_{\rm eff}12/2)$가 수치적으로 닫힌다. 단, 전이수 12와 inflationary readout은 가정이다. |
-| $|V_{cb}|$ | `Open` | `Phenomenology` | LO 실패는 유지하고, $\delta/(2\pi)$ electroweak projector bridge가 strict 기준 +0.58 sigma로 통과한다. |
+| $\lvert V_{cb}\rvert$ | `Open` | `Phenomenology` | LO 실패는 유지하고, $\delta/(2\pi)$ electroweak projector bridge가 strict 기준 +0.58 sigma로 통과한다. |
 | $A_s$ | `Open` | `Phenomenology` | 총응답 raw는 reject, projected residual-drive readout은 strict 기준 -0.53 sigma로 통과한다. |
 
 검증:
@@ -249,7 +288,7 @@ Scored pass rate: 84.6%
 
 | 읽기 | $A_s\times10^9$ | sigma | 판정 |
 |---|---:|---:|---|
-| total fixed-point response $|dx/dD|$ | 7.83532 | +1685.21 | reject |
+| total fixed-point response $\lvert dx/dD\rvert$ | 7.83532 | +1685.21 | reject |
 | local residual drive $x(1-x)$ | 5.60008 | +1027.79 | reject |
 | phase projected drive $(2/\pi)x(1-x)$ | 2.26963 | +48.24 | candidate |
 | integer geometry projected drive $(2/\pi)\sigma^{3/4}x(1-x)$ | 2.10604 | +0.13 | pass |
@@ -273,39 +312,47 @@ Scored pass rate: 84.6%
 
 ## 12. Clarus inverse-correlation / particle-language gate
 
-`examples/physics/clarus_boson_search_gate.py`는 미관측 실험 bridge의 판정
-조건을 사전등록한다. 여기서 29.65 MeV는 실제 CE connected 2점함수에서
-추출한 pole이 아니라 \(m_p\delta^2\)로 등록한 inverse-correlation scale
-ansatz다. 따라서 질량창 hit는 particle-language bridge를 지지할 수 있지만
-pole residue, spectral positivity나 CE field identity를 증명하지 않는다.
+`examples/physics/clarus_boson_search_gate.py`는 구 \(\delta\)와 질량창을
+hard-code한 **legacy/noncanonical runner**다. 아래 구 창은 당시 탐색 규칙의
+재현 기록일 뿐이며 현행 acceptance에 사용하지 않는다. 또한 이 질량은 실제
+CE connected 2점함수에서 추출한 pole이 아니라 \(m_p\delta_N^2\)로 등록한
+inverse-correlation scale ansatz다. 따라서 향후 질량창 hit도 pole residue,
+spectral positivity 또는 CE field identity를 저절로 증명하지 않는다.
 
-등록값:
+현행 canonical manifest의 중앙값은 다음과 같다.
 
-| 항목 | 값 |
-|---|---:|
-| $\delta$ | 0.17775842 |
-| coupling matching 후보 $\lambda_{HP}=\delta^2$ | 0.03159806 |
-| $m_\xi=m_p\delta^2$ | 29.64757 MeV |
-| 3-sigma 질량창 | 28.388--30.908 MeV |
-| Compton length | 6.65575 fm |
+| 항목 | 현행 값 | 지위 |
+|---|---:|---|
+| $s_A^2$ | 0.2315097758 | Track A registered neutral output |
+| $\delta_N=s_A^2(1-s_A^2)$ | 0.1779129995 | neutral-projector index |
+| coupling matching 후보 $\lambda_{HP}=\delta_N^2$ | 0.0316530354 | 별도 portal matching ansatz |
+| $m_\xi=m_p\delta_N^2$ | 29.6991596 MeV | inverse-correlation central scale |
+| reduced Compton length $\hbar c/m_\xi$ | 6.6441941 fm | 중앙값의 단위 변환 |
+| $\mu_\Phi=0$ portal mass $v_{\rm EW}\sqrt{\lambda_{HP}}$ | 43.8056765 GeV | light scale과 다른 rejected benchmark |
+| 현행 질량 불확실성·3-sigma 창 | 미정 | 입력 covariance와 pole/readout likelihood 필요 |
 
-판정 규칙:
+legacy runner snapshot은
+\[
+(\delta,\lambda_{HP},m_\xi)
+=(0.17775842,0.03159806,29.64757\,\mathrm{MeV})
+\]
+였고 reduced Compton length는 \(6.65575\,\mathrm{fm}\),
+구 3-sigma 창 \(28.388\)--\(30.908\,\mathrm{MeV}\)였다. 이 창을 현
+중앙값 주위로 단순 평행이동하거나 현행 3-sigma 구간으로 재명명하지 않는다.
 
-| 실험 결과 | gate 판정 |
-|---|---|
-| 질량창 안의 pole-compatible 5 sigma 신호 | `experimental_bridge_signal` |
-| 질량창 안의 5 sigma 미만 excess | `experimental_bridge_candidate` |
-| 질량창 전체와 bridge coupling benchmark 동시 배제 | `bridge_rejected` |
-| 질량창만 부분 배제하거나 coupling benchmark 미도달 | `bridge_constrained` |
-| 그 외 | `open_test` |
+현재는 uncertainty contract가 없으므로 runner의
+`experimental_bridge_signal`, `experimental_bridge_candidate`,
+`bridge_rejected`, `bridge_constrained` 출력을 최신 판정으로 인용하지 않는다.
+먼저 \(m_\xi\) 입력 covariance, coupling benchmark, detector acceptance와
+look-elsewhere 처리를 사전등록해야 한다. 그 뒤에도 pole-compatible 신호는
+particle-language bridge 후보일 뿐 이론 pole certificate가 아니다.
 
-X17류 17 MeV 신호는 질량창 밖이므로 Clarus bridge hit로 세지 않는다. 이
-gate는 이론 pole certificate가 아니라 실험 판정표다. 여기의 \(29.65\) MeV
-inverse-correlation 후보와
-\(m_\Phi\simeq v\sqrt{\lambda_{HP}}=43.77\) GeV 포탈 질량 benchmark는
-서로 다른 bridge 가정이며 같은 pole로 동시에 읽지 않는다.
-`bridge_rejected`가 나오더라도 반증되는 것은 국소 스칼라/포탈 readout이지,
-경로적분 수렴 구조로서의 클라루스장 자체가 아니다.
+X17류 17 MeV 신호는 canonical 중앙 scale과도 분리한다. 현행
+\(m_\xi=29.6991596\,\mathrm{MeV}\) inverse-correlation 후보와
+\(m_\Phi=43.8056765\,\mathrm{GeV}\) canonical 포탈 benchmark는 서로 다른
+bridge 가정이며 같은 pole로 동시에 읽지 않는다. 향후 적법한
+`bridge_rejected` 판정이 나오더라도 우선 반증되는 것은 국소 스칼라/포탈
+readout이지 경로적분 수렴 구조로서의 클라루스장 자체가 아니다.
 
 ## 13. A1/Q0 공변 작용 루프
 
@@ -362,6 +409,13 @@ spectral density derived      False
 \(\mathrm{BR}_{\rm inv}\simeq0.772\)로, 문서가 공급한 상한 \(0.11\)을
 통과하지 못한다. 이는 선택적 포탈 benchmark의 반증이며, 독립 on-shell
 scalar를 두지 않는 코어 분기 자체의 반증은 아니다.
+
+위 실행 블록은 legacy runner의 재현 로그다. 현행 canonical override는
+\(\lambda_{\rm HP}=0.0316530354\),
+\(m_\Phi=43.8056765\,\mathrm{GeV}\),
+\(\Gamma_{\rm inv}=13.790042\,\mathrm{MeV}\),
+\(\mathrm{BR}_{\rm inv}=0.77082222\)이며, PDG 2026이 열거한 ATLAS direct
+상한 \(0.107\)에서도 판정은 `REJECT`다.
 
 ### 13.3 Q0.4–Q0.5 singlet pole·vertex 통제 인증서
 
@@ -834,12 +888,12 @@ perturbation이 필요하다. 현재 processed snapshot만으로 생물학적 �
 
 | 모드 | \(\chi^2\) | dof | \(p\) | 판정 |
 |---|---:|---:|---:|---|
-| CE density + 외부 \(H_0=67.4,r_d=147.09\) 고정 | 37.100260857 | 13 | \(3.9957\times10^{-4}\) | `REJECT` |
-| 동일 shape + \(H_0r_d\) scale 1개 진단 fit | 12.608346862 | 12 | 0.398138 | `PASS/Diagnostic` |
+| canonical CE density + 외부 \(H_0=67.4,r_d=147.09\) 고정 | 40.201450858 | 13 | \(1.28283168\times10^{-4}\) | `REJECT` |
+| 동일 shape + \(H_0r_d\) scale 1개 진단 fit | 12.206911338 | 12 | 0.429208739 | `PASS/Diagnostic` |
 
 복잡도 패널티는 고정모델
-\({\rm AIC}={\rm BIC}=37.1003\), scale fit
-\({\rm AIC}=14.6083,\ {\rm BIC}=15.1733\)이다.
+\({\rm AIC}={\rm BIC}=40.2015\), scale fit
+\({\rm AIC}=14.2069,\ {\rm BIC}=14.7719\)이다.
 
 analytic scale은
 
@@ -848,11 +902,11 @@ q_*
 =
 \frac{y^\top C^{-1}d}{y^\top C^{-1}y}
 =
-0.986476933470
+0.985555780095
 $$
 
-이다. 이는 \(r_d=149.106375\,{\rm Mpc}\) 또는
-\(H_0=68.323949\,{\rm km\,s^{-1}Mpc^{-1}}\)와 등가다. 같은 DESI 데이터에
+이다. 이는 \(r_d=149.245738\,{\rm Mpc}\) 또는
+\(H_0=68.387809\,{\rm km\,s^{-1}Mpc^{-1}}\)와 등가다. 같은 DESI 데이터에
 맞춘 값이므로 CE 예측으로 세지 않는다. 현재 판정은 “고정 패키지 실패의 주된
 원인이 외부 \(H_0r_d\) scale”이라는 원인 분해다.
 
@@ -894,9 +948,9 @@ tests/test_quantum.py: 19 passed
 외부 \(r_d\)를 대체할 첫 계산 경로로
 
 $$
-z_d^{\rm EH}=1020.020419907,
+z_d^{\rm EH}=1019.907163886,
 \qquad
-r_d^{\rm EH\ hybrid}=151.318753028\ {\rm Mpc}
+r_d^{\rm EH\ hybrid}=151.505227530\ {\rm Mpc}
 $$
 
 를 얻었다. 입력은 CE \(\Omega_b,\Omega_m\), 외부 \(H_0,T_{\rm CMB}\),
@@ -904,8 +958,8 @@ $$
 13점 full covariance에 넣으면
 
 $$
-\chi^2=40.468225544,\qquad
-p=1.16176098\times10^{-4},
+\chi^2=41.194553577,\qquad
+p=8.86018138\times10^{-5},
 $$
 
 로 `REJECT`이며 외부 \(r_d=147.09\,{\rm Mpc}\)보다 악화된다. 수치 적분은
@@ -938,9 +992,9 @@ history에서 \(z_d=1059.25,\ r_d=147.649757605\,{\rm Mpc}\)를 회수했지만,
 - Hessian/Jacobi scalar는
   \(\Phi_{\rm eff}=\langle\eta,\mathcal J\eta\rangle/\langle\eta,\eta\rangle\)
   로 읽고 독립장과 동일시하지 않는다.
-- \(29.64757\,{\rm MeV}\)는
-  \(f=7.1687505314\times10^{21}\,{\rm Hz}\),
-  \(\omega=4.5042588010\times10^{22}\,{\rm s^{-1}}\)로 변환되지만 이것은
+- \(29.6991596174\,{\rm MeV}\)는
+  \(f=7.1812248454\times10^{21}\,{\rm Hz}\),
+  \(\omega=4.5120966464\times10^{22}\,{\rm s^{-1}}\)로 변환되지만 이것은
   pole의 존재 증거가 아니다.
 - \(H_{\rm int}/\hbar=gA\otimes O\)의 reduced frequency convention에서는
   \(\gamma=g^2J_{\rm red}\)이고, SI Hamiltonian과 무차원 \(O\)의 raw
@@ -1304,37 +1358,37 @@ al.의 figure source에서
 \beta_2\Delta\omega^2+\frac{\beta_4}{12}\Delta\omega^4=mK
 \]
 
-를 다시 풀어 (954.3127/1173.0601) nm를 얻었고, 공개 CAR 최대 cell
-(953.9375/1172.888889) nm의 inverse-wavelength energy residual은
-(2.8233\times10^{-4})였다. (g^{(2)}(0)=0.38095\pm0.06), CAR=0
-control (g^{(2)}(0)=1.00\pm0.04)도 source table에서 재계산했다. 다만 자료는
+를 다시 풀어 \(954.3127/1173.0601\) nm를 얻었고, 공개 CAR 최대 cell
+\(953.9375/1172.888889\) nm의 inverse-wavelength energy residual은
+\(2.8233\times10^{-4}\)였다. \(g^{(2)}(0)=0.38095\pm0.06\), CAR=0
+control \(g^{(2)}(0)=1.00\pm0.04\)도 source table에서 재계산했다. 다만 자료는
 처리된 figure source이며 event-level TDC count가 아니고, lab-frame 식은
 quasi-phase-matched SFWM과 동일하므로 literal moving-mirror DCE나 Clarus
 고유 증거로 승격하지 않는다.
 
-CMS HEPData의 7개 (p_{T,ee}) bin을 직접 적분해
+CMS HEPData의 7개 \(p_{T,ee}\) bin을 직접 적분해
 
 \[
 \sigma_{\rm fid}=263.3930128\ \mu\mathrm b
 \]
 
-를 얻어 논문값 (263.5\pm1.8_{\rm stat}\pm17.8_{\rm syst}\ \mu\mathrm b)를
-재현했다. 통계오차 적분은 (1.7238\ \mu\mathrm b)이고, systematic 공분산
+를 얻어 논문값 \(263.5\pm1.8_{\rm stat}\pm17.8_{\rm syst}\ \mu\mathrm b\)를
+재현했다. 통계오차 적분은 \(1.7238\ \mu\mathrm b\)이고, systematic 공분산
 미공개를 반영한 uncorrelated/fully-correlated 두 극한은
-(16.4958\)–(19.3189\ \mu\mathrm b)라서 게재값을 포함한다. 이는 quasi-real
-photon fusion에 의한 보통 (e^+e^-) 생성을 지지하지만 event four-vector가
+\(16.4958\)--\(19.3189\ \mu\mathrm b\)라서 게재값을 포함한다. 이는 quasi-real
+photon fusion에 의한 보통 \(e^+e^-\) 생성을 지지하지만 event four-vector가
 공개된 것은 아니며 자유 on-shell photon 두 개의 고립 충돌로 과장하지 않는다.
 
-1T-TaS2 `10.nxs`는 (256\times344\times45), 두 펌프 합산
-(0.60\ \mathrm{mJ/cm^2}), 보고 임계 (0.50\ \mathrm{mJ/cm^2}), 25 fs 간격을
-직접 확인했다. 보고 (2.2\pm0.1) THz는 (454.5\pm20.7) fs와 주기당 18.2
+1T-TaS2 `10.nxs`는 \(256\times344\times45\), 두 펌프 합산
+\(0.60\ \mathrm{mJ/cm^2}\), 보고 임계 \(0.50\ \mathrm{mJ/cm^2}\), 25 fs 간격을
+직접 확인했다. 보고 \(2.2\pm0.1\) THz는 \(454.5\pm20.7\) fs와 주기당 18.2
 sample이다. 그러나 본문/원자료의 고정 delay가 35/25 ps, 대응표/NeXus의 온도가
 160/20 K로 충돌하고 fit code·bound와 acquisition-level lifetime curve가 없어
 exact frequency/lifetime refit은 `False`로 잠갔다. 이는 기존 Ta/S 원자·전자의
 준안정 전자·구조 상 재배열이지 새 입자·원자 생성이 아니다.
 
 가장 중요한 bridge 반례는 에너지와 provenance다. 관측 optical pair는
-(2.3567938) eV이고 (e^+e^-) 정지질량 문턱은 (1.0219979) MeV이므로
+\(2.3567938\) eV이고 \(e^+e^-\) 정지질량 문턱은 \(1.0219979\) MeV이므로
 
 \[
 \frac{2m_ec^2}{E_{s+i}}=4.33639\times10^5.
@@ -1362,9 +1416,9 @@ snapshot은 SHA-256
 - `docs/0_검증과감사/FUSION_RESONANCE_LOOP_ENGINEERING.md`
 
 핵심 반례는 폭의 크기가 아니라 전달 사차원운동량이다. 정적 핵간 교환은
-(q^0=0), 따라서 (q^2=-|\mathbf q|^2<0)이고 양의 질량 scalar pole
-(q^2=m_\Phi^2>0)에 도달하지 못한다. 그러므로 진공 line의
-(Q=m_\Phi/\Gamma_\Phi)를 정적 Yukawa potential에 곱하는 bridge는 `REJECT`다.
+\(q^0=0\), 따라서 \(q^2=-|\mathbf q|^2<0\)이고 양의 질량 scalar pole
+\(q^2=m_\Phi^2>0\)에 도달하지 못한다. 그러므로 진공 line의
+\(Q=m_\Phi/\Gamma_\Phi\)를 정적 Yukawa potential에 곱하는 bridge는 `REJECT`다.
 별도 시간의존 background는 source amplitude, 공간 mode, pump work와
 backreaction을 푼 뒤 D--T scattering amplitude에 연결해야 한다.
 
@@ -1381,11 +1435,12 @@ plasma Q under ansatz           2.476237489e15
 scalar one-loop delta a_e       2.132519487e-19
 ```
 
-반사실 (Q\alpha_\Phi) Yukawa WKB는 (Q=10^9)에서
-(\gamma_0=2.813647838), (\gamma_Q=0.958673329),
-(\Sigma=40.851723790)을 준다. 핵반경에서 attraction과 Coulomb 항이 같아지는
-값은 (6.0392\times10^7)이지만 전체 바깥 hump가 20 keV 이하가 되는 analytic
-임계는 (6.2974\times10^{10}), 형식적 대역폭은 (1.5880\times10^{-11})이다.
+반사실 \(Q\alpha_\Phi\) Yukawa WKB는 \(Q=10^9\)에서
+\(\gamma_0=2.813647838\), \(\gamma_Q=0.958673329\),
+\(\Sigma=40.851723790\)을 준다. 핵반경에서 attraction과 Coulomb 항이 같아지는
+값은 \(6.0392\times10^7\)이지만 전체 바깥 hump가 20 keV 이하가 되는 analytic
+임계는 \(6.2974\times10^{10}\), 형식적 대역폭은
+\(1.5880\times10^{-11}\)이다.
 이 수치 통과는 `COUNTERFACTUAL_Q_TIMES_YUKAWA_WKB_CONTROL_ONLY`이며 physical
 barrier reduction으로 승격하지 않는다.
 
@@ -1520,8 +1575,9 @@ binding fraction 9.34e-4다.
 
 Lindsey et al.의 Floquet--Volkov generalized-Bessel sideband를 Bosch--Hale
 D--T 단면적에 적용한 뒤 10 keV Maxwellian과 등방 각도분포를 적분했다.
-0.3 keV photon에서 (10^{16}) V/m는 반응률을 4.223237599% 높이고, 정확히
-1%에 필요한 장은 (4.861597077\times10^{15}) V/m이다. sideband 확률합,
+0.3 keV photon에서 \(10^{16}\,\mathrm{V/m}\)는 반응률을 4.223237599% 높이고,
+정확히 1%에 필요한 장은
+\(4.861597077\times10^{15}\,\mathrm{V/m}\)이다. sideband 확률합,
 무구동 복원, Bosch--Hale fit-domain 질량, 에너지·각도·위상 격자 수렴을 모두
 통과했다. 다만 Lindsey et al.의 thermal benchmark는 1 keV이고 CN/FV 대조는
 0.1--10 keV 충돌에너지다. 10 keV plasma gain의 95.8%는 10 keV보다 높은
@@ -1529,10 +1585,11 @@ D--T 단면적에 적용한 뒤 10 keV Maxwellian과 등방 각도분포를 적�
 validation pass가 아니다. 1 keV benchmark의 1% 임계장 8.680352e14 V/m는
 별도 published-support gate를 통과한다.
 
-임계장의 에너지밀도는 (1.04635\times10^{20}) J/m³이다. 10 fs, 반지름
+임계장의 에너지밀도는 \(1.04635\times10^{20}\,\mathrm{J/m^3}\)이다.
+10 fs, 반지름
 10 nm의 선언된 평면파 pulse는 0.09855 J이며, 총 D/T ion density
-(10^{31}\,\mathrm{m^{-3}}) microvolume에서 추가 fusion/pulse 비는
-(7.65\times10^{-9})이다. 따라서 source 숫자는 닫혔지만 net-energy reactor
+\(10^{31}\,\mathrm{m^{-3}}\) microvolume에서 추가 fusion/pulse 비는
+\(7.65\times10^{-9}\)이다. 따라서 source 숫자는 닫혔지만 net-energy reactor
 upgrade는 아니다.
 
 29.64757 MeV CE scalar는 0.3 keV QED mode와 동일하지 않다. exact-Z2에서 두
@@ -1554,10 +1611,12 @@ reactor/ICF upgrade는 계속 `False`다.
 - `tests/test_fusion_flavor_aligned_loop.py`
 - `docs/0_검증과감사/FUSION_FLAVOR_ALIGNED_LOOP.md`
 
-등록질량 1% 해 (g_N=0.0174265)의 D/T charge product를 flavor-aligned
-(u,d,s) scalar에 정확히 맞췄다. (g_p=0.154\,\mathrm{GeV}/f_phi),
-(g_n=0.158\,\mathrm{GeV}/f_phi) matching은 (f_phi=8.9710) GeV,
-(g_p=0.0171664), (g_n=0.0176123)을 준다. 5 TeV VLQ 예시의 실제 새
+등록질량 1% 해 \(g_N=0.0174265\)의 D/T charge product를 flavor-aligned
+\((u,d,s)\) scalar에 정확히 맞췄다.
+\(g_p=0.154\,\mathrm{GeV}/f_\phi\),
+\(g_n=0.158\,\mathrm{GeV}/f_\phi\) matching은
+\(f_\phi=8.9710\,\mathrm{GeV}\),
+\(g_p=0.0171664\), \(g_n=0.0176123\)을 준다. 5 TeV VLQ 예시의 실제 새
 Yukawa 최대값은 0.299이고 left mixing은 0.0104 이하라 표시 coupling의
 perturbativity는 통과한다. 큰 kappa-phi=557은 단일 Lagrangian coupling이
 아니라 유효 계수비다. full SMEFT--WET RG matching과 29.65 MeV 질량의
@@ -1583,17 +1642,22 @@ gate가 없다. 따라서 최종 분류는
 - `tests/test_fusion_operator_alternatives_loop.py`
 - `docs/0_검증과감사/FUSION_OPERATOR_ALTERNATIVES_LOOP.md`
 
-pure trace/gluon 방향은 D/T 1%에 (|K_\Theta|v/f=5.48)이 필요해 digitized
-one-parameter rare-decay bound (1.38\times10^{-3})을 3968배 넘는다.
+pure trace/gluon 방향은 D/T 1%에
+\(\lvert K_\Theta\rvert v/f=5.48\)이 필요해 digitized
+one-parameter rare-decay bound \(1.38\times10^{-3}\)을 3968배 넘는다.
 Protophobic endpoint는 Pb neutron bound를 1.336배 넘고, neutron-phobic
-endpoint는 kaon combinations를 (9.47\times10^3), (2.75\times10^4)배
+endpoint는 kaon combinations를 \(9.47\times10^3\),
+\(2.75\times10^4\)배
 넘는다. Pb charge cancellation은 D/T charge product를 음수로 바꾸므로
 attraction blind spot이 아니다.
 
-massless disformal (r^{-7}) potential을 WKB--Bosch--Hale--Maxwellian chain에
-전파하면 1%에 (M=180.705) MeV가 필요하다. (M=200) MeV에서는 gain
-0.004396, 810 MeV에서 (6.02\times10^{-8}), 1.2 TeV에서
-(2.60\times10^{-33})이다. 등록 scalar mass를 넣으면 더 작아지므로 이는
+massless disformal \(r^{-7}\) potential을
+WKB--Bosch--Hale--Maxwellian chain에 전파하면 1%에
+\(M=180.705\,\mathrm{MeV}\)가 필요하다.
+\(M=200\,\mathrm{MeV}\)에서는 gain 0.004396,
+\(810\,\mathrm{MeV}\)에서 \(6.02\times10^{-8}\),
+\(1.2\,\mathrm{TeV}\)에서 \(2.60\times10^{-33}\)이다.
+등록 scalar mass를 넣으면 더 작아지므로 이는
 낙관적 상한이다. 200/810 MeV 분광·stellar 숫자는 massless scalar 참고값이라
 29.65 MeV mass-specific 배제로 쓰지 않았다. 적용 가능한 light-mediator collider
 bound 약 1.2 TeV만으로도 필요한 180.705 MeV scale은 닫힌다. 모든 대체분기의
@@ -1627,7 +1691,7 @@ distorted-wave 및 finite-density provenance가 없어 어느 쪽도 hard likeli
 
 rare-kaon 중앙곡선의 NLO tightening 임계는 점핵 6.6371, 가장 유리한 D/T proxy
 6.7187로 논문이 인정한 최대 10배 이론오차보다 작다. 최신 NA62 2016--2022 결과의
-전 질량 BR 개선 1--3배는 coupling bound에 (1/\sqrt I)로 전달했다. 추가로 JHEP
+전 질량 BR 개선 1--3배는 coupling bound에 \(1/\sqrt I\)로 전달했다. 추가로 JHEP
 Figure 2-a PDF 벡터 축과 후보를 감싸는 선분을 코드에 고정해 29.64757 MeV에서
 
 \[

@@ -8,12 +8,17 @@
 |---|---|---|
 | [PROOF_STATUS_MATRIX.md](PROOF_STATUS_MATRIX.md) | 전체 증명 등급표 | 정본 |
 | [PROOF_VALIDATION_LEDGER.md](PROOF_VALIDATION_LEDGER.md) | 실제 검산 이력과 판정 변경 기록 | 정본 |
+| [FULL_CONSISTENCY_COMPLETION_LOOP_2026-08-06.md](FULL_CONSISTENCY_COMPLETION_LOOP_2026-08-06.md) | 전수 감사의 직접 오류를 정확한 식·모형으로 교체하고 전역 정합성을 닫는 변경 계약 | working canonical |
+| [run_full_consistency_gate.ps1](run_full_consistency_gate.ps1) | H1·링크·delimiter·C0 control·GFM 표·의미 반례와 수치 재계산을 한 번에 전수 검사 | executable gate |
+| [verify_numeric_consistency.py](verify_numeric_consistency.py) | 결합상수 두 트랙·bootstrap·Gamma 측도·밀도벡터·Hubble readout·고정-background \(p\)-값·portal·scalar kernel·finite-$\xi$ 인플레이션을 표준 라이브러리로 재계산 | executable numeric gate |
+| [CANONICAL_NUMERIC_MANIFEST_2026-08-06.json](CANONICAL_NUMERIC_MANIFEST_2026-08-06.json) | 최신 Track A 입력과 파생 수치의 기계 판독 단일 원천 | numeric canonical |
+| [OBSERVATIONAL_BASELINE_2026-08-06.md](OBSERVATIONAL_BASELINE_2026-08-06.md) | 결합상수·Planck·DESI·Higgs portal·저에너지 정밀량의 정의, snapshot, covariance와 input/holdout 역할 고정 | data provenance canonical |
 | [VALIDATION_FRAMEWORK.md](VALIDATION_FRAMEWORK.md) | 남은 증명 요구사항과 tier별 blocker | 참고 정본 |
 | [MATHEMATICAL_PHYSICS_ISSUES.md](MATHEMATICAL_PHYSICS_ISSUES.md) | 수학/물리 문제점 감사 목록 | 참고 정본 |
 | [BRIDGE_B2_DERIVATION.md](BRIDGE_B2_DERIVATION.md) | \(P_{\text{survive}}\leftrightarrow\Omega_b\) bridge 보강 기록 | bridge 보조 |
 | [CORE_STRENGTHENING_LOOP.md](CORE_STRENGTHENING_LOOP.md) | 코어 반례군을 최소 원리·정리·코드 gate로 줄이는 반복 보강 정본 | working canonical |
 | [A1_Q0_COVARIANT_ACTION_LOOP.md](A1_Q0_COVARIANT_ACTION_LOOP.md) | 보통 Hessian 반례, 공변 장공간 Hessian, metric variation과 Q0 통과 조건 | working canonical |
-| [CE_TWO_POINT_AND_VERTEX_LOOP.md](CE_TWO_POINT_AND_VERTEX_LOOP.md) | 역상관 scale의 pole 비식별 반례, 선택적 포탈 Q0.4–Q0.5 tree pole·vertex와 29.65 MeV/43.77 GeV 양립성 정리 | control certificate |
+| [CE_TWO_POINT_AND_VERTEX_LOOP.md](CE_TWO_POINT_AND_VERTEX_LOOP.md) | 역상관 scale의 pole 비식별 반례, 선택적 포탈 Q0.4–Q0.5 tree pole·vertex와 29.6992 MeV/43.8057 GeV 분기 정리 | control certificate |
 | [CE_RENORMALIZED_POLE_AND_ONE_LOOP_LOOP.md](CE_RENORMALIZED_POLE_AND_ONE_LOOP_LOOP.md) | action provenance, renormalized pole fail-closed gate와 선택적 portal scalar one-loop 방사 안정성 감사 | control certificate |
 | [CE_EUCLIDEAN_CORRELATOR_AND_SPECTRAL_LOOP.md](CE_EUCLIDEAN_CORRELATOR_AND_SPECTRAL_LOOP.md) | 실제 CE ensemble 부재 감사, connected/jackknife·유한 positivity gate와 spectral 비유일성 구성 반례 | control certificate |
 | [CLARUS_RESONANT_MATTER_LOOP.md](CLARUS_RESONANT_MATTER_LOOP.md) | 위상 중첩·invariant pair·Floquet/Bogoliubov toy와 cutoff-independent global throat source-tail 감사 | working canonical |
@@ -55,38 +60,40 @@
 
 ## 읽는 순서
 
-1. [코어 독자 가이드](../코어_독자_가이드.md): 수식 전에 환기구 비유,
+1. [전체 정합성 완성 루프](FULL_CONSISTENCY_COMPLETION_LOOP_2026-08-06.md):
+   최신 타입·입력·수학·물리 교정 계약과 통과 gate를 먼저 본다.
+2. [코어 독자 가이드](../코어_독자_가이드.md): 수식 전에 환기구 비유,
    다공간 재귀, 증명과 bridge의 경계를 잡는다.
-2. [A1/Q0 공변 작용 루프](A1_Q0_COVARIANT_ACTION_LOOP.md): Hessian,
+3. [A1/Q0 공변 작용 루프](A1_Q0_COVARIANT_ACTION_LOOP.md): Hessian,
    stress tensor와 보존법칙 사이의 열린 조건을 먼저 본다.
-3. [Q0.0–Q0.3 최소 manifest](Q0_0_Q0_3_MINIMAL_MANIFEST.md):
+4. [Q0.0–Q0.3 최소 manifest](Q0_0_Q0_3_MINIMAL_MANIFEST.md):
    전체 CE+SM과 통제 절단의 통과 표시를 왜 분리하는지 본다.
-4. [CE two-point–vertex 루프](CE_TWO_POINT_AND_VERTEX_LOOP.md): 역상관
+5. [CE two-point–vertex 루프](CE_TWO_POINT_AND_VERTEX_LOOP.md): 역상관
    scale, tree pole, physical pole과 vertex의 층을 분리한다.
-5. [CE renormalized pole–one-loop 루프](CE_RENORMALIZED_POLE_AND_ONE_LOOP_LOOP.md):
+6. [CE renormalized pole–one-loop 루프](CE_RENORMALIZED_POLE_AND_ONE_LOOP_LOOP.md):
    실제 action provenance, pole holdout과 방사 안정성의 첫 blocker를 본다.
-6. [CE Euclidean correlator–spectral 루프](CE_EUCLIDEAN_CORRELATOR_AND_SPECTRAL_LOOP.md):
+7. [CE Euclidean correlator–spectral 루프](CE_EUCLIDEAN_CORRELATOR_AND_SPECTRAL_LOOP.md):
    실제 표본, 유한 positivity, screening energy와 실시간 pole의 경계를 본다.
-7. [CORE_STRENGTHENING_LOOP.md](CORE_STRENGTHENING_LOOP.md): 코어를 어떤 반례와 gate로 강화하는지 본다.
-8. [EXTERNAL_FIELD_TO_MATTER_REANALYSIS.md](EXTERNAL_FIELD_TO_MATTER_REANALYSIS.md): 실제 공개 데이터가 어디까지 재현되고 Clarus bridge가 어디서 끊기는지 본다.
-9. [FUSION_RESONANCE_LOOP_ENGINEERING.md](FUSION_RESONANCE_LOOP_ENGINEERING.md): 핵융합 공명 사슬이 static exchange gate에서 왜 끊기는지 본다.
-10. [FUSION_FULL_LOOP_ENGINEERING.md](FUSION_FULL_LOOP_ENGINEERING.md): 살아남은 Z2 쌍·파괴·구동·열반응률·ICF 분기를 전부 닫아 본다.
-11. [FUSION_EQUATION_ITERATION_LOOP.md](FUSION_EQUATION_ITERATION_LOOP.md): 허용 식을 열반응률까지 전파하고 어느 모델 변경부터 새 물리인지 확인한다.
-12. [FUSION_REMAINING_BRANCHES_LOOP.md](FUSION_REMAINING_BRANCHES_LOOP.md): 직접 연산자와 시간의존 source의 마지막 물리 gate를 확인한다.
-13. [FUSION_DIRECT_SCATTERING_LOOP.md](FUSION_DIRECT_SCATTERING_LOOP.md): 직접 결합이 저에너지 핵산란 정밀도에서 무시 가능한지 확인한다.
-14. [FUSION_FLOQUET_SOURCE_LOOP.md](FUSION_FLOQUET_SOURCE_LOOP.md): QED 시간의존 식 외삽·공개 benchmark와 CE scalar source 분기를 단위·에너지 장부까지 분리한다.
-15. [FUSION_FLAVOR_ALIGNED_LOOP.md](FUSION_FLAVOR_ALIGNED_LOOP.md): 가장 가까운 직접 scalar 후보가 어느 실험 여유에서 멈추는지 확인한다.
-16. [FUSION_FLAVOR_MARGIN_ROBUSTNESS_LOOP.md](FUSION_FLAVOR_MARGIN_ROBUSTNESS_LOOP.md): finite-size와 constraint-theory 오차를 넣어 중앙 후보의 작은 여유가 강건한지 확인한다.
-17. [FUSION_OPERATOR_ALTERNATIVES_LOOP.md](FUSION_OPERATOR_ALTERNATIVES_LOOP.md): 흔한 coupling-basis 우회로가 실제 제약을 피하는지 확인한다.
-18. [FUSION_SPIN_OPERATOR_LOOP.md](FUSION_SPIN_OPERATOR_LOOP.md): 스핀·비표준 Lorentz 연산자가 scalar 제약을 우회하는지 확인한다.
-19. [FUSION_SPIN_POLARIZATION_CONTROL_LOOP.md](FUSION_SPIN_POLARIZATION_CONTROL_LOOP.md): 새 입자 없는 편극 D–T의 이상적 quartet 1% 계산과 실제 energy-dependent Maxwellian·source 장부 사이의 미검증 경계를 확인한다.
-20. [FUSION_SCALAR_CURRENT_LOOP.md](FUSION_SCALAR_CURRENT_LOOP.md): 가장 가까운 scalar 후보의 one-/two-body D/T 핵응답과 최신 sigma-term 정보가 1% 여유를 실제로 인증하는지 확인한다.
-21. [PROOF_STATUS_MATRIX.md](PROOF_STATUS_MATRIX.md): 지금 무엇이 닫혔고 무엇이 열려 있는지 본다.
-22. [PROOF_VALIDATION_LEDGER.md](PROOF_VALIDATION_LEDGER.md): 왜 그 판정이 되었는지 검산 이력을 본다.
-23. [미해결_난제_목록.md](미해결_난제_목록.md): CE가 아직 못 닫은 외부/내부 난제를 확인한다.
-24. [VALIDATION_FRAMEWORK.md](VALIDATION_FRAMEWORK.md): 남은 blocker와 필요한 증명/실험을 본다.
-25. [우주론_양자론_루프_감사.md](우주론_양자론_루프_감사.md): 우주론·양자론의 최신 실행 잔차와 최소 보강을 본다.
-26. [문서_전체_완성도_감사.md](문서_전체_완성도_감사.md): 문서군 정리 우선순위를 본다.
+8. [CORE_STRENGTHENING_LOOP.md](CORE_STRENGTHENING_LOOP.md): 코어를 어떤 반례와 gate로 강화하는지 본다.
+9. [EXTERNAL_FIELD_TO_MATTER_REANALYSIS.md](EXTERNAL_FIELD_TO_MATTER_REANALYSIS.md): 실제 공개 데이터가 어디까지 재현되고 Clarus bridge가 어디서 끊기는지 본다.
+10. [FUSION_RESONANCE_LOOP_ENGINEERING.md](FUSION_RESONANCE_LOOP_ENGINEERING.md): 핵융합 공명 사슬이 static exchange gate에서 왜 끊기는지 본다.
+11. [FUSION_FULL_LOOP_ENGINEERING.md](FUSION_FULL_LOOP_ENGINEERING.md): 살아남은 Z2 쌍·파괴·구동·열반응률·ICF 분기를 전부 닫아 본다.
+12. [FUSION_EQUATION_ITERATION_LOOP.md](FUSION_EQUATION_ITERATION_LOOP.md): 허용 식을 열반응률까지 전파하고 어느 모델 변경부터 새 물리인지 확인한다.
+13. [FUSION_REMAINING_BRANCHES_LOOP.md](FUSION_REMAINING_BRANCHES_LOOP.md): 직접 연산자와 시간의존 source의 마지막 물리 gate를 확인한다.
+14. [FUSION_DIRECT_SCATTERING_LOOP.md](FUSION_DIRECT_SCATTERING_LOOP.md): 직접 결합이 저에너지 핵산란 정밀도에서 무시 가능한지 확인한다.
+15. [FUSION_FLOQUET_SOURCE_LOOP.md](FUSION_FLOQUET_SOURCE_LOOP.md): QED 시간의존 식 외삽·공개 benchmark와 CE scalar source 분기를 단위·에너지 장부까지 분리한다.
+16. [FUSION_FLAVOR_ALIGNED_LOOP.md](FUSION_FLAVOR_ALIGNED_LOOP.md): 가장 가까운 직접 scalar 후보가 어느 실험 여유에서 멈추는지 확인한다.
+17. [FUSION_FLAVOR_MARGIN_ROBUSTNESS_LOOP.md](FUSION_FLAVOR_MARGIN_ROBUSTNESS_LOOP.md): finite-size와 constraint-theory 오차를 넣어 중앙 후보의 작은 여유가 강건한지 확인한다.
+18. [FUSION_OPERATOR_ALTERNATIVES_LOOP.md](FUSION_OPERATOR_ALTERNATIVES_LOOP.md): 흔한 coupling-basis 우회로가 실제 제약을 피하는지 확인한다.
+19. [FUSION_SPIN_OPERATOR_LOOP.md](FUSION_SPIN_OPERATOR_LOOP.md): 스핀·비표준 Lorentz 연산자가 scalar 제약을 우회하는지 확인한다.
+20. [FUSION_SPIN_POLARIZATION_CONTROL_LOOP.md](FUSION_SPIN_POLARIZATION_CONTROL_LOOP.md): 새 입자 없는 편극 D–T의 이상적 quartet 1% 계산과 실제 energy-dependent Maxwellian·source 장부 사이의 미검증 경계를 확인한다.
+21. [FUSION_SCALAR_CURRENT_LOOP.md](FUSION_SCALAR_CURRENT_LOOP.md): 가장 가까운 scalar 후보의 one-/two-body D/T 핵응답과 최신 sigma-term 정보가 1% 여유를 실제로 인증하는지 확인한다.
+22. [PROOF_STATUS_MATRIX.md](PROOF_STATUS_MATRIX.md): 지금 무엇이 닫혔고 무엇이 열려 있는지 본다.
+23. [PROOF_VALIDATION_LEDGER.md](PROOF_VALIDATION_LEDGER.md): 왜 그 판정이 되었는지 검산 이력을 본다.
+24. [미해결_난제_목록.md](미해결_난제_목록.md): CE가 아직 못 닫은 외부/내부 난제를 확인한다.
+25. [VALIDATION_FRAMEWORK.md](VALIDATION_FRAMEWORK.md): 남은 blocker와 필요한 증명/실험을 본다.
+26. [우주론_양자론_루프_감사.md](우주론_양자론_루프_감사.md): 우주론·양자론의 최신 실행 잔차와 최소 보강을 본다.
+27. [문서_전체_완성도_감사.md](문서_전체_완성도_감사.md): 문서군 정리 우선순위를 본다.
 
 ## 운영 규칙
 

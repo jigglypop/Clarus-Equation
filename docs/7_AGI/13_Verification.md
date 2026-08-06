@@ -1,6 +1,10 @@
 # CE-AGI Hopfield Engine: 논문 vs 구현 검증 보고서
 
-> `12_Equation.md` 수식 기반. 구현: `reality_stone/python/reality_stone/clarus/engine.py`, `reality_stone/python/reality_stone/clarus/engine.py`
+> `12_Equation.md` 수식 기반. 구현:
+> `reality_stone/python/reality_stone/clarus/engine.py`. 2026-08-06 문서 정본은
+> Track-A manifest를 따르지만, 이 runtime의 `constants.py`는 아직 구형
+> $1/(e\pi)$ 계열과 구형 분율을 보유한다. 아래 표는 **형식 일치**와
+> **canonical 숫자 일치**를 분리한다.
 
 ---
 
@@ -10,7 +14,7 @@
 |------|----------------------|------|------|
 | W 추출 | Q@K^T/sqrt(d_h) + V@O + FFN, 레이어 평균, 대칭화 | `extract_hopfield()` 동일 | O |
 | 3D 격자 희소화 | d=3, r_c=pi, 밀도 ~3.16% (N=4096) | `sparsify_3d()` r_c=pi, N=768 -> 10.57% | 부분 |
-| 스펙트럼 조건화 | lambda_max < 0, 음정치 | `make_negative_definite()` shift=lambda_max+0.1|lambda_min| | O |
+| 스펙트럼 조건화 | lambda_max < 0, 음정치 | `make_negative_definite()`; shift \(=\lambda_{\max}+0.1\lvert\lambda_{\min}\rvert\) | O |
 | CSR 압축 | 희소 행렬 저장 | `to_csr()` values + col_idx + row_ptr | O |
 | 어휘 추출 | emb + ln_f + lm_head | weight tying 감지, 1벌 저장 | O |
 
@@ -18,22 +22,25 @@
 
 | 항목 | 논문 | 구현 | 일치 |
 |------|------|------|------|
-| 에너지 E(m,phi) | -0.5 m^T W m - b^T m + portal * <m, phi_hat> | `energy()` 동일 | O |
-| bypass F | F_bypass = bypass * phi (비보존, 에너지에 미포함) | `relax()` dt/tau * F_bypass (에너지 외부) | O |
+| 에너지 E(m,phi) | -0.5 m^T W m - b^T m + portal * <m, phi_hat> | 같은 항 구조, 계수는 구형 `PORTAL` | 형식 O / 숫자 DRIFT |
+| bypass F | F_bypass = bypass * phi (비보존, 에너지에 미포함) | 같은 항 구조, 계수는 구형 `BYPASS` | 형식 O / 숫자 DRIFT |
 | gradient descent | dm = -dt/tau * dE/dm + dt/tau * F + noise | `relax()` 동일 | O |
-| 노이즈 | sqrt(2*T_wake*dt/tau) * N(0,I) 등방 가우시안 | `relax()` 동일 | O |
+| 노이즈 | sqrt(2*T_wake*dt/tau) * N(0,I) 등방 가우시안 | 같은 형식, 구형 `T_WAKE` | 형식 O / 숫자 DRIFT |
 | phi 갱신 | v_m* = 궤적분산, EMA | `relax()` 최근 궤적 var -> EMA | O |
-| 노름 보존 | ||m|| 유지 | `F.normalize(m) * norm0` | O |
+| 노름 보존 | \(\lVert m\rVert\) 유지 | `F.normalize(m) * norm0` | O |
 
 ## 3. 상수 대조
 
-| 상수 | 논문 값 | 구현 | 일치 |
+| 상수 | canonical Track-A target | 현재 구현 | 판정 |
 |------|---------|------|------|
-| portal | [4/(e^(4/3)*pi^(4/3)) * (1 - 4/(e^(4/3)*pi^(4/3)))]^2 = 0.03120 | 0.03120 | O |
-| bypass | 1/(e^(1/3)*pi^(1/3)) = 0.4892 | 0.4892 | O |
-| T_wake | [3 + 4/(e^(4/3)*pi^(4/3))*(1-...)]^-1 = 0.3148 | 0.3148 | O |
+| portal | $\delta_N^2=[s_A^2(1-s_A^2)]^2=0.0316530354$ | 구형 $0.03120$ 계열 | `CANONICAL_DRIFT` |
+| bypass | $\alpha_s^{1/3}=0.4904868132$ | 구형 $0.4892$ 계열 | `CANONICAL_DRIFT` |
+| $T_{\rm wake}$ | $D_N^{-1}=0.3146719247$ | 구형 $0.3148$ 계열 | `CANONICAL_DRIFT` |
 | r_c | pi = 3.1416 | 3.1416 | O |
-| tau | 1/|lambda_max| (스펙트럼에서 유도) | 10.0 (1/0.1) | O |
+| tau | \(1/\lvert\lambda_{\max}\rvert\) (스펙트럼에서 유도) | 10.0 (1/0.1) | O |
+
+따라서 이 절의 세 engine 계수는 구현 일치 `O`가 아니라 migration 대상이다.
+문서가 최신인 것과 runtime이 이미 이식됐다는 것은 같은 판정이 아니다.
 
 ## 4. 메모리 비교
 
@@ -154,23 +161,23 @@
 | 각성: 경로 누적 | $\int \mathcal{D}\gamma\,e^{iS}$ 대응 | `collect_sleep_batch`: teacher 생성 -> state/target 수집 | O |
 | NREM: LBO 확산 | $W \leftarrow W - \eta_{\text{nrem}} \Delta_g W$ | `smooth_weight_matrix(W, laplacian, eta)` | O |
 | NREM: 곡률 기반 가소적 업데이트 | $\text{mask}(G, \varepsilon^2)$ 상위만 통과 | `row_topk_mask(delta, active_ratio)` | O |
-| REM: 비선택 경로 재조합 | $G_{\text{rem}} = \text{random\_project}(G_{\text{pruned}}) + \sigma\epsilon$ | `residual @ proj @ proj.T / rank + noise` | O |
+| REM: 비활성 gradient proposal | $G_{\text{rem}} = \text{random\_project}(G_{\text{inactive}}) + \sigma\epsilon$ | `residual @ proj @ proj.T / rank + noise` | 형식 O / 물리 경로 식별은 Bridge |
 | 위상 비율 | Wake $69\%$, NREM $26\%$, REM $5\%$ | `phase_profile = {wake: eng.wake_ratio, nrem: eng.nrem_ratio, rem: eng.rem_ratio}` | O |
 | 가드셋 보호 | 품질 하락 시 롤백 | `guard_snapshot` + `evaluate_guard_set` + 조건부 `restore_decoder_snapshot` | O |
 
 ### 8.6 CE 상수 대조 (engine.py)
 
-| 상수 | 수식 | engine.py 값 | 일치 |
+| 상수 | canonical 수식/값 | engine.py 현재값 | 판정 |
 |---|---|---|---|
-| `_AD` | $4/(e^{4/3}\pi^{4/3})$ | `4/(e**(4/3)*pi**(4/3))` | O |
-| `PORTAL` | $(\text{\_AD}(1-\text{\_AD}))^2$ | 0.03120 | O |
-| `BYPASS` | $1/(e^{1/3}\pi^{1/3})$ | 0.4892 | O |
-| `T_WAKE` | $1/(3+\text{\_AD}(1-\text{\_AD}))$ | 0.3148 | O |
-| `active_ratio` | $\varepsilon^2$ | 0.0487 | O |
-| `struct_ratio` | $\Omega_{\text{DM}}$ | 0.2623 | O |
-| `wake_ratio` | $\Omega_\Lambda$ | 0.6891 | O |
-| `nrem_ratio` | $\Omega_{\text{DM}}$ | 0.2623 | O |
-| `rem_ratio` | $\varepsilon^2$ | 0.0487 | O |
+| `_AD` / $s_A^2$ | $4\alpha_s^{4/3}=0.2315097758$ | $4/(e^{4/3}\pi^{4/3})=0.2291575578\ldots$ | `CANONICAL_DRIFT` |
+| `PORTAL` | $\delta_N^2=0.0316530354$ | 구형 $0.03120$ 계열 | `CANONICAL_DRIFT` |
+| `BYPASS` | $\alpha_s^{1/3}=0.4904868132$ | 구형 $0.4892$ 계열 | `CANONICAL_DRIFT` |
+| `T_WAKE` | $D_N^{-1}=0.3146719247$ | 구형 $0.3148$ 계열 | `CANONICAL_DRIFT` |
+| `active_ratio` | Track-A $x$ | 0.0486382585 | manifest sync gate |
+| `struct_ratio` | $\Omega_{\text{DM}}$ | 0.2610881744 | manifest sync gate |
+| `wake_ratio` | $\Omega_\Lambda$ | 0.6902735671 | manifest sync gate |
+| `nrem_ratio` | $\Omega_{\text{DM}}$ | 0.2610881744 | manifest sync gate |
+| `rem_ratio` | Track-A $x$ | 0.0486382585 | manifest sync gate |
 
 ### 8.7 Rust 커널 대조
 
@@ -221,7 +228,9 @@
    # -> {'samples': N, 'pi_wake': .., 'pi_nrem': .., 'pi_rem': .., 'kl_to_p_star': ..}
    ```
 
-   `p^* = (0.6891, 0.2623, 0.0487)` 와의 $d_{\text{KL}}$ 가 직접 출력되고 `BrainRuntimeSnapshot` 에 영속된다 (`mode_occupancy` 필드).
+   `p^*=(0.6902735671,0.2610881744,0.0486382585)`와의
+   $d_{\text{KL}}$가 직접 출력되고 `BrainRuntimeSnapshot`에 영속된다
+   (`mode_occupancy` 필드).
 
 2. `F2` ISS ball 반경 (외부 호출):
 
@@ -233,7 +242,12 @@
 
    `mu` 는 잔차 $\|m_k - m^*\|$ 또는 $\|dm_k\|$ 로그수축률에서, `c_k_max` 는 부록 A.1 의 $C_k = \|m_k - 2 m_{k-1} + m_{k-2}\|$ 최대치에서 추정된다. 닫힌형 반경:
 
-   $$R_{\text{ball}} = \frac{C_{k,\max} \cdot \|\phi\|_\infty}{\mu \cdot \alpha_b}, \quad \alpha_b = e^{1/3}\pi^{1/3} \approx 2.044.$$
+   $$R_{\text{ball}} = \frac{C_{k,\max} \cdot \|\phi\|_\infty}{\mu \cdot \alpha_b},
+   \qquad \alpha_b:=\alpha_s^{-1/3}=2.0387907956.$$
+
+   이것이 canonical target이다. 현재 `quantum.py::ALPHA_B_DEFAULT`는 구형
+   $e^{1/3}\pi^{1/3}$이므로 그 값으로 생성된 runtime report는
+   `CANONICAL_DRIFT`다.
 
 3. `F2` 자동 측정: `reality_stone/python/reality_stone/clarus/ce_ops.py::relax` 가 매 호출 시 `hist["iss"]` 에 동일 형식의 보고를 자동 산출 (전 궤적 `delta` 곡선에서 $\mu$ 추정, `bypass_C` 에서 $C_{k,\max}$, $\phi$ 에서 $\|\phi\|_\infty$).
 
@@ -301,12 +315,12 @@ F1 자기측정 ②, F2, F3, F4 회귀 프리미티브 모두 코드 레벨 구�
 | F2 ISS ball | $\|\phi\|_\infty$ | 26.89 |
 | F1 EMA off | `active_ratio_ema` | 0.3000 (초기값 고정) |
 | F1 EMA on | `active_ratio_ema` | 0.0503 |
-| F1 target | $\varepsilon^2$ | 0.0487 |
-| F1 closure | $\|\text{EMA}_{\text{on}} - \varepsilon^2\|$ | **0.0016 (0.16% 편차)** |
+| F1 target | Track-A $x$ | 0.0486382585 |
+| F1 closure | $\lvert\text{EMA}_{\text{on}}-x\rvert$ | **0.00166 (0.166 percentage point)** |
 | F3 KL off (auto-mode) | $d_{\text{KL}}(\pi \,\|\, p^*)$ | 0.3724 |
 | F3 KL on (auto-mode) | $d_{\text{KL}}(\pi \,\|\, p^*)$ | 0.3724 |
-| F3 KL on (forced $p^*$ schedule) | $d_{\text{KL}}(\pi \,\|\, p^*)$ | $\approx 10^{-4}$ (반올림 노이즈) |
-| F3 메터 정합 | $\pi$ vs $p^*$ | (0.6900, 0.2600, 0.0500) vs (0.6891, 0.2623, 0.0487) |
+| F3 KL on (forced rounded schedule) | $d_{\text{KL}}(\pi \,\|\, p^*)$ | $2.12\times10^{-5}$ |
+| F3 메터 정합 | $\pi$ vs $p^*$ | (0.6900, 0.2600, 0.0500) vs (0.6902736, 0.2610882, 0.0486383) |
 
 ### 10.2 비교표 (기 모델 대비)
 

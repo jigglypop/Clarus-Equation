@@ -23,7 +23,14 @@
 | 모드 상관 허용치 \(\bar\rho\lesssim2.2\times10^{-3}\) | `Exact under assumptions` | 정리 4.1 |
 | 상관의 실제 크기, \(N_{\mathrm{eff}}\)의 물리값 | `Open/Experiment` | 4, 7절 |
 
-표기: \(\varepsilon^2=0.04865\), \(\sigma=1-\varepsilon^2=0.95135\), \(D_{\mathrm{eff}}=3.17776\), \(m\equiv\langle\Phi\rangle=\sigma D_{\mathrm{eff}}=3.0232\). 관측은 Planck \(\Omega_b=0.0486\pm0.0010\), 상대 \(1\sigma\) 폭 \(\delta_{\mathrm{rel}}=0.0206\).
+표기:
+\(\varepsilon^2=0.048638258516\),
+\(\sigma=1-\varepsilon^2=0.951361741484\),
+\(D_N=3.177912999513\),
+\(m\equiv\langle\Phi\rangle=\sigma D_N=3.023344845502\).
+관측 민감도 대조는 이 문서가 처음 고정한 Planck
+\(\Omega_b=0.0486\pm0.0010\), 상대 \(1\sigma\) 폭
+\(\delta_{\mathrm{rel}}=0.0205761\)을 그대로 사용한다.
 
 ## 1. 감사 대상 수집
 
@@ -65,7 +72,9 @@ $$
 \operatorname{Var}(\Phi)\le2\ln(1+\delta_{\mathrm{rel}}).
 $$
 
-Planck \(1\sigma\) 예산 \(\delta_{\mathrm{rel}}=0.0206\)을 넣으면 \(\operatorname{Var}(\Phi)\le0.0407\)이다.
+Planck \(1\sigma\) 예산
+\(\delta_{\mathrm{rel}}=0.0205761\)을 넣으면
+\(\operatorname{Var}(\Phi)\le0.0407346\)이다.
 
 증명: 05k 정리 5.3의 Jensen 하한에 의해 비율 \(\langle e^{-\Phi}\rangle/e^{-\langle\Phi\rangle}\ge1\)이고, 2차 누적량 절단에서 비율은 \(e^{\operatorname{Var}(\Phi)/2}\)이다. \(e^{\operatorname{Var}/2}\le1+\delta_{\mathrm{rel}}\)을 풀면 된다. 끝.
 
@@ -91,15 +100,24 @@ $$
 
 증명: \(\mathrm{Gamma}(k,\theta)\)의 Laplace 변환 \(\langle e^{-\Phi}\rangle=(1+\theta)^{-k}\)에 \(\theta=m/k\)를 대입하고 \(e^{-m}\)으로 나눈다. 전개 \(m-k\ln(1+m/k)=m^2/2k-m^3/3k^2+\cdots\)에 \(k=N_{\mathrm{eff}}/2\)를 넣으면 선도항 \(m^2/N_{\mathrm{eff}}\)다. 끝.
 
-**정리 3.3 (R2 배제).** \(N_{\mathrm{eff}}=D_{\mathrm{eff}}=3.17776\)이면(\(k=1.589\)) 정리 3.2의 닫힌 형태가
+**정리 3.3 (R2 배제).**
+\(N_{\mathrm{eff}}=D_N=3.1779129995\)이면
+\(k=1.5889564998\)이고 정리 3.2의 닫힌 형태가
 
 $$
-\frac{\langle e^{-\Phi}\rangle}{e^{-\langle\Phi\rangle}}=e^{1.330}=3.78
+\frac{\langle e^{-\Phi}\rangle}{e^{-\langle\Phi\rangle}}
+=e^{1.33007426}
+=3.78132418
 $$
 
-을 준다. 참 생존분율은 \(3.78\times0.04865=0.184\)가 되어 관측 \(0.0486\pm0.0010\)에서 약 \(135\sigma\) 벗어난다.
+을 준다. 참 생존분율은
+\(3.78132418\times0.0486382585=0.183917023\)이 되어 관측
+\(0.0486\pm0.0010\)에서 \(135.317\sigma\) 벗어난다.
 
-증명: 수치 대입. \(m/k=1.9027\), \(k\ln(1+m/k)=1.6932\), \(m-1.6932=1.3300\). 끝.
+증명: 수치 대입.
+\(m/k=1.902723483\),
+\(k\ln(1+m/k)=1.693270586\),
+\(m-1.693270586=1.330074260\). 끝.
 
 해석:
 

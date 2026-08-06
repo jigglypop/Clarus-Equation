@@ -11,7 +11,23 @@
 
 핵심 결론:
 
-> 현재 실행 코드는 우주론 시뮬레이터가 아니라 finite PreEq/Gibbs 확률 도구와 fraction-layer 감사 도구다. \(\Omega_b\)와 유사한 숫자는 CE bootstrap 평균장 식별에서 나오지만, 최신 관측 우주론과 경쟁하려면 Friedmann background, perturbation growth, CMB/BAO/SNe likelihood, dark matter particle/structure likelihood가 필요하다. 현재 단계의 올바른 판정은 "내부 수학 감사는 강하지만, 물리 모델 검증은 아직 Open"이다.
+> 현재 checkout은 finite PreEq/Gibbs·fraction-layer 감사에 더해 05o의
+> Friedmann background, linear-growth ODE와 DESI DR2 compressed-BAO
+> covariance gate까지 구현한다. canonical density를 명시 주입한 두 고정
+> background 패키지는 모두 `REJECT`다. 아직 없는 것은 precision
+> recombination/Boltzmann perturbation, CMB+BAO+SNe joint likelihood,
+> dark-matter particle·structure likelihood다. 따라서 내부 수학과
+> forward-model 계산은 재현되지만 경쟁 우주론의 물리 검증은 닫히지 않았다.
+
+> **2026-08-06 이중 snapshot 계약:** 이 문서의
+> `constants.py` 표는 checkout runtime에 남아 있는 legacy fixture
+> \(0.0487,0.2623,0.6891\)를 정확히 감사한다. 원고 canonical manifest는
+> \((0.0486382585,0.2610881744,0.6902735671)\)이며, 이를 구 runtime API에
+> 명시 주입한 DESI DR2 결과는 외부 \(r_d=147.09\,{\rm Mpc}\)에서
+> \(\chi^2=40.20145,\ p=1.2828\times10^{-4}\), EH-hybrid
+> \(r_d=151.50523\,{\rm Mpc}\)에서
+> \(\chi^2=41.19455,\ p=8.8602\times10^{-5}\)로 모두 `REJECT`다.
+> legacy 상수나 무인자 runner 출력을 현행 원고 수치로 재사용하지 않는다.
 
 현재 판정:
 
@@ -23,8 +39,8 @@
 | \(\Omega_b\approx\varepsilon^2\) 물리 식별 | `Phenomenology/Bridge` | 관측 likelihood에서 유도되지 않고 평균장 식별에 의존 |
 | \(N_{\mathrm{eff}}\ge445\), \(\bar\rho\le2.2\times10^{-3}\) | `Audit/Exact under assumptions` | \(\Omega_b\) 오차 예산과 Gaussian-mode benchmark의 필요조건 |
 | 암흑물질 직접탐색 설명력 | `Not implemented` | WIMP/axion/sterile-neutrino 질량, 산란단면, detector likelihood 부재 |
-| ΛCDM 긴장 설명력 | `Not implemented` | \(H_0\), \(S_8\), \(w_0w_a\), growth likelihood 부재 |
-| 현대 우주론과 경쟁하는 예측 모델 | `Open` | 독립 관측량을 동시에 fit/predict하는 forward model 없음 |
+| 고정-background·growth·DESI compressed BAO | `Tooling/Phenomenology/REJECT` | 05o의 \(H(z)\), distance, linear \(D(a)\), \(S_8\), full-cov compressed BAO 구현; 두 canonical package 모두 기각 |
+| 현대 우주론과 경쟁하는 예측 모델 | `Open` | CMB·SN·full-shape·lensing을 같은 parameter vector로 공동 fit/predict하는 likelihood 없음 |
 
 ## 1. 코드가 실제로 닫은 표면
 
@@ -76,10 +92,12 @@
 `engine.py`는 이 비율을 active/struct/background partition과 decoder candidate ratio에 사용한다. `runtime.py`는 WAKE/NREM/REM occupancy를 \((\Omega_\Lambda,\Omega_{\mathrm{DM}},\Omega_b)\) simplex에 대응시켜 KL을 계산한다. `ce_euler.py`는
 
 $$
-D_{\mathrm{eff}}=3+\sin^2\theta_W(1-\sin^2\theta_W)
+D_{\mathrm{eff}}=3+s_A^2(1-s_A^2)
 $$
 
-형태의 effective dimension을 rotary base 등에 사용한다.
+형태의 effective dimension을 rotary base 등에 사용한다. 여기서 현행
+\(s_A^2:=4\alpha_s^{4/3}\)는 CE 등록 출력이며 물리적 약혼합각의 특정
+scheme과 동일시하지 않는다.
 
 이것은 코드 아키텍처에서 우주론 비율을 은유적/구조적 hyperparameter로 쓰는 것이며, CMB 또는 대규모구조 관측을 forward-modeling하는 것이 아니다.
 
@@ -162,10 +180,10 @@ CE 코드와의 비교:
 
 | 관측 항목 | 현대 연구 지위 | 현재 코드의 대응 |
 |---|---|---|
-| \(\Omega_bh^2\) | CMB acoustic peaks와 BBN 일관성으로 정밀 측정 | \(\Omega_b\) 자체에 대응하는 `ACTIVE_RATIO`만 있음. \(h^2\) 또는 acoustic physics 없음 |
-| \(\Omega_ch^2\) | CMB lensing/acoustic structure로 정밀 측정 | `STRUCT_RATIO`가 \(\Omega_{\mathrm{DM}}\) 대응으로 고정되어 있으나 perturbation physics 없음 |
-| \(H_0\) | CMB+BAO와 local distance ladder tension 지속 | 코드 대응 없음 |
-| \(\sigma_8/S_8\) | CMB와 weak lensing/cluster 사이 probe-dependent tension | 코드 대응 없음 |
+| \(\Omega_bh^2\) | CMB acoustic peaks와 BBN 일관성으로 정밀 측정 | canonical \(\Omega_b\)와 외부 \(H_0\)를 background에 주입 가능; recombination/acoustic likelihood는 없음 |
+| \(\Omega_ch^2\) | CMB lensing/acoustic structure로 정밀 측정 | canonical \(\Omega_{\mathrm{DM}}\)를 background·growth에 주입 가능; Boltzmann perturbation은 없음 |
+| \(H_0\) | CMB+BAO와 local distance ladder tension 지속 | 외부 \(H_0\) 입력과 사후 readout diagnostic 구현; 독립 유도·joint likelihood는 없음 |
+| \(\sigma_8/S_8\) | CMB와 weak lensing/cluster 사이 probe-dependent tension | GR/CPL linear growth 구현, \(\sigma_{8,0}\)는 외부 입력; shear likelihood는 없음 |
 | \(N_{\mathrm{eff}}\) | CMB의 relativistic species \(N_{\mathrm{eff}}\)와 별개 | CE의 \(N_{\mathrm{eff}}\)는 \(\Phi\) mode count이므로 표준 cosmological \(N_{\mathrm{eff}}\)와 혼동 금지 |
 
 따라서 CE의 \(\Omega_b\) 숫자 대응은 CMB likelihood의 압축 결과와 비교될 수는 있지만, 그 likelihood를 재현하거나 대체하지 않는다.
@@ -178,12 +196,14 @@ CE 코드와의 비교:
 
 | DESI 쟁점 | 필요한 모델 요소 | 현재 코드 상태 |
 |---|---|---|
-| BAO distance-redshift relation | \(H(z)\), \(D_A(z)\), sound horizon \(r_d\) | 없음 |
-| \(w_0,w_a\) dark-energy equation of state | \(w(a)=w_0+w_a(1-a)\), Friedmann integration | 없음 |
+| BAO distance-redshift relation | \(H(z)\), \(D_A(z)\), sound horizon \(r_d\) | 구현; 외부 \(r_d\)와 EH-hybrid를 provenance로 분리 |
+| \(w_0,w_a\) dark-energy equation of state | \(w(a)=w_0+w_a(1-a)\), Friedmann integration | 조건부 CPL forward map 구현; \(w_0,w_a\)의 CE 유도는 없음 |
 | CMB+BAO joint likelihood | covariance, nuisance, parameter posterior | 없음 |
-| \(\Omega_\Lambda\) 값 | `BACKGROUND_RATIO=0.6891` | 고정 비율. \(w=-1\) 또는 동적 \(w(a)\) 모델 아님 |
+| \(\Omega_\Lambda\) 값 | canonical \(0.6902735671\) | boundary output; 절대 scale과 동적 stress는 별도 |
 
-결론: DESI의 최신 긴장은 CE 코드가 현재 설명하거나 반박할 수 있는 대상이 아니다. CE가 이 축에 들어가려면 `BACKGROUND_RATIO`를 넘어서 \(H(z)\), \(w(z)\), BAO observable을 산출해야 한다.
+결론: CE는 이제 \(H(z)\), \(w(z)\), BAO observable을 산출해 고정 패키지를
+직접 기각할 수 있다. 그러나 같은 DR2로 맞춘 scale ablation은 예측이 아니며,
+CMB·SN와 nuisance를 포함한 joint explanation도 아니다.
 
 ### 3.3 \(S_8\), weak lensing, structure growth
 
@@ -194,12 +214,15 @@ CE 코드와의 비교:
 | \(S_8\) 구성요소 | 현재 코드 대응 |
 |---|---|
 | matter power spectrum \(P(k,z)\) | 없음 |
-| growth factor \(D(z)\), \(\sigma_8\) | 없음 |
+| growth factor \(D(z)\), \(\sigma_8\) | GR/CPL 조건부 \(D(z)\) 구현; \(\sigma_{8,0}=0.811\)은 외부 입력 |
 | lensing kernel, shear two-point function | 없음 |
 | baryonic feedback/systematics | 없음 |
-| \(\Omega_m=\Omega_b+\Omega_c\) | 비율 상수의 합으로만 가능, dynamics 없음 |
+| \(\Omega_m=\Omega_b+\Omega_c\) | canonical boundary로 background·linear-growth ODE 실행 |
 
-따라서 현재 CE/PreEq 구현은 \(S_8\) tension을 판별하지 못한다. 다만 05m의 \(\Phi\) mode 상관 상한은 "분산/상관이 관측 정밀도에 의해 제한된다"는 철학적으로 유사한 감사 구조를 갖지만, 이는 \(S_8\)의 matter clustering amplitude와는 다른 양이다.
+현재 조건부 출력은 \(S_8(0)=0.824042\)지만 \(\sigma_{8,0}\)가 외부
+normalization이고 lensing kernel·baryonic systematics가 없으므로
+\(S_8\) tension 해결로 세지 않는다. 05m의 \(\Phi\) mode 상관 상한도
+\(S_8\)의 matter clustering amplitude와는 다른 양이다.
 
 ### 3.4 Euclid 상태
 
@@ -300,10 +323,10 @@ CE의 \(\varepsilon^2\)는 \(\Omega_b\) 값 하나와 비교된다. 아직 \(\Om
 
 | 항목 | 현대 쟁점 | 현재 CE 상태 |
 |---|---|---|
-| dark energy | \(w=-1\)인지, \(w_0w_a\) 동적인지 | \(\Omega_\Lambda\) 상수만 있음 |
+| dark energy | \(w=-1\)인지, \(w_0w_a\) 동적인지 | CPL forward map은 구현; \(w_0,w_a\)의 CE 작용 유도 없음 |
 | dark matter | cold/warm/fuzzy/SIDM/particle model | density ratio만 있음 |
-| growth | \(\sigma_8\), \(S_8\), lensing tension | 없음 |
-| expansion | \(H_0\) tension, BAO distance ladder | 없음 |
+| growth | \(\sigma_8\), \(S_8\), lensing tension | linear growth와 \(S_8\) 계산; \(\sigma_{8,0}\) 외부 입력, lensing likelihood 없음 |
+| expansion | \(H_0\) tension, BAO distance ladder | distance/BAO gate 구현; canonical fixed package `REJECT`, joint ladder 없음 |
 
 따라서 세 비율의 합이 현대 우주론 파라미터와 유사하다는 사실은 출발점이지 완결된 비교가 아니다.
 
@@ -326,9 +349,9 @@ CE의 \(\varepsilon^2\)는 \(\Omega_b\) 값 하나와 비교된다. 아직 \(\Om
 | 분야 | 최신 연구 요지 | CE/PreEq 현재 지위 | 판정 |
 |---|---|---|---|
 | Planck/ACT/SPT CMB | \(\Omega_bh^2,\Omega_ch^2\) 정밀, \(\Lambda\)CDM 대체로 견고 | \(\Omega_b,\Omega_{\mathrm{DM}},\Omega_\Lambda\) 유사 비율 상수 | 숫자 비교만 가능 |
-| DESI DR2 | 동적 dark energy \(w_0w_a\) 선호 가능성 \(3.1\sigma\) 내외 | \(w(z)\), BAO likelihood 없음 | 비교 불가 |
-| \(H_0\) tension | CMB/BAO 낮은 \(H_0\), local 높은 \(H_0\) | \(H_0\) 없음 | 비교 불가 |
-| \(S_8\) tension | DES Y6 등 일부 low \(S_8\), probe-dependent systematic | growth/lensing 없음 | 비교 불가 |
+| DESI DR2 | 동적 dark energy \(w_0w_a\) 선호 가능성 \(3.1\sigma\) 내외 | background/CPL 및 DR2 compressed-BAO covariance 구현; canonical fixed packages는 `REJECT` | 고정 background 반증 완료, joint 설명은 미완 |
+| \(H_0\) tension | CMB/BAO 낮은 \(H_0\), local 높은 \(H_0\) | 외부 \(H_0\) 입력과 post-hoc source-role readout | 기술 진단만 가능, 독립 예측 아님 |
+| \(S_8\) tension | DES Y6 등 일부 low \(S_8\), probe-dependent systematic | conditional growth와 외부 \(\sigma_{8,0}\); lensing 없음 | 조건부 계산만 가능 |
 | Euclid Q1/DR1 | Q1은 비-cosmology quick release, DR1이 향후 핵심 | lensing/clustering 없음 | 향후 benchmark |
 | WIMP direct detection | LZ/XENONnT/PandaX 미검출, \(10^{-47}\mathrm{cm^2}\)대 제한 | mass/cross-section/recoil 없음 | 비교 불가 |
 | neutrino fog | \(^{8}\mathrm B\) CEvNS가 low-mass DM 배경으로 부상 | CEvNS 없음 | 비교 불가 |
@@ -341,8 +364,8 @@ CE의 \(\varepsilon^2\)는 \(\Omega_b\) 값 하나와 비교된다. 아직 \(\Om
 
 1. **용어 분리:** `ACTIVE_RATIO`, `STRUCT_RATIO`, `BACKGROUND_RATIO`를 코드 주석에서 "cosmology-inspired fixed ratios"와 "observational cosmology prediction"으로 명확히 구분한다.
 2. **\(\Phi\) sampler:** 05m의 \(\Phi\) mode decomposition을 실제 finite model로 구현해 \(\operatorname{Var}(\Phi)\), \(N_{\mathrm{eff}}\), \(\bar\rho\)를 산출한다.
-3. **background cosmology toy:** \((\Omega_b,\Omega_c,\Omega_\Lambda,H_0,w_0,w_a)\)를 받아 \(H(z)\), distance modulus, BAO distance를 계산하는 최소 forward model을 만든다.
-4. **likelihood boundary:** Planck/DESI/SH0ES/DES Y6 같은 관측을 직접 fit하기 전, 공개 likelihood 대신 compressed constraints를 읽는 thin adapter를 만든다.
+3. **background 정밀화:** 구현된 \((\Omega_b,\Omega_c,\Omega_\Lambda,H_0,w_0,w_a)\) forward model을 radiation, neutrino, recombination/Boltzmann 계층으로 확장한다.
+4. **likelihood boundary 확장:** 구현된 DESI compressed-BAO adapter의 provenance를 유지하면서 CMB/SN/DES Y6 nuisance와 cross-covariance를 포함한 joint adapter를 추가한다.
 5. **dark matter split:** \(\Omega_{\mathrm{DM}}\) ratio와 particle dark matter model을 분리한다. WIMP/axion/FDM/WDM 중 하나를 선택하지 않으면 직접탐색/구조형성 비교는 불가능하다.
 6. **README 판정 강화:** 우주론 비율은 현재 `Phenomenology/Bridge`이며, dark matter particle physics는 `Open/Not implemented`라고 명시한다.
 
@@ -371,6 +394,8 @@ $$
 \text{finite Gibbs/PreEq 수학}
 \;+\;
 \text{fraction-layer 감사}
+\;+\;
+\text{conditional background/growth와 DESI compressed-BAO gate}
 }
 $$
 
@@ -378,9 +403,9 @@ $$
 \boxed{
 \text{현재 코드가 닫지 않은 것}
 =
-\text{CMB/BAO/SNe likelihood}
+\text{precision CMB와 CMB/BAO/SNe joint likelihood}
 \;+\;
-\text{structure growth}
+\text{nonlinear structure와 lensing likelihood}
 \;+\;
 \text{dark matter particle/detector physics}
 }
@@ -388,6 +413,12 @@ $$
 
 따라서 CE/PreEq의 현재 우주론 지위는 다음 한 문장으로 정리된다.
 
-> \(\Omega_b\), \(\Omega_{\mathrm{DM}}\), \(\Omega_\Lambda\)와 닮은 비율을 내부 방정식과 상수로 갖고 있고, \(\Omega_b\) 평균장 식별의 수학적 필요조건을 잘 감사하고 있지만, 현대 우주론과 암흑물질 연구 결과를 설명하거나 경쟁하는 관측 물리 모델은 아직 구현되어 있지 않다.
+> canonical \(\Omega_b,\Omega_{\mathrm{DM}},\Omega_\Lambda\)를 조건부
+> Friedmann/growth/BAO forward model로 내렸고 DESI DR2 compressed gate에서
+> 두 고정 background를 기각했다. 그러나 precision CMB·SN·lensing과 joint
+> nuisance likelihood가 없으므로 현대 관측 우주론을 설명하는 완결 모형으로
+> 승격되지는 않았다.
 
-이 결론은 부정적이라기보다 경계선이다. 다음 병목은 더 많은 상수를 맞추는 것이 아니라, \(\Phi\)의 분산/상관을 실제로 계산하고, expansion/growth/detector observable로 내려가는 forward model을 만드는 것이다.
+다음 병목은 더 많은 상수를 맞추는 것이 아니라, \(\Phi\)의 분산/상관을
+실제 계산하고 이미 구현된 expansion/growth observable을
+recombination·lensing·joint likelihood까지 확장하는 것이다.

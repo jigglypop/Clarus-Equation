@@ -25,8 +25,8 @@
 | $G=(V,E)$ | cell substrate 그래프 (가능한 모든 cell과 연결) | 이산 구조 | 정의 (guard `server/cells/`) |
 | $L_G = D - A$ | combinatorial graph Laplacian, $A$ 인접, $D$ 차수 | 무차원 | `Exact` |
 | $\Delta_G$ | 정규화 라플라시안 $D^{-1/2}L_G D^{-1/2}$ | 무차원 | `Exact` |
-| $\phi \in \mathbb R^{|V|}$ | substrate 위 활성 잠재장 (cell별 1성분) | 무차원 (정규화) | 정의 |
-| $s \in \mathbb R^{|V|}$ | field source — 이벤트/관찰의 cell별 주입 | 무차원 | 정의 |
+| $\phi \in \mathbb R^{\lvert V\rvert}$ | substrate 위 활성 잠재장 (cell별 1성분) | 무차원 (정규화) | 정의 |
+| $s \in \mathbb R^{\lvert V\rvert}$ | field source — 이벤트/관찰의 cell별 주입 | 무차원 | 정의 |
 | $\tau$ | 디퓨전 가상시간 (오케스트레이션 축, 물리시간 아님) | 무차원 | 보조좌표 |
 | $\pi$ | 활성 우선순위 readout (DAGlet 노드 선택 측도) | 무차원 확률 | `Selection` |
 

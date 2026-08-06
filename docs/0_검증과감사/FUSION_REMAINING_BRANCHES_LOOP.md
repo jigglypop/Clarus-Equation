@@ -31,7 +31,7 @@
 | scalar 질량 | 필요한 $g_N$ | Higgs-mixing 등가값 |
 |---|---:|---:|
 | 0, 낙관적 하한 | `0.00569352` | `4.97583` |
-| 29.64757 MeV | `0.0174265` | `15.23` |
+| 29.6991596174 MeV | `0.0174469513` | `15.2477` |
 
 등록 질량에서 결합은 perturbative이지만, 이것만으로 물리적 허용을 뜻하지 않는다.
 현재 정본 portal 작용에는 직접 연산자가 없으며 Higgs mixing으로도 만들 수 없다.
@@ -48,12 +48,12 @@ g_N\simeq f_N\frac{m_N}{\Lambda}
 로 matching하면 등록 질량 해는
 
 \[
-\Lambda_{\rm req}=16.1525\ {\rm GeV},
+\Lambda_{\rm req}=16.1336\ {\rm GeV},
 \qquad
-\frac{\Lambda_{\rm req}}v=0.06566.
+\frac{\Lambda_{\rm req}}v=0.065584.
 \]
 
-이는 scalar 질량보다 545배 높아 저에너지 수치 EFT의 scale 분리는 있지만,
+이는 scalar 질량보다 543.23배 높아 저에너지 수치 EFT의 scale 분리는 있지만,
 electroweak 대칭 위에서 적분해 낸 무거운 completion으로 보기에는 $\Lambda<v$다.
 따라서 UV completion을 공급하지 않은 채 gauge-invariant 성공으로 세지 않는다.
 
@@ -62,7 +62,7 @@ electroweak 대칭 위에서 적분해 낸 무거운 completion으로 보기에�
 
 \[
 \frac{|\Delta\mathcal E|}{n_0}
-=\frac{g_N^2n_0}{2m_\Phi^2}=0.212369\ {\rm MeV/nucleon}
+=\frac{g_N^2n_0}{2m_\Phi^2}=0.212129\ {\rm MeV/nucleon}
 \]
 
 도 작지 않다. 이는 곧바로 배제를 증명하는 값은 아니지만 기존 NN phase shift와
@@ -71,13 +71,14 @@ coupling은 실제로 neutron scattering·원자·뮤온 계에서 독립 제약
 ([neutron--nucleus 원 논문](https://doi.org/10.1016/0370-2693(75)90073-8),
 [model-independent scalar coupling 분석](https://arxiv.org/abs/1605.04612)).
 
-현재 저장소에는 동일 proton/neutron coupling, 29.65 MeV에서의 NN-scattering,
+현재 저장소에는 동일 proton/neutron coupling, 29.6991596174 MeV에서의 NN-scattering,
 nuclear-binding, rare-decay joint likelihood가 없다. 그러므로 이 연산자는
 `LOW_ENERGY_MATH_SOLUTION_UV_AND_EXPERIMENTAL_GATES_FAIL_CLOSED`다.
 
 후속 [저에너지 핵산란 루프](FUSION_DIRECT_SCATTERING_LOOP.md)는 자유 Born
-$np$ scattering-length 이동 `-0.00509 fm`과 Hulthén deuteron 이동 `-2.077 keV`를
-얻었다. 보고된 triplet/singlet 산란길이 오차의 각각 3.39/1.18배 규모이므로
+$np$ scattering-length 이동 `-0.00508459 fm`과 Hulthén deuteron 이동
+`-2.08101 keV`를 얻었다. 보고된 triplet/singlet 산란길이 오차의 각각
+3.3897/1.1825배 규모이므로
 무시할 수 있다는 gate는 실패하지만, strong distorted-wave와 few-body 재적합이
 없어 exclusion도 아직 유도하지 않는다.
 
@@ -113,22 +114,23 @@ a_{\rm rel}=\frac{q_{\rm eff}E_0}{\mu\omega^2}
 
 ## 4. CE scalar 주파수와 source 장부
 
-29.64757 MeV scalar의 각주파수는 $4.5043\times10^{22}$ rad/s이고 양자에너지는
-29,647.57 keV다. published control의 1 keV ceiling보다 29,647.57배 높다.
+29.6991596174 MeV scalar의 각주파수는 $4.51210\times10^{22}$ rad/s이고
+양자에너지는 29,699.1596 keV다. published control의 1 keV ceiling보다
+29,699.1596배 높다.
 
 같은 $10^{16}$ V/m electromagnetic 대조군을 이 주파수에 대입하면 상대 quiver는
 
 \[
-a_{\rm rel}=7.8476\times10^{-8}\ {\rm fm}
+a_{\rm rel}=7.82036\times10^{-8}\ {\rm fm}
 \]
 
 뿐이다. 핵반경 3.24 fm quiver에는
 
 \[
-E_0=4.12865\times10^{23}\ {\rm V/m}
+E_0=4.14303\times10^{23}\ {\rm V/m}
 \]
 
-가 필요하고 대응 EM 에너지밀도는 약 $7.55\times10^{35}\,\mathrm{J/m^3}$다.
+가 필요하고 대응 EM 에너지밀도는 약 $7.599\times10^{35}\,\mathrm{J/m^3}$다.
 이 계산은 scalar를 photon으로 동일시하지 않는다. 오히려 electromagnetic control을
 CE source로 대체할 수 없음을 보이는 주파수 대조다.
 
@@ -140,7 +142,7 @@ pump work, decay/backreaction과 scalar Floquet D--T amplitude가 없으므로
 
 ## 5. Lawson·power·ICF 전파
 
-허용 정적 branch의 열반응률 증가율은 $6.18129\times10^{-10}$이므로 Lawson
+허용 정적 branch의 열반응률 증가율은 $6.16679\times10^{-10}$이므로 Lawson
 $n\tau$ 감소율도 사실상 같은 크기다. Higgs-비례 모델계열 전체의 질량 0·unit
 mixing 상한은 $4.01944\times10^{-4}$다.
 
@@ -181,3 +183,13 @@ uv --cache-dir .uv-cache run python `
 uv --cache-dir .uv-cache run --extra dev python -m pytest `
   tests/test_fusion_remaining_branches_loop.py -q
 ```
+
+최신 canonical 질량을 기존 solver 경로에 주입한 재계산 명령은 다음과 같다.
+
+```powershell
+.\.venv\Scripts\python.exe -c "import reality_stone.clarus.fusion_equation_iteration_loop as fe; import reality_stone.clarus.fusion_remaining_branches_loop as rb; m=29.69915961743591; fe.DEFAULT_SCALAR_MASS_MEV=m; rb.REGISTERED_SCALAR_MASS_MEV=m; fe.current_fusion_equation_iteration_report.cache_clear(); print(rb.current_fusion_remaining_branches_report().to_dict())"
+```
+
+핵심 출력은 `g_N=0.01744695128447136`, `Lambda_req=16.133570834265605 GeV`,
+`omega=4.51209664396115e22 rad/s`, `E_nuclear-quiver=4.143030018961213e23 V/m`다.
+EM control과 scalar source가 같지 않다는 판정 및 모든 physical gate `False`는 유지된다.

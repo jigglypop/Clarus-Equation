@@ -5,6 +5,11 @@
 실행: `examples/physics/fusion_equation_iteration_gate.py`  
 테스트: `tests/test_fusion_equation_iteration_loop.py`
 
+> 2026-08-06 canonical override: 이 문서의 scalar/portal 행은
+> \(m_{\rm light}=29.6991596\,\mathrm{MeV}\)와 direct
+> \(\mathrm{BR}_{\rm inv}<0.107\)으로 재평가했다. 위 실행 코드의 기본
+> fixture는 구 snapshot이므로 현행 acceptance runner가 아니다.
+
 ## 1. 성공 조건
 
 이 루프는 식을 바꾸어 수치만 크게 만드는 방식이 아니라 다음 조건을 동시에
@@ -31,8 +36,9 @@ V_1(r)=-\frac{g_{\Phi NN}^2}{4\pi}
 \frac{\hbar c}{r}e^{-m_\Phi r/(\hbar c)}.
 \]
 
-공급 상한 $|\sin\theta|=0.0038$과 $m_\Phi=29.64757$ MeV에서 핵반경의
-인력/Coulomb 비는 $7.60256\times10^{-10}$이다. deuteron과 triton의 coherent
+공급 상한 $|\sin\theta|=0.0038$과 현행
+$m_{\rm light}=29.6991596$ MeV에서 핵반경의
+인력/Coulomb 비는 $7.59613\times10^{-10}$이다. deuteron과 triton의 coherent
 point-nucleus scalar charge를 각각 2와 3으로 두어 $A_DA_T=6$을 포함한 낙관적
 상한이다. 유한 핵 form factor는 1 이하이므로 이 근사는 효과를 과소평가하지
 않는다. 에너지별 WKB와 열평균까지
@@ -40,7 +46,7 @@ point-nucleus scalar charge를 각각 2와 3으로 두어 $A_DA_T=6$을 포함�
 
 \[
 \frac{\Delta\langle\sigma v\rangle}{\langle\sigma v\rangle}
-=6.18129\times10^{-10}.
+=6.16679\times10^{-10}.
 \]
 
 즉 식은 정상 작동하지만 공학 효과는 없다.
@@ -87,13 +93,14 @@ V_2(r)=-\frac{C_N^2m_\Phi}{32\pi^3r^2}K_1(2m_\Phi r),
 V_2(r)\longrightarrow-\frac{C_N^2}{64\pi^3r^3}.
 \]
 
-Higgs invisible-width 공급 상한에서 얻은
-$|\lambda_{HP}|=0.005110743$을 사용하면 결과는 다음과 같다.
+PDG 2026의 ATLAS direct
+\(\operatorname{BR}_{\rm inv}<0.107\)을 fixed-light stress-test에서 역산한
+$|\lambda_{HP}|=0.00504779076$을 사용하면 결과는 다음과 같다.
 
 | 분기 | $V/V_C$ at $r_N$ | 열반응률 증가율 |
 |---|---:|---:|
-| 29.65 MeV 두-scalar | `2.55491e-17` | `3.83348e-18` |
-| 질량 0 상한 | `5.19443e-17` | `2.02183e-17` |
+| 29.6991596 MeV 두-scalar | `2.48554e-17` | `3.72520e-18` |
+| 질량 0 상한 | `5.06726e-17` | `1.97233e-17` |
 
 따라서 정본 $Z_2$ 식도 계산은 닫히지만 공학 목표를 실패한다. 이 결과는
 point-nucleon, 저운동량 Higgs 적분, 장거리 두-scalar cut의 조건부 EFT
@@ -136,7 +143,7 @@ control이며 완전한 핵 R-matrix 계산으로 과장하지 않는다.
 turning point의 수치 spike를 막기 위해
 $r=r_N+(r_C-r_N)\sin^2\vartheta$로 변수변환했다. 공급 mixing 분기의 증가율은
 `121×601`, `181×1001`, `361×4001` 에너지×방사 격자에서 각각
-`6.181088e-10`, `6.181294e-10`, `6.181505e-10`으로 수렴한다.
+`6.166589e-10`, `6.166795e-10`, `6.167004e-10`으로 수렴한다.
 
 ## 6. 될 때까지 역산한 새 식
 
@@ -152,8 +159,9 @@ $r=r_N+(r_C-r_N)\sin^2\vartheta$로 변수변환했다. 공급 mixing 분기의 
 g_N^{\rm req}=5.69352\times10^{-3}.
 \]
 
-이 값은 질량 0의 낙관적 하한이다. 등록 질량 29.64757 MeV에서 같은 1% 목표를
-다시 풀면 $g_N=0.0174265$, Higgs-mixing 등가값 약 15.23이 필요하다.
+이 값은 질량 0의 낙관적 하한이다. 현행 light 질량 29.6991596 MeV에서
+같은 1% 목표를 다시 풀면 \(g_N=0.01744695\), Higgs-mixing 등가값
+약 \(15.2477\)이 필요하다.
 
 질량 0 해를 Higgs-비례 식으로 환산한 mixing은
 

@@ -235,7 +235,7 @@ Euler-Lagrange 등호 \(\nabla S=0\)에는 자연스러운 defect가 둘 있다.
 
 | defect | zero set | manifest |
 |---|---|---|
-| \(\delta_1=|\nabla S|\) | 모든 critical point | critical set 전체로 농축 |
+| \(\delta_1=\lvert\nabla S\rvert\) | 모든 critical point | critical set 전체로 농축 |
 | \(\delta_2=S-\inf S\) | minimizer만 | minimizer로 농축 |
 
 같은 "등호"에서 출발해도 defect 선택이 manifest를 바꾼다(이번에는 zero set 자체가 다르다). CE가 \(E_{\mathrm{fold}}=W-W_{\min}\), 즉 \(\delta_2\) 계열을 채택한 것은 `Selection`이며, 05i 정리 4.2가 그 선택을 scaled Brownian prior의 LDP rate로 정당화한 것이다.

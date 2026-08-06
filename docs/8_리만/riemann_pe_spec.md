@@ -1,152 +1,196 @@
-# Riemann Surface Positional Encoding 정밀 사양
+# Log-Mellin positional encoding: Riemann-zero frequency 사양
 
-## 0. 전제
+## 0. 이름과 범위
 
-리만 가설(Riemann Hypothesis)은 공학적 axiom으로 채택한다.
+이 모듈은
 
-> ζ(s)의 모든 비자명 영점은 critical line Re(s) = 1/2 위에 있다.
+\[
+\theta_k(p)=\nu_k\log(1+p),
+\qquad \nu_k:=\frac{\gamma_k}{\gamma_0}
+\]
 
-따라서 영점은 s_n = 1/2 + i γ_n의 형태이며, {γ_n}은 Montgomery-Dyson 추측에 의해
-GUE(Gaussian Unitary Ensemble) 통계를 따르는 "무작위인 동시에 구조적인" 수열이다.
-처음 100개의 γ_n은 Titchmarsh / Odlyzko 표에서 가져와 `RIEMANN_ZEROS_IM`에 하드코딩한다.
-n > 100은 Riemann-von Mangoldt 점근식 γ_n ≈ 2π n / log n으로 외삽한다.
+인 rotary positional encoding이다. 복소 로그의 multi-sheet analytic
+continuation을 계산하지 않으므로 수학적으로 “Riemann surface 위의
+attention”이라고 부르지 않는다. Riemann zeta zero ordinate를 frequency
+bank로 선택한 **Log-Mellin rotary encoding**이 정확한 설명이다.
 
-본 사양은 이 axiom 위에서 attention의 positional encoding을
-**Riemann surface (multi-sheet 복소 평면)** 위의 회전으로 재구성한다.
+## 1. zero 자료
 
-## 1. 동기 — 왜 평면(surface)이 필요한가
+유한 목록의 \(\gamma_k\)는 출처와 검증 정밀도를 가진 table에서 읽는다.
+각 listed zero가 critical line 위에 있음을 독립 검증한 범위에서는 전체
+Riemann hypothesis를 가정할 필요가 없다.
 
-기존 `RiemannRotaryAttention`은 RoPE와 동일한 prescription을 사용한다.
+검증 범위를 넘는 항은 approximate frequency로 저장하고 실제 zero와
+구분한다. RH는 모든 비자명 영점에 관한 추가 conjecture이며, GUE spacing은
+RH와 별개의 더 강한 통계 conjecture다. 둘을 모듈의 보장조건으로 쓰지 않는다.
 
-    inv_freq_k = 1 / γ_k
-    θ(p, k)    = p · inv_freq_k
+현재 backend가 회전과 amplitude에 실제로 넣는 값은 raw ordinate가 아니라
 
-이는 평면(circle) 위의 회전이며, 다음 두 가지 한계가 있다:
+\[
+\nu_k=\frac{\gamma_k}{\gamma_0},\qquad
+a_k=\frac{1}{\tfrac12+i\nu_k}
+\]
 
-1. **단일 시트(single-sheet)**: θ가 2π를 넘어가면 정보가 wrap-around로 사라진다.
-   같은 phase인 두 위치를 attention이 구분할 수 없다.
-2. **선형 시간 lift**: 위치 p가 선형으로 들어간다.
-   따라서 sequence length가 N → kN으로 늘어나면 phase도 k배 늘어나
-   학습된 frequency 분포가 깨진다(RoPE의 long-context 문제와 동일).
+이다. 따라서 \(a_k\)는
+\(1/(\tfrac12+i\gamma_k)\)인 zeta explicit-formula coefficient가 아니라
+정규화된 design weight다. raw-number-theory reference mode를 따로 만들 때만
+\(\nu_k=\gamma_k\)로 둔다.
 
-Riemann surface는 이 두 문제를 동시에 해결한다.
+## 2. canonical 좌표와 회전
 
-- **Multi-sheet**: log z는 단일값이 아니라 z = r e^{iθ} 위에서 무한 시트를 갖는다.
-  sheet index를 명시적으로 유지하면 phase가 wrap되어도 정보가 보존된다.
-- **Logarithmic lift**: 자연 좌표 τ = log(1 + p)는 multiplicative scale에 대해
-  invariant하다(kp ↦ τ + log k). Sequence length의 power-law 변화에도 안정적이다.
+모든 관련 문서는
 
-## 2. 사양
+\[
+\tau_p=\log(1+p),\qquad
+\Delta_{ij}=\tau_i-\tau_j
+\]
 
-### 2.1 좌표 lift
+를 사용한다. 구현의 complex channel을
+\(z=q_{2k}+iq_{2k+1}\)로 읽을 때 negative-rotation convention은
 
-위치 p ∈ {0, 1, …, N-1}를 critical line의 imaginary axis로 들어올린다.
+\[
+\widetilde z_p^{(k)}
+=e^{-i\nu_k\tau_p}z_p^{(k)}.
+\]
 
-$$
-\tau_p = \log(1 + p), \qquad s_p = \tfrac{1}{2} + i\,\tau_p \in \mathbb{C}.
-$$
+실수 \(2\times2\) 행렬로는
 
-`+1`은 p = 0에서 log 발산을 막기 위한 standard offset이다.
+\[
+\begin{pmatrix}
+\widetilde z_{\rm Re}\\
+\widetilde z_{\rm Im}
+\end{pmatrix}
+=
+\begin{pmatrix}
+\cos\theta&\sin\theta\\
+-\sin\theta&\cos\theta
+\end{pmatrix}
+\begin{pmatrix}
+z_{\rm Re}\\
+z_{\rm Im}
+\end{pmatrix}.
+\]
 
-### 2.2 회전 generator
+따라서 query/key product의 phase는
 
-각 헤드의 dim-pair k(k = 0, …, d_head/2 - 1)는 γ_k를 frequency로 가지며,
-회전각은
+\[
+e^{-i\nu_k(\tau_i-\tau_j)}
+=e^{-i\nu_k\Delta_{ij}}.
+\]
 
-$$
-\theta(p, k) = \gamma_k \cdot \tau_p = \gamma_k \log(1 + p).
-$$
+이 부호는
+[mra_block_spec.md](mra_block_spec.md)의 canonical directed score와 같다.
 
-대응하는 단위 복소수는
+## 3. 불변성의 정확한 표현
 
-$$
-e^{i\theta(p,k)} = (1+p)^{i\gamma_k}.
-$$
+\[
+\Delta_{ij}
+=\log\frac{1+i}{1+j}
+\]
 
-이는 Mellin 변환 커널 (1+p)^{i γ_k}와 정확히 일치한다. Riemann ζ 함수 자체가
-이 형태의 합으로 정의되므로 자연스러운 선택이다.
+는 \(i-j\)만의 함수가 아니므로 ordinary translation invariance가 없다.
+대신 큰 양의 위치를 동시에 scale할 때
 
-### 2.3 Sheet index
+\[
+\log\frac{1+\lambda i}{1+\lambda j}
+\longrightarrow\log\frac{i}{j}
+\]
 
-회전은 모듈로 2π이지만, 시트(sheet) 정보는 별도로 보존한다.
+라는 asymptotic ratio-coordinate 성질이 있다. 이것을 sequence-length
+extrapolation 보장으로 확대하지 않는다. aliasing과 성능은 empirical
+benchmark로 판정한다.
 
-$$
-\sigma(p, k) = \left\lfloor \frac{\theta(p, k)}{2\pi} \right\rfloor.
-$$
+## 4. 선택적 wrap counter
 
-두 위치 i, j가 같은 phase(cos/sin 동일)라도 서로 다른 시트에 있으면
-Riemann surface 위에서는 다른 점이다. Attention은 sheet 차이를 바이어스로 받는다.
+\[
+\sigma(p,k)
+=\left\lfloor\frac{\nu_k\tau_p}{2\pi}\right\rfloor
+\]
 
-$$
-b^{\text{sheet}}_{ij} = -\lambda_\sigma \cdot \frac{1}{d_{\text{head}}/2}
-                       \sum_{k=0}^{d_{\text{head}}/2-1} |\sigma(i, k) - \sigma(j, k)|,
-$$
+를 별도 feature로 저장할 수 있다. 대칭 bias를 쓰려면
 
-여기서 λ_σ는 학습 가능한 per-head 스칼라다.
-이 항은 cross-sheet attention을 약화시켜 시트 식별을 강제한다.
+\[
+b_{ij}^{\rm wrap}
+=-\lambda_\sigma\frac1K
+\sum_k|\sigma(i,k)-\sigma(j,k)|
+\]
 
-### 2.4 회전 적용 (RoPE-style relative form)
+로 둔다. 이 counter는 phase collision을 구분하는 공학 feature일 뿐
+complex logarithm의 branch structure나 zeta function의 analytic
+continuation을 구현하지 않는다.
 
-RoPE와 동일하게, dim-pair (2k, 2k+1)에 대해 2D 회전을 적용한다.
+## 5. score convention
 
-$$
-\begin{pmatrix} q'_{2k} \\ q'_{2k+1} \end{pmatrix} =
-\begin{pmatrix} \cos\theta(p,k) & -\sin\theta(p,k) \\
-                \sin\theta(p,k) &  \cos\theta(p,k) \end{pmatrix}
-\begin{pmatrix} q_{2k} \\ q_{2k+1} \end{pmatrix}
-$$
+단순 rotary score는
 
-그러면 q_i^T k_j는 자동으로 Δθ = θ(i,k) - θ(j,k) = γ_k log((1+i)/(1+j))의
-함수가 된다. 이로써 translation invariance가 유지되고, Hilbert-Pólya 관점에서
-Hermitian kernel이 보장된다.
+\[
+L_{ij}^{\rm rotary}
+=\frac{\operatorname{Re}
+\sum_k\widetilde q_i^{(k)}
+\overline{\widetilde k_j^{(k)}}}{\sqrt{d_h}}
++b_{ij}^{\rm wrap}.
+\]
 
-### 2.5 최종 attention score
+정규화된 complex weight와 explicit-formula-inspired prefactor를 함께 쓰는
+현재 MRA score는
 
-$$
-\text{score}_{ij} = \frac{q_i^{\prime\top} k_j^{\prime}}{\sqrt{d_{\text{head}}}}
-                  + b^{\text{sheet}}_{ij},
-$$
+\[
+x_{ij}=\frac{1+j}{1+i},\qquad
+D_{ij}
+=\sqrt{x_{ij}}\sum_k
+a_k e^{-i\nu_k\Delta_{ij}}
+q_i^{(k)}\overline{k_j^{(k)}}.
+\]
 
-이후 causal mask와 softmax를 적용한다.
+두 식의 phase sign과 \(\Delta_{ij}\) 정의는 동일하다. 이 식을 raw zeta
+explicit-formula 항과 coefficient까지 같다고 해석해서는 안 된다.
 
-## 3. 학습 가능 파라미터
+## 6. Hermitian 조건
 
-| 이름            | 형상           | 역할                                                                   |
-|-----------------|----------------|------------------------------------------------------------------------|
-| `log_scale`     | (n_heads,)     | 헤드별 "speed of light": 모든 γ_k에 곱해지는 exp(s)                   |
-| `log_lambda_sigma` | (n_heads,) | sheet-difference penalty의 log-scale (λ_σ = exp(·))                  |
+rotary matrix 하나가 orthogonal/unitary라는 사실은 attention score matrix가
+Hermitian이라는 뜻이 아니다. 독립 \(W_q,W_k\), 방향성 prefactor, complex
+amplitude, causal mask 중 하나만 있어도 그 결론은 나오지 않는다.
 
-이 외 파라미터(γ_k, frequency 자체)는 모두 buffer로 두고 학습하지 않는다. 이렇게 RH의 axiom적 성격을 유지한다.
+bidirectional self-adjoint mode는
 
-## 4. 점근적 성질
+\[
+H=\frac12(D+D^\dagger),\qquad
+K_{ij}=\exp(\operatorname{Re}H_{ij}),\qquad
+A_{\rm sym}=D_d^{-1/2}KD_d^{-1/2},
+\quad (D_d)_{ii}=\sum_jK_{ij}
+\]
 
-- 작은 p에서는 τ_p ≈ p(log(1+p) ≈ p)이므로 기존 RoPE와 유사하다.
-- 큰 p에서는 τ_p가 천천히 증가하므로 frequency aliasing이 자동으로 완화된다.
-- N → kN일 때 τ는 log k만큼만 평행이동하므로 relative attention이 거의 동일하게 보존된다.
+로 별도 구성한다. 자세한 정리와 증명은
+[mra_block_spec.md](mra_block_spec.md) 4–6절을 따른다. causal decoder에는
+Hermitian claim을 적용하지 않는다.
 
-## 5. 백엔드 dispatch
+## 7. 학습 파라미터
 
-세 단계 backend 모두에서 동일한 수치 결과를 보장한다.
+\(\gamma_k\) 자체는 provenance가 고정된 buffer이고 \(\nu_k\)는 그로부터
+결정되는 정규화 frequency다. head별 scale이나
+\(\lambda_\sigma\)를 학습하면 그 값은 더 이상 zeta에서 정해진 0-parameter
+구조가 아니다. 학습 가능한 hyperparameter로 명시하고 ablation해야 한다.
 
-1. **PyTorch** (참조): `reality_stone.clarus.ce_riemann_attn.RiemannRotaryAttention`
-2. **Rust CPU**: `reality_stone.clarus._rust.nn_ce_riemann_fwd`
-3. **CUDA**: `reality_stone.clarus._rust.nn_ce_riemann_fwd_cuda` (cudarc launcher + `.cu` kernel)
+## 8. backend acceptance
 
-자동 선택은 `reality_stone.clarus.ce_riemann_attn.RiemannRotaryAttention(backend="auto")`가
-입력 텐서의 `device.type`으로 결정한다(cuda → cuda, cpu → rust, fallback → torch).
+PyTorch, Rust, CUDA backend는 다음을 동일하게 구현해야 한다.
 
-## 6. 수치 동일성 테스트
+1. \(\tau_p=\log(1+p)\)
+2. \(\nu_k=\gamma_k/\gamma_0\)와 \(a_k=(\tfrac12+i\nu_k)^{-1}\)
+3. negative-rotation 행렬
+4. \(\Delta_{ij}=\tau_i-\tau_j\)
+5. verified/approximate frequency provenance
+6. 동일 dtype에서 forward와 gradient tolerance
+7. causal future-leakage test
 
-`tests/test_riemann_pe_consistency.py`에서
+현재 backend가 이 사양의 self-adjoint normalization을 구현하지 않았다면
+단순 score symmetrization만으로 “Hermitian attention 구현 완료”라고
+기록하지 않는다.
 
-- 동일 입력에 대해 세 backend의 출력이 atol=1e-4, rtol=1e-3 이내로 일치하는지
-- backward grad가 PyTorch와 1e-3 이내로 일치하는지
+## 9. 참고
 
-검증한다.
-
-## 7. 참고
-
-- Titchmarsh, *The Theory of the Riemann Zeta-Function*, Appendix.
-- Odlyzko, *On the distribution of spacings between zeros of the zeta function*.
-- Montgomery (1973), pair-correlation conjecture.
-- Su & Lu, *RoFormer*, 2021 — RoPE 원본.
+- Riemann, zeta explicit formula
+- Titchmarsh, The Theory of the Riemann Zeta-Function
+- Odlyzko, high-zero computations and spacing data
+- Montgomery, pair-correlation conjecture
+- RoFormer, rotary positional encoding

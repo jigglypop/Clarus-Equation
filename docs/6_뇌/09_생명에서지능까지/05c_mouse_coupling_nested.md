@@ -1,4 +1,4 @@
-## Mouse IBL/OpenAlyx region-interaction effective-connectivity proxy gate
+# Mouse IBL/OpenAlyx region-interaction effective-connectivity proxy gate
 
 Flat-unit gate 다음에는 weighted interaction proxy를 걸었다. 단, 여기서 "effective connectivity"라는 말은 causal connectivity가 아니다. 같은 trial window 안에서 channel-rescued region rates의 pairwise product가 additive region bins보다 더 설명력이 있는지 보는 약한 proxy다.
 

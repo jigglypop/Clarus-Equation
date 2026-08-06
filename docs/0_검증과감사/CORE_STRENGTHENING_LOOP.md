@@ -149,7 +149,7 @@ CE는 깊이의 단위를 “한 단위 깊이당 한 e-fold”로 잡아
 
 현재 감사 격자에서 composition residual은 다음과 같다.
 
-| 후보 | \(\max|S(a+b)-S(a)S(b)|\) |
+| 후보 | \(\max\lvert S(a+b)-S(a)S(b)\rvert\) |
 |---|---:|
 | \(e^{-D}\) | \(2.78\times10^{-17}\) |
 | \(e^{-D^2}\) | \(2.19\times10^{-1}\) |
@@ -521,10 +521,11 @@ $$
 $$
 
 이다. 분모 \(1-Dx\)는 동시에 고정점의 조건수와 분기점까지의 거리를
-측정한다. 현재 후보 \(D=3.1777573\), \(x=0.0486468\)에서는
+측정한다. canonical Track A manifest의
+\(D_N=3.1779129995\), \(x=0.0486382585\)에서는
 
 $$
-Dx\simeq0.15459
+D_Nx=0.1545681540
 $$
 
 로 분기점에서 충분히 떨어져 있다.
@@ -857,18 +858,22 @@ phase space와 흡수 self-energy를 거쳐야 한다.
 
 #### 현재 A1/Q0 국소 대수 게이트
 
-`a1_q0_action_bridge.py`는 아직 전체 Q0를 풀지 않는다. 대신 다음 두
-과장을 실행 가능한 반례와 항등식으로 잠근다.
+`a1_q0_action_bridge.py`는 아직 전체 Q0를 풀지 않고 구 수치 snapshot도
+포함하므로 canonical 수치 acceptance에는 사용하지 않는다. 좌표변환
+반례·vertex 항등식만 구조 대조로 남기며, 아래 최신 포탈 수치는
+`CANONICAL_NUMERIC_MANIFEST_2026-08-06.json`과
+`verify_numeric_consistency.py`가 검산한다.
 
 - 비정상점의 비선형 좌표변환 예에서 tensor pullback은 \(20\), 보통
   Hessian은 \(32\), 비텐서 추가항은 \(12\)다. connection 보정 후 공변
   Hessian은 다시 \(20\)이다.
 - \(Z_2,\ v_\Phi=0\) 포탈에서는 \(h\)-\(\Phi\) cross-Hessian이 0이지만
   \(h\Phi^2\), \(h^2\Phi^2\) vertex는 0이 아니다.
-- 레거시 \(\lambda_{\mathrm{HP}}=0.0316,\ m_\Phi=43.77\,\mathrm{GeV}\)
+- canonical
+  \(\lambda_{\mathrm{HP}}=0.0316530354,\ m_\Phi=43.8056765\,\mathrm{GeV}\)
   benchmark는 같은 vertex 정규화에서
-  \(\mathrm{BR}(h\to\Phi\Phi)\simeq0.772\)여서, 문서가 공급한 상한
-  \(0.11\)을 통과하지 못한다.
+  \(\mathrm{BR}(h\to\Phi\Phi)=0.77082222\)여서, PDG 2026이 열거한
+  ATLAS direct Run-2 상한 \(0.107\)을 통과하지 못한다.
 
 게이트가 통과해도 `covariant_action_complete`,
 `stress_tensor_derived`, `spectral_density_derived`는 모두 `False`로
@@ -969,33 +974,37 @@ $$
 \text{equal row sums of }A
 \Longrightarrow
 x=e^{-D(1-x)}
-\\[2mm]
+\\
 \left.
 \begin{array}{l}
 \text{minimal Hodge type closure}\Rightarrow d=3\\
-\text{declared SM neutral subspace}\Rightarrow\delta=s_W^2c_W^2\\
+\text{registered neutral subspace}\Rightarrow\delta_N=s_A^2c_A^2\\
 \text{normalized additive transfer ansatz}
 \end{array}
 \right\}
 \Longrightarrow
-D_{\mathrm{eff}}=d+\delta
+D_{\mathrm{eff}}=d+\delta_N
 \quad\text{(conditional)}
-\\[2mm]
+\\
 \Downarrow
-\\[-1mm]
-x_{\mathrm{low}}\simeq0.0486468
+\\
+x_{\mathrm{low}}=0.0486382585
 \xrightarrow[\text{separate observational bridge}]{}
 \Omega_b
 \end{array}
 $$
 
-여기서는 \(D_{\mathrm{eff}}=d+\delta\)로 가는 화살과
+여기서는 \(D_{\mathrm{eff}}=d+\delta_N\)로 가는 화살과
 \(x_{\mathrm{low}}\leftrightarrow\Omega_b\)로 가는 화살이 모두 별도
-bridge다. 앞의 조건부 정리와 같은 증명 상태로 읽어서는 안 된다.
+bridge다. $s_A^2$는 CE registered coordinate이며 물리적 on-shell,
+$\overline{\rm MS}$, effective $s_W^2$와의 scheme map도 별도 Open이다.
+앞의 조건부 정리와 같은 증명 상태로 읽어서는 안 된다.
 
 ## 7. 실행 결과와 해석
 
-현재 실행 결과:
+아래 블록은 물리적 $s_W^2=0.23122$를 역입력하던 2026-07
+legacy/noncanonical 실행 기록이다. 낮은 Track-B 근과 scheme 자유도를
+누락하므로 현행 acceptance에 사용하지 않는다.
 
 ```text
 composition residuals
@@ -1029,6 +1038,18 @@ quantum-jump structural gate
   collective leakage counterexample  1
 ```
 
+현행 canonical verifier가 같은 수치 사슬에 대해 재현하는 값은 다음과 같다.
+
+```text
+canonical Track A chain
+  registered neutral output  0.2315097758
+  neutral projector index    0.1779129995
+  effective depth            3.1779129995
+  low fixed point            0.0486382585160
+  low multiplier D*x         0.154568154012
+  physical weak-angle map    OPEN
+```
+
 해석:
 
 - 지수형과 선형 complement는 각각의 구조 gate에서 대조군을 제거한다.
@@ -1037,8 +1058,8 @@ quantum-jump structural gate
   비자명 최소 고정점이 생긴다.
 - 기존 스칼라식은 \(A\)의 행합이 같은 균일 대각 불변 부분공간에서
   정확하다. 다른 저차원 invariant manifold의 가능성은 별도다.
-- EWSB coherence를 한 번 세는 conditional chain은 정방향과 역방향이
-  수치적으로 닫힌다.
+- legacy EWSB coherence chain의 정방향·역방향 산술은 내부적으로 닫히지만,
+  이는 canonical $s_A^2$를 물리적 약혼합각에 보내는 scheme 검증이 아니다.
 - 이 결과는 아직 \(\Omega_b\) 식별을 채점하지 않는다.
 - 사전등록된 스칼라 후보 27개는 대수적으로 계산 가능하지만 독립 selection
   관측이 하나뿐이므로 현재 모형 선택 판정은 `UNDERIDENTIFIED`다.

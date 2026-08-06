@@ -330,7 +330,7 @@ joint readout은 condition/value marginal보다 강하다.
 | readout | 의미 |
 |---|---|
 | \(\nu_\beta(k)\) | 어떤 조건/문제가 manifest 되는가 |
-| \(\rho_\beta(a|k)\) | 그 조건 아래 어떤 값이 manifest 되는가 |
+| \(\rho_\beta(a\mid k)\) | 그 조건 아래 어떤 값이 manifest 되는가 |
 | \(\rho_\beta(k,a)\) | 조건-값 쌍 자체가 manifest 되는가 |
 
 이 분리는 06장의 측정 operator 후보와도 연결된다. 측정 결과만 읽는 것과, 어떤 측정 조건이 선택되었는지를 함께 읽는 것은 다른 일이다.

@@ -1,6 +1,17 @@
 ﻿# TDCOSMO real covariance audit
 
-이 문서는 H0 readout law의 첫 실제 공개 posterior-chain 공분산 삽입 결과를 기록한다.
+> **현행 source-role 계약(2026-08-06):** 이 문서는 공개 posterior chain을
+> 사용한 **사후(post-hoc) calibration diagnostic**이다. readout law와
+> local/global role map은 알려진 chain 구조와 \(H_0\) 비교값을 검토하는
+> 과정에서 구성되었다. 따라서 아래의 `PASS`는 파일 schema, 공분산 변환,
+> role 분류, 수치 replay가 선언된 규칙대로 재현된다는 뜻일 뿐, CE의
+> \(H_0\) 물리나 새 우주론이 독립 관측으로 검증되었다는 뜻이 아니다.
+> `prediction` 또는 `예측`이라는 과거 표기는 모두 branch
+> **readout/classification**으로 읽으며, 승격에는 고정된 role 추출기와
+> 미사용 채널의 사전등록 holdout이 필요하다.
+
+이 문서는 H0 readout law에 공개 posterior-chain 공분산을 삽입한
+사후 진단 결과를 기록한다.
 
 ## Source
 
@@ -51,7 +62,24 @@ local nodes = lambda_mst, lambda_mst_sigma, alpha_lambda
 global nodes = omega_m, a_ani, a_ani_sigma, sigma_sigmaP
 ```
 
-이 mapping은 TDCOSMO의 공식 해석이 아니라, CE readout law의 실험적 topology 가정이다.
+이 mapping은 TDCOSMO의 공식 해석이 아니라, 공개 chain과 알려진 분석
+맥락을 본 뒤 선택한 CE readout law의 실험적·사후 topology 가정이다.
+
+이 장의 모든 readout은 현 정본
+
+$$
+H_0(q_F)=66.802746\exp\!\left(\frac{q_F\,0.16925962}{2}\right)
+\ {\rm km\,s^{-1}Mpc^{-1}}
+$$
+
+으로 재평가한다. 따라서 endpoint 계약은
+
+$$
+H_0(0)=66.802746,\qquad H_0(1)=72.702371
+\quad({\rm km\,s^{-1}Mpc^{-1}})
+$$
+
+이다.
 
 ## Result
 
@@ -63,9 +91,9 @@ global nodes = omega_m, a_ani, a_ani_sigma, sigma_sigmaP
 | \(C_L\) | 0.99374733 |
 | \(C_G\) | 0.49149667 |
 | \(q_F\) | 0.66908019 |
-| \(H_0(q_F)\) | 71.161396 |
+| \(H_0(q_F)\) | 70.694538 |
 | observational reference | \(67.4\pm3.65\) |
-| pull | \(+1.031\sigma\) |
+| pull | \(+0.903\sigma_{\rm obs}\) |
 
 검증 명령:
 
@@ -74,13 +102,21 @@ python examples/physics/h0_readout/h0_fisher_matrix_io_gate.py examples/physics/
 python examples/physics/h0_readout/h0_fisher_io_full_suite.py
 ```
 
-full suite 결과는 PASS다. batch 결과에서 전체 \(\chi^2/{\rm dof}=1.065307/5\)가 나왔다.
+full suite의 **기계적 I/O·공분산·replay 검사** 결과는 `PASS`다. 현
+정본으로 readout 열을 재평가한 기술적 residual 합은
+\(\chi^2/{\rm dof}=0.870800/5\)다. 같은 chain 맥락과 비교값이 mapping
+구성에 관여했으므로 이를 holdout 적합도나 모형 \(p\)-값으로 해석하지 않는다.
 
 ## Interpretation
 
-실제 TDCOSMO+SLACS 공분산은 순수 local endpoint \(q_F=1\)이 아니다. Hierarchical population/kinematic closure가 \(q_F\)를 낮추는 효과는 실제 chain에서도 보인다.
+선언된 사후 mapping 아래 실제 TDCOSMO+SLACS 공분산은 순수 local
+endpoint \(q_F=1\)이 아니다. Hierarchical population/kinematic closure와
+\(q_F\) 감소가 함께 나타나는 기술적 패턴을 보인다.
 
-다만 \(q_F=0.669\)는 관측 중앙값 67.4까지 완전히 낮추기에는 아직 높다. 따라서 현재 결과는 완전한 통과라기보다 "부분 지지 + mapping 개선 필요"다.
+다만 \(q_F=0.669\)는 관측 중앙값 67.4까지 완전히 낮추기에는 아직 높다.
+이는 물리적 “부분 지지”가 아니라 **기술적 잔차와 mapping 민감도**다.
+비교값을 본 뒤 mapping을 개선하면 사후 조정이므로, 그 개선은 사전등록
+holdout 없이는 검증 증거로 세지 않는다.
 
 ## Extension: four public chains
 
@@ -88,15 +124,15 @@ full suite 결과는 PASS다. batch 결과에서 전체 \(\chi^2/{\rm dof}=1.065
 
 | file | \(q_F\) | \(H_0(q_F)\) | reference | pull |
 |---|---:|---:|---:|---:|
-| `tdcosmo_only_alpha_free_om_covariance.json` | 0.805032 | 71.984147 | \(74.503\pm6.002\) | -0.420 |
-| `tdcosmo_ifu_covariance.json` | 0.795412 | 71.925622 | \(73.041\pm5.736\) | -0.195 |
-| `tdcosmo_slacs_covariance.json` | 0.669080 | 71.161396 | \(67.400\pm3.650\) | +1.031 |
-| `tdcosmo_slacs_ifu_covariance.json` | 0.628295 | 70.916411 | \(67.437\pm3.655\) | +0.952 |
+| `tdcosmo_only_alpha_free_om_covariance.json` | 0.805032 | 71.512616 | \(74.503\pm6.002\) | -0.498 |
+| `tdcosmo_ifu_covariance.json` | 0.795412 | 71.454419 | \(73.041\pm5.736\) | -0.277 |
+| `tdcosmo_slacs_covariance.json` | 0.669080 | 70.694538 | \(67.400\pm3.650\) | +0.903 |
+| `tdcosmo_slacs_ifu_covariance.json` | 0.628295 | 70.450946 | \(67.437\pm3.655\) | +0.825 |
 
 전체 batch 결과:
 
 ```text
-chi2/dof = 2.185252/8
+chi2/dof = 1.875522/8
 ```
 
 핵심 패턴:
@@ -105,7 +141,8 @@ chi2/dof = 2.185252/8
 2. SLACS population 정보를 넣으면 \(q_F\)가 \(0.67\)로 내려간다.
 3. SLACS+IFU까지 넣으면 \(q_F\)가 \(0.63\)으로 더 내려간다.
 4. 이 방향성은 "hierarchical/global closure가 local H0 readout을 낮춘다"는 CE readout 해석과 정성적으로 맞다.
-5. 하지만 SLACS 계열의 \(H_0(q_F)\)는 아직 posterior 중앙값보다 약 \(1\sigma\) 높다. 즉 mapping 또는 conductance 정의가 아직 완전히 닫힌 것은 아니다.
+5. 하지만 SLACS 계열의 \(H_0(q_F)\)는 아직 posterior 중앙값보다 약
+   \(0.8{-}0.9\sigma_{\rm obs}\) 높다. 즉 mapping 또는 conductance 정의가 아직 완전히 닫힌 것은 아니다.
 
 ## Next tests
 
@@ -134,10 +171,10 @@ python examples/physics/h0_readout/h0_tdcosmo_conductance_diagnostic_gate.py
 
 | chain | partition | mode | \(q_{\rm req}\) | \(q_F\) | \(H_0(q_F)\) | pull |
 |---|---|---|---:|---:|---:|---:|
-| TDCOSMO+SLACS | current lambda-family + alpha local | path | 0.026834 | 0.669080 | 71.161396 | +1.031 |
-| TDCOSMO+SLACS | alpha only local | direct | 0.026834 | 0.003704 | 67.268309 | -0.036 |
-| TDCOSMO+SLACS+IFU | current lambda-family + alpha local | path | 0.033403 | 0.628295 | 70.916411 | +0.952 |
-| TDCOSMO+SLACS+IFU | alpha only local | direct | 0.033403 | 0.001855 | 67.257791 | -0.049 |
+| TDCOSMO+SLACS | current lambda-family + alpha local | path | 0.105174 | 0.669080 | 70.694538 | +0.903 |
+| TDCOSMO+SLACS | alpha only local | direct | 0.105174 | 0.003704 | 66.823690 | -0.158 |
+| TDCOSMO+SLACS+IFU | current lambda-family + alpha local | path | 0.111659 | 0.628295 | 70.450946 | +0.825 |
+| TDCOSMO+SLACS+IFU | alpha only local | direct | 0.111659 | 0.001855 | 66.813234 | -0.171 |
 
 해석:
 
@@ -187,15 +224,15 @@ MST 자유도가 SLACS population/hierarchy likelihood로 묶이면 global closu
 
 | file | \(q_F\) | \(H_0(q_F)\) | reference | pull |
 |---|---:|---:|---:|---:|
-| `tdcosmo_only_alpha_free_om_covariance.json` | 0.830134 | 72.137101 | \(74.503\pm6.002\) | -0.394 |
-| `tdcosmo_ifu_covariance.json` | 0.852221 | 72.271948 | \(73.041\pm5.736\) | -0.134 |
-| `tdcosmo_slacs_covariance.json` | 0.003704 | 67.268309 | \(67.400\pm3.650\) | -0.036 |
-| `tdcosmo_slacs_ifu_covariance.json` | 0.001855 | 67.257791 | \(67.437\pm3.655\) | -0.049 |
+| `tdcosmo_only_alpha_free_om_covariance.json` | 0.830134 | 71.664698 | \(74.503\pm6.002\) | -0.473 |
+| `tdcosmo_ifu_covariance.json` | 0.852221 | 71.798780 | \(73.041\pm5.736\) | -0.217 |
+| `tdcosmo_slacs_covariance.json` | 0.003704 | 66.823690 | \(67.400\pm3.650\) | -0.158 |
+| `tdcosmo_slacs_ifu_covariance.json` | 0.001855 | 66.813234 | \(67.437\pm3.655\) | -0.171 |
 
 전체 batch 결과:
 
 ```text
-chi2/dof = 0.180365/8
+chi2/dof = 0.380673/8
 ```
 
 의미:
@@ -238,10 +275,10 @@ python examples/physics/h0_readout/h0_tdcosmo_role_transition_gate.py
 
 | file | branch | \(q_F\) | \(H_0(q_F)\) | pull | status |
 |---|---|---:|---:|---:|---|
-| `tdcosmo_only_alpha_free_om_covariance.json` | local | 0.830134 | 72.137101 | -0.394 | PASS |
-| `tdcosmo_ifu_covariance.json` | local | 0.852221 | 72.271948 | -0.134 | PASS |
-| `tdcosmo_slacs_covariance.json` | global | 0.003704 | 67.268309 | -0.036 | PASS |
-| `tdcosmo_slacs_ifu_covariance.json` | global | 0.001855 | 67.257791 | -0.049 | PASS |
+| `tdcosmo_only_alpha_free_om_covariance.json` | local | 0.830134 | 71.664698 | -0.473 | PASS |
+| `tdcosmo_ifu_covariance.json` | local | 0.852221 | 71.798780 | -0.217 | PASS |
+| `tdcosmo_slacs_covariance.json` | global | 0.003704 | 66.823690 | -0.158 | PASS |
+| `tdcosmo_slacs_ifu_covariance.json` | global | 0.001855 | 66.813234 | -0.171 | PASS |
 
 요약:
 
@@ -703,9 +740,10 @@ DESI BAO mean/covariance
   -> low-side branch
 ```
 
-이 결과의 의미는 "BAO H0를 맞췄다"가 아니다. 아직 그렇게 하지 않았다. 의미는 더 좁고 더
-강하다. TDCOSMO 밖의 독립 관측 계열에서도, source role만 보면 이론이 예측한 branch 방향이
-먼저 맞아떨어진다는 것이다.
+이 결과는 BAO \(H_0\) fit이 아니라 DESI label을 선언된 global role로
+변환했을 때 low readout이 나오는 **분류 replay**다. DESI는 TDCOSMO와
+데이터셋은 독립이지만, role 규칙은 알려진 low/high branch 맥락을 본 뒤
+구성했으므로 독립 예측 증거는 아니다.
 
 ## Pantheon+SH0ES local-ladder readout
 
@@ -766,10 +804,10 @@ Pantheon+SH0ES
   -> high-side branch
 ```
 
-이 단계의 의의는 크다. TDCOSMO 안에서 보였던 readout role transition이, Hubble tension의
-대표적인 두 외부 계열에서도 같은 방향으로 나타났다. 아직 최종 joint H0 likelihood를 다시
-계산한 것은 아니지만, source label만으로 branch 방향이 먼저 갈라진다는 점은 논문에서 강한
-구조적 근거가 된다.
+선언된 사후 role map은 Hubble-tension의 대표적인 두 외부 계열도 서로
+다른 readout family로 기술한다. 아직 joint \(H_0\) likelihood를 계산하지
+않았고 role map 자체도 holdout 전에 동결되지 않았으므로, 이는 구조적
+근거가 아니라 사전등록 규칙을 설계하기 위한 calibration 결과다.
 
 ## Cross-channel branch contrast
 
@@ -795,22 +833,25 @@ python examples/physics/h0_readout/h0_cross_channel_branch_contrast_gate.py
 - local family mean selector: high-side 쪽
 - global family mean selector: low-side 쪽
 - cross-channel separation: strong
-- status: PASS
+- status: mechanical classification `PASS` (physical validation 아님)
 
 의미:
 
-이제 주장은 한 계열의 우연이 아니다. time-delay lensing 내부에서는 likelihood composition이
-branch를 바꾼다. 외부 채널에서는 관측 family 자체가 source role을 이미 갖고 있다. BAO는
-global standard ruler, SH0ES는 local distance ladder다. 그리고 둘은 예상대로 서로 반대 branch를
-고른다.
+사후 role map 안에서는 time-delay lensing의 likelihood composition과
+외부 관측 family가 서로 다른 branch label에 대응한다. BAO를 global
+standard ruler, SH0ES를 local distance ladder로 분류하면 서로 반대
+readout을 얻는다. 이 문장은 mapping의 동작 설명이지 우연확률이나
+모형선호도에 대한 통계 결론이 아니다.
 
-논문에서 가장 조심스럽고 강한 문장은 다음이다.
+현재 쓸 수 있는 제한된 문장은 다음이다.
 
-> Hubble tension channels separate by source readout role before any joint
-> refit of H0 is performed.
+> Under the post-hoc source-role map, Hubble-tension channels are replayed as
+> distinct readout families; no joint refit or holdout validation has been
+> performed.
 
-즉, 우리는 최종값을 억지로 맞추는 것이 아니라, 최종값이 나오기 전의 source structure만으로
-branch 방향이 갈라지는지를 보고 있다. 이 점이 현재까지의 가장 강한 결과다.
+즉 현재 결과는 source metadata와 공분산을 일관된 schema로 처리하는
+calibration diagnostic이다. 최종값을 보지 않은 자동 role extractor를
+동결하고 새 채널에 적용하기 전에는 branch 법칙의 독립 검증으로 세지 않는다.
 
 ## Cross-channel role ablation
 
@@ -934,20 +975,21 @@ python examples/physics/h0_readout/h0_paper_claim_audit_gate.py
 | C13 | 논문 패키지는 endpoint figure, three-family figure, required limitations를 재현한다. | `h0_paper_package_gate.py` |
 | L1 | 아직 full joint BAO/SN/TDCOSMO H0 posterior refit은 하지 않았다. | `h0_external_channel_roadmap_gate.py` |
 
-이 audit의 의미는 "우리가 어디까지 밝혔는가"를 논문 문장 단위로 고정하는 데 있다. 현재
-가장 강한 문장은 다음이다.
+이 audit은 구현된 기계적 claim과 물리적으로 미검증인 claim을 문장 단위로
+분리한다. 현재 허용되는 문장은 다음이다.
 
-> Hubble-tension channels separate into local/high and global/low readout
-> branches by source role before a joint H0 refit is performed.
+> A post-hoc source-role map reproducibly replays the selected channels as
+> local/high, bridge/intermediate, and global/low families.
 
 반대로 아직 말하면 안 되는 문장은 다음이다.
 
 > We have replaced the full standard H0 likelihood analysis with a complete new
 > posterior refit.
 
-현재 결과는 그 직전 단계다. 즉 full posterior를 다시 계산한 것이 아니라, 각 관측 계열의
-source structure가 어느 H0 branch를 읽는지 독립적으로 가른 것이다. 이 차이를 명확히 쓰면
-주장이 과장되지 않고, 오히려 더 단단해진다.
+현재 결과는 full posterior refit의 “직전 단계”라고 보장할 수도 없다.
+각 관측 계열의 source structure를 사후 rule로 분류한 calibration
+단계이며, 다음 단계는 자동 role derivation의 사전등록과 untouched
+channel holdout이다.
 
 ## CMB source scout
 
@@ -1009,7 +1051,7 @@ source-role 해석:
 - global nodes: 1
 - selector: `q_F = 0.5`
 - classified readout: bridge
-- branch prediction: about 70.15 km/s/Mpc
+- branch prediction: about 69.69 km/s/Mpc
 - GW170817 reference H0: about 70.3 +/- 5.15 km/s/Mpc
 
 이 gate는 중요하다. 지금까지 local/high와 global/low 양끝이 잘 갈라지는 것을 보았다면,

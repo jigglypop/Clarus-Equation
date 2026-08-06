@@ -1,6 +1,6 @@
 # CE renormalized pole · one-loop 루프
 
-기준일: 2026-08-04  
+기준일: 2026-08-06
 범위: action provenance → renormalized \(\Gamma^{(2)}\) gate → 선택적 \(Z_2\)
 portal의 scalar one-loop 통제 계산
 
@@ -8,8 +8,11 @@ portal의 scalar one-loop 통제 계산
 > renormalized CE action, counterterm manifest와 실제 kernel 자료가 없기
 > 때문이다. 다만 어떤 자료가 들어와야 pole·residue·dispersion 단계가
 > 올라가는지는 fail-closed 인증서로 구현했다. 선택적 portal의 two-real-scalar
-> one-loop 통제에서는 결합은 섭동적이지만 29.65 MeV 질량은 방사적으로
-> 안정하지 않다는 강한 진단이 추가되었다.
+> one-loop 통제에서는 결합은 섭동적이지만 29.6991596 MeV
+> light target을 같은 portal field로 강제한 반사실적 stress-test가 방사적으로
+> 안정하지 않다는 강한 진단이 추가되었다. 이 stress-test는
+> \(m_0=0\), \(m_{\rm portal}=43.8056765\,\mathrm{GeV}\)인 정본 portal-dominance
+> benchmark와 다른 분기다.
 
 ## 1. 이번 루프의 판정
 
@@ -22,7 +25,7 @@ portal의 scalar one-loop 통제 계산
 | 현재 CE 자료가 renormalized kernel stage에 도달한다 | `NO` |
 | 선택적 portal scalar one-loop diagram 식 | `DERIVED CONDITIONAL` |
 | 그 finite 합이 물리 pole-mass 예측이다 | `NO` |
-| 29.65 MeV same-field portal pole이 radiatively stable하다 | `NOT SUPPORTED` |
+| 29.699 MeV same-field light-target portal pole이 radiatively stable하다 | `NOT SUPPORTED` |
 | physical CE pole·spectral positivity·LSZ | `OPEN` |
 
 ## 2. action provenance 감사
@@ -117,7 +120,7 @@ REGISTERED_SCALE
 \[
 \Gamma_R^{(2)}(s_*)=0,
 \qquad
-Z_*=left[\frac{d\Gamma_R^{(2)}}{ds}(s_*)\right]^{-1}>0
+Z_*=\left[\frac{d\Gamma_R^{(2)}}{ds}(s_*)\right]^{-1}>0
 \]
 
 를 수치 grid에서 다시 계산한다. 다음 반례는 전부 fail-closed다.
@@ -209,48 +212,49 @@ vacuum/RG 구조는 [Gonderinger et al.](https://arxiv.org/abs/0910.3167)을
 
 ## 6. 수치 결과
 
-입력은
+이 절은 정본 light bridge를 portal field와 같다고 가정했을 때의
+**same-field light-target stress-test**다. 입력은
 
 \[
-\lambda_{HP}=0.031598052\ldots,
+\lambda_{HP}=\delta_n^2=0.0316530353958,
 \quad \lambda_\phi=0.1,
-\quad v=246.22\,\mathrm{GeV},
-\quad m_h=\mu=125.25\,\mathrm{GeV},
-\quad m_\phi=0.02964757\,\mathrm{GeV}
+\quad v_{\rm EW}=246.21965\,\mathrm{GeV},
+\quad m_h=\mu=125.11\,\mathrm{GeV},
+\quad m_\phi=0.0296991596\,\mathrm{GeV}
 \]
 
 이다.
 
 ```text
-g_hφφ                                  15.560144719 GeV
-h-loop seagull finite piece             3.139034221 GeV^2
-hφ mixed bubble finite piece            1.533229411 GeV^2
-φ-loop seagull finite piece             2.955211409e-5 GeV^2
-two-real-scalar finite sum               4.672293184 GeV^2
-finite sum / target mass squared         5315.594954
-Sigma'(m_phi^2)                          4.886763794e-5
-linearized residue control               0.999951135
-first hφ cut                             125.279647570 GeV
+g_hφφ                                  15.587198593 GeV
+h-loop seagull finite piece             3.137470735 GeV^2
+hφ mixed bubble finite piece            1.538565582 GeV^2
+φ-loop seagull finite piece             2.964547588e-5 GeV^2
+two-real-scalar finite sum               4.676065963 GeV^2
+finite sum / target mass squared         5301.421169
+Sigma'(m_phi^2)                          4.914752341e-5
+linearized residue control               0.999950855
+first hφ cut                             125.139699160 GeV
 Im Sigma at light target                 0
 ```
 
 scale만 \(\mu=m_h/2,m_h,2m_h\)로 바꾸면 raw finite 합은
 
 ```text
--1.804843787, 4.672293184, 11.149430155 GeV^2
+-1.806301085, 4.676065963, 11.158433010 GeV^2
 ```
 
 로 부호까지 바뀐다. 이것은 물리 오차막대가 아니다. running parameter와
 counterterm이 상쇄해야 할 subtraction-scale dependence다. 따라서
-\(4.672\,\mathrm{GeV}^2\)를 그대로 물리 질량 보정이라고 부르면 안 된다.
+\(4.676\,\mathrm{GeV}^2\)를 그대로 물리 질량 보정이라고 부르면 안 된다.
 
 그럼에도 진단은 강하다.
 
 - \(\lambda_{HP}/(16\pi^2)\)는 작으므로 loop expansion 자체는 섭동적이다.
-- finite mass scale은 light target \(m_\phi^2\)보다 약 5316배 크다.
+- finite mass scale은 light target \(m_\phi^2\)보다 약 5301.42배 크다.
 - 같은 convention에서 target을 유지하려면 약
-  \(m_\phi^2/|\Sigma|=1.88\times10^{-4}\) 수준의 추가 retuning이 필요하다.
-- 반면 momentum derivative와 residue 변화는 약 \(4.9\times10^{-5}\)로 작다.
+  \(m_\phi^2/|\Sigma|=1.88629\times10^{-4}\) 수준의 추가 retuning이 필요하다.
+- 반면 momentum derivative와 residue 변화는 약 \(4.91475\times10^{-5}\)로 작다.
 - light pole은 \(h\phi\) cut보다 훨씬 아래라 이 subset에서
   \(\operatorname{Im}\Sigma=0\)이다.
 
@@ -266,14 +270,14 @@ radiative tuning**이다. 이 결론도 선택적 portal control에만 해당하
 | Q0 tree action hash 연결 | 100/100 | pole/vertex certificate와 digest 일치 |
 | renormalized pole gate 구현 | 95/100 | 수치 replica control 완결; 실제 CE data 없음 |
 | 선택적 portal scalar one-loop diagram 식 | 90/100 | \(h,\phi\) 숫자 control; gauge-complete 아님 |
-| 29.65 MeV portal pole의 방사 안정성 | 10/100 | 큰 additive scale과 scheme 의존성 |
+| 29.699 MeV same-field stress-test의 방사 안정성 | 10/100 | 큰 additive scale과 scheme 의존성 |
 | 실제 CE renormalized kernel | 0/100 | complete action·CT·kernel replica 없음 |
 | spectral positivity·LSZ | 0/100 | KL density와 asymptotic state 없음 |
 | 물질 생성률 | 0/100 | external LSZ와 renormalized vertex/rate 없음 |
 
 ## 8. 재현
 
-2026-08-04 검증 결과:
+2026-08-04 역사적 회귀 기록:
 
 - 관련 집중 회귀: `83 passed`
 - 전체 회귀: `1329 passed, 13 skipped, 0 failed`
@@ -282,6 +286,11 @@ radiative tuning**이다. 이 결론도 선택적 portal control에만 해당하
   `q0_manifest`, `neural_tree_algorithm_census`)만 명시적으로 제외했다.
 - Ruff check/format과 `git diff --check`를 통과했다. diff 검사의 출력은
   CRLF 변환 경고뿐이다.
+
+2026-08-06 수치는 동일 finite convention에 canonical manifest의
+\(m_{\rm light}\), \(\lambda_{HP}\), \(v_{\rm EW}\), \(M_H\)를 명시적으로 넣어
+재계산했다. 아래 runtime gate의 기본 인자는 구 snapshot이므로,
+정본 수치 재현에서는 반드시 위 6절의 네 인자를 주입해야 한다.
 
 ```powershell
 uv --cache-dir .uv-cache run python examples/physics/ce_renormalized_pole_gate.py
@@ -304,11 +313,12 @@ uv --cache-dir .uv-cache run --extra dev python -m pytest `
 
 1. **CE core readout branch:** \(\Phi_H\)를 local particle field로 간주하지 않고
    실제 connected correlator와 spectral reconstruction부터 수집한다.
-2. **optional portal branch:** complete SM+\(phi\) bare action, background,
+2. **optional portal branch:** complete SM+\(\phi\) bare action, background,
    gauge/tadpole prescription, counterterm basis와 running input을 하나의 manifest로
    고정한 뒤 gauge-complete one-loop complex pole을 계산한다.
 
-두 branch를 동일한 29.65 MeV 입자 증명으로 합치지 않는다. portal branch가
+두 branch를 동일한 29.699 MeV 입자 증명으로 합치지 않는다. 정본
+portal-dominance branch의 질량은 43.8056765 GeV이며, portal branch가
 full pole gate를 통과해도 `CE field identity`는 독립 matching 증거가 들어오기
 전까지 계속 `False`다.
 

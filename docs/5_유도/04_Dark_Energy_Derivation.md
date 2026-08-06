@@ -1,4 +1,4 @@
-## 1. 이 장의 목표와 구조
+# 1. 이 장의 목표와 구조
 
 이 문서는 CE 클라루스장(Clarus field) 이론을 **우주론(cosmology)**에 적용하여,
 
@@ -15,16 +15,27 @@
 
 우주론 문맥에서 혼동이 자주 발생하는 지점은 “입력(캘리브레이션)”과 “출력(예측)”이다. 이 장에서는 다음을 구분한다.
 
-- 입력(캘리브레이션): 예를 들어 $\Omega_\Lambda$, $H_0$, $\Omega_m$ 등을 사용해 CE 내부 파라미터(예: $\alpha_\Lambda$ 또는 등가 파라미터)를 제약하는 과정
-- 출력(예측): 제약된 파라미터로 $E(z)$, $D_L(z)$, $w(z)$, 성장률 $f\sigma_8(z)$ 등 함수형 관측량을 계산하고 다른 데이터와 교차검증하는 과정
+- 현행 Track-A boundary 모드: \(\Omega_b,\Omega_{\rm DM},\Omega_\Lambda\)는
+  canonical manifest의 출력이고, \(H_0,r_d,\sigma_{8,0}\)는 각
+  forward-model gate에 명시하는 외부 입력이다.
+- 별도 calibration 모드: 관측 \(\Omega_\Lambda,H_0,\Omega_m\)로
+  \(\alpha_\Lambda\) 같은 유효 파라미터를 맞출 수 있지만, 그때 같은
+  요약값을 예측 성공으로 다시 세지 않는다.
+- 검증 출력: 역할을 동결한 뒤 \(E(z),D_L(z),w(z),f\sigma_8(z)\)를
+  미사용 데이터와 비교한다.
 
-따라서 이 장의 핵심은 “요약값(예: $\Omega_\Lambda$)을 처음부터 예측한다”가 아니라, $\Lambda$CDM에서 우주 상수로 넣는 항을 CE의 변수/공리 구조로 연결했을 때 어떤 제약과 검증 경로가 생기는지를 명확히 하는 데 있다.
+따라서 boundary-output 모드와 calibration 모드를 같은 likelihood에서
+섞지 않는다. 현재 DESI compressed-BAO 고정-background gate는 전자를
+사용하며 두 canonical 패키지를 모두 `REJECT`한다.
 
 ## 1.1.2 이 장의 규약: 입력/가정/출력
 
 이 장에서 “잘 맞는다”는 표현이 예측인지, 캘리브레이션에 가까운지 혼동되지 않도록 아래를 구분한다.
 
-- 입력(캘리브레이션): $(\Omega_{m,0},\Omega_{\Lambda,0},H_0)$ 등 오늘날 요약값을 사용해 내부 파라미터(예: $\alpha_\Lambda$) 또는 함수형 선택(예: $\epsilon_{\text{grav}}$)을 제약하는 단계
+- 입력(캘리브레이션): calibration branch에서만
+  \((\Omega_{m,0},\Omega_{\Lambda,0},H_0)\)로 내부 파라미터 또는 함수형을
+  제약한다. Track-A fixed-background branch에서는 density vector를
+  출력으로 잠그고 \(H_0,r_d\)만 provenance가 붙은 외부 scale로 넣는다.
 - 가정(모형 선택): 평탄 FRW, 성분 분해(물질+암흑에너지), 배경–섭동 분리, 스크리닝 함수 $S(a)$ 정의 같은 계산 규약을 고정하는 단계
 - 출력(검증): $E(z)$, $D_L(z)$, $w(z)$, $f\sigma_8(z)$ 같은 함수형 관측량을 계산해 교차검증하는 단계
 
@@ -91,7 +102,7 @@ $$
 - **4장**: 비선택 경로 에너지 $E_\text{nonselected}$와 우주 상수 $\Lambda_\text{eff}$의 관계  
 - **5장**: “연산 복잡도–곡률 억제”와 가속 팽창의 정성적 유도  
 - **6장**: 암흑 에너지 방정식 상태 $w$와 CE 모델의 수치 제약  
-- **7장**: 공통 coupling $\alpha_C$와 다른 난제와의 정합성  
+- **7장**: 도메인별 coupling과 무차원 비교 조건
 - **8장**: 순환논리 점검, 한계, 향후 과제
 
 ### 최신 정본 정합성 주석
@@ -410,7 +421,7 @@ $$
 
 ### 4.1.1 (정본과의 연결) 스칼라 클라루스장 모형에서의 조건
 
-`../Core_Theory/8.2_CE_형식적_수학_모델과_증명.md`의 최소 모형처럼 억압 섹터를 스칼라장으로 기술하면, 균일 우주에서 운동항이 퍼텐셜에 비해 작을 때($\dot\sigma^2\ll V(\sigma)$) 응력–에너지 텐서는
+`../참조/형식적_수학_모델과_증명.md`의 최소 모형처럼 억압 섹터를 스칼라장으로 기술하면, 균일 우주에서 운동항이 퍼텐셜에 비해 작을 때($\dot\sigma^2\ll V(\sigma)$) 응력–에너지 텐서는
 
 $$
 T_{\mu\nu}^\text{supp}\approx -V(\sigma)\,g_{\mu\nu}
@@ -526,9 +537,30 @@ $$
 
 를 정의한다. 여기서 $\Delta$는 라플라시안이다.
 
-**가정 (함수공간/경계조건)**: $\phi\in H^2(\Omega)$이고, 예를 들어 $\phi|_{\partial\Omega}=0$ 및 $\partial_n\phi|_{\partial\Omega}=0$와 같은 경계조건(또는 주기 경계조건)을 둔다.
+**가정 (함수공간/경계조건)**: \(\Omega\)는 bounded Lipschitz domain이고
+다음 중 하나를 택한다.
 
-**정리 (존재/유일)**: 위 가정하에, $E[\phi]$는 아래에서 유계이며(coercive), $E$를 최소화하는 $\phi_*$가 존재한다. 또한 최소해는 동치류(예: 주기 경계에서 상수 모드)까지 유일하다.
+1. clamped 공간
+   \(V=H_0^2(\Omega)\), 즉 trace 의미에서
+   \(\phi|_{\partial\Omega}=\partial_n\phi|_{\partial\Omega}=0\);
+2. 주기 공간의 zero-mean 부분공간
+   \(V=H_{\rm per}^2(\Omega)\cap\{\int_\Omega\phi\,dx=0\}\).
+
+주기 공간 전체에서는 상수 mode 때문에 \(E\)가 \(H^2\)-norm에 coercive하지
+않다. zero-mean 제약을 두거나 상수에 대한 quotient를 취해야 한다.
+
+**정리 (존재/유일)**: 위 \(V\)와 \(\lambda_{\rm cos}>0\)에서 Poincaré형
+부등식과 elliptic estimate로
+
+$$
+E[\phi]\ge c\|\phi\|_{H^2(\Omega)}^2
+$$
+
+가 성립한다. 따라서 \(f\in V^*\)에 대해
+\(\tfrac12E[\phi]-\langle f,\phi\rangle\)는 유일한 minimizer를 갖는다.
+주기 quotient 표현에서는 유일성이 상수 동치류에 대해 성립하고, source
+표현에는 \(\langle f,1\rangle=0\) compatibility가 필요하다. \(f=0\)이면
+선택한 \(V\)의 최소해는 \(\phi_*=0\)이다.
 
 **Euler–Lagrange 방정식(정적)**: 최소해 $\phi_*$는 약해(weak solution) 의미에서
 
@@ -544,15 +576,41 @@ $$
 
 이 정식화는 “고주파(큰 $k$) 모드일수록 더 큰 비용”을 부여하므로, 수학적으로는 평탄화/안정화 functional로 해석된다.
 
-이 functional을 줄이기 위한 한 가지 경로는,
+중요하게도 위 정적 functional에는 $a(t)$나 시공간 metric의 변분이 없다.
+따라서 평탄화만으로 $\ddot a>0$을 유도할 수 없다. 최소 공변 bridge 후보는
 
-- **지역적으로 너무 높은 곡률/복잡도 영역을 줄이고**,  
-- 전체 부피를 늘려서 $\rho_\mathcal{C}$를 떨어뜨리는 것이다.
+$$
+S_{\rm bridge}=\int d^4x\sqrt{-g}\left[
+\frac{M_{\rm Pl}^2}{2}R-\frac12(\nabla\sigma)^2-V(\sigma)\right]
++S_m
+$$
 
-그 결과,
+처럼 별도의 동역학장을 도입하는 것이다. 평탄 FLRW에서 이 작용은
 
-- 우주는 $\ddot{a}>0$인 가속 팽창 단계에 들어가  
-  전역적인 곡률–복잡도 밀도를 완화한다.
+$$
+3M_{\rm Pl}^2H^2=\rho_m+\rho_r+\frac12\dot\sigma^2+V,
+$$
+
+$$
+\ddot\sigma+3H\dot\sigma+V_{,\sigma}=0,
+$$
+
+$$
+\boxed{\frac{\ddot a}{a}
+=-\frac{1}{6M_{\rm Pl}^2}
+\left(\rho_m+2\rho_r+2\dot\sigma^2-2V\right)}
+$$
+
+를 준다. 따라서 가속의 실제 조건은
+
+$$
+V>\dot\sigma^2+\frac{\rho_m+2\rho_r}{2}.
+$$
+
+정적 $\phi$ smoothing functional이 위 $\sigma,V(\sigma)$와 어떤 공변
+관계로 연결되고 같은 응력--에너지 텐서를 만드는지는 아직 제시되지 않았다.
+그 연결이 없으면 “부피를 늘려 복잡도 밀도를 낮춘다”는 문장은 후보 해석이지
+운동방정식의 결론이 아니다.
 
 이때 가속 팽창의 “원인”을
 
@@ -605,41 +663,28 @@ CE 모델에서는,
 
 ---
 
-## 7. 공통 coupling $\alpha_C$와 다른 난제들과의 정합성
+## 7. 도메인별 coupling과 비교 가능성
 
-이전 장들에서,
+Navier–Stokes, 영점 smoothing, 단백질 경로와 우주론에서 쓰는
+\(\lambda\)는 서로 다른 상태차원, 좌표 measure, cutoff와 목적함수
+정규화를 갖는다. 따라서 과거의 공통
+\(\alpha_C\sim10^{-4}{-}10^{-3}\) 주장은 단위·측도 정합성이 없어
+폐기한다.
 
-- Navier–Stokes, 리만 제타, 단백질 접힘 등 서로 다른 시스템에서  
-- $
-\mathcal{S}[\phi] =
-\int (\|\nabla\phi\|^2 + \lambda\|\nabla^2\phi\|^2)
-$
-꼴의 functional이 등장했고,  
-- 그때의 $\lambda$ 값들이 **공통 범위(대략 $10^{-4}\sim10^{-3}$)** 안에 위치한다는 패턴이 제시되었다.
+또한
 
-우주론에서도,
+$$
+\rho_{\rm DE}=\alpha_\Lambda\bar E_{\rm nonselected}
+$$
 
-- 비선택 경로 에너지 밀도 $\bar{E}_\text{nonselected}$와  
-  유효 암흑 에너지 밀도 $\rho_\text{DE}$ 사이의 관계
+는 \(\bar E_{\rm nonselected}\)의 공변 stress tensor와 renormalization
+prescription이 없으면 정의된 물리식이 아니다. 현행 우주론 bridge는
+공변 scalar action에서 \(\rho_\phi,p_\phi\)를 계산하는 `8.1의 경로다.
 
-  $$
-  \rho_\text{DE}
-   =
-  \alpha_\Lambda \bar{E}_\text{nonselected}
-  $$
-
-에서 $\alpha_\Lambda$를 무차원화하여  
-다른 난제들의 $\lambda$와 비교할 수 있다.
-
-만약 모든 난제에서 얻어지는 coupling 상수들이
-
-- 하나의 **좁은 $\alpha_C$ 범위**로 수렴한다면,
-
-이는
-
-- “우주의 다양한 스케일과 시스템에서 작동하는  
-  통일된 곡률–복잡도 억제 법칙이 존재한다”는  
-  CE 이론의 기본 주장에 대한 강한 정합성 증거가 된다.
+도메인 간 비교는 각 문제를 기준 길이·시간·상태 scale로 먼저
+무차원화하고, 동일한 spectrum cutoff 대비 penalty 비를 사전등록한
+뒤에만 가능하다. 그 전까지 각 계수는 도메인별 regularization
+hyperparameter이며 보편 물리 결합상수가 아니다.
 
 ---
 
@@ -674,40 +719,87 @@ $
     CE 우주론이 표준 $\Lambda$CDM과 얼마나 다른 예측을 하는지,  
     그리고 어디까지 허용되는지 분석.
 
-### 8.1 절대 스케일 유도 시도 (연구 기록 — 현재 음성)
+### 8.1 절대 스케일·중성미자·상태방정식의 닫힌 장부
 
-암흑에너지의 **분율**($\Omega_\Lambda$)과 **상태방정식**($w_0$)은 부트스트랩에서 예측되지만, **절대 스케일** $\rho_\Lambda^{1/4}$를 $H_0$를 입력으로 쓰지 않고 CE 구조에서 유도할 수 있는지 점검하였다. 목표값은 제1원리 재계산으로 $\rho_\Lambda^{1/4} = 2.240$ meV ($\Omega_\Lambda=0.6847$, $h=0.6736$).
+Track A가 고정하는 것은 무차원 boundary
+\(\Omega_{\rm DE}=0.690273567126\)이다. 절대 에너지 밀도는 외부 \(H_0\)가
+들어간 뒤에만
 
-검증한 경로와 결과:
+$$
+\rho_{{\rm DE},0}
+=
+3M_{\rm Pl,red}^{\,2}H_0^2\Omega_{\rm DE}
+$$
 
-| 경로 | 식 | 결과 | 판정 |
-|---|---|---|---|
-| CE 지수 위계 (EW용) | $M_{\text{Pl}}\,e^{-D_{\text{eff}}\cdot 12}/F$ | $2.44\times10^{11}$ eV $\approx v_{\text{EW}}$ (0.9%) | EW 위계는 재현 (대조군) |
-| 같은 메커니즘을 DE에 | $M_{\text{Pl}}\,e^{-D_{\text{eff}}\cdot N}$ | 목표에 $N\approx22.27$ 필요 | $N$이 CE 동기 정수 아님 |
-| 같은 메커니즘 ($v_{\text{EW}}$ 기준) | $v_{\text{EW}}\,e^{-D_{\text{eff}}\cdot N_2}$ | $N_2\approx10.17$ 필요 | 마찬가지로 비정수 |
-| 전자약 시소 | $v_{\text{EW}}^2/M_{\text{Pl}}$ | $4.97\times10^{-6}$ eV | 약 450배 작음 |
-| 중성미자 결합 | $\varepsilon^2\cdot m_{\nu3}$ | $2.43\times10^{-3}$ eV (8.6% 근접) | 단서이나 유도 아님 |
+로 정해진다. \(H_0=67.4\,{\rm km\,s^{-1}Mpc^{-1}}\), CODATA 상수를
+넣은 조건부 변환값은
+\(\rho_{{\rm DE},0}^{1/4}=2.2447\,{\rm meV}\)다. 따라서 이 meV 값은
+CE의 무입력 예측이 아니라 `CE 분율 + 외부 \(H_0\)` readout이다.
 
-**결론(정직):** EW 위계를 정확히 생성하는 CE의 지수 메커니즘($e^{-D_{\text{eff}}\cdot N_{\text{gauge}}}$, $N_{\text{gauge}}=12$)이 암흑에너지 절대 스케일로는 **CE에서 동기부여되는 지수로 깨끗하게 연장되지 않는다**(필요 지수 $\approx22.27$, 또는 $v_{\text{EW}}$ 기준 $\approx10.17$이 정수·CE 양과 맞지 않음). 시소·단순 거듭제곱 조합도 자릿수가 맞지 않는다. 따라서 절대 스케일은 **여전히 열린 문제**이며, 4절·5장의 "동역학적 재조정 프레임" 입장이 유지된다. 우주상수 절대값을 예측한다고 주장하지 않는다.
+중성미자 절대질량도 무매개변수로 닫히지 않는다. 게이지 불변 저에너지
+completion은 Weinberg 계수 행렬을 명시해야 한다.
 
-**추가로 판 단서들 (전수 스캔, `Open Test`):** $\rho_\Lambda^{1/4}\simeq 2.24$ meV는 CE가 예측하는 중성미자 질량 스케일(meV대)과 같은 자릿수다. 중요한 점은 CE 중성미자 질량이 7.6.2절 공식으로 **파라미터 0개·$H_0$ 비의존**으로 고정된다는 것이다: $m_{\nu3}=49.99$ meV, $\Sigma m_\nu = 58.86$ meV(관측 50.5 meV, $-1\%$).
+$$
+\mathcal L_5
+=
+\frac12(C_5)_{\alpha\beta}
+(\overline{L_\alpha^{\,c}}\,\widetilde H^*)
+(\widetilde H^\dagger L_\beta)
++{\rm h.c.},
+\qquad
+M_\nu=\frac{v^2}{2}C_5 .
+$$
 
-**물리적 가설 (형식 유도, 계수는 열림).** 클라루스장 $\Phi$는 2-loop Weinberg 경로로 중성미자 질량을 생성하므로, $\Phi$의 진공 요동 스펙트럼은 중성미자 스케일 $m_{\nu3}$에서 특성 마디를 갖는다. 부트스트랩은 이 요동 중 **생존 분율 $\varepsilon^2$**(선택된 경로 = 바리온 확률)만 거시 진공으로 남긴다고 가정하면, 잔여 진공에너지의 스케일은
+실수 singlet 하나만으로는 이 연산자를 생성할 수 없다. scotogenic
+completion을 택해도 \(M_\nu\)는 Yukawa 행렬, heavy-fermion 질량,
+CP-even/odd scalar 질량분할과 loop matching에 의존한다. 진동 자료는
+\(\Delta m_{21}^2,\Delta m_{3\ell}^2\)와 혼합을 제약하지만 최경질량
+\(m_{\rm lightest}\), Majorana 위상, \(C_5\)의 절대 정규화를 고정하지
+않는다. 그러므로 과거의
+\(\Sigma m_\nu=58.86\,{\rm meV}\)는 독립 예측이 아니라 특정 계수와
+최경질량을 선택한 legacy benchmark이며 현행 예측 장부에서 제외한다.
 
-$$\rho_\Lambda^{1/4} \sim \varepsilon^2 \, m_{\nu3}$$
+암흑에너지와 중성미자를 연결하려면 단순한 자릿수 비교 대신 독립 Wilson
+계수가 필요하다.
 
-형태로 닫힌다. 이 가설은 (i) 올바른 크기(meV), (ii) $\varepsilon^2$ 인자의 물리적 기원(생존율에 의한 요동 억압)을 동시에 동기부여한다는 점에서 단순 수치 맞춤보다 낫다. 그러나 정직하게, 실제로 요구되는 계수는 $\rho_\Lambda^{1/4}/m_{\nu3}=0.0448$로 $\varepsilon^2=0.04865$ 대비 $O(1)$ 인자 $0.921$이 더 필요하며($\varepsilon^2(1-\varepsilon^2)^2=0.0440$에 가깝지만 유일하지 않음), 이 $O(1)$을 CE에서 유일하게 고정하는 유도는 아직 없다. 곱셈 인자 후보 비교:
+$$
+\rho_{\rm DE}^{1/4}
+=
+\kappa_{\nu{\rm DE}}\,m_\nu .
+$$
 
-| 관계 | 값 | 목표 대비 | 비고 |
-|---|---|---|---|
-| $\varepsilon^2\cdot m_{\nu3}$ | 2.432 meV | $+8.6\%$ | 인자 동기 약함 |
-| $\varepsilon^2(1-\varepsilon^2)\cdot m_{\nu3}$ | 2.314 meV | $+3.3\%$ | 〃 |
-| $\delta^2(1+R)\cdot m_{\nu3}$ | 2.181 meV | $-2.6\%$ | 〃 |
-| $(R/10)\cdot \Sigma m_\nu$ | 2.240 meV | $+0.03\%$ | 수치 정확하나 "10"이 CE 비유도 → **numerology 경계** |
+\(\kappa_{\nu{\rm DE}}\)를 \(\varepsilon^2\),
+\(\varepsilon^2(1-\varepsilon^2)\), \(R/10\) 등으로 골라 수치를 맞추는
+것은 서로 구별되지 않는 사후 ansatz다. 유효작용의 진공 functional과
+renormalization 조건에서 \(\kappa_{\nu{\rm DE}}\)를 유일하게 유도하기
+전에는 이 관계를 prediction으로 사용하지 않는다.
 
-지수 경로($v_{\text{EW}}\,e^{-D_{\text{eff}}N}$)는 필요 지수 $N\approx D_{\text{eff}}^2$($0.75\%$ 근접)이나, 지수가 커서 $0.75\%$ 오차가 값에서는 $\sim26\%$ 오차로 증폭되어 정밀 예측에 부적합하다. 시소 증폭인자 451($=\rho_\Lambda^{1/4}/(v_{\text{EW}}^2/M_{\text{Pl}})$)도 깨끗한 CE 표현이 없다($1/\varepsilon^4=422$, $48\pi^2=474$).
+동적 상태방정식은 별도 공변 scalar completion에서 닫힌다.
 
-**정직한 종합 판정:** 모든 단서를 검토했으나 절대 스케일을 닫는 **파라미터 0개·비순환 관계는 없다**. 현재 확정할 수 있는 최강의 진술은 "CE가 파라미터 0개로 $\Sigma m_\nu = 58.86$ meV(1%)를 예측하고 관측 $\rho_\Lambda^{1/4}=2.24$ meV가 동일 meV 밴드에 있다"는 점이며, 연결 인자($\approx0.038$)는 아직 CE 구조에서 유도되지 않았다. 승격 조건: 이 $O(0.04)$ 인자를 생존율/DE-분율 구조에서 유일하게 도출하는 것. 그 전까지 우주상수 절대값은 예측이 아니라 **열린 문제**로 유지한다.
+$$
+\rho_\sigma=\frac12\dot\sigma^2+V(\sigma),
+\qquad
+p_\sigma=\frac12\dot\sigma^2-V(\sigma),
+\qquad
+w_\sigma=\frac{\dot\sigma^2-2V}{\dot\sigma^2+2V}.
+$$
+
+즉 \(w=-1\)은 \(\dot\sigma=0\)인 상수진공 branch의 가정이고,
+\(w(a)\ne-1\)은 \(V(\sigma)\), 정규화된 vacuum counterterm, 초기조건을
+지정해 Klein--Gordon 방정식과 Friedmann 방정식을 함께 풀어야 얻는다.
+현재 canonical density와 \(w=-1\), 외부
+\(H_0=67.4,\ r_d=147.09\,{\rm Mpc}\)를 묶은 DESI DR2 13-block
+고정-background 검산은
+\(\chi^2=40.20145,\ p=1.2828\times10^{-4}\)로 `REJECT`다.
+EH-hybrid \(r_d=151.50523\,{\rm Mpc}\)도
+\(\chi^2=41.19455,\ p=8.8602\times10^{-5}\)로 `REJECT`다.
+
+완전한 승격 조건은 (1) \(C_5\) 또는 UV 매개변수를 독립적으로 고정하고,
+(2) renormalized \(V(\sigma)\)와 진공 counterterm을 유도하며,
+(3) background와 perturbation을 같은 작용에서 풀고,
+(4) CMB·BAO·SN likelihood와 독립 holdout을 함께 통과하는 것이다.
+이 조건들은 수치 우연을 보존하는 대신 중성미자 질량, 절대 암흑에너지
+스케일과 \(w(a)\)를 하나의 재현 가능한 물리 문제로 만든다.
 
 이로써, 암흑 에너지와 우주 가속 팽창 문제에 대해서도  
 CE 클라루스장 이론의

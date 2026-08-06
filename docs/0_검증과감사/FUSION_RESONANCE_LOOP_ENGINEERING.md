@@ -10,7 +10,7 @@
 기존 핵융합 문서는 다음 사슬을 제안했다.
 
 \[
-29.648\ {\rm MeV\ scalar\ pole}
+29.6991596\ {\rm MeV\ inverse\!-\!correlation\ candidate}
 \xrightarrow{Q}
 Q\times V_{\rm Yukawa}(r)
 \rightarrow

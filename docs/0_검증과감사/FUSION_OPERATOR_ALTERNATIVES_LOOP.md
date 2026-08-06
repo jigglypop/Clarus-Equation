@@ -11,9 +11,9 @@ flavor-aligned (uds) 후보의 경계 제약을 피하기 위해 세 연산자 �
 
 | 분기 | 1%에 필요한 값 | 가장 가까운 제약 | 판정 |
 |---|---:|---:|---|
-| pure trace/gluon | (|K_\Theta|v/f=5.48) | (1.38\times10^{-3}) | 약 (4.0\times10^3)배 초과 |
-| protophobic (g_p=0) | (g_n=0.03018) | Pb effective 0.0235 vs 0.01758 | neutron `FAIL` |
-| neutron-phobic (g_n=0) | (g_p=0.042686) | kaon 조합 | (9.5\times10^3)--(2.75\times10^4)배 초과 |
+| pure trace/gluon | \((\lvert K_\Theta\rvert v/f=5.4826)\) | \(1.38\times10^{-3}\) | 약 \(3.973\times10^3\)배 초과 |
+| protophobic (g_p=0) | \(g_n=0.0302190\) | Pb effective 0.0235198 vs 0.0176408 | neutron `FAIL` |
+| neutron-phobic (g_n=0) | \(g_p=0.0427361\) | kaon 조합 | \((9.5\times10^3)\)--\((2.75\times10^4)\)배 초과 |
 | Pb charge blind spot | (g_p/g_n=-126/82) | D/T charge product | 부호가 음수, 반발력 |
 | massless disformal upper | \(M=180.705\) MeV | massless 200/810 MeV 참고값; light-mediator collider 1.2 TeV | collider `FAIL` |
 
@@ -33,15 +33,15 @@ g_p=0.7844\frac{K_\Theta}{f/\mathrm{GeV}},
 g_n=0.7817\frac{K_\Theta}{f/\mathrm{GeV}}.
 \]
 
-D/T charge product (1.8221\times10^{-3})을 맞추면
+D/T charge product \(1.82637665\times10^{-3}\)을 맞추면
 
 \[
-f/K_\Theta=44.9215\ \mathrm{GeV},
-\qquad |K_\Theta|v/f=5.4762.
+f/K_\Theta=44.8689\ \mathrm{GeV},
+\qquad |K_\Theta|v/f=5.48264.
 \]
 
 [Delaunay et al.](https://arxiv.org/abs/2501.16477) Fig. 4의 one-parameter
-trace 방향 한계 약 (1.38\times10^{-3})보다 3968배 크다. 여러 Wilson
+trace 방향 한계 약 \(1.38\times10^{-3}\)보다 3972.9배 크다. 여러 Wilson
 coefficient 사이의 별도 cancellation action은 공급되지 않았으므로 이 분기는 닫힌다.
 
 ## 3. isospin endpoint와 Pb blind spot
@@ -54,10 +54,10 @@ coefficient 사이의 별도 cancellation action은 공급되지 않았으므로
 
 이다.
 
-- (g_p=0)이면 (g_n=\sqrt{P/2}=0.03018)이고 Pb effective coupling은
-  0.02349로 외삽 neutron bound의 1.336배다.
+- \(g_p=0\)이면 \(g_n=\sqrt{P/2}=0.0302190\)이고 Pb effective coupling은
+  0.0235198로 canonical 질량 외삽 neutron bound의 1.33791배다.
 - (g_n=0)이면 neutron scattering source는 사라지지만
-  (g_p=\sqrt P=0.042686)이다. 이 방향을 quark 계수로 맞출 때 필요한 두
+  \(g_p=\sqrt P=0.0427361\)이다. 이 방향을 quark 계수로 맞출 때 필요한 두
   kaon combination은 198과 1581이고, digitized bound 0.0209와 0.0574를
   각각 9474배, 27544배 넘는다.
 - Pb coherent charge를 지우는 (82g_p+126g_n=0)은
@@ -89,7 +89,7 @@ Maxwellian에 그대로 넣었다. 1%에 필요한 가장 큰 scale은
 M=180.70494\ \mathrm{MeV}
 \]
 
-이다. coarse/default/fine 격자의 gain spread는 (2\times10^{-6})보다 작다.
+이다. coarse/default/fine 격자의 gain spread는 \(2\times10^{-6}\)보다 작다.
 등록 scalar mass는 pair potential을 더 억제하므로 massless 계산은 낙관적 상한이다.
 
 공개 제약을 같은 식에 넣은 결과는
@@ -102,9 +102,10 @@ M = 1.2 TeV       gain = 2.59627e-33
 
 이다. 200 MeV 수소분광과 810 MeV stellar-burning 값은
 [Brax--Burrage 계열 분석](https://arxiv.org/abs/1407.2376)의 **massless scalar**
-결과다. 따라서 이를 29.64757 MeV scalar의 mass-specific 배제로 부르지 않고
-참고값으로만 기록한다. 반면 29.65 MeV는 collider 운동량에 비해 light-mediator
-극한이며, [ATLAS scalar dark-energy search](https://cds.cern.ch/record/2627837)의
+결과다. 따라서 이를 최신 canonical \(29.6991596174\) MeV scalar의 mass-specific
+배제로 부르지 않고 참고값으로만 기록한다. 반면 이 질량은 collider 운동량에 비해
+light-mediator 극한이며,
+[ATLAS scalar dark-energy search](https://cds.cern.ch/record/2627837)의
 약 1.2 TeV scale은 필요한 180.7 MeV보다 6천 배 이상 높다. 이 적용 가능한
 collider bound 하나만으로도 낙관적인 massless-potential upper branch는 닫힌다.
 nonlinear screening completion을 새로 도입하면 collider 해석과 10 keV plasma의
@@ -132,3 +133,15 @@ likelihood다.
 uv run python examples/physics/fusion_operator_alternatives_gate.py
 uv run --extra dev python -m pytest tests/test_fusion_operator_alternatives_loop.py -q
 ```
+
+최신 canonical 질량에서 필요한 D/T product를 기존 thermal solver로 다시 푼 뒤 대체
+연산자 report를 재계산한 명령은 다음과 같다.
+
+```powershell
+.\.venv\Scripts\python.exe -c "import reality_stone.clarus.fusion_equation_iteration_loop as fe; import reality_stone.clarus.fusion_operator_alternatives_loop as oa; fe.DEFAULT_SCALAR_MASS_MEV=29.69915961743591; fe.current_fusion_equation_iteration_report.cache_clear(); r=oa.current_fusion_operator_alternatives_report(); print(r.trace_gluon, r.isospin, r.disformal, r.any_alternative_constraint_cleared)"
+```
+
+핵심 출력은 `P_req=0.0018263766547363008`, trace/gluon coordinate
+`5.482643238604032`, protophobic `g_n=0.030219006061883477`, neutron-phobic
+`g_p=0.04273612821415039`다. disformal 계산은 massless optimistic upper bound라
+canonical 질량 변경으로 수치를 재해석하지 않았고 물리 gate는 계속 `False`다.

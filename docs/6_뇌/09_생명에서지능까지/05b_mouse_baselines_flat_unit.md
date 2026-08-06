@@ -1,4 +1,4 @@
-## Mouse IBL/OpenAlyx task-baseline comparison gate
+# Mouse IBL/OpenAlyx task-baseline comparison gate
 
 Channel-region rescue 다음에는 다른 반례를 검사했다. Region decoder가 실제 neural state를 읽는 것이 아니라, 단순 trial clock, stimulus table, previous-trial history만 복원하는 경우다. 이 반례를 다음처럼 분리했다.
 

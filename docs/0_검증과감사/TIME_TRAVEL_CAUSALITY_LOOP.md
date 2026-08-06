@@ -18,17 +18,17 @@ N\ge 0,\qquad |\det T|^2\le 1
 ds^2=-dt^2+dx^2+dy^2+dz^2
 \]
 
-에서 시간을 (t\sim t+T)로 동일시한 몫공간 (S^1_T\times\mathbb R^3)을
-생각한다. 공간좌표를 고정하고 (t)만 증가시키면 각 국소 구간은
-future-directed timelike이고 (N=1>0)이다. CE 문서의 전이식을 그대로
+에서 시간을 \(t\sim t+T\)로 동일시한 몫공간 \(S^1_T\times\mathbb R^3\)을
+생각한다. 공간좌표를 고정하고 \(t\)만 증가시키면 각 국소 구간은
+future-directed timelike이고 \(N=1>0\)이다. CE 문서의 전이식을 그대로
 적용해도 각 스텝에서
 
 \[
 |\det T|^2=e^{-\alpha_{\rm total}\Delta\tau}\le1
 \]
 
-이다. 그러나 (t)가 한 주기 (T) 증가하면 몫공간에서는 출발 사건으로
-돌아온다. 고유시간은 (T>0)만큼 증가했지만 곡선은 닫힌다.
+이다. 그러나 \(t\)가 한 주기 \(T\) 증가하면 몫공간에서는 출발 사건으로
+돌아온다. 고유시간은 \(T>0\)만큼 증가했지만 곡선은 닫힌다.
 
 따라서 다음 함의는 거짓이다.
 
@@ -48,19 +48,19 @@ N\ge0\ \wedge\ |\det T|\le1
 t:M\to\mathbb R
 \]
 
-가 존재하고 모든 허용 causal curve에서 (t\circ\gamma)가 단조 증가한다고
+가 존재하고 모든 허용 causal curve에서 \(t\circ\gamma\)가 단조 증가한다고
 가정한다.
 
 **정리.** 이 가정 아래에는 future-directed CTC가 없다.
 
-**증명.** CTC (\gamma:[0,1]\to M)가 존재한다고 가정한다. 닫힘 때문에
-(\gamma(0)=\gamma(1))이고, 함수의 단일값성 때문에
+**증명.** CTC \(\gamma:[0,1]\to M\)가 존재한다고 가정한다. 닫힘 때문에
+\(\gamma(0)=\gamma(1)\)이고, 함수의 단일값성 때문에
 
 \[
 t(\gamma(1))-t(\gamma(0))=0
 \]
 
-이다. 그러나 (t\circ\gamma)가 future-directed causal curve에서 엄격히
+이다. 그러나 \(t\circ\gamma\)가 future-directed causal curve에서 엄격히
 증가하면 같은 차이는 양수여야 한다. 모순이다. \(\square\)
 
 ## 루프 1 판정

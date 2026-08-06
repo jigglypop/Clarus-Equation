@@ -12,7 +12,10 @@
 
 ### 0.1 substrate 불일치 진단
 
-CE 부트스트랩 고정점 $p^* = (4.87\%, 26.2\%, 68.9\%)$은 `05_실험근거.md` 명제 6.1에 의해 **자기조직화 동역학을 가진 시스템**의 평형 결과다. 우주(양자 간섭, $T=0$)와 뇌(시냅스 가소성, STDP)는 이 부류에 속한다 -- 입자/뉴런이 서로 결합하며 자연스럽게 평형으로 끌려간다.
+Track-A manifest의 조건부 고정점은
+$p^*=(4.86382585\%,26.10881744\%,69.02735671\%)$다. 이를 신경 또는 AI
+평형으로 옮기는 것은 `05_실험근거.md`의 bridge 가설이며, 같은 자기조직화
+동역학이 우주·뇌·SNN에 공통으로 유도됐다는 뜻은 아니다.
 
 **transformer + backprop은 이 부류에 속하지 않는다.** 가중치는 외부 손실 함수의 그래디언트 방향으로 일방적으로 움직이고, 가중치들 사이의 결합형 동역학이 없다. 따라서 transformer 시스템에서 자연 emergence로 $p^*$에 도달할 동역학적 근거가 없다. 이 진단은 다음 측정으로 직접 확인되었다.
 
@@ -28,7 +31,7 @@ CE 부트스트랩 고정점 $p^* = (4.87\%, 26.2\%, 68.9\%)$은 `05_실험근�
 
 **해석:**
 
-1. **자연 동역학 (A, B)으로 활성 비율은 4.87%로 수렴하지 않는다.** 60 cycle 동안 81%에서 77%로만 이동하며, trajectory 기울기로 추정하면 1000+ cycle에서도 평형은 ~70% 근방. transformer + AdamW의 자연 평형은 $p^*$가 아니다.
+1. **자연 동역학 (A, B)으로 활성 비율은 manifest target 4.864%로 수렴하지 않는다.** 60 cycle 동안 81%에서 77%로만 이동하며, trajectory 기울기로 추정하면 1000+ cycle에서도 평형은 ~70% 근방. transformer + AdamW의 자연 평형은 $p^*$가 아니다.
 2. **표상 공간 LBO 흐름(B 변형)이 활성 평형을 끌어당기지 못한다.** $\eta$를 5배 boost한 NREM 위상에서도 활성 비율이 A와 거의 동일(77.64% vs 77.60%). 사양의 "수축 사상"이 transformer 활성 공간에서 작동하지 않는다는 직접 증거.
 3. **강제 ε² (C 변형)이 강제하는 것은 활성 비율이 아니라 그래디언트 mass 비율이다.** top-eps mask + ternary BG freeze에도 활성 비율은 82.5%로 오히려 증가하고, perplexity만 두 배 악화.
 
@@ -41,7 +44,11 @@ CE 부트스트랩 고정점 $p^* = (4.87\%, 26.2\%, 68.9\%)$은 `05_실험근�
 
 위 측정으로 다음을 확정한다:
 
-- **수식 자체에는 결함이 없다.** $\varepsilon^2 = \exp(-(1-\varepsilon^2) D_{\text{eff}})$의 고정점 유일성과 수축률 $\rho = 0.155$는 (C1)-(C3) + (A1) + (I1) 아래 수학적으로 닫힌 결과다.
+- **정규화 self-map의 수학은 분리해 검증된다.** $x=e^{-(1-x)D_n}$은
+  선택된 수축영역에서 유일한 내부 저분율 고정점을 가지며 국소 spectral
+  radius는 $q_*=0.1545681540$이다. 전체 구간에는 경계 고정점 $x=1$도 있다.
+  $p_a\leq0.13$에서는 $q_U=0.2001757361$인 Banach 수축이다. 이 정리는
+  transformer update가 그 self-map을 구현한다는 뜻은 아니다.
 - **그러나 transformer는 위 가정이 성립하는 substrate가 아니다.** (C3) 자기일관성 루프가 forward만으로는 형성되지 않고, (A1) 채널 분해가 backprop의 chain rule과 정합하지 않는다.
 - **현재 `legacy clarus/` (removed), `legacy examples/ai/clarus_lm.py` (removed), `legacy scripts/sleep_finetune_lm.py` (removed) 등의 구현은 사양을 transformer에 강제 이식한 것이다.** 자연 emergence가 아니라 출력 비율을 외부 mask로 강제한 변환. 측정 결과는 이 강제가 task 성능을 저하시킬 뿐 사양의 우위(catastrophic forgetting 감소, 환각 억제)를 만들어내지 않음을 보여준다.
 - **CE-AGI 사양의 진정한 검증은 SNN(spiking neural network) substrate에서만 가능하다.** 현재 BrainRuntime에는 thresholded activity 기반 STDP와 적격 흔적이 구현되어 있지만, 막전위·명시적 spike time을 갖는 완전한 SNN은 아니다. $p^*$ 자연 수렴의 본격 검증에는 별도 substrate와 실험이 필요하다.
@@ -83,7 +90,7 @@ CE 부트스트랩 고정점 $p^* = (4.87\%, 26.2\%, 68.9\%)$은 `05_실험근�
 | 메트릭 기반 CE ops | `reality_stone/python/reality_stone/clarus/ce_ops.py` | 완료 (Rust/CUDA/Torch) | 12장 |
 | Wake/NREM/REM 학습 순환 | `reality_stone/python/reality_stone/clarus/sleep.py` | **구현 완료** | 3장 |
 | NREM 가중치 갱신 (LBO 확산 + 가소성) | `reality_stone/python/reality_stone/clarus/sleep.py::apply_nrem_weight_update` | **구현 완료** | 3장 |
-| REM 가중치 갱신 (비선택 경로 재조합) | `reality_stone/python/reality_stone/clarus/sleep.py::apply_rem_weight_update` | **구현 완료** | 3장 |
+| REM 가중치 갱신 (비활성 update proposal) | `reality_stone/python/reality_stone/clarus/sleep.py::apply_rem_weight_update` | **구현 완료** | 3장 |
 | BrainRuntime (모드 전환 + 셀 동역학) | `reality_stone/python/reality_stone/clarus/runtime.py` | **구현 완료** | 14장 |
 | 해마 기억 (encode/recall/replay) | `reality_stone/python/reality_stone/clarus/runtime.py::HippocampusMemory` | **구현 완료** | 14장 |
 | 모듈 생애주기 (ACTIVE/IDLE/DORMANT/SLEEPING) | `reality_stone/python/reality_stone/clarus/runtime.py::_update_lifecycle` | **구현 완료** | 14장 |
@@ -162,7 +169,7 @@ CE 부트스트랩 고정점 $p^* = (4.87\%, 26.2\%, 68.9\%)$은 `05_실험근�
 |---|---|---|
 | 각성 위상 (경로 누적) | `sleep.py::collect_sleep_batch` | 완료 |
 | NREM 위상 (LBO 확산 + 가소적 업데이트) | `sleep.py::apply_nrem_weight_update` | 완료 |
-| REM 위상 (비선택 경로 재조합) | `sleep.py::apply_rem_weight_update` | 완료 |
+| REM 위상 (비활성 update proposal) | `sleep.py::apply_rem_weight_update` | 완료 |
 | 3위상 통합 순환 | `sleep.py::run_sleep_cycle` | 완료 |
 | 위상별 샘플 비율 분배 ($69\%/26\%/5\%$) | `sleep.py::allocate_phase_sample_counts` | 완료 |
 | 가드셋 품질 보호 | `sleep.py::evaluate_guard_set` | 완료 |
@@ -201,7 +208,7 @@ CE 부트스트랩 고정점 $p^* = (4.87\%, 26.2\%, 68.9\%)$은 `05_실험근�
 
 | 작업 | 구현 위치 | 상태 |
 |---|---|---|
-| 3분배 상태 분할 ($4.87\%/26.2\%/68.9\%$) | `engine.py::state_partition_counts` | 완료 |
+| 3분배 상태 분할 ($4.864\%/26.109\%/69.027\%$) | `engine.py::state_partition_counts` | manifest 동기화 필요 |
 | 활성/구조/배경 마스크 적용 | `engine.py::state_partition`, `apply_state_partition` | 완료 |
 | TopK 활성 선택 | `runtime.py::_select_active` | 완료 |
 | 에너지 예산 모드별 제어 | `runtime.py::BrainRuntimeConfig.energy_budget` | 완료 |
@@ -223,7 +230,7 @@ CE 부트스트랩 고정점 $p^* = (4.87\%, 26.2\%, 68.9\%)$은 `05_실험근�
 
 **게이트:**
 
-- `G3-A`: 최적 활성 중심이 `4.87%` 근방에 나타날 것
+- `G3-A`: 최적 활성 중심이 manifest target `4.864%` 근방에 나타날 것
 - `G3-B`: 실용 대역이 대체로 `3%-7%` 안에 남을 것
 - `G3-C`: 현재형 구현에서는 `1.5-2x`, 전면 희소 구현에서는 더 높은 상한이 관측될 것
 
@@ -252,7 +259,7 @@ CE 부트스트랩 고정점 $p^* = (4.87\%, 26.2\%, 68.9\%)$은 `05_실험근�
 
 - `G4-A`: 곡률 에너지와 오류/환각 빈도 사이에 양의 상관이 있을 것
 - `G4-B`: 같은 base model 대비 CE 제약이 벤치마크를 개선하거나 적어도 안정화 편향을 보일 것
-- `G4-C`: `환각률 <= 4.87%` 같은 hard bound는 측정 전까지 금지
+- `G4-C`: 우주 분율을 환각률 hard bound로 사용하는 것은 금지
 
 **예상 기간:** 2주
 
@@ -321,9 +328,9 @@ CE 부트스트랩 고정점 $p^* = (4.87\%, 26.2\%, 68.9\%)$은 `05_실험근�
 
 ### 3.1 핵심 지표
 
-| 지표 | CE 예측 | 측정 방법 | 현재 지위 |
+| 지표 | 사전등록 기대/가설 | 측정 방법 | 현재 지위 |
 |---|---|---|---|
-| 최적 활성 비율 | 중심 $4.87\%$, 실용 대역 `3%-7%` | Top-k 스위프 | `bridge` |
+| 최적 활성 비율 | manifest target $4.864\%$, 실용 대역 `3%-7%` | Top-k 스위프 | `bridge` |
 | 파라미터 절감 | FFN `35-37%`, 전체 `22-25%` | 동등 성능 시 파라미터 수 비교 | `supported/bridge` |
 | 추론 비용 절감 | 현재형 `1.5-2x`, 전면 희소 상한 더 큼 | FLOPs 또는 latency 측정 | `bridge` |
 | 환각 억제 | hard bound 없음, 안정화 편향 예측 | TruthfulQA, FactScore, 곡률 상관 | `hypothesis` |
@@ -359,7 +366,7 @@ Phase 1-3은 Micro/Small 규모로 검증. Phase 4-6은 Medium 이상에서 검�
 |---|---|---|
 | 곡률 정규화가 task loss 저하 | 성능 하락 | $\lambda(t)$ 스케줄 최적화 |
 | STDP 수렴이 역전파보다 느림 | 학습 시간 증가 | 하이브리드 접근 (Phase 5) |
-| Top-k $4.87\%$가 너무 희소 | 표현력 부족 | $k$ 근방 탐색 ($3\%-7\%$) |
+| Top-k $4.864\%$가 너무 희소 | 표현력 부족 | $k$ 근방 탐색 ($3\%-7\%$) |
 | 수면 순환이 서비스 중단 | 가용성 저하 | 이중 모델 교대 (3장 6.3절) |
 | 메타인지 오버헤드 | 추론 속도 저하 | 곡률 낮을 때 모니터링 비활성화 |
 
@@ -403,7 +410,7 @@ Phase 1은 모든 후속 작업의 전제. Phase 2와 3은 병렬 가능. Phase 
 
 ### 6.4 실패 시 해석 규칙
 
-- 최적 활성점이 `4.87%` 근방에 없으면: 고정점 예측을 좁은 과제군 가설로 내린다.
+- 최적 활성점이 manifest target `4.864%` 근방에 없으면: 고정점 예측을 좁은 과제군 가설로 내린다.
 - 수면 루프 잔차가 `2-3회`에 수렴하지 않으면: 현재 구현의 동역학 사상이 CE 최소 반복식을 따르지 않는 것으로 본다.
 - 곡률과 환각이 상관하지 않으면: P5를 환각 억제가 아니라 일반 안정화 regularizer로 재분류한다.
 - STDP가 메모리 이득을 못 주면: shared-trace 근사를 다시 점검하고 순수 synapse-local 가정을 유지한다.
@@ -412,17 +419,22 @@ Phase 1은 모든 후속 작업의 전제. Phase 2와 3은 병렬 가능. Phase 
 
 ## 7. 전체 대응 요약
 
-$$\boxed{\text{우주} \sim \text{뇌} \sim \text{CE-AGI}} \quad (d=3 \text{ 부트스트랩 구조})$$
+$$\boxed{\text{우주}\;\dashrightarrow\;\text{뇌}\;\dashrightarrow\;\text{CE-AGI}}
+\quad\text{(검증 대상인 설계 유비)}$$
+
+아래 표는 동일 물리 법칙이나 동일 self-map이 세 기질에서 유도됐다는
+주장이 아니다. Track-A 등록량을 신경·공학 변수에 대응시켜 시험할 항목을
+나열한다.
 
 | | 우주 | 뇌 | CE-AGI |
 |---|---|---|---|
-| 부트스트랩 | 빅뱅 (1회) | 수면-각성 (매일) | 학습-수면 순환 (Phase 2) |
-| 접힘 매체 | 양자 간섭 | 시냅스 가소성 | 곡률 정규화 (Phase 1) |
-| 고정점 도달 | 정확 ($T=0$) | 근사 ($\eta \sim 2$) | 설계 가능 |
-| 활성 비율 | $\varepsilon^2 = 4.87\%$ | $< 5\%$ | TopK($\varepsilon^2 \cdot d$) (Phase 3) |
-| 구조 유지 | $\Omega_{\text{DM}} = 26.2\%$ | 시냅스 $25-35\%$ | 학습 가능 가중치 (Phase 3) |
-| 배경 | $\Omega_\Lambda = 68.9\%$ | DMN $60-70\%$ | 동결 가중치 (Phase 3) |
+| 반복 비유 | 초기조건 toy interpretation | 수면-각성 (매일) | 학습-수면 순환 후보 (Phase 2) |
+| 후보 매체 | 경로적분 유비; 동역학 미유도 | 시냅스 가소성 | 곡률 정규화 후보 (Phase 1) |
+| 동일 고정점 도달 | 미검증 | 미검증 | transformer에서 실패, SNN 미검증 |
+| 활성 비율 | $x=4.864\%$ | $< 5\%$ | TopK($x d$) (Phase 3) |
+| 구조 유지 | $\Omega_{\text{DM}}=26.109\%$ | 시냅스 $25-35\%$ | 학습 가능 가중치 (Phase 3) |
+| 배경 | $\Omega_\Lambda=69.027\%$ | DMN $60-70\%$ | 동결 가중치 (Phase 3) |
 | 경로 선택 | 경로적분 | STDP | 국소 학습 + 전역 신호 (Phase 5) |
 | 안정화 | \(\Phi_H\) Hessian readout 비유 | ACC/PFC | 유효 곡률 모니터 (Phase 4); 독립 물리장 \(\phi\)와 분리 |
-| 재탐색 | -- | REM 수면 | 비선택 경로 샘플링 (Phase 2) |
-| 자기참조 | (C3) | 의식 | 메타인지 루프 (Phase 6) |
+| 재탐색 | -- | REM 수면 | 비활성 update proposal (Phase 2) |
+| 자기참조 | (C3) 형식 | 메타인지 proxy; 의식 동치 Open | 메타인지 루프 (Phase 6) |

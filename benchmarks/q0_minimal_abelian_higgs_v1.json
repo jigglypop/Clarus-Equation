@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.0",
+  "manifest": {
+    "schema_version": "1.0",
+    "scope_id": "q0_minimal_abelian_higgs_z2_singlet_rxi_control_slice_only",
+    "model_label": "Minimal Abelian-Higgs plus Z2 singlet R_xi structural control slice",
+    "field_declarations": [
+      "A_mu",
+      "h",
+      "chi",
+      "phi",
+      "c",
+      "c_bar"
+    ],
+    "action_terms": [
+      "abelian_gauge_kinetic",
+      "complex_scalar_kinetic",
+      "z2_singlet_scalar_kinetic",
+      "higgs_z2_singlet_portal_potential",
+      "r_xi_gauge_fixing",
+      "faddeev_popov_ghost"
+    ],
+    "spacetime_signature": "(-,+,+,+)",
+    "action_kind": "classical_bare_tree_level_control",
+    "fixed_background_metric": "eta_mu_nu=diag(-1,+1,+1,+1);not_varied",
+    "units": "natural_units_hbar=c=1",
+    "action_convention": "S=int d^4x L;L_gauge=-F_mu_nu*F^mu_nu/4;L_scalar=-|D_mu H|^2-(partial_mu phi)^2/2-V(H,phi)",
+    "potential_convention": "V=-mu_H^2*|H|^2+lambda_H*|H|^4+(m0_phi^2/2)*phi^2+(lambda_phi/4)*phi^4+lambda_HP*|H|^2*phi^2",
+    "covariant_derivative": "D_mu=partial_mu-i*g*A_mu",
+    "gauge_transformation": "A_mu->A_mu+partial_mu(alpha);H->exp(i*g*alpha)*H",
+    "background_declaration": "H=(v+h+i*chi)/sqrt(2);phi=0;A_mu=0;h=chi=0",
+    "boundary_conditions": [
+      "fluctuations_and_first_derivatives_vanish_at_spatial_infinity",
+      "integration_by_parts_surface_terms_vanish"
+    ],
+    "field_space_metric": "G_(h,chi,phi)=diag(1,1,1);local_jet_audits_one_scalar_direction_only",
+    "field_space_connection": "Gamma=0_in_Cartesian_(h,chi,phi);Gamma_y=(d2x/dy2)/(dx/dy)_on_one_direction_local_jet",
+    "gauge_fixing": "F=partial_dot_A-xi*g*v*chi;L_gf=-F^2/(2*xi)",
+    "ghost_action": "L_gh=-c_bar*(delta_F/delta_alpha)*c;m_ghost^2=xi*g^2*v^2",
+    "counterterm_status": "not_applied_excluded_from_control_scope",
+    "renormalization_status": "not_applied_excluded_from_control_scope",
+    "excluded_sectors": [
+      "non_abelian_gauge_sector",
+      "fermion_yukawa_sector",
+      "gravity_and_ce_sector",
+      "global_gauge_orbit_and_anomaly_analysis",
+      "loop_counterterms_and_renormalization",
+      "renormalized_stress_tensor",
+      "physical_spectral_density"
+    ],
+    "full_ce_sm_complete": false
+  },
+  "control_inputs": {
+    "action_gradient_x": 3.0,
+    "action_hessian_x": 5.0,
+    "dx_dy": 2.0,
+    "d2x_dy2": 4.0,
+    "field_metric_x": 1.0,
+    "mu_squared": 2.0,
+    "higgs_self_coupling": 0.5,
+    "higgs_vev": 2.0,
+    "singlet_bare_mass_squared": 1.0,
+    "singlet_self_coupling": 0.25,
+    "lambda_hp": 0.13,
+    "singlet_background": 0.0,
+    "gauge_coupling": 0.4,
+    "xi": 2.0,
+    "gauge_fixing_goldstone_coefficient": 1.6,
+    "declared_ghost_mass_squared": 1.28,
+    "tolerance": 1e-12
+  }
+}

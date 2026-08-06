@@ -12,7 +12,9 @@
 | $1$ | 정규화된 완전 상태 | $e^0 = 1$ | Selection |
 | $0$ | 영점·분기 선택 | $d(d-3) = 0$ | Selection |
 
-본 장은 이 문법을 **Transformer attention 메커니즘에 그대로 이식**한다. 추가로 Riemann 가설 하의 제타 영점 $\gamma_n$을 **Euler 상수의 확장 문법**으로 시도한다.
+본 장은 이 문법을 Transformer의 inductive bias로 시험한다. 추가로 유한하게
+검증된 zeta-zero ordinate \(\gamma_n\)를 deterministic frequency bank로
+사용한다. 이는 RH, GUE 또는 Hilbert–Pólya의 구현이 아니다.
 
 ---
 
@@ -57,16 +59,20 @@ $$
 
 구현: `reality_stone/python/reality_stone/clarus/ce_euler.py::RecursiveEulerCEBlock`
 
-### 7.2.3 Riemann Rotary (RH axiom)
+### 7.2.3 Verified-zero Rotary
 
-리만 가설을 **공학 axiom**으로 채택: 모든 비자명 영점의 허수부 $\gamma_n$이 $\{\text{π}, e, \pi e, \pi/e\}$ 처럼 aperiodic 무리수 수열.
+유한 table에서 검증된 positive-zero ordinate를 주파수 후보로 쓴다.
+유한 목록을 사용하는 데 전체 RH는 필요하지 않다.
 
 $$
 \theta_{n,k} = n \cdot (\gamma_k / \gamma_1)^{-1} \cdot s_h
 $$
-첫 100개 $\gamma_n$ 하드코딩 (Titchmarsh 표), 이후는 Riemann–von Mangoldt 점근식 $\gamma_n \approx 2\pi n / \log n$.
+첫 100개 \(\gamma_n\)은 provenance가 있는 table로 고정한다. 그 밖의 항이
+필요하면 zero-counting equation의 역해를 approximate frequency로 별도
+표시하며 \(2\pi n/\log n\) 값을 실제 zero라고 부르지 않는다.
 
-Montgomery–Dyson 대응: $\gamma_n$ 간격은 Gaussian Unitary Ensemble (GUE) 고유값 간격과 동일 통계. "maximal disorder + maximal order" 구조.
+정규화된 고영점 간격의 GUE 거동은 Montgomery–Dyson conjecture와 수치
+증거의 대상이지 RH가 보장하는 정리가 아니다.
 
 구현: `reality_stone/python/reality_stone/clarus/ce_riemann_attn.py::RiemannRotaryAttention`
 
@@ -76,16 +82,18 @@ Montgomery–Dyson 대응: $\gamma_n$ 간격은 Gaussian Unitary Ensemble (GUE) 
 |---|---|
 | std | $\text{GELU}(W_1 x)\,W_2$ |
 | swiglu | $\text{SiLU}(W_g x) \odot (W_u x)\,W_d$ |
-| euler_decay | $\text{GELU}(h)\cdot e^{-|h|/\xi}$ |
+| euler_decay | $\text{GELU}(h)\cdot e^{-\lvert h\rvert/\xi}$ |
 | euler_phase | $\text{GELU}(h)\cdot (1 + \eta\cos(\pi h/\tau))$ |
-| euler_full | $\text{GELU}(h)\cdot (1 + \eta\cos(\pi h/\tau))\cdot e^{-|h|/\xi}$ |
-| zeta | $x\cdot\sigma(x)\cdot(1 + \lambda\cdot z(x))$, $z = |\zeta(1/2 + ix)|^2$ |
+| euler_full | $\text{GELU}(h)\cdot (1 + \eta\cos(\pi h/\tau))\cdot e^{-\lvert h\rvert/\xi}$ |
+| zeta | $x\cdot\sigma(x)\cdot(1 + \lambda\cdot z(x))$, $z = \lvert\zeta(1/2 + ix)\rvert^2$ |
 
 구현: `reality_stone/python/reality_stone/clarus/ce_ffn.py`, `reality_stone/python/reality_stone/clarus/ce_zeta.py`
 
 ### 7.2.5 Riemann FFN init
 
-$W_{\text{up}}$의 한 축을 $\gamma_n$ 간격으로 스케일. 키 좌표가 GUE 분포. 구현: `reality_stone/python/reality_stone/clarus/ce_riemann_attn.py::riemann_zero_init`
+\(W_{\text{up}}\)의 한 축을 선택한 \(\gamma_n\) 간격으로 스케일한다.
+유한 deterministic initialization이며 “키 좌표가 GUE 분포”라고 단정하지
+않는다. 구현: `reality_stone/python/reality_stone/clarus/ce_riemann_attn.py::riemann_zero_init`
 
 ---
 
@@ -150,18 +158,18 @@ $W_{\text{up}}$의 한 축을 $\gamma_n$ 간격으로 스케일. 키 좌표가 G
 
 ## 7.4 이론적 해석
 
-### 7.4.1 Euler = Riemann (공학적 등가)
+### 7.4.1 Euler와 zero-frequency variant의 실험상 동률
 
-Design 1 (Riemann rotary) 이 Euler-CE와 TIE. 이는 **예측된 결과**:
-- Montgomery–Dyson: $\gamma_n$ 간격 ≃ GUE
-- $\{1, \pi, e, \pi e, \pi/e\}$: 무리수 aperiodic
-- 두 수열 모두 **최대 질서 + 최대 혼돈** 통계 공유
-
-공학적 함의: 리만 가설 참/거짓에 관계없이 **Euler-CE가 충분**. 추가 복잡도는 이득 없음.
+Design 1과 Euler-CE가 이 소규모 benchmark에서 TIE였다. 이 결과만으로 두
+kernel의 수학적 등가, GUE 통계 또는 “최대 질서 + 최대 혼돈”을 추론할 수
+없다. 공학적 결론은 이 데이터셋·모델 크기에서 verified-zero frequency의
+추가 복잡도가 평균 성능 이득을 보이지 않았다는 것까지다.
 
 ### 7.4.2 자기재귀 = Bootstrap 고정점
 
-$k=3$에서 수렴은 CE `ε² = exp[-(1-ε²)D_eff]` 의 빠른 수렴과 일치. $D_{\text{eff}} \approx 3$에서 Banach 계수가 작아 3-step fixed-point 충분.
+\(k=3\) 결과는 해당 학습 실험의 관측이다. scalar bootstrap의 내부
+고정점 선형률은 약 0.155지만 이는 임의 neural map의 Banach 상수가 아니다.
+3-step 충분성은 별도 Jacobian/Lipschitz 측정 없이 이 식에서 따라오지 않는다.
 
 ### 7.4.3 Borbély $T_{\text{WAKE}}$ 경험 검증 (이전 commit 7f7fa18)
 
@@ -216,4 +224,6 @@ python3 examples/ai/bench_riemann_ffn_init.py --steps 300 --seeds 3
 - Riemann 영점 첫 100개: `reality_stone/python/reality_stone/clarus/ce_riemann_attn.py::RIEMANN_ZEROS_IM` (Titchmarsh 표, Odlyzko 검증)
 - Euler 상수 bitfield: `reality_stone/python/reality_stone/clarus/ce_euler.py::EULER_BASIS`
 - Borbély $T_{\text{WAKE}} = 1/(3 + \text{AD}(1-\text{AD}))$: `reality_stone/python/reality_stone/clarus/constants.py`
-- 모든 유도는 `docs/경로적분.md` §51-67 최소생성문법과 `docs/1_강의/A_연역적_유도.md` §801 고정점 개념에 근거.
+- Euler 계수는 CE 문서에서 가져온 design prior이고, zero frequency는
+  수론 table에서 가져온 별도 engineering choice다. 두 출처의 결합은
+  연역 정리가 아니라 ablation 대상이다.

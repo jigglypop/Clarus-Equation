@@ -1,4 +1,4 @@
-## 단계 2: Drosophila larva에서 adult FlyWire까지
+# 단계 2: Drosophila larva에서 adult FlyWire까지
 
 C. elegans 다음 단계에서는 단순 3층 routing 위에 cell type, action, memory가 같이 분화한다.
 

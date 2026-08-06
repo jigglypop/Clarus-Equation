@@ -117,7 +117,7 @@ python examples\pre_eq\fraction_threshold.py
 | 비선택 잔류 | raw mass와 conditional shape 분리 |
 | joint Bayes readout | conditional과 free energy marginal 재구성 |
 | tropical 극한 | log-sum-exp 오차 \(\le\log N/\beta\) |
-| Born refinement | branch count prior = \(|c_i|^2\), 위상 불변 |
+| Born refinement | branch count prior = \(\lvert c_i\rvert^2\), 위상 불변 |
 | toy gate ablation | \(\alpha_\phi=0\), \(\alpha_\phi>0\), shuffled residual 비교 |
 | layer-cake 항등식 | \(\langle e^{-\Phi}\rangle=\int e^{-t}\mu(\Phi\le t)dt\) 유한공간 정확 일치 |
 | mean-field bounds | Jensen 하한과 Var 상한이 tilt를 bracket |

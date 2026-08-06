@@ -6,20 +6,20 @@
 
 ## 결론
 
-29.64757 MeV flavor-aligned scalar는 여전히 가장 가까운 조건부 후보지만, 유한 핵 크기와
-제약의 이론 오차를 반복해도 물리 gate를 열 수 없다.
+최신 canonical \(29.6991596174\) MeV flavor-aligned scalar는 여전히 가장 가까운
+조건부 후보지만, 유한 핵 크기와 제약의 이론 오차를 반복해도 물리 gate를 열 수 없다.
 
 - D/T Gaussian one-body 접힘을 1% thermal/WKB 목표까지 다시 풀면 필요한 charge
-  product는 최대 2.10%, nucleon coupling은 1.05% 감소한다.
+  product는 최대 2.11%, nucleon coupling은 1.06% 감소한다.
 - Gaussian·3차원 exponential·균일구 밀도와 두 반지름 세트를 약한 퍼텐셜의 선형응답으로
-  비교하면 product 감소 범위는 1.65--2.41%, coupling 감소 범위는 0.83--1.21%다.
+  비교하면 product 감소 범위는 1.66--2.42%, coupling 감소 범위는 0.83--1.22%다.
 - neutron--Pb의 각분포 재투영은 결합 상한을 완화하지만, scalar bound에 더 가까운
   저에너지 총단면적 재투영은 상한을 강화한다. 서로 반대인 결과를 평균내지 않는다.
-- rare-kaon 중앙 곡선이 견디는 하향 NLO tightening은 점핵에서 6.637배, 가장 유리한
-  one-body proxy에서도 6.719배뿐이다. 최신 NA62의 BR 개선 범위는 coupling bound를
+- rare-kaon 중앙 곡선이 견디는 하향 NLO tightening은 점핵에서 6.629배, 가장 유리한
+  one-body proxy에서도 6.711배뿐이다. 최신 NA62의 BR 개선 범위는 coupling bound를
   추가로 `1/sqrt(1)--1/sqrt(3)`배 줄인다. Figure 2 벡터 곡선을 CE 질량에서 보간하면
-  중앙 개선 proxy는 1.331배이고 중앙 NLO 임계는 5.752--5.823배로 내려간다.
-  두 BR 판독값에 독립 5% box를 전파해도 점핵 임계는 5.471--6.047배다. 인정된
+  중앙 개선 proxy는 1.331배이고 중앙 NLO 임계는 5.746--5.817배로 내려간다.
+  두 BR 판독값에 독립 5% box를 전파해도 점핵 임계는 5.466--6.041배다. 인정된
   최대 10배 NLO 범위에서는 닫힌다.
 
 따라서 `margin_robustness_gate_pass=False`와
@@ -52,10 +52,10 @@ e^{-\mu r}\operatorname{erfc}\left(a\mu-\frac{r}{2a}\right)
 | D rms / T rms (fm) | 필요한 product / 점핵 | 필요한 coupling / 점핵 |
 |---:|---:|---:|
 | point | 1.000000 | 1.000000 |
-| 1.50 / 1.30 | 0.98579 | 0.99287 |
-| 1.975 / 1.59 | 0.98032 | 0.99011 |
-| 2.20 / 1.90 | 0.97902 | 0.98946 |
-| 2.40 / 2.10 | 0.97975 | 0.98982 |
+| 1.50 / 1.30 | 0.985738 | 0.992844 |
+| 1.975 / 1.59 | 0.980252 | 0.990077 |
+| 2.20 / 1.90 | 0.978938 | 0.989413 |
+| 2.40 / 2.10 | 0.979661 | 0.989778 |
 
 반지름만 넓히는 것으로 density-shape 의존성을 가릴 수 없으므로, 구조 반지름
 `(1.97507, 1.5978) fm`과 보수적 반지름 외피 `(2.12799, 1.7591) fm`에서 세 밀도를
@@ -63,8 +63,8 @@ e^{-\mu r}\operatorname{erfc}\left(a\mu-\frac{r}{2a}\right)
 
 | 반지름 세트 | Gaussian | exponential | 균일구 |
 |---|---:|---:|---:|
-| 구조 반지름 | 0.98028 | 0.98345 | 0.97772 |
-| 보수적 외피 | 0.97923 | 0.98314 | 0.97586 |
+| 구조 반지름 | 0.980209 | 0.983386 | 0.977638 |
+| 보수적 외피 | 0.979146 | 0.983073 | 0.975773 |
 
 이 값은 작은 probe coupling에서 얻은 선형응답이다. 별도 고해상도 nonlinear 재계산과의
 차이는 coupling 기준 약 `1e-5`였지만, hard gate에는 사용하지 않는다. 특히 charge
@@ -77,7 +77,7 @@ D 사중극, T neutron profile, overlap deformation과 density covariance가 빠
 
 \[
 q=3.531\text{--}13.178\ \mathrm{MeV},\qquad
-\frac{m_\phi^2}{m_\phi^2+q^2}=0.835\text{--}0.986.
+\frac{m_\phi^2}{m_\phi^2+q^2}=0.83551\text{--}0.98606.
 \]
 
 Pb rms 반지름 5.40--5.75 fm와 Gaussian, exponential, 균일구 form factor를 사용했다.
@@ -88,28 +88,28 @@ K_{\rm loc}(q)=\frac{m_\phi^2}{m_\phi^2+q^2}
 \left[1+\frac{m_\phi^2(1-F(q))}{q^2}\right]
 \]
 
-은 0.925--1.109로, 점핵 D/T의 통과 임계 `K <= 1.00633`을 양쪽에서 가로지른다.
-가장 유리한 D/T morphology proxy를 쓰면 임계는 `1.03122`다.
+은 0.92602--1.10907로, 점핵 D/T의 통과 임계 `K <= 1.01098`을 양쪽에서
+가로지른다. 가장 유리한 D/T morphology proxy를 쓰면 임계는 `1.03608`이다.
 
 그러나 국소값의 평균은 원 실험 fit이 아니다. 자유 intercept를 둔 25 keV 각분포의
 선형 기울기로 재투영하면
 
 \[
-K_{\rm angular}=0.910\text{--}0.923,
+K_{\rm angular}=0.91046\text{--}0.92348,
 \]
 
 이어서 결합 상한을 완화한다. 반대로 scalar 제약에 사용된 저에너지 총단면적
 `sigma(k)=sigma_0+sigma_2 k^2`를 10 eV--10 keV에서 재투영하면
 
 \[
-K_{\sigma_2}=1.050\text{--}1.080,
+K_{\sigma_2}=1.05044\text{--}1.08029,
 \]
 
 이고 `k -> 0`에서는
 
 \[
 K_{\sigma_2}(0)=1+\frac{m_\phi^2R_{\rm Pb}^2}{6(\hbar c)^2}
-=1.110\text{--}1.124,
+=1.11009\text{--}1.12482,
 \]
 
 이어서 상한을 강화한다. 두 recast가 통과 경계의 반대편에 놓인다. 원 분석이 이미 유한
@@ -119,7 +119,7 @@ finite-density provenance 없이는 어느 proxy도 hard bound가 아니다. 특
 간단한 원문 recast의 명시 범위보다 높다.
 
 finite-window 적분은 181×241 격자와 1001×1001 격자를 함께 계산한다. 정제 후 범위는
-`1.049888--1.079729`, 최대 상대 이동은 `3.82e-5`로 선언한 `1e-4` 수치 허용치 안이다.
+`1.050443--1.080292`, 최대 상대 이동은 `3.81e-5`로 선언한 `1e-4` 수치 허용치 안이다.
 gate에는 안정한 여섯 자리까지만 출력한다.
 
 이 구분은 scalar differential bound의 strong p-wave cancellation과 저에너지 총단면적
@@ -139,12 +139,12 @@ K_{\rm Pb}\le
 {g_{\rm Pb,0}\sqrt p}\right)^2,
 \qquad
 K_{\rm NLO}\le
-\frac{182\,d}{27.4217\sqrt p}.
+\frac{182\,d}{27.4539\sqrt p}.
 \]
 
 여기서 `d`는 digitized kaon 곡선 multiplier다. 중앙 `d=1`에서 오른쪽 임계값은 점핵
-6.637, 가장 유리한 one-body proxy 6.719다. 하단 `d=0.88`과 점핵을 동시에 요구하면
-5.841이다. 따라서 인정된 `K_NLO=10`에서는 Pb proxy를 어떻게 고르더라도 kaon 조건이
+6.629, 가장 유리한 one-body proxy 6.711이다. 하단 `d=0.88`과 점핵을 동시에 요구하면
+5.834다. 따라서 인정된 `K_NLO=10`에서는 Pb proxy를 어떻게 고르더라도 kaon 조건이
 닫힌다.
 
 [NA62 2016--2022 hidden-sector search](https://arxiv.org/abs/2507.17286)는 0--110 MeV와
@@ -158,7 +158,7 @@ B_{\rm coupling,new}=\frac{B_{\rm coupling,old}}{\sqrt{I_{\rm BR}}},
 \]
 
 따라서 기존 digitized coordinate 182는 범위만 전달하면 105.08--182가 되고, 점핵의
-허용 NLO tightening은 3.832--6.637, 가장 유리한 D/T proxy에서는 3.879--6.719다.
+허용 NLO tightening은 3.827--6.629, 가장 유리한 D/T proxy에서는 3.875--6.711이다.
 최신 자료만으로는 tree-level 후보가 이 범위 전체에서 중앙 상한 아래지만, 이것도 exclusion
 또는 pass 판정이 아니다.
 
@@ -166,29 +166,29 @@ B_{\rm coupling,new}=\frac{B_{\rm coupling,old}}{\sqrt{I_{\rm BR}}},
 기록했다. 축과 후보 질량을 선형 변환하고 후보를 감싸는 두 선분을 보간하면
 
 \[
-\mathcal B_{2016\text{--}22}^{90\%}(29.64757\,\mathrm{MeV})
-\simeq2.4763\times10^{-11},\qquad
+\mathcal B_{2016\text{--}22}^{90\%}(29.6991596174\,\mathrm{MeV})
+\simeq2.47425\times10^{-11},\qquad
 \mathcal B_{2016\text{--}18}^{90\%}
-\simeq3.2968\times10^{-11}.
+\simeq3.29329\times10^{-11}.
 \]
 
-따라서 그림 readout의 **중앙값** 개선은 `I_BR=1.33137`, coupling multiplier는
-`0.866665`, 갱신된 uds 중앙 coordinate는 `157.73`이다. 중앙 점핵 NLO 임계는
-`5.75212`, 가장 유리한 D/T proxy에서는 `5.82283`이다. 코드에는 PDF page index,
+따라서 그림 readout의 **중앙값** 개선은 `I_BR=1.33103`, coupling multiplier는
+`0.866776`, 갱신된 uds 중앙 coordinate는 `157.753`이다. 중앙 점핵 NLO 임계는
+`5.74611`, 가장 유리한 D/T proxy에서는 `5.81701`이다. 코드에는 PDF page index,
 축 좌표와 두 벡터 선분 끝점을 그대로 넣어 이 보간을 재현한다.
 
 그림 판독 자체의 5% 상대 오차는 old/new BR에 독립 box로 전파했다. 그 결과
 
 \[
-I_{\rm BR}=1.20457\text{--}1.47151,
-\quad B_{\rm coupling,new}/B_{\rm coupling,old}=0.82436\text{--}0.91114,
+I_{\rm BR}=1.20426\text{--}1.47113,
+\quad B_{\rm coupling,new}/B_{\rm coupling,old}=0.82447\text{--}0.91125,
 \]
 
-점핵 NLO 임계는 `5.47136--6.04729`, 가장 유리한 D/T proxy에서는
-`5.53862--6.12163`다. 이 전 구간도 10보다 작다.
+점핵 NLO 임계는 `5.46564--6.04097`, 가장 유리한 D/T proxy에서는
+`5.53308--6.11551`이다. 이 전 구간도 10보다 작다.
 
 그러나 논문은 1.4 MeV 간격의 mass hypothesis를 사용하고 이 값은 공개 그림의 선분
-보간이다. 29.64757 MeV의 tabulated CLs 값·acceptance table과 flavor-aligned uds
+보간이다. 29.6991596174 MeV의 tabulated CLs 값·acceptance table과 flavor-aligned uds
 amplitude 재매칭은 아직 없다. 따라서 `figure2_candidate_mass_curve_interpolation_entered=True`
 이지만 `exact_candidate_mass_observed_limit_entered=False`이고, 그림 보간을 exact
 mass-bin likelihood로 간주하지 않는다.
@@ -199,7 +199,8 @@ mass-bin likelihood로 간주하지 않는다.
 ## 4. gate를 열기 위해 필요한 입력
 
 1. ab-initio D/T one- 및 two-body scalar current와 밀도 covariance,
-2. 29.65 MeV 유한 전파자를 직접 넣은 Pb differential/total likelihood, 각도·에너지
+2. 29.6991596174 MeV 유한 전파자를 직접 넣은 Pb differential/total likelihood,
+   각도·에너지
    covariance, strong phase nuisance와 원 분석의 finite-density 처리 내역,
 3. 완전한 `O(p^4)` weak-ChPT 진폭, 저에너지상수 covariance, NA62/E949 mass-bin
    likelihood.
@@ -210,3 +211,15 @@ mass-bin likelihood로 간주하지 않는다.
 uv run python examples/physics/fusion_flavor_margin_robustness_gate.py
 uv run --extra dev python -m pytest tests/test_fusion_flavor_margin_robustness_loop.py -q
 ```
+
+최신 snapshot은 wrapper의 legacy 기본질량 대신 canonical 값을 thermal/flavor 모듈에
+같이 주입하고 cache를 비운 뒤 기존 robustness runner를 호출해 재계산했다.
+
+```powershell
+.\.venv\Scripts\python.exe -c "import reality_stone.clarus.fusion_equation_iteration_loop as fe; import reality_stone.clarus.fusion_flavor_aligned_loop as fa; import reality_stone.clarus.fusion_flavor_margin_robustness_loop as fm; m=29.69915961743591; fe.DEFAULT_SCALAR_MASS_MEV=m; fa.REGISTERED_SCALAR_MASS_MEV=m; fe.current_fusion_equation_iteration_report.cache_clear(); fa.current_fusion_flavor_aligned_report.cache_clear(); fm.current_fusion_flavor_margin_robustness_report.cache_clear(); r=fm.current_fusion_flavor_margin_robustness_report(); print(r.point_required_dt_product, r.folding_scenarios, r.lead_shape_proxy, r.latest_kaon_data, r.physical_ce_fusion_branch_accepted)"
+```
+
+출력의 canonical 질량, Figure 2 선분 보간값, NLO 임계값을 위 표에 반영했다. 이
+보간은 재현 가능한 **curve interpolation**이지만 1.4 MeV 간격의 tabulated CLs bin이나
+acceptance likelihood는 아니므로 `exact_candidate_mass_observed_limit_entered=False`와
+physical `False` 판정은 변하지 않는다.

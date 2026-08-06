@@ -1,4 +1,4 @@
-## 1. 이 장의 목표와 구조
+# 1. 이 장의 목표와 구조
 
 이 문서는 CE 클라루스장(Clarus field) 이론을 **유체역학의 Navier–Stokes 방정식**에 적용하여,
 
@@ -17,7 +17,7 @@
 - **5장**: CE 공리를 Navier–Stokes에 결합하는 최소한의 방법론  
 - **6장**: 곡률 기반 오차 억제 functional $\mathcal{S}_\text{NS}[\phi]$의 유도 스케치  
 - **7장**: Taylor–Green vortex에 대한 CE 기반 예측: 오차 감소율과 해석  
-- **8장**: 다른 난제들과의 일관성(공통 coupling $\alpha_C$) 및 순환논리 점검  
+- **8장**: 다른 regularizer와의 비교 조건 및 순환논리 점검
 
 각 절에서 **공리/정의/정리(결과)/근사/가설**을 명확히 구분하여,  
 순환논리가 없도록 하는 것을 최우선 원칙으로 한다.
@@ -233,7 +233,8 @@ Navier–Stokes 해의 **대표적인 해석적 기준 해(benchmark solution)**
   $$
 - 압력
   $$
-  p(x,y,t) = -\frac{U_0^2}{4}\left( \cos(2kx) + \cos(2ky) \right)e^{-4\nu k^2 t}
+  p(x,y,t) = p_0-\frac{\rho U_0^2}{4}
+  \left( \cos(2kx) + \cos(2ky) \right)e^{-4\nu k^2 t}
   $$
 
 와 같은 형태의 해가 알려져 있다.
@@ -337,34 +338,62 @@ $$
 
 ### 6.3 저차 근사에서의 functional 형태
 
-정보 이론에서 자주 쓰는 가우시안 근사를 적용하면,  
-$P_\text{selected}$의 로그는 오차 $\| \tilde{u} - u_\text{ref} \|^2$에 대해  
-2차까지 전개되는 형태를 갖는다.
+가우시안 residual likelihood만 가정하면 음의 로그우도에서 직접 나오는 것은
+$\|\tilde u-u_{\rm ref}\|_2^2$ 항이다. 장이 매끄럽다는 사실만으로 이
+residual을 기울기와 라플라시안 제곱으로 다시 쓸 수는 없다.
 
-또한, $\tilde{u}(x,t)$가 **공간적으로 매끄러운 장**이라는 가정을 두면,  
-오차 항을 공간 미분으로 다시 쓸 수 있고, 결과적으로
+아래 functional을 얻으려면 먼저 residual
+\(\phi=\tilde u-u_{\rm ref}\)의 기준 scale \(U\), 길이 \(L\), 시간
+\(T\)를 고정하고
+
 $$
-\mathcal{S}_\text{NS}[\phi]
+\bar\phi=\phi/U,\qquad \bar x=x/L,\qquad \bar t=t/T
+$$
+
+로 무차원화해야 한다. 그 뒤 discretization/cutoff와 경계조건이 지정된
+Gaussian Markov prior
+
+$$
+P_h(\bar\phi)\propto\exp\!\left[-\frac12\int
+\left(c_1\|\bar\nabla\bar\phi\|^2+
+c_2\|\bar\Delta\bar\phi\|^2\right)d\bar x\,d\bar t\right]
+$$
+
+를 택하거나, 관측 residual이 특정 미분 연산자
+\(\mathcal L\bar\phi\)에 작용한다는 operator approximation을 명시해야
+한다. \(P_h\)의 아래첨자는 유한 mesh/cutoff를 뜻한다. continuum
+Gaussian measure로 승격하려면 precision operator의 domain, 양의
+정부호성 및 covariance의 적절한 trace 조건을 별도로 확인한다.
+그 모델 선택 아래에서만
+
+$$
+\mathcal J_\text{NS}[\bar\phi]
 \approx
 \int \left(
-  \|\nabla \phi(x,t)\|^2
+  c_1\|\bar\nabla \bar\phi(\bar x,\bar t)\|^2
   +
-  \lambda_\text{NS}\,\|\nabla^2 \phi(x,t)\|^2
-\right)\,dx\,dt
+  c_2\|\bar\Delta \bar\phi(\bar x,\bar t)\|^2
+\right)\,d\bar x\,d\bar t
 $$
-꼴의 functional이 **정보 포텐셜의 2차 근사**로 등장한다.
+꼴의 **무차원** functional이 negative log-prior 또는 operator
+residual의 2차 근사로 등장한다. 차원 있는 원변수 식에서는 gradient와
+Laplacian 항의 단위가 다르므로 \(L,T,U\)에서 유도된 차원 계수를 반드시
+복원해야 한다.
 
 여기서
 
-- 첫째 항 $\|\nabla \phi\|^2$는 **기울기(1차 변화)의 크기**를 억제하는 항으로,  
+- 첫째 항 \(\|\bar\nabla\bar\phi\|^2\)는 **기울기(1차 변화)의 크기**를 억제하는 항으로,
   너무 급격한 공간 변화(고주파 모드)를 줄이는 역할을 한다.
-- 둘째 항 $\|\nabla^2 \phi\|^2$는 **곡률(2차 변화)의 크기**를 억제하는 항으로,  
-  난류 비슷하게 꼬이면서 매듭지는 구조를 완화하는 역할을 한다.
-- $\lambda_\text{NS}$는 Navier–Stokes 문제에서의 **유효 곡률 억제 세기**를 나타낸다.
+- 둘째 항 \(\|\bar\Delta\bar\phi\|^2\)는 더 높은 wavenumber를
+  \(k^4\)로 벌점화한다. 이것이 실제 난류 오차를 줄이는지는 별도
+  수렴·spectrum test의 결과다.
+- \(c_2/c_1\)는 고정된 무차원화와 mesh에서만 의미가 있는
+  Navier–Stokes regularization 비다.
 
-즉, CE 클라루스장 공리와 정보 포텐셜 정의에서 출발하여,  
-Navier–Stokes 수치해에 적용 가능한 **gradient + curvature 제곱 functional**이  
-자연스럽게 파생됨을 볼 수 있다.
+따라서 이 **gradient + curvature 제곱 functional**은 CE 공리만의 필연적
+귀결이 아니라, 공간 상관 prior/연산자 근사를 채택한 regularizer 후보이다.
+\(c_{1,2}\)는 training data와 분리된 validation grid 및 discretization에서
+독립적으로 정해야 한다.
 
 ---
 
@@ -373,26 +402,29 @@ Navier–Stokes 수치해에 적용 가능한 **gradient + curvature 제곱 func
 이제 위에서 얻은 functional을 Taylor–Green vortex 기준 해에 적용하면,  
 다음과 같은 구조의 예측이 가능하다.
 
-1. 기준 해 $u(x,t)$와 수치 해 $\tilde{u}(x,t)$에 대해,  
-   클라루스장 functional $\mathcal{S}_\text{NS}[\tilde{u}]$를 최소화하는 방향으로  
+1. 기준 해 \(u(x,t)\)와 수치 해 \(\tilde{u}(x,t)\)에 대해,
+   residual functional \(\mathcal J_\text{NS}[\tilde u-u]\)를
+   최소화하는 방향으로
    수치 scheme의 보정 항을 설계한다.
-2. 이때, 보정 항의 세기(실질적으로는 $\lambda_\text{NS}$와 연관)를  
-   하나의 coupling 상수 $\alpha_C$ 범위로 묶어,  
-   다른 난제들과 공유 가능한지 확인한다.
+2. 보정 세기는 Taylor--Green training grid에서 정하고, 더 미세한
+   미사용 grid에서 수렴 차수와 보존량을 함께 검증한다. 다른 도메인의
+   coefficient와 원시 수치값을 직접 공유하지 않는다.
 3. 수치 실험 결과,
    - $L^2$ 오차,  
    - $L^\infty$ 오차가
    기존 방법 대비 몇 배 감소하는지를 측정한다.
 
-이미 다른 파트에서 보고된 결과에 따르면,  
-동일한 곡률 functional 구조로
+다음 수치는 이 문서 안에 mesh, timestep, baseline, seed, 원시 결과가
+연결되어 있지 않으므로 검증된 결과로 사용할 수 없다. 과거에 적힌
+benchmark 목표는
 
-- Navier–Stokes(Taylor–Green): 약 2.5배 수준의 $L^2$ 오차 감소  
-- 3체 문제(Simo figure-8): 약 2.3배 수준의 $L^\infty$ 오차 감소  
-- 리만 제타 함수 영점 근사: 5배 이상, 2차 보정까지 포함하면 10배 이상
+- Navier–Stokes(Taylor–Green): $L^2$ 오차 2.5배 감소,
+- 3체 문제(Simo figure-8): $L^\infty$ 오차 2.3배 감소,
+- 리만 제타 영점 근사: 5--10배 감소
 
-과 같은 패턴이 나타나며,  
-해당 결과들을 통해 $\alpha_C$의 공통 범위를 추정하는 것이 가능하다.
+였다고만 기록한다. 이를 다시 주장하려면 동일 계산 예산, 독립 test grid,
+수렴 차수와 보존량을 포함한 재현 artifact가 필요하다. 그 전에는
+$\alpha_C$의 공통 범위를 추정할 근거가 아니다.
 
 ---
 
@@ -409,16 +441,17 @@ Navier–Stokes 수치해에 적용 가능한 **gradient + curvature 제곱 func
     단백질에서는 $\phi = \text{좌표장/접힘 에너지장}$ 등으로만 달라진다.
 
 - **functional의 형태 공유**  
-  - 모든 문제에서
+  - 여러 문제에서 형식적으로
     $$
     \mathcal{S}[\phi] =
     \int \left(
-      \|\nabla \phi\|^2 + \lambda\,\|\nabla^2 \phi\|^2
+      c_1\|\nabla \bar\phi\|^2 + c_2\,\|\Delta \bar\phi\|^2
     \right)
     $$
-    꼴이 유지되고,  
-    $\lambda$가 문제별로 약간 달라질 수는 있으나,  
-    하나의 공통 범위 $\alpha_C$ 안에 들어가는지를 검증한다.
+    꼴의 무차원 regularizer를 비교할 수 있다. 하지만 \(\bar\phi\),
+    measure와 cutoff가 다르므로 계수는 도메인별이다. 공통 범위를
+    주장하려면 동일한 무차원 observable과 hierarchical holdout 분석이
+    먼저 필요하다.
 
 - **순환논리 회피**  
   - Navier–Stokes에서의 오차 감소는  

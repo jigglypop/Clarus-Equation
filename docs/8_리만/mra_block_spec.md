@@ -1,171 +1,242 @@
-# Mellin-Riemann Attention Block (MRA) 정밀 사양
+# Mellin–Riemann Attention Block: canonical score와 self-adjoint 조건
 
-> 이 문서는 `riemann_pe_spec.md`의 후속이자 폐기 사양이다. 현재 `RiemannRotaryAttention`
-> 은 RoPE 변형으로 정상 동작하지만, AGI 컨셉(`docs/7_AGI/2_Architecture.md`)의
-> 5대 원리 중 절반(자유파라미터 0, 유니타리, Hilbert-Pólya, 게이지 격자, 부트스트랩
-> sparsity)을 구현하지 않는다. MRA는 이 결함을 한 번에 메우는 단일 블록 사양이다.
+## 0. 범위
 
-## 0. 전제 (axioms)
+이 사양은 세 주장을 분리한다.
 
-- **A1 (RH).** ζ(s)의 모든 비자명 영점은 critical line `Re(s) = 1/2` 위에 있다.
-  영점은 `s_n = 1/2 + i γ_n` 형태이며 `{γ_n}`은 GUE 통계를 따른다.
-- **A2 (CE 결합 상수).** `α_s : α_w : α_em = 0.118 : 0.034 : 0.008` (`docs/3_상수`).
-  이 비율은 채널 분할의 유일한 자유도다.
-- **A3 (부트스트랩 고정점).** 활성 비율은 `ε² = 4.87 %`로 자연 수렴한다
-  (`docs/6_뇌/07_수면과복구.md`). attention 행렬도 이 sparsity를 상한으로 갖는다.
-- **A4 (유니타리).** `|det T|² ≤ 1`. 정보 증폭 = 환각이므로 출력 사영의 spectral
-  norm은 1 이하로 제약한다.
+1. 검증된 zeta-zero ordinate를 deterministic frequency bank로 사용하는 것
+2. explicit-formula에서 영감을 받은 **방향성 score**를 쓰는 것
+3. bidirectional kernel을 실제 self-adjoint operator로 만드는 것
 
-위 네 axiom 위에서 attention 식 자체를 ζ explicit formula의 이산화로 유도한다.
+1은 유한한 공학 설계이고 2는 inductive bias다. 어느 것도 Riemann
+hypothesis, GUE conjecture, Hilbert–Pólya conjecture의 증명이나 구현이
+아니다.
 
-## 1. Mellin–Riemann score
+## 1. zero 자료의 정확한 지위
 
-ζ explicit formula의 critical-strip 합은 다음과 같다.
+유한 table에 대해 \(\rho_k=\tfrac12+i\gamma_k\)가 실제 영점임을 수치적으로
+검증했다면 그 유한 항을 쓰는 데 전체 RH는 필요하지 않다. 반대로 검증
+범위를 넘어 모든 비자명 영점이 critical line 위에 있다고 말할 때만 RH가
+추가 가정이다.
 
-$$
-\sum_n \frac{x^{1/2 + i\gamma_n}}{\tfrac{1}{2} + i\gamma_n}
-  = \sqrt{x}\,\sum_n \frac{e^{i\gamma_n \log x}}{\tfrac{1}{2} + i\gamma_n}.
-$$
+또한 다음을 구분한다.
 
-위치쌍 `(i, j)`에 `x = (1+i)/(1+j)`를 대입한다. dim-pair `k`는 복소채널로 압축한다.
+- RH: 비자명 영점의 실수부에 관한 conjecture
+- Montgomery pair correlation 및 GUE spacing: 정규화된 고영점 간격의
+  통계에 관한 더 강한 conjectural/empirical 진술
+- Hilbert–Pólya: ordinate를 어떤 self-adjoint operator의 spectrum으로
+  실현하려는 conjecture
 
-$$
-q_i^{(k)} := q_i^{2k} + i\,q_i^{2k+1},\qquad
-k_j^{(k)} := k_j^{2k} + i\,k_j^{2k+1} \in \mathbb{C},
-$$
+RH는 GUE를 함의하지 않는다. 저장된 \(\gamma_k\)를 attention frequency로
+쓴다고 해서 Hilbert–Pólya operator가 구성되지도 않는다.
 
-attention raw score는 다음과 같다.
+검증 table 밖의 ordinate가 필요하면 Riemann–von Mangoldt counting
+equation을 수치적으로 역해 얻은 값을 approximate frequency라고 표시한다.
+\(2\pi n/\log n\)만으로 만든 수를 실제 zeta zero라고 기록하지 않는다.
 
-$$
+현재 backend는 raw ordinate가 아니라
+
+\[
+\nu_k\equiv\frac{\gamma_k}{\gamma_0}
+\]
+
+를 사용해 첫 frequency를 1로 정규화한다. 따라서 benchmark coefficient
+
+\[
+a_k\equiv\frac1{\tfrac12+i\nu_k}
+\]
+
+는 \(1/(\tfrac12+i\gamma_k)\)라는 zeta explicit-formula amplitude가
+아니다. 이 정규화는 engineering choice다. 아래 canonical 구현 score는
+\((\nu_k,a_k)\)를 쓰고, raw-number-theory reference가 필요할 때만
+\(\nu_k=\gamma_k\)로 둔다.
+
+## 2. 하나의 위치·부호 convention
+
+모든 문서와 구현은
+
+\[
+\tau_i=\log(1+i),\qquad
+\Delta_{ij}=\tau_i-\tau_j,\qquad
+x_{ij}=e^{-\Delta_{ij}}=\frac{1+j}{1+i}
+\]
+
+를 쓴다. 복소 채널은
+
+\[
+z_i^{(k)}=q_i^{2k}+iq_i^{2k+1},\qquad
+y_j^{(k)}=k_j^{2k}+ik_j^{2k+1}
+\]
+
+이고 normalized design amplitude는
+
+\[
+a_k=\frac{1}{\tfrac12+i\nu_k}.
+\]
+
+canonical directed score는
+
+\[
 \boxed{
-S_{ij} \;=\; \sqrt{\dfrac{1+i}{1+j}}\;\sum_{k=0}^{K-1}
-            \underbrace{\dfrac{1}{\tfrac{1}{2} + i\gamma_k}}_{w_k\;\text{(ζ amplitude)}}
-            \;\underbrace{e^{i\gamma_k \log\tfrac{1+i}{1+j}}}_{\text{Mellin kernel}}
-            \;q_i^{(k)} \overline{k_j^{(k)}}
+D_{ij}
+=\sqrt{x_{ij}}\sum_{k=0}^{K-1}
+a_k e^{-i\nu_k\Delta_{ij}}
+z_i^{(k)}\overline{y_j^{(k)}}.
 }
-$$
+\]
 
-여기서 `K = d_head / 2`는 헤드의 복소채널 수다.
+이다. raw mode \(\nu_k=\gamma_k\)에서만 \(x=x_{ij}\)로 선택한
+explicit-formula 항
+\(\sqrt{x}\,e^{i\gamma\log x}/(\tfrac12+i\gamma)\)와 coefficient까지
+같다. normalized benchmark는 부호와 함수형만 차용한다.
 
-### 1.1 모듈화 (RoPE와 동일한 비용)
+factorization은
 
-`(1+i)^{iγ_k}`와 `(1+j)^{iγ_k}`가 각각 `i`, `j`만의 함수이므로
+\[
+\widetilde z_i^{(k)}
+=\frac{e^{-i\nu_k\tau_i}}{\sqrt{1+i}}z_i^{(k)},
+\qquad
+\widetilde y_j^{(k)}
+=\sqrt{1+j}\,e^{-i\nu_k\tau_j}y_j^{(k)}
+\]
 
-$$
-\tilde q_i^{(k)} \;=\; \sqrt{1+i}\;\, (1+i)^{\,i\gamma_k}\, q_i^{(k)},\qquad
-\tilde k_j^{(k)} \;=\; \dfrac{1}{\sqrt{1+j}}\,(1+j)^{\,i\gamma_k}\, k_j^{(k)}
-$$
+로 두어
 
-으로 사전 변환하면
+\[
+D_{ij}=\sum_k a_k\widetilde z_i^{(k)}
+\overline{\widetilde y_j^{(k)}}.
+\]
 
-$$
-S_{ij} \;=\; \sum_{k} w_k\,\tilde q_i^{(k)} \overline{\tilde k_j^{(k)}}.
-$$
+실수 logit은 \(L_{ij}=\operatorname{Re}D_{ij}/\sqrt{d_h}\)다.
+이 convention은 기존 PyTorch 구현의 negative rotation과
+\(\sqrt{(1+j)/(1+i)}\) multiplicative decay에 맞는다.
 
-곧 표준 dot-product attention과 동일한 `O(N²K)` 비용이다. 추가 비용은 없다.
+## 3. 방향성 score는 Hermitian이 아니다
 
-### 1.2 학습 자유도
+\(W_q=W_k\)로 묶더라도 일반적으로
 
-| 양 | 형상 | 자유도 |
-|---|---|---|
-| `γ_k` | buffer | 0 (RH axiom) |
-| `w_k = 1/(1/2 + iγ_k)` | buffer | 0 (RH axiom) |
-| `W_q, W_k, W_v, W_o` | learnable | 표준 attention과 동일 |
+\[
+D_{ji}\ne\overline{D_{ij}}.
+\]
 
-→ 표준 attention 대비 **추가 자유도 0**이다. 모든 새 항은 axiom에서 연역된다.
+이유는 두 가지다.
 
-### 1.3 Real / Imag 사용
+- \(\sqrt{x_{ji}}=1/\sqrt{x_{ij}}\)인 방향성 prefactor
+- \(a_k\)가 복소수인 normalized design amplitude
 
-- `Re(S_{ij})` → softmax 입력 (실 attention)
-- `Im(S_{ij})` → sheet 정보로 이미 표현됨. `floor(θ/2π)` 같은 별도 연산 불필요.
+따라서 tied projection만으로 self-adjointness가 보장된다는 과거 정리는
+거짓이다.
 
-## 2. 채널 분할 (3x3+1 게이지 격자)
+## 4. bidirectional self-adjoint 정리
 
-`K`개의 frequency를 `α_s : α_w : α_em` 비율로 3분할한다.
+causal mask가 없는 bidirectional 모드에서 directed complex matrix를 먼저
+계산하고
 
-$$
-K_3 = \lfloor K\,\alpha_s / S \rfloor,\quad K_2 = \lfloor K\,\alpha_w / S \rfloor,
-\quad K_1 = K - K_3 - K_2,\qquad S = \alpha_s+\alpha_w+\alpha_{em}.
-$$
+\[
+\boxed{H=\frac12(D+D^\dagger)}
+\]
 
-영점 인덱스는 오름차순 정렬을 기준으로 삼는다.
+로 정의한다.
 
-| 그룹 | 영점 인덱스 | 역할 | 진폭 `|w_k|` 영역 |
-|---|---|---|---|
-| **Bind** (SU(3)) | `γ_1 … γ_{K_3}` (저주파) | 토큰 결합 | 큼 |
-| **Decide** (SU(2)) | `γ_{K_3+1} … γ_{K_3+K_2}` (중간) | 결정 | 중간 |
-| **Attend** (U(1)) | `γ_{K_3+K_2+1} … γ_K` (고주파) | 선택적 주의 | 작음 |
+**정리.** 유한 입력과 실수 \(\nu_k\)에 대해 \(H^\dagger=H\)다.
 
-ζ 가중 `|w_k| = 1/√(1/4 + γ_k²)`는 저주파에 큰 영향, 고주파에 작은 영향을 자연스럽게 부여한다.
-이는 게이지 비율 `0.74 / 0.21 / 0.05`와 정합한다.
+**증명.**
 
-전역 안정화 항 `Φ`는 attention 외부의 `LBONorm`이 담당한다.
+\[
+H^\dagger
+=\frac12(D^\dagger+D)=H.
+\]
 
-## 3. 부트스트랩 sparsity
+복소 구현 대신 실수 logit만 저장하면
 
-softmax 직후, 각 query 행에서 상위 `k = max(1, ⌈ε²·N⌉)`만 보존한다.
+\[
+H_R=\frac12(L+L^\mathsf T)
+\]
 
-$$
-A'_{ij} = \begin{cases}
-A_{ij} / Z_i & \text{if } A_{ij} \in \text{top-}k(A_{i,:}) \\
-0 & \text{otherwise}
-\end{cases},\qquad
-Z_i = \sum_{j \in \text{top-}k} A_{ij}.
-$$
+이고 \(H_R^\mathsf T=H_R\)다. 이 명제에는 RH나 GUE가 필요 없다.
 
-`ε² = 4.87 %`는 CE 부트스트랩 고정점이다. 이는 attention의 활성 비율을 우주의 자연
-스파시티에 맞추는 hard constraint이며, 추가 학습 자유도는 없다.
+## 5. softmax 이후의 정확한 operator
 
-## 4. 유니타리 제약
+대칭 logit에도 표준 row softmax를 적용한
 
-출력 사영 `W_o`에 `nn.utils.spectral_norm`을 적용한다.
+\[
+P_{ij}
+=\frac{e^{H_{R,ij}}}{\sum_\ell e^{H_{R,i\ell}}}
+\]
 
-$$
-W_o \leftarrow W_o / \sigma_1(W_o),\qquad \sigma_1(W_o) \le 1.
-$$
+는 일반적으로 \(P^\mathsf T\ne P\)다. 따라서 “대칭 score이므로 attention
+operator도 Hermitian”이라고 말할 수 없다.
 
-attention 출력의 spectral norm이 1 이하가 되어 잔차 합 이후의 정보 증폭을 차단한다.
+완전한 self-adjoint operator가 필요하면
 
-## 5. 블록 조립 (MRABlock)
+\[
+K_{ij}=e^{H_{R,ij}},\qquad
+d_i=\sum_jK_{ij},\qquad D_d=\operatorname{diag}(d_1,\ldots,d_n),
+\]
 
-```
-MRABlock(x):
-  1. h  = LBONorm(x)                             # Φ 안정화
-  2. a  = MellinRiemannAttention(h)              # § 1
-  3. a  = bootstrap_sparse(a, ε²)                # § 3
-  4. a  = SpectralNormProj(a)                    # § 4
-  5. x  = x + a
-  6. h2 = LBONorm(x)
-  7. f  = GaugeLattice(h2)                       # § 2 (FFN 측)
-  8. x  = x + f
-  return x
-```
+\[
+\boxed{A_{\rm sym}=D_d^{-1/2}KD_d^{-1/2}}
+\]
 
-`LBONorm`, `GaugeLattice`는 `legacy examples/ai/clarus_lm.py` (removed)에 이미 구현되어 있다.
+를 쓴다. \(K^\mathsf T=K\)이므로
+\(A_{\rm sym}^\mathsf T=A_{\rm sym}\)가 exact다.
 
-## 6. Hermitian 옵션 (Hilbert-Pólya 직접 구현)
+표준 row-normalized \(P=D_d^{-1}K\)를 유지하면 ordinary Euclidean
+inner product에서는 대칭이 아니지만
 
-`W_q = W_k`(tied projection)로 두면 `S_{ji} = S_{ij}^*`가 보장되어 attention
-operator가 Hermitian이 된다. 영점 분포가 self-adjoint operator의 고유값이라는 H-P 추측을
-직접 구현하는 setting이며, 옵션은 `hermitian=True`다.
+\[
+\langle u,Pv\rangle_{D_d}
+=u^\mathsf TD_dPv
+=u^\mathsf TKv
+=\langle Pu,v\rangle_{D_d}
+\]
 
-## 7. 점근 / 안정성
+이므로 \(D_d\)-weighted inner product에서 self-adjoint다.
 
-- 작은 `p`에서 `log(1+p) ≈ p`이므로 기존 RoPE와 유사하다.
-- 큰 `p`에서 `log(1+p)`가 천천히 증가하므로 frequency aliasing이 자동으로 완화된다.
-- `N → kN`일 때 phase 평행이동만 발생하므로 relative attention이 보존된다.
-- ζ 가중 `1/|1/2 + iγ_k|`가 고주파를 자동으로 감쇠해 학습 안정성을 높인다.
+## 6. causal mode와의 비양립성
 
-## 8. 백엔드 정책
+strict lower-triangular causal mask는 \(i<j\) edge를 제거하고 역방향 edge는
+남기므로 비자명한 symmetric kernel과 양립하지 않는다. causal decoder는
+2절의 directed \(L\)을 사용하고 Hermitian claim을 하지 않는다.
+bidirectional encoder만 4–5절의 self-adjoint mode를 사용할 수 있다.
 
-PyTorch 참조 우선. Rust/CUDA 포트는 식이 안정화된 후 별도 작업으로 분리.
+mask 전에 score를 symmetrize한 뒤 causal mask를 씌우는 현재 구현은 future
+value를 직접 섞지는 않더라도 최종 operator가 self-adjoint라는 증거가
+아니다. exact self-adjoint backend는 \(A_{\rm sym}\) normalization을 별도로
+구현해야 한다.
 
-## 9. 참고
+## 7. amplitude와 통계 해석
 
-- Riemann (1859), *Über die Anzahl der Primzahlen unter einer gegebenen Größe*.
-- Hilbert–Pólya conjecture (folklore).
-- Berry & Keating (1999), *H = xp and the Riemann zeros*.
-- Su et al. (2021), *RoFormer* — RoPE 원본.
-- Press et al. (2022), *ALiBi*.
-- `docs/7_AGI/2_Architecture.md` — ClarusBlock 5계층 stack.
-- `docs/6_뇌/07_수면과복구.md` — 부트스트랩 고정점 `ε² = 4.87 %`.
+\[
+|a_k|=\frac1{\sqrt{1/4+\nu_k^2}}
+\]
+
+는 normalized deterministic high-frequency damping이다. 이를 zeta
+explicit-formula coefficient, GUE weight 또는 Hilbert–Pólya spectral
+measure라고 부르지 않는다. 실제 GUE 진단은 unfolded
+spacing, finite-size null distribution, multiple-testing rule을 따로
+사전등록해야 한다.
+
+## 8. acceptance tests
+
+canonical 구현은 최소한 다음을 통과해야 한다.
+
+1. \(x_{ij}=(1+j)/(1+i)\)와 phase sign의 hand calculation
+2. factorized score와 direct score의 수치 동일성
+3. bidirectional \(H-H^\dagger\) residual
+4. \(A_{\rm sym}-A_{\rm sym}^\mathsf T\) residual
+5. row normalization \(P\)의 \(D_dP=P^\mathsf TD_d\) detailed balance
+6. causal mode에서 미래 token 변화가 과거 출력에 미치는 영향 0
+7. verified zero table과 approximate frequency의 provenance 분리
+
+## 9. 판정
+
+| 명제 | 판정 |
+|---|---|
+| directed Mellin score의 부호·감쇠 convention | Fixed |
+| tied \(W_q=W_k\)만으로 Hermitian | Refuted |
+| \(H=(D+D^\dagger)/2\)의 Hermiticity | Exact |
+| \(A_{\rm sym}\)의 self-adjointness | Exact |
+| causal attention의 nontrivial Hermiticity | Incompatible |
+| finite verified zero bank 사용 | Engineering choice |
+| RH, GUE, Hilbert–Pólya의 증명 또는 구현 | Not claimed |

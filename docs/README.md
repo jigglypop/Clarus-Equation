@@ -50,19 +50,24 @@ CE의 계산 사슬은 다음처럼 읽는 것이 가장 안전하다.
 
 이를 수식으로 압축하면 두 계열이 중심이다.
 
-첫째, 독립적인 비용이 더해질 때 생존 가중치가 곱해진다는 조건을 둔다.
+첫째, \(S:\mathbb R_{\ge0}\to(0,1]\)가 비자명하고 측정가능하며,
+독립적인 비음수 비용이 더해질 때 생존 가중치가 곱해진다는 조건을 둔다.
 
 $$
 S(D_1+D_2)=S(D_1)S(D_2),\qquad S(0)=1.
 $$
 
-연속성 또는 측정가능성을 함께 두면
+그러면 \(-\log S\)에 대한 Cauchy 함수방정식으로
 
 $$
 S(D)=e^{-\lambda D}
 $$
 
-가 되고, 무차원 단위 규약으로 $\lambda=1$을 선택하면 $S(D)=e^{-D}$를 얻는다. 함수형의 유일성은 조건부 수학 정리지만, 독립 곱셈 조건을 실제 물리에 적용하는 것은 `Selection` 또는 `Bridge`다.
+가 되며 range와 비자명성에서 \(\lambda>0\)이다. \(\lambda=1\)은 깊이 단위를
+unit-rate로 잡는 정규화/Poisson 선택이지 위 함수방정식이 정한 수치가 아니다.
+\(S(D)=e^{-D}\)의 함수형 유일성은 이 전체 조건 아래의 정리지만, 독립
+곱셈 조건과 unit-rate를 실제 물리에 적용하는 것은 `Selection` 또는
+`Bridge`다.
 
 둘째, 선택된 분율이 다시 유효 비용을 바꾸는 자기재귀 조건을 둔다.
 
@@ -84,10 +89,10 @@ $$
 
 | 기호 | 1차 역할 | CE에서의 예와 문서 기능 |
 |---|---|---|
-| $e$ | 접힘·감쇠·생존·Gibbs 가중 | $S(D)=e^{-D}$ 같은 무차원 감쇠 규칙 |
-| $\pi$ | 주기·위상공간 정규화 | $1/(2\pi)$, $\alpha_{\text{total}}=1/(2\pi)$, 위상 평균 |
-| $i$ | 간섭·위상·분지 상쇄 | 경로적분, Born readout, 분지 간 상쇄 |
-| $1$ | 정규화·완전 상태 | $S(0)=1$, $e^0=1$, 고정점 수렴의 기준선 |
+| $e$ | 접힘·감쇠·생존·Gibbs 가중 | $S(D)=e^{-\lambda D}$; $\lambda=1$은 단위 선택 |
+| $\pi$ | 주기·위상공간 정규화 | $1/(2\pi)$; 결합 sum rule은 `Selection` |
+| $i$ | Lorentzian 진폭의 위상·간섭 | $e^{iS/\hbar}$; Born 확률 readout은 별도 열린 `Bridge` |
+| $1$ | 정규화·완전 상태 | $S(0)=1$, $e^0=1$; 고정점 수렴은 도함수로 별도 검사 |
 | $0$ | 영점·선택·manifest 조건 | 잔차 $r=0$, $d(d-3)=0$ 같은 분기 선택 규칙 |
 
 핵심 원칙은 먼저 **무차원 코어 식**을 고정하고, **선택 규칙**과
@@ -129,21 +134,40 @@ CE 문서는 네 층으로 읽는 것이 가장 안전하다.
 
 ### 3.2 현재 정리 원칙과 레거시 표기
 
+- 전수 교정의 최신 변경 계약은
+  [`0_검증과감사/FULL_CONSISTENCY_COMPLETION_LOOP_2026-08-06.md`](0_검증과감사/FULL_CONSISTENCY_COMPLETION_LOOP_2026-08-06.md)다.
+- 최신 Track A 입력과 파생 수치는
+  [`0_검증과감사/CANONICAL_NUMERIC_MANIFEST_2026-08-06.json`](0_검증과감사/CANONICAL_NUMERIC_MANIFEST_2026-08-06.json)을
+  단일 원천으로 삼고, `verify_numeric_consistency.py`로 재계산한다.
 - `경로적분.md`는 계산 체인의 최신 원천이다.
 - `상수.md`는 대표 수치와 항목 지위의 최종 정본이다.
 - `axium.md`는 공리, 기호, 주장 범위를 고정하는 프레이밍 문서다.
 - `1_강의/`는 설명용 강의 노트이며, 코어보다 강한 결론으로 읽지 않는다.
 - `2_경로적분과_응용/`, `4_공학적_활용/`, `5_유도/`, `6_뇌/`는 최신 정본과 호환되도록 다시 썼지만, 대부분 `Bridge` 또는 `Phenomenology` 층이다.
 - 응용 문서의 수치 벤치마크는 코어의 직접 `Exact` 결론이 아니라, 추가 가정과 실험 제약을 포함한 해석으로 읽는다.
-- 우주론 대표값은 현재 3계층 관성 보정 패키지인
-  $\Omega_b=0.04865$, $\Omega_\Lambda\approx0.6891$,
-  $\Omega_{DM}\approx0.2623$, $R\approx0.38063$으로 읽는다.
+- 우주론 대표값은 최신 Track A의 명시적 분할식 아래
+  \(R=0.3782386966\)과
+  \((\Omega_b,\Omega_{DM},\Omega_{DE})=(0.0486382585,0.2610881744,0.6902735671)\)로 읽는다.
+  과거 $R=0.38063$ 벡터는 이 식의 반올림값이 아니므로 현재 대표값이 아니다.
+- 같은 manifest에서 Hubble readout 산술은
+  \(H_0(0)=66.802746\), \(H_0(1)=72.702371\)
+  \(\mathrm{km\,s^{-1}Mpc^{-1}}\)로 고정한다. 이는 readout ansatz의
+  산술 검산이지 단일 사전 예측이 아니다.
+- 고정-background 13-block covariance snapshot은 외부
+  \(r_d=147.09\,\mathrm{Mpc}\)와 Eisenstein--Hu
+  \(r_d=151.5052\,\mathrm{Mpc}\) 양쪽에서 모두 `REJECT`다.
+- canonical \(Z_2\) portal benchmark는
+  \(\operatorname{BR}_{\rm inv}=0.77082222\)로 PDG 2026이 열거한
+  ATLAS direct 한계 \(0.107\)을 통과하지 못한다. 올바른 CP-even scalar
+  kernel의 유한질량 \(g-2\) 진단은
+  \(162.55198\times10^{-11}\)이며, 옛 \(135\times10^{-11}\)은 폐기한다.
 
 레거시 문서의 `정리/가정/식별/현상론` 표기는 위 등급으로 다시 해석한다.
 
 - `A3a`는 자기일관 고정점 식이며 `Selection` 또는 `Exact` 층에 가깝다.
 - `A3b`는 관측 가능한 선택 측도와 바리온 분율을 연결하는 `Bridge` 층이다.
-- `\alpha_s^{1/d}`와 `\sin^2\theta_W=4\alpha_s^{4/3}` 체인은 현재 핵심 정본 기준으로 `Bridge` 층이다.
+- `\alpha_s^{1/d}`와 \(s_A^2:=4\alpha_s^{4/3}\) 체인은 registered
+  output이며, 물리적 weak-angle scheme과의 동일시는 `Bridge` 층이다.
 - 블랙홀, 뇌, AGI, LLM 문서는 코어 정전의 직접 증명이라기보다 `Phenomenology` 또는 구조적 응용 층으로 읽는다.
 
 등급별 근거 위치는 `Exact`는 `axium.md`·`경로적분.md` 초반,
@@ -155,17 +179,20 @@ CE 문서는 네 층으로 읽는 것이 가장 안전하다.
 
 ### 4.1 자기재귀 고정점
 
-$D_{\mathrm{eff}}\simeq3.178$을 사용하면 물리 가지의 고정점은
+최신 Track A의 $D_N=3.1779129995$를 사용하면 선택된 저분율 가지의 고정점은
 
 $$
 x=e^{-(1-x)D_{\mathrm{eff}}}
 \quad\Longrightarrow\quad
-x\simeq0.0486466333
+x=0.0486382585
 $$
 
-이다. Newton 방법과 bracketed solver가 같은 해를 주며 수치 residual은 약 $2.1\times10^{-17}$이다.
+이다. Lambert-$W$, bracketed solver와 역함수
+$D=-\ln x/(1-x)$가 수치 허용오차 안에서 같은 값을 준다.
 
-이 단계에서 고정점 계산은 `Exact/Selection`에 가깝다. 이를 현재 우주의 $\Omega_b$로 동일시하는 마지막 단계는 `Bridge`다.
+이 단계는 지정 $D_N$에서의 정확한 고정점 계산이다. 현재 우주의
+$\Omega_b$와의 연결은 경로 수가 아니라 B2의 공변 에너지 가중
+stress readout으로 수행한다.
 
 검산:
 
@@ -183,27 +210,29 @@ python -m pytest tests/test_bootstrap_solver.py -q
 
 ### 4.2 암흑물질과 암흑에너지
 
-CE는 우주의 성분을 먼저 “선택되어 $d=3$ 표준모형 자유도로 나타난 부분”과 “선택되지 않은 Clarus 장의 암흑 부문”으로 나눈다.
+지정한 B2+A3b 후보 모형은 고정점 출력과 그 여집합을 먼저 나눈다.
 
 $$
 \Omega_{\mathrm{total}}
 =
-\underbrace{x}_{\Omega_b}
+\underbrace{x}_{\text{A3a output}}
 +
-\underbrace{(1-x)}_{\Omega_{\mathrm{dark}}}.
+\underbrace{(1-x)}_{\text{complement}},
+\qquad x\overset{\mathrm{A3b\ Bridge}}{\longleftrightarrow}\Omega_b.
 $$
 
-고정점 해 $x\simeq0.04865$를 바리온 분율과 연결하면
+고정점 해 $x=0.0486382585$를 B2 에너지 readout으로 바리온 분율과 연결하면
 
 $$
-\Omega_{\mathrm{dark}}=1-\Omega_b\simeq0.95135
+\Omega_{\mathrm{dark}}=1-\Omega_b=0.9513617415
 $$
 
-가 된다. 이 단계는 “현재 우주의 약 95%가 아직 암흑 부문에 있다”는 총량을 정할 뿐, 암흑물질과 암흑에너지를 아직 구분하지 않는다.
+가 된다. 이는 A3b 식별 아래의 조건부 총량이며, 암흑물질과 암흑에너지를
+아직 동역학적으로 구분하지 않는다.
 
-CE는 Clarus 장의 암흑 부문을 다음 두 성분으로 해석한다.
+dark-split ansatz는 여집합을 다음 두 후보 성분으로 읽는다.
 
-| 성분 | CE 해석 | 동역학적 역할 |
+| 성분 | 후보 해석 | 검증해야 할 동역학 |
 |---|---|---|
 | 암흑에너지 $\Omega_\Lambda$ | Clarus 장의 진공·0차 배경 성분 | 균질한 배경과 가속 팽창 |
 | 암흑물질 $\Omega_{DM}$ | 진공 위에 남은 집합적 요동·응축 성분 | 중력적으로 뭉치며 구조 성장에 참여 |
@@ -214,32 +243,28 @@ $$
 R\equiv\frac{\Omega_{DM}}{\Omega_\Lambda}
 $$
 
-로 두면 선도차수 CE 규칙은
+로 두면 최신 Track A의 명시적 분할 functional은
 
 $$
-R_{\mathrm{LO}}=\alpha_sD_{\mathrm{eff}}\simeq0.37463
+\boxed{R=\alpha_sD_N(1+x\delta_N)=0.3782386966}
 $$
 
-이다. 해석은 “유효 차원마다 결합세기 $\alpha_s$만큼 진공 요동이 축적된다”는 연장성 가정이다. 바리온이 세 게이지 층에 주는 피드백을 포함한 현재 대표값은
-
-$$
-R_{\mathrm{3layer}}\simeq0.38063
-$$
-
-이다. 그러면 전체 암흑 부문을 다음처럼 분할한다.
+이다. 이는 $\alpha_sD_N$ 선도항에 $x\delta_N$으로 정의한 neutral
+feedback을 붙인 하나의 고정된 현상론 모형이다. 그러면 전체 암흑 부문을
+다음처럼 분할한다.
 
 $$
 \Omega_\Lambda
 =
 \frac{1-x}{1+R}
-\simeq0.68907,
+=0.6902735671,
 $$
 
 $$
 \Omega_{DM}
 =
 \frac{(1-x)R}{1+R}
-\simeq0.26228.
+=0.2610881744.
 $$
 
 세 성분은 정규화를 만족한다.
@@ -251,14 +276,17 @@ $$
 또한
 
 $$
-\frac{\Omega_{DM}}{\Omega_b}\simeq5.39
+\frac{\Omega_{DM}}{\Omega_b}\simeq5.368
 $$
 
-이므로 “암흑물질이 보통물질보다 약 5배 많은 이유”를 별도 입자 개수의 우연이 아니라, 생존 고정점 $x$와 암흑 부문 요동비 $R$의 결합으로 설명한다.
+이므로 이 현상론 분할식은 약 5.37의 비를 조건부로 재현한다. 생존 고정점
+\(x\)와 dark-split ratio \(R\)를 실제 우주 성분에 연결하는 공변 동역학과
+공동 likelihood가 통과하기 전에는 이를 “왜 약 5배인가”의 완전한 설명으로
+세지 않는다.
 
 #### 암흑물질의 정체
 
-현재 CE가 직접 주장하는 암흑물질은 특정 WIMP 하나가 아니라
+현재 split ansatz의 암흑물질 후보는 특정 WIMP 하나가 아니라
 
 $$
 \Omega_{DM}
@@ -266,15 +294,25 @@ $$
 \text{Clarus 장 진공 위의 집합적 요동 성분}
 $$
 
-이다. 정확한 $Z_2$ 집합 가지에서는 단일 입자 핵반동이 선도차수에서 나타나지 않는다고 읽는다. 일반적인 WIMP식 탄성 산란이 발견되면 이 가지는 반증된다.
+로 표기한 집합 성분이다. 이는 현상론적 식별이지 미시적 정리나 특정 입자의
+검출 선언이 아니다. 정확한 $Z_2$는 홀수-$\Phi$ vertex와 단일-$\Phi$ 붕괴를 금지하지만,
+Higgs portal $-\lambda_{HP}|H|^2\Phi^2$가 있으면 EWSB 뒤
+$h\Phi^2$ vertex가 남아 Higgs 매개 핵반동은 일반적으로 0이 아니다.
+따라서 직접검출 판정은 $\lambda_{HP}$, pole mass와 핵자 form factor를
+넣은 산란단면적으로 수행한다.
 
-$m_\phi\simeq29.65\ \mathrm{MeV}$는 우주 전체 암흑물질 입자의 확정 질량이 아니다. 집합적 장 요동을 국소 스칼라 pole로 표현할 때 생기는 입자언어 `Bridge` 후보다.
+$m_{\rm light}=m_p\delta_N^2\simeq29.6992\ \mathrm{MeV}$는 우주 전체
+암흑물질 입자의 확정 질량이 아니다. 집합적 장 요동을 국소 스칼라 pole로
+표현할 때 생기는 입자언어 `Bridge` 후보다.
 
 #### 암흑에너지의 정체
 
-암흑에너지는 Clarus 장의 요동이 없는 진공 배경 성분으로 읽는다. 밀도 분할값 $\Omega_\Lambda$와, 왜 그 절대 에너지 밀도가 매우 작은가 하는 우주상수 문제는 서로 다른 질문이다.
+dark-energy 후보는 Clarus sector의 vacuum-like background 성분으로 읽는다.
+이 stress가 실제로 \(p\simeq-\rho\)를 만족하는지와 섭동 안정성은 공변
+작용에서 검정한다. 밀도 분할값 \(\Omega_\Lambda\)와, 왜 절대 에너지
+밀도가 매우 작은가 하는 우주상수 문제는 서로 다른 질문이다.
 
-- $\Omega_\Lambda\simeq0.6891$: 전체 에너지 중 차지하는 무차원 분율
+- $\Omega_{DE}=0.6902735671$: 이 분할 모형에서 전체 에너지 중 차지하는 무차원 분율
 - $\rho_\Lambda$: 실제 진공 에너지의 절대 스케일
 
 문서에는 de Sitter 엔트로피와 위상면적을 이용해 $\rho_\Lambda^{1/4}\sim2.24\ \mathrm{meV}$를 읽는 홀로그래피 후보가 있다. 이 부분은 미시적 양자중력 유도가 남아 있으므로 `Exact`가 아니라 `Bridge/Phenomenology`다.
@@ -284,10 +322,17 @@ $m_\phi\simeq29.65\ \mathrm{MeV}$는 우주 전체 암흑물질 입자의 확정
 암흑 부문 분할 규칙은 다음 순서로 발전했다.
 
 1. 초기에는 $R\simeq\alpha_s\pi$를 사용했다.
-2. 이미 유도된 유효 차원을 재사용하는 $R_{\mathrm{LO}}=\alpha_sD_{\mathrm{eff}}$로 교체했다.
-3. 바리온이 $U(1)$, $SU(2)$, $SU(3)$ 층에 주는 관성 피드백을 포함해 $R_{\mathrm{3layer}}\simeq0.38063$으로 정제했다.
+2. 이미 고정된 유효 깊이를 재사용하는 $R_{\mathrm{LO}}=\alpha_sD_N$로 교체했다.
+3. 최신본은 식에 없는 수치 보정을 버리고
+   $R=\alpha_sD_N(1+x\delta_N)$ 자체의 계산값 $0.3782386966$을 사용한다.
 
-수치 정합은 좋지만, “진공 성분 = 암흑에너지”와 “집합적 요동 = 암흑물질”의 미시적 동일시는 아직 독립적으로 증명되지 않았다. 따라서 현재 공식 판정은 둘 다 `Phenomenology`다. 특히 밀도비를 맞추는 것과 은하 halo, 렌즈, CMB 성장률을 동시에 재현하는 것은 별도의 검증 문제다.
+내부 정규화는 닫히지만, “진공 성분 = 암흑에너지”와 “집합적 요동 =
+암흑물질”의 미시적 동일시는 아직 독립적으로 증명되지 않았다. 따라서 현재
+공식 판정은 둘 다 `Phenomenology`다. 더구나 현행 13-block
+fixed-background 공동 gate는
+\(\chi^2=40.20145\), dof \(=13\),
+\(p=1.2828\times10^{-4}\)로 `REJECT`다. 밀도비 하나의 근접성과 은하 halo,
+렌즈, CMB 성장률을 동시에 재현하는 것은 서로 다른 검증 문제다.
 
 관련 문서:
 
@@ -298,8 +343,14 @@ $m_\phi\simeq29.65\ \mathrm{MeV}$는 우주 전체 암흑물질 입자의 확정
 
 #### 코어 보강과 남은 간극
 
-- `P_{\text{survive}} \leftrightarrow \Omega_b`는 유클리드 등분배 정리 + 부트스트랩 자기일관성 + Cauchy 유일성으로 정당화되었으며, `Selection` 근접 `Bridge`로 격상되었다. 잔여 불확도: 상호작용 보정 $O(\alpha_s/(2\pi)) \sim 2\%$.
-- `\alpha_s^{1/d}` 및 `\sin^2\theta_W = 4\alpha_s^{4/3}` 체인은 수치적으로 강하며, 독립 실험 검증 경로(FCC-ee, 격자 QCD, EIC)가 `상수.md`에 정리되었다. 코어 기준으로는 `Bridge`.
+- $P_{\text{count}}$와 $\Omega_b$를 직접 동일시하지 않는다. B1--B4와
+  A3b를 함께 채택해 renormalized stress tensor의 에너지 가중 측도,
+  관측 초곡면, sector projector, feedback depth를 모두 고정한 경우에만
+  $x=\langle E_b\rangle/\langle E_{\rm tot}\rangle=\Omega_b$가 조건부로 닫힌다.
+- `\alpha_s^{1/d}` 및 \(s_A^2:=4\alpha_s^{4/3}\) 체인은 registered
+  matching ansatz다. \(s_A^2\)를 특정 on-shell, \(\overline{\rm MS}\) 또는
+  effective weak angle로 보내는 scheme map 전에는 정밀 일치 score를 주지
+  않는다. 식 선택에 참고한 EW 값도 같은 revision의 holdout으로 재사용하지 않는다.
 - `N_c = d`는 구조적 유비를 넘어 동역학적 동일성으로 닫히지 않았다.
 - 뇌 문서의 항목은 `6_뇌/05_실험근거.md`의 실험 게이트에서 `supported`로 판정될 때만 `Phenomenology`에서 `Bridge`로 격상된다(등급 기준: `6_뇌/05_실험근거/01_판정기준과핵심주장.md` 1절의 supported/bridge/testable). 격상 근거는 실험 게이트이지 닫힘 가정 자체가 아니다. 부트스트랩 닫힘 가정 (C1)-(C3)은 `1_강의/A_연역적_유도.md` 2.5절에, 의식의 (C1)-(C3) 자기일관 조건은 `7_AGI/7_Consciousness.md` 1절에 별도로 정의된다(서로 다른 (C1)-(C3) 집합이며 `05_실험근거`에는 정의되지 않는다). AGI/게임 밸런스는 여전히 응용 가설층.
 - 공학/블랙홀 문서의 수치는 최신 정본과 양립하도록 정리되었지만, 대부분 설계 벤치마크 또는 유효 모델 수준이다.
@@ -315,41 +366,55 @@ $m_\phi\simeq29.65\ \mathrm{MeV}$는 우주 전체 암흑물질 입자의 확정
 대표적인 물리 브리지 후보는
 
 $$
-\sin^2\theta_W=4\alpha_s^{4/3}
+s_A^2:=4\alpha_s^{4/3}
 $$
 
-이다. 수치 정합은 강하지만, 왜 지수가 정확히 $4/3$이어야 하는지에 대한 독립적인 게이지 이론 유도는 아직 완전히 닫히지 않았다. 따라서 현재 등급은 `Bridge`다.
+이다. 여기서 \(s_A^2\)는 우선 CE neutral-mixing output이고, 물리적
+\(\hat s_Z^2\) 또는 \(\bar s_\ell^2\)와의 동일시는 RG·threshold·scheme
+conversion이 필요한 `Bridge`다. 지수와 prefactor도 Yang--Mills 작용에서
+유도되지 않았으므로, 중심값 근접성을 독립 검증으로 세지 않는다.
 
-검산:
+산술 재현(물리적 scheme 검증 아님):
 
 ```powershell
 python examples/physics/alpha_s_closure_gate.py
 ```
+
+이 스크립트는 Track B의 낮은 양의 근을 숨기고 “zero free parameters”를
+출력하는 legacy/noncanonical diagnostic이다. 물리 validation이나 최신
+acceptance에 쓰지 않는다. 현행 두-branch 산술은
+`docs/0_검증과감사/verify_numeric_consistency.py`가 검증한다.
 
 관련 문서:
 
 - [3_상수/2_혼합매개변수.md](3_상수/2_혼합매개변수.md)
 - [2_경로적분과_응용/10_공리_정당화.md](2_경로적분과_응용/10_공리_정당화.md)
 
-### 4.4 물리 예측과 사후 readout의 구분
+### 4.4 입력·조건부 출력·공동 likelihood의 분리
 
-$V_{cb}$, $V_{us}$, $A_s$, $n_s$ 같은 항목은 단순 원식이 바로 관측을 맞힌 경우와, loop 보정·projection·전이수 선택을 받아 통과한 경우를 구분해야 한다.
+flavour와 인플레이션은 다음 네 역할을 섞지 않는다.
 
-예를 들어 $V_{cb}$의 LO 식은 엄격한 기준에서 실패하지만,
+| 항목 | 현행 역할 | 검증 계약 |
+|---|---|---|
+| CKM/PMNS | 하나의 Yukawa·질량 texture를 대각화한 unitary-matrix benchmark | 원소별 사후 보정식의 개별 PASS를 폐기하고, 전체 matrix·invariant를 global-fit covariance로 공동 평가 |
+| \(A_s=2.10\times10^{-9}\) | 외부 normalization input | finite-\(\xi\) potential의 \(\lambda_4=1.3434991\times10^{-10}\)를 고정; 입력값을 성공 건수로 재집계하지 않음 |
+| \(N_*=57.1999\) | reheating-history benchmark input | \(N_*\)를 지정한 뒤 exact Einstein-frame 적분을 실행 |
+| \(n_s,r\) | 조건부 출력 | \(n_s=0.9661711385,\ r=0.0043456103\); 독립 spectrum holdout과 reheating completion 필요 |
 
-$$
-|V_{cb}|=\alpha_s^{3/2}\left(1+\frac{\delta}{2\pi}\right)
-$$
-
-라는 NLO projector 후보는 관측 범위에 들어온다. 현재 판정은 `Exact`가 아니라 조건부 `Phenomenology`다.
-
-검산:
+구 `ckm_vcb_nlo_gate.py`와 `primordial_spectrum_readout_gate.py`는
+후보식을 기록한 legacy diagnostic이며 현행 acceptance가 아니다. 현행 산술과
+문서 계약은 다음 명령으로 검사한다.
 
 ```powershell
-python examples/physics/ckm_vcb_nlo_gate.py
-python examples/physics/primordial_spectrum_readout_gate.py
-python tests/scorecard.py
+python docs/0_검증과감사/verify_numeric_consistency.py
+powershell -ExecutionPolicy Bypass -File docs/0_검증과감사/run_full_consistency_gate.ps1
 ```
+
+첫 명령은 canonical manifest의 정의·산술과 동결 likelihood의 \(p\)-value를
+검산한다. 둘째 명령은 H1·링크·delimiter·표·제어문자, 제한된 semantic
+sentinel과 canonical 산술을 전수 검사한다. 이 명령이 flavour global fit,
+Boltzmann likelihood 또는 모든 작용의 물리적 정당성을 자동 증명한다고
+해석하지 않는다.
 
 ### 4.5 등호 이전의 후보 선택
 
@@ -392,16 +457,22 @@ python examples/pre_eq/claim_residual_benchmark.py benchmarks/eval/faithbench_al
 문서의 “Clarus boson”은 코어에서 독립 입자를 먼저 가정한 것이 아니다. Clarus 장의 2점 상관함수 pole 또는 역상관길이를 입자언어로 읽는 `Bridge`다.
 
 $$
-m_\phi=m_p\delta^2\simeq29.65\ {\rm MeV}
+m_{\rm light}=m_p\delta_N^2\simeq29.6992\ {\rm MeV}
 $$
 
-는 이 pole readout의 사전등록값이다. 해당 질량창의 신호는 pole bridge를 지지하지만, 신호 부재는 우선 국소 스칼라·포탈 readout을 제약한다. 코어 장 자체의 반증 조건은 별도로 명시해야 한다.
+는 이 pole readout의 최신 질량 ansatz다. 해당 질량창의 신호만으로 field
+identity가 확정되지는 않으며 production coupling·width·residue도 함께
+필요하다. 신호 부재는 지정한 국소 스칼라 readout을 제약한다.
 
 검산:
 
 ```powershell
-python examples/physics/clarus_boson_search_gate.py
+powershell -ExecutionPolicy Bypass -File docs/0_검증과감사/run_full_consistency_gate.ps1
 ```
+
+`examples/physics/clarus_boson_search_gate.py`는 아직
+\(\alpha_s=0.11789\), \(m=29.65\,\mathrm{MeV}\)를 쓰는 legacy gate라 최신
+29.6992 MeV 정본의 acceptance 명령으로 사용하지 않는다.
 
 ## 5. 현재 검증 상태
 
@@ -411,10 +482,11 @@ python examples/physics/clarus_boson_search_gate.py
 |---|---|
 | 생존함수의 함수형 | 정규성·곱셈 조건 아래 `Exact/Selection` |
 | 자기재귀 고정점과 solver | 수학·코드 수준 `Exact` |
-| $d=3$ Hodge 선택 | `Selection` |
+| $d=3$ Hodge closure | 지정 oriented metric type-closure 아래 선형대수 `Exact`; 자연에 적용하는 조건은 `Selection` |
 | $P_{\mathrm{survive}}\leftrightarrow\Omega_b$ | `Bridge` |
 | 결합상수·혼합각 | 주로 `Bridge` |
 | DM/DE·초기 스펙트럼·Hubble readout | 주로 `Phenomenology/Open` |
+| 고정-background 13-block 우주론 | \(\chi^2=40.20145\), dof \(=13\), \(p=1.2828\times10^{-4}\): `REJECT` |
 | Clarus field pole | `Open test` |
 | 공학·뇌·AGI | `Phenomenology/Open test` |
 | PreEq 유한수학 | 상당 부분 `Exact under assumptions` |
@@ -497,8 +569,8 @@ $$
 1. [상수.md](상수.md)
 2. [3_상수/](3_상수/)
 3. [0_검증과감사/PROOF_VALIDATION_LEDGER.md](0_검증과감사/PROOF_VALIDATION_LEDGER.md)
-4. `tests/scorecard.py`
-5. `examples/physics/`
+4. [0_검증과감사/CANONICAL_NUMERIC_MANIFEST_2026-08-06.json](0_검증과감사/CANONICAL_NUMERIC_MANIFEST_2026-08-06.json)
+5. [0_검증과감사/run_full_consistency_gate.ps1](0_검증과감사/run_full_consistency_gate.ps1)
 
 ### AI·런타임을 볼 때
 
@@ -531,7 +603,7 @@ $$
 
 | 질문 | 먼저 볼 문서 | 이어서 볼 문서 |
 |---|---|---|
-| 문서군 전체 완성도와 다음 정리 순서는 무엇인가 | [0_검증과감사/문서_전체_완성도_감사.md](0_검증과감사/문서_전체_완성도_감사.md) | [참조/정합성_검증.md](참조/정합성_검증.md) |
+| 문서군 전체 완성도와 다음 정리 순서는 무엇인가 | [0_검증과감사/FULL_CONSISTENCY_COMPLETION_LOOP_2026-08-06.md](0_검증과감사/FULL_CONSISTENCY_COMPLETION_LOOP_2026-08-06.md) | [0_검증과감사/문서_전체_완성도_감사.md](0_검증과감사/문서_전체_완성도_감사.md) |
 | 무엇이 증명·브리지·미해결인가 | [0_검증과감사/PROOF_STATUS_MATRIX.md](0_검증과감사/PROOF_STATUS_MATRIX.md) | [0_검증과감사/미해결_난제_목록.md](0_검증과감사/미해결_난제_목록.md) |
 | CE의 최소 공리가 무엇인가 | [axium.md](axium.md) | [경로적분.md](경로적분.md) 3절 |
 | 오일러 항등식이 어떤 역할을 하는가 | [axium.md](axium.md) | [경로적분.md](경로적분.md) 15.14절 |
@@ -575,11 +647,17 @@ $$
 기본 검증:
 
 ```powershell
-$env:PYTHONPATH = "reality_stone/python"
-python -m pytest tests -q
-python tests/scorecard.py
-python tests/run_validation.py
+powershell -ExecutionPolicy Bypass -File docs/0_검증과감사/run_full_consistency_gate.ps1
+.venv\Scripts\python.exe -m pytest tests/test_bootstrap_solver.py tests/test_dimensionless.py tests/test_core_axioms.py tests/test_bridge_gates.py -q -p no:cacheprovider
 ```
+
+`tests/scorecard.py`와 `tests/run_validation.py`는 각각 legacy
+\(\alpha_s=0.11789\) 및 \(m_\phi\simeq29.648\,\mathrm{MeV}\) baseline을
+포함하므로 최신 Track A acceptance와 분리한다.
+`examples/physics/horizon_entropy_lift_derivation_gate.py`도 현
+checkout에서는 \(\alpha_s=0.11789\)를 고정해 구 Hubble readout을 내므로
+canonical acceptance runner가 아니다. 최신 문서 수치는 위 manifest
+verifier가 재계산한다.
 
 일부 오래된 문서에는 현재 checkout에서 제거된 `scripts/...`,
 `examples/ai/...`, `examples/physics/evolution/...`, `data/evolution/...`,

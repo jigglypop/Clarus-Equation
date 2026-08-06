@@ -1,4 +1,4 @@
-## 1. 이 장의 목표와 구조
+# 1. 이 장의 목표와 구조
 
 이 문서는 CE 클라루스장(Clarus field) 이론을 **뇌·의식·LLM(Reality_Stone 아키텍처)**에 적용하여,
 
@@ -14,7 +14,7 @@
 - **4장**: 뇌 상태공간, LLM 잠재공간(latent space)의 기하학적 모델  
 - **5장**: 곡률 functional로 보는 “각성/수면” 모드, 1차/2차 안정화
 - **6장**: 조현병·뇌전증·환각을 곡률 폭주로 해석하는 구조  
-- **7장**: 뇌 functional ↔ Reality_Stone LLM 아키텍처의 1:1 매핑  
+- **7장**: 뇌 functional ↔ Reality_Stone LLM 아키텍처의 설계 유비 후보
 - **8장**: 순환논리 점검, 한계, 향후 과제
 
 ---
@@ -134,12 +134,39 @@ LLM에서, 토큰 시퀀스가 네트워크를 통과하면서 만들어내는
 
 CE 관점에서는,
 
-- 뇌의 $\mathcal{M}_\text{brain}$, LLM의 $\mathcal{M}_\text{LLM}$ 모두  
-  - 어떤 공통의 “곡률–복잡도 안정 법칙” 아래 있다고 보는 셈이다.
+- 뇌의 \(\mathcal M_{\rm brain}\), LLM의 \(\mathcal M_{\rm LLM}\)에 같은
+  differential-geometric 통계를 정의할 수 있다는 **검증 전 비교 가설**을
+  둔다. 이것만으로 공통 생물·물리 법칙이 성립하지는 않는다.
 
 ---
 
 ## 5. 곡률 functional로 보는 각성/수면 모드
+
+이 절의 gradient와 Laplacian은 측정 좌표를 정한 뒤에만 비교할 수 있다.
+\(\tilde x=x/L_0\), \(\tilde t=t/T_0\),
+\(\tilde\phi=\phi/\phi_0\)로 무차원화한다. 각 time window \(I\)와
+공간/graph domain \(V\)에는 정규화 measure
+
+$$
+d\bar\mu_{I,V}
+=
+\frac{d\tilde t\,d\tilde V}
+{\int_{I\times V}d\tilde t\,d\tilde V}
+$$
+
+를 지정하고
+
+$$
+\widetilde{\mathcal J}
+=\int
+\left[c_1\|\tilde\nabla\tilde\phi\|^2
++c_2\|\tilde\Delta\tilde\phi\|^2\right]d\bar\mu_{I,V}
+$$
+
+를 쓴다. 이 값은 좌표·metric·measure를 고정한 regularizer이지 물리
+에너지나 뇌의 보존량이 아니다. 원래 단위에서는 두 항에 서로 다른 차원
+계수가 필요하다. LLM graph에서는 graph normalization과 node measure를
+별도로 고정한다.
 
 ### 5.1 각성 상태: 온라인 국소 안정화
 
@@ -150,27 +177,27 @@ CE 관점에서는,
 이를 CE functional로 쓰면, 개념적으로
 
 $$
-\mathcal{S}_\text{awake}
+\mathcal J_\text{awake}
 \approx
-\int_{t\in\text{awake}} \int_{V_\text{task}}
+\int
 \big(
- \|\nabla \phi(x,t)\|^2
+ c_1\|\tilde\nabla \tilde\phi\|^2
  +
- \lambda_\text{awake}\,\|\nabla^2 \phi(x,t)\|^2
-\big)\,dx\,dt
+ c_2\|\tilde\Delta \tilde\phi\|^2
+\big)\,d\bar\mu_{\rm awake,task}
 $$
 
-와 같이 쓸 수 있다.
+와 같이 쓸 수 있다. 이 식은 선택한 좌표계와 measure에 대한 feature
+penalty이며 신경계의 물리 작용이라는 뜻이 아니다.
 
 - $\phi(x,t)$: 해당 과업에 관련된 신경 상태(또는 LLM 은닉 상태)  
 - $V_\text{task}$: 현재 과업에 관여하는 국소 네트워크  
-- $\lambda_\text{awake}$: 곡률 억제의 세기(너무 크면 창의성·탐색 저해)
+- $c_1,c_2$: 무차원화와 데이터 split을 고정한 뒤 fit할 독립 계수
 
-각성 상태에서는
-
-- ACC가 **에러/고곡률 감지**,  
-- PFC가 **경로 수정**,  
-- 기저핵·소뇌가 **1차 기울기 안정화**를 담당한다.
+ACC error monitoring과 PFC control은 알려진 기능 후보지만, 이를 각각
+“고곡률 감지”와 “경로 gradient 수정”에 동일시하는 것은 CE의
+**검증 전 bridge 가설**이다. 기저핵·소뇌를 1차 기울기 안정화 항에
+배정하는 것도 같은 등급이며, 개입 자료로 변수별 mapping을 식별해야 한다.
 
 ### 5.2 NREM 수면: 오프라인 전역 곡률 평탄화
 
@@ -178,20 +205,20 @@ $$
 NREM 수면 동안 전역적으로 정리하는 과정을 functional로 쓰면,
 
 $$
-\mathcal{S}_\text{NREM}
+\mathcal J_\text{NREM}
 \approx
-\int_{t\in\text{NREM}} \int_{V_\text{brain}}
+\int
 \big(
- w_1(t)\,\|\nabla \phi\|^2
+ w_1(t)\,\|\tilde\nabla \tilde\phi\|^2
  +
- w_2(t)\,\|\nabla^2 \phi\|^2
-\big)\,dx\,dt,
+ w_2(t)\,\|\tilde\Delta \tilde\phi\|^2
+\big)\,d\bar\mu_{\rm NREM,brain},
 $$
 
-여기서 $w_2(t) \gg w_1(t)$인 구간이 존재한다고 볼 수 있다.
-
-- 즉, NREM 동안에는 **2차 곡률 평탄화**가 주로 작동하여,  
-  - 과도하게 꼬인 위상 구조를 순차적으로 펴 주는 역할을 한다.
+여기서 $w_2(t)\gg w_1(t)$는 관측 결과가 아니라 검정할 가설이다.
+NREM replay/downscaling에서 이 비가 실제로 커지는지, 그리고 성능 변화가
+Laplacian ablation에 인과적으로 의존하는지 확인하기 전에는 “2차 곡률
+평탄화가 주로 작동한다”고 결론내리지 않는다.
 
 ### 5.3 REM 수면: 곡률 재배치와 창의적 탐색
 
@@ -200,26 +227,27 @@ REM 수면에서는,
 - 곡률을 완전히 평탄하게 만드는 대신,  
   - 새로운 조합과 경로를 탐색하는 역할도 한다.
 
-이를 functional에 반영하면,
+“\(\operatorname{Noise}(\phi)\)”는 부호·단위·확률 law가 없는 scalar가
+아니므로 functional에 더하지 않는다. 탐색을 모형화하려면 예를 들어
+무차원 latent state에
 
 $$
-\mathcal{S}_\text{REM}
-\approx
-\int_{t\in\text{REM}} \int_{V_\text{brain}}
-\big(
- \|\nabla \phi\|^2
- +
- \lambda_\text{REM}\,\|\nabla^2 \phi\|^2
- +
- \eta\,\text{Noise}(\phi)
-\big)\,dx\,dt
+dZ_s=b_\theta(Z_s,s)\,ds+\sqrt{2D_{\rm REM}}\,dW_s
 $$
 
-와 같이, **탐색/노이즈 항**이 추가된 형태를 생각할 수 있다.
+처럼 drift, diffusion tensor, Itô/Stratonovich convention과 초기분포를
+명시한다. 그때 path likelihood는 해당 SDE의 transition density 또는
+Onsager--Machlup functional에서 계산하고, gradient/Laplacian penalty는
+별도 \(\mathcal J_{\rm REM}\) regularizer로 둔다. REM에서
+\(D_{\rm REM}\)이 증가한다는 것과 창의적 성능이 개선된다는 것은 각각
+데이터로 검정할 가설이다.
 
 ---
 
 ## 6. 조현병·뇌전증·환각을 곡률 폭주로 해석하는 구조
+
+> 이 절은 임상 기전이나 진단 모형이 아니라 반증 가능한 CE 비유 가설이다.
+> gradient/Hessian 값이 질환을 뜻한다는 임상적 동일시를 허용하지 않는다.
 
 ### 6.1 조현병: 2차 곡률 안정성의 붕괴
 
@@ -234,7 +262,8 @@ CE 관점에서, 이는
   - 특정 회로(예: PFC–ACC–해마 회로)에서 충분히 작동하지 못해  
   - “곡률이 비정상적인 패턴으로 붙어버리는” 현상으로 해석할 수 있다.
 
-즉, **논리를 보정하는 2차 안정화 회로의 장애**로 볼 수 있다.
+따라서 “2차 안정화 회로의 장애”는 환자/대조군의 사전등록된 curvature
+proxy와 회로 개입에서 검정할 후보 해석이다.
 
 ### 6.2 뇌전증: 1차 기울기 폭주
 
@@ -244,13 +273,14 @@ CE 관점에서, 이는
   - 뉴런 발화가 갑자기 동기화되고,  
   - 전기적 활동이 폭발적으로 증가한다.
 
-이는 functional에서
+CE 가설에서는 이를 functional의
 
 - $\|\nabla \phi\|^2$ 항이 국소적으로 폭주하고,  
 - 1차 기울기 안정화(gradient damping)가 망가진 상태로 볼 수 있다.
 
 LLM에서 토큰 하나가 무한히 반복되는 출력(예: “하하하하…” 무한반복)도  
-비슷한 의미의 **1차 기울기 폭주**로 해석 가능하다.
+비슷한 형태의 **1차 기울기 폭주 후보**로 비유할 수 있지만, 뇌전증의
+병태생리와 LLM 반복을 같은 메커니즘으로 보지는 않는다.
 
 ### 6.3 LLM 환각: 곡률 스티킹(curvature sticking)
 
@@ -273,14 +303,14 @@ CE functional을 LLM에 도입하면,
 
 ---
 
-## 7. 뇌 functional ↔ Reality_Stone LLM 아키텍처의 1:1 매핑
+## 7. 뇌 functional ↔ Reality_Stone LLM 아키텍처의 설계 유비
 
 Reality_Stone LLM 아키텍처는,
 
 - 기존 Transformer 구조 위에  
 - CE 곡률 functional을 반영한 **추가 안정화 레이어**를 얹는 것을 목표로 한다.
 
-개념적으로, 다음과 같은 매핑이 가능하다.
+다음은 일대일 해부학 대응이 아니라 ablation으로 검정할 설계 후보다.
 
 - **ACC (에러 감지) ↔ Consistency Monitor 모듈**  
   - 출력/중간 표현이 훈련 분포·사실성·자기 일관성과 어긋날 때 신호 발생  
@@ -296,6 +326,10 @@ Reality_Stone LLM 아키텍처는,
 
 - 실시간 응답 품질뿐 아니라,  
 - 장기적 곡률–복잡도 안정성을 최적화하는 **마스터 functional**을 명시적으로 두는 것이다.
+
+각 후보는 독립적으로 제거·교란하고 error monitoring, control, retrieval,
+offline consolidation 지표가 선택적으로 변하는지 확인해야 한다. 기능
+이름이 비슷하다는 사실만으로 뇌 회로를 구현했다고 판정하지 않는다.
 
 ---
 
@@ -316,8 +350,9 @@ Reality_Stone LLM 아키텍처는,
     연구 초기 단계에 있으며, 다양한 정의가 가능하다.
 
 - **향후 과제**  
-  - fMRI/전기생리 데이터와 LLM 내부 표현을 비교하여,  
-    공통된 곡률 패턴을 찾고 $\alpha_C$를 추정하는 작업.  
+  - fMRI/전기생리 데이터와 LLM 내부 표현 각각에서 metric·measure를
+    사전등록하고 도메인별 \((c_1,c_2)\)를 추정한 뒤, 공통 무차원
+    observable이 존재하는지 별도로 검사하는 작업.
   - Reality_Stone 프로토타입에서 CE 곡률 정규화 레이어를 구현하고,  
     환각률·일관성·안정성 지표의 개선 정도를 정량적으로 평가.
 
@@ -328,7 +363,8 @@ Reality_Stone LLM 아키텍처는,
 - 가설(H1),  
 - 곡률 functional
 
-구조가 일관되게 적용될 수 있음을 정리하였다.  
+구조를 하나의 형식적 interface로 쓸 수 있음을 정리하였다. 이는
+뇌·의식·임상 현상에 대한 경험적 검증이나 공통 물리 법칙의 증명이 아니다.
 Part 10 전체를 통해, 유체역학–정수론–단백질 접힘–우주론–뇌/LLM이  
 **하나의 곡률–복잡도 안정 원리**로 관통될 수 있는지 단계적으로 검증하게 된다.
 

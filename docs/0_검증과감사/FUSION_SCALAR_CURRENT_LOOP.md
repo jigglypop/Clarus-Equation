@@ -6,11 +6,12 @@
 
 ## 결론
 
-29.64757 MeV flavor-aligned scalar의 D–T 장벽 계산에서 기존 Gaussian one-body
-근사는 공개 Helm 중심값과 매우 잘 맞는다. $q=0,10,20,29.64757,40$ MeV의 등록된
+최신 canonical \(29.6991596174\) MeV flavor-aligned scalar의 D–T 장벽 계산에서
+기존 Gaussian one-body 근사는 공개 Helm 중심값과 매우 잘 맞는다.
+$q=0,10,20,29.6991596174,40$ MeV의 등록된
 5점 격자에서 D와 T form-factor 곱의 최대 표본 상대 차이는
 $8.99\times10^{-5}$, $q=i m_\phi$의 exterior-residue 해석 진단에서 차이는
-$-4.94\times10^{-5}$다. 이 검산은 Gaussian 중심곡선이 크게 잘못되었다는 가설을
+$-4.96\times10^{-5}$다. 이 검산은 Gaussian 중심곡선이 크게 잘못되었다는 가설을
 기각하지만 연속구간 최대나 물리 인증을 완성하지는 않는다.
 
 공개 입력을 끝까지 결합하면 다음 세 가지가 남는다.
@@ -74,17 +75,17 @@ dimensionless fraction 합 그 자체가 아니다. 각각
 $m_N\sum f_{Tq}^{(N)}$를 계산한 **sigma numerator, 단위 GeV**다. 이 때문에 새
 audit 필드도 `candidate_*_sigma_numerator_gev`로 명명했다.
 
-$f_\phi=8.9709918$ GeV에서 기존 후보는 다음과 같다.
+$f_\phi=8.9604754$ GeV에서 canonical-mass 후보는 다음과 같다.
 
 | 양 | 값 |
 |---|---:|
 | proton sigma numerator | 0.154 GeV |
 | neutron sigma numerator | 0.158 GeV |
-| $g_p$ | 0.0171664409 |
-| $g_n$ | 0.0176123225 |
-| $Q_D=g_p+g_n$ | 0.0347787634 |
-| $Q_T=g_p+2g_n$ | 0.0523910858 |
-| $Q_DQ_T$ | 0.00182209718 |
+| $g_p$ | 0.0171865881 |
+| $g_n$ | 0.0176329930 |
+| $Q_D=g_p+g_n$ | 0.0348195811 |
+| $Q_T=g_p+2g_n$ | 0.0524525741 |
+| $Q_DQ_T$ | 0.00182637665 |
 
 각 flavor 오차를 독립으로 단순 합성하면 fraction-sum 오차는 p에서 0.06233,
 n에서 0.06259로 매우 크다. 특히 공통 strange 항이 지배하므로 p/n 상관 없이
@@ -103,7 +104,7 @@ n에서 0.06259로 매우 크다. 특히 공통 strange 항이 지배하므로 p
 입력도 조건부로 p=n=72.3 MeV인 isoscalar nucleon 값이라고 두고 실제 D/T charge
 조합 $(144.6\times216.9)/(312\times470)$을 쓰면 $f_\phi$를 그대로 둘 때
 product 비는 0.213883, 동일 product를 맞추기 위해 중심값만 재조정한
-scale은 4.14885 GeV다. 이것은 정규화 민감도 진단일 뿐이다.
+scale은 4.14399 GeV다. 이것은 정규화 민감도 진단일 뿐이다.
 $\sigma_{\pi N}$--$\sigma_s$ covariance와 재조정된
 UV/kaon/neutron likelihood를 다시 계산하지 않았으므로 새로운 fit이나 허용
 후보로 승격하지 않는다.
@@ -144,18 +145,18 @@ F_G^D(q)F_G^T(q)=
 | 0 | 1.000000000 | 1.000000000 | 1.000000000 | 1.000000000 | 0 |
 | 10 | 0.998463079 | 0.998792756 | 0.997257690 | 0.997252085 | $5.62\times10^{-6}$ |
 | 20 | 0.993866472 | 0.995179762 | 0.989075799 | 0.989053564 | $2.25\times10^{-5}$ |
-| 29.64757 | 0.986571378 | 0.989438343 | 0.976151549 | 0.976103332 | $4.94\times10^{-5}$ |
+| 29.6991596 | 0.986524920 | 0.989401750 | 0.976069482 | 0.976021101 | $4.96\times10^{-5}$ |
 | 40 | 0.975690683 | 0.980857992 | 0.957014005 | 0.956927970 | $8.99\times10^{-5}$ |
 
 Yukawa folding에서 자주 등장하는 해석적 연속 $q=i m_\phi$도 별도로 계산했다.
 
 | 양 | 값 |
 |---|---:|
-| $F_D^H(i m_\phi)$ | 1.013611401 |
-| $F_T^H(i m_\phi)$ | 1.010674383 |
-| Helm product | 1.024431077 |
-| Gaussian product | 1.024481699 |
-| 상대 잔차 | $-4.9412\times10^{-5}$ |
+| $F_D^H(i m_\phi)$ | 1.013659135 |
+| $F_T^H(i m_\phi)$ | 1.010711763 |
+| Helm product | 1.024517211 |
+| Gaussian product | 1.024568013 |
+| 상대 잔차 | $-4.9584\times10^{-5}$ |
 
 따라서 exterior-residue 중심곡선 진단 tolerance $10^{-4}$는 통과한다. 그러나
 $q=i m_\phi$는 측정점이 아니다. 유한 $r$, 특히 핵밀도가 겹치는 장벽 안쪽에서는
@@ -169,18 +170,18 @@ one-body scalar-density covariance, two-body current도 빠져 있다. 그래서
 매개자의 Compton 길이는
 
 \[
-\lambda_\phi=\frac{\hbar c}{m_\phi}=6.65576\ {\rm fm}
+\lambda_\phi=\frac{\hbar c}{m_\phi}=6.64419\ {\rm fm}
 \]
 
 이다. 점핵 Yukawa 지수만 표시하면 다음과 같다.
 
 | $r$ (fm) | $\exp(-m_\phi r/\hbar c)$ |
 |---:|---:|
-| 3.24 | 0.614592 |
-| 5 | 0.471786 |
-| 10 | 0.222582 |
-| 20 | 0.0495428 |
-| 50 | 0.000546326 |
+| 3.24 | 0.614072 |
+| 5 | 0.471170 |
+| 10 | 0.222001 |
+| 20 | 0.0492844 |
+| 50 | 0.000539231 |
 
 이 루프가 결합 비교용으로 택한 $q_{\max}=40$ MeV 격자가 직접 분해하는 최소
 길이는 $\hbar c/q_{\max}=4.933$ fm다. 3.24 fm 안쪽을 같은 기준으로 분해하려면
@@ -213,15 +214,15 @@ w=\frac{\sigma_{\pi N}}{\sigma_{\pi N}+\sigma_s}=0.604426
 |---:|---:|---:|---:|
 | 10 | $-0.07616\%$ | $-0.08004\%$ | 0.02766% |
 | 20 | $-0.30465\%$ | $-0.32017\%$ | 0.11065% |
-| 29.64757 | $-0.66944\%$ | $-0.70355\%$ | 0.24315% |
+| 29.6991596 | $-0.67177\%$ | $-0.70600\%$ | 0.24399% |
 | 40 | $-1.21858\%$ | $-1.28067\%$ | 0.44260% |
 
 D와 T에 같은 intrinsic factor를 곱하고 기존 product를 유지하는 정확한 공통
 coupling factor는 $1/(1+\delta)$다. 따라서 strange-slope 중심을 고정하고
 scalar-radius 양 끝점만 바꾼 $q=40$ MeV coupling 진단은
 $+1.2336\%$--$+1.2973\%$로 1.2% 비교띠를 넘는다. 반면 $q=i m_\phi$에서는
-amplitude가 $+0.6694\%$--$+0.7036\%$, 필요한 coupling 보정은
-$-0.6650\%$--$-0.6986\%$다.
+amplitude가 $+0.6718\%$--$+0.7060\%$, 필요한 coupling 보정은
+$-0.6673\%$--$-0.7011\%$다.
 
 이 부호 차이는 spacelike slope와 해석적 연속을 섞지 않기 위해 명시했다. 또한
 저-$q$ 전개를 완전한 form factor로 승격하지 않았고 light/strange slope 공동
@@ -317,12 +318,14 @@ J_{2b}=-c_{\rm is}\left(\frac{g_A}{2f_\pi}\right)^2m_\pi^2
 
 ## 8. hard gate
 
-기존 one-body proxy 비교값은 다음과 같이 provenance를 고정했다.
+one-body proxy는 최신 질량을 넣은 margin solver의 canonical overlay로 다시 계산했다.
+아래 두 보정값은 구형 wrapper에 하드코딩된 certification snapshot을 무작정 치환한
+값이 아니라, 같은 WKB 응답을 새 질량에서 다시 푼 결과다.
 
 | 비교량 | coupling 보정 |
 |---|---:|
-| reference Gaussian | $-0.9887\%$ |
-| morphology envelope | $-1.2143\%$--$-0.8308\%$ |
+| canonical-mass reference Gaussian | $-0.9923\%$ |
+| canonical-mass morphology envelope | $-1.2188\%$--$-0.8342\%$ |
 | 이 루프의 절대 비교띠 | $\pm1.2\%$ |
 
 새 문헌을 넣은 뒤에도 다음 네 입력이 모두 없으므로 scalar-current 인증 gate는
@@ -346,3 +349,18 @@ sector 제약 gate까지 다시 논리곱한다. 따라서 가상의 완전한 D
 필요한 다음 산출물은 이 네 항을 포함하는 registered-mass ab-initio 응답 테이블과
 machine-readable covariance다. 그 전에는 Helm 중심검산 통과, 작은 two-body
 중심값, $+1.11\%$ proxy 중 어느 것도 물리 branch를 열지 않는다.
+
+## 9. 최신 질량 재현
+
+현재 Python wrapper에 남아 있는 legacy 기본질량을 수정하지 않고 canonical snapshot을
+재계산하기 위해, 동일 process에서 thermal solver·flavor report·scalar-current 모듈의
+질량과 5점 격자를 함께 주입했다.
+
+```powershell
+.\.venv\Scripts\python.exe -c "import reality_stone.clarus.fusion_equation_iteration_loop as fe; import reality_stone.clarus.fusion_flavor_aligned_loop as fa; import reality_stone.clarus.fusion_scalar_current_loop as sc; m=29.69915961743591; fe.DEFAULT_SCALAR_MASS_MEV=m; fa.REGISTERED_SCALAR_MASS_MEV=m; sc.REGISTERED_SCALAR_MASS_MEV=m; sc.SPACELIKE_Q_GRID_MEV=(0.,10.,20.,m,40.); fe.current_fusion_equation_iteration_report.cache_clear(); fa.current_fusion_flavor_aligned_report.cache_clear(); r=sc.current_fusion_scalar_current_report(); print(r.one_body_nuclear_shape, r.barrier_window, r.intrinsic_scalar_radius)"
+```
+
+재계산 출력은 `Compton length=6.6441940762577145 fm`, canonical 질량 점의
+`Helm/Gauss - 1 = 4.9569590480968984e-05`, 해석적 \(q=i m_\phi\) 잔차
+`-4.9583987526857776e-05`를 준다. 표의 나머지 10, 20, 40 MeV 점과 $q=40$
+hard diagnostic은 질량 변경과 무관하며, 인증 gate는 계속 `False`다.

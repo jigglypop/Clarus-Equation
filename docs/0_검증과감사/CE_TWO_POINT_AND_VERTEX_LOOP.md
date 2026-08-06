@@ -1,8 +1,8 @@
 # CE two-point → pole → vertex 루프
 
-> 갱신: 2026-08-04  
+> 갱신: 2026-08-06
 > 범위: Q0.4 singlet quadratic block과 Q0.5 국소 vertex의 조건부 통제 증명  
-> 결론: 선택적 포탈 EFT의 tree-level pole·vertex는 닫히지만, 29.64757 MeV
+> 결론: 선택적 포탈 EFT의 tree-level pole·vertex는 닫히지만, 29.6991596 MeV
 > 물리 CE pole과 실제 물질 생성은 닫히지 않는다.
 
 ## 1. 이번 루프의 판정
@@ -12,21 +12,21 @@
 1. 등록된 역상관 scale만으로 물리 입자 pole을 알 수 있는가.
 2. 저장소가 선언한 선택적 \(Z_2\) singlet portal action에서는 어떤 pole과
    vertex가 실제로 나오는가.
-3. \(29.64757\,\mathrm{MeV}\)와
-   \(v\sqrt{\lambda_{HP}}\simeq43.77\,\mathrm{GeV}\)를 같은 field의 같은
+3. \(29.6991596\,\mathrm{MeV}\)와
+   \(v_{\rm EW}\sqrt{\lambda_{HP}}=43.8056765\,\mathrm{GeV}\)를 같은 field의 같은
    pole로 읽을 수 있는가.
 
 결과는 다음과 같다.
 
 | 명제 | 판정 |
 |---|---|
-| \(m_p\delta^2=29.64757\,\mathrm{MeV}\) 산술 | `EXACT SCALE IDENTITY` |
+| \(m_p\delta_n^2=29.6991596\,\mathrm{MeV}\) 산술 | `EXACT SCALE IDENTITY` |
 | 역상관 scale 하나 \(\Rightarrow\) 고립 pole·residue·LSZ | `REFUTED` |
 | 선택적 canonical portal EFT의 tree kernel·pole·dispersion | `EXACT CONDITIONAL` |
 | 같은 EFT의 \(h\Phi^2,h^2\Phi^2\) 국소 vertex | `EXACT CONDITIONAL` |
 | A1 Hessian만으로 cubic/quartic vertex 유일 결정 | `REFUTED` |
-| \(m_0^2\ge0,\lambda_{HP}=\delta^2\)에서 29.65 MeV same-field pole | `REFUTED` |
-| 음의 \(m_0^2\)를 역산해 29.65 MeV tree pole 구성 | `CONSTRUCTIBLE, NOT PREDICTED` |
+| \(m_0^2\ge0,\lambda_{HP}=\delta_n^2\)에서 29.699 MeV same-field pole | `REFUTED` |
+| 음의 \(m_0^2\)를 역산해 29.699 MeV tree pole 구성 | `CONSTRUCTIBLE, NOT PREDICTED` |
 | renormalized CE pole·양의 spectral weight·LSZ | `OPEN` |
 | physical SM 물질 생성률 | `OPEN` |
 
@@ -73,7 +73,7 @@ LSZ가 Green function의 pole에서 S-matrix 외부 상태를 추출한다는 �
 기초한다. 현대적인 scattering-theory 보강도 asymptotic state 조건이 별도임을
 강조한다. [Collins, 2019](https://arxiv.org/abs/1904.10923)
 
-그러므로 현재 29.64757 MeV의 정직한 provenance는
+그러므로 현재 29.6991596 MeV의 정직한 provenance는
 
 ```text
 REGISTERED_INVERSE_CORRELATION_SCALE_ANSATZ
@@ -167,7 +167,7 @@ self-energy, counterterm, scheme, RG scale과 spectral density가 없으므로
 항이 빠져 있다. 따라서 이 형식 action은 부호·차원·metric variation을 고치기
 전에는 CE 물리 two-point kernel의 입력으로 사용하지 않는다.
 
-## 4. 29.65 MeV와 43.77 GeV의 양립성 정리
+## 4. 29.699 MeV와 43.806 GeV의 양립성 정리
 
 ### 4.1 비음수 bare mass 정리
 
@@ -187,26 +187,27 @@ m_{\rm pole}^2=m_0^2+\lambda_{HP}v^2
 등록값에서
 
 \[
-\lambda_{HP}=\frac{29.64757}{938.2720813}
-=0.031598052,
-\qquad v=246.22\,\mathrm{GeV}
+\lambda_{HP}=\delta_n^2=0.0316530353958,
+\qquad v_{\rm EW}=246.21965\,\mathrm{GeV}
 \]
 
 를 쓰면
 
 \[
-v\sqrt{\lambda_{HP}}
-=43.7676755\,\mathrm{GeV}.
+v_{\rm EW}\sqrt{\lambda_{HP}}
+=43.8056765\,\mathrm{GeV}.
 \]
 
-이는 목표 \(0.02964757\,\mathrm{GeV}\)의
+이는 light-bridge 목표 \(0.0296991596\,\mathrm{GeV}\)의
 
 \[
-\frac{43.7676755}{0.02964757}=1476.2652
+\frac{43.8056765}{0.0296991596}=1474.9803
 \]
 
-배다. 따라서 `nonnegative bare mass + same field + lambda_HP=delta^2` 분기에서
-29.65 MeV pole은 수학적으로 불가능하다.
+배다. 따라서 `nonnegative bare mass + same field + lambda_HP=delta_n^2` 분기에서
+29.699 MeV pole은 수학적으로 불가능하다. 현재 정본은 이 두 수치를
+각각 `light inverse-correlation bridge`와 \(m_0=0\)을 선택한
+`portal-dominance benchmark`로 분리한다.
 
 ### 4.2 음의 bare mass를 허용하면
 
@@ -214,24 +215,24 @@ v\sqrt{\lambda_{HP}}
 
 \[
 m_0^2
-=(0.02964757)^2-\lambda_{HP}(246.22)^2
-=-1915.6085374\,\mathrm{GeV}^2
+=(0.0296991596)^2-\lambda_{HP}(246.21965)^2
+=-1918.9364090\,\mathrm{GeV}^2
 \]
 
 다. portal shift는
 
 \[
-\lambda_{HP}v^2=1915.6094164\,\mathrm{GeV}^2
+\lambda_{HP}v_{\rm EW}^2=1918.9372910\,\mathrm{GeV}^2
 \]
 
 이므로 남는 비율은
 
 \[
-\frac{m_{\rm target}^2}{\lambda_{HP}v^2}
-=4.5885054\times10^{-7}.
+\frac{m_{\rm target}^2}{\lambda_{HP}v_{\rm EW}^2}
+=4.5965029\times10^{-7}.
 \]
 
-즉 약 \(2.179\times10^6:1\)의 squared-mass 상쇄다. 이는 일반 EFT
+즉 약 \(2.17557\times10^6:1\)의 squared-mass 상쇄다. 이는 일반 EFT
 대수에서 금지되지는 않지만 다음 두 주장을 동시에 버리게 한다.
 
 - \(m_0^2\ge0\)인 symmetric bare-mass 분기
@@ -246,7 +247,7 @@ singlet-only minimum보다 낮기 위한 하한은
 \[
 \lambda_\Phi>
 \frac{(m_0^2)^2}{\lambda_Hv^4}
-\simeq0.00772
+\simeq0.0077611
 \]
 
 다. 따라서 이 분기는 수학적으로 구성 가능하지만, 큰 상쇄의 기원과 loop·thermal
@@ -256,14 +257,14 @@ vacuum stability는 여전히 미유도다.
 
 \[
 \lambda_{HP}
-\le\frac{m_{\rm target}^2}{v^2}
-=1.4498783\times10^{-8}
+\le\frac{m_{\rm target}^2}{v_{\rm EW}^2}
+=1.4549327\times10^{-8}
 \]
 
-이어야 한다. 이는 \(\delta^2\)보다 약 \(2.179\times10^6\)배 작다.
+이어야 한다. 이는 \(\delta_n^2\)보다 약 \(2.17557\times10^6\)배 작다.
 
-따라서 가장 자연스러운 정리 방향은 29.65 MeV inverse-correlation bridge와
-43.77 GeV 선택적 EW portal pole을 서로 다른 scale/branch로 유지하는 것이다.
+따라서 현재 정본은 29.6991596 MeV inverse-correlation bridge와
+43.8056765 GeV 선택적 EW portal pole을 서로 다른 scale/branch로 유지한다.
 같은 field라고 주장하려면 위 상쇄의 동역학과 RG 안정성을 새로 유도해야 한다.
 
 ## 5. Hessian만으로 vertex가 나오지 않는 정확한 반례
@@ -369,24 +370,30 @@ off-shell Higgs propagator, SM final-state matrix element, phase space와 에너
 \sqrt{1-\frac{4m_\Phi^2}{m_h^2}}.
 \]
 
-\(m_\Phi=29.64757\,\mathrm{MeV}\),
-\(m_h=125.25\,\mathrm{GeV}\),
-\(\Gamma_h^{SM}=4.07\,\mathrm{MeV}\)를 넣으면
+이 gate에서는 light bridge를 포탈 field 질량으로 넣지 않는다. 정본
+portal-dominance 분기의
+\(m_0=0\), \(\lambda_{HP}=\delta_n^2=0.0316530354\),
+\(m_\Phi=43.8056765\,\mathrm{GeV}\),
+\(m_h=125.11\,\mathrm{GeV}\),
+\(\Gamma_h^{SM}=4.10\,\mathrm{MeV}\)를 넣으면
 
 \[
-\Gamma_{\rm inv}=19.228687\,\mathrm{MeV},
+\Gamma_{\rm inv}=13.7900417\,\mathrm{MeV},
 \qquad
-\mathrm{BR}_{\rm inv}=0.825312.
+\mathrm{BR}_{\rm inv}=0.7708222.
 \]
 
-문서가 공급한 상한 0.11을 역산하면
+따라서 PDG 2026 Higgs review §11.4.3이 요약한 ATLAS Run-2 direct observed
+\(\mathrm{BR}_{\rm inv}<0.107\) (95% CL) gate를 통과하지 못한다.
 
-\[
-|\lambda_{HP}|\le0.00511074
-\]
-
-인데 \(\delta^2=0.03159805\)는 이보다 6.183배 크다. 따라서 이 supplied
-benchmark는 tree-level gate를 통과하지 못한다. 이는 선택적 portal branch의
+29.6991596 MeV light bridge를 같은 portal field의 고정 질량으로 강제하는
+**별도 same-field stress-test**에서는
+\(\Gamma_{\rm inv}=19.3172016\,\mathrm{MeV}\),
+\(\mathrm{BR}_{\rm inv}=0.8249150\)이다. 이 질량을 고정한 채 0.107 gate를
+역산하면 \(|\lambda_{HP}|<0.00504779076\)이며, 정본
+\(\delta_n^2\)는 이보다 6.27067배 크다. 이는 \(m_0=0\)인 canonical
+portal-dominance 관계 \(m_\Phi=v_{\rm EW}\sqrt{\lambda_{HP}}\)와 다른 반사실적
+분기이며, 두 판정을 섞지 않는다. 이는 선택적 portal branch의
 판정이며, 상한 자체의 최신 global-fit 재분석이나 CE 코어 반증은 아니다.
 
 ## 8. 루프 점수
@@ -401,7 +408,7 @@ benchmark는 tree-level gate를 통과하지 못한다. 이는 선택적 portal 
 | 선택적 EFT tree residue·dispersion | 95/100 | canonical control exact; physical holdout 제외 |
 | A1에서 vertex 유일 유도 | 0/100 | 동일 Hessian·상이한 higher jet 반례 |
 | 선택적 portal local vertex | 95/100 | bare derivative exact; renormalized form factor 제외 |
-| 29.65 MeV와 portal dominance의 same-field 양립 | 0/100 | 비음수 bare-mass 정리로 반증 |
+| 29.699 MeV와 portal dominance의 same-field 양립 | 0/100 | 비음수 bare-mass 정리로 반증 |
 | physical CE pole·LSZ | 0/100 | CE \(\Gamma_R^{(2)}\), cut, \(Z_*\) 없음 |
 | physical 물질 생성률 | 0/100 | external pole certificate와 matrix element 없음 |
 
@@ -434,7 +441,7 @@ external leg에 같은 pole certificate를 연결해야 한다.
 
 ## 10. 재현
 
-2026-08-04 전체 회귀 결과:
+2026-08-04 역사적 전체 회귀 기록:
 
 - `1296 passed, 13 skipped, 0 failed`
 - 작업 트리에서 이미 삭제되어 있던 fixture에 직접 의존하는 테스트 파일 5개만 명시적으로 제외했다:
@@ -443,6 +450,12 @@ external leg에 같은 pole certificate를 연결해야 한다.
 - 시스템 임시 폴더의 권한 오류를 피하려고 저장소 안의 일회성 `--basetemp`를 사용했고,
   검증 뒤 그 임시 디렉터리는 제거했다.
 - `git diff --check`는 공백 오류 없이 통과했다. 표시된 내용은 CRLF 변환 경고뿐이다.
+
+2026-08-06 수치 계약은
+`CANONICAL_NUMERIC_MANIFEST_2026-08-06.json`에서 재계산했다. 아래 runtime
+gate의 기본 인자는 2026-08-04 legacy fixture를 유지하므로, 현재 문서의
+29.6991596 MeV·43.8056765 GeV·13.7900417 MeV 수치를 구 fixture 출력과
+혼합하지 않는다.
 
 ```powershell
 uv --cache-dir .uv-cache run python examples/physics/ce_two_point_vertex_gate.py
@@ -465,7 +478,7 @@ uv --cache-dir .uv-cache run --extra dev python -m pytest `
 1. 선택적 portal control과 CE core를 같은 field로 볼지 분기부터 결정한다.
 2. 같은 field 분기라면 full CE action, background, counterterm와 matching scale을
    명시하고 \(\Gamma_R^{(2)}\)를 계산한다.
-3. 별도 field/scale 분기라면 29.65 MeV와 43.77 GeV 기호·API를 완전히 분리한다.
+3. 별도 field/scale 분기라면 29.699 MeV와 43.806 GeV 기호·API를 완전히 분리한다.
 4. physical pole이 실제로 닫힌 뒤 \(\Phi\Phi\to h^*\to\mathrm{SM}\)의
    on-shell/continuum rate와 pump depletion을 계산한다.
 5. 생성된 SM matter의 density·lifetime·response를 계산한 뒤에만 Casimir stress

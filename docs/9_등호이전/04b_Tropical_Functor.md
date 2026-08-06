@@ -14,7 +14,7 @@
 |---|---|---|
 | min-plus energy category | `Exact` | 유한집합과 extended energy |
 | Gibbs deformation | `Exact` | \(e^{-\beta E}\) 커널 |
-| tropicalized composition limit | `Exact` | log-sum-exp 오차 \(\le\log|B|/\beta\) |
+| tropicalized composition limit | `Exact` | log-sum-exp 오차 \(\le\log\lvert B\rvert/\beta\) |
 
 ## 1. Tropical energy category
 

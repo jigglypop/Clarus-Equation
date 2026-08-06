@@ -444,7 +444,7 @@ observable, loop self-energy, physical cut와 phase space가 필요하다.
 한 사건이 두 \(\Phi\)를 만든다면 단순 단위-batch Poisson이 아니라
 compound-Poisson 또는 상관된 offspring 후보도 함께 비교해야 한다.
 
-### 6.3 레거시 포탈 benchmark의 비가시 폭 gate
+### 6.3 canonical 포탈 benchmark의 비가시 폭 gate
 
 위 convention에서 \(h\Phi^2\) vertex의 크기는
 \(2\lambda_{\mathrm{HP}}v\)다. 채널이 열려 있으면 tree level에서
@@ -456,17 +456,31 @@ $$
 \sqrt{1-\frac{4m_\Phi^2}{m_h^2}}
 $$
 
-다. 레거시 값
-\(\lambda_{\mathrm{HP}}=0.0316\), \(v=246.22\,\mathrm{GeV}\),
-\(m_h=125.25\,\mathrm{GeV}\), \(m_\Phi=43.77\,\mathrm{GeV}\),
-\(\Gamma_h^{\mathrm{SM}}=4.07\,\mathrm{MeV}\)를 넣으면
-\(\Gamma_{\mathrm{inv}}\simeq13.75\,\mathrm{MeV}\),
-\(\mathrm{BR}_{\mathrm{inv}}\simeq0.772\)다. 문서가 채택한 상한
-\(0.11\)을 적용하면 이 benchmark는 통과하지 못한다.
+다. 2026-08-06 canonical manifest의
+\(\lambda_{\mathrm{HP}}=\delta_N^2=0.0316530354\),
+\(v=246.21965\,\mathrm{GeV}\), \(\mu_\Phi=0\),
+\(m_\Phi=v\sqrt{\lambda_{\mathrm{HP}}}=43.8056765\,\mathrm{GeV}\),
+PDG 2026 Higgs snapshot \(m_h=125.11\,\mathrm{GeV}\)와
+\(\Gamma_h^{\mathrm{SM}}=4.10\,\mathrm{MeV}\)를 넣으면
+
+$$
+\Gamma_{\mathrm{inv}}=13.790042\,\mathrm{MeV},
+\qquad
+\mathrm{BR}_{\mathrm{inv}}=0.77082222.
+$$
+
+[PDG 2026 Higgs review](https://pdg.lbl.gov/2026/reviews/rpp2026-rev-higgs-boson.pdf)가
+열거한 ATLAS direct Run-2 observed 95% CL 상한
+\(\mathrm{BR}_{\rm inv}<0.107\)을 적용하면 이 benchmark는 통과하지
+못한다.
+과거 \(13.75\,\mathrm{MeV}\), \(0.772\)는 구 입력 snapshot으로만 남기고
+현행 판정에는 사용하지 않는다.
 
 이 계산은 선택한 portal EFT의 조건부 tree-level 반증 gate다. 포탈을
 CE에서 유도하지 않으며, 코어의 “독립 on-shell scalar 없음” 분기에는
-적용되지 않는다. 실행 구현은 `a1_q0_action_bridge.py`에 둔다.
+적용되지 않는다. 기존 `a1_q0_action_bridge.py`가 다른 입력 snapshot을
+고정했다면 이 절의 canonical manifest와 일치하도록 별도 갱신해야 하며,
+그 실행값을 현행 결과로 재사용하지 않는다.
 
 ## 7. Q0 acceptance gates
 
@@ -495,7 +509,7 @@ K_F=p^2-(m_0^2+\lambda_{HP}v^2)+i0
 
 의 residue와 dispersion, 그리고
 \(h\Phi^2,h^2\Phi^2,\chi^2\Phi^2\) local derivative를 재현했다. 그러나
-29.64757 MeV는 bare mass를 목표에서 역산해야만 이 tree pole이 되고,
+29.6991596 MeV는 bare mass를 목표에서 역산해야만 이 tree pole이 되고,
 renormalized CE pole·LSZ·full vertex 목록은 여전히 `OPEN`이다. 상세 반례와
 수치는 [CE_TWO_POINT_AND_VERTEX_LOOP.md](CE_TWO_POINT_AND_VERTEX_LOOP.md)에
 둔다.
@@ -505,7 +519,7 @@ renormalized CE pole·LSZ·full vertex 목록은 여전히 `OPEN`이다. 상세 
 gauge/scale drift와 dispersion을 caller bool 없이 재계산하는 gate를 추가했다.
 현재 CE에는 complete renormalized action/counterterm manifest와 kernel data가
 없어 최고 단계는 `REGISTERED_SCALE`이다. 선택적 portal의 two-real-scalar
-finite one-loop 합은 light target 질량제곱의 약 5316배지만 subtraction scale에
+finite one-loop 합은 light target 질량제곱의 약 5301.42배지만 subtraction scale에
 따라 부호가 바뀌므로 물리 pole correction으로 승격하지 않는다. 상세 식은
 [CE_RENORMALIZED_POLE_AND_ONE_LOOP_LOOP.md](CE_RENORMALIZED_POLE_AND_ONE_LOOP_LOOP.md)에
 둔다.

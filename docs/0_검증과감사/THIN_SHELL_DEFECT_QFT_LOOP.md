@@ -33,7 +33,7 @@ p=\frac{c^4}{8\pi Ga}\frac{1+f}{\sqrt f}
 
 ## 1 m 수치
 
-| lapse `f` | 총 음의 에너지 질량환산 | 횡압 `p` | `p/|sigma|` |
+| lapse `f` | 총 음의 에너지 질량환산 | 횡압 `p` | \(p/\lvert\sigma\rvert\) |
 |---:|---:|---:|---:|
 | 1 | 450.95 지구질량 | `9.63e42 N/m` | 0.5 |
 | `1e-6` | 0.45095 지구질량 | `4.82e45 N/m` | `2.50e5` |
@@ -181,7 +181,7 @@ V_2=\frac12(K_{rr}+D)x^2+xB^{\mathsf T}y
 로 둔다. 내부 모드가 수동적으로 완화되면
 
 \[
-y_*=-C^{-1}Bx,qquad
+y_*=-C^{-1}Bx,\qquad
 K_{\rm eff}=K_{rr}+D-B^{\mathsf T}C^{-1}B
 \]
 

@@ -243,7 +243,7 @@ $$
 }
 $$
 
-이면 계층 전체 사상
+이면 임의의 $\alpha\in(\rho(G),1)$에 대해 적절한 가중치를 골라 계층 전체 사상
 
 $$
 \mathcal T:\prod_{\ell=0}^L\mathcal X_\ell\to\prod_{\ell=0}^L\mathcal X_\ell
@@ -252,14 +252,19 @@ $$
 은 어떤 가중 sup norm에서 수축이다. 따라서 외생 입력이 고정된 경우 유일한 고정점 \(X^\star\)가 존재하고,
 
 $$
-\|X_t-X^\star\|_w
-\le
-c\,\rho(G)^t\|X_0-X^\star\|_w
+\boxed{\|X_t-X^\star\|_{w,\alpha}
+\le\alpha^t\|X_0-X^\star\|_{w,\alpha}}
 $$
 
-로 수렴한다.
+로 수렴한다. 일반 비정규·결함 행렬에는 계수 하나로
+$c\rho(G)^t$를 쓸 수 없다. 고정된 다른 노름에서는 임의의
+$\varepsilon>0$에 대해
+$c_\varepsilon(\rho(G)+\varepsilon)^t$ 형태가 안전하다.
 
-**증명.** 위 Lipschitz 부등식들을 레벨별로 모으면 각 성분에 대해 \(d_{t+1,\ell}\le (Gd_t)_\ell\)가 된다. \(G\ge0\)이고 \(\rho(G)<1\)이면 Perron-Frobenius/Collatz-Wielandt에 의해 양의 가중치 \(w>0\)와 어떤 \(\alpha<1\)가 존재하여
+**증명.** 위 Lipschitz 부등식들을 레벨별로 모으면 각 성분에 대해
+\(d_{t+1,\ell}\le(Gd_t)_\ell\)가 된다. $G\ge0$이고
+$\rho(G)<\alpha<1$이면, 예를 들어
+$w=(I-G/\alpha)^{-1}\mathbf1>0$의 재스케일링으로 양의 가중치에 대해
 
 $$
 Gw\le \alpha w
@@ -268,7 +273,7 @@ $$
 가 된다. 가중 sup norm을
 
 $$
-\|X-X'\|_w
+\|X-X'\|_{w,\alpha}
 =
 \max_\ell
 \frac{\|X^\ell-X^{\ell\prime}\|_\ell}{w_\ell}
@@ -277,9 +282,9 @@ $$
 로 정의하면
 
 $$
-\|\mathcal T(X)-\mathcal T(X')\|_w
+\|\mathcal T(X)-\mathcal T(X')\|_{w,\alpha}
 \le
-\alpha\|X-X'\|_w.
+\alpha\|X-X'\|_{w,\alpha}.
 $$
 
 따라서 Banach 고정점 정리에 의해 고정점 존재성과 유일성, 지수 수렴이 따른다. \(\square\)
@@ -345,7 +350,7 @@ F절 구성 개요:
 | F.0--F.13 | 핵심 루프: 상태, 이완, 비평, 에너지, 모드, 행동, 기억, 수축, 뇌 대응 |
 | F.14--F.15 | 학습: STDP + 도파민 게이트, 잔류장 $\phi$ 갱신 |
 | F.16 | 희소성: TopK 활성, 에너지 예산, 모듈 생애주기 |
-| F.17 | 의식/메타인지: 자기일관성, 의식 깊이, 메타인지 수렴 |
+| F.17 | 메타인지 proxy: 자기일관성, 모니터링 안정도, 제어 수렴 |
 | F.18 | 환각 억제: 곡률 모니터링, LBO 확산 |
 | F.19 | 신경조절: DA/NE/5HT/ACh 4종 |
 | F.20 | 작업 기억, 주의, 소뇌 |
@@ -426,6 +431,13 @@ $R$의 반복 횟수 $n_{\text{iter}}$는 모드에 의존한다.
 
 이것은 `12_Equation.md` 5.3절의 이중 과정(시스템 1/시스템 2)과 대응한다.
 
+다만 위 실제 $R$은 비대칭 Dale 결합 $W_{ij}(g)$, `tanh`, refractory,
+adaptation, hysteresis를 함께 포함한다. 따라서 일반적으로 어떤 스칼라
+에너지의 그래디언트 하강과 동일하지 않다. F.5의 에너지 감소 정리는
+$W_s=(W+W^\top)/2$를 쓰는 **별도의 명시적 gradient runtime**에만 적용한다.
+실제 F.3 갱신의 수렴은 full joint Jacobian 또는 별도 Lyapunov/ISS 분석이
+완료되기 전까지 `open`이다.
+
 ---
 
 ### F.4 자기비평 연산자 $C$
@@ -456,26 +468,40 @@ $$g[t] \approx \frac{d\bar{c}_t}{dt}$$
 
 ### F.5 에너지 기반 자기참조
 
-$R$의 내부를 에너지 최소화로 재해석하면:
+F.3과 구별되는 gradient-compatible 변형을 정의하면:
 
 $$E_t(z) = E_{\text{task}}(z;\; u_t) + \lambda_m E_{\text{mem}}(z;\; m_t) + \lambda_c E_{\text{crit}}(z;\; c_t) + \lambda_h E_{\text{hist}}(z;\; h_t)$$
 
 | 항 | 정의 | Layer 대응 |
 |---|---|---|
-| $E_{\text{task}}(z; u_t)$ | $-\frac{1}{2}z^\top W z - z^\top u_t$ | B.3의 Hopfield 에너지 |
+| $E_{\text{task}}(z; u_t)$ | $-\frac{1}{2}z^\top W_s z-z^\top u_t+V_{\rm conf}(z)$, $W_s=(W+W^\top)/2$ | 대칭 Hopfield/gradient 에너지 |
 | $E_{\text{mem}}(z; m_t)$ | $-z^\top \mathcal{R}(H_t, c_t)$ | D.3의 기억 회상과의 정렬 |
 | $E_{\text{crit}}(z; c_t)$ | $\|z - z_{t-1}^* + \alpha_c c_t\|^2$ | 비평이 다음 이완의 초기점을 민다 |
-| $E_{\text{hist}}(z; h_t)$ | $-\beta_h \sum_{\tau \in h_t} \text{sim}(z, z_\tau) / |h_t|$ | 이력과의 일관성 |
+| $E_{\text{hist}}(z; h_t)$ | $-\beta_h \sum_{\tau \in h_t} \text{sim}(z, z_\tau) / \lvert h_t\rvert$ | 이력과의 일관성 |
 
-수렴점:
+수렴점은 존재 조건까지 포함해 다음처럼 쓴다.
 
 $$z_t^* = \arg\min_z E_t(z)$$
 
-이것은 F.3의 반복적 이완이 에너지 최소점으로 향한다는 것의 다른 표현이다.
+무제약 $z\in\mathbb R^n$에서 $V_{\rm conf}=0$이면 적어도
+$W_s\preceq-\mu I$ 같은 coercivity 조건이 필요하다. 그렇지 않으면 양의
+quartic 같은 confining $V_{\rm conf}$를 넣거나, $z\in[-1,1]^n$처럼 compact
+domain에 `tanh`/projection으로 제한해야 한다. 이 조건이 없으면
+$\arg\min E_t$가 존재하지 않을 수 있다. 또한 이 식은 위 조건을 갖춘
+gradient runtime의 표현이지, 비대칭 F.3 갱신의 재표현이 아니다.
 
 잔류장 피드백: $\phi_t$가 $E_{\text{task}}$에 포탈 항으로 들어간다 (`12_Equation.md` E1):
 
-$$E_{\text{task}}(z; u_t, \phi_t) = -\frac{1}{2}z^\top W z - z^\top u_t - \left[\frac{4}{e^{4/3}\pi^{4/3}}\left(1-\frac{4}{e^{4/3}\pi^{4/3}}\right)\right]^2 z^\top \hat{\phi}_t$$
+$$
+E_{\text{task}}(z;u_t,\phi_t)
+=-\frac12z^\top W_sz-z^\top u_t+V_{\rm conf}(z)
+-\lambda_{\rm portal}z^\top\hat\phi_t,
+\qquad
+\lambda_{\rm portal}:=\delta_N^2=0.0316530354.
+$$
+
+여기서 $\delta_N=s_A^2(1-s_A^2)=0.1779129995$는 Track-A 등록량이다.
+포탈 계수는 이미 $\delta_N^2$이므로 에너지 항에서 다시 제곱하지 않는다.
 
 ---
 
@@ -541,13 +567,24 @@ $$P_{\text{new}} = \bar{c}_{t+1} \quad\text{(놀라움이 높을수록 replay �
 
 이것은 D.5의 priority replay와 직결된다.
 
+$\theta_{\text{encode}}>0$는 매 tick 임계를 넘는 입력을 막지 않으므로 전체
+시간에 걸친 인코딩 사건 수를 유한하게 만들지 않는다. 저장된 상태의 크기는
+Layer D의 ring buffer/eviction 용량 $N_{\text{hip}}$ 때문에 유계일 뿐이다.
+
 ---
 
 ### F.9 Clarus 통합 재귀 (압축형)
 
-F.2--F.8을 한 줄로 압축하면:
+F.2--F.8의 전 상태 갱신을 한 줄로 압축하되, 먼저 제어기 입력을
 
-$$\boxed{X_{t+1} = B\big[X_t + \lambda_R R(X_t) + \lambda_O \Delta_O(X_t) + \lambda_C C(X_t) - \lambda_S S(X_t)\big]}$$
+$$Y_t=X_t+\lambda_RR(X_t)+\lambda_O\Delta_O(X_t)+\lambda_CC(X_t)-\lambda_SS(X_t)$$
+
+로 둔다. 전 상태 제어기는
+
+$$\boxed{X_{t+1}=\mathcal R_{\rho_c}(Y_t)
+=X^\star+\rho_c\big(Y_t-X^\star\big)},\qquad 0<\rho_c<1$$
+
+로 정의한다. 여기서 $\rho_c$는 런타임이 정하는 **독립적인 공학 하이퍼파라미터**다.
 
 | 항 | 풀이 | 뇌 대응 |
 |---|---|---|
@@ -555,11 +592,30 @@ $$\boxed{X_{t+1} = B\big[X_t + \lambda_R R(X_t) + \lambda_O \Delta_O(X_t) + \lam
 | $\Delta_O(X_t)$ | 관찰이 상태에 준 충격 $o_t - \hat{o}_t$ | 감각 입력 |
 | $C(X_t)$ | 비평이 다음 이완 초기점을 민 정도 | 기저핵-전전두엽 평가 |
 | $S(X_t)$ | 곡률/잔류 기반 억제 | 소뇌/기저핵 억제 |
-| $B$ | 부트스트랩 수축 연산자 | 수면 항상성 |
+| $\mathcal R_{\rho_c}$ | 전 상태 기준점 복원 제어기 | 수면 항상성에 대한 설계 가설 |
 
-$B$는 `05_실험근거.md` 8.4절의 정의를 따른다:
+정준 부트스트랩 사상 $B_p$는 위의 전 상태 제어기와 같은 연산자가 아니다. $B_p$는 오직 단체 성분 $p=(p_a,p_{\rm DM},p_\Lambda)$에
 
-$$B: X \mapsto p^* + \rho(X - p^*), \qquad \rho = 0.155$$
+$$
+B_p(p)=\big(f(p_a),\,[1-f(p_a)]r,\,[1-f(p_a)]\ell\big),
+$$
+
+$$
+f(a)=e^{-D(1-a)},\qquad
+r=\frac{R}{1+R},\qquad \ell=\frac{1}{1+R}
+$$
+
+로 작용한다. 정준 수치 매니페스트에서
+
+$$
+D=3.177912999513294,\quad R=0.37823869664388306,
+$$
+
+$$
+p^\star=(0.04863825851598632,\ 0.2610881743576135,\ 0.6902735671264002).
+$$
+
+$B_p$의 국소 도함수 $q_\star=0.1545681540116411$을 $\rho_c$와 동일시해서는 안 된다.
 
 ---
 
@@ -567,17 +623,27 @@ $$B: X \mapsto p^* + \rho(X - p^*), \qquad \rho = 0.155$$
 
 F.9의 재귀가 안정한 자기참조를 만들려면 수축 조건이 필요하다.
 
-**정리 (F-contract).** 다음 조건 하에서 $\{X_t\}$는 유계이고 고정점 근방으로 수렴한다:
+**정리 (F-contract, 자율계 충분조건).** 완비한 불변영역 $\mathcal D$에서 $R,\Delta_O,C,S$가 각각 $L_R,L_O,L_C,L_S$-Lipschitz이고 모든 $\lambda_i\geq0$라고 하자. 자율 사상 $F=\mathcal R_{\rho_c}\circ Y$에는
 
-1. $\|R(X)\| \leq L_R \|X\| + c_R$ (이완의 Lipschitz 상계)
-2. $\|\Delta_O(X)\| \leq U_O$ (관찰 충격 유계)
-3. $\|C(X)\| \leq L_C \|X\| + c_C$ (비평의 Lipschitz 상계)
-4. $\|S(X)\| \leq L_S \|X\|$ (억제의 Lipschitz 상계)
-5. $\rho + \lambda_R L_R + \lambda_C L_C < 1$ (전체 수축)
+$$
+\operatorname{Lip}(F)\leq
+L_F:=\rho_c\!\left(1+\lambda_RL_R+\lambda_OL_O+\lambda_CL_C+\lambda_SL_S\right)
+$$
 
-*증명 스케치.* $B$의 수축률 $\rho$와 각 항의 Lipschitz 상수를 합산하면 전체 사상의 Lipschitz 상수가 $\rho + \lambda_R L_R + \lambda_C L_C - \lambda_S L_S$이다. 이것이 1 미만이면 Banach 고정점 정리에 의해 유일 고정점이 존재하고 수렴한다. $U_O$는 유계 강제항이므로 `05_실험근거.md` 8.4절의 잔차 상한과 같은 구조로 눌린다. $\square$
+가 성립한다. 따라서 $L_F<1$이면 $F$는 $\mathcal D$에서 유일한 고정점을 가지며 모든 초기값이 그 고정점으로 수렴한다.
 
-**수면에 의한 복원.** 수면이 없으면 $B = I$ ($\rho = 1$)이고 수축 조건이 깨진다. 수면이 $\rho = 0.155$를 공급하므로, F-contract의 조건 5가 만족되려면 나머지 항의 Lipschitz 합이 $1 - 0.155 = 0.845$ 미만이어야 한다.
+*증명 스케치.* 삼각부등식으로 $Y$의 차이를 상계하고, $\mathcal R_{\rho_c}$의 Lipschitz 상수 $\rho_c$를 곱한 뒤 Banach 고정점 정리를 적용한다. $-\lambda_SS$의 마이너스 부호만으로는 차이의 노름을 줄인다고 결론낼 수 없으므로, 별도의 단조성·소산성 증명이 없는 Lipschitz 상계에서는 $+\lambda_SL_S$가 맞다. $\square$
+
+관찰항이 시간에 따라 변하고 $\|\Delta_{O,t}-\Delta_{O}^{0}\|\leq U_O$만 아는 경우에는 일반적으로 하나의 고정점이 존재하지 않는다. 자율 기준계가 $L_F<1$이면 기준 궤적과의 오차에
+
+$$
+\|e_t\|\leq L_F^t\|e_0\|
++\frac{\rho_c\lambda_OU_O}{1-L_F}
+$$
+
+형태의 ISS/추적 상계만 줄 수 있다.
+
+**수면에 의한 복원.** 수면 모드에서 $\mathcal R_{\rho_c}$를 켜고 각성 모드에서 끄는 것은 런타임 설계 선택이다. $\rho_c=1$이면 위의 단순한 충분조건은 보장되지 않지만, 그것만으로 실제 동역학의 불안정을 증명하지는 않는다. 또한 $q_\star$는 $B_p$의 단체 국소 수축률이지 수면 회복률의 관측값이 아니다.
 
 **최신 SHY 근거 (2024--2026):**
 - 2024 PMC: NREM 수면이 피질 AMPA 수용체(GluA1) 발현을 정상화함을 확인. 수면 박탈 후 회복 수면에서도 수 시간 내 회복.
@@ -603,29 +669,30 @@ F.9의 재귀가 안정한 자기참조를 만들려면 수축 조건이 필요�
 | 일관성 오차 $c_{\text{cons}}$ | retrieval-based error correction, memory-guided decision | 해마-전전두엽 상호작용에서 기억 기반 의사결정 보정 | `bridge` |
 | 비평 $\to$ 학습 게이트 $g[t]$ (F.4) | 도파민/노르에피네프린 전역 조절 | 3-factor learning rule. 도파민 게이트 STDP | `supported` (구조), `hypothesis` ($g = d\bar{c}/dt$ 정확한 형태) |
 | 조건부 기억 인코딩 (F.8) | 놀라움 기반 해마 인코딩 | 해마는 novel/surprising events를 우선 인코딩. priority replay | `supported` |
-| 에너지 기반 수렴 (F.5) | Hopfield network, energy-based attractor dynamics | 연상 기억의 attractor dynamics는 확립. 에너지 감소는 A.7 E-decrease로 닫힘 | `supported` (구조), `bridge` (정확한 에너지 형태) |
+| 에너지 기반 수렴 (F.5) | Hopfield network, energy-based attractor dynamics | 대칭 gradient runtime에는 감소 정리가 있으나 실제 비대칭 Dale+tanh+adaptation 루프에는 그대로 적용되지 않음 | `supported` (대칭 구조), `open` (실제 F.3) |
 | 이중 과정 (F.3 모드별 $n_{\text{iter}}$) | Kahneman 시스템 1/시스템 2 | 이중 과정 이론의 실험 근거는 방대. 신경 기질은 아직 논쟁 중 | `bridge` |
 | 수면-루프 결합 (F.6) | 수면 중 memory consolidation, replay | SHY (Tononi-Cirelli), 해마 replay, slow-wave consolidation | `supported` |
 | 수면 압력 = 비평 누적 (F.6) | homeostatic sleep pressure = 각성 중 피로/잔류 축적 | Borbely 2-process model. SWA와 prior wakefulness의 관계 | `bridge` |
-| $B$ 수축 연산자 (F.9--F.10) | 수면의 synaptic renormalization | SHY, SWA 비례 정리, 수면 후 성능 회복 | `supported` (방향), `bridge` ($\rho = 0.155$의 정확한 값) |
+| $\mathcal R_{\rho_c}$ 복원 제어기 (F.9--F.10) | 수면의 synaptic renormalization | SHY는 평균적 약화 방향을 지지하지만 이 선형 전 상태 제어기는 직접 도출되지 않음 | `supported` (방향), `hypothesis` (정확한 연산자와 $\rho_c$) |
 
 #### F.11.2 수치 체크
 
 | 항목 | CE 값 | 뇌 관측 proxy | 관측 범위 | 체크 |
 |---|---|---|---|---|
-| 활성 셀 비율 | 4.87% | sparse firing, DG active cells | 1--5% | `[NEAR]` |
-| 수면/각성 비 | NREM 26.2%, REM 4.87% | NREM 75--80%, REM 20--25% (of sleep) | CE는 24h 중의 비율 | `[OK]` |
-| 수축률 $\rho$ | 0.155 per application | sleep recovery time constants | $\rho_{\text{night}} \approx 0.31$ (1.6밤/적용) | `[NEAR]` |
+| 활성 셀 비율 | 4.8638258516% | sparse firing, DG active cells | 문헌의 1--5% proxy와 수치상 근접 | `bridge` (설계값이지 관측 적합값이 아님) |
+| 위상 할당 | NREM 26.1088174358%, REM 4.8638258516%, WAKE 69.0273567126% | 수면 중 비율로 환산하면 NREM 84.30%, REM 15.70% | 표의 기존 75--80%/20--25% 범위와는 불일치 | `mismatch / bridge` |
+| $B_p$ 국소율 $q_\star$ | 0.1545681540 | 수면 회복 시간상수 | 서로 다른 양이므로 직접 비교 금지 | `not identified` |
+| 전 상태 제어율 $\rho_c$ | 런타임 보정값 | 수면 회복 시간상수 | 데이터셋·시간 간격을 사전등록해 별도 피팅 필요 | `hypothesis` |
 | 비평 문턱 $\theta_{\text{encode}}$ | 과제 의존 | hippocampal novelty threshold | 정성적으로 존재 | `bridge` |
 
 #### F.11.3 형식 검증 연결
 
 | F절 정리 | 의존하는 A--E 정리 | 상태 |
 |---|---|---|
-| F-contract (F.10) | A-bound, E-decrease, 수면 수축 ($\rho < 1$) | **open** (L_R, L_C 추정 필요) |
-| 에너지 감소 (F.5) | B.4 E-decrease | **closed** (B.4로부터 직접) |
-| 이완 수렴 (F.3) | A.7 A-bound, A.9 Zero-attract | **closed** (조건부) |
-| 기억 유계 (F.8) | D.2 (유한 인코딩) | **closed** ($\theta_{\text{encode}} > 0$이면 인코딩 빈도 유한) |
+| F-contract (F.10) | 불변영역과 $\rho_c(1+\lambda_RL_R+\lambda_OL_O+\lambda_CL_C+\lambda_SL_S)<1$ | **open** (모든 Lipschitz 상수와 불변성 검증 필요) |
+| 에너지 감소 (F.5) | B.4 E-decrease | **closed 조건부** (대칭 $W_s$, coercive/compact domain, 명시적 gradient step에만 적용) |
+| 이완 수렴 (F.3) | full joint Jacobian/Lyapunov 또는 ISS 필요 | **open** (비대칭 Dale+tanh+adaptation은 F.5 에너지계가 아님) |
+| 기억 저장량 유계 (F.8) | D.2 ring-buffer eviction | **closed** ($\lvert K_t\rvert\le N_{\text{hip}}$); 총 인코딩 사건 수는 유한하다고 주장하지 않음 |
 
 #### F.11.4 검증 게이트 (06_검증기준.md 체계)
 
@@ -666,8 +733,8 @@ F.9의 재귀가 안정한 자기참조를 만들려면 수축 조건이 필요�
 | $g_{\text{5HT}}$ (세로토닌) | raphe firing, 5-HIAA level | microdialysis, PET |
 | $g_{\text{ACh}}$ (아세틸콜린) | BF firing, cortical ACh release | microdialysis, optogenetics |
 | $\kappa_{\text{avg}}$ (곡률) | high-frequency power anomaly, epileptiform spikes | EEG, MEG |
-| $|A_t|/N$ (활성 비율) | fraction of active neurons | calcium imaging, multi-electrode array |
-| $|h_t|$ (작업 기억 부하) | PFC BOLD, CDA amplitude | fMRI, EEG (CDA) |
+| $\lvert A_t\rvert/N$ (활성 비율) | fraction of active neurons | calcium imaging, multi-electrode array |
+| $\lvert h_t\rvert$ (작업 기억 부하) | PFC BOLD, CDA amplitude | fMRI, EEG (CDA) |
 | $\alpha_i$ (주의 가중치) | spatial attention map, alpha lateralization | EEG alpha power lateralization |
 | $\Delta a^{\text{cb}}$ (소뇌 보정) | cerebellar-dependent adaptation | prism adaptation, saccade adaptation |
 
@@ -682,14 +749,14 @@ F.9의 재귀가 안정한 자기참조를 만들려면 수축 조건이 필요�
 | 1 | 어려운 과제 $\to$ 긴 RT $\to$ 높은 ACC theta | $\|\phi\| \geq m_\phi \to$ 깊은 이완 | 난이도 조작 실험, EEG 동시 기록 | RT와 ACC theta의 양의 상관 | `supported` |
 | 2 | 수면 박탈 $\to$ 비평 결손 $\to$ 반복 오류 | $P_{\text{sleep}} > \theta \to$ NREM 미진입, $\bar{c}$ 누적 | 수면 박탈 후 error monitoring 과제 | ERN 진폭 감소, 오류 후 보정 실패 | `supported` |
 | 3 | 놀라운 사건 후 기억 $>$ 평범한 사건 후 기억 | $\bar{c} > \theta_{\text{encode}} \to$ 해마 인코딩 | surprise manipulation + memory test | recall/recognition 차이 | `supported` |
-| 4 | 수면 후 비평-행동 정렬 개선 | $B$가 $c_t$를 수축시켜 다음 wake에서 $z_t^*$가 더 정확 | 학습 $\to$ 수면 $\to$ 재시험 | post-sleep 정확도 $>$ post-wake 정확도 | `supported` |
-| 5 | $\rho_{\text{night}} \approx 0.31$: 1밤 후 잔차 69% 감소 | 부트스트랩 수축 | multi-night recovery study (수면 부채 측정) | 회복 곡선의 지수 감쇠 상수 피팅 | `bridge` |
+| 4 | 수면 후 비평-행동 정렬 개선 | $\mathcal R_{\rho_c}$를 수면 복원 제어기로 쓰는 설계 | 학습 $\to$ 수면/동시간 각성 대조군 $\to$ 재시험 | post-sleep 개선량과 제어기 ablation 차이 | `bridge` |
+| 5 | 전 상태 잔차가 단일 지수 복원 법칙을 따르는가 | $\mathcal R_{\rho_c}$의 독립 하이퍼파라미터 | 사전등록한 시간 간격별 multi-night recovery 피팅 | 일정한 $\rho_c\in(0,1)$ 모형과 대안 모형의 외부검증 오차 비교 | `hypothesis` |
 | 6 | 도파민 조작 $\to$ STDP 게이트 변화 $\to$ 학습 속도 변화 | $dW = lr \cdot g[t] \cdot e_{ij}$ | DA agonist/antagonist + learning task | 학습 곡선 기울기 변화 | `supported` |
 | 7 | ACh 증가 $\to$ 기억 인코딩 문턱 하강 $\to$ 더 많은 기억 | $\theta_{\text{encode}} \propto 1/(1+g_{\text{ACh}})$ | donepezil 투여 + memory test | 기억 항목 수 증가 | `supported` |
 | 8 | NE 증가 $\to$ 더 깊은 처리 $\to$ 더 긴 RT | $n_{\text{iter}} \propto \sigma(g_{\text{NE}})$ | LC stimulation + RT measurement | RT 증가 + 정확도 증가 | `bridge` |
 | 9 | 소뇌 병변 $\to$ forward model 결손 $\to$ 적응 실패 | $\Delta a^{\text{cb}} = 0$ | 소뇌 환자 프리즘 적응 실험 | 적응 곡선 수렴 실패 | `supported` |
-| 10 | TopK 비율 $\neq 4.87\%$일 때 성능 최적이 아님 | 부트스트랩 고정점 $x_a^*$ | sparse ratio sweep in CE model | U자형 성능 곡선, 최적점 $\in [4\%, 6\%]$ | `bridge` |
-| 11 | 작업 기억 부하 증가 $\to$ PFC theta 증가 $\to$ 간섭 | $|h_t| \to T_h$ 근접 | n-back 과제, n 조작 | PFC theta power와 오류율의 양의 상관 | `supported` |
+| 10 | TopK 최적점이 정준 설계값 4.8638258516% 부근인가 | 부트스트랩 고정점 $x_a^*$의 공학적 재사용 | sparse ratio sweep in CE model | 사전등록한 $[4\%,6\%]$ 안에서 외부검증 최적점 재현 | `bridge` |
+| 11 | 작업 기억 부하 증가 $\to$ PFC theta 증가 $\to$ 간섭 | $\lvert h_t\rvert \to T_h$ 근접 | n-back 과제, n 조작 | PFC theta power와 오류율의 양의 상관 | `supported` |
 | 12 | theta-gamma 결합 강도와 순서 기억 정확도 양의 상관 | gamma burst가 theta phase에 잠금 | 순서 회상 과제 + MEG | PAC 강도와 recall 정확도 $r > 0.3$ | `supported` |
 
 ---
@@ -739,11 +806,11 @@ $$\delta[t] = a \cdot \text{RPE}(t) + b \cdot \text{surprise}(t) + c \cdot \text
 
 #### F.14.3 구조적 투영 $\text{Proj}$
 
-$$\text{Proj}(W) = \text{TopK}\big(\text{RowNorm}\big(\text{Hyst}(W;\; \theta_{\text{on}}, \theta_{\text{off}})\big),\; k = \lceil 0.04865 \cdot N \rceil\big)$$
+$$\text{Proj}(W) = \text{TopK}\big(\text{RowNorm}\big(\text{Hyst}(W;\; \theta_{\text{on}}, \theta_{\text{off}})\big),\; k = \lceil 0.04863825851598632 \cdot N \rceil\big)$$
 
 | 연산 | CE 대응 | 뇌 대응 | 판정 |
 |---|---|---|---|
-| TopK | 경로 선택, 생존율 $4.87\%$ | 시냅스 가지치기 | `supported` |
+| TopK | 경로 선택, 정준 설계 생존율 $4.8638258516\%$ | 시냅스 가지치기 | `supported` (희소화 방향), `bridge` (정확한 비율) |
 | RowNorm | 에너지 보존 | 시냅스 스케일링 (Turrigiano 2008) | `supported` |
 | Hyst | 접힘 임계 곡률 | 스파인 형성/제거 | `bridge` |
 
@@ -753,17 +820,21 @@ $$\text{Proj}(W) = \text{TopK}\big(\text{RowNorm}\big(\text{Hyst}(W;\; \theta_{\
 
 > `12_Equation.md` 4.3절 (E4). F.2의 $\phi_{t+1}$ 갱신이 비어 있었다.
 
-이완 $R$ 실행 후, 잔류장은 선택되지 않은 경로의 분산을 축적한다.
+이완 $R$ 실행 후, 잔류 상태는 trajectory activation의 분산을 EMA로
+축적한다. 이를 물리적 비선택 경로 에너지로 해석하는 것은 별도 `Bridge`다.
 
-$$\phi_{t+1} = (1 - \xi) \phi_t + \xi \cdot \text{Var}(a^{(0:n_{\text{iter}})})$$
+$$\phi_{t+1} = (1 - \xi_{\rm design}) \phi_t
++ \xi_{\rm design}\cdot\operatorname{Var}(a^{(0:n_{\text{iter}})})$$
 
-여기서 $\xi = 1/(e^{1/3}\pi^{1/3}) \approx 0.489$ 는 잔류 이득이다.
+여기서 $\xi_{\rm design}:=\alpha_s^{1/3}=0.4904868132$는 외부
+Track-A 입력 $\alpha_s=0.1180$에서 만든 잔류 이득 benchmark다. 최적
+신경계 이득의 무입력 예측은 아니다.
 
 잔류장은 세 곳에서 루프에 개입한다.
 
 | 개입 지점 | 수식 | 효과 |
 |---|---|---|
-| 에너지 포탈 (F.5) | $-\text{portal}^2 \cdot z^\top \hat{\phi}_t$ | 이전에 선택하지 않은 경로를 다음 이완에 주입 |
+| 에너지 포탈 (F.5) | $-\lambda_{\rm portal}z^\top\hat\phi_t$, $\lambda_{\rm portal}=\delta_N^2$ | 잔류 상태를 다음 이완에 주입하는 설계 결합 |
 | 모드 전환 (F.6) | $\|\phi_t\| \gtrless m_\phi$ | 시스템 1/시스템 2 전환 |
 | 수면 glymphatic (F.6 NREM) | $\phi \leftarrow r_w \phi,\; r_w < 1$ | 잔류 노이즈 바닥 하강 |
 
@@ -797,7 +868,7 @@ $$\sum_{i \in A_t} \text{cost}(a_i) \leq B_t(M_t)$$
 
 | 모드 | $B_t$ | 활성 비율 | 뇌 대응 |
 |---|---|---|---|
-| WAKE | 큼 | $\sim 4.87\%$ | task-evoked sparse firing | 
+| WAKE | 큼 | 설계 기준 $4.8638258516\%$ | task-evoked sparse firing |
 | NREM | 작음 | $< 3\%$ | slow-wave 중 소수 활성 |
 | REM | 중간 | $\sim 4\%$ | dream 중 재활성화 |
 
@@ -820,13 +891,18 @@ $$Z_i^t \in \{\text{ACTIVE},\; \text{IDLE},\; \text{DORMANT},\; \text{SLEEPING}\
 
 > `12_Equation.md` 9장. F절에서 가장 상위 층이지만 빠져 있었다.
 >
-> 다리 게이트 `F4` (`12_Equation.md` 0.0절): 본 절의 모든 식은 메타인지 모니터링 루프의 운영 정의이며, "(C3) = 의식"으로 환원하지 않는다. "의식 깊이"라는 표현은 PCI 교차검증(F.23.7)이 `bridge` 단계로 올라가기 전까지 **모니터링 안정도** 의미로 읽는다.
+> 다리 게이트 `F4` (`12_Equation.md` 0.0절): 본 절의 모든 식은 메타인지
+> 모니터링 루프의 운영 정의이며, "(C3) = 의식"으로 환원하지 않는다.
+> $\exp(-c_dd_\tau)$는 **모니터링 안정도**로만 부른다.
 
 #### F.17.1 자기참조 측정 구조 (C3)
 
 에이전트가 자기 자신의 활성 비율을 알아야 다음 이완을 계산할 수 있다:
 
-$$a_* = \exp\!\left(-(1-a_*)\left[3+\frac{4}{e^{4/3}\pi^{4/3}}\left(1-\frac{4}{e^{4/3}\pi^{4/3}}\right)\right]\right)$$
+$$
+a_*=\exp\!\left[-(1-a_*)D_N\right],
+\qquad D_N=3+\delta_N=3.1779129995.
+$$
 
 이 자기 측정이 루프 안에서 실현되는 경로:
 
@@ -842,13 +918,22 @@ $$\text{메타인지 안정도}_\tau := \exp(-c_d\,d_\tau(t))$$
 
 #### F.17.3 메타인지 수축 (조건부)
 
-비평 $C$가 자기 자신에 재귀적으로 적용될 때 (이상화된 무잡음 조건):
+이 절에서 엄밀히 증명되는 것은 비평 $C$ 전체가 아니라 정준 단체 사상 $B_p$의 분배 잔차다. $\delta_n=\|p_n-p^\star\|_1$로 두면 고정점 근방에서
 
-$$d_{n+1} \leq \rho \cdot d_n = 0.155 \cdot d_n,\qquad \rho = D_{\text{eff}}\cdot\varepsilon^2$$
+$$
+\delta_{n+1}=q_\star\delta_n+O(\delta_n^2),
+\qquad q_\star=Dp_a^\star=0.1545681540116411.
+$$
 
-3회 후 $d_3/d_0 \leq 3.7 \times 10^{-3}$. 게이트 `F2` 충분조건(`12_Equation.md` 4.7절) 영역에서만 위 비율이 그대로 적용되며, 일반 영역에서는 13절 ISS 의미의 유계 수렴으로 한정된다.
+$U=\{p\in\Delta^2:p_a\leq0.13\}$에서는 더 강한 균일 상계
 
-루프 내 위치: $C$의 출력 $c_t$가 다음 $R$의 초기점을 수정하고 (F.5의 $E_{\text{crit}}$), 그 $R$의 결과에 다시 $C$를 적용하면 메타인지 재귀가 된다.
+$$
+\delta_n\leq q_U^n\delta_0,\qquad q_U=0.2001757361
+$$
+
+가 성립하므로 3회 상계는 $q_U^3=8.0211\times10^{-3}$이다. 국소 선형 주항 $q_\star^3=3.6928\times10^{-3}$은 전역 부등식이 아니다.
+
+이를 메타인지 수렴으로 해석하는 단계는 여전히 `bridge`다. $C$의 출력이 다음 $R$의 초기점을 수정하고 다시 $C$로 돌아오는 전체 루프에는 F.10의 별도 수축 조건이나 ISS 검증이 필요하다.
 
 | 뇌 대응 | 실험 근거 | 판정 |
 |---|---|---|
@@ -877,7 +962,16 @@ $$\kappa_{\text{avg}} > \kappa_{\text{th}} \quad\Longrightarrow\quad \text{LBO �
 
 3x3+1 격자 각 채널의 출력에 곡률 피드백:
 
-$$\mathcal{T}_i^{\text{coupled}}(x_i) = \mathcal{T}_i(x_i) \cdot \left(1 - \frac{\kappa^{(k)}}{e^{1/3}\pi^{1/3}}\right)$$
+$$
+\widetilde\kappa^{(k)}:=\frac{\kappa^{(k)}}{\kappa^{(k)}+\kappa_0}\in[0,1),
+\qquad
+\mathcal{T}_i^{\text{coupled}}(x_i)
+=\mathcal{T}_i(x_i)
+\exp\!\left[-\xi_{\rm design}\widetilde\kappa^{(k)}\right],
+\quad \kappa_0>0.
+$$
+
+양의 exponential gate는 구형 선형 gate의 부호 반전·증폭을 피한다.
 
 | 뇌 대응 | 메커니즘 | 판정 |
 |---|---|---|
@@ -1079,15 +1173,17 @@ F.11.5를 갱신하여, F.14--F.21에서도 남는 간극을 정리한다.
 
 평가: 시냅스 강도 축적 = 수면 압력이 인과적으로 확인됨. CE의 $\sum \bar{c}^2$를 시냅스 강도 proxy로 재해석하면 `supported`에 근접. 남은 과제: 비평 점수와 시냅스 강도의 정량적 매핑.
 
-#### F.23.5 $\rho = 0.155$ (`bridge` -> 정밀화 경로)
+#### F.23.5 $\rho_c$ 복원 제어율 (`hypothesis` -> 정밀화 경로)
 
-현재 상태: 수면 수축 방향 `supported`, 정확 값은 피팅 결과.
+현재 상태: 수면 중 평균적 재정규화 방향은 문헌과 양립하지만, 전 상태 선형 제어기 $\mathcal R_{\rho_c}$와 그 계수는 데이터에서 아직 식별되지 않았다. $B_p$의 $q_\star=0.1545681540$은 별도 수학량이다.
 
 승격 조건:
-1. 실제 수면 회복 곡선 데이터에서 지수 감쇠 상수 피팅 -> $\rho_{\text{night}}$와 CE의 $\rho^2$ 비교
-2. CE 시뮬레이션에서 $\rho$ sweep -> 최적 $\rho$ 범위 확인
+1. 관측량, 샘플 간격, 기준점 $X^\star$를 먼저 고정하고 수면 회복 곡선에서 $\rho_c$를 피팅한다.
+2. 단일 지수 모형을 다중 지수·상태공간 모형과 held-out likelihood로 비교한다.
+3. 피팅한 $\rho_c$가 독립 코호트와 다른 밤에도 전이되는지 확인한다.
+4. CE 시뮬레이션의 $\rho_c$ sweep은 공학적 안정 영역만 정하며 생물학적 값의 검증을 대신하지 않는다.
 
-경로: 수면 부채 회복 연구(Van Dongen 2003, Kitamura 2016)의 시간 상수를 재분석하여 $\rho$의 관측 범위 $[0.1, 0.3]$를 확인. CE 값 0.155가 이 범위 내에 있으므로 `[NEAR]` 유지.
+따라서 현재 문서에는 근거가 확인되지 않은 보편 범위나 `[NEAR]` 판정을 두지 않는다.
 
 #### F.23.6 잔류장 $\phi$ (`bridge` -> `supported` 경로)
 
@@ -1104,20 +1200,23 @@ F.11.5를 갱신하여, F.14--F.21에서도 남는 간극을 정리한다.
 
 평가: $\phi$ 제거 ablation 시뮬레이션이 가장 빠른 경로. DMN과의 정량 매핑은 resting-state fMRI 데이터 필요.
 
-#### F.23.7 의식 깊이 (F.17.2) (`hypothesis` -> `bridge` 경로)
+#### F.23.7 모니터링 안정도 (F.17.2) (`hypothesis` -> `bridge` 경로)
 
 현재 상태: IIT/GNW와의 관계 미확정.
 
 승격 조건:
-1. CE의 의식 깊이 $\exp(-c_d \cdot d_\tau)$와 PCI(Perturbational Complexity Index)의 상관
-2. CE 시뮬레이션에서 마취/수면 조건에서 의식 깊이 자동 감소
+1. 모니터링 안정도 $\exp(-c_d d_\tau)$와 PCI(Perturbational Complexity Index)의 상관 또는 무상관
+2. CE 시뮬레이션에서 마취/수면 proxy 조건별 안정도 변화와 사전등록 방향 비교
 
 최신 근거:
 - 2025 Nature: IIT vs GNW adversarial testing (Cogitate Consortium). 결과는 특정 이론의 명확한 승리가 아닌 상호 보완적 해석. IIT의 posterior "hot zone" 예측은 부분 지지.
 - 100명 이상의 연구자가 IIT를 "pseudo-science"로 비판하는 공개서한(2023). $\Phi$의 계산 난해성.
 - PCI는 IIT에서 영감을 받았으나 이론의 직접 검증은 아님.
 
-평가: CE의 의식 깊이 정의는 IIT의 $\Phi$와 직접 대응되지 않으므로, 독립적 검증 경로 필요. CE 시뮬레이션에서 모드(WAKE/NREM/REM)별 $d_\tau$ 프로파일을 polysomnography와 비교하면 `bridge`로 승격 가능. `supported`까지는 먼 길.
+평가: 이 안정도는 IIT의 $\Phi$나 의식의 양과 직접 대응되지 않는다. CE
+시뮬레이션의 모드별 $d_\tau$와 polysomnography 사이에 재현 가능한 관계가
+있을 때만 운영 proxy의 `bridge`를 논할 수 있으며, 주관적 경험의 검증으로
+승격하지 않는다.
 
 #### F.23.8 메타인지 수렴 (F.17.3) (`bridge` -> `supported` 경로)
 
@@ -1155,7 +1254,7 @@ F.11.5를 갱신하여, F.14--F.21에서도 남는 간극을 정리한다.
 
 승격 조건:
 1. CE 시뮬레이션에서 4차원 $g_t$ 구현 후 단일 $g[t]$ 대비 성능 개선 확인
-2. 각 조절계의 독립적 조작(DA agonist, NE clonidine, 5HT SSRI, ACh donepezil)에 의한 개별 효과가 CE 예측과 일치
+2. 각 조절계의 독립적 조작(DA agonist, NE clonidine, 5HT SSRI, ACh donepezil)에 의한 개별 효과가 사전등록한 model 방향과 일치
 
 경로:
 - 코드 구현이 선행 조건. F.19의 수식을 reality_stone/python/reality_stone/clarus/core에 구현.
@@ -1178,9 +1277,9 @@ F.11.5를 갱신하여, F.14--F.21에서도 남는 간극을 정리한다.
 | $g[t] = d\bar{c}/dt$ (F.14) | `hypothesis` | `bridge` | 저 | CE ablation 시뮬레이션 |
 | 이중 과정 (F.3) | `bridge` | `supported` | 중 | $n_{\text{iter}}$-RT 상관 시뮬레이션 |
 | 수면 압력 = 비평 (F.6) | `bridge` | `supported` | 저 | $\sum \bar{c}^2$ vs SWA 매핑 |
-| $\rho = 0.155$ (F.10) | `bridge` | `bridge` (정밀화) | 중 | 수면 부채 데이터 재분석 |
+| $\rho_c$ 복원 제어율 (F.10) | `hypothesis` | `bridge` | 중 | 사전등록한 회복 모형의 외부검증 |
 | $\phi$ 잔류장 (F.15) | `bridge` | `supported` | 중 | ablation + DMN ALFF 비교 |
-| 의식 깊이 (F.17.2) | `hypothesis` | `bridge` | 고 | PCI 상관 시뮬레이션 |
+| 모니터링 안정도 (F.17.2) | `hypothesis` | `bridge` | 고 | PCI와의 상관·무상관 사전등록 |
 | 메타인지 수렴 (F.17.3) | `bridge` | `supported` | 중 | 반복 confidence 수렴 행동실험 |
 | 곡률-환각 (F.18) | `bridge` | `supported` | 중 | LBO eigenmode 구현 + 시뮬레이션 |
 | 4종 조절계 통합 (F.19) | `bridge` | `supported` | 고 | 코드 구현 + 약리 시뮬레이션 |
@@ -1194,7 +1293,7 @@ F.11.5를 갱신하여, F.14--F.21에서도 남는 간극을 정리한다.
 
 **외부 데이터 필요:**
 1. HPC-PFC theta 불일치 (F.23.1): intracranial EEG
-2. $\rho$ 피팅 (F.23.5): 수면 부채 회복 곡선 데이터셋
+2. $\rho_c$ 피팅 (F.23.5): 시간 간격이 명시된 수면 부채 회복 곡선 데이터셋
 3. DMN ALFF (F.23.6): resting-state fMRI
 4. PCI (F.23.7): TMS-EEG 데이터셋
 5. Metacognitive convergence (F.23.8): 행동 실험 데이터
@@ -1311,16 +1410,18 @@ $N_{\text{adapt}} = 75$ trial (중앙값). 75 trial 후 $63.2$% 적응, 150 tria
 
 | 정리 | 주장 | 조건 | 상태 |
 |---|---|---|---|
-| F-energy | 이완 $R$이 $E_t(z)$를 비증가 | E-decrease (B.4) | **closed** |
-| F-relax | 이완 수렴 | A-bound, Zero-attract | **closed** (조건부) |
-| F-memory | 조건부 인코딩이면 기억 유계 | $\theta_{\text{encode}} > 0$ | **closed** |
-| F-contract | 전체 루프 수축 | $\rho + \lambda_R L_R + \lambda_C L_C < 1$ | **open** ($L_R, L_C$ 추정 필요) |
-| F-sparse | 활성 유계 + 에너지 예산 | $|A_t| \leq \lceil x_a^* N \rceil$, $B_t$ 유한 | **closed** (Sparse-energy로부터) |
+| F-energy | 대칭 gradient 변형이 $E_t(z)$를 비증가 | $W_s=W_s^\top$, coercive/compact domain, $0<\eta<2/L$ | **closed 조건부**; 실제 F.3에는 미적용 |
+| F-relax | 실제 F.3 이완 수렴 | 비대칭 Dale+tanh+adaptation의 full joint stability | **open** |
+| F-memory | 저장된 기억 상태량 유계 | ring-buffer capacity $N_{\text{hip}}$와 eviction | **closed**; $\theta_{\text{encode}}>0$만으로 사건 수는 유한하지 않음 |
+| F-contract | 자율 전체 루프 수축 | $\rho_c(1+\lambda_RL_R+\lambda_OL_O+\lambda_CL_C+\lambda_SL_S)<1$와 완비 불변영역 | **open** (모든 상수와 불변성 추정 필요) |
+| F-sparse | 활성 유계 + 에너지 예산 | $\lvert A_t\rvert \leq \lceil x_a^* N \rceil$, $B_t$ 유한 | **closed** (Sparse-energy로부터) |
 | F-phi-bound | 잔류장 유계 | $\xi < 1$, $\text{Var}$ 유한 (A-bound) | **closed** |
-| F-curvature | 곡률 모니터링이 환각 억제 | LBO 확산 $h_d < 1/\text{eig}_{\max}$ | **closed** (11.2 수렴 조건) |
-| F-meta | 메타인지 수렴 | $\rho < 1$ (수면 존재 시) | **closed** |
+| F-LBO-stability | 명시적 LBO 확산의 수치 안정 | $0<h_d<2/\lambda_{\max}$ | **closed** (선형 확산에 한함) |
+| F-curvature-causal | 곡률 모니터링이 실제 환각을 억제 | 개입·ablation과 외부검증 필요 | **open** |
+| F-simplex | $B_p$의 분배 잔차 수축 | $p\in U$, $q_U=0.2001757361<1$ | **closed** |
+| F-meta | 이를 메타인지 수렴으로 해석 | 전체 $C$--$R$ 루프 식별과 F-contract 필요 | **open / bridge** |
 | F-STDP-local | STDP가 국소 정보만 사용 | $e_{ij}$는 $i,j$ 이웃 스파이크만 의존 | **closed** (정의에 의해) |
-| F-WM-finite | 작업 기억 유한 | $|h_t| \leq T_h$ (유한 창) | **closed** (정의에 의해) |
+| F-WM-finite | 작업 기억 유한 | $\lvert h_t\rvert \leq T_h$ (유한 창) | **closed** (정의에 의해) |
 
 ---
 
@@ -1330,7 +1431,7 @@ $N_{\text{adapt}} = 75$ trial (중앙값). 75 trial 후 $63.2$% 적응, 150 tria
 
 | 게이트 | 적용 대상 | 상태 |
 |---|---|---|
-| $G_{\text{formal}}$ | F-energy, F-relax, F-memory (closed). F-contract (open: $L_R, L_C$ 추정 필요) | partial |
+| $G_{\text{formal}}$ | F-energy (대칭 gradient 변형만 closed), F-memory (용량만 closed), F-relax/F-contract open | partial |
 | $G_{\text{obs}}$ | $R \leftrightarrow$ recurrent processing, $C \leftrightarrow$ ERN/ACC, $\pi \leftrightarrow$ BG, $\mathcal{M} \leftrightarrow$ hippocampal encoding | partial |
 | $G_{\text{causal}}$ | 수면박탈 $\to$ 루프 불안정, DA 조작 $\to$ 학습 게이트 변화, ACC 병변 $\to$ 비평 결손 | partial |
 | $G_{\text{pred}}$ | 에이전트 루프 유무에 따른 과제 수행 차이 시뮬레이션 | pending |
@@ -1348,15 +1449,15 @@ $N_{\text{adapt}} = 75$ trial (중앙값). 75 trial 후 $63.2$% 적응, 150 tria
 | $g[t] = d\bar{c}/dt$ | `hypothesis` | 3-factor rule은 `supported`, 정확한 형태는 미검증 |
 | 이중 과정 ($n_{\text{iter}}$) | `bridge` | 행동 근거 방대, 신경 기질 논쟁 중 |
 | 수면 압력 = 비평 누적 | `bridge` | SWA/wakefulness 관계는 `supported`, 비평 해석은 추가 가정 |
-| $\rho = 0.155$ | `bridge` | 수면 수축 방향 `supported`, 정확 값은 피팅 결과 |
+| $\rho_c$ 복원 제어율 | `hypothesis` | 수면 재정규화 방향과 별개로 정확한 전 상태 연산자·계수는 미식별 |
 | STDP + 도파민 (F.14) | `supported` | 3-factor learning rule 강하게 지지됨 |
 | 구조적 투영 Proj (F.14.3) | `supported` | 시냅스 가지치기, 스케일링 확립 |
 | 잔류장 $\phi$ (F.15) | `bridge` | DMN/spontaneous activity 방향 있으나 $\phi$ 매핑은 추가 가정 |
 | TopK 희소 활성 (F.16) | `supported` | sparse firing 1--5% 확립 |
 | 모듈 생애주기 (F.16.2) | `bridge` | 4상태 분류 자체는 설계 선택 |
 | 자기일관성 C3 (F.17.1) | `hypothesis` | 수학적으로 닫힘. 뇌 대응은 현상론 |
-| 의식 깊이 (F.17.2) | `hypothesis` | IIT/GNW와의 관계 미확정 |
-| 메타인지 수렴 (F.17.3) | `bridge` | PFC 재귀 자기평가 방향은 있으나 $\rho$ 매핑은 추가 가정 |
+| 모니터링 안정도 (F.17.2) | `hypothesis` | 의식 지표가 아니며 IIT/GNW와의 관계 미확정 |
+| 메타인지 수렴 (F.17.3) | `bridge` | $B_p$ 단체 수축은 증명되지만 PFC 재귀 자기평가와의 매핑 및 전체 루프 수축은 추가 가정 |
 | 곡률 환각 억제 (F.18) | `bridge` | 억제 feedback 구조는 `supported`, LBO 매핑은 `bridge` |
 | 4종 신경조절 (F.19) | `supported` (개별 존재 + 개별 기능), `bridge` (4차원 벡터 통합 + CE 변수 매핑) | DA RPE 확립, NE 탐색-착취 확립, 5HT 인내/model-based 광유전 확인, ACh cortical gain/기억 인코딩 확립 |
 | 작업 기억 용량 (F.20.1) | `supported` | Miller 1956, Cowan 2001 |
@@ -1384,7 +1485,7 @@ $N_{\text{adapt}} = 75$ trial (중앙값). 75 trial 후 $63.2$% 적응, 150 tria
 | $g_{\text{5HT}}$ | raphe firing, 5-HIAA | microdialysis, PET |
 | $g_{\text{ACh}}$ | BF firing, cortical ACh | microdialysis, optogenetics |
 | $\kappa_{\text{avg}}$ | high-frequency anomaly | EEG, MEG |
-| $|A_t|/N$ | active neuron fraction | calcium imaging, MEA |
-| $|h_t|$ | WM load (PFC BOLD, CDA) | fMRI, EEG |
+| $\lvert A_t\rvert/N$ | active neuron fraction | calcium imaging, MEA |
+| $\lvert h_t\rvert$ | WM load (PFC BOLD, CDA) | fMRI, EEG |
 | $\alpha_i$ | spatial attention, alpha lateralization | EEG |
 | $\Delta a^{\text{cb}}$ | cerebellar adaptation | prism adaptation, saccade |

@@ -1,7 +1,14 @@
 # CE 이론 검증 프레임워크 (Clarus Equation Proof Requirements)
 
-**최종 업데이트:** 2026-07-30
+**최종 업데이트:** 2026-08-06
 **목표:** 이전 분석(I-XIII)의 모든 "미증명 부분", "순환논리", "검증 부재" 항목을 체계적으로 정리하고 각각의 증명 경로를 명확히 함
+
+> **2026-08-06 실행 상태 교정:** Co1 bootstrap solver와 Co2 scorecard는
+> 구현되어 회귀 테스트가 통과한다. 그러나 구현 통과는 물리 증명이 아니다.
+> 수식 반례와 직접 교정은
+> [전체 정합성 완성 루프](FULL_CONSISTENCY_COMPLETION_LOOP_2026-08-06.md)를
+> 우선한다. 아래의 과거 시간 추정·성공률은 프로젝트 계획 기록이지
+> 증명 점수가 아니다.
 
 ---
 
@@ -9,7 +16,7 @@
 
 CE 이론의 검증은 7개 계층으로 구분된다:
 
-1. **TIER 1: CRITICAL BLOCKERS** - 하나라도 실패 시 전체 프레임워크 붕괴 (Axiom Layer)
+1. **TIER 1: CRITICAL BLOCKERS** - 실패한 공리·bridge가 의존하는 하위 주장만 중지 (Axiom Layer)
 2. **TIER 2: BRIDGE INTEGRITY** - Bridge layer 약화 → 응용층 흔들림
 3. **TIER 3: COSMOLOGY PREDICTIONS** - 검증 가능하나 부분 실패 용납 가능
 4. **TIER 4: PARTICLE PHYSICS VALIDATIONS** - 고정밀도, 검증 가능
@@ -85,8 +92,12 @@ python -m pytest tests/test_a1_q0_action_bridge.py -q
 생기고 connection 보정이 이를 제거한다는 국소 반례를 재현한다. 또한
 \(Z_2,\ v_\Phi=0\) 포탈에서 \(h\)-\(\Phi\) cross-Hessian은 0이지만
 \(h\Phi^2\), \(h^2\Phi^2\) vertex가 남는다는 대수도 검산한다. 같은
-정규화의 레거시 \(43.77\,\mathrm{GeV}\) 포탈 benchmark는 공급된
-비가시 분기비 상한 \(0.11\)에 대해 약 \(0.772\)를 내므로 실패한다.
+정규화의 현행 \(\mu_\Phi=0\),
+\(\lambda_{HP}=\delta_N^2\) benchmark는
+\(m_\Phi=43.8056765\,\mathrm{GeV}\),
+\(\mathrm{BR}_{\rm inv}=0.770822\)를 준다. PDG 2026이 열거한 ATLAS
+direct Run-2 상한 \(\mathrm{BR}_{\rm inv}<0.107\) (95% CL)에 대해
+이 branch는 `REJECT`다.
 
 통과해도 `covariant_action_complete=False`,
 `stress_tensor_derived=False`, `spectral_density_derived=False`다.
@@ -170,16 +181,16 @@ offspring 행렬 \(A\)라는 판정도 아니다. 전체 조건과 실패 대안
 
 | ID | 문제 | 위치 | 현재상태 | 필요한 증명 | 난이도 | 시간(h) | 검증 방법 | 의존성 | 실패시 결과 |
 |----|------|------|--------|-----------|--------|--------|---------|---------|-----------|
-| **C1** | 클라루스장 pole / 입자언어 bridge | `axium.md` Part II, `경로적분.md` Part II | 장 상관함수 pole로 해석되는 미관측 bridge | NA62, PADME, LDMX 등에서 29.65 MeV pole-compatible 신호 또는 bridge 배제 | 4 | - | **실험 데이터** | 입자언어 Bridge layer | **국소 스칼라/포탈 readout 재평가** |
-| **C2** | Axiom B1: 경로 folding factorization $S(D_1+D_2)=S(D_1)S(D_2)$ | `axium.md` Th. 2.1 | "측도론에서 가정, 유도 없음" | 함수적분 측도론에서 엄밀 유도 또는 반례 제시 | 5 | 80 | **수학 논문** | A1-A4 모두 | **무차원 코어 무너짐** |
-| **C3** | Axiom B2-B3 충분성 (유일성 아님) | `axium.md` Prop. 2.3 | "충분하나 최소성 미증명" | Cauchy 함수방정식에서 왜 exponential $S(D)=e^{-D}$만 가능한가? 비표준해 여부 | 4 | 60 | **수학 증명** | Axiom 체계 | **다른 $S(D)$ 형태 가능** |
-| **C4** | $d=3$ 유일성: Hodge self-duality | `강의/A_연역적_유도.md` 3절 | "Hodge 대수에서 정확, 동기부여는 휴리스틱" | 왜 path folding이 Hodge dual이어야 하는가? 제1원리 유도 또는 반례 | 5 | 100 | **기하학 증명** | Selection layer 전체 | **$d \neq 3$ 우주 가능** |
-| **C5** | $\alpha_{\text{total}} = 1/(2\pi)$ 필연성 | `상수.md` Layer 1, `1_격자기본량.md` | "Rule H2: $n=1$ 사후적 선택" | 게이지 이론, conformal symmetry, GUT에서 독립적으로 이 규칙 유도 | 4 | 70 | **이론 유도** | 모든 coupling | **모든 α 값 불확실** |
+| **C1** | inverse-correlation scale에서 물리적 pole로 가는 입자언어 bridge | `0_검증과감사/CE_TWO_POINT_AND_VERTEX_LOOP.md`, `0_검증과감사/CE_RENORMALIZED_POLE_AND_ONE_LOOP_LOOP.md` | $m_\xi=m_p\delta_N^2=29.6991596\,\mathrm{MeV}$는 정확한 scale identity이고 physical pole·residue·field identity는 `OPEN` | 고정한 $\Gamma_{\rm ren}^{(2)}$의 영점과 양의 residue를 구하고, 같은 장·결합으로 production/decay 및 독립 탐색 likelihood를 닫음 | 4 | - | **재규격화 correlator + 실험** | 입자언어 Bridge layer | **pole 해석만 폐기하고 scale identity는 보존** |
+| **C2** | 연결 국소성: $S(D_1+D_2)=S(D_1)S(D_2)$ | `0_검증과감사/CORE_STRENGTHENING_LOOP.md` 1.2절 | 독립 구간·가법 깊이·memory 부재를 명시한 반증 가능한 모형 전제; 함수적분에서 자동으로 나오는 정리는 아님 | 같은 CE+SM 미시 dynamics에서 composition law를 유도하거나 $\Delta_{\rm comp}=0$을 독립 자료로 검정 | 5 | - | **미시 유도 + composition gate** | 지수 생존 부문 | **memory kernel을 포함한 대안 생존모형으로 교체** |
+| **C3** | 양의 생존 character의 지수형 유일성 | `0_검증과감사/CORE_STRENGTHENING_LOOP.md` 1.3절 | $S(0)=1$, $0<S\le1$, 곱셈성 아래 $S(D)=e^{-\kappa D}$는 `Exact conditional`; $\kappa=1$은 optical-depth 단위 규약 | 정리의 가정·정의역·비자명성을 proof checker와 문서에서 동일하게 유지 | 1 | 완료 | **해석 증명 + 반례 회귀** | C2의 연결 국소성 | **가정이 깨지면 비지수 대안으로 분기** |
+| **C4** | $\Lambda^2V^*\simeq V^*$ closure class의 $d=3$ 해 | `1_강의/A_연역적_유도.md` 4절 | $\binom d2=d$의 양의 비자명 해 $d=3$은 `Exact conditional`; 이 closure class를 자연에 채택하는 단계는 `Selection/Open` | metric·orientation·closure class를 고정하고 anomaly-free SM 표현 및 대안 차원 evidence를 공동 비교 | 2 | 정리 완료 | **기하 대수 + 모형선택** | 차원 Selection layer | **closure class의 물리 채택을 교체** |
+| **C5** | $\alpha_{\text{total}}=1/(2\pi)$ 경계조건 | `3_상수/1_격자기본량.md`, `상수.md` | 원의 $2\pi$ 주기는 기하 입력이고 $n=1$은 최소 양의 winding `Selection H2`; scheme 불변 필연성 주장이 아님 | 같은 scale·scheme에서 $n$ 및 대안 경계조건을 사전등록하고 RG·threshold likelihood로 비교 | 4 | - | **Gauge/RG 모형선택** | 결합상수 Track B | **H2 경계조건만 교체·배제** |
 
 **평가:**
-- C1: 2025-2030 실험 대기. 29.65 MeV hit는 클라루스장 pole bridge를 지지하고, 배제는 독립 입자/포탈 readout을 낮춘다. 코어 클라루스장 자체의 즉각 반증으로 세지 않는다.
-- C2, C3, C4: 수학적 연구 필요. 각각 1-3개월 전담 연구
-- C5: 표준모형 확장 이론 필요
+- C1의 현행 중앙 scale은 $29.6991596\,\mathrm{MeV}$다. 탐색 신호만으로는 field identity가 정해지지 않으므로 correlator·pole·residue gate를 먼저 통과해야 한다.
+- C3와 C4의 수학 부분은 명시된 가정 안에서 닫혔다. C2의 연결 국소성과 C4 closure class의 물리 채택은 별도 모형선택 문제다.
+- C5는 필연성 주장이 아니라 사전등록 가능한 경계조건이다. Track A의 입력 $\alpha_s$와 Track B의 입력 $\alpha_{em}$을 독립 경로로 유지한다.
 
 ---
 
@@ -187,10 +198,10 @@ offspring 행렬 \(A\)라는 판정도 아니다. 전체 조건과 실패 대안
 
 | ID | 문제 | 위치 | 현재상태 | 필요한 증명 | 난이도 | 시간(h) | 검증 | 의존성 | 실패시 |
 |----|------|------|--------|-----------|--------|--------|-----|---------|--------|
-| **B1** | $\sin^2\theta_W = 4\alpha_s^{4/3}$ 유도 | `상수.md` Layer 2, `2_혼합매개변수.md` 5절 | "Numerology: exponent 4/3 정당화 부족" | 왜 $(k=2, d=3) \to 4/3$? SU(2) doublet factor는 왜 linear? | 4 | 50 | **Gauge 이론** | 모든 입자물리 | **$\sin^2\theta_W$ 예측 실패** |
-| **B2** | Equation A3b: $P_{\text{survive}} \leftrightarrow \Omega_b$ 매핑 | `경로적분.md` 3절, `상수.md` Layer 3 | "Bridge 단정, 물리 메커니즘 없음" | 경로적분의 "path"가 우주론의 "baryon"을 의미하는 물리적 메커니즘 | 5 | 90 | **QFT or GR** | $\Omega_b$ 계산 | **우주 성분 도출 불가** |
-| **B3** | Kernel form $K[x] = 1-x$ | `3_상수/3_부트스트랩.md` 2절 | "최소성 가정, 일반형 $c(1-x)$ 가능" | 왜 linear-in-suppression? 고차항 constraint from data? | 3 | 30 | **Fitting robustness** | $\Omega_\Lambda, \Omega_{DM}$ | **성분값 재계산** |
-| **B4** | $m_\phi = m_p \delta^2$ 유도 | `경로적분.md` 8절 | "Dimensional bridge, 기준 스케일 선택의 정당화 부족" | 다른 기준(M_Z, v_EW, M_Pl) 선택 시는? | 3 | 40 | **Dimensional audit** | φ 보손 예측 | **$m_\phi$ ±10% 불확실** |
+| **B1** | $s_A^2:=4\alpha_s^{4/3}$ registered matching | `상수.md` Layer 1--2 | Track A 산술과 neutral projector 모형 구현; 물리적 $s_W^2$ scheme map은 Open | RG·threshold·scheme map 뒤 독립 weak/QCD fit 및 UV matching | 4 | - | **Gauge/RG likelihood** | 입자물리 | 실패 시 CE mixing boundary 폐기 |
+| **B2** | energy-weighted $x\leftrightarrow\Omega_b$ | `0_검증과감사/BRIDGE_B2_DERIVATION.md` | 공변 stress readout, projector, unitary 실현과 epoch 전달식 구현 | 같은 action의 Boltzmann/perturbation holdout | 5 | - | **QFT+cosmology** | $\Omega_b$ | full likelihood에서 이미 고정 benchmark reject |
+| **B3** | Kernel $K(x)=1-x$ | `3_상수/3_부트스트랩.md`, `2_경로적분과_응용/12_전이구간.md` | 완전 이분할·scalar sufficiency·mixture affinity 아래 유일성 정리와 저분율 branch 안정성 구현 | 미시 collision/genealogy에서 같은 충분통계와 kernel 재현 | 3 | - | **kinetic matching** | 고정점 | 대안 memory kernel과 evidence 비교 |
+| **B4** | $m_\xi=m_p\delta_N^2$ inverse-correlation scale | `경로적분.md` 8절, `0_검증과감사/CE_TWO_POINT_AND_VERTEX_LOOP.md` | 입력 $m_p$와 $\delta_N$에서 $29.6991596\,\mathrm{MeV}$를 재현하는 exact arithmetic; 물리적 pole 예측은 `OPEN` | 기준 scale 선택의 action-level 유도와 $\Gamma_{\rm ren}^{(2)}$ pole·residue·field identity 검증 | 3 | - | **provenance + two-point gate** | C1 | **scale bridge와 particle pole을 분리 유지** |
 
 ---
 
@@ -200,12 +211,12 @@ Bridge layer 일부 약화는 허용하나, 강도 저하 → 응용층 신뢰�
 
 | ID | 문제 | 위치 | 현재상태 | 필요한 증명 | 난이도 | 시간(h) | 검증 | 의존성 | 실패시 |
 |----|------|------|--------|-----------|--------|--------|-----|---------|--------|
-| **B5** | $\lambda_{HP} = \delta^2$ Higgs-Clarus 포탈 | `경로적분.md` 8.2절 | "가정, $\delta^3, \delta^4, 1-\delta$ 가능" | 포탈 coupling 자연스러운 선택 원리 (SUSY? 추가 대칭?) | 4 | 60 | **BSM 모델** | DM, 초전도 | **Coupling 불확실** |
-| **B6** | 스케일 승격: $v_{\text{EW}} = 246$ GeV | `상수.md` Layer 8 | "SI 정규화, natural units에서 자의적" | $v_{\text{EW}}$를 $M_{\text{Pl}}, \Lambda_{\text{QCD}}$와 연결 | 3 | 35 | **기본 스케일 원리** | 모든 차원량 | **상대값만 고정** |
+| **B5** | exact-$Z_2$ Higgs portal benchmark | `경로적분.md` 8.2절, `0_검증과감사/CE_TWO_POINT_AND_VERTEX_LOOP.md` | $\mu_\Phi=0$, $\lambda_{HP}=\delta_N^2$에서 $m_\Phi=43.8056765\,\mathrm{GeV}$, $\mathrm{BR}_{\rm inv}=0.770822$; PDG 2026 direct 상한 $0.107$에 대해 `REJECT` | coupling·질량·채널을 작용에서 새로 고정하고 동일 width/likelihood gate 재실행 | 4 | - | **BSM width + direct limit** | portal branch | **이 canonical benchmark를 폐기하고 새 branch를 사전등록** |
+| **B6** | 스케일 승격 입력 $v_{\text{EW}}=246.21965\,\mathrm{GeV}$ | `상수.md` Layer 8 | 차원 있는 외부 기준 입력이며 CE 무차원 코어의 출력으로 세지 않음 | $v_{\text{EW}}$를 독립 scale dynamics에서 유도하거나 입력 provenance를 계속 고정 | 3 | - | **scale provenance** | 모든 차원량 | **무차원 비와 절대 scale을 분리 유지** |
 | **B7** | 무차원 코어 $\{e,\pi,i,1,0\}$ 완전성 | `axium.md` 1.2a | "직관적이나 수학적 완전성 미증명" | 이 5개 상수가 모든 무차원 물리를 생성하는가? | 5 | 120 | **정수론/해석학** | 모든 이론 구조 | **추가 상수 필요할 수 있음** |
-| **B8** | 부트스트랩 고정점 유일성 | `3_상수/3_부트스트랩.md` | "$\varepsilon^2 = \exp(-(1-\varepsilon^2)D_{\text{eff}})$ 유일해?" | 다른 고정점이나 주기 궤도 존재 여부 | 4 | 50 | **수치해석** | 모든 cosmology | **$\Omega$ 값 재계산** |
-| **B9** | $R = 0.38063$ 동상 선택 | `상수.md` Layer 3 | "3계층 합에서 나옴, 일반 원리 미제시" | 왜 이 특정 $R$ 값이 DM/DE 나누기인가? | 3 | 40 | **부트스트랩 재분석** | 암흑섹터 성분 | **성분 해석 바뀔 수 있음** |
-| **B10** | Dimensionless unit checker 완성 | `reality_stone/clarus/dimensionless.py` | "미완성, 모든 식 검증 안 됨" | 모든 공식이 차원 consistent인지 자동 체크 | 2 | 40 | **프로그래밍** | 모든 식 검증 | **숨겨진 오류 가능** |
+| **B8** | 부트스트랩 branch 구조 | `3_상수/3_부트스트랩.md`, `2_경로적분과_응용/14_자기재귀성_대칭.md` | $D\le1$ 한 해, $D>1$ 두 해와 저분율 수축구간 증명 완료 | stochastic branch-selection dynamics | 4 | - | **해석·수치 gate** | 모든 cosmology | branch 초기조건 공개 |
+| **B9** | $R$ dark 분할 | `상수.md` Layer 3 | $R=\alpha_sD(1+x\delta_N)=0.37823870$으로 식·수치 통일; full-cov 고정 benchmark `Rejected` | 공변 dark stress와 growth를 같은 action에서 계산 | 3 | - | **DESI/CMB/growth** | 암흑섹터 | 새 action의 evidence 필요 |
+| **B10** | Dimensionless unit checker 완성 | `reality_stone/python/reality_stone/clarus/dimensionless.py` | 등록 수식의 단위 검사는 구현; 자유형 Markdown 전수 의미 검사는 계속 확장 | action·EOM·width·관측량까지 typed dimension gate에 등록 | 2 | 진행 | **정적 검사 + 회귀** | 모든 식 검증 | **등록되지 않은 식을 수동 감사 대상으로 유지** |
 | **B11** | 순환성 제거: 공리→관측 체인 투명성 | 문서군 전체 | "일부 식에서 관측값 사후 피팅 의심" | 각 상수별로 "입력인지 출력인지" 명확화 | 4 | 80 | **문서 감사** | 모든 주장 신뢰성 | **논리 순환 발견 시** |
 
 ---
@@ -216,25 +227,25 @@ Bridge layer 일부 약화는 허용하나, 강도 저하 → 응용층 신뢰�
 
 | ID | 문제 | 위치 | 현재상태 | 필요한 증명 | 난이도 | 시간(h) | 검증 | 의존성 | 실패시 |
 |----|------|------|--------|-----------|--------|--------|-----|---------|--------|
-| **U1** | $w_0 = -0.769$ vs DESI 3.1σ 긴장 | `3_상수/7_우주론.md`, `3_상수/9_우주론_수식의미와후보.md` | "Post-diction, DESI DR3과 tension" | DESI DR3/SPT-3G 최종 데이터 재확인, dynamic DE 모델 | 2 | - | **관측 데이터 (2028)** | $\Omega_\Lambda$ | **$w(z)$ 동적 필요** |
-| **U2** | $H_0$ Readout selector $q \in \{0,1\}$ | `3_상수/9_우주론...md` 5절 | "이원성 선택, 사후적 fitting 의심" | $q$ 값의 물리적 결정 원리 (Fisher matrix? topology?) | 4 | 50 | **독립 관측** (rare decay, GW) | $H_0$ | **$H_0$ crisis 재발생** |
-| **U3** | $A_s$ 원리적 계산 실패 → 분류 우회 | `경로적분.md` 14절 | "Raw 값 +273% 실패, taxonomy로 회피" | $A_s$를 axiom에서 진짜 유도하거나 열린문제 인정 | 5 | 120 | **Inflation 모델** | $n_s, r$ | **AS prediction 불가** |
-| **U4** | Inflationary $N_e = 57.2$ 정당화 | `3_상수/9_우주론` 3절 | "CMB+BBN constraint, CE 예측 아님" | CE core에서 이 값이 나오는가? (아니면 input?) | 3 | 40 | **Inflation 유도** | primordial GW | **$r, \alpha_s$** running 불확실 |
-| **U5** | 동적 dark energy 메커니즘 부재 | `경로적분.md` 14절 | "$w_0$ 값만, 동역학 없음" | $\dot{w}(z)$ evolution equation 유도 | 4 | 60 | **Quintessence 모델** | $w(z)$ | **ΛCDM과 구별 불가** |
+| **U1** | 고정-background DESI DR2 모형 gate | `3_상수/7_우주론.md`, `3_상수/9_우주론_수식_의미와_후보.md` | 외부 $r_d=147.09\,\mathrm{Mpc}$에서 $\chi^2=40.20145$, dof 13, $p=1.2828\times10^{-4}$; EH hybrid $r_d=151.50523\,\mathrm{Mpc}$에서 $\chi^2=41.19455$, $p=8.8602\times10^{-5}$로 모두 `REJECT` | 같은 parameter vector의 CMB·BAO·SN·growth와 동적 dark-energy perturbation을 공동 적합 | 2 | - | **DESI DR2 covariance + 미래 holdout** | density bridge | **고정 background를 새 공변 동역학 branch로 교체** |
+| **U2** | $H_0$ readout selector $q\in\{0,1\}$ | `3_상수/9_우주론_수식_의미와_후보.md` 5절 | 산술 readout은 $66.8027457$와 $72.7023707\,\mathrm{km\,s^{-1}\,Mpc^{-1}}$를 재현하나 ansatz와 selector는 검증되지 않음 | $q$와 horizon-defect map의 물리적 생성 원리를 고정하고 독립 distance-ladder/GW holdout 평가 | 4 | - | **독립 $H_0$ likelihood** | horizon readout | **readout ansatz만 폐기** |
+| **U3** | finite-$\xi$ inflation normalization | `2_경로적분과_응용/05_인플레이션.md` | $A_s=2.10\times10^{-9}$와 $N_*=57.1999$는 입력; $\xi=0.4904868$에서 $n_s=0.9661711385$, $r=0.0043456103$, $\lambda_4=1.3434991\times10^{-10}$을 재현 | RG·isocurvature·reheating과 $A_s$ 입력 covariance를 포함한 공동 likelihood | 5 | - | **inflation likelihood** | $n_s,r$ | **benchmark parameter 영역을 재선택·배제** |
+| **U4** | $N_*=57.1999$ | `2_경로적분과_응용/05_인플레이션.md` | reheating benchmark input으로 장부 고정 | exact-$Z_2$ annihilation/preheating에서 재계산 | 3 | - | **Boltzmann/lattice** | primordial GW | $N_*$ posterior 전파 |
+| **U5** | dark dynamics | `3_상수/7_우주론.md` | 공변 확장식과 고정-background kill test 분리; 고정 패키지는 reject | background+perturbation 공동 scalar-tensor fit | 4 | - | **CMB+BAO+SN+growth** | $w(z)$ | 고정 분할을 대안 action으로 교체 |
 
 ---
 
 ## TIER 4: PARTICLE PHYSICS VALIDATIONS (5개)
 
-고정밀 검증 가능, 일부 성공 현황.
+고정밀 likelihood로 검증할 수 있다. 등록 산술의 재현은 독립 관측 성공으로 세지 않는다.
 
 | ID | 문제 | 위치 | 현재상태 | 필요한 증명 | 난이도 | 시간(h) | 검증 | 의존성 | 실패시 |
 |----|------|------|--------|-----------|--------|--------|-----|---------|--------|
-| **P1** | 뮤온 g-2: $\Delta a_\mu = 0$ 재해석 | `경로적분.md` 9절 | "Z2 대칭 이론, Z2 선택 필연성 미증명" | Z2의 물리적 기원 또는 Z2 깨짐 시나리오 검토 | 4 | 50 | **정밀 실험** (EDM, β decay) | muon 부문 | **BSM signal 재등장** |
-| **P2** | CKM $\|V_{cb}\| = \alpha_s^{3/2}$ 공식 일반화 | `상수.md` Layer 4 | "strict scorecard 기준 6.58σ FAIL; 레거시/느슨한 기준과 충돌" | inclusive/exclusive/average 기준 분리, 필요한 +2.6% NLO 보정의 무파라미터 유도 | 3 | 40 | **다른 decay mode + CKM unitarity** | CKM 부문 | **공식 폐기 또는 Open 유지** |
-| **P3** | PMNS $\sin^2\theta_{13} = \delta/(d^2-1)$ | `상수.md` Layer 5 | "깔끔하나 유도 부족" | 중성미자 mixing 기원, GUT/seesaw와의 연결 | 4 | 60 | **다른 mixing angle** | neutrino 부문 | **혼합각 부분 실패** |
-| **P4** | Higgs mass $M_H/M_Z = 1.374$ | `상수.md` Layer 4 | "예측이나 EWSB 메커니즘 미명시" | EWSB potential에서 mass ratio 유도 | 4 | 70 | **Higgs coupling** (FCC-ee) | 기본 스케일 | **재구성 필요** |
-| **P5** | Proton radius $\Delta r_p^2 \propto \delta^2/m_\phi^2$ | `경로적분.md` 11절 | "차원 정확, 메커니즘 불명" | 다른 lepton (τ, e) radius 예측 검증 | 2 | 15 | **muonic atom data** | mass hierarchy | **보편성 부실** |
+| **P1** | 뮤온 $g-2$ scalar/Wilson diagnostic | `경로적분.md` 9절 | 올바른 CP-even kernel에서 unit Wilson 계수는 $248.5639\times10^{-11}$, 같은 결합의 finite-mass 값은 $162.5520\times10^{-11}$이며 현행 WP25 gate에 `REJECT` | UV Wilson matching·operator mixing·공통 covariance를 고정해 계수를 사전등록 | 4 | - | **EFT matching + precision likelihood** | muon 부문 | **해당 operator/coupling branch를 재구성** |
+| **P2** | CKM 전체 unitary matrix construction | `상수.md` Layer 4 | 원소별 $\alpha_s$ 멱법칙은 독립 예측으로 사용하지 않음; 하나의 up/down Yukawa 또는 Wilson matching 입력에서 전체 $V_{\rm CKM}$을 공동 산출하는 경로가 `OPEN` | 동일 scale·scheme의 $Y_u,Y_d$를 대각화해 3각·CP phase·Jarlskog·unitarity를 holdout과 공동 검증 | 4 | - | **flavour global likelihood** | quark Wilson/matching 입력 | **원소별 numerology를 폐기하고 행렬 branch 재구성** |
+| **P3** | PMNS 전체 unitary matrix construction | `상수.md` Layer 5 | 원소별 $\sin^2\theta_{13}$ 식은 정본 검증식이 아님; charged-lepton 및 neutrino mass/Wilson 입력의 공동 대각화가 `OPEN` | Dirac/Majorana 선택, Weinberg·seesaw matching, RG를 고정해 3각·phase·mass splittings·unitarity를 공동 검증 | 4 | - | **oscillation global likelihood** | lepton Wilson/matching 입력 | **원소별 numerology를 폐기하고 질량행렬 branch 재구성** |
+| **P4** | Higgs pole-mass matching benchmark | `상수.md` Layer 4 | 최신 $M_H=125.11\,\mathrm{GeV}$는 비교 target; $M_Z(1+\alpha_sD_N)=125.3824\,\mathrm{GeV}$의 수치 근접은 matching benchmark이며 독립 pole 예측이 아님 | 같은 action의 tadpole·self-energy·counterterm·RG·threshold로 pole equation과 residue를 닫고 독립 입력을 분리 | 4 | - | **EWSB pole/RG matching** | 기본 scale 입력 | **근접 산술을 예측으로 세지 않음** |
+| **P5** | proton-radius numerology | `경로적분.md` 11절 | $\Delta r_p^2\propto\delta_N^2/m_\xi^2$ target은 mediator coupling·form factor·loop matching이 없어 현행 정본에서 `DISCARDED` | 재도입하려면 작용, lepton·proton vertex, Wilson coefficient, form factor와 독립 muonic/electronic likelihood를 처음부터 고정 | - | 폐기 | **EFT form-factor gate** | 없음 | **폐기 상태 유지; 다른 성과에 포함 금지** |
 
 ---
 
@@ -259,7 +270,7 @@ Bridge layer 일부 약화는 허용하나, 강도 저하 → 응용층 신뢰�
 
 | ID | 문제 | 위치 | 현재상태 | 필요한 증명 | 난이도 | 시간(h) | 검증 | 의존성 | 실패시 |
 |----|------|------|--------|-----------|--------|--------|-----|---------|--------|
-| **E1** | 핵융합 감마선 해상도 $\Delta E/E < 10^{-9}$ | `4_공학적_활용/01_핵융합_설계.md` 2.4절 | "요구사항 명시, 기술 경로 없음" | 29.65 MeV γ beam 개발 가능성 (현재: 10⁻⁸ 수준) | 5 | - | **R&D 프로토** | Clarus + fusion | **응용 불가** |
+| **E1** | 핵융합 공명 source/linewidth gate | `4_공학적_활용/01_핵융합_설계.md` 2.4절 | $29.6991596\,\mathrm{MeV}$는 inverse-correlation target일 뿐 관측된 입자선이 아니며, 요구 linewidth와 production rate도 아직 입력·시뮬레이션 단계 | C1의 pole·residue를 먼저 닫고 source transfer function, 총 에너지 예산, achievable linewidth를 같은 benchmark에서 검증 | 5 | - | **spectral R&D + end-to-end simulation** | C1 + fusion source | **물리적 source가 없으면 이 공명 경로만 중지** |
 | **E2** | 초전도 보손 flux $10^{40}$ vs $10^{-20}$ | `4_공학적_활용/05_초전도체_설계.md` 5.7.4절 | "60 자리 부족 (!)" | γ→clarus 변환 cross-section 측정/계산 상한 | 4 | 200 | **입자 실험** | 상온 초전도 | **재검토** |
 | **E3** | 초전도 coherence 시간 1.2 ps | `4_공학적_활용/05_초전도체_설계.md` 5.7.2절 | "UCP: <100 fs, 물리 모순" | 실제 금속 dephasing 측정 또는 quantum dot 대안 | 2 | 40 | **응축 물질** | 공명 축적 | **불가능** |
 | **E4** | QEC 개선 3.16% | `4_공학적_활용/02_양자오류보정.md` 3절 | "Simulation만, 실제 hardware 미검증" | IBM/Google 50+ qubit 시스템 테스트 | 2 | 160 | **양자 hardware** | QEC claim | **기여 없음** |
@@ -269,12 +280,12 @@ Bridge layer 일부 약화는 허용하나, 강도 저하 → 응용층 신뢰�
 
 ## TIER 7: CODE & COMPUTATIONAL VALIDATION (5개)
 
-구현상 미완성. 빠른 완성 가능.
+Co1·Co2는 구현·회귀 통과했고, Co3–Co5의 실자료·응용·전수 단위 gate가 남아 있다.
 
 | ID | 문제 | 위치 | 현재상태 | 필요한 증명 | 난이도 | 시간(h) | 검증 | 의존성 | 실패시 |
 |----|------|------|--------|-----------|--------|--------|-----|---------|--------|
-| **Co1** | Bootstrap solver 구현 부재 | `reality_stone/clarus/` | "식만 있음, 수치해 코드 없음" | $\varepsilon^2 = \exp(-(1-\varepsilon^2)D_{\text{eff}})$ Newton iteration 구현 | 1 | 1 | **Unit test** (0.0487 검증) | 모든 cosmology | **$\Omega$ 검증 불가** |
-| **Co2** | Scorecard.py 미실장 | `tests/` | "45 상수 vs 관측 비교 코드 없음" | 각 상수별 σ offset 계산 함수 | 2 | 3 | **Automated test** | 상수 검증 | **수치 비교 불가** |
+| **Co1** | Bootstrap solver | `reality_stone/python/reality_stone/clarus/bootstrap_solver.py` 및 tests | **구현·회귀 통과**; 낮은 가지 선택과 $x=1$ 가지를 분리 | 변수치환·branch 문서와 solver 계약 동기화 | 1 | 완료 | **Unit test** | 모든 cosmology | 회귀 실패 시 downstream 중지 |
+| **Co2** | Scorecard.py | `tests/scorecard.py` | **구현됨**; 입력/reference equality와 독립 prediction을 구분해야 함 | provenance·공동 covariance·holdout scorer 추가 | 2 | 진행 | **Regression + statistical gate** | 상수 검증 | reference match를 prediction으로 세지 않음 |
 | **Co3** | Brain dynamics fitting | `reality_stone/clarus/` | "42-param fitting, overfitting 위험" | Regularization + cross-validation (real fMRI) | 3 | 200 | **Allen Brain data** | 뇌 부문 | **무효** |
 | **Co4** | AGI 3×3+1 vs transformer | `examples/` | "개념문서만, 구현 없음" | 동일 param: CE sparse vs dense 벤치마크 | 2 | 80 | **MLPerf** | AGI claim | **무효** |
 | **Co5** | Dimensionless checker | `clarus/dimensionless.py` | "미완성, 모든 식 미검증" | 모든 공식 차원 자동 검증 | 2 | 40 | **프로그래밍** | 모든 식 | **오류 가능** |
@@ -285,51 +296,52 @@ Bridge layer 일부 약화는 허용하나, 강도 저하 → 응용층 신뢰�
 
 ### Phase 1: IMMEDIATE (즉시 착수, 2주)
 
-**왜:** 코드 부재로 모든 계산이 막혀있음
+**현재:** 핵심 solver와 scorecard는 구현됐고, 전 문서 정적·차원 검사 범위를
+넓히는 단계다.
 
-- **Co1** Bootstrap solver (1시간) → ε² = 0.0487 검증
-- **Co2** Scorecard.py (3시간) → 모든 상수 σ offset 계산
-- **B10** Dimensionless checker (40시간) → 모든 식 차원 검증
+- **Co1** Bootstrap solver → 완료, branch/variable regression 유지
+- **Co2** Scorecard.py → 구현 완료, prediction-only 공동 likelihood 보강
+- **B10** Dimensionless checker → 등록식 밖 Markdown 수식까지 확장
 
 **검증:** 각 코드 실행 후 unit test 통과 확인
 
 ---
 
-### Phase 2: HIGH IMPACT (높은 영향, 1개월)
+### Phase 2: HIGH IMPACT (물리 bridge와 likelihood)
 
-**왜:** Axiom 검증 불가능할 경우 전체 이론 붕괴
+**왜:** 재현 가능한 산술을 물리적 pole·stress·관측 likelihood로 승격하는
+단계가 현재의 핵심 병목이다.
 
-- **C1** Clarus 보손 실험 신호 수집 (ongoing, 2025-2027)
-  - 역할: NA62, PADME, LDMX 최신 데이터 모니터링
-  - 목표: 29.65 MeV 신호 확인
-  - 성공률: 40%
+- **C1** $29.6991596\,\mathrm{MeV}$ inverse-correlation scale의 two-point gate
+  - 먼저 $\Gamma_{\rm ren}^{(2)}$, pole, residue, field identity를 같은 action에서 계산한다.
+  - 그 뒤에만 NA62, PADME, LDMX 등 독립 탐색의 production/decay likelihood와 비교한다.
 
-- **U1** DESI DR3 분석 (2028, 현재 대기)
-  - 역할: $w_0 = -0.769$ vs 관측값 검증
-  - 목표: 3σ 이상 tension 해결 또는 인정
-  
-- **B2** $P_{\text{survive}} \leftrightarrow \Omega_b$ 물리 메커니즘 유도 (90시간)
-  - 역할: Bridge layer 최약점
-  - 필요: QFT or GR framework
-  - 목표: 독립적 물리 유도
+- **U1** 고정-background `REJECT` 이후의 동적 우주론 branch
+  - 현재 DESI DR2 covariance snapshot과 두 $r_d$ package의 실패를 regression으로 고정한다.
+  - 새 action은 background와 perturbation을 공동 계산하고 미래 untouched data를 holdout으로 둔다.
+
+- **B2** energy-weighted $x\leftrightarrow\Omega_b$ bridge
+  - 같은 공변 action에서 baryon projector, total stress, epoch transfer를 유도한다.
+  - CMB·BAO·SN·growth 공동 likelihood를 통과하기 전에는 density 산술을 관측 성공으로 세지 않는다.
 
 ---
 
-### Phase 3: PROOF EFFORTS (증명 작업, 2-6개월)
+### Phase 3: PROOF EFFORTS (조건부 정리와 물리 선택 분리)
 
-**의존성:** Phase 1, 2 완료 후
+- **C2–C5**
+  - C3의 지수형 정리와 C4의 조합론적 $d=3$ 정리는 가정·정의역 회귀를 유지한다.
+  - C2의 연결 국소성과 C4 closure class의 자연 채택은 미시 유도/모형선택으로 검증한다.
+  - C5의 $n=1$은 selection으로 사전등록하고 RG·threshold likelihood에서 대안과 비교한다.
 
-- **C2, C3, C4, C5** Axiom 엄밀성 (290시간 총)
-  - 병렬: 서로 다른 연구자 담당
-  - 산출: 각각 수학 논문 또는 명백한 반례
+- **B1, B3, B4, B5, B6**
+  - B1은 $s_A^2$와 물리적 $s_W^2$ 사이의 scheme map을 닫는다.
+  - B3은 conditional kernel theorem과 미시 genealogy를 연결한다.
+  - B4는 scale identity와 physical pole을 분리하고, B5의 rejected portal benchmark는 새 action으로만 교체한다.
+  - B6의 $v_{\rm EW}$는 유도 전까지 외부 scale 입력으로 유지한다.
 
-- **B1, B3, B4, B5, B6** Bridge 정당화 (215시간 총)
-  - 순차: C2-C5 결과에 의존
-  - 산출: 통합 gauge/BSM 모델 또는 수정사항
-
-- **U3** $A_s$ 근본 문제
-  - 최악 시나리오: inflation model 전면 재구성
-  - 선택지: (a) CE core에서 유도 (b) 열린문제로 인정
+- **U3** finite-$\xi$ inflation
+  - $A_s$와 $N_*$를 입력 장부에 고정한 채 $n_s$, $r$, $\lambda_4$ forward map을 회귀한다.
+  - RG·isocurvature·reheating 공동 likelihood가 다음 독립 물리 gate다.
 
 ---
 
@@ -355,71 +367,45 @@ Bridge layer 일부 약화는 허용하나, 강도 저하 → 응용층 신뢰�
 
 ## 증명 상태 요약
 
-### 핵심 9개 (Tier 1 Core + Bridge Must-Have)
+42개 항목을 한 개의 proof fraction으로 합치면 조건부 정리, 코드 구현,
+입력 재현, 독립 관측 검증이 뒤섞인다. 현행 근거 장부는 다음처럼 서로 다른
+판정축을 보존한다.
 
-| Category | Count | Status | Total Hours | Critical Path |
-|----------|-------|--------|-------------|----------------|
-| **Axiom** (C1-C5) | 5 | 0/5 증명 | 400+∞ | **Experimental wait** |
-| **Bridge Core** (B1-B4) | 4 | 0/4 증명 | 280 | **C1-C5 결과 기다림** |
-| **MUST-HAVE 합계** | **9** | **0/9** | **~680+∞** | **2025-2028 CRITICAL** |
+| 계층 | 항목 수 | 닫힌 수학·구현 근거 | 독립 물리·자료 판정 | 남은 핵심 gate |
+|---|---:|---|---|---|
+| **Axiom C1–C5** | 5 | C3 지수형 정리와 C4 $d=3$ closure 정리: `2 conditional theorems` | C1 pole `OPEN`; C2 locality와 C4/C5 물리 selection `OPEN` | 미시 composition, pole/residue, RG 모형선택 |
+| **Bridge Core B1–B4** | 4 | B1·B4 등록 산술 재현, B3 conditional kernel 정리 | 독립 물리 bridge `0 PASS`; B2 고정 우주론 downstream은 `REJECT` | weak-angle scheme map, 공변 stress, two-point function |
+| **Bridge+ B5–B11** | 7 | B8 branch 해석·수치 gate와 B10 등록식 검사가 구현됨 | B5 canonical portal `REJECT`; 나머지 미시/자료 bridge `OPEN` | 새 portal action, scale dynamics, 순환성·전수 단위 감사 |
+| **Cosmology U1–U5** | 5 | density·$H_0$·finite-$\xi$ forward arithmetic 재현 | 독립 empirical `0 PASS`; 두 고정-background package 모두 `REJECT` | 동적 background+perturbation 공동 likelihood |
+| **Particle P1–P5** | 5 | P1 loop kernel과 수치 diagnostic 재현 | 독립 empirical `0 PASS`; P1 `REJECT`, P2–P4 `OPEN`, P5 `DISCARDED` | Wilson/RG matching과 global likelihood |
+| **Brain Br1–Br6** | 6 | 문서·synthetic construction만 존재 | 실자료 gate `0/6` | 사전등록, 독립 dataset, out-of-sample 평가 |
+| **Engineering E1–E5** | 5 | 요구식·일부 simulation만 존재 | end-to-end 실험 gate `0/5` | source·loss·hardware를 포함한 전체 예산 |
+| **Code Co1–Co5** | 5 | Co1 bootstrap과 Co2 scorecard `2/5 implemented` | 구현 통과는 물리 검증으로 세지 않음 | Co3–Co5 실자료·응용·전수 단위 gate |
 
-### 재검증 가능 (Tier 2-4, 일부 실패 용납)
-
-| Category | Count | Status | Hours | Note |
-|----------|-------|--------|-------|------|
-| **Bridge+** (B5-B11) | 7 | 0/7 | 345 | Bridge 강도 관련 |
-| **Cosmology** (U1-U5) | 5 | 0-1/5 | 330 | U1: DESI 대기 |
-| **Particle** (P1-P5) | 5 | 2/5 (정밀도만) | 215 | 기존 데이터 사용 |
-| **소계** | 17 | 2/17 | 890 | **1-2년 작업** |
-
-### 미완성 (Tier 5-7)
-
-| Category | Count | Status | Hours | Feasibility |
-|----------|-------|--------|-------|-------------|
-| **Brain** (Br1-Br6) | 6 | 0/6 | 560+ | **극히 어려움** (신경생물학) |
-| **Engineering** (E1-E5) | 5 | 0/5 | >400 | **대부분 불가능** |
-| **Code** (Co1-Co5) | 5 | 0/5 | 320 | **빠른 완성 가능** |
-| **소계** | 16 | 0/16 | 1280+ | **3-5년 작업** |
-
-### **총합: 42개 항목, 0/42 증명, ~3000시간 + 실험 대기**
+따라서 현재 정당한 집계는 “Axiom conditional theorem 2개(C3·C4),
+Bridge Core conditional theorem 1개(B3), Bridge+ branch 정리·수치 gate
+1개(B8), 핵심 코드 2개 구현, 독립 물리 PASS 0개”다. 명시적 `REJECT`와
+`OPEN`은 각 행에 보존한다. 자세한
+근거는 `PROOF_STATUS_MATRIX.md`와
+`FULL_CONSISTENCY_COMPLETION_LOOP_2026-08-06.md`의 gate를 따른다.
 
 ---
 
-## 각 증명의 "실패 시나리오"
+## Gate 실패의 영향 범위
 
-### Critical Failure (이론 붕괴)
+실패는 의존 그래프를 따라 전파하되, 실패한 bridge와 무관한 정의·조건부
+정리·산술 identity까지 함께 폐기하지 않는다.
 
-1. **C1 실패:** Clarus 보손을 2027년까지 발견 못함
-   - **결과:** 모든 Bridge layer 무너짐
-   - **전환:** 다른 BSM 모델로 이동 (20년 손실)
-
-2. **C2, C3, C4 중 하나 반례 발견:**
-   - **결과:** 경로적분 코어 무너짐
-   - **전환:** 다른 경로적분 구조 필요
-
-3. **B2 물리 메커니즘 유도 불가:**
-   - **결과:** 우주론 성분 도출 불가
-   - **영향:** Cosmology 섹션 전체 무효
-
-### Moderate Failure (응용층 후퇴)
-
-4. **U1 실패:** DESI에서 $w_0 = -0.769$ 확인 안 됨
-   - **결과:** Dynamic DE 필요
-   - **영향:** Cosmology 예측 정밀도 ↓
-
-5. **B1, B5 실패:** Gauge 유도 불가
-   - **결과:** 입자물리 섹션 정확도 ↓
-   - **영향:** 상수 계산 재조정 필요
-
-### Technical Failure (부분 수정)
-
-6. **Br1-Br6 실패:** 뇌 방정식 fit 불가
-   - **결과:** 뇌과학 섹션 삭제
-   - **영향:** 이론의 범위 축소 (물리 + 우주론)
-
-7. **Co1-Co5 미완성:** 코드 구현 못 함
-   - **결과:** 현재 상태 유지 (검증 불가)
-   - **영향:** 논문 출판 불가능
+| Gate | 현재 또는 가능한 실패 | 중지되는 주장 | 보존되는 근거 | 다음 branch |
+|---|---|---|---|---|
+| C1/B4 | pole·residue 부재 또는 독립 탐색 배제 | $29.6991596\,\mathrm{MeV}$ particle identity와 이를 쓰는 E1 source | $m_p\delta_N^2$ scale arithmetic | 다른 field/scale 또는 비입자 readout |
+| C2 | $\Delta_{\rm comp}\ne0$ 또는 memory 검출 | memoryless exponential survival의 물리 적용 | C3의 조건부 수학 정리 | nonlocal/state-augmented kernel |
+| C4 | closure class가 자연에서 선택되지 않음 | $d=3$의 물리적 유일성 | $\binom d2=d$의 조건부 해 | 대안 closure와 evidence 비교 |
+| C5/B1 | RG·threshold likelihood에서 CE 경계조건 배제 | H2와 물리적 weak-angle 식별 | Track A/B의 입력별 산술 | 새 boundary condition/scheme map |
+| B2/U1 | 공변 stress bridge 또는 full likelihood 실패 | 고정 density의 우주론 모형 해석 | bootstrap 수학과 density vector 계산 | 동적 공변 action; 현재 고정 package는 이미 `REJECT` |
+| B5 | direct Higgs-invisible gate 실패 | $\mu_\Phi=0$, $\lambda_{HP}=\delta_N^2$ canonical portal | exact-$Z_2$ pole·width 계산 | coupling 감소, channel closure 또는 새 portal branch |
+| P1–P5 | Wilson/global likelihood 실패 | 해당 flavour·$g-2$·Higgs 관측 예측 | unitary construction 요구와 matching 산술 | 공통 mass/Wilson matrix 재구성 |
+| Br/E | 독립 자료·hardware gate 실패 | 해당 응용 주장 | 물리 코어의 독립 항목 | 응용 범위만 중지 |
 
 ---
 
@@ -427,35 +413,40 @@ Bridge layer 일부 약화는 허용하나, 강도 저하 → 응용층 신뢰�
 
 ### Axiom 검증 (C1-C5)
 
-| Criterion | Metric | Pass | Fail |
-|-----------|--------|------|------|
-| **Experimental** (C1) | Detection SNR | >5σ | No signal by 2027 |
-| **Mathematical** (C2-C4) | Derivation | 1차 peer review 통과 | Counterexample found |
-| **Theoretical** (C5) | Independent derivation | GUT/SUSY에서 나옴 | No alternative foundation |
+| ID | Pass | Fail/중지 |
+|---|---|---|
+| C1 | 동일 action의 $\Gamma_{\rm ren}^{(2)}$에 실수 pole, 양의 residue, 안정한 field identity가 있고 사전등록한 독립 탐색 likelihood를 통과 | pole/residue 부재, field mismatch 또는 독립 배제 |
+| C2 | 미시 유도 또는 독립 composition 자료에서 사전등록 허용오차 안의 $\Delta_{\rm comp}=0$ | 유의한 composition residual 또는 memory state 필요 |
+| C3 | $S(0)=1$, 양의 range, 곱셈성에서 $S=e^{-\kappa D}$ proof와 반례 회귀를 재현 | proof premise 누락 또는 구현이 정리와 불일치 |
+| C4 | closure class 안의 조합론 proof와 자연의 closure 선택 likelihood를 각각 통과 | 수학 반례 또는 물리 selection 실패를 구분 기록 |
+| C5 | scale·scheme·입력·대안 $n$을 사전등록한 RG likelihood에서 H2가 선택됨 | H2가 대안보다 지지되지 않음 |
 
 ### Bridge 검증 (B1-B6)
 
-| Criterion | Metric | Pass | Fail |
-|-----------|--------|------|------|
-| **Physics mechanism** | Physical picture | QFT/GR framework에서 유도 | Ad-hoc identification |
-| **Consistency** | Dimension + unitarity | 차원 정확, 단위 통일 | Inconsistency found |
-| **Robustness** | Sensitivity analysis | Kernel 선택에 불변 (<5%) | ±10% 이상 변함 |
+| ID | Pass | Fail/중지 |
+|---|---|---|
+| B1 | $s_A^2$에서 특정 physical $s_W^2$ 정의까지 RG·threshold·scheme map과 독립 EW likelihood가 닫힘 | scheme 혼용 또는 입력 재사용 |
+| B2 | 동일 공변 action의 stress/projector에서 density를 산출하고 CMB·BAO·SN·growth 공동 holdout 통과 | component별 사후 보정 또는 full covariance reject |
+| B3 | conditional theorem의 premise와 같은 충분통계/kernel이 미시 genealogy에서 재현 | 추가 memory/state가 필요 |
+| B4 | inverse-correlation scale과 renormalized pole·residue·field identity를 모두 재현 | scale arithmetic만 맞고 pole이 없음 |
+| B5 | 새 사전등록 portal이 width와 direct $\mathrm{BR}_{\rm inv}<0.107$ 및 관련 likelihood를 통과 | 현재 canonical branch처럼 limit 초과 |
+| B6 | 절대 scale의 독립 dynamics 또는 명시적 외부-input provenance가 유지됨 | 입력을 무차원 코어의 예측으로 중복 계상 |
 
 ### Cosmology 검증 (U1-U5)
 
-| Criterion | Metric | Pass | Fail |
-|-----------|--------|------|------|
-| **Prediction vs Observation** | σ offset | <2σ | >3σ tension |
-| **Model completeness** | Parameter count | Overfitting 없음 (dof>param) | Underconstrained |
-| **Stability** | Parameter sensitivity | D ln(prediction) / D ln(param) < 1 | Sensitive dependence |
+| Criterion | Pass | Fail/중지 |
+|---|---|---|
+| **Likelihood** | 사전등록 parameter vector, full covariance, 정규화·nuisance를 포함하고 holdout threshold 통과 | 단일 marginal 일치만 제시하거나 공동 likelihood reject |
+| **Dynamics** | background와 perturbation을 같은 action/EOM에서 계산 | density 숫자만 있고 $w(z)$·growth dynamics 부재 |
+| **Provenance** | $A_s$, $N_*$, $H_0$, $r_d$ 등 입력을 출력과 분리 | calibration 입력을 예측 성공으로 재계상 |
 
 ### Code 검증 (Co1-Co5)
 
-| Criterion | Metric | Pass | Fail |
-|-----------|--------|------|------|
-| **Unit tests** | Coverage | 모든 함수 >80% | <50% |
-| **Integration tests** | End-to-end | Bootstrap→Scorecard→Plot | Broken chain |
-| **Regression tests** | Stability | Prior version과 재현 | Divergence |
+| Criterion | Pass | Fail/중지 |
+|---|---|---|
+| **Unit/regression** | branch, residual, 단위, 경계조건에 대한 명시적 테스트 통과 | 테스트 실패 또는 중요한 분기 미등록 |
+| **Integration** | manifest→solver→likelihood→verdict가 한 provenance chain으로 재현 | 중간 수동 숫자 삽입 또는 입력/출력 혼용 |
+| **Reproducibility** | 버전·입력 hash·seed·환경과 수치 허용오차 고정 | 결과를 재생할 provenance 부재 |
 
 ---
 
@@ -487,43 +478,51 @@ Code layer (parallel)
 └── tests/ → Co4, Co5
 ```
 
-**Critical path:** C1 → B2 → U1-U5 / P1-P5 → Br1-Br6, E1-E5
-
-**Critical gate:** C1 (실험), B2 (물리 유도), U1 (관측)
+**의존 경로:** C2→C3는 생존법칙 경로, B2→U1/U5는 우주론 경로,
+C1/B4→E1은 입자 source 경로다. B5 portal과 P2/P3 flavour는 각각 별도
+action/Wilson 경로이며 한 경로의 실패를 다른 경로의 증명으로 전용하지 않는다.
 
 ---
 
 ## 최종 평가
 
-### 현재 상태 (2026-06-06)
+### 현재 상태 (2026-08-06)
 
-| Layer | Proofs | Status | Confidence |
-|-------|--------|--------|-----------|
-| **Axiom (C1-C5)** | 0/5 | ⚠️ UNPROVEN | 40% (실험 대기) |
-| **Bridge Core (B1-B4)** | 0/4 | ⚠️ UNPROVEN | 50% (휴리스틱) |
-| **Cosmology (U1-U5)** | 1/5* | ⚠️ PARTIAL | 60% (U1 tension) |
-| **Particle (P1-P5)** | 2/5 | ⭐ GOOD | 80% (정밀도만) |
-| **Brain (Br1-Br6)** | 0/6 | ❌ UNPROVEN | 10% (미검증) |
-| **Engineering (E1-E5)** | 0/5 | ❌ BLOCKED | 5% (불가능성 우려) |
-| **Code (Co1-Co5)** | 0/5 | 🔨 TODO | 0% (미구현) |
+| Layer | 재현된 근거 | 현재 물리 판정 | 완료 조건 |
+|---|---|---|---|
+| **Axiom C1–C5** | C3·C4 conditional proof 2개 | C1, C2의 미시 origin, C4/C5 selection `OPEN` | pole/residue, composition, RG selection gate |
+| **Bridge Core B1–B4** | B1/B4 산술, B3 conditional theorem | 독립 bridge `0 PASS`; B2 downstream `REJECT` | scheme map, stress/EOM, two-point gate |
+| **Cosmology U1–U5** | density, $H_0$, inflation forward map | fixed-background 두 package `REJECT`; 동적 branch `OPEN` | background+perturbation 공동 holdout |
+| **Particle P1–P5** | P1 kernel과 matching 산술 | P1 `REJECT`, P2–P4 `OPEN`, P5 `DISCARDED` | 공통 Wilson/RG/global likelihood |
+| **Brain Br1–Br6** | synthetic/document construction | 독립 자료 검증 `0/6` | 사전등록 out-of-sample data gate |
+| **Engineering E1–E5** | 요구식·일부 simulation | end-to-end 검증 `0/5` | source·loss·hardware 통합 gate |
+| **Code Co1–Co5** | Co1·Co2 `2/5 implemented` | 물리 검증과 별개 | Co3–Co5 및 provenance chain 완성 |
 
-\* U2 제외하고는 DESI 대기
+근거가 없는 confidence 백분율은 삭제한다. 수학 proof count, 구현 count,
+관측 PASS/REJECT는 서로 다른 분모를 가지므로 합산하지 않는다.
 
 ### 출판 준비도
 
-- **Theory journal (Phys. Rev. D):** Phase 2-3 완료 시 (12-18개월)
-- **Computational validation (Nature Comput. Sci.):** Code 완성 + Cross-validation (6개월)
-- **Neuroscience application:** 뇌 부문 데이터 확보 후 (18개월+)
+- **조건부 수학·재현성 노트:** C3/C4의 가정, proof, 반례 회귀와 실행
+  provenance를 동결하면 독립 산출물로 준비할 수 있다.
+- **우주론·portal null-result 보고:** 현재 `REJECT`를 숨기지 않고 covariance,
+  code, manifest, 환경을 보존하면 재현성/배제 보고의 재료가 된다.
+- **통합 물리 예측 논문:** C1 pole, B1 scheme map, B2 공동 likelihood,
+  P2/P3 Wilson construction이 닫히기 전에는 publication-ready로 판정하지 않는다.
+- **뇌·공학 응용 논문:** 독립 실자료 또는 end-to-end hardware gate 전에는
+  응용 검증 논문으로 판정하지 않는다.
 
 ### 위험도
 
-| Risk | Probability | Impact | Mitigation |
-|------|-------------|--------|-------------|
-| C1 실패 (Clarus 미발견) | 60% | CRITICAL | Alternative SUSY search |
-| B2 유도 불가 | 30% | CRITICAL | Phenomenological ansatz 용납 |
-| U1 >3σ tension | 40% | HIGH | Dynamic DE model 도입 |
-| Br1-Br6 fit 불가 | 70% | MEDIUM | 뇌 섹션 독립 출판 |
-| E1-E5 불가능 | 85% | LOW | 응용 부문 제외 |
+근거 없는 성공·실패 확률은 부여하지 않는다.
+
+| Risk | 현재 evidence | 영향 | 닫는 방법 |
+|---|---|---|---|
+| C1 particle bridge | physical pole 미확인 | E1과 particle-language branch | renormalized two-point + 독립 search likelihood |
+| B2/U1 cosmology | 두 고정-background package `REJECT` | 고정 density의 관측 모형 해석 | 새 공변 동적 action + untouched holdout |
+| B5 portal | $\mathrm{BR}_{\rm inv}=0.770822>0.107$ | canonical portal benchmark | 새 coupling/mass/channel 사전등록 |
+| P2/P3 flavour | 원소별 식 폐기, matrix construction `OPEN` | CKM/PMNS 예측 | 공통 Yukawa/Wilson matching + global fit |
+| Brain/Engineering | 독립 data/hardware gate 없음 | 해당 응용층 | out-of-sample 또는 end-to-end 검증 |
 
 ---
 
@@ -531,22 +530,23 @@ Code layer (parallel)
 
 ### 이 문서 이후
 
-1. **Phase 1 착수 (이번 주)**
-   - Co1: `bootstrap_solver.py` 구현 (Newton iteration)
-   - Co2: `scorecard.py` 작성 (45개 상수 σ offset)
-   - B10: `dimensionless_checker.py` 완성
+1. **문서·수치 gate 유지**
+   - canonical manifest에서 bootstrap, density, $H_0$, portal, scalar loop,
+     finite-$\xi$ inflation을 재계산한다.
+   - 입력/reference/fit/holdout 표기와 Markdown delimiter·표·링크를 전수 검사한다.
 
-2. **Phase 2 준비 (이번 달)**
-   - C1: NA62/PADME/LDMX preprints 모니터링
-   - U1: DESI DR3 데이터 재분석
-   - B2: QFT framework 검토 시작
+2. **물리 bridge 닫기**
+   - C1/B4: two-point pole·residue·field identity를 먼저 계산하고 독립 탐색으로 이동한다.
+   - B1: $s_A^2$의 RG·threshold·physical weak-angle scheme map을 구현한다.
+   - B2/U1: 동적 공변 우주론 action과 공동 covariance likelihood를 구성한다.
 
-3. **문서 개선 (병렬)**
-   - B11: 각 상수별 "입력/출력" 명확화 (80시간)
-   - 순환성 제거: 공리 → 관측 체인 재정렬
+3. **입자·응용 재구성**
+   - P2/P3: 하나의 mass/Wilson 입력에서 unitary CKM/PMNS 전체를 산출한다.
+   - B5/P1: rejected portal·$g-2$ branch를 새 사전등록 action으로만 교체한다.
+   - E1은 C1 통과 후 source·linewidth·energy-budget gate를 실행한다.
 
 ---
 
-**작성자:** Claude Code (Haiku 4.5)  
-**버전:** 1.0  
-**다음 검토 예정:** 2026-12-31 (Bootstrap 솔버 완성 후)
+**문서 버전:** 2.0 (2026-08-06 canonical evidence-ledger revision)
+
+**다음 검토 조건:** canonical manifest 또는 독립 likelihood/pole/Wilson gate가 변경될 때

@@ -34,11 +34,11 @@
 ### 유한 passive multimode no-go
 
 \[
-K_{\rm eff}=K_{rr}+D-B^TC^{-1}B,qquad C=C^T\succ0,
+K_{\rm eff}=K_{rr}+D-B^TC^{-1}B,\qquad C=C^T\succ0,
 \]
 
 \[
-B^TC^{-1}B=\|L^{-1}B\|^2\ge0,qquad
+B^TC^{-1}B=\|L^{-1}B\|^2\ge0,\qquad
 P^THP=\operatorname{diag}(K_{\rm eff},C).
 \]
 

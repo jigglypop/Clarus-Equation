@@ -263,7 +263,15 @@ $$z_t^* = \arg\min_z E_t(z)$$
 
 ### 4.3 Clarus 통합형
 
-$$\boxed{X_{t+1} = B\big[X_t + \lambda_R R(X_t) + \lambda_O \Delta_O(X_t) + \lambda_C C(X_t) - \lambda_S S(X_t)\big]}$$
+$$
+Y_t=X_t+\lambda_RR(X_t)+\lambda_O\Delta_O(X_t)
++\lambda_CC(X_t)-\lambda_SS(X_t),
+$$
+
+$$
+\boxed{X_{t+1}=\mathcal R_{\rho_c}(Y_t)
+=X^\star+\rho_c(Y_t-X^\star)},\qquad 0<\rho_c<1.
+$$
 
 | 항 | 풀이 | 뇌 대응 |
 |---|---|---|
@@ -271,15 +279,30 @@ $$\boxed{X_{t+1} = B\big[X_t + \lambda_R R(X_t) + \lambda_O \Delta_O(X_t) + \lam
 | $\Delta_O(X_t)$ | 관찰 충격 $o_t - \hat{o}_t$ | 감각 입력 |
 | $C(X_t)$ | 비평이 다음 이완 초기점을 민 정도 | 기저핵-전전두엽 평가 |
 | $S(X_t)$ | 곡률/잔류 기반 억제 | 소뇌/기저핵 억제 |
-| $B$ | 부트스트랩 수축 연산자 ($\rho = 0.155$) | 수면 항상성 |
+| $\mathcal R_{\rho_c}$ | 전 상태 복원 제어기; $\rho_c$는 독립 설계값 | 수면 항상성에 대한 가설 |
+
+정준 부트스트랩 $B_p$는 단체 $p$에만 작용하는 별도 비선형 사상이다.
+그 국소 선형률 $q_\star=0.1545681540116411$과
+$p_a\leq0.13$에서의 균일 상계 $q_U=0.2001757361$을 $\rho_c$와
+동일시하지 않는다.
 
 ### 4.4 수축 조건 (게이트 `F2`)
 
-$$\rho + \lambda_R L_R + \lambda_C L_C < 1$$
+완비 불변영역에서 $R,\Delta_O,C,S$가 각각
+$L_R,L_O,L_C,L_S$-Lipschitz이면 다음은 자율계의 충분조건이다.
 
-이 조건이 만족되면 Banach 고정점 정리에 의해 루프가 수축한다. 수면이 $\rho = 0.155$ 를 공급하므로 나머지 항의 Lipschitz 합이 $0.845$ 미만이어야 한다.
+$$
+\boxed{\rho_c(1+\lambda_RL_R+\lambda_OL_O+\lambda_CL_C+\lambda_SL_S)<1}.
+$$
 
-> 단 $R$ 내부의 비보존 바이패스 $F_{\text{bypass}}$ 는 위 Banach 수축의 가정을 깨뜨릴 수 있다(`12_Equation.md` 0.0절 게이트 `F2`). 따라서 위 부등식은 ISS 의미의 유계 수렴 (`12_Equation.md` 부록 A.1) 으로 격상되어, 끌개 ball 반경이 닫힌 식으로 표현된다. "안정적으로 수렴" 은 ball 안에서의 수렴으로 읽는다.
+억제항 앞의 마이너스 부호만으로 Lipschitz 상계에서
+$\lambda_SL_S$를 뺄 수 없다. 별도의 단조성·소산성 증명이 없으면 모든 항을
+더해야 한다. 관찰이 시간가변 유계 입력이면 Banach의 단일 고정점 결론 대신
+ISS/추적 오차 상계만 허용한다.
+
+> $R$ 내부의 비보존 바이패스 $F_{\text{bypass}}$는 별도 ISS 조건을
+> 요구한다(`12_Equation.md` 0.0절 게이트 `F2`). 위 조건은 실제 상수와
+> 불변영역을 확인하기 전까지 `open`이다.
 
 ### 4.5 확장 구성요소 (F.14--F.22 요약)
 
@@ -293,7 +316,7 @@ $$\rho + \lambda_R L_R + \lambda_C L_C < 1$$
 | F.17 메타인지 모니터링 (게이트 `F4`) | C3 자기참조 측정, 안정도 $\exp(-c_d d_\tau)$, 조건부 수축 $d_{n+1} \leq \rho d_n$ | 낮음 (장기) |
 | F.18 환각 억제 | $R$ 중 곡률 $\kappa$ 모니터링. $\kappa > \kappa_{\text{th}}$이면 LBO 확산 강화 | 중간 |
 | F.19 4종 신경조절 | $g_t = (g_{\text{DA}}, g_{\text{NE}}, g_{\text{5HT}}, g_{\text{ACh}})$. 현재는 단일 스칼라 | 중간 |
-| F.20 작업기억/주의/소뇌 | $|h_t| \leq T_h$, salience 기반 $\alpha_i$, 소뇌 forward model | 중간 |
+| F.20 작업기억/주의/소뇌 | $\lvert h_t\rvert \leq T_h$, salience 기반 $\alpha_i$, 소뇌 forward model | 중간 |
 | F.21 뇌파 대역 | gamma=국소, theta=전역, theta-gamma coupling으로 순서화 | 낮음 |
 | F.22 간극 정리 | 9개 정직한 간극. STDP 코드/4조절계가 `높음` | -- |
 

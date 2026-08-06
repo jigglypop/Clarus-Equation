@@ -1,4 +1,4 @@
-## 단계 1: C. elegans 원시 신경계
+# 단계 1: C. elegans 원시 신경계
 
 C. elegans는 "최소 원시 신경계"의 첫 실자료 gate다. 상태는 감각/input, 중간/relay, premotor/integrative output의 coarse state로 접는다.
 

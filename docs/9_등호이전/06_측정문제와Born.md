@@ -161,7 +161,8 @@ $$
 은 별도 readout이다. `jacobi_rayleigh_scalar`는 이 투영의 유한차원 형식
 게이트를 구현하지만 \(\Phi_{\rm eff}=\phi\)라는 mapping은 만들지 않는다.
 `ScalarFieldMassGap`도 \(E=\hbar\omega=hf\)의 단위 변환일 뿐
-\(m_\phi=29.64757\,{\rm MeV}\)의 측정 또는 유도가 아니다.
+현행 \(m_{\rm light}=29.6991596\,{\rm MeV}\)의 측정 또는 유도가 아니다.
+과거 \(29.64757\,{\rm MeV}\) fixture도 같은 이유로 물리 pole 증거가 아니다.
 
 분지 억압 후보를 확률로 쓰면 정규화된 식은
 

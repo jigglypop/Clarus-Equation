@@ -212,8 +212,11 @@ stress tensor와 같아지거나 보존되는 것은 아니다.
 
 별도 독립 스칼라장 \(\phi\)의 공변 작용을 채택하고 metric variation을
 수행하면
-\(\mathcal K_{\mu\nu}=T_{\mu\nu}^{\mathrm{visible}}+
-T_{\mu\nu}^{\phi}\)라는 동역학 모형을 제안할 수 있다. 비최소 결합까지
+\[
+\mathcal K_{\mu\nu}
+=T_{\mu\nu}^{\mathrm{visible}}+T_{\mu\nu}^{\phi}
+\]
+라는 동역학 모형을 제안할 수 있다. 비최소 결합까지
 포함한 stress tensor 후보는
 
 $$
@@ -259,55 +262,129 @@ $$
 - $\chi$가 $t$와 같은 시간 차원을 갖는다는 점
 - 플랑크 이하 보정을 기술하는 형식 변수라는 점
 
-#### $\chi$ 축의 동역학: 유클리드 열핵 흐름
+#### $\chi$ 축의 세 가지 서로 다른 수학적 실현
 
-$\chi$ 방향의 동역학은 CE 작용의 Wick 회전($t\to -i\chi$)으로부터 유도된다.
+이전 판본은 유클리드 2차 경계값 문제, Poisson semigroup, heat
+semigroup을 한 개의 "열핵 흐름"으로 동일시했다. 세 구조는 서로 다른
+방정식이므로 최신본에서는 다음처럼 분리한다. 아래에서 물리적 독립장은
+bare $\Phi$가 아니라 표기 규약에 따른 $\phi$다.
 
-**유클리드 장 방정식.** $\chi$를 유클리드 시간으로 읽으면, $\Phi$는 $\chi$ 방향에서 다음을 만족한다:
+1. **유클리드 경계값 문제.** 완전히 지정된 로런츠 작용을 Wick 회전한
+   뒤 자유 quadratic sector에서
 
-$$
-\frac{\partial^2\Phi}{\partial\chi^2}+\Delta_{g_E}\Phi = \frac{\partial V}{\partial\Phi}
-$$
+   $$
+   \left[-\partial_\chi^2-\Delta_{g_E}+M_\phi^2\right]\phi=0
+   $$
 
-여기서 $\Delta_{g_E}$는 유클리드 공간부분의 라플라스-벨트라미 연산자이다.
+   같은 2차 타원형 식을 얻는다. 부호는 선택한 로런츠 metric과 Wick
+   contour에서 고정하며, 상호작용이 있으면 $V'(\phi)$를 포함한 비선형
+   경계값 문제를 별도로 푼다.
+2. **Poisson semigroup.** 양의 자기수반 연산자
+   $A=-\Delta_{g_E}+M_\phi^2$에 대해
 
-**경계 조건:**
-- $\chi=0$: 로런츠 물리의 $\Phi(t,x)$와 매칭
-- $\chi\to\infty$: $\Phi\to\Phi_{\text{vac}}$ (오차 보정 완료, UV 요동 지수 감쇠)
+   $$
+   \partial_\chi\phi=-\sqrt A\,\phi,
+   \qquad \phi(\chi)=e^{-\chi\sqrt A}\phi(0)
+   $$
 
-**물리적 해석.** $\chi$-발전은 열핵(heat-kernel) 흐름이다:
+   는 1차 비국소 흐름이다. 이는 위 2차 식의 감쇠 가지를 선택한
+   자유이론 해이지 일반 비선형 해와 같은 것이 아니다.
+3. **Heat semigroup.** 별도의 diffusion parameter $s$에 대해
 
-$$
-\Phi(t,x;\chi) = \int K_\chi(x,y)\,\Phi(t,y;0)\,d^3y,\quad K_\chi(x,y)=\langle x|e^{-\chi\sqrt{-\Delta+M_\Phi^2}}|y\rangle
-$$
+   $$
+   \partial_s\phi=-A\phi,
+   \qquad \phi(s)=e^{-sA}\phi(0)
+   $$
 
-$\Phi$의 UV 요동은 $\chi$ 방향으로 지수 감쇠한다. 모드 $k$의 감쇠율은 $e^{-\chi\sqrt{k^2+M_\Phi^2}}$이므로, 고주파($k\gg M_\Phi$)일수록 빠르게 억제되어 **자연스러운 UV 정규화**를 제공한다. 이것이 제3공리의 "오차 보정" 메커니즘이다.
+   를 열흐름이라 부른다. $s$의 차원은 $\chi$와 다르므로 두 흐름을
+   혼용하지 않는다.
+
+두 semigroup은 지정된 자유 연산자에서 고주파 모드를 감쇠시키지만,
+그 사실만으로 interacting QFT의 regulator, counterterm, Ward/BRST
+identity와 continuum limit을 제공하지 않는다. 재규격화는 2절의 Q0
+게이트에서 별도로 수행한다.
 
 **$\chi$를 동역학적 장으로 승격할 경우.** $\chi(x,t)$를 시공간 위의 독립 스칼라장으로 취급하면, 최소 결합 작용:
 
 $$
-\mathcal{L}_\chi = \frac{1}{2}f(\Phi)\,(\partial_\mu\chi)^2-\frac{M_\chi^2}{2}\chi^2
+\mathcal{L}_\chi = -\frac{1}{2}f(\phi)\,(\partial_\mu\chi)(\partial^\mu\chi)-\frac{M_\chi^2}{2}\chi^2
 $$
 
 으로부터 장 방정식이 나온다:
 
 $$
-f(\Phi)\,\Box\chi + f'(\Phi)\,(\partial_\mu\Phi)(\partial^\mu\chi)+M_\chi^2\,\chi = 0
+f(\phi)\,\Box\chi + f'(\phi)\,(\partial_\mu\phi)(\partial^\mu\chi)-M_\chi^2\,\chi = 0
 $$
 
-$M_\chi\sim M_{\text{Pl}}$로 설정하면, 플랑크 에너지 이하에서 $\chi$는 지수적으로 무거워져 동결(decouple)되며, 오직 $t < t_P$ 영역에서만 활성화된다. 이것은 제3공리의 해상도 한계와 정합한다.
+$M_\chi\sim M_{\text{Pl}}$이면 외부 에너지 $E\ll M_\chi$에서 $\chi$
+교환 효과가 $E/M_\chi$의 거듭제곱으로 억제된다. 이것은 **에너지별 EFT
+decoupling**이며, "오직 $t<t_P$에서만 활성"이라는 우주시대별 결론을
+자동으로 뜻하지 않는다.
 
-**지위:** 유클리드 장 방정식은 Wick 회전의 수학적 귀결이므로 `Exact`이다. $\chi$를 독립 장으로 승격하는 것은 `Selection` 단계이며, $M_\chi\sim M_{\text{Pl}}$ 설정은 제3공리에 의한 물리적 선택이다.
+**정합성 지위:** 위 세 방정식은 각각 명시한 연산자·경계조건 아래
+`Exact conditional`이다. 어느 구조가 CE의 물리적 $\chi$인지 선택하는
+일과 완전한 Lorentzian action에서 Wick contour를 고정하는 일은 이
+절의 완성 조건이다.
 
 ---
 
-## 3. CE 마스터 공식 (The Unified Action Functional)
+## 3. CE 최소 공변 EFT와 유클리드 정규화 functional
 
-위 3대 공리를 바탕으로 우주의 모든 상호작용을 기술하는 단 하나의 통합 작용 범함수(Unified Action Functional)는 다음과 같다.
+최신본은 물리적 로런츠 작용과 계산용 smoothing functional을 분리한다.
+물리적 CE singlet를 $\phi$라 하고 cutoff $\Lambda_{\rm CE}$ 아래에서
+고전적으로 닫힌 최소 EFT를
 
 $$
-S_{\text{Universe}} = \int d^4x \sqrt{-g} \left[ \mathcal{L}_{\text{Physical}} + \alpha_C \beta |\nabla \Phi|^2 + \lambda |\nabla^2 \Phi|^2 + \gamma S_{\text{Info}} \right]
+\begin{aligned}
+S_{\rm CE}^{\rm EFT}
+={}&S_{\rm EH}+S_{\rm SM}
++\int d^4x\sqrt{-g}\,\mathcal L_\phi,\\
+\mathcal L_\phi
+={}&-\frac{Z_\phi}{2}\nabla_\mu\phi\nabla^\mu\phi
+-V(\phi)-\frac{\xi}{2}R\phi^2
+-\frac{\lambda_{H\phi}}{2}\phi^2H^\dagger H
++\sum_i\frac{c_i}{\Lambda_{\rm CE}^{\Delta_i-4}}\mathcal O_i
+\end{aligned}
 $$
+
+로 정의한다. $Z_\phi>0$이고 $V$가 아래로 유계이며, $\mathcal O_i$는
+지정한 gauge·diffeomorphism 대칭을 만족하는 국소 연산자다. 이 식은
+UV 완성이 아니라 **cutoff가 명시된 공변 EFT의 완결 정의**다. 독립적인
+고차 시간미분 연산자는 pole/residue 검사를 통과하기 전 기본 작용에
+넣지 않는다.
+
+이 작용에서
+
+$$
+Z_\phi\Box\phi-V'(\phi)-\xi R\phi
+-\lambda_{H\phi}(H^\dagger H)\phi=0
+$$
+
+가 나오며, 비최소 결합을 포함한 stress tensor는
+
+$$
+T^{\phi}_{\mu\nu}
+=Z_\phi\nabla_\mu\phi\nabla_\nu\phi
+-g_{\mu\nu}\!\left[\frac{Z_\phi}{2}(\nabla\phi)^2+V(\phi)\right]
++\xi\left(G_{\mu\nu}+g_{\mu\nu}\Box-\nabla_\mu\nabla_\nu\right)\phi^2
+$$
+
+다. Higgs portal 및 고차 연산자의 metric variation은 전체
+$T_{\mu\nu}$에 별도로 포함한다. 총작용의 diffeomorphism Noether
+identity와 모든 장 EOM을 함께 쓸 때만 총 stress tensor가 보존된다.
+
+한편 데이터·장 구성의 smoothing에는 물리 작용과 구별되는 유클리드
+functional
+
+$$
+\mathcal F_E[q]=\int d^dx\sqrt{g_E}\left[
+\frac{a}{2}|\nabla q|^2+\frac{b}{2\Lambda_s^2}|\Delta q|^2
+\right]+\gamma\,\mathcal S_{\rm rel}[q\Vert q_0]
+$$
+
+을 사용할 수 있다. $a,b\ge0$이고 $\mathcal S_{\rm rel}$는 기준측도
+$q_0$에 대한 무차원 상대엔트로피다. 이 식은 최적화/정규화 도구이며
+로런츠 QFT의 에너지나 새로운 입자를 자동으로 정의하지 않는다.
 
 ### 항별 정의 및 물리적 의미
 
@@ -315,26 +392,33 @@ $$
 *   **정의:** 기존 물리학(표준모형, 일반상대론)이 설명하는 입자와 힘의 상호작용.
 *   **역할:** 고전적/양자적 물리 법칙의 기본 뼈대.
 
-#### 2. $\alpha_C \beta |\nabla \Phi|^2$ (1st Order Clarus: Gradient)
-*   **정의:** 상태 필드 $\Phi$의 변화율(기울기)의 제곱에 비례하는 억압 항.
+#### 2. $a|\nabla q|^2/2$ (1st Order Clarus: Gradient)
+*   **정의:** 유클리드 대상장 $q$의 변화율(기울기)의 제곱에 비례하는 억압 항.
 *   **물리적 의미:** 급격한 변화나 쏠림 현상을 억제함. 유체의 점성, 입자의 관성, 시스템의 항상성 유지에 기여.
 *   **작용:** **"안정화(Stabilization)"** - 폭발(Blow-up) 방지.
 
-#### 3. $\lambda |\nabla^2 \Phi|^2$ (2nd Order Clarus: Curvature)
-*   **정의:** 상태 필드 $\Phi$의 곡률(Laplacian)의 제곱에 비례하는 억압 항.
-*   **업그레이드(좌표 불변 해석):** 곡률 연산자 $\nabla^2$는 계량 $g$에 대해 정의되는 공변 2차 미분 연산자로 해석하며, 리만 계량에서는 라플라스–벨트라미 $\Delta_g$, 로런츠 계량에서는 $\Box_g$에 대응한다.
+#### 3. $b|\Delta q|^2/(2\Lambda_s^2)$ (2nd Order Clarus: Curvature)
+*   **정의:** 유클리드 대상장 $q$의 Laplacian 제곱에 비례하는 억압 항.
+*   **좌표 불변 해석:** $\Delta$는 양의 Riemannian metric에 대한 라플라스–벨트라미 연산자다. 이를 Lorentzian $(\Box\phi)^2$와 동일시하지 않는다.
 *   **물리적 의미:** 공간이나 데이터 구조의 복잡한 꼬임(Ripple, Noise)을 펴줌.
 *   **작용:** **"최적화(Optimization) 및 구조화"** - 복잡한 문제를 단순화(Smoothing)하여 최적 해를 찾게 함. (지능, 단백질 접힘, 우주 평탄화의 원천)
 
-#### 4. $\gamma S_{\text{Info}}$ (Information Entropy)
-*   **정의:** $-\rho \ln \rho$ 형태의 정보 엔트로피 항.
-*   **물리적 의미:** 정보의 불확실성을 제어하며, 시간이 지남에 따라 정보가 흩어지는 것을 설명.
+#### 4. $\gamma\mathcal S_{\rm rel}[q\Vert q_0]$ (Relative Information)
+*   **정의:** 기준측도와 단위가 고정된 상대엔트로피 regularizer.
+*   **물리적 의미:** 최적화의 정보 손실을 제어한다. 폐쇄계의 국소 Lorentzian Lagrangian 또는 열역학적 엔트로피 생성률로는 읽지 않는다.
 
-### 3.1 (보강) $\Phi$ 표기 규약: "물리 장" vs "대상에 대응된 필드"
-이 문서군에서 $\Phi$는 두 방식으로 쓰일 수 있으므로, 혼선을 줄이기 위해 규약을 둔다.
-- **물리적 클라루스장(Physical field)**: 시공간 위의 스칼라장/텐서장으로서 $\Phi(x)$가 독립 자유도이며, 라그랑지안에 따라 동역학을 가진다.
-- **대상-대응 필드(Effective/assigned field)**: 어떤 대상(유체 속도장, 에너지 지형, 시냅스 가중치 등)에 대해 "억압 기능"을 표현하기 위해 $\Phi \equiv$ (그 대상의 함수)로 치환해 쓰는 경우.
-두 경우는 과학적 주장 강도가 다르다. "대상-대응"은 모델링/정규화로서 유용하지만, 물리적 입자/힘의 존재를 자동으로 의미하지 않는다.
+### 3.1 $\phi$, $\Phi_H$, $q$의 강제 타입 규약
+
+- **$\phi(x)$:** 위 공변 EFT의 독립 물리 스칼라장.
+- **$\Phi_H[\gamma,\eta]$:** 경로공간 Hessian의 probe별 readout. 일반적으로
+  bilocal operator에서 얻은 수이며 $\phi$와 같지 않다.
+- **$q$:** 유체, 에너지 지형, 시냅스 가중치 등 smoothing 대상에 배정한
+  유클리드 장.
+- **$R$:** 시공간 Ricci scalar.
+
+서로 다른 두 타입을 같다고 쓰려면 단위, 사상, probe, renormalization을
+명시한 별도 bridge 정리가 필요하다. 이후 bare $\Phi$는 인용된 레거시
+공식 외에는 사용하지 않는다.
 
 ### 3.2 (보강) $\epsilon$와의 연결(최소 형태)
 후속 문서에서 자주 등장하는 질량 억압 형태
@@ -343,7 +427,7 @@ m_{\text{eff}} = m_0(1-\epsilon)
 $$
 를 이 공리 문서와 연결하려면, 최소한
 $$
-\epsilon \equiv g_m \langle \Phi \rangle
+\epsilon \equiv g_m \langle \phi \rangle
 $$
 처럼 "진공값(또는 로컬 평균)과 결합"으로 정의해야 한다. 이때
 - $\epsilon$을 우주론 관측으로부터 역으로 고정하는 접근과,
@@ -376,8 +460,8 @@ $$
 | 분야 | 난제 (Problem) | 적용 필드 ($\Phi$) | 유도된 수정항 | 역할/효과(모형 수준) |
 | :--- | :--- | :--- | :--- | :--- |
 | **유체역학** | 나비에-스톡스 (Blow-up) | 속도장 $\mathbf{u}$ | $-\alpha \nabla (\nabla^2 \mathbf{u})$ | 난류로 인한 고주파/고곡률 모드를 억제하는 수치·정보적 안정화 functional |
-| **양자물리** | 리만 가설 (Zeta Zeros) | 제타 함수 $\zeta(s)$ | $+\lambda |\zeta''(s)|^2$ | 영점 근사 오차와 요동을 줄이는 곡률 평탄화 layer (RH 증명 아님) |
-| **생물학** | 단백질 접힘 (Levinthal) | 에너지 지형 $E$ | $+\lambda |\nabla^2 E|^2$ | 복잡한 에너지 장벽을 평탄화하여 접힘 경로 탐색을 돕는 모형적 역할 |
+| **양자물리** | 리만 가설 (Zeta Zeros) | 제타 함수 $\zeta(s)$ | $+\lambda \lvert\zeta''(s)\rvert^2$ | 영점 근사 오차와 요동을 줄이는 곡률 평탄화 layer (RH 증명 아님) |
+| **생물학** | 단백질 접힘 (Levinthal) | 에너지 지형 $E$ | $+\lambda \lvert\nabla^2 E\rvert^2$ | 복잡한 에너지 장벽을 평탄화하여 접힘 경로 탐색을 돕는 모형적 역할 |
 | **뇌과학** | 학습 및 수면 (Learning) | 시냅스 가중치 $W$ | Offline Smoothing | 과적합된 패턴을 완화하고 일반화를 돕는 오프라인 곡률 정규화 |
 | **우주론** | 암흑 에너지 (Dark Energy) | 시공간 계량 $g_{\mu\nu}$ | $+\Lambda_{\text{eff}}$ | 비선택 경로 에너지를 우주 상수형 항으로 해석하는 현상론적 프레임 |
 
@@ -409,36 +493,47 @@ CE 마스터 공식은 **"우주가 정보를 처리하는 알고리즘"**이라
 | 공리 | 내용 | 상태 |
 |------|------|------|
 | **A1** | \(\mathcal H_\gamma=\delta^2S[\gamma]\)는 경로공간 Hessian operator이고 \(\Phi_H[\gamma,\eta]\)는 probe별 투영값 | 형식 공리; 공변 국소장·stress tensor 대응은 `Bridge/Open` |
-| **A2** | $D_{\text{eff}} = d + \delta$, $\delta = \sin^2\theta_W\cos^2\theta_W$ | SM coherence 대수 + additive fold-operator의 조건부 구성; quantum-to-branching gate 진행 중 |
+| **A2** | \(D_{\text{eff}}=d+\delta_{\rm fold}\); canonical Track A는 \(\delta_{\rm fold}:=\delta_N=s_A^2(1-s_A^2)\) | \(s_A^2\)는 registered output. 물리적 \(W^3/B\) projector의 \(\delta_{\rm proj}=s_W^2(1-s_W^2)\)와의 동일시는 scheme matching을 요구하는 별도 bridge |
 | **A3a** | $\varepsilon^2 = \exp(-(1-\varepsilon^2)\cdot D_{\text{eff}})$ (부트스트랩 고정점 식) | 비음수 \(A\)와 독립 Poisson 재귀를 주면 1종류 또는 공통 행합 균일 sector에서 닫히는 `Exact conditional`. 그 sector를 실제 물리에 채택하는 일은 별도 `Selection/Bridge` |
 | **A3b** | $P_{\mathrm{survive}} \leftrightarrow \Omega_b$ | 관측 가능한 선택 측도에 대한 `Bridge` 규칙 |
 | **A4** | $\Omega_{\text{DM}}/\Omega_\Lambda = R$ | `Bridge`에서 `Phenomenology`로 넘어가는 성분 분해 규칙 |
 
 ### 6.1 A2의 강화: 혼합 대수와 fold-depth operator의 분리
 
-A2는 다음 두 명제로 나눈다.
+A2는 다음 세 명제로 나눈다.
 
 1. **SM 조건부 Exact:** EWSB 이후 물리적으로 지정된
    \(W^3/B\) gauge subspace의 중성 질량행렬에서 cross amplitude를
    \(M_Z^2\)로 정규화하고 제곱하면
    \[
-   \delta
+   \delta_{\rm proj}
    =\left(\frac{gg'}{g^2+g'^2}\right)^2
    =\sin^2\theta_W\cos^2\theta_W
    \]
    라는 normalized coherence intensity가 나온다. 이는 정확한 대수적
    통계량이지만 그 자체가 decay 또는 offspring rate는 아니다.
-2. **CE 조건부 operator 정리:** normalized fold-depth operator를
+2. **Track A 등록량:** \(\alpha_s^{\overline{\rm MS}}(M_Z)\)를 입력하면
+   \[
+   s_A^2:=4\alpha_s^{4/3},\qquad
+   \delta_N:=s_A^2(1-s_A^2)
+   \]
+   를 계산한다. \(s_A^2\)는 물리적 약혼합각의 이름이 아니다.
+3. **CE 조건부 operator 정리:** normalized fold-depth operator를
    \[
    \mathcal D_{\rm fold}=I_d\oplus C_Z^\dagger C_Z,
-   \qquad \|C_Z\|_{\rm HS}^2=\delta
+   \qquad \|C_Z\|_{\rm HS}^2=\delta_{\rm fold}
    \]
    로 구성하면 trace additivity에 의해
-   \(D_{\rm eff}=\operatorname{Tr}\mathcal D_{\rm fold}=d+\delta\)다.
+   \[
+   D_{\rm eff}=\operatorname{Tr}\mathcal D_{\rm fold}
+   =d+\delta_{\rm fold}.
+   \]
+   canonical Track A는
+   \(\delta_{\rm fold}:=\delta_N\)을 선택한다.
 
-둘째 명제의 단위계수 1을 최종적으로 닫으려면 복소·부호 있는 CE+SM
+셋째 명제의 단위계수 1을 최종적으로 닫으려면 복소·부호 있는 CE+SM
 동역학에서 양의 물리 jump rate와 next-generation operator가 나와야
-한다. 정본의 \(Z_2\), \(v_\Phi=0\) 진공에서는 \(h\)-\(\Phi\)
+한다. 정본의 \(Z_2\), \(v_\phi=0\) 진공에서는 \(h\)-\(\phi\)
 quadratic cross-Hessian이 0이므로 quadratic block 하나만으로는 충분하지
 않다. cubic/quartic vertex, loop self-energy, physical spectral density,
 완전양의 reduced dynamics, classical population closure를 차례로 검사해야
@@ -446,6 +541,8 @@ quadratic cross-Hessian이 0이므로 quadratic block 하나만으로는 충분�
 포함한다.
 따라서 “Z가 유일한 거대 중성 보손이므로 자동으로 \(+\delta\)”라는
 문장만으로는 충분하지 않다.
+\(\delta_N=\delta_{\rm proj}\)는 이 operator 정리의 결과가 아니며 독립
+RG·threshold·scheme map 뒤에만 시험한다.
 
 상세 유도와 대안
 \(d+c_1\delta+c_2\delta^2+\cdots\) 배제 계획:
@@ -458,7 +555,7 @@ quadratic cross-Hessian이 0이므로 quadratic block 하나만으로는 충분�
 |---|---|---|
 | 제1공리 (연산-기하 등가성) | A1 (\(\mathcal H_\gamma\), probe 투영 \(\Phi_H\), 지정 sector의 곡률 operator 항) | 보통 Hessian은 공변 텐서가 아니며, Hessian--곡률--독립장--metric variation을 잇는 mapping은 별도 `Bridge/Open` |
 | 제2공리 (최소 연산 작용) | A3a (자기일관성 부트스트랩) | 최소 비용 경로를 고정점 구조로 표현 |
-| 제2공리의 관측 연결 | A3b ($P_{\mathrm{survive}} \leftrightarrow \Omega_b$) | 고정점 해를 우주론 양에 대응시키는 식별 단계 |
+| 제2공리의 관측 연결 | A3b (energy-weighted $x\leftrightarrow\Omega_b$) | 공변 stress tensor와 고정 baryon projector로 고정점 해를 에너지 분율에 대응 |
 | 제3공리 (해상도 한계) | 힉스 포탈 동정 ($\lambda_{\text{HP}} = \delta^2$) 및 성분 분해 규칙 $R$ | 플랑크 이하 보정과 우주 성분 읽기의 유효 구현 |
 
 ### 6.3 공리에서 관측량으로 내려가는 최소 체인
@@ -470,19 +567,22 @@ quadratic cross-Hessian이 0이므로 quadratic block 하나만으로는 충분�
 | 1 | 생성 문법 | `{e,\pi,i,1,0}`의 역할 고정 | 본 문서 1.2a절 |
 | 2 | 무차원 코어 | $\Phi$, $\mathcal{K}$, $\tau = t + i\chi$, $S(D)=e^{-D}$ | 본 문서 2-3절 |
 | 3 | 선택 규칙 | A1, A2, A3a와 분기/정규화 선택 | 본 문서 6절, `경로적분.md` |
-| 4 | 브리지 규칙 | $P_{\mathrm{survive}} \leftrightarrow \Omega_b$, 게이지 연결, 포탈 연결 | `경로적분.md` 3절, 15절 |
+| 4 | 브리지 규칙 | energy-weighted B2 readout, 게이지 연결, 포탈 연결 | `경로적분.md` 3절, 15절 |
 | 5 | 스케일 승격과 응용 | $w_0$, $m_\phi$, $\lambda_{\text{HP}}$, $M_H$ 등 | `경로적분.md`, `상수.md` |
 
 즉 공리 문서만으로 바로 개별 수치를 주장하지 않는다. 공리 문서는 "무엇을 전제로 삼는가"를 고정하고, `경로적분.md`는 "어떻게 계산 체인으로 내려오는가"를, `상수.md`는 "어떤 대표값과 지위로 정리할 것인가"를 맡는다.
 
-현재 문서군에서 우주론 대표값은 `상수.md` 기준의 3계층 관성 보정 패키지
+현재 문서군의 최신 Track A 대표값은 기계 판독 manifest 기준으로
 
-- $\Omega_b = 0.04865$
-- $\Omega_\Lambda \approx 0.6891$
-- $\Omega_{DM} \approx 0.2623$
-- $R \approx 0.38063$
+- $\Omega_b = 0.0486382585$
+- $\Omega_{DE} = 0.6902735671$
+- $\Omega_{DM} = 0.2610881744$
+- $R = 0.3782386966$
 
-으로 읽는다. LO나 NLO 값은 보조 비교값으로는 남을 수 있지만, 대표 패키지의 자리는 이 값을 우선한다.
+으로 읽는다. 이 값들은
+$R=\alpha_sD_N(1+x\delta_N)$을 그대로 계산한 결과이며, 표시식에 없는
+보정값을 끼우지 않는다. 단일 원천은
+`0_검증과감사/CANONICAL_NUMERIC_MANIFEST_2026-08-06.json`이다.
 
 ### 6.4 이 문서가 직접 하지 않는 일
 
@@ -496,11 +596,11 @@ quadratic cross-Hessian이 0이므로 quadratic block 하나만으로는 충분�
 
 ### 6.5 동료평가 직전 체크리스트
 
-- 정의가 완결되었는가: \(\widetilde{\mathcal K}\)는 보통 Hessian
-  기댓값인 후보일 뿐이다. field-space connection, gauge/ghost,
-  renormalization과 metric variation을 포함한 공변 작용이 아직 열려
-  있다. 독립장 \(\phi\), Hessian readout \(\Phi_H\), Ricci scalar를
-  분리하고, \(\chi\)를 독립 장으로 승격할 경우의 \(f(\Phi)\)도 정해야 한다.
+- 정의가 완결되었는가: 독립장 $\phi$, Hessian readout $\Phi_H$, Ricci
+  scalar와 Euclidean smoothing $q$를 분리한다. 공변 EFT의 metric
+  variation으로 EOM과 stress tensor를 얻고, $\chi$를 독립 장으로 쓸
+  때에는 표시된 $f(\phi)$와 질량항을 입력 장부에 둔다. gauge/ghost
+  control 절단은 `0_검증과감사/Q0_0_Q0_3_MINIMAL_MANIFEST.md`를 따른다.
 - 정리와 가정이 분리되었는가: A2에서 SM 혼합 대수와 additive
   fold-operator 선택 및 quantum-to-branching bridge를 분리하고,
   A3a는 균일 scalar 자기일관 조건, A3b와 A4는 식별/현상론으로 분리한다.
@@ -520,21 +620,25 @@ quadratic cross-Hessian이 0이므로 quadratic block 하나만으로는 충분�
 | 산물 | 어느 원천 | 내용 |
 |---|---|---|
 | 생존율 \(S(D)=e^{-D}\) | P1 + 연결 국소성 | 무차원성만으로는 부족. 양의 정규화, 깊이의 가법성, 생존 character의 곱성, 비자명성에서 지수형; optical-depth 단위로 rate 1 |
-| $d=3$ | P1 + 최소 재귀 타입 폐쇄 | metric/orientation 외 추가구조 없이 2-form fold를 1-form 입력 타입으로 되돌리는 Hodge type closure의 유일해 |
+| $d=3$ | P1 + 최소 재귀 타입 폐쇄 | oriented metric vector space에서 Hodge star가 주는 $\Lambda^2V^*\simeq V^*$의 양의 비자명 차원해. metric·orientation은 필수이며, 이 구조를 자연에 채택하거나 내부 색군과 동일시하는 단계는 별도 selection |
 | $\alpha_{\text{total}}=1/(2\pi)$ | P1 | 주기 정규화($\pi,i$)에 의한 시간 그리드 상수화 |
 | $(1-\varepsilon^2)$ 되먹임 | P2 | 단순 $e^{-D_{\text{eff}}}$가 아니라 나머지가 되먹임 → **부트스트랩 고정점** |
 | $\nabla^\mu T_{\mu\nu}^{\mathrm{total}}=0$ | P2 + 미분동형사상 불변 작용 + on-shell 운동방정식 | Noether identity 아래의 조건부 총 stress 보존. P2나 Bianchi만으로 임의의 Hessian 후보에 강제되지 않음 |
-| $\sum\Omega=1$, 나머지=암흑섹터 | P2 | 살아남음=바리온(A3b), 나머지=DM+DE(A4) |
+| $\sum\Omega=1$, 나머지=암흑섹터 | P2 + B2/A4 | 에너지 가중 baryon projector와 지정 dark-sector stress 분해 |
 
-**조건부 코어 계산 (관측 bridge와 분리):**
-\(\sin^2\theta_W=0.23122\)를 사용하면
-\(\delta=0.1777573\)이다. additive quadratic fold-operator를 조건으로
-\(D_{\text{eff}}=3.1777573\), 안정한 비자명 고정점은
-\(\varepsilon^2=0.0486468\)이고 multiplier는
-\(D_{\rm eff}\varepsilon^2\simeq0.15459<1\)이다.
-\(\varepsilon^2\leftrightarrow\Omega_b\)와
-\(1-\varepsilon^2\leftrightarrow\) 암흑섹터는 이 수학 체인 뒤에 붙는
-별도 A3b/A4 bridge다.
+**Track A 코어 계산:**
+$\alpha_s^{\overline{\rm MS}}(M_Z)=0.1180$을 입력하면 neutral-projector
+functional은 등록 출력
+$s_A^2:=4\alpha_s^{4/3}=0.2315097758$,
+$\delta_N=0.1779129995$,
+$D_N=3.1779129995$를 준다. 안정한 저분율 고정점은
+$x=0.0486382585$이고 multiplier는
+$D_Nx=0.1545681540<1$이다. B2에서 $x$는 경로 개수 대신
+$\langle E_b\rangle/\langle E_{\rm tot}\rangle$로 정의되며, 관측
+초곡면에서 $\Omega_b=x$로 닫힌다.
+물리적 \(s_W^2\)의 on-shell, \(\overline{\rm MS}\), effective-leptonic
+정의 중 어느 것과 대응하는지는 RG·threshold·scheme matching 뒤에만
+판정한다.
 
 **두 원천에서 나오지 않는 것 (정직):**
 

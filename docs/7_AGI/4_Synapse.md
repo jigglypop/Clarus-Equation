@@ -180,9 +180,12 @@ $$W_{t+1} = \Pi\!\big(W_t + \Delta W_t\big)$$
 
 ### 5.3 발달 과정의 시냅스 가지치기
 
-뇌의 발달 과정에서 시냅스의 $\sim 50\%$가 제거되고, 성인 뇌에서 활성 시냅스 비율이 $\sim 5\%$라는 관측은 $\varepsilon^2 = 4.87\%$와 직접 정합한다(`07_수면과복구.md` 4.2절).
+뇌의 일부 sparse-activity 관측과 Track-A 설계 target
+$x=4.864\%$는 수치상 가깝다. 이는 같은 측정량 또는 같은 메커니즘이라는
+뜻이 아니며 `07_수면과복구.md`의 bridge gate를 따른다.
 
-AI에서 이것은 학습 초기의 dense network에서 시작하여, 부트스트랩 반복을 통해 자연스럽게 $4.87\%$ 희소 네트워크로 수렴하는 과정에 대응한다.
+AI에서는 dense network에서 이 target을 향한 projection을 설계할 수 있다.
+transformer가 자연스럽게 그 값으로 수렴한다는 주장은 실험에서 기각됐다.
 
 ---
 
@@ -200,9 +203,9 @@ AI에서 이것은 학습 초기의 dense network에서 시작하여, 부트스�
 
 사전학습된 모델의 미세조정 단계에서 STDP + 도파민 학습을 적용한다.
 
-- 사전학습 가중치 = 동결 ($68.9\%$, $\Omega_\Lambda$)
-- 미세조정 가중치 = 구조적 ($26.2\%$, $\Omega_{\text{DM}}$)
-- STDP 활성 가중치 = 활성 ($4.87\%$, $\varepsilon^2$)
+- 사전학습 가중치 = 동결 설계 영역 ($69.027\%$, $\Omega_\Lambda$)
+- 미세조정 가중치 = 구조적 설계 영역 ($26.109\%$, $\Omega_{\text{DM}}$)
+- STDP 활성 가중치 = 활성 설계 영역 ($4.864\%$, $x$)
 
 이 분배는 LoRA의 frozen/trainable 비율과 구조적으로 유사하다.
 
@@ -216,8 +219,12 @@ LoRA (Low-Rank Adaptation)의 CE 해석:
 
 $$W = W_{\text{frozen}} + B \cdot A$$
 
-- $W_{\text{frozen}}$: 동결 가중치 ($\sim 99\%$) $\to$ $\Omega_\Lambda = 68.9\%$ + $\Omega_{\text{DM}} = 26.2\%$
-- $B \cdot A$: 저랭크 적응 ($\sim 1\%$) $\to$ $\varepsilon^2 = 4.87\%$의 근사
+- $W_{\text{frozen}}$: CE 설계 대응을 적용하면 $\sim95.136\%$
+  ($\Omega_\Lambda=69.027\%$ + $\Omega_{\text{DM}}=26.109\%$)
+- $B \cdot A$: 같은 설계 대응에서 $x=4.864\%$의 적응 영역
+
+표준 LoRA의 실제 trainable fraction은 rank와 layer shape가 정하며 위 우주론
+분율에서 유도되지 않는다. 두 행은 별도 benchmark mapping일 뿐이다.
 
 LoRA는 CE 부트스트랩 에너지 분배를 경험적으로 근사한 것으로 해석할 수 있다. CE-AGI는 이를 이론적으로 정당화하고 최적 비율을 명시한다.
 

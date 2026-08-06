@@ -278,34 +278,45 @@ $$\text{Wake} \to \text{NREM} \to \text{REM} \to \text{evaluate}$$
 
 ### 7.4 위상 비율
 
-$$\text{wake} : \text{nrem} : \text{rem} = \Omega_\Lambda : \Omega_{\text{DM}} : \varepsilon^2 = 68.91\% : 26.23\% : 4.87\%$$
+이 비율은 시간과 우주론적 에너지 밀도를 물리적으로 동일시한 결과가 아니라, 정준 Track-A 3-simplex를 런타임 예산에 재사용한 **공학적 설계 매핑**이다. 기준값은 `../0_검증과감사/CANONICAL_NUMERIC_MANIFEST_2026-08-06.json`에서 읽는다.
+
+$$
+\text{wake}:\text{nrem}:\text{rem}
+:=0.6902735671264002:0.2610881743576135:0.04863825851598632.
+$$
 
 ```python
 # sleep.py::run_sleep_cycle
 phase_profile = {
-    "wake": eng.wake_ratio,   # 0.6891
-    "nrem": eng.nrem_ratio,   # 0.2623
-    "rem":  eng.rem_ratio,    # 0.0487
+    "wake": eng.wake_ratio,   # expected: 0.6902735671264002
+    "nrem": eng.nrem_ratio,   # expected: 0.2610881743576135
+    "rem":  eng.rem_ratio,    # expected: 0.04863825851598632
 }
 phase_budget = allocate_phase_sample_counts(total_cycle_samples, phase_profile)
 ```
 
+위 주석은 **기대값**이다. 코드가 이 값을 실제로 산출한다는 판정은 `13_Verification.md`의 manifest-sync 테스트가 같은 커밋에서 통과했을 때만 내린다.
+
 ---
 
-## 8. CE 상수 -> 코드 값
+## 8. CE canonical target -> 코드 migration 장부
 
-| 수식 기호 | 유도식 | 코드 변수 | 값 |
+| 수식 기호 | canonical target | 코드 변수와 현재값 | 판정 |
 |---|---|---|---|
-| $\text{\_AD}$ | $4/(e^{4/3}\pi^{4/3})$ | `engine._AD` | 0.1726... |
-| Portal | $(\text{\_AD}(1-\text{\_AD}))^2$ | `engine.PORTAL` | 0.03120 |
-| Bypass | $1/(e^{1/3}\pi^{1/3})$ | `engine.BYPASS` | 0.4892 |
-| $T_{\text{wake}}$ | $1/(3+\text{\_AD}(1-\text{\_AD}))$ | `engine.T_WAKE` | 0.3148 |
-| $\varepsilon^2$ | bootstrap fixed point | `eng.active_ratio` | 0.0487 |
-| $\Omega_{\text{DM}}$ | bootstrap fixed point | `eng.struct_ratio` | 0.2623 |
-| $\Omega_\Lambda$ | bootstrap fixed point | `eng.wake_ratio` | 0.6891 |
-| $r_c$ | $\pi$ | `eng.sparsity_radius` | 3.1416 |
-| target W density | $N=4096, r_c=\pi$ | `eng.target_w_density` | 0.0316 |
-| codebook weight | $(\text{\_AD}(1-\text{\_AD}))^2$ | `ce_ops.DEFAULT_CB_W` | 0.03120 |
+| $s_A^2$ | $4\alpha_s^{4/3}=0.2315097758$ | `constants.AD` $=4/(e^{4/3}\pi^{4/3})=0.2291575578\ldots$ | `CANONICAL_DRIFT` |
+| Portal | $\delta_N^2=0.0316530354$ | `constants.PORTAL`, 구형 $0.03120$ 계열 | `CANONICAL_DRIFT` |
+| Bypass | $\alpha_s^{1/3}=0.4904868132$ | `constants.BYPASS`, 구형 $0.4892$ 계열 | `CANONICAL_DRIFT` |
+| $T_{\text{wake}}$ | $D_N^{-1}=0.3146719247$ | `constants.T_WAKE`, 구형 $0.3148$ 계열 | `CANONICAL_DRIFT` |
+| $x$ | bootstrap fixed point $0.04863825851598632$ | `eng.active_ratio` 기대값 | manifest sync gate |
+| $\Omega_{\text{DM}}$ | $0.2610881743576135$ | `eng.struct_ratio` 기대값 | manifest sync gate |
+| $\Omega_\Lambda$ | $0.6902735671264002$ | `eng.wake_ratio` 기대값 | manifest sync gate |
+| $r_c$ | 공학 선택 $\pi$ | `eng.sparsity_radius` $3.1416$ | design sync |
+| target W density | $N=4096,r_c=\pi$에서의 공학 target $0.0316$ | `eng.target_w_density` | design sync |
+| codebook weight | $\delta_N^2=0.0316530354$ | `ce_ops.DEFAULT_CB_W`는 구형 `constants.PORTAL` 상속 | `CANONICAL_DRIFT` |
+
+이 표는 runtime migration이 끝났다고 선언하지 않는다. 문서 작업공간 밖의
+`reality_stone/.../constants.py`가 정본 값으로 바뀌고 같은 commit의 테스트가
+통과할 때만 `CANONICAL_DRIFT`를 `PASS`로 바꾼다.
 
 ---
 
@@ -450,7 +461,7 @@ $$
 | STDP 적격 흔적 | F.14 | 구현·runtime 연결 완료; 효능 `NO-EFFECT`, guard `FAIL`, 기본 off |
 | 4종 신경조절 (DA/NE/5HT/ACh) | F.19 | `neuromod.py` 상태식/효과 mapping 구현; 전체 runtime 폐루프는 부분 |
 | 소뇌 전방 모델 | F.20 | `agent.py::CerebellumPredictor`와 RuntimeAgent 연결 구현; 독립 효능 미검증 |
-| 작업 기억 용량 제한 $|h_t| \le T_h$ | F.20 | `agent.py::WorkingMemory` FIFO capacity 구현·RuntimeAgent 연결 |
+| 작업 기억 용량 제한 $\lvert h_t\rvert \le T_h$ | F.20 | `agent.py::WorkingMemory` FIFO capacity 구현·RuntimeAgent 연결 |
 | 뇌파 대역 분해 | F.21 | `runtime.py::brainwave_observable` FFT 5대역 구현 |
 | (C3) 메타인지 재귀 루프 | F.17 | `ConsciousnessMonitor.metacognition_step` 수축 toy 구현; 실제 agent feedback 미구현 |
 | Cold checkpoint ($\mathcal{C}$) | 14장 7절 | 미구현 (warm만 있음) |

@@ -15,7 +15,7 @@
 | **P1** 3x3+1 게이지 격자 | $d_3 : d_2 : d_1 = \alpha_s : \alpha_w : \alpha_{em}$ | 채널 분할, 파라미터 37% 절감 |
 | **P2** 수면-각성 순환 | Wake $\to$ NREM $\to$ REM $\to$ ... | 지속 학습, 파괴적 망각 방지 |
 | **P3** STDP 국소 학습 | $\Delta w = \eta\,\delta[t]\,e_{ij}[t]$ | 분산 학습, 메모리 $O(N)$ |
-| **P4** 부트스트랩 희소성 | $\text{활성} = \varepsilon^2 = 4.87\%$ | 전면 희소 실행 시 큰 절감 상한, 현재형 구현은 더 보수적 |
+| **P4** 부트스트랩 희소성 | Track-A 설계 target $x=4.864\%$ | 전면 희소 실행 시 큰 절감 상한, 현재형 구현은 더 보수적 |
 | **P5** 곡률 정규화 | $\kappa = \|\Delta_g h\|^2 < \kappa_{\text{th}}$ | hard bound가 아니라 안정화 편향 |
 
 ---
@@ -44,7 +44,8 @@ $$
 
 **P4: Top-k 활성화 (Sparse Conv)**
 
-$$\text{출력} = \text{TopK}(\text{Conv}(x),\; k = \lceil 0.0487 \times C_{\text{out}} \rceil)$$
+$$\text{출력}=\text{TopK}(\text{Conv}(x),\;
+k=\lceil0.0486382585\,C_{\text{out}}\rceil)$$
 
 $C_{\text{out}} = 256$이면 $k = 13$채널만 활성. 전면 희소 커널이 충분할 때는 큰 절감 상한이 가능하지만, 현재형 구현에서는 더 보수적으로 읽어야 한다.
 
@@ -90,7 +91,9 @@ $$
 
 **P4: 희소 감지**
 
-전체 앵커/쿼리 중 $4.87\%$만 활성화. $10^4$개 앵커면 $\sim 500$개만 활성. NMS 이전에 구조적으로 후보를 줄인다.
+전체 앵커/쿼리 중 설계상 $4.864\%$만 활성화한다. $10^4$개 앵커면
+$\lceil486.38\rceil=487$개다. 이는 우주론에서 검증된 vision 최적값이 아니라
+독립 sparse-ratio benchmark다.
 
 ---
 
@@ -141,7 +144,7 @@ $$V(s) = f(s) - \alpha \cdot \|\Delta_g h(s)\|^2$$
 ```python
 def ce_experience_replay(buffer, model):
     # NREM: 높은 곡률 경험 우선 처리
-    nrem_batch = buffer.sample_by_curvature(top_ratio=0.0487)
+    nrem_batch = buffer.sample_by_curvature(top_ratio=0.0486382585)
     update_critic(model, nrem_batch)
 
     # REM: 낮은 곡률 경험 재탐색 (노이즈 주입)
@@ -218,7 +221,11 @@ $$\Phi(\text{전역}) \leftrightarrow \text{SU(3)}(\text{국소}): \quad \xi R\P
 
 $$\text{텍스트}(\text{전역 의미}) \leftrightarrow \text{이미지}(\text{국소 특징}): \quad \xi \cdot \text{cross-attention}$$
 
-결합 강도 $\xi = \alpha_s^{1/3} = 0.490$ (CE 예측). cross-attention의 가중치가 이 근방에서 최적이라는 예측.
+사전등록 설계계수는
+$\xi_{\text{design}}:=\alpha_s^{1/3}=0.4904868132$다. 여기서
+$\alpha_s=0.1180$은 Track-A 외부 입력이며, 이를 cross-attention에 옮기는
+것은 별도 `Bridge`다. 이 값이 최적이라는 근거는 아직 없으므로 표현
+정규화를 고정한 독립 sweep으로 검정한다.
 
 ### 4.2 모달별 3x3+1 분할
 
@@ -242,10 +249,10 @@ $$\text{텍스트}(\text{전역 의미}) \leftrightarrow \text{이미지}(\text{
 
 **P4: 모달별 활성 비율**
 
-각 모달리티에서 먼저 $4.87\%$만 활성:
+각 모달리티에서 먼저 Track-A 설계 target $4.864\%$만 활성:
 
 $$
-h_m^{\text{act}} = \operatorname{TopK}(h_m,\; k_m = \lceil 0.0487\, d_m \rceil), \qquad m \in \{T,V,A,H\}
+h_m^{\text{act}} = \operatorname{TopK}(h_m,\; k_m = \lceil 0.0486382585\, d_m \rceil), \qquad m \in \{T,V,A,H\}
 $$
 
 그 뒤 결합:
@@ -424,9 +431,9 @@ $\kappa \to 0$이면 과평활화 (모든 노드 표현이 동일). $\kappa$의 
 
 ### 7.2 노드 활성 비율
 
-**P4: 그래프의 $4.87\%$ 활성**
+**P4: 그래프의 $4.864\%$ 설계 활성**
 
-전체 노드 중 $4.87\%$만 message passing에 참여:
+전체 노드 중 $4.864\%$만 message passing에 참여하는 benchmark:
 
 $$V_{\text{active}} = \text{TopK}(V,\; k = \lceil \varepsilon^2 \cdot |V| \rceil)$$
 
@@ -537,7 +544,9 @@ AlphaFold의 confidence score와 CE 곡률 에너지의 상관을 검증할 수 
 
 **P4: 화학 공간의 희소 탐색**
 
-가능한 분자 공간($\sim 10^{60}$)에서 $4.87\%$만 활성 탐색하는 것은 강한 설계 가설이다. 기존 가상 스크리닝 대비 효율 개선은 검증 게이트를 통과하기 전까지 상한 예측으로만 둔다.
+가능한 분자 공간($\sim 10^{60}$)에서 $4.864\%$만 활성 탐색하는 것은 강한
+독립 설계 가설이다. 기존 가상 스크리닝 대비 효율 개선은 검증 게이트를
+통과하기 전까지 상한 예측으로만 둔다.
 
 ### 10.3 의료 영상 (Medical Imaging)
 
@@ -640,6 +649,8 @@ $$\kappa_{\text{drive}}(s) = \|\Delta_g h(s)\|^2$$
 구현을 뜻하지 않는다.
 
 ```python
+import math
+
 class CEModule(nn.Module):
     def __init__(self, dim):
         self.norm = LBONorm(dim)           # P1: LBO 확산
@@ -657,7 +668,7 @@ class CEModule(nn.Module):
 
     def sparse_forward(self, x):          # P4: 추론 시 희소화
         y = self.forward(x)
-        k = int(0.0487 * y.shape[-1])
+        k = max(1, math.ceil(0.0486382585 * y.shape[-1]))
         return topk(y, k)
 ```
 
@@ -682,7 +693,7 @@ class CEModule(nn.Module):
 
 ### 14.1 공통 하향 규칙
 
-- `4.87%` 근방 최적점이 반복 재현되지 않으면: 해당 도메인에서 P4를 일반 법칙이 아니라 과제군 가설로 내린다.
+- manifest target `4.864%` 근방 최적점이 반복 재현되지 않으면: 해당 도메인에서 P4를 일반 법칙이 아니라 과제군 가설로 내린다.
 - 곡률과 오류가 상관하지 않으면: P5를 환각/오분류 억제가 아니라 안정화 regularizer로 제한한다.
 - 수면 루프가 wake-only보다 낫지 않으면: P2를 그 도메인에서는 아직 미닫힌 브리지로 유지한다.
 - 모달 결합 이득이 없으면: grounded late binding 구조를 기본값이 아니라 옵션 설계로 재분류한다.

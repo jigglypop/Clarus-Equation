@@ -2,14 +2,14 @@
 
 ## 1. 연구 명제
 
-“공간을 접어 이동한다”를 두 입구의 외부거리 (L)보다 내부 고유거리
-(\ell)이 훨씬 짧은 통과 가능 웜홀로 정의한다. 이는
-(\Delta t=0,\Delta x>0) 점프가 아니라 유한한 내부 경로를 국소적으로
+“공간을 접어 이동한다”를 두 입구의 외부거리 \(L\)보다 내부 고유거리
+\(\ell\)이 훨씬 짧은 통과 가능 웜홀로 정의한다. 이는
+\(\Delta t=0,\Delta x>0\) 점프가 아니라 유한한 내부 경로를 국소적으로
 광속 이하로 통과하는 방식이다.
 
 ## 2. 기하학적 단축 정리
 
-내부 속도를 (v=\beta c), (0<\beta<1)라 하면
+내부 속도를 \(v=\beta c\), \(0<\beta<1\)라 하면
 
 \[
 t_{\rm throat}=\frac{\ell}{\beta c}>0,
@@ -17,21 +17,21 @@ t_{\rm throat}=\frac{\ell}{\beta c}>0,
 \tau_{\rm traveler}=t_{\rm throat}\sqrt{1-\beta^2}>0.
 \]
 
-외부 관측자가 (L/t_{\rm throat})로 정의한 겉보기 속도는
+외부 관측자가 \(L/t_{\rm throat}\)로 정의한 겉보기 속도는
 
 \[
 \frac{v_{\rm app}}c=\beta\frac{L}{\ell}
 \]
 
-이므로 (L\gg\ell)이면 (c)를 크게 넘을 수 있다. 여행자의 국소속도와
+이므로 \(L\gg\ell\)이면 \(c\)를 크게 넘을 수 있다. 여행자의 국소속도와
 고유시간은 정상이다. 따라서 기하가 이미 주어졌다는 조건 아래
 “국소 FTL 없이 외부 경로보다 빠른 이동”은 성립한다. 정확히 순간적인
 이동은 아니다.
 
 ## 3. 목의 NEC 요구량
 
-zero-redshift Morris-Thorne control metric에서 목 (r_0)는
-(b(r_0)=r_0)이고 flare-out은 (b'(r_0)<1)이다. 목의 radial null
+zero-redshift Morris-Thorne control metric에서 목 \(r_0\)는
+\(b(r_0)=r_0\)이고 flare-out은 \(b'(r_0)<1\)이다. 목의 radial null
 projection은
 
 \[
@@ -39,13 +39,13 @@ projection은
 \frac{c^4}{8\pi G r_0^2}\left[b'(r_0)-1\right]<0.
 \]
 
-단순 control profile (b(r)=r_0^2/r)에서는 (b'(r_0)=-1)이므로
+단순 control profile \(b(r)=r_0^2/r\)에서는 \(b'(r_0)=-1\)이므로
 
 \[
 |\rho+p_r|=\frac{c^4}{4\pi G r_0^2}.
 \]
 
-(r_0=1\,\mathrm m)이면 약 (9.63\times10^{42}\,\mathrm{J/m^3})의
+\(r_0=1\,\mathrm m\)이면 약 \(9.63\times10^{42}\,\mathrm{J/m^3}\)의
 음의 null projection이 필요하다.
 
 ## 4. CE 카시미르 셀의 단위 감사
@@ -64,8 +64,8 @@ projection은
 |u_{\rm CE}|/c^2=3.7593\times10^9\,\mathrm{kg/m^3}.
 \]
 
-기존 (3.4\times10^{29}\,\mathrm{kg/m^3}) 표기는 약
-(9.0\times10^{19})배 큰 단위변환 오류다.
+기존 \(3.4\times10^{29}\,\mathrm{kg/m^3}\) 표기는 약
+\(9.0\times10^{19}\)배 큰 단위변환 오류다.
 
 1 m control throat와 비교한 국소 밀도 격차는
 
@@ -74,7 +74,7 @@ projection은
 \approx2.85\times10^{16}.
 \]
 
-또한 (\xi=6.65\,\mathrm{fm}) 상관길이를 1 m까지 늘리는 데 필요한
+또한 \(\xi=6.65\,\mathrm{fm}\) 상관길이를 1 m까지 늘리는 데 필요한
 형식적 길이비는
 
 \[
@@ -94,7 +94,7 @@ stress tensor로 연결하는 식을 유도하지 않았다.
 | 정확한 0초 순간이동 | `REFUTED` |
 | 통과 가능 목이 NEC 위반을 요구 | `PROVED / CONTROL METRIC` |
 | 기존 CE 카시미르 SI 변환 | `REFUTED / CORRECTED` |
-| 정적 CE 셀이 1 m 목의 국소 NEC 크기를 충족 | `NO`, 약 (2.85\times10^{16})배 부족 |
+| 정적 CE 셀이 1 m 목의 국소 NEC 크기를 충족 | `NO`, 약 \(2.85\times10^{16}\)배 부족 |
 | CE 공명이 필요한 stress tensor와 공간 coherence를 생성 | `OPEN` |
 | CE 물리적 웜홀 해 | `NOT ESTABLISHED` |
 
@@ -109,7 +109,7 @@ G_{\mu\nu}[g_{\rm WH}]
 \]
 
 필수 항목은 공명 상태의 renormalized stress tensor, 보존
-(\nabla_\mu T^{\mu\nu}=0), quantum inequality, backreaction, 목 안정성,
+\(\nabla_\mu T^{\mu\nu}=0\), quantum inequality, backreaction, 목 안정성,
 입구 생성·분리 에너지다. 현재 Q0에서 gravity/CE와 renormalized stress
 sector가 열려 있으므로 이 루프의 최종 지위는 `KINEMATIC PASS / PHYSICAL
 BRIDGE OPEN`이다.

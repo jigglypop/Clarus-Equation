@@ -23,7 +23,7 @@ asymptotically flat 해를 만들 수 있는지 검사했다.
 이라 하자. anisotropic conservation은
 
 \[
-\varphi(r)sim\left(\frac{3n}{4}-2\right)\ln r
+\varphi(r)\sim\left(\frac{3n}{4}-2\right)\ln r
 \]
 
 를 준다.
@@ -69,7 +69,7 @@ hf_{\rm req}=1.6925\times10^{11}\,\mathrm{eV}
 \simeq169\,\mathrm{GeV}.
 \]
 
-CE light-pole ansatz $29.65$MeV와 비교하면
+과거 snapshot의 CE light-pole ansatz \(29.65\,\mathrm{MeV}\)와 비교하면
 
 \[
 \frac{169\,\mathrm{GeV}}{29.65\,\mathrm{MeV}}
@@ -81,7 +81,8 @@ CE light-pole ansatz $29.65$MeV와 비교하면
 
 ### 3.1 최신 full-tensor target 교정
 
-위의 (a_0=3.6628\times10^{-18}) m, 169 GeV 값은 (b'(r_0)=-1)인
+위의 \(a_0=3.6628\times10^{-18}\,\mathrm m\), \(169\,\mathrm{GeV}\)
+값은 \(b'(r_0)=-1\)인
 과거 negative-null scale control이다. 현재 정확한 (b'(r_0)=-1/3) full
 Casimir tensor에는
 
@@ -94,8 +95,10 @@ a_*=4.0535640\times10^{-18}\ {\rm m},\qquad
 E_*=152.9323309\ {\rm GeV}
 \]
 
-를 사용한다. 29.64757 MeV pole-mass 후보와의 비는 5158.34다. 다만 pole
-mass는 propagating mode의 에너지 상한이 아니므로 이 비 자체가 5158차 harmonic을
+를 사용한다. canonical \(29.6991596174\,\mathrm{MeV}\)
+inverse-correlation 후보와의 비는 \(5149.382436\)이다. 다만 이 scale은
+physical pole로 확인되지 않았고, pole mass라 해도 propagating mode의 에너지
+상한이 아니므로 이 비 자체가 5149차 harmonic을
 강제하지 않는다. 가능한 경로는 실제 pole·dispersion을 갖는 고운동량 mode 또는
 명시적 비선형 mixing vertex이며, 둘 다 현재 CE에서는 `OPEN`이다.
 
@@ -108,10 +111,10 @@ scale이지 spherical throat에서 유도된 boundary eigenmode나 생성 daught
 ## 4. $Q$와 harmonic의 구분
 
 quality factor $Q$는 resonance linewidth, 저장시간과 정상상태 amplitude를
-바꾸지만 선형계의 중심 frequency를 5158.34배 올리지 않는다. 그러므로
+바꾸지만 선형계의 중심 frequency를 \(5149.382436\)배 올리지 않는다. 그러므로
 
 ```text
-29.65 MeV pole-mass 후보 + high Q
+29.6991596 MeV inverse-correlation 후보 + high Q
 ```
 
 만으로 현재 152.93 GeV 형식 mode scale을 만들 수 없다. 가능한 경로에 필요한 것은
@@ -131,7 +134,7 @@ quality factor $Q$는 resonance linewidth, 저장시간과 정상상태 amplitud
 | 문제 | 특정 파장 공명의 역할 |
 |---|---|
 | 필요한 microscopic length scale | ideal-planar \(\lambda=2a\) 선택에서 \(152.93\) GeV 형식 scale |
-| CE 29.65MeV pole과의 동일성 | 동일성 미유도; 질량과 mode 에너지를 구분해야 함 |
+| CE \(29.6991596\,\mathrm{MeV}\) inverse-correlation scale과의 동일성 | 동일성 미유도; 등록 scale, 물리 질량과 mode 에너지를 구분해야 함 |
 | high-$Q$만으로 주파수 상승 | 불가능 |
 | 음의 stress 부호 | 미유도 |
 | Casimir EoS의 전역 finite-mass no-go | amplitude-only 공명으로 해결 불가 |

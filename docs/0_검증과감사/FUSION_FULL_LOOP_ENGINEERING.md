@@ -38,15 +38,17 @@ Q0.4--Q0.5 certificate와 결합한 수치는 다음과 같다.
 |---|---:|
 | $h\Phi^2$ tree vertex | `True` |
 | 단일 Φ source | `False` |
-| 두-scalar cut 문턱 $2m_\Phi$ | `59.29514 MeV` |
-| 장거리 감쇠 scale $\hbar c/(2m_\Phi)$ | `3.327877806 fm` |
-| $m_0^2=0$ portal pole | `43.76767547 GeV` |
-| 공급 benchmark의 Higgs invisible BR | `0.8253120442` |
-| 공급 상한 | `0.11` |
-| 상한 아래 최대 $|\lambda_{HP}|$ | `0.005110743` |
+| light bridge를 pair kinematics에만 넣은 문턱 \(2m_{\rm light}\) | `59.3983192 MeV` |
+| 같은 반사실적 fixed-light 감쇠 scale \(\hbar c/(2m_{\rm light})\) | `3.32209704 fm` |
+| canonical \(\mu_\Phi=0\) portal pole | `43.8056765 GeV` |
+| canonical portal의 Higgs invisible BR | `0.77082222` |
+| PDG 2026 ATLAS direct observed 95% CL 상한 | `0.107` |
+| fixed-light stress-test에서 상한 아래 최대 \(\lvert\lambda_{HP}\rvert\) | `0.00504779076` |
 
-따라서 pair vertex의 존재는 조건부 tree-level 사실이지만, 29.65 MeV pole이 같은
-portal 작용에서 예측되거나 portal-dominated라는 뜻은 아니다. 더구나 두-scalar
+따라서 pair vertex의 존재는 조건부 tree-level 사실이지만,
+29.6991596 MeV light bridge가 같은 portal 작용의 pole로 예측되거나
+portal-dominated라는 뜻은 아니다. 표의 light kinematics와 canonical
+portal pole은 서로 다른 stress-test/benchmark 행이다. 더구나 두-scalar
 exchange의 renormalized 핵자 진폭과 표준 D--T R-matrix에 대한 잔차는 아직 없다.
 이 분기는 `TREE_PAIR_VERTEX_ONLY_PHYSICAL_FUSION_BRANCH_NOT_REACHED`에서 멈춘다.
 
@@ -79,7 +81,7 @@ likelihood와 비공명 D--T 진폭을 함께 다시 계산해야 한다.
 | 항목 | 결과 |
 |---|---:|
 | $g_{\Phi NN}$ | `4.970553562e-5` |
-| 필요한 장 진폭 $|\Phi_0|$ | `1.887661142e5 MeV` |
+| 필요한 장 진폭 $\lvert\Phi_0\rvert$ | `1.887661142e5 MeV` |
 | 자유장 에너지밀도 | `3.265576509e38 J/m^3` |
 | 양자수 밀도 | `6.874705009e49 m^-3` |
 | 진공 수명 | `6.865e-8 s` |

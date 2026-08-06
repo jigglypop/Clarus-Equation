@@ -11,8 +11,8 @@
 
 | 질문 | 실제 재분석 결과 | 판정 |
 |---|---|---|
-| 구동된 비선형 광섬유에서 특정 파장의 비고전적 광자쌍이 나오는가 | 예측 파장 (954.313/1173.060) nm, 공개 CAR 최대 셀 (953.938/1172.889) nm, 에너지 잔차 (0.0282\%) | `REPRODUCED` |
-| 전자기장 에너지가 질량 있는 (e^+e^-) 쌍으로 변환되는가 | CMS HEPData 7개 bin 적분 (263.393\ \mu\mathrm b), 논문값 (263.5\ \mu\mathrm b) | `REPRODUCED` |
+| 구동된 비선형 광섬유에서 특정 파장의 비고전적 광자쌍이 나오는가 | 예측 파장 (954.313/1173.060) nm, 공개 CAR 최대 셀 (953.938/1172.889) nm, 에너지 잔차 \(0.0282\%\) | `REPRODUCED` |
+| 전자기장 에너지가 질량 있는 \(e^+e^-\) 쌍으로 변환되는가 | CMS HEPData 7개 bin 적분 \(263.393\ \mu\mathrm b\), 논문값 \(263.5\ \mu\mathrm b\) | `REPRODUCED` |
 | 빛으로 기존 고체의 준안정 전자·구조 상을 만들 수 있는가 | 공개 NeXus의 배열·fluence·시간축·체크섬은 확인, 정확한 (2.2) THz refit과 수명 refit은 미재현 | `PARTIAL` |
 | 이 셋이 한 Clarus 장의 연속 작동을 증명하는가 | 같은 장치·동일 run·공통 coupling·에너지 전달 기록이 전혀 없음 | `NO` |
 | 새 원자·새 입자·새 질량 pole 또는 무한 에너지가 생성됐는가 | 어느 자료에도 그런 관측량이 없음 | `NO EVIDENCE` |
@@ -63,7 +63,7 @@ source data다. TDC event timestamp나 정수 원시 count는 아니므로, 게�
 - 사용 API payload SHA-256:
   `f2a6b865131884f8a3d12a9784585b01e2fa4d9e1e4b5b599516210958212595`
 
-HEPData의 (p_{T,ee}=0\)–(1) GeV 전 구간 7개 unfolded bin과 세 예측
+HEPData의 \(p_{T,ee}=0\)--\(1\) GeV 전 구간 7개 unfolded bin과 세 예측
 열을 사용했다. 이것도 검출기 event별 four-vector가 아니라 보정된 공개 표다.
 
 ### 2.3 1T-TaS2 준안정 hidden phase
@@ -152,17 +152,17 @@ E_{s+i}=hc\left(\lambda_s^{-1}+\lambda_i^{-1}\right)
 g^{(2)}(0)=0.380952381\pm0.06
 \]
 
-이고 CAR이 1보다 큰 네 점 모두 (g^{(2)}(0)+1\sigma<1)이다. CAR=0인
-Raman control은 (g^{(2)}(0)=1.00\pm0.04)다. 공개 오차만 표준편차처럼 나눈
+이고 CAR이 1보다 큰 네 점 모두 \(g^{(2)}(0)+1\sigma<1\)이다. CAR=0인
+Raman control은 \(g^{(2)}(0)=1.00\pm0.04\)다. 공개 오차만 표준편차처럼 나눈
 
 \[
 \frac{1-g^{(2)}(0)}{0.06}=10.32
 \]
 
 는 강한 분리를 보여 주지만, 원시 count와 공분산이 없으므로 이를 독립 분석의
-정식 (10.32\sigma) 발견 유의도로 부르지는 않는다.
+정식 \(10.32\sigma\) 발견 유의도로 부르지는 않는다.
 
-이 결과는 구동된 (chi^{(3)}) 매질에서 vacuum-seeded 비고전적 광자쌍이
+이 결과는 구동된 \(\chi^{(3)}\) 매질에서 vacuum-seeded 비고전적 광자쌍이
 선택된 파장에 나온다는 증거다. 그러나 논문 자체가 lab frame의 동일 식이
 quasi-phase-matched spontaneous four-wave mixing과 일치한다고 밝힌다. 따라서
 움직이는 거울의 literal DCE, Clarus 고유장 또는 자유에너지의 증명은 아니다.
@@ -192,7 +192,7 @@ CMS 공개표의 각 bin에 대해
 \pm17.8_{\rm syst}\ \mu\mathrm b.
 \]
 
-중심값 차이는 (0.107\ \mu\mathrm b=0.041\%\)다. 통계오차를 bin 독립으로
+중심값 차이는 \(0.107\ \mu\mathrm b=0.041\%\)다. 통계오차를 bin 독립으로
 적분하면
 
 \[
@@ -201,7 +201,7 @@ CMS 공개표의 각 bin에 대해
 =1.7238\ \mu\mathrm b,
 \]
 
-즉 게재값 (1.8\ \mu\mathrm b)를 반올림 오차 안에서 되찾는다. systematic
+즉 게재값 \(1.8\ \mu\mathrm b\)를 반올림 오차 안에서 되찾는다. systematic
 공분산이 공개되지 않았으므로 거짓 독립 가정을 하지 않고 두 극한만 계산했다.
 
 \[
@@ -210,17 +210,17 @@ CMS 공개표의 각 bin에 대해
 \le19.3189\ \mu\mathrm b.
 \]
 
-게재값 (17.8\ \mu\mathrm b)는 이 범위 안에 있다.
+게재값 \(17.8\ \mu\mathrm b\)는 이 범위 안에 있다.
 
 같은 bin에서 모델을 적분하면
 
 | 모델 | 적분 단면적 | 측정 대비 |
 |---|---:|---:|
-| gamma-UPC | (265.6159\ \mu\mathrm b) | (+0.844\%\) |
-| SuperChic | (260.9444\ \mu\mathrm b) | (-0.930\%\) |
-| STARlight | (225.0995\ \mu\mathrm b) | (-14.54\%\) |
+| gamma-UPC | \(265.6159\ \mu\mathrm b\) | \(+0.844\%\) |
+| SuperChic | \(260.9444\ \mu\mathrm b\) | \(-0.930\%\) |
+| STARlight | \(225.0995\ \mu\mathrm b\) | \(-14.54\%\) |
 
-이다. 19,689개의 선택된 (e^+e^-) 후보와 단면적은 quasi-real photon
+이다. 19,689개의 선택된 \(e^+e^-\) 후보와 단면적은 quasi-real photon
 fusion을 포함한 표준 QED 예측과 맞는다. 다만 ultraperipheral heavy-ion의
 광자는 이상적인 자유 on-shell 두 광자가 아니라 이온 Coulomb field의 작은
 virtuality를 가진 equivalent photon이다. 정확한 주장은 “전자기장 에너지가
@@ -235,15 +235,15 @@ virtuality를 가진 equivalent photon이다. 정확한 주장은 “전자기�
 2m_ec^2=1.0219979\times10^6\ \mathrm{eV}.
 \]
 
-광학 실험의 관측 광자쌍 (2.3567938) eV와 비교하면
+광학 실험의 관측 광자쌍 \(2.3567938\ \mathrm{eV}\)와 비교하면
 
 \[
 \frac{2m_ec^2}{E_{s+i}}
 =433{,}639.1.
 \]
 
-즉 그 광자쌍 하나는 (e^+e^-) 정지질량 문턱보다 약 43만 배 낮다. CMS
-selection의 (m_{ee}>5) GeV와 비교하면 차이는
+즉 그 광자쌍 하나는 \(e^+e^-\) 정지질량 문턱보다 약 43만 배 낮다. CMS
+selection의 \(m_{ee}>5\ \mathrm{GeV}\)와 비교하면 차이는
 
 \[
 \frac{5\ \mathrm{GeV}}{2.3567938\ \mathrm{eV}}
@@ -288,7 +288,7 @@ B\to C
 I(\theta,E,t_{12})\in\mathbb R^{256\times344\times45}
 \]
 
-이다. 두 펌프의 fluence는 각각 (0.30\ \mathrm{mJ/cm^2})이므로
+이다. 두 펌프의 fluence는 각각 \(0.30\ \mathrm{mJ/cm^2}\)이므로
 
 \[
 F_{\rm total}=0.60\ \mathrm{mJ/cm^2},\qquad
@@ -296,15 +296,15 @@ F_{\rm total}=0.60\ \mathrm{mJ/cm^2},\qquad
 \frac{0.60}{0.50}=1.20.
 \]
 
-논문 주파수 (f=2.2\pm0.1) THz를 주기로 바꾸면
+논문 주파수 \(f=2.2\pm0.1\ \mathrm{THz}\)를 주기로 바꾸면
 
 \[
 T=\frac1f=454.5\pm20.7\ \mathrm{fs}.
 \]
 
 원자료 초기 시간 간격은 25 fs이므로 한 주기당 약 18.2점이다. 따라서 시간축
-sampling은 이 진동을 분해하기에 충분하다. 10 kHz 반복률은 정확히 100
-(\mu\mathrm s)이고, 논문의 160 K 수명 상한 `<100` (\mu\mathrm s)와
+sampling은 이 진동을 분해하기에 충분하다. 10 kHz 반복률은 정확히
+\(100\ \mu\mathrm s\)이고, 논문의 160 K 수명 상한 \({<}100\ \mu\mathrm s\)와
 stroboscopic reset 설계도 수치상 맞는다.
 
 그러나 exact raw-to-result refit은 실패했다. 이유는 단순히 신호가 약해서가

@@ -1,4 +1,4 @@
-## 단계 3: Zebrafish larva activity
+# 단계 3: Zebrafish larva activity
 
 Zebrafish부터는 connectome proxy를 넘어 실제 calcium activity state를 본다. 목표는 두 가지다.
 

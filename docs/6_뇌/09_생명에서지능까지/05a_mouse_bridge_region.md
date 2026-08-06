@@ -1,4 +1,4 @@
-## 단계 4: Mouse Neuropixels/IBL
+# 단계 4: Mouse Neuropixels/IBL
 
 Zebrafish 다음 단계는 mouse Neuropixels/IBL이다. 이유는 다음이다.
 

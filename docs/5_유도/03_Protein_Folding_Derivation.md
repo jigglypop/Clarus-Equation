@@ -1,4 +1,4 @@
-## 1. 이 장의 목표와 구조
+# 1. 이 장의 목표와 구조
 
 이 문서는 CE 클라루스장(Clarus field) 이론을 **단백질 접힘(protein folding)**에 적용하여,
 
@@ -17,7 +17,7 @@
 - **4장**: 접힘 상태공간과 에너지/복잡도 랜드스케이프의 수학적 모델  
 - **5장**: CE 기반 곡률 functional의 도입 – 접힘 경로의 1차/2차 안정화  
 - **6장**: 접힘 예제(Trp-cage 등)에서의 RMSD 오차 감소와 수치 검증 구조  
-- **7장**: 공통 coupling $\alpha_C$와 다른 난제(나비에–스토크스, 리만 등)와의 정합성  
+- **7장**: 도메인별 coupling과 다른 regularizer의 비교 조건
 - **8장**: 순환논리 점검, 한계, 향후 과제
 
 ---
@@ -154,7 +154,9 @@ $$
 
 - $E(x)$: 물리적 에너지  
 - $\mathcal{C}(x)$: 해당 상태의 연산 복잡도  
-- $\alpha_C$: 에너지 단위와 복잡도 단위를 매핑하는 결합 상수
+- \(\alpha_C^{\rm fold}\): 선택한 \(\mathcal C\) convention을 에너지로
+  바꾸는 **단백질 모형별** 계수. 다른 도메인의 계수와 같은 상수로
+  자동 동일시하지 않는다.
 
 단백질 접힘은 이 $U(x)$를 직접 최소화한다기보다,  
 $U(x)$가 낮은 경로들에 **통계적으로 더 큰 확률**을 부여하는 확률 분포를 따른다고 보는 것이 자연스럽다.
@@ -183,28 +185,53 @@ $$
 자연이 실제로 채택하는 접힘 경로를 $x_\text{nat}(t)$라 하고,  
 이론적으로 가능한 다른 경로들을 $\{x_k(t)\}$라 하자.
 
-- 에너지와 복잡도가 모두 고려되는 확률분포 $P_\text{selected}[x(t)]$를 개념적으로 도입하면,
-  $$
-  P_\text{selected}[x(t)]
-  \propto
-  \exp\Big(
-   -\beta \int \big(E(x(t)) + \alpha_C \mathcal{C}(x(t))\big)\,dt
-  \Big)
-  $$
-  와 같은 형태를 생각할 수 있다.
-- 클라루스장 포텐셜은 정의 D1에 의해
-  $$
-  \Phi_\text{supp}[x(t)] = -\log P_\text{selected}[x(t)]
-  $$
-  로 주어지고, 이는 접힘 경로 functional의 형태로 나타난다.
+평형 **구조** 분포라면 기준 measure \(d\mu(x)\)에 대해
+
+$$
+p_{\rm eq}(x)=Z^{-1}e^{-\beta E(x)}
+$$
+
+로 쓴다. 반면 경로 \(x(t)\)의 확률은
+\(\exp[-\beta\int E\,dt]\)만으로 정해지지 않는다. 그 지수는
+\(\beta E\,dt\)의 시간차원이 남고, dynamics와 path measure도 빠져 있다.
+
+예를 들어 overdamped Langevin model
+
+$$
+dx_t=-M\nabla E(x_t)\,dt+\sqrt{2D}\,dW_t,
+\qquad D=k_BT\,M
+$$
+
+을 먼저 지정하면, discretization convention과 Jacobian을 포함한
+Onsager--Machlup functional이 경로 likelihood를 정한다. CE의 속도·곡률
+penalty를 쓰려면 이를 물리 likelihood라고 부르지 않고, 유한 time grid
+\(\{t_n\}\)의 명시적 regularization prior
+
+$$
+p_h[x_{0:N}]
+\propto p_{\rm dyn}[x_{0:N}]
+\exp\!\left[-c_1\sum_n\|\Delta y_n\|^2
+            -c_2\sum_n\|\Delta^2y_n\|^2\right]
+$$
+
+로 정의한다. \(y=x/L_0\), \(c_{1,2}\ge0\)이고 \(h=\Delta t/\tau_0\)의
+의존성을 기록해야 continuum limit를 논할 수 있다. 이때에만
+
+$$
+\Phi_{\rm supp}[x_{0:N}]=-\log p_h[x_{0:N}]
+$$
+
+가 정규화된 path measure에 대한 정보량으로 정의된다.
 
 ### 5.3 곡률 functional의 저차 근사
 
-접힘 경로가 충분히 매끄럽고,  
-상태공간의 곡률과 복잡도가 국소 근사로 표현 가능하다고 가정하면,
+접힘 경로가 충분히 매끄럽고 상태공간의 곡률과 복잡도가 국소 근사로
+표현 가능하다고 가정하자. 좌표와 시간의 단위를 섞지 않기 위해
+$y=x/L_0$, $s=t/\tau_0$를 먼저 정의한다.
 
 - 에너지 항: $E(x(t))$  
-- 복잡도/곡률 항: $\mathcal{C}(x(t)) \approx c_0 + c_1\|\dot{x}(t)\|^2 + c_2\|\ddot{x}(t)\|^2 + \dots$
+- 복잡도/곡률 항:
+  $\mathcal C[y]\approx c_0+c_1\|dy/ds\|^2+c_2\|d^2y/ds^2\|^2+\cdots$
 
 와 같이 전개할 수 있고,
 
@@ -213,20 +240,23 @@ $$
 $$
 \mathcal{S}_\text{fold}[\phi]
 \approx
-\int \left(
-  a_0 \|\dot{\phi}(t)\|^2
+\int ds\left[
+  c_1 \left\|\frac{dy}{ds}\right\|^2
   +
-  \lambda_\text{fold} \|\ddot{\phi}(t)\|^2
-\right)\,dt
+  c_2 \left\|\frac{d^2y}{ds^2}\right\|^2
+\right]
 $$
 
 꼴의 **1차/2차 곡률 억제 functional**로 표현된다.
 
 여기서
 
-- $\dot{\phi}(t)$: 구조 변화 속도 – **접힘의 1차 기울기**  
-- $\ddot{\phi}(t)$: 구조 변화 가속도 – **접힘 경로의 곡률/휘어짐**  
-- $\lambda_\text{fold}$: 2차 곡률 억제 세기
+- $dy/ds$: 무차원 구조 변화 속도
+- $d^2y/ds^2$: 무차원 경로 굽힘
+- $c_1,c_2$: 서로 독립인 무차원 계수
+
+원래 차원 좌표를 그대로 쓰려면 두 항의 단위가 다르므로 하나의
+$\lambda_{\rm fold}$만 적는 대신 서로 다른 차원 계수를 지정해야 한다.
 
 단백질은
 
@@ -253,14 +283,16 @@ CE functional이 **구조 예측 오차(RMSD)**를 얼마나 줄이는지 개념
   모델이 예측한 구조를 $\{r_i^\text{pred}\}$라 하면,
 
   $$
-  \text{RMSD}
+  \operatorname{RMSD}
   =
-  \sqrt{
-    \frac{1}{N}
-    \sum_{i=1}^N
-    \|r_i^\text{pred} - r_i^\text{exp}\|^2
-  }.
+  \min_{R\in SO(3),\,t\in\mathbb R^3}
+  \sqrt{\frac1N\sum_{i=1}^N
+  \|Rr_i^\text{pred}+t-r_{\pi(i)}^\text{exp}\|^2}.
   $$
+
+  여기서 $\pi$는 사전 고정한 atom correspondence이고, $R,t$는 Kabsch
+  정렬로 구한다. 동일 residue/atom selection, alternate location 처리와
+  결측 원자 규칙을 고정하지 않은 RMSD끼리는 비교할 수 없다.
 
 - 어떤 baseline 예측 방법(예: 단순 에너지 최소화, 기존 ML 모델 등)에 대해  
   RMSD$_\text{base}$를 측정하고,  
@@ -289,56 +321,50 @@ $$
 여기서
 
 $$
-L_\text{CE}
-\approx
-\int \left(
-  \|\nabla \phi\|^2 + \|\nabla^2 \phi\|^2
-\right)\,dt
+L_{\rm CE}\approx
+\sum_{n}\left[
+c_1\left\|\frac{y_{n+1}-y_n}{\Delta s}\right\|^2
++c_2\left\|\frac{y_{n+1}-2y_n+y_{n-1}}{\Delta s^2}\right\|^2
+\right]\Delta s.
 $$
 
 와 같은 형태로 모델링된다  
 (구체적인 구현에서는 시간/공간 이산화 버전 사용).
 
-### 6.3 개념적 수치 결과 요약
+### 6.3 현재 결과 상태와 재현 benchmark 계약
 
-실제 수치 실험 결과(다른 문서/코드에서 다룸)를 개념적으로 요약하면,
+과거의 “Trp-cage RMSD $2.3\to1.3$ Å” 및 1.5--2배 개선 수치는 이
+checkout에 원시 좌표, 실행 코드, seed와 hash가 없어 관측 결과로 인정하지
+않는다. 아래 계약을 만족하는 새 benchmark 전에는 **illustrative target**도
+성능 표에 넣지 않는다.
 
-- baseline 대비 CE 곡률 functional을 추가했을 때,  
-  특정 단백질(Trp-cage 등)에서의 RMSD 오차가
-  약 **1.5배~2배 정도 감소**하는 패턴이 관측된다.
+| 항목 | 사전등록 요구사항 |
+|---|---|
+| native | 예: Trp-cage TC5b의 PDB ID/version(후보 `1L2Y`), model/chain, C$\alpha$와 all-heavy atom set을 각각 고정 |
+| atom mapping | residue 번호, atom name, 결측/alternate-location 처리 후 일대일 correspondence |
+| 정렬·metric | Kabsch 정렬 RMSD, TM-score, clash count, 물리 에너지를 함께 보고 |
+| baseline | force field/model, optimizer 또는 sampler, step 수, compute budget를 CE run과 동일하게 고정 |
+| randomization | seed 목록, 초기 conformer 생성법, train/validation/test trajectory split 공개 |
+| regularizer | $L_0,\tau_0,c_1,c_2$와 tuning grid를 test 구조를 보기 전에 고정 |
+| 통계 | seed별 paired delta, confidence interval, 실패 run 포함 |
+| artifact | 코드 commit, environment lockfile, raw coordinate archive와 SHA-256 hash |
 
-예:
-
-- RMSD$_\text{base} \approx 2.3$ Å  
-- RMSD$_\text{CE} \approx 1.3$ Å
-
-정도의 스케일 차이가 보고될 수 있다.
-
-이는 Navier–Stokes, 3체 문제, 리만 제타, LLM 등  
-다른 시스템에서의 오차 감소율과 비교했을 때,
-
-- 같은 형태의 곡률 functional이  
-  다양한 시스템에서 **유사한 비율의 오차 개선**을 만들어낸다는 정합성을 시사한다.
+test RMSD 개선은 위 artifact에서 다시 계산될 때만 주장한다.
 
 ---
 
-## 7. 공통 coupling $\alpha_C$와 다른 난제들과의 정합성
+## 7. 도메인별 coupling과 교차문제 비교
 
-단백질 접힘에서의 $\lambda_\text{fold}$를  
-적절한 단위 변환을 통해 **무차원 coupling $\alpha_C$**로 표현하면,
+단백질 접힘의 계수는 $L_0,\tau_0$를 지정한 뒤의 무차원
+$(c_1,c_2)$로 보고해야 한다. 과거의 공통 범위
+$\alpha_C\sim10^{-4}$--$10^{-3}$은 문제별 nondimensionalization과
+재현 artifact가 없으므로 현재 추정값이 아니다.
 
-- Navier–Stokes, 리만 제타, 3체 문제 등에서 추정된 값들과  
-  비슷한 범위(예: $10^{-4} \sim 10^{-3}$)에 위치하는지를 확인할 수 있다.
-
-만약 서로 완전히 다른 물리/수학 시스템들에서
-
-- 동일한 형태의 곡률 functional  
-- 비슷한 규모의 coupling 상수 $\alpha_C$
-
-가 반복적으로 등장한다면,
-
-- 이는 CE 클라루스장 이론이 **“특정 문제에 맞춘 튜닝”이 아니라**,  
-  **“우주의 보편적인 곡률–복잡도 억제 원리”**일 가능성을 강하게 시사한다.
+서로 다른 문제에서 동일한 무차원 observable과 사전등록 절차를 적용한
+뒤 \((c_1,c_2)\)의 hierarchical posterior가 공통 구간을 보인다면,
+공통 **regularization family**에 대한 귀납적 증거가 된다. 그러나
+공통 미시 자유도·작용·RG map을 추가로 유도하지 않는 한 이를 보편 물리
+결합상수나 우주의 법칙으로 해석하지 않는다.
 
 ---
 

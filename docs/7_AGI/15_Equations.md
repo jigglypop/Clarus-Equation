@@ -40,7 +40,7 @@ $$a_i^{t+1} = (1-\gamma_a(M_t))\,a_i^t + \kappa_a(M_t)\,\tanh(I_i^t)$$
 | 파라미터 | 의미 | 안정 조건 |
 |---|---|---|
 | $\gamma_a \in (0,1]$ | decay rate | $\gamma_a > 0$ 필수 |
-| $\kappa_a > 0$ | gain | $\kappa_a < \gamma_a$ 이면 영점 수렴 보장 |
+| $\kappa_a \geq 0$ | gain | $0\leq\kappa_a\leq\gamma_a$는 $(-1,1)$ 불변성의 충분조건 |
 
 ### A.4 억제 갱신
 
@@ -78,9 +78,20 @@ $\tau_i^+ > \tau_i^-$: 양방향 임계가 달라야 히스테리시스가 성�
 
 ### A.7 형식 검증: 유계성
 
-**정리 (A-bound).** $\gamma_a \in (0,1]$이고 $\kappa_a(1+\gamma_a^{-1}\kappa_a\|W\|_\infty) \le C < \infty$이면 모든 $t$에 대해 $|a_i^t| < 1$.
+**정리 (A-bound).** $|a_i^0|<1$, $0<\gamma_a\leq1$,
+$0\leq\kappa_a\leq\gamma_a$이면 입력과 $W$의 크기에 관계없이 모든
+$t$에 대해 $|a_i^t|<1$이다.
 
-*증명 스케치.* $a_i^{t+1} = (1-\gamma_a)a_i^t + \kappa_a\tanh(I_i^t)$. $|\tanh(x)| < 1$이므로 $|a_i^{t+1}| \le (1-\gamma_a)|a_i^t| + \kappa_a$. 부등식을 반복하면 $\limsup_{t\to\infty}|a_i^t| \le \kappa_a/\gamma_a$. $\kappa_a < \gamma_a$이면 $|a_i^t| < 1$ 보장. $\square$
+*증명.* \( |\tanh I|<1 \)이므로
+\[
+|a_i^{t+1}|
+<(1-\gamma_a)|a_i^t|+\kappa_a
+<(1-\gamma_a)+\gamma_a=1
+\]
+이다. \(\square\)
+
+$\kappa_a>\gamma_a$이면 이 불변성 정리는 적용되지 않는다. 그 경우 별도
+clamp 또는 결합된 상태공간의 불변집합 증명이 필요하다.
 
 ### A.8 형식 검증: 적응 유계
 
@@ -96,9 +107,17 @@ $\tau_i^+ > \tau_i^-$: 양방향 임계가 달라야 히스테리시스가 성�
 
 ### A.9 형식 검증: 영점 안정성
 
-**정리 (Zero-attract).** $\kappa_a < \gamma_a$이고 $u_i^t = 0,\;\eta_i^t = 0,\;W = 0$이면 $(a_i^t, r_i^t) \to (0, 0)$.
+**정리 (Zero-attract, 분리계).** $u=\eta=0$, $W=0$,
+$\lambda_r=\lambda_m=\beta_w=0$, $0<\gamma_a,\gamma_r,\gamma_m,\gamma_w\leq1$
+이면 $a,r,m,w\to0$이다.
 
-*증명.* 결합과 입력이 없으면 $|a_i^{t+1}| \le (1-\gamma_a)|a_i^t| + \kappa_a|\tanh(0)| = (1-\gamma_a)|a_i^t|$. 기하급수 감소. $r_i$는 $a_i^2 \to 0$이므로 후속 감소. $\square$
+*증명.* 이 제한계에서는
+$a_i^{t+1}=(1-\gamma_a)a_i^t$이므로 $a_i^t\to0$이다. $r,w$는
+$a_i^2$를, $m$은 $a_i$를 입력으로 받는 안정한 선형 필터이므로 모두
+0으로 간다. $\square$
+
+$r,m,w$가 A.3 입력에 다시 결합된 원래 시스템에서는 위 증명을 사용할 수
+없다. 그 경우 전체 joint Jacobian 또는 Lyapunov 함수를 검사해야 한다.
 
 ---
 
@@ -120,7 +139,7 @@ $$W_{ij} = \epsilon_j \cdot |w_{ij}| \cdot \exp\!\left(-\frac{d_g(i,j)^2}{\sigma
 | $\sigma$ | 결합 반경 (kernel width) | $r_c = \pi \approx 3$ 격자 단위 |
 | $\chi_{ij} \in \{0,1\}$ | sparse mask | 국소 300 um 내 연결 확률 $\sim 10$--$20$% |
 | $\epsilon_j$ | Dale 부호 | E:I = 80:20 |
-| $|w_{ij}|$ | 가중치 크기 | log-normal 분포 (Song 2005) |
+| $\lvert w_{ij}\rvert$ | 가중치 크기 | log-normal 분포 (Song 2005) |
 
 **E/I 균형 조건** (J.10 유래):
 
@@ -130,9 +149,17 @@ $$\sum_{j \in \mathcal{E}} W_{ij} + \sum_{j \in \mathcal{I}} W_{ij} \approx 0 \q
 
 **초기화**:
 
-$$|w_{ij}| \sim \text{LogNormal}(\mu_w,\; \sigma_w^2), \qquad \mu_w = \ln(1/K), \quad \sigma_w = 1.0$$
+$$
+|w_{ij}|\sim\operatorname{LogNormal}(\mu_w,\sigma_w^2),
+\qquad
+\boxed{\mu_w=-\ln K-\frac{\sigma_w^2}{2}},
+\quad \sigma_w=1.0
+$$
 
-$K = 130$ (J.10). 이것은 $\sum_j |w_{ij}| \sim 1$이 되도록 정규화한 것이다.
+$K=130$일 때
+$\mathbb E|w_{ij}|=\exp(\mu_w+\sigma_w^2/2)=1/K$이므로 기대 행합이
+1이다. 기존 $\mu_w=\ln(1/K)$는 평균을 $e^{\sigma_w^2/2}/K$로
+과대 설정했다.
 
 ### B.2 대안: k-nearest neighbor
 
@@ -140,7 +167,12 @@ $$\chi_{ij} = \mathbf{1}[j \in \text{knn}(i, k)]$$
 
 ### B.3 에너지 함수
 
-$$E(\{a_i, w_i\}) = -\frac{1}{2}\sum_{i,j} W_{ij}^{\text{eff}}\,a_i\,a_j - \sum_i u_i\,a_i + \sum_i V(a_i, w_i)$$
+에너지 해석은 $W$와 $w,u$를 한 step 동안 동결하고, 결합을 대칭화한
+$W_s=(W^{\rm eff}+W^{{\rm eff}\top})/2$에 대해서만 둔다.
+
+$$
+E(a;w,u)=-\frac12a^\top W_sa-u^\top a+\sum_iV(a_i,w_i).
+$$
 
 국소 포텐셜 $V$를 구체화:
 
@@ -155,30 +187,59 @@ $$V(a_i, w_i) = \frac{1}{2}\gamma_a\,a_i^2 + \frac{1}{2}\beta_w\,w_i\,a_i^2 + \f
 $W_{ij}^{\text{eff}} = W_{ij} \cdot u_j \cdot x_j$ (STP, J.19).
 
 에너지의 물리적 의미는 다음과 같다.
-- **$a_i = 0$ 근방**: $V \approx \frac{1}{2}(\gamma_a + \beta_w w_i) a_i^2$ → 이중 우물의 바닥 평탄도. $w_i$가 커지면 우물이 깊어져 발화 억제.
+- **$a_i = 0$ 근방**: $\gamma_a+\beta_ww_i>0$, $\lambda_4>0$이면
+  국소 포텐셜 자체는 0에 하나의 최소점을 갖는 single well이다. 다중
+  attractor는 결합항이 전체 Hessian의 볼록성을 깨는 경우에만 가능하다.
 - **$|a_i| \to 1$**: $\lambda_4$ 항이 지배 → 포화.
 - **STP 효과**: $W^{\text{eff}}$가 depression으로 줄면 결합 에너지 감소 → 새로운 패턴 탐색 유도.
 
 ### B.4 형식 검증: 에너지 감소
 
-**정리 (E-decrease).** 동기적 업데이트에서 $a_i^{t+1}$이 $E$의 좌표별 최소화이면 $E(\{a_i^{t+1}\}) \le E(\{a_i^t\})$.
+**정리 (E-decrease, 대칭 동결계).** $E$의 gradient가 관심영역에서
+$L$-Lipschitz이고
 
-*증명 보강.* $\partial E/\partial a_i = -\sum_j W_{ij}^{\text{eff}} a_j - u_i + (\gamma_a + \beta_w w_i)a_i + \lambda_4 a_i^3$.
-A.3의 갱신 $a_i^{t+1} = (1-\gamma_a)a_i^t + \kappa_a\tanh(I_i^t - \beta_w w_i^t)$는 이 gradient의 damped descent에 해당.
-$\kappa_a < \gamma_a$이면 step size가 수축적이므로 에너지 비증가. $\square$
+$$a^{t+1}=a^t-\eta\nabla E(a^t),\qquad0<\eta<\frac{2}{L},$$
+
+이면
+
+$$
+E(a^{t+1})\leq E(a^t)
+-\left(\frac1\eta-\frac L2\right)\|a^{t+1}-a^t\|_2^2.
+$$
+
+이는 descent lemma의 직접 결과다. $|a_i|\leq1$인 영역에서는 예를 들어
+
+$$
+L\leq\|W_s\|_2+
+\max_i\{\gamma_a+\beta_ww_i+3\lambda_4\}
+$$
+
+를 쓸 수 있다. A.3의 동기 tanh 갱신은 이 quartic $E$의 좌표 최소화나
+gradient step과 같지 않으므로, 그 갱신에 대한 에너지 감소는 별도 증명
+없이는 주장하지 않는다. 비대칭 Dale 행렬의 antisymmetric 성분은 이
+스칼라 에너지로 포착되지 않는다.
 
 ### B.5 spectral bound
 
-$$\|W\|_2 \le \lambda_{\max}$$
+$$
+\boxed{\|W\|_2=\sigma_{\max}(W)}
+$$
 
-$\lambda_{\max}$를 clamp하여 증폭을 제한한다.
+이며 비대칭 행렬에서는 이를 $\lambda_{\max}$라고 부르면 안 된다.
+Euclidean one-step 증폭을 제한하려면 최대 특이값을 clamp한다.
 
-**Dale 법칙 하의 spectral bound**: E/I 분리 시 $W$는 비대칭. spectral radius $\rho(W)$를 직접 제어:
+**Dale 법칙 하의 spectral 점검**: E/I 분리 시 $W$는 비대칭이다.
+Rajan--Abbott형 식은 특정 random ensemble의 전형적 bulk scale이지 임의
+실현에 대한 결정론적 상계가 아니다.
 
 $$\rho(W) \leq \sqrt{K} \cdot \bar{w}_E \cdot (1 + \sqrt{p_I/p_E}) \qquad\text{(Rajan & Abbott 2006)}$$
 
 $K = 130$, $p_E = 0.8$, $p_I = 0.2$일 때 $\rho(W) \leq \sqrt{130} \cdot \bar{w}_E \cdot 1.5 \approx 17\bar{w}_E$.
-$\bar{w}_E = 1/K = 0.0077$이면 $\rho \approx 0.13 < 1$ → 안정.
+$\bar{w}_E=1/K$를 넣은 $0.13$은 ensemble scale estimate다.
+$\rho(W)<1$은 동결된 선형 이산계의 점근 안정에는 충분하지만 비정규
+과도증폭을 막지 않으며, 비선형·지연·적응을 포함한 전체 계의 안정성
+증명도 아니다. contraction에는 해당 유도 노름(예: $\sigma_{\max}$)과
+gain을 함께 제한해야 한다.
 
 ---
 
@@ -257,7 +318,7 @@ $$
 | $\theta_S$ | $0.1$ | S가 C를 넘어야 수면 진입 |
 | $\theta_U$ | $0.3$ | 외부 입력이 약할 때만 수면 |
 | $\theta_{\text{alert}}$ | $0.8$ | 강한 자극 시 강제 각성 |
-| $T_{\text{NREM}}(n)$ | $90 - 10n$ min ($n$: 주기 번호) | 야간 초반 NREM 길고 후반 짧음 |
+| $T_{\text{NREM}}(n)$ | $\max(T_{\min},90-10n)$ min, 예: $T_{\min}=10$ min | $90-10n$만 쓰려면 $0\le n\le8$로 제한해야 하며, 무제한 주기에서는 양의 하한이 필요 |
 | $T_{\text{REM}}(n)$ | $10 + 10n$ min | 야간 초반 REM 짧고 후반 길음 |
 | $S_{\text{cont}}$ | $0.3$ | 이 이하면 수면 종료 |
 
@@ -276,7 +337,7 @@ $$S^t \propto \int_0^t \bar{c}_\tau^2\,d\tau \qquad\text{(비평 점수 적분 =
 | $\lambda_r$ | $0.35$ | $0.50$ | $0.25$ | 모드 의존 억제 |
 | $\lambda_H$ (replay) | $0.002$ | $0.10$ | $0.20$ | J.16: SWR 빈도 |
 | $\sigma_\eta$ | $0.27$ | $0.07$/$0.27$ | $0.27$ | J.15: 시냅스 잡음 |
-| $B_t / N$ | $0.0487$ | $0.02$ | $0.03$ | J.8: 에너지 예산 |
+| $B_t / N$ | $0.0486382585$ | $0.02$ | $0.03$ | WAKE는 Track-A 설계 target; 수면값은 독립 benchmark |
 
 ### C.4 규칙 기반 전환 (의사코드)
 
@@ -495,21 +556,21 @@ $$\boxed{X_{t+1} = B\big[X_t + \lambda_R R(X_t) + \lambda_O \Delta_O(X_t) + \lam
 
 | 정리 | 주장 | 조건 | 상태 |
 |---|---|---|---|
-| A-bound | $\|a_i^t\| < 1$ 유계 | $\kappa_a < \gamma_a$ | **closed** |
+| A-bound | $(-1,1)$ 불변 | $\lvert a^0\rvert<1$, $0<\gamma_a\leq1$, $0\leq\kappa_a\leq\gamma_a$ | **closed 조건부**; 현재 mode 표는 조건 위반, clamp 필요 |
 | R-bound | $r_i^t$ 유계 | $\gamma_r > 0$, A-bound | **closed** |
-| Zero-attract | 입력 없으면 영점 수렴 | $W=0$, $u=0$, $\kappa_a < \gamma_a$ | **closed** |
-| E-decrease | 에너지 비증가 | 좌표별 최소화 업데이트 | **closed** |
-| Sleep-stabilize | sleep 후 에너지/잡음 감소 | NREM: $\gamma_a$ 증가, $\kappa_a$ 감소 | **closed** |
+| Zero-attract | 분리계에서 영점 수렴 | $W=u=\eta=0$, $\lambda_r=\lambda_m=\beta_w=0$, 모든 decay 양수 | **closed 제한계**; full joint system은 open |
+| E-decrease | 대칭 동결계의 gradient step에서 에너지 비증가 | $W_s=W_s^\top$, $0<\eta<2/L$ | **closed 대안 갱신**; 실제 tanh 갱신은 open |
+| Sleep-stabilize | sleep 후 에너지/잡음 감소 | full transition kernel과 Lyapunov/ISS 필요 | **open** |
 | Local-contract | 국소 Lipschitz 수축 | $\max((1-\gamma_a) + \kappa_a\|W_i\|_1) < 1$ | **closed** |
 | Sparse-energy | 활성 수 제한 | $B_t$ 유한, threshold $\theta_i > 0$ | **closed** |
 | W-bound | $w_i^t$ 적응 유계 | $\gamma_w > 0$, A-bound | **closed** |
 | Hysteresis-invariant | $b_i$ 전환 조건 비대칭 | $\tau^+ > \tau^-$ | **closed** |
 | STP-bound | $0 \leq x_j, u_j \leq 1$ | $\tau_{\text{rec}}, \tau_{\text{fac}} > 0$ | **closed** |
-| Homeo-stable | 항상성 스케일링 → $\bar{f} \to \bar{f}_{\text{target}}$ | $\eta_{\text{homeo}} > 0$ | **closed** |
+| Homeo-stable | 항상성 스케일링 → $\bar{f} \to \bar{f}_{\text{target}}$ | 발화율의 $W$ 의존성, 음의 피드백 부호, 양의 multiplier와 $W$ 유계, 충분히 작은 $\eta_{\text{homeo}}$ | **open**; $\eta_{\text{homeo}}>0$만으로는 수렴하지 않음 |
 | EI-balance | $\sum W_E + \sum W_I \approx 0$ | Dale $\epsilon_j$, $\bar{w}_I/\bar{w}_E \approx 4$ | **closed** |
-| EI-spectral | $\rho(W) < 1$ | $\bar{w}_E = 1/K$, Rajan-Abbott | **closed** |
-| Borbely-cycle | $S(t)$ 주기적 수면-각성 | $\tau_w, \tau_s > 0$, $C(t)$ 주기 | **closed** |
-| Hip-capacity | $|K| \leq N_{\text{hip}}$ | ring-buffer eviction | **closed** |
+| EI-spectral | 비대칭 E/I 결합 안정 | realization별 $\sigma_{\max}$·지연·gain·joint Jacobian 필요 | **open** |
+| Borbely-cycle | $S(t)$ 주기적 수면-각성 | $\tau_w,\tau_s>0$ 외에 입력 $U(t)$, 전환 임계, 초기조건이 반복 전환을 실제로 일으켜야 함 | **open 조건부**; 주기적 $C(t)$만으로 주기 궤도가 보장되지 않음 |
+| Hip-capacity | $\lvert K\rvert \leq N_{\text{hip}}$ | ring-buffer eviction | **closed** |
 | Forget-bound | $P_j(t) \geq P^{\text{floor}} > 0$ | Ebbinghaus 지수 감쇠 | **closed** |
 | Consolidate | replay $\to$ 피질 각인 | $n_{\text{replay}} > n_{\text{consol}}$ | **closed** |
 
@@ -523,10 +584,10 @@ $$\boxed{X_{t+1} = B\big[X_t + \lambda_R R(X_t) + \lambda_O \Delta_O(X_t) + \lam
 
 | 게이트 | 적용 대상 | 상태 |
 |---|---|---|
-| $G_{\text{formal}}$ | A-bound, R-bound, W-bound, E-decrease, Zero-attract, Local-contract, EI-balance, STP-bound, Homeo-stable, Borbely-cycle, Hip-capacity, Consolidate | **pass** |
-| $G_{\text{obs}}$ | EEG/fMRI에서 $a_i^t$ proxy 추출 → H.3 관측 방정식 | **pass** (방정식 완비) |
+| $G_{\text{formal}}$ | A-bound, R-bound, W-bound, E-decrease, Zero-attract, Local-contract, EI-balance, STP-bound, Homeo-stable, Borbely-cycle, Hip-capacity, Consolidate | **partial**; tanh 에너지, full zero-attract, EI stability 미결 |
+| $G_{\text{obs}}$ | EEG/fMRI에서 $a_i^t$ proxy 추출 → H.3 관측 방정식 | **pending**; 방정식 명시는 관측 검증이 아님 |
 | $G_{\text{causal}}$ | 약물/수면박탈/자극 실험에서 모드 전환 방향 일치 | partial |
-| $G_{\text{pred}}$ | 모델 시뮬레이션 vs 뇌 실험값 비교 (legacy `sim_brain_validation.py`, removed) | **pass** (7/7 항목 통과, 아래 H.4) |
+| $G_{\text{pred}}$ | 모델 시뮬레이션 vs 뇌 실험값 비교 (legacy `sim_brain_validation.py`, removed) | **not reproducible / pending** |
 
 ### H.3 관측 방정식 (Observation Equations)
 
@@ -635,7 +696,7 @@ legacy `scripts/sim_brain_validation.py` (removed) -- dim=256, 6000 steps (WAKE 
 
 | 검증 항목 | 측정값 | 뇌 실험 목표 | 결과 |
 |---|---|---|---|
-| **에너지 3분할** | active 4.69%, struct 26.2%, bg 69.1% | active ~4.87%, struct ~26.2%, bg ~68.9% | **pass** |
+| **에너지 3분할** | active 4.69%, struct 26.2%, bg 69.1% | Track-A $(4.864,26.109,69.027)\%$ | 거리만 보고; 사전등록 tolerance 없음 |
 | **STP 시냅스 피로** | x(start)=0.64 -> x(end)=0.16 | 지속 자극 시 자원 고갈 | **pass** |
 | **SFA 적응 축적** | w(start)=0.03 -> w(end)=1.0 | AHP에 의한 발화율 감소 | **pass** |
 | **발화율 안정화** | CV(early)=0.34 -> CV(late)=0.0001 | 적응에 의한 정상상태 수렴 | **pass** |
@@ -683,9 +744,9 @@ legacy `scripts/sim_brain_validation.py` (removed) -- dim=256, 6000 steps (WAKE 
 | CE 내부 변수 | 관측 방정식 | 출력 신호 | 절 |
 |---|---|---|---|
 | $a_i^t$ (patch 합산) | $\text{EEG}(t) = \frac{1}{N}\sum_i \sum_j W_{ij}^{\text{eff}} a_j^t$ | scalp EEG | H.3.1 |
-| $\text{EEG}(t)$ | $\text{PSD}(f) = |\text{FFT}|^2$ | 대역별 파워 | H.3.2 |
-| $|a_i|^2 + \alpha \sum |Wa|$ | $\text{BOLD} = \text{neural} * \text{HRF}$ | fMRI BOLD | H.3.3 |
-| $\phi_i(t)$ | $\text{ALFF} = \sqrt{\sum |\hat{\phi}|^2}$ | DMN low-freq | H.3.4 |
+| $\text{EEG}(t)$ | $\text{PSD}(f) = \lvert\text{FFT}\rvert^2$ | 대역별 파워 | H.3.2 |
+| $\lvert a_i\rvert^2 + \alpha \sum \lvert Wa\rvert$ | $\text{BOLD} = \text{neural} * \text{HRF}$ | fMRI BOLD | H.3.3 |
+| $\phi_i(t)$ | $\text{ALFF} = \sqrt{\sum \lvert\hat{\phi}\rvert^2}$ | DMN low-freq | H.3.4 |
 
 ---
 
@@ -795,7 +856,7 @@ $|a_i| = 0.05$ (TopK 임계 근방)일 때 $f_i \approx 0.34$ Hz → 관측 범�
 
 $$\ln |a_i^t| \sim \mathcal{N}(\mu_a, \sigma_a^2), \qquad \mu_a = \ln(\bar{f}_{\text{pop}}/f_{\max}) \approx -5.52, \quad \sigma_a \approx 1.0$$
 
-이 분포에서 상위 4.87%의 cutoff는:
+이 분포에서 Track-A target 상위 $4.864\%$의 cutoff는:
 
 $$a_{\text{TopK}} = \exp(\mu_a + 1.66\,\sigma_a) \approx 0.013$$
 
@@ -964,7 +1025,9 @@ $$\text{burst}(s, \tau_b, \tau_d) = \begin{cases} (s/\tau_b)^2 \exp(1 - s/\tau_b
 
 $$g_0(t) = g_0^* \cdot \left(1 + \beta_{\text{tonic}} \|p(t) - p^*\|^2\right)$$
 
-tonic DA level은 에너지 분배 고정점 $p^* = (0.0487, 0.2623, 0.6891)$으로부터의 이탈에 비례하여 변조된다. $g_0^*$는 $p = p^*$일 때의 baseline DA.
+tonic DA level을 Track-A 설계 target
+$p^*=(0.0486382585,0.2610881744,0.6902735671)$로부터의 이탈에 따라
+변조하는 **공학 ansatz**다. 이 식은 dopamine 생리에서 유도된 법칙이 아니다.
 
 ---
 
@@ -1001,10 +1064,10 @@ $$g_X^{t+1} = g_X^t + \frac{\Delta t}{\tau_X}(g_X^{\text{baseline}} - g_X^t) + \
 | 측정량 | 실험값 | 출처 | CE 변수 |
 |---|---|---|---|
 | 뇌 에너지 소비 (체중 대비) | 체중 2%, 에너지 20% | Raichle 2006 | 전체 budget |
-| 과제 유발 에너지 증가 | $0.5$--$1.0$% | Raichle 2006 | $x_a = 4.87\%$ (CE) |
-| intrinsic/ongoing 비중 | $60$--$80$% | Annual Reviews DMN | $x_b = 68.9\%$ (CE) |
+| 과제 유발 에너지 증가 | $0.5$--$1.0$% | Raichle 2006 | $x_a=4.864\%$와 동일량 아님 |
+| intrinsic/ongoing 비중 | $60$--$80$% | Annual Reviews DMN | $x_b=69.027\%$ bridge 비교 |
 | 시냅스 전달 에너지 | $\sim 59$% (signaling 중) | Attwell & Laughlin 2001 | $x_s$ 기여 |
-| housekeeping | $\sim 25$% | 동일 | $x_s = 26.2\%$ (CE) |
+| housekeeping | $\sim 25$% | 동일 | $x_s=26.109\%$ bridge 비교 |
 | 동시 활성 뉴런 상한 (에너지) | $\leq 15$% | Attwell & Laughlin 2001 | TopK 상한 |
 
 **신규 방정식 J8-1: 에너지 예산 정합 조건**
@@ -1015,18 +1078,22 @@ $$P_{\text{active}} = x_a \cdot N \cdot \bar{f}_{\text{active}} \cdot E_{\text{s
 
 여기서 $E_{\text{spike}} \approx 10^8$ ATP/spike (Attwell & Laughlin 2001).
 
-CE의 $x_a^* = 0.0487$에서:
+Track-A의 $x_a^*=0.0486382585$에서 위 단순 spike-only 비를 계산하면
 
 $$
-\frac{P_{\text{task-evoked}}}{P_{\text{total}}}
+\frac{P_{\text{active-spike}}}{P_{\text{spike}}}
 = \frac{x_a \bar{f}_{\text{active}}}{
 x_a \bar{f}_{\text{active}} + (1-x_a) \bar{f}_{\text{idle}}
 }
-\approx \frac{0.05 \times 6}{0.05 \times 6 + 0.95 \times 0.16}
-\approx 0.66\%
+\approx \frac{0.0486383\times6}{0.0486383\times6
++0.9513617\times0.16}
+\approx0.657
 $$
 
-이것은 Raichle의 "$0.5$--$1.0$% 과제 유발 증가"와 구간 내 일치한다.
+즉 약 $65.7\%$로, $0.5$--$1.0\%$가 아니다. 이 식은 활성 집단의
+spike-energy **구성비**를 계산하며 전체 뇌의 task-evoked **증가율**과 다른
+양이다. 두 값을 같다고 한 과거 결론은 refuted다. 전체 증가율을 예측하려면
+baseline 유지비, 혈류·glia 비용과 task 전후 차분을 포함해야 한다.
 
 ---
 
@@ -1036,7 +1103,7 @@ $$
 |---|---|---|---|
 | NREM/REM 비율 (수면 중) | NREM 75--80%, REM 20--25% | Lancet Respir Med | 모드 전환 확률 |
 | 수면 주기 | $\sim 90$ min | PSG 표준 | $T_{\text{cycle}}$ |
-| 수면:각성 비율 (24h) | 33% : 67% | 생리학 | CE: 31.1% : 68.9% |
+| 수면:각성 비율 (24h) | 33% : 67% | 생리학 | CE bridge: 30.973% : 69.027% |
 | SWA delta power 감쇠 | 각 NREM 에피소드 $\to$ SWA 25--40% 감소 | Achermann & Borbely 2003 | $\rho$ |
 | 수면 부채 회복 시간 상수 | $\tau_{\text{recovery}} \approx 1.6$ 밤 | Van Dongen 2003 | $\rho_{\text{night}} = \rho^{1/1.6}$ |
 
@@ -1050,7 +1117,9 @@ $$\text{SWA}_{n+1} = (1 - \alpha_{\text{SWA}}) \cdot \text{SWA}_n, \qquad \alpha
 
 $$\text{SWA}_{\text{morning}} / \text{SWA}_{\text{evening}} = (1 - 0.30)^{4.5} \approx 0.17$$
 
-CE의 $\rho_{\text{night}}^2 = 0.31^2 = 0.096$. 관측의 0.17과 같은 자릿수. 차이는 SWA가 시냅스 강도의 proxy이지 직접 $\rho$가 아니기 때문.
+Track-A map의 국소 환산값은
+$q_{\text{night},*}=0.311315$이고 제곱은 $0.096917$이다. SWA의 $0.17$과
+같은 자릿수라는 사실은 메커니즘 검증이 아니며, 두 양을 직접 등치하지 않는다.
 
 ---
 
@@ -1099,8 +1168,8 @@ $$0.8 \cdot \bar{w}_{\text{exc}} \approx 0.2 \cdot \bar{w}_{\text{inh}} \quad\Lo
 | NE 감쇠 $\tau_{\text{NE}}$ | | $300$ ms | Aston-Jones 2005 | $[200, 500]$ |
 | 5HT 감쇠 $\tau_{\text{5HT}}$ | | $3000$ ms | raphe tonic slow | $[2000, 5000]$ |
 | ACh 감쇠 $\tau_{\text{ACh}}$ | | $200$ ms | BF fast burst | $[100, 500]$ |
-| 활성 비율 | $x_a^*$ | $0.0487$ | sparse firing 1--5% | $[0.01, 0.05]$ |
-| 수축률 | $\rho$ | $0.155$ | 수면 SWA 감쇠 | $[0.10, 0.20]$ |
+| 활성 비율 target | $x_a^*$ | $0.0486382585$ | Track-A manifest; sparse firing와 bridge 비교 | $[0.01,0.05]$ |
+| 국소 선형률 | $q_*$ | $0.1545681540$ | $D_nx$의 수학값; SWA 감쇠와 동일량 아님 | -- |
 | 작업 기억 | $T_h$ | $6$ | theta/gamma 비 = 40/6 | $[4, 8]$ |
 | 시뮬레이션 dt | $\Delta t$ | $1$ ms | gamma 100 Hz 오버샘플 | $[0.5, 2]$ |
 
@@ -1122,14 +1191,20 @@ $$0.8 \cdot \bar{w}_{\text{exc}} \approx 0.2 \cdot \bar{w}_{\text{inh}} \quad\Lo
 | `refractory_scale` | $\lambda_r$ | $0.35$ | -- | -- | $[0.1, 0.5]$ | OK |
 | `active_threshold` | $\theta$ | $0.22$ | -- | -- | salience 기반 | 단위 다름 |
 | `bit_lower/upper` | $\tau^-/\tau^+$ | $0.10/0.30$ | -- | -- | 히스테리시스 대역 | OK |
-| `energy_budget` | $\|A_t\|$ | $16$ | -- | -- | $\lceil 0.0487 N \rceil$ | 테스트 스케일($N=16$) |
+| `energy_budget` | $\|A_t\|$ | $16$ | -- | -- | $\lceil0.0486382585N\rceil$ | $N=16$이면 기대값 1; 현재 16은 불일치 |
 
 **정합성 요약**:
 
 1. $\gamma_a, \gamma_r$: 모두 실험 구간 내. 모드 순서 WAKE < REM < NREM (NREM 강감쇠) 유지.
 2. $\gamma_m = 0.08$: NMDA $\tau = 100$ ms 기준($\gamma_m = 0.01$)보다 8배 빠름. 실험 정합을 위해 $0.01$--$0.02$ 권장.
-3. $\kappa_a$: WAKE $0.82 > \gamma_a = 0.18$이지만, A-bound는 $\kappa_a \|W_i\|_1 < \gamma_a$로 완화됨. CSR sparse 구조에서 $\|W_i\|_1 \ll 1$ 보장 시 안정.
-4. `energy_budget`: $N$에 비례 조정. $\text{budget} = \lceil 0.0487 N \rceil$.
+3. $\kappa_a$: WAKE $0.82>\gamma_a=0.18$이므로 A-bound 충분조건을
+   위반한다. tanh 앞의 $W$가 작아도 최대 출력 계수 $\kappa_a$ 자체는
+   줄지 않으므로 $\kappa_a\|W_i\|_1<\gamma_a$로 대체할 수 없다. 현재
+   구현은 명시적 $[-1,1]$ clamp에 의존하며, clamp 없는 안정성은 별도
+   joint-map 검증이 필요하다.
+4. `energy_budget`: $N$에 비례 조정하면
+   $\text{budget}=\lceil0.0486382585N\rceil$다. 값 16은 $309\leq N\leq328$
+   일 때만 이 규칙과 맞고, $N=16$에서는 budget 1이어야 한다.
 5. $\kappa_r = 0.24$ (WAKE): 구간 상한 $0.2$ 약간 초과. $a_i^2$ 스케일링으로 실효 억제 게인은 구간 내.
 
 **`field.rs` (FieldEngine) 대응**:
@@ -1153,9 +1228,9 @@ $$\ddot{\phi}_i = \mu^2\phi_i - \lambda\phi_i^3 + k\nabla^2\phi_i - \alpha_2\nab
 
 | 함수 | CE 대응 | 실험 제약 |
 |---|---|---|
-| `topk_silu_fwd(ratio)` | 희소 활성화 $a^* = \text{TopK}(\text{SiLU}(x), k)$ | `ratio` $= x_a^* = 0.0487$ (J.1, J.8) |
+| `topk_silu_fwd(ratio)` | 희소 활성화 $a^* = \text{TopK}(\text{SiLU}(x), k)$ | manifest benchmark `ratio` $=x_a^*=0.0486382585$ |
 | SiLU $= x\sigma(x)$ | $\tanh$ 근사 (smooth gating) | 비음수/음수 모두 통과 |
-| TopK masking | $b_i$ 결정 (A.7) | budget $= \lceil 0.0487 N \rceil$ |
+| TopK masking | $b_i$ 결정 (A.7) | budget $=\lceil0.0486382585N\rceil$ |
 
 ---
 
@@ -1281,11 +1356,12 @@ $$T_{\text{UP}} \propto \frac{\tau^+ - \tau^-}{\gamma_a^{\text{NREM}}}, \qquad T
 
 코드의 `bit_lower = 0.10`, `bit_upper = 0.30`, NREM $\gamma_a = 0.34$:
 
-$$T_{\text{UP}}^{\text{sim}} \sim \frac{0.20}{0.34} \approx 0.59 \text{ (단위 시간)}$$
+$$T_{\text{UP}}^{\text{sim}} \sim \frac{0.20}{0.34} \approx 0.588 \text{ update}$$
 
-이것이 실험의 450 ms와 대응하려면 시뮬레이션 1 단위 시간 $\approx 760$ ms → 1 step $\approx 760$ ms.
-
-$\Delta t = 10$ ms 기준이면 $T_{\text{UP}} \approx 59$ step $= 590$ ms → 실험 450 ms와 같은 자릿수.
+이 무차원 비는 **한 update보다도 작다**. 이를 $59$ step 또는 $590$ ms로
+읽는 것은 소수점을 100배 잘못 옮긴 것이다. 지속 시간을 ms로 예측하려면
+히스테리시스 입력 $\bar I(t)$의 동역학, update 간격, 임계 통과 규칙을 함께
+고정해야 한다. 현재 비례식만으로 450 ms 실험값을 재현했다고 말할 수 없다.
 
 ---
 
@@ -1308,11 +1384,17 @@ $$\bar{f}_i^{\text{slow}} = (1 - \gamma_{\text{homeo}}) \bar{f}_i^{\text{slow}} 
 
 | 파라미터 | 값 | 유래 |
 |---|---|---|
-| $\eta_{\text{homeo}}$ | $10^{-5}$ | $2\%/\text{h} = 0.02/3600\text{s} \approx 5.6 \times 10^{-6}$/ms |
+| $\eta_{\text{homeo}}$ | $10^{-5}$ | 설계값. $2\%/\text{h}=0.02/3{,}600{,}000\text{ ms}=5.56\times10^{-9}$/ms이므로 이 값에서 직접 유도되지 않음 |
 | $\gamma_{\text{homeo}}$ | $10^{-4}$ | 평균 발화율 추정 $\tau \sim 10$ s |
-| $\bar{f}_{\text{target}}$ | $x_a^* = 0.0487$ | CE 고정점 활성비 |
+| $\bar{f}_{\text{target}}$ | $x_a^*=0.0486382585$ | Track-A-inspired benchmark; 생리값은 별도 fit |
 
-이것은 STDP의 불안정성(양의 피드백)을 항상성(음의 피드백)으로 보정하는 역할.
+한 시간은 $3.6\times10^6$ ms이므로 선형 누적항은
+$36(\bar f_{\rm target}-\bar f)$다. 예를 들어 정규화 오차가 $0.01$이면
+$0.36\simeq36\%$/h이고, 오차가 $O(1)$이면 무려 $36$이어서 작은 변화 근사
+자체가 깨진다. 장시간에는 곱셈형 누적을 따로 계산해야 한다. 또한 이 갱신이
+실제 음의 피드백이 되려면 $\bar f_i(W)$가 해당 가중치
+스케일에 단조 증가하고 multiplier가 양수이며 $W$가 유계여야 한다. 따라서
+STDP 불안정성을 보정한다는 문장은 현재로서는 설계 목적이지 수렴 정리가 아니다.
 
 ---
 

@@ -6,26 +6,27 @@
 
 ## 1. 판정과 적용 범위
 
-29.64757 MeV CE 매개체의 pseudoscalar, axial-vector, vector, massive spin-2,
+최신 canonical \(29.6991596174\) MeV CE 매개체의 pseudoscalar, axial-vector,
+vector, massive spin-2,
 derivative-node 분기를 기존 10 keV D--T scalar 계산과 같은 장거리 Yukawa 세기에
 맞췄다. 기존 scalar loop에서 직접 가져오는 목표값은
 
 \[
-P_{1\%}=1.822097176\times10^{-3},\qquad
+P_{1\%}=1.826376655\times10^{-3},\qquad
 Y(r)=\frac{e^{-Mr}}{4\pi r}.
 \]
 
 이 문서의 결합은 \(V=-P_{1\%}Y\)와 같은 크기를 내는 **operator-level 등가값**이다.
 정확한 \(^{5}\mathrm{He}\;3/2^+\) coupled-channel NCSMC/R-matrix 재계산과
-29.64757 MeV 전용 \(\pi/K/\)BaBar likelihood가 없으므로 모든 physical gate는
+29.6991596174 MeV 전용 \(\pi/K/\)BaBar likelihood가 없으므로 모든 physical gate는
 항상 `False`다.
 
 | 분기 | 수학적 장거리 해 | 빠진 물리 입력 | physical gate |
 |---|---|---|---|
-| pseudoscalar | quartet에서 존재, \(|g_{PD}g_{PT}|=131.056\) | D/T pseudoscalar form factor와 공명 재계산 | `False` |
-| axial-vector | quartet에서 존재, \(g_{AD}g_{AT}=2.73315\times10^{-3}\) | quark--nucleus matching, K likelihood, UV 완결 | `False` |
+| pseudoscalar | quartet에서 존재, \(\lvert g_{PD}g_{PT}\rvert=130.908\) | D/T pseudoscalar form factor와 공명 재계산 | `False` |
+| axial-vector | quartet에서 존재, \(g_{AD}g_{AT}=2.73956\times10^{-3}\) | quark--nucleus matching, K likelihood, UV 완결 | `False` |
 | vector | attractive Pb \(q=0\) blind 해 존재 | finite-\(q\) Pb, \(\pi/K\), gauge completion | `False` |
-| spin-2 | 중앙 인력 존재, \(c/\Lambda=0.0227767\ \mathrm{GeV}^{-1}\) | mass-bin BaBar likelihood 또는 보존된 비보편 UV | `False` |
+| spin-2 | 중앙 인력 존재, \(c/\Lambda=0.0228034\ \mathrm{GeV}^{-1}\) | mass-bin BaBar likelihood 또는 보존된 비보편 UV | `False` |
 | derivative node | on-shell node를 쓸 수 있음 | 그 node가 Yukawa pole도 제거함 | `False` |
 
 ## 2. raw 비편극 trace와 quartet projector
@@ -91,9 +92,9 @@ V^{(0)}_{PP}=+
 Quartet attraction에는 반대 부호의 결합이 필요하고,
 
 \[
-|g_{PD}g_{PT}|=131.05613,\qquad
-|g_P|_{\rm equal}=11.44797,\qquad
-\frac{g_P^2}{4\pi}=10.4291.
+|g_{PD}g_{PT}|=130.90796,\qquad
+|g_P|_{\rm equal}=11.44150,\qquad
+\frac{g_P^2}{4\pi}=10.4173.
 \]
 
 따라서 이 숫자는 약결합 one-boson/Born 예측이 아니다. D와 T가 기본 Dirac 입자가
@@ -119,8 +120,8 @@ Quartet attraction에는 같은 부호가 필요하고,
 
 \[
 g_{AD}g_{AT}=\frac32P_{1\%}
-=2.7331458\times10^{-3},\qquad
-g_A|_{\rm equal}=0.0522795.
+=2.7395650\times10^{-3},\qquad
+g_A|_{\rm equal}=0.0523409.
 \]
 
 ### 보편 결합에 적용되는 비교
@@ -132,8 +133,8 @@ axial 방향 근사식
 g_xx_u^A\lesssim3\times10^{-6}\frac{M}{0.1\ \mathrm{GeV}}
 \]
 
-은 이 질량에서 \(8.89427\times10^{-7}\)이다. 핵 유효결합을 이 quark bound와
-단순 나눈 비는 \(5.88\times10^4\)지만, 이것은 정확한 quark--D/T matching
+은 이 질량에서 \(8.90975\times10^{-7}\)이다. 핵 유효결합을 이 quark bound와
+단순 나눈 비는 \(5.8746\times10^4\)지만, 이것은 정확한 quark--D/T matching
 likelihood가 아니라 긴장도를 보여 주는 proxy다.
 
 ### 비보편 결합에는 바로 적용되지 않는 비교
@@ -145,7 +146,7 @@ completion을 새로 공급해야 한다. 최신 보완 연구인
 [Hostert, Pospelov, Thompson (2026)](https://arxiv.org/abs/2602.19479)은
 non-conserved light-quark vector/axial current에 대해 중성 모드가 \(O(10^{-5})\),
 charged 모드가 보완적인 \(O(10^{-4})\) 조합까지 탐색한다고 보고한다. 이 order-of-
-magnitude도 29.64757 MeV 전용 likelihood로 취급하지 않는다.
+magnitude도 29.6991596174 MeV 전용 likelihood로 취급하지 않는다.
 
 ## 5. Vector와 attractive Pb blind 해
 
@@ -158,7 +159,7 @@ V_{VV}=+(g_p+g_n)(g_p+2g_n)Y.
 
 \[
 \frac{g_p}{g_n}=-\frac43,\qquad
-g_p=0.1207343,\qquad g_n=-0.0905507.
+g_p=0.1208760,\qquad g_n=-0.0906570.
 \]
 
 더 중요한 정확한 대수 결과는 \(^{208}\)Pb의 \(q=0\) coherent charge
@@ -170,19 +171,19 @@ g_p=0.1207343,\qquad g_n=-0.0905507.
 를 지우는 방향도 D--T attraction 구간에 있다는 것이다. 목표 세기에 맞추면
 
 \[
-g_p=0.1315340,\qquad g_n=-0.0856015,
+g_p=0.1316884,\qquad g_n=-0.0857020,
 \]
 
 \[
-Q_D=0.0459325,\qquad Q_T=-0.0396690,
+Q_D=0.0459864,\qquad Q_T=-0.0397156,
 \qquad Q_DQ_T=-P_{1\%}.
 \]
 
 Quark charge는
 
 \[
-g_u=0.1162232,\qquad g_d=-0.1009124,
-\qquad g_u-g_d=0.2171356.
+g_u=0.1163596,\qquad g_d=-0.1010308,
+\qquad g_u-g_d=0.2173904.
 \]
 
 이 Pb cancellation은 오직 \(q=0\)이다. 유한 momentum에서 proton/neutron form
@@ -194,8 +195,8 @@ factor가 다르므로 mass-specific Pb differential likelihood 없이 gate를 �
 \(\pi^0\to\gamma X, X\to e^+e^-\)를 9--70 MeV에서 검사했으므로 CE 질량이
 범위 안이다. [Hostert--Pospelov](https://arxiv.org/abs/2306.15077)의 17 MeV
 prompt-visible anomaly-current 매핑은 물리적 proton coupling 약
-\(2.42\times10^{-4}\)를 proxy로 준다. 필요한 Pb-blind \(g_p\)와의 비는 543.5다.
-다만 이것은 29.64757 MeV mass-bin likelihood가 아니므로 코드도
+\(2.42\times10^{-4}\)를 proxy로 준다. 필요한 Pb-blind \(g_p\)와의 비는 544.17이다.
+다만 이것은 29.6991596174 MeV mass-bin likelihood가 아니므로 코드도
 `prompt_visible_proxy_is_mass_specific=False`로 기록한다.
 
 Invisible/long-lived 또는 flavor-tuned vector에는 같은 prompt-visible 숫자를 직접
@@ -215,22 +216,23 @@ V_2=-\frac23\frac{c_Dc_Tm_Dm_T}{\Lambda^2}Y.
 동일 결합이면
 
 \[
-\frac c\Lambda=0.02277666\ \mathrm{GeV}^{-1},\qquad
-\frac\Lambda c=43.9046\ \mathrm{GeV}.
+\frac c\Lambda=0.02280339\ \mathrm{GeV}^{-1},\qquad
+\frac\Lambda c=43.8531\ \mathrm{GeV}.
 \]
 
 Ghost-free/dRGT형 낙관적 strong-coupling 척도는
 
 \[
-\Lambda_3\sim(M^2\Lambda/c)^{1/3}=0.33793\ \mathrm{GeV}.
+\Lambda_3\sim(M^2\Lambda/c)^{1/3}=0.33819\ \mathrm{GeV}.
 \]
 
 ### 보편 stress-energy 결합
 
 [Kang--Lee](https://arxiv.org/abs/2001.04868)의 BaBar 재해석 proxy는 visible에서
 \(3\times10^{-5}\ \mathrm{GeV}^{-1}\), invisible에서
-\(2\times10^{-4}\ \mathrm{GeV}^{-1}\) 수준이다. 요구값은 각각 759배와 114배다.
-이 비교는 전자에도 같은 stress-energy 결합이 있는 보편 모델에만 바로 적용된다.
+\(2\times10^{-4}\ \mathrm{GeV}^{-1}\) 수준이다. 요구값은 각각 760.1배와 114.0배다.
+이 비교는 전자에도 같은 stress-energy 결합이
+있는 보편 모델에만 바로 적용된다.
 
 ### 비보편 nucleon-only 결합
 
@@ -260,8 +262,8 @@ operator로 바뀐다. Contact는 장거리 Coulomb barrier를 낮추지 않는�
 수치적 척도는
 
 ```text
-M^2                    878.9784069 MeV^2
-hbar*c/M               6.6557556 fm
+M^2                    882.0400820 MeV^2
+hbar*c/M               6.6441941 fm
 mu_DT                   1124.64735 MeV
 E_G                     30.92 keV
 p_G                     8.3395559 MeV
@@ -293,6 +295,17 @@ uv run --extra dev ruff check \
   examples/physics/fusion_spin_operator_gate.py
 uv run python examples/physics/fusion_spin_operator_gate.py
 ```
+
+최신 canonical 질량 overlay는 thermal/flavor solver와 spin 모듈의 등록질량을 같은 값으로
+주입하고 cache를 비운 뒤 재계산했다.
+
+```powershell
+.\.venv\Scripts\python.exe -c "import reality_stone.clarus.fusion_equation_iteration_loop as fe; import reality_stone.clarus.fusion_flavor_aligned_loop as fa; import reality_stone.clarus.fusion_spin_operator_loop as sp; m=29.69915961743591; fe.DEFAULT_SCALAR_MASS_MEV=m; fa.REGISTERED_SCALAR_MASS_MEV=m; sp.REGISTERED_SCALAR_MASS_MEV=m; fe.current_fusion_equation_iteration_report.cache_clear(); fa.current_fusion_flavor_aligned_report.cache_clear(); sp.current_fusion_spin_operator_report.cache_clear(); r=sp.current_fusion_spin_operator_report(); print(r.required_dt_charge_product, r.pseudoscalar, r.axial_vector, r.vector, r.spin_two, r.derivative_node, r.any_physical_operator_gate_pass)"
+```
+
+핵심 출력은 `P_1%=0.0018263766547363008`, pseudoscalar product `130.9079551`,
+axial product `0.002739564982`, spin-2 `c/Lambda=0.02280339026 GeV^-1`,
+`M^2=882.04008198 MeV^2`다.
 
 성공 조건은 physical gate가 열리는 것이 아니라, 모든 수학 수치가 재현되고 빠진
 NCSMC/R-matrix 및 mass-specific likelihood 때문에 gate가 명시적으로 닫혀 있는 것이다.

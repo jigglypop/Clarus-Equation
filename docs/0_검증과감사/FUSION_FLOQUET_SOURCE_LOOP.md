@@ -4,6 +4,11 @@
 실행: `examples/physics/fusion_floquet_source_gate.py`  
 테스트: `tests/test_fusion_floquet_source_loop.py`
 
+> 2026-08-06 canonical override: 아래 scalar/portal 수치는
+> \(m_{\rm light}=29.6991596\,\mathrm{MeV}\)와 direct
+> \(\mathrm{BR}_{\rm inv}<0.107\) 계약으로 다시 계산했다. 위 실행 코드는
+> 구 fixture를 포함하므로 그 기본 출력은 현행 acceptance에 사용하지 않는다.
+
 ## 1. 이번 반복의 판정
 
 이번 단계에서는 시간의존 분기를 실제 단면적까지 닫았다. 결과는 두 문장으로
@@ -12,7 +17,7 @@
 1. 공개된 표준 QED Floquet--Volkov 식을 10 keV까지 외삽하면 D--T
    Maxwellian 반응률을 1% 높이는 수치해가 나온다. 다만 논문의 thermal
    benchmark는 1 keV이므로 10 keV 점은 공개 검증 통과점이 아니다.
-2. 이 전자기 해는 29.64757 MeV CE scalar의 해가 아니다.
+2. 이 전자기 해는 현행 29.6991596 MeV light-bridge scalar의 해가 아니다.
 
 대표 외삽점과 CE 판정은 다음과 같다.
 
@@ -25,7 +30,7 @@
 | 임계장 에너지밀도 | $1.046349192\times10^{20}$ J/m³ | pump 장부 입력 |
 | 10 fs, 반지름 10 nm 입사 에너지 | $9.85479\times10^{-2}$ J | 명시적 장부 |
 | 추가 fusion / 입사 pulse | $7.65470\times10^{-9}$ | net-energy `FAIL` |
-| CE $Z_2$ beat 필요 에너지밀도 | $5.65818\times10^{40}$ J/m³ | scalar source `FAIL` |
+| CE $Z_2$ beat 필요 에너지밀도 | $5.74962\times10^{40}$ J/m³ | scalar source `FAIL` |
 
 따라서 “시간의존 장으로 1%가 수학적으로 가능한가”에는 `YES`이지만,
 “현재 CE scalar가 그 효과를 내는가”와 “reactor 순에너지가 좋아지는가”에는
@@ -79,8 +84,9 @@ E_n=E+U_p+n\hbar\omega,
 [accepted manuscript](https://link.aps.org/accepted/10.1103/PhysRevC.109.044605)이다.
 그 논문은 0.1--10 keV 충돌에너지에서 Floquet--Volkov와
 Crank--Nicolson을 대조하고, thermal 결과는 1 keV D--T plasma를
-benchmark로 사용했다. 그 benchmark의 0.3 keV photon에서 1% 임계장은
-(8.680352\times10^{14}) V/m이며 공개-support gate를 통과한다. 반면 이 문서의
+benchmark로 사용했다. 그 benchmark의 \(0.3\,\mathrm{keV}\) photon에서
+1% 임계장은 \(8.680352\times10^{14}\,\mathrm{V/m}\)이며
+공개-support gate를 통과한다. 반면 이 문서의
 10 keV 목표는 Gamow saddle이 30.92 keV이므로 그 CN 대조범위를 벗어난다.
 0.3 keV 아래 photon도 공개 검증범위 밖이므로 더 낮은 임계장이 나오더라도
 채택하지 않는다.
@@ -97,7 +103,8 @@ benchmark로 사용했다. 그 benchmark의 0.3 keV photon에서 1% 임계장은
 \]
 
 field-free 단면적은 [Bosch--Hale](https://www.osti.gov/etdeweb/biblio/5161054)의
-D--T (S(E)) fit을 사용했다. 무구동 (E_0=0)에서 비율 1을 (2\times10^{-14})
+D--T \(S(E)\) fit을 사용했다. 무구동 \(E_0=0\)에서 비율 1을
+\(2\times10^{-14}\)
 이내로 복원한다. 1% 임계장에서 계산한 주요 값은
 
 ```text
@@ -133,11 +140,11 @@ I=cu_{\rm EM}=3.136875961\times10^{28}\ {\rm W/m^2}
 \]
 
 이다. geometry를 숨기지 않기 위해 10 fs, 반지름 10 nm의 선언된 pulse를
-사용했다. 이는 약 725 optical cycles, (0.09855) J의 입사 에너지다.
+사용했다. 이는 약 725 optical cycles, \(0.09855\,{\rm J}\)의 입사 에너지다.
 
-동수 D/T 총 ion density (10^{31}\,\mathrm{m^{-3}})의 선언된 microvolume에서
+동수 D/T 총 ion density \(10^{31}\,\mathrm{m^{-3}}\)의 선언된 microvolume에서
 Bosch--Hale 반응률을 그대로 적용하면, 1% 증강으로 얻는 추가 fusion 에너지는
-입사 pulse의 (7.65\times10^{-9})뿐이다. 흡수, plasma propagation, ramp,
+입사 pulse의 \(7.65\times10^{-9}\)뿐이다. 흡수, plasma propagation, ramp,
 pump recovery는 아직 풀지 않았다. 따라서 이 장부는 source 비용을 감춘 것이
 아니지만 reactor upgrade도 아니다.
 
@@ -146,12 +153,12 @@ pump recovery는 아직 풀지 않았다. 따라서 이 장부는 source 비용�
 등록 scalar의 on-shell quantum은
 
 \[
-\hbar\Omega_\Phi=29.64757\ {\rm MeV}=29647.57\ {\rm keV},
+\hbar\Omega_\Phi=29.6991596\ {\rm MeV}=29699.1596\ {\rm keV},
 \]
 
-즉 QED 외삽점의 0.3 keV보다 98,825배 높다. 0.3 keV로 구동한 같은 massive
+즉 QED 외삽점의 0.3 keV보다 98,997배 높다. 0.3 keV로 구동한 같은 massive
 field는 macroscopic propagating mode가 아니라 reduced Compton length
-6.65576 fm에서 감쇠하는 off-shell near field다.
+6.6441941 fm에서 감쇠하는 off-shell near field다.
 
 더구나 질량비례 scalar gradient의 상대좌표 결합은
 
@@ -174,7 +181,7 @@ QED의 V/m를 scalar의 V/m로 이름만 바꾸는 mapping은 금지했다.
 두 번째 mode는
 
 \[
-k=0.133374\ {\rm MeV},\qquad \bar\lambda_{\rm beat}=1479.50\ {\rm fm}
+k=0.133490\ {\rm MeV},\qquad \bar\lambda_{\rm beat}=1478.22\ {\rm fm}
 \]
 
 이고 10 keV Gamow saddle turning radius 46.57 fm보다 길다. 따라서 장벽
@@ -192,12 +199,13 @@ H_s(t)\simeq[1-\epsilon\cos(\Delta t)]\frac{p^2}{2\mu}+V_C
 \epsilon=0.302439606
 \]
 
-이 필요하다. 이미 선형화 범위 밖이다. invisible-width가 허용하는 portal
-(lambda=0.005110743)의
+이 필요하다. 이미 선형화 범위 밖이다. PDG 2026의 ATLAS direct
+\(\operatorname{BR}_{\rm inv}<0.107\)을 fixed-light stress-test에서 역산한
+portal coupling \(\lambda=0.00504779076\)의
 
 \[
 C_N^{\rm pair}=\frac{2\lambda f_Nm_N}{m_h^2}
-=1.83844\times10^{-10}\ {\rm MeV^{-1}}
+=1.81672\times10^{-10}\ {\rm MeV^{-1}}
 \]
 
 는 산란 Feynman vertex 계수다. 고전 배경 질량항에는 동일입자 미분에서
@@ -205,17 +213,17 @@ C_N^{\rm pair}=\frac{2\lambda f_Nm_N}{m_h^2}
 
 \[
 C_N^{\rm background}=\frac{C_N^{\rm pair}}2
-=9.1922\times10^{-11}\ {\rm MeV^{-1}}
+=9.08360\times10^{-11}\ {\rm MeV^{-1}}
 \]
 
 를 사용한다. 정정된 background 계수에서는
 
 \[
-a=1.7570\times10^6\ {\rm MeV},\qquad
-u_\Phi=5.65818\times10^{40}\ {\rm J/m^3}
+a=1.76807\times10^6\ {\rm MeV},\qquad
+u_\Phi=5.74962\times10^{40}\ {\rm J/m^3}
 \]
 
-가 필요하다. 같은 크기의 30.2% DC mass shift와 약 59.3 MeV sum-frequency
+가 필요하다. 같은 크기의 30.2% DC mass shift와 약 59.398 MeV sum-frequency
 성분도 피할 수 없다. 이 toy는 scalar 전용 finite-pulse Crank--Nicolson
 계산도 아니므로 물리적 CE upgrade로 승격하지 않는다.
 

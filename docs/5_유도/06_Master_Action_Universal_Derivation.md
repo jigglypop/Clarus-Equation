@@ -1,8 +1,9 @@
-## 1. 이 장의 목표와 구조
+# 1. 이 장의 목표와 구조
 
 이 문서는 앞선 각 장에서 사용한 CE 클라루스장 공리들을 하나로 모아,
 
-- **우주의 안정성·정합성**을 지배하는 하나의 **마스터 작용함수(CE 보편 안정 작용)**를 제시하고  
+- 여러 도메인의 안정화 항을 비교하는 하나의 **마스터 functional
+  인터페이스**를 제시하고
 - 고전역학, 양자역학, 유체역학, 정수론 난제, 단백질 접힘, 암흑에너지, 뇌·LLM 등이  
   이 마스터 작용의 **서로 다른 유효 이론(effective theory)**로 나타나는 구조를 개념적으로 정리하는 것
 
@@ -12,9 +13,9 @@
 
 - **1장**: 목표와 구조  
 - **2장**: 공리·정의·가설 요약 (A1–A5, D1, H1)  
-- **3장**: CE 보편 안정 작용 $S_\text{CE}$의 기본 형태 제안  
+- **3장**: CE 유클리드 안정 functional \(\mathcal J_\text{CE}\)의 타입·측도 규약
 - **4장**: 각 분야(유체·정수론·단백질·우주론·블랙홀·뇌/LLM)로의 투영·환원 구조  
-- **5장**: 결합 상수와 스케일(공통 $\alpha_C$)에 대한 정성적 논의  
+- **5장**: 도메인별 결합 계수와 비교 가능한 무차원화 조건
 - **6장**: 순환논리 점검, 한계, 향후 수학적 과제
 
 이 장은 “모든 것을 증명하는 이론”을 주장하지 않으며,  
@@ -102,7 +103,7 @@ $$
 
 ## 3. CE 보편 안정 작용의 기본 형태
 
-### 3.1 물리 작용과 안정 작용의 분리
+### 3.1 Lorentzian 물리 작용과 Euclidean 안정 functional의 분리
 
 표준 물리 이론에서, 작용은 대략
 
@@ -119,78 +120,67 @@ $$
 - $S_\text{GR}$: 중력(예: 아인슈타인–힐베르트 작용)  
 - $S_\text{matter}$: 물질·장(양자장 이론 등)
 
-CE 이론은 여기에 **추가적인 안정 작용 $S_\text{CE}$**를 더한
+Lorentzian 물리 작용에 임의의 양의 curvature penalty를 보편적으로 더하면
+고차 시간미분, ghost, 인과성 및 단위 문제가 생긴다. 따라서 이 문서의
+공통 객체는 \(S_{\rm phys}\)에 자동 가산되는 새 물리 작용이 아니라,
+유클리드 최적화·수치 안정화·Bayesian prior에 쓰는 비음수 목적함수
+\(\mathcal J_{\rm CE}\)다. 실제 물리 scalar의 Lorentzian 작용과 stress
+tensor는 `axium.md`의 공변 EFT에서 별도로 정의한다.
+
+### 3.2 측도와 단위가 지정된 공통 인터페이스
+
+도메인마다 기준 길이 \(\ell_x\), 기준 시간 \(\ell_t\), 상태 scale \(q_0\)를
+먼저 정하고
 
 $$
-S_\text{total}
- =
-S_\text{phys}
- +
-S_\text{CE}
+\bar x=x/\ell_x,\qquad
+\bar t=t/\ell_t,\qquad
+\bar q=q/q_0
 $$
 
-꼴을 제안한다.
-
-여기서 중요한 점은,
-
-- $S_\text{phys}$는 기존 이론에서 이미 쓰이던 작용이며,  
-- $S_\text{CE}$는 “곡률–복잡도 억제”라는 새로운 층을 나타낸다는 것이다.
-
-이 작용은 "모든 도메인을 하나의 미시 이론으로 엄밀 증명한다"는 뜻이 아니라, 서로 다른 도메인에서 반복적으로 나타나는 안정 functional을 **같은 문법으로 재표현**한다는 뜻이다.
-
-### 3.2 보편 안정 작용 $S_\text{CE}$의 형식
-
-앞선 각 장에서 등장한 곡률 functional들을 하나로 묶으면,  
-기본 골격은 다음과 같이 쓸 수 있다.
+로 무차원화한다. 양의 정부호 유클리드 metric \(g_E\)와 정규화 measure
+\(\int_{\mathcal D_E}d\bar\mu_E=1\) 아래 공통 interface를
 
 $$
-S_\text{CE}[\phi,g]
- =
-\int d^dx\,dt\,\sqrt{|g|}
-\left(
-  \alpha_1 \|\nabla \phi\|^2
-  +
-  \alpha_2 \|\nabla^2 \phi\|^2
-\right)
- +
-S_\text{info}[\Phi_\text{supp}].
+\boxed{
+\mathcal J_{\rm CE}[\bar q;g_E,p]
+=
+c_1\!\int_{\mathcal D_E}
+\|\nabla_E\bar q\|^2\,d\bar\mu_E
++
+c_2\!\int_{\mathcal D_E}
+\|\nabla_E^2\bar q\|^2\,d\bar\mu_E
++
+c_I\,\mathbb E_\nu[-\log p]
+}
 $$
 
-여기서
+로 둔다. \(c_1,c_2,c_I\ge0\)는 **도메인별** 무차원
+regularization weight다. 정보항은 \(\nu\ll p\), \(p>0\)
+\(\nu\)-거의 모든 곳에서만 유한하며,
+\(\mathbb E_\nu[-\log p]=\int-\log p\,d\nu\)다.
 
-- $\phi$: 각 시스템의 상태를 나타내는 유효 장(유체 속도장, 영점 오차장, 접힘 경로, 뇌 상태, LLM 잠재상태 등)  
-- $g$: 기저 기하(시공간 계량 혹은 상태공간의 유효 계량)  
-- $\alpha_1, \alpha_2$: 1차/2차 곡률 억제의 세기를 나타내는 결합 상수  
-- $S_\text{info}$: 클라루스장 포텐셜 $\Phi_\text{supp}$와 관련된 정보 이론적 항
+이 정의가 닫으려는 것은 형식과 타입뿐이다.
 
-이다.
+- \(\bar q\): 도메인 상태 변수이며 공변 EFT의 물리 scalar \(\phi\)와 자동
+  동일시하지 않는다.
+- \(g_E\): 최적화 도메인의 양의 metric이며 Lorentzian 시공간 metric과
+  다르다.
+- 두 미분항: 각각 기울기와 곡률 regularizer다.
+- 정보항: 지정된 확률 measure 사이의 cross-entropy 성분이며 에너지나
+  작용으로 자동 해석하지 않는다.
 
-$S_\text{info}$는 예를 들어,
-
-$$
-S_\text{info}
- =
-\int d\mu(x)\,\beta\,\Phi_\text{supp}(x)
- =
-\beta \int d\mu(x)\,[-\log P_\text{selected}(x)]
-$$
-
-와 같은 꼴을 취할 수 있다  
-($d\mu(x)$는 적절한 측도, $\beta$는 온도/민감도 유사 파라미터).
-
-요약하면,
-
-- $\|\nabla\phi\|^2$ 항: 1차 변화(기울기)의 폭주 억제  
-- $\|\nabla^2\phi\|^2$ 항: 2차 변화(곡률)의 급격한 휘어짐 억제  
-- $S_\text{info}$ 항: 희귀한 상태(낮은 선택 확률)에 대한 정보 비용 부여
-
-라는 세 층이 결합된 작용이 $S_\text{CE}$의 핵심이다.
+차원 있는 원변수로 돌아가면 각 계수에는 \(\ell_x,\ell_t,q_0\)의 차원이
+붙는다. 그러므로 서로 다른 도메인의 원시 계수값을 바로 비교할 수 없다.
 
 ---
 
 ## 4. 각 분야로의 투영·환원 구조
 
-이 절에서는 위의 보편 작용이 어떻게 각 장의 functional로 환원되는지 개략적으로 정리한다. 아래의 각 항목은 "직접 증명"이 아니라 "코어 functional의 투영 또는 유효 이론적 환원"으로 읽는다.
+이 절에서는 위의 공통 regularizer interface가 각 장의 functional로
+구체화되는 방식을 정리한다. 아래 항목은 직접 물리 유도가 아니라
+도메인별 모형 선택이다. 별도 표시가 없으면 아래 \(x,t,\phi\)는 §3.2에서
+무차원화한 좌표·상태의 약식 표기이고 적분 measure도 정규화되어 있다.
 
 ### 4.1 유체역학 (Navier–Stokes)
 
@@ -199,7 +189,7 @@ $$
 - 안정 작용:
 
   $$
-  S_\text{CE}^\text{NS}
+  \mathcal J_\text{CE}^\text{NS}
   \sim
   \int \left(
     \|\nabla \tilde{u}\|^2
@@ -218,7 +208,7 @@ $$
 - 안정 작용:
 
   $$
-  S_\text{CE}^\zeta
+  \mathcal J_\text{CE}^\zeta
   \sim
   \int \left(
     a_0 \phi(x)^2
@@ -239,7 +229,7 @@ $$
 - 안정 작용:
 
   $$
-  S_\text{CE}^\text{fold}
+  \mathcal J_\text{CE}^\text{fold}
   \sim
   \int \left(
     a_0 \|\dot{\phi}(t)\|^2
@@ -253,43 +243,42 @@ $$
 
 ### 4.4 우주론 (암흑 에너지)
 
-- 상태 변수: $\phi$를 전체 밀도·곡률장 등으로 보는 유효 기술  
-- 기하: FLRW 혹은 보다 일반화된 시공간  
-- 안정 작용:
-
-  - 전역적으로는 $S_\text{info}$와 $E_\text{nonselected}$가  
-    유효 우주 상수 $\Lambda_\text{eff}$에 기여하는 형태로 나타난다.
-
-여기서는 구체적인 수치 예측보다,  
-“왜 가속 팽창이 ‘복잡도–곡률 억제’와 연결될 수 있는지”의 개념적 틀을 제공한다.
+우주론은 공학 regularizer의 투영만으로 얻지 않는다. 공변 Lorentzian
+scalar action을 지정하고 metric variation으로
+\(\rho_\phi,p_\phi,w_\phi\)를 계산한 뒤 Friedmann/Boltzmann likelihood에
+넣어야 한다. 정보항이나 “비선택 에너지”를
+\(\Lambda_{\rm eff}\)와 자동 동일시하지 않는다. 현 canonical density
+vector는 boundary output이고 절대 에너지 scale과 동적 stress는 별도
+bridge다.
 
 ### 4.5 블랙홀 (강곡률계)
 
 - 상태 변수: $\phi = \Phi$ 또는 강곡률 배경에서의 평균량 $\langle \Phi^2 \rangle$  
 - 기하: 정적 또는 축대칭 시공간 계량 $g_{\mu\nu}$  
-- 안정 작용:
+- 안정 작용(이 식에서는 $c=\hbar=1$):
 
   $$
-  S_\text{CE}^\text{BH}
-  \sim
+  S_\text{eff}^\text{BH}
+  =
   \int d^4x\,\sqrt{-g}
-  \left(
-    \frac{F}{16\pi G}R
-    +
-    \|\nabla \Phi\|^2
-    +
-    V(\Phi)
-  \right)
+  \left[
+    \frac{f(\Phi)}{16\pi G_N}R
+    -\frac12 Z(\Phi)(\nabla\Phi)^2
+    -U(\Phi)
+  \right],
   $$
 
-  여기서 $F = 1 + \alpha_s D_{\text{eff}}$는 CE의 공통 form factor이며,
-  강곡률 평균장 근사에서는 $G_{\text{eff}} = G/F$의 형태로 읽힌다.
+  $$
+  f(\Phi_\infty)=1,\qquad f_{,\Phi}(\Phi_\infty)=0.
+  $$
 
-이 투영은 블랙홀을 "새로운 독립 이론"으로 다루기보다,
-기존 CE 핵심량 $\delta$, $D_{\text{eff}}$, $\alpha_s$, $F$가
-강곡률 영역에서 horizon 구조를 어떻게 재정의하는지를 보는 최소 유도다.
+  여기서 \(G_N\)은 무한대에서 측정된 Newton 상수다. 상수 form factor는
+  bare \(G\)에 흡수되므로 독립적인 \(G/F\) 관측효과가 아니다. 블랙홀
+  수정은 \(f(\Phi(r,\theta))\)의 비상수 profile과 그 stress 및 미분항을
+  coupled EOM으로 풀 때만 정의된다.
 
-상세 유도는 `07_Black_Hole_Derivation.md`를 참조한다.
+상세한 계량–scalar 방정식과 경계조건은
+`07_Black_Hole_Derivation.md`를 참조한다.
 
 ### 4.6 뇌·LLM (Reality_Stone)
 
@@ -298,7 +287,7 @@ $$
 - 안정 작용:
 
   $$
-  S_\text{CE}^\text{brain/LLM}
+  \mathcal J_\text{CE}^\text{brain/LLM}
   \sim
   \int
   \big(
@@ -308,46 +297,28 @@ $$
   \big)\,dV\,dt,
   $$
 
-  각성–수면 모드에 따라 $\lambda$와 가중 함수를 달리 적용한다.
+  각성–수면 모드에 따라 \(\lambda\)와 가중 함수를 달리 적용할 수 있다.
 
-이는 조현병(2차 곡률 안정 붕괴),  
-뇌전증(1차 기울기 폭주),  
-LLM 환각(곡률 스티킹)을  
-하나의 안정 functional 관점에서 **비교하는 틀**을 제공한다. 이 자체가 뇌나 LLM에서 CE가 이미 검증되었다는 뜻은 아니다.
+이는 시계열의 gradient·curvature 통계와 LLM 표현 변화량을 비교하는
+공학적 feature family다. 조현병·뇌전증·의식·환각의 임상 또는 인지
+기전과 동일시하려면 별도 operational endpoint, 데이터와 대조군이
+필요하며 현재 문서는 그런 검증을 제공하지 않는다.
 
 ---
 
 ## 5. 결합 상수와 스케일에 대한 논의
 
-각 분야에서 등장한 곡률 억제 계수들을  
-공통된 무차원 결합 상수 $\alpha_C$로 환산하면,
+원시 regularization coefficient는 상태 정규화, 격자 간격, 기준 시간,
+손실함수 convention과 measure에 따라 변한다. 따라서 과거
+\(\alpha_C\sim10^{-4}{-}10^{-3}\) 공통값 주장은 차원·측도 정합성이 없어
+폐기한다.
 
-- Navier–Stokes, 리만 제타, 단백질 접힘, LLM,  
-  그리고 우주론의 암흑 에너지까지
-
-대략
-
-$$
-\alpha_C \sim 10^{-4} \sim 10^{-3}
-$$
-
-범위의 값들이 등장하는 패턴이 제시되어 있다.
-
-이는 아직 정밀한 실험·수학적 증명이 아니라,
-
-- “서로 다른 계통의 문제들이  
-  비슷한 스케일의 곡률 억제 세기를 필요로 한다”는  
-초기 정성적 관찰에 가깝다.
-
-그러나 만약 추후 더 많은 데이터와 계산에서
-
-- 이 범위가 계속해서 유지되고,  
-- 서로 다른 스케일·도메인에서 $\alpha_C$가 **하나의 좁은 구간으로 수렴**한다면,
-
-이는 CE 마스터 작용이
-
-- “수학적 장난이 아니라,  
-  실제 우주가 따르는 보편 안정 원리의 근사치”일 가능성을 강화하게 된다.
+도메인 간 비교가 가능하려면 먼저 `3.2의 무차원화를 고정하고, 동일한
+무차원 observable—예를 들어 기준 spectrum의 cutoff 대비 curvature
+penalty 비—를 사전등록해야 한다. 그 뒤 독립 데이터에서 추정한
+\((c_1,c_2,c_I)\)가 공통 구간을 갖는지 hierarchical model로 검사한다.
+그 전까지 이 계수들은 서로 다른 공학 하이퍼파라미터이며 보편 물리
+결합상수가 아니다.
 
 ---
 

@@ -1,6 +1,11 @@
 ﻿# H0 readout law audit
 
-이 문서는 현재 \(H_0\) readout law의 수식, 검증 상태, 그리고 앞으로 계속 진행해도 되는지를 평가하기 위한 audit이다.
+이 문서는 \(H_0\) readout law의 수식과 검증 이력을 평가하기 위한
+audit이다. 수치 정본은 [`7_우주론.md`](7_우주론.md)의
+`CE-COSMO-2026-08` 계약($\alpha_s^{\overline{\rm MS}}(M_Z)=0.1180$),
+$N_e^{(N)}=57.20243399$,
+$\delta_N\sigma_D=0.16925962$, $t_{\rm Pl}=5.391247\times10^{-44}\,{\rm s}$다.
+구 selector 출력은 서로 다른 $N_e$/manifest를 혼용해 아래 표시식을 만족하지 않으므로 폐기한다.
 
 ## 1. 핵심 수식
 
@@ -11,25 +16,25 @@ D_{\rm eff}=3+\delta,
 \qquad
 x=e^{-D_{\rm eff}(1-x)},
 \qquad
-\sigma=1-x.
+\sigma_D\equiv1-x.
 $$
 
 수치값은
 
 $$
-D_{\rm eff}=3.17775842,
+D_{\rm eff}^{(N)}=3.17791300,
 \qquad
-x=0.04864672,
+x=0.04863826,
 \qquad
-\sigma=0.95135328,
+\sigma_D=0.95136174,
 \qquad
-\delta\sigma=0.16911106.
+\delta_N\sigma_D=0.16925962.
 $$
 
 e-fold 수는
 
 $$
-N_e=\frac32D_{\rm eff}N_{\rm gauge}=57.19965162.
+N_e^{(N)}=\frac32D_{\rm eff}^{(N)}N_{\rm gauge}=57.20243399.
 $$
 
 late-time de Sitter horizon entropy는
@@ -43,7 +48,7 @@ $$
 CE horizon readout의 기본 불변량 후보는
 
 $$
-I_H=\log S_{\rm dS}+\pi\delta\sigma,
+I_H=\log S_{\rm dS}+\pi\delta_N\sigma_D,
 \qquad
 I_{\rm phase}=\frac{\pi^2}{2}N_e.
 $$
@@ -54,7 +59,7 @@ $$
 \boxed{
 \log S_{\rm low}
 =
-\frac{\pi^2}{2}N_e-\pi\delta\sigma
+\frac{\pi^2}{2}N_e-\pi\delta_N\sigma_D
 }
 $$
 
@@ -62,7 +67,7 @@ $$
 
 $$
 \boxed{
-H_0^{\rm low}=67.247245\,{\rm km\,s^{-1}Mpc^{-1}}.
+H_0^{\rm low}=66.802746\,{\rm km\,s^{-1}Mpc^{-1}}.
 }
 $$
 
@@ -72,7 +77,7 @@ $$
 \boxed{
 \log S_{\rm high}
 =
-\frac{\pi^2}{2}N_e-\pi\delta\sigma-\delta\sigma
+\frac{\pi^2}{2}N_e-\pi\delta_N\sigma_D-\delta_N\sigma_D
 }
 $$
 
@@ -80,7 +85,7 @@ $$
 
 $$
 \boxed{
-H_0^{\rm high}=73.180689\,{\rm km\,s^{-1}Mpc^{-1}}.
+H_0^{\rm high}=72.702371\,{\rm km\,s^{-1}Mpc^{-1}}.
 }
 $$
 
@@ -90,7 +95,16 @@ $$
 \boxed{
 \log S(q)
 =
-\frac{\pi^2}{2}N_e-\pi\delta\sigma-q\delta\sigma.
+\frac{\pi^2}{2}N_e-\pi\delta_N\sigma_D-q\delta_N\sigma_D.
+}
+$$
+
+동일한 식을 수치적으로 쓰면
+
+$$
+\boxed{
+H_0(q)=66.802746\exp\!\left(\frac{q\,\delta_N\sigma_D}{2}\right)
+\ {\rm km\,s^{-1}Mpc^{-1}}.
 }
 $$
 
@@ -101,10 +115,10 @@ $$
 $$
 q_{\rm req}
 =
-\frac{\log S_{\rm global}-\log S_{\rm obs}}{\delta\sigma}.
+\frac{\log S_{\rm global}-\log S_{\rm obs}}{\delta_N\sigma_D}.
 $$
 
-그 결과 CMB는 \(q\simeq0\), Cepheid/SN은 \(q\simeq1\), BAO/TRGB/JAGB/GW/lens는 중간값을 요구했다.
+현 정본으로 역산하면 CMB는 \(q_{\rm req}\simeq0.105\), Cepheid/SN 중심값은 \(q_{\rm req}\simeq1.055{-}1.076\), BAO/TRGB/JAGB/GW/lens는 중간값을 요구한다. 즉 endpoint 분류는 유지되지만 중심값이 정확히 \(0\)과 \(1\)에 놓인다는 주장은 하지 않는다.
 
 이를 topology 값으로 압축하면
 
@@ -144,7 +158,7 @@ $$
 \boxed{
 \log S
 =
-\frac{\pi^2}{2}N_e-\pi\delta\sigma-q_F\delta\sigma.
+\frac{\pi^2}{2}N_e-\pi\delta_N\sigma_D-q_F\delta_N\sigma_D.
 }
 $$
 
@@ -152,12 +166,12 @@ $$
 
 | 단계 | 결과 | 지위 |
 |---|---:|---|
-| low branch | \(H_0=67.247245\) | Planck/CMB 계열 통과 |
-| high branch | \(H_0=73.180689\) | SH0ES/megamaser/local 계열 통과 |
-| \(q_{\rm req}\) ordering | \(\chi^2/{\rm dof}=0.220/6\) | 강한 selector 신호 |
-| prospective external channels | \(\chi^2/{\rm dof}=0.462/5\) | lens/maser/GW 통과 |
-| graph selector | \(\chi^2/{\rm dof}=0.402/10\) | schematic graph 통과 |
-| Fisher selector | \(\chi^2/{\rm dof}=0.199/6\) | schematic Fisher 통과 |
+| low branch | \(H_0=66.802746\) | Planck 대비 \(-1.19\sigma_{\rm obs}\); calibration family |
+| high branch | \(H_0=72.702371\) | SH0ES HST/JWST 대비 \(-0.32/-0.54\sigma_{\rm obs}\) |
+| \(q_{\rm req}\) ordering | \(\chi^2/{\rm dof}=2.299/6\) | selector ordering diagnostic |
+| prospective external channels | \(\chi^2/{\rm dof}=0.512/5\) | lens/maser/GW 비교 통과 |
+| graph selector | \(\chi^2/{\rm dof}=2.506/10\) | schematic graph 비교 통과 |
+| Fisher selector | \(\chi^2/{\rm dof}=2.122/6\) | schematic Fisher 비교 통과 |
 | Fisher/covariance IO suite | PASS | 실제 matrix 입력 준비 완료 |
 
 ## 4. 닫힌 것과 닫히지 않은 것
@@ -165,14 +179,14 @@ $$
 닫힌 것:
 
 1. \(H_0\) low/high branch를 하나의 무차원 식으로 쓸 수 있다.
-2. high branch correction은 새 상수가 아니라 기존 결핍 밀도 \(\delta\sigma\)다.
+2. high branch correction은 새 상수가 아니라 기존 결핍 밀도 \(\delta_N\sigma_D\)다.
 3. \(q\)는 자유 parameter에서 topology ratio, graph conductance, Fisher conductance로 내려왔다.
 4. 현재 IO 계층은 Fisher/covariance/CSV/labelled CSV를 받을 수 있고 full suite를 통과한다.
 
 아직 닫히지 않은 것:
 
 1. \(\log S\)가 왜 정확히 primordial phase-area count \((\pi^2/2)N_e\)를 읽는지의 물리 유도.
-2. \(\pi\delta\sigma\)와 \(\delta\sigma\)가 각각 global horizon integral과 local endpoint defect로 들어가는 정식 경로적분 유도.
+2. \(\pi\delta_N\sigma_D\)와 \(\delta_N\sigma_D\)가 각각 global horizon integral과 local endpoint defect로 들어가는 정식 경로적분 유도.
 3. 실제 공개 likelihood covariance에서 \(q_F\)를 계산한 결과의 채널 간 반복성. TDCOSMO 첫 투입은 `11_TDCOSMO_real_covariance_audit.md`에 기록되어 있으나, 아직 여러 독립 관측군으로 일반화된 것은 아니다.
 4. \(L,G\) 또는 \(C_L,C_G\)의 graph 노드 정의가 관측 pipeline마다 고유하게 정해지는지.
 5. 같은 파라미터가 likelihood closure에 따라 local endpoint 또는 global closure로 바뀌는 role map \(R\)을 외부 분석 규약에서 독립적으로 정할 수 있는지.
@@ -185,7 +199,7 @@ $$
 2. CMB/Planck 계열의 실제 \(q_F\)가 \(q\simeq1\)에 가깝게 나온다.
 3. SH0ES/local geometric 계열의 실제 \(q_F\)가 \(q\simeq0\)에 가깝게 나온다.
 4. TDCOSMO처럼 같은 관측군에서 model closure를 바꿀 때 \(q_F\)가 변하지 않는다.
-5. 실제 covariance를 넣었을 때 \(H_0(q_F)\)의 pull이 여러 독립 채널에서 \(3\sigma\) 이상 체계적으로 벗어난다.
+5. 실제 covariance를 넣었을 때 \(H_0(q_F)\)의 pull이 여러 독립 채널에서 \(3\sigma_{\rm obs}\) 이상 체계적으로 벗어난다.
 
 ## 6. 계속 진행해도 되는가?
 

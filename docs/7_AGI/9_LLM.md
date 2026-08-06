@@ -461,12 +461,12 @@ def sleep_train(model, dataloader, n_cycles=10, device='cuda'):
 
         # === NREM: 곡률 기반 선택적 업데이트 ===
         model.eval()
-        EPSILON_SQ = 0.0487
+        BOOTSTRAP_X = 0.04863825851598632  # Track-A manifest
         for name, p in model.named_parameters():
             if name in accumulated_grads:
                 g = accumulated_grads[name]
-                # 상위 4.87%만 통과
-                threshold = torch.quantile(g.abs().flatten(), 1.0 - EPSILON_SQ)
+                # manifest 기반 상위 4.864% 설계 target
+                threshold = torch.quantile(g.abs().flatten(), 1.0 - BOOTSTRAP_X)
                 mask = (g.abs() >= threshold).float()
                 p.data -= lr * g * mask
 
@@ -474,7 +474,7 @@ def sleep_train(model, dataloader, n_cycles=10, device='cuda'):
         for name, p in model.named_parameters():
             if name in accumulated_grads:
                 g = accumulated_grads[name]
-                threshold = torch.quantile(g.abs().flatten(), 1.0 - EPSILON_SQ)
+                threshold = torch.quantile(g.abs().flatten(), 1.0 - BOOTSTRAP_X)
                 pruned = g * (g.abs() < threshold).float()
                 # 노이즈 주입 + 재평가
                 noise = torch.randn_like(pruned) * pruned.std() * 0.1
@@ -491,16 +491,18 @@ def sleep_train(model, dataloader, n_cycles=10, device='cuda'):
 학습 후 추론 시 Top-k 활성화 적용:
 
 ```python
-class SparseGaugeLattice(GaugeLattice):
-    """추론 시 4.87% 활성화만 사용."""
+import math
 
-    EPSILON_SQ = 0.0487
+class SparseGaugeLattice(GaugeLattice):
+    """추론 시 Track-A 4.864% 설계 target을 사용."""
+
+    BOOTSTRAP_X = 0.04863825851598632
 
     def forward(self, x):
         y = super().forward(x)
         if not self.training:
             # 추론 시 Top-k 활성화
-            k = max(1, int(self.EPSILON_SQ * y.shape[-1]))
+            k = max(1, math.ceil(self.BOOTSTRAP_X * y.shape[-1]))
             topk_vals, topk_idx = torch.topk(y.abs(), k, dim=-1)
             mask = torch.zeros_like(y)
             mask.scatter_(-1, topk_idx, 1.0)
@@ -553,6 +555,8 @@ def generate_with_curvature_check(model, idx, n_tokens,
 텍스트-only LLM보다 AGI 쪽으로 가려면, 앞단에 모달리티별 sparse encoder를 두는 편이 더 자연스럽다(`7_AGI/12_Equation.md` 6.8-6.9절).
 
 ```python
+import math
+
 class GroundedCELLM(nn.Module):
     def __init__(self, text_model, vision_encoder, audio_encoder, touch_encoder):
         super().__init__()
@@ -560,10 +564,10 @@ class GroundedCELLM(nn.Module):
         self.vision_encoder = vision_encoder
         self.audio_encoder = audio_encoder
         self.touch_encoder = touch_encoder
-        self.epsilon_sq = 0.0487
+        self.bootstrap_x = 0.04863825851598632
 
     def topk_act(self, h):
-        k = max(1, int(self.epsilon_sq * h.shape[-1]))
+        k = max(1, math.ceil(self.bootstrap_x * h.shape[-1]))
         vals, idx = torch.topk(h.abs(), k, dim=-1)
         mask = torch.zeros_like(h)
         mask.scatter_(-1, idx, 1.0)
@@ -615,10 +619,10 @@ def forward(self, x):
 
 ```python
 # d=768 예시
-total = 0.11789 + 0.03352 + 0.00775  # = 0.15916
-d3 = round(768 * 0.11789 / 0.15916)  # = 568 (SU(3) binding)
-d2 = round(768 * 0.03352 / 0.15916)  # = 162 (SU(2) decision)
-d1 = 768 - 568 - 162                  # =  38 (U(1) attention)
+total = 0.1180 + 0.03352 + 0.00775   # = 0.15927
+d3 = round(768 * 0.1180 / total)      # = 569 (SU(3) binding)
+d2 = round(768 * 0.03352 / total)     # = 162 (SU(2) decision)
+d1 = 768 - d3 - d2                    # =  37 (U(1) attention)
 
 # 입력 x를 [x_3 | x_2 | x_1]으로 분할
 # 각각 독립적인 MLP를 통과
@@ -672,15 +676,17 @@ U(1)  attention:  13 dims (4.9%)    # 주의: 억제적 게이팅
 Phi   smoothing: LBO (rank=32)      # 안정화: 전역 평탄화
 ```
 
-이 비율은 CE 결합 상수에서 고정이므로 조정 불필요.
+첫 입력 $0.1180$은 Track-A calibration input이다. 이 채널 분할은 독립 공학
+benchmark이며 물리 결합이 neural width를 유일하게 정한다는 뜻이 아니다.
 
 ### 6.4 예측 점검 루프
 
 실전에서는 아래 순서로만 해석해야 한다.
 
 1. **예측 고정**
-   - 활성 비율 중심 `4.87%`
-   - 수면 루프 잔차 `1회 15.5%`, `2회 2.4%`, `3회 0.37%`
+   - manifest 기반 설계 target `4.864%`
+   - 고정점 근방 선형 잔차율 `q*=0.154568`; 균일 bound는
+     `q_U=0.200176` (`p_a<=0.13`에서만)
    - 곡률 제약은 hard bound가 아니라 안정화 편향
 2. **A/B 측정**
    - Dense와 Sparse

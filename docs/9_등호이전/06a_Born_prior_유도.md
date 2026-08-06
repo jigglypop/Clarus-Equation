@@ -203,7 +203,7 @@ finite branch 수준의 닫힌 부분은 `reality_stone.clarus.pre_eq`에 구현
 
 | 함수 | 의미 |
 |---|---|
-| `born_prior(amplitudes)` | \(|c_i|^2\) 정규화 prior |
+| `born_prior(amplitudes)` | \(\lvert c_i\rvert^2\) 정규화 prior |
 | `refined_branch_prior(counts)` | 동일 진폭 미세분지 count에서 coarse prior |
 
 회귀검사:

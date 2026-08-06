@@ -1,21 +1,20 @@
 # 19. OOD Generalization 의 구조적 결정성: Length Extrapolation 사례
 
-> 관련: `1_AGI.md`(5대 원리), `2_Architecture.md`(구조 규약), `13_Verification.md`(검증 방법론), `8_리만/mra_paper.md`(실증 데이터)
+> 관련: `1_AGI.md`(5대 원리), `2_Architecture.md`(구조 규약), `13_Verification.md`(검증 방법론), `8_리만/mra_paper.md`(역사적 비교)
 >
-> 이 장은 Clarus 본 thesis "구조에서 의미가 나온다" 를 OOD generalization 영역에 처음으로 정량 적용한 결과이다. 현재까지의 증거는 length axis 한 가지에 한정되며, 이는 가설 (`hypothesis`) 에서 단일-축 검증 (`bridge`) 으로 격상된 단계로 분류한다.
+> 과거 9변종×3seed 표의 JSON과 생성 script는 현재 checkout에 없다. 따라서
+> 그 표와 `bridge` 승격은 철회한다. 현재 재현 가능한 근거는
+> `../experiments/ood_length_repro.py`의 4 head-type tiny-model toy뿐이며,
+> length 단일 축의 `hypothesis/toy evidence`로 제한한다.
 
 ---
 
 ## 0. 한 줄 결론
 
-> Transformer 의 length-OOD generalization 은 두 tier 로 명확히 갈린다 — **rotation 위에 강한 distance attenuation (linear / multiplicative) 이 있거나, 회전 자체가 없으면 외삽한다. RoPE 회전을 그대로 두고 attenuation 을 약하게 얹거나 빼면 32× 에서 +29 ∼ +55 % 로 무너진다.**
-
-32× length extrapolation (train N=64, eval N=2048) 에서, 9 개의 표준/신규 변종을 두 tier 로 분류 가능하다:
-
-* **Tier 1 (외삽 OK, ≤ +10 %)**: ALiBi (`rope_alibi`, −6 %), Euler-CE 의 e-decay (`euler_no_pi`, −6 %), 풀 Euler-CE (−6 %), xPos (+4 %), NoPE (+7 %).
-* **Tier 2 (외삽 BAD, +29 ∼ +55 %)**: RoPE 단독 (+47 %), MRA (+41 %), MRA-bias (+40 %), Euler 의 π-rotation 단독 (+55 %).
-
-이는 AGI 의 핵심 어려움인 "학습 분포 밖에서 모델이 작동하는가" 가 데이터 양이 아니라 **inductive bias 의 형태** 에 의해 결정된다는 thesis 의 첫 직접 증거이다.
+> 현재 tiny char-LM toy에서는 32× 길이에서 ALiBi와 xPos가 안정적이고,
+> NoPE와 RoPE가 악화됐다. 이는 **명시적 강한 distance attenuation이 이 toy의
+> length-OOD에 도움을 준다**는 방향성 근거이지, 구조가 OOD 일반화를 결정한다는
+> 보편 정리나 scaling-only 접근의 반증이 아니다.
 
 ---
 
@@ -34,9 +33,14 @@
 
 각 원리는 "학습 분포 밖에서 무엇이 작동하는가" 를 구조 선택으로 풀려는 시도이다.
 
-본 장은 가장 측정 가능한 OOD axis — **시퀀스 길이** — 에서 이 thesis 를 정량 검증한다.
+본 장은 통제가 쉬운 OOD axis인 **시퀀스 길이**에서 이 thesis의 한 toy
+반증 가능성을 시험한다.
 
-여기서 자기참조재귀는 별도 원리라기보다 다른 원리들을 장기 작업으로 묶는 닫힘 조건이다. length extrapolation 실험에서는 distance attenuation 하나만으로도 OOD 구조가 드러나지만, agentic OOD에서는 모델이 자기 출력, 실패, 수정 내역을 다음 state에 다시 넣어야 한다. 즉 장문 추론, tool-use, multi-turn planning에서는 \(S_t \to R(S_t) \to C_t \to S_{t+1}\) 재귀가 없으면 error propagation을 유니타리 제약으로 줄여도 자기수정은 일어나지 않는다.
+여기서 자기참조재귀는 다른 원리들을 장기 작업으로 묶는 후보 닫힘 조건이다.
+현재 length toy는 positional attenuation만 비교하며 agentic OOD를 시험하지
+않는다. 장문 추론, tool-use, multi-turn planning에서
+\(S_t\to R(S_t)\to C_t\to S_{t+1}\) 재귀가 주는 추가 효과는 open-loop
+baseline과 별도로 측정해야 한다.
 
 이를 수학적으로 쓰면 OOD 입력열 \(e_{0:T}\)에 대한 closed-loop 안정성 문제다.
 
@@ -58,7 +62,10 @@ $$
 <0.
 $$
 
-즉 평균 로그 수축률이 음수여야 한다. 이 조건은 단일 token PPL보다 agent drift를 더 직접적으로 본다. length extrapolation에서 distance attenuation이 하는 역할은 위치 상태의 \(\hat\rho_t\)를 낮추는 것이고, agentic OOD에서 자기참조재귀가 하는 역할은 critique/memory/residual state의 \(\hat\rho_t\)를 낮추는 것이다.
+평균 로그 수축률의 음수성은 추가 정상성·적분가능성·불변영역 가정 아래의
+후보 안정성 지표다. 단일 token PPL보다 agent drift를 직접 보지만, length
+extrapolation 결과만으로 attenuation이 전체 agent state의 $\hat\rho_t$를
+낮춘다고 결론내릴 수는 없다.
 
 ### 1.1 왜 length 인가
 
@@ -72,102 +79,94 @@ OOD axis 들은 측정 난이도에 큰 차이가 있다:
 | 모달 (modal) | 비교 불가 | -- |
 | task transfer | ★ (zero-shot 정의 모호) | ★★ (benchmark) |
 
-Length 는 train N=64, eval N=2048 같이 정확한 32× OOD 상황을 만들 수 있고, PPL 로 한 자릿수 정확도로 측정된다. **OOD 효과를 다른 변수와 분리할 수 있는 거의 유일한 axis**.
+Length는 train $N=64$, eval $N=2048$처럼 정확한 배율을 만들 수 있고 PPL로
+측정하기 쉽다. 다만 corpus, absolute position distribution, optimization,
+evaluation batch가 함께 변할 수 있으므로 OOD 효과가 자동으로 분리되는 것은 아니다.
 
 따라서 length 에서 발견되는 구조적 원리는 OOD generalization 일반의 first-order 후보로 다룰 가치가 있다.
 
 ---
 
-## 2. 실증 — 9 변종 32× ablation
+## 2. 재현 가능한 tiny-model toy와 증거 장부
 
-`docs/8_리만/mra_paper.md` § 7.7 의 raw 결과를 AGI 관점에서 재해석한다.
+### 2.1 현재 실행 가능한 protocol
 
-### 2.1 비교 대상 (모두 ≈ 30 K params, train block = 64, char-level docs corpus)
+`../experiments/ood_length_repro.py`는 같은 tiny char-level LM에서
+`nope`, `alibi`, `rope`, `xpos` 네 head type을 학습한다. 현재 결과 장부의
+설정은 약 127 K parameter, train block 64, repository Python corpus,
+500 steps, seed 0--2, eval length 64/256/1024/2048이다. degradation은 각
+seed의 eval@64 PPL 대비 상대 변화다.
 
-| 변종 | 거리 처리 메커니즘 | 부류 |
+| head | 32× degradation mean ± sample std | 현재 toy 판정 |
+|---|---:|---|
+| ALiBi | $-9.1\%\pm5.7\%$ | 안정 방향 |
+| xPos | $-8.8\%\pm5.4\%$ | 안정 방향 |
+| NoPE | $+31.7\%\pm10.2\%$ | 악화; 과거 Tier-1 주장 반증 |
+| RoPE | $+505\%\pm41.4\%$ | 큰 악화 |
+
+이 표는 동일 script로 재생성할 수 있는 toy evidence다. NoPE와 RoPE의
+degradation 차이는 $505-31.7=473.3$ percentage points다. 비율을 쓰면 약
+$15.9$배지만, 분모가 0에 가까울 수 있는 degradation ratio는 불안정하므로
+"몇 배 우수"보다 percentage-point 차이와 seed 분산을 보고한다.
+
+### 2.2 철회된 증거 장부
+
+| 과거 주장 | 필요한 artifact | 현재 상태 |
 |---|---|---|
-| `nope` | 없음 (causal mask 만) | 베이스 (no PE) |
-| `std_rope` | π-rotation (RoPE) | 회전 |
-| `xpos` | RoPE + 채널별 multiplicative decay | 회전 + 곱셈 감쇠 |
-| `mra` | RoPE + ζ amplitude weighting | 회전 + 진폭 |
-| `mra_bias` | RoPE + log-additive distance bias | 회전 + log additive |
-| `rope_alibi` | RoPE + linear additive bias (ALiBi) | 회전 + linear additive |
-| `euler_no_decay` | π-rotation + block-aware base | 회전 |
-| `euler_no_pi` | linear additive bias 만 | linear additive |
-| `euler_ce_k1` | π-rotation + linear additive | 회전 + linear additive |
+| 9 변종 × 3 seed × 1500 step | `euler_extrap_long.json`, `extrap_full.json`과 생성 log | missing; 수치표 non-evidence |
+| MRA/MRA-bias의 32× tier | `bench_mra_extrap.py`, checkpoint/config/corpus hash | missing; 미판정 |
+| 9변종 구조가 OOD를 결정 | 다중 seed·scale·corpus·task 결과와 CI | 미검증 |
 
-### 2.2 32× extrapolation 상대 degradation
+`EulerCEMinimal` 구현 및 unit test는 head 연산의 코드 정확성을 검사할 수
+있지만, OOD 성능 결과를 대신하지 않는다.
 
-(전체 표는 `mra_paper.md` § 7.7 참조)
+### 2.3 주장 승격 acceptance protocol
 
-| 변종 | 부류 | **32× degrad** | tier |
-|---|---|---|---|
-| `rope_alibi` | RoPE + linear additive (ALiBi) | **−6.2 %** | 1 |
-| `euler_no_pi` | linear additive only | **−5.5 %** | 1 |
-| `euler_ce_k1` | RoPE + linear additive + π-rotation | **−6.2 %** | 1 |
-| `xpos` | RoPE + multiplicative decay | **+4.1 %** | 1 |
-| `nope` | no positional encoding | **+7.0 %** | 1 |
-| `mra_bias` | RoPE + log additive | +40.3 % | 2 |
-| `mra` | RoPE + ζ amplitude | +40.8 % | 2 |
-| `std_rope` | RoPE 단독 | +47.2 % | 2 |
-| `euler_no_decay` | π-rotation + block-aware base | +54.7 % | 2 |
-
-### 2.3 결정적 패턴: Tier 1과 Tier 2
-
-```
-Tier 1  (외삽 OK, ≤ +10 %):
-  ALiBi (linear additive)   −6.2 %  ← 가장 강함
-  Euler e-decay (= ALiBi)   −5.5 %
-  xPos (multiplicative)     +4.1 %
-  NoPE (no rotation)        +7.0 %
-
-   ════════════════════════ ↕ 30 ∼ 50 %p cliff ═══════════════════
-
-Tier 2  (외삽 BAD, +29 ∼ +55 %):
-  log additive              +40.3 %
-  RoPE + ζ amplitude        +40.8 %
-  RoPE 단독                 +47.2 %
-  π-rotation + base 만      +54.7 %
-```
-
-**Tier 1 과 Tier 2 는 30 ∼ 50 %p 의 절벽** 으로 갈린다 (random 결과 아님). 두 tier 의 구별 기준:
-
-| Tier | 구조적 조건 |
-|---|---|
-| **1 (외삽 OK)** | 강한 distance attenuation 존재 (linear/multiplicative) **OR** rotation 부재 |
-| **2 (외삽 BAD)** | rotation 존재 + attenuation 부재 또는 너무 약함 (log) |
-
-핵심은 **NoPE가 RoPE보다 7배 잘 외삽한다**는 점이다(+7.0% 대 +47.2%). 즉 RoPE의 회전 자체가 OOD의 직접 원인이며, 이를 보정하는 강한 distance attenuation이 없으면 회전을 아예 빼는 편이 낫다(Kazemnejad et al. 2023의 finding 재현).
+전체 9변종 결론을 복원하려면 동일 tokenizer/corpus split SHA256, parameter
+count $\pm0.1\%$, train tokens, optimizer schedule을 고정한다. 최소 10 seed와
+두 개 이상의 corpus에서 length $\{64,128,256,512,1024,2048\}$를 평가하고,
+각 run의 config/commit/environment hash, PPL, raw log를 JSONL로 보존한다.
+사전등록한 mixed-effects 또는 paired bootstrap 분석에서 attenuation class의
+효과 CI가 0을 배제하고 unseen corpus에서도 재현될 때만 `bridge`로 올린다.
+현재 3-seed single-corpus tiny result는 그 문턱을 통과하지 않는다.
 
 ---
 
-## 3. 왜 두 tier 가 갈리는가 — 직관
+## 3. 가능한 메커니즘 — 아직 가설
 
 ### 3.1 RoPE 회전이 OOD 의 직접 원인
 
-NoPE가 RoPE보다 7배 잘 외삽한다는 사실(NoPE +7%, RoPE +47%)은 회전 메커니즘 자체가 OOD 위험 요소임을 보여준다. RoPE의 phase `θ_k(p) = p · 10000^{−2k/d}`는 `p`가 학습 분포 [0, 64] 안에서는 학습된 attention 분포를 만들지만, `p ∈ [64, 2048]` 영역에서는 학습 분포 밖의 phase를 만든다. 즉 학습된 attention head가 본 적 없는 회전 상태에서 평가된다.
+현재 toy에서 NoPE도 $+31.7\%$ 악화됐고 RoPE는 $+505\%$ 악화됐다.
+따라서 "회전 부재면 외삽한다"는 과거 주장은 반증됐다. RoPE의 phase
+`θ_k(p)=p·10000^{-2k/d}`가 train 범위 밖에서 보지 못한 상태를 만든다는 것은
+위험 메커니즘 후보지만, 두 architecture의 차이가 rotation 하나뿐이라는
+인과 개입은 아니므로 회전 자체가 원인이라고 확정하지 않는다.
 
 특히 RoPE 의 wrap-around 특성 (`cos(2π+θ) = cos θ`) 때문에 멀리 떨어진 토큰 간 attention 이 가까운 토큰 간 attention 과 *같은 phase* 로 wrap 되어 관계가 깨진다.
 
-### 3.2 Distance attenuation 이 회전 효과를 dominate
+### 3.2 Distance attenuation 가설
 
-Tier 1 의 핵심 메커니즘은 회전과 무관한 별도의 distance signal:
+현재 toy에서 안정 방향이었던 두 변형은 명시적 강한 distance signal을 갖는다.
 
 | 형태 | 거리 의존 | 외삽 안정 |
 |---|---|---|
-| Linear additive `−m d` | strong, monotonic | **−6 %** (best) |
-| Multiplicative `ζ^d` | strong, monotonic | **+4 %** |
-| Log additive `−log d` | weak (sub-linear) | +40 % (fail) |
+| Linear additive `−m d` | strong, monotonic | ALiBi $-9.1\%\pm5.7\%$ |
+| Multiplicative `ζ^d`, $0<ζ<1$ | log-space linear attenuation | xPos $-8.8\%\pm5.4\%$ |
+| Log additive `−c\log d` | sub-linear | 현재 artifact 없음 |
 
-거리에 monotonic 하고 unbounded 한 attenuation 이 있으면 RoPE 회전의 wrap-around 효과를 dominate 하여 attention 이 자연스럽게 가까운 토큰에 집중. Linear 가 가장 강하고 multiplicative 도 작동, log 는 너무 천천히 감쇠해서 효과 없음.
+강한 attenuation을 additive logit $b(d)$에 대해
+$\liminf_{d\to\infty}-b(d)/d>0$으로 정의하면 linear bias와
+multiplicative $ζ^d$는 포함되고 $-c\log d$는 제외된다. 이 기준은 2-bit
+taxonomy의 모순을 피하는 **사전등록 분류 규칙**이지, 아직 충분조건 정리가
+아니다. MRA의 amplitude가 이 기준을 만족하는지도 구현식으로 따로 판정해야 한다.
 
 ### 3.3 1-jet 충분성 (linear 가 가장 강한 이유)
 
-모든 smooth 함수 `f(d)` 는 점 d₀ 근처에서 1-jet (constant + slope) 으로 근사 가능: `f(d) ≈ f(d₀) + f'(d₀)(d − d₀)`. Linear additive bias 는 학습 분포 안에서 `f'(d)` 의 점추정만 학습하면 되고, 그 추정이 외삽 영역에서도 유효 (선형 함수의 1-jet 은 함수 전체와 동일).
-
-Multiplicative `ζ^d` 도 log-space 에서 linear (`log ζ · d`) 이므로 비슷한 이유로 외삽 안정. Logarithmic 은 비선형 변환이 들어가서 학습 분포 밖에서 형태가 달라짐 → 약함.
-
-이 직관은 가설이며, 형식 증명은 후속 작업.
+모든 smooth 함수의 1-jet은 $d_0$ **근방**에서만 근사다. 이 국소 Taylor
+사실은 $64\to2048$ 외삽을 정당화하지 않는다. Linear bias가 전 구간에서
+같은 slope를 유지하고 multiplicative $ζ^d$가 log-space에서 linear라는 것은
+후보 설명이지만, softmax normalization과 학습된 Q/K를 포함한 일반화 정리는
+아니다. 따라서 이 절은 형식 증명이 아니라 후속 분석 가설이다.
 
 ---
 
@@ -177,19 +176,25 @@ Multiplicative `ζ^d` 도 log-space 에서 linear (`log ζ · d`) 이므로 비�
 
 Clarus AGI 의 핵심 명제 (`1_AGI.md` § 0): 우주는 빅뱅에서 한 번의 부트스트랩으로 고정점에 도달했고, 부트스트랩은 **구조적 자기조직화** 의 결과이다. 즉 의미와 구조는 분리 가능한 양이 아니다.
 
-본 발견은 이 명제의 ML 영역 사례:
+현재 toy가 허용하는 약한 ML 가설은 다음뿐이다.
 
-> 같은 학습 데이터, 같은 모델 크기, 같은 옵티마이저, 같은 손실. 단지 **거리 처리 함수의 형태** 만 다르다. 그런데 외삽 능력은 한 형태에서만 발현. → 외삽은 데이터의 함수가 아니라 **구조의 함수**.
+> 같은 작은 실험 설정에서 positional head type을 바꾸면 length-OOD PPL이
+> 달라질 수 있다. 구조는 데이터·규모·최적화와 함께 결과에 영향을 주는 요인이다.
 
-이는 scaling-only 접근 (데이터/파라미터 증량으로 모든 것 해결) 에 대한 강한 반증. 같은 학습 데이터에서 어떤 구조는 외삽하고 어떤 구조는 못 한다 → 데이터로 환원 불가.
+3 seed, 단일 corpus, 약 127 K parameter의 single-axis 결과는 scaling-only
+접근을 강하게 반증하지 못한다. 규모와 데이터의 상호작용을 시험하지 않았기
+때문이다. 현재 범위는 head-type 효과의 방향성 toy evidence다.
 
 ### 4.2 자유 파라미터 0 원칙과의 관계
 
 CE 본 thesis 는 자유 파라미터 0 (모든 비율이 axiom 에서 연역). 본 발견은 약한 형태:
 
-> Linear additive bias 의 *slope* 한 개는 학습. 그러나 *형태* 자체 (linear 가 외삽한다는 사실) 는 axiom — 학습으로 발견되지 않으며, 구조 선택의 결과.
+> Linear additive bias의 *slope*와 *형태*를 설계/학습 변수로 분리해 ablation할
+> 수 있다. 어느 형태가 외삽하는지는 axiom이 아니라 외부검증 대상이다.
 
-즉 ML 학습이 풀 수 있는 부분 (slope) 과 풀 수 없는 부분 (form) 의 경계가 보인다. AGI 시스템은 form-level 선택을 학습 외부에서 (axiom 으로) 가져와야 한다.
+현재 실험으로 ML이 form을 학습할 수 없다는 경계는 나오지 않는다. mixture,
+architecture search, meta-learning baseline과 비교하기 전에는 form-level 선택을
+학습 외부 axiom으로 고정할 근거가 없다.
 
 ---
 
@@ -220,23 +225,35 @@ n-shot in-context learning 에서 n 외삽 능력은 토큰 attention 의 distan
 | 상수 | 작용 | 환원 |
 |---|---|---|
 | `π`, `i` | rotation generator (`e^{iπt}` 결합) | **axis 1**: rotation |
-| `e` | exponential decay base | **axis 2**: decay |
+| `e` | exponential decay base | **axis 2 후보**: strong distance attenuation |
 | `1`, `0` | on/off gate values | 각 axis 의 1 비트 |
 
 → **2 axis × 2 gate value = 2² = 4 head-types**, 2-bit string `(pi, e)` 으로 인코딩:
 
-| (pi, e) | 헤드 타입 | 문헌 분석 |
+강한 attenuation bit는 단순히 감쇠 항이 "존재"하는지가 아니라, additive
+logit $b(d)$에 대해 $\liminf_{d\to\infty}-b(d)/d>0$인지로 정의한다.
+
+| (pi, e) | 대표 헤드 타입 | 현재 tiny toy |
 |---|---|---|
-| (0, 0) | NoPE [Kazemnejad 2023] | Tier 1 |
-| (0, 1) | ALiBi [Press 2022] | Tier 1 (best) |
-| (1, 0) | RoPE [Su 2021] | **Tier 2** (외삽 fail) |
-| (1, 1) | xPos [Sun 2023] / Euler-CE | Tier 1 |
+| (0, 0) | NoPE [Kazemnejad 2023] | 악화 ($+31.7\%$) |
+| (0, 1) | ALiBi [Press 2022] | 안정 방향 |
+| (1, 0) | RoPE [Su 2021] | 큰 악화 |
+| (1, 1) | xPos [Sun 2023] / Euler-CE 후보 | 안정 방향 |
 
-**§ 2.2 의 모든 9 변종이 이 4 가지 중 하나로 정확히 매핑**되며, 4 가지 중 단 한 가지 (10 = pure rotation) 만 Tier 2 (외삽 catastrophic). 즉 effective head-type capacity = log₂ 3 ≈ 1.58 비트.
+이 규칙에서 log-additive $-c\log d$와 distance에 대해 선형 이상으로 줄지
+않는 MRA amplitude는 strong bit가 0이다. 따라서 과거 MRA/MRA-bias를
+"attenuation 있음"으로 쓰면서 Tier 2에 둔 모순은 제거된다. 단, 해당 구현과
+artifact가 없으므로 이 둘의 실제 분류·성능은 미판정이다. "모든 9개가 정확히
+매핑되고 pure rotation만 실패"한다는 결론도 철회한다. 현재 toy에서는
+NoPE와 RoPE 둘 다 악화됐다.
 
-`reality_stone/python/reality_stone/clarus/ce_euler.py::EulerCEMinimal` 구현 + 16 개 테스트로 정확성 검증. 2-bit minimal 변종이 canonical PE (NoPE, RoPE, ALiBi, xPos) 를 수치적으로 reproduce (`min_alibi` ≈ `rope_alibi`, `min_xpos` ≈ `euler_ce_k1`, `min_rope` = `std_rope` 정확 일치).
+4개 상태의 고정길이 binary code는 **2 bit**가 필요하다. $\log_2 3\simeq1.58$
+bit는 세 상태를 균등하게 샘플할 때의 Shannon entropy 또는 이상적 평균
+code length 하한이지 고정 2-bit 레지스터 길이가 아니다.
 
-이는 Clarus 본 thesis ("자유 파라미터 0 에 가깝게") 의 또 다른 사례 — **5 차원 continuous bit_logits 가 사실상 2 비트 axiom 으로 환원**되며, 학습은 axis 선택을 풀 필요 없이 axiom 으로 받고 continuous parameter (xi, slope) 만 학습하면 된다.
+`EulerCEMinimal`과 unit tests는 이 4개 연산의 코드 경로를 검사한다. unit
+equivalence는 OOD 성능 증거가 아니며, 5차원 continuous parameterization이
+정보이론적으로 2 bit에 충분하다는 증명도 아니다. 2-bit 표는 구현 taxonomy다.
 
 ---
 
@@ -244,22 +261,29 @@ n-shot in-context learning 에서 n 외삽 능력은 토큰 attention 의 distan
 
 본 발견이 직접적으로 시사하는 설계 원칙:
 
-### R1. Rotation 과 Distance attenuation 의 조합 강제
+### R1. Distance attenuation을 독립 ablation
 
-Sequence position, time step, recursion depth, attention distance 등 모든 "거리" 양은 다음 중 하나로 인코딩해야 한다.
+현재 length toy가 지지하는 권고는 positional head에서 강한 attenuation을
+독립 arm으로 시험하라는 것이다.
 
-* **Tier 1A**: rotation + 강한 attenuation (linear ALiBi 권장 / multiplicative xPos 차선)
-* **Tier 1B**: rotation 자체 부재 (NoPE)
+* rotation + linear attenuation (ALiBi)
+* rotation + multiplicative attenuation (xPos)
+* rotation only와 NoPE 대조군
 
-회전을 그대로 두고 attenuation 을 빼거나 약하게 (logarithmic) 얹으면 OOD 에서 catastrophic. RoPE 의 인기에 끌려 회전을 무비판적으로 채택하면 long-context 에서 무너진다.
+현재 toy에서 NoPE도 악화됐으므로 "회전을 빼면 안전"이라는 규칙은 쓰지
+않는다. Sequence position 결과를 time step, recursion depth 등 모든 거리로
+전이하는 것도 별도 실험 전에는 금지한다.
 
-### R2. Form-level 선택은 axiom
+### R2. Form-level 선택도 검증 대상
 
-ML 학습은 slope 만 풀 수 있다. Form (linear / log / mult / rotation) 은 설계 시점 선택. Form 후보가 여러 개일 때는 OOD 검증이 결정.
+Form(linear/log/multiplicative/rotation)을 axiom으로 고정하지 않고, 같은 예산의
+architecture-search 또는 mixture baseline과 함께 OOD holdout에서 선택한다.
 
 ### R3. OOD axis 별 구조 검증 의무
 
-새 아키텍처 제안 시 in-distribution PPL 만으로 평가하지 말고, 적어도 한 가지 측정 가능한 OOD axis (length 가 가장 깔끔) 에서 16 ∼ 32× 외삽 검증을 명시. 본 작업의 9 개 변종 비교가 reference framework.
+새 아키텍처 제안 시 in-distribution PPL만 보고하지 말고, 사전등록한 OOD
+axis와 배율에서 seed 분산·CI를 보고한다. 2.3절 protocol이 현재 reference이며,
+과거 9변종 결과표는 reference evidence가 아니다.
 
 ---
 
@@ -268,9 +292,10 @@ ML 학습은 slope 만 풀 수 있다. Form (linear / log / mult / rotation) 은
 ### 한계
 
 1. **단일 axis (length)**: H1/H2/H3 미검증.
-2. **소규모**: ~30 K params, 600 K char corpus. 1B+ 모델에서 같은 패턴 유지되는지 미확인.
-3. **단일 도메인**: Korean+English markdown. 다른 modality 미평가.
-4. **이론 부재**: § 3 의 직관 (1-jet, dimensional analysis) 은 가설이며 형식 증명 없음.
+2. **소규모**: 약 127 K params, 3 seed, 500 step. seed CI와 1B+ scaling 미확인.
+3. **단일 도메인**: repository Python character corpus. 자연어·다른 modality 미평가.
+4. **부분 변종**: 현재 재현은 4 head type뿐이고 MRA/MRA-bias 등 5개 과거 arm은 미재현.
+5. **이론 부재**: §3의 attenuation 직관은 가설이며 형식 증명 없음.
 
 ### 후속
 
@@ -281,12 +306,15 @@ ML 학습은 slope 만 풀 수 있다. Form (linear / log / mult / rotation) 은
 
 ---
 
-## 8. 데이터 출처
+## 8. 데이터 출처와 재현 상태
 
-- 9 변종 × 3 seed × 1500 step × 32× extrapolation 측정: `examples/ai/results/euler_extrap_long.json`, `extrap_full.json` (확장)
-- 9 변종 코드: `examples/ai/bench_recursive_euler.py` (`RoPEAttnBlock`, `NoPEAttnBlock`, `XPosAttnBlock`, `RoPEAlibiAttnBlock`, etc.)
-- ExtrapLM 및 train/eval 파이프라인: `examples/ai/bench_mra_extrap.py`
-- 분석 표 + verdict: `docs/8_리만/mra_paper.md` § 7.7
+- 현재 실행 script: `../experiments/ood_length_repro.py`
+- 현재 결과 장부: `../experiments/RESULTS_ood_length.md`
+- head 구현: `../reality_stone/python/reality_stone/clarus/ce_euler.py`
+- unit tests: `../tests/test_euler_minimal.py` (연산 검증; OOD evidence 아님)
+- 과거 `euler_extrap_long.json`, `extrap_full.json`,
+  `bench_recursive_euler.py`, `bench_mra_extrap.py`: 현재 checkout에서 missing
+- `8_리만/mra_paper.md` §7.7: 과거 기록의 위치이며 raw artifact 대체물이 아님
 
 ## 9. References
 
