@@ -32,6 +32,10 @@ OMEGA_GAMMA_H2_REFERENCE = 2.469e-5
 NEUTRINO_RADIATION_FACTOR = 0.22710731766
 DEFAULT_N_EFF = 3.044
 EARLY_RD_INTEGRATION_POINTS = 10001
+CHAPTER1_OMEGA_B0 = 0.04863825851598631
+CHAPTER1_R_DARK = 0.3782386966438831
+CHAPTER1_OMEGA_CDM0 = 0.26108817435761356
+CHAPTER1_OMEGA_DE0 = 0.6902735671264001
 MPC_METERS = 3.0856775814913673e22
 SPEED_OF_LIGHT_M_S = 299792458.0
 NEWTON_G_SI = 6.67430e-11
@@ -56,6 +60,7 @@ class CEForwardParams:
     w0: float = -1.0
     wa: float = 0.0
     gravity_mu_coupling: float = 0.0
+    density_preset: str = "legacy"
 
     def __post_init__(self) -> None:
         if self.rd_mode not in {"external", "early-universe"}:
@@ -68,6 +73,8 @@ class CEForwardParams:
             raise ValueError("tcmb_k must be positive")
         if self.n_eff < 0.0:
             raise ValueError("n_eff must be non-negative")
+        if self.density_preset not in {"legacy", "chapter1"}:
+            raise ValueError("density_preset must be 'legacy' or 'chapter1'")
 
     @property
     def omega_m0(self) -> float:
@@ -86,20 +93,47 @@ class CEForwardParams:
         return self.omega_m0 * self.h * self.h
 
     @property
+    def omega_r0(self) -> float:
+        """Present radiation density implied by ``tcmb_k`` and ``n_eff``."""
+        return radiation_density_h2(self.tcmb_k, self.n_eff) / (self.h * self.h)
+
+    @property
+    def includes_radiation_background(self) -> bool:
+        """Whether the registered background keeps radiation explicitly."""
+        return self.rd_mode == "early-universe"
+
+    @property
     def density_norm(self) -> float:
-        return self.omega_m0 + self.omega_lambda0
+        omega_r0 = self.omega_r0 if self.includes_radiation_background else 0.0
+        return self.omega_m0 + self.omega_lambda0 + omega_r0
 
     @property
     def omega_m0_background(self) -> float:
+        if self.includes_radiation_background:
+            return self.omega_m0
         return self.omega_m0 / self.density_norm
 
     @property
     def omega_lambda0_background(self) -> float:
+        if self.includes_radiation_background:
+            return self.omega_lambda0
         return self.omega_lambda0 / self.density_norm
 
     @property
+    def omega_r0_background(self) -> float:
+        if not self.includes_radiation_background:
+            return 0.0
+        return self.omega_r0
+
+    @property
+    def omega_k0_background(self) -> float:
+        if not self.includes_radiation_background:
+            return 0.0
+        return 1.0 - self.density_norm
+
+    @property
     def is_flat(self) -> bool:
-        return abs(self.omega_m0 + self.omega_lambda0 - 1.0) < 1.0e-3
+        return abs(self.omega_k0_background) < 1.0e-12
 
 
 @dataclass(frozen=True)
@@ -126,6 +160,7 @@ class EarlyUniverseSoundHorizon:
     omega_r_h2: float
     omega_gamma0: float
     omega_r0: float
+    omega_k0: float
     z_drag: float
     a_drag: float
     sound_speed_drag_km_s: float
@@ -413,14 +448,57 @@ def radiation_density_h2(tcmb_k: float, n_eff: float) -> float:
     return omega_gamma_h2 * (1.0 + NEUTRINO_RADIATION_FACTOR * n_eff)
 
 
+def chapter1_canonical_params(
+    *,
+    rd_mode: str = "external",
+    h0: float = 67.4,
+    rd_mpc: float = 147.09,
+    tcmb_k: float = TCMB_REFERENCE_K,
+    n_eff: float = DEFAULT_N_EFF,
+    sigma8_0: float = 0.811,
+    w0: float = -1.0,
+    wa: float = 0.0,
+    gravity_mu_coupling: float = 0.0,
+) -> CEForwardParams:
+    """Build the registered Chapter-1 external or radiation-closed EH branch."""
+    if rd_mode == "external":
+        omega_dm0 = CHAPTER1_OMEGA_CDM0
+        omega_lambda0 = CHAPTER1_OMEGA_DE0
+    elif rd_mode == "early-universe":
+        h = h0 / 100.0
+        omega_r0 = radiation_density_h2(tcmb_k, n_eff) / (h * h)
+        omega_dark0 = 1.0 - CHAPTER1_OMEGA_B0 - omega_r0
+        omega_dm0 = omega_dark0 * CHAPTER1_R_DARK / (1.0 + CHAPTER1_R_DARK)
+        omega_lambda0 = omega_dark0 / (1.0 + CHAPTER1_R_DARK)
+    else:
+        raise ValueError("rd_mode must be 'external' or 'early-universe'")
+    return CEForwardParams(
+        omega_b0=CHAPTER1_OMEGA_B0,
+        omega_dm0=omega_dm0,
+        omega_lambda0=omega_lambda0,
+        h0=h0,
+        rd_mpc=rd_mpc,
+        rd_mode=rd_mode,
+        tcmb_k=tcmb_k,
+        n_eff=n_eff,
+        sigma8_0=sigma8_0,
+        w0=w0,
+        wa=wa,
+        gravity_mu_coupling=gravity_mu_coupling,
+        density_preset="chapter1",
+    )
+
+
 def early_hubble_rate_s_inverse(z: float, params: CEForwardParams) -> float:
     """Return H(z) in s^-1 for the benchmark radiation+matter+Lambda background."""
     if not math.isfinite(z) or z < 0.0:
         raise ValueError("redshift must be finite and non-negative")
-    omega_r0 = radiation_density_h2(params.tcmb_k, params.n_eff) / (params.h**2)
+    omega_r0 = params.omega_r0
+    omega_k0 = 1.0 - omega_r0 - params.omega_m0 - params.omega_lambda0
     expansion_squared = (
         omega_r0 * (1.0 + z) ** 4
         + params.omega_m0 * (1.0 + z) ** 3
+        + omega_k0 * (1.0 + z) ** 2
         + params.omega_lambda0
     )
     h0_s_inverse = params.h0 * 1000.0 / MPC_METERS
@@ -534,7 +612,8 @@ def sound_horizon_at_redshift_mpc(
         raise ValueError("integration_points must be an odd integer >= 3")
 
     omega_gamma_h2 = photon_density_h2(params.tcmb_k)
-    omega_r0 = radiation_density_h2(params.tcmb_k, params.n_eff) / (params.h**2)
+    omega_r0 = params.omega_r0
+    omega_k0 = 1.0 - omega_r0 - params.omega_m0 - params.omega_lambda0
     a_drag = 1.0 / (1.0 + z_drag)
 
     def integrand(a: float) -> float:
@@ -544,7 +623,10 @@ def sound_horizon_at_redshift_mpc(
             omega_gamma_h2,
         )
         scaled_hubble = params.h0 * math.sqrt(
-            omega_r0 + params.omega_m0 * a + params.omega_lambda0 * a**4
+            omega_r0
+            + params.omega_m0 * a
+            + omega_k0 * a**2
+            + params.omega_lambda0 * a**4
         )
         return sound_speed / scaled_hubble
 
@@ -581,6 +663,7 @@ def early_universe_sound_horizon(
     omega_r_h2 = radiation_density_h2(params.tcmb_k, params.n_eff)
     omega_gamma0 = omega_gamma_h2 / (params.h * params.h)
     omega_r0 = omega_r_h2 / (params.h * params.h)
+    omega_k0 = 1.0 - omega_r0 - params.omega_m0 - params.omega_lambda0
     z_drag = eisenstein_hu_drag_redshift(params.omega_m_h2, params.omega_b_h2)
     a_drag = 1.0 / (1.0 + z_drag)
 
@@ -596,6 +679,7 @@ def early_universe_sound_horizon(
         omega_r_h2=omega_r_h2,
         omega_gamma0=omega_gamma0,
         omega_r0=omega_r0,
+        omega_k0=omega_k0,
         z_drag=z_drag,
         a_drag=a_drag,
         sound_speed_drag_km_s=baryon_photon_sound_speed_km_s(
@@ -831,27 +915,49 @@ def parameter_provenance(params: CEForwardParams) -> tuple[ParameterProvenance, 
     n_eff_role = (
         "model_assumption" if params.rd_mode == "early-universe" else "inactive_model_assumption"
     )
+    chapter1_preset = params.density_preset == "chapter1"
+    if chapter1_preset:
+        baryon_source = "Chapter-1 Track-A x_star via chapter1_canonical_params"
+        dm_source = "Chapter-1 R_dark matter split via chapter1_canonical_params"
+        de_source = "Chapter-1 R_dark energy split via chapter1_canonical_params"
+    else:
+        baryon_source = "reality_stone.clarus.constants.ACTIVE_RATIO"
+        dm_source = "reality_stone.clarus.constants.STRUCT_RATIO"
+        de_source = "reality_stone.clarus.constants.BACKGROUND_RATIO"
+    dark_density_role = (
+        "derived_selection"
+        if chapter1_preset and params.rd_mode == "early-universe"
+        else "ce_prediction"
+    )
     return (
         ParameterProvenance(
             "omega_b0",
             params.omega_b0,
             "ce_prediction",
-            "reality_stone.clarus.constants.ACTIVE_RATIO",
+            baryon_source,
             "CE density-ratio output used as a boundary; its physical identification is a Bridge.",
         ),
         ParameterProvenance(
             "omega_dm0",
             params.omega_dm0,
-            "ce_prediction",
-            "reality_stone.clarus.constants.STRUCT_RATIO",
-            "CE density-ratio output used as a boundary; particle identity is not predicted.",
+            dark_density_role,
+            dm_source,
+            (
+                "Chapter-1 radiation closure preserving R_dark; particle identity is open."
+                if dark_density_role == "derived_selection"
+                else "CE density-ratio output used as a boundary; particle identity is not predicted."
+            ),
         ),
         ParameterProvenance(
             "omega_lambda0",
             params.omega_lambda0,
-            "ce_prediction",
-            "reality_stone.clarus.constants.BACKGROUND_RATIO",
-            "CE density-ratio output used as a boundary; microphysical identity remains open.",
+            dark_density_role,
+            de_source,
+            (
+                "Chapter-1 radiation closure preserving R_dark; microphysical identity is open."
+                if dark_density_role == "derived_selection"
+                else "CE density-ratio output used as a boundary; microphysical identity remains open."
+            ),
         ),
         ParameterProvenance(
             "h0",
@@ -925,7 +1031,12 @@ def w_of_a(a: float, w0: float, wa: float) -> float:
 
 def e2_of_a(a: float, params: CEForwardParams) -> float:
     de = dark_energy_scale(a, params.w0, params.wa)
-    return params.omega_m0_background * a ** (-3.0) + params.omega_lambda0_background * de
+    return (
+        params.omega_r0_background * a ** (-4.0)
+        + params.omega_m0_background * a ** (-3.0)
+        + params.omega_k0_background * a ** (-2.0)
+        + params.omega_lambda0_background * de
+    )
 
 
 def e_of_z(z: float, params: CEForwardParams) -> float:
@@ -949,7 +1060,9 @@ def dlnh_dln_a(a: float, params: CEForwardParams) -> float:
     w = w_of_a(a, params.w0, params.wa)
     e2 = e2_of_a(a, params)
     d_e2 = (
-        -3.0 * params.omega_m0_background * a ** (-3.0)
+        -4.0 * params.omega_r0_background * a ** (-4.0)
+        - 3.0 * params.omega_m0_background * a ** (-3.0)
+        - 2.0 * params.omega_k0_background * a ** (-2.0)
         - 3.0 * (1.0 + w) * params.omega_lambda0_background * de
     )
     return 0.5 * d_e2 / e2
@@ -966,18 +1079,35 @@ def residual_mu_of_a(a: float, params: CEForwardParams) -> float:
     return 1.0 - params.gravity_mu_coupling * residual_weight
 
 
-def luminosity_distance_mpc(z: float, params: CEForwardParams, n: int = 2001) -> float:
+def line_of_sight_comoving_distance_mpc(
+    z: float,
+    params: CEForwardParams,
+    n: int = 2001,
+) -> float:
     if z <= 0.0:
         return 0.0
-    c_km_s = 299792.458
     grid = linspace(0.0, z, n)
     inv_e = [1.0 / e_of_z(zz, params) for zz in grid]
     chi = simpson(inv_e, grid)
-    return (c_km_s / params.h0) * (1.0 + z) * chi
+    return (C_KM_S / params.h0) * chi
 
 
 def transverse_comoving_distance_mpc(z: float, params: CEForwardParams, n: int = 2001) -> float:
-    return luminosity_distance_mpc(z, params, n=n) / (1.0 + z)
+    radial_distance = line_of_sight_comoving_distance_mpc(z, params, n=n)
+    omega_k0 = params.omega_k0_background
+    if abs(omega_k0) < 1.0e-12:
+        return radial_distance
+
+    hubble_distance_today = C_KM_S / params.h0
+    dimensionless_radial_distance = radial_distance / hubble_distance_today
+    sqrt_abs_curvature = math.sqrt(abs(omega_k0))
+    argument = sqrt_abs_curvature * dimensionless_radial_distance
+    curvature_map = math.sinh(argument) if omega_k0 > 0.0 else math.sin(argument)
+    return hubble_distance_today * curvature_map / sqrt_abs_curvature
+
+
+def luminosity_distance_mpc(z: float, params: CEForwardParams, n: int = 2001) -> float:
+    return (1.0 + z) * transverse_comoving_distance_mpc(z, params, n=n)
 
 
 def hubble_distance_mpc(z: float, params: CEForwardParams) -> float:
@@ -1531,6 +1661,7 @@ def print_report(params: CEForwardParams, z_values: tuple[float, ...]) -> None:
     rd_selection = sound_horizon_selection(params)
     print("# CE Residual Cosmology Forward Model")
     print()
+    print(f"density_preset {params.density_preset}")
     print(f"omega_b0 {params.omega_b0:.6f}")
     print(f"omega_dm0 {params.omega_dm0:.6f}")
     print(f"omega_m0 {params.omega_m0:.6f}")
@@ -1551,6 +1682,7 @@ def print_report(params: CEForwardParams, z_values: tuple[float, ...]) -> None:
         print(f"omega_r_h2 {early.omega_r_h2:.12g}")
         print(f"omega_gamma0 {early.omega_gamma0:.12g}")
         print(f"omega_r0 {early.omega_r0:.12g}")
+        print(f"omega_k0 {early.omega_k0:.12g}")
         print(f"z_drag_eisenstein_hu {early.z_drag:.9f}")
         print(f"a_drag {early.a_drag:.12g}")
         print(f"sound_speed_drag_km_s {early.sound_speed_drag_km_s:.9f}")
@@ -1597,6 +1729,15 @@ def main() -> int:
             "external H0/Tcmb, Standard-Model Neff, and Eisenstein-Hu early physics."
         ),
     )
+    parser.add_argument(
+        "--density-preset",
+        choices=["legacy", "chapter1"],
+        default="legacy",
+        help=(
+            "Use legacy rounded CE constants (default) or the registered Chapter-1 "
+            "canonical density ledger."
+        ),
+    )
     parser.add_argument("--tcmb-k", type=float, default=TCMB_REFERENCE_K)
     parser.add_argument("--n-eff", type=float, default=DEFAULT_N_EFF)
     parser.add_argument("--sigma8-0", type=float, default=0.811)
@@ -1626,7 +1767,12 @@ def main() -> int:
     args = parser.parse_args()
 
     z_values = tuple(float(part.strip()) for part in args.z_list.split(",") if part.strip())
-    params = CEForwardParams(
+    parameter_factory = (
+        chapter1_canonical_params
+        if args.density_preset == "chapter1"
+        else CEForwardParams
+    )
+    params = parameter_factory(
         h0=args.h0,
         rd_mpc=args.rd_mpc,
         rd_mode=args.rd_mode,

@@ -16,8 +16,10 @@
 우주론 문맥에서 혼동이 자주 발생하는 지점은 “입력(캘리브레이션)”과 “출력(예측)”이다. 이 장에서는 다음을 구분한다.
 
 - 현행 Track-A boundary 모드: \(\Omega_b,\Omega_{\rm DM},\Omega_\Lambda\)는
-  canonical manifest의 출력이고, \(H_0,r_d,\sigma_{8,0}\)는 각
-  forward-model gate에 명시하는 외부 입력이다.
+  canonical 3-sector 출력이고, \(H_0,\sigma_{8,0}\)는 forward-model
+  gate에 명시하는 외부 입력이다. external branch의 $r_d$는 외부
+  입력이지만, 4-sector EH branch는 $T_{\rm CMB},N_{\rm eff}$와 EH drag
+  `Selection`으로 radiation closure와 $r_d$를 함께 계산한다.
 - 별도 calibration 모드: 관측 \(\Omega_\Lambda,H_0,\Omega_m\)로
   \(\alpha_\Lambda\) 같은 유효 파라미터를 맞출 수 있지만, 그때 같은
   요약값을 예측 성공으로 다시 세지 않는다.
@@ -25,8 +27,9 @@
   미사용 데이터와 비교한다.
 
 따라서 boundary-output 모드와 calibration 모드를 같은 likelihood에서
-섞지 않는다. 현재 DESI compressed-BAO 고정-background gate는 전자를
-사용하며 두 canonical 패키지를 모두 `REJECT`한다.
+섞지 않는다. 현재 실행된 13-component compressed DESI DR2
+BAO-only partial gate는 전자를 사용하며 두 canonical 패키지를
+모두 `Rejected`로 판정한다. CMB·SN·growth full joint gate는 `Open`이다.
 
 ## 1.1.2 이 장의 규약: 입력/가정/출력
 
@@ -34,8 +37,10 @@
 
 - 입력(캘리브레이션): calibration branch에서만
   \((\Omega_{m,0},\Omega_{\Lambda,0},H_0)\)로 내부 파라미터 또는 함수형을
-  제약한다. Track-A fixed-background branch에서는 density vector를
-  출력으로 잠그고 \(H_0,r_d\)만 provenance가 붙은 외부 scale로 넣는다.
+  제약한다. Track-A fixed-background branch에서는 branch별 density vector를
+  gate 전에 잠그고 $H_0$를 외부 scale로 넣는다. $r_d=147.09\,{\rm
+  Mpc}$는 external branch 입력이며, 4-sector EH의 $r_d$는 명시된 조기우주
+  입력과 EH 근사에서 얻은 derived `Selection`이다.
 - 가정(모형 선택): 평탄 FRW, 성분 분해(물질+암흑에너지), 배경–섭동 분리, 스크리닝 함수 $S(a)$ 정의 같은 계산 규약을 고정하는 단계
 - 출력(검증): $E(z)$, $D_L(z)$, $w(z)$, $f\sigma_8(z)$ 같은 함수형 관측량을 계산해 교차검증하는 단계
 
@@ -788,11 +793,27 @@ $$
 \(w(a)\ne-1\)은 \(V(\sigma)\), 정규화된 vacuum counterterm, 초기조건을
 지정해 Klein--Gordon 방정식과 Friedmann 방정식을 함께 풀어야 얻는다.
 현재 canonical density와 \(w=-1\), 외부
-\(H_0=67.4,\ r_d=147.09\,{\rm Mpc}\)를 묶은 DESI DR2 13-block
-고정-background 검산은
-\(\chi^2=40.20145,\ p=1.2828\times10^{-4}\)로 `REJECT`다.
-EH-hybrid \(r_d=151.50523\,{\rm Mpc}\)도
-\(\chi^2=41.19455,\ p=8.8602\times10^{-5}\)로 `REJECT`다.
+\(H_0=67.4,\ r_d=147.09\,{\rm Mpc}\)를 묶어 local `desi-dr2-all`의
+13-component compressed BAO mean/covariance만 계산한 고정-background
+BAO-only partial gate는
+\(\chi^2=40.20145,\ p=1.2828\times10^{-4}\)로 `Rejected`다.
+4-sector EH branch는 이 3-sector density에서 $r_d$만 교체한 경우가
+아니다. photon과 relativistic-neutrino를 합친
+
+$$
+\Omega_{{\rm rad},0}^{({\rm EH})}=9.192332265998932\times10^{-5},
+\qquad
+\Omega_{\rm rem}^{({\rm EH})}:=1-\Omega_b-\Omega_{{\rm rad},0}^{({\rm EH})}
+$$
+
+를 먼저 등록하고, $R_{\rm dark}$를 유지하며
+$\Omega_{{\rm cdm},0}^{({\rm EH})}=0.26106294726317864$,
+$\Omega_{{\rm DE},0}^{({\rm EH})}=0.6902068708981751$로 재분할해
+flat 4-sector closure를 맞춘다. sound horizon과 BAO distance에 이 같은
+Friedmann 배경을 쓴 canonical 결과는
+$r_d=151.50842877\,{\rm Mpc}$,
+$\chi^2=41.90607733$, $p=6.78476334\times10^{-5}$로 `Rejected`다.
+CMB·SN·growth full joint gate는 아직 실행되지 않아 `Open`이다.
 
 완전한 승격 조건은 (1) \(C_5\) 또는 UV 매개변수를 독립적으로 고정하고,
 (2) renormalized \(V(\sigma)\)와 진공 counterterm을 유도하며,

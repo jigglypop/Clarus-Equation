@@ -89,7 +89,7 @@ def test_drag_rate_point_value_locks_class_convention_and_si_units() -> None:
     )
     assert math.isclose(
         early_hubble_rate_s_inverse(1000.0, params),
-        4.391584117603106e-14,
+        4.391583072970779e-14,
         rel_tol=1e-14,
     )
     assert math.isclose(
@@ -99,7 +99,7 @@ def test_drag_rate_point_value_locks_class_convention_and_si_units() -> None:
             params,
             Y_P,
         ),
-        0.01270646192445367,
+        0.01270646494695847,
         rel_tol=1e-14,
     )
 
@@ -141,7 +141,7 @@ def test_hashed_history_recovers_analytic_tau_crossing_and_sound_horizon() -> No
         sound_horizon_at_redshift_mpc(params, target_z_drag),
         rel_tol=2e-14,
     )
-    assert math.isclose(benchmark.rd_mpc, 147.649757605, rel_tol=1e-11)
+    assert math.isclose(benchmark.rd_mpc, 147.649769047, rel_tol=1e-11)
     assert benchmark.crossing_bracket == (1059.0, 1060.0)
     assert benchmark.crossing_bracket_width == 1.0
     assert benchmark.rd_unit == "Mpc_comoving"

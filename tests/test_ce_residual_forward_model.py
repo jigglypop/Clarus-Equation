@@ -8,6 +8,7 @@ from examples.physics.ce_residual_forward_model import (
     CEForwardParams,
     DEFAULT_N_EFF,
     ForwardCoverage,
+    MPC_METERS,
     NEUTRINO_RADIATION_FACTOR,
     OMEGA_GAMMA_H2_REFERENCE,
     TCMB_REFERENCE_K,
@@ -16,15 +17,18 @@ from examples.physics.ce_residual_forward_model import (
     bao_chi2_with_covariance,
     bao_observable,
     baryon_photon_sound_speed_km_s,
+    chapter1_canonical_params,
     chi_square_survival,
     chi_square_verdict,
     dark_energy_scale,
+    early_hubble_rate_s_inverse,
     early_universe_sound_horizon,
     e_of_z,
     eisenstein_hu_drag_redshift,
     f_sigma8_at_z,
     hubble_distance_mpc,
     invert_matrix,
+    line_of_sight_comoving_distance_mpc,
     luminosity_distance_mpc,
     named_bao_dataset,
     parameter_provenance,
@@ -53,6 +57,64 @@ def test_ce_forward_model_uses_ce_density_ratios_for_background() -> None:
     assert math.isclose(e_of_z(0.0, params), 1.0, rel_tol=1e-12)
     assert e_of_z(1.0, params) > 1.0
     assert luminosity_distance_mpc(1.0, params) > 6000.0
+
+
+def test_legacy_early_mode_closes_residual_density_as_curvature() -> None:
+    params = CEForwardParams(rd_mode="early-universe")
+    background_sum = (
+        params.omega_r0_background
+        + params.omega_m0_background
+        + params.omega_lambda0_background
+        + params.omega_k0_background
+    )
+    h0_from_early_background = (
+        early_hubble_rate_s_inverse(0.0, params) * MPC_METERS / 1000.0
+    )
+
+    assert math.isclose(background_sum, 1.0, rel_tol=0.0, abs_tol=1e-15)
+    assert math.isclose(e_of_z(0.0, params), 1.0, rel_tol=0.0, abs_tol=1e-15)
+    assert math.isclose(
+        h0_from_early_background,
+        params.h0,
+        rel_tol=0.0,
+        abs_tol=1e-12,
+    )
+    assert params.omega_k0_background < 0.0
+    assert not params.is_flat
+
+    z = 2.33
+    radial_distance = line_of_sight_comoving_distance_mpc(z, params)
+    transverse_distance = transverse_comoving_distance_mpc(z, params)
+    hubble_distance_today = C_KM_S / params.h0
+    expected_transverse = (
+        hubble_distance_today
+        * math.sin(
+            math.sqrt(-params.omega_k0_background)
+            * radial_distance
+            / hubble_distance_today
+        )
+        / math.sqrt(-params.omega_k0_background)
+    )
+    assert math.isclose(
+        transverse_distance,
+        5781.325559257,
+        rel_tol=1e-11,
+    )
+    assert math.isclose(transverse_distance, expected_transverse, rel_tol=1e-14)
+    assert transverse_distance < radial_distance
+
+
+def test_open_early_background_uses_hyperbolic_transverse_distance() -> None:
+    params = CEForwardParams(
+        omega_lambda0=0.68,
+        rd_mode="early-universe",
+    )
+    radial_distance = line_of_sight_comoving_distance_mpc(2.0, params)
+    transverse_distance = transverse_comoving_distance_mpc(2.0, params)
+
+    assert params.omega_k0_background > 0.0
+    assert not params.is_flat
+    assert transverse_distance > radial_distance
 
 
 def test_ce_s8_today_is_close_to_combined_cmb_s8_baseline() -> None:
@@ -126,7 +188,7 @@ def test_early_universe_radiation_and_sound_speed_relations() -> None:
 
 
 def test_early_universe_sound_horizon_matches_analytic_sanity_gate() -> None:
-    params = CEForwardParams(rd_mode="early-universe")
+    params = chapter1_canonical_params(rd_mode="early-universe")
     result = early_universe_sound_horizon(params)
     coarse = early_universe_sound_horizon(params, integration_points=501)
 
@@ -180,7 +242,7 @@ def test_early_universe_sound_horizon_matches_analytic_sanity_gate() -> None:
 
 def test_sound_horizon_modes_and_early_input_provenance_are_separate() -> None:
     external_params = CEForwardParams()
-    early_params = CEForwardParams(rd_mode="early-universe")
+    early_params = chapter1_canonical_params(rd_mode="early-universe")
     external = sound_horizon_selection(external_params)
     early = sound_horizon_selection(early_params)
     provenance = {entry.name: entry for entry in parameter_provenance(early_params)}
@@ -194,6 +256,10 @@ def test_sound_horizon_modes_and_early_input_provenance_are_separate() -> None:
     assert early.early_universe is not None
     assert not math.isclose(early.rd_mpc, early_params.rd_mpc, rel_tol=1e-3)
     assert provenance["rd_mpc"].role == "derived_selection"
+    assert provenance["omega_b0"].role == "ce_prediction"
+    assert provenance["omega_dm0"].role == "derived_selection"
+    assert provenance["omega_lambda0"].role == "derived_selection"
+    assert "chapter1_canonical_params" in provenance["omega_dm0"].source
     assert provenance["h0"].role == "external_input"
     assert provenance["tcmb_k"].role == "external_input"
     assert provenance["n_eff"].role == "model_assumption"
@@ -368,8 +434,8 @@ def test_desi_dr2_full_covariance_fixed_model_is_rejected_and_decomposed() -> No
     assert "not a CE prediction" in scale_fit.note
 
 
-def test_desi_dr2_assesses_precomputed_early_rd_without_runtime_data_input() -> None:
-    params = CEForwardParams(rd_mode="early-universe")
+def test_desi_dr2_early_branch_uses_one_registered_radiation_background() -> None:
+    params = chapter1_canonical_params(rd_mode="early-universe")
     precomputed_rd = early_universe_sound_horizon(params)
     dataset = named_bao_dataset("desi-dr2-all")
     early_assessment = assess_bao_fit(
@@ -385,11 +451,15 @@ def test_desi_dr2_assesses_precomputed_early_rd_without_runtime_data_input() -> 
 
     assert "DESI-independent" in precomputed_rd.status
     assert "DR2 is not an untouched holdout" in precomputed_rd.status
-    assert math.isclose(precomputed_rd.rd_mpc, 151.318753028, rel_tol=1e-10)
-    assert math.isclose(early_assessment.chi2, 40.4682255439, rel_tol=1e-10)
+    assert params.includes_radiation_background
+    assert params.omega_r0_background > 0.0
+    assert params.is_flat
+    assert math.isclose(e_of_z(0.0, params), 1.0, rel_tol=1e-15)
+    assert math.isclose(precomputed_rd.rd_mpc, 151.508428775, rel_tol=1e-10)
+    assert math.isclose(early_assessment.chi2, 41.9060773313, rel_tol=1e-10)
     assert math.isclose(
         early_assessment.survival_p_value,
-        0.000116176098098,
+        0.0000678476333988,
         rel_tol=1e-10,
     )
     assert early_assessment.verdict == "REJECT"
@@ -402,15 +472,16 @@ def test_desi_dr2_assesses_precomputed_early_rd_without_runtime_data_input() -> 
     external_scale_fit = external_assessment.scale_fit_diagnostic
     assert early_scale_fit is not None
     assert external_scale_fit is not None
-    assert math.isclose(
-        early_scale_fit.chi2,
-        external_scale_fit.chi2,
-        rel_tol=1e-12,
-    )
+    assert math.isclose(early_scale_fit.chi2, 12.3135217704, rel_tol=1e-10)
     assert math.isclose(
         early_scale_fit.equivalent_rd_mpc_at_fixed_h0,
-        external_scale_fit.equivalent_rd_mpc_at_fixed_h0,
-        rel_tol=1e-12,
+        149.225436583,
+        rel_tol=1e-10,
+    )
+    assert not math.isclose(
+        early_scale_fit.chi2,
+        external_scale_fit.chi2,
+        rel_tol=1e-6,
     )
 
 

@@ -153,9 +153,14 @@ CE 문서는 네 층으로 읽는 것이 가장 안전하다.
   \(H_0(0)=66.802746\), \(H_0(1)=72.702371\)
   \(\mathrm{km\,s^{-1}Mpc^{-1}}\)로 고정한다. 이는 readout ansatz의
   산술 검산이지 단일 사전 예측이 아니다.
-- 고정-background 13-block covariance snapshot은 외부
-  \(r_d=147.09\,\mathrm{Mpc}\)와 Eisenstein--Hu
-  \(r_d=151.5052\,\mathrm{Mpc}\) 양쪽에서 모두 `REJECT`다.
+- 13-component DESI DR2 covariance snapshot에는 서로 다른 두
+  background·\(r_d\) 분기가 있다. external-input 분기는 위 late-time
+  3-sector vector와 \(r_d=147.09\,\mathrm{Mpc}\)를 쓰고, 4-sector
+  Eisenstein--Hu `Selection`은 \(\Omega_b\)를 유지한 채
+  \(\Omega_{\rm rad}=9.192332266\times10^{-5}\)를 먼저 배정하고 남은 dark
+  sector를 \(R_{\rm CE}\)로 다시 나눈 뒤
+  \(r_d=151.50842877\,\mathrm{Mpc}\)를 쓴다. 두 고정 분기 모두 이
+  BAO-only partial gate에서 `REJECT`다.
 - canonical \(Z_2\) portal benchmark는
   \(\operatorname{BR}_{\rm inv}=0.77082222\)로 PDG 2026이 열거한
   ATLAS direct 한계 \(0.107\)을 통과하지 못한다. 올바른 CP-even scalar
@@ -328,8 +333,8 @@ dark-energy 후보는 Clarus sector의 vacuum-like background 성분으로 읽�
 
 내부 정규화는 닫히지만, “진공 성분 = 암흑에너지”와 “집합적 요동 =
 암흑물질”의 미시적 동일시는 아직 독립적으로 증명되지 않았다. 따라서 현재
-공식 판정은 둘 다 `Phenomenology`다. 더구나 현행 13-block
-fixed-background 공동 gate는
+공식 판정은 둘 다 `Phenomenology`다. 더구나 현행 external-input
+background의 13-component DESI DR2 BAO-only full-cov partial gate는
 \(\chi^2=40.20145\), dof \(=13\),
 \(p=1.2828\times10^{-4}\)로 `REJECT`다. 밀도비 하나의 근접성과 은하 halo,
 렌즈, CMB 성장률을 동시에 재현하는 것은 서로 다른 검증 문제다.
@@ -486,7 +491,7 @@ powershell -ExecutionPolicy Bypass -File docs/0_검증과감사/run_full_consist
 | $P_{\mathrm{survive}}\leftrightarrow\Omega_b$ | `Bridge` |
 | 결합상수·혼합각 | 주로 `Bridge` |
 | DM/DE·초기 스펙트럼·Hubble readout | 주로 `Phenomenology/Open` |
-| 고정-background 13-block 우주론 | \(\chi^2=40.20145\), dof \(=13\), \(p=1.2828\times10^{-4}\): `REJECT` |
+| 고정-background DESI DR2 13-component BAO-only partial gate | \(\chi^2=40.20145\), dof \(=13\), \(p=1.2828\times10^{-4}\): `REJECT`; CMB·SN·growth full joint는 `Open` |
 | Clarus field pole | `Open test` |
 | 공학·뇌·AGI | `Phenomenology/Open test` |
 | PreEq 유한수학 | 상당 부분 `Exact under assumptions` |

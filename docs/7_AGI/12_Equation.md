@@ -1558,7 +1558,7 @@ input이지 CE 예측이 아니다.
 |---|---|---|---|---|
 | $\alpha_s^{\overline{\rm MS}}(M_Z)$ | $0.1180$ | PDG 2026 QCD review Eq. (9.25) | 입력과 동일 | Track-A calibration input |
 | $s_A^2:=4\alpha_s^{4/3}$ | $0.2315097758$ | 물리적 약혼합각은 scheme별 값 | scheme 변환 전 정밀 점수 금지 | registered matching |
-| $(\Omega_b,\Omega_{\rm DM},\Omega_\Lambda)$ | $(0.0486383,0.2610882,0.6902736)$ | 동일한 13-block covariance package | $\chi^2=40.2015$, dof $=13$, $p=1.28\times10^{-4}$: REJECT | 고정-background 조건부 출력 |
+| $(\Omega_b,\Omega_{\rm DM},\Omega_\Lambda)$ | $(0.0486383,0.2610882,0.6902736)$ | DESI DR2 13-component BAO-only covariance | $\chi^2=40.2015$, dof $=13$, $p=1.28\times10^{-4}$: REJECT; CMB·SN·growth full joint는 Open | 고정-background 조건부 출력 |
 | $M_H/M_Z=1+\alpha_sD_N$ | $M_H=125.3824$ GeV | PDG 2026 Higgs snapshot $125.11$ GeV | pole self-energy·RG matching 미완료 | 수치 target, 독립 예측 아님 |
 | 비입자 CE의 $\Delta a_\mu^{\rm BSM}$ | $0$ | WP2025 $38(63)\times10^{-11}$ | 양립하지만 비고유 | null branch |
 | Wilson ansatz $B_\mu$ | $248.5639\times10^{-11}$ | WP2025 $38(63)\times10^{-11}$ | 단위계수 benchmark REJECT | matching-dependent |

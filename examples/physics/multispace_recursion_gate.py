@@ -20,7 +20,8 @@ def report(name: str, coupling: np.ndarray) -> None:
     print(f"  coupling rows       {coupling.tolist()}")
     print(f"  Perron radius       {identity_branch_radius(coupling):.12g}")
     print(f"  regime              {branching_regime(coupling)}")
-    print(f"  minimal fixed point {result.survival}")
+    print(f"  extinction vector   {result.extinction}")
+    print(f"  trigger survival    {result.branching_survival}")
     print(f"  fixed-point radius  {result.stability_radius:.12g}")
     print(f"  residual            {result.residual:.3e}")
     try:
@@ -75,7 +76,9 @@ def main() -> None:
 
     print(
         "scope: row i is the source and column j is the next-generation type; "
-        "the scalar CE equation is the homogeneous equal-row-sum sector"
+        "the scalar CE equation is the homogeneous equal-row-sum sector. "
+        "Calling the extinction vector physical path survival requires the "
+        "separate suppressor-extinction bridge."
     )
 
 

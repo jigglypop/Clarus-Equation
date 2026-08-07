@@ -57,15 +57,38 @@ def _as_survival_vector(survival: ArrayLike, size: int) -> FloatVector:
 
 @dataclass(frozen=True)
 class MultispaceFixedPoint:
-    """Result of the componentwise-minimal fixed-point solve."""
+    """Result of the componentwise-minimal fixed-point solve.
+
+    The stored ``survival`` name is retained for API compatibility with the
+    older zero-trigger/path-survival convention.  Under the Galton--Watson
+    interpretation the same numbers are *extinction probabilities*.  New code
+    should use :attr:`extinction` and only use :attr:`path_survival` after an
+    explicit suppressor-extinction/path-survival bridge has been supplied.
+    """
 
     survival: tuple[float, ...]
     iterations: int
     residual: float
     stability_radius: float
 
+    @property
+    def extinction(self) -> tuple[float, ...]:
+        """Eventual extinction probabilities in the branching convention."""
+        return self.survival
+
+    @property
+    def branching_survival(self) -> tuple[float, ...]:
+        """Survival probabilities of the trigger branching process."""
+        return tuple(1.0 - value for value in self.survival)
+
+    @property
+    def path_survival(self) -> tuple[float, ...]:
+        """Zero-trigger path survival, conditional on the physical bridge."""
+        return self.survival
+
     def as_array(self) -> FloatVector:
-        return np.asarray(self.survival, dtype=np.float64)
+        """Return the branching-extinction vector as a NumPy array."""
+        return np.asarray(self.extinction, dtype=np.float64)
 
 
 def multispace_trigger_mean(survival: ArrayLike, coupling: ArrayLike) -> FloatVector:

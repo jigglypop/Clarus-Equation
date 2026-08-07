@@ -1,5 +1,0 @@
-# core runtime needs nothing beyond the stdlib.
-# these are only for the optional HTTP surface (server/main.py).
-fastapi>=0.110
-uvicorn>=0.29
-pydantic>=2.0

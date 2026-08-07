@@ -13,21 +13,26 @@
 
 > 현재 checkout은 finite PreEq/Gibbs·fraction-layer 감사에 더해 05o의
 > Friedmann background, linear-growth ODE와 DESI DR2 compressed-BAO
-> covariance gate까지 구현한다. canonical density를 명시 주입한 두 고정
-> background 패키지는 모두 `REJECT`다. 아직 없는 것은 precision
+> covariance gate까지 구현한다. Chapter 1 factory가 등록한 외부 3-sector와
+> 초기우주 4-sector 고정 패키지는 모두 `REJECT`다. 아직 없는 것은 precision
 > recombination/Boltzmann perturbation, CMB+BAO+SNe joint likelihood,
 > dark-matter particle·structure likelihood다. 따라서 내부 수학과
 > forward-model 계산은 재현되지만 경쟁 우주론의 물리 검증은 닫히지 않았다.
 
-> **2026-08-06 이중 snapshot 계약:** 이 문서의
+> **2026-08-07 이중 snapshot 계약:** 이 문서의
 > `constants.py` 표는 checkout runtime에 남아 있는 legacy fixture
-> \(0.0487,0.2623,0.6891\)를 정확히 감사한다. 원고 canonical manifest는
-> \((0.0486382585,0.2610881744,0.6902735671)\)이며, 이를 구 runtime API에
-> 명시 주입한 DESI DR2 결과는 외부 \(r_d=147.09\,{\rm Mpc}\)에서
-> \(\chi^2=40.20145,\ p=1.2828\times10^{-4}\), EH-hybrid
-> \(r_d=151.50523\,{\rm Mpc}\)에서
-> \(\chi^2=41.19455,\ p=8.8602\times10^{-5}\)로 모두 `REJECT`다.
-> legacy 상수나 무인자 runner 출력을 현행 원고 수치로 재사용하지 않는다.
+> \(0.0487,0.2623,0.6891\)를 정확히 감사한다. Chapter 1 현행 정본은
+> `chapter1_canonical_params` 공장이다. 외부 $r_d$ 분기는 3-sector
+> \((0.0486382585,0.2610881744,0.6902735671)\)와
+> \(r_d=147.09\,{\rm Mpc}\)에서
+> \(\chi^2=40.20145,\ p=1.2828\times10^{-4}\)를 낸다. 초기우주 분기는
+> radiation closure와 $R_{\rm dark}$ 보존 재분할로 만든 4-sector
+> \((\Omega_b,\Omega_{\rm cdm},\Omega_{\rm DE},\Omega_r)\)
+> \(=(0.0486382585,0.2610629473,0.6902068709,9.1923323\times10^{-5})\),
+> \(z_d=1019.906156874\), \(r_d=151.508428775\,{\rm Mpc}\)에서
+> \(\chi^2=41.90608,\ p=6.7848\times10^{-5}\)를 낸다. 두 분기는 모두
+> `REJECT`다. CLI에서는 `--density-preset chapter1`을 써야 하며, legacy
+> 상수나 무인자 runner 출력을 현행 원고 수치로 재사용하지 않는다.
 
 현재 판정:
 
@@ -180,8 +185,8 @@ CE 코드와의 비교:
 
 | 관측 항목 | 현대 연구 지위 | 현재 코드의 대응 |
 |---|---|---|
-| \(\Omega_bh^2\) | CMB acoustic peaks와 BBN 일관성으로 정밀 측정 | canonical \(\Omega_b\)와 외부 \(H_0\)를 background에 주입 가능; recombination/acoustic likelihood는 없음 |
-| \(\Omega_ch^2\) | CMB lensing/acoustic structure로 정밀 측정 | canonical \(\Omega_{\mathrm{DM}}\)를 background·growth에 주입 가능; Boltzmann perturbation은 없음 |
+| \(\Omega_bh^2\) | CMB acoustic peaks와 BBN 일관성으로 정밀 측정 | 두 Chapter 1 분기 모두 \(\Omega_bh^2=0.02209519\); recombination/acoustic likelihood는 없음 |
+| \(\Omega_ch^2\) | CMB lensing/acoustic structure로 정밀 측정 | 외부 3-sector는 \(0.11860609\), radiation closure 뒤 4-sector는 \(0.11859463\); Boltzmann perturbation은 없음 |
 | \(H_0\) | CMB+BAO와 local distance ladder tension 지속 | 외부 \(H_0\) 입력과 사후 readout diagnostic 구현; 독립 유도·joint likelihood는 없음 |
 | \(\sigma_8/S_8\) | CMB와 weak lensing/cluster 사이 probe-dependent tension | GR/CPL linear growth 구현, \(\sigma_{8,0}\)는 외부 입력; shear likelihood는 없음 |
 | \(N_{\mathrm{eff}}\) | CMB의 relativistic species \(N_{\mathrm{eff}}\)와 별개 | CE의 \(N_{\mathrm{eff}}\)는 \(\Phi\) mode count이므로 표준 cosmological \(N_{\mathrm{eff}}\)와 혼동 금지 |
@@ -196,10 +201,10 @@ CE 코드와의 비교:
 
 | DESI 쟁점 | 필요한 모델 요소 | 현재 코드 상태 |
 |---|---|---|
-| BAO distance-redshift relation | \(H(z)\), \(D_A(z)\), sound horizon \(r_d\) | 구현; 외부 \(r_d\)와 EH-hybrid를 provenance로 분리 |
+| BAO distance-redshift relation | \(H(z)\), \(D_A(z)\), sound horizon \(r_d\) | 구현; 외부 3-sector와 radiation closure를 거친 4-sector EH를 provenance로 분리하고, 각 분기 안에서는 초기·후기 Friedmann 배경을 하나로 고정 |
 | \(w_0,w_a\) dark-energy equation of state | \(w(a)=w_0+w_a(1-a)\), Friedmann integration | 조건부 CPL forward map 구현; \(w_0,w_a\)의 CE 유도는 없음 |
-| CMB+BAO joint likelihood | covariance, nuisance, parameter posterior | 없음 |
-| \(\Omega_\Lambda\) 값 | canonical \(0.6902735671\) | boundary output; 절대 scale과 동적 stress는 별도 |
+| CMB+BAO joint likelihood | covariance, nuisance, parameter posterior | 없음; 구현된 full covariance는 DESI **compressed BAO vector 내부** covariance이지 full joint가 아님 |
+| \(\Omega_\Lambda\) 값 | 외부 3-sector \(0.6902735671\); 4-sector EH \(\Omega_{\rm DE}=0.6902068709\) | 전자는 boundary output, 후자는 복사 closure 뒤 $R_{\rm dark}$ 보존 파생값; 절대 scale과 동적 stress는 별도 |
 
 결론: CE는 이제 \(H(z)\), \(w(z)\), BAO observable을 산출해 고정 패키지를
 직접 기각할 수 있다. 그러나 같은 DR2로 맞춘 scale ablation은 예측이 아니며,
@@ -364,7 +369,7 @@ CE의 \(\varepsilon^2\)는 \(\Omega_b\) 값 하나와 비교된다. 아직 \(\Om
 
 1. **용어 분리:** `ACTIVE_RATIO`, `STRUCT_RATIO`, `BACKGROUND_RATIO`를 코드 주석에서 "cosmology-inspired fixed ratios"와 "observational cosmology prediction"으로 명확히 구분한다.
 2. **\(\Phi\) sampler:** 05m의 \(\Phi\) mode decomposition을 실제 finite model로 구현해 \(\operatorname{Var}(\Phi)\), \(N_{\mathrm{eff}}\), \(\bar\rho\)를 산출한다.
-3. **background 정밀화:** 구현된 \((\Omega_b,\Omega_c,\Omega_\Lambda,H_0,w_0,w_a)\) forward model을 radiation, neutrino, recombination/Boltzmann 계층으로 확장한다.
+3. **background 정밀화:** 구현된 radiation closure, 상대론적 neutrino 밀도와 동일 초기·후기 Friedmann background 위에 massive-neutrino 열이력, precision recombination과 Boltzmann perturbation 계층을 확장한다.
 4. **likelihood boundary 확장:** 구현된 DESI compressed-BAO adapter의 provenance를 유지하면서 CMB/SN/DES Y6 nuisance와 cross-covariance를 포함한 joint adapter를 추가한다.
 5. **dark matter split:** \(\Omega_{\mathrm{DM}}\) ratio와 particle dark matter model을 분리한다. WIMP/axion/FDM/WDM 중 하나를 선택하지 않으면 직접탐색/구조형성 비교는 불가능하다.
 6. **README 판정 강화:** 우주론 비율은 현재 `Phenomenology/Bridge`이며, dark matter particle physics는 `Open/Not implemented`라고 명시한다.
@@ -413,9 +418,10 @@ $$
 
 따라서 CE/PreEq의 현재 우주론 지위는 다음 한 문장으로 정리된다.
 
-> canonical \(\Omega_b,\Omega_{\mathrm{DM}},\Omega_\Lambda\)를 조건부
-> Friedmann/growth/BAO forward model로 내렸고 DESI DR2 compressed gate에서
-> 두 고정 background를 기각했다. 그러나 precision CMB·SN·lensing과 joint
+> Chapter 1 장부를 외부 $r_d$용 3-sector와 radiation closure를 거친
+> 초기우주용 4-sector 등록 배경으로 내려, 각 분기 안에서 같은 Friedmann 식을
+> growth/BAO forward model에 사용했고 DESI DR2 compressed gate에서 두 고정
+> 패키지를 기각했다. 그러나 precision CMB·SN·lensing과 joint
 > nuisance likelihood가 없으므로 현대 관측 우주론을 설명하는 완결 모형으로
 > 승격되지는 않았다.
 

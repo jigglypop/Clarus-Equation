@@ -2456,7 +2456,7 @@ $$
 
 이로써, CE 1.0에서 도입한 클라루스장 포텐셜 $U(S)$와 late-time 우주론에서 관측되는 작은 오차 사이를 **질량 스케일–시간 스케일–고정점 구조**를 통해 연결하는 수학적 틀이 마련된다. 구체적인 수치는 $U(S)$의 형태(예: $m_S,\lambda_4,\xi$)를 선택한 뒤, FLRW 배경에서 수치 해석을 통해 추정하는 것이 다음 단계의 과제이다.
 
-### 16.6 $H_0$ calibration ansatz와 공식 공동 판정
+### 16.6 $H_0$ calibration ansatz와 DESI DR2 BAO-only partial 판정
 
 과거 계산은
 
@@ -2472,15 +2472,32 @@ untouched prediction이 아니다. $\pi^2/2$를 위상면적이라고 부르는 
 그 계수가 FLRW action의 e-fold generator에 들어간다는 동역학은 나오지
 않는다.
 
-최신 Track A density vector를 명시적으로 주입한 공식 13-observable
-공동 gate는
+최신 Track A density vector를 명시적으로 주입하고 local
+`desi-dr2-all`의 13-component compressed BAO mean/covariance만 계산한
+partial gate는
+두 배경 branch를 구분한다. external 행은 late-time 3-sector 절단을
+쓰지만, 4-sector EH 행은 그 벡터에서 $r_d$만 바꾸지 않는다.
+
+$$
+\Omega_{{\rm rad},0}^{({\rm EH})}=9.192332265998932\times10^{-5},
+\qquad
+\Omega_{\rm rem}^{({\rm EH})}:=1-\Omega_b-\Omega_{{\rm rad},0}^{({\rm EH})}
+$$
+
+를 등록한 뒤 같은 $R_{\rm dark}$로
+$\Omega_{{\rm cdm},0}^{({\rm EH})}=0.26106294726317864$,
+$\Omega_{{\rm DE},0}^{({\rm EH})}=0.6902068708981751$로 재분할해
+4-sector flat closure를 맞춘다. sound horizon과 BAO distance는 모두 이 동일
+Friedmann 배경을 쓴다.
 
 | package | $\chi^2$ | dof | $p$ | 판정 |
 |---|---:|---:|---:|---|
-| external $H_0=67.4$, $r_d=147.09$ Mpc | 40.20145 | 13 | $1.2828\times10^{-4}$ | reject |
-| EH-hybrid $r_d=151.50523$ Mpc | 41.19455 | 13 | $8.8602\times10^{-5}$ | reject |
+| external $H_0=67.4$, $r_d=147.09$ Mpc | 40.20145 | 13 | $1.2828\times10^{-4}$ | `Rejected` |
+| 4-sector EH $r_d=151.50842877$ Mpc | 41.90607733 | 13 | $6.78476334\times10^{-5}$ | `Rejected` |
 
-이다. 동적 분기는 `경로적분.md` 14절의 scalar--tensor action에서 초기자료,
+두 고정 background는 이 BAO-only partial gate에서 모두 `Rejected`다.
+CMB·SN·growth full joint gate는 실행되지 않아 `Open`이다. 동적 분기는
+`경로적분.md` 14절의 scalar--tensor action에서 초기자료,
 $m_q,\xi_q,V_0$와 nuisance를 등록하고 background·perturbation을 함께 푼
 뒤 같은 likelihood로 다시 검정한다.
 
