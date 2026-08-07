@@ -25,6 +25,7 @@ NUMBERED = tuple(CHAPTER / f"{index:02d}_{name}.md" for index, name in (
 ))
 CONTRACT = CHAPTER / "00_수학적_완결성_계약.md"
 PROOFS = CHAPTER / "15_보강_정리와_증명.md"
+LOOP = CHAPTER / "16_오픈_브리지_유도_루프.md"
 PRIMARY_STATUSES = (
     "Definition",
     "Exact",
@@ -108,7 +109,7 @@ def _assert_math_delimiters_are_ordered(text: str, path: Path) -> None:
 
 
 def test_complete_chapter_set_is_utf8_and_structurally_balanced() -> None:
-    for path in (CONTRACT, *NUMBERED, PROOFS):
+    for path in (CONTRACT, *NUMBERED, PROOFS, LOOP):
         assert path.is_file(), path
         raw = path.read_bytes()
         assert b"\r" not in raw.replace(b"\r\n", b""), path
@@ -181,9 +182,10 @@ def test_shared_status_and_symbol_contract_is_explicit() -> None:
         text = path.read_text(encoding="utf-8")
         assert "00_수학적_완결성_계약.md" in text, path
         assert "15_보강_정리와_증명.md" in text, path
+        assert LOOP.name in text, path
 
     combined = "\n".join(
-        path.read_text(encoding="utf-8") for path in (*NUMBERED, PROOFS)
+        path.read_text(encoding="utf-8") for path in (*NUMBERED, PROOFS, LOOP)
     )
     for forbidden_status in (
         "`Calibration`",
@@ -232,6 +234,30 @@ def test_strengthened_theorem_suite_covers_each_repaired_layer() -> None:
         "재귀 surprisal의 유일성",
     ):
         assert token in proofs
+
+
+def test_open_bridge_loop_has_an_exhaustive_executable_ledger() -> None:
+    loop = LOOP.read_text(encoding="utf-8")
+    for index in range(36):
+        assert re.search(rf"\bB{index}\b", loop)
+    for token in (
+        "weak-decoherence",
+        r"\operatorname{Cov}_P(s,e)",
+        "Casas--Ibarra",
+        "time-periodic quotient",
+        "vacuum counterterm",
+        "Morris--Thorne",
+        "bridge count",
+        "physical realizations validated",
+    ):
+        assert token in loop
+    assert "python examples/physics/chapter2_open_bridge_audit.py" in loop
+    assert "python -m pytest tests/test_chapter2_open_bridge_audit.py -q" in loop
+    equation_tags = [
+        int(number)
+        for number in re.findall(r"\\tag\{16\.(\d+)\}", loop)
+    ]
+    assert equation_tags == list(range(1, 84))
 
 
 def test_known_semantic_regressions_are_absent() -> None:
@@ -297,7 +323,7 @@ def test_known_semantic_regressions_are_absent() -> None:
         assert r"\delta_{\rm proj}" in text, path
 
 
-def test_real_audit_gate_is_the_only_chapter_level_python_gate() -> None:
+def test_chapter_level_numeric_and_open_bridge_audits_are_present() -> None:
     gate = ROOT / "examples" / "physics" / "chapter2_mathematical_audit.py"
     tests = ROOT / "tests" / "test_chapter2_mathematical_audit.py"
     assert gate.is_file()
@@ -308,3 +334,12 @@ def test_real_audit_gate_is_the_only_chapter_level_python_gate() -> None:
     assert "regularized_fixed_point_potential" in gate_text
     assert "operational_tau" in gate_text
     assert "einstein_slope_ratio_per_c6" in gate_text
+
+    open_gate = ROOT / "examples" / "physics" / "chapter2_open_bridge_audit.py"
+    open_tests = ROOT / "tests" / "test_chapter2_open_bridge_audit.py"
+    assert open_gate.is_file()
+    assert open_tests.is_file()
+    open_gate_text = open_gate.read_text(encoding="utf-8")
+    assert "bridge_implications_proved_or_refuted: true" in open_gate_text
+    assert "physical_realizations_validated: false" in open_gate_text
+    assert '"B35"' in open_gate_text
