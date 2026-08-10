@@ -1,20 +1,26 @@
 # G9-CB: 희소 인과 브리지 세계모형
 
-> 상태: V1/V3 validation `FAIL` 보존, V2/V4 validation 및 locked test `PASS`
+> 상태: V1/V3/V5 validation `FAIL` 보존, V2/V4 validation 및 locked test
+> `PASS`, V6 사전등록 완료ㆍ미실행
 >
 > 사전등록: `../../experiments/preregistration/sparse_causal_bridge_v1.json`,
 > `../../experiments/preregistration/sparse_causal_bridge_v2.json`,
 > `../../experiments/preregistration/sparse_causal_bridge_v3.json`,
-> `../../experiments/preregistration/sparse_causal_bridge_v4.json`
+> `../../experiments/preregistration/sparse_causal_bridge_v4.json`,
+> `../../experiments/preregistration/sparse_causal_bridge_v5.json`,
+> `../../experiments/preregistration/sparse_causal_bridge_v6.json`
 >
 > 구현: `../../reality_stone/python/reality_stone/clarus/sparse_causal_bridge.py`
-> 및 `../../reality_stone/python/reality_stone/clarus/latent_causal_bridge.py`
+> 및 `../../reality_stone/python/reality_stone/clarus/latent_causal_bridge.py`,
+> `../../reality_stone/python/reality_stone/clarus/free_rollout_bridge.py`
 >
 > 실행: `../../examples/agi/sparse_causal_bridge_gate.py`,
-> `../../examples/agi/latent_causal_bridge_gate.py`
+> `../../examples/agi/latent_causal_bridge_gate.py`,
+> `../../examples/agi/free_rollout_bridge_gate.py`
 >
 > 테스트: `../../tests/test_sparse_causal_bridge.py`,
-> `../../tests/test_latent_causal_bridge.py`
+> `../../tests/test_latent_causal_bridge.py`,
+> `../../tests/test_free_rollout_bridge.py`
 
 ## 1. 왜 방향을 바꿨는가
 
@@ -319,12 +325,13 @@ $\left(u_e,\bar r_e,c_e\right)$는 prefix
 
 ### 9.3 V3 — `FAIL`, test 미개봉
 
-V3는 $\gamma$까지 각 80-step OOD prefix에서 다시 추정했다. 기전과
-subspace는 정확했지만 일부 seed의 짧은 AR 추정이 불안정했다.
+V3는 $\gamma$까지 각 80-step OOD prefix에서 다시 추정했다. graph는
+exact였고 기전계수 오차와 subspace 오차는 작았지만, 일부 seed의 짧은 AR
+추정이 불안정했다.
 
 - graph precision/recall: `1.00 / 1.00`
 - self / bridge coefficient MAE: `0.00099 / 0.00471`
-- loading cosine: `0.99876`
+- loading-subspace $|\cos|$: `0.99876`
 - rank-1 설명분산: `88.97%`
 - global 감소 vs V1 방식 / no-latent: `13.30% / 57.45%`
 - global 감소 vs fixed-local: `0.59%` — 등록 기준 5% 실패
@@ -336,9 +343,10 @@ V3 artifact와 구현 SHA는 보존했고 test는 열지 않았다.
 
 ### 9.4 V4 — 공유 시간상수, 변하는 loading
 
-V4의 변경은 하나다. $\gamma$는 긴 observational-train residual 전체에서
-episode 경계를 넘지 않고 한 번만 적합한다. OOD prefix는 residual 중심,
-rank-1 방향, scalar intercept만 적응한다. 즉
+V4의 알고리즘 변경은 하나이며 protocol상 모든 seed도 새로 배정했다.
+$\gamma$는 긴 observational-train residual 전체에서 episode 경계를 넘지
+않고 한 번만 적합한다. OOD prefix는 residual 중심, rank-1 subspace,
+scalar intercept만 적응한다. 즉
 
 \[
 \underbrace{D,B,\gamma}_{\text{environment-invariant}}
@@ -351,13 +359,13 @@ rank-1 방향, scalar intercept만 적응한다. 즉
 
 | 지표 | V4 validation 20 seed | V4 locked test 30 seed | 판정 |
 |---|---:|---:|---|
-| 선택 edge | `A→C`, `C→D` | 동일 | PASS |
-| graph precision / recall | 1.00 / 1.00 | 1.00 / 1.00 | PASS |
+| train/probe에서 동결한 edge | `A→C`, `C→D` | 같은 frozen model | PASS |
+| frozen graph precision / recall | 1.00 / 1.00 | 같은 1.00 / 1.00 | PASS |
 | self coefficient MAE | 0.00128 | 0.00128 | PASS |
 | bridge coefficient MAE | 0.00240 | 0.00240 | PASS |
 | intervention NRMSE | 0.08838 | 0.08799 | PASS |
-| loading cosine mean | 0.99918 | 0.99921 | PASS |
-| loading cosine seed 최소 | 0.99710 | 0.99536 | PASS |
+| loading-subspace $|\cos|$ mean | 0.99918 | 0.99921 | PASS |
+| loading-subspace $|\cos|$ seed 최소 | 0.99710 | 0.99536 | PASS |
 | rank-1 설명분산 | 89.98% | 89.93% | PASS |
 | causal latent global RMSE | 0.15712 | 0.15578 | PASS |
 | global 감소 vs fixed-local | 7.14% | 6.58% | PASS |
@@ -368,6 +376,10 @@ rank-1 방향, scalar intercept만 적응한다. 즉
 | paired CI95 lower vs fixed-local | +0.01109 | +0.01001 | PASS |
 | lesion direct-target MSE 최소 증가 | 75.30% | 46.31% | PASS |
 | wall time | 2.03 s | 2.98 s | PASS |
+
+validation/test는 동일한 고정 OOD loading과 하나의 frozen train/probe 모델을
+공유하고 평가 noise seed만 다르다. 따라서 test graph를 다시 식별한 것도,
+새 loading family로 일반화한 것도 아니다.
 
 V4 validation/test의 merged registration SHA는
 `f9f8a0d9c3a9203e91a675db01775564f05f360557c814bf31e2770017c98a91`다.
@@ -381,7 +393,93 @@ V4 lock은 이 SHA뿐 아니라 실제 알고리즘/DGP 두 파일의 SHA도 함
 따라서 V2의 soft lock보다 강하지만, git revisionㆍPython/NumPy binaryㆍOS까지
 고정한 완전한 재현 환경 hash는 아니다.
 
-## 10. 무엇이 입증됐고 무엇이 아닌가
+## 10. V5: 실제 상태 재입력을 끊은 자유전개
+
+### 10.1 누설 없는 단일 origin 정의
+
+V4는 매 step의 실제 $x_t$를 다시 받아 one-step 예측했다. V5는 OOD
+prefix $x_0,\ldots,x_{80}$만 관측하고, $C=80$에서 한 번 시작한다.
+마지막 관측 residual로 초기 score를 만들고
+
+\[
+r_{C-1}=x_C-\widehat f(x_{C-1}),
+\qquad z_{C-1}=u^\top(r_{C-1}-\bar r),
+\]
+
+그 뒤에는 실제 미래 상태나 residual을 읽지 않고
+
+\[
+\widehat z_{C+k}=c+\gamma\widehat z_{C+k-1},
+\quad
+\widehat r_{C+k}=\bar r+u\widehat z_{C+k},
+\quad
+\widehat x_{C+k+1}
+=\widehat f(\widehat x_{C+k})+\widehat r_{C+k}
+\]
+
+만 20번 반복한다. H5는 이 하나의 H20 trajectory 앞 다섯 row다.
+rollout API는 `Episode`, future outcome, hidden state를 인자로 받지 않으며,
+$x_{81:100}$과 hidden을 변조해도 비-oracle 예측이 bit-identical인 테스트를
+추가했다.
+
+### 10.2 V5 validation — `FAIL`, test 미개봉
+
+V5는 V4의 frozen mechanism을 사용하고 20개의 새 validation seed에서
+평가했다. 비교의 독립 단위는 step이 아니라 seed이며 Student-$t$ CI를 썼다.
+
+| 지표 | H5 | H20 | 판정 |
+|---|---:|---:|---|
+| causal-latent free path RMSE | 0.20678 | 0.33308 | 유한ㆍ안정 |
+| persistence RMSE | 0.23166 | 0.38913 | 기준선 |
+| no-latent mechanism RMSE | 0.39476 | 0.44420 | 기준선 |
+| fixed-local RMSE | 0.23665 | 0.42220 | 기준선 |
+| stable adaptive-dense RMSE | 0.21488 | 0.31270 | 기준선 |
+| same-probe dense+latent RMSE | 0.20697 | 0.33402 | 동일 정보예산 대조 |
+| 감소 vs persistence | 10.74% | 14.40% | 평균 기준 PASS |
+| 감소 vs no-latent | 47.62% | 25.02% | PASS |
+| 감소 vs fixed-local | 12.62% | 21.11% | PASS |
+| persistence 대비 seed 승률 | 0.65 | 0.75 | H5 FAIL |
+| persistence 대비 paired CI95 lower | -0.00679 | -0.01481 | 둘 다 FAIL |
+| stable adaptive-dense 대비 | 3.77% 우수 | 6.52% 열세 | H20 FAIL |
+| ratio vs same-probe dense+latent | 0.99910 | 0.99721 | 비열등 PASS |
+
+따라서 평균 성능만 보면 자유전개가 작동했지만, seed 간 변동성과 강한
+prefix-adaptive 기준선을 포함한 등록 계약은 통과하지 못했다. 실패 check는
+정확히 네 개다.
+
+- `h5_seed_wins_persistence`
+- `h5_ci_persistence`
+- `h20_ci_persistence`
+- `h20_vs_stable_adaptive_dense`
+
+예측은 모두 finite였고 최대 절댓값 1.04922, learned-mechanism Jacobian
+spectral radius 최대 0.78142, H20/H5 RMSE ratio 1.61081이었다. 즉 실패
+원인은 발산이나 미래 누설이 아니라 모델 간ㆍseed 간 예측 불확실성이다.
+V5 validation artifact와 구현 hash를 보존했고 locked test는 열지 않았다.
+
+### 10.3 실패 뒤 수식 변경 후보
+
+V5 validation은 이후 후보 설계용 development data로만 사용했다. prefix
+전체로 scalar Kalman posterior를 추정한 후보는 H5/H20 RMSE
+`0.20730 / 0.33406`으로 V5보다 오히려 나빠 폐기했다.
+
+현재 V6 사전등록 후보는 세 독립 expert를 prefix 내부에서 backtest해
+불확실성 가중치를 정하는 방식이다. pseudo-origin 60에서 causal-latent,
+stable adaptive-dense, persistence를 각각 20-step 자유전개한다. 각 expert의
+prefix 오차는 $E_j=(20d)^{-1}$ 곱하기 20개 leadㆍ4개 chart 제곱오차의 합으로
+두고, $w_j$는 $(E_j+10^{-12})^{-1/2}$에 비례하도록 합 1로 정규화한다.
+이후 전체 $x_{0:80}$으로 expert를 다시 적합하고, 세 expert가 각자 만든
+20-step trajectory의 lead별 Euclidean barycenter만 취한다. 합의값을 다시
+component 입력으로 넣지는 않는다.
+
+V5 development에서 이 후보의 평균 weight는 causal/adaptive/persistence
+`0.3552 / 0.3196 / 0.3253`, H5/H20 RMSE는
+`0.20442 / 0.31930`이었다. 이 수치는 후보 선택 자료이지 증거가 아니다.
+V6 merged registration SHA는
+`b73245484d1a8ff1e385cceb08cbf99105ef7db7d672531da677daba7fbc4eed`이며,
+구현ㆍvalidationㆍtest는 아직 시작하지 않았다.
+
+## 11. 무엇이 입증됐고 무엇이 아닌가
 
 현재 V4까지 지지하는 가장 강한 문장은 다음뿐이다.
 

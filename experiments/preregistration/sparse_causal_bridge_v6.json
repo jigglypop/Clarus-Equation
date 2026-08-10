@@ -1,0 +1,160 @@
+{
+  "schema_version": 6,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-10",
+  "experiment": "sparse_causal_bridge_v6",
+  "roadmap_stage": "G9-CB",
+  "extends": "sparse_causal_bridge_v5.json",
+  "supersedes": "sparse_causal_bridge_v5",
+  "runner": "consensus_free_rollout",
+  "parent_model_runner": "single_origin_free_rollout",
+  "active_models_path": "consensus.models",
+  "active_gate": "consensus_gate",
+  "failed_predecessor_artifact": "artifacts/agi/sparse_causal_bridge_validation_v5.json",
+  "change_reason": "V5 was stable and beat mean persistence/no-latent RMSE, but failed persistence seed-win and paired-CI gates and was 6.52% worse than the stable OOD-prefix dense model at H20. A scalar Kalman denoising pilot on V5 development seeds did not improve V5 and was rejected. V6 makes one system-level change: prefix backtesting determines nonnegative uncertainty weights for the invariant causal-latent rollout, stable OOD-prefix dense rollout, and persistence. V5 validation is development data only; V6 evidence uses fresh seeds.",
+  "development_data_disclosure": {
+    "used_for_weight_selection_only": "artifacts/agi/sparse_causal_bridge_validation_v5.json",
+    "artifact_sha256": "6dd4999e385fc47ea5ccd2e3e1233c60f2d1968554b82dd5cb95a34524f9e9a0",
+    "v5_merged_registration_sha256": "31e029705a372b622bf5d7109784b89bb0b42d959c4960ef2bdedb3a8c07b78a",
+    "v5_test_opened": false,
+    "v5_implementation_sha256": {
+      "free_rollout_bridge.py": "13d38836f3fef8ef6cbad35bb5b79fc41e15b21ebf00eec5d61604e7b3832cd6",
+      "latent_causal_bridge.py": "40306162c5d266a8ecb80d882202afb92fbc45aa5bc467a1004721706e57eef7",
+      "sparse_causal_bridge.py": "0885d7244c3ea35367987ec59538d15c081d3ba6009897e5d0e5e42a24538ca7"
+    },
+    "rejected_candidate": "A scalar prefix Kalman posterior produced H5/H20 path RMSE 0.20730/0.33406 on V5 development seeds versus 0.20678/0.33308 for V5, so it was not promoted.",
+    "selected_rule_pilot": {
+      "rule": "At pseudo-origin t=60, inverse-root-MSE weights are computed from a 20-step prefix-only backtest and then frozen for the real origin t=80.",
+      "mean_weights_on_v5_development_only": {
+        "causal_latent_free": 0.3552,
+        "stable_adaptive_dense_prefix_free": 0.3196,
+        "persistence": 0.3253
+      },
+      "candidate_h5_path_rmse": 0.204421,
+      "candidate_h20_path_rmse": 0.319301
+    },
+    "selection_note": "Only the weight formula, pseudo-origin, and epsilon are frozen; V6 episode weights use its observed prefix only. V5 results are not counted as V6 evidence."
+  },
+  "overrides": {
+    "hypothesis": "A prefix-backtested convex consensus of invariant causal dynamics, calibrated OOD adaptation, and a low-variance persistence anchor will reduce V5 rollout error and restore seed-level robustness on fresh same-loading OOD episodes while remaining noninferior to equal-probe dense consensus.",
+    "claim_boundary": "This tests a three-expert prefix-calibrated forecast controller in the same four-chart, fully observed, known-rank-one, matched-basis synthetic family. It is post-prefix conditional-mean forecasting under one fixed OOD loading, not unseen-environment generalization, target-window weight learning, long autonomous simulation, real brain evidence, or AGI.",
+    "data_roles": {
+      "validation": {
+        "environment": "ood",
+        "seeds": [67100, 67101, 67102, 67103, 67104, 67105, 67106, 67107, 67108, 67109, 67110, 67111, 67112, 67113, 67114, 67115, 67116, 67117, 67118, 67119],
+        "steps_per_seed": 100,
+        "intervention_pairs_per_source_per_seed": 0
+      },
+      "test": {
+        "environment": "ood",
+        "seeds": [68100, 68101, 68102, 68103, 68104, 68105, 68106, 68107, 68108, 68109, 68110, 68111, 68112, 68113, 68114, 68115, 68116, 68117, 68118, 68119, 68120, 68121, 68122, 68123, 68124, 68125, 68126, 68127, 68128, 68129],
+        "steps_per_seed": 100,
+        "intervention_pairs_per_source_per_seed": 0
+      }
+    },
+    "models": [
+      "causal_adaptive_consensus",
+      "same_probe_dense_consensus",
+      "v5_causal_latent_free",
+      "causal_mechanism_no_latent",
+      "stable_adaptive_dense_prefix_free",
+      "stable_fixed_local_latent_free",
+      "fixed_local_train",
+      "persistence",
+      "oracle_hidden_diagnostic"
+    ],
+    "consensus": {
+      "mode": "prefix_uncertainty_weighted_state_consensus",
+      "horizons": [5, 20],
+      "calibration_steps": 80,
+      "origin": 80,
+      "pseudo_origin": 60,
+      "prefix_backtest_horizon": 20,
+      "weight_experts": [
+        "causal_latent_free",
+        "stable_adaptive_dense_prefix_free",
+        "persistence"
+      ],
+      "weight_error": "E_j = mean squared error across prefix leads 61 through 80 and all four charts",
+      "weight_formula": "w_j = (E_j + 1e-12)^(-1/2) / sum_l (E_l + 1e-12)^(-1/2)",
+      "weight_epsilon": 1e-12,
+      "weights_nonnegative": true,
+      "weights_sum": 1.0,
+      "weight_fit_data": "Each V6 episode's observed x[0:81] only; no x[81:101] target is read.",
+      "inner_fit": "Fit each expert using x[0:61], independently free-roll from x[60] to x[80], and score against the already observed x[61:81].",
+      "outer_refit": "Refit the causal residual filter and adaptive expert using x[0:81], then freeze the prefix-derived weights.",
+      "component_rollouts_generated_before_combination": true,
+      "combination": "At every lead, take the weighted Euclidean barycenter of three independently generated 20-step component rollouts; never feed the consensus back into a component.",
+      "same_probe_dense_consensus": "Replace only the sparse causal component by the all-12-edge equal-probe dense latent component; keep adaptive and persistence components and all weights identical.",
+      "v5_comparator": "Evaluate the unmodified sparse causal_latent_free component on the identical V6 episode and truth path.",
+      "future_observation_reads": 0,
+      "metric_definitions": "Identical to inherited rollout.metric_definitions; each seed remains the sole independent unit."
+    },
+    "consensus_gate": {
+      "origins_per_seed_required": 1,
+      "weights_sum_tolerance": 1e-12,
+      "horizon_5": {
+        "global_path_rmse_reduction_vs_v5_min": 0.01,
+        "terminal_rmse_ratio_vs_v5_max": 1.0,
+        "seed_win_fraction_vs_v5_min": 0.55,
+        "global_path_rmse_reduction_vs_no_latent_min": 0.25,
+        "global_path_rmse_reduction_vs_persistence_min": 0.05,
+        "global_path_rmse_ratio_vs_fixed_local_max": 1.05,
+        "global_path_rmse_reduction_vs_stable_local_latent_min": 0.08,
+        "global_path_rmse_ratio_vs_stable_adaptive_dense_max": 1.05,
+        "global_path_rmse_ratio_vs_same_probe_dense_consensus_max": 1.02,
+        "seed_win_fraction_vs_no_latent_min": 0.75,
+        "seed_win_fraction_vs_persistence_min": 0.75,
+        "paired_ci95_lower_vs_no_latent_min": 0.0,
+        "paired_ci95_lower_vs_persistence_min": 0.0,
+        "paired_ci95_lower_vs_stable_local_latent_min": 0.0,
+        "downstream_path_rmse_reduction_vs_stable_local_latent_min": 0.1,
+        "terminal_rmse_reduction_vs_no_latent_min": 0.1,
+        "terminal_rmse_reduction_vs_persistence_min": 0.05
+      },
+      "horizon_20": {
+        "global_path_rmse_reduction_vs_v5_min": 0.03,
+        "terminal_rmse_ratio_vs_v5_max": 1.0,
+        "seed_win_fraction_vs_v5_min": 0.55,
+        "global_path_rmse_reduction_vs_no_latent_min": 0.15,
+        "global_path_rmse_reduction_vs_persistence_min": 0.1,
+        "global_path_rmse_reduction_vs_fixed_local_min": 0.1,
+        "global_path_rmse_reduction_vs_stable_local_latent_min": 0.15,
+        "global_path_rmse_ratio_vs_stable_adaptive_dense_max": 1.05,
+        "global_path_rmse_ratio_vs_same_probe_dense_consensus_max": 1.02,
+        "seed_win_fraction_vs_no_latent_min": 0.65,
+        "seed_win_fraction_vs_persistence_min": 0.75,
+        "paired_ci95_lower_vs_no_latent_min": 0.0,
+        "paired_ci95_lower_vs_persistence_min": 0.0,
+        "paired_ci95_lower_vs_fixed_local_min": 0.0,
+        "paired_ci95_lower_vs_stable_local_latent_min": 0.0,
+        "downstream_path_rmse_reduction_vs_stable_local_latent_min": 0.15,
+        "terminal_rmse_ratio_vs_no_latent_max": 1.0,
+        "terminal_rmse_reduction_vs_persistence_min": 0.05,
+        "terminal_rmse_ratio_vs_stable_local_latent_max": 0.95
+      },
+      "nonfinite_prediction_count_max": 0,
+      "maximum_prediction_absolute_value": 5.0,
+      "learned_mechanism_jacobian_spectral_radius_max": 0.98,
+      "learned_latent_ar_abs_max": 0.98,
+      "stable_adaptive_self_coefficient_abs_max": 0.98,
+      "horizon_20_to_5_path_rmse_ratio_max": 2.0,
+      "maximum_prediction_norm_to_train_q99_ratio": 5.0,
+      "future_observation_reads_max": 0,
+      "finite_metrics_required": true
+    },
+    "test_lock": {
+      "open_only_after_validation_pass": true,
+      "test_may_change_weight_rule_or_components": false,
+      "failed_validation_artifact_must_be_preserved": true,
+      "require_identical_merged_registration_sha256": true,
+      "require_identical_implementation_sha256": [
+        "consensus_rollout_bridge.py",
+        "free_rollout_bridge.py",
+        "latent_causal_bridge.py",
+        "sparse_causal_bridge.py"
+      ],
+      "require_identical_v5_failure_artifact_sha256": true
+    }
+  }
+}

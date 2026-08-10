@@ -1,0 +1,186 @@
+{
+  "schema_version": 5,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-10",
+  "experiment": "sparse_causal_bridge_v5",
+  "roadmap_stage": "G9-CB",
+  "extends": "sparse_causal_bridge_v4.json",
+  "supersedes": "sparse_causal_bridge_v4",
+  "runner": "single_origin_free_rollout",
+  "parent_model_runner": "latent_residual_filter",
+  "active_models_path": "rollout.models",
+  "active_gate": "rollout_gate",
+  "failed_predecessor_artifact": null,
+  "predecessor_status": "V4 validation and locked test passed; V5 is a stricter endpoint extension, not a repair of a failed V4.",
+  "change_reason": "V4 passed only a sequential one-step gate that re-read the true state at every step. V5 changes the evaluation, not the learned mechanism: after an 80-transition prefix and one final observed state, predicted latent residuals and predicted chart states are recursively fed back for one uninterrupted 5- and 20-step forecast. The V4 train, selector, intervention, and calibration rules remain fixed; only validation and locked-test seeds are fresh.",
+  "overrides": {
+    "hypothesis": "After an 80-transition OOD calibration prefix, the frozen V4 sparse mechanism plus rank-one context state will outperform persistence and its no-latent ablation, outperform fixed-local at H20, and remain noninferior to an equal-probe dense mechanism while true future chart states and residuals are unavailable.",
+    "claim_boundary": "This is a four-fully-observed-chart, known-rank-one, shared-AR, matched-basis, directed-budget-two synthetic conditional-mean forecast gate. Validation and test use new stochastic seeds under the same single fixed OOD loading vector, not unseen loading environments. It observes x[0:81], performs calibrated domain adaptation rather than zero-shot transfer, freezes adaptation, and runs freely from x[80] through x[100]. It does not predict stochastic innovations and is not a full-episode autonomous world model, planning, real cortical connectivity, a neural algorithm, or AGI.",
+    "data_roles": {
+      "validation": {
+        "environment": "ood",
+        "seeds": [57100, 57101, 57102, 57103, 57104, 57105, 57106, 57107, 57108, 57109, 57110, 57111, 57112, 57113, 57114, 57115, 57116, 57117, 57118, 57119],
+        "steps_per_seed": 100,
+        "intervention_pairs_per_source_per_seed": 0
+      },
+      "test": {
+        "environment": "ood",
+        "seeds": [58100, 58101, 58102, 58103, 58104, 58105, 58106, 58107, 58108, 58109, 58110, 58111, 58112, 58113, 58114, 58115, 58116, 58117, 58118, 58119, 58120, 58121, 58122, 58123, 58124, 58125, 58126, 58127, 58128, 58129],
+        "steps_per_seed": 100,
+        "intervention_pairs_per_source_per_seed": 0
+      }
+    },
+    "latent_filter": {
+      "online_signal": "observed mechanism residuals only through calibration; recursively predicted residual thereafter"
+    },
+    "models": [
+      "persistence",
+      "fixed_local_train",
+      "fixed_dense_train",
+      "v1_bridge_observational_local",
+      "causal_mechanism_no_latent",
+      "causal_latent_free",
+      "stable_fixed_local_latent_free",
+      "stable_fixed_dense_latent_free",
+      "stable_adaptive_dense_prefix_free",
+      "same_probe_dense_latent_free",
+      "oracle_hidden_diagnostic"
+    ],
+    "rollout": {
+      "mode": "single_origin_calibrated_free",
+      "horizons": [5, 20],
+      "origin_start": "ood_calibration_steps",
+      "origins_per_seed": 1,
+      "observed_prefix": "x[0] through x[80]",
+      "future_states_available_to_predictor": false,
+      "future_hidden_available_to_predictor": false,
+      "state_recursion": "x_hat[t+k] is the next mechanism input",
+      "residual_recursion": "r_hat[t+k-1] is the next latent-filter input",
+      "prefix_filter_frozen": true,
+      "truth_hidden_oracle_is_diagnostic_only": true,
+      "frozen_parent_validation_artifact": "artifacts/agi/sparse_causal_bridge_validation_v4.json",
+      "frozen_parent_validation_artifact_sha256": "41c17778c7aa2adcd36557ca0042ea0d2de90c817acbd8730bbc97424f553986",
+      "learned_model_source": "V4 selected edges, paired-do coefficient estimates, and pooled-train scalar AR stored in the frozen parent artifact",
+      "parent_checks": [
+        "artifact SHA256 equals the preregistered value",
+        "parent passed is true",
+        "parent merged registration SHA256 is unchanged",
+        "parent latent and sparse implementation SHA256 values equal current files"
+      ],
+      "baseline_refit": "Fixed observational baselines are deterministically refit from inherited V4 train seeds under the pinned sparse implementation. No V5 validation or test outcome is used for fitting.",
+      "model_definitions": {
+        "persistence": "repeat x[80] for every lead",
+        "fixed_models": "recursively feed each model's x_hat into its own next prediction; no residual correction",
+        "stable_observational": "fit [1, x_target, tanh(x_other charts)] with registered ridge; no cubic term and no coefficient clipping",
+        "latent_filter_models": "fit each model's own pooled-train scalar AR and its own prefix residual center, rank-one direction, and intercept; recursively feed r_hat and x_hat",
+        "causal_latent_free": "use frozen sparse V4 D, B, and pooled-train scalar AR",
+        "same_probe_dense_latent_free": "use all twelve off-diagonal paired-do estimates without thresholding, the same diagonal estimates and probe budget, then fit its own train AR and prefix residual filter",
+        "oracle_hidden_diagnostic": "use true h[80] only, recurse it with registered latent_ar, and use no future h or process noise"
+      },
+      "models": [
+        "persistence",
+        "fixed_local_train",
+        "fixed_dense_train",
+        "v1_bridge_observational_local",
+        "causal_mechanism_no_latent",
+        "causal_latent_free",
+        "stable_fixed_local_latent_free",
+        "stable_fixed_dense_latent_free",
+        "stable_adaptive_dense_prefix_free",
+        "same_probe_dense_latent_free",
+        "oracle_hidden_diagnostic"
+      ],
+      "non_gating_diagnostics": [
+        "adaptive_dense_prefix",
+        "v4_sequential_one_step",
+        "oracle_hidden_diagnostic"
+      ],
+      "paired_ci_unit": "independent_seed",
+      "paired_ci": {
+        "method": "student_t_two_sided_95_lower",
+        "critical_value_validation_n20": 2.093024054,
+        "critical_value_test_n30": 2.045229642
+      },
+      "metric_definitions": {
+        "seed_path_rmse": "sqrt(mean squared error over leads 1..H and requested charts) computed separately per seed",
+        "reported_path_rmse": "arithmetic mean of independent-seed path RMSE values",
+        "seed_terminal_rmse": "sqrt(mean squared error over requested charts at exactly lead H) computed separately per seed",
+        "reported_terminal_rmse": "arithmetic mean of independent-seed terminal RMSE values",
+        "paired_ci95_lower": "Student-t lower bound on per-seed absolute RMSE difference baseline minus causal_latent_free",
+        "horizon_20_to_5_ratio": "reported candidate H20 path RMSE divided by reported candidate H5 path RMSE",
+        "prediction_norm": "L2 norm per predicted four-chart state; train q99 pools per-state L2 norms from inherited observational-train episodes",
+        "learned_jacobian": "maximum spectral radius over candidate rollout states of diag(D)+B diag(sech(x)^2)"
+      },
+      "leakage_tests": [
+        "rollout API accepts only fitted objects, x[79], x[80], and horizon; it cannot accept Episode or future outcomes",
+        "mutating x[81:101] leaves predictions bit-identical while scores change",
+        "mutating all hidden values leaves every non-oracle prediction bit-identical",
+        "H5 prediction equals the first five rows of the single H20 rollout"
+      ],
+      "evaluation_probe_usage": "none; validation and test episodes are purely observational scoring data"
+    },
+    "rollout_gate": {
+      "require_passing_frozen_v4_validation_artifact": true,
+      "origins_per_seed_required": 1,
+      "horizon_5": {
+        "global_path_rmse_reduction_vs_no_latent_min": 0.25,
+        "global_path_rmse_reduction_vs_persistence_min": 0.05,
+        "global_path_rmse_ratio_vs_fixed_local_max": 1.05,
+        "global_path_rmse_reduction_vs_stable_local_latent_min": 0.08,
+        "global_path_rmse_ratio_vs_stable_adaptive_dense_max": 1.05,
+        "global_path_rmse_ratio_vs_same_probe_dense_latent_max": 1.02,
+        "seed_win_fraction_vs_no_latent_min": 0.75,
+        "seed_win_fraction_vs_persistence_min": 0.75,
+        "paired_ci95_lower_vs_no_latent_min": 0.0,
+        "paired_ci95_lower_vs_persistence_min": 0.0,
+        "paired_ci95_lower_vs_stable_local_latent_min": 0.0,
+        "downstream_path_rmse_reduction_vs_stable_local_latent_min": 0.1,
+        "terminal_rmse_reduction_vs_no_latent_min": 0.1,
+        "terminal_rmse_reduction_vs_persistence_min": 0.05
+      },
+      "horizon_20": {
+        "global_path_rmse_reduction_vs_no_latent_min": 0.15,
+        "global_path_rmse_reduction_vs_persistence_min": 0.1,
+        "global_path_rmse_reduction_vs_fixed_local_min": 0.1,
+        "global_path_rmse_reduction_vs_stable_local_latent_min": 0.15,
+        "global_path_rmse_reduction_vs_stable_adaptive_dense_min": 0.05,
+        "global_path_rmse_ratio_vs_same_probe_dense_latent_max": 1.02,
+        "seed_win_fraction_vs_no_latent_min": 0.75,
+        "seed_win_fraction_vs_persistence_min": 0.75,
+        "paired_ci95_lower_vs_no_latent_min": 0.0,
+        "paired_ci95_lower_vs_persistence_min": 0.0,
+        "paired_ci95_lower_vs_fixed_local_min": 0.0,
+        "paired_ci95_lower_vs_stable_local_latent_min": 0.0,
+        "downstream_path_rmse_reduction_vs_stable_local_latent_min": 0.15,
+        "terminal_rmse_ratio_vs_no_latent_max": 1.0,
+        "terminal_rmse_reduction_vs_persistence_min": 0.05,
+        "terminal_rmse_ratio_vs_stable_local_latent_max": 0.95
+      },
+      "nonfinite_prediction_count_max": 0,
+      "maximum_prediction_absolute_value": 5.0,
+      "learned_mechanism_jacobian_spectral_radius_max": 0.98,
+      "learned_latent_ar_abs_max": 0.98,
+      "horizon_20_to_5_path_rmse_ratio_max": 2.0,
+      "maximum_prediction_norm_to_train_q99_ratio": 5.0,
+      "future_observation_reads_max": 0,
+      "finite_metrics_required": true
+    },
+    "resource_limits": {
+      "max_cpu_seconds_target": 15.0,
+      "external_download_bytes": 0,
+      "write_trajectory_files": false,
+      "numpy_only": true
+    },
+    "test_lock": {
+      "open_only_after_validation_pass": true,
+      "test_may_change_selection_or_coefficients": false,
+      "failed_validation_artifact_must_be_preserved": true,
+      "require_identical_merged_registration_sha256": true,
+      "require_identical_implementation_sha256": [
+        "free_rollout_bridge.py",
+        "latent_causal_bridge.py",
+        "sparse_causal_bridge.py"
+      ]
+    }
+  }
+}
