@@ -451,6 +451,8 @@ $$
 | `reality_stone/python/reality_stone/clarus/core/src/engine/constants.rs` | 물리 상수 유도 | 3_상수 |
 | `reality_stone/python/reality_stone/clarus/core/src/engine/config.rs` | 런타임 설정 | 인프라 |
 | `reality_stone/python/reality_stone/clarus/core/src/engine/runtime_types.rs` | CellState, Mode 등 타입 | A, C |
+| `reality_stone/python/reality_stone/clarus/causal_world_simulator.py` | 부분감각 latent 복원, controlled transition 식별, chart holonomy, anchor harmonic field, 반사실 one-step planner | 26장; 유한 선형 합성 gate |
+| `experiments/preregistration/nonlinear_object_permanence_v1.json` | G2--G3 데이터 분할ㆍ기준선ㆍ판정 임계값 고정 | 27장; 구현 전 사전등록 |
 
 ---
 

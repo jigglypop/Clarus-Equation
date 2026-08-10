@@ -1,440 +1,210 @@
-# 구현 로드맵과 벤치마크
+# 인과 세계 시뮬레이터 실행 로드맵
 
-> 관련: 7_AGI 시리즈 전체, `examples/agi/` (현재 STDP 감사), `examples/ai/` (과거 구현)
+> 기준일: 2026-08-10
 >
-> 이 장은 2-8장의 CE-AGI 원리를 실제 코드로 구현하는 단계별 로드맵과 검증 계획을 정리한다.
+> 상태 원장: 이 문서가 AGI 연구의 우선순위ㆍ게이트ㆍ중단 조건에 대한 단일 기준이다.
+>
+> 완료된 수학과 G1 결과: `26_Causal_World_Simulator.md`
+>
+> 다음 실험 사전등록: `27_Nonlinear_Object_Permanence.md`
 
-> 원칙: 앞으로는 모든 CE-AGI 주장을 `예측 -> 측정량 -> 통과/실패 게이트` 순서로만 올린다. `supported`가 아닌 항목은 벤치마크를 통과하기 전까지 성공 기준으로 승격하지 않는다.
+## 0. 주장 정책과 동결된 레거시 트랙
 
----
+모든 주장은 `가설 -> 사전등록 측정 -> 기준선 비교 -> 통과/실패 -> 주장 등급 갱신` 순서로만 올린다. 합성 실험의 성공은 생물학적 증거나 AGI 달성을 뜻하지 않는다.
 
-## 0. 적용 영역과 한계 (정직한 측정 기록)
+기존 CE 비율을 transformer에 강제 이식한 트랙은 우선순위에서 제외한다. KoGPT2 실험에서 자연 활성비 수렴은 나타나지 않았고, 강제 희소화는 perplexity를 악화시켰으며, 기존 수면 변형도 continual-learning 기준선을 이기지 못했다. 따라서 다음 항목은 별도 새 증거가 생길 때까지 동결한다.
 
-### 0.1 substrate 불일치 진단
+- 우주 분율을 신경 활성 비율로 직접 동일시하는 주장
+- transformer에 특정 활성비를 강제하는 실험
+- 성능 게이트를 통과하지 않은 STDPㆍ수면ㆍ메타인지 모듈의 통합
+- 합성 성공을 뇌 또는 의식의 증명으로 해석하는 주장
 
-Track-A manifest의 조건부 고정점은
-$p^*=(4.86382585\%,26.10881744\%,69.02735671\%)$다. 이를 신경 또는 AI
-평형으로 옮기는 것은 `05_실험근거.md`의 bridge 가설이며, 같은 자기조직화
-동역학이 우주·뇌·SNN에 공통으로 유도됐다는 뜻은 아니다.
+이전 참조가 사용하는 `G-S1`~`G-S5`는 동결된 SNN 검증 게이트를 뜻한다: 막전위와 spike time, 국소 STDP, 자연 활성분율, held-out 과제 성능, 연속학습 보존을 차례로 검증한다. 현재 모두 `미검증`이며 주 실행 경로를 막지 않는다.
 
-**transformer + backprop은 이 부류에 속하지 않는다.** 가중치는 외부 손실 함수의 그래디언트 방향으로 일방적으로 움직이고, 가중치들 사이의 결합형 동역학이 없다. 따라서 transformer 시스템에서 자연 emergence로 $p^*$에 도달할 동역학적 근거가 없다. 이 진단은 다음 측정으로 직접 확인되었다.
+## 1. 연구 목표와 현재 위치
 
-### 0.2 측정 기록 (2026-04, KoGPT2 ClarusLM 127M)
+작업 가설은 다음과 같다.
 
-세 가지 변형을 비교 측정한 결과(legacy `scripts/natural_dynamics.py` and `examples/ai/results/natural_dynamics.json`, removed):
+> 뇌는 국소 인과모델들이 감각ㆍ행동ㆍ기억을 통해 맞물리는 계층적 세계 시뮬레이터이며, 피질 주름과 연결 구조는 그 계산을 제약하고 안정화하는 물리적 형상일 수 있다.
 
-| 변형 | 사양 적용 방식 | 초기 활성 | 최종 활성 (60 cycle) | 최종 ppl |
-|---|---|---|---|---|
-| A. plain AdamW | CE 메커니즘 일체 없음 | 81.7% | 77.6% | 27.2 |
-| B. 표상 LBO 흐름 | NREM에 heat-kernel flow 강화 | 81.7% | 77.6% | 26.7 |
-| C. 강제 ε² | top-ε² gradient mask + ternary | 81.7% | 82.5% | 51.1 |
+이 문장은 세 개의 독립 트랙으로 나눈다.
 
-**해석:**
-
-1. **자연 동역학 (A, B)으로 활성 비율은 manifest target 4.864%로 수렴하지 않는다.** 60 cycle 동안 81%에서 77%로만 이동하며, trajectory 기울기로 추정하면 1000+ cycle에서도 평형은 ~70% 근방. transformer + AdamW의 자연 평형은 $p^*$가 아니다.
-2. **표상 공간 LBO 흐름(B 변형)이 활성 평형을 끌어당기지 못한다.** $\eta$를 5배 boost한 NREM 위상에서도 활성 비율이 A와 거의 동일(77.64% vs 77.60%). 사양의 "수축 사상"이 transformer 활성 공간에서 작동하지 않는다는 직접 증거.
-3. **강제 ε² (C 변형)이 강제하는 것은 활성 비율이 아니라 그래디언트 mass 비율이다.** top-eps mask + ternary BG freeze에도 활성 비율은 82.5%로 오히려 증가하고, perplexity만 두 배 악화.
-
-추가 측정:
-
-- **Continual learning** (한국어 → 영어, legacy `scripts/continual_test.py`, removed): 사양 sleep cycle이 baseline AdamW 대비 forgetting을 21배 악화시킴. NREM weight smoothing이 오히려 기존 표상을 흐리고, ternary 동적 재분류가 옛 활성 가중치를 BG로 밀어내며 NREM smoothing이 그것을 평탄화시키는 메커니즘.
-- **TopK sparsity sweep** (이전, `examples/ai/topk_sweep_results.json`): GPT-2 MLP에 4.87% TopK 강제 시 perplexity 1328 (dense 대비 27배 악화). 단조 감소.
-
-### 0.3 결론: 강제 변환의 자리매김
-
-위 측정으로 다음을 확정한다:
-
-- **정규화 self-map의 수학은 분리해 검증된다.** $x=e^{-(1-x)D_n}$은
-  선택된 수축영역에서 유일한 내부 저분율 고정점을 가지며 국소 spectral
-  radius는 $q_*=0.1545681540$이다. 전체 구간에는 경계 고정점 $x=1$도 있다.
-  $p_a\leq0.13$에서는 $q_U=0.2001757361$인 Banach 수축이다. 이 정리는
-  transformer update가 그 self-map을 구현한다는 뜻은 아니다.
-- **그러나 transformer는 위 가정이 성립하는 substrate가 아니다.** (C3) 자기일관성 루프가 forward만으로는 형성되지 않고, (A1) 채널 분해가 backprop의 chain rule과 정합하지 않는다.
-- **현재 `legacy clarus/` (removed), `legacy examples/ai/clarus_lm.py` (removed), `legacy scripts/sleep_finetune_lm.py` (removed) 등의 구현은 사양을 transformer에 강제 이식한 것이다.** 자연 emergence가 아니라 출력 비율을 외부 mask로 강제한 변환. 측정 결과는 이 강제가 task 성능을 저하시킬 뿐 사양의 우위(catastrophic forgetting 감소, 환각 억제)를 만들어내지 않음을 보여준다.
-- **CE-AGI 사양의 진정한 검증은 SNN(spiking neural network) substrate에서만 가능하다.** 현재 BrainRuntime에는 thresholded activity 기반 STDP와 적격 흔적이 구현되어 있지만, 막전위·명시적 spike time을 갖는 완전한 SNN은 아니다. $p^*$ 자연 수렴의 본격 검증에는 별도 substrate와 실험이 필요하다.
-
-### 0.4 현재 코드베이스의 정직한 자리매김
-
-| 영역 | 현재 코드의 지위 |
-|---|---|
-| `legacy examples/ai/clarus_lm.py` (removed) (LBONorm, GaugeLattice, spectral norm) | 사양 영감을 받은 transformer 변형. 정규 transformer 대비 우위 미입증. |
-| `legacy scripts/sleep_finetune_lm.py` (removed) (WAKE/NREM/REM cycle) | 사양 그대로 구현. transformer 위에서 강제 변환. fit 속도 손해, forgetting 21배 악화 (측정). |
-| `legacy clarus/sparsity.py` (removed) (TernaryClassifier) | 동적 재분류로 BG 라벨이 frozen 의미를 잃음. 사양 4.4절 자체의 모순 (frozen vs 동적 재분류) 반영. |
-| `reality_stone/python/reality_stone/clarus/runtime.py`, `reality_stone/python/reality_stone/clarus/agent.py` 등 brain runtime | 상태·행동·critic·기억·STDP gate가 닫힌 실행 루프. 다만 STDP 효능은 `NO-EFFECT`, held-out guard는 `FAIL`이므로 학습 우위 미입증. |
-| `reality_stone/python/reality_stone/clarus/engine.py` standalone CE relax | 토큰 디코딩에서 의미 있는 출력 생산 실패 (`engine_results.json`: 노이즈 토큰). |
-
-### 0.5 다음 단계 옵션
-
-1. **현재 상태 유지 + 정직한 documentation**: 본 절의 측정 기록을 코드 주석과 README에 반영. 사양은 SNN substrate에서 검증 대상이라는 점을 명시. 가장 정직하고 빠른 길.
-2. **SNN 작은 프로토타입**: snnTorch / Norse 라이브러리로 작은 합성 task에서 STDP + 부트스트랩 사이클 구현. 활성 비율 자연 수렴 여부 측정. 사양의 진짜 검증. 1-2주 작업.
-3. **transformer 변형으로서의 가치 재평가**: 사양에서 분리해 LBONorm + spectral norm + 곡률 정규화의 transformer regularizer로서의 효과만 ablation. AGI 청구는 분리하고 LM 정규화 이점만 측정.
-
-본 8장 이후의 Phase 1-6 로드맵은 위 substrate 진단을 전제하지 않은 채 작성되었다. 측정 결과 반영을 위해 향후 phase 정의 시 "sample efficiency vs natural emergence" 구분이 필요하다.
-
----
-
-## 1. 현재 상태: 기존 구현 평가
-
-### 1.1 구현 완료
-
-| 구현 | 파일 | 상태 | 장 |
-|---|---|---|---|
-| LBONorm | `legacy examples/ai/clarus_lm.py` (removed) | V1 완료 | 2장 |
-| GaugeLattice (블록 대각) | `legacy examples/ai/clarus_lm.py` (removed) | V1 (혼합 없음) | 2장 |
-| Spectral Norm | `legacy examples/ai/clarus_lm.py` (removed) | 완료 | 2장 |
-| 곡률 정규화 손실 | `legacy examples/ai/clarus_lm.py` (removed) | 완료 | 2장 |
-| 곡률 기반 환각 억제 | `examples/ai/sfe_hallucination_suppressor.py` | V1 완료 | 6장 |
-| GPT-2 CE 이식 | `examples/ai/ce_gpt2.py` | 완료 | 2장 |
-| 학습 스크립트 | `legacy examples/ai/train_clarus.py` (removed) | 완료 | -- |
-| CE 에너지 이완 엔진 | `reality_stone/python/reality_stone/clarus/engine.py` | 완료 (standalone) | 12장 |
-| 메트릭 기반 CE ops | `reality_stone/python/reality_stone/clarus/ce_ops.py` | 완료 (Rust/CUDA/Torch) | 12장 |
-| Wake/NREM/REM 학습 순환 | `reality_stone/python/reality_stone/clarus/sleep.py` | **구현 완료** | 3장 |
-| NREM 가중치 갱신 (LBO 확산 + 가소성) | `reality_stone/python/reality_stone/clarus/sleep.py::apply_nrem_weight_update` | **구현 완료** | 3장 |
-| REM 가중치 갱신 (비활성 update proposal) | `reality_stone/python/reality_stone/clarus/sleep.py::apply_rem_weight_update` | **구현 완료** | 3장 |
-| BrainRuntime (모드 전환 + 셀 동역학) | `reality_stone/python/reality_stone/clarus/runtime.py` | **구현 완료** | 14장 |
-| 해마 기억 (encode/recall/replay) | `reality_stone/python/reality_stone/clarus/runtime.py::HippocampusMemory` | **구현 완료** | 14장 |
-| 모듈 생애주기 (ACTIVE/IDLE/DORMANT/SLEEPING) | `reality_stone/python/reality_stone/clarus/runtime.py::_update_lifecycle` | **구현 완료** | 14장 |
-| Borbely 2-Process 수면 압력 | `reality_stone/python/reality_stone/clarus/runtime.py::_update_sleep_state` | **구현 완료** | 14장 |
-| STP (Tsodyks-Markram) | `reality_stone/python/reality_stone/clarus/runtime.py::_step_torch`, Rust kernel | **구현 완료** | 15장 |
-| Rust brain_step 커널 | `reality_stone/python/reality_stone/clarus/core/src/engine/kernel.rs` | **구현 완료** | 14장 |
-| 3분배 상태 분할 ($\varepsilon^2/\Omega_{\text{DM}}/\Omega_\Lambda$) | `reality_stone/python/reality_stone/clarus/engine.py::state_partition_counts` | **구현 완료** | 5장 |
-| 곡률 기반 로짓 조정 | `reality_stone/python/reality_stone/clarus/engine.py::_curvature_adjust_logits` | **구현 완료** | 6장 |
-| 스냅샷 연속성 (warm snapshot) | `reality_stone/python/reality_stone/clarus/runtime.py::snapshot/from_snapshot` | **구현 완료** | 14장 |
-| 가드셋 평가 (top1/top10/top50) | `reality_stone/python/reality_stone/clarus/sleep.py::evaluate_guard_set` | **구현 완료** | -- |
-| STDP 적격 흔적 + critic gate | `reality_stone/python/reality_stone/clarus/stdp.py`, `runtime.py::_apply_runtime_stdp` | **배선 완료, 효능 미통과** | 17장 F.14 |
-| 4종 신경조절 상태식 | `reality_stone/python/reality_stone/clarus/neuromod.py` | **독립 모듈 구현 완료** | 17장 F.19 |
-| 작업 기억 + 소뇌 전방 모델 | `reality_stone/python/reality_stone/clarus/agent.py` | **RuntimeAgent 통합 완료** | 17장 F.20 |
-| 뇌파 대역 관측 | `reality_stone/python/reality_stone/clarus/runtime.py::brainwave_observable` | **관측 구현 완료** | 17장 F.21 |
-
-### 1.2 미구현 / 부분 구현
-
-| 원리 | 장 | 상태 | 우선순위 |
-|---|---|---|---|
-| 섭동적 채널 혼합 ($U_{\text{down}} U_{\text{up}}^\top x$) | 2장 | 미구현 | 높음 |
-| STDP 국소 학습 효능/guard | 4장 | 배선 완료, A/B `NO-EFFECT`, guard `FAIL` | 높음 |
-| LBO 곡률 추론 억제 V2 (재추론 메커니즘) | 6장 | V1 완료, V2 필요 | 중간 |
-| 메타인지 루프 (C3 자기참조) | 7장 | 미구현 | 낮음 |
-| Cold checkpoint (장기 저장) | 14장 | 미구현 (warm snapshot만 구현) | 낮음 |
-| 4종 신경조절의 BrainRuntime 파라미터 폐루프 | 17장 | 상태식/효과 mapping 구현, runtime 전체 통합은 부분 | 중간 |
-| 작업 기억 / 소뇌 전방 모델의 독립 task 효능 | 17장 | RuntimeAgent 통합 완료, baseline 우위 미검증 | 중간 |
-
----
-
-## 2. 단계별 로드맵
-
-### 공통 검증 규칙
-
-각 Phase는 아래 4단계를 반드시 따른다.
-
-1. **예측 고정**: 먼저 수식 또는 구조가 요구하는 예측값을 문서에 고정한다.
-2. **측정량 고정**: 그 예측을 무엇으로 잴지 벤치마크와 로그 항목을 정한다.
-3. **게이트 통과**: 기준 모델 대비 개선 또는 비회귀를 확인한다.
-4. **실패 시 하향**: 예측이 어긋나면 CE 원리를 버리는 것이 아니라, 해당 문장을 `bridge` 또는 `hypothesis`로 내린다.
-
-즉 로드맵의 목적은 "CE가 맞다고 선언"하는 것이 아니라, **어느 예측이 실제로 버티는지 하나씩 걸러내는 것**이다.
-
-### Phase 1: 아키텍처 완성 (2장 V2)
-
-**목표:** GaugeLattice V2 (섭동적 혼합 추가), 교차 주파수 결합.
-
-**작업:**
-
-1. `GaugeLattice`에 저랭크 혼합항 $U_{\text{down}} U_{\text{up}}^\top x$ 추가
-2. 교차 주파수 결합 게이트 $\xi \cdot E_{\text{curv}}$ 구현
-3. 곡률 정규화 스케줄 $\lambda(t)$ 구현
-
-**검증:**
-
-- WikiText-103 perplexity 비교: V1 vs V2 vs 표준 Transformer
-- 파라미터 수 비교: `22-25%` 전체 절감 또는 `35-37%` FFN 절감 확인
-- 곡률 에너지 수렴 곡선 시각화
-
-**게이트:**
-
-- `G1-A`: GaugeLattice V2가 표준 FFN 대비 파라미터 절감 예측 범위 안에 들어갈 것
-- `G1-B`: 같은 학습 budget에서 perplexity가 구조적 퇴보를 보이지 않을 것
-- `G1-C`: 곡률 에너지가 발산하지 않고 안정 구간을 형성할 것
-
-**예상 기간:** 2주
-
----
-
-### Phase 2: 수면 학습 (3장) -- 구현 완료
-
-**목표:** 각성-NREM-REM 3위상 학습 순환 구현.
-
-**현재 상태: 핵심 파이프라인 구현 완료.**
-
-| 작업 | 구현 위치 | 상태 |
+| 트랙 | 질문 | 증거가 올라가는 순서 |
 |---|---|---|
-| 각성 위상 (경로 누적) | `sleep.py::collect_sleep_batch` | 완료 |
-| NREM 위상 (LBO 확산 + 가소적 업데이트) | `sleep.py::apply_nrem_weight_update` | 완료 |
-| REM 위상 (비활성 update proposal) | `sleep.py::apply_rem_weight_update` | 완료 |
-| 3위상 통합 순환 | `sleep.py::run_sleep_cycle` | 완료 |
-| 위상별 샘플 비율 분배 ($69\%/26\%/5\%$) | `sleep.py::allocate_phase_sample_counts` | 완료 |
-| 가드셋 품질 보호 | `sleep.py::evaluate_guard_set` | 완료 |
-| 디코더 리피팅 (NREM/REM 각각) | `sleep.py::fit_decoder_from_batch` | 완료 |
-| 어휘 헤드 미세조정 | `sleep.py::finetune_vocab_head_from_batch` | 완료 |
-| 수면 압력 자동 전환 | `runtime.py::_auto_mode` + `_update_sleep_state` | 완료 (Borbely 2-Process) |
-
-**구현 상세:**
-
-- `apply_nrem_weight_update`: 상태 그래프 라플라시안 기반 확산 (`smooth_weight_matrix`) + 상위 `active_ratio` 가소적 업데이트
-- `apply_rem_weight_update`: 비선택 잔차 (`~selected_mask`)를 저랭크 랜덤 투영 + 노이즈로 재조합
-- `run_sleep_cycle`: Wake 수집 -> NREM W 갱신 -> NREM 디코더 리피팅 -> REM W 갱신 -> REM 디코더 리피팅 -> 가드셋 평가 -> 롤백 판정
-
-**남은 검증:**
-
-- 지속 학습(continual learning) 벤치마크: 수면 순환 vs 연속 학습
-- 파괴적 망각 측정: 이전 태스크 성능 보존율
-- 수렴 속도: 부트스트랩 이탈 $\delta_n$ 감소 곡선
-- 과도 응답: 균등 초기화에서 `33.3 -> 9.28 -> 5.55 -> 4.98%` 예측과 실제 재분배 비교
-
-**게이트:**
-
-- `G2-A`: 수면이 있는 체계가 wake-only보다 이전 태스크 보존율에서 우위일 것
-- `G2-B`: 잔차 곡선이 최소한 `2회 ~2.4%`, `3회 ~0.37%` 목표 수렴률에 근접할 것
-- `G2-C`: sleep-on에서는 bounded residual, wake-only에서는 누적 drift가 관측될 것
-
-**예상 기간:** ~~4주~~ 핵심 구현 완료. 대규모 벤치마크 검증 잔여
-
----
-
-### Phase 3: 희소성 (5장) -- 기반 구현 완료
-
-**목표:** 부트스트랩 수렴 희소 네트워크 구현.
-
-**현재 상태:**
-
-| 작업 | 구현 위치 | 상태 |
-|---|---|---|
-| 3분배 상태 분할 ($4.864\%/26.109\%/69.027\%$) | `engine.py::state_partition_counts` | manifest 동기화 필요 |
-| 활성/구조/배경 마스크 적용 | `engine.py::state_partition`, `apply_state_partition` | 완료 |
-| TopK 활성 선택 | `runtime.py::_select_active` | 완료 |
-| 에너지 예산 모드별 제어 | `runtime.py::BrainRuntimeConfig.energy_budget` | 완료 |
-| 모듈 생애주기 4상태 관리 | `runtime.py::_update_lifecycle` | 완료 |
-| 수면 순환 시 동적 재분류 | `sleep.py::classify_state_dimensions` | 완료 |
-
-**잔여 작업:**
-
-1. ~~Top-k 활성화 구현~~ -> 완료
-2. ~~3분배 가중치 분류 구현~~ -> 완료
-3. ~~동적 재분류~~ -> 완료
-4. 자기수렴 실험: 초기 균등에서 $\varepsilon^2$로의 수렴 관측 (벤치마크 필요)
-
-**검증:**
-
-- Top-k 비율 스위프: $k \in \{1\%, 2\%, 3\%, 4\%, 5\%, 7\%, 10\%, 20\%, 100\%\}$
-- 성능/효율 트레이드오프 곡선에서 `4-5%` 근방의 knee point 확인
-- 추론 속도 측정: Dense vs Sparse
-
-**게이트:**
-
-- `G3-A`: 최적 활성 중심이 manifest target `4.864%` 근방에 나타날 것
-- `G3-B`: 실용 대역이 대체로 `3%-7%` 안에 남을 것
-- `G3-C`: 현재형 구현에서는 `1.5-2x`, 전면 희소 구현에서는 더 높은 상한이 관측될 것
-
-**예상 기간:** 3주
-
----
-
-### Phase 4: 환각 억제 V2 (6장)
-
-**목표:** LBO 곡률 기반 추론 시 환각 억제.
-
-**작업:**
-
-1. `RealityStoneEngine`에 LBO 곡률 통합
-2. 적응형 임계치 구현
-3. 재추론 메커니즘 (곡률 초과 시 평탄화 후 재시도)
-4. 곡률 기반 로짓 조정
-
-**검증:**
-
-- TruthfulQA, HaluEval, FactScore: CE 제약 전/후 비교
-- 곡률 에너지와 환각 빈도의 상관관계 분석
-- 추론 오버헤드 측정 (재추론 빈도와 비용)
-
-**게이트:**
-
-- `G4-A`: 곡률 에너지와 오류/환각 빈도 사이에 양의 상관이 있을 것
-- `G4-B`: 같은 base model 대비 CE 제약이 벤치마크를 개선하거나 적어도 안정화 편향을 보일 것
-- `G4-C`: 우주 분율을 환각률 hard bound로 사용하는 것은 금지
-
-**예상 기간:** 2주
-
----
-
-### Phase 5: 국소 학습 (4장)
-
-**목표:** STDP + 도파민 학습 규칙의 미세조정 적용.
-
-**작업:**
-
-1. Trace 기반 STDP 구현 (pre/post trace, eligibility trace) — 완료
-2. critic + bootstrap deviation 전역 조절 신호 — 배선 완료
-3. 하이브리드 학습: 사전학습(역전파) + 미세조정(STDP)
-4. LoRA 대비 성능/효율 비교
-
-**검증:**
-
-- 미세조정 벤치마크: STDP vs LoRA vs Full fine-tuning
-- 통신 비용 측정: 분산 환경에서 $O(1)$ 동기화 확인
-- 메모리 비용: $O(N)$ trace vs $O(N^2)$ 활성값 저장
-- 현재 합성 next-step prediction A/B: 효능 `NO-EFFECT`, held-out guard `FAIL`
-
-**게이트:**
-
-- `G5-A`: shared-trace 구현에서는 메모리 절감이 `~50%` 근방에 들어올 것
-- `G5-B`: 전역 신호가 스칼라 또는 저차원일 때 통신량이 그래디언트 동기화보다 작을 것
-- `G5-C`: 생물학적 직접량이 닫히기 전까지 `dopamine = ||p-p^*||`로 단정하지 말 것
-
-**예상 기간:** 6주
-
-현재 구현/효능/진단의 정본은 `21_STDP_Efficacy_Audit.md`다. 구현 완료를
-성능 통과로 읽지 않으며, 효능과 guard가 동시에 통과하기 전까지
-`stdp_enabled=False`를 유지한다.
-
----
-
-### Phase 6: 메타인지 (7장)
-
-**목표:** (C3) 자기일관성 루프 구현.
-
-**작업:**
-
-1. 자기 모니터링 모듈: 활성 비율, 곡률, 부트스트랩 이탈 측정
-2. 자동 개입 판정 및 실행
-3. 재귀적 자기 평가 (깊이 3)
-4. 수면 필요 판단 및 자동 수면 순환 시작
-
-**검증:**
-
-- 메타인지 유무에 따른 장기 안정성 비교
-- 자기 수정 빈도와 성능 변화
-- 시간창 평균 이탈 $\delta_\tau(t)$ 또는 $\exp(-\beta\delta_\tau)$와 외부 안정성 지표 비교
-
-**게이트:**
-
-- `G6-A`: 메타인지 루프가 장기 drift와 곡률 폭주를 줄일 것
-- `G6-B`: 재귀 깊이 3 기본값이 오버헤드 대비 가장 안정적일 것
-- `G6-C`: PCI와의 직접 대응은 검증 전까지 탐색 과제로만 둘 것
-
-**예상 기간:** 8주
-
----
-
-## 3. 벤치마크 계획
-
-### 3.1 핵심 지표
-
-| 지표 | 사전등록 기대/가설 | 측정 방법 | 현재 지위 |
-|---|---|---|---|
-| 최적 활성 비율 | manifest target $4.864\%$, 실용 대역 `3%-7%` | Top-k 스위프 | `bridge` |
-| 파라미터 절감 | FFN `35-37%`, 전체 `22-25%` | 동등 성능 시 파라미터 수 비교 | `supported/bridge` |
-| 추론 비용 절감 | 현재형 `1.5-2x`, 전면 희소 상한 더 큼 | FLOPs 또는 latency 측정 | `bridge` |
-| 환각 억제 | hard bound 없음, 안정화 편향 예측 | TruthfulQA, FactScore, 곡률 상관 | `hypothesis` |
-| 지속 학습 성능 | wake-only 대비 향상 | 이전 태스크 보존율 | `bridge` |
-| 수렴 속도 | 2회 `2.4%`, 3회 `0.37%` 잔차 목표 | 부트스트랩 이탈 감소 곡선 | `bridge` |
-
-### 3.2 비교 대상
-
-| 방법 | 비교 포인트 |
-|---|---|
-| 표준 Transformer | 아키텍처 효율, perplexity |
-| LoRA | 미세조정 효율, 메모리 |
-| MoE (Mixtral 등) | 희소성 비율, 추론 속도 |
-| RLHF | 환각 억제 효과 |
-| Continual learning (EWC, SI 등) | 파괴적 망각 방지 |
-
-### 3.3 모델 규모
-
-| 규모 | 파라미터 | 용도 |
-|---|---|---|
-| Micro | $\sim 10\text{M}$ | 원리 검증, 어블레이션 |
-| Small | $\sim 100\text{M}$ | 아키텍처 비교 |
-| Medium | $\sim 1\text{B}$ | 벤치마크 성능 확인 |
-| Large | $\sim 7\text{B}$ | 실용 성능 검증 |
-
-Phase 1-3은 Micro/Small 규모로 검증. Phase 4-6은 Medium 이상에서 검증.
-
----
-
-## 4. 리스크와 완화
-
-| 리스크 | 영향 | 완화 |
-|---|---|---|
-| 곡률 정규화가 task loss 저하 | 성능 하락 | $\lambda(t)$ 스케줄 최적화 |
-| STDP 수렴이 역전파보다 느림 | 학습 시간 증가 | 하이브리드 접근 (Phase 5) |
-| Top-k $4.864\%$가 너무 희소 | 표현력 부족 | $k$ 근방 탐색 ($3\%-7\%$) |
-| 수면 순환이 서비스 중단 | 가용성 저하 | 이중 모델 교대 (3장 6.3절) |
-| 메타인지 오버헤드 | 추론 속도 저하 | 곡률 낮을 때 모니터링 비활성화 |
-
----
-
-## 5. 의존성 그래프
-
-```
-Phase 1 (아키텍처 V2)
-  ↓
-Phase 2 (수면 학습) ← Phase 3 (희소성)
-  ↓                    ↓
-Phase 4 (환각 억제 V2) ←┘
-  ↓
-Phase 5 (국소 학습)
-  ↓
-Phase 6 (메타인지)
+| A. 계산 | 국소 인과 세계모델이 실제로 예측ㆍ추론ㆍ계획하는가? | 합성 -> 시뮬레이션 -> 실제 센서 |
+| B. 뇌 | 주름ㆍ연결ㆍ기능의 관계가 시간 선행성과 홀드아웃 예측력을 갖는가? | 공개 영상 -> 종단 자료 -> 생물 개입 |
+| C. 통합ㆍ안전 | 모듈을 통합해도 안정성ㆍ감사 가능성ㆍ성능이 유지되는가? | sandbox -> 제한 행동 -> 실제 환경 |
+
+현재 위치는 `G1 완료`다. 선형 부분관측계에서 상태복원, 행동 포함 전이, 반사실 개입, 한 단계 계획, chart holonomy를 수학과 코드로 확인했다. 다음 병목은 `G2 비선형 장기 예측`과 `G3 물체 영속성`이다.
+
+## 2. 의존성
+
+```text
+G1 선형 인과 gate [완료]
+  -> G2 비선형 장기 rollout
+       -> G3 가림ㆍ물체 영속성
+            -> G4 능동 지각
+                 -> G5 인과ㆍ조합 OOD
+                      -> G6 자발적 chart/구조 성장
+                           -> G7 기억ㆍ재생ㆍ계층 계획
+                                -> G8 실제 센서ㆍ로봇
+                                     -> G10 사회ㆍ언어
+
+B1 발달 지도 -> B2 dHCP -> B3 HCP -> B4 유전/종단 -> B5 개입
+                          \____________________________/
+                                       |
+                          G9 뇌 대응은 독립 판정
 ```
 
-Phase 1은 모든 후속 작업의 전제. Phase 2와 3은 병렬 가능. Phase 4는 2와 3의 결합. Phase 5는 독립적이지만 2 이후가 권장. Phase 6은 최종.
+G9는 A 트랙의 성공으로 자동 통과하지 않는다. 계산 모델과 뇌 자료는 분석계획을 각각 고정한 뒤 공통 지표만 비교한다.
 
----
+## 3. 게이트 원장
 
-## 6. 성공 기준
-
-### 6.1 단기 (Phase 1-3, 약 9주)
-
-- GaugeLattice V2가 표준 FFN 대비 37% 파라미터 감소, 동등 perplexity
-- 수면 학습이 wake-only 대비 이전 태스크 보존율 향상
-- Top-k가 `4-5%`를 중심으로 `3-7%` 대역에서 최적점 형성
-
-### 6.2 중기 (Phase 4-5, 약 8주)
-
-- 곡률-환각 상관관계가 재현되고 CE 제약이 벤치마크 개선 또는 안정화 편향을 보임
-- STDP 미세조정이 LoRA 대비 동등 성능, shared-trace 조건에서 메모리/통신 이득 확인
-
-### 6.3 장기 (Phase 6, 약 8주)
-
-- (C3) 메타인지 루프가 장기 안정성을 개선
-- $\delta_\tau(t)$ 기반 메타인지 점수와 외부 안정성 지표의 상관관계 확인
-
-### 6.4 실패 시 해석 규칙
-
-- 최적 활성점이 manifest target `4.864%` 근방에 없으면: 고정점 예측을 좁은 과제군 가설로 내린다.
-- 수면 루프 잔차가 `2-3회`에 수렴하지 않으면: 현재 구현의 동역학 사상이 CE 최소 반복식을 따르지 않는 것으로 본다.
-- 곡률과 환각이 상관하지 않으면: P5를 환각 억제가 아니라 일반 안정화 regularizer로 재분류한다.
-- STDP가 메모리 이득을 못 주면: shared-trace 근사를 다시 점검하고 순수 synapse-local 가정을 유지한다.
-
----
-
-## 7. 전체 대응 요약
-
-$$\boxed{\text{우주}\;\dashrightarrow\;\text{뇌}\;\dashrightarrow\;\text{CE-AGI}}
-\quad\text{(검증 대상인 설계 유비)}$$
-
-아래 표는 동일 물리 법칙이나 동일 self-map이 세 기질에서 유도됐다는
-주장이 아니다. Track-A 등록량을 신경·공학 변수에 대응시켜 시험할 항목을
-나열한다.
-
-| | 우주 | 뇌 | CE-AGI |
+| Gate | 최소 결과 | 상태 | 다음 이동 조건 |
 |---|---|---|---|
-| 반복 비유 | 초기조건 toy interpretation | 수면-각성 (매일) | 학습-수면 순환 후보 (Phase 2) |
-| 후보 매체 | 경로적분 유비; 동역학 미유도 | 시냅스 가소성 | 곡률 정규화 후보 (Phase 1) |
-| 동일 고정점 도달 | 미검증 | 미검증 | transformer에서 실패, SNN 미검증 |
-| 활성 비율 | $x=4.864\%$ | $< 5\%$ | TopK($x d$) (Phase 3) |
-| 구조 유지 | $\Omega_{\text{DM}}=26.109\%$ | 시냅스 $25-35\%$ | 학습 가능 가중치 (Phase 3) |
-| 배경 | $\Omega_\Lambda=69.027\%$ | DMN $60-70\%$ | 동결 가중치 (Phase 3) |
-| 경로 선택 | 경로적분 | STDP | 국소 학습 + 전역 신호 (Phase 5) |
-| 안정화 | \(\Phi_H\) Hessian readout 비유 | ACC/PFC | 유효 곡률 모니터 (Phase 4); 독립 물리장 \(\phi\)와 분리 |
-| 재탐색 | -- | REM 수면 | 비활성 update proposal (Phase 2) |
-| 자기참조 | (C3) 형식 | 메타인지 proxy; 의식 동치 Open | 메타인지 루프 (Phase 6) |
+| G0 | 수학적 일관성ㆍ유한계 정리 | 완료 | 코드 대응 |
+| G1 | 선형 상태복원ㆍ인과ㆍ계획 | 완료 | 재현 테스트 유지 |
+| G2 | 비선형 1/5/20/100-step rollout | 준비 | 단일 MLPㆍ선형ㆍ지속성 기준선 우위 |
+| G3 | 가림 중 상태ㆍ정체성ㆍ재등장 예측 | 준비 | 학습보다 긴 가림의 홀드아웃 통과 |
+| G4 | 정보이득을 위한 감각 행동 | 대기 | 고정ㆍ무작위 시선보다 낮은 비용 |
+| G5 | 새 객체 수ㆍ속성ㆍ법칙ㆍ목표 | 대기 | 개입 관계와 성능 동시 보존 |
+| G6 | chart 생성ㆍ전이ㆍ복구 | 대기 | 단일 모델 ablation 우위, 오류 국소화 |
+| G7 | 기억ㆍ재생ㆍ장기 계획 | 대기 | 망각과 장기 regret 동시 감소 |
+| G8 | 실제 센서ㆍ제한 로봇 | 대기 | sandbox 안전 게이트 통과 |
+| G9 | 주름ㆍ연결ㆍ기능 대응 | 병렬 준비 | 기계적 성장모델 대비 홀드아웃 증분 |
+| G10 | 타 에이전트ㆍ언어 인터페이스 | 대기 | 체계적 일반화와 믿음 추적 |
+| G11 | 광범위 일반지능 평가 | 미정 | 독립 평가 전에는 AGI 명칭 금지 |
+
+## 4. 트랙 A: 계산 실행계획
+
+### A1. G2--G3: 비선형 물체 영속성
+
+첫 환경은 외부 게임엔진 없이 재현 가능한 NumPy 2차원 다중물체 세계로 고정한다. 상태에는 물체별 위치ㆍ속도ㆍ반지름ㆍ질량ㆍ정체성이 있고, 관측에는 가림 마스크와 ego/action copy가 포함된다. 충돌, 벽 반사, 마찰, 약한 비선형 위치 의존력이 존재한다.
+
+필수 비교군은 `persistence`, `global linear`, `small monolithic nonlinear`, `local-chart nonlinear` 네 개다. 데이터 분할은 시간뿐 아니라 seed, 물체 수, 가림 길이, 물리 파라미터를 분리한다. 상세 수치와 실패 규칙은 27장에 고정한다.
+
+산출물:
+
+- `reality_stone/python/reality_stone/clarus/nonlinear_object_world.py`
+- `examples/agi/nonlinear_object_permanence_gate.py`
+- `tests/test_nonlinear_object_world.py`
+- `artifacts/agi/nonlinear_object_permanence_report.json`
+- 선택적 대용량 궤적은 Git에 넣지 않고 재생성 명령만 기록
+
+### A2. G4: 능동 지각
+
+G3 모델에 이동 가능한 시선 또는 센서를 추가한다. 목적함수는 과제 비용, 상태 불확실성, 행동 비용을 함께 포함한다. 고정 시선과 무작위 탐색보다 더 적은 관측 비용으로 숨은 상태를 식별해야 한다.
+
+### A3. G5: 인과ㆍ조합 OOD
+
+객체 상태와 관계 그래프를 분리한다. 훈련에 없던 객체 수, 질량ㆍ마찰 조합, 도구, 인과 방향, 목표에서 시험한다. 영상 유사도만 좋아지고 개입 효과가 틀리면 실패다.
+
+### A4. G6: 자발적 chart와 구조 성장
+
+chart 수, 담당 영역, 전이함수, 결합 강도를 학습 대상으로 바꾼다. cocycle 위반과 holonomy/frustration으로 오염된 연결을 찾아 국소 복구한다. 모듈 추가ㆍ삭제는 검증 성능과 복잡도 페널티를 함께 개선할 때만 채택한다.
+
+### A5. G7: 기억ㆍ재생ㆍ계층 계획
+
+작업ㆍ일화ㆍ의미 기억을 분리하고 실패/고오차 사건을 오프라인 재생한다. 빠른 감각제어, 중간 객체사건, 느린 목표ㆍ법칙의 세 시간척도로 계획한다. 새 과제 적응과 과거 과제 보존을 동시에 측정한다.
+
+### A6. G8ㆍG10: 실제 환경과 사회ㆍ언어
+
+시뮬레이션을 통과한 모델만 제한된 실제 센서/로봇으로 옮긴다. 이후 다른 에이전트의 관측ㆍ목표ㆍ거짓 믿음을 추적하고, 언어는 세계모델의 질의ㆍ보고ㆍ계획 인터페이스로 결합한다. 언어모델 자체를 세계모델 성공의 대리변수로 사용하지 않는다.
+
+## 5. 트랙 B: 뇌ㆍ주름 검증계획
+
+### B1. 발달ㆍ유전 atlas
+
+주요 고랑마다 출현 시기, 출생 후 변화, 좌우 비대칭, 집단 공통성, 개인차, 유전율, 기능영역 정렬, 백질 연결을 표준 표로 만든다. 개인 형태는 `인류 공통 발달 + 유전 + 비공유 환경 + 발달 잡음`의 계층모형으로 분석한다.
+
+### B2. 공개 영상의 실행 순서
+
+1. dHCP 신생아 구조 MRIㆍ확산 MRIㆍ휴지상태 fMRI로 곡률, 고랑 바닥, 연결 텐서, 기능 상관장을 계산한다. 공식 2차 공개 자료는 신생아 505명을 제공한다: <https://www.developingconnectome.org/data-release/second-data-release/information-registration-and-download/>
+2. HCP 성인 자료로 V1/A1/S1/M1 같은 기능 앵커와 개인별 주름ㆍ연결 정렬을 시험한다: <https://www.humanconnectomeproject.org/data/>
+3. ABCD는 통제 접근 승인 후 청소년 종단 변화에 사용한다: <https://abcdstudy.org/scientists/data-sharing/>
+4. UK Biobank는 2026-08 현재 신규 신청 중단 상태이므로 즉시 의존성에서 제외한다: <https://www.ukbiobank.ac.uk/use-our-data/apply-for-access/>
+
+### B3. 경쟁모형과 반증
+
+- `M0`: 두께ㆍ면적 팽창ㆍ재료 특성의 기계적 좌굴
+- `M1`: M0 + 백질 연결 방향/장력 대리변수
+- `M2`: M1 + 기능 앵커ㆍ국소 위상결합ㆍfrustration
+
+반드시 초기 성장ㆍ연결ㆍ기능으로 미래 곡률ㆍ고랑 위치를 예측한다. M2가 누수 없는 홀드아웃에서 M0/M1을 안정적으로 이기지 못하면 “세계모델 결합이 주름을 조직한다”는 강한 가설을 기각하거나 축소한다. 영상 신호가 살아남은 후에만 오가노이드나 주름뇌 동물 개입 협력을 검토한다.
+
+## 6. 트랙 C: 통합ㆍ안전 계약
+
+통합 순서는 `감각 -> 객체/사건 추정 -> 국소 인과 chart <-> 기억 -> 불확실성 -> 반사실 rollout -> 계획 -> 행동 -> 교정`이다.
+
+실세계 행동 전 필수 조건:
+
+- sandbox와 행동ㆍ시간ㆍ자원 예산
+- OOD 또는 높은 불확실성에서 정지/추가 관측
+- 목표모델과 세계모델의 분리
+- 구조 변경 전 snapshot, 성능 하락 시 rollback
+- 모든 예측ㆍ개입ㆍ행동의 감사 로그
+- 외부 쓰기와 자기수정의 별도 승인
+
+## 7. 공통 평가와 중단 조건
+
+| 축 | 지표 |
+|---|---|
+| 예측 | rollout RMSE/NLL, horizon별 붕괴 |
+| 상태 | 가림 복원, 정체성 보존, 재등장 위치 |
+| 인과 | 개입효과 오차, 부호 정확도 |
+| 계획 | 비용, regret, 성공률 |
+| 일반화 | seedㆍ객체ㆍ법칙ㆍ목표 OOD |
+| 불확실성 | calibration, 과신률, OOD 거부 |
+| 기억 | 망각률, 재학습 속도 |
+| 구조 | holonomy, frustration, chart 수 |
+| 효율ㆍ안전 | 연산량, 행동 한도 위반, rollback |
+
+다음 중 하나면 해당 주장을 승격하지 않는다.
+
+- 강한 기준선을 반복 seed에서 이기지 못함
+- one-step은 좋지만 장기 rollout이 기준선보다 먼저 붕괴
+- 관측 적합은 좋지만 개입 효과가 틀림
+- 데이터 누수, 사후 임계값 선택, seed 선택 효과
+- 합성 결과를 실제 뇌나 일반지능의 증거로 과대해석
+
+실패 결과도 보고서와 테스트로 남긴다. 구현을 버리는 대신 주장 등급을 낮추고 실패 원인을 다음 가설로 분리한다.
+
+## 8. 실행 큐
+
+| 순서 | 작업 | 완료 정의 |
+|---|---|---|
+| 1 | G2--G3 명세 고정 | 27장과 기계 판독 설정 일치 |
+| 2 | 환경ㆍoracle 구현 | 에너지/충돌 불변량과 seed 재현 테스트 |
+| 3 | 기준선 구현 | persistenceㆍlinearㆍmonolithic 결과 저장 |
+| 4 | local-chart 모델 | 동일 데이터ㆍ예산에서 비교 가능 |
+| 5 | 홀드아웃 gate | 5개 이상 seed, CI와 실패 원인 기록 |
+| 6 | G4 능동 지각 | 정보이득 ablation 통과 |
+| 7 | dHCP/HCP 파이프라인 | 데이터 사전ㆍ파생값ㆍQC 보고서 |
+| 8 | G5--G7 확장 | 각 gate 독립 통과 후 통합 |
+
+현재 허용된 구현 범위는 1~5다. G4 이후 코드는 앞 단계가 실패해도 자동 착수하지 않는다.
+
+## 9. 저장소와 산출물 정책
+
+- 소스, 테스트, 사전등록, 작은 JSON 요약은 보존한다.
+- 결과를 재현하는 데 필요한 작은 CSV는 보존할 수 있다.
+- 대용량 trajectory, 렌더 프레임, checkpoint는 기본적으로 Git에서 제외하고 생성 명령과 hash만 남긴다.
+- `__pycache__`, `.pytest_cache`, `.ruff_cache`, 임시 파일은 증거가 아니므로 삭제 가능하다.
+- 실패 산출물은 불필요한 파일이 아니다. 해당 주장과 seedㆍ설정ㆍ코드 버전을 연결하는 보고서는 보존한다.
+- 기존 모듈은 새 gate가 대체하고 회귀 테스트가 통과하기 전에는 삭제하지 않는다.
+
+## 10. 다음 명령
+
+G1 회귀 확인:
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest tests/test_causal_world_simulator.py tests/test_riemannian_gear.py tests/test_riemann_gear_certificate.py -q
+.\.venv\Scripts\python.exe examples/agi/causal_world_simulator_gate.py
+```
+
+G2--G3 구현이 끝난 뒤 사용할 목표 명령:
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest tests/test_nonlinear_object_world.py -q
+.\.venv\Scripts\python.exe examples/agi/nonlinear_object_permanence_gate.py --config experiments/preregistration/nonlinear_object_permanence_v1.json
+```

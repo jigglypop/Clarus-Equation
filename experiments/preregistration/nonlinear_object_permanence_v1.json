@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-10",
+  "experiment": "nonlinear_object_permanence_v1",
+  "engine": {
+    "backend": "numpy",
+    "dt": 0.02,
+    "integrator": "semi_implicit_euler",
+    "world_bounds": [-1.0, 1.0],
+    "train_object_counts": [2, 3],
+    "composition_ood_object_counts": [4],
+    "train_occlusion_steps": [4, 12],
+    "long_occlusion_ood_steps": [16, 32]
+  },
+  "splits": {
+    "train_seeds": [1000, 1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 1010, 1011, 1012, 1013, 1014, 1015, 1016, 1017, 1018, 1019],
+    "validation_seeds": [2000, 2001, 2002, 2003, 2004],
+    "id_test_seeds": [3000, 3001, 3002, 3003, 3004],
+    "long_occlusion_ood_seeds": [4000, 4001, 4002, 4003, 4004],
+    "composition_ood_seeds": [5000, 5001, 5002, 5003, 5004]
+  },
+  "rollout_horizons": [1, 5, 20, 100],
+  "baselines": [
+    "persistence",
+    "global_linear",
+    "monolithic_nonlinear",
+    "local_chart_nonlinear",
+    "oracle_state_upper_bound"
+  ],
+  "g2_gate": {
+    "local_chart_rmse_reduction_vs_persistence_at_20": 0.20,
+    "local_chart_rmse_reduction_vs_global_linear_at_20": 0.20,
+    "local_chart_better_than_monolithic_at_100": true,
+    "minimum_seed_wins_out_of_5": 4,
+    "intervention_sign_accuracy_min": 0.90,
+    "numerical_failures_max": 0
+  },
+  "g3_gate": {
+    "hidden_rmse_reduction_vs_persistence": 0.25,
+    "reappearance_error_reduction_vs_monolithic": 0.10,
+    "identity_switch_rate_max": 0.05,
+    "uncertainty_must_increase_with_occlusion": true
+  },
+  "reporting": {
+    "confidence_interval": 0.95,
+    "report_every_seed": true,
+    "include_config_sha256": true,
+    "overwrite_v1_results": false
+  }
+}

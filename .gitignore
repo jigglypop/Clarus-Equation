@@ -39,6 +39,7 @@ target/
 !benchmarks/external_field_to_matter_v1.json
 !experiments/preregistration/cosmology_future_holdout_v2.json
 !experiments/preregistration/quantum_future_holdout_v2.json
+!experiments/preregistration/nonlinear_object_permanence_v1.json
 *.pt
 *.pth
 *.csv

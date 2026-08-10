@@ -2,6 +2,13 @@
 
 > 관련: `6_뇌/05_실험근거.md`(구조 유비), `6_뇌/07_수면과복구.md`(수면-부트스트랩), `7_AGI/12_Equation.md`(3x3+1 격자), `6_뇌/08_시냅스가소성.md`(시냅스 가소성), `6_뇌/05_실험근거.md`(실험 근거), `5_유도/05_Neural_RealityStone_Derivation.md`(곡률 functional)
 >
+> 신규 세계모델 경로: `26_Causal_World_Simulator.md`는 공통 감각 anchor,
+> 부분관측 상태복원, 국소 chart gluing, 반사실 행동선택을 별도의 유한
+> 수학모형과 합성 데이터 gate로 다룬다. 이 gate의 통과는 P8 생물학적
+> causal world model 통과로 승격하지 않는다.
+> 전체 실행 순서와 중단 조건은 `8_Roadmap.md`, 다음 비선형ㆍ물체 영속성
+> 실험의 고정 명세는 `27_Nonlinear_Object_Permanence.md`를 따른다.
+>
 > 이 문서 시리즈(7_AGI)는 CE 뇌 연구(`6_뇌/`)에서 도출된 원리를 **AGI 구현 방법론으로 구체화**하는 설계 문서다. `Bridge`/`Phenomenology` 층이며, 실험 근거의 강도는 `6_뇌/05_실험근거.md`의 `supported / bridge / hypothesis` 구분을 따른다.
 
 > **substrate 경고 (2026-04 측정 기준)**: 본 시리즈가 검증하려는 Track-A
@@ -130,6 +137,7 @@ AGI가 진정한 자율성을 가지려면, 단순한 추론을 넘어 **자기 
 | 6 | 환각 억제 | 곡률 정규화 | ACC/PFC | `sfe_hallucination_suppressor.py` |
 | 7 | 의식 | (C3) 자기참조 | 전역 작업공간 | -- |
 | 8 | 로드맵 | 전체 | 전체 | 전체 |
+| 26 | 국소 인과 세계 시뮬레이터 | 감각 atlas·전이식별·반사실 제어 | 분산 감각계·행동 loop | `causal_world_simulator.py` |
 
 ---
 

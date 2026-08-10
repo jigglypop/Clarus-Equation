@@ -1,0 +1,22 @@
+{
+  "seed": 20260810,
+  "train_steps": 1000,
+  "test_steps": 600,
+  "stacked_observation_rank": 4,
+  "visual_only_rank": 2,
+  "reconstruction_rmse": 0.002016240877577971,
+  "visual_only_reconstruction_rmse": 0.13639672210993095,
+  "transition_error": 0.0029612035339207526,
+  "control_error": 0.0004183349511072625,
+  "test_r2_model": 0.9998577761149187,
+  "test_r2_persistence": 0.6442265314641336,
+  "counterfactual_effect_error": 0.00034963737428835067,
+  "planned_mean_cost": 0.07712059913774642,
+  "zero_action_mean_cost": 0.1411548888654216,
+  "random_action_mean_cost": 0.24148137542472692,
+  "harmonic_residual": 1.1102230246251565e-16,
+  "harmonic_energy_advantage": 0.07999999999999993,
+  "exact_holonomy_frustration": 1.5449807722464592e-33,
+  "corrupted_holonomy_frustration": 0.007488000000000001,
+  "passed": true
+}
