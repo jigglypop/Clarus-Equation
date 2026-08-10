@@ -470,6 +470,9 @@ $$
 | `experiments/preregistration/sparse_causal_bridge_v1.json` | 네 차트 SCMㆍLB 후보ㆍpaired-doㆍ실패/중단 조건 최초 고정 | 41장; G9-CB V1 FAIL 계약 |
 | `experiments/preregistration/sparse_causal_bridge_v2.json` | V1 범위 축소, fresh seeds, 관측 최강 기준 비열등성 계약 | 41장; G9-CB V2 |
 | `reality_stone/python/reality_stone/clarus/sparse_causal_bridge.py` | 4-chart hidden-cause SCM, discrete LB 후보, paired-do 방향화, OOD/lesion/soft-locked gate | 41장; G9-CB V2 |
+| `experiments/preregistration/sparse_causal_bridge_v3.json` | 직접 target 교란 복원, 대각 기전 개입식별, seed별 latent AR 계약 | 41장; G9-CB V3 FAIL |
+| `experiments/preregistration/sparse_causal_bridge_v4.json` | pooled train latent ARㆍOOD loading-direction 적응ㆍ구현 SHA lock | 41장; G9-CB V4 |
+| `reality_stone/python/reality_stone/clarus/latent_causal_bridge.py` | 대각/bridge 기전 개입 추정, rank-1 residual PCA, 공유 AR, 순차 one-step OOD gate | 41장; G9-CB V4 |
 
 ---
 
@@ -485,7 +488,8 @@ $$
 | (C3) 메타인지 재귀 루프 | F.17 | `ConsciousnessMonitor.metacognition_step` 수축 toy 구현; 실제 agent feedback 미구현 |
 | Cold checkpoint ($\mathcal{C}$) | 14장 7절 | 미구현 (warm만 있음) |
 | Live journal ($\mathcal{J}$) | 14장 7절 | 미구현 |
-| bridge target의 직접 잠재교란 처리 | 41장 | V1 FAIL; V2 scope에서 제외, latent-state estimator 미구현 |
+| bridge target의 직접 잠재교란 처리 | 41장 | V1/V3 FAIL 뒤 V4 rank-1ㆍ공유-AR 합성 family 통과; 일반 latent shift는 미해결 |
+| bridge 세계모형 free rollout | 41장 | 직전 residual 기반 sequential one-step만 완료; 5/20-step 자율 rollout 미구현 |
 | 실제 피질 U-fiber/bridge 연결 | 40--41장 | geometry candidate와 합성 gate만 완료; tractography 미검증 |
 | 섭동적 채널 혼합 | 2장 2.3절 | 미구현 |
 | 교차 주파수 결합 게이트 | 2장 6절 | 미구현 |

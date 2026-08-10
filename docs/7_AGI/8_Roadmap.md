@@ -35,7 +35,7 @@
 | B. 뇌 | 주름ㆍ연결ㆍ기능의 관계가 시간 선행성과 홀드아웃 예측력을 갖는가? | 공개 영상 -> 종단 자료 -> 생물 개입 |
 | C. 통합ㆍ안전 | 모듈을 통합해도 안정성ㆍ감사 가능성ㆍ성능이 유지되는가? | sandbox -> 제한 행동 -> 실제 환경 |
 
-현재 위치는 `G1--G8`과 `G9-S/G9-3D/G9-R/G9-H/G9-F/G9-B/G9-CB`의 저비용 단계까지 완료다. G9-CB V1은 두 true bridge를 정확히 찾았지만 bridge target의 직접 잠재교란 때문에 예측ㆍlesion gate에 실패했고 test를 열지 않았다. 범위를 잠근 V2는 새 seed의 locked test에서 `A→C`, `C→D`를 정확히 복원하고 common-cause `A--B`를 배제했다. OOD global RMSE는 local-only 대비 10.68%, dense observational 대비 56.20%, raw-correlation 대비 45.25% 낮았지만 가장 강한 observation-only predictive-gain 기준과는 사실상 동률이다. 이는 4-chart 합성 식별 gate이지 피질 연결이나 AGI의 증거가 아니다.
+현재 위치는 `G1--G8`과 `G9-S/G9-3D/G9-R/G9-H/G9-F/G9-B/G9-CB`의 저비용 단계까지 완료다. G9-CB V1은 bridge target 직접 잠재교란에서 실패했고, 이를 제거한 V2는 구조 식별 locked test를 통과했다. 직접 잠재교란을 복원한 V3는 seed별 짧은 AR 적합의 불안정성으로 다시 실패했다. 공유 latent AR을 train에서 학습하고 OOD loading 방향만 적응한 V4는 locked test에서 `A→C`, `C→D`를 정확히 복원하고 common-cause `A--B`를 배제했으며, sequential one-step OOD RMSE를 fixed-local 대비 6.58%, V1 방식 대비 20.22%, latent 무시 대비 61.35% 낮췄다. 이는 4-chart rank-1 합성 gate이지 피질 연결이나 AGI의 증거가 아니다.
 
 ## 2. 의존성
 
@@ -60,7 +60,7 @@ G9는 A 트랙의 성공으로 자동 통과하지 않는다. 계산 모델과 �
 
 ```text
 G9-R/F/B 집단평균 기하 [저비용 단계 완료]
-          -> G9-CB 합성 geometry-proposal/causal-selection 분리 [V2 완료]
+          -> G9-CB 합성 geometry-proposal/causal-selectionㆍlatent context 분리 [V4 완료]
                -> 실제 superficial-white tractography matched control [대기/SKIPPED_COST]
 ```
 
@@ -84,7 +84,7 @@ G9-R/F/B 집단평균 기하 [저비용 단계 완료]
 | G9-H | connection/holonomy 수치 항등식 | V1 완료 | 독립 방향장 residual holonomy 필요 |
 | G9-F | 기능ㆍ해부 경계 분리 | Yeo 실패ㆍDesikan 양성대조 완료 | 개인별 기능ㆍ연결 자료 필요 |
 | G9-B | 희소 fold-contact 후보 | V1 실패 보존ㆍV2 양반구 완료 | tractography matched control 필요 |
-| G9-CB | geometry proposal + intervention 방향화 | V1 validation 실패 보존ㆍV2 locked test 완료 | 직접 잠재교란 targetㆍ실제 연결은 미해결 |
+| G9-CB | geometry proposal + intervention 방향화 + latent context | V1/V3 validation 실패 보존ㆍV2/V4 locked test 완료 | free rolloutㆍrank 변화ㆍ실제 연결은 미해결 |
 | G10 | 타 에이전트ㆍ언어 인터페이스 | 대기 | 체계적 일반화와 믿음 추적 |
 | G11 | 광범위 일반지능 평가 | 미정 | 독립 평가 전에는 AGI 명칭 금지 |
 
@@ -212,9 +212,9 @@ G9-R/F/B는 TemplateFlow 집단평균 표면에서 계산한 기하 파생치이
 | 16 | G9-H connection holonomy | 완료: Gauss--Bonnetㆍ강체등변 수치 검증 |
 | 17 | G9-F 기능/해부 경계 | 완료: Yeo null, Desikan 양성대조ㆍ분리 |
 | 18 | G9-B 희소 fold bridge | 완료: V1 보편가설 실패, V2 양반구 sparse tail |
-| 19 | G9-CB 희소 인과 bridge | 완료: V1 validation FAIL/test 미개봉, V2 validation+locked test PASS |
+| 19 | G9-CB 희소 인과 bridge | 완료: V1/V3 validation FAILㆍtest 미개봉, V2 구조식별 PASS, V4 직접교란 latent-filter locked test PASS |
 
-다음 저비용 계산 반증은 V1이 드러낸 bridge target 직접 잠재교란을 latent-state 추정 또는 환경불변 residual로 처리하는 별도 사전등록이다. 실제 뇌 연결 주장은 독립 superficial-white-matter tractography에서 G9-B strong 후보와 거리ㆍ곡률 matched control을 비교하기 전까지 보류하며, 접근ㆍ비용 한도를 넘으면 `SKIPPED_COST`로 남긴다.
+다음 저비용 계산 반증은 실제 상태 재입력을 끊은 5/20-step free rollout, source-basis 불일치, rank-2 또는 시간상수 변화에서 V4의 실패 경계를 찾는 것이다. 실제 뇌 연결 주장은 독립 superficial-white-matter tractography에서 G9-B strong 후보와 거리ㆍ곡률 matched control을 비교하기 전까지 보류하며, 접근ㆍ비용 한도를 넘으면 `SKIPPED_COST`로 남긴다.
 
 ## 9. 저장소와 산출물 정책
 
@@ -248,4 +248,8 @@ G9-CB 재현:
 .\.venv\Scripts\python.exe examples/agi/sparse_causal_bridge_gate.py --config experiments/preregistration/sparse_causal_bridge_v2.json --split validation
 # 위 artifact가 동일 config SHA로 PASS한 경우에만
 .\.venv\Scripts\python.exe examples/agi/sparse_causal_bridge_gate.py --config experiments/preregistration/sparse_causal_bridge_v2.json --split test
+.\.venv\Scripts\python.exe -m pytest tests/test_latent_causal_bridge.py -q --basetemp .tmp/g9cb-v4-doc
+.\.venv\Scripts\python.exe examples/agi/latent_causal_bridge_gate.py --config experiments/preregistration/sparse_causal_bridge_v4.json --split validation
+# 위 artifact의 configㆍimplementation SHA가 모두 같은 경우에만
+.\.venv\Scripts\python.exe examples/agi/latent_causal_bridge_gate.py --config experiments/preregistration/sparse_causal_bridge_v4.json --split test
 ```

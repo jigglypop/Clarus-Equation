@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "created_after_locked_test": true,
+  "purpose": "Post-run integrity attestation. The V4 test lock prospectively checked the two implementation hashes recorded in the passing validation artifact; this file additionally pins configs, tests, runner, and result artifacts after the run.",
+  "merged_registration_sha256_reported_by_gate": "f9f8a0d9c3a9203e91a675db01775564f05f360557c814bf31e2770017c98a91",
+  "implementation_sha256_checked_by_test_lock": {
+    "latent_causal_bridge.py": "40306162c5d266a8ecb80d882202afb92fbc45aa5bc467a1004721706e57eef7",
+    "sparse_causal_bridge.py": "0885d7244c3ea35367987ec59538d15c081d3ba6009897e5d0e5e42a24538ca7"
+  },
+  "files": {
+    "reality_stone/python/reality_stone/clarus/latent_causal_bridge.py": "40306162c5d266a8ecb80d882202afb92fbc45aa5bc467a1004721706e57eef7",
+    "reality_stone/python/reality_stone/clarus/sparse_causal_bridge.py": "0885d7244c3ea35367987ec59538d15c081d3ba6009897e5d0e5e42a24538ca7",
+    "tests/test_latent_causal_bridge.py": "8d217417446724a87b0e05803342497e0ad2229eb422f07b219186a98a2f8cbb",
+    "examples/agi/latent_causal_bridge_gate.py": "d8daa64ed0f46e2e4c58e5f1a52d025759fcfde3e19832c1ac842854977a97dd",
+    "experiments/preregistration/sparse_causal_bridge_v3.json": "28041d1679cd526f0bde39ea5cce2688aac5d92ff5ea478bd74f0d578e4c0c20",
+    "experiments/preregistration/sparse_causal_bridge_v4.json": "b116b3ff73d20b8dd3ce25c0db669bfdaf06e077e98eb7f17d13c9d93f8ad8b6",
+    "artifacts/agi/sparse_causal_bridge_validation_v3.json": "1f07627c81deaaf906477f5a1ed5b870955084c33c726769637fa7d83d160abd",
+    "artifacts/agi/sparse_causal_bridge_validation_v4.json": "41c17778c7aa2adcd36557ca0042ea0d2de90c817acbd8730bbc97424f553986",
+    "artifacts/agi/sparse_causal_bridge_test_v4.json": "938e68518080f7a7b0e9a50bd2756121d64e0952ee2fcd75eec6c33656cd7db9"
+  }
+}
