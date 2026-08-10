@@ -1,0 +1,932 @@
+{
+  "experiment": "fold_bridge_v2_right_sparse_tail_replication",
+  "status": "PASS",
+  "checks": {
+    "source_integrity": true,
+    "bridge_population": true,
+    "download_budget": true,
+    "strong_population": true,
+    "strong_fraction": true,
+    "tail_advantage": true,
+    "bilateral_count": true,
+    "runtime": true
+  },
+  "summary": {
+    "bridge_pair_count": 5894,
+    "median_surface_to_white_route_ratio": 0.7926680062965076,
+    "white_route_shorter_fraction": 0.2987784187309128,
+    "maximum_surface_to_white_route_ratio": 4.990971013521564,
+    "strong_bridge_ratio_threshold": 1.5,
+    "strong_bridge_pair_count": 754,
+    "strong_bridge_fraction": 0.12792670512385476,
+    "ratio_quantile_90": 1.6789441137908112,
+    "left_to_right_strong_count_ratio": 1.1193633952254642
+  },
+  "synthetic_controls": null,
+  "top_bridges": [
+    {
+      "first": 6617,
+      "second": 10174,
+      "pial_distance": 3.8948650469349633,
+      "surface_distance": 79.40461714529053,
+      "white_route_proxy": 15.909653037488523,
+      "surface_to_white_route_ratio": 4.990971013521564,
+      "normal_opposition": 0.994001395505451
+    },
+    {
+      "first": 5706,
+      "second": 6616,
+      "pial_distance": 2.998529880572658,
+      "surface_distance": 78.44143486677406,
+      "white_route_proxy": 15.776245410990175,
+      "surface_to_white_route_ratio": 4.9721231397763095,
+      "normal_opposition": 0.9339061687151036
+    },
+    {
+      "first": 4806,
+      "second": 6110,
+      "pial_distance": 5.1527626818380305,
+      "surface_distance": 79.72921053561062,
+      "white_route_proxy": 16.13812637458751,
+      "surface_to_white_route_ratio": 4.940425467305742,
+      "normal_opposition": 0.7436862887298711
+    },
+    {
+      "first": 6618,
+      "second": 8014,
+      "pial_distance": 4.596245700461062,
+      "surface_distance": 78.52770942164429,
+      "white_route_proxy": 15.900401285593224,
+      "surface_to_white_route_ratio": 4.938725005185586,
+      "normal_opposition": 0.9495667146081488
+    },
+    {
+      "first": 4806,
+      "second": 8015,
+      "pial_distance": 5.303527136664139,
+      "surface_distance": 79.48568407744185,
+      "white_route_proxy": 16.41705912782689,
+      "surface_to_white_route_ratio": 4.841651812212441,
+      "normal_opposition": 0.7711552796168988
+    },
+    {
+      "first": 1117,
+      "second": 8014,
+      "pial_distance": 4.489176316289957,
+      "surface_distance": 78.79414116697781,
+      "white_route_proxy": 16.309185058480185,
+      "surface_to_white_route_ratio": 4.831273965219231,
+      "normal_opposition": 0.6774424744878862
+    },
+    {
+      "first": 6616,
+      "second": 10174,
+      "pial_distance": 4.355894878777176,
+      "surface_distance": 77.53957772113503,
+      "white_route_proxy": 16.238565218748818,
+      "surface_to_white_route_ratio": 4.775026406372955,
+      "normal_opposition": 0.9241364907769892
+    },
+    {
+      "first": 5704,
+      "second": 6617,
+      "pial_distance": 5.685554919079749,
+      "surface_distance": 78.52925625149692,
+      "white_route_proxy": 16.491195649640307,
+      "surface_to_white_route_ratio": 4.761889793794893,
+      "normal_opposition": 0.9804164164473887
+    },
+    {
+      "first": 834,
+      "second": 4806,
+      "pial_distance": 5.965351777798988,
+      "surface_distance": 77.80666113635118,
+      "white_route_proxy": 16.406758635927602,
+      "surface_to_white_route_ratio": 4.74235422504295,
+      "normal_opposition": 0.8850459561733616
+    },
+    {
+      "first": 5702,
+      "second": 6618,
+      "pial_distance": 4.495169847980881,
+      "surface_distance": 75.70279855101032,
+      "white_route_proxy": 15.96313393608609,
+      "surface_to_white_route_ratio": 4.742351899953516,
+      "normal_opposition": 0.9945542348732199
+    },
+    {
+      "first": 5704,
+      "second": 6618,
+      "pial_distance": 4.072257395130847,
+      "surface_distance": 76.11082566907041,
+      "white_route_proxy": 16.166178654555466,
+      "surface_to_white_route_ratio": 4.70802824188901,
+      "normal_opposition": 0.9975181394442167
+    },
+    {
+      "first": 4806,
+      "second": 6109,
+      "pial_distance": 5.778927996025533,
+      "surface_distance": 76.98316396633075,
+      "white_route_proxy": 16.392174197251858,
+      "surface_to_white_route_ratio": 4.696336376124953,
+      "normal_opposition": 0.8497422164650678
+    },
+    {
+      "first": 6110,
+      "second": 9093,
+      "pial_distance": 5.417830225373258,
+      "surface_distance": 77.17232084236497,
+      "white_route_proxy": 16.448258775143337,
+      "surface_to_white_route_ratio": 4.691823122274076,
+      "normal_opposition": 0.9344657438402909
+    },
+    {
+      "first": 8015,
+      "second": 9093,
+      "pial_distance": 4.765584577061654,
+      "surface_distance": 76.9287943841962,
+      "white_route_proxy": 16.43961808083966,
+      "surface_to_white_route_ratio": 4.679475764333999,
+      "normal_opposition": 0.9408631649826621
+    },
+    {
+      "first": 6618,
+      "second": 10174,
+      "pial_distance": 5.1894489466194225,
+      "surface_distance": 76.98618656286402,
+      "white_route_proxy": 16.72066781416311,
+      "surface_to_white_route_ratio": 4.604253096736572,
+      "normal_opposition": 0.9640042307902925
+    },
+    {
+      "first": 8015,
+      "second": 9092,
+      "pial_distance": 5.121270295179118,
+      "surface_distance": 77.61050348510568,
+      "white_route_proxy": 16.93144616977749,
+      "surface_to_white_route_ratio": 4.583808300063574,
+      "normal_opposition": 0.9470521955746433
+    },
+    {
+      "first": 6109,
+      "second": 9093,
+      "pial_distance": 4.5440489494936065,
+      "surface_distance": 74.4262742730851,
+      "white_route_proxy": 16.279904572714877,
+      "surface_to_white_route_ratio": 4.571665266258597,
+      "normal_opposition": 0.9771977516983908
+    },
+    {
+      "first": 8014,
+      "second": 9092,
+      "pial_distance": 5.361036551128964,
+      "surface_distance": 78.00930398778625,
+      "white_route_proxy": 17.09824865762469,
+      "surface_to_white_route_ratio": 4.5624148735841,
+      "normal_opposition": 0.7520562361022952
+    },
+    {
+      "first": 834,
+      "second": 9093,
+      "pial_distance": 5.466189171567795,
+      "surface_distance": 75.24977144310554,
+      "white_route_proxy": 16.515844899233514,
+      "surface_to_white_route_ratio": 4.556216887614259,
+      "normal_opposition": 0.993361109975568
+    },
+    {
+      "first": 1790,
+      "second": 9092,
+      "pial_distance": 4.861385119502171,
+      "surface_distance": 74.86190317095448,
+      "white_route_proxy": 16.574630312247653,
+      "surface_to_white_route_ratio": 4.516655983309386,
+      "normal_opposition": 0.8943803853736886
+    },
+    {
+      "first": 1790,
+      "second": 9093,
+      "pial_distance": 5.684011675311741,
+      "surface_distance": 74.18019407004499,
+      "white_route_proxy": 16.428075988900208,
+      "surface_to_white_route_ratio": 4.515452334172643,
+      "normal_opposition": 0.9913545204447994
+    },
+    {
+      "first": 6619,
+      "second": 8014,
+      "pial_distance": 5.43694076136116,
+      "surface_distance": 74.6980004899926,
+      "white_route_proxy": 16.62553938037917,
+      "surface_to_white_route_ratio": 4.492967041908327,
+      "normal_opposition": 0.8594128785422164
+    },
+    {
+      "first": 834,
+      "second": 9094,
+      "pial_distance": 4.881419880772941,
+      "surface_distance": 74.54398014684311,
+      "white_route_proxy": 16.741275828994013,
+      "surface_to_white_route_ratio": 4.452706048707548,
+      "normal_opposition": 0.8936298667531726
+    },
+    {
+      "first": 1116,
+      "second": 5704,
+      "pial_distance": 4.463952427740528,
+      "surface_distance": 74.02400829707528,
+      "white_route_proxy": 16.64662826245061,
+      "surface_to_white_route_ratio": 4.446786888612718,
+      "normal_opposition": 0.8127394144231707
+    },
+    {
+      "first": 834,
+      "second": 2177,
+      "pial_distance": 5.939565972520457,
+      "surface_distance": 76.01324948123056,
+      "white_route_proxy": 17.108426400737507,
+      "surface_to_white_route_ratio": 4.443029867314611,
+      "normal_opposition": 0.7793173225827157
+    },
+    {
+      "first": 1116,
+      "second": 5702,
+      "pial_distance": 5.296289086959165,
+      "surface_distance": 73.81995050266106,
+      "white_route_proxy": 16.621922328967106,
+      "surface_to_white_route_ratio": 4.441119928349964,
+      "normal_opposition": 0.8081062638925051
+    },
+    {
+      "first": 4788,
+      "second": 5702,
+      "pial_distance": 3.9760386280331312,
+      "surface_distance": 71.4369292801523,
+      "white_route_proxy": 16.088492831799112,
+      "surface_to_white_route_ratio": 4.440249936834126,
+      "normal_opposition": 0.898556281209232
+    },
+    {
+      "first": 4788,
+      "second": 8013,
+      "pial_distance": 4.388740590688021,
+      "surface_distance": 69.10179311036688,
+      "white_route_proxy": 15.582415158306341,
+      "surface_to_white_route_ratio": 4.434600952955074,
+      "normal_opposition": 0.9717880310590172
+    },
+    {
+      "first": 5702,
+      "second": 6619,
+      "pial_distance": 3.978133980835268,
+      "surface_distance": 71.87308961935861,
+      "white_route_proxy": 16.250371532582236,
+      "surface_to_white_route_ratio": 4.42285823897946,
+      "normal_opposition": 0.9902141394669045
+    },
+    {
+      "first": 1116,
+      "second": 10174,
+      "pial_distance": 5.003668484088908,
+      "surface_distance": 74.89936919086888,
+      "white_route_proxy": 16.9449495429119,
+      "surface_to_white_route_ratio": 4.420158879859245,
+      "normal_opposition": 0.908369109900298
+    },
+    {
+      "first": 6619,
+      "second": 8013,
+      "pial_distance": 3.8382999079195965,
+      "surface_distance": 69.03932032660992,
+      "white_route_proxy": 15.659959908657843,
+      "surface_to_white_route_ratio": 4.408652431379502,
+      "normal_opposition": 0.9371456297309759
+    },
+    {
+      "first": 6621,
+      "second": 8014,
+      "pial_distance": 5.691582709771351,
+      "surface_distance": 75.00541327642432,
+      "white_route_proxy": 17.140718585183514,
+      "surface_to_white_route_ratio": 4.375861659689065,
+      "normal_opposition": 0.637760180183375
+    },
+    {
+      "first": 9094,
+      "second": 9783,
+      "pial_distance": 5.650755552413533,
+      "surface_distance": 73.54470976714832,
+      "white_route_proxy": 17.009516990786285,
+      "surface_to_white_route_ratio": 4.323738869656676,
+      "normal_opposition": 0.9012752437821929
+    },
+    {
+      "first": 3941,
+      "second": 9093,
+      "pial_distance": 5.763843043576577,
+      "surface_distance": 71.50334961033707,
+      "white_route_proxy": 16.543831731195915,
+      "surface_to_white_route_ratio": 4.322054936977303,
+      "normal_opposition": 0.9327172745916885
+    },
+    {
+      "first": 1790,
+      "second": 4799,
+      "pial_distance": 4.817205173983543,
+      "surface_distance": 71.38364605651282,
+      "white_route_proxy": 16.52768143187562,
+      "surface_to_white_route_ratio": 4.31903569479751,
+      "normal_opposition": 0.9994829522759452
+    },
+    {
+      "first": 6108,
+      "second": 9093,
+      "pial_distance": 5.636012085624129,
+      "surface_distance": 72.12534009415609,
+      "white_route_proxy": 16.80024973892258,
+      "surface_to_white_route_ratio": 4.293111186737725,
+      "normal_opposition": 0.9986900304104537
+    },
+    {
+      "first": 1790,
+      "second": 6619,
+      "pial_distance": 5.486518274074157,
+      "surface_distance": 71.55059967316079,
+      "white_route_proxy": 16.67760645272127,
+      "surface_to_white_route_ratio": 4.290219935096618,
+      "normal_opposition": 0.6861500841605981
+    },
+    {
+      "first": 510,
+      "second": 1790,
+      "pial_distance": 4.770383281255896,
+      "surface_distance": 72.45086742024772,
+      "white_route_proxy": 17.039599231721542,
+      "surface_to_white_route_ratio": 4.251911470157733,
+      "normal_opposition": 0.8868331369842334
+    },
+    {
+      "first": 510,
+      "second": 8014,
+      "pial_distance": 5.885012569870816,
+      "surface_distance": 75.5982682370795,
+      "white_route_proxy": 17.78961230608291,
+      "surface_to_white_route_ratio": 4.249573680210542,
+      "normal_opposition": 0.7338985301873754
+    },
+    {
+      "first": 4799,
+      "second": 6109,
+      "pial_distance": 5.273500331518965,
+      "surface_distance": 71.62972625955294,
+      "white_route_proxy": 16.90286724005618,
+      "surface_to_white_route_ratio": 4.237726371642191,
+      "normal_opposition": 0.9955731978667699
+    },
+    {
+      "first": 5702,
+      "second": 6621,
+      "pial_distance": 5.724685209348099,
+      "surface_distance": 72.18050240579035,
+      "white_route_proxy": 17.047242056327168,
+      "surface_to_white_route_ratio": 4.234145451052606,
+      "normal_opposition": 0.8838174060187729
+    },
+    {
+      "first": 6621,
+      "second": 8013,
+      "pial_distance": 5.2789701851666,
+      "surface_distance": 69.34673311304165,
+      "white_route_proxy": 16.379467655340022,
+      "surface_to_white_route_ratio": 4.233759885989535,
+      "normal_opposition": 0.7628208943225789
+    },
+    {
+      "first": 3940,
+      "second": 4799,
+      "pial_distance": 5.4846353176720255,
+      "surface_distance": 66.63783222767086,
+      "white_route_proxy": 15.92326995983151,
+      "surface_to_white_route_ratio": 4.184933898362166,
+      "normal_opposition": 0.9809287946876385
+    },
+    {
+      "first": 3941,
+      "second": 4799,
+      "pial_distance": 4.367947258096372,
+      "surface_distance": 68.7068015968049,
+      "white_route_proxy": 16.430225977778345,
+      "surface_to_white_route_ratio": 4.181731991375523,
+      "normal_opposition": 0.9731048480343573
+    },
+    {
+      "first": 4788,
+      "second": 5704,
+      "pial_distance": 5.829806312304913,
+      "surface_distance": 71.64098707456651,
+      "white_route_proxy": 17.244284570556548,
+      "surface_to_white_route_ratio": 4.1544771997609375,
+      "normal_opposition": 0.9000455709284545
+    },
+    {
+      "first": 509,
+      "second": 8013,
+      "pial_distance": 3.95659119572206,
+      "surface_distance": 65.65470997046278,
+      "white_route_proxy": 15.806917865956445,
+      "surface_to_white_route_ratio": 4.1535428049426475,
+      "normal_opposition": 0.9977089814902065
+    },
+    {
+      "first": 834,
+      "second": 2174,
+      "pial_distance": 5.970725366106801,
+      "surface_distance": 71.57965636860632,
+      "white_route_proxy": 17.295192985005176,
+      "surface_to_white_route_ratio": 4.138702379942533,
+      "normal_opposition": 0.9044406944601213
+    },
+    {
+      "first": 3940,
+      "second": 4797,
+      "pial_distance": 3.932832188080133,
+      "surface_distance": 64.28185644199594,
+      "white_route_proxy": 15.588674729192913,
+      "surface_to_white_route_ratio": 4.12362548829217,
+      "normal_opposition": 0.9724393101119934
+    },
+    {
+      "first": 3940,
+      "second": 6619,
+      "pial_distance": 5.717038965679982,
+      "surface_distance": 66.80478584431883,
+      "white_route_proxy": 16.27426176587955,
+      "surface_to_white_route_ratio": 4.1049349460742395,
+      "normal_opposition": 0.7660082858101842
+    },
+    {
+      "first": 6620,
+      "second": 8013,
+      "pial_distance": 3.8434574624873568,
+      "surface_distance": 65.84790921761976,
+      "white_route_proxy": 16.07165114079781,
+      "surface_to_white_route_ratio": 4.097146499805807,
+      "normal_opposition": 0.9645903989909124
+    },
+    {
+      "first": 1789,
+      "second": 4788,
+      "pial_distance": 5.197426962534923,
+      "surface_distance": 66.40562502591027,
+      "white_route_proxy": 16.21378156335665,
+      "surface_to_white_route_ratio": 4.095628448331129,
+      "normal_opposition": 0.700072361016446
+    },
+    {
+      "first": 1790,
+      "second": 4797,
+      "pial_distance": 5.311298552885686,
+      "surface_distance": 69.0276702708379,
+      "white_route_proxy": 16.91206823580921,
+      "surface_to_white_route_ratio": 4.081562899839794,
+      "normal_opposition": 0.9956487354532316
+    },
+    {
+      "first": 4788,
+      "second": 5703,
+      "pial_distance": 4.894547509872212,
+      "surface_distance": 67.27360763185482,
+      "white_route_proxy": 16.551140712377048,
+      "surface_to_white_route_ratio": 4.0645903989896714,
+      "normal_opposition": 0.6168024335110698
+    },
+    {
+      "first": 509,
+      "second": 3940,
+      "pial_distance": 4.498276009914739,
+      "surface_distance": 63.420175488171715,
+      "white_route_proxy": 15.627994730196846,
+      "surface_to_white_route_ratio": 4.058113442131478,
+      "normal_opposition": 0.9457933686980358
+    },
+    {
+      "first": 4797,
+      "second": 8013,
+      "pial_distance": 5.646065295002248,
+      "surface_distance": 66.51639092428702,
+      "white_route_proxy": 16.505832776439334,
+      "surface_to_white_route_ratio": 4.029871853496147,
+      "normal_opposition": 0.846261953144651
+    },
+    {
+      "first": 4799,
+      "second": 6108,
+      "pial_distance": 5.464154857624971,
+      "surface_distance": 69.32879208062394,
+      "white_route_proxy": 17.204498203580634,
+      "surface_to_white_route_ratio": 4.029689867164803,
+      "normal_opposition": 0.9931063649290225
+    },
+    {
+      "first": 510,
+      "second": 3941,
+      "pial_distance": 5.946516001731231,
+      "surface_distance": 69.7740229605398,
+      "white_route_proxy": 17.361278187246064,
+      "surface_to_white_route_ratio": 4.0189450458663325,
+      "normal_opposition": 0.9616149264083373
+    },
+    {
+      "first": 3940,
+      "second": 6620,
+      "pial_distance": 4.0763374288458145,
+      "surface_distance": 63.61337473532867,
+      "white_route_proxy": 15.841050340560605,
+      "surface_to_white_route_ratio": 4.01572959922034,
+      "normal_opposition": 0.830237163081857
+    },
+    {
+      "first": 1116,
+      "second": 10175,
+      "pial_distance": 5.851766754502717,
+      "surface_distance": 69.73519182275126,
+      "white_route_proxy": 17.39801159975032,
+      "surface_to_white_route_ratio": 4.008227688717717,
+      "normal_opposition": 0.6559376032787586
+    },
+    {
+      "first": 1790,
+      "second": 4795,
+      "pial_distance": 5.5218459140096,
+      "surface_distance": 70.5457407157279,
+      "white_route_proxy": 17.600849245326618,
+      "surface_to_white_route_ratio": 4.008087321948924,
+      "normal_opposition": 0.9325068129570117
+    },
+    {
+      "first": 4795,
+      "second": 8013,
+      "pial_distance": 5.459045681467739,
+      "surface_distance": 68.03446136917702,
+      "white_route_proxy": 17.02731678630021,
+      "surface_to_white_route_ratio": 3.995606719663311,
+      "normal_opposition": 0.7464893121622554
+    },
+    {
+      "first": 3941,
+      "second": 4797,
+      "pial_distance": 4.502935383919816,
+      "surface_distance": 66.35082581112998,
+      "white_route_proxy": 16.646959669341513,
+      "surface_to_white_route_ratio": 3.985762393197085,
+      "normal_opposition": 0.9847751294130895
+    },
+    {
+      "first": 2174,
+      "second": 9782,
+      "pial_distance": 5.596427506264269,
+      "surface_distance": 68.47478737822783,
+      "white_route_proxy": 17.182731850176182,
+      "surface_to_white_route_ratio": 3.9850931723366054,
+      "normal_opposition": 0.9129279370500724
+    },
+    {
+      "first": 1118,
+      "second": 8013,
+      "pial_distance": 4.677572030822826,
+      "surface_distance": 66.60450093331883,
+      "white_route_proxy": 16.721917226200315,
+      "surface_to_white_route_ratio": 3.9830660582963087,
+      "normal_opposition": 0.9287222307005015
+    },
+    {
+      "first": 509,
+      "second": 8012,
+      "pial_distance": 3.9330987325174456,
+      "surface_distance": 61.09736147059974,
+      "white_route_proxy": 15.393772762779891,
+      "surface_to_white_route_ratio": 3.9689660495915007,
+      "normal_opposition": 0.9364215769476969
+    },
+    {
+      "first": 3940,
+      "second": 4796,
+      "pial_distance": 3.4733526588969372,
+      "surface_distance": 62.32074498184159,
+      "white_route_proxy": 15.707230653831049,
+      "surface_to_white_route_ratio": 3.967646898127223,
+      "normal_opposition": 0.9935986625771906
+    },
+    {
+      "first": 3940,
+      "second": 4795,
+      "pial_distance": 5.305128219292177,
+      "surface_distance": 65.79992688688594,
+      "white_route_proxy": 16.59759542600118,
+      "surface_to_white_route_ratio": 3.9644252795682804,
+      "normal_opposition": 0.8662563151967718
+    },
+    {
+      "first": 509,
+      "second": 5702,
+      "pial_distance": 5.939471640253219,
+      "surface_distance": 68.47983420744555,
+      "white_route_proxy": 17.30693694704071,
+      "surface_to_white_route_ratio": 3.956785329315874,
+      "normal_opposition": 0.9692944672126924
+    },
+    {
+      "first": 1118,
+      "second": 3940,
+      "pial_distance": 4.6663299564499265,
+      "surface_distance": 64.36996645102776,
+      "white_route_proxy": 16.393883623531583,
+      "surface_to_white_route_ratio": 3.9264623276105177,
+      "normal_opposition": 0.8618437497758737
+    },
+    {
+      "first": 509,
+      "second": 1789,
+      "pial_distance": 4.289244719005576,
+      "surface_distance": 63.05935068849961,
+      "white_route_proxy": 16.0900976841962,
+      "surface_to_white_route_ratio": 3.919140326316162,
+      "normal_opposition": 0.8319309965362055
+    },
+    {
+      "first": 2174,
+      "second": 6108,
+      "pial_distance": 5.480095722728834,
+      "surface_distance": 68.45522501965688,
+      "white_route_proxy": 17.47222177086389,
+      "surface_to_white_route_ratio": 3.917946207265443,
+      "normal_opposition": 0.8630612323174691
+    },
+    {
+      "first": 5702,
+      "second": 6620,
+      "pial_distance": 5.964053262228153,
+      "surface_distance": 68.68167851036846,
+      "white_route_proxy": 17.559723539486303,
+      "surface_to_white_route_ratio": 3.911318897243737,
+      "normal_opposition": 0.9940094232051742
+    },
+    {
+      "first": 2539,
+      "second": 4788,
+      "pial_distance": 5.5698770347889806,
+      "surface_distance": 67.10487020121805,
+      "white_route_proxy": 17.161774530969744,
+      "surface_to_white_route_ratio": 3.9101358708635954,
+      "normal_opposition": 0.714435723285914
+    },
+    {
+      "first": 1118,
+      "second": 1790,
+      "pial_distance": 5.862300242636404,
+      "surface_distance": 69.11578027986974,
+      "white_route_proxy": 17.73239878877053,
+      "surface_to_white_route_ratio": 3.897711815709839,
+      "normal_opposition": 0.8538891967186552
+    },
+    {
+      "first": 4796,
+      "second": 8013,
+      "pial_distance": 5.321772404999146,
+      "surface_distance": 64.55527946413268,
+      "white_route_proxy": 16.664837200582298,
+      "surface_to_white_route_ratio": 3.8737419806223494,
+      "normal_opposition": 0.9088060618878215
+    },
+    {
+      "first": 354,
+      "second": 4799,
+      "pial_distance": 5.500844378168164,
+      "surface_distance": 66.4788250368621,
+      "white_route_proxy": 17.169624254936366,
+      "surface_to_white_route_ratio": 3.871885840352567,
+      "normal_opposition": 0.9423794014868291
+    },
+    {
+      "first": 3939,
+      "second": 4797,
+      "pial_distance": 4.587558189255745,
+      "surface_distance": 61.79312834051846,
+      "white_route_proxy": 15.97633255802296,
+      "surface_to_white_route_ratio": 3.867791817433552,
+      "normal_opposition": 0.9854689740738848
+    },
+    {
+      "first": 6620,
+      "second": 8012,
+      "pial_distance": 5.12533838129706,
+      "surface_distance": 61.290560717756726,
+      "white_route_proxy": 15.885034960558938,
+      "surface_to_white_route_ratio": 3.8583837473405302,
+      "normal_opposition": 0.9933474415562922
+    },
+    {
+      "first": 3940,
+      "second": 9081,
+      "pial_distance": 3.797555314923072,
+      "surface_distance": 60.73690425282648,
+      "white_route_proxy": 15.879281224600943,
+      "surface_to_white_route_ratio": 3.8249152082985947,
+      "normal_opposition": 0.9839495593960172
+    },
+    {
+      "first": 4790,
+      "second": 8012,
+      "pial_distance": 4.5808040145998135,
+      "surface_distance": 60.05939166987174,
+      "white_route_proxy": 15.754897686293024,
+      "surface_to_white_route_ratio": 3.812109279651129,
+      "normal_opposition": 0.6252714421866523
+    },
+    {
+      "first": 8013,
+      "second": 9081,
+      "pial_distance": 5.540159727754241,
+      "surface_distance": 62.97143873511755,
+      "white_route_proxy": 16.82085652360455,
+      "surface_to_white_route_ratio": 3.743652331065919,
+      "normal_opposition": 0.9852830786550119
+    },
+    {
+      "first": 3941,
+      "second": 4796,
+      "pial_distance": 5.506843113174156,
+      "surface_distance": 64.38971435097564,
+      "white_route_proxy": 17.224204994109233,
+      "surface_to_white_route_ratio": 3.7383272187597196,
+      "normal_opposition": 0.953453672557903
+    },
+    {
+      "first": 3939,
+      "second": 4796,
+      "pial_distance": 4.133693606929834,
+      "surface_distance": 59.83201688036411,
+      "white_route_proxy": 16.0199347387711,
+      "surface_to_white_route_ratio": 3.734847729158344,
+      "normal_opposition": 0.9592002603947575
+    },
+    {
+      "first": 3939,
+      "second": 4798,
+      "pial_distance": 4.8562988635780755,
+      "surface_distance": 60.694843852413264,
+      "white_route_proxy": 16.299880042952424,
+      "surface_to_white_route_ratio": 3.723637455764951,
+      "normal_opposition": 0.8346306232501749
+    },
+    {
+      "first": 354,
+      "second": 4797,
+      "pial_distance": 5.248556022754047,
+      "surface_distance": 64.12284925118719,
+      "white_route_proxy": 17.249896754138256,
+      "surface_to_white_route_ratio": 3.7172888722249366,
+      "normal_opposition": 0.9604160659904601
+    },
+    {
+      "first": 2173,
+      "second": 3940,
+      "pial_distance": 5.425648648361229,
+      "surface_distance": 60.780405201627445,
+      "white_route_proxy": 16.36819727364771,
+      "surface_to_white_route_ratio": 3.713323109777154,
+      "normal_opposition": 0.9588725202014826
+    },
+    {
+      "first": 509,
+      "second": 1788,
+      "pial_distance": 5.532801658567697,
+      "surface_distance": 58.89935235217514,
+      "white_route_proxy": 15.893688628168514,
+      "surface_to_white_route_ratio": 3.705832782440908,
+      "normal_opposition": 0.9930532745832925
+    },
+    {
+      "first": 354,
+      "second": 2174,
+      "pial_distance": 5.982942675620719,
+      "surface_distance": 65.60525797589504,
+      "white_route_proxy": 17.736599355705977,
+      "surface_to_white_route_ratio": 3.6988633875179358,
+      "normal_opposition": 0.6712296438110048
+    },
+    {
+      "first": 3940,
+      "second": 4794,
+      "pial_distance": 4.751897063909139,
+      "surface_distance": 59.846207020473415,
+      "white_route_proxy": 16.22473453014821,
+      "surface_to_white_route_ratio": 3.688578503966852,
+      "normal_opposition": 0.9305363227516863
+    },
+    {
+      "first": 8012,
+      "second": 9081,
+      "pial_distance": 5.020605934122875,
+      "surface_distance": 58.41409023525451,
+      "white_route_proxy": 15.888022633873723,
+      "surface_to_white_route_ratio": 3.676611720750824,
+      "normal_opposition": 0.8790328396008507
+    },
+    {
+      "first": 1788,
+      "second": 4796,
+      "pial_distance": 5.489478145280724,
+      "surface_distance": 57.79992184584503,
+      "white_route_proxy": 15.80087978878471,
+      "surface_to_white_route_ratio": 3.65801921275743,
+      "normal_opposition": 0.9145198418983844
+    },
+    {
+      "first": 4794,
+      "second": 8012,
+      "pial_distance": 4.251407596677637,
+      "surface_distance": 57.523393002901464,
+      "white_route_proxy": 15.829992178887027,
+      "surface_to_white_route_ratio": 3.6338232105775945,
+      "normal_opposition": 0.9162493765793238
+    },
+    {
+      "first": 1788,
+      "second": 9081,
+      "pial_distance": 4.335221570044229,
+      "surface_distance": 56.21608111682991,
+      "white_route_proxy": 15.54173676850125,
+      "surface_to_white_route_ratio": 3.6171041855993966,
+      "normal_opposition": 0.9830814852645897
+    },
+    {
+      "first": 3939,
+      "second": 9081,
+      "pial_distance": 4.292580078717806,
+      "surface_distance": 58.24817615134899,
+      "white_route_proxy": 16.156389010708978,
+      "surface_to_white_route_ratio": 3.60527195233664,
+      "normal_opposition": 0.8556763168245448
+    },
+    {
+      "first": 2173,
+      "second": 3939,
+      "pial_distance": 4.18946268712957,
+      "surface_distance": 58.29167710014996,
+      "white_route_proxy": 16.17190666919317,
+      "surface_to_white_route_ratio": 3.6045024431901562,
+      "normal_opposition": 0.8865324162630827
+    },
+    {
+      "first": 354,
+      "second": 4798,
+      "pial_distance": 5.410034164533267,
+      "surface_distance": 63.024564763082,
+      "white_route_proxy": 17.56996993021811,
+      "surface_to_white_route_ratio": 3.5870616178282564,
+      "normal_opposition": 0.7320679779643442
+    },
+    {
+      "first": 1788,
+      "second": 4794,
+      "pial_distance": 3.5603779047125954,
+      "surface_distance": 55.32538388447685,
+      "white_route_proxy": 15.501848888404936,
+      "surface_to_white_route_ratio": 3.568953889484699,
+      "normal_opposition": 0.9709839687390209
+    },
+    {
+      "first": 3752,
+      "second": 4347,
+      "pial_distance": 3.990769060368101,
+      "surface_distance": 52.28180129731043,
+      "white_route_proxy": 14.753916652738521,
+      "surface_to_white_route_ratio": 3.543587952125664,
+      "normal_opposition": 0.6701215165405746
+    },
+    {
+      "first": 4792,
+      "second": 8012,
+      "pial_distance": 4.369049061002194,
+      "surface_distance": 56.89476512511184,
+      "white_route_proxy": 16.207233798360186,
+      "surface_to_white_route_ratio": 3.510455012432062,
+      "normal_opposition": 0.7940928417296943
+    },
+    {
+      "first": 354,
+      "second": 4796,
+      "pial_distance": 5.971489659668585,
+      "surface_distance": 62.16173779103284,
+      "white_route_proxy": 17.75047672354795,
+      "surface_to_white_route_ratio": 3.5019756798175727,
+      "normal_opposition": 0.915622514382734
+    }
+  ],
+  "resource_usage": {
+    "downloaded_bytes": 541819,
+    "elapsed_seconds": 2.1050657997839153
+  }
+}

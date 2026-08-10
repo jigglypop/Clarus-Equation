@@ -1,0 +1,76 @@
+{
+  "experiment": "anatomical_boundary_v1_desikan_left_positive_control",
+  "split": "validation",
+  "status": "FAIL",
+  "checks": {
+    "source_integrity": true,
+    "candidate_auc": true,
+    "auc_gain": false,
+    "sector_consistency": false,
+    "permutation_control": true,
+    "download_budget": true,
+    "runtime": true
+  },
+  "summary": {
+    "eligible_edges": 28073,
+    "boundary_edges": 2244,
+    "boundary_prevalence": 0.0799344565953051,
+    "baseline_auc": 0.6581897600624603,
+    "candidate_auc": 0.6518932709755385,
+    "candidate_auc_gain": -0.006296489086921819,
+    "auc_improved_sector_count": 1,
+    "permutation_mean_auc": 0.4969845850525981
+  },
+  "per_sector": [
+    {
+      "sector": 0,
+      "edges": 1069,
+      "boundary_edges": 98,
+      "baseline_auc": 0.6096597238277391,
+      "candidate_auc": 0.589882090838395
+    },
+    {
+      "sector": 2,
+      "edges": 4597,
+      "boundary_edges": 427,
+      "baseline_auc": 0.6491556169584239,
+      "candidate_auc": 0.6443802335181036
+    },
+    {
+      "sector": 4,
+      "edges": 3032,
+      "boundary_edges": 199,
+      "baseline_auc": 0.735454540616957,
+      "candidate_auc": 0.7314812679706333
+    },
+    {
+      "sector": 6,
+      "edges": 5809,
+      "boundary_edges": 474,
+      "baseline_auc": 0.6384891588467212,
+      "candidate_auc": 0.641829491575022
+    }
+  ],
+  "negative_control_aucs": [
+    0.4651136811479385,
+    0.5236429894733409,
+    0.4885960012930098,
+    0.49963446780469106,
+    0.4980167419934506,
+    0.4975850383983504,
+    0.5039766700790578,
+    0.49500978669685075,
+    0.4743631608289597,
+    0.5111736548598231,
+    0.49413401261340195,
+    0.4972847647505044,
+    0.4969446789441672,
+    0.49949798788309285,
+    0.4922931449530964,
+    0.5144865791218353
+  ],
+  "resource_usage": {
+    "downloaded_bytes": 331354,
+    "elapsed_seconds": 2.7393879001028836
+  }
+}

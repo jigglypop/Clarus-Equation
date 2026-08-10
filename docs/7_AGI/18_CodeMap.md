@@ -463,6 +463,13 @@ $$
 | `reality_stone/python/reality_stone/clarus/real_robot_log.py` | 실제 SCITOS 초음파 로그 무결성, 시간순 분할, 지연ㆍdropout 복원, 선택적 행동 복원 | 34장; G8-R V5 |
 | `reality_stone/python/reality_stone/clarus/folding_twist.py` | differential-growth gradient flow, null guard, 국소 꼬임 계수ㆍ주름 peak 식별 | 35장; G9-S V3 |
 | `reality_stone/python/reality_stone/clarus/folding_surface_3d.py` | 2D 리만 성장 텐서 gradient flow, 회전 equivariance, OBJ 표면 출력 | 36장; G9-3D V2 |
+| `reality_stone/python/reality_stone/clarus/fsaverage_geometry.py` | TemplateFlow surface 파싱, positive-cotangent LB/heat 특징, sector holdout, 경계보존 확산 | 37장; G9-R V4/V8 |
+| `reality_stone/python/reality_stone/clarus/connection_holonomy.py` | 구면/평면 parallel transport, Gauss--Bonnet holonomy, 강체등변성 | 38장; G9-H V1 |
+| `reality_stone/python/reality_stone/clarus/functional_boundary.py` | Yeo/Desikan mesh-edge 경계, weighted ridge/AUC, heat-landmark 좌표 | 39장; G9-F |
+| `reality_stone/python/reality_stone/clarus/fold_bridge.py` | 대향 bank 후보, 제한 Dijkstra, white-route proxy, sparse-tail 판정 | 40장; G9-B V2 |
+| `experiments/preregistration/sparse_causal_bridge_v1.json` | 네 차트 SCMㆍLB 후보ㆍpaired-doㆍ실패/중단 조건 최초 고정 | 41장; G9-CB V1 FAIL 계약 |
+| `experiments/preregistration/sparse_causal_bridge_v2.json` | V1 범위 축소, fresh seeds, 관측 최강 기준 비열등성 계약 | 41장; G9-CB V2 |
+| `reality_stone/python/reality_stone/clarus/sparse_causal_bridge.py` | 4-chart hidden-cause SCM, discrete LB 후보, paired-do 방향화, OOD/lesion/soft-locked gate | 41장; G9-CB V2 |
 
 ---
 
@@ -478,5 +485,7 @@ $$
 | (C3) 메타인지 재귀 루프 | F.17 | `ConsciousnessMonitor.metacognition_step` 수축 toy 구현; 실제 agent feedback 미구현 |
 | Cold checkpoint ($\mathcal{C}$) | 14장 7절 | 미구현 (warm만 있음) |
 | Live journal ($\mathcal{J}$) | 14장 7절 | 미구현 |
+| bridge target의 직접 잠재교란 처리 | 41장 | V1 FAIL; V2 scope에서 제외, latent-state estimator 미구현 |
+| 실제 피질 U-fiber/bridge 연결 | 40--41장 | geometry candidate와 합성 gate만 완료; tractography 미검증 |
 | 섭동적 채널 혼합 | 2장 2.3절 | 미구현 |
 | 교차 주파수 결합 게이트 | 2장 6절 | 미구현 |

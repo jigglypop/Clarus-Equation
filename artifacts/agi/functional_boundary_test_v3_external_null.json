@@ -1,0 +1,107 @@
+{
+  "experiment": "functional_boundary_v3_pointwise_right_practical_null",
+  "split": "test",
+  "status": "PASS",
+  "checks": {
+    "source_integrity": true,
+    "candidate_auc": true,
+    "auc_gain": true,
+    "sector_consistency": true,
+    "permutation_control": true,
+    "download_budget": true,
+    "candidate_auc_ceiling": true,
+    "anatomy_function_gap": true,
+    "runtime": true
+  },
+  "summary": {
+    "eligible_edges": 27948,
+    "boundary_edges": 2273,
+    "boundary_prevalence": 0.08132961213682553,
+    "baseline_auc": 0.5220502781020677,
+    "candidate_auc": 0.5220502781020677,
+    "candidate_auc_gain": 0.0,
+    "auc_improved_sector_count": 0,
+    "permutation_mean_auc": 0.5023700424876698,
+    "desikan_minus_candidate_auc": 0.16328149208754283
+  },
+  "per_sector": [
+    {
+      "sector": 0,
+      "edges": 2863,
+      "boundary_edges": 169,
+      "baseline_auc": 0.5896798935174813,
+      "candidate_auc": 0.5896798935174813
+    },
+    {
+      "sector": 1,
+      "edges": 4561,
+      "boundary_edges": 474,
+      "baseline_auc": 0.522697262804054,
+      "candidate_auc": 0.522697262804054
+    },
+    {
+      "sector": 2,
+      "edges": 4725,
+      "boundary_edges": 414,
+      "baseline_auc": 0.5514474263680037,
+      "candidate_auc": 0.5514474263680037
+    },
+    {
+      "sector": 3,
+      "edges": 925,
+      "boundary_edges": 99,
+      "baseline_auc": 0.5818353021742853,
+      "candidate_auc": 0.5818353021742853
+    },
+    {
+      "sector": 4,
+      "edges": 1334,
+      "boundary_edges": 116,
+      "baseline_auc": 0.45354170205537625,
+      "candidate_auc": 0.45354170205537625
+    },
+    {
+      "sector": 5,
+      "edges": 5823,
+      "boundary_edges": 304,
+      "baseline_auc": 0.5772099493615358,
+      "candidate_auc": 0.5772099493615358
+    },
+    {
+      "sector": 6,
+      "edges": 4640,
+      "boundary_edges": 451,
+      "baseline_auc": 0.5084745762711864,
+      "candidate_auc": 0.5084745762711864
+    },
+    {
+      "sector": 7,
+      "edges": 3077,
+      "boundary_edges": 246,
+      "baseline_auc": 0.39151611226461963,
+      "candidate_auc": 0.39151611226461963
+    }
+  ],
+  "negative_control_aucs": [
+    0.5038702957722379,
+    0.5005560949188916,
+    0.5130817470076581,
+    0.5059569976545202,
+    0.5083188340592499,
+    0.49109465975408834,
+    0.5004450803320802,
+    0.5078509227732501,
+    0.5072370797027128,
+    0.49570721957477754,
+    0.48752768983754446,
+    0.5026785130750482,
+    0.5065558495882597,
+    0.5013949167339022,
+    0.497135499972741,
+    0.5085092790457557
+  ],
+  "resource_usage": {
+    "downloaded_bytes": 327054,
+    "elapsed_seconds": 2.5164319002069533
+  }
+}

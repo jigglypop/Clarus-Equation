@@ -1,0 +1,76 @@
+{
+  "experiment": "functional_boundary_v2_heat_landmarks_left_validation",
+  "split": "validation",
+  "status": "FAIL",
+  "checks": {
+    "source_integrity": true,
+    "candidate_auc": false,
+    "auc_gain": false,
+    "sector_consistency": false,
+    "permutation_control": true,
+    "download_budget": true,
+    "runtime": true
+  },
+  "summary": {
+    "eligible_edges": 27928,
+    "boundary_edges": 2262,
+    "boundary_prevalence": 0.08099398453165282,
+    "baseline_auc": 0.5178713937302759,
+    "candidate_auc": 0.5289029712253407,
+    "candidate_auc_gain": 0.011031577495064782,
+    "auc_improved_sector_count": 2,
+    "permutation_mean_auc": 0.500752851328193
+  },
+  "per_sector": [
+    {
+      "sector": 0,
+      "edges": 1018,
+      "boundary_edges": 106,
+      "baseline_auc": 0.4929038397881496,
+      "candidate_auc": 0.5367634889109566
+    },
+    {
+      "sector": 2,
+      "edges": 4618,
+      "boundary_edges": 519,
+      "baseline_auc": 0.5887196510639138,
+      "candidate_auc": 0.5530499708326811
+    },
+    {
+      "sector": 4,
+      "edges": 3032,
+      "boundary_edges": 234,
+      "baseline_auc": 0.4594215648540166,
+      "candidate_auc": 0.49719427185474363
+    },
+    {
+      "sector": 6,
+      "edges": 5834,
+      "boundary_edges": 276,
+      "baseline_auc": 0.5304405192150237,
+      "candidate_auc": 0.5286041533029815
+    }
+  ],
+  "negative_control_aucs": [
+    0.5006406656069791,
+    0.4873149823696731,
+    0.49744401001148164,
+    0.4987137608473503,
+    0.5100711913310797,
+    0.48521502622020785,
+    0.521519401799296,
+    0.48231087783496873,
+    0.48983796178030303,
+    0.5062742561998743,
+    0.5107133934593224,
+    0.5059755337741763,
+    0.500428567461167,
+    0.500984495091361,
+    0.5034387551060514,
+    0.5111627423577965
+  ],
+  "resource_usage": {
+    "downloaded_bytes": 327153,
+    "elapsed_seconds": 16.5704504000023
+  }
+}

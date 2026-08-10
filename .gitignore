@@ -80,6 +80,10 @@ target/
 !experiments/preregistration/fsaverage_geometry_v1.json
 !experiments/preregistration/fsaverage_geometry_v2.json
 !experiments/preregistration/fsaverage_geometry_v3.json
+!experiments/preregistration/sparse_causal_bridge_v1.json
+!experiments/preregistration/sparse_causal_bridge_v2.json
+!experiments/preregistration/sparse_causal_bridge_v3.json
+!experiments/preregistration/sparse_causal_bridge_v4.json
 !/artifacts/agi/folding_surface_3d_v2.obj
 *.pt
 *.pth

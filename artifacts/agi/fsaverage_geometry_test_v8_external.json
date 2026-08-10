@@ -1,0 +1,106 @@
+{
+  "experiment": "fsaverage_geometry_v8_guided_lb_right_depth_replication",
+  "split": "test",
+  "status": "PASS",
+  "checks": {
+    "source_integrity": true,
+    "rmse_improvement": true,
+    "sign_improvement": true,
+    "download_budget": true,
+    "sector_consistency": true,
+    "runtime": true
+  },
+  "summary": {
+    "baseline_rmse": 0.35335737881508433,
+    "candidate_rmse": 0.3461922516191226,
+    "scalar_rmse": 0.3873794908221985,
+    "baseline_sign_accuracy": 0.7764801387423146,
+    "candidate_sign_accuracy": 0.7798503163801813,
+    "scalar_sign_accuracy": 0.7658896330437451,
+    "rmse_reduction": 0.020277281940421332,
+    "sign_accuracy_gain": 0.0033701776378667336,
+    "local_over_scalar_rmse_reduction": 0.10632271500914403,
+    "local_over_scalar_sign_gain": 0.013960683336436186,
+    "vertices": 10242,
+    "faces": 20480,
+    "rmse_improved_sector_count": 8
+  },
+  "per_sector": [
+    {
+      "sector": 0,
+      "baseline_rmse": 0.3853038301141568,
+      "candidate_rmse": 0.37573950536448886,
+      "scalar_rmse": 0.42049814550547915,
+      "baseline_sign_accuracy": 0.8409785932721713,
+      "candidate_sign_accuracy": 0.8470948012232415,
+      "scalar_sign_accuracy": 0.800203873598369
+    },
+    {
+      "sector": 1,
+      "baseline_rmse": 0.2802739287996812,
+      "candidate_rmse": 0.27069709304236406,
+      "scalar_rmse": 0.31309779765842966,
+      "baseline_sign_accuracy": 0.8672172808132147,
+      "candidate_sign_accuracy": 0.8684879288437103,
+      "scalar_sign_accuracy": 0.8519695044472682
+    },
+    {
+      "sector": 2,
+      "baseline_rmse": 0.34587610042474143,
+      "candidate_rmse": 0.34510752357156194,
+      "scalar_rmse": 0.3816633739750968,
+      "baseline_sign_accuracy": 0.7623490669593853,
+      "candidate_sign_accuracy": 0.7667398463227223,
+      "scalar_sign_accuracy": 0.7590559824368825
+    },
+    {
+      "sector": 3,
+      "baseline_rmse": 0.4668844863370966,
+      "candidate_rmse": 0.4493479790218007,
+      "scalar_rmse": 0.500064849613828,
+      "baseline_sign_accuracy": 0.508411214953271,
+      "candidate_sign_accuracy": 0.5121495327102804,
+      "scalar_sign_accuracy": 0.5345794392523364
+    },
+    {
+      "sector": 4,
+      "baseline_rmse": 0.511474222400904,
+      "candidate_rmse": 0.5027164610634359,
+      "scalar_rmse": 0.5466387718502889,
+      "baseline_sign_accuracy": 0.6155038759689923,
+      "candidate_sign_accuracy": 0.6155038759689923,
+      "scalar_sign_accuracy": 0.6263565891472869
+    },
+    {
+      "sector": 5,
+      "baseline_rmse": 0.2542050564179708,
+      "candidate_rmse": 0.251940720710675,
+      "scalar_rmse": 0.28675495692105285,
+      "baseline_sign_accuracy": 0.8686918177364037,
+      "candidate_sign_accuracy": 0.8755512003919648,
+      "scalar_sign_accuracy": 0.8535031847133758
+    },
+    {
+      "sector": 6,
+      "baseline_rmse": 0.28551582162070444,
+      "candidate_rmse": 0.2818990130521163,
+      "scalar_rmse": 0.31227868709914525,
+      "baseline_sign_accuracy": 0.8952912019826518,
+      "candidate_sign_accuracy": 0.8940520446096655,
+      "scalar_sign_accuracy": 0.8878562577447335
+    },
+    {
+      "sector": 7,
+      "baseline_rmse": 0.29732558440541906,
+      "candidate_rmse": 0.2920897171265376,
+      "scalar_rmse": 0.33803934395426777,
+      "baseline_sign_accuracy": 0.8533980582524272,
+      "candidate_sign_accuracy": 0.8592233009708737,
+      "scalar_sign_accuracy": 0.8135922330097087
+    }
+  ],
+  "resource_usage": {
+    "downloaded_bytes": 373296,
+    "elapsed_seconds": 0.5327657000161707
+  }
+}

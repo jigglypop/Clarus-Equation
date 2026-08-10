@@ -1,13 +1,22 @@
 {
-  "dataset": "TemplateFlow tpl-fsaverage 10k left hemisphere",
+  "dataset": "TemplateFlow tpl-fsaverage 10k bilateral hemispheres",
   "provider": "NiPreps TemplateFlow",
   "archive_page": "https://www.templateflow.org/browse/",
   "downloaded_on": "2026-08-10",
   "files": [
     {"name": "lh_pial.surf.gii", "bytes": 270927, "sha256": "2201cd917aae312477747c06c6a7a4a7cc8debe28b053190afbe1622ae0ee699"},
     {"name": "lh_sulc.shape.gii", "bytes": 51680, "sha256": "239db18af9bbb1c160648dc2818bc8a981e09acb577f6dd9261796fac807b431"},
-    {"name": "lh_curv.shape.gii", "bytes": 50816, "sha256": "ce934ff3501a4db560d6a5773ef4fdc50b8e56b52deb2c263c91c50efdc3e834"}
+    {"name": "lh_curv.shape.gii", "bytes": 50816, "sha256": "ce934ff3501a4db560d6a5773ef4fdc50b8e56b52deb2c263c91c50efdc3e834"},
+    {"name": "rh_pial.surf.gii", "bytes": 270980, "sha256": "e1583407d0daf26c08404c5518063f25714ae06d22d71d430554f7802802d6cc"},
+    {"name": "rh_sulc.shape.gii", "bytes": 51728, "sha256": "a15231967211f7e63bebfab5fcc9037b157b3855f49f3a0e287d434715d05bd5"},
+    {"name": "rh_curv.shape.gii", "bytes": 50588, "sha256": "9d363c2d75260bfaac71e630005eac77efa75c5af3e952aedebf86f35ba9af97"},
+    {"name": "lh_yeo7.label.gii", "bytes": 5410, "sha256": "b9e50a6bef1a1af3c7a5b18a8d01180427d22ca9cfdd42ee7a7d7a5b20591b71"},
+    {"name": "rh_yeo7.label.gii", "bytes": 5486, "sha256": "7e674b9c912bf6290312db539948dcc2e4e021359c3e4b54200775c682449be7"},
+    {"name": "lh_desikan.label.gii", "bytes": 9611, "sha256": "0d7e68e9e19c345ddc6286e1b32b706b543b965a1ef4a3cfa005901a67a80096"},
+    {"name": "rh_desikan.label.gii", "bytes": 9515, "sha256": "5aab7074118df85cf9654172bb829dcc0504431ae2ba6c1dca128aa3b6bbb3dc"},
+    {"name": "lh_white.surf.gii", "bytes": 270838, "sha256": "ee707e6eaee1a4c9ce7abbb9a3a22bb1d47d4452259bf2c5c9cd269c325a3f8f"},
+    {"name": "rh_white.surf.gii", "bytes": 270839, "sha256": "0b749d55082e4c28f690a4430b1c481209b37f04dfb8d4c6c41990b066b73caa"}
   ],
-  "total_bytes": 373423,
+  "total_bytes": 1318418,
   "excluded": [{"dataset": "HCP S1200 Group Average", "bytes": 2300000000, "status": "SKIPPED_COST"}]
 }

@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "created_after_locked_test": true,
+  "purpose": "Post-run integrity attestation for the exact V2 implementation and artifacts. This is not a prospective cryptographic blind and does not upgrade the soft test lock.",
+  "merged_registration_sha256_reported_by_gate": "be128195e8504a09cbf2ec58bfc2191a47fb9c7b7ef895d514729253b3c6c704",
+  "files": {
+    "reality_stone/python/reality_stone/clarus/sparse_causal_bridge.py": "0885d7244c3ea35367987ec59538d15c081d3ba6009897e5d0e5e42a24538ca7",
+    "tests/test_sparse_causal_bridge.py": "5a123fe035355b5a1af1bc6501730dfd2a65def61a53d3b2d9614b8b1dcf402d",
+    "examples/agi/sparse_causal_bridge_gate.py": "8c03487949f1239635d1a11f8655dc73ee7bde87dc44d57e6a640d56f9641a00",
+    "experiments/preregistration/sparse_causal_bridge_v1.json": "a4ab2f9b7ba5049926d77cd7cf90352531c93b02a1af4554a26dbfb6b48dbf0e",
+    "experiments/preregistration/sparse_causal_bridge_v2.json": "ae609efae7af917771082caa42d7df5cfd6c41a1ffb0081203eb8b5213f90f19",
+    "artifacts/agi/sparse_causal_bridge_validation_v1.json": "ca9f09f32957124766ff0a5e9dedaa7ae1b5f3f9a3ecdc092d8fbdd3c3c9d282",
+    "artifacts/agi/sparse_causal_bridge_validation_v2.json": "4717ab98ff85467f9c521d1c3c65955791466faf5733ddb7c1fd777363be5134",
+    "artifacts/agi/sparse_causal_bridge_test_v2.json": "f970142e556710c36af0d4401abaf572ac32b4eab41e65c61f02fc8a946757f2"
+  }
+}

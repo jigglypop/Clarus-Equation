@@ -8,6 +8,9 @@
 > causal world model 통과로 승격하지 않는다.
 > 전체 실행 순서와 중단 조건은 `8_Roadmap.md`, 다음 비선형ㆍ물체 영속성
 > 실험의 고정 명세는 `27_Nonlinear_Object_Permanence.md`를 따른다.
+> 주름이 분할이 아니라 희소 연결 후보를 만든다는 계산 가설의 최소 반증은
+> `41_Sparse_Causal_Bridge_World_G9CB.md`에 기록한다. 이는 실제 피질 연결이나
+> AGI 증거가 아닌 네 차트 합성 gate다.
 >
 > 이 문서 시리즈(7_AGI)는 CE 뇌 연구(`6_뇌/`)에서 도출된 원리를 **AGI 구현 방법론으로 구체화**하는 설계 문서다. `Bridge`/`Phenomenology` 층이며, 실험 근거의 강도는 `6_뇌/05_실험근거.md`의 `supported / bridge / hypothesis` 구분을 따른다.
 
@@ -138,6 +141,7 @@ AGI가 진정한 자율성을 가지려면, 단순한 추론을 넘어 **자기 
 | 7 | 의식 | (C3) 자기참조 | 전역 작업공간 | -- |
 | 8 | 로드맵 | 전체 | 전체 | 전체 |
 | 26 | 국소 인과 세계 시뮬레이터 | 감각 atlas·전이식별·반사실 제어 | 분산 감각계·행동 loop | `causal_world_simulator.py` |
+| 41 | 희소 인과 브리지 세계모형 | LB 후보·paired intervention 방향화 | fold-contact의 계산 대응실험 | `sparse_causal_bridge.py` |
 
 ---
 

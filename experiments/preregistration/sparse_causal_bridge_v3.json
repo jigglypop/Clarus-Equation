@@ -1,0 +1,102 @@
+{
+  "schema_version": 3,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-10",
+  "experiment": "sparse_causal_bridge_v3",
+  "roadmap_stage": "G9-CB",
+  "extends": "sparse_causal_bridge_v2.json",
+  "supersedes": "sparse_causal_bridge_v2",
+  "runner": "latent_residual_filter",
+  "change_reason": "V2 passed only after removing direct hidden loading from bridge targets. V3 restores the failed V1 target confounding and tests the new decomposition invariant intervention-identified local/bridge mechanism plus a rank-one OOD residual-state filter. All data-role and control seeds are fresh.",
+  "overrides": {
+    "hypothesis": "With direct hidden loading restored at bridge target C, randomized paired interventions can identify both diagonal local dynamics and sparse directed bridges, while an OOD-prefix rank-one residual filter can estimate the changed latent context and repair the V1 prediction failure without changing the invariant mechanism.",
+    "claim_boundary": "This is a four-chart, rank-one, one-step sequential synthetic gate with an 80-step OOD calibration prefix. It does not establish general hidden-state causal discovery, free rollout, real cortical connectivity, a neural algorithm, or AGI.",
+    "scm": {
+      "train_hidden_loadings": [1.15, 1.25, 0.55, 0.0],
+      "ood_hidden_loadings": [1.15, -1.25, -0.55, 0.0]
+    },
+    "data_roles": {
+      "observational_train": {
+        "environment": "train",
+        "seeds": [35100, 35101, 35102, 35103, 35104, 35105, 35106, 35107],
+        "steps_per_seed": 520
+      },
+      "observational_selector_holdout": {
+        "environment": "train",
+        "seeds": [35600, 35601, 35602, 35603],
+        "steps_per_seed": 360
+      },
+      "topology_intervention_probe": {
+        "environment": "train",
+        "seeds": [36100, 36101, 36102, 36103],
+        "stationary_steps_per_seed": 320,
+        "pairs_per_source_per_seed": 32
+      },
+      "validation": {
+        "environment": "ood",
+        "seeds": [37100, 37101, 37102, 37103, 37104, 37105, 37106, 37107, 37108, 37109, 37110, 37111, 37112, 37113, 37114, 37115, 37116, 37117, 37118, 37119],
+        "steps_per_seed": 440,
+        "intervention_pairs_per_source_per_seed": 24
+      },
+      "test": {
+        "environment": "ood",
+        "seeds": [38100, 38101, 38102, 38103, 38104, 38105, 38106, 38107, 38108, 38109, 38110, 38111, 38112, 38113, 38114, 38115, 38116, 38117, 38118, 38119, 38120, 38121, 38122, 38123, 38124, 38125, 38126, 38127, 38128, 38129],
+        "steps_per_seed": 440,
+        "intervention_pairs_per_source_per_seed": 24
+      }
+    },
+    "negative_controls": {
+      "no_bridge_seed": 36600,
+      "permuted_intervention_seed": 36601,
+      "max_selected_edges_each": 0
+    },
+    "latent_filter": {
+      "rank": 1,
+      "ood_calibration_steps": 80,
+      "freeze_subspace_after_calibration": true,
+      "online_signal": "previous observed one-step mechanism residual only",
+      "center_calibration_residuals": true,
+      "fit_scalar_ar_with_intercept": true,
+      "self_effect_denominator": "2 * intervention_amplitude",
+      "cross_effect_denominator": "2 * tanh(intervention_amplitude)",
+      "truth_hidden_state_available_to_learner": false,
+      "evaluation_prefix_rows_scored": false
+    },
+    "models": [
+      "fixed_local_train",
+      "fixed_dense_train",
+      "adaptive_local_prefix",
+      "adaptive_dense_prefix",
+      "v1_bridge_observational_local",
+      "causal_mechanism_no_latent",
+      "causal_latent_filter",
+      "oracle_hidden_diagnostic"
+    ],
+    "latent_gate": {
+      "max_joint_spectral_radius": 0.98,
+      "geometry_truth_pair_coverage_min": 1.0,
+      "directed_precision_min": 0.9,
+      "directed_recall_min": 0.9,
+      "exact_graph_recovery_probe_seed_fraction_min": 0.8,
+      "common_cause_false_edges_max": 0,
+      "reverse_true_edges_max": 0,
+      "selected_edges_max": 2,
+      "self_coefficient_mae_max": 0.03,
+      "bridge_coefficient_mae_max": 0.08,
+      "true_effect_sign_accuracy_min": 1.0,
+      "intervention_response_nrmse_max": 0.2,
+      "latent_subspace_cosine_mean_min": 0.9,
+      "latent_subspace_cosine_seed_min": 0.8,
+      "latent_scalar_ar_abs_error_mean_max": 0.08,
+      "rank_one_residual_variance_fraction_mean_min": 0.75,
+      "ood_global_rmse_reduction_vs_fixed_local_min": 0.05,
+      "ood_global_rmse_reduction_vs_v1_bridge_min": 0.1,
+      "ood_global_rmse_reduction_vs_no_latent_min": 0.35,
+      "ood_global_rmse_ratio_vs_adaptive_dense_max": 1.05,
+      "ood_downstream_rmse_reduction_vs_fixed_local_min": 0.15,
+      "paired_ci95_lower_vs_fixed_local_min": 0.0,
+      "lesion_direct_target_mse_increase_fraction_min": 0.2,
+      "finite_metrics_required": true
+    }
+  }
+}

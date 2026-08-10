@@ -1,0 +1,70 @@
+{
+  "experiment": "fsaverage_geometry_v6_curvature_guided_lb",
+  "split": "validation",
+  "status": "FAIL",
+  "checks": {
+    "source_integrity": true,
+    "rmse_improvement": true,
+    "sign_improvement": false,
+    "download_budget": true,
+    "sector_consistency": true,
+    "runtime": true
+  },
+  "summary": {
+    "baseline_rmse": 0.32831758066580674,
+    "candidate_rmse": 0.32066646449286335,
+    "scalar_rmse": 0.36345030851568383,
+    "baseline_sign_accuracy": 0.7811004744043453,
+    "candidate_sign_accuracy": 0.7810333264351166,
+    "scalar_sign_accuracy": 0.7672868079010232,
+    "rmse_reduction": 0.02330400996933346,
+    "sign_accuracy_gain": -6.714796922868693e-05,
+    "local_over_scalar_rmse_reduction": 0.11771580053831276,
+    "local_over_scalar_sign_gain": 0.013746518534093366,
+    "vertices": 10242,
+    "faces": 20480,
+    "rmse_improved_sector_count": 3
+  },
+  "per_sector": [
+    {
+      "sector": 0,
+      "baseline_rmse": 0.4724405868590979,
+      "candidate_rmse": 0.45758305576645136,
+      "scalar_rmse": 0.5163709266399327,
+      "baseline_sign_accuracy": 0.5235602094240838,
+      "candidate_sign_accuracy": 0.5235602094240838,
+      "scalar_sign_accuracy": 0.5235602094240838
+    },
+    {
+      "sector": 2,
+      "baseline_rmse": 0.29326438004977373,
+      "candidate_rmse": 0.27941574256350094,
+      "scalar_rmse": 0.32438489226661343,
+      "baseline_sign_accuracy": 0.8772813089993706,
+      "candidate_sign_accuracy": 0.880427942101951,
+      "scalar_sign_accuracy": 0.8609188168659534
+    },
+    {
+      "sector": 4,
+      "baseline_rmse": 0.28001579396476706,
+      "candidate_rmse": 0.2780266967714827,
+      "scalar_rmse": 0.3102881731074465,
+      "baseline_sign_accuracy": 0.8679611650485437,
+      "candidate_sign_accuracy": 0.8660194174757282,
+      "scalar_sign_accuracy": 0.8339805825242719
+    },
+    {
+      "sector": 6,
+      "baseline_rmse": 0.26754956178958833,
+      "candidate_rmse": 0.2676403628700183,
+      "scalar_rmse": 0.3027572420487429,
+      "baseline_sign_accuracy": 0.8555992141453831,
+      "candidate_sign_accuracy": 0.8541257367387033,
+      "scalar_sign_accuracy": 0.8506876227897839
+    }
+  ],
+  "resource_usage": {
+    "downloaded_bytes": 373423,
+    "elapsed_seconds": 0.5014957999810576
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "experiment": "fsaverage_geometry_v4_laplace_beltrami",
+  "split": "validation",
+  "status": "PASS",
+  "checks": {
+    "source_integrity": true,
+    "rmse_improvement": true,
+    "sign_improvement": true,
+    "download_budget": true,
+    "sector_consistency": true,
+    "runtime": true
+  },
+  "summary": {
+    "baseline_rmse": 0.36345030851568383,
+    "candidate_rmse": 0.32831758066580674,
+    "scalar_rmse": 0.36345030851568383,
+    "baseline_sign_accuracy": 0.7672868079010232,
+    "candidate_sign_accuracy": 0.7811004744043453,
+    "scalar_sign_accuracy": 0.7672868079010232,
+    "rmse_reduction": 0.09666446011108842,
+    "sign_accuracy_gain": 0.013813666503322053,
+    "local_over_scalar_rmse_reduction": 0.09666446011108842,
+    "local_over_scalar_sign_gain": 0.013813666503322053,
+    "vertices": 10242,
+    "faces": 20480,
+    "rmse_improved_sector_count": 4
+  },
+  "per_sector": [
+    {
+      "sector": 0,
+      "baseline_rmse": 0.5163709266399327,
+      "candidate_rmse": 0.4724405868590979,
+      "scalar_rmse": 0.5163709266399327,
+      "baseline_sign_accuracy": 0.5235602094240838,
+      "candidate_sign_accuracy": 0.5235602094240838,
+      "scalar_sign_accuracy": 0.5235602094240838
+    },
+    {
+      "sector": 2,
+      "baseline_rmse": 0.32438489226661343,
+      "candidate_rmse": 0.29326438004977373,
+      "scalar_rmse": 0.32438489226661343,
+      "baseline_sign_accuracy": 0.8609188168659534,
+      "candidate_sign_accuracy": 0.8772813089993706,
+      "scalar_sign_accuracy": 0.8609188168659534
+    },
+    {
+      "sector": 4,
+      "baseline_rmse": 0.3102881731074465,
+      "candidate_rmse": 0.28001579396476706,
+      "scalar_rmse": 0.3102881731074465,
+      "baseline_sign_accuracy": 0.8339805825242719,
+      "candidate_sign_accuracy": 0.8679611650485437,
+      "scalar_sign_accuracy": 0.8339805825242719
+    },
+    {
+      "sector": 6,
+      "baseline_rmse": 0.3027572420487429,
+      "candidate_rmse": 0.26754956178958833,
+      "scalar_rmse": 0.3027572420487429,
+      "baseline_sign_accuracy": 0.8506876227897839,
+      "candidate_sign_accuracy": 0.8555992141453831,
+      "scalar_sign_accuracy": 0.8506876227897839
+    }
+  ],
+  "resource_usage": {
+    "downloaded_bytes": 373423,
+    "elapsed_seconds": 0.45614879997447133
+  }
+}

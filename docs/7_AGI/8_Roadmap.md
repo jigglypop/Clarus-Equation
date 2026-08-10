@@ -6,7 +6,7 @@
 >
 > 완료된 수학과 G1 결과: `26_Causal_World_Simulator.md`
 >
-> 다음 실험 사전등록: `27_Nonlinear_Object_Permanence.md`
+> 최신 계산-뇌 대응 gate: `41_Sparse_Causal_Bridge_World_G9CB.md`
 
 ## 0. 주장 정책과 동결된 레거시 트랙
 
@@ -35,7 +35,7 @@
 | B. 뇌 | 주름ㆍ연결ㆍ기능의 관계가 시간 선행성과 홀드아웃 예측력을 갖는가? | 공개 영상 -> 종단 자료 -> 생물 개입 |
 | C. 통합ㆍ안전 | 모듈을 통합해도 안정성ㆍ감사 가능성ㆍ성능이 유지되는가? | sandbox -> 제한 행동 -> 실제 환경 |
 
-현재 위치는 `G1--G8 및 G9-S/G9-3D 완료`다. G8-R V5는 실제 SCITOS 로그에서 행동 복원을 8.49%p 개선했다. G9-S V3는 1D null/대안 식별을 통과했고, G9-3D V2는 방향성 성장 텐서의 3D 높이 표면에서 RMSE 91.6%, ridge mismatch 89.3% 감소와 90도 회전 equivariance를 확인했다. G9 결과는 합성 식별성과 형상화이며 생물학적 뇌 주름 증거가 아니다.
+현재 위치는 `G1--G8`과 `G9-S/G9-3D/G9-R/G9-H/G9-F/G9-B/G9-CB`의 저비용 단계까지 완료다. G9-CB V1은 두 true bridge를 정확히 찾았지만 bridge target의 직접 잠재교란 때문에 예측ㆍlesion gate에 실패했고 test를 열지 않았다. 범위를 잠근 V2는 새 seed의 locked test에서 `A→C`, `C→D`를 정확히 복원하고 common-cause `A--B`를 배제했다. OOD global RMSE는 local-only 대비 10.68%, dense observational 대비 56.20%, raw-correlation 대비 45.25% 낮았지만 가장 강한 observation-only predictive-gain 기준과는 사실상 동률이다. 이는 4-chart 합성 식별 gate이지 피질 연결이나 AGI의 증거가 아니다.
 
 ## 2. 의존성
 
@@ -58,6 +58,12 @@ B1 발달 지도 -> B2 dHCP -> B3 HCP -> B4 유전/종단 -> B5 개입
 
 G9는 A 트랙의 성공으로 자동 통과하지 않는다. 계산 모델과 뇌 자료는 분석계획을 각각 고정한 뒤 공통 지표만 비교한다.
 
+```text
+G9-R/F/B 집단평균 기하 [저비용 단계 완료]
+          -> G9-CB 합성 geometry-proposal/causal-selection 분리 [V2 완료]
+               -> 실제 superficial-white tractography matched control [대기/SKIPPED_COST]
+```
+
 ## 3. 게이트 원장
 
 | Gate | 최소 결과 | 상태 | 다음 이동 조건 |
@@ -71,9 +77,14 @@ G9는 A 트랙의 성공으로 자동 통과하지 않는다. 계산 모델과 �
 | G6 | chart 생성ㆍ전이ㆍ복구 | V3 완료 | 연속 regime에서 재검증 |
 | G7 | 기억ㆍ재생ㆍ장기 계획 | V4 완료 | 실제 과제에서는 재검증 필요 |
 | G8 | 실제 센서ㆍ제한 로봇 | G8-S V4ㆍG8-C V7ㆍG8-R V5 완료; 실장비 대기 | 다른 로봇/환경 holdout 또는 replay 폐루프 |
-| G9 | 주름ㆍ연결ㆍ기능 대응 | 병렬 준비 | 기계적 성장모델 대비 홀드아웃 증분 |
+| G9 | 주름ㆍ연결ㆍ기능 대응 | 저비용 기하ㆍ합성 대응 완료; 생물 연결 미검증 | 기계적 성장모델 대비 홀드아웃 증분 |
 | G9-S | 합성 differential-growth null | V3 완료 | 실제 MRI 없이 식별성만 확인; 공개 요약통계 연결 필요 |
 | G9-3D | 방향성 성장 텐서 표면 | V2 완료 | OBJ 형상화; 실제 cortical mesh와 미대조 |
+| G9-R | fsaverage 내재기하ㆍ경계보존 확산 | V4 locked testㆍV8 우반구 복제 완료 | 개인별ㆍ발달 자료 필요 |
+| G9-H | connection/holonomy 수치 항등식 | V1 완료 | 독립 방향장 residual holonomy 필요 |
+| G9-F | 기능ㆍ해부 경계 분리 | Yeo 실패ㆍDesikan 양성대조 완료 | 개인별 기능ㆍ연결 자료 필요 |
+| G9-B | 희소 fold-contact 후보 | V1 실패 보존ㆍV2 양반구 완료 | tractography matched control 필요 |
+| G9-CB | geometry proposal + intervention 방향화 | V1 validation 실패 보존ㆍV2 locked test 완료 | 직접 잠재교란 targetㆍ실제 연결은 미해결 |
 | G10 | 타 에이전트ㆍ언어 인터페이스 | 대기 | 체계적 일반화와 믿음 추적 |
 | G11 | 광범위 일반지능 평가 | 미정 | 독립 평가 전에는 AGI 명칭 금지 |
 
@@ -126,7 +137,15 @@ chart 수, 담당 영역, 전이함수, 결합 강도를 학습 대상으로 바
 3. ABCD는 통제 접근 승인 후 청소년 종단 변화에 사용한다: <https://abcdstudy.org/scientists/data-sharing/>
 4. UK Biobank는 2026-08 현재 신규 신청 중단 상태이므로 즉시 의존성에서 제외한다: <https://www.ukbiobank.ac.uk/use-our-data/apply-for-access/>
 
-### B3. 경쟁모형과 반증
+### B3. 현재 무료 검증의 경계
+
+G9-R/F/B는 TemplateFlow 집단평균 표면에서 계산한 기하 파생치이고, G9-CB는
+별도의 네 차트 합성 SCM이다. 전자는 실제 연결을 측정하지 않았고 후자는 실제
+피질을 사용하지 않았으므로 서로를 검증한 것으로 합치지 않는다. 현재 연결은
+“실제 표면에서 희소 후보가 있었다 → 그 후보/인과 선택의 역할을 합성계에서
+분리해 보았다”는 연구 순서뿐이다.
+
+### B4. 경쟁모형과 반증
 
 - `M0`: 두께ㆍ면적 팽창ㆍ재료 특성의 기계적 좌굴
 - `M1`: M0 + 백질 연결 방향/장력 대리변수
@@ -182,15 +201,20 @@ chart 수, 담당 영역, 전이함수, 결합 강도를 학습 대상으로 바
 | 5 | 홀드아웃 gate | 완료: IDㆍ장기가림ㆍ조합 OOD 각 5 seed |
 | 6 | G4 능동 지각 | 완료: V1/V2 실패 보존, V3 locked test 통과 |
 | 7 | G5 인과ㆍ조합 OOD | 완료: V1--V5 실패 보존, V6 locked test 통과 |
-| 8 | 공개 뇌자료 파이프라인 | 비용ㆍ접근성 확인 후 별도 착수 |
+| 8 | 공개 뇌자료 파이프라인 | 부분 완료: TemplateFlow fsaverage 10k; 개인별 dMRI/fMRI 대기 |
 | 9 | G6--G7 확장 | 완료: G6 V3, G7 V4 locked test 통과 |
 | 10 | G8-S 결함주입 안전 sandbox | 완료: V1/V2 실패, V3 판정결함 감사, V4 강화 test 통과 |
 | 11 | G8-C 결함 OOD calibration | 완료: V1--V6 한계 보존, V7 seed별 Wilson locked test 통과 |
 | 12 | G8-R 실제 공개 센서 로그 | 완료: V1--V4 실패 보존, V5 시간순 locked test 통과 |
 | 13 | G9-S 합성 주름ㆍ꼬임 식별 | 완료: V1/V2 실패 보존, V3 null+대안 locked test 통과 |
 | 14 | G9-3D 리만 성장 표면 | 완료: V1 실패 보존, V2 회전-equivariant locked testㆍOBJ 통과 |
+| 15 | G9-R 실제 fsaverage 기하 | 완료: V1/V2/V5--V7 실패 보존, V4 testㆍV8 우반구 통과 |
+| 16 | G9-H connection holonomy | 완료: Gauss--Bonnetㆍ강체등변 수치 검증 |
+| 17 | G9-F 기능/해부 경계 | 완료: Yeo null, Desikan 양성대조ㆍ분리 |
+| 18 | G9-B 희소 fold bridge | 완료: V1 보편가설 실패, V2 양반구 sparse tail |
+| 19 | G9-CB 희소 인과 bridge | 완료: V1 validation FAIL/test 미개봉, V2 validation+locked test PASS |
 
-현재 다음 구현 범위는 G9-3D를 무료 논문 요약통계ㆍ소형 cortical surface 파생치와 대조하는 것이다. 유료ㆍ대용량 뇌 영상, 실제 로봇 운용, 충돌 실험은 계속 `SKIPPED_COST`다.
+다음 저비용 계산 반증은 V1이 드러낸 bridge target 직접 잠재교란을 latent-state 추정 또는 환경불변 residual로 처리하는 별도 사전등록이다. 실제 뇌 연결 주장은 독립 superficial-white-matter tractography에서 G9-B strong 후보와 거리ㆍ곡률 matched control을 비교하기 전까지 보류하며, 접근ㆍ비용 한도를 넘으면 `SKIPPED_COST`로 남긴다.
 
 ## 9. 저장소와 산출물 정책
 
@@ -215,4 +239,13 @@ G2--G3 구현이 끝난 뒤 사용할 목표 명령:
 ```powershell
 .\.venv\Scripts\python.exe -m pytest tests/test_nonlinear_object_world.py -q
 .\.venv\Scripts\python.exe examples/agi/nonlinear_object_permanence_gate.py --config experiments/preregistration/nonlinear_object_permanence_v1.json
+```
+
+G9-CB 재현:
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest tests/test_sparse_causal_bridge.py -q --basetemp .tmp/g9cb-doc
+.\.venv\Scripts\python.exe examples/agi/sparse_causal_bridge_gate.py --config experiments/preregistration/sparse_causal_bridge_v2.json --split validation
+# 위 artifact가 동일 config SHA로 PASS한 경우에만
+.\.venv\Scripts\python.exe examples/agi/sparse_causal_bridge_gate.py --config experiments/preregistration/sparse_causal_bridge_v2.json --split test
 ```

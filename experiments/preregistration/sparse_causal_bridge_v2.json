@@ -1,0 +1,67 @@
+{
+  "schema_version": 2,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-10",
+  "experiment": "sparse_causal_bridge_v2",
+  "roadmap_stage": "G9-CB",
+  "extends": "sparse_causal_bridge_v1.json",
+  "supersedes": "sparse_causal_bridge_v1",
+  "change_reason": "V1 recovered both directed bridges but failed prediction gates because a hidden cause directly loaded bridge target C, while only cross-chart bridge coefficients—not local mechanisms or the latent state—were intervention-identified. V2 narrows the minimal claim by removing direct hidden loading from bridge targets. It also uses fresh seeds, corrects the permuted-label negative-control implementation, and treats the strongest observation-only selector as a non-inferiority comparator when it recovers the same graph.",
+  "failed_predecessor_artifact": "artifacts/agi/sparse_causal_bridge_validation_v1.json",
+  "overrides": {
+    "hypothesis": "When hidden-cause shift is confined to a noncausal contact pair, a discrete Laplace-Beltrami fold-contact prior plus randomized paired interventions will reject the contact confounder, orient the invariant sparse bridges, and match the strongest correct observation-only predictor while outperforming local, raw-association, and dense observational baselines.",
+    "claim_boundary": "This is a four-chart synthetic bridge-identification gate. V2 intentionally does not solve hidden-state estimation or direct latent confounding of a bridge target. Geometry proposes candidates only; randomized interventions orient them. No cortical, U-fiber, neural, biological, or AGI mechanism is established.",
+    "scm": {
+      "train_hidden_loadings": [1.15, 1.25, 0.0, 0.0],
+      "ood_hidden_loadings": [1.15, -1.25, 0.0, 0.0]
+    },
+    "data_roles": {
+      "observational_train": {
+        "environment": "train",
+        "seeds": [15100, 15101, 15102, 15103, 15104, 15105, 15106, 15107],
+        "steps_per_seed": 520
+      },
+      "observational_selector_holdout": {
+        "environment": "train",
+        "seeds": [15600, 15601, 15602, 15603],
+        "steps_per_seed": 360
+      },
+      "topology_intervention_probe": {
+        "environment": "train",
+        "seeds": [16100, 16101, 16102, 16103],
+        "stationary_steps_per_seed": 320,
+        "pairs_per_source_per_seed": 32
+      },
+      "validation": {
+        "environment": "ood",
+        "seeds": [17100, 17101, 17102, 17103, 17104, 17105, 17106, 17107, 17108, 17109, 17110, 17111, 17112, 17113, 17114, 17115, 17116, 17117, 17118, 17119],
+        "steps_per_seed": 360,
+        "intervention_pairs_per_source_per_seed": 24
+      },
+      "test": {
+        "environment": "ood",
+        "seeds": [18100, 18101, 18102, 18103, 18104, 18105, 18106, 18107, 18108, 18109, 18110, 18111, 18112, 18113, 18114, 18115, 18116, 18117, 18118, 18119, 18120, 18121, 18122, 18123, 18124, 18125, 18126, 18127, 18128, 18129],
+        "steps_per_seed": 360,
+        "intervention_pairs_per_source_per_seed": 24
+      }
+    },
+    "negative_controls": {
+      "no_bridge_seed": 16600,
+      "permuted_intervention_seed": 16601,
+      "max_selected_edges_each": 0
+    },
+    "gate": {
+      "ood_global_rmse_reduction_vs_predictive_gain_min": -0.01,
+      "ood_downstream_rmse_reduction_vs_dense_observational_min": -0.01,
+      "paired_ci95_lower_vs_best_observational_min": -0.002,
+      "causal_rmse_ratio_vs_predictive_gain_max": 1.01,
+      "causal_downstream_rmse_ratio_vs_dense_observational_max": 1.01
+    },
+    "test_lock": {
+      "open_only_after_validation_pass": true,
+      "test_may_change_selection_or_coefficients": false,
+      "failed_validation_artifact_must_be_preserved": true,
+      "failed_locked_test_seeds_must_not_be_reused": true
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "experiment": "connection_holonomy_v1",
+  "status": "PASS",
+  "checks": {
+    "planar_null": true,
+    "gauss_bonnet": true,
+    "rotation_equivariance": true,
+    "runtime": true
+  },
+  "summary": {
+    "planar_absolute_holonomy": 0.0,
+    "spherical_area_error_max": 0.0,
+    "rotation_equivariance_error_max": 1.1102230246251565e-16
+  },
+  "triangles": [
+    {
+      "signed_area": 1.5707963267948966,
+      "holonomy": 1.5707963267948966,
+      "area_error": 0.0,
+      "rotation_error": 0.0
+    },
+    {
+      "signed_area": 0.5512855984325309,
+      "holonomy": 0.5512855984325309,
+      "area_error": 0.0,
+      "rotation_error": 1.1102230246251565e-16
+    }
+  ],
+  "resource_usage": {
+    "external_bytes": 0,
+    "elapsed_seconds": 0.001383800059556961
+  }
+}

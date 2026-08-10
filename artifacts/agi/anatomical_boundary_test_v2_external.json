@@ -1,0 +1,104 @@
+{
+  "experiment": "anatomical_boundary_v2_pointwise_right_replication",
+  "split": "test",
+  "status": "PASS",
+  "checks": {
+    "source_integrity": true,
+    "candidate_auc": true,
+    "auc_gain": true,
+    "sector_consistency": true,
+    "permutation_control": true,
+    "download_budget": true,
+    "runtime": true
+  },
+  "summary": {
+    "eligible_edges": 28130,
+    "boundary_edges": 2239,
+    "boundary_prevalence": 0.07959473871311767,
+    "baseline_auc": 0.6853317701896106,
+    "candidate_auc": 0.6853317701896106,
+    "candidate_auc_gain": 0.0,
+    "auc_improved_sector_count": 0,
+    "permutation_mean_auc": 0.49751433675783685
+  },
+  "per_sector": [
+    {
+      "sector": 0,
+      "edges": 2863,
+      "boundary_edges": 213,
+      "baseline_auc": 0.7454530959340951,
+      "candidate_auc": 0.7454530959340951
+    },
+    {
+      "sector": 1,
+      "edges": 4557,
+      "boundary_edges": 431,
+      "baseline_auc": 0.6580504142706598,
+      "candidate_auc": 0.6580504142706598
+    },
+    {
+      "sector": 2,
+      "edges": 4764,
+      "boundary_edges": 361,
+      "baseline_auc": 0.7401998008157369,
+      "candidate_auc": 0.7401998008157369
+    },
+    {
+      "sector": 3,
+      "edges": 1013,
+      "boundary_edges": 101,
+      "baseline_auc": 0.607803543512246,
+      "candidate_auc": 0.607803543512246
+    },
+    {
+      "sector": 4,
+      "edges": 1458,
+      "boundary_edges": 105,
+      "baseline_auc": 0.6816105303910182,
+      "candidate_auc": 0.6816105303910182
+    },
+    {
+      "sector": 5,
+      "edges": 5758,
+      "boundary_edges": 472,
+      "baseline_auc": 0.6211025927137241,
+      "candidate_auc": 0.6211025927137241
+    },
+    {
+      "sector": 6,
+      "edges": 4640,
+      "boundary_edges": 337,
+      "baseline_auc": 0.6843448536008623,
+      "candidate_auc": 0.6843448536008623
+    },
+    {
+      "sector": 7,
+      "edges": 3077,
+      "boundary_edges": 219,
+      "baseline_auc": 0.744089330278542,
+      "candidate_auc": 0.744089330278542
+    }
+  ],
+  "negative_control_aucs": [
+    0.5059344791556628,
+    0.4949062869641957,
+    0.5118748412848496,
+    0.48994609619988044,
+    0.5052044180431432,
+    0.5080104881206613,
+    0.5047567326161,
+    0.4887871372087671,
+    0.488756457286019,
+    0.5082152266800397,
+    0.5052813765132006,
+    0.4785978504913845,
+    0.4850060113330093,
+    0.4841767032260724,
+    0.4902763464990352,
+    0.5104989365033693
+  ],
+  "resource_usage": {
+    "downloaded_bytes": 331083,
+    "elapsed_seconds": 2.714626000262797
+  }
+}
