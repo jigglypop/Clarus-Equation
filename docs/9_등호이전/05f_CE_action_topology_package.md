@@ -15,18 +15,18 @@ $$
 
 남은 선택은 실제 CE가 어떤 경로공간 위상과 action package를 채택할지다. 기존 CE 문서의 A2는 \(C^1\) 위상을 쓰지만, kinetic action만으로는 \(C^1\)-compactness가 나오지 않는다. 따라서 이 문서는 CE 9_등호이전 수학 코어의 action/topology package를 고정한다.
 
-결론:
+따라서
 
-> continuum 증명 코어는 \(W^{1,p}/C^0\) Tonelli package로 둔다. finite mesh는 계산/검증용 exact approximation으로 둔다. \(C^1\) pathspace는 acceleration/curvature penalty가 \(S_E\) 또는 \(S_{\mathrm{supp}}\)에 들어간 강화판에서만 쓴다.
+> continuum 증명 코어는 \(W^{1,p}/C^0\) Tonelli package로 둔다. finite mesh는 유한차원 계산·검증층으로 둔다. \(C^1\) pathspace는 acceleration/curvature penalty가 \(S_E\) 또는 \(S_{\mathrm{supp}}\)에 들어간 강화판에서만 쓴다.
 
-현재 판정:
+형식 출처:
 
-| package | 지위 | 용도 |
+| 항목 | 출처 | 용도 |
 |---|---|---|
-| finite mesh \(\mathcal P_{I,N}\) | `Exact under assumptions` | 코드, toy, 수치 검증 |
-| \(W^{1,p}/C^0\) Tonelli | `Canonical continuum package` | CE 농축 정리의 기본 해석학 |
-| \(C^1+\ddot\gamma\) penalty | `Stronger regularized package` | 기존 \(C^1\) 문구를 살리는 강화판 |
-| bare \(C^1\)+kinetic action | `Rejected for compactness` | kinetic energy만으로 compact sublevel 실패 |
+| finite mesh \(\mathcal P_{I,N}\) | `[정리]` | 코드, toy, 수치 검증 |
+| \(W^{1,p}/C^0\) Tonelli | `[공리: 모델 선택]`; compactness는 `[정리]` | CE 농축 정리의 기본 해석학 |
+| \(C^1+\ddot\gamma\) penalty | `[공리: 모델 선택]`; 충분조건은 `[정리]` | \(C^1\) 정칙성을 요구하는 강화판 |
+| kinetic bound의 위상학적 함의 | `[정리]` kinetic bound만으로 \(C^1\)-compactness가 따르지 않음 | 정리 2.1 |
 
 ## 1. 선택 규칙
 
@@ -82,7 +82,7 @@ $$
 
 이 항 없이 \(C^1\)-compactness를 말하면 안 된다.
 
-## 2. 왜 bare \(C^1\)은 실패하는가
+## 2. kinetic bound의 \(C^1\)-compactness no-go
 
 기존 CE 문서의 A2는 거리
 
@@ -101,7 +101,10 @@ $$
 
 만으로는 \(\dot\gamma\)의 균등수렴 subsequence를 보장하지 않는다.
 
-### 반례 2.1
+### 정리 2.1 (kinetic bound의 \(C^1\)-compactness no-go)
+
+`[정리]` endpoint를 고정해도 kinetic action의 유계성만으로
+그 sublevel은 \(C^1\)에서 일반적으로 compact하지 않다.
 
 \(I=[0,2\pi]\), \(M=\mathbb R\), endpoint \(0\)을 고정하고
 
@@ -148,7 +151,9 @@ $$
 \quad\text{is not compact in }C^1\text{ in general}.
 $$
 
-따라서 기존 \(C^1\) pathspace 문장은 그냥 쓰면 `Bridge`다.
+kinetic action만 둔 \(C^1\) pathspace는 good-rate compactness 가정을
+충족하지 않는다. \(C^1\) 위상을 채택하려면 acceleration/curvature 제어를
+`[공리: 모델 선택]`으로 추가하고 그 강화 조건 아래의 정리를 적용해야 한다.
 
 ## 3. Canonical continuum package: \(W^{1,p}/C^0\)
 
@@ -293,7 +298,7 @@ $$
 
 - \(\phi\) readout 자체는 05a-05b의 pushforward 결과다.
 - \(S_{\mathrm{supp}}\) 안에 \(\phi\)를 넣으면 CE residual이 다시 action에 feed back된다.
-- 이 feed-back은 `Selection/Bridge`이고, 수학 정리는 \(S_{\mathrm{supp}}\)가 주어졌을 때만 작동한다.
+- feedback functional의 채택은 `[공리: 모델 선택]`이고, residual과 물리 작용의 동일시는 `[공리: 물리 사상]`이다. 구체식이 없으면 `[미완성]`이며 수학 정리는 \(S_{\mathrm{supp}}\)가 주어졌을 때만 작동한다.
 
 ## 5. finite mesh package
 
@@ -361,9 +366,9 @@ $$
 
 그러면 \(\dot\gamma\)는 \(W^{1,p}\) bounded family가 되고, 1차원 Sobolev compact embedding으로 \(\dot\gamma\)는 \(C^0\)에서 precompact하다. \(\gamma\)도 endpoint와 velocity bound로 \(C^0\)-precompact하므로 \(\gamma\)는 \(C^1\)-precompact하다.
 
-판정:
+출처:
 
-`Exact under stronger action assumptions`
+강화된 action 가정 아래 `[정리]`
 
 이 package를 택하면 \(S_{\mathrm{supp}}\)는 단순 비용이 아니라 고주파 경로/급격한 fold를 억제하는 regularizer 역할을 한다.
 
@@ -385,7 +390,7 @@ $$
 
 | 항목 | 상태 |
 |---|---|
-| bare \(C^1\)+kinetic action의 compactness 실패 | 반례 2.1 |
+| kinetic bound만으로 \(C^1\)-compactness가 따르지 않음 | `[정리]` 2.1 |
 | \(W^{1,p}/C^0\) sublevel precompactness | 정리 3.1 |
 | \(W=S_E/\hbar+S_{\mathrm{supp}}\) good-rate | 정리 3.2 |
 | CE 선택 농축 | 따름정리 3.3 |

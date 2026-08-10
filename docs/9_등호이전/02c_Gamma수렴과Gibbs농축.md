@@ -18,14 +18,14 @@ $$
 - Gamma 수렴만으로는 분모의 양질량 하한이 자동으로 나오지 않는다. 고정 기준측도 \(\mu_0\)와 맞는 recovery 조건이 필요하다.
 - \(E_0\)의 최소집합 내부 선택은 \(\beta_n\)과 \(E_n-E_0\)의 상대 scale이 결정할 수 있다.
 
-현재 판정:
+형식 출처:
 
 | 항목 | 판정 | 이유 |
 |---|---|---|
-| 국소균등수렴 + equicoercive + 유일 minimizer | `Exact under assumptions` | 본문 정리 4.1 |
-| Gamma 수렴 + positive-mass recovery | `Exact under assumptions` | 본문 정리 5.2 |
-| 최소집합 내부 선택 | `Open/Selection` | \(\beta_n(E_n-E_0)\) scale에 의존 |
-| jet 농축과의 연결 | `Exact under assumptions` | 02b의 움직이는 중심 정리 |
+| 국소균등수렴 + equicoercive + 유일 minimizer | `[정리]` | 본문 정리 4.1 |
+| Gamma 수렴 + positive-mass recovery | `[정리]` | 본문 정리 5.2 |
+| 최소집합 내부 선택 | `[미완성]` | \(\beta_n(E_n-E_0)\) scale에 의존 |
+| jet 농축과의 연결 | `[정리]` | 02b의 움직이는 중심 정리 |
 
 ## 1. 세팅
 
@@ -158,7 +158,7 @@ $$
 
 - \(E_0\)만 보면 \(0\)과 \(1\)은 구분되지 않는다.
 - \(E_n\)의 작은 차이가 \(\beta_n\)에 증폭되어 내부 선택을 만든다.
-- 따라서 최소집합 내부 분포는 별도 `Selection` 층이다.
+- 따라서 최소집합 내부 분포를 고정하려면 별도 `[공리: 모델 선택]`이 필요하다.
 
 ## 4. 국소균등수렴 버전
 

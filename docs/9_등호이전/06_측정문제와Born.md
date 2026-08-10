@@ -1,257 +1,180 @@
 # 06. 측정 문제와 Born bridge
 
-## 0. 목표
+## 0. 범위
 
-이 장은 등호 이전 수학을 양자 측정 문제에 연결한다.
+유한 후보의 Gibbs 농축, Born probability assignment와 물리적 측정
+instrument는 서로 다른 구조다. 이 장은 세 구조를 분리한다.
 
-핵심 구분:
+## 1. 유한 outcome 후보
 
-- PreEq는 후보분포가 조건에 의해 어떻게 manifest 되는지 설명한다.
-- Born rule 전체를 자동으로 증명하지는 않는다.
-- \(\mu_0(i)=|c_i|^2\)를 왜 써야 하는지는 별도 bridge다.
+**[정의]** 유한차원 Hilbert space \(\mathcal H\), orthonormal basis
+\(\{|i\rangle\}_{i=1}^n\)와 단위벡터
+\[
+|\psi\rangle=\sum_{i=1}^nc_i|i\rangle,
+\qquad
+\sum_i|c_i|^2=1
+\]
+를 고정한다. Outcome label space는 \(A=\{1,\dots,n\}\)다.
 
-## 1. 후보공간
-
-양자 상태가
-
-$$
-|\psi\rangle=\sum_i c_i|i\rangle
-$$
-
-라 하자. 측정 후보공간은
-
-$$
-A=\{i\}
-$$
-
-이다.
-
-Born prior를 받아오면
-
-$$
+**[공리: 확률 모형]** 초기 prior를
+\[
 \mu_0(i)=|c_i|^2
-$$
+\]
+로 택한다. 또는
+[06a_Born_prior_유도.md](06a_Born_prior_유도.md)의 강한
+refinement axioms를 모두 채택하면 이 식은 그 axioms의 조건부 정리가
+된다. 어느 경우에도 실제 장치가 그 refinement를 구현한다는 결론은
+따로 필요하다.
 
-이다.
+## 2. 조건부 Gibbs 재가중
 
-이 단계는 현재 `Bridge`다.
-
-## 2. 측정 조건 에너지
-
-측정 장치와의 상호작용은 후보 \(i\)마다 조건 에너지를 만든다.
-
-$$
-E_{\mathrm{meas}}:A\to\mathbb R_{\ge0}
-$$
-
-PreEq 재가중은
-
-$$
+**[공리: 모델 선택]** 무차원 cost
+\[
+\mathcal I_{\rm meas}:A\to\mathbb R
+\]
+와 무차원 \(\beta>0\)를 택하고
+\[
 \mu_\beta(i)
 =
-\frac{e^{-\beta E_{\mathrm{meas}}(i)}|c_i|^2}
-{\sum_j e^{-\beta E_{\mathrm{meas}}(j)}|c_j|^2}
-$$
+\frac{e^{-\beta\mathcal I_{\rm meas}(i)}|c_i|^2}
+{\sum_j e^{-\beta\mathcal I_{\rm meas}(j)}|c_j|^2}
+\]
+로 정의한다. 물리적 에너지 \(E_i\)를 쓸 때에는
+\(\mathcal I_{\rm meas}=E_i/E_*\) 또는 열적 모형의
+\(E_i/(k_BT)\)처럼 무차원화한다.
 
-이다.
+**[정리]** Support 안의 최소집합
+\[
+A_*=
+\operatorname*{argmin}_{i:|c_i|^2>0}
+\mathcal I_{\rm meas}(i)
+\]
+에 대해
+\[
+\mu_\beta(A\setminus A_*)\to0
+\qquad(\beta\to\infty).
+\]
+유일 최소자 \(k\)가 있으면 \(\mu_\beta\to\delta_k\)다.
 
-## 3. Manifest
+**증명.** \(S=\{i:|c_i|^2>0\}\)라 하자.
+\(S\setminus A_*=\varnothing\)이면 자명하다. 그렇지 않으면 유한집합에서
+최소자 밖에는 양의 energy gap
+\[
+\Delta=
+\min_{i\in S\setminus A_*}
+\bigl(\mathcal I_{\rm meas}(i)-\min_S\mathcal I_{\rm meas}\bigr)>0
+\]
+\(A\setminus S\)의 질량은 항상 0이고, 분자·분모의 유한합을 비교하면
+나머지 바깥 질량은
+\(Ce^{-\beta\Delta}\) 이하이다. \(\square\)
 
-최소 에너지 후보 집합
+이 정리는 이미 주어진 prior의 zero-temperature selection이다. 반복
+실험의 single-shot Born sampling이나 물리적 collapse를 유도하지 않는다.
 
-$$
-A_*=\operatorname*{argmin}_{i:|c_i|^2>0}E_{\mathrm{meas}}(i)
-$$
+## 3. 표준 instrument 기준선
 
-으로 \(\mu_\beta\)가 집중한다.
-
-유일 최소 후보 \(k\)가 있으면
-
-$$
-\mu_\beta\to\delta_k
-$$
-
-이다.
-
-해석:
-
-$$
-|\psi\rangle
-\quad\leadsto\quad
-k
-$$
-
-는 외부에서 갑자기 생기는 collapse가 아니라, 후보분포가 측정 조건 에너지 아래에서 manifest 되는 과정으로 읽을 수 있다.
-
-## 4. Born rule과의 정확한 관계
-
-중요한 점은 다음이다.
-
-PreEq가 직접 주는 것은
-
-$$
-\mu_0 \mapsto \mu_\beta \mapsto \mu_\infty
-$$
-
-이다.
-
-Born rule은
-
-$$
-\mu_0(i)=|c_i|^2
-$$
-
-를 말한다.
-
-따라서 Born rule 전체를 증명하려면 다음 중 하나가 필요하다.
-
-1. Hilbert space norm에서 확률측도 \(\mu_0\)가 유일하게 \(|c_i|^2\)임을 보이는 정리
-2. Gleason류 정리와 PreEq prior의 연결
-3. CE 경로적분의 위상/간섭 구조에서 \(|c_i|^2\)가 prior로 내려오는 유도
-
-현재 이 셋은 이 폴더에서 증명하지 않는다.
-
-### 4.1 표준 측정 기준선과 CE가 추가해야 할 것
-
-표준 finite-dimensional 측정 instrument는 Kraus operator \(M_k\)로
-
-$$
-p(k)
+**[정의]** 유한 outcome quantum instrument는 completely positive
+maps \(\{\mathcal J_k\}\)의 족이며
+\(\sum_k\mathcal J_k\)가 trace preserving이다. Kraus 표현에서는
+\[
+\mathcal J_k(\rho)
 =
-\operatorname{Tr}\!\left(M_k\rho M_k^\dagger\right),
+\sum_\alpha M_{k\alpha}\rho M_{k\alpha}^\dagger,
 \qquad
-\rho_k
+\sum_{k,\alpha}M_{k\alpha}^\dagger M_{k\alpha}=I.
+\]
+Outcome probability와 조건부 상태는
+\[
+p(k)=\operatorname{Tr}\mathcal J_k(\rho),
+\qquad
+\rho_k=\frac{\mathcal J_k(\rho)}{p(k)}
+\quad(p(k)>0)
+\]
+다.
+
+이 구조는 선형성, complete positivity, normalization과 상태 update를
+한꺼번에 고정한다. Gibbs formula \(\mu_\beta\)는 classical probability
+재가중만 정의하므로, 그 자체로 quantum instrument가 아니다.
+
+## 4. Branch-dependent reweighting의 경계
+
+**[정의]** 무차원 \(\varphi_k\)에 대해
+\[
+\widetilde p_k
 =
-\frac{M_k\rho M_k^\dagger}{p(k)},
-$$
+\frac{p(k)e^{-\varphi_k}}
+{\sum_jp(j)e^{-\varphi_j}}
+\]
+는 분모가 양수일 때 well-defined probability vector다.
 
-$$
-\sum_k M_k^\dagger M_k=I
-$$
+**[산출]** 모든 \(\varphi_k\)가 같으면
+\(\widetilde p_k=p(k)\)다. 서로 다르면 일반적으로 Born probability와
+다르다.
 
-를 만족한다. 현재 `reality_stone.clarus.quantum`에는 일반 Hermitian
-Hamiltonian 진화, density matrix, Born sampling, GKSL/Lindblad 기준선이
-구현되어 있다. 이는 CE 증거가 아니라 CE 측정 bridge가 반드시 회복해야 할
-baseline이다.
+상태 \(\rho\)에 의존하는 normalization을 사후 적용한 map은 일반적으로
+선형 CPTP channel이 아니다. 이를 물리 측정으로 쓰려면
 
-이번 감사에서는 독립 스칼라장 분기 \(\phi\ne R\)만 채택했다. 최소 action
-후보는
+1. \(\varphi_k\)를 장치 action에서 계산하고,
+2. 해당 확률과 상태 update를 만드는 CP instrument를 구성하며,
+3. 비선택 map의 trace preservation과 spacelike no-signalling을
+   확인해야 한다.
 
-$$
+국소 비선택 channel의 spacelike marginal 정리는
+[../참조/이론물리_보존_원장.md](../참조/이론물리_보존_원장.md) 5절에
+있다.
+
+## 5. 장 후보와 Hessian readout
+
+**[공리: EFT 후보]** 독립 scalar field를 택한다면 예를 들어
+\[
 S_\phi
 =
 \int d^4x\sqrt{-g}
 \left[
--\frac12(\nabla\phi)^2
+-\frac12\nabla_\mu\phi\nabla^\mu\phi
 -\frac12m_\phi^2\phi^2
 -\frac12\xi R\phi^2
 -V_{\rm int}(\phi)
 \right]
-$$
+\]
+같은 action을 출발점으로 둘 수 있다. 부호, boundary term, state와
+renormalization을 함께 지정해야 한다.
 
-이다. 반면 Hessian/Jacobi의 scalar 투영
-
-$$
+한편 Jacobi/Hessian의 scalar projection
+\[
 \Phi_{\rm eff}[\gamma,\eta]
 =
 \frac{\langle\eta,\mathcal J_\gamma\eta\rangle}
 {\langle\eta,\eta\rangle}
-$$
+\]
+은 probe \(\eta\ne0\)를 고정한 readout이다. 독립장 \(\phi\),
+\(\Phi_{\rm eff}\), 곡률 \(R\)은 서로 다른 대상이다. 이들을 동일시하려면
+별도의 **[공리: 물리 사상]**이 필요하다.
 
-은 별도 readout이다. `jacobi_rayleigh_scalar`는 이 투영의 유한차원 형식
-게이트를 구현하지만 \(\Phi_{\rm eff}=\phi\)라는 mapping은 만들지 않는다.
-`ScalarFieldMassGap`도 \(E=\hbar\omega=hf\)의 단위 변환일 뿐
-\(m_\phi=29.64757\,{\rm MeV}\)의 측정 또는 유도가 아니다.
+## 6. 측정 조건 자체가 후보인 모형
 
-분지 억압 후보를 확률로 쓰면 정규화된 식은
-
-$$
-\widetilde p_k
+**[정의]** 유한한 장치 후보집합 \(K\)와 outcome 집합 \(A\)에 대해
+joint prior \(\rho_0\in\mathcal P(K\times A)\), 무차원 cost
+\[
+\mathcal I(M,i)
 =
-\frac{
-p(k)e^{-\Phi_k/\Lambda_\Phi}
-}{
-\sum_jp(j)e^{-\Phi_j/\Lambda_\Phi}
-}
-$$
+\mathcal I_{\rm outcome}(M,i)
++\lambda\mathcal I_{\rm apparatus}(M)
+\]
+를 정의할 수 있다. \(\lambda\)도 무차원이다.
 
-다. \(\Phi_k\)가 모든 분지에서 같으면 표준 \(p(k)\)를 그대로 보존한다. 이
-경우 CE 고유 예측은 없다. \(\Phi_k\)가 다르면 Born 확률에서 벗어나므로,
-\(\Phi_k\)를 apparatus/action에서 계산하고 수정된 map이 CPTP와 no-signalling을
-만족함을 보여야 한다.
+이 유한 모형에는 03장의 joint Gibbs 농축 정리를 적용할 수 있다.
+그러나 \(M\)을 실제 apparatus intervention으로 읽는 것은
+**[공리: 물리 사상]**이다.
 
-PreEq의
+## 7. 남은 물리 문제
 
-$$
-\mu_\beta(i)
-\propto
-e^{-\beta E_{\rm meas}(i)}\mu_0(i)
-$$
+- 06a refinement isometry와 실제 ancilla·장치의 대응
+- CE path amplitude에서 Hilbert probability assignment로 가는 사상
+- \(\mathcal I_{\rm meas}\)의 공변 장치 action
+- Gibbs 재가중을 실현하는 CPTP instrument
+- 독립 preparation을 반복했을 때의 outcome frequency theorem
+- 환경 spectral density와 Lindblad/GKSL 유효범위
 
-는 \(\mu_0\)를 조건부로 농축한다. 유일 최소 에너지가 있으면
-\(\beta\to\infty\)에서 그 최소점을 결정론적으로 고르므로, 반복 실험에서 Born
-빈도로 single-shot outcome을 생성하는 stochastic instrument는 별도 과제다.
-
-## 5. 측정 조건도 후보가 된다
-
-03장의 조건공간을 쓰면 measurement operator도 후보다.
-
-조건공간:
-
-$$
-K=\{M_1,M_2,\dots\}
-$$
-
-값공간:
-
-$$
-A=\{i\}
-$$
-
-joint 상태:
-
-$$
-\rho(M,i)
-$$
-
-joint energy:
-
-$$
-E(M,i)
-=
-E_{\mathrm{outcome}}(M,i)+\lambda E_{\mathrm{apparatus}}(M)
-$$
-
-이다.
-
-그러면 측정은 단순히 값 \(i\)만 고르는 일이 아니라, 측정 조건 \(M\)과 결과 \(i\)의 쌍이 manifest 되는 일이다.
-
-이것이 TEMP의 "measurement도 모호함의 한 결"이라는 말을 수학적으로 읽는 방식이다.
-
-## 6. CE 측정 문서와의 연결
-
-`docs/4_공학적_활용/02_양자오류보정.md`는 측정 문제를 CE 접힘으로 읽는다.
-
-이 장의 위치:
-
-| CE 측정 문서 | 이 장 |
-|---|---|
-| 분지별 경로 가중치 \(W_k\) | 후보 prior와 조건 재가중 |
-| 접힘은 붕괴가 아님 | manifest는 농축 극한 |
-| 비고전 경로는 소멸하지 않음 | 비선택 잔류 \(\mu_{\mathrm{ns}}\) |
-| Born rule은 접힘 역학 결과라는 과거 주장 | 현재는 finite branch prior 보존 후보로 강등, CE 경로적분 유도는 `Open` |
-
-## 7. 다음 작업
-
-Born prior의 finite branch 유도 조건은 [06a_Born_prior_유도.md](06a_Born_prior_유도.md)로 분리했다.
-
-남은 작업:
-
-1. 06a의 branch refinement 공리를 실제 측정장치 모델과 연결
-2. CE 경로적분의 분지 가중치 \(W_k\)에서 \(|c_k|^2\)가 내려오는 조건 정리
-3. \(E_{\mathrm{meas}}\)와 장치 상호작용/접힘 에너지의 대응 검토
-4. \(M_k\), CPTP, no-signalling을 회복하는 장치 map 구현
-5. 표준 Born sampling과 CE 수정안의 동일-seed preregistered ablation
-6. 독립장 결합 \(H_{\rm int}=gA\otimes\mathcal O_\phi\), bath state와
-   \(J_\phi(\omega,T)\)를 고정한 뒤
-   \(\gamma_\phi(\omega)=g^2J_\phi(\omega)\ge0\)의 유효 범위를 검증
+이 항목은 **[미완성]**이다. 최소자 농축과 Born sampling은 서로 대체하지
+않는다.

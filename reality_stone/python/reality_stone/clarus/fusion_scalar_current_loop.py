@@ -17,7 +17,6 @@ leaves the report fail closed.
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
-from functools import lru_cache
 import math
 from numbers import Integral, Real
 from typing import Any
@@ -72,8 +71,44 @@ class SourceProvenance:
     pinned_version: str
     url: str
     role: str
+    source_domain: str
     primary_source: bool
     machine_readable_covariance_supplied: bool
+    doi: str = ""
+
+
+@dataclass(frozen=True)
+class ScalarPrimaryEvidenceAudit:
+    source_keys: tuple[str, ...]
+    registered_mediator_momentum_mev: float
+    required_barrier_radius_min_fm: float
+    required_barrier_radius_max_fm: float
+    physical_triton_partial_q0_two_pion_matrix_element_published: bool
+    physical_triton_full_q0_scalar_response_public: bool
+    physical_triton_finite_q_curve_figure_only: bool
+    machine_readable_dt_response_arrays_public: bool
+    joint_dt_momentum_covariance_public: bool
+    physical_point_short_range_contact_fitted: bool
+    registered_mass_current_and_potential_share_regulator: bool
+    full_form_factor_likelihood_supplied: bool
+    full_real_space_scalar_current_likelihood_supplied: bool
+    heavy_pion_triton_mirror_q0_benchmark_available: bool
+    heavy_pion_mirror_accepted_as_physical_triton: bool
+    helium3_accepted_as_triton_proxy: bool
+    graph_digitization_accepted_for_certification: bool
+    low_q_extrapolation_accepted_for_full_response: bool
+    dt_reaction_rmatrix_method_public: bool
+    dt_reaction_input_and_posterior_public: bool
+    reaction_likelihood_is_scalar_current_likelihood: bool
+    primary_evidence_gate_pass: bool
+    status: str
+
+
+@dataclass(frozen=True)
+class ScalarReportGateResults:
+    canonical_primary_evidence_gate_pass: bool
+    scalar_current_loop_closed: bool
+    physical_ce_fusion_branch_accepted: bool
 
 
 @dataclass(frozen=True)
@@ -197,7 +232,7 @@ class IntrinsicScalarRadiusAudit:
     imaginary_exact_coupling_correction_at_radius_max: float
     q40_coupling_correction_exceeds_comparison_band: bool
     scalar_radius_covariance_supplied: bool
-    low_q_expansion_promoted_to_full_form_factor: bool
+    full_form_factor_likelihood_supplied: bool
     scalar_radius_certification_pass: bool
     status: str
 
@@ -299,7 +334,7 @@ class ScalarCurrentCertificationAudit:
     scalar_current_certification_pass: bool
     upstream_uv_action_gate_pass: bool
     upstream_existing_constraints_gate_pass: bool
-    physical_ce_fusion_branch_accepted: bool
+    component_and_upstream_gate_pass: bool
     status: str
 
 
@@ -307,6 +342,7 @@ class ScalarCurrentCertificationAudit:
 class FusionScalarCurrentReport:
     schema_version: str
     sources: tuple[SourceProvenance, ...]
+    primary_evidence: ScalarPrimaryEvidenceAudit
     nucleon_scalar_charge: NucleonScalarChargeAudit
     one_body_nuclear_shape: OneBodyNuclearShapeAudit
     barrier_window: BarrierWindowAudit
@@ -444,8 +480,10 @@ def _source_provenance() -> tuple[SourceProvenance, ...]:
             pinned_version="v2",
             url="https://arxiv.org/abs/2509.03486v2",
             role="flavor alignment and proton/neutron u,d,s scalar fractions",
+            source_domain="scalar-phenomenology",
             primary_source=True,
             machine_readable_covariance_supplied=False,
+            doi="https://doi.org/10.1103/ms4p-zymy",
         ),
         SourceProvenance(
             key="korber_2017_v1",
@@ -454,8 +492,10 @@ def _source_provenance() -> tuple[SourceProvenance, ...]:
             pinned_version="v1",
             url="https://arxiv.org/abs/1704.01150v1",
             role="D/T/He3 Helm fits and chiral one- and two-body scalar responses",
+            source_domain="nuclear-scalar-response",
             primary_source=True,
             machine_readable_covariance_supplied=False,
+            doi="https://doi.org/10.1103/PhysRevC.96.035805",
         ),
         SourceProvenance(
             key="andreoli_2019_v2",
@@ -464,8 +504,10 @@ def _source_provenance() -> tuple[SourceProvenance, ...]:
             pinned_version="v2",
             url="https://arxiv.org/abs/1811.01843v2",
             role="cutoff dependence of scalar two-body currents in light nuclei",
+            source_domain="nuclear-scalar-response",
             primary_source=True,
             machine_readable_covariance_supplied=False,
+            doi="https://doi.org/10.1103/PhysRevC.99.025501",
         ),
         SourceProvenance(
             key="devries_2024_v2",
@@ -474,8 +516,10 @@ def _source_provenance() -> tuple[SourceProvenance, ...]:
             pinned_version="v2",
             url="https://arxiv.org/abs/2310.11343v2",
             role="higher-order regulator dependence and missing short-range contact",
+            source_domain="nuclear-scalar-response",
             primary_source=True,
             machine_readable_covariance_supplied=False,
+            doi="https://doi.org/10.1140/epjc/s10052-024-13477-z",
         ),
         SourceProvenance(
             key="filandri_2024_v2",
@@ -484,8 +528,10 @@ def _source_provenance() -> tuple[SourceProvenance, ...]:
             pinned_version="v2",
             url="https://arxiv.org/abs/2403.06599v2",
             role="low-q deuteron scalar reduced-matrix-element order diagnostics",
+            source_domain="nuclear-scalar-response",
             primary_source=True,
             machine_readable_covariance_supplied=False,
+            doi="https://doi.org/10.1103/PhysRevC.110.034002",
         ),
         SourceProvenance(
             key="chakraborty_2026_v1",
@@ -497,8 +543,10 @@ def _source_provenance() -> tuple[SourceProvenance, ...]:
             pinned_version="v1",
             url="https://arxiv.org/abs/2603.28872v1",
             role="zero-momentum deuteron and helium-3 light-quark sigma-term ratios",
+            source_domain="nuclear-scalar-response",
             primary_source=True,
             machine_readable_covariance_supplied=False,
+            doi="https://doi.org/10.48550/arXiv.2603.28872",
         ),
         SourceProvenance(
             key="agadjanov_2024_v2",
@@ -507,8 +555,10 @@ def _source_provenance() -> tuple[SourceProvenance, ...]:
             pinned_version="v2",
             url="https://arxiv.org/abs/2303.08741v2",
             role="modern pion-nucleon and strange sigma-term normalization",
+            source_domain="nucleon-scalar-input",
             primary_source=True,
             machine_readable_covariance_supplied=False,
+            doi="https://doi.org/10.1103/PhysRevLett.131.261902",
         ),
         SourceProvenance(
             key="alarcon_weiss_2017_v1",
@@ -520,8 +570,197 @@ def _source_provenance() -> tuple[SourceProvenance, ...]:
             pinned_version="v1",
             url="https://arxiv.org/abs/1707.07682v1",
             role="dispersive light-quark nucleon scalar-radius interval",
+            source_domain="nucleon-scalar-input",
             primary_source=True,
             machine_readable_covariance_supplied=False,
+            doi="https://doi.org/10.1103/PhysRevC.96.055206",
+        ),
+        SourceProvenance(
+            key="krebs_2020_published",
+            title="Subleading contributions to the nuclear scalar isoscalar currents",
+            arxiv_identifier="2005.07433",
+            pinned_version="published",
+            url="https://doi.org/10.1140/epja/s10050-020-00249-y",
+            role="proof that physical NN scattering does not separately fix the scalar short-range contacts",
+            source_domain="nuclear-scalar-response",
+            primary_source=True,
+            machine_readable_covariance_supplied=False,
+            doi="https://doi.org/10.1140/epja/s10050-020-00249-y",
+        ),
+        SourceProvenance(
+            key="chang_nplqcd_2018_v2",
+            title="Scalar, Axial, and Tensor Interactions of Light Nuclei from Lattice QCD",
+            arxiv_identifier="1712.03221",
+            pinned_version="v2",
+            url="https://arxiv.org/abs/1712.03221v2",
+            role="q=0 heavy-pion D/He3 benchmark, not a physical-point triton response",
+            source_domain="nuclear-scalar-response",
+            primary_source=True,
+            machine_readable_covariance_supplied=False,
+            doi="https://doi.org/10.1103/PhysRevLett.120.152002",
+        ),
+        SourceProvenance(
+            key="detmold_shanahan_2021_published",
+            title="Few-nucleon matrix elements in pionless effective field theory in a finite volume",
+            arxiv_identifier="2102.04329",
+            pinned_version="published",
+            url="https://doi.org/10.1103/PhysRevD.103.074503",
+            role="heavy-pion q=0 mirror-model benchmark, not physical tritium evidence",
+            source_domain="nuclear-scalar-response",
+            primary_source=True,
+            machine_readable_covariance_supplied=False,
+            doi="https://doi.org/10.1103/PhysRevD.103.074503",
+        ),
+        SourceProvenance(
+            key="richardson_2022_v2",
+            title=(
+                "Large-Nc constraints for elastic dark-matter-light-nucleus scattering "
+                "in pionless effective field theory"
+            ),
+            arxiv_identifier="2110.15959",
+            pinned_version="v2",
+            url="https://arxiv.org/abs/2110.15959v2",
+            role="D/T finite-q curves with matched D contact and assumed triton coupling ratio",
+            source_domain="nuclear-scalar-response",
+            primary_source=True,
+            machine_readable_covariance_supplied=False,
+            doi="https://doi.org/10.1103/PhysRevC.106.044003",
+        ),
+        SourceProvenance(
+            key="hupin_dt_2019_v3",
+            title="Ab initio predictions for polarized deuterium-tritium thermonuclear fusion",
+            arxiv_identifier="1803.11378",
+            pinned_version="v3",
+            url="https://arxiv.org/abs/1803.11378v3",
+            role="deterministic NCSMC D-T reaction prediction, not a scalar-current likelihood",
+            source_domain="dt-reaction",
+            primary_source=True,
+            machine_readable_covariance_supplied=False,
+            doi="https://doi.org/10.1038/s41467-018-08052-6",
+        ),
+        SourceProvenance(
+            key="desouza_dt_2019_published",
+            title="Thermonuclear fusion rates for tritium + deuterium using Bayesian methods",
+            arxiv_identifier="1901.04857",
+            pinned_version="published",
+            url="https://doi.org/10.1103/PhysRevC.99.014619",
+            role="D-T reaction R-matrix likelihood, distinct from a scalar-current likelihood",
+            source_domain="dt-reaction",
+            primary_source=True,
+            machine_readable_covariance_supplied=False,
+            doi="https://doi.org/10.1103/PhysRevC.99.014619",
+        ),
+        SourceProvenance(
+            key="odell_dt_2022_v2",
+            title="How Bayesian methods can improve R-matrix analyses of data: the example of the D-T reaction",
+            arxiv_identifier="2105.06541",
+            pinned_version="v2",
+            url="https://arxiv.org/abs/2105.06541v2",
+            role="public reaction R-matrix method; scalar-current real-space likelihood is a different object",
+            source_domain="dt-reaction",
+            primary_source=True,
+            machine_readable_covariance_supplied=False,
+            doi="https://doi.org/10.1103/PhysRevC.105.014625",
+        ),
+    )
+
+
+def audit_scalar_primary_evidence() -> ScalarPrimaryEvidenceAudit:
+    """Classify public scalar-current inputs without promoting proxies or plots."""
+
+    return ScalarPrimaryEvidenceAudit(
+        source_keys=(
+            "korber_2017_v1",
+            "andreoli_2019_v2",
+            "krebs_2020_published",
+            "chang_nplqcd_2018_v2",
+            "detmold_shanahan_2021_published",
+            "richardson_2022_v2",
+            "chakraborty_2026_v1",
+            "hupin_dt_2019_v3",
+            "desouza_dt_2019_published",
+            "odell_dt_2022_v2",
+        ),
+        registered_mediator_momentum_mev=REGISTERED_SCALAR_MASS_MEV,
+        required_barrier_radius_min_fm=3.24,
+        required_barrier_radius_max_fm=50.0,
+        physical_triton_partial_q0_two_pion_matrix_element_published=True,
+        physical_triton_full_q0_scalar_response_public=False,
+        physical_triton_finite_q_curve_figure_only=True,
+        machine_readable_dt_response_arrays_public=False,
+        joint_dt_momentum_covariance_public=False,
+        physical_point_short_range_contact_fitted=False,
+        registered_mass_current_and_potential_share_regulator=False,
+        full_form_factor_likelihood_supplied=False,
+        full_real_space_scalar_current_likelihood_supplied=False,
+        heavy_pion_triton_mirror_q0_benchmark_available=True,
+        heavy_pion_mirror_accepted_as_physical_triton=False,
+        helium3_accepted_as_triton_proxy=False,
+        graph_digitization_accepted_for_certification=False,
+        low_q_extrapolation_accepted_for_full_response=False,
+        dt_reaction_rmatrix_method_public=True,
+        dt_reaction_input_and_posterior_public=False,
+        reaction_likelihood_is_scalar_current_likelihood=False,
+        primary_evidence_gate_pass=False,
+        status=(
+            "FAIL_CLOSED_NO_PHYSICAL_TRITON_FULL_RESPONSE_DT_COVARIANCE_"
+            "FITTED_CONTACT_OR_REAL_SPACE_LIKELIHOOD"
+        ),
+    )
+
+
+def physical_scalar_primary_evidence_gate_pass(
+    audit: ScalarPrimaryEvidenceAudit,
+) -> bool:
+    """Require the canonical public-evidence record and every physical data leaf."""
+
+    if type(audit) is not ScalarPrimaryEvidenceAudit:
+        return False
+    try:
+        if audit != audit_scalar_primary_evidence():
+            return False
+        required_positive_leaves = all(
+            flag is True
+            for flag in (
+                audit.physical_triton_full_q0_scalar_response_public,
+                audit.machine_readable_dt_response_arrays_public,
+                audit.joint_dt_momentum_covariance_public,
+                audit.physical_point_short_range_contact_fitted,
+                audit.registered_mass_current_and_potential_share_regulator,
+                audit.full_form_factor_likelihood_supplied,
+                audit.full_real_space_scalar_current_likelihood_supplied,
+                audit.primary_evidence_gate_pass,
+            )
+        )
+        required_negative_leaves = all(
+            flag is False
+            for flag in (
+                audit.heavy_pion_mirror_accepted_as_physical_triton,
+                audit.helium3_accepted_as_triton_proxy,
+                audit.graph_digitization_accepted_for_certification,
+                audit.low_q_extrapolation_accepted_for_full_response,
+                audit.reaction_likelihood_is_scalar_current_likelihood,
+            )
+        )
+        return required_positive_leaves and required_negative_leaves
+    except Exception:
+        return False
+
+
+def scalar_report_gate_results(
+    certification: ScalarCurrentCertificationAudit,
+) -> ScalarReportGateResults:
+    """Combine component gates with a newly constructed canonical evidence record."""
+
+    canonical_evidence = audit_scalar_primary_evidence()
+    evidence_pass = physical_scalar_primary_evidence_gate_pass(canonical_evidence)
+    return ScalarReportGateResults(
+        canonical_primary_evidence_gate_pass=evidence_pass,
+        scalar_current_loop_closed=(
+            certification.scalar_current_certification_pass and evidence_pass
+        ),
+        physical_ce_fusion_branch_accepted=(
+            certification.component_and_upstream_gate_pass and evidence_pass
         ),
     )
 
@@ -777,7 +1016,7 @@ def audit_intrinsic_scalar_radius() -> IntrinsicScalarRadiusAudit:
             > COUPLING_CORRECTION_COMPARISON_BAND
         ),
         scalar_radius_covariance_supplied=False,
-        low_q_expansion_promoted_to_full_form_factor=False,
+        full_form_factor_likelihood_supplied=False,
         scalar_radius_certification_pass=False,
         status="Q40_LOW_Q_RADIUS_DIAGNOSTIC_CROSSES_BAND_BUT_NO_JOINT_FORM_FACTOR_LIKELIHOOD",
     )
@@ -933,7 +1172,7 @@ def _certification(
     radius_leaf_pass = all(
         (
             radius.scalar_radius_covariance_supplied,
-            radius.low_q_expansion_promoted_to_full_form_factor,
+            radius.full_form_factor_likelihood_supplied,
             radius.scalar_radius_certification_pass,
         )
     )
@@ -978,15 +1217,15 @@ def _certification(
             two_body_leaf_pass,
         )
     )
-    physical_branch_pass = all(
+    component_and_upstream_pass = all(
         (
             certification_pass,
             upstream_uv_action_gate_pass,
             upstream_existing_constraints_gate_pass,
         )
     )
-    if physical_branch_pass:
-        status = "PHYSICAL_SCALAR_CURRENT_AND_UPSTREAM_GATES_PASS"
+    if component_and_upstream_pass:
+        status = "SCALAR_COMPONENT_AND_UPSTREAM_GATES_PASS"
     elif certification_pass:
         status = "SCALAR_CURRENT_CERTIFIED_BUT_UPSTREAM_UV_OR_CONSTRAINT_GATE_OPEN"
     else:
@@ -1024,16 +1263,16 @@ def _certification(
         scalar_current_certification_pass=certification_pass,
         upstream_uv_action_gate_pass=upstream_uv_action_gate_pass,
         upstream_existing_constraints_gate_pass=upstream_existing_constraints_gate_pass,
-        physical_ce_fusion_branch_accepted=physical_branch_pass,
+        component_and_upstream_gate_pass=component_and_upstream_pass,
         status=status,
     )
 
 
-@lru_cache(maxsize=1)
 def current_fusion_scalar_current_report() -> FusionScalarCurrentReport:
     """Build the complete scalar-current ledger and retain fail-closed status."""
 
     upstream = current_fusion_flavor_aligned_report()
+    primary_evidence = audit_scalar_primary_evidence()
     nucleon = audit_nucleon_scalar_charge()
     shape = audit_one_body_nuclear_shape()
     barrier = audit_barrier_window()
@@ -1050,9 +1289,11 @@ def current_fusion_scalar_current_report() -> FusionScalarCurrentReport:
         upstream_uv_action_gate_pass=upstream.operator.uv_action_gate_pass,
         upstream_existing_constraints_gate_pass=upstream.all_existing_constraint_gates_pass,
     )
+    report_gates = scalar_report_gate_results(certification)
     return FusionScalarCurrentReport(
-        schema_version="fusion-scalar-current-v2",
+        schema_version="fusion-scalar-current-v4",
         sources=_source_provenance(),
+        primary_evidence=primary_evidence,
         nucleon_scalar_charge=nucleon,
         one_body_nuclear_shape=shape,
         barrier_window=barrier,
@@ -1060,8 +1301,8 @@ def current_fusion_scalar_current_report() -> FusionScalarCurrentReport:
         sigma_term_proxy=proxy,
         two_body_scalar_current=two_body,
         certification=certification,
-        scalar_current_loop_closed=certification.scalar_current_certification_pass,
-        physical_ce_fusion_branch_accepted=(certification.physical_ce_fusion_branch_accepted),
+        scalar_current_loop_closed=report_gates.scalar_current_loop_closed,
+        physical_ce_fusion_branch_accepted=report_gates.physical_ce_fusion_branch_accepted,
         next_required_input=(
             "provide a registered-mass, q=0--40 MeV ab-initio D and T one-plus-two-body "
             "scalar response with shared regulator, fitted short-range contact, full D/T "

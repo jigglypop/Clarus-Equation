@@ -1,39 +1,43 @@
 # 05o. CE Residual Cosmology Forward Model
 
-## 0. 목표
+## 0. 범위와 출처
 
-[05n_CE_cosmology_modern_audit.md](05n_CE_cosmology_modern_audit.md)는 CE 성분비가 최신 CMB 계열 \(\Omega\) 값과 가깝지만, 현대 우주론과 맞붙으려면 \(H(z)\), distance, growth observable로 내려가야 한다고 결론냈다. 이 문서는 그 첫 번째 실행 가능한 forward model을 고정한다.
+이 문서는 CE 성분비를 현재 우주의 경계조건으로 놓았을 때, 평탄 FLRW
+배경과 선형 성장 관측량을 계산하는 조건부 forward model을 정리한다.
 
-핵심 결론:
+- `[공리: 물리 사상]` CE의 $q_{\rm ext}$와 성분 분해 경험식을 오늘의
+  $(\Omega_b,\Omega_{\rm DM},\Omega_\Lambda)$ 경계조건으로 읽는다.
+- `[공리: 모델 선택]` 평탄 FLRW, CPL 암흑에너지, GR 성장 한계를 채택한다.
+- `[공리: 외부 입력]` $H_0$, $r_d$, $\sigma_{8,0}$는 독립 자료에서
+  공급한다.
+- `[정의]` 거리, BAO 압축량과 공분산 통계량의 계산 규약을 고정한다.
+- `[산출]` 위 전제와 정의를 대입하면 $H(z)$, 거리와 선형 성장
+  관측량이 결정된다.
+- `[경험식]` 수정중력 결합과 같은 자료 기반 scale 최적화는 정리나
+  사전 예측으로 사용하지 않는다.
+- `[미완성]` CE 내부의 재결합·sound-horizon 유도, 완전한 CMB/SN/BAO
+  likelihood, 입자 암흑물질과 검출기 응답은 이 문서에서 닫히지 않는다.
 
-> CE 성분비를 현재 우주의 boundary condition으로 쓰면, 보수적인 \(\Lambda\)CDM 한계에서 \(H(z)\), luminosity distance, linear growth, \(S_8\), \(f\sigma_8\)를 계산할 수 있다. 이 단계는 background/growth 검산까지 닫지만, particle dark matter와 detector likelihood는 여전히 `Open`이다.
+이 구분에서 실행 코드와 수치 회귀는 수식 구현을 검사할 뿐, 물리 사상을
+증명하지 않는다.
 
-현재 판정:
+## 1. 경계조건과 외부 입력
 
-| 항목 | 판정 | 코드 |
-|---|---|---|
-| CE 성분비 \(\to H(z)\) | `Tooling/Exact` | `examples/physics/ce_residual_forward_model.py` |
-| BAO 압축 관측량 \(D_M/r_d,D_H/r_d,D_V/r_d\) | `Tooling/Exact` | `bao_observable` |
-| diagonal/full BAO \(\chi^2\) | `Tooling/Exact`, DESI DR2 compressed mean/cov embedded | `bao_chi2`, `bao_chi2_with_covariance`, `named_bao_dataset` |
-| BAO p-value·판정·잔차 기여도 | `Tooling/Exact` | `assess_bao_fit` |
-| \(H_0r_d\) scale ablation | `Diagnostic fit`, CE 예측 아님 | `BAOScaleFitDiagnostic` |
-| 외부/초기우주 근사 \(r_d\) 선택 | `External input` / `Selection/Approximation` | `sound_horizon_selection`, `early_universe_sound_horizon` |
-| CPL \(w_0w_a\) 확장 | `Tooling/Exact` | `dark_energy_scale` |
-| linear growth \(D(a)\), \(f\sigma_8\) | `Tooling/Exact under model` | `solve_growth` |
-| \(S_8\) 현재값 검산 | `Tooling/Exact` | `s8_today` |
-| WIMP/axion/FDM detector physics | `Not implemented` | coverage flag |
+### 1.1 CE 성분비의 사용
 
-## 1. 현재 경계조건
-
-코드는 CE 상수 파일에서 다음 값을 읽는다.
+`[공리: 물리 사상]` 현재 코드가 읽는 성분비는
 
 $$
 \Omega_b=0.0487,\qquad
 \Omega_{\mathrm{DM}}=0.2623,\qquad
-\Omega_\Lambda=0.6891.
+\Omega_\Lambda=0.6891
 $$
 
-반올림으로 합이 \(1.0001\)이므로 background 계산에는 내부 정규화 값을 쓴다.
+이다. $\Omega_b=q_{\rm ext}$의 동일시는 물리 사상이고,
+성분비 $\Omega_{\rm DM}/\Omega_\Lambda$ 분할은 경험식이다. 따라서 이 세 수는
+고정점 정리만의 무입력 산출이 아니다.
+
+반올림 오차를 배경 방정식에 넣지 않기 위해
 
 $$
 \widehat\Omega_m
@@ -44,26 +48,35 @@ $$
 \widehat\Omega_\Lambda
 =
 \frac{\Omega_\Lambda}
-{\Omega_b+\Omega_{\mathrm{DM}}+\Omega_\Lambda}.
+{\Omega_b+\Omega_{\mathrm{DM}}+\Omega_\Lambda}
 $$
 
-기본값은
+로 정규화한다.
+
+### 1.2 계산에 필요한 독립 입력
+
+`[공리: 외부 입력]`
+
+| 입력 | 역할 |
+|---|---|
+| $H_0$ | 거리 단위와 시간 척도 |
+| $r_d$ | BAO 표준자 눈금 |
+| $\sigma_{8,0}$ | 선형 성장의 현재 정규화 |
+| $T_{\rm CMB}$ | 재결합 adapter를 사용할 때의 열적 입력 |
+
+`[공리: 모델 선택]` 기본 계산은
 
 $$
-h_0=0.674,\qquad
-\sigma_{8,0}=0.811,\qquad
-w_0=-1,\qquad
-w_a=0.
+w_0=-1,\qquad w_a=0,\qquad \mu(a)=1
 $$
 
-여기서 \(\Omega_b,\Omega_{\rm DM},\Omega_\Lambda\)는 CE boundary output이고,
-\(H_0,r_d,\sigma_{8,0}\)는 외부 관측 입력이다. \(w_0,w_a,\mu(a)\)는 모형
-가정이다. 즉 첫 검산은 CE 성분비와 외부 거리·성장 calibration을 결합한 flat
-\(\Lambda\)CDM 한계다.
+인 평탄 $\Lambda$CDM/GR 한계다. 이 선택은 CE에서 유도된 값이 아니다.
 
-## 2. Background 수식
+## 2. 배경 우주론
 
-동적 dark energy 확장을 위해 CPL parameterization을 쓴다.
+### 2.1 CPL 배경
+
+`[공리: 모델 선택]` $a>0$, 무차원 $(w_0,w_a)$에 대해 CPL 식을
 
 $$
 w(a)=w_0+w_a(1-a),
@@ -74,10 +87,10 @@ F_{\mathrm{DE}}(a)
 :=
 \frac{\rho_{\mathrm{DE}}(a)}{\rho_{\mathrm{DE}}(1)}
 =
-a^{-3(1+w_0+w_a)}\exp\big(3w_a(a-1)\big).
+a^{-3(1+w_0+w_a)}\exp\!\big(3w_a(a-1)\big)
 $$
 
-따라서
+로 둔다. `[산출]` 평탄 FLRW의 보존 방정식을 적용하면
 
 $$
 E^2(a)
@@ -86,66 +99,49 @@ E^2(a)
 =
 \widehat\Omega_m a^{-3}
 +
-\widehat\Omega_\Lambda F_{\mathrm{DE}}(a).
+\widehat\Omega_\Lambda F_{\mathrm{DE}}(a)
 $$
 
-\(\Lambda\)CDM 한계 \(w_0=-1,w_a=0\)에서는
+이다. 지수의 인자는 모두 무차원이다. $(w_0=-1,w_a=0)$이면
 
 $$
 F_{\mathrm{DE}}(a)=1,
 \qquad
-E^2(a)=\widehat\Omega_m a^{-3}+\widehat\Omega_\Lambda.
+E^2(a)=\widehat\Omega_m a^{-3}+\widehat\Omega_\Lambda
 $$
 
-Luminosity distance는
+가 된다.
+
+### 2.2 거리와 BAO 압축량
+
+`[정의]` 평탄 배경에서 사용할 거리와 BAO 압축량을
 
 $$
 D_L(z)
 =
-\frac{c}{H_0}(1+z)\int_0^z\frac{dz'}{E(z')}.
+\frac{c}{H_0}(1+z)\int_0^z\frac{dz'}{E(z')},
 $$
-
-BAO 비교에는 flat geometry에서
 
 $$
 D_M(z)=\frac{D_L(z)}{1+z},
 \qquad
-D_H(z)=\frac{c}{H(z)}
+D_H(z)=\frac{c}{H(z)},
 $$
-
-를 쓰고, isotropic BAO 요약량은
 
 $$
 D_V(z)=\big[zD_M(z)^2D_H(z)\big]^{1/3}
 $$
 
-로 둔다. 기존 결과와의 호환을 위한 `--rd-mode external`의 기본 sound
-horizon scale은
+이다. BAO 비교량은 $(D_M/r_d,D_H/r_d,D_V/r_d)$이며, $r_d$는 앞 절의
+외부 입력이다. `--rd-mode external`은 이 입력을 전달하는 계산 인터페이스일
+뿐 독립적인 물리 예측이 아니다.
 
-$$
-r_d=147.09\ \mathrm{Mpc}
-$$
+## 3. BAO 중립 데이터 감사
 
-이다. `--rd-mode early-universe`는 CE 밀도 boundary와 외부
-\(H_0,T_{\rm CMB}\), 표준모형 가정 \(N_{\rm eff}=3.044\),
-Eisenstein--Hu drag fit에서 \(r_d\)를 선계산한다. 두 모드는 provenance에서
-분리한다. 출력은 \(D_M/r_d\), \(D_H/r_d\), \(D_V/r_d\)다. 이는 DESI
-likelihood 전체가 아니라 compressed observable layer다.
+### 3.1 공분산 계산
 
-대각 오차만 있는 첫 likelihood는
-
-$$
-\chi^2_{\mathrm{BAO,diag}}
-=
-\sum_i
-\left(
-\frac{O_i^{\mathrm{model}}-O_i^{\mathrm{obs}}}{\sigma_i}
-\right)^2,
-\qquad
-O_i\in\{D_M/r_d,\ D_H/r_d,\ D_V/r_d\}.
-$$
-
-full covariance가 주어지면
+`[정의]` 관측 벡터와 모델 벡터가 같은 순서로 주어지고 공분산 $C$가
+대칭 양의 정부호일 때 BAO 통계량을
 
 $$
 \chi^2_{\mathrm{BAO}}
@@ -155,50 +151,117 @@ $$
 \Delta O_i=O_i^{\mathrm{model}}-O_i^{\mathrm{obs}}
 $$
 
-를 쓴다. 공식 DESI DR2 compressed Gaussian BAO mean/covariance는
-`CobayaSampler/bao_data`의 `desi_bao_dr2` ASCII 파일을 source로 고정했다.
-현재 내장 dataset은 다음 두 개다.
+로 둔다. 대각 공분산에서는
+
+$$
+\chi^2_{\mathrm{BAO,diag}}
+=
+\sum_i
+\left(
+\frac{O_i^{\mathrm{model}}-O_i^{\mathrm{obs}}}{\sigma_i}
+\right)^2
+$$
+
+로 줄어든다. 잔차벡터를 \(r:=\Delta O\)라 쓰고 각 성분의 대수적 기여를
+
+$$
+c_i=r_i(C^{-1}r)_i
+$$
+
+로 두면 다음 항등식이 성립한다.
+
+`[정리]`
+
+$$
+\sum_i c_i
+=
+\sum_i r_i(C^{-1}r)_i
+=
+r^\top C^{-1}r
+=
+\chi^2.
+$$
+
+증명은 유한합과 행렬곱의 정의를 전개하면 끝난다.
+
+### 3.2 자료 범위
+
+`[공리: 외부 입력]` 로컬 registry는 `CobayaSampler/bao_data`의
+`desi_bao_dr2` Gaussian BAO mean/covariance 파일에서 옮긴 다음 압축 자료를
+사용한다.
 
 | 이름 | 내용 | source file |
 |---|---|---|
-| `desi-dr2-bgs` | BGS 단일 \(D_V/r_d\) point, \(z=0.295\) | `desi_gaussian_bao_BGS_BRIGHT-21.35_GCcomb_mean/cov.txt` |
-| `desi-dr2-all` | DESI DR2 BGS/LRG/ELG/QSO/Ly\(\alpha\) 13-point compressed vector와 13x13 covariance | `desi_gaussian_bao_ALL_GCcomb_mean/cov.txt` |
+| `desi-dr2-bgs` | $z=0.295$의 $D_V/r_d$ 한 점 | `desi_gaussian_bao_BGS_BRIGHT-21.35_GCcomb_mean/cov.txt` |
+| `desi-dr2-all` | 13개 BGS/LRG/ELG/QSO/Ly$\alpha$ 압축 관측량과 $13\times13$ 공분산 | `desi_gaussian_bao_ALL_GCcomb_mean/cov.txt` |
 
-CLI data format은
+원본 저장소의 commit과 취득 날짜는 현재 registry에 고정되어 있지 않다.
+따라서 아래 수치는 로컬 배열의 재현 계산이며, 동결된 외부 likelihood에 대한
+사전 예측으로 세지 않는다. 이 provenance 보강은 `[미완성]`이다.
 
-```text
-z:kind:value:sigma
-```
+### 3.3 수치 기록
 
-이며 `kind`는 `dm`, `dh`, `dv` 중 하나다. 여러 점은 comma로 연결한다.
+`[산출]` 현재 로컬 13점 벡터와 공분산에 대한 계산값은 다음과 같다.
+표의 두 입력 구성은 구현 민감도 비교용이며 활성 물리 패키지가 아니다.
 
-covariance CLI format은 row를 semicolon으로, column을 comma 또는 whitespace로 구분한다.
+| 계산 구성 | $\chi^2$ | 자유도 | upper-tail $p$ |
+|---|---:|---:|---:|
+| 외부 calibration을 사용한 회귀 벡터 | 37.100260857 | 13 | $3.9957326\times10^{-4}$ |
+| Eisenstein--Hu 근사를 사용한 진단 벡터 | 40.468225544 | 13 | $1.16176098\times10^{-4}$ |
 
-```text
-0.04,0.01;0.01,0.09
-```
+공분산 기여가 큰 좌표는 $z=0.934$의 $D_M/r_d$, $z=0.706$의
+두 값 $(D_H/r_d,D_M/r_d)$, $z=0.510$의 $D_H/r_d$다. 이는 잔차의 위치를
+기술할 뿐 CE 코어 전체의 진리 판정이 아니다.
 
-공식 내장 dataset은 `--bao-dataset`으로 실행한다.
+### 3.4 공통 scale 진단
 
-```powershell
-python examples\physics\ce_residual_forward_model.py --bao-dataset desi-dr2-all
-python examples\physics\ce_residual_forward_model.py --rd-mode early-universe --bao-dataset desi-dr2-all
-```
-
-현재 CE 기본 \(\Lambda\)CDM boundary에서 `desi-dr2-all` full covariance 결과는
-\(\chi^2=37.100260857\), \(N=13\)이다. 이것은 compressed BAO layer의 직접 검산값이며,
-아직 CMB/SN joint fit이나 nuisance marginalization을 포함하지 않는다.
-
-### 2.1 초기우주 \(r_d\) 근사
-
-물리 밀도를
+`[경험식]` BAO 벡터 $y$에 같은 자료로 하나의 scale $q$를 맞추면
 
 $$
-\omega_b=\Omega_bh^2,\qquad
+O_i(q)=q y_i,
+\qquad
+q_*
+=
+\frac{y^\top C^{-1}d}{y^\top C^{-1}y}
+=0.986476933470
+$$
+
+를 얻는다. 해당 회귀 계산은
+
+$$
+\chi^2_{\mathrm{scale}}=12.608346862,
+\qquad
+\nu=12,
+\qquad
+p=0.398138
+$$
+
+이고
+
+$$
+\mathrm{AIC}=\chi^2+2k,
+\qquad
+\mathrm{BIC}=\chi^2+k\ln N
+$$
+
+를 쓰면 $\mathrm{AIC}=14.6083$, $\mathrm{BIC}=15.1733$이다. 이 값은
+동일한 DESI 벡터로 얻은 사후 최적화이므로 CE의 입력값, 닫힘 조건 또는
+예측으로 재사용하지 않는다. 독립 자료에서 scale을 먼저 고정한 뒤에만 새
+관측 비교를 정의할 수 있다.
+
+## 4. Sound-horizon 계산 도구의 경계
+
+### 4.1 Eisenstein--Hu 근사
+
+`[경험식]` 물리 밀도
+
+$$
+\omega_b=\Omega_bh^2,
+\qquad
 \omega_m=\Omega_mh^2
 $$
 
-로 쓰고,
+와
 
 $$
 \omega_\gamma
@@ -211,7 +274,7 @@ $$
 \omega_\gamma\left(1+0.22710731766N_{\rm eff}\right)
 $$
 
-로 둔다. Eisenstein--Hu drag fit은
+를 입력으로 받는 Eisenstein--Hu drag fit은
 
 $$
 z_d
@@ -230,7 +293,7 @@ b_1
 b_2=0.238\omega_m^{0.223}
 $$
 
-이다. \(a_d=(1+z_d)^{-1}\),
+이다. $a_d=(1+z_d)^{-1}$이고,
 
 $$
 R_b(a)=\frac{3\omega_ba}{4\omega_\gamma},
@@ -247,39 +310,13 @@ r_d
 \frac{c_s(a)}{a^2H(a)}\,da
 $$
 
-를 10,001점 composite Simpson 적분으로 계산한다.
+를 계산할 수 있다. 이 절은 표준 경험적 drag fit의 구현 규약일 뿐 CE 내부의
+재결합 또는 $r_d$ 유도가 아니다.
 
-현재 고정 입력은
+### 4.2 외부 재결합 history adapter
 
-$$
-z_d^{\rm EH}=1020.020419907,
-\qquad
-r_d^{\rm EH\ hybrid}=151.318753028\ {\rm Mpc}
-$$
-
-를 준다. DESI DR2 13점 full covariance 결과는
-
-$$
-\chi^2=40.468225544,\qquad
-\nu=13,\qquad
-p=1.16176098\times10^{-4},
-$$
-
-즉 `REJECT`다. 외부 \(r_d=147.09\,{\rm Mpc}\)의
-\(\chi^2=37.100260857\)보다 오히려 나빠졌다.
-
-이 결과는 “초기우주 수식을 넣었으니 CE가 \(r_d\)를 유도했다”는 뜻이
-아니다. 이 계산은 외부 \(H_0,T_{\rm CMB}\), 표준 \(N_{\rm eff}\)와 경험적
-drag fit을 섞은 근사다. Eisenstein--Hu \(z_d\)는 precision recombination
-또는 Boltzmann solver가 아니므로, 현재 차이는 새 자유도를 더하기보다 drag
-optical depth와 열이력을 실제로 닫아야 한다는 실패 진단이다. DESI 값은
-함수의 runtime 입력이 아니지만 이 모드는 DR2 잔차를 본 뒤 추가됐으므로 DR2를
-untouched holdout으로 세지 않는다.
-
-### 2.2 drag optical-depth history adapter
-
-precision 재결합 코드를 내부에서 흉내 내지 않고, 외부 solver의
-\(x_e(z)=n_e/n_H\) export를 받는 adapter를 둔다.
+`[정의]` 단위와 열 순서가 고정된 $x_e(z)=n_e/n_H$ 표에 대해 drag
+optical depth를
 
 $$
 \tau_{\rm drag}(z)
@@ -288,123 +325,20 @@ $$
 \frac{c\sigma_Tn_{H,0}x_e(z')(1+z')^2}
 {H(z')R(z')}\,dz',
 \qquad
-R(z)=\frac{3\omega_b}{4\omega_\gamma(1+z)}.
+R(z)=\frac{3\omega_b}{4\omega_\gamma(1+z)}
 $$
 
-\(\tau_{\rm drag}(z_d)=1\)을 piecewise-linear rate 적분과 bracket 내부
-bisection으로 찾고, \(r_d=r_s(z_d)\)를 기존 Simpson sound-horizon 적분으로
-계산한다. 입력은 raw-byte SHA-256과 함께 solver/version/backend, \(Y_p\),
-cosmology, 단위, column/delimiter/grid provenance를 가져야 한다.
+로 정의한다. $\tau_{\rm drag}(z_d)=1$의 bracket 내부 해를 수치적으로 찾고
+입력 파일은 raw-byte SHA-256, solver와 backend 버전, $Y_p$, cosmology,
+단위와 column 규약을 함께 가져야 한다.
 
-합성 analytic history 검산은
+실제 CLASS/CAMB/HyRec export와의 교차검증 및 원자물리·중성미자 입력 회계는
+`[미완성]`이다. 합성 history는 수치 적분기 검사에만 사용한다.
 
-$$
-z_d=1059.25,\qquad
-r_d=147.649757605\ {\rm Mpc}
-$$
+## 5. 선형 성장
 
-를 회수한다. 이것은 실제 CLASS/CAMB/HyRec 출력이나 CE 예측이 아니다. 실제
-solver가 없던 환경에서 adapter의 식·단위·root를 검산한 manufactured
-fixture이며, precision 교차검증은 solver export를 등록한 뒤에만 성립한다.
-
-### 2.3 고정 모델 판정
-
-현재 코드는
-
-$$
-p_{\rm surv}
-=
-Q\!\left(\frac{\nu}{2},\frac{\chi^2}{2}\right)
-$$
-
-를 계산하고, \(p\ge0.05\)를 `PASS`, \(0.0027\le p<0.05\)를 `TENSION`,
-\(p<0.0027\)을 `REJECT`로 고정한다. 기본 모델은 BAO 데이터로 fit한 파라미터가
-없으므로 \(\nu=13\)이고,
-
-$$
-\frac{\chi^2}{\nu}=2.853866220,
-\qquad
-p=3.9957326\times10^{-4}
-$$
-
-라서 `REJECT`다. 이것은 “CE core 전체 기각”이 아니라
-
-$$
-\text{CE density boundary}
-+
-\text{외부 }H_0,r_d
-+
-\Lambda\text{CDM closure}
-$$
-
-패키지의 고정 BAO goodness-of-fit 실패다.
-
-관측별 covariance 기여는
-
-$$
-c_i=r_i(C^{-1}r)_i,
-\qquad
-\sum_i c_i=\chi^2
-$$
-
-로 출력한다. 가장 큰 기여는 \(z=0.934\)의 \(D_M/r_d\), \(z=0.706\)의
-\(D_H/r_d,D_M/r_d\), \(z=0.510\)의 \(D_H/r_d\)에서 나온다.
-
-### 2.4 왜 안 맞는가: \(H_0r_d\) scale ablation
-
-BAO ratio는 고정된 shape에서
-
-$$
-O_i
-=
-\frac{c}{H_0r_d}
-F_i(z;\Omega_m,w_0,w_a)
-$$
-
-처럼 공통 scale을 갖는다. 예측 \(y\), 데이터 \(d\)에 대해 \(y(q)=qy\)만
-허용하면 최적 scale은
-
-$$
-q_*
-=
-\frac{y^\top C^{-1}d}
-{y^\top C^{-1}y}
-=
-0.986476933470
-$$
-
-이다. 진단 결과는
-
-$$
-\chi^2_{\rm scale}=12.608346862,
-\qquad
-\nu=12,
-\qquad
-p=0.398138
-$$
-
-로 `PASS`다. \(k\)를 BAO 데이터로 fit한 파라미터 수로 두고
-
-$$
-{\rm AIC}=\chi^2+2k,
-\qquad
-{\rm BIC}=\chi^2+k\ln N
-$$
-
-를 적용하면 고정모델은 \({\rm AIC}={\rm BIC}=37.1003\), scale fit은
-\({\rm AIC}=14.6083,\ {\rm BIC}=15.1733\)이다. 즉 1개 자유도 패널티로는
-개선이 사라지지 않는다. 이는 \(H_0=67.4\)를 고정하면
-\(r_d=149.106375\,{\rm Mpc}\), \(r_d=147.09\,{\rm Mpc}\)를 고정하면
-\(H_0=68.323949\,{\rm km\,s^{-1}Mpc^{-1}}\)에 해당한다.
-
-따라서 현재 불일치의 1차 원인은 density shape보다 외부 \(H_0r_d\)
-normalization이다. 그러나 같은 DESI 데이터로 맞춘 1-parameter 진단이므로 이
-값은 CE 예측이나 closure가 아니다. 독립 CMB/sound-horizon calibration 전에
-기본값으로 채택하면 사후보정이다.
-
-## 3. Growth 수식
-
-선형 성장률은 \(x=\ln a\)에 대해
+`[공리: 모델 선택]` $x=\ln a$와 주어진 $H(a),\mu(a)$에 대해 선형
+성장식으로
 
 $$
 \frac{d^2D}{dx^2}
@@ -416,24 +350,21 @@ $$
 =0
 $$
 
-를 푼다. 기본 검산은 GR 한계이므로
+을 채택한다. 기본 검산은 GR 한계 $\mu(a)=1$을 쓴다.
 
-$$
-\mu(a)=1.
-$$
-
-잔류 sector가 성장에 주는 효과를 탐색할 수 있도록 phenomenological coupling도 열어 둔다.
+`[경험식]` 잔류 sector의 수정중력 효과를 탐색하는 선택적 ansatz는
 
 $$
 \mu(a)
 =
 1-\epsilon_{\mathrm{grav}}
-\frac{\Omega_{\mathrm{DE}}(a)}{\Omega_{\mathrm{DE}}(1)}.
+\frac{\Omega_{\mathrm{DE}}(a)}{\Omega_{\mathrm{DE}}(1)}
 $$
 
-기본값은 \(\epsilon_{\mathrm{grav}}=0\)이다. 즉 이 문서의 닫힌 판정은 "성장 방정식 도구를 만들었다"이지, "수정중력 신호를 예측했다"가 아니다.
+이다. $\epsilon_{\mathrm{grav}}$의 미시적 작용 유도는 없으므로 이 식은
+물리 예측이 아니다.
 
-관측량은
+`[정의]` $D(1)=1$ 정규화와 외부 $\sigma_{8,0}$에 대해
 
 $$
 \sigma_8(z)=\sigma_{8,0}D(z),
@@ -441,117 +372,54 @@ $$
 f\sigma_8(z)=\frac{d\ln D}{d\ln a}\sigma_8(z),
 $$
 
-그리고
-
 $$
 S_8(0)=\sigma_{8,0}\sqrt{\frac{\widehat\Omega_m}{0.3}}
 $$
 
-으로 계산한다.
+로 정의한다. 성장 방정식의 해를 대입한 수치는 `[산출]`이다.
 
-## 4. 검산 출력
+## 6. 실행과 회귀 범위
 
-실행:
-
-```powershell
-python examples\physics\ce_residual_forward_model.py
-```
-
-대표 출력:
-
-| 양 | 값 |
-|---|---:|
-| \(\Omega_b\) | 0.048700 |
-| \(\Omega_{\mathrm{DM}}\) | 0.262300 |
-| \(\Omega_m\) | 0.311000 |
-| \(\Omega_\Lambda\) | 0.689100 |
-| \(S_8(0)\) | 0.825734 |
-| \(E(1)\) at \(z=1\) | 1.782353 |
-| \(D_L(z=1)\) Mpc | 6818.454 |
-| \(D_M(z=1)/r_d\) | 23.178 |
-| \(D_H(z=1)/r_d\) | 16.966 |
-| \(D_V(z=1)/r_d\) | 20.889 |
-| \(f\sigma_8(z=0.5)\) | 0.473314 |
-
-해석:
-
-- \(S_8(0)\approx0.826\)은 2026 combined CMB baseline \(S_8\approx0.836\)과 가까운 쪽이다.
-- DES Y6 같은 낮은 \(S_8\approx0.794\) probe와의 긴장은 이 모델이 아직 해소하지 않는다.
-- \(w_0w_a\)를 바꾸면 \(E(z)\), \(D_L(z)\)가 변하므로 DESI DR2류 background tension을 실험할 최소 도구는 생겼다.
-
-## 5. 테스트
-
-회귀검사:
+기본 수식 구현은 다음 명령으로 확인한다.
 
 ```powershell
+python examples\physics\ce_residual_forward_model.py --rd-mpc <external-rd>
 uv run --extra dev python -m pytest tests\test_ce_residual_forward_model.py tests\test_recombination_drag_adapter.py tests\test_cosmology_ratio_audit.py -q
 ```
 
-현재 결과:
+`[산출]` 코드 회귀가 확인하는 범위는 다음과 같다.
 
-```text
-33 passed
-```
+- $(w_0=-1,w_a=0)$에서 $F_{\rm DE}=1$.
+- $E(0)=1$, 거리 정의와 BAO 압축량의 단위 일치.
+- 대각·full covariance $\chi^2$의 대수적 일치와 상관항 응답.
+- $D(1)=1$, 성장 단조성과 $f\sigma_8>0$인 기준 해.
+- 외부 $r_d$와 경험적 drag 계산의 provenance 분리.
+- 재결합 history의 hash, 단위, grid와 root bracket 검사.
 
-검증 항목:
+이 목록은 수치 구현 범위이며 물리 사상이나 관측 적합도의 증명이 아니다.
 
-| 테스트 | 내용 |
-|---|---|
-| `test_lcdm_limit_has_constant_dark_energy_density` | \(w_0=-1,w_a=0\)에서 \(F_{\mathrm{DE}}=1\) |
-| `test_ce_forward_model_uses_ce_density_ratios_for_background` | CE 성분비가 flat background를 만들고 \(E(0)=1\) |
-| `test_ce_s8_today_is_close_to_combined_cmb_s8_baseline` | \(S_8(0)\)가 combined CMB baseline 근방 |
-| `test_growth_solution_is_normalized_and_monotone` | \(D(1)=1\), 성장 단조성, \(f\sigma_8\) 양수 |
-| `test_dynamic_dark_energy_changes_background_observables` | \(w_0w_a\) 변경이 \(E(z)\), \(D_L(z)\)를 바꿈 |
-| `test_bao_observable_uses_consistent_distance_definitions` | \(D_M/r_d,D_H/r_d,D_V/r_d\) 정의 일치 |
-| `test_early_universe_radiation_and_sound_speed_relations` | \(\omega_\gamma,\omega_r,c_s\) 관계와 단위 검산 |
-| `test_early_universe_sound_horizon_matches_analytic_sanity_gate` | Simpson 수렴과 물질--복사 닫힌형 교차검산 |
-| `test_sound_horizon_modes_and_early_input_provenance_are_separate` | 외부 \(r_d\)와 EH hybrid 입력 역할 분리 |
-| `test_bao_observable_is_sensitive_to_dynamic_dark_energy` | \(w_0w_a\) 변경이 BAO 압축량을 바꿈 |
-| `test_bao_diagonal_chi2_is_zero_for_fiducial_generated_data` | 자기 생성 fiducial data에서 \(\chi^2=0\) |
-| `test_bao_diagonal_chi2_detects_dynamic_de_shift` | fiducial BAO data가 동적 DE shift를 검출 |
-| `test_bao_full_covariance_matches_diagonal_chi2_for_diagonal_covariance` | 대각 covariance가 diagonal \(\chi^2\)와 일치 |
-| `test_bao_full_covariance_responds_to_correlations` | correlation term이 \(\chi^2\)를 바꿈 |
-| `test_chi_square_survival_and_preregistered_verdict_boundaries` | p-value와 판정 경계 고정 |
-| `test_bao_assessment_decomposes_diagonal_chi2_into_raw_pull_squares` | 대각 covariance 기여도 검증 |
-| `test_desi_dr2_full_covariance_fixed_model_is_rejected_and_decomposed` | DESI 고정모델 `REJECT`, scale 진단 `PASS`, 기여도 합 검증 |
-| `test_desi_dr2_assesses_precomputed_early_rd_without_runtime_data_input` | EH hybrid도 DESI DR2에서 `REJECT`이고 외부 모드보다 악화됨을 고정 |
-| `test_covariance_parser_and_inverter_validate_matrix` | covariance parser와 inverse 검증 |
-| `test_named_desi_dr2_bao_datasets_are_available` | DESI DR2 BGS/ALL named dataset registry 검증 |
-| `test_named_desi_dr2_bao_dataset_chi2_runs_against_ce_model` | 공식 BGS covariance로 CE model \(\chi^2\) 계산 가능 |
-| `test_unknown_named_bao_dataset_raises` | unknown dataset 방어 |
-| `test_parse_bao_data_validates_kind_and_sigma` | BAO data parser 검증 |
-| `test_forward_coverage_keeps_dark_matter_particle_physics_open` | particle/detector DM은 여전히 Open |
-| `test_parameter_provenance_separates_predictions_inputs_and_assumptions` | CE boundary·외부 입력·모형 가정 분리 |
-| `tests/test_recombination_drag_adapter.py` | external history SHA/provenance·단위·grid·cosmology 일치와 \(\tau_{\rm drag}=1\) bracket, 합성 \(z_d,r_d\) 회귀 |
+## 7. 남은 문제
 
-## 6. 남은 것
+| 항목 | 출처 | 필요한 작업 |
+|---|---|---|
+| CE 내부 $r_d$ | `[미완성]` | 공변 초기우주 동역학, 재결합·원자물리와 $\theta_*$ 동시 계산 |
+| 동결된 외부 likelihood | `[미완성]` | source commit·취득일, nuisance와 systematic, convention 교차검증 |
+| 낮은 $S_8$ 자료 | `[미완성]` | baryonic feedback 또는 $\mu(a)$의 원리적 유도 |
+| 입자 암흑물질 | `[미완성]` | $(m_\chi,\sigma_{\chi N})$, transfer function과 detector likelihood |
+| 사전 관측 시험 | `[미완성]` | 독립 $H_0r_d$ calibration과 비교 절차를 자료 공개 전에 고정 |
 
-이 forward model이 새로 닫은 것은 background/growth 계산이다. 아직 닫지 않은 것은 다음이다.
+## 8. 결론
 
-| 병목 | 필요한 다음 수식 |
-|---|---|
-| DESI likelihood | official source 자동 동기화, nuisance/systematic 처리, 다른 likelihood convention cross-check |
-| \(H_0r_d\) calibration | EH hybrid와 외부 \(x_e(z)\) history adapter는 구현됨; 다음은 실제 CLASS/HyRec·CAMB export, solver 자체 \(z_d,r_d\) 교차검증, radiation·neutrino·atomic physics, \(\theta_*\) |
-| 낮은 \(S_8\) probes | baryonic feedback 또는 \(\mu(a)\)의 원리적 유도 |
-| 암흑물질 직접탐색 | \(m_\chi\), \(\sigma_{\chi N}\), recoil spectrum |
-| FDM/WDM/SIDM | transfer function \(T(k)\), halo mass function |
-
-## 7. 결론
+`[산출]` 평탄 FLRW/CPL/GR 전제와 외부 scale을 앞 절의 정의에 대입하면
 
 $$
 \boxed{
-\text{CE ratios}
-\longrightarrow
-H(z),\ D_L(z),\ D(a),\ f\sigma_8(z),\ S_8(0)
+(\widehat\Omega_m,\widehat\Omega_\Lambda;H_0,r_d,\sigma_{8,0})
+\longmapsto
+H(z),D_L(z),D(a),f\sigma_8(z),S_8(0)
 }
 $$
 
-이 단계에서 우리가 가리키는 우주는 다음처럼 더 선명해진다.
-
-> CE 성분비는 background/growth boundary로 실행 가능하지만, 외부
-> \(r_d=147.09\,{\rm Mpc}\) 패키지와 EH hybrid
-> \(r_d=151.318753\,{\rm Mpc}\) 패키지는 DESI DR2 compressed BAO에서 모두
-> `REJECT`다. 단일 \(H_0r_d\) scale 진단은
-> \(r_d=149.106375\,{\rm Mpc}\)에서 적합도를 회복하지만 같은 데이터로 맞춘
-> 값이다. 다음 병목은 새 density 식이 아니라 precision recombination과 독립
-> sound-horizon/distance calibration이다.
+의 계산 사상은 정해진다. CE 성분비를 그 입력 경계조건으로 읽는 단계는
+물리 사상이며, $r_d$의 CE 내부 결정과 독립 likelihood 예측은 아직 추가
+구조가 필요하다. 같은 자료로 얻은 scale 최적화는 경험식 진단에만 속한다.

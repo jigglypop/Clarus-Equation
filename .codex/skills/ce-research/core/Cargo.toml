@@ -1,0 +1,9 @@
+[package]
+name = "ce-research-core"
+version = "1.0.0"
+edition = "2024"
+
+[profile.release]
+strip = true
+panic = "abort"
+

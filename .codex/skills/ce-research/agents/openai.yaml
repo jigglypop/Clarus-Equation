@@ -1,0 +1,5 @@
+interface:
+  display_name: "CE Research Team"
+  short_description: "Independent physics research, falsification, and synthesis"
+  default_prompt: "Use $ce-research to audit and reproduce this Clarus-Equation claim."
+

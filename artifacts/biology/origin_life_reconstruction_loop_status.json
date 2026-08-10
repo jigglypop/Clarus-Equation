@@ -1,0 +1,172 @@
+{
+  "artifact_type": "clarus_life_to_human_reconstruction_loop_status",
+  "artifact_version": 2,
+  "policy": {
+    "advance_rule": "advance only after all registered gates pass",
+    "failure_rule": "remain at the same loop, change one causal term, version, rerun all gates",
+    "claim_rule": "digital engineering pass never implies empirical biological reconstruction"
+  },
+  "current_stage": "P0",
+  "current_stage_target": "template-bearing protocell",
+  "current_stage_promoted": false,
+  "last_completed_loop": "P0.2",
+  "active_loop": "P0.3",
+  "next_organism_stage": "P1",
+  "next_organism_unlocked": false,
+  "loop_results": [
+    {
+      "loop_id": "P0.0",
+      "name": "conditional exact lineage mathematics",
+      "status": "pass",
+      "passed": true,
+      "evidence": [
+        {
+          "name": "recurrent_state_existence",
+          "passed": true,
+          "builder_passed": true,
+          "independently_verified": true,
+          "independent_checks": 11,
+          "errors": []
+        },
+        {
+          "name": "coupled_heredity_selection",
+          "passed": true,
+          "builder_passed": true,
+          "independently_verified": true,
+          "independent_checks": 8,
+          "errors": []
+        },
+        {
+          "name": "age_structured_partition_branching",
+          "passed": true,
+          "builder_passed": true,
+          "independently_verified": true,
+          "independent_checks": 8,
+          "errors": []
+        }
+      ],
+      "scope": "exact only inside the declared toy models"
+    },
+    {
+      "loop_id": "P0.1",
+      "name": "explicit copy bookkeeping under finite shared resources",
+      "status": "pass",
+      "passed": true,
+      "evidence": [
+        {
+          "name": "explicit_finite_resource_lineage",
+          "passed": true,
+          "builder_passed": true,
+          "independently_verified": true,
+          "independent_checks": 8,
+          "errors": []
+        }
+      ],
+      "scope": "integer-token engineering model with finite-horizon recurrence; not autonomous chemistry"
+    },
+    {
+      "loop_id": "P0.2",
+      "name": "stoichiometric open-flow scaffold and membrane geometry",
+      "status": "pass",
+      "passed": true,
+      "evidence": [
+        {
+          "name": "stoichiometric_material_energy_geometry",
+          "passed": true,
+          "builder_passed": true,
+          "independently_verified": true,
+          "independent_checks": 8,
+          "errors": []
+        }
+      ],
+      "scope": "declared coarse reaction network with exact material, carrier, standard-state free-energy, and membrane-geometry ledgers; not calibrated autonomous chemistry"
+    },
+    {
+      "loop_id": "P0.3",
+      "name": "mature-offspring supercriticality and robustness",
+      "status": "ready",
+      "passed": false,
+      "required_gates": [
+        "mature daughter reaches its own first division",
+        "full model lower confidence bound exceeds replacement",
+        "paired ablations and term-specific rescues",
+        "density regulation and parameter/environment holdouts"
+      ]
+    }
+  ],
+  "stage_ladder": [
+    {
+      "stage_id": "P0",
+      "target": "template-bearing protocell",
+      "transition_to_validate": "resource-coupled metabolism, copying, boundary growth, and recursive division",
+      "status": "in_progress"
+    },
+    {
+      "stage_id": "P1",
+      "target": "adaptive prokaryote (E. coli-like)",
+      "transition_to_validate": "internal state and chemotactic action improve viability under causal shifts",
+      "status": "locked"
+    },
+    {
+      "stage_id": "P2",
+      "target": "single-cell sensorimotor organism (Paramecium-like)",
+      "transition_to_validate": "history-dependent sensorimotor control and damage recovery",
+      "status": "locked"
+    },
+    {
+      "stage_id": "P3",
+      "target": "aneural multicellular coordinator (Trichoplax-like)",
+      "transition_to_validate": "distributed cell signalling creates organism-level action selection",
+      "status": "locked"
+    },
+    {
+      "stage_id": "P4",
+      "target": "nerve-net organism (Hydra-like)",
+      "transition_to_validate": "specialized excitable cells coordinate whole-body state and behavior",
+      "status": "locked"
+    },
+    {
+      "stage_id": "P5",
+      "target": "compact nervous system (C. elegans-like)",
+      "transition_to_validate": "weighted recurrent routing predicts held-out stimulus-action trials",
+      "status": "locked"
+    },
+    {
+      "stage_id": "P6",
+      "target": "centralized insect nervous system (Drosophila-like)",
+      "transition_to_validate": "reusable memory and action circuits compose across tasks",
+      "status": "locked"
+    },
+    {
+      "stage_id": "P7",
+      "target": "vertebrate learner (zebrafish-like)",
+      "transition_to_validate": "closed-loop neural dynamics predict continuous adaptive behavior",
+      "status": "locked"
+    },
+    {
+      "stage_id": "P8",
+      "target": "mammalian agent (mouse-like)",
+      "transition_to_validate": "causal world models, replay, and transfer survive perturbational tests",
+      "status": "locked"
+    },
+    {
+      "stage_id": "P9",
+      "target": "primate social learner",
+      "transition_to_validate": "compositional planning, imitation, and theory-of-agent generalize",
+      "status": "locked"
+    },
+    {
+      "stage_id": "P10",
+      "target": "human-level developmental agent",
+      "transition_to_validate": "language, cumulative culture, causal science, and guarded self-modification",
+      "status": "locked"
+    }
+  ],
+  "claim_scope": {
+    "finite_resource_lineage_kernel_engineering_passed": true,
+    "stoichiometric_geometry_scaffold_engineering_passed": true,
+    "template_bearing_protocell_engineering_promoted": false,
+    "empirical_autonomous_protocell_proven": false,
+    "human_reconstruction_complete": false
+  }
+}

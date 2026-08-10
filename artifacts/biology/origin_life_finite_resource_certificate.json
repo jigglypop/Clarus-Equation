@@ -1,6 +1,6 @@
 {
   "artifact_type": "clarus_finite_resource_protocell_engineering_certificate",
-  "artifact_version": 1,
+  "artifact_version": 2,
   "arithmetic": "integer token conservation plus exact rational partition oracle",
   "model": {
     "parameters": {
@@ -42,12 +42,27 @@
       "low_density_generation_3_survival": {
         "exact": "2327147464067521080712076339036595905669192696159513/2993155353253689176481146537402947624255349848014848",
         "decimal": 0.777489702142527
-      }
+      },
+      "sampler_draws": 8192,
+      "sampler_counts_P0_P1_P2": [
+        979,
+        4039,
+        3174
+      ],
+      "sampler_probabilities_P0_P1_P2": [
+        0.1195068359375,
+        0.4930419921875,
+        0.387451171875
+      ],
+      "sampler_max_absolute_error": 0.005432255566120148,
+      "sampler_tolerance": 0.02
     },
     "integer_material_conservation": {
       "passed": true,
       "invariant": "reservoir + external + waste + sum(cell_energy + cell_boundary + sum(cell_module_copies))",
-      "max_balance_error": 0
+      "max_balance_error": 0,
+      "max_template_ledger_residual": 0,
+      "max_boundary_ledger_residual": 0
     },
     "explicit_copy_recurrence": {
       "passed": true,
@@ -88,17 +103,20 @@
           31
         ],
         "max_mass_balance_error": 0,
-        "mean_divisions_per_founder": 115.375,
-        "mean_final_population_per_founder": 15.53125,
-        "mean_peak_population_per_founder": 18.28125,
-        "max_population": 34,
+        "max_template_ledger_residual": 0,
+        "max_boundary_ledger_residual": 0,
+        "max_module_partition_residual": 0,
+        "mean_divisions_per_founder": 132.53125,
+        "mean_final_population_per_founder": 17.6875,
+        "mean_peak_population_per_founder": 20.9375,
+        "max_population": 36,
         "max_generation": 28,
-        "runs_reaching_generation_3": 24,
+        "runs_reaching_generation_3": 25,
         "runs_with_division": 32,
-        "runs_extinct_at_horizon": 13,
-        "total_starvation_deaths": 512
+        "runs_extinct_at_horizon": 11,
+        "total_starvation_deaths": 625
       },
-      "observed_generation_3_survival": 0.75,
+      "observed_generation_3_survival": 0.78125,
       "required_generation_3_runs": 20,
       "automatic_copy_reset_used": false
     },
@@ -118,6 +136,9 @@
             7
           ],
           "max_mass_balance_error": 0,
+          "max_template_ledger_residual": 0,
+          "max_boundary_ledger_residual": 0,
+          "max_module_partition_residual": 0,
           "mean_divisions_per_founder": 0.0,
           "mean_final_population_per_founder": 0.0,
           "mean_peak_population_per_founder": 1.0,
@@ -141,6 +162,9 @@
             7
           ],
           "max_mass_balance_error": 0,
+          "max_template_ledger_residual": 0,
+          "max_boundary_ledger_residual": 0,
+          "max_module_partition_residual": 0,
           "mean_divisions_per_founder": 0.0,
           "mean_final_population_per_founder": 1.0,
           "mean_peak_population_per_founder": 1.0,
@@ -164,6 +188,9 @@
             7
           ],
           "max_mass_balance_error": 0,
+          "max_template_ledger_residual": 0,
+          "max_boundary_ledger_residual": 0,
+          "max_module_partition_residual": 0,
           "mean_divisions_per_founder": 0.0,
           "mean_final_population_per_founder": 1.0,
           "mean_peak_population_per_founder": 1.0,
@@ -191,6 +218,9 @@
           7
         ],
         "max_mass_balance_error": 0,
+        "max_template_ledger_residual": 0,
+        "max_boundary_ledger_residual": 0,
+        "max_module_partition_residual": 0,
         "mean_divisions_per_founder": 0.0,
         "mean_final_population_per_founder": 0.0,
         "mean_peak_population_per_founder": 1.0,
@@ -225,15 +255,18 @@
           15
         ],
         "max_mass_balance_error": 0,
-        "mean_divisions_per_founder": 14.375,
+        "max_template_ledger_residual": 0,
+        "max_boundary_ledger_residual": 0,
+        "max_module_partition_residual": 0,
+        "mean_divisions_per_founder": 13.9375,
         "mean_final_population_per_founder": 0.0,
-        "mean_peak_population_per_founder": 3.71875,
-        "max_population": 10,
-        "max_generation": 20,
-        "runs_reaching_generation_3": 16,
+        "mean_peak_population_per_founder": 3.53125,
+        "max_population": 9,
+        "max_generation": 13,
+        "runs_reaching_generation_3": 15,
         "runs_with_division": 16,
         "runs_extinct_at_horizon": 16,
-        "total_starvation_deaths": 160
+        "total_starvation_deaths": 143
       },
       "high_density": {
         "runs": 16,
@@ -256,15 +289,18 @@
           15
         ],
         "max_mass_balance_error": 0,
-        "mean_divisions_per_founder": 1.5,
+        "max_template_ledger_residual": 0,
+        "max_boundary_ledger_residual": 0,
+        "max_module_partition_residual": 0,
+        "mean_divisions_per_founder": 1.5625,
         "mean_final_population_per_founder": 0.0,
-        "mean_peak_population_per_founder": 1.01953125,
+        "mean_peak_population_per_founder": 1.02734375,
         "max_population": 17,
         "max_generation": 11,
         "runs_reaching_generation_3": 16,
         "runs_with_division": 16,
         "runs_extinct_at_horizon": 16,
-        "total_starvation_deaths": 374
+        "total_starvation_deaths": 341
       }
     },
     "finite_material_population_bound": {
@@ -275,7 +311,7 @@
   },
   "claim_scope": {
     "finite_resource_accounting_proven_for_declared_simulator": true,
-    "explicit_resource_consuming_copy_restoration_implemented": true,
+    "explicit_token_consuming_copy_bookkeeping_implemented": true,
     "finite_horizon_multigeneration_lineage_observed": true,
     "density_competition_observed_in_registered_seed_panel": true,
     "starvation_death_observed_in_registered_seed_panel": true,

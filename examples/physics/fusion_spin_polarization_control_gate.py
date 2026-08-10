@@ -12,9 +12,17 @@ def main() -> None:
     retention = report.retention
     equilibrium = report.thermal_equilibrium
     pump = report.pump_ledger
+    evidence = report.published_evidence
     print("FUSION SPIN-POLARIZATION STANDARD-MODEL CONTROL")
     print(" reaction layer")
     print(f"  required P_D P_T                {reaction.required_polarization_product:.9e}")
+    print(f"  deuteron p_zz                   {reaction.deuteron_tensor_polarization:.9e}")
+    print(
+        "  deuteron m+/m0/m- populations  "
+        f"{reaction.deuteron_mplus_population:.6f}/"
+        f"{reaction.deuteron_mzero_population:.6f}/"
+        f"{reaction.deuteron_mminus_population:.6f}"
+    )
     print(f"  Maxwellian reactivity ratio     {reaction.maxwellian_reactivity_ratio:.9e}")
     print(
         f"  ideal-projector target reached  {reaction.conditional_ideal_projector_target_reached}"
@@ -29,6 +37,16 @@ def main() -> None:
     )
     print(f"  Czz directly measured           {reaction.spin_correlation_czz_directly_measured}")
     print(f"  polarized D-T rate validated    {reaction.polarized_dt_rate_directly_validated}")
+    print(" published energy-dependent evidence")
+    print(
+        "  digitized full ratio            "
+        f"{evidence.reaction.full_alignment_maxwellian_reactivity_ratio:.9e}"
+    )
+    print(
+        "  digitized lower ratio           "
+        f"{evidence.reaction.digitization_lower_maxwellian_reactivity_ratio:.9e}"
+    )
+    print(f"  physical evidence gate          {evidence.physical_spin_fusion_evidence_gate_pass}")
     print(" source margin")
     print(f"  design P_D P_T                  {design.polarization_product:.9e}")
     print(
@@ -41,6 +59,13 @@ def main() -> None:
     print(f"  D-T retention measured          {retention.dt_in_plasma_retention_measured}")
     print(f"  burn-weighted product measured  {retention.burn_weighted_product_measured}")
     print(f"  burn-weighted product value     {retention.burn_weighted_polarization_product}")
+    print(
+        f"  burn-weighted p_zz value        {retention.burn_weighted_deuteron_tensor_polarization}"
+    )
+    print(
+        "  burn-weighted p_zz measured     "
+        f"{retention.burn_weighted_deuteron_tensor_polarization_measured}"
+    )
     print(f"  burn-weighted product required  {retention.burn_weighted_product_required:.9e}")
     print(
         "  burn product meets threshold    "
@@ -70,14 +95,32 @@ def main() -> None:
     print(
         f"  wall-plug break-even eV/pair    {pump.electrical_break_even_energy_per_injected_pair_ev:.9e}"
     )
+    print(f"  ledger denominator              {pump.energy_ledger_denominator}")
+    print(
+        "  per baseline reacted pair eV    "
+        f"{pump.electrical_break_even_energy_per_baseline_reacted_pair_ev:.9e}"
+    )
+    print(
+        "  per incremental reaction eV     "
+        f"{pump.electrical_break_even_energy_per_incremental_fusion_reaction_ev:.9e}"
+    )
     print(f"  10x-margin pump power W         {pump.engineering_margin_wall_plug_power_w:.9e}")
     print(
-        f"  measured wall-plug ledger       {pump.measured_wall_plug_energy_per_polarized_dt_pair_available}"
+        f"  measured wall-plug ledger       {pump.measured_wall_plug_energy_per_injected_dt_pair_available}"
     )
     print(
-        f"  measured pair energy eV/pair    {pump.measured_wall_plug_energy_per_polarized_dt_pair_ev}"
+        f"  measured pair energy eV/pair    {pump.measured_wall_plug_energy_per_injected_dt_pair_ev}"
     )
-    print(f"  measured energy below ceiling   {pump.measured_pair_energy_below_break_even}")
+    print(
+        "  measured uncertainty eV/pair   "
+        f"{pump.measured_wall_plug_energy_std_per_injected_dt_pair_ev}"
+    )
+    print(f"  3sigma upper below 10x margin  {pump.uncertainty_upper_below_engineering_margin}")
+    print(
+        "  measured flow meets throughput "
+        f"{pump.wall_plug_measurement_pair_flow_meets_declared_throughput}"
+    )
+    print(f"  measurement provenance          {pump.wall_plug_measurement_provenance}")
     print(f"  cryo/microwave accounted        {pump.cryogenic_and_microwave_power_accounted}")
     print(f"  tritium handling accounted      {pump.tritium_handling_power_accounted}")
     print(
@@ -88,6 +131,13 @@ def main() -> None:
     print(f" physical spin branch             {report.physical_spin_polarized_branch_pass}")
     print(f" physical CE branch               {report.physical_ce_one_percent_branch_pass}")
     print(f" maximum supported stage          {report.maximum_supported_stage}")
+
+    if not evidence.energy_dependent_figure_control_reproduced:
+        raise RuntimeError("published figure reproduction control regressed")
+    if report.physical_spin_polarized_branch_pass:
+        raise RuntimeError("unexpected physical spin-branch promotion requires review")
+    if report.physical_ce_one_percent_branch_pass:
+        raise RuntimeError("unexpected CE-branch promotion requires review")
 
 
 if __name__ == "__main__":

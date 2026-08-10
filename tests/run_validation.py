@@ -1,254 +1,364 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Standalone CE Validation - No dependencies
-Runs all 3 validators without torch/sympy/etc
-"""
+"""Run the bootstrap, canonical constants, and dimensionless CE validators."""
+
+from __future__ import annotations
 
 import math
-import json
-from typing import Dict, List
+import sys
+from fractions import Fraction
+from pathlib import Path
+from typing import Any
 
-ALPHA_S = 0.11789
-SIN2_THETA_W = 4 * (ALPHA_S ** (4 / 3))
-DELTA = SIN2_THETA_W * (1 - SIN2_THETA_W)
-D_EFF = 3 + DELTA
-N_E = 3 * D_EFF * 12 / 2
-V_CB_NLO = ALPHA_S ** (3 / 2) * (1 + DELTA / (2 * math.pi))
-A_S_PROJECTED_READOUT = 2.1038087
-N_S_TRANSITION_COUNT = 1 - 2 / N_E
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from reality_stone.clarus.dimensionless import (  # noqa: E402
+    MASS,
+    TEMPERATURE,
+    GateResult,
+    Quantity,
+    audit_dimensionless,
+    check_dimensionless,
+    dim,
+    exp_arguments,
+    group_dimension,
+)
+from tests.scorecard import ConstantsScorecard  # noqa: E402
 
 
 class BootstrapValidator:
-    """Pure Python bootstrap solver - no scipy needed"""
+    """Pure-Python bootstrap fixed-point validator."""
 
-    DELTA = 0.17776  # sin²θ_W × cos²θ_W
+    DELTA = 0.17776  # sin²(theta_W) * cos²(theta_W)
     D_EFF = 3 + DELTA
     OMEGA_B_OBS = 0.04865
 
-    def equation(self, eps):
-        """f(eps) = eps - exp(-(1-eps) * D_eff)"""
+    def equation(self, eps: float) -> float:
+        """Return f(eps) for eps = exp(-(1-eps) * D_eff)."""
+
         return eps - math.exp(-(1 - eps) * self.D_EFF)
 
-    def derivative(self, eps):
-        """f'(eps) = 1 - D_eff * exp(-(1-eps) * D_eff)"""
+    def derivative(self, eps: float) -> float:
+        """Return f'(eps)."""
+
         return 1 - self.D_EFF * math.exp(-(1 - eps) * self.D_EFF)
 
-    def newton_solve(self, x0=0.05, tol=1e-10, max_iter=100):
-        """Newton-Raphson method"""
+    def newton_solve(
+        self,
+        x0: float = 0.05,
+        tol: float = 1e-10,
+        max_iter: int = 100,
+    ) -> tuple[float, int]:
+        """Solve the fixed-point equation with Newton-Raphson."""
+
         x = x0
-        for i in range(max_iter):
-            f = self.equation(x)
-            df = self.derivative(x)
-            x_new = x - f / df
-            error = abs(x_new - x)
-            if error < tol:
-                return x_new, i
+        for iteration in range(max_iter):
+            x_new = x - self.equation(x) / self.derivative(x)
+            if abs(x_new - x) < tol:
+                return x_new, iteration
             x = x_new
         raise RuntimeError(f"Failed to converge after {max_iter} iterations")
 
-    def validate(self):
-        """Run bootstrap validation"""
-        eps, iterations = self.newton_solve()
+    def validate(self) -> dict[str, Any]:
+        """Solve and compare the bootstrap result with its local Omega_b reference."""
 
-        # Check equation
+        eps, iterations = self.newton_solve()
         lhs = eps
         rhs = math.exp(-(1 - eps) * self.D_EFF)
         residual = abs(lhs - rhs)
-
-        # Check against observation
         sigma_offset = (eps - self.OMEGA_B_OBS) / 0.00005
 
         return {
-            'solution': eps,
-            'iterations': iterations,
-            'lhs': lhs,
-            'rhs': rhs,
-            'residual': residual,
-            'equation_satisfied': residual < 1e-9,
-            'omega_b_obs': self.OMEGA_B_OBS,
-            'sigma_offset': sigma_offset,
-            'pass': abs(sigma_offset) < 1
+            "solution": eps,
+            "iterations": iterations,
+            "lhs": lhs,
+            "rhs": rhs,
+            "residual": residual,
+            "equation_satisfied": residual < 1e-9,
+            "omega_b_obs": self.OMEGA_B_OBS,
+            "sigma_offset": sigma_offset,
+            "pass": abs(sigma_offset) < 1,
         }
 
 
 class ConstantsValidator:
-    """Validate 45 CE constants against observations"""
+    """Adapt the canonical constants scorecard for the combined validation report."""
 
-    CONSTANTS = {
-        'alpha_inv(0)': {'ce': 137.035999, 'obs': 137.035999, 'sigma': 0.000022},
-        'alpha_s(M_Z)': {'ce': ALPHA_S, 'obs': ALPHA_S, 'sigma': 0.00005},
-        'sin2_theta_W': {'ce': SIN2_THETA_W, 'obs': 0.23122, 'sigma': 0.00003},
-        'delta': {'ce': DELTA, 'obs': 0.17776, 'sigma': 0.00003},
-        'Omega_b': {'ce': 0.04865, 'obs': 0.04865, 'sigma': 0.0001},
-        'Omega_Lambda': {'ce': 0.6891, 'obs': 0.6847, 'sigma': 0.0016},
-        'Omega_DM': {'ce': 0.2623, 'obs': 0.2589, 'sigma': 0.0091},
-        'm_H': {'ce': 125.1, 'obs': 125.10, 'sigma': 0.14},
-        'V_cb': {'ce': V_CB_NLO, 'obs': 0.04153, 'sigma': 0.00016},
-        'sin2_theta_13': {'ce': DELTA / 8, 'obs': 0.02200, 'sigma': 0.00055},
-        'w_0': {'ce': -0.769, 'obs': -0.776, 'sigma': 0.034},
-        'A_s': {'ce': A_S_PROJECTED_READOUT, 'obs': 2.1056, 'sigma': 0.0034},
-        'n_s': {'ce': N_S_TRANSITION_COUNT, 'obs': 0.9649, 'sigma': 0.0042},
-        'm_phi_CE': {'ce': 29.648, 'obs': None, 'sigma': 0.1},
-    }
+    def __init__(self, scorecard: ConstantsScorecard | None = None) -> None:
+        self.scorecard = scorecard or ConstantsScorecard()
 
-    def validate_all(self):
-        """Validate all constants"""
-        results = []
-        passed = 0
-        caution = 0
-        warn = 0
-        fail = 0
+    def validate_all(self) -> dict[str, Any]:
+        """Return canonical rows without copying observations or grading rules."""
 
-        for name, data in self.CONSTANTS.items():
-            ce = data['ce']
-            obs = data['obs']
-            sigma = data['sigma']
-
-            if obs is None:
-                status = 'UNOBS'
-                sigma_offset = float('nan')
-                rel_error = float('nan')
-            else:
-                delta = abs(ce - obs)
-                sigma_offset = delta / sigma if sigma > 0 else float('nan')
-                rel_error = 100 * delta / obs if obs != 0 else float('nan')
-
-                if sigma_offset < 1:
-                    status = 'PASS'
-                    passed += 1
-                elif sigma_offset < 2:
-                    status = 'CAUTION'
-                    caution += 1
-                elif sigma_offset < 3:
-                    status = 'WARN'
-                    warn += 1
-                else:
-                    status = 'FAIL'
-                    fail += 1
-
-            results.append({
-                'name': name,
-                'ce': ce,
-                'obs': obs,
-                'sigma_offset': sigma_offset,
-                'rel_error': rel_error,
-                'status': status
-            })
-
-        return {
-            'results': results,
-            'summary': {
-                'total': len(self.CONSTANTS),
-                'passed': passed,
-                'caution': caution,
-                'warn': warn,
-                'fail': fail
+        results = [
+            {
+                "name": constant.name,
+                "symbol": constant.symbol,
+                "ce": constant.ce_value,
+                "obs": constant.obs_value,
+                "obs_sigma": constant.obs_sigma,
+                "sigma_offset": constant.sigma_offset,
+                "rel_error": constant.relative_error,
+                "grade": constant.grade,
+                "role": constant.role,
+                "status": constant.status,
+                "scoreable": constant.scoreable,
+                "is_scored": constant.is_scored,
+                "source": constant.source,
+                "notes": constant.notes,
             }
-        }
+            for constant in self.scorecard.constants
+        ]
+        return {"results": results, "summary": self.scorecard.summary()}
 
 
 class DimensionalValidator:
-    """Quick dimensional analysis check"""
+    """Evaluate CE formula dimensions through the dimensionless checker."""
 
-    FORMULAS = {
-        'S(D) = exp(-D)': {'dims_correct': True, 'note': 'D dimensionless'},
-        'D_eff = 3 + delta': {'dims_correct': True, 'note': 'Both dimensionless'},
-        'eps2 = exp(-(1-eps)*D_eff)': {'dims_correct': True, 'note': 'Exp arg dimensionless'},
-        'sin2_theta_W = 4*alpha_s^(4/3)': {'dims_correct': True, 'note': 'Both dimensionless'},
-        'm_phi = m_p * delta^2': {'dims_correct': True, 'note': 'm_p [M] * [1] = [M]'},
-        'T_c = const * m_phi * exp(...)': {'dims_correct': True, 'note': 'Result is energy/temp'},
-        'w_0 = -2*xi^2 / (3*Omega)': {'dims_correct': True, 'note': 'Dimensionless ratio'},
-    }
-
-    def validate_all(self):
-        """Check all formulas"""
-        passed = sum(1 for f in self.FORMULAS.values() if f['dims_correct'])
-        total = len(self.FORMULAS)
+    @staticmethod
+    def _gate_info(result: GateResult[Any], success_note: str) -> dict[str, Any]:
         return {
-            'formulas': self.FORMULAS,
-            'passed': passed,
-            'total': total,
-            'all_pass': passed == total
+            "dims_correct": result.passed,
+            "note": success_note if result.passed else "; ".join(result.errors),
+            "errors": result.errors,
+        }
+
+    @staticmethod
+    def _expected_dimension_info(
+        actual: tuple[Fraction, ...],
+        expected: tuple[Fraction, ...],
+        success_note: str,
+    ) -> dict[str, Any]:
+        passed = actual == expected
+        error = () if passed else (f"expected dims={expected}, got dims={actual}",)
+        return {
+            "dims_correct": passed,
+            "note": success_note if passed else error[0],
+            "errors": error,
+        }
+
+    def validate_all(self) -> dict[str, Any]:
+        """Run live dimension-vector checks for every reported formula."""
+
+        delta = Quantity("delta", 0.17776)
+        d_eff = Quantity("D_eff", 3.17776)
+        epsilon2 = Quantity("epsilon^2", 0.04865)
+        alpha_s = Quantity("alpha_s", 0.11789)
+        proton_mass = Quantity("m_p", 938.2720813, MASS)
+        clarus_mass = Quantity("m_phi", 29.648, MASS)
+        boltzmann = Quantity("k_B", 1.380649e-23, dim(1, 0, 0, -1))
+        critical_temperature = Quantity("T_c", 300.0, TEMPERATURE)
+        xi = Quantity("xi", 1.0)
+        omega = Quantity("Omega", 1.0)
+
+        formulas: dict[str, dict[str, Any]] = {}
+
+        formulas["S(D) = exp(-D)"] = self._gate_info(
+            exp_arguments((Quantity("D", 3.0),)),
+            "exponential argument D is dimensionless",
+        )
+
+        formulas["D_eff = 3 + delta"] = self._gate_info(
+            audit_dimensionless(
+                (Quantity("3", 3.0), delta),
+                context="D_eff additive terms",
+            ),
+            "all additive terms are dimensionless",
+        )
+
+        bootstrap_factors = (Quantity("1-epsilon^2", 1 - epsilon2.value), d_eff)
+        bootstrap_factor_gate = audit_dimensionless(
+            bootstrap_factors,
+            context="bootstrap exponential factors",
+        )
+        if bootstrap_factor_gate.passed:
+            bootstrap_dims = group_dimension(
+                bootstrap_factors,
+                {"1-epsilon^2": Fraction(1), "D_eff": Fraction(1)},
+            )
+            bootstrap_gate = exp_arguments(
+                (Quantity("(1-epsilon^2)*D_eff", 1.0, bootstrap_dims),)
+            )
+        else:
+            bootstrap_gate = bootstrap_factor_gate
+        formulas["epsilon^2 = exp(-(1-epsilon^2)*D_eff)"] = self._gate_info(
+            bootstrap_gate,
+            "bootstrap exponential argument is dimensionless",
+        )
+
+        weak_angle_dims = group_dimension(
+            (alpha_s,),
+            {"alpha_s": Fraction(4, 3)},
+        )
+        formulas["sin^2(theta_W) = 4*alpha_s^(4/3)"] = self._gate_info(
+            check_dimensionless(
+                Quantity("4*alpha_s^(4/3)", 1.0, weak_angle_dims),
+                context="weak-angle bridge",
+            ),
+            "fractional-power bridge is dimensionless",
+        )
+
+        mass_readout_dims = group_dimension(
+            (proton_mass, delta),
+            {"m_p": Fraction(1), "delta": Fraction(2)},
+        )
+        formulas["m_phi = m_p * delta^2"] = self._expected_dimension_info(
+            mass_readout_dims,
+            MASS,
+            "right-hand side has mass dimension",
+        )
+
+        thermal_argument_gate = exp_arguments((Quantity("thermal exponent", 1.0),))
+        thermal_rhs_dims = group_dimension(
+            (Quantity("prefactor", 1.0), clarus_mass),
+            {"prefactor": Fraction(1), "m_phi": Fraction(1)},
+        )
+        thermal_lhs_dims = group_dimension(
+            (boltzmann, critical_temperature),
+            {"k_B": Fraction(1), "T_c": Fraction(1)},
+        )
+        if thermal_argument_gate.passed:
+            formulas["k_B*T_c = prefactor*m_phi*exp(...)"] = self._expected_dimension_info(
+                thermal_rhs_dims,
+                thermal_lhs_dims,
+                "both sides have energy dimension and the exponent is dimensionless",
+            )
+        else:
+            formulas["k_B*T_c = prefactor*m_phi*exp(...)"] = self._gate_info(
+                thermal_argument_gate,
+                "thermal exponential argument is dimensionless",
+            )
+
+        equation_of_state_dims = group_dimension(
+            (xi, omega),
+            {"xi": Fraction(2), "Omega": Fraction(-1)},
+        )
+        formulas["w_0 = -2*xi^2/(3*Omega)"] = self._gate_info(
+            check_dimensionless(
+                Quantity("xi^2/Omega", 1.0, equation_of_state_dims),
+                context="equation-of-state readout",
+            ),
+            "equation-of-state ratio is dimensionless",
+        )
+
+        passed = sum(info["dims_correct"] for info in formulas.values())
+        total = len(formulas)
+        return {
+            "formulas": formulas,
+            "passed": passed,
+            "total": total,
+            "all_pass": passed == total,
         }
 
 
-def main():
-    """Run all validations"""
+def _overall_status(
+    bootstrap_result: dict[str, Any],
+    constants_summary: dict[str, Any],
+    dimensional_result: dict[str, Any],
+) -> str:
+    if not bootstrap_result["pass"] or not dimensional_result["all_pass"]:
+        return "FAIL"
+    return str(constants_summary["status"])
 
-    print("=" * 80)
+
+def main() -> dict[str, Any]:
+    """Run all validators and print an honesty-preserving combined report."""
+
+    print("=" * 96)
     print("CLARUS EQUATION VALIDATION SUITE")
-    print("=" * 80)
+    print("=" * 96)
 
-    # 1. Bootstrap solver
     print("\n[1] BOOTSTRAP FIXED-POINT SOLVER")
-    print("-" * 80)
+    print("-" * 96)
     validator = BootstrapValidator()
-    try:
-        result = validator.validate()
-        print(f"Solution eps^2 = {result['solution']:.10f}")
-        print(f"Expected Omega_b = {result['omega_b_obs']:.5f}")
-        print(f"Residual |LHS-RHS| = {result['residual']:.2e}")
-        print(f"Equation satisfied? {result['equation_satisfied']}")
-        print(f"Sigma offset = {result['sigma_offset']:+.2f} sigma")
-        print(f"Status: {'PASS' if result['pass'] else 'FAIL'}")
-    except Exception as e:
-        print(f"ERROR: {e}")
+    result = validator.validate()
+    print(f"Solution epsilon^2 = {result['solution']:.10f}")
+    print(f"Expected Omega_b = {result['omega_b_obs']:.5f}")
+    print(f"Residual |LHS-RHS| = {result['residual']:.2e}")
+    print(f"Equation satisfied? {result['equation_satisfied']}")
+    print(f"Sigma offset = {result['sigma_offset']:+.2f} sigma")
+    print(f"Status: {'PASS' if result['pass'] else 'FAIL'}")
 
-    # 2. Constants scorecard
-    print("\n[2] CONSTANTS VALIDATION SCORECARD")
-    print("-" * 80)
-    constants_val = ConstantsValidator()
-    const_result = constants_val.validate_all()
-
-    summary = const_result['summary']
-    print(f"Total constants tested: {summary['total']}")
-    print(f"  PASS (< 1 sigma):    {summary['passed']:3d}  ({100*summary['passed']/summary['total']:.1f}%)")
-    print(f"  CAUTION (1-2 sigma): {summary['caution']:3d}  ({100*summary['caution']/summary['total']:.1f}%)")
-    print(f"  WARN (2-3 sigma):    {summary['warn']:3d}  ({100*summary['warn']/summary['total']:.1f}%)")
-    print(f"  FAIL (> 3 sigma):    {summary['fail']:3d}  ({100*summary['fail']/summary['total']:.1f}%)")
+    print("\n[2] CANONICAL CONSTANTS SCORECARD")
+    print("-" * 96)
+    const_result = ConstantsValidator().validate_all()
+    summary = const_result["summary"]
+    scored_total = summary["scored_total"]
+    print(f"Total entries: {summary['total']}")
+    print(f"Scored Selection/Bridge/Phenomenology rows: {scored_total}")
+    print(
+        f"  PASS (< 1 sigma):    {summary['passed']:3d}  "
+        f"({100 * summary['passed'] / scored_total:.1f}% of scored rows)"
+    )
+    print(
+        f"  CAUTION (1-2 sigma): {summary['caution']:3d}  "
+        f"({100 * summary['caution'] / scored_total:.1f}% of scored rows)"
+    )
+    print(
+        f"  WARN (2-3 sigma):    {summary['warn']:3d}  "
+        f"({100 * summary['warn'] / scored_total:.1f}% of scored rows)"
+    )
+    print(
+        f"  FAIL (> 3 sigma):    {summary['fail']:3d}  "
+        f"({100 * summary['fail'] / scored_total:.1f}% of scored rows)"
+    )
+    print(f"  EXACT/reference:     {summary['exact']:3d}")
+    print(f"  INPUT/excluded:      {summary['input']:3d}")
+    print(f"  OPEN:                {summary['open']:3d}")
+    print(f"  OPEN TEST:           {summary['test']:3d}")
+    print(f"Scored pass rate: {summary['pass_rate']:.1f}%")
+    print(f"Scorecard status: {summary['status']}")
 
     print("\nDetailed Results:")
-    print(f"{'Constant':20s} {'CE Value':15s} {'Obs Value':15s} {'Sigma Offset':15s} {'Status':10s}")
-    print("-" * 80)
-    for r in const_result['results']:
-        ce_str = f"{r['ce']:.6f}" if isinstance(r['ce'], float) else str(r['ce'])
-        obs_str = f"{r['obs']:.6f}" if r['obs'] is not None else "N/A"
-        sigma_str = f"{r['sigma_offset']:+.2f}" if not math.isnan(r['sigma_offset']) else "N/A"
-        print(f"{r['name']:20s} {ce_str:15s} {obs_str:15s} {sigma_str:15s} {r['status']:10s}")
+    print(
+        f"{'Symbol':24s} {'Grade':14s} {'CE Value':14s} {'Obs Value':14s} "
+        f"{'delta/sigma':12s} {'Status':10s}"
+    )
+    print("-" * 96)
+    for row in const_result["results"]:
+        ce_str = f"{row['ce']:.6g}"
+        obs_str = "N/A" if row["obs"] is None else f"{row['obs']:.6g}"
+        sigma_str = (
+            "N/A" if math.isnan(row["sigma_offset"]) else f"{row['sigma_offset']:+.2f}"
+        )
+        print(
+            f"{row['symbol'][:24]:24s} {row['grade'][:14]:14s} {ce_str:14s} "
+            f"{obs_str:14s} {sigma_str:12s} {row['status']:10s}"
+        )
 
-    # 3. Dimensional check
     print("\n[3] DIMENSIONAL CONSISTENCY CHECK")
-    print("-" * 80)
-    dim_val = DimensionalValidator()
-    dim_result = dim_val.validate_all()
-
+    print("-" * 96)
+    dim_result = DimensionalValidator().validate_all()
     print(f"Formulas checked: {dim_result['total']}")
     print(f"Dimensionally consistent: {dim_result['passed']} / {dim_result['total']}")
     print(f"Overall: {'PASS' if dim_result['all_pass'] else 'ISSUES DETECTED'}")
+    for formula, info in dim_result["formulas"].items():
+        status = "OK" if info["dims_correct"] else "ERROR"
+        print(f"  {formula:52s} [{status}] {info['note']}")
 
-    for formula, info in dim_result['formulas'].items():
-        status = "OK" if info['dims_correct'] else "ERROR"
-        print(f"  {formula:50s} [{status}] {info['note']}")
-
-    # Summary
-    print("\n" + "=" * 80)
+    overall_status = _overall_status(result, summary, dim_result)
+    print("\n" + "=" * 96)
     print("SUMMARY")
-    print("=" * 80)
+    print("=" * 96)
     print(f"Bootstrap solver:      {'PASS' if result['pass'] else 'FAIL'}")
-    print(f"Constants scorecard:   {100*summary['passed']/summary['total']:.1f}% pass rate")
-    print(f"Dimensional analysis:  {'PASS' if dim_result['all_pass'] else 'ISSUES'}")
-
-    overall_pass = result['pass'] and (summary['passed']/summary['total'] > 0.8) and dim_result['all_pass']
-    print(f"\nOVERALL: {'VALIDATED' if overall_pass else 'ISSUES FOUND'}")
-    print("=" * 80 + "\n")
+    print(
+        f"Constants scorecard:   {summary['status']} "
+        f"({summary['passed']}/{scored_total} PASS; {summary['pass_rate']:.1f}%)"
+    )
+    print(f"Dimensional analysis:  {'PASS' if dim_result['all_pass'] else 'FAIL'}")
+    print(f"\nOVERALL: {overall_status}")
+    print("=" * 96 + "\n")
 
     return {
-        'bootstrap': result,
-        'constants': const_result,
-        'dimensional': dim_result
+        "bootstrap": result,
+        "constants": const_result,
+        "dimensional": dim_result,
+        "overall_status": overall_status,
     }
 
 
-if __name__ == '__main__':
-    results = main()
+if __name__ == "__main__":
+    main()

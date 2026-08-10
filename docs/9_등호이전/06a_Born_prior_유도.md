@@ -1,224 +1,220 @@
-# 06a. Born Prior 유도 조건
+# 06a. 조건부 유한분지 Born weight 정리
 
-## 0. 목표
+## 0. 범위
 
-06장은 Born prior
+이 문서는 모든 유한차원 직교분할에 걸친 probability assignment가 강한
+refinement covariance와 연속성을 만족할 때 \(|c_i|^2\)가 강제됨을
+증명한다. Gleason 정리의 대체 증명이나 실제 측정장치의 유도는 아니다.
 
-$$
-\mu_0(i)=|c_i|^2
-$$
+## 1. Probability assignment
 
-를 bridge로 두었다. 이 문서는 어떤 공리를 추가하면 finite branch 상황에서 그 prior가 나오는지 정리한다.
-
-주의:
-
-> 이 문서는 전체 Gleason 정리의 완전 증명이 아니다. 여기서는 유한 분지, branch refinement, 연속성 공리 아래에서 $|c_i|^2$가 유일한 prior가 되는 최소 도구만 쓴다.
-
-현재 판정:
-
-| 항목 | 판정 |
-|---|---|
-| finite equal-branch proof | `Exact` |
-| rational amplitude proof | `Exact under refinement axioms` |
-| irrational amplitude extension | `Exact under continuity` |
-| 물리적 측정장치와의 동일시 | `Bridge` |
-
-## 1. 공리계 B
-
-상태는 유한차원 Hilbert space의 unit vector다.
-
-$$
+**[정의]** 모든 유한차원 Hilbert space의 orthonormal basis
+\(\mathcal B=\{|i\rangle\}_{i=1}^n\)와 unit vector
+\[
 |\psi\rangle=\sum_i c_i|i\rangle
-$$
+\]
+에 probability vector
+\(\mu_{\psi,\mathcal B}\in\mathcal P(\{1,\dots,n\})\)를 배정한다고 하자.
 
-측정 후보공간은 직교 basis의 index 집합 $A=\{i\}$다.
+다음은 이 배정족 전체에 대한 **[공리]**다.
 
-### B0. 위상 불변성
+### B0. Ray 불변성
 
-전체 위상은 prior를 바꾸지 않는다.
-
-$$
-|\psi\rangle\sim e^{i\theta}|\psi\rangle
-$$
+\[
+\mu_{e^{i\theta}\psi,\mathcal B}
+=
+\mu_{\psi,\mathcal B}.
+\]
 
 ### B1. 정규화
 
-각 후보 prior는 음이 아니고 총합은 1이다.
+\[
+\mu_{\psi,\mathcal B}(i)\geq0,
+\qquad
+\sum_i\mu_{\psi,\mathcal B}(i)=1.
+\]
 
-$$
-\mu_\psi(i)\ge0,\qquad \sum_i\mu_\psi(i)=1
-$$
+### B2. Nullity
 
-### B2. 직교 coarse-graining 가법성
+\[
+c_i=0
+\quad\Longrightarrow\quad
+\mu_{\psi,\mathcal B}(i)=0.
+\]
 
-서로 직교한 후보 묶음 $S\subset A$에 대해
+### B3. Equal-branch symmetry
 
-$$
-\mu_\psi(S)=\sum_{i\in S}\mu_\psi(i)
-$$
-
-이다.
-
-### B3. 대칭성
-
-측정 basis의 두 후보가 상태에서 같은 계수 크기를 가지면 prior도 같다.
-
-$$
+같은 basis에서
+\[
 |c_i|=|c_j|
-\quad\Rightarrow\quad
-\mu_\psi(i)=\mu_\psi(j)
-$$
-
-### B4. Branch refinement 불변성
-
-한 후보 $i$를 $n_i$개의 동일한 미세분지로 나누어도, 그 미세분지들의 prior 합은 원래 후보 $i$의 prior와 같다.
-
-### B5. 연속성
-
-$|c_i|^2$가 연속적으로 변하면 $\mu_\psi(i)$도 연속적으로 변한다.
-
-## 2. 동일 진폭 정리
-
-**정리 2.1**  
-
-$$
-|\psi\rangle=\frac1{\sqrt N}\sum_{i=1}^N e^{i\theta_i}|i\rangle
-$$
-
-이면
-
-$$
-\mu_\psi(i)=\frac1N
-$$
-
-이다.
-
-**증명.**
-
-모든 후보의 계수 크기가 같다. B3에 의해 모든 $\mu_\psi(i)$가 같은 값 $p$다. B1에 의해
-
-$$
-Np=1
-$$
-
-이므로 $p=1/N$이다. $\square$
-
-## 3. 유리 진폭 정리
-
-**정리 3.1**  
-$|c_i|^2=n_i/N$이고 $\sum_i n_i=N$인 자연수 $n_i$가 존재하면
-
-$$
-\mu_\psi(i)=|c_i|^2
-$$
-
-이다.
-
-**증명.**
-
-후보 $i$를 $n_i$개의 미세분지
-
-$$
-(i,1),\dots,(i,n_i)
-$$
-
-로 refinement한다. 총 미세분지 수는 $N$이다. refinement된 상태를 동일 진폭 상태로 표현하면 각 미세분지는 정리 2.1에 의해 prior $1/N$을 가진다.
-
-B2와 B4에 의해 원래 후보 $i$의 prior는 미세분지 prior의 합이다.
-
-$$
-\mu_\psi(i)
+\quad\Longrightarrow\quad
+\mu_{\psi,\mathcal B}(i)
 =
-\sum_{k=1}^{n_i}\frac1N
+\mu_{\psi,\mathcal B}(j).
+\]
+
+이 공리는 상대위상과 label permutation이 equal-modulus branch의
+확률을 가르지 않는다는 강한 대칭 가정이다.
+
+### B4. Refinement covariance
+
+양의 정수 \(n_i\)에 대해 basis isometry를
+\[
+V|i\rangle
+=
+\frac1{\sqrt{n_i}}
+\sum_{\alpha=1}^{n_i}
+e^{i\vartheta_{i\alpha}}|i,\alpha\rangle
+\]
+로 정의할 수 있다고 하자. 그러면
+\[
+\mu_{\psi,\mathcal B}(i)
+=
+\sum_{\alpha=1}^{n_i}
+\mu_{V\psi,\mathcal B'}(i,\alpha).
+\]
+
+즉 ancillary equal-amplitude refinement 뒤의 coarse probability가
+원래 probability와 같다. 이는 단순한 유한 가법성보다 강하며, 서로 다른
+Hilbert-space dimension의 배정을 연결한다.
+
+### B5. 상태 연속성
+
+고정 basis에서 \(\|\psi_k-\psi\|\to0\)이면 각 \(i\)에 대해
+\[
+\mu_{\psi_k,\mathcal B}(i)
+\to
+\mu_{\psi,\mathcal B}(i).
+\]
+
+## 2. 동일 진폭
+
+**[정리]**
+\[
+|\psi\rangle
+=
+\frac1{\sqrt N}
+\sum_{i=1}^Ne^{i\theta_i}|i\rangle
+\]
+이면
+\[
+\mu_{\psi,\mathcal B}(i)=\frac1N.
+\]
+
+**증명.** B3으로 모든 branch probability가 같은 \(p\)이고 B1로
+\(Np=1\)이다. \(\square\)
+
+## 3. 유리 제곱진폭
+
+**[정리]** \(|c_i|^2=n_i/N\)이고
+\(n_i\in\mathbb Z_{\geq0}\), \(\sum_i n_i=N\)이면
+\[
+\mu_{\psi,\mathcal B}(i)=|c_i|^2.
+\]
+
+**증명.** \(n_i=0\)인 branch에는 \(V|i\rangle=|i,1\rangle\)인 한 개
+zero-amplitude microbranch를 두고, \(n_i>0\)인 branch에는 B4의
+refinement를 적용하면
+\[
+V|\psi\rangle
+=
+\sum_{i:n_i>0}\sum_{\alpha=1}^{n_i}
+\frac{c_i}{\sqrt{n_i}}
+e^{i\vartheta_{i\alpha}}|i,\alpha\rangle.
+\]
+모든 nonzero microbranch의 수는 정확히 \(N\)이고 coefficient
+magnitude는
+\[
+\frac{|c_i|}{\sqrt{n_i}}=\frac1{\sqrt N}.
+\]
+B2로 zero-amplitude microbranch의 probability는 0이다. B3으로
+나머지 \(N\)개 probability가 모두 같고 B1로 각각 \(1/N\)이다.
+B4로
+\[
+\mu_{\psi,\mathcal B}(i)
+=
+\sum_{\alpha=1}^{n_i}\frac1N
 =
 \frac{n_i}{N}
 =
-|c_i|^2
-$$
+|c_i|^2.
+\quad\square
+\]
 
-이다. $\square$
+## 4. 일반 제곱진폭
 
-## 4. 일반 진폭
-
-**정리 4.1**  
-B0-B5가 성립하면 유한 basis 측정에서
-
-$$
-\mu_\psi(i)=|c_i|^2
-$$
-
+**[정리]** B0--B5가 모든 유한 refinement에 대해 성립하면
+\[
+\mu_{\psi,\mathcal B}(i)=|c_i|^2
+\]
 이다.
 
-**증명.**
+**증명.** Probability simplex의 rational points가 dense하므로
+\[
+p^{(k)}_i\in\mathbb Q_{\geq0},
+\qquad
+\sum_i p_i^{(k)}=1,
+\qquad
+p_i^{(k)}\to|c_i|^2
+\]
+인 수열을 잡는다. \(c_i\ne0\)이면 \(\theta_i=\arg c_i\)로 두고,
+\(c_i=0\)이면 \(\theta_i\)를 임의로 택해
+\[
+|\psi_k\rangle
+=
+\sum_i\sqrt{p_i^{(k)}}e^{i\theta_i}|i\rangle
+\]
+로 두면 \(\|\psi_k-\psi\|\to0\)이다. 3절과 B5로
+\[
+\mu_{\psi,\mathcal B}(i)
+=
+\lim_k\mu_{\psi_k,\mathcal B}(i)
+=
+\lim_kp_i^{(k)}
+=
+|c_i|^2.
+\quad\square
+\]
 
-임의의 $|c_i|^2$ 는 유리수열 $n_{i,k}/N_k$로 근사할 수 있다. 각 근사 상태에 대해서는 정리 3.1이 성립한다. B5의 연속성으로 극한을 취하면
+## 5. 정리가 말하지 않는 것
 
-$$
-\mu_\psi(i)=\lim_k\frac{n_{i,k}}{N_k}=|c_i|^2
-$$
+B4는 physical ancilla에서 가능한 모든 refinement가 확률을 보존한다는
+강한 **[공리]**다. 다음 항목은 위 증명에 포함되지 않으며
+**[미완성]**이다.
 
-이다. $\square$
+- 실제 apparatus interaction이 B4 isometry를 구현하는 조건
+- POVM과 무한차원 Hilbert space로의 확장
+- contextual assignment를 배제하는 물리 원리
+- preparation independence와 반복측정 frequency
+- CE path amplitude에서 이 probability assignment로 가는 사상
 
-## 5. PreEq와의 결합
+따라서 이 결과를 “PreEq가 무가정으로 Born rule을 유도한다”고 읽지
+않는다.
 
-Born prior가 닫히면 06장의 초기 모호함은
+## 6. PreEq와의 결합
 
-$$
+위 공리계를 채택하면 초기 prior는
+\[
 \mu_0(i)=|c_i|^2
-$$
-
-로 고정된다.
-
-그 뒤 측정 조건은 PreEq 재가중이다.
-
-$$
+\]
+로 고정된다. 그 뒤 무차원 측정 cost를 택한 재가중
+\[
 \mu_\beta(i)
 =
-\frac{e^{-\beta E_{\mathrm{meas}}(i)}|c_i|^2}
-{\sum_j e^{-\beta E_{\mathrm{meas}}(j)}|c_j|^2}
-$$
+\frac{e^{-\beta\mathcal I_{\rm meas}(i)}|c_i|^2}
+{\sum_j e^{-\beta\mathcal I_{\rm meas}(j)}|c_j|^2}
+\]
+에는 [06_측정문제와Born.md](06_측정문제와Born.md)의 유한 농축 정리가
+적용된다.
 
-따라서 역할이 나뉜다.
+Born prior와 Gibbs selection은 역할이 다르다. 첫째는 초기 probability
+assignment이고, 둘째는 추가 cost 아래의 조건부 재가중이다.
 
-| 층 | 담당 |
-|---|---|
-| Born prior | 측정 전 후보 질량 $\mu_0$ |
-| PreEq dynamics | 조건 에너지 아래 manifest 농축 |
-| CE bridge | $E_{\mathrm{meas}}$와 접힘/장치 상호작용의 식별 |
+## 7. 기계 검산의 범위
 
-## 6. 반증 조건
-
-이 문서의 유도는 다음 중 하나가 깨지면 무너진다.
-
-| 깨지는 공리 | 결과 |
-|---|---|
-| B2 가법성 실패 | coarse-grained outcome 확률이 합으로 닫히지 않음 |
-| B3 대칭성 실패 | 같은 크기 계수 분지가 다른 prior를 가짐 |
-| B4 refinement 실패 | 미세분지 표현에 따라 prior가 바뀜 |
-| B5 연속성 실패 | 유리 진폭에서 일반 진폭으로 확장 불가 |
-
-## 7. 코드 검증
-
-finite branch 수준의 닫힌 부분은 `reality_stone.clarus.pre_eq`에 구현했다.
-
-| 함수 | 의미 |
-|---|---|
-| `born_prior(amplitudes)` | \(|c_i|^2\) 정규화 prior |
-| `refined_branch_prior(counts)` | 동일 진폭 미세분지 count에서 coarse prior |
-
-회귀검사:
-
-```powershell
-python -m pytest tests\test_pre_eq.py -q
-```
-
-검증되는 항목:
-
-1. 유리 branch count \((n_i/N)\)와 \(|c_i|^2\) prior가 일치한다.
-2. 전체 위상 \(e^{i\theta}\)를 곱해도 prior는 변하지 않는다.
-
-이 코드는 B0-B4의 finite branch 결과만 검산한다. Hilbert space 전체 측정장치 모델이나 Gleason류 일반 정리는 여전히 이 문서 밖의 bridge다.
-
-## 8. 결론
-
-Born rule은 PreEq가 자동으로 만드는 것이 아니다. 그러나 Born prior를 위 공리들로 닫으면, PreEq는 그 prior가 측정 조건 아래 어떻게 하나의 manifest outcome으로 농축되는지를 설명한다.
+유리 branch count와 위상 불변성의 유한 대수는
+\[
+\texttt{python -m pytest tests/test\_pre\_eq.py -q}
+\]
+로 회귀검사할 수 있다. 이 계산은 B0--B4를 구현한 예제를 검산할 뿐 B4의
+물리적 보편성이나 quantum instrument를 증명하지 않는다.

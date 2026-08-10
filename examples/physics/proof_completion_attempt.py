@@ -2,9 +2,8 @@
 Proof-completion attempt ledger for currently open CE constants.
 
 The script is intentionally conservative:
-- closed means the formula is already justified by the local proof rules;
-- conditional_pass means a zero-free-parameter bridge candidate is numerically
-  viable but still needs an independent derivation;
+- candidate_pass means an input-dependent bridge/readout is numerically viable
+  but still needs an independent derivation;
 - obstruction means the current formula cannot be counted as proven.
 """
 
@@ -12,6 +11,21 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
+
+if __package__:
+    from .primordial_spectrum_readout_gate import (
+        OBS_AS_1E9,
+        OBS_AS_SIGMA_1E9,
+        effective_geometry_drive,
+        total_fixed_point_response,
+    )
+else:
+    from primordial_spectrum_readout_gate import (  # type: ignore[no-redef]
+        OBS_AS_1E9,
+        OBS_AS_SIGMA_1E9,
+        effective_geometry_drive,
+        total_fixed_point_response,
+    )
 
 
 ALPHA_S = 0.11789
@@ -60,7 +74,7 @@ def vcb_nlo_candidate() -> Attempt:
         value,
         0.04153,
         0.00016,
-        "conditional_pass",
+        "candidate_pass",
         "Accepted under the one-loop electroweak projector bridge gate.",
     )
 
@@ -85,8 +99,8 @@ def vus_one_loop() -> Attempt:
         value,
         0.22650,
         0.00048,
-        "conditional_pass",
-        "No-free-parameter correction is within 1 sigma; still a phenomenological bridge.",
+        "candidate_pass",
+        "Fixed-form readout is within 1 sigma; alpha_s remains an external input.",
     )
 
 
@@ -99,8 +113,8 @@ def ns_transition_count() -> Attempt:
         value,
         0.9649,
         0.0042,
-        "conditional_pass",
-        "Numerically closed if the CE transition count 12 is accepted; inflationary dynamics remain external.",
+        "candidate_pass",
+        "Numerically close if the CE transition count 12 is accepted; inflationary dynamics remain external.",
     )
 
 
@@ -108,9 +122,9 @@ def as_raw() -> Attempt:
     return Attempt(
         "A_s raw",
         "raw recursive derivative amplitude",
-        7.84e-9,
-        2.1056e-9,
-        0.0034e-9,
+        total_fixed_point_response().as_1e9 * 1e-9,
+        OBS_AS_1E9 * 1e-9,
+        OBS_AS_SIGMA_1E9 * 1e-9,
         "obstruction",
         "Raw value is far outside the observed amplitude; the readout candidate is post-hoc until selected.",
     )
@@ -120,10 +134,10 @@ def as_readout_candidate() -> Attempt:
     return Attempt(
         "A_s readout candidate",
         "(2/pi)*sigma^(D_eff/(D_eff+1))*eps2*(1-eps2)",
-        2.1038087e-9,
-        2.1056e-9,
-        0.0034e-9,
-        "conditional_pass",
+        effective_geometry_drive().as_1e9 * 1e-9,
+        OBS_AS_1E9 * 1e-9,
+        OBS_AS_SIGMA_1E9 * 1e-9,
+        "candidate_pass",
         "Numerically viable under the projected residual-drive readout gate.",
     )
 

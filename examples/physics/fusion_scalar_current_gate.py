@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from reality_stone.clarus.fusion_scalar_current_loop import (
     current_fusion_scalar_current_report,
+    scalar_report_gate_results,
 )
 
 
@@ -13,7 +14,9 @@ def main() -> None:
     radius = report.intrinsic_scalar_radius
     proxy = report.sigma_term_proxy
     two_body = report.two_body_scalar_current
+    evidence = report.primary_evidence
     gate = report.certification
+    report_gates = scalar_report_gate_results(gate)
 
     print("CE FUSION SCALAR-CURRENT LOOP")
     print(" one-nucleon normalization")
@@ -69,15 +72,26 @@ def main() -> None:
     print(f"  fitted contact supplied         {gate.calibrated_two_body_contact_supplied}")
     print(f"  D/T covariance supplied         {gate.momentum_dependent_dt_covariance_supplied}")
     print(f"  real-space barrier supplied     {gate.full_real_space_barrier_response_supplied}")
+    print(" primary-evidence classification")
+    print(
+        "  physical T full q0 response     "
+        f"{evidence.physical_triton_full_q0_scalar_response_public}"
+    )
+    print(
+        f"  machine-readable D/T arrays     {evidence.machine_readable_dt_response_arrays_public}"
+    )
+    print(f"  shared-regulator fitted contact {evidence.physical_point_short_range_contact_fitted}")
+    print(
+        "  reaction likelihood is scalar  "
+        f"{evidence.reaction_likelihood_is_scalar_current_likelihood}"
+    )
     print(" direct leaf gates")
     print(f"  p/n covariance                  {nucleon.proton_neutron_sigma_covariance_supplied}")
     print(f"  modern sigma covariance         {nucleon.modern_sigma_term_covariance_supplied}")
     print(f"  normalization likelihood        {nucleon.normalization_likelihood_supplied}")
     print(f"  ab-initio density covariance    {shape.ab_initio_density_covariance_supplied}")
     print(f"  scalar-radius covariance        {radius.scalar_radius_covariance_supplied}")
-    print(
-        f"  full scalar form factor         {radius.low_q_expansion_promoted_to_full_form_factor}"
-    )
+    print(f"  full scalar form-factor data    {radius.full_form_factor_likelihood_supplied}")
     print(
         "  regulator-consistent current    "
         f"{two_body.regulator_consistent_current_and_potential_supplied}"
@@ -99,11 +113,23 @@ def main() -> None:
     print(
         f"  comparison band                 +/- {gate.comparison_band_absolute_coupling_correction:.6f}"
     )
-    print(f"  scalar-current certification    {gate.scalar_current_certification_pass}")
+    print(f"  component scalar certification  {gate.scalar_current_certification_pass}")
     print(f"  upstream UV/action gate         {gate.upstream_uv_action_gate_pass}")
     print(f"  upstream constraint gates       {gate.upstream_existing_constraints_gate_pass}")
+    print(f"  component + upstream gates      {gate.component_and_upstream_gate_pass}")
+    print(f"  canonical primary evidence     {report_gates.canonical_primary_evidence_gate_pass}")
+    print(f"  canonical scalar loop closed    {report.scalar_current_loop_closed}")
     print(f"  physical branch accepted        {report.physical_ce_fusion_branch_accepted}")
-    print(f"  status                          {gate.status}")
+    print(f"  component status                {gate.status}")
+
+    if (
+        report.scalar_current_loop_closed is not report_gates.scalar_current_loop_closed
+        or report.physical_ce_fusion_branch_accepted
+        is not report_gates.physical_ce_fusion_branch_accepted
+    ):
+        raise SystemExit("FAIL_CLOSED_REPORT_GATE_MISMATCH")
+    if report.physical_ce_fusion_branch_accepted:
+        raise SystemExit("FAIL_CLOSED_ASSERTION_PHYSICAL_SCALAR_BRANCH_UNEXPECTEDLY_ACCEPTED")
 
 
 if __name__ == "__main__":

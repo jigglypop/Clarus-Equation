@@ -1,442 +1,209 @@
-## 1. 이 장의 목표와 구조
-
-이 문서는 CE 클라루스장(Clarus field) 이론을 **유체역학의 Navier–Stokes 방정식**에 적용하여,
-
-- 어떤 공리에서 출발해서  
-- 어떤 중간 정의와 근사들을 거쳐  
-- 최종적으로 **오차 억제용 곡률 functional**과 **수치 검증 전략**으로 이어지는지
-
-를 처음부터 끝까지 연역적으로 정리하는 것을 목표로 한다.
-
-이 장의 논리 구조는 다음과 같다.
-
-- **1장**: 이 장의 목표와 사용 범위 정리  
-- **2장**: 기존 물리 공리(양자역학, 일반상대론, 통계역학) – CE가 전제로 삼는 최소 집합  
-- **3장**: CE 클라루스장 근본 공리(A1–A5)와 정의(D1), 가설(H1)  
-- **4장**: Navier–Stokes 방정식의 고전적 정식화 – CE 없이의 기준선(baseline)  
-- **5장**: CE 공리를 Navier–Stokes에 결합하는 최소한의 방법론  
-- **6장**: 곡률 기반 오차 억제 functional $\mathcal{S}_\text{NS}[\phi]$의 유도 스케치  
-- **7장**: Taylor–Green vortex에 대한 CE 기반 예측: 오차 감소율과 해석  
-- **8장**: 다른 난제들과의 일관성(공통 coupling $\alpha_C$) 및 순환논리 점검  
-
-각 절에서 **공리/정의/정리(결과)/근사/가설**을 명확히 구분하여,  
-순환논리가 없도록 하는 것을 최우선 원칙으로 한다.
-
-### 최신 정본 정합성 주석
-
-이 장은 **응용 계층의 유효 모델** 문서다. 따라서 아래 항목은 `docs/경로적분.md` 최신 정본을 고정 입력으로 사용한다.
-
-- 미시 클라루스장 포텐셜: $V(\Phi)=+\frac{1}{2}M_\Phi^2\Phi^2+\frac{1}{4}\lambda_4\Phi^4$  
-- 대칭/진공 규약: $Z_2$ 보존, $v_\Phi=0$  
-- 우주론 분해 규약: $R=\alpha_s D_{\text{eff}}(1+\varepsilon^2\delta)$
-
-이 장의 D1($\Phi_\text{supp}=-\log P_\text{selected}$)은 위 미시 라그랑지안을 대체하는 정의가 아니라, Navier–Stokes 문제에 대한 **정보론적 유효 포텐셜**이다.
-
----
-
-## 2. 전제하는 기존 물리 공리 집합
-
-CE 이론은 기존 물리학을 부정하거나 교체하지 않고,  
-다음의 표준 공리들 위에 “추가적인 클라루스장 구조”를 얹는 확장으로 설정한다.
-
-### 2.1 양자역학 공리(QM)
-
-- **QM-1**: 상태는 힐베르트 공간의 벡터 $|\psi\rangle$ 로 표현된다.  
-- **QM-2**: 시간발전은 선형 유니터리 연산자로 주어지며, 슈뢰딩거 방정식을 따른다.  
-- **QM-3**: 관측 결과의 확률은 Born 규칙
-  $$
-  P_i = |\langle i | \psi \rangle|^2
-  $$
-  를 따른다.
-
-CE는 Born 규칙을 다시 “증명”하려 하지 않으며,  
-위 공리를 **그대로 수용**한 뒤, 그 위에 “비선택 경로의 처리 방식”을 추가한다.
-
-### 2.2 일반상대론 공리(GR)
-
-- **GR-1**: 시공간은 계량 $g_{\mu\nu}$를 가진 4차원 다양체이다.  
-- **GR-2**: 시공간 곡률 $G_{\mu\nu}$와 에너지-운동량 텐서 $T_{\mu\nu}$의 관계는
-  $$
-  G_{\mu\nu} + \Lambda g_{\mu\nu} = 8\pi G T_{\mu\nu}
-  $$
-  로 주어진다.
-
-CE는 $T_{\mu\nu}$ 안에 **추가적인 클라루스장 기여 $T_{\mu\nu}^\text{supp}$**가 존재한다고 가정하지만,  
-기본 식의 형태 자체는 그대로 유지한다.
-
-### 2.3 통계역학·정보 이론 공리
-
-- **STAT-1**: 엔트로피는
-  $$
-  S = -\sum_i p_i \log p_i
-  $$
-  로 주어진다.  
-- **STAT-2**: 닫힌계 전체 엔트로피는 비감소한다.
-
-CE의 클라루스장 포텐셜 $\Phi_\text{supp}$는 이 엔트로피·정보 개념과 자연스럽게 연결되지만,  
-기존 엔트로피 정의를 대체하지 않고 **보조적인 정보 포텐셜로만 사용**한다.
-
----
-
-## 3. CE 클라루스장 근본 공리와 정의, 가설
-
-이 절에서는 CE 클라루스장 이론에서 사용하는 **근본 공리(A1–A5)**,  
-**정의(D1)**, **가설(H1)**을 한 번에 정리한다.
-
-### 3.1 공리 A1: 선택/비선택 경로의 실재성
-
-- 어떤 양자 사건 $E$에서 가능한 결과 집합을 $\{i\}$,  
-  각 결과의 Born 확률을 $\{P_i\}$라 하자.
-- 실제로 관측된 결과에 해당하는 경로를 **선택 경로(selected)**,  
-  나머지 $\{j \neq i\}$를 **비선택 경로(non-selected)**라 부른다.
-- **공리 A1**: 비선택 경로들은 “완전히 소멸”하지 않고,  
-  **어떤 물리적(정보/에너지) 저장소에 누적된다.**
-
-이 공리는 “비선택 경로 = 클라루스장 에너지의 원천”이라는 이후 구조의 출발점이 된다.
-
-### 3.2 공리 A2: 비선택 경로 에너지 전환
-
-- 위치 혹은 구성 $x$에서의 선택 확률을 $P_\text{selected}(x)$라 할 때,
-  $$
-  q(x) := 1 - P_\text{selected}(x)
-  $$
-  를 **비선택 경로 비율**이라 정의한다.
-- **공리 A2**: 비선택 경로 비율 $q(x)$에 비례하는 에너지 밀도
-  $$
-  E_\text{nonselected}(x) = q(x)\,E_\text{quantum}(x)
-  $$
-  가 존재하며, 전체 에너지 보존 법칙과 양립한다.
-
-여기서 $E_\text{quantum}(x)$는 해당 자유도에 할당되는 기본 양자 에너지 스케일로,  
-플랑크 스케일 혹은 그 순간의 모드 에너지로 모델링될 수 있다.
-
-### 3.3 정의 D1: 클라루스장 포텐셜
-
-- 어떤 coarse-grained 상태 $x$가 선택될 확률을 $P_\text{selected}(x)$라 할 때,
-  $$
-  \Phi_\text{supp}(x) := -\log P_\text{selected}(x)
-  $$
-  로 **클라루스장 포텐셜**을 정의한다.
-
-이는 정보이론에서의 surprisal과 동일한 구조를 가지며,  
-선택 확률이 작을수록 클라루스장 포텐셜이 커진다.
-
-여기서 중요한 점은:
-
-- $P_\text{selected}(x)$는 **양자역학과 상호작용으로 먼저 결정**되고,  
-- $\Phi_\text{supp}(x)$는 이를 재표현한 **정보 포텐셜**일 뿐이라는 것이다.
-
-즉, “$\Phi$ 때문에 $P$가 정해진다”와 “$P$ 때문에 $\Phi$가 정해진다”를 동시에 공리로 두지 않음으로써  
-**순환논리를 피한다.**
-
-### 3.4 공리 A4: 곡률–에너지 결합
-
-- **공리 A4**: 비선택 경로 에너지 밀도 $E_\text{nonselected}(x)$는  
-  추가적인 응력–에너지 텐서 $T_{\mu\nu}^\text{supp}$를 통해 시공간 곡률에 기여한다.
-
-스칼라화한 단순 모델에서는 국소 곡률 스칼라 $K(x)$에 대해
-$$
-K(x) = K_\text{visible}(x) + \alpha\,E_\text{nonselected}(x)
-$$
-와 같이 쓸 수 있고,  
-텐서 형태로는
-$$
-G_{\mu\nu} + \Lambda g_{\mu\nu}
-=
-8\pi G \left( T_{\mu\nu}^\text{visible} + T_{\mu\nu}^\text{supp} \right)
-$$
-로 표현한다.
-
-여기서 $\alpha$는 **새로운 결합 상수**이며, 가능하면 전 우주적으로 거의 일정하거나  
-약한 러닝만을 가진다고 가정한다.
-
-### 3.5 공리 A5: 양자–우주 스케일 브리징
-
-- **공리 A5**: 클라루스장이 만들어내는 $T_{\mu\nu}^\text{supp}$는
-  1. **양자 스케일**에서는 개별 사건마다 동적으로 요동하지만,  
-  2. **코스믹 스케일**에서 충분히 평균하면,
-     - 암흑물질에 해당하는 “클러스터링되는 질량 항”과  
-     - 암흑에너지에 해당하는 “거의 균일한 음압/우주상수 항”
-     으로 유효 분해된다.
-
-이로부터 “비선택 경로 총합이 암흑성분에 기여한다”는 직관이 수학적 틀 안에 들어온다.
-다만, 암흑물질/암흑에너지의 **정확한 비율 값**은 공리가 아니라  
-이 공리들에서 **파생되는 예측/피팅의 대상**이다.
-
-### 3.6 가설 H1: 복잡도–곡률–에너지 관계
-
-- 어떤 구성 $x$에 대해, 연산 복잡도 혹은 “연산 난이도”를 $\mathcal{C}(x)$라 하자.
-- **가설 H1**: 질량/에너지/곡률과 연산 복잡도 사이에 단조 증가 또는 감소 관계가 존재한다.
-
-보다 직관적인 모델 형태로는
-$$
-m(x) \propto \frac{1}{\text{Computational Tractability}(x)}
-$$
-와 같이 쓸 수 있다.
-
-중요한 점은,
-
-- 질량 $m(x)$는 기존 물리에서 독립적으로 정의되고,  
-- 연산 난이도는 계산 복잡도/알고리즘 관점에서 독립적으로 정의되며,  
-- 둘 사이의 관계는 **검증 가능한 가설(H1)**로 두어야 한다는 것이다.
-
-이렇게 해야 “질량을 복잡도로 정의해 놓고, 그걸로 다시 복잡도를 설명하는”  
-순환 구조를 피할 수 있다.
-
----
-
-## 4. Navier–Stokes 방정식의 고전적 정식화 (baseline)
-
-이제 CE를 결합하기 이전에, 유체역학에서 사용하는 **고전적 Navier–Stokes 방정식**을 정리한다.  
-여기서는 가장 기본적인 **비압축성 뉴턴 유체(incompressible Newtonian fluid)**를 기준으로 한다.
-
-### 4.1 기본 방정식
-
-공간 좌표를 $x \in \mathbb{R}^d$ ($d=2$ 또는 $3$), 시간 $t$라 하고,  
-속도장을 $u(x,t)$, 압력을 $p(x,t)$라 하면, 비압축성 Navier–Stokes 방정식은
-
-1. **질량 보존(비압축성 조건)**  
-   $$
-   \nabla \cdot u(x,t) = 0
-   $$
-
-2. **운동량 보존**  
-   $$
-   \rho \left( \frac{\partial u}{\partial t}
-   + (u \cdot \nabla) u \right)
-   =
-   -\nabla p + \mu \Delta u + f
-   $$
-
-으로 쓴다.
-
-여기서
-
-- $\rho$: 밀도(상수)  
-- $\mu$: 점성 계수  
-- $f$: 외력(예: 중력, 구동력)  
-- $\Delta$: 라플라시안 연산자이다.
-
-### 4.2 Taylor–Green vortex 기준 해
-
-2차원 혹은 3차원에서의 Taylor–Green vortex는  
-Navier–Stokes 해의 **대표적인 해석적 기준 해(benchmark solution)**이다.
-
-예를 들어 2차원, 점성 계수 $\nu = \mu/\rho$에 대해,
-
-- 속도장
-  $$
-  u_x(x,y,t) = U_0 \cos(kx)\sin(ky)\,e^{-2\nu k^2 t}
-  $$
-  $$
-  u_y(x,y,t) = -U_0 \sin(kx)\cos(ky)\,e^{-2\nu k^2 t}
-  $$
-- 압력
-  $$
-  p(x,y,t) = -\frac{U_0^2}{4}\left( \cos(2kx) + \cos(2ky) \right)e^{-4\nu k^2 t}
-  $$
-
-와 같은 형태의 해가 알려져 있다.
-
-수치해석에서는 이 해를 “정답(ground truth)”로 두고,  
-수치 해법이 만들어내는 해 $\tilde{u}(x,t)$와의 차이
-$$
-e(x,t) = \tilde{u}(x,t) - u(x,t)
-$$
-에 대한 $L^2$ 노름, $L^\infty$ 노름 등을 통해 **오차를 측정**한다.
-
-CE 이론의 목표는, 동일한 물리 방정식을 풀되
-
-- **클라루스장 기반 곡률 functional**을 통해  
-- 시간·공간 격자 위상에서의 **불필요한 고곡률 모드(난류 비슷한 수치 잡음)**를 억제함으로써
-
-이 $e(x,t)$의 크기를 **체계적으로 줄이는 것**이다.
-
----
-
-## 5. CE 공리를 Navier–Stokes에 결합하는 최소 구조
-
-이제 2–4장에서 정리한 내용들을 바탕으로,  
-CE 클라루스장 공리를 Navier–Stokes 해석·수치해석에 어떻게 결합할지의 **최소 구조**를 정한다.
-
-핵심 아이디어는 다음 두 층으로 나뉜다.
-
-- **물리 층**:  
-  - 비선택 경로 에너지 $E_\text{nonselected}$가  
-    유체의 유효 응력 텐서 혹은 외력 $f$에 **추가 항**으로 작동하는 해석.  
-- **수치·정보 층**:  
-  - 수치 해 $\tilde{u}(x,t)$가 실제 해 $u(x,t)$와 비교될 때,  
-    “선택된 경로와 비선택(잘못된) 경로”를 **정보적으로 분리**하고,
-    비선택 방향을 곡률 functional을 통해 억제하는 해석.
-
-이 문서의 Part10에서는, **순환논리와 불필요한 물리 가정 증가를 피하기 위해**,  
-우선 두 번째 층(수치·정보 층)의 구조부터 명확히 한다.  
-즉:
-
-- Navier–Stokes 방정식 자체는 그대로 두되,  
-- 그 해를 근사하는 수치장 $\tilde{u}(x,t)$에 대해
-  - “어떤 모드가 선택 경로에 가깝고,  
-     어떤 모드가 비선택 경로에 해당하는지”를  
-    클라루스장 포텐셜 $\Phi_\text{supp}$와 곡률 functional로 정의·측정한다.
-
-이제 다음 절에서, 이 아이디어를 수식화한  
-**오차 억제 functional $\mathcal{S}_\text{NS}[\phi]$**를 유도한다.
-
----
-
-## 6. Navier–Stokes용 곡률 기반 오차 억제 functional 유도 (스케치)
-
-이 절에서는 CE 공리와 정보 포텐셜 정의(D1)를 사용해,  
-Navier–Stokes 수치해에 적용할 **오차 억제 functional**의 기본 형태를 유도한다.
-
-### 6.1 상태 변수와 필드 선택
-
-먼저 어떤 필드에 곡률 functional을 걸 것인지를 선택해야 한다.
-
-- 선택지 1: 속도장 자체 $u(x,t)$  
-- 선택지 2: 와도(vorticity) $\omega = \nabla \times u$  
-- 선택지 3: 수치 오차장 $e(x,t) = \tilde{u}(x,t) - u(x,t)$  
-
-Part10에서는 **수치 해석에서 직접 관측 가능한 양**에 functional을 거는 것이 낫기 때문에,  
-우선
-$$
-\phi(x,t) := \tilde{u}(x,t)
-$$
-를 상태 변수로 택한다.  
-($\omega$ 기반 버전은 별도 확장으로 다룰 수 있다.)
-
-### 6.2 선택/비선택 모드의 정보적 해석
-
-어떤 격자점 $(x_i, t_n)$에서의 수치 해 $\tilde{u}(x_i,t_n)$가  
-참 해 $u(x_i,t_n)$에 가까울수록, 우리는 그 값을 “선택 경로에 가까운 상태”로 본다.
-
-이를 정보적으로 모델링하기 위해, 예를 들어
-$$
-P_\text{selected}(x_i,t_n)
-\propto
-\exp\left(
- -\beta \,\| \tilde{u}(x_i,t_n) - u_\text{ref}(x_i,t_n) \|^2
-\right)
-$$
-와 같은 가중 확률을 생각할 수 있다.
-
-여기서
-
-- $u_\text{ref}$는 기준 해(예: 고해상도 레퍼런스, 분석해, 혹은 한 단계 앞선 보정된 해)  
-- $\beta$는 민감도를 조절하는 파라미터이다.
-
-그러면 정의 D1에 의해
-$$
-\Phi_\text{supp}(x_i,t_n)
-=
--\log P_\text{selected}(x_i,t_n)
-$$
-가 정해지고,  
-이 포텐셜을 **연속화(limit)** 하면 $\Phi_\text{supp}(x,t)$에 대한  
-기울기/곡률 functional이 자연스럽게 등장한다.
-
-### 6.3 저차 근사에서의 functional 형태
-
-정보 이론에서 자주 쓰는 가우시안 근사를 적용하면,  
-$P_\text{selected}$의 로그는 오차 $\| \tilde{u} - u_\text{ref} \|^2$에 대해  
-2차까지 전개되는 형태를 갖는다.
-
-또한, $\tilde{u}(x,t)$가 **공간적으로 매끄러운 장**이라는 가정을 두면,  
-오차 항을 공간 미분으로 다시 쓸 수 있고, 결과적으로
-$$
-\mathcal{S}_\text{NS}[\phi]
-\approx
-\int \left(
-  \|\nabla \phi(x,t)\|^2
-  +
-  \lambda_\text{NS}\,\|\nabla^2 \phi(x,t)\|^2
-\right)\,dx\,dt
-$$
-꼴의 functional이 **정보 포텐셜의 2차 근사**로 등장한다.
-
-여기서
-
-- 첫째 항 $\|\nabla \phi\|^2$는 **기울기(1차 변화)의 크기**를 억제하는 항으로,  
-  너무 급격한 공간 변화(고주파 모드)를 줄이는 역할을 한다.
-- 둘째 항 $\|\nabla^2 \phi\|^2$는 **곡률(2차 변화)의 크기**를 억제하는 항으로,  
-  난류 비슷하게 꼬이면서 매듭지는 구조를 완화하는 역할을 한다.
-- $\lambda_\text{NS}$는 Navier–Stokes 문제에서의 **유효 곡률 억제 세기**를 나타낸다.
-
-즉, CE 클라루스장 공리와 정보 포텐셜 정의에서 출발하여,  
-Navier–Stokes 수치해에 적용 가능한 **gradient + curvature 제곱 functional**이  
-자연스럽게 파생됨을 볼 수 있다.
-
----
-
-## 7. Taylor–Green vortex에 대한 CE 기반 예측 (개요)
-
-이제 위에서 얻은 functional을 Taylor–Green vortex 기준 해에 적용하면,  
-다음과 같은 구조의 예측이 가능하다.
-
-1. 기준 해 $u(x,t)$와 수치 해 $\tilde{u}(x,t)$에 대해,  
-   클라루스장 functional $\mathcal{S}_\text{NS}[\tilde{u}]$를 최소화하는 방향으로  
-   수치 scheme의 보정 항을 설계한다.
-2. 이때, 보정 항의 세기(실질적으로는 $\lambda_\text{NS}$와 연관)를  
-   하나의 coupling 상수 $\alpha_C$ 범위로 묶어,  
-   다른 난제들과 공유 가능한지 확인한다.
-3. 수치 실험 결과,
-   - $L^2$ 오차,  
-   - $L^\infty$ 오차가
-   기존 방법 대비 몇 배 감소하는지를 측정한다.
-
-이미 다른 파트에서 보고된 결과에 따르면,  
-동일한 곡률 functional 구조로
-
-- Navier–Stokes(Taylor–Green): 약 2.5배 수준의 $L^2$ 오차 감소  
-- 3체 문제(Simo figure-8): 약 2.3배 수준의 $L^\infty$ 오차 감소  
-- 리만 제타 함수 영점 근사: 5배 이상, 2차 보정까지 포함하면 10배 이상
-
-과 같은 패턴이 나타나며,  
-해당 결과들을 통해 $\alpha_C$의 공통 범위를 추정하는 것이 가능하다.
-
----
-
-## 8. 다른 난제들과의 일관성 및 순환논리 점검 (Navier–Stokes 관점)
-
-마지막으로, Navier–Stokes 장에서의 CE 적용이  
-다른 난제들(리만, 3체, 단백질 접힘 등)과 **같은 공리/functional을 공유하는지**,  
-그리고 **순환논리가 없는지**를 Navier–Stokes 관점에서 정리한다.
-
-- **공리/정의의 공유**  
-  - A1–A5, D1, H1은 모든 난제에서 동일하게 사용된다.  
-  - Navier–Stokes에서는 $\phi = \tilde{u}$,  
-    리만에서는 $\phi = \zeta$의 위상/오차장,  
-    단백질에서는 $\phi = \text{좌표장/접힘 에너지장}$ 등으로만 달라진다.
-
-- **functional의 형태 공유**  
-  - 모든 문제에서
-    $$
-    \mathcal{S}[\phi] =
-    \int \left(
-      \|\nabla \phi\|^2 + \lambda\,\|\nabla^2 \phi\|^2
-    \right)
-    $$
-    꼴이 유지되고,  
-    $\lambda$가 문제별로 약간 달라질 수는 있으나,  
-    하나의 공통 범위 $\alpha_C$ 안에 들어가는지를 검증한다.
-
-- **순환논리 회피**  
-  - Navier–Stokes에서의 오차 감소는  
-    “기존 해석해(Taylor–Green)와의 차이”로 측정되며,  
-    CE 공리에서 직접 가져온 값이 아니다.  
-  - 즉, 우리는
-    - 공리(A1–A5, H1)를 사용해 **functional 구조만 제안**하고,  
-    - 수치 실험에서 **오차 감소가 실제로 일어나는지**를 독립적으로 확인한다.
-  - 이로써 “공리로부터 functional을 정의해 놓고,  
-    그 functional로부터 다시 공리를 증명하는” 순환을 피한다.
-
-이 장에서는 Navier–Stokes를 통해 CE 클라루스장 이론이
-
-- 기존 유체역학 방정식을 변경하지 않으면서도,  
-- 수치해의 오차 구조(특히 고곡률 모드)를 체계적으로 억제할 수 있는지,
-
-를 연역적·수학적으로 정리하는 것을 1차 목표로 하였다.  
-다음 세부 문서에서는 여기서 제시한 functional을 실제 수치 코드(examples/physics 하위)와 연결하여,  
-구체적인 오차 그래프와 coupling 추정치를 이어서 다룰 수 있다.
-
-
+# 1. Navier--Stokes: 방정식, 에너지 항등식, 조건부 변분 목적함수
+
+이 장은 Navier--Stokes 방정식을 CE에서 새로 유도하거나 3차원 정칙성
+문제를 해결했다고 주장하지 않는다. 표준 비압축성 방정식의 정확한 에너지
+구조와, 수치 최적화에 사용할 수 있는 잔차 functional을 분리한다.
+
+## 1.1 정의역과 경계조건
+
+**[공리] 유체 branch:** \(d=2\) 또는 \(3\), \(\Omega=\mathbb T^d\)인
+periodic domain 또는 매끄러운 bounded domain의 no-slip 조건
+\(\mathbf u|_{\partial\Omega}=0\)을 택한다. 밀도 \(\rho>0\)와 동점성계수
+\(\nu>0\)는 상수이고 \(\mathbf f\)는 단위질량당 외력이다. periodic
+branch에서는 속도와 외력의 공간평균을 0으로 고정한다.
+
+**[정의]** \(H_\sigma\)는 위 경계조건을 따르는 매끄러운
+divergence-free vector field들의 \(L^2\) closure이고, \(V_\sigma\)는
+같은 집합의 \(H^1\) closure다. bounded branch에서는
+\(V_\sigma\subset H_0^1(\Omega)^d\)이고, periodic branch에서는
+zero-mean periodic \(H^1\) 공간이다. \(V_\sigma\)의 norm은
+\(\|\mathbf u\|_{V_\sigma}:=\|\nabla\mathbf u\|_2\)로 둔다.
+
+**[정의]** 비압축성 Navier--Stokes 방정식은
+\[
+\partial_t\mathbf u
++(\mathbf u\cdot\nabla)\mathbf u
+=-\frac1\rho\nabla p+\nu\Delta\mathbf u+\mathbf f,
+\qquad
+\nabla\cdot\mathbf u=0.
+\]
+pressure는 divergence-free 제약을 집행하는 Lagrange multiplier다.
+
+## 1.2 smooth solution의 운동에너지 항등식
+
+**[정리]** 위 경계조건을 만족하는 충분히 매끄러운 해에 대해
+\[
+\frac12\frac{d}{dt}\|\mathbf u(t)\|_{L^2(\Omega)}^2
++\nu\|\nabla\mathbf u(t)\|_{L^2(\Omega)}^2
+=(\mathbf f,\mathbf u)_{L^2}.
+\]
+물리적 kinetic energy에는 전체 식에 \(\rho\)를 곱한다.
+
+**증명.** 방정식에 \(\mathbf u\)를 내적해 적분한다. 비선형항은
+\[
+\int_\Omega\mathbf u\cdot
+(\mathbf u\cdot\nabla)\mathbf u\,dx
+=\frac12\int_\Omega\nabla\cdot
+(|\mathbf u|^2\mathbf u)\,dx=0,
+\]
+pressure 항은
+\(\int\mathbf u\cdot\nabla p=-\int p\nabla\cdot\mathbf u=0\)이고,
+부분적분으로
+\(\int\mathbf u\cdot\Delta\mathbf u=-\|\nabla\mathbf u\|_2^2\)다.
+
+**[산출]** \(\mathbf f\in V_\sigma'\)이면 Young 부등식으로
+\[
+\frac12\frac{d}{dt}\|\mathbf u\|_2^2
++\frac{\nu}{2}\|\nabla\mathbf u\|_2^2
+\le\frac{1}{2\nu}\|\mathbf f\|_{V_\sigma'}^2.
+\]
+이는 에너지의 a priori bound이며 pointwise smoothness를 자동으로 주지
+않는다.
+
+## 1.3 weak solution의 지위
+
+**[정의]** Leray--Hopf weak solution은
+\[
+\mathbf u\in
+L^\infty_{\rm loc}([0,\infty);H_\sigma)
+\cap
+L^2_{\rm loc}([0,\infty);V_\sigma)
+\]
+이고 divergence-free test function에 대한 weak 방정식과 energy
+inequality를 만족하는 해다.
+
+**[정리]** \(\mathbf u_0\in H_\sigma\)와
+\(\mathbf f\in L^2_{\rm loc}([0,\infty);V_\sigma')\)를 둔다.
+
+1. \(d=2\)에서는 표준 유한에너지 초기자료와 위 경계조건 아래 global weak
+   solution이 유일하고, 적절한 정칙 초기자료에는 global strong solution이
+   존재한다.
+2. \(d=3\)에서는 global Leray--Hopf weak solution의 존재가 알려져 있다.
+3. \(d=3\)의 임의 smooth divergence-free 초기자료에 대한 global
+   smoothness와 weak solution의 일반 유일성은 아직 증명되지 않았다.
+
+**[미완성]** CE functional을 추가하는 것만으로 3차원 global regularity가
+따른다는 증명은 없다.
+
+## 1.4 무차원화
+
+**[정의]** 기준 length \(L>0\), velocity \(U>0\)를 택해
+\[
+\mathbf x=L\hat{\mathbf x},\quad
+t=\frac LU\hat t,\quad
+\mathbf u=U\hat{\mathbf u},\quad
+p=\rho U^2\hat p,\quad
+\mathbf f=\frac{U^2}{L}\hat{\mathbf f}
+\]
+로 둔다.
+
+**[산출]** 방정식은
+\[
+\partial_{\hat t}\hat{\mathbf u}
++(\hat{\mathbf u}\cdot\hat\nabla)\hat{\mathbf u}
+=-\hat\nabla\hat p
++\frac1{\operatorname{Re}}\hat\Delta\hat{\mathbf u}
++\hat{\mathbf f},
+\qquad
+\hat\nabla\cdot\hat{\mathbf u}=0,
+\]
+\[
+\operatorname{Re}:=\frac{UL}{\nu}
+\]
+가 된다. Reynolds number와 모든 hatted 변수는 무차원이다.
+
+## 1.5 Taylor--Green exact branch
+
+**[공리] 모델 선택:** 2차원 square torus
+\([0,2\pi L]^2\), \(\mathbf f=0\), 정수 \(n\ge1\)에 대한
+wave number \(k=n/L\)와 amplitude \(U_0\)를 택한다.
+
+**[정리]**
+\[
+u_x=U_0\sin(kx)\cos(ky)e^{-2\nu k^2t},
+\qquad
+u_y=-U_0\cos(kx)\sin(ky)e^{-2\nu k^2t},
+\]
+\[
+p=p_0+\frac{\rho U_0^2}{4}
+[\cos(2kx)+\cos(2ky)]e^{-4\nu k^2t}
+\]
+는 비압축성 Navier--Stokes의 정확한 smooth solution이다. 직접 미분하면
+\(\nabla\cdot\mathbf u=0\), viscous decay와 pressure가 각각 시간미분과
+convective gradient를 상쇄한다.
+
+이 해는 수치코드의 manufactured-solution 기준선으로 유용하지만
+3차원 난류 정칙성을 검사하는 충분한 사례가 아니다.
+
+## 1.6 잔차 최소화 functional
+
+**[정의]** 1.4절의 무차원 변수로
+\[
+\mathcal R(\hat{\mathbf u},\hat p)
+:=
+\partial_{\hat t}\hat{\mathbf u}
++(\hat{\mathbf u}\cdot\hat\nabla)\hat{\mathbf u}
++\hat\nabla\hat p
+-\operatorname{Re}^{-1}\hat\Delta\hat{\mathbf u}
+-\hat{\mathbf f}
+\]
+를 정의한다.
+
+**[공리] 수치모형:** dimensionless spacetime domain
+\(\hat I\times\hat\Omega\), \(\kappa>0\)와 경계·초기조건을 고정하고
+\[
+\mathcal J[\hat{\mathbf u},\hat p]
+=\frac12\int_{\hat I\times\hat\Omega}
+\left(
+|\mathcal R|^2+\kappa|\hat\nabla\cdot\hat{\mathbf u}|^2
+\right)d\hat t\,d^d\hat x
+\]
+를 least-squares objective로 사용한다.
+
+**[정리]** \(\mathcal J\ge0\)이고, 허용 함수가 경계·초기조건을 만족할 때
+\[
+\mathcal J=0
+\quad\Longleftrightarrow\quad
+\mathcal R=0,\quad
+\hat\nabla\cdot\hat{\mathbf u}=0
+\quad\text{a.e.}
+\]
+다. 이는 residual norm의 직접 귀결이다.
+
+**[미완성]** \(\mathcal J\)의 최소값이 0인지, minimizer가 존재·유일한지,
+discretization이 수렴하는지는 함수공간, coercivity, inf--sup 조건과
+resolution에 의존한다. dissipative Navier--Stokes를 이 objective 하나의
+Lorentzian 물리 작용에서 유도했다고 부르지 않는다.
+
+## 1.7 추가 CE source의 조건
+
+**[공리] 별도 branch:** CE 자유도를 유체에 결합하려면 momentum equation에
+\(\rho^{-1}\nabla\cdot\tau_{\rm CE}\) 또는 명시적인 body force를 추가하고
+그 구성방정식, causal relaxation time과 경계조건을 공급한다.
+
+**[정리]** 수정된 energy balance에는
+\[
+\frac1\rho\int_\Omega
+\mathbf u\cdot(\nabla\cdot\tau_{\rm CE})\,dx
+=-\frac1\rho\int_\Omega\tau_{\rm CE}:\nabla\mathbf u\,dx
+\]
+가 단위질량당 항으로 추가된다. 물리적 energy balance 전체에 \(\rho\)를
+곱하면 이에 대응하는 항은
+\[
+\int_\Omega
+\mathbf u\cdot(\nabla\cdot\tau_{\rm CE})\,dx
+=-\int_\Omega\tau_{\rm CE}:\nabla\mathbf u\,dx
+\]
+다. 따라서 \(\tau_{\rm CE}\)의 부호·대칭·동역학 없이 억제나 안정화를
+결론낼 수 없다.
+
+## 1.8 요약
+
+| 항목 | 지위 | 범위 |
+|---|---|---|
+| smooth energy identity | [정리] | periodic/no-slip, incompressible smooth 해 |
+| Leray--Hopf energy inequality | [정리] | finite-energy weak solution |
+| 2D Taylor--Green 해 | [정리] | 지정 periodic branch |
+| dimensionless least-squares objective | [공리]·[정리] | 잔차 0과 PDE의 동치 |
+| 3D global regularity | [미완성] | 표준 공개 문제 |
+| CE stress의 안정화 효과 | [미완성] | constitutive law와 energy estimate 부재 |

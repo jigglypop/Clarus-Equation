@@ -172,15 +172,14 @@ $$
 
 | 구조 | 표준 이름 | 이 폴더에서의 지위 |
 |---|---|---|
-| row-stochastic kernel | finite Markov category | `Exact` |
-| nonnegative weighted kernel | weight Kleisli category | `Exact` |
-| nonzero row 제한 | manifest 정규화 조건 | `Selection/Exact` |
-| Gibbs kernel | energy 기반 weighted kernel | `Exact` |
-| \(\beta\to\infty\) | tropical/min-plus limit | `Exact` |
+| row-stochastic kernel | finite Markov category | `[정의]`, `[정리]` |
+| nonnegative weighted kernel | weight Kleisli category | `[정의]`, `[정리]` |
+| nonzero row 제한 | manifest 정규화 조건 | `[공리: 모델 선택]`; 정규화는 `[정리]` |
+| Gibbs kernel | energy 기반 weighted kernel | `[정의]` |
+| \(\beta\to\infty\) | tropical/min-plus limit | `[정리]` |
 
 ## 7. 결론
 
 새 범주를 새로 발명했다고 주장하면 과하다. 정확한 주장은 다음이다.
 
 > 등호 이전 수학은 finite weighted kernel/Kleisli 구조를 후보 상태의 조건 작동으로 해석하고, zero-temperature 극한을 manifest 연산으로 읽는다.
-

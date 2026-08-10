@@ -1,290 +1,217 @@
-# 05l. CE Uncertainty Floor Package
+# 05l. 불확정성·Gaussian 모드·경로 정칙성의 분리
 
-## 0. 목표
+## 0. 범위
 
-[05k_CE_hard_constraint.md](05k_CE_hard_constraint.md)는 두 가지를 `Open`으로 남겼다.
+Kennard 부등식, 한 Gaussian action 모형의 모멘트, Brownian path의
+quadratic variation은 각각 참인 결과지만 서로를 자동으로 유도하지 않는다.
+이 문서는 세 층을 분리하고 threshold·mean-field에 실제로 필요한 조건만
+남긴다.
 
-1. mean-field 오차를 통제하는 \(\operatorname{Var}(\Phi)\)의 실제 크기.
-2. threshold 요동 창 \(u_{\mathrm{th}}=\langle S_E\rangle+z_q\sqrt{\operatorname{Var}(S_E)}\)에서 요동 scale의 근거.
-
-이 문서는 불확정성 원리(Kennard 부등식)를 수학 도구로 들여와 이 두 자리의 **scale을 하한으로 고정**한다.
-
-핵심 결론:
-
-> 불확정성은 모드당 작용 요동이 \(\hbar\) 아래로 내려갈 수 없게 만드는 **floor**다. 이 floor 위에서 (i) 05i의 kinetic 장애물(\(S_E=\infty\) a.s.)은 병리가 아니라 불확정성의 경로공간 그림자임이 드러나고, (ii) 05k threshold 창의 폭 \(\hbar\sqrt{N/2}\)는 자유 선택이 아니라 강제된 scale이 되며, (iii) mode 분해 가정 아래 \(\operatorname{Var}(\Phi)=\Theta(1/N_{\mathrm{eff}})\)로 mean-field 오차가 조건부로 닫힌다. 단, 분위수 \(z_q\)의 값은 불확정성에서 나오지 않는다. 불확정성은 요동의 크기를 고정할 뿐 어느 분위에서 자르는지는 결정하지 못한다.
-
-현재 판정:
-
-| 항목 | 판정 | 이유 |
-|---|---|---|
-| Kennard 부등식 | `Exact` (domain 조건 import) | 정리 1.1 |
-| zero-point 하한 \(\langle H\rangle\ge\hbar\omega/2\) | `Exact` | 정리 2.1 |
-| 모드당 Euclidean 작용 모멘트 \((\hbar/2,\hbar^2/2)\) | `Exact` | 정리 2.2 |
-| 05i 장애물의 불확정성 독법 | 수학 `Exact`, 독법 `Bridge` | 정리 3.1 |
-| threshold 창 scale \(\hbar\sqrt{N/2}\) 고정 | `Exact under assumptions` | 4절 |
-| \(\operatorname{Var}(\Phi)=\Theta(1/N_{\mathrm{eff}})\)와 mean-field 수렴 | `Exact under assumptions` | 정리 5.1 |
-| bootstrap \(\Phi\)의 mode 분해 가능성 | `Bridge/Open` | 6절 |
-| 분위수 \(z_q\)의 값 | `Selection/Open` 유지 | 불확정성으로 닫히지 않음 |
+| 항목 | 형식 출처 |
+|---|---|
+| Kennard 부등식과 조화진동자 바닥에너지 | **[정리]** |
+| 독립 Gaussian action의 Gamma law | **[정리]**; prior는 **[공리: 모델 선택]** |
+| Brownian과 \(H^1\) path의 quadratic variation 경계 | **[정리]** |
+| Brownian variance와 \(\hbar\)의 식별 | 일반적으로 성립하지 않음 |
+| \(N_{\rm eff}\) 독립모드 mean-field bound | 조건부 **[정리]** |
+| CE residual의 실제 mode 분해 | **[미완성]** |
 
 ## 1. Kennard 부등식
 
-### 정리 1.1
+**[정리]** Hilbert space의 self-adjoint operators \(X,P\)가 공통
+dense invariant domain에서
+\([X,P]=i\hbar\mathbf1\)을 만족한다고 하자. 단위벡터 \(\psi\)가
+\(XP\), \(PX\)와 두 분산이 정의되는 domain에 있으면
 
-Hilbert space의 self-adjoint 연산자 \(X,P\)가 공통 dense domain에서 \([X,P]=i\hbar\)를 만족하고, 단위 벡터 \(\psi\)가 그 domain에 있다고 하자(정의역 조건은 표준 import). 그러면
+\[
+\operatorname{Var}_\psi(X)\operatorname{Var}_\psi(P)
+\geq\frac{\hbar^2}{4}.
+\]
 
-$$
-\operatorname{Var}_\psi(X)\cdot\operatorname{Var}_\psi(P)
-\ge
-\frac{\hbar^2}4.
-$$
-
-증명:
-
-평균을 빼서 \(\langle X\rangle=\langle P\rangle=0\)으로 둘 수 있다(\(X\to X-\langle X\rangle\)은 교환자를 바꾸지 않는다). 내적 \(\langle X\psi,P\psi\rangle\)의 허수부는
-
-$$
-2\,\mathrm{Im}\langle X\psi,P\psi\rangle
+**증명.** 평균을 뺀
+\(\widetilde X=X-\langle X\rangle\),
+\(\widetilde P=P-\langle P\rangle\)에 대해
+\[
+\frac{\hbar}{2}
 =
-\frac1i\big(\langle X\psi,P\psi\rangle-\langle P\psi,X\psi\rangle\big)
-=
-\frac1i\langle\psi,[X,P]\psi\rangle
-=
-\hbar.
-$$
+\left|\operatorname{Im}
+\langle\widetilde X\psi,\widetilde P\psi\rangle\right|
+\leq
+\|\widetilde X\psi\|\,\|\widetilde P\psi\|.
+\]
+제곱하면 결론을 얻는다. \(\square\)
 
-Cauchy-Schwarz로
+**[정리]** 질량 \(m>0\), 주파수 \(\omega>0\)인 조화진동자
+\[
+H=\frac{P^2}{2m}+\frac{m\omega^2X^2}{2}
+\]
+는 모든 허용 단위상태에서
+\[
+\langle H\rangle\geq\frac{\hbar\omega}{2}
+\]
+를 만족한다.
 
-$$
-\frac\hbar2
-=
-|\mathrm{Im}\langle X\psi,P\psi\rangle|
-\le
-|\langle X\psi,P\psi\rangle|
-\le
-\|X\psi\|\,\|P\psi\|
-=
-\sqrt{\operatorname{Var}(X)\operatorname{Var}(P)}.
-$$
-
-끝.
-
-## 2. Zero-point floor와 Gaussian 포화
-
-### 정리 2.1: zero-point 하한
-
-단위 질량 조화 모드 \(H=\frac12(P^2+\omega^2X^2)\)에 대해 모든 상태에서
-
-$$
-\langle H\rangle\ge\frac{\hbar\omega}2.
-$$
-
-증명:
-
-\(\langle X^2\rangle\ge\operatorname{Var}(X)\), \(\langle P^2\rangle\ge\operatorname{Var}(P)\)이고 AM-GM으로
-
-$$
+**증명.** 평균항을 버리고 AM--GM과 Kennard 부등식을 적용하면
+\[
 \langle H\rangle
-=
-\frac{\langle P^2\rangle+\omega^2\langle X^2\rangle}2
-\ge
-\omega\sqrt{\langle X^2\rangle\langle P^2\rangle}
-\ge
-\omega\sqrt{\operatorname{Var}(X)\operatorname{Var}(P)}
-\ge
-\frac{\hbar\omega}2.
-$$
+\geq
+\sqrt{\operatorname{Var}(P)\,\omega^2\operatorname{Var}(X)}
+\geq\frac{\hbar\omega}{2}.
+\quad\square
+\]
 
-마지막 부등식이 정리 1.1이다. 끝.
+이 결과는 canonical pair와 Hamiltonian을 고정한 뒤의 에너지 하한이다.
+임의의 확률과정의 diffusion coefficient나 임의의 Euclidean functional의
+분산을 결정하지 않는다.
 
-등호는 centered minimum-uncertainty Gaussian(바닥상태)에서만 성립한다. 즉 **모드 하나의 에너지/작용 scale \(\hbar\)는 어떤 상태 선택으로도 제거할 수 없는 floor**다.
+## 2. 독립 Gaussian action 모형
 
-### 정리 2.2: 모드당 Euclidean 작용의 정확한 모멘트
+**[공리: 모델 선택]** \(z_1,\dots,z_N\)을 독립 표준정규 변수로 두고
+무차원 action
+\[
+U_N:=\frac12\sum_{k=1}^Nz_k^2
+\]
+를 택한다.
 
-05k의 자유장 모델에서 모드 \(\phi_k\)의 prior는 \(e^{-S_k/\hbar}\) Gibbs weight, \(S_k=\omega_k\phi_k^2/2\)다. 그러면 \(\phi_k\sim\mathcal N(0,\hbar/\omega_k)\)이고
-
-$$
-\langle S_k\rangle=\frac\hbar2,
+**[정리]**
+\[
+U_N\sim\operatorname{Gamma}\!\left(\frac N2,1\right),
 \qquad
-\operatorname{Var}(S_k)=\frac{\hbar^2}2.
-$$
-
-증명:
-
-\(z:=\phi_k\sqrt{\omega_k/\hbar}\sim\mathcal N(0,1)\)로 치환하면 \(S_k/\hbar=z^2/2\)다. \(\langle z^2\rangle=1\), \(\operatorname{Var}(z^2)=2\)이므로
-
-$$
-\langle S_k\rangle=\frac\hbar2\langle z^2\rangle=\frac\hbar2,
+\mathbb E U_N=\frac N2,
 \qquad
-\operatorname{Var}(S_k)=\frac{\hbar^2}4\operatorname{Var}(z^2)=\frac{\hbar^2}2.
-$$
+\operatorname{Var}(U_N)=\frac N2.
+\]
 
-끝.
+**증명.** \(\sum_kz_k^2\)는 자유도 \(N\)인 chi-square 분포이므로
+그 절반은 표시한 Gamma 분포다. 또는 moment-generating function
+\(\mathbb E e^{tU_N}=(1-t)^{-N/2}\), \(t<1\)을 두 번 미분한다.
+\(\square\)
 
-해석:
-
-> 정리 2.1은 모드당 scale \(\hbar\)가 하한임을 말하고, 정리 2.2는 path-integral prior가 그 floor scale에서 정확히 작동함을 말한다. 모드당 평균도 분산도 모두 \(\hbar\) 단위로 고정되어 있고, 이것이 05k의 \(u=S_E/\hbar\sim\mathrm{Gamma}(N/2,1)\)에서 mean \(=\) Var \(=N/2\)가 나온 근원이다. **요동의 크기는 모델의 자유 파라미터가 아니다.**
-
-## 3. 05i 장애물의 불확정성 독법
-
-### 정리 3.1: 유한 kinetic action은 무요동을 강제한다
-
-(i) \(\gamma\in H^1\)이면 quadratic variation은 0이다(05i 정리 2.1의 (i)).
-
-(ii) 05i의 physical prior \(\mu^\hbar\)(scaled bridge)의 path는 dyadic partition을 따라 a.s.
-
-$$
-\sum_k|\gamma(t_{k+1})-\gamma(t_k)|^2
-\to
-\hbar\,d
-$$
-
-를 만족한다. 즉 시간당 quadratic variation이 정확히 \(\hbar\)다.
-
-증명:
-
-(i)은 05i에서 증명했다. (ii)는 \(\sqrt\hbar B^0\)의 quadratic variation이 \(\hbar\cdot t\)인 것으로, Brownian quadratic variation의 scaling이다(외부 import). 끝.
-
-독법 (`Bridge`):
-
-> 짧은 시간 \(\Delta t\)에서 \(|\Delta\gamma|^2\approx\hbar\Delta t\), 즉 \(\Delta x\sim\sqrt{\hbar\Delta t}\)는 위치-운동량 요동 \(\Delta x\cdot\Delta p\sim\hbar\)의 경로공간 형태다. 유한 kinetic action 경로는 quadratic variation 0, 즉 모든 시간 scale에서 요동이 사라진 경로인데, 이는 불확정성 floor 아래로 내려간 경로라 prior가 질량을 줄 수 없다. **05i 정리 2.1은 측도론적 병리가 아니라 Kennard floor의 그림자다.** 동시에 A2''' prior(scaled bridge)가 시간당 정확히 \(\hbar\)의 요동을 갖는다는 것은, 그 prior 선택이 불확정성과 정합하는 유일한 scale임을 뜻한다.
-
-## 4. Threshold 창의 scale 고정
-
-05k 정리 3.2는 고정 분율 \(q\)의 threshold가
-
-$$
-u_{\mathrm{th}}(N)=\frac N2+z_q\sqrt{\frac N2}+o(\sqrt N)
-$$
-
-임을 보였다. 작용 단위로 돌리면 창의 중심과 폭은
-
-$$
-S_{\mathrm{th}}
-=
-\underbrace{\frac{N\hbar}2}_{\text{zero-point 합}}
-+
-z_q
-\underbrace{\hbar\sqrt{\frac N2}}_{\text{불확정성 요동 폭}}
-+o(\sqrt N\,\hbar).
-$$
-
-정리 2.1, 2.2에 의해 두 밑줄 항은 모두 강제된 scale이다.
-
-| 양 | 값 | 지위 |
-|---|---|---|
-| 창의 중심 \(N\hbar/2\) | 모드당 zero-point \(\hbar/2\)의 합 | `Exact` (floor 포화) |
-| 창의 폭 \(\hbar\sqrt{N/2}\) | 모드당 \(\operatorname{Var}=\hbar^2/2\)의 CLT 합산 | `Exact under assumptions` |
-| 분위수 \(z_q\) | \(q\)에서 역산 | `Selection/Open` 유지 |
-
-해석:
-
-> 05k 시점에서는 threshold의 "scale 선택"과 "분위수 선택"이 모두 열려 있었다. 이제 scale은 닫혔다. 남은 자유도는 무차원 분위수 \(z_q\) 하나뿐이다. 불확정성은 자(尺)를 고정했고, 어디서 자를지는 여전히 `Selection`이다.
-
-## 5. \(\operatorname{Var}(\Phi)\)의 조건부 통제
-
-### 정리 5.1: intensive mode 분해 아래 mean-field 수렴
-
-\(\Phi\)가 독립 모드 기여의 합
-
-$$
-\Phi=\sum_{k=1}^{N_{\mathrm{eff}}}Y_k,
+작용 차원을 복원해 \(S_N=\hbar U_N\)로 **정의**하면
+\[
+\mathbb ES_N=\frac{N\hbar}{2},
 \qquad
-Y_k\ \text{독립},
-\quad
-0\le Y_k\le\frac C{N_{\mathrm{eff}}},
-\quad
-\operatorname{Var}(Y_k)=\frac{v_k}{N_{\mathrm{eff}}^2}
-$$
+\operatorname{Var}(S_N)=\frac{N\hbar^2}{2}.
+\]
+이는 선택한 Gaussian density의 산출이지 Kennard 부등식의 산출이 아니다.
 
-로 쓰인다고 하자(\(\langle\Phi\rangle=O(1)\)인 intensive 정규화, \(v_k\le v_{\max}\)). 그러면
-
-$$
-\operatorname{Var}(\Phi)
+**[정리]** \(q\in(0,1)\), \(z_q=\Phi_{\rm normal}^{-1}(q)\)이고
+\(u_N(q)\)를 \(U_N\)의 \(q\)-quantile이라 하면
+\[
+u_N(q)
 =
-\sum_k\frac{v_k}{N_{\mathrm{eff}}^2}
-\le
-\frac{v_{\max}}{N_{\mathrm{eff}}},
-$$
+\frac N2+z_q\sqrt{\frac N2}+o(\sqrt N).
+\]
 
-이고 05k 정리 5.3과 결합하면(\(M=C\) 유계)
+**증명.** 중심화한 독립 변수
+\((z_k^2-1)/2\)에 central limit theorem을 적용하고, 극한 정규분포의
+분포함수가 연속이고 엄격히 증가한다는 quantile convergence를 쓴다.
+\(\square\)
 
-$$
+따라서 \(S_N\)의 같은 quantile은
+\[
+S_N(q)
+=
+\frac{N\hbar}{2}
++z_q\hbar\sqrt{\frac N2}
++o(\hbar\sqrt N)
+\]
+다. \(q\)와 Gaussian independence는 **[공리: 모델 선택]**이며,
+불확정성만으로 정해지지 않는다.
+
+## 3. Brownian과 Sobolev path의 경계
+
+**[정리]** \(\gamma\in H^1([0,1];\mathbb R^d)\)이면 mesh가 0으로 가는
+모든 partition \(\Pi_n\)에 대해
+\[
+\sum_{[u,v]\in\Pi_n}
+|\gamma(v)-\gamma(u)|^2\longrightarrow0.
+\]
+
+**증명.** \(H^1\subset W^{1,1}\)이므로 \(\gamma\)는 finite variation이고
+\[
+\sum|\Delta\gamma|^2
+\leq
+\max|\Delta\gamma|\,\operatorname{Var}(\gamma)\to0.
+\quad\square
+\]
+
+**[정리]** \(\mathbb R^d\)의 bridge
+\[
+B_t^{x_i,x_f}
+=(1-t)x_i+tx_f+\sqrt{\sigma}\,\widetilde B_t,
+\qquad \sigma>0,
+\]
+는 균등 partition에서 각 성분의 quadratic variation이 \(\sigma\),
+Euclidean 제곱합의 극한이 \(d\sigma\)다. 따라서 거의 모든 sample path는
+\(H^1\)에 속하지 않는다.
+
+이 정리는 \(\sigma>0\)인 모든 scale에서 성립한다. \(\sigma\)의 차원은
+좌표 제곱이며 \(\hbar\)의 차원은 작용이므로, 질량·시간·길이 기준을 포함한
+추가 사상 없이 \(\sigma=\hbar\)라고 둘 수 없다. Kennard 부등식도
+\(\sigma\)의 유일한 값을 고르지 않는다.
+
+## 4. Intensive 독립모드의 mean-field bound
+
+**[공리: 모델 선택]** \(N=N_{\rm eff}\)이고
+\[
+\Phi_N=\sum_{k=1}^NY_k,
+\qquad
+Y_k\ \text{독립},\qquad
+0\leq Y_k\leq\frac CN,\qquad
+\operatorname{Var}(Y_k)=\frac{v_k}{N^2},
+\]
+여기서 \(0\leq v_k\leq v_{\max}<\infty\)라 하자. 그러면
+\(0\leq\Phi_N\leq C\).
+
+**[정리]**
+\[
+\operatorname{Var}(\Phi_N)
+=
+\frac1{N^2}\sum_{k=1}^Nv_k
+\leq\frac{v_{\max}}N
+\]
+이고
+\[
 1
-\le
-\frac{\langle e^{-\Phi}\rangle}{e^{-\langle\Phi\rangle}}
-\le
-\exp\!\Big(\frac{e^{C}v_{\max}}{2N_{\mathrm{eff}}}\Big)
-=
-1+O\!\big(N_{\mathrm{eff}}^{-1}\big).
-$$
+\leq
+\frac{\mathbb E e^{-\Phi_N}}
+{e^{-\mathbb E\Phi_N}}
+\leq
+\exp\!\left(
+\frac{e^C v_{\max}}{2N}
+\right).
+\]
+추가로 \(v_k\geq v_{\min}>0\)이면
+\[
+\operatorname{Var}(\Phi_N)\geq\frac{v_{\min}}N.
+\]
 
-또한 모드 분포가 비퇴화(\(v_k\ge v_{\min}>0\), 정리 2.2의 Gaussian 모드면 \(v_{\min}\) 자동)라면
+**증명.** 독립성으로 분산은 합산된다. 아래쪽 비는 \(e^{-x}\)의
+convexity에 대한 Jensen 부등식이다. Taylor 정리와
+\(\sup_{[0,C]}(e^{-x})''\leq1\)로
+\[
+\mathbb Ee^{-\Phi_N}
+\leq
+e^{-\mathbb E\Phi_N}
++\frac12\operatorname{Var}(\Phi_N).
+\]
+\(e^{-\mathbb E\Phi_N}\geq e^{-C}\)로 나누고 \(1+x\leq e^x\)를 쓰면
+위쪽 비를 얻는다. \(\square\)
 
-$$
-\operatorname{Var}(\Phi)\ge\frac{v_{\min}}{N_{\mathrm{eff}}}>0.
-$$
+상관된 모드에서는 covariance 합이 추가되므로 이 \(N^{-1}\) bound는
+자동이 아니다. 실제 CE residual이 위 독립·유계·intensive 분해를 갖는지는
+**[미완성]**이다.
 
-증명:
+## 5. 현재 보존되는 결론
 
-독립성에서 분산은 합산된다. 상한은 05k 정리 5.3 (ii)에 \(M=C\), \(\operatorname{Var}(\Phi)\le v_{\max}/N_{\mathrm{eff}}\)를 대입한 것이고, 하한은 05k 정리 5.3 (i)의 Jensen이다. floor는 분산 합산에서 즉시 나온다. 끝.
+- Kennard와 조화진동자 바닥에너지는 operator domain 아래의 정리다.
+- Gamma action moment와 threshold 폭은 선택한 독립 Gaussian 모형의
+  정리다.
+- Brownian prior와 \(H^1\) variational pathspace는 서로 다른
+  measure/topology route다.
+- 독립 intensive 분해 아래에서만 mean-field 오차가
+  \(O(N_{\rm eff}^{-1})\)로 통제된다.
 
-해석:
-
-> mean-field 단계 \(\langle e^{-\Phi}\rangle\approx e^{-\langle\Phi\rangle}\)는 mode 분해 가정 아래 \(N_{\mathrm{eff}}\to\infty\)에서 **점근적으로 정확**하고, 유한 \(N_{\mathrm{eff}}\)에서는 불확정성 floor 때문에 **절대 정확해질 수 없다**. bootstrap 방정식
->
-> $$
-> \varepsilon^2=e^{-(1-\varepsilon^2)D_{\mathrm{eff}}}
-> $$
->
-> 은 따라서 \(O(1/N_{\mathrm{eff}})\) 보정항을 갖는 점근식으로 읽어야 하며, 보정의 부호는 Jensen에 의해 정해져 있다: 참값 \(\langle e^{-\Phi}\rangle\)는 우변보다 크고, 따라서 mean-field \(\varepsilon^2\)는 생존분율의 **하한 추정**이다.
-
-## 6. 닫힌 것과 남은 것
-
-닫힌 것:
-
-| 항목 | 상태 |
-|---|---|
-| Kennard 부등식 | 정리 1.1 |
-| zero-point floor | 정리 2.1 |
-| 모드당 작용 모멘트 \((\hbar/2,\hbar^2/2)\) | 정리 2.2 |
-| 05i 장애물 = 불확정성 floor의 그림자 | 정리 3.1 + 독법 |
-| threshold 창의 중심/폭 scale | 4절 |
-| mode 분해 아래 \(\operatorname{Var}(\Phi)\) 상하한과 mean-field 수렴 | 정리 5.1 |
-| mean-field \(\varepsilon^2\)가 하한 추정이라는 부호 확정 | 정리 5.1 + 05k 정리 5.3 |
-
-남은 것:
-
-| 병목 | 다음 작업 |
-|---|---|
-| bootstrap \(\Phi\)의 mode 분해 실재성 | \(\Phi\)가 실제로 독립 intensive 합인지. CE 문서의 \(\langle\Phi\rangle=\sigma D_{\mathrm{eff}}\) 구성 감사 |
-| \(N_{\mathrm{eff}}\)의 값 | 보정 \(O(1/N_{\mathrm{eff}})\)의 실제 크기. 수치 회귀 대상 |
-| 분위수 \(z_q\approx-1.66\)의 물리 | 불확정성으로 닫히지 않음. 독립 원리 필요 |
-| domain 조건의 완전한 처리 | 정리 1.1의 self-adjointness/domain은 표준 import로 둠 |
-
-경고:
-
-> 불확정성 원리로 \(z_q\)나 \(\varepsilon^2\) 값 자체를 유도했다고 주장하면 안 된다. 이 package가 닫은 것은 요동의 **scale**(자)이지 분위수(눈금 위의 위치)가 아니다. 후자를 불확정성에서 끌어내는 시도는 [08_수학도구_진행지도.md](08_수학도구_진행지도.md)의 "증명하면 안 되는 자리"에 추가한다.
-
-## 7. 결론
-
-$$
-\boxed{
-\Delta X\,\Delta P\ge\frac\hbar2
-\;\Longrightarrow\;
-\langle S_k\rangle=\frac\hbar2,\ \operatorname{Var}(S_k)=\frac{\hbar^2}2
-\;\Longrightarrow\;
-S_{\mathrm{th}}=\frac{N\hbar}2+z_q\,\hbar\sqrt{\frac N2}
-}
-$$
-
-$$
-\boxed{
-\text{mode 분해 가정 아래}\quad
-1\le\frac{\langle e^{-\Phi}\rangle}{e^{-\langle\Phi\rangle}}
-\le1+O(N_{\mathrm{eff}}^{-1}),
-\qquad
-\operatorname{Var}(\Phi)\ge\frac{v_{\min}}{N_{\mathrm{eff}}}>0.
-}
-$$
-
-불확정성은 fraction layer의 자를 고정하고 mean-field의 오차 부호와 크기를 통제한다. 남은 `Selection`은 \(z_q\), 남은 `Bridge`는 \(\Phi\)의 mode 분해 실재성이다.
+분위수, diffusion scale, mode 독립성 또는 이를 특정 물리장에 대응시키는
+단계는 각각 별도의 **[공리]** 또는 **[미완성]** 항목이다.

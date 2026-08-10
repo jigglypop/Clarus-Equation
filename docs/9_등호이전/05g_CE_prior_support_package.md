@@ -26,15 +26,15 @@ $$
 
 > full support만으로는 충분하지 않다. \(W\)가 l.s.c.일 뿐이면 near-minimum set이 열린집합을 포함하지 않을 수 있다. 자동 recovery를 얻으려면 finite positive prior, minimizer atom, \(W\)의 minimizer 근방 연속성, 또는 positive tube recovery를 요구해야 한다.
 
-현재 판정:
+형식 출처:
 
 | 항목 | 판정 | 이유 |
 |---|---|---|
-| finite positive prior | `Exact` | minimizer 후보가 양의 weight를 가짐 |
-| full support + \(W\) continuous at minimizer | `Exact under assumptions` | near-minimum set이 열린 근방을 포함 |
-| full support + l.s.c. only | `False in general` | 반례 2.1 |
-| \(\mu_{\mathrm{CE}}\) recovery | `Equivalent to reference recovery` | \(e^{-W}\) reweighting은 null set을 새로 살리지 않음 |
-| physical reference measure construction | `Bridge/Open` | 형식적 \(\mathcal D\gamma\)의 실제 support가 필요 |
+| finite positive prior | `[정리]` | minimizer 후보가 양의 weight를 가짐 |
+| full support + \(W\) continuous at minimizer | `[정리]` | near-minimum set이 열린 근방을 포함 |
+| l.s.c.와 full support의 recovery 함의 | `[정리]` 둘만으로 recovery가 따르지 않음 | 정리 2.1 |
+| \(\mu_{\mathrm{CE}}\) recovery | `[정리]` reference recovery와 동치 | \(e^{-W}\) reweighting은 null set을 새로 살리지 않음 |
+| physical reference measure construction | `[미완성]` | 형식적 \(\mathcal D\gamma\)의 실제 support가 필요 |
 
 ## 1. 표기 정리
 
@@ -97,7 +97,9 @@ e^{-\beta(W_{\min}+\eta)}
 \mu(R_\eta(W)).
 $$
 
-### 반례 2.1: full support + l.s.c.만으로는 부족
+### 정리 2.1 (full support와 l.s.c.의 recovery no-go)
+
+`[정리]` full support와 lower semicontinuity만으로 positive recovery mass는 일반적으로 따르지 않는다.
 
 \(\Gamma=[0,1]\), \(\mu\)를 Lebesgue measure라고 하자. \(\mu\)는 full support다. 에너지를
 
@@ -297,7 +299,7 @@ $$
 
 - 이 prior는 수학적으로는 full support를 보장한다.
 - 그러나 \(W\)가 l.s.c.일 뿐이면 full support만으로 recovery가 안 된다.
-- 또한 dense atomic prior는 물리적 \(\mathcal D\gamma\)의 자연스러운 측도라고 주장할 수 없다. `Tooling/Exact`이지 `Bridge`는 아니다.
+- dense atomic prior의 존재는 `[정리]`지만, 이를 물리적 \(\mathcal D\gamma\)와 동일시할 근거는 없어 `[미완성]`이다.
 
 ## 6. CE 권장 prior package
 
@@ -313,17 +315,17 @@ $$
 
 그러면 recovery mass는 정리 3.1로 자동이다.
 
-판정:
+출처:
 
-`Exact`
+`[정리]`
 
 ### Package C: continuous energy, full-support prior
 
 \(\mathcal P_I\)에 \(C^0\) topology를 쓰고 \(\mu_{\mathrm{base}}\)가 full support라고 하자. \(W\)가 적어도 하나의 minimizer \(\gamma_*\)에서 continuous이면 recovery mass는 정리 3.3으로 자동이다.
 
-판정:
+출처:
 
-`Exact under assumptions`
+`[정리]`
 
 ### Package T: tube recovery axiom
 
@@ -336,9 +338,9 @@ $$
 \sup_{V_\eta}W\le W_{\min}+\eta.
 $$
 
-판정:
+출처:
 
-`Exact under assumptions`
+`[정리]`
 
 ### Package A: atomized minimizer recovery
 
@@ -356,9 +358,9 @@ $$
 
 그러면 recovery mass는 자동이다. 하지만 이 prior는 \(W\)를 보고 만든 것이므로 물리적 prior라기보다 proof device 또는 algorithmic search prior다.
 
-판정:
+출처:
 
-`Tooling/Selection`
+search prior 채택은 `[공리: 모델 선택]`; recovery는 `[정리]`
 
 ## 7. 권장 A2'' prior/support 공리
 
@@ -387,7 +389,7 @@ $$
 
 | 항목 | 상태 |
 |---|---|
-| full support + l.s.c. insufficiency | 반례 2.1 |
+| full support와 l.s.c.만으로 recovery가 따르지 않음 | `[정리]` 2.1 |
 | finite positive prior recovery | 정리 3.1 |
 | atom recovery | 정리 3.2 |
 | full support + minimizer continuity recovery | 정리 3.3 |

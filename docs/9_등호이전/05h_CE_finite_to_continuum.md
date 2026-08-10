@@ -29,15 +29,15 @@ $$
 
 > fixed \(N\)에서는 finite positive prior만으로 충분하다. 그러나 \(N\to\infty\)와 \(\beta_N\to\infty\)를 함께 보내면 positive prior만으로는 부족하다. near-minimizer recovery mass가 \(\beta_N\) scale에서 너무 빨리 사라지지 않아야 한다.
 
-현재 판정:
+형식 출처:
 
-| 항목 | 판정 | 이유 |
+| 항목 | 출처 | 이유 |
 |---|---|---|
-| fixed mesh 농축 | `Exact` | finite positive prior + \(\beta\to\infty\) |
-| positive prior의 joint-limit 충분성 | `False in general` | 반례 2.1 |
-| recovery mass scale 조건 | `Exact under assumptions` | 정리 3.1 |
-| fixed-\(\beta\) Gibbs convergence | `Exact under assumptions` | compact/continuous/weak convergence package |
-| full physical continuum prior | `Bridge/Open` | Brownian/Sobolev/Gaussian support 선택 필요 |
+| fixed mesh 농축 | `[정리]` | finite positive prior + \(\beta\to\infty\) |
+| positive prior의 joint-limit 함의 | `[정리]` positivity만으로 joint-limit recovery가 따르지 않음 | 정리 2.1 |
+| recovery mass scale 조건 | `[정리]` | 정리 3.1 |
+| fixed-\(\beta\) Gibbs convergence | `[정리]` | compact/continuous/weak convergence package |
+| full physical continuum prior | `[미완성]` | Brownian/Sobolev/Gaussian support 선택 필요 |
 
 ## 1. 세팅
 
@@ -140,7 +140,9 @@ $$
 
 finite set이므로 모든 비최소점의 질량이 0으로 간다. 끝.
 
-### 반례 2.1: positive weight만으로는 joint limit이 깨진다
+### 정리 2.1 (positive weight의 joint-limit recovery no-go)
+
+`[정리]` 각 finite mesh에서 prior가 양수라는 사실만으로 joint-limit recovery는 일반적으로 따르지 않는다.
 
 각 \(N\)에서
 

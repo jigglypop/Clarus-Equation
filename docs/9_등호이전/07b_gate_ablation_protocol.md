@@ -9,14 +9,14 @@
 > 후보분포 재가중과 잔류 압축은 유한수학으로 닫힌다.  
 > \(\phi\) 재주입이 성능을 높이는지는 정리가 아니라 ablation 문제다.
 
-현재 판정:
+형식 출처:
 
 | 항목 | 판정 | 이유 |
 |---|---|---|
-| \(\alpha_\phi=0\) vs \(\alpha_\phi>0\) 비교 설계 | `Tooling` | 통제군/실험군 정의 |
-| 후보분포/잔류 지표 계산 | `Exact` | 유한합 |
-| 성능 개선 주장 | `Open/Experiment` | 데이터와 통계 검정 필요 |
-| hallucination 억제 주장 | `Open/Experiment` | claim-level evidence gate 필요 |
+| \(\alpha_\phi=0\) vs \(\alpha_\phi>0\) 비교 설계 | `[정의]` | 통제군/실험군 정의 |
+| 후보분포/잔류 지표 계산 | `[산출]` | 유한합 |
+| 성능 개선 주장 | `[예측]` | 데이터와 통계 검정 필요 |
+| hallucination 억제 주장 | `[예측]` | claim-level evidence gate 필요 |
 
 ## 1. 고정할 런타임 식
 
@@ -111,33 +111,33 @@ $$
 
 | 지표 | 식 | 판정 |
 |---|---|---|
-| entropy | \(H_t=-\sum_a\mu_t(a)\log\mu_t(a)\) | `Exact` |
-| margin | \(\mu_t(a_1)-\mu_t(a_2)\) | `Exact` |
-| residual mass | \(q_t=1-\mu_t(a_t^*)\) | `Exact` |
-| selected risk | \(E_{\mathrm{risk}}(a_t^*)\) | `Bridge/Task` |
-| contradiction rate | rejected/evidence conflict rate | `Task metric` |
-| NLL or loss | task likelihood | `Task metric` |
+| entropy | \(H_t=-\sum_a\mu_t(a)\log\mu_t(a)\) | `[정의]` |
+| margin | \(\mu_t(a_1)-\mu_t(a_2)\) | `[정의]` |
+| residual mass | \(q_t=1-\mu_t(a_t^*)\) | `[정의]` |
+| selected risk | \(E_{\mathrm{risk}}(a_t^*)\) | `[경험식]` |
+| contradiction rate | evidence-conflict rate | `[정의]` |
+| NLL or loss | task likelihood | `[정의]` |
 | latency | runtime cost | `Engineering` |
 
-## 5. 성공 기준
+## 5. 효과 판별 기준
 
 성능 개선 주장은 아래 중 최소 하나를 만족해야 한다.
 
-| 주장 | 성공 조건 |
+| 주장 | 요구 조건 |
 |---|---|
 | prediction 도움 | Treatment가 Control A보다 NLL/accuracy에서 seed 평균 개선, bootstrap CI가 0을 넘지 않음 |
-| hallucination 억제 | contradiction/evidence-fail rate가 감소하고 accuracy가 통계적으로 악화되지 않음 |
+| hallucination 억제 | contradiction/evidence-conflict rate가 감소하고 accuracy가 통계적으로 악화되지 않음 |
 | review 품질 향상 | high residual mass 구간에서 review precision이 상승 |
 | OOD 안정성 | OOD split에서 entropy 폭주 또는 risk 선택률 감소 |
 
-실패 기준:
+보류 조건:
 
-| 결과 | 판정 |
+| 관측 결과 | 해석 |
 |---|---|
 | 평균 개선 없음 | \(\phi\) 재주입 bridge는 보류 |
-| 성능 개선 + hallucination 증가 | 안전 gate 실패 |
+| 성능 개선 + hallucination 증가 | 안전성 근거가 충족되지 않음 |
 | shuffled residual도 동일 개선 | 구조적 residual 효과 아님 |
-| latency가 목표 초과 | 공학적 실패 |
+| latency가 목표 초과 | 공학 비용 기준이 충족되지 않음 |
 
 ## 6. 최소 toy task
 
@@ -172,7 +172,7 @@ $$
 1. seed별 metric을 먼저 계산한다.
 2. seed 평균 차이에 대해 bootstrap confidence interval을 계산한다.
 3. primary metric과 safety metric을 분리한다.
-4. primary metric만 좋아지고 safety가 나빠지면 성공으로 세지 않는다.
+4. primary metric만 좋아지고 safety가 나빠지면 효과 확인으로 세지 않는다.
 
 권장:
 
@@ -188,9 +188,9 @@ $$
 
 | 실험 결과 | 이론 판정 |
 |---|---|
-| Treatment 성공, shuffled 실패 | embedding residual bridge 강화 |
-| Treatment와 shuffled 둘 다 성공 | residual norm/gain 효과, 커널 재검토 |
-| Treatment 실패 | \(\phi\) 재주입은 open 유지 |
+| Treatment만 우위 | embedding residual bridge의 경험 근거 강화 |
+| Treatment와 shuffled가 모두 우위 | residual norm/gain 효과 가능성, 커널 재검토 |
+| Treatment 우위 없음 | \(\phi\) 재주입 효과는 `[미완성]` 유지 |
 | safety 악화 | hallucination gate bridge 하향 |
 
 중요:

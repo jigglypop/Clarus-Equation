@@ -8,13 +8,13 @@
 
 > 선택 전 분포를 버리지 말고, 선택되지 않은 질량을 압축해 다음 step의 에너지 또는 logits에 재주입한다.
 
-현재 판정:
+형식 출처:
 
 | 항목 | 판정 |
 |---|---|
-| 후보분포 재가중 | `Exact` |
-| toy gate 알고리즘 | `Tooling` |
-| 실제 LLM 성능 개선 | `Open/Experiment` |
+| 후보분포 재가중 | `[정리]` |
+| toy gate 알고리즘 | `[정의]`; 실행값은 `[산출]` |
+| 실제 LLM 성능 개선 | `[예측]`; 07b의 사전등록 절차 적용 |
 
 ## 1. 입력
 
@@ -205,7 +205,8 @@ $$
 
 로 둔다.
 
-accepted claim은 manifest된다. rejected claim은 완전히 삭제하지 않고 \(\phi\)에 저장한다.
+최소 cost claim은 manifest 후보가 된다. 나머지 claim의 residual 요약은
+\(\phi\)에 저장한다.
 
 $$
 \phi_{t+1}^{\mathrm{claim}}

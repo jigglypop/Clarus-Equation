@@ -6,15 +6,228 @@ import pytest
 
 from reality_stone.clarus.fusion_scalar_current_loop import (
     _certification,
+    audit_scalar_primary_evidence,
     gaussian_product_form_factor,
     helm_form_factor,
     current_fusion_scalar_current_report,
+    physical_scalar_primary_evidence_gate_pass,
+    scalar_report_gate_results,
 )
+
+
+class _AlwaysEqualProxy:
+    def __init__(self, wrapped):
+        self._wrapped = wrapped
+
+    def __getattr__(self, name):
+        return getattr(self._wrapped, name)
+
+    def __eq__(self, _other):
+        return True
+
+    def __ne__(self, _other):
+        return False
 
 
 @pytest.fixture(scope="module")
 def report():
     return current_fusion_scalar_current_report()
+
+
+def test_primary_scalar_evidence_separates_physical_data_from_proxies(report) -> None:
+    audit = report.primary_evidence
+
+    assert audit.registered_mediator_momentum_mev == pytest.approx(29.64757)
+    assert audit.physical_triton_partial_q0_two_pion_matrix_element_published
+    assert audit.physical_triton_finite_q_curve_figure_only
+    assert audit.heavy_pion_triton_mirror_q0_benchmark_available
+    assert audit.dt_reaction_rmatrix_method_public
+    assert not audit.physical_triton_full_q0_scalar_response_public
+    assert not audit.machine_readable_dt_response_arrays_public
+    assert not audit.joint_dt_momentum_covariance_public
+    assert not audit.physical_point_short_range_contact_fitted
+    assert not audit.registered_mass_current_and_potential_share_regulator
+    assert not audit.full_form_factor_likelihood_supplied
+    assert not audit.full_real_space_scalar_current_likelihood_supplied
+    assert not audit.heavy_pion_mirror_accepted_as_physical_triton
+    assert not audit.helium3_accepted_as_triton_proxy
+    assert not audit.graph_digitization_accepted_for_certification
+    assert not audit.low_q_extrapolation_accepted_for_full_response
+    assert not audit.dt_reaction_input_and_posterior_public
+    assert not audit.reaction_likelihood_is_scalar_current_likelihood
+    assert not physical_scalar_primary_evidence_gate_pass(audit)
+
+
+def test_primary_scalar_evidence_gate_rejects_forged_flags(report) -> None:
+    forged = replace(
+        report.primary_evidence,
+        physical_triton_full_q0_scalar_response_public=True,
+        machine_readable_dt_response_arrays_public=True,
+        joint_dt_momentum_covariance_public=True,
+        physical_point_short_range_contact_fitted=True,
+        registered_mass_current_and_potential_share_regulator=True,
+        full_form_factor_likelihood_supplied=True,
+        full_real_space_scalar_current_likelihood_supplied=True,
+        primary_evidence_gate_pass=True,
+    )
+
+    fresh_canonical = audit_scalar_primary_evidence()
+    assert fresh_canonical == report.primary_evidence
+    assert fresh_canonical is not report.primary_evidence
+    assert not physical_scalar_primary_evidence_gate_pass(forged)
+
+
+def test_primary_scalar_evidence_gate_rejects_always_equal_foreign_type(report) -> None:
+    assert not physical_scalar_primary_evidence_gate_pass(
+        _AlwaysEqualProxy(report.primary_evidence)
+    )
+
+
+@pytest.mark.parametrize(
+    "field",
+    (
+        "heavy_pion_mirror_accepted_as_physical_triton",
+        "helium3_accepted_as_triton_proxy",
+        "graph_digitization_accepted_for_certification",
+        "low_q_extrapolation_accepted_for_full_response",
+        "reaction_likelihood_is_scalar_current_likelihood",
+    ),
+)
+def test_primary_scalar_evidence_gate_rejects_every_anti_proxy_leaf(report, field) -> None:
+    contradictory = replace(report.primary_evidence, **{field: True})
+
+    assert not physical_scalar_primary_evidence_gate_pass(contradictory)
+
+
+def test_scalar_primary_source_dois_versions_and_domains_are_canonical(report) -> None:
+    sources = {source.key: source for source in report.sources}
+    expected = {
+        "broggini_2025_v2": (
+            "2509.03486",
+            "v2",
+            "https://arxiv.org/abs/2509.03486v2",
+            "https://doi.org/10.1103/ms4p-zymy",
+            "scalar-phenomenology",
+        ),
+        "korber_2017_v1": (
+            "1704.01150",
+            "v1",
+            "https://arxiv.org/abs/1704.01150v1",
+            "https://doi.org/10.1103/PhysRevC.96.035805",
+            "nuclear-scalar-response",
+        ),
+        "andreoli_2019_v2": (
+            "1811.01843",
+            "v2",
+            "https://arxiv.org/abs/1811.01843v2",
+            "https://doi.org/10.1103/PhysRevC.99.025501",
+            "nuclear-scalar-response",
+        ),
+        "devries_2024_v2": (
+            "2310.11343",
+            "v2",
+            "https://arxiv.org/abs/2310.11343v2",
+            "https://doi.org/10.1140/epjc/s10052-024-13477-z",
+            "nuclear-scalar-response",
+        ),
+        "filandri_2024_v2": (
+            "2403.06599",
+            "v2",
+            "https://arxiv.org/abs/2403.06599v2",
+            "https://doi.org/10.1103/PhysRevC.110.034002",
+            "nuclear-scalar-response",
+        ),
+        "chakraborty_2026_v1": (
+            "2603.28872",
+            "v1",
+            "https://arxiv.org/abs/2603.28872v1",
+            "https://doi.org/10.48550/arXiv.2603.28872",
+            "nuclear-scalar-response",
+        ),
+        "agadjanov_2024_v2": (
+            "2303.08741",
+            "v2",
+            "https://arxiv.org/abs/2303.08741v2",
+            "https://doi.org/10.1103/PhysRevLett.131.261902",
+            "nucleon-scalar-input",
+        ),
+        "alarcon_weiss_2017_v1": (
+            "1707.07682",
+            "v1",
+            "https://arxiv.org/abs/1707.07682v1",
+            "https://doi.org/10.1103/PhysRevC.96.055206",
+            "nucleon-scalar-input",
+        ),
+        "krebs_2020_published": (
+            "2005.07433",
+            "published",
+            "https://doi.org/10.1140/epja/s10050-020-00249-y",
+            "https://doi.org/10.1140/epja/s10050-020-00249-y",
+            "nuclear-scalar-response",
+        ),
+        "chang_nplqcd_2018_v2": (
+            "1712.03221",
+            "v2",
+            "https://arxiv.org/abs/1712.03221v2",
+            "https://doi.org/10.1103/PhysRevLett.120.152002",
+            "nuclear-scalar-response",
+        ),
+        "detmold_shanahan_2021_published": (
+            "2102.04329",
+            "published",
+            "https://doi.org/10.1103/PhysRevD.103.074503",
+            "https://doi.org/10.1103/PhysRevD.103.074503",
+            "nuclear-scalar-response",
+        ),
+        "richardson_2022_v2": (
+            "2110.15959",
+            "v2",
+            "https://arxiv.org/abs/2110.15959v2",
+            "https://doi.org/10.1103/PhysRevC.106.044003",
+            "nuclear-scalar-response",
+        ),
+        "hupin_dt_2019_v3": (
+            "1803.11378",
+            "v3",
+            "https://arxiv.org/abs/1803.11378v3",
+            "https://doi.org/10.1038/s41467-018-08052-6",
+            "dt-reaction",
+        ),
+        "desouza_dt_2019_published": (
+            "1901.04857",
+            "published",
+            "https://doi.org/10.1103/PhysRevC.99.014619",
+            "https://doi.org/10.1103/PhysRevC.99.014619",
+            "dt-reaction",
+        ),
+        "odell_dt_2022_v2": (
+            "2105.06541",
+            "v2",
+            "https://arxiv.org/abs/2105.06541v2",
+            "https://doi.org/10.1103/PhysRevC.105.014625",
+            "dt-reaction",
+        ),
+    }
+
+    assert set(sources) == set(expected)
+    for key, canonical in expected.items():
+        source = sources[key]
+        observed = (
+            source.arxiv_identifier,
+            source.pinned_version,
+            source.url,
+            source.doi,
+            source.source_domain,
+        )
+        assert observed == canonical
+        assert source.primary_source
+
+    assert {key for key, source in sources.items() if source.source_domain == "dt-reaction"} == {
+        "hupin_dt_2019_v3",
+        "desouza_dt_2019_published",
+        "odell_dt_2022_v2",
+    }
+    assert sources["hupin_dt_2019_v3"].role.startswith("deterministic NCSMC")
 
 
 def test_candidate_one_nucleon_charge_is_reproduced_but_not_renormalized_as_a_fit(report) -> None:
@@ -100,7 +313,7 @@ def test_scalar_radius_diagnostic_crosses_band_at_q40_but_is_not_certified(repor
     assert audit.imaginary_exact_coupling_correction_at_radius_max == pytest.approx(-0.006986372736)
     assert audit.q40_coupling_correction_exceeds_comparison_band
     assert not audit.scalar_radius_covariance_supplied
-    assert not audit.low_q_expansion_promoted_to_full_form_factor
+    assert not audit.full_form_factor_likelihood_supplied
     assert not audit.scalar_radius_certification_pass
 
 
@@ -171,6 +384,8 @@ def test_provenance_and_proxy_assumptions_serialize_separately(report) -> None:
     )
     assert payload["sigma_term_proxy"]["assumptions"]["helium3_used_as_triton_isospin_proxy"]
     assert not payload["certification"]["comparison_band_is_statistical_confidence_interval"]
+    assert "physical_ce_fusion_branch_accepted" not in payload["certification"]
+    assert not payload["certification"]["component_and_upstream_gate_pass"]
 
 
 def test_scalar_current_gate_remains_fail_closed(report) -> None:
@@ -193,6 +408,15 @@ def test_scalar_current_gate_remains_fail_closed(report) -> None:
             audit.two_body_leaf_gate_pass,
         )
     )
+    expected_component_and_upstream = all(
+        (
+            expected_certification,
+            audit.upstream_uv_action_gate_pass,
+            audit.upstream_existing_constraints_gate_pass,
+        )
+    )
+    expected_evidence = physical_scalar_primary_evidence_gate_pass(report.primary_evidence)
+    expected_report_gates = scalar_report_gate_results(audit)
 
     assert audit.helm_gaussian_central_benchmark_pass
     assert audit.legacy_reference_gaussian_coupling_correction == pytest.approx(-0.009886663376)
@@ -208,17 +432,21 @@ def test_scalar_current_gate_remains_fail_closed(report) -> None:
     assert not audit.full_real_space_barrier_response_supplied
     assert audit.all_required_scalar_current_inputs_supplied is expected_required_inputs
     assert audit.scalar_current_certification_pass is expected_certification
-    assert report.scalar_current_loop_closed is expected_certification
     assert not audit.upstream_uv_action_gate_pass
     assert not audit.upstream_existing_constraints_gate_pass
-    expected_physical = all(
-        (
-            expected_certification,
-            audit.upstream_uv_action_gate_pass,
-            audit.upstream_existing_constraints_gate_pass,
-        )
+    assert audit.component_and_upstream_gate_pass is expected_component_and_upstream
+    assert expected_report_gates.canonical_primary_evidence_gate_pass is expected_evidence
+    assert expected_report_gates.scalar_current_loop_closed is (
+        expected_certification and expected_evidence
     )
-    assert report.physical_ce_fusion_branch_accepted is expected_physical
+    assert expected_report_gates.physical_ce_fusion_branch_accepted is (
+        expected_component_and_upstream and expected_evidence
+    )
+    assert report.scalar_current_loop_closed is expected_report_gates.scalar_current_loop_closed
+    assert (
+        report.physical_ce_fusion_branch_accepted
+        is expected_report_gates.physical_ce_fusion_branch_accepted
+    )
     assert not expected_certification
 
 
@@ -260,7 +488,7 @@ def test_physical_scalar_gate_requires_nuclear_uv_and_external_constraint_conjun
         radius=replace(
             report.intrinsic_scalar_radius,
             scalar_radius_covariance_supplied=True,
-            low_q_expansion_promoted_to_full_form_factor=True,
+            full_form_factor_likelihood_supplied=True,
             scalar_radius_certification_pass=True,
         ),
         proxy=proxy,
@@ -281,7 +509,11 @@ def test_physical_scalar_gate_requires_nuclear_uv_and_external_constraint_conjun
         upstream_existing_constraints_gate_pass=True,
     )
     assert all_true.scalar_current_certification_pass
-    assert all_true.physical_ce_fusion_branch_accepted
+    assert all_true.component_and_upstream_gate_pass
+    all_true_report_gates = scalar_report_gate_results(all_true)
+    assert not all_true_report_gates.canonical_primary_evidence_gate_pass
+    assert not all_true_report_gates.scalar_current_loop_closed
+    assert not all_true_report_gates.physical_ce_fusion_branch_accepted
 
     for upstream_field in (
         "upstream_uv_action_gate_pass",
@@ -294,7 +526,8 @@ def test_physical_scalar_gate_requires_nuclear_uv_and_external_constraint_conjun
         upstream[upstream_field] = False
         audit = _certification(**complete, **upstream)
         assert audit.scalar_current_certification_pass
-        assert not audit.physical_ce_fusion_branch_accepted
+        assert not audit.component_and_upstream_gate_pass
+        assert not scalar_report_gate_results(audit).physical_ce_fusion_branch_accepted
 
     component_leaf_fields = {
         "nucleon": (
@@ -310,7 +543,7 @@ def test_physical_scalar_gate_requires_nuclear_uv_and_external_constraint_conjun
         "barrier": ("dt_real_space_scalar_current_likelihood_supplied",),
         "radius": (
             "scalar_radius_covariance_supplied",
-            "low_q_expansion_promoted_to_full_form_factor",
+            "full_form_factor_likelihood_supplied",
             "scalar_radius_certification_pass",
         ),
         "two_body": (
@@ -333,7 +566,8 @@ def test_physical_scalar_gate_requires_nuclear_uv_and_external_constraint_conjun
                 upstream_existing_constraints_gate_pass=True,
             )
             assert not audit.scalar_current_certification_pass
-            assert not audit.physical_ce_fusion_branch_accepted
+            assert not audit.component_and_upstream_gate_pass
+            assert not scalar_report_gate_results(audit).scalar_current_loop_closed
 
     bad_nucleon = dict(complete)
     bad_nucleon["nucleon"] = replace(

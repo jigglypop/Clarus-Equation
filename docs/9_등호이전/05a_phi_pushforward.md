@@ -10,13 +10,13 @@ $$
 
 로 쓸 수 있다고 했다. 이 문서는 그 식을 실제 도구로 쓰기 위한 조건과 규약을 고정한다.
 
-현재 판정:
+형식 출처:
 
 | 항목 | 판정 | 이유 |
 |---|---|---|
-| 측도 pushforward 형식 | `Exact under assumptions` | measurable kernel과 finite measure가 있으면 닫힘 |
-| CE 물리 \(\Phi\)와 동일시 | `Bridge` | 어떤 커널을 고르는지에 달림 |
-| 잔류 질량 보존 규약 | `Selection` | raw/normalized 선택 필요 |
+| 측도 pushforward 형식 | `[정리]` | measurable kernel과 finite measure가 있으면 닫힘 |
+| CE 물리 \(\Phi\)와 동일시 | `[미완성]` | 어떤 커널을 고르는지에 달림 |
+| 잔류 질량 보존 규약 | `[공리: 모델 선택]` | raw/normalized 선택 필요 |
 
 ## 1. 기본 데이터
 
@@ -154,7 +154,7 @@ CE에서 \(K_\phi\)는 자동으로 주어지지 않는다. 후보는 다음과 
 | curvature kernel | \(K_\phi(x,\gamma)=\mathcal H_\gamma(x)\) | 경로 헤시안/곡률 잔류 |
 | AGI embedding kernel | \(K_\phi(i,\gamma)=P h_\gamma(i)\) | 후보 trace의 hidden residual |
 
-05장의 `Bridge/Open`은 바로 이 표에서 어느 커널을 CE의 물리 \(\Phi\)와 연결할지 아직 선택하지 않았다는 뜻이다.
+05장의 `[미완성]`은 바로 이 표에서 어느 커널을 CE의 물리 \(\Phi\)와 연결할지 아직 선택하지 않았다는 뜻이다.
 
 ## 7. \(\Phi\)와 \(\phi\)의 구분
 
@@ -190,9 +190,9 @@ $$
 
 이때도 \(\Phi_{\mathrm{res}}\)는 전체 \(\Phi\)가 아니라 비선택 경로에서 온 잔류 성분이다.
 
-## 8. Bridge를 닫는 체크리스트
+## 8. 물리 사상을 닫는 체크리스트
 
-05장의 \(\phi\) pushforward를 `Bridge`에서 `Exact under assumptions`로 올리려면 다음을 채운다.
+05장의 \(\phi\) pushforward에 조건부 `[정리]`를 적용하려면 다음을 채운다. 물리적 동일시는 별도의 `[공리: 물리 사상]`이다.
 
 | 항목 | 필요 조건 |
 |---|---|
@@ -206,4 +206,3 @@ $$
 ## 9. 한 줄 결론
 
 \(\phi\) pushforward는 수학적으로 어렵지 않다. 어려운 부분은 커널 선택이다. 즉 문제는 적분식이 아니라 "무엇을 잔류장으로 읽을 것인가"다.
-

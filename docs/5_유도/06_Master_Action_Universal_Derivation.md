@@ -1,399 +1,251 @@
-## 1. 이 장의 목표와 구조
-
-이 문서는 앞선 각 장에서 사용한 CE 클라루스장 공리들을 하나로 모아,
-
-- **우주의 안정성·정합성**을 지배하는 하나의 **마스터 작용함수(CE 보편 안정 작용)**를 제시하고  
-- 고전역학, 양자역학, 유체역학, 정수론 난제, 단백질 접힘, 암흑에너지, 뇌·LLM 등이  
-  이 마스터 작용의 **서로 다른 유효 이론(effective theory)**로 나타나는 구조를 개념적으로 정리하는 것
-
-을 목표로 한다.
-
-이 장의 구성은 다음과 같다.
-
-- **1장**: 목표와 구조  
-- **2장**: 공리·정의·가설 요약 (A1–A5, D1, H1)  
-- **3장**: CE 보편 안정 작용 $S_\text{CE}$의 기본 형태 제안  
-- **4장**: 각 분야(유체·정수론·단백질·우주론·블랙홀·뇌/LLM)로의 투영·환원 구조  
-- **5장**: 결합 상수와 스케일(공통 $\alpha_C$)에 대한 정성적 논의  
-- **6장**: 순환논리 점검, 한계, 향후 수학적 과제
-
-이 장은 “모든 것을 증명하는 이론”을 주장하지 않으며,  
-앞선 장들에서 이미 사용한 곡률 functional을 **하나의 형식 안에 정리**하는 수준에 머문다.
-
-또한 이 장은 오일러 항등식 기반 CE 코어 정전의 **투영 문서**다. 여기서 쓰는 식들은 코어 정전의 `Exact / Selection / Bridge / Phenomenology` 체계를 넘지 못한다.
-
-- 코어에서 `Bridge`인 식은 이 장에서도 `Bridge`다.
-- 코어에서 직접 증명하지 않은 블랙홀, 뇌, LLM 연결은 이 장에서도 `Phenomenology` 또는 구조적 응용이다.
-- 차원 있는 계수와 도메인별 결합 상수는 코어의 무차원 비율을 각 도메인 기준 스케일에 승격한 결과로 읽는다.
-
----
-
-### 최신 정본 정합성 주석
-
-이 장은 여러 응용 문서의 공통 functional 형식을 통합하는 문서이며, 미시 물리 규약은 `docs/경로적분.md` 최신 정본을 고정 사용한다.
-
-- 미시 포텐셜: $V(\Phi)=+\frac{1}{2}M_\Phi^2\Phi^2+\frac{1}{4}\lambda_4\Phi^4$  
-- 대칭/진공: $Z_2$ 보존, $v_\Phi=0$  
-- 암흑 성분 분해: $R=\alpha_s D_{\text{eff}}(1+\varepsilon^2\delta)$
-
-또한 본 장의 A1-A5 표기는 응용 계층의 요약 표기이며, D1($\Phi_\text{supp}=-\log P_\text{selected}$)은 정보론적 유효 포텐셜이다. 미시 라그랑지안은 위 정본 규약으로만 해석한다.
-
----
-
-## 2. 공리·정의·가설 요약
-
-### 2.1 공리 A1–A5
-
-이 절의 A1-A5는 코어 정전의 대체 공리가 아니라, 응용 계층에서 재서술한 **요약 표기**다. 해석 우선순위는 항상 `docs/axium.md`와 `docs/경로적분.md`의 정의를 따른다.
-
-- **공리 A1 (선택/비선택 경로 실재성)**  
-  - 양자 사건의 비선택 경로는 완전히 소멸하지 않고,  
-    어떤 물리적(정보/에너지) 저장소에 누적된다.
-
-- **공리 A2 (비선택 경로 에너지 전환)**  
-  - 비선택 경로 비율 $q(x)=1-P_\text{selected}(x)$에 비례하는  
-    에너지 밀도 $E_\text{nonselected}(x)=q(x)E_\text{quantum}(x)$가 존재하며,  
-    전체 에너지 보존과 양립한다.
-
-- **공리 A3 (묵시적으로 포함)**  
-  - 비선택 경로 에너지는 양자 수준에서는 요동하지만,  
-    거시적 평균에서 유효한 장으로 볼 수 있는 정도의 연속성을 가진다.
-
-- **공리 A4 (곡률–에너지 결합)**  
-  - $E_\text{nonselected}(x)$는 추가 응력–에너지 텐서 $T_{\mu\nu}^\text{supp}$를 통해  
-    시공간 곡률에 기여한다.
-
-- **공리 A5 (양자–우주 스케일 브리징)**  
-  - $T_{\mu\nu}^\text{supp}$는 양자 스케일에서 요동하지만,  
-    충분히 평균하면 암흑물질·암흑에너지와 유사한 효과를 내는 유효 성분으로 분리된다.
-
-### 2.2 정의 D1 (클라루스장 포텐셜)
-
-- 선택 확률 $P_\text{selected}(x)$에 대해
-  $$
-  \Phi_\text{supp}(x) := -\log P_\text{selected}(x)
-  $$
-  로 정의한다.
-
-이는 정보 이론에서의 surprisal과 같은 구조이며,  
-“희귀한 상태일수록 높은 억압 포텐셜”이라는 의미를 갖는다.
-
-### 2.3 가설 H1 (복잡도–곡률–에너지 관계)
-
-- 어떤 구성 $x$에 대해,
-  - 연산 복잡도 $\mathcal{C}(x)$,  
-  - 곡률량 $\mathcal{K}(x)$,  
-  - 에너지/질량 $E(x), m(x)$
-  사이에 단조 관계가 존재한다고 가정한다.
-
-개략적으로,
-
-$$
-\mathcal{C}(x)
- \leftrightarrow
-\mathcal{K}(x)
- \leftrightarrow
-E(x)
-$$
-
-이며, “복잡도가 높을수록 곡률·에너지가 커진다”는 직관을 수학적으로 담으려는 가설이다.
-
----
-
-## 3. CE 보편 안정 작용의 기본 형태
-
-### 3.1 물리 작용과 안정 작용의 분리
-
-표준 물리 이론에서, 작용은 대략
-
-$$
-S_\text{phys}
- =
-S_\text{GR}[g]
- +
-S_\text{matter}[\psi,g]
-$$
-
-와 같은 형태를 가진다.
-
-- $S_\text{GR}$: 중력(예: 아인슈타인–힐베르트 작용)  
-- $S_\text{matter}$: 물질·장(양자장 이론 등)
-
-CE 이론은 여기에 **추가적인 안정 작용 $S_\text{CE}$**를 더한
-
-$$
-S_\text{total}
- =
-S_\text{phys}
- +
-S_\text{CE}
-$$
-
-꼴을 제안한다.
-
-여기서 중요한 점은,
-
-- $S_\text{phys}$는 기존 이론에서 이미 쓰이던 작용이며,  
-- $S_\text{CE}$는 “곡률–복잡도 억제”라는 새로운 층을 나타낸다는 것이다.
-
-이 작용은 "모든 도메인을 하나의 미시 이론으로 엄밀 증명한다"는 뜻이 아니라, 서로 다른 도메인에서 반복적으로 나타나는 안정 functional을 **같은 문법으로 재표현**한다는 뜻이다.
-
-### 3.2 보편 안정 작용 $S_\text{CE}$의 형식
-
-앞선 각 장에서 등장한 곡률 functional들을 하나로 묶으면,  
-기본 골격은 다음과 같이 쓸 수 있다.
-
-$$
-S_\text{CE}[\phi,g]
- =
-\int d^dx\,dt\,\sqrt{|g|}
-\left(
-  \alpha_1 \|\nabla \phi\|^2
-  +
-  \alpha_2 \|\nabla^2 \phi\|^2
-\right)
- +
-S_\text{info}[\Phi_\text{supp}].
-$$
-
-여기서
-
-- $\phi$: 각 시스템의 상태를 나타내는 유효 장(유체 속도장, 영점 오차장, 접힘 경로, 뇌 상태, LLM 잠재상태 등)  
-- $g$: 기저 기하(시공간 계량 혹은 상태공간의 유효 계량)  
-- $\alpha_1, \alpha_2$: 1차/2차 곡률 억제의 세기를 나타내는 결합 상수  
-- $S_\text{info}$: 클라루스장 포텐셜 $\Phi_\text{supp}$와 관련된 정보 이론적 항
-
-이다.
-
-$S_\text{info}$는 예를 들어,
-
-$$
-S_\text{info}
- =
-\int d\mu(x)\,\beta\,\Phi_\text{supp}(x)
- =
-\beta \int d\mu(x)\,[-\log P_\text{selected}(x)]
-$$
-
-와 같은 꼴을 취할 수 있다  
-($d\mu(x)$는 적절한 측도, $\beta$는 온도/민감도 유사 파라미터).
-
-요약하면,
-
-- $\|\nabla\phi\|^2$ 항: 1차 변화(기울기)의 폭주 억제  
-- $\|\nabla^2\phi\|^2$ 항: 2차 변화(곡률)의 급격한 휘어짐 억제  
-- $S_\text{info}$ 항: 희귀한 상태(낮은 선택 확률)에 대한 정보 비용 부여
-
-라는 세 층이 결합된 작용이 $S_\text{CE}$의 핵심이다.
-
----
-
-## 4. 각 분야로의 투영·환원 구조
-
-이 절에서는 위의 보편 작용이 어떻게 각 장의 functional로 환원되는지 개략적으로 정리한다. 아래의 각 항목은 "직접 증명"이 아니라 "코어 functional의 투영 또는 유효 이론적 환원"으로 읽는다.
-
-### 4.1 유체역학 (Navier–Stokes)
-
-- 상태 변수: $\phi(x,t) = \tilde{u}(x,t)$ (수치 해석에서의 속도장 근사)  
-- 배경 기하: 유클리드 공간(또는 단순한 곡률을 가진 공간)  
-- 안정 작용:
-
-  $$
-  S_\text{CE}^\text{NS}
-  \sim
-  \int \left(
-    \|\nabla \tilde{u}\|^2
-    +
-    \lambda_\text{NS}\|\nabla^2 \tilde{u}\|^2
-  \right)\,dx\,dt.
-  $$
-
-이는 테일러–그린 소용돌이 등에서  
-고주파 수치 노이즈와 고곡률 모드를 억제하는 역할을 한다.
-
-### 4.2 정수론 (리만 제타 영점 근사)
-
-- 상태 변수: $\phi(n) \approx \varepsilon_n$ (영점 위치 오차)  
-- 기하: 영점 인덱스 공간을 1차원 연속선으로 보는 근사  
-- 안정 작용:
-
-  $$
-  S_\text{CE}^\zeta
-  \sim
-  \int \left(
-    a_0 \phi(x)^2
-    +
-    a_1 (\phi'(x))^2
-    +
-    \lambda_\zeta (\phi''(x))^2
-  \right)\,dx.
-  $$
-
-이는 영점 위치 근사에서의 고곡률 패턴을 완화하고,  
-오차 분포를 더 매끄럽게 만드는 역할을 한다.
-
-### 4.3 단백질 접힘
-
-- 상태 변수: $\phi(t)=x(t)$ (접힘 경로) 또는 그에 대한 오차장  
-- 기하: 접힘 상태공간의 유효 계량  
-- 안정 작용:
-
-  $$
-  S_\text{CE}^\text{fold}
-  \sim
-  \int \left(
-    a_0 \|\dot{\phi}(t)\|^2
-    +
-    \lambda_\text{fold} \|\ddot{\phi}(t)\|^2
-  \right)\,dt.
-  $$
-
-이는 불필요하게 꼬이고 되돌아가는 고복잡도 경로를 억제하여,  
-접힘 RMSD를 줄이는 방향으로 작동한다.
-
-### 4.4 우주론 (암흑 에너지)
-
-- 상태 변수: $\phi$를 전체 밀도·곡률장 등으로 보는 유효 기술  
-- 기하: FLRW 혹은 보다 일반화된 시공간  
-- 안정 작용:
-
-  - 전역적으로는 $S_\text{info}$와 $E_\text{nonselected}$가  
-    유효 우주 상수 $\Lambda_\text{eff}$에 기여하는 형태로 나타난다.
-
-여기서는 구체적인 수치 예측보다,  
-“왜 가속 팽창이 ‘복잡도–곡률 억제’와 연결될 수 있는지”의 개념적 틀을 제공한다.
-
-### 4.5 블랙홀 (강곡률계)
-
-- 상태 변수: $\phi = \Phi$ 또는 강곡률 배경에서의 평균량 $\langle \Phi^2 \rangle$  
-- 기하: 정적 또는 축대칭 시공간 계량 $g_{\mu\nu}$  
-- 안정 작용:
-
-  $$
-  S_\text{CE}^\text{BH}
-  \sim
-  \int d^4x\,\sqrt{-g}
-  \left(
-    \frac{F}{16\pi G}R
-    +
-    \|\nabla \Phi\|^2
-    +
-    V(\Phi)
-  \right)
-  $$
-
-  여기서 $F = 1 + \alpha_s D_{\text{eff}}$는 CE의 공통 form factor이며,
-  강곡률 평균장 근사에서는 $G_{\text{eff}} = G/F$의 형태로 읽힌다.
-
-이 투영은 블랙홀을 "새로운 독립 이론"으로 다루기보다,
-기존 CE 핵심량 $\delta$, $D_{\text{eff}}$, $\alpha_s$, $F$가
-강곡률 영역에서 horizon 구조를 어떻게 재정의하는지를 보는 최소 유도다.
-
-상세 유도는 `07_Black_Hole_Derivation.md`를 참조한다.
-
-### 4.6 뇌·LLM (Reality_Stone)
-
-- 상태 변수: $\phi(x,t)$ (뇌 상태) 또는 $z(t)$ (LLM 잠재 상태)  
-- 기하: 신경상태/잠재공간의 유효 매니폴드  
-- 안정 작용:
-
-  $$
-  S_\text{CE}^\text{brain/LLM}
-  \sim
-  \int
-  \big(
-    \|\nabla \phi\|^2
-    +
-    \lambda_\text{brain}\|\nabla^2 \phi\|^2
-  \big)\,dV\,dt,
-  $$
-
-  각성–수면 모드에 따라 $\lambda$와 가중 함수를 달리 적용한다.
-
-이는 조현병(2차 곡률 안정 붕괴),  
-뇌전증(1차 기울기 폭주),  
-LLM 환각(곡률 스티킹)을  
-하나의 안정 functional 관점에서 **비교하는 틀**을 제공한다. 이 자체가 뇌나 LLM에서 CE가 이미 검증되었다는 뜻은 아니다.
-
----
-
-## 5. 결합 상수와 스케일에 대한 논의
-
-각 분야에서 등장한 곡률 억제 계수들을  
-공통된 무차원 결합 상수 $\alpha_C$로 환산하면,
-
-- Navier–Stokes, 리만 제타, 단백질 접힘, LLM,  
-  그리고 우주론의 암흑 에너지까지
-
-대략
-
-$$
-\alpha_C \sim 10^{-4} \sim 10^{-3}
-$$
-
-범위의 값들이 등장하는 패턴이 제시되어 있다.
-
-이는 아직 정밀한 실험·수학적 증명이 아니라,
-
-- “서로 다른 계통의 문제들이  
-  비슷한 스케일의 곡률 억제 세기를 필요로 한다”는  
-초기 정성적 관찰에 가깝다.
-
-그러나 만약 추후 더 많은 데이터와 계산에서
-
-- 이 범위가 계속해서 유지되고,  
-- 서로 다른 스케일·도메인에서 $\alpha_C$가 **하나의 좁은 구간으로 수렴**한다면,
-
-이는 CE 마스터 작용이
-
-- “수학적 장난이 아니라,  
-  실제 우주가 따르는 보편 안정 원리의 근사치”일 가능성을 강화하게 된다.
-
----
-
-## 6. 순환논리 점검, 한계, 향후 과제
-
-### 6.1 순환논리 점검
-
-- 이 장에서 제시한 $S_\text{total}=S_\text{phys}+S_\text{CE}$ 구조는  
-  고전역학, 양자역학, 일반상대론이 이미 가지고 있는 작용 $S_\text{phys}$ 위에  
-  추가적인 안정 작용 $S_\text{CE}$를 더한 것이다.  
-- 우리는 GR, QM, NS 등을 $S_\text{CE}$로부터 “다시 증명”했다고 주장하지 않는다.  
-- 각 난제(나비에–스토크스, 리만, 단백질 등)에서
-  - 공리는 functional의 **형태**를 제안하는 데만 사용하고,  
-  - 오차 감소나 예측 정확도 향상은  
-    실제 수치 실험과 관측 데이터를 통해 **독립적으로 측정**한다.  
-  - 이렇게 함으로써 “공리를 결과로부터 다시 도출하는” 순환을 피한다.
-
-### 6.2 한계
-
-- $S_\text{CE}$의 정확한 수학적 형태(특히 $S_\text{info}$ 부분)는  
-  아직 여러 후보 중 하나이며,  
-  다양한 데이터와 이론을 통해 검증·수정이 필요하다.  
-- 상태공간의 정확한 기하 구조(계량, 곡률 텐서) 역시  
-  분야마다 정의가 다르고, 아직 통일된 틀이 없다.
-
-### 6.3 향후 과제
-
-- 각 도메인에서
-  - 명확한 상태 변수 $\phi$,  
-  - 기하 구조 $g$,  
-  - 곡률량 정의를 합의하고,  
-  - $S_\text{CE}$의 계수를 데이터에 맞게 추정하는 작업.  
-- 서로 다른 도메인에서 얻은 $\alpha_C$ 값들을  
-  - 엄밀한 통계 방법으로 비교·통합하여,  
-  - 정말로 하나의 보편 상수가 존재하는지,  
-    혹은 스케일/도메인에 따라 여러 고정점이 있는지 탐색.
-
-이 장은 CE 클라루스장 이론의 “마스터 공식”을  
-완전한 최종 이론이 아니라,
-
-- 앞서 각 장에서 사용한 안정 functional들을  
-  하나의 작용 형태 안에 모아 둔 **중간 정리**로 제시한다.  
-
-향후 더 엄밀한 수학·물리 작업을 통해  
-이 마스터 작용이 얼마나 강하게 제약되는지,  
-그리고 실제 우주와 실험 데이터가 이를 어디까지 지지하는지가  
-본격적으로 검증될 필요가 있다.
-
-
+# 6. Master action: 변분 원리, EFT branch, 일관된 축약
+
+이 장의 master action은 여러 분야의 방정식을 하나의 scalar 식에서 자동으로
+산출한다는 명제가 아니다. field content, symmetry와 boundary condition을
+명시한 작용에서 Euler--Lagrange 방정식이 어떻게 나오고, 어떤 축약이
+일관적인지를 정리한다.
+
+## 6.1 일반 변분 구조
+
+**[정의]** 시공간 \(M\) 위 field를 \(\Phi^A\), coupling을
+\(\lambda_I\)라 하고
+\[
+S[\Phi;\lambda]
+=\int_M d^4x\,\sqrt{-g}\,
+L(\Phi^A,\nabla_\mu\Phi^A;\lambda_I)
+\]
+를 정의한다. 자연단위에서 \(S\)는 무차원이고 SI에서는 \(S/\hbar\)가
+무차원이다.
+
+**[정리]** 일차미분 Lagrangian의 variation은
+\[
+\delta S
+=\int_M d^4x\,\sqrt{-g}\,
+\mathcal E_A\,\delta\Phi^A
++\int_{\partial M}\Theta(\Phi,\delta\Phi),
+\]
+\[
+\mathcal E_A
+=\frac{\partial L}{\partial\Phi^A}
+-\nabla_\mu
+\frac{\partial L}{\partial(\nabla_\mu\Phi^A)}
+\]
+다. boundary term을 없애는 경계조건 또는 적절한 boundary action을
+선택하면
+\[
+\delta S=0\quad\Longleftrightarrow\quad \mathcal E_A=0
+\]
+가 모든 독립 variation에 대해 성립한다.
+
+**[정리]** 미분동형사상 불변인 matter+gravity action에는 metric
+Euler--Lagrange tensor의 divergence와 다른 field equation을 잇는
+Noether identity가 있다. matter와 scalar equation이 성립하면 metric
+equation의 Bianchi identity로부터 그 우변의 covariant conservation이
+따른다. 이는 서로 독립적으로 고른 background와 source를 자동으로
+정합시켜 주지는 않는다.
+
+## 6.2 scalar--tensor EFT branch
+
+**[공리] 모델 선택:**
+\[
+S_{\rm ST}
+=\int d^4x\sqrt{-g}\left[
+\frac{M_{\rm Pl}^2}{2}F(\phi)R
+-\frac12K(\phi)(\nabla\phi)^2
+-V(\phi)+\mathcal L_m(g,\Psi)
+\right]
+\]
+를 하나의 재사용 가능한 EFT family로 택한다. \([\phi]=1\),
+\(F,K\)는 무차원이고 \(V\)의 질량차원은 4다. timelike 또는 spacelike
+경계가 있으면 fixed induced metric과 fixed \(\phi\)를 쓰고
+\(M_{\rm Pl}^2\int_{\partial M}\sqrt{|h|}\,F K_{\rm ext}\) 같은
+generalized Gibbons--Hawking--York 항을 포함하거나, variation을 compact
+support로 제한한다.
+
+**[산출]** metric과 scalar variation은
+\[
+M_{\rm Pl}^2F G_{\mu\nu}
+=T_{\mu\nu}^{m}
++K\left(\nabla_\mu\phi\nabla_\nu\phi
+-\frac12g_{\mu\nu}(\nabla\phi)^2\right)
+-g_{\mu\nu}V
++M_{\rm Pl}^2
+(\nabla_\mu\nabla_\nu F-g_{\mu\nu}\Box F),
+\]
+\[
+K\Box\phi+\frac12K_{,\phi}(\nabla\phi)^2
++\frac{M_{\rm Pl}^2}{2}F_{,\phi}R
+-V_{,\phi}=0.
+\]
+
+**[공리] 안정 영역:**
+\[
+F(\phi)>0,\qquad
+\frac{K}{F}
++\frac{3M_{\rm Pl}^2}{2}
+\left(\frac{F_{,\phi}}F\right)^2>0
+\]
+인 field domain만 사용한다. 첫 조건은 effective graviton kinetic 부호,
+둘째는 Einstein-frame scalar kinetic 부호의 충분한 국소 조건이다.
+
+**[미완성]** \(F,K,V\)의 구체적 함수, quantum correction,
+cutoff와 matter coupling은 CE의 공통 수학에서 고정되지 않는다.
+
+## 6.3 상수-field branch
+
+**[공리] 분기 선택:** \(\phi=\phi_0\)가 상수이고
+\[
+\frac{M_{\rm Pl}^2}{2}F_{,\phi}(\phi_0)R
+-V_{,\phi}(\phi_0)=0
+\]
+인 배경을 택한다.
+
+**[산출]** \(F_0=F(\phi_0)>0\), \(V_0=V(\phi_0)\)이면
+\[
+M_{\rm Pl}^2F_0G_{\mu\nu}
++V_0g_{\mu\nu}=T_{\mu\nu}^{m}.
+\]
+따라서
+\[
+M_{\rm Pl,eff}^2=M_{\rm Pl}^2F_0,\qquad
+\Lambda_{\rm eff}=\frac{V_0}{M_{\rm Pl}^2F_0}.
+\]
+이 branch는 Einstein 방정식의 표준 해를 조건부로 포함한다. \(F_0,V_0\)의
+값을 무입력으로 정하지는 않는다.
+
+## 6.4 일관된 축약
+
+**[정의]** full field를 ansatz
+\(\Phi^A=\iota^A(\psi^a)\)로 제한해
+\[
+S_{\rm red}[\psi]:=S[\iota(\psi)]
+\]
+를 정의한다.
+
+**[정리]** reduced equation
+\(\delta S_{\rm red}/\delta\psi^a=0\)은 full Euler--Lagrange equation의
+ansatz tangent 방향 투영을 준다. 이 해가 full solution이 되려면 ansatz에
+수직인 discarded equation도
+\[
+\mathcal E_A[\iota(\psi)]=0
+\]
+을 만족해야 한다. 이 추가 조건을 만족하는 축약만 consistent truncation이다.
+
+**[산출]** homogeneous scalar--FLRW, constant-field black-hole branch처럼
+symmetry가 discarded mode를 source하지 않는 경우에는 일관된 축약을
+구성할 수 있다. 반면 유체, open quantum system과 dissipative material에는
+각각 fluid variables, bath와 constitutive law를 추가해야 한다.
+
+## 6.5 dissipative equation의 경계
+
+**[정리]** 일반적인 single-copy local Lorentzian action의 보존적
+Euler--Lagrange flow와 점성 Navier--Stokes 또는 GKSL semigroup는 같은
+수학 구조가 아니다. dissipative effective equation을 action으로 기술하려면
+environment를 유지한 뒤 적분소거하거나 Schwinger--Keldysh doubled field,
+influence functional과 positivity/noise 조건을 사용해야 한다.
+
+**[미완성]** 하나의 실수 scalar potential만으로 viscosity, Lindblad rate,
+superconducting collision integral과 nuclear transport coefficient를 모두
+산출하는 matching은 없다.
+
+## 6.6 Euclidean cutoff와 saddle
+
+**[공리] Euclidean branch:** 유한 cutoff 뒤의 모든 자유도를 기준척도로
+나눈 무차원 좌표 \(z\in\mathbb R^N\)로 쓴다.
+\(s_N(z)=S_{E,N}(z)/\hbar\)가 연속인 실함수이고 어떤
+\(c,p>0\), \(C\in\mathbb R\)에 대해
+\[
+s_N(z)\ge c\|z\|^p-C
+\tag{6.6}
+\]
+라고 가정한다.
+
+**[정리]** 이 전제에서
+\[
+0<Z_N=\int_{\mathbb R^N}d^Nz\,e^{-s_N(z)}<\infty .
+\tag{6.7}
+\]
+실제로 integrand는
+\(e^{C}e^{-c\|z\|^p}\)로 지배된다. 지수 \(s_N=S_E/\hbar\)는
+무차원이다.
+
+**[정리] Laplace 선도항:** \(z_j\)가 고립된 비퇴화 최소점이고
+\(\mathcal H_j=\nabla^2s_N(z_j)>0\)라 하자. 그 최소점의 고정된 작은
+근방에 대한
+\[
+Z_j(\lambda)=\int_{\mathcal U_j}d^Nz\,
+e^{-\lambda s_N(z)}
+\]
+는 \(\lambda\to\infty\)에서
+\[
+Z_j(\lambda)\sim
+e^{-\lambda s_N(z_j)}
+\left(\frac{2\pi}{\lambda}\right)^{N/2}
+(\det\mathcal H_j)^{-1/2}.
+\tag{6.8}
+\]
+zero mode, negative mode 또는 gauge orbit가 있으면 이 식의 전제가
+깨지며 collective coordinate와 적분 contour를 별도로 정해야 한다.
+
+**[미완성]** continuum limit, gauge fixing, reflection positivity,
+renormalization과 Lorentzian reconstruction은 유한 cutoff 정리와 별개다.
+
+## 6.7 dimensionless residual objective
+
+**[정의]** 각 equation residual \(\mathcal E_A\)의 질량차원을 \(d_A\),
+질량차원 1의 reference scale을 \(\Lambda_A>0\)라 하고
+\[
+\widehat{\mathcal E}_A
+:=\frac{\mathcal E_A}{\Lambda_A^{d_A}}
+\]
+로 무차원화한다. \(x^\mu=L_{\rm ref}\hat x^\mu\)도 함께 사용한다.
+
+**[공리] 수치모형:** Euclidean positive norm과 무차원 weight
+\(w_A(\hat x)>0\)를 택해
+\[
+\mathcal J[\Phi]
+=\frac12\sum_A\int d^4\hat x\,
+w_A(\hat x)|\widehat{\mathcal E}_A|^2
+\]
+를 최적화 objective로 둔다.
+
+**[정리]**
+\[
+\mathcal J\ge0,\qquad
+\mathcal J=0
+\Longleftrightarrow
+\mathcal E_A=0\ \text{a.e. for every }A.
+\]
+이는 positive residual norm의 직접 귀결이다.
+
+이 \(\mathcal J\)는 physical Lorentzian action \(S\)와 다른 수치 목적함수다.
+\(\mathcal J\)의 stationary point가 \(\mathcal J=0\)이거나 full equation의
+해라는 보장은 없다.
+
+## 6.8 분야별 필요한 추가 구조
+
+| 축약 대상 | master EFT 외에 필요한 것 | 보존되는 조건부 결과 |
+|---|---|---|
+| FLRW·암흑에너지 | \(F,K,V\), matter와 초기조건 | Friedmann·scalar equation |
+| black hole | constant-field 조건, horizon 경계 | Einstein branch·Wald entropy |
+| Navier--Stokes | 유체장, equation of state, viscosity | energy identity·weak form |
+| 열린 양자계 | bath, coupling, coarse graining | GKSL·KMS 조건 |
+| 초전도체 | fermion band, pairing kernel, bath | gap equation·Floquet expansion |
+| 핵융합 | nuclear EFT, plasma self-energy, transport | Yukawa potential·WKB exponent |
+
+**[공리] 외부 scale:** \(29.65\,{\rm MeV}\) 같은 benchmark는
+\(\Lambda_A\) 또는 scan coordinate로 선택할 수 있지만, 그 선택만으로
+어느 sector의 pole·coupling·해도 산출되지 않는다.
+
+## 6.9 요약
+
+| 항목 | 지위 |
+|---|---|
+| Euler--Lagrange variation과 Noether identity | [정리] |
+| scalar--tensor EFT | [공리]과 [산출] |
+| constant-field Einstein branch | [산출] |
+| consistent truncation 조건 | [정리] |
+| Euclidean finite-cutoff measure와 saddle | [정리] |
+| dimensionless residual objective | [공리]과 [정리] |
+| 모든 분야의 coupling을 정하는 단일 CE 작용 | [미완성] |
+| UV completion과 quantum measure | [미완성] |

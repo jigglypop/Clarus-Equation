@@ -16,14 +16,14 @@ $$
 
 실제 CE 문서의 \(\mathcal P_I\), \(\mu_{\mathrm{ref}}\), \(W/F\), \(\mathcal P_{\mathrm{ns}}\)와 대조한 결과는 [05d_pathspace_audit.md](05d_pathspace_audit.md)에 둔다. 여기서는 일반 정리 적용 조건만 유지한다.
 
-현재 판정:
+형식 출처:
 
 | 항목 | 판정 |
 |---|---|
-| finite path approximation | `Exact` |
-| compact pathspace 농축 | `Exact under assumptions` |
-| Polish/non-compact pathspace 농축 | `Exact under assumptions` |
-| 실제 CE \(\Gamma\), \(S[\gamma]\), \(\Phi\) 식별 | `Bridge` |
+| finite path approximation | `[정리]` |
+| compact pathspace 농축 | `[정리]` |
+| Polish/non-compact pathspace 농축 | `[정리]` |
+| 실제 CE \(\Gamma\), \(S[\gamma]\), \(\Phi\) 식별 | `[미완성]` |
 
 ## 1. 최소 데이터
 
@@ -38,7 +38,7 @@ CE pathspace 농축에 필요한 데이터는 다음 여섯 개다.
 | \(\Gamma_*\) | manifest 경로 집합 | argmin set |
 | \(\Gamma_{\mathrm{ns}}\) | 비선택 경로 집합 | measurable complement |
 
-이 중 하나라도 비어 있으면 05장은 여전히 형식적 `Bridge`다.
+이 중 하나라도 비어 있으면 05장의 물리 사상은 `[미완성]`이다.
 
 ## 2. 세 가지 닫힘 수준
 
@@ -63,7 +63,7 @@ $$
 
 > \(\beta\to\infty\)에서 최소 에너지 경로 집합으로 농축한다.
 
-판정: `Exact`
+출처: `[정리]`
 
 ### Level C: compact pathspace
 
@@ -86,7 +86,7 @@ $$
 
 for every open \(U\supset\Gamma_*\).
 
-판정: `Exact under assumptions`
+출처: `[정리]`
 
 ### Level P: Polish/non-compact pathspace
 
@@ -115,7 +115,7 @@ $$
 \quad(U\supset\Gamma_*).
 $$
 
-판정: `Exact under assumptions`
+출처: `[정리]`
 
 ## 3. Energy 선택 후보
 
@@ -123,10 +123,10 @@ $$
 
 | 후보 | 식 | 판정 |
 |---|---|---|
-| action energy | \(E(\gamma)=S_E[\gamma]\) | `Bridge` |
-| suppress action | \(E(\gamma)=S_{\mathrm{supp}}[\gamma]\) | `Bridge` |
-| fold functional | \(E(\gamma)=\Phi[\gamma]\) | `Bridge` |
-| hybrid | \(E(\gamma)=aS_E[\gamma]+bS_{\mathrm{supp}}[\gamma]\) | `Selection/Bridge` |
+| action energy | \(E(\gamma)=S_E[\gamma]\) | `[미완성]`; 채택 시 `[공리: 물리 사상]` |
+| suppress action | \(E(\gamma)=S_{\mathrm{supp}}[\gamma]\) | `[미완성]`; 채택 시 `[공리: 물리 사상]` |
+| fold functional | \(E(\gamma)=\Phi[\gamma]\) | `[미완성]`; 채택 시 `[공리: 물리 사상]` |
+| hybrid | \(E(\gamma)=aS_E[\gamma]+bS_{\mathrm{supp}}[\gamma]\) | `[미완성]`; 계수는 `[공리: 모델 선택]` |
 
 수학 정리는 \(E\)가 주어졌을 때만 작동한다. \(E\)의 물리적 정체성은 별도 문제다.
 
@@ -242,4 +242,4 @@ $$
 }
 $$
 
-그 답이 예이면 pathspace 선택/비선택 농축은 `Exact under assumptions`가 된다. 아니면 05장은 계속 `Bridge`로 남는다.
+그 답이 예이면 pathspace 선택/비선택 농축은 가정이 명시된 `[정리]`가 된다. 아니면 05장의 물리 사상은 `[미완성]`으로 남는다.

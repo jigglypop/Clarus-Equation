@@ -8,13 +8,13 @@
 
 > \(E\mapsto e^{-\beta E}\)는 유한 \(\beta\)에서 tropical category에서 `PreEq_fin`으로 가는 엄밀한 functor가 아니다. 합성에서 \(\min\)이 아니라 \(\sum\)이 생기기 때문이다. 하지만 \(-\frac1\beta\log\)로 tropicalization한 뒤 \(\beta\to\infty\)를 보내면 합성과 양립한다.
 
-현재 판정:
+형식 출처:
 
 | 항목 | 판정 | 이유 |
 |---|---|---|
-| min-plus energy category | `Exact` | 유한집합과 extended energy |
-| Gibbs deformation | `Exact` | \(e^{-\beta E}\) 커널 |
-| tropicalized composition limit | `Exact` | log-sum-exp 오차 \(\le\log|B|/\beta\) |
+| min-plus energy category | `[정의]`, `[정리]` | 유한집합과 extended energy |
+| Gibbs deformation | `[정의]` | \(e^{-\beta E}\) 커널 |
+| tropicalized composition limit | `[정리]` | log-sum-exp 오차 \(\le\log|B|/\beta\) |
 
 ## 1. Tropical energy category
 
@@ -323,4 +323,3 @@ F\odot E
 $$
 
 이로써 `PreEq_fin`은 zero-temperature에서 tropical/min-plus 범주로 내려가는 정확한 극한 도구를 가진다.
-

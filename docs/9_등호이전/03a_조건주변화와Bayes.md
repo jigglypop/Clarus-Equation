@@ -8,14 +8,14 @@
 
 > 조건 \(C\)를 먼저 읽는가, 값 \(a\)를 먼저 읽는가, 아니면 \((C,a)\) 쌍 전체를 읽는가?
 
-현재 판정:
+형식 출처:
 
 | 항목 | 판정 | 이유 |
 |---|---|---|
-| joint Gibbs 상태 | `Exact` | 유한공간 정규화 |
-| 조건/값 marginal | `Exact` | 합으로 정의 |
-| conditional readout | `Exact` | Bayes 분해 |
-| readout 선택 | `Selection` | 무엇을 표면에 manifest할지의 선택 |
+| joint Gibbs 상태 | `[정의]` | 유한공간 정규화 |
+| 조건/값 marginal | `[산출]` | 합으로 계산 |
+| conditional readout | `[정리]` | Bayes 분해 |
+| readout 선택 | `[공리: 모델 선택]` | 무엇을 표면에 manifest할지의 선택 |
 
 ## 1. 세팅
 
@@ -346,4 +346,3 @@ $$
 $$
 
 joint manifest는 가장 많은 정보를 보존한다. marginal readout은 표면을 단순하게 만들지만, 조건 또는 값의 잔류 정보를 잃을 수 있다.
-

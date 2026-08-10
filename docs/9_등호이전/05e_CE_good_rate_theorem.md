@@ -17,14 +17,14 @@ $$
 1. **추상 정리**: \(E\)가 l.s.c.이고 compact sublevel을 가지며 recovery mass가 있으면 Gibbs 측도는 minimizer set으로 농축한다.
 2. **CE 충분조건**: \(S_E\)가 compact sublevel을 만들고 \(S_{\mathrm{supp}}\ge0\)가 l.s.c.이면 \(W\)도 good rate function이 된다.
 
-현재 판정:
+형식 출처:
 
 | 항목 | 판정 | 이유 |
 |---|---|---|
-| 추상 good-rate 농축 | `Exact under assumptions` | 아래 정리 1.1에서 직접 증명 |
-| \(W\to E_{\mathrm{fold}}\) shift | `Exact` | 상수 이동은 minimizer와 Gibbs 비율을 보존 |
-| \(S_E+S_{\mathrm{supp}}\) sufficient package | `Exact under assumptions` | l.s.c.와 compact sublevel 보존 |
-| 실제 CE \(S_E\), \(S_{\mathrm{supp}}\) 검증 | `Bridge/Open` | 경로공간 위상과 suppress action의 해석학적 정의가 더 필요 |
+| 추상 good-rate 농축 | `[정리]` | 아래 정리 1.1에서 직접 증명 |
+| \(W\to E_{\mathrm{fold}}\) shift | `[정리]` | 상수 이동은 minimizer와 Gibbs 비율을 보존 |
+| \(S_E+S_{\mathrm{supp}}\) sufficient package | `[정리]` | l.s.c.와 compact sublevel 보존 |
+| 실제 CE \(S_E\), \(S_{\mathrm{supp}}\) 검증 | `[미완성]` | 경로공간 위상과 suppress action의 해석학적 정의가 더 필요 |
 
 ## 1. 추상 good-rate 농축 정리
 
@@ -294,9 +294,9 @@ $$
 
 이다. \(M\)이 compact이면 \(\mathcal P_{I,N}\)도 compact다. \(M=\mathbb R^d\)이면 \(W_N\)이 continuous/coercive일 때 [02a_noncompact_Gamma.md](02a_noncompact_Gamma.md)를 그대로 쓴다.
 
-판정:
+출처:
 
-`Exact under assumptions`
+`[정리]`
 
 ### 4.2 \(H^1/C^0\) Tonelli package
 
@@ -335,9 +335,9 @@ $$
 \gamma\text{들이 }C^0\text{에서 precompact}.
 $$
 
-판정:
+출처:
 
-`Exact under standard variational assumptions`
+표준 변분 가정 아래 `[정리]`
 
 주의: 이 패키지는 \(C^1\)-compactness가 아니라 \(C^0\)-compactness를 준다.
 
@@ -369,9 +369,9 @@ $$
 
 를 제어해야 한다. 그러면 \(\gamma\)와 \(\dot\gamma\) 모두 Arzela-Ascoli 조건을 만족하고 \(C^1\) precompactness가 나온다.
 
-판정:
+출처:
 
-`Exact under stronger action assumptions`
+강화된 action 가정 아래 `[정리]`
 
 ## 5. 닫힌 것과 남은 것
 

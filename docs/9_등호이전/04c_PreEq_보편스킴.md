@@ -13,19 +13,19 @@
 3. **정보 정리**: 같은 zero set을 주는 defect들은 manifest 극한은 공유하지만 finite-\(\beta\) 구조는 다르다. 즉 PreEq 데이터는 등호 자체보다 엄격히 많다.
 4. **적용 경계**: 계산 불가능성, 측도 가능성, size 문제는 PreEq가 우회하지 못한다.
 
-현재 판정:
+형식 출처:
 
 | 항목 | 판정 | 이유 |
 |---|---|---|
-| residual/metric 인코딩 | `Exact` | 정리 1.1, 1.2 |
-| 해집합 수준 보편성 | `Exact`이지만 자명 | 주의 1.3 |
-| 선형계 manifest = Moore-Penrose | `Exact` | 정리 2.1 |
-| 축약사상 고정점 농축 | `Exact under assumptions` | 정리 2.2 |
-| 유한 논리(SAT/max-SAT) 농축 | `Exact` | 정리 2.3 |
-| defect는 등호보다 많은 정보 | `Exact` | 정리 3.1, 예시 3.2 |
-| 변분 등호의 defect 선택 | `Selection` | 4절 |
+| residual/metric 인코딩 | `[정리]` | 정리 1.1, 1.2 |
+| 해집합 수준 보편성 | `[정리]`이지만 자명 | 주의 1.3 |
+| 선형계 manifest = Moore-Penrose | `[정리]` | 정리 2.1 |
+| 축약사상 고정점 농축 | `[정리]` | 정리 2.2 |
+| 유한 논리(SAT/max-SAT) 농축 | `[정리]` | 정리 2.3 |
+| defect는 등호보다 많은 정보 | `[정리]` | 정리 3.1, 예시 3.2 |
+| 변분 등호의 defect 선택 | `[공리: 모델 선택]` | 4절 |
 | 계산 가능성/알고리즘 비용 | PreEq로 개선 안 됨 | 5절 |
-| 범주적 functorial 승격 | 부분 `Exact`, 전체 `Open` | 정리 6.1 |
+| 범주적 functorial 승격 | 부분 `[정리]`, 전체 `[미완성]` | 정리 6.1 |
 
 ## 1. 보편 인코딩
 
@@ -238,7 +238,13 @@ Euler-Lagrange 등호 \(\nabla S=0\)에는 자연스러운 defect가 둘 있다.
 | \(\delta_1=|\nabla S|\) | 모든 critical point | critical set 전체로 농축 |
 | \(\delta_2=S-\inf S\) | minimizer만 | minimizer로 농축 |
 
-같은 "등호"에서 출발해도 defect 선택이 manifest를 바꾼다(이번에는 zero set 자체가 다르다). CE가 \(E_{\mathrm{fold}}=W-W_{\min}\), 즉 \(\delta_2\) 계열을 채택한 것은 `Selection`이며, 05i 정리 4.2가 그 선택을 scaled Brownian prior의 LDP rate로 정당화한 것이다.
+같은 "등호"에서 출발해도 defect 선택이 manifest를 바꾼다(이번에는 zero
+set 자체가 다르다). CE가 무차원
+\(\mathcal I_{\mathrm{fold}}-\inf\mathcal I_{\mathrm{fold}}\), 즉
+\(\delta_2\) 계열을 채택하는 것은 `[공리: 모델 선택]`이다. 선택한
+pathspace와 prior가 good-rate·recovery 조건을 만족할 때에만
+[05_CE_브리지.md](05_CE_브리지.md)의 조건부 농축 정리를 적용할 수
+있으며, 어느 prior도 defect 선택 자체를 유도하지 않는다.
 
 ## 5. 적용 경계
 
@@ -250,7 +256,7 @@ PreEq가 우회하지 못하는 것을 명시한다.
 | 알고리즘 비용 | 정리 2.3의 manifest는 존재하지만, 그것을 sampling하는 annealing의 mixing time은 최악의 경우 지수적이다. NP-hardness는 그대로다 |
 | 측도 가능성 | \(\delta\)가 가측이 아니거나 \(X\)에 표준 Borel 구조가 없으면 Gibbs 기계가 시작되지 않는다 |
 | size | "모든 집합 위의 functor 등호"처럼 proper class 크기의 후보공간은 prior를 받을 수 없다. small/locally small 제한이 필요하다 |
-| 등호의 강도 | HoTT의 identity type처럼 등호 자체가 공간(경로공간)인 설정과의 대응은 시사적이지만 현재 정리가 없다. `Bridge/Open` |
+| 등호의 강도 | HoTT의 identity type처럼 등호 자체가 공간(경로공간)인 설정과의 대응은 시사적이지만 현재 정리가 없어 `[미완성]`이다. |
 
 ## 6. 범주적 위치
 
@@ -278,7 +284,7 @@ $$
 
 \(\delta_X(x)<\eta\)이면 \(\delta_Y(f(x))\le\delta_X(x)<\eta\)다. \(\inf\delta_Y\le\inf\delta_X=0\)이므로 \(R_\eta\)의 정의와 일치한다. zero set 보존은 \(\eta\downarrow0\)이다. 합성이 조건을 보존하는 것은 부등식의 연쇄다. 끝.
 
-남은 것 (`Open`): 이 category에서 Gibbs family 배정 \((X,\delta,\mu_0)\mapsto(\mu_\beta)_\beta\)를 [04a_Markov_Kleisli.md](04a_Markov_Kleisli.md)의 weight Kleisli로 가는 functor로 승격하는 것. 사상이 prior를 어떻게 밀어야 하는지(\(f_*\mu_0^X\)와 \(\mu_0^Y\)의 호환 조건)가 추가 데이터로 필요하다.
+남은 것 (`[미완성]`): 이 category에서 Gibbs family 배정 \((X,\delta,\mu_0)\mapsto(\mu_\beta)_\beta\)를 [04a_Markov_Kleisli.md](04a_Markov_Kleisli.md)의 weight Kleisli로 가는 functor로 승격하는 것. 사상이 prior를 어떻게 밀어야 하는지(\(f_*\mu_0^X\)와 \(\mu_0^Y\)의 호환 조건)가 추가 데이터로 필요하다.
 
 ## 7. 닫힌 것과 남은 것
 

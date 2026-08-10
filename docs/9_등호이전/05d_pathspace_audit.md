@@ -8,16 +8,16 @@
 
 > CE 문서에는 이미 \(\mathcal P_I\), 참조측도, CE 가중치 \(W\), 선택함수 \(F\), 비선택 경로공간, 잔류장 커널이 들어 있다. 따라서 확률공간 구성과 비선택 pushforward는 조건부로 닫힌다. 남은 병목은 \(W/F\)가 좋은 rate function인지, 즉 lower semicontinuity, compact sublevel/coercivity, recovery mass를 만족하는지다.
 
-현재 판정:
+형식 출처:
 
 | 항목 | 판정 | 이유 |
 |---|---|---|
-| \((\mathcal P_I,\mathcal B)\) | `Exact under CE assumptions` | CE 문서가 \(C^1\) 경로공간, Polish/Borel 구조를 가정 |
-| CE 확률측도 \(\mu_{\mathrm{CE}}\) | `Exact under CE assumptions` | \(W\) 가측성과 \(\int e^{-W}d\mu_{\mathrm{ref}}<\infty\)로 정규화 가능 |
-| 선택함수 \(F\)와 \(W\)의 동일성 | `Exact under CE assumptions` | \(F=W+c\)이면 argmin과 Gibbs 가중치가 상수배만 다름 |
-| \(\Gamma_{\mathrm{sel}}\), \(\mathcal P_{\mathrm{ns}}\)의 가측성 | `Exact under assumptions` | \(F\) 가측/l.s.c. 정의를 쓰면 닫힘 |
-| 비선택 잔류장 \(\phi(x)\) | `Exact under kernel assumptions` | \(K(x,\cdot)\in L^1(\mu_{\mathrm{ns}})\)이면 적분 정의 가능 |
-| \(\beta\to\infty\) 농축 | `Still bridge` | l.s.c., coercivity/good rate, positive-mass recovery가 아직 실제 \(W\)에서 증명되지 않음 |
+| \((\mathcal P_I,\mathcal B)\) | `[공리: 모델 선택]` | CE 문서가 \(C^1\) 경로공간, Polish/Borel 구조를 가정 |
+| CE 확률측도 \(\mu_{\mathrm{CE}}\) | 조건부 `[정리]` | \(W\) 가측성과 \(\int e^{-W}d\mu_{\mathrm{ref}}<\infty\)로 정규화 가능 |
+| 선택함수 \(F\)와 \(W\)의 동일성 | 조건부 `[정리]` | \(F=W+c\)이면 argmin과 Gibbs 가중치가 상수배만 다름 |
+| \(\Gamma_{\mathrm{sel}}\), \(\mathcal P_{\mathrm{ns}}\)의 가측성 | `[정리]` | \(F\) 가측/l.s.c. 정의를 쓰면 닫힘 |
+| 비선택 잔류장 \(\phi(x)\) | 조건부 `[정리]` | \(K(x,\cdot)\in L^1(\mu_{\mathrm{ns}})\)이면 적분 정의 가능 |
+| \(\beta\to\infty\) 농축 | `[미완성]` | l.s.c., coercivity/good rate, positive-mass recovery가 아직 실제 \(W\)에서 증명되지 않음 |
 
 ## 1. 기존 CE 문서에서 이미 채워진 것
 
@@ -304,29 +304,32 @@ $$
 | \(\mu_{\mathrm{base}}\) | PreEq reweighting을 시작할 base prior |
 | \(\mu_\beta\) | \(E_{\mathrm{fold}}\)로 다시 reweight한 posterior |
 
-### 4.2 \(\Gamma_{\mathrm{sel}}=\Gamma(\Omega)\) 문제
+### 4.2 선택집합의 가측 정의
 
-기존 CE 문서에는 random worldline \(\Gamma:\Omega\to\mathcal P_I\)의 image를 \(\Gamma_{\mathrm{sel}}\)로 보는 표현이 있다. 이 표현은 물리적 직관에는 좋지만 수학적으로는 조심해야 한다.
+**[정리]** 가측함수의 상은 일반적으로 Borel 집합일 필요가 없다. 따라서
+선택집합의 가측성은 어떤 random worldline의 상이라는 사실만으로 따라오지
+않는다.
 
-문제:
-
-1. measurable map의 image는 일반적으로 Borel일 필요가 없다.
-2. random realization의 image와 variational minimizer set은 같은 개념이 아니다.
-
-안전한 정의:
-
-$$
-\Gamma_{\mathrm{sel}}:=\operatorname{argmin}F
-$$
-
-또는
+**[정의]** \(F:\mathcal P_I\to(-\infty,\infty]\)가 아래로 유계이고
+\(F_{\min}:=\inf_{\gamma\in\mathcal P_I}F[\gamma]\)라 하자. \(\eta>0\)에
+대해
 
 $$
-\Gamma_{\mathrm{sel}}:=\bigcap_{n=1}^{\infty}
-\{\gamma:F[\gamma]\le F_{\min}+1/n\}.
+\Gamma_{\mathrm{sel}}^{(\eta)}
+:=\{\gamma:F[\gamma]\le F_{\min}+\eta\}
 $$
 
-이 정의는 \(F\)의 가측성/l.s.c. 조건 아래에서 \(\mathcal P_{\mathrm{ns}}\)를 안정적으로 만든다.
+를 near-minimizer 선택집합으로 둔다. \(F\)가 lower semicontinuous이면 이
+집합은 닫혀 있어 Borel 집합이다. 정확한 minimizer가 존재할 때에만
+
+$$
+\operatorname{argmin}F
+=\bigcap_{n=1}^{\infty}\Gamma_{\mathrm{sel}}^{(1/n)}
+$$
+
+를 exact 선택집합으로 쓴다. 어느 경우든
+\(\mathcal P_{\mathrm{ns}}:=\mathcal P_I\setminus\Gamma_{\mathrm{sel}}\)의
+가측성은 선택집합의 가측성에서 따라온다.
 
 ### 4.3 \(S(x)\), \(\Phi\), \(\phi\) 충돌
 
@@ -399,7 +402,7 @@ $$
 
 로 농축한다.
 
-이 정리가 닫히면 05 CE bridge의 핵심 선택 문장은 `Bridge`에서 `Exact under assumptions`로 승격된다.
+이 정리가 닫히면 05 CE의 조건부 농축은 `[정리]`가 된다. 경로공간과 물리량의 동일시는 별도의 `[공리: 물리 사상]`으로 남는다.
 
 ## 7. 이 이론이 나중에 주는 것
 

@@ -8,14 +8,14 @@
 
 > LLM/agent가 하나의 token 또는 action을 선택할 때, 선택되지 않은 후보들은 완전히 버려지는가, 아니면 잔류장으로 보존되는가?
 
-현재 판정:
+형식 출처:
 
 | 항목 | 판정 | 이유 |
 |---|---|---|
-| 후보분포 재가중 | `Exact` | 01장의 유한공간 정리 |
-| token/action 후보공간 적용 | `Bridge` | 모델 logits와 energy 식별 필요 |
-| 잔류장 \(\phi\) 업데이트 | `Bridge/Tooling` | toy 규약은 07a에서 분리, 실제 구현은 실험 필요 |
-| hallucination gate 연결 | `Bridge` | claim residual gate와 연결 가능 |
+| 후보분포 재가중 | `[정리]` | 01장의 유한공간 정리 |
+| token/action 후보공간 적용 | `[미완성]` | 모델 logits와 energy 식별 필요 |
+| 잔류장 \(\phi\) 업데이트 | `[경험식]` | toy 규약은 07a에서 분리, 성능은 `[예측]`으로 시험 |
+| hallucination gate 연결 | `[경험식]`; 성능 주장은 `[예측]` | claim residual gate와 연결 |
 
 ## 1. Token 후보공간
 
@@ -156,7 +156,8 @@ $$
 \mu_\beta(a)\propto e^{-\beta E_{\mathrm{claim}}(a)}\mu_0(a)
 $$
 
-accepted claim은 manifest 되고 rejected/review claim은 잔류 또는 보류 상태로 남는다.
+선택 cost가 최소인 claim은 manifest 후보가 되고, 근거 충돌 또는 추가
+검토가 필요한 claim은 residual·보류 후보로 남는다.
 
 ## 6. Runtime 설계 규칙
 
@@ -213,6 +214,6 @@ $$
 
 1. toy vocabulary에서 \(\mu_0\), \(E\), \(\mu_\beta\), \(\phi\) 계산 코드 작성
 2. \(\phi\) 재주입 있음/없음 next-token prediction ablation
-3. claim residual gate에서 rejected claim을 \(\phi\)로 저장하고 다음 답변 안정성 비교
+3. claim residual gate에서 근거 충돌 claim을 \(\phi\)로 저장하고 다음 답변 안정성 비교
 
 이 장은 아직 이론 bridge다. 하지만 07a 덕분에 가장 빠르게 실험 가능한 응용 축이 되었다.

@@ -18,15 +18,15 @@ $$
 
 > Brownian bridge는 \(C^0\) path prior로는 full support를 갖지만, \(W^{1,p}\) kinetic/Tonelli action과 그대로 결합하면 맞지 않는다. Brownian path는 거의 surely \(W^{1,p}\)가 아니기 때문이다. 현재 \(W^{1,p}/C^0\) 코어와 가장 직접적으로 맞는 continuum prior는 Sobolev-Gaussian prior다.
 
-현재 판정:
+형식 출처:
 
 | prior route | 판정 | 이유 |
 |---|---|---|
-| Sobolev-Gaussian on \(H^1\) | `Exact under assumptions` | \(H^1\) 안에 살고 full support를 가짐 |
-| Brownian bridge on \(C^0\) | `Exact for C^0 support`, `Bridge for Tonelli` | \(C^0\) full support지만 \(W^{1,p}\) 질량은 0 |
-| dense atomic prior | `Tooling/Exact` | separable pathspace에서 항상 만들 수 있음 |
-| finite mesh prior | `Tooling/Exact` | 05h의 scaled recovery 조건과 결합 |
-| physical \(\mathcal D\gamma\) | `Bridge/Open` | 어떤 route를 물리 원리로 채택할지 선택 필요 |
+| Sobolev-Gaussian on \(H^1\) | `[정리]` | \(H^1\) 안에 살고 full support를 가짐 |
+| Brownian bridge의 support 경계 | `[정리]` | \(C^0\) full support지만 \(W^{1,p}\) 질량은 0; Tonelli prior로 쓸 수 없음 |
+| dense atomic prior | `[정리]` | separable pathspace에서 항상 만들 수 있음 |
+| finite mesh prior | `[정리]` | 05h의 scaled recovery 조건과 결합 |
+| physical \(\mathcal D\gamma\) | `[미완성]` | 어떤 route를 물리 원리로 채택할지 선택 필요 |
 
 ## 1. 두 후보공간을 섞으면 안 된다
 
@@ -132,14 +132,24 @@ $$
 \to0.
 $$
 
-반면 Brownian bridge는 Brownian motion과 같은 quadratic variation을 갖는다. 균등 partition에 대해
+반면 Brownian bridge는 Brownian motion과 같은 quadratic variation을 갖는다. 균등 partition에 대해 각 성분 \(j=1,\dots,d\)는
 
 $$
-\sum_i |B^{x_i,x_f}_{t_{i+1}}-B^{x_i,x_f}_{t_i}|^2
+\sum_i
+\left|
+B^{x_i,x_f,j}_{t_{i+1}}-B^{x_i,x_f,j}_{t_i}
+\right|^2
 \to \sigma
 $$
 
-almost surely다. 따라서 Brownian bridge sample path는 finite variation일 수 없고, \(W^{1,1}\), 따라서 \(W^{1,p}\)에도 속하지 않는다. 끝.
+almost surely이고, Euclidean norm을 사용한 전체 합은
+
+$$
+\sum_i |B^{x_i,x_f}_{t_{i+1}}-B^{x_i,x_f}_{t_i}|^2
+\to d\sigma
+$$
+
+almost surely다. 따라서 \(\sigma>0\)인 Brownian bridge sample path는 finite variation일 수 없고, \(W^{1,1}\), 따라서 \(W^{1,p}\)에도 속하지 않는다. 끝.
 
 결론:
 
@@ -377,9 +387,9 @@ where \(S_{\mathrm{pot}}\) and \(S_{\mathrm{supp}}\) are defined on \(C^0\). In 
 | \(W_{\mathrm{B}}\) continuous at minimizer 또는 positive tube recovery | 05g recovery mass |
 | finite mesh approximation consistency | 05h scale condition |
 
-판정:
+출처:
 
-`Bridge/Open`
+`[미완성]`
 
 이 route는 물리적으로 자연스러울 수 있지만, 05f의 Tonelli proof를 그대로 쓰는 route가 아니다. 새로운 \(C^0\)/Brownian good-rate 또는 large-deviation package가 필요하다.
 

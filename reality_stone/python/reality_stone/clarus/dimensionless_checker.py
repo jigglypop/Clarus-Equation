@@ -15,13 +15,63 @@ This catches:
 
 from enum import Enum
 from dataclasses import dataclass
-from typing import Dict, List, Tuple, Optional
-import sympy as sp
-from sympy import symbols, parse_expr, simplify, Rational
+from fractions import Fraction
+from typing import Dict, List, Tuple
+from sympy import parse_expr
+
+
+@dataclass(frozen=True)
+class DimensionVector:
+    """Exact dimension exponents for combinations not named by ``Dimension``.
+
+    The old checker returned ``Dimension.DIMENSIONLESS`` whenever a product,
+    quotient, or power did not happen to match one of the small named enum
+    members.  That made, for example, ``TIME**-1`` and ``MASS**2`` silently
+    dimensionless.  Keeping the full vector makes the fallback conservative.
+    """
+
+    exponents: Tuple[Fraction, Fraction, Fraction, Fraction]
+
+    @classmethod
+    def from_exponents(cls, exponents) -> "DimensionVector":
+        values = tuple(Fraction(value) for value in exponents)
+        if len(values) != 4:
+            raise ValueError("dimension vectors must have four exponents")
+        return cls(values)  # type: ignore[arg-type]
+
+    @property
+    def name(self) -> str:
+        labels = ("M", "L", "T", "Theta")
+        terms = [f"{label}^{power}" for label, power in zip(labels, self.exponents) if power]
+        return "DIMENSIONLESS" if not terms else " ".join(terms)
+
+    def __mul__(self, other):
+        other_vector = _as_dimension_vector(other)
+        if other_vector is NotImplemented:
+            return NotImplemented
+        return _dimension_from_exponents(
+            a + b for a, b in zip(self.exponents, other_vector.exponents)
+        )
+
+    def __truediv__(self, other):
+        other_vector = _as_dimension_vector(other)
+        if other_vector is NotImplemented:
+            return NotImplemented
+        return _dimension_from_exponents(
+            a - b for a, b in zip(self.exponents, other_vector.exponents)
+        )
+
+    def __pow__(self, power):
+        exponent = Fraction(power)
+        return _dimension_from_exponents(exponent * value for value in self.exponents)
+
+    def is_dimensionless(self) -> bool:
+        return all(exponent == 0 for exponent in self.exponents)
 
 
 class Dimension(Enum):
     """Fundamental dimensions in natural units (ℏ=c=k_B=1)."""
+
     DIMENSIONLESS = (0, 0, 0, 0)  # pure number
     MASS = (1, 0, 0, 0)  # M
     LENGTH = (0, 1, 0, 0)  # L = M⁻¹
@@ -39,44 +89,56 @@ class Dimension(Enum):
 
     def __mul__(self, other):
         """Dimension multiplication."""
-        if isinstance(other, Dimension):
-            exp = tuple(a + b for a, b in zip(self.exponents, other.exponents))
-            for d in Dimension:
-                if d.exponents == exp:
-                    return d
-            return Dimension.DIMENSIONLESS  # Fallback
-        return self
+        other_vector = _as_dimension_vector(other)
+        if other_vector is NotImplemented:
+            return NotImplemented
+        return _dimension_from_exponents(
+            Fraction(a) + b for a, b in zip(self.exponents, other_vector.exponents)
+        )
 
     def __truediv__(self, other):
         """Dimension division."""
-        if isinstance(other, Dimension):
-            exp = tuple(a - b for a, b in zip(self.exponents, other.exponents))
-            for d in Dimension:
-                if d.exponents == exp:
-                    return d
-            return Dimension.DIMENSIONLESS
-        return self
+        other_vector = _as_dimension_vector(other)
+        if other_vector is NotImplemented:
+            return NotImplemented
+        return _dimension_from_exponents(
+            Fraction(a) - b for a, b in zip(self.exponents, other_vector.exponents)
+        )
 
     def __pow__(self, n):
         """Dimension power."""
-        exp = tuple(n * e for e in self.exponents)
-        for d in Dimension:
-            if d.exponents == exp:
-                return d
-        return Dimension.DIMENSIONLESS
+        exponent = Fraction(n)
+        return _dimension_from_exponents(exponent * value for value in self.exponents)
 
     def is_dimensionless(self) -> bool:
         """Check if truly dimensionless."""
         return all(e == 0 for e in self.exponents)
 
 
+def _as_dimension_vector(value):
+    if isinstance(value, DimensionVector):
+        return value
+    if isinstance(value, Dimension):
+        return DimensionVector.from_exponents(value.exponents)
+    return NotImplemented
+
+
+def _dimension_from_exponents(exponents):
+    vector = DimensionVector.from_exponents(exponents)
+    for named in Dimension:
+        if vector.exponents == tuple(Fraction(value) for value in named.exponents):
+            return named
+    return vector
+
+
 @dataclass
 class Formula:
     """Single CE formula with dimensional analysis."""
+
     name: str
     symbol: str
     formula: str  # Mathematical expression
-    expected_dim: Dimension
+    expected_dim: Dimension | DimensionVector
     source: str  # Which document
     notes: str = ""
     status: str = ""
@@ -100,7 +162,7 @@ class DimensionlessChecker:
             "exp(-D)",  # S(D) = e^(-D)
             Dimension.DIMENSIONLESS,
             "axium.md / 경로적분.md",
-            "D must be dimensionless (folding depth count)"
+            "D must be dimensionless (folding depth count)",
         )
 
         self.add_formula(
@@ -109,7 +171,7 @@ class DimensionlessChecker:
             "3 + delta",  # D_eff = 3 + δ
             Dimension.DIMENSIONLESS,
             "경로적분.md section 2",
-            "Pure integer dimensions; δ dimensionless"
+            "Pure integer dimensions; δ dimensionless",
         )
 
         # COSMOLOGY LAYER
@@ -119,7 +181,7 @@ class DimensionlessChecker:
             "exp(-(1-eps)*D_eff)",  # ε² = exp(-(1-ε²)D_eff)
             Dimension.DIMENSIONLESS,
             "상수.md layer 3",
-            "All dimensionless; survival rate"
+            "All dimensionless; survival rate",
         )
 
         self.add_formula(
@@ -128,7 +190,7 @@ class DimensionlessChecker:
             "eps**2",  # Ω_b = ε²
             Dimension.DIMENSIONLESS,
             "상수.md layer 3",
-            "Density fraction, dimensionless"
+            "Density fraction, dimensionless",
         )
 
         self.add_formula(
@@ -137,7 +199,7 @@ class DimensionlessChecker:
             "-2*xi_w**2 / (3*Omega_Lambda)",
             Dimension.DIMENSIONLESS,
             "3_상수/7_우주론.md",
-            "EOS parameter, dimensionless"
+            "EOS parameter, dimensionless",
         )
 
         # PARTICLE PHYSICS LAYER
@@ -147,7 +209,7 @@ class DimensionlessChecker:
             "4 * alpha_s**(4/3)",
             Dimension.DIMENSIONLESS,
             "상수.md layer 2",
-            "Both sides dimensionless"
+            "Both sides dimensionless",
         )
 
         self.add_formula(
@@ -156,7 +218,7 @@ class DimensionlessChecker:
             "alpha_s**(3/2)",
             Dimension.DIMENSIONLESS,
             "상수.md layer 4",
-            "Both sides dimensionless"
+            "Both sides dimensionless",
         )
 
         self.add_formula(
@@ -165,7 +227,7 @@ class DimensionlessChecker:
             "delta / (d**2 - 1)",  # δ/(d²-1)
             Dimension.DIMENSIONLESS,
             "상수.md layer 5",
-            "Both sides dimensionless"
+            "Both sides dimensionless",
         )
 
         # BRIDGE LAYER
@@ -175,7 +237,7 @@ class DimensionlessChecker:
             "m_p * delta**2",
             Dimension.MASS,
             "경로적분.md section 8",
-            "m_p is mass; δ² dimensionless → result is mass ✓"
+            "m_p is mass; δ² dimensionless → result is mass ✓",
         )
 
         self.add_formula(
@@ -184,7 +246,7 @@ class DimensionlessChecker:
             "delta**2",
             Dimension.DIMENSIONLESS,
             "경로적분.md section 8.2",
-            "Quartic coupling, dimensionless in natural units"
+            "Quartic coupling, dimensionless in natural units",
         )
 
         self.add_formula(
@@ -193,7 +255,7 @@ class DimensionlessChecker:
             "246 * GeV",
             Dimension.MASS,
             "상수.md scale promotion",
-            "Vacuum expectation value, mass dimension"
+            "Vacuum expectation value, mass dimension",
         )
 
         self.add_formula(
@@ -202,7 +264,7 @@ class DimensionlessChecker:
             "v_EW * delta",
             Dimension.MASS,
             "경로적분.md section 8",
-            "v_EW × dimensionless → mass ✓"
+            "v_EW × dimensionless → mass ✓",
         )
 
         # ENGINEERING LAYER
@@ -212,7 +274,7 @@ class DimensionlessChecker:
             "1.13 * m_phi * exp(-m_phi**2 / (N_F * g_phi_e**2 * Q**2))",
             Dimension.MASS,  # Energy/temperature (k_B=1)
             "4_공학적_활용/05_초전도체_설계.md",
-            "Temperature in natural units; exponent dimensionless"
+            "Temperature in natural units; exponent dimensionless",
         )
 
         self.add_formula(
@@ -221,16 +283,16 @@ class DimensionlessChecker:
             "2 * m_phi * exp(-1/lambda)",
             Dimension.MASS,
             "4_공학적_활용/05_초전도체_설계.md 5.5",
-            "m_φ is mass; exponent dimensionless"
+            "m_φ is mass; exponent dimensionless",
         )
 
         self.add_formula(
             "Critical magnetic field",
             "B_c",
             "sqrt(mu_0 * N_F * Delta**2)",
-            Dimension.MASS,  # B has dim [M²] in natural units (F=evB)
+            Dimension.MASS**2,  # B has dim [M²] in natural units (F=evB)
             "4_공학적_활용/05_초전도체_설계.md 5.5.3",
-            "μ₀ = 1 in natural; sqrt required"
+            "μ₀ = 1 in natural; sqrt required",
         )
 
         self.add_formula(
@@ -239,7 +301,7 @@ class DimensionlessChecker:
             "exp(2*Q**2*correction/hbar)",
             Dimension.DIMENSIONLESS,
             "4_공학적_활용/01_핵융합_설계.md",
-            "Ratio of probabilities, dimensionless"
+            "Ratio of probabilities, dimensionless",
         )
 
         # BRAIN/AGI LAYER
@@ -249,16 +311,16 @@ class DimensionlessChecker:
             "(1-rho_B)*p_star + rho_B*p_n + gamma*Laplacian*p",
             Dimension.DIMENSIONLESS,
             "6_뇌/00_읽기지도.md",
-            "Activity probability, dimensionless"
+            "Activity probability, dimensionless",
         )
 
         self.add_formula(
             "STDP learning rate upper bound",
             "η_max",
             "(A_plus - A_minus*exp(-tau_plus/tau_minus)) / (tau_plus + tau_minus)",
-            Dimension.TIME**(-1),  # [T⁻¹]
+            Dimension.TIME ** (-1),  # [T⁻¹]
             "6_뇌/08_시냅스가소성.md",
-            "Rate has dimension time⁻¹"
+            "Rate has dimension time⁻¹",
         )
 
         self.add_formula(
@@ -267,7 +329,7 @@ class DimensionlessChecker:
             "S_inf + (S_0 - S_inf)*exp(-t/tau_S)",
             Dimension.DIMENSIONLESS,
             "6_뇌/07_수면과복구.md",
-            "S is unitless sleep pressure; t/tau_S dimensionless"
+            "S is unitless sleep pressure; t/tau_S dimensionless",
         )
 
         # RIEMANN/MRA LAYER
@@ -277,20 +339,29 @@ class DimensionlessChecker:
             "exp(-d_G^2(z_i, z_j) / (2*sigma^2)) / partition",
             Dimension.DIMENSIONLESS,
             "8_리만/mra_paper.md",
-            "Distance² / σ² dimensionless → attention weights"
+            "Distance² / σ² dimensionless → attention weights",
         )
 
-    def add_formula(self, name: str, symbol: str, formula: str,
-                    expected_dim: Dimension, source: str, notes: str = ""):
+    def add_formula(
+        self,
+        name: str,
+        symbol: str,
+        formula: str,
+        expected_dim: Dimension | DimensionVector,
+        source: str,
+        notes: str = "",
+    ):
         """Register a formula."""
-        self.formulas.append(Formula(
-            name=name,
-            symbol=symbol,
-            formula=formula,
-            expected_dim=expected_dim,
-            source=source,
-            notes=notes
-        ))
+        self.formulas.append(
+            Formula(
+                name=name,
+                symbol=symbol,
+                formula=formula,
+                expected_dim=expected_dim,
+                source=source,
+                notes=notes,
+            )
+        )
 
     def check_formula(self, formula: Formula) -> Dict:
         """
@@ -306,50 +377,50 @@ class DimensionlessChecker:
             }
         """
         result = {
-            'name': formula.name,
-            'symbol': formula.symbol,
-            'formula': formula.formula,
-            'expected': formula.expected_dim.name,
-            'notes': formula.notes,
-            'source': formula.source
+            "name": formula.name,
+            "symbol": formula.symbol,
+            "formula": formula.formula,
+            "expected": formula.expected_dim.name,
+            "notes": formula.notes,
+            "source": formula.source,
         }
 
         # Manual checks (symbolic evaluation is limited)
         try:
             # Parse formula symbolically
-            expr = parse_expr(formula.formula)
+            parse_expr(formula.formula)
 
             # Quick dimensionality checks based on formula structure
             if formula.symbol == "S(D)" or "exp(" in formula.formula:
                 # Exponential arguments must be dimensionless
                 if "exp(-D)" in formula.formula or "exp(-(1-" in formula.formula:
-                    result['status'] = "PASS ✓"
+                    result["status"] = "PASS ✓"
                 else:
-                    result['status'] = "CHECK: exp argument dimensionless?"
+                    result["status"] = "CHECK: exp argument dimensionless?"
 
             elif formula.symbol == "sin²θ_W" or formula.symbol == "|V_cb|":
                 # These are pure numbers
-                result['status'] = "PASS ✓"
+                result["status"] = "PASS ✓"
 
             elif formula.expected_dim == Dimension.MASS:
                 # Should have mass dimension
                 if "m_" in formula.formula or "GeV" in formula.formula:
-                    result['status'] = "PASS ✓"
+                    result["status"] = "PASS ✓"
                 else:
-                    result['status'] = "WARN ⚠️ - Missing mass factor?"
+                    result["status"] = "WARN ⚠️ - Missing mass factor?"
 
             elif formula.expected_dim == Dimension.DIMENSIONLESS:
                 # Should be dimensionless
                 if "exp(" in formula.formula or "/" in formula.formula:
                     # Likely dimensionless (ratio or exp of dimensionless)
-                    result['status'] = "PASS ✓"
+                    result["status"] = "PASS ✓"
                 else:
-                    result['status'] = "UNCLEAR - Manual review needed"
+                    result["status"] = "UNCLEAR - Manual review needed"
             else:
-                result['status'] = "TODO - Dimension type not recognized"
+                result["status"] = "TODO - Dimension type not recognized"
 
         except Exception as e:
-            result['status'] = f"PARSE ERROR: {str(e)}"
+            result["status"] = f"PARSE ERROR: {str(e)}"
 
         return result
 
@@ -358,7 +429,7 @@ class DimensionlessChecker:
         results = []
         for formula in self.formulas:
             results.append(self.check_formula(formula))
-        self.results = {r['symbol']: r for r in results}
+        self.results = {r["symbol"]: r for r in results}
         return results
 
     def generate_report(self) -> str:
@@ -376,12 +447,12 @@ class DimensionlessChecker:
         results = self.run_all_checks()
 
         # Group by status
-        passed = [r for r in results if "PASS" in r['status']]
-        unclear = [r for r in results if "UNCLEAR" in r['status'] or "TODO" in r['status']]
-        warnings = [r for r in results if "WARN" in r['status']]
-        errors = [r for r in results if "ERROR" in r['status']]
+        passed = [r for r in results if "PASS" in r["status"]]
+        unclear = [r for r in results if "UNCLEAR" in r["status"] or "TODO" in r["status"]]
+        warnings = [r for r in results if "WARN" in r["status"]]
+        errors = [r for r in results if "ERROR" in r["status"]]
 
-        lines.append(f"SUMMARY:")
+        lines.append("SUMMARY:")
         lines.append(f"  ✓ PASS:      {len(passed):3d} / {len(results)}")
         lines.append(f"  ⚠️  UNCLEAR:   {len(unclear):3d} / {len(results)}")
         lines.append(f"  ⚠️  WARN:      {len(warnings):3d} / {len(results)}")
@@ -393,7 +464,6 @@ class DimensionlessChecker:
         lines.append("-" * 100)
 
         for result in results:
-            status_icon = "✓" if "PASS" in result['status'] else "?" if "UNCLEAR" in result['status'] else "⚠️" if "WARN" in result['status'] else "❌"
             lines.append(
                 f"{result['symbol']:15s} {result['name'][:40]:40s} {result['status']:20s} {result['expected']:20s}"
             )
@@ -404,7 +474,7 @@ class DimensionlessChecker:
         lines.append("-" * 100)
 
         for result in results:
-            if result['notes']:
+            if result["notes"]:
                 lines.append(f"\n{result['symbol']}: {result['name']}")
                 lines.append(f"  Formula: {result['formula']}")
                 lines.append(f"  Source:  {result['source']}")
@@ -431,13 +501,14 @@ def main():
 
     # Save results
     import os
-    output_file = os.path.join(os.path.dirname(__file__), 'dimensionless_audit.txt')
-    with open(output_file, 'w', encoding='utf-8') as f:
+
+    output_file = os.path.join(os.path.dirname(__file__), "dimensionless_audit.txt")
+    with open(output_file, "w", encoding="utf-8") as f:
         f.write(report)
     print(f"Report saved to: {output_file}")
 
     return checker
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -1,0 +1,5 @@
+interface:
+  display_name: "CE Document Writer"
+  short_description: "Write CE documents with explicit formal provenance"
+  default_prompt: "Use $ce-doc-write to revise this CE document without strengthening claims."
+

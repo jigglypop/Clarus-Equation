@@ -1,363 +1,290 @@
 # Clarus Equation (CE)
 
-> **상태:** 미발표 신이론. arXiv 미등록, 동료 심사 없음. 자기 검증만 통과.
-> **요지:** "왜 우주가 지금 이 모습인가" 를 자유 매개변수 0 개로 계산해 본 시도.
+> **상태:** 미발표 연구 가설·수치 실험 저장소. arXiv 등록과 동료 심사는 아직 없다.
+>
+> **현재 결론:** 고정점과 일부 대수는 명시한 전제 아래 완결되어 있다. CE 고유의
+> 물리 사상과 관측량 연결은 공리 또는 미완성 항목으로 분리하며, 자연에 대한
+> 확증과 수학적 완결성을 같은 말로 쓰지 않는다.
 
----
+## 1. 무엇을 연구하는가
 
-## 한 문단 요약 (비전공자용)
+CE는 적은 수의 무차원 구조로 입자물리와 우주론의 여러 수치 관계를 함께 기술할 수
+있는지 시험한다. 다음 세 층을 분리한다.
 
-오늘날의 표준 우주 모형(ΛCDM)과 표준 입자 모형(SM)은 합쳐서 **약 25 개의 숫자를 실험에 맞춰 직접 입력**해야만 작동한다. 이 25 개가 바뀌면 우주가 완전히 다른 모습이 된다. 왜 하필 그 값인지는 누구도 모른다.
+- 명시한 공리에서 증명되는 정리와 그 직접 산출
+- 수학 구조를 물리량에 대응시키는 공리
+- 자료를 사용하는 경험식과 아직 증명이 완결되지 않은 항목
 
-**Clarus Equation (CE)** 은 이 25 개 중 가장 많은 항목을, **단 하나의 숫자** $\alpha_s = 0.1179$ (강력 결합 상수, 측정값) 에서 출발해 계산해 본다. 우주의 평균 물질 밀도, 암흑에너지 비율, 힉스 보손 질량, 중성미자 질량, 우주의 나이 ÷ 허블 시간, ... 18 가지를 같은 한 가지 출발점에서 도출하고, 측정값과 평균 1% 안쪽으로 맞는다.
+전체 주장별 출처와 남은 증명 의무는
+[형식 구조 원장](docs/2_경로적분과_응용/전체_진리값_감사.md)에 기록한다.
 
-이게 우연인지 진짜 구조인지 - 그걸 가리는 게 본 저장소의 목적이다.
+## 2. 정본 출처 체계
 
----
-
-## 1. 기존 모형은 어떤 모습인가
-
-| 무엇을 설명하는가 | 표준 입자 모형 (SM) | 표준 우주 모형 (ΛCDM) |
+| 표기 | 뜻 | 필요한 기록 |
 | --- | --- | --- |
-| 입력 매개변수 개수 | 약 19 개 (질량, 혼합각, 결합 상수) | 약 6 개 ($H_0$, $\Omega_b$, $\Omega_m$, $A_s$, $n_s$, $\tau$) |
-| 어디서 오는가 | 측정값을 그대로 넣음 | 측정값을 그대로 넣음 |
-| 왜 그 값인가 | 미해결 | 미해결 |
+| **[정의]** | 기호·대상·정의역을 선언하는 항목으로, 참거짓 명제가 아님 | 기호와 정의역 |
+| **[정리]** | 명시한 전제와 정의만으로 증명된 명제 | 전제, 정의역, 증명 |
+| **[공리]** | 모형이 채택한 경계조건·가지·물리 사상 | 선택 내용과 적용 범위 |
+| **[산출]** | 정리와 공리를 대입해 얻는 직접 결과 | 사용한 선행 항목 |
+| **[경험식]** | 자료·보정·유효 계수를 사용하는 관계 | 자료와 계수의 출처 |
+| **[미완성]** | 정의·증명·작용·사상이 아직 완결되지 않은 항목 | 남은 증명 의무 |
+| **[예측]** | 입력과 판별 기준을 미리 고정한 관측량 | 독립 자료와 불확도 |
 
-이 모형들은 **놀랍도록 정확**하다. 다만 "왜?" 를 묻지 않을 뿐이다. 예를 들어 우주에서 보통 물질이 약 5 % 라는 사실은 **측정해서 알아낸 결과**이지, **계산해서 나온 결과**가 아니다.
+수학적 출처와 관측 비교는 별도 열에 둔다. 허용된 정의역 안의 완전한
+반례가 확인된 보편 명제는 정본 문장·식·표에 보존하지 않으며, 재도입 방지는
+실행 회귀검사에서 담당한다.
 
-CE 가 묻는 질문은 단순하다 — **이 25 개를 더 적은 수로 줄일 수 있는가?**
+## 3. 입력 회계와 코어
 
----
+### 3.1 외부 입력
 
-## 2. CE 의 출발점
-
-### 2-1. 단 하나의 입력
-실험에서 측정된 강력 결합 상수 한 개:
-
-$$\alpha_s = 0.1179 \quad (M_Z\ \text{스케일},\ \text{입자물리데이터그룹 PDG 2024})$$
-
-### 2-2. 단 하나의 가정
-시공간은 **3 차원이고 약간 빠져나간다**. "정확히 3 이 아니라 $3 + \delta$ 라는 작은 잔여물을 남기며 만들어진다" 라는 그림.
-
-이 잔여물 $\delta$ 가 다름 아닌 우리가 이미 알고 있는 양으로 결정된다:
-
-$$\delta = \sin^2\theta_W \cdot \cos^2\theta_W = 0.178$$
-
-여기서 $\theta_W$ 는 **전자기력과 약력이 섞이는 각도**(바인베르크 각, 측정값). CE 는 이를 다시 $\alpha_s$ 에서 도출한다:
-
-$$\sin^2\theta_W = 4\,\alpha_s^{4/3} = 0.2312$$
-
-(측정값 $0.23122 \pm 0.00003$ 와 0.02$\sigma$ 일치.)
-
-### 2-3. 그 다음은 자기참조 방정식 한 줄
-유효 차원과 잔여물에서 우주의 **보통 물질 비율** 이 자기일관 방정식으로 닫힌다:
-
-$$\varepsilon^2 = \exp\!\left[-(1 - \varepsilon^2)\,(3 + \delta)\right] = 0.0486$$
-
-이 $\varepsilon^2$ 가 곧 $\Omega_b$ — **우주의 보통(바리온) 물질 비율**이다. 측정값 $0.0493 \pm 0.0010$ 과 0.7 % 차이.
-
-요약: **하나의 측정값 + 하나의 이상한 가정 + 하나의 방정식** 이 CE 의 전부다. 나머지는 전부 따라 나온다 — 적어도 그렇게 주장한다.
-
----
-
-## 3. 무엇을 맞추는가 (핵심 결과 18 종)
-
-| 영역 | 양 | CE 예측 | 측정값 | 차이 |
-| --- | --- | --- | --- | --- |
-| 통합 | $\sin^2\theta_W$ | 0.23122 | $0.23122 \pm 0.00003$ | 0.02 $\sigma$ |
-| 우주론 | 보통 물질 $\Omega_b$ | 0.0486 | $0.0493 \pm 0.0010$ | 0.7 % |
-| 우주론 | 암흑에너지 $\Omega_\Lambda$ | 0.6904 | 0.6847 | 0.8 % |
-| 우주론 | 암흑물질 $\Omega_{DM}$ | 0.2609 | 0.2589 | 0.8 % |
-| 우주론 | DE 상태방정식 $w_0$ | $-0.768$ | $-0.770 \pm 0.066$ (DESI DR2) | 0.04 $\sigma$ |
-| 우주론 | 우주 나이 $H_0 t_0$ | 0.956 | 0.951 | 0.5 % |
-| 우주론 | 인플레이션 지수 $n_s$ | 0.965 | $0.9649 \pm 0.0042$ | 0.03 $\sigma$ |
-| 입자물리 | 힉스 질량 $M_H$ | 125.35 GeV | $125.25 \pm 0.17$ | 0.6 $\sigma$ |
-| 입자물리 | 양성자 반경 $\Delta r_p^2$ | 0.0601 fm$^2$ | $0.0587 \pm 0.0033$ | 0.4 $\sigma$ |
-| 입자물리 | $\|V_{cb}\|$ | 0.0405 | 0.0408 | 0.8 % |
-| 입자물리 | Jarlskog $J$ | $3.13 \times 10^{-5}$ | $3.08 \times 10^{-5}$ | 1.5 % |
-| 입자물리 | $\sin^2\theta_{13}$ (PMNS) | 0.0222 | 0.0222 | 0.1 % |
-| 입자물리 | $m_{\nu_3}$ (중성미자) | 51.5 meV | ~50.5 meV | 2.0 % |
-| 입자물리 | Koide $Q_K$ | 2/3 | 0.66661 | 0.001 % |
-| 입자물리 | 새 스칼라 $m_\phi$ | 29.65 MeV | 22-30 MeV (제약) | 범위 안 |
-| 입자물리 | 뮤온 $g\text{-}2$ BSM | 0 | $38 \pm 63 \times 10^{-11}$ (BMW lattice 2026) | 0.6 $\sigma$ |
-| 입자물리 | 전자 $g\text{-}2$ ($a_e$) | $1.159653 \times 10^{-3}$ | $1.15965218059 \times 10^{-3}$ (Harvard 2023) | 0.2 $\sigma$ |
-| 교차 | DM/DE 비율 | 0.378 | 0.380 | 0.5 % |
-
-19 개 관측치를 한 입력 ($\alpha_s$) 으로 맞추는 종합 점수는 다음과 같다 (자세한 계산은 `examples/physics/scorecard.py`).
-
-| 항목 | 값 |
-| --- | --- |
-| $\chi^2$ / 자유도 | 1.000 |
-| p-value | 0.457 |
-| 1 $\sigma$ 안 | 13 / 19 |
-| 2-3 $\sigma$ | 1 / 19 (Planck+BAO $\Omega_b$) |
-
-> **솔직한 한계**: 위 목록은 CE 가 "잘 푸는" 것들이다. CE 가 **아직 못 푸는 것들** 은 본 README 마지막 절 [솔직한 한계] 에 나열한다.
-
----
-
-## 4. 핵심 개념 4 개 (그림으로)
-
-### 4-1. 극장
-양자역학에서 입자는 모든 가능한 경로를 동시에 간다. 대부분 서로 취소되고 하나의 현실만 남는다. 이 "취소" 를 지배하는 게 무엇인가?
-
-매진된 극장을 떠올려 보자. 새 관객은 앉을 자리가 없다. 누군가 취소해야 비로소 앉을 수 있다. 양자역학에서 "확률" 이라 부르는 것은 **이 취소표 경쟁**이다.
-
-- 3 층 발코니 — 강력 (3 가지 색)
-- 2 층 발코니 — 약력 (2 가지 상태)
-- 1 층 객석 — 전자기력 (1 가지 전하)
-- 층 사이 계단 — **중력**
-
-### 4-2. 에스컬레이터
-중력은 다른 세 힘과 다르다. 그것은 **층** 이 아니라 **층 사이를 접는 메커니즘** 이다.
-
-- 1 층까지 내려온 사람 — 보통 물질 (5 %)
-- 에스컬레이터 위의 사람 — 암흑물질 (26 %)
-- 에스컬레이터의 전기 — 암흑에너지 (69 %)
-
-그래서 우리는 **암흑물질을 직접 잡지 못한다**. 그것은 입자가 아니라 "에스컬레이터에 잠시 머물러 있는 보통 물질" 이기 때문이다 — CE 의 해석이다. (검증 필요.)
-
-### 4-3. 종이접기
-종이 위에 무한한 선을 그린다. 대부분이 접혀서 사라진다. **남은 선이 보통 물질, 접는 데 쓴 에너지가 암흑에너지** 다. 3 차원에서 접으면 약 5 % 가 남는다 — 관측된 바리온 비율 4.86 % 와 일치한다.
-
-### 4-4. AI 와 자연이 같은 수식을 쓴다
-ChatGPT 가 다음 단어를 고르는 식 (Softmax) 과 자연이 양자 경로를 고르는 식은 **수학적으로 같다**:
-
-$$P(\gamma) = \frac{e^{-S(\gamma)}}{\sum_{\gamma'} e^{-S(\gamma')}}$$
-
-AI 연구자는 Softmax 가 "잘 돼서" 썼다. CE 의 입장: **그게 잘 되는 이유는 자연이 원래 그렇게 작동하기 때문이다**.
-
----
-
-## 5. 라그랑지안 (전공자용 한 줄)
-
-$$\mathcal{L} = \frac{R}{16\pi G} + \xi R \Phi^2 + \mathcal{L}_{\text{SM}}^{d=3} + \tfrac{1}{2}(\partial_\mu \Phi)^2 - V(\Phi) + \delta^2 \Phi^2 |H|^2$$
-
-- $\Phi$ : $d=0$ 잔여물 (게이지 싱글렛, 실수 스칼라, $Z_2$ 대칭)
-- $\xi R \Phi^2$ : 비최소 중력 결합, $\xi = \alpha_s^{1/3} = 0.490$
-- $\delta^2 \Phi^2 |H|^2$ : 힉스 포탈, $\lambda_{HP} = \delta^2 = 0.032$
-- $V(\Phi) = \tfrac{1}{2} m_\phi^2 \Phi^2 + \tfrac{1}{4}\lambda \Phi^4$ : 양의 질량항 (VEV 없음)
-
----
-
-## 6. 검증 가능한 미래 예측
-
-본 이론이 **틀렸음을 증명** 할 수 있는 실험들 (반증 가능성):
-
-| 예측 | 실험 | 결과 시점 |
+| 항목 | 역할 | 상태 |
 | --- | --- | --- |
-| $w_0 = -0.769$, $w_a = -0.22$ | DESI DR3 BAO | 2026-2028 |
-| 정상 계층 (NH), $\sum m_\nu \approx 55$ meV | JUNO | ~2026 |
-| 22-30 MeV 새 스칼라 보손 | NA64, PADME | 2025-2027 |
-| BR$(H \to \text{invisible}) \approx 0.5 \%$ | HL-LHC | 2029-2035 |
-| $r = 0.0014$ (인플레이션 텐서) | LiteBIRD | ~2032 |
-| $\Omega_b = 0.0486$ 정밀 측정 | CMB-S4 | ~2030 |
+| \(\alpha_s(M_Z)=0.11789\) | 저장소의 강결합 benchmark | **[공리]**, 외부 입력 |
+| \(d=3\) | 현재 물리 branch | **[공리]**, 가지 선택 |
+| 관측 자료·공분산·척도 | 각 likelihood와 경험식에 명시 | 외부 비교 자료 |
 
-이 중 하나라도 **CE 가 틀린 방향으로 빗나가면** 이론 전체를 폐기한다. 이게 과학의 룰이다.
+2026 PDG QCD review의 평균은
+\(\alpha_s(M_Z^2)=0.1180\pm0.0009\)이다. 저장소 값 0.11789는 이 측정과
+양립하는 **입력값**이지 CE의 독립 예측이 아니다.
 
----
+### 3.2 전자약 브리지
 
-## 7. CE vs ΛCDM (직접 비교)
+**[경험식]**
 
-| 항목 | CE | ΛCDM |
+\[
+s_W^2 \equiv \sin^2\theta_W = 4\alpha_s^{4/3}
+= 0.2312220683 .
+\]
+
+PDG 2026의 \(\overline{\mathrm{MS}}\) 기준값 \(0.23122\pm0.00006\)과 비교하면
+약 \(+0.03\sigma\)다. 가까운 수치는 관계식의 흥미로운 readout이지만, RG·scheme·
+scale 의존성을 작용에서 유도한 것은 아니다.
+
+**[산출]** 아래 대수는 위 경험식과 \(d=3\) branch를 조건으로 한다.
+
+\[
+\delta=s_W^2(1-s_W^2),\qquad D_{\mathrm{eff}}=3+\delta .
+\]
+
+### 3.3 고정점
+
+**[정리]** 아래 최소 고정점은 \(D_{\mathrm{eff}}>1\)인 Poisson 분지모형에서
+정의되며, 해당 정의역의 존재성과 최소성은 고정점 분석으로 닫힌다.
+
+\[
+q_{\mathrm{ext}}
+=\exp\!\left[-(1-q_{\mathrm{ext}})D_{\mathrm{eff}}\right]
+=0.0486466333 .
+\]
+
+지수의 인자 \((1-q_{\mathrm{ext}})D_{\mathrm{eff}}\)는 무차원이다.
+분기과정 용어에서 최소 고정점 \(q_{\mathrm{ext}}\)는 **소멸 확률**이고,
+\(s_{\mathrm{branch}}=1-q_{\mathrm{ext}}\)는 생존 확률이다.
+
+**[정의]** 이 문맥의
+\(\Omega_b:=\rho_b(t_0)/\rho_{\rm crit}(t_0)\)는 현재 바리온 밀도분율이다.
+
+**[공리: 확률–에너지 사상]** \(q_{\mathrm{ext}}\mapsto\Omega_b\)는 별도로 채택한다.
+따라서 고정점의 정확한 해와 바리온 밀도의 물리적 유도를 같은 주장으로 세지 않는다.
+
+## 4. 형식 결과와 관측 비교
+
+### 4.1 형식 결과
+
+| 항목 | 결과 | 출처 |
 | --- | --- | --- |
-| 외부 입력 매개변수 | 1 ($\alpha_s$) | 6 |
-| $\Omega_b$ 유도 | 첫 원리 | 측정 후 입력 |
-| DM/DE 비율 | 유도 (0.5 %) | 미설명 |
-| 힉스 질량 | 유도 (0.6 $\sigma$) | 미설명 |
-| CKM/PMNS 19 매개변수 | 유도 (0.1-2.7 %) | 측정 후 입력 |
-| 중성미자 질량 | 정상 계층 예측, $m_3$ 2 % | 미설명 |
-| 우주상수 문제 | $10^{122}$ → 0.8 % | 미해결 |
-| 동적 DE ($w_0$) | 유도 (0.04 $\sigma$) | w0waCDM 확장 필요 |
-| 평균 적합도 | ~1 % | 보통 < 0.1 % (입력했으니까) |
-| 반증 가능 | 가능 | 유연 |
+| 최소 고정점 | \(q_{\mathrm{ext}}=0.0486466333\), residual \(2.08\times10^{-17}\) | **[정리]** |
+| 코어 지수·로그 인자 | 7식의 dimension vector가 0 | **[산출]** |
+| \(\delta,D_{\mathrm{eff}}\) | 전자약 사상과 외부 \(\alpha_s\)를 대입한 값 | **[산출]** |
+| \(q_{\mathrm{ext}}\mapsto\Omega_b\) | 확률을 에너지 분율로 읽는 규칙 | **[공리]** |
 
-**CE 는 정확도가 다소 낮은 대신, "왜 이 값인가" 에 답하려 시도한다.**
-ΛCDM 은 정확하지만, **왜 그 값인지에는 침묵**한다.
+### 4.2 관측 비교 자료
 
----
+| 경험적 readout | 계산값 | 비교값 | 수학적 출처 |
+| --- | ---: | ---: | --- |
+| \(V_{cb}\) projector | 0.04162 | 0.04153 | **[경험식]** |
+| \(V_{us}\) 보정식 | 0.22696 | 0.22650 | **[경험식]** |
+| \(A_s\) 투영 잔차 readout | \(2.104\times10^{-9}\) | \((2.099\pm0.029)\times10^{-9}\) | **[경험식]** |
 
-## 8. 솔직한 한계
+이 표의 근접도는 정리의 증명에 사용하지 않는다. 자료 선택, 보정 규칙과
+공분산을 포함한 독립 우도가 갖춰진 경우에만 **[예측]**으로 분리한다.
 
-CE 는 다음을 **아직 못 푼다**:
+## 5. 기호와 의미의 경계
 
-- **허블 텐션** ($H_0$ Planck 67.4 vs SH0ES 73.0, ~5 $\sigma$) — CE 는 $H_0 \cdot t_0$ 무차원 비율만 도출한다. $H_0$ 자체에 대해 침묵.
-- **$S_8$ 텐션** (KiDS vs Planck) — 부분 모듈 있으나 미완.
-- **JWST z>10 조기 은하** — 시뮬레이션 미반영.
-- **양자중력 완전 양자화** — 액션은 적었으나 UV 완성은 미완.
-- **수치 계산이 동료 심사를 통과한 적 없음** — 코드는 공개되어 있으니 누구든 재현/반증 가능.
+| 기호 | 이 저장소의 정본 의미 | 동일시하지 않는 것 |
+| --- | --- | --- |
+| \(\Phi[\gamma]\) | 경로 진폭 또는 문맥상 명시한 장 | Hessian, 곡률, 중력 자체 |
+| \(H_{ij}\) | 작용의 2차 변분/Hessian | \(\Phi\) |
+| \(R\) | 시공간 곡률 스칼라 | 확률 진폭 |
+| \(q_{\mathrm{ext}}\) | 최소 소멸 고정점 | 생존 확률 |
+| \(s_{\mathrm{branch}}\) | \(1-q_{\mathrm{ext}}\), 생존 확률 | 억압 계수 \(\sigma\) |
+| \(\varepsilon^2\) | 과거 문서의 호환 표기 | 문맥 없이 소멸/생존을 동시에 뜻하지 않음 |
 
-발표 안 된 이론을 신뢰하지 말 것. 이 README 의 모든 수치는 **재현 코드** ([13 절](#13-수치-검증-코드)) 로 직접 돌려 확인할 수 있다.
+## 6. 모형 후보와 차원 규약
 
----
+**[공리]** 이론물리 branch는 부호·대칭·정의역을 고정한 공변
+\(Z_2\) singlet-portal EFT를 사용한다.
 
-## 9. 유도 체인 (한눈에)
+\[
+S_{\rm EFT}=\int d^4x\sqrt{-g}\left[
+\frac12(M_{\rm Pl}^2-\xi\phi^2)R-\Lambda_0
+-\frac12(\nabla\phi)^2+\mathcal L_{\rm SM}^{\rm kin+gauge+Yuk}
+-V(H,\phi)\right],
+\]
 
-```mermaid
-graph TD
-    E["e^(i pi) + 1 = 0<br/>(e, pi, i, 1, 0)"]
+\[
+V(H,\phi)=V_H(H)+\frac12m_\phi^2\phi^2
++\frac{\lambda_\phi}{4}\phi^4
++\frac{\lambda_{H\phi}}2\phi^2H^\dagger H.
+\]
 
-    E -->|"0 -> d(d-3)=0"| D["d = 3"]
-    E -->|"pi -> 1/(2 pi)"| A["alpha_total = 0.1592"]
+**[정리]** \(\lambda_H,\lambda_\phi>0\)에서 portal 사차항이 음이
+아니기 위한 필요충분조건은
 
-    A -->|"자기일관"| AS["alpha_s = 0.1179<br/>sin^2 theta_W = 4 alpha_s^(4/3)"]
+\[
+\lambda_{H\phi}\geq-2\sqrt{\lambda_H\lambda_\phi}.
+\]
 
-    D --> DEFF["D_eff = d + delta = 3.178"]
-    AS --> DELTA["delta = 0.178"]
-    DEFF --- DELTA
+[증명](docs/참조/핵심_정리_증명.md#portal-boundedness) 등호에서는
+평평한 사차 방향이 남으므로, 다음 측도 정리에는 엄격한 부등식을 쓴다.
 
-    DELTA --> BS["부트스트랩<br/>eps^2 = 0.049 = Omega_b"]
-    DELTA --> QCD["DM/DE = alpha_s D + 3계층 보정"]
-    DELTA --> MASS["m_phi = m_p delta^2 = 29.65 MeV"]
-    DELTA --> XI["xi = alpha_s^(1/3) = 0.490"]
+**[정리]** \(\xi=0\)인 고정 Euclidean 배경에서
+\(\lambda_{H\phi}>-2\sqrt{\lambda_H\lambda_\phi}\)와 양의 kinetic term을
+만족하는 measurable finite scalar--Higgs bosonic truncation을 유한
+격자에 두면 partition function과 모든 다항식 모멘트가 유한하다.
+[증명](docs/참조/핵심_정리_증명.md#finite-lattice-measure)
 
-    BS --> OB["보통 물질 5 %"]
-    QCD --> DM["DM 26 % + DE 69 %"]
-    QCD --> MH["힉스 125.35 GeV"]
-    XI --> W0["w0 = -0.768<br/>r = 0.0014"]
-    AS --> CKM["CKM/PMNS 전부 유도"]
-    DELTA --> NU["m_nu3 = 51.5 meV"]
+**[정리]** 완결된 공변 작용의 총 stress tensor는 on shell 보존된다.
+[증명](docs/참조/핵심_정리_증명.md#noether-stress)
 
-    style E fill:#1a1a2e,color:#e0e0ff,stroke:#7b68ee
-    style DELTA fill:#2d1b4e,color:#e8d5f5,stroke:#9b59b6
-    style OB fill:#0d3b2e,color:#a8e6cf,stroke:#2ecc71
-    style DM fill:#0d3b2e,color:#a8e6cf,stroke:#2ecc71
-    style MH fill:#0d3b2e,color:#a8e6cf,stroke:#2ecc71
-    style NU fill:#0d3b2e,color:#a8e6cf,stroke:#2ecc71
-    style W0 fill:#0d3b2e,color:#a8e6cf,stroke:#2ecc71
-    style CKM fill:#0d3b2e,color:#a8e6cf,stroke:#2ecc71
+따라서 이 branch는 특정 질량이나 결합을 예측하지는 않지만 대칭, 안정성과
+보존법칙을 갖는다. 양의 cutoff 측도가 여기서 증명된 범위는 scalar--Higgs
+bosonic truncation이며, gauge fixing·ghost·fermion determinant를 포함한
+전체 양자측도는 별도 구성이다.
+
+경로 가중치는 차원 있는 작용 \(S_E\)를 그대로 지수에 넣지 않는다.
+
+\[
+P(\gamma)=
+\frac{\exp[-S_E(\gamma)/\hbar]}
+{\sum_{\gamma'}\exp[-S_E(\gamma')/\hbar]} .
+\]
+
+따라서 모든 `exp`, `log`, 확률, 고정점 코어의 인자는 무차원이어야 한다.
+
+### 6.1 추가로 보존된 조건부 이론
+
+| 구조 | 닫힌 범위 |
+|---|---|
+| Hodge \(\Lambda^2\leftrightarrow\Lambda^1\) | 방향·metric을 가진 \(d=3\) |
+| 다형 Poisson 최소 고정점 | 비음수 독립 offspring |
+| \(A=dI+\delta B\) | row-stochastic toy family의 정확한 균일 축약 |
+| canonical scalar \(w\geq-1\) | Einstein frame 최소 결합·양의 kinetic·\(\rho>0\) |
+| 상수 진공항 \(w=-1\) | 공변 GR branch |
+| CKM·PMNS 질량행렬 | 주어진 질량과 unitary 입력의 존재구성 |
+| Koide \(Q=2/3\) | 제곱근 질량벡터의 \(45^\circ\) 기하 |
+| Starobinsky형 \(n_s,r\) | \(V_0>0\), Einstein-frame 정준 단일장 지배와 leading slow-roll |
+
+공통 증명은
+[핵심 정리 증명 원장](docs/참조/핵심_정리_증명.md)에 둔다. 공변 Hessian,
+국소 양자채널, 스펙트럼·역문제, wormhole·thin-shell·Casimir처럼 반례 뒤에도
+전제를 좁혀 남는 구조는
+[이론물리 보존 원장](docs/참조/이론물리_보존_원장.md)에 분리했다.
+
+## 7. 열린 bridge와 예측 조건
+
+- CE와 \(\Lambda\)CDM을 같은 데이터·공분산·자유도에서 비교한 완전한 model
+  selection 결과는 아직 없다.
+- 양자 진폭에서 완전양성 jump process와 Poisson offspring로 가는
+  microscopic bridge가 열려 있다.
+- \(H_0\), \(S_8\), 재가열과 continuum·UV 완비성은 열려 있다.
+- 외부 입력, fitted nuisance, 같은 release 내부 교차검증은 독립 예측으로 세지 않는다.
+- 핵융합과 공학 branch는 작용에서 reactor gain이나 점화 에너지까지의 산출이
+  아직 완결되지 않았다.
+- 물리 주장을 정리로 쓰려면 전제·정의역·증명이 필요하고, 자연에 대한 예측으로
+  쓰려면 독립 자료·불확도·공분산과 사전 고정한 판별 기준이 추가로 필요하다.
+
+## 8. 재현
+
+Python 환경이 준비돼 있다면 다음 명령으로 핵심 계산을 재현할 수 있다.
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest tests\test_bootstrap_solver.py -q
+.\.venv\Scripts\python.exe tests\scorecard.py
+.\.venv\Scripts\python.exe tests\run_validation.py
+.\.venv\Scripts\python.exe examples\physics\proof_completion_attempt.py
+.\.venv\Scripts\python.exe -m pytest tests\test_dimensionless.py -q
+.\.venv\Scripts\python.exe docs\2_경로적분과_응용\validate_manuscript.py
 ```
 
----
+전체 회귀:
 
-## 10. 핵심 수식 일람 (전공자용)
-
-| 공식 | 의미 |
-| --- | --- |
-| $\alpha_{\text{total}} = 1/(2\pi)$ | 시간 그리드 상수화 |
-| $\sin^2\theta_W = 4\,\alpha_s^{4/3}$ | 전자약 혼합각 |
-| $\alpha_{\text{dim}} = \alpha_s^{1/d}$ | 차원당 결합 강도 |
-| $\delta = \sin^2\theta_W \cos^2\theta_W$ | 전자약 혼합 잔여 |
-| $D_{\text{eff}} = d + \delta$ | 유효 차원 |
-| $\varepsilon^2 = \exp[-(1-\varepsilon^2) D_{\text{eff}}]$ | 부트스트랩 (= $\Omega_b$) |
-| $R = \alpha_s D_{\text{eff}} (1 + \text{3 계층 관성})$ | DM/DE 비율 |
-| $F = 1 + \alpha_s D_{\text{eff}}$ | QCD 진공 폼팩터 |
-| $M_H = M_Z \cdot F$ | 힉스 질량 |
-| $\xi = \alpha_s^{1/3}$ | 비최소 중력 결합 |
-| $w_0 = -1 + 2\xi^2/(3\Omega_\Lambda)$ | DE 상태방정식 |
-| $m_{\nu_l} = \delta^4 m_l / [(16\pi^2)^2 (1+R)]$ | 중성미자 질량 |
-| $J = 4\,\alpha_s^{11/2}$ | Jarlskog CP 불변량 |
-| $Q_K = 2/d = 2/3$ | Koide 공식 |
-| $n_s = 1 - 2/N$ | 인플레이션 스펙트럼 지수 |
-| $r = 12 / [N^2(1 + 6\xi^2)]$ | 인플레이션 텐서 비율 |
-
----
-
-## 11. 읽는 순서
-
-**일반 독자**
-1. 본 README 1-8 절
-2. [`docs/README.md`](docs/README.md) — 문서 계층 안내
-
-**물리/수학 배경**
-1. [`docs/경로적분.md`](docs/경로적분.md) — 계산 체인
-2. [`docs/상수.md`](docs/상수.md) — 모든 수치 집계
-3. [`docs/axium.md`](docs/axium.md) — 공리와 표기법
-4. [`docs/2_경로적분과_응용/12_전이구간.md`](docs/2_경로적분과_응용/12_전이구간.md) — 전이 보정
-
-**심화**
-- `docs/2_경로적분과_응용/` — 인플레이션, 강한 CP, 중성미자, 페르미온 질량
-- `docs/4_공학적_활용/` — 핵융합, 양자오류보정, 진공에너지, 초전도체
-- `docs/5_유도/` — Navier-Stokes, 암흑에너지, 블랙홀, 마스터 작용
-- `docs/참조/` — 형식 모델, 정합성 검증
-
----
-
-## 12. 직접 돌려 보기
-
-```bash
-# 환경 (Python 3.13)
-python -m venv .venv
-.venv/Scripts/python.exe -m pip install torch numpy
-
-# 종합 점수표
-.venv/Scripts/python.exe examples/physics/scorecard.py
-
-# 동적 암흑에너지 (DESI DR2 비교)
-.venv/Scripts/python.exe examples/physics/check_dynamic_de.py
-
-# d=0 기원 전수 검증
-.venv/Scripts/python.exe examples/physics/d0_full_verification.py
+```powershell
+.\.venv\Scripts\python.exe -m pytest -q
 ```
 
----
+## 9. 읽는 순서
 
-## 13. 수치 검증 코드
+1. [문서 지도](docs/README.md)
+2. [검증 규약](docs/2_경로적분과_응용/00_검증_규약.md)
+3. [형식 구조 원장](docs/2_경로적분과_응용/전체_진리값_감사.md)
+4. [공리·기호 사전](docs/axium.md)
+5. [계산 체인](docs/경로적분.md)
+6. [상수 후보식과 검증](docs/상수.md)
 
-| 코드 | 검증 대상 |
+`docs/2_경로적분과_응용/`은 장별 전제·증명·공리·산출을,
+`docs/4_공학적_활용/`은 공학 적용의 입력과 미완성 항목을 담는다.
+
+## 10. 주요 검증 코드
+
+| 코드 | 범위 |
 | --- | --- |
-| [`scorecard.py`](examples/physics/scorecard.py) | 19 관측 종합 χ² 점수 |
-| [`check_muon_g2_integral.py`](examples/physics/check_muon_g2_integral.py) | 스칼라 보손, 양성자 반경 |
-| [`check_dark_matter_paper.py`](examples/physics/check_dark_matter_paper.py) | 다중 데이터셋, BIC/AIC |
-| [`check_dynamic_de.py`](examples/physics/check_dynamic_de.py) | 동적 DE, DESI 동치 |
-| [`check_unification.py`](examples/physics/check_unification.py) | 전자약-강력 통합 |
-| [`d0_full_verification.py`](examples/physics/d0_full_verification.py) | d=0 기원 전수 검증 |
-| [`baryon_inertia.py`](examples/physics/baryon_inertia.py) | 3 계층 바리온 관성 |
-| [`xi_derivation.py`](examples/physics/xi_derivation.py) | $\xi = \alpha_s^{1/3}$ 유도 |
-| [`neutrino_mass.py`](examples/physics/neutrino_mass.py) | 중성미자 질량 NH 예측 |
-| [`fermion_mass.py`](examples/physics/fermion_mass.py) | 페르미온 세대비 |
-| [`higgs_mass.py`](examples/physics/higgs_mass.py) | 힉스 질량 0.6 $\sigma$ |
-| [`ckm_derivation.py`](examples/physics/ckm_derivation.py) | CKM/PMNS 일괄 유도 |
-| [`fusion_resonance_loop_gate.py`](examples/physics/fusion_resonance_loop_gate.py) | 핵융합 공명 fail-closed 루프 감사 |
-| [`fusion_full_loop_gate.py`](examples/physics/fusion_full_loop_gate.py) | 핵융합 Z2·구동·열반응률·Lawson·NIF 전분기 감사 |
-| [`fusion_equation_iteration_gate.py`](examples/physics/fusion_equation_iteration_gate.py) | 허용 퍼텐셜부터 열반응률까지 식-수정 반복 루프 |
-| [`fusion_remaining_branches_gate.py`](examples/physics/fusion_remaining_branches_gate.py) | 직접 연산자 UV·시간의존 source·reactor/ICF 잔여분기 감사 |
-| [`fusion_direct_scattering_gate.py`](examples/physics/fusion_direct_scattering_gate.py) | 직접 scalar의 Born 산란길이·Hulthén deuteron 핵물리 control |
-| [`fusion_floquet_source_gate.py`](examples/physics/fusion_floquet_source_gate.py) | QED Floquet 10 keV 식 외삽·1 keV 공개 benchmark·pump 장부와 CE scalar beat 비동일성 감사 |
-| [`fusion_flavor_aligned_gate.py`](examples/physics/fusion_flavor_aligned_gate.py) | flavor-aligned 직접 scalar의 UV·neutron·kaon·invisible 경계 감사 |
-| [`fusion_flavor_margin_robustness_gate.py`](examples/physics/fusion_flavor_margin_robustness_gate.py) | D/T finite-size·Pb recast·최신 NA62 Figure 2 보간을 포함한 flavor 후보 여유 강건성 감사 |
-| [`fusion_operator_alternatives_gate.py`](examples/physics/fusion_operator_alternatives_gate.py) | trace/gluon·isospin-phobic·disformal 대체 연산자 no-go 감사 |
-| [`fusion_spin_operator_gate.py`](examples/physics/fusion_spin_operator_gate.py) | pseudoscalar·axial·vector·spin-2·derivative-node의 quartet 투영과 제약 fail-closed 감사 |
-| [`fusion_spin_polarization_control_gate.py`](examples/physics/fusion_spin_polarization_control_gate.py) | 표준모형 D–T 편극의 이상적 quartet 1% 조건부 대조군과 열평형·retention·wall-plug source 장부 감사 |
-| [`fusion_scalar_current_gate.py`](examples/physics/fusion_scalar_current_gate.py) | flavor-aligned 후보의 D/T one-body·scalar-radius·sigma-term proxy·chiral two-body current와 공동 covariance 결손 감사 |
+| [`tests/scorecard.py`](tests/scorecard.py) | 입력을 제외한 정본 수치 스코어카드 |
+| [`tests/run_validation.py`](tests/run_validation.py) | 고정점·스코어카드·실제 차원 검사 통합 |
+| [`examples/physics/proof_completion_attempt.py`](examples/physics/proof_completion_attempt.py) | 원 주장과 조건부 후손 분리 |
+| [`examples/physics/cosmology_ratio_audit.py`](examples/physics/cosmology_ratio_audit.py) | 후기우주 비율 산술 감사 |
+| [`examples/physics/ce_residual_forward_model.py`](examples/physics/ce_residual_forward_model.py) | DESI DR2 공분산 전방검사 |
+| [`examples/physics/quantum_jump_bridge_gate.py`](examples/physics/quantum_jump_bridge_gate.py) | 양자점프 bridge gate |
+| [`examples/physics/fusion_resonance_loop_gate.py`](examples/physics/fusion_resonance_loop_gate.py) | 핵융합 공명 회귀검사 |
+| [`examples/physics/fusion_full_loop_gate.py`](examples/physics/fusion_full_loop_gate.py) | 핵융합 전 분기 감사 |
+| [`examples/physics/fusion_equation_iteration_gate.py`](examples/physics/fusion_equation_iteration_gate.py) | 퍼텐셜–열반응률 반복 게이트 |
+| [`examples/physics/fusion_remaining_branches_gate.py`](examples/physics/fusion_remaining_branches_gate.py) | UV·source·reactor/ICF 잔여분기 |
+| [`examples/physics/fusion_direct_scattering_gate.py`](examples/physics/fusion_direct_scattering_gate.py) | Born·Hulthén 핵물리 대조군 |
+| [`examples/physics/fusion_floquet_source_gate.py`](examples/physics/fusion_floquet_source_gate.py) | QED Floquet와 CE scalar 비동일성 |
+| [`examples/physics/fusion_flavor_aligned_gate.py`](examples/physics/fusion_flavor_aligned_gate.py) | flavor-aligned 후보 제약 |
+| [`examples/physics/fusion_flavor_margin_robustness_gate.py`](examples/physics/fusion_flavor_margin_robustness_gate.py) | finite-size·Pb·NA62 강건성 |
+| [`examples/physics/fusion_operator_alternatives_gate.py`](examples/physics/fusion_operator_alternatives_gate.py) | 대체 연산자 no-go |
+| [`examples/physics/fusion_spin_operator_gate.py`](examples/physics/fusion_spin_operator_gate.py) | spin 연산자 투영과 제약 |
+| [`examples/physics/fusion_spin_polarization_control_gate.py`](examples/physics/fusion_spin_polarization_control_gate.py) | 편극 대조군과 source 장부 |
+| [`examples/physics/fusion_polarized_evidence_gate.py`](examples/physics/fusion_polarized_evidence_gate.py) | 편극 evidence 회귀검사 |
+| [`examples/physics/fusion_sciencedb_payload_gate.py`](examples/physics/fusion_sciencedb_payload_gate.py) | ScienceDB payload 무결성 |
+| [`examples/physics/fusion_sciencedb_reactivity_gate.py`](examples/physics/fusion_sciencedb_reactivity_gate.py) | D–T 표의 Maxwellian 반응률 |
+| [`examples/physics/fusion_scalar_current_gate.py`](examples/physics/fusion_scalar_current_gate.py) | scalar current와 공동 공분산 결손 |
 
----
+기존 실행 산출물의 상수명은 호환성을 위해 유지한다. 현재 문서에는 direct D–T
+reaction/source/burn/wall 산출을 물리 예측으로 두지 않는다.
 
-## 14. 엔진 (Reality Stone)
+## 11. 엔진
 
-CE 수치 엔진은 `reality_stone/` 패키지로 통합되었다. 구 최상위 `clarus` 패키지는 `reality_stone.clarus` 로 이동했다.
+`reality_stone/`은 CE 수치 런타임과 Rust/PyO3 백엔드를 담는다.
 
 ```text
 reality_stone/
-  python/reality_stone/          Reality Stone Python API
-  python/reality_stone/clarus/   Clarus 런타임, CE 연산, 에이전트, 브리지
-  src/                           Rust/PyO3 백엔드 (layers, bindings, cuda)
-  tests/                         회귀 테스트
-  examples/unified_clarus_demo.py
-
-clarus-agent-guard/              LLM 에이전트 가드 제품 (별도 서버 + 벤치)
-tests/                           최상위 pytest 스위트 + scorecard/검증 하네스
+  python/reality_stone/          Python API
+  python/reality_stone/clarus/   CE 연산·브리지·공학 gate
+  src/                           Rust/PyO3 백엔드
+tests/                           최상위 회귀·스코어카드
 ```
 
 ```python
-import reality_stone.clarus  # 런타임/CE ops 진입점
+import reality_stone.clarus
 ```
 
-통합 데모:
+## 12. 읽는 사람에게
 
-```powershell
-.\.venv\Scripts\python.exe -B reality_stone\examples\unified_clarus_demo.py
-```
-
----
-
-## 15. 읽는 사람에게
-
-이 저장소는 한 명의 연구자가 적은 가설이다. 동료 심사를 통과한 적이 없고 실험 검증 도 부분적이다. 그러나 19 개 관측치를 한 입력에서 평균 1 % 안쪽으로 맞추는 자기 검증은 **재현 가능한 코드** 로 누구나 확인할 수 있다.
-
-옳다면, 우리는 자연의 25 개 매개변수 중 18 개를 줄였다.
-틀렸다면, 위에 나열된 6 개 미래 실험 중 하나가 그것을 곧 보여 줄 것이다.
-
-판단은 데이터에 맡긴다.
+이 저장소는 정리, 공리, 산출, 경험식, 미완성 항목과 예측을 서로 다른 출처로
+기록한다. 표의 가까운 값만으로 매개변수 감소나 자연법칙의 유도를 주장하지 않는다.
+관측 비교는 형식적 증명과 분리해 독립 데이터와 공분산으로 다룬다.
 
 — *To you, two thousand years from now.*

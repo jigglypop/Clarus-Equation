@@ -21,6 +21,11 @@ from reality_stone.clarus.dimensionless import (
     nondimensionalize,
     require_dimensionless,
 )
+from reality_stone.clarus.dimensionless_checker import (
+    Dimension,
+    DimensionVector,
+    DimensionlessChecker,
+)
 
 
 def test_curvature_must_be_scaled_before_exponential() -> None:
@@ -59,7 +64,10 @@ def test_buckingham_pi_finds_reynolds_number_shape() -> None:
         {"rho": Fraction(-1, 1), "v": Fraction(-1, 1), "L": Fraction(-1, 1), "mu": Fraction(1, 1)}
     ]
     assert group_dimension([rho, velocity, length, viscosity], groups[0]) == DIMENSIONLESS
-    assert math.isclose(evaluate_group([rho, velocity, length, viscosity], groups[0]), 1 / (1.2 * 3.0 * 2.0 / 1.8e-5))
+    assert math.isclose(
+        evaluate_group([rho, velocity, length, viscosity], groups[0]),
+        1 / (1.2 * 3.0 * 2.0 / 1.8e-5),
+    )
 
 
 def test_dimensionless_guard_accepts_ce_core_ratio() -> None:
@@ -71,8 +79,10 @@ def test_dimensionless_guard_accepts_ce_core_ratio() -> None:
 def test_dimensionless_gate_result_composes_value_transform() -> None:
     epsilon2 = Quantity("epsilon^2", 0.25)
 
-    result = check_dimensionless(epsilon2).map(lambda q: q.value).bind(
-        lambda value: check_dimensionless(Quantity("sqrt_epsilon2", math.sqrt(value)))
+    result = (
+        check_dimensionless(epsilon2)
+        .map(lambda q: q.value)
+        .bind(lambda value: check_dimensionless(Quantity("sqrt_epsilon2", math.sqrt(value))))
     )
 
     assert result.passed
@@ -97,10 +107,41 @@ def test_dimensionless_audit_accumulates_all_failures() -> None:
 
 
 def test_exp_arguments_validates_batch_before_kernel_use() -> None:
-    args = exp_arguments([
-        Quantity("D_eff", 0.31),
-        Quantity("phi", 1.7),
-    ])
+    args = exp_arguments(
+        [
+            Quantity("D_eff", 0.31),
+            Quantity("phi", 1.7),
+        ]
+    )
 
     assert args.passed
     assert args.unwrap() == (0.31, 1.7)
+
+
+def test_checker_preserves_unnamed_inverse_time_dimension() -> None:
+    inverse_time = Dimension.TIME**-1
+
+    assert isinstance(inverse_time, DimensionVector)
+    assert inverse_time.exponents == tuple(map(Fraction, (0, 0, -1, 0)))
+    assert not inverse_time.is_dimensionless()
+
+
+def test_checker_preserves_mass_squared_and_composes_back_to_mass() -> None:
+    mass_squared = Dimension.MASS**2
+
+    assert isinstance(mass_squared, DimensionVector)
+    assert mass_squared.exponents == tuple(map(Fraction, (2, 0, 0, 0)))
+    assert not mass_squared.is_dimensionless()
+    assert mass_squared / Dimension.MASS == Dimension.MASS
+
+
+def test_registered_rate_and_magnetic_field_have_nontrivial_dimensions() -> None:
+    formulas = {formula.name: formula for formula in DimensionlessChecker().formulas}
+
+    rate = formulas["STDP learning rate upper bound"].expected_dim
+    magnetic_field = formulas["Critical magnetic field"].expected_dim
+
+    assert rate == Dimension.TIME**-1
+    assert not rate.is_dimensionless()
+    assert magnetic_field == Dimension.MASS**2
+    assert not magnetic_field.is_dimensionless()

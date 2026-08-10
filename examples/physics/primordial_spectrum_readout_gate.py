@@ -25,8 +25,11 @@ DELTA = SIN2_THETA_W * (1 - SIN2_THETA_W)
 D_EFF = 3 + DELTA
 N_GAUGE = 12
 N_E = 3 * D_EFF * N_GAUGE / 2
-OBS_AS_1E9 = 2.1056
-OBS_AS_SIGMA_1E9 = 0.0034
+# Planck 2018 TT,TE,EE+lowE+lensing: ln(10^10 A_s)=3.044+/-0.014,
+# converted to the linear A_s x 10^9 scale used by this gate.  Keep this
+# snapshot shared with the scorecard and proof-attempt ledger.
+OBS_AS_1E9 = 2.099
+OBS_AS_SIGMA_1E9 = 0.029
 
 
 def bootstrap_fixed_point(d_eff: float = D_EFF) -> float:

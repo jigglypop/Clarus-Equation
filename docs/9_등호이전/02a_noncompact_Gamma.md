@@ -8,13 +8,13 @@
 
 > \(A=\mathbb R^n\), \(E\)가 continuous/coercive이고 \(\operatorname{supp}\mu_0\) 위의 minimizer가 유일하면, Gibbs 재가중 \(\mu_\beta\)는 그 minimizer의 Dirac 측도로 약수렴한다.
 
-현재 판정:
+형식 출처:
 
 | 항목 | 판정 | 이유 |
 |---|---|---|
-| \(\mathbb R^n\) coercive 농축 | `Exact under assumptions` | 직접 증명 가능 |
-| 여러 minimizer로의 농축 | `Exact under assumptions` | 열린 근방 농축으로 닫힘 |
-| Gamma-convergence | `Exact under assumptions`/`Open` | scale-dependent Gibbs는 02c에서 분리 |
+| \(\mathbb R^n\) coercive 농축 | `[정리]` | 직접 증명 가능 |
+| 여러 minimizer로의 농축 | `[정리]` | 열린 근방 농축으로 닫힘 |
+| Gamma-convergence | 조건부 `[정리]`; 일반 scale-dependent Gibbs는 `[미완성]` | 02c에서 분리 |
 
 ## 1. 세팅
 
@@ -449,7 +449,7 @@ CE bridge에서 \(A=\mathcal P_I\) 같은 경로공간을 쓰려면, 정리 6.1�
 | escape | coercive/equicoercive 조건이 있는가 | `필수` |
 | minimizer | 선택 경로가 유일한가, 아니면 최소집합인가 | `필수` |
 
-이 표가 비면 05장은 여전히 `Bridge`다. 표가 채워지면 그때 non-compact 농축 정리를 CE 경로공간 위로 옮길 수 있다.
+이 표가 비면 CE 경로공간으로 가는 물리 사상은 `[미완성]`이다. 표가 채워지면 그때 non-compact 농축 정리를 CE 경로공간 위로 옮길 수 있다.
 
 ## 11. 결론
 
@@ -463,4 +463,4 @@ E\ \mathrm{coercive}
 \mu_\beta\Rightarrow\delta_{x_*}
 $$
 
-이것은 새 물리 bridge가 아니라 표준 해석학 위의 `Exact under assumptions` 정리다.
+이것은 새 물리 사상이 아니라 표준 해석학 위에서 가정이 명시된 `[정리]`다.

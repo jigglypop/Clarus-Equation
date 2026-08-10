@@ -12,14 +12,14 @@ $$
 
 > \(\phi\) pushforward의 적분 형식은 수학적으로 쉽다. 어려운 것은 어떤 커널을 어떤 readout으로 채택하는가다.
 
-현재 판정:
+형식 출처:
 
 | 항목 | 판정 | 이유 |
 |---|---|---|
-| endpoint/occupation/curvature/embedding 커널 정의 | `Exact under assumptions` | measurable/integrable 조건 아래 닫힘 |
-| raw/conditional 잔류 규약 | `Selection` | 질량 보존과 모양 보존 중 선택 |
-| CE \(\Phi\)와 동일시 | `Bridge` | 경로 작용의 Hessian readout을 별도 식별해야 함 |
-| AGI residual channel | `Tooling/Open test` | ablation 검증 대상 |
+| endpoint/occupation/curvature/embedding 커널 | `[정의]`; 적분 존재는 `[정리]` | measurable/integrable 조건 아래 닫힘 |
+| raw/conditional 잔류 규약 | `[공리: 모델 선택]` | 질량 보존과 모양 보존 중 선택 |
+| CE \(\Phi\)와 동일시 | `[미완성]` | 경로 작용의 Hessian readout을 별도 식별해야 함 |
+| AGI residual channel | `[예측]` | 사전등록 ablation 검증 대상 |
 
 ## 1. 공통 세팅
 
@@ -218,7 +218,7 @@ $$
 | 잃는 정보 | 전체 후보 텍스트/경로의 세부 구조 |
 | 적합한 상황 | LLM 후보분포, action 후보, hallucination review |
 
-이 커널은 수학적으로는 유한합이라 `Exact`다. 하지만 성능 향상은 실험 문제다.
+이 커널의 값은 유한합의 `[산출]`이다. 성능 향상은 사전등록 절차를 갖춘 `[예측]`으로만 시험한다.
 
 ## 3. Raw와 conditional의 차이
 
@@ -274,7 +274,7 @@ $$
 
 \(\square\)
 
-해석: endpoint와 curvature를 섞는 hybrid readout은 수학적으로 가능하다. 그러나 계수 \(a,b\)를 고르는 일은 `Selection`이다.
+해석: endpoint와 curvature를 섞는 hybrid readout은 수학적으로 가능하다. 그러나 계수 \(a,b\)를 고르는 일은 `[공리: 모델 선택]`이다.
 
 ## 5. 유한 후보공간 닫힘
 
@@ -310,10 +310,10 @@ curvature kernel을 CE \(\Phi\)와 연결하려면 아래 표를 채워야 한�
 | Hessian \(\delta^2S/\delta\gamma^2\) | 존재 또는 약한 의미 | `필수` |
 | 비선택 측도 | \(\nu_{\mathrm{ns},\beta}\) finite measure | `필수` |
 | integrability | \(K_{\mathrm{curv}}\in L^1(\nu_{\mathrm{ns},\beta})\) | `필수` |
-| readout 규약 | raw/conditional/hybrid 중 선택 | `Selection` |
-| 물리 동일시 | \(\phi_{\mathrm{curv}}=\Phi_{\mathrm{res}}\) 여부 | `Bridge` |
+| readout 규약 | raw/conditional/hybrid 중 선택 | `[공리: 모델 선택]` |
+| 물리 동일시 | \(\phi_{\mathrm{curv}}=\Phi_{\mathrm{res}}\) 여부 | `[미완성]`; 채택 시 `[공리: 물리 사상]` |
 
-이 표가 비면 \(\phi\) pushforward는 형식만 닫힌다. 표가 채워지면 해당 가정 아래 `Exact under assumptions`로 올릴 수 있다.
+이 표가 비면 \(\phi\) pushforward는 형식만 닫힌다. 표가 채워지면 해당 가정 아래의 `[정리]`를 적용할 수 있다.
 
 ## 7. 다음 실험 연결
 
@@ -348,4 +348,3 @@ $$
 $$
 
 다만 어떤 \(K_\phi\)가 CE의 물리 \(\Phi\)인지, 또는 AGI runtime의 유효 residual channel인지는 아직 bridge와 실험의 문제다.
-

@@ -12,14 +12,14 @@
 
 > \(h\to0\)만으로 Gibbs 분포가 Dirac로 collapse하지는 않는다. \(h\)는 에너지 중심을 jet로 보내고, 실제 농축은 \(\beta_h\to\infty\) 같은 readout 강도가 함께 필요하다.
 
-현재 판정:
+형식 출처:
 
 | 항목 | 판정 | 이유 |
 |---|---|---|
-| finite-difference jet 수렴 | `Exact` | Taylor 정리 |
-| fixed-\(\beta\) posterior 한계 | `Exact under assumptions` | 중심만 jet로 이동 |
-| \(\beta_h\to\infty\) jet 농축 | `Exact under assumptions` | 02a형 Gibbs 농축 |
-| 비선택 잔류 = 고차 jet 정보 | `Selection/Exact` | deterministic residual은 Exact, 잔류 readout은 선택 |
+| finite-difference jet 수렴 | `[정리]` | Taylor 정리 |
+| fixed-\(\beta\) posterior 한계 | `[정리]` | 중심만 jet로 이동 |
+| \(\beta_h\to\infty\) jet 농축 | `[정리]` | 02a형 Gibbs 농축 |
+| 비선택 잔류 = 고차 jet 정보 | residual은 `[정리]`; readout은 `[공리: 모델 선택]` | deterministic residual과 잔류 readout을 분리 |
 
 ## 1. Finite difference jet
 
@@ -449,13 +449,13 @@ $$
 
 ## 8. 비선택 잔류의 정확한 지위
 
-이 문서에서 `Exact`로 닫힌 것은 다음이다.
+이 문서에서 `[정리]`로 닫힌 것은 다음이다.
 
 | 대상 | 판정 |
 |---|---|
-| finite difference jet가 \(J_x^kf\)로 수렴 | `Exact` |
-| \(\beta_h\to\infty\)에서 \(\mu_h\Rightarrow\delta_{J_x^kf}\) | `Exact under assumptions` |
-| finite-scale 중심 잔류 \(R_h^{(k)}\)가 고차 도함수를 담음 | `Exact` |
+| finite difference jet가 \(J_x^kf\)로 수렴 | `[정리]` |
+| \(\beta_h\to\infty\)에서 \(\mu_h\Rightarrow\delta_{J_x^kf}\) | `[정리]` |
+| finite-scale 중심 잔류 \(R_h^{(k)}\)가 고차 도함수를 담음 | `[정리]` |
 
 하지만
 
@@ -465,7 +465,7 @@ $$
 \mu_h|_{A_k\setminus\{J_x^kf\}}
 $$
 
-를 어떤 moment/readout으로 읽을지는 아직 `Selection`이다. 가장 단순한 readout은 중심 잔류 또는 평균 잔류다.
+를 어떤 moment/readout으로 읽을지는 아직 `[미완성]`이다. 가장 단순한 readout은 중심 잔류 또는 평균 잔류지만, 채택하려면 `[공리: 모델 선택]`으로 고정해야 한다.
 
 $$
 \mathcal R_h

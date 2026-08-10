@@ -3,8 +3,10 @@ CE Constants Validation Scorecard
 =================================
 
 This script compares CE candidate constants against the observational
-reference values used by the local validation suite.  It deliberately uses
-ASCII-only console output so the report is readable on Windows terminals.
+reference values used by the local validation suite. External inputs remain
+visible but are explicitly excluded from scored-fit counts. The electroweak
+and strong-coupling references use the PDG 2026 snapshot. It deliberately
+uses ASCII-only console output so the report is readable on Windows terminals.
 """
 
 from __future__ import annotations
@@ -23,9 +25,15 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from examples.physics.primordial_spectrum_readout_gate import effective_geometry_drive
-from examples.physics.ckm_vcb_nlo_gate import vcb_nlo_electroweak_projector
-from examples.physics.clarus_boson_search_gate import M_PHI_MEV
+from examples.physics.primordial_spectrum_readout_gate import (  # noqa: E402
+    OBS_AS_1E9,
+    OBS_AS_SIGMA_1E9,
+    effective_geometry_drive,
+)
+from examples.physics.ckm_vcb_nlo_gate import (  # noqa: E402
+    vcb_nlo_electroweak_projector,
+)
+from examples.physics.clarus_boson_search_gate import M_PHI_MEV  # noqa: E402
 
 
 @dataclass(frozen=True)
@@ -40,11 +48,14 @@ class Constant:
     source: str
     grade: str
     notes: str = ""
+    role: str = "Candidate"
+    scoreable: bool = True
 
     @property
     def is_scored(self) -> bool:
         return (
-            self.grade in {"Bridge", "Phenomenology", "Selection"}
+            self.scoreable
+            and self.grade in {"Bridge", "Phenomenology", "Selection"}
             and self.obs_value is not None
             and self.obs_sigma is not None
             and self.obs_sigma > 0
@@ -70,6 +81,8 @@ class Constant:
 
     @property
     def status(self) -> str:
+        if self.role == "Input":
+            return "INPUT"
         if self.grade == "Exact":
             return "EXACT"
         if self.grade == "Open":
@@ -99,9 +112,17 @@ class ConstantsScorecard:
     def load_layer_data(self) -> None:
         """Load constants from the current 8-layer CE documentation."""
 
-        alpha_s = 0.11789
-        sin2_theta_w_ce = 4 * (alpha_s ** (4 / 3))
-        lambda_obs = 0.23122 * (1 - 0.23122)
+        alpha_s_input = 0.11789
+        pdg_2026_alpha_s = 0.1180
+        pdg_2026_alpha_s_sigma = 0.0009
+        pdg_2026_sin2_theta_w_ms = 0.23122
+        pdg_2026_sin2_theta_w_ms_sigma = 0.00006
+        sin2_theta_w_ce = 4 * (alpha_s_input ** (4 / 3))
+        lambda_ce = sin2_theta_w_ce * (1 - sin2_theta_w_ce)
+        lambda_obs = pdg_2026_sin2_theta_w_ms * (1 - pdg_2026_sin2_theta_w_ms)
+        lambda_obs_sigma = (
+            abs(1 - 2 * pdg_2026_sin2_theta_w_ms) * pdg_2026_sin2_theta_w_ms_sigma
+        )
 
         self.add_constant(
             "Fine structure constant inverse",
@@ -116,32 +137,37 @@ class ConstantsScorecard:
         self.add_constant(
             "Strong coupling constant",
             "alpha_s(M_Z)",
-            alpha_s,
-            0.11789,
-            0.00005,
-            "Local CE reference value",
+            alpha_s_input,
+            pdg_2026_alpha_s,
+            pdg_2026_alpha_s_sigma,
+            "PDG 2026 QCD review, Eq. (9.25)",
             "Selection",
-            "Used as the scale-consistent input for closure gates.",
+            "External scale-consistent input for closure gates, not a CE prediction; "
+            "retained for provenance and explicitly excluded from the scored denominator.",
+            role="Input",
+            scoreable=False,
         )
         self.add_constant(
             "Weak mixing angle squared",
             "sin^2(theta_W)",
             sin2_theta_w_ce,
-            0.23122,
-            0.00003,
-            "Electroweak fit reference in local docs",
+            pdg_2026_sin2_theta_w_ms,
+            pdg_2026_sin2_theta_w_ms_sigma,
+            "PDG 2026 electroweak review, Table 10.2 (MS at M_Z)",
             "Bridge",
-            "Relation sin^2(theta_W)=4 alpha_s^(4/3) remains a bridge law.",
+            "Relation sin^2(theta_W)=4 alpha_s^(4/3) remains a bridge law. "
+            "The comparison uses the PDG 2026 MS-scheme snapshot.",
         )
         self.add_constant(
             "Weinberg angle parameter",
             "lambda_W",
-            sin2_theta_w_ce * (1 - sin2_theta_w_ce),
+            lambda_ce,
             lambda_obs,
-            0.00003,
-            "Derived from sin^2(theta_W)",
+            lambda_obs_sigma,
+            "Derived from the PDG 2026 MS sin^2(theta_W) snapshot",
             "Bridge",
-            "Derived readout from the same electroweak bridge.",
+            "Derived readout from the same electroweak bridge; observational "
+            "uncertainty is propagated through lambda=s(1-s).",
         )
         self.add_constant(
             "Baryon density parameter",
@@ -201,7 +227,7 @@ class ConstantsScorecard:
         self.add_constant(
             "CKM element Vus magnitude",
             "|V_us|",
-            sin2_theta_w_ce / (1 + alpha_s / (2 * math.pi)),
+            sin2_theta_w_ce / (1 + alpha_s_input / (2 * math.pi)),
             0.22650,
             0.00048,
             "Local strict CKM reference",
@@ -211,7 +237,7 @@ class ConstantsScorecard:
         self.add_constant(
             "PMNS mixing angle theta13",
             "sin^2(theta_13)",
-            lambda_obs / (3**2 - 1),
+            lambda_ce / (3**2 - 1),
             0.02200,
             0.00055,
             "Neutrino mixing local reference",
@@ -247,14 +273,14 @@ class ConstantsScorecard:
             "Primordial spectrum amplitude",
             "A_s x 10^9",
             effective_geometry_drive().as_1e9,
-            2.099,
-            0.029,
+            OBS_AS_1E9,
+            OBS_AS_SIGMA_1E9,
             "Planck 2018 ln(10^10 A_s)=3.044+/-0.014, converted to A_s x 10^9 "
             "(was previously reported with an undersized sigma=0.0034)",
             "Phenomenology",
             "Projected residual-drive readout passes; total-response raw readout is rejected.",
         )
-        n_eff = 3 * (3 + lambda_obs) * 12 / 2
+        n_eff = 3 * (3 + lambda_ce) * 12 / 2
         self.add_constant(
             "Scalar spectral index",
             "n_s",
@@ -310,20 +336,71 @@ class ConstantsScorecard:
         source: str,
         grade: str,
         notes: str = "",
+        *,
+        role: str = "Candidate",
+        scoreable: bool = True,
     ) -> None:
         self.constants.append(
-            Constant(name, symbol, ce_value, obs_value, obs_sigma, source, grade, notes)
+            Constant(
+                name=name,
+                symbol=symbol,
+                ce_value=ce_value,
+                obs_value=obs_value,
+                obs_sigma=obs_sigma,
+                source=source,
+                grade=grade,
+                notes=notes,
+                role=role,
+                scoreable=scoreable,
+            )
         )
 
     def _status_counts(self) -> dict[str, int]:
-        statuses = ["PASS", "CAUTION", "WARN", "FAIL", "EXACT", "OPEN", "TEST", "UNSCORED"]
+        statuses = [
+            "PASS",
+            "CAUTION",
+            "WARN",
+            "FAIL",
+            "EXACT",
+            "INPUT",
+            "OPEN",
+            "TEST",
+            "UNSCORED",
+        ]
         return {status: sum(1 for c in self.constants if c.status == status) for status in statuses}
+
+    def summary(self) -> dict[str, int | float | str]:
+        """Return the canonical scored denominator, counts, and aggregate status."""
+
+        counts = self._status_counts()
+        scored_total = sum(1 for constant in self.constants if constant.is_scored)
+        if counts["FAIL"]:
+            aggregate_status = "FAIL"
+        elif counts["WARN"]:
+            aggregate_status = "WARN"
+        elif counts["CAUTION"]:
+            aggregate_status = "CAUTION"
+        else:
+            aggregate_status = "PASS"
+        return {
+            "total": len(self.constants),
+            "scored_total": scored_total,
+            "passed": counts["PASS"],
+            "caution": counts["CAUTION"],
+            "warn": counts["WARN"],
+            "fail": counts["FAIL"],
+            "exact": counts["EXACT"],
+            "input": counts["INPUT"],
+            "open": counts["OPEN"],
+            "test": counts["TEST"],
+            "unscored": counts["UNSCORED"],
+            "pass_rate": 100 * counts["PASS"] / scored_total if scored_total else 0.0,
+            "status": aggregate_status,
+        }
 
     def generate_report(self) -> str:
         lines: list[str] = []
-        counts = self._status_counts()
-        scored_total = sum(1 for c in self.constants if c.is_scored)
-        pass_rate = 100 * counts["PASS"] / scored_total if scored_total else 0.0
+        summary = self.summary()
 
         lines.append("")
         lines.append("=" * 108)
@@ -331,16 +408,18 @@ class ConstantsScorecard:
         lines.append("=" * 108)
         lines.append("")
         lines.append("SUMMARY:")
-        lines.append(f"  Total entries:             {len(self.constants):3d}")
-        lines.append(f"  Scored bridge/phenom rows: {scored_total:3d}")
-        lines.append(f"  PASS (<1 sigma):           {counts['PASS']:3d}")
-        lines.append(f"  CAUTION (1-2 sigma):       {counts['CAUTION']:3d}")
-        lines.append(f"  WARN (2-3 sigma):          {counts['WARN']:3d}")
-        lines.append(f"  FAIL (>3 sigma):           {counts['FAIL']:3d}")
-        lines.append(f"  EXACT/reference rows:      {counts['EXACT']:3d}")
-        lines.append(f"  OPEN rows:                 {counts['OPEN']:3d}")
-        lines.append(f"  OPEN TEST rows:            {counts['TEST']:3d}")
-        lines.append(f"  Scored pass rate:          {pass_rate:.1f}%")
+        lines.append(f"  Total entries:             {summary['total']:3d}")
+        lines.append(f"  Scored Selection/Bridge/Phenomenology rows: {summary['scored_total']:3d}")
+        lines.append(f"  PASS (<1 sigma):           {summary['passed']:3d}")
+        lines.append(f"  CAUTION (1-2 sigma):       {summary['caution']:3d}")
+        lines.append(f"  WARN (2-3 sigma):          {summary['warn']:3d}")
+        lines.append(f"  FAIL (>3 sigma):           {summary['fail']:3d}")
+        lines.append(f"  EXACT/reference rows:      {summary['exact']:3d}")
+        lines.append(f"  INPUT/excluded rows:       {summary['input']:3d}")
+        lines.append(f"  OPEN rows:                 {summary['open']:3d}")
+        lines.append(f"  OPEN TEST rows:            {summary['test']:3d}")
+        lines.append(f"  Scored pass rate:          {summary['pass_rate']:.1f}%")
+        lines.append(f"  Aggregate status:          {summary['status']}")
         lines.append("")
         lines.append("DETAILED RESULTS:")
         lines.append("-" * 108)
@@ -379,9 +458,9 @@ class ConstantsScorecard:
             lines.append("  - None among currently scored rows.")
 
         lines.append("")
-        lines.append("OPEN / EXCLUDED FROM SCORE:")
+        lines.append("INPUT / OPEN / EXCLUDED FROM SCORE:")
         for const in self.constants:
-            if const.status in {"OPEN", "TEST"}:
+            if const.status in {"INPUT", "OPEN", "TEST"}:
                 lines.append(f"  - {const.name}: {const.notes}")
 
         lines.append("")
@@ -392,13 +471,16 @@ class ConstantsScorecard:
     def save_json(self, filepath: str) -> None:
         data = {
             "timestamp": str(np.datetime64("now")),
-            "summary": self._status_counts(),
+            "summary": self.summary(),
             "constants": [
                 {
                     "name": c.name,
                     "symbol": c.symbol,
                     "grade": c.grade,
+                    "role": c.role,
                     "status": c.status,
+                    "scoreable": c.scoreable,
+                    "is_scored": c.is_scored,
                     "ce_value": float(c.ce_value),
                     "obs_value": None if c.obs_value is None else float(c.obs_value),
                     "obs_sigma": None if c.obs_sigma is None else float(c.obs_sigma),
