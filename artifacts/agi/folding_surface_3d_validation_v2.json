@@ -1,0 +1,72 @@
+{
+  "experiment": "folding_surface_3d_v2",
+  "split": "validation",
+  "status": "PASS",
+  "checks": {
+    "null_guard": true,
+    "coefficient_recovery": true,
+    "surface_improvement": true,
+    "ridge_improvement": true,
+    "rotation_equivariance": true,
+    "no_external_data": true,
+    "runtime": true
+  },
+  "summary": {
+    "null_selected_coefficient": 0.0,
+    "selected_coefficient": 0.8,
+    "baseline_rmse": 0.000499202792727323,
+    "candidate_rmse": 4.296963101339073e-05,
+    "baseline_ridge_iou": 0.9083859839993442,
+    "candidate_ridge_iou": 0.9898015355642474,
+    "rotation_equivariance_rmse": 1.8684924809088877e-18,
+    "rmse_reduction": 0.9139234963437759,
+    "ridge_iou_gain": 0.08141555156490321,
+    "ridge_mismatch_reduction": 0.8886800854175024
+  },
+  "per_seed": [
+    {
+      "seed": 71000,
+      "baseline_rmse": 0.0004242771978683167,
+      "candidate_rmse": 4.545500782131112e-05,
+      "baseline_ridge_iou": 0.9495798319327731,
+      "candidate_ridge_iou": 1.0,
+      "rotation_equivariance_rmse": 1.8857347507813185e-18
+    },
+    {
+      "seed": 71001,
+      "baseline_rmse": 0.00044705446343235933,
+      "candidate_rmse": 3.7339093283489876e-05,
+      "baseline_ridge_iou": 0.9016393442622951,
+      "candidate_ridge_iou": 1.0,
+      "rotation_equivariance_rmse": 1.8704545803061284e-18
+    },
+    {
+      "seed": 71002,
+      "baseline_rmse": 0.0005187803074819813,
+      "candidate_rmse": 5.29592600489331e-05,
+      "baseline_ridge_iou": 0.9173553719008265,
+      "candidate_ridge_iou": 0.9661016949152542,
+      "rotation_equivariance_rmse": 2.422269514266737e-18
+    },
+    {
+      "seed": 71003,
+      "baseline_rmse": 0.0005059982318768124,
+      "candidate_rmse": 4.3440123899141615e-05,
+      "baseline_ridge_iou": 0.9173553719008265,
+      "candidate_ridge_iou": 0.9829059829059829,
+      "rotation_equivariance_rmse": 1.6395165919413287e-18
+    },
+    {
+      "seed": 71004,
+      "baseline_rmse": 0.0005999037629771456,
+      "candidate_rmse": 3.565467001407795e-05,
+      "baseline_ridge_iou": 0.856,
+      "candidate_ridge_iou": 1.0,
+      "rotation_equivariance_rmse": 1.5244869672489256e-18
+    }
+  ],
+  "resource_usage": {
+    "external_download_bytes": 0,
+    "elapsed_seconds": 9.899449200369418
+  }
+}

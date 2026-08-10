@@ -1,0 +1,143 @@
+{
+  "experiment": "fault_ood_calibration_v6",
+  "split": "validation",
+  "seeds": [
+    44000,
+    44001,
+    44002,
+    44003,
+    44004
+  ],
+  "status": "PASS",
+  "checks": {
+    "brier_improves": true,
+    "calibrated": true,
+    "selective_safety": true,
+    "useful_coverage": true,
+    "safer_than_baseline": true,
+    "no_external_data": true,
+    "runtime": true
+  },
+  "summary": {
+    "baseline": {
+      "brier": 0.07639303721657102,
+      "ece": 0.046080111348934936,
+      "threshold": 0.040612515655228415,
+      "coverage": 0.7002666666666666,
+      "accepted_violation_rate": 0.024297405755788544,
+      "prevalence": 0.10243333333333333
+    },
+    "candidate": {
+      "brier": 0.06545162336397324,
+      "ece": 0.06502655869185395,
+      "threshold": 0.05270834358593832,
+      "coverage": 0.47503333333333336,
+      "accepted_violation_rate": 0.011644642584975148,
+      "prevalence": 0.10243333333333333,
+      "worst_seed_accepted_violation_rate": 0.0183460344340954,
+      "minimum_seed_coverage": 0.3605
+    }
+  },
+  "per_seed": [
+    {
+      "seed": 44000,
+      "baseline": {
+        "brier": 0.08104983661033037,
+        "ece": 0.05064088404526777,
+        "threshold": 0.025060152761007842,
+        "coverage": 0.6665,
+        "accepted_violation_rate": 0.024506126531632907,
+        "prevalence": 0.1095
+      },
+      "candidate": {
+        "brier": 0.0670060446529456,
+        "ece": 0.058394109944115494,
+        "threshold": 0.04595152793357356,
+        "coverage": 0.48433333333333334,
+        "accepted_violation_rate": 0.012732278045423262,
+        "prevalence": 0.1095
+      }
+    },
+    {
+      "seed": 44001,
+      "baseline": {
+        "brier": 0.07585036873252812,
+        "ece": 0.04284430288672357,
+        "threshold": 0.05921913476509531,
+        "coverage": 0.7648333333333334,
+        "accepted_violation_rate": 0.02920026149487906,
+        "prevalence": 0.10366666666666667
+      },
+      "candidate": {
+        "brier": 0.07097981831595654,
+        "ece": 0.08281379054793747,
+        "threshold": 0.08582048490988319,
+        "coverage": 0.576,
+        "accepted_violation_rate": 0.015625,
+        "prevalence": 0.10366666666666667
+      }
+    },
+    {
+      "seed": 44002,
+      "baseline": {
+        "brier": 0.07377780183664168,
+        "ece": 0.045705241528702464,
+        "threshold": 0.019739265957981873,
+        "coverage": 0.5893333333333334,
+        "accepted_violation_rate": 0.010463800904977375,
+        "prevalence": 0.09783333333333333
+      },
+      "candidate": {
+        "brier": 0.06052184001587646,
+        "ece": 0.059993667156535396,
+        "threshold": 0.029170549421054272,
+        "coverage": 0.36383333333333334,
+        "accepted_violation_rate": 0.004122766834631242,
+        "prevalence": 0.09783333333333333
+      }
+    },
+    {
+      "seed": 44003,
+      "baseline": {
+        "brier": 0.07654573237913055,
+        "ece": 0.0463196713544549,
+        "threshold": 0.07036234097027756,
+        "coverage": 0.793,
+        "accepted_violation_rate": 0.03720050441361917,
+        "prevalence": 0.10183333333333333
+      },
+      "candidate": {
+        "brier": 0.064693762684349,
+        "ece": 0.05862931100264585,
+        "threshold": 0.0751478747464388,
+        "coverage": 0.5905,
+        "accepted_violation_rate": 0.0183460344340954,
+        "prevalence": 0.10183333333333333
+      }
+    },
+    {
+      "seed": 44004,
+      "baseline": {
+        "brier": 0.0747414465242244,
+        "ece": 0.044890456929525965,
+        "threshold": 0.02868168382177947,
+        "coverage": 0.6876666666666666,
+        "accepted_violation_rate": 0.02011633543383422,
+        "prevalence": 0.09933333333333333
+      },
+      "candidate": {
+        "brier": 0.0640566511507386,
+        "ece": 0.06530191480803552,
+        "threshold": 0.02745128091874178,
+        "coverage": 0.3605,
+        "accepted_violation_rate": 0.007397133610725843,
+        "prevalence": 0.09933333333333333
+      }
+    }
+  ],
+  "resource_usage": {
+    "external_download_bytes": 0,
+    "elapsed_seconds": 1.2590447003021836
+  },
+  "config": "experiments\\preregistration\\fault_ood_calibration_v6.json"
+}

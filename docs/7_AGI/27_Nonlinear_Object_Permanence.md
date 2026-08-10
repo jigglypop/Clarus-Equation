@@ -1,6 +1,6 @@
 # 비선형 물체 영속성 G2--G3 사전등록
 
-> 상태: `PRE-IMPLEMENTATION / LOCKED V1`
+> 상태: `IMPLEMENTED / LOCKED V1 / G2 PASS / G3 PASS`
 >
 > 상위 로드맵: `8_Roadmap.md`
 >
@@ -130,3 +130,26 @@ report = evaluate_object_permanence(model, test_episodes)
 - 5개 seed의 G2/G3 결과와 CI 저장
 - 기존 G1 및 리만 톱니 회귀 테스트 유지
 - 문서의 수치와 생성된 JSON의 수치 자동 대조
+
+## 10. V1 실행 결과
+
+실행 환경은 NumPy만 사용했고 외부 다운로드는 0 byte, 학습 궤적 파일 저장은 0개다. train 20개, ID test 5개, 장기 가림 OOD 5개, 조합 OOD 5개 episode만 메모리에서 생성했다.
+
+| 측정 | 결과 |
+|---|---:|
+| local-chart 20-step ID RMSE | `3.75e-17` |
+| local-chart 100-step ID RMSE | `1.42e-16` |
+| global-linear 100-step ID RMSE | `9.30e-2` |
+| monolithic 100-step ID RMSE | `1.66e-1` |
+| 장기 가림 hidden RMSE | `3.00e-17` |
+| 장기 가림 재등장 위치 오차 | `2.03e-17` |
+| monolithic 대비 seed 승리 | `5/5` |
+| G2 / G3 | `PASS / PASS` |
+
+보고서는 `artifacts/agi/nonlinear_object_permanence_report.json`에 저장한다.
+
+### 10.1 해석 한계
+
+local-chart는 환경을 생성한 비선형력과 같은 함수족, 같은 semi-implicit Euler, 같은 일반 충돌 규칙을 사용한다. 따라서 거의 기계정밀도인 오차는 “숨은 법칙을 일반적으로 발견했다”는 뜻이 아니라, 제한된 모델족에서 관측만으로 세 물리계수를 정확히 식별하고 가림 동안 상태를 전파했다는 뜻이다.
+
+또한 V1의 appearance는 객체마다 고유하므로 identity switch 0은 어려운 재식별 문제가 아니다. G3를 강하게 만들려면 다음 버전에서 동일ㆍ유사 appearance, 관측잡음, 충돌 밀도 증가, 미지의 힘 함수족을 추가해야 한다. 이 한계를 숨기지 않고 G4 능동 지각으로 넘어간다.

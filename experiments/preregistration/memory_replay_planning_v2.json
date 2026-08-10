@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-10",
+  "supersedes": "memory_replay_planning_v1",
+  "extends": "memory_replay_planning_v1.json",
+  "change_reason": "V1 action effect was below action penalty and ignored registered split seeds",
+  "experiment": "memory_replay_planning_v2",
+  "overrides": {"macro_horizon": 10, "action_values": [-1.0, 0.0, 1.0]}
+}

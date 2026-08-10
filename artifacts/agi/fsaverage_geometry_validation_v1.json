@@ -1,0 +1,9 @@
+{
+  "experiment": "fsaverage_geometry_v1",
+  "split": "validation",
+  "status": "FAIL",
+  "stage": "source_parser",
+  "error": "zlib.error: incorrect header check",
+  "cause": "GIFTI GZipBase64Binary payload used a zlib stream without a gzip wrapper",
+  "prediction_gate_executed": false
+}

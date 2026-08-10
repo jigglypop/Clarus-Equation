@@ -60,5 +60,5 @@ def test_human_spec_points_to_the_machine_readable_contract() -> None:
     spec = SPEC_PATH.read_text(encoding="utf-8")
 
     assert "nonlinear_object_permanence_v1.json" in spec
-    assert "PRE-IMPLEMENTATION / LOCKED V1" in spec
+    assert "LOCKED V1 / G2 PASS / G3 PASS" in spec
     assert "test를 보고 임계값" in spec

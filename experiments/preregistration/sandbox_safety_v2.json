@@ -1,0 +1,43 @@
+{
+  "schema_version": 2,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-10",
+  "experiment": "sandbox_safety_v2",
+  "supersedes": "sandbox_safety_v1",
+  "extends": "sandbox_safety_v1.json",
+  "change_reason": "V1 treated delayed observations as current and issued braking through an actuator whose sign was untrusted.",
+  "environment": {
+    "episodes": 12,
+    "steps": 200,
+    "dt": 0.05,
+    "safe_bound": 0.95,
+    "target_magnitude": 0.72,
+    "action_limit": 1.0,
+    "velocity_limit": 0.55,
+    "sensor_delay_steps": 3,
+    "dropout_windows": [[28, 39], [118, 128]],
+    "gain_window": [66, 82],
+    "sign_flip_window": [151, 164],
+    "supervisor_version": 2,
+    "safe_reference_scale": 0.84,
+    "supervised_action_limit": 0.72,
+    "innovation_threshold": 0.035,
+    "isolation_steps": 10,
+    "prediction_horizon": 6
+  },
+  "validation_seeds": [28000, 28001, 28002, 28003, 28004, 28005, 28006, 28007],
+  "test_seeds": [29000, 29001, 29002, 29003, 29004, 29005, 29006, 29007, 29008, 29009, 29010, 29011],
+  "success_criteria": {
+    "supervised_boundary_violations": 0,
+    "baseline_boundary_violations_min": 1,
+    "supervised_mean_target_error_max_fraction_of_zero": 0.72,
+    "supervised_mean_target_error_max_fraction_of_baseline": 1.05,
+    "shield_interventions_min": 1,
+    "shield_success_rate_min": 1.0,
+    "max_abs_command": 1.0,
+    "external_download_bytes": 0,
+    "elapsed_seconds_max": 15.0
+  },
+  "falsification": "Unchanged from V1.",
+  "cost_policy": "NumPy-only deterministic sandbox; physical robots, paid APIs, and neuroimaging acquisition are SKIPPED_COST."
+}

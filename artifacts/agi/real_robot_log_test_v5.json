@@ -1,0 +1,88 @@
+{
+  "experiment": "real_robot_log_v5",
+  "split": "test",
+  "status": "PASS",
+  "checks": {
+    "source_integrity": true,
+    "candidate_accuracy": true,
+    "accuracy_gain": true,
+    "selective_error": true,
+    "useful_coverage": true,
+    "download_budget": true,
+    "runtime": true
+  },
+  "summary": {
+    "baseline_accuracy": 0.618916797488226,
+    "candidate_accuracy": 0.7038199895342753,
+    "accepted_error_rate": 0.12804878048780488,
+    "coverage": 0.30036630036630035,
+    "accuracy_gain": 0.08490319204604924
+  },
+  "per_seed": [
+    {
+      "seed": 57000,
+      "baseline_accuracy": 0.6208791208791209,
+      "candidate_accuracy": 0.706959706959707,
+      "accepted_error_rate": 0.13109756097560976,
+      "coverage": 0.30036630036630035
+    },
+    {
+      "seed": 57001,
+      "baseline_accuracy": 0.6327838827838828,
+      "candidate_accuracy": 0.7042124542124543,
+      "accepted_error_rate": 0.11585365853658537,
+      "coverage": 0.30036630036630035
+    },
+    {
+      "seed": 57002,
+      "baseline_accuracy": 0.6053113553113553,
+      "candidate_accuracy": 0.7142857142857143,
+      "accepted_error_rate": 0.10365853658536585,
+      "coverage": 0.30036630036630035
+    },
+    {
+      "seed": 57003,
+      "baseline_accuracy": 0.61996336996337,
+      "candidate_accuracy": 0.7023809523809523,
+      "accepted_error_rate": 0.11890243902439024,
+      "coverage": 0.30036630036630035
+    },
+    {
+      "seed": 57004,
+      "baseline_accuracy": 0.6272893772893773,
+      "candidate_accuracy": 0.7005494505494505,
+      "accepted_error_rate": 0.11585365853658537,
+      "coverage": 0.30036630036630035
+    },
+    {
+      "seed": 57005,
+      "baseline_accuracy": 0.6163003663003663,
+      "candidate_accuracy": 0.6941391941391941,
+      "accepted_error_rate": 0.17073170731707318,
+      "coverage": 0.30036630036630035
+    },
+    {
+      "seed": 57006,
+      "baseline_accuracy": 0.6098901098901099,
+      "candidate_accuracy": 0.7042124542124543,
+      "accepted_error_rate": 0.1402439024390244,
+      "coverage": 0.30036630036630035
+    }
+  ],
+  "source": {
+    "dataset": "UCI Wall-Following Robot Navigation Data",
+    "doi": "10.24432/C57C8W",
+    "license": "CC BY 4.0",
+    "url": "https://archive.ics.uci.edu/static/public/194/wall%2Bfollowing%2Brobot%2Bnavigation%2Bdata.zip",
+    "relative_path": "data/public/uci_wall_following/sensor_readings_24.data",
+    "sha256": "6e9728dedef8b35e31ba0be11aea85aa53bd248ab33652777df81b95a4cc8c00",
+    "bytes": 875878,
+    "rows": 5456,
+    "channels": 24,
+    "sampling_hz": 9
+  },
+  "resource_usage": {
+    "elapsed_seconds": 12.026653700042516,
+    "downloaded_bytes": 954168
+  }
+}

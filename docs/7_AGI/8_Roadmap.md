@@ -35,7 +35,7 @@
 | B. 뇌 | 주름ㆍ연결ㆍ기능의 관계가 시간 선행성과 홀드아웃 예측력을 갖는가? | 공개 영상 -> 종단 자료 -> 생물 개입 |
 | C. 통합ㆍ안전 | 모듈을 통합해도 안정성ㆍ감사 가능성ㆍ성능이 유지되는가? | sandbox -> 제한 행동 -> 실제 환경 |
 
-현재 위치는 `G1 완료`다. 선형 부분관측계에서 상태복원, 행동 포함 전이, 반사실 개입, 한 단계 계획, chart holonomy를 수학과 코드로 확인했다. 다음 병목은 `G2 비선형 장기 예측`과 `G3 물체 영속성`이다.
+현재 위치는 `G1--G8 및 G9-S/G9-3D 완료`다. G8-R V5는 실제 SCITOS 로그에서 행동 복원을 8.49%p 개선했다. G9-S V3는 1D null/대안 식별을 통과했고, G9-3D V2는 방향성 성장 텐서의 3D 높이 표면에서 RMSE 91.6%, ridge mismatch 89.3% 감소와 90도 회전 equivariance를 확인했다. G9 결과는 합성 식별성과 형상화이며 생물학적 뇌 주름 증거가 아니다.
 
 ## 2. 의존성
 
@@ -64,14 +64,16 @@ G9는 A 트랙의 성공으로 자동 통과하지 않는다. 계산 모델과 �
 |---|---|---|---|
 | G0 | 수학적 일관성ㆍ유한계 정리 | 완료 | 코드 대응 |
 | G1 | 선형 상태복원ㆍ인과ㆍ계획 | 완료 | 재현 테스트 유지 |
-| G2 | 비선형 1/5/20/100-step rollout | 준비 | 단일 MLPㆍ선형ㆍ지속성 기준선 우위 |
-| G3 | 가림 중 상태ㆍ정체성ㆍ재등장 예측 | 준비 | 학습보다 긴 가림의 홀드아웃 통과 |
-| G4 | 정보이득을 위한 감각 행동 | 대기 | 고정ㆍ무작위 시선보다 낮은 비용 |
-| G5 | 새 객체 수ㆍ속성ㆍ법칙ㆍ목표 | 대기 | 개입 관계와 성능 동시 보존 |
-| G6 | chart 생성ㆍ전이ㆍ복구 | 대기 | 단일 모델 ablation 우위, 오류 국소화 |
-| G7 | 기억ㆍ재생ㆍ장기 계획 | 대기 | 망각과 장기 regret 동시 감소 |
-| G8 | 실제 센서ㆍ제한 로봇 | 대기 | sandbox 안전 게이트 통과 |
+| G2 | 비선형 1/5/20/100-step rollout | V1 완료 | 더 넓은 함수족ㆍ잡음에서 재검증 |
+| G3 | 가림 중 상태ㆍ정체성ㆍ재등장 예측 | V1 완료 | 모호한 외형ㆍidentity 교란 추가 |
+| G4 | 정보이득을 위한 감각 행동 | V3 완료 | 더 넓은 교란에서 margin 재검증 |
+| G5 | 새 객체 수ㆍ속성ㆍ법칙ㆍ목표 | V6 완료 | 미지 basis에서 재검증 |
+| G6 | chart 생성ㆍ전이ㆍ복구 | V3 완료 | 연속 regime에서 재검증 |
+| G7 | 기억ㆍ재생ㆍ장기 계획 | V4 완료 | 실제 과제에서는 재검증 필요 |
+| G8 | 실제 센서ㆍ제한 로봇 | G8-S V4ㆍG8-C V7ㆍG8-R V5 완료; 실장비 대기 | 다른 로봇/환경 holdout 또는 replay 폐루프 |
 | G9 | 주름ㆍ연결ㆍ기능 대응 | 병렬 준비 | 기계적 성장모델 대비 홀드아웃 증분 |
+| G9-S | 합성 differential-growth null | V3 완료 | 실제 MRI 없이 식별성만 확인; 공개 요약통계 연결 필요 |
+| G9-3D | 방향성 성장 텐서 표면 | V2 완료 | OBJ 형상화; 실제 cortical mesh와 미대조 |
 | G10 | 타 에이전트ㆍ언어 인터페이스 | 대기 | 체계적 일반화와 믿음 추적 |
 | G11 | 광범위 일반지능 평가 | 미정 | 독립 평가 전에는 AGI 명칭 금지 |
 
@@ -79,21 +81,21 @@ G9는 A 트랙의 성공으로 자동 통과하지 않는다. 계산 모델과 �
 
 ### A1. G2--G3: 비선형 물체 영속성
 
-첫 환경은 외부 게임엔진 없이 재현 가능한 NumPy 2차원 다중물체 세계로 고정한다. 상태에는 물체별 위치ㆍ속도ㆍ반지름ㆍ질량ㆍ정체성이 있고, 관측에는 가림 마스크와 ego/action copy가 포함된다. 충돌, 벽 반사, 마찰, 약한 비선형 위치 의존력이 존재한다.
+첫 환경은 외부 게임엔진 없이 재현 가능한 NumPy 2차원 다중물체 세계로 구현했다. 상태에는 물체별 위치ㆍ속도ㆍ반지름ㆍ질량ㆍ정체성이 있고, 관측에는 가림 마스크와 action이 포함된다. 충돌, 벽 반사, 마찰, 약한 비선형 위치 의존력이 존재한다.
 
 필수 비교군은 `persistence`, `global linear`, `small monolithic nonlinear`, `local-chart nonlinear` 네 개다. 데이터 분할은 시간뿐 아니라 seed, 물체 수, 가림 길이, 물리 파라미터를 분리한다. 상세 수치와 실패 규칙은 27장에 고정한다.
 
 산출물:
 
-- `reality_stone/python/reality_stone/clarus/nonlinear_object_world.py`
-- `examples/agi/nonlinear_object_permanence_gate.py`
-- `tests/test_nonlinear_object_world.py`
-- `artifacts/agi/nonlinear_object_permanence_report.json`
+- `reality_stone/python/reality_stone/clarus/nonlinear_object_world.py` (완료)
+- `examples/agi/nonlinear_object_permanence_gate.py` (완료)
+- `tests/test_nonlinear_object_world.py` (완료)
+- `artifacts/agi/nonlinear_object_permanence_report.json` (완료)
 - 선택적 대용량 궤적은 Git에 넣지 않고 재생성 명령만 기록
 
 ### A2. G4: 능동 지각
 
-G3 모델에 이동 가능한 시선 또는 센서를 추가한다. 목적함수는 과제 비용, 상태 불확실성, 행동 비용을 함께 포함한다. 고정 시선과 무작위 탐색보다 더 적은 관측 비용으로 숨은 상태를 식별해야 한다.
+G3 모델에 제한된 추가 센서를 구현했다. V1은 동일 공분산과 `3/5` seed 문제로 실패했고, V2는 질량 보정 후 validation을 통과했지만 locked test에서 다시 `3/5`로 실패했다. V3는 새 seed와 paired expected-cost 판정으로 바꾸어 test 20개에서 random 대비 비용 11.4% 감소, 95% 하한 양수로 통과했다. 상세 실패ㆍ수식 변경은 `28_Active_Perception_G4.md`에 보존한다.
 
 ### A3. G5: 인과ㆍ조합 OOD
 
@@ -173,16 +175,22 @@ chart 수, 담당 영역, 전이함수, 결합 강도를 학습 대상으로 바
 
 | 순서 | 작업 | 완료 정의 |
 |---|---|---|
-| 1 | G2--G3 명세 고정 | 27장과 기계 판독 설정 일치 |
-| 2 | 환경ㆍoracle 구현 | 에너지/충돌 불변량과 seed 재현 테스트 |
-| 3 | 기준선 구현 | persistenceㆍlinearㆍmonolithic 결과 저장 |
-| 4 | local-chart 모델 | 동일 데이터ㆍ예산에서 비교 가능 |
-| 5 | 홀드아웃 gate | 5개 이상 seed, CI와 실패 원인 기록 |
-| 6 | G4 능동 지각 | 정보이득 ablation 통과 |
-| 7 | dHCP/HCP 파이프라인 | 데이터 사전ㆍ파생값ㆍQC 보고서 |
-| 8 | G5--G7 확장 | 각 gate 독립 통과 후 통합 |
+| 1 | G2--G3 명세 고정 | 완료 |
+| 2 | 환경ㆍoracle 구현 | 완료: seedㆍ가림ㆍ수치 테스트 |
+| 3 | 기준선 구현 | 완료: persistenceㆍlinearㆍmonolithic |
+| 4 | local-chart 모델 | 완료: 같은 관측ㆍaction 사용 |
+| 5 | 홀드아웃 gate | 완료: IDㆍ장기가림ㆍ조합 OOD 각 5 seed |
+| 6 | G4 능동 지각 | 완료: V1/V2 실패 보존, V3 locked test 통과 |
+| 7 | G5 인과ㆍ조합 OOD | 완료: V1--V5 실패 보존, V6 locked test 통과 |
+| 8 | 공개 뇌자료 파이프라인 | 비용ㆍ접근성 확인 후 별도 착수 |
+| 9 | G6--G7 확장 | 완료: G6 V3, G7 V4 locked test 통과 |
+| 10 | G8-S 결함주입 안전 sandbox | 완료: V1/V2 실패, V3 판정결함 감사, V4 강화 test 통과 |
+| 11 | G8-C 결함 OOD calibration | 완료: V1--V6 한계 보존, V7 seed별 Wilson locked test 통과 |
+| 12 | G8-R 실제 공개 센서 로그 | 완료: V1--V4 실패 보존, V5 시간순 locked test 통과 |
+| 13 | G9-S 합성 주름ㆍ꼬임 식별 | 완료: V1/V2 실패 보존, V3 null+대안 locked test 통과 |
+| 14 | G9-3D 리만 성장 표면 | 완료: V1 실패 보존, V2 회전-equivariant locked testㆍOBJ 통과 |
 
-현재 허용된 구현 범위는 1~5다. G4 이후 코드는 앞 단계가 실패해도 자동 착수하지 않는다.
+현재 다음 구현 범위는 G9-3D를 무료 논문 요약통계ㆍ소형 cortical surface 파생치와 대조하는 것이다. 유료ㆍ대용량 뇌 영상, 실제 로봇 운용, 충돌 실험은 계속 `SKIPPED_COST`다.
 
 ## 9. 저장소와 산출물 정책
 

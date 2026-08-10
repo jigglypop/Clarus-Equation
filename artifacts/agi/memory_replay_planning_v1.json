@@ -1,0 +1,20 @@
+{
+  "experiment": "memory_replay_planning_v1",
+  "config_sha256": "ddd42d91056f711b6a9eca0007e65b7bb5e9af957ad19ce2f9b02869630f2e66",
+  "memory_items": 3,
+  "prototype_bytes": 120,
+  "recall_accuracy": 1.0,
+  "priority_rare_error": 0.02661272568943418,
+  "recency_rare_error": 0.834380497363745,
+  "planning_cost": 33.22823653443201,
+  "recency_planning_cost": 33.22823653443201,
+  "zero_action_cost": 33.22823653443201,
+  "reservoir_items": 3,
+  "resource_usage": {
+    "external_download_bytes": 0,
+    "trajectory_files_written": 0,
+    "elapsed_wall_seconds": 0.02151989983394742
+  },
+  "performance_passed": false,
+  "passed": false
+}

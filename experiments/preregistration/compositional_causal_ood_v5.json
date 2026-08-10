@@ -1,0 +1,10 @@
+{
+  "schema_version": 5,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-10",
+  "supersedes": "compositional_causal_ood_v4",
+  "extends": "compositional_causal_ood_v4.json",
+  "change_reason": "V4 scalar trimming broke 2D force-vector structure; V5 trims whole transition residuals",
+  "experiment": "compositional_causal_ood_v5",
+  "overrides": {"robust_group_trim": true}
+}

@@ -1,0 +1,50 @@
+{
+  "experiment": "sandbox_safety_v3",
+  "split": "test",
+  "seeds": [
+    31000,
+    31001,
+    31002,
+    31003,
+    31004,
+    31005,
+    31006,
+    31007,
+    31008,
+    31009,
+    31010,
+    31011
+  ],
+  "status": "PASS",
+  "checks": {
+    "zero_supervised_violations": true,
+    "baseline_exposes_hazard": true,
+    "useful_vs_zero": true,
+    "competitive_vs_baseline": true,
+    "shield_was_exercised": true,
+    "shield_success": true,
+    "command_saturated": true,
+    "no_external_data": true,
+    "runtime": true
+  },
+  "metrics": {
+    "supervised_boundary_violations": 0,
+    "baseline_boundary_violations": 630,
+    "supervised_mean_target_error": 0.45857948875777493,
+    "baseline_mean_target_error": 0.4803194096154728,
+    "zero_action_mean_target_error": 0.719999999999999,
+    "shield_interventions": 894,
+    "shield_success_rate": 1.0,
+    "max_abs_command": 1.0
+  },
+  "resource_usage": {
+    "external_download_bytes": 0,
+    "elapsed_seconds": 0.1098110000602901
+  },
+  "skipped_cost": [
+    "physical_robot",
+    "paid_api",
+    "new_neuroimaging"
+  ],
+  "config": "experiments\\preregistration\\sandbox_safety_v3.json"
+}

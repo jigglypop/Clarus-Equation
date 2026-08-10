@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-10",
+  "experiment": "folding_surface_3d_v1",
+  "claim": "An anisotropic local growth tensor is identifiable in a 3D height surface beyond scalar differential growth and the solver is equivariant to 90-degree coordinate rotation.",
+  "simulation": {
+    "size": 24, "steps": 900, "dt": 0.008,
+    "bending": 0.7, "foundation": 0.035, "quartic": 0.7,
+    "base_growth": 0.68, "scalar_growth_scale": 0.14,
+    "tensor_scale": 0.16, "true_tensor_coefficient": 0.8, "hidden_tensor_scale": 0.025,
+    "candidate_coefficients": [0.0, 0.4, 0.8, 1.2]
+  },
+  "training_seeds": [67000, 67001, 67002, 67003],
+  "validation_seeds": [68000, 68001, 68002, 68003, 68004],
+  "test_seeds": [69000, 69001, 69002, 69003, 69004, 69005, 69006],
+  "success_criteria": {
+    "null_selected_coefficient_abs_max": 0.0,
+    "alternative_selected_coefficient_error_max": 0.01,
+    "surface_rmse_reduction_min": 0.3,
+    "ridge_iou_gain_min": 0.1,
+    "rotation_equivariance_rmse_max": 1e-10,
+    "external_download_bytes": 0,
+    "elapsed_seconds_max": 15.0
+  },
+  "falsification": "Null false selection, coefficient/profile/ridge failure, coordinate-axis dependence, or resource failure falsifies V1.",
+  "scope_limit": "Synthetic periodic height surface and OBJ visualization only; not a cortical anatomy reconstruction."
+}

@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-10",
+  "supersedes": "adaptive_chart_topology_v1",
+  "extends": "adaptive_chart_topology_v1.json",
+  "change_reason": "V1 created duplicate B charts at normalized distance 0.71 while A-B separation exceeded 2",
+  "experiment": "adaptive_chart_topology_v2",
+  "overrides": {"merge_threshold": 0.75}
+}

@@ -1,0 +1,38 @@
+{
+  "schema_version": 4,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-10",
+  "experiment": "fault_ood_calibration_v4",
+  "supersedes": "fault_ood_calibration_v3",
+  "extends": "fault_ood_calibration_v3.json",
+  "change_reason": "V3 interactions worsened validation Brier; V4 returns to the simpler model and broadens low-cost domain randomization while retaining a strictly harder OOD test.",
+  "model": {"class_weighted": false, "candidate_feature_version": 1, "l2": 0.0002, "iterations": 1400},
+  "data": {
+    "train_samples": 7000,
+    "calibration_samples": 3000,
+    "test_samples": 6000,
+    "horizon": 8,
+    "dt": 0.05,
+    "safe_bound": 1.0,
+    "train_gain_range": [0.8, 3.2],
+    "test_gain_range": [3.2, 4.2],
+    "train_delay_range": [0, 6],
+    "test_delay_range": [6, 9],
+    "train_flip_probability": 0.15,
+    "test_flip_probability": 0.25
+  },
+  "validation_seeds": [40000, 40001, 40002, 40003, 40004],
+  "test_seeds": [41000, 41001, 41002, 41003, 41004, 41005, 41006],
+  "success_criteria": {
+    "candidate_brier_max_fraction_of_baseline": 0.9,
+    "candidate_ece_max": 0.08,
+    "accepted_violation_rate_max": 0.02,
+    "accepted_coverage_min": 0.25,
+    "accepted_violation_rate_max_fraction_of_baseline": 0.75,
+    "external_download_bytes": 0,
+    "elapsed_seconds_max": 15.0
+  },
+  "threshold_rule": "Unchanged from V1.",
+  "falsification": "Unchanged from V1.",
+  "cost_policy": "Synthetic NumPy-only windows; hardware and paid data are SKIPPED_COST."
+}

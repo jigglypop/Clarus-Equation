@@ -1,0 +1,74 @@
+{
+  "experiment": "real_robot_log_v4",
+  "split": "validation",
+  "status": "PASS",
+  "checks": {
+    "source_integrity": true,
+    "candidate_accuracy": true,
+    "accuracy_gain": true,
+    "selective_error": true,
+    "useful_coverage": true,
+    "download_budget": true,
+    "runtime": true
+  },
+  "summary": {
+    "baseline_accuracy": 0.6820512820512821,
+    "candidate_accuracy": 0.7443223443223443,
+    "accepted_error_rate": 0.13479853479853482,
+    "coverage": 0.5,
+    "accuracy_gain": 0.06227106227106227
+  },
+  "per_seed": [
+    {
+      "seed": 54000,
+      "baseline_accuracy": 0.6886446886446886,
+      "candidate_accuracy": 0.73992673992674,
+      "accepted_error_rate": 0.15018315018315018,
+      "coverage": 0.5
+    },
+    {
+      "seed": 54001,
+      "baseline_accuracy": 0.6978021978021978,
+      "candidate_accuracy": 0.7362637362637363,
+      "accepted_error_rate": 0.13186813186813187,
+      "coverage": 0.5
+    },
+    {
+      "seed": 54002,
+      "baseline_accuracy": 0.6666666666666666,
+      "candidate_accuracy": 0.7380952380952381,
+      "accepted_error_rate": 0.13186813186813187,
+      "coverage": 0.5
+    },
+    {
+      "seed": 54003,
+      "baseline_accuracy": 0.6941391941391941,
+      "candidate_accuracy": 0.7564102564102564,
+      "accepted_error_rate": 0.1391941391941392,
+      "coverage": 0.5
+    },
+    {
+      "seed": 54004,
+      "baseline_accuracy": 0.663003663003663,
+      "candidate_accuracy": 0.7509157509157509,
+      "accepted_error_rate": 0.12087912087912088,
+      "coverage": 0.5
+    }
+  ],
+  "source": {
+    "dataset": "UCI Wall-Following Robot Navigation Data",
+    "doi": "10.24432/C57C8W",
+    "license": "CC BY 4.0",
+    "url": "https://archive.ics.uci.edu/static/public/194/wall%2Bfollowing%2Brobot%2Bnavigation%2Bdata.zip",
+    "relative_path": "data/public/uci_wall_following/sensor_readings_24.data",
+    "sha256": "6e9728dedef8b35e31ba0be11aea85aa53bd248ab33652777df81b95a4cc8c00",
+    "bytes": 875878,
+    "rows": 5456,
+    "channels": 24,
+    "sampling_hz": 9
+  },
+  "resource_usage": {
+    "elapsed_seconds": 4.955229300074279,
+    "downloaded_bytes": 954168
+  }
+}

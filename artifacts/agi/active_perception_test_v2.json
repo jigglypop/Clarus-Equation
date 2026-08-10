@@ -1,0 +1,79 @@
+{
+  "experiment": "active_perception_v2",
+  "split": "test",
+  "config_sha256": "6e46c935ea56e8425453f2124395339df9a5c9fa5945d09c821889f385544587",
+  "resource_usage": {
+    "external_download_bytes": 0,
+    "backend": "numpy",
+    "training_episodes": 20,
+    "evaluation_episodes": 5,
+    "trajectory_files_written": 0,
+    "elapsed_cpu_wall_seconds": 0.5110326004214585
+  },
+  "policies": {
+    "no_sensor": {
+      "mean_cost": 0.0003234276427471523,
+      "mean_task_loss": 0.0003234276427471523,
+      "mean_query_rate": 0.0,
+      "seed_costs": [
+        0.00013744736244210594,
+        0.0003252087929381485,
+        0.0003893540634881975,
+        0.00021488368522501466,
+        0.0005502443096422948
+      ]
+    },
+    "fixed_round_robin": {
+      "mean_cost": 0.00019289720931149276,
+      "mean_task_loss": 0.00019089720931149274,
+      "mean_query_rate": 0.2,
+      "seed_costs": [
+        0.00010850305888967454,
+        0.0001512830068330889,
+        0.00015614878427618292,
+        9.962402008046482e-05,
+        0.00044892717647805256
+      ]
+    },
+    "random_hidden": {
+      "mean_cost": 8.064768897941873e-05,
+      "mean_task_loss": 7.864768897941872e-05,
+      "mean_query_rate": 0.2,
+      "seed_costs": [
+        5.561628433316824e-05,
+        8.662903399230844e-05,
+        0.0001565601389496114,
+        5.8019616091733044e-05,
+        4.6413371530272474e-05
+      ]
+    },
+    "max_information_gain": {
+      "mean_cost": 5.8130493362839285e-05,
+      "mean_task_loss": 5.613049336283929e-05,
+      "mean_query_rate": 0.2,
+      "seed_costs": [
+        5.686427688611288e-05,
+        5.928704271430725e-05,
+        7.724921674110895e-05,
+        4.605022758390863e-05,
+        5.120170288875876e-05
+      ]
+    },
+    "oracle_error": {
+      "mean_cost": 4.89730139546275e-05,
+      "mean_task_loss": 4.69730139546275e-05,
+      "mean_query_rate": 0.2,
+      "seed_costs": [
+        4.419064610587229e-05,
+        5.248304079271375e-05,
+        6.793308325205781e-05,
+        4.041899399494931e-05,
+        3.983930562754433e-05
+      ]
+    }
+  },
+  "seed_wins_vs_random": 3,
+  "performance_passed": false,
+  "resource_passed": true,
+  "passed": false
+}

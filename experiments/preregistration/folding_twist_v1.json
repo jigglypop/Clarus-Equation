@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-10",
+  "experiment": "folding_twist_v1",
+  "claim": "A local coupling/twist contribution is identifiable beyond differential-growth mechanics when present, without being spuriously selected in a mechanics-only null world.",
+  "simulation": {
+    "points": 96, "steps": 1800, "dt": 0.01,
+    "bending": 0.9, "foundation": 0.04, "quartic": 0.8,
+    "base_growth": 0.72, "growth_field_scale": 0.18,
+    "true_twist_coefficient": 0.8, "hidden_growth_scale": 0.04,
+    "candidate_coefficients": [0.0, 0.4, 0.8, 1.2]
+  },
+  "training_seeds": [58000, 58001, 58002, 58003, 58004],
+  "validation_seeds": [59000, 59001, 59002, 59003, 59004, 59005],
+  "test_seeds": [60000, 60001, 60002, 60003, 60004, 60005, 60006, 60007],
+  "success_criteria": {
+    "null_selected_coefficient_abs_max": 0.0,
+    "alternative_selected_coefficient_error_max": 0.01,
+    "alternative_rmse_reduction_min": 0.3,
+    "alternative_peak_alignment_gain_min": 0.15,
+    "null_candidate_rmse_increase_max": 0.02,
+    "external_download_bytes": 0,
+    "elapsed_seconds_max": 15.0
+  },
+  "falsification": "False twist selection in the null, coefficient recovery failure, or held-out profile/peak improvement failure falsifies V1.",
+  "scope_limit": "Synthetic one-dimensional cortical strip only; not evidence that biological cortical folds encode a twisted latent space."
+}

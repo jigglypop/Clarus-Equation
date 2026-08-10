@@ -1,0 +1,19 @@
+{
+  "dataset": "Wall-Following Robot Navigation Data",
+  "repository": "UCI Machine Learning Repository",
+  "doi": "10.24432/C57C8W",
+  "license": "CC BY 4.0",
+  "downloaded_on": "2026-08-10",
+  "archive_url": "https://archive.ics.uci.edu/static/public/194/wall%2Bfollowing%2Brobot%2Bnavigation%2Bdata.zip",
+  "archive_bytes": 954168,
+  "archive_sha256": "7c1a3838be678585570fa7fa675217ee626b3aa277bb187dde627418b5e95ed2",
+  "used_file": "sensor_readings_24.data",
+  "used_file_bytes": 875878,
+  "used_file_sha256": "6e9728dedef8b35e31ba0be11aea85aa53bd248ab33652777df81b95a4cc8c00",
+  "rows": 5456,
+  "channels": 24,
+  "excluded_large_alternatives": [
+    {"dataset": "UCI Continuous Ambient Sensor Data", "size": "13 GB", "status": "SKIPPED_COST"},
+    {"dataset": "UCI Sensorless Drive Diagnosis", "size": "24.4 MB", "status": "SKIPPED_COST"}
+  ]
+}

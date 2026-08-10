@@ -1,0 +1,31 @@
+{
+  "schema_version": 2,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-10",
+  "experiment": "folding_twist_v2",
+  "supersedes": "folding_twist_v1",
+  "extends": "folding_twist_v1.json",
+  "change_reason": "V1 skipped a random-field draw when hidden=false, so paired worlds had different initial perturbations; it also recomputed identical truth trajectories.",
+  "simulation": {
+    "points": 96, "steps": 1800, "dt": 0.01,
+    "bending": 0.9, "foundation": 0.04, "quartic": 0.8,
+    "base_growth": 0.72, "growth_field_scale": 0.18,
+    "true_twist_coefficient": 0.8, "hidden_growth_scale": 0.04,
+    "candidate_coefficients": [0.0, 0.4, 0.8, 1.2]
+  },
+  "training_seeds": [61000, 61001, 61002, 61003, 61004],
+  "validation_seeds": [62000, 62001, 62002, 62003, 62004, 62005],
+  "test_seeds": [63000, 63001, 63002, 63003, 63004, 63005, 63006, 63007],
+  "success_criteria": {
+    "null_selected_coefficient_abs_max": 0.0,
+    "alternative_selected_coefficient_error_max": 0.01,
+    "alternative_rmse_reduction_min": 0.3,
+    "alternative_peak_alignment_gain_min": 0.15,
+    "null_candidate_rmse_increase_max": 0.02,
+    "external_download_bytes": 0,
+    "elapsed_seconds_max": 15.0
+  },
+  "pairing_invariant": "base field, coupling field, hidden-field draw, and initial perturbation consume identical RNG streams for truth and every candidate.",
+  "falsification": "Unchanged from V1.",
+  "scope_limit": "Synthetic one-dimensional cortical strip only; not evidence that biological cortical folds encode a twisted latent space."
+}

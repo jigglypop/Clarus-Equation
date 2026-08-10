@@ -1,0 +1,31 @@
+{
+  "schema_version": 2,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-10",
+  "experiment": "folding_surface_3d_v2",
+  "supersedes": "folding_surface_3d_v1",
+  "extends": "folding_surface_3d_v1.json",
+  "change_reason": "V1 recovered the tensor and reduced RMSE 91.7 percent, but absolute ridge IoU gain missed by 0.0039 because baseline IoU was already 0.890; V2 measures proportional mismatch reduction.",
+  "simulation": {
+    "size": 24, "steps": 900, "dt": 0.008,
+    "bending": 0.7, "foundation": 0.035, "quartic": 0.7,
+    "base_growth": 0.68, "scalar_growth_scale": 0.14,
+    "tensor_scale": 0.16, "true_tensor_coefficient": 0.8, "hidden_tensor_scale": 0.025,
+    "candidate_coefficients": [0.0, 0.4, 0.8, 1.2]
+  },
+  "training_seeds": [70000, 70001, 70002, 70003],
+  "validation_seeds": [71000, 71001, 71002, 71003, 71004],
+  "test_seeds": [72000, 72001, 72002, 72003, 72004, 72005, 72006],
+  "success_criteria": {
+    "null_selected_coefficient_abs_max": 0.0,
+    "alternative_selected_coefficient_error_max": 0.01,
+    "surface_rmse_reduction_min": 0.3,
+    "ridge_mismatch_reduction_min": 0.5,
+    "rotation_equivariance_rmse_max": 1e-10,
+    "external_download_bytes": 0,
+    "elapsed_seconds_max": 15.0
+  },
+  "ridge_metric": "1 - candidate IoU divided by 1 - baseline IoU; report proportional mismatch reduction.",
+  "falsification": "Unchanged except replacing saturated absolute IoU gain with at least 50 percent mismatch reduction.",
+  "scope_limit": "Synthetic periodic height surface and OBJ visualization only; not a cortical anatomy reconstruction."
+}

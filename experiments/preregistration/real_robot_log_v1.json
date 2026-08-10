@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-10",
+  "experiment": "real_robot_log_v1",
+  "claim": "Timestamp-aware short-memory reconstruction improves action-label recovery from delayed and missing real ultrasonic robot logs over stale median imputation.",
+  "source": {
+    "dataset": "UCI Wall-Following Robot Navigation Data",
+    "doi": "10.24432/C57C8W",
+    "license": "CC BY 4.0",
+    "url": "https://archive.ics.uci.edu/static/public/194/wall%2Bfollowing%2Brobot%2Bnavigation%2Bdata.zip",
+    "relative_path": "data/public/uci_wall_following/sensor_readings_24.data",
+    "sha256": "6e9728dedef8b35e31ba0be11aea85aa53bd248ab33652777df81b95a4cc8c00",
+    "bytes": 875878,
+    "rows": 5456,
+    "channels": 24,
+    "sampling_hz": 9
+  },
+  "split": {"train_fraction": 0.6, "validation_fraction": 0.2, "test_fraction": 0.2, "shuffle": false},
+  "faults": {
+    "validation_delay_range": [2, 3],
+    "test_delay_range": [3, 4],
+    "validation_dropout_probability": 0.2,
+    "test_dropout_probability": 0.3
+  },
+  "model": {"knn_k": 5, "trend_window": 3, "accepted_coverage": 0.5},
+  "validation_seeds": [48000, 48001, 48002, 48003, 48004],
+  "test_seeds": [49000, 49001, 49002, 49003, 49004, 49005, 49006],
+  "success_criteria": {
+    "candidate_accuracy_min": 0.65,
+    "candidate_accuracy_gain_min": 0.03,
+    "accepted_error_rate_max": 0.15,
+    "accepted_coverage_min": 0.5,
+    "all_source_integrity_checks": true,
+    "download_bytes_max": 1000000,
+    "elapsed_seconds_max": 15.0
+  },
+  "falsification": "Any integrity mismatch, accuracy/gain miss, or selective-error miss falsifies V1.",
+  "scope_limit": "Logged action-label recovery only; no collision, closed-loop safety, or new-robot generalization claim."
+}

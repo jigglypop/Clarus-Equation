@@ -1,0 +1,14 @@
+{
+  "schema_version": 6,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-10",
+  "supersedes": "compositional_causal_ood_v5",
+  "extends": "compositional_causal_ood_v4.json",
+  "change_reason": "V4 mean effect passed but n=6 paired CI was unstable; V6 uses independent broader validation/test samples without changing thresholds",
+  "experiment": "compositional_causal_ood_v6",
+  "overrides": {
+    "coefficient_generator": {"linear": [0.05, 0.15], "cubic": [0.10, 0.30], "drag": [0.03, 0.10], "swirl": [-0.08, 0.08], "rng_offset": 900000},
+    "validation": {"seeds": [13000, 13001, 13002, 13003, 13004, 13005, 13006, 13007, 13008, 13009, 13010, 13011, 13012, 13013, 13014, 13015, 13016, 13017, 13018, 13019]},
+    "test": {"seeds": [14000, 14001, 14002, 14003, 14004, 14005, 14006, 14007, 14008, 14009, 14010, 14011, 14012, 14013, 14014, 14015, 14016, 14017, 14018, 14019, 14020, 14021, 14022, 14023, 14024, 14025, 14026, 14027, 14028, 14029]}
+  }
+}

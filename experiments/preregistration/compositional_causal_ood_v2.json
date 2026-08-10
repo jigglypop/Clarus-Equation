@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-10",
+  "supersedes": "compositional_causal_ood_v1",
+  "change_reason": "V1 calibration lacked persistent excitation and median coefficient error was 22.8%",
+  "experiment": "compositional_causal_ood_v2",
+  "resource_limits": {
+    "external_download_bytes": 0,
+    "backend": "numpy",
+    "max_cpu_seconds_target": 15,
+    "write_trajectory_files": false
+  },
+  "calibration_steps": 20,
+  "calibration_probe_steps": 20,
+  "rollout_horizons": [20, 100],
+  "velocity_process_noise_std": 0.001,
+  "train": [
+    [0.05, 0.20, 0.06, 0.00], [0.15, 0.20, 0.06, 0.00],
+    [0.10, 0.10, 0.06, 0.00], [0.10, 0.30, 0.06, 0.00],
+    [0.10, 0.20, 0.03, 0.00], [0.10, 0.20, 0.10, 0.00],
+    [0.10, 0.20, 0.06, -0.08], [0.10, 0.20, 0.06, 0.08]
+  ],
+  "validation": {
+    "seeds": [10000, 10001, 10002, 10003, 10004, 10005],
+    "coefficients": [
+      [0.06, 0.12, 0.04, -0.06], [0.14, 0.28, 0.09, 0.06],
+      [0.07, 0.26, 0.035, 0.04], [0.13, 0.14, 0.095, -0.05],
+      [0.08, 0.24, 0.08, -0.07], [0.12, 0.16, 0.05, 0.07]
+    ]
+  },
+  "test": {
+    "seeds": [11000, 11001, 11002, 11003, 11004, 11005, 11006, 11007, 11008, 11009, 11010, 11011],
+    "coefficients": [
+      [0.055, 0.11, 0.035, 0.075], [0.145, 0.29, 0.095, -0.075],
+      [0.065, 0.27, 0.085, 0.055], [0.135, 0.13, 0.045, -0.055],
+      [0.075, 0.23, 0.032, -0.065], [0.125, 0.17, 0.098, 0.065],
+      [0.058, 0.25, 0.075, -0.045], [0.142, 0.15, 0.038, 0.045],
+      [0.085, 0.285, 0.092, -0.035], [0.115, 0.115, 0.042, 0.035],
+      [0.095, 0.265, 0.055, 0.072], [0.105, 0.135, 0.088, -0.072]
+    ]
+  },
+  "gate": {
+    "rmse_reduction_vs_pooled": 0.30,
+    "rmse_reduction_vs_monolithic": 0.30,
+    "paired_ci95_lower_min": 0.0,
+    "intervention_effect_error_max": 0.02,
+    "median_coefficient_relative_error_max": 0.15
+  }
+}

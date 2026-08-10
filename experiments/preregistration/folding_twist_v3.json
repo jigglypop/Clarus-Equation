@@ -1,0 +1,32 @@
+{
+  "schema_version": 3,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-10",
+  "experiment": "folding_twist_v3",
+  "supersedes": "folding_twist_v2",
+  "extends": "folding_twist_v2.json",
+  "change_reason": "V2 recovered the coefficient and reduced RMSE 76.9 percent, but binary within-two-grid peak alignment saturated at 92.7 percent for the baseline; V3 uses continuous circular peak distance.",
+  "simulation": {
+    "points": 96, "steps": 1800, "dt": 0.01,
+    "bending": 0.9, "foundation": 0.04, "quartic": 0.8,
+    "base_growth": 0.72, "growth_field_scale": 0.18,
+    "true_twist_coefficient": 0.8, "hidden_growth_scale": 0.04,
+    "candidate_coefficients": [0.0, 0.4, 0.8, 1.2]
+  },
+  "training_seeds": [64000, 64001, 64002, 64003, 64004],
+  "validation_seeds": [65000, 65001, 65002, 65003, 65004, 65005],
+  "test_seeds": [66000, 66001, 66002, 66003, 66004, 66005, 66006, 66007],
+  "success_criteria": {
+    "null_selected_coefficient_abs_max": 0.0,
+    "alternative_selected_coefficient_error_max": 0.01,
+    "alternative_rmse_reduction_min": 0.3,
+    "alternative_peak_distance_reduction_min": 0.2,
+    "null_candidate_rmse_increase_max": 0.02,
+    "external_download_bytes": 0,
+    "elapsed_seconds_max": 15.0
+  },
+  "peak_metric": "Mean circular grid distance from each true peak to the nearest predicted peak; lower is better.",
+  "pairing_invariant": "Unchanged from V2.",
+  "falsification": "Unchanged except replacing the saturated binary peak metric with continuous distance reduction.",
+  "scope_limit": "Synthetic one-dimensional cortical strip only; not evidence that biological cortical folds encode a twisted latent space."
+}

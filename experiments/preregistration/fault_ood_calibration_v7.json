@@ -1,0 +1,41 @@
+{
+  "schema_version": 7,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-10",
+  "experiment": "fault_ood_calibration_v7",
+  "supersedes": "fault_ood_calibration_v6",
+  "extends": "fault_ood_calibration_v6.json",
+  "change_reason": "V6 passed the registered mean gate but worst-seed empirical risk was 2.20 percent; V7 requires a per-seed finite-sample upper bound.",
+  "model": {"class_weighted": false, "candidate_feature_version": 1, "l2": 0.0002, "iterations": 1400},
+  "calibration_risk_limit": 0.001,
+  "confidence": {"method": "one_sided_wilson", "level": 0.95, "z": 1.6448536269514722},
+  "data": {
+    "train_samples": 7000,
+    "calibration_samples": 5000,
+    "test_samples": 20000,
+    "horizon": 8,
+    "dt": 0.05,
+    "safe_bound": 1.0,
+    "train_gain_range": [0.8, 3.2],
+    "test_gain_range": [3.2, 4.2],
+    "train_delay_range": [0, 6],
+    "test_delay_range": [6, 9],
+    "train_flip_probability": 0.15,
+    "test_flip_probability": 0.25
+  },
+  "validation_seeds": [46000, 46001, 46002, 46003, 46004],
+  "test_seeds": [47000, 47001, 47002, 47003, 47004, 47005, 47006],
+  "success_criteria": {
+    "candidate_brier_max_fraction_of_baseline": 0.9,
+    "candidate_ece_max": 0.08,
+    "accepted_violation_rate_max": 0.02,
+    "worst_seed_wilson_upper_max": 0.02,
+    "accepted_coverage_min": 0.25,
+    "accepted_violation_rate_max_fraction_of_baseline": 0.75,
+    "external_download_bytes": 0,
+    "elapsed_seconds_max": 15.0
+  },
+  "threshold_rule": "Maximum calibration coverage at empirical accepted risk at most 0.1 percent; test additionally requires every seed's one-sided 95 percent Wilson upper bound at most 2 percent.",
+  "falsification": "Any worst-seed confidence bound above 2 percent or coverage below 25 percent fails V7.",
+  "cost_policy": "Synthetic NumPy-only windows; hardware and paid data are SKIPPED_COST."
+}

@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-10",
+  "experiment": "fault_ood_calibration_v1",
+  "claim": "Observable uncertainty and actuator innovation improve short-horizon OOD hazard calibration and useful selective rejection over geometry alone.",
+  "data": {
+    "train_samples": 5000,
+    "calibration_samples": 2500,
+    "test_samples": 5000,
+    "horizon": 8,
+    "dt": 0.05,
+    "safe_bound": 1.0,
+    "train_gain_range": [0.8, 2.0],
+    "test_gain_range": [2.0, 3.2],
+    "train_delay_range": [0, 3],
+    "test_delay_range": [3, 6],
+    "train_flip_probability": 0.05,
+    "test_flip_probability": 0.15
+  },
+  "features": {
+    "baseline": ["absolute_observed_position", "outward_observed_velocity", "absolute_command"],
+    "candidate_additions": ["observation_uncertainty", "actuator_innovation"]
+  },
+  "validation_seeds": [34000, 34001, 34002, 34003, 34004],
+  "test_seeds": [35000, 35001, 35002, 35003, 35004, 35005, 35006],
+  "success_criteria": {
+    "candidate_brier_max_fraction_of_baseline": 0.9,
+    "candidate_ece_max": 0.08,
+    "accepted_violation_rate_max": 0.02,
+    "accepted_coverage_min": 0.25,
+    "accepted_violation_rate_max_fraction_of_baseline": 0.75,
+    "external_download_bytes": 0,
+    "elapsed_seconds_max": 15.0
+  },
+  "threshold_rule": "On calibration data, choose the lowest candidate probability threshold whose accepted subset has at most 1 percent violations and maximum coverage; never tune on test.",
+  "falsification": "Failure of calibration, useful coverage, OOD selective safety, or improvement over geometry falsifies V1.",
+  "cost_policy": "Synthetic NumPy-only windows; hardware and paid data are SKIPPED_COST."
+}

@@ -1,0 +1,122 @@
+{
+  "experiment": "folding_twist_v3",
+  "split": "test",
+  "status": "PASS",
+  "checks": {
+    "null_guard": true,
+    "coefficient_recovery": true,
+    "profile_improvement": true,
+    "peak_improvement": true,
+    "null_no_harm": true,
+    "no_external_data": true,
+    "runtime": true
+  },
+  "summary": {
+    "null_selected_coefficient": 0.0,
+    "alternative_selected_coefficient": 0.8,
+    "baseline_rmse": 0.046395411351919755,
+    "candidate_rmse": 0.010007018885877284,
+    "rmse_reduction": 0.7843101592532122,
+    "baseline_peak_alignment": 0.8831845238095237,
+    "candidate_peak_alignment": 0.9682539682539683,
+    "peak_alignment_gain": 0.08506944444444453,
+    "baseline_peak_distance": 1.0674603174603177,
+    "candidate_peak_distance": 0.3427579365079365,
+    "null_rmse_increase": 0.0,
+    "peak_distance_reduction": 0.6789033457249072
+  },
+  "per_seed": [
+    {
+      "seed": 66000,
+      "null_baseline_rmse": 0.002988530037713823,
+      "null_candidate_rmse": 0.002988530037713823,
+      "baseline_rmse": 0.009031662772133114,
+      "candidate_rmse": 0.0024123464281816265,
+      "baseline_peak_alignment": 0.8571428571428571,
+      "candidate_peak_alignment": 0.8571428571428571,
+      "baseline_peak_distance": 1.0,
+      "candidate_peak_distance": 0.7142857142857143
+    },
+    {
+      "seed": 66001,
+      "null_baseline_rmse": 0.0026053294447481974,
+      "null_candidate_rmse": 0.0026053294447481974,
+      "baseline_rmse": 0.024159588220443833,
+      "candidate_rmse": 0.0032279457438415793,
+      "baseline_peak_alignment": 0.8888888888888888,
+      "candidate_peak_alignment": 1.0,
+      "baseline_peak_distance": 1.3333333333333333,
+      "candidate_peak_distance": 0.1111111111111111
+    },
+    {
+      "seed": 66002,
+      "null_baseline_rmse": 0.0035771195738518655,
+      "null_candidate_rmse": 0.0035771195738518655,
+      "baseline_rmse": 0.11899338405752044,
+      "candidate_rmse": 0.013318320259112622,
+      "baseline_peak_alignment": 0.6666666666666666,
+      "candidate_peak_alignment": 1.0,
+      "baseline_peak_distance": 2.4444444444444446,
+      "candidate_peak_distance": 0.3333333333333333
+    },
+    {
+      "seed": 66003,
+      "null_baseline_rmse": 0.007988507178855856,
+      "null_candidate_rmse": 0.007988507178855856,
+      "baseline_rmse": 0.039653513103759766,
+      "candidate_rmse": 0.0069595400677316815,
+      "baseline_peak_alignment": 1.0,
+      "candidate_peak_alignment": 0.8888888888888888,
+      "baseline_peak_distance": 0.6666666666666666,
+      "candidate_peak_distance": 1.1111111111111112
+    },
+    {
+      "seed": 66004,
+      "null_baseline_rmse": 0.0058416494537700024,
+      "null_candidate_rmse": 0.0058416494537700024,
+      "baseline_rmse": 0.03124785073904081,
+      "candidate_rmse": 0.01001309494960476,
+      "baseline_peak_alignment": 1.0,
+      "candidate_peak_alignment": 1.0,
+      "baseline_peak_distance": 0.25,
+      "candidate_peak_distance": 0.125
+    },
+    {
+      "seed": 66005,
+      "null_baseline_rmse": 0.007682392899618486,
+      "null_candidate_rmse": 0.007682392899618486,
+      "baseline_rmse": 0.05241122168897304,
+      "candidate_rmse": 0.013470472146622727,
+      "baseline_peak_alignment": 1.0,
+      "candidate_peak_alignment": 1.0,
+      "baseline_peak_distance": 0.42857142857142855,
+      "candidate_peak_distance": 0.0
+    },
+    {
+      "seed": 66006,
+      "null_baseline_rmse": 0.004932477155254184,
+      "null_candidate_rmse": 0.004932477155254184,
+      "baseline_rmse": 0.06836929284326054,
+      "candidate_rmse": 0.013465590470092246,
+      "baseline_peak_alignment": 0.875,
+      "candidate_peak_alignment": 1.0,
+      "baseline_peak_distance": 0.75,
+      "candidate_peak_distance": 0.125
+    },
+    {
+      "seed": 66007,
+      "null_baseline_rmse": 0.008486048777416625,
+      "null_candidate_rmse": 0.008486048777416625,
+      "baseline_rmse": 0.02729677739022652,
+      "candidate_rmse": 0.01718884102183102,
+      "baseline_peak_alignment": 0.7777777777777778,
+      "candidate_peak_alignment": 1.0,
+      "baseline_peak_distance": 1.6666666666666667,
+      "candidate_peak_distance": 0.2222222222222222
+    }
+  ],
+  "resource_usage": {
+    "external_download_bytes": 0,
+    "elapsed_seconds": 11.8068823996
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "dataset": "TemplateFlow tpl-fsaverage 10k left hemisphere",
+  "provider": "NiPreps TemplateFlow",
+  "archive_page": "https://www.templateflow.org/browse/",
+  "downloaded_on": "2026-08-10",
+  "files": [
+    {"name": "lh_pial.surf.gii", "bytes": 270927, "sha256": "2201cd917aae312477747c06c6a7a4a7cc8debe28b053190afbe1622ae0ee699"},
+    {"name": "lh_sulc.shape.gii", "bytes": 51680, "sha256": "239db18af9bbb1c160648dc2818bc8a981e09acb577f6dd9261796fac807b431"},
+    {"name": "lh_curv.shape.gii", "bytes": 50816, "sha256": "ce934ff3501a4db560d6a5773ef4fdc50b8e56b52deb2c263c91c50efdc3e834"}
+  ],
+  "total_bytes": 373423,
+  "excluded": [{"dataset": "HCP S1200 Group Average", "bytes": 2300000000, "status": "SKIPPED_COST"}]
+}

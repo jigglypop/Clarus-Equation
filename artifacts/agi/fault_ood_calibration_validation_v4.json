@@ -1,0 +1,141 @@
+{
+  "experiment": "fault_ood_calibration_v4",
+  "split": "validation",
+  "seeds": [
+    40000,
+    40001,
+    40002,
+    40003,
+    40004
+  ],
+  "status": "FAIL",
+  "checks": {
+    "brier_improves": true,
+    "calibrated": true,
+    "selective_safety": false,
+    "useful_coverage": true,
+    "safer_than_baseline": true,
+    "no_external_data": true,
+    "runtime": true
+  },
+  "summary": {
+    "baseline": {
+      "brier": 0.07510586523583576,
+      "ece": 0.04314494191668898,
+      "threshold": 0.12218368353289313,
+      "coverage": 0.8505,
+      "accepted_violation_rate": 0.05023364201731941,
+      "prevalence": 0.0984
+    },
+    "candidate": {
+      "brier": 0.06714244898909487,
+      "ece": 0.07108449001235158,
+      "threshold": 0.17799388847128922,
+      "coverage": 0.7152,
+      "accepted_violation_rate": 0.02195957426080651,
+      "prevalence": 0.0984
+    }
+  },
+  "per_seed": [
+    {
+      "seed": 40000,
+      "baseline": {
+        "brier": 0.073797273545646,
+        "ece": 0.040944203475901275,
+        "threshold": 0.11810750639555814,
+        "coverage": 0.8456666666666667,
+        "accepted_violation_rate": 0.047299960583366184,
+        "prevalence": 0.09766666666666667
+      },
+      "candidate": {
+        "brier": 0.06741612936406664,
+        "ece": 0.07877470171201183,
+        "threshold": 0.18087663695916442,
+        "coverage": 0.711,
+        "accepted_violation_rate": 0.02015939990623535,
+        "prevalence": 0.09766666666666667
+      }
+    },
+    {
+      "seed": 40001,
+      "baseline": {
+        "brier": 0.07738028214591293,
+        "ece": 0.04655768749844683,
+        "threshold": 0.11025782456991871,
+        "coverage": 0.847,
+        "accepted_violation_rate": 0.05076741440377804,
+        "prevalence": 0.10016666666666667
+      },
+      "candidate": {
+        "brier": 0.06713828122981522,
+        "ece": 0.0630324711085494,
+        "threshold": 0.18770608895727875,
+        "coverage": 0.7346666666666667,
+        "accepted_violation_rate": 0.026542649727767695,
+        "prevalence": 0.10016666666666667
+      }
+    },
+    {
+      "seed": 40002,
+      "baseline": {
+        "brier": 0.07742968602874088,
+        "ece": 0.04914706686455965,
+        "threshold": 0.13355185488428484,
+        "coverage": 0.8591666666666666,
+        "accepted_violation_rate": 0.0545101842870999,
+        "prevalence": 0.103
+      },
+      "candidate": {
+        "brier": 0.0670164973576835,
+        "ece": 0.06867325233554379,
+        "threshold": 0.20491454094189984,
+        "coverage": 0.7315,
+        "accepted_violation_rate": 0.022100706311232628,
+        "prevalence": 0.103
+      }
+    },
+    {
+      "seed": 40003,
+      "baseline": {
+        "brier": 0.0727207848505079,
+        "ece": 0.03866729795619575,
+        "threshold": 0.10925487686138233,
+        "coverage": 0.835,
+        "accepted_violation_rate": 0.043912175648702596,
+        "prevalence": 0.09566666666666666
+      },
+      "candidate": {
+        "brier": 0.06752120200247824,
+        "ece": 0.07915064593885708,
+        "threshold": 0.1346804885770532,
+        "coverage": 0.661,
+        "accepted_violation_rate": 0.018406454866364094,
+        "prevalence": 0.09566666666666666
+      }
+    },
+    {
+      "seed": 40004,
+      "baseline": {
+        "brier": 0.07420129960837106,
+        "ece": 0.040408453788341445,
+        "threshold": 0.13974635495332163,
+        "coverage": 0.8656666666666667,
+        "accepted_violation_rate": 0.05467847516365037,
+        "prevalence": 0.0955
+      },
+      "candidate": {
+        "brier": 0.0666201349914308,
+        "ece": 0.06579137896679581,
+        "threshold": 0.18179168692104983,
+        "coverage": 0.7378333333333333,
+        "accepted_violation_rate": 0.0225886604924328,
+        "prevalence": 0.0955
+      }
+    }
+  ],
+  "resource_usage": {
+    "external_download_bytes": 0,
+    "elapsed_seconds": 1.3457382000051439
+  },
+  "config": "experiments\\preregistration\\fault_ood_calibration_v4.json"
+}

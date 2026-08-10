@@ -1,0 +1,15 @@
+{
+  "schema_version": 4,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-10",
+  "supersedes": "memory_replay_planning_v3",
+  "extends": "memory_replay_planning_v3.json",
+  "change_reason": "V3 dynamics differed but coarse feedback selected identical actions; V4 tests memory-dependent actuator semantics",
+  "experiment": "memory_replay_planning_v4",
+  "overrides": {
+    "regimes": {"A": [0.06, 0.12, 0.04, -0.06, 1.0], "B": [0.14, 0.28, 0.09, 0.06, 1.0], "C": [0.10, 0.18, 0.055, -0.08, -1.0]},
+    "coefficient_scale": [0.10, 0.20, 0.07, 0.16, 2.0],
+    "validation_seeds": [24000, 24001, 24002, 24003, 24004, 24005],
+    "test_seeds": [25000, 25001, 25002, 25003, 25004, 25005, 25006, 25007, 25008]
+  }
+}

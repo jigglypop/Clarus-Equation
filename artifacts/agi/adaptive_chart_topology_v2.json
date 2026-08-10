@@ -1,0 +1,48 @@
+{
+  "experiment": "adaptive_chart_topology_v2",
+  "config_sha256": "b0cb61d2b3b7f7933dc8883e7e8e1d1ed9ad1f9d0ae8eba3e4db23e7c1996a74",
+  "chart_count": 3,
+  "chart_labels": [
+    "A",
+    "B",
+    "B"
+  ],
+  "chart_centers": [
+    [
+      0.09523230315895814,
+      0.054416043898516425,
+      0.013153720287721273,
+      -0.08024403418484055,
+      0.9961430845770791
+    ],
+    [
+      0.13633623454811744,
+      0.28348629932227065,
+      0.10301465737192332,
+      0.060684207506513765,
+      1.0014821963612475
+    ],
+    [
+      0.17661649329709272,
+      0.16789555849491491,
+      0.12159941624217939,
+      0.046993014950906756,
+      0.9671217215294494
+    ]
+  ],
+  "assignment_accuracy": 0.95,
+  "mean_chart_rmse": 0.016450708093267635,
+  "mean_pooled_rmse": 0.06884906745019746,
+  "rmse_reduction": 0.7610612793678376,
+  "repair_distance_before": 1.6285843403295879,
+  "repair_distance_after": 0.6284290649549452,
+  "repair_distance_reduction": 0.6141255632927395,
+  "untouched_chart_change": 0.0,
+  "resource_usage": {
+    "external_download_bytes": 0,
+    "trajectory_files_written": 0,
+    "elapsed_wall_seconds": 0.7181012998335063
+  },
+  "performance_passed": false,
+  "passed": false
+}

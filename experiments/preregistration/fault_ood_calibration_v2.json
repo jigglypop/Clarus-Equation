@@ -1,0 +1,38 @@
+{
+  "schema_version": 2,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-10",
+  "experiment": "fault_ood_calibration_v2",
+  "supersedes": "fault_ood_calibration_v1",
+  "extends": "fault_ood_calibration_v1.json",
+  "change_reason": "V1 class weighting preserved ranking but severely overestimated rare-event probabilities.",
+  "model": {"class_weighted": false, "l2": 0.0002, "iterations": 1400},
+  "data": {
+    "train_samples": 5000,
+    "calibration_samples": 2500,
+    "test_samples": 5000,
+    "horizon": 8,
+    "dt": 0.05,
+    "safe_bound": 1.0,
+    "train_gain_range": [0.8, 2.0],
+    "test_gain_range": [2.0, 3.2],
+    "train_delay_range": [0, 3],
+    "test_delay_range": [3, 6],
+    "train_flip_probability": 0.05,
+    "test_flip_probability": 0.15
+  },
+  "validation_seeds": [36000, 36001, 36002, 36003, 36004],
+  "test_seeds": [37000, 37001, 37002, 37003, 37004, 37005, 37006],
+  "success_criteria": {
+    "candidate_brier_max_fraction_of_baseline": 0.9,
+    "candidate_ece_max": 0.08,
+    "accepted_violation_rate_max": 0.02,
+    "accepted_coverage_min": 0.25,
+    "accepted_violation_rate_max_fraction_of_baseline": 0.75,
+    "external_download_bytes": 0,
+    "elapsed_seconds_max": 15.0
+  },
+  "threshold_rule": "Unchanged from V1.",
+  "falsification": "Unchanged from V1.",
+  "cost_policy": "Synthetic NumPy-only windows; hardware and paid data are SKIPPED_COST."
+}

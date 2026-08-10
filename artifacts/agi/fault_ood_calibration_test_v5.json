@@ -1,0 +1,181 @@
+{
+  "experiment": "fault_ood_calibration_v5",
+  "split": "test",
+  "seeds": [
+    43000,
+    43001,
+    43002,
+    43003,
+    43004,
+    43005,
+    43006
+  ],
+  "status": "FAIL",
+  "checks": {
+    "brier_improves": true,
+    "calibrated": true,
+    "selective_safety": false,
+    "useful_coverage": true,
+    "safer_than_baseline": true,
+    "no_external_data": true,
+    "runtime": true
+  },
+  "summary": {
+    "baseline": {
+      "brier": 0.07557716511385494,
+      "ece": 0.04406796916309897,
+      "threshold": 0.08245989933044454,
+      "coverage": 0.806,
+      "accepted_violation_rate": 0.04026978966910255,
+      "prevalence": 0.09947619047619048
+    },
+    "candidate": {
+      "brier": 0.06556401401664749,
+      "ece": 0.06494283733634437,
+      "threshold": 0.12904460898058848,
+      "coverage": 0.6707857142857144,
+      "accepted_violation_rate": 0.021375914136161137,
+      "prevalence": 0.09947619047619048
+    }
+  },
+  "per_seed": [
+    {
+      "seed": 43000,
+      "baseline": {
+        "brier": 0.07773491487173662,
+        "ece": 0.04649844152037453,
+        "threshold": 0.07120932047558795,
+        "coverage": 0.7838333333333334,
+        "accepted_violation_rate": 0.03529661917924729,
+        "prevalence": 0.10383333333333333
+      },
+      "candidate": {
+        "brier": 0.06480654214954622,
+        "ece": 0.06023440902534419,
+        "threshold": 0.09840859197167197,
+        "coverage": 0.6428333333333334,
+        "accepted_violation_rate": 0.02229712211563391,
+        "prevalence": 0.10383333333333333
+      }
+    },
+    {
+      "seed": 43001,
+      "baseline": {
+        "brier": 0.07320313298565742,
+        "ece": 0.04481096219694103,
+        "threshold": 0.06718132266638979,
+        "coverage": 0.7946666666666666,
+        "accepted_violation_rate": 0.035864093959731544,
+        "prevalence": 0.0975
+      },
+      "candidate": {
+        "brier": 0.061263596492273475,
+        "ece": 0.06851387667917312,
+        "threshold": 0.12750062689625374,
+        "coverage": 0.662,
+        "accepted_violation_rate": 0.0188821752265861,
+        "prevalence": 0.0975
+      }
+    },
+    {
+      "seed": 43002,
+      "baseline": {
+        "brier": 0.07746199923728106,
+        "ece": 0.04601286664978783,
+        "threshold": 0.10277104725521669,
+        "coverage": 0.8345,
+        "accepted_violation_rate": 0.048532055122828044,
+        "prevalence": 0.10183333333333333
+      },
+      "candidate": {
+        "brier": 0.0636824058545179,
+        "ece": 0.05233941824841744,
+        "threshold": 0.14784393229242573,
+        "coverage": 0.7135,
+        "accepted_violation_rate": 0.021256715720626023,
+        "prevalence": 0.10183333333333333
+      }
+    },
+    {
+      "seed": 43003,
+      "baseline": {
+        "brier": 0.07161007987244691,
+        "ece": 0.036349057560737516,
+        "threshold": 0.0792466313818964,
+        "coverage": 0.805,
+        "accepted_violation_rate": 0.03954451345755693,
+        "prevalence": 0.0935
+      },
+      "candidate": {
+        "brier": 0.06469628779857252,
+        "ece": 0.05828198903387328,
+        "threshold": 0.1860236609688875,
+        "coverage": 0.7493333333333333,
+        "accepted_violation_rate": 0.023576512455516015,
+        "prevalence": 0.0935
+      }
+    },
+    {
+      "seed": 43004,
+      "baseline": {
+        "brier": 0.07574873638289463,
+        "ece": 0.04527011969618244,
+        "threshold": 0.05857939371882999,
+        "coverage": 0.7736666666666666,
+        "accepted_violation_rate": 0.03274450667815597,
+        "prevalence": 0.09966666666666667
+      },
+      "candidate": {
+        "brier": 0.06740518820129404,
+        "ece": 0.07230066572235638,
+        "threshold": 0.10760241131317509,
+        "coverage": 0.629,
+        "accepted_violation_rate": 0.018547959724430314,
+        "prevalence": 0.09966666666666667
+      }
+    },
+    {
+      "seed": 43005,
+      "baseline": {
+        "brier": 0.07362965493844233,
+        "ece": 0.04330314022498004,
+        "threshold": 0.10610116782963665,
+        "coverage": 0.8366666666666667,
+        "accepted_violation_rate": 0.04402390438247012,
+        "prevalence": 0.09883333333333333
+      },
+      "candidate": {
+        "brier": 0.06617550774762997,
+        "ece": 0.07698166001793093,
+        "threshold": 0.11253230059000421,
+        "coverage": 0.63,
+        "accepted_violation_rate": 0.0208994708994709,
+        "prevalence": 0.09883333333333333
+      }
+    },
+    {
+      "seed": 43006,
+      "baseline": {
+        "brier": 0.0796516375085256,
+        "ece": 0.04623119629268939,
+        "threshold": 0.09213041198555433,
+        "coverage": 0.8136666666666666,
+        "accepted_violation_rate": 0.04588283490372798,
+        "prevalence": 0.10116666666666667
+      },
+      "candidate": {
+        "brier": 0.07091856987269828,
+        "ece": 0.06594784262731529,
+        "threshold": 0.12340073883170115,
+        "coverage": 0.6688333333333333,
+        "accepted_violation_rate": 0.02417144281086469,
+        "prevalence": 0.10116666666666667
+      }
+    }
+  ],
+  "resource_usage": {
+    "external_download_bytes": 0,
+    "elapsed_seconds": 1.7515984000638127
+  },
+  "config": "experiments\\preregistration\\fault_ood_calibration_v5.json"
+}

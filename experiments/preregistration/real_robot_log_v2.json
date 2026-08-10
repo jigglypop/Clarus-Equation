@@ -1,0 +1,42 @@
+{
+  "schema_version": 2,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-10",
+  "experiment": "real_robot_log_v2",
+  "supersedes": "real_robot_log_v1",
+  "extends": "real_robot_log_v1.json",
+  "change_reason": "V1 improved total accuracy by 5.76 percentage points but its dropout-delay dominated selection score left 22.60 percent accepted error; V2 gives neighbor vote margin equal weight.",
+  "source": {
+    "dataset": "UCI Wall-Following Robot Navigation Data",
+    "doi": "10.24432/C57C8W",
+    "license": "CC BY 4.0",
+    "url": "https://archive.ics.uci.edu/static/public/194/wall%2Bfollowing%2Brobot%2Bnavigation%2Bdata.zip",
+    "relative_path": "data/public/uci_wall_following/sensor_readings_24.data",
+    "sha256": "6e9728dedef8b35e31ba0be11aea85aa53bd248ab33652777df81b95a4cc8c00",
+    "bytes": 875878,
+    "rows": 5456,
+    "channels": 24,
+    "sampling_hz": 9
+  },
+  "split": {"train_fraction": 0.6, "validation_fraction": 0.2, "test_fraction": 0.2, "shuffle": false},
+  "faults": {
+    "validation_delay_range": [2, 3],
+    "test_delay_range": [3, 4],
+    "validation_dropout_probability": 0.2,
+    "test_dropout_probability": 0.3
+  },
+  "model": {"knn_k": 5, "trend_window": 3, "accepted_coverage": 0.5, "margin_weight": 1.0},
+  "validation_seeds": [50000, 50001, 50002, 50003, 50004],
+  "test_seeds": [51000, 51001, 51002, 51003, 51004, 51005, 51006],
+  "success_criteria": {
+    "candidate_accuracy_min": 0.65,
+    "candidate_accuracy_gain_min": 0.03,
+    "accepted_error_rate_max": 0.15,
+    "accepted_coverage_min": 0.5,
+    "all_source_integrity_checks": true,
+    "download_bytes_max": 1000000,
+    "elapsed_seconds_max": 15.0
+  },
+  "falsification": "Unchanged from V1.",
+  "scope_limit": "Logged action-label recovery only; no collision, closed-loop safety, or new-robot generalization claim."
+}

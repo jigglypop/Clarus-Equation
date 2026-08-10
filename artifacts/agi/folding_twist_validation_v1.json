@@ -1,0 +1,85 @@
+{
+  "experiment": "folding_twist_v1",
+  "split": "validation",
+  "status": "FAIL",
+  "checks": {
+    "null_guard": true,
+    "coefficient_recovery": false,
+    "profile_improvement": false,
+    "peak_improvement": false,
+    "null_no_harm": true,
+    "no_external_data": true,
+    "runtime": false
+  },
+  "summary": {
+    "null_selected_coefficient": 0.0,
+    "alternative_selected_coefficient": 0.0,
+    "baseline_rmse": 0.09329044913524376,
+    "candidate_rmse": 0.09329044913524376,
+    "rmse_reduction": 0.0,
+    "baseline_peak_alignment": 0.05787037037037037,
+    "candidate_peak_alignment": 0.05787037037037037,
+    "peak_alignment_gain": 0.0,
+    "null_rmse_increase": 0.0
+  },
+  "per_seed": [
+    {
+      "seed": 59000,
+      "null_baseline_rmse": 0.09867243974189747,
+      "null_candidate_rmse": 0.09867243974189747,
+      "baseline_rmse": 0.15736137163364597,
+      "candidate_rmse": 0.15736137163364597,
+      "baseline_peak_alignment": 0.0,
+      "candidate_peak_alignment": 0.0
+    },
+    {
+      "seed": 59001,
+      "null_baseline_rmse": 0.06952580517858611,
+      "null_candidate_rmse": 0.06952580517858611,
+      "baseline_rmse": 0.07895464619853541,
+      "candidate_rmse": 0.07895464619853541,
+      "baseline_peak_alignment": 0.0,
+      "candidate_peak_alignment": 0.0
+    },
+    {
+      "seed": 59002,
+      "null_baseline_rmse": 0.05943883770974007,
+      "null_candidate_rmse": 0.05943883770974007,
+      "baseline_rmse": 0.06555478662945038,
+      "candidate_rmse": 0.06555478662945038,
+      "baseline_peak_alignment": 0.125,
+      "candidate_peak_alignment": 0.125
+    },
+    {
+      "seed": 59003,
+      "null_baseline_rmse": 0.0918569168109611,
+      "null_candidate_rmse": 0.0918569168109611,
+      "baseline_rmse": 0.09723867114672206,
+      "candidate_rmse": 0.09723867114672206,
+      "baseline_peak_alignment": 0.2222222222222222,
+      "candidate_peak_alignment": 0.2222222222222222
+    },
+    {
+      "seed": 59004,
+      "null_baseline_rmse": 0.06368709726305649,
+      "null_candidate_rmse": 0.06368709726305649,
+      "baseline_rmse": 0.05866102513291088,
+      "candidate_rmse": 0.05866102513291088,
+      "baseline_peak_alignment": 0.0,
+      "candidate_peak_alignment": 0.0
+    },
+    {
+      "seed": 59005,
+      "null_baseline_rmse": 0.09365972074132414,
+      "null_candidate_rmse": 0.09365972074132414,
+      "baseline_rmse": 0.1019721940701979,
+      "candidate_rmse": 0.1019721940701979,
+      "baseline_peak_alignment": 0.0,
+      "candidate_peak_alignment": 0.0
+    }
+  ],
+  "resource_usage": {
+    "external_download_bytes": 0,
+    "elapsed_seconds": 18.292631200049073
+  }
+}

@@ -453,6 +453,16 @@ $$
 | `reality_stone/python/reality_stone/clarus/core/src/engine/runtime_types.rs` | CellState, Mode 등 타입 | A, C |
 | `reality_stone/python/reality_stone/clarus/causal_world_simulator.py` | 부분감각 latent 복원, controlled transition 식별, chart holonomy, anchor harmonic field, 반사실 one-step planner | 26장; 유한 선형 합성 gate |
 | `experiments/preregistration/nonlinear_object_permanence_v1.json` | G2--G3 데이터 분할ㆍ기준선ㆍ판정 임계값 고정 | 27장; 구현 전 사전등록 |
+| `reality_stone/python/reality_stone/clarus/nonlinear_object_world.py` | NumPy 비선형 다중물체 환경, 가림 관측, 기준선, local-chart 모델, G2--G3 판정 | 27장; 최소 데이터 실행 경로 |
+| `reality_stone/python/reality_stone/clarus/active_perception.py` | 공분산 예측ㆍ관측, 정보이득 센서 선택, 정책 ablation, paired G4 판정 | 28장; NumPy-only 능동 지각 |
+| `reality_stone/python/reality_stone/clarus/compositional_causal_world.py` | 공유 force basis 식별, 조합 OOD rolloutㆍ개입 gate | 29장; G5 V6 |
+| `reality_stone/python/reality_stone/clarus/adaptive_chart_topology.py` | online chart 생성ㆍ병합ㆍ할당ㆍ국소 복구 | 30장; G6 V3 |
+| `reality_stone/python/reality_stone/clarus/memory_replay_planning.py` | bounded prototype memory, priority replay, macro-action MPC | 31장; G7 V4 |
+| `reality_stone/python/reality_stone/clarus/sandbox_safety.py` | 지연ㆍ누락 감각, actuator 결함, 불확실성 격리, 예측경계 shield | 32장; G8-S V4 |
+| `reality_stone/python/reality_stone/clarus/fault_ood_calibration.py` | 단기 위험 logistic calibration, OOD Brier/ECE, 선택적 거부, Wilson 위험상한 | 33장; G8-C V7 |
+| `reality_stone/python/reality_stone/clarus/real_robot_log.py` | 실제 SCITOS 초음파 로그 무결성, 시간순 분할, 지연ㆍdropout 복원, 선택적 행동 복원 | 34장; G8-R V5 |
+| `reality_stone/python/reality_stone/clarus/folding_twist.py` | differential-growth gradient flow, null guard, 국소 꼬임 계수ㆍ주름 peak 식별 | 35장; G9-S V3 |
+| `reality_stone/python/reality_stone/clarus/folding_surface_3d.py` | 2D 리만 성장 텐서 gradient flow, 회전 equivariance, OBJ 표면 출력 | 36장; G9-3D V2 |
 
 ---
 

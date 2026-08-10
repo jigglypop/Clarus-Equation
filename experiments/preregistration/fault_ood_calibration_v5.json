@@ -1,0 +1,39 @@
+{
+  "schema_version": 5,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-10",
+  "experiment": "fault_ood_calibration_v5",
+  "supersedes": "fault_ood_calibration_v4",
+  "extends": "fault_ood_calibration_v4.json",
+  "change_reason": "V4 passed Brier, ECE, and coverage but OOD accepted risk drifted from the 1 percent calibration target to 2.20 percent; V5 registers a 0.5 percent calibration buffer.",
+  "model": {"class_weighted": false, "candidate_feature_version": 1, "l2": 0.0002, "iterations": 1400},
+  "calibration_risk_limit": 0.005,
+  "data": {
+    "train_samples": 7000,
+    "calibration_samples": 3000,
+    "test_samples": 6000,
+    "horizon": 8,
+    "dt": 0.05,
+    "safe_bound": 1.0,
+    "train_gain_range": [0.8, 3.2],
+    "test_gain_range": [3.2, 4.2],
+    "train_delay_range": [0, 6],
+    "test_delay_range": [6, 9],
+    "train_flip_probability": 0.15,
+    "test_flip_probability": 0.25
+  },
+  "validation_seeds": [42000, 42001, 42002, 42003, 42004],
+  "test_seeds": [43000, 43001, 43002, 43003, 43004, 43005, 43006],
+  "success_criteria": {
+    "candidate_brier_max_fraction_of_baseline": 0.9,
+    "candidate_ece_max": 0.08,
+    "accepted_violation_rate_max": 0.02,
+    "accepted_coverage_min": 0.25,
+    "accepted_violation_rate_max_fraction_of_baseline": 0.75,
+    "external_download_bytes": 0,
+    "elapsed_seconds_max": 15.0
+  },
+  "threshold_rule": "Choose maximum calibration coverage with empirical accepted risk at most 0.5 percent, reserving drift margin below the unchanged 2 percent OOD test limit.",
+  "falsification": "Unchanged test thresholds from V1.",
+  "cost_policy": "Synthetic NumPy-only windows; hardware and paid data are SKIPPED_COST."
+}

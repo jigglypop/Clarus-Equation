@@ -1,0 +1,16 @@
+{
+  "schema_version": 3,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-10",
+  "supersedes": "memory_replay_planning_v2",
+  "extends": "memory_replay_planning_v2.json",
+  "change_reason": "Origin regulation did not require regime memory; V3 uses hold-position control under opposite rotational drift",
+  "experiment": "memory_replay_planning_v3",
+  "overrides": {
+    "regimes": {"A": [0.06, 0.12, 0.04, -0.06, 1.0], "B": [0.14, 0.28, 0.09, 0.06, 1.0], "C": [0.10, 0.18, 0.055, -0.08, 1.0]},
+    "planning_target": "hold_initial",
+    "action_cost": 0.001,
+    "validation_seeds": [22000, 22001, 22002, 22003, 22004, 22005],
+    "test_seeds": [23000, 23001, 23002, 23003, 23004, 23005, 23006, 23007, 23008]
+  }
+}

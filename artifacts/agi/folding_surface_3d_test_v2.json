@@ -1,0 +1,88 @@
+{
+  "experiment": "folding_surface_3d_v2",
+  "split": "test",
+  "status": "PASS",
+  "checks": {
+    "null_guard": true,
+    "coefficient_recovery": true,
+    "surface_improvement": true,
+    "ridge_improvement": true,
+    "rotation_equivariance": true,
+    "no_external_data": true,
+    "runtime": true
+  },
+  "summary": {
+    "null_selected_coefficient": 0.0,
+    "selected_coefficient": 0.8,
+    "baseline_rmse": 0.0005615405528952912,
+    "candidate_rmse": 4.74001656343135e-05,
+    "baseline_ridge_iou": 0.908558259041409,
+    "candidate_ridge_iou": 0.9902319902319903,
+    "rotation_equivariance_rmse": 2.110736436466712e-18,
+    "rmse_reduction": 0.9155890605052133,
+    "ridge_iou_gain": 0.0816737311905813,
+    "ridge_mismatch_reduction": 0.8931777800202522
+  },
+  "per_seed": [
+    {
+      "seed": 72000,
+      "baseline_rmse": 0.00037880492342230856,
+      "candidate_rmse": 4.3992110127193065e-05,
+      "baseline_ridge_iou": 0.9016393442622951,
+      "candidate_ridge_iou": 1.0,
+      "rotation_equivariance_rmse": 1.6322573136507579e-18
+    },
+    {
+      "seed": 72001,
+      "baseline_rmse": 0.0007792992468613588,
+      "candidate_rmse": 4.6290648403612295e-05,
+      "baseline_ridge_iou": 0.9016393442622951,
+      "candidate_ridge_iou": 0.9829059829059829,
+      "rotation_equivariance_rmse": 2.7697228044563706e-18
+    },
+    {
+      "seed": 72002,
+      "baseline_rmse": 0.0007075534050680041,
+      "candidate_rmse": 4.862658569989261e-05,
+      "baseline_ridge_iou": 0.9333333333333333,
+      "candidate_ridge_iou": 1.0,
+      "rotation_equivariance_rmse": 2.0239563370360713e-18
+    },
+    {
+      "seed": 72003,
+      "baseline_rmse": 0.0004423504486880242,
+      "candidate_rmse": 4.628318809156674e-05,
+      "baseline_ridge_iou": 0.9173553719008265,
+      "candidate_ridge_iou": 0.9829059829059829,
+      "rotation_equivariance_rmse": 1.886903408983387e-18
+    },
+    {
+      "seed": 72004,
+      "baseline_rmse": 0.00046130637819736696,
+      "candidate_rmse": 5.479918668952319e-05,
+      "baseline_ridge_iou": 0.9333333333333333,
+      "candidate_ridge_iou": 0.9829059829059829,
+      "rotation_equivariance_rmse": 2.3103880355265706e-18
+    },
+    {
+      "seed": 72005,
+      "baseline_rmse": 0.00047142505167909994,
+      "candidate_rmse": 4.6416840239142055e-05,
+      "baseline_ridge_iou": 0.9016393442622951,
+      "candidate_ridge_iou": 0.9829059829059829,
+      "rotation_equivariance_rmse": 1.897883632902922e-18
+    },
+    {
+      "seed": 72006,
+      "baseline_rmse": 0.0006900444163508757,
+      "candidate_rmse": 4.539260018926456e-05,
+      "baseline_ridge_iou": 0.8709677419354839,
+      "candidate_ridge_iou": 1.0,
+      "rotation_equivariance_rmse": 2.2540435227109065e-18
+    }
+  ],
+  "resource_usage": {
+    "external_download_bytes": 0,
+    "elapsed_seconds": 11.435404099989682
+  }
+}

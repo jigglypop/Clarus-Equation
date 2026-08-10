@@ -1,0 +1,56 @@
+{
+  "experiment": "fsaverage_geometry_v2",
+  "split": "validation",
+  "status": "FAIL",
+  "checks": {
+    "source_integrity": true,
+    "rmse_improvement": false,
+    "sign_improvement": false,
+    "download_budget": true,
+    "runtime": true
+  },
+  "summary": {
+    "baseline_rmse": 0.36345030851568383,
+    "candidate_rmse": 0.35710844754428955,
+    "baseline_sign_accuracy": 0.7672868079010232,
+    "candidate_sign_accuracy": 0.7624959046542209,
+    "rmse_reduction": 0.017449045503068028,
+    "sign_accuracy_gain": -0.004790903246802314,
+    "vertices": 10242,
+    "faces": 20480
+  },
+  "per_sector": [
+    {
+      "sector": 0,
+      "baseline_rmse": 0.5163709266399327,
+      "candidate_rmse": 0.4900504356134474,
+      "baseline_sign_accuracy": 0.5235602094240838,
+      "candidate_sign_accuracy": 0.525305410122164
+    },
+    {
+      "sector": 2,
+      "baseline_rmse": 0.32438489226661343,
+      "candidate_rmse": 0.32307099885782065,
+      "baseline_sign_accuracy": 0.8609188168659534,
+      "candidate_sign_accuracy": 0.8445563247325362
+    },
+    {
+      "sector": 4,
+      "baseline_rmse": 0.3102881731074465,
+      "candidate_rmse": 0.3010289110672866,
+      "baseline_sign_accuracy": 0.8339805825242719,
+      "candidate_sign_accuracy": 0.8446601941747572
+    },
+    {
+      "sector": 6,
+      "baseline_rmse": 0.3027572420487429,
+      "candidate_rmse": 0.3142834446386036,
+      "baseline_sign_accuracy": 0.8506876227897839,
+      "candidate_sign_accuracy": 0.8354616895874263
+    }
+  ],
+  "resource_usage": {
+    "downloaded_bytes": 373423,
+    "elapsed_seconds": 0.41916569974273443
+  }
+}

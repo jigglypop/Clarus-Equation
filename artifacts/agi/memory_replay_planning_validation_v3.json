@@ -1,0 +1,88 @@
+{
+  "experiment": "memory_replay_planning_v3",
+  "split": "validation",
+  "config_sha256": "86e5d8ffc7df2c683e88ea51e013a27efb68e9b1dae118ddee7fa4af31e85037",
+  "memory_items": 3.0,
+  "prototype_bytes": 120.0,
+  "recall_accuracy": 1.0,
+  "priority_rare_error": 0.03234367691197509,
+  "recency_rare_error": 1.1783600459358994,
+  "planning_cost": 0.07101858643419832,
+  "recency_planning_cost": 0.07101858643419832,
+  "zero_action_cost": 0.22577699684654884,
+  "seed_results": [
+    {
+      "memory_items": 3,
+      "prototype_bytes": 120,
+      "recall_accuracy": 1.0,
+      "priority_rare_error": 0.04184180601373496,
+      "recency_rare_error": 1.1697948594146776,
+      "planning_cost": 0.07101858643419831,
+      "recency_planning_cost": 0.07101858643419831,
+      "zero_action_cost": 0.22577699684654884,
+      "reservoir_items": 3
+    },
+    {
+      "memory_items": 3,
+      "prototype_bytes": 120,
+      "recall_accuracy": 1.0,
+      "priority_rare_error": 0.033386815007796514,
+      "recency_rare_error": 1.1701120173987192,
+      "planning_cost": 0.07101858643419831,
+      "recency_planning_cost": 0.07101858643419831,
+      "zero_action_cost": 0.22577699684654884,
+      "reservoir_items": 3
+    },
+    {
+      "memory_items": 3,
+      "prototype_bytes": 120,
+      "recall_accuracy": 1.0,
+      "priority_rare_error": 0.02988704646777323,
+      "recency_rare_error": 1.1873791775134372,
+      "planning_cost": 0.07101858643419831,
+      "recency_planning_cost": 0.07101858643419831,
+      "zero_action_cost": 0.22577699684654884,
+      "reservoir_items": 3
+    },
+    {
+      "memory_items": 3,
+      "prototype_bytes": 120,
+      "recall_accuracy": 1.0,
+      "priority_rare_error": 0.04317435814640419,
+      "recency_rare_error": 1.1643399281753533,
+      "planning_cost": 0.07101858643419831,
+      "recency_planning_cost": 0.07101858643419831,
+      "zero_action_cost": 0.22577699684654884,
+      "reservoir_items": 3
+    },
+    {
+      "memory_items": 3,
+      "prototype_bytes": 120,
+      "recall_accuracy": 1.0,
+      "priority_rare_error": 0.016116727698039072,
+      "recency_rare_error": 1.2150149019257275,
+      "planning_cost": 0.07101858643419831,
+      "recency_planning_cost": 0.07101858643419831,
+      "zero_action_cost": 0.22577699684654884,
+      "reservoir_items": 3
+    },
+    {
+      "memory_items": 3,
+      "prototype_bytes": 120,
+      "recall_accuracy": 1.0,
+      "priority_rare_error": 0.02965530813810255,
+      "recency_rare_error": 1.1635193911874806,
+      "planning_cost": 0.07101858643419831,
+      "recency_planning_cost": 0.07101858643419831,
+      "zero_action_cost": 0.22577699684654884,
+      "reservoir_items": 3
+    }
+  ],
+  "resource_usage": {
+    "external_download_bytes": 0,
+    "trajectory_files_written": 0,
+    "elapsed_wall_seconds": 0.12447759974747896
+  },
+  "performance_passed": false,
+  "passed": false
+}

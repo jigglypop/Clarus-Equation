@@ -1,0 +1,46 @@
+{
+  "schema_version": 2,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-10",
+  "supersedes": "active_perception_v1",
+  "change_reason": "V1 validation won only 3/5 seeds because scalar Q ignored observable mass-dependent disturbance sensitivity",
+  "experiment": "active_perception_v2",
+  "resource_limits": {
+    "external_download_bytes": 0,
+    "backend": "numpy",
+    "max_training_episodes": 20,
+    "max_validation_episodes": 5,
+    "max_test_episodes": 5,
+    "max_cpu_seconds_target": 15,
+    "write_trajectory_files": false
+  },
+  "world": {
+    "objects": 4,
+    "occlusion_steps": [10, 30],
+    "velocity_process_noise_std": 0.008,
+    "query_interval": 4,
+    "process_variance": 0.000064,
+    "observation_variance": 0.000001,
+    "query_cost": 0.00001,
+    "mass_scaled_process_noise": true,
+    "mass_scaled_covariance": true
+  },
+  "splits": {
+    "validation_seeds": [6000, 6001, 6002, 6003, 6004],
+    "test_seeds": [7000, 7001, 7002, 7003, 7004]
+  },
+  "policies": [
+    "no_sensor",
+    "fixed_round_robin",
+    "random_hidden",
+    "max_information_gain",
+    "oracle_error"
+  ],
+  "gate": {
+    "cost_reduction_vs_no_sensor": 0.20,
+    "cost_reduction_vs_random_hidden": 0.10,
+    "cost_reduction_vs_fixed_round_robin": 0.10,
+    "minimum_seed_wins_vs_random_out_of_5": 4,
+    "max_query_rate": 0.25
+  }
+}
