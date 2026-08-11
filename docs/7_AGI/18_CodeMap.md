@@ -3,6 +3,10 @@
 > 이 문서는 `15_Equations.md`의 Layer A--E 수식과 `17_AgentLoop.md`의 Layer F가 실제 코드의 어디에서 구현되는지를 1:1로 대응시킨다.
 > 코드를 읽을 때 "이 변수가 어떤 수식인지" 또는 수식을 읽을 때 "이 항이 어디에 구현되어 있는지"를 즉시 찾을 수 있도록 한다.
 
+> 실험 격리: `brain_geometry_benchmark.py`는 Loop 8B의 PFC 끌개–MD 연속조절
+> 가설을 검증하는 합성 벤치이며 canonical Layer A–F 런타임에는 연결되지
+> 않는다. 통과 결과도 생물학적 동일성이나 런타임 승격을 뜻하지 않는다.
+
 ---
 
 ## 1. 전체 아키텍처 대응
@@ -466,6 +470,9 @@ $$
 | raw-history controlled belief | F.2, F.4 | `history_state_benchmark.py` 합성 ID/OOD `85/100 GO`; 실제 2-state tanh RNN에는 비열등일 뿐 우위 미확립 |
 | modular reward transfer | F.4, F.7 | `reward_transfer_benchmark.py` 구현; locked Loop 4 `0/100 STOP`, context-RNN SAFE class 미학습으로 planner 우위 주장 불가 |
 | audited episodic memory | D.1--D.6 | `episodic_memory.py` ADD/UPDATE/DELETE/NOOP·evidence·abstention 후보 구현; corrected Loop 5 `90/100 GO`, runtime 기본 경로 미연결 |
+| executive rule belief | F.4, F.7, F.17 | `executive_control.py` 후보 구현; Loop 6 전체 `0/100 STOP`, belief maintenance는 유망하나 surprise 재귀 feedback 효능 실패 |
+| active executive information gain | F.7, F.17 | `ActiveExecutiveController` 구현; Loop 7 `0/100 STOP`, 현 과제에 action-dependent sensing/probe가 없어 독립 효능 식별 불가 |
+| unified executive posterior/control | F.1, F.4, F.7, F.17 | Loop 8 수식 후보를 research workspace에 고정; canonical·runtime 미편입, 정확 finite-state solver 전까지 구현 잠금 |
 
 ### 12.1 2026-08-11 loop-engineering 상태
 
@@ -506,5 +513,19 @@ $$
 - `[미완성]` 위 결과는 UPDATE 간섭을 겨냥한 합성 key/value task다.
   LoCoMo/LongMemEval, multi-session temporal reasoning, replay consolidation,
   BrainRuntime 기본 경로 효능은 아직 검증하지 않았다.
+- `[경험식]` Loop 6 hidden-rule task에서 rule posterior 유지 후보는 ID/OOD
+  accuracy `0.8771/0.8444`였고 hazard-off·feedback shuffle·gap reset·
+  win-stay-shift를 paired LCB로 이겼다.
+- `[미완성]` surprise→hazard 증폭은 surprise-off보다 낫지 않았고 전체
+  gate는 `0/100 STOP`이다. 메타인지 효능이나 PFC 구현 완료로 승격하지
+  않으며, 다음 후보는 명시적 change-point/context inference여야 한다.
+- `[미완성]` Loop 7 정보이득 행동도 reward-only보다 낫지 않았다. 현재
+  rule-switch 과제에는 미래 관측 품질을 바꾸는 probe 행동이 없으므로
+  epistemic action value를 식별할 수 없다. 다음 검증에는 비용 있는 inspect,
+  action-conditioned observation, delayed payoff가 함께 필요하다.
+- `[미완성]` Loop 8은 분기식 대신
+  $q_t(x,c,v,\kappa)$ posterior와 단일 정책 functional로 executive core를
+  재정의했다. 이는 아직 research model choice이며 canonical 식이나 PFC
+  대응으로 승격하지 않는다. exact finite-state identifiability gate가 먼저다.
 - 재현 artifact와 제한된 해석은
   `_workspace/ce/agi-loop-engineering-20260811/`에 기록한다.

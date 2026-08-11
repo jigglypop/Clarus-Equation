@@ -2,6 +2,40 @@
 
 Status: COMPLETE
 
+## Loop 8B brain-geometry mechanism
+
+- Added `brain_geometry_benchmark.py`: a bounded two-dimensional attractor
+  benchmark with an exact two-node heat-flow control.
+- Added five locked arms: pure diffusion, fixed attractor, continuous
+  MD-modulated attractor, shuffled-context MD, and oracle-context MD.
+- Every non-oracle arm receives the same causal cue filter and final readout;
+  the candidate receives no latent context or future state.
+- Added a CLI and focused tests. No canonical runtime state, Layer A–F equation,
+  default STDP behavior, branch, or dependency was changed.
+- Reproduction: `.venv/Scripts/python.exe examples/agi/brain_geometry_bench.py
+  --output _workspace/ce/agi-loop-engineering-20260811/loop8b-brain-geometry-validation.json`.
+
+## Loop 8C feedback-residual replay
+
+- Extended the frozen Loop 8B model with one scalar residual state computed
+  only after action-contingent feedback.
+- Added checkpoint, residual, error-sign-flip, and oracle arms across ID, OOD,
+  and stationary controls.
+- The canonical hippocampus/runtime state remains unchanged; this is an
+  isolated synthetic experiment.
+- Reproduction: `.venv/Scripts/python.exe examples/agi/residual_replay_bench.py
+  --output _workspace/ce/agi-loop-engineering-20260811/loop8c-residual-replay-validation.json`.
+
+## Loop 8D conflict-adaptive STN boundary
+
+- Added a read-only drift-diffusion decision layer over frozen Loop 8C memory
+  traces with low, equal-mean matched, adaptive, and conflict-shuffle arms.
+- Decision arms cannot mutate PFC, MD, or residual state; trace identity is
+  checked after every arm.
+- No canonical runtime state or dependency changed.
+- Reproduction: `.venv/Scripts/python.exe examples/agi/stn_boundary_bench.py
+  --output _workspace/ce/agi-loop-engineering-20260811/loop8d-stn-boundary-validation.json`.
+
 Implemented current checkpoint:
 
 - `clarus/belief_control.py`: rank-1 robust observer, action-effect matrix, pure H2/H3 planning, state persistence.
@@ -49,4 +83,22 @@ recency eviction. `episodic_memory_benchmark.py` holds fixed the existing
 priority-only memory, merge-off, abstention-off, FIFO, and no-memory arms. It is
 not yet the default `BrainRuntime.hippocampus`; runtime integration requires a
 separate downstream-task guard.
+
+Loop 6 adds `executive_control.py`: a normalized categorical rule belief,
+hidden change hazard, action selection by expected rule correctness, and a
+surprise-triggered next-step flexibility signal. The benchmark causally removes
+hazard, surprise feedback, temporal feedback alignment, and gap retention. The
+belief state is useful, but the scalar surprise boost failed its independent
+efficacy gate and must not be wired into `RuntimeAgent`.
+
+Loop 7 adds an expected rule-information term to action selection and includes
+reward-only, information-only, surprise, shuffled-feedback, heuristic, and
+oracle controls. It is retained as a negative witness: the existing card task
+does not expose a probe action or action-dependent sensing, so information gain
+cannot become a distinct executive control variable.
+
+Implementation is now locked behind `loop8-unified-executive-equation.md`.
+No additional RuntimeAgent branch or named INSPECT/WAIT/SWITCH handler is
+allowed. The next code, after equation review, is an isolated exact finite-state
+solver for one posterior and one policy functional.
 
