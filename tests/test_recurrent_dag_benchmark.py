@@ -1,5 +1,7 @@
 from reality_stone.clarus.recurrent_dag_benchmark import (
+    evaluate_context_boundary,
     evaluate_recurrent_dag,
+    evaluate_soft_evidence,
     small_recurrent_dag_config,
 )
 
@@ -14,3 +16,21 @@ def test_recurrent_dag_benchmark_integrity_and_schema() -> None:
     assert result["gates"]["finite_valid_topology"]
     assert result["gates"]["bounded_finite_state"]
     assert 0 <= result["promise_score"] <= 100
+
+
+def test_soft_evidence_benchmark_has_no_unreachable_targets() -> None:
+    result = evaluate_soft_evidence(small_recurrent_dag_config())
+    assert result["schema"] == "clarus.recurrent-bg-dag-soft-evidence.validation.v1"
+    assert result["id"]["unreachable_count"] == 0.0
+    assert result["ood"]["unreachable_count"] == 0.0
+    assert result["id"]["minimum_true_probability"] > 0.0
+    assert result["ood"]["minimum_true_probability"] > 0.0
+    assert result["pending_overwrites"] == 0
+
+
+def test_context_boundary_benchmark_mechanism_identities() -> None:
+    result = evaluate_context_boundary(small_recurrent_dag_config())
+    assert result["schema"] == "clarus.recurrent-bg-dag-context-boundary.validation.v1"
+    assert result["gates"]["exact_surprise_identity"]
+    assert result["gates"]["directional_nonexpansive"]
+    assert result["future_reads"] == 0

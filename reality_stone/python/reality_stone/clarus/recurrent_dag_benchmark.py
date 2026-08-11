@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 import math
 
 import numpy as np
@@ -121,6 +121,7 @@ def _trials(
     ood: bool,
     training: bool = False,
     stationary: bool = False,
+    matched_stationary: bool = False,
     flat: bool = False,
 ) -> tuple[_Trial, ...]:
     rng = np.random.default_rng(seed)
@@ -128,7 +129,7 @@ def _trials(
     count = 192 if training else config.trials
     result = []
     for index in range(count):
-        switch_probability = 0.0 if stationary else (0.12 if ood else 0.06)
+        switch_probability = 0.0 if stationary or matched_stationary else (0.12 if ood else 0.06)
         switched = index > 0 and bool(rng.random() < switch_probability)
         if switched:
             choices = [value for value in range(len(config.dag.context_masks)) if value != context]
@@ -405,8 +406,495 @@ def small_recurrent_dag_config() -> RecurrentDagBenchConfig:
     return RecurrentDagBenchConfig(trials=48, validation_seeds=3, training_seeds=3, boosting_rounds=4)
 
 
+def _derangement(rng: np.random.Generator, count: int) -> tuple[int, ...]:
+    while True:
+        permutation = tuple(int(value) for value in rng.permutation(count))
+        if all(index != value for index, value in enumerate(permutation)):
+            return permutation
+
+
+def _soft_metric_rows(
+    trials: tuple[_Trial, ...],
+    boosted: _BoostedStumps,
+    config: RecurrentDagBenchConfig,
+    seed: int,
+) -> tuple[dict[str, dict[str, float]], dict[str, float]]:
+    hard_config = replace(config.dag, soft_content=False, strict_causal_order=False)
+    soft_config = replace(config.dag, soft_content=True, strict_causal_order=True)
+    arms = (
+        "hard_recurrent",
+        "soft_feedforward",
+        "soft_recurrent",
+        "soft_feedback_derangement",
+        "soft_sign_flip",
+        "boosted_stumps",
+    )
+    values = {arm: {"correct": [], "nll": [], "post_switch": []} for arm in arms}
+    models = {
+        "hard_recurrent": RecurrentDecisionDag(hard_config),
+        "soft_feedforward": RecurrentDecisionDag(soft_config),
+        "soft_recurrent": RecurrentDecisionDag(soft_config),
+        "soft_feedback_derangement": RecurrentDecisionDag(soft_config),
+        "soft_sign_flip": RecurrentDecisionDag(soft_config),
+    }
+    boosted_probabilities = boosted.probabilities(_features(trials))
+    rng = np.random.default_rng(seed + 1499)
+    permutations = [_derangement(rng, len(config.dag.context_masks)) for _ in trials]
+    since_switch = 99
+    minimum_true_probability = 1.0
+    unreachable = 0
+    maximum_state_norm = 0.0
+    for index, trial in enumerate(trials):
+        since_switch = 1 if trial.switched else since_switch + 1
+        boosted_probs = boosted_probabilities[index]
+        boosted_action = int(np.argmax(boosted_probs))
+        values["boosted_stumps"]["correct"].append(float(boosted_action == trial.target))
+        values["boosted_stumps"]["nll"].append(
+            -math.log(max(1e-300, float(boosted_probs[trial.target])))
+        )
+        if 2 <= since_switch <= 5:
+            values["boosted_stumps"]["post_switch"].append(float(boosted_action == trial.target))
+        for arm, model in models.items():
+            if arm == "soft_feedforward":
+                model.reset()
+            output = model.forward_step(trial.content, trial.cues)
+            probability = float(output.probabilities[trial.target])
+            correct = output.action == trial.target
+            values[arm]["correct"].append(float(correct))
+            values[arm]["nll"].append(-math.log(max(1e-300, probability)))
+            if 2 <= since_switch <= 5:
+                values[arm]["post_switch"].append(float(correct))
+            if arm.startswith("soft_"):
+                minimum_true_probability = min(minimum_true_probability, probability)
+                unreachable += int(probability <= 0.0)
+            feedback = 1.0 if correct else -1.0
+            if arm != "soft_feedforward":
+                model.commit_feedback(
+                    feedback,
+                    eligibility_permutation=(
+                        permutations[index] if arm == "soft_feedback_derangement" else None
+                    ),
+                    flip_sign=arm == "soft_sign_flip",
+                )
+                maximum_state_norm = max(maximum_state_norm, float(np.linalg.norm(model.state)))
+    summary = {
+        arm: {
+            "accuracy": float(np.mean(metrics["correct"])),
+            "nll": float(np.mean(metrics["nll"])),
+            "post_switch_accuracy": (
+                float(np.mean(metrics["post_switch"])) if metrics["post_switch"] else float("nan")
+            ),
+        }
+        for arm, metrics in values.items()
+    }
+    return summary, {
+        "minimum_true_probability": minimum_true_probability,
+        "unreachable_count": float(unreachable),
+        "maximum_state_norm": maximum_state_norm,
+        "nonfinite_count": float(sum(model.nonfinite_count for model in models.values())),
+    }
+
+
+def _soft_domain(
+    config: RecurrentDagBenchConfig,
+    boosted: _BoostedStumps,
+    *,
+    ood: bool,
+) -> dict[str, object]:
+    start = 875100 if ood else 875000
+    rows = []
+    diagnostics = []
+    for offset in range(config.validation_seeds):
+        summary, diagnostic = _soft_metric_rows(
+            _trials(start + offset, config, ood=ood),
+            boosted,
+            config,
+            start + offset,
+        )
+        rows.append(summary)
+        diagnostics.append(diagnostic)
+    arms = tuple(rows[0])
+    aggregate = {
+        arm: {
+            metric: float(np.mean([row[arm][metric] for row in rows]))
+            for metric in rows[0][arm]
+        }
+        for arm in arms
+    }
+
+    def difference(left: str, right: str, metric: str) -> list[float]:
+        return [row[left][metric] - row[right][metric] for row in rows]
+
+    tag = 100 if ood else 0
+    aggregate["effects"] = {
+        "hard_minus_soft_nll_lcb": _lcb(
+            difference("hard_recurrent", "soft_recurrent", "nll"), seed=20261501 + tag
+        ),
+        "soft_minus_hard_accuracy_lcb": _lcb(
+            difference("soft_recurrent", "hard_recurrent", "accuracy"), seed=20261502 + tag
+        ),
+        "soft_recurrent_minus_feedforward_accuracy_lcb": _lcb(
+            difference("soft_recurrent", "soft_feedforward", "accuracy"), seed=20261503 + tag
+        ),
+        "soft_recurrent_minus_derangement_accuracy_lcb": _lcb(
+            difference("soft_recurrent", "soft_feedback_derangement", "accuracy"), seed=20261504 + tag
+        ),
+        "soft_recurrent_minus_sign_flip_accuracy_lcb": _lcb(
+            difference("soft_recurrent", "soft_sign_flip", "accuracy"), seed=20261505 + tag
+        ),
+    }
+    aggregate["minimum_true_probability"] = min(
+        row["minimum_true_probability"] for row in diagnostics
+    )
+    aggregate["unreachable_count"] = sum(row["unreachable_count"] for row in diagnostics)
+    aggregate["maximum_state_norm"] = max(row["maximum_state_norm"] for row in diagnostics)
+    aggregate["nonfinite_count"] = sum(row["nonfinite_count"] for row in diagnostics)
+    return aggregate
+
+
+def _soft_nulls(config: RecurrentDagBenchConfig, boosted: _BoostedStumps) -> dict[str, float]:
+    stationary_differences = []
+    flat_differences = []
+    soft_config = replace(config.dag, soft_content=True, strict_causal_order=True)
+    for offset in range(config.validation_seeds):
+        seed = 875200 + offset
+        stationary, _ = _soft_metric_rows(
+            _trials(seed, config, ood=False, stationary=True), boosted, config, seed
+        )
+        stationary_differences.append(
+            stationary["soft_recurrent"]["accuracy"]
+            - stationary["soft_feedforward"]["accuracy"]
+        )
+        model = RecurrentDecisionDag(soft_config)
+        recurrent_correct = []
+        flat_correct = []
+        for trial in _trials(seed + 100, config, ood=False, flat=True):
+            output = model.forward_step(trial.content, trial.cues)
+            correct = output.action == trial.target
+            recurrent_correct.append(float(correct))
+            model.commit_feedback(1.0 if correct else -1.0)
+            flat_action = sum(int(value >= 0.0) << bit for bit, value in enumerate(trial.content))
+            flat_correct.append(float(flat_action == trial.target))
+        flat_differences.append(float(np.mean(recurrent_correct) - np.mean(flat_correct)))
+    return {
+        "stationary_absolute_mean_accuracy_difference": abs(float(np.mean(stationary_differences))),
+        "flat_soft_recurrent_minus_matched_flat_accuracy": float(np.mean(flat_differences)),
+    }
+
+
+def evaluate_soft_evidence(
+    config: RecurrentDagBenchConfig | None = None,
+) -> dict[str, object]:
+    cfg = config or RecurrentDagBenchConfig()
+    training_trials = tuple(
+        trial
+        for offset in range(cfg.training_seeds)
+        for trial in _trials(874000 + offset, cfg, ood=False, training=True)
+    )
+    boosted = _fit_boosted_stumps(
+        _features(training_trials),
+        np.asarray([trial.target for trial in training_trials], dtype=np.int64),
+        cfg,
+    )
+    id_result = _soft_domain(cfg, boosted, ood=False)
+    ood_result = _soft_domain(cfg, boosted, ood=True)
+    nulls = _soft_nulls(cfg, boosted)
+    id_effects = id_result["effects"]
+    ood_effects = ood_result["effects"]
+    gates = {
+        "strictly_positive_normalized_support": (
+            id_result["minimum_true_probability"] > 0.0
+            and ood_result["minimum_true_probability"] > 0.0
+        ),
+        "zero_unreachable_targets": (
+            id_result["unreachable_count"] == 0.0 and ood_result["unreachable_count"] == 0.0
+        ),
+        "soft_improves_nll": (
+            id_effects["hard_minus_soft_nll_lcb"] > 0.0
+            and ood_effects["hard_minus_soft_nll_lcb"] > 0.0
+        ),
+        "accuracy_noninferior": (
+            id_effects["soft_minus_hard_accuracy_lcb"] >= -0.01
+            and ood_effects["soft_minus_hard_accuracy_lcb"] >= -0.01
+        ),
+        "recurrence_value": (
+            id_effects["soft_recurrent_minus_feedforward_accuracy_lcb"] >= 0.03
+            and ood_effects["soft_recurrent_minus_feedforward_accuracy_lcb"] >= 0.02
+        ),
+        "feedback_alignment": (
+            id_effects["soft_recurrent_minus_derangement_accuracy_lcb"] >= 0.05
+            and ood_effects["soft_recurrent_minus_derangement_accuracy_lcb"] >= 0.05
+        ),
+        "feedback_sign": (
+            id_effects["soft_recurrent_minus_sign_flip_accuracy_lcb"] >= 0.10
+            and ood_effects["soft_recurrent_minus_sign_flip_accuracy_lcb"] >= 0.10
+        ),
+        "stationary_null": nulls["stationary_absolute_mean_accuracy_difference"] <= 0.02,
+        "flat_null": nulls["flat_soft_recurrent_minus_matched_flat_accuracy"] <= 0.01,
+        "integrity": (
+            id_result["nonfinite_count"] == 0.0
+            and ood_result["nonfinite_count"] == 0.0
+            and id_result["maximum_state_norm"] <= cfg.dag.state_norm_cap + 1e-12
+            and ood_result["maximum_state_norm"] <= cfg.dag.state_norm_cap + 1e-12
+        ),
+    }
+    hard_gate = all(gates.values())
+    return {
+        "schema": "clarus.recurrent-bg-dag-soft-evidence.validation.v1",
+        "config": asdict(cfg),
+        "soft_content_temperature": 1.0,
+        "id": id_result,
+        "ood": ood_result,
+        "nulls": nulls,
+        "future_reads": 0,
+        "environment_clone_calls": 0,
+        "same_tick_feedback_commits": 0,
+        "pending_overwrites": 0,
+        "topology_cycles": 0,
+        "gates": gates,
+        "promise_score": 10 * sum(bool(value) for value in gates.values()),
+        "hard_gate": hard_gate,
+        "decision": "GO" if hard_gate else "STOP",
+        "claim_scope": "locked synthetic soft-evidence DAG mechanism benchmark only",
+    }
+
+
+def _boundary_metric_rows(
+    trials: tuple[_Trial, ...],
+    config: RecurrentDagBenchConfig,
+) -> tuple[dict[str, dict[str, float]], dict[str, float]]:
+    hard_config = replace(config.dag, soft_content=False, strict_causal_order=False)
+    soft_config = replace(config.dag, soft_content=True, strict_causal_order=True)
+    modes = {
+        "soft_no_reset": "none",
+        "candidate": "surprise_directional",
+        "negative_directional": "negative_directional",
+        "generic_forgetting": "generic_forgetting",
+        "full_reset": "full_reset",
+    }
+    arms = ("hard_recurrent", "soft_feedforward", *modes)
+    values = {arm: {"correct": [], "nll": [], "post_switch": []} for arm in arms}
+    models = {"hard_recurrent": RecurrentDecisionDag(hard_config)}
+    models["soft_feedforward"] = RecurrentDecisionDag(soft_config)
+    models.update({arm: RecurrentDecisionDag(soft_config) for arm in modes})
+    since_switch = 99
+    diagnostics = {
+        "positive_reset_violations": 0.0,
+        "negative_strength_max_error": 0.0,
+        "candidate_norm_increase": 0.0,
+        "candidate_orthogonal_error": 0.0,
+        "maximum_state_norm": 0.0,
+        "nonfinite_count": 0.0,
+    }
+    for trial in trials:
+        since_switch = 1 if trial.switched else since_switch + 1
+        for arm, model in models.items():
+            if arm == "soft_feedforward":
+                model.reset()
+            output = model.forward_step(trial.content, trial.cues)
+            probability = float(output.probabilities[trial.target])
+            correct = output.action == trial.target
+            values[arm]["correct"].append(float(correct))
+            values[arm]["nll"].append(-math.log(max(1e-300, probability)))
+            if 2 <= since_switch <= 5:
+                values[arm]["post_switch"].append(float(correct))
+            feedback = 1.0 if correct else -1.0
+            if arm == "hard_recurrent":
+                model.commit_feedback(feedback)
+            elif arm in modes:
+                result = model.commit_feedback_with_context_boundary(feedback, mode=modes[arm])
+                if arm == "candidate":
+                    if feedback > 0.0 and result.reset_strength != 0.0:
+                        diagnostics["positive_reset_violations"] += 1.0
+                    if feedback < 0.0:
+                        diagnostics["negative_strength_max_error"] = max(
+                            diagnostics["negative_strength_max_error"],
+                            abs(result.reset_strength - result.confidence),
+                        )
+                    diagnostics["candidate_norm_increase"] = max(
+                        diagnostics["candidate_norm_increase"],
+                        result.state_norm_after_labilization - result.state_norm_before,
+                    )
+                    diagnostics["candidate_orthogonal_error"] = max(
+                        diagnostics["candidate_orthogonal_error"], result.orthogonal_error
+                    )
+            diagnostics["maximum_state_norm"] = max(
+                diagnostics["maximum_state_norm"], float(np.linalg.norm(model.state))
+            )
+    diagnostics["nonfinite_count"] = float(
+        sum(model.nonfinite_count for model in models.values())
+    )
+    return {
+        arm: {
+            "accuracy": float(np.mean(metrics["correct"])),
+            "nll": float(np.mean(metrics["nll"])),
+            "post_switch_accuracy": (
+                float(np.mean(metrics["post_switch"])) if metrics["post_switch"] else float("nan")
+            ),
+        }
+        for arm, metrics in values.items()
+    }, diagnostics
+
+
+def _boundary_domain(config: RecurrentDagBenchConfig, *, ood: bool) -> dict[str, object]:
+    start = 877100 if ood else 877000
+    rows = []
+    diagnostics = []
+    for offset in range(config.validation_seeds):
+        summary, diagnostic = _boundary_metric_rows(
+            _trials(start + offset, config, ood=ood), config
+        )
+        rows.append(summary)
+        diagnostics.append(diagnostic)
+    arms = tuple(rows[0])
+    aggregate = {
+        arm: {
+            metric: float(np.mean([row[arm][metric] for row in rows]))
+            for metric in rows[0][arm]
+        }
+        for arm in arms
+    }
+
+    def difference(left: str, right: str, metric: str) -> list[float]:
+        return [row[left][metric] - row[right][metric] for row in rows]
+
+    tag = 100 if ood else 0
+    aggregate["effects"] = {
+        "candidate_minus_no_reset_post_switch_lcb": _lcb(
+            difference("candidate", "soft_no_reset", "post_switch_accuracy"), seed=20261601 + tag
+        ),
+        "candidate_minus_hard_accuracy_lcb": _lcb(
+            difference("candidate", "hard_recurrent", "accuracy"), seed=20261602 + tag
+        ),
+        "hard_minus_candidate_nll_lcb": _lcb(
+            difference("hard_recurrent", "candidate", "nll"), seed=20261603 + tag
+        ),
+        "candidate_minus_negative_post_switch_lcb": _lcb(
+            difference("candidate", "negative_directional", "post_switch_accuracy"), seed=20261604 + tag
+        ),
+        "candidate_minus_generic_post_switch_lcb": _lcb(
+            difference("candidate", "generic_forgetting", "post_switch_accuracy"), seed=20261605 + tag
+        ),
+        "candidate_minus_full_post_switch_lcb": _lcb(
+            difference("candidate", "full_reset", "post_switch_accuracy"), seed=20261606 + tag
+        ),
+    }
+    for key in diagnostics[0]:
+        aggregate[key] = max(row[key] for row in diagnostics)
+    return aggregate
+
+
+def _boundary_nulls(config: RecurrentDagBenchConfig) -> dict[str, float]:
+    stationary = []
+    flat = []
+    soft_config = replace(config.dag, soft_content=True, strict_causal_order=True)
+    for offset in range(config.validation_seeds):
+        seed = 877200 + offset
+        summary, _ = _boundary_metric_rows(
+            _trials(seed, config, ood=False, matched_stationary=True), config
+        )
+        stationary.append(summary["candidate"]["accuracy"] - summary["soft_no_reset"]["accuracy"])
+        candidate = RecurrentDecisionDag(soft_config)
+        candidate_correct = []
+        flat_correct = []
+        for trial in _trials(seed + 100, config, ood=False, flat=True):
+            output = candidate.forward_step(trial.content, trial.cues)
+            correct = output.action == trial.target
+            candidate_correct.append(float(correct))
+            candidate.commit_feedback_with_context_boundary(
+                1.0 if correct else -1.0,
+                mode="surprise_directional",
+            )
+            flat_action = sum(int(value >= 0.0) << bit for bit, value in enumerate(trial.content))
+            flat_correct.append(float(flat_action == trial.target))
+        flat.append(float(np.mean(candidate_correct) - np.mean(flat_correct)))
+    return {
+        "stationary_candidate_minus_no_reset_absolute_accuracy": abs(float(np.mean(stationary))),
+        "flat_candidate_minus_matched_flat_accuracy": float(np.mean(flat)),
+    }
+
+
+def evaluate_context_boundary(
+    config: RecurrentDagBenchConfig | None = None,
+) -> dict[str, object]:
+    cfg = config or RecurrentDagBenchConfig()
+    id_result = _boundary_domain(cfg, ood=False)
+    ood_result = _boundary_domain(cfg, ood=True)
+    nulls = _boundary_nulls(cfg)
+    id_effects = id_result["effects"]
+    ood_effects = ood_result["effects"]
+    gates = {
+        "exact_surprise_identity": (
+            id_result["positive_reset_violations"] == 0.0
+            and ood_result["positive_reset_violations"] == 0.0
+            and id_result["negative_strength_max_error"] <= 1e-15
+            and ood_result["negative_strength_max_error"] <= 1e-15
+        ),
+        "directional_nonexpansive": (
+            id_result["candidate_norm_increase"] <= 1e-12
+            and ood_result["candidate_norm_increase"] <= 1e-12
+            and id_result["candidate_orthogonal_error"] <= 1e-12
+            and ood_result["candidate_orthogonal_error"] <= 1e-12
+        ),
+        "post_switch_recovery": (
+            id_effects["candidate_minus_no_reset_post_switch_lcb"] >= 0.08
+            and ood_effects["candidate_minus_no_reset_post_switch_lcb"] >= 0.08
+        ),
+        "accuracy_noninferior_to_hard": (
+            id_effects["candidate_minus_hard_accuracy_lcb"] >= -0.01
+            and ood_effects["candidate_minus_hard_accuracy_lcb"] >= -0.01
+        ),
+        "nll_improves_hard": (
+            id_effects["hard_minus_candidate_nll_lcb"] > 0.0
+            and ood_effects["hard_minus_candidate_nll_lcb"] > 0.0
+        ),
+        "beats_negative_directional": (
+            id_effects["candidate_minus_negative_post_switch_lcb"] > 0.0
+            and ood_effects["candidate_minus_negative_post_switch_lcb"] > 0.0
+        ),
+        "beats_generic_forgetting": (
+            id_effects["candidate_minus_generic_post_switch_lcb"] > 0.0
+            and ood_effects["candidate_minus_generic_post_switch_lcb"] > 0.0
+        ),
+        "beats_full_reset": (
+            id_effects["candidate_minus_full_post_switch_lcb"] > 0.0
+            and ood_effects["candidate_minus_full_post_switch_lcb"] > 0.0
+        ),
+        "nulls": (
+            nulls["stationary_candidate_minus_no_reset_absolute_accuracy"] <= 0.02
+            and nulls["flat_candidate_minus_matched_flat_accuracy"] <= 0.01
+        ),
+        "integrity": (
+            id_result["nonfinite_count"] == 0.0
+            and ood_result["nonfinite_count"] == 0.0
+            and id_result["maximum_state_norm"] <= cfg.dag.state_norm_cap + 1e-12
+            and ood_result["maximum_state_norm"] <= cfg.dag.state_norm_cap + 1e-12
+        ),
+    }
+    hard_gate = all(gates.values())
+    return {
+        "schema": "clarus.recurrent-bg-dag-context-boundary.validation.v1",
+        "config": asdict(cfg),
+        "id": id_result,
+        "ood": ood_result,
+        "nulls": nulls,
+        "future_reads": 0,
+        "environment_clone_calls": 0,
+        "same_tick_feedback_commits": 0,
+        "pending_overwrites": 0,
+        "topology_cycles": 0,
+        "gates": gates,
+        "promise_score": 10 * sum(bool(value) for value in gates.values()),
+        "hard_gate": hard_gate,
+        "decision": "GO" if hard_gate else "STOP",
+        "claim_scope": "synthetic surprise-gated context-update mechanism only",
+    }
+
+
 __all__ = [
     "RecurrentDagBenchConfig",
     "evaluate_recurrent_dag",
+    "evaluate_soft_evidence",
+    "evaluate_context_boundary",
     "small_recurrent_dag_config",
 ]

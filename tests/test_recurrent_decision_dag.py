@@ -38,3 +38,29 @@ def test_recurrent_dag_requires_causal_feedback_order() -> None:
     model.commit_feedback(-1.0, flip_sign=True)
     with pytest.raises(RuntimeError, match="preceding forward"):
         model.commit_feedback(1.0)
+
+
+def test_soft_content_preserves_all_action_support_and_pending_order() -> None:
+    model = RecurrentDecisionDag(
+        RecurrentDagConfig(soft_content=True, strict_causal_order=True)
+    )
+    output = model.forward_step((0.2, -0.3, 0.1), (0.5, -0.2, 0.0, 0.1))
+    assert all(probability > 0.0 for probability in output.probabilities)
+    assert math.isclose(sum(output.probabilities), 1.0)
+    with pytest.raises(RuntimeError, match="pending decision"):
+        model.forward_step((0.2, -0.3, 0.1), (0.5, -0.2, 0.0, 0.1))
+    model.commit_feedback(-1.0)
+
+
+def test_context_boundary_is_directional_and_positive_safe() -> None:
+    model = RecurrentDecisionDag(
+        RecurrentDagConfig(soft_content=True, strict_causal_order=True)
+    )
+    model.forward_step((1.0, -1.0, 1.0), (2.0, 0.0, 0.0, 0.0))
+    positive = model.commit_feedback_with_context_boundary(1.0)
+    assert positive.reset_strength == 0.0
+    model.forward_step((1.0, -1.0, 1.0), (2.0, 0.0, 0.0, 0.0))
+    negative = model.commit_feedback_with_context_boundary(-1.0)
+    assert math.isclose(negative.reset_strength, negative.confidence)
+    assert negative.state_norm_after_labilization <= negative.state_norm_before + 1e-12
+    assert negative.orthogonal_error <= 1e-12
