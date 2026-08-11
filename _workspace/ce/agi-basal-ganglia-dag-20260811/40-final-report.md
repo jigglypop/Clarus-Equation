@@ -31,3 +31,20 @@ context labilization. It improved ID switch recovery but failed OOD, stationary,
 and comparator gates (50/100 STOP). The remaining mathematical defect is causal
 credit assignment: negative feedback must be attributed between sensory/base
 uncertainty and context uncertainty before context state is updated.
+
+Loop 8K implemented that factorization as an exact finite-state context filter.
+It beat the hard parent in both accuracy and NLL, and passed support-alignment,
+outcome-sign, reset, null, and mathematical-identity controls. It scored 80/100
+STOP because the locked transition hazard `0.06` did not adapt to the OOD
+environment hazard `0.12`; post-switch recovery remained below gate. The next
+unresolved variable is therefore transition/change-point inference, not action
+evidence, context likelihood, reset strength, or DAG topology.
+
+Loop 8L closed the track with a finite joint hazard-by-context HMM. It correctly
+separated stationary, ID, and OOD volatility, but learned hazard weights did not
+beat fixed or frozen-weight alternatives in action accuracy and post-switch
+gates. The run scored 70/100 STOP and is terminal by preregistration. This
+removes hazard-grid tuning as the next route. Further evidence must come from a
+broader task distribution, calibrated likelihoods, real neural/behavioral data,
+or a separately authorized runtime experiment—not another version of this
+synthetic benchmark.

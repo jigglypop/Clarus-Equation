@@ -7,6 +7,7 @@ from reality_stone.clarus.recurrent_decision_dag import (
     DagNode,
     RecurrentDagConfig,
     RecurrentDecisionDag,
+    OutcomePosteriorConfig,
     validate_topology,
 )
 
@@ -64,3 +65,20 @@ def test_context_boundary_is_directional_and_positive_safe() -> None:
     assert math.isclose(negative.reset_strength, negative.confidence)
     assert negative.state_norm_after_labilization <= negative.state_norm_before + 1e-12
     assert negative.orthogonal_error <= 1e-12
+
+
+def test_outcome_posterior_is_exact_and_normalized() -> None:
+    model = RecurrentDecisionDag(
+        RecurrentDagConfig(soft_content=True, strict_causal_order=True)
+    )
+    model.forward_step((0.4, -0.2, 0.8), (0.3, -0.1, 0.2, 0.0))
+    result = model.commit_outcome_posterior(
+        -1.0,
+        config=OutcomePosteriorConfig(switch_hazard=0.06),
+    )
+    assert result.posterior_sum_error <= 1e-14
+    assert result.bayes_residual <= 1e-14
+    assert result.transition_sum_error <= 1e-14
+    assert all(value > 0.0 for value in result.posterior_context_probabilities)
+    assert all(value > 0.0 for value in result.predicted_next_prior)
+    assert math.isclose(sum(result.predicted_next_prior), 1.0)

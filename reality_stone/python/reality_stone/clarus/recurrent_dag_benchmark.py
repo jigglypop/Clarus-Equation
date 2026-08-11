@@ -8,7 +8,11 @@ import math
 import numpy as np
 
 from .brain_geometry_benchmark import _lcb
-from .recurrent_decision_dag import RecurrentDagConfig, RecurrentDecisionDag
+from .recurrent_decision_dag import (
+    OutcomePosteriorConfig,
+    RecurrentDagConfig,
+    RecurrentDecisionDag,
+)
 
 
 @dataclass(frozen=True)
@@ -891,10 +895,283 @@ def evaluate_context_boundary(
     }
 
 
+def _posterior_metric_rows(
+    trials: tuple[_Trial, ...],
+    config: RecurrentDagBenchConfig,
+    seed: int,
+) -> tuple[dict[str, dict[str, float]], dict[str, float]]:
+    hard_config = replace(config.dag, soft_content=False, strict_causal_order=False)
+    soft_config = replace(config.dag, soft_content=True, strict_causal_order=True)
+    arms = (
+        "hard_recurrent",
+        "soft_feedforward",
+        "signed_heuristic",
+        "directional_reset",
+        "outcome_posterior",
+        "support_derangement",
+        "outcome_sign_flip",
+    )
+    values = {arm: {"correct": [], "nll": [], "post_switch": []} for arm in arms}
+    models = {"hard_recurrent": RecurrentDecisionDag(hard_config)}
+    models.update({arm: RecurrentDecisionDag(soft_config) for arm in arms if arm != "hard_recurrent"})
+    posterior_config = OutcomePosteriorConfig(switch_hazard=0.06)
+    rng = np.random.default_rng(seed + 1877)
+    permutations = [_derangement(rng, len(config.dag.context_masks)) for _ in trials]
+    diagnostics = {
+        "posterior_sum_error": 0.0,
+        "bayes_residual": 0.0,
+        "transition_sum_error": 0.0,
+        "minimum_posterior": 1.0,
+        "minimum_predicted_prior": 1.0,
+        "degenerate_evidence_count": 0.0,
+        "maximum_state_norm": 0.0,
+        "nonfinite_count": 0.0,
+    }
+    since_switch = 99
+    for index, trial in enumerate(trials):
+        since_switch = 1 if trial.switched else since_switch + 1
+        for arm, model in models.items():
+            if arm == "soft_feedforward":
+                model.reset()
+            output = model.forward_step(trial.content, trial.cues)
+            probability = float(output.probabilities[trial.target])
+            correct = output.action == trial.target
+            values[arm]["correct"].append(float(correct))
+            values[arm]["nll"].append(-math.log(max(1e-300, probability)))
+            if 2 <= since_switch <= 5:
+                values[arm]["post_switch"].append(float(correct))
+            feedback = 1.0 if correct else -1.0
+            if arm == "hard_recurrent" or arm == "signed_heuristic":
+                model.commit_feedback(feedback)
+            elif arm == "directional_reset":
+                model.commit_feedback_with_context_boundary(
+                    feedback, mode="surprise_directional"
+                )
+            elif arm in {"outcome_posterior", "support_derangement", "outcome_sign_flip"}:
+                result = model.commit_outcome_posterior(
+                    feedback,
+                    config=posterior_config,
+                    support_permutation=(
+                        permutations[index] if arm == "support_derangement" else None
+                    ),
+                    flip_outcome=arm == "outcome_sign_flip",
+                )
+                if arm == "outcome_posterior":
+                    diagnostics["posterior_sum_error"] = max(
+                        diagnostics["posterior_sum_error"], result.posterior_sum_error
+                    )
+                    diagnostics["bayes_residual"] = max(
+                        diagnostics["bayes_residual"], result.bayes_residual
+                    )
+                    diagnostics["transition_sum_error"] = max(
+                        diagnostics["transition_sum_error"], result.transition_sum_error
+                    )
+                    diagnostics["minimum_posterior"] = min(
+                        diagnostics["minimum_posterior"],
+                        min(result.posterior_context_probabilities),
+                    )
+                    diagnostics["minimum_predicted_prior"] = min(
+                        diagnostics["minimum_predicted_prior"],
+                        min(result.predicted_next_prior),
+                    )
+                    diagnostics["degenerate_evidence_count"] += float(
+                        result.degenerate_evidence
+                    )
+            diagnostics["maximum_state_norm"] = max(
+                diagnostics["maximum_state_norm"], float(np.linalg.norm(model.state))
+            )
+    diagnostics["nonfinite_count"] = float(
+        sum(model.nonfinite_count for model in models.values())
+    )
+    return {
+        arm: {
+            "accuracy": float(np.mean(metrics["correct"])),
+            "nll": float(np.mean(metrics["nll"])),
+            "post_switch_accuracy": (
+                float(np.mean(metrics["post_switch"])) if metrics["post_switch"] else float("nan")
+            ),
+        }
+        for arm, metrics in values.items()
+    }, diagnostics
+
+
+def _posterior_domain(config: RecurrentDagBenchConfig, *, ood: bool) -> dict[str, object]:
+    start = 879100 if ood else 879000
+    rows = []
+    diagnostics = []
+    for offset in range(config.validation_seeds):
+        summary, diagnostic = _posterior_metric_rows(
+            _trials(start + offset, config, ood=ood), config, start + offset
+        )
+        rows.append(summary)
+        diagnostics.append(diagnostic)
+    arms = tuple(rows[0])
+    aggregate = {
+        arm: {
+            metric: float(np.mean([row[arm][metric] for row in rows]))
+            for metric in rows[0][arm]
+        }
+        for arm in arms
+    }
+
+    def difference(left: str, right: str, metric: str) -> list[float]:
+        return [row[left][metric] - row[right][metric] for row in rows]
+
+    tag = 100 if ood else 0
+    aggregate["effects"] = {
+        "posterior_minus_signed_accuracy_lcb": _lcb(
+            difference("outcome_posterior", "signed_heuristic", "accuracy"), seed=20261701 + tag
+        ),
+        "posterior_minus_signed_post_switch_lcb": _lcb(
+            difference("outcome_posterior", "signed_heuristic", "post_switch_accuracy"), seed=20261702 + tag
+        ),
+        "posterior_minus_hard_accuracy_lcb": _lcb(
+            difference("outcome_posterior", "hard_recurrent", "accuracy"), seed=20261703 + tag
+        ),
+        "hard_minus_posterior_nll_lcb": _lcb(
+            difference("hard_recurrent", "outcome_posterior", "nll"), seed=20261704 + tag
+        ),
+        "posterior_minus_derangement_accuracy_lcb": _lcb(
+            difference("outcome_posterior", "support_derangement", "accuracy"), seed=20261705 + tag
+        ),
+        "posterior_minus_sign_flip_accuracy_lcb": _lcb(
+            difference("outcome_posterior", "outcome_sign_flip", "accuracy"), seed=20261706 + tag
+        ),
+        "posterior_minus_reset_accuracy_lcb": _lcb(
+            difference("outcome_posterior", "directional_reset", "accuracy"), seed=20261707 + tag
+        ),
+    }
+    for key in diagnostics[0]:
+        if key.startswith("minimum_"):
+            aggregate[key] = min(row[key] for row in diagnostics)
+        else:
+            aggregate[key] = max(row[key] for row in diagnostics)
+    return aggregate
+
+
+def _posterior_nulls(config: RecurrentDagBenchConfig) -> dict[str, float]:
+    stationary = []
+    flat = []
+    soft_config = replace(config.dag, soft_content=True, strict_causal_order=True)
+    posterior_config = OutcomePosteriorConfig(switch_hazard=0.06)
+    for offset in range(config.validation_seeds):
+        seed = 879200 + offset
+        summary, _ = _posterior_metric_rows(
+            _trials(seed, config, ood=False, matched_stationary=True), config, seed
+        )
+        stationary.append(
+            summary["outcome_posterior"]["accuracy"]
+            - summary["signed_heuristic"]["accuracy"]
+        )
+        candidate = RecurrentDecisionDag(soft_config)
+        candidate_correct = []
+        flat_correct = []
+        for trial in _trials(seed + 100, config, ood=False, flat=True):
+            output = candidate.forward_step(trial.content, trial.cues)
+            correct = output.action == trial.target
+            candidate_correct.append(float(correct))
+            candidate.commit_outcome_posterior(
+                1.0 if correct else -1.0,
+                config=posterior_config,
+            )
+            flat_action = sum(int(value >= 0.0) << bit for bit, value in enumerate(trial.content))
+            flat_correct.append(float(flat_action == trial.target))
+        flat.append(float(np.mean(candidate_correct) - np.mean(flat_correct)))
+    return {
+        "stationary_posterior_minus_signed_absolute_accuracy": abs(float(np.mean(stationary))),
+        "flat_posterior_minus_matched_flat_accuracy": float(np.mean(flat)),
+    }
+
+
+def evaluate_outcome_posterior(
+    config: RecurrentDagBenchConfig | None = None,
+) -> dict[str, object]:
+    cfg = config or RecurrentDagBenchConfig()
+    id_result = _posterior_domain(cfg, ood=False)
+    ood_result = _posterior_domain(cfg, ood=True)
+    nulls = _posterior_nulls(cfg)
+    id_effects = id_result["effects"]
+    ood_effects = ood_result["effects"]
+    gates = {
+        "simplex_valid": (
+            id_result["minimum_posterior"] > 0.0
+            and ood_result["minimum_posterior"] > 0.0
+            and id_result["minimum_predicted_prior"] > 0.0
+            and ood_result["minimum_predicted_prior"] > 0.0
+            and id_result["posterior_sum_error"] <= 1e-12
+            and ood_result["posterior_sum_error"] <= 1e-12
+        ),
+        "exact_filter_identities": (
+            id_result["bayes_residual"] <= 1e-12
+            and ood_result["bayes_residual"] <= 1e-12
+            and id_result["transition_sum_error"] <= 1e-12
+            and ood_result["transition_sum_error"] <= 1e-12
+        ),
+        "beats_signed_accuracy": (
+            id_effects["posterior_minus_signed_accuracy_lcb"] >= 0.02
+            and ood_effects["posterior_minus_signed_accuracy_lcb"] >= 0.02
+        ),
+        "beats_signed_post_switch": (
+            id_effects["posterior_minus_signed_post_switch_lcb"] >= 0.05
+            and ood_effects["posterior_minus_signed_post_switch_lcb"] >= 0.05
+        ),
+        "accuracy_noninferior_to_hard": (
+            id_effects["posterior_minus_hard_accuracy_lcb"] >= -0.01
+            and ood_effects["posterior_minus_hard_accuracy_lcb"] >= -0.01
+        ),
+        "nll_improves_hard": (
+            id_effects["hard_minus_posterior_nll_lcb"] > 0.0
+            and ood_effects["hard_minus_posterior_nll_lcb"] > 0.0
+        ),
+        "support_alignment": (
+            id_effects["posterior_minus_derangement_accuracy_lcb"] >= 0.05
+            and ood_effects["posterior_minus_derangement_accuracy_lcb"] >= 0.05
+        ),
+        "outcome_sign": (
+            id_effects["posterior_minus_sign_flip_accuracy_lcb"] >= 0.10
+            and ood_effects["posterior_minus_sign_flip_accuracy_lcb"] >= 0.10
+        ),
+        "beats_directional_reset": (
+            id_effects["posterior_minus_reset_accuracy_lcb"] > 0.0
+            and ood_effects["posterior_minus_reset_accuracy_lcb"] > 0.0
+        ),
+        "null_and_integrity": (
+            nulls["stationary_posterior_minus_signed_absolute_accuracy"] <= 0.02
+            and nulls["flat_posterior_minus_matched_flat_accuracy"] <= 0.01
+            and id_result["degenerate_evidence_count"] == 0.0
+            and ood_result["degenerate_evidence_count"] == 0.0
+            and id_result["nonfinite_count"] == 0.0
+            and ood_result["nonfinite_count"] == 0.0
+        ),
+    }
+    hard_gate = all(gates.values())
+    return {
+        "schema": "clarus.recurrent-bg-dag-outcome-posterior.validation.v1",
+        "config": asdict(cfg),
+        "model_switch_hazard": 0.06,
+        "id": id_result,
+        "ood": ood_result,
+        "nulls": nulls,
+        "future_reads": 0,
+        "environment_clone_calls": 0,
+        "same_tick_feedback_commits": 0,
+        "pending_overwrites": 0,
+        "topology_cycles": 0,
+        "legacy_decay_updates_in_candidate": 0,
+        "explicit_resets_in_candidate": 0,
+        "gates": gates,
+        "promise_score": 10 * sum(bool(value) for value in gates.values()),
+        "hard_gate": hard_gate,
+        "decision": "GO" if hard_gate else "STOP",
+        "claim_scope": "exact finite-model context filter on a synthetic task only",
+    }
+
+
 __all__ = [
     "RecurrentDagBenchConfig",
     "evaluate_recurrent_dag",
     "evaluate_soft_evidence",
     "evaluate_context_boundary",
+    "evaluate_outcome_posterior",
     "small_recurrent_dag_config",
 ]

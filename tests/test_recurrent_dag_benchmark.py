@@ -1,5 +1,6 @@
 from reality_stone.clarus.recurrent_dag_benchmark import (
     evaluate_context_boundary,
+    evaluate_outcome_posterior,
     evaluate_recurrent_dag,
     evaluate_soft_evidence,
     small_recurrent_dag_config,
@@ -34,3 +35,12 @@ def test_context_boundary_benchmark_mechanism_identities() -> None:
     assert result["gates"]["exact_surprise_identity"]
     assert result["gates"]["directional_nonexpansive"]
     assert result["future_reads"] == 0
+
+
+def test_outcome_posterior_benchmark_filter_identities() -> None:
+    result = evaluate_outcome_posterior(small_recurrent_dag_config())
+    assert result["schema"] == "clarus.recurrent-bg-dag-outcome-posterior.validation.v1"
+    assert result["gates"]["simplex_valid"]
+    assert result["gates"]["exact_filter_identities"]
+    assert result["legacy_decay_updates_in_candidate"] == 0
+    assert result["explicit_resets_in_candidate"] == 0

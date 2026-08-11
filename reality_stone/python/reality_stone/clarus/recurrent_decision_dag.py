@@ -86,6 +86,29 @@ class ContextBoundaryResult:
     orthogonal_error: float
 
 
+@dataclass(frozen=True)
+class OutcomePosteriorConfig:
+    switch_hazard: float = 0.06
+
+    def __post_init__(self) -> None:
+        if not math.isfinite(self.switch_hazard) or not 0.0 < self.switch_hazard < 1.0:
+            raise ValueError("switch_hazard must lie strictly between zero and one")
+
+
+@dataclass(frozen=True)
+class OutcomePosteriorResult:
+    outcome: int
+    prior_context_probabilities: tuple[float, ...]
+    outcome_likelihoods: tuple[float, ...]
+    evidence: float
+    posterior_context_probabilities: tuple[float, ...]
+    predicted_next_prior: tuple[float, ...]
+    posterior_sum_error: float
+    bayes_residual: float
+    transition_sum_error: float
+    degenerate_evidence: bool
+
+
 def _softmax(values: np.ndarray, temperature: float = 1.0) -> np.ndarray:
     scaled = values / temperature
     scaled = scaled - float(np.max(scaled))
@@ -265,6 +288,64 @@ class RecurrentDecisionDag:
             context_boundary_mode=mode,
         )
 
+    def commit_outcome_posterior(
+        self,
+        signed_feedback: float,
+        *,
+        config: OutcomePosteriorConfig = OutcomePosteriorConfig(),
+        support_permutation: Sequence[int] | None = None,
+        flip_outcome: bool = False,
+    ) -> OutcomePosteriorResult:
+        if self._pending is None:
+            raise RuntimeError("outcome posterior requires one preceding forward step")
+        if signed_feedback not in (-1.0, 1.0):
+            raise ValueError("outcome posterior requires feedback exactly -1 or +1")
+        count = len(self.config.context_masks)
+        chosen = self._pending.action
+        support = np.asarray(
+            [row[chosen] for row in self._pending.action_support_by_context],
+            dtype=np.float64,
+        )
+        if support_permutation is not None:
+            permutation = np.asarray(tuple(support_permutation), dtype=np.int64)
+            if sorted(permutation.tolist()) != list(range(count)):
+                raise ValueError("support permutation must be a full permutation")
+            support = support[permutation]
+        outcome = int(signed_feedback > 0.0)
+        if flip_outcome:
+            outcome = 1 - outcome
+        likelihood = support if outcome else 1.0 - support
+        prior = np.asarray(self._pending.context_probabilities, dtype=np.float64)
+        joint = prior * likelihood
+        evidence = float(np.sum(joint))
+        if not math.isfinite(evidence) or evidence <= 0.0:
+            raise FloatingPointError("outcome has zero or nonfinite model evidence")
+        posterior = joint / evidence
+        hazard = config.switch_hazard
+        predicted = (1.0 - hazard) * posterior + hazard * (1.0 - posterior) / (count - 1)
+        if np.any(predicted <= 0.0) or not np.all(np.isfinite(predicted)):
+            raise FloatingPointError("transition prediction left the probability simplex")
+        self._state = np.log(predicted)
+        self._state -= float(np.mean(self._state))
+        if not np.all(np.isfinite(self._state)):
+            self.nonfinite_count += 1
+            raise FloatingPointError("nonfinite posterior state")
+        result = OutcomePosteriorResult(
+            outcome=outcome,
+            prior_context_probabilities=tuple(float(value) for value in prior),
+            outcome_likelihoods=tuple(float(value) for value in likelihood),
+            evidence=evidence,
+            posterior_context_probabilities=tuple(float(value) for value in posterior),
+            predicted_next_prior=tuple(float(value) for value in predicted),
+            posterior_sum_error=abs(float(np.sum(posterior)) - 1.0),
+            bayes_residual=float(np.max(np.abs(posterior * evidence - joint))),
+            transition_sum_error=abs(float(np.sum(predicted)) - 1.0),
+            degenerate_evidence=False,
+        )
+        self.commit_count += 1
+        self._pending = None
+        return result
+
     def _commit_feedback(
         self,
         signed_feedback: float,
@@ -355,6 +436,8 @@ __all__ = [
     "RecurrentDagConfig",
     "RecurrentDagOutput",
     "RecurrentDecisionDag",
+    "OutcomePosteriorConfig",
+    "OutcomePosteriorResult",
     "context_action_topology",
     "validate_topology",
 ]
