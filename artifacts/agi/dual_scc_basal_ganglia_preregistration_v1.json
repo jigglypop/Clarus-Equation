@@ -1,0 +1,143 @@
+{
+  "schema": "clarus.dual-scc-basal-ganglia.preregistration.v1",
+  "registered_at": "2026-08-11T21:07:06.1927453+09:00",
+  "status": "LOCKED_BEFORE_VALIDATION",
+  "research_question": "Can a bounded two-timescale colored-layer recurrent controller satisfy the formal topology, small-gain, residual, and HOLD-simplex obligations, and what does a reduced costly-probe diagnostic show after recurrent-readout bypasses are removed?",
+  "claim_scope": {
+    "formal_claims": [
+      "DSCC-1 colored-layer topology and truthful union macro-SCC",
+      "DSCC-2 frozen-input two-block small-gain contraction",
+      "DSCC-3 separate contraction is insufficient without the cross-gain condition",
+      "DSCC-4 residual enclosure and finite-budget fail-closed behavior",
+      "DSCC-5 action/HOLD simplex and invariant conditional action ordering"
+    ],
+    "behavioral_claims": [
+      "DSCC-6 dual-layer utility synergy",
+      "DSCC-7 cross-layer causal mediation"
+    ],
+    "behavioral_status_before_run": "UNTESTED_INVALID_DESIGN",
+    "promotion_eligible": false,
+    "promotion_blockers": [
+      "the reduced diagnostic retains an external Bayesian context filter",
+      "the monolithic reference and some null-cell arms are algebraic aliases",
+      "internal cross-summary shuffle/time instrumentation is absent",
+      "attempted future reads are not independently instrumented",
+      "the diagnostic has 2+3 states rather than a learned matched 16+16 route"
+    ]
+  },
+  "graph_semantics": {
+    "slow_layer": "one colored recurrent SCC",
+    "fast_layer": "one colored recurrent SCC",
+    "uncolored_union": "one macro-SCC under reciprocal cross-layer paths",
+    "forbidden_label": "two maximal SCCs in one reciprocally connected static graph"
+  },
+  "core_config": {
+    "action_count": 2,
+    "slow_recurrence": 0.34,
+    "fast_recurrence": 0.3,
+    "slow_from_fast": 0.08,
+    "fast_from_slow": 1.0,
+    "tolerance": 1e-10,
+    "max_iterations": 128,
+    "policy_temperature": 0.55,
+    "hold_temperature": 0.2,
+    "hold_bias": -1.1,
+    "hold_conflict_gain": 1.0
+  },
+  "controller_config": {
+    "probe_limit": 2,
+    "probe_cost": 0.08,
+    "feedback_gain": 0.24,
+    "slow_memory_gain": 0.72,
+    "fast_memory_gain": 0.72
+  },
+  "diagnostic_config": {
+    "episodes_per_seed": 240,
+    "context_bias": 1.1,
+    "cue_mean_id": 0.28,
+    "cue_mean_ood": 0.22,
+    "cue_std": 1.0,
+    "clear_noise_id": 0.24,
+    "clear_noise_ood": 0.3,
+    "evidence_noise_id": 1.35,
+    "evidence_noise_ood": 1.5,
+    "probe_noise_id": 0.12,
+    "probe_noise_ood": 0.16,
+    "model_clear_noise": 0.24,
+    "model_evidence_noise": 1.35,
+    "model_probe_noise": 0.12,
+    "probe_cost": 0.3,
+    "feedback_delay_min": 2,
+    "feedback_delay_max": 4,
+    "logit_clip": 7.0,
+    "drive_scale": 3.0,
+    "slow_memory_gain": 0.72,
+    "quadrature_points": 9,
+    "hidden_blocks_id": [29, 37, 31],
+    "hidden_blocks_ood": [23, 41, 29]
+  },
+  "data_roles": {
+    "development_seeds_seen": [
+      1001,
+      1002,
+      1101,
+      1102,
+      1103,
+      1104,
+      1201,
+      1202,
+      1203,
+      1204
+    ],
+    "validation": {
+      "seed_start": 2026081300,
+      "seed_count": 12,
+      "episodes_per_seed": 240,
+      "opened_once": false
+    },
+    "test_unopened": {
+      "seed_start": 2026082300,
+      "seed_count": 64,
+      "episodes_per_seed": 480
+    }
+  },
+  "decision_rule": {
+    "overall_verdict": "HOLD regardless of diagnostic score because promotion_eligible is false",
+    "formal_gate": "all topology, small-gain, finite-state, residual, simplex, unit, and dimensionless checks must pass",
+    "diagnostic_thresholds": {
+      "paired_utility_and_brier_lcb": 0.0,
+      "monolithic_noninferiority_lcb": -0.02,
+      "conflict_hold_gap": 0.15,
+      "shuffle_or_sign_mean": 0.03,
+      "time_or_clock_mean": 0.02,
+      "factorial_interaction_mean_and_lcb": 0.02,
+      "simplex_error_max": 1e-12,
+      "residual_error_bound_max": 1e-10
+    }
+  },
+  "development_disclosure": {
+    "candidate_routes_considered": 4,
+    "behavioral_result_panels_viewed": 10,
+    "target_aware_tuning_occurred": true,
+    "attempts": [
+      "initial defaults: 2 seeds x 80 episodes; diagnostic score 71.05%",
+      "bias 1.1, cost 0.14, informative probe: 4 x 100; 92.1%",
+      "bias 1.3, cost 0.18: 4 x 100; 86.84%",
+      "analytic posterior readout plus known OOD noise: 4 x 100; 78.95%",
+      "stronger cues and longer blocks: 4 x 100; 78.95%",
+      "probe cost 0.20: 4 x 100; 89.47%",
+      "probe cost 0.30 before recurrent-readout repair: 4 x 100; 89.47%",
+      "probe cost 0.25 before recurrent-readout repair: 4 x 100; 94.74%",
+      "cost 0.30 cached rerun before repair: 4 x 100; 89.47%",
+      "recurrent-readout repair, cost 0.30: 4 x 100; legacy gates 97.37%"
+    ],
+    "consequence": "The validation block is disjoint and opened once, but this artifact is not a strong prospective confirmation. Results remain diagnostic and cannot promote DSCC-6 or DSCC-7."
+  },
+  "exact_validation_command": "uv run --extra dev python examples/agi/dual_scc_probe_bench.py --role validation --seed-start 2026081300 --seed-count 12 --episodes 240 --output artifacts/agi/dual_scc_basal_ganglia_diagnostic_validation_v1.json",
+  "test_policy": "The 2026082300..2026082363 test block remains unopened after this run.",
+  "chronology": {
+    "separate_git_commits_available": false,
+    "replacement": "SHA-256 preregistration and implementation lock artifacts created before the validation command",
+    "strength": "REPOSITORY_DECLARED_PRE_VALIDATION_DIAGNOSTIC"
+  }
+}

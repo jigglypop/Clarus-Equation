@@ -19,6 +19,6 @@ description: 열린 CE 가설에 대해 구조적으로 다른 유도 후보와 
 
 # 출력
 
-12-routes.md에 Status: COMPLETE/BLOCKED와 각 후보의 경로, 단계별 지위, dof, 수치, 교차 예측, 반증 시험을 기록한다. 순위는 낮은 dof와 강한 교차 예측을 우선한다.
+12-routes.md에 Status: COMPLETE/BLOCKED와 각 후보의 경로, 단계별 지위, dof, 수치, 교차 예측, 반증 시험을 기록한다. 순위는 낮은 dof와 강한 교차 예측을 우선한다. 후보당 요약은 표 한 행 + 짧은 절로 제한하고 상세 계산은 artifacts/에 둔다. 계약에 Open/Hypothesis가 없어 레인이 스킵되면 Status: SKIPPED (사유)만 쓴다.
 
 경로가 없으면 필요한 빠진 구조를 적고 종료한다. 승격은 ce-closure-gate와 ce-status-auditor의 소관이다.

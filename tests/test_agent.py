@@ -3,14 +3,31 @@
 import torch
 import pytest
 from reality_stone.clarus.agent import (
-    compute_critic, select_action_discrete, select_action_continuous,
-    bootstrap_operator, agent_step, CriticResult,
-    RuntimeAgent, RuntimeAgentConfig, RuntimeAgentStep,
-    RuntimeTextAgent, RuntimeTextAgentTurn, TextEnvironment, TextEnvironmentStep,
+    compute_critic,
+    select_action_discrete,
+    select_action_continuous,
+    bootstrap_operator,
+    agent_step,
+    CriticResult,
+    RuntimeAgent,
+    RuntimeAgentConfig,
+    RuntimeAgentStep,
+    RuntimeTextAgent,
+    RuntimeTextAgentTurn,
+    TextEnvironment,
+    TextEnvironmentStep,
+    cosine_action_evidence,
 )
-from reality_stone.clarus.constants import BOOTSTRAP_CONTRACTION, CRITIC_W_PRED, CRITIC_W_CONS, CRITIC_W_NOV
+from reality_stone.clarus.constants import (
+    BOOTSTRAP_CONTRACTION,
+    CRITIC_W_PRED,
+    CRITIC_W_CONS,
+    CRITIC_W_NOV,
+)
 from reality_stone.clarus.runtime import BrainRuntime, BrainRuntimeConfig, RuntimeMode
 from reality_stone.clarus.belief_control import BeliefControlConfig, BeliefController
+from reality_stone.clarus.adaptive_scc_tower_controller import AdaptiveTowerController
+from reality_stone.clarus.nested_scc_tower import NestedTowerGenerator, TowerSpec
 
 
 class TestCritic:
@@ -63,6 +80,14 @@ class TestAction:
         a = select_action_continuous(z, w, b)
         assert a.shape == (3,)
 
+    def test_cosine_action_evidence_is_bounded_and_dimensionless(self):
+        observation = torch.tensor([2.0, 0.0, 0.0])
+        actions = torch.tensor([[4.0, 0.0, 0.0], [0.0, 3.0, 0.0], [-1.0, 0.0, 0.0]])
+        assert cosine_action_evidence(observation, actions) == pytest.approx((1.0, 0.0, -1.0))
+
+    def test_cosine_action_evidence_zero_norm_is_zero(self):
+        assert cosine_action_evidence(torch.zeros(2), torch.eye(2)) == (0.0, 0.0)
+
 
 class TestBootstrap:
     def test_contraction(self):
@@ -88,8 +113,12 @@ class TestBootstrap:
         target = torch.zeros(8)
         for _ in range(20):
             x = agent_step(
-                x, torch.zeros(8), torch.zeros(8),
-                torch.zeros(8), torch.zeros(8), target=target,
+                x,
+                torch.zeros(8),
+                torch.zeros(8),
+                torch.zeros(8),
+                torch.zeros(8),
+                target=target,
             )
         assert x.norm().item() < 0.1
 
@@ -216,6 +245,96 @@ class TestRuntimeAgent:
         assert out.belief_plan is not None
         assert out.belief_update is not None
 
+    def test_nested_scc_action_is_read_from_issued_state_token(self):
+        runtime = make_runtime(dim=4)
+        controller = AdaptiveTowerController(
+            NestedTowerGenerator(TowerSpec(shell_width=2, maximum_depth=2))
+        )
+        embeddings = torch.tensor([[1.0, 0.0, 0.0, 0.0], [-1.0, 0.0, 0.0, 0.0]])
+        agent = RuntimeAgent(
+            runtime,
+            action_embeddings=embeddings,
+            config=RuntimeAgentConfig(action_count=2, nested_scc_enabled=True),
+            nested_scc_controller=controller,
+        )
+
+        out = agent.step(
+            observation=torch.tensor([-1.0, 0.0, 0.0, 0.0]),
+            action_mask=(True, True),
+            force_mode=RuntimeMode.WAKE,
+        )
+
+        assert out.nested_scc_token is controller.latest_token
+        assert out.nested_scc_policy == controller.read_policy(out.nested_scc_token, (True, True))
+        assert out.action_index == out.nested_scc_policy.selected_action
+        assert out.nested_scc_evidence == pytest.approx((-1.0, 1.0))
+        assert sum(out.nested_scc_policy.probabilities) == pytest.approx(1.0, abs=1e-12)
+        assert out.nested_scc_audit.bounded
+        assert out.nested_scc_audit.state_mediated
+        assert out.nested_scc_audit.evidence_sup_norm <= 1.0
+        assert out.nested_scc_audit.state_sup_norm <= 1.0
+
+    def test_nested_scc_history_changes_policy_under_same_current_observation(self):
+        embeddings = torch.eye(2)
+        first_runtime = make_runtime(dim=2)
+        second_runtime = make_runtime(dim=2)
+        first = RuntimeAgent(
+            first_runtime,
+            action_embeddings=embeddings,
+            config=RuntimeAgentConfig(action_count=2, nested_scc_enabled=True),
+        )
+        second = RuntimeAgent(
+            second_runtime,
+            action_embeddings=embeddings,
+            config=RuntimeAgentConfig(action_count=2, nested_scc_enabled=True),
+        )
+        first.step(observation=torch.tensor([1.0, 0.0]), force_mode=RuntimeMode.WAKE)
+        second.step(observation=torch.tensor([0.0, 1.0]), force_mode=RuntimeMode.WAKE)
+
+        first_out = first.step(observation=torch.tensor([0.5, 0.5]), force_mode=RuntimeMode.WAKE)
+        second_out = second.step(observation=torch.tensor([0.5, 0.5]), force_mode=RuntimeMode.WAKE)
+
+        assert first_out.nested_scc_evidence == pytest.approx(second_out.nested_scc_evidence)
+        assert first_out.nested_scc_policy.probabilities != pytest.approx(
+            second_out.nested_scc_policy.probabilities
+        )
+
+    def test_nested_scc_mask_and_invalid_observation_fail_before_runtime_step(self):
+        runtime = make_runtime(dim=2)
+        agent = RuntimeAgent(
+            runtime,
+            action_embeddings=torch.eye(2),
+            config=RuntimeAgentConfig(action_count=2, nested_scc_enabled=True),
+        )
+        with pytest.raises(ValueError, match="at least one"):
+            agent.step(observation=torch.zeros(2), action_mask=(False, False))
+        assert runtime.step_index == 0
+        with pytest.raises(ValueError, match="finite"):
+            agent.step(observation=torch.tensor([float("nan"), 0.0]))
+        assert runtime.step_index == 0
+
+    def test_nested_scc_and_belief_control_are_mutually_exclusive(self):
+        with pytest.raises(ValueError, match="cannot be enabled together"):
+            RuntimeAgentConfig(belief_control_enabled=True, nested_scc_enabled=True)
+
+    def test_disabled_nested_scc_ignores_supplied_controller_and_preserves_legacy_path(self):
+        runtime = make_runtime(dim=2)
+        controller = AdaptiveTowerController(
+            NestedTowerGenerator(TowerSpec(shell_width=2, maximum_depth=1))
+        )
+        agent = RuntimeAgent(
+            runtime,
+            action_embeddings=torch.eye(2),
+            config=RuntimeAgentConfig(action_count=2, nested_scc_enabled=False),
+            nested_scc_controller=controller,
+        )
+        out = agent.step(observation=torch.tensor([1.0, 0.0]), force_mode=RuntimeMode.WAKE)
+        assert agent.nested_scc_controller is None
+        assert out.nested_scc_token is None
+        assert out.action_index == select_action_discrete(
+            runtime.activation, agent.action_embeddings
+        )
+
 
 class TestTextEnvironment:
     def test_text_encoding_is_deterministic(self):
@@ -255,3 +374,6 @@ class TestTextEnvironment:
 
         assert clarus.RuntimeTextAgent is RuntimeTextAgent
         assert clarus.TextEnvironment is TextEnvironment
+        assert clarus.AdaptiveTowerController is AdaptiveTowerController
+        assert clarus.NestedTowerGenerator is NestedTowerGenerator
+        assert clarus.cosine_action_evidence is cosine_action_evidence

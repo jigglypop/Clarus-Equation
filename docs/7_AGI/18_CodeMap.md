@@ -529,3 +529,89 @@ $$
   대응으로 승격하지 않는다. exact finite-state identifiability gate가 먼저다.
 - 재현 artifact와 제한된 해석은
   `_workspace/ce/agi-loop-engineering-20260811/`에 기록한다.
+
+---
+
+## 13. Dual recurrent-layer basal-ganglia research core (2026-08-11)
+
+| Canonical object | Implementation | Status |
+|---|---|---|
+| colored slow/fast recurrent layers and small-gain certificate | `dual_scc_basal_ganglia.py` | formal core implemented; uncolored union is one macro-SCC |
+| action/HOLD probability simplex | `DualSCCBasalGanglia.policy` | exact normalization and conditional-action invariance tested |
+| causal observe/decide/probe/action/feedback protocol | `dual_scc_controller.py` | opt-in research component; delayed single-use tokens and snapshot tested |
+| reduced costly-probe diagnostic | `dual_scc_probe_benchmark.py` | `HOLD`; DSCC-6/7 remain untested because matched controls and integrity instrumentation are incomplete |
+| canonical claim boundary | `27_Dual_SCC_Basal_Ganglia.md` | formal DSCC-1--5 active; biological identity, runtime promotion, and AGI claims forbidden |
+
+This component is not wired into `RuntimeAgent`; default runtime behavior is unchanged.
+
+---
+
+## 14. Fixed-graph SCC foundation (2026-08-11)
+
+| Canonical object | Implementation | Status |
+|---|---|---|
+| deterministic maximal-SCC partition and condensation | `scc_atlas.py::decompose_scc` | finite foundation verified; maximal SCCs of one fixed graph are disjoint |
+| fixed-node threshold merge filtration | `scc_atlas.py::threshold_scc_filtration` | merge-only parent links; changed node/edge semantics fail closed |
+| positive-delay event unroll | `scc_atlas.py::forward_time_unroll` | event graph is a DAG with singleton SCCs; template projection is separately named |
+| artificial SCC-DAG realization | `scc_atlas.py::construct_arch1` | exact finite `ARCH-1` constructor/validator |
+| finite simultaneous block-gain certificate | `scc_atlas.py::certify_dag_block_gain` | `M[target,source]`, normalized metrics, condition/residual/`q<1` fail closed |
+| regression and exhaustive audit | `test_scc_atlas.py` | 18 focused tests; independent finite enumeration is recorded in the SCC research run |
+
+This foundation computes declared finite graphs only. It does not identify a biological
+whole-brain parcellation or infer dynamics from topology.
+
+---
+
+## 15. V9 nested infinite-SCC unit mechanism (2026-08-11)
+
+| Canonical object | Implementation | Status |
+|---|---|---|
+| generated nested strongly connected prefixes | `nested_scc_tower.py` | deterministic finite generator; the ideal direct union is mathematical, not physical infinity |
+| exact finite causal cone | `NestedTowerGenerator.backward_causal_cone` | finite-horizon/local/complete-predecessor scope only |
+| direct-limit compatibility audit | `NestedTowerGenerator.compatibility_certificate` | zero fixture exact; generic append-zero boundary coupling is explicitly refused |
+| uniform finite Jacobi certificate | `NestedTowerGenerator.certify_prefix` | default dimensionless bound `q=0.54`; no infinite-tail or truncation certificate |
+| state-token recurrent controller | `adaptive_scc_tower_controller.py` | state-only readout, episode-bound token, snapshot, and real unit lesions tested |
+| canonical theorem and V1--V9 boundary | `28_Nested_Infinite_SCC_V9.md` | mathematics survives; `V9-1` untested; development `0/256 BLOCKED` |
+
+The controller is a grow-only finite `D_max` research fixture. The default runtime still does
+not use it; the separately gated opt-in adapter below imports it only when explicitly enabled.
+No V8 locked test, ACBSM fresh block, V9 development seed, confirmation, biological claim, or
+AGI claim is opened by this unit implementation.
+
+---
+
+## 16. V9 opt-in RuntimeAgent integration (2026-08-12)
+
+| Runtime object | Implementation | Status |
+|---|---|---|
+| dimensionless action evidence | `agent.py::cosine_action_evidence` | bounded cosine encoder; zero norms map to zero |
+| explicit enable gate | `RuntimeAgentConfig.nested_scc_enabled` | default `False`; legacy behavior preserved |
+| persistent update | `RuntimeAgent.step -> CausalEvent -> AdaptiveTowerController.observe` | exact next tick; observation updates registered tower state |
+| action readout | `TowerStateToken -> read_policy -> selected_action` | no legacy argmax or external-posterior output bypass in V9 branch |
+| action availability | `RuntimeAgent.step(action_mask=...)` | exact boolean mask; invalid/all-false input fails before runtime advance |
+| unresolved controller composition | belief control + nested SCC | fail closed; no silent priority rule |
+| P2 cleanup | `TowerSpec`, `TowerManifest` | two dormant depth DOFs removed; scalar metadata explicitly not capacity/MAC |
+| focused validation | agent+tower+controller+runtime+dimensionless | 210 passed warning-as-error after excluding two pre-existing PyTorch sparse warnings |
+
+This makes V9 an executable finite state-mediated research-agent path. It does not establish
+task utility, predictive superiority, biological identity, infinite execution, or AGI. The
+registered V9 development state remains `0/256 BLOCKED`.
+
+---
+
+## 17. V10 local–cloud transition kernel (2026-08-12)
+
+| Object | Implementation | Status |
+|---|---|---|
+| bounded local/shared recurrent transition | `local_cloud_kernel.py` | weighted block-sup certificate `q=0.9355555556 < 0.95` |
+| label-blind 20-state feature path | `LocalCloudTransitionKernel.step` | no target, posterior, or hand-written decision bypass |
+| factorial development harness | `local_cloud_benchmark.py` | full/local-only/cloud-only/no-memory; train-only frozen ridge |
+| causal controls | `cross_cut`, decision `local_reset`, decision `cloud_reset` | actual transition lesions; intact full readout reused |
+| one-shot registered runner | `examples/agi/local_cloud_development_run.py` | hash/seed-role bound; existing result fails closed |
+| confirmation runner | `examples/agi/local_cloud_confirmation_run.py` | exact pre-development seed reservation and development-lock equality enforced |
+| canonical result boundary | `29_Local_Cloud_Kernel_V10.md` | development and confirmation GO; OOD, strong learned comparator, biology, and AGI untested |
+
+The registered development achieved full accuracy `0.653015` and conservative paired improvement
+`0.128479`. Frozen confirmation reproduced full accuracy `0.652100` and paired improvement
+`0.138794` with interval `[0.128844, 0.149719]`. This confirms the narrow synthetic mechanism,
+not OOD generalization, arbitrary recurrent superiority, biology, or AGI.

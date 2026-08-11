@@ -16,9 +16,13 @@ description: CE가 사용하는 관측값·오차·데이터 릴리스와 실험
 - 새 실험 일정·감도 변경이 사전등록 범위에 주는 영향 기록
 - 접근 불가 또는 기억에 의존한 값은 UNVERIFIED
 
+# 분량
+
+판정에 필요한 최소만 쓴다. 표와 갱신 권고 중심으로 유지하고, 긴 발췌·탐색 로그는 run의 artifacts/에 두고 경로만 인용한다. 계약에 PREDECESSOR가 있으면 선행 run이 검증한 값을 재대조하지 않고 변경분만 다룬다.
+
 # 출력
 
-10-sources.md에 Status: COMPLETE/BLOCKED와 다음 표를 작성한다.
+10-sources.md에 Status: COMPLETE/BLOCKED와 다음 표를 작성한다. 계약이 관측값을 인용하지 않아 레인이 스킵되면 Status: SKIPPED (사유)만 쓴다.
 
 | Evidence ID | 양 | 저장소 값 | 원 출처 값 | 기준선 상태 | 영향 |
 |---|---|---|---|---|---|

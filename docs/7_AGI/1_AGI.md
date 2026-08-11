@@ -109,6 +109,8 @@ AGI가 진정한 자율성을 가지려면, 단순한 추론을 넘어 **자기 
 | 7 | 의식 | (C3) 자기참조 | 전역 작업공간 | -- |
 | 8 | 로드맵 | 전체 | 전체 | 전체 |
 | 26 | Sparse causal bridge V7 폐쇄 감사 | 합성 H20 예측 브리지 | 생물학적 대응 없음 | `reliability_rollout_bridge.py` |
+| 27 | 이중 recurrent-layer 기저핵 연구 | colored recurrent layer와 small-gain | 기저핵 영감 공학 추상화 | `dual_scc_basal_ganglia.py`, `dual_scc_controller.py` |
+| 28 | V9 중첩 무한 SCC 정본 | 직접극한 tower와 유한 causal cone | 유한 뇌의 virtual multiscale 가설 | `nested_scc_tower.py`, `adaptive_scc_tower_controller.py` |
 
 ---
 
@@ -133,6 +135,6 @@ CE-AGI의 가장 큰 차별점은 **핵심 비율의 상당 부분이 CE에서 �
 
 1. CE 부트스트랩 고정점이 $d=3$ 자기조직화 시스템의 보편 구조라는 가설
 2. 뇌-우주 구조 유비(`05_실험근거.md`)가 AI에도 확장 가능하다는 가설
-3. 기존 코드(`legacy clarus_lm.py` (removed), `sfe_hallucination_suppressor.py`)는 구현 가능성만 보이며 기준 모델 대비 우위는 미검증이다. 합성 sparse causal bridge V7도 등록된 결합 조건을 충족하지 못해 test를 열지 않았다(`26_Sparse_Causal_Bridge_V7_Closure.md`).
+3. 기존 코드(`legacy clarus_lm.py` (removed), `sfe_hallucination_suppressor.py`)는 구현 가능성만 보이며 기준 모델 대비 우위는 미검증이다. 합성 sparse causal bridge V7도 등록된 결합 조건을 충족하지 못해 test를 열지 않았다(`26_Sparse_Causal_Bridge_V7_Closure.md`). V9 중첩 SCC는 수학·격리 unit 구현만 통과했고 개발 실행은 `0/256 BLOCKED`이므로 성능 또는 생물학적 뇌 동일성의 증거가 아니다(`28_Nested_Infinite_SCC_V9.md`).
 
 각 장에서 CE 원리를 구체적 구현으로 변환할 때, 어디까지가 코어에서 연역된 것이고 어디부터가 설계 선택인지, 그리고 무엇이 아직 실험 가설인지를 명시한다.

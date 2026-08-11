@@ -36,6 +36,6 @@ description: CE 코드, 물리 게이트와 clarus-agent-guard를 최소 변경�
 2. 최소 패치를 적용한다.
 3. 저장소가 제공하는 실행기(uv/system Python 등)를 그대로 사용한다. 새 가상환경은 만들지 않는다.
 4. 작은 테스트부터 관련 회귀로 넓힌다.
-5. 30-implementation.md에 Status: COMPLETE/BLOCKED, 변경, 불변식, 명령과 원래 결과를 기록한다.
+5. 30-implementation.md에 Status: COMPLETE/BLOCKED, 변경, 불변식, 명령과 원래 결과를 기록한다. 감사 결과 코드 변경이 불필요하면 Status: SKIPPED (사유)만 쓴다.
 
 실패를 통과로 표현하지 않는다.

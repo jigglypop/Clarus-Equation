@@ -9,17 +9,25 @@ import hashlib
 import math
 from collections import deque
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, Sequence
 
 import torch
 import torch.nn.functional as F
 
 try:
     from .constants import (
-        BOOTSTRAP_CONTRACTION, ACTIVE_RATIO, STRUCT_RATIO, BACKGROUND_RATIO,
-        CRITIC_W_PRED, CRITIC_W_CONS, CRITIC_W_NOV,
-        CONSCIOUSNESS_TAU, CONSCIOUSNESS_CD, META_MAX_DEPTH,
-        WM_CAPACITY, CEREBELLUM_ALPHA, CEREBELLUM_ETA, NORM_EPS,
+        BOOTSTRAP_CONTRACTION,
+        ACTIVE_RATIO,
+        CRITIC_W_PRED,
+        CRITIC_W_CONS,
+        CRITIC_W_NOV,
+        CONSCIOUSNESS_TAU,
+        CONSCIOUSNESS_CD,
+        META_MAX_DEPTH,
+        WM_CAPACITY,
+        CEREBELLUM_ALPHA,
+        CEREBELLUM_ETA,
+        NORM_EPS,
     )
     from .runtime import BrainRuntime, RuntimeMode, RuntimeStep
     from .belief_control import (
@@ -28,12 +36,27 @@ try:
         BeliefPlan,
         BeliefUpdate,
     )
+    from .adaptive_scc_tower_controller import (
+        AdaptiveTowerController,
+        CausalEvent,
+        PolicyDecision,
+        TowerStateToken,
+    )
+    from .nested_scc_tower import NestedTowerGenerator, TowerSpec
 except ImportError:
     from reality_stone.clarus.constants import (
-        BOOTSTRAP_CONTRACTION, ACTIVE_RATIO, STRUCT_RATIO, BACKGROUND_RATIO,
-        CRITIC_W_PRED, CRITIC_W_CONS, CRITIC_W_NOV,
-        CONSCIOUSNESS_TAU, CONSCIOUSNESS_CD, META_MAX_DEPTH,
-        WM_CAPACITY, CEREBELLUM_ALPHA, CEREBELLUM_ETA, NORM_EPS,
+        BOOTSTRAP_CONTRACTION,
+        ACTIVE_RATIO,
+        CRITIC_W_PRED,
+        CRITIC_W_CONS,
+        CRITIC_W_NOV,
+        CONSCIOUSNESS_TAU,
+        CONSCIOUSNESS_CD,
+        META_MAX_DEPTH,
+        WM_CAPACITY,
+        CEREBELLUM_ALPHA,
+        CEREBELLUM_ETA,
+        NORM_EPS,
     )
     from reality_stone.clarus.runtime import BrainRuntime, RuntimeMode, RuntimeStep
     from reality_stone.clarus.belief_control import (
@@ -42,6 +65,13 @@ except ImportError:
         BeliefPlan,
         BeliefUpdate,
     )
+    from reality_stone.clarus.adaptive_scc_tower_controller import (
+        AdaptiveTowerController,
+        CausalEvent,
+        PolicyDecision,
+        TowerStateToken,
+    )
+    from reality_stone.clarus.nested_scc_tower import NestedTowerGenerator, TowerSpec
 
 
 # ---------------------------------------------------------------------------
@@ -208,7 +238,9 @@ class WorkingMemory:
 class CerebellumPredictor:
     """Forward model: o_hat_{t+1} = o_hat_t + alpha*(o_t - o_hat_t) (F.20)."""
 
-    def __init__(self, dim: int, alpha: float = CEREBELLUM_ALPHA, eta: float = CEREBELLUM_ETA) -> None:
+    def __init__(
+        self, dim: int, alpha: float = CEREBELLUM_ALPHA, eta: float = CEREBELLUM_ETA
+    ) -> None:
         self.alpha = alpha
         self.eta = eta
         self.prediction = torch.zeros(dim)
@@ -236,6 +268,7 @@ class RuntimeAgentConfig:
     rho: float = BOOTSTRAP_CONTRACTION
     belief_control_enabled: bool = False
     belief_horizon: int = 2
+    nested_scc_enabled: bool = False
 
     def __post_init__(self) -> None:
         self.action_count = max(1, int(self.action_count))
@@ -247,6 +280,9 @@ class RuntimeAgentConfig:
         self.rho = min(max(float(self.rho), 0.0), 1.0)
         self.belief_control_enabled = bool(self.belief_control_enabled)
         self.belief_horizon = max(1, int(self.belief_horizon))
+        self.nested_scc_enabled = bool(self.nested_scc_enabled)
+        if self.belief_control_enabled and self.nested_scc_enabled:
+            raise ValueError("belief control and nested-SCC control cannot be enabled together")
 
 
 @dataclass
@@ -262,6 +298,23 @@ class RuntimeAgentStep:
     goal_norm: float
     belief_plan: BeliefPlan | None = None
     belief_update: BeliefUpdate | None = None
+    nested_scc_token: TowerStateToken | None = None
+    nested_scc_policy: PolicyDecision | None = None
+    nested_scc_evidence: tuple[float, ...] | None = None
+    nested_scc_audit: NestedSCCCascadeAudit | None = None
+
+
+@dataclass(frozen=True)
+class NestedSCCCascadeAudit:
+    """Observable boundedness and mediation checks for one V9 action tick."""
+
+    tick: int
+    active_depth: int
+    evidence_sup_norm: float
+    state_sup_norm: float
+    probability_mass: float
+    bounded: bool
+    state_mediated: bool
 
 
 def default_action_embeddings(action_count: int, dim: int) -> torch.Tensor:
@@ -275,12 +328,46 @@ def default_action_embeddings(action_count: int, dim: int) -> torch.Tensor:
     return embeddings
 
 
+def cosine_action_evidence(
+    observation: torch.Tensor,
+    action_embeddings: torch.Tensor,
+) -> tuple[float, ...]:
+    """Return bounded dimensionless evidence for each fixed action embedding.
+
+    Zero observation or zero action embeddings receive exactly zero evidence.
+    This function is an encoder only; the nested-SCC policy must still be read
+    from a controller-issued state token.
+    """
+
+    if observation.ndim != 1:
+        raise ValueError("observation must be a one-dimensional vector")
+    if action_embeddings.ndim != 2 or action_embeddings.shape[1] != observation.numel():
+        raise ValueError("action_embeddings must have shape (n_actions, observation_dim)")
+    if not torch.isfinite(observation).all() or not torch.isfinite(action_embeddings).all():
+        raise ValueError("observation and action embeddings must be finite")
+
+    observation_f = observation.detach().float()
+    embeddings_f = action_embeddings.detach().float().to(observation_f.device)
+    observation_norm = torch.linalg.vector_norm(observation_f)
+    embedding_norms = torch.linalg.vector_norm(embeddings_f, dim=1)
+    denominators = embedding_norms * observation_norm
+    evidence = torch.zeros(embeddings_f.shape[0], device=observation_f.device)
+    valid = denominators > 0.0
+    if bool(valid.any()):
+        evidence[valid] = (embeddings_f[valid] @ observation_f) / denominators[valid]
+    evidence = evidence.clamp(-1.0, 1.0)
+    if not torch.isfinite(evidence).all():
+        raise ValueError("cosine action evidence must be finite")
+    return tuple(float(value) for value in evidence.cpu())
+
+
 class RuntimeAgent:
     """Closed Layer-F loop over BrainRuntime.
 
-    This is the smallest executable AGI core in the repo: runtime relaxation,
-    action selection, environment observation, critic, working memory, forward
-    model, consciousness monitor, and goal feedback happen in one tick.
+    This is an executable research-agent core: runtime relaxation, action
+    selection, environment observation, critic, working memory, forward model,
+    monitor, and goal feedback happen in one tick.  Execution is not an AGI
+    capability claim.
     """
 
     def __init__(
@@ -290,15 +377,21 @@ class RuntimeAgent:
         action_embeddings: torch.Tensor | None = None,
         config: RuntimeAgentConfig | None = None,
         belief_controller: BeliefController | None = None,
+        nested_scc_controller: AdaptiveTowerController | None = None,
     ) -> None:
         self.runtime = runtime
         self.config = config or RuntimeAgentConfig()
+        if self.config.belief_control_enabled and self.config.nested_scc_enabled:
+            raise ValueError("belief control and nested-SCC control cannot be enabled together")
         dim = self.runtime.config.dim
         if action_embeddings is None:
             action_embeddings = default_action_embeddings(self.config.action_count, dim)
         if action_embeddings.ndim != 2 or action_embeddings.shape[1] != dim:
             raise ValueError("action_embeddings must have shape (n_actions, runtime_dim)")
-        self.action_embeddings = action_embeddings.detach().float().to(self.runtime.device)
+        action_embeddings = action_embeddings.detach().float()
+        if not torch.isfinite(action_embeddings).all():
+            raise ValueError("action_embeddings must be finite")
+        self.action_embeddings = action_embeddings.to(self.runtime.device)
         self.working_memory = WorkingMemory(capacity=self.config.working_memory_capacity)
         self.cerebellum = CerebellumPredictor(dim=dim)
         self.consciousness = ConsciousnessMonitor(rho=self.config.rho)
@@ -320,6 +413,31 @@ class RuntimeAgent:
             # Do not retain or initialize the optional controller.  This keeps
             # the legacy path free of extra RNG calls and state transitions.
             self.belief_controller = None
+        if self.config.nested_scc_enabled:
+            action_count = int(self.action_embeddings.shape[0])
+            if nested_scc_controller is None:
+                nested_scc_controller = AdaptiveTowerController(
+                    NestedTowerGenerator(TowerSpec(shell_width=action_count))
+                )
+            if type(nested_scc_controller) is not AdaptiveTowerController:
+                raise TypeError("nested_scc_controller must be an AdaptiveTowerController")
+            if nested_scc_controller.generator.spec.shell_width != action_count:
+                raise ValueError("nested-SCC shell width must equal the action count")
+            self.nested_scc_controller = nested_scc_controller
+        else:
+            # A supplied controller cannot silently affect the legacy path.
+            self.nested_scc_controller = None
+
+    def _nested_scc_mask(self, action_mask: Sequence[bool] | None) -> tuple[bool, ...]:
+        action_count = int(self.action_embeddings.shape[0])
+        if action_mask is None:
+            return (True,) * action_count
+        mask = tuple(action_mask)
+        if len(mask) != action_count or any(type(value) is not bool for value in mask):
+            raise ValueError("action_mask must contain one exact boolean per action")
+        if not any(mask):
+            raise ValueError("action_mask must allow at least one action")
+        return mask
 
     def step(
         self,
@@ -330,13 +448,33 @@ class RuntimeAgent:
         force_mode: RuntimeMode | None = None,
         task_goal: torch.Tensor | None = None,
         stdp_learning_signal: float | None = None,
+        action_mask: Sequence[bool] | None = None,
     ) -> RuntimeAgentStep:
         if self.belief_controller is not None:
             if task_goal is None:
                 raise ValueError("task_goal is required when belief control is enabled")
             goal_check = task_goal.detach().float().view(-1)
-            if goal_check.numel() != self.runtime.config.dim or not torch.isfinite(goal_check).all():
+            if (
+                goal_check.numel() != self.runtime.config.dim
+                or not torch.isfinite(goal_check).all()
+            ):
                 raise ValueError("task_goal must be a finite observation-space vector")
+        if self.nested_scc_controller is None:
+            if action_mask is not None:
+                raise ValueError("action_mask is available only when nested-SCC control is enabled")
+            nested_mask = None
+        else:
+            # Validate every caller-controlled boundary and the live generator
+            # seal before BrainRuntime advances.
+            nested_mask = self._nested_scc_mask(action_mask)
+            self.nested_scc_controller.generator.assert_integrity()
+            if observation is not None:
+                observation_check = observation.detach().float().view(-1)
+                if (
+                    observation_check.numel() != self.runtime.config.dim
+                    or not torch.isfinite(observation_check).all()
+                ):
+                    raise ValueError("observation must be a finite runtime-dimension vector")
         runtime_step = self.runtime.step(
             external_input=external_input,
             force_mode=force_mode,
@@ -345,12 +483,55 @@ class RuntimeAgent:
         )
         relaxed = self.runtime.activation.detach()
 
-        observation_t = relaxed if observation is None else observation.detach().float().to(
-            self.runtime.device
-        ).view(self.runtime.config.dim)
+        observation_t = (
+            relaxed
+            if observation is None
+            else observation.detach().float().to(self.runtime.device).view(self.runtime.config.dim)
+        )
         belief_update = None
         belief_plan = None
-        if self.belief_controller is None:
+        nested_scc_token = None
+        nested_scc_policy = None
+        nested_scc_evidence = None
+        nested_scc_audit = None
+        if self.nested_scc_controller is not None:
+            nested_scc_evidence = cosine_action_evidence(observation_t, self.action_embeddings)
+            nested_scc_token = self.nested_scc_controller.observe(
+                CausalEvent(
+                    tick=self.nested_scc_controller.tick + 1,
+                    observation=nested_scc_evidence,
+                )
+            )
+            nested_scc_policy = self.nested_scc_controller.read_policy(
+                nested_scc_token,
+                nested_mask,
+            )
+            # This assignment is the V9 causal boundary: no legacy similarity
+            # argmax or external posterior may replace the token readout.
+            action_index = nested_scc_policy.selected_action
+            state_sup = max(
+                float(torch.as_tensor(state).abs().max().item())
+                for state in self.nested_scc_controller.state_copy()
+            )
+            evidence_sup = max(abs(value) for value in nested_scc_evidence)
+            probability_mass = sum(nested_scc_policy.probabilities)
+            nested_scc_audit = NestedSCCCascadeAudit(
+                tick=nested_scc_token.tick,
+                active_depth=nested_scc_token.active_depth,
+                evidence_sup_norm=evidence_sup,
+                state_sup_norm=state_sup,
+                probability_mass=probability_mass,
+                bounded=(
+                    evidence_sup <= 1.0
+                    and state_sup <= 1.0
+                    and abs(probability_mass - 1.0) <= 1e-12
+                ),
+                state_mediated=(
+                    nested_scc_token is self.nested_scc_controller.latest_token
+                    and action_index == nested_scc_policy.selected_action
+                ),
+            )
+        elif self.belief_controller is None:
             action_index = select_action_discrete(relaxed, self.action_embeddings)
         else:
             belief_update = self.belief_controller.observe(observation_t)
@@ -405,6 +586,10 @@ class RuntimeAgent:
             goal_norm=float(self.runtime.goal.norm().item()),
             belief_plan=belief_plan,
             belief_update=belief_update,
+            nested_scc_token=nested_scc_token,
+            nested_scc_policy=nested_scc_policy,
+            nested_scc_evidence=nested_scc_evidence,
+            nested_scc_audit=nested_scc_audit,
         )
 
 

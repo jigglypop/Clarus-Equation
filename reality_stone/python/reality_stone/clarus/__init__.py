@@ -38,6 +38,23 @@ RuntimeTextAgent = None
 RuntimeTextAgentTurn = None
 TextEnvironment = None
 TextEnvironmentStep = None
+cosine_action_evidence = None
+AdaptiveTowerController = None
+CausalEvent = None
+CrossScaleCut = None
+PolicyDecision = None
+TowerStateToken = None
+UpperReset = None
+NestedTowerGenerator = None
+InfiniteTailCertificate = None
+RolloutTailCertificate = None
+TowerManifest = None
+TowerSpec = None
+LocalCloudKernelConfig = None
+LocalCloudObservation = None
+LocalCloudState = None
+LocalCloudTransitionKernel = None
+SmallGainCertificate = None
 BeliefControlConfig = None
 BeliefController = None
 BeliefPlan = None
@@ -79,9 +96,25 @@ except ImportError:
     pass
 
 try:
+    from .local_cloud_kernel import (  # type: ignore[no-redef]
+        LocalCloudKernelConfig,
+        LocalCloudObservation,
+        LocalCloudState,
+        LocalCloudTransitionKernel,
+        SmallGainCertificate,
+    )
+except ImportError:
+    pass
+
+try:
     from .constants import (  # type: ignore[no-redef]
-        AD, PORTAL, BYPASS, T_WAKE,
-        ACTIVE_RATIO, STRUCT_RATIO, BACKGROUND_RATIO,
+        AD,
+        PORTAL,
+        BYPASS,
+        T_WAKE,
+        ACTIVE_RATIO,
+        STRUCT_RATIO,
+        BACKGROUND_RATIO,
     )
 except ImportError:
     pass
@@ -159,6 +192,26 @@ try:
         RuntimeTextAgentTurn,
         TextEnvironment,
         TextEnvironmentStep,
+        cosine_action_evidence,
+    )
+except ImportError:
+    pass
+
+try:
+    from .adaptive_scc_tower_controller import (  # type: ignore[no-redef]
+        AdaptiveTowerController,
+        CausalEvent,
+        CrossScaleCut,
+        PolicyDecision,
+        TowerStateToken,
+        UpperReset,
+    )
+    from .nested_scc_tower import (  # type: ignore[no-redef]
+        InfiniteTailCertificate,
+        NestedTowerGenerator,
+        RolloutTailCertificate,
+        TowerManifest,
+        TowerSpec,
     )
 except ImportError:
     pass
@@ -230,6 +283,23 @@ __all__ = [
     "RuntimeTextAgentTurn",
     "TextEnvironment",
     "TextEnvironmentStep",
+    "cosine_action_evidence",
+    "AdaptiveTowerController",
+    "CausalEvent",
+    "CrossScaleCut",
+    "PolicyDecision",
+    "TowerStateToken",
+    "UpperReset",
+    "NestedTowerGenerator",
+    "InfiniteTailCertificate",
+    "RolloutTailCertificate",
+    "TowerManifest",
+    "TowerSpec",
+    "LocalCloudKernelConfig",
+    "LocalCloudObservation",
+    "LocalCloudState",
+    "LocalCloudTransitionKernel",
+    "SmallGainCertificate",
     "BeliefControlConfig",
     "BeliefController",
     "BeliefPlan",
@@ -268,6 +338,11 @@ __all__ = [
     "safe_print",
     "normalize_vector",
     "resolve_device",
-    "AD", "PORTAL", "BYPASS", "T_WAKE",
-    "ACTIVE_RATIO", "STRUCT_RATIO", "BACKGROUND_RATIO",
+    "AD",
+    "PORTAL",
+    "BYPASS",
+    "T_WAKE",
+    "ACTIVE_RATIO",
+    "STRUCT_RATIO",
+    "BACKGROUND_RATIO",
 ]
