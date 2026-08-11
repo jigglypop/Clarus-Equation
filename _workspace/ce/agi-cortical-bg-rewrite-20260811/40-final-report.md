@@ -61,3 +61,18 @@ curves, measured wall-time/memory scaling, and a matched behavioral task.  The
 next experiment is therefore not another algebraic rewrite: it is a sidecar
 task lane comparing quotient-only, local-cone, and dense full execution without
 allowing the candidate to inspect the dense reference.
+
+That sidecar lane is now complete. On 54 balanced delayed-interception episodes
+at each of `N=64,128,256`, the exact local-cone path matched dense action accuracy
+and normalized utility at `1.0`, while quotient-only accuracy was `1/3`. Across
+budgets `0,1,2,4,8,16,64`, every actual state error remained inside the online
+delay-resolved certificate and no hard action was falsely certified. The exact
+budget reconstructed dense state to `2.78e-17`.
+
+The fixed-radius sidecar stored 165 state scalars versus dense's 3840 at `N=256`
+and ran in about `17.2%` of dense time, with zero action differences from the
+generic sparse reference. The frozen synthetic rubric is therefore `100/100`
+and permits a feature-off read-only sidecar. This promotion is deliberately
+narrow: the optimized timing applies to the compiled finite-range patch path,
+not arbitrary graphs, learned symmetry, runtime replacement, biological
+identity, or general AGI.
