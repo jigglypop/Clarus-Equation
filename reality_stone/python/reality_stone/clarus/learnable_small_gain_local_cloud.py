@@ -223,8 +223,8 @@ class StableBilinearLocalCloud(nn.Module):
     def __init__(
         self,
         retention_cap: float = 0.995,
-        salience_threshold: float = 0.25,
-        salience_sharpness: float = 20.0,
+        salience_threshold: float = 0.40,
+        salience_sharpness: float = 30.0,
     ) -> None:
         super().__init__()
         if not 0.0 < retention_cap < 1.0:
