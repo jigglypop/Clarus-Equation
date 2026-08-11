@@ -1,0 +1,157 @@
+{
+  "schema_version": 7,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-11",
+  "experiment": "sparse_causal_bridge_v7",
+  "roadmap_stage": "G9-CB-CLOSURE",
+  "extends": "sparse_causal_bridge_v6.json",
+  "supersedes": "sparse_causal_bridge_v6",
+  "runner": "symmetric_consensus_closure",
+  "parent_model_runner": "single_origin_free_rollout",
+  "active_models_path": "closure.models",
+  "active_gate": "closure_gate",
+  "failed_predecessor_artifact": "artifacts/agi/sparse_causal_bridge_validation_v5.json",
+  "change_reason": "V6 was registered but never implemented or run. Independent V1-V6 source, statistical, and route audits found that V5 was the first genuine free rollout and failed four gates. A development-only scalar reliability pilot and hard selector were rejected. A symmetric three-expert pilot improved V5 mean error but was worse than its no-sparse ablation. V7 therefore makes one closure-level change from V5: prefix-backtested output aggregation is evaluated with a symmetric no-sparse control, and positive paired sparse contribution is mandatory. V7 cannot support AGI and no second V7 route may replace it after validation.",
+  "development_data_disclosure": {
+    "source": "historical V5 validation seeds only",
+    "v5_failure_artifact": "artifacts/agi/sparse_causal_bridge_validation_v5.json",
+    "v5_failure_artifact_sha256_raw_crlf": "6dd4999e385fc47ea5ccd2e3e1233c60f2d1968554b82dd5cb95a34524f9e9a0",
+    "v5_merged_registration_sha256_lf": "31e029705a372b622bf5d7109784b89bb0b42d959c4960ef2bdedb3a8c07b78a",
+    "v4_parent_artifact_sha256_raw_crlf": "41c17778c7aa2adcd36557ca0042ea0d2de90c817acbd8730bbc97424f553986",
+    "parent_replay": "29 focused tests passed; V5 H20 0.3330829265726758, stable adaptive dense H20 0.3126973530814967, and the same four failed checks reproduced",
+    "rejected_routes": {
+      "scalar_latent_reliability": "normalized H20 0.5032895564 versus unscaled V5 0.5016823880; rejected",
+      "hard_prefix_selector": "normalized H20 0.4542441753 versus adaptive dense 0.4472373455; prefix/target winner agreement 0.40; rejected"
+    },
+    "selected_closure_pilot": {
+      "sparse_consensus_normalized_h20": 0.4486999692,
+      "v5_parent_normalized_h20": 0.5016823880,
+      "persistence_normalized_h20": 0.5017602164,
+      "stable_adaptive_dense_normalized_h20": 0.4472373455,
+      "symmetric_dense_consensus_normalized_h20": 0.4489831337,
+      "no_sparse_consensus_normalized_h20": 0.4416784068,
+      "sparse_minus_no_sparse_mean_penalty": 0.0070215625,
+      "mean_weights_sparse_adaptive_persistence": [0.3491680431, 0.3074101175, 0.3434218393]
+    },
+    "interpretation": "All pilot values are target-aware development evidence and cannot count as V7 evidence. No V7 validation or test seed was simulated before this file was written."
+  },
+  "overrides": {
+    "hypothesis": "On fresh episodes from the frozen four-chart synthetic family, a prefix-backtested sparse-causal/adaptive-dense/persistence consensus will have positive paired H20 value beyond an identically calibrated adaptive-dense/persistence consensus, while improving the unscaled V5 parent and persistence and remaining noninferior to strong symmetric dense controls.",
+    "claim_boundary": "This is a confirmatory closure test for the incremental forecast value of one sparse causal expert in a fully observed, known-rank-one, matched-basis, same-loading synthetic family. Passing would support only that narrow controller contribution. Failure closes this sparse contribution route. Neither outcome establishes AGI, autonomous agency, open-world causal discovery, a brain mechanism, consciousness, unseen-environment transfer, or a physical CE correspondence.",
+    "data_roles": {
+      "validation": {
+        "environment": "ood",
+        "seeds": [77100, 77101, 77102, 77103, 77104, 77105, 77106, 77107, 77108, 77109, 77110, 77111, 77112, 77113, 77114, 77115, 77116, 77117, 77118, 77119, 77120, 77121, 77122, 77123, 77124, 77125, 77126, 77127, 77128, 77129, 77130, 77131, 77132, 77133, 77134, 77135, 77136, 77137, 77138, 77139, 77140, 77141, 77142, 77143, 77144, 77145, 77146, 77147, 77148, 77149, 77150, 77151, 77152, 77153, 77154, 77155, 77156, 77157, 77158, 77159, 77160, 77161, 77162, 77163, 77164, 77165, 77166, 77167, 77168, 77169, 77170, 77171, 77172, 77173, 77174, 77175, 77176, 77177, 77178, 77179, 77180, 77181, 77182, 77183, 77184, 77185, 77186, 77187, 77188, 77189, 77190, 77191, 77192, 77193, 77194, 77195],
+        "steps_per_seed": 100,
+        "intervention_pairs_per_source_per_seed": 0
+      },
+      "test": {
+        "environment": "ood",
+        "seeds": [78100, 78101, 78102, 78103, 78104, 78105, 78106, 78107, 78108, 78109, 78110, 78111, 78112, 78113, 78114, 78115, 78116, 78117, 78118, 78119, 78120, 78121, 78122, 78123, 78124, 78125, 78126, 78127, 78128, 78129, 78130, 78131, 78132, 78133, 78134, 78135, 78136, 78137, 78138, 78139, 78140, 78141, 78142, 78143, 78144, 78145, 78146, 78147, 78148, 78149, 78150, 78151, 78152, 78153, 78154, 78155, 78156, 78157, 78158, 78159, 78160, 78161, 78162, 78163, 78164, 78165, 78166, 78167, 78168, 78169, 78170, 78171, 78172, 78173, 78174, 78175, 78176, 78177, 78178, 78179, 78180, 78181, 78182, 78183, 78184, 78185, 78186, 78187, 78188, 78189, 78190, 78191, 78192, 78193, 78194, 78195],
+        "steps_per_seed": 100,
+        "intervention_pairs_per_source_per_seed": 0
+      }
+    },
+    "models": [
+      "sparse_consensus",
+      "no_sparse_consensus",
+      "symmetric_dense_consensus",
+      "v5_sparse_parent",
+      "stable_adaptive_dense_prefix_free",
+      "persistence"
+    ],
+    "normalization": {
+      "coordinate_status": "dimensionless synthetic coordinates",
+      "method": "per-chart sample standard deviation over inherited observational-train states only",
+      "ddof": 1,
+      "expected_scales": [0.5328761310945436, 0.5650979567442539, 1.8315263080254838, 1.5086286133803488],
+      "scale_match_absolute_tolerance": 1e-12,
+      "target_window_influence": 0
+    },
+    "closure": {
+      "mode": "symmetric_prefix_backtested_consensus_closure",
+      "horizon": 20,
+      "diagnostic_horizon": 5,
+      "calibration_steps": 80,
+      "origin": 80,
+      "pseudo_origin": 60,
+      "prefix_backtest_horizon": 20,
+      "observed_prefix": "x[0] through x[80]",
+      "target_window": "x[81] through x[100]",
+      "future_states_available_to_predictor": false,
+      "future_hidden_available_to_predictor": false,
+      "weight_error": "mean squared normalized error across prefix leads 61 through 80 and all four charts",
+      "weight_formula": "w_j = (E_j + 1e-12)^(-1/2) / sum_l (E_l + 1e-12)^(-1/2)",
+      "weight_epsilon_dimensionless": 1e-12,
+      "weights_nonnegative": true,
+      "weights_sum": 1.0,
+      "sparse_consensus_experts": ["v5_sparse_parent", "stable_adaptive_dense_prefix_free", "persistence"],
+      "dense_consensus_experts": ["same_probe_dense_latent_free", "stable_adaptive_dense_prefix_free", "persistence"],
+      "no_sparse_consensus_experts": ["stable_adaptive_dense_prefix_free", "persistence"],
+      "symmetric_refit": "Each controller fits its own weights by the identical inner-prefix rule and refits its learned experts through x[80].",
+      "component_recursion": "Each component generates one independent H20 trajectory before combination; consensus output is never fed into a component.",
+      "paired_ci_unit": "independent simulation seed",
+      "paired_ci_method": "two-sided Student-t 95 percent endpoint",
+      "critical_value_n96_df95": 1.9852510035054978,
+      "metric": "For each seed, sqrt(mean(((truth-prediction)/training_scale)^2)) over 20 leads and four charts; reported mean is arithmetic across seeds.",
+      "h5_rule": "prediction_H5 is exactly prediction_H20[0:5] and never affects pass/fail",
+      "leakage_contract": [
+        "forecast and weight APIs accept immutable prefix arrays and fitted objects only",
+        "maximum observed state index is instrumented and must be 80",
+        "mutating x[81:101] leaves all non-oracle predictions and weights bit-identical",
+        "mutating hidden states leaves all predictions and weights bit-identical"
+      ]
+    },
+    "closure_gate": {
+      "validation_seeds_required": 96,
+      "test_seeds_required": 96,
+      "origins_per_seed_required": 1,
+      "primary_horizon": 20,
+      "h5_is_gating": false,
+      "paired_ci95_lower_sparse_contribution_vs_no_sparse_min": 0.0,
+      "paired_ci95_lower_improvement_vs_v5_parent_min": 0.0,
+      "paired_ci95_lower_improvement_vs_persistence_min": 0.0,
+      "stable_adaptive_dense_noninferiority_margin": 0.05,
+      "paired_log_ratio_ci95_upper_vs_stable_adaptive_dense_max": 0.048790164169432,
+      "symmetric_dense_consensus_noninferiority_margin": 0.02,
+      "paired_log_ratio_ci95_upper_vs_symmetric_dense_consensus_max": 0.01980262729617973,
+      "nonfinite_prediction_count_max": 0,
+      "maximum_component_prediction_absolute_value": 5.0,
+      "maximum_prediction_norm_to_train_q99_ratio": 5.0,
+      "maximum_dynamic_component_pathwise_jacobian_radius": 0.98,
+      "maximum_latent_ar_abs": 0.98,
+      "maximum_observed_state_index": 80,
+      "future_observation_reads_max": 0,
+      "weights_sum_tolerance": 1e-12,
+      "finite_metrics_required": true,
+      "all_primary_clauses_required": true,
+      "failure_meaning": "The sparse expert has no confirmed incremental H20 value under this registered controller and this G9-CB route closes; favorable secondary means cannot override failure."
+    },
+    "resource_limits": {
+      "max_cpu_seconds_target": 90.0,
+      "external_download_bytes": 0,
+      "write_trajectory_files": false,
+      "numpy_only": true,
+      "evaluation_probe_pairs": 0,
+      "forecast_origins_per_seed": 1,
+      "component_rollouts_per_seed": 8
+    },
+    "test_lock": {
+      "open_only_after_validation_pass": true,
+      "test_may_change_registration_gate_models_or_code": false,
+      "failed_validation_artifact_must_be_preserved": true,
+      "require_identical_merged_registration_sha256": true,
+      "require_identical_canonical_registration_sha256": true,
+      "require_identical_implementation_sha256": [
+        "reliability_rollout_bridge.py",
+        "free_rollout_bridge.py",
+        "latent_causal_bridge.py",
+        "sparse_causal_bridge.py"
+      ],
+      "require_identical_test_sha256": ["test_reliability_rollout_bridge.py"],
+      "require_identical_v4_parent_artifact_sha256": true,
+      "require_identical_v5_failure_artifact_sha256": true,
+      "no_second_v7_route_after_failure": true
+    }
+  }
+}

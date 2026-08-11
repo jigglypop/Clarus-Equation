@@ -1,0 +1,13 @@
+/experiments/preregistration/sparse_causal_bridge_v*.json text eol=lf
+/reality_stone/python/reality_stone/clarus/sparse_causal_bridge.py text eol=lf
+/reality_stone/python/reality_stone/clarus/latent_causal_bridge.py text eol=lf
+/reality_stone/python/reality_stone/clarus/free_rollout_bridge.py text eol=lf
+/reality_stone/python/reality_stone/clarus/reliability_rollout_bridge.py text eol=lf
+/tests/test_sparse_causal_bridge.py text eol=lf
+/tests/test_latent_causal_bridge.py text eol=lf
+/tests/test_free_rollout_bridge.py text eol=lf
+/tests/test_reliability_rollout_bridge.py text eol=lf
+/artifacts/agi/sparse_causal_bridge_validation_v4.json text eol=crlf
+/artifacts/agi/sparse_causal_bridge_validation_v5.json text eol=crlf
+/artifacts/agi/sparse_causal_bridge_validation_v7.json text eol=crlf
+/artifacts/agi/parent_anchor_shrinkage_development_v1.json text eol=lf

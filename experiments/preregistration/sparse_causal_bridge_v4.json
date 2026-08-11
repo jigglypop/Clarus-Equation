@@ -1,0 +1,55 @@
+{
+  "schema_version": 4,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-10",
+  "experiment": "sparse_causal_bridge_v4",
+  "roadmap_stage": "G9-CB",
+  "extends": "sparse_causal_bridge_v3.json",
+  "supersedes": "sparse_causal_bridge_v3",
+  "runner": "latent_residual_filter",
+  "change_reason": "V3 recovered the full invariant mechanism and OOD loading subspace but failed fixed-local performance and paired-CI gates because an 80-step prefix re-estimated the invariant latent AR separately for every seed. V4 makes one registered change: estimate the shared scalar latent AR once from pooled observational-train mechanism residuals, then use each OOD prefix only for the changed residual direction and centering. All seeds are fresh and V3 test remains unopened.",
+  "failed_predecessor_artifact": "artifacts/agi/sparse_causal_bridge_validation_v3.json",
+  "overrides": {
+    "hypothesis": "When latent temporal dynamics are invariant but their chart loadings shift, pooling train residuals for the scalar latent AR and adapting only the OOD residual subspace will stabilize the direct-target-confounding bridge model across seeds.",
+    "data_roles": {
+      "observational_train": {
+        "environment": "train",
+        "seeds": [45100, 45101, 45102, 45103, 45104, 45105, 45106, 45107],
+        "steps_per_seed": 520
+      },
+      "observational_selector_holdout": {
+        "environment": "train",
+        "seeds": [45600, 45601, 45602, 45603],
+        "steps_per_seed": 360
+      },
+      "topology_intervention_probe": {
+        "environment": "train",
+        "seeds": [46100, 46101, 46102, 46103],
+        "stationary_steps_per_seed": 320,
+        "pairs_per_source_per_seed": 32
+      },
+      "validation": {
+        "environment": "ood",
+        "seeds": [47100, 47101, 47102, 47103, 47104, 47105, 47106, 47107, 47108, 47109, 47110, 47111, 47112, 47113, 47114, 47115, 47116, 47117, 47118, 47119],
+        "steps_per_seed": 440,
+        "intervention_pairs_per_source_per_seed": 24
+      },
+      "test": {
+        "environment": "ood",
+        "seeds": [48100, 48101, 48102, 48103, 48104, 48105, 48106, 48107, 48108, 48109, 48110, 48111, 48112, 48113, 48114, 48115, 48116, 48117, 48118, 48119, 48120, 48121, 48122, 48123, 48124, 48125, 48126, 48127, 48128, 48129],
+        "steps_per_seed": 440,
+        "intervention_pairs_per_source_per_seed": 24
+      }
+    },
+    "negative_controls": {
+      "no_bridge_seed": 46600,
+      "permuted_intervention_seed": 46601,
+      "max_selected_edges_each": 0
+    },
+    "latent_filter": {
+      "scalar_ar_source": "pooled_observational_train_mechanism_residuals",
+      "ood_prefix_estimates": ["residual_center", "rank_one_direction", "scalar_intercept"],
+      "ood_prefix_reestimates_scalar_ar": false
+    }
+  }
+}

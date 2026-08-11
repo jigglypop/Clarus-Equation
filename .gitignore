@@ -39,6 +39,13 @@ target/
 !benchmarks/external_field_to_matter_v1.json
 !experiments/preregistration/cosmology_future_holdout_v2.json
 !experiments/preregistration/quantum_future_holdout_v2.json
+!experiments/preregistration/sparse_causal_bridge_v1.json
+!experiments/preregistration/sparse_causal_bridge_v2.json
+!experiments/preregistration/sparse_causal_bridge_v3.json
+!experiments/preregistration/sparse_causal_bridge_v4.json
+!experiments/preregistration/sparse_causal_bridge_v5.json
+!experiments/preregistration/sparse_causal_bridge_v6.json
+!experiments/preregistration/sparse_causal_bridge_v7.json
 *.pt
 *.pth
 *.csv

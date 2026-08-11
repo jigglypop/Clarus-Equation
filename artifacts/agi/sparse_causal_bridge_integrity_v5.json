@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "created_after_validation": true,
+  "validation_passed": false,
+  "locked_test_opened": false,
+  "purpose": "Post-validation integrity attestation for the preserved V5 failure. The locked test was not opened.",
+  "merged_registration_sha256_reported_by_gate": "31e029705a372b622bf5d7109784b89bb0b42d959c4960ef2bdedb3a8c07b78a",
+  "implementation_sha256_reported_by_gate": {
+    "free_rollout_bridge.py": "13d38836f3fef8ef6cbad35bb5b79fc41e15b21ebf00eec5d61604e7b3832cd6",
+    "latent_causal_bridge.py": "40306162c5d266a8ecb80d882202afb92fbc45aa5bc467a1004721706e57eef7",
+    "sparse_causal_bridge.py": "0885d7244c3ea35367987ec59538d15c081d3ba6009897e5d0e5e42a24538ca7"
+  },
+  "files": {
+    "reality_stone/python/reality_stone/clarus/free_rollout_bridge.py": "13d38836f3fef8ef6cbad35bb5b79fc41e15b21ebf00eec5d61604e7b3832cd6",
+    "reality_stone/python/reality_stone/clarus/latent_causal_bridge.py": "40306162c5d266a8ecb80d882202afb92fbc45aa5bc467a1004721706e57eef7",
+    "reality_stone/python/reality_stone/clarus/sparse_causal_bridge.py": "0885d7244c3ea35367987ec59538d15c081d3ba6009897e5d0e5e42a24538ca7",
+    "tests/test_free_rollout_bridge.py": "218ab4d82d7c265a0c1d4b6c5f55c238fb1da5ddbc2e26f31c231bcbd598a4a3",
+    "examples/agi/free_rollout_bridge_gate.py": "5462017e7fde146c147e504f9329f8c4959082f1dcb3b0216c984487b47ae90e",
+    "experiments/preregistration/sparse_causal_bridge_v5.json": "17a8ba5c7889557d0beaf5ab2613f6afe48ec30c8461228563185c8c6059c90d",
+    "artifacts/agi/sparse_causal_bridge_validation_v5.json": "6dd4999e385fc47ea5ccd2e3e1233c60f2d1968554b82dd5cb95a34524f9e9a0"
+  }
+}

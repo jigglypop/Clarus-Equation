@@ -55,8 +55,19 @@ CE 부트스트랩 고정점 $p^* = (4.87\%, 26.2\%, 68.9\%)$은 `05_실험근�
 | `legacy clarus/sparsity.py` (removed) (TernaryClassifier) | 동적 재분류로 BG 라벨이 frozen 의미를 잃음. 사양 4.4절 자체의 모순 (frozen vs 동적 재분류) 반영. |
 | `reality_stone/python/reality_stone/clarus/runtime.py`, `reality_stone/python/reality_stone/clarus/agent.py` 등 brain runtime | 상태·행동·critic·기억·STDP gate가 닫힌 실행 루프. 다만 STDP 효능은 `NO-EFFECT`, held-out guard는 `FAIL`이므로 학습 우위 미입증. |
 | `reality_stone/python/reality_stone/clarus/engine.py` standalone CE relax | 토큰 디코딩에서 의미 있는 출력 생산 실패 (`engine_results.json`: 노이즈 토큰). |
+| sparse causal bridge V7 | 96개 고정 validation seed의 H20 자유 롤아웃에서 sparse 제거 대비 paired 기여는 양수였지만, V5 부모·persistence 개선과 pathwise 안정성 조건이 충족되지 않았다. 결합 route는 폐쇄했고 test는 열지 않았다. |
 
-### 0.5 다음 단계 옵션
+### 0.5 Sparse causal bridge V7 폐쇄 (2026-08-11)
+
+**[공리: 모델 선택]** V7은 4차원 합성 동역학에서 sparse·adaptive dense·persistence 전문가를 동일한 prefix-only 규칙으로 결합한 단일 H20 route다. 이는 CE-AGI 전체나 실제 환경의 인과 발견을 대표하지 않는다.
+
+**[예측]** validation 96 seeds에서 sparse 성분의 양의 paired 기여, V5 부모와 persistence 대비 양의 paired 개선, dense 대조군 비열등, pathwise 안정성을 모두 요구했다.
+
+**[경험식]** sparse 제거 대비 차이의 95% 구간은 `[+0.008174, +0.032930]`이었지만, V5 부모 개선 구간 `[-0.027431, +0.014449]`, persistence 개선 구간 `[-0.016487, +0.037470]`, 최대 pathwise radius `1.114309 > 0.98` 때문에 결합 조건은 충족되지 않았다.
+
+**[산출]** test unlock 전제가 성립하지 않아 test split은 열지 않았고 같은 V7 route의 재탐색도 종료했다. 이 결과는 AGI 효능의 증거나 반증이 아니라 좁은 합성 브리지 경로의 폐쇄다. 전체 정의·수치·해시 경계는 `26_Sparse_Causal_Bridge_V7_Closure.md`에 고정한다.
+
+### 0.6 다음 단계 옵션
 
 1. **현재 상태 유지 + 정직한 documentation**: 본 절의 측정 기록을 코드 주석과 README에 반영. 사양은 SNN substrate에서 검증 대상이라는 점을 명시. 가장 정직하고 빠른 길.
 2. **SNN 작은 프로토타입**: snnTorch / Norse 라이브러리로 작은 합성 task에서 STDP + 부트스트랩 사이클 구현. 활성 비율 자연 수렴 여부 측정. 사양의 진짜 검증. 1-2주 작업.

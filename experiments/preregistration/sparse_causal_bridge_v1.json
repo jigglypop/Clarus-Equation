@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-10",
+  "experiment": "sparse_causal_bridge_v1",
+  "roadmap_stage": "G9-CB",
+  "hypothesis": "A discrete Laplace-Beltrami fold-contact prior can propose a small undirected bridge set, while randomized paired interventions can prune and orient that set into an invariant sparse causal world model under a registered hidden-cause loading shift.",
+  "claim_boundary": "This is a four-chart synthetic engineering gate. Geometry is a proposal prior, not causal evidence, and the experiment does not establish a cortical sulcus, U-fiber, neural, AGI, or biological mechanism.",
+  "matrix_orientation": "bridge[target, source]",
+  "charts": ["A", "B", "C", "D"],
+  "scm": {
+    "equations": {
+      "latent": "h[t+1] = latent_ar * h[t] + latent_noise_std * xi[t]",
+      "observed": "x[t+1] = self_coeff * x[t] + bridge @ tanh(x[t]) + loading[environment] * h[t] + state_noise_std * epsilon[t]"
+    },
+    "latent_ar": 0.96,
+    "latent_noise_std": 0.12,
+    "state_noise_std": 0.1,
+    "initial_state_std": 0.25,
+    "self_coefficients": [0.14, 0.12, 0.78, 0.76],
+    "true_directed_bridges": [
+      {"source": 0, "target": 2, "coefficient": 0.52},
+      {"source": 2, "target": 3, "coefficient": -0.48}
+    ],
+    "train_hidden_loadings": [1.15, 1.25, 0.55, 0.0],
+    "ood_hidden_loadings": [1.15, -1.25, -0.55, 0.0],
+    "registered_common_cause_pair": [0, 1],
+    "burn_in_steps": 100
+  },
+  "geometry_proposal": {
+    "interpretation": "A four-node finite graph is only a discrete Laplace-Beltrami surrogate for an intrinsically long but extrinsically close folded sheet.",
+    "surface_edges": [
+      [0, 3, 1.0],
+      [3, 1, 1.0],
+      [1, 2, 1.0]
+    ],
+    "white_contact_affinity": [
+      [0.0, 1.0, 0.95, 0.25],
+      [1.0, 0.0, 0.22, 0.68],
+      [0.95, 0.22, 0.0, 0.92],
+      [0.25, 0.68, 0.92, 0.0]
+    ],
+    "heat_time": 0.5,
+    "score": "white_contact_affinity * (1 - normalized_off_diagonal_heat_kernel)",
+    "undirected_pair_budget": 4,
+    "directed_expansion": "both orientations",
+    "required_truth_pair_coverage": 1.0
+  },
+  "data_roles": {
+    "observational_train": {
+      "environment": "train",
+      "seeds": [5100, 5101, 5102, 5103, 5104, 5105, 5106, 5107],
+      "steps_per_seed": 520
+    },
+    "observational_selector_holdout": {
+      "environment": "train",
+      "seeds": [5600, 5601, 5602, 5603],
+      "steps_per_seed": 360
+    },
+    "topology_intervention_probe": {
+      "environment": "train",
+      "seeds": [6100, 6101, 6102, 6103],
+      "stationary_steps_per_seed": 320,
+      "pairs_per_source_per_seed": 32
+    },
+    "validation": {
+      "environment": "ood",
+      "seeds": [7100, 7101, 7102, 7103, 7104, 7105, 7106, 7107, 7108, 7109, 7110, 7111, 7112, 7113, 7114, 7115, 7116, 7117, 7118, 7119],
+      "steps_per_seed": 360,
+      "intervention_pairs_per_source_per_seed": 24
+    },
+    "test": {
+      "environment": "ood",
+      "seeds": [8100, 8101, 8102, 8103, 8104, 8105, 8106, 8107, 8108, 8109, 8110, 8111, 8112, 8113, 8114, 8115, 8116, 8117, 8118, 8119, 8120, 8121, 8122, 8123, 8124, 8125, 8126, 8127, 8128, 8129],
+      "steps_per_seed": 360,
+      "intervention_pairs_per_source_per_seed": 24
+    }
+  },
+  "intervention": {
+    "operation": "surgically replace one source x_j by +amplitude and -amplitude from the same base state and hidden state",
+    "amplitude": 0.75,
+    "common_process_noise_within_pair": true,
+    "independent_sensor_noise_std": 0.04,
+    "balanced_source_and_sign_order": true,
+    "rng_streams": "state, process, intervention_order, and sensor streams are separated by fixed offsets"
+  },
+  "learning": {
+    "local_basis": ["1", "x_target", "x_target^3"],
+    "bridge_basis": "tanh(x_source)",
+    "ridge": 0.001,
+    "directed_edge_budget": 2,
+    "causal_effect_abs_min": 0.15,
+    "causal_z_min": 3.0,
+    "require_split_half_sign_agreement": true,
+    "observational_gain_min_fraction": 0.01,
+    "truth_labels_available_to_selector": false,
+    "final_observational_fit_uses_test_rows": false,
+    "probe_use": "causal_bridge and dense_probe use topology probes; probe labels are not reused as validation/test effects"
+  },
+  "models": [
+    "local_only",
+    "dense_observational",
+    "raw_correlation_top2",
+    "predictive_gain_top2",
+    "geometry_observational_top2",
+    "dense_probe",
+    "causal_bridge",
+    "oracle_diagnostic"
+  ],
+  "negative_controls": {
+    "no_bridge_seed": 6600,
+    "permuted_intervention_seed": 6601,
+    "max_selected_edges_each": 0
+  },
+  "gate": {
+    "max_joint_spectral_radius": 0.98,
+    "train_abs_common_cause_correlation_min": 0.7,
+    "raw_correlation_must_select_common_cause": true,
+    "geometry_truth_pair_coverage_min": 1.0,
+    "directed_precision_min": 0.9,
+    "directed_recall_min": 0.9,
+    "exact_graph_recovery_probe_seed_fraction_min": 0.8,
+    "common_cause_false_edges_max": 0,
+    "reverse_true_edges_max": 0,
+    "selected_edges_max": 2,
+    "true_effect_sign_accuracy_min": 1.0,
+    "bridge_coefficient_mae_max": 0.08,
+    "intervention_response_nrmse_max": 0.2,
+    "ood_global_rmse_reduction_vs_local_min": 0.05,
+    "ood_global_rmse_reduction_vs_dense_observational_min": 0.1,
+    "ood_global_rmse_reduction_vs_raw_correlation_min": 0.1,
+    "ood_global_rmse_reduction_vs_predictive_gain_min": 0.05,
+    "ood_downstream_rmse_reduction_vs_local_min": 0.15,
+    "ood_downstream_rmse_reduction_vs_dense_observational_min": 0.05,
+    "paired_ci95_lower_vs_best_observational_min": 0.0,
+    "causal_rmse_ratio_vs_dense_probe_max": 1.02,
+    "lesion_direct_target_mse_increase_fraction_min": 0.2,
+    "lesion_non_descendant_prediction_change_max": 1e-10,
+    "finite_metrics_required": true
+  },
+  "resource_limits": {
+    "max_cpu_seconds_target": 10.0,
+    "external_download_bytes": 0,
+    "write_trajectory_files": false,
+    "numpy_only": true
+  },
+  "test_lock": {
+    "open_only_after_validation_pass": true,
+    "test_may_change_selection_or_coefficients": false,
+    "failed_validation_artifact_must_be_preserved": true,
+    "failed_locked_test_seeds_must_not_be_reused": true
+  }
+}

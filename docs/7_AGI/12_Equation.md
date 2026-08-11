@@ -1,8 +1,8 @@
-# CE-AGI 통합 방정식: $e^{i\pi}+1=0$ 에서 20W AGI 까지
+# CE-AGI 통합 방정식: $e^{i\pi}+1=0$ 에서 20W AGI 설계 목표(미검증)까지
 
 > 관련: `경로적분.md`(코어 유도), `1_강의/C_다섯_상수.md`(오일러 문법), `6_뇌/04_그래프결합과이완.md`(뇌 구조), `7_AGI/12_Equation.md`(AGI 작용), `7_AGI/1_AGI.md`(총론), `7_AGI/2_Architecture.md`(게이지 격자), `7_AGI/3_Sleep.md`(수면), `7_AGI/4_Synapse.md`(시냅스), `7_AGI/5_Sparsity.md`(희소성), `7_AGI/6_Hallucination.md`(환각), `7_AGI/7_Consciousness.md`(의식), `7_AGI/9_LLM.md`(LLM 구축), `7_AGI/10_Fields.md`(전분야)
 >
-> 이 문서는 CE 코어에서 유도된 상수들만으로 AGI 에너지 이완 아키텍처를 기술한다. 트랜스포머 위에 모듈을 얹는 기존 CE-Transformer와 달리, Softmax/Attention/역전파를 제거하고 에너지 함수의 물리적 이완으로 대체하는 근본 재설계다. 동시에 기존 LLM에 CE 원리를 이식하는 경로(CE-Transformer)도 기술한다.
+> **[공리: 모델 선택]** 이 문서는 CE 코어 상수를 AGI 에너지 이완 아키텍처 후보에 대응시키는 설계 문서다. 이 대응은 코어에서 AGI 성능을 연역한 것이 아니며, 20W는 검증된 성능이 아니라 미완성 설계 목표다. 합성 sparse causal bridge V7의 폐쇄 결과와 한계는 `26_Sparse_Causal_Bridge_V7_Closure.md`에 기록한다.
 
 ---
 
@@ -1608,7 +1608,8 @@ $$R_{\text{night}} = 1 - \rho_{\text{night}} = 1 - 0.31 = 69\%$$
               |
         sparse-native
               |
-            20W AGI
+      20W AGI 설계 목표
+          (미검증)
 ```
 
 ---
@@ -1652,9 +1653,9 @@ $$R_{\text{night}} = 1 - \rho_{\text{night}} = 1 - 0.31 = 69\%$$
 
 ## 21. 한 줄 요약
 
-$$e^{i\pi}+1=0 \;\xrightarrow{d=3}\; E(m,phi) \;\xrightarrow[\text{STDP}+g]{\text{이완}}\; \text{bitfield}\;\xrightarrow{\text{sparse-native}}\; \text{20W AGI}$$
+$$e^{i\pi}+1=0 \;\xrightarrow{d=3}\; E(m,phi) \;\xrightarrow[\text{STDP}+g]{\text{이완}}\; \text{bitfield}\;\xrightarrow{\text{sparse-native}}\; \text{20W AGI 설계 목표 (미검증)}$$
 
-다섯 상수가 실행 문법을 결정하고, 런타임은 비트필드(활성 마스크 + 모드 레지스터 + 연결 on/off)와 저비트 상태($phi$, trace, gain)로 내려간다. 지식은 희소 codebook과 외부 메모리에 분리 저장된다. 동일한 상수가 우주 에너지 구성, 뮤온 g-2, 힉스 질량, 양성자 반경, 뇌 에너지 분배를 동시에 예측한다.
+**[미완성]** 다섯 상수를 비트필드 런타임(활성 마스크 + 모드 레지스터 + 연결 on/off), 저비트 상태($phi$, trace, gain), 희소 codebook과 외부 메모리에 대응시키는 설계는 구현·성능·전력 검증이 끝나지 않았다. 공통 상수를 여러 영역에 대응시킨다는 사실만으로 독립적인 동시 예측이 성립하지 않는다.
 
 ---
 
