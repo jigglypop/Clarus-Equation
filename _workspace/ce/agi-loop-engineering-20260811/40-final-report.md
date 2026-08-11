@@ -32,3 +32,18 @@ is uniquely or generally superior. The next discriminating loop must test
 intervention/reward transfer where an explicit belief and planner can adapt
 without relearning a policy.
 
+That Loop 4 transfer attempt is `0/100 STOP`. The registered stale-planner
+causal gate did not separate in four cells, one OOD oracle gap missed by
+`0.000410`, and the small context policy RNN failed to learn SAFE at all. Hence
+the apparently large candidate-RNN return gap is not accepted. The next route
+must not tune this failed benchmark; it moves to an independently testable AGI
+gap: hippocampal memory/replay efficacy under delay and interference.
+
+Loop 5 closes the narrow memory-operation gap and scores `90/100 GO` on its
+corrected bounded synthetic benchmark. Explicit UPDATE prevents duplicate cues
+from retaining stale facts; evidence IDs, abstention, DELETE, and audit are all
+causally required by the controls. This does not validate replay consolidation,
+long-dialogue memory, or biological hippocampus. The candidate stays separate
+from the default runtime until a downstream multi-session task and regression
+guard justify integration.
+

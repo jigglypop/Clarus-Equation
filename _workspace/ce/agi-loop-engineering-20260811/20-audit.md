@@ -16,6 +16,10 @@ Status: COMPLETE
 | Runtime signed-credit efficacy, matched manifold (Loop 2c) | empirical synthetic | signed-off LCB `-0.06021`; guard delta `+0.07479` | STOP / default off |
 | Raw-history controlled state discovery (Loop 3) | empirical synthetic | score `85`; causal ablations pass | GO within claim limit |
 | Structured history state superiority over recurrent state | not shown | ID LCB `0.0`; OOD LCB `-0.00498` | NONINFERIOR only |
+| Modular reward transfer (Loop 4) | empirical synthetic | stale causal gate and oracle-gap gate fail | STOP |
+| Explicit planner superiority over context-RNN | not shown | RNN train accuracy `68.76%`, SAFE predictions `0` | INVALID comparator signal |
+| Audited episodic-memory mechanics (Loop 5) | empirical synthetic | corrected score `90`; all registered controls present | GO within claim limit |
+| Long-dialogue/SOTA or biological replay efficacy | not tested | bounded synthetic key/value task only | OPEN |
 
 No AGI, world-model superiority, or runtime-learning superiority claim is made.
 The tabular signed-credit result does not transfer to the current continuous

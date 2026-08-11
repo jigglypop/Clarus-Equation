@@ -464,6 +464,8 @@ $$
 | action-conditioned belief + MPC | F.2, F.4, F.7 | `belief_control.py`와 RuntimeAgent 선택 경로 구현; 합성 DPC validation `86.32/100 GO`, recurrent sufficient-statistic baseline과는 동률이므로 일반 world-model 우위는 미완성 |
 | signed temporal credit | F.14 | `credit_control.py`의 tabular mechanism probe `100/100 GO`; `runtime_credit_benchmark.py`의 Loop 2b/2c는 모두 `0/100 STOP`, 기본 off |
 | raw-history controlled belief | F.2, F.4 | `history_state_benchmark.py` 합성 ID/OOD `85/100 GO`; 실제 2-state tanh RNN에는 비열등일 뿐 우위 미확립 |
+| modular reward transfer | F.4, F.7 | `reward_transfer_benchmark.py` 구현; locked Loop 4 `0/100 STOP`, context-RNN SAFE class 미학습으로 planner 우위 주장 불가 |
+| audited episodic memory | D.1--D.6 | `episodic_memory.py` ADD/UPDATE/DELETE/NOOP·evidence·abstention 후보 구현; corrected Loop 5 `90/100 GO`, runtime 기본 경로 미연결 |
 
 ### 12.1 2026-08-11 loop-engineering 상태
 
@@ -493,5 +495,16 @@ $$
 - `[미완성]` 교정된 2-state tanh RNN 대비 LCB는 ID `0.0`, OOD `-0.00498`로
   비열등만 성립한다. 다음 게이트는 동일 task 분류가 아니라 명시적 belief와
   planner가 정책 재학습 없이 intervention/reward 변화에 전이하는지다.
+- `[미완성]` Loop 4 reward-transfer는 `0/100 STOP`이다. stale-planner
+  대조가 6개 cell 중 4개에서 분리되지 않았고 OOD oracle gap 하나가
+  `0.020410 > 0.02`였다. context-RNN은 train accuracy `68.76%`와 SAFE 예측
+  `0`으로 미학습이므로 큰 candidate-RNN 차이를 planner 우위로 해석하지 않는다.
+- `[경험식]` 교정된 Loop 5 bounded-memory probe에서 explicit UPDATE,
+  evidence ID, margin abstention, DELETE audit 후보가 `90/100 GO`를 얻었다.
+  최신 값·근거·abstention·삭제 정확도는 각각 `1.0`이고 기존 memory 대비
+  composite LCB는 `+0.75`다.
+- `[미완성]` 위 결과는 UPDATE 간섭을 겨냥한 합성 key/value task다.
+  LoCoMo/LongMemEval, multi-session temporal reasoning, replay consolidation,
+  BrainRuntime 기본 경로 효능은 아직 검증하지 않았다.
 - 재현 artifact와 제한된 해석은
   `_workspace/ce/agi-loop-engineering-20260811/`에 기록한다.

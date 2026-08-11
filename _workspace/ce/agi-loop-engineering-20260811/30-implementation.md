@@ -37,3 +37,16 @@ comparison, and causal history ablations. It is not yet wired into the default
 `RuntimeAgent`; the next checkpoint is transfer/control integration rather than
 another same-task classifier comparison.
 
+Loop 4 added a frozen-belief reward-transfer harness and a context-conditioned
+two-state policy RNN. The locked run failed its stale-policy and oracle-gap
+gates. A post-run, non-scoring audit also found that the policy comparator never
+learned its SAFE class, so this harness cannot establish planner superiority.
+The route is closed without tuning; it remains useful as a regression witness.
+
+Loop 5 adds `episodic_memory.py` with explicit ADD/UPDATE/DELETE/NOOP audit,
+evidence-returning recall, margin abstention, and bounded novelty/priority/
+recency eviction. `episodic_memory_benchmark.py` holds fixed the existing
+priority-only memory, merge-off, abstention-off, FIFO, and no-memory arms. It is
+not yet the default `BrainRuntime.hippocampus`; runtime integration requires a
+separate downstream-task guard.
+

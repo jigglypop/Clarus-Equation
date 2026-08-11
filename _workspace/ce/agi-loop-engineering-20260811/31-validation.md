@@ -32,6 +32,15 @@ Results:
 - proof-completion harness retained the explicit LO/tree/raw obstructions and
   labelled the improved readouts as candidates only;
 - research-core checks: `OK lanes`, `OK gate`, `OK build`, `OK final`.
+- Loop 4 modular reward transfer: `0/100 STOP`; stale LCB failed in four of
+  six domain/context cells and maximum oracle gap was `0.020410 > 0.02`.
+- Loop 4 context-RNN comparison is non-claimable: train accuracy `68.76%`,
+  label counts `7729/269/8002`, prediction counts `3725/0/12275`.
+- Loop 5 first artifact is INVALID because the registered no-memory arm was
+  omitted; corrected artifact is scored separately.
+- Loop 5 corrected episodic memory: `90/100 GO`; latest/evidence/abstention/
+  deletion each `1.0`; composite LCB `+0.75` existing, `+0.75` merge-off,
+  `+0.25` FIFO; audit and capacity guards pass.
 
 Loop 1b primary per delay:
 
