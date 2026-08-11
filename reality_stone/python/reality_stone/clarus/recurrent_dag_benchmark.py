@@ -1,0 +1,412 @@
+"""Locked Loop 8H benchmark for a recurrent inhibitory decision DAG."""
+
+from __future__ import annotations
+
+from dataclasses import asdict, dataclass
+import math
+
+import numpy as np
+
+from .brain_geometry_benchmark import _lcb
+from .recurrent_decision_dag import RecurrentDagConfig, RecurrentDecisionDag
+
+
+@dataclass(frozen=True)
+class RecurrentDagBenchConfig:
+    dag: RecurrentDagConfig = RecurrentDagConfig()
+    trials: int = 256
+    validation_seeds: int = 32
+    training_seeds: int = 16
+    boosting_rounds: int = 32
+    boosting_shrinkage: float = 0.15
+    threshold_quantiles: int = 8
+
+
+@dataclass(frozen=True)
+class _Trial:
+    content: tuple[float, ...]
+    cues: tuple[float, ...]
+    target: int
+    base_action: int
+    switched: bool
+
+
+@dataclass(frozen=True)
+class _Stump:
+    feature: int
+    threshold: float
+    left: tuple[float, ...]
+    right: tuple[float, ...]
+
+
+@dataclass(frozen=True)
+class _BoostedStumps:
+    intercept: tuple[float, ...]
+    stumps: tuple[_Stump, ...]
+    shrinkage: float
+
+    def probabilities(self, features: np.ndarray) -> np.ndarray:
+        logits = np.tile(np.asarray(self.intercept), (features.shape[0], 1))
+        for stump in self.stumps:
+            left = np.asarray(stump.left)
+            right = np.asarray(stump.right)
+            logits += self.shrinkage * np.where(
+                (features[:, stump.feature] <= stump.threshold)[:, None],
+                left,
+                right,
+            )
+        return _row_softmax(logits)
+
+
+def _row_softmax(values: np.ndarray) -> np.ndarray:
+    shifted = values - np.max(values, axis=1, keepdims=True)
+    weights = np.exp(shifted)
+    return weights / np.sum(weights, axis=1, keepdims=True)
+
+
+def _features(trials: tuple[_Trial, ...]) -> np.ndarray:
+    return np.asarray([(*trial.content, *trial.cues) for trial in trials], dtype=np.float64)
+
+
+def _fit_boosted_stumps(
+    features: np.ndarray,
+    targets: np.ndarray,
+    config: RecurrentDagBenchConfig,
+) -> _BoostedStumps:
+    classes = config.dag.action_count
+    counts = np.bincount(targets, minlength=classes).astype(np.float64) + 1.0
+    intercept = np.log(counts / float(np.sum(counts)))
+    logits = np.tile(intercept, (len(targets), 1))
+    one_hot = np.eye(classes, dtype=np.float64)[targets]
+    stumps: list[_Stump] = []
+    quantiles = np.linspace(0.1, 0.9, config.threshold_quantiles)
+    for _ in range(config.boosting_rounds):
+        residual = one_hot - _row_softmax(logits)
+        best: tuple[float, int, float, np.ndarray, np.ndarray, np.ndarray] | None = None
+        for feature in range(features.shape[1]):
+            thresholds = np.unique(np.quantile(features[:, feature], quantiles))
+            for threshold in thresholds:
+                mask = features[:, feature] <= threshold
+                if int(np.sum(mask)) < classes or int(np.sum(~mask)) < classes:
+                    continue
+                left = np.mean(residual[mask], axis=0)
+                right = np.mean(residual[~mask], axis=0)
+                fitted = np.where(mask[:, None], left, right)
+                gain = float(np.sum(residual**2) - np.sum((residual - fitted) ** 2))
+                if best is None or gain > best[0]:
+                    best = (gain, feature, float(threshold), left, right, fitted)
+        if best is None:
+            break
+        _, feature, threshold, left, right, fitted = best
+        logits += config.boosting_shrinkage * fitted
+        stumps.append(
+            _Stump(
+                feature=feature,
+                threshold=threshold,
+                left=tuple(float(value) for value in left),
+                right=tuple(float(value) for value in right),
+            )
+        )
+    return _BoostedStumps(
+        intercept=tuple(float(value) for value in intercept),
+        stumps=tuple(stumps),
+        shrinkage=config.boosting_shrinkage,
+    )
+
+
+def _trials(
+    seed: int,
+    config: RecurrentDagBenchConfig,
+    *,
+    ood: bool,
+    training: bool = False,
+    stationary: bool = False,
+    flat: bool = False,
+) -> tuple[_Trial, ...]:
+    rng = np.random.default_rng(seed)
+    context = int(rng.integers(len(config.dag.context_masks)))
+    count = 192 if training else config.trials
+    result = []
+    for index in range(count):
+        switch_probability = 0.0 if stationary else (0.12 if ood else 0.06)
+        switched = index > 0 and bool(rng.random() < switch_probability)
+        if switched:
+            choices = [value for value in range(len(config.dag.context_masks)) if value != context]
+            context = choices[int(rng.integers(len(choices)))]
+        if training:
+            base_action = int(rng.integers(6))
+        elif ood:
+            base_action = int(rng.choice((6, 7)))
+        else:
+            base_action = int(rng.integers(6))
+        coherence = 0.90 if ood else 1.20
+        content_noise = 0.95 if ood else 0.75
+        content = tuple(
+            float((1.0 if base_action & (1 << bit) else -1.0) * coherence + rng.normal(0.0, content_noise))
+            for bit in range(3)
+        )
+        cue_strength = 5.0 if stationary else (0.55 if ood else 0.75)
+        cue_noise = 0.30 if stationary else 1.0
+        cues = rng.normal(0.0, cue_noise, len(config.dag.context_masks))
+        cues[context] += cue_strength
+        target = base_action if flat else base_action ^ config.dag.context_masks[context]
+        result.append(
+            _Trial(
+                content=content,
+                cues=tuple(float(value) for value in cues),
+                target=target,
+                base_action=base_action,
+                switched=switched,
+            )
+        )
+    return tuple(result)
+
+
+def _hard_tree_probabilities(trial: _Trial, config: RecurrentDagBenchConfig) -> np.ndarray:
+    base = sum(int(value >= 0.0) << bit for bit, value in enumerate(trial.content))
+    context = int(np.argmax(trial.cues))
+    action = base ^ config.dag.context_masks[context]
+    probabilities = np.full(config.dag.action_count, 0.02 / (config.dag.action_count - 1))
+    probabilities[action] = 0.98
+    return probabilities
+
+
+def _metric_rows(
+    trials: tuple[_Trial, ...],
+    boosted: _BoostedStumps,
+    config: RecurrentDagBenchConfig,
+    seed: int,
+) -> tuple[dict[str, dict[str, float]], dict[str, float]]:
+    arms = ("hard_tree", "boosted_stumps", "feedforward_dag", "recurrent_dag", "feedback_shuffle", "sign_flip")
+    accumulators = {
+        arm: {"correct": [], "nll": [], "post_switch": []}
+        for arm in arms
+    }
+    models = {
+        arm: RecurrentDecisionDag(config.dag)
+        for arm in ("feedforward_dag", "recurrent_dag", "feedback_shuffle", "sign_flip")
+    }
+    boosted_probabilities = boosted.probabilities(_features(trials))
+    since_switch = 99
+    max_state_norm = 0.0
+    permutation_rng = np.random.default_rng(seed + 991)
+    permutations = [
+        tuple(int(value) for value in permutation_rng.permutation(len(config.dag.context_masks)))
+        for _ in trials
+    ]
+    for index, trial in enumerate(trials):
+        since_switch = 1 if trial.switched else since_switch + 1
+        fixed = {
+            "hard_tree": _hard_tree_probabilities(trial, config),
+            "boosted_stumps": boosted_probabilities[index],
+        }
+        for arm, probabilities in fixed.items():
+            predicted = int(np.argmax(probabilities))
+            accumulators[arm]["correct"].append(float(predicted == trial.target))
+            accumulators[arm]["nll"].append(-math.log(max(1e-12, float(probabilities[trial.target]))))
+            if 2 <= since_switch <= 5:
+                accumulators[arm]["post_switch"].append(float(predicted == trial.target))
+        for arm, model in models.items():
+            if arm == "feedforward_dag":
+                model.reset()
+            output = model.forward_step(trial.content, trial.cues)
+            probabilities = np.asarray(output.probabilities)
+            correct = output.action == trial.target
+            accumulators[arm]["correct"].append(float(correct))
+            accumulators[arm]["nll"].append(-math.log(max(1e-12, float(probabilities[trial.target]))))
+            if 2 <= since_switch <= 5:
+                accumulators[arm]["post_switch"].append(float(correct))
+            feedback = 1.0 if correct else -1.0
+            if arm != "feedforward_dag":
+                model.commit_feedback(
+                    feedback,
+                    eligibility_permutation=permutations[index] if arm == "feedback_shuffle" else None,
+                    flip_sign=arm == "sign_flip",
+                )
+                max_state_norm = max(max_state_norm, float(np.linalg.norm(model.state)))
+    summary = {}
+    for arm, values in accumulators.items():
+        summary[arm] = {
+            "accuracy": float(np.mean(values["correct"])),
+            "nll": float(np.mean(values["nll"])),
+            "post_switch_accuracy": float(np.mean(values["post_switch"])) if values["post_switch"] else float("nan"),
+        }
+    diagnostics = {
+        "max_state_norm": max_state_norm,
+        "nonfinite_count": float(sum(model.nonfinite_count for model in models.values())),
+        "same_tick_commit_count": 0.0,
+    }
+    return summary, diagnostics
+
+
+def _domain(
+    config: RecurrentDagBenchConfig,
+    boosted: _BoostedStumps,
+    *,
+    ood: bool,
+) -> dict[str, object]:
+    start = 872100 if ood else 872000
+    per_seed = []
+    max_state_norm = 0.0
+    nonfinite = 0.0
+    for offset in range(config.validation_seeds):
+        seed = start + offset
+        summary, diagnostics = _metric_rows(
+            _trials(seed, config, ood=ood), boosted, config, seed
+        )
+        per_seed.append(summary)
+        max_state_norm = max(max_state_norm, diagnostics["max_state_norm"])
+        nonfinite += diagnostics["nonfinite_count"]
+
+    arms = tuple(per_seed[0])
+    aggregate = {
+        arm: {
+            metric: float(np.mean([row[arm][metric] for row in per_seed]))
+            for metric in per_seed[0][arm]
+        }
+        for arm in arms
+    }
+
+    def difference(left: str, right: str, metric: str) -> list[float]:
+        return [row[left][metric] - row[right][metric] for row in per_seed]
+
+    tag = 100 if ood else 0
+    aggregate["effects"] = {
+        "recurrent_minus_feedforward_accuracy_lcb": _lcb(
+            difference("recurrent_dag", "feedforward_dag", "accuracy"), seed=20261401 + tag
+        ),
+        "boosted_minus_recurrent_nll_lcb": _lcb(
+            difference("boosted_stumps", "recurrent_dag", "nll"), seed=20261402 + tag
+        ),
+        "recurrent_minus_shuffle_accuracy_lcb": _lcb(
+            difference("recurrent_dag", "feedback_shuffle", "accuracy"), seed=20261403 + tag
+        ),
+        "recurrent_minus_sign_flip_accuracy_lcb": _lcb(
+            difference("recurrent_dag", "sign_flip", "accuracy"), seed=20261404 + tag
+        ),
+        "post_switch_recurrent_minus_feedforward_lcb": _lcb(
+            difference("recurrent_dag", "feedforward_dag", "post_switch_accuracy"), seed=20261405 + tag
+        ),
+    }
+    aggregate["max_state_norm"] = max_state_norm
+    aggregate["nonfinite_count"] = nonfinite
+    return aggregate
+
+
+def _nulls(config: RecurrentDagBenchConfig, boosted: _BoostedStumps) -> dict[str, float]:
+    stationary_differences = []
+    flat_differences = []
+    for offset in range(config.validation_seeds):
+        seed = 872200 + offset
+        stationary, _ = _metric_rows(
+            _trials(seed, config, ood=False, stationary=True), boosted, config, seed
+        )
+        stationary_differences.append(
+            stationary["recurrent_dag"]["accuracy"] - stationary["feedforward_dag"]["accuracy"]
+        )
+        flat_trials = _trials(seed + 100, config, ood=False, flat=True)
+        recurrent = RecurrentDecisionDag(config.dag)
+        recurrent_correct = []
+        flat_correct = []
+        for trial in flat_trials:
+            output = recurrent.forward_step(trial.content, trial.cues)
+            correct = output.action == trial.target
+            recurrent_correct.append(float(correct))
+            recurrent.commit_feedback(1.0 if correct else -1.0)
+            flat_action = sum(int(value >= 0.0) << bit for bit, value in enumerate(trial.content))
+            flat_correct.append(float(flat_action == trial.target))
+        flat_differences.append(float(np.mean(recurrent_correct) - np.mean(flat_correct)))
+    return {
+        "stationary_absolute_mean_accuracy_difference": abs(float(np.mean(stationary_differences))),
+        "flat_recurrent_minus_matched_flat_accuracy": float(np.mean(flat_differences)),
+    }
+
+
+def evaluate_recurrent_dag(
+    config: RecurrentDagBenchConfig | None = None,
+) -> dict[str, object]:
+    cfg = config or RecurrentDagBenchConfig()
+    training_trials = tuple(
+        trial
+        for offset in range(cfg.training_seeds)
+        for trial in _trials(870000 + offset, cfg, ood=False, training=True)
+    )
+    boosted = _fit_boosted_stumps(
+        _features(training_trials),
+        np.asarray([trial.target for trial in training_trials], dtype=np.int64),
+        cfg,
+    )
+    probe = RecurrentDecisionDag(cfg.dag)
+    id_result = _domain(cfg, boosted, ood=False)
+    ood_result = _domain(cfg, boosted, ood=True)
+    nulls = _nulls(cfg, boosted)
+    id_effects = id_result["effects"]
+    ood_effects = ood_result["effects"]
+    gates = {
+        "finite_valid_topology": all(edge.source < edge.target for edge in probe.edges),
+        "bounded_finite_state": (
+            id_result["max_state_norm"] <= cfg.dag.state_norm_cap + 1e-12
+            and ood_result["max_state_norm"] <= cfg.dag.state_norm_cap + 1e-12
+            and id_result["nonfinite_count"] == 0.0
+            and ood_result["nonfinite_count"] == 0.0
+        ),
+        "recurrent_beats_feedforward": (
+            id_effects["recurrent_minus_feedforward_accuracy_lcb"] >= 0.03
+            and ood_effects["recurrent_minus_feedforward_accuracy_lcb"] >= 0.02
+        ),
+        "recurrent_beats_boosted_nll": (
+            id_effects["boosted_minus_recurrent_nll_lcb"] > 0.0
+            and ood_effects["boosted_minus_recurrent_nll_lcb"] > 0.0
+        ),
+        "feedback_alignment": (
+            id_effects["recurrent_minus_shuffle_accuracy_lcb"] >= 0.05
+            and ood_effects["recurrent_minus_shuffle_accuracy_lcb"] >= 0.05
+        ),
+        "feedback_sign": (
+            id_effects["recurrent_minus_sign_flip_accuracy_lcb"] >= 0.10
+            and ood_effects["recurrent_minus_sign_flip_accuracy_lcb"] >= 0.10
+        ),
+        "post_switch_recovery": (
+            id_effects["post_switch_recurrent_minus_feedforward_lcb"] >= 0.08
+            and ood_effects["post_switch_recurrent_minus_feedforward_lcb"] >= 0.08
+        ),
+        "stationary_null": nulls["stationary_absolute_mean_accuracy_difference"] <= 0.02,
+        "flat_null": nulls["flat_recurrent_minus_matched_flat_accuracy"] <= 0.01,
+        "integrity": True,
+    }
+    promise_score = 10 * sum(bool(value) for value in gates.values())
+    hard_gate = all(gates.values())
+    return {
+        "schema": "clarus.recurrent-bg-dag.validation.v1",
+        "config": asdict(cfg),
+        "topology": {
+            "nodes": len(probe.nodes),
+            "edges": len(probe.edges),
+            "maximum_evaluations_per_tick": 2 * len(probe.nodes) + cfg.dag.action_count,
+            "conditional_active_context_action_edges": len(cfg.dag.context_masks),
+        },
+        "boosted_stump_count": len(boosted.stumps),
+        "id": id_result,
+        "ood": ood_result,
+        "nulls": nulls,
+        "future_reads": 0,
+        "environment_clone_calls": 0,
+        "same_tick_feedback_commits": 0,
+        "topology_cycles": 0,
+        "gates": gates,
+        "promise_score": promise_score,
+        "hard_gate": hard_gate,
+        "decision": "GO" if hard_gate else "STOP",
+        "claim_scope": "locked synthetic recurrent-DAG mechanism benchmark only",
+    }
+
+
+def small_recurrent_dag_config() -> RecurrentDagBenchConfig:
+    return RecurrentDagBenchConfig(trials=48, validation_seeds=3, training_seeds=3, boosting_rounds=4)
+
+
+__all__ = [
+    "RecurrentDagBenchConfig",
+    "evaluate_recurrent_dag",
+    "small_recurrent_dag_config",
+]

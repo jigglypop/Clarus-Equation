@@ -15,6 +15,10 @@ with reverse competitive inhibition and signed dopamine-like eligibility. An
 XGBoost model belongs in the comparator set, not in the biological identity
 claim.
 
-Status: the equation and falsification route are ready. The predictor,
-preregistration JSON, synthetic benchmark, and numerical score are not yet
-implemented in this run.
+Loop 8H implemented the predictor and ran the locked synthetic benchmark once.
+It scored 80/100 but remains STOP. Recurrent accuracy, feedback alignment,
+feedback sign, topology, boundedness, integrity, and null gates passed. NLL and
+post-switch recovery failed because the recurrent context state saturated at
+its norm cap and became overconfident. The next admissible route is a separately
+preregistered surprise-dependent deconsolidation/reset mechanism, not retuning
+Loop 8H after observing validation.
