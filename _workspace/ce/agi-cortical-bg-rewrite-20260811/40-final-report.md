@@ -31,3 +31,13 @@ raised utility from `0.327880` to `0.551173` and accuracy from `0.663940` to
 `0.818713`, while beating always-wait utility. The registered overall verdict is
 still `STOP` because its entropy-quartile HOLD gap was `0.212027`, short of the
 locked `0.25`. The common-offset STN control was exactly inert, as predicted.
+
+The subsequent Indra-net correction changes the scaling architecture. A
+countably expanding causal carrier can close on a finite group-orbit quotient
+when its kernel is equivariant/equitable. The exact identity
+`F_A L = L F_Abar` passed to `1.11e-16` while full network size grew and quotient
+dimension stayed three. It also exposed a new boundary of the old SCC result:
+every finite open truncation of `A[i,i+1]=2` becomes extinct, while the infinite
+translation quotient has extinction `0.20318787`. Thus the proposed runtime is
+now `collective quotient background + finite local causal deviation`, not an
+ever-growing list of separately evaluated options.
