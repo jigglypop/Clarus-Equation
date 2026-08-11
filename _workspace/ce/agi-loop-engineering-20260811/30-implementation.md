@@ -36,6 +36,15 @@ Status: COMPLETE
 - Reproduction: `.venv/Scripts/python.exe examples/agi/stn_boundary_bench.py
   --output _workspace/ce/agi-loop-engineering-20260811/loop8d-stn-boundary-validation.json`.
 
+## Loop 8E quasi-static gravitational decision field
+
+- Added a finite-volume screened-Poisson solver, reusable source basis fields,
+  underdamped motion, saddle-energy capture, DDM/STN comparators, and source
+  shuffle/sign controls.
+- It reads the frozen Loop 8C trace and does not modify canonical runtime state.
+- Reproduction: `.venv/Scripts/python.exe examples/agi/gravitational_decision_bench.py
+  --output _workspace/ce/agi-loop-engineering-20260811/loop8e-gravitational-decision-validation.json`.
+
 Implemented current checkpoint:
 
 - `clarus/belief_control.py`: rank-1 robust observer, action-effect matrix, pure H2/H3 planning, state persistence.

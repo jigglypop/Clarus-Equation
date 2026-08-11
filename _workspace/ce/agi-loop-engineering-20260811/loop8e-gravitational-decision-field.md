@@ -204,3 +204,28 @@ source-mass shuffle, flat metric 대 MD metric이다.
 
 grid 수렴성, kernel 폭, screening, 잡음과 capture tolerance는 결과 전에 별도
 사전등록한다. 사후 선택하면 중력장 가설은 검증되지 않은 것이다.
+
+## 8. 첫 수치 판정과 축약 반례
+
+**[산출·실패]** quasi-static 구현은 장 잔차, 대칭, 질량차–힘 방향,
+source 통제, 안정성과 linear-STN 대비 utility를 통과했지만 fixed DDM
+정확도를 이기지 못해 `0/100 STOP`이다.
+
+거의 모든 trial이 최소 허용시점 5 step에서 capture되었다. evidence마다
+elliptic 장을 즉시 다시 푸는 축약에서는 saddle과 well이 순간적으로 이동해
+(G8)이 신뢰할 만한 evidence 축적 전에 성립한다. 따라서 (G3)의 quasi-static
+장을 온라인 결정시간으로 읽는 부모 구현은 폐기한다.
+
+**[미완성: 다음 장방정식]** 살아 있는 후속 후보는
+
+\[
+\tau_\Phi^2\partial_{\hat t}^2\Phi
++2\zeta\tau_\Phi\partial_{\hat t}\Phi
++c_\Phi^2L_{g_\theta}\Phi+\mu^2\Phi
+=-\kappa(\rho-\bar\rho)
+\tag{G11}
+\]
+
+이다. 유한 응답시간 때문에 source가 장 전체를 즉시 바꾸지 못하고 field
+energy가 누적된 뒤에만 capture가 가능하다. \(c_\Phi,\tau_\Phi,\zeta\)의
+사전 고정과 CFL/에너지 안정성 증명이 다음 gate다.

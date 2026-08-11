@@ -155,3 +155,24 @@ Status: EQUATION READY / NUMERICAL BENCHMARK NOT YET SCORED.
 - Dimensionless regression remains `10 passed`.
 - No numerical performance or biological gravity claim is made at this stage.
 
+## Loop 8E quasi-static field benchmark
+
+Status: `0/100 STOP`.
+
+- Field residuals passed: `3.41e-13/2.64e-13` versus `1e-10`.
+- Equal masses gave central force `-1.17e-15`; `0.7/0.3` and `0.3/0.7` gave
+  `+0.11817/-0.11817`.
+- Gravity accuracy was `0.8566/0.8280`, shuffle `0.5150/0.5094`, and sign-flip
+  `0.1432/0.1722`; source causality controls passed.
+- Gravity beat linear-STN utility by LCB `+0.18742/+0.32771`, but failed fixed
+  DDM accuracy by LCB `-0.10872/-0.05680`.
+- Capture occurred essentially at the registered five-step minimum for every
+  coherence group. Strict ordering passed numerically but is not a meaningful
+  graded latency effect.
+- Capture rate, flip rate, boundedness, and memory trace identity passed.
+
+The elliptic field changed globally and instantaneously after each evidence
+update, making the energy certificate true before reliable evidence had
+accumulated. This rejects the quasi-static decision implementation, not the
+source-field symmetry theorem.
+

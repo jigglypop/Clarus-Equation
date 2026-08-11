@@ -58,6 +58,18 @@ Status: COMPLETE
 - Gate: PASS for preregistration of a numerical field experiment; BLOCKED for
   runtime or biological promotion.
 
+## Loop 8E numerical status audit
+
+- Screened-Poisson solution, symmetry, and source-force direction: **verified
+  numerical outputs**.
+- Quasi-static gravity improves decision accuracy over DDM: **rejected**.
+- Capture time represents evidence-dependent field settling: **not shown**;
+  near-universal five-step capture exposes instantaneous-field degeneracy.
+- Utility over linear-STN: **synthetic output with premature-capture caveat**.
+- The surviving parent claim is source/field symmetry only. A decision claim
+  requires a dynamical field with finite response time.
+- Gate: STOP for quasi-static promotion; preserve Loop 8B/8C.
+
 | Claim | Status | Evidence | Gate |
 |---|---|---|---|
 | Optional action-conditioned controller is implemented without changing the default agent path | implementation | focused regression | PASS |

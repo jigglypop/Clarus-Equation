@@ -108,5 +108,13 @@ MD defines their effective geometry, a screened Poisson equation generates the
 decision potential, and an underdamped state follows the field until its energy
 falls below the separating saddle. Conflict delay is then symmetric force
 cancellation rather than an externally raised threshold. This candidate is
-mathematically specified but not yet numerically scored.
+mathematically specified.
+
+Its first quasi-static implementation scored `0/100 STOP`. Field residual,
+symmetry, source direction, shuffle/sign controls, stability, and utility over
+linear-STN passed. But the elliptic field changed instantaneously with every
+evidence update, causing near-universal capture at the five-step minimum.
+Accuracy `0.8566/0.8280` was below fixed DDM by paired LCB
+`-0.10872/-0.05680`. The surviving route is a finite-response hyperbolic field,
+not retuning this quasi-static solver.
 
