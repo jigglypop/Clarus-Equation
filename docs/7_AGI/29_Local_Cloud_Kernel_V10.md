@@ -83,8 +83,10 @@ reset의 paired loss는 각각 `0.1597900391`, `0.1578369141`, `0.0787963867`이
 없다. SCC 수학은 recurrent 구조를 기술하는 형식 도구일 뿐, 이 개발 결과가 생물학적
 SCC 중첩을 입증하지 않는다.
 
-[예측] 다음 강한 게이트에서는 동일 raw observation과 train budget을 받는 dense recurrent
-comparator 및 context/noise/horizon OOD 변형에서도 full increment가 유지되어야 한다.
+[삭제된 예측] 동일 raw observation을 받는 learned recurrent comparator와 noise/horizon
+OOD에서도 V10 우위가 유지된다는 예측은 V11에서 실패했다. Elman-20과 GRU-20은 V10을 크게
+앞섰고, compute-matched Elman-3도 모든 panel에서 V10보다 높았다. 자세한 음성 결과는
+`30_Strong_Recurrent_OOD_V11.md`에 둔다.
 
 ## 재현 경로
 

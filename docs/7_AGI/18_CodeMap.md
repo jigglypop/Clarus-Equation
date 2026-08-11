@@ -615,3 +615,19 @@ The registered development achieved full accuracy `0.653015` and conservative pa
 `0.128479`. Frozen confirmation reproduced full accuracy `0.652100` and paired improvement
 `0.138794` with interval `[0.128844, 0.149719]`. This confirms the narrow synthetic mechanism,
 not OOD generalization, arbitrary recurrent superiority, biology, or AGI.
+
+---
+
+## 18. V11 strong learned recurrent and OOD audit (2026-08-12)
+
+| Object | Implementation | Status |
+|---|---|---|
+| identical raw-sequence learned comparators | `local_cloud_ood_benchmark.py` | Elman-20, GRU-20, compute-matched Elman-3 |
+| registered OOD panels | ID/noise/horizon/combined | label rule fixed; noise and horizon only shift |
+| one-shot runner | `examples/agi/local_cloud_ood_run.py` | 16 fresh seeds; hash/role/output bound |
+| canonical negative result | `30_Strong_Recurrent_OOD_V11.md` | `STOP`; 10/14 gates failed |
+
+V10 scored `0.660/0.593/0.540/0.520` on ID/noise/horizon/combined. GRU-20 scored approximately
+`0.999/0.998/0.998/0.998`; compute-matched Elman-3 also exceeded V10 on all panels. Therefore
+V10's narrow factorial mechanism confirmation survives, but learned-recurrent superiority and OOD
+robustness claims are rejected.
