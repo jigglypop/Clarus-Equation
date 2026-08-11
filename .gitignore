@@ -46,6 +46,7 @@ target/
 !experiments/preregistration/sparse_causal_bridge_v5.json
 !experiments/preregistration/sparse_causal_bridge_v6.json
 !experiments/preregistration/sparse_causal_bridge_v7.json
+!experiments/preregistration/sparse_causal_bridge_v8.json
 *.pt
 *.pth
 *.csv
