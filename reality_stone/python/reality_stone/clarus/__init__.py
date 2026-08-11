@@ -38,6 +38,10 @@ RuntimeTextAgent = None
 RuntimeTextAgentTurn = None
 TextEnvironment = None
 TextEnvironmentStep = None
+BeliefControlConfig = None
+BeliefController = None
+BeliefPlan = None
+BeliefUpdate = None
 gibbs_reweight = None
 manifest_indices = None
 nonselected_residual = None
@@ -137,6 +141,16 @@ except ImportError:
     pass
 
 try:
+    from .belief_control import (  # type: ignore[no-redef]
+        BeliefControlConfig,
+        BeliefController,
+        BeliefPlan,
+        BeliefUpdate,
+    )
+except ImportError:
+    pass
+
+try:
     from .agent import (  # type: ignore[no-redef]
         RuntimeAgent,
         RuntimeAgentConfig,
@@ -216,6 +230,10 @@ __all__ = [
     "RuntimeTextAgentTurn",
     "TextEnvironment",
     "TextEnvironmentStep",
+    "BeliefControlConfig",
+    "BeliefController",
+    "BeliefPlan",
+    "BeliefUpdate",
     "gibbs_reweight",
     "manifest_indices",
     "nonselected_residual",

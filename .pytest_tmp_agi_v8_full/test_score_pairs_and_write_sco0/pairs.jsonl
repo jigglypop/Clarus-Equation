@@ -1,0 +1,2 @@
+{"record_id": "ok", "claim_index": 0, "claim": "Paris is the capital of France.", "evidence": "Paris is the capital of France."}
+{"record_id": "bad", "claim_index": 0, "claim": "Berlin is the capital of France.", "evidence": "Paris is the capital of France."}

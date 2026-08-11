@@ -22,6 +22,12 @@ try:
         WM_CAPACITY, CEREBELLUM_ALPHA, CEREBELLUM_ETA, NORM_EPS,
     )
     from .runtime import BrainRuntime, RuntimeMode, RuntimeStep
+    from .belief_control import (
+        BeliefControlConfig,
+        BeliefController,
+        BeliefPlan,
+        BeliefUpdate,
+    )
 except ImportError:
     from reality_stone.clarus.constants import (
         BOOTSTRAP_CONTRACTION, ACTIVE_RATIO, STRUCT_RATIO, BACKGROUND_RATIO,
@@ -30,6 +36,12 @@ except ImportError:
         WM_CAPACITY, CEREBELLUM_ALPHA, CEREBELLUM_ETA, NORM_EPS,
     )
     from reality_stone.clarus.runtime import BrainRuntime, RuntimeMode, RuntimeStep
+    from reality_stone.clarus.belief_control import (
+        BeliefControlConfig,
+        BeliefController,
+        BeliefPlan,
+        BeliefUpdate,
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -222,6 +234,8 @@ class RuntimeAgentConfig:
     lambda_critic: float = 0.2
     lambda_suppress: float = 0.1
     rho: float = BOOTSTRAP_CONTRACTION
+    belief_control_enabled: bool = False
+    belief_horizon: int = 2
 
     def __post_init__(self) -> None:
         self.action_count = max(1, int(self.action_count))
@@ -231,6 +245,8 @@ class RuntimeAgentConfig:
         self.lambda_critic = float(self.lambda_critic)
         self.lambda_suppress = float(self.lambda_suppress)
         self.rho = min(max(float(self.rho), 0.0), 1.0)
+        self.belief_control_enabled = bool(self.belief_control_enabled)
+        self.belief_horizon = max(1, int(self.belief_horizon))
 
 
 @dataclass
@@ -244,6 +260,8 @@ class RuntimeAgentStep:
     consciousness_depth: float
     working_memory_size: int
     goal_norm: float
+    belief_plan: BeliefPlan | None = None
+    belief_update: BeliefUpdate | None = None
 
 
 def default_action_embeddings(action_count: int, dim: int) -> torch.Tensor:
@@ -271,6 +289,7 @@ class RuntimeAgent:
         *,
         action_embeddings: torch.Tensor | None = None,
         config: RuntimeAgentConfig | None = None,
+        belief_controller: BeliefController | None = None,
     ) -> None:
         self.runtime = runtime
         self.config = config or RuntimeAgentConfig()
@@ -288,6 +307,19 @@ class RuntimeAgent:
         # (F.14.2). It is causal: the critic at t needs the relaxed state at t,
         # so it can only drive the learning gate at t+1.
         self._last_critic_score = 0.0
+        if self.config.belief_control_enabled:
+            self.belief_controller = belief_controller or BeliefController(
+                BeliefControlConfig(
+                    observation_dim=dim,
+                    action_count=self.action_embeddings.shape[0],
+                    horizon=self.config.belief_horizon,
+                ),
+                device=self.runtime.device,
+            )
+        else:
+            # Do not retain or initialize the optional controller.  This keeps
+            # the legacy path free of extra RNG calls and state transitions.
+            self.belief_controller = None
 
     def step(
         self,
@@ -296,18 +328,36 @@ class RuntimeAgent:
         observation: torch.Tensor | None = None,
         obs_prior: torch.Tensor | None = None,
         force_mode: RuntimeMode | None = None,
+        task_goal: torch.Tensor | None = None,
     ) -> RuntimeAgentStep:
+        if self.belief_controller is not None:
+            if task_goal is None:
+                raise ValueError("task_goal is required when belief control is enabled")
+            goal_check = task_goal.detach().float().view(-1)
+            if goal_check.numel() != self.runtime.config.dim or not torch.isfinite(goal_check).all():
+                raise ValueError("task_goal must be a finite observation-space vector")
         runtime_step = self.runtime.step(
             external_input=external_input,
             force_mode=force_mode,
             critic_score=self._last_critic_score,
         )
         relaxed = self.runtime.activation.detach()
-        action_index = select_action_discrete(relaxed, self.action_embeddings)
 
         observation_t = relaxed if observation is None else observation.detach().float().to(
             self.runtime.device
         ).view(self.runtime.config.dim)
+        belief_update = None
+        belief_plan = None
+        if self.belief_controller is None:
+            action_index = select_action_discrete(relaxed, self.action_embeddings)
+        else:
+            belief_update = self.belief_controller.observe(observation_t)
+            belief_plan = self.belief_controller.plan(
+                observation_t,
+                task_goal,
+                action_free_base_transition=lambda obs: obs.clone(),
+            )
+            action_index = belief_plan.action_index
         prediction = self.cerebellum.predict().to(self.runtime.device)
         recalled = self.runtime.hippocampus.recall(relaxed).to(self.runtime.device)
         prior_t = None if obs_prior is None else obs_prior.detach().float().to(self.runtime.device)
@@ -335,6 +385,13 @@ class RuntimeAgent:
             rho=self.config.rho,
         )
         self.runtime.set_goal(self.self_state)
+        if self.belief_controller is not None and belief_plan is not None:
+            # The identity prediction is the Loop-1 action-free persistence
+            # baseline.  The committed action is learned only at next observe.
+            self.belief_controller.commit(
+                belief_plan,
+                base_prediction=observation_t,
+            )
 
         return RuntimeAgentStep(
             runtime_step=runtime_step,
@@ -344,6 +401,8 @@ class RuntimeAgent:
             consciousness_depth=self.consciousness.consciousness_depth(),
             working_memory_size=len(self.working_memory),
             goal_norm=float(self.runtime.goal.norm().item()),
+            belief_plan=belief_plan,
+            belief_update=belief_update,
         )
 
 

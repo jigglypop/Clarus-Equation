@@ -431,6 +431,10 @@ $$
 | `reality_stone/python/reality_stone/clarus/engine.py` | CE 에너지 이완, 디코딩, 상태 분할, 곡률 억제 | F (이완), 6장 |
 | `reality_stone/python/reality_stone/clarus/ce_ops.py` | 수치 백엔드 분기, 에너지/이완/메트릭/PQ | F (수치 핵심) |
 | `reality_stone/python/reality_stone/clarus/sleep.py` | Wake/NREM/REM 학습 순환, 가드셋, 디코더 리피팅 | F (학습) |
+| `reality_stone/python/reality_stone/clarus/belief_control.py` | `[경험식]` action-conditioned rank-1 posterior와 짧은 관측공간 MPC; 기본 비활성 | F (실험 제어) |
+| `reality_stone/python/reality_stone/clarus/dpc_benchmark.py` | `[예측]` belief/action/horizon 인과성의 합성 DPC 검증 | F (실험) |
+| `reality_stone/python/reality_stone/clarus/credit_control.py` | `[경험식]` signed TD eligibility와 signed homeostasis 분리 probe | F.14 (실험 학습) |
+| `reality_stone/python/reality_stone/clarus/delayed_credit_benchmark.py` | `[예측]` 지연 보상 credit의 합성 인과 ablation | F.14 (실험) |
 | `reality_stone/python/reality_stone/clarus/device.py` | 디바이스 자동 감지 | 인프라 |
 | `reality_stone/python/reality_stone/clarus/core/src/engine/kernel.rs` | brain_step 핵심 루프, Dale's Law | A |
 | `reality_stone/python/reality_stone/clarus/core/src/engine/field.rs` | 필드 결합, 리만 거리 | B |
@@ -457,3 +461,22 @@ $$
 | Live journal ($\mathcal{J}$) | 14장 7절 | 미구현 |
 | 섭동적 채널 혼합 | 2장 2.3절 | 미구현 |
 | 교차 주파수 결합 게이트 | 2장 6절 | 미구현 |
+| action-conditioned belief + MPC | F.2, F.4, F.7 | `belief_control.py`와 RuntimeAgent 선택 경로 구현; 합성 DPC validation `86.32/100 GO`, recurrent sufficient-statistic baseline과는 동률이므로 일반 world-model 우위는 미완성 |
+| signed temporal credit | F.14 | `credit_control.py`의 tabular mechanism probe `100/100 GO`; 기존 BrainRuntime STDP 효능은 여전히 `NO-EFFECT`/`FAIL`이고 기본 off |
+
+### 12.1 2026-08-11 loop-engineering 상태
+
+- `[경험식]` action-conditioned sufficient statistic과 충분한 planning horizon은
+  DPC-2/DPC-3 합성 validation에서 reactive, action-agnostic, H1 대조군을
+  이겼다. 학습된 모델의 per-delay return은 `0.76797`, reactive는 `0.15`,
+  paired 95% LCB는 `0.57344`였다.
+- `[미완성]` 같은 sufficient statistic을 가진 recurrent 대조군과의 paired
+  차이는 `0.0`이다. 따라서 model-based planning의 독립 우위나 AGI 주장은
+  닫히지 않았다.
+- `[경험식]` signed delayed eligibility는 tabular probe에서 success `1.0`,
+  trace-off/absolute-TD/reward-shuffle은 각각 `0.48242`였다.
+- `[미완성]` 위 credit 식은 아직 BrainRuntime의 연속 activation과 held-out
+  prediction guard에 연결되지 않았다. `21_STDP_Efficacy_Audit.md`의 실패
+  판정과 `stdp_enabled=False` 기본값을 유지한다.
+- 재현 artifact와 제한된 해석은
+  `_workspace/ce/agi-loop-engineering-20260811/`에 기록한다.

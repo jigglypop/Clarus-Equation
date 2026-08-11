@@ -10,6 +10,7 @@ from reality_stone.clarus.agent import (
 )
 from reality_stone.clarus.constants import BOOTSTRAP_CONTRACTION, CRITIC_W_PRED, CRITIC_W_CONS, CRITIC_W_NOV
 from reality_stone.clarus.runtime import BrainRuntime, BrainRuntimeConfig, RuntimeMode
+from reality_stone.clarus.belief_control import BeliefControlConfig, BeliefController
 
 
 class TestCritic:
@@ -164,6 +165,56 @@ class TestRuntimeAgent:
 
         assert out.runtime_step.stdp_updates > 0
         assert len(agent.working_memory) == 4
+
+    def test_belief_control_requires_external_task_goal(self):
+        runtime = make_runtime()
+        agent = RuntimeAgent(
+            runtime,
+            config=RuntimeAgentConfig(action_count=2, belief_control_enabled=True),
+        )
+        with pytest.raises(ValueError, match="task_goal"):
+            agent.step(observation=torch.zeros(16), force_mode=RuntimeMode.WAKE)
+        assert runtime.step_index == 0
+
+    def test_disabled_belief_control_keeps_legacy_action_path(self):
+        runtime = make_runtime()
+        agent = RuntimeAgent(
+            runtime,
+            config=RuntimeAgentConfig(action_count=2, belief_control_enabled=False),
+            belief_controller=object(),
+        )
+        out = agent.step(
+            external_input=torch.linspace(0.0, 0.5, 16),
+            force_mode=RuntimeMode.WAKE,
+        )
+        expected = select_action_discrete(runtime.activation, agent.action_embeddings)
+        assert agent.belief_controller is None
+        assert out.action_index == expected
+        assert out.belief_plan is None
+        assert out.belief_update is None
+
+    def test_belief_control_uses_goal_conditioned_plan(self):
+        runtime = make_runtime()
+        controller = BeliefController(
+            BeliefControlConfig(observation_dim=16, action_count=2, horizon=2),
+            loading=torch.nn.functional.one_hot(torch.tensor(0), 16).float(),
+        )
+        controller.action_effect[:, 0] = -0.25
+        controller.action_effect[:, 1] = 0.25
+        agent = RuntimeAgent(
+            runtime,
+            config=RuntimeAgentConfig(action_count=2, belief_control_enabled=True),
+            belief_controller=controller,
+        )
+        observation = torch.zeros(16)
+        out = agent.step(
+            observation=observation,
+            task_goal=torch.ones(16),
+            force_mode=RuntimeMode.WAKE,
+        )
+        assert out.action_index == 1
+        assert out.belief_plan is not None
+        assert out.belief_update is not None
 
 
 class TestTextEnvironment:
