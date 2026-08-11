@@ -140,3 +140,18 @@ The linear conflict-to-boundary map produces a speed–accuracy trade-off but
 does not establish efficient conflict-aligned allocation. No coefficient was
 changed after observing the result.
 
+## Loop 8E gravitational field mathematical preflight
+
+Status: EQUATION READY / NUMERICAL BENCHMARK NOT YET SCORED.
+
+- The screened field functional is strictly convex for `mu > 0`, giving a
+  unique Poisson/Helmholtz potential under the stated self-adjoint boundary
+  conditions.
+- Deterministic damped motion decreases total mechanical energy and yields a
+  saddle-energy capture certificate without an adaptive conflict threshold.
+- Gaussian two-source check at `a=1`, `sigma=0.6`: central force is exactly
+  `0` for masses `0.5/0.5`, `+0.277058` for `0.7/0.3`, and `-0.277058` for
+  `0.3/0.7`.
+- Dimensionless regression remains `10 passed`.
+- No numerical performance or biological gravity claim is made at this stage.
+

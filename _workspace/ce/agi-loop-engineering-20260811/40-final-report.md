@@ -102,3 +102,11 @@ conflict allocation, delayed easy OOD trials too much, and failed utility LCB.
 The memory trace remained bit-identical and all numerical bounds passed. The
 failure is therefore in resource allocation, not PFC/MD/residual regression.
 
+The optimal-stopping follow-up is replaced by Loop 8E's gravitational-field
+construction. PFC evidence and residuals define positive action-source masses,
+MD defines their effective geometry, a screened Poisson equation generates the
+decision potential, and an underdamped state follows the field until its energy
+falls below the separating saddle. Conflict delay is then symmetric force
+cancellation rather than an externally raised threshold. This candidate is
+mathematically specified but not yet numerically scored.
+

@@ -43,6 +43,21 @@ Status: COMPLETE
 - Gate: STOP. Preserve Loop 8B/8C checkpoints; do not tune this linear boundary
   or promote it to runtime.
 
+## Loop 8E gravitational decision-field pre-audit
+
+- Screened Poisson field existence/uniqueness: **conditional theorem** for a
+  compact decision manifold, self-adjoint boundary conditions, and `mu > 0`.
+- Deterministic capture below saddle energy: **conditional theorem** for frozen
+  source/metric and zero decision noise.
+- Symmetric evidence causes zero central force: **conditional symmetry
+  theorem**; noise turns permanent stalling into metastable random escape.
+- Neural evidence is physical gravitational mass: **deleted interpretation**.
+  Evidence mass is a normalized effective source only.
+- MD equals spacetime metric and STN equals screening/friction: **incomplete
+  biological maps**.
+- Gate: PASS for preregistration of a numerical field experiment; BLOCKED for
+  runtime or biological promotion.
+
 | Claim | Status | Evidence | Gate |
 |---|---|---|---|
 | Optional action-conditioned controller is implemented without changing the default agent path | implementation | focused regression | PASS |
