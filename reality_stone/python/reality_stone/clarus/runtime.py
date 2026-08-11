@@ -136,6 +136,10 @@ class BrainRuntimeConfig:
     stdp_density: float = ACTIVE_RATIO
     stdp_gate_threshold: float = 1e-3
     stdp_spike_threshold: float = 0.3
+    # Experimental alternative to the legacy critic-derivative gate.  The
+    # default is unchanged; external_signed must be explicitly selected and
+    # supplied a causal signal by the caller.
+    stdp_gate_mode: str = "critic_derivative"
 
     def __post_init__(self) -> None:
         self.dim = int(self.dim)
@@ -154,6 +158,8 @@ class BrainRuntimeConfig:
         self.stdp_density = min(max(float(self.stdp_density), 0.0), 1.0)
         self.stdp_gate_threshold = max(float(self.stdp_gate_threshold), 0.0)
         self.stdp_spike_threshold = max(float(self.stdp_spike_threshold), 0.0)
+        if self.stdp_gate_mode not in {"critic_derivative", "external_signed"}:
+            raise ValueError("stdp_gate_mode must be critic_derivative or external_signed")
 
     def energy_budget(self, mode: RuntimeMode) -> int:
         base = max(1, int(round(self.dim * self.active_ratio)))
@@ -246,6 +252,7 @@ class BrainRuntimeSnapshot:
     delay_idx: int = 0
     brainwave_history: tuple[float, ...] = ()
     last_stdp_gate: float = 0.0
+    stdp_pending_learning_signal: float = 0.0
 
 
 @dataclass
@@ -464,6 +471,7 @@ class BrainRuntime:
         self._stdp_prev_critic_score = 0.0
         self._stdp_updates = 0
         self._last_stdp_gate = 0.0
+        self._stdp_pending_learning_signal = 0.0
 
     def _rebuild_sparse(self) -> None:
         """Rebuild CSR sparse weight from dense weight."""
@@ -492,7 +500,11 @@ class BrainRuntime:
         self.weight = self.weight.abs() * self.dale_sign.unsqueeze(1)
 
     def _apply_runtime_stdp(
-        self, active_count: int, energy: float, critic_score: float | None = None
+        self,
+        active_count: int,
+        energy: float,
+        critic_score: float | None = None,
+        learning_signal: float | None = None,
     ) -> float:
         """Optional F14 closed-loop plasticity over the runtime weight matrix.
 
@@ -506,6 +518,11 @@ class BrainRuntime:
             self._last_stdp_gate = 0.0
             return 0.0
 
+        if self.config.stdp_gate_mode == "external_signed" and learning_signal is not None:
+            if not math.isfinite(float(learning_signal)):
+                raise ValueError("learning_signal must be finite")
+            self._stdp_pending_learning_signal += float(learning_signal)
+
         tick = self.step_index + 1
         if tick % self.config.stdp_interval != 0:
             self._last_stdp_gate = 0.0
@@ -518,18 +535,20 @@ class BrainRuntime:
 
         gate_drive = float(energy if critic_score is None else critic_score)
         active_ratio = float(active_count) / float(max(self.config.dim, 1))
-        gate = compute_learning_gate(
+        legacy_gate = compute_learning_gate(
             critic_score=gate_drive,
             prev_critic_score=self._stdp_prev_critic_score,
             active_ratio=active_ratio,
             alpha_g=self.stdp_tracker.config.alpha_g,
         )
-        # F.14.2 gate is a *time derivative of the critic signal* d(c_bar)/dt.
-        # prev must therefore hold the SAME quantity used as this tick's drive
-        # (critic when supplied, else the energy proxy). Storing energy while
-        # driving with critic mixed two incommensurate scales and made the
-        # derivative near-random in sign (diagnosed 2026-07; see 18_CodeMap F.14.2).
+        # Keep the legacy derivative state current even in the experimental
+        # mode, so switching modes cannot expose a stale critic difference.
         self._stdp_prev_critic_score = gate_drive
+        if self.config.stdp_gate_mode == "external_signed":
+            gate = self._stdp_pending_learning_signal
+            self._stdp_pending_learning_signal = 0.0
+        else:
+            gate = legacy_gate
         self._last_stdp_gate = float(gate)
 
         if abs(gate) <= self.config.stdp_gate_threshold:
@@ -990,6 +1009,7 @@ class BrainRuntime:
         cue: torch.Tensor | None = None,
         force_mode: RuntimeMode | None = None,
         critic_score: float | None = None,
+        learning_signal: float | None = None,
     ) -> RuntimeStep:
         external = (
             torch.zeros(self.config.dim, device=self.device)
@@ -1012,7 +1032,12 @@ class BrainRuntime:
         active_mask = self._select_active(salience, self._f1_effective_budget(mode))
         active_count = int(active_mask.sum().item())
         self._f1_update_ema(active_count)
-        stdp_gate = self._apply_runtime_stdp(active_count, energy, critic_score=critic_score)
+        stdp_gate = self._apply_runtime_stdp(
+            active_count,
+            energy,
+            critic_score=critic_score,
+            learning_signal=learning_signal,
+        )
         self.mode = mode
         self.mode_occupancy[mode.value] = self.mode_occupancy.get(mode.value, 0) + 1
         self._update_lifecycle(salience, active_mask)
@@ -1080,6 +1105,7 @@ class BrainRuntime:
             delay_idx=int(self._delay_idx),
             brainwave_history=tuple(float(value) for value in self._brainwave_history),
             last_stdp_gate=float(self._last_stdp_gate),
+            stdp_pending_learning_signal=float(self._stdp_pending_learning_signal),
         )
 
     @classmethod
@@ -1139,6 +1165,9 @@ class BrainRuntime:
         runtime._stdp_prev_critic_score = float(snapshot.stdp_prev_critic_score)
         runtime._stdp_updates = int(snapshot.stdp_updates)
         runtime._last_stdp_gate = float(snapshot.last_stdp_gate)
+        runtime._stdp_pending_learning_signal = float(
+            getattr(snapshot, "stdp_pending_learning_signal", 0.0)
+        )
         if runtime.stdp_tracker is not None and snapshot.stdp_tracker is not None:
             runtime.stdp_tracker.load_state_dict(snapshot.stdp_tracker)
         return runtime

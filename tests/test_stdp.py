@@ -144,3 +144,86 @@ class TestRuntimeCriticGate:
         assert agent._last_critic_score >= 0.0
         assert any(g != 0.0 for g in gates)
         assert rt._stdp_updates > 0
+
+    def test_external_signed_gate_preserves_signal_sign(self):
+        cfg = BrainRuntimeConfig(
+            dim=16,
+            stdp_enabled=True,
+            stdp_interval=1,
+            stdp_apply_interval=1,
+            stdp_gate_threshold=0.0,
+            stdp_spike_threshold=0.05,
+            stdp_gate_mode="external_signed",
+            noise_sigma=0.0,
+            dale_law=False,
+            axon_delay=False,
+        )
+        torch.manual_seed(2)
+        weight = torch.randn(16, 16) * 0.1
+        weight.fill_diagonal_(0.0)
+        positive = BrainRuntime(weight.clone(), config=cfg)
+        negative = BrainRuntime(weight.clone(), config=cfg)
+        ext = torch.ones(16) * 0.5
+        out_positive = positive.step(
+            external_input=ext,
+            force_mode=RuntimeMode.WAKE,
+            learning_signal=0.25,
+        )
+        out_negative = negative.step(
+            external_input=ext,
+            force_mode=RuntimeMode.WAKE,
+            learning_signal=-0.25,
+        )
+        assert out_positive.stdp_gate == pytest.approx(0.25)
+        assert out_negative.stdp_gate == pytest.approx(-0.25)
+
+    def test_external_signed_gate_fails_closed_without_signal(self):
+        cfg = BrainRuntimeConfig(
+            dim=8,
+            stdp_enabled=True,
+            stdp_apply_interval=1,
+            stdp_gate_threshold=0.0,
+            stdp_gate_mode="external_signed",
+            noise_sigma=0.0,
+            dale_law=False,
+            axon_delay=False,
+        )
+        runtime = BrainRuntime(torch.zeros(8, 8), config=cfg)
+        before = runtime.weight.clone()
+        out = runtime.step(external_input=torch.ones(8), force_mode=RuntimeMode.WAKE)
+        assert out.stdp_gate == 0.0
+        assert out.stdp_updates == 0
+        assert torch.equal(runtime.weight, before)
+
+    def test_external_signal_survives_until_apply_interval_and_snapshot(self):
+        cfg = BrainRuntimeConfig(
+            dim=8,
+            stdp_enabled=True,
+            stdp_interval=1,
+            stdp_apply_interval=3,
+            stdp_gate_threshold=0.0,
+            stdp_gate_mode="external_signed",
+            noise_sigma=0.0,
+            dale_law=False,
+            axon_delay=False,
+        )
+        runtime = BrainRuntime(torch.randn(8, 8) * 0.02, config=cfg)
+        external = torch.ones(8) * 0.2
+        first = runtime.step(
+            external_input=external,
+            force_mode=RuntimeMode.WAKE,
+            learning_signal=0.2,
+        )
+        assert first.stdp_gate == 0.0
+        restored = BrainRuntime.from_snapshot(runtime.snapshot(), backend="torch", device="cpu")
+        restored.step(
+            external_input=external,
+            force_mode=RuntimeMode.WAKE,
+            learning_signal=-0.05,
+        )
+        applied = restored.step(
+            external_input=external,
+            force_mode=RuntimeMode.WAKE,
+            learning_signal=0.1,
+        )
+        assert applied.stdp_gate == pytest.approx(0.25)

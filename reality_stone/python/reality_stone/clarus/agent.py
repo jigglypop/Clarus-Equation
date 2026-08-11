@@ -329,6 +329,7 @@ class RuntimeAgent:
         obs_prior: torch.Tensor | None = None,
         force_mode: RuntimeMode | None = None,
         task_goal: torch.Tensor | None = None,
+        stdp_learning_signal: float | None = None,
     ) -> RuntimeAgentStep:
         if self.belief_controller is not None:
             if task_goal is None:
@@ -340,6 +341,7 @@ class RuntimeAgent:
             external_input=external_input,
             force_mode=force_mode,
             critic_score=self._last_critic_score,
+            learning_signal=stdp_learning_signal,
         )
         relaxed = self.runtime.activation.detach()
 

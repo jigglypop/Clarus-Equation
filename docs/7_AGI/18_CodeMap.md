@@ -462,7 +462,8 @@ $$
 | 섭동적 채널 혼합 | 2장 2.3절 | 미구현 |
 | 교차 주파수 결합 게이트 | 2장 6절 | 미구현 |
 | action-conditioned belief + MPC | F.2, F.4, F.7 | `belief_control.py`와 RuntimeAgent 선택 경로 구현; 합성 DPC validation `86.32/100 GO`, recurrent sufficient-statistic baseline과는 동률이므로 일반 world-model 우위는 미완성 |
-| signed temporal credit | F.14 | `credit_control.py`의 tabular mechanism probe `100/100 GO`; 기존 BrainRuntime STDP 효능은 여전히 `NO-EFFECT`/`FAIL`이고 기본 off |
+| signed temporal credit | F.14 | `credit_control.py`의 tabular mechanism probe `100/100 GO`; `runtime_credit_benchmark.py`의 Loop 2b/2c는 모두 `0/100 STOP`, 기본 off |
+| raw-history controlled belief | F.2, F.4 | `history_state_benchmark.py` 합성 ID/OOD `85/100 GO`; 실제 2-state tanh RNN에는 비열등일 뿐 우위 미확립 |
 
 ### 12.1 2026-08-11 loop-engineering 상태
 
@@ -475,8 +476,22 @@ $$
   닫히지 않았다.
 - `[경험식]` signed delayed eligibility는 tabular probe에서 success `1.0`,
   trace-off/absolute-TD/reward-shuffle은 각각 `0.48242`였다.
-- `[미완성]` 위 credit 식은 아직 BrainRuntime의 연속 activation과 held-out
-  prediction guard에 연결되지 않았다. `21_STDP_Efficacy_Audit.md`의 실패
-  판정과 `stdp_enabled=False` 기본값을 유지한다.
+- `[경험식]` 외부 signed signal을 받는 선택적 runtime 경로, apply-interval
+  누적, snapshot 복원, 8개 대조군 벤치가 구현되었다. 기본 gate는 바꾸지 않았다.
+- `[미완성]` runtime Loop 2b는 dense-to-sparse 첫 투영 혼입을 발견했고,
+  이를 제거한 Loop 2c도 `0/100 STOP`이었다. signed-off 95% LCB는
+  `-0.06021`, reward-shuffle 대비 LCB는 `-0.00208`, held-out guard 증가는
+  `+0.07479 > 0.02`였다. 따라서 현재 오차개선량×STDP eligibility 식의
+  runtime 효능은 지지되지 않으며 `stdp_enabled=False`를 유지한다.
+- `[미완성]` 다음 핵심 공백은 observation/action history에서 latent state를
+  학습하는 것이다. 현재 DPC planner는 sufficient statistic을 직접 받아
+  같은 정보를 가진 recurrent 대조군과 동률이다.
+- `[경험식]` Loop 3은 ordered raw history에서
+  $h_t=\rho^{\Delta t}h_{t-1}+m_ta_{t-1}y_t$와 frozen likelihood를 train-only로
+  학습해 `85/100 GO`를 얻었다. ID/OOD ECE는 `0.02021/0.02815`이며 action
+  제거·shuffle·history 절단 대조군을 모두 이겼다.
+- `[미완성]` 교정된 2-state tanh RNN 대비 LCB는 ID `0.0`, OOD `-0.00498`로
+  비열등만 성립한다. 다음 게이트는 동일 task 분류가 아니라 명시적 belief와
+  planner가 정책 재학습 없이 intervention/reward 변화에 전이하는지다.
 - 재현 artifact와 제한된 해석은
   `_workspace/ce/agi-loop-engineering-20260811/`에 기록한다.

@@ -11,7 +11,13 @@ Status: COMPLETE
 | Primary learned DPC validation | empirical synthetic | return `0.768`, success `0.863`, Brier `0.0723`, ECE `0.0440` | PASS |
 | OOD calibration | empirical synthetic | ECE `0.0928 > 0.08` | FAIL diagnostic |
 | Signed eligibility carries delayed reward | tabular mechanism | success `1.0` vs three controls `0.4824` | PASS |
-| BrainRuntime STDP task efficacy | unchanged | prior `NO-EFFECT`, held-out `FAIL` | OPEN / default off |
+| BrainRuntime external signed-credit API | implementation | focused regression `52 passed` | PASS / experimental only |
+| Runtime signed-credit efficacy, dense start (Loop 2b) | empirical synthetic | score `0`, structural jump confound | STOP |
+| Runtime signed-credit efficacy, matched manifold (Loop 2c) | empirical synthetic | signed-off LCB `-0.06021`; guard delta `+0.07479` | STOP / default off |
+| Raw-history controlled state discovery (Loop 3) | empirical synthetic | score `85`; causal ablations pass | GO within claim limit |
+| Structured history state superiority over recurrent state | not shown | ID LCB `0.0`; OOD LCB `-0.00498` | NONINFERIOR only |
 
 No AGI, world-model superiority, or runtime-learning superiority claim is made.
+The tabular signed-credit result does not transfer to the current continuous
+BrainRuntime eligibility representation.
 
