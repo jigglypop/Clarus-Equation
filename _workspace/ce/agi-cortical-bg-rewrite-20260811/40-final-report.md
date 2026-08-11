@@ -1,5 +1,7 @@
 # Verdict
 
+Status: COMPLETE
+
 The prior track did not fail because its Bayes filter was numerically wrong. It
 failed to establish the claimed mechanism: the task supplied oracle-shaped
 contexts and an XOR law, the graph lacked shared subactions, feedback updated a
@@ -41,3 +43,21 @@ every finite open truncation of `A[i,i+1]=2` becomes extinct, while the infinite
 translation quotient has extinction `0.20318787`. Thus the proposed runtime is
 now `collective quotient background + finite local causal deviation`, not an
 ever-growing list of separately evaluated options.
+
+The next dynamic finite-cover experiment now passes as a standalone mechanism.
+For delayed signed `tanh` dynamics on cyclic covers of 32, 64, 128, and 256
+cells, a fixed three-orbit quotient reproduced the full homogeneous trajectory
+with error `0.0`.  A local perturbation was executed only on its causal cone and
+reconstructed the dense reference to `2.78e-17`; the largest active slice was
+13 nodes against a bound of 51.  Nonuniform translation tests had error `0.0`,
+snapshot continuation was exact, same-tick edges were rejected, and budget
+overflow failed closed.  The absolute small-gain certificate was `0.31 < 1`, so
+the result controls nonzero spatial modes rather than certifying only the
+homogeneous quotient mode.
+
+This is `73/100`: GO for the standalone dynamic quotient/cone prototype, STOP
+for BrainRuntime integration.  Missing points are approximate-budget error
+curves, measured wall-time/memory scaling, and a matched behavioral task.  The
+next experiment is therefore not another algebraic rewrite: it is a sidecar
+task lane comparing quotient-only, local-cone, and dense full execution without
+allowing the candidate to inspect the dense reference.
