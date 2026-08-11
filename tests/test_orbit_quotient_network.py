@@ -8,6 +8,7 @@ from reality_stone.clarus.orbit_quotient_network import (
     initial_snapshot,
     lift_orbit_trajectory,
     project_orbit_state,
+    simulate_budgeted_initial_deviation,
     simulate_full,
     simulate_quotient,
     simulate_sparse_initial_deviation,
@@ -133,3 +134,60 @@ def test_small_gain_controls_nonzero_spatial_modes() -> None:
     initial_error = np.max(np.abs(perturbed_path[0] - base_path[0]))
     final_error = np.max(np.abs(perturbed_path[-1] - base_path[-1]))
     assert final_error < initial_error * 1e-8
+
+
+@pytest.mark.parametrize("budget", (0, 1, 2, 4, 8, 16, 64))
+def test_budgeted_cone_error_is_certified_and_converges(budget: int) -> None:
+    network = _network()
+    initial = np.asarray((0.2, -0.1, 0.3))
+    inputs = np.asarray(tuple((0.01 * t, -0.02, 0.015) for t in range(8)))
+    perturbations = {(13, 0): 0.4, (45, 2): -0.27}
+    approximate = simulate_budgeted_initial_deviation(
+        network, 64, initial, inputs, perturbations, active_budget=budget
+    )
+    full_initial = lift_orbit_trajectory(initial, 64)
+    for (cell, orbit), delta in perturbations.items():
+        full_initial[cell, orbit] += delta
+    full = simulate_full(network, full_initial, lift_orbit_trajectory(inputs, 64))
+    actual_by_time_orbit = np.max(np.abs(full - approximate.reconstructed), axis=1)
+    assert np.all(
+        actual_by_time_orbit
+        <= approximate.certified_error_by_time_orbit + 1e-12
+    )
+    assert max(map(len, approximate.retained_by_time)) <= budget
+    assert np.all(np.isfinite(approximate.certified_error_by_time_orbit))
+    if budget == 0:
+        assert np.array_equal(
+            approximate.reconstructed,
+            lift_orbit_trajectory(approximate.baseline, 64),
+        )
+    if budget == 64:
+        assert np.max(np.abs(full - approximate.reconstructed)) <= 1e-12
+
+
+def test_budget_selection_is_translation_equivariant_even_at_ties() -> None:
+    network = _network()
+    initial = np.asarray((0.2, -0.1, 0.3))
+    inputs = np.zeros((8, 3))
+    original = simulate_budgeted_initial_deviation(
+        network,
+        64,
+        initial,
+        inputs,
+        {(10, 0): 0.4, (30, 0): 0.4},
+        active_budget=1,
+    )
+    shifted = simulate_budgeted_initial_deviation(
+        network,
+        64,
+        initial,
+        inputs,
+        {(17, 0): 0.4, (37, 0): 0.4},
+        active_budget=1,
+    )
+    assert np.array_equal(translate_cells(original.reconstructed, 7), shifted.reconstructed)
+    assert np.array_equal(
+        original.certified_error_by_time_orbit,
+        shifted.certified_error_by_time_orbit,
+    )
+    assert original.tie_drops_by_time[0] == 2

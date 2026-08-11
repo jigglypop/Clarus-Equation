@@ -8,6 +8,7 @@ finite causal cone.  All activities and gains are normalized/dimensionless.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from functools import lru_cache
 import math
 from typing import Mapping
 
@@ -81,6 +82,51 @@ class SparseConeResult:
     reconstructed: FloatArray
     active_by_time: tuple[tuple[Node, ...], ...]
     work: int
+
+
+@dataclass(frozen=True)
+class ApproximateConeResult:
+    baseline: FloatArray
+    reconstructed: FloatArray
+    retained_by_time: tuple[tuple[Node, ...], ...]
+    dropped_by_time: tuple[tuple[Node, ...], ...]
+    candidate_counts: tuple[int, ...]
+    local_residual_by_time_orbit: FloatArray
+    certified_error_by_time_orbit: FloatArray
+    exhausted_by_time: tuple[bool, ...]
+    tie_drops_by_time: tuple[int, ...]
+    candidate_evaluations: int
+    edge_evaluations: int
+
+
+@dataclass(frozen=True)
+class SparseSidecarResult:
+    baseline: FloatArray
+    deviations_by_time: tuple[tuple[tuple[int, int, float], ...], ...]
+    work: int
+
+    def value(self, time: int, cell: int, orbit: int, cover_size: int) -> float:
+        value = float(self.baseline[time, orbit])
+        key = (int(cell) % cover_size, int(orbit))
+        for stored_cell, stored_orbit, delta in self.deviations_by_time[time]:
+            if (stored_cell, stored_orbit) == key:
+                return value + delta
+        return value
+
+
+@lru_cache(maxsize=32)
+def _edge_groups(
+    network: DelayedOrbitNetwork,
+) -> tuple[tuple[tuple[DelayedEdge, ...], ...], tuple[tuple[DelayedEdge, ...], ...]]:
+    incoming = tuple(
+        tuple(edge for edge in network.edges if edge.target_orbit == orbit)
+        for orbit in range(network.orbit_count)
+    )
+    outgoing = tuple(
+        tuple(edge for edge in network.edges if edge.source_orbit == orbit)
+        for orbit in range(network.orbit_count)
+    )
+    return incoming, outgoing
 
 
 def _vector(values: ArrayLike, size: int, name: str) -> FloatArray:
@@ -272,6 +318,215 @@ def simulate_sparse_initial_deviation(
     return SparseConeResult(background, reconstructed, active, work)
 
 
+def simulate_sparse_sidecar(
+    network: DelayedOrbitNetwork,
+    cover_size: int,
+    initial_background: ArrayLike,
+    inputs: ArrayLike,
+    perturbations: Mapping[Node, float],
+    *,
+    active_budget: int | None = None,
+) -> SparseSidecarResult:
+    """Exact sparse execution without materializing an ``N x Q`` trajectory."""
+
+    if cover_size <= 0:
+        raise ValueError("cover_size must be positive")
+    if active_budget is not None and active_budget <= 0:
+        raise ValueError("active_budget must be positive")
+    initial_vector = _vector(initial_background, network.orbit_count, "state")
+    drive = np.asarray(inputs, dtype=np.float64)
+    if (
+        not np.any(initial_vector)
+        and not np.any(drive)
+        and not any(network.bias)
+    ):
+        background = np.zeros((drive.shape[0] + 1, network.orbit_count))
+    else:
+        background = simulate_quotient(network, initial_vector, drive)
+    steps = background.shape[0] - 1
+    incoming, outgoing = _edge_groups(network)
+    deviations: list[dict[Node, float]] = [dict() for _ in range(steps + 1)]
+    for (cell, orbit), delta in perturbations.items():
+        if not 0 <= orbit < network.orbit_count or not math.isfinite(delta):
+            raise ValueError("invalid perturbation")
+        key = (int(cell) % cover_size, int(orbit))
+        deviations[0][key] = deviations[0].get(key, 0.0) + float(delta)
+    if active_budget is not None and len(deviations[0]) > active_budget:
+        raise RuntimeError("active causal cone exceeds budget")
+    work = len(deviations[0])
+    for time in range(1, steps + 1):
+        candidates: set[Node] = set()
+        for source_time in range(time):
+            for cell, orbit in deviations[source_time]:
+                for edge in outgoing[orbit]:
+                    if time - edge.delay != source_time:
+                        continue
+                    candidates.add(((cell + edge.shift) % cover_size, edge.target_orbit))
+        if active_budget is not None and len(candidates) > active_budget:
+            raise RuntimeError("active causal cone exceeds budget")
+        for cell, target_orbit in candidates:
+            total = network.bias[target_orbit] + drive[time - 1, target_orbit]
+            for edge in incoming[target_orbit]:
+                source_time = time - edge.delay
+                if source_time < 0:
+                    source_value = 0.0
+                else:
+                    source_cell = (cell - edge.shift) % cover_size
+                    source_value = background[source_time, edge.source_orbit]
+                    source_value += deviations[source_time].get(
+                        (source_cell, edge.source_orbit), 0.0
+                    )
+                total += edge.weight * source_value
+            delta = math.tanh(total) - background[time, target_orbit]
+            if delta != 0.0:
+                deviations[time][(cell, target_orbit)] = delta
+        work += len(candidates) * (1 + len(network.edges))
+    records = tuple(
+        tuple((cell, orbit, value) for (cell, orbit), value in layer.items())
+        for layer in deviations
+    )
+    return SparseSidecarResult(background, records, work)
+
+
+def _equivariant_magnitude_budget(
+    candidates: Mapping[Node, float], active_budget: int
+) -> tuple[dict[Node, float], dict[Node, float], int]:
+    """Select complete magnitude tie classes without an absolute-index tie break."""
+
+    if active_budget < 0:
+        raise ValueError("active_budget must be nonnegative")
+    if len(candidates) <= active_budget:
+        return dict(candidates), {}, 0
+    by_magnitude: dict[float, list[tuple[Node, float]]] = {}
+    for node, value in candidates.items():
+        by_magnitude.setdefault(abs(value), []).append((node, value))
+    retained: dict[Node, float] = {}
+    boundary_tie_drops = 0
+    stopped = False
+    for magnitude in sorted(by_magnitude, reverse=True):
+        group = by_magnitude[magnitude]
+        if not stopped and len(retained) + len(group) <= active_budget:
+            retained.update(group)
+        else:
+            if not stopped and len(group) > 1:
+                boundary_tie_drops = len(group)
+            stopped = True
+    dropped = {node: value for node, value in candidates.items() if node not in retained}
+    return retained, dropped, boundary_tie_drops
+
+
+def simulate_budgeted_initial_deviation(
+    network: DelayedOrbitNetwork,
+    cover_size: int,
+    initial_background: ArrayLike,
+    inputs: ArrayLike,
+    perturbations: Mapping[Node, float],
+    *,
+    active_budget: int,
+) -> ApproximateConeResult:
+    """Approximate a local deviation and certify its orbit-wise sup error.
+
+    Unlike :func:`simulate_sparse_initial_deviation`, this path may discard
+    deviations.  It reports every discarded candidate and propagates a
+    Lipschitz error certificate over the fixed orbit-delay quotient.
+    """
+
+    if cover_size <= 0:
+        raise ValueError("cover_size must be positive")
+    if active_budget < 0:
+        raise ValueError("active_budget must be nonnegative")
+    background = simulate_quotient(network, initial_background, inputs)
+    steps = background.shape[0] - 1
+    drive = np.asarray(inputs, dtype=np.float64)
+    retained_layers: list[dict[Node, float]] = [dict() for _ in range(steps + 1)]
+    dropped_layers: list[dict[Node, float]] = [dict() for _ in range(steps + 1)]
+    initial_candidates: dict[Node, float] = {}
+    for (cell, orbit), delta in perturbations.items():
+        if not 0 <= orbit < network.orbit_count or not math.isfinite(delta):
+            raise ValueError("invalid perturbation")
+        key = (int(cell) % cover_size, int(orbit))
+        initial_candidates[key] = initial_candidates.get(key, 0.0) + float(delta)
+    retained_layers[0], dropped_layers[0], initial_ties = _equivariant_magnitude_budget(
+        initial_candidates, active_budget
+    )
+
+    reconstructed = lift_orbit_trajectory(background, cover_size)
+    for node, delta in retained_layers[0].items():
+        reconstructed[0, node[0], node[1]] += delta
+    residual = np.zeros((steps + 1, network.orbit_count), dtype=np.float64)
+    for (_, orbit), delta in dropped_layers[0].items():
+        residual[0, orbit] = max(residual[0, orbit], abs(delta))
+    certified = np.zeros_like(residual)
+    certified[0] = residual[0]
+    candidate_counts = [len(initial_candidates)]
+    exhausted = [bool(dropped_layers[0])]
+    tie_drops = [initial_ties]
+    candidate_evaluations = len(initial_candidates)
+    edge_evaluations = 0
+
+    for time in range(1, steps + 1):
+        candidate_nodes: set[Node] = set()
+        for edge in network.edges:
+            source_time = time - edge.delay
+            if source_time < 0:
+                continue
+            for cell, orbit in retained_layers[source_time]:
+                if orbit == edge.source_orbit:
+                    candidate_nodes.add(((cell + edge.shift) % cover_size, edge.target_orbit))
+        candidates: dict[Node, float] = {}
+        for cell, target_orbit in candidate_nodes:
+            total = network.bias[target_orbit] + drive[time - 1, target_orbit]
+            for edge in network.edges:
+                if edge.target_orbit != target_orbit:
+                    continue
+                edge_evaluations += 1
+                source_time = time - edge.delay
+                if source_time < 0:
+                    source_value = 0.0
+                else:
+                    source_cell = (cell - edge.shift) % cover_size
+                    source_value = background[source_time, edge.source_orbit]
+                    source_value += retained_layers[source_time].get(
+                        (source_cell, edge.source_orbit), 0.0
+                    )
+                total += edge.weight * source_value
+            delta = math.tanh(total) - background[time, target_orbit]
+            if delta != 0.0:
+                candidates[(cell, target_orbit)] = delta
+        retained, dropped, ties = _equivariant_magnitude_budget(candidates, active_budget)
+        retained_layers[time] = retained
+        dropped_layers[time] = dropped
+        for node, delta in retained.items():
+            reconstructed[time, node[0], node[1]] += delta
+        for (_, orbit), delta in dropped.items():
+            residual[time, orbit] = max(residual[time, orbit], abs(delta))
+        certified[time] = residual[time]
+        for edge in network.edges:
+            source_time = time - edge.delay
+            if source_time >= 0:
+                certified[time, edge.target_orbit] += (
+                    abs(edge.weight) * certified[source_time, edge.source_orbit]
+                )
+        candidate_counts.append(len(candidates))
+        exhausted.append(bool(dropped))
+        tie_drops.append(ties)
+        candidate_evaluations += len(candidates)
+
+    return ApproximateConeResult(
+        baseline=background,
+        reconstructed=reconstructed,
+        retained_by_time=tuple(tuple(sorted(layer)) for layer in retained_layers),
+        dropped_by_time=tuple(tuple(sorted(layer)) for layer in dropped_layers),
+        candidate_counts=tuple(candidate_counts),
+        local_residual_by_time_orbit=residual,
+        certified_error_by_time_orbit=certified,
+        exhausted_by_time=tuple(exhausted),
+        tie_drops_by_time=tuple(tie_drops),
+        candidate_evaluations=candidate_evaluations,
+        edge_evaluations=edge_evaluations,
+    )
+
+
 def translate_cells(state: ArrayLike, shift: int) -> FloatArray:
     values = np.asarray(state, dtype=np.float64)
     if values.ndim < 2:
@@ -280,17 +535,21 @@ def translate_cells(state: ArrayLike, shift: int) -> FloatArray:
 
 
 __all__ = [
+    "ApproximateConeResult",
     "DelayedEdge",
     "DelayedOrbitNetwork",
     "DelayedSnapshot",
     "SparseConeResult",
+    "SparseSidecarResult",
     "advance_full",
     "advance_quotient",
     "initial_snapshot",
     "lift_orbit_trajectory",
     "project_orbit_state",
     "simulate_full",
+    "simulate_budgeted_initial_deviation",
     "simulate_quotient",
     "simulate_sparse_initial_deviation",
+    "simulate_sparse_sidecar",
     "translate_cells",
 ]
