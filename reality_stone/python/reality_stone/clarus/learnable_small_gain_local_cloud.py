@@ -220,11 +220,20 @@ class StableBilinearLocalCloud(nn.Module):
     identifiable instead of being forced through many weak recurrent products.
     """
 
-    def __init__(self, retention_cap: float = 0.995) -> None:
+    def __init__(
+        self,
+        retention_cap: float = 0.995,
+        salience_threshold: float = 0.25,
+        salience_sharpness: float = 20.0,
+    ) -> None:
         super().__init__()
         if not 0.0 < retention_cap < 1.0:
             raise ValueError("retention_cap must lie in (0, 1)")
+        if not 0.0 < salience_threshold < 1.0 or salience_sharpness <= 0.0:
+            raise ValueError("salience gate parameters are outside their valid domain")
         self.retention_cap = float(retention_cap)
+        self.salience_threshold = float(salience_threshold)
+        self.salience_sharpness = float(salience_sharpness)
         self.local_retention_raw = nn.Parameter(torch.full((4,), 3.5))
         self.cloud_retention_raw = nn.Parameter(torch.full((4,), 3.5))
         self.local_input_scale = nn.Parameter(torch.ones(4))
@@ -250,8 +259,16 @@ class StableBilinearLocalCloud(nn.Module):
         for tick in range(sequence.shape[1]):
             local_input = sequence[:, tick, :16].reshape(-1, 4, 4)
             shared_input = sequence[:, tick, 16:]
-            local = torch.tanh(local * local_retention + local_input * self.local_input_scale)
-            cloud = torch.tanh(cloud * cloud_retention + shared_input * self.cloud_input_scale)
+            local_gate = torch.sigmoid(
+                self.salience_sharpness * (torch.abs(local_input) - self.salience_threshold)
+            )
+            cloud_gate = torch.sigmoid(
+                self.salience_sharpness * (torch.abs(shared_input) - self.salience_threshold)
+            )
+            local_candidate = torch.tanh(local_input * self.local_input_scale)
+            cloud_candidate = torch.tanh(shared_input * self.cloud_input_scale)
+            local = (1.0 - local_gate) * local_retention * local + local_gate * local_candidate
+            cloud = (1.0 - cloud_gate) * cloud_retention * cloud + cloud_gate * cloud_candidate
         features = torch.cat((local.reshape(sequence.shape[0], 16), cloud), dim=1)
         interaction = torch.sum(local * cloud.unsqueeze(1) * self.bilinear, dim=(1, 2))
         return interaction + self.linear(features).squeeze(-1)

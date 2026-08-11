@@ -64,6 +64,20 @@ def test_stable_bilinear_is_small_and_strictly_contractive() -> None:
     assert model(sequence).shape == (7,)
 
 
+def test_salience_gate_preserves_a_finite_bounded_state_path() -> None:
+    model = StableBilinearLocalCloud()
+    sequence = torch.zeros(1, 8, 20)
+    sequence[:, 0, :16] = 1.0
+    sequence[:, 1, 16] = 1.0
+    sequence[:, 2:, :] = 0.01
+    with torch.no_grad():
+        score = model(sequence)
+        local_retention, cloud_retention = model.retentions()
+    assert torch.isfinite(score).all()
+    assert float(torch.max(local_retention)) < 0.995
+    assert float(torch.max(cloud_retention)) < 0.995
+
+
 def test_stable_bilinear_training_is_deterministic() -> None:
     rng = np.random.default_rng(82)
     features = rng.normal(size=(32, 4, 20)).astype(np.float32)
