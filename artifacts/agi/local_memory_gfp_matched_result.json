@@ -1,0 +1,521 @@
+{
+  "artifact_type": "clarus_local_memory_gfp_matched_result",
+  "artifact_version": 1,
+  "phase": "confirmatory",
+  "preregistration": "artifacts/agi/local_memory_gfp_matched_preregistration.json",
+  "statistic": "per-target delta' = (r2_local_memory - r2_current_nonlinear) / (1 - r2_current_nonlinear) on test block; recording D_r = median of included targets (median-of-ratios); guard: exclude targets with (1 - r2_current_nonlinear) < 0.01",
+  "test": "exact one-sided Mann-Whitney U on recording medians, AML32 (n=7) > AML18 (n=11), alpha=0.05; primary h=6, secondary h=1",
+  "horizons": {
+    "h6": {
+      "strains": {
+        "AML32": [
+          {
+            "recording_id": "BrainScanner20170610_105634",
+            "n_targets_evaluated": 107,
+            "n_targets_excluded_headroom_guard": 0,
+            "n_targets_included": 107,
+            "median_delta_prime": 0.3936003678040922,
+            "delta_prime_quartiles": [
+              0.35336505047658906,
+              0.3936003678040922,
+              0.4421388060513918
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20170613_134800",
+            "n_targets_evaluated": 118,
+            "n_targets_excluded_headroom_guard": 0,
+            "n_targets_included": 118,
+            "median_delta_prime": 0.4122676297828446,
+            "delta_prime_quartiles": [
+              0.3719797169726628,
+              0.4122676297828446,
+              0.4614746011285333
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20170424_105620",
+            "n_targets_evaluated": 110,
+            "n_targets_excluded_headroom_guard": 0,
+            "n_targets_included": 110,
+            "median_delta_prime": 0.342281777861165,
+            "delta_prime_quartiles": [
+              0.3115938643605071,
+              0.342281777861165,
+              0.37885485770492766
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20180709_100433",
+            "n_targets_evaluated": 135,
+            "n_targets_excluded_headroom_guard": 0,
+            "n_targets_included": 135,
+            "median_delta_prime": 0.3702826733694764,
+            "delta_prime_quartiles": [
+              0.32707561009452923,
+              0.3702826733694764,
+              0.42855342460624957
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20200309_151024",
+            "n_targets_evaluated": 121,
+            "n_targets_excluded_headroom_guard": 0,
+            "n_targets_included": 121,
+            "median_delta_prime": 0.3410237513340455,
+            "delta_prime_quartiles": [
+              0.25828368911096544,
+              0.3410237513340455,
+              0.43253383927477984
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20200309_153839",
+            "n_targets_evaluated": 131,
+            "n_targets_excluded_headroom_guard": 0,
+            "n_targets_included": 131,
+            "median_delta_prime": 0.329393774148341,
+            "delta_prime_quartiles": [
+              0.2561297013811926,
+              0.329393774148341,
+              0.41440395423586635
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20200309_162140",
+            "n_targets_evaluated": 134,
+            "n_targets_excluded_headroom_guard": 0,
+            "n_targets_included": 134,
+            "median_delta_prime": 0.35643070970754587,
+            "delta_prime_quartiles": [
+              0.29674426364223827,
+              0.35643070970754587,
+              0.3991162949548942
+            ]
+          }
+        ],
+        "AML18": [
+          {
+            "recording_id": "BrainScanner20200929_143439",
+            "n_targets_evaluated": 137,
+            "n_targets_excluded_headroom_guard": 0,
+            "n_targets_included": 137,
+            "median_delta_prime": 0.4167044210476253,
+            "delta_prime_quartiles": [
+              0.3587027715437662,
+              0.4167044210476253,
+              0.47239067976204585
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20200204_102136",
+            "n_targets_evaluated": 122,
+            "n_targets_excluded_headroom_guard": 0,
+            "n_targets_included": 122,
+            "median_delta_prime": 0.3424245525095049,
+            "delta_prime_quartiles": [
+              0.29185566451655537,
+              0.3424245525095049,
+              0.38487054151804806
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20200310_153952",
+            "n_targets_evaluated": 116,
+            "n_targets_excluded_headroom_guard": 0,
+            "n_targets_included": 116,
+            "median_delta_prime": 0.3321226109613501,
+            "delta_prime_quartiles": [
+              0.27000406939952326,
+              0.3321226109613501,
+              0.3835786324789803
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20200311_100140",
+            "n_targets_evaluated": 105,
+            "n_targets_excluded_headroom_guard": 0,
+            "n_targets_included": 105,
+            "median_delta_prime": 0.376196941303352,
+            "delta_prime_quartiles": [
+              0.30741236141342587,
+              0.376196941303352,
+              0.432778225906311
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20200116_145254",
+            "n_targets_evaluated": 114,
+            "n_targets_excluded_headroom_guard": 0,
+            "n_targets_included": 114,
+            "median_delta_prime": 0.3427177435879798,
+            "delta_prime_quartiles": [
+              0.30328919538239363,
+              0.3427177435879798,
+              0.3749986442549062
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20200116_152636",
+            "n_targets_evaluated": 129,
+            "n_targets_excluded_headroom_guard": 0,
+            "n_targets_included": 129,
+            "median_delta_prime": 0.36043685363172195,
+            "delta_prime_quartiles": [
+              0.3184994641846344,
+              0.36043685363172195,
+              0.39876530012522804
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20200929_140030",
+            "n_targets_evaluated": 117,
+            "n_targets_excluded_headroom_guard": 0,
+            "n_targets_included": 117,
+            "median_delta_prime": 0.34936072514095895,
+            "delta_prime_quartiles": [
+              0.292379263582044,
+              0.34936072514095895,
+              0.3942156155875456
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20210503_122703",
+            "n_targets_evaluated": 131,
+            "n_targets_excluded_headroom_guard": 0,
+            "n_targets_included": 131,
+            "median_delta_prime": 0.22950233751779076,
+            "delta_prime_quartiles": [
+              0.16219859281242577,
+              0.22950233751779076,
+              0.29249685100317646
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20210503_135244",
+            "n_targets_evaluated": 139,
+            "n_targets_excluded_headroom_guard": 0,
+            "n_targets_included": 139,
+            "median_delta_prime": 0.42470770403588715,
+            "delta_prime_quartiles": [
+              0.35249646870868145,
+              0.42470770403588715,
+              0.49099408381558934
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20210503_151831",
+            "n_targets_evaluated": 129,
+            "n_targets_excluded_headroom_guard": 0,
+            "n_targets_included": 129,
+            "median_delta_prime": 0.3558230681142186,
+            "delta_prime_quartiles": [
+              0.3110280332220031,
+              0.3558230681142186,
+              0.4090754926697171
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20210503_154404",
+            "n_targets_evaluated": 126,
+            "n_targets_excluded_headroom_guard": 0,
+            "n_targets_included": 126,
+            "median_delta_prime": 0.35223290038231736,
+            "delta_prime_quartiles": [
+              0.3127534959012696,
+              0.35223290038231736,
+              0.4147637037563921
+            ]
+          }
+        ]
+      },
+      "recording_medians_aml32": [
+        0.3936003678040922,
+        0.4122676297828446,
+        0.342281777861165,
+        0.3702826733694764,
+        0.3410237513340455,
+        0.329393774148341,
+        0.35643070970754587
+      ],
+      "recording_medians_aml18": [
+        0.4167044210476253,
+        0.3424245525095049,
+        0.3321226109613501,
+        0.376196941303352,
+        0.3427177435879798,
+        0.36043685363172195,
+        0.34936072514095895,
+        0.22950233751779076,
+        0.42470770403588715,
+        0.3558230681142186,
+        0.35223290038231736
+      ],
+      "median_aml32": 0.35643070970754587,
+      "median_aml18": 0.35223290038231736,
+      "median_difference_aml32_minus_aml18": 0.004197809325228508,
+      "mann_whitney_u": 38.0,
+      "mann_whitney_u_max": 77,
+      "exact_one_sided_p_aml32_greater": 0.5350992961287079
+    },
+    "h1": {
+      "strains": {
+        "AML32": [
+          {
+            "recording_id": "BrainScanner20170610_105634",
+            "n_targets_evaluated": 107,
+            "n_targets_excluded_headroom_guard": 7,
+            "n_targets_included": 100,
+            "median_delta_prime": 0.9715018109338321,
+            "delta_prime_quartiles": [
+              0.9667374515721885,
+              0.9715018109338321,
+              0.9748295898844553
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20170613_134800",
+            "n_targets_evaluated": 118,
+            "n_targets_excluded_headroom_guard": 18,
+            "n_targets_included": 100,
+            "median_delta_prime": 0.9727386379706666,
+            "delta_prime_quartiles": [
+              0.9697313465554654,
+              0.9727386379706666,
+              0.975768229974396
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20170424_105620",
+            "n_targets_evaluated": 110,
+            "n_targets_excluded_headroom_guard": 2,
+            "n_targets_included": 108,
+            "median_delta_prime": 0.9685697972930902,
+            "delta_prime_quartiles": [
+              0.9640807491478431,
+              0.9685697972930902,
+              0.9721334163587338
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20180709_100433",
+            "n_targets_evaluated": 135,
+            "n_targets_excluded_headroom_guard": 41,
+            "n_targets_included": 94,
+            "median_delta_prime": 0.9674642474137081,
+            "delta_prime_quartiles": [
+              0.9630235738103363,
+              0.9674642474137081,
+              0.9707141882206625
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20200309_151024",
+            "n_targets_evaluated": 121,
+            "n_targets_excluded_headroom_guard": 7,
+            "n_targets_included": 114,
+            "median_delta_prime": 0.9696676238377695,
+            "delta_prime_quartiles": [
+              0.9607455473955075,
+              0.9696676238377695,
+              0.9744633512890712
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20200309_153839",
+            "n_targets_evaluated": 131,
+            "n_targets_excluded_headroom_guard": 8,
+            "n_targets_included": 123,
+            "median_delta_prime": 0.9598630491870266,
+            "delta_prime_quartiles": [
+              0.94710597626741,
+              0.9598630491870266,
+              0.9684304758917603
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20200309_162140",
+            "n_targets_evaluated": 134,
+            "n_targets_excluded_headroom_guard": 2,
+            "n_targets_included": 132,
+            "median_delta_prime": 0.9680850346985947,
+            "delta_prime_quartiles": [
+              0.9631282185905261,
+              0.9680850346985947,
+              0.9721436531822999
+            ]
+          }
+        ],
+        "AML18": [
+          {
+            "recording_id": "BrainScanner20200929_143439",
+            "n_targets_evaluated": 137,
+            "n_targets_excluded_headroom_guard": 0,
+            "n_targets_included": 137,
+            "median_delta_prime": 0.9700185533796315,
+            "delta_prime_quartiles": [
+              0.9650431797823699,
+              0.9700185533796315,
+              0.9726539540381844
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20200204_102136",
+            "n_targets_evaluated": 122,
+            "n_targets_excluded_headroom_guard": 0,
+            "n_targets_included": 122,
+            "median_delta_prime": 0.9680706534870108,
+            "delta_prime_quartiles": [
+              0.9632099016287725,
+              0.9680706534870108,
+              0.9721095936742562
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20200310_153952",
+            "n_targets_evaluated": 116,
+            "n_targets_excluded_headroom_guard": 0,
+            "n_targets_included": 116,
+            "median_delta_prime": 0.962173844780338,
+            "delta_prime_quartiles": [
+              0.957428758991269,
+              0.962173844780338,
+              0.9670996889903833
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20200311_100140",
+            "n_targets_evaluated": 105,
+            "n_targets_excluded_headroom_guard": 0,
+            "n_targets_included": 105,
+            "median_delta_prime": 0.9681255823996109,
+            "delta_prime_quartiles": [
+              0.9638513856483568,
+              0.9681255823996109,
+              0.9736572560497917
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20200116_145254",
+            "n_targets_evaluated": 114,
+            "n_targets_excluded_headroom_guard": 0,
+            "n_targets_included": 114,
+            "median_delta_prime": 0.9665030982942411,
+            "delta_prime_quartiles": [
+              0.9614908088385588,
+              0.9665030982942411,
+              0.9692182693591284
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20200116_152636",
+            "n_targets_evaluated": 129,
+            "n_targets_excluded_headroom_guard": 0,
+            "n_targets_included": 129,
+            "median_delta_prime": 0.9685230891734318,
+            "delta_prime_quartiles": [
+              0.9643620717733637,
+              0.9685230891734318,
+              0.972417050378363
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20200929_140030",
+            "n_targets_evaluated": 117,
+            "n_targets_excluded_headroom_guard": 0,
+            "n_targets_included": 117,
+            "median_delta_prime": 0.9693887330133727,
+            "delta_prime_quartiles": [
+              0.964332581576596,
+              0.9693887330133727,
+              0.9745068577041222
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20210503_122703",
+            "n_targets_evaluated": 131,
+            "n_targets_excluded_headroom_guard": 0,
+            "n_targets_included": 131,
+            "median_delta_prime": 0.9639994866367928,
+            "delta_prime_quartiles": [
+              0.9594303268319162,
+              0.9639994866367928,
+              0.9694736380901436
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20210503_135244",
+            "n_targets_evaluated": 139,
+            "n_targets_excluded_headroom_guard": 0,
+            "n_targets_included": 139,
+            "median_delta_prime": 0.9732697691124715,
+            "delta_prime_quartiles": [
+              0.9680997580668713,
+              0.9732697691124715,
+              0.9792951618567374
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20210503_151831",
+            "n_targets_evaluated": 129,
+            "n_targets_excluded_headroom_guard": 4,
+            "n_targets_included": 125,
+            "median_delta_prime": 0.9654149043080957,
+            "delta_prime_quartiles": [
+              0.9606939053017648,
+              0.9654149043080957,
+              0.9694480154303938
+            ]
+          },
+          {
+            "recording_id": "BrainScanner20210503_154404",
+            "n_targets_evaluated": 126,
+            "n_targets_excluded_headroom_guard": 0,
+            "n_targets_included": 126,
+            "median_delta_prime": 0.9714398336496093,
+            "delta_prime_quartiles": [
+              0.9677764334347625,
+              0.9714398336496093,
+              0.9758558400242189
+            ]
+          }
+        ]
+      },
+      "recording_medians_aml32": [
+        0.9715018109338321,
+        0.9727386379706666,
+        0.9685697972930902,
+        0.9674642474137081,
+        0.9696676238377695,
+        0.9598630491870266,
+        0.9680850346985947
+      ],
+      "recording_medians_aml18": [
+        0.9700185533796315,
+        0.9680706534870108,
+        0.962173844780338,
+        0.9681255823996109,
+        0.9665030982942411,
+        0.9685230891734318,
+        0.9693887330133727,
+        0.9639994866367928,
+        0.9732697691124715,
+        0.9654149043080957,
+        0.9714398336496093
+      ],
+      "median_aml32": 0.9685697972930902,
+      "median_aml18": 0.9681255823996109,
+      "median_difference_aml32_minus_aml18": 0.0004442148934793444,
+      "mann_whitney_u": 44.0,
+      "mann_whitney_u_max": 77,
+      "exact_one_sided_p_aml32_greater": 0.32949974861739567
+    }
+  },
+  "verdict": "KILL",
+  "verdict_detail": "primary p > 0.05 and median difference <= 0.02: the 'neural temporal memory' interpretation of docs/7_AGI/25 is dead for both horizons; the gate claim is demoted to non-Markovianity of the measurement process",
+  "decision_inputs": {
+    "primary_p_h6": 0.5350992961287079,
+    "primary_median_difference_h6": 0.004197809325228508,
+    "kill_requires": "p > 0.05 AND median difference <= 0.02"
+  }
+}

@@ -1184,6 +1184,18 @@ AGI에 의미 있는 최소 가정은 local temporal-history/state feature이며
 population cloud, graph, diffusion은 이번 자료에서 그 위의 필수 구조로
 확인되지 않았다.
 
+> **후기 (2026-08-12).** `25_Local_Temporal_Memory_Confirmation.md`의 계산
+> 게이트 PASS는 유지되나, 동일 게이트를 활동 비의존 GFP 대조군
+> AML18(11 recording)에 사전등록 후 적용한 결과 $h=1$·$h=6$ 모두 11/11
+> PASS였고 효과 크기가 AML32보다 컸다. 따라서 위 분해에서 "뉴런 측정
+> 신호가 시간적 local state를 가진다"는 문장은 "전처리된 형광 시계열이
+> lag 예측정보를 가진다"로 좁혀 읽어야 하며, 신경 기억이라는 생물학적
+> 해석은 강등되었다(25번 문서 머리 지위 변경 블록 참조). 이 경계는
+> §12 claim ladder의 L2 계열 해석에도 동일하게 적용된다. headroom 교정
+> 통계량($\delta'$, median-of-ratios) 기반 사전등록 본 실행에서도
+> GCaMP·GFP 분포 겹침이 확정되었다(주검정 $h=6$ exact one-sided
+> Mann–Whitney $p=0.535$; `artifacts/agi/local_memory_gfp_matched_result.json`).
+
 2026-08-04 AML32 원자료 재실행에서는 $h=1$과 $h=6$ 결과 JSON이 기존 커밋의
 두 confirmatory artifact와 각각 정확히 일치했고, 구현 정규화 SHA-256
 `6032a76d33a0a2adc2671972248c550b00c600be418919c3c296924106475f86`에 대해

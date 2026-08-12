@@ -1,0 +1,130 @@
+{
+  "artifact_type": "clarus_cloudcell_dynamics_gate",
+  "artifact_version": 1,
+  "source": {
+    "url": "https://osf.io/download/evhrg/",
+    "archive_name": "AML310_moving.tar.gz",
+    "archive_bytes": 348444164,
+    "sha256": "144126ee9a49d311c3393deea434e1a0963d55de35318e25d98d48f9c175250a",
+    "expected_sha256": "144126ee9a49d311c3393deea434e1a0963d55de35318e25d98d48f9c175250a",
+    "integrity_passed": true
+  },
+  "method": {
+    "target": "x_i(t+1)",
+    "equation_variant": "nonlinear",
+    "local": "[x_i(t), x_i(t-1), x_i(t-2)]",
+    "current_state_baseline": "x_i(t)",
+    "cloud": "train-only PCA of all non-target units at t and t-1",
+    "split": "chronological 60/20/20 with five-sample embargo",
+    "selection": "ridge selected on validation; test untouched",
+    "null": "circularly shifted held-out cloud",
+    "replicate_unit": "recording/animal, never neuron"
+  },
+  "gate_passed": false,
+  "claim_scope": "observational support for a local-state plus population-context dynamics bridge; not proof that a biological neuron is a monad",
+  "result": {
+    "recording_count": 4,
+    "recordings_passed": 0,
+    "min_recordings_passed": 3,
+    "passed": false,
+    "replicate_unit": "independently recorded animal",
+    "recordings": [
+      {
+        "recording_id": "BrainScanner20200130_110803",
+        "n_units": 134,
+        "n_timepoints": 1466,
+        "horizon_steps": 1,
+        "equation_variant": "nonlinear",
+        "n_targets_evaluated": 134,
+        "median_r2_intercept": -0.30930937942537573,
+        "median_r2_current": 0.9701316088831948,
+        "median_r2_local": 0.9991338585211166,
+        "median_r2_cloud": 0.18490698384674376,
+        "median_r2_full": 0.9989376932503757,
+        "median_delta_memory": 0.02879686921829966,
+        "median_delta_cloud_given_local": -8.809872382986583e-05,
+        "median_delta_local_given_cloud": 0.8134490101072467,
+        "median_delta_time_alignment": 4.671003030320975e-05,
+        "positive_fraction_cloud_given_local": 0.15671641791044777,
+        "criteria": {
+          "min_memory_delta": 0.001,
+          "min_cloud_delta": 0.001,
+          "min_positive_fraction": 0.6
+        },
+        "passed": false
+      },
+      {
+        "recording_id": "BrainScanner20200130_105254",
+        "n_units": 128,
+        "n_timepoints": 1525,
+        "horizon_steps": 1,
+        "equation_variant": "nonlinear",
+        "n_targets_evaluated": 122,
+        "median_r2_intercept": -0.2494409820692095,
+        "median_r2_current": 0.9785524436590076,
+        "median_r2_local": 0.999396869052066,
+        "median_r2_cloud": -0.10000065904040123,
+        "median_r2_full": 0.9988005365987942,
+        "median_delta_memory": 0.020779902517145288,
+        "median_delta_cloud_given_local": -0.0003297958046735716,
+        "median_delta_local_given_cloud": 1.098317932582604,
+        "median_delta_time_alignment": 4.104769547985665e-06,
+        "positive_fraction_cloud_given_local": 0.040983606557377046,
+        "criteria": {
+          "min_memory_delta": 0.001,
+          "min_cloud_delta": 0.001,
+          "min_positive_fraction": 0.6
+        },
+        "passed": false
+      },
+      {
+        "recording_id": "BrainScanner20200310_141211",
+        "n_units": 116,
+        "n_timepoints": 1495,
+        "horizon_steps": 1,
+        "equation_variant": "nonlinear",
+        "n_targets_evaluated": 109,
+        "median_r2_intercept": -1.4687890395814356,
+        "median_r2_current": 0.9400501420862869,
+        "median_r2_local": 0.9978054922681568,
+        "median_r2_cloud": -0.8575385729919658,
+        "median_r2_full": 0.9969535135446009,
+        "median_delta_memory": 0.05816201028031587,
+        "median_delta_cloud_given_local": -0.0005360106126535147,
+        "median_delta_local_given_cloud": 1.8555220533353305,
+        "median_delta_time_alignment": 3.633266422953252e-05,
+        "positive_fraction_cloud_given_local": 0.11926605504587157,
+        "criteria": {
+          "min_memory_delta": 0.001,
+          "min_cloud_delta": 0.001,
+          "min_positive_fraction": 0.6
+        },
+        "passed": false
+      },
+      {
+        "recording_id": "BrainScanner20200310_142022",
+        "n_units": 97,
+        "n_timepoints": 1480,
+        "horizon_steps": 1,
+        "equation_variant": "nonlinear",
+        "n_targets_evaluated": 97,
+        "median_r2_intercept": -0.4120829727135611,
+        "median_r2_current": 0.9612894139980522,
+        "median_r2_local": 0.9987224740071879,
+        "median_r2_cloud": -0.311109692604538,
+        "median_r2_full": 0.9986598132314117,
+        "median_delta_memory": 0.03775480649033647,
+        "median_delta_cloud_given_local": -5.197802624101744e-05,
+        "median_delta_local_given_cloud": 1.3031663768000161,
+        "median_delta_time_alignment": 3.0366580998864023e-05,
+        "positive_fraction_cloud_given_local": 0.28865979381443296,
+        "criteria": {
+          "min_memory_delta": 0.001,
+          "min_cloud_delta": 0.001,
+          "min_positive_fraction": 0.6
+        },
+        "passed": false
+      }
+    ]
+  }
+}

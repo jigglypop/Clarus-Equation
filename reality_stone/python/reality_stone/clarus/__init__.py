@@ -55,6 +55,25 @@ LocalCloudObservation = None
 LocalCloudState = None
 LocalCloudTransitionKernel = None
 SmallGainCertificate = None
+ClarusField = None
+ClarusFieldCertificate = None
+ClarusFieldConfig = None
+ClarusFieldDrive = None
+ClarusFieldState = None
+ClarusFieldStep = None
+PhaseOccupancy = None
+bounded_hrr_bind = None
+normalized_graph_laplacian = None
+project_rows_to_unit_ball = None
+prediction_error_gate_scores = None
+UnifiedMetricConfig = None
+UnifiedMetricState = None
+MetricPath = None
+MetricGoalReadout = None
+MetricSurprise = None
+UnifiedMetricCertificate = None
+UnifiedMetricCore = None
+affine_chart_change = None
 BeliefControlConfig = None
 BeliefController = None
 BeliefPlan = None
@@ -102,6 +121,37 @@ try:
         LocalCloudState,
         LocalCloudTransitionKernel,
         SmallGainCertificate,
+    )
+except ImportError:
+    pass
+
+try:
+    from .clarus_field import (  # type: ignore[no-redef]
+        ClarusField,
+        ClarusFieldCertificate,
+        ClarusFieldConfig,
+        ClarusFieldDrive,
+        ClarusFieldState,
+        ClarusFieldStep,
+        PhaseOccupancy,
+        bounded_hrr_bind,
+        normalized_graph_laplacian,
+        prediction_error_gate_scores,
+        project_rows_to_unit_ball,
+    )
+except ImportError:
+    pass
+
+try:
+    from .unified_metric import (  # type: ignore[no-redef]
+        MetricGoalReadout,
+        MetricPath,
+        MetricSurprise,
+        UnifiedMetricCertificate,
+        UnifiedMetricConfig,
+        UnifiedMetricCore,
+        UnifiedMetricState,
+        affine_chart_change,
     )
 except ImportError:
     pass
@@ -300,6 +350,25 @@ __all__ = [
     "LocalCloudState",
     "LocalCloudTransitionKernel",
     "SmallGainCertificate",
+    "ClarusField",
+    "ClarusFieldCertificate",
+    "ClarusFieldConfig",
+    "ClarusFieldDrive",
+    "ClarusFieldState",
+    "ClarusFieldStep",
+    "PhaseOccupancy",
+    "bounded_hrr_bind",
+    "normalized_graph_laplacian",
+    "prediction_error_gate_scores",
+    "project_rows_to_unit_ball",
+    "UnifiedMetricConfig",
+    "UnifiedMetricState",
+    "MetricPath",
+    "MetricGoalReadout",
+    "MetricSurprise",
+    "UnifiedMetricCertificate",
+    "UnifiedMetricCore",
+    "affine_chart_change",
     "BeliefControlConfig",
     "BeliefController",
     "BeliefPlan",

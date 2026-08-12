@@ -1,3 +1,0 @@
-{"id": "supported", "answer": "Paris is the capital of France.", "context": "Paris is the capital of France.", "is_hallucinated": false}
-{"id": "entity_swap", "answer": "Berlin is the capital of France.", "context": "Paris is the capital of France.", "is_hallucinated": true}
-{"id": "unsupported", "answer": "The project uses Redis for durable consensus.", "context": "The project stores consensus state in SQLite.", "is_hallucinated": true}

@@ -1,1 +1,0 @@
-{"evidence_class":"reactor_rate_polarized_deuterium_source_v1","observed_output_count":20000000000000000000000,"observed_output_count_std":1000000000000.0,"observed_output_count_unit":"particles","payload_role":"event_counts","schema_version":"fusion-polarized-artifact-raw-v1","species":"D"}

@@ -1,0 +1,87 @@
+[package]
+name = "rbe_llm"
+version = "0.1.0"
+edition = "2021"
+
+# 바이너리들이 삭제되어 일시적으로 제거됨
+[[bin]]
+name = "test_memory_size"
+path = "src/test_memory_size.rs"
+
+
+
+[[example]]
+name = "korean_sllm_demo"
+path = "examples/korean_sllm_demo.rs"
+
+[[example]]
+name = "nlp_layers_demo"
+path = "examples/nlp_layers_demo.rs"
+
+[[example]]
+name = "test_performance"
+path = "examples/test_performance.rs"
+
+[[example]]
+name = "simple_accuracy_test"
+path = "examples/simple_accuracy_test.rs"
+
+[dependencies]
+# 기존 의존성들
+rand = "0.8"
+approx = "0.5"
+rustfft = "6.4.0"
+noise = "0.9.0"
+rayon = "1.10.0"
+microfft = "0.6.0"
+rustdct = "0.7.1"
+omni-wave = "0.2.1"
+ndarray-stats = "0.6.0"
+nalgebra = { version = "0.32", features = ["serde"] }
+ndarray = { version = "0.15", features = ["serde", "rayon"] }
+libm = "0.2"
+serde = { version = "1.0", features = ["derive"] }
+num_cpus = "1.0"
+indicatif = "0.17"
+
+# HTTP 및 네트워킹
+hf-hub = { version = "0.3", features = ["tokio"] }
+serde_json = "1.0"
+tokio = { version = "1.0", features = ["full"] }
+reqwest = { version = "0.12", features = ["json", "stream"] }
+
+# SLLM API 새 의존성들
+clap = { version = "4.0", features = ["derive"] }
+warp = "0.3"
+anyhow = "1.0"
+chrono = { version = "0.4", features = ["serde"] }
+env_logger = "0.10"
+
+# 모델 로딩 및 처리
+safetensors = "0.4"
+memmap2 = "0.9"
+half = "2.4"
+
+# Python 연동 (옵셔널)
+pyo3 = { version = "0.21", features = ["auto-initialize", "gil-refs"], optional = true }
+numpy = { version = "0.21", optional = true }
+
+# 토크나이저
+tokenizers = "0.21"
+candle-core = "0.9.1"
+candle-nn = "0.9.1"
+candle-transformers = "0.9.1"
+bincode = "1.3"
+once_cell = "1.21.3"
+lru = "0.12"
+parking_lot = "0.12.4"
+crc16 = "0.4.0"
+byteorder = "1.5.0"
+
+[dependencies.tch]
+version = "0.16"
+optional = true
+
+# Test dependencies
+[dev-dependencies]
+tempfile = "3.20.0"

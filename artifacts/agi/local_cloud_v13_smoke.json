@@ -1,0 +1,609 @@
+{
+  "epochs": 200,
+  "evaluation_episodes": 256,
+  "exploration_log": [
+    {
+      "choice": "train_episodes=192",
+      "reason": "must be a multiple of both 32 (LocalCloudBenchmarkConfig/LearnedOODConfig validation, inherited unmodified from V10/V11) and 24 (compositional train pool size = 32 - 8 held-out cells); lcm(32, 24) = 96, so 192 = 2x96 is the smallest practical size above the V10/V11 default of 256 episodes' per-condition density."
+    },
+    {
+      "choice": "evaluation_episodes=256",
+      "reason": "matches V10/V11 default; 256 is a multiple of 32 (iid panels) and of 8 (heldout compositional pool), so a single evaluation count works for all five panels without extra rounding."
+    },
+    {
+      "choice": "epochs=200, lr=0.01, wd=1e-4, clip=1.0 for all learned models",
+      "reason": "identical training regime as the V11 comparator run (local_cloud_ood_benchmark.LearnedOODConfig) except epochs raised from 100 to 200 per the V13 task instruction, applied uniformly to v13/elman3/elman20/gru20 so no model gets an unstated training advantage."
+    },
+    {
+      "choice": "retention_cap=1.0 for GatedLocalCloudV13",
+      "reason": "explicit user authorization to relax the V10 contraction_cap (0.95) and V12 retention_cap (0.995) constraints; marginal stability is permitted and the learned retention / an observational Lipschitz estimate are reported in the output, not enforced as a certificate gate."
+    }
+  ],
+  "g1_per_panel": {
+    "combined": false,
+    "heldout": true,
+    "horizon": false,
+    "id": true,
+    "noise": true
+  },
+  "g2_paired_lcb_intervals": {
+    "combined": [
+      -0.158203125,
+      -0.259765625,
+      -0.0810546875
+    ],
+    "heldout": [
+      0.1171875,
+      -0.05439453124999996,
+      0.3115234375
+    ],
+    "horizon": [
+      -0.1669921875,
+      -0.251953125,
+      -0.1064453125
+    ],
+    "id": [
+      0.1318359375,
+      0.1015625,
+      0.162109375
+    ],
+    "noise": [
+      0.123046875,
+      0.103515625,
+      0.15234375
+    ]
+  },
+  "g2_per_panel": {
+    "combined": false,
+    "heldout": false,
+    "horizon": false,
+    "id": true,
+    "noise": true
+  },
+  "gates": {
+    "G1_v13_within_5pct_of_gru20_all_panels": false,
+    "G2_v13_beats_elman3_paired_lcb_all_panels": false,
+    "G3_v13_heldout_accuracy_at_least_0_90": false,
+    "G4_integrity": true
+  },
+  "integrity": {
+    "duplicate_seed_count": 0,
+    "duplicate_v13_state_hash_across_distinct_seeds": 0,
+    "model_count_mismatch": 0,
+    "nonfinite_count": 0,
+    "panel_count_mismatch": 0
+  },
+  "learned_retention_summary": {
+    "cloud_retention_max": {
+      "max": 0.771291196346283,
+      "mean": 0.74171943962574,
+      "min": 0.6699654459953308
+    },
+    "cloud_retention_mean": {
+      "max": 0.6590396165847778,
+      "mean": 0.5909086018800735,
+      "min": 0.4922700524330139
+    },
+    "local_retention_max": {
+      "max": 0.8150840401649475,
+      "mean": 0.7884477078914642,
+      "min": 0.7677980065345764
+    },
+    "local_retention_mean": {
+      "max": 0.694290280342102,
+      "mean": 0.6262001246213913,
+      "min": 0.5805004239082336
+    },
+    "loose_upper_bound_cloud_lipschitz": {
+      "max": 7.766732156276703,
+      "mean": 7.045214667916298,
+      "min": 6.744616627693176
+    },
+    "loose_upper_bound_local_lipschitz": {
+      "max": 8.297573149204254,
+      "mean": 7.9657526314258575,
+      "min": 7.488312602043152
+    }
+  },
+  "overall": "STOP",
+  "panel_means": {
+    "combined": {
+      "elman20": 0.48828125,
+      "elman3": 0.697265625,
+      "gru20": 0.880859375,
+      "v10": 0.4912109375,
+      "v13": 0.5390625
+    },
+    "heldout": {
+      "elman20": 0.4130859375,
+      "elman3": 0.3291015625,
+      "gru20": 0.46875,
+      "v10": 0.4462890625,
+      "v13": 0.4462890625
+    },
+    "horizon": {
+      "elman20": 0.4970703125,
+      "elman3": 0.7109375,
+      "gru20": 0.8837890625,
+      "v10": 0.5224609375,
+      "v13": 0.5439453125
+    },
+    "id": {
+      "elman20": 0.853515625,
+      "elman3": 0.7138671875,
+      "gru20": 0.869140625,
+      "v10": 0.6337890625,
+      "v13": 0.845703125
+    },
+    "noise": {
+      "elman20": 0.8525390625,
+      "elman3": 0.70703125,
+      "gru20": 0.8701171875,
+      "v10": 0.58203125,
+      "v13": 0.830078125
+    }
+  },
+  "schema": "clarus.local_cloud.v13_development.v1",
+  "seed_count": 4,
+  "seed_rows": [
+    {
+      "holdout_cells": [
+        [
+          0,
+          7
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          7
+        ],
+        [
+          3,
+          7
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "learned_ledgers": {
+        "elman20": {
+          "multiply_estimate_per_tick": 820,
+          "parameter_count": 861,
+          "recurrent_state_scalars": 20,
+          "state_hash": "FF1CB42C22432F86D3B551E54488EE9684827251EA2E2F0CF82C64651B30935B"
+        },
+        "elman3": {
+          "multiply_estimate_per_tick": 72,
+          "parameter_count": 79,
+          "recurrent_state_scalars": 3,
+          "state_hash": "AF592AEF9CBAE11CAE499A58949D97674673221AAAE0F600EAD3F342F11A75C4"
+        },
+        "gru20": {
+          "multiply_estimate_per_tick": 2460,
+          "parameter_count": 2541,
+          "recurrent_state_scalars": 20,
+          "state_hash": "7A46BF2DE1E9E15C1BCF803B91D54C06E2CA2E1E66B6DDE2569EB0FE35DB5FB3"
+        }
+      },
+      "nonfinite_count": 0,
+      "panel_accuracies": {
+        "combined": {
+          "elman20": 0.83984375,
+          "elman3": 0.6484375,
+          "gru20": 0.875,
+          "v10": 0.50390625,
+          "v13": 0.59375
+        },
+        "heldout": {
+          "elman20": 0.5,
+          "elman3": 0.37109375,
+          "gru20": 0.5,
+          "v10": 0.4765625,
+          "v13": 0.25
+        },
+        "horizon": {
+          "elman20": 0.8359375,
+          "elman3": 0.6796875,
+          "gru20": 0.875,
+          "v10": 0.5234375,
+          "v13": 0.5859375
+        },
+        "id": {
+          "elman20": 0.875,
+          "elman3": 0.7109375,
+          "gru20": 0.875,
+          "v10": 0.65625,
+          "v13": 0.8125
+        },
+        "noise": {
+          "elman20": 0.87109375,
+          "elman3": 0.69140625,
+          "gru20": 0.875,
+          "v10": 0.59765625,
+          "v13": 0.80859375
+        }
+      },
+      "seed": 7001,
+      "v13_ledger": {
+        "lipschitz_report": {
+          "certified": false,
+          "cloud_interaction_spectral_norm": 2.6645936965942383,
+          "cloud_recurrent_spectral_norm": 3.3424792289733887,
+          "cloud_retention_max": 0.771291196346283,
+          "cloud_retention_mean": 0.577770471572876,
+          "local_interaction_spectral_norm": 3.953352212905884,
+          "local_recurrent_spectral_norm": 2.7599036693573,
+          "local_retention_max": 0.7750567197799683,
+          "local_retention_mean": 0.694290280342102,
+          "loose_upper_bound_cloud_lipschitz": 6.77836412191391,
+          "loose_upper_bound_local_lipschitz": 7.488312602043152,
+          "note": "observational only; retention_cap permits marginal stability (<=1.0) per explicit user authorization to relax the V10/V12 contraction constraint -- this is a reported metric, not a gate"
+        },
+        "parameter_count": 205,
+        "state_hash": "2082D2F8B3167D76D94F6B1AB3F2809A56A026C2A569FB53A0A10B350261AAB2"
+      }
+    },
+    {
+      "holdout_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          7
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          6
+        ],
+        [
+          2,
+          5
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          6
+        ]
+      ],
+      "learned_ledgers": {
+        "elman20": {
+          "multiply_estimate_per_tick": 820,
+          "parameter_count": 861,
+          "recurrent_state_scalars": 20,
+          "state_hash": "6A6DDBD58098EACE630F472481FA626225F68B1BEB0DE3F065A199642ECCB3E7"
+        },
+        "elman3": {
+          "multiply_estimate_per_tick": 72,
+          "parameter_count": 79,
+          "recurrent_state_scalars": 3,
+          "state_hash": "FC3F7CBDB9199F6AD1E65F3B9D4601BA82AF2989CF77252C8946C49EB5635D53"
+        },
+        "gru20": {
+          "multiply_estimate_per_tick": 2460,
+          "parameter_count": 2541,
+          "recurrent_state_scalars": 20,
+          "state_hash": "EB369498181C2E4AAB024FF49A1137257174349338142258F82D719F9564BDC3"
+        }
+      },
+      "nonfinite_count": 0,
+      "panel_accuracies": {
+        "combined": {
+          "elman20": 0.28515625,
+          "elman3": 0.7734375,
+          "gru20": 0.8125,
+          "v10": 0.4453125,
+          "v13": 0.48046875
+        },
+        "heldout": {
+          "elman20": 0.25,
+          "elman3": 0.25,
+          "gru20": 0.25,
+          "v10": 0.55859375,
+          "v13": 0.65234375
+        },
+        "horizon": {
+          "elman20": 0.28125,
+          "elman3": 0.78125,
+          "gru20": 0.8125,
+          "v10": 0.49609375,
+          "v13": 0.4921875
+        },
+        "id": {
+          "elman20": 0.8125,
+          "elman3": 0.78125,
+          "gru20": 0.8125,
+          "v10": 0.58203125,
+          "v13": 0.8828125
+        },
+        "noise": {
+          "elman20": 0.8125,
+          "elman3": 0.77734375,
+          "gru20": 0.8125,
+          "v10": 0.5390625,
+          "v13": 0.87890625
+        }
+      },
+      "seed": 7002,
+      "v13_ledger": {
+        "lipschitz_report": {
+          "certified": false,
+          "cloud_interaction_spectral_norm": 3.313260078430176,
+          "cloud_recurrent_spectral_norm": 3.7835066318511963,
+          "cloud_retention_max": 0.6699654459953308,
+          "cloud_retention_mean": 0.4922700524330139,
+          "local_interaction_spectral_norm": 4.325343608856201,
+          "local_recurrent_spectral_norm": 3.1571455001831055,
+          "local_retention_max": 0.8150840401649475,
+          "local_retention_mean": 0.5805004239082336,
+          "loose_upper_bound_cloud_lipschitz": 7.766732156276703,
+          "loose_upper_bound_local_lipschitz": 8.297573149204254,
+          "note": "observational only; retention_cap permits marginal stability (<=1.0) per explicit user authorization to relax the V10/V12 contraction constraint -- this is a reported metric, not a gate"
+        },
+        "parameter_count": 205,
+        "state_hash": "9B6FACF80EA74A3CA5D7785857CAF082EF8C9A3A444B1C83D6C1615D3F460A3A"
+      }
+    },
+    {
+      "holdout_cells": [
+        [
+          0,
+          7
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          6
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          6
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          7
+        ]
+      ],
+      "learned_ledgers": {
+        "elman20": {
+          "multiply_estimate_per_tick": 820,
+          "parameter_count": 861,
+          "recurrent_state_scalars": 20,
+          "state_hash": "58CC3078FB36221EC5325A5993FB6EAEC3C1BDE52AC70D8F51680AE46C1C7095"
+        },
+        "elman3": {
+          "multiply_estimate_per_tick": 72,
+          "parameter_count": 79,
+          "recurrent_state_scalars": 3,
+          "state_hash": "974BF38AC9B9D5888572E00B2A8A3120C06FE712C60460DD73A4C51DD591E1F0"
+        },
+        "gru20": {
+          "multiply_estimate_per_tick": 2460,
+          "parameter_count": 2541,
+          "recurrent_state_scalars": 20,
+          "state_hash": "80297825EADE8D436283503BCB761D7D5802CB998CCEDA94320FFDBE447FBF86"
+        }
+      },
+      "nonfinite_count": 0,
+      "panel_accuracies": {
+        "combined": {
+          "elman20": 0.30078125,
+          "elman3": 0.6953125,
+          "gru20": 0.8984375,
+          "v10": 0.4921875,
+          "v13": 0.53515625
+        },
+        "heldout": {
+          "elman20": 0.3828125,
+          "elman3": 0.375,
+          "gru20": 0.41796875,
+          "v10": 0.3515625,
+          "v13": 0.5234375
+        },
+        "horizon": {
+          "elman20": 0.30078125,
+          "elman3": 0.69921875,
+          "gru20": 0.91015625,
+          "v10": 0.5234375,
+          "v13": 0.55859375
+        },
+        "id": {
+          "elman20": 0.84765625,
+          "elman3": 0.69921875,
+          "gru20": 0.86328125,
+          "v10": 0.6328125,
+          "v13": 0.8515625
+        },
+        "noise": {
+          "elman20": 0.84765625,
+          "elman3": 0.69921875,
+          "gru20": 0.87109375,
+          "v10": 0.56640625,
+          "v13": 0.8046875
+        }
+      },
+      "seed": 7003,
+      "v13_ledger": {
+        "lipschitz_report": {
+          "certified": false,
+          "cloud_interaction_spectral_norm": 2.747389078140259,
+          "cloud_recurrent_spectral_norm": 3.2288291454315186,
+          "cloud_retention_max": 0.7683984041213989,
+          "cloud_retention_mean": 0.6345542669296265,
+          "local_interaction_spectral_norm": 4.155350208282471,
+          "local_recurrent_spectral_norm": 2.9220128059387207,
+          "local_retention_max": 0.7958520650863647,
+          "local_retention_mean": 0.5886216163635254,
+          "loose_upper_bound_cloud_lipschitz": 6.744616627693176,
+          "loose_upper_bound_local_lipschitz": 7.873215079307556,
+          "note": "observational only; retention_cap permits marginal stability (<=1.0) per explicit user authorization to relax the V10/V12 contraction constraint -- this is a reported metric, not a gate"
+        },
+        "parameter_count": 205,
+        "state_hash": "82C18C315B72ED01C0A588287928402687AE9F4EDA6C55DAB1FBDF11A2D25EEA"
+      }
+    },
+    {
+      "holdout_cells": [
+        [
+          0,
+          3
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          6
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          3,
+          6
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "learned_ledgers": {
+        "elman20": {
+          "multiply_estimate_per_tick": 820,
+          "parameter_count": 861,
+          "recurrent_state_scalars": 20,
+          "state_hash": "78D490291AA24770DD2E85799AFEA8282E8DDBBA8D6266B32AFB57D22B6A400D"
+        },
+        "elman3": {
+          "multiply_estimate_per_tick": 72,
+          "parameter_count": 79,
+          "recurrent_state_scalars": 3,
+          "state_hash": "19B05703E6BC23D3E178B8ED8257406B35BB545746055DB58C8CAE13D2A309D3"
+        },
+        "gru20": {
+          "multiply_estimate_per_tick": 2460,
+          "parameter_count": 2541,
+          "recurrent_state_scalars": 20,
+          "state_hash": "51B5B76586B3ED7F08992B36E1BB18D10B17530A392C0008F6DACF8DC8449887"
+        }
+      },
+      "nonfinite_count": 0,
+      "panel_accuracies": {
+        "combined": {
+          "elman20": 0.52734375,
+          "elman3": 0.671875,
+          "gru20": 0.9375,
+          "v10": 0.5234375,
+          "v13": 0.546875
+        },
+        "heldout": {
+          "elman20": 0.51953125,
+          "elman3": 0.3203125,
+          "gru20": 0.70703125,
+          "v10": 0.3984375,
+          "v13": 0.359375
+        },
+        "horizon": {
+          "elman20": 0.5703125,
+          "elman3": 0.68359375,
+          "gru20": 0.9375,
+          "v10": 0.546875,
+          "v13": 0.5390625
+        },
+        "id": {
+          "elman20": 0.87890625,
+          "elman3": 0.6640625,
+          "gru20": 0.92578125,
+          "v10": 0.6640625,
+          "v13": 0.8359375
+        },
+        "noise": {
+          "elman20": 0.87890625,
+          "elman3": 0.66015625,
+          "gru20": 0.921875,
+          "v10": 0.625,
+          "v13": 0.828125
+        }
+      },
+      "seed": 7004,
+      "v13_ledger": {
+        "lipschitz_report": {
+          "certified": false,
+          "cloud_interaction_spectral_norm": 3.7703821659088135,
+          "cloud_recurrent_spectral_norm": 2.3635408878326416,
+          "cloud_retention_max": 0.7572227120399475,
+          "cloud_retention_mean": 0.6590396165847778,
+          "local_interaction_spectral_norm": 4.24977970123291,
+          "local_recurrent_spectral_norm": 3.1863319873809814,
+          "local_retention_max": 0.7677980065345764,
+          "local_retention_mean": 0.6413881778717041,
+          "loose_upper_bound_cloud_lipschitz": 6.891145765781403,
+          "loose_upper_bound_local_lipschitz": 8.203909695148468,
+          "note": "observational only; retention_cap permits marginal stability (<=1.0) per explicit user authorization to relax the V10/V12 contraction constraint -- this is a reported metric, not a gate"
+        },
+        "parameter_count": 205,
+        "state_hash": "B2C9CD011923CAC23EFD8EA054A5CF81000A4B315CCE7770BC699587BD689DE9"
+      }
+    }
+  ],
+  "seeds": [
+    7001,
+    7002,
+    7003,
+    7004
+  ],
+  "train_episodes": 192
+}

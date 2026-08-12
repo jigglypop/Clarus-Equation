@@ -1,0 +1,5 @@
+interface:
+  display_name: "CE Closure Gate"
+  short_description: "Audit proofs, axioms, status, and counterexamples"
+  default_prompt: "Use $ce-closure-gate to audit the formal status of this CE claim."
+

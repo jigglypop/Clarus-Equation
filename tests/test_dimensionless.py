@@ -145,3 +145,23 @@ def test_registered_rate_and_magnetic_field_have_nontrivial_dimensions() -> None
     assert not rate.is_dimensionless()
     assert magnetic_field == Dimension.MASS**2
     assert not magnetic_field.is_dimensionless()
+
+
+def test_clarus_field_gate_and_phase_score_are_registered_dimensionless() -> None:
+    checker = DimensionlessChecker()
+    formulas = {formula.symbol: formula for formula in checker.formulas}
+
+    assert formulas["g_CF"].expected_dim == Dimension.DIMENSIONLESS
+    assert formulas["chi_CF"].expected_dim == Dimension.DIMENSIONLESS
+    assert checker.check_formula(formulas["g_CF"])["status"].startswith("PASS")
+    assert checker.check_formula(formulas["chi_CF"])["status"].startswith("PASS")
+
+
+def test_unified_metric_surprise_and_condition_ratio_are_dimensionless() -> None:
+    checker = DimensionlessChecker()
+    formulas = {formula.symbol: formula for formula in checker.formulas}
+
+    assert formulas["chi_UM"].expected_dim == Dimension.DIMENSIONLESS
+    assert formulas["kappa_UM"].expected_dim == Dimension.DIMENSIONLESS
+    assert checker.check_formula(formulas["chi_UM"])["status"].startswith("PASS")
+    assert checker.check_formula(formulas["kappa_UM"])["status"].startswith("PASS")

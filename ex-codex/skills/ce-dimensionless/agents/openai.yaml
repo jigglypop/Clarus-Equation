@@ -1,0 +1,5 @@
+interface:
+  display_name: "CE Dimensionless Gate"
+  short_description: "Check dimensions and normalization of CE equations"
+  default_prompt: "Use $ce-dimensionless to check this CE equation and its code gate."
+

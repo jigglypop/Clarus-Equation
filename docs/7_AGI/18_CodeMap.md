@@ -631,3 +631,45 @@ V10 scored `0.660/0.593/0.540/0.520` on ID/noise/horizon/combined. GRU-20 scored
 `0.999/0.998/0.998/0.998`; compute-matched Elman-3 also exceeded V10 on all panels. Therefore
 V10's narrow factorial mechanism confirmation survives, but learned-recurrent superiority and OOD
 robustness claims are rejected.
+
+---
+
+## 19. Clarus-field bounded baseline (2026-08-12)
+
+| Formal object | Implementation | Status |
+|---|---|---|
+| finite symmetric connected substrate and normalized Laplacian | `clarus_field.py::normalized_graph_laplacian` | dimensionless graph operator; directed neural connectivity is not identified with the diffusion operator |
+| damped nonnegative field | `ClarusField.step` | exact constant-source spectral step for $\dot\phi=-(\kappa L+\lambda I)\phi+r(s)$; $r(s)=\min(\lVert s\rVert_2,R)$ |
+| exact latch | `ClarusField.step` hard branch | closed nodes are copied without arithmetic; 256-tick bit-identity regression |
+| predictive salience | `prediction_error_gate_scores` | squared normalized error gives sign-invariant soft score; `ClarusField.step` applies the hard boundary |
+| bounded external write | `project_rows_to_unit_ball` + convex update | CF-1/2 implementation; CF-3 additionally requires i.i.d. exogenous common writes and non-atomic thresholds |
+| three-phase descriptive readout | `PhaseOccupancy` | structure threshold acts on dimensionless $\lambda\phi/R$; no target composition is injected |
+| HRR binding | `bounded_hrr_bind` | bounded readout only; excluded from the certified recurrent transition |
+| theorem boundary | `ClarusFieldCertificate` | $p^*$ self-convergence and V14 route-L inheritance are explicitly false |
+| focused validation | `tests/test_clarus_field.py` | 17 passed; CE core slice 71 passed; runtime/public slice 34 passed; local-cloud compatibility slice 72 passed |
+
+The baseline borrows graph locality, bounded memory and surprise-gated writing as engineering
+abstractions. It does not claim that a brain is a cosmological field. V14 route L is not copied:
+its soft gate is never exactly closed and its recurrent HRR candidate admits a one-dimensional
+expanding counterexample. Task utility, biological identification, SNN efficacy, and AGI remain
+unverified.
+
+## 20. V15 unified finite metric core (2026-08-13)
+
+| Formal object | Implementation | Status |
+|---|---|---|
+| one persistent SPD field $g_i$ | `unified_metric.py::UnifiedMetricState` | exactly one dataclass field, `metric`; role parameter count 0 |
+| fixed-chart stability | `UnifiedMetricCore.project_metric` | eigenvalues clipped to $[m,M]$; condition bound $M/m$; not affine-covariant |
+| affine tensor transport | `affine_chart_change` | transports $z$ and $g$ without projection; local/edge/path cost covariance tested |
+| world readout | `UnifiedMetricCore.edge_lengths` | finite metric-cost substrate only; no irreversible transition law |
+| memory readout | `metric_deformation` + `apply_source_metric` | source-before/after tensor deformation; source semantics are external |
+| planning readout | `shortest_path` | endpoint-average metric graph cost; full continuum geodesic not claimed |
+| critic readout | `surprise_gate` | hard threshold on dimensionless $d_g^2/\ell_0^2$ |
+| goal readout | `minimum_cost_targets` | all numerical minimizers retained; source-free symmetry cannot be secretly broken |
+| theorem boundary | `UnifiedMetricCertificate` | connection, curvature, heat, continuum, irreversible dynamics, AGI/bio/cosmos evidence are false |
+| focused validation | `tests/test_unified_metric.py` | 17 focused tests; 128 affine trials recorded in the V15 CE run |
+
+The SCC nodes are finite samples of one metric graph in this baseline. Calling them an atlas or
+a Laplace--Beltrami discretization still requires sampling, overlap, quadrature, operator
+consistency, and direct-limit compatibility results. Increasing the SCC/node count is therefore
+resolution growth, not a proved increase in intelligence.

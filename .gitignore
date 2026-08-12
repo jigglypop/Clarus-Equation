@@ -3,6 +3,8 @@ __pycache__/
 *.pyc
 *.pyo
 .pytest_cache/
+.pytest_tmp_*/
+/.uv-cache/
 .mypy_cache/
 .ruff_cache/
 .hypothesis/

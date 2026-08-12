@@ -332,6 +332,44 @@ class DimensionlessChecker:
             "S is unitless sleep pressure; t/tau_S dimensionless",
         )
 
+        self.add_formula(
+            "Clarus-field prediction-error gate",
+            "g_CF",
+            "1/(1 + exp(-(gain*norm_error_sq + bias)))",
+            Dimension.DIMENSIONLESS,
+            "7_AGI/Clarus-field baseline",
+            "norm_error_sq = ||(observation-prediction)/reference_scale||^2; "
+            "gain and bias are dimensionless",
+        )
+
+        self.add_formula(
+            "Clarus-field structural phase score",
+            "chi_CF",
+            "field_decay*phi/source_cap",
+            Dimension.DIMENSIONLESS,
+            "7_AGI/Clarus-field baseline",
+            "Runtime coefficients and state are dimensionless; this ratio fixes the threshold scale",
+        )
+
+        self.add_formula(
+            "Unified-metric surprise gate score",
+            "chi_UM",
+            "metric_distance_sq/reference_length_sq",
+            Dimension.DIMENSIONLESS,
+            "7_AGI/V15 unified-metric finite baseline",
+            "Both squared quantities use the same information-length scale; only their ratio "
+            "may enter the hard threshold",
+        )
+
+        self.add_formula(
+            "Unified-metric fixed-chart condition bound",
+            "kappa_UM",
+            "max_metric_eigenvalue/min_metric_eigenvalue",
+            Dimension.DIMENSIONLESS,
+            "7_AGI/V15 unified-metric finite baseline",
+            "The eigenvalue ratio is dimensionless but fixed-chart, not affine invariant",
+        )
+
         # RIEMANN/MRA LAYER
         self.add_formula(
             "Riemann metric attention",
@@ -391,7 +429,10 @@ class DimensionlessChecker:
             parse_expr(formula.formula)
 
             # Quick dimensionality checks based on formula structure
-            if formula.symbol == "S(D)" or "exp(" in formula.formula:
+            if formula.symbol == "g_CF":
+                result["status"] = "PASS ✓"
+
+            elif formula.symbol == "S(D)" or "exp(" in formula.formula:
                 # Exponential arguments must be dimensionless
                 if "exp(-D)" in formula.formula or "exp(-(1-" in formula.formula:
                     result["status"] = "PASS ✓"

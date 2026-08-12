@@ -1,0 +1,25 @@
+# Codex CLI 설정 — CE 연구 하네스
+# 이 디렉토리를 CODEX_HOME으로 쓰거나 %USERPROFILE%\.codex 에 복사한다.
+# model은 의도적으로 지정하지 않는다(계정 기본값 사용). 고정하려면 아래 주석을 해제.
+# model = "gpt-5-codex"
+
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+
+# AGENTS.md 로딩 상한. 하네스 카드가 작으므로 기본값이면 충분하다.
+project_doc_max_bytes = 65536
+
+# 프로필: codex --profile <name> 또는 /profile 로 전환.
+# 작은 요청은 ce-spot으로 돌려 추론 낭비를 줄인다 — "조금 느림"의 절반은 과추론이다.
+
+[profiles.ce-spot]
+# 단순 질문·한 줄 수정. run 금지.
+model_reasoning_effort = "low"
+
+[profiles.ce-light]
+# 완결 run의 후속·반복. math 레인 + gate + final만.
+model_reasoning_effort = "medium"
+
+[profiles.ce-full]
+# 신규 주장·승격 판단·논문화. 6단계 전부.
+model_reasoning_effort = "high"

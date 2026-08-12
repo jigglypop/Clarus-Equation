@@ -4,7 +4,27 @@
 >
 > 이 문서 시리즈(7_AGI)는 CE 뇌 연구(`6_뇌/`)에서 도출된 원리를 **AGI 구현 방법론으로 구체화**하는 설계 문서다. `Bridge`/`Phenomenology` 층이며, 실험 근거의 강도는 `6_뇌/05_실험근거.md`의 `supported / bridge / hypothesis` 구분을 따른다.
 
-> **substrate 경고 (2026-04 측정 기준)**: 본 시리즈가 제시하는 부트스트랩 동역학 (특히 $p^* = (4.87\%, 26.2\%, 68.9\%)$로의 자연 수렴, 수면 순환의 catastrophic forgetting 방지)은 **STDP 기반 결합형 자기조직화 시스템**(우주의 양자 간섭, 뇌의 시냅스 가소성, SNN)에서 성립하는 명제다. **transformer + backprop 시스템은 이 부류에 속하지 않음**이 직접 측정으로 확인되었다(`8_Roadmap.md` 0절). 따라서 `legacy clarus/` (removed) 및 `legacy examples/ai/clarus_lm.py` (removed)의 현재 구현은 사양을 transformer 위에 **강제 이식한 변환**이며, 사양의 진정한 검증은 SNN substrate 위에서만 가능하다. 이 한계는 본 시리즈의 모든 청구를 읽을 때 전제로 둔다.
+> **substrate 경고 (2026-08 감사 기준)**: [가설] 본 시리즈는 STDP·SNN 같은 국소 가소성 기질에서 부트스트랩 동역학을 시험할 것을 제안한다. 어떤 기질에서도 $p^*=(4.87\%,26.2\%,68.9\%)$ 전체로의 자기수렴이나 수면 순환의 망각 방지 효능은 아직 성립한 정리가 아니다. transformer 기질의 자연 수렴은 반증됐고(`5_Sparsity.md` 8.5), 현재 STDP 구현도 효능 `NO-EFFECT`, held-out guard `FAIL`이다(`21_STDP_Efficacy_Audit.md`). 따라서 SNN도 미검증 경로이며, 특정 기질을 참인 해답으로 선결하지 않는다.
+
+## 현재 판정 (2026-08-12)
+
+현재 CE-AGI는 **수학 정리, 실행 가능한 뇌형 runtime, 좁은 합성 과제의 연구 PoC** 단계다. AGI가 아니다.
+
+| 범위 | 현재 근거 | 판정 |
+|---|---|---|
+| BrainRuntime A--E와 agent/sleep 배선 | 셀·희소 결합·모드·해마·snapshot·선택적 agent loop 구현 | 구현됨; 생물학·AGI 효능을 뜻하지 않음 |
+| V9 nested SCC | 유한 수학·runtime 경로 구현, 256-seed 정확도 $0.3457$ 대 monolithic $0.6116$ | `STOP` |
+| V10 local/cloud | 한 합성 conditional-binding 과제에서 개발·확인 64+64 seed | 좁은 경험식 `GO` |
+| V11 강한 RNN/OOD | 14개 gate 중 10개 실패 | `STOP` |
+| V12--V13c | V12 채점 없음; V13 계열 구현 검증 후 16-seed 과학 gate 실패 | `ABANDONED` / `STOP` |
+| V14 binding | 무손실 슬롯+쌍선형 충분조건과 선형/가법 no-go | 수학 설계 완료; 정식 구현·채점 미수행 |
+| Clarus field baseline | 유계 그래프장·경성 latch·외생 공통 쓰기 구현과 회귀 | 형식 primitive 구현; 과제 효능·생물학 미검증 |
+| V15 unified metric | 하나의 SPD metric state에서 finite cost·deformation·path·surprise·goal-tie readout | finite metric-graph primitive 구현; world dynamics·continuum·AGI 미검증 |
+| 전체 $p^*$ 자기수렴 | 현재 동역학은 활성률이 외부 입력률을 추적 | [예측]이 아니라 아직 [미완성] 가설; 정리 아님 |
+
+[정리] $a^*=0.0487077$은 스칼라 사상 $B_a(a)=e^{-(1-a)D_{\text{eff}}}$의 유일 내부 고정점이다. [공리: 경험식] 나머지 $0.2623,0.6891$은 이 스칼라 정리에서 나오지 않는다. 우주 조성비를 뇌 점유율과 동일시하는 단계는 물리 사상 가설이며, 현재 runtime의 loss·gate·희소율에 그 값을 넣는 것은 설계 선택이지 자기수렴 증거가 아니다.
+
+[산출: finite 구현] V15는 세계모형·기억·계획·비평·목표를 별도 persistent module로 복제하지 않고 하나의 metric tensor state를 공유하게 한다. 이번 구현에서 `world`는 비가역 미래예측기가 아니라 metric cost substrate이고, `goal`은 외부 source가 metric에 기록한 비용의 모든 최소화점을 tie-preserving하게 읽는 연산이다. [정리: no-go] 정적 Riemannian distance는 대칭이므로 비가역 world transition을 혼자 정하지 못하며, source-free 대칭 metric은 의미 있는 유일 목표를 선택하지 못한다. 따라서 V15는 AGI agent 완성이 아니라 다음 task loop를 위한 기하 core다.
 
 ---
 
@@ -14,7 +34,7 @@ CE 뇌 연구는 하나의 결론으로 수렴한다.
 
 $$\boxed{\text{현재 AI에는 부트스트랩이 없다.}}$$
 
-우주는 빅뱅에서 한 번의 부트스트랩으로 고정점 $p^* = (4.87\%,\; 26.2\%,\; 68.9\%)$에 도달했다. 뇌는 매일 수면으로 부트스트랩을 반복한다. 현재 AI는 학습(training) 한 번으로 끝나고, 추론(inference)은 고정된 가중치를 재생한다. 이것은 "빅뱅 없이 우주를 운영하려는 것"과 같다(`07_수면과복구.md` 6.1절).
+[공리: 물리 사상] 우주 조성비와 뇌의 활성·구조·배경 점유율을 대응시키고, [가설] 수면을 반복 부트스트랩으로 해석한다. 이 대응은 설계 비유이며 관측으로 확정된 동일성이 아니다. 현재 AI의 고정 추론과 지속 적응의 차이를 연구하기 위한 출발점으로만 사용한다(`07_수면과복구.md` 6.1절).
 
 CE-AGI의 목표는 이 구조적 결함 5가지를 동시에 해결하는 것이다.
 
@@ -55,7 +75,7 @@ $$d_3 : d_2 : d_1 = \alpha_s : \alpha_w : \alpha_{em} = 0.118 : 0.034 : 0.008$$
 
 $$\text{학습} \to \text{서비스} \to \underbrace{\text{NREM}}_{\text{오프라인}} \to \underbrace{\text{REM}}_{\text{오프라인}} \to \text{서비스} \to \cdots$$
 
-동적 이완 사상의 최소 수축률 $\rho = \|DB(p^*)\| = 0.155$는 현재 단계에서 **목표 수렴률**로 읽어야 한다. 실제 네트워크 반복식이 닫히기 전까지는 bridge 상태다.
+스칼라 사상의 국소 수축률 $|B_a'(a^*)|=D_{\text{eff}}a^*=0.1547$은 현재 단계에서 비교용 목표 수렴률이다. 실제 네트워크 점유율 전이 $T_a$가 정의되고 $T_a=B_a$ 또는 제어된 근사임이 증명되기 전까지는 bridge가 아니라 [미완성]이다.
 
 ### 원리 3: STDP 국소 학습 + 전역 신호 (4장)
 
@@ -70,11 +90,11 @@ $$\Delta w_{ij}[t] = \eta\,\delta[t]\,e_{ij}[t]$$
 
 ### 원리 4: 부트스트랩 수렴 희소 네트워크 (5장)
 
-활성 뉴런 비율을 부트스트랩 고정점에 수렴시킨다:
+활성 뉴런 비율이 부트스트랩 고정점에 수렴하는지를 시험한다:
 
-$$\text{활성 비율} \to \varepsilon^2 = 4.87\%$$
+$$\text{활성 비율} \stackrel{?}{\longrightarrow} \varepsilon^2 = 4.87\%$$
 
-나머지 가중치의 에너지 분배: 구조적 가중치 $26.2\%$ + 동결 가중치 $68.9\%$.
+[공리: 경험식] 나머지 가중치의 모델 분배는 구조적 가중치 $26.2\%$ + 동결 가중치 $68.9\%$로 둔다. 이 두 수는 스칼라 고정점 정리의 산출이 아니다.
 
 추론 비용 절감은 강한 희소 커널이 있을 때의 낙관적 상한이며, 현재 문서 구현 수준에서는 더 보수적으로 읽어야 한다.
 
@@ -135,6 +155,6 @@ CE-AGI의 가장 큰 차별점은 **핵심 비율의 상당 부분이 CE에서 �
 
 1. CE 부트스트랩 고정점이 $d=3$ 자기조직화 시스템의 보편 구조라는 가설
 2. 뇌-우주 구조 유비(`05_실험근거.md`)가 AI에도 확장 가능하다는 가설
-3. 기존 코드(`legacy clarus_lm.py` (removed), `sfe_hallucination_suppressor.py`)는 구현 가능성만 보이며 기준 모델 대비 우위는 미검증이다. 합성 sparse causal bridge V7도 등록된 결합 조건을 충족하지 못해 test를 열지 않았다(`26_Sparse_Causal_Bridge_V7_Closure.md`). V9 중첩 SCC는 수학·격리 unit 구현만 통과했고 개발 실행은 `0/256 BLOCKED`이므로 성능 또는 생물학적 뇌 동일성의 증거가 아니다(`28_Nested_Infinite_SCC_V9.md`).
+3. 기존 코드(`legacy clarus_lm.py` (removed), `sfe_hallucination_suppressor.py`)는 구현 가능성만 보이며 기준 모델 대비 우위는 미검증이다. 합성 sparse causal bridge V7도 등록된 결합 조건을 충족하지 못해 test를 열지 않았다(`26_Sparse_Causal_Bridge_V7_Closure.md`). V9 중첩 SCC는 수학·격리 unit 구현을 통과했고, 이후 256-seed 개발 실행이 1회 집행되어 판정은 STOP이었다(matched monolithic 대조군 대비 paired improvement $-0.27$로 열세; confirmation seed 미개봉). reset/cut 대조 대비 인과 기여만 살아남으며 성능 우위 또는 생물학적 뇌 동일성의 증거가 아니다(`28_Nested_Infinite_SCC_V9.md` §13).
 
 각 장에서 CE 원리를 구체적 구현으로 변환할 때, 어디까지가 코어에서 연역된 것이고 어디부터가 설계 선택인지, 그리고 무엇이 아직 실험 가설인지를 명시한다.

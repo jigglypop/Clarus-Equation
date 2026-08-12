@@ -1,2 +1,0 @@
-{"record_id": "ok", "claim_index": 0, "entailment": 0.85, "contradiction": 0.05, "neutral": 0.1}
-{"record_id": "bad", "claim_index": 0, "entailment": 0.1, "contradiction": 0.8, "neutral": 0.1}

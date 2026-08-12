@@ -1,6 +1,17 @@
 # Local temporal-memory confirmation
 
-> 최종 상태: `preregistered computational gate PASS`
+> **지위 변경 (2026-08-12) — 생물학적 해석 강등.**
+> 아래 원문이 기록한 사전등록 계산 게이트 PASS(AML32 $h=1$ 7/7, $h=6$ 7/7)는 계산적 사실로 유지된다. 그러나 이 결과를 신경 세포 내부의 시간 기억(neural local temporal memory)으로 읽는 생물학적 해석은 **[삭제된 해석]**으로 강등한다. 근거는 활동 비의존 형광 대조군에서 성립한 완전 반례다.
+>
+> 활동 비의존 GFP-only 계통 AML18의 11개 recording에 본 문서와 동일한 confirmatory 게이트($h=1$, $h=6$, 동일 모델 family·null 절차, min_pass $=\lceil 11\cdot 5/7\rceil=8$)를 점수 산출 전에 잠근 사전등록(`artifacts/agi/local_memory_aml18_preregistration.json`, 기대 방향 명시: GFP FAIL이면 본 문서 해석 생존, GFP PASS면 강등)에 따라 적용한 결과, $h=1$ 11/11 PASS(median $\Delta$ 0.024–0.079), $h=6$ 11/11 PASS($\Delta$ 0.211–0.383)로, AML32 GCaMP($h=1$ $\Delta$ 0.013–0.043, $h=6$ 0.115–0.213)보다 신호가 더 컸다. 활동 비의존 채널에서 lag 예측정보가 더 크게 나타나므로, 관측된 예측정보는 indicator kinetics와 전처리(Ratio2·I_smooth 저역통과)의 시간적 자기상관으로 설명 가능하며 세포 내부 기억기작을 지지하지 않는다.
+>
+> 산출물: `artifacts/agi/local_memory_aml18_h1_confirmatory.json`, `artifacts/agi/local_memory_aml18_h6_confirmatory.json`. 데이터: OSF dpr3h `AML18_moving.tar.gz`(sha256 `588d7666f4e8afebad1ab9b8483244a6de0303251d862425522c2b8dd78bbd82`), `artifacts/agi/cloudcell_data_manifest.json`에 등재. 계산 게이트 자체(누출 방지, null 절차, AML32 7/7 재현)는 유효하며, "전처리된 칼슘/형광 시계열에 lag 예측정보가 있다"는 계산적 사실은 산출로 유지된다.
+>
+> 아래 본문은 당시(2026-07~08) 시점 기술로 보존한다(**stale**). §7 표의 indicator-kinetics 행만 이 반례를 반영해 갱신했다.
+>
+> **최종 확정 (2026-08-12, 사전등록 본 실행).** 위 반례 이후 남아 있던 가능성, 즉 관측된 "GCaMP $\Delta$ < GFP $\Delta$"가 headroom 차이에 가려진 생물 신호일 가능성은 headroom 항등식 $\Delta=(1-R^2_C)\Delta'$로 분리했다. 이 항등식은 원래 관측된 strain 간 $\Delta$ 차이가 분모 $(1-R^2_C)$ 효과만으로 설명됨을 보이므로, target-level $\delta'$의 median-of-ratios를 교정 통계량으로 하는 killing test를 실행 전에 사전등록(`artifacts/agi/local_memory_gfp_matched_preregistration.json`; AML18 recording ID 목록의 전사 오류 1건은 실행 전에 교정했고 데이터 선택은 불변)하고 본 실행했다. 주검정 $h=6$에서 AML32 중앙값 0.3564($n=7$) 대 AML18 0.3522($n=11$), 차 $+0.0042$, exact one-sided Mann–Whitney $p=0.5351$로 사전등록 KILL 조건($p>0.05$이고 차 $\le 0.02$)을 충족했고, 부검정 $h=1$도 0.9686 대 0.9681, $p=0.3295$로 같은 방향이다. 따라서 생물학적 해석은 양 horizon 모두 KILL로 확정되며, 존속하는 주장은 "전처리+indicator 합성 과정의 비-Markov성(lag-2 조건부 예측정보)"뿐이다. $h=1$에서 양 strain 모두 $\delta'\approx 0.97$인 사실은 결정론적 스무딩 필터의 서명과 부합한다. 검정력 한계로, 이 설계는 잔차분산 약 2%p 미만의 효과를 배제하지 못한다(사전 명시). 산출물: `artifacts/agi/local_memory_gfp_matched_result.json`. 설계 분해(게이트 PASS ⟺ 관측 과정의 AR(1)-Markov성 위반)는 `_workspace/ce/agi-clarus-field-20260812/artifacts/bio_gate_redesign_note.md`에 있다.
+
+> 최종 상태: `preregistered computational gate PASS` — 계산적 사실로 유지; 생물학적 해석은 위 블록에 따라 강등
 >
 > AML310 exploratory: `h=1 4/4`, `h=6 4/4`
 >
@@ -168,7 +179,7 @@ h=6: 7/7, required 5
 |---|---|
 | 고정된 코드와 artifact가 사전등록 술어를 만족 | **Exact computational PASS** |
 | AML32 measured trace에 current를 넘는 aligned local-history 예측정보 존재 | **Confirmatory support, 7/7 at both horizons** |
-| 이 정보가 calcium indicator/전처리 평활화가 아닌 세포 내부 기억기작 | 미증명 |
+| 이 정보가 calcium indicator/전처리 평활화가 아닌 세포 내부 기억기작 | **시험됨 — 반례 성립** (2026-08-12, AML18 GFP-only 11 recording에서 동일 게이트가 $h=1$·$h=6$ 모두 11/11 PASS, $\Delta$가 AML32보다 큼; 문서 머리 지위 변경 블록 참조) |
 | 뉴런 간 population cloud가 local history 위에 추가 정보 제공 | 반증, 0/4 |
 | anonymous activity에서 directed effective graph가 local보다 우수 | 반증, 0/4 |
 | diffusion이 linear/persistence보다 우수 | 반증, 최대 1/4 |

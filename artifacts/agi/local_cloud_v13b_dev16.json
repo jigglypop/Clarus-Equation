@@ -1,0 +1,2039 @@
+{
+  "epochs": 200,
+  "evaluation_episodes": 256,
+  "exploration_log": [
+    {
+      "choice": "train_episodes=192",
+      "reason": "must be a multiple of both 32 (LocalCloudBenchmarkConfig/LearnedOODConfig validation, inherited unmodified from V10/V11) and 24 (compositional train pool size = 32 - 8 held-out cells); lcm(32, 24) = 96, so 192 = 2x96 is the smallest practical size above the V10/V11 default of 256 episodes' per-condition density."
+    },
+    {
+      "choice": "evaluation_episodes=256",
+      "reason": "matches V10/V11 default; 256 is a multiple of 32 (iid panels) and of 8 (heldout compositional pool), so a single evaluation count works for all five panels without extra rounding."
+    },
+    {
+      "choice": "epochs=200, lr=0.01, wd=1e-4, clip=1.0 for all learned models",
+      "reason": "identical training regime as the V11 comparator run (local_cloud_ood_benchmark.LearnedOODConfig) except epochs raised from 100 to 200 per the V13 task instruction, applied uniformly to v13/elman3/elman20/gru20 so no model gets an unstated training advantage."
+    },
+    {
+      "choice": "v13b: strict convex combination + spectral cap (sigma <= 1.0)",
+      "reason": "V13 dev16 showed post-training loose Lipschitz upper bounds of ~7-9 and collapse to ~0.53 on the T=8 horizon/combined panels (worse than elman3's 0.643) while GRU-20 held ~0.86 everywhere; diagnosis: the relaxation was excessive -- what is needed is structural marginal stability, i.e. a GRU-style convex combination h' = (1-g)h + g*tanh(...) whose state-path gain is structurally <= max(1-g) + g*L(candidate), with exact spectral caps (<= 1.0) on W_rec, the cross matrices, and the interaction matrices U (an interim power-iteration cap was replaced by the exact 4x4 top singular value after a first 16-seed run showed the estimate underestimating sigma by up to 5.6%, i.e. capped norms up to 1.056; accuracies of that interim run are recorded in the workspace log). Retention (1-g) may still reach 1 (marginal stability, same user authorization as V13). Training regime, data, seeds, panels, and gate thresholds are identical to the V13 dev16 run; nothing was re-tuned to the outcome."
+    },
+    {
+      "choice": "retention_cap=1.0 for GatedLocalCloudV13",
+      "reason": "explicit user authorization to relax the V10 contraction_cap (0.95) and V12 retention_cap (0.995) constraints; marginal stability is permitted and the learned retention / an observational Lipschitz estimate are reported in the output, not enforced as a certificate gate."
+    }
+  ],
+  "g1_per_panel": {
+    "combined": false,
+    "heldout": false,
+    "horizon": false,
+    "id": false,
+    "noise": false
+  },
+  "g2_paired_lcb_intervals": {
+    "combined": [
+      -0.068359375,
+      -0.14991455078125,
+      0.013922119140624994
+    ],
+    "heldout": [
+      -0.044677734375,
+      -0.1269775390625,
+      0.032232666015624994
+    ],
+    "horizon": [
+      -0.08154296875,
+      -0.170709228515625,
+      0.013928222656249989
+    ],
+    "id": [
+      -0.0009765625,
+      -0.02393798828125,
+      0.023681640625
+    ],
+    "noise": [
+      0.00537109375,
+      -0.02294921875,
+      0.034185791015624994
+    ]
+  },
+  "g2_per_panel": {
+    "combined": false,
+    "heldout": false,
+    "horizon": false,
+    "id": false,
+    "noise": false
+  },
+  "gates": {
+    "G1_v13_within_5pct_of_gru20_all_panels": false,
+    "G2_v13_beats_elman3_paired_lcb_all_panels": false,
+    "G3_v13_heldout_accuracy_at_least_0_90": false,
+    "G4_integrity": true
+  },
+  "integrity": {
+    "duplicate_seed_count": 0,
+    "duplicate_v13_state_hash_across_distinct_seeds": 0,
+    "model_count_mismatch": 0,
+    "nonfinite_count": 0,
+    "panel_count_mismatch": 0
+  },
+  "learned_retention_summary": {
+    "sigma_cloud_interaction": {
+      "max": 1.0000001192092896,
+      "mean": 1.0000000149011612,
+      "min": 0.9999998807907104
+    },
+    "sigma_cloud_rec": {
+      "max": 1.000000238418579,
+      "mean": 1.0,
+      "min": 0.9999998807907104
+    },
+    "sigma_cloud_to_local": {
+      "max": 1.000000238418579,
+      "mean": 0.9999999850988388,
+      "min": 0.9999997019767761
+    },
+    "sigma_local_interaction": {
+      "max": 1.0000001192092896,
+      "mean": 0.9999999590218067,
+      "min": 0.9999998211860657
+    },
+    "sigma_local_rec": {
+      "max": 1.0000001192092896,
+      "mean": 1.0,
+      "min": 0.9999997615814209
+    },
+    "sigma_local_to_cloud": {
+      "max": 1.000000238418579,
+      "mean": 1.0000000074505806,
+      "min": 0.9999998211860657
+    },
+    "structural_bound": {
+      "max": 3.0000003576278687,
+      "mean": 3.0000000968575478,
+      "min": 2.9999998211860657
+    },
+    "structural_bound_cloud_candidate": {
+      "max": 3.0000003576278687,
+      "mean": 3.000000022351742,
+      "min": 2.9999998211860657
+    },
+    "structural_bound_cloud_state_map": {
+      "max": 3.0000003576278687,
+      "mean": 3.000000022351742,
+      "min": 2.9999998211860657
+    },
+    "structural_bound_local_candidate": {
+      "max": 3.0000003576278687,
+      "mean": 2.9999999441206455,
+      "min": 2.9999995827674866
+    },
+    "structural_bound_local_state_map": {
+      "max": 3.0000003576278687,
+      "mean": 2.9999999441206455,
+      "min": 2.9999995827674866
+    }
+  },
+  "overall": "STOP",
+  "panel_means": {
+    "combined": {
+      "elman20": 0.602294921875,
+      "elman3": 0.61962890625,
+      "gru20": 0.856689453125,
+      "v10": 0.5234375,
+      "v13b": 0.55126953125
+    },
+    "heldout": {
+      "elman20": 0.438232421875,
+      "elman3": 0.36669921875,
+      "gru20": 0.427001953125,
+      "v10": 0.349853515625,
+      "v13b": 0.322021484375
+    },
+    "horizon": {
+      "elman20": 0.6064453125,
+      "elman3": 0.643310546875,
+      "gru20": 0.858642578125,
+      "v10": 0.543701171875,
+      "v13b": 0.561767578125
+    },
+    "id": {
+      "elman20": 0.860107421875,
+      "elman3": 0.782470703125,
+      "gru20": 0.856689453125,
+      "v10": 0.61376953125,
+      "v13b": 0.781494140625
+    },
+    "noise": {
+      "elman20": 0.85986328125,
+      "elman3": 0.75341796875,
+      "gru20": 0.85693359375,
+      "v10": 0.558349609375,
+      "v13b": 0.7587890625
+    }
+  },
+  "schema": "clarus.local_cloud.v13_development.v1",
+  "seed_count": 16,
+  "seed_rows": [
+    {
+      "holdout_cells": [
+        [
+          0,
+          5
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          6
+        ],
+        [
+          3,
+          5
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "learned_ledgers": {
+        "elman20": {
+          "multiply_estimate_per_tick": 820,
+          "parameter_count": 861,
+          "recurrent_state_scalars": 20,
+          "state_hash": "7D9A0973BDC2D0E7E199C3983DD8F79C42992C4B7F8BCAA9598EBE8E4E8FAC42"
+        },
+        "elman3": {
+          "multiply_estimate_per_tick": 72,
+          "parameter_count": 79,
+          "recurrent_state_scalars": 3,
+          "state_hash": "499965345C5522ECFF6F218E8BDDCCFE73721B20B1E228A492DBB9DAFB5DEECA"
+        },
+        "gru20": {
+          "multiply_estimate_per_tick": 2460,
+          "parameter_count": 2541,
+          "recurrent_state_scalars": 20,
+          "state_hash": "41EAFD6F9B78C1167D698E37E294EB27C97457F46FE2F4FC080D26021B5003E5"
+        }
+      },
+      "nonfinite_count": 0,
+      "panel_accuracies": {
+        "combined": {
+          "elman20": 0.85546875,
+          "elman3": 0.7421875,
+          "gru20": 0.8203125,
+          "v10": 0.49609375,
+          "v13b": 0.48046875
+        },
+        "heldout": {
+          "elman20": 0.25,
+          "elman3": 0.27734375,
+          "gru20": 0.26953125,
+          "v10": 0.1328125,
+          "v13b": 0.40625
+        },
+        "horizon": {
+          "elman20": 0.85546875,
+          "elman3": 0.7734375,
+          "gru20": 0.8125,
+          "v10": 0.515625,
+          "v13b": 0.4921875
+        },
+        "id": {
+          "elman20": 0.8125,
+          "elman3": 0.8046875,
+          "gru20": 0.81640625,
+          "v10": 0.5625,
+          "v13b": 0.81640625
+        },
+        "noise": {
+          "elman20": 0.8125,
+          "elman3": 0.7578125,
+          "gru20": 0.81640625,
+          "v10": 0.546875,
+          "v13b": 0.79296875
+        }
+      },
+      "seed": 9000,
+      "v13_ledger": {
+        "lipschitz_report": {
+          "certified": false,
+          "note": "structural bound from strict convex combination + spectral caps (sigma <= 1) on all recurrent-path matrices; retention (1-g) may reach 1 (marginal stability permitted per the same explicit user authorization as V13); observational, not a certified contraction gate",
+          "sigma_cloud_interaction": 1.0,
+          "sigma_cloud_rec": 1.0,
+          "sigma_cloud_to_local": 1.0,
+          "sigma_local_interaction": 1.0,
+          "sigma_local_rec": 1.0,
+          "sigma_local_to_cloud": 0.9999998211860657,
+          "structural_bound": 3.0,
+          "structural_bound_cloud_candidate": 2.9999998211860657,
+          "structural_bound_cloud_state_map": 2.9999998211860657,
+          "structural_bound_local_candidate": 3.0,
+          "structural_bound_local_state_map": 3.0
+        },
+        "parameter_count": 197,
+        "state_hash": "05E017C4D03B25F705CAF941DBA09406ED7A549203D6F313AB0ABB8274100F1E",
+        "variant": "v13b"
+      }
+    },
+    {
+      "holdout_cells": [
+        [
+          0,
+          6
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          5
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          3,
+          3
+        ]
+      ],
+      "learned_ledgers": {
+        "elman20": {
+          "multiply_estimate_per_tick": 820,
+          "parameter_count": 861,
+          "recurrent_state_scalars": 20,
+          "state_hash": "1A1EAB65BD7FB51915598ABC4262C14AAB77828570FB8A7E9AFB9A0E84FB67D2"
+        },
+        "elman3": {
+          "multiply_estimate_per_tick": 72,
+          "parameter_count": 79,
+          "recurrent_state_scalars": 3,
+          "state_hash": "ED03C29FF066AA64501588C75F07D78D6E3385886F5269FCF67792D7A7D146D1"
+        },
+        "gru20": {
+          "multiply_estimate_per_tick": 2460,
+          "parameter_count": 2541,
+          "recurrent_state_scalars": 20,
+          "state_hash": "35AAC24D3AA6582D1F92B4C3C5F172947214D61623AB1F0C0996B4138498D69A"
+        }
+      },
+      "nonfinite_count": 0,
+      "panel_accuracies": {
+        "combined": {
+          "elman20": 0.890625,
+          "elman3": 0.4296875,
+          "gru20": 0.8671875,
+          "v10": 0.515625,
+          "v13b": 0.56640625
+        },
+        "heldout": {
+          "elman20": 0.546875,
+          "elman3": 0.41796875,
+          "gru20": 0.5,
+          "v10": 0.4609375,
+          "v13b": 0.56640625
+        },
+        "horizon": {
+          "elman20": 0.8984375,
+          "elman3": 0.421875,
+          "gru20": 0.875,
+          "v10": 0.55078125,
+          "v13b": 0.5625
+        },
+        "id": {
+          "elman20": 0.890625,
+          "elman3": 0.796875,
+          "gru20": 0.875,
+          "v10": 0.62890625,
+          "v13b": 0.7734375
+        },
+        "noise": {
+          "elman20": 0.890625,
+          "elman3": 0.7578125,
+          "gru20": 0.875,
+          "v10": 0.55078125,
+          "v13b": 0.73828125
+        }
+      },
+      "seed": 9001,
+      "v13_ledger": {
+        "lipschitz_report": {
+          "certified": false,
+          "note": "structural bound from strict convex combination + spectral caps (sigma <= 1) on all recurrent-path matrices; retention (1-g) may reach 1 (marginal stability permitted per the same explicit user authorization as V13); observational, not a certified contraction gate",
+          "sigma_cloud_interaction": 0.9999998807907104,
+          "sigma_cloud_rec": 1.0,
+          "sigma_cloud_to_local": 0.9999999403953552,
+          "sigma_local_interaction": 0.9999999403953552,
+          "sigma_local_rec": 0.9999999403953552,
+          "sigma_local_to_cloud": 0.9999999403953552,
+          "structural_bound": 2.9999998211860657,
+          "structural_bound_cloud_candidate": 2.9999998211860657,
+          "structural_bound_cloud_state_map": 2.9999998211860657,
+          "structural_bound_local_candidate": 2.9999998211860657,
+          "structural_bound_local_state_map": 2.9999998211860657
+        },
+        "parameter_count": 197,
+        "state_hash": "54CDF28A4D7B0A896A74F9AB186EFF2082427C863037D15D30844069FB841B02",
+        "variant": "v13b"
+      }
+    },
+    {
+      "holdout_cells": [
+        [
+          0,
+          3
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          1,
+          7
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "learned_ledgers": {
+        "elman20": {
+          "multiply_estimate_per_tick": 820,
+          "parameter_count": 861,
+          "recurrent_state_scalars": 20,
+          "state_hash": "0F9F887F092D7A841C26F4135EE9A56566DEB5B5D7EDC1BC462E39F344CE6BC2"
+        },
+        "elman3": {
+          "multiply_estimate_per_tick": 72,
+          "parameter_count": 79,
+          "recurrent_state_scalars": 3,
+          "state_hash": "15E4065B2C224E2359FC28B5D7DD54AE1F3D6610068D2E6CD835A3D7254F126F"
+        },
+        "gru20": {
+          "multiply_estimate_per_tick": 2460,
+          "parameter_count": 2541,
+          "recurrent_state_scalars": 20,
+          "state_hash": "FF2EA6F4F4910377AE480B1E2C5C67104AB8DC5686056D91175CC9C965D493D8"
+        }
+      },
+      "nonfinite_count": 0,
+      "panel_accuracies": {
+        "combined": {
+          "elman20": 0.58203125,
+          "elman3": 0.36328125,
+          "gru20": 0.796875,
+          "v10": 0.484375,
+          "v13b": 0.515625
+        },
+        "heldout": {
+          "elman20": 0.25,
+          "elman3": 0.2265625,
+          "gru20": 0.1953125,
+          "v10": 0.12109375,
+          "v13b": 0.0
+        },
+        "horizon": {
+          "elman20": 0.5859375,
+          "elman3": 0.3671875,
+          "gru20": 0.8046875,
+          "v10": 0.5,
+          "v13b": 0.5390625
+        },
+        "id": {
+          "elman20": 0.8125,
+          "elman3": 0.69921875,
+          "gru20": 0.796875,
+          "v10": 0.60546875,
+          "v13b": 0.7109375
+        },
+        "noise": {
+          "elman20": 0.80859375,
+          "elman3": 0.66796875,
+          "gru20": 0.79296875,
+          "v10": 0.515625,
+          "v13b": 0.71875
+        }
+      },
+      "seed": 9002,
+      "v13_ledger": {
+        "lipschitz_report": {
+          "certified": false,
+          "note": "structural bound from strict convex combination + spectral caps (sigma <= 1) on all recurrent-path matrices; retention (1-g) may reach 1 (marginal stability permitted per the same explicit user authorization as V13); observational, not a certified contraction gate",
+          "sigma_cloud_interaction": 1.0,
+          "sigma_cloud_rec": 0.9999999403953552,
+          "sigma_cloud_to_local": 0.9999998807907104,
+          "sigma_local_interaction": 0.9999998807907104,
+          "sigma_local_rec": 0.9999999403953552,
+          "sigma_local_to_cloud": 0.9999998807907104,
+          "structural_bound": 2.9999998211860657,
+          "structural_bound_cloud_candidate": 2.9999998211860657,
+          "structural_bound_cloud_state_map": 2.9999998211860657,
+          "structural_bound_local_candidate": 2.999999701976776,
+          "structural_bound_local_state_map": 2.999999701976776
+        },
+        "parameter_count": 197,
+        "state_hash": "C30B829A4918CA1C49E4BEADBFE8A2CFE01B3CBF88A3C2B5DD539BFBFDA1CF8B",
+        "variant": "v13b"
+      }
+    },
+    {
+      "holdout_cells": [
+        [
+          0,
+          6
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          7
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          3,
+          5
+        ]
+      ],
+      "learned_ledgers": {
+        "elman20": {
+          "multiply_estimate_per_tick": 820,
+          "parameter_count": 861,
+          "recurrent_state_scalars": 20,
+          "state_hash": "6C0EC42B9CFA9625B6030FF50D3584B855DE3F6EA7DA945B8866F67FA22648EA"
+        },
+        "elman3": {
+          "multiply_estimate_per_tick": 72,
+          "parameter_count": 79,
+          "recurrent_state_scalars": 3,
+          "state_hash": "C267871A6A88DA8CCF2967A435E93DD0EB3C9CDCED1B41A317135F43DB952A96"
+        },
+        "gru20": {
+          "multiply_estimate_per_tick": 2460,
+          "parameter_count": 2541,
+          "recurrent_state_scalars": 20,
+          "state_hash": "F144C1A6CC1D63E48EEAEC0307650B47CB92917B788DE9E3C21FB99DE30A1E1C"
+        }
+      },
+      "nonfinite_count": 0,
+      "panel_accuracies": {
+        "combined": {
+          "elman20": 0.12109375,
+          "elman3": 0.5234375,
+          "gru20": 0.9375,
+          "v10": 0.52734375,
+          "v13b": 0.53515625
+        },
+        "heldout": {
+          "elman20": 0.75,
+          "elman3": 0.37109375,
+          "gru20": 0.75,
+          "v10": 0.3828125,
+          "v13b": 0.30078125
+        },
+        "horizon": {
+          "elman20": 0.11328125,
+          "elman3": 0.5234375,
+          "gru20": 0.9375,
+          "v10": 0.54296875,
+          "v13b": 0.53515625
+        },
+        "id": {
+          "elman20": 0.9375,
+          "elman3": 0.8046875,
+          "gru20": 0.9375,
+          "v10": 0.58984375,
+          "v13b": 0.73828125
+        },
+        "noise": {
+          "elman20": 0.9375,
+          "elman3": 0.7734375,
+          "gru20": 0.9375,
+          "v10": 0.5703125,
+          "v13b": 0.734375
+        }
+      },
+      "seed": 9003,
+      "v13_ledger": {
+        "lipschitz_report": {
+          "certified": false,
+          "note": "structural bound from strict convex combination + spectral caps (sigma <= 1) on all recurrent-path matrices; retention (1-g) may reach 1 (marginal stability permitted per the same explicit user authorization as V13); observational, not a certified contraction gate",
+          "sigma_cloud_interaction": 1.0000001192092896,
+          "sigma_cloud_rec": 1.0,
+          "sigma_cloud_to_local": 0.9999999403953552,
+          "sigma_local_interaction": 0.9999999403953552,
+          "sigma_local_rec": 0.9999999403953552,
+          "sigma_local_to_cloud": 1.000000238418579,
+          "structural_bound": 3.0000003576278687,
+          "structural_bound_cloud_candidate": 3.0000003576278687,
+          "structural_bound_cloud_state_map": 3.0000003576278687,
+          "structural_bound_local_candidate": 2.9999998211860657,
+          "structural_bound_local_state_map": 2.9999998211860657
+        },
+        "parameter_count": 197,
+        "state_hash": "F10333436C9DDE76FF57D01D943024EA204A1C6E411CD2EAC6FAB6576852F99B",
+        "variant": "v13b"
+      }
+    },
+    {
+      "holdout_cells": [
+        [
+          0,
+          7
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          7
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "learned_ledgers": {
+        "elman20": {
+          "multiply_estimate_per_tick": 820,
+          "parameter_count": 861,
+          "recurrent_state_scalars": 20,
+          "state_hash": "B580FC963E5FBD64E1EE5D9911AB9C747316320A96BD1878F98EF48856D7C7BE"
+        },
+        "elman3": {
+          "multiply_estimate_per_tick": 72,
+          "parameter_count": 79,
+          "recurrent_state_scalars": 3,
+          "state_hash": "A05B30431BECD95C7D982A3F3D5C8141962B75CA62931B6E3BD9DD2A67E9C492"
+        },
+        "gru20": {
+          "multiply_estimate_per_tick": 2460,
+          "parameter_count": 2541,
+          "recurrent_state_scalars": 20,
+          "state_hash": "020DC4C7D9C96ED8664855BA156EF8E4594FA4E31F04A6D5AA2FE36260175371"
+        }
+      },
+      "nonfinite_count": 0,
+      "panel_accuracies": {
+        "combined": {
+          "elman20": 0.828125,
+          "elman3": 0.64453125,
+          "gru20": 0.875,
+          "v10": 0.51171875,
+          "v13b": 0.51953125
+        },
+        "heldout": {
+          "elman20": 0.4140625,
+          "elman3": 0.51953125,
+          "gru20": 0.5078125,
+          "v10": 0.45703125,
+          "v13b": 0.25
+        },
+        "horizon": {
+          "elman20": 0.84765625,
+          "elman3": 0.78125,
+          "gru20": 0.86328125,
+          "v10": 0.54296875,
+          "v13b": 0.578125
+        },
+        "id": {
+          "elman20": 0.8515625,
+          "elman3": 0.8671875,
+          "gru20": 0.8671875,
+          "v10": 0.58984375,
+          "v13b": 0.8046875
+        },
+        "noise": {
+          "elman20": 0.84765625,
+          "elman3": 0.84765625,
+          "gru20": 0.8671875,
+          "v10": 0.53515625,
+          "v13b": 0.7890625
+        }
+      },
+      "seed": 9004,
+      "v13_ledger": {
+        "lipschitz_report": {
+          "certified": false,
+          "note": "structural bound from strict convex combination + spectral caps (sigma <= 1) on all recurrent-path matrices; retention (1-g) may reach 1 (marginal stability permitted per the same explicit user authorization as V13); observational, not a certified contraction gate",
+          "sigma_cloud_interaction": 0.9999999403953552,
+          "sigma_cloud_rec": 1.0,
+          "sigma_cloud_to_local": 1.0000001192092896,
+          "sigma_local_interaction": 1.0,
+          "sigma_local_rec": 1.0000001192092896,
+          "sigma_local_to_cloud": 1.000000238418579,
+          "structural_bound": 3.000000238418579,
+          "structural_bound_cloud_candidate": 3.0000001788139343,
+          "structural_bound_cloud_state_map": 3.0000001788139343,
+          "structural_bound_local_candidate": 3.000000238418579,
+          "structural_bound_local_state_map": 3.000000238418579
+        },
+        "parameter_count": 197,
+        "state_hash": "4037C57CCFEE1EE71FDA7FBC93214B6FDFBBE328AF8236804A5F715819698A90",
+        "variant": "v13b"
+      }
+    },
+    {
+      "holdout_cells": [
+        [
+          0,
+          5
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          6
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          6
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          3,
+          3
+        ]
+      ],
+      "learned_ledgers": {
+        "elman20": {
+          "multiply_estimate_per_tick": 820,
+          "parameter_count": 861,
+          "recurrent_state_scalars": 20,
+          "state_hash": "154D2ED69B44ACDD75BB71462EC81F47CD5EA216213BE2CC0A8652CAAB9D370E"
+        },
+        "elman3": {
+          "multiply_estimate_per_tick": 72,
+          "parameter_count": 79,
+          "recurrent_state_scalars": 3,
+          "state_hash": "80DAFD928BC0392195108878606B73C1DAF14041507062847EF250CC72BE8CDF"
+        },
+        "gru20": {
+          "multiply_estimate_per_tick": 2460,
+          "parameter_count": 2541,
+          "recurrent_state_scalars": 20,
+          "state_hash": "1B87FF6EA19134A6EB1EDD2EC7199334C8734B1C15A70897682B19CB8414C575"
+        }
+      },
+      "nonfinite_count": 0,
+      "panel_accuracies": {
+        "combined": {
+          "elman20": 0.80859375,
+          "elman3": 0.44140625,
+          "gru20": 0.77734375,
+          "v10": 0.515625,
+          "v13b": 0.5546875
+        },
+        "heldout": {
+          "elman20": 0.13671875,
+          "elman3": 0.01171875,
+          "gru20": 0.08203125,
+          "v10": 0.33984375,
+          "v13b": 0.1640625
+        },
+        "horizon": {
+          "elman20": 0.8125,
+          "elman3": 0.44140625,
+          "gru20": 0.7890625,
+          "v10": 0.54296875,
+          "v13b": 0.5703125
+        },
+        "id": {
+          "elman20": 0.78125,
+          "elman3": 0.76171875,
+          "gru20": 0.76953125,
+          "v10": 0.6640625,
+          "v13b": 0.7890625
+        },
+        "noise": {
+          "elman20": 0.78515625,
+          "elman3": 0.73828125,
+          "gru20": 0.7734375,
+          "v10": 0.609375,
+          "v13b": 0.76953125
+        }
+      },
+      "seed": 9005,
+      "v13_ledger": {
+        "lipschitz_report": {
+          "certified": false,
+          "note": "structural bound from strict convex combination + spectral caps (sigma <= 1) on all recurrent-path matrices; retention (1-g) may reach 1 (marginal stability permitted per the same explicit user authorization as V13); observational, not a certified contraction gate",
+          "sigma_cloud_interaction": 1.0000001192092896,
+          "sigma_cloud_rec": 1.0,
+          "sigma_cloud_to_local": 1.000000238418579,
+          "sigma_local_interaction": 1.0,
+          "sigma_local_rec": 1.0,
+          "sigma_local_to_cloud": 0.9999998807907104,
+          "structural_bound": 3.000000238418579,
+          "structural_bound_cloud_candidate": 3.0,
+          "structural_bound_cloud_state_map": 3.0,
+          "structural_bound_local_candidate": 3.000000238418579,
+          "structural_bound_local_state_map": 3.000000238418579
+        },
+        "parameter_count": 197,
+        "state_hash": "865463A3931A64E593FF2185ADD08957D6E30D25E19BAC13D640042D26032E6B",
+        "variant": "v13b"
+      }
+    },
+    {
+      "holdout_cells": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          6
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          6
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "learned_ledgers": {
+        "elman20": {
+          "multiply_estimate_per_tick": 820,
+          "parameter_count": 861,
+          "recurrent_state_scalars": 20,
+          "state_hash": "67CC4BD59FFF105B055291913F2BEB4CE6767EA5C5A9400B6CF1A0D00F446CFE"
+        },
+        "elman3": {
+          "multiply_estimate_per_tick": 72,
+          "parameter_count": 79,
+          "recurrent_state_scalars": 3,
+          "state_hash": "3DDC066F07BF70791A2DFB631B3F90B1FC0F9697B585FD04FAC4B81DDF89B217"
+        },
+        "gru20": {
+          "multiply_estimate_per_tick": 2460,
+          "parameter_count": 2541,
+          "recurrent_state_scalars": 20,
+          "state_hash": "38D7DE365A15D360C666FFFE87F040AC16B615362FEBB3A047CE380CC5A1534C"
+        }
+      },
+      "nonfinite_count": 0,
+      "panel_accuracies": {
+        "combined": {
+          "elman20": 0.53515625,
+          "elman3": 0.71484375,
+          "gru20": 0.91796875,
+          "v10": 0.52734375,
+          "v13b": 0.51171875
+        },
+        "heldout": {
+          "elman20": 0.62109375,
+          "elman3": 0.25,
+          "gru20": 0.734375,
+          "v10": 0.26953125,
+          "v13b": 0.296875
+        },
+        "horizon": {
+          "elman20": 0.5234375,
+          "elman3": 0.75,
+          "gru20": 0.91796875,
+          "v10": 0.578125,
+          "v13b": 0.515625
+        },
+        "id": {
+          "elman20": 0.90625,
+          "elman3": 0.7734375,
+          "gru20": 0.9375,
+          "v10": 0.62890625,
+          "v13b": 0.8046875
+        },
+        "noise": {
+          "elman20": 0.90234375,
+          "elman3": 0.7265625,
+          "gru20": 0.93359375,
+          "v10": 0.5859375,
+          "v13b": 0.78125
+        }
+      },
+      "seed": 9006,
+      "v13_ledger": {
+        "lipschitz_report": {
+          "certified": false,
+          "note": "structural bound from strict convex combination + spectral caps (sigma <= 1) on all recurrent-path matrices; retention (1-g) may reach 1 (marginal stability permitted per the same explicit user authorization as V13); observational, not a certified contraction gate",
+          "sigma_cloud_interaction": 1.0,
+          "sigma_cloud_rec": 1.0,
+          "sigma_cloud_to_local": 1.0000001192092896,
+          "sigma_local_interaction": 0.9999998807907104,
+          "sigma_local_rec": 1.0,
+          "sigma_local_to_cloud": 0.9999998807907104,
+          "structural_bound": 3.0,
+          "structural_bound_cloud_candidate": 2.9999998807907104,
+          "structural_bound_cloud_state_map": 2.9999998807907104,
+          "structural_bound_local_candidate": 3.0,
+          "structural_bound_local_state_map": 3.0
+        },
+        "parameter_count": 197,
+        "state_hash": "BAF5C32D77D9DC59C01600FA827ECD591548A8F8D9C02529EC6B3B3BC7B73048",
+        "variant": "v13b"
+      }
+    },
+    {
+      "holdout_cells": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          6
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          6
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          6
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "learned_ledgers": {
+        "elman20": {
+          "multiply_estimate_per_tick": 820,
+          "parameter_count": 861,
+          "recurrent_state_scalars": 20,
+          "state_hash": "DEA38C3F7D3F94E23DF31CB5821A7B76281D1E6A9CAE952BA705B579D36BA47D"
+        },
+        "elman3": {
+          "multiply_estimate_per_tick": 72,
+          "parameter_count": 79,
+          "recurrent_state_scalars": 3,
+          "state_hash": "8BF06D58494BD2AD1BA73F082F964B3833D80325F6FC2CEEEBA48F17D06B56F9"
+        },
+        "gru20": {
+          "multiply_estimate_per_tick": 2460,
+          "parameter_count": 2541,
+          "recurrent_state_scalars": 20,
+          "state_hash": "71681F3BBEF07F92178567FC8FC7E2B5DA8C29159954ECB2D4EF566148402895"
+        }
+      },
+      "nonfinite_count": 0,
+      "panel_accuracies": {
+        "combined": {
+          "elman20": 0.12890625,
+          "elman3": 0.6484375,
+          "gru20": 0.875,
+          "v10": 0.546875,
+          "v13b": 0.51953125
+        },
+        "heldout": {
+          "elman20": 0.5,
+          "elman3": 0.390625,
+          "gru20": 0.5,
+          "v10": 0.3359375,
+          "v13b": 0.5
+        },
+        "horizon": {
+          "elman20": 0.125,
+          "elman3": 0.66015625,
+          "gru20": 0.875,
+          "v10": 0.546875,
+          "v13b": 0.5078125
+        },
+        "id": {
+          "elman20": 0.875,
+          "elman3": 0.765625,
+          "gru20": 0.875,
+          "v10": 0.6328125,
+          "v13b": 0.84375
+        },
+        "noise": {
+          "elman20": 0.875,
+          "elman3": 0.734375,
+          "gru20": 0.875,
+          "v10": 0.5625,
+          "v13b": 0.796875
+        }
+      },
+      "seed": 9007,
+      "v13_ledger": {
+        "lipschitz_report": {
+          "certified": false,
+          "note": "structural bound from strict convex combination + spectral caps (sigma <= 1) on all recurrent-path matrices; retention (1-g) may reach 1 (marginal stability permitted per the same explicit user authorization as V13); observational, not a certified contraction gate",
+          "sigma_cloud_interaction": 1.0000001192092896,
+          "sigma_cloud_rec": 0.9999999403953552,
+          "sigma_cloud_to_local": 0.9999998807907104,
+          "sigma_local_interaction": 0.9999998807907104,
+          "sigma_local_rec": 1.0,
+          "sigma_local_to_cloud": 0.9999999403953552,
+          "structural_bound": 3.0,
+          "structural_bound_cloud_candidate": 3.0,
+          "structural_bound_cloud_state_map": 3.0,
+          "structural_bound_local_candidate": 2.999999761581421,
+          "structural_bound_local_state_map": 2.999999761581421
+        },
+        "parameter_count": 197,
+        "state_hash": "02907E370BCB6A3202BDD750D9C717C896A591A1F5B66CA5DCF6D1E2D8D41F65",
+        "variant": "v13b"
+      }
+    },
+    {
+      "holdout_cells": [
+        [
+          0,
+          3
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          2,
+          7
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          6
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "learned_ledgers": {
+        "elman20": {
+          "multiply_estimate_per_tick": 820,
+          "parameter_count": 861,
+          "recurrent_state_scalars": 20,
+          "state_hash": "105D270970D5610ABAB99E49F9BAD588B88AB5242DA272F5AAD349DF106A8339"
+        },
+        "elman3": {
+          "multiply_estimate_per_tick": 72,
+          "parameter_count": 79,
+          "recurrent_state_scalars": 3,
+          "state_hash": "84CB3CE0C8A5FE6F8AC6FF94C5A1CC25D982D26798C3937F3BAC7F79E42822CF"
+        },
+        "gru20": {
+          "multiply_estimate_per_tick": 2460,
+          "parameter_count": 2541,
+          "recurrent_state_scalars": 20,
+          "state_hash": "46395668011F16DB7739AF69B73B95F9996F7B846C721B263E5657894C07661E"
+        }
+      },
+      "nonfinite_count": 0,
+      "panel_accuracies": {
+        "combined": {
+          "elman20": 0.87109375,
+          "elman3": 0.7890625,
+          "gru20": 0.875,
+          "v10": 0.52734375,
+          "v13b": 0.5078125
+        },
+        "heldout": {
+          "elman20": 0.5,
+          "elman3": 0.375,
+          "gru20": 0.5,
+          "v10": 0.359375,
+          "v13b": 0.578125
+        },
+        "horizon": {
+          "elman20": 0.875,
+          "elman3": 0.8125,
+          "gru20": 0.875,
+          "v10": 0.515625,
+          "v13b": 0.51953125
+        },
+        "id": {
+          "elman20": 0.875,
+          "elman3": 0.8125,
+          "gru20": 0.875,
+          "v10": 0.578125,
+          "v13b": 0.75
+        },
+        "noise": {
+          "elman20": 0.875,
+          "elman3": 0.8046875,
+          "gru20": 0.875,
+          "v10": 0.55078125,
+          "v13b": 0.71484375
+        }
+      },
+      "seed": 9008,
+      "v13_ledger": {
+        "lipschitz_report": {
+          "certified": false,
+          "note": "structural bound from strict convex combination + spectral caps (sigma <= 1) on all recurrent-path matrices; retention (1-g) may reach 1 (marginal stability permitted per the same explicit user authorization as V13); observational, not a certified contraction gate",
+          "sigma_cloud_interaction": 1.0000001192092896,
+          "sigma_cloud_rec": 0.9999999403953552,
+          "sigma_cloud_to_local": 1.0000001192092896,
+          "sigma_local_interaction": 1.0000001192092896,
+          "sigma_local_rec": 1.0000001192092896,
+          "sigma_local_to_cloud": 1.0000001192092896,
+          "structural_bound": 3.0000003576278687,
+          "structural_bound_cloud_candidate": 3.0000001788139343,
+          "structural_bound_cloud_state_map": 3.0000001788139343,
+          "structural_bound_local_candidate": 3.0000003576278687,
+          "structural_bound_local_state_map": 3.0000003576278687
+        },
+        "parameter_count": 197,
+        "state_hash": "33B08E1CB7E241B91FA1089ECE04D144DA3EF5A4FDD024D8D21085EBFDBDBB71",
+        "variant": "v13b"
+      }
+    },
+    {
+      "holdout_cells": [
+        [
+          0,
+          5
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          7
+        ],
+        [
+          2,
+          5
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          3,
+          5
+        ]
+      ],
+      "learned_ledgers": {
+        "elman20": {
+          "multiply_estimate_per_tick": 820,
+          "parameter_count": 861,
+          "recurrent_state_scalars": 20,
+          "state_hash": "B22DCEF41A117ADED025A65196B92972B0092816600C1BDC1FB4A0B503B99EA0"
+        },
+        "elman3": {
+          "multiply_estimate_per_tick": 72,
+          "parameter_count": 79,
+          "recurrent_state_scalars": 3,
+          "state_hash": "160829AED8E9C84D2426656E2D372F9662625A35498DF7E25311C17CE45E31DF"
+        },
+        "gru20": {
+          "multiply_estimate_per_tick": 2460,
+          "parameter_count": 2541,
+          "recurrent_state_scalars": 20,
+          "state_hash": "121AE41298007F23099F32688FD1BDA3EBC63145186CAE6CC1F763088533DE89"
+        }
+      },
+      "nonfinite_count": 0,
+      "panel_accuracies": {
+        "combined": {
+          "elman20": 0.65625,
+          "elman3": 0.75390625,
+          "gru20": 0.859375,
+          "v10": 0.58203125,
+          "v13b": 0.51171875
+        },
+        "heldout": {
+          "elman20": 0.3828125,
+          "elman3": 0.515625,
+          "gru20": 0.5,
+          "v10": 0.43359375,
+          "v13b": 0.25390625
+        },
+        "horizon": {
+          "elman20": 0.65234375,
+          "elman3": 0.80859375,
+          "gru20": 0.87109375,
+          "v10": 0.609375,
+          "v13b": 0.46875
+        },
+        "id": {
+          "elman20": 0.84765625,
+          "elman3": 0.83203125,
+          "gru20": 0.875,
+          "v10": 0.58984375,
+          "v13b": 0.80859375
+        },
+        "noise": {
+          "elman20": 0.85546875,
+          "elman3": 0.78125,
+          "gru20": 0.87109375,
+          "v10": 0.53125,
+          "v13b": 0.7734375
+        }
+      },
+      "seed": 9009,
+      "v13_ledger": {
+        "lipschitz_report": {
+          "certified": false,
+          "note": "structural bound from strict convex combination + spectral caps (sigma <= 1) on all recurrent-path matrices; retention (1-g) may reach 1 (marginal stability permitted per the same explicit user authorization as V13); observational, not a certified contraction gate",
+          "sigma_cloud_interaction": 1.0,
+          "sigma_cloud_rec": 1.0000001192092896,
+          "sigma_cloud_to_local": 1.0,
+          "sigma_local_interaction": 0.9999999403953552,
+          "sigma_local_rec": 1.0,
+          "sigma_local_to_cloud": 1.0,
+          "structural_bound": 3.0000001192092896,
+          "structural_bound_cloud_candidate": 3.0000001192092896,
+          "structural_bound_cloud_state_map": 3.0000001192092896,
+          "structural_bound_local_candidate": 2.9999999403953552,
+          "structural_bound_local_state_map": 2.9999999403953552
+        },
+        "parameter_count": 197,
+        "state_hash": "161CFCE21528076E738C42823A77D336903A649CB289AFF83ABE2918ED5BC2AE",
+        "variant": "v13b"
+      }
+    },
+    {
+      "holdout_cells": [
+        [
+          0,
+          7
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          7
+        ],
+        [
+          2,
+          6
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          3,
+          3
+        ]
+      ],
+      "learned_ledgers": {
+        "elman20": {
+          "multiply_estimate_per_tick": 820,
+          "parameter_count": 861,
+          "recurrent_state_scalars": 20,
+          "state_hash": "A93A0FD2956CCD0A2476DC9022B925BDA55FFE963FB27544145FAF3B9E85B099"
+        },
+        "elman3": {
+          "multiply_estimate_per_tick": 72,
+          "parameter_count": 79,
+          "recurrent_state_scalars": 3,
+          "state_hash": "E41C47DCAF730BF55904C4E588B261AE0111B382431EACDD340BC9544ECB170B"
+        },
+        "gru20": {
+          "multiply_estimate_per_tick": 2460,
+          "parameter_count": 2541,
+          "recurrent_state_scalars": 20,
+          "state_hash": "4C76AD754AEF8CEDAF69653EE4DF7008CBD2EC1810469A871DBBC71D82AD65F0"
+        }
+      },
+      "nonfinite_count": 0,
+      "panel_accuracies": {
+        "combined": {
+          "elman20": 0.11328125,
+          "elman3": 0.76171875,
+          "gru20": 0.890625,
+          "v10": 0.53515625,
+          "v13b": 0.5625
+        },
+        "heldout": {
+          "elman20": 0.5,
+          "elman3": 0.42578125,
+          "gru20": 0.5390625,
+          "v10": 0.4609375,
+          "v13b": 0.48828125
+        },
+        "horizon": {
+          "elman20": 0.125,
+          "elman3": 0.76953125,
+          "gru20": 0.8828125,
+          "v10": 0.54296875,
+          "v13b": 0.55859375
+        },
+        "id": {
+          "elman20": 0.875,
+          "elman3": 0.78125,
+          "gru20": 0.890625,
+          "v10": 0.5703125,
+          "v13b": 0.8359375
+        },
+        "noise": {
+          "elman20": 0.87890625,
+          "elman3": 0.7734375,
+          "gru20": 0.890625,
+          "v10": 0.51953125,
+          "v13b": 0.80859375
+        }
+      },
+      "seed": 9010,
+      "v13_ledger": {
+        "lipschitz_report": {
+          "certified": false,
+          "note": "structural bound from strict convex combination + spectral caps (sigma <= 1) on all recurrent-path matrices; retention (1-g) may reach 1 (marginal stability permitted per the same explicit user authorization as V13); observational, not a certified contraction gate",
+          "sigma_cloud_interaction": 0.9999999403953552,
+          "sigma_cloud_rec": 1.000000238418579,
+          "sigma_cloud_to_local": 0.9999997019767761,
+          "sigma_local_interaction": 0.9999998211860657,
+          "sigma_local_rec": 1.0000001192092896,
+          "sigma_local_to_cloud": 1.0,
+          "structural_bound": 3.0000001788139343,
+          "structural_bound_cloud_candidate": 3.0000001788139343,
+          "structural_bound_cloud_state_map": 3.0000001788139343,
+          "structural_bound_local_candidate": 2.9999996423721313,
+          "structural_bound_local_state_map": 2.9999996423721313
+        },
+        "parameter_count": 197,
+        "state_hash": "D3730BEFFEA9B9D25CE5BB50AC3ACD1C505B0A044D0C58894F1C1686D30591F4",
+        "variant": "v13b"
+      }
+    },
+    {
+      "holdout_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          7
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          2,
+          5
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          3,
+          3
+        ]
+      ],
+      "learned_ledgers": {
+        "elman20": {
+          "multiply_estimate_per_tick": 820,
+          "parameter_count": 861,
+          "recurrent_state_scalars": 20,
+          "state_hash": "7F360C374F01F86A8A8121BE82C39B1B26D919FD39C45AFDE3C7325037065AE2"
+        },
+        "elman3": {
+          "multiply_estimate_per_tick": 72,
+          "parameter_count": 79,
+          "recurrent_state_scalars": 3,
+          "state_hash": "23576E31A677EEFF5E24AF94EDBA5B3FD194B4673E4F6CC76A2CA12129306942"
+        },
+        "gru20": {
+          "multiply_estimate_per_tick": 2460,
+          "parameter_count": 2541,
+          "recurrent_state_scalars": 20,
+          "state_hash": "E0967BA3200B962ADCEB41F6A0C610DF61668DC8EC129A18CD869D56595D9A57"
+        }
+      },
+      "nonfinite_count": 0,
+      "panel_accuracies": {
+        "combined": {
+          "elman20": 0.87109375,
+          "elman3": 0.79296875,
+          "gru20": 0.87109375,
+          "v10": 0.5,
+          "v13b": 0.5234375
+        },
+        "heldout": {
+          "elman20": 0.5,
+          "elman3": 0.375,
+          "gru20": 0.5,
+          "v10": 0.49609375,
+          "v13b": 0.46875
+        },
+        "horizon": {
+          "elman20": 0.875,
+          "elman3": 0.80859375,
+          "gru20": 0.875,
+          "v10": 0.5078125,
+          "v13b": 0.5625
+        },
+        "id": {
+          "elman20": 0.875,
+          "elman3": 0.8046875,
+          "gru20": 0.875,
+          "v10": 0.58984375,
+          "v13b": 0.75390625
+        },
+        "noise": {
+          "elman20": 0.875,
+          "elman3": 0.78515625,
+          "gru20": 0.875,
+          "v10": 0.5390625,
+          "v13b": 0.72265625
+        }
+      },
+      "seed": 9011,
+      "v13_ledger": {
+        "lipschitz_report": {
+          "certified": false,
+          "note": "structural bound from strict convex combination + spectral caps (sigma <= 1) on all recurrent-path matrices; retention (1-g) may reach 1 (marginal stability permitted per the same explicit user authorization as V13); observational, not a certified contraction gate",
+          "sigma_cloud_interaction": 1.0,
+          "sigma_cloud_rec": 1.0,
+          "sigma_cloud_to_local": 1.0000001192092896,
+          "sigma_local_interaction": 1.0,
+          "sigma_local_rec": 1.0000001192092896,
+          "sigma_local_to_cloud": 0.9999998211860657,
+          "structural_bound": 3.000000238418579,
+          "structural_bound_cloud_candidate": 2.9999998211860657,
+          "structural_bound_cloud_state_map": 2.9999998211860657,
+          "structural_bound_local_candidate": 3.000000238418579,
+          "structural_bound_local_state_map": 3.000000238418579
+        },
+        "parameter_count": 197,
+        "state_hash": "287D23918A44798CF4F570285BFBE5F60F589326D0C7933345A0066CA49F81B2",
+        "variant": "v13b"
+      }
+    },
+    {
+      "holdout_cells": [
+        [
+          0,
+          7
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          3,
+          5
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "learned_ledgers": {
+        "elman20": {
+          "multiply_estimate_per_tick": 820,
+          "parameter_count": 861,
+          "recurrent_state_scalars": 20,
+          "state_hash": "4310B306A19826BDBD366F245CD2500DFBFDFEDDB0F899E756C0C1C879F0DC06"
+        },
+        "elman3": {
+          "multiply_estimate_per_tick": 72,
+          "parameter_count": 79,
+          "recurrent_state_scalars": 3,
+          "state_hash": "A25F9D3E6920A56D3AB65F34757AB3E6F644C4BCCE2BC9152E62025E5A407C37"
+        },
+        "gru20": {
+          "multiply_estimate_per_tick": 2460,
+          "parameter_count": 2541,
+          "recurrent_state_scalars": 20,
+          "state_hash": "6811D566C87F1A5B80845CF9EEA088D0B5B9564BB740E9441048760C85065F45"
+        }
+      },
+      "nonfinite_count": 0,
+      "panel_accuracies": {
+        "combined": {
+          "elman20": 0.8203125,
+          "elman3": 0.40234375,
+          "gru20": 0.8359375,
+          "v10": 0.53515625,
+          "v13b": 0.58984375
+        },
+        "heldout": {
+          "elman20": 0.5078125,
+          "elman3": 0.515625,
+          "gru20": 0.26171875,
+          "v10": 0.2265625,
+          "v13b": 0.37890625
+        },
+        "horizon": {
+          "elman20": 0.8359375,
+          "elman3": 0.44140625,
+          "gru20": 0.828125,
+          "v10": 0.56640625,
+          "v13b": 0.58203125
+        },
+        "id": {
+          "elman20": 0.88671875,
+          "elman3": 0.8203125,
+          "gru20": 0.8203125,
+          "v10": 0.66796875,
+          "v13b": 0.828125
+        },
+        "noise": {
+          "elman20": 0.88671875,
+          "elman3": 0.78125,
+          "gru20": 0.83203125,
+          "v10": 0.62890625,
+          "v13b": 0.79296875
+        }
+      },
+      "seed": 9012,
+      "v13_ledger": {
+        "lipschitz_report": {
+          "certified": false,
+          "note": "structural bound from strict convex combination + spectral caps (sigma <= 1) on all recurrent-path matrices; retention (1-g) may reach 1 (marginal stability permitted per the same explicit user authorization as V13); observational, not a certified contraction gate",
+          "sigma_cloud_interaction": 0.9999999403953552,
+          "sigma_cloud_rec": 0.9999998807907104,
+          "sigma_cloud_to_local": 0.9999999403953552,
+          "sigma_local_interaction": 1.0,
+          "sigma_local_rec": 0.9999998211860657,
+          "sigma_local_to_cloud": 1.000000238418579,
+          "structural_bound": 3.0000000596046448,
+          "structural_bound_cloud_candidate": 3.0000000596046448,
+          "structural_bound_cloud_state_map": 3.0000000596046448,
+          "structural_bound_local_candidate": 2.999999761581421,
+          "structural_bound_local_state_map": 2.999999761581421
+        },
+        "parameter_count": 197,
+        "state_hash": "D08F5AE78390A80F3A8508B3C31A568662DB35FA6CF93993AE66E320EC44FB2C",
+        "variant": "v13b"
+      }
+    },
+    {
+      "holdout_cells": [
+        [
+          0,
+          5
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          7
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          7
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          7
+        ]
+      ],
+      "learned_ledgers": {
+        "elman20": {
+          "multiply_estimate_per_tick": 820,
+          "parameter_count": 861,
+          "recurrent_state_scalars": 20,
+          "state_hash": "417B54A0D1FBD8EAC4ECEFC77BDFA8215E7838D9F4108D73801A123309BB8E2C"
+        },
+        "elman3": {
+          "multiply_estimate_per_tick": 72,
+          "parameter_count": 79,
+          "recurrent_state_scalars": 3,
+          "state_hash": "9CD5CCC74367276A9B0E1AB7BACF11AF1E7BEA71AA312EF0E8E1799E772CBBDB"
+        },
+        "gru20": {
+          "multiply_estimate_per_tick": 2460,
+          "parameter_count": 2541,
+          "recurrent_state_scalars": 20,
+          "state_hash": "EDA5A10E6C03841F5A781CF7BAD94EB8EFC80B439559AD186FB2383C7FF37B66"
+        }
+      },
+      "nonfinite_count": 0,
+      "panel_accuracies": {
+        "combined": {
+          "elman20": 0.76953125,
+          "elman3": 0.70703125,
+          "gru20": 0.78515625,
+          "v10": 0.5078125,
+          "v13b": 0.59765625
+        },
+        "heldout": {
+          "elman20": 0.03515625,
+          "elman3": 0.25,
+          "gru20": 0.10546875,
+          "v10": 0.1875,
+          "v13b": 0.0
+        },
+        "horizon": {
+          "elman20": 0.7578125,
+          "elman3": 0.71484375,
+          "gru20": 0.78125,
+          "v10": 0.515625,
+          "v13b": 0.62109375
+        },
+        "id": {
+          "elman20": 0.75390625,
+          "elman3": 0.71875,
+          "gru20": 0.78125,
+          "v10": 0.6171875,
+          "v13b": 0.64453125
+        },
+        "noise": {
+          "elman20": 0.76171875,
+          "elman3": 0.7109375,
+          "gru20": 0.78125,
+          "v10": 0.54296875,
+          "v13b": 0.62890625
+        }
+      },
+      "seed": 9013,
+      "v13_ledger": {
+        "lipschitz_report": {
+          "certified": false,
+          "note": "structural bound from strict convex combination + spectral caps (sigma <= 1) on all recurrent-path matrices; retention (1-g) may reach 1 (marginal stability permitted per the same explicit user authorization as V13); observational, not a certified contraction gate",
+          "sigma_cloud_interaction": 0.9999999403953552,
+          "sigma_cloud_rec": 1.0,
+          "sigma_cloud_to_local": 0.9999999403953552,
+          "sigma_local_interaction": 0.9999998807907104,
+          "sigma_local_rec": 0.9999997615814209,
+          "sigma_local_to_cloud": 1.0000001192092896,
+          "structural_bound": 3.0000000596046448,
+          "structural_bound_cloud_candidate": 3.0000000596046448,
+          "structural_bound_cloud_state_map": 3.0000000596046448,
+          "structural_bound_local_candidate": 2.9999995827674866,
+          "structural_bound_local_state_map": 2.9999995827674866
+        },
+        "parameter_count": 197,
+        "state_hash": "4053FB099BF27967CB175B510415C042D1E469EE0D1161AC89F07376B455A0EF",
+        "variant": "v13b"
+      }
+    },
+    {
+      "holdout_cells": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          6
+        ],
+        [
+          1,
+          6
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          3,
+          5
+        ]
+      ],
+      "learned_ledgers": {
+        "elman20": {
+          "multiply_estimate_per_tick": 820,
+          "parameter_count": 861,
+          "recurrent_state_scalars": 20,
+          "state_hash": "A77C7D743122DE7ADB5A8958F783C3E47BBE103482F05A7A30BEF64A7B3BB6D4"
+        },
+        "elman3": {
+          "multiply_estimate_per_tick": 72,
+          "parameter_count": 79,
+          "recurrent_state_scalars": 3,
+          "state_hash": "B66DEEACDB6FA1B3D83AE9B47C698C5D54556B3F78BB022CDA0F59F29AF24890"
+        },
+        "gru20": {
+          "multiply_estimate_per_tick": 2460,
+          "parameter_count": 2541,
+          "recurrent_state_scalars": 20,
+          "state_hash": "9340F907BFA36A5030DCDA0932BA002E1034B8DA555E8A0B53440911C11C38A2"
+        }
+      },
+      "nonfinite_count": 0,
+      "panel_accuracies": {
+        "combined": {
+          "elman20": 0.66796875,
+          "elman3": 0.46484375,
+          "gru20": 0.86328125,
+          "v10": 0.51171875,
+          "v13b": 0.6328125
+        },
+        "heldout": {
+          "elman20": 0.546875,
+          "elman3": 0.4453125,
+          "gru20": 0.44921875,
+          "v10": 0.43359375,
+          "v13b": 0.25
+        },
+        "horizon": {
+          "elman20": 0.703125,
+          "elman3": 0.46875,
+          "gru20": 0.875,
+          "v10": 0.55859375,
+          "v13b": 0.671875
+        },
+        "id": {
+          "elman20": 0.890625,
+          "elman3": 0.7265625,
+          "gru20": 0.85546875,
+          "v10": 0.66015625,
+          "v13b": 0.8125
+        },
+        "noise": {
+          "elman20": 0.88671875,
+          "elman3": 0.68359375,
+          "gru20": 0.86328125,
+          "v10": 0.56640625,
+          "v13b": 0.8046875
+        }
+      },
+      "seed": 9014,
+      "v13_ledger": {
+        "lipschitz_report": {
+          "certified": false,
+          "note": "structural bound from strict convex combination + spectral caps (sigma <= 1) on all recurrent-path matrices; retention (1-g) may reach 1 (marginal stability permitted per the same explicit user authorization as V13); observational, not a certified contraction gate",
+          "sigma_cloud_interaction": 1.0000001192092896,
+          "sigma_cloud_rec": 1.0,
+          "sigma_cloud_to_local": 0.9999998211860657,
+          "sigma_local_interaction": 1.0000001192092896,
+          "sigma_local_rec": 1.0000001192092896,
+          "sigma_local_to_cloud": 1.0,
+          "structural_bound": 3.0000001192092896,
+          "structural_bound_cloud_candidate": 3.0000001192092896,
+          "structural_bound_cloud_state_map": 3.0000001192092896,
+          "structural_bound_local_candidate": 3.0000000596046448,
+          "structural_bound_local_state_map": 3.0000000596046448
+        },
+        "parameter_count": 197,
+        "state_hash": "3866AD5DBBE290F90A7A962BE58203A416EB22C2F83A93CE5CFA03428E3DB58F",
+        "variant": "v13b"
+      }
+    },
+    {
+      "holdout_cells": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          6
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          3,
+          7
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "learned_ledgers": {
+        "elman20": {
+          "multiply_estimate_per_tick": 820,
+          "parameter_count": 861,
+          "recurrent_state_scalars": 20,
+          "state_hash": "152F3F4E362AF5A4DF3CE5798738C6B656B9D448678C191DECF764A1184867C3"
+        },
+        "elman3": {
+          "multiply_estimate_per_tick": 72,
+          "parameter_count": 79,
+          "recurrent_state_scalars": 3,
+          "state_hash": "84345BF2320FE1F292494B07E68A46BB1ADF926951069C100E568E9C61B49FE5"
+        },
+        "gru20": {
+          "multiply_estimate_per_tick": 2460,
+          "parameter_count": 2541,
+          "recurrent_state_scalars": 20,
+          "state_hash": "E2A7FC982C7840E695D1A5E48175C83DFD62F9C9E1E5482F29D5FBFC40E00533"
+        }
+      },
+      "nonfinite_count": 0,
+      "panel_accuracies": {
+        "combined": {
+          "elman20": 0.1171875,
+          "elman3": 0.734375,
+          "gru20": 0.859375,
+          "v10": 0.55078125,
+          "v13b": 0.69140625
+        },
+        "heldout": {
+          "elman20": 0.5703125,
+          "elman3": 0.5,
+          "gru20": 0.4375,
+          "v10": 0.5,
+          "v13b": 0.25
+        },
+        "horizon": {
+          "elman20": 0.1171875,
+          "elman3": 0.75,
+          "gru20": 0.875,
+          "v10": 0.5625,
+          "v13b": 0.703125
+        },
+        "id": {
+          "elman20": 0.890625,
+          "elman3": 0.75,
+          "gru20": 0.859375,
+          "v10": 0.64453125,
+          "v13b": 0.7890625
+        },
+        "noise": {
+          "elman20": 0.87890625,
+          "elman3": 0.73046875,
+          "gru20": 0.8515625,
+          "v10": 0.578125,
+          "v13b": 0.7734375
+        }
+      },
+      "seed": 9015,
+      "v13_ledger": {
+        "lipschitz_report": {
+          "certified": false,
+          "note": "structural bound from strict convex combination + spectral caps (sigma <= 1) on all recurrent-path matrices; retention (1-g) may reach 1 (marginal stability permitted per the same explicit user authorization as V13); observational, not a certified contraction gate",
+          "sigma_cloud_interaction": 1.0,
+          "sigma_cloud_rec": 0.9999999403953552,
+          "sigma_cloud_to_local": 1.0,
+          "sigma_local_interaction": 0.9999999403953552,
+          "sigma_local_rec": 1.0,
+          "sigma_local_to_cloud": 1.0,
+          "structural_bound": 2.9999999403953552,
+          "structural_bound_cloud_candidate": 2.9999999403953552,
+          "structural_bound_cloud_state_map": 2.9999999403953552,
+          "structural_bound_local_candidate": 2.9999999403953552,
+          "structural_bound_local_state_map": 2.9999999403953552
+        },
+        "parameter_count": 197,
+        "state_hash": "A3462372828B7EF903E149E09B27D6500D7BAF879F24F3FB7EA674E042432AE0",
+        "variant": "v13b"
+      }
+    }
+  ],
+  "seeds": [
+    9000,
+    9001,
+    9002,
+    9003,
+    9004,
+    9005,
+    9006,
+    9007,
+    9008,
+    9009,
+    9010,
+    9011,
+    9012,
+    9013,
+    9014,
+    9015
+  ],
+  "train_episodes": 192,
+  "variant": "v13b"
+}

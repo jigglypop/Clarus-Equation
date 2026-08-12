@@ -1,0 +1,136 @@
+{
+  "schema": "clarus.cloudcell_data_manifest.v1",
+  "created_at": "2026-08-12T21:37:40+09:00",
+  "data_root": "data/external/cloudcell",
+  "raw_files_committed": false,
+  "relocation": {
+    "moved_from": ".tmp/cloudcell-data and .tmp/PredictionCode",
+    "moved_to": "data/external/cloudcell",
+    "moved_at": "2026-08-12",
+    "reason": "gitignored .tmp is treated as disposable; data moved to a stable gitignored data/external path with this tracked checksum manifest",
+    "note": "old artifacts (pre 17a3d27 deletion) reference .tmp\\cloudcell-data paths; those refer to the same bytes now under data/external/cloudcell"
+  },
+  "claim_scope": {
+    "purpose": "Checksum-locked source collection for docs/7_AGI 22-25 biology-line gates (C. elegans whole-brain imaging, human MTL single units).",
+    "public_measurements_are_not_clarus_specific_evidence": true,
+    "no_mechanism_identified": true
+  },
+  "datasets": [
+    {
+      "dataset_id": "celegans_whole_brain_osf_dpr3h",
+      "title": "Whole-brain calcium imaging in freely moving C. elegans (Predicting natural behavior from whole-brain neural dynamics)",
+      "source_repository": "OSF project dpr3h",
+      "landing_url": "https://osf.io/dpr3h/",
+      "paper": "eLife 2021;10:e66135 (Hallinen, Dempsey, Scholz et al., Decoding locomotion from population neural activity in moving C. elegans)",
+      "paper_doi": "10.7554/eLife.66135",
+      "analysis_code": {
+        "name": "PredictionCode",
+        "license": "GPL-2.0",
+        "local_path": "data/external/cloudcell/PredictionCode",
+        "local_bytes_total": 1185787
+      },
+      "archives": [
+        {
+          "relative_path": "AML32_moving.tar.gz",
+          "source_url": "https://osf.io/download/evhrg/",
+          "bytes": 1218075251,
+          "sha256": "6b71a6ba1a5d2f1ef3bf9661e845e1e52634bae217fc0c2630a83fca07daed63",
+          "expected_sha256": "6b71a6ba1a5d2f1ef3bf9661e845e1e52634bae217fc0c2630a83fca07daed63",
+          "sha256_verified_after_move": true,
+          "sha256_verified_at": "2026-08-12"
+        },
+        {
+          "relative_path": "AML310_moving.tar.gz",
+          "source_url": "https://osf.io/dpr3h/ (OSF project file listing)",
+          "bytes": 348444164,
+          "sha256": "144126ee9a49d311c3393deea434e1a0963d55de35318e25d98d48f9c175250a",
+          "expected_sha256": "144126ee9a49d311c3393deea434e1a0963d55de35318e25d98d48f9c175250a",
+          "sha256_verified_after_move": true,
+          "sha256_verified_at": "2026-08-12"
+        },
+        {
+          "relative_path": "AML18_moving.tar.gz",
+          "source_url": "https://osf.io/download/hsg2y/",
+          "bytes": 1409801111,
+          "sha256": "588d7666f4e8afebad1ab9b8483244a6de0303251d862425522c2b8dd78bbd82",
+          "expected_sha256": "588d7666f4e8afebad1ab9b8483244a6de0303251d862425522c2b8dd78bbd82",
+          "expected_sha256_source": "OSF API osfstorage metadata for node dpr3h, fetched before download",
+          "sha256_verified_after_download": true,
+          "sha256_verified_at": "2026-08-12",
+          "purpose": "AML18 GFP-only control strain for the indicator-kinetics counterexample test of the docs/7_AGI/25 local temporal-memory gate",
+          "downloaded_at": "2026-08-12"
+        }
+      ],
+      "extracted_files": [
+        {"relative_path": "extracted/AKS297.51_moving/AKS297.51_moving_datasets.txt", "bytes": 132},
+        {"relative_path": "extracted/AKS297.51_moving/BrainScanner20200130_105254_MS/centerline.mat", "bytes": 31059654},
+        {"relative_path": "extracted/AKS297.51_moving/BrainScanner20200130_105254_MS/heatDataMS.mat", "bytes": 10064816},
+        {"relative_path": "extracted/AKS297.51_moving/BrainScanner20200130_105254_MS/pointStatsNew.mat", "bytes": 29057560},
+        {"relative_path": "extracted/AKS297.51_moving/BrainScanner20200130_110803_MS/centerline.mat", "bytes": 26028125},
+        {"relative_path": "extracted/AKS297.51_moving/BrainScanner20200130_110803_MS/heatDataMS.mat", "bytes": 11717398},
+        {"relative_path": "extracted/AKS297.51_moving/BrainScanner20200130_110803_MS/pointStatsNew.mat", "bytes": 29717215},
+        {"relative_path": "extracted/AKS297.51_moving/BrainScanner20200310_141211_MS/centerline.mat", "bytes": 30402604},
+        {"relative_path": "extracted/AKS297.51_moving/BrainScanner20200310_141211_MS/heatDataMS.mat", "bytes": 8556213},
+        {"relative_path": "extracted/AKS297.51_moving/BrainScanner20200310_141211_MS/pointStatsNew.mat", "bytes": 25302671},
+        {"relative_path": "extracted/AKS297.51_moving/BrainScanner20200310_142022_MS/centerline.mat", "bytes": 31047390},
+        {"relative_path": "extracted/AKS297.51_moving/BrainScanner20200310_142022_MS/heatDataMS.mat", "bytes": 8285454},
+        {"relative_path": "extracted/AKS297.51_moving/BrainScanner20200310_142022_MS/pointStatsNew.mat", "bytes": 20682843},
+        {"relative_path": "extracted/AML32_moving/AML32_moving_datasets.txt", "bytes": 207},
+        {"relative_path": "extracted/AML32_moving/BrainScanner20170424_105620_MS/heatDataMS.mat", "bytes": 25198898},
+        {"relative_path": "extracted/AML32_moving/BrainScanner20170610_105634_MS/heatDataMS.mat", "bytes": 22321498},
+        {"relative_path": "extracted/AML32_moving/BrainScanner20170613_134800_MS/heatDataMS.mat", "bytes": 24325569},
+        {"relative_path": "extracted/AML32_moving/BrainScanner20180709_100433_MS/heatDataMS.mat", "bytes": 30352029},
+        {"relative_path": "extracted/AML32_moving/BrainScanner20200309_151024_MS/heatDataMS.mat", "bytes": 10286450},
+        {"relative_path": "extracted/AML32_moving/BrainScanner20200309_153839_MS/heatDataMS.mat", "bytes": 14004240},
+        {"relative_path": "extracted/AML32_moving/BrainScanner20200309_162140_MS/heatDataMS.mat", "bytes": 13691034},
+        {"relative_path": "extracted/AML18_moving/AML18_moving_datasets.txt", "bytes": 319, "note": "3 leading '#' comment lines removed after extraction because the unmodified loader has no comment handling; the 11 recording ids are byte-identical to the archive original and match the 11 BrainScanner*_MS directories"},
+        {"relative_path": "extracted/AML18_moving/BrainScanner20200116_145254_MS/heatDataMS.mat", "bytes": 22351652},
+        {"relative_path": "extracted/AML18_moving/BrainScanner20200116_152636_MS/heatDataMS.mat", "bytes": 25654429},
+        {"relative_path": "extracted/AML18_moving/BrainScanner20200204_102136_MS/heatDataMS.mat", "bytes": 16360191},
+        {"relative_path": "extracted/AML18_moving/BrainScanner20200310_153952_MS/heatDataMS.mat", "bytes": 11528708},
+        {"relative_path": "extracted/AML18_moving/BrainScanner20200311_100140_MS/heatDataMS.mat", "bytes": 11506515},
+        {"relative_path": "extracted/AML18_moving/BrainScanner20200929_140030_MS/heatDataMS.mat", "bytes": 13660552},
+        {"relative_path": "extracted/AML18_moving/BrainScanner20200929_143439_MS/heatDataMS.mat", "bytes": 25283832},
+        {"relative_path": "extracted/AML18_moving/BrainScanner20210503_122703_MS/heatDataMS.mat", "bytes": 15409950},
+        {"relative_path": "extracted/AML18_moving/BrainScanner20210503_135244_MS/heatDataMS.mat", "bytes": 18950372},
+        {"relative_path": "extracted/AML18_moving/BrainScanner20210503_151831_MS/heatDataMS.mat", "bytes": 14963943},
+        {"relative_path": "extracted/AML18_moving/BrainScanner20210503_154404_MS/heatDataMS.mat", "bytes": 15756878}
+      ]
+    }
+  ],
+  "human_mtl": {
+    "dataset_id": "human_mtl_sternberg_nwb",
+    "local_path": "data/external/cloudcell/mtl",
+    "files": [
+      {"file_name": "sub-7.nwb", "bytes": 61340496, "identifier": "SBID_7_P32CS", "session_id": "2"},
+      {"file_name": "sub-18.nwb", "bytes": 365508952, "identifier": "SBID_18_P51HMH", "session_id": "2"},
+      {"file_name": "sub-19.nwb", "bytes": 27268224, "identifier": "SBID_19_P47HMH", "session_id": "2"},
+      {"file_name": "sub-20.nwb", "bytes": 25582000, "identifier": "SBID_20_P49CS", "session_id": "2"}
+    ],
+    "nwb_general_metadata_sub18": {
+      "institution": "Cedars-Sinai Medical Center",
+      "lab": "Rutishauser",
+      "experimenter": ["Kyzar, Michael"],
+      "experiment_description": "This data contains electrophysiological recordings and behavior from the Sternberg task performed in patients with intractable epilepsy implanted with depth electrodes and Behnke-Fried microwires in the human medial temporal lobe and medial frontal cortex.",
+      "keywords": ["single neuron, human, intracranial, persistent activity, working memory"],
+      "related_publications": ["doi: 10.1038/nn.4509, 10.1016/j.neuron.2020.01.032"],
+      "session_description": "SBID: 18",
+      "session_start_time": "2016-01-01T00:00:00.000000-08:00",
+      "session_start_time_note": "Session start time set to Jan 1st of the recording year to avoid PHI disclosure.",
+      "source_script": "SB_NWB_export_main.m",
+      "subject": {"subject_id": "18", "species": "Homo sapiens", "age": "P24Y", "sex": "M"}
+    },
+    "provenance": {
+      "likely_dandiset": "DANDI:000469 (Human single-neuron recordings, Sternberg working memory task, Rutishauser lab; Kyzar et al.)",
+      "dandiset_inferred_from_file_metadata_not_from_download_record": true,
+      "related_publications_dois": ["10.1038/nn.4509", "10.1016/j.neuron.2020.01.032"],
+      "note": "Original download record was lost with the .tmp workspace; identification rests on NWB general/ metadata (lab, experimenter, task, keywords) read via h5py on 2026-08-12."
+    }
+  },
+  "auxiliary_result_json_files": [
+    {"relative_path": "cloudcell_mtl_gate.json", "bytes": 17365, "note": "2026-07-31 MTL gate output kept alongside data"},
+    {"relative_path": "human_mtl_recheck_all_shifts.json", "bytes": 31206, "note": "2026-08-04 recheck"},
+    {"relative_path": "local_memory_h1_recheck_20260804.json", "bytes": 11749, "note": "2026-08-04 h=1 recheck"},
+    {"relative_path": "local_memory_h6_recheck_20260804.json", "bytes": 11657, "note": "2026-08-04 h=6 recheck"}
+  ]
+}

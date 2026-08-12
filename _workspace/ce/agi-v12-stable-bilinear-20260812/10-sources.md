@@ -1,3 +1,5 @@
-# Sources
+# Source boundary
 
-Status: IN_PROGRESS
+Status: COMPLETE
+
+Synthetic engineering comparison only. No biological or AGI source claim is introduced.

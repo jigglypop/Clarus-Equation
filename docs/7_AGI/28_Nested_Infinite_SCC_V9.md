@@ -8,7 +8,7 @@
 >
 > V9 인과 메커니즘: **UNTESTED — 이론/설계 단계**
 >
-> 개발 실행: **0/256, BLOCKED — pre-run gate 미완료**
+> 개발 실행: **0/256, BLOCKED — pre-run gate 미완료** *(당시 시점 기술, stale — 이후 별도 run에서 256-seed 실행 1회 집행, 판정 STOP; §13 사후 기록 참조)*
 >
 > 생물학·AGI 승격: **금지 — 직접 증거 없음**
 
@@ -426,6 +426,9 @@ normalizer, comparison identity, intervention, budget, exact 256개 seed와 모�
 freeze한 implementation lock 및 독립 pre-run audit가 없다. 따라서 development
 registration은 HOLD, 실행은 **0/256 BLOCKED**, confirmation/test는 만들지 않는다.
 V8 test `81100..81355`와 ACBSM fresh block `82100..82355`는 계속 닫아 둔다.
+*(사후 주석: 위 문단은 이 문서 작성 시점의 기술이며 stale이다. 이후 별도 run에서
+pre-run gate가 통과되어 256-seed 개발 실행이 1회 집행되었고 판정은 STOP이었다.
+§13 사후 기록을 따른다.)*
 
 ## 10. neuroscience가 허용하는 해석의 상한
 
@@ -605,6 +608,8 @@ depth $1\to2\to3$, action $0\to1\to2$를 token policy에서 산출했다.
 검증했다. development seed, H20 benchmark, matched control, predictive score,
 biological data는 하나도 열거나 실행하지 않았다. V9 data 상태는 계속 **0/256
 BLOCKED**이며 biological/AGI route는 **UNTESTED / NOT AUTHORIZED**다.
+*(사후 주석: 마지막 문장의 data 상태는 이 절 작성 시점 기술이며 stale이다.
+이후 개발 실행 1회가 집행되었고 판정은 STOP이다. §13 사후 기록을 따른다.)*
 
 ## 12. 최종 경계표
 
@@ -621,10 +626,11 @@ BLOCKED**이며 biological/AGI route는 **UNTESTED / NOT AUTHORIZED**다.
 | finite causal cone | **[조건부 정리]** | finite in-degree, local tick, complete predecessors, finite horizon | infinite-horizon/fixed-point 유한 계산을 보장하지 않음 |
 | lazy generator | **[정리]·[산출: unit]** | total certified rule이면 finite query theorem; 현재 코드는 등록된 finite $D_{\max}$ prefix fixture | exact quotient·unbounded implementation을 자동 보장하지 않음 |
 | sealed finite controller | **[산출: unit]·[미완성]** | exact schema, atomic lifecycle, same-process HMAC continuation과 opt-in RuntimeAgent 연결 | cross-process snapshot, adaptive truncation, capacity/MAC, 성능·생물학·AGI를 보장하지 않음 |
-| V9 nested causal state | **[산출: state-mediated runtime path]·[미완성]·[예측]** | observation→tower state→token policy 인과 경로는 unit 검증; utility는 새 development registration에서만 시험 가능 | 현재 성능 성공·confirmation 주장 금지; 0/256 BLOCKED |
+| V9 nested causal state | **[산출: state-mediated runtime path]·[미완성]·[예측]** | observation→tower state→token policy 인과 경로는 unit 검증; utility는 새 development registration에서만 시험 가능 | 현재 성능 성공·confirmation 주장 금지; "0/256 BLOCKED"는 당시 시점 기술로 stale — §13 사후 기록(실행 1회, 판정 STOP) 참조 |
 | brain-wide nested representation | **[미완성]** | finite biological analogue라는 falsifiable hypothesis | biological identity·의식·AGI·물리적 무한 승격 금지 |
+| V15 metric-atlas reading | **[공리: 모델 선택]·[미완성]** | 각 finite SCC node를 하나의 metric-graph sample로 읽을 수 있음 | sampling/overlap/operator 수렴 없이 Riemannian atlas·Laplace--Beltrami·지능 증가로 승격 금지 |
 
-따라서 V1~V9 연구의 현재 종착점은 다음과 같다.
+따라서 V1~V9 연구의 이 문서 작성 시점 종착점은 다음과 같았다.
 
 ```text
 NESTED-SCC MATHEMATICS       SURVIVES
@@ -635,3 +641,51 @@ V9-1 TASK UTILITY            UNTESTED
 V9 CONFIRMATION              NOT REGISTERED / BLOCKED
 BIOLOGICAL OR AGI CLAIM      UNTESTED / NOT AUTHORIZED
 ```
+
+위 상태 블록에서 `V9-1 TASK UTILITY`, `256-SEED DEVELOPMENT RUN`,
+`V9 CONFIRMATION` 세 행은 stale이다. 이후 경과는 §13 사후 기록에 있다.
+
+## 13. 사후 기록 (2026-08-12): 첫 256-seed 개발 실행과 STOP 판정
+
+이 절은 §9, §11, §12의 "0/256 BLOCKED" 기술 이후의 사실 경과를 기록한다. 원
+기록은 당시 시점 기술로 본문에 그대로 보존하되, 현재 상태로는 stale이다. 별도
+run `agi-v9-loop-engineering-20260812`에서 preregistration과 authorization을
+포함한 pre-run gate가 통과되어(Gate: PASS), development seed `0..255`에 대한
+256-seed 개발 실행이 1회 집행되었다.
+
+**[산출: 2026-08-12 개발 실행 결과]** 등록된 gate 판정은 **STOP**이다. V9 arm의
+평균 정확도는 $0.3457$이고, 가장 강한 등록 대조군인 matched monolithic 대조군은
+$0.6116$이었다. paired mean improvement는 $-0.2659$(95% bootstrap 구간
+$[-0.2788,-0.2524]$)로, 임계 $\ge 0.02$를 만족하지 못해 FAIL이다. 반면
+upper-reset loss $0.0635$와 cross-cut loss $0.0635$는 임계 $\ge 0.05$를 통과했고,
+causal integrity counter는 모두 0으로 PASS였다. confirmation seed
+`10000..10255`는 개봉되지 않았고 봉인 상태로 유지된다. 모든 수치는 무차원
+정확도·정확도 차이다.
+
+이 결과에서 살아남는 진술과 죽는 진술은 다음과 같이 나뉜다. cross-level state가
+reset/cut 대조 대비 output 행동을 실제로 바꾼다는 인과 기여 진술은 [산출]로
+살아남는다. 반면 이 등록된 mechanism/task에 대한 V9의 task utility 우위,
+confirmation 개시, AGI·생물학 함의는 기각된다. 따라서 §12 표의 V9 nested causal
+state 행은 "실행 1회 집행, 판정 STOP, confirmation 미개봉"으로 읽어야 한다.
+
+**[미완성: 사후 진단과 재설계 조건 — 후속 가설]** post-development 진단은 모든
+V9 level이 같은 약한 local recurrence를 공유했고 readout이 지연된 약한
+복사본들을 평균했다는 것이다. 이 진단은 사후적이며 이번 점수를 수리하지 못하고
+confirmation을 열지 못한다. 후속 재설계는 다음 여섯 조건을 요구한다.
+
+1. local temporal state를 기저 객체로 삼는다.
+2. monadic 객체는 neuron이나 shell이 아니라 typed transition kernel이다.
+3. cross-level state는 full이 local-only와 cloud-only를 동일 최적화·compute
+   예산에서 이길 때만 인정한다.
+4. level별 timescale은 candidate와 matched control 양쪽에 포함한다.
+5. readout은 모든 level을 평균하지 않고 local과 shared increment를 분리해
+   노출한다.
+6. 이번 STOP의 seed block과 confirmation block은 재사용하지 않는다.
+
+후속 architecture는 별도의 새 model이며 새 계약과 새 seed role을 요구한다.
+이번 점수의 수리가 아니다.
+
+출처:
+
+- [post-development audit](../../_workspace/ce/agi-v9-loop-engineering-20260812/artifacts/post-development-audit.md)
+- [최종 폐쇄 보고](../../_workspace/ce/agi-v9-loop-engineering-20260812/40-final-report.md)
