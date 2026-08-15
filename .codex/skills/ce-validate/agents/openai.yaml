@@ -1,5 +1,4 @@
 interface:
   display_name: "CE Validation Harness"
-  short_description: "Run CE numerical, dimensional, and regression checks"
-  default_prompt: "Use $ce-validate to run the relevant CE validation suite and report failures."
-
+  short_description: "Run the smallest relevant CE validation check without cache residue"
+  default_prompt: "Use $ce-validate to run only the smallest relevant CE check, clean its temp files, and report what was not run."

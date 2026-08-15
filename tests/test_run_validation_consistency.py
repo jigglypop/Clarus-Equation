@@ -81,6 +81,22 @@ def test_combined_validator_has_no_stale_constant_count_claim() -> None:
     assert "45" not in (run_validation.ConstantsValidator.__doc__ or "")
 
 
+def test_bootstrap_validation_separates_equation_from_density_claim() -> None:
+    result = run_validation.BootstrapValidator().validate()
+
+    assert result["model_id"] == "LEGACY_DELTA_5DP_V1"
+    assert result["quantity_semantics"] == "branching_extinction_probability"
+    assert result["survival"] == 1.0 - result["q_ext"]
+    assert result["equation_satisfied"]
+    assert result["pass"]
+    assert result["sigma_offset"] is None
+    assert result["observation_comparison_status"] == (
+        "historical_display_only_no_covariance"
+    )
+    assert not result["physical_bridge_complete"]
+    assert not result["scientific_density_prediction"]
+
+
 def test_dimensional_validator_runs_live_dimensionless_gates() -> None:
     result = run_validation.DimensionalValidator().validate_all()
 
@@ -110,4 +126,6 @@ def test_overall_status_preserves_canonical_caution() -> None:
     result = run_validation.main()
 
     assert result["overall_status"] == "CAUTION"
+    assert result["physical_closure"] == "INCOMPLETE"
+    assert result["release_readiness"] == "NOT_READY"
     assert result["constants"]["summary"]["scored_total"] == 12

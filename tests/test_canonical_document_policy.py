@@ -100,7 +100,6 @@ REMOVED_PARENT_PATTERNS = (
 )
 
 POLICY_FILES = (
-    "agents/ce-paper-writer.md",
     "agents/ce-math-verifier.md",
     "agents/ce-status-auditor.md",
     "agents/ce-physics-sourcer.md",
@@ -202,7 +201,6 @@ def test_agent_policies_use_the_same_formal_provenance() -> None:
         if codex_text != claude_text:
             violations.append(f"policy mirror drift: {relative}")
         if relative in {
-            "agents/ce-paper-writer.md",
             "agents/ce-status-auditor.md",
             "skills/ce-doc-write/SKILL.md",
         }:
@@ -216,6 +214,12 @@ def test_agent_policies_use_the_same_formal_provenance() -> None:
         ):
             for match in pattern.finditer(codex_text):
                 line = codex_text.count("\n", 0, match.start()) + 1
+                line_text = codex_text.splitlines()[line - 1]
+                # `Gate: PASS|REVISE|BLOCKED` is the run-chain machine protocol
+                # the auditor must emit verbatim; only its protocol spelling is
+                # exempt, never a theory-status use of the same token.
+                if label == "machine verdict" and "Gate:" in line_text:
+                    continue
                 violations.append(f".codex/{relative}:{line}: {label}: {match.group(0)}")
 
     assert not violations, "\n".join(violations)

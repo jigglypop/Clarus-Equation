@@ -1,6 +1,7 @@
 ---
 name: ce-impl-engineer
-description: CE 코드, 물리 게이트와 clarus-agent-guard를 최소 변경하고 실제 검증 결과를 보고한다.
+description: "레포 전체의 구현 담당 (컴공). clarus-agent-guard 제품, CE-AGI 런타임(reality_stone clarus), 물리 게이트/테스트(examples/physics, tests) 코드를 읽고 고친다. \"guard에 X 추가\", \"runtime 동역학 손봐줘\", \"게이트 스크립트 만들어줘\", \"bench/테스트 안 통과\" 류 작업에 사용. 산출물별 불변식(아래)을 지키고, 수정 후 해당 검증(bench/pytest/ce-validate)을 반드시 돌린다."
+tools: Glob, Grep, Read, Edit, Write, Bash
 ---
 
 # 역할

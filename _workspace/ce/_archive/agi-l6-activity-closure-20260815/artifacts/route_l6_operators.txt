@@ -1,0 +1,28 @@
+r(3/4) = 81/16
+P_star in_U0=True occ0=1
+P_circ in_U0=True occ0=1
+=== one-step u=1 ===
+P_star tilde=7187/6336 d=1 (m',b')=(7187/12672, 491/990)
+P_circ tilde=16891/14850 d=1 (m',b')=(16891/29700, 133/270)
+pair unequal = True
+mass diff = -1487/950400
+boundary diff = 1/297
+division bits equal = True
+=== one-step u=m ===
+P_star tilde=6355/12672 d=0 (m',b')=(6355/12672, 491/990)
+P_circ tilde=34559/74250 d=0 (m',b')=(34559/74250, 133/270)
+=== T=32 float witnesses (not a hull) ===
+--- const_u1 ---
+P_star m32=0.572091755558 b32=0.533505274891 occ32=1 divs=32 out=0 first_out=None extinct_at=None
+P_circ m32=0.572084195667 b32=0.533491684481 occ32=1 divs=32 out=0 first_out=None extinct_at=None
+occupancy equal = True
+--- u=m ---
+P_star m32=0.710494158092 b32=0.583992300872 occ32=0 divs=0 out=20 first_out=12 extinct_at=None
+P_circ m32=0.000000000000 b32=0.044942626733 occ32=0 divs=0 out=25 first_out=7 extinct_at=11
+occupancy equal = True
+--- u=1[R0] ---
+P_star m32=0.572091755558 b32=0.533505274891 occ32=1 divs=32 out=0 first_out=None extinct_at=None
+P_circ m32=0.572084195667 b32=0.533491684481 occ32=1 divs=32 out=0 first_out=None extinct_at=None
+occupancy equal = True
+H1 cites O-E1 occupancy 1 at q=3/4, u=1; no T=32 hull
+sigma pair = (1, 1); bit predictor domain is a singleton

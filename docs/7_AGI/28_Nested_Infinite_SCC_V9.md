@@ -628,7 +628,8 @@ BLOCKED**이며 biological/AGI route는 **UNTESTED / NOT AUTHORIZED**다.
 | sealed finite controller | **[산출: unit]·[미완성]** | exact schema, atomic lifecycle, same-process HMAC continuation과 opt-in RuntimeAgent 연결 | cross-process snapshot, adaptive truncation, capacity/MAC, 성능·생물학·AGI를 보장하지 않음 |
 | V9 nested causal state | **[산출: state-mediated runtime path]·[미완성]·[예측]** | observation→tower state→token policy 인과 경로는 unit 검증; utility는 새 development registration에서만 시험 가능 | 현재 성능 성공·confirmation 주장 금지; "0/256 BLOCKED"는 당시 시점 기술로 stale — §13 사후 기록(실행 1회, 판정 STOP) 참조 |
 | brain-wide nested representation | **[미완성]** | finite biological analogue라는 falsifiable hypothesis | biological identity·의식·AGI·물리적 무한 승격 금지 |
-| V15 metric-atlas reading | **[공리: 모델 선택]·[미완성]** | 각 finite SCC node를 하나의 metric-graph sample로 읽을 수 있음 | sampling/overlap/operator 수렴 없이 Riemannian atlas·Laplace--Beltrami·지능 증가로 승격 금지 |
+| V15/V16 metric--SCC bridge | **[산출: 독립 finite primitive]·[공리: 모델 선택]·[미완성]** | V15 finite metric-graph readout과 V16 executed-vector/cost SPD metric learner는 각각 구현·검증됨 | 둘을 SCC tower와 합성하는 사상은 미구현; sampling·overlap·quadrature·operator/direct-limit compatibility 없이 Riemannian atlas·Laplace--Beltrami·뇌/우주 동일성·지능 증가로 승격 금지 |
+| V17 strict metric-only SCC replication | **[조건부 정리: no-go]·[산출: finite 확인]** | full-$GL(d)$ pointwise covariance와 등록된 공동독립·metric-only 통신 조건 아래 finite component/depth 및 compatible measurable countable system은 signed cue를 복구하지 못함 | raw cue side channel, sign-correlated seed/topology/init, 정의되지 않은 infinite event-depth, 일반 delayed credit·AGI·생물·우주로 확장 금지 |
 
 따라서 V1~V9 연구의 이 문서 작성 시점 종착점은 다음과 같았다.
 
@@ -689,3 +690,54 @@ confirmation을 열지 못한다. 후속 재설계는 다음 여섯 조건을 �
 
 - [post-development audit](../../_workspace/ce/agi-v9-loop-engineering-20260812/artifacts/post-development-audit.md)
 - [최종 폐쇄 보고](../../_workspace/ce/agi-v9-loop-engineering-20260812/40-final-report.md)
+
+## 14. V17 사후 경계 (2026-08-13): strict metric 복제의 no-rescue와 homogeneous 탈출
+
+이 절은 V9의 실패 점수를 다시 해석하거나 수리하지 않는다. V17은 별도 등록 과제에서
+“부호에 둔감한 원공간 metric state를 SCC agent 수나 recursion depth의 증가만으로
+복제하면 잃어버린 delayed cue 정보가 돌아오는가”를 형식적으로 분리했다.
+
+**[정리: full-GL sign-blindness]** strict update $U$가 모든 $J\in GL(d)$에 대해
+pointwise fixed-seed covariance를 만족한다고 하자. $J=-I$이면 metric은 그대로이고
+$x$만 $-x$로 바뀌므로
+
+$$
+U(g,-x,c)=U(g,x,c).
+$$
+
+**[조건부 정리: finite/countable SCC no-rescue]** paired branch에서 public reference,
+전체 seed, topology와 초기 metric state가 signed cue와 공동 독립이고 동일한 realization을
+쓰며, 각 component가 raw signed cue를 pointwise-covariant metric update로 먼저 소비한
+뒤 metric state와 sign-independent message만 통신하면 모든 finite component 수와
+finite event depth에서 두 branch의 상태·message는 귀납적으로 같다. 따라서 balanced
+terminal action의 정확도와 regret는 각각 $1/2$다. 가산 component 결론은 standard-Borel
+product system 또는 projectively compatible finite laws, measurable updates와 measurable
+terminal kernel이 선언된 경우에만 성립한다. permutation equivariance나 finite-$N$
+실험 목록만으로 countable system 또는 infinite-depth action이 생기지는 않는다.
+
+**[산출: 봉인 finite 확인]** confirmation seed `1720000..1720255`의 256 paired
+fixture에서 strict state의 sign-paired 직렬화와 action distribution은 전부 같았고,
+balanced 정확도와 regret는 $0.5/0.5$였다. $N\in\{1,2,4,8,16,64\}$의 모든 finite
+복제 control도 같은 값을 냈다. 이 수치는 finite 구현 killing fixture이며, 위 가산
+결론의 근거는 별도의 조건부 수학 정리다.
+
+**[정리: 등록 homogeneous 탈출]** $z_s=(su,1)$을
+$G_0=I_{d+1}$에 $\eta=1$, $c=4$로 한 번 쓰고 $y_a=(au,-1)$의 quadratic cost를
+읽으면 correct cost $2$, wrong cost $4$, exact margin $2$다. [산출] 봉인된 512개
+부호 branch는 모두 정답이었고 최소 수치 margin은 $1.999999999999996$, chart action
+agreement는 $1.0$, 최대 상대 quadratic-cost defect는
+$4.4408920985006072\times10^{-15}$였다. 다만 $d=3$에서
+$G\in\operatorname{SPD}(4)$는 원래 $\operatorname{SPD}(3)$의 6개보다 4개 많은 10개
+ambient 좌표를 가지며, 추가분은 spatial covector 3개와 scalar 1개의 포장이다.
+
+따라서 이 탈출은 “factor 하나”라는 저장 형식은 만족하지만 strict original-space
+$g$-only 가설은 만족하지 않는다. 또한 one-cue public-reference memory일 뿐 일반
+delayed credit assignment, 무한 SCC에 의한 지능 증가, AGI, 생물학적 뇌 또는 우주
+framework 동일성의 증거가 아니다.
+
+V17 근거:
+
+- [등록 계약](../../_workspace/ce/agi-v17-metric-delayed-credit-20260813/00-contract.md)
+- [독립 수학 검증](../../_workspace/ce/agi-v17-metric-delayed-credit-20260813/11-math.md)
+- [봉인 확인 결과](../../_workspace/ce/agi-v17-metric-delayed-credit-20260813/artifacts/confirmation-results.json)
+- [homogeneous signed-cue 구현](../../reality_stone/python/reality_stone/clarus/homogeneous_signed_cue.py)

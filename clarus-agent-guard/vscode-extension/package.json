@@ -1,0 +1,75 @@
+{
+  "name": "clarus-agent",
+  "displayName": "Clarus Agent",
+  "description": "A Claude Code / Codex-style coding agent panel, guarded by ClarusGuard (structural injection defense + human approval on every side effect).",
+  "version": "0.0.1",
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["Other"],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        { "id": "clarusAgent", "title": "Clarus Agent", "icon": "media/icon.svg" }
+      ]
+    },
+    "views": {
+      "clarusAgent": [
+        { "type": "webview", "id": "clarusAgent.chat", "name": "Chat" }
+      ]
+    },
+    "commands": [
+      { "command": "clarusAgent.newSession", "title": "Clarus Agent: New Session" }
+    ],
+    "configuration": {
+      "title": "Clarus Agent",
+      "properties": {
+        "clarusAgent.provider": {
+          "type": "string",
+          "enum": ["anthropic", "openai"],
+          "default": "anthropic",
+          "description": "LLM backend used for the agent loop."
+        },
+        "clarusAgent.anthropicModel": {
+          "type": "string",
+          "default": "claude-sonnet-5",
+          "description": "Model id used when provider = anthropic."
+        },
+        "clarusAgent.openaiModel": {
+          "type": "string",
+          "default": "gpt-4.1",
+          "description": "Model id used when provider = openai."
+        },
+        "clarusAgent.anthropicApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Anthropic API key (or set ANTHROPIC_API_KEY env var instead)."
+        },
+        "clarusAgent.openaiApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "OpenAI API key (or set OPENAI_API_KEY env var instead)."
+        },
+        "clarusAgent.pythonPath": {
+          "type": "string",
+          "default": "python",
+          "description": "Python interpreter used to run the ClarusGuard bridge (server/vscode_bridge.py)."
+        },
+        "clarusAgent.guardRepoPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to the clarus-agent-guard directory (defaults to the folder bundled with this extension)."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.4.0"
+  }
+}

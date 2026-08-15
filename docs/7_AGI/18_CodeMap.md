@@ -345,7 +345,7 @@ AI 응용에서 핵심은 단일 모듈 성능이 아니라 \(S_t \to R(S_t) \to
 |---|---|---|---|
 | \(S_t\) | 전역 상태: mode, activation, memory, pressure, lifecycle | `runtime.py::BrainRuntime`, `BrainRuntimeSnapshot` | 부분 구현 |
 | \(R(S_t)\) | 내부 이완/수렴: 셀 동역학 반복, sparse activation | `runtime.py::step`, `engine.py::CEEngine`, `ce_ops.py::relax` | 구현됨 |
-| \(C_t\) | 자기비평: 예측오차, 일관성, 놀라움, 곡률 점수 | `agent.py`, `stdp.py`, `ce_laplacian.py` 후보 | 부분/분산 구현 |
+| \(C_t\) | 자기비평: 예측오차, 일관성, 놀라움, 곡률 점수 | `agent.py`, `stdp.py` 후보 | 부분/분산 구현 |
 | \(\mathcal M\) | 기억 갱신과 replay | `runtime.py::HippocampusMemory`, `sleep.py` | 구현됨 |
 | \(\phi_t\) | 잔류장/불확실성/탈락 경로 보존 | `engine.py`, `sleep.py` | 부분 구현 |
 | \(\mathcal U\) | 다음 전역 상태 구성 | `runtime.py::step`, `snapshot()/from_snapshot()` | 구현됨 |
@@ -663,13 +663,59 @@ unverified.
 | affine tensor transport | `affine_chart_change` | transports $z$ and $g$ without projection; local/edge/path cost covariance tested |
 | world readout | `UnifiedMetricCore.edge_lengths` | finite metric-cost substrate only; no irreversible transition law |
 | memory readout | `metric_deformation` + `apply_source_metric` | source-before/after tensor deformation; source semantics are external |
-| planning readout | `shortest_path` | endpoint-average metric graph cost; full continuum geodesic not claimed |
-| critic readout | `surprise_gate` | hard threshold on dimensionless $d_g^2/\ell_0^2$ |
+| planning readout | `shortest_path` | strict representative relaxation, 별도 distance-oriented tie DAG, visited/$N-1$ cycle guard; $10^{-16}$ positive-chain 회귀 `PASS` |
+| critic readout | `surprise_gate` | dimensionless $d_g^2/\ell_0^2$의 Boolean은 log-domain에서 판정하고 표시용 ratio saturation과 분리 |
 | goal readout | `minimum_cost_targets` | all numerical minimizers retained; source-free symmetry cannot be secretly broken |
 | theorem boundary | `UnifiedMetricCertificate` | connection, curvature, heat, continuum, irreversible dynamics, AGI/bio/cosmos evidence are false |
-| focused validation | `tests/test_unified_metric.py` | 17 focused tests; 128 affine trials recorded in the V15 CE run |
+| focused validation | `tests/test_unified_metric.py` | 27 focused tests; tiny chain·extreme scale·explicit rejection 포함 |
+| V16 G-NUMERIC | inherited R1--R4 and V15 killing fixtures | combined focused suite 63 passed; SCC-related expanded slice 296 passed |
 
 The SCC nodes are finite samples of one metric graph in this baseline. Calling them an atlas or
 a Laplace--Beltrami discretization still requires sampling, overlap, quadrature, operator
 consistency, and direct-limit compatibility results. Increasing the SCC/node count is therefore
 resolution growth, not a proved increase in intelligence.
+
+The old oracle-navigation score supplied the environment metric directly and therefore validated
+objective-aligned arithmetic only. V16 closes executed-vector/scalar-cost metric learning and an
+immediate synthetic action--observation loop in a narrow registered protocol. Raw sensory
+representation, delayed credit, a nonstationary world model, and learned semantic OOD remain
+unimplemented or unscored.
+
+## 21. V16 covariant one-state metric flow (2026-08-13)
+
+| Formal object | Implementation | Status |
+|---|---|---|
+| one persistent SPD state | `covariant_metric_flow.py::CovariantMetricState.factor` | canonical lower-triangular positive-diagonal factor only; $d=3$ has 6 semantic DoF and optimizer state 0 |
+| prediction and residual | `CovariantMetricFlow.predict`, `residual` | $p=x^Tgx$, $r=\log(p/c)$; executed vector and positive scalar cost are external inputs |
+| covariant update | `CovariantMetricFlow.update` | factor congruence with no spectral projection; mathematical rank-one structure $O(d^2)$, reference QR canonicalization $O(d^3)$; nonrepresentable binary64 outputs rejected |
+| route readout | `CovariantMetricFlow.choose_route` | declared tolerance retains all minimizers and exposes the lowest-index representative |
+| theorem boundary | V16 run `11-math.md` | M1--M5 and noiseless finite-spanning bounded-gap convergence proved; fixed-rate noisy point convergence false; stochastic/diminishing-rate theory incomplete |
+| focused validation | `tests/test_covariant_metric_flow.py`, `tests/test_v16_benchmark.py` | flow 19 tests plus evaluator sealing tests; combined focused suite 63 passed |
+| sealed score | V16 `confirmation-results.json` | 256 seeds; accuracy $0.9642334$, regret $0.000439384$, metric error $0.0339121$, chart actions $1.0$; all five top-level gates `PASS`, `V16 NARROW GO` |
+| certificate boundary | `MetricFlowCertificate` | raw perception, delayed credit, continuum geometry and AGI evidence are false |
+
+The factor is the unique numerical encoding of $g$, not a second semantic state beside $g$.
+This does not show that the meanings of five agent functions are automatically derivable from
+$g$, or that a biological brain and the physical universe use this same learned metric.
+
+## 22. V17 strict metric no-go and homogeneous signed-cue lift (2026-08-13)
+
+| Formal object | Implementation | Status |
+|---|---|---|
+| strict original-space control | `homogeneous_signed_cue.py::HomogeneousSignedCue.strict_write` | V16 update를 projective cue representative에 적용해 $x$와 $-x$의 exact serialized factor를 같게 유지; 일반 memory solver가 아니라 sign-blindness killing fixture |
+| strict terminal law | `serialize_strict_state`, `strict_terminal_distribution` | 고정 action 순서 $(-1,+1)$에서 paired state와 $(0.5,0.5)$ law equality를 검사 |
+| one persistent augmented factor | `HomogeneousSignedCueState.factor` | $G\in\operatorname{SPD}(4)$의 canonical lower-triangular factor 하나; 10 ambient real coordinates, optimizer state 0 |
+| cue write and terminal readout | `lift_cue`, `write_cue`, `lift_action`, `readout` | $z_s=(su,1)$, $y_a=(au,-1)$, $\eta=1$, $c=4$의 고정 analytic fixture; exact cost $2$ 대 $4$, margin $2$ |
+| declared chart law | V17 evaluator의 $A=\operatorname{diag}(J,1)$ transport | spatial $GL(3)$만 embedded covariance로 검사; homogeneous coordinate를 섞는 일반 $GL(4)$ 또는 affine translation claim은 없음 |
+| theorem boundary | V17 run `11-math.md` | pointwise full-$GL(d)$ covariance에서 $U(g,-x,c)=U(g,x,c)$; finite SCC no-rescue와 compatibility·measurability를 갖춘 countable extension만 정리 |
+| focused validation | `tests/test_homogeneous_signed_cue.py`, `tests/test_v17_benchmark.py` | factor-only API, exact paired serialization, chart transport, sealing·seed-role·manifest failure를 검사 |
+| sealed score | V17 `confirmation-results.json` | 256 paired seeds: strict accuracy/regret $0.5/0.5$; lift $512/512$, regret $0$, minimum margin $1.999999999999996$, chart actions $1.0$, maximum relative quadratic-cost defect $4.4408920985006072\times10^{-15}$ |
+| certificate boundary | `HomogeneousSignedCueCertificate` | general delayed credit, infinite-SCC intelligence growth, biological fidelity, cosmological identity와 AGI evidence가 모두 false |
+
+For $d=3$, moving from $\operatorname{SPD}(3)$ to $\operatorname{SPD}(4)$ increases the
+independent ambient coordinates from 6 to 10.  The added four coordinates are the three
+components of a spatial covector plus one scalar in the homogeneous block.  Keeping them in one
+factor field is a valid implementation packaging, but it is extra oriented memory and therefore
+not the strict original-space $g$-only hypothesis.  The registered task is one public-reference,
+one-cue delayed-memory fixture; it neither learns a general credit kernel nor identifies brain or
+cosmological dynamics.

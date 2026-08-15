@@ -1,0 +1,340 @@
+{
+  "schema_version": "ce-cosmology-observations/v1",
+  "manifest_id": "CE_COSMOLOGY_OBSERVATIONS_V1",
+  "snapshot_date": "2026-08-16",
+  "provenance_policy": {
+    "required_entry_fields": [
+      "observation_id",
+      "release",
+      "model",
+      "source",
+      "units",
+      "covariance",
+      "blind_role",
+      "validity"
+    ],
+    "scientific_score_requires": [
+      "single_identified_release_and_model",
+      "official_source",
+      "locally_pinned_covariance_or_likelihood_sha256",
+      "declared_blind_role"
+    ],
+    "missing_requirement_policy": "fail_closed"
+  },
+  "blind_holdout": {
+    "assignment_status": "unassigned",
+    "gate_status": "NOT_READY",
+    "qualifying_independent_holdout_count": 0,
+    "fail_closed": true,
+    "reason": "No freeze-postdating, preregistered, independent release with a locally pinned full covariance is assigned."
+  },
+  "legacy_ratio_baseline_ids": [
+    "Planck2018_base",
+    "Planck_ACT_SPT_combined",
+    "ACT_DR6_DESI_reported",
+    "SPT3G_CMBSPA"
+  ],
+  "observations": [
+    {
+      "observation_id": "Planck2018_base",
+      "release": {
+        "experiment": "Planck",
+        "release_id": "Planck-2018-final",
+        "release_year": 2018,
+        "publication_year": 2020
+      },
+      "model": {
+        "name": "base_flat_LambdaCDM",
+        "combination": "legacy compressed display reference"
+      },
+      "source": {
+        "publisher": "ESA Planck Legacy Archive",
+        "uri": "https://www.cosmos.esa.int/web/planck/pla",
+        "evidence_id": "SRC-OBS-PLANCK-01",
+        "accessed": "2026-08-16",
+        "official": true
+      },
+      "values": {
+        "omega_b_h2": 0.0224,
+        "omega_c_h2": 0.12,
+        "H0": 67.4
+      },
+      "units": {
+        "omega_b_h2": "dimensionless",
+        "omega_c_h2": "dimensionless",
+        "H0": "km s^-1 Mpc^-1"
+      },
+      "covariance": {
+        "status": "public_remote_not_loaded",
+        "kind": "released_likelihood_and_chains",
+        "asset_uri": "https://www.cosmos.esa.int/web/planck/pla",
+        "local_asset_sha256": null
+      },
+      "blind_role": "seen_reference_not_holdout",
+      "validity": {
+        "status": "VALID_REFERENCE",
+        "historical_display_eligible": true,
+        "scientific_score_eligible": false,
+        "reason": "Official release, but this local manifest does not pin the likelihood/covariance bytes."
+      }
+    },
+    {
+      "observation_id": "Planck_ACT_SPT_combined",
+      "release": {
+        "experiment": "mixed",
+        "release_id": "unidentified-hybrid-tuple",
+        "release_year": null,
+        "publication_year": null
+      },
+      "model": {
+        "name": "unidentified_mixed_compressed_tuple",
+        "combination": "components drawn from incompatible Planck/ACT/SPT combinations"
+      },
+      "source": {
+        "publisher": null,
+        "uri": null,
+        "evidence_id": "SRC-FULL-P0-02",
+        "accessed": "2026-08-16",
+        "official": false
+      },
+      "values": {
+        "omega_b_h2": 0.02228,
+        "omega_c_h2": 0.1195,
+        "H0": 68.43
+      },
+      "units": {
+        "omega_b_h2": "dimensionless",
+        "omega_c_h2": "dimensionless",
+        "H0": "km s^-1 Mpc^-1"
+      },
+      "covariance": {
+        "status": "NONEXISTENT_FOR_HYBRID",
+        "kind": "none",
+        "asset_uri": null,
+        "local_asset_sha256": null
+      },
+      "blind_role": "historical_excluded",
+      "validity": {
+        "status": "EXCLUDED_HISTORICAL",
+        "historical_display_eligible": true,
+        "scientific_score_eligible": false,
+        "reason": "The tuple is not one official likelihood, release, model, or posterior and has no joint covariance."
+      }
+    },
+    {
+      "observation_id": "ACT_DR6_DESI_reported",
+      "release": {
+        "experiment": "ACT",
+        "release_id": "ACT-DR6.02",
+        "release_year": 2025,
+        "publication_year": 2025
+      },
+      "model": {
+        "name": "flat_LambdaCDM",
+        "combination": "ACT DR6 primary CMB plus lensing and DESI DR1 combination identified by chain tag"
+      },
+      "source": {
+        "publisher": "NASA LAMBDA",
+        "uri": "https://lambda.gsfc.nasa.gov/product/act/act_dr6.02/index.html",
+        "evidence_id": "SRC-OBS-ACT-01",
+        "accessed": "2026-08-16",
+        "official": true
+      },
+      "values": {
+        "omega_b_h2": 0.0226,
+        "omega_c_h2": 0.118,
+        "H0": 68.22
+      },
+      "units": {
+        "omega_b_h2": "dimensionless",
+        "omega_c_h2": "dimensionless",
+        "H0": "km s^-1 Mpc^-1"
+      },
+      "covariance": {
+        "status": "public_remote_not_loaded",
+        "kind": "spectra_covariance_and_mcmc_chain",
+        "asset_uri": "https://lambda.gsfc.nasa.gov/product/act/act_dr6.02/index.html",
+        "local_asset_sha256": null
+      },
+      "blind_role": "seen_reference_not_holdout",
+      "validity": {
+        "status": "VALID_REFERENCE",
+        "historical_display_eligible": true,
+        "scientific_score_eligible": false,
+        "reason": "Official tagged combination; local covariance/chain bytes are not pinned in this repository."
+      }
+    },
+    {
+      "observation_id": "SPT3G_CMBSPA",
+      "release": {
+        "experiment": "SPT-3G",
+        "release_id": "SPT-3G-D1-CMB-SPA-corrected-2026-04-01",
+        "release_year": 2026,
+        "publication_year": 2025
+      },
+      "model": {
+        "name": "flat_LambdaCDM",
+        "combination": "corrected CMB-SPA chain"
+      },
+      "source": {
+        "publisher": "NASA LAMBDA",
+        "uri": "https://lambda.gsfc.nasa.gov/product/spt/spt_3gd1/",
+        "evidence_id": "SRC-OBS-SPT-01",
+        "accessed": "2026-08-16",
+        "official": true
+      },
+      "values": {
+        "omega_b_h2": 0.022398,
+        "omega_c_h2": 0.12028,
+        "H0": 67.19
+      },
+      "units": {
+        "omega_b_h2": "dimensionless",
+        "omega_c_h2": "dimensionless",
+        "H0": "km s^-1 Mpc^-1"
+      },
+      "covariance": {
+        "status": "public_remote_not_loaded",
+        "kind": "corrected_chain_and_likelihood",
+        "asset_uri": "https://lambda.gsfc.nasa.gov/product/spt/spt3g_d1_bandp_liklyhood_get.html",
+        "local_asset_sha256": null
+      },
+      "blind_role": "seen_reference_not_holdout",
+      "validity": {
+        "status": "VALID_REFERENCE",
+        "historical_display_eligible": true,
+        "scientific_score_eligible": false,
+        "reason": "Official corrected release; local covariance/chain bytes are not pinned in this repository."
+      }
+    },
+    {
+      "observation_id": "DESI_DR2_FLAT_LCDM_RESULTS_II",
+      "release": {
+        "experiment": "DESI",
+        "release_id": "DESI-DR2-Results-II",
+        "release_year": 2025,
+        "publication_year": 2025
+      },
+      "model": {
+        "name": "flat_LambdaCDM",
+        "combination": "DESI DR2 BAO plus CMB"
+      },
+      "source": {
+        "publisher": "DESI Data",
+        "uri": "https://data.desi.lbl.gov/doc/papers/dr2/",
+        "evidence_id": "SRC-FULL-P0-01",
+        "accessed": "2026-08-16",
+        "official": true
+      },
+      "values": {
+        "omega_m": 0.3027,
+        "omega_m_sigma": 0.0036,
+        "omega_lambda_flat": 0.6973,
+        "omega_lambda_flat_sigma": 0.0036
+      },
+      "units": {
+        "omega_m": "dimensionless",
+        "omega_m_sigma": "dimensionless_68pct_marginal",
+        "omega_lambda_flat": "dimensionless",
+        "omega_lambda_flat_sigma": "dimensionless_68pct_marginal"
+      },
+      "covariance": {
+        "status": "public_remote_not_loaded",
+        "kind": "released_chain_and_13x13_BAO_covariance",
+        "asset_uri": "https://data.desi.lbl.gov/doc/papers/dr2/",
+        "local_asset_sha256": null
+      },
+      "blind_role": "seen_reference_not_holdout",
+      "validity": {
+        "status": "VALID_REFERENCE",
+        "historical_display_eligible": true,
+        "scientific_score_eligible": false,
+        "reason": "Corrects the unidentified 0.693+/-0.005 row; local posterior bytes are not pinned."
+      }
+    },
+    {
+      "observation_id": "SH0ES_2024_FOUR_ANCHOR",
+      "release": {
+        "experiment": "SH0ES",
+        "release_id": "Breuval-2024-four-anchor",
+        "release_year": 2024,
+        "publication_year": 2024
+      },
+      "model": {
+        "name": "local_distance_ladder",
+        "combination": "four geometric anchors"
+      },
+      "source": {
+        "publisher": "The Astrophysical Journal",
+        "uri": "https://doi.org/10.3847/1538-4357/ad630e",
+        "evidence_id": "SRC-OBS-SH0ES-01",
+        "accessed": "2026-08-16",
+        "official": true
+      },
+      "values": {
+        "H0": 73.17,
+        "H0_sigma": 0.86
+      },
+      "units": {
+        "H0": "km s^-1 Mpc^-1",
+        "H0_sigma": "km s^-1 Mpc^-1_68pct_marginal"
+      },
+      "covariance": {
+        "status": "full_calibration_covariance_not_loaded",
+        "kind": "published_marginal_with_systematics",
+        "asset_uri": "https://doi.org/10.3847/1538-4357/ad630e",
+        "local_asset_sha256": null
+      },
+      "blind_role": "seen_reference_not_holdout",
+      "validity": {
+        "status": "VALID_REFERENCE",
+        "historical_display_eligible": true,
+        "scientific_score_eligible": false,
+        "reason": "Published marginal is recorded; full local calibration covariance is absent."
+      }
+    },
+    {
+      "observation_id": "TDCOSMO_2025_CANONICAL",
+      "release": {
+        "experiment": "TDCOSMO",
+        "release_id": "TDCOSMO-2025-v4",
+        "release_year": 2025,
+        "publication_year": 2026
+      },
+      "model": {
+        "name": "flat_LambdaCDM",
+        "combination": "eight time-delay lenses plus Pantheon+"
+      },
+      "source": {
+        "publisher": "Astronomy & Astrophysics",
+        "uri": "https://doi.org/10.1051/0004-6361/202555801",
+        "evidence_id": "SRC-OBS-TDCOSMO-01",
+        "accessed": "2026-08-16",
+        "official": true
+      },
+      "values": {
+        "H0": 71.6,
+        "H0_sigma_minus": 3.3,
+        "H0_sigma_plus": 3.9
+      },
+      "units": {
+        "H0": "km s^-1 Mpc^-1",
+        "H0_sigma_minus": "km s^-1 Mpc^-1_68pct_marginal",
+        "H0_sigma_plus": "km s^-1 Mpc^-1_68pct_marginal"
+      },
+      "covariance": {
+        "status": "full_posterior_not_loaded",
+        "kind": "published_asymmetric_marginal",
+        "asset_uri": "https://doi.org/10.1051/0004-6361/202555801",
+        "local_asset_sha256": null
+      },
+      "blind_role": "seen_reference_not_holdout",
+      "validity": {
+        "status": "VALID_REFERENCE",
+        "historical_display_eligible": true,
+        "scientific_score_eligible": false,
+        "reason": "Published canonical marginal is recorded; the full local posterior is absent."
+      }
+    }
+  ]
+}

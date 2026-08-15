@@ -15,8 +15,10 @@ fixed-point response.
 
 from __future__ import annotations
 
+import argparse
 import math
 from dataclasses import dataclass
+from typing import Sequence
 
 
 ALPHA_S = 0.11789
@@ -30,6 +32,7 @@ N_E = 3 * D_EFF * N_GAUGE / 2
 # snapshot shared with the scorecard and proof-attempt ledger.
 OBS_AS_1E9 = 2.099
 OBS_AS_SIGMA_1E9 = 0.029
+HISTORICAL_PRIMORDIAL_PROJECTOR_MODEL_ID = "HISTORICAL_TARGET_AWARE_AS_PROJECTOR_V1"
 
 
 def bootstrap_fixed_point(d_eff: float = D_EFF) -> float:
@@ -58,6 +61,18 @@ class SpectrumReadout:
     @property
     def sigma_offset(self) -> float:
         return (self.as_1e9 - OBS_AS_1E9) / OBS_AS_SIGMA_1E9
+
+    @property
+    def closure_status(self) -> str:
+        """Current status, separate from the legacy fit-status snapshot."""
+        if self.status == "reject":
+            return "rejected_control"
+        return "target_aware_candidate"
+
+    @property
+    def qualifies_as_physical_prediction(self) -> bool:
+        """No projector in this historical scan is a blind prediction."""
+        return False
 
 
 def as_from_source(source_amplitude: float) -> float:
@@ -139,26 +154,48 @@ def inferred_geometry_exponent() -> float:
     return math.log(required_projection / (2 / math.pi)) / math.log(SIGMA)
 
 
-def main() -> None:
+def main(argv: Sequence[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(prog="primordial_spectrum_readout_gate")
+    parser.add_argument(
+        "--historical-reproduction",
+        action="store_true",
+        help="run the observationally screened legacy projector table",
+    )
+    args = parser.parse_args(argv)
+    if not args.historical_reproduction:
+        print(
+            "Historical projector disabled: pass --historical-reproduction; "
+            "physical primordial closure remains [미완성]."
+        )
+        return 2
+
     print("=" * 100)
-    print("CE PRIMORDIAL SPECTRUM READOUT GATE")
+    print("CE PRIMORDIAL SPECTRUM HISTORICAL REPRODUCTION")
     print("=" * 100)
+    print(f"model_id={HISTORICAL_PRIMORDIAL_PROJECTOR_MODEL_ID}")
+    print("physical_closure=false; blind_prediction=false")
     print(f"D_eff={D_EFF:.8f}, N_e={N_E:.8f}, x={X:.10f}, sigma={SIGMA:.10f}")
     print(f"gamma_eff={D_EFF/(D_EFF+1):.8f}, gamma_obs={inferred_geometry_exponent():.8f}")
     print("-" * 100)
-    print(f"{'readout':38s} {'status':10s} {'source':>14s} {'A_s x 1e9':>14s} {'sigma':>10s}")
+    print(
+        f"{'readout':38s} {'legacy-fit':10s} {'closure':>22s} "
+        f"{'source':>14s} {'A_s x 1e9':>14s} {'sigma':>10s}"
+    )
     print("-" * 100)
     for item in readouts():
         print(
             f"{item.name:38s} {item.status:10s} "
-            f"{item.source_amplitude:14.8g} {item.as_1e9:14.8g} {item.sigma_offset:10.2f}"
+            f"{item.closure_status:>22s} {item.source_amplitude:14.8g} "
+            f"{item.as_1e9:14.8g} {item.sigma_offset:10.2f}"
         )
     print("-" * 100)
     print("Boundary rule:")
     print("- reject total response as an observable density source; it is a solved-point displacement.")
-    print("- accept projected residual drive only as a Bridge/Phenomenology readout, not as Exact.")
+    print("- projected residual drives are target-aware candidates, not blind predictions.")
+    print("- legacy 'pass' means numerical snapshot proximity only; it is not closure success.")
     print("=" * 100)
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

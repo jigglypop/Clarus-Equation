@@ -1,6 +1,7 @@
 """PolicyCell — the Permission Proxy gate. Any external-action edge passes
 through here. Default stance: never auto-allow a side effect; downgrade to
-a draft and require approval. Rules load from policies/default.yaml.
+a draft and require approval. Rules are hardcoded against the tool spec
+(side_effecting / required_cap).
 """
 
 from __future__ import annotations

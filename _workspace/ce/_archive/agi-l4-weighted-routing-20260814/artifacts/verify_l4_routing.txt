@@ -1,0 +1,28 @@
+Independent L4 reductions (print-only recompute; no production import).
+Preregister: artifacts/l4_preregister.md (written first; no occupancy).
+u=1 occupancy on U0 is cited from N-E2 / O-E1, not recomputed.
+
+B_c b_hi = 157/297
+u=0 sign change at b = 1 - 1/lambda = 3/5
+crit - b_hi = 106/1485 > 0
+1 - lambda(1-b_hi) = -53/297 < 0
+B_c m_lo = 13/30 > 0
+worst-case mtilde(u=0) on closed B_c = 0
+first-step m from B_c corner (m_lo,b_hi) = 0
+after T=32 from any such start: m=0 (stays), not in R0_m=[2/5,3/5]
+
+W=I e1 -> u=(1, 0)
+W=I e2 -> u=(0, 1)
+W=I same drive: False
+A_1 e1 -> u=(1/2, 1/2)
+A_1 e2 -> u=(1/2, 1/2)
+A_1 same drive: True
+A_J e1 -> u=(0, 1)
+A_J e2 -> u=(1, 0)
+A_J same drive: False
+A_L e1 -> u=(1, 1)
+A_L e2 -> u=(0, 0)
+A_L same drive: False
+
+q0 registered = 3/4
+ALGEBRA_OK

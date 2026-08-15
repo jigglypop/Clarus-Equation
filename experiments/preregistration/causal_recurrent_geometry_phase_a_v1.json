@@ -1,0 +1,136 @@
+{
+  "allowed_claim_boundary": {
+    "exact_edge_only_when_registered_conjunction": true,
+    "evidence_excluded": [
+      "SCC",
+      "memory",
+      "biology",
+      "consciousness",
+      "AGI"
+    ],
+    "phase_a_synthetic_identification_only": true
+  },
+  "bootstrap": {
+    "samples": 4000,
+    "seed": 771
+  },
+  "confirmation": {
+    "commitment_domain": "CE-PHASE-A-V1-CONFIRMATION-SPLIT-ROTATION-2",
+    "commitment_scheme": "sha256(canonical-json-secret-seed-block-v1)",
+    "custody_status": "custody_unverified",
+    "disjoint_from_pilot_and_development": true,
+    "execution_authorized": false,
+    "holdout_status": "not_executable_holdout",
+    "opaque_commitment": "ad928d4fe89adcc138d92a83610259573a85ae0fd5d4a65cfc49a321391b2291",
+    "raw_seed_material_present": false,
+    "reservation_kind": "reservation_only",
+    "seed_count": 24,
+    "status": "reserved_unopened"
+  },
+  "development_output_path": "_workspace/ce/agi-causal-recurrent-geometry-phase-a-20260816/artifacts/development-results.json",
+  "dimensionless": {
+    "dimension_tags": {
+      "gaussian_residual": "DIMENSIONLESS",
+      "input": "DIMENSIONLESS",
+      "noise": "DIMENSIONLESS",
+      "state": "DIMENSIONLESS"
+    },
+    "normalized_coordinates": true,
+    "reference_scales": {
+      "input": [
+        1.0,
+        1.0
+      ],
+      "noise": [
+        1.0
+      ],
+      "state": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    }
+  },
+  "dof_accounting": {
+    "factorized_formula": "n*(K*n+m)",
+    "factorized_minus_pooled_formula": "(K-1)*n^2",
+    "pooled_formula": "n*(n+m)",
+    "report_effective_dof": true
+  },
+  "generator": {
+    "context_count": 3,
+    "context_heterogeneity": 0.38,
+    "experiment_version": "CE-PHASE-A-V1",
+    "heldout_intervention_scale": 1.35,
+    "heldout_steps": 192,
+    "input_dimension": 2,
+    "master_seed": 940221,
+    "noise_sigma": 0.05,
+    "ridge": 1e-06,
+    "state_dimension": 4,
+    "train_intervention_scale": 0.75,
+    "train_steps": 480
+  },
+  "manifest_hash_policy": "sha256-canonical-json-excluding-manifest_sha256",
+  "manifest_sha256": "78af635c524e05b35ba4a8b982f712d5174b99298bce1d94f827694c1c8733e2",
+  "primary_endpoint": "graph-seed paired delta_nll = pooled_nll - factorized_nll",
+  "required_artifacts": [
+    {
+      "path": "_workspace/ce/agi-causal-recurrent-geometry-phase-a-20260816/00-contract.md",
+      "sha256": "a77ef203c5a9614043b5f5223547ef50f214234bde43c68ac8dc70309644fe6e"
+    },
+    {
+      "path": "examples/agi/causal_recurrent_geometry_development_run.py",
+      "sha256": "f311a1ae1ecabbfbb55ac966429f276d782f13629f29759ad685f0d93516bb7c"
+    },
+    {
+      "path": "reality_stone/python/reality_stone/clarus/causal_recurrent_geometry_benchmark.py",
+      "sha256": "783b19a3d7e5e167203bfa49b8166b452bdd526729b87940b6033b25e3ebb8c8"
+    },
+    {
+      "path": "tests/test_causal_recurrent_geometry_benchmark.py",
+      "sha256": "f1870e1ab67c837dcea317138472de235c93d93c564af925a37ba68e4239a8aa"
+    }
+  ],
+  "schema": "ce.causal_recurrent_geometry.phase_a.manifest.v1",
+  "seed_roles": {
+    "development_graph_seeds": [
+      204506886,
+      204506887,
+      204506888,
+      204506889,
+      204506890,
+      204506891,
+      204506892,
+      204506893,
+      204506894,
+      204506895,
+      204506896,
+      204506897,
+      204506898,
+      204506899,
+      204506900,
+      204506901,
+      204506902,
+      204506903,
+      204506904,
+      204506905,
+      204506906,
+      204506907,
+      204506908,
+      204506909
+    ],
+    "pilot_graph_seeds": [
+      1001,
+      1002,
+      1003,
+      1004
+    ]
+  },
+  "status": "preregistered_development",
+  "stop_rules": {
+    "PA-H1": "STOP unless mean, median, and paired-bootstrap lower bound are positive",
+    "PA-H2": "STOP unless mean, median, and paired-bootstrap lower bound are positive"
+  }
+}

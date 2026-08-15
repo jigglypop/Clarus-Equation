@@ -16,8 +16,9 @@ Clarus-Equation 연구·구현을 위한 Codex 전역 지침. 프로젝트별 AG
 | guard 벤치·ASR·회귀 | $clarus-guard-bench |
 | 신규 주장 검증·승격 판단·논문화·병렬 연구 | $ce-research (full) |
 | 완결 run의 후속·반복 (v8→v9 등) | $ce-research (light, PREDECESSOR 지정) |
+| `.codex` 하네스·스킬·역할 카드·실행 정책 수정 | run 없이 대상 파일만 최소 수정 (spot) |
 
-선택한 스킬 하나만 로드한다. 역할 카드(agents/*.md)는 해당 레인을 실행하는 순간에만 읽는다.
+선택한 스킬 하나만 로드한다. 역할 카드는 4장(sourcer, math-verifier, status-auditor, impl-engineer)이며 해당 레인을 실행하는 순간에만 읽는다. 우회 경로 탐색(routes)은 math-verifier 레인에 포함되고, 최종 집필은 역할 카드 없이 $ce-research의 집필 규칙으로 직접 한다.
 
 ## 코어 명령
 
@@ -43,6 +44,25 @@ Clarus-Equation 연구·구현을 위한 Codex 전역 지침. 프로젝트별 AG
 - PREDECESSOR가 있으면 선행 run이 검증한 결론을 재유도·재대조하지 않고 경로만 인용한다.
 - 상세 계산·로그·발췌는 artifacts/에 쓰고 stage 파일에는 판정·표·경로만 남긴다.
 - 레인 파일은 3–4만 자 재생성이 아니라 판정 중심의 짧은 문서다.
+- `check final`은 앞 단계를 포함한다. 같은 상태에서 contract→lanes→gate→build→final을 연속 재실행하지 말고, 단계 전환에 필요한 check와 마지막 final을 각각 한 번만 실행한다.
+
+## 실행·캐시 규율
+
+- “검증해줘”, “고쳐줘”, “하네스 개선”은 전체 테스트 실행 권한이 아니다. 기본은 변경 파일에 직접 연결된 가장 작은 검사 **한 개**이며, green이면 멈춘다.
+- 관련 회귀 확대는 작은 검사가 실패했거나 공용 API·의존성 경계를 바꿨을 때만 한다. 저장소 전체 pytest·전체 bench·release 검증은 사용자가 `전체`, `full`, `release`, `CI 재현`을 명시한 경우에만 실행한다.
+- 코드가 바뀌지 않았는데 같은 green 명령을 다시 실행하지 않는다. 다른 역할의 성공 로그가 현재 byte와 명령을 고정했다면 인용하고 중복 실행하지 않는다.
+- Python은 기존 interpreter를 `-B`로 사용하고 child 환경에 `PYTHONDONTWRITEBYTECODE=1`을 둔다. pytest는 `-p no:cacheprovider`와 실행별 고유 `--basetemp`를 사용한다.
+- basetemp는 하네스가 만든 고유 소유 경로만 쓰고 성공·실패·중단 모두 `finally`에서 제거한다. 고정 이름 재사용, repo root 임시물, 광역 glob cleanup은 금지한다.
+- Ruff는 `--no-cache`를 쓴다. 문법 확인은 source를 메모리에서 `compile()`하고 `compileall`로 pyc를 만들지 않는다.
+- 현재 interpreter로 가능한 작업에 새 venv나 `uv run`을 만들지 않는다. dependency resolution이 실제로 필요할 때만 기존 프로젝트 실행기를 사용한다.
+- full 검증을 생략한 것은 실패가 아니다. 최종 보고에는 실행한 최소 검사와 생략한 확대 검증을 각각 명시한다.
+
+## 끈질김 (진취성 규율)
+
+- **BLOCKED는 최후 수단이다.** 막히면 (a) 우회 경로 후보 소진, (b) 주장 범위 축소로 좁은 정리 salvage, (c) 공리 1개 명시 추가 순으로 시도하고 기각 근거를 기록한 뒤에만 쓴다. BLOCKED에는 재개 조건이 필수다.
+- ABANDONED는 구조적 불가능(반례 확정·no-go·증거 원천 부재)의 근거가 있을 때만. 분량·피로·세션 길이는 사유가 아니다.
+- 부정 결과도 완결한다: 반례·기각으로 끝나는 run도 40-final-report.md까지 간다. 죽은 경로 확인은 실패가 아니라 산출이다.
+- revise 한도 소진은 run 포기 사유가 아니다 — 살릴 것을 좁혀 살리고 남는 결함만 BLOCKED로 보고서에 남긴다.
 
 ## 정직성 (협상 불가)
 

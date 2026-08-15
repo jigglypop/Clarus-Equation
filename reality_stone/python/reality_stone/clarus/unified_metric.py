@@ -31,6 +31,11 @@ from .clarus_field import normalized_graph_laplacian
 
 MetricNestedTuple = tuple[tuple[tuple[float, ...], ...], ...]
 
+_FLOAT_EPSILON = float(np.finfo(np.float64).eps)
+_FLOAT_MAX_LOG = math.log(float(np.finfo(np.float64).max))
+_FLOAT_MIN_SUBNORMAL = float(np.nextafter(0.0, 1.0))
+_FLOAT_MIN_LOG = math.log(_FLOAT_MIN_SUBNORMAL)
+
 
 def _finite_float(value: object, name: str) -> float:
     if isinstance(value, (bool, np.bool_)) or not isinstance(value, Real):
@@ -70,10 +75,112 @@ def _finite_array(
     return result.copy()
 
 
+def _safe_symmetrize(array: np.ndarray, *, name: str) -> np.ndarray:
+    """Average a matrix with its transpose without overflowing finite entries."""
+
+    with np.errstate(over="ignore", invalid="ignore"):
+        result = 0.5 * array + 0.5 * np.swapaxes(array, -1, -2)
+    if not np.all(np.isfinite(result)):
+        raise FloatingPointError(f"{name} symmetrization is not representable")
+    return result
+
+
+def _positive_product_parts(
+    factors: Sequence[float],
+    *,
+    name: str,
+) -> tuple[float, int]:
+    """Return ``mantissa, exponent`` for a positive product without forming it."""
+
+    mantissa = 1.0
+    exponent = 0
+    for factor in factors:
+        if not math.isfinite(factor) or factor <= 0.0:
+            raise FloatingPointError(f"{name} has a nonpositive or nonfinite factor")
+        part_mantissa, part_exponent = math.frexp(factor)
+        mantissa *= part_mantissa
+        exponent += part_exponent
+        mantissa, shift = math.frexp(mantissa)
+        exponent += shift
+    return mantissa, exponent
+
+
+def _representable_positive_product(
+    factors: Sequence[float],
+    *,
+    name: str,
+) -> float:
+    mantissa, exponent = _positive_product_parts(factors, name=name)
+    try:
+        result = math.ldexp(mantissa, exponent)
+    except OverflowError as error:
+        raise FloatingPointError(f"{name} is not representable") from error
+    if not math.isfinite(result) or result <= 0.0:
+        raise FloatingPointError(f"{name} is not representable")
+    return result
+
+
+def _representable_positive_sqrt_product(
+    factors: Sequence[float],
+    *,
+    name: str,
+) -> float:
+    mantissa, exponent = _positive_product_parts(factors, name=name)
+    if exponent % 2:
+        mantissa *= 2.0
+        exponent -= 1
+    try:
+        result = math.ldexp(math.sqrt(mantissa), exponent // 2)
+    except OverflowError as error:
+        raise FloatingPointError(f"{name} is not representable") from error
+    if not math.isfinite(result) or result <= 0.0:
+        raise FloatingPointError(f"{name} is not representable")
+    return result
+
+
+def _quadratic_factors(
+    vector: np.ndarray,
+    metric: np.ndarray,
+    *,
+    name: str,
+) -> tuple[float, ...] | None:
+    """Factor ``x.T @ g @ x`` into bounded pieces, or return ``None`` for zero."""
+
+    vector_scale = float(np.max(np.abs(vector)))
+    if vector_scale == 0.0:
+        return None
+    metric_scale = float(np.max(np.abs(metric)))
+    if not math.isfinite(metric_scale) or metric_scale <= 0.0:
+        raise FloatingPointError(f"{name} metric scale is invalid")
+
+    normalized_vector = vector / vector_scale
+    normalized_metric = metric / metric_scale
+    try:
+        factor = np.linalg.cholesky(normalized_metric)
+    except np.linalg.LinAlgError as error:
+        raise FloatingPointError(f"{name} metric factorization failed") from error
+    weighted = factor.T @ normalized_vector
+    unit_quadratic = math.fsum(float(value) * float(value) for value in weighted)
+    if not math.isfinite(unit_quadratic) or unit_quadratic <= 0.0:
+        raise FloatingPointError(f"{name} is not numerically positive")
+    return (unit_quadratic, metric_scale, vector_scale, vector_scale)
+
+
+def _product_log(factors: Sequence[float]) -> float:
+    return math.fsum(math.log(factor) for factor in factors)
+
+
+def _saturating_exp(log_value: float) -> float:
+    if log_value > _FLOAT_MAX_LOG:
+        return math.inf
+    if log_value < _FLOAT_MIN_LOG:
+        return 0.0
+    return math.exp(log_value)
+
+
 def _metric_tuples(metric: np.ndarray) -> MetricNestedTuple:
     return tuple(
-        tuple(tuple(float(value) for value in row) for row in node_metric)
-        for node_metric in metric
+        tuple(tuple(float(value) for value in row) for row in node_metric) for node_metric in metric
     )
 
 
@@ -89,22 +196,27 @@ def _metric_array(
         result = np.asarray(values, dtype=np.float64)
     except (TypeError, ValueError) as error:
         raise ValueError(
-            f"{name} must be a finite array with shape "
-            f"({node_count}, {dimension}, {dimension})"
+            f"{name} must be a finite array with shape ({node_count}, {dimension}, {dimension})"
         ) from error
     expected = (node_count, dimension, dimension)
     if result.shape != expected:
         raise ValueError(f"{name} must have shape {expected}")
     if not np.all(np.isfinite(result)):
         raise ValueError(f"{name} must contain only finite values")
-    scale = max(1.0, float(np.max(np.abs(result))))
-    tolerance = 128.0 * np.finfo(np.float64).eps * scale
+    scale = float(np.max(np.abs(result)))
+    tolerance = 128.0 * _FLOAT_EPSILON * scale
     if not np.allclose(result, np.swapaxes(result, 1, 2), rtol=0.0, atol=tolerance):
         raise ValueError(f"{name} must be symmetric at every node")
-    result = 0.5 * (result + np.swapaxes(result, 1, 2))
+    try:
+        result = _safe_symmetrize(result, name=name)
+    except FloatingPointError as error:
+        raise ValueError(f"{name} cannot be safely symmetrized") from error
     if require_spd:
-        eigenvalues = np.linalg.eigvalsh(result)
-        if float(np.min(eigenvalues)) <= 0.0:
+        try:
+            eigenvalues = np.linalg.eigvalsh(result)
+        except np.linalg.LinAlgError as error:
+            raise ValueError(f"{name} eigenvalue validation failed") from error
+        if not np.all(np.isfinite(eigenvalues)) or float(np.min(eigenvalues)) <= 0.0:
             raise ValueError(f"{name} must be positive definite at every node")
     return result.copy()
 
@@ -231,10 +343,27 @@ def affine_chart_change(
         offset_array = np.zeros(dimension, dtype=np.float64)
     else:
         offset_array = _finite_array(offset, shape=(dimension,), name="offset")
-    transformed_points = point_array @ jacobian_array.T + offset_array
+    with np.errstate(over="ignore", invalid="ignore", under="ignore"):
+        transformed_points = point_array @ jacobian_array.T + offset_array
+    if not np.all(np.isfinite(transformed_points)):
+        raise FloatingPointError("affine point transport is not representable")
     transformed_metric = np.empty_like(metric_array)
     for node in range(node_count):
-        transformed_metric[node] = inverse.T @ metric_array[node] @ inverse
+        with np.errstate(over="ignore", invalid="ignore", under="ignore"):
+            transported = inverse.T @ metric_array[node] @ inverse
+        if not np.all(np.isfinite(transported)):
+            raise FloatingPointError("affine metric transport is not representable")
+        transported = _safe_symmetrize(
+            transported,
+            name="affine metric transport",
+        )
+        try:
+            eigenvalues = np.linalg.eigvalsh(transported)
+        except np.linalg.LinAlgError as error:
+            raise FloatingPointError("affine metric transport SPD validation failed") from error
+        if not np.all(np.isfinite(eigenvalues)) or float(np.min(eigenvalues)) <= 0.0:
+            raise FloatingPointError("affine metric transport is not representable as SPD")
+        transformed_metric[node] = transported
     return transformed_points, transformed_metric
 
 
@@ -254,14 +383,10 @@ class UnifiedMetricCore:
         except (TypeError, ValueError) as error:
             raise ValueError("points must be a finite rank-2 array") from error
         if point_array.ndim != 2 or point_array.shape[0] < 1 or point_array.shape[1] < 2:
-            raise ValueError(
-                "points must be a nonempty rank-2 array with dimension at least 2"
-            )
+            raise ValueError("points must be a nonempty rank-2 array with dimension at least 2")
         if not np.all(np.isfinite(point_array)):
             raise ValueError("points must contain only finite values")
-        if len({tuple(float(value) for value in row) for row in point_array}) != len(
-            point_array
-        ):
+        if len({tuple(float(value) for value in row) for row in point_array}) != len(point_array):
             raise ValueError("points must be distinct")
         self.config = config
         self.node_count = int(point_array.shape[0])
@@ -332,14 +457,37 @@ class UnifiedMetricCore:
             name=name,
             require_spd=False,
         )
-        eigenvalues, eigenvectors = np.linalg.eigh(array)
+        try:
+            eigenvalues, eigenvectors = np.linalg.eigh(array)
+        except np.linalg.LinAlgError as error:
+            raise FloatingPointError(f"{name} projection eigensolver failed") from error
+        if not np.all(np.isfinite(eigenvalues)) or not np.all(np.isfinite(eigenvectors)):
+            raise FloatingPointError(f"{name} projection eigensystem is not finite")
         clipped = np.clip(
             eigenvalues,
             self.config.min_eigenvalue,
             self.config.max_eigenvalue,
         )
-        projected = (eigenvectors * clipped[:, None, :]) @ np.swapaxes(eigenvectors, 1, 2)
-        return 0.5 * (projected + np.swapaxes(projected, 1, 2))
+        with np.errstate(over="ignore", invalid="ignore"):
+            projected = (eigenvectors * clipped[:, None, :]) @ np.swapaxes(
+                eigenvectors,
+                1,
+                2,
+            )
+        projected = _safe_symmetrize(projected, name=f"{name} projection")
+        try:
+            validated = _metric_array(
+                projected,
+                node_count=self.node_count,
+                dimension=self.dimension,
+                name=f"{name} projection",
+                require_spd=True,
+            )
+        except ValueError as error:
+            raise FloatingPointError(
+                f"{name} projection did not produce a finite SPD metric"
+            ) from error
+        return validated
 
     def _validated_state(self, state: UnifiedMetricState) -> np.ndarray:
         if type(state) is not UnifiedMetricState:
@@ -373,8 +521,20 @@ class UnifiedMetricCore:
         current = self._project_array(self._validated_state(state), name="state.metric")
         source = self._project_array(source_metric, name="source_metric")
         rate = self.config.source_rate
-        updated = (1.0 - rate) * current + rate * source
-        return UnifiedMetricState(_metric_tuples(updated))
+        with np.errstate(over="ignore", invalid="ignore"):
+            updated = (1.0 - rate) * current + rate * source
+        updated = _safe_symmetrize(updated, name="source metric update")
+        try:
+            validated = _metric_array(
+                updated,
+                node_count=self.node_count,
+                dimension=self.dimension,
+                name="source metric update",
+                require_spd=True,
+            )
+        except ValueError as error:  # pragma: no cover - convex SPD arithmetic guard
+            raise FloatingPointError("source metric update is not finite SPD") from error
+        return UnifiedMetricState(_metric_tuples(validated))
 
     def metric_deformation(
         self,
@@ -400,11 +560,17 @@ class UnifiedMetricCore:
             shape=(self.dimension,),
             name="displacement",
         )
-        value = float(vector @ metric[node_index] @ vector)
-        tolerance = 128.0 * np.finfo(np.float64).eps * max(1.0, abs(value))
-        if value < -tolerance:  # pragma: no cover - guarded by SPD validation
-            raise FloatingPointError("metric produced a negative squared length")
-        return max(value, 0.0)
+        factors = _quadratic_factors(
+            vector,
+            metric[node_index],
+            name="local squared length",
+        )
+        if factors is None:
+            return 0.0
+        return _representable_positive_product(
+            factors,
+            name="local squared length",
+        )
 
     def edge_lengths(self, state: UnifiedMetricState) -> np.ndarray:
         """Return finite lengths on topology edges and infinity elsewhere."""
@@ -417,12 +583,25 @@ class UnifiedMetricCore:
                 target_index = int(target)
                 if target_index <= source:
                     continue
-                displacement = self._points[target_index] - self._points[source]
-                endpoint_metric = 0.5 * (metric[source] + metric[target_index])
-                squared = float(displacement @ endpoint_metric @ displacement)
-                if squared <= 0.0:  # distinct points and SPD should make this impossible
-                    raise FloatingPointError("an edge has a nonpositive metric length")
-                length = math.sqrt(squared)
+                with np.errstate(over="ignore", invalid="ignore"):
+                    displacement = self._points[target_index] - self._points[source]
+                if not np.all(np.isfinite(displacement)):
+                    raise FloatingPointError("an edge displacement is not representable")
+                endpoint_metric = _safe_symmetrize(
+                    0.5 * metric[source] + 0.5 * metric[target_index],
+                    name="endpoint metric average",
+                )
+                factors = _quadratic_factors(
+                    displacement,
+                    endpoint_metric,
+                    name="edge squared length",
+                )
+                if factors is None:  # pragma: no cover - distinct points are validated
+                    raise FloatingPointError("an edge has zero metric length")
+                length = _representable_positive_sqrt_product(
+                    factors,
+                    name="edge length",
+                )
                 lengths[source, target_index] = length
                 lengths[target_index, source] = length
         return lengths
@@ -436,35 +615,54 @@ class UnifiedMetricCore:
         lengths = self.edge_lengths(state)
         distances = np.full(self.node_count, np.inf, dtype=np.float64)
         predecessors = np.full(self.node_count, -1, dtype=np.int64)
-        path_counts = np.zeros(self.node_count, dtype=np.int8)
         distances[source_index] = 0.0
-        path_counts[source_index] = 1
         pending: list[tuple[float, int]] = [(0.0, source_index)]
         while pending:
             distance, node = heapq.heappop(pending)
-            tolerance = 64.0 * np.finfo(np.float64).eps * max(1.0, abs(distance))
-            if distance > distances[node] + tolerance:
+            if distance != distances[node]:
                 continue
             for neighbor in np.flatnonzero(np.isfinite(lengths[node])):
                 neighbor_index = int(neighbor)
                 if neighbor_index == node:
                     continue
-                candidate = distance + float(lengths[node, neighbor_index])
+                edge_length = float(lengths[node, neighbor_index])
+                with np.errstate(over="ignore", invalid="ignore"):
+                    candidate = distance + edge_length
+                if not math.isfinite(candidate) or candidate <= distance:
+                    continue
                 incumbent = float(distances[neighbor_index])
-                scale = max(1.0, abs(candidate), abs(incumbent) if math.isfinite(incumbent) else 1.0)
-                compare_tolerance = 128.0 * np.finfo(np.float64).eps * scale
-                if not math.isfinite(incumbent) or candidate < incumbent - compare_tolerance:
+                if candidate < incumbent:
                     distances[neighbor_index] = candidate
                     predecessors[neighbor_index] = node
-                    path_counts[neighbor_index] = path_counts[node]
                     heapq.heappush(pending, (candidate, neighbor_index))
-                elif abs(candidate - distances[neighbor_index]) <= compare_tolerance:
+
+        if not np.all(np.isfinite(distances)):
+            raise FloatingPointError("a finite graph path cost is not representable")
+
+        path_counts = np.zeros(self.node_count, dtype=np.int8)
+        path_counts[source_index] = 1
+        distance_order = sorted(
+            range(self.node_count),
+            key=lambda node: (float(distances[node]), node),
+        )
+        for node in distance_order:
+            if path_counts[node] == 0:
+                continue
+            for neighbor in np.flatnonzero(np.isfinite(lengths[node])):
+                neighbor_index = int(neighbor)
+                if distances[node] >= distances[neighbor_index]:
+                    continue
+                candidate = float(distances[node]) + float(lengths[node, neighbor_index])
+                if not math.isfinite(candidate):
+                    continue
+                target_distance = float(distances[neighbor_index])
+                scale = max(abs(candidate), abs(target_distance))
+                tie_tolerance = 128.0 * _FLOAT_EPSILON * scale
+                if abs(candidate - target_distance) <= tie_tolerance:
                     path_counts[neighbor_index] = min(
                         2,
                         int(path_counts[neighbor_index]) + int(path_counts[node]),
                     )
-                    if predecessors[neighbor_index] < 0 or node < predecessors[neighbor_index]:
-                        predecessors[neighbor_index] = node
         return distances, predecessors, path_counts
 
     def shortest_path(
@@ -477,12 +675,20 @@ class UnifiedMetricCore:
         target_index = _node_index(target, self.node_count, "target")
         distances, predecessors, path_counts = self._dijkstra(state, source_index)
         path = [target_index]
+        visited = {target_index}
         cursor = target_index
-        while cursor != source_index:
+        for _ in range(self.node_count - 1):
+            if cursor == source_index:
+                break
             cursor = int(predecessors[cursor])
             if cursor < 0:  # pragma: no cover - topology connectivity is validated
                 raise RuntimeError("connected metric graph produced no path")
+            if cursor in visited:
+                raise RuntimeError("shortest-path predecessor cycle detected")
+            visited.add(cursor)
             path.append(cursor)
+        if cursor != source_index:
+            raise RuntimeError("shortest-path reconstruction exceeded N-1 hops")
         path.reverse()
         return MetricPath(
             nodes=tuple(path),
@@ -517,16 +723,44 @@ class UnifiedMetricCore:
             raise ValueError("reference_scale must be positive")
         if threshold_value < 0.0:
             raise ValueError("threshold must be nonnegative")
-        squared = self.local_length_squared(
-            state,
-            node,
-            observed_array - predicted_array,
+        metric = self._validated_state(state)
+        node_index = _node_index(node, self.node_count, "node")
+        with np.errstate(over="ignore", invalid="ignore"):
+            displacement = observed_array - predicted_array
+        if not np.all(np.isfinite(displacement)):
+            raise FloatingPointError("surprise displacement is not representable")
+        factors = _quadratic_factors(
+            displacement,
+            metric[node_index],
+            name="surprise squared length",
         )
-        normalized = squared / (scale * scale)
+        if factors is None:
+            squared = 0.0
+            normalized = 0.0
+            hard_gate = 0
+        else:
+            squared_log = _product_log(factors)
+            squared = _saturating_exp(squared_log)
+            ratio_log = squared_log - 2.0 * math.log(scale)
+            normalized = _saturating_exp(ratio_log)
+            if threshold_value == 0.0:
+                hard_gate = 1
+            else:
+                threshold_log = math.log(threshold_value)
+                comparison_tolerance = (
+                    128.0
+                    * _FLOAT_EPSILON
+                    * max(
+                        1.0,
+                        abs(ratio_log),
+                        abs(threshold_log),
+                    )
+                )
+                hard_gate = int(ratio_log > threshold_log + comparison_tolerance)
         return MetricSurprise(
             squared_length=squared,
             normalized_squared_length=normalized,
-            hard_gate=int(normalized > threshold_value),
+            hard_gate=hard_gate,
         )
 
     def minimum_cost_targets(
@@ -549,9 +783,10 @@ class UnifiedMetricCore:
         distances, _, _ = self._dijkstra(state, source_index)
         costs = tuple((candidate, float(distances[candidate])) for candidate in ordered)
         minimum = min(cost for _, cost in costs)
-        tolerance = 256.0 * np.finfo(np.float64).eps * max(1.0, abs(minimum))
         minimizers = tuple(
-            candidate for candidate, cost in costs if abs(cost - minimum) <= tolerance
+            candidate
+            for candidate, cost in costs
+            if abs(cost - minimum) <= 256.0 * _FLOAT_EPSILON * max(abs(cost), abs(minimum))
         )
         return MetricGoalReadout(
             costs=costs,
@@ -575,9 +810,7 @@ class UnifiedMetricCore:
             observed_min_eigenvalue=minimum,
             observed_max_eigenvalue=maximum,
             condition_number=maximum / minimum,
-            configured_condition_bound=(
-                self.config.max_eigenvalue / self.config.min_eigenvalue
-            ),
+            configured_condition_bound=(self.config.max_eigenvalue / self.config.min_eigenvalue),
             within_configured_bounds=within,
             persistent_state="metric_only",
             persistent_state_field_count=len(fields(UnifiedMetricState)),

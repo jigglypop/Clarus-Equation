@@ -1,0 +1,127 @@
+P-H1 / P-H2 independent algebra
+
+q-map fixed points (P.4 unchanged): ['1/4', '1/2', '3/4']
+F0 citation solve: {'q_fixed': ['1/4', '1/2', '3/4'], 'dividing_mass_roots': ['1/2', '-2/9'], 'positive_dividing_mass': '1/2', 'cube_fixed_count': 6, 'positive_dividing_states': 3}
+q absent from (P.1)--(P.3): {'P.1_has_q': False, 'P.2_has_q': False, 'P.3_has_q': False, 'P.4_has_q': True, 'implementation_predivision_args': ('mass', 'boundary', 'parameters'), 'implementation_boundary_uses': ('mass', 'boundary', 'rho', 'delta')}
+
+r(q) positivity (selected grid):
+  kappa=1/8 q=0 r=63/16 positive=True
+  kappa=1/8 q=1/4 r=135/32 positive=True
+  kappa=1/8 q=1/2 r=9/2 positive=True
+  kappa=1/8 q=3/4 r=153/32 positive=True
+  kappa=1/8 q=1 r=81/16 positive=True
+  kappa=1/4 q=0 r=27/8 positive=True
+  kappa=1/4 q=1/4 r=63/16 positive=True
+  kappa=1/4 q=1/2 r=9/2 positive=True
+  kappa=1/4 q=3/4 r=81/16 positive=True
+  kappa=1/4 q=1 r=45/8 positive=True
+  kappa=1/2 q=0 r=9/4 positive=True
+  kappa=1/2 q=1/4 r=27/8 positive=True
+  kappa=1/2 q=1/2 r=9/2 positive=True
+  kappa=1/2 q=3/4 r=45/8 positive=True
+  kappa=1/2 q=1 r=27/4 positive=True
+  kappa=1 q=0 r=0 positive=False
+  kappa=1 q=1/4 r=9/4 positive=True
+  kappa=1 q=1/2 r=9/2 positive=True
+  kappa=1 q=3/4 r=27/4 positive=True
+  kappa=1 q=1 r=9 positive=True
+rho(q) positivity (selected grid):
+  kappa=1/8 q=0 rho=7/40 positive=True
+  kappa=1/8 q=1/4 rho=3/16 positive=True
+  kappa=1/8 q=1/2 rho=1/5 positive=True
+  kappa=1/8 q=3/4 rho=17/80 positive=True
+  kappa=1/8 q=1 rho=9/40 positive=True
+  kappa=1/4 q=0 rho=3/20 positive=True
+  kappa=1/4 q=1/4 rho=7/40 positive=True
+  kappa=1/4 q=1/2 rho=1/5 positive=True
+  kappa=1/4 q=3/4 rho=9/40 positive=True
+  kappa=1/4 q=1 rho=1/4 positive=True
+  kappa=1/2 q=0 rho=1/10 positive=True
+  kappa=1/2 q=1/4 rho=3/20 positive=True
+  kappa=1/2 q=1/2 rho=1/5 positive=True
+  kappa=1/2 q=3/4 rho=1/4 positive=True
+  kappa=1/2 q=1 rho=3/10 positive=True
+  kappa=1 q=0 rho=0 positive=False
+  kappa=1 q=1/4 rho=1/10 positive=True
+  kappa=1 q=1/2 rho=1/5 positive=True
+  kappa=1 q=3/4 rho=3/10 positive=True
+  kappa=1 q=1 rho=2/5 positive=True
+
+critical kappa: {'P-H1_q=1/4_m=3/8': {'r': '136/35', 'kappa': '86/315', 'kappa_decimal': 0.273015873015873}, 'P-H1_q=1/4_disc=0': {'r_high': '[16+2*sqrt(55)]/9', 'r_high_decimal': 3.4258218860212586, 'kappa_decimal': 0.47741249510166295}, 'P-H2_q=1/4_m=3/8': {'rho': '44/435', 'kappa': '86/87', 'kappa_decimal': 0.9885057471264368}}
+extinction area at nominal r (q=1/2 for both): 1/10
+
+=== P-H1 dividing-mass scan ===
+kappa=0 q=1/4 r=9/2 disc=169/4 area=1/10
+  root {'m': '1/2', 'm_float': 0.5, 'b_mass': '1/2', 'b_bound': '1/2', 'residual': '0', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': True, 'jury': {'trace': '27/40', 'det': '-13/80', 'jury_1_minus_tr_plus_det': '13/80', 'jury_1_plus_tr_plus_det': '121/80', 'jury_1_minus_det': '93/80', 'linear_schur': True}}
+kappa=0 q=1/2 r=9/2 disc=169/4 area=1/10
+  root {'m': '1/2', 'm_float': 0.5, 'b_mass': '1/2', 'b_bound': '1/2', 'residual': '0', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': True, 'jury': {'trace': '27/40', 'det': '-13/80', 'jury_1_minus_tr_plus_det': '13/80', 'jury_1_plus_tr_plus_det': '121/80', 'jury_1_minus_det': '93/80', 'linear_schur': True}}
+kappa=0 q=3/4 r=9/2 disc=169/4 area=1/10
+  root {'m': '1/2', 'm_float': 0.5, 'b_mass': '1/2', 'b_bound': '1/2', 'residual': '0', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': True, 'jury': {'trace': '27/40', 'det': '-13/80', 'jury_1_minus_tr_plus_det': '13/80', 'jury_1_plus_tr_plus_det': '121/80', 'jury_1_minus_det': '93/80', 'linear_schur': True}}
+kappa=1/8 q=1/4 r=135/32 disc=29881/1024 area=8/75
+  root {'m': None, 'm_float': 0.4515948444605053, 'b_mass': 0.4745663000271027, 'b_bound': 0.4745663000271206, 'residual': '1/55964173294400', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': False, 'jury': {'trace': '910773071/1062624000', 'det': '-1230797447783/58810925280000', 'jury_1_minus_tr_plus_det': '3586696108861/29405462640000', 'jury_1_plus_tr_plus_det': '4499452643613/2450455220000', 'jury_1_minus_det': '60041722727783/58810925280000', 'linear_schur': True}}
+kappa=1/8 q=1/2 r=9/2 disc=169/4 area=1/10
+  root {'m': '1/2', 'm_float': 0.5, 'b_mass': '1/2', 'b_bound': '1/2', 'residual': '0', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': True, 'jury': {'trace': '27/40', 'det': '-13/80', 'jury_1_minus_tr_plus_det': '13/80', 'jury_1_plus_tr_plus_det': '121/80', 'jury_1_minus_det': '93/80', 'linear_schur': True}}
+kappa=1/8 q=3/4 r=153/32 disc=58105/1024 area=8/85
+  root {'m': None, 'm_float': 0.5392970382163466, 'b_mass': 0.5189055855887629, 'b_bound': 0.5189055855887883, 'residual': '1/39306278760320', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': False, 'jury': {'trace': '191643553/381089280', 'det': '-4447569668771/15128024930304', 'jury_1_minus_tr_plus_det': '15364097334013/75640124651520', 'jury_1_plus_tr_plus_det': '30480151760439/25213374883840', 'jury_1_minus_det': '19575594599075/15128024930304', 'linear_schur': True}}
+kappa=1/4 q=1/4 r=63/16 disc=4489/256 area=4/35
+  root {'m': '7/18', 'm_float': 0.3888888888888889, 'b_mass': '7/16', 'b_bound': '7/16', 'residual': '0', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': True, 'jury': {'trace': '3043/2880', 'det': '53/384', 'jury_1_minus_tr_plus_det': '469/5760', 'jury_1_plus_tr_plus_det': '12641/5760', 'jury_1_minus_det': '331/384', 'linear_schur': True}}
+kappa=1/4 q=1/2 r=9/2 disc=169/4 area=1/10
+  root {'m': '1/2', 'm_float': 0.5, 'b_mass': '1/2', 'b_bound': '1/2', 'residual': '0', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': True, 'jury': {'trace': '27/40', 'det': '-13/80', 'jury_1_minus_tr_plus_det': '13/80', 'jury_1_plus_tr_plus_det': '121/80', 'jury_1_minus_det': '93/80', 'linear_schur': True}}
+kappa=1/4 q=3/4 r=81/16 disc=18601/256 area=4/45
+  root {'m': None, 'm_float': 0.5721774169705444, 'b_mass': 0.5336592693653524, 'b_bound': 0.5336592693653645, 'residual': '1/82918272451152', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': False, 'jury': {'trace': '237258301/703528640', 'det': '-1295831870961841/3093453420626560', 'jury_1_minus_tr_plus_det': '150876797643893/618690684125312', 'jury_1_plus_tr_plus_det': '2840859111109973/3093453420626560', 'jury_1_minus_det': '4389285291588401/3093453420626560', 'linear_schur': True}}
+kappa=86/315 q=1/4 r=136/35 disc=19044/1225 area=63/544
+  root {'m': '3/8', 'm_float': 0.375, 'b_mass': '3/7', 'b_bound': '3/7', 'residual': '0', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': True, 'jury': {'trace': '307/280', 'det': '477/2800', 'jury_1_minus_tr_plus_det': '207/2800', 'jury_1_plus_tr_plus_det': '6347/2800', 'jury_1_minus_det': '2323/2800', 'linear_schur': True}}
+kappa=86/315 q=1/2 r=9/2 disc=169/4 area=1/10
+  root {'m': '1/2', 'm_float': 0.5, 'b_mass': '1/2', 'b_bound': '1/2', 'residual': '0', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': True, 'jury': {'trace': '27/40', 'det': '-13/80', 'jury_1_minus_tr_plus_det': '13/80', 'jury_1_plus_tr_plus_det': '121/80', 'jury_1_minus_det': '93/80', 'linear_schur': True}}
+kappa=86/315 q=3/4 r=179/35 disc=92789/1225 area=63/716
+  root {'m': None, 'm_float': 0.5776716048393756, 'b_mass': 0.5360367687571227, 'b_bound': 0.5360367687570985, 'residual': '113/4673116885706225', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': False, 'jury': {'trace': '200310169/651888230', 'det': '-76551955092265/173452352821442', 'jury_1_minus_tr_plus_det': '763043806543377/3035416174375235', 'jury_1_plus_tr_plus_det': '2628470113977818/3035416174375235', 'jury_1_minus_det': '250004307913707/173452352821442', 'linear_schur': True}}
+kappa=1/2 q=1/4 r=27/8 disc=-95/64 area=2/15
+  no positive real root
+kappa=1/2 q=1/2 r=9/2 disc=169/4 area=1/10
+  root {'m': '1/2', 'm_float': 0.5, 'b_mass': '1/2', 'b_bound': '1/2', 'residual': '0', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': True, 'jury': {'trace': '27/40', 'det': '-13/80', 'jury_1_minus_tr_plus_det': '13/80', 'jury_1_plus_tr_plus_det': '121/80', 'jury_1_minus_det': '93/80', 'linear_schur': True}}
+kappa=1/2 q=3/4 r=45/8 disc=6961/64 area=2/25
+  root {'m': None, 'm_float': 0.6246255974136644, 'b_mass': 0.5554075941807449, 'b_bound': 0.5554075941807965, 'residual': '2/38710707025895', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': False, 'jury': {'trace': '2718427/148423120', 'det': '-72253336226763/110147112752672', 'jury_1_minus_tr_plus_det': '179381947208739/550735563763360', 'jury_1_plus_tr_plus_det': '199555818050351/550735563763360', 'jury_1_minus_det': '182400448979435/110147112752672', 'linear_schur': True}}
+kappa=1 q=1/4 r=9/4 disc=-359/16 area=1/5
+  no positive real root
+kappa=1 q=1/2 r=9/2 disc=169/4 area=1/10
+  root {'m': '1/2', 'm_float': 0.5, 'b_mass': '1/2', 'b_bound': '1/2', 'residual': '0', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': True, 'jury': {'trace': '27/40', 'det': '-13/80', 'jury_1_minus_tr_plus_det': '13/80', 'jury_1_plus_tr_plus_det': '121/80', 'jury_1_minus_det': '93/80', 'linear_schur': True}}
+kappa=1 q=3/4 r=27/4 disc=3169/16 area=1/15
+  root {'m': None, 'm_float': 0.6971654794458494, 'b_mass': 0.5823467945037933, 'b_bound': 0.5823467945037617, 'residual': '1/31550530756620', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': False, 'jury': {'trace': '-54399109/91833520', 'det': '-232295723052007/210834884889760', 'jury_1_minus_tr_plus_det': '20686140689219/42166976977952', 'jury_1_plus_tr_plus_det': '-146352379770589/210834884889760', 'jury_1_minus_det': '443130607941767/210834884889760', 'linear_schur': False}}
+
+=== P-H2 dividing-mass scan ===
+kappa=0 q=1/4 rho=1/5 disc=169/100
+  root {'m': '1/2', 'm_float': 0.5, 'b_mass': '1/2', 'b_bound': '1/2', 'residual': '0', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': True, 'jury': {'trace': '27/40', 'det': '-13/80', 'jury_1_minus_tr_plus_det': '13/80', 'jury_1_plus_tr_plus_det': '121/80', 'jury_1_minus_det': '93/80', 'linear_schur': True}}
+kappa=0 q=1/2 rho=1/5 disc=169/100
+  root {'m': '1/2', 'm_float': 0.5, 'b_mass': '1/2', 'b_bound': '1/2', 'residual': '0', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': True, 'jury': {'trace': '27/40', 'det': '-13/80', 'jury_1_minus_tr_plus_det': '13/80', 'jury_1_plus_tr_plus_det': '121/80', 'jury_1_minus_det': '93/80', 'linear_schur': True}}
+kappa=0 q=3/4 rho=1/5 disc=169/100
+  root {'m': '1/2', 'm_float': 0.5, 'b_mass': '1/2', 'b_bound': '1/2', 'residual': '0', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': True, 'jury': {'trace': '27/40', 'det': '-13/80', 'jury_1_minus_tr_plus_det': '13/80', 'jury_1_plus_tr_plus_det': '121/80', 'jury_1_minus_det': '93/80', 'linear_schur': True}}
+kappa=1/8 q=1/4 rho=3/16 disc=9729/6400
+  root {'m': None, 'm_float': 0.48753960495051496, 'b_mass': 0.4775712889109269, 'b_bound': 0.47757128891093903, 'residual': '64/5280739721529685', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': False, 'jury': {'trace': '472792291/664386640', 'det': '-3047939194608333/22070480370524480', 'jury_1_minus_tr_plus_det': '663339418829307/4414096074104896', 'jury_1_plus_tr_plus_det': '34728385257685759/22070480370524480', 'jury_1_minus_det': '25118419565132813/22070480370524480', 'linear_schur': True}}
+kappa=1/8 q=1/2 rho=1/5 disc=169/100
+  root {'m': '1/2', 'm_float': 0.5, 'b_mass': '1/2', 'b_bound': '1/2', 'residual': '0', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': True, 'jury': {'trace': '27/40', 'det': '-13/80', 'jury_1_minus_tr_plus_det': '13/80', 'jury_1_plus_tr_plus_det': '121/80', 'jury_1_minus_det': '93/80', 'linear_schur': True}}
+kappa=1/8 q=3/4 rho=17/80 disc=12001/6400
+  root {'m': None, 'm_float': 0.5115982867993364, 'b_mass': 0.5208769162388054, 'b_bound': 0.5208769162387857, 'residual': '142/7225436241027225', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': False, 'jury': {'trace': '476457241/744244400', 'det': '-5114427115200101/27694986346568000', 'jury_1_minus_tr_plus_det': '4850527558682879/27694986346568000', 'jury_1_plus_tr_plus_det': '40310590904052919/27694986346568000', 'jury_1_minus_det': '32809413461768101/27694986346568000', 'linear_schur': True}}
+kappa=1/4 q=1/4 rho=7/40 disc=437/320
+  root {'m': None, 'm_float': 0.4741585997625569, 'b_mass': 0.45348547957260243, 'b_bound': 0.4534854795725903, 'residual': '7/576574415223655', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': False, 'jury': {'trace': '145873427/194455020', 'det': '-280593878325751/2520850320213360', 'jury_1_minus_tr_plus_det': '349201764237373/2520850320213360', 'jury_1_plus_tr_plus_det': '275420741302523/168056688014224', 'jury_1_minus_det': '2801444198539111/2520850320213360', 'linear_schur': True}}
+kappa=1/4 q=1/2 rho=1/5 disc=169/100
+  root {'m': '1/2', 'm_float': 0.5, 'b_mass': '1/2', 'b_bound': '1/2', 'residual': '0', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': True, 'jury': {'trace': '27/40', 'det': '-13/80', 'jury_1_minus_tr_plus_det': '13/80', 'jury_1_plus_tr_plus_det': '121/80', 'jury_1_minus_det': '93/80', 'linear_schur': True}}
+kappa=1/4 q=3/4 rho=9/40 disc=3321/1600
+  root {'m': None, 'm_float': 0.5223957909684771, 'b_mass': 0.5403124237432588, 'b_bound': 0.540312423743278, 'residual': '83/4335761225990660', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': False, 'jury': {'trace': '242408657/399308960', 'det': '-1632546916013277/7972382276814080', 'jury_1_minus_tr_plus_det': '1500037924717467/7972382276814080', 'jury_1_plus_tr_plus_det': '11179632796884139/7972382276814080', 'jury_1_minus_det': '9604929192827357/7972382276814080', 'linear_schur': True}}
+kappa=1/2 q=1/4 rho=3/20 disc=441/400
+  root {'m': '4/9', 'm_float': 0.4444444444444444, 'b_mass': '2/5', 'b_bound': '2/5', 'residual': '0', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': True, 'jury': {'trace': '5/6', 'det': '-1/20', 'jury_1_minus_tr_plus_det': '7/60', 'jury_1_plus_tr_plus_det': '107/60', 'jury_1_minus_det': '21/20', 'linear_schur': True}}
+kappa=1/2 q=1/2 rho=1/5 disc=169/100
+  root {'m': '1/2', 'm_float': 0.5, 'b_mass': '1/2', 'b_bound': '1/2', 'residual': '0', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': True, 'jury': {'trace': '27/40', 'det': '-13/80', 'jury_1_minus_tr_plus_det': '13/80', 'jury_1_plus_tr_plus_det': '121/80', 'jury_1_minus_det': '93/80', 'linear_schur': True}}
+kappa=1/2 q=3/4 rho=1/4 disc=1009/400
+  root {'m': None, 'm_float': 0.5418306705393229, 'b_mass': 0.5752952069707812, 'b_bound': 0.5752952069707531, 'residual': '24/852025825393795', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': False, 'jury': {'trace': '46400073/85071670', 'det': '-346571119927717/1447437807317780', 'jury_1_minus_tr_plus_det': '311400347743681/1447437807317780', 'jury_1_plus_tr_plus_det': '378066605407289/289487561463556', 'jury_1_minus_det': '1794008927245497/1447437807317780', 'linear_schur': True}}
+kappa=86/87 q=1/4 rho=44/435 disc=579121/756900
+  root {'m': '3/8', 'm_float': 0.375, 'b_mass': '11/40', 'b_bound': '11/40', 'residual': '0', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': True, 'jury': {'trace': '945/928', 'det': '931/9280', 'jury_1_minus_tr_plus_det': '761/9280', 'jury_1_plus_tr_plus_det': '19661/9280', 'jury_1_minus_det': '8349/9280', 'linear_schur': True}}
+kappa=86/87 q=1/2 rho=1/5 disc=169/100
+  root {'m': '1/2', 'm_float': 0.5, 'b_mass': '1/2', 'b_bound': '1/2', 'residual': '0', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': True, 'jury': {'trace': '27/40', 'det': '-13/80', 'jury_1_minus_tr_plus_det': '13/80', 'jury_1_plus_tr_plus_det': '121/80', 'jury_1_minus_det': '93/80', 'linear_schur': True}}
+kappa=86/87 q=3/4 rho=26/87 disc=2704009/756900
+  root {'m': None, 'm_float': 0.5729459657845545, 'b_mass': 0.6313027384121981, 'b_bound': 0.6313027384121986, 'residual': '9/16323408700890845', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': False, 'jury': {'trace': '1642811913/3736666820', 'det': '-13944495757904857/48147168702375560', 'jury_1_minus_tr_plus_det': '13034946162374749/48147168702375560', 'jury_1_plus_tr_plus_det': '55370399726566657/48147168702375560', 'jury_1_minus_det': '62091664460280417/48147168702375560', 'linear_schur': True}}
+kappa=1 q=1/4 rho=1/10 disc=19/25
+  root {'m': None, 'm_float': 0.3732109937267358, 'b_mass': 0.27177978870812436, 'b_bound': 0.2717797887081317, 'residual': '3/411802304709520', 'm_ge_theta_over_2': False, 'in_cube': True, 'dividing_fixed_candidate': False}
+kappa=1 q=1/2 rho=1/5 disc=169/100
+  root {'m': '1/2', 'm_float': 0.5, 'b_mass': '1/2', 'b_bound': '1/2', 'residual': '0', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': True, 'jury': {'trace': '27/40', 'det': '-13/80', 'jury_1_minus_tr_plus_det': '13/80', 'jury_1_plus_tr_plus_det': '121/80', 'jury_1_minus_det': '93/80', 'linear_schur': True}}
+kappa=1 q=3/4 rho=3/10 disc=18/5
+  root {'m': None, 'm_float': 0.5735864066853564, 'b_mass': 0.6324555320336417, 'b_bound': 0.6324555320336681, 'residual': '1/37716609005890', 'm_ge_theta_over_2': True, 'in_cube': True, 'dividing_fixed_candidate': False, 'jury': {'trace': '6513509/14892968', 'det': '-16112110083723/55450123962256', 'jury_1_minus_tr_plus_det': '15086643602355/55450123962256', 'jury_1_plus_tr_plus_det': '63589384154711/55450123962256', 'jury_1_minus_det': '71562234045979/55450123962256', 'linear_schur': True}}

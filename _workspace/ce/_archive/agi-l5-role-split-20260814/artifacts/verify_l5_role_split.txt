@@ -1,0 +1,19 @@
+I e1 = (Fraction(1, 1), Fraction(0, 1))
+I e2 = (Fraction(0, 1), Fraction(1, 1))
+sensor u_I(e1) = 1
+sensor u_I(e2) = 0
+action u_I(e1) = 0
+action u_I(e2) = 1
+role-split u^A(tau1) = 1
+role-split u^A(tau2) = 0
+no-store u^A(tau1) = 1
+no-store u^A(tau2) = 1
+B_c b_hi = 157/297
+u=0 sign change at b = 1 - 1/lambda = 3/5
+crit - b_hi = 106/1485 > 0 : True
+1 - lambda(1-b_hi) = -53/297
+worst-case mtilde(u=0) on closed B_c = 0
+m=0 absorbs u in {0,1} at every tested b
+no-wash tau1 action after beta from m=0: m=0
+operators: role-split drives differ; no-store drives coincide
+H1 readout on tau2 after beta is not scored (start not U0)

@@ -202,7 +202,10 @@ class ConstantsScorecard:
             "Baseline unified to a single dataset (was a hybrid of the Planck "
             "central value with an undersized sigma). Alternative baselines: "
             "Planck+BAO 0.6889+/-0.0056 (CE offset +0.04 sigma); "
-            "DESI DR2+CMB 0.693+/-0.005 (CE offset -0.78 sigma).",
+            "official DESI DR2 flat-LambdaCDM+CMB Omega_m=0.3027+/-0.0036, "
+            "hence Omega_Lambda=0.6973+/-0.0036 (CE offset -2.28 sigma). "
+            "See benchmarks/cosmology/observations_v1.json; this row remains "
+            "a seen reference, not an independent holdout.",
         )
         self.add_constant(
             "Higgs boson mass",

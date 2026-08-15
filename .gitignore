@@ -14,6 +14,8 @@ __pycache__/
 # Rust
 target/
 /reality_stone/python/reality_stone/clarus/core/target/
+/_workspace/ce-target/
+/_workspace/.ce-research-target/
 
 # Environment
 /.venv/
@@ -39,6 +41,7 @@ target/
 !benchmarks/q0_minimal_abelian_higgs_v1.json
 !benchmarks/neural_tree_algorithm_census_v1.json
 !benchmarks/external_field_to_matter_v1.json
+!benchmarks/cosmology/observations_v1.json
 !experiments/preregistration/cosmology_future_holdout_v2.json
 !experiments/preregistration/quantum_future_holdout_v2.json
 !experiments/preregistration/sparse_causal_bridge_v1.json
@@ -49,6 +52,7 @@ target/
 !experiments/preregistration/sparse_causal_bridge_v6.json
 !experiments/preregistration/sparse_causal_bridge_v7.json
 !experiments/preregistration/sparse_causal_bridge_v8.json
+!experiments/preregistration/causal_recurrent_geometry_phase_a_v1.json
 *.pt
 *.pth
 *.csv

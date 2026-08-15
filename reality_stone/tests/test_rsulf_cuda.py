@@ -376,27 +376,3 @@ def test_rsulf_lm_head_cuda_pipeline():
     assert logits.shape == (1, seq_len, vocab_size)
     assert torch.isfinite(logits).all()
 
-if __name__ == "__main__":
-    print("=" * 60)
-    print("RS-ULF Test Suite")
-    print("=" * 60)
-    
-    print("\n[Test 1] CPU Forward")
-    test_rsulf_cpu_forward()
-    
-    print("\n[Test 2] Inference Pipeline")
-    test_rsulf_inference_pipeline()
-    
-    if HAS_CUDA_RSULF:
-        print("\n[Test 3] CUDA Forward")
-        test_rsulf_cuda_forward()
-        
-        print("\n[Test 4] CPU-CUDA Consistency")
-        test_rsulf_cpu_cuda_consistency()
-    else:
-        print("\n[Test 3-4] Skipped (CUDA not available)")
-    
-    print("\n" + "=" * 60)
-    print("All tests passed!")
-    print("=" * 60)
-

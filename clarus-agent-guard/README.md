@@ -74,14 +74,24 @@ server/
   main.py          FastAPI shell (optional)
   routes.py        POST /event, GET /daglet/{id}, /daglet/similar, /trace
   scheduler.py     ★ substrate를 걸어 DAGlet을 생성 (런타임 핵심)
+  capability.py    권한 토큰/taint — 탐지 무관 구조 방어 (I1 권한 출처)
+  executor.py      유일한 부작용 실행 경로 (chokepoint)
+  interception.py  @gate.guarded 툴 봉인, dispatch()만 호출 가능
+  sdk.py           ClarusGuard — 4개 코어 통합 진입점
+  memory_firewall.py  memory_write 3-gate (poisoning/faithfulness/preservation)
+  replay.py        과거 차단에서 행동동사 학습 (적응)
+  learn.py         학습 보조
+  diffusion_scheduler.py  실험적 확산 라우팅 (Open/Hypothesis, CI 미결선)
+  vscode_bridge.py VSCode 확장 브리지
   cells/           salience / router / policy / critic / memory / trace
   trace/
     schema.py      ★ DAGlet / Node / Edge — 코어 데이터 모델
     store.py       in-memory 저장 + motif 유사도(similar)
-  policies/default.yaml   PolicyCell 허용/승인 규칙
 examples/
   rag_chatbot_guard.py
   coding_agent_guard.py
+  integrated_agent.py
+vscode-extension/  Clarus Agent 뷰 (TypeScript)
 ```
 
 `schema.py` 가 진짜 코어다 — 웹 프레임워크나 LLM 클라이언트를 절대
@@ -101,7 +111,7 @@ import 하지 않아 어디든 이식된다.
 
 ```bash
 python -m bench.run
-# route accuracy : 99/100 = 99.0%   (target 85%+)
+# route accuracy : 96/100 = 96.0%   (target 85%+)
 # external false-allow : 0/25 = 0.0%   (target 0%)
 # latency avg / p95 : ~0.03 ms        (target +300ms 이하)
 # RESULT: [PASS]
@@ -174,7 +184,7 @@ python -m bench.inject_run
 ### 한 번에 다 돌리기
 
 ```bash
-python -m bench.all     # 6개 벤치 스코어보드 + CI 게이트(exit code)
+python -m bench.all     # 9개 벤치 스코어보드 + CI 게이트(exit code)
 ```
 
 ### 공식 AgentDojo 공격 데이터 실측

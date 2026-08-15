@@ -8,7 +8,8 @@ Codex CLI용 Clarus-Equation 연구 하네스. `.codex/`의 개발 트랙을 코
 AGENTS.md            Codex 전역 지침: 라우팅 표, 코어 명령, P0/P1/P2, 속도·정직성 규율
 config.toml          프로필 3종 (ce-spot / ce-light / ce-full, reasoning effort 차등)
 prompts/             커스텀 슬래시 프롬프트 (/ce-research, /ce-status, /ce-gc 등 8종)
-agents/              역할 카드 6장 (입력 계약 · 판정 기준 · 종료 체크리스트 포함)
+agents/              역할 카드 4장 (입력 계약 · 판정 기준 · 종료 체크리스트 포함)
+                     — routes는 math-verifier에 흡수, 집필은 $ce-research 집필 규칙으로 인라인
 skills/              스킬 6종 (SKILL.md + agents/openai.yaml)
 skills/ce-research/core/   Rust 게이트 코어 (init|status|check|revise|gc + hook)
 hooks.json           UserPromptSubmit 라우팅 + Stop 완결 가드

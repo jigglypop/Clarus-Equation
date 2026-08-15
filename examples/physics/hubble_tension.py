@@ -75,7 +75,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from cosmology import Background, simpson, linspace
+from cosmology import linspace, simpson
 
 
 EPS_FIX = math.exp(-1.0)
@@ -92,6 +92,12 @@ DELTA_EPS_FP = -DELTA / math.pi
 OMEGA_M_CANON = 0.3110  # canonical CE ratio (cosmology_ratio_audit)
 DELTA_EPS_CANON = OMEGA_M_CANON - EPS_FIX  # anchored form, = -0.056879
 
+# This module is retained as a reproducibility boundary.  It is not the U5
+# physical inference route because its acoustic readout does not use all of
+# the advertised physical inputs (notably ``om_b_h2``).
+HISTORICAL_H0_TOY_MODEL_ID = "HISTORICAL_H0_THETA_TOY_V1"
+HISTORICAL_H0_TOY_PHYSICAL_CLOSURE = False
+
 
 def bootstrap_eps2() -> float:
     x = 0.05
@@ -107,17 +113,83 @@ def eps_to_omegas(eps: float) -> tuple[float, float]:
     return om_m / s, om_l / s
 
 
+def static_flrw_e2(
+    a: float,
+    om_m0: float,
+    om_l0: float,
+    om_r0: float = OMEGA_R0,
+) -> float:
+    """Return one static matter+radiation+Lambda ``E(a)^2`` denominator."""
+    if a <= 0.0:
+        raise ValueError("scale factor must be positive")
+    return om_m0 * a ** (-3.0) + om_r0 * a ** (-4.0) + om_l0
+
+
 def hubble_sq(a: float, om_m0: float, om_l0: float) -> float:
-    return om_m0 * a ** (-3.0) + om_l0 + OMEGA_R0 * a ** (-4.0)
+    """Historical matter+Lambda denominator retained for API reproduction."""
+    if a <= 0.0:
+        raise ValueError("scale factor must be positive")
+    return om_m0 * a ** (-3.0) + om_l0
 
 
 def omega_m_of_a(a: float, om_m0: float, om_l0: float) -> float:
+    """Matter fraction in the exact static matter+radiation+Lambda background."""
+    return (om_m0 * a ** (-3.0)) / static_flrw_e2(a, om_m0, om_l0)
+
+
+def omega_r_of_a(a: float, om_m0: float, om_l0: float) -> float:
+    """Radiation fraction for the toy module's static FLRW background."""
+    return (OMEGA_R0 * a ** (-4.0)) / static_flrw_e2(a, om_m0, om_l0)
+
+
+def exact_flrw_ricci_over_h2(omega_m: float, omega_r: float) -> float:
+    """Return exact ``R/H^2`` for flat matter+radiation+Lambda FLRW.
+
+    This trace identity applies to a background with separately conserved
+    pressureless matter, radiation, and a cosmological constant.  A running
+    coupling needs its additional derivative/current terms and must not reuse
+    this helper as though it were an exact running-field equation.
+    """
+    return 12.0 - 9.0 * omega_m - 12.0 * omega_r
+
+
+def exact_static_flrw_ricci_over_h2(a: float, om_m0: float, om_l0: float) -> float:
+    """Evaluate the exact trace using fractions from the same static ``E^2``."""
+    return exact_flrw_ricci_over_h2(
+        omega_m_of_a(a, om_m0, om_l0),
+        omega_r_of_a(a, om_m0, om_l0),
+    )
+
+
+def historical_matter_lambda_ricci_over_h2(omega_m: float) -> float:
+    """Legacy radiation-free formula, retained only for numeric reproduction."""
+    return 12.0 - 9.0 * omega_m
+
+
+def historical_omega_m_of_a(a: float, om_m0: float, om_l0: float) -> float:
+    """Matter fraction used by the original radiation-free running toy."""
     return (om_m0 * a ** (-3.0)) / hubble_sq(a, om_m0, om_l0)
 
 
+def historical_h0_toy_input_activity() -> dict[str, bool]:
+    """Declare which advertised inputs affect the historical theta toy."""
+    return {
+        "omega_m_h2": True,
+        "omega_b_h2": False,
+        "recombination_history": False,
+        "likelihood_covariance": False,
+    }
+
+
 def m_eff_over_h(a: float, xi: float, alpha: float, om_m0: float, om_l0: float) -> float:
-    om_m_a = omega_m_of_a(a, om_m0, om_l0)
-    r_over_h2 = 12.0 - 9.0 * om_m_a
+    """Historical running-field mass readout.
+
+    The legacy number intentionally uses the old matter+Lambda Ricci formula.
+    Use :func:`exact_flrw_ricci_over_h2` for the exact static FLRW trace; a
+    physical running-field route additionally needs its stress/current terms.
+    """
+    om_m_a = historical_omega_m_of_a(a, om_m0, om_l0)
+    r_over_h2 = historical_matter_lambda_ricci_over_h2(om_m_a)
     if r_over_h2 <= 0.0:
         return 0.0
     return math.sqrt(2.0 * xi * r_over_h2 / alpha)
@@ -267,7 +339,12 @@ def lcdm_theta_star_for_h(
     """
     For LCDM with given H_0 and matching Omega_b h^2 = const,
     compute theta_star using only background (no running).
+
+    ``om_b_h2`` is retained in the signature for historical API parity but is
+    inactive in this constant-sound-speed toy.  Consequently this function is
+    not a baryon-aware physical CMB readout.
     """
+    _ = om_b_h2
     h_true = h0_true / 100.0
     h_test = h0_test / 100.0
     om_m0_true, _ = eps_to_omegas(eps_today)
@@ -282,7 +359,6 @@ def lcdm_theta_star_for_h(
     a_grid = linspace(1.0e-6, 1.0, 4001)
     eps_grid = []
     for a in a_grid:
-        h2 = om_m0_test * a ** (-3.0) + om_l0_test + OMEGA_R0 * a ** (-4.0)
         eps_grid.append((om_l0_test - om_m0_test) / (om_l0_test + om_m0_test))
     return theta_star(a_grid, eps_grid, z_star, n)
 
@@ -340,8 +416,8 @@ def report_scenario(label: str, eps_today: float, xi: float, alpha: float,
     print(f"  theta_star (CE)    = {th_star_ce:.8e}")
     print(f"  H_0_true (SH0ES)   = {h0_true:.4f} km/s/Mpc")
     if math.isnan(h0_cmb):
-        print(f"  H_0_extracted CMB  = NaN (theta_* outside LCDM fit range)")
-        print(f"  Delta H_0 (SH0-CMB)= NaN")
+        print("  H_0_extracted CMB  = NaN (theta_* outside LCDM fit range)")
+        print("  Delta H_0 (SH0-CMB)= NaN")
     else:
         print(f"  H_0_extracted CMB  = {h0_cmb:.4f} km/s/Mpc")
         print(f"  Delta H_0 (SH0-CMB)= {delta_h0:+.4f}  (observed ~ +5.6)")
@@ -386,7 +462,7 @@ def main() -> int:
     print("CE closure HYPOTHESIS (status: Open/Phenomenology; see header)")
     print(f"  xi_flow     = pi^2 / 2          = {XI_FLOW:.6f}  (eps-flow stiffness; != nonminimal xi=alpha_s^(1/3))")
     print(f"  delta_eps_0 = - delta / pi      = {DELTA_EPS_FP:+.6f}  (hypothesis: NO independent derivation;")
-    print(f"                                                 1+delta/pi is a rejected control in ckm_vcb_nlo_gate.py)")
+    print("                                                 1+delta/pi is a rejected control in ckm_vcb_nlo_gate.py)")
     print(f"  delta_eps_0 = Om_m_canon - e^-1 = {DELTA_EPS_CANON:+.6f}  (anchored to canonical Omega_m=0.311)")
     print("=" * 72)
     r_fp = report_scenario("closed form (xi=pi^2/2, de=-delta/pi)",
@@ -457,7 +533,7 @@ def main() -> int:
 
     if args.grid:
         print("=" * 72)
-        print(f"2D grid: rows = delta_eps_0, cols = xi.  Cell = Delta H_0")
+        print("2D grid: rows = delta_eps_0, cols = xi.  Cell = Delta H_0")
         print(f"  alpha = {args.alpha}, target = +{args.target_tension:.2f}")
         print("=" * 72)
         des = [-0.20, -0.10, -0.07, -0.05, -0.03, -0.01, -3e-3, -1e-3]

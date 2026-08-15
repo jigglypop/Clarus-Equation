@@ -1,0 +1,19 @@
+r(3/4) = 81/16
+r(1/4) = 63/16
+u=0 sign change at b = 3/5
+1-lambda(1-b_hi B_c) = -53/297 < 0 : True
+1-lambda(1-b_hi R0) = -3/22 < 0 : True
+m=0 absorbing under any u: tilde m = 0 identically
+wash+sigma tau1: sigma=1 oA=1  (O-E1 after wash, uA=1)
+wash+sigma tau2: sigma=0 oA=0  (uA=0 one-step extinction)
+no-store both: oA=1  (wash then uA=1, O-E1)
+dual-product both: bits (1,0) vs (0,1), product=0, oA=0
+dual-own tau1: bitA=0 oA=0; tau2: bitA=1 oA=1
+q-memory tau1: qA=1/4 uA=1 oA=0 (O-E1); tau2: qA=3/4 uA=1 oA=1
+center leftover tau1: oS=1 oA=0 mA=0.000000e+00 bA=1.892187e-02
+center leftover tau2: oS=0 oA=1 mA=0.572092 bA=0.533505
+no-wash tau1 after beta uA=1: oA=0 mA=0.000000e+00
+no-wash tau2 after beta uA=1: oA=1 mA=0.572177 bA=0.533659
+center u=1 window2 from window1 image: o=1 m=0.572177 b=0.533659
+q-memory float tau1 U0 x 1/4 u=1: oA=0 m=0.390562
+q-memory float tau2 U0 x 3/4 u=1: oA=1 m=0.572092

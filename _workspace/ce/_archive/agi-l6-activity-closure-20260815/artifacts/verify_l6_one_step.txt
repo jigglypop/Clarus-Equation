@@ -1,0 +1,18 @@
+r(3/4) = 81/16
+P_star tilde_m = 7187/6336
+P_star (m',b') = (7187/12672, 491/990)
+P_star dividing = True
+P_circ tilde_m = 16891/14850
+P_circ (m',b') = (16891/29700, 133/270)
+P_circ dividing = True
+E1 pair unequal = True
+E1 mass unequal = True
+E1 boundary unequal = True
+mass difference = -1487/950400
+boundary difference = 1/297
+sigma pair = (1, 1)
+E2 domain on this pair is a singleton = True
+E2 cannot match both true next states = True
+E3 not a function of sigma = True
+H1 both in U0 x {3/4} = True
+H1 cites O-E1 occupancy 1 at q=3/4, u=1; no T=32 hull

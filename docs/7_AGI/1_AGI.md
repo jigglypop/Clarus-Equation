@@ -6,7 +6,7 @@
 
 > **substrate 경고 (2026-08 감사 기준)**: [가설] 본 시리즈는 STDP·SNN 같은 국소 가소성 기질에서 부트스트랩 동역학을 시험할 것을 제안한다. 어떤 기질에서도 $p^*=(4.87\%,26.2\%,68.9\%)$ 전체로의 자기수렴이나 수면 순환의 망각 방지 효능은 아직 성립한 정리가 아니다. transformer 기질의 자연 수렴은 반증됐고(`5_Sparsity.md` 8.5), 현재 STDP 구현도 효능 `NO-EFFECT`, held-out guard `FAIL`이다(`21_STDP_Efficacy_Audit.md`). 따라서 SNN도 미검증 경로이며, 특정 기질을 참인 해답으로 선결하지 않는다.
 
-## 현재 판정 (2026-08-12)
+## 현재 판정 (2026-08-13)
 
 현재 CE-AGI는 **수학 정리, 실행 가능한 뇌형 runtime, 좁은 합성 과제의 연구 PoC** 단계다. AGI가 아니다.
 
@@ -19,12 +19,42 @@
 | V12--V13c | V12 채점 없음; V13 계열 구현 검증 후 16-seed 과학 gate 실패 | `ABANDONED` / `STOP` |
 | V14 binding | 무손실 슬롯+쌍선형 충분조건과 선형/가법 no-go | 수학 설계 완료; 정식 구현·채점 미수행 |
 | Clarus field baseline | 유계 그래프장·경성 latch·외생 공통 쓰기 구현과 회귀 | 형식 primitive 구현; 과제 효능·생물학 미검증 |
-| V15 unified metric | 하나의 SPD metric state에서 finite cost·deformation·path·surprise·goal-tie readout | finite metric-graph primitive 구현; world dynamics·continuum·AGI 미검증 |
+| V15 unified metric | R1--R4 수리 후 tiny-scale 경로·finite-input 적대 회귀 통과; focused 27 tests | finite metric-graph readout 수치 결함 수리; 비가역 world·유일 goal·continuum·AGI는 미확립 |
+| V16 covariant metric flow | M1--M5와 noiseless bounded-gap 수렴 정리; 봉인 256-seed 확인에서 route 정확도 $0.9642334$, regret $0.000439384$, chart action agreement $1.0$ | one-state vector-observation metric learner `NARROW GO`; AGI·생물·우주 `NOT AUTHORIZED` |
+| V17 metric-only delayed signed cue | full-$GL(d)$ sign-blindness와 조건부 finite/countable SCC no-rescue 정리; 봉인 256 paired seed에서 strict 정확도·regret $0.5/0.5$, homogeneous lift $512/512$ | strict original-space $g$-only는 `NO-GO`; $G\in\operatorname{SPD}(d+1)$ 탈출은 추가 covector+scalar를 포장한 좁은 기억 primitive |
 | 전체 $p^*$ 자기수렴 | 현재 동역학은 활성률이 외부 입력률을 추적 | [예측]이 아니라 아직 [미완성] 가설; 정리 아님 |
 
 [정리] $a^*=0.0487077$은 스칼라 사상 $B_a(a)=e^{-(1-a)D_{\text{eff}}}$의 유일 내부 고정점이다. [공리: 경험식] 나머지 $0.2623,0.6891$은 이 스칼라 정리에서 나오지 않는다. 우주 조성비를 뇌 점유율과 동일시하는 단계는 물리 사상 가설이며, 현재 runtime의 loss·gate·희소율에 그 값을 넣는 것은 설계 선택이지 자기수렴 증거가 아니다.
 
-[산출: finite 구현] V15는 세계모형·기억·계획·비평·목표를 별도 persistent module로 복제하지 않고 하나의 metric tensor state를 공유하게 한다. 이번 구현에서 `world`는 비가역 미래예측기가 아니라 metric cost substrate이고, `goal`은 외부 source가 metric에 기록한 비용의 모든 최소화점을 tie-preserving하게 읽는 연산이다. [정리: no-go] 정적 Riemannian distance는 대칭이므로 비가역 world transition을 혼자 정하지 못하며, source-free 대칭 metric은 의미 있는 유일 목표를 선택하지 못한다. 따라서 V15는 AGI agent 완성이 아니라 다음 task loop를 위한 기하 core다.
+[산출: finite 수치 수리] V15의 공개 최단경로는 strict representative relaxation과 reconstruction cycle guard, 별도 tie-count DAG를 사용하고, goal 비교는 절대 단위 floor가 없는 상대 허용오차를 쓴다. 길이는 scaled mantissa/exponent 연산으로, surprise Boolean은 log-domain 비교로 계산한다. 등록된 tiny-scale·finite-input 회귀가 통과했으므로 이전 코드의 비종료 결함은 현재 구현 상태가 아니다.
+
+[정리: no-go] 정적 Riemannian distance가 대칭이므로 비가역 world transition을 혼자 정하지 못하고, source-free 대칭 metric이 의미 있는 유일 목표를 선택하지 못한다는 경계는 그대로다.
+
+[정의] V16의 $g_t$는 유한 벡터 공간의 SPD 비용 계량이며, `docs/axium.md`의 시공간 metric $g_{\mu\nu}$와 동일하지 않다. [정리] V16.1은 SPD 보존, 모든 $J\in GL(d)$에 대한 affine covariance, 같은 관측 residual의 정확한 수축, AIRM natural-gradient exponential step, spanning iff 식별 가능성을 만족한다. 유한 noiseless spanning 방향을 bounded-gap으로 방문하면 Burg divergence에 의해 $g_t\to g_*$이고, persistent noise 아래 fixed-rate point convergence는 반례로 거짓이다.
+
+[산출: 등록 합성 확인] 봉인된 256개 확인 seed에서 V16은 route 정확도 $0.9642334$, 평균 normalized regret $0.000439384$, median invariant metric error $0.0339121$을 기록했다. chart action agreement는 $1.0$, 최대 상대 prediction defect는 $2.6735\times10^{-13}$, step 32 이후 online regret의 identity 대비 개선은 $0.4872651$이었고 등록 gate가 모두 통과했다. 따라서 정확한 판정은 `V16 NARROW GO`다. 이는 executed nonzero vector와 양의 scalar cost를 받는 finite synthetic primitive의 결과일 뿐 raw sensory representation, delayed credit, semantic OOD, tool use, SCC continuum, 생물학, 우주론 또는 AGI 증거가 아니다.
+
+[정리: full-GL sign-blindness] strict original-space metric update $U$가 모든 $J\in GL(d)$에 대해 pointwise fixed-seed covariance를 만족하면 $J=-I$를 대입하여
+
+$$
+U(g,-x,c)=U(g,x,c)
+$$
+
+를 얻는다. 균형 잡힌 과거 부호가 terminal observation에 다시 나타나지 않고, seed·초기 상태·topology가 그 부호와 공동 독립이며, raw signed cue가 이 metric update를 거친 뒤에만 통신되는 등록 조건에서는 모든 finite component 수와 finite event depth가 두 부호 history를 구별하지 못한다. 가산 SCC 확장은 standard-Borel countable product 또는 projectively compatible finite laws와 measurable terminal kernel이 있을 때의 [조건부 정리]다. 정의되지 않은 infinite event-depth action이나 finite-$N$ 표만으로 가산 결론을 주장하지 않는다.
+
+[정리: 등록 homogeneous 탈출] 공개 unit reference $u$, $z_s=(su,1)$, $y_a=(au,-1)$, $G_0=I_{d+1}$, $\eta=1$, $c=4$이면 한 번의 고정 write 뒤
+
+$$
+G_1=I_{d+1}+\frac12z_sz_s^T,
+\qquad
+y_a^TG_1y_a=
+\begin{cases}
+2,&a=s,\\
+4,&a=-s.
+\end{cases}
+$$
+
+따라서 exact wrong-minus-correct margin은 $2$다. [산출: 봉인 합성 확인] 확인 seed 256쌍에서 strict 원공간 상태는 직렬화와 action law가 부호쌍마다 같았고 balanced 정확도와 regret는 각각 $0.5$였다. lift는 512개 부호 branch 모두 정답이었고 regret $0$, 최소 수치 margin $1.999999999999996$, chart action agreement $1.0$, 최대 상대 quadratic-cost defect $4.4408920985006072\times10^{-15}$였다. 그러나 $d=3$ lift의 10개 ambient 좌표는 원래 6개보다 4개 많으며, 이는 spatial covector 3개와 scalar 1개를 같은 SPD factor에 포장한 추가 기억이다. 그러므로 이 산출은 strict $g$-only, 일반 delayed credit, 재귀적 지능 증가, 생물학적 뇌, 우주 metric 또는 AGI의 성립을 뜻하지 않는다.
 
 ---
 

@@ -26,15 +26,19 @@ from reality_stone.clarus.dimensionless import (  # noqa: E402
     exp_arguments,
     group_dimension,
 )
+from reality_stone.clarus.cosmology_registry import (  # noqa: E402
+    LEGACY_DELTA_5DP_V1,
+)
 from tests.scorecard import ConstantsScorecard  # noqa: E402
 
 
 class BootstrapValidator:
-    """Pure-Python bootstrap fixed-point validator."""
+    """Pure-Python validator for the versioned legacy fixed-point route."""
 
-    DELTA = 0.17776  # sin²(theta_W) * cos²(theta_W)
-    D_EFF = 3 + DELTA
-    OMEGA_B_OBS = 0.04865
+    MODEL = LEGACY_DELTA_5DP_V1
+    DELTA = MODEL.delta
+    D_EFF = MODEL.d_eff
+    LEGACY_OMEGA_B_DISPLAY = 0.04865
 
     def equation(self, eps: float) -> float:
         """Return f(eps) for eps = exp(-(1-eps) * D_eff)."""
@@ -63,24 +67,40 @@ class BootstrapValidator:
         raise RuntimeError(f"Failed to converge after {max_iter} iterations")
 
     def validate(self) -> dict[str, Any]:
-        """Solve and compare the bootstrap result with its local Omega_b reference."""
+        """Certify the equation without promoting q_ext to a density prediction."""
 
         eps, iterations = self.newton_solve()
         lhs = eps
         rhs = math.exp(-(1 - eps) * self.D_EFF)
         residual = abs(lhs - rhs)
-        sigma_offset = (eps - self.OMEGA_B_OBS) / 0.00005
+        equation_satisfied = residual < 1e-9
 
         return {
             "solution": eps,
+            "q_ext": eps,
+            "survival": 1.0 - eps,
             "iterations": iterations,
             "lhs": lhs,
             "rhs": rhs,
             "residual": residual,
-            "equation_satisfied": residual < 1e-9,
-            "omega_b_obs": self.OMEGA_B_OBS,
-            "sigma_offset": sigma_offset,
-            "pass": abs(sigma_offset) < 1,
+            "equation_satisfied": equation_satisfied,
+            "model_id": self.MODEL.model_id,
+            "model_role": self.MODEL.role.value,
+            "model_status": self.MODEL.status.value,
+            "quantity_semantics": "branching_extinction_probability",
+            # Compatibility display only: there is no covariance attached to
+            # this rounded value, so a sigma score would be fabricated.
+            "omega_b_obs": self.LEGACY_OMEGA_B_DISPLAY,
+            "legacy_omega_b_display": self.LEGACY_OMEGA_B_DISPLAY,
+            "sigma_offset": None,
+            "observation_comparison_status": (
+                "historical_display_only_no_covariance"
+            ),
+            "physical_bridge_complete": False,
+            "scientific_density_prediction": False,
+            # Keep the historical machine key, but make it an equation-only
+            # result rather than an observational or physical verdict.
+            "pass": equation_satisfied,
         }
 
 
@@ -145,7 +165,7 @@ class DimensionalValidator:
 
         delta = Quantity("delta", 0.17776)
         d_eff = Quantity("D_eff", 3.17776)
-        epsilon2 = Quantity("epsilon^2", 0.04865)
+        q_ext = Quantity("q_ext", LEGACY_DELTA_5DP_V1.q_ext)
         alpha_s = Quantity("alpha_s", 0.11789)
         proton_mass = Quantity("m_p", 938.2720813, MASS)
         clarus_mass = Quantity("m_phi", 29.648, MASS)
@@ -169,7 +189,7 @@ class DimensionalValidator:
             "all additive terms are dimensionless",
         )
 
-        bootstrap_factors = (Quantity("1-epsilon^2", 1 - epsilon2.value), d_eff)
+        bootstrap_factors = (Quantity("1-q_ext", 1 - q_ext.value), d_eff)
         bootstrap_factor_gate = audit_dimensionless(
             bootstrap_factors,
             context="bootstrap exponential factors",
@@ -177,14 +197,14 @@ class DimensionalValidator:
         if bootstrap_factor_gate.passed:
             bootstrap_dims = group_dimension(
                 bootstrap_factors,
-                {"1-epsilon^2": Fraction(1), "D_eff": Fraction(1)},
+                {"1-q_ext": Fraction(1), "D_eff": Fraction(1)},
             )
             bootstrap_gate = exp_arguments(
-                (Quantity("(1-epsilon^2)*D_eff", 1.0, bootstrap_dims),)
+                (Quantity("(1-q_ext)*D_eff", 1.0, bootstrap_dims),)
             )
         else:
             bootstrap_gate = bootstrap_factor_gate
-        formulas["epsilon^2 = exp(-(1-epsilon^2)*D_eff)"] = self._gate_info(
+        formulas["q_ext = exp(-(1-q_ext)*D_eff)"] = self._gate_info(
             bootstrap_gate,
             "bootstrap exponential argument is dimensionless",
         )
@@ -275,12 +295,18 @@ def main() -> dict[str, Any]:
     print("-" * 96)
     validator = BootstrapValidator()
     result = validator.validate()
-    print(f"Solution epsilon^2 = {result['solution']:.10f}")
-    print(f"Expected Omega_b = {result['omega_b_obs']:.5f}")
+    print(f"Model = {result['model_id']} ({result['model_status']})")
+    print(f"Extinction root q_ext = {result['q_ext']:.10f}")
+    print(f"Survival 1-q_ext = {result['survival']:.10f}")
     print(f"Residual |LHS-RHS| = {result['residual']:.2e}")
     print(f"Equation satisfied? {result['equation_satisfied']}")
-    print(f"Sigma offset = {result['sigma_offset']:+.2f} sigma")
-    print(f"Status: {'PASS' if result['pass'] else 'FAIL'}")
+    print(
+        "Historical Omega_b display = "
+        f"{result['legacy_omega_b_display']:.5f} (comparison excluded)"
+    )
+    print("Sigma offset = not computed (no covariance attached)")
+    print(f"Equation status: {'PASS' if result['pass'] else 'FAIL'}")
+    print("Physical density bridge: INCOMPLETE")
 
     print("\n[2] CANONICAL CONSTANTS SCORECARD")
     print("-" * 96)
@@ -343,12 +369,14 @@ def main() -> dict[str, Any]:
     print("\n" + "=" * 96)
     print("SUMMARY")
     print("=" * 96)
-    print(f"Bootstrap solver:      {'PASS' if result['pass'] else 'FAIL'}")
+    print(f"Bootstrap equation:    {'PASS' if result['pass'] else 'FAIL'}")
     print(
         f"Constants scorecard:   {summary['status']} "
         f"({summary['passed']}/{scored_total} PASS; {summary['pass_rate']:.1f}%)"
     )
     print(f"Dimensional analysis:  {'PASS' if dim_result['all_pass'] else 'FAIL'}")
+    print("Physical closure:      INCOMPLETE")
+    print("Release readiness:     NOT_READY")
     print(f"\nOVERALL: {overall_status}")
     print("=" * 96 + "\n")
 
@@ -357,6 +385,8 @@ def main() -> dict[str, Any]:
         "constants": const_result,
         "dimensional": dim_result,
         "overall_status": overall_status,
+        "physical_closure": "INCOMPLETE",
+        "release_readiness": "NOT_READY",
     }
 
 

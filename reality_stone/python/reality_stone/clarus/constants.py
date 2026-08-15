@@ -8,6 +8,8 @@ from __future__ import annotations
 
 import math
 
+from .cosmology_registry import LEGACY_DELTA_5DP_V1, LEGACY_ROUNDED_RUNTIME_V1
+
 # ---------------------------------------------------------------------------
 # Core CE coupling constant
 # ---------------------------------------------------------------------------
@@ -21,12 +23,18 @@ BYPASS: float = 1.0 / (math.e ** (1.0 / 3.0) * math.pi ** (1.0 / 3.0))
 T_WAKE: float = 1.0 / (3.0 + AD * (1.0 - AD))
 
 # ---------------------------------------------------------------------------
-# Bootstrap fixed-point ratios  (d = 3)
+# Bootstrap fixed-point ratios (runtime compatibility facade)
 # ---------------------------------------------------------------------------
-ACTIVE_RATIO: float = 0.0487        # epsilon^2  (baryon / task-active)
-STRUCT_RATIO: float = 0.2623        # Omega_DM   (structural / plastic)
-BACKGROUND_RATIO: float = 0.6891    # Omega_Lambda (frozen / background)
-BOOTSTRAP_CONTRACTION: float = 0.155  # rho = D_eff * epsilon^2
+# These names are operational/runtime defaults.  They intentionally retain
+# bit-for-bit parity with the historical literals; scientific exact-chain
+# values live separately in cosmology_registry.CE_CORE_EXACT_V1.
+ACTIVE_RATIO: float = LEGACY_ROUNDED_RUNTIME_V1.active_ratio
+STRUCT_RATIO: float = LEGACY_ROUNDED_RUNTIME_V1.struct_ratio
+BACKGROUND_RATIO: float = LEGACY_ROUNDED_RUNTIME_V1.background_ratio
+BOOTSTRAP_CONTRACTION: float = LEGACY_ROUNDED_RUNTIME_V1.contraction_display
+# Historical epsilon spelling denotes the legacy extinction root.  It is not
+# a survival alias; survival is always ``1 - EPSILON_SQUARED_LEGACY``.
+EPSILON_SQUARED_LEGACY: float = LEGACY_DELTA_5DP_V1.q_ext
 
 # ---------------------------------------------------------------------------
 # Sparsity

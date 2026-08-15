@@ -8,37 +8,83 @@ model for them yet.
 
 from __future__ import annotations
 
-import ast
 from dataclasses import dataclass
+import importlib.util
+import json
 from pathlib import Path
+import sys
+from types import ModuleType
+from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[2]
-CONSTANTS_PATH = ROOT / "reality_stone" / "python" / "reality_stone" / "clarus" / "constants.py"
+REGISTRY_PATH = (
+    ROOT
+    / "reality_stone"
+    / "python"
+    / "reality_stone"
+    / "clarus"
+    / "cosmology_registry.py"
+)
+OBSERVATION_MANIFEST_PATH = ROOT / "benchmarks" / "cosmology" / "observations_v1.json"
+_REGISTRY_MODULE_NAME = "_ce_cosmology_registry_v1"
+
+
+def _load_registry_module() -> ModuleType:
+    """Load the stdlib-only registry without importing the package facade."""
+
+    cached = sys.modules.get(_REGISTRY_MODULE_NAME)
+    if cached is not None:
+        return cached
+
+    spec = importlib.util.spec_from_file_location(_REGISTRY_MODULE_NAME, REGISTRY_PATH)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"cannot load CE cosmology registry: {REGISTRY_PATH}")
+    module = importlib.util.module_from_spec(spec)
+    # dataclasses resolves postponed annotations through sys.modules while the
+    # module is executed, so register the lightweight module before exec.
+    sys.modules[_REGISTRY_MODULE_NAME] = module
+    try:
+        spec.loader.exec_module(module)
+    except BaseException:
+        sys.modules.pop(_REGISTRY_MODULE_NAME, None)
+        raise
+    return module
 
 
 def load_ce_ratios_from_constants() -> dict[str, float]:
-    """Read CE ratio constants without importing torch-heavy package modules."""
-    tree = ast.parse(CONSTANTS_PATH.read_text(encoding="utf-8"))
-    names = {"ACTIVE_RATIO", "STRUCT_RATIO", "BACKGROUND_RATIO"}
-    values: dict[str, float] = {}
-    for node in tree.body:
-        if not isinstance(node, ast.AnnAssign):
-            continue
-        if not isinstance(node.target, ast.Name):
-            continue
-        if node.target.id not in names:
-            continue
-        literal = ast.literal_eval(node.value)
-        values[node.target.id] = float(literal)
-    missing = names - values.keys()
-    if missing:
-        raise ValueError(f"missing CE constants: {sorted(missing)}")
+    """Read the named compatibility triplet without importing torch modules.
+
+    The public function name is preserved for downstream callers.  Its source
+    is now the typed registry rather than AST-parsing assignment literals.
+    """
+
+    runtime = _load_registry_module().LEGACY_ROUNDED_RUNTIME_V1
     return {
-        "omega_b": values["ACTIVE_RATIO"],
-        "omega_c": values["STRUCT_RATIO"],
-        "omega_lambda": values["BACKGROUND_RATIO"],
+        "omega_b": float(runtime.active_ratio),
+        "omega_c": float(runtime.struct_ratio),
+        "omega_lambda": float(runtime.background_ratio),
     }
+
+
+def load_observation_manifest() -> dict[str, Any]:
+    """Load and minimally validate the versioned observation manifest."""
+
+    payload = json.loads(OBSERVATION_MANIFEST_PATH.read_text(encoding="utf-8"))
+    if payload.get("manifest_id") != "CE_COSMOLOGY_OBSERVATIONS_V1":
+        raise ValueError("unexpected cosmology observation manifest_id")
+    required = set(payload["provenance_policy"]["required_entry_fields"])
+    observations = payload.get("observations")
+    if not isinstance(observations, list):
+        raise ValueError("cosmology observation manifest requires an observations list")
+    for entry in observations:
+        missing = required - set(entry)
+        if missing:
+            raise ValueError(
+                f"observation {entry.get('observation_id', '<unknown>')} "
+                f"is missing provenance fields: {sorted(missing)}"
+            )
+    return payload
 
 
 @dataclass(frozen=True)
@@ -48,6 +94,8 @@ class DensityBaseline:
     omega_c_h2: float
     h0: float
     note: str
+    validity_status: str = "VALID_REFERENCE"
+    scientific_score_eligible: bool = False
 
     @property
     def h(self) -> float:
@@ -88,6 +136,8 @@ class CoverageVerdict:
     has_growth_model_for_s8: bool
     has_particle_dark_matter_model: bool
     has_detector_likelihood: bool
+    scientific_score_eligible: bool = False
+    closure_role: str = "exploratory_ratio_diagnostic"
 
     @property
     def summary(self) -> str:
@@ -105,37 +155,42 @@ class CoverageVerdict:
 
 CE_RATIOS = load_ce_ratios_from_constants()
 
+_BASELINE_NOTES = {
+    "Planck2018_base": "Planck base-LambdaCDM reference.",
+    "Planck_ACT_SPT_combined": (
+        "Historical mixed tuple; no single official posterior or covariance."
+    ),
+    "ACT_DR6_DESI_reported": "ACT DR6.02 tagged compressed reference.",
+    "SPT3G_CMBSPA": "Corrected SPT-3G D1 CMB-SPA compressed reference.",
+}
 
-RECENT_BASELINES = (
-    DensityBaseline(
-        name="Planck2018_base",
-        omega_b_h2=0.0224,
-        omega_c_h2=0.120,
-        h0=67.4,
-        note="Planck base-LambdaCDM reference.",
-    ),
-    DensityBaseline(
-        name="Planck_ACT_SPT_combined",
-        omega_b_h2=0.02228,
-        omega_c_h2=0.1195,
-        h0=68.43,
-        note="Representative combined CMB constraint used in 2025-2026 comparisons.",
-    ),
-    DensityBaseline(
-        name="ACT_DR6_DESI_reported",
-        omega_b_h2=0.0226,
-        omega_c_h2=0.118,
-        h0=68.22,
-        note="Representative ACT DR6 plus DESI compressed parameter set.",
-    ),
-    DensityBaseline(
-        name="SPT3G_CMBSPA",
-        omega_b_h2=0.022398,
-        omega_c_h2=0.12028,
-        h0=67.19,
-        note="Representative SPT-3G/CMB-SPA-style compressed set.",
-    ),
-)
+
+def _load_recent_baselines() -> tuple[DensityBaseline, ...]:
+    manifest = load_observation_manifest()
+    by_id = {entry["observation_id"]: entry for entry in manifest["observations"]}
+    baselines: list[DensityBaseline] = []
+    for observation_id in manifest["legacy_ratio_baseline_ids"]:
+        try:
+            entry = by_id[observation_id]
+            values = entry["values"]
+            validity = entry["validity"]
+            baselines.append(
+                DensityBaseline(
+                    name=observation_id,
+                    omega_b_h2=float(values["omega_b_h2"]),
+                    omega_c_h2=float(values["omega_c_h2"]),
+                    h0=float(values["H0"]),
+                    note=_BASELINE_NOTES[observation_id],
+                    validity_status=str(validity["status"]),
+                    scientific_score_eligible=bool(validity["scientific_score_eligible"]),
+                )
+            )
+        except KeyError as exc:
+            raise ValueError(f"invalid ratio baseline manifest entry: {observation_id}") from exc
+    return tuple(baselines)
+
+
+RECENT_BASELINES = _load_recent_baselines()
 
 
 def relative_error(predicted: float, observed: float) -> float:
@@ -163,7 +218,18 @@ def compare_all_density_ratios(
 
 
 def coverage_verdict(max_relative_tolerance: float = 0.04) -> CoverageVerdict:
-    comparisons = compare_all_density_ratios()
+    valid_names = {
+        baseline.name
+        for baseline in RECENT_BASELINES
+        if baseline.validity_status != "EXCLUDED_HISTORICAL"
+    }
+    comparisons = tuple(
+        comparison
+        for comparison in compare_all_density_ratios()
+        if comparison.baseline in valid_names
+    )
+    if not comparisons:
+        raise ValueError("no valid density reference remains after provenance filtering")
     density_close = all(c.max_abs_relative_error <= max_relative_tolerance for c in comparisons)
     return CoverageVerdict(
         density_ratios_close=density_close,
@@ -183,11 +249,17 @@ def print_report() -> None:
     print(f"  Omega_Lambda {CE_RATIOS['omega_lambda']:.6f}")
     print(f"  Omega_m      {CE_RATIOS['omega_b'] + CE_RATIOS['omega_c']:.6f}")
     print()
+    print("Historical/excluded rows are displayed for parity but omitted from the verdict.")
     print("| baseline | dOmega_b | rel_b | dOmega_DM | rel_DM | dOmega_Lambda | rel_Lambda |")
     print("|---|---:|---:|---:|---:|---:|---:|")
+    baseline_by_name = {baseline.name: baseline for baseline in RECENT_BASELINES}
     for comparison in compare_all_density_ratios():
+        baseline = baseline_by_name[comparison.baseline]
+        display_name = comparison.baseline
+        if baseline.validity_status == "EXCLUDED_HISTORICAL":
+            display_name += " [EXCLUDED_HISTORICAL]"
         print(
-            f"| {comparison.baseline} "
+            f"| {display_name} "
             f"| {comparison.omega_b_diff:+.6f} | {100.0 * comparison.omega_b_rel:+.2f}% "
             f"| {comparison.omega_c_diff:+.6f} | {100.0 * comparison.omega_c_rel:+.2f}% "
             f"| {comparison.omega_lambda_diff:+.6f} | {100.0 * comparison.omega_lambda_rel:+.2f}% |"
@@ -200,6 +272,8 @@ def print_report() -> None:
     print("has_growth_model_for_s8", verdict.has_growth_model_for_s8)
     print("has_particle_dark_matter_model", verdict.has_particle_dark_matter_model)
     print("has_detector_likelihood", verdict.has_detector_likelihood)
+    print("scientific_score_eligible", verdict.scientific_score_eligible)
+    print("closure_role", verdict.closure_role)
 
 
 def main() -> int:

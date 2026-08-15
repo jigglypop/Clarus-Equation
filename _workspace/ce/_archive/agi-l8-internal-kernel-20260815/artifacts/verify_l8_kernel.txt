@@ -1,0 +1,15 @@
+U0 subset R0: yes (geometry)
+H_star in U0 subset R0; o^A=1; typed H
+H_circ in U0 subset R0; o^A=1; typed H
+E2 current bits equal: o^A(H_star)=o^A(H_circ)=1
+H_star Phi: t'=1 E held bits held; sensor m'=0 b'=491/990 q'=3/4; action cited L6-E1 (m',b')=(7187/12672, 491/990)
+H_circ Phi: t'=1 E held bits held; sensor m'=0 b'=133/270 q'=3/4; action cited L6-E1 (m',b')=(16891/29700, 133/270)
+E2 action (m',b') differ by cited L6-E1: dm=-1487/950400 db=1/297
+Phi(H_star) != Phi(H_circ) as host tuples
+E1: K=Phi typed H->H equals Phi on S
+E3: o^A constant on S, K=Phi not constant; maps from S differ
+H1: Phi(H) is a 6-slot host tuple, not a bit; K_bit equality fails
+sensor b'(H_star)=491/990
+sensor b'(H_circ)=133/270
+drives: u^A=1 u^S=0
+ALL CHECKS PASSED

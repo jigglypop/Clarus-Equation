@@ -1,0 +1,17 @@
+L8-H1 route numbers. Not a theorem. Not AGI GO.
+r(3/4) = 81/16
+1 - lambda(1-b) at b=49/99 = -26/99
+star current o^A = 1
+star Z^S(u=0) = (Fraction(0, 1), Fraction(491, 990), Fraction(3, 4))
+star Z^A(u=1) = (Fraction(7187, 12672), Fraction(491, 990), Fraction(3, 4))
+star Phi slots = t=1 E=e2 sigma=1 I=1
+circ current o^A = 1
+circ Z^S(u=0) = (Fraction(0, 1), Fraction(133, 270), Fraction(3, 4))
+circ Z^A(u=1) = (Fraction(16891, 29700), Fraction(133, 270), Fraction(3, 4))
+circ Phi slots = t=1 E=e2 sigma=1 I=1
+Phi(star) == Phi(circ): False
+o^A constant on S: True
+K_bit codomain {0,1}; Phi codomain is H-space. Equality type-fails.
+K_act emits only action (m',b'). Missing t,E,Z^S,q,sigma,I.
+K_3 emits a third cube. Codomain is not H. Already rejected as required.
+K=Phi matches by construction on S.

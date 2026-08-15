@@ -2,6 +2,11 @@ import argparse
 import math
 from dataclasses import dataclass
 
+try:
+    from examples.physics.cosmology_kernel import FlatFLRW
+except ModuleNotFoundError:  # Direct execution from examples/physics.
+    from cosmology_kernel import FlatFLRW
+
 
 def clamp01(x: float) -> float:
     if x < 0.0:
@@ -17,6 +22,7 @@ def linspace(a: float, b: float, n: int) -> list[float]:
     step = (b - a) / (n - 1)
     return [a + i * step for i in range(n)]
 
+
 def logspace(a_min: float, a_max: float, n: int) -> list[float]:
     if a_min <= 0.0 or a_max <= 0.0:
         raise ValueError("a_min and a_max must be > 0")
@@ -29,29 +35,41 @@ def logspace(a_min: float, a_max: float, n: int) -> list[float]:
 
 
 def simpson(y: list[float], x: list[float]) -> float:
+    """Integrate tabulated data with nonuniform quadratic panels.
+
+    Consecutive pairs of intervals are integrated by the unique quadratic
+    interpolant through their three samples.  If the sample count is even,
+    the final interval is retained with a trapezoid instead of being dropped.
+    """
+
     n = len(x)
     if n != len(y):
         raise ValueError("x and y length mismatch")
     if n < 2:
         return 0.0
-    if n == 2:
-        return 0.5 * (x[1] - x[0]) * (y[0] + y[1])
-    if n % 2 == 0:
-        n -= 1
-        x = x[:n]
-        y = y[:n]
-        if n < 2:
-            return 0.0
-    h = (x[-1] - x[0]) / (n - 1)
-    s = y[0] + y[-1]
-    s_odd = 0.0
-    s_even = 0.0
+
+    direction = x[1] - x[0]
+    if direction == 0.0:
+        raise ValueError("x values must be strictly monotonic")
     for i in range(1, n - 1):
-        if i % 2 == 1:
-            s_odd += y[i]
-        else:
-            s_even += y[i]
-    return (h / 3.0) * (s + 4.0 * s_odd + 2.0 * s_even)
+        if (x[i + 1] - x[i]) * direction <= 0.0:
+            raise ValueError("x values must be strictly monotonic")
+
+    panel_stop = n if n % 2 == 1 else n - 1
+    total = 0.0
+    for i in range(0, panel_stop - 2, 2):
+        h0 = x[i + 1] - x[i]
+        h1 = x[i + 2] - x[i + 1]
+        hsum = h0 + h1
+        total += (hsum / 6.0) * (
+            (2.0 - h1 / h0) * y[i]
+            + (hsum * hsum / (h0 * h1)) * y[i + 1]
+            + (2.0 - h0 / h1) * y[i + 2]
+        )
+
+    if n % 2 == 0:
+        total += 0.5 * (x[-1] - x[-2]) * (y[-2] + y[-1])
+    return total
 
 
 def interp_linear(x_grid: list[float], y_grid: list[float], x: float) -> float:
@@ -115,22 +133,39 @@ def is_close(a: float, b: float, tol: float) -> bool:
 class Background:
     omega_m0: float
     omega_l0: float
+    omega_r0: float = 0.0
+    w0: float = -1.0
+    wa: float = 0.0
+
+    def _kernel(self) -> FlatFLRW:
+        return FlatFLRW(
+            omega_m0=self.omega_m0,
+            omega_de0=self.omega_l0,
+            omega_r0=self.omega_r0,
+            w0=self.w0,
+            wa=self.wa,
+        )
+
+    def e2_of_a(self, a: float) -> float:
+        return self._kernel().e2_of_a(a)
 
     def e_of_a(self, a: float) -> float:
-        return math.sqrt(self.omega_m0 * a ** (-3.0) + self.omega_l0)
+        return self._kernel().e_of_a(a)
 
     def dlnh_dln_a(self, a: float) -> float:
-        e2 = self.omega_m0 * a ** (-3.0) + self.omega_l0
-        num = -3.0 * self.omega_m0 * a ** (-3.0)
-        return 0.5 * num / e2
+        return self._kernel().dlnh_dln_a(a)
 
     def omega_m_of_a(self, a: float) -> float:
-        e2 = self.omega_m0 * a ** (-3.0) + self.omega_l0
-        return (self.omega_m0 * a ** (-3.0)) / e2
+        return self._kernel().omega_m_of_a(a)
 
     def omega_l_of_a(self, a: float) -> float:
-        e2 = self.omega_m0 * a ** (-3.0) + self.omega_l0
-        return self.omega_l0 / e2
+        return self._kernel().omega_de_of_a(a)
+
+    def omega_r_of_a(self, a: float) -> float:
+        return self._kernel().omega_r_of_a(a)
+
+    def ricci_over_h2(self, a: float) -> float:
+        return self._kernel().ricci_over_h2(a)
 
 
 def compute_s_of_a(bg: Background, a_grid: list[float]) -> list[float]:
@@ -143,6 +178,7 @@ def compute_s_of_a(bg: Background, a_grid: list[float]) -> list[float]:
         num = simpson(omegals[: i + 1], a_grid[: i + 1])
         out.append(clamp01(num / denom))
     return out
+
 
 def compute_s_of_a_ratio(bg: Background, a_grid: list[float]) -> list[float]:
     omega_l0 = bg.omega_l_of_a(1.0)
@@ -159,6 +195,10 @@ def solve_growth(bg: Background, a_grid: list[float], mu_of_a: list[float]) -> t
         raise ValueError("a_grid and mu_of_a length mismatch")
     if len(a_grid) < 3:
         raise ValueError("need at least 3 points")
+    if any(not math.isfinite(a) or a <= 0.0 for a in a_grid):
+        raise ValueError("a_grid values must be finite and > 0")
+    if any(a_grid[i + 1] <= a_grid[i] for i in range(len(a_grid) - 1)):
+        raise ValueError("a_grid values must be strictly increasing")
 
     d = [0.0 for _ in a_grid]
     dp = [0.0 for _ in a_grid]
@@ -168,7 +208,6 @@ def solve_growth(bg: Background, a_grid: list[float], mu_of_a: list[float]) -> t
     dp[0] = a0
 
     lna = [math.log(a) for a in a_grid]
-    dln = (lna[-1] - lna[0]) / (len(lna) - 1)
 
     def mu_at_ln_a(x: float) -> float:
         if x <= lna[0]:
@@ -199,6 +238,7 @@ def solve_growth(bg: Background, a_grid: list[float], mu_of_a: list[float]) -> t
 
     for i in range(len(a_grid) - 1):
         x = lna[i]
+        dln = lna[i + 1] - x
         k1 = rhs(x, d[i], dp[i])
         k2 = rhs(x + 0.5 * dln, d[i] + 0.5 * dln * k1[0], dp[i] + 0.5 * dln * k1[1])
         k3 = rhs(x + 0.5 * dln, d[i] + 0.5 * dln * k2[0], dp[i] + 0.5 * dln * k2[1])

@@ -370,6 +370,64 @@ class DimensionlessChecker:
             "The eigenvalue ratio is dimensionless but fixed-chart, not affine invariant",
         )
 
+        self.add_formula(
+            "V16 covariant metric-flow residual",
+            "r_V16",
+            "log(predicted_quadratic_cost/observed_quadratic_cost)",
+            Dimension.DIMENSIONLESS,
+            "7_AGI/V16 covariant metric-flow agent",
+            "Prediction and observation must use the same squared-cost reference unit; "
+            "their positive ratio is dimensionless before entering log",
+        )
+
+        self.add_formula(
+            "V16 normalized route regret",
+            "rho_V16",
+            "(selected_route_cost/minimum_route_cost)-1",
+            Dimension.DIMENSIONLESS,
+            "7_AGI/V16 covariant metric-flow agent",
+            "Selected and minimum route costs have identical units and the minimum is positive",
+        )
+
+        self.add_formula(
+            "V17 conditional signed-cue information",
+            "I_V17",
+            "H_sign_given_public_reference-H_sign_given_metric_and_public_reference",
+            Dimension.DIMENSIONLESS,
+            "7_AGI/V17 metric-only delayed-cue run",
+            "Entropy and mutual information are logarithmic pure-number counts; the theorem "
+            "is conditional on the public oriented reference",
+        )
+
+        self.add_formula(
+            "V17 homogeneous-lift normalized action margin",
+            "delta_V17",
+            "(wrong_action_cost-correct_action_cost)/correct_action_cost",
+            Dimension.DIMENSIONLESS,
+            "7_AGI/V17 metric-only delayed-cue run",
+            "Both quadratic action costs use the same synthetic cost unit",
+        )
+
+        self.add_formula(
+            "V18b reward-decoded binary label",
+            "y_tilde_V18b",
+            "action*(2*reward-1)",
+            Dimension.DIMENSIONLESS,
+            "7_AGI/V18b reward-decoded delayed-credit run",
+            "Action and binary correctness reward are pure numbers, so the decoded label "
+            "is dimensionless",
+        )
+
+        self.add_formula(
+            "V18b delayed classifier increment",
+            "delta_w_V18b",
+            "learning_rate*decoded_label*eligibility_coordinate",
+            Dimension.DIMENSIONLESS,
+            "7_AGI/V18b reward-decoded delayed-credit run",
+            "The registered synthetic learning rate, label, and trace coordinates are all "
+            "dimensionless",
+        )
+
         # RIEMANN/MRA LAYER
         self.add_formula(
             "Riemann metric attention",
@@ -429,7 +487,12 @@ class DimensionlessChecker:
             parse_expr(formula.formula)
 
             # Quick dimensionality checks based on formula structure
-            if formula.symbol == "g_CF":
+            if formula.symbol in {
+                "g_CF",
+                "I_V17",
+                "y_tilde_V18b",
+                "delta_w_V18b",
+            }:
                 result["status"] = "PASS ✓"
 
             elif formula.symbol == "S(D)" or "exp(" in formula.formula:

@@ -233,6 +233,59 @@ def test_symmetric_goal_preserves_all_ties_and_candidate_permutation() -> None:
     assert "representative" in path.tie_policy
 
 
+def test_tiny_unique_chain_goal_and_source_self_are_not_absolute_scale_ties() -> None:
+    points = np.array(
+        [
+            [0.0, 0.0],
+            [1.0e-16, 0.0],
+            [2.0e-16, 0.0],
+        ]
+    )
+    chain = np.array(
+        [
+            [0.0, 1.0, 0.0],
+            [1.0, 0.0, 1.0],
+            [0.0, 1.0, 0.0],
+        ]
+    )
+    core = UnifiedMetricCore(points, chain)
+    state = core.identity_state()
+
+    path = core.shortest_path(state, 2, 0)
+    goal = core.minimum_cost_targets(state, 2, [0, 1])
+    source_self = core.shortest_path(state, 2, 2)
+
+    assert path.nodes == (2, 1, 0)
+    assert path.cost == pytest.approx(2.0e-16, rel=1.0e-15, abs=0.0)
+    assert path.unique
+    assert goal.minimizers == (1,)
+    assert goal.unique
+    assert source_self.nodes == (2,)
+    assert source_self.cost == 0.0
+    assert source_self.unique
+
+
+def test_shortest_path_reconstruction_has_an_explicit_cycle_guard(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    core = _core()
+    state = core.identity_state()
+
+    def cyclic_predecessors(
+        _state: UnifiedMetricState,
+        _source: int,
+    ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+        return (
+            np.array([2.0, 1.0, 0.0, 3.0]),
+            np.array([1, 0, -1, 1]),
+            np.ones(4, dtype=np.int8),
+        )
+
+    monkeypatch.setattr(core, "_dijkstra", cyclic_predecessors)
+    with pytest.raises(RuntimeError, match="cycle"):
+        core.shortest_path(state, 2, 0)
+
+
 def test_surprise_is_dimensionless_hard_and_affine_covariant() -> None:
     core = _core()
     state = core.identity_state()
@@ -278,6 +331,120 @@ def test_surprise_is_dimensionless_hard_and_affine_covariant() -> None:
         abs=1e-12,
     )
     assert transformed_surprise.hard_gate == at_boundary.hard_gate
+
+
+def test_surprise_gate_is_stable_when_the_diagnostic_ratio_saturates() -> None:
+    core = _core()
+    state = core.identity_state()
+
+    overflowed_ratio = core.surprise_gate(
+        state,
+        0,
+        [1.0, 0.0],
+        [0.0, 0.0],
+        reference_scale=1.0e-200,
+        threshold=1.0,
+    )
+    underflowed_ratio = core.surprise_gate(
+        state,
+        0,
+        [1.0, 0.0],
+        [0.0, 0.0],
+        reference_scale=1.0e200,
+        threshold=0.0,
+    )
+    below_positive_threshold = core.surprise_gate(
+        state,
+        0,
+        [1.0, 0.0],
+        [0.0, 0.0],
+        reference_scale=1.0e200,
+        threshold=1.0e-300,
+    )
+    zero = core.surprise_gate(
+        state,
+        0,
+        [0.0, 0.0],
+        [0.0, 0.0],
+        reference_scale=1.0e-200,
+        threshold=0.0,
+    )
+
+    assert math.isinf(overflowed_ratio.normalized_squared_length)
+    assert overflowed_ratio.hard_gate == 1
+    assert underflowed_ratio.normalized_squared_length == 0.0
+    assert underflowed_ratio.hard_gate == 1
+    assert below_positive_threshold.normalized_squared_length == 0.0
+    assert below_positive_threshold.hard_gate == 0
+    assert zero.hard_gate == 0
+
+
+@pytest.mark.parametrize("exponent", [-150, -16, 0, 16, 150])
+def test_local_and_edge_lengths_are_stable_across_representable_scales(
+    exponent: int,
+) -> None:
+    coordinate = 10.0**exponent
+    points = np.array([[0.0, 0.0], [coordinate, 0.0]])
+    adjacency = np.array([[0.0, 1.0], [1.0, 0.0]])
+    core = UnifiedMetricCore(points, adjacency)
+    state = core.identity_state()
+
+    local = core.local_length_squared(state, 0, [coordinate, 0.0])
+    edge = core.edge_lengths(state)[0, 1]
+
+    assert local == pytest.approx(coordinate * coordinate, rel=3.0e-14, abs=0.0)
+    assert edge == pytest.approx(coordinate, rel=3.0e-14, abs=0.0)
+
+
+def test_huge_finite_metric_symmetrizes_safely_and_clips_to_bounds() -> None:
+    points = np.array([[0.0, 0.0], [1.0, 0.0]])
+    adjacency = np.array([[0.0, 1.0], [1.0, 0.0]])
+    core = UnifiedMetricCore(points, adjacency)
+    huge_metric = np.repeat((1.0e308 * np.eye(2))[None, :, :], 2, axis=0)
+
+    unprojected = core.make_state(huge_metric)
+    projected = core.project_metric(huge_metric)
+
+    assert core.edge_lengths(unprojected)[0, 1] == pytest.approx(1.0e154)
+    assert np.all(np.isfinite(np.asarray(projected.metric)))
+    np.testing.assert_allclose(
+        np.asarray(projected.metric),
+        np.repeat((4.0 * np.eye(2))[None, :, :], 2, axis=0),
+    )
+
+
+def test_nonrepresentable_lengths_and_affine_transports_raise_explicitly() -> None:
+    adjacency = np.array([[0.0, 1.0], [1.0, 0.0]])
+    huge = UnifiedMetricCore(
+        np.array([[-1.0e308, 0.0], [1.0e308, 0.0]]),
+        adjacency,
+    )
+    ordinary = UnifiedMetricCore(
+        np.array([[0.0, 0.0], [1.0, 0.0]]),
+        adjacency,
+    )
+    metric = np.repeat(np.eye(2)[None, :, :], 2, axis=0)
+
+    with pytest.raises(FloatingPointError, match="not representable"):
+        huge.edge_lengths(huge.identity_state())
+    with pytest.raises(FloatingPointError, match="not representable"):
+        ordinary.local_length_squared(
+            ordinary.identity_state(),
+            0,
+            [1.0e200, 0.0],
+        )
+    with pytest.raises(FloatingPointError, match="affine metric transport"):
+        affine_chart_change(
+            ordinary.points,
+            metric,
+            np.diag([1.0e308, 1.0]),
+        )
+    with pytest.raises(FloatingPointError, match="affine metric transport"):
+        affine_chart_change(
+            ordinary.points,
+            metric,
+            np.diag([1.0e-308, 1.0]),
+        )
 
 
 def test_snapshot_roundtrip_is_exact_and_input_detached() -> None:

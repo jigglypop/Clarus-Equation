@@ -1,15 +1,20 @@
 """
 Bootstrap Fixed-Point Solver for Clarus Equation
 ================================================================
-Solves: ε² = exp(-(1-ε²) × D_eff)
-where D_eff = 3 + δ = 3 + sin²θ_W·cos²θ_W = 3.17776
+Solves: q_ext = exp(-(1-q_ext) × D_eff)
+for a named exact or legacy effective-depth model.
 
-Output: ε² ≈ 0.04865 (baryon survival rate) ↔ Ω_b
+The small root is q_ext, the branching extinction probability.  Survival is
+1-q_ext.  ``eps_squared`` remains only as a compatibility spelling.  A
+historical q_ext -> Omega_b readout is not part of this solver.
 """
 
 import numpy as np
-import json
-from pathlib import Path
+
+try:
+    from .cosmology_registry import CE_CORE_EXACT_V1, LEGACY_DELTA_5DP_V1
+except ImportError:  # pragma: no cover - supports direct script execution
+    from cosmology_registry import CE_CORE_EXACT_V1, LEGACY_DELTA_5DP_V1
 
 try:
     from scipy.optimize import brentq as scipy_brentq
@@ -20,30 +25,61 @@ except ModuleNotFoundError:  # pragma: no cover - exercised in minimal installs
 
 
 class BootstrapSolver:
-    """Clarus Equation bootstrap fixed-point solver."""
+    """Clarus Equation extinction fixed-point solver.
 
-    # Core constants from CE framework
+    The default remains ``LEGACY_DELTA_5DP_V1`` for API and numerical
+    compatibility.  Select ``CE_CORE_EXACT_V1`` explicitly for the unrounded
+    formula-chain value.
+    """
+
+    LEGACY_MODEL_ID = LEGACY_DELTA_5DP_V1.model_id
+    EXACT_MODEL_ID = CE_CORE_EXACT_V1.model_id
+
+    # Class attributes retain the historical default for callers that inspect
+    # them without constructing an instance.
     DELTA = 0.17776  # sin²θ_W × cos²θ_W
     D_EFF = 3 + DELTA  # 3.17776
 
-    # Observational reference values
-    OMEGA_B_OBS = 0.04865  # Planck 2018
-    OMEGA_B_OBS_SIGMA = 0.00005  # ±0.0005
-    OMEGA_LAMBDA_OBS = 0.6891  # Planck 2018
-    OMEGA_DM_OBS = 0.2623  # Planck 2018
+    # Compatibility display values.  They are not a single Planck posterior
+    # and therefore have no defensible Gaussian sigma in this solver.
+    OMEGA_B_OBS = 0.04865
+    OMEGA_B_OBS_SIGMA = None
+    OMEGA_LAMBDA_OBS = 0.6891
+    OMEGA_DM_OBS = 0.2623
 
-    def __init__(self, verbose=False):
+    def __init__(self, verbose=False, model_id=LEGACY_MODEL_ID):
+        models = {
+            self.LEGACY_MODEL_ID: LEGACY_DELTA_5DP_V1,
+            self.EXACT_MODEL_ID: CE_CORE_EXACT_V1,
+        }
+        try:
+            model = models[model_id]
+        except KeyError as exc:
+            raise ValueError(f"Unknown bootstrap model_id: {model_id}") from exc
+
         self.verbose = verbose
+        self.model_id = model.model_id
+        self.model_role = model.role.value
+        self.model_status = model.status.value
+        self.precision = model.fixed_point.precision
+        self.DELTA = model.delta
+        self.D_EFF = model.d_eff
         self.eps_squared = None
         self.convergence_info = {}
 
+    @classmethod
+    def exact(cls, verbose=False):
+        """Construct a solver for the full-precision formula chain."""
+
+        return cls(verbose=verbose, model_id=cls.EXACT_MODEL_ID)
+
     def bootstrap_equation(self, eps):
         """
-        Core bootstrap equation.
-        ε² = exp(-(1-ε²) × D_eff)
+        Core extinction equation (``eps`` is the legacy parameter name).
+        q_ext = exp(-(1-q_ext) × D_eff)
 
         Rearranged for root-finding:
-        f(ε) = ε - exp(-(1-ε) × D_eff) = 0
+        f(q_ext) = q_ext - exp(-(1-q_ext) × D_eff) = 0
         """
         return eps - np.exp(-(1 - eps) * self.D_EFF)
 
@@ -199,7 +235,10 @@ class BootstrapSolver:
             raise ValueError(f"Unknown method: {method}")
 
         if self.verbose:
-            print(f"\nPASS: Converged: eps^2 = {self.eps_squared:.10f}")
+            print(
+                f"\nPASS: Converged q_ext = {self.eps_squared:.10f} "
+                f"[{self.model_id}]"
+            )
 
         return self.eps_squared
 
@@ -224,19 +263,26 @@ class BootstrapSolver:
         rhs = np.exp(-(1 - eps_squared) * self.D_EFF)
         residual = abs(lhs - rhs)
 
-        # Check against observation
+        # Preserve the old display-ratio API without inventing a covariance.
         omega_b_ratio = eps_squared / self.OMEGA_B_OBS
-        omega_b_sigma = (eps_squared - self.OMEGA_B_OBS) / self.OMEGA_B_OBS_SIGMA
 
         result = {
             'eps_squared': eps_squared,
+            'q_ext': eps_squared,
+            'survival': 1.0 - eps_squared,
+            'quantity_semantics': 'branching_extinction_probability',
             'lhs': lhs,
             'rhs': rhs,
             'residual': residual,
             'equation_satisfied': residual < 1e-9,
+            'model_id': self.model_id,
+            'model_role': self.model_role,
+            'model_status': self.model_status,
+            'precision': self.precision,
             'omega_b_obs': self.OMEGA_B_OBS,
             'omega_b_ratio': omega_b_ratio,
-            'omega_b_sigma_offset': omega_b_sigma,
+            'omega_b_sigma_offset': None,
+            'observation_comparison_status': 'historical_display_only_no_covariance',
             'convergence': self.convergence_info
         }
 
@@ -249,19 +295,21 @@ class BootstrapSolver:
         print("\n" + "="*70)
         print("BOOTSTRAP FIXED-POINT SOLUTION")
         print("="*70)
-        print(f"\nEquation: eps^2 = exp(-(1-eps^2) * D_eff)")
+        print(f"\nModel: {verification['model_id']}")
+        print("Equation: q_ext = exp(-(1-q_ext) * D_eff)")
         print(f"D_eff = 3 + delta = 3 + {self.DELTA} = {self.D_EFF:.5f}")
-        print(f"\n{'Solution':30s}: eps^2 = {verification['eps_squared']:.10f}")
-        print(f"{'LHS (eps^2)':30s}: {verification['lhs']:.10f}")
+        print(f"\n{'Extinction root':30s}: q_ext = {verification['q_ext']:.10f}")
+        print(f"{'Survival':30s}: 1-q_ext = {verification['survival']:.10f}")
+        print(f"{'LHS (q_ext)':30s}: {verification['lhs']:.10f}")
         print(f"{'RHS (exp(...))':30s}: {verification['rhs']:.10f}")
         print(f"{'Residual |LHS-RHS|':30s}: {verification['residual']:.2e}")
         print(f"{'Equation satisfied?':30s}: {verification['equation_satisfied']}")
 
-        print(f"\n{'Interpretation as Omega_b':30s}:")
-        print(f"  eps^2 = {verification['eps_squared']:.5f}")
-        print(f"  Omega_b(obs) = {verification['omega_b_obs']:.5f}")
-        print(f"  Ratio (CE/obs) = {verification['omega_b_ratio']:.4f}")
-        print(f"  sigma offset = {verification['omega_b_sigma_offset']:.2f} sigma")
+        print(f"\n{'Historical display comparison':30s}:")
+        print(f"  q_ext = {verification['q_ext']:.5f}")
+        print(f"  legacy Omega_b display = {verification['omega_b_obs']:.5f}")
+        print(f"  ratio = {verification['omega_b_ratio']:.4f}")
+        print("  sigma offset = not computed (no covariance attached)")
 
         print(f"\n{'Convergence':30s}:")
         for key, val in verification['convergence'].items():
@@ -305,7 +353,7 @@ def main():
 
     # Unit test
     print("\n[5] Unit Test:")
-    expected_eps = 0.04865  # Planck Ω_b
+    expected_eps = 0.04865  # historical five-significant-digit display
     tolerance = 1e-4
 
     if abs(eps_newton - expected_eps) < tolerance:

@@ -165,3 +165,33 @@ def test_unified_metric_surprise_and_condition_ratio_are_dimensionless() -> None
     assert formulas["kappa_UM"].expected_dim == Dimension.DIMENSIONLESS
     assert checker.check_formula(formulas["chi_UM"])["status"].startswith("PASS")
     assert checker.check_formula(formulas["kappa_UM"])["status"].startswith("PASS")
+
+
+def test_v16_metric_flow_residual_and_regret_are_dimensionless() -> None:
+    checker = DimensionlessChecker()
+    formulas = {formula.symbol: formula for formula in checker.formulas}
+
+    assert formulas["r_V16"].expected_dim == Dimension.DIMENSIONLESS
+    assert formulas["rho_V16"].expected_dim == Dimension.DIMENSIONLESS
+    assert checker.check_formula(formulas["r_V16"])["status"].startswith("PASS")
+    assert checker.check_formula(formulas["rho_V16"])["status"].startswith("PASS")
+
+
+def test_v17_conditional_information_and_lift_margin_are_dimensionless() -> None:
+    checker = DimensionlessChecker()
+    formulas = {formula.symbol: formula for formula in checker.formulas}
+
+    assert formulas["I_V17"].expected_dim == Dimension.DIMENSIONLESS
+    assert formulas["delta_V17"].expected_dim == Dimension.DIMENSIONLESS
+    assert checker.check_formula(formulas["I_V17"])["status"].startswith("PASS")
+    assert checker.check_formula(formulas["delta_V17"])["status"].startswith("PASS")
+
+
+def test_v18b_reward_decoder_and_classifier_increment_are_dimensionless() -> None:
+    checker = DimensionlessChecker()
+    formulas = {formula.symbol: formula for formula in checker.formulas}
+
+    assert formulas["y_tilde_V18b"].expected_dim == Dimension.DIMENSIONLESS
+    assert formulas["delta_w_V18b"].expected_dim == Dimension.DIMENSIONLESS
+    assert checker.check_formula(formulas["y_tilde_V18b"])["status"].startswith("PASS")
+    assert checker.check_formula(formulas["delta_w_V18b"])["status"].startswith("PASS")

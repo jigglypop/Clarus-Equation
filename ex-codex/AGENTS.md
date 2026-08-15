@@ -17,7 +17,7 @@ Clarus-Equation 연구·구현을 위한 Codex 전역 지침. 프로젝트별 AG
 | 신규 주장 검증·승격 판단·논문화·병렬 연구 | $ce-research (full) |
 | 완결 run의 후속·반복 (v8→v9 등) | $ce-research (light, PREDECESSOR 지정) |
 
-선택한 스킬 하나만 로드한다. 역할 카드(agents/*.md)는 해당 레인을 실행하는 순간에만 읽는다.
+선택한 스킬 하나만 로드한다. 역할 카드는 4장(sourcer, math-verifier, status-auditor, impl-engineer)이며 해당 레인을 실행하는 순간에만 읽는다. 우회 경로 탐색(routes)은 math-verifier 레인에 포함되고, 최종 집필은 역할 카드 없이 $ce-research의 집필 규칙으로 직접 한다.
 
 ## 코어 명령
 
@@ -43,6 +43,13 @@ Clarus-Equation 연구·구현을 위한 Codex 전역 지침. 프로젝트별 AG
 - PREDECESSOR가 있으면 선행 run이 검증한 결론을 재유도·재대조하지 않고 경로만 인용한다.
 - 상세 계산·로그·발췌는 artifacts/에 쓰고 stage 파일에는 판정·표·경로만 남긴다.
 - 레인 파일은 3–4만 자 재생성이 아니라 판정 중심의 짧은 문서다.
+
+## 끈질김 (진취성 규율)
+
+- **BLOCKED는 최후 수단이다.** 막히면 (a) 우회 경로 후보 소진, (b) 주장 범위 축소로 좁은 정리 salvage, (c) 공리 1개 명시 추가 순으로 시도하고 기각 근거를 기록한 뒤에만 쓴다. BLOCKED에는 재개 조건이 필수다.
+- ABANDONED는 구조적 불가능(반례 확정·no-go·증거 원천 부재)의 근거가 있을 때만. 분량·피로·세션 길이는 사유가 아니다.
+- 부정 결과도 완결한다: 반례·기각으로 끝나는 run도 40-final-report.md까지 간다. 죽은 경로 확인은 실패가 아니라 산출이다.
+- revise 한도 소진은 run 포기 사유가 아니다 — 살릴 것을 좁혀 살리고 남는 결함만 BLOCKED로 보고서에 남긴다.
 
 ## 정직성 (협상 불가)
 

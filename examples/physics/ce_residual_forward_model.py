@@ -819,11 +819,35 @@ class ParameterProvenance:
 
     @property
     def is_ce_prediction(self) -> bool:
+        """Compatibility view of the historical ``role`` field.
+
+        New closure code must use :attr:`closure_role`; the original role is
+        retained because older scorecards and reproduction tests serialized
+        it.  In particular, ``ce_prediction`` does not mean a blind or
+        physically closed prediction.
+        """
         return self.role == "ce_prediction"
+
+    @property
+    def closure_role(self) -> str:
+        """Fail-closed scientific role used by the unified cosmology gate."""
+        if self.role == "ce_prediction":
+            return "legacy_model_boundary"
+        return self.role
+
+    @property
+    def qualifies_as_physical_prediction(self) -> bool:
+        """Whether this entry is an independently closed CE prediction."""
+        return False
 
 
 def parameter_provenance(params: CEForwardParams) -> tuple[ParameterProvenance, ...]:
-    """Separate CE boundary predictions, external inputs, and model assumptions."""
+    """Return provenance with legacy roles plus fail-closed closure roles.
+
+    The three density values retain the historical ``ce_prediction`` string
+    only for serialized compatibility.  Their current :attr:`closure_role` is
+    ``legacy_model_boundary`` because the abundance/action bridge is open.
+    """
     rd_selection = sound_horizon_selection(params)
     tcmb_role = (
         "external_input" if params.rd_mode == "early-universe" else "inactive_external_input"
@@ -1559,10 +1583,15 @@ def print_report(params: CEForwardParams, z_values: tuple[float, ...]) -> None:
     print(f"wa {params.wa:.6f}")
     print(f"gravity_mu_coupling {params.gravity_mu_coupling:.6f}")
     print(f"S8_today {s8_today(params):.6f}")
+    print("physical_closure INCOMPLETE")
+    print("blind_prediction false")
     print()
-    print("parameter_provenance(name,value,role,source)")
+    print("parameter_provenance(name,value,legacy_role,closure_role,physical_prediction,source)")
     for entry in parameter_provenance(params):
-        print(f"{entry.name},{entry.value:.9g},{entry.role},{entry.source}")
+        print(
+            f"{entry.name},{entry.value:.9g},{entry.role},{entry.closure_role},"
+            f"{str(entry.qualifies_as_physical_prediction).lower()},{entry.source}"
+        )
     print()
     print("z,E(z),D_L_Mpc,D_M_over_rd,D_H_over_rd,D_V_over_rd,Omega_m(z),Omega_de(z),sigma8(z),f_sigma8(z)")
     for z in z_values:
