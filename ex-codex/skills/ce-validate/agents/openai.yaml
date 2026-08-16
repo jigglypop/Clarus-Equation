@@ -1,5 +1,0 @@
-interface:
-  display_name: "CE Validation Harness"
-  short_description: "Run CE numerical, dimensional, and regression checks"
-  default_prompt: "Use $ce-validate to run the relevant CE validation suite and report failures."
-

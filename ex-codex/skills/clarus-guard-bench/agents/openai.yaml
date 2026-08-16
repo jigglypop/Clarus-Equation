@@ -1,4 +1,0 @@
-interface:
-  display_name: "Clarus Guard Bench"
-  short_description: "Run guard security benchmarks and honest metrics"
-  default_prompt: "Use $clarus-guard-bench to run the guard suite and report regressions."
