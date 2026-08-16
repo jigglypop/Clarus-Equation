@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "experiment": "episodic_ltm_dream_factorial_v2_hard_reinstatement",
+  "roadmap_stage": "G7-M",
+  "status": "validation_PASS_test_PASS_byte_locked",
+  "creation_provenance": {
+    "branch": "research/agi-g7m-v2-validation",
+    "head": "a2700770ec42e330ae0bf3bda919867e6932f532",
+    "head_parent": "9d11f86d053368302f2b7f3d8510d689ca036aaf",
+    "head_subject": "test(agi): verify V2 post-unlock artifact chain",
+    "scientific_artifacts_tracked_at_head": true,
+    "all_locked_files_tracked_at_head": true,
+    "content_basis": "Raw bytes at the stated head, including the post-test audit-only test-source transition recorded below; no registered seed is generated or evaluated by this ledger."
+  },
+  "commits": {
+    "preregistration": "375515bf775bd000669962411208c8bc913c2456",
+    "implementation": "d74a56bdbc70a2adb5cb6149a2c3a584c0529960",
+    "implementation_lock": "4980bb5aac302bcaa6bf848270e890275032c360",
+    "train_calibration_and_validation": "3e4fafb42c9d4bbcae06f267fa679a3846cd80ad",
+    "locked_test": "9d11f86d053368302f2b7f3d8510d689ca036aaf",
+    "post_test_audit": "a2700770ec42e330ae0bf3bda919867e6932f532"
+  },
+  "byte_contract": {
+    "digest": "SHA-256 over raw file bytes",
+    "encoding": "UTF-8 without BOM",
+    "line_endings": "LF only; no CR byte",
+    "terminal_newline": "exactly one LF"
+  },
+  "post_test_audit_transition": {
+    "path": "tests/test_episodic_ltm_dream_bridge_v2.py",
+    "base_commit": "d74a56bdbc70a2adb5cb6149a2c3a584c0529960",
+    "transition_commit": "a2700770ec42e330ae0bf3bda919867e6932f532",
+    "base_raw_sha256": "11ef3c176045e2a5c51e347411a9353a5fa417777694b580c25039e99aea4ff7",
+    "current_raw_sha256": "ca9d7366e652e89235cc3853048d67cdda2129850b4a5e657eb82d871f865f5c",
+    "scope": "Replace the pre-test-only artifact-absence assertion with a read-only byte-chain audit when the locked test artifact exists.",
+    "model_changed": false,
+    "gate_changed": false,
+    "registered_seed_generated": false,
+    "artifact_regenerated": false
+  },
+  "files": {
+    "experiments/preregistration/episodic_ltm_dream_factorial_v2.json": {
+      "raw_sha256": "973e90111ee98862a5c9ffc3f86509b46ee4e263b5a977e7e1504e00109092b9",
+      "size_bytes": 47091,
+      "first_locked_commit": "375515bf775bd000669962411208c8bc913c2456",
+      "eol": "LF",
+      "terminal_lf_count": 1,
+      "utf8_bom": false
+    },
+    "reality_stone/python/reality_stone/clarus/episodic_ltm_dream_bridge_v2.py": {
+      "raw_sha256": "edace8bb0ff63eb04bf87518a2f69c4f2960d5a200fec2ac9f1b2bf2a89fa6b1",
+      "size_bytes": 71994,
+      "first_locked_commit": "d74a56bdbc70a2adb5cb6149a2c3a584c0529960",
+      "eol": "LF",
+      "terminal_lf_count": 1,
+      "utf8_bom": false
+    },
+    "examples/agi/episodic_ltm_dream_bridge_v2_gate.py": {
+      "raw_sha256": "b971fdd8520bb4be447912cef89b8697aaec9eaf6424f2c13c1bdb5ff6d171b8",
+      "size_bytes": 200,
+      "first_locked_commit": "d74a56bdbc70a2adb5cb6149a2c3a584c0529960",
+      "eol": "LF",
+      "terminal_lf_count": 1,
+      "utf8_bom": false
+    },
+    "tests/test_episodic_ltm_dream_bridge_v2.py": {
+      "raw_sha256": "ca9d7366e652e89235cc3853048d67cdda2129850b4a5e657eb82d871f865f5c",
+      "size_bytes": 41992,
+      "first_locked_commit": "a2700770ec42e330ae0bf3bda919867e6932f532",
+      "eol": "LF",
+      "terminal_lf_count": 1,
+      "utf8_bom": false
+    },
+    "artifacts/agi/episodic_ltm_dream_factorial_implementation_lock_v2.json": {
+      "raw_sha256": "cb88993b595ad3e527e59d48ba50b471af14585cbadd1e810328bbd0e2208105",
+      "size_bytes": 6569,
+      "first_locked_commit": "4980bb5aac302bcaa6bf848270e890275032c360",
+      "eol": "LF",
+      "terminal_lf_count": 1,
+      "utf8_bom": false
+    },
+    "artifacts/agi/episodic_ltm_dream_factorial_train_calibration_v2.json": {
+      "raw_sha256": "ccec7b07540099bba1dd3b482f7073c77115e6a16a591410c5e5d422fb0eb76b",
+      "size_bytes": 11551,
+      "first_locked_commit": "3e4fafb42c9d4bbcae06f267fa679a3846cd80ad",
+      "eol": "LF",
+      "terminal_lf_count": 1,
+      "utf8_bom": false
+    },
+    "artifacts/agi/episodic_ltm_dream_factorial_validation_v2.json": {
+      "raw_sha256": "56bf2253774634a1997b1b59c35912eb804182032fd2bceb0938e845b6527e30",
+      "size_bytes": 308379,
+      "first_locked_commit": "3e4fafb42c9d4bbcae06f267fa679a3846cd80ad",
+      "eol": "LF",
+      "terminal_lf_count": 1,
+      "utf8_bom": false
+    },
+    "artifacts/agi/episodic_ltm_dream_factorial_test_v2.json": {
+      "raw_sha256": "c13bce6a03913c8edaec20f038ef806fc0760f9e1602dbafab47693a9bf9c3de",
+      "size_bytes": 449417,
+      "first_locked_commit": "9d11f86d053368302f2b7f3d8510d689ca036aaf",
+      "eol": "LF",
+      "terminal_lf_count": 1,
+      "utf8_bom": false
+    }
+  },
+  "lock_chain": {
+    "registration_sha256": "973e90111ee98862a5c9ffc3f86509b46ee4e263b5a977e7e1504e00109092b9",
+    "implementation_lock_artifact_sha256": "cb88993b595ad3e527e59d48ba50b471af14585cbadd1e810328bbd0e2208105",
+    "train_calibration_sha256": "ccec7b07540099bba1dd3b482f7073c77115e6a16a591410c5e5d422fb0eb76b",
+    "validation_artifact_sha256": "56bf2253774634a1997b1b59c35912eb804182032fd2bceb0938e845b6527e30",
+    "test_artifact_sha256": "c13bce6a03913c8edaec20f038ef806fc0760f9e1602dbafab47693a9bf9c3de"
+  },
+  "outcomes": {
+    "validation": {
+      "split": "validation",
+      "seeds": "81100-81139",
+      "seed_count": 40,
+      "passed": true,
+      "performance_passed": true,
+      "resource_passed": true,
+      "checks_total": 84,
+      "checks_passed": 84,
+      "test_opened_in_this_artifact": false
+    },
+    "test": {
+      "split": "test",
+      "seeds": "82100-82159",
+      "seed_count": 60,
+      "passed": true,
+      "performance_passed": true,
+      "resource_passed": true,
+      "checks_total": 84,
+      "checks_passed": 84,
+      "opened_only_after_validation_pass": true
+    }
+  },
+  "claim_boundary": "This ledger records a passing preregistered synthetic G7-M V2 validation and locked test for one hard cue-anchored exemplar-completion mechanism plus constrained schema recombination. It is not evidence of AGI, human or biological memory, dreaming or sleep, hippocampal implementation, semantic memory, planning, a general world model, recurrent attractor dynamics, or synergy."
+}

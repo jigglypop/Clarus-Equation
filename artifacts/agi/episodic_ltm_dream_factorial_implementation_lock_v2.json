@@ -1,0 +1,120 @@
+{
+  "equivalence_recipe_identifier": "v1_soft_equivalence_v2_recipe_1",
+  "experiment": "episodic_ltm_dream_factorial_v2_hard_reinstatement",
+  "frozen_v1_comparator_equivalence_sha256": "b0bc0d0506f6d33894df072d15b744fea6d7881f7c3425a32a4a95efa3cc3ca2",
+  "immutable_v1_dependency_sha256": {
+    "examples/agi/episodic_ltm_dream_bridge_gate.py": "441e295409f65dfaa497a8314c0a91237aebed959f1f154a0e86dccd94839a4a",
+    "experiments/preregistration/episodic_ltm_dream_factorial_v1.json": "6487156371e4c42877fa0813dd170fb000ce11fe05e51f34bceb74653159fac0",
+    "reality_stone/python/reality_stone/clarus/episodic_ltm_dream_bridge.py": "fd93755c854384448bf69660a341bbb621da2ade3f7179977f7225579549bc39"
+  },
+  "implementation_sha256": {
+    "examples/agi/episodic_ltm_dream_bridge_v2_gate.py": "b971fdd8520bb4be447912cef89b8697aaec9eaf6424f2c13c1bdb5ff6d171b8",
+    "reality_stone/python/reality_stone/clarus/episodic_ltm_dream_bridge_v2.py": "edace8bb0ff63eb04bf87518a2f69c4f2960d5a200fec2ac9f1b2bf2a89fa6b1"
+  },
+  "off_range_seeds": [
+    76001,
+    76002,
+    76003,
+    76004
+  ],
+  "off_range_shared_equivalence_report": {
+    "all_passed": true,
+    "all_required_equal": true,
+    "off_range_seeds": [
+      76001,
+      76002,
+      76003,
+      76004
+    ],
+    "per_seed": [
+      {
+        "M00_shared_metrics_equal": true,
+        "M01_shared_metrics_equal": true,
+        "M10_nonrecall_metrics_equal": true,
+        "M11_nonrecall_metrics_equal": true,
+        "components_equal": true,
+        "components_v1_sha256": "412505d99bdd5a1be73b4ddc7d9839c77f4c2365a84bc8a20dd4a33c2f042a73",
+        "components_v2_sha256": "412505d99bdd5a1be73b4ddc7d9839c77f4c2365a84bc8a20dd4a33c2f042a73",
+        "dream_equal": true,
+        "dream_v1_sha256": "c37539a268a12ea9478af8dd31aa74b8c762e8943941bf004d9c9f0cddeefb5e",
+        "dream_v2_sha256": "c37539a268a12ea9478af8dd31aa74b8c762e8943941bf004d9c9f0cddeefb5e",
+        "seed": 76001,
+        "slow_schema_equal": true,
+        "slow_schema_v1_sha256": "e7e0b663c76c061a36b3ac41d6c1ea6281cdc1a3f59d2f5de89b8e8dde79f8bd",
+        "slow_schema_v2_sha256": "e7e0b663c76c061a36b3ac41d6c1ea6281cdc1a3f59d2f5de89b8e8dde79f8bd",
+        "world_and_queries_equal": true,
+        "world_v1_sha256": "1ce107b50663746f3f1f1472aa350e70c74ede25e30877733eb1a7c5b47d0300",
+        "world_v2_sha256": "1ce107b50663746f3f1f1472aa350e70c74ede25e30877733eb1a7c5b47d0300"
+      },
+      {
+        "M00_shared_metrics_equal": true,
+        "M01_shared_metrics_equal": true,
+        "M10_nonrecall_metrics_equal": true,
+        "M11_nonrecall_metrics_equal": true,
+        "components_equal": true,
+        "components_v1_sha256": "bc31b202b8b2cae71254912b6e24ea2e600b4aeae763e1760594a6a09358fe71",
+        "components_v2_sha256": "bc31b202b8b2cae71254912b6e24ea2e600b4aeae763e1760594a6a09358fe71",
+        "dream_equal": true,
+        "dream_v1_sha256": "3f680299ecbe1325dfd99c415268a8060398a1a288ed8c9d0a9248ee06b3c24c",
+        "dream_v2_sha256": "3f680299ecbe1325dfd99c415268a8060398a1a288ed8c9d0a9248ee06b3c24c",
+        "seed": 76002,
+        "slow_schema_equal": true,
+        "slow_schema_v1_sha256": "0680bf99a8973782c805314f5af4706c761fbc7e4aaa10b8e1de0aa4f90725eb",
+        "slow_schema_v2_sha256": "0680bf99a8973782c805314f5af4706c761fbc7e4aaa10b8e1de0aa4f90725eb",
+        "world_and_queries_equal": true,
+        "world_v1_sha256": "68f702596d1f364d3ef7bdd751d857805750767741d72630c3acb8e8a76f838a",
+        "world_v2_sha256": "68f702596d1f364d3ef7bdd751d857805750767741d72630c3acb8e8a76f838a"
+      },
+      {
+        "M00_shared_metrics_equal": true,
+        "M01_shared_metrics_equal": true,
+        "M10_nonrecall_metrics_equal": true,
+        "M11_nonrecall_metrics_equal": true,
+        "components_equal": true,
+        "components_v1_sha256": "20943eb397a1d7f8f237ce286e7cb7420a71f1304b30bf8c5dcbb1aae9bbaad0",
+        "components_v2_sha256": "20943eb397a1d7f8f237ce286e7cb7420a71f1304b30bf8c5dcbb1aae9bbaad0",
+        "dream_equal": true,
+        "dream_v1_sha256": "68bf8887c903430304ed09de17340ce8af541f19caaa9d9d8335ab8aa7980d87",
+        "dream_v2_sha256": "68bf8887c903430304ed09de17340ce8af541f19caaa9d9d8335ab8aa7980d87",
+        "seed": 76003,
+        "slow_schema_equal": true,
+        "slow_schema_v1_sha256": "a210c73945ed0d7b024ab9d95a40c2a4fdcf1c7b076e9fab8cef9fffda33fc0f",
+        "slow_schema_v2_sha256": "a210c73945ed0d7b024ab9d95a40c2a4fdcf1c7b076e9fab8cef9fffda33fc0f",
+        "world_and_queries_equal": true,
+        "world_v1_sha256": "2fada646fc7e819f4962a17baefe37b63306ac378a06a264102d20e2814d76bb",
+        "world_v2_sha256": "2fada646fc7e819f4962a17baefe37b63306ac378a06a264102d20e2814d76bb"
+      },
+      {
+        "M00_shared_metrics_equal": true,
+        "M01_shared_metrics_equal": true,
+        "M10_nonrecall_metrics_equal": true,
+        "M11_nonrecall_metrics_equal": true,
+        "components_equal": true,
+        "components_v1_sha256": "15aab69fb6e0a243caee5122f5c94c91b83cd269cb76226751004707c70a89fd",
+        "components_v2_sha256": "15aab69fb6e0a243caee5122f5c94c91b83cd269cb76226751004707c70a89fd",
+        "dream_equal": true,
+        "dream_v1_sha256": "993fcdf8005ef929c8f7c9b47ed0087ad830b545f6b79f310c7fe0a5c06cc2e0",
+        "dream_v2_sha256": "993fcdf8005ef929c8f7c9b47ed0087ad830b545f6b79f310c7fe0a5c06cc2e0",
+        "seed": 76004,
+        "slow_schema_equal": true,
+        "slow_schema_v1_sha256": "552bac12033fdbf57472d2b6f17771db9308fe4c2282dcfb88cf297413e63972",
+        "slow_schema_v2_sha256": "552bac12033fdbf57472d2b6f17771db9308fe4c2282dcfb88cf297413e63972",
+        "world_and_queries_equal": true,
+        "world_v1_sha256": "9e0d84225b80ec014f1cfb4f301b884d985c56648d896c3ef92ed37aa83e41a4",
+        "world_v2_sha256": "9e0d84225b80ec014f1cfb4f301b884d985c56648d896c3ef92ed37aa83e41a4"
+      }
+    ],
+    "recipe_identifier": "v1_shared_paths_v2_recipe_1",
+    "registered_seed_count": 0,
+    "registered_seed_used_for_prelock_equivalence": 0,
+    "schema_version": 1,
+    "scope": "prelock_off_range_comprehensive",
+    "standardizer_input_and_values_equal": true,
+    "standardizer_v1_sha256": "352cca1f84df8394f3539e936a2b019207ac8f9ec347ec7f104fd521e3044ccf",
+    "standardizer_v2_sha256": "352cca1f84df8394f3539e936a2b019207ac8f9ec347ec7f104fd521e3044ccf"
+  },
+  "off_range_shared_equivalence_sha256": "90bd7c522ba7cb686102e61d218fcf089f4ab0eb2acbfda59bb42f9336aacf60",
+  "registered_seed_used_for_prelock_equivalence": 0,
+  "registration_sha256": "973e90111ee98862a5c9ffc3f86509b46ee4e263b5a977e7e1504e00109092b9",
+  "schema_version": 1
+}

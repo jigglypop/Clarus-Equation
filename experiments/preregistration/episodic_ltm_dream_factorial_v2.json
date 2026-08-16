@@ -1,0 +1,1019 @@
+{
+  "schema_version": 2,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-10",
+  "experiment": "episodic_ltm_dream_factorial_v2_hard_reinstatement",
+  "roadmap_stage": "G7-M/V2",
+  "runner": "episodic_ltm_dream_factorial_v2",
+  "standalone": true,
+  "extends": null,
+  "preregistration_integrity": {
+    "registered_v2_pilot_executed": false,
+    "development_result_imported": true,
+    "development_source_is_opened_v1_validation": true,
+    "train_seeds_opened": false,
+    "validation_seeds_opened": false,
+    "test_seeds_opened": false,
+    "registered_seed_results_may_not_change_this_contract": true,
+    "permitted_pre_seed_changes": "Only clerical corrections that do not change hypotheses, mechanisms, data, metrics, gates, or inference; every correction must retain the prior raw SHA-256 and state whether any registered seed was opened.",
+    "implementation_must_be_frozen_before_registered_train_calibration": true
+  },
+  "transport": {
+    "registration_eol": "LF via experiments/preregistration/.gitattributes",
+    "artifact_eol": "LF via artifacts/agi/.gitattributes",
+    "json_writer": "UTF-8 bytes with one terminal LF"
+  },
+  "historical_boundary": {
+    "v1_registration": {
+      "experiment": "episodic_ltm_dream_factorial_v1",
+      "commit": "0cc20f26ec97c54b33f4cdd4b79a83ee97e7915b",
+      "implementation_commit": "81c7ce68b0d3ea5cf5e768926023ecb0845fa378",
+      "registration_sha256": "6487156371e4c42877fa0813dd170fb000ce11fe05e51f34bceb74653159fac0",
+      "module_sha256": "fd93755c854384448bf69660a341bbb621da2ade3f7179977f7225579549bc39",
+      "runner_sha256": "441e295409f65dfaa497a8314c0a91237aebed959f1f154a0e86dccd94839a4a",
+      "train_calibration_artifact_sha256": "9ab33380e47feaadc608ff147cb012763d1979e114afda7caaf87059f72be8cd",
+      "validation_artifact_sha256": "7b3bbf75349ae651fbed1211f15c1b4b26fa102ebdb7053876c12ab63525bf79",
+      "validation_result": "FAIL",
+      "test_opened": false,
+      "is_parent": false,
+      "is_fresh_evidence": false,
+      "is_historical_rationale": true,
+      "is_frozen_fresh_seed_comparator_specification": true
+    }
+  },
+  "development_evidence": {
+    "epistemic_status": "DEVELOPMENT_ONLY",
+    "source": "opened_v1_validation_78100_78139",
+    "seen_before_v2_lock": true,
+    "used_for_mechanism_selection_and_gate_design": true,
+    "may_count_as_v2_validation_or_confirmation": false,
+    "committed_pilot_script": false,
+    "pilot_script_sha256": null,
+    "reproducibility_limit": "The hard-winner pilot was reported from an uncommitted inspection script, so only the frozen V1 artifact and the new preregistered fresh-seed run may support a research result.",
+    "v1_registered_result": {
+      "M10_and_M11_post_identity_accuracy": 0.9932291666666666,
+      "M10_and_M11_post_positive_coverage": 0.9963541666666668,
+      "M10_and_M11_post_accepted_wrong_rate": 0.003125,
+      "M10_and_M11_post_hidden_nrmse": 0.13541391083142224,
+      "matched_no_ltm_hidden_nrmse": 0.13065519817684956,
+      "convergence_rate": 0.4182291666666667,
+      "extra_step_stability_rate": 0.5401041666666667,
+      "unstored_lure_false_episode_recall_rate": 0.03177083333333334
+    },
+    "uncommitted_hard_winner_pilot_report": {
+      "identity_accuracy": 0.9963541666666668,
+      "positive_coverage": 0.9963541666666668,
+      "accepted_wrong_rate": 0.0,
+      "unstored_lure_false_episode_recall_rate": 0.03177083333333334,
+      "hidden_nrmse_reported_rounded": 0.003413,
+      "idempotence_rate": 1.0
+    },
+    "v1_test_seeds_79100_79159_must_remain_unopened": true
+  },
+  "hypotheses": {
+    "hard_reinstatement": "On fresh seeds, replacing V1 soft recurrent trace mixing with cue-anchored single-exemplar completion improves old-A hidden-coordinate reconstruction while preserving episode identity, positive coverage, accepted-wrong control, and lure rejection.",
+    "long_term_memory": "After context-B interference, a persistent observed-only episodic store restores the identity and instance-specific hidden trajectory of an old context-A episode from a noisy partial cue.",
+    "dream_like_recombination": "The unchanged bounded offline pass improves fresh-seed valid novel-combination reconstruction by updating only missing slow-schema bindings with hypothetical provenance.",
+    "integration": "The LTM-plus-dream cell satisfies both absolute families without material antagonism relative to the corresponding single-factor cells.",
+    "interaction": "The paired factorial interaction is estimated but need not be positive; synergy may be claimed only when its 95 percent lower bound is positive."
+  },
+  "claim_boundary": {
+    "allowed_after_locked_test_pass": "A known-slot, small synthetic, fixed-capacity demonstration in which an observed-only cue-anchored exemplar completion mechanism outperforms the frozen V1 soft recurrent comparator on hidden reconstruction under registered identity and false-memory constraints, and coexists with constrained offline completion of missing schema bindings.",
+    "validation_pass_interpretation": "A validation pass unlocks the registered test; it is not confirmation by itself.",
+    "forbidden": [
+      "unconstrained_free_generation",
+      "dream_or_sleep_consciousness",
+      "biological_hippocampal_or_cortical_mechanism",
+      "biological_recurrent_attractor",
+      "human_long_term_memory",
+      "semantic_memory",
+      "general_world_model",
+      "causal_discovery",
+      "planning_or_action_selection",
+      "generalization_beyond_the_registered_generator",
+      "AGI"
+    ],
+    "terminology": "Dream means dream-like constrained offline recombination only. Hard reinstatement means deterministic content-addressed exemplar/template completion, not a biological attractor. Synthetic output is hypothetical schema content, never an observed episode or recalled memory."
+  },
+  "data_roles": {
+    "train": {
+      "seeds": [
+        80100,
+        80101,
+        80102,
+        80103,
+        80104,
+        80105,
+        80106,
+        80107,
+        80108,
+        80109,
+        80110,
+        80111,
+        80112,
+        80113,
+        80114,
+        80115,
+        80116,
+        80117,
+        80118,
+        80119,
+        80120,
+        80121,
+        80122,
+        80123,
+        80124,
+        80125,
+        80126,
+        80127,
+        80128,
+        80129,
+        80130,
+        80131,
+        80132,
+        80133,
+        80134,
+        80135,
+        80136,
+        80137,
+        80138,
+        80139
+      ],
+      "role": "Coordinate standardization, V2 and frozen-V1 pre/post abstention thresholds, and dream join threshold only after config and implementation freeze. No efficacy decision."
+    },
+    "validation": {
+      "seeds": [
+        81100,
+        81101,
+        81102,
+        81103,
+        81104,
+        81105,
+        81106,
+        81107,
+        81108,
+        81109,
+        81110,
+        81111,
+        81112,
+        81113,
+        81114,
+        81115,
+        81116,
+        81117,
+        81118,
+        81119,
+        81120,
+        81121,
+        81122,
+        81123,
+        81124,
+        81125,
+        81126,
+        81127,
+        81128,
+        81129,
+        81130,
+        81131,
+        81132,
+        81133,
+        81134,
+        81135,
+        81136,
+        81137,
+        81138,
+        81139
+      ],
+      "role": "First V2 efficacy decision after implementation and train calibration are byte-frozen."
+    },
+    "test": {
+      "seeds": [
+        82100,
+        82101,
+        82102,
+        82103,
+        82104,
+        82105,
+        82106,
+        82107,
+        82108,
+        82109,
+        82110,
+        82111,
+        82112,
+        82113,
+        82114,
+        82115,
+        82116,
+        82117,
+        82118,
+        82119,
+        82120,
+        82121,
+        82122,
+        82123,
+        82124,
+        82125,
+        82126,
+        82127,
+        82128,
+        82129,
+        82130,
+        82131,
+        82132,
+        82133,
+        82134,
+        82135,
+        82136,
+        82137,
+        82138,
+        82139,
+        82140,
+        82141,
+        82142,
+        82143,
+        82144,
+        82145,
+        82146,
+        82147,
+        82148,
+        82149,
+        82150,
+        82151,
+        82152,
+        82153,
+        82154,
+        82155,
+        82156,
+        82157,
+        82158,
+        82159
+      ],
+      "role": "Locked confirmation opened only after an all-of V2 validation pass."
+    },
+    "development_unit_seeds": [
+      76001,
+      76002,
+      76003,
+      76004
+    ],
+    "unit_test_seed_rule": "No registered V1 or V2 train, validation, or test seed may be executed by unit tests."
+  },
+  "factorial_design": {
+    "paired_unit": "master_seed",
+    "cells": {
+      "M00": {
+        "persistent_ltm": false,
+        "dream_update": false
+      },
+      "M10": {
+        "persistent_ltm": true,
+        "dream_update": false
+      },
+      "M01": {
+        "persistent_ltm": false,
+        "dream_update": true
+      },
+      "M11": {
+        "persistent_ltm": true,
+        "dream_update": true
+      }
+    },
+    "orthogonality": {
+      "same_generator_queries_order_and_rng_across_cells": true,
+      "same_slow_model_and_wake_updates_across_cells": true,
+      "same_offline_workspace_and_budget_in_M01_and_M11": true,
+      "no_ltm_cells_have_zero_queryable_episode_records_at_evaluation": true,
+      "dream_only_workspace_is_deleted_before_evaluation": true,
+      "recall_path_never_calls_dream_path": true,
+      "positive_interaction_required": false
+    }
+  },
+  "generator": {
+    "change_from_v1": "none",
+    "backend": "numpy_cpu",
+    "contexts_in_order": [
+      "A",
+      "B"
+    ],
+    "context_B_role": "interference after all context-A wake observations",
+    "trajectory_steps": 12,
+    "state_dimension": 8,
+    "slots": {
+      "prefix_steps": 5,
+      "connector_steps": 2,
+      "suffix_steps": 5
+    },
+    "ports": 4,
+    "prefixes_per_port": 3,
+    "suffixes_per_port": 3,
+    "prefixes_per_context": 12,
+    "suffixes_per_context": 12,
+    "port_anchor_rule": "Draw an 8 by 8 standard-normal matrix, compute QR, normalize each Q column sign by the corresponding R diagonal, and use the first four Q columns.",
+    "context_transform_A": {
+      "permutation": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "signs": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "context_transform_B": {
+      "permutation": [
+        1,
+        0,
+        3,
+        2,
+        5,
+        4,
+        7,
+        6
+      ],
+      "signs": [
+        1,
+        -1,
+        1,
+        -1,
+        1,
+        -1,
+        1,
+        -1
+      ]
+    },
+    "context_transform_formula": "R_c(v)[k] = signs_c[k] * v[permutation_c[k]]",
+    "primitive_interior_ar": 0.6,
+    "prefix_endpoint": "prefix[-1] = port_anchor[g]",
+    "connector": "connector = [port_anchor[g], R_c(port_anchor[g])]",
+    "suffix_startpoint": "suffix[0] = R_c(port_anchor[g])",
+    "validity": "A pair is valid exactly when its opaque prefix and suffix nodes belong to the same context-local inferred bipartite connected component.",
+    "observed_local_edges_per_port": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        2,
+        0
+      ]
+    ],
+    "missing_valid_local_edges_per_port": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        1
+      ]
+    ],
+    "local_id_permutation": "Independently permute opaque prefix and suffix local IDs for every seed and context before records are exposed.",
+    "observed_combinations_per_context": 24,
+    "missing_valid_combinations_per_context": 12,
+    "observed_instances_per_combination": 2,
+    "observed_episodes_per_context": 48,
+    "post_interference_observed_episodes": 96,
+    "episode_formula": "observed_episode = compositional_base + scaled stationary AR(1) instance residual",
+    "stationary_AR_formula": "u_0 is N(0,I); u_t = rho * u_(t-1) + sqrt(1-rho^2) * epsilon_t with epsilon_t iid N(0,I).",
+    "instance_residual_ar": 0.4,
+    "instance_residual_scale_default": 0.2,
+    "instance_residual_scale_at_steps": {
+      "4": 0.05,
+      "5": 0.05,
+      "6": 0.05,
+      "7": 0.05
+    },
+    "rng": {
+      "constructor": "numpy.random.SeedSequence([master_seed, stream_id])",
+      "stream_ids": {
+        "anchors": 0,
+        "primitive_interiors": 1,
+        "opaque_id_permutations": 2,
+        "instance_residuals": 3,
+        "bank_order": 4,
+        "cue_masks": 5,
+        "cue_noise": 6,
+        "lures": 7,
+        "invalid_queries": 8
+      },
+      "separate_streams": [
+        "anchors",
+        "primitive_interiors",
+        "opaque_id_permutations",
+        "instance_residuals",
+        "bank_order",
+        "cue_masks",
+        "cue_noise",
+        "lures",
+        "invalid_queries"
+      ],
+      "canonical_draw_order": "context A then B, port 0..3, local opaque pre-permutation id 0..2, time increasing, dimension increasing; edges use the registered list order and instances use index 0 then 1.",
+      "candidate_may_read_master_seed_or_stream_id": false
+    },
+    "primitive_construction": "For each seed/context/port/local primitive, draw prefix states 0..3 by the stationary AR rule and then replace prefix state 4 by the shared seed port anchor. Set suffix state 0 to the context transform of that anchor and draw suffix states 1..4 by the registered AR recurrence from that state. Anchors are drawn once per seed and shared by A and B."
+  },
+  "queries": {
+    "change_from_v1": "none",
+    "standardization": "Pool all 96 real wake episodes from every V2 train seed. For each of the 96 flattened trajectory coordinates, fit population mean and population standard deviation with ddof=0, then transform x to (x-mu)/max(sigma,1e-8). Validation/test, all cells, and the frozen V1 comparator reuse these arrays.",
+    "all_similarity_and_rmse_coordinates_are_dimensionless": true,
+    "mask_sampling": "Within each query and each prefix, connector, and suffix slot, draw one coordinate permutation from the cue_masks stream and take its first k entries. Recall masks use prefixes of the same permutation so 12-visible is a strict subset of 24-visible and 24-visible is a strict subset of 48-visible.",
+    "query_draw_order": "Recall positives in canonical context-A observed-edge then instance order; novel-valid in context A then B, port then registered missing-edge order; lures in context A then B, port then registered observed-edge order; invalids in context A then B, port then local index. Mask and noise draws follow this order within each family.",
+    "recall": {
+      "target": "the exact stored context-A observed episode including its instance residual",
+      "positive_queries_per_seed": 48,
+      "visible_counts": [
+        12,
+        24,
+        48
+      ],
+      "primary_visible_count": 24,
+      "visible_counts_by_slot": {
+        "12": [
+          5,
+          2,
+          5
+        ],
+        "24": [
+          10,
+          4,
+          10
+        ],
+        "48": [
+          20,
+          8,
+          20
+        ]
+      },
+      "masks_nested_within_each_slot": true,
+      "visible_noise_standard_deviation": 0.1,
+      "pre_and_post_queries_identical_and_read_only": true,
+      "hidden_coordinates_only_for_trajectory_rmse": true,
+      "registered_gate_and_calibration_visible_count": 24,
+      "visible_counts_12_and_48_role": "diagnostic_only"
+    },
+    "novel_valid": {
+      "queries_per_seed": 24,
+      "contexts": [
+        "A",
+        "B"
+      ],
+      "target": "noise-free compositional base for every missing valid binding",
+      "visible_count": 24,
+      "visible_counts_by_slot": [
+        10,
+        4,
+        10
+      ],
+      "visible_noise_standard_deviation": 0.1
+    },
+    "same_schema_unstored_lure": {
+      "queries_per_seed": 48,
+      "construction": "A fresh instance residual for an observed binding that is never inserted into the observed store.",
+      "visible_count": 24,
+      "visible_counts_by_slot": [
+        10,
+        4,
+        10
+      ],
+      "visible_noise_standard_deviation": 0.1
+    },
+    "invalid": {
+      "queries_per_seed": 24,
+      "construction": "For each context, port g, and local index j, concatenate prefix(g,j), the context connector for g, and suffix((g+1) mod 4,j), giving 12 deterministic cross-component queries per context before opaque-ID permutation.",
+      "visible_count": 24,
+      "visible_counts_by_slot": [
+        10,
+        4,
+        10
+      ],
+      "visible_noise_standard_deviation": 0.1,
+      "metric_scope": "No reconstruction target or NRMSE is defined; only abstention is scored.",
+      "required_response": "abstain"
+    },
+    "candidate_inputs_only": [
+      "opaque_context_token",
+      "opaque_prefix_token",
+      "opaque_suffix_token",
+      "cue_values",
+      "cue_mask",
+      "read_only_observed_records_when_LTM_or_offline_workspace_is_enabled"
+    ],
+    "forbidden_candidate_inputs": [
+      "episode_target_id",
+      "hidden_target_coordinates",
+      "port_label",
+      "context_transform",
+      "compositional_base",
+      "valid_or_invalid_label",
+      "stored_or_lure_label",
+      "master_seed_or_stream_id",
+      "validation_or_test_outcome"
+    ]
+  },
+  "long_term_memory": {
+    "capacity": 96,
+    "allowed_records": "real wake observations only",
+    "pre_interference_items": 48,
+    "post_interference_items": 96,
+    "eviction": "none because registered capacity equals registered observed count",
+    "synthetic_or_hypothetical_insertions_allowed": false,
+    "component_validity_precheck": "Reject before scoring unless the opaque context-prefix-suffix query belongs to one inferred context-local connected component, exactly as in V1.",
+    "hard_cue_anchored_reinstatement": {
+      "name": "cue_anchored_single_exemplar_completion",
+      "only_scientific_mechanism_change_from_v1": true,
+      "standardized_trace": "h_i[d] = (x_i[d]-mu[d])/max(sigma[d],1e-8), d=0..95",
+      "standardized_observed_cue": "q[d] = (cue_value[d]-mu[d])/max(sigma[d],1e-8) only for d in observed mask M; coordinates outside M are not read.",
+      "observed_score": "s_i = dot(q_M,h_i,M) / max(norm(q_M)*norm(h_i,M),1e-12)",
+      "eligible_trace_bank": "All N stored real traces in immutable storage order after the V1-identical component-validity precheck; no target, port, context truth, or hidden coordinate may filter the score bank.",
+      "winner": "j_star is numpy.argmax(s) with the first storage index winning an exact tie.",
+      "confidence": "c = max_i s_i, before any reconstruction.",
+      "acceptance": "Accept if and only if c is strictly greater than the separately calibrated V2 threshold tau_N for N=48 or N=96.",
+      "accepted_completion": "For d in observed mask M set z[d]=q[d]; for d outside M set z[d]=h_j_star[d]. Return episode identity j_star with real/recalled provenance.",
+      "rejected_completion": "Return no episode identity and use the unchanged observed-binding slow-schema prototype with schema_fallback provenance; it remains uncovered and is included in hidden NRMSE.",
+      "hidden_cue_poisoning_rule": "Cue values outside M are never read for scoring, selection, confidence, acceptance, or reconstruction.",
+      "operator": "T_q(z) = P_M q + P_notM h_j_star(q,M)",
+      "idempotence": "T_q(T_q(z)) = T_q(z) because j_star depends only on the immutable observed cue and store.",
+      "not_present": [
+        "softmax_attention",
+        "beta",
+        "damping",
+        "full_state_rescoring",
+        "iterative_trace_mixing"
+      ],
+      "interpretation": "Deterministic associative exemplar/template completion; not a recurrent-attractor claim."
+    },
+    "threshold_calibration": {
+      "split": "train_only",
+      "separate_bank_sizes": [
+        48,
+        96
+      ],
+      "separate_mechanisms": [
+        "V2_hard",
+        "frozen_V1_soft"
+      ],
+      "candidate_thresholds": "For each mechanism and bank size, sorted unique train initial-confidence values plus positive infinity.",
+      "feasibility": "Same-schema unstored-lure false episode recall must be at most 0.025.",
+      "pre_48_pool": "For each of 40 train seeds use all 48 context-A primary 24-visible stored positives and the first 24 lure specifications, which are exactly the context-A unstored lures.",
+      "post_96_pool": "For each of 40 train seeds use the same 48 context-A primary 24-visible stored positives and all 48 context-A-plus-context-B unstored lures.",
+      "pooling_separation": "Build pre and post pools separately for V2_hard and frozen_V1_soft. Never mix bank sizes or mechanisms when selecting a threshold.",
+      "objective": "For each mechanism and bank size, pool the registered positives and lures over 40 train seeds. Lexicographically maximize that mechanism's positive identity accuracy with abstentions wrong, minimize lure false recall, then choose the largest threshold.",
+      "acceptance_rule": "Accept if and only if confidence is strictly greater than that mechanism's calibrated threshold.",
+      "validation_or_test_recalibration": false,
+      "why_thresholds_are_separate": "The threshold rule and false-lure constraint are identical, while each complete reinstatement mechanism is evaluated under its own train-only calibration; both threshold sets are byte-frozen before validation."
+    },
+    "abstention_reconstruction": "For an observed-binding positive query not accepted as an episode, return the unchanged slow-schema observed-binding prototype with schema_fallback provenance; it remains uncovered and wrong for identity but is included in hidden NRMSE."
+  },
+  "frozen_v1_soft_comparator": {
+    "purpose": "Fresh-seed paired remediation comparator, not reuse of V1 validation means.",
+    "source_lock": {
+      "commit": "81c7ce68b0d3ea5cf5e768926023ecb0845fa378",
+      "module_sha256": "fd93755c854384448bf69660a341bbb621da2ade3f7179977f7225579549bc39",
+      "registration_sha256": "6487156371e4c42877fa0813dd170fb000ce11fe05e51f34bceb74653159fac0"
+    },
+    "initialization": "Compute V1 masked-cosine scores, a0=softmax(12*s), and z1=clamp_observed(q,sum_i a0_i h_i).",
+    "later_update": "a_r=softmax(12*cosine(z_r,h_i)); hidden(z_next)=0.5*hidden(z_r)+0.5*hidden(sum_i a_r_i h_i); observed coordinates remain clamped.",
+    "maximum_iterations": 20,
+    "convergence_hidden_rms": 1e-06,
+    "identity": "argmax of final V1 attention only when the initial-score V1 threshold accepts",
+    "confidence": "maximum initial masked cosine",
+    "calibration": "Use the V2 train worlds and common frozen mu/sigma but independently apply the unchanged V1 train-only threshold selection rule.",
+    "evaluation_scope": "Old-A pre/post recall and lures on the same fresh master seeds and queries as V2 M10. Dream is not invoked in this comparator.",
+    "golden_equivalence": "Before any V2 registered train seed opens, off-range development seeds must reproduce frozen V1 episode_id, confidence, accepted flag, returned reconstruction, iterations, convergence, extra-step stability, and clamp error exactly.",
+    "equivalence_hash_recipe": {
+      "recipe_identifier": "v1_soft_equivalence_v2_recipe_1",
+      "when_computed": "After V2 module and CLI bytes are frozen and before any V2 registered train seed is generated.",
+      "off_range_seeds_in_order": [
+        76001,
+        76002,
+        76003,
+        76004
+      ],
+      "standardizer": "Fit one V1 coordinate standardizer from all 96 real A+B records of each off-range seed, concatenated in seed order and each seed's records_a then records_b order.",
+      "store_stages": "For each seed evaluate pre48 with records_a and post96 with records_a then records_b.",
+      "queries": "At each stage materialize all 48 primary 24-visible context-A positives. Also materialize the first 24 context-A lures at pre48 and all 48 A+B lures at post96, in frozen V1 specification order.",
+      "threshold_for_equivalence_only": -1.0,
+      "result_record_order": "seed ascending, stage pre48 then post96, family positive then lure, query index ascending",
+      "result_fields": [
+        "seed",
+        "stage",
+        "family",
+        "query_index",
+        "accepted",
+        "episode_id_or_null",
+        "provenance_source",
+        "provenance_epistemic_status",
+        "provenance_observed",
+        "provenance_recalled",
+        "confidence_f64le_hex",
+        "iterations",
+        "converged",
+        "extra_step_stable",
+        "clamp_max_error_f64le_hex",
+        "returned_reconstruction_f64le_c_order_sha256"
+      ],
+      "float_encoding": "For every scalar float use numpy.asarray(value,dtype='<f8').tobytes().hex(). Convert every returned reconstruction to contiguous dtype '<f8' C-order bytes before SHA-256.",
+      "standardizer_fingerprint": "SHA-256 of contiguous little-endian float64 mu bytes followed by sigma bytes.",
+      "canonical_payload": "Object with schema_version=1, frozen V1 dependency hashes, off_range_seeds, standardizer_fingerprint, threshold_for_equivalence_only, and the ordered result record array.",
+      "serialization": "json.dumps(payload,sort_keys=True,separators=(',',':'),ensure_ascii=True,allow_nan=False).encode('utf-8') with no terminal LF",
+      "hash": "frozen_v1_comparator_equivalence_hash = SHA-256 of the canonical serialized payload.",
+      "persistence": "Write the hash and recipe identifier into the implementation-lock artifact and the later train-calibration artifact.",
+      "reverification": "Before validation and again before test seed generation, recompute the payload from immutable V1 dependency bytes and off-range seeds and require an exact hash match to both lock artifacts."
+    },
+    "historical_v1_means_used_as_gate": false
+  },
+  "slow_schema_model": {
+    "change_from_v1": "none",
+    "observed_binding_entry": "Mean of the two real wake episode instances for that context-prefix-suffix binding.",
+    "missing_binding_without_dream": "Return the mean observed binding prototype for the inferred context and component with provenance schema_fallback.",
+    "episode_identity_output_allowed": false,
+    "observed_binding_overwrite_allowed": false,
+    "online_update_during_evaluation": false
+  },
+  "dream_like_offline_recombination": {
+    "change_from_v1": "none",
+    "function": "constrained_missing_binding_dream",
+    "input": "A read-only snapshot of real wake records; M01 and M11 receive identical snapshots.",
+    "workspace_persistent_after_update": false,
+    "component_inference": "Connected components of each context-local opaque prefix-suffix co-occurrence bipartite graph.",
+    "prefix_prototype": "Mean observed prefix slot for each opaque context-prefix token.",
+    "connector_prototype": "Mean observed connector slot for each inferred context-component.",
+    "suffix_prototype": "Mean observed suffix slot for each opaque context-suffix token.",
+    "proposal": "prefix_prototype concatenated with connector_prototype and suffix_prototype",
+    "proposal_scope": "Every unobserved prefix-suffix cross-product within one inferred context-component, and no other pair.",
+    "join_threshold": "The train-wake 0.99 quantile of standardized prefix-to-connector and connector-to-suffix endpoint discontinuity, frozen before validation.",
+    "join_threshold_exact": "For every train-seed observed-binding mean prototype compute d_left = ||prefix[-1]-connector[0]||_2/sqrt(8) and d_right = ||connector[-1]-suffix[0]||_2/sqrt(8) after coordinate standardization. Pool both values over 40 seeds, 2 contexts, and 24 bindings, and use numpy.quantile(pool,0.99,method='linear') as one global threshold. A proposal is accepted only when both RMS distances are at or below it.",
+    "acceptance": [
+      "same_context",
+      "same_inferred_component",
+      "both_join_discontinuities_at_or_below_frozen_threshold",
+      "binding_missing_from_slow_schema_table"
+    ],
+    "accepted_per_context": 12,
+    "accepted_per_seed": 24,
+    "offline_update_passes": 1,
+    "destination": "missing slow schema table binding only",
+    "provenance": {
+      "source": "synthetic",
+      "epistemic_status": "hypothetical",
+      "may_be_called_observed_or_recalled": false
+    },
+    "forbidden": [
+      "fresh_random_latent",
+      "free_generation",
+      "cross_context_splice",
+      "cross_component_splice",
+      "heldout_target_read",
+      "observed_binding_overwrite",
+      "PersistentEpisodicStore.insert_real",
+      "any_LTM_insertion_or_mutation"
+    ]
+  },
+  "execution_path_separation": {
+    "module": "reality_stone/python/reality_stone/clarus/episodic_ltm_dream_bridge_v2.py",
+    "runner_function": "run_episodic_ltm_dream_v2_gate",
+    "cli": "examples/agi/episodic_ltm_dream_bridge_v2_gate.py",
+    "recall_path": [
+      "PersistentEpisodicStore.insert_real",
+      "hard_cue_anchored_recall"
+    ],
+    "v1_comparator_path": [
+      "PersistentEpisodicStore.insert_real",
+      "frozen_v1_soft_recall"
+    ],
+    "dream_path": [
+      "constrained_missing_binding_dream",
+      "update_missing_slow_binding"
+    ],
+    "dream_function_must_be_pure_over_store_input": true,
+    "recall_path_may_call_dream_path": false,
+    "dream_path_may_call_any_recall_path": false,
+    "synthetic_provenance_may_enter_recall_index": false
+  },
+  "implementation_equivalence_before_registered_train": {
+    "off_range_seeds": [
+      76001,
+      76002,
+      76003,
+      76004
+    ],
+    "exactly_equal_to_v1": [
+      "generated real-record fingerprints and ordering",
+      "query targets masks noise and ordering",
+      "standardizer input ordering",
+      "cooccurrence components",
+      "slow-schema observed prototypes and hashes",
+      "dream proposal keys trajectories joins and provenance",
+      "M00 and M01 values for every metric shared with V1, including output provenance",
+      "M10 and M11 generator, slow-schema, dream, provenance, constraint, and resource metrics that do not depend on LTM acceptance"
+    ],
+    "allowed_differences": [
+      "V2 hard recall result fields",
+      "all recall, lure, threshold, and frozen-comparator fields",
+      "separately calibrated V2 thresholds",
+      "version artifact path and hashes",
+      "fresh registered seed lists",
+      "new paired comparator metrics"
+    ],
+    "frozen_v1_comparator_must_pass_golden_equivalence": true,
+    "registered_seed_may_not_be_used_for_equivalence": true
+  },
+  "metrics": {
+    "recall": [
+      "post_old_A_identity_accuracy",
+      "post_old_A_positive_coverage",
+      "post_old_A_accepted_wrong_rate",
+      "post_old_A_hidden_nrmse",
+      "pre_to_post_identity_drop",
+      "pre_to_post_hidden_nrmse_increase",
+      "one_step_idempotence_rate",
+      "repeat_identity_stability_rate",
+      "hidden_idempotence_rms_max",
+      "clamp_max_error"
+    ],
+    "fresh_seed_v1_comparison": [
+      "v1_soft_post_identity_accuracy",
+      "v1_soft_post_positive_coverage",
+      "v1_soft_post_accepted_wrong_rate",
+      "v1_soft_post_hidden_nrmse",
+      "v1_soft_lure_false_episode_recall_rate",
+      "v1_soft_convergence_rate",
+      "v1_soft_extra_step_stability_rate",
+      "paired_hidden_nrmse_benefit",
+      "paired_identity_difference",
+      "paired_coverage_difference",
+      "paired_accepted_wrong_difference",
+      "paired_lure_false_difference"
+    ],
+    "novel_combination": [
+      "valid_output_coverage",
+      "noise_free_base_hidden_nrmse",
+      "output_provenance"
+    ],
+    "false_memory": [
+      "unstored_lure_false_episode_recall_rate",
+      "novel_valid_tagged_recalled_rate"
+    ],
+    "forgetting_and_distortion": [
+      "slow_model_only_old_A_schema_nrmse",
+      "current_B_observed_nrmse",
+      "observed_binding_overwrite_count",
+      "observed_binding_hash_change_count"
+    ],
+    "constraints": [
+      "accepted_dream_port_violation_count",
+      "accepted_dream_context_violation_count",
+      "accepted_dream_join_violation_count",
+      "invalid_query_nonabstain_rate",
+      "synthetic_to_ltm_insert_count",
+      "heldout_target_read_count",
+      "nonfinite_metric_or_prediction_count"
+    ],
+    "aggregation": "Compute every metric per master seed, report all four cells and the fresh-seed V1 comparator, and report paired seed-level contrasts. No composite score may hide a failed component."
+  },
+  "metric_definitions": {
+    "positive_coverage": "Fraction of positive recall queries accepted as a stored episode; abstention is uncovered.",
+    "valid_output_coverage": "Fraction of novel valid queries with a binding-specific observed or synthetic table entry. schema_fallback and abstention are uncovered even though schema_fallback is scored for reconstruction error.",
+    "hidden_nrmse_when_uncovered": "Always score returned schema_fallback on hidden coordinates so abstention cannot improve error by omitting a query.",
+    "accepted_wrong_rate": "Among all positive recall queries, fraction accepted with wrong stored identity; denominator is all positive queries.",
+    "novel_valid_tagged_recalled": "Any novel valid query with recalled provenance, regardless of reconstruction quality.",
+    "hidden_nrmse_per_seed": "After frozen train standardization, E_s=sqrt(sum over all queries and hidden coordinates of (prediction-target)^2 divided by included scalar-coordinate count). No additional denominator and no mean of per-query roots.",
+    "hidden_nrmse_aggregation": "Cell reports are arithmetic means of seed-level E_s. Paired intervals and factorial effects operate on seed-level contrasts.",
+    "one_step_idempotence": "For each accepted V2 recall, apply the cue-anchored completion operator again with the same immutable observed cue and store. Count success only if identity is unchanged and hidden-coordinate RMS delta is at most 1e-12.",
+    "repeat_identity_stability": "Repeat the full hard recall call from the same immutable cue and store; accepted flag, identity, confidence, and reconstruction must match.",
+    "hidden_idempotence_rms_max": "Maximum standardized hidden-coordinate RMS between first and second cue-anchored completion over post-interference old-A positive queries.",
+    "v1_convergence_scope": "V1 comparator convergence and extra-step stability retain their frozen V1 definitions and are diagnostic; they are not relabeled as V2 idempotence.",
+    "slow_schema_observed_nrmse": "Compare each observed real episode with its slow-table observed-binding prototype over all 96 standardized coordinates and take one pooled root per seed.",
+    "observed_binding_hash": "SHA-256 of context, opaque prefix, opaque suffix, and C-order float64 standardized prototype bytes in sorted-key order, before and after dream update."
+  },
+  "paired_inference": {
+    "confidence": 0.95,
+    "multiplicity": "Unadjusted paired 95 percent intervals are reported, and every registered endpoint is an all-of gate. This does not establish family-wise error control.",
+    "validation_critical_value_n40": 2.022690911734728,
+    "test_critical_value_n60": 2.0009953780882674,
+    "interval": "mean_difference plus or minus critical_value times sample_standard_deviation divided by sqrt(number_of_seeds)",
+    "higher_is_better_factorial": {
+      "L_main": "0.5*((M10-M00)+(M11-M01))",
+      "D_main": "0.5*((M01-M00)+(M11-M10))",
+      "interaction": "M11-M10-M01+M00"
+    },
+    "error_metrics": "Negate error before applying factorial formulas.",
+    "absolute_nrmse_effects_for_inference": "For seed s, L_s=0.5*((E_M00-E_M10)+(E_M01-E_M11)) and D_s=0.5*((E_M00-E_M01)+(E_M10-E_M11)).",
+    "mean_nrmse_reduction_for_magnitude_gate": "L reduction=1-(mean(E_M10)+mean(E_M11))/(mean(E_M00)+mean(E_M01)); D reduction=1-(mean(E_M01)+mean(E_M11))/(mean(E_M00)+mean(E_M10)). Zero denominator is hard invalid.",
+    "fresh_v1_remediation": {
+      "hidden_benefit_per_seed": "DeltaE_s=E_V1_soft_s-E_V2_hard_M10_s; higher is better.",
+      "hidden_relative_reduction": "1-mean(E_V2_hard_M10)/mean(E_V1_soft); zero V1 denominator is hard invalid.",
+      "strict_hidden_win": "DeltaE_s>0; zero is a tie.",
+      "identity_difference": "DeltaI_s=I_V2_hard_M10-I_V1_soft",
+      "coverage_difference": "DeltaC_s=C_V2_hard_M10-C_V1_soft",
+      "accepted_wrong_difference": "DeltaW_s=W_V2_hard_M10-W_V1_soft; lower is better.",
+      "lure_false_difference": "DeltaF_s=F_V2_hard_M10-F_V1_soft; lower is better."
+    },
+    "dream_strict_seed_win": "For the dream NRMSE gate, a strict seed win means D_s>0; zero is a tie and not a win.",
+    "matched_no_dream_degradation": "For every upper-degradation gate, test M01-M00 and M11-M10 separately with paired upper confidence bounds; averaging is forbidden."
+  },
+  "all_of_gate": {
+    "ltm_recall": {
+      "M10_and_M11_post_identity_accuracy_min": 0.8,
+      "M10_and_M11_post_positive_coverage_min": 0.8,
+      "M10_and_M11_post_hidden_nrmse_max": 0.45,
+      "M10_and_M11_post_accepted_wrong_rate_max": 0.05,
+      "L_main_identity_gain_min": 0.4,
+      "L_main_identity_paired_ci95_lower_min": 0.0,
+      "L_main_hidden_nrmse_reduction_min": 0.35,
+      "L_main_hidden_nrmse_paired_ci95_lower_min": 0.0,
+      "M10_and_M11_pre_to_post_identity_drop_max": 0.05,
+      "M10_and_M11_pre_to_post_hidden_nrmse_increase_max": 0.05,
+      "one_step_idempotence_rate_min": 0.99,
+      "repeat_identity_stability_rate_min": 0.99,
+      "hidden_idempotence_rms_max": 1e-12,
+      "clamp_max_error_max": 1e-12
+    },
+    "remediation_vs_frozen_v1_on_fresh_seeds": {
+      "paired_hidden_nrmse_benefit_ci95_lower_min": 0.0,
+      "paired_hidden_nrmse_strict_win_fraction_min": 0.7,
+      "mean_hidden_nrmse_relative_reduction_min": 0.35,
+      "paired_identity_difference_ci95_lower_min": -0.01,
+      "paired_positive_coverage_difference_ci95_lower_min": -0.01,
+      "paired_accepted_wrong_difference_ci95_upper_max": 0.01,
+      "paired_lure_false_difference_ci95_upper_max": 0.01
+    },
+    "dream_novel_combination": {
+      "M01_and_M11_valid_output_coverage_min": 0.9,
+      "M01_and_M11_hidden_nrmse_max": 0.35,
+      "D_main_hidden_nrmse_reduction_min": 0.3,
+      "D_main_hidden_nrmse_paired_ci95_lower_min": 0.0,
+      "D_main_strict_seed_win_fraction_min": 0.7,
+      "D_main_valid_coverage_gain_min": 0.5,
+      "D_main_valid_coverage_paired_ci95_lower_min": 0.0,
+      "accepted_synthetic_bindings_per_seed_required": 24,
+      "accepted_constraint_violation_count_max": 0
+    },
+    "integration_no_antagonism": {
+      "M11_recall_identity_minus_M10_min": -0.02,
+      "M11_minus_M10_recall_nrmse_paired_ci95_upper_max": 0.02,
+      "M11_novel_coverage_minus_M01_min": -0.02,
+      "M11_minus_M01_novel_nrmse_paired_ci95_upper_max": 0.02,
+      "M11_must_pass_both_absolute_gate_families": true,
+      "positive_interaction_required": false
+    },
+    "false_memory_and_provenance": {
+      "M10_and_M11_unstored_lure_false_episode_recall_rate_max": 0.05,
+      "all_cells_invalid_query_nonabstain_rate_max": 0.02,
+      "all_cells_novel_valid_tagged_recalled_rate_max": 0.01,
+      "synthetic_to_ltm_insert_count_max": 0
+    },
+    "forgetting_schema_and_integrity": {
+      "dream_minus_matched_no_dream_current_B_nrmse_paired_ci95_upper_max": 0.02,
+      "dream_minus_matched_no_dream_old_A_slow_schema_nrmse_paired_ci95_upper_max": 0.02,
+      "observed_binding_overwrite_count_max": 0,
+      "observed_binding_hash_change_count_max": 0,
+      "cross_context_or_component_dream_accept_count_max": 0,
+      "heldout_target_read_count_max": 0,
+      "nonfinite_metric_or_prediction_count_max": 0
+    },
+    "implementation_equivalence": {
+      "off_range_v1_equivalence_required": true,
+      "M00_and_M01_shared_v1_metric_and_provenance_equality_required": true,
+      "shared_v1_equality_excludes_v2_only_idempotence_and_comparator_fields": true,
+      "M10_and_M11_equivalence_excludes_all_recall_lure_threshold_and_comparator_fields": true,
+      "only_whitelisted_differences_allowed": true,
+      "registered_seed_used_for_equivalence_max": 0
+    }
+  },
+  "dimensionless_audit": {
+    "status": "dimensionless",
+    "standardized_coordinate": "(x-mu)/max(sigma,1e-8) is dimensionless",
+    "masked_cosine_and_threshold": "s_i, c, and tau are ratios of standardized inner products and norms and are dimensionless",
+    "softmax_comparator": "V1 beta=12 multiplies a dimensionless cosine and is dimensionless",
+    "hidden_nrmse_and_join_rms": "Both are RMS values in frozen standardized coordinates and are dimensionless",
+    "proportions_effects_intervals_and_relative_reductions": "dimensionless",
+    "numerical_constants": "1e-8, 1e-12, and 1e-6 are numerical floors or tolerances in dimensionless standardized space",
+    "scope_limit": "Dimensional consistency is not evidence of physical, biological, or AGI validity."
+  },
+  "failure_rules": {
+    "all_of": "Any failed registered check makes the split FAIL; no passing average may override identity, hidden error, remediation, false-memory, forgetting, distortion, constraint, leakage, provenance, or equivalence failure.",
+    "validation_fail": "Preserve the V2 validation artifact, keep V2 test unopened, and require V3 with fresh seeds for any mechanism, metric, threshold, gate, or implementation change.",
+    "test_fail": "Preserve the V2 test artifact and do not reinterpret or tune the locked test into a pass.",
+    "hard_invalid": [
+      "registered_seed_opened_out_of_order",
+      "V1_test_seed_or_artifact_opened",
+      "target_port_validity_or_hidden_truth_read",
+      "validation_or_test_recalibration",
+      "config_calibration_comparator_or_implementation_hash_mismatch",
+      "nonwhitelisted_generator_query_schema_or_dream_change_from_v1",
+      "synthetic_written_as_observed",
+      "synthetic_inserted_into_LTM",
+      "nonfinite_output"
+    ],
+    "interpretation": {
+      "idempotence_without_error_and_identity_pass": "Numerical idempotence only, not episodic reinstatement.",
+      "L_absolute_pass_but_v1_remediation_fail": "Fresh-seed LTM effect only; no V1 improvement claim.",
+      "L_only_pass": "Persistent associative exemplar completion only; no dream or novel-generalization claim.",
+      "D_only_pass": "Constrained offline schema-table augmentation only; no long-term episodic-memory or biological-dream claim.",
+      "M11_pass_interaction_interval_includes_zero": "Coexistence without synergy.",
+      "validation_pass": "Unlock condition only; confirmation requires locked test pass."
+    }
+  },
+  "test_lock": {
+    "open_only_after_validation_all_of_pass": true,
+    "implementation_lock_artifact": "artifacts/agi/episodic_ltm_dream_factorial_implementation_lock_v2.json",
+    "implementation_lock_artifact_contract": "UTF-8 JSON with one LF, written after off-range equivalence and before registered train generation; contains raw V2 registration SHA-256, frozen V2 module and CLI SHA-256 values, immutable V1 dependency SHA-256 values, frozen_v1_comparator_equivalence_hash, equivalence recipe identifier, and off-range seed list.",
+    "validation_artifact": "artifacts/agi/episodic_ltm_dream_factorial_validation_v2.json",
+    "test_artifact": "artifacts/agi/episodic_ltm_dream_factorial_test_v2.json",
+    "train_calibration_artifact": "artifacts/agi/episodic_ltm_dream_factorial_train_calibration_v2.json",
+    "train_calibration_artifact_contract": "UTF-8 JSON with one LF; frozen mu, sigma, V2 tau_pre/tau_post, V1-comparator tau_pre/tau_post, join_threshold, raw registration SHA-256, implementation-lock artifact SHA-256, implementation hashes, immutable V1 dependency hashes, and frozen comparator equivalence hash. Validation and test read byte-identical bytes.",
+    "failed_validation_artifact_must_be_preserved": true,
+    "require_identical_raw_registration_sha256": true,
+    "require_identical_implementation_lock_artifact_sha256": true,
+    "require_identical_train_calibration_sha256": true,
+    "require_identical_implementation_sha256": [
+      "reality_stone/python/reality_stone/clarus/episodic_ltm_dream_bridge_v2.py",
+      "examples/agi/episodic_ltm_dream_bridge_v2_gate.py"
+    ],
+    "require_immutable_v1_dependency_sha256": {
+      "experiments/preregistration/episodic_ltm_dream_factorial_v1.json": "6487156371e4c42877fa0813dd170fb000ce11fe05e51f34bceb74653159fac0",
+      "reality_stone/python/reality_stone/clarus/episodic_ltm_dream_bridge.py": "fd93755c854384448bf69660a341bbb621da2ade3f7179977f7225579549bc39",
+      "examples/agi/episodic_ltm_dream_bridge_gate.py": "441e295409f65dfaa497a8314c0a91237aebed959f1f154a0e86dccd94839a4a"
+    },
+    "v1_dependencies_checked_before_any_validation_or_test_seed_generation": true,
+    "require_frozen_v1_comparator_equivalence_hash": true,
+    "test_may_change_generator_model_threshold_metric_gate_or_comparator": false,
+    "early_test_open_is_hard_invalid": true,
+    "v1_test_79100_79159_remains_forbidden": true
+  },
+  "resources": {
+    "external_download_bytes": 0,
+    "write_raw_trajectory_files": false,
+    "backend": "numpy_cpu",
+    "persistent_observed_items_M10_M11": 96,
+    "persistent_observed_items_M00_M01": 0,
+    "persistent_observed_trace_bytes_max": 131072,
+    "frozen_v1_comparator_runs_sequentially_and_does_not_add_persistent_records": true,
+    "offline_synthetic_bindings_per_dream_cell_per_seed": 24,
+    "offline_update_passes": 1,
+    "validation_wall_seconds_target_report_only": 60,
+    "test_wall_seconds_target_report_only": 90,
+    "wall_time_is_not_a_scientific_efficacy_gate": true
+  },
+  "literature_safety": [
+    {
+      "source": "https://www.nature.com/articles/s41562-023-01706-6",
+      "allowed_inspiration": "rapid episode-specific storage",
+      "not_supported": "that this fixed synthetic store is a biological engram or human long-term memory"
+    },
+    {
+      "source": "https://www.nature.com/articles/ncomms8462",
+      "allowed_inspiration": "partial-cue pattern completion as a separately testable operation",
+      "not_supported": "the registered hard-winner equation or a hippocampal mechanism"
+    },
+    {
+      "source": "https://www.nature.com/articles/s41562-023-01799-z",
+      "allowed_inspiration": "separation of fast episode-specific traces from a slower generative model",
+      "not_supported": "that this implementation is a biological hippocampal-cortical algorithm or a dream"
+    },
+    {
+      "source": "https://www.nature.com/articles/s41467-018-06213-1",
+      "allowed_inspiration": "separate measurement of replay and later memory",
+      "not_supported": "the registered recombination rule or a causal replay benefit"
+    },
+    {
+      "source": "https://www.nature.com/articles/s41593-023-01324-5",
+      "allowed_inspiration": "offline coordination should be tested separately from online retrieval",
+      "not_supported": "copying biological frequencies or calling this synthetic update sleep"
+    }
+  ]
+}

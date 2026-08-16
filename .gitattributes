@@ -11,3 +11,18 @@
 /artifacts/agi/sparse_causal_bridge_validation_v5.json text eol=crlf
 /artifacts/agi/sparse_causal_bridge_validation_v7.json text eol=crlf
 /artifacts/agi/parent_anchor_shrinkage_development_v1.json text eol=lf
+
+# G7-M and G9-CBM evidence is raw-byte hashed; keep the complete chain LF.
+/experiments/preregistration/episodic_ltm_dream_factorial_v*.json text eol=lf
+/reality_stone/python/reality_stone/clarus/episodic_ltm_dream_bridge*.py text eol=lf
+/tests/test_episodic_ltm_dream_bridge*.py text eol=lf
+/examples/agi/episodic_ltm_dream_bridge*_gate.py text eol=lf
+/artifacts/agi/episodic_ltm_dream_factorial_*.json text eol=lf
+/experiments/preregistration/agi_world_memory_integration_v*.json text eol=lf
+/reality_stone/python/reality_stone/clarus/agi_world_memory_integration_v*.py text eol=lf
+/tests/test_agi_world_memory_integration*.py text eol=lf
+/examples/agi/agi_world_memory_integration_v*_gate.py text eol=lf
+/artifacts/agi/agi_world_memory_integration_*.json text eol=lf
+/_workspace/ce/agi-world-memory-integration-v1-20260810/*.md text eol=lf
+/_workspace/ce/agi-world-memory-integration-v1-20260810/revisions/*.md text eol=lf
+/.gitattributes text eol=lf

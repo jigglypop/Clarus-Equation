@@ -1,0 +1,368 @@
+{
+  "schema_version": 3,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-11",
+  "experiment": "agi_world_memory_integration_v3",
+  "roadmap_stage": "G9-CBM/V3",
+  "runner": "agi_world_memory_integration_v3",
+  "standalone": false,
+  "extends": "agi_world_memory_integration_v2.json",
+  "supersedes": "agi_world_memory_integration_v2",
+  "predecessor": {
+    "status": "BLOCKED_PRE_IMPLEMENTATION",
+    "git_commit": "407a9714483ffd417660d9fe24db83b96f162301",
+    "registration_raw_sha256": "b336fed11bf964512d1a2d50dd6c103a9593b426a986d4fe3b26e0bafa1338c2",
+    "implementation_lock_created": false,
+    "train_execution_count": 0,
+    "validation_execution_count": 0,
+    "test_execution_count": 0,
+    "reason": "Inherited PartialCue field names were mismatched and unstored-lure cue mask/noise chronology was outcome-determining but unspecified."
+  },
+  "amendment_integrity": {
+    "path": "_workspace/ce/agi-world-memory-integration-v1-20260810/revisions/31-v3-boundary-amendment.md",
+    "raw_sha256": "9b2e7cc13675798ca2db303aa4bebe984fad9705b12984560a7ad1ef955a7340",
+    "status": "LOCKED_PRE_IMPLEMENTATION",
+    "base_contract_path": "_workspace/ce/agi-world-memory-integration-v1-20260810/revisions/00-contract-v2-draft.md",
+    "base_contract_raw_sha256": "842512a55764e20a1b1f11c50c708b89bd8a8fe33b5c82f88a143f0cb36f7e70",
+    "base_registration_path": "experiments/preregistration/agi_world_memory_integration_v2.json",
+    "base_registration_raw_sha256": "b336fed11bf964512d1a2d50dd6c103a9593b426a986d4fe3b26e0bafa1338c2"
+  },
+  "merge_semantics": {
+    "algorithm": "load base recursively; verify every declared base/amendment raw SHA; deep-copy base; interpret each delete_paths item as an array of exact JSON object keys, delete in listed order and hard-fail if a segment or leaf is absent; recursively merge overrides where objects merge and arrays/scalars replace; then assign every V3 top-level key other than overrides into the merged object exactly as serialized",
+    "object_key_order": "scientifically irrelevant; canonical artifact JSON sorts keys",
+    "arrays": "replace, never concatenate",
+    "null": "literal null unless a path is explicitly listed in delete_paths",
+    "unknown_override_path": "hard fail unless the exact array of JSON object-key segments is listed in allowed_new_override_paths",
+    "allowed_new_override_paths": [
+      ["preregistration_integrity", "base_contract_raw_sha256"],
+      ["preregistration_integrity", "predecessor_registration_raw_sha256"],
+      ["preregistration_integrity", "v3_pilot_executed"],
+      ["preregistration_integrity", "v3_static_content_audit_required"],
+      ["preregistration_integrity", "scientific_post_lock_change_requires_v4_fresh_seeds"],
+      ["data_roles", "train", "fresh_after_v2_block"],
+      ["data_roles", "validation", "fresh_after_v2_block"],
+      ["data_roles", "test", "fresh_after_v2_block"],
+      ["evaluation_origins_and_cues", "cue", "noise_chronology"],
+      ["evaluation_origins_and_cues", "cue", "mask_shared_positive_and_lure"],
+      ["evaluation_origins_and_cues", "cue", "noise_shared_positive_and_lure"],
+      ["evaluation_origins_and_cues", "lure_cue"],
+      ["candidate_api", "PartialCue"],
+      ["candidate_api", "exact_field_dtypes", "PartialCue.context_token"],
+      ["candidate_api", "exact_field_dtypes", "PartialCue.prefix_token"],
+      ["candidate_api", "exact_field_dtypes", "PartialCue.suffix_token"],
+      ["candidate_api", "exact_field_dtypes", "PartialCue.cue_values"],
+      ["candidate_api", "exact_field_dtypes", "PartialCue.cue_mask"]
+    ],
+    "merged_registration_sha256_recipe": "SHA256(json.dumps(merged_registration,sort_keys=True,ensure_ascii=True,separators=(',',':'),allow_nan=False).encode('utf-8'))",
+    "raw_v3_registration_sha256_locked_before_implementation": true
+  },
+  "delete_paths": [
+    [
+      "candidate_api",
+      "exact_field_dtypes",
+      "PartialCue.raw_codec"
+    ],
+    [
+      "candidate_api",
+      "exact_field_dtypes",
+      "PartialCue.mask"
+    ],
+    [
+      "preregistration_integrity",
+      "final_status_audit_gate"
+    ],
+    [
+      "preregistration_integrity",
+      "final_mechanical_consistency_gate"
+    ],
+    [
+      "preregistration_integrity",
+      "scientific_post_lock_change_requires_v3_fresh_seeds"
+    ]
+  ],
+  "overrides": {
+    "preregistration_integrity": {
+      "contract_path": "_workspace/ce/agi-world-memory-integration-v1-20260810/revisions/31-v3-boundary-amendment.md",
+      "contract_raw_sha256": "9b2e7cc13675798ca2db303aa4bebe984fad9705b12984560a7ad1ef955a7340",
+      "contract_status": "LOCKED_PRE_IMPLEMENTATION",
+      "base_contract_raw_sha256": "842512a55764e20a1b1f11c50c708b89bd8a8fe33b5c82f88a143f0cb36f7e70",
+      "predecessor_registration_raw_sha256": "b336fed11bf964512d1a2d50dd6c103a9593b426a986d4fe3b26e0bafa1338c2",
+      "v3_pilot_executed": false,
+      "v3_static_content_audit_required": "PASS before implementation lock",
+      "development_seed_executed": false,
+      "train_seeds_opened": false,
+      "validation_seeds_opened": false,
+      "test_seeds_opened": false,
+      "scientific_post_lock_change_requires_v4_fresh_seeds": true
+    },
+    "data_roles": {
+      "train": {
+        "seeds": [
+          92100,
+          92101,
+          92102,
+          92103,
+          92104,
+          92105,
+          92106,
+          92107,
+          92108,
+          92109,
+          92110,
+          92111,
+          92112,
+          92113,
+          92114,
+          92115,
+          92116,
+          92117,
+          92118,
+          92119,
+          92120,
+          92121,
+          92122,
+          92123,
+          92124,
+          92125,
+          92126,
+          92127,
+          92128,
+          92129,
+          92130,
+          92131,
+          92132,
+          92133,
+          92134,
+          92135,
+          92136,
+          92137,
+          92138,
+          92139
+        ],
+        "count": 40,
+        "purpose": "V3 train-only shared core, state/codec normalizers, scoped recall threshold, and residual join threshold",
+        "run_exactly_once": true,
+        "fresh_after_v2_block": true
+      },
+      "validation": {
+        "seeds": [
+          93100,
+          93101,
+          93102,
+          93103,
+          93104,
+          93105,
+          93106,
+          93107,
+          93108,
+          93109,
+          93110,
+          93111,
+          93112,
+          93113,
+          93114,
+          93115,
+          93116,
+          93117,
+          93118,
+          93119,
+          93120,
+          93121,
+          93122,
+          93123,
+          93124,
+          93125,
+          93126,
+          93127,
+          93128,
+          93129,
+          93130,
+          93131,
+          93132,
+          93133,
+          93134,
+          93135,
+          93136,
+          93137,
+          93138,
+          93139
+        ],
+        "count": 40,
+        "purpose": "V3 locked model selection gate",
+        "run_exactly_once": true,
+        "fresh_after_v2_block": true
+      },
+      "test": {
+        "seeds": [
+          94100,
+          94101,
+          94102,
+          94103,
+          94104,
+          94105,
+          94106,
+          94107,
+          94108,
+          94109,
+          94110,
+          94111,
+          94112,
+          94113,
+          94114,
+          94115,
+          94116,
+          94117,
+          94118,
+          94119,
+          94120,
+          94121,
+          94122,
+          94123,
+          94124,
+          94125,
+          94126,
+          94127,
+          94128,
+          94129,
+          94130,
+          94131,
+          94132,
+          94133,
+          94134,
+          94135,
+          94136,
+          94137,
+          94138,
+          94139,
+          94140,
+          94141,
+          94142,
+          94143,
+          94144,
+          94145,
+          94146,
+          94147,
+          94148,
+          94149,
+          94150,
+          94151,
+          94152,
+          94153,
+          94154,
+          94155,
+          94156,
+          94157,
+          94158,
+          94159
+        ],
+        "count": 60,
+        "purpose": "V3 locked confirmation after committed validation PASS only",
+        "run_exactly_once": true,
+        "locked": true,
+        "fresh_after_v2_block": true
+      }
+    },
+    "evaluation_origins_and_cues": {
+      "cue": {
+        "mask_sampling": "for each canonical origin, stream 11 independently permutes C-order cells inside rows 0:5, 5:7, and 7:12 and selects first 10,4,10; the corresponding lure reuses the exact positive mask with no additional stream-11 draw",
+        "noise_chronology": "within each mask visit ascending global C-order flat indices; stream 12 draws 24 iid standard Normals for positive visible cells immediately followed by 24 fresh iid standard Normals for lure visible cells; multiply each by 0.01*reshape(sigma_codec,(12,8))[r,h]",
+        "mask_shared_positive_and_lure": true,
+        "noise_shared_positive_and_lure": false
+      },
+      "lure_cue": {
+        "count_per_seed": 24,
+        "shape": [
+          12,
+          8
+        ],
+        "values": "fresh generated lure 12-row raw prefix codec",
+        "mask": "exact corresponding positive cue_mask",
+        "visible_noise": "fresh second block of 24 stream-12 standard Normals for that origin under cue.noise_chronology",
+        "hidden_values": "poison and never read",
+        "tokens": "identical valid context, component, prefix, anchor-suffix, and action tokens of the corresponding positive origin",
+        "storage": "fingerprint, drift, prefix, and cue are never inserted into the 96-record ledger"
+      },
+      "cross_port_diagnostic_construction": "reuse the complete noisy positive PartialCue byte-for-value and replace only suffix_token by the same-local suffix token from port (port+1) mod 4"
+    },
+    "candidate_api": {
+      "PartialCue": [
+        "context_token",
+        "prefix_token",
+        "suffix_token",
+        "cue_values",
+        "cue_mask"
+      ],
+      "exact_field_dtypes": {
+        "PartialCue.context_token": "OpaqueToken",
+        "PartialCue.prefix_token": "OpaqueToken",
+        "PartialCue.suffix_token": "OpaqueToken",
+        "PartialCue.cue_values": "float64[12,8]",
+        "PartialCue.cue_mask": "bool[12,8]"
+      }
+    },
+    "test_lock": {
+      "registration_path": "experiments/preregistration/agi_world_memory_integration_v3.json",
+      "module_path": "reality_stone/python/reality_stone/clarus/agi_world_memory_integration_v3.py",
+      "runner_path": "examples/agi/agi_world_memory_integration_v3_gate.py",
+      "unit_test_path": "tests/test_agi_world_memory_integration_v3.py",
+      "integrity_test_path": "tests/test_agi_world_memory_integration_integrity_v3.py",
+      "implementation_lock_path": "artifacts/agi/agi_world_memory_integration_implementation_lock_v3.json",
+      "calibration_path": "artifacts/agi/agi_world_memory_integration_train_calibration_v3.json",
+      "validation_path": "artifacts/agi/agi_world_memory_integration_validation_v3.json",
+      "test_path": "artifacts/agi/agi_world_memory_integration_test_v3.json",
+      "integrity_path": "artifacts/agi/agi_world_memory_integration_integrity_v3.json",
+      "unlock_record": "in-memory UnlockRecordV3 serialized inside test artifact"
+    },
+    "implementation_dependency_manifest": {
+      "ordered_primary_paths": [
+        "experiments/preregistration/agi_world_memory_integration_v3.json",
+        "reality_stone/python/reality_stone/clarus/agi_world_memory_integration_v3.py",
+        "examples/agi/agi_world_memory_integration_v3_gate.py",
+        "tests/test_agi_world_memory_integration_v3.py",
+        "tests/test_agi_world_memory_integration_integrity_v3.py"
+      ],
+      "ordered_source_paths": [
+        "experiments/preregistration/agi_world_memory_integration_v3.json",
+        "reality_stone/python/reality_stone/clarus/agi_world_memory_integration_v3.py",
+        "examples/agi/agi_world_memory_integration_v3_gate.py",
+        "tests/test_agi_world_memory_integration_v3.py",
+        "tests/test_agi_world_memory_integration_integrity_v3.py",
+        "experiments/preregistration/episodic_ltm_dream_factorial_v2.json",
+        "reality_stone/python/reality_stone/clarus/episodic_ltm_dream_bridge_v2.py",
+        "reality_stone/python/reality_stone/clarus/episodic_ltm_dream_bridge.py"
+      ],
+      "callable_boundaries": [
+        "reality_stone.clarus.agi_world_memory_integration_v3.scoped_hard_recall_v3",
+        "reality_stone.clarus.agi_world_memory_integration_v3.codec_residual_view_v3",
+        "reality_stone.clarus.agi_world_memory_integration_v3.constrained_residual_completion_v3",
+        "reality_stone.clarus.agi_world_memory_integration_v3.execute_candidate_v3",
+        "reality_stone.clarus.agi_world_memory_integration_v3.run_agi_world_memory_integration_v3_gate",
+        "reality_stone.clarus.episodic_ltm_dream_bridge_v2.hard_cue_anchored_recall"
+      ],
+      "codec_strip_boundary": "codec_residual_view_v3 alone converts a raw or standardized (12,8) codec into residual-only (12,4); columns 4:8 may not cross"
+    },
+    "artifact_state_machine": {
+      "stages": {
+        "preregistration": {
+          "preconditions": [
+            "V3 amendment status is LOCKED_PRE_IMPLEMENTATION and amendment/base raw SHAs match",
+            "all V2 and V3 registered train, validation, and test execution counts are zero"
+          ],
+          "postcondition": "exact V3 registration and amendment bytes are committed, tracked, clean at their paths, and HEAD-identical"
+        },
+        "calibration": {
+          "seed_role": "train 92100..92139"
+        },
+        "validation": {
+          "seed_role": "validation 93100..93139"
+        },
+        "test": {
+          "seed_role": "locked test 94100..94159"
+        }
+      }
+    },
+    "failure_rules": {
+      "any_post_lock_scientific_change": "V4 with fresh seeds"
+    }
+  }
+}

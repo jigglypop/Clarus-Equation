@@ -1,0 +1,2449 @@
+{
+  "schema_version": 2,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-11",
+  "experiment": "agi_world_memory_integration_v2",
+  "roadmap_stage": "G9-CBM/V2",
+  "runner": "agi_world_memory_integration_v2",
+  "standalone": true,
+  "extends": null,
+  "preregistration_integrity": {
+    "contract_path": "_workspace/ce/agi-world-memory-integration-v1-20260810/revisions/00-contract-v2-draft.md",
+    "contract_raw_sha256": "842512a55764e20a1b1f11c50c708b89bd8a8fe33b5c82f88a143f0cb36f7e70",
+    "contract_status": "LOCKED_PRE_IMPLEMENTATION",
+    "final_status_audit_gate": "PASS",
+    "final_mechanical_consistency_gate": "PASS",
+    "v2_pilot_executed": false,
+    "development_seed_executed": false,
+    "train_seeds_opened": false,
+    "validation_seeds_opened": false,
+    "test_seeds_opened": false,
+    "implementation_must_be_frozen_before_train": true,
+    "registered_results_may_not_change_contract": true,
+    "scientific_post_lock_change_requires_v3_fresh_seeds": true
+  },
+  "transport": {
+    "encoding": "UTF-8 without BOM",
+    "eol": "LF",
+    "terminal_lf_count": 1,
+    "json_nonfinite_allowed": false,
+    "artifact_writer": "sorted keys, indent 2, one terminal LF, no overwrite"
+  },
+  "hypotheses": {
+    "C1_ltm": "Marginal real-wake-only scoped episodic completion improves H20 autonomous rollout error.",
+    "C2_dream": "For each matched LTM state, constrained residual-only completion of the 24 missing schema keys improves unseen-valid H20 error.",
+    "C3_integration": "M11 improves fixed-set action planning relative to M00 while satisfying both component and no-antagonism gates.",
+    "C4_safety": "All enumerated leakage, provenance, validity, stability, and resource invariants remain satisfied.",
+    "C5_reporting": "Every metric-specific factorial interaction is reported; generic synergy is not preregistered."
+  },
+  "claim_boundary": {
+    "allowed_after_locked_test_pass": "A conditional software-component result on this exact dimensionless synthetic generator, 96-record bank, residual schema, action set, H20 horizon, and calibration sample.",
+    "validation_pass_is_confirmation": false,
+    "forbidden": [
+      "general_world_model",
+      "semantic_consolidation",
+      "recurrent_attractor",
+      "biological_hippocampal_memory",
+      "human_dreaming_or_sleep",
+      "consciousness",
+      "open_world_planning",
+      "continual_learning",
+      "causal_discovery",
+      "AGI",
+      "generalization_beyond_registered_generator",
+      "generic_synergy"
+    ],
+    "dream_term": "dream-like constrained offline residual-schema completion only",
+    "memory_term": "deterministic scoped hard exemplar completion only"
+  },
+  "data_roles": {
+    "train": {
+      "seeds": [
+        86100,
+        86101,
+        86102,
+        86103,
+        86104,
+        86105,
+        86106,
+        86107,
+        86108,
+        86109,
+        86110,
+        86111,
+        86112,
+        86113,
+        86114,
+        86115,
+        86116,
+        86117,
+        86118,
+        86119,
+        86120,
+        86121,
+        86122,
+        86123,
+        86124,
+        86125,
+        86126,
+        86127,
+        86128,
+        86129,
+        86130,
+        86131,
+        86132,
+        86133,
+        86134,
+        86135,
+        86136,
+        86137,
+        86138,
+        86139
+      ],
+      "count": 40,
+      "purpose": "core, state/codec normalizers, recall threshold, residual join threshold only",
+      "run_exactly_once": true
+    },
+    "validation": {
+      "seeds": [
+        87100,
+        87101,
+        87102,
+        87103,
+        87104,
+        87105,
+        87106,
+        87107,
+        87108,
+        87109,
+        87110,
+        87111,
+        87112,
+        87113,
+        87114,
+        87115,
+        87116,
+        87117,
+        87118,
+        87119,
+        87120,
+        87121,
+        87122,
+        87123,
+        87124,
+        87125,
+        87126,
+        87127,
+        87128,
+        87129,
+        87130,
+        87131,
+        87132,
+        87133,
+        87134,
+        87135,
+        87136,
+        87137,
+        87138,
+        87139
+      ],
+      "count": 40,
+      "purpose": "one registered all-of run",
+      "run_exactly_once": true
+    },
+    "test": {
+      "seeds": [
+        88100,
+        88101,
+        88102,
+        88103,
+        88104,
+        88105,
+        88106,
+        88107,
+        88108,
+        88109,
+        88110,
+        88111,
+        88112,
+        88113,
+        88114,
+        88115,
+        88116,
+        88117,
+        88118,
+        88119,
+        88120,
+        88121,
+        88122,
+        88123,
+        88124,
+        88125,
+        88126,
+        88127,
+        88128,
+        88129,
+        88130,
+        88131,
+        88132,
+        88133,
+        88134,
+        88135,
+        88136,
+        88137,
+        88138,
+        88139,
+        88140,
+        88141,
+        88142,
+        88143,
+        88144,
+        88145,
+        88146,
+        88147,
+        88148,
+        88149,
+        88150,
+        88151,
+        88152,
+        88153,
+        88154,
+        88155,
+        88156,
+        88157,
+        88158,
+        88159
+      ],
+      "count": 60,
+      "purpose": "locked confirmation after committed validation PASS only",
+      "run_exactly_once": true,
+      "locked": true
+    },
+    "registered_roles_pairwise_disjoint": true,
+    "unit_or_development_may_use_registered_seed": false
+  },
+  "spaces_and_tokens": {
+    "state_dimension": 4,
+    "action_dimension": 2,
+    "horizon": 20,
+    "h5_source": "same H20 array rows 0:5",
+    "contexts": 2,
+    "ports": 4,
+    "prefix_locals": 3,
+    "suffix_locals": 3,
+    "token_type": "OpaqueTokenV2",
+    "token_api": "equality and hash only",
+    "token_forbidden_payload": [
+      "integer index",
+      "seed",
+      "split",
+      "validity",
+      "goal",
+      "outcome rank"
+    ]
+  },
+  "bindings": {
+    "observed_order": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        2,
+        0
+      ]
+    ],
+    "missing_valid_order": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        1
+      ]
+    ],
+    "full_valid_cartesian": true,
+    "invalid_if": [
+      "cross_context",
+      "cross_port",
+      "unknown_token",
+      "observed_overwrite",
+      "phase_order_change",
+      "invalid_action"
+    ]
+  },
+  "generator": {
+    "rng": {
+      "engine": "numpy.random.Generator(numpy.random.PCG64(numpy.random.SeedSequence([master_seed,stream_id])))",
+      "numpy_version_frozen_in_implementation_lock": true,
+      "streams": {
+        "token": 0,
+        "initial_state": 1,
+        "prefix_primitive": 2,
+        "connector": 3,
+        "suffix_primitive": 4,
+        "irreducible_interaction": 5,
+        "episode_drift": 6,
+        "entity_fingerprint": 7,
+        "wake_noise": 8,
+        "evaluation_prefix": 9,
+        "evaluation_noise": 10,
+        "cue_mask": 11,
+        "cue_noise": 12,
+        "lure_construction": 13
+      },
+      "no_presentation_order_stream": true
+    },
+    "D": [
+      [
+        0.55,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0.5,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0.45,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0.4
+      ]
+    ],
+    "B": [
+      [
+        0,
+        0,
+        0,
+        0.05
+      ],
+      [
+        0.08,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        -0.07,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0.06,
+        0
+      ]
+    ],
+    "G": [
+      [
+        0.28,
+        0
+      ],
+      [
+        0,
+        0.28
+      ],
+      [
+        -0.14,
+        0.1
+      ],
+      [
+        0.1,
+        -0.14
+      ]
+    ],
+    "action_intervention_equation": "x_next=D@x+B@tanh(x)+G@do(a)+q_episode+b(context,port,prefix,j(a),phase)+eta_next",
+    "phase_rule": {
+      "prefix_rows": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "connector_rows": [
+        5,
+        6
+      ],
+      "suffix_rows": [
+        7,
+        8,
+        9,
+        10,
+        11
+      ]
+    },
+    "schema_residual_definition": {
+      "prefix_phases_0_to_4": "P[context,port,prefix]",
+      "connector_phases_5_to_6": "C[context,port]",
+      "suffix_phases_7_to_11": "S[context,port,suffix] + E[context,port,prefix,suffix]",
+      "action_selects_suffix": "suffix=j(action)"
+    },
+    "episode_drift_definition": {
+      "unit_direction": "u_theta[context,port,prefix,suffix] is the L2-normalized drift-stream vector for the displayed observed binding",
+      "equation": "q_episode=sign*0.040*u_theta[context,port,prefix,suffix]",
+      "sign_order": [
+        -1,
+        1
+      ],
+      "zero_norm_hard_fail_without_resampling": true
+    },
+    "primitive_draws": {
+      "prefix": {
+        "shape": [
+          2,
+          4,
+          3,
+          4
+        ],
+        "distribution": "Uniform[-1,1]",
+        "normalization": "per (context,port), subtract local-axis mean then divide block max_abs",
+        "scale": 0.025
+      },
+      "connector": {
+        "shape": [
+          2,
+          4,
+          4
+        ],
+        "distribution": "Uniform[-1,1]",
+        "normalization": "per (context,port) vector divide max_abs, no mean subtraction",
+        "scale": 0.01
+      },
+      "suffix": {
+        "shape": [
+          2,
+          4,
+          3,
+          4
+        ],
+        "distribution": "Uniform[-1,1]",
+        "normalization": "per (context,port), subtract local-axis mean then divide block max_abs",
+        "scale": 0.025
+      },
+      "normalization_floor_rule": "denominator <=1e-12 hard fail without resampling",
+      "axis_order": [
+        "context",
+        "port",
+        "local",
+        "state_coordinate"
+      ],
+      "memory_order": "C"
+    },
+    "irreducible_interaction": {
+      "shape": [
+        2,
+        4,
+        3,
+        3,
+        4
+      ],
+      "distribution": "Uniform[-0.010,0.010]",
+      "applies_to_suffix_phases_only": true,
+      "hidden_from_candidate": true
+    },
+    "drift": {
+      "shape": [
+        2,
+        4,
+        6,
+        4
+      ],
+      "observed_binding_order": "bindings.observed_order",
+      "normalize_each": true,
+      "scale": 0.04
+    },
+    "fingerprint": {
+      "shape": [
+        2,
+        4,
+        6,
+        2,
+        4
+      ],
+      "sign_order": [
+        -1,
+        1
+      ],
+      "normalize_each": true,
+      "independent_of_drift": true
+    },
+    "signature": {
+      "equation": "y=fingerprint+0.005*xi",
+      "xi_distribution": "Uniform[-1,1]^4"
+    },
+    "initial_state": {
+      "distribution": "Uniform[-0.25,0.25]^4"
+    },
+    "wake_noise": {
+      "distribution": "Uniform[-0.002,0.002]^4",
+      "antithetic_by_sign": true
+    },
+    "evaluation_noise": {
+      "distribution": "Uniform[-0.002,0.002]^4",
+      "common_across_candidates_and_cells": true,
+      "exact_counterfactual_key": [
+        "seed",
+        "origin",
+        "lead"
+      ],
+      "candidate_input_forbidden": true
+    },
+    "state_and_goal_bound": 2,
+    "bound_and_task_feasibility_split_local_only": true,
+    "no_resampling_failed_registered_origin": true,
+    "lure": {
+      "count_per_seed": 24,
+      "origin_order": "canonical evaluation origin order: context, port, prefix_local",
+      "target_cosine": 0.85,
+      "max_other_absolute_cosine_exclusive": 0.95,
+      "max_attempts": 10000,
+      "v_distribution": "Uniform[-1,1]^4",
+      "formula": "v_perp=v-dot(v,f)*f; normalize; f_lure=0.85*f+sqrt(1-0.85^2)*v_perp",
+      "acceptance": "accept the first nonzero-perpendicular attempt whose maximum absolute cosine with every other stored fingerprint is strictly less than 0.95",
+      "zero_norm_hard_fail_or_attempt_reject": "v_perp attempt rejects; final drift zero norm hard fails",
+      "drift_scale": 0.04,
+      "all_lure_draws_stream": 13,
+      "fresh_lure_generation": "after fingerprint acceptance, stream 13 draws one fresh Uniform[-1,1]^4 drift, normalizes and scales it by 0.040, then draws a fresh initial state, 12 innovations, and 12 rows of 0.005*Uniform[-1,1]^4 signature noise",
+      "schema_and_action": "use the same observed anchor schema (prefix,prefix) and constant action A[prefix] for all 12 transitions",
+      "tokens": "copy the origin's identical valid context, component, prefix, anchor-suffix, and action tokens; only the fresh unstored fingerprint/drift/state/noise differ",
+      "exhaustion": "more than 10,000 fingerprint attempts for an origin hard-fails without resampling",
+      "not_stored": true
+    }
+  },
+  "learned_core": {
+    "train_only": true,
+    "rows": 46080,
+    "solves": 4,
+    "parameters": 20,
+    "source_map": [
+      3,
+      0,
+      1,
+      2
+    ],
+    "design_columns": [
+      "intercept",
+      "x_target",
+      "tanh(x_source)",
+      "action_0",
+      "action_1"
+    ],
+    "ridge": 0.000001,
+    "intercept_ridge": 0,
+    "solver": "numpy.linalg.solve((X.T@X+Lambda),X.T@y), float64",
+    "ordered_vector": [
+      "intercept[4]",
+      "diagonal[4]",
+      "bridge[4]",
+      "action[4,2]"
+    ],
+    "prediction": "c_hat+d_hat*x_target+b_hat*tanh(x_source)+g_hat@action",
+    "forbidden": [
+      "clipping",
+      "edge_selection",
+      "validation_refit",
+      "seed_specific_adaptation",
+      "intercept_drop"
+    ]
+  },
+  "wake_ledger": {
+    "records_per_seed": 96,
+    "formula": "2 contexts * 4 ports * 6 observed bindings * 2 signs",
+    "states_per_record": 13,
+    "transitions_per_record": 12,
+    "actions_per_record": 12,
+    "signatures_per_record": 12,
+    "append_order": [
+      "context",
+      "port",
+      "displayed_observed_binding_(prefix,suffix)_taken_once_from_O",
+      "sign_-1_then_+1"
+    ],
+    "wake_action_rows_0_to_11": "constant A[suffix] for the displayed observed binding (prefix,suffix)",
+    "real_only": true,
+    "immutable": true,
+    "capacity": 96,
+    "trace_payload_bytes": 73728
+  },
+  "codec": {
+    "shape": [
+      12,
+      8
+    ],
+    "dtype": "float64",
+    "memory_order": "C",
+    "raw_residual": "T_raw[r,0:4]=x[r+1]-CoreModelV2.predict(x[r],a[r])",
+    "raw_signature": "T_raw[r,4:8]=y[r]",
+    "episodic_store_payload": "T_raw",
+    "vec_C": "C-order flatten",
+    "standardize": "reshape((vec_C(T_raw)-mu_codec)/sigma_codec,(12,8),order='C')",
+    "inverse": "reshape(mu_codec+sigma_codec*vec_C(T_std),(12,8),order='C')",
+    "scale_floor": 1e-8,
+    "slot_slices": [
+      [
+        0,
+        5
+      ],
+      [
+        5,
+        7
+      ],
+      [
+        7,
+        12
+      ]
+    ],
+    "residual_columns": [
+      0,
+      4
+    ],
+    "fingerprint_columns": [
+      4,
+      8
+    ],
+    "evaluation_future_encoding_forbidden": true
+  },
+  "evaluation_origins_and_cues": {
+    "origins_per_seed": 24,
+    "order": [
+      "context",
+      "port",
+      "prefix_local"
+    ],
+    "anchor_suffix_rule": "j_anchor=i",
+    "sign_rule": "even origin=-1; odd origin=+1",
+    "prefix": {
+      "transitions": 12,
+      "numeric_action": "A[i] constant",
+      "anchor_key": "(i,i)",
+      "fresh_initial_and_innovations": true,
+      "same_episode_drift_and_fingerprint": true,
+      "prediction_anchor": "x_prefix[12]",
+      "future_phase_start": 0
+    },
+    "cue": {
+      "shape": [
+        12,
+        8
+      ],
+      "visible_count": 24,
+      "visible_by_slots": [
+        10,
+        4,
+        10
+      ],
+      "mask_sampling": "in canonical origin order, cue-mask stream 11 independently permutes the C-order flattened cell indices within rows 0:5, 5:7, and 7:12 and selects the first 10, 4, and 10 respectively; no cell outside its slot competes and no mask is reused across origins",
+      "nested": false,
+      "mask_fixed_before_cells": true,
+      "noise": "0.01*reshape(sigma_codec,(12,8))*Normal(0,1) on visible cells only",
+      "masked_values_are_poison": true
+    },
+    "positive_target": "selected immutable real wake record, not new evaluation episode",
+    "lures_per_seed": 24,
+    "cross_port_diagnostics_per_seed": 24,
+    "cross_port_diagnostic_construction": "for each positive cue in canonical origin order, keep raw cue values, mask, context token, and prefix token unchanged, replace only the anchor suffix token by the same-local suffix token from port (port+1) mod 4, and reject before any scoped view or distance access"
+  },
+  "episodic_ltm": {
+    "physical_capacity": 96,
+    "scope_count": 8,
+    "candidates_per_scope": 12,
+    "scope_order": "storage first occurrence",
+    "zero_copy_scope_indices": true,
+    "cross_component_reject_before_distance": true,
+    "recall_function": "scoped_hard_recall_v2 -> inherited G7-M V2 hard_cue_anchored_recall exactly once",
+    "strict_accept": "confidence > tau",
+    "tie": "first storage index",
+    "masked_coordinate_nonread": true,
+    "accepted_output": "raw single exemplar with visible cue clamped",
+    "rejected_output": "raw mu_codec hidden fallback; inherited zero reconstruction forbidden from q_hat",
+    "query_calls_per_seed": 72,
+    "distance_rows_per_seed": 576,
+    "scope_codes": {
+      "disabled_no_queryable": 0,
+      "valid_12_row_scope": 1,
+      "invalid_context_or_component": 2,
+      "invalid_range": [
+        3,
+        255
+      ]
+    },
+    "serialized_confidence": {
+      "scope_0_or_2": -2,
+      "scope_1_range": [
+        -1,
+        1
+      ]
+    },
+    "origin_recall_invariants": {
+      "accepted_dtype": "bool",
+      "identity_dtype": "int16",
+      "physical_identity_valid_range": [
+        0,
+        95
+      ],
+      "rejected_identity": -1,
+      "scope_dtype": "uint8",
+      "scope_0_or_2": "accepted=false, identity=-1, confidence=-2.0",
+      "scope_1_rejected": "accepted=false, identity=-1, finite confidence in [-1,1]",
+      "scope_1_accepted": "accepted=true, identity in [0,95], finite confidence in [-1,1]"
+    },
+    "internal_negative_infinity_never_serialized": true,
+    "synthetic_insert_forbidden": true
+  },
+  "r1_completion_and_rollout": {
+    "visible_raw_cells": "always clamp cue values",
+    "accepted_hidden_raw_cells": "selected real exemplar",
+    "rejected_or_disabled_hidden_raw_cells": "reshape(mu_codec,(12,8))",
+    "schema_anchor_raw": "inverse_standardize(observed anchor schema key)[:,0:4]",
+    "q_hat": "mean(completed_view_raw[:,0:4]-schema_anchor_raw,axis=0)",
+    "episode_id_discarded_before_rollout": true,
+    "schema_inverse": "s_hat_raw=inverse_standardize(schema_table_payload)[:,0:4] using the frozen CodecSpecV2 and C-order vec_C/reshape boundary",
+    "phase_and_key": "for lead t use row t mod 12 of key (context_ordinal,component_ordinal,prefix_ordinal,j(action[t]))",
+    "rollout_transition": "x_hat[t+1]=CoreModelV2.predict(x_hat[t],action[t])+q_hat+s_hat_raw[context,component,prefix,j(action[t]),t mod 12]",
+    "rollout_recursive": true,
+    "true_state_reread": false,
+    "returned_row": "predictions[k,ell,:] is mathematical x_hat[ell+1] for ell=0..19; anchor x_hat[0]=anchor_state is not returned",
+    "all_candidates_and_leads": "all 8 candidates recurse for all 20 leads without early exit",
+    "invalid_token_padding": "use the registered numeric action and component-local fallback schema row, continue finite recursion, return inferred_valid=false, resolved_schema_key=-1, schema_source=0",
+    "ownership": "candidate uses only inferred graph/schema/core; evaluator truth, future, and true validity never enter rollout"
+  },
+  "slow_schema_and_dream": {
+    "key_count": 72,
+    "key_flatten": "(((context_ordinal*4+component_ordinal)*3+prefix_ordinal)*3+suffix_ordinal)",
+    "key_order": "wake first occurrence, never opaque spelling sort",
+    "unresolved_key": -1,
+    "key_dtype": "int16",
+    "valid_key_range": [
+      0,
+      71
+    ],
+    "only_allowed_negative_key": -1,
+    "source_codes": {
+      "unresolved": 0,
+      "observed_real": 1,
+      "synthetic_hypothetical": 2,
+      "component_fallback": 3,
+      "invalid_range": [
+        4,
+        255
+      ]
+    },
+    "observed_keys": 48,
+    "missing_keys": 24,
+    "payload_shape": [
+      72,
+      12,
+      8
+    ],
+    "standardized_storage": true,
+    "fingerprint_columns_standardized_zero": true,
+    "observed_immutable": true,
+    "observed_binding_mean": "mean over two antithetic sign records in T_std residual columns 0:4",
+    "prefix_fragment": "mean rows 0:5 over observed keys with same prefix",
+    "connector_fragment": "mean rows 5:7 over six observed keys in same context/component",
+    "suffix_fragment": "mean rows 7:12 over observed keys with same suffix",
+    "proposal": "concatenate prefix(5,4),connector(2,4),suffix(5,4)",
+    "fallback": "mean of six complete observed residual templates in same context/component",
+    "candidate_order": [
+      "context_ordinal",
+      "component_ordinal",
+      "prefix_ordinal",
+      "suffix_ordinal"
+    ],
+    "only_missing_keys_are_join_candidates": true,
+    "join_left": "sqrt(mean((P[-1,0:4]-C[0,0:4])^2))",
+    "join_right": "sqrt(mean((C[-1,0:4]-S[0,0:4])^2))",
+    "join_accept": "left <= tau_join and right <= tau_join",
+    "dream_passes": 1,
+    "unit_weight": true,
+    "observed_overwrite_forbidden": true,
+    "counts": {
+      "ordered_pairs": 288,
+      "checks": 288,
+      "same_component": 72,
+      "component_rejections": 216,
+      "observed_rejections": 48,
+      "join_candidates": 24,
+      "scalar_join_values": 48,
+      "output_slots": 24,
+      "update_slots": 24
+    },
+    "pair_reason_codes": {
+      "unexamined": 0,
+      "same_component_candidate": 1,
+      "component_port_rejection": 2,
+      "observed_key_rejection": 3,
+      "join_accepted": 4,
+      "left_join_rejection": 5,
+      "right_join_rejection": 6,
+      "lesion_accepted_valid_missing": 7,
+      "lesion_accepted_invalid_cross_port": 8,
+      "lesion_capacity_padding": 9,
+      "invalid_range": [
+        10,
+        255
+      ],
+      "both_join_fail_priority": "left_join_rejection"
+    },
+    "synthetic_semantics": {
+      "source": "synthetic",
+      "status": "hypothetical",
+      "observed": false,
+      "recalled": false,
+      "episode_id": null
+    },
+    "no_ltm_dream_cell_snapshot_destroyed_before_evaluation": true,
+    "lesion": {
+      "classify_from_same_288_indices_without_extra_pass": true,
+      "nonobserved": 240,
+      "accepted": 24,
+      "padding": 216,
+      "accepted_valid_missing": 3,
+      "accepted_invalid_cross_port": 21,
+      "invalid_rate": 0.875,
+      "traversal": "canonical wake-first-occurrence context,prefix,suffix order; reject 48 observed; accept first 24 of remaining 240; capacity-pad remaining 216",
+      "canonical_pseudocode": "for context in first_occurrence_contexts: for prefix_slot in first_occurrence_prefix_slots[0:12]: for suffix_slot in first_occurrence_suffix_slots[0:12]: append (context,prefix_slot,suffix_slot); classify all 288; reject 48 observed; select the first 24 remaining nonobserved indices; mark the remaining 216 capacity padding",
+      "per_condition_hash_requirements": {
+        "ordered_288_index_traversal_sha256_identical": true,
+        "selected_first_24_index_sha256_identical": true,
+        "typed_selected_counts": "exactly 3 provenance=1 valid_missing and 21 provenance=2 invalid_cross_port"
+      },
+      "occupancy_all_true": true,
+      "provenance_codes": {
+        "empty": 0,
+        "valid_missing": 1,
+        "invalid_cross_port": 2,
+        "invalid_range": [
+          3,
+          255
+        ]
+      },
+      "never_enters_schema_or_action_index": true,
+      "every_condition_runs_post_classification": true,
+      "nonlesion_is_shadow_only": true
+    },
+    "dream_output_provenance_codes": {
+      "empty_or_rejected": 0,
+      "synthetic_hypothetical": 1,
+      "invalid_range": [
+        2,
+        255
+      ]
+    }
+  },
+  "actions_and_planning": {
+    "alphabet": [
+      [
+        -1,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ]
+    ],
+    "suffix_map": [
+      0,
+      1,
+      2
+    ],
+    "candidate_sequences": [
+      {
+        "id": 0,
+        "rule": "A0 repeated 20"
+      },
+      {
+        "id": 1,
+        "rule": "A1 repeated 20"
+      },
+      {
+        "id": 2,
+        "rule": "A2 repeated 20"
+      },
+      {
+        "id": 3,
+        "rule": "cycle A0,A1,A2 truncate20"
+      },
+      {
+        "id": 4,
+        "rule": "cycle A1,A2,A0 truncate20"
+      },
+      {
+        "id": 5,
+        "rule": "cycle A2,A0,A1 truncate20"
+      },
+      {
+        "id": 6,
+        "rule": "numeric copy id3; ell=6 token from next port"
+      },
+      {
+        "id": 7,
+        "rule": "numeric copy id4; ell=12 token from next context"
+      }
+    ],
+    "valid_candidate_ids": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "action_lure_ids": [
+      6,
+      7
+    ],
+    "wake_action_index_value": [
+      "context_token",
+      "component_id",
+      "numeric_action",
+      "suffix_token"
+    ],
+    "step_validity": "unique token resolution and matching context/component/numeric action and resolved schema key",
+    "invalid_step_return": {
+      "inferred_valid": false,
+      "schema_key": -1,
+      "schema_source": 0
+    },
+    "invalid_step_still_rolls_finite": true,
+    "goal_id": "(context+2*port+prefix_local) mod 3",
+    "goal_start": "x_prefix[12]",
+    "goal_shape": [
+      20,
+      4
+    ],
+    "goal_dynamics": "literal D,B,G; constant A[goal_id]; q=b=eta=0",
+    "state_normalizer": {
+      "rows": 49920,
+      "ddof": 0,
+      "scale_floor": 0.05
+    },
+    "action_cost_weight": 0.02,
+    "invalid_penalty": 10000,
+    "success_threshold": 25,
+    "valid_cost_upper_bound": 6400.01,
+    "true_cost": "for a generator-valid sequence J(o,k)=sum_{ell=0..19,state=0..3}(z(x_star[o,k,ell])-z(g[o,ell]))^2/(20*4) + 0.02*sum_{ell=0..19,action_coordinate=0..1}(action[k,ell,action_coordinate]^2)/(20*2), z(v)=(v-mu_x)/sigma_x; for a generator-invalid sequence set J(o,k)=10000",
+    "true_invalid_sequence_cost": "J(o,k)=10000 exactly when evaluator-only generator-valid is false; generator validity is unsealed only after candidate return bytes are hashed",
+    "candidate_cost": "J_hat(o,k) uses the identical formula with predictions[k,ell,:]; set exactly 10000 when any inferred_valid[k,0:20] is false",
+    "k_hat": "argmin_k (J_hat(o,k), canonical_index(k))",
+    "k_opt": "argmin_k (J(o,k), canonical_index(k))",
+    "regret": "r(o,c)=J(o,k_hat(o,c))-J(o,k_opt(o)); R(seed,c)=mean over 24 origins",
+    "success": "s(o,c)=1[J(o,k_hat)<=25 and selected sequence is generator-valid]; S(seed,c)=mean over 24 origins",
+    "negative_regret_rule": "less than -1e-12 hard fail; [-1e-12,0) serialize as zero",
+    "tie": "lower canonical candidate index",
+    "all_eight_rolled_for_twenty_steps": true,
+    "split_local_pre_candidate_assertions": "for every legally opened origin, at least one generator-valid candidate has J<=25 and at least one generator-valid candidate has J>25; any failure invalidates the opened split without resampling",
+    "true_vs_inferred_ownership": "evaluator computes J,k_opt,regret,success only after candidate return is hashed; candidate computes J_hat,k_hat without true future or generator validity"
+  },
+  "candidate_api": {
+    "CoreModelV2": [
+      "intercept",
+      "diagonal",
+      "bridge",
+      "action"
+    ],
+    "CostSpecV2": [
+      "mu_x",
+      "sigma_x",
+      "action_cost_weight",
+      "success_threshold",
+      "invalid_penalty"
+    ],
+    "CodecSpecV2": [
+      "mu_codec",
+      "sigma_codec"
+    ],
+    "CandidateRequestV2": [
+      "cue",
+      "anchor_state",
+      "numeric_actions",
+      "action_tokens",
+      "public_goal",
+      "cost_spec",
+      "codec_spec",
+      "core",
+      "action_index",
+      "schema",
+      "episodic_store"
+    ],
+    "OriginRecallAuditV2": [
+      "accepted",
+      "identity",
+      "confidence",
+      "scope"
+    ],
+    "CandidateResultV2": [
+      "predictions",
+      "inferred_valid",
+      "resolved_schema_keys",
+      "schema_sources",
+      "inferred_costs",
+      "selected_index",
+      "origin_recall_audit"
+    ],
+    "SeedRecallAuditV2": [
+      "accepted",
+      "identity",
+      "confidence",
+      "scope"
+    ],
+    "request_shapes": {
+      "anchor_state": [
+        4
+      ],
+      "numeric_actions": [
+        8,
+        20,
+        2
+      ],
+      "action_tokens": [
+        8,
+        20
+      ],
+      "public_goal": [
+        20,
+        4
+      ]
+    },
+    "exact_field_dtypes": {
+      "CoreModelV2.intercept": "float64[4]",
+      "CoreModelV2.diagonal": "float64[4]",
+      "CoreModelV2.bridge": "float64[4]",
+      "CoreModelV2.action": "float64[4,2]",
+      "CostSpecV2.mu_x": "float64[4]",
+      "CostSpecV2.sigma_x": "float64[4]",
+      "CostSpecV2.action_cost_weight": "float64",
+      "CostSpecV2.success_threshold": "float64",
+      "CostSpecV2.invalid_penalty": "float64",
+      "CodecSpecV2.mu_codec": "float64[96]",
+      "CodecSpecV2.sigma_codec": "float64[96]",
+      "PartialCue.raw_codec": "float64[12,8]",
+      "PartialCue.mask": "bool[12,8]",
+      "CandidateRequestV2.anchor_state": "float64[4]",
+      "CandidateRequestV2.numeric_actions": "float64[8,20,2]",
+      "CandidateRequestV2.action_tokens": "OpaqueTokenV2[8,20]",
+      "CandidateRequestV2.public_goal": "float64[20,4]",
+      "CandidateResultV2.predictions": "float64[8,20,4]",
+      "CandidateResultV2.inferred_valid": "bool[8,20]",
+      "CandidateResultV2.resolved_schema_keys": "int16[8,20]",
+      "CandidateResultV2.schema_sources": "uint8[8,20]",
+      "CandidateResultV2.inferred_costs": "float64[8]",
+      "CandidateResultV2.selected_index": "int64",
+      "OriginRecallAuditV2.accepted": "bool",
+      "OriginRecallAuditV2.identity": "int16",
+      "OriginRecallAuditV2.confidence": "float64",
+      "OriginRecallAuditV2.scope": "uint8",
+      "SeedRecallAuditV2.accepted": "bool[72]",
+      "SeedRecallAuditV2.identity": "int16[72]",
+      "SeedRecallAuditV2.confidence": "float64[72]",
+      "SeedRecallAuditV2.scope": "uint8[72]"
+    },
+    "result_codebook_invariants": {
+      "resolved_schema_key": "int16 -1 or 0..71 only",
+      "schema_source": "uint8 0..3 only; unresolved key -1 iff source 0",
+      "selected_index": "int64 0..7",
+      "origin_recall_audit": "must satisfy episodic_ltm.origin_recall_invariants"
+    },
+    "result_shapes": {
+      "predictions": [
+        8,
+        20,
+        4
+      ],
+      "inferred_valid": [
+        8,
+        20
+      ],
+      "resolved_schema_keys": [
+        8,
+        20
+      ],
+      "schema_sources": [
+        8,
+        20
+      ],
+      "inferred_costs": [
+        8
+      ]
+    },
+    "per_origin_result_count": 24,
+    "seed_recall_audit_length": 72,
+    "seed_recall_order": [
+      "24 positives",
+      "24 lures",
+      "24 cross-port diagnostics"
+    ],
+    "diagnostic_cues_never_enter_execute_candidate": true,
+    "forbidden_inputs": [
+      "cell_label",
+      "World",
+      "Episode",
+      "master_seed",
+      "stream_id",
+      "split",
+      "target_id",
+      "evaluator_handle",
+      "future_state",
+      "evaluation_innovation_eta",
+      "true_q",
+      "true_schema",
+      "generator_validity",
+      "outcome",
+      "realized_cost",
+      "reward",
+      "oracle_rank"
+    ],
+    "candidate_hash_before_evaluator_unseal": true,
+    "no_token_emissions": true
+  },
+  "factorial_design": {
+    "cells": {
+      "M00": {
+        "queryable_real_records": 0,
+        "hypothetical_writes": 0
+      },
+      "M10": {
+        "queryable_real_records": 96,
+        "hypothetical_writes": 0
+      },
+      "M01": {
+        "queryable_real_records": 0,
+        "hypothetical_writes": "at most 24"
+      },
+      "M11": {
+        "queryable_real_records": 96,
+        "hypothetical_writes": "at most 24"
+      }
+    },
+    "only_factor_differences": [
+      "queryable real LTM content",
+      "accepted hypothetical missing-slot writes"
+    ],
+    "all_other_inputs_bytes_calls_capacity_equal": true,
+    "no_cell_label_in_candidate": true
+  },
+  "controls": {
+    "required": [
+      "persistence",
+      "frozen_core",
+      "schema_only",
+      "shuffled_binding",
+      "zero_q",
+      "unconstrained_lesion",
+      "zero_synthetic"
+    ],
+    "persistence": "repeat x_origin",
+    "frozen_core": "recursive full 20-parameter core with q=s=0",
+    "schema_only": "byte-identical to M00",
+    "shuffled_binding": "preserve M10 acceptance/confidence; cyclic next positive reconstruction within context/component before q projection",
+    "zero_q": "preserve recall and audits; set q_hat=0 before rollout",
+    "unconstrained_lesion": "expose common 240-to-24 lesion audit only to diagnostic invalid_splice_rate",
+    "zero_synthetic": "preserve dream calls/audits; replace hypothetical payload by fallback",
+    "oracle": "post-hash evaluator diagnostic only; cannot satisfy treatment gate"
+  },
+  "metrics": {
+    "row_convention": "array row ell stores mathematical lead ell+1",
+    "valid_candidates_only_for_rollout_error": 6,
+    "E_all": "sqrt(sum standardized squared prediction error over o,k<6,ell<H,state / denominator)",
+    "U_s": "(o,k,ell,r) with k<6, ell<H, r<4 and (origin_prefix,j(action[k,ell])) in M",
+    "E_uv": "sqrt(sum standardized squared error on U_s(H) / |U_s(H)|)",
+    "E_recall": "sqrt(sum over all 24 positive hidden cells of (standardize(raw reconstruction)-standardize(selected ledger raw target))^2 / 1728); rejection uses raw-mean fallback and removes no item",
+    "denominators": {
+      "E_all_H20": 11520,
+      "E_all_H5": 2880,
+      "E_uv_H20": 3840,
+      "E_uv_H5": 960,
+      "recall_hidden": 1728,
+      "valid_predicted_transitions": 2880,
+      "origin_metrics": 24,
+      "dream_coverage": 24,
+      "lesion_invalid_splice": 24
+    },
+    "recall": {
+      "coverage": "accepted positives/24",
+      "identity_accuracy": "accepted correct/24",
+      "wrong_all": "accepted wrong/24",
+      "wrong_given_accept": "accepted wrong/max(accepted positives,1)",
+      "false_lure": "accepted lures/24",
+      "report_max_seed_false_lure": true,
+      "cross_port_accepts": "accepted cross-port diagnostics/24"
+    },
+    "dream_coverage": "accepted valid missing keys/24",
+    "invalid_rates": {
+      "splice": "invalid accepted splice flags/24",
+      "predicted_transition": "among six valid candidates: nonfinite, abs(state)>2, inferred_valid=false, unresolved/out-of-range key, or key/source/context/component/phase/action audit mismatch; count/2880",
+      "selected_action": "invalid selected/24"
+    },
+    "planning": {
+      "regret": "true J(selected)-true J(optimal)",
+      "success": "true J(selected)<=25 and generator-valid"
+    },
+    "h5_is_bit_exact_h20_prefix": true,
+    "no_dropped_index_or_finite_only_average": true,
+    "nonfinite_hard_fail": true
+  },
+  "paired_inference": {
+    "seed_is_unit": true,
+    "ddof": 1,
+    "critical_validation": 2.022690911734728,
+    "critical_test": 2.0009953780882674,
+    "lower_is_better_ltm": "0.5*((E00-E10)+(E01-E11))",
+    "lower_is_better_dream": "0.5*((E00-E01)+(E10-E11))",
+    "lower_is_better_interaction": "E10+E01-E00-E11",
+    "higher_is_better_ltm": "0.5*((Q10-Q00)+(Q11-Q01))",
+    "higher_is_better_dream": "0.5*((Q01-Q00)+(Q11-Q10))",
+    "higher_is_better_interaction": "Q11-Q10-Q01+Q00",
+    "strict_benefit_win": ">0",
+    "zero_is_tie": true,
+    "ratios_use_cell_means": true,
+    "nonpositive_or_nonfinite_ratio_denominator_hard_fail": true
+  },
+  "all_of_gate": {
+    "exact_formulas": {
+      "RR_L_H20": "1-(mean(E_all_M10_H20)+mean(E_all_M11_H20))/(mean(E_all_M00_H20)+mean(E_all_M01_H20))",
+      "RR_dream_M00_to_M01_H20": "1-mean(E_uv_M01_H20)/mean(E_uv_M00_H20)",
+      "RR_dream_M10_to_M11_H20": "1-mean(E_uv_M11_H20)/mean(E_uv_M10_H20)",
+      "RR_joint_H20": "1-mean(E_all_M11_H20)/mean(E_all_M00_H20)",
+      "RR_M11_vs_persistence_H20": "1-mean(E_all_M11_H20)/mean(E_all_persistence_H20)",
+      "RR_regret": "1-mean(R_M11)/mean(R_M00)",
+      "paired_ltm_benefit_H20": "0.5*((E_all_M00_H20-E_all_M10_H20)+(E_all_M01_H20-E_all_M11_H20))",
+      "paired_dream_M00_to_M01_H20": "E_uv_M00_H20-E_uv_M01_H20",
+      "paired_dream_M10_to_M11_H20": "E_uv_M10_H20-E_uv_M11_H20",
+      "paired_joint_benefit_H20": "E_all_M00_H20-E_all_M11_H20",
+      "paired_persistence_benefit_H20": "E_all_persistence_H20-E_all_M11_H20",
+      "paired_regret_benefit": "R_M00-R_M11",
+      "paired_success_gain": "S_M11-S_M00",
+      "no_antagonism_recall_vector": "E_recall_M11-1.02*E_recall_M10",
+      "no_antagonism_dream_vector_H20": "E_uv_M11_H20-1.02*E_uv_M01_H20",
+      "attribution_shuffled_H20": "E_all_shuffled_H20-E_all_M10_H20",
+      "attribution_zero_q_H20": "E_all_zero_q_H20-E_all_M10_H20",
+      "attribution_lesion": "invalid_splice_rate_unconstrained_lesion-invalid_splice_rate_M01",
+      "attribution_zero_synthetic_H20": "E_uv_zero_synthetic_H20-E_uv_M01_H20"
+    },
+    "prediction": {
+      "marginal_ltm_relative_reduction_min": 0.1,
+      "marginal_ltm_ci_lower_strict_gt": 0,
+      "marginal_ltm_strict_win_fraction_min": 0.65,
+      "matched_dream_relative_reduction_min_each": 0.1,
+      "matched_dream_ci_lower_strict_gt_each": 0,
+      "matched_dream_strict_win_fraction_min_each": 0.65,
+      "joint_relative_reduction_min": 0.1,
+      "joint_ci_lower_strict_gt": 0,
+      "joint_strict_win_fraction_min": 0.65,
+      "M11_E_all_H20_max": 1,
+      "M01_E_uv_H20_max": 1,
+      "M11_E_uv_H20_max": 1,
+      "M11_H20_over_H5_max": 2,
+      "M11_vs_persistence_relative_reduction_min": 0.1,
+      "M11_vs_persistence_ci_lower_strict_gt": 0,
+      "M11_vs_persistence_strict_win_fraction_min": 0.65
+    },
+    "planning": {
+      "M11_regret_relative_reduction_vs_M00_min": 0.2,
+      "regret_ci_lower_strict_gt": 0,
+      "success_gain_min": 0.1,
+      "success_gain_ci_lower_strict_gt": 0,
+      "M11_success_mean_min": 0.75,
+      "M11_invalid_selected_count": 0
+    },
+    "recall": {
+      "cells": [
+        "M10",
+        "M11"
+      ],
+      "coverage_min": 0.8,
+      "identity_accuracy_min": 0.8,
+      "wrong_all_max": 0.05,
+      "wrong_given_accept_max": 0.05,
+      "false_lure_mean_max": 0.05,
+      "false_lure_ci_upper_max": 0.05,
+      "cross_port_accept_count": 0
+    },
+    "dream": {
+      "cells": [
+        "M01",
+        "M11"
+      ],
+      "missing_binding_coverage_min": 0.8,
+      "accepted_invalid_splice_count": 0,
+      "observed_overwrite_count": 0
+    },
+    "no_antagonism": {
+      "recall_relative_margin": 0.02,
+      "recall_paired_upper_leq": 0,
+      "dream_relative_margin": 0.02,
+      "dream_paired_upper_leq": 0
+    },
+    "attribution": {
+      "shuffled_vs_M10_ci_lower_strict_gt": 0,
+      "zero_q_vs_M10_ci_lower_strict_gt": 0,
+      "lesion_invalid_splice_vs_M01_ci_lower_strict_gt": 0,
+      "zero_synthetic_vs_M01_E_uv_ci_lower_strict_gt": 0
+    },
+    "stability": {
+      "all_finite": true,
+      "max_abs_prediction": 2,
+      "max_seed_invalid_predicted_transition_rate": 0.01,
+      "h5_h20_bit_exact": true
+    },
+    "hard_zero_counts": [
+      "synthetic_with_episode_id",
+      "synthetic_tagged_observed",
+      "synthetic_tagged_recalled",
+      "synthetic_to_ltm_insert_attempts",
+      "synthetic_to_ltm_successful_inserts",
+      "nonledger_real_record_in_ltm",
+      "observed_record_overwrite_or_hash_change",
+      "cross_context_or_cross_port_or_cross_component_accepted_splice",
+      "accepted_context_component_phase_action_or_key_constraint_violation",
+      "accepted_cross_context_recall",
+      "heldout_future_reads",
+      "evaluator_latent_or_truth_reads",
+      "generator_validity_or_outcome_reads",
+      "masked_cue_coordinate_reads",
+      "test_path_reads_before_unlock",
+      "cell_cross_write_or_shared_mutation",
+      "nonfinite_outputs"
+    ],
+    "resource": {
+      "budget_vector_exact": true,
+      "allocation_bytes_exact": 393216,
+      "persistent_cap": 524288,
+      "temporary_cap": 1048576,
+      "metadata_cap": 32768,
+      "cpu_only": true,
+      "numpy_only": true,
+      "one_process": true,
+      "network_downloads": 0,
+      "gpu": false,
+      "external_trajectory_files": 0,
+      "target_split_wall_seconds": 120
+    },
+    "split_pass_mapping": {
+      "checks_exact_keyset": [
+        "prediction.marginal_ltm_relative_reduction",
+        "prediction.marginal_ltm_ci_lower",
+        "prediction.marginal_ltm_strict_win_fraction",
+        "prediction.dream_M00_to_M01_relative_reduction",
+        "prediction.dream_M00_to_M01_ci_lower",
+        "prediction.dream_M00_to_M01_strict_win_fraction",
+        "prediction.dream_M10_to_M11_relative_reduction",
+        "prediction.dream_M10_to_M11_ci_lower",
+        "prediction.dream_M10_to_M11_strict_win_fraction",
+        "prediction.joint_relative_reduction",
+        "prediction.joint_ci_lower",
+        "prediction.joint_strict_win_fraction",
+        "prediction.M11_E_all_H20",
+        "prediction.M01_E_uv_H20",
+        "prediction.M11_E_uv_H20",
+        "prediction.M11_H20_over_H5",
+        "prediction.M11_vs_persistence_relative_reduction",
+        "prediction.M11_vs_persistence_ci_lower",
+        "prediction.M11_vs_persistence_strict_win_fraction",
+        "planning.M11_regret_relative_reduction_vs_M00",
+        "planning.regret_ci_lower",
+        "planning.success_gain",
+        "planning.success_gain_ci_lower",
+        "planning.M11_success_mean",
+        "planning.M11_invalid_selected_count",
+        "recall.M10_coverage",
+        "recall.M10_identity_accuracy",
+        "recall.M10_wrong_all",
+        "recall.M10_wrong_given_accept",
+        "recall.M10_false_lure_mean",
+        "recall.M10_false_lure_ci_upper",
+        "recall.M10_cross_port_accept_count",
+        "recall.M11_coverage",
+        "recall.M11_identity_accuracy",
+        "recall.M11_wrong_all",
+        "recall.M11_wrong_given_accept",
+        "recall.M11_false_lure_mean",
+        "recall.M11_false_lure_ci_upper",
+        "recall.M11_cross_port_accept_count",
+        "dream.M01_missing_binding_coverage",
+        "dream.M01_accepted_invalid_splice_count",
+        "dream.M01_observed_overwrite_count",
+        "dream.M11_missing_binding_coverage",
+        "dream.M11_accepted_invalid_splice_count",
+        "dream.M11_observed_overwrite_count",
+        "no_antagonism.recall_paired_upper",
+        "no_antagonism.dream_paired_upper",
+        "attribution.shuffled_vs_M10_ci_lower",
+        "attribution.zero_q_vs_M10_ci_lower",
+        "attribution.lesion_invalid_splice_vs_M01_ci_lower",
+        "attribution.zero_synthetic_vs_M01_E_uv_ci_lower",
+        "stability.all_finite",
+        "stability.max_abs_prediction",
+        "stability.max_seed_invalid_predicted_transition_rate",
+        "stability.h5_h20_bit_exact"
+      ],
+      "resource_checks_exact_keyset": [
+        "budget_vector_exact",
+        "allocation_bytes_exact",
+        "persistent_within_cap",
+        "temporary_within_cap",
+        "metadata_within_cap",
+        "cpu_only",
+        "numpy_only",
+        "one_process",
+        "network_downloads_zero",
+        "gpu_disabled",
+        "external_trajectory_files_zero",
+        "wall_within_target"
+      ],
+      "hard_zero_checks_exact_keyset": [
+        "synthetic_with_episode_id",
+        "synthetic_tagged_observed",
+        "synthetic_tagged_recalled",
+        "synthetic_to_ltm_insert_attempts",
+        "synthetic_to_ltm_successful_inserts",
+        "nonledger_real_record_in_ltm",
+        "observed_record_overwrite_or_hash_change",
+        "cross_context_or_cross_port_or_cross_component_accepted_splice",
+        "accepted_context_component_phase_action_or_key_constraint_violation",
+        "accepted_cross_context_recall",
+        "heldout_future_reads",
+        "evaluator_latent_or_truth_reads",
+        "generator_validity_or_outcome_reads",
+        "masked_cue_coordinate_reads",
+        "test_path_reads_before_unlock",
+        "cell_cross_write_or_shared_mutation",
+        "nonfinite_outputs"
+      ],
+      "keyset_rule": "checks, resource_checks, and hard_zero_checks must be nonempty objects with exactly their registered key sets; any missing, extra, or duplicate key hard-fails before all(values); artifact JSON object keys are canonically sorted and object insertion order is not scientific state",
+      "performance_passed": "all values in checks are true",
+      "hard_zero_checks": "an exact 17-key Boolean object keyed by provenance_and_leakage.hard_zero_count_order names; each value is (corresponding canonical-order integer hard_zero_count == 0)",
+      "integrity_passed": "all values in hard_zero_checks are true",
+      "resource_passed": "all values in resource_checks are true",
+      "passed": "performance_passed and integrity_passed and resource_passed",
+      "validation_and_test_use_identical_mapping": true,
+      "recompute_from_primitive_seed_vectors": true,
+      "stored_boolean_mismatch_hard_fail": true
+    },
+    "required_reports_ordered": [
+      "all primitive seed-by-cell and seed-by-control metric vectors",
+      "every asserted denominator and denominator audit",
+      "cell and control arithmetic means",
+      "paired means, sample SDs with ddof=1, two-sided 95 percent CIs, strict-win counts/fractions, and tie counts",
+      "E_all and E_uv H5/H20 factorial L effect, D effect, benefit-oriented interaction, and interaction sign",
+      "regret and success factorial L effect, D effect, benefit-oriented interaction, and interaction sign",
+      "simple LTM effects E_all_M00_H20-E_all_M10_H20 and E_all_M01_H20-E_all_M11_H20",
+      "both matched dream effects and all four joint cell means",
+      "maximum seed false-lure rate in M10 and M11 in addition to mean and upper CI",
+      "all 288 pair classifications, every pair-reason count, 24 constrained dream slots, and 24 lesion slots",
+      "all exact-formula ratio numerators and strictly-positive denominators",
+      "all performance checks, integrity checks, resource checks, and recomputed conjunctions"
+    ]
+  },
+  "calibration": {
+    "train_only": true,
+    "run_exactly_once": true,
+    "population_counts": {
+      "core_transitions": 46080,
+      "state_rows": 49920,
+      "codec_trajectories": 3840,
+      "positive_queries": 960,
+      "lure_queries": 960,
+      "residual_endpoint_values": 3840
+    },
+    "recall_threshold": {
+      "wrapper": "scoped_hard_recall_v2",
+      "finite_pool_only": true,
+      "accept": "confidence > tau",
+      "candidates": "sorted unique positive/lure confidence plus symbolic REJECT_ALL",
+      "feasibility": {
+        "pooled_false_lure_max": 0.025,
+        "pooled_wrong_all_max": 0.025
+      },
+      "objective_order": [
+        "maximize correct identity accuracy with abstention wrong",
+        "minimize lure acceptance",
+        "largest finite tau"
+      ],
+      "reject_all_winner_means_infeasible": true,
+      "persisted_tau_must_be_finite": true,
+      "empty_nonfinite_count_mismatch_or_nonunique_complete_lexicographic_selector_hard_fail": true
+    },
+    "join_threshold": {
+      "statistic": "numpy quantile",
+      "q": 0.99,
+      "method": "linear",
+      "columns": [
+        0,
+        4
+      ],
+      "values_per_observed_binding": 2,
+      "left_statistic": "sqrt(mean((R[4,0:4]-R[5,0:4])^2))",
+      "right_statistic": "sqrt(mean((R[6,0:4]-R[7,0:4])^2))",
+      "pool": "both residual-only four-coordinate RMS values for every one of 1,920 train observed-binding means; exact total 3,840",
+      "selector": "numpy.quantile(pool,0.99,method='linear')",
+      "accept_equality": true,
+      "empty_nonfinite_count_mismatch_or_nonunique_selector_hard_fail": true
+    },
+    "forbidden": [
+      "validation_refit",
+      "test_refit",
+      "cell_specific_threshold",
+      "rollout_blend",
+      "dream_weight_tuning",
+      "planner_tuning",
+      "success_tuning",
+      "route_selection"
+    ]
+  },
+  "provenance_and_leakage": {
+    "semantic_tuples": {
+      "wake": [
+        "real",
+        "observed",
+        true,
+        false,
+        "unique ledger id"
+      ],
+      "recall": [
+        "real",
+        "recalled",
+        false,
+        true,
+        "existing ledger id"
+      ],
+      "dream": [
+        "synthetic",
+        "hypothetical",
+        false,
+        false,
+        null
+      ],
+      "fallback": [
+        "schema_fallback",
+        "inferred",
+        false,
+        false,
+        null
+      ]
+    },
+    "hard_zero_count_order": [
+      "synthetic_with_episode_id",
+      "synthetic_tagged_observed",
+      "synthetic_tagged_recalled",
+      "synthetic_to_ltm_insert_attempts",
+      "synthetic_to_ltm_successful_inserts",
+      "nonledger_real_record_in_ltm",
+      "observed_record_overwrite_or_hash_change",
+      "cross_context_or_cross_port_or_cross_component_accepted_splice",
+      "accepted_context_component_phase_action_or_key_constraint_violation",
+      "accepted_cross_context_recall",
+      "heldout_future_reads",
+      "evaluator_latent_or_truth_reads",
+      "generator_validity_or_outcome_reads",
+      "masked_cue_coordinate_reads",
+      "test_path_reads_before_unlock",
+      "cell_cross_write_or_shared_mutation",
+      "nonfinite_outputs"
+    ],
+    "capability_instrumented_not_candidate_self_report": true,
+    "required_tests": [
+      "poison futures,true q/schema,outcomes,costs,validity,masked cue,seed/stream independently",
+      "all 24 cell execution orders bit-identical per cell",
+      "input/core/observed-schema hashes equal across cells",
+      "H5 equals H20 prefix bit-exact",
+      "candidate presentation permutation maps back",
+      "pre-unlock test path denied",
+      "synthetic insertion attempts and successes separate",
+      "rejected zero reconstruction cannot influence fallback"
+    ]
+  },
+  "resources": {
+    "boolean_dtype_contract": {
+      "numpy_dtype_string": "bool",
+      "numpy_scalar_type": "numpy.bool_",
+      "itemsize_bytes": 1,
+      "markdown_semantic_name": "bool8",
+      "removed_numpy_alias_bool8_forbidden": true
+    },
+    "registered_budget_vector": [
+      {
+        "name": "N_wake_records",
+        "value": 96
+      },
+      {
+        "name": "N_wake_transitions",
+        "value": 1152
+      },
+      {
+        "name": "U_core",
+        "value": 0
+      },
+      {
+        "name": "P_core",
+        "value": 20
+      },
+      {
+        "name": "N_origins",
+        "value": 24
+      },
+      {
+        "name": "K",
+        "value": 8
+      },
+      {
+        "name": "H",
+        "value": 20
+      },
+      {
+        "name": "N_rollout_calls",
+        "value": 192
+      },
+      {
+        "name": "N_predicted_transitions",
+        "value": 3840
+      },
+      {
+        "name": "N_planner_score_calls",
+        "value": 192
+      },
+      {
+        "name": "B_ltm_trace_bytes",
+        "value": 73728
+      },
+      {
+        "name": "Q_ltm_call_slots",
+        "value": 72
+      },
+      {
+        "name": "N_scoped_distance_rows",
+        "value": 576
+      },
+      {
+        "name": "N_schema_key_slots",
+        "value": 72
+      },
+      {
+        "name": "N_ordered_pair_enumerations",
+        "value": 288
+      },
+      {
+        "name": "N_component_port_checks",
+        "value": 288
+      },
+      {
+        "name": "N_same_component_pairs",
+        "value": 72
+      },
+      {
+        "name": "N_observed_keys",
+        "value": 48
+      },
+      {
+        "name": "N_join_candidates",
+        "value": 24
+      },
+      {
+        "name": "N_scalar_endpoint_join_values",
+        "value": 48
+      },
+      {
+        "name": "N_dream_output_slots",
+        "value": 24
+      },
+      {
+        "name": "U_dream_update_slots",
+        "value": 24
+      },
+      {
+        "name": "N_lesion_nonobserved_pairs",
+        "value": 240
+      },
+      {
+        "name": "N_lesion_accepted_slots",
+        "value": 24
+      },
+      {
+        "name": "N_lesion_capacity_padding",
+        "value": 216
+      },
+      {
+        "name": "N_dream_passes",
+        "value": 1
+      },
+      {
+        "name": "persistent_numeric_payload_bytes",
+        "value": 393216
+      },
+      {
+        "name": "persistent_byte_cap",
+        "value": 524288
+      },
+      {
+        "name": "temporary_workspace_byte_cap",
+        "value": 1048576
+      }
+    ],
+    "registered_budget_vector_length": 29,
+    "allocation_ledger": [
+      {
+        "name": "ltm_trace_payload",
+        "shape": [
+          96,
+          12,
+          8
+        ],
+        "dtype": "float64",
+        "bytes": 73728
+      },
+      {
+        "name": "ltm_occupancy",
+        "shape": [
+          96
+        ],
+        "dtype": "bool",
+        "bytes": 96
+      },
+      {
+        "name": "ltm_provenance",
+        "shape": [
+          96
+        ],
+        "dtype": "uint8",
+        "bytes": 96
+      },
+      {
+        "name": "scoped_storage_indices",
+        "shape": [
+          8,
+          12
+        ],
+        "dtype": "int16",
+        "bytes": 192
+      },
+      {
+        "name": "schema_payload",
+        "shape": [
+          72,
+          12,
+          8
+        ],
+        "dtype": "float64",
+        "bytes": 55296
+      },
+      {
+        "name": "schema_occupancy",
+        "shape": [
+          72
+        ],
+        "dtype": "bool",
+        "bytes": 72
+      },
+      {
+        "name": "schema_provenance",
+        "shape": [
+          72
+        ],
+        "dtype": "uint8",
+        "bytes": 72
+      },
+      {
+        "name": "predictions",
+        "shape": [
+          24,
+          8,
+          20,
+          4
+        ],
+        "dtype": "float64",
+        "bytes": 122880
+      },
+      {
+        "name": "inferred_valid",
+        "shape": [
+          24,
+          8,
+          20
+        ],
+        "dtype": "bool",
+        "bytes": 3840
+      },
+      {
+        "name": "resolved_schema_keys",
+        "shape": [
+          24,
+          8,
+          20
+        ],
+        "dtype": "int16",
+        "bytes": 7680
+      },
+      {
+        "name": "schema_sources",
+        "shape": [
+          24,
+          8,
+          20
+        ],
+        "dtype": "uint8",
+        "bytes": 3840
+      },
+      {
+        "name": "q_hat",
+        "shape": [
+          24,
+          4
+        ],
+        "dtype": "float64",
+        "bytes": 768
+      },
+      {
+        "name": "inferred_costs",
+        "shape": [
+          24,
+          8
+        ],
+        "dtype": "float64",
+        "bytes": 1536
+      },
+      {
+        "name": "selected_indices",
+        "shape": [
+          24
+        ],
+        "dtype": "int64",
+        "bytes": 192
+      },
+      {
+        "name": "learned_core",
+        "shape": [
+          20
+        ],
+        "dtype": "float64",
+        "bytes": 160
+      },
+      {
+        "name": "codec_mean_scale",
+        "shape": [
+          2,
+          96
+        ],
+        "dtype": "float64",
+        "bytes": 1536
+      },
+      {
+        "name": "state_mean_scale",
+        "shape": [
+          2,
+          4
+        ],
+        "dtype": "float64",
+        "bytes": 64
+      },
+      {
+        "name": "completed_positive_cues",
+        "shape": [
+          24,
+          12,
+          8
+        ],
+        "dtype": "float64",
+        "bytes": 18432
+      },
+      {
+        "name": "dream_residual_buffer",
+        "shape": [
+          24,
+          12,
+          4
+        ],
+        "dtype": "float64",
+        "bytes": 9216
+      },
+      {
+        "name": "lesion_residual_buffer",
+        "shape": [
+          24,
+          12,
+          4
+        ],
+        "dtype": "float64",
+        "bytes": 9216
+      },
+      {
+        "name": "dream_occupancy",
+        "shape": [
+          24
+        ],
+        "dtype": "bool",
+        "bytes": 24
+      },
+      {
+        "name": "dream_provenance",
+        "shape": [
+          24
+        ],
+        "dtype": "uint8",
+        "bytes": 24
+      },
+      {
+        "name": "lesion_occupancy",
+        "shape": [
+          24
+        ],
+        "dtype": "bool",
+        "bytes": 24
+      },
+      {
+        "name": "lesion_provenance",
+        "shape": [
+          24
+        ],
+        "dtype": "uint8",
+        "bytes": 24
+      },
+      {
+        "name": "recall_accepted",
+        "shape": [
+          72
+        ],
+        "dtype": "bool",
+        "bytes": 72
+      },
+      {
+        "name": "recall_identity",
+        "shape": [
+          72
+        ],
+        "dtype": "int16",
+        "bytes": 144
+      },
+      {
+        "name": "recall_confidence",
+        "shape": [
+          72
+        ],
+        "dtype": "float64",
+        "bytes": 576
+      },
+      {
+        "name": "recall_scope",
+        "shape": [
+          72
+        ],
+        "dtype": "uint8",
+        "bytes": 72
+      },
+      {
+        "name": "ordered_pair_indices",
+        "shape": [
+          288,
+          2
+        ],
+        "dtype": "int16",
+        "bytes": 1152
+      },
+      {
+        "name": "pair_check_flags",
+        "shape": [
+          288
+        ],
+        "dtype": "bool",
+        "bytes": 288
+      },
+      {
+        "name": "pair_reason_codes",
+        "shape": [
+          288
+        ],
+        "dtype": "uint8",
+        "bytes": 288
+      },
+      {
+        "name": "endpoint_join_values",
+        "shape": [
+          24,
+          2
+        ],
+        "dtype": "float64",
+        "bytes": 384
+      },
+      {
+        "name": "actual_budget_vector",
+        "shape": [
+          29
+        ],
+        "dtype": "int64",
+        "bytes": 232
+      },
+      {
+        "name": "registered_budget_vector",
+        "shape": [
+          29
+        ],
+        "dtype": "int64",
+        "bytes": 232
+      },
+      {
+        "name": "hard_provenance_leak_counts",
+        "shape": [
+          17
+        ],
+        "dtype": "int64",
+        "bytes": 136
+      },
+      {
+        "name": "inactive_padding",
+        "shape": [
+          80632
+        ],
+        "dtype": "uint8",
+        "bytes": 80632
+      }
+    ],
+    "allocation_total_bytes": 393216,
+    "allocation_ledger_expected_sha256": "7f5c52b1b4aa01f8141ce821ed1bf4164e3fdf131ae828f08b20a8280f3079b4",
+    "persistent_byte_cap": 524288,
+    "temporary_workspace_byte_cap": 1048576,
+    "metadata_utf8_cap": 32768,
+    "all_factorial_cells_and_nonoracle_controls_identical": true,
+    "inactive_shadow_execution": {
+      "ltm_disabled": "allocate the unqueryable 96-record payload, execute all 72 facade call slots and exactly 576 equal-shaped masked-distance rows in shadow buffers, discard every shadow result, keep externally serialized recall scope=0, and prohibit shadow values from q_hat or rollout",
+      "dream_disabled": "allocate identical schema/pair/join/output arrays, execute 288 shadow enumerations and component/port checks, compute 48 shadow endpoint values, execute 24 shadow update slots and one shadow dream pass, discard every write, and prohibit shadow values from schema, action index, or rollout",
+      "counter_ownership": "capability-instrumented actual counters, not candidate constants or self-reports, must equal the full 29-field registered vector in every factorial cell and every non-oracle control"
+    },
+    "lesion_postclassification_reuses_same_288_indices": true,
+    "no_extra_lesion_enumeration_join_or_dream_pass": true
+  },
+  "test_lock": {
+    "registration_path": "experiments/preregistration/agi_world_memory_integration_v2.json",
+    "module_path": "reality_stone/python/reality_stone/clarus/agi_world_memory_integration_v2.py",
+    "runner_path": "examples/agi/agi_world_memory_integration_v2_gate.py",
+    "unit_test_path": "tests/test_agi_world_memory_integration_v2.py",
+    "integrity_test_path": "tests/test_agi_world_memory_integration_integrity_v2.py",
+    "implementation_lock_path": "artifacts/agi/agi_world_memory_integration_implementation_lock_v2.json",
+    "calibration_path": "artifacts/agi/agi_world_memory_integration_train_calibration_v2.json",
+    "validation_path": "artifacts/agi/agi_world_memory_integration_validation_v2.json",
+    "test_path": "artifacts/agi/agi_world_memory_integration_test_v2.json",
+    "integrity_path": "artifacts/agi/agi_world_memory_integration_integrity_v2.json",
+    "implementation_lock_before_train": true,
+    "calibration_written_once": true,
+    "validation_written_once": true,
+    "test_written_once": true,
+    "test_requires_committed_clean_head_identical_validation": true,
+    "recompute_validation_performance_integrity_and_resource_checks": true,
+    "unlock_record": "in-memory UnlockRecordV2 serialized inside test artifact",
+    "exact_registration_implementation_calibration_dependency_hashes_required": true,
+    "test_reuses_calibration_bytes_exactly": true,
+    "early_test_read_hard_invalid": true,
+    "validation_fail_preserved_and_test_unopened": true,
+    "artifact_deletion_never_authorizes_registered_rerun": true
+  },
+  "implementation_dependency_manifest": {
+    "ordered_primary_paths": [
+      "experiments/preregistration/agi_world_memory_integration_v2.json",
+      "reality_stone/python/reality_stone/clarus/agi_world_memory_integration_v2.py",
+      "examples/agi/agi_world_memory_integration_v2_gate.py",
+      "tests/test_agi_world_memory_integration_v2.py",
+      "tests/test_agi_world_memory_integration_integrity_v2.py"
+    ],
+    "ordered_dependency_paths": [
+      "experiments/preregistration/episodic_ltm_dream_factorial_v2.json",
+      "reality_stone/python/reality_stone/clarus/episodic_ltm_dream_bridge_v2.py",
+      "reality_stone/python/reality_stone/clarus/episodic_ltm_dream_bridge.py"
+    ],
+    "ordered_source_paths": [
+      "experiments/preregistration/agi_world_memory_integration_v2.json",
+      "reality_stone/python/reality_stone/clarus/agi_world_memory_integration_v2.py",
+      "examples/agi/agi_world_memory_integration_v2_gate.py",
+      "tests/test_agi_world_memory_integration_v2.py",
+      "tests/test_agi_world_memory_integration_integrity_v2.py",
+      "experiments/preregistration/episodic_ltm_dream_factorial_v2.json",
+      "reality_stone/python/reality_stone/clarus/episodic_ltm_dream_bridge_v2.py",
+      "reality_stone/python/reality_stone/clarus/episodic_ltm_dream_bridge.py"
+    ],
+    "ordered_path_raw_sha256_record_schema": [
+      "path",
+      "raw_sha256"
+    ],
+    "ordered_path_raw_sha256_recipe": "serialize one {path,raw_sha256} record for every ordered_source_paths entry in that exact order, where raw_sha256=SHA256(path.read_bytes()); this ordered 8-record array is copied byte-for-value through implementation lock, calibration, validation, test, and unlock record without aggregation",
+    "ordered_dependency_subset": "the final three ordered_path_raw_sha256 records correspond exactly to ordered_dependency_paths",
+    "every_path_raw_sha256_required": true,
+    "callable_boundaries": [
+      "reality_stone.clarus.agi_world_memory_integration_v2.scoped_hard_recall_v2",
+      "reality_stone.clarus.agi_world_memory_integration_v2.codec_residual_view_v2",
+      "reality_stone.clarus.agi_world_memory_integration_v2.constrained_residual_completion_v2",
+      "reality_stone.clarus.agi_world_memory_integration_v2.execute_candidate_v2",
+      "reality_stone.clarus.agi_world_memory_integration_v2.run_agi_world_memory_integration_v2_gate",
+      "reality_stone.clarus.episodic_ltm_dream_bridge_v2.hard_cue_anchored_recall"
+    ],
+    "callable_source_sha256_by_symbol_recipe": "for each imported callable use inspect.getsource; replace CRLF and bare CR by LF; require exactly one terminal LF and no other strip or dedent; SHA256 the UTF-8 bytes; serialize one {symbol,source_sha256} record in callable_boundaries order without aggregation",
+    "codec_strip_boundary": "codec_residual_view_v2 alone converts a raw or standardized (12,8) codec into the residual-only (12,4) dream/schema view; columns 4:8 may not cross this boundary",
+    "numpy_version_field": "numpy.__version__ exact string",
+    "ordered_allocation_ledger_sha256_required": true,
+    "allocation_sha256_recipe": "SHA256(json.dumps(resources.allocation_ledger,ensure_ascii=True,separators=(',',':'),allow_nan=False).encode('utf-8')) preserving listed entry and object-key order",
+    "implementation_lock_required_fields": [
+      "experiment",
+      "stage",
+      "registration_raw_sha256",
+      "contract_raw_sha256",
+      "ordered_path_raw_sha256",
+      "callable_source_sha256_by_symbol",
+      "numpy_version",
+      "ordered_allocation_ledger_sha256",
+      "registered_budget_vector",
+      "handcrafted_test_results",
+      "registered_seed_execution_count"
+    ]
+  },
+  "artifact_state_machine": {
+    "global_rules": {
+      "no_overwrite": true,
+      "deleting_an_artifact_never_authorizes_rerun": true,
+      "registered_role_run_counts_are_append_only_history": true,
+      "all_hashes_are_raw_file_SHA256_unless_explicitly_named_payload_SHA256": true,
+      "registration_must_be_git_tracked_clean_and_HEAD_identical_before_implementation_lock": true,
+      "failed_or_invalid_stage_artifact_is_preserved": true
+    },
+    "run_count_semantics": "run_count is the number of registered scientific split executions performed by that stage, not command invocations or read-only audits",
+    "stages_ordered": [
+      "preregistration",
+      "implementation_lock",
+      "calibration",
+      "validation",
+      "test",
+      "integrity",
+      "verify"
+    ],
+    "stages": {
+      "preregistration": {
+        "preconditions": [
+          "contract status is LOCKED_PRE_IMPLEMENTATION and contract raw SHA matches preregistration_integrity",
+          "all registered train, validation, and test execution counts are zero"
+        ],
+        "seed_role": "none",
+        "run_count": 0,
+        "input_hash_fields": [
+          "contract_raw_sha256"
+        ],
+        "required_output_fields": [
+          "registration_raw_sha256",
+          "git_commit",
+          "git_tracked",
+          "git_clean_at_path",
+          "HEAD_identical_at_path"
+        ],
+        "no_overwrite": true,
+        "postcondition": "the exact registration bytes are committed, tracked, clean at the path, and byte-identical to git show HEAD:registration_path"
+      },
+      "implementation_lock": {
+        "preconditions": [
+          "preregistration postcondition holds",
+          "module, runner, and both tests exist",
+          "implementation-lock, calibration, validation, test, and integrity artifacts are absent",
+          "all handcrafted no-registered-seed poison, order, dtype, allocation, and boundary tests pass"
+        ],
+        "seed_role": "none; handcrafted fixtures only",
+        "run_count": 0,
+        "invocation_policy": "written exactly once from handcrafted, static, and hash checks; no registered seed",
+        "input_hash_fields": [
+          "registration_raw_sha256",
+          "contract_raw_sha256",
+          "ordered_path_raw_sha256",
+          "callable_source_sha256_by_symbol",
+          "ordered_allocation_ledger_sha256"
+        ],
+        "required_output_fields": [
+          "experiment",
+          "stage",
+          "registration_raw_sha256",
+          "contract_raw_sha256",
+          "ordered_path_raw_sha256",
+          "callable_source_sha256_by_symbol",
+          "numpy_version",
+          "ordered_allocation_ledger_sha256",
+          "registered_budget_vector",
+          "handcrafted_test_results",
+          "registered_seed_execution_count"
+        ],
+        "no_overwrite": true,
+        "postcondition": "implementation lock bytes and all dependency, callable, NumPy, allocation, and handcrafted-test fields verify before train opens"
+      },
+      "calibration": {
+        "preconditions": [
+          "implementation lock exists and every locked hash matches current bytes",
+          "calibration, validation, test, and integrity artifacts are absent",
+          "train role has never been opened"
+        ],
+        "seed_role": "train 86100..86139",
+        "run_count": 1,
+        "invocation_policy": "the train role opens exactly once and writes one immutable artifact",
+        "input_hash_fields": [
+          "registration_raw_sha256",
+          "implementation_lock_raw_sha256",
+          "ordered_path_raw_sha256",
+          "callable_source_sha256_by_symbol",
+          "numpy_version",
+          "ordered_allocation_ledger_sha256"
+        ],
+        "required_output_fields": [
+          "experiment",
+          "stage",
+          "status",
+          "calibration_passed",
+          "failure_reasons",
+          "registration_raw_sha256",
+          "implementation_lock_raw_sha256",
+          "ordered_path_raw_sha256",
+          "callable_source_sha256_by_symbol",
+          "numpy_version",
+          "core_coefficients_20",
+          "core_payload_sha256",
+          "mu_x",
+          "sigma_x",
+          "mu_codec",
+          "sigma_codec",
+          "tau_recall",
+          "tau_join",
+          "recall_positive_confidence_pool",
+          "recall_lure_confidence_pool",
+          "recall_selector_candidates_and_ties",
+          "join_endpoint_value_pool",
+          "population_counts",
+          "ordered_allocation_ledger_sha256",
+          "registered_seed_execution_count",
+          "canonical_payload_sha256_excluding_this_field"
+        ],
+        "no_overwrite": true,
+        "postcondition": "one finite feasible recall threshold and one finite join threshold plus byte-locked core/normalizers are preserved; validation remains closed on any failure"
+      },
+      "validation": {
+        "preconditions": [
+          "implementation and calibration hashes match current bytes",
+          "calibration reports feasibility and exact population counts",
+          "validation, test, and integrity artifacts are absent",
+          "validation role has never been opened and test path has never been read"
+        ],
+        "seed_role": "validation 87100..87139",
+        "run_count": 1,
+        "invocation_policy": "the validation role opens exactly once and writes one immutable PASS-or-FAIL artifact",
+        "input_hash_fields": [
+          "registration_raw_sha256",
+          "implementation_lock_raw_sha256",
+          "calibration_raw_sha256",
+          "core_payload_sha256",
+          "ordered_path_raw_sha256",
+          "callable_source_sha256_by_symbol",
+          "numpy_version",
+          "ordered_allocation_ledger_sha256"
+        ],
+        "required_output_fields": [
+          "experiment",
+          "stage",
+          "split",
+          "primitive_seed_vectors",
+          "cell_and_control_summaries",
+          "effect_and_interaction_reports",
+          "checks",
+          "hard_zero_counts",
+          "hard_zero_checks",
+          "resource_checks",
+          "performance_passed",
+          "integrity_passed",
+          "resource_passed",
+          "passed",
+          "registration_raw_sha256",
+          "implementation_lock_raw_sha256",
+          "calibration_raw_sha256",
+          "core_payload_sha256",
+          "ordered_path_raw_sha256",
+          "callable_source_sha256_by_symbol",
+          "numpy_version",
+          "ordered_allocation_ledger_sha256",
+          "registered_seed_execution_count"
+        ],
+        "no_overwrite": true,
+        "postcondition": "validation artifact is preserved whether PASS or FAIL; only an all-of PASS may proceed toward committed unlock"
+      },
+      "test": {
+        "preconditions": [
+          "validation artifact is Git-tracked, committed, clean at its path, and byte-identical to git show HEAD:validation_path",
+          "validation primitive vectors recompute every check and performance_passed, integrity_passed, resource_passed, and passed without mismatch",
+          "passed is true and every registration, implementation, calibration, dependency, NumPy, callable, and allocation hash still matches",
+          "test and integrity artifacts are absent and test role has never been opened"
+        ],
+        "seed_role": "locked test 88100..88159",
+        "run_count": 1,
+        "invocation_policy": "the locked test role opens exactly once after construction of the in-memory unlock record",
+        "input_hash_fields": [
+          "validation_raw_sha256",
+          "registration_raw_sha256",
+          "implementation_lock_raw_sha256",
+          "calibration_raw_sha256",
+          "core_payload_sha256",
+          "ordered_path_raw_sha256",
+          "callable_source_sha256_by_symbol",
+          "numpy_version",
+          "ordered_allocation_ledger_sha256"
+        ],
+        "required_output_fields": [
+          "experiment",
+          "stage",
+          "split",
+          "primitive_seed_vectors",
+          "cell_and_control_summaries",
+          "effect_and_interaction_reports",
+          "checks",
+          "hard_zero_counts",
+          "hard_zero_checks",
+          "resource_checks",
+          "performance_passed",
+          "integrity_passed",
+          "resource_passed",
+          "passed",
+          "registration_raw_sha256",
+          "implementation_lock_raw_sha256",
+          "calibration_raw_sha256",
+          "core_payload_sha256",
+          "ordered_path_raw_sha256",
+          "callable_source_sha256_by_symbol",
+          "numpy_version",
+          "ordered_allocation_ledger_sha256",
+          "registered_seed_execution_count",
+          "validation_raw_sha256",
+          "unlock_record"
+        ],
+        "unlock_record_exact_fields": [
+          "validation_raw_sha256",
+          "registration_raw_sha256",
+          "implementation_lock_raw_sha256",
+          "calibration_raw_sha256",
+          "ordered_path_raw_sha256",
+          "test_unlocked"
+        ],
+        "unlock_record_test_unlocked_literal": true,
+        "no_overwrite": true,
+        "postcondition": "test artifact names the committed validation bytes and contains the exact in-memory unlock record; no later scientific mutation is allowed"
+      },
+      "integrity": {
+        "preconditions": [
+          "exactly one terminal chain holds: calibration FAIL with no validation/test artifacts; validation FAIL with no test artifact; or validation PASS followed by a completed test artifact",
+          "no registered stage remains legally open and every scientific artifact that exists is immutable"
+        ],
+        "seed_role": "none",
+        "run_count": 0,
+        "invocation_policy": "one no-overwrite integrity artifact may be written after scientific stages; it performs no registered scientific execution",
+        "input_hash_fields": [
+          "all legally existing source and artifact raw SHA256 values"
+        ],
+        "required_output_fields": [
+          "experiment",
+          "stage",
+          "ordered_path_raw_sha256",
+          "stage_history",
+          "registered_execution_counts",
+          "all_hashes_match",
+          "scientific_world_generation_count",
+          "scientific_artifact_mutation_count"
+        ],
+        "no_overwrite": true,
+        "postcondition": "read-only hashing only; generates no world and mutates no scientific artifact"
+      },
+      "verify": {
+        "preconditions": [
+          "integrity ledger exists"
+        ],
+        "seed_role": "none",
+        "run_count": 0,
+        "invocation_policy": "repeatable read-only verification; zero scientific runs and no output artifact",
+        "input_hash_fields": [
+          "integrity ledger and every referenced raw path"
+        ],
+        "required_output_fields": [
+          "verified",
+          "mismatches"
+        ],
+        "no_overwrite": true,
+        "postcondition": "generates no registered world, writes no artifact, and mutates no scientific file"
+      }
+    }
+  },
+  "failure_rules": {
+    "stop_before_train_on": [
+      "contract_or_prereg_mismatch",
+      "source_or_dependency_hash_mismatch",
+      "handcrafted_poison_or_order_failure",
+      "budget_or_allocation_mismatch",
+      "missing implementation lock"
+    ],
+    "stop_before_validation_on": [
+      "calibration infeasible",
+      "calibration integrity failure"
+    ],
+    "stop_after_validation_fail": true,
+    "forbidden_after_failure": [
+      "retune",
+      "drop seed",
+      "resample origin",
+      "average ratios",
+      "epsilon denominator",
+      "weaken hard zero",
+      "relabel control",
+      "open test"
+    ],
+    "any_post_lock_scientific_change": "V3 with fresh seeds"
+  },
+  "dimensionless_audit": {
+    "gate": "PASS",
+    "scope": "symbolic coordinate/unit consistency only",
+    "all_generator_and_score_coordinates_dimensionless": true,
+    "tanh_argument_dimensionless": true,
+    "standardization_is_like_quantity_ratio": true,
+    "resource_bytes_and_seconds_outside_scientific_core": true,
+    "empirical_support": false
+  },
+  "literature_safety": {
+    "role": "motivation and limitation only",
+    "planning_replay_source": "Jensen, Hennequin, and Mattar 2024",
+    "episodic_slow_model_source": "Spens and Burgess 2024",
+    "replay_sources": [
+      "Schapiro et al. 2018",
+      "Huang et al. 2024",
+      "Geva-Sagiv et al. 2023"
+    ],
+    "forbidden_inference": "No cited biology paper validates this algorithm, dream implementation, manifold, or AGI claim."
+  }
+}

@@ -1,0 +1,406 @@
+{
+  "schema_version": 1,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-10",
+  "experiment": "episodic_ltm_dream_factorial_v1",
+  "roadmap_stage": "G7-M",
+  "runner": "episodic_ltm_dream_factorial",
+  "standalone": true,
+  "extends": null,
+  "preregistration_integrity": {
+    "registered_pilot_executed": false,
+    "development_result_imported": false,
+    "train_seeds_opened": false,
+    "validation_seeds_opened": false,
+    "test_seeds_opened": false,
+    "registered_seed_results_may_not_change_this_contract": true,
+    "preimplementation_clerical_amendment": {
+      "previous_registration_sha256": "2901ee6151d6d12215e5e9025dd0e9720f8c17297fa891b39b437c1629b6b59f",
+      "previous_registration_commit": "48be628",
+      "registered_seed_results_seen_before_amendment": false,
+      "scope": "Fix metric pooling, RNG streams, query construction, join quantile, paired contrasts, provenance coverage, and the calibration artifact before implementation or any registered-seed execution; hypotheses and numerical gates are unchanged."
+    }
+  },
+  "transport": {
+    "registration_eol": "LF via experiments/preregistration/.gitattributes",
+    "artifact_eol": "LF via artifacts/agi/.gitattributes",
+    "json_writer": "UTF-8 bytes with one terminal LF"
+  },
+  "historical_boundary": {
+    "sparse_causal_bridge_v7": {
+      "result": "validation_FAIL",
+      "artifact": "artifacts/agi/sparse_causal_bridge_validation_v7.json",
+      "artifact_sha256_informational": "cc8d0b6945499a374306cd1269322184b9f4d49bb315c22e90a4a77865bea06d",
+      "role": "historical_context_only",
+      "is_parent": false,
+      "is_baseline": false,
+      "is_development_data": false,
+      "is_hash_lock_dependency": false
+    }
+  },
+  "hypotheses": {
+    "long_term_memory": "After context-B interference, a persistent observed-only episodic store restores the identity and instance-specific trajectory of an old context-A episode from a noisy partial cue while rejecting same-schema episodes that were never stored.",
+    "dream_like_recombination": "A bounded offline pass that recombines only observed fragments satisfying an inferred world/schema constraint and updates only missing slow-schema bindings improves fresh-seed valid novel-combination reconstruction without overwriting observed bindings.",
+    "integration": "The LTM-plus-dream cell satisfies both recall and novel-combination gates without material antagonism relative to the corresponding single-factor cells.",
+    "interaction": "The factorial interaction is estimated with a paired interval but is not required to be positive; synergy may be claimed only when its 95 percent lower bound is positive."
+  },
+  "claim_boundary": {
+    "allowed": "A known-slot, small synthetic, fixed-capacity demonstration of persistent associative recall and constrained offline completion of missing schema bindings.",
+    "forbidden": [
+      "unconstrained_free_generation",
+      "dream_or_sleep_consciousness",
+      "biological_hippocampal_or_cortical_mechanism",
+      "general_world_model",
+      "causal_discovery",
+      "planning_or_action_selection",
+      "semantic_memory",
+      "human_memory",
+      "AGI"
+    ],
+    "terminology": "Dream means dream-like constrained offline recombination only. A synthetic output is hypothetical schema content, never an observed episode or recalled memory."
+  },
+  "data_roles": {
+    "train": {
+      "seeds": [77100, 77101, 77102, 77103, 77104, 77105, 77106, 77107, 77108, 77109, 77110, 77111, 77112, 77113, 77114, 77115, 77116, 77117, 77118, 77119, 77120, 77121, 77122, 77123, 77124, 77125, 77126, 77127, 77128, 77129, 77130, 77131, 77132, 77133, 77134, 77135, 77136, 77137, 77138, 77139],
+      "role": "coordinate standardization and separate pre/post abstention-threshold calibration only"
+    },
+    "validation": {
+      "seeds": [78100, 78101, 78102, 78103, 78104, 78105, 78106, 78107, 78108, 78109, 78110, 78111, 78112, 78113, 78114, 78115, 78116, 78117, 78118, 78119, 78120, 78121, 78122, 78123, 78124, 78125, 78126, 78127, 78128, 78129, 78130, 78131, 78132, 78133, 78134, 78135, 78136, 78137, 78138, 78139],
+      "role": "first efficacy decision after implementation and train calibration are frozen"
+    },
+    "test": {
+      "seeds": [79100, 79101, 79102, 79103, 79104, 79105, 79106, 79107, 79108, 79109, 79110, 79111, 79112, 79113, 79114, 79115, 79116, 79117, 79118, 79119, 79120, 79121, 79122, 79123, 79124, 79125, 79126, 79127, 79128, 79129, 79130, 79131, 79132, 79133, 79134, 79135, 79136, 79137, 79138, 79139, 79140, 79141, 79142, 79143, 79144, 79145, 79146, 79147, 79148, 79149, 79150, 79151, 79152, 79153, 79154, 79155, 79156, 79157, 79158, 79159],
+      "role": "locked confirmation opened only after an all-of validation pass"
+    },
+    "unit_test_seed_rule": "No registered train, validation, or test seed may be executed by unit tests."
+  },
+  "factorial_design": {
+    "paired_unit": "master_seed",
+    "cells": {
+      "M00": {"persistent_ltm": false, "dream_update": false},
+      "M10": {"persistent_ltm": true, "dream_update": false},
+      "M01": {"persistent_ltm": false, "dream_update": true},
+      "M11": {"persistent_ltm": true, "dream_update": true}
+    },
+    "orthogonality": {
+      "same_generator_queries_order_and_rng_across_cells": true,
+      "same_slow_model_and_wake_updates_across_cells": true,
+      "same_offline_workspace_and_budget_in_M01_and_M11": true,
+      "no_ltm_cells_have_zero_queryable_episode_records_at_evaluation": true,
+      "dream_only_workspace_is_deleted_before_evaluation": true,
+      "positive_interaction_required": false
+    }
+  },
+  "generator": {
+    "backend": "numpy_cpu",
+    "contexts_in_order": ["A", "B"],
+    "context_B_role": "interference after all context-A wake observations",
+    "trajectory_steps": 12,
+    "state_dimension": 8,
+    "slots": {"prefix_steps": 5, "connector_steps": 2, "suffix_steps": 5},
+    "ports": 4,
+    "prefixes_per_port": 3,
+    "suffixes_per_port": 3,
+    "prefixes_per_context": 12,
+    "suffixes_per_context": 12,
+    "port_anchor_rule": "Draw an 8 by 8 standard-normal matrix, compute QR, normalize each Q column sign by the corresponding R diagonal, and use the first four Q columns.",
+    "context_transform_A": {"permutation": [0, 1, 2, 3, 4, 5, 6, 7], "signs": [1, 1, 1, 1, 1, 1, 1, 1]},
+    "context_transform_B": {"permutation": [1, 0, 3, 2, 5, 4, 7, 6], "signs": [1, -1, 1, -1, 1, -1, 1, -1]},
+    "context_transform_formula": "R_c(v)[k] = signs_c[k] * v[permutation_c[k]]",
+    "primitive_interior_ar": 0.6,
+    "prefix_endpoint": "prefix[-1] = port_anchor[g]",
+    "connector": "connector = [port_anchor[g], R_c(port_anchor[g])]",
+    "suffix_startpoint": "suffix[0] = R_c(port_anchor[g])",
+    "validity": "A pair is valid exactly when its opaque prefix and suffix nodes belong to the same context-local inferred bipartite connected component.",
+    "observed_local_edges_per_port": [[0, 0], [0, 1], [1, 1], [1, 2], [2, 2], [2, 0]],
+    "missing_valid_local_edges_per_port": [[0, 2], [1, 0], [2, 1]],
+    "local_id_permutation": "Independently permute opaque prefix and suffix local IDs for every seed and context before records are exposed.",
+    "observed_combinations_per_context": 24,
+    "missing_valid_combinations_per_context": 12,
+    "observed_instances_per_combination": 2,
+    "observed_episodes_per_context": 48,
+    "post_interference_observed_episodes": 96,
+    "episode_formula": "observed_episode = compositional_base + scaled stationary AR(1) instance residual",
+    "stationary_AR_formula": "u_0 is N(0,I); u_t = rho * u_(t-1) + sqrt(1-rho^2) * epsilon_t with epsilon_t iid N(0,I).",
+    "instance_residual_ar": 0.4,
+    "instance_residual_scale_default": 0.2,
+    "instance_residual_scale_at_steps": {"4": 0.05, "5": 0.05, "6": 0.05, "7": 0.05},
+    "rng": {
+      "constructor": "numpy.random.SeedSequence([master_seed, stream_id])",
+      "stream_ids": {"anchors": 0, "primitive_interiors": 1, "opaque_id_permutations": 2, "instance_residuals": 3, "bank_order": 4, "cue_masks": 5, "cue_noise": 6, "lures": 7, "invalid_queries": 8},
+      "separate_streams": ["anchors", "primitive_interiors", "opaque_id_permutations", "instance_residuals", "bank_order", "cue_masks", "cue_noise", "lures", "invalid_queries"],
+      "canonical_draw_order": "context A then B, port 0..3, local opaque pre-permutation id 0..2, time increasing, dimension increasing; edges use the registered list order and instances use index 0 then 1.",
+      "candidate_may_read_master_seed_or_stream_id": false
+    },
+    "primitive_construction": "For each seed/context/port/local primitive, draw prefix states 0..3 by the stationary AR rule and then replace prefix state 4 by the shared seed port anchor. Set suffix state 0 to the context transform of that anchor and draw suffix states 1..4 by the registered AR recurrence from that state. Anchors are drawn once per seed and shared by A and B."
+  },
+  "queries": {
+    "standardization": "Pool all 96 real wake episodes from every train seed. For each of the 96 flattened trajectory coordinates, fit the population mean and population standard deviation (ddof=0), then transform x to (x-mu)/max(sigma,1e-8). Validation/test and every cell reuse these frozen arrays.",
+    "all_similarity_and_rmse_coordinates_are_dimensionless": true,
+    "mask_sampling": "Within each query and each of prefix, connector, and suffix slots, draw one coordinate permutation from the cue_masks stream and take its first k entries. Recall masks use prefixes of the same permutation so 12-visible is a strict subset of 24-visible and 24-visible is a strict subset of 48-visible.",
+    "query_draw_order": "Recall positives in canonical context-A observed-edge then instance order; novel-valid in context A then B, port then registered missing-edge order; lures in context A then B, port then registered observed-edge order; invalids in context A then B, port then local index. Mask and noise draws follow this same order within each query family.",
+    "recall": {
+      "target": "the exact stored context-A observed episode including its instance residual",
+      "positive_queries_per_seed": 48,
+      "visible_counts": [12, 24, 48],
+      "primary_visible_count": 24,
+      "visible_counts_by_slot": {"12": [5, 2, 5], "24": [10, 4, 10], "48": [20, 8, 20]},
+      "masks_nested_within_each_slot": true,
+      "visible_noise_standard_deviation": 0.1,
+      "pre_and_post_queries_identical_and_read_only": true,
+      "hidden_coordinates_only_for_trajectory_rmse": true,
+      "registered_gate_and_calibration_visible_count": 24,
+      "visible_counts_12_and_48_role": "diagnostic_only"
+    },
+    "novel_valid": {
+      "queries_per_seed": 24,
+      "contexts": ["A", "B"],
+      "target": "noise-free compositional base for every missing valid binding",
+      "visible_count": 24,
+      "visible_counts_by_slot": [10, 4, 10],
+      "visible_noise_standard_deviation": 0.1
+    },
+    "same_schema_unstored_lure": {
+      "queries_per_seed": 48,
+      "construction": "A fresh instance residual for an observed binding that is never inserted into the observed store.",
+      "visible_count": 24,
+      "visible_counts_by_slot": [10, 4, 10],
+      "visible_noise_standard_deviation": 0.1
+    },
+    "invalid": {
+      "queries_per_seed": 24,
+      "construction": "For each context, port g, and local index j, concatenate prefix(g,j), the context connector for g, and suffix((g+1) mod 4,j), giving 12 deterministic cross-component queries per context before opaque-ID permutation.",
+      "visible_count": 24,
+      "visible_counts_by_slot": [10, 4, 10],
+      "visible_noise_standard_deviation": 0.1,
+      "metric_scope": "No reconstruction target or NRMSE is defined; only abstention is scored.",
+      "required_response": "abstain"
+    },
+    "candidate_inputs_only": ["opaque_context_token", "opaque_prefix_token", "opaque_suffix_token", "cue_values", "cue_mask", "read_only_observed_records_when_LTM_or_offline_workspace_is_enabled"],
+    "forbidden_candidate_inputs": ["episode_target_id", "hidden_target_coordinates", "port_label", "context_transform", "compositional_base", "valid_or_invalid_label", "stored_or_lure_label", "validation_or_test_outcome"]
+  },
+  "long_term_memory": {
+    "capacity": 96,
+    "allowed_records": "real wake observations only",
+    "pre_interference_items": 48,
+    "post_interference_items": 96,
+    "eviction": "none because the registered capacity equals the registered observed count",
+    "recurrent_recall": {
+      "initialization": "z0 = mask * standardized_noisy_cue; all hidden coordinates are zero",
+      "initial_score": "masked cosine between the observed cue coordinates and each standardized stored trace",
+      "beta": 12.0,
+      "first_update": "a0 = softmax(beta * initial_score); z1 = clamp_observed(cue, sum_i a0_i h_i)",
+      "later_update": "a_r = softmax(beta * cosine(z_r, h_i)); hidden(z_next) = 0.5 * hidden(z_r) + 0.5 * hidden(sum_i a_r_i h_i); observed coordinates remain clamped",
+      "damping": 0.5,
+      "maximum_iterations": 20,
+      "convergence_hidden_rms": 1e-6,
+      "identity": "argmax of final attention only when the initial-score abstention gate accepts",
+      "confidence": "maximum initial masked cosine before recurrent self-reinforcement"
+    },
+    "threshold_calibration": {
+      "split": "train_only",
+      "separate_bank_sizes": [48, 96],
+      "candidate_thresholds": "Sorted unique train initial-confidence values plus positive infinity.",
+      "feasibility": "same-schema unstored-lure false episode recall must be at most 0.025",
+      "objective": "For each bank size, pool primary 24-visible train positives and lures across all 40 train seeds. Lexicographically maximize positive episode identity accuracy with every abstention counted wrong, minimize lure false recall over every lure query, then choose the largest threshold.",
+      "acceptance_rule": "Accept if and only if confidence is strictly greater than the calibrated threshold.",
+      "validation_or_test_recalibration": false
+    },
+    "synthetic_or_hypothetical_insertions_allowed": false,
+    "abstention_reconstruction": "For an observed-binding positive query that is not accepted as an episode, return the slow-schema observed-binding prototype with schema_fallback provenance; it remains uncovered and wrong for identity but is still included in hidden NRMSE."
+  },
+  "slow_schema_model": {
+    "observed_binding_entry": "Mean of the two real wake episode instances for that context-prefix-suffix binding.",
+    "missing_binding_without_dream": "Return the mean observed binding prototype for the inferred context and component with provenance schema_fallback.",
+    "episode_identity_output_allowed": false,
+    "observed_binding_overwrite_allowed": false,
+    "online_update_during_evaluation": false
+  },
+  "dream_like_offline_recombination": {
+    "function": "constrained_missing_binding_dream",
+    "input": "A read-only snapshot of real wake records; M01 and M11 receive identical snapshots.",
+    "workspace_persistent_after_update": false,
+    "component_inference": "Connected components of each context-local opaque prefix-suffix co-occurrence bipartite graph.",
+    "prefix_prototype": "Mean observed prefix slot for each opaque context-prefix token.",
+    "connector_prototype": "Mean observed connector slot for each inferred context-component.",
+    "suffix_prototype": "Mean observed suffix slot for each opaque context-suffix token.",
+    "proposal": "prefix_prototype concatenated with connector_prototype and suffix_prototype",
+    "proposal_scope": "Every unobserved prefix-suffix cross-product within one inferred context-component, and no other pair.",
+    "join_threshold": "The train-wake 0.99 quantile of standardized prefix-to-connector and connector-to-suffix endpoint discontinuity, frozen before validation.",
+    "join_threshold_exact": "For every train-seed observed-binding mean prototype compute d_left = ||prefix[-1]-connector[0]||_2/sqrt(8) and d_right = ||connector[-1]-suffix[0]||_2/sqrt(8) after coordinate standardization. Pool both values over 40 seeds, 2 contexts, and 24 bindings, and use numpy.quantile(pool,0.99,method='linear') as one global threshold. A proposal is accepted only when both RMS distances are at or below it.",
+    "acceptance": ["same_context", "same_inferred_component", "both_join_discontinuities_at_or_below_frozen_threshold", "binding_missing_from_slow_schema_table"],
+    "accepted_per_context": 12,
+    "accepted_per_seed": 24,
+    "offline_update_passes": 1,
+    "destination": "missing slow schema table binding only",
+    "provenance": {"source": "synthetic", "epistemic_status": "hypothetical", "may_be_called_observed_or_recalled": false},
+    "forbidden": ["fresh_random_latent", "free_generation", "cross_context_splice", "cross_component_splice", "heldout_target_read", "observed_binding_overwrite", "PersistentEpisodicStore.insert_real", "any_LTM_insertion_or_mutation"]
+  },
+  "execution_path_separation": {
+    "module": "reality_stone/python/reality_stone/clarus/episodic_ltm_dream_bridge.py",
+    "runner_function": "run_episodic_ltm_dream_gate",
+    "cli": "examples/agi/episodic_ltm_dream_bridge_gate.py",
+    "recall_path": ["PersistentEpisodicStore.insert_real", "recurrent_clamped_recall"],
+    "dream_path": ["constrained_missing_binding_dream", "update_missing_slow_binding"],
+    "dream_function_must_be_pure_over_store_input": true,
+    "recall_path_may_call_dream_path": false,
+    "dream_path_may_call_recurrent_recall": false,
+    "synthetic_provenance_may_enter_recall_index": false
+  },
+  "metrics": {
+    "recall": ["post_old_A_identity_accuracy", "post_old_A_positive_coverage", "post_old_A_accepted_wrong_rate", "post_old_A_hidden_nrmse", "pre_to_post_identity_drop", "pre_to_post_hidden_nrmse_increase", "convergence_rate", "extra_step_stability_rate", "clamp_max_error"],
+    "novel_combination": ["valid_output_coverage", "noise_free_base_hidden_nrmse", "output_provenance"],
+    "false_memory": ["unstored_lure_false_episode_recall_rate", "novel_valid_tagged_recalled_rate"],
+    "forgetting_and_distortion": ["slow_model_only_old_A_schema_nrmse", "current_B_observed_nrmse", "observed_binding_overwrite_count", "observed_binding_hash_change_count"],
+    "constraints": ["accepted_dream_port_violation_count", "accepted_dream_context_violation_count", "accepted_dream_join_violation_count", "invalid_query_nonabstain_rate", "synthetic_to_ltm_insert_count", "heldout_target_read_count"],
+    "aggregation": "Compute every metric per master seed, report all four cell means and paired seed-level contrasts; no composite score may hide a failed component."
+  },
+  "metric_definitions": {
+    "positive_coverage": "Fraction of positive recall queries accepted as a stored episode; abstention is uncovered.",
+    "valid_output_coverage": "Fraction of novel valid queries with a binding-specific observed or synthetic table entry. schema_fallback and abstention both count as uncovered even though schema_fallback is still scored for reconstruction error.",
+    "hidden_nrmse_when_uncovered": "Always score the returned schema_fallback reconstruction on hidden coordinates so abstention or fallback cannot improve error by omitting a query.",
+    "accepted_wrong_rate": "Among all positive recall queries, fraction accepted with the wrong stored episode identity; denominator is not restricted to accepted queries.",
+    "novel_valid_tagged_recalled": "Any novel valid query whose provenance is recalled, regardless of reconstruction quality.",
+    "hidden_nrmse_per_seed": "After frozen train standardization, E_s = sqrt(sum over all queries and hidden coordinates of (prediction-target)^2 divided by the number of included scalar coordinates). There is no additional normalization denominator and no mean of per-query roots.",
+    "hidden_nrmse_aggregation": "Cell reports are arithmetic means of seed-level E_s. Paired intervals and factorial effects operate on seed-level E_s contrasts.",
+    "slow_schema_observed_nrmse": "For old-A and current-B schema distortion, compare each observed real episode with its slow-table observed-binding prototype over all 96 standardized scalar coordinates and take one pooled root per seed.",
+    "observed_binding_hash": "SHA-256 of context, opaque prefix token, opaque suffix token, and the C-order float64 standardized prototype bytes in canonical sorted-key order, computed before and after the dream update.",
+    "recall_numerical_scope": "Convergence rate, extra-step stability, and clamp error are measured separately for M10 and M11 on post-interference old-A positive queries with the primary 24-visible mask.",
+    "extra_step_stability": "After registered convergence or iteration 20, perform one additional registered recurrent update; stability requires unchanged accepted identity and hidden-coordinate RMS delta at most 1e-6."
+  },
+  "paired_inference": {
+    "confidence": 0.95,
+    "validation_critical_value_n40": 2.022690911734728,
+    "test_critical_value_n60": 2.0009953780882674,
+    "interval": "mean_difference plus or minus critical_value times sample_standard_deviation divided by sqrt(number_of_seeds)",
+    "higher_is_better_factorial": {
+      "L_main": "0.5 * ((M10 - M00) + (M11 - M01))",
+      "D_main": "0.5 * ((M01 - M00) + (M11 - M10))",
+      "interaction": "M11 - M10 - M01 + M00"
+    },
+    "error_metrics": "Negate error before applying the factorial formulas.",
+    "absolute_nrmse_effects_for_inference": "For each seed, L_s = 0.5*((E_M00-E_M10)+(E_M01-E_M11)) and D_s = 0.5*((E_M00-E_M01)+(E_M10-E_M11)). CI lower bounds are computed from these seed-level absolute standardized-NRMSE contrasts.",
+    "mean_nrmse_reduction_for_magnitude_gate": "Let bar_E_cell be the arithmetic mean of seed-level NRMSE. L reduction = 1-(bar_E_M10+bar_E_M11)/(bar_E_M00+bar_E_M01); D reduction = 1-(bar_E_M01+bar_E_M11)/(bar_E_M00+bar_E_M10). The registered 0.35 and 0.30 minima are dimensionless relative fractions under this formula, while paired CI gates remain absolute contrasts. A zero denominator is hard invalid.",
+    "strict_seed_win": "For the dream NRMSE gate, a strict seed win means D_s > 0; zero is a tie and not a win.",
+    "matched_no_dream_degradation": "For every registered upper-degradation gate, M01-M00 and M11-M10 are tested separately with paired seed-level upper confidence bounds; averaging the two contrasts is forbidden."
+  },
+  "all_of_gate": {
+    "ltm_recall": {
+      "M10_and_M11_post_identity_accuracy_min": 0.8,
+      "M10_and_M11_post_positive_coverage_min": 0.8,
+      "M10_and_M11_post_hidden_nrmse_max": 0.45,
+      "M10_and_M11_post_accepted_wrong_rate_max": 0.05,
+      "L_main_identity_gain_min": 0.4,
+      "L_main_identity_paired_ci95_lower_min": 0.0,
+      "L_main_hidden_nrmse_reduction_min": 0.35,
+      "L_main_hidden_nrmse_paired_ci95_lower_min": 0.0,
+      "M10_and_M11_pre_to_post_identity_drop_max": 0.05,
+      "M10_and_M11_pre_to_post_hidden_nrmse_increase_max": 0.05,
+      "convergence_rate_min": 0.99,
+      "extra_step_stability_rate_min": 0.99,
+      "clamp_max_error_max": 1e-12
+    },
+    "dream_novel_combination": {
+      "M01_and_M11_valid_output_coverage_min": 0.9,
+      "M01_and_M11_hidden_nrmse_max": 0.35,
+      "D_main_hidden_nrmse_reduction_min": 0.3,
+      "D_main_hidden_nrmse_paired_ci95_lower_min": 0.0,
+      "D_main_strict_seed_win_fraction_min": 0.7,
+      "D_main_valid_coverage_gain_min": 0.5,
+      "D_main_valid_coverage_paired_ci95_lower_min": 0.0,
+      "accepted_synthetic_bindings_per_seed_required": 24,
+      "accepted_constraint_violation_count_max": 0
+    },
+    "integration_no_antagonism": {
+      "M11_recall_identity_minus_M10_min": -0.02,
+      "M11_minus_M10_recall_nrmse_paired_ci95_upper_max": 0.02,
+      "M11_novel_coverage_minus_M01_min": -0.02,
+      "M11_minus_M01_novel_nrmse_paired_ci95_upper_max": 0.02,
+      "M11_must_pass_both_absolute_gate_families": true,
+      "positive_interaction_required": false
+    },
+    "false_memory_and_provenance": {
+      "M10_and_M11_unstored_lure_false_episode_recall_rate_max": 0.05,
+      "all_cells_invalid_query_nonabstain_rate_max": 0.02,
+      "all_cells_novel_valid_tagged_recalled_rate_max": 0.01,
+      "synthetic_to_ltm_insert_count_max": 0
+    },
+    "forgetting_schema_and_integrity": {
+      "dream_minus_matched_no_dream_current_B_nrmse_paired_ci95_upper_max": 0.02,
+      "dream_minus_matched_no_dream_old_A_slow_schema_nrmse_paired_ci95_upper_max": 0.02,
+      "observed_binding_overwrite_count_max": 0,
+      "observed_binding_hash_change_count_max": 0,
+      "cross_context_or_component_dream_accept_count_max": 0,
+      "heldout_target_read_count_max": 0,
+      "nonfinite_metric_or_prediction_count_max": 0
+    }
+  },
+  "failure_rules": {
+    "all_of": "Any failed registered check makes the split FAIL; passing averages may not override false-memory, forgetting, distortion, constraint, leakage, or provenance failures.",
+    "validation_fail": "Preserve the validation artifact, keep test unopened, and use a new version with fresh seeds for any change.",
+    "test_fail": "Preserve the test artifact and do not reinterpret or tune the same locked test into a pass.",
+    "hard_invalid": ["registered_seed_opened_out_of_order", "target_or_port_truth_read", "validation_or_test_recalibration", "config_or_implementation_hash_mismatch", "synthetic_written_as_observed", "synthetic_inserted_into_LTM", "nonfinite_output"],
+    "interpretation": {
+      "L_only_pass": "Persistent associative recall only; no dream or novel-generalization claim.",
+      "D_only_pass": "Constrained offline schema-table augmentation only; no long-term episodic-memory or biological-dream claim.",
+      "M11_pass_interaction_interval_includes_zero": "Coexistence without a synergy claim.",
+      "numerical_fixed_point_without_identity": "A numerical fixed point, not an episodic attractor."
+    }
+  },
+  "test_lock": {
+    "open_only_after_validation_all_of_pass": true,
+    "validation_artifact": "artifacts/agi/episodic_ltm_dream_factorial_validation_v1.json",
+    "test_artifact": "artifacts/agi/episodic_ltm_dream_factorial_test_v1.json",
+    "train_calibration_artifact": "artifacts/agi/episodic_ltm_dream_factorial_train_calibration_v1.json",
+    "train_calibration_artifact_contract": "UTF-8 JSON with one LF; contains frozen mu, sigma, tau_pre, tau_post, join_threshold, raw registration SHA-256, and implementation SHA-256. Validation and test must read byte-identical calibration bytes.",
+    "failed_validation_artifact_must_be_preserved": true,
+    "require_identical_raw_registration_sha256": true,
+    "require_identical_train_calibration_sha256": true,
+    "require_identical_implementation_sha256": [
+      "reality_stone/python/reality_stone/clarus/episodic_ltm_dream_bridge.py",
+      "examples/agi/episodic_ltm_dream_bridge_gate.py"
+    ],
+    "test_may_change_generator_model_threshold_metric_or_gate": false,
+    "early_test_open_is_hard_invalid": true
+  },
+  "resources": {
+    "external_download_bytes": 0,
+    "write_raw_trajectory_files": false,
+    "backend": "numpy_cpu",
+    "persistent_observed_items_M10_M11": 96,
+    "persistent_observed_items_M00_M01": 0,
+    "persistent_observed_trace_bytes_max": 131072,
+    "offline_synthetic_bindings_per_dream_cell_per_seed": 24,
+    "offline_update_passes": 1,
+    "validation_wall_seconds_target_report_only": 45,
+    "test_wall_seconds_target_report_only": 60,
+    "wall_time_is_not_a_scientific_efficacy_gate": true
+  },
+  "literature_safety": [
+    {
+      "source": "https://www.nature.com/articles/s41562-023-01799-z",
+      "allowed_inspiration": "one-shot autoassociative traces, partial-cue reconstruction, and separation of fast episodes from a slower generative model",
+      "not_supported": "that this implementation is a biological hippocampal-cortical algorithm or a dream"
+    },
+    {
+      "source": "https://www.nature.com/articles/s41467-018-06213-1",
+      "allowed_inspiration": "separate measurement of replay and later memory",
+      "not_supported": "the registered recombination rule or a combined surprise-reward-failure priority"
+    },
+    {
+      "source": "https://www.nature.com/articles/s41467-024-51582-5",
+      "allowed_inspiration": "separate item reactivation from ordered replay",
+      "not_supported": "causal direction, this algorithm, or dream content"
+    },
+    {
+      "source": "https://www.nature.com/articles/s41593-023-01324-5",
+      "allowed_inspiration": "offline coordination can be tested against a timing control",
+      "not_supported": "copying biological frequencies or calling this synthetic update sleep"
+    },
+    {
+      "source": "https://www.nature.com/articles/s41593-024-01675-7",
+      "allowed_inspiration": "world-model rollout and computation cost should be separately measured in later planning work",
+      "not_supported": "planning, general physics, or a valid-world manifold in this recall-and-binding experiment"
+    }
+  ]
+}

@@ -1,0 +1,436 @@
+{
+  "schema_version": 4,
+  "status": "locked_pre_implementation",
+  "registered_on": "2026-08-11",
+  "experiment": "agi_world_memory_integration_v4",
+  "roadmap_stage": "G9-CBM/V4",
+  "runner": "agi_world_memory_integration_v4",
+  "standalone": false,
+  "extends": "agi_world_memory_integration_v3.json",
+  "supersedes": "agi_world_memory_integration_v3",
+  "predecessor": {
+    "status": "BLOCKED_PRE_IMPLEMENTATION",
+    "registration_git_commit": "2d42382eb96b72d28a28f86e8c30dd17e70a0ea4",
+    "blocked_prototype_git_commit": "ce628ce2ed3d7342ca27df4285db0937a26d6e04",
+    "registration_raw_sha256": "bb98be25d60484f0f477b052e97e66be0aa416ebf33712ca269c09f7bfa3758b",
+    "implementation_lock_created": false,
+    "train_execution_count": 0,
+    "validation_execution_count": 0,
+    "test_execution_count": 0,
+    "reason": "Shuffled-binding totalization, lesion rollout, zero-synthetic source code, actual resource ownership, and irreversible stage opening were not uniquely executable."
+  },
+  "amendment_integrity": {
+    "path": "_workspace/ce/agi-world-memory-integration-v1-20260810/revisions/34-v4-implementation-closure-amendment.md",
+    "raw_sha256": "47ba50da367cf4fea73b2525c988ba813f101a9d2f197b67d3fe9b4e4b7b1ec3",
+    "status": "LOCKED_PRE_IMPLEMENTATION",
+    "base_contract_path": "_workspace/ce/agi-world-memory-integration-v1-20260810/revisions/31-v3-boundary-amendment.md",
+    "base_contract_raw_sha256": "9b2e7cc13675798ca2db303aa4bebe984fad9705b12984560a7ad1ef955a7340",
+    "base_registration_path": "experiments/preregistration/agi_world_memory_integration_v3.json",
+    "base_registration_raw_sha256": "bb98be25d60484f0f477b052e97e66be0aa416ebf33712ca269c09f7bfa3758b"
+  },
+  "merge_semantics": {
+    "algorithm": "load base recursively; verify every declared base/amendment raw SHA at every generation; deep-copy the fully merged base; interpret each delete_paths item as an array of exact JSON object keys, delete in listed order and hard-fail if a segment or leaf is absent; recursively merge overrides where objects merge and arrays/scalars replace; then assign every V4 top-level key other than overrides into the merged object exactly as serialized",
+    "object_key_order": "scientifically irrelevant except where a registered hashing recipe explicitly preserves listed object-key order; canonical artifact JSON sorts keys",
+    "arrays": "replace, never concatenate",
+    "null": "literal null unless a path is explicitly listed in delete_paths",
+    "unknown_override_path": "hard fail unless the exact array of JSON object-key segments is listed in allowed_new_override_paths",
+    "allowed_new_override_paths": [
+      ["preregistration_integrity", "v4_pilot_executed"],
+      ["preregistration_integrity", "v4_static_content_audit_required"],
+      ["preregistration_integrity", "predecessor_status"],
+      ["preregistration_integrity", "scientific_post_lock_change_requires_v5_fresh_seeds"],
+      ["data_roles", "train", "fresh_after_v3_block"],
+      ["data_roles", "validation", "fresh_after_v3_block"],
+      ["data_roles", "test", "fresh_after_v3_block"],
+      ["test_lock", "calibration_intent_path"],
+      ["test_lock", "validation_intent_path"],
+      ["test_lock", "test_intent_path"],
+      ["artifact_state_machine", "stages", "calibration_intent"],
+      ["artifact_state_machine", "stages", "validation_intent"],
+      ["artifact_state_machine", "stages", "test_intent"]
+    ],
+    "merged_registration_sha256_recipe": "SHA256(json.dumps(merged_registration,sort_keys=True,ensure_ascii=True,separators=(',',':'),allow_nan=False).encode('utf-8'))",
+    "raw_v4_registration_sha256_locked_before_implementation": true
+  },
+  "delete_paths": [
+    ["preregistration_integrity", "scientific_post_lock_change_requires_v4_fresh_seeds"],
+    ["data_roles", "train", "fresh_after_v2_block"],
+    ["data_roles", "validation", "fresh_after_v2_block"],
+    ["data_roles", "test", "fresh_after_v2_block"]
+  ],
+  "overrides": {
+    "preregistration_integrity": {
+      "contract_path": "_workspace/ce/agi-world-memory-integration-v1-20260810/revisions/34-v4-implementation-closure-amendment.md",
+      "contract_raw_sha256": "47ba50da367cf4fea73b2525c988ba813f101a9d2f197b67d3fe9b4e4b7b1ec3",
+      "contract_status": "LOCKED_PRE_IMPLEMENTATION",
+      "base_contract_raw_sha256": "9b2e7cc13675798ca2db303aa4bebe984fad9705b12984560a7ad1ef955a7340",
+      "predecessor_registration_raw_sha256": "bb98be25d60484f0f477b052e97e66be0aa416ebf33712ca269c09f7bfa3758b",
+      "predecessor_status": "BLOCKED_PRE_IMPLEMENTATION",
+      "v4_pilot_executed": false,
+      "v4_static_content_audit_required": "PASS before implementation lock",
+      "development_seed_executed": false,
+      "train_seeds_opened": false,
+      "validation_seeds_opened": false,
+      "test_seeds_opened": false,
+      "scientific_post_lock_change_requires_v5_fresh_seeds": true
+    },
+    "data_roles": {
+      "train": {
+        "seeds": [95100, 95101, 95102, 95103, 95104, 95105, 95106, 95107, 95108, 95109, 95110, 95111, 95112, 95113, 95114, 95115, 95116, 95117, 95118, 95119, 95120, 95121, 95122, 95123, 95124, 95125, 95126, 95127, 95128, 95129, 95130, 95131, 95132, 95133, 95134, 95135, 95136, 95137, 95138, 95139],
+        "count": 40,
+        "purpose": "V4 train-only shared core, normalizers, scoped recall threshold including symbolic REJECT_ALL, and residual join threshold",
+        "run_exactly_once": true,
+        "fresh_after_v3_block": true
+      },
+      "validation": {
+        "seeds": [96100, 96101, 96102, 96103, 96104, 96105, 96106, 96107, 96108, 96109, 96110, 96111, 96112, 96113, 96114, 96115, 96116, 96117, 96118, 96119, 96120, 96121, 96122, 96123, 96124, 96125, 96126, 96127, 96128, 96129, 96130, 96131, 96132, 96133, 96134, 96135, 96136, 96137, 96138, 96139],
+        "count": 40,
+        "purpose": "V4 locked model-selection gate with per-origin true-cost feasibility assertion",
+        "run_exactly_once": true,
+        "fresh_after_v3_block": true
+      },
+      "test": {
+        "seeds": [97100, 97101, 97102, 97103, 97104, 97105, 97106, 97107, 97108, 97109, 97110, 97111, 97112, 97113, 97114, 97115, 97116, 97117, 97118, 97119, 97120, 97121, 97122, 97123, 97124, 97125, 97126, 97127, 97128, 97129, 97130, 97131, 97132, 97133, 97134, 97135, 97136, 97137, 97138, 97139, 97140, 97141, 97142, 97143, 97144, 97145, 97146, 97147, 97148, 97149, 97150, 97151, 97152, 97153, 97154, 97155, 97156, 97157, 97158, 97159],
+        "count": 60,
+        "purpose": "V4 locked confirmation after committed validation all-of PASS only",
+        "run_exactly_once": true,
+        "locked": true,
+        "fresh_after_v3_block": true
+      }
+    },
+    "controls": {
+      "shuffled_binding": "for origin i in each fixed (context,port) stratum, preserve its own M10 recall audit but compute q_hat from the already completed positive view V[(i+1) mod 3], accepted exemplar or registered R1 fallback regardless of acceptance, minus origin i's own schema anchor",
+      "unconstrained_lesion": "candidate rollout and every non-lesion-diagnostic primitive are byte-identical to M00; only expose the common shadow lesion audit invalid_splice_rate=21/24 and never insert lesion objects into schema/action index",
+      "zero_synthetic": "preserve M01 dream calls and audits; every valid missing lookup uses component fallback before rollout and returns resolved key with source=3, never source=2"
+    },
+    "calibration": {
+      "recall_threshold": {
+        "candidates": "sorted unique finite positive/lure confidence values plus one nonnumeric symbolic REJECT_ALL, all actually evaluated",
+        "objective_order": [
+          "maximize positive correct-identity count/960 with abstention wrong",
+          "minimize lure-accept count/960",
+          "on equality symbolic REJECT_ALL outranks all finite thresholds; otherwise choose largest finite tau"
+        ],
+        "reject_all_winner_means_infeasible": true,
+        "persisted_tau_must_be_finite": true,
+        "empty_nonfinite_count_mismatch_or_nonunique_complete_lexicographic_selector_hard_fail": true
+      }
+    },
+    "actions_and_planning": {
+      "split_local_pre_candidate_assertions": "for every legally opened validation/test origin, among generator-valid IDs 0..5 at least one sealed true J is <=25 and at least one is >25; IDs 6..7 cannot witness; failure writes terminal split FAIL without resampling"
+    },
+    "test_lock": {
+      "registration_path": "experiments/preregistration/agi_world_memory_integration_v4.json",
+      "module_path": "reality_stone/python/reality_stone/clarus/agi_world_memory_integration_v4.py",
+      "runner_path": "examples/agi/agi_world_memory_integration_v4_gate.py",
+      "unit_test_path": "tests/test_agi_world_memory_integration_v4.py",
+      "integrity_test_path": "tests/test_agi_world_memory_integration_integrity_v4.py",
+      "implementation_lock_path": "artifacts/agi/agi_world_memory_integration_implementation_lock_v4.json",
+      "calibration_intent_path": "artifacts/agi/agi_world_memory_integration_calibration_intent_v4.json",
+      "calibration_path": "artifacts/agi/agi_world_memory_integration_train_calibration_v4.json",
+      "validation_intent_path": "artifacts/agi/agi_world_memory_integration_validation_intent_v4.json",
+      "validation_path": "artifacts/agi/agi_world_memory_integration_validation_v4.json",
+      "test_intent_path": "artifacts/agi/agi_world_memory_integration_test_intent_v4.json",
+      "test_path": "artifacts/agi/agi_world_memory_integration_test_v4.json",
+      "integrity_path": "artifacts/agi/agi_world_memory_integration_integrity_v4.json",
+      "unlock_record": "in-memory UnlockRecordV4 serialized inside test intent and test artifact"
+    },
+    "implementation_dependency_manifest": {
+      "ordered_primary_paths": [
+        "experiments/preregistration/agi_world_memory_integration_v4.json",
+        "reality_stone/python/reality_stone/clarus/agi_world_memory_integration_v4.py",
+        "examples/agi/agi_world_memory_integration_v4_gate.py",
+        "tests/test_agi_world_memory_integration_v4.py",
+        "tests/test_agi_world_memory_integration_integrity_v4.py"
+      ],
+      "ordered_dependency_paths": [
+        "experiments/preregistration/agi_world_memory_integration_v3.json",
+        "reality_stone/python/reality_stone/clarus/agi_world_memory_integration_v3.py",
+        "experiments/preregistration/episodic_ltm_dream_factorial_v2.json",
+        "reality_stone/python/reality_stone/clarus/episodic_ltm_dream_bridge_v2.py",
+        "reality_stone/python/reality_stone/clarus/episodic_ltm_dream_bridge.py"
+      ],
+      "ordered_source_paths": [
+        "experiments/preregistration/agi_world_memory_integration_v4.json",
+        "reality_stone/python/reality_stone/clarus/agi_world_memory_integration_v4.py",
+        "examples/agi/agi_world_memory_integration_v4_gate.py",
+        "tests/test_agi_world_memory_integration_v4.py",
+        "tests/test_agi_world_memory_integration_integrity_v4.py",
+        "experiments/preregistration/agi_world_memory_integration_v3.json",
+        "reality_stone/python/reality_stone/clarus/agi_world_memory_integration_v3.py",
+        "experiments/preregistration/episodic_ltm_dream_factorial_v2.json",
+        "reality_stone/python/reality_stone/clarus/episodic_ltm_dream_bridge_v2.py",
+        "reality_stone/python/reality_stone/clarus/episodic_ltm_dream_bridge.py"
+      ],
+      "callable_boundaries": [
+        "reality_stone.clarus.agi_world_memory_integration_v4.scoped_hard_recall_v4",
+        "reality_stone.clarus.agi_world_memory_integration_v4.codec_residual_view_v4",
+        "reality_stone.clarus.agi_world_memory_integration_v4.constrained_residual_completion_v4",
+        "reality_stone.clarus.agi_world_memory_integration_v4.execute_candidate_v4",
+        "reality_stone.clarus.agi_world_memory_integration_v4.evaluate_factorial_seed_v4",
+        "reality_stone.clarus.agi_world_memory_integration_v4.run_agi_world_memory_integration_v4_gate",
+        "reality_stone.clarus.agi_world_memory_integration_v4.ConditionArenaV4",
+        "reality_stone.clarus.agi_world_memory_integration_v4.ActualCounterV4",
+        "reality_stone.clarus.agi_world_memory_integration_v4.TempArenaV4",
+        "reality_stone.clarus.agi_world_memory_integration_v3.load_merged_registration_v3",
+        "reality_stone.clarus.agi_world_memory_integration_v3.scoped_hard_recall_v3",
+        "reality_stone.clarus.agi_world_memory_integration_v3.codec_residual_view_v3",
+        "reality_stone.clarus.agi_world_memory_integration_v3.constrained_residual_completion_v3",
+        "reality_stone.clarus.agi_world_memory_integration_v3.execute_candidate_v3",
+        "reality_stone.clarus.agi_world_memory_integration_v3.fit_shared_core_v3",
+        "reality_stone.clarus.agi_world_memory_integration_v3._generate_seed_world_v3",
+        "reality_stone.clarus.agi_world_memory_integration_v3._make_store_schema_action",
+        "reality_stone.clarus.agi_world_memory_integration_v3.build_evaluation_cues_v3",
+        "reality_stone.clarus.agi_world_memory_integration_v3.planning_cost_v3",
+        "reality_stone.clarus.agi_world_memory_integration_v3.paired_interval_v3",
+        "reality_stone.clarus.agi_world_memory_integration_v3.factorial_effects_v3",
+        "reality_stone.clarus.episodic_ltm_dream_bridge_v2.hard_cue_anchored_recall"
+      ],
+      "codec_strip_boundary": "codec_residual_view_v4, optionally delegating only to the hashed V3 boundary, is the sole raw/standardized (12,8) to residual-only (12,4) conversion; columns 4:8 may not cross"
+    },
+    "artifact_state_machine": {
+      "global_rules": {
+        "no_overwrite": true,
+        "deleting_an_artifact_never_authorizes_rerun": true,
+        "registered_role_run_counts_are_append_only_history": true,
+        "registration_must_be_git_tracked_clean_and_HEAD_identical_before_implementation_lock": true,
+        "failed_or_invalid_stage_artifact_is_preserved": true
+      },
+      "stages_ordered": [
+        "preregistration",
+        "implementation_lock",
+        "calibration_intent",
+        "calibration",
+        "validation_intent",
+        "validation",
+        "test_intent",
+        "test",
+        "integrity",
+        "verify"
+      ],
+      "stages": {
+        "preregistration": {
+          "preconditions": [
+            "V4 amendment is LOCKED_PRE_IMPLEMENTATION and recursive V3/V2 base and amendment raw hashes match",
+            "all V2, V3, and V4 registered train, validation, and test execution counts are zero"
+          ],
+          "postcondition": "exact V4 registration and amendment bytes are committed, tracked, clean at their paths, and HEAD-identical"
+        },
+        "implementation_lock": {
+          "preconditions": [
+            "preregistration postcondition holds",
+            "V4 module, runner, and both V4 tests exist and all ten ordered source paths are tracked, clean, and HEAD-identical",
+            "every V4 artifact and intent path is absent and has no Git index/history deletion witness",
+            "the exact registered pytest command produces structural exit-zero evidence; a literal success Boolean is forbidden"
+          ],
+          "seed_role": "none; handcrafted fixtures only",
+          "run_count": 0,
+          "invocation_policy": "explicit exact registered output path; O_EXCL create once; zero registered seeds and no alternate helper"
+        },
+        "calibration_intent": {
+          "preconditions": [
+            "implementation lock exists and every current source, callable, NumPy, allocation, and handcrafted-test evidence field verifies",
+            "calibration intent/artifact and all later V4 intent/artifact paths are absent with no Git index/history deletion witness"
+          ],
+          "seed_role": "none",
+          "run_count": 0,
+          "invocation_policy": "O_EXCL canonical intent only; zero RNG/world; commit, clean, and HEAD-identical before calibration",
+          "required_output_fields": ["experiment", "stage", "intended_stage", "intended_output_path", "status", "registration_raw_sha256", "implementation_lock_raw_sha256", "predecessor_artifact_raw_sha256", "unlock_record", "registered_seed_execution_count_before", "canonical_payload_sha256_excluding_this_field"],
+          "no_overwrite": true,
+          "postcondition": "calibration intent is tracked, committed, clean, and HEAD-identical"
+        },
+        "calibration": {
+          "preconditions": [
+            "committed calibration intent postcondition holds and its hashes match current bytes",
+            "calibration and all later V4 intent/artifact paths are absent with no Git index/history deletion witness",
+            "train role has never been opened"
+          ],
+          "seed_role": "train 95100..95139",
+          "run_count": 1,
+          "invocation_policy": "exact registered output O_EXCL; fsync nullable opened_unfinished FAIL before first RNG/world; finalize same descriptor once; no dry run"
+        },
+        "validation_intent": {
+          "preconditions": [
+            "calibration artifact is immutable PASS and all hashes/counts/REJECT_ALL evidence verify",
+            "validation intent/artifact and all later V4 intent/artifact paths are absent with no Git index/history deletion witness"
+          ],
+          "seed_role": "none",
+          "run_count": 0,
+          "invocation_policy": "O_EXCL canonical intent only; zero RNG/world; commit, clean, and HEAD-identical before validation",
+          "required_output_fields": ["experiment", "stage", "intended_stage", "intended_output_path", "status", "registration_raw_sha256", "implementation_lock_raw_sha256", "predecessor_artifact_raw_sha256", "unlock_record", "registered_seed_execution_count_before", "canonical_payload_sha256_excluding_this_field"],
+          "no_overwrite": true,
+          "postcondition": "validation intent is tracked, committed, clean, and HEAD-identical"
+        },
+        "validation": {
+          "preconditions": [
+            "committed validation intent postcondition holds and its hashes match current bytes",
+            "validation and all later V4 intent/artifact paths are absent with no Git index/history deletion witness",
+            "validation role has never been opened and test artifact bytes have never been read"
+          ],
+          "seed_role": "validation 96100..96139",
+          "run_count": 1,
+          "invocation_policy": "exact registered output O_EXCL; fsync nullable opened_unfinished FAIL before first RNG/world; per-origin feasibility; finalize same descriptor once; no dry run",
+          "required_output_fields": ["experiment", "stage", "status", "failure_reasons", "split", "primitive_seed_vectors", "cell_and_control_summaries", "effect_and_interaction_reports", "checks", "hard_zero_counts", "hard_zero_checks", "resource_checks", "performance_passed", "integrity_passed", "resource_passed", "passed", "registration_raw_sha256", "implementation_lock_raw_sha256", "calibration_raw_sha256", "core_payload_sha256", "ordered_path_raw_sha256", "callable_source_sha256_by_symbol", "numpy_version", "ordered_allocation_ledger_sha256", "registered_seed_execution_count"]
+        },
+        "test_intent": {
+          "preconditions": [
+            "validation is tracked, committed, clean, HEAD-identical, and primitive vectors independently recompute exact 55+17+12 all true",
+            "all current source/callable/NumPy/allocation and artifact-chain hashes verify before the test path is read",
+            "test intent/artifact and integrity paths are absent with no Git index/history deletion witness"
+          ],
+          "seed_role": "none",
+          "run_count": 0,
+          "invocation_policy": "construct UnlockRecordV4, then O_EXCL canonical intent only; zero RNG/world; commit, clean, and HEAD-identical before test",
+          "required_output_fields": ["experiment", "stage", "intended_stage", "intended_output_path", "status", "registration_raw_sha256", "implementation_lock_raw_sha256", "predecessor_artifact_raw_sha256", "unlock_record", "registered_seed_execution_count_before", "canonical_payload_sha256_excluding_this_field"],
+          "no_overwrite": true,
+          "postcondition": "test intent containing exact unlock record is tracked, committed, clean, and HEAD-identical"
+        },
+        "test": {
+          "preconditions": [
+            "committed test intent and embedded unlock record verify against current bytes without reading a test artifact",
+            "test and integrity paths are absent with no Git index/history deletion witness",
+            "test role has never been opened"
+          ],
+          "seed_role": "locked test 97100..97159",
+          "run_count": 1,
+          "invocation_policy": "exact registered output O_EXCL; fsync nullable opened_unfinished FAIL before first RNG/world; per-origin feasibility; finalize same descriptor once; no dry run",
+          "required_output_fields": ["experiment", "stage", "status", "failure_reasons", "split", "primitive_seed_vectors", "cell_and_control_summaries", "effect_and_interaction_reports", "checks", "hard_zero_counts", "hard_zero_checks", "resource_checks", "performance_passed", "integrity_passed", "resource_passed", "passed", "registration_raw_sha256", "implementation_lock_raw_sha256", "calibration_raw_sha256", "core_payload_sha256", "ordered_path_raw_sha256", "callable_source_sha256_by_symbol", "numpy_version", "ordered_allocation_ledger_sha256", "registered_seed_execution_count", "validation_raw_sha256", "unlock_record"]
+        },
+        "integrity": {
+          "preconditions": [
+            "exactly one terminal V4 chain holds, including immutable FAIL, dangling intent, or opened_unfinished as terminal",
+            "no registered stage remains legally open and deletion witnesses are absent"
+          ],
+          "invocation_policy": "one exact-path O_EXCL integrity artifact; zero registered scientific execution; fixed-order history includes every intent/stage with nullable missing-later records"
+        },
+        "verify": {
+          "invocation_policy": "repeatable read-only verification; output_path must be absent; zero scientific runs and no writes"
+        }
+      }
+    },
+    "failure_rules": {
+      "stop_after_validation_fail": true,
+      "any_post_lock_scientific_change": "V5 with fresh seeds and paths"
+    }
+  },
+  "implementation_closure_v4": {
+    "shuffled_binding": {
+      "stratum": ["context", "port"],
+      "canonical_i": "prefix_local 0,1,2",
+      "direction": "next=(i+1)%3",
+      "completed_view": "own visible noisy cue cells clamped; hidden cells from accepted real exemplar else reshape(mu_codec,(12,8))",
+      "complete_all_before_projection": true,
+      "q_hat": "mean(V[next][:,0:4]-schema_anchor_raw[i][:,0:4],axis=0)",
+      "audit": "origin i retains its own unpermuted M10 OriginRecallAudit",
+      "partial_rejection": "total: next V always exists via accepted reconstruction or registered fallback"
+    },
+    "unconstrained_lesion": {
+      "rollout_reference": "M00 byte-for-byte",
+      "queryable_real_records": 0,
+      "active_hypothetical_writes": 0,
+      "lesion_objects_enter_schema_or_action_index": false,
+      "only_exposed_difference": "dream.invalid_splice_rate=21/24=0.875 from common shadow audit",
+      "all_other_primitives_equal": "M00"
+    },
+    "zero_synthetic": {
+      "audit_reference": "M01 constrained dream calls and decisions",
+      "accepted_source2_replacement": "same-component fallback before rollout",
+      "valid_missing_resolved_key_preserved": true,
+      "returned_source_for_every_valid_missing": 3,
+      "returned_source2_count": 0,
+      "observed_source": 1,
+      "invalid_key_source": [-1, 0]
+    },
+    "resource_ownership": {
+      "persistent_owner": "ConditionArenaV4",
+      "allocation_order": "resources.allocation_ledger listed order",
+      "actual_destination_required": true,
+      "candidate_results_are_views": true,
+      "posthoc_copy_forbidden": true,
+      "persistent_owned_bytes_exact": 393216,
+      "persistent_cap_bytes": 524288,
+      "counter_owner": "ActualCounterV4",
+      "counter_source": "instrumented operations only; constants/posthoc/self-report forbidden",
+      "temporary_owner": "TempArenaV4",
+      "temporary_peak_formula": "max over allocation/release events of sum nbytes for unique live nonpersistent owning bases",
+      "temporary_cap_bytes": 1048576,
+      "temporary_live_at_seed_return": 0,
+      "untracked_owner_hard_fail": true,
+      "metadata_utf8_cap_bytes": 32768,
+      "resource_checks_from_observed_evidence_only": true
+    },
+    "calibration_reject_all": {
+      "finite_candidates": "sorted unique finite positive/lure confidences",
+      "symbolic_candidate": "REJECT_ALL nonnumeric and accepts none",
+      "positive_count": 960,
+      "lure_count": 960,
+      "feasible_false_lure_rate_max": 0.025,
+      "feasible_wrong_all_rate_max": 0.025,
+      "lexicographic_max": ["positive_correct_identity_count/960", "-lure_accept_count/960", "REJECT_ALL above finite on prior-coordinate tie else larger finite tau"],
+      "serialize_all_candidates_feasibility_objectives_ties_winner": true,
+      "reject_all_winner": "calibration FAIL; tau_recall absent/null and validation intent forbidden"
+    },
+    "per_origin_feasibility": {
+      "splits": ["validation", "test"],
+      "candidate_ids": [0, 1, 2, 3, 4, 5],
+      "required_exists_leq": 25,
+      "required_exists_gt": 25,
+      "action_lures_excluded": [6, 7],
+      "failure": "terminal opened-split FAIL; no resample/drop/retry",
+      "candidate_sealing": "truth remains evaluator-private until candidate result and harness hashes freeze"
+    },
+    "stage_protocol": {
+      "mutating_output_path": "explicit, resolved repository-relative, byte-equal registered path; no alternate or omitted path",
+      "verify_output_path": null,
+      "dry_run_surface": "none in API, CLI, environment, or helper",
+      "intent_stage_map": {
+        "calibration": "calibration_intent_path",
+        "validation": "validation_intent_path",
+        "test": "test_intent_path"
+      },
+      "intent_creation": "os.open O_CREAT|O_EXCL|O_WRONLY; canonical LF JSON; flush+fsync; zero registered RNG/world; commit/clean/HEAD-identical before science",
+      "intent_exact_fields": ["experiment", "stage", "intended_stage", "intended_output_path", "status", "registration_raw_sha256", "implementation_lock_raw_sha256", "predecessor_artifact_raw_sha256", "unlock_record", "registered_seed_execution_count_before", "canonical_payload_sha256_excluding_this_field"],
+      "intent_status": "INTENT",
+      "scientific_open": "O_EXCL exact artifact; write+fsync opened_unfinished nullable FAIL envelope before first RNG/world; finalize same open descriptor exactly once",
+      "opened_failure_exact_fields": ["experiment", "stage", "status", "failure_phase", "failure_type", "failure_message_sha256", "completed_registered_seed_count", "expected_registered_seed_count", "registration_raw_sha256", "implementation_lock_raw_sha256", "calibration_raw_sha256", "validation_raw_sha256", "intent_raw_sha256", "registered_seed_execution_count", "canonical_payload_sha256"],
+      "opened_failure_null_rule": "not-yet-available predecessor/type/message/payload hashes are literal null; opened_unfinished has null type/message/payload",
+      "failure_message_sha256": "SHA256(UTF8(type(exception).__name__+':'+str(exception))); no traceback, seed, latent, future, or absolute path",
+      "normal_status": ["PASS", "FAIL"],
+      "history_order": ["implementation_lock", "calibration_intent", "calibration", "validation_intent", "validation", "test_intent", "test", "integrity"],
+      "history_record_exact_fields": ["stage", "intent_raw_sha256", "artifact_raw_sha256", "status", "run_count", "registered_seed_execution_count"],
+      "history_record_rules": "scientific status INTENT/PASS/FAIL; wholly unopened later stage has null hashes/status and zero counts; implementation lock has null intent and zero counts; integrity self artifact hash is null",
+      "missing_later_history": "explicit exact-field null/zero record",
+      "deletion_probe": "worktree existence plus Git index and git log --all -- exact path; any prior witness with absent path is terminal invalid",
+      "deletion_never_authorizes": true,
+      "dangling_intent_or_opened_unfinished": "terminal FAIL",
+      "registered_seed_capability": "module-private object constructed only by run_agi_world_memory_integration_v4_gate after stage-open checks; no alternate helper/API"
+    },
+    "handcrafted_test_evidence": {
+      "argv_tail": ["-m", "pytest", "-q", "--disable-warnings", "--maxfail=1", "tests/test_agi_world_memory_integration_v4.py", "tests/test_agi_world_memory_integration_integrity_v4.py"],
+      "exact_fields": ["argv_tail", "unit_test_raw_sha256", "integrity_test_raw_sha256", "collected_count", "passed_count", "failed_count", "error_count", "skipped_count", "xfailed_count", "xpassed_count", "deselected_count", "exit_code", "stdout_raw_sha256", "stderr_raw_sha256"],
+      "validity": "exit_code=0; collected_count>0; passed_count=collected_count; all other counts zero; test hashes equal ordered source records",
+      "literal_success_boolean_forbidden": true,
+      "mocked_or_manual_evidence_forbidden": true
+    },
+    "test_unlock": {
+      "performance_check_count": 55,
+      "hard_zero_check_count": 17,
+      "resource_check_count": 12,
+      "total_check_count": 84,
+      "recompute_source": "validation primitive_seed_vectors, never stored summaries",
+      "stored_boolean_exact_match": true,
+      "all_checks_required_true": true,
+      "conjunctions": ["performance_passed", "integrity_passed", "resource_passed", "passed"],
+      "current_byte_rechecks": ["registration and amendment raw hashes", "all ordered source path raw hashes", "every callable inspect-source hash", "numpy.__version__ exact string", "ordered allocation ledger unsorted-key SHA", "implementation/calibration/validation raw hash chain"],
+      "test_read_before_unlock": "forbidden except existence-only refusal",
+      "unlock_before_test_intent": true
+    },
+    "v3_dependency": {
+      "allowed": true,
+      "raw_paths_in_manifest": ["experiments/preregistration/agi_world_memory_integration_v3.json", "reality_stone/python/reality_stone/clarus/agi_world_memory_integration_v3.py"],
+      "only_manifested_v3_callables_may_execute": true,
+      "forbidden": ["V3 runner", "V3 registered seeds", "V3 artifact paths", "V3 stage/unlock helpers"],
+      "v4_gate_evaluator_arenas_controls_authoritative": true
+    }
+  }
+}
