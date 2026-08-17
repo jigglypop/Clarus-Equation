@@ -1,6 +1,6 @@
-# CE Codex 하네스
+# CE Codex 하네스 상세 규칙
 
-Clarus-Equation 연구·구현을 위한 Codex 전역 지침. 프로젝트별 AGENTS.md보다 우선순위가 낮다.
+루트 `../AGENTS.md`가 기본 속도·라우팅 규칙의 정본이다. 이 파일은 `.codex` 내부 작업이나 명시적 CE 연구 run에만 상세 규칙을 보충한다.
 
 ## 라우팅
 
@@ -22,8 +22,8 @@ Clarus-Equation 연구·구현을 위한 Codex 전역 지침. 프로젝트별 AG
 
 ## 코어 명령
 
-    <codex-home>/hooks/run.sh <cmd> ...     # POSIX
-    <codex-home>/hooks/run.cmd <cmd> ...    # Windows (프리빌드 바이너리 직행)
+    .codex/hooks/run.sh <cmd> ...     # POSIX
+    .codex/hooks/run.cmd <cmd> ...    # Windows (프리빌드 바이너리 직행)
 
 - `init <run-dir>` — run 생성, `.active-run` 포인터 설정. `REUSE?` 목록이 나오면 새로 파지 말고 이어받는다.
 - `status <run-dir>` — 단계별 상태·Gate·수정 카운트를 한 화면에 출력. **run 현황 파악에 stage 파일을 다시 읽지 말고 이것을 쓴다.**

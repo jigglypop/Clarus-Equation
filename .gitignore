@@ -4,6 +4,10 @@ __pycache__/
 *.pyo
 .pytest_cache/
 .pytest_tmp_*/
+pytest-basetemp-*/
+pytest-tmp/
+pytest-v*-tmp/
+pytest-metric-tmp/
 /.uv-cache/
 .mypy_cache/
 .ruff_cache/
@@ -31,6 +35,7 @@ target/
 # Outputs and models
 /llm_extract/
 *.json
+!.codex/hooks.json
 !benchmarks/core_claims_v1.json
 !benchmarks/neural_language_synthetic_v1.json
 !benchmarks/neural_language_blind_synthetic_v1.json
