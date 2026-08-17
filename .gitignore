@@ -58,6 +58,7 @@ target/
 !experiments/preregistration/sparse_causal_bridge_v7.json
 !experiments/preregistration/sparse_causal_bridge_v8.json
 !experiments/preregistration/causal_recurrent_geometry_phase_a_v1.json
+!experiments/preregistration/c_elegans_connectome_replay_v1.json
 *.pt
 *.pth
 *.csv

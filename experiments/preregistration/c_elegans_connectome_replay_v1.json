@@ -1,0 +1,43 @@
+{
+  "dataset_id": "openworm_celegansneuroml_herm_full_edgelist",
+  "electrical_weight_semantics": "sum_of_released_row_weights_not_physical_gap_junction_count",
+  "expected_source_metrics": {
+    "chemical_observation_count": 4681,
+    "chemical_released_weight_sum": 27019,
+    "electrical_max_observations_per_pair": 2,
+    "electrical_observation_count": 2698,
+    "electrical_reciprocal_two_row_pair_count": 1339,
+    "electrical_released_weight_sum": 12683,
+    "electrical_unequal_reciprocal_weight_pair_count": 13,
+    "electrical_unordered_pair_count": 1359,
+    "exact_duplicate_released_row_count": 0,
+    "normalized_endpoint_identifier_count": 448,
+    "self_loop_observation_count": 48,
+    "source_byte_length": 252842,
+    "source_observation_count": 7379,
+    "total_released_weight_sum": 39702
+  },
+  "parser": {
+    "bom": "forbidden",
+    "classes": ["chemical", "electrical"],
+    "duplicate_identity": "source_record_ordinal",
+    "endpoint_identifier": "ascii_alphanumeric_after_leading_trailing_ascii_space_removal",
+    "header": ["Source", "Target", "Weight", "Type"],
+    "ordinal_policy": "r1_zero_based_csv_data_record_position_preserved_and_complete",
+    "self_loops": "accepted_and_preserved",
+    "utf8": "strict",
+    "weight_grammar": "0|[1-9][0-9]*"
+  },
+  "population": "all_normalized_endpoint_identifiers_in_frozen_file_including_non_neuron_cells",
+  "schema_version": 1,
+  "scope": "adult_hermaphrodite_structural_graph_only",
+  "source": {
+    "byte_length": 252842,
+    "commit": "b36380a36d2a6dda0f03c946c433524b25ea2268",
+    "path": "herm_full_edgelist.csv",
+    "redistribution_permission": "not_established",
+    "repository_handling": "manifest_only_raw_and_full_output_run_local",
+    "sha256": "0ab9baab5f404895b8dbeb8daa453c86e8f342961bc458cd19bf1b5f6a38d859",
+    "url": "https://raw.githubusercontent.com/openworm/CElegansNeuroML/b36380a36d2a6dda0f03c946c433524b25ea2268/herm_full_edgelist.csv"
+  }
+}
