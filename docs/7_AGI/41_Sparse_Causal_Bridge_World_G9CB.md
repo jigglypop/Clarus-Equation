@@ -1,5 +1,10 @@
 # G9-CB: 희소 인과 브리지 세계모형
 
+이 문서는 희소 인과 브리지의 최소세계에서 관측 상관과 개입 식별을 어떻게 분리하는지 기록한다. 독자는 causal model·preregistration·locked test의 기본을 아는 독자를 전제로 하며, Laplace--Beltrami 항은 후보 구조를 제안하는 도구이지 인과 방향·계수·세계모형의 증명은 아니다.
+
+방향 전환과 최소식 뒤에 후보·개입 식별·data provenance·information cost·baseline·V1–V2 장부와 결과를 읽는다. input state·개입·metric·seed·split·threshold가 등록된 범위만 판정하며, FAIL과 미개봉 test는 음의 결과·선택 편향 차단을 뜻하고 결과를 서사로 보완하지 않는다.
+
+
 > 상태: V1/V3/V5/V6/V7 validation `FAIL` 보존, V2/V4 locked test `PASS`,
 > V5/V6/V7 locked test 미개봉
 >
@@ -32,6 +37,8 @@
 
 ## 1. 왜 방향을 바꿨는가
 
+방향 전환은 이전 가설이 어떤 baseline·counterexample·식별 조건에서 충분하지 않았는지 명시하는 rollback 기록이다. 새 방향은 계획 또는 축소된 claim이며, 구현 변경·수식 유사성만으로 empirical success로 승격하지 않는다.
+
 G9-F는 고랑 기하가 Yeo 대규모 기능망 경계를 직접 나눈다는 단순 명제를
 지지하지 않았다. G9-B는 반대로 접힘이 일부 표면상 원거리 쌍에 희소한
 3차원 지름길 **후보**를 만들 수 있음을 보였지만, 낙관적 white chord일 뿐
@@ -49,85 +56,91 @@ G9-F는 고랑 기하가 Yeo 대규모 기능망 경계를 직접 나눈다는 �
 
 ## 2. 최소 세계와 식
 
+최소세계는 latent state, observed variable, intervention input, output metric의 정의역과 정보 흐름을 고정한다. 식은 지정한 shape·timebase·noise 가정의 후보 모델이며, 실제 데이터 provenance와 개입 없이 인과 세계의 기제로 읽지 않는다.
+
 차트 identity 발견 문제를 섞지 않고 네 차트 $A,B,C,D$를 고정한다.
 숨은 공통원인 $h_t$와 관측 상태 $x_t\in\mathbb R^4$는
 
-\[
+$$
 h_{t+1}=\rho h_t+\sigma_h\xi_t,
-\]
+$$
 
-\[
+$$
 x_{t+1}
 =D x_t+B\tanh(x_t)+\Lambda_e h_t+\sigma_x\epsilon_t
-\]
+$$
 
 를 따른다. 행렬 방향은 $B_{ij}=B[\text{target}=i,\text{source}=j]$다.
 V2의 실제 방향성 bridge는
 
-\[
+$$
 B_{CA}=0.52,\qquad B_{DC}=-0.48
-\]
+$$
 
 뿐이다. $H\to A,H\to B$는 존재하지만 $A\leftrightarrow B$ 직접 edge는
 없다. OOD에서는
 
-\[
+$$
 \Lambda_{\mathrm{train}}=(1.15,1.25,0,0)^\top,
 \qquad
 \Lambda_{\mathrm{ood}}=(1.15,-1.25,0,0)^\top
-\]
+$$
 
 처럼 $H\to B$의 부호만 바꾼다. 진짜 $B$는 고정이다. 결합계의 최대
 고윳값 절댓값은 $0.96<0.98$이므로 등록된 안정성 gate를 만족한다.
 
 ### 2.1 관측 상관이 틀릴 수 있는 이유
 
+관측 상관은 동일 data split에서 함께 변한 readout의 관계일 뿐 방향·원인·개입 효과를 식별하지 않는다. hidden confounder·selection bias·time leakage는 counterexample이며, baseline correlation이 높아도 bridge claim을 지지하지 않는다.
+
 선형화한 관측 회귀는 일반적으로
 
-\[
+$$
 \widehat W_e
 \approx D+B+
 \Lambda_e\operatorname{Cov}(h_t,x_t)
 \operatorname{Cov}(x_t)^{-1}
-\]
+$$
 
 를 포함한다. 마지막 항은 환경 $e$에 따라 변하는 nuisance다. V2 train의
 
-\[
+$$
 |\operatorname{corr}(A,B)|=0.96554
-\]
+$$
 
 는 매우 크지만 직접 edge는 없다. 실제 raw-correlation top-2는 거짓
 $B\to A$를 선택했고 OOD에서 깨졌다.
 
 ## 3. Laplace--Beltrami는 후보만 제안한다
 
+Laplace--Beltrami는 state geometry에서 sparse coupling 후보와 regularization을 생성하는 설계 도구다. 후보 score는 causal direction·coefficient의 ground truth가 아니며, intervention baseline·ablation·locked OOD test가 식별과 기각의 조건이다.
+
 네 차트의 표면 인접행렬을 $W$, degree를 $Q$라 두고 이산
 Laplace--Beltrami 대용 연산자를
 
-\[
+$$
 L=Q-W
-\]
+$$
 
 로 둔다. $L$은 대칭 positive semidefinite이고 열핵은
 
-\[
+$$
 K_\tau=e^{-\tau L},\qquad \tau=0.5
-\]
+$$
 
 다. 사전고정한 extrinsic white-contact affinity를 $C_{ij}$, 열핵의
-off-diagonal 정규화를 \(\widetilde K_{ij}\)라 하면 fold 후보 점수는
+off-diagonal 정규화를 $\widetilde K_{ij}$라 하면 fold 후보 점수는
 
-\[
+$$
 S_{ij}=C_{ij}(1-\widetilde K_{ij})
-\]
+$$
 
 다. 즉 white-contact는 가깝지만 표면 열확산으로는 가깝지 않은 쌍을 먼저
 검사한다. 상위 네 undirected pair는
 
-\[
+$$
 \{A,C\},\{A,B\},\{C,D\},\{B,D\}
-\]
+$$
 
 이고 양방향으로 펼쳐 여덟 후보를 만든다. 이 구성은 true pair를 사전에
 높은 affinity로 포함한 양성대조다. 따라서 “LB가 연결을 발견했다”거나
@@ -135,30 +148,32 @@ S_{ij}=C_{ij}(1-\widetilde K_{ij})
 
 ## 4. 방향과 계수의 개입 식별
 
+개입 식별은 명시한 intervention variable, target readout, effect metric, information cost에서 방향·계수를 판정한다. observational fit과 분리하며, intervention provenance·randomization·threshold가 깨지면 결과는 unidentifiable 또는 FAIL이다.
+
 각 source $j$에 대해 같은 base state, 같은 $h_t$, 같은 process noise를
 보존한 채
 
-\[
+$$
 x_{j,t}^{+}=+\delta,\qquad x_{j,t}^{-}=-\delta,
 \qquad \delta=0.75
-\]
+$$
 
 로 surgical replacement한다. $i\ne j$이면 paired difference는
 
-\[
+$$
 Y_i^+-Y_i^-
 =2B_{ij}\tanh(\delta)+\eta_i
-\]
+$$
 
 다. 숨은 원인과 공통 process noise는 정확히 소거되고, 독립 sensor noise
 $\eta_i$만 남는다. 따라서
 
-\[
+$$
 \widehat B_{ij}
 =\frac{1}{n}\sum_{r=1}^{n}
 \frac{Y_{i,r}^{+}-Y_{i,r}^{-}}
 {2\tanh(\delta)}
-\]
+$$
 
 는 이 합성 family에서 $B_{ij}$의 불편 추정량이다.
 
@@ -173,6 +188,8 @@ $\eta_i$만 남는다. 따라서
 관측 train residual에서 local basis $[1,x_i,x_i^3]$만 적합한다.
 
 ## 5. 데이터 역할과 정보비용
+
+데이터 역할은 train/development/locked-test와 외부 intervention source를 분리하고 information cost의 분모를 고정한다. provenance·seed·split·access log가 없으면 비용·성능 비교는 재현되지 않으며, private/held-out 결과를 열어 선택하지 않는다.
 
 | 역할 | V2 seed | 크기 | 선택에 사용 |
 |---|---|---:|---|
@@ -189,6 +206,8 @@ $\eta_i$만 남는다. 따라서
 
 ## 6. 기준선
 
+기준선은 동일 dataset·split·seed·compute·metric에서 causal bridge의 추가 기여를 비교하는 분모다. 약한 baseline·post-hoc tuning·누수는 expected failure이며, 더 좋은 개발 score가 locked confirmation을 대체하지 않는다.
+
 - `local_only`: cross-chart edge 0
 - `dense_observational`: 관측으로 12개 방향 edge 모두 적합
 - `raw_correlation_top2`: raw association 상위 2개
@@ -200,7 +219,11 @@ $\eta_i$만 남는다. 따라서
 
 ## 7. 루프 장부
 
+루프 장부는 version별 preregistration, implementation, artifact, locked-test 상태를 구분한다. `FAIL`은 등록된 gate의 미통과이고 test 미개봉은 결과 오염 방지 경계이며, 둘을 성공·미완성·미측정과 혼동하지 않는다.
+
 ### V1 — `FAIL`, test 미개봉
+
+V1의 FAIL은 명시한 development 또는 pre-test gate가 깨져 locked test를 열지 않았다는 판정이다. 미개봉은 결과를 보지 않았음을 뜻하며, 이후 가설 축소는 V1 성공의 재해석이나 test evidence가 아니다.
 
 V1은 $H$가 실제 bridge target $C$에도 직접 들어가게 만들었다. bridge
 두 개는 정확히 복원했다.
@@ -221,6 +244,8 @@ V1은 $H$가 실제 bridge target $C$에도 직접 들어가게 만들었다. br
 
 ### V2 — 가설 축소와 구현 수정
 
+V2는 V1 반례·failure를 피해 claim·input·operator를 좁힌 새 preregistration과 구현 경로다. 새 version은 새 baseline·seed·split·threshold가 필요하며, V1의 데이터나 결과를 선택적으로 재사용하지 않는다.
+
 V2는 bridge target의 직접 hidden loading을 0으로 두어 “bridge 식별”만
 격리했다. 모든 train/probe/validation/test/control seed를 새로 바꿨고,
 permutation은 paired outcome arm을 균형 있게 뒤집도록 수정했다. 또한
@@ -228,6 +253,8 @@ permutation은 paired outcome arm을 균형 있게 뒤집도록 수정했다. �
 gate를 비열등성 gate로 바꾼 사실을 사전등록했다.
 
 ## 8. V2 결과
+
+V2 결과는 등록된 minimal world, intervention fixture, information-cost metric, baseline에서 얻은 좁은 판정이다. PASS/FAIL과 uncertainty·OOD·ablation을 함께 읽으며, 결과가 미개봉이거나 gate 미통과이면 구조 해석·세계모형 성립으로 승격하지 않는다.
 
 | 지표 | validation 20 seed | locked test 30 seed | 판정 |
 |---|---:|---:|---|
@@ -266,72 +293,80 @@ API에서 명시적으로 우회할 수 있다. 이번 실행에서는 validatio
 
 ## 9. V3--V4: 직접 잠재교란과 문맥 필터
 
+V3--V4는 직접 latent confounder와 context filter를 정의해 관측 상관의 대안을 통제하려는 새 preregistration이다. filter output·input provenance·baseline·seed·split·threshold를 고정하며, 구현상 분리가 causal identification이나 locked success를 보장하지 않는다.
+
 V2는 bridge target의 hidden loading을 제거해 구조 선택만 격리했다. 다음
 루프는 V1의 어려운 조건
 
-\[
+$$
 \Lambda_{\mathrm{train}}=(1.15,1.25,0.55,0)^\top,
 \qquad
 \Lambda_{\mathrm{ood}}=(1.15,-1.25,-0.55,0)^\top
-\]
+$$
 
 을 복원했다. 이제 숨은 원인 $H$는 source $A$와 bridge target $C$에
 동시에 들어간다.
 
 ### 9.1 대각 기전까지 개입으로 식별
 
+이 절은 diagonal mechanism을 포함한 intervention input과 target coefficient의 식별 정의역을 넓힌다. 개입 assignment·randomization·measurement error가 가정이며, 이 조건이 깨지거나 counterexample이 나오면 방향·계수 결론은 미입증이다.
+
 source와 target이 같으면 paired difference는
 
-\[
+$$
 Y_j^+-Y_j^-=2\delta D_{jj}+\eta_j
-\]
+$$
 
 이므로 대각 자기동역학도
 
-\[
+$$
 \widehat D_{jj}=\frac{\overline{Y_j^+-Y_j^-}}{2\delta}
-\]
+$$
 
 로 추정한다. off-diagonal은 앞 절의 $\tanh$ 분모를 그대로 쓴다. 이렇게
 얻은 불변 기전을
 
-\[
+$$
 \widehat f(x_t)=\widehat D x_t+\widehat B\tanh(x_t)
-\]
+$$
 
 라 두면 관측 residual은
 
-\[
+$$
 r_t=x_{t+1}-\widehat f(x_t)\approx\Lambda_e h_t+\epsilon_t
-\]
+$$
 
 다.
 
 ### 9.2 rank-1 residual filter
 
+rank-1 filter는 residual state를 입력으로 context-suppressed output을 만드는 구현 후보다. rank·normalization·timebase는 설계 가정이고, no-filter baseline·ablation·OOD에서 이득이 사라지면 filter 해석은 기각된다.
+
 OOD seed마다 처음 80 transition만 calibration에 사용한다. 그 residual
 공분산의 첫 고유벡터를 $u_e$라 하면 바뀐 loading subspace를 label 없이
 추정할 수 있다. 현재 outcome을 미리 쓰지 않고 직전 residual만 사용해
 
-\[
+$$
 z_t=u_e^\top(r_t-\bar r_e),
 \qquad
 \widehat r_{t+1}
 =\bar r_e+u_e(c_e+\gamma z_t)
-\]
+$$
 
 로 다음 문맥 residual을 예측한다. 최종 one-step 예측은
 
-\[
+$$
 \widehat x_{t+2}
 =\widehat f(x_{t+1})+\widehat r_{t+1}
-\]
+$$
 
 다. 평가 prefix는 점수에서 제외하고, filter의
 $\left(u_e,\bar r_e,c_e\right)$는 prefix
 뒤에 동결한다.
 
 ### 9.3 V3 — `FAIL`, test 미개봉
+
+V3 FAIL은 등록된 development gate가 충족되지 않아 locked test를 보지 않았다는 의미다. 미개봉 결과는 evidence가 아니며, 이후 필터 수정은 V3의 성공·실패를 사후 합리화하지 않는 새 version 계약이다.
 
 V3는 $\gamma$까지 각 80-step OOD prefix에서 다시 추정했다. graph는
 exact였고 기전계수 오차와 subspace 오차는 작았지만, 일부 seed의 짧은 AR
@@ -351,16 +386,18 @@ V3 artifact와 구현 SHA는 보존했고 test는 열지 않았다.
 
 ### 9.4 V4 — 공유 시간상수, 변하는 loading
 
+V4는 confounder/filter의 time constant와 loading을 명시적으로 바꾼 preregistered hypothesis다. 공유·변동 가정은 data provenance와 split에서 검증해야 하며, baseline·OOD·counterfactual ablation 미통과는 FAIL 또는 rollback 조건이다.
+
 V4의 알고리즘 변경은 하나이며 protocol상 모든 seed도 새로 배정했다.
 $\gamma$는 긴 observational-train residual 전체에서 episode 경계를 넘지
 않고 한 번만 적합한다. OOD prefix는 residual 중심, rank-1 subspace,
 scalar intercept만 적응한다. 즉
 
-\[
+$$
 \underbrace{D,B,\gamma}_{\text{environment-invariant}}
 \quad+\quad
 \underbrace{u_e,\bar r_e,c_e}_{\text{environment-adaptive}}
-\]
+$$
 
 로 분리한다. train에서 얻은 $\widehat\gamma=0.93693$이고 생성값 0.96과의
 절대오차는 0.02307이다.
@@ -403,27 +440,31 @@ V4 lock은 이 SHA뿐 아니라 실제 알고리즘/DGP 두 파일의 SHA도 함
 
 ## 10. V5: 실제 상태 재입력을 끊은 자유전개
 
+V5는 observed actual state 재입력을 끊어 free-run trajectory가 leakage 없이 생성되는지 묻는 version이다. free-run은 initial origin·operator·horizon만을 input으로 하며, hidden feedback·future label·cached state는 leakage와 즉시 failure로 처리한다.
+
 ### 10.1 누설 없는 단일 origin 정의
+
+single origin은 시작 state와 허용 외생 input의 provenance를 하나의 checkpoint로 고정하는 contract다. 이후 state·label·metric을 다시 주입하면 free-run 정의가 깨지며, origin serialization·seed·timebase mismatch도 반증 조건이다.
 
 V4는 매 step의 실제 $x_t$를 다시 받아 one-step 예측했다. V5는 OOD
 prefix $x_0,\ldots,x_{80}$만 관측하고, $C=80$에서 한 번 시작한다.
 마지막 관측 residual로 초기 score를 만들고
 
-\[
+$$
 r_{C-1}=x_C-\widehat f(x_{C-1}),
 \qquad z_{C-1}=u^\top(r_{C-1}-\bar r),
-\]
+$$
 
 그 뒤에는 실제 미래 상태나 residual을 읽지 않고
 
-\[
+$$
 \widehat z_{C+k}=c+\gamma\widehat z_{C+k-1},
 \quad
 \widehat r_{C+k}=\bar r+u\widehat z_{C+k},
 \quad
 \widehat x_{C+k+1}
 =\widehat f(\widehat x_{C+k})+\widehat r_{C+k}
-\]
+$$
 
 만 20번 반복한다. H5는 이 하나의 H20 trajectory 앞 다섯 row다.
 rollout API는 `Episode`, future outcome, hidden state를 인자로 받지 않으며,
@@ -431,6 +472,8 @@ $x_{81:100}$과 hidden을 변조해도 비-oracle 예측이 bit-identical인 테
 추가했다.
 
 ### 10.2 V5 validation — `FAIL`, test 미개봉
+
+V5 FAIL은 leakage-free validation gate가 등록 threshold를 통과하지 못했고 locked test를 열지 않았음을 기록한다. 미개봉은 결과 선택을 차단하는 상태이며, free-run 구조의 일반 성공·실패를 의미하지 않는다.
 
 V5는 V4의 frozen mechanism을 사용하고 20개의 새 validation seed에서
 평가했다. 비교의 독립 단위는 step이 아니라 seed이며 Student-$t$ CI를 썼다.
@@ -467,6 +510,8 @@ V5 validation artifact와 구현 hash를 보존했고 locked test는 열지 않�
 
 ### 10.3 V6 사전등록과 결과 비개봉 수정
 
+V6는 V5 failure를 바탕으로 input contract·filter·metric을 새로 고정한 preregistration이다. 결과 비개봉 수정은 access·artifact·split 경계를 보존하는 절차이며, 개발 중 관찰을 confirmation evidence로 바꾸지 않는다.
+
 V5 validation은 이후 후보 설계용 development data로만 사용했다. prefix
 전체로 scalar Kalman posterior를 추정한 후보는 H5/H20 RMSE
 `0.20730 / 0.33406`으로 V5보다 오히려 나빠 폐기했다.
@@ -491,6 +536,8 @@ V5 development에서 이 후보의 평균 weight는 causal/adaptive/persistence
 `53c1cd432943573b4de227bf474718ad610bd5a22c2d4c82cd6e9cda482600be`다.
 
 ### 10.4 V6 validation — `FAIL`, test 미개봉
+
+V6 FAIL은 등록한 validation baseline·metric·threshold에서 claim이 성립하지 않았다는 좁은 판정이다. locked test 미개봉은 negative result의 범위를 보호하며, 후속 version이 V6 evidence를 승격하지 못하게 한다.
 
 **[예측]** prefix backtest로 정한 세 expert의 convex consensus가 fresh V6
 validation seed에서 V5 오차와 seed-level 변동성을 줄이는지를 등록된 51개
@@ -521,21 +568,23 @@ V6는 V5보다 H5에서 3.63%, H20에서 1.26% 나빴다. persistence보다
 
 ### 10.5 V7 사전등록 — 비영시차 불변 시간 prior
 
+V7은 nonzero-lag invariance라는 time prior를 input·operator·threshold와 함께 사전 등록한다. prior는 경험식 또는 구조 가설이며, data provenance·seed·split·OOD·ablation에서 반증되지 전에는 식별 정리나 세계모형 증거가 아니다.
+
 **[공리: 모델 선택]** V7은 V6 arbitration을 활성 후보에서 제거하고 V5의
 희소 인과 expert를 다시 anchor로 둔다. 바꾸는 항목은 공유 scalar AR 추정기
 하나다. train residual의 첫 주성분 score에서 episode 경계를 넘지 않는
-자기공분산 \(\gamma_1,\ldots,\gamma_{20}\)을 계산하고
+자기공분산 $\gamma_1,\ldots,\gamma_{20}$을 계산하고
 
-\[
+$$
 \widehat\rho=
 \frac{\sum_{k=1}^{19}\gamma_k\gamma_{k+1}}
 {\sum_{k=1}^{19}\gamma_k^2}
-\]
+$$
 
-로 둔다. 독립 관측잡음이 분산을 더하는 \(\gamma_0\)는 사용하지 않고,
+로 둔다. 독립 관측잡음이 분산을 더하는 $\gamma_0$는 사용하지 않고,
 결과는 안정성 구간 `[-0.98, 0.98]`로 투영한다.
-residual score의 단위를 \([x]\)라 하면 각 \(\gamma_k\)는 \([x]^2\), 분자와
-분모는 모두 \([x]^4\)이므로 \(\widehat\rho\)는 무차원이다.
+residual score의 단위를 $[x]$라 하면 각 $\gamma_k$는 $[x]^2$, 분자와
+분모는 모두 $[x]^4$이므로 $\widehat\rho$는 무차원이다.
 
 **[산출]** frozen train에서 V5 lag-zero OLS는 `0.936927`, 비영시차 추정은
 `0.957925`다. programmed `0.96`은 진단에만 쓰며 candidate 함수가 읽을 수
@@ -549,6 +598,8 @@ CIㆍpersistenceㆍsame-probe denseㆍ안정성 기준을 함께 판정한다. v
 `44ad51cc5279581568e254617db2aa63b2adf42095f97aaaa94fabf7e9a54e02`다.
 
 ### 10.6 V7 validation — `FAIL`, test 미개봉
+
+V7 FAIL은 비영시차 prior가 지정 validation gate에서 지지되지 않아 locked test를 열지 않았다는 기록이다. 미개봉은 미측정 결과이지 잠재 성공이 아니며, 반례·failure는 다음 version의 입력과 rollback 경계를 정한다.
 
 **[산출]** 고정 구현 SHA
 `f7a64266ad167b58eecb5d3b27907f3c4f30b66fa660e50f52b88b27c72fc90f`로
@@ -584,6 +635,8 @@ validation artifact SHA는
 V6와 V7 locked test artifact는 모두 생성하지 않았다.
 
 ## 11. 무엇이 입증됐고 무엇이 아닌가
+
+이 절은 형식 정의·구현 contract·개발/validation 결과·미개봉 locked test·과학적 인과 해석을 분리한다. 입증된 것은 명시한 정의역과 artifact의 범위에 한정되고, 미입증 bridge는 재현 가능한 origin·dataset provenance·seed·split·baseline·threshold와 반증 순서를 갖춘 새 run이 필요하다.
 
 현재 V4까지 지지하는 가장 강한 문장은 다음뿐이다.
 
@@ -627,6 +680,8 @@ randomized experiment다.
 
 ## 12. 재현
 
+이 절은 preregistration 설정을 입력으로 unit·validation·locked-test artifact를 다시 생성하는 실행 경로를 제시한다. 명령의 성공은 fixture와 코드 contract의 통과를 뜻하며, causal bridge의 과학적 입증이나 미개봉 결과의 승격을 뜻하지 않는다.
+
 ```powershell
 .\.venv\Scripts\python.exe -m pytest tests/test_sparse_causal_bridge.py -q --basetemp .tmp/g9cb-unit
 .\.venv\Scripts\python.exe examples/agi/sparse_causal_bridge_gate.py --config experiments/preregistration/sparse_causal_bridge_v2.json --split validation
@@ -662,6 +717,8 @@ randomized experiment다.
 외부 다운로드, GPU, trajectory 파일은 모두 0이다.
 
 ## 13. 다음 반증 순서
+
+다음 순서는 V1--V7의 실패·미개봉 상태에서 남은 가정을 가장 정보량 큰 반례부터 검사하기 위한 계획이다. 각 단계는 origin provenance·dataset/split·seed·baseline·threshold·locked access를 새로 고정하며, 실행 전에는 결과나 승격 상태가 아니다.
 
 1. V7 실패를 시간상수 하나의 문제가 아니라 source-basisㆍresidual-model
    misspecification 반례로 보존하고, 같은 validation에 문턱을 맞추지 않는다.

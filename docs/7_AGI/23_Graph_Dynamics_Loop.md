@@ -1,8 +1,15 @@
 # Weighted directed graph dynamics loop
 
+이 문서는 가중 방향 그래프 state가 지정 update를 거쳐 어떤 loop 출력으로 이어지는지 검증한 좁은 연구 기록이다. 독자는 graph state·train/test split·baseline의 기본을 아는 독자를 전제로 하며, 구조 해석은 fixture 기반 실험 결과와 구분한다.
+
+중첩식과 입력·출력을 먼저 고정하고 누수·반례 gate, AML310 탐색, 판정·다음 루프 순으로 읽는다. node/edge tensor shape·timebase·seed·metric·threshold가 등록된 범위 밖에서는 결과를 일반 graph dynamics나 AGI 결론으로 승격하지 않는다.
+
+
 > 상태: `synthetic PASS / AML310 exploratory FAIL 0/4 / AML32 untouched`
 
 ## 1. 검사한 중첩식
+
+이 절은 graph state·edge weight·update operator를 입력으로 다음 graph readout을 내는 검증 대상 명제를 정의한다. shape·정규화·tick·initial condition이 fixture의 정의역이며, 수식만으로 empirical generalization을 보장하지 않는다.
 
 국소 기준은 다음으로 고정했다.
 
@@ -51,6 +58,8 @@ regime마다 $G_{2b}$의 graph를 별도로 학습했다.
 
 ## 2. 누수·반례 게이트
 
+gate는 train/test leakage, label shortcut, 약한 baseline을 차단해 어떤 metric pass가 의미 있는지 정한다. split·seed·threshold 위반 또는 반례 발견은 즉시 실패·rollback 조건이며, 코드 통과가 과학적 참을 대신하지 않는다.
+
 - chronological `60/20/20` split과 5-frame embargo
 - 결측치 대치, 표준화, adjacency, ridge 선택은 test를 보지 않음
 - graph는 항상 $h=1$에서 학습하고 $h=6,30$에도 그대로 재사용
@@ -65,6 +74,8 @@ regime마다 $G_{2b}$의 graph를 별도로 학습했다.
 `tests/test_graph_dynamics.py`에 있다.
 
 ## 3. AML310 탐색 결과
+
+AML310 결과는 지정 dataset provenance·panel·seed·metric·baseline에서 나온 좁은 관찰이다. 수치 차이는 uncertainty·OOD·component ablation과 함께 읽으며, graph 구조가 원인이라는 해석은 별도 개입 없이는 가설이다.
 
 표의 값은 recording별 median
 $\Delta R^2=R^2_{\rm directed}-R^2_{\rm local}$이다.
@@ -86,6 +97,8 @@ rewired-null의 최저값도 $p=0.40$이었다. 따라서 양의 효과가 작�
 모자란 상황이 아니라, 복잡한 graph일수록 local 기준보다 일관되게 나빠졌다.
 
 ## 4. 판정과 다음 루프
+
+판정은 현재 evidence가 지지·기각·미완성 중 어디에 있는지 기록하고 다음 실험의 입력·artifact·gate를 정한다. 계획은 결과가 아니며, 새 split·baseline·OOD에서 실패하면 승격하지 않는다.
 
 $$
 \boxed{

@@ -1,13 +1,19 @@
 # 에이전트 루프 방정식 (Layer F)
 
+이 문서는 Layer A--E runtime state를 받아 action context와 다음 self-state를 만드는 Layer F agent loop를 정의한다. 독자는 이산 동역학·상태 기계·feedback의 기본을 아는 독자를 전제로 하며, 자기참조와 자기비평은 관측 가능한 계산 연산이지 의식·주관 경험의 충분조건이 아니다.
+
+먼저 왜 루프가 필요한지와 Layer 의존을 고정하고, state·이완·비평·에너지·mode 결합의 입력·출력과 수렴 가정을 순서대로 읽는다. timebase는 runtime tick이며, 초기·종료 조건과 norm 경계가 깨지면 수렴·효능 주장은 적용되지 않는다.
+
 > 위치: `15_Equations.md`의 F절을 독립 문서로 분리.
-> 의존: `15_Equations.md`(Layer A--E), `14_BrainRuntimeSpec.md`(설계 사양), `6_뇌/05_실험근거.md`(근거 판정), `6_뇌/06_검증기준.md`(검증 매트릭스)
+> 의존: `15_Equations.md`(Layer A--E), `14_BrainRuntimeSpec.md`(설계 사양), `6_뇌/05_실험근거.md`(근거 판정), `../검증_원장/뇌_검증기준.md`(검증 매트릭스)
 >
 > 이 문서에는 서사 설명을 넣지 않는다. 식, 정의, 뇌 대응 검증 기준만 둔다.
 
 ---
 
 ## F. 자기참조 재귀 (agent loop)
+
+Layer F는 이전 self-state, Layer A--E summary, action outcome을 입력으로 다음 self-state와 control context를 출력하는 재귀 operator다. 정의역·shape·정규화·종료 조건을 명시하지 않은 자기참조 비유는 구현 contract나 과학적 주장으로 사용하지 않는다.
 
 > 이 절은 Layer A--E의 **바깥**에서 전체를 감싸는 에이전트 루프를 정의한다.
 > A--E는 "한 틱의 셀/필드/모드/기억/요약"이고, F는 "그 틱을 반복하며 행동-관찰-비평-기억을 순환시키는 외부 루프"다.
@@ -16,6 +22,8 @@
 ---
 
 ### F.-1 왜 자기참조재귀가 핵심인가
+
+자기참조는 시스템이 자신의 관측 state를 다음 update의 입력으로 사용하는 계산 구조를 뜻한다. 이는 자기비평·적응의 API 동기일 뿐 자각·의식·자율성의 관찰 증거가 아니며, no-loop baseline과 OOD horizon이 실패 경계다.
 
 Layer A--E만 있으면 시스템은 한 틱의 상태를 갱신할 수 있다. 그러나 AGI 응용에서 필요한 것은 한 틱의 계산이 아니라, 계산 결과가 다시 다음 계산의 조건을 바꾸는 닫힌 루프다. 이 닫힘이 없으면 모델은 긴 작업에서 자기 오류를 축적만 하고, 수정하지 못한다.
 
@@ -32,7 +40,7 @@ C(R(S_t),a_t,o_t),\;
 \right)
 $$
 
-여기서 핵심은 \(R(S_t)\)가 단순 출력이 아니라 다음 상태 \(S_{t+1}\)를 만드는 항으로 다시 들어간다는 점이다. 즉 시스템은 자기 상태를 읽고, 그 읽기의 잔차를 비평하고, 비평 결과로 다음 자기 상태를 바꾼다.
+여기서 핵심은 $R(S_t)$가 단순 출력이 아니라 다음 상태 $S_{t+1}$를 만드는 항으로 다시 들어간다는 점이다. 즉 시스템은 자기 상태를 읽고, 그 읽기의 잔차를 비평하고, 비평 결과로 다음 자기 상태를 바꾼다.
 
 Transformer에 CE 모듈을 얹는 것과 CE식 에이전트 루프의 차이는 여기서 갈린다.
 
@@ -40,7 +48,7 @@ Transformer에 CE 모듈을 얹는 것과 CE식 에이전트 루프의 차이는
 |---|---|---|---|---|
 | 표준 LLM inference | hidden state는 token 생성 후 대부분 폐기 | 외부 evaluator 또는 RLHF 사후 보정 | context window에 수동 주입 | turn 사이 자기수정 약함 |
 | CE module transplant | attention/norm/FFN은 안정화 | 일부 curvature score 가능 | 별도 구현 필요 | 아직 열린 루프 |
-| CE 자기참조재귀 | \(S_t\)가 \(S_{t+1}\)로 닫힘 | \(c_t\)가 다음 이완 에너지에 들어감 | \(m_t,\phi_t\)가 다음 입력 조건 | agentic 지속성의 최소형 |
+| CE 자기참조재귀 | $S_t$가 $S_{t+1}$로 닫힘 | $c_t$가 다음 이완 에너지에 들어감 | $m_t,\phi_t$가 다음 입력 조건 | agentic 지속성의 최소형 |
 
 따라서 이 문서에서 F절은 부가 기능이 아니라 A--E를 AGI 응용으로 올리는 최소 닫힘 조건이다. attention, sparsity, sleep, hallucination 억제는 모두 이 루프 안에 들어갈 때만 장기 상태 유지와 자기수정으로 이어진다.
 
@@ -54,7 +62,7 @@ S_{t+1}=\mathcal T_{\theta,e_t}(S_t),
 e_t=(u_t,o_t)
 $$
 
-여기서 \(e_t\)는 외부 입력과 환경 관찰을 묶은 외생 신호다. 외생 신호를 고정하면 자기참조재귀의 핵심 질문은 \(\mathcal T\)가 고정점을 갖는지다.
+여기서 $e_t$는 외부 입력과 환경 관찰을 묶은 외생 신호다. 외생 신호를 고정하면 자기참조재귀의 핵심 질문은 $\mathcal T$가 고정점을 갖는지다.
 
 $$
 S^\star=\mathcal T_{\theta,e}(S^\star).
@@ -64,7 +72,7 @@ $$
 
 #### F.-1.2 분해와 Jacobian
 
-\(\mathcal T\)를 구성요소로 분해한다.
+$\mathcal T$를 구성요소로 분해한다.
 
 $$
 \mathcal T
@@ -96,7 +104,7 @@ $$
 }
 $$
 
-여기서 \(\rho(\cdot)\)는 spectral radius다. 전역 수축을 요구하려면 어떤 norm에 대해
+여기서 $\rho(\cdot)$는 spectral radius다. 전역 수축을 요구하려면 어떤 norm에 대해
 
 $$
 \sup_{S\ne S'}
@@ -121,7 +129,7 @@ $$
 
 #### F.-1.3 자기비평의 닫힘 조건
 
-자기비평 \(C\)가 진짜 재귀 항이 되려면 다음 step의 이완 에너지에 들어가야 한다.
+자기비평 $C$가 진짜 재귀 항이 되려면 다음 step의 이완 에너지에 들어가야 한다.
 
 $$
 E_{t+1}(z)
@@ -140,7 +148,7 @@ D_c R(S_{t+1})\ne0
 }
 $$
 
-즉 \(c_{t+1}\)가 다음 \(R\)의 초기점, 에너지, 온도, budget, 또는 decoding policy 중 적어도 하나를 바꿔야 한다. 이 조건이 0이면 self-critique는 관찰량일 뿐 제어량이 아니다.
+즉 $c_{t+1}$가 다음 $R$의 초기점, 에너지, 온도, budget, 또는 decoding policy 중 적어도 하나를 바꿔야 한다. 이 조건이 0이면 self-critique는 관찰량일 뿐 제어량이 아니다.
 
 #### F.-1.4 재귀 품질의 측정량
 
@@ -148,19 +156,19 @@ $$
 
 | 지표 | 식 | 의미 |
 |---|---|---|
-| 수축률 | \(\hat\rho_t=\|S_{t+1}-S_t\|/(\|S_t-S_{t-1}\|+\epsilon)\) | 자기 상태가 안정화되는가 |
-| 비평 영향도 | \(I_c=\|R(S_{t+1};c_{t+1})-R(S_{t+1};0)\|\) | critique가 실제 동역학을 바꾸는가 |
-| 기억 영향도 | \(I_m=\|R(S_{t+1};m_{t+1})-R(S_{t+1};0)\|\) | memory가 context 장식이 아니라 상태항인가 |
-| 잔류 반경 | \(r_\phi=\limsup_t\|\phi_t\|\) | 탈락 경로/불확실성이 유계인가 |
-| 재귀 이득 | \(G_{\rm rec}=\Delta{\rm score}_{\rm closed}-\Delta{\rm score}_{\rm open}\) | 닫힌 루프가 open-loop 대비 개선하는가 |
+| 수축률 | $\hat\rho_t=\|S_{t+1}-S_t\|/(\|S_t-S_{t-1}\|+\epsilon)$ | 자기 상태가 안정화되는가 |
+| 비평 영향도 | $I_c=\|R(S_{t+1};c_{t+1})-R(S_{t+1};0)\|$ | critique가 실제 동역학을 바꾸는가 |
+| 기억 영향도 | $I_m=\|R(S_{t+1};m_{t+1})-R(S_{t+1};0)\|$ | memory가 context 장식이 아니라 상태항인가 |
+| 잔류 반경 | $r_\phi=\limsup_t\|\phi_t\|$ | 탈락 경로/불확실성이 유계인가 |
+| 재귀 이득 | $G_{\rm rec}=\Delta{\rm score}_{\rm closed}-\Delta{\rm score}_{\rm open}$ | 닫힌 루프가 open-loop 대비 개선하는가 |
 
-이 지표들이 없으면 자기참조재귀는 철학적 설명에 머문다. CE-LLM의 실험은 최소한 open-loop baseline과 closed-loop variant를 나누고 \(I_c,I_m,\hat\rho_t\)를 함께 보고해야 한다.
+이 지표들이 없으면 자기참조재귀는 철학적 설명에 머문다. CE-LLM의 실험은 최소한 open-loop baseline과 closed-loop variant를 나누고 $I_c,I_m,\hat\rho_t$를 함께 보고해야 한다.
 
 #### F.-1.5 계층적 자기참조재귀 정리
 
-하위 재귀들이 모여 상위 재귀가 되고, 상위 재귀가 다시 하위 재귀의 boundary condition을 바꾸는 구조를 다음처럼 둔다. 레벨 \(\ell=0,\dots,L\)의 상태공간을 Banach 공간 \(\mathcal X_\ell\)라 하고, 레벨별 상태를 \(X_t^\ell\in\mathcal X_\ell\)라 한다.
+하위 재귀들이 모여 상위 재귀가 되고, 상위 재귀가 다시 하위 재귀의 boundary condition을 바꾸는 구조를 다음처럼 둔다. 레벨 $\ell=0,\dots,L$의 상태공간을 Banach 공간 $\mathcal X_\ell$라 하고, 레벨별 상태를 $X_t^\ell\in\mathcal X_\ell$라 한다.
 
-레벨 \(\ell\)의 갱신은
+레벨 $\ell$의 갱신은
 
 $$
 X_{t+1}^\ell
@@ -171,7 +179,7 @@ U_t^\ell
 \right)
 $$
 
-이고 입력 \(U_t^\ell\)은 이웃 레벨의 요약과 피드백으로 구성된다.
+이고 입력 $U_t^\ell$은 이웃 레벨의 요약과 피드백으로 구성된다.
 
 $$
 U_t^\ell
@@ -227,7 +235,7 @@ $$
 d_{t+1}\le Gd_t
 $$
 
-를 만족하는 비음수 gain matrix \(G\)가 존재한다. 삼대각 근사에서
+를 만족하는 비음수 gain matrix $G$가 존재한다. 삼대각 근사에서
 
 $$
 G_{\ell,\ell}=\rho_\ell,\qquad
@@ -249,7 +257,7 @@ $$
 \mathcal T:\prod_{\ell=0}^L\mathcal X_\ell\to\prod_{\ell=0}^L\mathcal X_\ell
 $$
 
-은 어떤 가중 sup norm에서 수축이다. 따라서 외생 입력이 고정된 경우 유일한 고정점 \(X^\star\)가 존재하고,
+은 어떤 가중 sup norm에서 수축이다. 따라서 외생 입력이 고정된 경우 유일한 고정점 $X^\star$가 존재하고,
 
 $$
 \|X_t-X^\star\|_w
@@ -259,7 +267,7 @@ $$
 
 로 수렴한다.
 
-**증명.** 위 Lipschitz 부등식들을 레벨별로 모으면 각 성분에 대해 \(d_{t+1,\ell}\le (Gd_t)_\ell\)가 된다. \(G\ge0\)이고 \(\rho(G)<1\)이면 Perron-Frobenius/Collatz-Wielandt에 의해 양의 가중치 \(w>0\)와 어떤 \(\alpha<1\)가 존재하여
+**증명.** 위 Lipschitz 부등식들을 레벨별로 모으면 각 성분에 대해 $d_{t+1,\ell}\le (Gd_t)_\ell$가 된다. $G\ge0$이고 $\rho(G)<1$이면 Perron-Frobenius/Collatz-Wielandt에 의해 양의 가중치 $w>0$와 어떤 $\alpha<1$가 존재하여
 
 $$
 Gw\le \alpha w
@@ -282,7 +290,7 @@ $$
 \alpha\|X-X'\|_w.
 $$
 
-따라서 Banach 고정점 정리에 의해 고정점 존재성과 유일성, 지수 수렴이 따른다. \(\square\)
+따라서 Banach 고정점 정리에 의해 고정점 존재성과 유일성, 지수 수렴이 따른다. $\square$
 
 #### F.-1.6 프랙탈/자기유사 재귀의 조건
 
@@ -312,7 +320,7 @@ $$
 
 가 충분조건이다.
 
-이 식이 의미하는 것은 명확하다. 하위 재귀의 자체 수축률 \(\rho_0\)가 작아도, 상향 요약 \(g_\uparrow\)과 하향 피드백 \(g_\downarrow\)의 곱이 크면 전체는 폭주한다. 반대로 상향/하향 결합의 기하평균을 작게 유지하면 같은 형태의 재귀를 여러 층 쌓아도 하나의 큰 수축 사상으로 남는다.
+이 식이 의미하는 것은 명확하다. 하위 재귀의 자체 수축률 $\rho_0$가 작아도, 상향 요약 $g_\uparrow$과 하향 피드백 $g_\downarrow$의 곱이 크면 전체는 폭주한다. 반대로 상향/하향 결합의 기하평균을 작게 유지하면 같은 형태의 재귀를 여러 층 쌓아도 하나의 큰 수축 사상으로 남는다.
 
 CE 관점에서 이것이 "프랙탈"로 읽히려면 단순히 비슷한 모듈을 반복 배치하는 것으로는 부족하다. 각 레벨이 다음 다섯 항을 가져야 한다.
 
@@ -322,11 +330,13 @@ $$
 }
 $$
 
-그리고 레벨 사이 전달은 \(G\)의 small-gain 조건을 만족해야 한다. 이때 하위 모듈의 닫힌 루프들이 상위 루프의 상태변수가 되고, 상위 루프의 critic/goal이 하위 루프의 boundary condition으로 내려가는 계층적 자기참조재귀가 된다.
+그리고 레벨 사이 전달은 $G$의 small-gain 조건을 만족해야 한다. 이때 하위 모듈의 닫힌 루프들이 상위 루프의 상태변수가 되고, 상위 루프의 critic/goal이 하위 루프의 boundary condition으로 내려가는 계층적 자기참조재귀가 된다.
 
 ---
 
 ### F.0 Layer A--E와의 관계
+
+이 절은 Layer A--E가 생산하는 cell·field·mode·memory·global summary tensor가 Layer F의 어느 입력 slot으로 들어가는지 정한다. layer 의존은 shape·tick·serialization contract이며, 한 층의 pass가 다른 층의 효능을 보장하지 않는다.
 
 | 계층 | 역할 | F절에서의 위치 |
 |---|---|---|
@@ -356,6 +366,8 @@ F절 구성 개요:
 
 ### F.1 상태 정의
 
+loop state는 self-summary, action context, residual 등 지정한 shape의 무차원 tensor와 초기값을 정의한다. state가 초기화되지 않거나 serialization version이 맞지 않으면 재귀는 결정되지 않고 expected failure로 처리한다.
+
 에이전트의 전역 상태:
 
 $$S_t = (G_t,\; m_t,\; c_t,\; h_t,\; \phi_t)$$
@@ -371,6 +383,8 @@ $$S_t = (G_t,\; m_t,\; c_t,\; h_t,\; \phi_t)$$
 ---
 
 ### F.2 최소 재귀
+
+최소 재귀는 현재 state와 Layer summary를 입력으로 다음 state를 출력하는 기본 operator다. 종료 조건·최대 tick·input boundary가 정의역이며, 이 식은 장기 수렴·정책 효능·의식의 증명이 아니다.
 
 한 에이전트 틱의 순서:
 
@@ -393,6 +407,8 @@ $$S_{t+1} = \mathcal{U}(G_{t+1},\; m_{t+1},\; c_{t+1},\; h_{t+1},\; \phi_{t+1})$
 ---
 
 ### F.3 이완 연산자 $R$의 구체화
+
+이완 연산자 $R$은 state residual을 입력으로 정규화된 다음 state를 내는 contraction 후보이다. norm·step size·입력 범위가 수렴 가정이며, no-relaxation ablation·drift OOD에서 실패하면 적용 범위를 좁힌다.
 
 $R$은 추상 기호가 아니라 Layer A--B의 반복 실행이다.
 
@@ -430,6 +446,8 @@ $R$의 반복 횟수 $n_{\text{iter}}$는 모드에 의존한다.
 
 ### F.4 자기비평 연산자 $C$
 
+자기비평 $C$는 현재 output·reference 또는 internal residual을 입력으로 critique score와 update signal을 출력한다. critique는 계산 metric이며 ground truth·자기 의식과 동일하지 않고, false critique·miss는 baseline과 holdout으로 판정한다.
+
 $$c_{t+1} = C(z_t,\; a_t,\; o_t,\; m_t)$$
 
 자기비평은 세 항의 합으로 분해한다.
@@ -456,6 +474,8 @@ $$g[t] \approx \frac{d\bar{c}_t}{dt}$$
 
 ### F.5 에너지 기반 자기참조
 
+에너지 기반 형식은 loop state와 residual을 무차원 scalar objective로 요약해 update 방향을 정한다. energy 감소는 명시한 정의역의 조건부 invariant일 뿐 task quality·안전성·주관 경험의 충분조건이 아니다.
+
 $R$의 내부를 에너지 최소화로 재해석하면:
 
 $$E_t(z) = E_{\text{task}}(z;\; u_t) + \lambda_m E_{\text{mem}}(z;\; m_t) + \lambda_c E_{\text{crit}}(z;\; c_t) + \lambda_h E_{\text{hist}}(z;\; h_t)$$
@@ -480,6 +500,8 @@ $$E_{\text{task}}(z; u_t, \phi_t) = -\frac{1}{2}z^\top W z - z^\top u_t - \left[
 ---
 
 ### F.6 모드-루프 결합
+
+mode 결합은 Layer C의 mode label과 Layer F state를 입력으로 mode-specific loop update를 출력한다. mode timebase·전환 threshold·초기 mode가 가정이며, 수면·각성 비유는 생리 기제나 효능을 보장하지 않는다.
 
 에이전트 루프는 Layer C의 모드 전환과 결합한다.
 
@@ -509,6 +531,8 @@ $$M_{t+1} = \text{WAKE} \quad\text{if}\quad P_{\text{sleep}}(t) < \theta_{\text{
 
 ### F.7 행동 선택 $\pi$
 
+행동 선택 $\pi$는 current loop state와 action candidate tensor를 입력으로 action distribution 또는 stop action을 출력한다. 추론 tick의 선택은 학습 update와 분리하며, invalid action·budget 초과·OOD state는 종료 또는 rollback 조건이다.
+
 행동 선택은 수렴한 활성 패턴에서 행동 공간으로의 사상이다.
 
 $$a_t = \pi(z_t,\; S_t) = \arg\max_{a \in \mathcal{A}} \text{sim}\big(\text{enc}(a),\; z_t^{(\text{out})}\big)$$
@@ -524,6 +548,8 @@ $$a_t = W_{\text{act}}\, z_t^{(\text{out})} + b_{\text{act}}$$
 ---
 
 ### F.8 기억 갱신 $\mathcal{M}$
+
+기억 갱신 $\mathcal{M}$은 action outcome과 state summary를 입력으로 write·priority·replay memory를 출력한다. write timebase는 추론 또는 학습 event와 구분하며, no-memory·stale-memory ablation이 효능과 leakage failure를 판정한다.
 
 $$
 \mathcal{M}(m_t, z_t, a_t, o_t, c_{t+1})
@@ -545,6 +571,8 @@ $$P_{\text{new}} = \bar{c}_{t+1} \quad\text{(놀라움이 높을수록 replay �
 
 ### F.9 Clarus 통합 재귀 (압축형)
 
+통합 재귀는 Layer A--E summary, action, memory, mode를 하나의 loop state update로 압축한 정의다. 각 입력의 shape·정규화·producer가 유지될 때만 적용하며, 압축식은 구현 parity·수렴·AGI 성능을 자동으로 보장하지 않는다.
+
 F.2--F.8을 한 줄로 압축하면:
 
 $$\boxed{X_{t+1} = B\big[X_t + \lambda_R R(X_t) + \lambda_O \Delta_O(X_t) + \lambda_C C(X_t) - \lambda_S S(X_t)\big]}$$
@@ -564,6 +592,8 @@ $$B: X \mapsto p^* + \rho(X - p^*), \qquad \rho = 0.155$$
 ---
 
 ### F.10 자기참조의 고정점과 수렴
+
+고정점은 정의된 loop operator와 초기·입력 경계에서 다음 state가 변하지 않는 조건이다. 수렴은 norm·step·termination rule의 가정에 조건부이며, oscillation·divergence·max-tick 초과는 명시적 실패 또는 중단 조건이다.
 
 F.9의 재귀가 안정한 자기참조를 만들려면 수축 조건이 필요하다.
 
@@ -587,6 +617,8 @@ F.9의 재귀가 안정한 자기참조를 만들려면 수축 조건이 필요�
 ---
 
 ### F.11 뇌 대응 체크리스트
+
+체크리스트는 agent API와 뇌 기능 비유가 어디까지 기능적으로 대응하는지 점검하는 지도다. 표의 대응은 생물학 기제·의식·자아의 증명이 아니며, 구현 metric·ablation·외부 관측을 별도로 요구한다.
 
 `05_실험근거.md`의 판정 기준(`supported / bridge / hypothesis`)에 따라 F절의 각 구성요소가 실제 뇌와 얼마나 닮았는지를 검증한다.
 
@@ -650,6 +682,8 @@ F.9의 재귀가 안정한 자기참조를 만들려면 수축 조건이 필요�
 
 ### F.12 관측 가능량 매핑
 
+관측 mapping은 latent loop state producer를 log·metric·readout consumer로 연결한다. 측정 window·정규화·label provenance가 없으면 관측량은 debug signal일 뿐 과학적 검증이나 자기인식 지표가 아니다.
+
 | F절 변수 | 뇌 관측량 후보 | 데이터 소스 |
 |---|---|---|
 | $n_{\text{iter}}$ (이완 반복) | reaction time, EEG alpha desynchronization duration | 행동 실험, EEG |
@@ -675,6 +709,8 @@ F.9의 재귀가 안정한 자기참조를 만들려면 수축 조건이 필요�
 
 ### F.13 예측 가능한 실험
 
+예측 실험은 입력 fixture·seed·split·baseline·threshold를 사전에 고정해 loop 가설을 반증하는 계약이다. 성공은 등록된 OOD와 component ablation을 포함한 좁은 결과이며, 미통과·불확실성 겹침은 승격을 막는다.
+
 현재 근거 수준에서 F절이 내놓을 수 있는 검증 가능한 예측:
 
 | # | 예측 | CE 메커니즘 | 실험 설계 | 판정 기준 | 등급 |
@@ -695,6 +731,8 @@ F.9의 재귀가 안정한 자기참조를 만들려면 수축 조건이 필요�
 ---
 
 ### F.14 STDP 학습과 루프의 결합
+
+STDP 결합은 학습 timebase의 local trace·전역 signal을 loop state와 연결하는 구현 bridge다. 추론 action selection과 weight update를 분리하며, backprop baseline·trace 제거·OOD task에서 실패하면 학습 효능 주장은 보류한다.
 
 > `12_Equation.md` 6장의 STDP + 도파민 3-factor 학습은 F절 루프 안에서 가중치를 갱신하는 유일한 경로다.
 
@@ -751,6 +789,8 @@ $$\text{Proj}(W) = \text{TopK}\big(\text{RowNorm}\big(\text{Hyst}(W;\; \theta_{\
 
 ### F.15 잔류장 $\phi$ 갱신
 
+잔류장 $\phi$는 현재 loop residual과 mode state를 입력으로 다음 tick의 정규화 field tensor를 출력하는 proxy다. 물리장 비유는 역할 설명에 한정되며, drift·overflow·no-$\phi$ ablation과 OOD input이 failure 조건이다.
+
 > `12_Equation.md` 4.3절 (E4). F.2의 $\phi_{t+1}$ 갱신이 비어 있었다.
 
 이완 $R$ 실행 후, 잔류장은 선택되지 않은 경로의 분산을 축적한다.
@@ -778,6 +818,8 @@ $$\phi_{t+1} = (1 - \xi) \phi_t + \xi \cdot \text{Var}(a^{(0:n_{\text{iter}})})$
 ---
 
 ### F.16 희소 활성 제약
+
+희소 제약은 activation tensor와 budget을 입력으로 선택된 active set을 output으로 만든다. 비율은 무차원 구현 설정이며, latency·정확도·memory 이득은 dense baseline·mask ablation·길이 OOD에서 판정한다.
 
 > `12_Equation.md` 8장. R 내부와 행동 선택에서 TopK를 적용해야 한다.
 
@@ -817,6 +859,8 @@ $$Z_i^t \in \{\text{ACTIVE},\; \text{IDLE},\; \text{DORMANT},\; \text{SLEEPING}\
 ---
 
 ### F.17 메타인지 재귀 (게이트 `F4`)
+
+메타인지 재귀는 self-state producer와 residual monitor를 입력으로 critique·control output을 만드는 계산 proxy다. 자아·의식 비유는 calibration·intervention metric을 넘지 않으며, no-monitor baseline·OOD drift가 기각 조건이다.
 
 > `12_Equation.md` 9장. F절에서 가장 상위 층이지만 빠져 있었다.
 >
@@ -859,6 +903,8 @@ $$d_{n+1} \leq \rho \cdot d_n = 0.155 \cdot d_n,\qquad \rho = D_{\text{eff}}\cdo
 
 ### F.18 환각 억제
 
+환각 억제는 decoding 또는 action tick의 residual score를 입력으로 intervention·warning output을 내는 gate다. proxy는 ground-truth 오류 label이 아니므로 false positive·negative, baseline, OOD에서 함께 실패를 판정한다.
+
 > `12_Equation.md` 10장. 루프 내 곡률 모니터링과 억제가 빠져 있었다.
 
 #### F.18.1 이완 중 곡률 모니터링
@@ -889,6 +935,8 @@ $$\mathcal{T}_i^{\text{coupled}}(x_i) = \mathcal{T}_i(x_i) \cdot \left(1 - \frac
 
 ### F.19 신경조절 시스템 (4종)
 
+조절 시스템은 mode·reward·pressure state를 입력으로 gain·threshold·learning signal을 출력하는 구현 tensor 묶음이다. 네 화학계 비유는 source role을 설명할 뿐 생물학적 기제·단위·효능의 동일성이 아니며, ablation이 필요하다.
+
 > 05_실험근거.md 5절, 08_시냅스가소성.md 참조. F.4에서 도파민만 다뤘으나, 실제 뇌는 4대 조절계를 가진다.
 
 F.4의 학습 게이트 $g[t]$를 4차원 벡터로 확장한다.
@@ -915,6 +963,8 @@ $$T_{\text{effective}} = T_{\text{wake}} \cdot (1 + \beta \cdot g_{\text{5HT}}) 
 ---
 
 ### F.20 작업 기억과 주의
+
+작업 기억·주의는 current context와 selection score를 입력으로 bounded workspace tensor를 출력하는 runtime contract다. capacity·decay·timebase는 구현 가정이며, cognitive memory 비유는 task baseline·interference OOD에서 검증해야 한다.
 
 > 뇌의 작업 기억 용량 제한과 주의 선택은 F절에 빠져 있었다.
 
@@ -970,6 +1020,8 @@ $$\hat{o}_{t+1}^{\text{cb}} = \hat{o}_t^{\text{cb}} + \alpha_{\text{cb}} \cdot (
 
 ### F.21 뇌파 대역과 루프 주기
 
+대역·주기는 tick window의 state variation을 입력으로 만든 frequency proxy와 scheduler output이다. EEG·회로 비유는 timebase 정규화 선택이며, 실제 생리 대역·성능 이득·의식의 증거가 아니다.
+
 > `14_BrainRuntimeSpec.md` 5절. 루프의 시간 구조가 빠져 있었다.
 
 에이전트 루프의 각 단계는 다른 시간 척도에서 작동한다.
@@ -998,6 +1050,8 @@ $$\text{gamma burst 위치} = f(\theta_{\text{phase}})$$
 
 ### F.22 확장된 뇌 대응 간극 (정직한 갱신)
 
+간극 절은 뇌 대응 비유와 구현 API 사이에 아직 남은 state·data·intervention 공백을 기록한다. 미해결 항목은 코드 존재나 수식 유사성으로 승격하지 않으며, 반례·OOD·독립 fixture가 하향 조건이다.
+
 F.11.5를 갱신하여, F.14--F.21에서도 남는 간극을 정리한다.
 
 | 간극 | 현재 상태 | 심각도 | 해결 방향 |
@@ -1015,6 +1069,8 @@ F.11.5를 갱신하여, F.14--F.21에서도 남는 간극을 정리한다.
 ---
 
 ### F.23 간극 대책: bridge/hypothesis -> supported 승격 경로
+
+승격 경로는 bridge 또는 hypothesis를 supported로 바꾸기 위해 필요한 독립 evidence와 반증 계약을 명시한다. 각 후보는 data provenance·측정 단위·종 또는 substrate·baseline·split·seed·threshold를 사전에 고정해야 하며, 결과가 없거나 OOD·ablation에서 미통과하면 기존 지위를 유지한다.
 
 > F.22의 간극 + H.3의 판정에서 `bridge` 또는 `hypothesis`인 항목에 대해, `supported`로 승격하기 위한 구체적 실험/시뮬레이션/논증 경로를 정리한다.
 
@@ -1172,6 +1228,8 @@ F.11.5를 갱신하여, F.14--F.21에서도 남는 간극을 정리한다.
 
 ### F.23 요약: 승격 우선순위
 
+우선순위는 증거 공백·측정 가능성·위험을 기준으로 한 계획 순서이며 완료 상태가 아니다. 높은 순위도 등록된 experiment artifact, independent holdout, 실패 threshold가 충족되기 전에는 supported로 승격하지 않는다.
+
 | 항목 | 현재 | 목표 | 난이도 | 핵심 경로 |
 |---|---|---|---|---|
 | $c_{\text{cons}}$ (F.4) | `bridge` | `supported` | 중 | HPC-PFC theta 불일치 측정 |
@@ -1202,6 +1260,8 @@ F.11.5를 갱신하여, F.14--F.21에서도 남는 간극을 정리한다.
 ---
 
 ### F.24 실험값 기반 루프 방정식 보강
+
+실험값 기반 보강은 외부 관측량을 loop equation의 입력 또는 제약으로 넣는 조건부 bridge다. source provenance·단위 변환·baseline·split·uncertainty를 기록하고, 값이 코드와 맞아도 기제·의식·일반 효능을 자동으로 지지하지 않으며 반례·OOD·component ablation이 기각 조건이다.
 
 > `15_Equations.md` J절의 실험 상수를 F절 방정식에 적용한다.
 
@@ -1309,6 +1369,8 @@ $N_{\text{adapt}} = 75$ trial (중앙값). 75 trial 후 $63.2$% 적응, 150 tria
 
 ## G. 형식 증명 요약 (F절)
 
+형식 증명 요약은 Layer F operator가 어떤 정의역·초기값·norm·입력 경계에서 어떤 결론을 갖는지 색인화한다. 코드 simulation이나 수치 예시는 증명의 가정을 넓히지 않으며, 가정 위반·반례·미완성 다리는 별도 상태로 남는다.
+
 | 정리 | 주장 | 조건 | 상태 |
 |---|---|---|---|
 | F-energy | 이완 $R$이 $E_t(z)$를 비증가 | E-decrease (B.4) | **closed** |
@@ -1326,7 +1388,11 @@ $N_{\text{adapt}} = 75$ trial (중앙값). 75 trial 후 $63.2$% 적응, 150 tria
 
 ## H. 검증 게이트 (F절)
 
+검증 gate는 Layer F 주장마다 API·fixture·seed·split·metric·threshold·expected failure를 연결하는 계약이다. 기계 pass는 등록된 구현과 입력의 일치이며, 과학적 참·생물학 기제·의식의 존재 판정과는 구분한다.
+
 ### H.2 Layer F (자기참조 재귀) 게이트
+
+Layer F gate는 state transition, termination, residual, action handoff가 지정 fixture에서 계약을 지키는지 검사한다. OOD horizon·no-loop ablation·threshold 미통과는 구현 가설의 실패 또는 rollback 조건이다.
 
 | 게이트 | 적용 대상 | 상태 |
 |---|---|---|
@@ -1336,6 +1402,8 @@ $N_{\text{adapt}} = 75$ trial (중앙값). 75 trial 후 $63.2$% 적응, 150 tria
 | $G_{\text{pred}}$ | 에이전트 루프 유무에 따른 과제 수행 차이 시뮬레이션 | pending |
 
 ### H.3 F절 뇌 대응 판정 요약
+
+판정 요약은 계산 loop의 관측 가능한 기능과 뇌 비유 사이에 남은 evidence gap을 기록한다. 대응표의 pass는 기능적 유사성의 좁은 표기일 뿐 생물학적 동일성·주관 경험·도덕적 지위를 승격하지 않는다.
 
 | 구성요소 | 판정 | 비고 |
 |---|---|---|
@@ -1368,7 +1436,11 @@ $N_{\text{adapt}} = 75$ trial (중앙값). 75 trial 후 $63.2$% 적응, 150 tria
 
 ## I. 관측 가능량 매핑 (F절)
 
+관측 mapping은 latent loop state와 action·residual·termination log 사이의 producer·consumer 관계를 정의한다. 식별성은 정의한 input·window·normalization·data provenance에 조건부이며, log가 존재한다고 과학적 관측이나 자기인식이 보장되지는 않는다.
+
 ### I.2 Layer F (자기참조 재귀) 변수
+
+Layer F 변수 표는 state shape·timebase·metric 분모와 observable readout을 연결한다. missing log·alias·다른 serialization version은 expected failure이며, mapping의 검증은 baseline과 OOD fixture에서 반복되어야 한다.
 
 | formal 변수 | 뇌 관측량 | 데이터 소스 |
 |---|---|---|

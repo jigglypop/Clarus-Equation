@@ -2,6 +2,14 @@ from __future__ import annotations
 
 import math
 
+import pytest
+
+
+pytest.importorskip(
+    "torch",
+    reason="BootstrapSolver integration imports the torch-backed package facade",
+)
+
 from reality_stone.clarus.bootstrap_solver import BootstrapSolver
 
 

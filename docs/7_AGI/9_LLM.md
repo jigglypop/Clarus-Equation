@@ -1,5 +1,9 @@
 # CE-LLM 실전 구축 가이드
 
+이 문서는 LLM 본체와 CE 모듈을 결합하는 구현 경로를 설명한다. 독자는 transformer 학습·추론·평가의 기본을 아는 독자를 전제로 하며, CE 모듈은 입력 표현·정규화·감시를 담당할 뿐 데이터 품질, 사실성, 모델 일반화의 책임을 대신하지 않는다.
+
+원리와 구축 경로를 먼저 읽고, 학습 step·decoding step·검증 run의 timebase를 분리해 구현과 측정을 연결한다. 성공은 provenance가 기록된 데이터의 baseline·holdout·OOD·ablation gate이며, 오탐은 유효 출력을 억제한 경우, 미탐은 오류 출력을 놓친 경우로 함께 기록한다.
+
 > 관련: 2-6장(이론), `legacy examples/ai/clarus_lm.py` (removed)(처음부터 학습), `examples/ai/ce_gpt2.py`(기존 모델 이식), `legacy examples/ai/train_clarus.py` (removed)(학습 스크립트)
 >
 > 이 장은 CE-AGI 원리를 적용한 LLM을 실제로 만드는 세 가지 경로를 다룬다. 이론이 아니라 코드와 명령어 중심.
@@ -24,24 +28,24 @@ c_{t+1}=C(z_t,a_t,o_t,m_t), \qquad
 S_{t+1}=\mathcal U(S_t,z_t,c_{t+1},m_{t+1},\phi_{t+1})
 $$
 
-이다. 즉 모델은 출력 직전의 hidden state만 쓰는 것이 아니라, 자기비평 \(c_t\), 기억 \(m_t\), 잔류장 \(\phi_t\), 모드 \(M_t\)를 다시 다음 추론의 조건으로 넣는다. 이것이 `17_AgentLoop.md`의 Layer F이고, LLM 응용에서 가장 먼저 보존해야 할 구조다.
+이다. 즉 모델은 출력 직전의 hidden state만 쓰는 것이 아니라, 자기비평 $c_t$, 기억 $m_t$, 잔류장 $\phi_t$, 모드 $M_t$를 다시 다음 추론의 조건으로 넣는다. 이것이 `17_AgentLoop.md`의 Layer F이고, LLM 응용에서 가장 먼저 보존해야 할 구조다.
 
 실전 구현에서 자기참조재귀는 세 단계로 나뉜다.
 
 | 단계 | 구현 형태 | 바로 가능한 응용 | 지위 |
 |---|---|---|---|
-| 내부 재귀 | 한 block 또는 hidden state를 \(k\)회 이완해 고정점 근처로 보냄 | recursive block, long-context 안정화 | 구현/벤치 가능 |
-| 비평 재귀 | 출력 후보를 자기비평 점수 \(c_t\)로 평가하고 다음 decoding에 반영 | hallucination suppressor, verifier, reranker | 프로토타입 가능 |
+| 내부 재귀 | 한 block 또는 hidden state를 $k$회 이완해 고정점 근처로 보냄 | recursive block, long-context 안정화 | 구현/벤치 가능 |
+| 비평 재귀 | 출력 후보를 자기비평 점수 $c_t$로 평가하고 다음 decoding에 반영 | hallucination suppressor, verifier, reranker | 프로토타입 가능 |
 | 기억 재귀 | 행동/관찰/비평을 memory에 쓰고 다음 step의 context로 회수 | agent memory, sleep replay, RAG state | 구현 가능 |
 
 따라서 CE-LLM 이식의 우선순위는 다음 순서다.
 
-1. **한 번 더 생각하는 내부 이완**: \(h \to F(h) \to F(F(h))\) 구조를 넣어 hidden state를 자기 고정점으로 보낸다.
+1. **한 번 더 생각하는 내부 이완**: $h \to F(h) \to F(F(h))$ 구조를 넣어 hidden state를 자기 고정점으로 보낸다.
 2. **자기비평을 다음 입력으로 접기**: 답변 후 평가가 로그로만 남지 않고, 다음 token 또는 다음 turn의 state에 들어가야 한다.
-3. **잔류장을 버리지 않기**: softmax에서 탈락한 후보, 높은 곡률 구간, 불확실성 신호를 \(\phi\)로 보존한다.
-4. **수면/리플레이로 재정렬**: online 추론 중 쌓인 \(m,c,\phi\)를 offline replay에서 다시 압축한다.
+3. **잔류장을 버리지 않기**: softmax에서 탈락한 후보, 높은 곡률 구간, 불확실성 신호를 $\phi$로 보존한다.
+4. **수면/리플레이로 재정렬**: online 추론 중 쌓인 $m,c,\phi$를 offline replay에서 다시 압축한다.
 
-이 기준으로 보면 Euler-CE attention, LBONorm, spectral norm, MRA, curvature penalty는 모두 보조 장치다. 이 장치들이 의미를 가지려면 결국 \(S_t \to R(S_t) \to C \to \mathcal U(S_{t+1})\) 루프 안에서 자기 상태를 갱신해야 한다.
+이 기준으로 보면 Euler-CE attention, LBONorm, spectral norm, MRA, curvature penalty는 모두 보조 장치다. 이 장치들이 의미를 가지려면 결국 $S_t \to R(S_t) \to C \to \mathcal U(S_{t+1})$ 루프 안에서 자기 상태를 갱신해야 한다.
 
 ### 0.1 수학적 최소형
 
@@ -57,7 +61,7 @@ $$
 \times \Phi
 $$
 
-로 둔다. 각각 전역 요약, 기억, 자기비평, 이력, 잔류장이다. 한 step의 CE-LLM은 외부 입력 \(x_t\)와 관찰 \(o_t\)에 대해 다음 자기 사상으로 정의된다.
+로 둔다. 각각 전역 요약, 기억, 자기비평, 이력, 잔류장이다. 한 step의 CE-LLM은 외부 입력 $x_t$와 관찰 $o_t$에 대해 다음 자기 사상으로 정의된다.
 
 $$
 \mathcal T_{\theta,x_t,o_t}:\mathcal S\to\mathcal S,
@@ -90,7 +94,7 @@ S_{t+1}&=(G_{t+1},m_{t+1},c_{t+1},h_{t+1},\phi_{t+1}).
 \end{aligned}
 $$
 
-여기서 중요한 항은 \(c_{t+1}\)이다. 자기비평이 단순 로그나 평가 리포트로 끝나면 루프는 열려 있다. CE식 응용에서는 \(c_{t+1}\)가 다음 step의 에너지에 들어가야 한다.
+여기서 중요한 항은 $c_{t+1}$이다. 자기비평이 단순 로그나 평가 리포트로 끝나면 루프는 열려 있다. CE식 응용에서는 $c_{t+1}$가 다음 step의 에너지에 들어가야 한다.
 
 $$
 E_{t+1}(z)
@@ -115,13 +119,13 @@ $$
 
 ### 0.2 안정성 조건
 
-고정된 task regime에서 이상적인 자기참조재귀는 어떤 attractor \(S^\star\) 근처로 수축해야 한다.
+고정된 task regime에서 이상적인 자기참조재귀는 어떤 attractor $S^\star$ 근처로 수축해야 한다.
 
 $$
 S^\star=\mathcal T(S^\star).
 $$
 
-충분조건은 가중 norm \(\|\cdot\|_Q\)에 대해
+충분조건은 가중 norm $\|\cdot\|_Q$에 대해
 
 $$
 \|\mathcal T(S)-\mathcal T(S')\|_Q
@@ -143,7 +147,7 @@ $$
 \right).
 $$
 
-AI 응용에서 측정할 값은 \(S^\star\) 자체가 아니라 수축률과 잔류 반경이다.
+AI 응용에서 측정할 값은 $S^\star$ 자체가 아니라 수축률과 잔류 반경이다.
 
 $$
 \hat\rho_t
@@ -155,7 +159,7 @@ r_{\rm res}
 \limsup_{t\to\infty}\|S_t-S_t^\star\|_Q.
 $$
 
-좋은 CE-LLM 보강은 accuracy만 올리는 모듈이 아니라, \(\hat\rho_t\)를 낮추거나 \(r_{\rm res}\)를 줄이는 모듈이다.
+좋은 CE-LLM 보강은 accuracy만 올리는 모듈이 아니라, $\hat\rho_t$를 낮추거나 $r_{\rm res}$를 줄이는 모듈이다.
 
 ### 0.3 계층화 가능성
 
@@ -187,7 +191,7 @@ u_{i,t}^{(\ell)}
 B_i^{(\ell)}(S_t^{(\ell+1)}).
 $$
 
-이 구조가 안정하려면 `17_AgentLoop.md` F.-1.5의 gain matrix \(G\)가
+이 구조가 안정하려면 `17_AgentLoop.md` F.-1.5의 gain matrix $G$가
 
 $$
 \rho(G)<1
@@ -197,9 +201,9 @@ $$
 
 | 값 | 의미 | 너무 크면 생기는 문제 |
 |---|---|---|
-| \(\rho_\ell\) | 해당 모듈 자체의 수축률 | 내부 사고가 수렴하지 않음 |
-| \(g_\uparrow\) | 하위 요약이 상위 상태를 흔드는 gain | 작은 오류가 global state로 증폭 |
-| \(g_\downarrow\) | 상위 critic/goal이 하위 모듈을 흔드는 gain | top-down 명령이 하위 루프를 파괴 |
+| $\rho_\ell$ | 해당 모듈 자체의 수축률 | 내부 사고가 수렴하지 않음 |
+| $g_\uparrow$ | 하위 요약이 상위 상태를 흔드는 gain | 작은 오류가 global state로 증폭 |
+| $g_\downarrow$ | 상위 critic/goal이 하위 모듈을 흔드는 gain | top-down 명령이 하위 루프를 파괴 |
 
 자기유사하게 같은 모듈을 반복 배치하는 경우 충분조건은
 
@@ -213,6 +217,8 @@ $$
 
 ## 1. 세 가지 구축 경로
 
+세 경로는 서로 다른 초기 모델과 compute를 입력으로 받아 CE 모듈이 연결된 checkpoint·평가 artifact를 출력한다. 표의 난이도와 소요는 계획값이며, 성능 완료나 일반화 증거를 뜻하지 않는다.
+
 | 경로 | 설명 | 난이도 | 소요 | 결과물 |
 |---|---|---|---|---|
 | **A. 처음부터 학습** | ClarusLM을 스크래치로 학습 | 낮음 | GPU 수시간 | 소형 CE-LLM |
@@ -222,6 +228,8 @@ $$
 ---
 
 ## 2. 경로 A: 처음부터 학습 (ClarusLM)
+
+처음부터 학습은 데이터 provenance·tokenizer·optimizer 상태를 함께 고정해야 재현 가능한 경로가 된다. 학습 step의 loss 개선은 추론 사실성·OOD·오탐/미탐 개선을 보장하지 않으므로 별도 검증 gate를 둔다.
 
 ### 2.1 기존 코드 구조
 
@@ -300,6 +308,8 @@ step   200 | loss 2.3456 | val 2.4567 | curv 0.003456 | ...
 
 ### 2.3 규모별 설정
 
+규모 표는 memory·wall-clock 예산을 맞추기 위한 구성 예시다. 동일 데이터 split과 training token 수를 통제하지 않으면 규모 차이를 CE 모듈 효과로 읽을 수 없다.
+
 | 규모 | dim | layers | heads | 파라미터 | GPU 메모리 | 학습 시간 |
 |---|---|---|---|---|---|---|
 | Micro | 128 | 4 | 4 | ~1M | < 1GB | 수분 |
@@ -333,6 +343,8 @@ model = ClarusLM(
 
 ## 3. 경로 B: 기존 모델 이식 (CE-GPT2)
 
+이식은 기존 LLM의 책임과 CE 모듈의 책임을 분리한 ablation 경로다. 원 모델 checkpoint·데이터 provenance·변경한 모듈을 기록하고, baseline 대비 holdout·OOD 변화로만 이식 효과를 판정한다.
+
 ### 3.1 2단계 이식 전략
 
 `examples/ai/ce_gpt2.py`가 GPT-2에 CE를 이식하는 완전한 코드다.
@@ -350,6 +362,8 @@ model = ClarusLM(
 - 증류(distillation)로 초기화: 원본 MLP의 입출력을 모방하도록 학습
 
 ### 3.2 실행
+
+이 절은 지정한 예제와 phase 설정을 입력으로 runtime artifact와 metric 출력을 생성하는 실행 절차를 보여 준다. 명령 성공은 환경·코드 contract의 확인이며, LLM–CE 책임 경계나 모델 성능의 과학적 결론을 대신하지 않는다.
 
 ```bash
 cd examples/ai
@@ -420,6 +434,8 @@ optimizer = torch.optim.AdamW(
 ---
 
 ## 4. 경로 C: 대규모 CE 사전학습
+
+대규모 경로는 compute 규모를 키우는 계획이지 앞 경로의 가설을 자동으로 확인하는 방법이 아니다. training·service·offline sleep의 timebase와 데이터 유입 경계를 따로 기록하며, gate 미통과 시 규모 확대는 rollback 대상이다.
 
 ### 4.1 아키텍처 설정
 
@@ -587,7 +603,11 @@ class GroundedCELLM(nn.Module):
 
 ## 5. CE 모듈별 구현 상세
 
+이 절은 LLM 본체가 맡는 token prediction과 CE 모듈이 맡는 정규화·채널 분할·감시 인터페이스를 구분한다. 코드 조각은 명세이며, 각 모듈의 효능은 제거 ablation과 동일 baseline에서 반증 가능해야 한다.
+
 ### 5.1 LBONorm 내부 동작
+
+이 코드는 입력 tensor를 받아 정규화된 tensor를 내는 LBONorm의 내부 update 순서를 예시한다. 각 단계의 shape·precision·timebase는 구현 contract이고, 물리적 장의 정규화나 OOD 안정성은 별도 benchmark로 판정한다.
 
 ```python
 def forward(self, x):
@@ -613,6 +633,8 @@ def forward(self, x):
 
 ### 5.2 GaugeLattice 채널 분할
 
+이 예시는 지정한 전체 차원과 비율을 입력으로 채널별 정수 shape를 계산하는 allocation 규칙이다. 반올림·잔여 채널·다른 model dimension에서의 동작은 검사 대상이며, 이름이 물리 gauge 자유도를 구현했다는 뜻은 아니다.
+
 ```python
 # d=768 예시
 total = 0.11789 + 0.03352 + 0.00775  # = 0.15916
@@ -626,6 +648,8 @@ d1 = 768 - 568 - 162                  # =  38 (U(1) attention)
 ```
 
 ### 5.3 Spectral Norm 적용
+
+이 코드는 projection weight의 spectral norm을 제어하는 구현 예시로, 입력 행렬과 제약된 출력 operator를 명시한다. 안정성 효과는 baseline·ablation·OOD 조건에서 측정해야 하며 코드 블록만으로 보장되지 않는다.
 
 ```python
 # 적용 전: sigma_1(W) 제약 없음 (정보 증폭 가능)
@@ -641,7 +665,11 @@ PyTorch의 `spectral_norm`은 power iteration으로 최대 특이값을 추정�
 
 ## 6. 학습 모니터링: 무엇을 봐야 하는가
 
+모니터링은 학습 metric과 추론 위험 metric을 섞지 않고 provenance가 있는 validation 기록으로 연결한다. 단일 loss 개선은 성공이 아니며, OOD 악화·오탐 증가·미탐 유지가 나타나면 해당 모듈 가설은 기각 또는 미완성이다.
+
 ### 6.1 핵심 지표
+
+다음 지표는 step별 추세와 holdout 평가를 함께 남기기 위한 측정 계약이다. 목표값은 운영 경보 기준이며 ground-truth 사실성의 대체물이 아니다.
 
 | 지표 | 의미 | 목표 |
 |---|---|---|
@@ -655,6 +683,8 @@ PyTorch의 `spectral_norm`은 power iteration으로 최대 특이값을 추정�
 | `ground_align` | 모달 정합도 | grounded 모델에서 증가 기대 |
 
 ### 6.2 곡률 에너지의 해석
+
+곡률 에너지는 내부 활성의 residual proxy이지 오류 label 자체가 아니다. 오류 provenance와의 상관·개입 ablation이 없으면 단조 변화만으로 안정성 또는 환각 억제를 주장할 수 없다.
 
 - **curv 단조 증가**: 모델이 복잡한 패턴을 학습 중 (정상)
 - **curv 급등**: 불안정한 영역 진입 (lambda_curv 증가 고려)
@@ -695,6 +725,8 @@ Phi   smoothing: LBO (rank=32)      # 안정화: 전역 평탄화
 
 ### 6.5 최소 체크리스트
 
+체크리스트는 실행 전 데이터 provenance, baseline, OOD, rollback 기록이 빠지지 않게 하는 절차다. 항목 충족은 성능 증명이 아니라 검증 가능한 run의 최소 조건이다.
+
 | 항목 | 기대값 | 실패 시 해석 |
 |---|---|---|
 | `active_ratio` 스위프 | 최적점 `4-5%`, 실용 대역 `3-7%` | 과제 의존성이 더 큼 |
@@ -733,7 +765,11 @@ class GaugeLatticeV2(nn.Module):
 
 ## 8. 실전 팁
 
+다음 값은 구현을 시작하기 위한 hyperparameter 제안이며, 형식 정리나 보편 최적값이 아니다. 각 선택은 validation sweep과 component ablation에서 실패할 수 있고, 그 결과를 다음 run의 입력으로 남긴다.
+
 ### 8.1 lambda_curv 선택
+
+계수는 과제 손실과 곡률 proxy 사이의 절충을 정하는 무차원 hyperparameter다. 표의 권장은 동일 data provenance와 compute에서의 기준선 sweep 없이 일반화하지 않는다.
 
 | 모델 규모 | 권장 lambda_curv | 이유 |
 |---|---|---|
@@ -744,11 +780,15 @@ class GaugeLatticeV2(nn.Module):
 
 ### 8.2 LBO rank 선택
 
+rank는 표현력·비용·안정성의 구현 선택이다. 아래 식은 시작 규칙이며 OOD와 latency에서의 실패가 있으면 그대로 유지하지 않는다.
+
 $$r = \max(4,\; d / 8)$$
 
 이 경험적 규칙이 대부분의 경우 작동한다. $r$이 너무 작으면 확산이 불충분하고, 너무 크면 파라미터 낭비.
 
 ### 8.3 Spectral Norm 주의사항
+
+spectral constraint는 증폭을 제한하는 모듈이며 optimizer 안정성·사실성의 충분조건이 아니다. 학습 불안정·오탐·미탐을 baseline과 ablation에서 함께 진단한다.
 
 - 학습 초반에 spectral norm이 그래디언트를 불안정하게 만들 수 있다
 - 해결: warmup 동안 spectral norm의 power iteration을 1회만 수행 (기본값)

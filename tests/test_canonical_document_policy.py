@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import importlib.util
 import re
 from pathlib import Path
+from urllib.parse import unquote
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -10,6 +12,17 @@ LECTURE_DIR = ROOT / "docs" / "1_강의"
 CONSTANTS_DIR = ROOT / "docs" / "3_상수"
 FORMAL_DIR = ROOT / "docs" / "9_등호이전"
 REFERENCE_DIR = ROOT / "docs" / "참조"
+MATH_NORMALIZER_PATH = PAPER_DIR / "normalize_markdown_math.py"
+
+
+def _load_math_normalizer():
+    spec = importlib.util.spec_from_file_location(
+        "ce_markdown_math_normalizer", MATH_NORMALIZER_PATH
+    )
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 PHYSICS_APPLICATION_MARKDOWN = tuple(
     ROOT / "docs" / "4_공학적_활용" / name
@@ -26,8 +39,11 @@ PHYSICS_APPLICATION_MARKDOWN = tuple(
 THEORY_DERIVATION_MARKDOWN = tuple(
     ROOT / "docs" / "5_유도" / name
     for name in (
+        "00_선택과_접힘.md",
         "01_Navier_Stokes.md",
+        "03_Protein_Folding_Derivation.md",
         "04_Dark_Energy_Derivation.md",
+        "05_Neural_RealityStone_Derivation.md",
         "06_Master_Action_Universal_Derivation.md",
         "07_Black_Hole_Derivation.md",
     )
@@ -103,11 +119,19 @@ POLICY_FILES = (
     "agents/ce-math-verifier.md",
     "agents/ce-status-auditor.md",
     "agents/ce-physics-sourcer.md",
+    "agents/ce-ledger-writer.md",
+    "agents/ce-paper-writer.md",
     "skills/ce-doc-write/SKILL.md",
+    "skills/ce-ledger-write/SKILL.md",
+    "skills/ce-paper-write/SKILL.md",
     "skills/ce-closure-gate/SKILL.md",
     "skills/ce-dimensionless/SKILL.md",
     "skills/ce-validate/SKILL.md",
 )
+
+NARRATIVE_MARKDOWN = (
+    ROOT / "docs" / "코어_독자_가이드.md",
+) + tuple(sorted(LECTURE_DIR.glob("*.md"))) + THEORY_DERIVATION_MARKDOWN
 
 FORMAL_PROVENANCE = (
     "[정의]",
@@ -225,8 +249,126 @@ def test_agent_policies_use_the_same_formal_provenance() -> None:
     assert not violations, "\n".join(violations)
 
 
+def test_ledger_and_paper_writers_have_disjoint_ownership() -> None:
+    ledger = (ROOT / ".codex" / "skills" / "ce-ledger-write" / "SKILL.md").read_text(
+        encoding="utf-8"
+    )
+    paper = (ROOT / ".codex" / "skills" / "ce-paper-write" / "SKILL.md").read_text(
+        encoding="utf-8"
+    )
+    router = (ROOT / ".codex" / "skills" / "ce-doc-write" / "SKILL.md").read_text(
+        encoding="utf-8"
+    )
+
+    assert "강의, 유도, 논문 원고와 독자 가이드의 문장을 고치지 않는다" in ledger
+    assert "원장은 수정하지 않는다" in paper
+    assert "원장을 읽기 전용 입력" in paper
+    assert "$ce-ledger-write" in router
+    assert "$ce-paper-write" in router
+    assert "동시에 수정하지 않는다" in router
+
+
+def test_narrative_documents_open_with_reader_orientation() -> None:
+    violations: list[str] = []
+    for path in NARRATIVE_MARKDOWN:
+        lines = path.read_text(encoding="utf-8").splitlines()
+        if not lines or not lines[0].startswith("# "):
+            violations.append(f"{path.relative_to(ROOT)}: missing title")
+            continue
+
+        first_body = next((line.strip() for line in lines[1:] if line.strip()), "")
+        if (
+            not first_body
+            or first_body.startswith(("#", "[", "**[", "|", "- ", "* ", "```"))
+            or re.match(r"\d+[.)]\s", first_body)
+        ):
+            violations.append(
+                f"{path.relative_to(ROOT)}: narrative must begin with prose: {first_body}"
+            )
+
+        if re.search(r"(?m)^#{1,3}\s+결론(?:\s|$)", "\n".join(lines)):
+            violations.append(f"{path.relative_to(ROOT)}: standalone conclusion heading")
+
+    assert not violations, "\n".join(violations)
+
+
+def test_core_narrative_keeps_verified_fixed_point_scope_and_measure_term() -> None:
+    narrative = (ROOT / "docs" / "5_유도" / "00_선택과_접힘.md").read_text(
+        encoding="utf-8"
+    )
+    assert r"x_0\in[0,1/D]" in narrative
+    assert r"x_0\in[0,1)" not in narrative
+    assert "잔류 측도" in narrative
+    assert "잔류 분포" not in narrative
+
+
+def test_all_docs_use_renderable_math_delimiters_outside_code() -> None:
+    normalizer = _load_math_normalizer()
+    violations: list[str] = []
+    for path in sorted((ROOT / "docs").rglob("*.md")):
+        text = path.read_text(encoding="utf-8-sig")
+        normalized, block_count, inline_count = normalizer.normalize_text(text)
+        if normalized != text:
+            violations.append(
+                f"{path.relative_to(ROOT)}: blocks={block_count}, inline={inline_count}"
+            )
+
+    assert not violations, "\n".join(violations)
+
+
+def test_math_normalizer_preserves_code_and_latex_row_spacing() -> None:
+    normalizer = _load_math_normalizer()
+    source = """\\[
+x=1\\\\[4pt]
+\\]
+Inline \\(x\\) and `code \\(y\\)`.
+```text
+\\(fenced\\)
+```
+"""
+    expected = """$$
+x=1\\\\[4pt]
+$$
+Inline $x$ and `code \\(y\\)`.
+```text
+\\(fenced\\)
+```
+"""
+    normalized, block_count, inline_count = normalizer.normalize_text(source)
+    assert normalized == expected
+    assert block_count == 2
+    assert inline_count == 2
+
+
+def test_all_relative_markdown_links_resolve() -> None:
+    link_pattern = re.compile(r"(?<!!)\[[^\]]*\]\(([^)]+)\)")
+    violations: list[str] = []
+
+    for path in sorted((ROOT / "docs").rglob("*.md")):
+        text = path.read_text(encoding="utf-8-sig")
+        for match in link_pattern.finditer(text):
+            raw_target = match.group(1).strip()
+            if raw_target.startswith("<") and raw_target.endswith(">"):
+                raw_target = raw_target[1:-1]
+            if not raw_target or raw_target.startswith(
+                ("#", "http://", "https://", "mailto:", "data:")
+            ):
+                continue
+
+            relative_target = unquote(raw_target.split("#", 1)[0].split("?", 1)[0])
+            if not relative_target:
+                continue
+            if not (path.parent / relative_target).resolve().exists():
+                line = text.count("\n", 0, match.start()) + 1
+                violations.append(
+                    f"{path.relative_to(ROOT)}:{line}: missing link target: {raw_target}"
+                )
+
+    assert not violations, "\n".join(violations)
+
+
 def test_salvaged_theory_has_canonical_proofs_and_consistent_eft_signs() -> None:
-    ledger = (REFERENCE_DIR / "핵심_정리_증명.md").read_text(encoding="utf-8")
+    ledger = (ROOT / "docs" / "검증_원장" / "참조_핵심_정리_증명.md").read_text(encoding="utf-8")
     missing = [
         anchor
         for anchor in SALVAGED_THEORY_ANCHORS

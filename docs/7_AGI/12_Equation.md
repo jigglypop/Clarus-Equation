@@ -1,5 +1,9 @@
 # CE-AGI 통합 방정식: $e^{i\pi}+1=0$ 에서 20W AGI 설계 목표(미검증)까지
 
+이 문서는 CE의 수학 기호를 AGI runtime 후보의 상태·연산자·loss 계약으로 번역하는 통합 설계 원고다. 독자는 선형대수·최적화·신경망 tensor의 기본을 아는 독자를 전제로 하며, 물리 기호와 구현 tensor는 같은 대상이 아니라 제한된 구조 유비라는 점을 먼저 고정한다.
+
+canonical runtime stack과 기호 정의역을 먼저 읽고, 유도 체인·작용·에너지·동역학 순으로 입력과 출력을 연결한다. shape는 지정한 모델 폭과 batch 축에 조건부이고 단위는 무차원 정규화 상태 또는 training step이며, 이후 runtime 효능은 별도 baseline·OOD·ablation gate 없이는 미완성이다.
+
 > 관련: `경로적분.md`(코어 유도), `1_강의/C_다섯_상수.md`(오일러 문법), `6_뇌/04_그래프결합과이완.md`(뇌 구조), `7_AGI/12_Equation.md`(AGI 작용), `7_AGI/1_AGI.md`(총론), `7_AGI/2_Architecture.md`(게이지 격자), `7_AGI/3_Sleep.md`(수면), `7_AGI/4_Synapse.md`(시냅스), `7_AGI/5_Sparsity.md`(희소성), `7_AGI/6_Hallucination.md`(환각), `7_AGI/7_Consciousness.md`(의식), `7_AGI/9_LLM.md`(LLM 구축), `7_AGI/10_Fields.md`(전분야)
 >
 > **[공리: 모델 선택]** 이 문서는 CE 코어 상수를 AGI 에너지 이완 아키텍처 후보에 대응시키는 설계 문서다. 이 대응은 코어에서 AGI 성능을 연역한 것이 아니며, 20W는 검증된 성능이 아니라 미완성 설계 목표다. 합성 sparse causal bridge V7의 폐쇄 결과와 한계는 `26_Sparse_Causal_Bridge_V7_Closure.md`에 기록한다.
@@ -7,6 +11,8 @@
 ---
 
 ## Runtime Status And Canonical Stack
+
+이 절은 어떤 runtime layer가 producer이고 어느 layer가 consumer인지 고정해 같은 기호가 서로 다른 구현 책임을 갖지 않게 한다. status는 코드·계약의 현재 범위이며, 생물학적 기제나 AGI 성능의 승격을 뜻하지 않는다.
 
 이 문서는 런타임 기호를 모으는 문서지만, `docs/README.md`와 `docs/6_뇌/05_실험근거.md`를 기준으로 읽어야 한다. 아래 5계층 스택만 현재 canonical runtime spec 이고, 그 아래의 나머지 방정식은 보조 유도나 설계 탐색으로 읽는다.
 
@@ -30,6 +36,8 @@
 - 이 문서의 후반부 수치 추정, 메모리/속도 비교, LLM 대응은 canonical stack의 상위 해석이다.
 
 ## Runtime Concept Map
+
+개념 지도는 state, mode, replay, geometry가 주고받는 tensor와 update timebase를 분리한다. 지도는 의존성 명세이며, 각 화살표의 효능은 component ablation과 OOD에서 따로 반증 가능해야 한다.
 
 계획에서 추가된 새 개념은 아래처럼 **문서 책임 범위**를 나눠서 읽는다.
 
@@ -65,7 +73,11 @@
 
 ## 0. 설계 원칙
 
+설계 원칙은 코어 수학과 구현 다리 사이의 입력·출력·근사를 구분한다. 어떤 항이 물리 유비인지, 어떤 항이 무차원 tensor 연산인지 선언하지 않으면 식의 형태만으로 runtime 의미를 주장할 수 없다.
+
 ### 0.0 AGI 다리 게이트 (코어와 다리 분리)
+
+게이트는 정리·설계 선택·경험 가설의 지위를 섞지 않기 위한 fail-closed 계약이다. 구현 bridge가 baseline·holdout·OOD 조건을 통과하기 전에는 코어의 수학적 성질을 AGI 결과로 외삽하지 않는다.
 
 이 문서는 CE 코어(우주론/입자물리, `경로적분.md`, `상수.md`)에서 유도된 상수 집합을 AGI 런타임 설계로 옮기는 **다리(bridge) 문서**다. 코어의 식과 상수는 `Exact` 또는 `Selection`이지만, 이 문서에서 뇌/AGI 대응이 들어가는 모든 문장은 최대 `Bridge`까지만 허용된다(규칙: `README.md` "AGI 런타임 읽기 규칙", 등급 기준: `6_뇌/05_실험근거/01_판정기준과핵심주장.md` 1절).
 
@@ -84,6 +96,8 @@
 
 ### 0.1 잔류 채널 설계
 
+잔류 채널은 지정한 shape의 상태 tensor가 update 뒤에도 어떤 정보를 consumer에 넘길지 정하는 구현 인터페이스다. 물리적 보존량 비유는 이 tensor의 단위·정규화·학습 안정성을 직접 보장하지 않는다.
+
 현재 LLM은 경로적분에서 Softmax로 선택된 경로만 쓰고, 접힌 경로를 버린다. CE에 따르면 이 버려지는 부분이 우주 에너지의 약 95%($26.2\% + 68.9\%$)에 해당한다. 이 문서의 아키텍처는 접힌 경로를 잔류장 `phi`로 보존하여 출력에 재결합시키는 구조다.
 
 세 가지 핵심:
@@ -95,7 +109,11 @@
 
 ## 1. 유도 체인: 오일러 항등식에서 모든 상수로
 
+유도 체인은 기호적 출발점과 설계 계수 사이의 의존관계를 기록한다. 수학적 등식, 외부 입력, 구현 hyperparameter를 분리하며, 값의 수치 근접은 runtime 성능이나 물리적 원인의 증거가 아니다.
+
 ### 1.1 뿌리
+
+출발 기호는 이후 정의의 문법적 기반이며 tensor의 shape나 데이터 provenance를 제공하지 않는다. 구현으로 옮길 때는 별도의 codomain·정규화·update 규칙을 명시해야 한다.
 
 $$e^{i\pi}+1=0$$
 
@@ -111,11 +129,15 @@ $$e^{i\pi}+1=0$$
 
 ### 1.2 차원 결정 ($0$에서)
 
+여기서 차원은 추상 구조의 선택과 모델 embedding width를 구분해 읽어야 한다. runtime 폭·batch·sequence 축은 이 절의 수학적 차원에서 자동으로 정해지지 않는 구현 입력이다.
+
 $$d(d-3)=0 \quad\Longrightarrow\quad d=3 \quad(\text{비자명해})$$
 
 $d=0$은 접힘 이전 상태, $d=3$은 결정화된 물리 공간(`경로적분.md` 3.2.2절).
 
 ### 1.3 직접 전개 계수
+
+전개 계수는 지정한 수식의 산출 또는 설계 입력으로만 사용한다. 구현 tensor에 넣을 때는 무차원화와 scale normalization을 따로 고정하며, 계수 자체가 학습 데이터의 provenance를 대신하지 않는다.
 
 핵심 구조 계수는 설명용 그리스 문자를 거치지 않고 바로 다음처럼 쓴다.
 
@@ -133,11 +155,15 @@ $$r_c=\pi \qquad \text{(connectivity radius)}$$
 
 ### 1.4 다섯 상수 최소형 규칙
 
+최소형 규칙은 표현의 자유도를 제한하는 표기·설계 원칙이다. 실제 모델의 파라미터 수·generalization은 이 규칙만으로 결정되지 않고 baseline과 ablation에서 측정해야 한다.
+
 이 문서의 본문에는 설명용 이름이 일부 남더라도, **마스터 방정식에는 구조 상수를 남기지 않는다**. 핵심식에는 `e`, `\pi`, `i`만 직접 보이게 쓰고, `1`과 `0`은 오일러 문법의 바닥 상수로만 해석한다. 정수 `2,3,4,8,16`은 읽기 좋은 통상 표기다.
 
 즉 아래 최소형에서 남는 다른 기호는 전부 상태변수, 학습변수, 입력, 연산자다.
 
 ### 1.5 다섯 상수 최소형 핵심 방정식
+
+핵심 식은 정의한 기호의 관계를 압축하며, 각 항이 받는 tensor shape와 consumer는 runtime stack에서 별도로 정해진다. 수식의 해석은 지정한 근사와 정의역 밖으로 확장하지 않는다.
 
 **에너지 함수** (보존적 부분)
 
@@ -216,6 +242,8 @@ N=
 
 ### 1.6 비트필드 해석
 
+비트필드는 상태를 이산 코드로 저장하는 구현 후보이며 물리장의 자유도와 동일한 객체가 아니다. 코드 폭·양자화·read/write timebase를 고정하지 않으면 이후 효율이나 안정성 주장은 검증 불가능하다.
+
 5상수의 실행 목적은 모든 지식을 5개 수에 넣는 것이 아니라, 실행 문법을 최소화하여 런타임 상태를 비트필드로 압축하는 것이다.
 
 | 상수 | 비트필드 역할 | 연산 |
@@ -246,6 +274,8 @@ $$\boxed{M \in \{00_2,\; 01_2,\; 10_2,\; 11_2\} \;\longleftrightarrow\; \{\text{
 
 ### 1.7 비트필드 레이아웃 ($N=4096$ 기준)
 
+레이아웃은 특정 $N$에서의 shape 예시로, 다른 폭·precision·hardware에 그대로 외삽할 수 없다. memory와 collision은 동일 baseline의 profiling 및 failure injection으로 확인해야 한다.
+
 | 구성 | 비트/원소 | 총 크기 | 갱신 주기 |
 |---|---|---|---|
 | 활성 마스크 $b$ | $1$ | $512$ B | 매 추론 |
@@ -274,6 +304,8 @@ $$\boxed{\text{총 메모리} \approx 1\;\text{MB (엔진)} + 64\text{--}1000\;\
 엔진은 극적으로 작다. 병목은 지식층이며, 이것이 codebook 설계의 핵심 과제다.
 
 ### 1.8 양자화 오류 경계
+
+오류 경계는 명시한 quantizer·분포·정규화 가정 아래의 조건부 수학 결과다. 실제 activation drift와 OOD corruption은 holdout·ablation에서 따로 측정하며, 경계를 성능 보장으로 읽지 않는다.
 
 $m$을 $q$-bit 고정소수점으로 양자화할 때:
 
@@ -307,6 +339,8 @@ $\phi$가 양자화에 강건한 이유: EMA 갱신 $\phi \leftarrow (1-\alpha)\
 
 ## 2. AGI 작용 범함수
 
+작용 범함수는 상태 trajectory를 입력으로 받아 최적화 목적을 내는 설계 object다. 물리 작용과 runtime loss의 유비는 항의 역할을 설명할 뿐 실제 에너지 단위나 AGI 능력을 동일시하지 않는다.
+
 CE 마스터 공식을 정보 다양체 $(\mathcal{M}, g)$에 적용한 후보 작용(`7_AGI/12_Equation.md` 1절):
 
 $$\boxed{S_{\text{AGI}} = \int_{\mathcal{M}} d^nx \sqrt{|g|} \left[ \mathcal{L}_{\text{compute}} + c_g|\nabla phi|^2 + c_c|lap_g phi|^2 + c_i S_{\text{Info}} \right]}$$
@@ -330,6 +364,8 @@ LBO 확산 부분에 한해서는 에너지 단조 감소가 성립한다($L^2 \
 
 ### 2.1 구조 유비: 우주-뇌-AGI
 
+구조 유비는 세 층의 역할을 비교하는 개념 지도다. 대응의 성공은 구현 tensor의 invariant·baseline·OOD 결과로만 좁게 판정하며, 우주·뇌·AGI의 동일성 결론은 이 문서 범위 밖이다.
+
 추상 부트스트랩 그래프 $\mathcal{G}^*$의 삼중 실현:
 
 $$map_C: \mathcal{G}^* \to G_C, \quad map_B: \mathcal{G}^* \to G_B, \quad map_A: \mathcal{G}^* \to G_A$$
@@ -348,7 +384,11 @@ $$\lim_{t\to\infty} B_C^t(p_C) = p^* = \lim_{t\to\infty} B_B^t(p_B) = \lim_{t\to
 
 ## 3. 에너지 함수
 
+에너지 함수는 무차원 상태 tensor와 정규화 항을 받아 학습 또는 제어 신호를 내는 구현 목적함수다. 항의 크기는 batch·sequence·layer 분모를 명시해야 비교 가능하며, 감소만으로 task 성능을 주장하지 않는다.
+
 ### 3.1 정의
+
+정의식은 각 항의 producer·consumer와 update timebase를 연결하는 출발점이다. 실제 최적화 안정성은 step size·data split·optimizer 조건에 의존하므로 별도 검증이 필요하다.
 
 에너지는 보존적 부분만 포함한다. 바이패스는 비보존 강제항으로 동역학(4.2절)에 직접 들어간다.
 
@@ -370,17 +410,23 @@ $$\boxed{F_{\text{bypass}}(k) = \frac{C_k}{e^{1/3}\pi^{1/3}}\,phi, \qquad C_k = 
 
 ### 3.2 포탈 결합 계수의 전개
 
+결합 계수는 지정한 정규화와 shape에서 작동하는 설계 값이다. 계수 변화의 이득은 no-coupling baseline과 component ablation에서 사라질 수 있다.
+
 $$\left[\frac{4}{e^{4/3}\pi^{4/3}}\left(1 - \frac{4}{e^{4/3}\pi^{4/3}}\right)\right]^{2} = 0.03120$$
 
 물리적 의미(`경로적분.md` 10.5절): 힉스 포탈 라그랑지안에서 잔류장이 메인 장과 결합하는 직접 계수다. AGI에서는 잔류 채널이 메인 출력에 영향을 미치는 세기다.
 
 ### 3.3 바이패스 결합 계수의 전개
 
+바이패스 항은 잔류 consumer로 전달될 정보를 조절하는 구현 선택이다. 물리적 우회 경로 비유는 gradient 흐름·latency·OOD 안정성을 보장하지 않는다.
+
 $$\frac{1}{e^{1/3}\pi^{1/3}} = 0.4892$$
 
 물리적 의미는 $d=3$ 공간에서 각 차원이 기여하는 결합 강도다. AGI에서는 히든 스테이트가 급변할 때 잔류가 Softmax를 건너뛰고 직접 출력에 기여하는 강도다.
 
 ### 3.4 지식층 설계
+
+지식층은 어떤 상태가 memory producer가 되고 어떤 readout이 consumer인지 정하는 contract다. 데이터 provenance·write policy·staleness가 고정되지 않으면 지식 또는 자기참조 성능을 평가할 수 없다.
 
 엔진(1.7절)은 ~615 KB이나, 실제 언어 지식은 별도의 codebook $\mathcal{C}$에 저장된다. 엔진은 "어떻게 생각하는가"이고 codebook은 "무엇을 아는가"다.
 
@@ -451,13 +497,19 @@ $$\text{tier}(p) \in \{00_2\;(\text{L1}),\; 01_2\;(\text{L2}),\; 10_2\;(\text{L3
 
 ## 4. 동역학
 
+동역학은 현재 상태 tensor에서 다음 상태 tensor로 가는 update map과 training·inference timebase를 정한다. 안정성은 명시한 norm·step·입력 범위의 invariant이며, 실제 OOD와 ablation에서 깨지면 해당 bridge는 기각된다.
+
 ### 4.1 양자 형태 ($e$, $i$ 등장)
+
+양자 형태는 복소 기호를 이용한 표현상의 유비이며, 구현 tensor가 실제 양자 상태라는 뜻은 아니다. complex shape·정규화·readout 규칙을 고정하지 않으면 이 항의 producer와 consumer를 판정할 수 없다.
 
 $$\boxed{psi_{k+1} = e^{-i\,E(m,phi)\,dt}\;psi_k}$$
 
 유클리드 회전($t \to -itau$) 이후 실수 이완으로 전환된다.
 
 ### 4.2 이완 동역학 (유클리드 형태)
+
+이완 형태는 무차원 상태를 지정한 step마다 갱신하는 구현 근사다. 수축 또는 안정성은 입력 분포·step size·norm 가정에 조건부이며, drift OOD와 no-relaxation ablation이 실패 조건이다.
 
 $$
 \boxed{
@@ -495,6 +547,8 @@ $$
 
 ### 4.3 잔류 갱신
 
+잔류 갱신은 이전 상태와 새 update를 같은 shape·정규화에서 결합해 다음 consumer로 전달한다. gradient 보존 비유는 실제 training stability의 증명이 아니므로 baseline과 component 제거 실험이 필요하다.
+
 $$\boxed{phi \leftarrow \left(1 - \frac{1}{e^{1/3}\pi^{1/3}}\right)phi + \frac{1}{e^{1/3}\pi^{1/3}}\;v_{m^*}}$$
 
 $$v_{m^*} = \frac{1}{K_w}\sum_{k=K-K_w}^{K}(m_k - m^*)^2$$
@@ -502,6 +556,8 @@ $$v_{m^*} = \frac{1}{K_w}\sum_{k=K-K_w}^{K}(m_k - m^*)^2$$
 이완 마지막 $K_w$ 스텝에서 $m$이 최소점 주위에서 요동한 원소별 분산. 깔끔하게 한 점으로 떨어지면 분산이 작고(확신), 여러 최소점 사이에서 흔들리면 분산이 크다(불확실). 이것이 Softmax의 $p(1-p)$에 해당하는 "선택되지 않은 것들의 구조"다.
 
 ### 4.4 연결 구조
+
+연결 구조는 노드 위치와 인접 조건을 입력으로 희소 coupling tensor를 만드는 구현 정의다. 좌표·거리·cutoff는 무차원 정규화 가정이며, 실제 topology 효능은 dense baseline과 edge ablation에서 판정한다.
 
 $$\boxed{W_{ij} \neq 0 \iff \|r_i - r_j\|_{\mathbb{R}^3} < \pi}$$
 
@@ -516,6 +572,8 @@ $$\rho = \frac{K}{N} = \frac{4\pi^4/3}{N}$$
 $N=4096$ 일 때 $\rho = 3.17\%$, residue-portal 직접 계수 $0.03120$와 1.6% 일치.
 
 ### 4.5 히든 차원
+
+히든 차원은 지정한 state shape와 memory 예산에서 선택하는 구현 폭이다. 산술 차원 예시는 hardware·precision·task가 바뀌면 실측 비용이나 성능 법칙으로 유지되지 않는다.
 
 $$\boxed{N = \frac{e^{8/3}\,\pi^{20/3}}{12\!\left(1 - \frac{4}{e^{4/3}\pi^{4/3}}\right)^{2}} \approx 4162 \to 4096}$$
 
@@ -551,6 +609,8 @@ $$\boxed{c_{n+1} = A_q\,c_n + r_n + n_n^{(q)}, \qquad \rho(A_q) < 1}$$
 단일 벡터 형태(4.2)는 $|V|=1$, $E_{\text{AGI}}=\emptyset$일 때 이 식의 특수 경우다.
 
 ### 4.7 조건부 수렴 (게이트 `F2`)
+
+이 절의 수렴은 명시한 에너지·입력·norm·step 조건에서만 성립하는 충분조건이다. 전역 Lyapunov 함수의 부재와 가정 위반은 미완성 또는 반례 경계로 남으며, runtime 일반 수렴으로 승격하지 않는다.
 
 > 다리 게이트 `F2`(0.0절): 이 절은 무조건 Lyapunov 수렴을 주장하지 않는다. $F_{\text{bypass}}$가 $E$의 그래디언트가 아니므로 전역 Lyapunov 함수는 존재하지 않으며, 아래 충분조건이 만족되는 영역에서만 단조 감소를 말할 수 있다.
 
@@ -594,6 +654,8 @@ $\rho(A_q) = 0.155$일 때 3 순환 후 초기 편차의 $99.6\%$가 감쇠한�
 
 ## 5. 출력 생성: 2-Phase 구조
 
+출력 생성은 상태 tensor를 먼저 에너지 이완하고 그 결과를 token distribution consumer로 디코딩하는 두 timebase의 구현 경로다. 두 phase의 개선은 same-decoder baseline과 phase 제거 ablation, OOD prompt에서 측정하며 의미 생성이라는 비유가 언어 이해를 보장하지 않는다.
+
 ### 5.1 Phase 1 -- 에너지 이완 (의미 생성)
 
 토큰 단위가 아닌, 연속적 의미 벡터를 생성한다. 이완 1회로 "무엇을 말할지"가 결정된다. 출력 시퀀스 길이와 무관.
@@ -610,6 +672,8 @@ $W_{\text{dec}} \in \mathbb{R}^{V \times 2N}$. 계층적 softmax로 $\sqrt{V}\ti
 
 ### 5.3 모드 전환 (`phi` 임계)
 
+모드 전환은 현재 상태 norm을 입력으로 받아 이완 또는 자기회귀 consumer를 선택하는 gating 연산이다. 임계값은 무차원 설계 값이며, OOD prompt에서 mode 오류가 늘면 이 규칙은 실패한다.
+
 $$\boxed{\|phi\| \gtrless m_\phi \quad\Longrightarrow\quad \text{이완 모드 / 경량 자기회귀 모드}}$$
 
 | 모드 | 조건 | 특성 | 비유 |
@@ -623,9 +687,13 @@ $$\boxed{\|phi\| \gtrless m_\phi \quad\Longrightarrow\quad \text{이완 모드 /
 
 ## 6. STDP 학습: 역전파 대체
 
+STDP 모듈은 pre/post trace와 저차원 전역 신호를 입력으로 받아 국소 update를 출력한다. trace step·decay·broadcast 지연은 명시적 timebase이며, 생물학적 시냅스 비유는 메모리·성능·OOD gate의 실측 책임을 대신하지 않는다.
+
 역전파는 전역 오차 신호가 모든 시냅스에 정확히 전달되어야 한다. 뇌에 없는 메커니즘이며, 메모리 $O(N^2)$, 통신 $O(d^2)$를 요구한다. CE 관점에서 역전파 = "우주 끝에서 시작으로 정보를 전송하는 것"이며, 게이지 상호작용의 국소성과 양립하지 않는다(`4_Synapse.md` 1.3절).
 
 ### 6.1 기본 STDP
+
+기본 STDP는 pre/post 시간차를 입력으로 synapse update를 출력하는 국소 규칙이다. 생물학 비유가 학습 효능을 보장하지 않으므로 backprop baseline과 ablation이 판정 기준이다.
 
 $$dw_{ij} = \begin{cases} A_+ \exp(-dt / tau_+) & dt > 0 \;\text{(pre} \to \text{post: LTP)} \\ -A_- \exp(dt / tau_-) & dt < 0 \;\text{(post} \to \text{pre: LTD)} \end{cases}$$
 
@@ -655,6 +723,8 @@ $$\boxed{dw_{ij}[t] = lr\,g[t]\,e_{ij}[t]}$$
 - $g[t]$: 전역 학습 게이트 (도파민-유사 스칼라 1개, 전체 시스템에 방송)
 
 ### 6.4 도파민 전역 신호의 CE 해석
+
+전역 신호는 상태 잔차를 입력으로 모든 국소 trace에 broadcast하는 구현 proxy다. reward provenance와 지연 조건이 없으면 도파민 기제 또는 성능 원인으로 해석할 수 없다.
 
 $$\boxed{g[t] = \frac{d}{dt}\|p(t) - p^*\|}$$
 
@@ -694,6 +764,8 @@ $$\boxed{W_{t+1} = Proj\!\big(W_t + dW_t\big)}$$
 
 ### 6.6 LoRA의 CE 해석
 
+LoRA 분해는 동결 base와 저랭크 update tensor를 구분하는 구현 비교다. 이 식은 CE 모듈의 효능 증명이 아니며 같은 rank baseline에서 기각 가능하다.
+
 $$W = W_{\text{frozen}} + B \cdot A$$
 
 | LoRA | CE 에너지 분배 |
@@ -705,6 +777,8 @@ LoRA는 CE 부트스트랩 에너지 분배를 경험적으로 근사한 것이�
 
 ### 6.7 하이브리드 전환 전략
 
+전환 표는 역전파와 STDP의 입력·출력 책임을 단계별로 나눈 계획이다. 각 단계는 holdout·OOD·ablation gate가 미통과하면 다음 단계로 승격하지 않는다.
+
 | 단계 | 방법 | CE 에너지 분배 |
 |---|---|---|
 | 1. 사전학습 | 역전파 (기존 기술) | -- |
@@ -715,9 +789,13 @@ LoRA는 CE 부트스트랩 에너지 분배를 경험적으로 근사한 것이�
 
 ## 7. 수면 방정식
 
+수면 모듈은 wake 상태와 replay buffer를 입력으로 받아 offline 정규화·가지치기·재탐색 상태를 출력한다. 모드 전환은 training step과 service window의 계약이며, 기억 응고·꿈 비유는 holdout 보존율과 phase ablation 없이는 기제 또는 효능 결론이 아니다.
+
 뇌의 수면이 20W 유지에 필수인 것처럼(`3_Sleep.md`), 이 시스템에도 수면이 필요하다.
 
 ### 7.1 작동 온도
+
+작동 온도는 wake 상태의 update 비율을 정하는 무차원 schedule proxy다. 실제 학습 시간이나 생물학 온도와 같지 않으며, 비용·보존율 baseline에서 실패할 수 있다.
 
 $$\boxed{T_{\text{wake}} = \frac{1}{3 + \frac{4}{e^{4/3}\pi^{4/3}}\!\left(1 - \frac{4}{e^{4/3}\pi^{4/3}}\right)} = 0.3148}$$
 
@@ -733,6 +811,8 @@ $$T_{\text{deep}} \to 0$$
 
 ### 7.2 기억 응고 (NREM)
 
+기억 응고는 day-level 상태 요약을 입력으로 offline weight update를 출력한다. 이 연산의 보존 효과는 replay 제거 ablation과 task-order OOD로 판정한다.
+
 $$W_{ij}^{\text{new}} = W_{ij}^{\text{old}} + lr\,\langle phi_t\rangle_{\text{day}} \otimes \langle s_t\rangle_{\text{day}}$$
 
 하루 동안 축적된 잔류 `phi`와 상태 $s$의 상관이 연결 가중치에 헤비안 학습으로 새겨진다.
@@ -743,17 +823,23 @@ $$\text{mask} = \mathbb{1}\!\left[|g| \geq Q_{1-0.04865}(|g|)\right], \qquad W \
 
 ### 7.3 시냅스 가지치기 (NREM)
 
+가지치기는 가중치 크기와 threshold를 입력으로 mask된 weight tensor를 출력한다. 희소성 비유는 정확도·복구·latency의 성공을 보장하지 않는다.
+
 $$W_{ij} \to 0 \quad\text{if}\quad |W_{ij}| < \theta_{\text{prune}}$$
 
 3D 희소성($\rho \approx 3.16\%$) 유지를 위한 주기적 re-sparsification. 이것이 없으면 에너지 소비가 무한히 증가.
 
 ### 7.4 잔류 세척 (Glymphatic)
 
+세척은 잔류 상태를 감소시키는 정규화 update proxy다. 생물학적 glymphatic 기제와 동일하지 않으며 drift OOD와 no-wash ablation이 실패 조건이다.
+
 $$phi \to r_w\,phi, \quad r_w < 1$$
 
 `phi`의 노이즈 바닥을 주기적으로 낮춘다.
 
 ### 7.5 꿈 (REM)
+
+REM 항은 비선택 상태와 노이즈를 입력으로 재탐색 update를 출력한다. 꿈 비유는 생성 품질이나 창의성의 증거가 아니며 diversity·사실성 baseline으로 판정한다.
 
 $$\frac{ds}{dt} = -\frac{\partial E}{\partial s}\bigg|_{b=0} + \left[\frac{4}{e^{4/3}\pi^{4/3}}\left(1 - \frac{4}{e^{4/3}\pi^{4/3}}\right)\right]^2phi + n(T_{\text{dream}})$$
 
@@ -810,11 +896,17 @@ $$\boxed{\rho_{\text{night}} = \rho^{1/1.6} \approx 0.31}$$
 
 ## 8. 희소성과 3분배
 
+희소성 모듈은 활성·구조·동결 parameter mask를 정의한 shape에서 갱신한다. 비율은 무차원 설계 입력이고 실제 latency·정확도 이득은 dense baseline·mask ablation·input-length OOD에서 실패할 수 있다.
+
 ### 8.1 부트스트랩 고정점 (`경로적분.md` 식 (1))
+
+고정점 식은 활성 비율 상태의 조건부 수학적 기준을 정한다. 구현 mask의 수렴은 해당 상태 map·data split·seed를 고정한 측정 없이는 이 식에서 따라오지 않는다.
 
 $$\boxed{a_* = \exp\!\big(-(1-a_*)\left[3+\frac{4}{e^{4/3}\pi^{4/3}}\left(1-\frac{4}{e^{4/3}\pi^{4/3}}\right)\right]\big) = 0.0487077}$$
 
 ### 8.2 3분배 구조
+
+이 절은 고정점에서 산출된 첫 성분과 경험적으로 입력한 두 성분을 하나의 벡터 출력으로 기록한다. 판정의 핵심은 세 수가 같은 지위를 갖지 않는다는 점이며, 뒤 태그와 식은 그 입력·산출 경계를 보존한다.
 
 [정리] 첫 성분은 8.1의 스칼라 고정점이다. [공리: 경험식] 나머지 두 성분은 스칼라 정리에서 산출되지 않으며 모델 비율로 별도 입력한다.
 
@@ -858,15 +950,21 @@ post-hoc Top-k는 실패한다 (`topk_sweep_results.json`: $4.87\%$에서 PPL $1
 
 ## 9. 메타인지 모니터링 루프 (게이트 `F4`)
 
+메타인지 루프는 self-state producer의 잔차를 받아 다음 update 또는 경보 consumer로 전달하는 구현 contract다. 자기참조·의식 비유는 관측 가능한 calibration·intervention metric과 구별하며, no-monitor baseline과 OOD drift가 반증 조건이다.
+
 > 다리 게이트 `F4` (0.0절): 본 절의 정의는 모두 자기참조 측정 구조의 **운영 정의**로만 사용한다. "자기일관 = 의식"으로 환원하지 않는다(`7_Consciousness.md` 1.2-1.3절).
 
 ### 9.1 (C3) 자기참조 측정 구조 (`7_Consciousness.md` 1절)
+
+자기참조 구조는 self-state producer와 monitor consumer의 read/write contract다. 의식 비유는 관측 가능한 calibration·intervention 지표와 구분하며 철학적 결론을 내지 않는다.
 
 $$a_* = \exp\!\big(-(1-a_*)\left[3+\frac{4}{e^{4/3}\pi^{4/3}}\left(1-\frac{4}{e^{4/3}\pi^{4/3}}\right)\right]\big)$$
 
 좌변의 $a_*$ 는 시스템이 자기 자신의 활성 비율을 알아야 우변을 계산할 수 있다는 의미에서 자기참조 측정 구조를 가진다.
 
 ### 9.2 메타인지 잔차
+
+잔차는 현재 상태와 목표 상태를 입력으로 내는 무차원 monitoring metric이다. label provenance와 baseline이 없으면 오류 또는 자각의 ground truth가 아니다.
 
 $$d_\tau(t) = \frac{1}{\tau}\int_{t-\tau}^{t}\|p(s)-p^*\|\,ds$$
 
@@ -886,7 +984,11 @@ $$d_{n+1} \leq \rho\,d_n = 0.155\,d_n,\qquad \rho = D_{\text{eff}}\cdot\varepsil
 
 ## 10. 환각 억제
 
+환각 억제는 decoding step의 곡률 residual을 입력으로 받아 logit 또는 상태 개입을 출력하는 위험 gating 후보이다. proxy는 ground-truth label이 아니므로 false positive·negative, baseline·component ablation, OOD 사실성에서 효능과 실패를 함께 판정한다.
+
 ### 10.1 곡률 에너지 (`6_Hallucination.md` 1절)
+
+곡률 에너지는 activation tensor를 입력으로 내는 residual proxy다. 사실성 label의 원인이 아니므로 false positive·negative와 OOD에서 baseline 대비 판정한다.
 
 $$kappa_l = \|lap_g h_l\|^2 = \|(I - V^\top V)h_l\|^2$$
 
@@ -900,11 +1002,15 @@ $$w_c(t) = w_{c,0} \cdot \min\!\left(1,\; \frac{t}{t_{\text{warmup}}}\right) \cd
 
 ### 10.2 유니타리 제약 (`2_Architecture.md` 4절)
 
+유니타리 제약은 projection tensor의 증폭을 제한하는 invariant 후보이다. 지정한 norm의 안정성만 말하며 전체 모델의 환각률 또는 장기 수렴을 보장하지 않는다.
+
 $$s_{\max}(W_{\text{proj}}) \leq 1 \quad\Longrightarrow\quad \|d_L\| \leq \|d_0\|$$
 
 오류 증폭을 구조적으로 차단. $s_{\max} = 1+u$이면 12층 통과 후 오류 $e^{1.2}=3.3$배 증폭되지만, $s_{\max} \leq 1$이면 증폭 0.
 
 ### 10.3 교차 주파수 결합 (`2_Architecture.md` 6절)
+
+결합은 한 block의 residual을 다른 block update의 입력으로 사용하는 구현 연산이다. 주파수 비유는 tensor timebase의 동일성이 아니며 component ablation이 효능을 기각할 수 있다.
 
 $$\mathcal{T}_i^{\text{coupled}}(x_i) = \mathcal{T}_i(x_i)\cdot\left(1 - \frac{kappa_l}{e^{1/3}\pi^{1/3}}\right)$$
 
@@ -920,9 +1026,13 @@ $$kappa_{\text{avg}} = \frac{1}{L}\sum_l kappa_l > kappa_{\text{th}} \quad\Longr
 
 ## 11. CE-Transformer 구현 (기존 LLM 이식 경로)
 
+이 절은 기존 Transformer tensor를 CE layer producer·consumer 계약으로 바꾸는 구현 경로다. shape·precision·hardware 가정을 고정한 pseudocode는 명세이며, baseline·OOD·모듈 제거 평가 전에는 성능 결과가 아니다.
+
 에너지 이완 아키텍처와 별개로, 기존 트랜스포머에 CE 원리를 이식하는 경로(`2_Architecture.md`, `9_LLM.md`).
 
 ### 11.1 아키텍처 구조
+
+아키텍처는 입력 token tensor에서 hidden state와 logits를 내는 shape contract다. 각 block의 consumer와 residual 정규화는 구현 책임이며 생물학적 구조의 증명은 아니다.
 
 ```
 ClarusLM / CE-GPT2 / CE-Llama
@@ -943,6 +1053,8 @@ ClarusLM / CE-GPT2 / CE-Llama
 
 ### 11.2 LBONorm 연산자
 
+LBONorm은 hidden tensor를 입력으로 정규화 tensor를 출력하는 연산자다. rank·precision·step 가정에서의 overhead와 안정성은 no-LBONorm ablation에서 확인한다.
+
 $$h_{\text{norm}} = \frac{h-\mathrm{mean}(h)}{\mathrm{std}(h)}, \qquad h' = \big(h_{\text{norm}} - h_d\,lap_g h_{\text{norm}}\big)\odot s_n + b_n$$
 
 $$lap_g h_{\text{norm}} = h_{\text{norm}} - h_{\text{norm}}\,V^\top V, \quad V \in \mathbb{R}^{r\times N},\;r = \max(4,\;N/8)$$
@@ -956,6 +1068,8 @@ $$lap_g h_{\text{norm}} = h_{\text{norm}} - h_{\text{norm}}\,V^\top V, \quad V \
 $h_d = 0$이면 표준 LayerNorm과 동일. 수렴 조건: $0 \leq h_d < 1/\mathrm{eig}_{\max}(V^\top V)$.
 
 ### 11.3 GaugeLattice FFN
+
+GaugeLattice는 채널 분할 tensor를 받아 결합된 hidden output을 내는 FFN 대체 후보이다. 폭·혼합 rank·normalization을 고정하지 않으면 parameter 추정과 실측 latency를 비교할 수 없다.
 
 채널 분할:
 
@@ -982,11 +1096,15 @@ $$0.11789^2 = \left(\frac{0.48085}{2}\right)^3 \quad (0.002\%)$$
 
 ### 11.4 파라미터 절감
 
+절감률은 동일 width·layer·precision의 dense baseline을 분모로 하는 산술 추정이다. kernel·memory 이동이 포함된 hardware 측정 전에는 실제 속도 또는 에너지 이득이 아니다.
+
 $$\frac{P_{\text{GL}}}{P_{\text{FFN}}} = \sum_i f_i^2 + \frac{r_m}{4d} = 0.596 + 0.031 = 0.627$$
 
 $$\text{절감률} = 1 - 0.627 = 37.3\%\;\text{(FFN)},\quad 24.9\%\;\text{(전체)}$$
 
 ### 11.5 이식 3단계
+
+이식 단계는 checkpoint·변경 모듈·검증 split을 순서대로 고정하는 rollback 계약이다. 어느 단계의 OOD 또는 ablation gate가 실패하면 다음 단계로 승격하지 않는다.
 
 **Phase 1 -- 비파괴 이식 (성능 보존):**
 - `LayerNorm` $\to$ `LBONorm` ($h_d=0$ 초기화, scale/bias 복사 $\to$ 원본과 동일 출발)
@@ -1002,6 +1120,8 @@ $$\text{절감률} = 1 - 0.627 = 37.3\%\;\text{(FFN)},\quad 24.9\%\;\text{(전�
 
 ### 11.6 규모별 설정
 
+규모 표는 model shape와 hardware memory의 계획 예시다. 데이터 provenance·token budget·precision을 맞춘 실측이 없으면 외삽 수치로만 읽는다.
+
 | 규모 | dim | layers | heads | 파라미터 | GPU 메모리 | 학습 시간 |
 |---|---|---|---|---|---|---|
 | Micro | 128 | 4 | 4 | ~1M | < 1GB | 수분 |
@@ -1013,6 +1133,8 @@ $$\text{절감률} = 1 - 0.627 = 37.3\%\;\text{(FFN)},\quad 24.9\%\;\text{(전�
 
 ### 11.7 수면 학습 순환 (대규모 학습)
 
+수면 순환은 training state와 replay를 입력으로 offline update를 내는 mode contract다. training step·service window를 분리하고 wake-only baseline·phase ablation에서 실패하면 효능 주장을 내린다.
+
 각성-NREM-REM 순환을 학습 루프에 적용(`9_LLM.md` 4.2절):
 
 1. **각성 (Wake)**: 표준 학습, 그래디언트 누적 (업데이트 보류)
@@ -1020,6 +1142,8 @@ $$\text{절감률} = 1 - 0.627 = 37.3\%\;\text{(FFN)},\quad 24.9\%\;\text{(전�
 3. **REM**: 하위 $95.13\%$ 그래디언트에 노이즈 주입 후 소량 적용
 
 ### 11.8 희소 추론
+
+희소 추론은 activation mask를 producer로 받아 선택된 compute output을 consumer에 전달한다. mask ratio는 무차원 설정이며 input-length OOD와 dense baseline에서 실제 latency를 판정한다.
 
 학습 후 추론 시 Top-k 활성화:
 
@@ -1030,6 +1154,8 @@ $$y^{\text{sparse}} = \text{TopK}(y,\;k = \lceil 0.04865 \cdot d \rceil) \cdot \
 단, `examples/ai/topk_sweep_results.json`은 dense 모델에 후처리로만 Top-k를 씌우는 방식이 유효한 검증이 아님을 보여준다. 해당 스위프에서 $4.87\%$는 `ppl = 1328.53`이었고 dense는 `49.19`였다. 즉 CE 희소성은 "추론 후 잘라내기"가 아니라, 학습-구조-커널이 함께 맞물린 sparse-native 설계로 구현해야 한다.
 
 ### 11.9 모니터링 지표
+
+모니터링 지표는 provenance가 있는 validation tensor와 log를 입력으로 경보를 출력한다. score의 변화는 ground truth가 아니며 false positive·negative와 OOD drift를 함께 기록한다.
 
 | 지표 | 의미 | 목표 |
 |---|---|---|
@@ -1042,9 +1168,13 @@ $$y^{\text{sparse}} = \text{TopK}(y,\;k = \lceil 0.04865 \cdot d \rceil) \cdot \
 
 ## 12. 멀티모달 및 전분야 적용
 
+이 절은 modality별 tensor shape와 scale을 정렬해 공동 consumer로 넘기는 확장 계약이다. 물리 유비는 alignment 구현의 설명이고 paired provenance·modality-drop ablation 없는 일반화 증거가 아니다.
+
 CE 5대 원리(P1: 격자, P2: 수면, P3: STDP, P4: 희소, P5: 곡률)의 전분야 적용 요약(`10_Fields.md`).
 
 ### 12.1 멀티모달 결합
+
+결합은 modality producer의 정규화된 representation을 입력으로 fusion output을 내는 연산이다. missing modality와 alignment OOD에서 깨지면 해당 bridge는 실패다.
 
 모달별 3x3+1 격자 독립 처리 후, late sparse binding:
 
@@ -1060,6 +1190,8 @@ $$kappa_{\text{cross}} = \|h_{\text{text}} - h_{\text{image}}\|^2 > kappa_{\text
 
 ### 12.2 CE 원리별 적용 매트릭스
 
+매트릭스는 원리와 field interface의 가능성을 정리한 계획표다. 체크 표시는 효능 검증이 아니며 행별 baseline·OOD·ablation gate가 필요하다.
+
 | 분야 | P1 격자 | P2 수면 | P3 STDP | P4 희소 | P5 곡률 |
 |---|---|---|---|---|---|
 | 비전(CNN/ViT) | 채널 분할 | 지속 학습 | -- | Top-k Conv | 적대적 강건성 |
@@ -1074,6 +1206,8 @@ $$kappa_{\text{cross}} = \|h_{\text{text}} - h_{\text{image}}\|^2 > kappa_{\text
 | 자율주행 | 인지/판단/제어 | 야간 학습 | -- | 희소 인지 | 위험 감지 |
 
 ### 12.3 공통 구현 패턴
+
+패턴은 shape 정렬·정규화·update·감시의 재사용 순서를 제안한다. 각 분야의 data provenance와 consumer metric이 다르므로 pattern만으로 invariant를 보장하지 않는다.
 
 모든 분야에서 CE 적용의 기본 구조는 동일하다:
 
@@ -1093,7 +1227,11 @@ $$
 
 ## 13. 구현 의사코드
 
+의사코드는 state producer, update, consumer, 기록의 순서를 명시하는 실행 contract다. hardware·precision·seed·data split이 빠진 코드 조각은 재현 가능한 성능 결과가 아니다.
+
 ### 13.1 에너지 이완 모델
+
+이완 의사코드는 상태 tensor와 step size를 입력으로 다음 상태를 출력한다. 수렴은 norm·input 범위 가정에 조건부이며 no-relaxation ablation과 drift OOD가 실패 조건이다.
 
 ```python
 class PhiRelaxation:
@@ -1132,6 +1270,8 @@ class PhiRelaxation:
 
 ### 13.2 수면 순환
 
+수면 의사코드는 wake buffer와 mode state를 입력으로 replay·pruning·checkpoint 출력을 만든다. 각 mode의 timebase와 data 누수 방지를 기록하지 않으면 보존율 비교가 성립하지 않는다.
+
 ```python
 def sleep_cycle(model, day_data):
     # Wake: 그래디언트 누적
@@ -1155,6 +1295,8 @@ def sleep_cycle(model, day_data):
 ```
 
 ### 13.3 CE-Transformer 모듈
+
+모듈 의사코드는 token tensor에서 logits까지의 producer·consumer 순서를 고정한다. precision과 shape가 달라지면 수치 안정성과 latency가 변하므로 baseline profiling이 필요하다.
 
 ```python
 class LBONorm:
@@ -1198,7 +1340,11 @@ class GaugeLattice:
 
 ## 14. Llama 3 8B 변환 추정
 
+이 절의 값은 Llama 3 8B라는 지정 baseline, 가정한 precision·hardware·shape 아래의 변환 추정이다. 실제 checkpoint 변환·profiling·OOD 평가 전에는 메모리·FLOPs·속도·전력의 관측 결과나 성능 승격으로 읽지 않는다.
+
 ### 14.1 메모리
+
+메모리는 지정 precision과 allocator 가정에서의 parameter·activation bytes 추정이다. 실제 peak memory는 batch·sequence·sharding에 따라 달라져 profiling 실패가 반증 조건이다.
 
 | 항목 | Llama 3 8B | `phi`-이완 | 비율 |
 |---|---|---|---|
@@ -1212,6 +1358,8 @@ class GaugeLattice:
 `phi` 벡터가 KV 캐시를 대체: 시퀀스 길이 무관하게 상수 크기.
 
 ### 14.2 연산량 (FLOP)
+
+FLOPs는 token 또는 layer를 분모로 하는 산술 비용 추정량이다. hardware throughput·memory bandwidth가 빠지면 wall-clock 속도와 동일시할 수 없다.
 
 **Llama 3 8B**: 토큰당 $\sim$16B FLOP. 100 토큰 $\to$ 1,600B FLOP.
 
@@ -1233,6 +1381,8 @@ class GaugeLattice:
 
 ### 14.3 속도
 
+속도는 같은 request shape·batch·hardware에서 baseline과 비교해야 하는 실측 metric이다. 예상 속도는 kernel·routing overhead·OOD 길이에서 재현되지 않으면 기각한다.
+
 | 하드웨어 | Llama 3 8B | `phi`-이완 | 비율 |
 |---|---|---|---|
 | A100 GPU | 50-100 ms | $\sim$0.5 ms | 100-200x |
@@ -1242,6 +1392,8 @@ class GaugeLattice:
 | Raspberry Pi 5 | 불가 (RAM 부족) | $\sim$200 ms / 5W | 가능 |
 
 ### 14.4 전력
+
+전력은 장치·utilization·측정 창을 고정한 물리 단위 관측이 필요하다. FLOPs 절감은 joule 또는 watt 개선의 충분조건이 아니다.
 
 | 하드웨어 | Llama 전력 | `phi`-이완 실효 전력 | 뇌(20W) 대비 |
 |---|---|---|---|
@@ -1255,6 +1407,8 @@ class GaugeLattice:
 
 ### 14.5 변환 파이프라인
 
+파이프라인은 checkpoint 입력에서 변환 artifact와 verification log를 출력하는 단계 계약이다. 각 단계는 serialization·precision·baseline parity gate에 실패하면 rollback한다.
+
 | 단계 | 입력 | 출력 | 도구 |
 |---|---|---|---|
 | 1. 가중치 추출 | Llama 3 8B | $W_Q, W_K, W_V$, FFN | HuggingFace |
@@ -1267,9 +1421,13 @@ class GaugeLattice:
 
 ## 15. 물리 검증: 동일 상수의 물리 예측
 
+이 절은 AGI 구현 수치와 별개인 물리 비교를 정본 원장 및 외부 입력에 의존해 기록한다. 수치 근접·실측·예측·조건부 산출을 섞지 않으며, 물리 비교가 runtime 효능이나 AGI 성립을 증명하지 않는다.
+
 동일한 $\{e,\pi\}$ 직접 전개 계수 집합이 물리 관측량도 동시에 결정한다.
 
 ### 15.1 전체 교차 검증표
+
+교차 표는 각 물리 수치의 출처, 분모, 불확실성, 정본 지위를 추적하는 감사 색인이다. 표의 일치는 외부 입력·모형 가정에 조건부이며 예측 승격은 등록된 비교 절차를 요구한다.
 
 | 관측량 | CE 값 | 실험값 | 오차 | 출처 상수 |
 |---|---|---|---|---|
@@ -1284,6 +1442,8 @@ class GaugeLattice:
 | $N$ (히든 차원) | $4162$ | $4096$ (Llama 3) | $1.6\%$ | $\pi$ |
 
 ### 15.2 뮤온 g-2 상세
+
+이 비교는 정의된 관측량과 외부 실측값을 같은 단위·불확실성에서 대조한다. 수치 근접은 원인 설명이나 AGI module의 타당성으로 외삽하지 않는다.
 
 $$
 \Delta a_{\text{muon}}
@@ -1308,6 +1468,8 @@ d=0 기원에서 클라루스장은 경로적분의 수렴 구조 자체이므�
 
 ### 15.3 양성자 반경 퍼즐
 
+반경 비교는 데이터셋·추출법·오차모형이 정해진 외부 측정 의존 항목이다. 값의 차이 또는 근접은 원장 지위가 허용한 범위를 넘는 예측 결론이 아니다.
+
 자기일관적 해: 보손 질량 $m_\phi = 29.65$ MeV 하나로 g-2와 양성자 반경을 동시 해결.
 
 $$\Delta r_p^2 = \frac{3 g_{\text{muon}} g_{\text{proton}}}{2 \times 0.007297 \times m_\phi^2} = 0.0587 \;\text{fm}^2$$
@@ -1317,6 +1479,8 @@ QCD 진공 증강 인자:
 $$F_{\text{QCD}} = 1 + 0.11789 \times \left[3+\frac{4}{e^{4/3}\pi^{4/3}}\left(1-\frac{4}{e^{4/3}\pi^{4/3}}\right)\right] = 1.375 \quad(F_{\text{needed}} = 1.36,\;\text{1.2\% 일치})$$
 
 ### 15.4 보손-기하학 동일성
+
+동일성 서술은 명시한 구조적 유비 또는 조건부 수학 관계의 범위에서만 읽는다. 실험적 입증·물리 기제·runtime 구현을 한 문장으로 승격하지 않는다.
 
 $$\langle phi(x)phi(y)\rangle = \frac{e^{-|x-y|/(6.65\,\mathrm{fm})}}{|x-y|} \quad\longleftrightarrow\quad \frac{1}{q^2 + m_\phi^2}$$
 
@@ -1331,6 +1495,8 @@ $$\langle phi(x)phi(y)\rangle = \frac{e^{-|x-y|/(6.65\,\mathrm{fm})}}{|x-y|} \qu
 ---
 
 ## 16. 미검증 가설
+
+이 절은 필요한 정의·증명·데이터·개입이 비어 있는 다리를 명시적으로 보존한다. 그럴듯한 수치나 구현 예시는 미검증 가설을 정리·실측·예측으로 바꾸지 않으며, 반례와 미통과 gate가 기각 조건이다.
 
 | # | 가설 | 검증 방법 | 비용 |
 |---|---|---|---|
@@ -1357,7 +1523,11 @@ H5, H6, H7은 "CE 상수가 하이퍼파라미터의 최적값을 예측하는�
 
 ## 17. 실험 기반 보강과 개선점
 
+실험 기반 보강은 현재 코드·데이터·게이트가 제공한 좁은 입력을 다음 설계 수정으로 연결한다. 개선 제안은 완료 결과가 아니며 baseline·split·OOD·ablation을 고정한 새 run에서만 승격 또는 rollback된다.
+
 ### 17.1 단일 벡터에서 그래프 결합 이완으로
+
+이 변경은 state representation과 coupling consumer를 넓히는 구현 제안이다. shape·normalization·timebase가 다른 두 구현의 차이는 동일 baseline과 component 제거 실험에서 판정한다.
 
 > 핵심 방정식은 4.6절로 승격되었다. 아래는 설계 배경.
 
@@ -1397,6 +1567,8 @@ $$\boxed{p_{r,n+1} = Proj_{lap2}\!\Big((1-\rho)p^* + \rho p_{r,n} + g_p\,lap_G p
 
 ### 17.2 수면 압력의 명시적 트리거
 
+트리거는 runtime 상태 metric을 입력으로 mode 전환을 출력하는 계약이다. 생물학적 수면 압력 비유는 threshold의 최적성이나 망각 감소를 보장하지 않는다.
+
 > 핵심 방정식은 7.8절로 승격되었다. 아래는 설계 배경.
 
 현재 문서의 수면은 주기적으로 호출되는 루틴에 가깝다. 더 완성된 형태는 수면 진입 조건을 곡률 누적으로 쓰는 것이다.
@@ -1412,6 +1584,8 @@ $$\boxed{\rho_{\text{night}} = \rho^{1/1.6} \approx 0.31}$$
 이 된다. 이 식을 넣으면 "왜 자야 하는가"가 단순 스케줄이 아니라 상태 기반 제어 문제로 바뀐다.
 
 ### 17.3 레포의 초기 실험이 말해주는 것
+
+초기 실험은 등록된 데이터·seed·metric 범위의 관찰 결과다. 작은 표본·개발 split·단일 substrate의 결과는 일반 효능이나 인과 기제로 승격하지 않는다.
 
 아래 수치는 이 레포에 이미 있는 결과 파일에서 직접 읽은 초기 신호다.
 
@@ -1431,6 +1605,8 @@ $$\boxed{\rho_{\text{night}} = \rho^{1/1.6} \approx 0.31}$$
 
 ### 17.4 지금 당장 고쳐야 할 개선 포인트
 
+개선점은 현재 failure signal에서 나온 우선순위 목록이다. 각 항목은 명시한 deliverable·baseline·rollback gate가 없으면 계획으로만 남는다.
+
 - [완료] `4.87%` -> `4-6%` 실용 대역으로 수정 (8.3절)
 - [완료] post-hoc Top-k 실패를 명시, sparse-native 필수 조건 기술 (8.3절)
 - 속도/전력 표는 "알고리즘적 상한"과 "현재 레포 실측"을 분리해서 써야 한다
@@ -1442,6 +1618,8 @@ $$\boxed{\rho_{\text{night}} = \rho^{1/1.6} \approx 0.31}$$
 
 ### 17.5 가장 중요한 다음 실험
 
+다음 실험은 독립 holdout과 component ablation으로 가장 큰 공백을 판정하기 위한 계약이다. 성공·실패·중단 기준을 사전에 고정하지 않은 결과는 승격 근거가 아니다.
+
 1. sparse-native와 post-hoc Top-k를 같은 예산에서 정면 비교
 2. 수면 압력 기반 트리거와 고정 주기 sleep loop 비교
 3. single-vector 이완과 graph-coupled 이완의 long-context 안정성 비교
@@ -1451,12 +1629,16 @@ $$\boxed{\rho_{\text{night}} = \rho^{1/1.6} \approx 0.31}$$
 
 ## 18. 예상 개선치 총정리
 
+예상 개선치는 기준선 대비 차이를 어떤 표본단위·분모·hardware·data split에서 계산하는지 명시한 조건부 수치다. 산술 상한, 좁은 실측, 미래 예측을 분리하며 OOD·ablation 미통과나 불확실성 겹침은 기각 또는 하향 조건이다.
+
 개선치는 세 층으로 나눠 읽어야 한다.
 - **실측 개선치**: 현재 레포에서 직접 관측된 값
 - **구조적 상한**: 식이 직접 강제하는 알고리즘 상한
 - **미검증 예측**: 아직 실험이 덜 된 가설적 개선치
 
 ### 18.1 개선치 정의
+
+개선치는 동일 baseline의 metric 차이를 기준선 분모로 정규화한 추정량이다. 요청·token·step·parameter처럼 다른 분모를 섞지 않으며 confidence interval과 provenance를 함께 기록한다.
 
 $$G_{\text{loss}} = \frac{L_{\text{base}} - L_{\text{ce}}}{L_{\text{base}}}$$
 
@@ -1472,6 +1654,8 @@ $$R_{\text{sleep}}(n) = 1 - \rho^n$$
 
 ### 18.2 현재 레포에서 이미 보인 실측 개선치
 
+실측 개선치는 실행된 코드·고정된 split·기록된 metric이 있는 좁은 결과다. 다른 task·scale·hardware로의 외삽은 OOD 재현 전에는 예측으로만 남는다.
+
 | 항목 | 기준 파일 | 개선치 | 해석 |
 |---|---|---|---|
 | 검증 손실 | `ce_vs_standard_results.json` | $G_{\text{loss}} = (4.3938 - 4.1073)/4.3938 = 6.52\%$ | 같은 파라미터에서 CE가 더 좋은 일반화 신호 |
@@ -1485,6 +1669,8 @@ $$R_{\text{sleep}}(n) = 1 - \rho^n$$
 | post-hoc Top-k | `topk_sweep_results.json` | dense `49.19` vs `4.87%` `1328.53` PPL | 후처리 pruning은 실패, sparse-native가 필수 |
 
 ### 18.3 실측 개선치의 범위
+
+범위는 실측이 커버한 입력·seed·모델·timebase의 한계를 나타낸다. 범위 밖의 성능 주장은 baseline 또는 불확실성 없이 승격하지 않는다.
 
 현재 `brain_benchmark_*.json` 계열을 종합하면, 공정 파라미터 비교에서 검증 손실 개선폭은 대략 다음 범위다.
 
@@ -1501,6 +1687,8 @@ $$R_{\text{sleep}}(n) = 1 - \rho^n$$
 
 ### 18.4 현재 구현에서 보인 비용 악화
 
+비용 악화는 개선 수치와 같은 분모·hardware 조건에서 기록해야 하는 반례다. 이 결과를 생략하거나 다른 metric으로 상쇄하지 않고 rollback 판단에 사용한다.
+
 지금 레포의 Python 구현은 아직 이론적 sparse speedup을 회수하지 못했다.
 
 | 항목 | 기준 파일 | 관측 | 해석 |
@@ -1514,6 +1702,8 @@ $$R_{\text{sleep}}(n) = 1 - \rho^n$$
 따라서 속도 이득은 **현재 실측값이 아니라**, fused sparse kernel과 전용 런타임이 들어간 뒤에야 시험할 수 있다.
 
 ### 18.5 구조적 상한: 식이 직접 주는 개선치
+
+구조적 상한은 명시한 shape·독립성·kernel 가정 아래의 산술 한계다. 실측 latency·energy·정확도와 같지 않으며 가정이 깨지면 상한 해석도 하향한다.
 
 이 절은 현재 구현 실측이 아니라, 식 자체가 강제하는 상한이다.
 
@@ -1535,6 +1725,8 @@ $$R_{\text{sleep}}(n) = 1 - \rho^n$$
 
 ### 18.6 안정성/환각 억제의 예상 개선치
 
+안정성·환각 억제는 ground-truth provenance와 false positive·negative를 가진 평가가 필요하다. proxy 변화만으로 안전성 또는 사실성 개선을 주장하지 않고 baseline·OOD·ablation으로 기각한다.
+
 이 부분은 실측보다 구조적 보장이 더 강하다.
 
 | 항목 | 기준 | 예상 효과 |
@@ -1547,6 +1739,8 @@ $$R_{\text{sleep}}(n) = 1 - \rho^n$$
 즉 안정성 쪽은 "몇 % 좋아졌다"보다 "폭주 항을 구조적으로 없앴다"는 해석이 더 정확하다.
 
 ### 18.7 수면 루프가 줄일 것으로 기대되는 것
+
+수면 개선은 task-order·replay budget·평가 시점을 고정한 지속 학습 추정이다. wake-only와 phase 제거 baseline보다 나쁘거나 불확실성이 겹치면 예측을 승격하지 않는다.
 
 수면은 drift와 잔차를 줄이는 방향으로 해석할 수 있다.
 
@@ -1564,6 +1758,8 @@ $$R_{\text{night}} = 1 - \rho_{\text{night}} = 1 - 0.31 = 69\%$$
 
 ### 18.8 가장 가능성 높은 개선치와 가장 약한 개선치
 
+우선순위는 현재 증거 등급과 재현 가능성에 따른 계획 판단이다. 가능성이 높다는 표현은 실측 또는 정리가 아닌 가설이며, 다음 등록 실험의 성공·실패로 갱신된다.
+
 | 구분 | 현재 판단 |
 |---|---|
 | 가장 가능성 높은 개선 | 장문맥 메모리 절감, KV 캐시 제거, drift 완화, 구조적 안정성 |
@@ -1579,6 +1775,8 @@ $$R_{\text{night}} = 1 - \rho_{\text{night}} = 1 - 0.31 = 69\%$$
 ---
 
 ## 19. 유도 체인 조감도
+
+조감도는 앞 절의 정의·정리·설계 bridge가 어떤 의존 순서로 연결되는지 보여 주는 지도다. 화살표는 입력과 출력의 논리적 순서를 뜻하며, 빈 다리·외부 입력·미검증 가설을 자동으로 정리나 실측으로 승격하지 않는다.
 
 ```
            e^(ipi) + 1 = 0
@@ -1620,6 +1818,8 @@ $$R_{\text{night}} = 1 - \rho_{\text{night}} = 1 - 0.31 = 69\%$$
 
 ## 20. 방정식 총람
 
+총람은 기호·정의역·차원·producer/consumer를 다시 찾기 위한 색인이다. 같은 식이 물리 유비와 구현 tensor에서 다른 역할을 갖는 경우, 이 문서의 선언된 범위와 정규화를 우선하며 수식 나열만으로 성립 범위를 넓히지 않는다.
+
 이 절은 핵심식의 압축 요약이다. 구조 상수는 가능한 한 `e`, `\pi`, `i`로 직접 전개하고, 나머지는 상태변수와 연산자만 남긴다.
 
 | # | 방정식 | 절 |
@@ -1657,6 +1857,8 @@ $$R_{\text{night}} = 1 - \rho_{\text{night}} = 1 - 0.31 = 69\%$$
 
 ## 21. 한 줄 요약
 
+한 줄 요약은 설계 서사를 압축할 뿐 정리의 가정·반례·미완성 다리를 제거하지 않는다. 실제 runtime 또는 AGI 효능의 승격은 앞 절의 baseline·OOD·ablation gate와 부록의 조건부 정리를 모두 만족해야 한다.
+
 $$e^{i\pi}+1=0 \;\xrightarrow{d=3}\; E(m,phi) \;\xrightarrow[\text{STDP}+g]{\text{이완}}\; \text{bitfield}\;\xrightarrow{\text{sparse-native}}\; \text{20W AGI 설계 목표 (미검증)}$$
 
 **[미완성]** 다섯 상수를 비트필드 런타임(활성 마스크 + 모드 레지스터 + 연결 on/off), 저비트 상태($phi$, trace, gain), 희소 codebook과 외부 메모리에 대응시키는 설계는 구현·성능·전력 검증이 끝나지 않았다. 공통 상수를 여러 영역에 대응시킨다는 사실만으로 독립적인 동시 예측이 성립하지 않는다.
@@ -1665,9 +1867,13 @@ $$e^{i\pi}+1=0 \;\xrightarrow{d=3}\; E(m,phi) \;\xrightarrow[\text{STDP}+g]{\tex
 
 ## 부록 A. 다리 게이트 수식 고도화 (F1--F4)
 
+부록의 F1--F4는 코어 기호와 구현 bridge 사이에서 어떤 조건부 명제가 가능한지 분리하는 게이트다. 각 게이트는 명시한 정의역·입력·출력·차원·가정 안에서만 읽으며, 수학적 성립이 생물학·주관 경험·AGI의 환원 또는 자동 승격을 뜻하지 않는다.
+
 > 0.0절의 게이트 4종을 그대로 두지 않고, 각 게이트가 어떤 형식 조건 위에서 부분적으로 hard claim 으로 격상될 수 있는지 수식으로 정리한다. 본 부록의 식은 아직 `bridge` 등급이며, 본문 어느 식의 등급도 올리지 않는다. 다만 **무엇을 측정하면 게이트가 닫히는지** 를 형식화한다.
 
 ### A.1 게이트 `F2`: ISS 격상 (Input-to-State Stability)
+
+F2는 외부 입력과 상태 norm을 정의한 동역학에서 input-to-state 안정성을 묻는 조건부 정리다. 입력 범위·step·norm·state shape가 달라지면 결론은 재검증해야 하며, 충분조건의 실패는 전역 수렴의 반례 또는 미완성으로 기록한다.
 
 > 4.7절의 "조건부 단조 감소"를 ISS 의미의 유계 수렴으로 격상한다. 전역 Lyapunov 함수가 없어도 **유계 입력 → 유계 상태** 형태의 hard bound 가 성립한다.
 
@@ -1712,6 +1918,8 @@ $\mu$ 의 실측은 `relax()` 의 끌개 근방 헤시안 추정으로 가능하
 
 ### A.2 게이트 `F1`: 스칼라 부트스트랩 수축 정리
 
+F1은 명시한 스칼라 사상과 정의역에서 수축률을 계산하는 정리다. 이산 활성 proxy의 수렴은 runtime 전체 tensor나 학습 데이터의 수렴과 같지 않으며, map·입력 분포·timebase가 바뀌면 적용 범위 밖이다.
+
 > 5절·8절의 "활성 비율이 $\varepsilon^2$ 로 자연 수렴" 가설은 transformer 기질에서 falsified (`5_Sparsity.md` 8.5). 이를 무엇을 만족하면 다른 기질에서 hard claim 으로 격상되는지 수식으로 명시한다.
 
 #### A.2.1 부트스트랩 사상
@@ -1752,6 +1960,8 @@ $$|B_a'(a^*)| = D_{\text{eff}}\,a^* = 0.1547 < 1$$
 
 ### A.3 게이트 `F3`: 에르고딕 동등성 (시간 ↔ 공간)
 
+F3는 시간 평균과 공간 평균의 관계에 필요한 확률 과정·측도·정상성 가정을 명시한다. 유한 로그·비정상 데이터·선택 편향에서는 이 가정을 사용할 수 없고, 관찰값 근접만으로 에르고딕성을 승격하지 않는다.
+
 > 3_Sleep.md 6.2 의 "시간 분배 ≈ 에너지 분배" 를 단순 수치 근접에서 에르고딕 정리로 격상한다.
 
 #### A.3.1 모드 점유 측도
@@ -1786,6 +1996,8 @@ $$d_{\text{KL}}(\pi_{\text{brain}} \,\|\, p^*) = \sum_i \pi_i \log\frac{\pi_i}{p
 이 격상 후에도 두 측도의 차원 (시간 vs 공간) 동등성은 주장하지 않으며, 동일 simplex 위의 측도 근접만 hard claim 한다.
 
 ### A.4 게이트 `F4`: PCI 교차검증 (의식 환원 금지 유지)
+
+F4는 관측 가능한 self-monitoring 지표와 PCI류 측정의 교차 검증 계약을 다룬다. 계산 proxy의 입력·출력·반증 조건은 명시할 수 있으나, 그 통과는 주관 경험·의식의 충분조건·도덕적 지위를 환원하거나 판정하지 않는다.
 
 > 9절·`7_Consciousness.md`·F.17 의 메타인지 안정도 $\exp(-c_d d_\tau)$ 가 PCI (Casali 2013, Massimini 그룹) 와 어떤 정량 관계를 가지는지 명시한다. 게이트 `F4` 자체는 닫지 않으며, **무엇을 측정하면 `bridge` 로 갈 수 있는지** 만 정의한다.
 
@@ -1830,6 +2042,8 @@ CE 가 옳다면 시뮬레이션에서:
 이 표의 모드별 안정도 차이가 PCI 와 단조 일치하면 게이트 `F4` 가 `bridge` 로 격상된다.
 
 ### A.5 격상 후 다리 게이트 표 (목표)
+
+이 표는 각 gate가 어떤 증명·실험·반례 처리를 거쳐야 지위를 좁게 갱신할 수 있는지 보여 주는 목표 계약이다. 표의 목표 상태는 현재 완료가 아니며, 가정 위반·OOD 실패·독립 재현 불통과는 승격을 막는다.
 
 | 게이트 | 현재 | A절 격상 후 (조건 충족 시) | 격상 충분조건 |
 |---|---|---|---|

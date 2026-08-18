@@ -1,8 +1,13 @@
 # Layer A--E 방정식 정본
 
+이 문서는 Layer A--E runtime의 상태·갱신·결합·모드를 정의한 정본 수식 모음이다. 독자는 이산 동역학·행렬·정규화의 기본을 아는 독자를 전제로 하며, 각 기호는 지정한 tensor shape와 runtime tick에서만 구현 의미를 갖고 생물학적 기제와 동일하지 않다.
+
+먼저 셀 상태와 유계 갱신, 다음으로 필드 결합과 에너지, 전역 모드의 순서로 읽는다. 수식의 형식 검증은 명시한 초기·경계·step·norm 가정 아래의 조건부 성질이며, 실제 학습 효능·OOD 안정성은 별도 fixture와 baseline을 필요로 한다.
+
+
 > 위치: `12_Equation.md`의 canonical runtime 5계층에 대한 **수식 전용** 참조 문서.
-> 의존: `14_BrainRuntimeSpec.md`(설계 사양), `6_뇌/05_실험근거.md`(근거 판정), `6_뇌/06_검증기준.md`(검증 매트릭스)
-> F절(에이전트 루프) 전체: `17_AgentLoop.md`로 분리됨. F절 검증: `6_뇌/06_검증기준.md`.
+> 의존: `14_BrainRuntimeSpec.md`(설계 사양), `6_뇌/05_실험근거.md`(근거 판정), `../검증_원장/뇌_검증기준.md`(검증 매트릭스)
+> F절(에이전트 루프) 전체: `17_AgentLoop.md`로 분리됨. F절 검증: `../검증_원장/뇌_검증기준.md`.
 >
 > 이 문서에는 서사 설명을 넣지 않는다. 식, 정의, 증명/검증 기준만 둔다.
 
@@ -10,7 +15,11 @@
 
 ## A. 순수 셀 동역학 (kernel dynamics)
 
+Layer A는 local cell state를 입력으로 같은 shape의 다음 tick state를 내는 kernel이다. 상태는 무차원 정규화 tensor이고, 초기값·입력 범위·update 순서가 바뀌면 유계성·안정성 결론도 다시 확인해야 한다.
+
 ### A.1 상태 정의
+
+상태 정의는 각 cell 좌표의 정의역·shape·초기값을 고정한다. 이 기호들은 runtime 저장 단위이며 실제 뉴런의 전압·분자 농도 단위와 동일하지 않다.
 
 $$s_i^t = (a_i^t,\;r_i^t,\;m_i^t,\;w_i^t,\;b_i^t) \in \mathbb{R}^4 \times \{0,1\}$$
 
@@ -24,6 +33,8 @@ $$s_i^t = (a_i^t,\;r_i^t,\;m_i^t,\;w_i^t,\;b_i^t) \in \mathbb{R}^4 \times \{0,1\
 
 ### A.2 입력 합산
 
+입력 합산은 이전 state와 외부 event tensor를 받아 local drive를 만드는 producer 연산이다. 입력 정규화·경계조건이 없으면 뒤 갱신의 유계성 가정을 적용할 수 없다.
+
 $$I_i^t = u_i^t + \underbrace{\sum_j W_{ij}^{\text{eff}}(t)\,a_j^{t-\delta_{ij}}}_{\text{STP + 전파지연}} - \lambda_r\,r_i^t + \lambda_m\,m_i^t + \eta_i^t$$
 
 - $u_i^t$: 외부 입력
@@ -35,6 +46,8 @@ $$I_i^t = u_i^t + \underbrace{\sum_j W_{ij}^{\text{eff}}(t)\,a_j^{t-\delta_{ij}}
 
 ### A.3 활성 갱신
 
+활성 갱신은 bounded drive를 입력으로 다음 활성 state를 출력한다. timebase는 하나의 runtime tick이며, 비선형 함수의 형식 성질은 정의역 밖의 입력이나 다른 precision에서 자동으로 유지되지 않는다.
+
 $$a_i^{t+1} = (1-\gamma_a(M_t))\,a_i^t + \kappa_a(M_t)\,\tanh(I_i^t)$$
 
 | 파라미터 | 의미 | 안정 조건 |
@@ -44,17 +57,23 @@ $$a_i^{t+1} = (1-\gamma_a(M_t))\,a_i^t + \kappa_a(M_t)\,\tanh(I_i^t)$$
 
 ### A.4 억제 갱신
 
+억제 갱신은 local activity를 입력으로 억제 state를 출력하는 coupling 없는 kernel 단계다. 생물학적 억제 비유는 실제 회로 기제의 증거가 아니며, 경계 위반은 형식 검증의 실패 조건이다.
+
 $$r_i^{t+1} = (1-\gamma_r(M_t))\,r_i^t + \kappa_r(M_t)\,(a_i^t)^2$$
 
 $r_i$는 활성의 제곱에 비례하여 축적되며, 높은 활성이 곧 강한 억제를 만든다.
 
 ### A.5 기억 흔적 갱신
 
+기억 흔적은 과거 tick의 정규화 state를 요약해 다음 trace tensor를 만든다. trace의 decay·초기값·serialization은 구현 가정이며, 기억 성능은 task baseline에서 따로 판정한다.
+
 $$m_i^{t+1} = (1-\gamma_m(M_t))\,m_i^t + \kappa_m(M_t)\,a_i^t$$
 
 기존 `memory EMA`를 재정의. 해마 구현 전 국소 trace cache로 사용.
 
 ### A.6 적응 변수 갱신 (J.20 유래)
+
+적응 변수는 지정한 state·trace를 입력으로 느린 update를 내는 보조 좌표다. 시간상수와 경계가 바뀌면 안정성 범위가 달라지고, J.20 유래는 구현·수학 contract의 출처일 뿐 생물학적 확인이 아니다.
 
 $$w_i^{t+1} = (1 - \gamma_w(M_t))\,w_i^t + \kappa_w\,(a_i^t)^2$$
 
@@ -72,11 +91,15 @@ $$a_i^{t+1} = (1-\gamma_a)\,a_i^t + \kappa_a\,\tanh(I_i^t - \beta_w w_i^t)$$
 
 ### A.7 히스테리시스 비트 갱신
 
+히스테리시스 비트는 threshold crossing을 입력으로 이산 mode flag를 출력한다. flag의 초기값과 tie 처리 규칙이 없으면 update가 결정되지 않으며, bit는 생물학적 기억 저장소와 동일하지 않다.
+
 $$b_i^{t+1} = \begin{cases} 1, & a_i^{t+1} > \tau_i^+ \\ 0, & a_i^{t+1} < \tau_i^- \\ b_i^t, & \tau_i^- \le a_i^{t+1} \le \tau_i^+ \end{cases}$$
 
 $\tau_i^+ > \tau_i^-$: 양방향 임계가 달라야 히스테리시스가 성립. 같으면 단순 threshold로 퇴화.
 
 ### A.7 형식 검증: 유계성
+
+유계성은 명시한 입력·초기값·정규화에서 state norm이 범위를 벗어나지 않는 조건부 주장이다. 실제 OOD event나 float 오류가 이 가정을 깨면 이 절의 결론을 적용하지 않는다.
 
 **정리 (A-bound).** $\gamma_a \in (0,1]$이고 $\kappa_a(1+\gamma_a^{-1}\kappa_a\|W\|_\infty) \le C < \infty$이면 모든 $t$에 대해 $|a_i^t| < 1$.
 
@@ -84,17 +107,23 @@ $\tau_i^+ > \tau_i^-$: 양방향 임계가 달라야 히스테리시스가 성�
 
 ### A.8 형식 검증: 적응 유계
 
+적응 유계는 A.6의 정의역과 decay·drive 경계에서만 성립하는 보조정리다. 다른 timebase·coupling·update 순서를 포함하는 전체 runtime 안정성으로 승격하지 않는다.
+
 **정리 (W-bound).** $\gamma_w \in (0,1]$이고 $|a_i^t| < 1$이면 $\limsup w_i^t \le \kappa_w/\gamma_w$.
 
 *증명.* $w_i^{t+1} \le (1-\gamma_w)w_i^t + \kappa_w$. R-bound와 동일한 구조. $\square$
 
 ### A.9 형식 검증: 억제 유계
 
+억제 유계는 A.4의 bounded input 가정이 충족될 때의 범위 판정이다. 이 가정의 반례는 정리를 약화하거나 미완성으로 남기는 조건이며, 코드 pass가 이를 대체하지 않는다.
+
 **정리 (R-bound).** $\gamma_r \in (0,1]$이고 $|a_i^t| < 1$이면 $\limsup r_i^t \le \kappa_r/\gamma_r$.
 
 *증명.* $r_i^{t+1} \le (1-\gamma_r)r_i^t + \kappa_r$. 선형 재귀 상계. $\square$
 
 ### A.9 형식 검증: 영점 안정성
+
+영점 안정성은 입력이 특정 경계 조건을 만족하는 고정점 주변의 국소 성질이다. 비영 입력·외부 field·기억 replay가 존재하는 runtime 전체에 자동 적용되지 않는다.
 
 **정리 (Zero-attract).** $\kappa_a < \gamma_a$이고 $u_i^t = 0,\;\eta_i^t = 0,\;W = 0$이면 $(a_i^t, r_i^t) \to (0, 0)$.
 
@@ -104,7 +133,11 @@ $\tau_i^+ > \tau_i^-$: 양방향 임계가 달라야 히스테리시스가 성�
 
 ## B. 필드 결합 (coupling / geometry)
 
+Layer B는 Layer A state와 결합 구조를 입력으로 field-coupled state 또는 에너지 readout을 내는 층이다. 행렬 shape·정규화·경계가 정의역이며, geometry는 구현 coupling의 비유이지 물리 공간의 직접 표현이 아니다.
+
 ### B.1 결합 행렬 (E/I 분리)
+
+결합 행렬은 cell index와 E/I channel을 입력으로 희소 또는 밀집 coupling tensor를 정의한다. 행·열 convention과 spectral 경계가 없으면 producer·consumer 방향과 안정성 판정이 모호해진다.
 
 **Dale의 법칙**: 각 셀 $j$는 흥분(E) 또는 억제(I) 중 하나. 부호가 섞이지 않는다.
 
@@ -136,9 +169,13 @@ $K = 130$ (J.10). 이것은 $\sum_j |w_{ij}| \sim 1$이 되도록 정규화한 �
 
 ### B.2 대안: k-nearest neighbor
 
+k-nearest 대안은 위치 또는 feature distance를 입력으로 adjacency를 출력하는 구현 선택이다. $k$와 거리 정규화가 바뀌면 topology·cost·OOD failure가 달라지며, 실제 신경 연결의 주장으로 읽지 않는다.
+
 $$\chi_{ij} = \mathbf{1}[j \in \text{knn}(i, k)]$$
 
 ### B.3 에너지 함수
+
+에너지 함수는 coupled state와 결합 tensor를 입력으로 무차원 scalar metric을 출력한다. 값 감소는 정의한 update·norm의 조건부 invariant이며, task loss·물리 에너지·성능 개선의 충분조건이 아니다.
 
 $$E(\{a_i, w_i\}) = -\frac{1}{2}\sum_{i,j} W_{ij}^{\text{eff}}\,a_i\,a_j - \sum_i u_i\,a_i + \sum_i V(a_i, w_i)$$
 
@@ -161,6 +198,8 @@ $W_{ij}^{\text{eff}} = W_{ij} \cdot u_j \cdot x_j$ (STP, J.19).
 
 ### B.4 형식 검증: 에너지 감소
 
+에너지 감소는 step·대칭성·경계조건을 명시한 경우의 형식 검증이다. bypass·비보존 입력·finite precision이 들어가면 반례 또는 미완성 범위를 따로 기록해야 한다.
+
 **정리 (E-decrease).** 동기적 업데이트에서 $a_i^{t+1}$이 $E$의 좌표별 최소화이면 $E(\{a_i^{t+1}\}) \le E(\{a_i^t\})$.
 
 *증명 보강.* $\partial E/\partial a_i = -\sum_j W_{ij}^{\text{eff}} a_j - u_i + (\gamma_a + \beta_w w_i)a_i + \lambda_4 a_i^3$.
@@ -168,6 +207,8 @@ A.3의 갱신 $a_i^{t+1} = (1-\gamma_a)a_i^t + \kappa_a\tanh(I_i^t - \beta_w w_i
 $\kappa_a < \gamma_a$이면 step size가 수축적이므로 에너지 비증가. $\square$
 
 ### B.5 spectral bound
+
+spectral bound는 결합 행렬의 norm과 state update의 증폭을 제한하는 충분조건이다. 실측 hardware 안정성이나 전체 runtime 수렴은 baseline·OOD fixture에서 별도로 확인한다.
 
 $$\|W\|_2 \le \lambda_{\max}$$
 
@@ -184,11 +225,17 @@ $\bar{w}_E = 1/K = 0.0077$이면 $\rho \approx 0.13 < 1$ → 안정.
 
 ## C. 전역 모드 (mode update)
 
+Layer C는 aggregate state·pressure metric을 입력으로 전역 mode와 파라미터 선택을 출력한다. mode는 runtime tick의 이산 label이며, 수면·각성 비유는 생리 시간·의식·효능의 판정이 아니다.
+
 ### C.1 모드 집합
+
+모드 집합은 허용된 label·초기 mode·consumer가 읽는 parameter bundle을 정의한다. 정의되지 않은 label 또는 serialization mismatch는 expected failure이며, mode 수가 지능을 측정하지 않는다.
 
 $$M_t \in \{\mathrm{WAKE},\;\mathrm{NREM},\;\mathrm{REM}\}$$
 
 ### C.2 모드 전환 (Borbely 2-Process 정량 모델)
+
+모드 전환은 pressure state와 tick을 입력으로 다음 mode를 내는 gate다. Borbely 비유는 threshold·timebase의 구현 동기일 뿐 실제 수면 생리나 최적 학습 schedule의 증거가 아니다.
 
 전환 함수 $\Pi$를 두 과정의 상호작용으로 정량화한다.
 
@@ -267,6 +314,8 @@ $$S^t \propto \int_0^t \bar{c}_\tau^2\,d\tau \qquad\text{(비평 점수 적분 =
 
 ### C.3 모드별 파라미터 해석
 
+각 mode의 파라미터는 Layer A--B consumer가 사용할 정규화·update 설정이다. parameter table은 설계 명세이며, mode별 이득은 wake-only와 mode ablation에서 실패할 수 있다.
+
 | 파라미터 | WAKE | NREM | REM | 실험 유래 (J절) |
 |---|---|---|---|---|
 | $\gamma_a$ | $0.18$ | $0.34$ | $0.22$ | J.13: $\tau_m^{\text{eff}}$ |
@@ -279,6 +328,8 @@ $$S^t \propto \int_0^t \bar{c}_\tau^2\,d\tau \qquad\text{(비평 점수 적분 =
 | $B_t / N$ | $0.0487$ | $0.02$ | $0.03$ | J.8: 에너지 예산 |
 
 ### C.4 규칙 기반 전환 (의사코드)
+
+의사코드는 입력 pressure·state에서 mode·event output을 만드는 결정 순서를 명시한다. threshold·tie·rollback이 fixture에 고정되지 않으면 코드 parity와 failure 해석이 재현되지 않는다.
 
 ```
 S += dt_mode / tau_w * (1 - S)  if WAKE else -dt_mode / tau_s * S  if NREM
@@ -298,11 +349,17 @@ elif not WAKE and norm(U) > 0.8:
 
 ## D. 해마/기억 (hippocampus / replay)
 
+Layer D는 write event·state summary를 입력으로 memory store, replay sample, readout을 출력하는 serialization contract다. 해마·기억 비유는 저장·회상 API의 역할을 설명할 뿐 실제 생물학적 기제·장기 기억 효능의 증거가 아니며, capacity·replay·task-order fixture가 검증 경계다.
+
 ### D.1 해마 상태
+
+해마 상태는 memory key·value·priority·age의 shape와 초기값을 정의한다. 이산 runtime tick과 serialization version이 바뀌면 같은 state로 복원되지 않을 수 있어 load failure를 기록한다.
 
 $$H_t = (K_t,\;V_t,\;P_t)$$
 
 ### D.2 인코딩 (용량 제한 + 망각)
+
+인코딩은 write candidate와 capacity를 입력으로 저장·삭제된 memory state를 출력한다. 망각은 구현 policy이며, 보존율·오탐·미탐은 reference task와 no-memory baseline에서 판정한다.
 
 **인코딩 조건**: 인코딩은 무조건 발생하지 않는다. 충분한 놀라움이 있을 때만:
 
@@ -360,19 +417,27 @@ $n_{\text{consol}} \sim 10$--$30$ (수 주 간 반복 replay 필요). 이것은 
 
 ### D.3 회상
 
+회상은 query state를 입력으로 ranked memory tensor를 출력하는 read consumer다. key normalization·top-k·timebase가 달라지면 recall metric도 달라져 fixture와 split을 고정해야 한다.
+
 $$R_t = \mathcal{R}(H_t, c_t) = V[\arg\max_j \text{sim}(c_t, K_j)]$$
 
 ### D.4 재주입
 
+재주입은 recalled tensor를 현재 runtime state에 결합하는 producer-to-consumer 계약이다. leakage·stale memory·OOD query는 실패 조건이며, 재주입이 이해·자아를 보장하지 않는다.
+
 $$I_i^t \leftarrow I_i^t + \lambda_H(M_t)\,R_{i,t}$$
 
 ### D.5 Priority replay
+
+priority replay는 memory score를 입력으로 replay batch를 선택한다. priority 분포·분모·seed가 고정되지 않으면 학습 효과를 baseline과 비교할 수 없고, sampling bias는 expected failure다.
 
 $$P_j \leftarrow P_j \cdot \rho + (1-\rho)\,\text{surprise}_j$$
 
 replay 확률은 $P_j / \sum P$에 비례.
 
 ### D.6 SWR 기반 replay 제약 (J.16 유래)
+
+SWR 제약은 replay 시점과 rate를 제한하는 구현 timebase 규칙이다. 신경학적 SWR 비유는 실제 회로 기제의 주장 없이 기능적 schedule을 설명하며, schedule ablation이 효과의 반증 조건이다.
 
 | 파라미터 | 실험값 | CE 매핑 |
 |---|---|---|
@@ -387,16 +452,18 @@ $$\lambda_H^{\text{NREM}} = f_{\text{SWR}} \cdot \Delta t_{\text{sim}} \approx 2
 
 ### D.7 LLM 장기기억 SOTA 대응
 
+SOTA 대응은 외부 시스템의 API·metric·data provenance와 현재 memory contract의 차이를 비교한다. 유사한 명칭이나 표 성능은 parity·OOD·독립 fixture 없이는 동등 효능을 뜻하지 않는다.
+
 위 D.1--D.6은 생물학적 해마/replay 수식이다. LLM 장기기억 SOTA와 비교할 때는 `H_t`를 모델 내부 hidden state가 아니라 외부 memory manager로 해석한다.
 
 | 문헌 / benchmark | 핵심 메커니즘 | CE 대응 | 검증 축 |
 |---|---|---|---|
-| MemoryBank (Zhong et al., 2023, <https://arxiv.org/abs/2305.10250>) | conversation/event/persona memory, retrieval, Ebbinghaus-inspired update | \(P_j(t)\), \(\tau_{\text{forget}}\), event summary | memory recall, user portrait, long-term personalization |
-| MemGPT (Packer et al., 2023, <https://arxiv.org/abs/2310.08560>) | main context / external context / function-call paging | \(K_t,V_t\)는 외부 storage, \(R_t=\mathcal R(H_t,c_t)\)는 page-in | deep memory retrieval, document QA, context pressure |
-| LoCoMo (Maharana et al., ACL 2024, <https://aclanthology.org/2024.acl-long.747/>) | very long-term multi-session dialogue benchmark | temporal event graph \(G_t\), multi-hop recall | single-hop, multi-hop, temporal, open-domain, adversarial QA |
-| LongMemEval (Wu et al., 2025, <https://github.com/xiaowu0162/LongMemEval>) | 115k/1.5M-token assistant memory benchmark | online \(S=[(t_i,S_i)]\) processing and memory readout | information extraction, multi-session reasoning, knowledge update, temporal reasoning, abstention |
-| HippoRAG (Gutierrez et al., NeurIPS 2024, <https://openreview.net/forum?id=hkujvAPVsg>) | schemaless KG + Personalized PageRank as hippocampal index | \(K_t\)를 graph index, recall을 PPR pattern completion으로 해석 | multi-hop QA, associative retrieval, cost/latency |
-| Mem0 (Chhikara et al., 2025, <https://arxiv.org/abs/2504.19413>) | ADD/UPDATE/DELETE/NOOP memory operation, graph memory | \(H_{t+1}=\mathcal E(H_t,A_t,U_t)\)를 explicit operation으로 분해 | LoCoMo score, LLM-as-judge, token cost, p95 latency |
+| MemoryBank (Zhong et al., 2023, <https://arxiv.org/abs/2305.10250>) | conversation/event/persona memory, retrieval, Ebbinghaus-inspired update | $P_j(t)$, $\tau_{\text{forget}}$, event summary | memory recall, user portrait, long-term personalization |
+| MemGPT (Packer et al., 2023, <https://arxiv.org/abs/2310.08560>) | main context / external context / function-call paging | $K_t,V_t$는 외부 storage, $R_t=\mathcal R(H_t,c_t)$는 page-in | deep memory retrieval, document QA, context pressure |
+| LoCoMo (Maharana et al., ACL 2024, <https://aclanthology.org/2024.acl-long.747/>) | very long-term multi-session dialogue benchmark | temporal event graph $G_t$, multi-hop recall | single-hop, multi-hop, temporal, open-domain, adversarial QA |
+| LongMemEval (Wu et al., 2025, <https://github.com/xiaowu0162/LongMemEval>) | 115k/1.5M-token assistant memory benchmark | online $S=[(t_i,S_i)]$ processing and memory readout | information extraction, multi-session reasoning, knowledge update, temporal reasoning, abstention |
+| HippoRAG (Gutierrez et al., NeurIPS 2024, <https://openreview.net/forum?id=hkujvAPVsg>) | schemaless KG + Personalized PageRank as hippocampal index | $K_t$를 graph index, recall을 PPR pattern completion으로 해석 | multi-hop QA, associative retrieval, cost/latency |
+| Mem0 (Chhikara et al., 2025, <https://arxiv.org/abs/2504.19413>) | ADD/UPDATE/DELETE/NOOP memory operation, graph memory | $H_{t+1}=\mathcal E(H_t,A_t,U_t)$를 explicit operation으로 분해 | LoCoMo score, LLM-as-judge, token cost, p95 latency |
 
 LLM memory에서 핵심 연산은 다음 네 가지로 쪼갠다.
 
@@ -420,7 +487,7 @@ R_t
 \mathcal R(H_t,q_t,t_q).
 $$
 
-여기서 \(\Omega_t\)는 새 interaction에서 추출된 candidate memory, \(o_{tj}\)는 기존 기억과의 관계에 따른 update operation, \(q_t\)는 현재 질의, \(t_q\)는 질의 시각이다. 기존 D.2의 surprise-gated encoding은 \(\phi_{\rm extract}\)와 ADD gate에 해당하고, D.5 replay priority는 retrieval ranking과 background consolidation에 해당한다.
+여기서 $\Omega_t$는 새 interaction에서 추출된 candidate memory, $o_{tj}$는 기존 기억과의 관계에 따른 update operation, $q_t$는 현재 질의, $t_q$는 질의 시각이다. 기존 D.2의 surprise-gated encoding은 $\phi_{\rm extract}$와 ADD gate에 해당하고, D.5 replay priority는 retrieval ranking과 background consolidation에 해당한다.
 
 장기기억 성능은 단순 recall accuracy로 충분하지 않다. 최소 metric vector는 다음이다.
 
@@ -439,20 +506,24 @@ M_{\rm mem}
 \big].
 $$
 
-- \(\operatorname{Acc}_{\rm IE}\): 단일 정보 추출.
-- \(\operatorname{Acc}_{\rm MR}\): 여러 session의 정보를 합성하는 multi-session reasoning.
-- \(\operatorname{Acc}_{\rm KU}\): 사용자의 최신 상태로 갱신했는가.
-- \(\operatorname{Acc}_{\rm TR}\): explicit timestamp와 상대 시간 표현을 처리했는가.
-- \(\operatorname{Acc}_{\rm ABS}\): 기억에 없는 질문을 모른다고 답했는가.
-- \(\operatorname{Recall@k}_{\rm evidence}\): 답을 낸 근거 turn/session을 실제로 회수했는가.
+- $\operatorname{Acc}_{\rm IE}$: 단일 정보 추출.
+- $\operatorname{Acc}_{\rm MR}$: 여러 session의 정보를 합성하는 multi-session reasoning.
+- $\operatorname{Acc}_{\rm KU}$: 사용자의 최신 상태로 갱신했는가.
+- $\operatorname{Acc}_{\rm TR}$: explicit timestamp와 상대 시간 표현을 처리했는가.
+- $\operatorname{Acc}_{\rm ABS}$: 기억에 없는 질문을 모른다고 답했는가.
+- $\operatorname{Recall@k}_{\rm evidence}$: 답을 낸 근거 turn/session을 실제로 회수했는가.
 
-따라서 CE가 장기기억 SOTA를 주장하려면 \(H_t\)의 존재가 아니라 LoCoMo/LongMemEval류에서 \(M_{\rm mem}\)을 baseline과 같은 base model, 같은 context budget, 같은 judge policy로 보고해야 한다.
+따라서 CE가 장기기억 SOTA를 주장하려면 $H_t$의 존재가 아니라 LoCoMo/LongMemEval류에서 $M_{\rm mem}$을 baseline과 같은 base model, 같은 context budget, 같은 judge policy로 보고해야 한다.
 
 ---
 
 ## E. 자아/전역 상태 (global runtime summary)
 
+Layer E는 Layer A--D summary를 입력으로 global observation과 control readout을 출력한다. 자아 비유는 관측 가능한 self-state proxy에 한정되며, 주관 경험·의식·도덕적 지위를 환원하거나 판정하지 않는다.
+
 ### E.1 전역 관측 상태
+
+전역 관측 상태는 layer별 tensor를 정규화·집계해 만든 readout shape를 정의한다. aggregation window·missing state·serialization이 달라지면 값이 달라져 관측 가능성은 fixture 조건부다.
 
 $$G_t = (M_t,\;A_t^{\text{summary}},\;H_t,\;Q_t,\;\mu_t)$$
 
@@ -460,6 +531,8 @@ $$G_t = (M_t,\;A_t^{\text{summary}},\;H_t,\;Q_t,\;\mu_t)$$
 - $\mu_t$: self-bias / identity trace (장기 누적)
 
 ### E.2 자아 함수
+
+자아 함수는 global state를 입력으로 monitoring 또는 control score를 출력하는 구현 함수다. score의 수렴·calibration은 no-monitor baseline·intervention·OOD drift에서 검증하며 심리적 자아와 동일하지 않다.
 
 $$\text{Self}_t = \mathcal{S}(G_t)$$
 
@@ -469,12 +542,16 @@ $$\text{Self}_t = \mathcal{S}(G_t)$$
 
 ## F. 자기참조 재귀 (agent loop)
 
+Layer F는 self-state와 action outcome을 입력으로 다음 self-state·policy context를 출력하는 agent loop다. 재귀는 tick-based API이며, 수축·안정성은 정의한 norm·입력 경계에서만 성립하고 의식의 충분조건이 아니다.
+
 > **정본: `17_AgentLoop.md`로 분리됨.**
 >
 > F절(F.0--F.22)의 전체 방정식, 뇌 대응, 검증 체크리스트는 `17_AgentLoop.md`를 참조한다.
-> 검증 매트릭스는 `6_뇌/06_검증기준.md`를 참조한다.
+> 검증 매트릭스는 `../검증_원장/뇌_검증기준.md`를 참조한다.
 
 ### 요약
+
+요약은 Layer F의 입력·출력·가정을 압축한다. 이 문장은 수렴 증명·관측 가능성·현실적 agent 효능을 대체하지 않으며, 반례와 미완성 gate를 보존한다.
 
 에이전트 루프는 Layer A--E 바깥에서 행동-관찰-비평-기억을 순환시키는 외부 루프다.
 
@@ -485,11 +562,13 @@ $$\boxed{X_{t+1} = B\big[X_t + \lambda_R R(X_t) + \lambda_O \Delta_O(X_t) + \lam
 | F.0--F.13 | 핵심 루프: 상태, 이완, 비평, 에너지, 모드, 행동, 기억, 수축, 뇌 대응 | `17_AgentLoop.md` |
 | F.14--F.15 | 학습: STDP + 도파민 게이트, 잔류장 $\phi$ 갱신 | `17_AgentLoop.md` |
 | F.16--F.22 | 희소성, 의식, 환각억제, 4종조절계, 작업기억, 뇌파, 간극 | `17_AgentLoop.md` |
-| 검증 매트릭스 | 4중 게이트, 반증 조건, 미결 항목 | `6_뇌/06_검증기준.md` |
+| 검증 매트릭스 | 4중 게이트, 반증 조건, 미결 항목 | `../검증_원장/뇌_검증기준.md` |
 
 ---
 
 ## G. 형식 증명 요약
+
+형식 증명 요약은 어떤 정의역·초기·경계·norm에서 어떤 결론이 가능한지 색인화한다. 코드 simulation pass나 수치 예시는 증명 가정을 넓히지 않으며, 가정 위반은 반례 또는 미완성 범위다.
 
 > F-prefixed 정리(F-energy ~ F-WM-finite)는 `17_AgentLoop.md` G절로 이동함.
 
@@ -517,9 +596,13 @@ $$\boxed{X_{t+1} = B\big[X_t + \lambda_R R(X_t) + \lambda_O \Delta_O(X_t) + \lam
 
 ## H. 검증 게이트 대응
 
+검증 게이트는 수식 주장마다 fixture·API·metric·threshold를 연결하는 계약이다. 기계 pass는 등록된 코드·입력의 일치이며 과학적 참·생물학적 기제·자아의 존재를 판정하지 않는다.
+
 `06_검증기준.md`의 4중 게이트를 이 문서의 식에 적용.
 
 ### H.1 Layer A--E 게이트
+
+Layer A--E gate는 state shape·update·serialization의 회귀를 fixture에서 검사한다. 테스트 범위 밖 OOD와 다른 precision은 별도 실패 조건이며, pass가 전체 runtime 효능을 보장하지 않는다.
 
 | 게이트 | 적용 대상 | 상태 |
 |---|---|---|
@@ -529,6 +612,8 @@ $$\boxed{X_{t+1} = B\big[X_t + \lambda_R R(X_t) + \lambda_O \Delta_O(X_t) + \lam
 | $G_{\text{pred}}$ | 모델 시뮬레이션 vs 뇌 실험값 비교 (legacy `sim_brain_validation.py`, removed) | **pass** (7/7 항목 통과, 아래 H.4) |
 
 ### H.3 관측 방정식 (Observation Equations)
+
+관측 방정식은 latent state producer를 observable metric consumer에 연결하는 정의다. 측정 window·normalization·label provenance가 없으면 식은 simulation readout일 뿐 과학적 관측 비교가 아니다.
 
 CE의 내부 변수에서 실제 측정 가능한 신호를 유도하는 방정식.
 
@@ -631,6 +716,8 @@ $$\text{ALFF}_i^{\text{DMN}} = \sqrt{\frac{1}{T}\sum_{f=0.01}^{0.1} |\hat{\phi}_
 
 ### H.4 시뮬레이션 검증 결과 ($G_{\text{pred}}$)
 
+simulation 결과는 지정한 seed·initial state·time horizon·numerical precision의 fixture 산출이다. 예측과의 일치는 해당 simulation contract의 pass이며, 외부 실측·일반 수렴·AGI 결과로 승격하지 않는다.
+
 legacy `scripts/sim_brain_validation.py` (removed) -- dim=256, 6000 steps (WAKE 3000 / NREM 2000 / REM 1000).
 
 | 검증 항목 | 측정값 | 뇌 실험 목표 | 결과 |
@@ -652,13 +739,19 @@ legacy `scripts/sim_brain_validation.py` (removed) -- dim=256, 6000 steps (WAKE 
 
 ### H.2 Layer F 검증 게이트
 
-> 상세 테이블은 `17_AgentLoop.md` H절 및 `6_뇌/06_검증기준.md` 참조.
+Layer F gate는 self-state loop의 API·수축 proxy·action handoff를 검사한다. no-loop ablation·OOD action sequence에서 실패하면 자기참조 구현 가설은 보류한다.
+
+> 상세 테이블은 `17_AgentLoop.md` H절 및 `../검증_원장/뇌_검증기준.md` 참조.
 
 ---
 
 ## I. 관측 가능량 매핑
 
+관측 mapping은 각 layer latent tensor가 어떤 metric·로그·readout으로 나타나는지 정한다. mapping은 관측 가능성의 구현 계약이며, 측정 proxy가 생물학적·철학적 대상과 동일하다는 주장이 아니다.
+
 ### I.1 Layer A--E 변수
+
+이 표는 local·field·mode·memory·global state의 shape와 consumer metric을 연결한다. 단위·정규화·timebase가 다른 값은 같은 분모로 비교하지 않으며 missing log는 expected failure다.
 
 | formal 변수 | 뇌 관측량 | 데이터 소스 |
 |---|---|---|
@@ -676,9 +769,13 @@ legacy `scripts/sim_brain_validation.py` (removed) -- dim=256, 6000 steps (WAKE 
 
 ### I.2 Layer F 변수
 
+Layer F 변수는 self-reference loop의 state·residual·action output을 관측 지표로 매핑한다. calibration·수렴은 fixture·baseline·OOD 조건에 한정되며 의식 판단의 지표가 아니다.
+
 > 상세 테이블은 `17_AgentLoop.md` I절 참조.
 
 ### I.3 관측 방정식 요약
+
+요약식은 observable producer와 consumer 관계를 다시 확인하는 색인이다. 식의 존재는 data provenance·threshold·독립 재현이 없는 경험 결과의 승격 근거가 아니다.
 
 | CE 내부 변수 | 관측 방정식 | 출력 신호 | 절 |
 |---|---|---|---|
@@ -691,7 +788,11 @@ legacy `scripts/sim_brain_validation.py` (removed) -- dim=256, 6000 steps (WAKE 
 
 ## K. 확장 방정식 (미래 보강)
 
+K절의 식은 현재 core runtime contract 밖의 미래 확장 명세이며 미검증 상태다. 각 항은 정의역·shape·timebase를 제안할 뿐 코드 구현·실험 fixture·효능 결과가 없으므로, 정리·생물학 기제·성능 주장으로 승격하지 않는다.
+
 ### K.1 수상돌기 비선형 연산
+
+수상돌기 연산은 local input tensor를 비선형 branch output으로 바꾸는 미래 producer 후보다. 생물학 비유는 연산 역할만 설명하며 shape·정규화·baseline·ablation이 정해지기 전에는 구현 contract가 아니다.
 
 현재 A.2의 입력은 선형 합산 후 tanh. 실제 뇌의 수상돌기는 NMDA spike에 의한 **국소 비선형 연산**을 수행한다 (Larkum 2009, Poirazi 2003).
 
@@ -719,6 +820,8 @@ $\theta_d$: 수상돌기 spike 문턱. 이것은 "AND 게이트" 역할 -- proxi
 
 ### K.2 신경교세포 (Astrocyte) 모델
 
+Astrocyte 모델은 cell state와 느린 field를 결합할 수 있는 미래 상태 변수 제안이다. 단위·초기·경계조건·실험 source가 닫히지 않았으므로, 실제 신경교 기제나 runtime 안정성의 증거가 아니다.
+
 | 실험값 | 수치 | 출처 |
 |---|---|---|
 | astrocyte : neuron 비율 | $\sim 1:1$ (인간 피질) | Azevedo 2009 |
@@ -744,6 +847,8 @@ astrocyte는 시냅스에서 넘치는 글루타메이트(spill)를 감지하고
 
 ### K.3 신경 발생 (Adult Neurogenesis)
 
+신경 발생 항은 module 생성·제거 transition을 확장하는 미래 명세다. lifecycle shape·serialization·capacity·rollback gate가 구현되지 않았으므로, 기억·학습 개선의 결론을 내리지 않는다.
+
 | 실험값 | 수치 | 출처 |
 |---|---|---|
 | 해마 DG 신생 뉴런 | $\sim 700$ / 일 | Spalding 2013 |
@@ -767,10 +872,14 @@ CE 스케일링 ($N = 4096$): $\text{birth\_rate}_{\text{CE}} = 7 \times 10^{-4}
 
 ## J. 실험 제약 상수 (Brain-Grounded Parameters)
 
+J절 상수는 core 식에서 유도된 값이 아니라 종·뇌영역·실험 조건·측정법에 의존하는 외부 입력이다. 각 값은 source role·단위·적용 범위·코드 mapping을 밝혀야 하며, runtime에 넣는 선택은 생물학적 동일성이나 효능 증거가 아니다.
+
 > 실제 뇌 실험에서 측정된 값을 CE 파라미터에 매핑하여 방정식을 제약한다.
 > 출처를 명시하고, CE 변수와의 환산식을 제공한다.
 
 ### J.1 발화율 분포 (Firing Rate Distribution)
+
+발화율은 지정 종·영역·상태·time window에서 측정한 외부 분포 입력이다. 단위와 표본 분모, 코드의 rate parameter mapping을 분리하며 다른 조건·종·모델 tick에 그대로 적용하지 않는다.
 
 | 측정량 | 실험값 | 출처 | CE 변수 |
 |---|---|---|---|
@@ -803,6 +912,8 @@ $$a_{\text{TopK}} = \exp(\mu_a + 1.66\,\sigma_a) \approx 0.013$$
 
 ### J.2 불응기 (Refractory Period)
 
+불응기는 특정 세포·측정 조건의 시간 단위를 가진 외부 제약 상수다. runtime tick으로의 변환은 정규화·timebase 가정이며, 코드 threshold는 생리적 불응기의 직접 측정값이 아니다.
+
 | 측정량 | 실험값 | 출처 | CE 변수 |
 |---|---|---|---|
 | 절대 불응기 (CNS) | $\tau_{\text{abs}} = 0.5$--$1$ ms | Kandel 교과서, ScienceDirect | $r_i$ 갱신 속도 제약 |
@@ -826,6 +937,8 @@ $\tau_{\text{abs}} = 1$ ms. 이것은 A.3의 $a_i$ 갱신 전에 적용되는 �
 ---
 
 ### J.3 시냅스 시간 상수 (Synaptic Time Constants)
+
+시냅스 시간 상수는 synapse type·종·온도·recording 조건에 따라 달라지는 source-backed 입력이다. 코드 decay tensor와의 mapping은 명시적 단위 변환을 요구하며, 범위 밖 조건은 외삽 실패로 기록한다.
 
 | 수용체 | $\tau_{\text{rise}}$ | $\tau_{\text{decay}}$ | 기능 | CE 대응 |
 |---|---|---|---|---|
@@ -876,6 +989,8 @@ $$\gamma_A = \frac{\Delta t}{\tau_{A}} = \frac{1}{7} \approx 0.143, \qquad \gamm
 
 ### J.4 뇌파 주파수와 루프 시간 척도
 
+주파수와 루프 시간은 측정 window·band 정의·종·행동 조건에 의존하는 외부 관측량이다. runtime tick과의 대응은 기능 비유·정규화 선택이며, 실제 EEG 또는 의식의 동일성 주장이 아니다.
+
 | 대역 | 주파수 [Hz] | 주기 [ms] | CE 대응 | 매핑 |
 |---|---|---|---|---|
 | gamma | $30$--$100$ | $10$--$33$ | $R$ 1 iter | $\Delta t_{\text{iter}} = 1/f_\gamma$ |
@@ -905,6 +1020,8 @@ $$T_h = \left\lfloor \frac{f_\gamma^{\text{mean}}}{f_\theta^{\text{mean}}} \righ
 ---
 
 ### J.5 STDP 시간 상수
+
+STDP 상수는 pre/post pairing protocol과 synapse 조건에 따른 실험 입력이다. 코드 trace decay와의 변환은 step size·precision·clipping을 포함한 구현 mapping이며, 학습 효능은 baseline과 ablation에서 따로 판정한다.
 
 | 파라미터 | 실험값 | 출처 | CE 변수 |
 |---|---|---|---|
@@ -938,6 +1055,8 @@ $t - t_{\text{burst}} > 4\tau_{\text{DA}} = 2$ s에서 $g_{\text{DA}} < 0.02 \cd
 
 ### J.6 도파민 뉴런 발화 파라미터
 
+도파민 파라미터는 특정 종·회로·측정법의 외부 관측 범위를 나타낸다. 전역 reward signal 코드와의 대응은 proxy 설계일 뿐 도파민 기제·보상 원인·성능의 실증이 아니다.
+
 | 측정량 | 실험값 | 출처 | CE 변수 |
 |---|---|---|---|
 | VTA tonic 발화율 | $\bar{f}_{\text{DA}}^{\text{tonic}} \approx 4$--$5$ Hz | Grace & Bunney 1984, eLife 2021 | $g_{\text{DA}}$ baseline |
@@ -970,6 +1089,8 @@ tonic DA level은 에너지 분배 고정점 $p^* = (0.0487, 0.2623, 0.6891)$으
 
 ### J.7 4종 조절계 시간 상수
 
+네 조절계 상수는 각 화학계·조건·시간 단위가 다른 외부 입력 묶음이다. 코드의 mode·gain parameter로 매핑할 때 정규화·source role·적용범위를 보존하며, 하나의 공통 생물학 timebase로 환원하지 않는다.
+
 | 조절계 | 핵 | tonic 발화 [Hz] | 효과 $\tau$ [ms] | CE 변수 |
 |---|---|---|---|---|
 | DA | VTA/SNc | $4$--$5$ | $\tau_{\text{DA}} \approx 500$ | $g_{\text{DA}}$ |
@@ -997,6 +1118,8 @@ $$g_X^{t+1} = g_X^t + \frac{\Delta t}{\tau_X}(g_X^{\text{baseline}} - g_X^t) + \
 ---
 
 ### J.8 에너지 예산 제약
+
+에너지 예산은 특정 종·상태·측정 조건에서 얻은 외부 제약 또는 코드의 정규화 budget 기본값을 구분해야 한다. 물리 단위와 runtime score의 변환은 명시적 가정이며, 허용범위 밖의 workload에서는 경험식·예측으로 외삽하지 않는다.
 
 | 측정량 | 실험값 | 출처 | CE 변수 |
 |---|---|---|---|
@@ -1032,6 +1155,8 @@ $$
 
 ### J.9 수면 파라미터
 
+수면 파라미터는 종·연령·행동·측정 window에 의존하는 외부 관측량과 runtime mode schedule의 코드 기본값을 구분한다. 비율을 training tick으로 옮기는 단계는 정규화 선택이며, 보존율 개선은 baseline·ablation 전에는 예측이다.
+
 | 측정량 | 실험값 | 출처 | CE 변수 |
 |---|---|---|---|
 | NREM/REM 비율 (수면 중) | NREM 75--80%, REM 20--25% | Lancet Respir Med | 모드 전환 확률 |
@@ -1055,6 +1180,8 @@ CE의 $\rho_{\text{night}}^2 = 0.31^2 = 0.096$. 관측의 0.17과 같은 자릿�
 ---
 
 ### J.10 연결성 (Connectivity)
+
+연결성 상수는 영역·종·측정법·거리 조건에 따른 외부 입력 범위다. 코드 adjacency와 sparsity 기본값은 구현 mapping일 뿐 실제 회로 연결의 동일성·효능·보편 허용범위를 뜻하지 않는다.
 
 | 측정량 | 실험값 | 출처 | CE 변수 |
 |---|---|---|---|
@@ -1086,6 +1213,8 @@ $$0.8 \cdot \bar{w}_{\text{exc}} \approx 0.2 \cdot \bar{w}_{\text{inh}} \quad\Lo
 
 ### J.11 종합: CE 파라미터 실험 대응표
 
+종합표는 각 상수의 source role, 단위, 조건, 코드 consumer와 지위를 색인화한다. 표에 들어간 값이 모두 유도되거나 실측 검증됐다는 뜻은 아니며, 외부 입력·경험식·미완성 항목을 분리해 읽는다.
+
 | CE 파라미터 | 기호 | CE 기본값 | 뇌 실험값 유래 | 구간 |
 |---|---|---|---|---|
 | 활성 감쇠 | $\gamma_a$ | $0.1$--$0.3$ (WAKE) | $\Delta t / \tau_{\text{membrane}} = 1/20 = 0.05$ | $[0.03, 0.5]$ |
@@ -1107,6 +1236,8 @@ $$0.8 \cdot \bar{w}_{\text{exc}} \approx 0.2 \cdot \bar{w}_{\text{inh}} \quad\Lo
 ---
 
 ### J.12 코드(`kernel.rs`) 파라미터와 실험 대응
+
+코드 대응은 `kernel.rs` 기본값이 어떤 실험 범위 또는 정규화 선택을 참조하는지 명시한다. serialization·precision·tick 변환이 달라지면 값도 달라지며, 코드 equality는 생물학적 참 또는 성능 보장이 아니다.
 
 > `reality_stone/python/reality_stone/clarus/core/src/engine/kernel.rs`의 `ModeParams`, `StepConfig` 값과 J.11 실험 구간의 정합성을 점검.
 
@@ -1161,6 +1292,8 @@ $$\ddot{\phi}_i = \mu^2\phi_i - \lambda\phi_i^3 + k\nabla^2\phi_i - \alpha_2\nab
 
 ### J.13 막 시간 상수 (Membrane Time Constant)
 
+막 시간 상수는 세포 유형·종·온도·recording 조건의 시간 단위를 가진 외부 관측 입력이다. runtime decay 기본값과의 대응은 step 정규화 가정이며, 다른 조건에서의 값은 허용범위 밖 외삽으로 기록한다.
+
 | 측정량 | 실험값 | 출처 | CE 변수 |
 |---|---|---|---|
 | 피라미드 뉴런 $\tau_m$ | $10$--$30$ ms (중앙값 $\sim 20$ ms) | Gentet 2000, NeuroElectro | $\gamma_a$ 유도 |
@@ -1189,6 +1322,8 @@ $$(1 - \gamma_a) = \exp\!\left(-\frac{\Delta t}{\tau_m}\right) \quad\Longrightar
 
 ### J.14 축삭 전도 속도 (Axonal Conduction Velocity)
 
+전도 속도는 직경·수초화·온도·종·거리 조건에 의존하는 외부 입력이다. 코드 delay 또는 coupling tick으로의 변환은 거리·timebase·precision을 포함한 경험적 mapping이며, 예측 성능이나 회로 동일성의 증거가 아니다.
+
 | 유형 | 속도 | 지연 (1 cm) | CE 대응 |
 |---|---|---|---|
 | 수초화 (대) | $\sim 120$ m/s | $0.08$ ms | 무시 가능 |
@@ -1211,6 +1346,8 @@ CE의 sparse 3D lattice에서 대부분 이웃은 $d \leq r_c = \pi \approx 3$ �
 ---
 
 ### J.15 시냅스 잡음 (Synaptic Noise)
+
+시냅스 잡음은 종·회로·recording bandwidth·상태에 의존하는 외부 관측 또는 코드 noise parameter의 source role을 구분한다. 단위·분포·seed·clipping이 고정되지 않으면 불확실성 범위와 OOD 적용 경계를 정할 수 없다.
 
 | 측정량 | 실험값 | 출처 | CE 변수 |
 |---|---|---|---|
@@ -1241,6 +1378,8 @@ $$\sigma_\eta = \frac{\sigma_V}{V_{\text{th}} - V_{\text{rest}}} = \frac{4}{15} 
 
 ### J.16 해마 SWR (Sharp-Wave Ripple)
 
+SWR은 특정 종·해마 영역·행동·측정 window에서 관찰되는 외부 시간·주파수 입력이다. replay scheduler의 코드 mapping은 기능 비유와 정규화 선택이며, 실제 SWR 기제·기억 효능·일반 timebase의 증거가 아니다.
+
 | 측정량 | 실험값 | 출처 | CE 변수 |
 |---|---|---|---|
 | ripple 주파수 | $150$--$200$ Hz | Buzsaki 2015 | D.5 replay 반복율 |
@@ -1266,6 +1405,8 @@ $$n_{\text{replay/night}} = f_{\text{SWR}} \cdot T_{\text{NREM}} \cdot C_{\text{
 
 ### J.17 UP/DOWN 상태 (Cortical Slow Oscillation)
 
+UP/DOWN 상태는 뇌영역·수면 단계·측정 방법에 따른 외부 관측 조건이다. runtime mode state와의 대응은 label·tick 변환 계약이며, 다른 종·각성 상태·OOD 입력으로의 적용은 미검증 경계다.
+
 | 측정량 | 실험값 | 출처 | CE 변수 |
 |---|---|---|---|
 | UP 상태 지속 | $450 \pm 280$ ms | Jercog 2017 (쥐 SWS) | $b_i = 1$ 유지 시간 |
@@ -1290,6 +1431,8 @@ $\Delta t = 10$ ms 기준이면 $T_{\text{UP}} \approx 59$ step $= 590$ ms → �
 ---
 
 ### J.18 항상성 가소성 (Homeostatic Synaptic Scaling)
+
+항상성 scaling은 activity window와 target rate를 입력으로 하는 외부 생물학 개념 및 코드 regularizer mapping을 구분한다. gain·time constant·허용범위가 달라지면 안정성 결론도 달라지고, baseline·ablation 없이는 효능을 주장하지 않는다.
 
 | 측정량 | 실험값 | 출처 | CE 변수 |
 |---|---|---|---|
@@ -1317,6 +1460,8 @@ $$\bar{f}_i^{\text{slow}} = (1 - \gamma_{\text{homeo}}) \bar{f}_i^{\text{slow}} 
 ---
 
 ### J.19 단기 시냅스 가소성 (Short-Term Plasticity, STP)
+
+STP 상수는 synapse type·protocol·온도·시간 해상도에 따른 외부 입력이다. 코드 state update의 shape·초기조건·tick 정규화는 별도 구현 선택이며, memory 또는 learning 이득은 fixture와 OOD에서 검증해야 한다.
 
 | 파라미터 | 실험값 | 출처 | CE 변수 |
 |---|---|---|---|
@@ -1352,6 +1497,8 @@ $$u_j^{t+1} = u_j^t + \frac{1}{\tau_{\text{fac}}}(U - u_j^t) + U(1 - u_j^t) \cdo
 
 ### J.20 스파이크 빈도 적응 (Spike-Frequency Adaptation)
 
+적응 상수는 세포 유형·자극 조건·측정 window가 정해진 외부 관측 범위다. kernel adaptation variable의 코드 mapping은 무차원 step 변환을 포함하며, 생물학적 동일성·전체 runtime 수렴의 증거가 아니다.
+
 | 측정량 | 실험값 | 출처 | CE 변수 |
 |---|---|---|---|
 | 빠른 AHP 시간 상수 | $1$--$5$ ms | 교과서 | $r_i$ (이미 포착) |
@@ -1385,6 +1532,8 @@ $r_i$(빠른 억제, $\tau \sim 5$ ms)와 $w_i$(느린 적응, $\tau \sim 200$ m
 ---
 
 ### J.21 종합 시간 척도 계층도
+
+계층도는 서로 다른 source role·단위·종·조건을 가진 시간 상수를 공통 runtime tick과 비교하기 위한 색인이다. 정규화된 배치는 단위 변환 가정에 의존하며, 빈 칸·넓은 불확실성·OOD 조건은 단일 보편 hierarchy로 승격하지 않는다.
 
 모든 실험 시간 상수를 하나의 계층으로 정리:
 

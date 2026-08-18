@@ -1,0 +1,4 @@
+interface:
+  display_name: "CE Ledger Writer"
+  short_description: "Normalize CE provenance and claim ledgers"
+  default_prompt: "Use $ce-ledger-write to update a CE claim ledger without turning it into a narrative paper."

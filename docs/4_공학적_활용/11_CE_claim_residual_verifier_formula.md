@@ -1,6 +1,10 @@
 # 11. CE Claim Residual Verifier Formula
 
+이 문서는 claim residual verifier의 수식 정본이며, score가 아닌 evidence-bounded 복원 규칙을 정의한다. 독자는 확률분포, 공분산, graph regularization을 안다고 가정한다. 입력은 후보·근거·scale·source graph이고 출력은 posterior·mask·복원 답변이며, 성공은 adversarial/OOD holdout에서 false-allow를 낮추는 것이고 실패는 scale drift·source 상관·오탐을 무시하는 것이다.
+
 ## 0. 판정
+
+판정은 현재 수식의 적용 범위와 미완성 bridge를 요약하며, verifier 통과가 claim의 형식적 증명은 아니라는 경계를 둔다.
 
 이 문서는 LLM verifier를 다시 세우기 위한 수식 정본이다.
 
@@ -9,10 +13,10 @@
 따라서 v2 verifier는 다음 순서로 닫는다.
 
 1. 답변 후보를 claim 후보 묶음으로 분해한다.
-2. 각 claim에 대해 evidence 기준장 \(B\), 불확실성 \(C\), 무차원 잔차 \(e\)를 만든다.
+2. 각 claim에 대해 evidence 기준장 $B$, 불확실성 $C$, 무차원 잔차 $e$를 만든다.
 3. source reliability와 independent source quorum을 계산한다.
 4. signed claim graph curvature를 계산한다.
-5. claim action \(\phi_i\)와 answer action \(\Delta(y)\)를 만든다.
+5. claim action $\phi_i$와 answer action $\Delta(y)$를 만든다.
 6. PreEq Gibbs posterior로 후보 답변을 재가중한다.
 7. accepted claim mask만 answer composer로 복원한다.
 
@@ -20,20 +24,22 @@
 
 | stack | 역할 | 지위 |
 |---|---|---|
-| claim residual gate | evidence 기준장 \(B\), scale \(C\), source/graph action으로 claim을 accept/reject | `Tooling/Open test` |
-| PreEq manifest verifier | 답변 후보 \(y_k\) 위 posterior \(p_\beta\)와 abstain gate | posterior 수학은 `Exact`, 적용은 `Tooling/Open test` |
+| claim residual gate | evidence 기준장 $B$, scale $C$, source/graph action으로 claim을 accept/reject | `Tooling/Open test` |
+| PreEq manifest verifier | 답변 후보 $y_k$ 위 posterior $p_\beta$와 abstain gate | posterior 수학은 `Exact`, 적용은 `Tooling/Open test` |
 
 claim residual gate가 외부 사실성 방어선이고, PreEq manifest verifier가 후보 답변 선택 방어선이다. 둘 중 하나만 쓰면 문서 정본에 못 미친다.
 
 ## 1. 후보공간
 
-질문 \(x\)와 evidence bundle \(E\)가 주어졌다고 하자. LLM 또는 후보 생성기는 답변 후보 유한집합을 만든다.
+후보공간은 유한집합으로 고정하며, 생성기가 빠뜨린 참 후보나 무한 탐색의 선택 효과는 이 정의 밖에 있다.
+
+질문 $x$와 evidence bundle $E$가 주어졌다고 하자. LLM 또는 후보 생성기는 답변 후보 유한집합을 만든다.
 
 $$
 A_x=\{y_1,\dots,y_N\}.
 $$
 
-후보 \(y_k\)는 claim들의 유한집합으로 분해된다.
+후보 $y_k$는 claim들의 유한집합으로 분해된다.
 
 $$
 y_k=\{c_{k1},\dots,c_{kn_k}\}.
@@ -49,7 +55,9 @@ $$
 
 ## 2. Claim-Evidence 기준장
 
-claim \(c_i\)는 여러 검증 축을 가진 벡터로 읽는다.
+각 축의 score는 extractor와 evidence snapshot에 의존하므로, parser 오류와 label 불일치를 residual의 물리적 신호로 읽지 않는다.
+
+claim $c_i$는 여러 검증 축을 가진 벡터로 읽는다.
 
 $$
 z_i=
@@ -63,13 +71,13 @@ z_{\rm causal}
 \end{bmatrix}.
 $$
 
-source \(m\), axis \(a\)가 제공하는 기준값과 불확실성을
+source $m$, axis $a$가 제공하는 기준값과 불확실성을
 
 $$
 b_{ima},\qquad \sigma_{ima}
 $$
 
-로 둔다. source reliability \(q_m\in[\epsilon^2,1]\), source-axis weight \(w_{ima}\ge0\)가 있을 때 precision은
+로 둔다. source reliability $q_m\in[\epsilon^2,1]$, source-axis weight $w_{ima}\ge0$가 있을 때 precision은
 
 $$
 p_{ima}
@@ -108,9 +116,11 @@ C_i
 \right).
 $$
 
-근거가 없는 축은 \(\sum_m p_{ima}=0\)이므로 \(B_{ia}\)를 만들지 않고 missing mask에 넣는다.
+근거가 없는 축은 $\sum_m p_{ima}=0$이므로 $B_{ia}$를 만들지 않고 missing mask에 넣는다.
 
 ## 3. 무차원 잔차
+
+잔차의 분자는 scale과 같은 차원을 가져야 하며 0 scale·강한 상관에서는 공분산 정규화가 필요하다.
 
 claim residual은 반드시 무차원이어야 한다.
 
@@ -132,11 +142,13 @@ $$
 
 이는 count defect보다 우선한다. `supported/unsupported/contradicted` 카운트는 이 residual field를 만들 수 없을 때의 저차 proxy일 뿐이다.
 
-CE 문서군의 공통 규칙에 따라 \(\exp\), \(\log\), fixed-point, probability core에 들어가는 모든 값은 무차원이어야 한다. 따라서 \(\Delta\), \(\phi_i\), \(E_i\), \(\beta\Delta\), \(D_{\rm eff}\phi_i\)는 모두 무차원량이어야 한다. latency, token count, embedding norm, physical scale 같은 값은 직접 exponent에 넣지 않고 별도 normalization 또는 Buckingham-Pi식 무차원화 뒤에만 쓴다.
+CE 문서군의 공통 규칙에 따라 $\exp$, $\log$, fixed-point, probability core에 들어가는 모든 값은 무차원이어야 한다. 따라서 $\Delta$, $\phi_i$, $E_i$, $\beta\Delta$, $D_{\rm eff}\phi_i$는 모두 무차원량이어야 한다. latency, token count, embedding norm, physical scale 같은 값은 직접 exponent에 넣지 않고 별도 normalization 또는 Buckingham-Pi식 무차원화 뒤에만 쓴다.
 
 ## 4. Source 신뢰도와 독립성
 
-source \(m\)의 누적 신뢰도는 최근 검증된 claim residual 평균으로 갱신한다.
+source 신뢰도 갱신은 과거 검증의 요약이며 출처 간 복제·상관이 있으면 독립 표본처럼 세지 않는 경계가 필요하다.
+
+source $m$의 누적 신뢰도는 최근 검증된 claim residual 평균으로 갱신한다.
 
 $$
 q_m
@@ -150,7 +162,7 @@ q_m
 \right].
 $$
 
-같은 원문을 복사한 mirror source는 독립 근거로 세지 않는다. source family \(g\)별 precision mass는
+같은 원문을 복사한 mirror source는 독립 근거로 세지 않는다. source family $g$별 precision mass는
 
 $$
 M_{ig}
@@ -183,13 +195,15 @@ $$
 
 ## 5. Signed Claim Graph
 
+signed edge는 지지와 모순의 모델 선택이며 잘못된 edge의 전파는 edge ablation으로 반증해야 한다.
+
 claim graph를
 
 $$
 G_C=(V_C,E_C,A,R)
 $$
 
-로 둔다. \(A_{ij}\ge0\)는 연결 강도, \(R_{ij}\in\{+1,-1\}\)는 지지/모순 방향이다.
+로 둔다. $A_{ij}\ge0$는 연결 강도, $R_{ij}\in\{+1,-1\}$는 지지/모순 방향이다.
 
 claim local reliability는
 
@@ -215,11 +229,13 @@ $$
 \left(R_{ij}e_j-e_i\right).
 $$
 
-이 항은 잘못된 claim이 이웃 claim을 오염시키는 것을 막기 위해 \(q_jq_{{\rm src}(j)}\)로 약화된다.
+이 항은 잘못된 claim이 이웃 claim을 오염시키는 것을 막기 위해 $q_jq_{{\rm src}(j)}$로 약화된다.
 
 ## 6. Claim Action
 
-claim \(i\)의 local action은
+local action은 선택한 축·가중치의 penalty이며 낮은 값이 근거 자체의 완전성을 보증하지 않는다.
+
+claim $i$의 local action은
 
 $$
 \phi_i
@@ -264,14 +280,16 @@ $$
 
 | 조건 | 동작 |
 |---|---|
-| \(P_{{\rm accept},i}\ge S_{\rm accept}\), \(\|e_i\|\le e_{\max}\), \(\|\Delta_Ge_i\|\le g_{\max}\), \(N_{{\rm eff},i}\ge1.60\) | claim accept |
+| $P_{{\rm accept},i}\ge S_{\rm accept}$, $\|e_i\|\le e_{\max}$, $\|\Delta_Ge_i\|\le g_{\max}$, $N_{{\rm eff},i}\ge1.60$ | claim accept |
 | missing evidence | retrieve / abstain |
-| \(P_{{\rm accept},i}\le S_{\rm reject}\) 또는 residual 과대 | reject |
+| $P_{{\rm accept},i}\le S_{\rm reject}$ 또는 residual 과대 | reject |
 | 중간 영역 | 추가 검색, 계산기 호출, human review |
 
 ## 7. Answer Action
 
-답변 후보 \(y_k\)의 action은 accepted/rejected claim action을 묶은 값이다.
+answer action은 claim action을 묶는 집계 규칙이므로 긴 답변과 짧은 답변의 길이 보정·coverage를 함께 검사해야 한다.
+
+답변 후보 $y_k$의 action은 accepted/rejected claim action을 묶은 값이다.
 
 $$
 \Delta(y_k,E)
@@ -305,6 +323,8 @@ $$
 
 ## 8. PreEq Posterior
 
+Gibbs 재가중은 유한 후보와 온도 파라미터라는 근사 아래의 posterior proxy이며 calibrated probability는 별도 검증 대상이다.
+
 답변 후보 posterior는 유한 후보공간 Gibbs 재가중이다.
 
 $$
@@ -318,9 +338,9 @@ p_\beta(y_k\mid E)
 }.
 $$
 
-\(\beta=0\)이면 prior-only, \(\beta\to\infty\)이면 최소 answer action 후보로 농축한다. finite \(\beta\)에서는 posterior MAP를 선택한다.
+$\beta=0$이면 prior-only, $\beta\to\infty$이면 최소 answer action 후보로 농축한다. finite $\beta$에서는 posterior MAP를 선택한다.
 
-이 posterior의 정규화와 유한 후보공간 농축은 `Exact`다. 그러나 defect \(\Delta(y,E)\)의 구체 선택, \(\beta\), \(p_{\min}\), \(g_{\min}\), \(\Delta_{\max}\), \(r_{\rm accept}\)는 `Selection`이며 benchmark로 calibration해야 한다. manifest는 "참"이 아니라 "정의된 defect에서 최소인 후보"다.
+이 posterior의 정규화와 유한 후보공간 농축은 `Exact`다. 그러나 defect $\Delta(y,E)$의 구체 선택, $\beta$, $p_{\min}$, $g_{\min}$, $\Delta_{\max}$, $r_{\rm accept}$는 `Selection`이며 benchmark로 calibration해야 한다. manifest는 "참"이 아니라 "정의된 defect에서 최소인 후보"다.
 
 manifest 후보:
 
@@ -356,6 +376,8 @@ $$
 
 ## 9. 출력 복원
 
+mask 복원은 자유 생성 억제를 목표로 하지만, evidence 누락으로 인한 유용한 claim의 오탐도 human review로 측정해야 한다.
+
 최종 답변은 자유 생성물이 아니다. accepted claim mask를 통과한 claim만 복원한다.
 
 $$
@@ -375,9 +397,11 @@ $$
 B+\Sigma\widehat e
 $$
 
-인데, verifier에서는 \(\widehat e\)가 gate를 통과한 claim에 대해서만 문장화된다.
+인데, verifier에서는 $\widehat e$가 gate를 통과한 claim에 대해서만 문장화된다.
 
 ## 10. 구현 우선순위
+
+현재 kernel은 수식 전체의 v0 proxy이므로 구현 순서는 검증 가능한 축부터 확장해야 한다. 각 단계는 정확도뿐 아니라 오탐·미탐·계산비용의 holdout 평가를 요구한다.
 
 현재 Rust/Python `llm_pre_eq` count kernel은 다음의 v0 proxy다.
 
@@ -389,20 +413,22 @@ $$
 
 v2 구현은 아래 순서로 바꾼다.
 
-1. `ClaimAxisEvidence`: axis별 \(b_{ima},\sigma_{ima},w_{ima},q_m,g(m)\).
-2. `ClaimResidual`: \(B_i,C_i,e_i,E_i,\tau_i,N_{{\rm eff},i}\).
-3. `ClaimGraph`: \(A_{ij},R_{ij}\), \(\Delta_Ge_i\).
-4. Rust kernel: batched \(E_i,\Delta_Ge_i,\phi_i,\Delta(y_k),p_\beta\).
+1. `ClaimAxisEvidence`: axis별 $b_{ima},\sigma_{ima},w_{ima},q_m,g(m)$.
+2. `ClaimResidual`: $B_i,C_i,e_i,E_i,\tau_i,N_{{\rm eff},i}$.
+3. `ClaimGraph`: $A_{ij},R_{ij}$, $\Delta_Ge_i$.
+4. Rust kernel: batched $E_i,\Delta_Ge_i,\phi_i,\Delta(y_k),p_\beta$.
 5. Python policy: retrieve/review/abstain/compose.
 6. Eval: negative controls, shuffled graph, source holdout, topic holdout, time holdout, ECE, Brier, false accept.
 
 ## 11. 주장 등급
 
+아래 등급은 수학 정리, 구현 산출, 경험 성능과 미완성을 분리한다. 등급표는 claim의 사실성 자체가 아니라 이 문서가 제공하는 근거의 층위를 기록한다.
+
 | 항목 | 등급 |
 |---|---|
-| 유한 후보 posterior \(p_\beta\) | `Exact` |
+| 유한 후보 posterior $p_\beta$ | `Exact` |
 | residual/metric defect 인코딩 | `Exact` |
-| LLM claim vector \(z_i\) 추출 | `Bridge/Open test` |
+| LLM claim vector $z_i$ 추출 | `Bridge/Open test` |
 | source reliability update | `Selection/Open test` |
 | graph curvature가 false accept를 줄인다는 주장 | `Open test` |
 | SOTA 초과 | 금지. 공개 benchmark와 동일 base model, 동일 retrieval budget, confidence interval 전까지 주장 금지 |
@@ -415,7 +441,7 @@ v2 구현은 아래 순서로 바꾼다.
 | curvature risk 감소 = factual hallucination hard bound | curvature는 내부 안정 proxy다 |
 | PreEq posterior = 진리 판정 | posterior는 defect 기반 선택이다 |
 | count defect = 최종 CE verifier | count는 v0 proxy다 |
-| \(\phi=\Phi\) | residual readout field와 CE physical fold field는 다르다 |
+| $\phi=\Phi$ | residual readout field와 CE physical fold field는 다르다 |
 | SOTA 초과 | 공개 benchmark, 강한 baseline, 비용/latency, abstain split, multi-seed 전까지 금지 |
 
 강한 성능 주장을 하려면 TruthfulQA, FEVER, HotpotQA 또는 실제 RAG 로그에서 다음을 모두 보고해야 한다.
@@ -432,6 +458,8 @@ v2 구현은 아래 순서로 바꾼다.
 
 ### 11.1 SOTA 문헌 앵커
 
+외부 문헌은 label policy와 평가 단위가 고정된 기준점으로만 비교한다. 서로 다른 task·dataset의 숫자를 섞으면 성능 갭의 의미가 사라진다.
+
 현재 외부 비교는 아래 문헌을 기준점으로만 둔다. 숫자는 서로 다른 label policy와 평가 단위를 섞으면 안 된다.
 
 | benchmark / paper | 평가 단위 | 핵심 관찰 | CE 해석 |
@@ -445,47 +473,51 @@ v2 구현은 아래 순서로 바꾼다.
 
 ## 12. 필수 불변조건
 
+v2는 점수 향상보다 먼저 아래 불변조건을 회귀 테스트로 보존해야 한다. 한 조건의 실패는 높은 평균 benchmark보다 우선하는 반증 신호다.
+
 v2 구현은 아래 불변조건을 반드시 테스트해야 한다.
 
 | invariant | 의미 |
 |---|---|
-| dimensionless exponent | \(\exp(-D_{\rm eff}\phi)\), \(\exp(-\beta\Delta)\) 인자는 무차원 |
-| posterior normalization | \(\sum_k p_\beta(y_k\mid E)=1\) |
-| \(\beta=0\) prior limit | posterior가 \(\mu_0\)로 복귀 |
-| large-\(\beta\) concentration | 충분한 gap에서 최소 \(\Delta\) 후보로 농축 |
+| dimensionless exponent | $\exp(-D_{\rm eff}\phi)$, $\exp(-\beta\Delta)$ 인자는 무차원 |
+| posterior normalization | $\sum_k p_\beta(y_k\mid E)=1$ |
+| $\beta=0$ prior limit | posterior가 $\mu_0$로 복귀 |
+| large-$\beta$ concentration | 충분한 gap에서 최소 $\Delta$ 후보로 농축 |
 | claim order invariance | claim 순서가 바뀌어도 action 불변 |
-| evidence/source order invariance | source 순서가 바뀌어도 \(B,C,e\) 불변 |
-| duplicate source no quorum | 같은 source family 복제는 \(N_{\rm eff}\)를 올리지 못함 |
+| evidence/source order invariance | source 순서가 바뀌어도 $B,C,e$ 불변 |
+| duplicate source no quorum | 같은 source family 복제는 $N_{\rm eff}$를 올리지 못함 |
 | missing evidence rejection | 근거 없는 claim은 accept 불가 |
-| low-reliability poisoning blocked | 낮은 \(q_m\) source가 거짓 claim을 quorum으로 밀 수 없음 |
+| low-reliability poisoning blocked | 낮은 $q_m$ source가 거짓 claim을 quorum으로 밀 수 없음 |
 | trusted contradiction blocked | 신뢰 source와 모순되는 claim은 curvature/action으로 억제 |
 | Rust/numpy parity | native kernel과 fallback 결과 일치 |
 
 ## 13. CE 문서 claim 전용 축
 
+CE 문서는 형식 지위와 의존 관계가 있으므로 일반 entailment 외의 전용 축이 필요하다. 이 축은 원장을 수정하지 않고 문서 claim의 태그·출처 불일치를 검출하는 verifier 입력이다.
+
 `docs/1_강의`, `docs/2_경로적분과_응용`, `docs/3_상수`, `docs/7_AGI`, `docs/8_리만`까지 포함하면 verifier는 일반 claim만이 아니라 **CE 문서 내부 claim tier**도 검사해야 한다.
 
-CE claim을 검증할 때는 claim vector \(z_i\)에 아래 축을 추가한다.
+CE claim을 검증할 때는 claim vector $z_i$에 아래 축을 추가한다.
 
 | axis | 검사 내용 | 실패 시 |
 |---|---|---|
 | dimensionless | exponent/log/fixed-point/probability core에 차원량이 직접 들어갔는가 | hard reject 또는 schema penalty |
 | tier | `Exact`, `Selection`, `Bridge`, `Phenomenology`, `Open`, `Open test`가 명시됐는가 | missing-tier penalty |
-| branch | \(W_0/W_{-1}\), \(d=0/d=3\), readout branch가 명시됐는가 | branch ambiguity penalty |
-| bridge | A3b, \(\Phi\leftrightarrow R\), \(P_{\rm survive}\leftrightarrow\Omega_b\), portal/readout 식별을 Exact처럼 말하는가 | bridge-overclaim penalty |
-| transition | \(\tau_*<1\), freeze-time, C-grade readout이 필요한 관측량을 endpoint 값으로 말하는가 | transition-readout penalty |
-| source manifest | covariance/Fisher/source-role/channel manifest 없이 \(H_0\), source role, branch selector를 주장하는가 | provenance penalty |
-| substrate | transformer에서 falsified된 \(\varepsilon^2\) sparsity나 MRA OOD 주장을 일반 법칙처럼 말하는가 | substrate-overclaim penalty |
-| symbol firewall | residual \(\phi_i\)와 CE physical fold field \(\Phi\)를 동일시하는가 | hard reject |
+| branch | $W_0/W_{-1}$, $d=0/d=3$, readout branch가 명시됐는가 | branch ambiguity penalty |
+| bridge | A3b, $\Phi\leftrightarrow R$, $P_{\rm survive}\leftrightarrow\Omega_b$, portal/readout 식별을 Exact처럼 말하는가 | bridge-overclaim penalty |
+| transition | $\tau_*<1$, freeze-time, C-grade readout이 필요한 관측량을 endpoint 값으로 말하는가 | transition-readout penalty |
+| source manifest | covariance/Fisher/source-role/channel manifest 없이 $H_0$, source role, branch selector를 주장하는가 | provenance penalty |
+| substrate | transformer에서 falsified된 $\varepsilon^2$ sparsity나 MRA OOD 주장을 일반 법칙처럼 말하는가 | substrate-overclaim penalty |
+| symbol firewall | residual $\phi_i$와 CE physical fold field $\Phi$를 동일시하는가 | hard reject |
 
 특히 다음 문장은 reject 또는 review로 내려야 한다.
 
 | claim pattern | 이유 |
 |---|---|
-| "CE는 전체 우주론을 Exact로 증명했다" | \(\Omega_\Lambda,\Omega_{\rm DM},H_0,A_s\) 등은 Bridge/Phenomenology/Open test 층을 포함 |
+| "CE는 전체 우주론을 Exact로 증명했다" | $\Omega_\Lambda,\Omega_{\rm DM},H_0,A_s$ 등은 Bridge/Phenomenology/Open test 층을 포함 |
 | "CE는 자유 파라미터가 0개다" | 정본은 단일 결합 입력, branch/selection, bridge 식별 이후 추가 fit knob가 없다는 의미 |
-| "A3b가 Exact다" | fixed-point math는 Selection, \(\Omega_b\) 식별은 Bridge |
-| "고정점 endpoint로 \(A_s,\eta,T_{\rm CMB}\)가 바로 나온다" | transition interval \(\tau_*\) 또는 residual-drive readout이 필요 |
+| "A3b가 Exact다" | fixed-point math는 Selection, $\Omega_b$ 식별은 Bridge |
+| "고정점 endpoint로 $A_s,\eta,T_{\rm CMB}$가 바로 나온다" | transition interval $\tau_*$ 또는 residual-drive readout이 필요 |
 | "MRA/Riemann PE가 OOD를 해결한다" | 문서상 MRA는 32x length OOD에서 Tier 2, ALiBi/Euler e-decay 쪽이 Tier 1 |
 | "곡률 위험 감소가 factual hallucination hard bound다" | curvature는 risk proxy, factual truth gate가 아님 |
 
@@ -502,9 +534,11 @@ $$
 +\lambda_{\rm provenance}P_{\rm provenance}.
 $$
 
-여기서 \(P_{\rm bridge}\)는 Bridge/Phenomenology/Open test claim을 Exact 문장으로 올릴 때 커지고, \(P_{\rm provenance}\)는 source manifest, covariance role map, benchmark holdout이 없을 때 커진다.
+여기서 $P_{\rm bridge}$는 Bridge/Phenomenology/Open test claim을 Exact 문장으로 올릴 때 커지고, $P_{\rm provenance}$는 source manifest, covariance role map, benchmark holdout이 없을 때 커진다.
 
 ## 14. Closed-loop / OOD 제약
+
+verifier score가 다음 생성·검색 상태에 실제로 들어가지 않으면 closed loop라 부를 수 없다. OOD 제약은 distribution shift에서 false-allow가 증가하는지 독립 negative control로 확인해야 한다.
 
 verifier는 점수판으로 끝나면 안 된다. `docs/7_AGI` 기준으로 critique와 residual은 다음 step의 energy 또는 state에 실제로 들어가야 한다.
 
@@ -553,6 +587,8 @@ $$
 
 ## 15. 구현 기준점
 
+기준점은 현재 코드와 데이터 snapshot에서 재현 가능한 최소 동작을 뜻한다. 구현이 바뀌면 checksum·seed·label policy와 함께 다시 측정해야 한다.
+
 현재 v2 구현 기준점은 다음이다.
 
 - Python API: `reality_stone/python/reality_stone/clarus/llm_pre_eq.py`
@@ -571,6 +607,8 @@ $$
 이 구현은 이전 count-only proxy를 제거한 것이 아니라 호환층으로 남기고, v2 검증 경로는 claim residual action을 정본으로 둔다.
 
 ## 16. 성능 갭 체크
+
+성능 갭은 알려진 부족과 조치의 결과를 같은 metric에서 비교하는 표다. 조치 뒤의 개선은 독립 holdout과 paired ablation이 없으면 인과적 효과로 단정할 수 없다.
 
 현재 확인된 부족 지점과 조치 결과는 다음이다.
 
@@ -768,7 +806,7 @@ z_i^{\rm src}
 e_i=C_i^{-1/2}(z_i-B_i).
 $$
 
-여기서 \(z_i^{\rm lex}\)는 lexical overlap, \(z_i^{\rm entail}\)과 \(z_i^{\rm contra}\)는 claim별 NLI/entailment score, \(z_i^{\rm span}\)은 RAGTruth/FaithBench류 span-localization 신호, \(z_i^{\rm attrib}\)은 근거 passage/claim attribution, \(z_i^{\rm temporal}\)은 날짜·순서·업데이트 충돌, \(z_i^{\rm src}\)는 source independence와 reliability를 뜻한다. RAGTruth의 subtle conflict와 FaithBench의 unwanted/questionable case는 주로 \(z_i^{\rm entail}\), \(z_i^{\rm contra}\), \(z_i^{\rm span}\), \(z_i^{\rm temporal}\) 축이 없을 때 false negative가 된다.
+여기서 $z_i^{\rm lex}$는 lexical overlap, $z_i^{\rm entail}$과 $z_i^{\rm contra}$는 claim별 NLI/entailment score, $z_i^{\rm span}$은 RAGTruth/FaithBench류 span-localization 신호, $z_i^{\rm attrib}$은 근거 passage/claim attribution, $z_i^{\rm temporal}$은 날짜·순서·업데이트 충돌, $z_i^{\rm src}$는 source independence와 reliability를 뜻한다. RAGTruth의 subtle conflict와 FaithBench의 unwanted/questionable case는 주로 $z_i^{\rm entail}$, $z_i^{\rm contra}$, $z_i^{\rm span}$, $z_i^{\rm temporal}$ 축이 없을 때 false negative가 된다.
 
 claim action은 그대로 유지하되, 축별 covariance와 benchmark policy를 분리한다.
 
@@ -788,7 +826,7 @@ C_i
 +C_i^{\rm corr}.
 $$
 
-즉 다음 개선은 \(\Delta(y_k,E)\)를 새로 만드는 것이 아니라, 같은 posterior 안에 들어가는 \(z_i,B_i,C_i\)를 benchmark label policy에 맞게 학습/보정하는 것이다.
+즉 다음 개선은 $\Delta(y_k,E)$를 새로 만드는 것이 아니라, 같은 posterior 안에 들어가는 $z_i,B_i,C_i$를 benchmark label policy에 맞게 학습/보정하는 것이다.
 
 실행 명령:
 
@@ -881,6 +919,8 @@ python examples/pre_eq/claim_residual_benchmark.py \
 - RAGTruth++처럼 재주석된 label 기준으로 false-negative annotation 문제 보정
 
 ## 17. 한 줄 결론
+
+결론은 count penalty 대신 evidence-bounded residual action을 쓰자는 조건부 설계 제안이다. 실제 안전성은 구현·manifest 품질·OOD holdout에서 반증 가능하게 검증되어야 한다.
 
 LLM hallucination verifier의 CE 수식은 count penalty가 아니라
 

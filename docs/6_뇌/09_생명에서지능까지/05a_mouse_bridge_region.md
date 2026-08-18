@@ -1,5 +1,7 @@
 ## 단계 4: Mouse Neuropixels/IBL
 
+Mouse 단계는 region-level 신경기록과 행동을 같은 trial timebase에서 연결하는 조건부 bridge다. 독자는 Neuropixels cluster, CCF atlas, session holdout을 안다고 가정한다. 입력은 spike·cluster·trial·wheel·region metadata이고 출력은 region decoder이며, 성공은 누수 없는 cross-session 재현이고 region label을 인과 회로로 동일시하는 것은 실패다.
+
 Zebrafish 다음 단계는 mouse Neuropixels/IBL이다. 이유는 다음이다.
 
 1. C. elegans에서 weighted routing을 닫았다.
@@ -32,9 +34,11 @@ Mouse/IBL 첫 gate:
 | spike-region audit | spikes, clusters, channels, atlas region이 한 세션에 있는지 | spike times and region labels present |
 | region activity closure | region-binned firing이 trial state를 예측하는지 | heldout decoding beats baseline |
 | decision/action bridge | visual, thalamus, striatum, motor 계열이 choice/action timing을 분리하는지 | region-class model beats flat model |
-| graph/flat comparison | 영역 묶음 모델이 flat neuron model보다 나은지 | \(\mathcal L_{\mathrm{region}}/\mathcal L_{\mathrm{flat}}<1\) |
+| graph/flat comparison | 영역 묶음 모델이 flat neuron model보다 나은지 | $\mathcal L_{\mathrm{region}}/\mathcal L_{\mathrm{flat}}<1$ |
 
 ### Mouse IBL/OpenAlyx metadata bridge audit
+
+metadata audit은 실제 spike download 전 필요한 파일 묶음과 provenance를 검사한다. 파일 동시 존재는 decoder 성능이나 region 기제의 증명이 아니다.
 
 첫 실행은 전량 다운로드가 아니라 metadata bridge audit로 제한했다. 목표는 region-level decision/action gate에 필요한 최소 파일 묶음이 한 공개 세션 안에 함께 존재하는지 확인하는 것이다. Spike array 자체는 내려받지 않았다.
 
@@ -83,6 +87,8 @@ $$
 
 ### Mouse IBL/OpenAlyx first strict-session decision/action gate
 
+첫 strict session은 trial·wheel·spike·cluster·CCF를 지정한 창에서 결합한 pilot이다. train/test trial 누수와 movement timing confound를 막는 split이 없으면 통과로 읽지 않는다.
+
 첫 strict candidate인 `d2832a38-27f6-452d-91d6-af72d794136c`를 실제로 내려받아 trial, wheel, spike, cluster, CCF acronym을 연결했다.
 
 실행:
@@ -106,9 +112,9 @@ loaded arrays:
 | spikes assigned `unknown` | 1033332 |
 | unknown spike fraction | 0.029674 |
 
-여기서 중요한 점은 cluster acronym file이 648 row인데 observed spike cluster id는 0부터 699까지라는 것이다. 따라서 이 세션에서 cluster-region bridge는 완전히 깨진 것이 아니라 약 \(97.03\%\) spike에 대해 strict acronym label을 주고, 나머지 \(2.97\%\) spike는 `unknown` bin으로 보존하는 형태다. 즉 삭제가 아니라 censored region bin이다.
+여기서 중요한 점은 cluster acronym file이 648 row인데 observed spike cluster id는 0부터 699까지라는 것이다. 따라서 이 세션에서 cluster-region bridge는 완전히 깨진 것이 아니라 약 $97.03\%$ spike에 대해 strict acronym label을 주고, 나머지 $2.97\%$ spike는 `unknown` bin으로 보존하는 형태다. 즉 삭제가 아니라 censored region bin이다.
 
-trial \(i\), spike \(k\), spike time \(t_k\), cluster id \(c_k\), region/group map \(G(c_k)\)를 두면 region-binned feature는 다음처럼 정의했다.
+trial $i$, spike $k$, spike time $t_k$, cluster id $c_k$, region/group map $G(c_k)$를 두면 region-binned feature는 다음처럼 정의했다.
 
 $$
 x_{ig}
@@ -118,7 +124,7 @@ x_{ig}
 \mathbf 1[G(c_k)=g].
 $$
 
-이 식은 단순 spike count가 아니라 duration-normalized rate다. 만약 \(b_i-a_i\)가 trial마다 달라지면 단순 count는 response duration을 그대로 leak한다. 그래서 이 gate에서는 다음 두 고정 window를 사용했다.
+이 식은 단순 spike count가 아니라 duration-normalized rate다. 만약 $b_i-a_i$가 trial마다 달라지면 단순 count는 response duration을 그대로 leak한다. 그래서 이 gate에서는 다음 두 고정 window를 사용했다.
 
 | window | interval | target |
 |---|---|---|
@@ -131,7 +137,7 @@ $$
 |---|---|---|
 | `region_family` | visual cortex, visual thalamus, somatosensory thalamus, hippocampus, cingulate, other, unknown | 넓은 anatomical family |
 | `acronym_region` | high-spike CCF acronyms plus unknown | 더 세분한 region acronym model |
-| `global_rate` | \(\sum_g x_{ig}\) one scalar | 영역 구조를 지운 flat firing-rate baseline |
+| `global_rate` | $\sum_g x_{ig}$ one scalar | 영역 구조를 지운 flat firing-rate baseline |
 
 decoder는 z-scored ridge linear classifier다.
 
@@ -143,7 +149,7 @@ $$
 +\lambda\|w\|_2^2.
 $$
 
-각 fold에서 train set 평균과 표준편차로 \(X\)를 표준화하고, held-out fold의 score sign으로 binary label을 예측했다. 판정 지표는 class imbalance에 덜 민감한 balanced accuracy다.
+각 fold에서 train set 평균과 표준편차로 $X$를 표준화하고, held-out fold의 score sign으로 binary label을 예측했다. 판정 지표는 class imbalance에 덜 민감한 balanced accuracy다.
 
 $$
 \mathrm{BA}
@@ -156,7 +162,7 @@ $$
 \right).
 $$
 
-null은 label permutation이다. 즉 관측 feature \(X\)는 그대로 두고 \(y\)만 섞어 같은 cross-validation을 반복한다.
+null은 label permutation이다. 즉 관측 feature $X$는 그대로 두고 $y$만 섞어 같은 cross-validation을 반복한다.
 
 $$
 p
@@ -198,7 +204,7 @@ $$
 
 의의는 세 가지다.
 
-첫째, Drosophila/Zebrafish에서 얻은 \(P_t\rightarrow b_t\) 항이 포유류에서는 단일 neural population이 아니라 region-indexed population vector로 올라간다.
+첫째, Drosophila/Zebrafish에서 얻은 $P_t\rightarrow b_t$ 항이 포유류에서는 단일 neural population이 아니라 region-indexed population vector로 올라간다.
 
 $$
 R_t
@@ -212,7 +218,7 @@ r_{\mathrm{CG}}(t),
 \right].
 $$
 
-둘째, behavior variable은 더 이상 단일 \(b_t\)가 아니라 choice, wheel direction, first-movement latency처럼 분해된다.
+둘째, behavior variable은 더 이상 단일 $b_t$가 아니라 choice, wheel direction, first-movement latency처럼 분해된다.
 
 $$
 y_t
@@ -240,9 +246,11 @@ B_{\mathrm{action}}R_{t-\tau:t}
 }
 $$
 
-단, 이 gate는 mouse 전체를 닫지 않는다. 첫 probe의 강한 영역은 thalamus, visual cortex, hippocampus 쪽이고 motor/striatal loop가 충분히 포함되지 않았다. 따라서 다음 mouse gate는 다중 probe 또는 motor/striatum 포함 세션에서 같은 decoder를 반복해, \(B_{\mathrm{region}}\)이 특정 probe 위치의 우연한 readout이 아니라 일반적인 region/action bridge인지 확인해야 한다. 이 병목을 아래 audit와 multi-probe gate로 바로 이어서 검사했다.
+단, 이 gate는 mouse 전체를 닫지 않는다. 첫 probe의 강한 영역은 thalamus, visual cortex, hippocampus 쪽이고 motor/striatal loop가 충분히 포함되지 않았다. 따라서 다음 mouse gate는 다중 probe 또는 motor/striatum 포함 세션에서 같은 decoder를 반복해, $B_{\mathrm{region}}$이 특정 probe 위치의 우연한 readout이 아니라 일반적인 region/action bridge인지 확인해야 한다. 이 병목을 아래 audit와 multi-probe gate로 바로 이어서 검사했다.
 
 ### Mouse IBL/OpenAlyx motor-striatum candidate audit
+
+candidate audit은 작은 cluster-level metadata로 probe support를 찾는 단계다. spike count를 내려받지 않은 audit은 행동 예측 또는 coupling의 증거가 아니다.
 
 첫 strict-session gate의 한계를 줄이기 위해, spike array를 새로 내려받기 전에 strict 29 sessions의 작은 cluster-level 파일만 훑었다. 사용한 파일은 `clusters.brainLocationAcronyms_ccf_2017.npy`와 `clusters.metrics.pqt`다. 목표는 motor cortex, striatal complex, septal/subpallial, basal-ganglia-output family가 실제 spike-count support를 갖는 probe를 찾는 것이다.
 
@@ -278,6 +286,8 @@ NYU-30 session은 같은 behavioral trial table에서 motor cortex probe와 stri
 
 ### Mouse IBL/OpenAlyx multi-probe motor-striatal region gate
 
+multi-probe gate는 probe·region·session의 불확실성을 분리해 region 특징의 holdout 성능을 시험한다. atlas mapping·unit quality·window 정의를 outer split 전에 고정해야 한다.
+
 실행:
 
 ```bash
@@ -308,7 +318,7 @@ $$
 }
 $$
 
-multi-probe feature는 probe index \(p\)를 명시해서 만들었다.
+multi-probe feature는 probe index $p$를 명시해서 만들었다.
 
 $$
 x_{ipg}
@@ -319,7 +329,7 @@ x_{ipg}
 \mathbf 1[G_p(c_{pk})=g].
 $$
 
-따라서 single-probe region vector \(R_i\)는 다음 multi-probe vector로 올라간다.
+따라서 single-probe region vector $R_i$는 다음 multi-probe vector로 올라간다.
 
 $$
 R_i^{\mathrm{multi}}
@@ -386,9 +396,11 @@ R_{t-\tau:t}^{\mathrm{motor/striatal}}
 }
 $$
 
-여기서 \(B_{\mathrm{probe,region}}\)은 probe identity와 region identity를 함께 보존하는 readout이고, \(B_{\mathrm{loop}}\)는 motor/striatal family만으로 설명 가능한 action component다. 다만 이 결론은 아직 single session이다. 다음 mouse closure는 이 gate를 여러 sessions에 반복해, \(\Phi_{\mathrm{mammal}}\)이 NYU-30 특이 readout인지 일반적인 포유류 region loop인지 분리해야 한다.
+여기서 $B_{\mathrm{probe,region}}$은 probe identity와 region identity를 함께 보존하는 readout이고, $B_{\mathrm{loop}}$는 motor/striatal family만으로 설명 가능한 action component다. 다만 이 결론은 아직 single session이다. 다음 mouse closure는 이 gate를 여러 sessions에 반복해, $\Phi_{\mathrm{mammal}}$이 NYU-30 특이 readout인지 일반적인 포유류 region loop인지 분리해야 한다.
 
 ### Mouse IBL/OpenAlyx cross-session region generalization gate
+
+cross-session gate는 단일 session 특이성을 반증하기 위한 반복 protocol이다. 동물·세션·probe가 train과 test에 겹치면 일반화 성능은 누수된 수치로 취급한다.
 
 NYU-30 multi-probe gate 다음 병목은 단일 session 특이성이다. 이를 위해 첫 thalamic/visual reference, NYU-30 multi-probe, 그리고 motor-striatum audit에서 고른 세 single-probe candidates를 같은 protocol로 반복했다.
 
@@ -449,7 +461,7 @@ $$
 }
 $$
 
-이제 mouse 항은 session index \(s\)를 포함해 쓸 수 있다.
+이제 mouse 항은 session index $s$를 포함해 쓸 수 있다.
 
 $$
 \Phi_{\mathrm{mammal}}^{(s)}(t)
@@ -462,9 +474,11 @@ R_{t-\tau:t}^{(s,\mathrm{motor/striatal})}
 +\epsilon_s.
 $$
 
-여기서 \(\epsilon_s\)는 probe placement, unknown-bin fraction, lab/session differences를 흡수하는 session residual이다. Cross-session gate의 의의는 \(\epsilon_s\)가 0이라는 것이 아니라, \(B_{\mathrm{probe,region}}^{(s)}R_t^{(s)}\) 항이 여러 후보 세션에서 반복된다는 점이다.
+여기서 $\epsilon_s$는 probe placement, unknown-bin fraction, lab/session differences를 흡수하는 session residual이다. Cross-session gate의 의의는 $\epsilon_s$가 0이라는 것이 아니라, $B_{\mathrm{probe,region}}^{(s)}R_t^{(s)}$ 항이 여러 후보 세션에서 반복된다는 점이다.
 
 ### Mouse IBL/OpenAlyx channel-region rescue gate
+
+channel rescue는 strict acronym 밖 unknown bin이 큰 상황에서 region 해석의 한계를 감사한다. censored cluster가 많으면 decoder 통과는 region code의 충분한 증거가 아니라 결측을 포함한 조건부 결과다.
 
 Cross-session gate를 통과한 뒤에도 가장 큰 약점은 `unknown` bin이었다. 특히 NYU-30 multi-probe gate에서 probe01은 strict acronym rows가 209인데 observed cluster slots가 561이라, spike의 74.4123%가 strict acronym 밖으로 빠졌다. 이 상태에서 decoder가 통과해도 결론은 "region code가 충분하다"가 아니라 "큰 censored bin을 보존한 상태에서도 decoding이 된다"에 머문다.
 
@@ -472,10 +486,10 @@ Cross-session gate를 통과한 뒤에도 가장 큰 약점은 `unknown` bin이�
 
 | file | 의미 |
 |---|---|
-| `clusters.channels.npy` | cluster \(c\)가 놓인 recording channel \(\chi(c)\) |
-| `channels.brainLocationIds_ccf_2017.npy` | channel \(\chi\)의 Allen CCF 2017 numeric region id \(I(\chi)\) |
+| `clusters.channels.npy` | cluster $c$가 놓인 recording channel $\chi(c)$ |
+| `channels.brainLocationIds_ccf_2017.npy` | channel $\chi$의 Allen CCF 2017 numeric region id $I(\chi)$ |
 
-핵심은 strict acronym label을 버리는 것이 아니라, strict acronym이 없는 cluster에만 fallback을 적용하는 것이다. Session \(s\), probe \(p\), cluster \(c\)에 대해 strict acronym을 \(A_{sp}(c)\), cluster-channel map을 \(\chi_{sp}(c)\), channel CCF id를 \(I_{sp}(\chi)\)라고 두면 hybrid map은 다음처럼 정의한다.
+핵심은 strict acronym label을 버리는 것이 아니라, strict acronym이 없는 cluster에만 fallback을 적용하는 것이다. Session $s$, probe $p$, cluster $c$에 대해 strict acronym을 $A_{sp}(c)$, cluster-channel map을 $\chi_{sp}(c)$, channel CCF id를 $I_{sp}(\chi)$라고 두면 hybrid map은 다음처럼 정의한다.
 
 $$
 G_{\mathrm{hybrid},sp}(c)
@@ -490,7 +504,7 @@ I_{sp}(\chi_{sp}(c)),
 \end{cases}
 $$
 
-여기서 \(A_{sp}(c)\)는 CCF acronym이고, \(I_{sp}(\chi_{sp}(c))\)는 numeric CCF id다. 둘은 같은 종류의 label이 아니므로 생물학적 의미를 동일하게 읽으면 안 된다. 이 gate에서 hybrid bin의 역할은 "정확한 region acronym 복원"이 아니라, strict acronym row 부족 때문에 censored 되던 cluster를 channel-registered anatomical id bin으로 되살리는 것이다.
+여기서 $A_{sp}(c)$는 CCF acronym이고, $I_{sp}(\chi_{sp}(c))$는 numeric CCF id다. 둘은 같은 종류의 label이 아니므로 생물학적 의미를 동일하게 읽으면 안 된다. 이 gate에서 hybrid bin의 역할은 "정확한 region acronym 복원"이 아니라, strict acronym row 부족 때문에 censored 되던 cluster를 channel-registered anatomical id bin으로 되살리는 것이다.
 
 Feature 식은 기존 region-window rate와 같은 형태를 유지한다.
 
@@ -580,7 +594,7 @@ $$
 
 DY_014는 여전히 speed만 통과한다. 따라서 이 gate는 "모든 probe에서 모든 행동 변수가 닫혔다"가 아니라, "unknown-bin이 큰 artifact라는 약점을 줄여도 cross-session region/action decoding은 유지된다"는 결론이다.
 
-이 결과를 식으로 쓰면, 이전의 residual \(\epsilon_s\)를 더 잘게 나눌 수 있다.
+이 결과를 식으로 쓰면, 이전의 residual $\epsilon_s$를 더 잘게 나눌 수 있다.
 
 $$
 \epsilon_s
@@ -591,7 +605,7 @@ $$
 +\epsilon_{\mathrm{unregistered},s}.
 $$
 
-Strict acronym gate에서는 \(\epsilon_{\mathrm{registration},s}\)와 \(\epsilon_{\mathrm{unregistered},s}\)가 모두 `unknown` bin에 섞여 있었다. Channel-region rescue 뒤에는 관측 가능한 channel CCF id가 \(R_t^{\mathrm{hybrid}}\) 안으로 들어오므로, 남는 residual은 더 작고 더 엄격한 의미의 미등록 잔차다.
+Strict acronym gate에서는 $\epsilon_{\mathrm{registration},s}$와 $\epsilon_{\mathrm{unregistered},s}$가 모두 `unknown` bin에 섞여 있었다. Channel-region rescue 뒤에는 관측 가능한 channel CCF id가 $R_t^{\mathrm{hybrid}}$ 안으로 들어오므로, 남는 residual은 더 작고 더 엄격한 의미의 미등록 잔차다.
 
 $$
 R_t^{(s,\mathrm{hybrid})}
@@ -617,5 +631,5 @@ R_{t-\tau:t}^{(s,\mathrm{motor/striatal})}
 }
 $$
 
-여기서 중요한 변화는 \(B_{\mathrm{probe,region}}\)이 strict acronym-only readout에서 hybrid registered readout으로 승격된 점이다. Mouse 단계의 남은 병목은 이제 "cluster acronym row 부족 때문에 생긴 unknown artifact"가 아니라, 더 큰 panel에서 같은 결과가 유지되는지, 그리고 timing-only/flat-neuron/effective-connectivity baseline을 얼마나 더 깰 수 있는지다.
+여기서 중요한 변화는 $B_{\mathrm{probe,region}}$이 strict acronym-only readout에서 hybrid registered readout으로 승격된 점이다. Mouse 단계의 남은 병목은 이제 "cluster acronym row 부족 때문에 생긴 unknown artifact"가 아니라, 더 큰 panel에서 같은 결과가 유지되는지, 그리고 timing-only/flat-neuron/effective-connectivity baseline을 얼마나 더 깰 수 있는지다.
 

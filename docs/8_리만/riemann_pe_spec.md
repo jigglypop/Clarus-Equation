@@ -1,6 +1,13 @@
 # Riemann Surface Positional Encoding 정밀 사양
 
+이 문서는 Riemann surface positional encoding의 coordinate lift, sheet index, rotation, attention score를 구현 contract로 정의한다. 독자는 RoPE·복소 좌표·attention의 기본을 아는 독자를 전제로 하며, surface 비유는 positional tensor 설계이지 리만가설·복소해석의 새 정리·물리 surface의 증명이 아니다.
+
+전제와 동기 뒤에 lift·generator·sheet·rotation·score·parameter·점근·backend·수치 fixture 순으로 읽는다. 정의역·shape·precision·normalization이 성립 범위이며, parity·안정성·성능은 baseline·counterexample·OOD length에서 판정한다.
+
+
 ## 0. 전제
+
+전제는 input position, hidden shape, complex convention, precision과 boundary 처리를 고정한다. 이는 구현 axiom이며, 수식 표기만으로 surface의 수학적 또는 물리적 실재를 주장하지 않는다.
 
 리만 가설(Riemann Hypothesis)은 공학적 axiom으로 채택한다.
 
@@ -15,6 +22,8 @@ n > 100은 Riemann-von Mangoldt 점근식 γ_n ≈ 2π n / log n으로 외삽한
 **Riemann surface (multi-sheet 복소 평면)** 위의 회전으로 재구성한다.
 
 ## 1. 동기 — 왜 평면(surface)이 필요한가
+
+동기는 평면 positional encoding의 어떤 alias·branch·length 한계를 보완하려는 설계 가설을 설명한다. surface라는 말은 coordinate representation의 비유이며, empirical 이득은 동일 baseline·seed·OOD fixture 없이는 미완성이다.
 
 기존 `RiemannRotaryAttention`은 RoPE와 동일한 prescription을 사용한다.
 
@@ -38,7 +47,11 @@ Riemann surface는 이 두 문제를 동시에 해결한다.
 
 ## 2. 사양
 
+사양은 position input을 lifted coordinate·sheet·rotation을 거쳐 attention score consumer로 전달하는 contract다. 각 단계의 shape·normalization·timebase가 정의역이며, 구현 path는 수학적 정리나 성능 결과가 아니다.
+
 ### 2.1 좌표 lift
+
+coordinate lift는 scalar or index position을 surface coordinate tensor로 바꾸는 producer다. branch·origin·precision이 가정이며, input range 밖 또는 discontinuity는 failure/rollback 경계다.
 
 위치 p ∈ {0, 1, …, N-1}를 critical line의 imaginary axis로 들어올린다.
 
@@ -49,6 +62,8 @@ $$
 `+1`은 p = 0에서 log 발산을 막기 위한 standard offset이다.
 
 ### 2.2 회전 generator
+
+rotation generator는 lifted coordinate를 입력으로 unitary-like rotation parameter를 출력한다. generator의 수치 안정성은 norm·precision·fixture tolerance에 조건부이고, 복소해석적 대칭의 증명은 아니다.
 
 각 헤드의 dim-pair k(k = 0, …, d_head/2 - 1)는 γ_k를 frequency로 가지며,
 회전각은
@@ -67,6 +82,8 @@ $$
 이 형태의 합으로 정의되므로 자연스러운 선택이다.
 
 ### 2.3 Sheet index
+
+sheet index는 branch 선택과 coordinate continuity를 위한 discrete state다. 초기 sheet·transition·serialization 규칙이 없으면 producer/consumer parity가 모호하며, index는 실제 다가함수 기제를 구현했다는 뜻이 아니다.
 
 회전은 모듈로 2π이지만, 시트(sheet) 정보는 별도로 보존한다.
 
@@ -87,6 +104,8 @@ $$
 
 ### 2.4 회전 적용 (RoPE-style relative form)
 
+rotation 적용은 query/key tensor와 positional rotation을 결합해 relative score input을 만드는 단계다. shape·broadcast·precision contract가 실패하면 baseline RoPE parity도 보장되지 않는다.
+
 RoPE와 동일하게, dim-pair (2k, 2k+1)에 대해 2D 회전을 적용한다.
 
 $$
@@ -102,6 +121,8 @@ Hermitian kernel이 보장된다.
 
 ### 2.5 최종 attention score
 
+최종 score는 rotated query/key와 normalization을 입력으로 logit을 출력한다. metric·PPL·length extrapolation 효과는 score 식과 구분하며, ablation·seed·OOD failure가 기각 조건이다.
+
 $$
 \text{score}_{ij} = \frac{q_i^{\prime\top} k_j^{\prime}}{\sqrt{d_{\text{head}}}}
                   + b^{\text{sheet}}_{ij},
@@ -110,6 +131,8 @@ $$
 이후 causal mask와 softmax를 적용한다.
 
 ## 3. 학습 가능 파라미터
+
+학습 parameter는 수식에서 고정한 항과 optimizer가 조절할 tensor를 구분한다. parameter learning은 surface 구조·ζ 영점·리만가설을 학습했다는 뜻이 아니며, baseline과 regularization ablation이 필요하다.
 
 | 이름            | 형상           | 역할                                                                   |
 |-----------------|----------------|------------------------------------------------------------------------|
@@ -120,11 +143,15 @@ $$
 
 ## 4. 점근적 성질
 
+점근 성질은 명시한 sequence limit·norm·branch·precision의 조건부 분석이다. finite model·truncation·overflow·OOD length에서는 반례·수치 failure를 별도 검사해야 한다.
+
 - 작은 p에서는 τ_p ≈ p(log(1+p) ≈ p)이므로 기존 RoPE와 유사하다.
 - 큰 p에서는 τ_p가 천천히 증가하므로 frequency aliasing이 자동으로 완화된다.
 - N → kN일 때 τ는 log k만큼만 평행이동하므로 relative attention이 거의 동일하게 보존된다.
 
 ## 5. 백엔드 dispatch
+
+dispatch는 backend·dtype·shape에 따라 동일 API를 어떤 kernel이 소비하는지 정한다. backend parity는 fixture tolerance의 기계 조건이며, speed·memory·모델 품질의 보장은 아니다.
 
 세 단계 backend 모두에서 동일한 수치 결과를 보장한다.
 
@@ -137,6 +164,8 @@ $$
 
 ## 6. 수치 동일성 테스트
 
+수치 동일성 test는 고정 fixture·seed·precision·threshold에서 구현과 reference output을 비교한다. pass는 등록된 inputs의 parity이고, 다른 hardware·length·branch·수학적 참으로 외삽하지 않는다.
+
 `tests/test_riemann_pe_consistency.py`에서
 
 - 동일 입력에 대해 세 backend의 출력이 atol=1e-4, rtol=1e-3 이내로 일치하는지
@@ -145,6 +174,8 @@ $$
 검증한다.
 
 ## 7. 참고
+
+참고문헌은 설계 동기·알고리즘 배경·수학 용어의 source role을 제공한다. 인용은 이 구현의 test evidence나 리만가설의 지위를 바꾸지 않는다.
 
 - Titchmarsh, *The Theory of the Riemann Zeta-Function*, Appendix.
 - Odlyzko, *On the distribution of spacings between zeros of the zeta function*.

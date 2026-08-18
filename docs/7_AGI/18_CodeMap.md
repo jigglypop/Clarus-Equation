@@ -1,5 +1,10 @@
 # 이론-코드 정합 맵
 
+이 문서는 정본 방정식의 symbol을 코드 file·class·function과 runtime state에 연결하는 색인이다. 독자는 Python/Rust API와 tensor shape의 기본을 아는 독자를 전제로 하며, mapping은 구현 책임·입출력·불변조건을 설명할 뿐 수식의 과학적 참이나 모듈 효능을 입증하지 않는다.
+
+전체 아키텍처 뒤에 Layer A–F 순서로 equation→symbol→producer/consumer→code 위치를 읽는다. 경로와 line 표기는 현재 코드 탐색용이며, shape·unit·timebase·미구현 gap은 별도 fixture와 parity gate가 없으면 완료로 승격하지 않는다.
+
+
 > 이 문서는 `15_Equations.md`의 Layer A--E 수식과 `17_AgentLoop.md`의 Layer F가 실제 코드의 어디에서 구현되는지를 1:1로 대응시킨다.
 > 코드를 읽을 때 "이 변수가 어떤 수식인지" 또는 수식을 읽을 때 "이 항이 어디에 구현되어 있는지"를 즉시 찾을 수 있도록 한다.
 
@@ -10,6 +15,8 @@
 ---
 
 ## 1. 전체 아키텍처 대응
+
+전체 표는 layer별 수식·state·code owner를 한 방향으로 추적하는 지도다. 화살표는 producer와 consumer의 계약이며, 파일 존재·이름 유사성만으로 equation parity나 runtime invariant가 성립하지 않는다.
 
 ```
 15_Equations.md            clarus/
@@ -37,7 +44,11 @@
 
 ## 2. Layer A: 셀 동역학
 
+Layer A mapping은 local state tensor가 한 runtime tick에 어떤 함수로 갱신되는지 연결한다. 각 항은 지정 shape·정규화·초기값에서만 대응하며, 다른 backend·precision·입력 범위는 parity fixture가 필요하다.
+
 ### 2.1 상태 변수
+
+상태 변수 표는 수식 symbol, runtime field, code attribute의 shape·unit·producer를 고정한다. alias 또는 serialization version이 다르면 consumer가 같은 상태를 읽는다는 보장이 없어 미구현 또는 migration gap으로 기록한다.
 
 | 수식 기호 | canonical 이름 | Python 변수 | Rust 변수 | 초기값 |
 |---|---|---|---|---|
@@ -50,6 +61,8 @@
 | $x_i$ | stp_x | `self.stp_x` | `stp_x` | 1.0 |
 
 ### 2.2 입력 계산 (A.2)
+
+입력 계산은 이전 local state와 external event를 받아 drive tensor를 만드는 producer mapping이다. 코드 경로는 A.2의 정확한 shape·정규화·tick 순서와 비교해야 하며, 주석·line 정보만으로 parity를 주장하지 않는다.
 
 $$I_i^t = u_i^t + \sum_j W_{ij}^{\text{eff}} a_j - \lambda_r r_i - \beta_w w_i + \lambda_m m_i + \eta_i$$
 
@@ -71,6 +84,8 @@ drive = (
 
 ### 2.3 활성 갱신 (A.3)
 
+활성 갱신 mapping은 drive input에서 next activation output으로 가는 function contract다. boundedness invariant는 초기·입력·precision 가정에 조건부이고, unit test와 OOD drift가 failure 경계다.
+
 $$a_i^{t+1} = (1 - \gamma_a^{(M)}) a_i^t + \kappa_a^{(M)} \tanh(I_i^t)$$
 
 ```python
@@ -82,6 +97,8 @@ activation = (
 ```
 
 ### 2.4 억제 갱신 (A.4)
+
+억제 갱신은 activity producer를 inhibition consumer로 변환하는 tick-level mapping이다. 생물학적 억제 비유는 code state의 unit·shape·수렴을 보장하지 않으며, 범위 위반은 parity failure다.
 
 $$r_i^{t+1} = (1 - \gamma_r^{(M)}) r_i^t + \kappa_r^{(M)} (a_i^{t+1})^2$$
 
@@ -95,6 +112,8 @@ refractory = (
 
 ### 2.5 기억 흔적 (A.5)
 
+기억 흔적 mapping은 과거 state를 trace tensor로 누적하는 API contract다. decay·initial condition·serialization이 수식과 다르면 memory effect를 주장할 수 없고 expected failure로 남는다.
+
 $$m_i^{t+1} = (1 - \gamma_m) m_i^t + \gamma_m a_i^{t+1}, \quad \gamma_m = 0.01$$
 
 ```python
@@ -103,6 +122,8 @@ memory_trace = 0.99 * self.memory_trace + 0.01 * activation
 ```
 
 ### 2.6 적응 변수 (A.6 / J.20)
+
+적응 변수는 local trace와 state를 느린 update output으로 바꾸는 mapping이다. 외부 실험 상수와 code default의 단위 변환은 별도 입력이며, J.20 비유가 코드 parity를 대신하지 않는다.
 
 $$w_i^{t+1} = (1 - \gamma_w) w_i^t + \kappa_w (a_i^{t+1})^2, \quad \gamma_w = 0.005$$
 
@@ -113,6 +134,8 @@ adaptation = ((1.0 - 0.005) * self.adaptation + 0.005 * activation.square()).cla
 
 ### 2.7 비트 갱신 (A.7)
 
+비트 갱신은 threshold input에서 hysteresis flag output을 만드는 이산 contract다. 초기 bit·tie 처리·tick ordering이 불변조건이며, 누락된 경우 재현 가능한 mapping이 아니다.
+
 $$b_i^{t+1} = \begin{cases} 1 & a_i > \tau^+ \\ 0 & a_i < \tau^- \\ b_i^t & \text{otherwise} \end{cases}$$
 
 ```python
@@ -122,6 +145,8 @@ bitfield[activation <= self.config.bit_lower_threshold] = 0   # tau- = 0.10
 ```
 
 ### 2.8 STP (Tsodyks-Markram, J.19)
+
+STP mapping은 synapse state와 event를 입력으로 short-term plasticity output을 만든다. 실험 상수·코드 step·정규화의 차이를 보존하며, 생물학 기제와 implementation proxy를 동일시하지 않는다.
 
 $$u_j \leftarrow u_j + (-u_j/\tau_f + u_0(1-u_j)\delta(t-t_j^*))$$
 $$x_j \leftarrow x_j + ((1-x_j)/\tau_r - u_j x_j \delta(t-t_j^*))$$
@@ -136,6 +161,8 @@ stp_x = self.stp_x + (tau_rec * (1 - self.stp_x) - self.stp_u * self.stp_x * spi
 
 ## 3. Layer B: 필드 결합
 
+Layer B mapping은 Layer A state와 adjacency/coupling tensor를 입력으로 coupled field output을 내는 contract다. 행렬 orientation·shape·normalization이 불변조건이며, graph topology OOD와 edge ablation이 미구현 또는 failure 범위를 드러낸다.
+
 | 수식 | 코드 위치 | 구현 방식 |
 |---|---|---|
 | $W_{ij}$ (sparse) | `runtime.py::__init__` | `pack_sparse` -> CSR `(values, col_idx, row_ptr)` |
@@ -147,7 +174,11 @@ stp_x = self.stp_x + (tau_rec * (1 - self.stp_x) - self.stp_u * self.stp_x * spi
 
 ## 4. Layer C: 전역 모드
 
+Layer C mapping은 aggregate metric을 mode label과 parameter bundle로 바꾸는 control contract다. mode는 tick-based runtime state이고, 수면 비유는 생리적 시간·효능의 입증이 아니라 API 설명이다.
+
 ### 4.1 모드 전환 ($\Pi$)
+
+모드 전환 mapping은 pressure·state input에서 next mode output을 내는 gate를 코드 함수에 연결한다. threshold·initial mode·rollback이 fixture에 고정되지 않으면 pass/fail을 재현할 수 없다.
 
 $$M_{t+1} = \Pi(M_t, Q_t, U_t, E_t)$$
 
@@ -172,6 +203,8 @@ def _auto_mode(self, external_norm):
 
 ### 4.2 수면 압력 (Borbely 2-Process, C.2)
 
+수면 압력 mapping은 외부 시간 상수와 runtime step 정규화를 구분한다. 코드 tick 변환은 구현 가정이며, Borbely 관측과의 수치 일치는 생물학 타당성이나 학습 효능을 뜻하지 않는다.
+
 $$\frac{dS}{dt} = \begin{cases} (S_{\max} - S)/\tau_w & \text{WAKE} \\ -S/\tau_s & \text{NREM} \\ -S/(2\tau_s) & \text{REM} \end{cases}$$
 
 ```python
@@ -186,6 +219,8 @@ else:  # REM
 ```
 
 ### 4.3 모드별 파라미터 ($\Theta^{(M)}$)
+
+mode parameter 표는 각 mode consumer가 읽는 gain·decay·budget의 code default를 보여 준다. 값은 지정 config·precision의 구현 입력이며, 성능 우위는 mode ablation과 OOD에서 별도로 확인한다.
 
 ```python
 # runtime.py::BrainRuntimeConfig
@@ -202,6 +237,8 @@ else:  # REM
 
 ## 5. Layer D: 해마/기억
 
+Layer D mapping은 write·read·replay state가 어떤 API와 serialization artifact로 이동하는지 정한다. 해마 비유는 기능 지도에 한정되며, retention·recall은 no-memory baseline과 task split에서 검증해야 한다.
+
 | 수식 | 코드 위치 | 구현 |
 |---|---|---|
 | $H_t = (K_t, V_t, P_t)$ | `HippocampusMemory._keys, _values, _priority` | list[Tensor] |
@@ -211,6 +248,8 @@ else:  # REM
 | $I_i \leftarrow I_i + \lambda_H R_{i,t}$ | `runtime.py::step` | WAKE: recall, SLEEP: 0.5*recall + 0.5*replay |
 
 ### 5.1 encode 조건
+
+encode 조건은 mode·input·goal state를 입력으로 memory write event를 출력하는 gate다. 조건의 누락·data leakage·stale write는 expected failure이며, 코드 branch 존재만으로 기억 효능을 주장하지 않는다.
 
 ```python
 # runtime.py::step, line ~589
@@ -227,6 +266,8 @@ elif mode is not WAKE and len(hippocampus) > 0:
 
 ## 6. Layer E: 전역 요약
 
+Layer E mapping은 layer summary producer를 global readout consumer로 연결한다. aggregation shape·window·normalization이 정의역이며, 자아·전역 상태 비유는 주관 경험이나 과학적 관측의 등식이 아니다.
+
 | 수식 | 코드 위치 |
 |---|---|
 | $G_t = (M_t, A_t^{\text{summary}}, H_t, Q_t, \mu_t)$ | `RuntimeStep(step, mode, energy, active_modules, replay_norm, sleep_pressure, arousal, lifecycle_counts)` |
@@ -237,10 +278,14 @@ elif mode is not WAKE and len(hippocampus) > 0:
 
 ## 7. Layer F: 에이전트 루프 (CE 에너지 이완 경로)
 
+Layer F mapping은 self-state·action·memory·mode를 loop update와 control output으로 연결한다. 수렴은 명시한 norm·step·termination 가정에 조건부이고, 코드 path pass는 agent 효능·의식의 증명이 아니다.
+
 > CE 에너지 이완 추론은 Layer A-B의 brain cell dynamics와는 별도 경로다.
 > `engine.py::CEEngine`이 Hopfield 에너지 이완을 수행하고, `sleep.py`가 3위상 학습 순환을 관리한다.
 
 ### 7.1 에너지 이완 ($R$)
+
+이완 mapping은 state residual을 입력으로 next state를 출력하는 operator와 code function을 연결한다. energy 감소 invariant는 정의한 shape·step·input boundary에서만 성립하며 no-relaxation ablation이 failure 조건이다.
 
 $$E(m, \phi) = -\frac{1}{2} m^\top W m - m^\top b + \text{portal} \cdot m^\top \hat\phi + E_{\text{cb}} + E_{\text{bypass}}$$
 
@@ -255,6 +300,8 @@ E_bypass = bypass_coeff * dot(m, phi)  # non-conservative bypass
 
 ### 7.2 이완 루프
 
+이완 루프는 반복 operator의 tick ordering·max step·stop output을 명시한다. divergence·oscillation·max-iteration 초과는 종료 또는 rollback 상태이며, unrolled code가 같은 수렴을 보장하지 않는다.
+
 ```python
 # ce_ops.py::_relax_packed_torch
 for step in range(n_steps):
@@ -267,6 +314,8 @@ for step in range(n_steps):
 ```
 
 ### 7.3 Sleep Cycle (3위상 학습)
+
+sleep-cycle mapping은 학습 state와 replay input을 wake·NREM·REM producer/consumer로 나눈다. 학습 update와 inference action을 분리하고, phase 제거 ablation·task-order OOD가 효능의 반증 조건이다.
 
 $$\text{Wake} \to \text{NREM} \to \text{REM} \to \text{evaluate}$$
 
@@ -281,6 +330,8 @@ $$\text{Wake} \to \text{NREM} \to \text{REM} \to \text{evaluate}$$
 | 가드셋 보호 | `evaluate_guard_set` | top1/top10/top50 품질 체크, 조건부 롤백 |
 
 ### 7.4 위상 비율
+
+위상 비율은 scheduler가 읽는 무차원 time budget과 코드 default의 mapping이다. 생물학적 수면 시간 비유는 runtime tick과 동일하지 않으며, ratio sweep이 없으면 최적성 주장이 아니다.
 
 $$\text{wake} : \text{nrem} : \text{rem} = \Omega_\Lambda : \Omega_{\text{DM}} : \varepsilon^2 = 68.91\% : 26.23\% : 4.87\%$$
 
@@ -298,6 +349,8 @@ phase_budget = allocate_phase_sample_counts(total_cycle_samples, phase_profile)
 
 ## 8. CE 상수 -> 코드 값
 
+상수 mapping은 정본 산출, 외부 입력, 경험식, 코드 default의 source role을 구분한다. 코드 equality는 단위 변환·precision·artifact provenance가 맞는지의 기계 계약이며, 상수의 물리적 참이나 runtime 성능을 판정하지 않는다.
+
 | 수식 기호 | 유도식 | 코드 변수 | 값 |
 |---|---|---|---|
 | $\text{\_AD}$ | $4/(e^{4/3}\pi^{4/3})$ | `engine._AD` | 0.1726... |
@@ -314,6 +367,8 @@ phase_budget = allocate_phase_sample_counts(total_cycle_samples, phase_profile)
 ---
 
 ## 9. 백엔드 분기
+
+backend branch는 동일 state·shape·API를 reference와 kernel consumer가 어떻게 처리하는지 정하는 contract다. Python/Rust parity는 fixture·seed·precision·serialization 경계에서 검증하며, branch 존재는 hardware 효율·과학 지위의 승격이 아니다.
 
 ```
 ce_ops.ce_backend(device, requested) -> "cuda" | "rust" | "torch"
@@ -339,32 +394,36 @@ ce_ops.ce_backend(device, requested) -> "cuda" | "rust" | "torch"
 
 ## 10. 자기참조재귀 구현 대응
 
-AI 응용에서 핵심은 단일 모듈 성능이 아니라 \(S_t \to R(S_t) \to C_t \to S_{t+1}\) 루프가 닫히는지다. 현재 코드 대응은 다음처럼 읽는다.
+자기참조 mapping은 loop state·residual·action log가 어느 file/function에서 producer와 consumer를 이루는지 연결한다. 코드 path는 계산 proxy의 구현 근거이며, 자아·의식·주관 경험의 과학적 판정과 구분한다.
+
+AI 응용에서 핵심은 단일 모듈 성능이 아니라 $S_t \to R(S_t) \to C_t \to S_{t+1}$ 루프가 닫히는지다. 현재 코드 대응은 다음처럼 읽는다.
 
 | 재귀 항 | 의미 | 현재 코드 위치 | 구현 판정 |
 |---|---|---|---|
-| \(S_t\) | 전역 상태: mode, activation, memory, pressure, lifecycle | `runtime.py::BrainRuntime`, `BrainRuntimeSnapshot` | 부분 구현 |
-| \(R(S_t)\) | 내부 이완/수렴: 셀 동역학 반복, sparse activation | `runtime.py::step`, `engine.py::CEEngine`, `ce_ops.py::relax` | 구현됨 |
-| \(C_t\) | 자기비평: 예측오차, 일관성, 놀라움, 곡률 점수 | `agent.py`, `stdp.py` 후보 | 부분/분산 구현 |
-| \(\mathcal M\) | 기억 갱신과 replay | `runtime.py::HippocampusMemory`, `sleep.py` | 구현됨 |
-| \(\phi_t\) | 잔류장/불확실성/탈락 경로 보존 | `engine.py`, `sleep.py` | 부분 구현 |
-| \(\mathcal U\) | 다음 전역 상태 구성 | `runtime.py::step`, `snapshot()/from_snapshot()` | 구현됨 |
+| $S_t$ | 전역 상태: mode, activation, memory, pressure, lifecycle | `runtime.py::BrainRuntime`, `BrainRuntimeSnapshot` | 부분 구현 |
+| $R(S_t)$ | 내부 이완/수렴: 셀 동역학 반복, sparse activation | `runtime.py::step`, `engine.py::CEEngine`, `ce_ops.py::relax` | 구현됨 |
+| $C_t$ | 자기비평: 예측오차, 일관성, 놀라움, 곡률 점수 | `agent.py`, `stdp.py` 후보 | 부분/분산 구현 |
+| $\mathcal M$ | 기억 갱신과 replay | `runtime.py::HippocampusMemory`, `sleep.py` | 구현됨 |
+| $\phi_t$ | 잔류장/불확실성/탈락 경로 보존 | `engine.py`, `sleep.py` | 부분 구현 |
+| $\mathcal U$ | 다음 전역 상태 구성 | `runtime.py::step`, `snapshot()/from_snapshot()` | 구현됨 |
 
-따라서 현재 구현의 강점은 `runtime.py`의 상태-기억-모드 루프이고, 약점은 \(C_t\)가 하나의 표준 self-critic API로 아직 고정되지 않았다는 점이다. LLM 응용을 강화하려면 새 attention 변형을 늘리기보다, `agent.py`/`runtime.py`/`sleep.py` 사이에 self-critic score와 잔류장 업데이트를 표준 계약으로 묶는 것이 우선이다.
+따라서 현재 구현의 강점은 `runtime.py`의 상태-기억-모드 루프이고, 약점은 $C_t$가 하나의 표준 self-critic API로 아직 고정되지 않았다는 점이다. LLM 응용을 강화하려면 새 attention 변형을 늘리기보다, `agent.py`/`runtime.py`/`sleep.py` 사이에 self-critic score와 잔류장 업데이트를 표준 계약으로 묶는 것이 우선이다.
 
 ### 10.1 수학량과 로그 항목
+
+로그 mapping은 수식 symbol을 time-stamped runtime field와 metric 분모에 연결한다. log가 있다고 식별성·수렴·ground truth가 보장되지는 않으며 missing field·alias·window mismatch는 expected failure다.
 
 닫힌 루프 실험에서는 아래 양을 같은 run에서 기록해야 한다.
 
 | 수학량 | 코드에서 읽을 후보 | 필수성 |
 |---|---|---|
-| \(\|S_{t+1}-S_t\|\) | `RuntimeStep`, snapshot tensor 차이 | 수축률 \(\hat\rho_t\) 계산 |
-| \(\bar c_t\) | agent critic score, STDP learning gate, curvature score | 자기비평 강도 |
-| \(I_c\) | critic on/off ablation의 `activation` 또는 logits 차이 | critique가 제어량인지 검증 |
-| \(I_m\) | hippocampus recall on/off ablation | memory 재주입 영향 |
-| \(\|\phi_t\|\) | `engine.py` / `sleep.py` 잔류장 후보 | 잔류장 유계성 |
-| \(M_t\) | `RuntimeMode` | WAKE/NREM/REM 별 \(\rho\) 분리 |
-| active ratio | `active_modules / dim` | \(\varepsilon^2\) 근처 수렴 여부 |
+| $\|S_{t+1}-S_t\|$ | `RuntimeStep`, snapshot tensor 차이 | 수축률 $\hat\rho_t$ 계산 |
+| $\bar c_t$ | agent critic score, STDP learning gate, curvature score | 자기비평 강도 |
+| $I_c$ | critic on/off ablation의 `activation` 또는 logits 차이 | critique가 제어량인지 검증 |
+| $I_m$ | hippocampus recall on/off ablation | memory 재주입 영향 |
+| $\|\phi_t\|$ | `engine.py` / `sleep.py` 잔류장 후보 | 잔류장 유계성 |
+| $M_t$ | `RuntimeMode` | WAKE/NREM/REM 별 $\rho$ 분리 |
+| active ratio | `active_modules / dim` | $\varepsilon^2$ 근처 수렴 여부 |
 
 > 정정 노트 (2026-07, F.14.2 게이트): $g[t]=\alpha_g\,d\bar c/dt+(1-\alpha_g)\,\text{bootstrap\_dev}$ 의 미분항은 **같은 척도의 critic 신호 차분**이어야 한다. `runtime.py::_apply_runtime_stdp` 가 이전에는 drive로 `critic_score`(≈1.0), prev로 `energy`(≈0.3)를 써서 서로 다른 척도를 빼는 바람에 게이트 부호가 거의 무작위였다. 현재는 `_stdp_prev_critic_score` 에 이번 tick의 `gate_drive`(critic, 없으면 energy proxy)를 그대로 저장해 일관된 시간미분이 되도록 수정됨. `stdp_enabled=False` 극한 환원 불변식은 그대로 유지(트래커 미생성 시 조기 반환).
 
@@ -389,14 +448,16 @@ $$
 
 ### 10.2 계층 gain 로그
 
+gain log는 layer별 producer가 기록한 정규화 값과 consumer가 읽는 control 값을 대조한다. 값의 추세는 debug evidence이며, baseline·OOD·intervention 없이 생물학적 조절 기제나 효능을 주장하지 않는다.
+
 `17_AgentLoop.md` F.-1.5의 계층 정리를 코드 실험으로 옮기려면 각 모듈 또는 agent마다 아래 값을 로그로 남긴다.
 
 | 수학량 | 코드 추정 방법 | 판정 |
 |---|---|---|
-| \(\rho_\ell\) | 같은 입력에서 연속 state delta 비율 `state_delta_next / state_delta` | 모듈 자체 수축률 |
-| \(g_\uparrow\) | 하위 모듈 state perturbation이 상위 summary를 바꾸는 norm ratio | aggregation gain |
-| \(g_\downarrow\) | 상위 goal/critic perturbation이 하위 activation을 바꾸는 norm ratio | feedback gain |
-| \(\rho(G)\) | 추정 gain matrix의 spectral radius | 전체 계층 안정성 |
+| $\rho_\ell$ | 같은 입력에서 연속 state delta 비율 `state_delta_next / state_delta` | 모듈 자체 수축률 |
+| $g_\uparrow$ | 하위 모듈 state perturbation이 상위 summary를 바꾸는 norm ratio | aggregation gain |
+| $g_\downarrow$ | 상위 goal/critic perturbation이 하위 activation을 바꾸는 norm ratio | feedback gain |
+| $\rho(G)$ | 추정 gain matrix의 spectral radius | 전체 계층 안정성 |
 
 최소 2층 실험에서는 solver agent와 critic agent만 둔다.
 
@@ -429,6 +490,8 @@ $$
 
 ## 11. 파일 책임 분리
 
+파일 책임 표는 source·test·artifact가 소유하는 state transition과 rollback 범위를 고정한다. 파일 존재·import 성공은 equation parity·benchmark pass·과학적 입증을 뜻하지 않으며, 계약 밖 책임은 미구현으로 남는다.
+
 | 파일 | 책임 | Layer |
 |---|---|---|
 | `reality_stone/python/reality_stone/clarus/runtime.py` | 셀 동역학, 모드 전환, 해마, 생애주기, 스냅샷 | A, B, C, D, E |
@@ -453,6 +516,8 @@ $$
 
 ## 12. 미구현 대조
 
+미구현 대조는 수식·API·code mapping 중 아직 없는 producer·consumer·fixture·threshold를 명시한다. legacy 또는 removed 경로는 현재 구현과 구분하며, 계획·주석·유사 코드로 완료·검증 상태를 승격하지 않는다.
+
 | 수식/개념 | 문서 위치 | 코드 상태 |
 |---|---|---|
 | STDP 적격 흔적 | F.14 | 구현·runtime 연결 완료; 효능 `NO-EFFECT`, guard `FAIL`, 기본 off |
@@ -475,6 +540,8 @@ $$
 | unified executive posterior/control | F.1, F.4, F.7, F.17 | Loop 8 수식 후보를 research workspace에 고정; canonical·runtime 미편입, 정확 finite-state solver 전까지 구현 잠금 |
 
 ### 12.1 2026-08-11 loop-engineering 상태
+
+이 상태 기록은 특정 날짜·artifact·fixture의 구현·검증 범위를 보여 주는 스냅샷이다. 이후 코드·baseline·serialization이 바뀌면 재검증이 필요하며, 기계 pass는 runtime 효능이나 과학적 참의 판정이 아니다.
 
 - `[경험식]` action-conditioned sufficient statistic과 충분한 planning horizon은
   DPC-2/DPC-3 합성 validation에서 reactive, action-agnostic, H1 대조군을
@@ -534,6 +601,8 @@ $$
 
 ## 13. Dual recurrent-layer basal-ganglia research core (2026-08-11)
 
+이 버전 절은 날짜가 붙은 research core의 feature flag, entry point, artifact와 test evidence를 기록한다. 상태는 experimental 또는 해당 스냅샷의 구현 범위이며, superseded/current 판정과 rollback·known gap을 이후 버전과 혼동하지 않는다.
+
 | Canonical object | Implementation | Status |
 |---|---|---|
 | colored slow/fast recurrent layers and small-gain certificate | `dual_scc_basal_ganglia.py` | formal core implemented; uncolored union is one macro-SCC |
@@ -547,6 +616,8 @@ This component is not wired into `RuntimeAgent`; default runtime behavior is unc
 ---
 
 ## 14. Fixed-graph SCC foundation (2026-08-11)
+
+fixed-graph SCC 절은 지정 feature와 entry point가 어떤 고정 topology contract를 구현하는지 추적한다. artifact·test pass는 등록된 fixture의 증거이고, dynamic graph·OOD·성능 효능은 known gap 또는 별도 rollback 조건이다.
 
 | Canonical object | Implementation | Status |
 |---|---|---|
@@ -563,6 +634,8 @@ whole-brain parcellation or infer dynamics from topology.
 ---
 
 ## 15. V9 nested infinite-SCC unit mechanism (2026-08-11)
+
+V9 절은 nested mechanism의 version/date, opt-in flag, test artifact와 현재 지위를 구분한다. unit mechanism의 구현·수리 evidence는 runtime 통합·benchmark success와 다르며, superseded 또는 STOP 상태는 삭제하지 않고 rollback 경계로 남긴다.
 
 | Canonical object | Implementation | Status |
 |---|---|---|
@@ -581,6 +654,8 @@ AGI claim is opened by this unit implementation.
 ---
 
 ## 16. V9 opt-in RuntimeAgent integration (2026-08-12)
+
+opt-in integration은 feature flag가 켜진 entry point와 RuntimeAgent consumer의 contract를 설명한다. 기본 경로와의 parity, serialization, flag-off baseline이 실패하면 integration은 current default가 아니라 experimental 또는 rollback 대상으로 유지된다.
 
 | Runtime object | Implementation | Status |
 |---|---|---|
@@ -601,6 +676,8 @@ registered V9 development state remains `0/256 BLOCKED`.
 
 ## 17. V10 local–cloud transition kernel (2026-08-12)
 
+V10 절은 local–cloud transition의 state input, feature flag, artifact·test evidence와 적용 범위를 기록한다. 좁은 fixture pass는 network·security·일반 OOD 효능의 증거가 아니며, provenance·latency·failure handling이 known gap이다.
+
 | Object | Implementation | Status |
 |---|---|---|
 | bounded local/shared recurrent transition | `local_cloud_kernel.py` | weighted block-sup certificate `q=0.9355555556 < 0.95` |
@@ -620,6 +697,8 @@ not OOD generalization, arbitrary recurrent superiority, biology, or AGI.
 
 ## 18. V11 strong learned recurrent and OOD audit (2026-08-12)
 
+V11 audit은 강한 recurrent 후보의 entry point와 OOD test evidence를 현재 판정과 함께 보존한다. gate failure는 superseded/STOP 또는 experimental 경계를 정하며, 후속 변경은 같은 baseline·split·threshold에서 재검증해야 한다.
+
 | Object | Implementation | Status |
 |---|---|---|
 | identical raw-sequence learned comparators | `local_cloud_ood_benchmark.py` | Elman-20, GRU-20, compute-matched Elman-3 |
@@ -635,6 +714,8 @@ robustness claims are rejected.
 ---
 
 ## 19. Clarus-field bounded baseline (2026-08-12)
+
+bounded baseline은 field feature의 최소 entry point와 제한된 invariant를 제공하는 current 또는 experimental 기준선이다. baseline artifact·test pass는 비교의 분모이며, 과제 효능·생물학 기제·무한 범위 적용은 known gap으로 남는다.
 
 | Formal object | Implementation | Status |
 |---|---|---|
@@ -655,6 +736,8 @@ expanding counterexample. Task utility, biological identification, SNN efficacy,
 unverified.
 
 ## 20. V15 unified finite metric core (2026-08-13)
+
+V15 절은 finite metric core의 version/date·entry point·artifact·test evidence와 이전 버전의 supersession 관계를 명시한다. finite-input 수리 pass는 continuum·world semantics·AGI 완료가 아니며, regression failure는 rollback 조건이다.
 
 | Formal object | Implementation | Status |
 |---|---|---|
@@ -683,6 +766,8 @@ unimplemented or unscored.
 
 ## 21. V16 covariant one-state metric flow (2026-08-13)
 
+V16 절은 covariant flow의 feature·artifact·등록 gate와 NARROW 범위를 구분한다. current status는 지정 synthetic fixture의 evidence이며, new data·OOD·flag parity 미통과는 experimental 하향 또는 rollback 사유다.
+
 | Formal object | Implementation | Status |
 |---|---|---|
 | one persistent SPD state | `covariant_metric_flow.py::CovariantMetricState.factor` | canonical lower-triangular positive-diagonal factor only; $d=3$ has 6 semantic DoF and optimizer state 0 |
@@ -699,6 +784,8 @@ This does not show that the meanings of five agent functions are automatically d
 $g$, or that a biological brain and the physical universe use this same learned metric.
 
 ## 22. V17 strict metric no-go and homogeneous signed-cue lift (2026-08-13)
+
+V17 절은 strict no-go와 lift의 서로 다른 entry point·feature·test artifact·지위를 분리한다. no-go proof와 좁은 lift pass를 일반 memory·AGI·생물학 결과로 합치지 않으며, additional-state 의존과 OOD gap을 명시적 경계로 둔다.
 
 | Formal object | Implementation | Status |
 |---|---|---|

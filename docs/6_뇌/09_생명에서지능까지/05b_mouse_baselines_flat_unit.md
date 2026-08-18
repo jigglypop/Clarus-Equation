@@ -1,5 +1,7 @@
 ## Mouse IBL/OpenAlyx task-baseline comparison gate
 
+이 gate는 region decoder가 trial clock·stimulus·history 같은 비신경 baseline을 이기는지 시험한다. 독자는 nested split, baseline model과 uncertainty interval을 안다고 가정한다. 입력은 사전고정 trial covariate와 neural window이고 출력은 holdout increment이며, 동일 trial의 feature가 train/test에 새면 실패다.
+
 Channel-region rescue 다음에는 다른 반례를 검사했다. Region decoder가 실제 neural state를 읽는 것이 아니라, 단순 trial clock, stimulus table, previous-trial history만 복원하는 경우다. 이 반례를 다음처럼 분리했다.
 
 $$
@@ -26,7 +28,7 @@ H_{i-1}
 \right].
 $$
 
-여기서 \(H_{i-1}\)는 previous choice, previous feedback, previous reward, previous signed contrast, previous reaction latency, previous response latency다. Current choice, current first movement, current response, current feedback은 baseline feature에서 제외했다. 이유는 이 값들이 이번 target 자체이거나 target 직후 outcome이라서 leakage가 되기 때문이다.
+여기서 $H_{i-1}$는 previous choice, previous feedback, previous reward, previous signed contrast, previous reaction latency, previous response latency다. Current choice, current first movement, current response, current feedback은 baseline feature에서 제외했다. 이유는 이 값들이 이번 target 자체이거나 target 직후 outcome이라서 leakage가 되기 때문이다.
 
 비교한 모델은 다음이다.
 
@@ -59,7 +61,7 @@ $$
 \mathrm{BA}(X^{\mathrm{task}}).
 $$
 
-\(\Delta_{\mathrm{timing}}>0\)이면 단순 session drift/trial clock 반례가 약해진다. \(\Delta_{\mathrm{task}}>0\)이면 current stimulus와 previous-trial history만으로 설명되지 않는 neural increment가 남는다.
+$\Delta_{\mathrm{timing}}>0$이면 단순 session drift/trial clock 반례가 약해진다. $\Delta_{\mathrm{task}}>0$이면 current stimulus와 previous-trial history만으로 설명되지 않는 neural increment가 남는다.
 
 실행:
 
@@ -77,7 +79,7 @@ Target replication:
 
 Mean deltas:
 
-| target | mean \(\Delta_{\mathrm{timing}}\) | mean \(\Delta_{\mathrm{task}}\) |
+| target | mean $\Delta_{\mathrm{timing}}$ | mean $\Delta_{\mathrm{task}}$ |
 |---|---:|---:|
 | choice sign | 0.130975 | 0.000924 |
 | first movement speed | 0.125473 | 0.060066 |
@@ -85,7 +87,7 @@ Mean deltas:
 
 Candidate deltas:
 
-| candidate | choice \(\Delta_t\) | choice \(\Delta_x\) | speed \(\Delta_t\) | speed \(\Delta_x\) | wheel \(\Delta_t\) | wheel \(\Delta_x\) |
+| candidate | choice $\Delta_t$ | choice $\Delta_x$ | speed $\Delta_t$ | speed $\Delta_x$ | wheel $\Delta_t$ | wheel $\Delta_x$ |
 |---|---:|---:|---:|---:|---:|---:|
 | `witten29_thalamic_visual_reference` | 0.134807 | 0.000000 | 0.217524 | 0.113459 | 0.233831 | -0.000211 |
 | `nyu30_motor_striatal_multi_probe` | 0.300062 | 0.000526 | 0.075917 | 0.044396 | 0.359294 | 0.029426 |
@@ -141,7 +143,7 @@ R_t^{(s,\mathrm{hybrid})}
 \epsilon_s.
 $$
 
-여기서 \(B_{\mathrm{stim/history}}\)는 특히 choice를 강하게 설명하는 task-table term이고, \(B_{\mathrm{action\ increment}}\)는 speed와 wheel action direction에서 남는 neural increment다. 따라서 mouse 단계의 현재 결론은 다음이다.
+여기서 $B_{\mathrm{stim/history}}$는 특히 choice를 강하게 설명하는 task-table term이고, $B_{\mathrm{action\ increment}}$는 speed와 wheel action direction에서 남는 neural increment다. 따라서 mouse 단계의 현재 결론은 다음이다.
 
 $$
 \boxed{
@@ -160,9 +162,11 @@ $$
 
 ### Mouse IBL/OpenAlyx flat-unit versus hybrid-region comparison gate
 
+flat-unit 비교는 region 압축이 예측력을 잃는지, 아니면 해부학적으로 해석 가능한 저차원 표현인지 묻는 경쟁 시험이다. unit identity·quality filtering·regularization은 outer test를 보기 전에 고정하고, 더 높은 unit 성능은 region 기제의 반증 또는 축소 조건으로 기록한다.
+
 Task-baseline gate 다음에는 representational counterexample을 검사했다. 같은 neural window 안에서 anatomical region/probe bin을 쓰지 않고, 개별 cluster identity를 flat feature로 쓰면 더 잘 되는가다. 이 반례가 중요하다. Region decoder가 global-rate와 timing을 이기더라도, flat unit이 훨씬 잘 되면 region 항은 "최대 예측기"가 아니라 "해부학적 압축 표현"으로 내려가야 한다.
 
-Probe \(p\)에서 spike count 상위 \(K=96\) cluster를 골라 unit map을 만든다.
+Probe $p$에서 spike count 상위 $K=96$ cluster를 골라 unit map을 만든다.
 
 $$
 U_p(c)
@@ -184,7 +188,7 @@ u_{ipu}
 \mathbf 1[U_p(c_{pk})=u].
 $$
 
-Hybrid region feature \(r_{ipg}\)와 직접 비교하기 위해 두 차이를 정의했다.
+Hybrid region feature $r_{ipg}$와 직접 비교하기 위해 두 차이를 정의했다.
 
 $$
 \Delta_{\mathrm{unit-region}}
@@ -293,7 +297,7 @@ C_{\mathrm{unit}\rightarrow\mathrm{region}}^{(s)}
 U_t^{(s)}.
 $$
 
-여기서 \(U_t^{(s)}\)는 top-unit/cluster-level activity, \(R_t^{(s,\mathrm{hybrid})}\)는 channel-rescued anatomical compression, \(\eta_t^{(s)}\)는 region binning으로 잃는 unit-specific residual이다. Flat-unit gate의 의의는 \(\eta_t^{(s)}\)가 choice와 wheel에서 무시할 수 없다는 점을 밝혔다는 것이다.
+여기서 $U_t^{(s)}$는 top-unit/cluster-level activity, $R_t^{(s,\mathrm{hybrid})}$는 channel-rescued anatomical compression, $\eta_t^{(s)}$는 region binning으로 잃는 unit-specific residual이다. Flat-unit gate의 의의는 $\eta_t^{(s)}$가 choice와 wheel에서 무시할 수 없다는 점을 밝혔다는 것이다.
 
 따라서 mouse 항은 다음처럼 내려 적는다.
 
@@ -315,4 +319,4 @@ R_t^{(s,\mathrm{hybrid})}
 \epsilon_s.
 $$
 
-즉 mouse에서 새로 얻은 결론은 region-only closure가 아니라 unit-detail과 anatomical compression의 분리다. 다음 강한 단계는 effective-connectivity다. 단순 unit identity \(U_t\)가 아니라 unit/region 사이의 weighted interaction \(K_{ij}\)가 action을 더 잘 설명하는지 봐야, C. elegans에서 시작한 weighted routing 명제를 포유류까지 연결할 수 있다. 이 질문을 아래 proxy gate로 바로 검사했다.
+즉 mouse에서 새로 얻은 결론은 region-only closure가 아니라 unit-detail과 anatomical compression의 분리다. 다음 강한 단계는 effective-connectivity다. 단순 unit identity $U_t$가 아니라 unit/region 사이의 weighted interaction $K_{ij}$가 action을 더 잘 설명하는지 봐야, C. elegans에서 시작한 weighted routing 명제를 포유류까지 연결할 수 있다. 이 질문을 아래 proxy gate로 바로 검사했다.

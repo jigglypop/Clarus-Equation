@@ -1,5 +1,10 @@
 # G7-M: episodic LTM과 constrained imagination 연구 루프
 
+이 문서는 실제 episode를 보존하는 episodic store와 제약된 offline 재조합을 2×2 설계로 분리해 시험한 G7-M 기록이다. 독자는 holdout·paired effect·preregistration의 기본을 아는 독자를 전제로 하며, episodic·attractor·imagination은 data provenance와 output label로 operationalize한 구현 용어이지 인간 기억·꿈·의식의 증명은 아니다.
+
+무엇을 시험했는지와 V1 용어 뒤에 2×2 설계, validation/locked output, 성공·실패 경로, 문헌 역할, V1/V2 완결 경계를 읽는다. dataset·seed·split·baseline·threshold와 locked access가 정의역이며, V1 FAIL·미개봉과 V2 PASS를 같은 evidence로 합치지 않는다.
+
+
 > 상태: **[산출] V1 validation FAIL / V1 locked test 미개봉; V2 validation PASS / V2 locked test PASS**
 >
 > 사전등록: V1
@@ -19,6 +24,8 @@
 > [희소 인과 브리지 세계모형 G9-CB](41_Sparse_Causal_Bridge_World_G9CB.md)
 
 ## 1. 무엇을 시험했는가
+
+이 절은 episodic store input, constrained imagination operator, task output과 기준선의 책임을 operational definition으로 고정한다. 설계는 작은 합성 환경·고정 용량·CPU의 범위이며, task 통과는 일반 기억·세계모형·생물학적 기제를 뜻하지 않는다.
 
 한 줄로 말하면, 실제 episode를 오래 보존하는 경로와 관찰 조각을 제약 안에서
 재조합하는 오프라인 경로를 분리한 뒤 함께 작동하는지를 시험했다.
@@ -40,6 +47,8 @@ world-model rollout을 구현하지 않았다. 어느 결과도 다른 축의 �
 소급하지 않는다.
 
 ## 2. V1의 용어와 provenance
+
+V1 용어는 observed episode, retrieved episode, imagined composition의 data provenance와 허용 write/read 경계를 구분한다. alias·재조합·cached label이 실제 관찰 record로 섞이면 provenance violation과 실패이며, 용어가 심리적 경험을 판정하지 않는다.
 
 **[정의] Observed episode**는 환경에서 실제 관찰해 저장한 record다. V1의
 episodic LTM에는 이 record만 들어갈 수 있다.
@@ -63,6 +72,8 @@ counterfactual 생성, 시간축 world-model consolidation, 행동조건부 plan
 아니라 제한된 계산 경로의 이름이다.
 
 ## 3. 사전등록한 2×2 설계
+
+2×2 설계는 episodic factor와 constrained-imagination factor의 paired effect를 같은 seed·split·baseline·metric에서 분리한다. cell 평균과 interaction은 preregistered threshold·uncertainty에 조건부이며, post-hoc tuning·누수·약한 비교군은 기각 조건이다.
 
 **[공리: 실험 계약]** 네 cell은 다음처럼 한 요인만 바꾼다.
 
@@ -106,12 +117,16 @@ pre-implementation 정정이다. hypotheses와 수치 gate는 바꾸지 않았�
 
 ## 4. Validation V1 산출
 
+V1 validation은 개발 split에서 preregistered cell·paired metric·failure check를 계산한 evidence다. validation은 locked confirmation이 아니며, FAIL 또는 threshold 미통과 시 locked test를 열지 않는 경계가 선택 편향을 막는다.
+
 **[산출]** open train seed 40개로 calibration을 동결한 뒤 validation seed
 40개를 평가했다. 등록 check 73개 중 67개가 PASS, 6개가 FAIL이어서
 all-of 판정은 **FAIL**이다. resource gate는 PASS였지만 성능 실패를 덮지
 않는다. 이 판정 뒤 locked test seed 60개와 test artifact는 열지 않았다.
 
 ### 4.1 Cell 평균
+
+cell 평균은 각 2×2 condition의 sample unit·분모·seed에서 계산한 추정량이다. 평균 차이는 paired effect·baseline·uncertainty 없이 성공을 뜻하지 않으며, OOD cell 또는 split 변화는 별도 판정이다.
 
 | cell | old-A identity accuracy | old-A positive coverage | old-A hidden NRMSE | attractor convergence | extra-step stability | novel coverage | novel hidden NRMSE |
 |---|---:|---:|---:|---:|---:|---:|---:|
@@ -125,6 +140,8 @@ all-of 판정은 **FAIL**이다. resource gate는 PASS였지만 성능 실패를
 비-LTM 경로의 trivial finite behavior다.
 
 ### 4.2 Paired 요인 효과
+
+paired effect는 같은 episode/seed의 조건 차이를 이용해 factor 기여를 추정한다. pairing·missingness·metric direction이 가정이며, interaction과 baseline이 미통과하면 causal 또는 구조 해석으로 승격하지 않는다.
 
 | 지표 | 주효과 평균 | paired 95% interval | 판정 |
 |---|---:|---:|---|
@@ -142,6 +159,8 @@ synergy 증거는 없다.
 
 ### 4.3 실패한 여섯 check
 
+실패 check는 provenance·retrieval·imagination 제약·metric 중 어느 계약이 깨졌는지 보존하는 반례 기록이다. 여섯 failure를 평균 score로 상쇄하지 않으며, V1은 FAIL로 남고 locked test는 미개봉이다.
+
 | check | 관찰값 | 등록 gate | 지위 |
 |---|---:|---:|---|
 | `L_main.hidden_reduction` | relative = -0.036422 | 최소 0.35 | FAIL |
@@ -158,6 +177,8 @@ stability를 통과해야 episodic attractor라고 부를 수 있는데, 두 LTM
 그 조건을 크게 놓쳤다.
 
 ## 5. 성공한 경로와 실패한 경로를 분리한다
+
+이 절은 어떤 output path가 등록 gate를 통과했고 어떤 path가 실패했는지 data/metric 기준으로 분리한다. 성공 path는 다른 task·condition·생물학 해석의 증거가 아니며, 실패 path는 다음 version의 preregistration·rollback 입력이다.
 
 **[산출: 제한된 dream path 성공]** `M01/M11`은 seed마다 synthetic binding
 24개를 받아들였고, novel coverage 1.0과 novel hidden NRMSE 0.089741을
@@ -190,6 +211,8 @@ instance-specific trajectory reinstatement나 episodic attractor는
 
 ## 6. 문헌이 지지하는 범위
 
+문헌은 episodic retrieval·attractor·offline recombination의 배경과 외부 source role을 제공한다. 인용은 이 실험의 provenance·paired effect·locked validation을 대체하지 않으며, 문헌 해석과 구현 proxy를 같은 지위로 두지 않는다.
+
 **[공리: 외부 입력]** 아래 1차 연구는 설계 영감과 반례 경계로만 사용한다.
 
 | 연구 | V1에 준 영감 | 이 문서가 주장하지 않는 것 |
@@ -205,6 +228,8 @@ instance-specific trajectory reinstatement나 episodic attractor는
 V1 FAIL을 생물학 이론의 반증으로 만들지도 않는다.
 
 ## 7. V1 완결성 판정
+
+V1 완결성은 preregistered validation gate와 locked-test access 상태를 기준으로 판정한다. FAIL·미개봉은 결과 부재와 반례 경계를 뜻하며, 사후 수정이나 후속 version의 PASS로 V1을 소급 승격하지 않는다.
 
 | 주장 | V1 판정 |
 |---|---|
@@ -222,6 +247,8 @@ V1 validation 결과를 본 뒤 같은 seed와 gate를 조정해 PASS로 만들�
 V1 locked test는 미개봉으로 영구 보존하며, 후속 버전은 fresh test seed를 쓴다.
 
 ## 8. V2: 한 가지 변경만 한 재검증
+
+V2는 V1 failure를 바탕으로 한 가지 변경만 고정한 새 preregistration이다. input·operator·baseline·seed·split·threshold가 V1과 어떻게 달라졌는지 기록하며, 변경이 적다고 evidence가 자동 비교 가능해지는 것은 아니다.
 
 **[예측: V2 사전등록 당시]** V1의 여러 trace를 부드럽게 섞는 recurrent
 retrieval을 cue가 가장 잘 맞는 observed trace 하나의 hidden 좌표로 완성하는
@@ -261,7 +288,11 @@ lock은 위 validation artifact SHA-256을 가리키며, test 60 seed에서도 �
 
 ## 9. V2 locked-test 산출
 
+V2 locked test는 development와 분리된 access·artifact·integrity ledger에서 preregistered metric을 평가한 confirmation evidence다. PASS는 이 정의역의 paired result이며, OOD·new dataset·feature ablation·일반 imagination 효능의 결론이 아니다.
+
 ### 9.1 2×2 cell 평균
+
+locked cell 평균은 V2의 고정 seed·split·sample unit·metric 분모에서 나온 확인 추정량이다. uncertainty·baseline·interaction을 함께 읽고, 단일 cell의 개선으로 전체 mechanism이나 V1 failure를 지우지 않는다.
 
 | cell | old-A identity | positive coverage | old-A hidden NRMSE | one-step idempotence | repeat identity stability | novel coverage | novel hidden NRMSE |
 |---|---:|---:|---:|---:|---:|---:|---:|
@@ -304,6 +335,8 @@ roundoff 수준이었다. 두 경로의 공존은 확인됐지만 양의 interac
 관찰되지 않았다.
 
 ## 10. V2 뒤의 완결성 경계
+
+V2 뒤 경계는 무엇이 locked validation으로 닫혔고 무엇이 data provenance·OOD·문헌·생물학 해석에서 여전히 미완성인지 구분한다. 후속 승격은 새 preregistration·independent split·counterexample·rollback 조건을 필요로 한다.
 
 | 주장 | 현재 지위 |
 |---|---|

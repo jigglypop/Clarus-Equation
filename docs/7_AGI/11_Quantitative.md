@@ -1,5 +1,9 @@
 # CE-AI 정량적 성능 분석: 메모리, 속도, 정확도
 
+이 문서는 CE 모듈의 비용·속도·정확도 지표를 어떤 표본단위와 분모로 계산할지 정리한다. 독자는 평균·비율·holdout 평가의 기본을 아는 독자를 전제로 하며, 숫자 예시는 명시한 shape·하드웨어·모델 가정의 산술 추정과 실제 측정 결과를 구분해 읽어야 한다.
+
+기준 모델과 단위를 먼저 고정한 다음 P1의 파라미터·FLOPs, P4의 희소 추정, P3의 메모리·통신을 차례로 비교한다. 각 값은 동일 baseline·split·precision·hardware에서 반복 측정한 불확실성 범위가 없으면 상한 또는 계획 수치이며, OOD·ablation 미통과는 승격을 막는다.
+
 > 관련: 2장(아키텍처), 4장(STDP), 5장(희소성), 6장(환각 억제), `7_AGI/12_Equation.md` 6절(파라미터 절감), `6_뇌/05_실험근거.md`
 >
 > 이 장은 CE 각 원리가 메모리, 속도, 정확도에 미치는 영향을 정량화한다. 다만 `6_뇌/05_실험근거.md` 기준으로, P1의 연산자 수준 절감식은 비교적 직접적이지만, P2/P4/P5의 태스크 수준 성능 수치는 아직 `bridge` 또는 `hypothesis`가 섞여 있다.
@@ -7,6 +11,8 @@
 ---
 
 ## 1. 기준 모델 정의
+
+기준 모델은 이후 모든 절감률의 표본단위와 분모를 고정하는 대조군이다. model width·layer·token·batch·precision·hardware를 함께 기록하지 않으면 산술 파라미터 수와 실측 latency·memory를 같은 지표로 비교할 수 없다.
 
 표준 Transformer 블록 1개의 비용을 기준으로 삼는다. 아래 FLOPs는 행렬곱 1회당 multiply-add를 `2mnk`로 세는 관례를 따른다.
 
@@ -31,7 +37,11 @@ $$F_{\text{base}} = 12 \cdot (24Td^2 + 4T^2d)\big|_{T=2048,d=768} \approx 502.5\
 
 ## 2. P1: GaugeLattice FFN -- 파라미터/FLOPs 절감
 
+P1 지표는 고정된 shape와 token 분모에서 파라미터·FLOPs를 비교하는 추정량이다. 절감률은 동일 task·sequence 길이·hardware baseline의 holdout 측정 전에는 산술 예시이며, OOD latency 악화는 기각 조건이다.
+
 ### 2.1 표준 FFN 파라미터
+
+표준 FFN 수는 지정한 layer당 tensor shape에서 계산하는 기준선이다. 입력 폭·batch·sequence가 달라지면 직접 비교할 수 없으므로 정규화 계약과 추정 오차를 함께 기록한다.
 
 $$P_{\text{FFN}}^{\text{std}} = 2 \times d \times 4d = 8d^2$$
 
@@ -67,9 +77,13 @@ $$\boxed{P_{\text{GL}} = 2{,}810{,}992 + 147{,}456 + 75{,}265 = 3{,}033{,}713}$$
 
 ### 2.3 절감률
 
+절감률은 기준선 대비 차이를 기준선 분모로 나눈 무차원 추정량이다. kernel의 memory 이동·routing overhead가 빠지면 실제 wall-clock 결과로 승격하지 않는다.
+
 $$\text{FFN 파라미터 절감} = 1 - \frac{P_{\text{GL}}}{P_{\text{FFN}}^{\text{std}}} = 1 - \frac{3{,}033{,}713}{4{,}718{,}592} = \boxed{35.7\%}$$
 
 ### 2.4 수학적 일반화
+
+일반화식은 명시한 shape 가정 아래의 산술 관계이며 모든 모델 규모의 실측 법칙이 아니다. 규모별 불확실성은 seed·hardware·data split을 바꾼 holdout과 OOD에서 측정한다.
 
 $$\frac{P_{\text{GL}}}{P_{\text{FFN}}^{\text{std}}} = \frac{8\sum_i d_i^2 + 2dr_m}{8d^2} = \frac{\sum_i d_i^2}{d^2} + \frac{r_m}{4d}$$
 
@@ -110,6 +124,8 @@ $$\text{전체 FLOPs 절감} = 0.667 \times 37.3\% = \boxed{24.9\%}$$
 ---
 
 ## 3. P4: 부트스트랩 희소성 -- 추론 속도
+
+희소성 속도는 활성 token 또는 weight를 분모로 하는 비용 추정과 실제 요청 latency를 구분한다. mask ratio만으로 이득을 주장하지 않고, dense baseline·mask ablation·OOD input 길이에서 승격 여부를 판정한다.
 
 ### 3.1 Dense 추론 FLOPs
 
@@ -163,6 +179,8 @@ $$\text{실제 속도} = \frac{\text{이론적 속도}}{1 + \alpha_{\text{overhe
 
 ## 4. P3: STDP 국소 학습 -- 메모리 절감
 
+메모리 지표는 batch·sequence·precision을 고정한 peak allocated bytes 또는 activation 분모를 명시해야 한다. 국소 학습의 산술 절감은 trace 저장·통신·optimizer state를 포함한 baseline에서 확인되지 않으면 조건부 추정이다.
+
 ### 4.1 역전파 메모리
 
 역전파는 모든 중간 활성값을 저장해야 한다.
@@ -199,6 +217,8 @@ $P = 85\text{M}$: $M_{\text{total}}^{\text{STDP}} = 680\text{MB} + 0.11\text{MB}
 
 ### 4.3 메모리 절감률
 
+절감률은 같은 모델·batch·precision의 기준 peak memory를 분모로 둔다. allocator 차이·checkpointing·offload는 실행 환경 불확실성으로 따로 기록한다.
+
 $$\text{메모리 절감} = 1 - \frac{M_{\text{STDP}}}{M_{\text{BP}}} = 1 - \frac{680}{1410} = \boxed{51.8\%}$$
 
 핵심 절감 원인:
@@ -207,6 +227,8 @@ $$\text{메모리 절감} = 1 - \frac{M_{\text{STDP}}}{M_{\text{BP}}} = 1 - \fra
 - eligibility trace 추가: $+110\text{KB}$ (무시 가능)
 
 ### 4.4 대규모 모델에서의 효과
+
+규모 확장은 예시 수치를 실제 검증으로 바꾸지 않는다. 모델 크기별 split·hardware·통신 topology를 고정한 반복 측정에서 효과가 사라지면 외삽 가설은 기각한다.
 
 | 모델 규모 | 역전파 메모리 | STDP 메모리 | 절감 |
 |---|---|---|---|
@@ -224,6 +246,8 @@ $$\frac{M_{\text{STDP}}}{M_{\text{BP}}} = \frac{8P}{16P + 4LTd} \approx \frac{8}
 
 ### 4.5 통신 비용 (분산 학습)
 
+통신 비용은 worker당 bytes·동기화 횟수·step time을 분리한 추정량이다. throughput과 fault tolerance를 측정하지 않으면 bytes 절감만으로 분산 효율을 주장할 수 없다.
+
 | | 역전파 | STDP + 도파민 |
 |---|---|---|
 | 동기화 크기 (층당) | $O(d^2)$ 그래디언트 | $O(1)$ 스칼라 $\delta[t]$ |
@@ -235,6 +259,8 @@ $$\text{통신 절감} = 1 - \frac{4\text{B}}{2d^2 \times 4\text{B}} = 1 - \frac
 ---
 
 ## 5. P5: 곡률 정규화 -- 정확도/환각률
+
+정확도와 환각률은 provenance가 있는 ground-truth label을 기준으로, 평가 요청 또는 답변 수를 분모로 고정해야 한다. residual proxy의 개선은 false positive·negative, 동일 baseline·split, OOD 비교가 없으면 실제 안전성 결과가 아니라 조건부 예측이다.
 
 ### 5.1 유니타리 제약의 오류 전파 억제
 
@@ -298,6 +324,8 @@ $$
 ---
 
 ## 6. P2: 수면 학습 -- 지속 학습 정확도
+
+지속 학습 지표는 task 순서·replay budget·평가 시점을 고정한 표본 평균이다. wake-only baseline과 phase 제거 ablation보다 유지율이 나쁘거나 confidence interval이 겹치면 수면 효능은 승격하지 않는다.
 
 ### 6.1 파괴적 망각률
 
@@ -366,6 +394,8 @@ $$p_{n+1} = p^* + \rho(p_n - p^*), \qquad p^* = (0.0487,\; 0.2623,\; 0.6891)$$
 
 ## 7. 복합 효과: 모든 원리 동시 적용
 
+복합 효과는 단일 모듈 추정량을 더하거나 곱한 산술 예시와 실제 통합 run을 구분해야 한다. 상호작용은 full factorial 또는 최소 component ablation, 동일 split, OOD에서 측정하며 독립성 가정이 깨지면 총합 예측은 기각한다.
+
 ### 7.1 총합 정리
 
 $d = 768$, $L = 12$, $T = 2048$ 기준:
@@ -383,6 +413,8 @@ $d = 768$, $L = 12$, $T = 2048$ 기준:
 
 ### 7.2 에너지 효율 총합 (조건부 상한)
 
+조건부 상한은 명시한 독립성·kernel 효율 가정 아래의 계산값이다. 실제 energy는 hardware power·latency·utilization을 포함한 단위 측정으로 검증하며, 상한을 관측 결과나 보장으로 읽지 않는다.
+
 > 다리 게이트 `F1` (`12_Equation.md` 0.0절): 아래 수식은 활성 비율이 $\varepsilon^2 = 0.0487$로 **자기수렴한다는 가설이 성립할 때**의 조건부 상한이다. transformer + backprop 기질에서는 이 가설이 `falsified`(`5_Sparsity.md` 8.5절)이며, 따라서 아래 수치는 SNN + STDP 기질에서 자기수렴이 검증된 후에만 hard claim으로 올린다. 현재는 설계 목표값으로만 읽는다.
 
 추론 시 (자기수렴 가설 + attention 완전 희소화 가정):
@@ -398,6 +430,8 @@ $$\text{에너지 비율} = \underbrace{0.627}_{\text{P1}} \times \underbrace{0.
 $$\text{에너지 절감} = 1 - 0.0975 = \boxed{90.25\%} \approx 10\times \quad \text{(조건부)}$$
 
 ### 7.3 규모별 예측
+
+규모별 수치는 data·compute·architecture를 고정하지 않은 외삽 예시다. 새 규모의 baseline, seed 불확실성, OOD 검증이 없으면 경험 결과로 승격하지 않는다.
 
 | 규모 | 표준 파라미터 | CE 파라미터 | 표준 추론 비용 | CE 추론 비용 |
 |---|---|---|---|---|
@@ -429,6 +463,8 @@ $$k^*(d) = \lceil 0.0487\,d \rceil$$
 ---
 
 ## 8. 정확도-효율 트레이드오프
+
+트레이드오프는 동일 task·split에서 정확도와 비용을 함께 측정한 Pareto 비교다. 정확도는 provenance가 있는 label의 표본 평균, 비용은 같은 hardware·batch·precision의 분모로 정규화하며, 한 축의 개선이 OOD 손실이나 불확실성 증가를 덮지 않는다.
 
 ### 8.1 희소성과 정확도의 관계
 
@@ -477,7 +513,11 @@ $$
 
 ## 9. LBONorm 오버헤드
 
+오버헤드는 LBONorm을 추가한 모델과 동일 baseline의 parameter·FLOPs·latency 차이를 기준선 분모로 계산한다. 안정성 이득은 별도 holdout·component ablation으로 확인해야 하며, 실제 측정 전 수치는 shape 가정의 산술 추정이다.
+
 ### 9.1 추가 파라미터
+
+추가 파라미터 수는 명시한 tensor shape와 rank에서의 산술값이다. 실제 memory footprint는 precision·optimizer·distributed sharding에 따라 달라지므로 실행 환경·seed 분산·hardware 측정이 없으면 실측 결론으로 승격하지 않는다.
 
 $$P_{\text{LBO}} - P_{\text{LN}} = r \times d + 1 \quad (\text{V 행렬 + h 스칼라})$$
 
@@ -510,6 +550,8 @@ FLOPs: GaugeLattice 절감 $-24.9\%$ + LBONorm 오버헤드 $+3.1\%$ = $\boxed{-
 ---
 
 ## 10. 요약: CE 원리별 정량적 이득
+
+요약표는 각 숫자의 표본단위·분모·가정·지위를 다시 확인하는 색인이다. 예측·산술 예시·실측을 한 행에서 섞지 않고, 동일 baseline·provenance·OOD·ablation gate를 통과한 결과만 좁은 경험적 결론으로 승격하며 미통과는 실패로 기록한다.
 
 | CE 원리 | 메모리 | 속도 (추론) | 정확도 | 핵심 공식 |
 |---|---|---|---|---|

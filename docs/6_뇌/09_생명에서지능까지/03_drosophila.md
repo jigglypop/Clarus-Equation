@@ -1,5 +1,7 @@
 ## 단계 2: Drosophila larva에서 adult FlyWire까지
 
+Drosophila 단계는 cell type·action·memory의 분화를 구조 자료와 비교하는 조건부 gate다. 독자는 connectome annotation, life-stage 비교와 graph normalization의 기본 뜻을 안다고 가정한다. 입력은 larva/adult connectome와 annotation이고 출력은 계통 간 보존·분기 항이며, 서로 다른 life stage와 해상도를 같은 동역학 단위로 동일시하지 않는다.
+
 C. elegans 다음 단계에서는 단순 3층 routing 위에 cell type, action, memory가 같이 분화한다.
 
 초기 후보식:
@@ -29,6 +31,8 @@ m_{n+1}
 $$
 
 ### Drosophila larva candidate gate
+
+larva gate는 초기 구조 가설을 경쟁 connectome·annotation과 비교한다. candidate 통과는 adult·trial dynamics에 대한 예측이 아니라 다음 holdout의 입력이다.
 
 초기 가설:
 
@@ -116,9 +120,11 @@ $$
 1. C. elegans의 weighted routing만으로는 larva fly brain의 구조를 충분히 설명하지 못한다.
 2. mushroom body 내부 및 projection/action/lateral과의 loop가 강한 후보로 보인다.
 3. 그러나 action split도 순수 손실 기준으로 강하므로 "memory 단독 추가"라고 말하면 과하다.
-4. 따라서 다음 항은 \(M_{\mathrm{memory}}\) 하나가 아니라 \(D_{\mathrm{celltype}}+A_{\mathrm{action}}+M_{\mathrm{memory}}\)의 공동 분화로 수정해야 한다.
+4. 따라서 다음 항은 $M_{\mathrm{memory}}$ 하나가 아니라 $D_{\mathrm{celltype}}+A_{\mathrm{action}}+M_{\mathrm{memory}}$의 공동 분화로 수정해야 한다.
 
 ### Drosophila adult FlyWire closure
+
+adult closure는 지정 파일과 annotation의 구조적 관계만 닫는다. cell type label의 provenance와 graph normalization이 바뀌면 수치 비교도 다시 해야 한다.
 
 larva 후보를 adult FlyWire/Codex 파생 connectome으로 다시 열었다. 사용 자료는 `connectome.mat`의 `W.TOT`와 같은 record의 `annotations.mat`다.
 
@@ -240,6 +246,8 @@ $$
 4. 따라서 "신경계 양이 늘면 지능이 생긴다"보다 "weighted routing 위에 역할 분화와 내부 loop가 붙는다"가 더 정확하다.
 
 ### Drosophila trial-dynamics boundary audit
+
+구조 connectome은 시간동역학·행동 기제를 자동으로 제공하지 않는다. 필수 trial·activity·behavior timebase가 없으면 해당 bridge는 미완성으로 보존한다.
 
 Adult FlyWire 결과는 구조 connectome closure다. 이를 실제 시간동역학 behavior equation으로 승격할 수 있는지 audit하면, 로컬에는 `trial_id`, timebase, neural activity/spikes, behavior trace, stimulus/task epoch, celltype/region mapping을 함께 가진 Drosophila trial dynamics table이 없다. 따라서 Drosophila 항은 structural closed로 유지하지만, trial dynamics는 data-boundary로 둔다.
 

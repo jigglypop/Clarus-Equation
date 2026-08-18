@@ -1,6 +1,10 @@
 # 10. PreEq LLM Manifest Verifier
 
+이 문서는 후보 답변을 evidence manifest로 검증하는 조건부 구현 규약이다. 독자는 claim 분해, NLI와 precision/recall을 안다고 가정한다. 입력은 후보·근거·threshold이고 출력은 답변 또는 보류 판정이며, 성공은 synthetic과 실제 holdout에서 false-allow를 낮추는 것이고 실패는 manifest 누락·오탐·분포이동을 감추는 것이다.
+
 ## 목표
+
+목표는 낮은 defect energy의 후보만 복원하는 것이며 낮은 점수가 사실성의 완전한 증명은 아니다.
 
 LLM 후보 답변을 등호 이전 후보 상태로 보고, 근거 불일치 defect energy가 낮은 답변만 manifest answer로 선택한다. 이 문서는 `reality_stone.clarus.llm_pre_eq`, Rust/PyO3 `nn_llm_pre_eq_fwd`, `examples/pre_eq/llm_manifest_verifier.py`의 검증 기준을 고정한다.
 
@@ -8,7 +12,9 @@ LLM 후보 답변을 등호 이전 후보 상태로 보고, 근거 불일치 def
 
 ## 수식
 
-후보 답변 \(y_i\)와 evidence \(E\)에 대해
+아래 수식은 score의 정의역과 무차원 정규화를 고정한다. scale·evidence extractor가 바뀌면 threshold도 독립적으로 재검증해야 한다.
+
+후보 답변 $y_i$와 evidence $E$에 대해
 
 $$
 p_\beta(y_i\mid E)
@@ -17,9 +23,11 @@ p_\beta(y_i\mid E)
 {\sum_j\mu_0(y_j)\exp(-\beta\Delta(y_j,E))}.
 $$
 
-\(\mu_0\)는 모델 prior 또는 후보 생성 prior이고, \(\Delta\)는 verifier defect다. 유한 \(\beta\)에서는 posterior MAP를 선택한다. \(\beta=0\)이면 posterior는 prior로 돌아가고, \(\beta\to\infty\)에서 최소 defect 후보로 농축된다.
+$\mu_0$는 모델 prior 또는 후보 생성 prior이고, $\Delta$는 verifier defect다. 유한 $\beta$에서는 posterior MAP를 선택한다. $\beta=0$이면 posterior는 prior로 돌아가고, $\beta\to\infty$에서 최소 defect 후보로 농축된다.
 
 ## Claim-level fold
+
+atomic claim 분해는 검증 단위를 만들지만 분해 오류가 미탐을 만들 수 있다. label policy는 자료를 보기 전에 고정하고 인간 audit으로 반증해야 한다.
 
 실제 RAG/QA에서는 답변을 atomic claim으로 쪼갠 뒤 각 claim을 세 라벨 중 하나로 접는다.
 
@@ -45,23 +53,27 @@ $$
 +0.25C_{\rm uncertainty},
 $$
 
-여기서 \(T=C_{\rm supported}+C_{\rm unsupported}+C_{\rm contradicted}\)다. 음수 support credit은 제거했다. supported claim은 보상항이 아니라 coverage defect를 낮추는 방식으로만 작용한다.
+여기서 $T=C_{\rm supported}+C_{\rm unsupported}+C_{\rm contradicted}$다. 음수 support credit은 제거했다. supported claim은 보상항이 아니라 coverage defect를 낮추는 방식으로만 작용한다.
 
 수치 커널은 Rust/PyO3의 `nn_llm_pre_eq_fwd`가 있으면 Rust에서 energy와 posterior를 계산하고, Rust extension이 없으면 같은 수식의 numpy fallback을 사용한다.
 
 ## Manifest 판정
 
+세 조건은 선택한 verifier의 accept 규칙이며, 하나라도 약하면 보류·검색·질문으로 개입해야 한다.
+
 `PreEqVerifier`는 다음 세 조건을 모두 통과할 때만 답한다.
 
 | 조건 | 의미 |
 |---|---|
-| \(E_{\min}\le E_{\max}\) | 모든 후보가 너무 나쁘면 abstain |
-| \(\Delta_2-\Delta_1\ge g_{\min}\) | 1등과 2등 defect gap이 충분해야 함 |
-| \(\max_i p_\beta(y_i)\ge p_{\min}\) | posterior confidence가 충분해야 함 |
+| $E_{\min}\le E_{\max}$ | 모든 후보가 너무 나쁘면 abstain |
+| $\Delta_2-\Delta_1\ge g_{\min}$ | 1등과 2등 defect gap이 충분해야 함 |
+| $\max_i p_\beta(y_i)\ge p_{\min}$ | posterior confidence가 충분해야 함 |
 
 실패하면 답변 대신 `abstained=True`와 reason을 돌려준다.
 
 ## 현재 synthetic 검산
+
+synthetic 검산은 코드 경로의 회귀 검사이지 실제 RAG 분포에서의 성능 증명은 아니다.
 
 실행:
 
@@ -88,6 +100,8 @@ baseline_hallucination_rate 1.000000
 
 ## Adversarial / noisy sweep
 
+sweep은 noise·공격 조건에서의 오탐과 미탐을 함께 보고해야 하며 threshold 사후선택은 허용하지 않는다.
+
 추가 sweep은 `llm_manifest_verifier_sweep.py`에 둔다.
 
 ```powershell
@@ -112,9 +126,11 @@ uv run --extra dev python examples/pre_eq/llm_manifest_verifier_sweep.py --mode 
 | 44 | 0.609 | 0.972 | 0.627 | 0.373 |
 | 55 | 0.607 | 0.964 | 0.630 | 0.370 |
 
-평균적으로 exact accuracy는 약 0.625, answered accuracy는 약 0.646, answered hallucination rate는 약 0.354다. 이 수치는 유한 \(\beta\)에서 posterior MAP를 선택하고 negative support credit을 제거한 뒤의 값이다. 공개 benchmark가 아니라 verifier 구조의 수치 회귀이며, 현재 noisy 분포에서는 아직 강한 verifier라고 주장할 수 없다.
+평균적으로 exact accuracy는 약 0.625, answered accuracy는 약 0.646, answered hallucination rate는 약 0.354다. 이 수치는 유한 $\beta$에서 posterior MAP를 선택하고 negative support credit을 제거한 뒤의 값이다. 공개 benchmark가 아니라 verifier 구조의 수치 회귀이며, 현재 noisy 분포에서는 아직 강한 verifier라고 주장할 수 없다.
 
 ## 테스트
+
+테스트는 불변조건과 지정 입력의 재현성을 확인하며 새로운 사실의 entailment를 보장하지 않는다.
 
 실행:
 
@@ -138,15 +154,17 @@ Rust: 2 passed
 | small-gap abstain | 후보 defect가 거의 같으면 답하지 않음 |
 | high-defect abstain | 모든 후보가 나쁘면 답하지 않음 |
 | metric regression | baseline prior 선택 대비 hallucination 감소 |
-| \(\beta=0\) prior limit | posterior가 prior로 복귀 |
-| large-\(\beta\) concentration | 낮은 defect 후보로 posterior 농축 |
+| $\beta=0$ prior limit | posterior가 prior로 복귀 |
+| large-$\beta$ concentration | 낮은 defect 후보로 posterior 농축 |
 | defect decomposition | component 합과 clipped energy 일치 |
 | claim fold | atomic evidence label이 candidate defect count로 접힘 |
 | Rust/numpy parity | Rust kernel과 numpy fallback의 posterior 일치 |
 
 ## 다음 실험
 
-1. 실제 RAG pipeline에서 후보 \(N=8\sim16\)개를 만든다.
+실제 pipeline 실험은 candidate 생성·holdout·human audit과 비용을 사전등록해 false-allow 감소를 반증 가능하게 해야 한다.
+
+1. 실제 RAG pipeline에서 후보 $N=8\sim16$개를 만든다.
 2. 답변을 atomic claim으로 분해한다.
 3. evidence retrieval로 `supported`, `unsupported`, `contradicted`를 채운다.
 4. TruthfulQA, FEVER, HotpotQA, 내부 문서 QA에서 baseline과 비교한다.

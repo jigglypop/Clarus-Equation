@@ -1,5 +1,7 @@
 ## 단계 3: Zebrafish larva activity
 
+Zebrafish는 실제 calcium activity와 행동 proxy를 연결할 수 있는 단계지만 자료 chunk마다 시간해상도와 label이 다르다. 독자는 calcium imaging, perturbation, behavioral timebase를 안다고 가정한다. 입력은 activity frame·laser·behavior metadata이고 출력은 association 또는 perturbation gate이며, timestamp-certified 연속 decoding만 더 강한 결론을 허용한다.
+
 Zebrafish부터는 connectome proxy를 넘어 실제 calcium activity state를 본다. 목표는 두 가지다.
 
 1. 실제 activity state가 다음 activity state를 예측하는가.
@@ -38,9 +40,11 @@ y_t\in
 \}
 $$
 
-\(C_{\mathrm{assembly}}\)는 두 뉴런이 같은 assembly를 공유하는지에 따른 correlation block 항이고, \(L_{\mathrm{lowrank}}\)는 저차원 recurrent state 예측 항이다.
+$C_{\mathrm{assembly}}$는 두 뉴런이 같은 assembly를 공유하는지에 따른 correlation block 항이고, $L_{\mathrm{lowrank}}$는 저차원 recurrent state 예측 항이다.
 
 ### Zebrafish optic tectum spontaneous activity
+
+이 activity-only pilot은 행동 label 없이 자발 상태의 구조를 검사한다. whole-brain behavior 기제나 방향 예측으로 일반화하지 않는다.
 
 이 자료에는 행동이 없으므로 whole-brain behavior gate가 아니라 activity-only pilot이다.
 
@@ -56,6 +60,8 @@ $$
 3. 행동 자료가 없으므로 stimulus-action 방정식은 아직 아니지만, 척추동물 국소 회로의 폐쇄 동역학 후보는 통과한다.
 
 ### Zebrafish freely swimming activity
+
+자유수영 chunk는 region activity의 시간 변화를 제공하지만 정렬된 tail label이 없으면 연속 행동 decoding은 미완성이다.
 
 Figshare freely-swimming zebrafish figure5/S8 chunk로 자유수영 상태의 region activity를 확인했다. 이 chunk에는 정렬된 tail-behavior label이 없으므로 최종 activity-to-behavior gate는 아니다.
 
@@ -76,6 +82,8 @@ Figshare freely-swimming zebrafish figure5/S8 chunk로 자유수영 상태의 re
 
 ### Zebrafish laser perturbation to behavior
 
+laser 조건과 회전 행동의 관계는 perturbation-to-behavior closure다. neural trace를 통한 decoding과 동일시하지 않으며 stimulus timing·대조군이 필요하다.
+
 figure8/c/LR chunk의 `boutInfo.mat`를 사용해 left/right laser 조건이 회전 행동 방향을 바꾸는지 검증했다. 이것은 neural trace -> behavior decoding이 아니라 perturbation -> behavior closure다.
 
 | group | left n | left mean angle | right n | right mean angle | left-right | p |
@@ -95,6 +103,8 @@ figure8/c/LR chunk의 `boutInfo.mat`를 사용해 left/right laser 조건이 회
 3. 따라서 척추동물 단계의 motor output 항은 임의 잡음이 아니라 방향성 perturbation에 의해 조절되는 닫힌 행동 출력이다.
 
 ### Zebrafish activity to behavior-frame gate
+
+activity와 bout frame의 구분은 association gate다. 연속 speed·heading·turn을 예측했다는 주장은 timestamp alignment 없이는 허용하지 않는다.
 
 figure8/g chunk의 `e2` neural activity와 `FrameBout` 행동 bout frame을 사용했다. 연속 tail/stage movement decoding은 아니고, neural activity가 행동 bout frame과 baseline frame을 구분하는지 보는 association gate다.
 
@@ -119,6 +129,8 @@ figure8/g chunk의 `e2` neural activity와 `FrameBout` 행동 bout frame을 사�
 
 ### Zebrafish activity to direction gate
 
+left/right 조건 구분은 지정 activity window의 분류 성능이다. 조건 label이 neural dynamics의 방향 코드를 직접 측정한다는 뜻은 아니다.
+
 figure8/f chunk의 `e2`, `LeftLS`, `RightLS`를 사용해 neural activity window가 left/right 조건을 구분하는지 봤다.
 
 | 항목 | 값 |
@@ -141,6 +153,8 @@ figure8/f chunk의 `e2`, `LeftLS`, `RightLS`를 사용해 neural activity window
 3. 표본 수는 21 trial로 작으므로 최종 결론은 continuous movement decoding에서 다시 확인해야 한다.
 
 ### Zebrafish continuous alignment audit
+
+연속 decoding에는 neural frame과 behavior timestamp의 인증된 정렬이 필요하다. inferred alignment는 정찰 결과로만 기록하고 final gate를 통과시키지 않는다.
 
 최종 목표는 neural activity frame으로 speed, heading, turn angle을 직접 예측하는 continuous decoding gate다.
 
@@ -188,6 +202,8 @@ $$
 3. 이 상태에서 speed/heading/turn angle을 직접 예측하면 임의 정렬이 되어 검증이 무효다.
 
 ### Zebrafish e2-LR alignment probe
+
+이 probe는 같은 시각 대응이 가능한지 확인하는 자료 audit이다. stage·head·yolk 변수의 샘플링 차이는 비교 불가능성으로 보존한다.
 
 `e2[:, t]` neural frame을 같은 시각의 stage/head/yolk movement에 붙일 수 있는지 확인했다.
 
@@ -246,6 +262,8 @@ verdict:
 
 ### Zebrafish candidate continuous decoding
 
+후보 decoding은 timestamp-certified 검증 전의 신호 탐색이다. shift test와 독립 holdout이 실패하면 연속 예측 주장을 보류한다.
+
 이 gate는 timestamp-certified 최종 검증이 아니라 inferred alignment 위에서 신호가 있는지 보는 정찰 검증이다.
 
 alignment:
@@ -278,6 +296,8 @@ best decoding:
 3. p가 0.05 아래로 내려가지 않았고 timestamp-certified도 아니므로 최종 continuous movement gate를 통과했다고 보지 않는다.
 
 ### Zebrafish supplementary audit
+
+supplementary audit은 누락된 timebase·resampling metadata가 있는지 검사한다. 파일 존재만으로 alignment가 복원되었다고 결론내리지 않는다.
 
 `Others_Supplementary.7z`까지 받은 뒤 공개 supplementary 안에 explicit e2 timestamp 또는 e2-resampled behavior trace가 있는지 감사했다.
 
@@ -315,7 +335,9 @@ Others_Supplementary supplies Z-position/stage alignment and calcium trace/inter
 
 ### Zebrafish continuous boundary final audit
 
-기존 alignment audit, e2-LR probe, candidate continuous decoding, supplementary audit을 하나로 묶어 final audit를 수행했다. 결론은 변하지 않는다. Activity-to-bout-frame과 activity-to-direction bridge는 가능하지만, timestamp-certified alignment는 \(0/10\)이고 e2 timestamp 또는 e2-resampled behavior trace가 없다. inferred alignment에서 speed는 \(R^2=0.123460\) 후보지만 shift \(p=0.066667\)이고 final gate는 아니다. Turn은 \(R^2=0.010998\)라 후보가 아니다.
+final audit은 모든 alignment 증거를 묶어 통과·보류를 판정한다. 불리한 timestamp 결과는 후보 $R^2$보다 우선하는 반증 조건이다.
+
+기존 alignment audit, e2-LR probe, candidate continuous decoding, supplementary audit을 하나로 묶어 final audit를 수행했다. 결론은 변하지 않는다. Activity-to-bout-frame과 activity-to-direction bridge는 가능하지만, timestamp-certified alignment는 $0/10$이고 e2 timestamp 또는 e2-resampled behavior trace가 없다. inferred alignment에서 speed는 $R^2=0.123460$ 후보지만 shift $p=0.066667$이고 final gate는 아니다. Turn은 $R^2=0.010998$라 후보가 아니다.
 
 | 항목 | 값 |
 |---|---|
@@ -337,6 +359,8 @@ $$
 $$
 
 ### Zebrafish 종합 의의
+
+종합 의의는 activity·perturbation·association에서 닫힌 부분과 연속 행동 bridge의 미완성을 분리한다. 계통 간 공통 상태변수는 비교 좌표일 뿐 동일 기제의 증명은 아니다.
 
 Zebrafish 단계에서 닫힌 것은 네 가지다.
 

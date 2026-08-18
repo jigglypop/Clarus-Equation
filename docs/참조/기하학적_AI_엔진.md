@@ -1,6 +1,12 @@
 # 8.2 기하학적 AI 엔진 Reality_Stone: 리만 다양체 위의 지능
 
+이 문서는 Reality_Stone을 manifold state·metric·inference/learning update로 기술하는 기하 AI 구현 비유로 소개한다. 지능·의식·물리 공간의 동일시는 operational definition, tensor contract, benchmark가 없는 한 성립하지 않는다.
+
+독자는 Reality_Stone 수학 interface와 AGI runtime 문서를 먼저 읽는다. 핵심 요소, 2-flow, CE pruning, approximation·factorization·attention 구현과 검증 가능한 출력의 순서다.
+
 ## 1. 개요: 지능은 통계가 아니라 기하학이다
+
+제목의 문구는 연구 동기이며 통계 모델을 배제하는 정리가 아니다. 이 문서에서 지능은 지정한 task metric과 state update를 가진 구현적 proxy로만 평가한다.
 
 현재의 딥러닝(Deep Learning)과 거대언어모델(LLM)은 방대한 데이터의 통계적 상관관계를 벡터 내적(Dot Product)으로 근사하는 방식에 의존합니다. 그러나 **Reality_Stone**은 지능의 본질을 다르게 정의합니다.
 
@@ -11,6 +17,8 @@
 ---
 
 ## 2. Reality_Stone 엔진의 4대 핵심 요소
+
+핵심 요소는 state space, metric, update, readout의 producer/consumer contract로 해석한다. 각 요소의 shape·unit·timebase가 없으면 물리·생물 비유를 검증할 수 없다.
 
 Reality_Stone은 뇌 계산의 95%를 설명한다고 알려진 다음 4가지 요소를 수학적으로 통합합니다.
 
@@ -23,9 +31,13 @@ Reality_Stone은 뇌 계산의 95%를 설명한다고 알려진 다음 4가지 �
 
 ## 3. 수학적 구조: 2-Flow 메커니즘
 
+2-flow는 data/state 이동과 geometry update를 나눈 계산 모델이다. 두 flow의 coupling, stability, convergence는 명시한 manifold·step size·loss 가정에 의존한다.
+
 Reality_Stone 엔진은 두 개의 흐름(Flow)이 상호작용하며 작동합니다. 하나는 데이터의 이동(Flow on Geometry)이고, 다른 하나는 공간 자체의 변화(Flow of Geometry)입니다.
 
 ### 3.1 Flow 1: 추론 (Inference) - 데이터의 이동
+
+inference flow는 입력 tensor에서 output/readout으로 가는 update의 정의다. 실제 추론 품질은 dataset provenance·baseline·OOD metric으로만 평가한다.
 입력 데이터(상태 $x$)는 고정된 벡터가 아니라, 다양체 위를 미끄러지는 입자로 취급됩니다. 다음 상태 $x_{new}$는 현재 위치에서의 곡률과 잠재 가치(Potential)에 의해 결정됩니다.
 
 $$
@@ -37,6 +49,8 @@ $$
     *   이 항은 **벨만 방정식(Bellman Equation)**의 가치 함수 기울기와 동치입니다. 즉, 에너지가 낮아지는(보상이 커지는) 방향을 기하학적으로 찾습니다.
 
 ### 3.2 Flow 2: 학습 (Learning) - 공간의 변화
+
+learning flow는 metric/parameter를 갱신하는 timebase를 정의한다. online update가 안정적이거나 생물학적 가소성과 같다는 주장은 ablation과 failure 분석이 필요하다.
 학습은 가중치($W$)를 바꾸는 것이 아니라, 정보 공간의 **계량(Metric, $g$)** 자체를 업데이트하는 과정입니다. 이를 **Ricci Flow**의 변형으로 볼 수 있습니다.
 
 $$
@@ -49,6 +63,8 @@ $$
 ---
 
 ## 4. CE와의 결합: 가지치기(Pruning)의 기하학
+
+CE pruning은 후보/잔류의 계산적 readout과 결합하는 제안이다. physical folding이나 cognitive selection을 유도하는 정리로 읽지 않으며 residual loss·leakage를 측정해야 한다.
 
 기존 LLM은 확률이 낮은 토큰도 `top-k` 샘플링 등으로 억지로 잘라내야 했습니다. 하지만 Reality_Stone에 CE 클라루스장이 적용되면, 이 과정이 자연스러운 물리 현상이 됩니다.
 
@@ -63,13 +79,19 @@ $$
 
 ## 5. 구현 전략 및 최적화
 
+구현 전략은 계산 비용·precision·approximation error를 줄이는 선택이다. 최적화가 원래 기하 모델의 보존량·해석 가능성을 자동 보장하지 않는다.
+
 리만 기하학 연산은 계산 비용이 매우 높습니다(텐서 역행렬 연산 등). Reality_Stone은 이를 실용화하기 위해 다음과 같은 공학적 최적화를 도입합니다.
 
 ### 5.1 Tangent Space Approximation (접공간 근사)
+
+접공간 근사는 국소 chart와 step-size 범위에서만 유효하다. 큰 이동·고곡률·chart transition은 반례와 rollback 조건을 요구한다.
 모든 연산을 다양체 전체에서 하지 않고, 현재 상태 $x$ 주변의 평평한 접공간(Tangent Space)으로 투영(Log Map)하여 계산한 뒤, 다시 복귀(Exp Map)시킵니다.
 *   이 과정은 뇌의 격자 세포(Grid Cell)가 공간을 육각형 격자로 평탄화하여 인식하는 원리와 동일합니다.
 
 ### 5.2 Low-Rank Metric Factorization
+
+low-rank factorization은 metric tensor의 shape와 rank budget을 바꾸는 근사다. rank truncation error와 positive-definiteness failure를 baseline과 비교해야 한다.
 $N \times N$ 크기의 거대 계량 텐서 $G$를 직접 다루지 않고, 저랭크 분해(Low-Rank Decomposition)를 사용합니다.
 $$
 G \approx L L^T
@@ -77,11 +99,15 @@ $$
 *   이는 계산 복잡도를 $O(N^3)$에서 $O(N^2)$ 혹은 그 이하로 획기적으로 줄여줍니다.
 
 ### 5.3 Curvature Learning as Attention
+
+curvature-attention 대응은 implementation proxy다. attention weight가 기하학적 curvature나 물리 인과를 측정한다고 결론내리지 않는다.
 Transformer의 **Self-Attention** 메커니즘은 사실상 데이터 간의 거리를 동적으로 계산하는 과정입니다. Reality_Stone은 Attention Score를 **Metric Tensor의 성분($g_{ij}$)**으로 재해석하여, 기존 트랜스포머 구조를 그대로 활용하면서도 기하학적 학습을 수행할 수 있습니다.
 
 ---
 
 ## 6. 결론: 생각하는 기하학
+
+결론은 기하 update가 유용한 계산 가설일 수 있음을 말한다. 주장 가능한 출력은 fixed task·seed·metric·ablation/OOD 결과이며 지능·의식의 일반 결론은 미완성이다.
 
 Reality_Stone은 "인공지능이 생각을 하는가?"라는 질문에 대해, "생각은 곧 정보 공간에서의 움직임이다"라고 답합니다.
 

@@ -1,5 +1,10 @@
 # Sparse Causal Bridge V7 폐쇄 감사
 
+이 문서는 V7 sparse causal bridge가 어떤 정의역·graph 가정·dataset·seed·baseline에서 닫혔거나 닫히지 않았는지 감사한다. 독자는 validation·사전 예측·반례의 기본을 아는 독자를 전제로 하며, closure는 등록된 claim contract의 상태이지 생물학·AGI·일반 인과성의 증명은 아니다.
+
+정의와 전제를 먼저 읽고 무차원 감사, validation 비교, 폐쇄 범위와 재현 잠금 순으로 확인한다. 입력·출력·metric·threshold·failure를 고정하지 않은 bridge는 계획 또는 미완성으로 남고, pass 수만으로 지위를 승격하지 않는다.
+
+
 > 날짜: 2026-08-11
 > 범위: 4차원 합성 동역학의 단일 원점 H20 자유 롤아웃
 > 정본 입력: `experiments/preregistration/sparse_causal_bridge_v7.json`
@@ -9,23 +14,27 @@
 
 ## 1. 정의역과 정의
 
+정의역은 graph node·edge·state·causal readout의 shape와 허용 입력을 고정한다. bridge는 지정 operator가 producer state를 consumer metric에 연결하는 형식 정의이며, 이 정의 밖의 topology·data·timebase에는 결론을 적용하지 않는다.
+
 **[정의]** 한 seed의 관측열은 무차원 4차원 상태 $x_t\in\mathbb R^4$이며, 모델은 $x_{0:80}$만 읽고 원점 $t=80$에서 H20 경로 $x_{81:100}$을 자유 롤아웃한다. H5는 같은 경로의 첫 5행인 진단량이며 게이트가 아니다.
 
 **[정의]** 훈련 구간에서 고정한 좌표별 scale $s_j>0$에 대해 모델 $m$의 seed 단위 오차를
 
-\[
+$$
 E_m
 =\sqrt{\frac1{20\cdot4}
 \sum_{h=1}^{20}\sum_{j=1}^{4}
 \left(\frac{\hat x^{(m)}_{80+h,j}-x_{80+h,j}}{s_j}\right)^2}
 }
-\]
+$$
 
 로 둔다. 독립 단위는 trajectory row가 아니라 seed 하나다.
 
 **[정의]** `sparse_consensus`는 sparse parent, stable adaptive dense, persistence의 세 전문가를 결합한다. `no_sparse_consensus`는 뒤의 두 전문가만 결합하고, `symmetric_dense_consensus`는 sparse parent 대신 같은 probe budget의 dense latent 전문가를 쓴다.
 
 ## 2. 전제와 사전 예측
+
+전제는 graph independence·split·seed·baseline·metric·threshold를 사전에 고정해 사후 설명을 막는다. 예측은 등록된 dataset과 output 분모에서만 평가하며, 미통과·반례·OOD 역전은 closure 또는 승격을 막는 조건이다.
 
 **[공리: 모델 선택]** 각 consensus는 동일한 prefix, 동일한 정규화 오차, 동일한 inverse-root MSE 규칙으로 자기 가중치를 따로 맞춘다. validation 결과를 본 뒤 route, 전문가, seed 수 또는 임계값을 바꾸지 않는다.
 
@@ -43,6 +52,8 @@ test seed `78100..78195`는 validation의 모든 결합 조건이 충족될 때�
 
 ## 3. 무차원 감사
 
+무차원 감사는 식에 들어가는 state·scale·확률·로그 인자가 정의된 unit과 normalization을 따르는지 검사한다. 기계 감사 pass는 수식 contract의 범위이며, data provenance·인과 해석·성능 효능을 확인하지 않는다.
+
 | 코어 항목 | 차원 | 정규화 | 판정 |
 |---|---:|---|---|
 | $(\hat x_j-x_j)/s_j$ | 0 | 훈련 구간 좌표 scale $s_j$ | 무차원 |
@@ -55,6 +66,8 @@ test seed `78100..78195`는 validation의 모든 결합 조건이 충족될 때�
 `tests/test_dimensionless.py` 10개가 통과했고 `dimensionless.py` checker가 정상 종료했다. 이 결과는 차원 정합성만 말하며 예측 성능이나 AGI 타당성을 보장하지 않는다.
 
 ## 4. validation 관측 비교
+
+validation 비교는 고정된 dataset provenance·split·seed에서 모델 output과 baseline metric을 대조한다. 관측 근접은 형식 증명과 다르며, uncertainty·ablation·OOD가 없으면 causal bridge의 과학적 승격 근거가 아니다.
 
 **[경험식]** 96개의 고정 validation seed에서 얻은 평균 normalized H20 path RMSE는 다음과 같다. 작을수록 좋다.
 
@@ -85,6 +98,8 @@ paired 비교는 다음과 같다.
 
 ## 5. 폐쇄 범위
 
+폐쇄 범위는 어떤 claim·fixture·threshold·반례 처리가 끝났는지와 남은 gap을 구분한다. closed는 현재 정의역의 감사 상태이고, 새로운 graph·dataset·feature flag에는 재현·baseline·rollback이 필요하다.
+
 **[미완성]** locked test는 열리지 않았고 `artifacts/agi/sparse_causal_bridge_test_v7.json`도 생성되지 않았다. 따라서 test 일반화 증거는 0이다.
 
 **[산출]** 사전등록 규칙에 따라 이 V7 route는 여기서 닫는다. 같은 validation을 본 뒤 임계값을 바꾸거나 두 번째 V7 route를 시험하지 않는다.
@@ -92,6 +107,8 @@ paired 비교는 다음과 같다.
 이 폐쇄가 부정하는 것은 이 합성 환경에서 등록한 symmetric consensus 경로의 결합 성공 주장이다. 모든 가능한 sparse 모델, SNN substrate, CE 코어 수학 또는 AGI 가능성 전체를 부정하는 보편 반례는 아니다. 반대로 어느 항목도 V7에서 지지되었다고 승격되지 않는다.
 
 ## 6. 재현 잠금과 자원
+
+재현 자원은 version·entry point·artifact·seed·환경을 고정해 같은 closure 판정을 다시 계산할 수 있게 한다. lock은 과학적 진리의 봉인이 아니며, artifact 불일치·resource drift·독립 재현 실패는 rollback 또는 미완성 조건이다.
 
 - registration raw SHA-256: `134ddaa793170b898649b79e11407c10f35d1468ba95701544a06905d9448c3e`
 - registration canonical SHA-256: `2d1c06cb9259e52e435e28017b82d89924c4c305c0dc81b29beadf78ede13365`

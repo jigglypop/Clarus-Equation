@@ -1,5 +1,7 @@
 ## 단계 1: C. elegans 원시 신경계
 
+C. elegans는 최소 신경계의 구조·자극·행동 항을 분리해 시험하는 첫 실자료 gate다. 독자는 connectome, trial table과 timebase의 뜻을 안다고 가정한다. 입력은 chemical graph·stimulus·behavior provenance이고 출력은 routing 후보이며, 구조 proxy를 실제 행동 인과성으로 동일시하지 않는 것이 적용 경계다.
+
 C. elegans는 "최소 원시 신경계"의 첫 실자료 gate다. 상태는 감각/input, 중간/relay, premotor/integrative output의 coarse state로 접는다.
 
 $$
@@ -27,9 +29,11 @@ P_{n+1}
 \right]
 $$
 
-여기서 \(W_{\mathrm{chem}}\)은 Witvliet/OpenWorm 계열 C. elegans chemical weighted connectome이다.
+여기서 $W_{\mathrm{chem}}$은 Witvliet/OpenWorm 계열 C. elegans chemical weighted connectome이다.
 
 ### C. elegans graph gate
+
+graph gate는 edge 존재보다 가중 chemical synapse가 경쟁 graph보다 예측력을 갖는지 시험한다. atlas·weight 단위·null graph와 worm holdout이 고정되지 않으면 통과로 읽지 않는다.
 
 질문:
 
@@ -113,9 +117,11 @@ $$
 
 1. 원시 신경계에도 감각-input, 중간-relay, premotor/integrative output의 coarse layer 문법이 보인다.
 2. 이 문법은 binary adjacency가 아니라 weighted chemical synapse에 실려 있다.
-3. 전역 뇌 방정식의 \(\Delta_G\) 또는 \(\mathcal L(W)\) 항은 고등피질 전용이 아니라 원시 회로에도 적용 가능한 후보다.
+3. 전역 뇌 방정식의 $\Delta_G$ 또는 $\mathcal L(W)$ 항은 고등피질 전용이 아니라 원시 회로에도 적용 가능한 후보다.
 
 ### C. elegans developmental graph gate
+
+발달 graph는 시점별 연결 변화가 공통 상태변수에 필요한지 묻는다. developmental stage와 recording 조건이 다르면 계수의 직접 비교는 불가능하다.
 
 질문:
 
@@ -163,12 +169,14 @@ $$
 의의:
 
 1. 원시 routing은 성체의 우연한 산물이 아니라 발달 전반에서 유지되는 구조다.
-2. synapse 수와 \(\lambda_{\max}\)는 stage와 함께 증가하지만, block/flat은 오히려 안정적으로 낮아진다.
+2. synapse 수와 $\lambda_{\max}$는 stage와 함께 증가하지만, block/flat은 오히려 안정적으로 낮아진다.
 3. 따라서 "처음에는 무작위 연결이고 나중에만 기능층이 생긴다"는 반례가 약해진다.
 
 ### C. elegans stimulus-output gate
 
-stimulus-output routing은 row-normalized chemical transition \(T(W_{\mathrm{chem}})\)로 둔다.
+row-normalized transition은 자극에서 output으로 가는 계산적 routing 가설이다. 이는 synapse 전류나 행동의 직접 측정이 아니며 trial timebase로 반증해야 한다.
+
+stimulus-output routing은 row-normalized chemical transition $T(W_{\mathrm{chem}})$로 둔다.
 
 $$
 R_d
@@ -258,9 +266,11 @@ $$
 
 1. 원시 신경계의 첫 기능은 "많은 뉴런"이 아니라 자극 domain을 적절한 output domain으로 보내는 weighted routing이다.
 2. 실제 행동 trial은 아니지만 connectome proxy에서 domain-preserving channel이 닫혔다.
-3. 이 결과로 최소 primitive neural control 식의 \(\mathcal L(W_{\mathrm{chem}})\)와 \(U_d\rightarrow b_d\) 항은 다음 단계로 넘길 수 있다.
+3. 이 결과로 최소 primitive neural control 식의 $\mathcal L(W_{\mathrm{chem}})$와 $U_d\rightarrow b_d$ 항은 다음 단계로 넘길 수 있다.
 
 ### C. elegans trial-behavior boundary audit
+
+이 audit은 구조 proxy와 실제 behavior gate 사이에 필요한 trial provenance를 명시한다. 필수 열이 없으면 결론은 미완성이지 weighted routing의 생물학적 증명이 아니다.
 
 이 proxy를 실제 empirical behavior gate로 승격할 수 있는지도 별도로 감사했다. 로컬 `data/`와 evolution 산출물에는 `trial_id`, stimulus label/time, behavior trace/label, `worm_id`, timebase를 동시에 가진 C. elegans trial table이 없다. 따라서 C. elegans의 weighted routing과 stimulus-output channel은 proxy로는 닫혔지만, 실제 trial behavior는 data-boundary로 둔다.
 

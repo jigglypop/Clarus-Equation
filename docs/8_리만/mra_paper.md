@@ -1,11 +1,18 @@
 # Mellin-Riemann Attention: ζ explicit-formula 유도 attention의 ablation 분석과 분산 절감, 그리고 Euler-CE의 length extrapolation 우위 발견
 
+이 원고는 Mellin--Riemann attention과 Euler-CE 변종을 지정한 모델·corpus·seed·step·length fixture에서 ablation한 결과를 보고한다. 독자는 attention·PPL·holdout·seed 분산의 기본을 아는 독자를 전제로 하며, ζ explicit formula와 리만가설 관련 표현은 설계 동기·수식 배경이지 실험 결과가 가설의 증명은 아니다.
+
+배경과 방법 뒤에 knob·구현·실험 setup·결과·length extrapolation·이론 함의·한계 순으로 읽는다. 모든 수치는 등록된 dataset provenance·split·precision·baseline·metric의 범위에 한정되고, ablation/OOD 실패·uncertainty는 구조 해석과 리만가설 외삽을 막는 경계다.
+
+
 > 본 문서는 `mra_block_spec.md`의 사양과 `tests/test_mra.py`의 검증, 그리고
 > `examples/ai/bench_recursive_euler.py --mode mra`와 `bench_mra_extrap.py`의
 > ablation 실측을 한 편의 짧은 논문 형태로 정리한다. **정직한 negative-positive
 > 혼합 결과**를 담은 internal write-up이다.
 
 ## Abstract
+
+초록의 결과는 명시한 experimental fixture의 요약이며, 수학적 정리·리만가설 증명·일반 attention 우위와 구분한다. metric 분모·seed·baseline·length 범위가 달라지면 같은 결론을 다시 검증해야 한다.
 
 Riemann ζ 함수의 explicit formula의 critical-strip 합으로부터 attention
 score를 직접 유도한 새로운 attention 변종 **Mellin-Riemann Attention
@@ -51,6 +58,8 @@ distance attenuation(linear ALiBi 또는 multiplicative xPos)이 필수이며,
 
 ## 1. Introduction
 
+서론은 explicit-formula 수식이 어떤 attention 후보를 동기화하는지와 empirical question을 분리한다. 수학 배경은 implementation contract의 입력일 뿐, 모델 성능이 수론 명제의 증거가 되지는 않는다.
+
 Transformer의 positional encoding은 attention 메커니즘이 set-permutation
 invariant라는 근본 한계를 외부 주입으로 해결하는 inductive bias의 핵심
 지점이다. RoPE [1]가 LLaMA / Qwen / Mistral / Gemma / EXAONE 등 거의 모든
@@ -71,6 +80,8 @@ ablation으로 분리한 데에 있다.
 
 ### 1.1 Contributions
 
+기여 목록은 형식 사양, 구현, 좁은 ablation evidence, 미완성 가설을 구분해 읽어야 한다. 각 항은 dataset·seed·baseline·threshold 또는 증명 가정을 벗어나면 승격하지 않는다.
+
 1. ζ explicit formula의 critical-strip 합으로부터 attention score를
    폐쇄형으로 유도 (§ 3).
 2. 7가지 설계 knob(frequency 방식, amplitude weighting, decay 형태,
@@ -83,6 +94,8 @@ ablation으로 분리한 데에 있다.
 ---
 
 ## 2. Background
+
+배경은 RoPE·ALiBi·explicit formula의 정의와 본 실험에서의 source role을 제공한다. 인용·수식은 MRA의 empirical 효능·리만가설 관련 해석을 확정하지 않으며, 구현의 precision·branch·fixture가 별도 필요하다.
 
 ### 2.1 RoPE
 
@@ -125,6 +138,8 @@ von Mangoldt:
 ---
 
 ## 3. Method - Mellin-Riemann Attention
+
+방법은 query/key/position input을 score와 attention output으로 변환하는 tensor contract다. shape·normalization·complex precision·backend가 정의역이며, score 형태만으로 안정성·generalization·수론 명제를 보장하지 않는다.
 
 ### 3.1 단순 score 식
 
@@ -170,6 +185,8 @@ Re(S) = q̂_re @ k̃_re^T + q̂_im @ k̃_im^T
 
 ### 3.3 학습 자유도
 
+학습 자유도 표는 수식에서 고정한 양과 optimizer가 조절하는 tensor의 shape·분모를 구분한다. 표의 자유도는 구현 설정이며, 수론 상수의 추정·리만가설 관련 evidence·성능 우위를 뜻하지 않는다.
+
 | 양 | 형상 | 자유도 |
 |---|---|---|
 | `γ_k` | buffer | 0 (RH axiom) |
@@ -182,6 +199,8 @@ Re(S) = q̂_re @ k̃_re^T + q̂_im @ k̃_im^T
 ---
 
 ## 4. 설계 Knob - Ablation 표면
+
+knob은 사전 정의한 feature flag로, 각 항의 추가 기여를 baseline과 component ablation에서 분리한다. post-hoc 최고 조합은 evidence가 아니며, OOD·seed·threshold 미통과는 해당 knob 가설의 실패다.
 
 `MellinRiemannAttention(d_model, n_heads, block, **knobs)`가 노출하는 7개
 knob은 다음과 같다.
@@ -198,11 +217,15 @@ knob은 다음과 같다.
 
 ### 4.1 `freq_mode`
 
+`freq_mode`는 positional frequency producer가 어떤 규칙을 consumer score에 전달하는지 고르는 feature flag다. 각 선택은 같은 seed·split·baseline·metric의 ablation에서만 비교하며, flag 이름의 수학적 동기가 성공을 보장하지 않는다.
+
 - `"rope"`: `θ_k(p) = p · base^{−k/K}`. RoPE 기하 급수(~3000× 범위).
 - `"zeta_log"`: `θ_k(p) = γ_k · log(1+p)`. Mellin 커널이며, ζ 영점이 곧 frequency다.
   `γ_k/γ_1`의 범위가 K=16에서 ~5×에 불과해 다중 스케일 해상도가 손실된다.
 
 ### 4.2 `amp_weight`
+
+`amp_weight`는 frequency component의 amplitude normalization을 바꾸는 구현 knob다. weight의 효과는 precision·length·optimizer에 의존하며, no-weight baseline과 OOD에서 기각될 수 있다.
 
 - `True`: `w_k = 1/(1/2 + iγ_k)`를 score에 곱한다. `Re(w_k)·Re_part −
   Im(w_k)·Im_part` 형태로 standard RoPE의 `cos` 채널과 보조 `sin` 채널이
@@ -230,6 +253,8 @@ LM에서는 mask 전 symmetrize가 future leakage를 일으킨다**. 본 작업�
 
 ## 5. Implementation
 
+구현 절은 code path·tensor shape·dtype·backend·fixture contract를 명시한다. 구현 성공은 numerical parity의 기계 근거일 뿐 PPL·length·리만가설 관련 결론의 증거가 아니다.
+
 `reality_stone/python/reality_stone/clarus/ce_mra.py`는 PyTorch 참조 구현(~250 LOC)이다. 현재 backend는 PyTorch only이며,
 `RiemannRotaryAttention`의 Rust/CUDA 패턴을 그대로 이식할 수 있다.
 
@@ -248,6 +273,8 @@ LM에서는 mask 전 symmetrize가 future leakage를 일으킨다**. 본 작업�
 
 ## 6. Experiments - Setup
 
+setup은 corpus provenance·train/validation split·seed·model budget·precision·baseline·metric 분모를 고정한다. 이 계약 밖의 모델 규모·data shift·hardware에서의 결과는 새 OOD 실험이며, 개발 결과를 locked confirmation으로 읽지 않는다.
+
 | 항목 | 값 |
 |---|---|
 | 코퍼스 | `docs/` Markdown (400 K chars, vocab = 788) |
@@ -262,6 +289,8 @@ LM에서는 mask 전 symmetrize가 future leakage를 일으킨다**. 본 작업�
 | 하드웨어 | RTX 4060 (CUDA) |
 
 ### 6.1 Variants
+
+변종 표는 feature flag와 baseline이 어떤 수식·코드 차이를 갖는지 명시한다. variant 수가 많을수록 selection bias가 커지므로 seed 분산·사전 비교·ablation threshold가 필요하다.
 
 | 이름 | freq_mode | amp_weight | decay_mode | 기타 |
 |---|---|---|---|---|
@@ -279,7 +308,11 @@ LM에서는 mask 전 symmetrize가 future leakage를 일으킨다**. 본 작업�
 
 ## 7. Results
 
+결과는 지정 step·seed·dataset·metric에서 얻은 empirical observations이다. 평균·분산·best seed를 구분하며, 성공·실패는 baseline·uncertainty·OOD length에서의 registered threshold로만 판정한다.
+
 ### 7.1 1500-step × 3-seed PPL ablation
+
+PPL ablation은 지정 training step과 세 seed의 token-level loss를 분모로 하는 좁은 추정이다. sample 수·corpus split·precision이 바뀌면 수치를 일반 모델 품질로 외삽하지 않는다.
 
 | variant | params | PPL | **σ_PPL** | time/seed (s) |
 |---|---|---|---|---|
@@ -295,6 +328,8 @@ LM에서는 mask 전 symmetrize가 future leakage를 일으킨다**. 본 작업�
 
 ### 7.2 Verdicts (`std_rope`, `euler_ce_k1` 대비)
 
+verdict는 명시한 두 baseline에 대한 사전 또는 규정된 비교 판정이다. 다른 baseline·seed·OOD에서 역전되거나 uncertainty가 겹치면 강한 구조 결론을 내리지 않는다.
+
 | 비교 | z | Δ PPL | 판정 |
 |---|---|---|---|
 | `mra_zeta` vs `std_rope` | +8.84 | +1.999 | **LOSS** (γ-freq 붕괴 확정) |
@@ -307,6 +342,8 @@ LM에서는 mask 전 symmetrize가 future leakage를 일으킨다**. 본 작업�
 | `euler_ce_k1` vs `std_rope` | (best baseline) | −0.424 | WIN |
 
 ### 7.3 부정적 발견
+
+부정적 발견은 feature·variant·metric에서 나타난 반례를 보존한다. 평균 개선이나 수식 동기로 실패를 지우지 않으며, 해당 조건은 future work의 rollback·ablation 입력이다.
 
 1. **`mra_zeta` (PPL 14.29)**: ζ 영점을 frequency로 직접 사용하면 RoPE의
    다중 스케일 해상도가 깨진다. `γ_k/γ_1`의 범위는 K=16에서 ~5×에 불과하다.
@@ -321,6 +358,8 @@ LM에서는 mask 전 symmetrize가 future leakage를 일으킨다**. 본 작업�
    regularization.
 
 ### 7.4 긍정적 발견 - seed 분산 절감
+
+seed 분산 절감은 동일 setup의 반복 run에서 계산한 통계량이다. 분산 변화는 평균 품질·안정성·generalization의 충분조건이 아니며, 더 많은 seed·OOD fixture에서 재현해야 한다.
 
 mean PPL은 거의 동등하지만 seed-to-seed 분산은 명확히 감소한다.
 
@@ -341,6 +380,8 @@ mean PPL은 거의 동등하지만 seed-to-seed 분산은 명확히 감소한다
 
 ### 7.5 가장 좋은 lean 변종
 
+lean 변종은 현재 비교 표에서 비용·metric 기준으로 선택한 implementation 후보다. 선택 자체는 locked test·new dataset·hardware parity 전의 개발 판단이며, best-of-many bias를 포함할 수 있다.
+
 `decay_mode="bias"` (`mra_bias`):
 - mean PPL 12.240: **RoPE보다 0.05 낮음**(z = −0.36, statistically TIE
   with mean preference)
@@ -355,6 +396,8 @@ bias_{ij} = ½ (log(1+j) − log(1+i))
 지수 `½`가 직접 도출된다.
 
 ### 7.6 Length extrapolation (4×까지)
+
+4× extrapolation은 training length와 held-out evaluation length가 다른 OOD fixture다. length 정의·position reset·metric 분모·baseline을 고정하며, 통과는 semantic OOD나 리만가설 관련 외삽이 아니다.
 
 train block = 64, eval block ∈ {64, 96, 128, 192, 256} (4× 외삽까지),
 1000 step × 3 seed:
@@ -385,6 +428,8 @@ train block = 64, eval block ∈ {64, 96, 128, 192, 256} (4× 외삽까지),
 방향임을 시사한다.
 
 ### 7.7.1 Scaling: d_model {64, 128, 256}에서 패턴 유지
+
+scaling 결과는 지정 width·layer·seed·corpus의 반복 비교다. 패턴 유지 여부는 uncertainty·compute·baseline parity에 조건부이며, 미측정 규모나 production model로 승격하지 않는다.
 
 § 7.7의 결과를 모델 크기 scaling에 대해 검증한다. 학습 설정은 동일하다
 (train block = 64, 1500 step). seeds는 d=64에서 3, d=128/256에서 메모리상 2다.
@@ -424,6 +469,8 @@ train block = 64, eval block ∈ {64, 96, 128, 192, 256} (4× 외삽까지),
    generalization이 약해진다. NoPE는 baseline으로는 의미 있지만 production에는 부적합하다.
 
 ### 7.7.2 Length extrapolation (32×까지): Euler-CE 분해
+
+32× 결과는 더 긴 OOD horizon에서 Euler-CE factor의 contribution을 ablation으로 분리한 observation이다. overflow·precision·position convention·data shift가 반례 조건이며, 구조 설명은 개입 증거 전에는 가설이다.
 
 위 § 7.6의 발견(Euler-CE의 외삽 우위)의 진짜 원인을 격리한다. EulerCE는
 두 개의 분리 가능한 구조를 결합하므로 각각을 frozen으로 끄고 비교한다.
@@ -489,6 +536,8 @@ logarithmic decay가 linear보다 약한 이유는 long-distance에서 너무 �
 wrap-around 효과를 dominate하지 못하기 때문이다.
 
 ### 7.7.3 2-bit Minimal Euler-CE: operational 환원
+
+2-bit 환원은 구현 feature를 최소 operational representation으로 압축한 설계 결론이다. 이는 수론 상수·물리 구조·보편 head taxonomy의 증명이 아니며, variant ablation과 OOD 재현이 필요하다.
 
 § 7.7의 ablation은 강력한 시사를 만든다. Euler 5상수 `{e, π, i, 1, 0}`의
 attention적 의미는 두 axis와 두 게이트로 환원된다.
@@ -581,7 +630,11 @@ rotation)만 외삽 catastrophic**이다.
 
 ## 8. ML 이론 함의: 정직한 평가
 
+이론 함의는 실험에서 지지된 관찰, 실패한 가설, 다음 검증 가능한 가설을 분리한다. empirical pass는 정리의 증명이 아니고, 수식 유사성은 data provenance·counterexample·OOD를 대체하지 않는다.
+
 ### 8.1 무엇이 작동했나
+
+이 절의 “작동”은 등록된 setup·metric·seed에서 threshold를 만족한 empirical observation을 뜻한다. 수학 정리·리만가설·일반 model law와는 구분하며, OOD·ablation·독립 재현이 범위를 정한다.
 
 * **Logarithmic distance bias**(ζ explicit-formula의 `√x`로부터 유도)는
   ALiBi의 합리적 일반화다.
@@ -590,6 +643,8 @@ rotation)만 외삽 catastrophic**이다.
   0.05 PPL 우위보다 훨씬 큰 비용 절감.
 
 ### 8.2 무엇이 작동하지 않았나
+
+작동하지 않은 항목은 지정 variant·dataset·metric에서의 반례 또는 failure evidence다. 평균 개선이나 다른 변종의 결과로 이를 상쇄하지 않고, feature 가설의 rollback 입력으로 남긴다.
 
 * **ζ 영점을 frequency로 직접 사용(`zeta_log`)**: 이론적으로 매력적이지만
   실측에서 다중 스케일 해상도 손실로 인한 명확한 LOSS. 이 결과는 "Riemann
@@ -603,6 +658,8 @@ rotation)만 외삽 catastrophic**이다.
 
 ### 8.3 어떤 가설이 다음 단계에서 검증 가능한가
 
+다음 가설은 dataset provenance·split·seed·baseline·threshold·OOD axis를 새로 등록해야 하는 계획이다. 실행 전에는 empirical evidence·이론 함의·수론 외삽으로 승격하지 않는다.
+
 * **Length extrapolation**: 짧은 context 학습 후 긴 context에서의 안정성.
   `mra_bias`의 logarithmic decay는 RoPE의 wrap-around 한계를 넘어설 가능성
   이 있다. 별도 측정 필요.
@@ -613,6 +670,8 @@ rotation)만 외삽 catastrophic**이다.
 ---
 
 ## 9. Related Work
+
+관련연구는 방법·배경·비교 기준의 source role을 밝힌다. 인용은 본 원고의 구현 fixture·seed·metric·리만가설 지위를 바꾸지 않는다.
 
 - **RoPE** [1]: 회전 기반 상대위치, 본 연구의 직접적 baseline.
 - **ALiBi** [2]: 거리 감쇠 bias. `mra_bias`의 logarithmic 변종이 이를 일반화한다.
@@ -629,7 +688,11 @@ rotation)만 외삽 catastrophic**이다.
 
 ## 10. Limitations & Future Work
 
+한계는 dataset·seed·model scale·precision·OOD axis가 닫지 못한 공백을 보존한다. 후속은 preregistration·baseline·threshold·rollback을 가진 계획이며 실행 전에는 evidence가 아니다.
+
 ### 10.1 한계
+
+한계 목록은 현재 fixture가 닫지 못한 scale·data·precision·length·theory gap을 명시한다. 항목은 결과의 적용 경계를 뜻하며, 미측정 범위를 일반 결론으로 메우지 않는다.
 
 1. **소규모 실험**: 210 K 파라미터, 400 K char 코퍼스다. 본격 결론을 위해서는
    1 M+ 파라미터 × 1 M+ 토큰 × 5+ seed가 필요하다.
@@ -641,6 +704,8 @@ rotation)만 외삽 catastrophic**이다.
    효과 검증 가능하나 본 작업 범위 밖.
 
 ### 10.2 후속
+
+후속은 preregistered metric·baseline·seed·split·rollback을 가진 검증 계획이다. 목록의 우선순위나 수식 동기는 실행된 evidence나 리만가설 관련 결론이 아니다.
 
 1. Length extrapolation: train N=64, eval N={128, 256, 512}에서
    `mra_bias`의 logarithmic decay가 RoPE의 periodic wrap보다 실제로 잘
@@ -654,6 +719,8 @@ rotation)만 외삽 catastrophic**이다.
 ---
 
 ## 11. Conclusion
+
+결론은 지정 ablation fixture에서의 좁은 결과와 미완성 수론·AGI·일반화 bridge를 함께 요약한다. 수치 근접·PPL 개선·변산 감소를 리만가설 증명·물리 기제·보편 모델 우위로 승격하지 않는다.
 
 본 작업의 핵심 결론은 세 가지다.
 
@@ -675,6 +742,8 @@ Euler-CE 외삽 우위의 진짜 메커니즘(e-decay = ALiBi)을 32× extrapola
 ---
 
 ## References
+
+참고문헌은 수식·방법·실험 설계의 외부 source role을 제공한다. 인용은 이 원고의 baseline·dataset provenance·독립 재현이나 수학 지위를 대체하지 않는다.
 
 [1] J. Su et al., "RoFormer: Enhanced Transformer with Rotary Position Embedding," arXiv:2104.09864, 2021.
 
@@ -705,6 +774,8 @@ Euler-CE 외삽 우위의 진짜 메커니즘(e-decay = ALiBi)을 32× extrapola
 ---
 
 ## Appendix A. 200-step transient (참고용)
+
+부록 transient는 지정 200-step·seed·precision에서의 보조 관찰이다. 짧은 구간은 주 결과·장기 수렴·length OOD evidence가 아니며, reference fixture 밖에서는 미완성으로 읽는다.
 
 소규모 짧은 학습(200 step × 2 seed)에서는 분산이 더 dramatic하게 보였으나
 (σ_PPL: RoPE 1.22, mra 0.16, mra_h 0.06; 7-20× 감소), 1500-step 충분 수렴 시점

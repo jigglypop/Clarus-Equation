@@ -1,5 +1,10 @@
 # 디퓨전 오케스트레이션 사양 (Diffusion Orchestration)
 
+이 문서는 디퓨전 state를 orchestration readout과 DAGlet 후보로 바꾸는 미착수 설계 사양이다. 독자는 확률적 update·DAG·state machine의 기본을 아는 독자를 전제로 하며, 물리 디퓨전 비유는 구현 state·timebase·consumer contract와 동일하지 않다.
+
+지위 선언과 기호 정의 뒤에 flow, readout, self-loop hypothesis, 측정 gate, 비범위와 최소 구현 경로를 읽는다. 입력·출력·seed·split·baseline·threshold가 없는 항목은 계획이며, ablation·OOD·rollback 통과 전에는 evidence로 승격하지 않는다.
+
+
 > 관련: `7_AGI/12_Equation.md`(canonical 5계층), `7_AGI/17_AgentLoop.md`(자기참조재귀/F절), `6_뇌/04_그래프결합과이완.md`(graph Laplacian Δ_G), `clarus-agent-guard/server/scheduler.py`(현행 셀-워크 오케스트레이션), `experiments/RESULTS_recursion.md`(ClarusCell 고정점 실증)
 >
 > 이 문서는 "DAGlet 생성과 자기폐루프의 다음 입력조건을 substrate 그래프 위 디퓨전으로 결정한다"는 오케스트레이션 아이디어를 **형식화**한다. 현재 코드/문서에 이 메커니즘은 구현되어 있지 않다. 본 문서의 모든 운영 주장은 `Open` 또는 `Hypothesis`이며, F-게이트(`12_Equation.md` 0.0절 F1–F4)를 우회하는 형태로 읽지 않는다.
@@ -7,6 +12,8 @@
 ---
 
 ## 0. 지위 선언 (먼저 고정)
+
+지위 선언은 이 문서의 식과 pseudocode가 implementation·benchmark artifact가 아닌 hypothesis 또는 미착수 명세임을 고정한다. 이후 기호·flow의 존재는 실행 결과·과학적 참·자기폐루프 효능을 뜻하지 않는다.
 
 | 구성요소 | 지위 | 근거 |
 |---|---|---|
@@ -19,6 +26,8 @@
 이 문서는 "디퓨전이 오케스트레이션을 한다"를 **증명하지 않는다.** 무엇을 정의하면 그 주장이 검증 가능해지는지를 형식화한다.
 
 ## 1. 기호 사전 (이 문서 한정)
+
+기호 사전은 state·noise·schedule·readout의 정의역, shape, 정규화와 producer/consumer를 고정한다. 각 값의 timebase와 seed를 선언하지 않으면 확률적 update와 deterministic orchestration output을 비교할 수 없다.
 
 | 기호 | 의미 | 차원/형식 | 지위 |
 |---|---|---|---|
@@ -33,6 +42,8 @@
 주의: $\phi$는 `12_Equation.md`의 kernel dynamics 상태 $a_i$와 **자동으로 같지 않다.** $\phi$는 *오케스트레이션 평면*(어떤 cell을 언제 펼칠지)의 장이고, $a_i$는 *셀 내부 동역학*의 활성이다. 동일시하려면 별도 식별 단계가 필요하다(F-게이트 F1 메커니즘 결손 참조).
 
 ## 2. 코어 식 (디퓨전 흐름)
+
+코어 식은 현재 diffusion state와 schedule input을 다음 state로 바꾸는 후보 operator다. 수렴·stability는 step·noise distribution·boundary 조건에 가정되며, numerical blow-up·OOD schedule·seed sensitivity가 failure 조건이다.
 
 substrate $G$ 위에서 활성장 $\phi$는 source-driven 디퓨전으로 진화한다:
 
@@ -52,9 +63,11 @@ $$
 
 $\lambda>0$이면 $\Delta_G+\lambda I \succ 0$이므로 $\phi^\star$는 **유일**하다. 이것은 substrate 위 source $s$의 정규화된 확산 확산(graph Green's function)이다. — 여기까지 `Exact`.
 
-**무차원 게이트:** $\Delta_G, \lambda, \phi, s$ 모두 무차원이어야 한다($\Delta_G$는 정규화 라플라시안, $s$는 정규화 주입). `참조/무차원_감사_수학.md` 규칙 통과.
+**무차원 게이트:** $\Delta_G, \lambda, \phi, s$ 모두 무차원이어야 한다($\Delta_G$는 정규화 라플라시안, $s$는 정규화 주입). `../검증_원장/참조_무차원_감사_수학.md` 규칙 통과.
 
 ## 3. Readout: 디퓨전 → DAGlet 생성
+
+readout은 diffusion tensor를 입력으로 DAGlet structure와 orchestration state를 출력하는 consumer contract다. graph validity·serialization·producer provenance를 fixture로 검증해야 하며, DAGlet 생성이 task planning 효능을 보장하지 않는다.
 
 정상상태 $\phi^\star$에서 cell 활성 우선순위를 정규화로 읽는다 (`Selection`):
 
@@ -72,6 +85,8 @@ $$
 
 ## 4. 자기폐루프와의 연결 (Hypothesis)
 
+자기폐루프 연결은 readout state를 다음 diffusion input으로 되먹이는 가설적 bridge다. loop timebase·termination·rollback이 정의되지 않으면 수렴·자기참조·의식 비유를 주장할 수 없고, no-loop ablation이 반증 조건이다.
+
 `17_AgentLoop.md` F절의 자기참조재귀는 $S_{t+1}=\mathcal T(S_t;e_t)$의 Banach 고정점이다. 본 사양의 가설:
 
 > **(H1)** 디퓨전 정상상태 $\phi^\star_t$가 자기폐루프의 *다음 입력조건* $e_{t+1}$의 일부를 결정한다: $e_{t+1} = g(\phi^\star_t,\,o_t)$.
@@ -88,6 +103,8 @@ $$
 
 ## 5. 측정 게이트 (무엇을 재면 격상되는가)
 
+측정 gate는 dataset provenance·split·seed·baseline·metric·threshold를 사전에 고정해 hypothesis를 좁게 승격하거나 기각하는 계약이다. pass는 등록된 fixture의 evidence이며, OOD·ablation·독립 재현이 없으면 supported로 올리지 않는다.
+
 | 주장 | 닫히기 위한 측정 | 격상 |
 |---|---|---|
 | 디퓨전 readout이 셀 워크보다 나은 DAGlet | 동일 이벤트셋에서 route accuracy / latency 비교 (guard `bench.run` 확장) | `Open` → `Bridge` |
@@ -99,12 +116,16 @@ $$
 
 ## 6. 이 문서가 직접 하지 않는 일
 
+비범위는 현재 명세가 구현·학습·실험·과학적 해석 중 무엇을 제공하지 않는지 명시한다. 이 경계는 향후 계획과 현재 evidence를 섞지 않고, 알려지지 않은 failure를 완료 주장으로 덮지 않게 한다.
+
 - 디퓨전 오케스트레이션이 셀 워크보다 우수함을 **주장하지 않는다**(벤치 없음).
 - $\phi$(오케스트레이션 장)와 $a_i$(셀 동역학)를 **동일시하지 않는다**.
 - 자기폐루프 고정점 수렴을 **보장하지 않는다**(실증은 현재 미수렴).
 - 집행 게이트(capability/policy)를 디퓨전으로 **대체하지 않는다** — 디퓨전은 제안층, 집행은 detection-free 구조층으로 분리 유지.
 
 ## 7. 최소 구현 경로 (참고, 미착수)
+
+최소 경로는 input state·entry point·artifact·test를 추가하기 위한 순서도이며 아직 실행 결과가 아니다. 각 단계는 baseline·seed·split·threshold·rollback과 함께 등록해야 하며, failure나 OOD 미통과 시 다음 단계로 승격하지 않는다.
 
 1. `server/scheduler.py`에 `DiffusionScheduler` 후보 추가 — substrate 인접행렬에서 $\Delta_G$ 구성, $(\Delta_G+\lambda I)^{-1}s$ 풀어 $\pi$ readout, 기존 워크와 A/B.
 2. 안전: 규칙 3(action→policy 강제)을 디퓨전 경로에서도 `trace/audit.py`로 검사.

@@ -1,8 +1,10 @@
 ## Mouse IBL/OpenAlyx region-interaction effective-connectivity proxy gate
 
+이 gate는 같은 trial window의 region rate 상호작용이 additive bin보다 예측력을 더하는지 보는 약한 proxy다. 독자는 nested regression, outer holdout과 permutation test를 안다고 가정한다. 입력은 channel-rescued region rate와 target이고 출력은 interaction increment이며, effective connectivity는 causal connectivity와 동일하지 않는다.
+
 Flat-unit gate 다음에는 weighted interaction proxy를 걸었다. 단, 여기서 "effective connectivity"라는 말은 causal connectivity가 아니다. 같은 trial window 안에서 channel-rescued region rates의 pairwise product가 additive region bins보다 더 설명력이 있는지 보는 약한 proxy다.
 
-Hybrid region vector를 \(R_i^{\mathrm{hybrid}}=(r_{i1},\ldots,r_{id})\)라고 두면 interaction feature는 다음이다.
+Hybrid region vector를 $R_i^{\mathrm{hybrid}}=(r_{i1},\ldots,r_{id})$라고 두면 interaction feature는 다음이다.
 
 $$
 z_{iab}
@@ -105,7 +107,7 @@ $$
 \mathrm{wheel}\ 0/5.
 $$
 
-따라서 \(K_{\mathrm{region}}(R\otimes R)\) 항은 현재 식에 승격하지 않는다.
+따라서 $K_{\mathrm{region}}(R\otimes R)$ 항은 현재 식에 승격하지 않는다.
 
 $$
 \boxed{
@@ -120,7 +122,7 @@ R_t^{(s,\mathrm{hybrid})}
 }
 $$
 
-이 음성 결과가 weighted interaction 전체를 부정하지는 않는다. 같은 window 안의 곱 \(r_a(t)r_b(t)\)는 방향성과 지연을 잃는다. 그래서 다음 gate는 아래처럼 source window와 target window를 분리한 lagged coupling으로 진행했다.
+이 음성 결과가 weighted interaction 전체를 부정하지는 않는다. 같은 window 안의 곱 $r_a(t)r_b(t)$는 방향성과 지연을 잃는다. 그래서 다음 gate는 아래처럼 source window와 target window를 분리한 lagged coupling으로 진행했다.
 
 $$
 z_{iab}^{(\delta)}
@@ -131,6 +133,8 @@ r_{ia}(t-\delta)r_{ib}(t),
 $$
 
 ### Mouse IBL/OpenAlyx lagged region-coupling proxy gate
+
+lagged gate는 source와 target window를 분리해 동시 readout 누수를 줄인다. 시간 지연의 방향성은 prediction ordering일 뿐 synaptic causality의 증명은 아니며 label·time permutation이 반증 조건이다.
 
 Lagged proxy에서는 source window와 target window를 분리했다. Choice와 first-movement speed는 `stimOn -300 ms`부터 `stimOn`까지를 source로 두고, target은 기존 stimulus window `stimOn +20 ms`부터 `+320 ms`까지로 둔다. Wheel action direction은 `firstMovement -400 ms`부터 `-100 ms`까지를 source로 두고, target은 기존 movement window `firstMovement -100 ms`부터 `+200 ms`까지로 둔다.
 
@@ -210,7 +214,7 @@ $$
 \mathrm{wheel}\ 0/5.
 $$
 
-따라서 이번 공개 IBL 5-candidate panel에서 승격되는 것은 \(K(R_{t-\delta}\otimes R_t)\)가 아니다.
+따라서 이번 공개 IBL 5-candidate panel에서 승격되는 것은 $K(R_{t-\delta}\otimes R_t)$가 아니다.
 
 $$
 \boxed{
@@ -241,17 +245,19 @@ $$
 }
 $$
 
-이 음성 결과 뒤에는 region-rate product가 아니라 all-unit nested regularization을 먼저 검사했다. 이유는 flat-unit gate가 이미 top-unit readout의 강함을 보였기 때문이다. 만약 \(U_t\)가 \(X_t\)와 \(R_t\) 뒤에서도 독립적으로 남으면, mouse 단계 방정식에는 explicit unit-detail residual을 승격해야 한다.
+이 음성 결과 뒤에는 region-rate product가 아니라 all-unit nested regularization을 먼저 검사했다. 이유는 flat-unit gate가 이미 top-unit readout의 강함을 보였기 때문이다. 만약 $U_t$가 $X_t$와 $R_t$ 뒤에서도 독립적으로 남으면, mouse 단계 방정식에는 explicit unit-detail residual을 승격해야 한다.
 
 ### Mouse IBL/OpenAlyx all-unit nested-regularization gate
 
+nested gate는 unit decoder의 우위와 region 압축의 추가 기여를 outer test에서 분리한다. regularization과 feature selection은 inner train에서만 결정하며 test fold를 본 선택은 누수로 판정한다.
+
 Nested gate의 질문은 단순히 unit decoder가 region decoder보다 높은가가 아니다. 더 좁은 질문은 다음이다.
 
-1. Task/history \(X_i\)가 이미 들어간 뒤 region \(R_i\)가 남는가.
-2. Task/history와 region \(R_i\)가 이미 들어간 뒤 unit identity \(U_i\)가 남는가.
-3. 반대로 task/history와 unit \(U_i\)가 이미 들어간 뒤 region compression \(R_i\)가 남는가.
+1. Task/history $X_i$가 이미 들어간 뒤 region $R_i$가 남는가.
+2. Task/history와 region $R_i$가 이미 들어간 뒤 unit identity $U_i$가 남는가.
+3. 반대로 task/history와 unit $U_i$가 이미 들어간 뒤 region compression $R_i$가 남는가.
 
-여기서 \(X_i\)는 current stimulus, previous choice/reward, trial timing history로 구성한 task/history covariate이고, \(R_i\)는 channel-rescued hybrid region bin, \(U_i\)는 probe별 high-spike unit identity bin이다. 이번 실행에서는 `min_unit_spikes=1000`, `max_units_per_probe=192`를 사용했다. 이 cap은 계산량을 제한하기 위한 guard이며, 이전 top-unit 96개보다 넓은 unit panel이다.
+여기서 $X_i$는 current stimulus, previous choice/reward, trial timing history로 구성한 task/history covariate이고, $R_i$는 channel-rescued hybrid region bin, $U_i$는 probe별 high-spike unit identity bin이다. 이번 실행에서는 `min_unit_spikes=1000`, `max_units_per_probe=192`를 사용했다. 이 cap은 계산량을 제한하기 위한 guard이며, 이전 top-unit 96개보다 넓은 unit panel이다.
 
 비교한 nested model은 다음이다.
 
@@ -288,7 +294,7 @@ Z_{m,\mathrm{train}(k)}\beta
 \lambda=1.
 $$
 
-Test fold \(k\)에서 얻은 score를 합쳐 balanced accuracy를 계산한다.
+Test fold $k$에서 얻은 score를 합쳐 balanced accuracy를 계산한다.
 
 $$
 \mathrm{BA}(M_m)
@@ -319,7 +325,7 @@ $$
 \mathrm{BA}(M_{XU}).
 $$
 
-\(\Delta_{U\mid X,R}>0\)가 후보 session들에서 반복되면, unit identity는 task와 anatomical region을 넘어 독립적으로 살아남는다. 반대로 \(\Delta_{R\mid X,U}>0\)가 반복되면, high-dimensional unit readout 위에서도 region compression이 작지만 안정적인 정규화 항으로 남는다.
+$\Delta_{U\mid X,R}>0$가 후보 session들에서 반복되면, unit identity는 task와 anatomical region을 넘어 독립적으로 살아남는다. 반대로 $\Delta_{R\mid X,U}>0$가 반복되면, high-dimensional unit readout 위에서도 region compression이 작지만 안정적인 정규화 항으로 남는다.
 
 실행:
 
@@ -337,7 +343,7 @@ Target replication:
 
 Candidate residuals:
 
-| candidate | unit residuals | region residuals | choice \(U\mid X,R\) | speed \(U\mid X,R\) | wheel \(U\mid X,R\) | choice \(R\mid X,U\) | speed \(R\mid X,U\) | wheel \(R\mid X,U\) |
+| candidate | unit residuals | region residuals | choice $U\mid X,R$ | speed $U\mid X,R$ | wheel $U\mid X,R$ | choice $R\mid X,U$ | speed $R\mid X,U$ | wheel $R\mid X,U$ |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
 | `witten29_thalamic_visual_reference` | 0 | 2 | -0.051956 | -0.019195 | -0.036050 | 0.003912 | -0.008008 | 0.010234 |
 | `nyu30_motor_striatal_multi_probe` | 0 | 2 | -0.004495 | -0.035997 | -0.003564 | 0.000827 | -0.010814 | 0.005592 |
@@ -406,7 +412,7 @@ R_t^{(\mathrm{hybrid})}
 }
 $$
 
-이 결과는 flat-unit gate와 모순이 아니다. Flat-unit gate는 \(U_t\)와 \(R_t\)를 단독 또는 task와 각각 결합해 비교했다. 그 결과 top-unit은 choice/wheel에서 region보다 강했다. 하지만 nested gate는 \(R_t\)를 이미 포함한 뒤 \(U_t\)가 더해지는지를 본다. 고차원 unit bin은 candidate panel 평균에서 cross-validated generalization을 오히려 낮췄다. 즉 mouse 단계의 현재 식은 "unit identity가 중요하지 않다"가 아니라, "공개 IBL 5-candidate panel의 ridge nested decoder에서는 region-compressed state가 더 안정적인 중간 표현이다"로 읽어야 한다.
+이 결과는 flat-unit gate와 모순이 아니다. Flat-unit gate는 $U_t$와 $R_t$를 단독 또는 task와 각각 결합해 비교했다. 그 결과 top-unit은 choice/wheel에서 region보다 강했다. 하지만 nested gate는 $R_t$를 이미 포함한 뒤 $U_t$가 더해지는지를 본다. 고차원 unit bin은 candidate panel 평균에서 cross-validated generalization을 오히려 낮췄다. 즉 mouse 단계의 현재 식은 "unit identity가 중요하지 않다"가 아니라, "공개 IBL 5-candidate panel의 ridge nested decoder에서는 region-compressed state가 더 안정적인 중간 표현이다"로 읽어야 한다.
 
 이 common-ridge 음성 판정은 여기서 멈추지 않는다. 바로 다음 gate에서 unit block의 regularization mismatch를 검사했다.
 
@@ -428,7 +434,9 @@ $$
 
 ### Mouse IBL/OpenAlyx block-regularized unit residual gate
 
-Common-ridge nested gate의 가장 직접적인 반례는 penalty mismatch다. Unit block \(U_i\)는 high-dimensional이고, region block \(R_i\)는 compact하다. 같은 ridge \(\lambda=1\)을 쓰면 \(U_i\)는 fold마다 불안정해질 수 있다. 그래서 block-regularized gate는 \(\lambda_X=\lambda_R=1\)로 고정하고, \(\lambda_U\)만 outer train split 내부의 inner CV로 고른다.
+block regularization은 high-dimensional unit block과 compact region block의 penalty mismatch를 통제한다. $\lambda_U$의 inner CV 선택은 불확실성을 남기므로 session별 분산과 paired outer-fold 결과를 함께 보고해야 한다.
+
+Common-ridge nested gate의 가장 직접적인 반례는 penalty mismatch다. Unit block $U_i$는 high-dimensional이고, region block $R_i$는 compact하다. 같은 ridge $\lambda=1$을 쓰면 $U_i$는 fold마다 불안정해질 수 있다. 그래서 block-regularized gate는 $\lambda_X=\lambda_R=1$로 고정하고, $\lambda_U$만 outer train split 내부의 inner CV로 고른다.
 
 $$
 \hat\beta_{\lambda_U}^{(-k)}
@@ -458,7 +466,7 @@ uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/
 
 Target replication:
 
-| target | \(U_{\mathrm{block}}\mid X,R\) count | \(R\mid X,U_{\mathrm{block}}\) count | unit>region after task | mean task BA | mean task+region BA | mean block task+unit BA | mean block task+region+unit BA | mean \(U_{\mathrm{block}}\mid X,R\) | mean \(R\mid X,U_{\mathrm{block}}\) |
+| target | $U_{\mathrm{block}}\mid X,R$ count | $R\mid X,U_{\mathrm{block}}$ count | unit>region after task | mean task BA | mean task+region BA | mean block task+unit BA | mean block task+region+unit BA | mean $U_{\mathrm{block}}\mid X,R$ | mean $R\mid X,U_{\mathrm{block}}$ |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | choice sign | 4/5 | 2/5 | 4/5 | 0.844886 | 0.845811 | 0.866224 | 0.862736 | 0.016925 | -0.003489 |
 | first movement speed | 5/5 | 0/5 | 5/5 | 0.689940 | 0.750006 | 0.798966 | 0.784605 | 0.034599 | -0.014360 |
@@ -506,11 +514,13 @@ R_t^{(s,\mathrm{hybrid})}
 }
 $$
 
-동시에 region residual도 wheel에서는 \(4/5\)로 남으므로, 결론은 unit-only가 아니다. 현재 mouse 항은 task/history, block-regularized unit detail, hybrid anatomical compression이 서로 다른 bias-variance 위치에서 살아남는 mixed readout이다.
+동시에 region residual도 wheel에서는 $4/5$로 남으므로, 결론은 unit-only가 아니다. 현재 mouse 항은 task/history, block-regularized unit detail, hybrid anatomical compression이 서로 다른 bias-variance 위치에서 살아남는 mixed readout이다.
 
 ### Mouse IBL/OpenAlyx temporal GLM coupling gate
 
-Block-regularized gate가 살린 것은 같은 target window 안의 static unit detail이다. 따라서 다음 반례는 더 엄격하다. 같은 unit detail이 단순히 현재 window의 identity readout일 뿐인지, 아니면 조금 전 source window의 unit activity \(U_{t-\ell}\)가 task와 region, 그리고 현재 unit detail \(U_t\) 뒤에서도 행동 target을 더 설명하는지 보았다.
+temporal GLM은 과거 unit window가 현재 target을 더 설명하는지 묻는다. lag·window·covariate는 사전고정해야 하며 autocorrelation·movement confound를 통제하지 않으면 시간 coupling은 식별되지 않는다.
+
+Block-regularized gate가 살린 것은 같은 target window 안의 static unit detail이다. 따라서 다음 반례는 더 엄격하다. 같은 unit detail이 단순히 현재 window의 identity readout일 뿐인지, 아니면 조금 전 source window의 unit activity $U_{t-\ell}$가 task와 region, 그리고 현재 unit detail $U_t$ 뒤에서도 행동 target을 더 설명하는지 보았다.
 
 비교식은 다음 네 개다.
 
@@ -523,7 +533,7 @@ M_{XRU0UL} &: y_t \sim [X_t, R_t, U_t, U_{t-\ell}].
 \end{aligned}
 $$
 
-여기서 \(X_t\)는 stimulus/history/task table, \(R_t\)는 target window의 hybrid region bin, \(U_t\)는 target window의 unit block, \(U_{t-\ell}\)는 source window의 lagged unit block이다. Choice와 speed는 stimulus 이전 window를 source로, wheel direction은 movement 이전 window를 source로 둔다. Unit block penalty는 outer train fold 내부의 inner CV에서 고른다.
+여기서 $X_t$는 stimulus/history/task table, $R_t$는 target window의 hybrid region bin, $U_t$는 target window의 unit block, $U_{t-\ell}$는 source window의 lagged unit block이다. Choice와 speed는 stimulus 이전 window를 source로, wheel direction은 movement 이전 window를 source로 둔다. Unit block penalty는 outer train fold 내부의 inner CV에서 고른다.
 
 실행:
 
@@ -533,7 +543,7 @@ uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/
 
 5-candidate panel 결과:
 
-| target | lag \(U\mid X,R\) | lag \(U\mid X,R,U_0\) | mean \(XR\) BA | mean \(XR+U_0\) BA | mean \(XR+U_L\) BA | mean \(XR+U_0+U_L\) BA | mean \(\Delta U_L\mid X,R\) | mean \(\Delta U_L\mid X,R,U_0\) |
+| target | lag $U\mid X,R$ | lag $U\mid X,R,U_0$ | mean $XR$ BA | mean $XR+U_0$ BA | mean $XR+U_L$ BA | mean $XR+U_0+U_L$ BA | mean $\Delta U_L\mid X,R$ | mean $\Delta U_L\mid X,R,U_0$ |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
 | choice sign | 1/5 | 0/5 | 0.845811 | 0.862736 | 0.839904 | 0.852269 | -0.005907 | -0.010466 |
 | first movement speed | 5/5 | 2/5 | 0.750006 | 0.784605 | 0.774394 | 0.788782 | 0.024388 | 0.004177 |
@@ -549,7 +559,7 @@ $$
 }
 $$
 
-해석은 중요하다. \(U_L\mid X,R\)만 보면 speed에서 5/5로 신호가 있다. 그러나 현재 window의 unit detail \(U_0\)를 같이 넣으면 choice는 0/5, speed는 2/5, wheel은 2/5로 내려간다. 즉 lagged unit signal은 일부 target에서 보이지만, 현재 unit detail을 이기는 독립 지연 결합항으로 승격되지는 않는다.
+해석은 중요하다. $U_L\mid X,R$만 보면 speed에서 5/5로 신호가 있다. 그러나 현재 window의 unit detail $U_0$를 같이 넣으면 choice는 0/5, speed는 2/5, wheel은 2/5로 내려간다. 즉 lagged unit signal은 일부 target에서 보이지만, 현재 unit detail을 이기는 독립 지연 결합항으로 승격되지는 않는다.
 
 따라서 현 단계에서 올릴 수 있는 항은 다음이다.
 
@@ -569,7 +579,9 @@ $$
 
 ### Mouse IBL/OpenAlyx low-rank unit transition gate
 
-Temporal GLM 실패 뒤에는 식을 다시 세웠다. 앞의 gate는 \(U_{t-\ell}\)가 행동 \(y_t\)를 현재 unit \(U_t\) 뒤에서도 더 설명하는지를 물었다. 하지만 진짜 시간 결합은 보통 다음처럼 먼저 neural state transition으로 나타난다.
+low-rank transition은 행동 이전에 neural state 변화가 있는지 시험하는 계산 모형이다. rank는 inner split에서 고르고, transition 적합이 생물학적 회로의 방향성이나 세포기제의 증명은 아니다.
+
+Temporal GLM 실패 뒤에는 식을 다시 세웠다. 앞의 gate는 $U_{t-\ell}$가 행동 $y_t$를 현재 unit $U_t$ 뒤에서도 더 설명하는지를 물었다. 하지만 진짜 시간 결합은 보통 다음처럼 먼저 neural state transition으로 나타난다.
 
 $$
 U_{t-\ell}
@@ -592,7 +604,7 @@ A_sH_{t-\ell}
 }
 $$
 
-여기서 \(H_t\)는 unit matrix \(U_t\)의 train-fold PCA low-rank population state다. 개별 unit 전체를 그대로 맞히는 all-unit transition scout에서는 pooled \(R^2\)는 좋아졌지만 feature 평균 \(R^2\)가 나빠졌다. 즉 temporal signal은 모든 unit feature에 균일하게 퍼진 것이 아니라, 몇 개 population axis에 몰려 있었다. 그래서 \(U_t\)가 아니라 \(H_t\)를 target으로 다시 검사했다.
+여기서 $H_t$는 unit matrix $U_t$의 train-fold PCA low-rank population state다. 개별 unit 전체를 그대로 맞히는 all-unit transition scout에서는 pooled $R^2$는 좋아졌지만 feature 평균 $R^2$가 나빠졌다. 즉 temporal signal은 모든 unit feature에 균일하게 퍼진 것이 아니라, 몇 개 population axis에 몰려 있었다. 그래서 $U_t$가 아니라 $H_t$를 target으로 다시 검사했다.
 
 실행:
 
@@ -602,7 +614,7 @@ uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/
 
 5-candidate panel 결과:
 
-| transition | positive after \(X\) | positive after \(X,R_0\) | mean \(\Delta R^2\mid X\) | mean \(\Delta R^2\mid X,R_0\) |
+| transition | positive after $X$ | positive after $X,R_0$ | mean $\Delta R^2\mid X$ | mean $\Delta R^2\mid X,R_0$ |
 |---|---:|---:|---:|---:|
 | pre-stimulus to stimulus latent | 5/5 | 5/5 | 0.195029 | 0.106973 |
 | pre-movement to movement latent | 5/5 | 5/5 | 0.218151 | 0.127870 |
@@ -633,9 +645,11 @@ H_{t-\ell}\Rightarrow H_t
 }
 $$
 
-즉 mouse temporal 항은 행동 decoder의 직접 잔차가 아니라, low-rank population state transition으로 다시 세운다. 다음 행동식은 \(H_t\)와 innovation \(\epsilon_t\)가 행동 target을 나누어 설명하는지로 넘어가야 한다.
+즉 mouse temporal 항은 행동 decoder의 직접 잔차가 아니라, low-rank population state transition으로 다시 세운다. 다음 행동식은 $H_t$와 innovation $\epsilon_t$가 행동 target을 나누어 설명하는지로 넘어가야 한다.
 
 ### Mouse IBL/OpenAlyx innovation-to-behavior gate
+
+innovation gate는 예측된 state와 잔차 innovation을 분리해 어느 부분이 행동과 연결되는지 검사한다. residual이 작아도 unobserved input·label noise가 남을 수 있어 인과 해석은 보류한다.
 
 Low-rank transition이 통과했으므로 다음 질문은 행동이 어디에 붙는가다. Transition 식은 현재 population state를 두 부분으로 나눈다.
 
@@ -652,7 +666,7 @@ A_sH_{t-\ell}
 +C_sR_t.
 $$
 
-\(\hat H_t\)는 과거 population state, task/history, region compression으로 예측되는 궤적이다. \(\epsilon_t\)는 그 궤적으로 설명되지 않는 현재 population innovation이다. 행동식 후보는 다음처럼 다시 쓴다.
+$\hat H_t$는 과거 population state, task/history, region compression으로 예측되는 궤적이다. $\epsilon_t$는 그 궤적으로 설명되지 않는 현재 population innovation이다. 행동식 후보는 다음처럼 다시 쓴다.
 
 $$
 \boxed{
@@ -676,7 +690,7 @@ uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/
 
 5-candidate panel 결과:
 
-| target | \(\hat H_t\) positive | \(\epsilon_t\) positive | \(\epsilon_t\mid \hat H_t\) positive | mean \(\Delta \hat H_t\) | mean \(\Delta \epsilon_t\) | mean \(\Delta \epsilon_t\mid \hat H_t\) |
+| target | $\hat H_t$ positive | $\epsilon_t$ positive | $\epsilon_t\mid \hat H_t$ positive | mean $\Delta \hat H_t$ | mean $\Delta \epsilon_t$ | mean $\Delta \epsilon_t\mid \hat H_t$ |
 |---|---:|---:|---:|---:|---:|---:|
 | choice sign | 1/5 | 4/5 | 4/5 | -0.001622 | 0.014292 | 0.010658 |
 | first movement speed | 5/5 | 4/5 | 4/5 | 0.018635 | 0.020376 | 0.020288 |
@@ -710,7 +724,7 @@ y_t.
 }
 $$
 
-예측 가능한 population trajectory \(\hat H_t\)는 speed에서 강하게 행동을 담지만, choice와 wheel에서는 약하다. 반면 innovation \(\epsilon_t\)는 choice, speed, wheel 모두에서 \(\hat H_t\) 뒤에도 4/5로 남는다. 즉 seeded panel에서는 행동이 단순히 과거 상태가 밀고 온 smooth trajectory가 아니라, 그 trajectory에서 벗어난 현재 population innovation에 더 반복적으로 붙는다.
+예측 가능한 population trajectory $\hat H_t$는 speed에서 강하게 행동을 담지만, choice와 wheel에서는 약하다. 반면 innovation $\epsilon_t$는 choice, speed, wheel 모두에서 $\hat H_t$ 뒤에도 4/5로 남는다. 즉 seeded panel에서는 행동이 단순히 과거 상태가 밀고 온 smooth trajectory가 아니라, 그 trajectory에서 벗어난 현재 population innovation에 더 반복적으로 붙는다.
 
 12-session registered panel 실행:
 
@@ -720,7 +734,7 @@ uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/
 
 12-panel 결과:
 
-| target | \(\hat H_t\) positive | \(\epsilon_t\) positive | \(\epsilon_t\mid \hat H_t\) positive | mean \(\Delta \hat H_t\) | mean \(\Delta \epsilon_t\) | mean \(\Delta \epsilon_t\mid \hat H_t\) |
+| target | $\hat H_t$ positive | $\epsilon_t$ positive | $\epsilon_t\mid \hat H_t$ positive | mean $\Delta \hat H_t$ | mean $\Delta \epsilon_t$ | mean $\Delta \epsilon_t\mid \hat H_t$ |
 |---|---:|---:|---:|---:|---:|---:|
 | choice sign | 7/12 | 8/12 | 3/12 | 0.002320 | 0.008033 | 0.004624 |
 | first movement speed | 9/12 | 10/12 | 9/12 | 0.009861 | 0.022655 | 0.016741 |
@@ -738,9 +752,11 @@ X_t,R_t,\hat H_t
 }
 $$
 
-즉 5-candidate 결론은 “innovation이 세 target 모두에서 남는다”였지만, 12-panel 결론은 더 좁다. Speed와 wheel 같은 action target에서는 innovation readout이 유지된다. Choice는 task/history와 trial policy에 더 붙어 있어서, \(\epsilon_t\)가 \(\hat H_t\) 뒤에 반복적으로 남지 않는다. 다음 식은 choice readout과 action readout을 분리해야 한다.
+즉 5-candidate 결론은 “innovation이 세 target 모두에서 남는다”였지만, 12-panel 결론은 더 좁다. Speed와 wheel 같은 action target에서는 innovation readout이 유지된다. Choice는 task/history와 trial policy에 더 붙어 있어서, $\epsilon_t$가 $\hat H_t$ 뒤에 반복적으로 남지 않는다. 다음 식은 choice readout과 action readout을 분리해야 한다.
 
 ### Mouse IBL/OpenAlyx choice/action innovation split
+
+choice와 action은 같은 target으로 합치지 않고 별도 outer session에서 increment를 비교한다. 평균 차이는 confidence interval과 label permutation을 통과해야 하며, 한 세션의 큰 효과는 일반화 증거가 아니다.
 
 12-panel 결과를 같은 세션 단위로 다시 읽어, action target의 평균 innovation increment가 choice innovation increment보다 큰지 확인했다.
 
@@ -779,8 +795,8 @@ $$
 
 | metric | value |
 |---|---:|
-| mean choice \(\epsilon_t\mid\hat H_t\) | 0.004624 |
-| mean action \(\epsilon_t\mid\hat H_t\) | 0.023320 |
+| mean choice $\epsilon_t\mid\hat H_t$ | 0.004624 |
+| mean action $\epsilon_t\mid\hat H_t$ | 0.023320 |
 | mean action - choice | 0.018696 |
 | median action - choice | 0.015874 |
 | 95% bootstrap CI low | 0.006277 |
@@ -802,11 +818,13 @@ $$
 }
 $$
 
-따라서 12-panel 실패의 해석은 “innovation 식이 틀렸다”가 아니라 “choice와 action을 같은 \(y_t\)로 묶은 것이 너무 거칠었다”에 가깝다. Choice는 task/history와 policy 항에 더 붙고, speed/wheel action은 transition에서 남은 current population innovation에 더 붙는다.
+따라서 12-panel 실패의 해석은 “innovation 식이 틀렸다”가 아니라 “choice와 action을 같은 $y_t$로 묶은 것이 너무 거칠었다”에 가깝다. Choice는 task/history와 policy 항에 더 붙고, speed/wheel action은 transition에서 남은 current population innovation에 더 붙는다.
 
 ### Mouse IBL/OpenAlyx directed latent-axis split gate
 
-다음 반례는 \(\epsilon_t\) 전체 벡터가 너무 거칠다는 것이다. Full-vector readout에서는 choice가 약했지만, 개별 innovation axis 중 하나만 행동 decoder에 추가하면 choice가 다시 살아날 수 있다. 따라서 각 target마다 \(\epsilon_{t,1},\ldots,\epsilon_{t,12}\)를 하나씩 넣고, \(X_t,R_t,\hat H_t\) 뒤에서 best single axis increment를 측정했다.
+directed-axis gate는 full innovation 대신 축별 기여를 시험한다. 여러 축 중 최고 축을 고르는 선택 효과가 있으므로 축 선택은 train 내부에서 끝나야 하고 test-best axis는 반증 자료다.
+
+다음 반례는 $\epsilon_t$ 전체 벡터가 너무 거칠다는 것이다. Full-vector readout에서는 choice가 약했지만, 개별 innovation axis 중 하나만 행동 decoder에 추가하면 choice가 다시 살아날 수 있다. 따라서 각 target마다 $\epsilon_{t,1},\ldots,\epsilon_{t,12}$를 하나씩 넣고, $X_t,R_t,\hat H_t$ 뒤에서 best single axis increment를 측정했다.
 
 실행:
 
@@ -859,9 +877,11 @@ X_t,R_t,\hat H_t
 }
 $$
 
-이 결과는 앞선 12-panel full-vector 판정을 수정한다. Choice에 innovation이 아예 없는 것이 아니다. Full-vector \(\epsilon_t\)를 한꺼번에 넣으면 choice는 불안정하지만, target별 single latent axis를 고르면 choice도 반복된다. 따라서 다음 병목은 innovation 존재 여부가 아니라, best axis가 세션마다 안정적인 subspace로 묶이는지다.
+이 결과는 앞선 12-panel full-vector 판정을 수정한다. Choice에 innovation이 아예 없는 것이 아니다. Full-vector $\epsilon_t$를 한꺼번에 넣으면 choice는 불안정하지만, target별 single latent axis를 고르면 choice도 반복된다. 따라서 다음 병목은 innovation 존재 여부가 아니라, best axis가 세션마다 안정적인 subspace로 묶이는지다.
 
 ### Mouse IBL/OpenAlyx latent-axis stability
+
+axis stability는 선택된 축 번호가 세션 간 반복되는지 검사해 사후 선택을 통제한다. 축의 부호·순서는 latent 회전에 따라 바뀔 수 있으므로 alignment 규약과 불확실성을 함께 기록한다.
 
 Directed-axis gate의 위험은 사후 선택이다. 12개 축 중 가장 좋은 축을 target마다 고르면 당연히 좋아질 수 있다. 그래서 best axis 번호가 세션 사이에서 반복되는지, 또는 적어도 top3 축에 충분히 몰리는지 확인했다.
 
@@ -879,7 +899,7 @@ python3 examples/physics/evolution/mouse_ibl_latent_axis_stability_from_directed
 | first movement speed | 4 | 2/12 | 6/12 | 0.860529 | 0.999950 | `False` | `False` |
 | wheel action direction | 4 | 4/12 | 8/12 | 0.703510 | 0.167700 | `False` | `True` |
 
-Within-session sharing도 약하다. Choice-speed same axis는 \(2/12\), choice-wheel은 \(4/12\), speed-wheel은 \(0/12\), 세 target이 모두 같은 axis인 경우는 \(0/12\)다.
+Within-session sharing도 약하다. Choice-speed same axis는 $2/12$, choice-wheel은 $4/12$, speed-wheel은 $0/12$, 세 target이 모두 같은 axis인 경우는 $0/12$다.
 
 판정:
 
@@ -897,9 +917,11 @@ $$
 
 ### Mouse IBL/OpenAlyx nested innovation-subspace gate
 
+subspace gate는 axis 또는 subspace를 outer train에서 고정한 뒤 test fold에서만 평가한다. 선택된 subspace가 choice·action 모두에 보편적이라는 주장은 대상별 holdout 실패로 반증된다.
+
 Latent-axis stability gate가 막은 것은 사후 선택 문제다. 12개 innovation axis 중 test fold에서 제일 잘 맞는 축을 고르면 choice, speed, wheel 모두 좋아진다. 하지만 논문식 주장으로 올리려면 test 결과를 보기 전에 axis 또는 subspace가 정해져야 한다.
 
-그래서 nested gate는 outer fold의 test set을 완전히 숨긴 상태에서, outer train 안의 inner CV로 target별 top-3 innovation axis를 고른다. 그 뒤에만 outer test에서 \(X_t,R_t,\hat H_t\) 뒤에 그 subspace가 남는지 본다.
+그래서 nested gate는 outer fold의 test set을 완전히 숨긴 상태에서, outer train 안의 inner CV로 target별 top-3 innovation axis를 고른다. 그 뒤에만 outer test에서 $X_t,R_t,\hat H_t$ 뒤에 그 subspace가 남는지 본다.
 
 실행:
 
@@ -963,7 +985,7 @@ X_t,R_t,\hat H_t
 }
 $$
 
-따라서 사후 best-axis 선택이라는 반례는 action에 대해서는 한 단계 약해졌다. 안정된 이름 붙은 축은 아직 없지만, train fold 안에서 미리 고른 작은 innovation subspace가 speed와 wheel의 outer test 행동을 반복적으로 설명한다. 반대로 choice는 nested subspace에서도 \(5/12\), median \(-0.000203\)에 그쳐 승격하지 않는다.
+따라서 사후 best-axis 선택이라는 반례는 action에 대해서는 한 단계 약해졌다. 안정된 이름 붙은 축은 아직 없지만, train fold 안에서 미리 고른 작은 innovation subspace가 speed와 wheel의 outer test 행동을 반복적으로 설명한다. 반대로 choice는 nested subspace에서도 $5/12$, median $-0.000203$에 그쳐 승격하지 않는다.
 
 현재 mouse readout은 그래서 다음처럼 갈라진다.
 
@@ -991,11 +1013,13 @@ R_t,
 }
 $$
 
-여기서 \(P_t^{\mathrm{policy/history?}}\)는 아직 승격된 항이 아니라 다음 병목이다. Choice는 innovation이 전혀 없어서 실패한 것이 아니라, 공개 IBL task 구조에서는 stimulus, prior block, previous choice/reward, policy history와 더 강하게 겹쳐 있을 가능성이 크다. 다음 식 후보는 action subspace를 더 키우는 것이 아니라 choice-specific policy/history latent를 분리하는 쪽으로 가야 한다.
+여기서 $P_t^{\mathrm{policy/history?}}$는 아직 승격된 항이 아니라 다음 병목이다. Choice는 innovation이 전혀 없어서 실패한 것이 아니라, 공개 IBL task 구조에서는 stimulus, prior block, previous choice/reward, policy history와 더 강하게 겹쳐 있을 가능성이 크다. 다음 식 후보는 action subspace를 더 키우는 것이 아니라 choice-specific policy/history latent를 분리하는 쪽으로 가야 한다.
 
 ### Mouse IBL/OpenAlyx choice policy/history gate
 
-Nested subspace 뒤의 다음 질문은 choice가 왜 약한지다. Action에서는 train-selected innovation subspace가 남았지만, choice에서는 \(5/12\)였다. 따라서 choice에 같은 innovation 항을 억지로 넣기보다, task/history 또는 policy-like covariate가 choice를 얼마나 먼저 설명하는지 확인했다.
+choice가 약한 이유를 neural innovation 탓으로 단정하지 않고 task·history covariate의 선행 설명력을 비교한다. policy block은 행동적 baseline이며 잠재 의도나 의사결정 기제의 직접 측정은 아니다.
+
+Nested subspace 뒤의 다음 질문은 choice가 왜 약한지다. Action에서는 train-selected innovation subspace가 남았지만, choice에서는 $5/12$였다. 따라서 choice에 같은 innovation 항을 억지로 넣기보다, task/history 또는 policy-like covariate가 choice를 얼마나 먼저 설명하는지 확인했다.
 
 비교한 model은 다음 순서다.
 
@@ -1053,7 +1077,7 @@ $$
 }
 $$
 
-그러나 이것을 "choice는 policy만으로 완전히 닫혔다"라고 읽으면 과하다. Policy/history baseline 자체가 mean BA \(0.836522\)로 매우 강하고, nested eps는 반복 기준에 못 닿지만 mean dBA는 양수다. 또한 \(\hat H\)는 \(7/12\), mean \(0.002320\)으로 매우 작은 양성이다. 따라서 다음 식 후보는 policy/history를 더 세밀한 latent로 만들고, 그 뒤에 남는 neural residual을 다시 보는 형태가 되어야 한다.
+그러나 이것을 "choice는 policy만으로 완전히 닫혔다"라고 읽으면 과하다. Policy/history baseline 자체가 mean BA $0.836522$로 매우 강하고, nested eps는 반복 기준에 못 닿지만 mean dBA는 양수다. 또한 $\hat H$는 $7/12$, mean $0.002320$으로 매우 작은 양성이다. 따라서 다음 식 후보는 policy/history를 더 세밀한 latent로 만들고, 그 뒤에 남는 neural residual을 다시 보는 형태가 되어야 한다.
 
 현재 choice 후보식은 다음이다.
 
@@ -1076,7 +1100,9 @@ $$
 
 ### Mouse IBL/OpenAlyx richer choice policy/history gate
 
-다음에는 hand-built richer policy/history block을 만들었다. 기존 \(X_{\mathrm{policy/history}}\)는 current stimulus/probability와 previous trial history의 선형 묶음이었다. Richer block은 여기에 multi-lag choice/outcome, win-stay/lose-switch, stimulus-prior interaction, previous choice interaction, decayed choice/reward/feedback trace를 추가했다.
+richer history block은 여러 lag와 상호작용을 추가한 경쟁 설명이다. feature 수 증가로 생긴 개선은 nested CV·permutation·outer session holdout을 통과할 때만 해석한다.
+
+다음에는 hand-built richer policy/history block을 만들었다. 기존 $X_{\mathrm{policy/history}}$는 current stimulus/probability와 previous trial history의 선형 묶음이었다. Richer block은 여기에 multi-lag choice/outcome, win-stay/lose-switch, stimulus-prior interaction, previous choice interaction, decayed choice/reward/feedback trace를 추가했다.
 
 질문은 두 개다.
 
@@ -1124,7 +1150,7 @@ P_{\mathrm{rich}}
 }
 $$
 
-즉 손으로 만든 richer policy feature는 기존 linear policy/history를 반복적으로 이기지 못했다. 반대로 \(R\), \(\hat H\), \(\epsilon_{S_{\mathrm{train}}}\) 각각은 단독 증분으로는 약하지만, 셋을 모두 합친 all-neural residual은 \(7/12\), mean \(0.009414\)로 살아났다.
+즉 손으로 만든 richer policy feature는 기존 linear policy/history를 반복적으로 이기지 못했다. 반대로 $R$, $\hat H$, $\epsilon_{S_{\mathrm{train}}}$ 각각은 단독 증분으로는 약하지만, 셋을 모두 합친 all-neural residual은 $7/12$, mean $0.009414$로 살아났다.
 
 따라서 choice 병목은 "policy feature를 더 많이 넣으면 닫힌다"도 아니고 "action-style innovation subspace 하나를 넣으면 닫힌다"도 아니다. 다음 식 후보는 block synergy를 직접 검사해야 한다.
 
@@ -1145,11 +1171,13 @@ R_t,
 }
 $$
 
-다음 병목은 \(R\), \(\hat H\), \(\epsilon\) 중 어느 하나의 단독 승격이 아니라, \(P_{\mathrm{rich}}\) 뒤에서 세 neural block이 함께 남는 이유를 ablation/Shapley식으로 분해하는 것이다.
+다음 병목은 $R$, $\hat H$, $\epsilon$ 중 어느 하나의 단독 승격이 아니라, $P_{\mathrm{rich}}$ 뒤에서 세 neural block이 함께 남는 이유를 ablation/Shapley식으로 분해하는 것이다.
 
 ### Mouse IBL/OpenAlyx choice neural-block synergy gate
 
-Synergy gate는 같은 outer fold 안에서 \(P_{\mathrm{rich}}\) 뒤에 붙는 neural block 조합을 모두 비교했다.
+synergy gate는 같은 outer fold에서 policy 뒤에 붙는 neural block 조합을 비교한다. 조합 탐색은 train 내부에서만 하고, test 성능을 보고 조합을 바꾸면 누수다.
+
+Synergy gate는 같은 outer fold 안에서 $P_{\mathrm{rich}}$ 뒤에 붙는 neural block 조합을 모두 비교했다.
 
 $$
 P,\quad
@@ -1162,7 +1190,7 @@ P+\hat H+\epsilon,\quad
 P+R+\hat H+\epsilon.
 $$
 
-여기서 \(\epsilon\)은 outer train 내부에서 고른 top-3 innovation subspace다.
+여기서 $\epsilon$은 outer train 내부에서 고른 top-3 innovation subspace다.
 
 실행:
 
@@ -1174,14 +1202,14 @@ uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/
 
 | model | mean BA | median BA |
 |---|---:|---:|
-| \(P\) | 0.837102 | 0.850950 |
-| \(P+\epsilon\) | 0.842266 | 0.852734 |
-| \(P+\hat H\) | 0.840806 | 0.854294 |
-| \(P+R\) | 0.839692 | 0.846948 |
-| \(P+\hat H+\epsilon\) | 0.848622 | 0.859746 |
-| \(P+R+\epsilon\) | 0.844350 | 0.850032 |
-| \(P+R+\hat H\) | 0.840482 | 0.851776 |
-| \(P+R+\hat H+\epsilon\) | 0.846516 | 0.853543 |
+| $P$ | 0.837102 | 0.850950 |
+| $P+\epsilon$ | 0.842266 | 0.852734 |
+| $P+\hat H$ | 0.840806 | 0.854294 |
+| $P+R$ | 0.839692 | 0.846948 |
+| $P+\hat H+\epsilon$ | 0.848622 | 0.859746 |
+| $P+R+\epsilon$ | 0.844350 | 0.850032 |
+| $P+R+\hat H$ | 0.840482 | 0.851776 |
+| $P+R+\hat H+\epsilon$ | 0.846516 | 0.853543 |
 
 증분:
 
@@ -1193,17 +1221,17 @@ uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/
 | best single after policy | 8/12 | 0.010347 | 0.002667 | `True` |
 | best pair after policy | 5/12 | 0.013102 | 0.001518 | `False` |
 
-각 fixed model을 \(P\)와 직접 비교하면:
+각 fixed model을 $P$와 직접 비교하면:
 
 | model | positive | mean dBA | median dBA |
 |---|---:|---:|---:|
-| \(P+R\) | 5/12 | 0.002590 | 0.001219 |
-| \(P+\hat H\) | 5/12 | 0.003704 | 0.000532 |
-| \(P+\epsilon\) | 7/12 | 0.005164 | 0.002361 |
-| \(P+R+\hat H\) | 3/12 | 0.003381 | 0.000869 |
-| \(P+R+\epsilon\) | 3/12 | 0.007248 | -0.000623 |
-| \(P+\hat H+\epsilon\) | 5/12 | 0.011520 | -0.000603 |
-| \(P+R+\hat H+\epsilon\) | 7/12 | 0.009414 | 0.002078 |
+| $P+R$ | 5/12 | 0.002590 | 0.001219 |
+| $P+\hat H$ | 5/12 | 0.003704 | 0.000532 |
+| $P+\epsilon$ | 7/12 | 0.005164 | 0.002361 |
+| $P+R+\hat H$ | 3/12 | 0.003381 | 0.000869 |
+| $P+R+\epsilon$ | 3/12 | 0.007248 | -0.000623 |
+| $P+\hat H+\epsilon$ | 5/12 | 0.011520 | -0.000603 |
+| $P+R+\hat H+\epsilon$ | 7/12 | 0.009414 | 0.002078 |
 
 판정:
 
@@ -1215,7 +1243,7 @@ $$
 }
 $$
 
-Full neural block은 \(P\) 뒤에서 살아나지만, best single이나 best pair를 반복적으로 이기지 못한다. 따라서 choice residual을 "세 neural block의 삼중 결합"으로 승격하면 안 된다.
+Full neural block은 $P$ 뒤에서 살아나지만, best single이나 best pair를 반복적으로 이기지 못한다. 따라서 choice residual을 "세 neural block의 삼중 결합"으로 승격하면 안 된다.
 
 대신 더 좁은 신호가 보인다.
 
@@ -1227,7 +1255,7 @@ P_{\mathrm{rich}}+\epsilon_{S_{\mathrm{train}}}
 }
 $$
 
-\(P+\epsilon\)는 \(7/12\), mean \(0.005164\), median \(0.002361\)로 통과한다. 단, \(\epsilon\) subspace는 train fold 안에서 \(P,R,\hat H\) 조건으로 고른 축이므로 완전히 독립적인 choice-only axis는 아니다. 현재 해석은 "choice에는 innovation이 없다"가 아니라, "policy 뒤에 남는 choice innovation은 \(R,\hat H\)를 함께 partial out하면 불안정해지고, \(P+\epsilon\) 형태에서는 반복된다"이다.
+$P+\epsilon$는 $7/12$, mean $0.005164$, median $0.002361$로 통과한다. 단, $\epsilon$ subspace는 train fold 안에서 $P,R,\hat H$ 조건으로 고른 축이므로 완전히 독립적인 choice-only axis는 아니다. 현재 해석은 "choice에는 innovation이 없다"가 아니라, "policy 뒤에 남는 choice innovation은 $R,\hat H$를 함께 partial out하면 불안정해지고, $P+\epsilon$ 형태에서는 반복된다"이다.
 
 따라서 choice 식은 다시 좁힌다.
 
@@ -1249,7 +1277,9 @@ $$
 
 ### Mouse IBL/OpenAlyx choice innovation-axis reproducibility gate
 
-마지막으로 \(P+\epsilon\) 신호가 진짜 choice용 반복 subspace인지 확인했다. Synergy gate의 \(P+\epsilon\)는 이전 nested 선택을 재사용한 결과라, 이번에는 outer train 안에서 \(P\)만 baseline으로 두고 choice용 \(\epsilon\) 축을 새로 골랐다.
+reproducibility gate는 choice용 innovation 축을 매 outer train에서 새로 골라 반복성을 시험한다. 반복되지 않는 축은 유용한 session feature일 수 있어도 named mechanism으로 승격하지 않는다.
+
+마지막으로 $P+\epsilon$ 신호가 진짜 choice용 반복 subspace인지 확인했다. Synergy gate의 $P+\epsilon$는 이전 nested 선택을 재사용한 결과라, 이번에는 outer train 안에서 $P$만 baseline으로 두고 choice용 $\epsilon$ 축을 새로 골랐다.
 
 식은 다음이다.
 
@@ -1315,11 +1345,11 @@ P_{\mathrm{rich}}+\epsilon_{S_{c,\mathrm{train}}}
 }
 $$
 
-축 선택에는 top3 \([5,6,4]\) 쪽으로 약한 몰림이 있지만, 정작 outer test 증분이 \(3/12\), median \(-0.001667\)이라 행동식으로 승격할 수 없다. 따라서 choice는 안정된 innovation subspace로 닫히지 않았다.
+축 선택에는 top3 $[5,6,4]$ 쪽으로 약한 몰림이 있지만, 정작 outer test 증분이 $3/12$, median $-0.001667$이라 행동식으로 승격할 수 없다. 따라서 choice는 안정된 innovation subspace로 닫히지 않았다.
 
 이 실패가 의미하는 것은 두 가지다.
 
-1. \(P+\epsilon\) 신호는 있다. 그러나 choice-only train selection으로 다시 걸면 반복되지 않는다.
+1. $P+\epsilon$ 신호는 있다. 그러나 choice-only train selection으로 다시 걸면 반복되지 않는다.
 2. 따라서 현재 mouse choice 항은 stable neural axis가 아니라 session-adaptive residual로 남긴다.
 
 현재 choice 식은 다음처럼 보수적으로 내려간다.
@@ -1340,7 +1370,7 @@ P_t^{(s,\mathrm{rich})}
 }
 $$
 
-24-session top-candidate panel에서도 같은 질문을 다시 걸었다. 이번에는 ranker의 `top_candidates` 24개를 사용했고, 반복 기준은 \(13/24\)로 올렸다.
+24-session top-candidate panel에서도 같은 질문을 다시 걸었다. 이번에는 ranker의 `top_candidates` 24개를 사용했고, 반복 기준은 $13/24$로 올렸다.
 
 실행:
 
@@ -1402,7 +1432,9 @@ $$
 
 ### Mouse IBL/OpenAlyx action innovation-subspace mechanism map
 
-Choice 쪽은 stable innovation subspace로 닫히지 않았으므로, 다음에는 이미 통과한 action subspace가 어디에 걸려 있는지 보았다. 이 map은 causal localization이 아니다. Train-selected action \(\epsilon\) axis를 target-window unit PCA loading으로 되돌린 뒤, loading 절댓값 mass를 probe와 CCF id로 집계한 descriptive mechanism map이다.
+mechanism map은 train-selected action subspace loading을 probe·CCF id로 집계한 기술적 지도다. 이는 causal localization이 아니며 atlas coverage·unknown bin·unit quality가 바뀌면 해석도 달라진다.
+
+Choice 쪽은 stable innovation subspace로 닫히지 않았으므로, 다음에는 이미 통과한 action subspace가 어디에 걸려 있는지 보았다. 이 map은 causal localization이 아니다. Train-selected action $\epsilon$ axis를 target-window unit PCA loading으로 되돌린 뒤, loading 절댓값 mass를 probe와 CCF id로 집계한 descriptive mechanism map이다.
 
 실행:
 
@@ -1468,9 +1500,9 @@ Speed와 wheel의 상위 CCF id 순서가 거의 같고, 이름을 붙이면 같
 | wheel action direction | drop top CCF | 11/12 | 10/11 | 0.018655 | 0.010498 | -0.001695 | `True` |
 | wheel action direction | only top CCF | 9/12 | 4/9 | 0.014889 | 0.000601 | -0.005461 | `False` |
 
-판정은 둘로 갈린다. Speed는 top anatomical block을 제거하면 \(9/12\rightarrow4/11\)로 내려가므로 이 block에 더 의존한다. Wheel은 제거해도 \(10/11\), mean \(0.018655\)로 남으므로 더 분산된 action map이다. Top block만 단독으로 쓰는 조건은 두 target 모두 replication rule을 통과하지 못한다. 따라서 action map은 하나의 작은 핵이 전부를 설명하는 구조가 아니라, speed 쪽에서는 top block 의존성이 강하고 wheel 쪽에서는 보상 가능한 distributed readout으로 남긴다.
+판정은 둘로 갈린다. Speed는 top anatomical block을 제거하면 $9/12\rightarrow4/11$로 내려가므로 이 block에 더 의존한다. Wheel은 제거해도 $10/11$, mean $0.018655$로 남으므로 더 분산된 action map이다. Top block만 단독으로 쓰는 조건은 두 target 모두 replication rule을 통과하지 못한다. 따라서 action map은 하나의 작은 핵이 전부를 설명하는 구조가 아니라, speed 쪽에서는 top block 의존성이 강하고 wheel 쪽에서는 보상 가능한 distributed readout으로 남긴다.
 
-Probe block도 같은 방식으로 걸었다. Mechanism map에서 probe00 mass가 speed \(0.634586\), wheel \(0.638429\)로 가장 컸기 때문에 `probe00`을 제거하거나 단독으로 남겼다.
+Probe block도 같은 방식으로 걸었다. Mechanism map에서 probe00 mass가 speed $0.634586$, wheel $0.638429$로 가장 컸기 때문에 `probe00`을 제거하거나 단독으로 남겼다.
 
 | target | condition | evaluated | supported | mean dBA | median dBA | mean delta vs full | passed |
 |---|---|---:|---:|---:|---:|---:|---|
@@ -1481,7 +1513,7 @@ Probe block도 같은 방식으로 걸었다. Mechanism map에서 probe00 mass�
 | wheel action direction | drop probe00 | 6/12 | 4/6 | 0.007663 | 0.004311 | -0.012687 | `False` |
 | wheel action direction | only probe00 | 9/12 | 6/9 | 0.020289 | 0.008952 | -0.000061 | `False` |
 
-여기서는 wheel 쪽이 더 선명하다. probe00을 빼면 wheel mean dBA가 \(0.020350\rightarrow0.007663\)으로 크게 떨어진다. probe00만 남기면 mean은 \(0.020289\)로 full과 거의 같지만 \(6/9\)라 현 \(7\)-replication rule에는 닿지 않는다. Speed는 probe00만으로도 \(7/9\)라 rule은 통과하지만 full보다 평균이 낮다. 따라서 probe00은 action map의 강한 carrier이고, 특히 wheel action에서는 거의 충분한 carrier에 가깝지만, replication rule 기준에서는 완전한 단독 충분조건이라고 쓰면 아직 과하다.
+여기서는 wheel 쪽이 더 선명하다. probe00을 빼면 wheel mean dBA가 $0.020350\rightarrow0.007663$으로 크게 떨어진다. probe00만 남기면 mean은 $0.020289$로 full과 거의 같지만 $6/9$라 현 $7$-replication rule에는 닿지 않는다. Speed는 probe00만으로도 $7/9$라 rule은 통과하지만 full보다 평균이 낮다. 따라서 probe00은 action map의 강한 carrier이고, 특히 wheel action에서는 거의 충분한 carrier에 가깝지만, replication rule 기준에서는 완전한 단독 충분조건이라고 쓰면 아직 과하다.
 
 마지막으로 probe00 안에서도 소수 unit만으로 닫히는지 보았다. 여기서는 cluster 번호를 세션 사이에서 같은 unit처럼 취급하지 않는다. 각 outer fold의 train set에서 target-window PCA loading과 train-selected action axes로 probe00 안 top 16 units를 새로 고른 뒤, 그 units만 남기거나 제거했다.
 
@@ -1494,4 +1526,4 @@ Probe block도 같은 방식으로 걸었다. Mechanism map에서 probe00 mass�
 | wheel action direction | drop top units | 12/12 | 6/12 | 0.007747 | 0.001398 | -0.012603 | `False` |
 | wheel action direction | only top units | 9/12 | 7/9 | 0.023757 | 0.008952 | 0.003407 | `True` |
 
-이 결과는 wheel을 더 강하게 좁힌다. Wheel은 fold-local top 16 probe00 units만으로 \(7/9\), mean \(0.023757\)이라 full보다 평균이 높고 현 replication rule도 통과한다. 반대로 top units를 제거하면 mean이 \(0.007747\)로 내려간다. Speed는 top units를 제거하면 약해지지만, top units만으로는 \(6/9\)라 한 번 부족하다. 따라서 wheel action은 `probe00` 안의 fold-local top-unit carrier로 거의 닫힌다. Speed action은 top anatomical block과 probe00에 의존하지만, 소수 top units만으로 충분하다고 쓰기에는 아직 모자란다.
+이 결과는 wheel을 더 강하게 좁힌다. Wheel은 fold-local top 16 probe00 units만으로 $7/9$, mean $0.023757$이라 full보다 평균이 높고 현 replication rule도 통과한다. 반대로 top units를 제거하면 mean이 $0.007747$로 내려간다. Speed는 top units를 제거하면 약해지지만, top units만으로는 $6/9$라 한 번 부족하다. 따라서 wheel action은 `probe00` 안의 fold-local top-unit carrier로 거의 닫힌다. Speed action은 top anatomical block과 probe00에 의존하지만, 소수 top units만으로 충분하다고 쓰기에는 아직 모자란다.

@@ -1,5 +1,10 @@
 # 19. OOD Generalization 의 구조적 결정성: Length Extrapolation 사례
 
+이 문서는 length extrapolation을 예로 OOD generalization을 어떻게 dataset·split·seed·baseline·metric 계약으로 평가할지 기록한다. 독자는 train/test 분할과 상대 성능 저하의 기본을 아는 독자를 전제로 하며, 현재 수치는 지정 corpus·모델 크기·seed의 좁은 증거이지 AGI 일반화의 증명은 아니다.
+
+결론과 OOD 정의 뒤에 9변종 ablation, 구조 직관, 다른 axis 가설, 설계 권고와 한계를 읽는다. OOD는 training support 밖의 length 조건으로 operationalize하며, threshold·uncertainty·ablation·rollback을 등록하지 않은 계획은 완료 결과로 승격하지 않는다.
+
+
 > 관련: `1_AGI.md`(5대 원리), `2_Architecture.md`(구조 규약), `13_Verification.md`(검증 방법론), `8_리만/mra_paper.md`(실증 데이터)
 >
 > 이 장은 Clarus 본 thesis "구조에서 의미가 나온다" 를 OOD generalization 영역에 처음으로 정량 적용한 결과이다. 현재까지의 증거는 length axis 한 가지에 한정되며, 이는 가설 (`hypothesis`) 에서 단일-축 검증 (`bridge`) 으로 격상된 단계로 분류한다.
@@ -7,6 +12,8 @@
 ---
 
 ## 0. 한 줄 결론
+
+이 결론은 지정 dataset·split·model budget에서 관찰한 상대 degradation의 요약이다. baseline·seed·metric 분모가 바뀌면 재검증해야 하며, 수치 패턴을 모든 task·semantic OOD의 구조적 법칙으로 외삽하지 않는다.
 
 > Transformer 의 length-OOD generalization 은 두 tier 로 명확히 갈린다 — **rotation 위에 강한 distance attenuation (linear / multiplicative) 이 있거나, 회전 자체가 없으면 외삽한다. RoPE 회전을 그대로 두고 attenuation 을 약하게 얹거나 빼면 32× 에서 +29 ∼ +55 % 로 무너진다.**
 
@@ -20,6 +27,8 @@
 ---
 
 ## 1. AGI 의 본질로서의 OOD Generalization
+
+이 절은 OOD를 training distribution의 명시된 support 밖에서 같은 task metric을 평가하는 operational definition으로 둔다. dataset provenance·split·label 규칙이 없으면 AGI 비유나 구조 논의는 검증 가능한 주장이 아니다.
 
 `1_AGI.md` 의 5대 원리는 모두 어떤 의미에서 OOD generalization 의 구조적 조건을 다룬다:
 
@@ -36,9 +45,9 @@
 
 본 장은 가장 측정 가능한 OOD axis — **시퀀스 길이** — 에서 이 thesis 를 정량 검증한다.
 
-여기서 자기참조재귀는 별도 원리라기보다 다른 원리들을 장기 작업으로 묶는 닫힘 조건이다. length extrapolation 실험에서는 distance attenuation 하나만으로도 OOD 구조가 드러나지만, agentic OOD에서는 모델이 자기 출력, 실패, 수정 내역을 다음 state에 다시 넣어야 한다. 즉 장문 추론, tool-use, multi-turn planning에서는 \(S_t \to R(S_t) \to C_t \to S_{t+1}\) 재귀가 없으면 error propagation을 유니타리 제약으로 줄여도 자기수정은 일어나지 않는다.
+여기서 자기참조재귀는 별도 원리라기보다 다른 원리들을 장기 작업으로 묶는 닫힘 조건이다. length extrapolation 실험에서는 distance attenuation 하나만으로도 OOD 구조가 드러나지만, agentic OOD에서는 모델이 자기 출력, 실패, 수정 내역을 다음 state에 다시 넣어야 한다. 즉 장문 추론, tool-use, multi-turn planning에서는 $S_t \to R(S_t) \to C_t \to S_{t+1}$ 재귀가 없으면 error propagation을 유니타리 제약으로 줄여도 자기수정은 일어나지 않는다.
 
-이를 수학적으로 쓰면 OOD 입력열 \(e_{0:T}\)에 대한 closed-loop 안정성 문제다.
+이를 수학적으로 쓰면 OOD 입력열 $e_{0:T}$에 대한 closed-loop 안정성 문제다.
 
 $$
 S_{t+1}=\mathcal T_{\theta,e_t}(S_t),
@@ -46,7 +55,7 @@ S_{t+1}=\mathcal T_{\theta,e_t}(S_t),
 e_t\sim \mathcal D_{\rm out}.
 $$
 
-훈련 분포 \(\mathcal D_{\rm train}\)에서만 작은 손실을 갖는 것은 충분하지 않다. OOD 일반화에는 다음 조건이 필요하다.
+훈련 분포 $\mathcal D_{\rm train}$에서만 작은 손실을 갖는 것은 충분하지 않다. OOD 일반화에는 다음 조건이 필요하다.
 
 $$
 \mathbb E_{e_t\sim\mathcal D_{\rm out}}
@@ -58,9 +67,11 @@ $$
 <0.
 $$
 
-즉 평균 로그 수축률이 음수여야 한다. 이 조건은 단일 token PPL보다 agent drift를 더 직접적으로 본다. length extrapolation에서 distance attenuation이 하는 역할은 위치 상태의 \(\hat\rho_t\)를 낮추는 것이고, agentic OOD에서 자기참조재귀가 하는 역할은 critique/memory/residual state의 \(\hat\rho_t\)를 낮추는 것이다.
+즉 평균 로그 수축률이 음수여야 한다. 이 조건은 단일 token PPL보다 agent drift를 더 직접적으로 본다. length extrapolation에서 distance attenuation이 하는 역할은 위치 상태의 $\hat\rho_t$를 낮추는 것이고, agentic OOD에서 자기참조재귀가 하는 역할은 critique/memory/residual state의 $\hat\rho_t$를 낮추는 것이다.
 
 ### 1.1 왜 length 인가
+
+length는 input axis와 evaluation horizon을 정확히 조절할 수 있는 OOD fixture다. 다른 sequence length는 compute·position encoding·data content를 함께 바꿀 수 있으므로, baseline과 ablation을 분리해야 한다.
 
 OOD axis 들은 측정 난이도에 큰 차이가 있다:
 
@@ -80,9 +91,13 @@ Length 는 train N=64, eval N=2048 같이 정확한 32× OOD 상황을 만들 �
 
 ## 2. 실증 — 9 변종 32× ablation
 
+실증은 같은 parameter budget·corpus provenance·train block에서 변종만 바꾼 ablation 계약이다. metric의 분모·seed 수·threshold를 고정하고, OOD failure는 예상과 다른 degradation 또는 uncertainty 겹침으로 판정한다.
+
 `docs/8_리만/mra_paper.md` § 7.7 의 raw 결과를 AGI 관점에서 재해석한다.
 
 ### 2.1 비교 대상 (모두 ≈ 30 K params, train block = 64, char-level docs corpus)
+
+비교 대상은 architecture feature와 input shape가 다른 모델의 baseline 목록이다. parameter 근접성은 compute·optimizer·initialization parity를 보장하지 않으므로 환경과 seed split을 함께 기록한다.
 
 | 변종 | 거리 처리 메커니즘 | 부류 |
 |---|---|---|
@@ -97,6 +112,8 @@ Length 는 train N=64, eval N=2048 같이 정확한 32× OOD 상황을 만들 �
 | `euler_ce_k1` | π-rotation + linear additive | 회전 + linear additive |
 
 ### 2.2 32× extrapolation 상대 degradation
+
+상대 degradation은 OOD metric과 in-distribution baseline의 차이를 지정 분모로 정규화한 추정량이다. 단일 seed 또는 post-hoc 선택은 evidence가 아니며, confidence interval·OOD heldout이 기각 조건이다.
 
 (전체 표는 `mra_paper.md` § 7.7 참조)
 
@@ -113,6 +130,8 @@ Length 는 train N=64, eval N=2048 같이 정확한 32× OOD 상황을 만들 �
 | `euler_no_decay` | π-rotation + block-aware base | +54.7 % | 2 |
 
 ### 2.3 결정적 패턴: Tier 1과 Tier 2
+
+tier 구분은 등록된 metric·threshold에서 보이는 조건부 분류다. 관찰 패턴은 메커니즘 증명과 다르며, 새 dataset·seed·feature ablation에서 재현되지 않으면 하향 또는 rollback된다.
 
 ```
 Tier 1  (외삽 OK, ≤ +10 %):
@@ -142,6 +161,8 @@ Tier 2  (외삽 BAD, +29 ∼ +55 %):
 ---
 
 ## 3. 왜 두 tier 가 갈리는가 — 직관
+
+이 절의 설명은 ablation 결과를 해석하기 위한 구조 가설이지 수학적 필연성의 증명은 아니다. rotation·attenuation·linearization 각각을 제거하거나 OOD axis를 바꾼 실험이 반증 경계다.
 
 ### 3.1 RoPE 회전이 OOD 의 직접 원인
 
@@ -173,6 +194,8 @@ Multiplicative `ζ^d` 도 log-space 에서 linear (`log ζ · d`) 이므로 비�
 
 ## 4. Clarus 본 thesis 와의 정합
 
+정합은 CE 설계 비유와 좁은 OOD 관찰이 어떤 질문을 공유하는지 설명한다. 구조 유사성은 물리·AGI·의미의 동일성이나 현재 결과의 과학적 승격을 뜻하지 않는다.
+
 ### 4.1 "구조에서 의미가 나온다"
 
 Clarus AGI 의 핵심 명제 (`1_AGI.md` § 0): 우주는 빅뱅에서 한 번의 부트스트랩으로 고정점에 도달했고, 부트스트랩은 **구조적 자기조직화** 의 결과이다. 즉 의미와 구조는 분리 가능한 양이 아니다.
@@ -194,6 +217,8 @@ CE 본 thesis 는 자유 파라미터 0 (모든 비율이 axiom 에서 연역). 
 ---
 
 ## 5. 일반화 가설 — 다른 OOD axis
+
+다음 가설은 length 외 axis에서 dataset·split·metric·baseline을 새로 등록해야 하는 계획이다. 현재 length evidence가 semantic·compositional·in-context axis의 통과를 보장하지 않으며, 각 hypothesis는 OOD failure로 기각 가능하다.
 
 본 발견을 다른 OOD axis 로 일반화한 가설:
 
@@ -242,6 +267,8 @@ n-shot in-context learning 에서 n 외삽 능력은 토큰 attention 의 distan
 
 ## 6. AGI 아키텍처 설계 권고
 
+권고는 현재 ablation에서 나온 설계 가설이며 implementation requirement가 아니다. 각 항은 no-feature baseline·component ablation·OOD metric에서 실패하면 강제 규칙이나 axiom으로 유지하지 않는다.
+
 본 발견이 직접적으로 시사하는 설계 원칙:
 
 ### R1. Rotation 과 Distance attenuation 의 조합 강제
@@ -265,7 +292,11 @@ ML 학습은 slope 만 풀 수 있다. Form (linear / log / mult / rotation) 은
 
 ## 7. 한계와 후속
 
+한계는 현재 dataset·split·seed·task·compute가 닫지 못한 범위를 보존한다. 후속은 artifact·threshold·rollback을 가진 실험 계획이며, 실행 전에는 evidence나 완료 상태가 아니다.
+
 ### 한계
+
+현재 한계는 dataset·split·seed·model 규모·OOD axis가 닫지 못한 expected failure를 뜻한다. 아래 항목은 결과의 반례 가능 범위이며, 단일 axis 통과를 더 넓은 일반화 evidence로 승격하지 않는다.
 
 1. **단일 axis (length)**: H1/H2/H3 미검증.
 2. **소규모**: ~30 K params, 600 K char corpus. 1B+ 모델에서 같은 패턴 유지되는지 미확인.
@@ -273,6 +304,8 @@ ML 학습은 slope 만 풀 수 있다. Form (linear / log / mult / rotation) 은
 4. **이론 부재**: § 3 의 직관 (1-jet, dimensional analysis) 은 가설이며 형식 증명 없음.
 
 ### 후속
+
+후속 실험은 새 axis·모델·seed의 artifact와 baseline·threshold를 사전에 등록하는 계획이다. 실행 결과가 없거나 OOD·ablation에서 실패하면 이 목록은 완료가 아니라 rollback 또는 미완성으로 남는다.
 
 1. **Scaling**: d_model ∈ {64, 128, 256, 512} × n_layers ∈ {2, 4, 8, 12} 에서 32× 외삽 패턴 유지되는지.
 2. **다른 OOD axis**: H1 (코퍼스 transfer), H2 (in-context length), H3 (CoT depth) 각각 검증.
@@ -283,12 +316,16 @@ ML 학습은 slope 만 풀 수 있다. Form (linear / log / mult / rotation) 은
 
 ## 8. 데이터 출처
 
+데이터 출처는 corpus provenance, preprocessing, split 경계를 재현 가능하게 남기는 입력 계약이다. 출처가 바뀌면 metric·threshold·OOD 정의를 다시 등록해야 하며 기존 수치와 비교하지 않는다.
+
 - 9 변종 × 3 seed × 1500 step × 32× extrapolation 측정: `examples/ai/results/euler_extrap_long.json`, `extrap_full.json` (확장)
 - 9 변종 코드: `examples/ai/bench_recursive_euler.py` (`RoPEAttnBlock`, `NoPEAttnBlock`, `XPosAttnBlock`, `RoPEAlibiAttnBlock`, etc.)
 - ExtrapLM 및 train/eval 파이프라인: `examples/ai/bench_mra_extrap.py`
 - 분석 표 + verdict: `docs/8_리만/mra_paper.md` § 7.7
 
 ## 9. References
+
+참고문헌은 배경·방법·외부 관찰의 source role을 구분한다. 인용은 현재 ablation의 data provenance나 독립 재현을 대체하지 않는다.
 
 - Press et al. (2022), *Train Short, Test Long: Attention with Linear Biases (ALiBi)*, ICLR.
 - Sun et al. (2023), *A Length-Extrapolatable Transformer (xPos)*, ACL.

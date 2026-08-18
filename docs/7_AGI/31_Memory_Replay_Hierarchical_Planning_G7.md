@@ -1,25 +1,36 @@
 # 제한 기억ㆍreplayㆍ계층 계획 G7 사전등록
 
+이 문서는 제한 memory, replay, hierarchical planning state를 비교하기 위한 G7 사전등록과 결과 기록이다. 독자는 stream evaluation·holdout·planner baseline의 기본을 아는 독자를 전제로 하며, 기억·계획 비유는 구현 state·metric을 넘어서는 생물학·의식 주장이 아니다.
+
+비용·기억 수식·stream 비교군·계층 계획·gate 뒤에 버전별 결과와 범위 경계를 읽는다. memory shape·replay timebase·dataset provenance·seed·split·baseline·metric·threshold가 계약이며, privacy leakage·OOD·ablation·rollback을 분리한다.
+
+
 > 상태: **[산출] G7 V4 PASS / 후속 G7-M V1 validation FAILㆍV2 locked test PASS**
 >
 > 계약: `../../experiments/preregistration/memory_replay_planning_v1.json`
 
 ## 0. 비용과 주장
 
+비용은 memory budget·compute·latency의 분모를 고정하고, 주장은 등록된 gate에서만 해석한다. 계획 수치와 측정 결과를 섞지 않으며, budget·privacy·baseline 위반은 PASS 여부와 별도로 실패다.
+
 NumPy 합성계수와 짧은 물리 rollout만 사용한다. 저장하는 기억은 5차원 chart prototype뿐이며 궤적ㆍcheckpointㆍ외부 자료는 금지한다. 통과는 제한 기억에서 희귀 인과 regime의 보존과 모델기반 macro-action 효능만 뜻한다.
 
 ## 1. 기억 수식
 
+기억 수식은 stream state와 write/read policy를 입력으로 bounded memory tensor와 replay output을 정의한다. shape·initial condition·serialization·tick이 가정이며, 수식은 retention·planning 효능이나 생물학 기억의 증명이 아니다.
+
 episode 계수 (hat\theta_e)의 novelty와 rarity를
 
-\[
+$$
 n_e=\min_k\lVert D^{-1}(\hat\theta_e-\mu_k)\rVert,
 \qquad r_e=(1+c_k)^{-1}
-\]
+$$
 
 로 두고 priority를 (p_e=n_e+\lambda_r r_e)로 정한다. 같은 chart이면 online 평균을 갱신하고, 새 chart인데 용량이 찼으면 priority가 가장 낮은 항목을 교체한다. replay 시에는 희귀 chart의 priority를 다시 올리되 원본 궤적은 저장하지 않는다.
 
 ## 2. stream과 비교군
+
+stream과 비교군은 동일 dataset provenance·split·seed·horizon·compute에서 memory feature의 기여를 분리한다. future leakage·weak baseline·entity overlap은 expected failure이며, split 위반은 rollback 조건이다.
 
 - regime AㆍBㆍC 세 개, 기억 용량 3
 - B는 초기에 두 번만 등장하는 희귀 regime
@@ -29,9 +40,13 @@ n_e=\min_k\lVert D^{-1}(\hat\theta_e-\mu_k)\rVert,
 
 ## 3. 계층 계획
 
+계층 계획은 current state·memory·goal을 입력으로 subgoal과 action output을 만드는 producer/consumer contract다. planning depth·termination·timebase가 정의역이고, plan 생성은 task success·안전성·자율성의 증거가 아니다.
+
 상위 계획기는 9개 macro-action 후보를 5 step 동안 내부 rollout하고 목표 원점까지의 비용이 가장 작은 후보를 선택한다. 하위 실행기는 선택된 action을 5 step 적용하고 다시 계획한다. zero-action과 recency 기억 기반 MPC를 기준선으로 둔다.
 
 ## 4. 통과 조건
+
+통과 조건은 metric·threshold·uncertainty·baseline·OOD·ablation을 사전에 고정한다. 하나의 개발 score나 post-hoc 최고 seed는 evidence가 아니며, 미통과·privacy failure·budget 초과는 승격을 막는다.
 
 1. priority replay의 세 regime recall 정확도 100%.
 2. 희귀 B 계수오차가 recency보다 50% 이상 낮음.
@@ -44,6 +59,8 @@ n_e=\min_k\lVert D^{-1}(\hat\theta_e-\mu_k)\rVert,
 
 ## 5. 루프 1 결과와 V2
 
+루프 결과는 특정 version·artifact·dataset·seed에서 얻은 개발 또는 확인 evidence다. V2는 변경된 state/feature contract를 뜻하며, 이전 결과와 같은 baseline·split이 아니면 직접 비교하거나 승격하지 않는다.
+
 V1은 120-byte 기억으로 recall 100%, 희귀 B 오차 96.8% 감소를 달성했지만 5-stepㆍaction 0.22에서 모든 planner가 zero action을 골라 계획 gate에 실패했다. 또한 등록 seed 대신 고정 seed 하나만 쓴 구현 결함을 발견했다.
 
 V2는 모든 validation/test seed를 독립 실행하고 macro horizon을 10, action 후보를 `[-1,0,1]`로 바꾼다. 기억식과 통과 기준은 유지한다.
@@ -54,9 +71,13 @@ V3는 zero-action 대비 68.5% 개선했지만 correct/recency planner가 같은
 
 ## 6. V4 최종 결과: G7 PASS
 
+PASS는 V4의 등록된 fixture·metric·threshold에서만 성립하는 경험 판정이다. 다른 dataset·stream·OOD·feature flag에서의 성공·기억 기제·일반 planning 효능을 뜻하지 않으며, 반례는 rollback 조건이다.
+
 locked test 9개에서 recall 정확도는 100%, 기억은 3개 prototypeㆍ120 bytes였다. 희귀 B 오차는 recency보다 97.4% 낮았다. priority-memory MPC 비용 `0.0710`은 zero-action `0.2258`보다 68.5%, recency-MPC `0.9710`보다 92.7% 낮았다. 실행은 0.18초, 외부 비용은 0이다.
 
 ## 7. 범위 경계와 다음 기억 실험
+
+범위 경계는 현재 결과가 닫지 못한 memory capacity·long horizon·privacy·planning gap을 명시한다. 다음 실험은 provenance·split·baseline·seed·threshold를 가진 계획이며, 실행 전에는 evidence가 아니다.
 
 **[산출]** 이 prototype은 제한된 regime prototype의 recall과 macro-action
 선택을 시험했다. partial cue에서 실제 episode trajectory를 복원하는
@@ -69,6 +90,8 @@ schema distortion, world-validity projection은 구현하지 않았다.
 기억ㆍ꿈 또는 해마-피질 통합의 증거로 확장하지 않는다.
 
 ## 8. 후속 G7-M V1 결과
+
+V1 결과는 지정 artifact와 run 조건의 추가 evidence 또는 failure 기록이다. version 간 feature·baseline·metric 분모를 보존하지 않으면 비교가 불가능하며, result는 OOD·ablation 재현 전 좁게 해석한다.
 
 > 사전등록 raw SHA-256:
 > `6487156371e4c42877fa0813dd170fb000ce11fe05e51f34bceb74653159fac0`
@@ -98,6 +121,8 @@ reinstatement와 episodic attractor는 해결되지 않았다. dream-like 경로
 수면, 장기기억 일반론, planning 또는 AGI의 증거로 확장하지 않는다.
 
 ## 9. 후속 G7-M V2 결과
+
+V2 결과는 V1과 독립적으로 version/date·entry point·dataset·seed·split을 명시해야 하는 후속 판정이다. current·experimental·rollback 상태를 분리하고, privacy·leakage·baseline failure는 성능 수치로 상쇄하지 않는다.
 
 > 사전등록 raw SHA-256:
 > `973e90111ee98862a5c9ffc3f86509b46ee4e263b5a977e7e1504e00109092b9`

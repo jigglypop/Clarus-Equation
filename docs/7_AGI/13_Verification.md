@@ -1,10 +1,16 @@
 # CE-AGI Hopfield Engine: 논문 vs 구현 검증 보고서
 
+이 문서는 `12_Equation.md`의 지정 수식과 구현 artifact가 어떤 좁은 계약에서 일치하는지 점검한다. 독자는 테스트·fixture·baseline의 기본을 아는 독자를 전제로 하며, 기계 테스트 통과는 코드 경로와 등록된 입력의 일치이지 과학적 참·AGI 효능·생물학적 기제의 증명은 아니다.
+
+파이프라인·동역학·상수·메모리·추론을 같은 fixture와 환경에서 대조한 뒤, 이전 구현 차이와 미결 failure를 읽는다. metric의 단위·분모·seed·split·threshold를 기록하고, expected failure나 미결 항목은 통과 수치로 덮지 않는다.
+
 > `12_Equation.md` 수식 기반. 구현: `reality_stone/python/reality_stone/clarus/engine.py`, `reality_stone/python/reality_stone/clarus/engine.py`
 
 ---
 
 ## 1. 파이프라인 대조
+
+파이프라인 대조는 같은 입력 fixture가 논문 명세와 코드 단계에서 어떤 output을 내는지 확인한다. 성공은 등록된 환경·seed·threshold의 경로 일치이며, data provenance가 다른 실행이나 새 task의 일반화는 판정 범위 밖이다.
 
 | 단계 | 논문 (12_Equation.md) | 구현 | 일치 |
 |------|----------------------|------|------|
@@ -15,6 +21,8 @@
 | 어휘 추출 | emb + ln_f + lm_head | weight tying 감지, 1벌 저장 | O |
 
 ## 2. 동역학 대조
+
+동역학 대조는 지정한 초기 상태·step·정규화에서 수식 update와 구현 state trajectory를 비교한다. metric은 같은 timebase와 norm 분모를 사용하며, 안정성 통과는 다른 입력·OOD·장기 horizon에서의 보장이 아니다.
 
 | 항목 | 논문 | 구현 | 일치 |
 |------|------|------|------|
@@ -27,6 +35,8 @@
 
 ## 3. 상수 대조
 
+상수 대조는 원장 또는 명시한 외부 입력을 fixture로 읽어 코드 상수와 비교한다. 수치 일치는 provenance·불확실성·정본 지위를 바꾸지 않으며, 상수의 물리적 의미는 기계 assert가 판정하지 않는다.
+
 | 상수 | 논문 값 | 구현 | 일치 |
 |------|---------|------|------|
 | portal | [4/(e^(4/3)*pi^(4/3)) * (1 - 4/(e^(4/3)*pi^(4/3)))]^2 = 0.03120 | 0.03120 | O |
@@ -37,7 +47,11 @@
 
 ## 4. 메모리 비교
 
+메모리 비교는 같은 모델 shape·batch·precision·hardware에서 peak bytes 또는 parameter 수를 기준선 분모로 대조한다. 산술 추정과 profiler 실측을 구분하며 allocator·offload 차이는 환경 불확실성으로 기록한다.
+
 ### 4.1 모델: skt/kogpt2-base-v2 (d=768, vocab=51200, 12 layers)
+
+이 모델은 비교의 shape·vocabulary·layer fixture를 고정하는 baseline이다. 다른 checkpoint·precision·token length에서는 같은 수치를 재사용하지 않고 별도 run과 split을 등록한다.
 
 | 항목 | 크기 |
 |------|------|
@@ -50,6 +64,8 @@
 
 ### 4.2 W_sparse 상세
 
+희소 가중치 계산은 명시한 mask·shape·분모에서의 추정 또는 계수 대조다. 실제 memory·latency 이득은 dense baseline과 mask ablation profiling이 없으면 결론나지 않는다.
+
 | 항목 | 값 |
 |------|------|
 | 원본 W (dense) | 768 x 768 = 2,304 KB |
@@ -61,7 +77,11 @@
 
 ## 5. 추론 성능
 
+추론 성능은 동일 prompt fixture·decoding 설정·hardware timebase에서 속도와 품질을 분리해 평가한다. 작은 sample의 출력 예시는 benchmark result가 아니며, OOD·seed·baseline 비교에서 실패하면 효능 주장은 보류한다.
+
 ### 5.1 속도 (CPU, 10 tokens, 60 steps/token)
+
+속도는 명시한 CPU·token 수·step 수를 분모로 한 좁은 측정값이다. batch·prompt 길이·precision이 달라지면 latency 비교가 무효가 될 수 있어 환경과 반복 불확실성을 함께 기록한다.
 
 | 엔진 | 시간 | tok/s |
 |------|------|-------|
@@ -70,12 +90,16 @@
 
 ### 5.2 출력 품질
 
+품질은 provenance가 있는 reference 또는 사전 정의한 평가 label을 가진 fixture에서만 metric이 된다. 주관적 예시는 오탐·미탐·OOD 일반화를 판정하지 못하므로 baseline과 blind split이 필요하다.
+
 | 엔진 | 입력 | 출력 |
 |------|------|------|
 | CE | "오늘 날씨가" | 한글 토큰 생성 (의미 약함) |
 | GPT2 | "오늘 날씨가" | "추워지면서, 오늘도 추위가 계속되" |
 
 ## 6. 이전 구현과의 차이
+
+차이 표는 코드 변경의 대상·입력·출력 계약과 호환성 위험을 남기는 회귀 기록이다. 변경이 더 낫다는 주장은 이전 baseline과 동일 fixture·expected failure 비교가 통과할 때만 가능하다.
 
 | 항목 | 이전 (hopfield.py) | 현재 (convert.py + engine.py) |
 |------|-------------------|-------------------------------|
@@ -90,6 +114,8 @@
 
 ## 7. 미결 사항 (Hopfield 엔진 시점)
 
+미결 항목은 테스트가 아직 대상 주장·fixture·threshold를 닫지 못한 expected failure다. 이를 pass 수나 구현 존재로 승격하지 않으며, 필요한 데이터·독립 재현·반례 조건이 충족될 때만 상태를 갱신한다.
+
 1. **출력 품질**: CE 엔진의 한글 생성 품질은 아직 GPT2에 미달. 희소 W의 에너지 경관이 얕아서 이완이 의미 있는 끌개에 도달하지 못함
 2. **밀도**: N=768에서 r_c=pi는 10.57% 밀도. 논문의 3.16%는 N=4096 기준
 3. **codebook**: 논문 4.6절의 product quantization 미구현. 현재는 단순 top-K embedding
@@ -99,9 +125,13 @@
 
 ## 8. 현재 시스템 검증: BrainRuntime + Sleep Cycle
 
+이 절은 BrainRuntime과 sleep cycle이 명시한 API·state shape·mode transition을 수행하는지 코드 fixture로 대조한다. pass는 등록된 seed·split·threshold에서의 구현 계약 일치이며, 생물학적 수면 기제·AGI 효능·과학적 입증을 뜻하지 않는다.
+
 > 이 절은 위 1-7절의 초기 Hopfield 엔진 이후 진행된 `reality_stone/python/reality_stone/clarus/runtime.py`, `reality_stone/python/reality_stone/clarus/engine.py`, `reality_stone/python/reality_stone/clarus/sleep.py` 구현에 대한 검증이다.
 
 ### 8.1 BrainRuntime: 수식-코드 대조
+
+수식-코드 대조는 입력 state와 update output의 shape·정규화·timebase를 같은 fixture에서 비교한다. 수치 tolerance 통과는 API 회귀 검증이며, 다른 입력 분포·OOD horizon에서의 동역학 성립은 별도 gate다.
 
 | 수식 (15_Equations.md) | 코드 (`runtime.py`) | 일치 |
 |---|---|---|
@@ -117,6 +147,8 @@
 
 ### 8.2 모드별 파라미터 대조
 
+모드 대조는 runtime mode가 선택하는 parameter와 consumer 경로를 등록된 상태 fixture에서 점검한다. mode 전환의 값 일치는 학습 효능이 아니며, 누락·잘못된 branch는 expected failure 또는 회귀로 기록한다.
+
 | 파라미터 | WAKE | NREM | REM | 뇌 대응 |
 |---|---|---|---|---|
 | $\gamma_a$ (activation_decay) | 0.18 | 0.34 | 0.22 | NREM에서 감쇠 강화 |
@@ -127,6 +159,8 @@
 | replay_mix | 0.08 | 0.28 | 0.35 | 수면 시 기억 재생 강화 |
 
 ### 8.3 수면 압력: Borbely 2-Process 대조
+
+수면 압력 비교는 지정한 입력·clock·정규화에서 API output이 참조 식과 일치하는지 확인한다. 생물학 모델은 기능 비유·외부 참조이고, 코드 일치가 생리적 타당성이나 최적 schedule의 증거는 아니다.
 
 | 항목 | 수식 (15_Equations.md C.2) | 코드 | 일치 |
 |---|---|---|---|
@@ -139,6 +173,8 @@
 
 ### 8.4 해마 기억: 연산 대조
 
+기억 대조는 write·read·replay API의 입력 shape와 output contract를 fixture로 검사한다. retention 또는 recall 성능은 task label·split·baseline이 없는 연산 일치만으로 판정할 수 없다.
+
 | 연산 | 수식 (15_Equations.md D절) | 코드 (`HippocampusMemory`) | 일치 |
 |---|---|---|---|
 | encode | $H_{t+1} = \mathcal{E}(H_t, A_t, U_t)$ | `encode(key, value, priority)`: 용량 초과 시 최저 우선순위 제거 | O |
@@ -148,6 +184,8 @@
 | WAKE encoding 조건 | 외부 입력 or 목표 존재 시 | `external_norm > 1e-6 or goal.norm > 1e-6` | O |
 
 ### 8.5 Sleep Cycle: 3위상 파이프라인 대조
+
+3위상 대조는 wake·NREM·REM의 순서, state handoff, checkpoint 출력을 검증한다. phase가 실행됐다는 pass는 continual-learning 개선이 아니며 wake-only와 phase 제거 ablation이 효능 기각 조건이다.
 
 | 위상 | 수식 (3_Sleep.md) | 코드 (`sleep.py`) | 일치 |
 |---|---|---|---|
@@ -159,6 +197,8 @@
 | 가드셋 보호 | 품질 하락 시 롤백 | `guard_snapshot` + `evaluate_guard_set` + 조건부 `restore_decoder_snapshot` | O |
 
 ### 8.6 CE 상수 대조 (engine.py)
+
+상수 대조는 정본 또는 명시한 외부 입력값이 코드 fixture에 정확히 반영됐는지 검사한다. 숫자 equality는 상수의 물리적 출처·과학적 참·runtime 성능을 판정하지 않는다.
 
 | 상수 | 수식 | engine.py 값 | 일치 |
 |---|---|---|---|
@@ -174,6 +214,8 @@
 
 ### 8.7 Rust 커널 대조
 
+Rust 대조는 동일 API·shape·precision에서 Python 또는 기준 구현과 output tolerance를 비교한다. backend parity의 pass는 hardware 성능·안전성·일반화의 증거가 아니며, precision mismatch는 expected failure다.
+
 | 기능 | Python fallback | Rust kernel | 일치 |
 |---|---|---|---|
 | brain_step (셀 동역학) | `_step_torch` | `nn_brain_step` via `_step_rust` | O (NumPy 중개) |
@@ -187,6 +229,8 @@
 
 ### 8.8 미결 사항 (현재 시스템)
 
+미결 항목은 현재 fixture·seed·threshold가 닫지 못한 API 또는 과학적 다리다. 테스트 통과 항목과 섞지 않으며, 필요한 split·독립 재현·반례 조건이 정해질 때까지 미완성으로 남는다.
+
 1. **대규모 벤치마크**: Sleep cycle의 지속 학습 효과를 Split-CIFAR 또는 텍스트 도메인에서 정량 검증 필요
 2. **STDP 미구현**: `17_AgentLoop.md` F.14의 적격 흔적 기반 학습은 아직 코드에 없음
 3. **4종 신경조절**: 현재 `runtime.py`는 단일 스칼라 조절만 사용. DA/NE/5HT/ACh 분리 미구현
@@ -198,6 +242,8 @@
 
 ## 9. 다리 게이트 검증 매트릭스 (`12_Equation.md` 0.0절, 부록 A)
 
+게이트 매트릭스는 F1--F4 주장마다 어떤 API·fixture·metric·threshold가 코드 계약을 검사하는지 분리한다. 기계적 pass는 해당 gate의 구현 상태만 말하며, 정리의 가정 충족·과학적 참·의식 환원은 별도 범위다.
+
 본 절은 4종 다리 게이트의 현재 측정 가능 여부와 코드 위치를 정리한다. 각 게이트의 격상 조건은 `12_Equation.md` 부록 A 를 따른다.
 
 | 게이트 | 본 시스템에서의 측정점 | 측정 가능 여부 | 코드 위치 |
@@ -208,6 +254,8 @@
 | `F4` PCI 회귀 (부록 A.4) | 메타인지 안정도 $\exp(-c_d d_\tau)$ vs 외부 PCI | **회귀 프리미티브 구현됨** (PCI 데이터 외부 의존) | `reality_stone/python/reality_stone/clarus/quantum.py::pci_regression`, `reality_stone/python/reality_stone/clarus/agent.py::ConsciousnessMonitor.consciousness_depth` |
 
 ### 9.1 측정 API (구현 완료)
+
+측정 API는 등록된 state와 log를 입력으로 gate metric을 출력하는 producer·consumer contract다. shape·seed·split·tolerance를 고정하지 않으면 pass/fail이 재현되지 않으며, metric이 과학적 ground truth를 대신하지 않는다.
 
 다음 호출만으로 게이트 측정값을 즉시 얻는다.
 
@@ -265,6 +313,8 @@
 
 ### 9.2 정합화: `legacy_generate` 의 $C_k$ 누락 패치
 
+이 패치는 baseline 구현의 누락 항을 명시한 API contract에 맞추는 회귀 수정이다. parity 통과는 새 과학 주장이나 성능 향상이 아니라 expected failure 제거 여부를 확인하는 기계 검사다.
+
 `engine.py::legacy_generate` 는 이전에 $m_{out} \mathrel{+}= \text{bypass}\cdot \phi$ 만 적용해 정규 식 E20 의 $C_k$ 인자를 누락하고 있었다. 본 버전에서 마지막 3개의 $m$ 궤적을 유지하고
 
 $$F_{\text{bypass}}(k) = \tfrac{C_k}{\alpha_b}\,\phi, \quad C_k = \|m_k - 2 m_{k-1} + m_{k-2}\|$$
@@ -273,10 +323,14 @@ $$F_{\text{bypass}}(k) = \tfrac{C_k}{\alpha_b}\,\phi, \quad C_k = \|m_k - 2 m_{k
 
 ### 9.3 잔여 작업
 
+잔여 작업은 gate별 fixture·threshold·독립 검증이 아직 없는 expected failure 목록이다. 구현 계획을 완료·입증으로 승격하지 않고, 각 작업의 성공·실패 조건을 등록해야 한다.
+
 1. `F1` 자기조직 5조건의 ①·③·④·⑤ (simplex 보존, 국소 안정성, 에너지 균형, 외부 데이터 재학습): 단일 step 단위 측정이 아닌 **세션·sweep 단위 검증**.
 2. `F4` PCI 데이터 수집: 외부 PCI 측정값 (Casali 2013 등) 과 동기화된 `consciousness_depth()` 시계열 산출 후 `pci_regression()` 호출.
 
 ### 9.4 측정 우선순위 (갱신)
+
+우선순위는 현재 증거 공백과 재현 비용에 따른 계획 판단이다. 순위는 과학적 중요도 또는 성공 가능성의 측정값이 아니며, gate 실패 시 rollback될 수 있다.
 
 F1 자기측정 ②, F2, F3, F4 회귀 프리미티브 모두 코드 레벨 구현 완료. 잔여 작업은 모두 **외부 데이터 또는 세션 sweep 의존** 항목이며 코드 변경 불요.
 
@@ -289,9 +343,13 @@ F1 자기측정 ②, F2, F3, F4 회귀 프리미티브 모두 코드 레벨 구�
 
 ## 10. 한국어 KoGPT2 실측 (legacy `scripts/bench_gates.py`, removed)
 
+이 절은 removed legacy script로 수행했던 좁은 KoGPT2 CPU 측정 기록을 보존한다. 환경·checkpoint·data provenance·metric이 현재 artifact와 다를 수 있으므로, 수치는 재실행 가능한 현재 baseline의 성능 주장이 아니라 과거 비교 참고다.
+
 `skt/kogpt2-base-v2` 의 13 layer x 8 한국어 프롬프트 hidden state 공분산 (403 x 768) 으로 Hopfield $W$ ($\dim = 768$, $\lambda \in [-677.08, -0.001]$) 를 빌드하고 `BrainRuntime` 200 step + `ce_ops.relax` 300 step 을 구동한 결과.
 
 ### 10.1 게이트 수치 (한국어 베이스, CPU)
+
+게이트 수치는 명시한 CPU·token·prompt·decoding 설정의 실측 metric이다. 다른 hardware·precision·seed·split에는 적용되지 않으며, threshold 통과는 등록된 fixture의 기계 판정일 뿐 일반 품질 결론이 아니다.
 
 | 게이트 | 지표 | 측정값 |
 |---|---|---|
@@ -310,6 +368,8 @@ F1 자기측정 ②, F2, F3, F4 회귀 프리미티브 모두 코드 레벨 구�
 
 ### 10.2 비교표 (기 모델 대비)
 
+비교표는 legacy baseline과 지정 artifact의 같은 분모·환경에서의 차이를 기록한다. removed 경로 또는 직렬화가 달라지면 parity가 깨질 수 있으므로, 현재 benchmark로 승격하려면 새 artifact build와 독립 split이 필요하다.
+
 | 항목 | HF KoGPT2 baseline | BrainRuntime + F1 on |
 |---|---|---|
 | 로드 메모리 | 174.1 MB | (가중치 768 x 768 / 4 byte = 2.36 MB) |
@@ -321,12 +381,16 @@ F1 자기측정 ②, F2, F3, F4 회귀 프리미티브 모두 코드 레벨 구�
 
 ### 10.3 해석
 
+해석은 실측 범위·불확실성·expected failure를 보존한다. 단일 환경의 개선·악화를 AGI 효능·생물학적 대응·다른 데이터의 일반화로 외삽하지 않는다.
+
 1. **F1 ② 충족**: 자기측정 피드백이 활성 비율을 200 step 만에 $\varepsilon^2$ 의 0.16% 이내로 락온. 부록 A.2 의 사용 가능한 충분조건 ② "자기측정 → 다음 임계 피드백" 이 한국어 실모델 공분산 위에서도 동작함을 실증.
 2. **F2 격상 가능**: $R_{\text{ball}}$ 이 유한 (5.93) 으로 산출됨. 부록 A.1 의 ISS bound 가 한국어 KoGPT2 covariance Hopfield 기질 위에서 적용 가능함이 확인됨.
 3. **F3 메터 정합 확인 / 자기조직 보류**: `force_mode` 로 $p^*$ 비율 스케줄을 주입한 세션에서 경험적 모드 점유 $\pi$ 가 $p^*$ 와 round-off 오차 ($\sim 10^{-4}$) 내에서 일치 — `mode_occupancy_kl` 메터 자체의 정합성은 한국어 실모델 위에서 검증됨. 단, **자동 모드 정책**이 $p^*$ 로 자기수렴하는지는 별개 질문이며, 현재 `TAU_W_STEPS = 65520` (1 ms step 기준 18.2 h) 가속도와 200 step 벤치 간 시간 스케일 불일치로 미관측. 격상 경로: (a) `reality_stone.clarus.constants.TAU_W_STEPS` 를 ms→s 단위로 재캘리브레이션, 또는 (b) `legacy scripts/sleep_finetune_lm.py` (removed) 와 결합한 1000+ step 수면 사이클 sweep.
 4. **F4 미실측**: 외부 PCI 데이터셋 미보유. `pci_regression()` 호출 경로만 확보된 상태.
 
 ### 10.4 격리 / 사용자 룰 부합 확인
+
+격리 확인은 artifact가 지정 capability·serialization·사용자 규칙을 지키는지 보는 운영 gate다. 보안 또는 룰 pass는 모델 출력의 사실성·과학적 참·성능 우위를 입증하지 않는다.
 
 - 측정 대상 $W$ 는 KoGPT2 hidden state 의 covariance 한 번 계산 후 KoGPT2 모델 객체는 `del + gc.collect()` 로 해제 (legacy `bench_gates.py`, removed).
 - 측정 단계의 어떤 코드도 teacher logits/hidden 을 추론에 재주입하지 않음 (`runtime-isolation` 부합).
@@ -335,9 +399,13 @@ F1 자기측정 ②, F2, F3, F4 회귀 프리미티브 모두 코드 레벨 구�
 
 ## 11. 격리 아티팩트 빌드 (legacy scripts, removed)
 
+이 절은 removed build script가 만들던 artifact와 현재 재현 가능한 build 계약을 분리한다. 빌드 성공은 bytes·metadata·serialization의 기계적 조건이며, 모델 효능은 provenance가 있는 benchmark·baseline·OOD·ablation에서 별도로 검증한다.
+
 `agi-artifact` §4 추가 (양자화 / 비트폭 축소 엄격 금지) 에 따라 PQ / int8 / int4 / fp16 / bf16 / VQ / GPTQ / AWQ 류 일체 사용 금지. 본 절은 **fp32 전용 격리 아티팩트** 의 빌드, 실측, 그리고 메모리 룰까지 동시 충족하기 위한 비양자화 격상 경로를 기록한다.
 
 ### 11.1 빌드 파이프라인 (fp32 전용)
+
+파이프라인은 입력 checkpoint·precision·환경을 받아 serialized artifact를 출력하는 계약이다. fp32라는 가정이 바뀌면 size·수치 parity·metric이 달라질 수 있어 양자화는 후속 검증 대상으로 남는다.
 
 세 단계로 분리:
 
@@ -346,6 +414,8 @@ F1 자기측정 ②, F2, F3, F4 회귀 프리미티브 모두 코드 레벨 구�
 3. legacy `scripts/prune_vocab.py` (removed) — 동일 한국어 corpus 로 BPE 토큰 빈도 측정, 빈도 top-K + 항상유지 셋 (eos / pad / unk / bos / `decoder_token_ids`) 만 남기고 `emb_weight` 를 (K, 768) fp32 로 row-pruning. 매핑 (`kept_token_ids`, `vocab_id_map`) 과 fallback (`pruned_unk_emb` = pruned 행 평균) 을 함께 저장. 양자화 / 비트폭 축소 없음 — fp32 유지.
 
 ### 11.2 룰 부합 표 (현 baseline `legacy clarus/skt_kogpt2-base-v2.ce.pt` (removed), V1 적용)
+
+룰 표는 legacy baseline과 V1 artifact의 build·serialization 조건을 대조한다. removed baseline의 pass는 현재 runtime의 회귀 보장이 아니며, artifact provenance와 hash가 없는 비교는 재현 가능한 결과가 아니다.
 
 | 룰 | 측정 | 판정 |
 |---|---|---|
@@ -362,6 +432,8 @@ F1 자기측정 ②, F2, F3, F4 회귀 프리미티브 모두 코드 레벨 구�
 | `korean-runtime-eval`: 정확도 붕괴 시 폐기 | last-token 반복 0건 (4/5 맥락 정상) | 부합 |
 
 ### 11.3 Distillation 효과 (fp32 emb, ridge=1.0, blend=0.5, 692 페어, V1 후)
+
+distillation 수치는 지정한 pair 수·precision·ridge·blend의 좁은 추정 또는 측정이다. 데이터 split·seed·teacher provenance가 바뀌면 결과가 달라질 수 있고, task 품질·OOD·오탐/미탐 baseline에서 확인 전에는 일반 효능으로 승격하지 않는다.
 
 | 단계 | $R^2$ | 한국어 단독 생성 샘플 |
 |---|---|---|
@@ -385,6 +457,8 @@ V1 prune 은 decoder projection (768→768) 에 영향을 주지 않으므로 R�
 
 ### 11.4 디스크 분해와 V1 효과
 
+디스크 분해는 artifact serialization의 byte 구성과 build 옵션을 설명하는 측정이다. 저장공간 절감은 inference latency·정확도·안전성의 대리변수가 아니며, load parity 실패는 명시적 rollback 조건이다.
+
 V1 이전 fp32 baseline 의 디스크 180.89 MB 분해:
 
 | 항목 | 크기 (V1 전) | V1 후 |
@@ -404,6 +478,8 @@ V1 단독으로 디스크 180.89 → 79.41 MB, RAM 240.4 → 137.8 MB, latency 6
 corpus 토큰 coverage 는 100% (60 문장에서 unique 576 토큰 모두 kept set 에 포함, 항상유지 항목 257 개 합치면 833 개, 나머지 약 15500 슬롯은 frequency 0 인 BPE 토큰을 그대로 흡수). 더 많은 한국어 코퍼스를 `--extra-corpus` 로 주입하면 K 를 줄여도 동일 coverage 유지 가능.
 
 ### 11.5 후속 작업 (등록, 양자화 미포함)
+
+후속 작업은 등록된 data provenance·baseline·split·threshold가 필요한 미완성 검증 목록이다. 양자화·새 build·새 benchmark의 성공은 계획이 아니라 독립 artifact와 OOD·ablation gate가 통과할 때만 기록한다.
 
 | ID | 상태 | 작업 | 예상 효과 | 룰 영향 |
 |---|---|---|---|---|

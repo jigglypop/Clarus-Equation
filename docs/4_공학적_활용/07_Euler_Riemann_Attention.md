@@ -1,6 +1,10 @@
 # 7. Euler-Riemann Attention: CE 이론 상수의 Transformer 이식
 
+이 문서는 작은 char-level benchmark에서의 조건부 모델 비교를 기록한다. 독자는 Transformer, perplexity, seed 분산을 안다고 가정하며, 설계·고정 benchmark·결과·재현의 순서로 읽는다. 입력은 명시한 corpus와 hyperparameter이고 출력은 holdout PPL이며, 성공은 독립 corpus·seed·ablation에서의 재현이고 실패는 작은 표의 근접을 이론 상수의 물리적 증명으로 읽는 것이다.
+
 ## 7.1 동기
+
+최소 생성 문법은 설계 영감을 줄 수 있지만 attention 구조를 유일하게 정하지 않는다. 이 절은 이식의 출발점과 공학적 가설의 경계를 분리한다.
 
 `docs/경로적분.md` §51-67은 `{e, π, i, 1, 0}`을 CE의 **최소 생성 문법**으로 규정한다.
 
@@ -18,7 +22,11 @@
 
 ## 7.2 설계 공간
 
+아래 변형은 서로 다른 position·recursion·FFN 공리의 조합이다. 같은 기호가 쓰여도 표준 Transformer와 동등한 이론 유도는 아니며 각 설계는 benchmark에서 반증 가능해야 한다.
+
 ### 7.2.1 Euler-CE Attention (core)
+
+core position encoding은 정의한 좌표와 정규화에서만 비교 가능하다. 길이 외삽과 다른 tokenizer에서는 별도 검증이 필요하다.
 
 **Position encoding**:
 $$
@@ -42,6 +50,8 @@ $$
 
 ### 7.2.2 Recursive ClarusCell
 
+재귀 cell은 지정한 깊이와 초기화에서의 계산 모듈이며 고정점 수렴을 물리 시간으로 읽지 않는다.
+
 CE bootstrap 방정식
 $$
 \varepsilon^2 = \exp\!\bigl[-(1-\varepsilon^2)\,D_{\text{eff}}\bigr]
@@ -59,6 +69,8 @@ $$
 
 ### 7.2.3 Riemann Rotary (RH axiom)
 
+이 소절의 리만 관련 배열은 공학적 초기화 가설이며 수학적 리만 가설의 증명이나 물리 상수의 산출이 아니다.
+
 리만 가설을 **공학 axiom**으로 채택: 모든 비자명 영점의 허수부 $\gamma_n$이 $\{\text{π}, e, \pi e, \pi/e\}$ 처럼 aperiodic 무리수 수열.
 
 $$
@@ -71,6 +83,8 @@ Montgomery–Dyson 대응: $\gamma_n$ 간격은 Gaussian Unitary Ensemble (GUE) 
 구현: `reality_stone/python/reality_stone/clarus/ce_riemann_attn.py::RiemannRotaryAttention`
 
 ### 7.2.4 FFN 변형
+
+표의 FFN 식은 parameterization 비교를 위한 정의이며 동일 parameter count와 optimizer 조건에서 평가해야 한다.
 
 | 이름 | 식 |
 |---|---|
@@ -85,13 +99,19 @@ Montgomery–Dyson 대응: $\gamma_n$ 간격은 Gaussian Unitary Ensemble (GUE) 
 
 ### 7.2.5 Riemann FFN init
 
+초기화 간격은 입력 scale에 의존하며 학습 뒤의 성능 차이는 seed·학습률 분산과 함께 보고해야 한다.
+
 $W_{\text{up}}$의 한 축을 $\gamma_n$ 간격으로 스케일. 키 좌표가 GUE 분포. 구현: `reality_stone/python/reality_stone/clarus/ce_riemann_attn.py::riemann_zero_init`
 
 ---
 
 ## 7.3 벤치 결과 (모두 char-level LM, 400K-char docs corpus, 2-layer, $d_{\text{model}}=96$)
 
+아래 표는 고정한 작은 corpus·층수·폭·step에서의 조건부 결과다. 수치 성공은 독립 데이터·더 큰 모델·오염 없는 holdout에서 재현될 때만 일반화 주장으로 승격될 수 있다.
+
 ### 7.3.1 Position Encoding (5 seeds × 500 steps, PR #1 commit 3bbc558)
+
+position encoding 비교는 같은 seed 수와 training budget 아래의 평균·분산을 읽어야 한다.
 
 | 변형 | PPL | RoPE 대비 |
 |---|---|---|
@@ -104,6 +124,8 @@ $W_{\text{up}}$의 한 축을 $\gamma_n$ 간격으로 스케일. 키 좌표가 G
 **결론**: Euler rotary가 RoPE를 통계적으로 유의하게 이김 (5σ). 이론-정합(euler_ce)이 분산 최저.
 
 ### 7.3.2 Recursive ClarusCell (3 seeds × 300 steps, commit f7f17f4)
+
+재귀 깊이 결과는 지정한 step budget의 trade-off이며 수렴 속도를 일반 추론 능력으로 동일시하지 않는다.
 
 | 변형 | PPL | RoPE 대비 | k1 대비 | 시간 |
 |---|---|---|---|---|
@@ -118,6 +140,8 @@ $W_{\text{up}}$의 한 축을 $\gamma_n$ 간격으로 스케일. 키 좌표가 G
 
 ### 7.3.3 FFN + Position 조합 (3 seeds × 300 steps, commit 9ede7f3)
 
+조합 효과는 interaction ablation과 동일 compute 비교가 있어야 해석 가능하다.
+
 모두 k=3 recursive 위:
 
 | 변형 | PPL | euler_ce_std 대비 |
@@ -130,6 +154,8 @@ $W_{\text{up}}$의 한 축을 $\gamma_n$ 간격으로 스케일. 키 좌표가 G
 
 ### 7.3.4 Design 2 ζ activation (LOSS 기록)
 
+loss 기록은 실패한 설계의 재현 증인이며 다른 데이터에서의 성능 판정은 아니다.
+
 | FFN | PPL | time |
 |---|---|---|
 | swiglu | 17.78 ± 0.78 | 30.9s |
@@ -138,6 +164,8 @@ $W_{\text{up}}$의 한 축을 $\gamma_n$ 간격으로 스케일. 키 좌표가 G
 **결론**: |ζ(1/2+ix)|² modulation은 학습에 해로움 + 비현실적 비용.
 
 ### 7.3.5 Design 4 Riemann FFN init
+
+초기화 분산 표는 randomness의 범위를 보여 주며 이론 상수의 최적성을 증명하지 않는다.
 
 | Init | PPL | std |
 |---|---|---|
@@ -150,26 +178,42 @@ $W_{\text{up}}$의 한 축을 $\gamma_n$ 간격으로 스케일. 키 좌표가 G
 
 ## 7.4 이론적 해석
 
-### 7.4.1 Euler = Riemann (공학적 등가)
+벤치 관찰을 CE 서사에 연결할 때는 정본의 지위와 경험적 성능을 분리해야 한다. 아래 해석은 공학 가설이며 반증 조건은 독립 benchmark의 ablation이다.
 
-Design 1 (Riemann rotary) 이 Euler-CE와 TIE. 이는 **예측된 결과**:
-- Montgomery–Dyson: $\gamma_n$ 간격 ≃ GUE
-- $\{1, \pi, e, \pi e, \pi/e\}$: 무리수 aperiodic
-- 두 수열 모두 **최대 질서 + 최대 혼돈** 통계 공유
+### 7.4.1 Euler vs Riemann — 최종 판정은 8_리만 정본을 따른다
 
-공학적 함의: 리만 가설 참/거짓에 관계없이 **Euler-CE가 충분**. 추가 복잡도는 이득 없음.
+소규모 TIE는 제한된 실험 결과일 뿐 정본의 수학적 판정을 바꾸지 않는다.
+
+이 절의 소규모 벤치(§7.3.3)에서 riemann_std는 TIE로 기록되었으나, 이후
+[`docs/8_리만/mra_paper.md`](../8_리만/mra_paper.md) §7.3의 더 큰 실험(1500 step × 3 seed)에서
+ζ 영점을 attention 주파수로 직접 쓰는 계열(mra_zeta)은 RoPE 대비 명확한 LOSS(z=+8.84)로
+판정되어 폐기되었다. 원인은 $\gamma_k/\gamma_1$ 범위가 좁아 RoPE의 다중스케일 해상도를
+잃기 때문이다. 같은 논문 §7.7의 32× 길이 외삽 분해에서 Euler-CE의 외삽 우위는
+e-decay(ALiBi 계열) 단독 효과로 환원되었고, π-rotation은 외삽에 기여하지 않았다.
+
+이론적 배경(Montgomery–Dyson: $\gamma_n$ 간격 ≃ GUE, $\{1,\pi,e,\pi e,\pi/e\}$의 무리수
+aperiodicity)은 두 주파수 계열의 통계적 유사성을 설명하지만, 성능 등가의 근거로는
+사용하지 않는다. 공학적 결론은 유지·강화된다: 리만 가설 참/거짓과 무관하게
+**Euler-CE(실질적으로 e-decay)로 충분**하며, ζ 영점 주파수의 추가 복잡도는 이득이 없다.
+이 절과 8_리만 정본이 충돌하면 8_리만 쪽이 우선한다.
 
 ### 7.4.2 자기재귀 = Bootstrap 고정점
+
+계산 깊이의 수렴은 알고리즘 특성이고 CE 고정점과의 대응은 추가 모델 선택이다.
 
 $k=3$에서 수렴은 CE `ε² = exp[-(1-ε²)D_eff]` 의 빠른 수렴과 일치. $D_{\text{eff}} \approx 3$에서 Banach 계수가 작아 3-step fixed-point 충분.
 
 ### 7.4.3 Borbély $T_{\text{WAKE}}$ 경험 검증 (이전 commit 7f7fa18)
+
+초기값 근방의 이동량은 지정한 optimizer·corpus에서의 경험식이며 보편 최적성의 증거는 아니다.
 
 Dual-graph attention의 gate를 학습 자유도로 풀었을 때, Borbély 2-process에서 유도한 $T_{\text{WAKE}} = 0.315$ 초기값에서 평균 +0.002만 이동. **이론 상수의 경험적 준최적성 확인**.
 
 ---
 
 ## 7.5 최종 Winning Stack
+
+winning stack은 이 benchmark의 선택 결과이며 배포 전에는 비용·안전성·외부 holdout을 함께 통과해야 한다.
 
 | 층 | 채택 | 공헌 |
 |---|---|---|
@@ -183,6 +227,8 @@ Dual-graph attention의 gate를 학습 자유도로 풀었을 때, Borbély 2-pr
 
 ## 7.6 버림 / 실패 목록
 
+실패 목록은 탐색 편향을 기록하는 negative control이며, 이후 설계가 같은 조건을 우회했는지 점검하는 기준이다.
+
 | 설계 | 결과 | 원인 |
 |---|---|---|
 | Dual-Laplacian attention (ce_dual) | −3.4σ LOSS | Convex softmax 혼합이 sharpness 희석 |
@@ -194,6 +240,8 @@ Dual-graph attention의 gate를 학습 자유도로 풀었을 때, Borbély 2-pr
 ---
 
 ## 7.7 실험 재현
+
+아래 명령은 지정한 환경과 데이터 snapshot에서만 같은 결과를 목표로 한다. checksum·dependency·seed가 다르면 수치 차이는 실패 원인과 함께 기록해야 한다.
 
 ```bash
 # Position encoding 벤치
@@ -212,6 +260,8 @@ python3 examples/ai/bench_riemann_ffn_init.py --steps 300 --seeds 3
 ---
 
 ## 7.8 이론 상수 출처
+
+상수의 출처는 코드와 문헌으로 추적하되, 공학 initialisation에 썼다는 사실이 물리적 지위를 변경하지 않는다.
 
 - Riemann 영점 첫 100개: `reality_stone/python/reality_stone/clarus/ce_riemann_attn.py::RIEMANN_ZEROS_IM` (Titchmarsh 표, Odlyzko 검증)
 - Euler 상수 bitfield: `reality_stone/python/reality_stone/clarus/ce_euler.py::EULER_BASIS`

@@ -1,5 +1,10 @@
 # Local temporal-memory confirmation
 
+이 문서는 local temporal-memory가 지정 horizon에서 baseline보다 구별되는지 확인한 좁은 confirmation 기록이다. 독자는 time-series prediction·holdout·counterfactual baseline의 기본을 아는 독자를 전제로 하며, 기억 비유는 구현 state와 실험 metric을 넘어서는 기제 주장이 아니다.
+
+증명 명제와 판정식을 먼저 읽고 누수 방지, AML310 탐색, untouched AML32 확인, 독립 계산과 AGI 해석 경계를 차례로 확인한다. dataset provenance·split·seed·horizon·threshold가 정의역이며, 통과가 일반 memory·지능·생물학 결과로 승격되지 않는다.
+
+
 > **지위 변경 (2026-08-12) — 생물학적 해석 강등.**
 > 아래 원문이 기록한 사전등록 계산 게이트 PASS(AML32 $h=1$ 7/7, $h=6$ 7/7)는 계산적 사실로 유지된다. 그러나 이 결과를 신경 세포 내부의 시간 기억(neural local temporal memory)으로 읽는 생물학적 해석은 **[삭제된 해석]**으로 강등한다. 근거는 활동 비의존 형광 대조군에서 성립한 완전 반례다.
 >
@@ -19,59 +24,63 @@
 
 ## 1. 실제로 증명한 명제
 
+이 명제는 local state·time window·prediction output과 지정 baseline의 차이를 제한된 fixture에서 비교한다. 증명의 정의역·초기 조건·metric 분모를 벗어나면 결론은 적용되지 않고, memory라는 이름이 인과 기제를 뜻하지 않는다.
+
 이 결과가 지지하는 명제는 다음처럼 좁다.
 
 > 움직이는 C. elegans의 이 calcium-activity 데이터에서, 한 뉴런의
-> \(t-1,t-2\) 측정값은 그 뉴런의 현재 측정값 \(x_i(t)\)만으로 만든
-> 비선형 기준선을 조건으로 한 뒤에도 \(t+h\) 측정값에 대한 held-out
-> 예측정보를 가진다. 이 결과는 \(h=1,6\)과 별도의 AML32 일곱 동물에서
+> $t-1,t-2$ 측정값은 그 뉴런의 현재 측정값 $x_i(t)$만으로 만든
+> 비선형 기준선을 조건으로 한 뒤에도 $t+h$ 측정값에 대한 held-out
+> 예측정보를 가진다. 이 결과는 $h=1,6$과 별도의 AML32 일곱 동물에서
 > 재현된다.
 
 고정한 예측식은
 
-\[
+$$
 \widehat x_i(t+h)
 =\beta_0+g\!\left(x_i(t)\right)
  \beta_1x_i(t-1)+\beta_2x_i(t-2),
-\]
+$$
 
-\[
+$$
 g(x)=[x,x^2,x^3,\tanh x]
-\]
+$$
 
-이다. current-only 기준선은 \(\beta_1=\beta_2=0\)인 같은 ridge
+이다. current-only 기준선은 $\beta_1=\beta_2=0$인 같은 ridge
 family다. 따라서 단순 선형 current 기준선이 약해서 생기는 이득만을
 세지 않았다.
 
 ## 2. 증명 판정식
 
-기록 \(r\), 뉴런 \(i\), horizon \(h\)에 대해
+판정식은 sample unit·horizon·error metric·threshold·불확실성을 고정해 pass/fail을 정한다. 추정량은 dataset split·seed에 조건부이며, 식의 통과는 scientific truth가 아니라 등록된 claim의 기계·통계 판정이다.
 
-\[
+기록 $r$, 뉴런 $i$, horizon $h$에 대해
+
+$$
 d_{r,i,h}
 =R^2_{r,i,h}(\mathrm{local})
 -R^2_{r,i,h}(\mathrm{current\ nonlinear})
-\]
+$$
 
 로 두고, 동물별 효과를
 
-\[
+$$
 \Delta_{r,h}=\operatorname{median}_i d_{r,i,h}
-\]
+$$
 
-로 정의했다. \(t-1,t-2\) 열을 train/validation/test 각 블록 안에서
+로 정의했다. $t-1,t-2$ 열을 train/validation/test 각 블록 안에서
 함께 원형 이동하고 **매번 모델을 다시 학습**한 19개 null을
-\(\Delta^{(b)}_{r,h}\)라 하면
+$\Delta^{(b)}_{r,h}$라 하면
 
-\[
+$$
 p_{r,h}
 =\frac{1+\sum_{b=1}^{19}
 \mathbf 1[\Delta^{(b)}_{r,h}\ge\Delta_{r,h}]}{20}.
-\]
+$$
 
 기록 하나의 사전등록 통과 술어는
 
-\[
+$$
 G_{r,h}=
 \mathbf 1\!\left[
 \begin{array}{l}
@@ -81,22 +90,24 @@ n_{\rm target}\ge20,\\
 p_{r,h}\le0.05
 \end{array}
 \right].
-\]
+$$
 
 확인 패널의 전체 술어는
 
-\[
+$$
 G_{\rm panel}
 =
 \mathbf 1\!\left[\sum_{r=1}^{7}G_{r,1}\ge5\right]
 \land
 \mathbf 1\!\left[\sum_{r=1}^{7}G_{r,6}\ge5\right].
-\]
+$$
 
 규칙은 AML32 activity를 평가하기 전에
 `local_memory_aml32_preregistration.json`에 고정했다.
 
 ## 3. 누수 및 약한 대조군 방지
+
+이 절은 future information, entity overlap, weak baseline이 만든 거짓 개선을 차단한다. provenance·split·baseline·ablation이 깨지면 결과는 expected failure 또는 rollback이며, 사후 tuning으로 복구하지 않는다.
 
 - 시간순 60/20/20 분할과 5-sample embargo를 썼다.
 - ridge는 validation에서만 고르고 test는 변환·학습·선택에 쓰지 않았다.
@@ -111,19 +122,25 @@ G_{\rm panel}
 
 ## 4. 탐색 패널: AML310
 
-| horizon | 기록별 median \(\Delta R^2\) | 기록 통과 |
-|---|---:|---:|
-| \(h=1\) | 0.0293, 0.0226, 0.0604, 0.0379 | 4/4 |
-| \(h=6\) | 0.2298, 0.1952, 0.3085, 0.1879 | 4/4 |
+AML310은 model·dataset·seed를 탐색하는 개발 panel이며 selection bias가 있을 수 있다. 이 패널의 수치는 hypothesis 생성에만 쓰고, confirmation 승격은 untouched split과 독립 계산을 요구한다.
 
-모든 기록의 positive-target fraction은 \(0.901\) 이상이고 null rank
-\(p=0.05\)였다. 이 결과를 본 뒤에도 AML32 기준은 바꾸지 않았다.
+| horizon | 기록별 median $\Delta R^2$ | 기록 통과 |
+|---|---:|---:|
+| $h=1$ | 0.0293, 0.0226, 0.0604, 0.0379 | 4/4 |
+| $h=6$ | 0.2298, 0.1952, 0.3085, 0.1879 | 4/4 |
+
+모든 기록의 positive-target fraction은 $0.901$ 이상이고 null rank
+$p=0.05$였다. 이 결과를 본 뒤에도 AML32 기준은 바꾸지 않았다.
 
 ## 5. untouched 확인 패널: AML32
 
-### \(h=1\)
+AML32는 탐색·tuning에서 분리한 confirmation panel로, 동일 판정식과 baseline을 적용한다. panel provenance·seed·horizon이 바뀌면 새 확인으로 등록해야 하며, 통과하지 않으면 탐색 결과를 지지하지 않는다.
 
-| recording | targets | current \(R^2\) | local \(R^2\) | \(\Delta R^2\) | positive | null \(p\) | pass |
+### $h=1$
+
+$h=1$은 지정한 한 time step horizon의 prediction fixture다. 다른 horizon과 분모·난이도가 다르므로 metric을 합치지 않고 seed·baseline·threshold에서 따로 판정한다.
+
+| recording | targets | current $R^2$ | local $R^2$ | $\Delta R^2$ | positive | null $p$ | pass |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | 20170610_105634 | 107 | 0.9759 | 0.9994 | 0.0230 | 0.991 | 0.05 | PASS |
 | 20170613_134800 | 118 | 0.9771 | 0.9994 | 0.0223 | 1.000 | 0.05 | PASS |
@@ -135,9 +152,11 @@ G_{\rm panel}
 
 사전등록 요구치는 5/7이고 관측값은 **7/7**이다.
 
-### \(h=6\)
+### $h=6$
 
-| recording | targets | current \(R^2\) | local \(R^2\) | \(\Delta R^2\) | positive | null \(p\) | pass |
+$h=6$은 더 긴 time horizon의 독립 fixture로, error accumulation과 OOD drift가 다를 수 있다. $h=1$ 통과는 이 조건의 성공을 보장하지 않으며, failure는 memory 가설의 적용 범위를 좁힌다.
+
+| recording | targets | current $R^2$ | local $R^2$ | $\Delta R^2$ | positive | null $p$ | pass |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | 20170610_105634 | 107 | 0.4875 | 0.6844 | 0.1949 | 0.991 | 0.05 | PASS |
 | 20170613_134800 | 118 | 0.4778 | 0.6882 | 0.2098 | 1.000 | 0.05 | PASS |
@@ -151,6 +170,8 @@ G_{\rm panel}
 
 ## 6. 독립 계산 검증
 
+독립 계산은 builder와 분리된 implementation·artifact·seed에서 판정식을 재계산하는 재현성 gate다. 수치 parity는 등록된 fixture의 기계 evidence이며, dataset bias·과학적 기제·일반 AGI 성능을 해결하지 않는다.
+
 verifier는 결과 파일의 `gate_passed`를 신뢰하지 않고 다음을 다시
 계산한다.
 
@@ -159,7 +180,7 @@ verifier는 결과 파일의 `gate_passed`를 신뢰하지 않고 다음을 다�
 3. 정확히 사전등록한 일곱 recording인지 확인
 4. 각 기록의 네 조건을 원시 수치에서 재계산
 5. horizon별 pass count와 5/7 조건 재계산
-6. \(h=1,6\) 동시 통과 재계산
+6. $h=1,6$ 동시 통과 재계산
 
 결과는
 
@@ -175,6 +196,8 @@ h=6: 7/7, required 5
 
 ## 7. 무엇이 증명됐고 무엇은 아직 아닌가
 
+이 절은 조건부 형식 결론, 확인 panel의 경험 evidence, 남은 구조 해석을 분리한다. 반례·OOD·새 split이 나타나면 승격을 취소하거나 범위를 좁히며, 그 공백을 그럴듯한 서사로 메우지 않는다.
+
 | 명제 | 판정 |
 |---|---|
 | 고정된 코드와 artifact가 사전등록 술어를 만족 | **Exact computational PASS** |
@@ -186,33 +209,35 @@ h=6: 7/7, required 5
 | 뉴런 자체가 category-theoretic monad/CloudCell | 미증명이며 현재 자료로 식별 불가 |
 | 이 결과가 AGI architecture를 직접 입증 | 미증명 |
 
-특히 \(p=0.05\)는 19개 고정 phase-null이 주는 최소 해상도다. 이는
+특히 $p=0.05$는 19개 고정 phase-null이 주는 최소 해상도다. 이는
 “모든 null보다 관측 정렬이 컸다”는 뜻이지, 생물학적 모집단에서 정확한
 확률이 0.05라는 뜻은 아니다. 또한 calcium indicator kinetics나 기존
 signal processing도 local history를 만들 수 있다. 따라서 정당한 결론은
 
-\[
+$$
 \boxed{
 \text{measured neuron activity is predictively stateful over time}
 }
-\]
+$$
 
 까지다. 현재 결과로
 
-\[
+$$
 \text{neuron}=\text{coded monadic CloudCell}
-\]
+$$
 
 을 쓰는 것은 증거 범위를 넘는다.
 
 ## 8. AGI 쪽에서 남는 의미
 
+AGI 의미는 local-memory 결과가 설계 후보에 주는 제한된 input을 설명한다. 현재 증거는 feature·task·dataset 범위에 한정되며, 통합 agent 효능·의식·생물학 대응은 별도 baseline·ablation·OOD gate가 필요하다.
+
 AGI 설계에 가져갈 수 있는 것은 존재론적 동일시가 아니라 설계 제약이다.
 
-\[
+$$
 \text{unit state}_{t+1}
 =F(\text{unit state}_{t:t-2},\ \text{input}_t)
-\]
+$$
 
 처럼 각 unit에 짧은 local state를 두는 가정은 실제 데이터와 합치한다.
 반대로 이번 자료는 dense population cloud, learned directed graph,

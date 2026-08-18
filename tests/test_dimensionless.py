@@ -1,31 +1,62 @@
 from __future__ import annotations
 
+import importlib.util
 import math
 from fractions import Fraction
+from pathlib import Path
+import sys
 
 import pytest
 
-from reality_stone.clarus.dimensionless import (
-    CURVATURE,
-    DIMENSIONLESS,
-    LENGTH,
-    Quantity,
-    audit_dimensionless,
-    buckingham_pi_groups,
-    check_dimensionless,
-    dim,
-    evaluate_group,
-    exp_argument,
-    exp_arguments,
-    group_dimension,
-    nondimensionalize,
-    require_dimensionless,
+
+ROOT = Path(__file__).resolve().parents[1]
+CLARUS_DIR = ROOT / "reality_stone" / "python" / "reality_stone" / "clarus"
+
+
+def _load_standalone_module(name: str, filename: str):
+    """Load a math gate without importing the torch-backed package facade."""
+
+    spec = importlib.util.spec_from_file_location(name, CLARUS_DIR / filename)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    try:
+        spec.loader.exec_module(module)
+    finally:
+        sys.modules.pop(name, None)
+    return module
+
+
+_dimensionless = _load_standalone_module("ce_dimensionless_math", "dimensionless.py")
+HAS_SYMPY = importlib.util.find_spec("sympy") is not None
+_checker = (
+    _load_standalone_module("ce_dimensionless_checker", "dimensionless_checker.py")
+    if HAS_SYMPY
+    else None
 )
-from reality_stone.clarus.dimensionless_checker import (
-    Dimension,
-    DimensionVector,
-    DimensionlessChecker,
+requires_sympy = pytest.mark.skipif(
+    not HAS_SYMPY,
+    reason="dimensionless formula registry validation requires sympy",
 )
+
+CURVATURE = _dimensionless.CURVATURE
+DIMENSIONLESS = _dimensionless.DIMENSIONLESS
+LENGTH = _dimensionless.LENGTH
+Quantity = _dimensionless.Quantity
+audit_dimensionless = _dimensionless.audit_dimensionless
+buckingham_pi_groups = _dimensionless.buckingham_pi_groups
+check_dimensionless = _dimensionless.check_dimensionless
+dim = _dimensionless.dim
+evaluate_group = _dimensionless.evaluate_group
+exp_argument = _dimensionless.exp_argument
+exp_arguments = _dimensionless.exp_arguments
+group_dimension = _dimensionless.group_dimension
+nondimensionalize = _dimensionless.nondimensionalize
+require_dimensionless = _dimensionless.require_dimensionless
+
+Dimension = _checker.Dimension if _checker is not None else None
+DimensionVector = _checker.DimensionVector if _checker is not None else None
+DimensionlessChecker = _checker.DimensionlessChecker if _checker is not None else None
 
 
 def test_curvature_must_be_scaled_before_exponential() -> None:
@@ -118,6 +149,7 @@ def test_exp_arguments_validates_batch_before_kernel_use() -> None:
     assert args.unwrap() == (0.31, 1.7)
 
 
+@requires_sympy
 def test_checker_preserves_unnamed_inverse_time_dimension() -> None:
     inverse_time = Dimension.TIME**-1
 
@@ -126,6 +158,7 @@ def test_checker_preserves_unnamed_inverse_time_dimension() -> None:
     assert not inverse_time.is_dimensionless()
 
 
+@requires_sympy
 def test_checker_preserves_mass_squared_and_composes_back_to_mass() -> None:
     mass_squared = Dimension.MASS**2
 
@@ -135,6 +168,7 @@ def test_checker_preserves_mass_squared_and_composes_back_to_mass() -> None:
     assert mass_squared / Dimension.MASS == Dimension.MASS
 
 
+@requires_sympy
 def test_registered_rate_and_magnetic_field_have_nontrivial_dimensions() -> None:
     formulas = {formula.name: formula for formula in DimensionlessChecker().formulas}
 
@@ -147,6 +181,7 @@ def test_registered_rate_and_magnetic_field_have_nontrivial_dimensions() -> None
     assert not magnetic_field.is_dimensionless()
 
 
+@requires_sympy
 def test_clarus_field_gate_and_phase_score_are_registered_dimensionless() -> None:
     checker = DimensionlessChecker()
     formulas = {formula.symbol: formula for formula in checker.formulas}
@@ -157,6 +192,7 @@ def test_clarus_field_gate_and_phase_score_are_registered_dimensionless() -> Non
     assert checker.check_formula(formulas["chi_CF"])["status"].startswith("PASS")
 
 
+@requires_sympy
 def test_unified_metric_surprise_and_condition_ratio_are_dimensionless() -> None:
     checker = DimensionlessChecker()
     formulas = {formula.symbol: formula for formula in checker.formulas}
@@ -167,6 +203,7 @@ def test_unified_metric_surprise_and_condition_ratio_are_dimensionless() -> None
     assert checker.check_formula(formulas["kappa_UM"])["status"].startswith("PASS")
 
 
+@requires_sympy
 def test_v16_metric_flow_residual_and_regret_are_dimensionless() -> None:
     checker = DimensionlessChecker()
     formulas = {formula.symbol: formula for formula in checker.formulas}
@@ -177,6 +214,7 @@ def test_v16_metric_flow_residual_and_regret_are_dimensionless() -> None:
     assert checker.check_formula(formulas["rho_V16"])["status"].startswith("PASS")
 
 
+@requires_sympy
 def test_v17_conditional_information_and_lift_margin_are_dimensionless() -> None:
     checker = DimensionlessChecker()
     formulas = {formula.symbol: formula for formula in checker.formulas}
@@ -187,6 +225,7 @@ def test_v17_conditional_information_and_lift_margin_are_dimensionless() -> None
     assert checker.check_formula(formulas["delta_V17"])["status"].startswith("PASS")
 
 
+@requires_sympy
 def test_v18b_reward_decoder_and_classifier_increment_are_dimensionless() -> None:
     checker = DimensionlessChecker()
     formulas = {formula.symbol: formula for formula in checker.formulas}

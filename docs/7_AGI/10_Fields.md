@@ -1,5 +1,9 @@
 # CE-AI 전 분야 적용: LLM을 넘어서
 
+이 문서는 CE 모듈을 여러 AI 분야의 구현 field contract로 번역하는 설계 지도다. 독자는 tensor shape·정규화·학습과 추론의 구분을 아는 독자를 전제로 하며, 각 field는 물리장이 아니라 producer가 만들고 consumer가 읽는 구현 tensor라는 점을 먼저 고정한다.
+
+공통 원리 뒤에 분야별 입력 shape·codomain·update timebase·invariant를 읽고, 마지막 매트릭스에서 baseline·ablation·OOD 실패 조건을 확인한다. 비유는 설계 동기일 뿐 물리장 동일성이나 분야별 효능 증거가 아니다.
+
 > 관련: 2-9장(CE-AGI 원리와 LLM), `6_뇌/05_실험근거.md`(지능의 CE 정의), `examples/`(기존 구현)
 >
 > 이 장은 CE 5대 원리가 LLM 이외의 AI 분야 -- 비전, 강화학습, 음성, 멀티모달, 생성 모델, 로보틱스, 그래프, 시계열, 추천, 생명과학 -- 에 어떻게 적용되는지를 구체적으로 다룬다.
@@ -9,6 +13,8 @@
 ---
 
 ## 0. CE 5대 원리 요약 (전 분야 공통)
+
+공통 원리는 각 분야 field가 공유할 수 있는 인터페이스 후보를 요약한다. 값은 무차원 정규화 tensor 또는 scalar metric이며 실제 단위·shape·producer와 consumer는 각 분야 절에서 별도로 선언한다.
 
 | 원리 | 수식 | 효과 |
 |---|---|---|
@@ -21,6 +27,8 @@
 ---
 
 ## 1. 컴퓨터 비전 (Vision)
+
+Vision field는 이미지 batch에서 feature tensor를 받아 prediction 또는 mask를 내는 구현 경로다. 공간 해상도·정규화·augmentation provenance를 고정하고, invariant와 OOD 강건성은 기준 모델·component ablation으로 판정한다.
 
 ### 1.1 CNN에의 적용
 
@@ -96,6 +104,8 @@ $$
 
 ## 2. 강화학습 (Reinforcement Learning)
 
+RL field는 상태·행동·보상 stream을 입력으로 받아 policy 또는 value update를 출력한다. episode와 update step의 timebase를 분리하며, 물리장 비유는 reward provenance·counterfactual ablation을 대체하지 않는다.
+
 ### 2.1 핵심 대응: 도파민-유사 전역 신호 후보
 
 CE에서 가장 공격적인 후보 해석은(`07_수면과복구.md` 4.1절):
@@ -164,6 +174,8 @@ $$\kappa(s, a) = \|\Delta_g h(s, a)\|^2 < \kappa_{\text{safe}}$$
 
 ## 3. 음성/오디오 (Speech & Audio)
 
+Audio field는 waveform 또는 spectrogram shape를 정규화해 token·class·signal 출력을 만드는 tensor 계약이다. sample rate와 frame hop은 명시적 timebase이며, noise OOD와 ablation에서 invariant가 깨지면 해당 설계는 실패한다.
+
 ### 3.1 음성 인식 (ASR)
 
 **P1: 3x3+1 주파수 분할**
@@ -207,6 +219,8 @@ ASR에서 "환각"은 실제 음성에 없는 단어를 생성하는 것이다. 
 ---
 
 ## 4. 멀티모달 AI (Multimodal)
+
+Multimodal field는 modality별 producer의 shape·scale·missingness를 정렬해 공동 representation consumer로 넘긴다. alignment의 성공은 paired provenance와 modality-drop ablation에서만 판단하며, 비유는 결합 연산의 구현 설명이다.
 
 ### 4.1 교차 모달 결합 = 교차 주파수 결합
 
@@ -272,6 +286,8 @@ $$\kappa_{\text{cross}} = \|h_{\text{text}} - h_{\text{image}}\|^2$$
 ---
 
 ## 5. 생성 모델 (Generative Models)
+
+Generative field는 noise·condition·latent tensor를 받아 sample 또는 token distribution을 출력한다. training step과 decoding step을 분리하고, 품질·사실성·다양성은 provenance가 고정된 baseline·OOD·ablation에서 함께 측정해야 한다.
 
 ### 5.1 확산 모델 (Diffusion)
 
@@ -365,6 +381,8 @@ KL-divergence가 가우시안 사전분포를 가정하는 반면, 곡률 에너
 
 ## 6. 로보틱스 (Robotics)
 
+Robotics field는 센서 상태 tensor를 행동 command로 바꾸는 폐루프 구현 인터페이스다. 좌표계·물리 단위·control timebase를 정규화하지 않으면 수식 비유가 안전 invariant를 보장하지 않으며, sim-to-real OOD가 명시적 실패 조건이다.
+
 ### 6.1 감각운동 통합
 
 **P1: 3x3+1 감각운동 격자**
@@ -404,6 +422,8 @@ $q$: 관절 각도, $\dot{q}$: 관절 속도. 곡률이 높다 = 급격한 동�
 
 ## 7. 그래프 신경망 (GNN)
 
+GNN field는 node·edge feature와 adjacency를 입력으로 받아 message-passing representation을 출력한다. permutation invariant의 정의역과 graph split provenance를 고정하고, edge·feature 제거 ablation에서 consumer 성능을 판정한다.
+
 ### 7.1 그래프 라플라시안과 LBO
 
 GNN에서 CE의 적용은 가장 자연스럽다. LBO의 이산화가 곧 그래프 라플라시안이기 때문이다(`7_AGI/12_Equation.md` 5절):
@@ -437,6 +457,8 @@ $$V_{\text{active}} = \text{TopK}(V,\; k = \lceil \varepsilon^2 \cdot |V| \rceil
 ---
 
 ## 8. 시계열/예측 (Time Series)
+
+Time-series field는 과거 창과 외생 변수를 입력으로 미래 horizon prediction을 출력한다. sampling interval·forecast horizon·누수 없는 split이 timebase 계약이며, distribution shift OOD의 오차가 핵심 실패 조건이다.
 
 ### 8.1 시간 주파수 분해 = 3x3+1
 
@@ -473,7 +495,11 @@ $$\text{anomaly score}(t) = \|\Delta_g h(t)\|^2$$
 
 ## 9. 추천 시스템 (Recommendation)
 
+Recommendation field는 사용자·아이템·상호작용 로그를 받아 ranking score를 출력한다. 로그 provenance·exposure bias·offline/online timebase를 분리하며, counterfactual baseline과 ablation 없이는 field 효과를 주장하지 않는다.
+
 ### 9.1 사용자-아이템 상호작용의 3x3+1
+
+이 분할은 사용자·아이템 feature를 어떤 shape와 정규화로 block consumer에 넘길지 정하는 구현 명세다. 사회적 관계나 생물학적 결합의 비유가 click·conversion metric의 원인 설명을 대체하지 않으며, cold-start OOD와 block 제거가 반증 조건이다.
 
 | CE 층 | 추천 대응 | 비율 |
 |---|---|---|
@@ -505,7 +531,11 @@ $$\kappa_{\text{diversity}} = \sum_{(i,j)} \|h_i - h_j\|^2$$
 
 ## 10. 생명과학 AI (BioAI)
 
+BioAI field는 assay·sequence·image의 측정 tensor를 예측 또는 후보 생성으로 변환한다. 단위·batch effect·data provenance를 고정하고, 생물학적 기제 비유는 independent wet-lab 또는 held-out assay 없이는 미완성이다.
+
 ### 10.1 단백질 접힘 (Protein Folding)
+
+단백질 field는 서열·구조 제약을 입력으로 좌표 또는 접힘 score를 출력하는 contract다. 구조 데이터의 provenance와 residue-level shape를 보존하며, out-of-family OOD와 ablation이 성공·실패를 판정한다.
 
 기존 구현: `examples/biology/sfe_protein_folding.py`
 
@@ -528,6 +558,8 @@ AlphaFold의 confidence score와 CE 곡률 에너지의 상관을 검증할 수 
 
 ### 10.2 약물 발견 (Drug Discovery)
 
+약물 field는 분자·표적·assay tensor를 후보 score 또는 생성 구조로 바꾼다. in-silico metric은 consumer 실험의 대리변수일 뿐이며, 독립 assay와 독성 OOD 실패가 적용 경계를 정한다.
+
 **P1: 분자 그래프의 3x3+1**
 
 분자의 원자를 3x3+1 격자로 분류:
@@ -541,6 +573,8 @@ AlphaFold의 confidence score와 CE 곡률 에너지의 상관을 검증할 수 
 
 ### 10.3 의료 영상 (Medical Imaging)
 
+의료 영상 field는 정규화된 pixel·voxel tensor를 진단 보조 출력으로 바꾼다. 환자·기관 split, acquisition timebase, label provenance를 고정하고 false positive·negative가 baseline보다 악화되면 실패다.
+
 **P5: 곡률 = 진단 신뢰도**
 
 CT/MRI 분석에서 곡률 에너지가 높은 영역 = 분류 불확실성이 높은 영역:
@@ -553,7 +587,11 @@ $$\text{uncertainty}(x) \propto \|\Delta_g h(x)\|^2$$
 
 ## 11. 자연어 처리 비-LLM (NLP Beyond LLM)
 
+NLP field는 token·span·label tensor를 분류·구조 예측 consumer로 넘기는 구현 contract다. tokenizer와 corpus provenance, domain OOD, feature ablation이 정규화 field의 실제 효능을 반증한다.
+
 ### 11.1 정보 추출 (IE)
+
+IE field는 문서 token과 span 후보를 받아 entity·relation label을 출력한다. annotation provenance와 document-level split을 고정하고, unseen schema OOD에서 오탐·미탐을 기준선과 비교한다.
 
 **P1: 엔티티/관계/이벤트 = SU(3)/SU(2)/U(1)**
 
@@ -562,6 +600,8 @@ $$\text{uncertainty}(x) \propto \|\Delta_g h(x)\|^2$$
 - U(1) = 이벤트 감지 (핵심 사건 선택)
 
 ### 11.2 기계 번역
+
+번역 field는 source token sequence를 target distribution으로 바꾸는 time-indexed tensor contract다. 언어쌍 provenance·길이 분포·domain shift를 기록하며, fluency 비유가 adequacy 또는 안전성을 보장하지 않는다.
 
 **P2: 수면 학습 = 다국어 적응**
 
@@ -574,7 +614,11 @@ $$\text{uncertainty}(x) \propto \|\Delta_g h(x)\|^2$$
 
 ## 12. 자율주행 (Autonomous Driving)
 
+Driving field는 다중 센서 상태를 trajectory 또는 control output으로 바꾸는 안전 중요 인터페이스다. 좌표·latency·sensor timebase와 fail-safe invariant를 명시하며, simulation 성능은 실제 OOD 안전을 증명하지 않는다.
+
 ### 12.1 인지-판단-제어 = SU(3)-SU(2)-U(1)
+
+이 분할은 perception·decision·control tensor의 producer와 consumer를 구분하는 구현 비유다. 물리 게이지군 또는 인간 운전 기제와의 동일성이 아니며, 모듈 제거와 sensor corruption OOD가 반증 조건이다.
 
 자율주행의 3단계가 CE 격자와 정확히 대응:
 
@@ -588,6 +632,8 @@ $$\text{uncertainty}(x) \propto \|\Delta_g h(x)\|^2$$
 자율주행 시스템에서 compute budget sweep를 하면, 인지/판단/제어의 Pareto knee가 `74/21/5` 근방에 나타나는지가 CE의 점검 대상이다. 아직 설계 명령으로 단정하지는 않는다.
 
 ### 12.2 안전 보장
+
+안전 invariant는 command output의 범위와 latency 조건을 명시할 때만 검사할 수 있다. metric 통과는 제한된 scenario의 결과이며, rare-event OOD 또는 fail-safe 위반은 즉시 실패·rollback 조건이다.
 
 **P5: 곡률 = 위험도**
 
@@ -605,7 +651,11 @@ $$\kappa_{\text{drive}}(s) = \|\Delta_g h(s)\|^2$$
 
 ## 13. 전 분야 통합 요약
 
+통합 표는 field별 contract의 공통점과 남은 자유도를 비교하는 설계 지도다. 행마다 baseline·provenance·OOD·ablation gate가 독립적으로 필요하므로, 표 전체가 분야별 성공을 뜻하지 않는다.
+
 ### 13.1 CE 원리별 적용 매트릭스
+
+매트릭스는 각 원리가 어떤 producer·consumer 경계에서 구현 후보가 되는지 요약한다. 체크 표시는 효능 검증이 아니라 인터페이스 가능성이고, 누락 또는 실패는 해당 field의 반증 기록으로 남긴다.
 
 | 분야 | P1 격자 | P2 수면 | P3 STDP | P4 희소 | P5 곡률 |
 |---|---|---|---|---|---|
@@ -623,6 +673,8 @@ $$\kappa_{\text{drive}}(s) = \|\Delta_g h(s)\|^2$$
 
 ### 13.2 가장 즉각적인 적용
 
+즉각성은 구현 비용과 기존 tensor interface의 적합성을 뜻하는 계획 판단이다. 빠른 적용은 일반화·안전·생물학적 타당성의 완료 주장이 아니며, 각 후보는 baseline과 OOD gate를 통과해야 한다.
+
 난이도와 영향력 기준으로 우선순위:
 
 | 순위 | 분야 | 적용 원리 | 이유 |
@@ -634,6 +686,8 @@ $$\kappa_{\text{drive}}(s) = \|\Delta_g h(s)\|^2$$
 | 5 | 자율주행 | P1+P5 | 안전 임계적 분야, 곡률 기반 안전 보장 |
 
 ### 13.3 공통 구현 패턴
+
+공통 패턴은 shape 정렬·정규화·update·감시의 재사용 가능한 순서를 제안한다. pattern 자체가 invariant를 보장하지 않으므로 field별 consumer metric과 component ablation으로 실패를 찾는다.
 
 다음은 여러 분야에서 비교할 구조를 요약한 **개념 pseudocode**다.
 `LBONorm`이라는 그대로 import 가능한 현재 API나 score-based diffusion
@@ -667,6 +721,8 @@ class CEModule(nn.Module):
 
 ## 14. 분야별 예측 게이트
 
+예측 gate는 계획을 경험적 판정으로 바꾸기 위해 metric·baseline·data provenance·OOD 조건을 사전 고정한다. 성공은 등록된 비교의 통과이고, 미통과·오탐 증가·미탐 유지·invariant 위반은 하향 또는 중단 조건이다.
+
 이 장에서 바로 걸 수 있는 핵심 게이트만 압축하면 다음과 같다.
 
 | 분야 | 예측 | 측정량 | 통과 게이트 | 실패 시 해석 |
@@ -681,6 +737,8 @@ class CEModule(nn.Module):
 | 자율주행 | 인지/판단/제어 budget sweep에서 CE 비율 근방 knee | success, latency, safety intervention | Pareto knee가 근방에 존재 | 74/21/5를 설계 힌트로만 유지 |
 
 ### 14.1 공통 하향 규칙
+
+하향 규칙은 field 비유·구현 tensor·효능 가설을 구분한 fail-closed 규약이다. 사후 metric 교체로 OOD·ablation 실패를 성공으로 재해석하지 않는다.
 
 - `4.87%` 근방 최적점이 반복 재현되지 않으면: 해당 도메인에서 P4를 일반 법칙이 아니라 과제군 가설로 내린다.
 - 곡률과 오류가 상관하지 않으면: P5를 환각/오분류 억제가 아니라 안정화 regularizer로 제한한다.

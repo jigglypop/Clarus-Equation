@@ -1,12 +1,18 @@
 # 05o. CE Residual Cosmology Forward Model
 
+이 문서는 CE latent residual을 우주론 거리·BAO·성장 관측량으로 연결하려 할 때 필요한 forward-model contract를 정리한다. CE 성분비 자체와 background cosmology·재결합·data covariance는 서로 다른 출처의 입력이며, 관측 근접은 bridge의 물리적 증명이 아니다.
+
+독자는 CE residual bridge와 우주론 표준 파라미터의 역할을 구분할 수 있어야 한다. 외부 입력과 경계조건, background·거리·데이터 likelihood, sound horizon·성장, 실행 범위와 반증/미완성 순서로 읽는다.
+
 ## 0. 범위와 출처
+
+이 문서는 forward map의 정의역·출력과 출처 역할을 고정한다. latent residual에서 stress-energy 또는 관측량으로 가는 물리 bridge가 완성되었다고 주장하지 않는다.
 
 이 문서는 CE 성분비를 현재 우주의 경계조건으로 놓았을 때, 평탄 FLRW
 배경과 선형 성장 관측량을 계산하는 조건부 forward model을 정리한다.
 
 수치 판본과 Claim ID는
-[우주론 판본·주장 원장](../3_상수/00_우주론_원장.md)을 따른다.
+[우주론 판본·주장 원장](../검증_원장/상수_우주론_원장.md)을 따른다.
 
 - `[공리: 물리 사상]` CE의 $q_{\rm ext}$와 성분 분해 경험식을 오늘의
   $(\Omega_b,\Omega_{\rm DM},\Omega_\Lambda)$ 경계조건으로 읽는다.
@@ -26,7 +32,11 @@
 
 ## 1. 경계조건과 외부 입력
 
+forward prediction에는 CE 내부 산출과 독립적으로 주어지는 background·calibration·nuisance 입력을 분리해야 한다. 입력 provenance가 없으면 수치 일치는 사후 보정과 구분되지 않는다.
+
 ### 1.1 CE 성분비의 사용
+
+CE 성분비는 이 문서에서 명시한 역할로만 forward map에 들어간다. 그것을 관측 우주론 파라미터의 무입력 산출로 재표현하지 않는다.
 
 `[공리: 런타임 호환 경계]` 현재 코드가
 `LEGACY_ROUNDED_RUNTIME_V1`로 읽는 성분비는
@@ -60,6 +70,8 @@ $$
 
 ### 1.2 계산에 필요한 독립 입력
 
+독립 입력은 단위·정규화·snapshot과 함께 고정되어야 한다. nuisance parameter와 calibration을 숨기면 식별성과 반증 기준이 사라진다.
+
 `[공리: 외부 입력]`
 
 | 입력 | 역할 |
@@ -79,7 +91,11 @@ $$
 
 ## 2. 배경 우주론
 
+background cosmology는 latent residual을 observable로 보내는 외부 모델 층이다. CPL 등 parameterization은 정의된 적합 함수이지 CE 메커니즘의 정리적 결과가 아니다.
+
 ### 2.1 CPL 배경
+
+CPL 배경은 redshift 범위와 parameter prior에 의존한다. 다른 dark-energy parameterization이나 curvature를 배제하는 물리 증명은 제공하지 않는다.
 
 `[공리: 모델 선택]` $a>0$, 무차원 $(w_0,w_a)$에 대해 CPL 식을
 
@@ -119,6 +135,8 @@ $$
 
 ### 2.2 거리와 BAO 압축량
 
+거리와 BAO 압축량은 background와 sound-horizon normalization을 함께 사용한다. observable 정의의 단위와 fiducial conversion을 맞추지 않으면 비교가 무의미하다.
+
 `[정의]` 평탄 배경에서 사용할 거리와 BAO 압축량을
 
 $$
@@ -143,7 +161,11 @@ $$
 
 ## 3. BAO 중립 데이터 감사
 
+BAO 비교는 data vector, covariance, fiducial convention, redshift selection을 고정한 likelihood 문제다. CE parameter의 식별성은 이 자료만으로 자동 확보되지 않는다.
+
 ### 3.1 공분산 계산
+
+공분산은 잔차의 분모와 상관을 정하므로 diagonal 오차와 대체할 수 없다. covariance provenance와 positive-definiteness 검사가 필요하다.
 
 `[정의]` 관측 벡터와 모델 벡터가 같은 순서로 주어지고 공분산 $C$가
 대칭 양의 정부호일 때 BAO 통계량을
@@ -167,7 +189,7 @@ $$
 \right)^2
 $$
 
-로 줄어든다. 잔차벡터를 \(r:=\Delta O\)라 쓰고 각 성분의 대수적 기여를
+로 줄어든다. 잔차벡터를 $r:=\Delta O$라 쓰고 각 성분의 대수적 기여를
 
 $$
 c_i=r_i(C^{-1}r)_i
@@ -191,6 +213,8 @@ $$
 
 ### 3.2 자료 범위
 
+자료 범위는 표본·redshift·분석 선택을 제한한다. 범위 밖 extrapolation과 dataset leakage는 별도의 실패 조건이다.
+
 `[공리: 외부 입력]` 로컬 registry는 `CobayaSampler/bao_data`의
 `desi_bao_dr2` Gaussian BAO mean/covariance 파일에서 옮긴 다음 압축 자료를
 사용한다.
@@ -206,6 +230,8 @@ $$
 
 ### 3.3 수치 기록
 
+수치 기록은 재현 가능한 입력·출력의 보존이며 이론 지위의 승격이 아니다. rounding과 unit conversion은 likelihood 전에 검증해야 한다.
+
 `[산출]` 현재 로컬 13점 벡터와 공분산에 대한 계산값은 다음과 같다.
 표의 두 입력 구성은 구현 민감도 비교용이며 활성 물리 패키지가 아니다.
 
@@ -219,6 +245,8 @@ $$
 기술할 뿐 CE 코어 전체의 진리 판정이 아니다.
 
 ### 3.4 공통 scale 진단
+
+공통 scale 진단은 여러 관측량의 normalization mismatch를 찾는 도구다. 양호한 scale fit은 latent residual의 독자적 식별 증거가 아니다.
 
 `[경험식]` BAO 벡터 $y$에 같은 자료로 하나의 scale $q$를 맞추면
 
@@ -256,7 +284,11 @@ $$
 
 ## 4. Sound-horizon 계산 도구의 경계
 
+sound horizon은 early-universe physics와 recombination history에 민감한 외부 계산층이다. 그 근사 선택이 CE forward map의 물리 bridge를 대체하지 않는다.
+
 ### 4.1 Eisenstein--Hu 근사
+
+Eisenstein--Hu 식은 지정한 파라미터 범위에서의 경험적/근사 도구다. precision 요구나 비표준 early physics에서는 반례가 될 수 있다.
 
 `[경험식]` 물리 밀도
 
@@ -320,6 +352,8 @@ $$
 
 ### 4.2 외부 재결합 history adapter
 
+외부 adapter는 provenance·version·unit contract를 가진 입력 모듈이다. adapter 통과는 재결합 물리나 CE 메커니즘의 검증 결과가 아니다.
+
 `[정의]` 단위와 열 순서가 고정된 $x_e(z)=n_e/n_H$ 표에 대해 drag
 optical depth를
 
@@ -341,6 +375,8 @@ $$
 `[미완성]`이다. 합성 history는 수치 적분기 검사에만 사용한다.
 
 ## 5. 선형 성장
+
+선형 성장은 background와 perturbation 방정식, 초기조건 및 bias/nuisance 가정에 의존한다. residual의 stress-energy mapping 없이는 CE의 독립 예측으로 읽을 수 없다.
 
 `[공리: 모델 선택]` $x=\ln a$와 주어진 $H(a),\mu(a)$에 대해 선형
 성장식으로
@@ -385,6 +421,8 @@ $$
 
 ## 6. 실행과 회귀 범위
 
+실행 결과는 고정 fixture·seed·covariance·baseline 아래의 계산 회귀로만 해석한다. 코드 통과와 과학적 참, out-of-distribution 예측은 구별된다.
+
 기본 수식 구현은 다음 명령으로 확인한다.
 
 ```powershell
@@ -405,6 +443,8 @@ uv run --extra dev python -m pytest tests\test_ce_residual_forward_model.py test
 
 ## 7. 남은 문제
 
+남은 문제는 latent residual의 물리적 source term, nuisance degeneracy, likelihood identifiability 및 사전등록 예측을 포함한다. 이 공백은 그럴듯한 수치 적합으로 메우지 않는다.
+
 | 항목 | 출처 | 필요한 작업 |
 |---|---|---|
 | CE 내부 $r_d$ | `[미완성]` | 공변 초기우주 동역학, 재결합·원자물리와 $\theta_*$ 동시 계산 |
@@ -414,6 +454,8 @@ uv run --extra dev python -m pytest tests\test_ce_residual_forward_model.py test
 | 사전 관측 시험 | `[미완성]` | 독립 $H_0r_d$ calibration과 비교 절차를 자료 공개 전에 고정 |
 
 ## 8. 결론
+
+결론적으로 forward model은 외부 우주론 입력을 사용해 조건부 observable을 계산하는 도구다. CE bridge의 승격에는 독립 data split·baseline·불확실성·반증 가능한 예측이 추가로 필요하다.
 
 `[산출]` 평탄 FLRW/CPL/GR 전제와 외부 scale을 앞 절의 정의에 대입하면
 

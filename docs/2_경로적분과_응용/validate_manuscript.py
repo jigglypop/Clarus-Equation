@@ -27,6 +27,7 @@ from improvement_loop_engineering import (
 
 
 HERE = Path(__file__).resolve().parent
+LEDGER_DIR = HERE.parent / "검증_원장"
 REPO_ROOT = HERE.parents[1]
 STATUS_TOKENS = (
     "[정의]",
@@ -48,12 +49,12 @@ LEGACY_STATUS_TOKENS = (
     "[Conditional]",
 )
 CHAPTERS = tuple(
-    sorted(path for path in HERE.glob("[0-9][0-9]_*.md") if path.name != "00_검증_규약.md")
+    sorted(HERE.glob("[0-9][0-9]_*.md"))
 )
 CANONICAL_PROSE = (
-    HERE / "00_검증_규약.md",
+    LEDGER_DIR / "경로적분_검증_규약.md",
     *CHAPTERS,
-    HERE / "전체_진리값_감사.md",
+    LEDGER_DIR / "경로적분_전체_진리값_감사.md",
 )
 
 
@@ -235,8 +236,8 @@ def validate() -> list[Check]:
         token: sum(text.count(token) for text in texts.values())
         for token in STATUS_TOKENS
     }
-    protocol_text = (HERE / "00_검증_규약.md").read_text(encoding="utf-8")
-    ledger_text = (HERE / "전체_진리값_감사.md").read_text(encoding="utf-8")
+    protocol_text = (LEDGER_DIR / "경로적분_검증_규약.md").read_text(encoding="utf-8")
+    ledger_text = (LEDGER_DIR / "경로적분_전체_진리값_감사.md").read_text(encoding="utf-8")
     canonical_prose_texts = {
         path.name: path.read_text(encoding="utf-8") for path in CANONICAL_PROSE
     }
@@ -993,7 +994,7 @@ def validate() -> list[Check]:
 
     neutrino_summary = texts.get("07_중성미자_질량.md", "")
     stale_neutrino_rejection = (
-        "| \\(m_\\nu\\propto m_l\\) 또는 \\(m_l^{5/8}\\) | [Rejected]"
+        "| $m_\\nu\\propto m_l$ 또는 $m_l^{5/8}$ | [Rejected]"
         in neutrino_summary
     )
     checks.append(
@@ -1002,7 +1003,7 @@ def validate() -> list[Check]:
             not stale_neutrino_rejection
             and "| fractional ansatz의 질량 readout | **[경험식]**"
             in neutrino_summary
-            and "| 현재 portal에서 \\(C_{ij}=0\\) | **[정리]**"
+            and "| 현재 portal에서 $C_{ij}=0$ | **[정리]**"
             in neutrino_summary
             and neutrino_summary.count("[Rejected]") == 0,
             "the false portal-generation parent is removed; the numerical legacy "
@@ -1017,7 +1018,7 @@ def validate() -> list[Check]:
         "01_차원의_유일성.md": (
             "d = 4",
             "d=0,3",
-            "양의 정수해는 \\(d=3\\)",
+            "양의 정수해는 $d=3$",
             "방향과 리만 계량",
         ),
         "02_에스컬레이터.md": (
@@ -1039,14 +1040,14 @@ def validate() -> list[Check]:
             "| 양성자 반경의 CE 기여 | **[미완성]**",
             "281.73769",
             "0.344351",
-            "even-\\(\\varphi\\) loop 총합은",
+            "even-$\\varphi$ loop 총합은",
         ),
         "05_인플레이션.md": (
             "m_{\\varphi,{\\rm phys}}",
             "k_*=0.05",
             "독립 입력",
             "tree-level curvature mass는 **[정리]**",
-            "정확한 \\(Z_2\\)",
+            "정확한 $Z_2$",
         ),
         "06_강한_CP.md": (
             "\\bar\\theta",
@@ -1077,7 +1078,7 @@ def validate() -> list[Check]:
             "6.38\\times10^9",
             "v_{\\rm DI}=v_{\\rm EW}/\\sqrt2",
         ),
-        "09_페르미온_질량.md": ("Q_K=\\frac2N", "공통 \\(A,\\phi,r\\)", "m_t^{\\rm MC}", "principal", "on-shell scheme"),
+        "09_페르미온_질량.md": ("Q_K=\\frac2N", "공통 $A,\\phi,r$", "m_t^{\\rm MC}", "principal", "on-shell scheme"),
         "10_공리_정당화.md": (
             "C(x)=1-x",
             "x_Z=q_{\\rm ext}",
@@ -1101,8 +1102,8 @@ def validate() -> list[Check]:
             "22.452",
             "F_D(x)-x",
             "|_{r=0}",
-            "D>1\\)의 비자명 가지",
-            "D=0\\)에서는 \\(F_0\\equiv1\\)이므로 역함수가 없다",
+            "D>1$의 비자명 가지",
+            "D=0$에서는 $F_0\\equiv1$이므로 역함수가 없다",
         ),
         "13_위상공간.md": (
             "유한 sparse grammar",

@@ -1,5 +1,10 @@
 # V9 중첩 무한 SCC: 직접극한 recurrent tower 정본
 
+이 문서는 nested SCC의 finite implementation과 direct-limit 또는 infinite-limit claim을 분리해 정의한다. 독자는 directed graph·SCC·direct limit·수축의 기본을 아는 독자를 전제로 하며, finite algorithm의 실행·test pass·empirical score는 무한 객체의 정리나 neuroscience 기제와 다른 지위다.
+
+형식 객체와 graph 가정 뒤에 limit topology·동역학·truncation·causal cone·engineering falsifier·현재 evidence를 순서대로 읽는다. state shape·algorithm horizon·dataset·seed·baseline·metric은 등록된 범위에서만 유효하며, 반례·OOD·미구현 다리는 별도 경계로 남는다.
+
+
 > 날짜: 2026-08-12
 >
 > 형식 수학: **SURVIVES — NISCC-1~8 및 converse exhaustion 정리**
@@ -28,6 +33,8 @@
    V9는 이름이나 그래프 그림이 아니라 새 상태 메커니즘으로 새로 시험해야 한다.
 
 ## 1. 형식 객체와 “중첩”의 정확한 뜻
+
+이 절은 nested state·graph·inclusion map의 정의역과 topology를 고정한다. “중첩”은 finite SCC family와 limit object의 형식 관계이며, 코드의 재귀 데이터 구조나 뇌 계층과 자동으로 같은 대상이 아니다.
 
 **[정의 NISCC-D1]** 비어 있지 않은 유향 그래프들의 열을
 
@@ -75,6 +82,8 @@ scale-indexed tower, time-translation quotient 어느 것과도 같은 graph가 
 
 ## 2. graph 직접합집합 정리와 역정리
 
+직접합집합 정리는 명시한 graph inclusion·connectivity·limit topology 가정에서만 결론을 낸다. finite graph test나 구현 trace는 정리의 증명이 아니며, 가정 위반·countergraph는 반례 경계다.
+
 **[정리 NISCC-1]** 포함으로 중첩된 비어 있지 않은 강연결 유향 그래프들의
 직접합집합 $G_\infty$는 강연결이다.
 
@@ -116,6 +125,8 @@ exhaustion의 root·열거·witness path·level boundary는 유일하지 않으�
 
 ## 3. 고정 graph와 시간 unroll의 no-go
 
+no-go는 fixed graph와 시간 unroll을 동일시할 수 없는 정의역·가정을 명시해 부모 주장을 제한한다. 이 반례는 nested SCC 전체의 불가능성이나 finite algorithm의 실패를 뜻하지 않으며, 정확히 좁힌 claim만 남긴다.
+
 **[정리 NISCC-3: no-go]** 하나의 고정 유향 그래프에서 서로 다른 maximal SCC는
 서로소이며, overlap하거나 proper하게 중첩될 수 없다.
 
@@ -144,6 +155,8 @@ $$
 선언한 time-translation quotient에 있다. $\square$
 
 ## 4. direct-limit 동역학
+
+direct-limit 동역학은 compatible finite state update를 입력으로 limit state trajectory를 정의한다. update continuity·topology·initial condition이 가정이며, finite truncation 실행은 이 limit trajectory의 완전한 관측이 아니다.
 
 **[정의 NISCC-D5]** 각 level state를 normalized metric space
 $(X_n,d_n)$, update를 $F_n:X_n\to X_n$, injective isometric embedding을
@@ -202,6 +215,8 @@ weight tying 또는 같은 함수 이름을 모든 level에서 쓰는 것만으�
 image를 invariant하게 보존해야 한다.
 
 ## 5. 수축, 고정점과 truncation bound
+
+수축·고정점·truncation bound는 정의한 norm·operator·horizon·boundary에서 finite approximation error를 제한하는 조건부 결과다. step·topology·input가 달라지거나 bound가 깨지면 limit claim은 미완성 또는 반례로 남고, test pass로 대체하지 않는다.
 
 **[조건부 정리 NISCC-6A]** $\overline X$가 complete하고
 $\overline F:\overline X\to\overline X$가 하나의 level-independent
@@ -285,6 +300,8 @@ infinite-limit fixed-point bound를 주장할 수 없다.
 
 ## 6. lazy generator, causal cone과 quotient 경계
 
+lazy generator는 필요한 finite prefix만 생산하는 algorithm이고 causal cone은 어떤 input이 readout에 닿는지 제한하는 graph contract다. quotient·truncation은 implementation 최적화이며, infinite completeness·semantic causality·OOD 효능을 보장하지 않는다.
+
 **[정리 NISCC-8A]** total generator `Gen(n)`이 유한 $G_n$, embedding,
 birth level, complete incoming adjacency와 nesting·strong-connectivity certificate를
 반환하면, 유한하게 많은 level/index query는 가장 큰 필요한 prefix까지만 생성해
@@ -348,6 +365,8 @@ semiconjugacy defect와 별도의 error bound를 요구한다.
 
 ## 7. 무차원 계약
 
+무차원 계약은 state·gain·probability·limit scale이 어떤 reference로 정규화되는지 명시한다. audit 통과는 식의 단위 일관성일 뿐 topology·convergence·empirical performance의 충분조건이 아니다.
+
 **[정의 DIM-V9]** graph 정리들은 조합론적이라 물리 단위가 없다. state·동역학
 정리에 들어가는 metric과 값은 다음과 같이 먼저 무차원화한다.
 
@@ -368,6 +387,8 @@ finite reference scale은 training data만으로 고정해야 하며, developmen
 생물학적 정당성을 보장하지 않는다.
 
 ## 8. V1~V8 및 ACBSM에서 V9로 이어지는 계보
+
+계보는 버전별 feature·assumption·artifact가 어떤 claim을 supersede하거나 남기는지 추적한다. 이전 코드·test evidence는 V9의 finite design과 limit theorem을 자동으로 지지하지 않으며, migration gap은 별도 기록한다.
 
 **[경험식: 저장된 synthetic 연구 결과]** `PASS`는 각 버전의 제한된 저장 gate만을
 뜻하며 AGI나 생물학의 증거가 아니다.
@@ -400,6 +421,8 @@ exact quotient를 뜻하지 않는다.
 
 ## 9. V9 finite engineering design과 falsifier
 
+finite design은 state shape·depth cap·algorithm truncation·entry point·dataset/seed/baseline/metric을 가진 구현 계약이다. falsifier는 registered threshold·OOD·ablation·counterexample로 design을 기각하는 조건이며, 통과는 infinite-limit claim의 증명이 아니다.
+
 **[정의 V9-1 후보]** 선택된 engineering route는 유한 parameter generator가
 중첩 tower의 다음 shell을 결정적으로 만들고, 실제 tick에는 adaptive finite prefix만
 실행하는 previous-tick/Jacobi recurrent controller다. output은 immutable
@@ -431,6 +454,8 @@ pre-run gate가 통과되어 256-seed 개발 실행이 1회 집행되었고 판�
 §13 사후 기록을 따른다.)*
 
 ## 10. neuroscience가 허용하는 해석의 상한
+
+neuroscience 해석은 nested recurrent control의 기능 비유에 한정한다. SCC·causal cone·limit object를 실제 뇌 회로·의식·자아의 기제나 증거로 환원하지 않으며, 종·영역·관측·개입 데이터가 없는 대응은 미완성이다.
 
 **[경험식: primary-source 동기]** 현재 출처는 유한한 recurrent anatomy와
 multiscale organization의 동기까지만 제공한다.
@@ -465,6 +490,8 @@ compatible update, contraction 또는 causal cross-level state를 실제로 구�
 
 ## 11. 구현·검증 자원과 현재 허용 범위
 
+이 절은 code, artifact, test, dataset, seed, metric이 현재 어디까지 finite implementation을 뒷받침하는지 분리한다. proof·test·empirical evidence는 서로 다른 지위이며, serialization·baseline·OOD gap은 허용 범위 밖으로 명시한다.
+
 **[산출 BRAIN-N2: 조건부 engineering design]** 독립 source·math·route lane과
 status audit는 다음 isolated formal/unit 범위를 승인했다.
 
@@ -483,18 +510,18 @@ adapter와 evidence seed 실행을 승인하지 않았다. 2026-08-12 후속 lig
 
 연구 원장:
 
-- [계약](../../_workspace/ce/agi-v9-nested-infinite-scc-20260811/00-contract.md)
-- [출처·V1~V8 계보 감사](../../_workspace/ce/agi-v9-nested-infinite-scc-20260811/10-sources.md)
-- [수학 증명](../../_workspace/ce/agi-v9-nested-infinite-scc-20260811/11-math.md)
-- [대안 route·개발 설계](../../_workspace/ce/agi-v9-nested-infinite-scc-20260811/12-routes.md)
-- [형식 지위 감사](../../_workspace/ce/agi-v9-nested-infinite-scc-20260811/20-audit.md)
-- [isolated 구현 잠금](../../_workspace/ce/agi-v9-nested-infinite-scc-20260811/30-implementation.md)
-- [독립 unit 검증](../../_workspace/ce/agi-v9-nested-infinite-scc-20260811/31-validation.md)
-- [runtime integration 계약](../../_workspace/ce/agi-v9-runtime-integration-20260812/00-contract.md)
-- [runtime integration 수학 감사](../../_workspace/ce/agi-v9-runtime-integration-20260812/11-math.md)
-- [runtime integration 지위 감사](../../_workspace/ce/agi-v9-runtime-integration-20260812/20-audit.md)
-- [runtime integration 구현 기록](../../_workspace/ce/agi-v9-runtime-integration-20260812/30-implementation.md)
-- [runtime integration 검증 기록](../../_workspace/ce/agi-v9-runtime-integration-20260812/31-validation.md)
+- [계약](../../_workspace/ce/_archive/agi-v9-nested-infinite-scc-20260811/00-contract.md)
+- [출처·V1~V8 계보 감사](../../_workspace/ce/_archive/agi-v9-nested-infinite-scc-20260811/10-sources.md)
+- [수학 증명](../../_workspace/ce/_archive/agi-v9-nested-infinite-scc-20260811/11-math.md)
+- [대안 route·개발 설계](../../_workspace/ce/_archive/agi-v9-nested-infinite-scc-20260811/12-routes.md)
+- [형식 지위 감사](../../_workspace/ce/_archive/agi-v9-nested-infinite-scc-20260811/20-audit.md)
+- [isolated 구현 잠금](../../_workspace/ce/_archive/agi-v9-nested-infinite-scc-20260811/30-implementation.md)
+- [독립 unit 검증](../../_workspace/ce/_archive/agi-v9-nested-infinite-scc-20260811/31-validation.md)
+- [runtime integration 계약](../../_workspace/ce/_archive/agi-v9-runtime-integration-20260812/00-contract.md)
+- [runtime integration 수학 감사](../../_workspace/ce/_archive/agi-v9-runtime-integration-20260812/11-math.md)
+- [runtime integration 지위 감사](../../_workspace/ce/_archive/agi-v9-runtime-integration-20260812/20-audit.md)
+- [runtime integration 구현 기록](../../_workspace/ce/_archive/agi-v9-runtime-integration-20260812/30-implementation.md)
+- [runtime integration 검증 기록](../../_workspace/ce/_archive/agi-v9-runtime-integration-20260812/31-validation.md)
 
 구현된 opt-in unit surface:
 
@@ -613,6 +640,8 @@ BLOCKED**이며 biological/AGI route는 **UNTESTED / NOT AUTHORIZED**다.
 
 ## 12. 최종 경계표
 
+최종 표는 finite engineering, limit mathematics, empirical evaluation, biological interpretation의 상태를 한곳에서 구분한다. closed 또는 pass 표시는 해당 정의역의 계약을 뜻하며, 새 graph·dataset·counterexample·OOD failure는 rollback 또는 미완성 조건이다.
+
 | 주장 | CE 지위 | 살아 있는 정확한 범위 | 넘어갈 수 없는 경계 |
 |---|---|---|---|
 | nested finite strong views의 direct union | **[정리]** | nonempty, injectively nested level이면 union도 strong | 각 finite level이 fixed limit의 별도 maximal SCC라는 뜻이 아님 |
@@ -688,8 +717,8 @@ confirmation을 열지 못한다. 후속 재설계는 다음 여섯 조건을 �
 
 출처:
 
-- [post-development audit](../../_workspace/ce/agi-v9-loop-engineering-20260812/artifacts/post-development-audit.md)
-- [최종 폐쇄 보고](../../_workspace/ce/agi-v9-loop-engineering-20260812/40-final-report.md)
+- [post-development audit](../../_workspace/ce/_archive/agi-v9-loop-engineering-20260812/artifacts/post-development-audit.md)
+- [최종 폐쇄 보고](../../_workspace/ce/_archive/agi-v9-loop-engineering-20260812/40-final-report.md)
 
 ## 14. V17 사후 경계 (2026-08-13): strict metric 복제의 no-rescue와 homogeneous 탈출
 
@@ -737,7 +766,7 @@ framework 동일성의 증거가 아니다.
 
 V17 근거:
 
-- [등록 계약](../../_workspace/ce/agi-v17-metric-delayed-credit-20260813/00-contract.md)
-- [독립 수학 검증](../../_workspace/ce/agi-v17-metric-delayed-credit-20260813/11-math.md)
-- [봉인 확인 결과](../../_workspace/ce/agi-v17-metric-delayed-credit-20260813/artifacts/confirmation-results.json)
+- [등록 계약](../../_workspace/ce/_archive/agi-v17-metric-delayed-credit-20260813/00-contract.md)
+- [독립 수학 검증](../../_workspace/ce/_archive/agi-v17-metric-delayed-credit-20260813/11-math.md)
+- **[미완성] 봉인 확인 결과:** 선행 run이 인용한 `artifacts/confirmation-results.json`은 현재 보관본에 없어 재현할 수 없다.
 - [homogeneous signed-cue 구현](../../reality_stone/python/reality_stone/clarus/homogeneous_signed_cue.py)

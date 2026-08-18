@@ -1,5 +1,10 @@
 # 이중 recurrent-layer 기저핵 제어 코어
 
+이 문서는 이중 SCC graph와 controller state를 이용한 제어 코어의 형식 객체·수축·진단 범위를 정의한다. 독자는 directed graph·SCC·simplex·validation 기본을 아는 독자를 전제로 하며, 기저핵 비유는 구현 controller의 기능 지도이지 생물학적 회로 기제의 증명은 아니다.
+
+형식 객체와 graph assumptions 뒤에 수축·잔차·Action/HOLD·timebase·무차원 계약·생물학 해석·폐쇄·재현 순으로 읽는다. dataset·seed·baseline·metric·threshold는 등록된 fixture에서만 유효하며, 반례·OOD·ablation 실패는 승격이 아니라 rollback 경계다.
+
+
 > 날짜: 2026-08-11
 >
 > 정본 범위: 형식적으로 닫힌 두 블록 수축 코어, 명시적 action/HOLD simplex, 인과적 controller protocol
@@ -15,6 +20,8 @@ layer-restricted recurrent subgraph 두 개다. 색을 지운 결합 그래프�
 macro-SCC다.
 
 ## 1. 형식 객체
+
+형식 객체는 두 recurrent layer의 node·edge·state·controller output shape와 정의역을 고정한다. SCC는 graph-theoretic component이며, 연결 구조가 실제 기저핵의 해부학·기능과 동일하다는 주장은 이 정의에 포함되지 않는다.
 
 **[정의 DSCC-1]** 느린 상태와 빠른 상태를
 
@@ -49,6 +56,8 @@ $$
 대체하지 못한다.
 
 ## 2. 수축과 잔차 인증
+
+수축·잔차 인증은 정의한 norm·step·input boundary에서 controller state가 어떤 충분조건을 만족하는지 검사한다. 인증 pass는 지정 fixture와 수식 가정의 일치이며, 비정상 입력·다른 graph·finite precision 반례는 별도 failure 조건이다.
 
 **[정리 DSCC-2]** `T_u`가 완비된 product cube의 self-map이고
 `rho(M)<1`이면, 양의 가중치 `w`에 대한 weighted max norm에서 `T_u`는 수축이다.
@@ -98,6 +107,8 @@ certificate가 필요하다.
 
 ## 3. Action/HOLD simplex
 
+simplex는 controller가 action과 hold probability 또는 weight를 output으로 내는 제약된 codomain이다. 확률 정규화·tie·termination 규칙이 가정이며, policy 우위는 행동 baseline·seed·OOD task 비교가 없으면 주장하지 않는다.
+
 **[정의 DSCC-5]** 빠른 action 좌표에서 조건부 행동 확률을
 
 $$
@@ -125,6 +136,8 @@ STN 자극이 조건에 따라 행동을 가속하고 deferral을 없앨 수도 
 
 ## 4. 시간축 controller protocol
 
+protocol은 graph update, controller decision, action handoff가 어느 tick 순서로 producer와 consumer를 잇는지 정한다. timebase·latency·serialization이 바뀌면 parity가 깨질 수 있으며, loop execution은 생물학 시간의 재현이 아니다.
+
 **[산출]** `DualSCCController`는 다음 순서를 강제한다.
 
 1. `begin_trial`
@@ -141,6 +154,8 @@ STN 자극이 조건에 따라 행동을 가속하고 deferral을 없앨 수도 
 
 ## 5. 무차원 계약
 
+무차원 계약은 graph state·gain·residual·probability가 어떤 reference scale로 정규화되는지 명시한다. audit 통과는 단위 일관성의 기계 조건이며, 성능·안정성·인과 기제의 충분조건은 아니다.
+
 **[공리]** `tanh`, `exp`, `log`, probability kernel에 들어가는 모든 값은 무차원이다.
 
 | 원시량 | 코어 입력 |
@@ -156,6 +171,8 @@ STN 자극이 조건에 따라 행동을 가속하고 deferral을 없앨 수도 
 이 검사는 수학적 typing만 보장하며 생물학적 대응이나 행동 효능을 보장하지 않는다.
 
 ## 6. 생물학에서 허용되는 해석
+
+생물학 해석은 Action/HOLD·recurrent control의 기능 비유에 한정한다. 종·영역·관측 조건·외부 data 없이 controller tensor를 기저핵 회로·도파민·행동 기제로 승격하지 않으며, 비유의 실패는 형식 코어의 반례와 구분한다.
 
 **[경험: 출처가 허용하는 동기]** 다음 정도만 허용된다.
 
@@ -177,6 +194,8 @@ STN 자극이 조건에 따라 행동을 가속하고 deferral을 없앨 수도 
 증명한다고 쓰지 않는다.
 
 ## 7. 잠금 진단 결과와 폐쇄 경계
+
+진단 결과는 version·dataset·seed·baseline·metric·threshold가 고정된 좁은 test evidence다. closure는 해당 graph fixture의 상태이며, counterexample·OOD·ablation failure·새 controller feature는 재검증과 rollback을 요구한다.
 
 **[산출: 형식·수치]** 잠긴 구현에서
 
@@ -209,6 +228,8 @@ cross-summary lesion/shuffle/sign/time controls, 독립 integrity instrumentatio
 현재 미개봉 test seed `2026082300..2026082363`은 열지 않는다.
 
 ## 8. 구현과 재현 자원
+
+재현 자원은 entry point·artifact·환경·seed를 고정해 형식·진단 결과를 다시 계산하는 계약이다. 코드·test pass는 과학적 참 또는 생물학적 입증이 아니며, serialization·dependency·baseline mismatch는 known gap으로 남는다.
 
 - core: `reality_stone/python/reality_stone/clarus/dual_scc_basal_ganglia.py`
 - causal protocol: `reality_stone/python/reality_stone/clarus/dual_scc_controller.py`

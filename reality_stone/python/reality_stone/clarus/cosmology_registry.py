@@ -220,7 +220,7 @@ def _build_core_exact_v1() -> CoreChain:
         provenance=Provenance(
             source_id="R-U1-EXACT",
             source_kind="ce_formula_chain",
-            source_path="docs/3_상수/00_우주론_원장.md",
+            source_path="docs/검증_원장/상수_우주론_원장.md",
             formula_version="alpha_s_to_sin2_to_delta_to_D_to_q/v1",
             precision="binary64; no intermediate decimal rounding",
             note="alpha_s scale/scheme and the sin2 mapping remain empirical model inputs",

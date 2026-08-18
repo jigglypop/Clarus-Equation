@@ -2500,7 +2500,7 @@ REMAINING_REJECTED_ROUTE_RULES: tuple[RemainingRejectedRouteRule, ...] = (
     RemainingRejectedRouteRule(
         "03-state-space-x1-not-d0",
         "03",
-        (r"\(x=1\)", r"\(d=0\)", r"\(D=3.177758"),
+        (r"$x=1$", r"$d=0$", r"$D=3.177758"),
         ("state_space_bridge",),
     ),
     RemainingRejectedRouteRule(
@@ -2518,7 +2518,7 @@ REMAINING_REJECTED_ROUTE_RULES: tuple[RemainingRejectedRouteRule, ...] = (
     RemainingRejectedRouteRule(
         "04-gauge-unification-ledger-row",
         "04",
-        ("| 게이지 결합 통일 |", r"\(M_Z\)", "통일군·동일 결합값"),
+        ("| 게이지 결합 통일 |", r"$M_Z$", "통일군·동일 결합값"),
         ("gauge_unification_claim",),
     ),
     RemainingRejectedRouteRule(
@@ -2530,7 +2530,7 @@ REMAINING_REJECTED_ROUTE_RULES: tuple[RemainingRejectedRouteRule, ...] = (
     RemainingRejectedRouteRule(
         "04-ce-bsm-zero-gminus2",
         "04",
-        ("CE BSM", r"\(g-2\)", "CE 고유 진폭"),
+        ("CE BSM", r"$g-2$", "CE 고유 진폭"),
         ("light_scalar_precision",),
     ),
     RemainingRejectedRouteRule(
@@ -2708,7 +2708,7 @@ EXPECTED_SEMANTIC_MANIFEST_SHA256 = (
     "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
 )
 EXPECTED_SOURCE_SHA256 = (
-    "7d592e9a50c9dc5abe55fb6b2d8c19862f639ceb22144674af57818ef0241dfa"
+    "b61c907bd584efe5e49c6cfeb3b434c363ae88272d136d09aedbedcec1e99274"
 )
 EXPECTED_REGRESSION_WITNESS_REGISTRY_SHA256 = (
     "f0c9d64e2622e897e8699842897fc7657e33ae7eccb10b827a5ada5d38cf85a0"

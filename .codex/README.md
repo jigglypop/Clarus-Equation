@@ -9,8 +9,8 @@ Codex CLI용 Clarus-Equation 연구 하네스. `.codex/`의 개발 트랙을 코
 AGENTS.md            `.codex` 내부 작업용 상세 보조 지침
 config.toml          프로젝트 기본 medium effort + bounded multi-agent 설정
 prompts/             커스텀 슬래시 프롬프트 (/ce-research, /ce-status, /ce-gc 등 8종)
-agents/              네이티브 TOML 역할 4개 + explicit CE run용 상세 Markdown 카드
-skills/              스킬 6종 (SKILL.md + agents/openai.yaml)
+agents/              연구 역할 4개 + 원장/논문 작성 역할 2개 (TOML + 상세 Markdown 카드)
+skills/              공통 6종 + 원장/논문 작성 분리 스킬 2종 (SKILL.md + agents/openai.yaml)
 skills/ce-research/core/   Rust 게이트 코어 (init|status|check|revise|gc + hook)
 hooks.json           프로젝트 로컬 UserPromptSubmit 라우팅(Stop 전역 차단 없음)
 hooks/               run.cmd(고속) / run.ps1 / run.sh 래퍼

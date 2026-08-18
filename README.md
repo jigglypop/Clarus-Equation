@@ -16,9 +16,9 @@ CE는 적은 수의 무차원 구조로 입자물리와 우주론의 여러 수�
 - 자료를 사용하는 경험식과 아직 증명이 완결되지 않은 항목
 
 전체 주장별 출처와 남은 증명 의무는
-[형식 구조 원장](docs/2_경로적분과_응용/전체_진리값_감사.md)에 기록한다.
+[형식 구조 원장](docs/검증_원장/경로적분_전체_진리값_감사.md)에 기록한다.
 우주론의 정밀 계산값·과거 재현값·런타임 호환값·관측 자료는
-[우주론 판본·주장 원장](docs/3_상수/00_우주론_원장.md)에서 서로 다른
+[우주론 판본·주장 원장](docs/검증_원장/상수_우주론_원장.md)에서 서로 다른
 `config_id`와 Claim ID로 관리한다.
 
 ## 2. 정본 출처 체계
@@ -92,7 +92,7 @@ q_{\mathrm{ext}}
 \(q_{\mathrm{ext}}\mapsto\Omega_b\)는 별도로 채택했던 호환 사상이다.
 따라서 고정점의 정확한 해와 바리온 밀도의 물리적 유도를 같은 주장으로 세지
 않는다. 새 경로의 conditioned \(Dq\) 조성과 공변 전이 면 \(1/D\) 합성은
-[우주론 판본·주장 원장](docs/3_상수/00_우주론_원장.md)에 분리한다.
+[우주론 판본·주장 원장](docs/검증_원장/상수_우주론_원장.md)에 분리한다.
 
 ## 4. 형식 결과와 관측 비교
 
@@ -153,17 +153,17 @@ V(H,\phi)=V_H(H)+\frac12m_\phi^2\phi^2
 \lambda_{H\phi}\geq-2\sqrt{\lambda_H\lambda_\phi}.
 \]
 
-[증명](docs/참조/핵심_정리_증명.md#portal-boundedness) 등호에서는
+[증명](docs/검증_원장/참조_핵심_정리_증명.md#portal-boundedness) 등호에서는
 평평한 사차 방향이 남으므로, 다음 측도 정리에는 엄격한 부등식을 쓴다.
 
 **[정리]** \(\xi=0\)인 고정 Euclidean 배경에서
 \(\lambda_{H\phi}>-2\sqrt{\lambda_H\lambda_\phi}\)와 양의 kinetic term을
 만족하는 measurable finite scalar--Higgs bosonic truncation을 유한
 격자에 두면 partition function과 모든 다항식 모멘트가 유한하다.
-[증명](docs/참조/핵심_정리_증명.md#finite-lattice-measure)
+[증명](docs/검증_원장/참조_핵심_정리_증명.md#finite-lattice-measure)
 
 **[정리]** 완결된 공변 작용의 총 stress tensor는 on shell 보존된다.
-[증명](docs/참조/핵심_정리_증명.md#noether-stress)
+[증명](docs/검증_원장/참조_핵심_정리_증명.md#noether-stress)
 
 따라서 이 branch는 특정 질량이나 결합을 예측하지는 않지만 대칭, 안정성과
 보존법칙을 갖는다. 양의 cutoff 측도가 여기서 증명된 범위는 scalar--Higgs
@@ -194,10 +194,10 @@ P(\gamma)=
 | Starobinsky형 \(n_s,r\) | \(V_0>0\), Einstein-frame 정준 단일장 지배와 leading slow-roll |
 
 공통 증명은
-[핵심 정리 증명 원장](docs/참조/핵심_정리_증명.md)에 둔다. 공변 Hessian,
+[핵심 정리 증명 원장](docs/검증_원장/참조_핵심_정리_증명.md)에 둔다. 공변 Hessian,
 국소 양자채널, 스펙트럼·역문제, wormhole·thin-shell·Casimir처럼 반례 뒤에도
 전제를 좁혀 남는 구조는
-[이론물리 보존 원장](docs/참조/이론물리_보존_원장.md)에 분리했다.
+[이론물리 보존 원장](docs/검증_원장/참조_이론물리_보존_원장.md)에 분리했다.
 
 ## 7. 열린 bridge와 예측 조건
 
@@ -234,8 +234,8 @@ Python 환경이 준비돼 있다면 다음 명령으로 핵심 계산을 재현
 ## 9. 읽는 순서
 
 1. [문서 지도](docs/README.md)
-2. [검증 규약](docs/2_경로적분과_응용/00_검증_규약.md)
-3. [형식 구조 원장](docs/2_경로적분과_응용/전체_진리값_감사.md)
+2. [검증 규약](docs/검증_원장/경로적분_검증_규약.md)
+3. [형식 구조 원장](docs/검증_원장/경로적분_전체_진리값_감사.md)
 4. [공리·기호 사전](docs/axium.md)
 5. [계산 체인](docs/경로적분.md)
 6. [상수 후보식과 검증](docs/상수.md)

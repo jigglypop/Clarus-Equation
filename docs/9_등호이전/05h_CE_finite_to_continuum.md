@@ -1,6 +1,12 @@
 # 05h. CE Finite-to-Continuum Package
 
+이 문서는 유한 mesh Gibbs 문제에서 continuum 경로공간 농축으로 갈 때 필요한 interpolation, topology, mesh–temperature scaling을 정리한다. 닫힌 결과는 명시한 consistency·equicoercivity·recovery 가정 아래의 측도 수렴이며, 수치 근사가 CE 물리 continuum을 이미 구현한다는 해석은 포함하지 않는다.
+
+독자는 05e–05g의 good-rate·prior package와 02c의 Gamma 수렴 경계를 먼저 읽는다. fixed mesh, joint limit, gap consistency, fixed-temperature convergence, diagonal limit과 반례 순서로 읽는다.
+
 ## 0. 목표
+
+유한 차원 농축과 continuum 농축은 mesh를 고정하는지 함께 보내는지에 따라 다른 명제다. 이 절은 극한 순서와 필요한 스케일 조건을 명시한다.
 
 [05g_CE_prior_support_package.md](05g_CE_prior_support_package.md)는 CE 농축에 필요한 prior/support 조건을
 
@@ -27,21 +33,23 @@ $$
 
 핵심 결론:
 
-> fixed \(N\)에서는 finite positive prior만으로 충분하다. 그러나 \(N\to\infty\)와 \(\beta_N\to\infty\)를 함께 보내면 positive prior만으로는 부족하다. near-minimizer recovery mass가 \(\beta_N\) scale에서 너무 빨리 사라지지 않아야 한다.
+> fixed $N$에서는 finite positive prior만으로 충분하다. 그러나 $N\to\infty$와 $\beta_N\to\infty$를 함께 보내면 positive prior만으로는 부족하다. near-minimizer recovery mass가 $\beta_N$ scale에서 너무 빨리 사라지지 않아야 한다.
 
 형식 출처:
 
 | 항목 | 출처 | 이유 |
 |---|---|---|
-| fixed mesh 농축 | `[정리]` | finite positive prior + \(\beta\to\infty\) |
+| fixed mesh 농축 | `[정리]` | finite positive prior + $\beta\to\infty$ |
 | positive prior의 joint-limit 함의 | `[정리]` positivity만으로 joint-limit recovery가 따르지 않음 | 정리 2.1 |
 | recovery mass scale 조건 | `[정리]` | 정리 3.1 |
-| fixed-\(\beta\) Gibbs convergence | `[정리]` | compact/continuous/weak convergence package |
+| fixed-$\beta$ Gibbs convergence | `[정리]` | compact/continuous/weak convergence package |
 | full physical continuum prior | `[미완성]` | Brownian/Sobolev/Gaussian support 선택 필요 |
 
 ## 1. 세팅
 
-\(\Gamma=\mathcal P_I\)를 continuum pathspace라고 하자. finite mesh 후보공간은 finite set
+세팅은 mesh 후보공간, continuum 공간, interpolation 및 에너지·prior의 대응을 정의한다. topology가 고정되지 않으면 convergence와 compactness의 의미가 정해지지 않는다.
+
+$\Gamma=\mathcal P_I$를 continuum pathspace라고 하자. finite mesh 후보공간은 finite set
 
 $$
 A_N=\mathcal P_{I,N}
@@ -63,7 +71,7 @@ $$
 W_N:A_N\to[0,\infty].
 $$
 
-항상 \(\mu_N(a)>0\) for all \(a\in A_N\)라고 하자.
+항상 $\mu_N(a)>0$ for all $a\in A_N$라고 하자.
 
 finite Gibbs measure:
 
@@ -98,15 +106,19 @@ $$
 
 ## 2. fixed mesh와 joint mesh는 다르다
 
-### 정리 2.1: fixed \(N\) finite concentration
+fixed $N$에서는 유한합 농축만 필요하지만 joint limit에서는 mesh 의존 recovery 질량과 energy error가 온도에 의해 증폭된다. 다음 정리와 no-go는 이 두 범위를 구별한다.
 
-\(A_N\)이 finite set이고 \(\mu_N(a)>0\) for all \(a\in A_N\)라고 하자. \(W_N\)의 minimizer set을
+### 정리 2.1: fixed $N$ finite concentration
+
+정리는 양의 유한 prior와 고정 후보집합 아래의 형식 농축이다. mesh refinement나 continuum 해와의 consistency는 결론에 없다.
+
+$A_N$이 finite set이고 $\mu_N(a)>0$ for all $a\in A_N$라고 하자. $W_N$의 minimizer set을
 
 $$
 M_N=\operatorname*{argmin}_{a\in A_N}W_N(a)
 $$
 
-라 두면 모든 \(a\notin M_N\)에 대해
+라 두면 모든 $a\notin M_N$에 대해
 
 $$
 \nu_{N,\beta}(a)\to0
@@ -115,7 +127,7 @@ $$
 
 이다.
 
-특히 \(M_N=\{a_N^*\}\)이면
+특히 $M_N=\{a_N^*\}$이면
 
 $$
 \nu_{N,\beta}\Rightarrow\delta_{a_N^*}.
@@ -123,13 +135,13 @@ $$
 
 증명:
 
-\(a\notin M_N\)이면
+$a\notin M_N$이면
 
 $$
 \Delta_a=W_N(a)-\min W_N>0.
 $$
 
-어떤 \(a_*\in M_N\)에 대해
+어떤 $a_*\in M_N$에 대해
 
 $$
 \frac{\nu_{N,\beta}(a)}{\nu_{N,\beta}(a_*)}
@@ -142,9 +154,11 @@ finite set이므로 모든 비최소점의 질량이 0으로 간다. 끝.
 
 ### 정리 2.1 (positive weight의 joint-limit recovery no-go)
 
+각 mesh에서 양의 weight가 있어도 그 하한이 사라지면 joint 분모 하한은 실패할 수 있다. 이는 fixed-mesh 결과를 continuum claim으로 승격하는 반례다.
+
 `[정리]` 각 finite mesh에서 prior가 양수라는 사실만으로 joint-limit recovery는 일반적으로 따르지 않는다.
 
-각 \(N\)에서
+각 $N$에서
 
 $$
 A_N=\{a,b\},
@@ -154,7 +168,7 @@ W_N(a)=0,
 W_N(b)=1
 $$
 
-라고 하자. 모든 \(N\)에서 \(a\)가 유일 minimizer다.
+라고 하자. 모든 $N$에서 $a$가 유일 minimizer다.
 
 하지만 inverse temperature를
 
@@ -170,7 +184,7 @@ $$
 \mu_N(b)=\frac1{1+e^{-N^2}}
 $$
 
-로 잡으면 각 \(N\)에서 prior weight는 양수지만
+로 잡으면 각 $N$에서 prior weight는 양수지만
 
 $$
 \nu_{N,\beta_N}(a)
@@ -184,7 +198,7 @@ $$
 
 해석:
 
-> energy gap \(1\)은 \(\beta_N=N\)에 의해 \(e^{-N}\)으로 보상된다. 그런데 recovery weight가 \(e^{-N^2}\)로 더 빨리 죽으면 Gibbs 분모가 minimizer를 붙잡지 못한다.
+> energy gap $1$은 $\beta_N=N$에 의해 $e^{-N}$으로 보상된다. 그런데 recovery weight가 $e^{-N^2}$로 더 빨리 죽으면 Gibbs 분모가 minimizer를 붙잡지 못한다.
 
 따라서 finite-to-continuum bridge에는 다음 scale 조건이 필요하다.
 
@@ -194,13 +208,17 @@ $$
 
 ## 3. joint finite-to-continuum concentration
 
+joint 극한에는 interpolation된 sublevel의 equicoercivity, continuum minimizer에 대한 scaled recovery, outer gap consistency가 함께 필요하다. 이들은 수치 scheme의 정의가 아니라 추가 가정이다.
+
 ### 가정 J
+
+가정 J는 mesh·temperature·prior mass의 상대 스케일을 고정한다. 어느 항도 실제 CE discretization에서 자동으로 성립하지 않는다.
 
 다음 네 조건을 둔다.
 
-1. \(\beta_N\to\infty\).
-2. \(M\subset\Gamma\)는 nonempty compact set이다.
-3. outer gap consistency: 모든 open \(U\supset M\)에 대해 어떤 \(\delta_U>0\)와 \(N_U\)가 존재해서 \(N\ge N_U\)이면
+1. $\beta_N\to\infty$.
+2. $M\subset\Gamma$는 nonempty compact set이다.
+3. outer gap consistency: 모든 open $U\supset M$에 대해 어떤 $\delta_U>0$와 $N_U$가 존재해서 $N\ge N_U$이면
 
 $$
 \iota_N(a)\notin U
@@ -208,7 +226,7 @@ $$
 W_N(a)\ge m+\delta_U.
 $$
 
-4. scaled recovery mass: 모든 \(\eta>0\)에 대해 \(B_{N,\eta}\subset A_N\)가 존재해서 충분히 큰 \(N\)에서
+4. scaled recovery mass: 모든 $\eta>0$에 대해 $B_{N,\eta}\subset A_N$가 존재해서 충분히 큰 $N$에서
 
 $$
 W_N(a)\le m+\eta
@@ -225,13 +243,15 @@ $$
 
 ### 정리 3.1: scaled recovery concentration
 
-가정 J 아래에서 모든 open \(U\supset M\)에 대해
+정리는 가정 J 아래 interpolation된 측도가 continuum 최소집합 근방으로 집중함을 말한다. rate의 최적성, 유일 경로 선택, 물리 시간해석은 보장하지 않는다.
+
+가정 J 아래에서 모든 open $U\supset M$에 대해
 
 $$
 \bar\nu_{N,\beta_N}(U)\to1.
 $$
 
-특히 \(M=\{\gamma_*\}\)이면
+특히 $M=\{\gamma_*\}$이면
 
 $$
 \bar\nu_{N,\beta_N}\Rightarrow\delta_{\gamma_*}.
@@ -239,7 +259,7 @@ $$
 
 증명:
 
-open \(U\supset M\)을 잡고 outer gap \(\delta_U>0\)를 택한다. \(\eta=\delta_U/2\)로 둔다.
+open $U\supset M$을 잡고 outer gap $\delta_U>0$를 택한다. $\eta=\delta_U/2$로 둔다.
 
 분모는 recovery set에서
 
@@ -251,7 +271,7 @@ Z_{N,\beta_N}
 e^{-\beta_N(m+\eta)}r_{N,\eta}.
 $$
 
-반면 \(\iota_N(a)\notin U\)이면 \(W_N(a)\ge m+\delta_U\)이므로
+반면 $\iota_N(a)\notin U$이면 $W_N(a)\ge m+\delta_U$이므로
 
 $$
 \sum_{\iota_N(a)\notin U}
@@ -281,19 +301,23 @@ $$
 +\log\frac1{r_{N,\delta_U/2}}.
 $$
 
-scaled recovery mass 때문에 오른쪽은 \(-\infty\)로 간다. 따라서 바깥 질량은 0으로 간다.
+scaled recovery mass 때문에 오른쪽은 $-\infty$로 간다. 따라서 바깥 질량은 0으로 간다.
 
-만약 \(M=\{\gamma_*\}\)이면 임의의 열린근방 \(U\ni\gamma_*\)에 대해 \(\bar\nu_{N,\beta_N}(U)\to1\)이다. metric space에서 이는 \(\delta_{\gamma_*}\)로의 약수렴을 준다. 끝.
+만약 $M=\{\gamma_*\}$이면 임의의 열린근방 $U\ni\gamma_*$에 대해 $\bar\nu_{N,\beta_N}(U)\to1$이다. metric space에서 이는 $\delta_{\gamma_*}$로의 약수렴을 준다. 끝.
 
 ## 4. outer gap consistency를 얻는 충분조건
 
-가정 J의 outer gap은 CE continuum energy \(W\)에서 보통 나온다.
+outer gap은 continuum 최소집합 밖의 energy separation이 mesh에서 사라지지 않게 하는 핵심 안정성 조건이다. 다음 충분조건은 필요충분 분류가 아니며 nonconforming discretization에는 반례가 가능하다.
+
+가정 J의 outer gap은 CE continuum energy $W$에서 보통 나온다.
 
 ### 정리 4.1: continuum gap + lower energy consistency
 
-\(\Gamma\)가 metric space이고 \(W:\Gamma\to[0,\infty]\)가 l.s.c.이며 compact sublevel을 갖는다고 하자. \(M=\operatorname*{argmin}W\)가 nonempty compact이고, \(m=\min W\)라 하자.
+정리는 continuum gap과 lower consistency를 결합해 mesh 바깥 gap을 확보한다. interpolation 오류와 boundary layer를 제어하지 않으면 적용할 수 없다.
 
-임의의 open \(U\supset M\)에 대해 어떤 \(c_U>0\)가 존재해서
+$\Gamma$가 metric space이고 $W:\Gamma\to[0,\infty]$가 l.s.c.이며 compact sublevel을 갖는다고 하자. $M=\operatorname*{argmin}W$가 nonempty compact이고, $m=\min W$라 하자.
+
+임의의 open $U\supset M$에 대해 어떤 $c_U>0$가 존재해서
 
 $$
 \gamma\notin U
@@ -303,7 +327,7 @@ $$
 
 이다.
 
-또한 어떤 \(N_U\) 이후로
+또한 어떤 $N_U$ 이후로
 
 $$
 W_N(a)\ge W(\iota_N(a))-c_U/2
@@ -320,9 +344,9 @@ $$
 
 증명:
 
-첫 문장은 [05e_CE_good_rate_theorem.md](05e_CE_good_rate_theorem.md)의 gap 논리와 같다. 만약 \(c_U=0\)이면 \(\gamma_n\notin U\)이고 \(W(\gamma_n)\to m\)인 열이 있다. compact sublevel에서 부분열을 잡으면 \(\gamma_n\to\gamma\notin U\)이고 l.s.c.에 의해 \(W(\gamma)\le m\)이다. 따라서 \(\gamma\in M\subset U\), 모순이다.
+첫 문장은 [05e_CE_good_rate_theorem.md](05e_CE_good_rate_theorem.md)의 gap 논리와 같다. 만약 $c_U=0$이면 $\gamma_n\notin U$이고 $W(\gamma_n)\to m$인 열이 있다. compact sublevel에서 부분열을 잡으면 $\gamma_n\to\gamma\notin U$이고 l.s.c.에 의해 $W(\gamma)\le m$이다. 따라서 $\gamma\in M\subset U$, 모순이다.
 
-이제 \(\iota_N(a)\notin U\)이면 \(W(\iota_N(a))\ge m+c_U\)이고
+이제 $\iota_N(a)\notin U$이면 $W(\iota_N(a))\ge m+c_U$이고
 
 $$
 W_N(a)\ge W(\iota_N(a))-c_U/2\ge m+c_U/2.
@@ -332,17 +356,21 @@ $$
 
 주의:
 
-- locally uniform \(W_N\to W\)와 equicoercivity가 있으면 이 lower consistency를 보통 얻는다.
+- locally uniform $W_N\to W$와 equicoercivity가 있으면 이 lower consistency를 보통 얻는다.
 - Gamma 수렴은 minimizer 안정성에는 강하지만, Gibbs 분모에는 scaled recovery mass가 별도로 필요하다.
 
-## 5. fixed-\(\beta\) thermal convergence
+## 5. fixed-$\beta$ thermal convergence
+
+온도를 고정한 뒤 mesh를 보내는 문제는 zero-temperature 농축과 다른 약수렴 문제다. 다음 가정은 normalization과 integrand convergence를 분리해 요구한다.
 
 joint zero-temperature 농축과 별개로, finite Gibbs ensemble이 continuum Gibbs ensemble을 근사하는지도 확인해야 한다.
 
 ### 가정 T
 
-1. \(\Gamma\)는 compact metric space다.
-2. \(W:\Gamma\to\mathbb R\)는 continuous다.
+가정 T는 fixed-$\beta$에서 prior pushforward와 energy의 consistency·tightness를 명시한다. 이는 joint scaling 가정 J를 대체하지 않는다.
+
+1. $\Gamma$는 compact metric space다.
+2. $W:\Gamma\to\mathbb R$는 continuous다.
 3. pushed prior
 
 $$
@@ -371,9 +399,11 @@ $$
 \mu_{\mathrm{base}}(d\gamma).
 $$
 
-### 정리 5.1: fixed-\(\beta\) Gibbs convergence
+### 정리 5.1: fixed-$\beta$ Gibbs convergence
 
-가정 T 아래에서 고정된 \(\beta<\infty\)마다
+정리는 고정 역온도에서의 thermal measure convergence만 결론낸다. $\beta\to\infty$와의 교환이나 수치 오차율은 추가 조건 없이는 따라오지 않는다.
+
+가정 T 아래에서 고정된 $\beta<\infty$마다
 
 $$
 \bar\nu_{N,\beta}\Rightarrow\nu_\beta.
@@ -381,7 +411,7 @@ $$
 
 증명:
 
-bounded continuous \(f\)를 잡는다. numerator는
+bounded continuous $f$를 잡는다. numerator는
 
 $$
 \int f\,d\bar\nu_{N,\beta}\cdot Z_{N,\beta}
@@ -390,7 +420,7 @@ $$
 f(\iota_N(a))e^{-\beta W_N(a)}\mu_N(a).
 $$
 
-균등오차 \(\varepsilon_N\to0\) 때문에
+균등오차 $\varepsilon_N\to0$ 때문에
 
 $$
 \sup_a
@@ -407,7 +437,7 @@ $$
 \int f(\gamma)e^{-\beta W(\gamma)}\bar\mu_N(d\gamma)
 $$
 
-와 같은 극한을 갖는다. \(\bar\mu_N\Rightarrow\mu_{\mathrm{base}}\)이고 \(f e^{-\beta W}\)는 continuous bounded이므로
+와 같은 극한을 갖는다. $\bar\mu_N\Rightarrow\mu_{\mathrm{base}}$이고 $f e^{-\beta W}$는 continuous bounded이므로
 
 $$
 \int f e^{-\beta W}d\bar\mu_N
@@ -415,9 +445,11 @@ $$
 \int f e^{-\beta W}d\mu_{\mathrm{base}}.
 $$
 
-\(f=1\)을 적용하면 \(Z_{N,\beta}\to Z_\beta\)도 얻는다. \(Z_\beta>0\)이므로 비율의 극한이 곧 \(\bar\nu_{N,\beta}\Rightarrow\nu_\beta\)다. 끝.
+$f=1$을 적용하면 $Z_{N,\beta}\to Z_\beta$도 얻는다. $Z_\beta>0$이므로 비율의 극한이 곧 $\bar\nu_{N,\beta}\Rightarrow\nu_\beta$다. 끝.
 
 ## 6. 두 극한을 합치는 방법
+
+두 극한은 먼저 thermal convergence를 확보하고 이후 temperature를 올리는 diagonal 선택으로 결합할 수 있다. 이 절은 가능한 순서를 제시하며 모든 scaling path가 동일하다는 주장은 하지 않는다.
 
 두 종류의 닫힘이 있다.
 
@@ -425,18 +457,20 @@ $$
 |---|---|
 | finite mesh zero-temperature가 continuum minimizer로 바로 가는가 | 정리 3.1 |
 | fixed thermal ensemble이 continuum CE Gibbs measure를 근사하는가 | 정리 5.1 |
-| \(\beta\to\infty\) continuum 농축과 finite approximation을 함께 쓰는가 | diagonal argument |
+| $\beta\to\infty$ continuum 농축과 finite approximation을 함께 쓰는가 | diagonal argument |
 
-### 정리 6.1: fixed-\(\beta\) convergence + continuum concentration의 diagonal
+### 정리 6.1: fixed-$\beta$ convergence + continuum concentration의 diagonal
 
-정리 5.1이 모든 \(\beta=k\in\mathbb N\)에 대해 성립하고, continuum Gibbs measure가
+정리는 제시한 두 입력 정리와 선택한 diagonal 아래의 존재 결론이다. diagonal의 계산 가능성·물리적 timebase는 별도 문제다.
+
+정리 5.1이 모든 $\beta=k\in\mathbb N$에 대해 성립하고, continuum Gibbs measure가
 
 $$
 \nu_k\Rightarrow\delta_{\gamma_*}
 \qquad(k\to\infty)
 $$
 
-라고 하자. 그러면 어떤 증가열 \(N(k)\to\infty\)가 존재해서
+라고 하자. 그러면 어떤 증가열 $N(k)\to\infty$가 존재해서
 
 $$
 \bar\nu_{N(k),k}\Rightarrow\delta_{\gamma_*}.
@@ -444,7 +478,7 @@ $$
 
 증명:
 
-weak convergence를 metrize하는 거리 \(d\)를 하나 택한다. 정리 5.1에 의해 각 \(k\)마다 충분히 큰 \(N(k)\)를 잡아
+weak convergence를 metrize하는 거리 $d$를 하나 택한다. 정리 5.1에 의해 각 $k$마다 충분히 큰 $N(k)$를 잡아
 
 $$
 d(\bar\nu_{N(k),k},\nu_k)<1/k
@@ -463,15 +497,17 @@ $$
 
 주의:
 
-이 정리는 schedule의 존재를 준다. 임의의 \(\beta_N\)에 대한 명시적 보장은 정리 3.1의 scaled recovery 조건이 담당한다.
+이 정리는 schedule의 존재를 준다. 임의의 $\beta_N$에 대한 명시적 보장은 정리 3.1의 scaled recovery 조건이 담당한다.
 
 ## 7. Gamma 수렴만으로 부족한 이유
+
+Gamma 수렴은 minimizer 구조를 통제하지만 Gibbs 분모의 prior mass와 온도 증폭 오차를 자동으로 제공하지 않는다. 따라서 mesh Gibbs measure의 수렴에는 recovery와 normalization 자료가 추가로 필요하다.
 
 [02c_Gamma수렴과Gibbs농축.md](02c_Gamma수렴과Gibbs농축.md)는 이미 Gamma 수렴이 positive-mass recovery 없이는 Gibbs 분모를 닫지 못한다고 정리했다.
 
 05h에서 더 강하게 확인한 것은 다음이다.
 
-> finite mesh에서 모든 후보 weight가 양수여도, 그 양수성이 \(\beta_N\) scale에서 충분하지 않으면 minimizer가 joint limit에서 사라진다.
+> finite mesh에서 모든 후보 weight가 양수여도, 그 양수성이 $\beta_N$ scale에서 충분하지 않으면 minimizer가 joint limit에서 사라진다.
 
 따라서 finite-to-continuum CE bridge의 올바른 조건은
 
@@ -485,19 +521,21 @@ $$
 
 ## 8. CE 권장 A3 공리
 
+권장 A3는 필요한 discretization contract를 CE 공리로 명시하는 모델 선택이다. 공리 채택은 numerical consistency나 continuum 물리 검증을 대체하지 않는다.
+
 05f의 A2'가 action/topology를 정하고, 05g의 A2''가 prior/support를 정했다면, finite-to-continuum bridge에는 다음 A3를 둔다.
 
 > **A3 finite-to-continuum axiom.**  
-> finite mesh package \((A_N,W_N,\mu_N,\iota_N)\)와 inverse-temperature schedule \(\beta_N\to\infty\)는 다음을 만족한다.
+> finite mesh package $(A_N,W_N,\mu_N,\iota_N)$와 inverse-temperature schedule $\beta_N\to\infty$는 다음을 만족한다.
 > 
-> 1. continuum minimizer set \(M\) 바깥에는 uniform outer gap이 있다.
-> 2. finite energy \(W_N\)은 이 outer gap을 깨지 않는 lower consistency를 갖는다.
-> 3. near-minimizer mesh set \(B_{N,\eta}\)가 있고
+> 1. continuum minimizer set $M$ 바깥에는 uniform outer gap이 있다.
+> 2. finite energy $W_N$은 이 outer gap을 깨지 않는 lower consistency를 갖는다.
+> 3. near-minimizer mesh set $B_{N,\eta}$가 있고
 > \[
 > \frac1{\beta_N}\log\frac1{\mu_N(B_{N,\eta})}\to0
 > \]
 > 를 만족한다.
-> 4. fixed thermal CE ensemble까지 근사하려면 \((\iota_N)_*\mu_N\Rightarrow\mu_{\mathrm{base}}\)와 fixed-\(\beta\) energy consistency를 추가한다.
+> 4. fixed thermal CE ensemble까지 근사하려면 $(\iota_N)_*\mu_N\Rightarrow\mu_{\mathrm{base}}$와 fixed-$\beta$ energy consistency를 추가한다.
 
 이 공리 아래에서
 
@@ -509,6 +547,8 @@ $$
 이다.
 
 ## 9. 결론
+
+결론적으로 finite-to-continuum bridge는 interpolation·topology·equicoercivity·consistency·scaled recovery의 공동 결과다. 이 가정이 실제 CE mesh/action/prior에서 충족되는지는 남은 미완성 검증이다.
 
 CE finite mesh package와 continuum package의 일관성은 다음으로 닫힌다.
 
@@ -537,4 +577,4 @@ W^{1,p}/C^0
 }
 $$
 
-다음 병목은 물리적 continuum prior의 실제 선택이다. 즉 Brownian/Sobolev/Gaussian path prior가 CE가 선택한 \(W^{1,p}/C^0\) 경로공간에서 어떤 support를 갖는지, 그리고 \(S_{\mathrm{supp}}\)의 물리 형태가 어떤 recovery set을 만드는지 확인해야 한다.
+다음 병목은 물리적 continuum prior의 실제 선택이다. 즉 Brownian/Sobolev/Gaussian path prior가 CE가 선택한 $W^{1,p}/C^0$ 경로공간에서 어떤 support를 갖는지, 그리고 $S_{\mathrm{supp}}$의 물리 형태가 어떤 recovery set을 만드는지 확인해야 한다.
