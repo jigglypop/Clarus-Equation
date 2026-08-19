@@ -1,50 +1,39 @@
 from __future__ import annotations
 
-import json
+import io, json, zipfile
 from pathlib import Path
-import requests
+import pandas as pd, requests
 
 PMCID='PMC11841214'
-BASE='https://www.ncbi.nlm.nih.gov/research/bionlp/RESTful/supplmat.cgi/bioc_json/'
+URL=f'https://www.ebi.ac.uk/europepmc/webservices/rest/{PMCID}/supplementaryFiles'
 OUT=Path('md_loop_results'); OUT.mkdir(exist_ok=True)
-
 s=requests.Session(); s.headers.update({'User-Agent':'Mozilla/5.0 scientific-reanalysis'})
-list_url=f'{BASE}{PMCID}/list'
-r=s.get(list_url,timeout=60); r.raise_for_status()
-text=r.text
-(OUT/'suppl_list_raw.txt').write_text(text,encoding='utf-8')
-try:
-    listing=r.json()
-except Exception:
-    listing={'raw':text}
-
-# Fetch all indexed supplementary entries through the official API and retain parsed JSON/text.
-entries=[]
-for i in range(1,40):
-    u=f'{BASE}{PMCID}/{i}'
-    rr=s.get(u,timeout=60)
-    if rr.status_code!=200 or not rr.text.strip():
-        if i>20: break
-        continue
-    ctype=rr.headers.get('content-type','')
-    try: payload=rr.json()
-    except Exception: payload={'raw':rr.text[:200000]}
-    blob=json.dumps(payload,ensure_ascii=False)
-    # Keep entries relevant to source-data figs 3-5 or where filename metadata is missing but content names them.
-    target=any(x in blob for x in ['source_data_Fig3','source_data_Fig4','source_data_Fig5','Fig3.xlsx','Fig4.xlsx','Fig5.xlsx'])
-    entries.append({'index':i,'url':u,'content_type':ctype,'target':target,'payload':payload})
-
-res={'pmcid':PMCID,'list_url':list_url,'listing':listing,'entries':entries}
-(OUT/'inventory.json').write_text(json.dumps(res,indent=2,ensure_ascii=False),encoding='utf-8')
-lines=['# MD transthalamic source-data FAIR-SMART inventory','',f'PMCID `{PMCID}`','']
-lines.append('## List response')
-lines.append('```')
-lines.append(text[:10000])
-lines.append('```')
-lines.append('')
-lines.append('## Retrieved entries')
-for e in entries:
-    blob=json.dumps(e['payload'],ensure_ascii=False)
-    lines.append(f'- index `{e["index"]}` target={e["target"]} chars={len(blob)} preview={blob[:500]!r}')
+r=s.get(URL,timeout=120); r.raise_for_status()
+raw=r.content
+(OUT/'supplementary.zip').write_bytes(raw)
+res={'pmcid':PMCID,'url':URL,'bytes':len(raw),'members':[]}
+with zipfile.ZipFile(io.BytesIO(raw)) as z:
+    for name in z.namelist():
+        info=z.getinfo(name)
+        item={'name':name,'bytes':info.file_size}
+        if name.lower().endswith('.xlsx') and any(k in name for k in ['source_data_Fig3','source_data_Fig4','source_data_Fig5']):
+            data=z.read(name); p=OUT/Path(name).name; p.write_bytes(data)
+            xls=pd.ExcelFile(io.BytesIO(data),engine='openpyxl')
+            sheets={}
+            for sh in xls.sheet_names:
+                df=pd.read_excel(io.BytesIO(data),sheet_name=sh,header=None,engine='openpyxl')
+                ne=df.dropna(how='all').dropna(axis=1,how='all')
+                preview=ne.head(25).astype(object).where(pd.notna(ne),None).values.tolist()
+                sheets[sh]={'shape':list(ne.shape),'preview':preview}
+            item['target']=True; item['sheets']=sheets
+        res['members'].append(item)
+(OUT/'inventory.json').write_text(json.dumps(res,indent=2,default=str),encoding='utf-8')
+lines=['# MD transthalamic Europe PMC supplementary inventory','',f'URL `{URL}` bytes={len(raw)}','']
+for m in res['members']:
+    if m.get('target'):
+        lines.append(f'## {m["name"]}')
+        for sh,meta in m['sheets'].items():
+            lines.append(f'- `{sh}` shape={meta["shape"]}')
+            for row in meta['preview'][:10]: lines.append('  - '+repr(row[:10]))
 (OUT/'inventory.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
 print((OUT/'inventory.md').read_text())
