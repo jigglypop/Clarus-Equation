@@ -28,6 +28,10 @@ HippocampusMemory = None
 ModuleLifecycle = None
 RuntimeMode = None
 RuntimeStep = None
+NativeLoopsConfig = None
+run_native_loops = None
+loop8_route_b = None
+loop9_route_b = None
 RealityStoneStatus = None
 has_reality_stone = None
 reality_stone_status = None
@@ -367,6 +371,11 @@ except ImportError:
     pass
 
 try:
+    from .runtime_native_loops import NativeLoopsConfig, loop8_route_b, loop9_route_b, run_native_loops  # type: ignore[no-redef]
+except ImportError:
+    pass
+
+try:
     from .reality import (  # type: ignore[no-redef]
         RealityStoneStatus,
         has_reality_stone,
@@ -475,6 +484,10 @@ __all__ = [
     "ModuleLifecycle",
     "RuntimeMode",
     "RuntimeStep",
+    "NativeLoopsConfig",
+    "run_native_loops",
+    "loop8_route_b",
+    "loop9_route_b",
     "RealityStoneStatus",
     "has_reality_stone",
     "reality_stone_status",

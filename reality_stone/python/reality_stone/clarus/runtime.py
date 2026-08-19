@@ -140,6 +140,10 @@ class BrainRuntimeConfig:
     # default is unchanged; external_signed must be explicitly selected and
     # supplied a causal signal by the caller.
     stdp_gate_mode: str = "critic_derivative"
+    stdp_orientation: str = "legacy"
+    # Kept enabled by default for legacy-compatible online episodic encoding.
+    # Native recall experiments may explicitly seal this path after cutoff.
+    hippocampal_encoding_enabled: bool = True
 
     def __post_init__(self) -> None:
         self.dim = int(self.dim)
@@ -160,6 +164,9 @@ class BrainRuntimeConfig:
         self.stdp_spike_threshold = max(float(self.stdp_spike_threshold), 0.0)
         if self.stdp_gate_mode not in {"critic_derivative", "external_signed"}:
             raise ValueError("stdp_gate_mode must be critic_derivative or external_signed")
+        if self.stdp_orientation not in {"legacy", "causal"}:
+            raise ValueError("stdp_orientation must be legacy or causal")
+        self.hippocampal_encoding_enabled = bool(self.hippocampal_encoding_enabled)
 
     def energy_budget(self, mode: RuntimeMode) -> int:
         base = max(1, int(round(self.dim * self.active_ratio)))
@@ -465,6 +472,7 @@ class BrainRuntime:
                     dim=self.config.dim,
                     spike_threshold=self.config.stdp_spike_threshold,
                     lr=self.config.stdp_lr,
+                    orientation=self.config.stdp_orientation,
                 ),
                 device=self.device,
             )
@@ -493,6 +501,28 @@ class BrainRuntime:
             dtype=self.weight.dtype,
             check_invariants=False,
         )
+
+    def install_bounded_recurrent_delta(self, delta: torch.Tensor, *, max_frobenius_norm: float) -> float:
+        """Opt-in bounded recurrent write and CSR rebuild for controlled experiments.
+
+        The default runtime never calls this method.  It provides a single
+        observable mutation boundary for experiments that must write the real
+        recurrent matrix rather than retaining a side association matrix.
+        """
+        candidate = delta.detach().float().to(self.device)
+        if candidate.shape != self.weight.shape or not torch.isfinite(candidate).all():
+            raise ValueError("delta must be finite and match recurrent weight shape")
+        bound = float(max_frobenius_norm)
+        if not math.isfinite(bound) or bound <= 0.0:
+            raise ValueError("max_frobenius_norm must be finite and positive")
+        norm = float(candidate.norm().item())
+        if norm > bound:
+            candidate = candidate * (bound / norm)
+        self.weight = self.weight + candidate
+        if self.config.dale_law:
+            self.weight = self.weight.abs() * self.dale_sign.unsqueeze(1)
+        self._rebuild_sparse()
+        return float(candidate.norm().item())
 
     def _apply_dale_sign(self) -> None:
         if not self.config.dale_law:
@@ -1043,9 +1073,9 @@ class BrainRuntime:
         self._update_lifecycle(salience, active_mask)
 
         priority = float((salience[active_mask].mean().item() if active_count else salience.mean().item()) + external_norm)
-        if mode is RuntimeMode.WAKE and (external_norm > NORM_EPS or self.goal.norm().item() > NORM_EPS):
+        if self.config.hippocampal_encoding_enabled and mode is RuntimeMode.WAKE and (external_norm > NORM_EPS or self.goal.norm().item() > NORM_EPS):
             self.hippocampus.encode(self.activation, value=self.memory_trace, priority=priority)
-        elif mode is not RuntimeMode.WAKE and len(self.hippocampus) > 0:
+        elif self.config.hippocampal_encoding_enabled and mode is not RuntimeMode.WAKE and len(self.hippocampus) > 0:
             consolidated = 0.85 * self.activation + 0.15 * replay
             self.hippocampus.encode(consolidated, value=self.memory_trace, priority=priority * 0.5)
 
@@ -1065,6 +1095,29 @@ class BrainRuntime:
             stdp_gate=stdp_gate,
             stdp_updates=self._stdp_updates,
         )
+
+    def reset_evaluation_state(self) -> None:
+        """Clear all transient dynamics without changing recurrent weights or stores.
+
+        This is an opt-in evaluation boundary for independent-probe experiments.
+        It intentionally leaves ``weight`` and the current hippocampal object
+        untouched; callers that require memory cutoff must clear that store
+        separately before calling this method.
+        """
+        self.activation.zero_(); self.refractory.zero_(); self.memory_trace.zero_()
+        self.adaptation.zero_(); self.stp_u.fill_(0.5); self.stp_x.fill_(1.0)
+        self.bitfield.zero_(); self.goal.zero_(); self.inactive_steps.zero_()
+        self.lifecycle.fill_(_LIFECYCLE_TO_CODE[ModuleLifecycle.DORMANT])
+        self.mode = RuntimeMode.WAKE; self.sleep_pressure = 0.0; self.arousal = 0.0
+        self.step_index = 0; self.circadian_phase = 0.0
+        self._circadian_value = CIRCADIAN_BASE + CIRCADIAN_AMP; self.nrem_cycle_count = 0
+        self.mode_occupancy = {RuntimeMode.WAKE.value: 0, RuntimeMode.NREM.value: 0, RuntimeMode.REM.value: 0}
+        self.active_ratio_ema = float(self.config.active_ratio); self._brainwave_history = []
+        if self._delay_buffer is not None: self._delay_buffer.zero_()
+        self._delay_idx = 0
+        if self.stdp_tracker is not None: self.stdp_tracker.reset()
+        self._stdp_prev_critic_score = 0.0; self._stdp_updates = 0
+        self._last_stdp_gate = 0.0; self._stdp_pending_learning_signal = 0.0
 
     def snapshot(self) -> BrainRuntimeSnapshot:
         return BrainRuntimeSnapshot(

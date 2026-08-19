@@ -10,6 +10,17 @@ from reality_stone.clarus.constants import STDP_R_E, ACTIVE_RATIO
 
 
 class TestEligibilityTracker:
+    def test_causal_orientation_is_asymmetric_and_legacy_default_is_preserved(self):
+        legacy = EligibilityTracker(STDPConfig(dim=3, spike_threshold=0.1))
+        causal = EligibilityTracker(STDPConfig(dim=3, spike_threshold=0.1, orientation="causal"))
+        pre, post = torch.zeros(3), torch.zeros(3)
+        pre[0], post[1] = 1.0, 1.0
+        legacy.update(pre); legacy.update(post)
+        causal.update(pre); causal.update(post)
+        # W[row=post, col=pre] is the explicit causal convention.
+        assert causal.eligibility[1, 0] > 0
+        assert causal.eligibility[0, 1] != causal.eligibility[1, 0]
+        assert legacy.eligibility[0, 1] > legacy.eligibility[1, 0]
     def test_trace_decay(self):
         cfg = STDPConfig(dim=16)
         tracker = EligibilityTracker(cfg)
@@ -115,6 +126,41 @@ def _plastic_runtime(dim: int = 16) -> BrainRuntime:
 
 
 class TestRuntimeCriticGate:
+    def test_runtime_causal_pre_to_post_potentiates_applied_weight(self):
+        """The live runtime matrix, not just eligibility, uses post/pre rows."""
+        dim, pre, post = 4, 0, 1
+        cfg = BrainRuntimeConfig(
+            dim=dim,
+            active_ratio=1.0,
+            stdp_enabled=True,
+            stdp_interval=1,
+            stdp_apply_interval=2,
+            stdp_lr=4.0,  # keeps the causal entry above structural projection.
+            stdp_density=1.0,
+            stdp_gate_threshold=0.0,
+            stdp_spike_threshold=0.05,
+            stdp_gate_mode="external_signed",
+            stdp_orientation="causal",
+            noise_sigma=0.0,
+            dale_law=False,
+            axon_delay=False,
+            hippocampal_encoding_enabled=False,
+        )
+        runtime = BrainRuntime(torch.zeros(dim, dim), config=cfg)
+        before = runtime.weight.clone()
+        pre_drive, post_drive = torch.zeros(dim), torch.zeros(dim)
+        pre_drive[pre], post_drive[post] = 10.0, 10.0
+        runtime.step(external_input=pre_drive, force_mode=RuntimeMode.WAKE, learning_signal=0.5)
+        applied = runtime.step(external_input=post_drive, force_mode=RuntimeMode.WAKE, learning_signal=0.5)
+        delta = runtime.weight - before
+        assert applied.stdp_gate == pytest.approx(1.0)
+        assert torch.isfinite(runtime.weight).all()
+        assert delta[post, pre] > 0.0
+        # The reverse diagnostic is LTD-dominated for this ordered pair.
+        assert delta[pre, post] <= 0.0
+        assert delta[post, pre] > delta[pre, post]
+        assert BrainRuntimeConfig(dim=dim).stdp_orientation == "legacy"
+
     def test_critic_score_drives_gate(self):
         """Two identical runtimes diverge in STDP gate when fed different critics."""
         ext = torch.ones(16) * 0.5

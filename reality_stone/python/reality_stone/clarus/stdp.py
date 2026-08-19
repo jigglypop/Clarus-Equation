@@ -38,6 +38,10 @@ class STDPConfig:
     spike_threshold: float = STDP_SPIKE_THRESHOLD
     lr: float = STDP_LR
     alpha_g: float = STDP_ALPHA_G
+    # ``legacy`` preserves the historical trace indexing.  ``causal`` is an
+    # explicit opt-in convention for a row=post, column=pre recurrent matrix:
+    # a pre spike on i followed by a post spike on j potentiates W[j, i].
+    orientation: str = "legacy"
 
 
 class EligibilityTracker:
@@ -55,8 +59,16 @@ class EligibilityTracker:
         spike = (activation.abs() > self.config.spike_threshold).float()
         self.pre_trace = self.config.r_plus * self.pre_trace + spike
         self.post_trace = self.config.r_minus * self.post_trace + spike
-        ltp = self.config.a_plus * torch.outer(self.pre_trace, spike)
-        ltd = self.config.a_minus * torch.outer(spike, self.post_trace)
+        if self.config.orientation == "legacy":
+            ltp = self.config.a_plus * torch.outer(self.pre_trace, spike)
+            ltd = self.config.a_minus * torch.outer(spike, self.post_trace)
+        elif self.config.orientation == "causal":
+            # BrainRuntime uses ``W @ activation``.  Thus rows are receivers
+            # and columns are senders; keep the causal direction unambiguous.
+            ltp = self.config.a_plus * torch.outer(spike, self.pre_trace)
+            ltd = self.config.a_minus * torch.outer(self.post_trace, spike)
+        else:
+            raise ValueError("orientation must be legacy or causal")
         self.eligibility = self.config.r_e * self.eligibility + (ltp - ltd)
 
     def reset(self) -> None:
