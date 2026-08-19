@@ -1,0 +1,2621 @@
+{
+  "status": "COMPLETE",
+  "url": "https://doi.gin.g-node.org/10.12751/g-node.etlk5k/10.12751_g-node.etlk5k.zip",
+  "sha256": "b9962e7760ac7299cc968fa4a23d2c965342d78abdded4f937a4081588f09ba3",
+  "archive_bytes": 483324456,
+  "n_files": 129,
+  "extension_counts": {
+    ".md": 10,
+    ".mat": 66,
+    ".m": 33,
+    "<none>": 4,
+    ".pdf": 8,
+    ".txt": 2,
+    ".py": 1,
+    ".csv": 1,
+    ".pkl": 1,
+    ".png": 2,
+    ".yml": 1
+  },
+  "top_level_counts": {
+    "Figure1": 50,
+    "Figure2": 34,
+    "Figure3": 16,
+    "Figure4": 10,
+    "Figure5": 11,
+    "Figure6": 5,
+    "LICENSE": 1,
+    "datacite.yml": 1,
+    "readme.md": 1
+  },
+  "all_files": [
+    {
+      "name": "Figure1/NDNFActivationExperiments/BaselineSessions/README.md",
+      "size": 5107,
+      "extension": ".md"
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/BaselineSessions/Summary_baseline_NDNFactivationRuleA.mat",
+      "size": 833229,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/BaselineSessions/analyze_opto_behavior.m",
+      "size": 8399,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Code/Figure1_RelearningCode.m",
+      "size": 3191,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Control/NWO1.mat",
+      "size": 104865,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Control/NWO10.mat",
+      "size": 112993,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Control/NWO11.mat",
+      "size": 66289,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Control/NWO12.mat",
+      "size": 85283,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Control/NWO13.mat",
+      "size": 115534,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Control/NWO3.mat",
+      "size": 109775,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Control/NWO4.mat",
+      "size": 74999,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Control/NWO5.mat",
+      "size": 105822,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Control/NWO6.mat",
+      "size": 96669,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Control/NWO9.mat",
+      "size": 99759,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Data/Figure1Relearning_DataSummary.mat",
+      "size": 560429,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Opto/NWO1.mat",
+      "size": 104850,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Opto/NWO10.mat",
+      "size": 103318,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Opto/NWO11.mat",
+      "size": 81851,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Opto/NWO12.mat",
+      "size": 99631,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Opto/NWO13.mat",
+      "size": 93262,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Opto/NWO3.mat",
+      "size": 108268,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Opto/NWO4.mat",
+      "size": 98394,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Opto/NWO5.mat",
+      "size": 123895,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Opto/NWO6.mat",
+      "size": 105781,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Opto/NWO9.mat",
+      "size": 103104,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/README_Figure1_Relearning.md",
+      "size": 2878,
+      "extension": ".md"
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleA/ICR1_Airpuff_new_20240917_090621.mat",
+      "size": 5990810,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleA/ICR1_Airpuff_new_20240917_165401.mat",
+      "size": 9993943,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleA/ICR1_Airpuff_new_20240918_090324.mat",
+      "size": 9280180,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleA/ICR1_Airpuff_new_20240918_170513.mat",
+      "size": 7731281,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleA/ICR2_Airpuff_new_20240918_120536.mat",
+      "size": 1987016,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleA/ICR2_Airpuff_new_20240919_130117.mat",
+      "size": 276739,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleA/ICR3_Airpuff_new_20240916_172554.mat",
+      "size": 607342,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleA/ICR3_Airpuff_new_20240917_102429.mat",
+      "size": 7460266,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleA/ICR3_Airpuff_new_20240917_195526.mat",
+      "size": 7001268,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleA/ICR3_Airpuff_new_20240918_104532.mat",
+      "size": 6505588,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleA/ICR3_Airpuff_new_20240918_190455.mat",
+      "size": 476592,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleA/RuleA_Stats.mat",
+      "size": 1350,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleB/ICR1_Airpuff_new_20240919_102930.mat",
+      "size": 254696,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleB/ICR1_Airpuff_new_20240919_161459.mat",
+      "size": 3501172,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleB/ICR1_Airpuff_new_20240920_081217.mat",
+      "size": 3717910,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleB/ICR1_Airpuff_new_20240920_150126.mat",
+      "size": 3144982,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleB/ICR2_Airpuff_new_20240919_185827.mat",
+      "size": 253293,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleB/ICR2_Airpuff_new_20240920_100953.mat",
+      "size": 2059730,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleB/ICR2_Airpuff_new_20240920_165533.mat",
+      "size": 267957,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleB/ICR3_Airpuff_new_20240919_113537.mat",
+      "size": 292729,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleB/ICR3_Airpuff_new_20240919_174932.mat",
+      "size": 1893422,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleB/ICR3_Airpuff_new_20240920_093243.mat",
+      "size": 4112727,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleB/ICR3_Airpuff_new_20240920_174513.mat",
+      "size": 4275337,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleB/SummaryStatsRuleB.mat",
+      "size": 1321,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure2/Code/Figure2_CaImaging_Analysis.m",
+      "size": 9875,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure2/Code/HelperFunctions/DataSummarizer.m",
+      "size": 1737,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure2/Code/HelperFunctions/iam_lazy.m",
+      "size": 227,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure2/Code/HelperFunctions/iam_lazyV2.m",
+      "size": 231,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure2/Code/HelperFunctions/plot_bar_errors.m",
+      "size": 496,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure2/Code/HelperFunctions/plot_epochs.m",
+      "size": 119,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure2/Code/HelperFunctions/stdshade.m",
+      "size": 1383,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure2/Code/NeuroPixels/PLOTS_STATISTICS/.DS_Store",
+      "size": 6148,
+      "extension": "<none>"
+    },
+    {
+      "name": "Figure2/Code/NeuroPixels/PLOTS_STATISTICS/L5_interneuron_fr.pdf",
+      "size": 19046,
+      "extension": ".pdf"
+    },
+    {
+      "name": "Figure2/Code/NeuroPixels/PLOTS_STATISTICS/L5_pyramidals_puff_ctrl_DCZ.pdf",
+      "size": 26600,
+      "extension": ".pdf"
+    },
+    {
+      "name": "Figure2/Code/NeuroPixels/PLOTS_STATISTICS/backprop_distance.pdf",
+      "size": 14518,
+      "extension": ".pdf"
+    },
+    {
+      "name": "Figure2/Code/NeuroPixels/PLOTS_STATISTICS/backprop_speed.pdf",
+      "size": 16966,
+      "extension": ".pdf"
+    },
+    {
+      "name": "Figure2/Code/NeuroPixels/PLOTS_STATISTICS/modulation_piechart_pyr_br_global.pdf",
+      "size": 20312,
+      "extension": ".pdf"
+    },
+    {
+      "name": "Figure2/Code/NeuroPixels/PLOTS_STATISTICS/modulation_piechart_pyr_br_puff.pdf",
+      "size": 20035,
+      "extension": ".pdf"
+    },
+    {
+      "name": "Figure2/Code/NeuroPixels/PLOTS_STATISTICS/modulation_piechart_pyr_fr_global.pdf",
+      "size": 20053,
+      "extension": ".pdf"
+    },
+    {
+      "name": "Figure2/Code/NeuroPixels/PLOTS_STATISTICS/modulation_piechart_pyr_fr_puff.pdf",
+      "size": 19886,
+      "extension": ".pdf"
+    },
+    {
+      "name": "Figure2/Code/NeuroPixels/PLOTS_STATISTICS/statistics.txt",
+      "size": 765,
+      "extension": ".txt"
+    },
+    {
+      "name": "Figure2/Code/NeuroPixels/analyze_and_plot_ephys.py",
+      "size": 28483,
+      "extension": ".py"
+    },
+    {
+      "name": "Figure2/Code/NeuroPixels/requirements.txt",
+      "size": 30,
+      "extension": ".txt"
+    },
+    {
+      "name": "Figure2/Data/DCO1_020724_dff.mat",
+      "size": 63685782,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure2/Data/DCO1_050724_dff.mat",
+      "size": 17603436,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure2/Data/DCO1_090724_dff.mat",
+      "size": 16922307,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure2/Data/DCO1_300624_dff.mat",
+      "size": 35783534,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure2/Data/DCO2_011124_dff.mat",
+      "size": 31808557,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure2/Data/DCO2_021124_dff.mat",
+      "size": 27315299,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure2/Data/DCO2_031124_dff.mat",
+      "size": 19239520,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure2/Data/DCO2_041124_dff.mat",
+      "size": 18735985,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure2/Data/DCO2_311024_dff.mat",
+      "size": 30909646,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure2/Data/DCO4_011124_dff.mat",
+      "size": 11983739,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure2/Data/DCO4_021124_dff.mat",
+      "size": 24622247,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure2/Data/NeuroPixels/extracted_data/.DS_Store",
+      "size": 8196,
+      "extension": "<none>"
+    },
+    {
+      "name": "Figure2/Data/NeuroPixels/extracted_data/extracted_neural_data.csv",
+      "size": 41834,
+      "extension": ".csv"
+    },
+    {
+      "name": "Figure2/Data/NeuroPixels/extracted_data/extracted_neural_data.pkl",
+      "size": 479272,
+      "extension": ".pkl"
+    },
+    {
+      "name": "Figure2/README_Figure2.md",
+      "size": 5430,
+      "extension": ".md"
+    },
+    {
+      "name": "Figure3/FunctionalClustering/Code/FunctionalClustering.m",
+      "size": 511,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure3/FunctionalClustering/Code/HelperFunctions/Violinplot-Matlab-master/LICENSE",
+      "size": 1461,
+      "extension": "<none>"
+    },
+    {
+      "name": "Figure3/FunctionalClustering/Code/HelperFunctions/Violinplot-Matlab-master/README.md",
+      "size": 2125,
+      "extension": ".md"
+    },
+    {
+      "name": "Figure3/FunctionalClustering/Code/HelperFunctions/Violinplot-Matlab-master/Violin.m",
+      "size": 32365,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure3/FunctionalClustering/Code/HelperFunctions/Violinplot-Matlab-master/example.png",
+      "size": 43429,
+      "extension": ".png"
+    },
+    {
+      "name": "Figure3/FunctionalClustering/Code/HelperFunctions/Violinplot-Matlab-master/example2.png",
+      "size": 34423,
+      "extension": ".png"
+    },
+    {
+      "name": "Figure3/FunctionalClustering/Code/HelperFunctions/Violinplot-Matlab-master/test_cases/testviolinplot.m",
+      "size": 2653,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure3/FunctionalClustering/Code/HelperFunctions/Violinplot-Matlab-master/violinplot.m",
+      "size": 7521,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure3/FunctionalClustering/Code/HelperFunctions/plot_bar_errors.m",
+      "size": 496,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure3/FunctionalClustering/Code/Plot_Stats_spatialCorr.m",
+      "size": 9901,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure3/FunctionalClustering/Data/SpatialCorrInstructionVSChoiceStats.mat",
+      "size": 19449,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure3/FunctionalClustering/Data/SpatialCorr_RuleARuleB.mat",
+      "size": 6689,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure3/FunctionalClustering/README_Figure3.md",
+      "size": 4859,
+      "extension": ".md"
+    },
+    {
+      "name": "Figure3/Selectivity/Code/GluSNFR_SelectivityStats.m",
+      "size": 1495,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure3/Selectivity/Data/SelectivityStatsGluSNFR.mat",
+      "size": 7771063,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure3/Selectivity/README_SelectivityStats.md",
+      "size": 837,
+      "extension": ".md"
+    },
+    {
+      "name": "Figure4/Code/Figure4_Code.m",
+      "size": 5351,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure4/Code/HelperFunctions/DeleteFullZero.m",
+      "size": 1417,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure4/Code/HelperFunctions/Plot_Selec_CD_Avg.m",
+      "size": 3774,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure4/Code/HelperFunctions/SortROIsByPeak.m",
+      "size": 1902,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure4/Code/HelperFunctions/coding_arranger.m",
+      "size": 1170,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure4/Code/HelperFunctions/rep_drift_selec.m",
+      "size": 2325,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure4/Code/HelperFunctions/trans_gcamp_general.m",
+      "size": 2492,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure4/Data/DataRepDrift_CaImagingDendrites.mat",
+      "size": 2125796,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure4/Data/DataSummary_CaImagingDendrites.mat",
+      "size": 1582022,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure4/README_Figure4_Data.md",
+      "size": 3461,
+      "extension": ".md"
+    },
+    {
+      "name": "Figure5/Code/Figure5_Code.m",
+      "size": 4303,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure5/Code/Figure5_TransitionErrorCode.m",
+      "size": 2301,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure5/Code/Helper Functions/DeleteFullZero.m",
+      "size": 1417,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure5/Code/Helper Functions/Plot_Selec_CD_Avg.m",
+      "size": 3774,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure5/Code/Helper Functions/SortROIsByPeak.m",
+      "size": 1902,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure5/Code/Helper Functions/coding_arranger.m",
+      "size": 1170,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure5/Code/Helper Functions/rep_drift_selec.m",
+      "size": 2325,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure5/Code/Helper Functions/trans_gcamp_general.m",
+      "size": 2492,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure5/Data/Figure5Data_Selectivity_RepDrift.mat",
+      "size": 8000786,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure5/Data/Figure5Data_TransitionError.mat",
+      "size": 3419451,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure5/README_Figure5_Data.md",
+      "size": 3486,
+      "extension": ".md"
+    },
+    {
+      "name": "Figure6/Code/Figure6_CodeSelec_Error_Analysis.m",
+      "size": 5531,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure6/Code/Figure6_Code_SVMSummary.m",
+      "size": 4421,
+      "extension": ".m"
+    },
+    {
+      "name": "Figure6/Data/Figure6Data_SVMSummary.mat",
+      "size": 62542995,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure6/Data/Figure6Data_Selec_ErrorCoding.mat",
+      "size": 13761811,
+      "extension": ".mat"
+    },
+    {
+      "name": "Figure6/README_Figure6_Data.md",
+      "size": 1875,
+      "extension": ".md"
+    },
+    {
+      "name": "LICENSE",
+      "size": 13133,
+      "extension": "<none>"
+    },
+    {
+      "name": "datacite.yml",
+      "size": 4668,
+      "extension": ".yml"
+    },
+    {
+      "name": "readme.md",
+      "size": 1910,
+      "extension": ".md"
+    }
+  ],
+  "selected_records": [
+    {
+      "name": "Figure1/NDNFActivationExperiments/BaselineSessions/README.md",
+      "size": 5107,
+      "extension": ".md",
+      "preview": "# Optogenetic Behavioral Analysis - Data Structure Documentation\n\n## Overview\n\nThis repository contains code for analyzing behavioral performance during an instructed delayed response task with optogenetic manipulations. The analysis examines the effects of optogenetic stimulation at different task epochs on behavioral metrics including performance accuracy, reaction times, and licking behavior.\n\n## Input Data Structure: `cont_data`\n\n`cont_data` is a structure array with 40 entries, where each entry corresponds to behavioral data from one animal during one experimental session.\n\n### Data Dimensions\n\n- **Number of entries**: 40 (animal \u00d7 session combinations)\n- **Number of fields per entry**: 22\n- **Trial structure**: Most fields are t\u00d72 matrices, where:\n  - `t` = number of trials in the session\n  - Column 1 (t,1) = categorical values indicating event types\n  - Column 2 (t,2) = timestamps when events occurred/began (in seconds)\n\n### Key Fields\n\n| Field Name    | Structure | Column 1 (t,1) Description | Column 2 (t,2) Description |\n| ------------- | --------- | -------------------------- | -------------------------- |\n| `Opto`        | t\u00d71       | Optogenetic condition:<br>1 = No stimulation (control)<br>2 = Stimulation during sample/instruction period<br>3 = Stimulation during delay period<br>4 = Stimulation during report period | N/A |\n| `TrialTypes`  | t\u00d71       | Trial instruction:<br>1 = Left instructed trial<br>0 = Right instructed trial | N/A |\n| `Choice`      | t\u00d72       | Animal's choice:<br>1 = Licked left<br>0 = Licked right | Timestamp of choice initiation |\n| `Outcomes`    | t\u00d72       | Trial outcome:<br>-1 = Impulsive lick (premature response)<br>0 = Incorrect choice<br>1 = Correct choice<br>3 = Omission (no response) | Timestamp of outcome determination |\n| `DirOut`      | t\u00d71       | Binary performance:<br>1 = Correct trial<br>0 = Incorrect trial | N/A |\n| `Confidence`  | t\u00d71 or t\u00d72 | Measure of choice confidence | Timestamp (if applicable) |\n| `licks_trial` | t\u00d71 or t\u00d72 | Number of licks per trial | Timestamp information (if applicable) |\n\n### Additional Fields\n\nThe structure contains additional fields capturing other behavioral and task-related variables. The exact structure may vary, but fields generally follow the t\u00d72 format described above, with categorical values in the first column and timestamps in the second column when applicable.\n\n## Task Structure\n\nThe behavioral task consists of several epochs:\n\n1. **Sample/Instruction Period**: Animals receive a sensory cue indicating the correct response direction\n2. **Delay Period**: A waiting period between instruction and response opportunity\n3. **Report Period**: Animals report their choice by licking left or right\n\nOptogenetic stimulation can occur during any of these three epochs (or not at all in control trials).\n\n## Data Preprocessing\n\nThe analysis script performs the following preprocessing steps:\n\n1. **Trial Selection**: \n   - Excludes initial baseline trials (before first Opto \u2260 1)\n   - Excludes omitted trials (Outcome = 3)\n   - Excludes impulsive trials (Outcome = -1)\n\n2. **Session Quality Control**:\n   - Requires minimum 7 trials per condition (left and right) per opto condition\n   - Sessions not meeting this criterion are flagged and excluded from analysis\n\n3. **Trial Categorization**:\n   - Separates left-instructed and right-instructed trials\n   - Groups trials by optogenetic condition\n\n## Output Metrics\n\nThe analysis calculates the following behavioral metrics:\n\n| Metric     | Description | Units |\n| ---------- | ----------- | ----- |\n| `DirOut`   | Proportion of correct choices | 0-1 (fraction) |\n| `RT`       | Reaction time (choice latency) | seconds |\n| `Licks`    | Average number of licks per trial | count |\n| `Confi`    | Average confidence measure | variable |\n\nEach metric is calculated for:\n- **All trials combined** (Allstats)\n- **Left-instructed trials only** (Lstats)\n- **Right-instructed trials only** (Rstats)\n\n## Statistical Analysis\n\nThe script performs one-way ANOVA to test for effects of optogenetic condition on each behavioral metric, separately for:\n- Combined trials\n- Left-instructed trials\n- Right-instructed trials\n\n## Visualization\n\nThe analysis generates a 3\u00d73 grid of violin plots showing:\n- **Top row**: Combined trials (all conditions)\n- **Middle row**: Right-instructed trials (red axes)\n- **Bottom row**: Left-instructed trials (blue axes)\n- **Columns**: Different behavioral metrics (Performance, RT, Licks)\n\n## Usage\n\n```matlab\n% Load your data\nload('cont_data_example.mat')\n\n% Run analysis\nanalyze_opto_behavior  % or run the script sections individually\n```\n\n## Dependencies\n\n- MATLAB R2016b or later\n- Statistics and Machine Learning Toolbox\n- `violinplot` function (available from MATLAB File Exchange)\n\n## Notes\n\n- Impulsive and omitted trials are quantified separately but excluded from main behavioral analyses\n- Sessions with fewer than 7 valid trials per condition per side are excluded from statistical analysis\n- NaN values in reaction time and other continuous measures are handled using `nanmean`\n\n"
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/BaselineSessions/Summary_baseline_NDNFactivationRuleA.mat",
+      "size": 833229,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "cont_data",
+            "shape": [
+              40,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Control/NWO1.mat",
+      "size": 104865,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "cont_data",
+            "shape": [
+              5,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Control/NWO10.mat",
+      "size": 112993,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "cont_data",
+            "shape": [
+              5,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Control/NWO11.mat",
+      "size": 66289,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "cont_data",
+            "shape": [
+              5,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Control/NWO12.mat",
+      "size": 85283,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "cont_data",
+            "shape": [
+              5,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "idx",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "double"
+          },
+          {
+            "name": "str",
+            "shape": [
+              1
+            ],
+            "class": "char"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Control/NWO13.mat",
+      "size": 115534,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "cont_data",
+            "shape": [
+              5,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Control/NWO3.mat",
+      "size": 109775,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "cont_data",
+            "shape": [
+              5,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Control/NWO4.mat",
+      "size": 74999,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "cont_data",
+            "shape": [
+              5,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Control/NWO5.mat",
+      "size": 105822,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "cont_data",
+            "shape": [
+              5,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Control/NWO6.mat",
+      "size": 96669,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "cont_data",
+            "shape": [
+              5,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Control/NWO9.mat",
+      "size": 99759,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "cont_data",
+            "shape": [
+              5,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Data/Figure1Relearning_DataSummary.mat",
+      "size": 560429,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "ABctr_cont",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "ABopto_cont",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "BActr_cont",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "BAopto_cont",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "opto",
+            "shape": [
+              5,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "primer",
+            "shape": [
+              5,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "rever",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "double"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Opto/NWO1.mat",
+      "size": 104850,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "cont_data",
+            "shape": [
+              5,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Opto/NWO10.mat",
+      "size": 103318,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "cont_data",
+            "shape": [
+              5,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Opto/NWO11.mat",
+      "size": 81851,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "cont_data",
+            "shape": [
+              5,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Opto/NWO12.mat",
+      "size": 99631,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "cont_data",
+            "shape": [
+              5,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Opto/NWO13.mat",
+      "size": 93262,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "cont_data",
+            "shape": [
+              5,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Opto/NWO3.mat",
+      "size": 108268,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "cont_data",
+            "shape": [
+              5,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Opto/NWO4.mat",
+      "size": 98394,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "cont_data",
+            "shape": [
+              5,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Opto/NWO5.mat",
+      "size": 123895,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "cont_data",
+            "shape": [
+              5,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Opto/NWO6.mat",
+      "size": 105781,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "cont_data",
+            "shape": [
+              5,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/Opto/NWO9.mat",
+      "size": 103104,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "cont_data",
+            "shape": [
+              5,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/NDNFActivationExperiments/Relearning/README_Figure1_Relearning.md",
+      "size": 2878,
+      "extension": ".md",
+      "preview": "# Figure 1 Relearning Data - NDNF Optogenetic Manipulation\n\n## Overview\n\nBehavioral data from rule relearning experiments with optogenetic NDNF interneuron activation.\n\n**Paradigm:** Rule switching (A\u2192B or B\u2192A) with/without NDNF activation  \n**Figure:** Figure 1 - NDNF manipulation impairs relearning\n\n## Experimental Design\n\n**Rule Transitions:**\n\n* **A\u2192B:** Switch from bidirectional to unidirectional rule\n* **B\u2192A:** Switch from unidirectional to bidirectional rule\n\n**Conditions:**\n\n* **Control:** No optogenetic stimulation\n* **Opto:** NDNF interneuron activation during transitions\n\n## Data Alignment\n\nAll behavioral data aligned so **trial 125 = rule switch moment**\n\n* Trials 1-125: Pre-switch (old rule)\n* Trials 126+: Post-switch (new rule, relearning phase)\n\n## Dataset 1: Concatenated Transition Sessions\n\n**File:** `Figure1Relearning\\_DataSummary.mat`\n\n### Variables\n\nFour main structures combining transition and subsequent sessions:\n\n```matlab\nABctr\\_cont     % A\u2192B transition, control\nABopto\\_cont    % A\u2192B transition, NDNF activation\nBActr\\_cont     % B\u2192A transition, control\nBAopto\\_cont    % B\u2192A transition, NDNF activation\n```\n\n### Structure Format\n\n**Dimensions:** 500 \u00d7 10 (trials \u00d7 animals)\n\n* **500:** Trial positions (padded with NaN)\n* **10:** Individual mice\n* **Trial 125:** Rule switch point (aligned across animals)\n\n### Common Fields\n\n|Field|Description|Units|\n|-|-|-|\n|`RRT`|Right trial reaction time|seconds|\n|`LRT`|Left trial reaction time|seconds|\n|`RDirOut`|Right instructed trial outcome|1=correct, 0=error|\n|`LDirOut`|Left instructed trial outcome|1=correct, 0=error|\n|`CumRDirOut`|Cumulative correct right trials|count|\n|`CumLDirOut`|Cumulative correct left trials|count|\n|`RLicks`|Number of right licks|count|\n|`LLicks`|Number of left licks|count|\n|`ROut`|Right choice outcome (regardless of instruction)|1=correct, 0=error|\n|`LOut`|Left choice outcome (regardless of instruction)|1=correct, 0=error|\n|`Outcomes`|Trial outcome|1=correct, 0=error, 3=omission|\n|`Choice`|Lick direction + timestamp|\\[direction, time]|\n|`TrialTypes`|Instruction side|1=left, 0=right|\n\n**All fields:** 500 \u00d7 10 matrices\n\n\n\n## Dataset 2: Session-by-Session Data\n\n**Variables:** `primer` (control), `opto` (NDNF activation)\n\n### Structure Format\n\n**Dimensions:** 5-element structure array\n\n* Each element = one session\n* Each field = n \u00d7 10 matrix (trials \u00d7 animals, padded with NaN)\n\n### Session Sequence\n\n|Index|Session|Description|\n|-|-|-|\n|(1)|Rule A|Baseline performance|\n|(2)|A\u2192B or B\u2192A|Transition session (rule switch)|\n|(3)|Rule B or A|First session after switch|\n|(4)|B\u2192A or A\u2192B|Reverse transition|\n|(5)|Rule A or B|Final session|\n\n**Same fields as concatenated data.**\n\n\n\n## Citation\n\nMaristany de las Casas et al. (206). Tuft dendrites in frontal motor cortex enable flexible learning. Science. 10.1126/science.adx4358\n\n"
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleA/ICR1_Airpuff_new_20240917_090621.mat",
+      "size": 5990810,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "SessionData",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleA/ICR1_Airpuff_new_20240917_165401.mat",
+      "size": 9993943,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "SessionData",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleA/ICR1_Airpuff_new_20240918_090324.mat",
+      "size": 9280180,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "SessionData",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleA/ICR1_Airpuff_new_20240918_170513.mat",
+      "size": 7731281,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "SessionData",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleA/ICR2_Airpuff_new_20240918_120536.mat",
+      "size": 1987016,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "SessionData",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleA/ICR2_Airpuff_new_20240919_130117.mat",
+      "size": 276739,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "SessionData",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleA/ICR3_Airpuff_new_20240916_172554.mat",
+      "size": 607342,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "SessionData",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleA/ICR3_Airpuff_new_20240917_102429.mat",
+      "size": 7460266,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "SessionData",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleA/ICR3_Airpuff_new_20240917_195526.mat",
+      "size": 7001268,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "SessionData",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleA/ICR3_Airpuff_new_20240918_104532.mat",
+      "size": 6505588,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "SessionData",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleA/ICR3_Airpuff_new_20240918_190455.mat",
+      "size": 476592,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "SessionData",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleA/RuleA_Stats.mat",
+      "size": 1350,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "Allstats",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "Lstats",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "Rstats",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleB/ICR1_Airpuff_new_20240919_102930.mat",
+      "size": 254696,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "SessionData",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleB/ICR1_Airpuff_new_20240919_161459.mat",
+      "size": 3501172,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "SessionData",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleB/ICR1_Airpuff_new_20240920_081217.mat",
+      "size": 3717910,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "SessionData",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleB/ICR1_Airpuff_new_20240920_150126.mat",
+      "size": 3144982,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "SessionData",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleB/ICR2_Airpuff_new_20240919_185827.mat",
+      "size": 253293,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "SessionData",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleB/ICR2_Airpuff_new_20240920_100953.mat",
+      "size": 2059730,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "SessionData",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleB/ICR2_Airpuff_new_20240920_165533.mat",
+      "size": 267957,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "SessionData",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleB/ICR3_Airpuff_new_20240919_113537.mat",
+      "size": 292729,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "SessionData",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleB/ICR3_Airpuff_new_20240919_174932.mat",
+      "size": 1893422,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "SessionData",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleB/ICR3_Airpuff_new_20240920_093243.mat",
+      "size": 4112727,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "SessionData",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleB/ICR3_Airpuff_new_20240920_174513.mat",
+      "size": 4275337,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "SessionData",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure1/VgatCreXChR2_Experiments/RuleB/SummaryStatsRuleB.mat",
+      "size": 1321,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "Allstats",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "Lstats",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "Rstats",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure2/Code/NeuroPixels/PLOTS_STATISTICS/statistics.txt",
+      "size": 765,
+      "extension": ".txt",
+      "preview": "=== L5 PYRAMIDAL NEURONS (PUFF) ===\nn = 210\nFR: Ctrl = 11.29 \u00b1 5.75, DCZ = 8.71 \u00b1 4.61, Change = -22.86%, p = 1.7233277475267754e-05\nBR: Ctrl = 6.19 \u00b1 8.09, DCZ = 3.35 \u00b1 5.92, Change = -45.99%, p = 3.1855434379224334e-06\nEffect Size: FR = 0.12 \u00b1 0.22, BR = 0.29 \u00b1 0.38\nEffect Size Difference (FR vs BR): p = 7.508055781002554e-05\nbackprop Distance: Ctrl = 131.11 \u00b1 51.17, DCZ = 134.55 \u00b1 53.59, Change = 2.62%, p = 0.06743579286781762\nbackprop Speed: Ctrl = 0.40 \u00b1 0.63, DCZ = 0.35 \u00b1 0.39, Change = -12.72%, p = 0.7747396739032382\n\n=== L5 INTERNEURONS (PUFF) ===\nn = 18\nFR: Ctrl = 7.85 \u00b1 4.46, DCZ = 4.78 \u00b1 3.99, Change = -39.18%, p = 0.0022601116584233033\nEffect Size: FR = 0.28 \u00b1 0.37\nEffect Size Difference (Inter vs other): p = 0.045539104949325476\n"
+    },
+    {
+      "name": "Figure2/Code/NeuroPixels/analyze_and_plot_ephys.py",
+      "size": 28483,
+      "extension": ".py",
+      "preview": "\nimport pandas as pd\nimport numpy as np\nimport matplotlib.pyplot as plt\nimport scipy.stats\nfrom scipy.stats import mannwhitneyu, wilcoxon\nfrom pathlib import Path\nfrom matplotlib.transforms import Bbox\n\n# configuration\nFIGURE_HEIGHT = 3\nFONT_SIZE = 15\nFONT_FAMILY = \"Arial\"\nFIGURE_DPI = 300\nFIGURE_SIZE = (3, 3)\n\nCOLOR_FR = \"k\"\nCOLOR_BR = \"#BB5566\"\nCOLOR_EFF = \"#004488\"\nCOLORS_MAIN = [COLOR_FR, COLOR_BR, COLOR_EFF]\n\nCONFIG = {\n    # path relative to this script\n    \"output_dir\": Path(__file__).parent / \"PLOTS_STATISTICS\",\n    \"effect_size\": True,\n    \"min_backprop_distance\": 50,\n\n    \"font_size\": FONT_SIZE,\n    \"figure_dpi\": FIGURE_DPI,\n    \"modulation_threshold_percent\": 5.0,\n    \"color_palette\": COLORS_MAIN,\n}\n\n# helper functions\n\ndef my_ceil(a, precision=0):\n    \"\"\"rounds up a number to a specified precision.\n    \n    args:\n        a: input number or array.\n        precision: number of decimal places.\"\"\"\n    return np.round(a + 0.5 * 10 ** (-precision), precision)\n\ndef dropNaNs(arr1, arr2):\n    \"\"\"removes indices where either array has nan. We don't want to include neurons that drifted away.\n    \n    args:\n        arr1: first array.\n        arr2: second array.\"\"\"\n    good_idxs = np.where(~np.isnan(arr1) & ~np.isnan(arr2))\n    return arr1[good_idxs], arr2[good_idxs]\n\ndef getAsterisks(p):\n    \"\"\"returns significance asterisks for a given p-value.\n    \n    args:\n        p: p-value from statistical test.\"\"\"\n    if p < 0.001:\n        return \"***\"\n    elif p < 0.01:\n        return \"**\"\n    elif p < 0.05:\n        return \"*\"\n    else:\n        return \"\"\n\ndef full_extent(ax, pad=0.0):\n    \"\"\"calculates the full extent of an axes object including labels.\n    \n    args:\n        ax: matplotlib axes object.\n        pad: padding to add.\"\"\"\n    ax.figure.canvas.draw()\n    items = ax.get_xticklabels() + ax.get_yticklabels()\n    items += [ax, ax.title, ax.xaxis.label, ax.yaxis.label]\n    items += [ax, ax.title]\n    bbox = Bbox.union([item.get_window_extent() for item in items])\n    return bbox.expanded(1.0 + pad, 1.0 + pad)\n\ndef formatScatterPlot(ax, ylim, axeslabel, log=False, is_effect_size=False):\n    \"\"\"formats a scatter plot with specific styles.\n    \n    args:\n        ax: matplotlib axes object.\n        ylim: limits for both axes.\n        axeslabel: tuple of (xlabel, ylabel).\n        log: whether to use log scale.\n        is_effect_size: boolean to apply effect size specific formatting.\"\"\"\n    ax.spines[[\"top\", \"right\"]].set_visible(False)\n    if log:\n        ax.set_xscale(\"log\")\n        ax.set_yscale(\"log\")\n    if is_effect_size:\n        ax.set_ylim([-1, 1])\n        ax.set_xlim([-1, 1])\n        ax.set_xticks([-1, 1])\n        ax.set_yticks([-1, 1])\n        ax.set_yticklabels([-1, 1])\n        ax.set_xticklabels([-1, 1])\n    else:\n        ax.set_ylim(ylim)\n        ax.set_xlim(ylim)\n        ax.set_xticks(ylim)\n        ax.set_yticks(ylim)\n        ax.set_yticklabels([0, ylim[1]])\n        ax.set_xticklabels([0, ylim[1]])\n    ax.set_xlabel(axeslabel[0])\n    ax.set_ylabel(axeslabel[1])\n\ndef formatBoxPlot(ax, B, xlabels, is_effect_size=False):\n    \"\"\"formats a box plot and returns y-axis limits.\n    \n    args:\n        ax: matplotlib axes object.\n        b: boxplot dictionary.\n        xlabels: list of x-axis labels.\n        is_effect_size: boolean for effect size formatting.\"\"\"\n    if is_effect_size:\n        this_ylim = [-1, 1]\n    else:\n        whiskertop = np.nanmax([item.get_ydata()[1] for item in B[\"whiskers\"]])\n        this_ylim = [0, my_ceil(whiskertop, 1)]\n    ax.set_xticklabels(xlabels, rotation=60)\n    ax.spines[[\"top\", \"right\", \"bottom\", \"left\"]].set_visible(False)\n    ax.set_ylim(this_ylim)\n    ax.set_yticks([], [])\n    return this_ylim\n\n# plotting functions\n\ndef plotData(\n    frs_ctrl,\n    frs_DCZ,\n    brs_ctrl,\n    brs_DCZ,\n    header,\n    outputPath,\n    colors=[\"k\", \"#BB5566\", \"#004488\"],\n    saveSVG=False,\n    orientation=\"vertical\",\n    effect_size=True,\n    savePDF=True,\n    saveIndividualPlots=False,\n):\n    \"\"\"plots firing rate and burst rate comparisons (boxplots and scatter).\n    \n    args:\n        frs_ctrl: firing rates control.\n        frs_dcz: firing rates dcz.\n        brs_ctrl: burst rates control.\n        brs_dcz: burst rates dcz.\n        header: title/filename prefix.\n        outputpath: directory to save plots.\n        colors: list of colors for fr, br, and effect size.\n        savesvg: whether to save as svg.\n        orientation: plot orientation.\n        effect_size: whether to plot effect sizes.\n        savepdf: whether to save as pdf.\n        saveindividualplots: whether to save separate plots.\"\"\"\n    frs_ctrl_clean = frs_ctrl.copy()\n    frs_DCZ_clean = frs_DCZ.copy()\n    brs_ctrl_clean = brs_ctrl.copy()\n    brs_DCZ_clean = brs_DCZ.copy()\n\n    frs_ctrl_clean[frs_ctrl_clean == 0] = np.nan\n    frs_DCZ_clean[frs_DCZ_clean == 0] = np.nan\n    brs_ctrl_clean[brs_ctrl_clean == 0] = np.nan\n    brs_DCZ_clean[brs_DCZ_clean == 0] = np.nan\n\n    avgBFCtrl = brs_ctrl_clean / frs_ctrl_clean\n    avgBFDCZ = brs_DCZ_clean / frs_DCZ_clean\n\n    def getEffectSize(A, B):\n        return (A - B) / (A + B)\n\n    effFR = getEffectSize(frs_ctrl_clean, frs_DCZ_clean)\n    effBR = getEffectSize(brs_ctrl_clean, brs_DCZ_clean)\n\n    w, p_FR = wilcoxon(frs_ctrl_clean, frs_DCZ_clean, nan_policy=\"omit\")\n    w, p_BR = wilcoxon(brs_ctrl_clean, brs_DCZ_clean, nan_policy=\"omit\")\n    if effect_size:\n        w, p_BF = wilcoxon(effFR, effBR, nan_policy=\"omit\")\n    else:\n        w, p_BF = wilcoxon(avgBFCtrl, avgBFDCZ, nan_policy=\"omit\")\n\n    frs_ctrl_plot, frs_DCZ_plot = dropNaNs(frs_ctrl_clean, frs_DCZ_clean)\n    brs_ctrl_plot, brs_DCZ_plot = dropNaNs(brs_ctrl_clean, brs_DCZ_clean)\n    if effect_size:\n        effFR_plot, effBR_plot = dropNaNs(effFR, effBR)\n    else:\n        avgBFCtrl_plot, avgBFDCZ_plot = dropNaNs(avgBFCtrl, avgBFDCZ)\n\n    color_FR, color_BR, color_BF = colors\n\n    fig, ax = plt.subplots(\n        ncols=2,\n        nrows=3,\n        figsize=(4, FIGURE_HEIGHT * 2.5),\n        width_ratios=[3, 2],\n        constrained_layout=True,\n    )\n    ax = ax.flatten()\n    axesCoords = range(6)\n\n\n    B = ax[axesCoords[1]].boxplot(\n        [frs_ctrl_plot, frs_DCZ_plot], widths=0.7, sym=\"\", patch_artist=True,\n        boxprops=dict(facecolor=color_FR, color=color_FR, alpha=0.2),\n        whiskerprops=dict(color=color_FR), capprops=dict(color=color_FR), medianprops=dict(color=color_FR),\n    )\n    ax[axesCoords[1]].text(\n        0.5, 0.992, f\"{getAsterisks(p_FR)}\", ha=\"center\", va=\"center\",\n        transform=ax[axesCoords[1]].transAxes, fontsize=10, weight=\"bold\"\n    )\n    this_ylim = formatBoxPlot(ax[axesCoords[1]], B, [\"Ctrl\", \"DCZ\"])\n\n    jitter_ctrl = np.random.normal(0, 0.1, len(frs_ctrl_plot))\n    jitter_dcz = np.random.normal(0, 0.1, len(frs_DCZ_plot))\n    ax[axesCoords[1]].scatter(1 + jitter_ctrl, frs_ctrl_plot, c=color_FR, s=15, alpha=0.3, zorder=10)\n    ax[axesCoords[1]].scatter(2 + jitter_dcz, frs_DCZ_plot, c=color_FR, s=15, alpha=0.3, zorder=10)\n    for i in range(len(frs_ctrl_plot)):\n        ax[axesCoords[1]].plot(\n            [1.15, 1.85], [frs_ctrl_plot[i], frs_DCZ_plot[i]], \n            color=color_FR, alpha=0.2, linewidth=0.5, zorder=5\n        )\n\n    ax[axesCoords[0]].scatter(frs_ctrl_plot, frs_DCZ_plot, c=color_FR, s=10, alpha=0.4)\n    ax[axesCoords[0]].plot(this_ylim, this_ylim, c=color_FR, linestyle=\"--\", alpha=0.2)\n    formatScatterPlot(ax[axesCoords[0]], this_ylim, [\"Ctrl FR (Hz)\", \"DCZ FR (Hz)\"])\n\n\n    B = ax[axesCoords[3]].boxplot(\n        [brs_ctrl_plot, brs_DCZ_plot], widths=0.7, sym=\"\", patch_artist=True,\n        boxprops=dict(facecolor=color_BR, color=color_BR, alpha=0.2),\n        whiskerprops=dict(color=color_BR), capprops=dict(color=color_BR), medianprops=dict(color=color_BR),\n    )\n    ax[axesCoords[3]].text(\n        0.5, 0.992, f\"{getAsterisks(p_BR)}\", ha=\"center\", va=\"center\",\n        transform=ax[axesCoords[3]].transAxes, fontsize=10, weight=\"bold\"\n    )\n    this_ylim = formatBoxPlot(ax[axesCoords[3]], B, [\"Ctrl\", \"DCZ\"])\n\n    jitter_ctrl = np.random.normal(0, 0.1, len(brs_ctrl_plot))\n    jitter_dcz = np.random.normal(0, 0.1, len(brs_DCZ_plot))\n    ax[axesCoords[3]].scatter(1 + jitter_ctrl, brs_ctrl_plot, c=color_BR, s=15, alpha=0.3, zorder=10)\n    ax[axesCoords[3]].scatter(2 + jitter_dcz, brs_DCZ_plot, c=color_BR, s=15, alpha=0.3, zorder=10)\n    for i in range(len(brs_ctrl_plot)):\n        ax[axesCoords[3]].plot(\n            [1.15, 1.85], [brs_ctrl_plot[i], brs_DCZ_plot[i]], \n            color=color_BR, alpha=0.2, linewidth=0.5, zorder=5\n        )\n\n    ax[axesCoords[2]].scatter(brs_ctrl_plot, brs_DCZ_plot, c=color_BR, s=10, alpha=0.4)\n    ax[axesCoords[2]].plot(this_ylim, this_ylim, c=color_BR, linestyle=\"--\", alpha=0.2)\n    formatScatterPlot(ax[axesCoords[2]], this_ylim, [\"Ctrl BR (Hz)\", \"DCZ BR (Hz)\"])\n\n\n    if effect_size:\n        d1, d2 = effFR_plot, effBR_plot\n    else:\n        d1, d2 = avgBFCtrl_plot, avgBFDCZ_plot\n\n    B = ax[axesCoords[5]].boxplot(\n        [d1, d2], widths=0.7, sym=\"\", patch_artist=True,\n        boxprops=dict(facecolor=color_BF, color=color_BF, alpha=0.2),\n        whiskerprops=dict(color=color_BF), capprops=dict(color=color_BF), medianprops=dict(color=color_BF),\n    )\n    ax[axesCoords[5]].text(\n        0.5, 0.992, f\"{getAsterisks(p_BF)}\", ha=\"center\", va=\"center\",\n        transform=ax[axesCoords[5]].transAxes, fontsize=10, weight=\"bold\"\n    )\n    x_ticklabels = [\"FR\", \"BR\"] if effect_size else [\"Ctrl\", \"DCZ\"]\n    this_ylim = formatBoxPlot(ax[axesCoords[5]], B, x_ticklabels, is_effect_size=effect_size)\n\n    jitter_d1 = np.random.normal(0, 0.1, len(d1))\n    jitter_d2 = np.random.normal(0, 0.1, len(d2))\n    ax[axesCoords[5]].scatter(1 + jitter_d1, d1, c=color_BF, s=15, alpha=0.3, zorder=10)\n    ax[axesCoords[5]].scatter(2 + jitter_d2, d2, c=color_BF, s=15, alpha=0.3, zorder=10)\n    for i in range(len(d1)):\n        ax[axesCoords[5]].plot(\n            [1.15, 1.85], [d1[i], d2[i]], \n            color=color_BF, alpha=0.2, linewidth=0.5, zorder=5\n        )\n\n    if effect_size:\n        ax[axesCoords[4]].scatter(effFR_plot, effBR_plot, c=color_BF, s=10, alpha=0.4)\n        ax[axesCoords[4]].plot([-1, 1], [-1, 1], c=color_BF, linestyle=\"--\", alpha=0.2)\n    else:\n        ax[axesCoords[4]].scatter(avgBFCtrl_plot, avgBFDCZ_plot, c=color_BF, s=10, alpha=0.4)\n        ax[axesCoords[4]].plot(this_ylim, this_ylim, c=color_BF, linestyle=\"--\", alpha=0.2)\n    \n    yStr = \"Effect size BR\" if effect_size else \"Ctrl BF\"\n    xStr = \"Effect size FR\" if effect_size else \"DCZ BF\"\n    ax[axesCoords[4]].set_xlabel(f\"{xStr}\")\n    ax[axesCoords[4]].set_ylabel(f\"{yStr}\")\n    formatScatterPlot(ax[axesCoords[4]], this_ylim, [xStr, yStr], log=False, is_effect_size=effect_size)\n\n    if savePDF:\n        plt.savefig(outputPath / f\"{header}.pdf\", transparent=True)\n    plt.close()\n    \n    return {\n        \"n_neurons\": len(frs_ctrl_clean),\n        \"fr_ctrl_mean\": np.nanmean(frs_ctrl_clean), \"fr_ctrl_std\": np.nanstd(frs_ctrl_clean),\n        \"fr_dcz_mean\": np.nanmean(frs_DCZ_clean), \"fr_dcz_std\": np.nanstd(frs_DCZ_clean),\n        \"fr_change_pct\": ((np.nanmean(frs_DCZ_clean) - np.nanmean(frs_ctrl_clean)) / np.nanmean(frs_ctrl_clean)) * 100,\n        \"p_FR\": p_FR,\n        \"br_ctrl_mean\": np.nanmean(brs_ctrl_clean), \"br_ctrl_std\": np.nanstd(brs_ctrl_clean),\n        \"br_dcz_mean\": np.nanmean(brs_DCZ_clean), \"br_dcz_std\": np.nanstd(brs_DCZ_clean),\n        \"br_change_pct\": ((np.nanmean(brs_DCZ_clean) - np.nanmean(brs_ctrl_clean)) / np.nanmean(brs_ctrl_clean)) * 100,\n        \"p_BR\": p_BR,\n        \"p_BR\": p_BR,\n        \"fr_eff_mean\": np.nanmean(effFR), \"fr_eff_std\": np.nanstd(effFR),\n        \"br_eff_mean\": np.nanmean(effBR), \"br_eff_std\": np.nanstd(effBR),\n        \"p_eff\": p_BF\n    }\n\ndef plot_interneurons_combined(cluster_info, interneuron_cluster_info, output_path):\n    \"\"\"plots interneuron firing rate changes and compares effect sizes.\n    \n    args:\n        cluster_info: dataframe for pyramidal neurons (for comparison).\n        interneuron_cluster_info: dataframe for interneurons.\n        output_pat"
+    },
+    {
+      "name": "Figure2/Code/NeuroPixels/requirements.txt",
+      "size": 30,
+      "extension": ".txt",
+      "preview": "pandas\nnumpy\nmatplotlib\nscipy\n"
+    },
+    {
+      "name": "Figure2/Data/DCO1_050724_dff.mat",
+      "size": 17603436,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "branch_amp",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "branch_freq",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "cont_data",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "dff_types",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "spine_amp",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "spine_freq",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure2/Data/DCO1_090724_dff.mat",
+      "size": 16922307,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "branch_amp",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "branch_freq",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "cont_data",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "dff_types",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "spine_amp",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "spine_freq",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure2/Data/DCO2_021124_dff.mat",
+      "size": 27315299,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "branch_amp",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "branch_freq",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "cont_data",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "dff_types",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "spine_amp",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "spine_freq",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure2/Data/DCO2_031124_dff.mat",
+      "size": 19239520,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "branch_amp",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "branch_freq",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "cont_data",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "dff_types",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "spine_amp",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "spine_freq",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure2/Data/DCO2_041124_dff.mat",
+      "size": 18735985,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "branch_amp",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "branch_freq",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "cont_data",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "dff_types",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "spine_amp",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "spine_freq",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure2/Data/DCO2_311024_dff.mat",
+      "size": 30909646,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "branch_amp",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "branch_freq",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "cont_data",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "dff_types",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "spine_amp",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "spine_freq",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure2/Data/DCO4_011124_dff.mat",
+      "size": 11983739,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "branch_amp",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "branch_freq",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "cont_data",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "dff_types",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "spine_amp",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "spine_freq",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure2/Data/DCO4_021124_dff.mat",
+      "size": 24622247,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "branch_amp",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "branch_freq",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "cont_data",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "dff_types",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "spine_amp",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "spine_freq",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure2/Data/NeuroPixels/extracted_data/extracted_neural_data.csv",
+      "size": 41834,
+      "extension": ".csv",
+      "preview": "neuron_id,layer,is_interneuron,avg_fr_session,tonic_fr_ctrl,tonic_fr_dcz,burst_rate_ctrl,burst_rate_dcz,tonic_fr_ctrl_puff,tonic_fr_dcz_puff,burst_rate_ctrl_puff,burst_rate_dcz_puff,backprop_dist_ctrl_puff,backprop_dist_dcz_puff,backprop_speed_ctrl_puff,backprop_speed_dcz_puff,psth_bin_size_ms\n307_1,5,False,0.012768294584891244,0.5566666722297668,1.0049999952316284,0.0,0.006666666828095913,,,,,,,,,10\n308_1,5,False,0.11585012335759548,8.046667098999023,5.401666641235352,1.8200000524520874,0.5550000071525574,20.039682388305664,16.964284896850586,15.158730506896973,5.059523582458496,,,,,10\n310_1,5,False,0.03141926945052844,3.4133334159851074,1.090000033378601,0.22333332896232605,0.01666666753590107,,,,,,,,,10\n313_1,5,False,0.059955665766532294,4.026666641235352,2.3499999046325684,0.16333332657814026,0.09833333641290665,11.626984596252441,7.361111164093018,1.1507936716079712,0.773809552192688,,,,,10\n316_1,5,False,0.022379370853969297,1.3566666841506958,1.4149999618530273,0.02666666731238365,0.07666666805744171,,,,,,,,,10\n319_1,5,False,0.025990832830604615,1.659999966621399,1.8583333492279053,0.12666666507720947,0.08666666597127914,,,,,,,,,10\n325_1,5,False,0.0768391380707527,4.323333263397217,3.878333330154419,2.8399999141693115,0.9816666841506958,,,,,,,,,10\n326_1,5,False,0.1296618291237811,10.59666633605957,8.376667022705078,2.5333333015441895,1.1666666269302368,18.174602508544922,14.484127044677734,11.34920597076416,4.960317611694336,,,,,10\n329_1,Unknown,False,0.012561411333427702,0.5566666722297668,0.21833333373069763,0.006666666828095913,0.0033333334140479565,,,,,,,,,10\n330_1,5,False,0.018142761660955013,1.7400000095367432,0.01666666753590107,0.006666666828095913,0.0,,,,,,,,,10\n331_1,5,False,0.017854924093701388,3.496666669845581,0.021666666492819786,0.47999998927116394,0.006666666828095913,,,,,,,,,10\n332_1,5,False,0.05517036621094079,4.87333345413208,1.3833333253860474,0.47999998927116394,0.0833333358168602,14.404762268066406,3.789682626724243,3.055555582046509,0.6746031641960144,,,,,10\n333_1,5,False,0.0680780821174705,0.7266666889190674,2.4600000381469727,0.10000000149011612,0.6833333373069763,1.6666666269302368,3.789682626724243,0.0793650820851326,2.0039682388305664,,,,,10\n335_1,5,False,0.02517229474872712,1.4766666889190674,2.4666666984558105,0.06666667014360428,0.10999999940395355,7.142857074737549,12.936508178710938,0.3174603283405304,1.1507936716079712,66.66666666666669,66.66666666666669,0.2820539524527748,0.2200020829131639,10\n336_1,5,False,0.0205039292048324,0.503333330154419,1.7400000095367432,0.02666666731238365,0.10999999940395355,,,,,66.66666666666669,73.33333333333334,0.1582748797936446,0.1788634820432237,10\n339_1,Unknown,False,0.009188314842174292,0.1066666692495346,0.46000000834465027,0.0,0.006666666828095913,,,,,73.33333333333334,73.33333333333334,0.611116896981015,2.0952579325063363,10\n341_1,5,False,0.049445097099786665,2.373333215713501,3.2733333110809326,0.2666666805744171,0.3149999976158142,,,,,73.33333333333334,80.00000000000001,1.4666805527544249,0.5017591364686241,10\n345_1,5,False,0.026944294772132244,2.4700000286102295,1.2949999570846558,0.1133333370089531,0.013333333656191826,,,,,60.000000000000014,53.33333333333334,1.000009467787127,0.2285735926370531,10\n346_1,5,False,0.10979204205930436,5.849999904632568,5.808333396911621,1.3366667032241821,1.475000023841858,4.603174686431885,8.551587104797363,1.1111111640930176,2.3611111640930176,93.33333333333334,93.33333333333334,0.3676802487621307,0.3389231343338071,10\n347_1,5,False,0.052561838257704815,7.190000057220459,2.4649999141693115,4.289999961853027,0.3199999928474426,13.531745910644531,5.476190567016602,28.015872955322266,0.7539682388305664,73.33333333333334,80.00000000000001,0.1102767332898074,0.1166168023596798,10\n348_1,5,False,0.28756322207233576,9.583333015441895,8.986666679382324,8.75333309173584,7.226666450500488,13.84920597076416,13.690476417541504,29.72222137451172,25.654762268066406,,,,,10\n354_1,5,False,0.02468656885398663,0.8966666460037231,1.4149999618530273,0.7233333587646484,0.5183333158493042,,,,,73.33333333333334,80.00000000000001,0.3188435984248775,0.4650450533123823,10\n356_1,5,False,0.039321310164038094,2.236666679382324,1.5533332824707031,0.3400000035762787,0.4033333361148834,,,,,,,,,10\n357_1,5,False,0.061903066807482594,3.180000066757202,1.6333333253860474,0.0,0.0,5.595238208770752,5.376984119415283,0.0,0.0,60.000000000000014,60.000000000000014,0.1860482730766723,0.2051301472383825,10\n358_1,5,False,0.0795466101877321,7.583333492279053,4.320000171661377,1.3266667127609253,0.09166666865348816,24.761905670166016,14.702381134033203,10.912698745727539,0.1984127014875412,86.66666666666669,93.33333333333334,0.7583405130718912,0.6894004664289931,10\n361_1,5,False,0.11802689495995101,10.476666450500488,4.8466668128967285,0.12333333492279053,0.036666665226221085,13.968254089355469,5.992063522338867,0.8730158805847168,0.1587301641702652,120.00000000000004,93.33333333333334,0.1140346189215316,0.1613490453344457,10\n364_1,5,False,0.028653330327700642,1.399999976158142,0.6616666913032532,0.0,0.009999999776482582,,,,,173.33333333333337,80.00000000000001,0.3927529631792295,1.0895341249032957,10\n366_1,5,False,0.06914398060870658,4.5,4.058333396911621,0.14000000059604645,0.19333332777023315,,,,,166.66666666666669,146.66666666666669,0.4761949846605316,0.4630109195950279,10\n367_1,5,False,0.10030689472589976,10.873332977294922,4.138333320617676,0.8866666555404663,0.5166666507720947,11.38888931274414,10.595237731933594,0.9126983880996704,1.4682539701461792,60.000000000000014,120.00000000000004,0.2962991015665506,0.4439904578628698,10\n368_1,5,False,0.01534534030420885,1.1133333444595337,0.9016666412353516,0.10000000149011612,0.06499999761581421,,,,,,,,,10\n370_1,5,False,0.019518985029386406,1.159999966621399,0.4216666519641876,0.046666666865348816,0.0033333334140479565,,,,,140.00000000000003,133.33333333333337,0.4331967877333777,0.422226219732338,10\n371_1,5,False,0.07416764564968,6.146666526794434,0.9350000023841858,0.27000001072883606,0.0033333334140479565,,,,,,,,,10\n375_1,5,False,0.014499817450401329,0.15333333611488342,0.39500001072883606,0.07333333045244217,0.09000000357627869,,,,,146.66666666666669,120.00000000000004,0.3349440694942751,0.290993746031746,10\n377_1,5,False,0.03897500559093608,2.619999885559082,2.1050000190734863,0.0533333346247673,0.03999999910593033,,,,,,,,,10\n378_1,5,False,0.058574944936112566,1.6200000047683716,3.3550000190734863,0.0533333346247673,0.036666665226221085,,,,,93.33333333333334,93.33333333333334,0.1969715618368557,0.1753388469530396,10\n383_1,5,False,0.29962091766306964,17.71666717529297,13.451666831970215,7.863333225250244,2.5316667556762695,20.714284896850586,19.484127044677734,21.46825408935547,7.023809432983398,120.00000000000004,133.33333333333337,0.7425357657361815,0.2940879142414299,10\n498_1,5,False,0.062154924678829514,4.9666666984558105,2.0366666316986084,1.1433333158493042,0.1899999976158142,15.158730506896973,9.603174209594727,6.269841194152832,1.2896825075149536,,,,,10\n338_1,5,True,0.09097016363811032,3.0799999237060547,4.148333549499512,0.8899999856948853,2.2750000953674316,11.904762268066406,11.0119047164917,4.2063493728637695,16.507936477661133,,,,,10\n340_1,5,True,0.6469104349405325,7.019999980926514,8.524999618530273,63.4466667175293,35.20000076293945,0.7142857313156128,4.404761791229248,161.11111450195312,97.38095092773438,,,,,10\n360_1,5,True,0.10602766637506554,4.913333415985107,5.493333339691162,1.4633333683013916,2.366666555404663,15.992063522338867,15.09920597076416,7.698412895202637,9.781745910644531,,,,,10\n372_1,5,True,0.08806480319364406,7.860000133514404,3.861666679382324,1.6833332777023315,0.2616666555404663,14.7619047164917,7.539682388305664,3.492063522338867,0.7142857313156128,,,,,10\n382_1,5,True,0.02969224404700669,1.7766666412353516,1.596666693687439,0.07666666805744171,0.036666665226221085,9.960317611694336,6.388888835906982,0.9126983880996704,0.3571428656578064,,,,,10\n480_2,5,False,0.06964657878979998,4.793333530426025,2.8516666889190674,0.3233333230018616,0.2683333456516266,,,,,,,,,10\n493_2,5,False,0.023533885896486795,1.246666669845581,0.653333306312561,0.6566666960716248,0.4333333373069763,,,,,,,,,10\n501_2,5,False,0.08808980142498997,6.400000095367432,2.053333282470703,0.5266666412353516,0.47333332896232605,,,,,,,,,10\n506_2,5,False,0.04695186415951966,2.6666667461395264,0.54666668176651,1.440000057220459,0.35333332419395447,,,,,,,,,10\n510_2,5,False,0.019463209809584627,3.2233333587646484,0.550000011920929,0.6800000071525574,0.019999999552965164,,,,,,,,,10\n521_2,5,False,0.09873012217606113,4.616666793823242,3.998333215713501,0.21666666865348816,0.6299999952316284,4.6218485832214355,4.45945930480957,0.0,0.19305019080638885,,,,,10\n524_2,5,False,0.2995934146463909,14.850000381469727,10.116666793823242,5.21999979019165,2.056666612625122,21.008403778076172,17.3745174407959,11.008403778076172,1.930501937866211,,,,,10\n525_2,5,False,0.22992365432990014,11.010000228881836,8.813333511352539,3.6533334255218506,3.383333444595337,14.327731132507324,13.5521240234375,2.941176414489746,2.606177568435669,,,,,10\n526_2,5,False,0.3728516752946155,14.126667022705078,12.341666221618652,11.293333053588867,6.236666679382324,18.86554527282715,15.019305229187012,5.168067455291748,1.6795367002487183,,,,,10\n527_2,5,False,0.06530699699328467,4.913333415985107,2.9733333587646484,0.40666666626930237,0.23333333432674408,,,,,180.00000000000003,233.33333333333337,0.235347260141988,0.1944464542483661,10\n529_2,5,False,0.023371615209651288,1.1299999952316284,0.7950000166893005,0.5566666722297668,0.6600000262260437,,,,,140.00000000000003,140.00000000000003,0.3666704565826331,0.1944464542483659,10\n530_2,5,False,0.02049710589999372,1.559999942779541,0.6483333110809326,0.23000000417232513,0.28999999165534973,,,,,,,,,10\n531_2,5,False,0.012059030184547312,0.7766666412353516,0.23333333432674408,0.09000000357627869,0.07666666805744171,,,,,,,,,10\n532_2,5,False,0.013264469572468228,0.5633333325386047,0.3316666781902313,0.25,0.25333333015441895,,,,,,,,,10\n533_2,5,False,0.07052284049871171,2.0299999713897705,1.0916666984558105,6.179999828338623,1.6299999952316284,,,,,,,,,10\n534_2,5,False,0.03363175892299354,1.996666669845581,0.8833333253860474,0.4166666567325592,0.1666666716337204,,,,,,,,,10\n535_2,5,False,0.06485263907014525,3.3533332347869873,2.7083332538604736,1.2033333778381348,1.2133333683013916,,,,,320.00000000000006,333.33333333333337,0.248841037722058,0.2062004579434625,10\n536_2,5,False,0.009133521516170013,0.5199999809265137,0.5483333468437195,0.1133333370089531,0.14499999582767487,,,,,86.66666666666669,93.33333333333334,0.3676805680332733,0.2930787136497108,10\n538_2,5,False,0.026176579939236496,0.3700000047683716,0.30666667222976685,0.019999999552965164,0.028333334252238274,,,,,146.66666666666669,220.00000000000003,0.1815032851954001,0.1979838495096301,10\n539_2,5,False,0.055195215050763455,1.8966666460037231,1.3333333730697632,2.2166666984558105,1.2316666841506958,,,,,120.00000000000004,153.33333333333337,0.3482515779745854,0.349571834254945,10\n546_2,5,False,0.0897727802627411,6.5333333015441895,3.2816667556762695,0.6033333539962769,0.26499998569488525,9.285714149475098,4.420849323272705,0.8403361439704895,0.11583011597394943,,,,,10\n549_2,5,False,0.28391806629808086,3.373333215713501,4.53000020980835,20.899999618530273,12.91333293914795,5.966386318206787,7.258687496185303,26.848739624023438,15.405405044555664,106.66666666666669,166.66666666666669,2.6666942296918617,0.6039551391288221,10\n553_2,5,False,0.04297391417938064,1.3700000047683716,1.246666669845581,1.5833333730697632,1.0099999904632568,,,,,100.0,120.00000000000004,0.4977829228758161,0.3400035142857137,10\n555_2,5,False,0.16690699217366523,8.166666984558105,6.755000114440918,1.7166666984558105,1.4816666841506958,13.487395286560059,12.277992248535156,5.672268867492676,2.9536678791046143,153.33333333333337,133.33333333333337,0.3259292947401184,0.2604040620771067,10\n559_2,5,False,0.2406613374930726,11.466666221618652,11.185"
+    },
+    {
+      "name": "Figure2/README_Figure2.md",
+      "size": 5430,
+      "extension": ".md",
+      "preview": "# Calcium Imaging Analysis - Figure 2\n\n## Overview\n\nThis repository contains code for analyzing dendritic calcium activity in Layer 5b pyramidal neurons during chemogenetic manipulation of NDNF (Neuron-Derived Neurotrophic Factor) interneurons. The analysis examines how NDNF activation affects calcium signaling in dendritic spines and shafts during an instructed delayed response task.\n\n\n## Experimental Design\n\n### Conditions\n- **Saline (Control):** Baseline calcium activity\n- **DCZ (NDNF Activation):** Chemogenetic activation of NDNF interneurons using Deschloroclozapine\n\n### ROI Types\n- **Dendritic Spines:** Small protrusions on dendrites receiving synaptic input\n- **Dendritic Shafts/Branches:** Main dendritic trunk showing global calcium activity\n\n### Trial Types\n- **Left Instructed Trials:** Air puff stimulus delivered to left whisker pad\n- **Right Instructed Trials:** Air puff stimulus delivered to right whisker pad\n\n## Input Data Structures\n\n### 1. Transient Properties Data\n\nLoaded via `DataSummarizer('matrix', variable_name, 'vert')`:\n\n| Variable | Description | Structure |\n|----------|-------------|-----------|\n| `branch_amp` | Amplitude of calcium transients in dendritic branches | Structure with `.Sal` and `.DCZ` fields |\n| `spine_amp` | Amplitude of calcium transients in dendritic spines | Structure with `.Sal` and `.DCZ` fields |\n| `branch_freq` | Frequency of calcium transients in branches | Structure with `.Sal` and `.DCZ` fields |\n| `spine_freq` | Frequency of calcium transients in spines | Structure with `.Sal` and `.DCZ` fields |\n\nEach field (`.Sal`, `.DCZ`) contains a cell array where each cell corresponds to one imaging session/animal.\n\n### 2. Behavioral Data Structure: `cont_data`\n\nLoaded via `DataSummarizer('matrix', 'cont_data', 'horz')`:\n\nStructure array with multiple sessions, each containing:\n\n#### Main Fields\n\n| Field Name | Structure | Description |\n|------------|-----------|-------------|\n| `Sal` | Substructure | Behavioral data during saline (control) condition |\n| `DCZ` | Substructure | Behavioral data during DCZ (NDNF activation) condition |\n\n#### Subfields (within `.Sal` and `.DCZ`)\n\n| Field | Type | Column 1 | Column 2 | Description |\n|-------|------|----------|----------|-------------|\n| `TrialTypes` | t\u00d71 | Trial instruction | N/A | 1=Left instructed, 0=Right instructed |\n| `Choice` | t\u00d72 | Animal's choice | Timestamp | 1=Licked left, 0=Licked right |\n| `Outcomes` | t\u00d72 | Trial outcome | Timestamp | -1=Impulsive, 0=Error, 1=Correct, 3=Omission |\n| `DirOut` | t\u00d71 | Performance | N/A | 1=Correct, 0=Incorrect |\n| `spine_local` | t\u00d7r | Isolated spine calcium activity | N/A | Activity of r spines across t timepoints |\n| `spine_all` | t\u00d7r | All spine events | N/A | Includes both local and global events |\n| `branch` | t\u00d7r | Branch calcium activity | N/A | Activity of r branches across t timepoints |\n\n**Note:** \n- `t` = number of timepoints in trial (e.g., imaging frames)\n- `r` = number of ROIs (regions of interest)\n\n### 3. Selectivity Data Structure: `dff_types`\n\nLoaded via `DataSummarizer('matrix', 'dff_types', 'horz')`:\n\nStructure organized by experimental condition and ROI type:\n\n```\ndff_types(session).Condition.ROI_type.DataType\n```\n\n#### Organization\n\n| Level 1 | Level 2 | Level 3 | Description |\n|---------|---------|---------|-------------|\n| `Sal` or `DCZ` | `spine` or `branch` | `type1` | Mean activity for right instructed trials (t\u00d7r matrix) |\n| | | `type2` | Mean activity for left instructed trials (t\u00d7r matrix) |\n| | | `selec` | Trial-type selectivity across time (t\u00d7r matrix) |\n\n#### Matrix Dimensions\n\n- **t:** Number of timepoints across trial duration\n- **r:** Number of ROIs (spines or branches)\n\n#### Field Definitions\n\n| Field | Formula | Description |\n|-------|---------|-------------|\n| `type1` | Mean(Right trials) | Average calcium activity during right instructed trials |\n| `type2` | Mean(Left trials) | Average calcium activity during left instructed trials |\n| `selec` | \\|type1 - type2\\| | Absolute difference between right and left trial activity |\n\n**Selectivity** quantifies how well an ROI discriminates between trial types. High selectivity indicates the ROI responds differently to left vs. right instructions.\n\n\n## Key Metrics\n\n### Effect Size\n\n**Formula:**\n```\nEffect Size = (Activity_Saline - Activity_DCZ) / (Activity_Saline + Activity_DCZ)\n```\n\n**Interpretation:**\n- **1:** Complete suppression by DCZ\n- **0:** No effect\n- **-1:** Complete enhancement by DCZ\n\n### Geometric Mean Activity\n\n**Formula:**\n```\nGeometric Mean = \u221a(Amplitude \u00d7 Frequency)\n```\n\n**Purpose:** Combines two aspects of calcium signaling into a single metric\n\n### Selectivity\n\n**Formula:**\n```\nSelectivity(t) = |Activity_Right(t) - Activity_Left(t)|\n```\n\n**Interpretation:**\n- High values indicate strong trial-type discrimination\n- Low values indicate similar responses to both trial types\n\n## Dependencies\n\n### Required MATLAB Toolboxes\n- Statistics and Machine Learning Toolbox\n\n### Custom Functions (must be in MATLAB path)\n- `DataSummarizer()` - Loads and organizes data from multiple files\n- `iam_lazy()` - Extracts specific calcium activity fields from `cont_data`\n- `iam_lazyV2()` - Extracts specific fields from `dff_types`\n- `plot_bar_errors()` - Creates bar plots with error bars and statistics\n- `stdshade()` - Plots mean with shaded standard error\n- `plot_epochs()` - Marks trial epoch boundaries on plots\n"
+    },
+    {
+      "name": "Figure3/FunctionalClustering/Code/HelperFunctions/Violinplot-Matlab-master/README.md",
+      "size": 2125,
+      "extension": ".md",
+      "preview": "# Violin Plots for Matlab\n\nA violin plot is an easy to read substitute for a box plot that\nreplaces the box shape with a kernel density estimate of the data, and\noptionally overlays the data points itself. The original boxplot shape\nis still included as a grey box/line in the center of the violin.\n\nViolin plots are a superset of box plots, and give a much richer\nunderstanding of the data distribution, while not taking more space.\nYou will be able to instantly spot too-sparse data, or multi-modal\ndistributions, which could go unnoticed in boxplots.\n\n`violinplot` is meant as a direct substitute for `boxplot` (excluding\nnamed arguments). Additional constructor parameters include the width\nof the plot, the bandwidth of the kernel density estimation, and the\nX-axis position of the violin plot.\n\nFor more information about violin plots, read \"[Violin plots: a box\nplot-density trace synergism](http://www.stat.cmu.edu/~rnugent/PCMI2016/papers/ViolinPlots.pdf)\"\nby J. L. Hintze and R. D. Nelson in The American Statistician, vol.\n52, no. 2, pp. 181-184, 1998 (DOI: 10.2307/2685478).\n\nFor a simple call:\n\n```matlab\nload carbig MPG Origin\nOrigin = cellstr(Origin);\nfigure\nvs = violinplot(MPG, Origin);\nylabel('Fuel Economy in MPG');\nxlim([0.5, 7.5]);\n```\n\n![example image](./example.png)\n\n\nYou can also play around with the different options, and tune your violin plots to your liking.\n\n```matlab\ngrouporder={'England','Sweden','Japan','Italy','Germany','France','USA'};\nvs = Violin({MPG(strcmp(Origin, grouporder{pos}))},...\n    position,...\n    'HalfViolin','right',...% left, full\n    'QuartileStyle','shadow',... % boxplot, none\n    'DataStyle', 'histogram',... % scatter, none\n    'ShowNotches', false,...\n    'ShowMean', false,...\n    'ShowMedian', true,...\n    'ViolinColor', color);\n```\n![example image2](example2.png)\n\n## Citation\n\n[![DOI](https://zenodo.org/badge/60771923.svg)](https://zenodo.org/badge/latestdoi/60771923)\n\nIf you want to cite this repository, use \n\n> Bechtold, Bastian, 2016. Violin Plots for Matlab, Github Project  \n> https://github.com/bastibe/Violinplot-Matlab, DOI: 10.5281/zenodo.4559847\n"
+    },
+    {
+      "name": "Figure3/FunctionalClustering/Data/SpatialCorrInstructionVSChoiceStats.mat",
+      "size": 19449,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "inst_noise",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "inst_signal",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "resp_noise",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "resp_signal",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure3/FunctionalClustering/Data/SpatialCorr_RuleARuleB.mat",
+      "size": 6689,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "branch_noise_RuleA",
+            "shape": [
+              151,
+              2
+            ],
+            "class": "double"
+          },
+          {
+            "name": "branch_noise_RuleB",
+            "shape": [
+              46,
+              2
+            ],
+            "class": "double"
+          },
+          {
+            "name": "branch_signal_RuleA",
+            "shape": [
+              151,
+              2
+            ],
+            "class": "double"
+          },
+          {
+            "name": "branch_signal_RuleB",
+            "shape": [
+              46,
+              2
+            ],
+            "class": "double"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure3/FunctionalClustering/README_Figure3.md",
+      "size": 4859,
+      "extension": ".md",
+      "preview": "# Functional Clustering Analysis - Figure 3\n\n\n\n### Two Types of Correlations\n\n#### 1. Noise Correlation (Coactivity)\n- **Definition:** Pearson correlation of raw calcium activity between two synapses\n- **Reflects:** Shared input, global processes, or common modulatory signals\n- **Interpretation:** \n  - High coactivity = synapses receive similar input patterns\n  - Independent of task structure\n\n#### 2. Signal Correlation (Coding Correlation)\n- **Definition:** Correlation of task-related activity patterns between synapses\n- **Reflects:** Functional similarity in information encoding\n- **Interpretation:**\n  - High signal correlation = synapses encode similar task features\n  - Depends on task structure and synapse selectivity\n\n## Experimental Design\n\n### Comparisons\n\n#### Comparison 1: Rule A vs Rule B\n- **Purpose:** Test if functional clustering depends on task complexity\n- **Rule A:** Bidirectional task (complex) - requires left/right discrimination\n- **Rule B:** Unidirectional task (simple) - always lick left\n- **Hypothesis:** Clustering may be stronger during complex rule requiring integration\n\n#### Comparison 2: Instruction-Selective vs Choice-Selective Synapses\n- **Purpose:** Test if different synapse types show different clustering properties\n- **Instruction-selective:** Synapses encoding sensory instruction (air puff side)\n- **Choice-selective:** Synapses encoding motor choice (lick direction)\n- **Hypothesis:** Choice-selective synapses may show stronger clustering\n\n### Distance Threshold\n- **Maximum distance analyzed:** 20 \u03bcm\n- **Rationale:** Functional clustering is most relevant for nearby synapses\n\n## Input Data Structures\n\n### Primary Data Files\n\n| File | Purpose | Contains |\n|------|---------|----------|\n| `SpatialCorr_RuleARuleB.mat` | Rule comparison | Correlation vs distance for both rules |\n| `SpatialCorrInstructionVSChoiceStats.mat` | Synapse type comparison | Correlation vs distance + nearest neighbor data |\n\n### Data Matrix Structure\n\nAll correlation matrices follow the same format:\n\n#### Matrix Dimensions: n\u00d72\n\n| Column | Content | Units | Description |\n|--------|---------|-------|-------------|\n| Column 1 | Distance | \u03bcm (pre-scaling) | Spatial separation between synapse pairs |\n| Column 2 | Correlation | -1 to 1 | Correlation coefficient (coactivity or signal) |\n\n\n\n## Function Usage\n\n### Basic Syntax\n\n```matlab\nsummary = Plot_Stats_spatialCorr(branch_noise, branch_noise_RuleA, ...\n                                 branch_signal, branch_signal_RuleA)\n```\n\n### Full Syntax with Nearest Neighbor\n\n```matlab\nsummary = Plot_Stats_spatialCorr(branch_noise, branch_noise_RuleA, ...\n                                 branch_signal, branch_signal_RuleA, ...\n                                 inst_noise_nearneigh, resp_noise_nearneigh)\n```\n\n### Example Usage\n\n```matlab\n%% Analysis 1: Compare Rule A vs Rule B\nload('SpatialCorr_RuleARuleB.mat')\n\n% Run analysis\nstats_rules = Plot_Stats_spatialCorr(branch_noise, branch_noise_RuleA, ...\n                                     branch_signal, branch_signal_RuleA);\n\n\n%% Analysis 2: Compare Instruction vs Choice Selective Synapses\nload('SpatialCorrInstructionVSChoiceStats.mat')\n\n% Run analysis with nearest neighbor comparison\nstats_types = Plot_Stats_spatialCorr(branch_noise, branch_noise_RuleA, ...\n                                     branch_signal, branch_signal_RuleA, ...\n                                     inst_noise_nearneigh, resp_noise_nearneigh);\n\n\n## Output Structure\n\n### Summary Statistics\n\nThe function returns a structure with the following fields:\n\n| Field | Description | Test Type |\n|-------|-------------|-----------|\n| `RHO_signal` | Spearman \u03c1 for signal correlation vs distance (Rule B) | Correlation |\n| `PVAL_signal` | P-value for signal correlation (Rule B) | Correlation |\n| `RHO_noise` | Spearman \u03c1 for coactivity vs distance (Rule B) | Correlation |\n| `PVAL_noise` | P-value for coactivity (Rule B) | Correlation |\n| `RHO_signal_RuleA` | Spearman \u03c1 for signal correlation vs distance (Rule A) | Correlation |\n| `PVAL_signal_RuleA` | P-value for signal correlation (Rule A) | Correlation |\n| `RHO_noise_RuleA` | Spearman \u03c1 for coactivity vs distance (Rule A) | Correlation |\n| `PVAL_noise_RuleA` | P-value for coactivity (Rule A) | Correlation |\n| `l_noise` | Test statistic for Rule A vs B coactivity | Mann-Whitney U |\n| `p_noise` | P-value for Rule A vs B comparison | Mann-Whitney U |\n| `pnearest` | P-value for nearest neighbor comparison | Mann-Whitney U |\n\n\n\n\n## Dependencies\n\n### Required MATLAB Toolboxes\n- Statistics and Machine Learning Toolbox (for `corr`, `fitlm`, `ranksum`)\n\n### Required Helper Functions\n\n| Function | Purpose |\n|----------|---------|\n| `plot_bar_errors()` | Create bar plots with error bars and statistical comparison |\n| `violinplot()` | Generate violin plots showing full distributions |\n"
+    },
+    {
+      "name": "Figure3/Selectivity/Data/SelectivityStatsGluSNFR.mat",
+      "size": 7771063,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "ConA2_Summ",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "ConA_Summ",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "ConB_Summ",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "x_df",
+            "shape": [
+              1,
+              600
+            ],
+            "class": "double"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure3/Selectivity/README_SelectivityStats.md",
+      "size": 837,
+      "extension": ".md",
+      "preview": "# SelectivityStatsGluSNFR.mat - Data Structure\n\n## Overview\n\n**Recording:** 100 Hz, 6-second trials = 600 frames per trial  \n**Figure:** Figure 3 - Selectivity Analysis\n\n## Data Structure\n\nEach rule (RuleA, RuleB, RuleA_prime) contains three matrices:\n\n### Matrix Format: s \u00d7 600\n- **s** = number of synapses\n- **600** = time points (6 seconds \u00d7 100 Hz)\n\n### Fields\n\n| Field | Description |\n|-------|-------------|\n| `dff_type1` | Average \u0394F/F for **right instructed trials** |\n| `type2` | Average \u0394F/F for **left instructed trials** |\n| `selec` | Selectivity = \\|type1 - type2\\| |\n\n## Epoch Frame Numbers\n\n| Epoch | Time (s) | Frames |\n|-------|----------|--------|\n| Initial Delay | 0.0-1.2 | 1-120 |\n| Instruction | 1.2-1.9 | 121-190 |\n| Delay | 1.9-2.9 | 191-290 |\n| Go Cue | 2.9-3.0 | 291-300 |\n| Report | 3.0-6.0 | 301-600 |\n\n\n"
+    },
+    {
+      "name": "Figure4/Data/DataRepDrift_CaImagingDendrites.mat",
+      "size": 2125796,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "cd_choice_ctr",
+            "shape": [
+              1,
+              5
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "cd_choice_test",
+            "shape": [
+              1,
+              5
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "cd_stim_ctr",
+            "shape": [
+              1,
+              5
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "cd_stim_test",
+            "shape": [
+              1,
+              5
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "sig_ctr",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "sig_test",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "type_sum_ctr",
+            "shape": [
+              1,
+              5
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "type_sum_test",
+            "shape": [
+              1,
+              5
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "x_df",
+            "shape": [
+              1,
+              60
+            ],
+            "class": "double"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure4/Data/DataSummary_CaImagingDendrites.mat",
+      "size": 1582022,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "cd_choice_ctr",
+            "shape": [
+              1,
+              5
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "cd_choice_test",
+            "shape": [
+              1,
+              5
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "cd_stim_ctr",
+            "shape": [
+              1,
+              5
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "cd_stim_test",
+            "shape": [
+              1,
+              5
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "sig_ctr",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "sig_test",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "type_sum_ctr",
+            "shape": [
+              1,
+              5
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "type_sum_test",
+            "shape": [
+              1,
+              5
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "x_df",
+            "shape": [
+              1,
+              60
+            ],
+            "class": "double"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure4/README_Figure4_Data.md",
+      "size": 3461,
+      "extension": ".md",
+      "preview": "# DataSummary_CaImagingDendrites.mat - Data Structure\n\n## Overview\n\nLongitudinal calcium imaging data from Layer 5b pyramidal neuron dendrites tracked across 5 consecutive sessions. Used to analyze representational stability and drift during rule learning.\n\n**Recording:** Dendritic calcium imaging, 60 frames per trial  \n**Figure:** Figure 4 - Longitudinal tracking during rule learning  \n**Animals:** Same dendrites tracked across multiple days\n\n## Experimental Conditions\n\n### TEST Condition (Relearning Paradigm)\n5 sessions tracking rule transitions:\n- **Session 1:** Rule A \n- **Session 2:** Rule A \n- **Session 3:** Rule A \n- **Session 4:** Rule B \n- **Session 5:** Rule A \n\n### CONTROL Condition (Stability Baseline)\n5 consecutive sessions of Rule A only (no rule changes)\n- Purpose: Distinguish learning-related changes from natural representational drift\n\n## Variable Naming Convention\n\nVariables follow pattern: `[type]_[category]_[condition]`\n\n**Condition suffix:**\n- `_test` = Relearning paradigm (A\u2192A\u2192A\u2192B\u2192A)\n- `_ctr` = Control (A\u2192A\u2192A\u2192A\u2192A)\n\n## Data Structures\n\n### 1. Coding Direction Variables (`cd_choice_*`, `cd_stim_*`)\n\n**Fields:** `Lproj`, `Rproj`  \n**Dimensions:** d \u00d7 60 (per session, 5 sessions total)\n\n- **d:** Number of dendrites tracked that session\n- **60:** Frames per trial\n- **Lproj:** Projection onto coding direction for left instructed trials\n- **Rproj:** Projection onto coding direction for right instructed trials\n\n**Types:**\n- `cd_choice_*`: Coding direction during choice/report period\n- `cd_stim_*`: Coding direction during instruction/sample period\n\n**Example structure:**\n```matlab\ncd_choice_test(1).Lproj  % Day 1 left projections (d\u00d760)\ncd_choice_test(1).Rproj  % Day 1 right projections (d\u00d760)\n% ... up to cd_choice_test(5) for Day 5\n```\n\n### 2. Significance Variables (`sig_*`)\n\n**Fields:** `Choice`, `Stimuli`, `Delay`  \n**Dimensions:** 5 \u00d7 d (binary matrix)\n\n- **Rows (5):** Session/day number\n- **Columns (d):** Dendrite number\n- **Values:** 1 = significantly coding, 0 = not significant\n\n**Meaning:**\n- `sig_test.Choice(3, 15) = 1` means dendrite 15 was significantly choice-selective on Day 3\n- `sig_ctr.Delay(2, 8) = 0` means dendrite 8 was not delay-coding on Day 2\n\n### 3. Selectivity Variables (`type_sum_*`)\n\n**Structure:** Array of 5 elements (one per day), each with fields:\n\n| Field | Dimensions | Description |\n|-------|------------|-------------|\n| `nu_type1` | 60 \u00d7 d | Average activity for right instructed trials |\n| `nu_type2` | 60 \u00d7 d | Average activity for left instructed trials |\n| `sel_types` | 60 \u00d7 d | Selectivity = \\|type1 - type2\\| |\n\n**Same as Figure 3 data, but with 5 days:**\n- Row dimension (60): Time points across trial\n- Column dimension (d): Individual dendrites\n- Values: Calcium event rates or selectivity magnitude\n\n**Example:**\n```matlab\ntype_sum_test(1).nu_type1  % Day 1 right trials (60\u00d7d)\ntype_sum_test(1).nu_type2  % Day 1 left trials (60\u00d7d)\ntype_sum_test(1).sel_types % Day 1 selectivity (60\u00d7d)\n```\n\n\n### Additional Required Variable\n```matlab\nx_df               % Time vector for trial (length 60)\n```\n\n\n## Related Scripts\n\n- `Figure4_Code.m` - Main analysis script\n- `DeleteFullZero.m` - Remove inactive dendrites\n- `SortROIsByPeak.m` - Sort and visualize by selectivity timing\n- `coding_arranger.m` - Extract epoch-specific activity\n- `rep_drift_selec.m` - Quantify representational drift\n- `Plot_Selec_CD_Avg.m` - Visualize across all days\n\n\n"
+    },
+    {
+      "name": "Figure5/Data/Figure5Data_Selectivity_RepDrift.mat",
+      "size": 8000786,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "cd_choice_all",
+            "shape": [
+              1,
+              5
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "cd_stim_all",
+            "shape": [
+              1,
+              5
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "sig_all",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "type_sum_all",
+            "shape": [
+              1,
+              5
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "x_df",
+            "shape": [
+              1,
+              180
+            ],
+            "class": "double"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure5/Data/Figure5Data_TransitionError.mat",
+      "size": 3419451,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "ConAB_Summ",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "ConBA_Summ",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "ConSum",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "prob_startAB",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "prob_startBA",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "selec_startAB",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "selec_startBA",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure5/README_Figure5_Data.md",
+      "size": 3486,
+      "extension": ".md",
+      "preview": "# Figure 5 Data - NDNF Interneuron Coding\n\n## Overview\n\nGCaMP calcium imaging from NDNF interneuron somas across rule learning sessions. Two datasets analyze (1) selectivity and representational drift, and (2) transition error coding.\n\n**Recording:** NDNF interneuron soma calcium imaging  \n**Figure:** Figure 5 - NDNF interneurons during rule learning\n\n## Dataset 1: Selectivity and Representational Drift\n\n**File:** `Figure5Data\\_Selectivity\\_RepDrift.mat`\n\n### Structure\n\nIdentical to Figure 4 data structure but recorded from NDNF interneurons instead of L5b dendrites.\n\n**Variables:**\n\n```matlab\ntype\\_sum\\_all      % Selectivity across 5 sessions\nsig\\_all           % Significance flags (Choice, Stimuli, Delay)\ncd\\_choice\\_all     % Choice period coding direction (5 sessions)\ncd\\_stim\\_all       % Instruction period coding direction (5 sessions)\nx\\_df              % Time vector for trial\n```\n\n### Experimental Paradigm\n\n5 sessions of rule learning:\n\n* **Day 1:** Rule A\n* **Day 2:** Rule A\n* **Day 3:** Rule A\n* **Day 4:** Rule B\n* **Day 5:** Rule A\n\n### Variable Details\n\nSame as Figure 4 (see README\\_Figure4\\_Data.md for complete description):\n\n* **type\\_sum\\_all:** 5-element array, each with `nu\\_type1`, `nu\\_type2`, `sel\\_types`\n* **sig\\_all:** Fields `Choice`, `Stimuli`, `Delay` (5 \u00d7 n binary matrices)\n* **cd\\_choice\\_all / cd\\_stim\\_all:** 5-element array, each with `Lproj`, `Rproj`\n\n\n\n## Dataset 2: Transition Error Coding\n\n**File:** `Figure5Data\\_TransitionError.mat`\n\n### Purpose\n\nAnalyzes NDNF interneuron activity during rule transition sessions, specifically examining how these cells encode unexpected errors when animals apply the wrong rule.\n\n### Variables\n\n#### A\u2192B Transition (Rule A to Rule B)\n\n```matlab\nConAB\\_Summ        % Trial-averaged activity during A\u2192B errors\nprob\\_startAB      % Significance probabilities for error coding\nselec\\_startAB     % Selectivity during errors\n```\n\n#### B\u2192A Transition (Rule B to Rule A)\n\n```matlab\nConBA\\_Summ        % Trial-averaged activity during B\u2192A errors\nprob\\_startBA      % Significance probabilities for error coding\nselec\\_startBA     % Selectivity during errors\n```\n\n### Structure Details\n\n#### ConAB\\_Summ / ConBA\\_Summ\n\nTrial-averaged NDNF activity during transition error trials.\n\n**Fields:**\n\n* `selec`: Selectivity time course (180 \u00d7 n)\n* `selecabs`: Absolute selectivity (180 \u00d7 n)\n* Other activity measures\n\n**Dimensions:** 180 \u00d7 n\n\n* **180:** Frames per trial (6 seconds at 30 Hz)\n* **n:** Number of NDNF interneurons\n\n#### prob\\_startAB / prob\\_startBA\n\nStatistical significance for different coding types.\n\n**Fields:**\n\n* `resp`: P-value for response/choice period coding\n* `stim`: P-value for stimulus/instruction period coding\n* `err`: P-value for error-specific coding\n\n**Dimensions:** n \u00d7 1 (one value per interneuron)\n\n#### selec\\_startAB / selec\\_startBA\n\nDirection and magnitude of error selectivity.\n\n**Fields:**\n\n* `err`: Error selectivity value for each interneuron\n\n**Values:**\n\n* Positive: Interneuron increases activity on errors\n* Negative: Interneuron decreases activity on errors\n* Magnitude: Strength of error selectivity\n\n\n\n## Related Helper Functions\n\nSame functions as Figure 4:\n\n* `DeleteFullZero.m` - Remove inactive cells\n* `SortROIsByPeak.m` - Sort and visualize\n* `coding\\_arranger.m` - Extract epochs\n* `rep\\_drift\\_selec.m` - Quantify drift\n* `Plot\\_Selec\\_CD\\_Avg.m` - Visualize all sessions\n* `trans\\_gcamp\\_general.m` - Analyze transition errors\n\n## \n\n"
+    },
+    {
+      "name": "Figure6/Data/Figure6Data_Selec_ErrorCoding.mat",
+      "size": 13761811,
+      "extension": ".mat",
+      "inventory": {
+        "format": "mat-v5",
+        "variables": [
+          {
+            "name": "cd_choice_all",
+            "shape": [
+              1,
+              8
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "cd_stim_all",
+            "shape": [
+              1,
+              8
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "error_sum",
+            "shape": [
+              1,
+              4
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "sig_all",
+            "shape": [
+              1,
+              1
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "type_sum_all",
+            "shape": [
+              1,
+              8
+            ],
+            "class": "struct"
+          },
+          {
+            "name": "x_df",
+            "shape": [
+              1,
+              180
+            ],
+            "class": "double"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Figure6/README_Figure6_Data.md",
+      "size": 1875,
+      "extension": ".md",
+      "preview": "# Figure 6 Data - NDNF Interneurons During Initial Learning\n\n## Overview\n\nNDNF interneuron activity during initial task learning, tracking progression from random reward baseline through learning to proficient performance.\n\n**Recording:** NDNF interneuron GCaMP imaging  \n**Figure:** Figure 6 - Initial learning  \n**Sessions:** 8 sessions across learning trajectory\n\n## Experimental Design\n\n**8 Sessions:**\n\n* **Sessions 1-3:** Baseline (random reward task, before learning Rule A)\n* **Sessions 4-5:** First and last session of learning trajectory\n* **Sessions 6-8:** Post-learning (proficient Rule A performance)\n\n**Key comparison:** Baseline (1-3) vs Post-learning (6-8)\n\n## Dataset 1: Selectivity \\& Error Coding\n\n**File:** `Figure6Data\\_Selec\\_ErrorCoding.mat`\n\n### Standard Selectivity Variables\n\nSame structure as Figures 4-5, but with 8 sessions:\n\n```matlab\ntype\\_sum\\_all      % Selectivity (8 sessions)\nsig\\_all           % Significance flags (Choice, Stimuli, Delay)\ncd\\_choice\\_all     % Choice coding direction (8 sessions)\ncd\\_stim\\_all       % Instruction coding direction (8 sessions)\nx\\_df              % Time vector\n```\n\n**Structure:** Same as Figure 4/5 (see those READMEs for details)\n\n### Error-Related Variables\n\nNew dataset analyzing correct vs error trials:\n\n```matlab\nerror\\_sum(i).nu\\_type1       % Average activity on correct trials (t\u00d7n)\nerror\\_sum(i).nu\\_type2       % Average activity on error trials (t\u00d7n)\nerror\\_sum(i).nu\\_type1out1   % Correct trials, left choice (t\u00d7n)\nerror\\_sum(i).nu\\_type1out2   % Correct trials, right choice (t\u00d7n)\nerror\\_sum(i).nu\\_type2out1   % Error trials, left choice (t\u00d7n)\nerror\\_sum(i).nu\\_type2out2   % Error trials, right choice (t\u00d7n)\nerror\\_sum(i).wei\\_nu         % Weighted error selectivity (t\u00d7n)\n```\n\n**Dimensions:** t \u00d7 n\n\n* **t:** Time points per trial\n* **n:** Number of NDNF interneurons\n\n\n\n## \n\n"
+    },
+    {
+      "name": "datacite.yml",
+      "size": 4668,
+      "extension": ".yml",
+      "preview": " # Metadata for DOI registration according to DataCite Metadata Schema 4.1.\n# For detailed schema description see 10.1126/science.adx4358\n\n## Required fields\n\n# The main researchers involved. Include digital identifier (e.g., ORCID)\n# if possible, including the prefix to indicate its type.\nauthors:\n  -\n    firstname: \"Eduardo\"\n    lastname: \"Maristany de las Casas\"\n    affiliation: \"Institute for Biology, Humboldt University of Berlin, Berlin, Germany.\"\n    id: \"ORCID:0000-0002-6621-6838\"\n    \n  -\n    firstname: \"Kris\"\n    lastname: \"Killmann\"\n    affiliation: \"Institute for Biology, Humboldt University of Berlin, Berlin, Germany.\"\n    \n  -\n    firstname: \"Moritz\"\n    lastname: \"Dr\u00fcke\"\n    affiliation: \"Institute for Biology, Humboldt University of Berlin, Berlin, Germany.\"\n    \n  -\n    firstname: \"Lukas\"\n    lastname: \"M\u00fcnster\"\n    affiliation: \"Zentrum f\u00fcr molekulare Neurobiologie, UKE Hamburg, Hamburg, Germany.\"\n    \n  -\n    firstname: \"Christian\"\n    lastname: \"Ebner\"\n    affiliation: \"Institute for Biology, Humboldt University of Berlin, Berlin, Germany. NeuroCure Cluster of Excellence Charit\u00e9 Universit\u00e4tsmedizin Berlin, Berlin, Germany.\"\n    \n  -\n    firstname: \"Robert\"\n    lastname: \"Sachdev\"\n    affiliation: \"Institute for Biology, Humboldt University of Berlin, Berlin, Germany.\"\n    \n  -\n    firstname: \"Dieter\"\n    lastname: \"Jaeger\"\n    affiliation: \"Department of Biology, Emory University, Atlanta, GA, USA.\"\n    \n  -\n    firstname: \"Matthew E.\"\n    lastname: \"Larkum\"\n    affiliation: \"Institute for Biology, Humboldt University of Berlin, Berlin, Germany.\"\n\n\n\n# A title to describe the published resource.\ntitle: \"Tuft dendrites in frontal motor cortex enable flexible learning\"\n\n# Additional information about the resource, e.g., a brief abstract.\ndescription: \"This repository contains behavioral, electrophysiological, functional imaging (two-photon calcium and glutamate imaging), and chemogenetic/optogenetic data that support our findings on the role of apical tuft dendrites of layer 5b pyramidal neurons in the anterolateral motor cortex (ALM) during flexible learning. The dataset includes data from a rule-switching behavioral paradigm, NDNF interneuron manipulations, dendritic calcium imaging, synaptic glutamate imaging, and Neuropixels recordings.\"\n\n\n# List of keywords the resource should be associated with.\n# Give as many keywords as possible, to make the resource findable.\nkeywords:\n  - Systems Neuroscience\n  - Motor Cortex\n  - Anterolateral Motor Cortex (ALM)\n  - Flexible Learning\n  - Rule Switching\n  - Dendrites\n  - Apical Tuft Dendrites\n  - Layer 5 Pyramidal Neurons\n  - Layer 5b Extratelencephalic Neurons\n  - NDNF Interneurons\n  - Layer 1 Interneurons\n  - Two-Photon Calcium Imaging\n  - Glutamate Imaging\n  - iGluSNFR\n  - Electrophysiology\n  - Neuropixels\n  - Optogenetics\n  - Chemogenetics\n  - Dendritic Integration\n  - Burst Firing\n  - Synaptic Clustering\n  - Decision Making\n  - Behavior\n\n# License information for this resource. Please provide the license name and/or a link to the license.\n# Please add also a corresponding LICENSE file to the repository.\nlicense:\n  name: \"Creative Commons Attribution 4.0 International Public License\"\n  url: \"https://creativecommons.org/licenses/by/4.0/\"\n\n\n\n## Optional Fields\n\n# Funding information for this resource.\n# Separate funder name and grant number by comma.\nfunding:\n  - \"NIH, 1R01 NS111470\"\n  - \"EU, 720270 (HBP SGA1)\"\n  - \"EU, 785907 (HBP SGA2)\"\n  - \"EU, 945539 (HBP SGA3)\"\n  - \"EU, 670118 (ERC ActiveCortex)\"\n  - \"EU, 101055340 (ERC Cortical Coupling)\"\n  - \"Einstein Foundation Berlin, EVF-2017-363\"\n  - \"Einstein Foundation Berlin, EVF-2017-363-2\"\n  - \"Einstein Foundation Berlin, EVF-2020-571\"\n  - \"DFG, EXC 257 NeuroCure\"\n  - \"DFG, LA 3442/3-1\"\n  - \"DFG, 327654276 (SFB 1315)\"\n  - \"DFG, LA 3442/6-1\"\n\n\n# Related publications. reftype might be: IsSupplementTo, IsDescribedBy, IsReferencedBy.\n# Please provide digital identifier (e.g., DOI) if possible.\n# Add a prefix to the ID, separated by a colon, to indicate the source.\n# Supported sources are: DOI, arXiv, PMID\nreferences:\n  -\n    id: \"doi:10.1126/science.adx4358\"\n    reftype: \"IsSupplementTo\"\n    citation: \"Maristany de las Casas E, Killmann K, Dr\u00fcke M, M\u00fcnster L, Ebner C, Sachdev R, Jaeger D, Larkum ME, Science 392, eadx4358 (2026). Tuft dendrites in frontal motor cortex enable flexible learning. DOI: 10.1126/science.adx4358\"\n\n\n# Resource type. Default is Dataset, other possible values are Software, DataPaper, Image, Text.\nresourcetype: \"Dataset\"\n\n"
+    },
+    {
+      "name": "readme.md",
+      "size": 1910,
+      "extension": ".md",
+      "preview": "# Tuft dendrites in frontal motor cortex enable flexible learning during decision-making tasks.\n\nThis repository contains behavioral, electrophysiological, functional imaging (two-photon imaging) and anatomical data that were used to generate figures in our paper \"Tuft dendrites in frontal motor cortex enable flexible learning during decision-making tasks.\" by Maristany de las Casas et al., 2026 (doi: 10.1126/science.adx4358).\n\n## Abstract\n\nFlexible learning relies on integrating sensory and contextual information to adjust behavioral output in different environments. For licking tasks in rodents, the anterolateral motor cortex (ALM) is critical for action selection. Here, we show that inputs critical to decision making converge on L1 in ALM where they can influence the apical dendrites of layer 5 pyramidal neurons responsible for motor planning and execution. We therefore investigated their role in a rule-switching decision-making paradigm. Activation of dendrite-inhibiting layer 1 interneurons impaired relearning, without affecting learned behavior. Dendritic imaging and extracellular recordings revealed that this inhibition had profound effects on calcium activity and bursting. Further, excitatory synaptic inputs to tuft dendrites exhibited rule-dependent clustering. We conclude that apical dendrites are a key computational component of flexible learning.\n\n## Contributors\n\n* Eduardo Maristany de las Casas, maristanye@gmail.com, https://orcid.org/0000-0002-6621-6838\n* Kris Killmann\n* Moritz Dr\u00fcke\n* Lukas M\u00fcnster\n* Christian Ebner\n* Robert Sachdev\n* Dieter Jaeger\n* Matthew Larkum, matthew.larkum@hu-berlin.de\n\n## Contents\n\n* Each figure folder contains pre-processed data (.mat files) to reproduce corresponding figures.\n* The details of the data are documented in README.md inside the folders.\n* Codes folder contains relevant codes used in this study.\n\n"
+    }
+  ]
+}

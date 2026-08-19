@@ -1,0 +1,160 @@
+# E17 official archive direct inventory
+
+Archive SHA-256: `b9962e7760ac7299cc968fa4a23d2c965342d78abdded4f937a4081588f09ba3`
+Archive bytes: `483324456`; files: `129`.
+
+## Extensions
+
+- `.mat`: 66
+- `.m`: 33
+- `.md`: 10
+- `.pdf`: 8
+- `<none>`: 4
+- `.png`: 2
+- `.txt`: 2
+- `.csv`: 1
+- `.pkl`: 1
+- `.py`: 1
+- `.yml`: 1
+
+## Candidate files
+
+- `Figure1/NDNFActivationExperiments/BaselineSessions/README.md` (5107 bytes): `text`
+- `Figure1/NDNFActivationExperiments/BaselineSessions/Summary_baseline_NDNFactivationRuleA.mat` (833229 bytes): `mat-v5`
+  - cont_data:[40, 1]
+- `Figure1/NDNFActivationExperiments/Relearning/Control/NWO1.mat` (104865 bytes): `mat-v5`
+  - cont_data:[5, 1]
+- `Figure1/NDNFActivationExperiments/Relearning/Control/NWO10.mat` (112993 bytes): `mat-v5`
+  - cont_data:[5, 1]
+- `Figure1/NDNFActivationExperiments/Relearning/Control/NWO11.mat` (66289 bytes): `mat-v5`
+  - cont_data:[5, 1]
+- `Figure1/NDNFActivationExperiments/Relearning/Control/NWO12.mat` (85283 bytes): `mat-v5`
+  - cont_data:[5, 1], idx:[1, 1], str:[1]
+- `Figure1/NDNFActivationExperiments/Relearning/Control/NWO13.mat` (115534 bytes): `mat-v5`
+  - cont_data:[5, 1]
+- `Figure1/NDNFActivationExperiments/Relearning/Control/NWO3.mat` (109775 bytes): `mat-v5`
+  - cont_data:[5, 1]
+- `Figure1/NDNFActivationExperiments/Relearning/Control/NWO4.mat` (74999 bytes): `mat-v5`
+  - cont_data:[5, 1]
+- `Figure1/NDNFActivationExperiments/Relearning/Control/NWO5.mat` (105822 bytes): `mat-v5`
+  - cont_data:[5, 1]
+- `Figure1/NDNFActivationExperiments/Relearning/Control/NWO6.mat` (96669 bytes): `mat-v5`
+  - cont_data:[5, 1]
+- `Figure1/NDNFActivationExperiments/Relearning/Control/NWO9.mat` (99759 bytes): `mat-v5`
+  - cont_data:[5, 1]
+- `Figure1/NDNFActivationExperiments/Relearning/Data/Figure1Relearning_DataSummary.mat` (560429 bytes): `mat-v5`
+  - ABctr_cont:[1, 1], ABopto_cont:[1, 1], BActr_cont:[1, 1], BAopto_cont:[1, 1], opto:[5, 1], primer:[5, 1], rever:[1, 1]
+- `Figure1/NDNFActivationExperiments/Relearning/Opto/NWO1.mat` (104850 bytes): `mat-v5`
+  - cont_data:[5, 1]
+- `Figure1/NDNFActivationExperiments/Relearning/Opto/NWO10.mat` (103318 bytes): `mat-v5`
+  - cont_data:[5, 1]
+- `Figure1/NDNFActivationExperiments/Relearning/Opto/NWO11.mat` (81851 bytes): `mat-v5`
+  - cont_data:[5, 1]
+- `Figure1/NDNFActivationExperiments/Relearning/Opto/NWO12.mat` (99631 bytes): `mat-v5`
+  - cont_data:[5, 1]
+- `Figure1/NDNFActivationExperiments/Relearning/Opto/NWO13.mat` (93262 bytes): `mat-v5`
+  - cont_data:[5, 1]
+- `Figure1/NDNFActivationExperiments/Relearning/Opto/NWO3.mat` (108268 bytes): `mat-v5`
+  - cont_data:[5, 1]
+- `Figure1/NDNFActivationExperiments/Relearning/Opto/NWO4.mat` (98394 bytes): `mat-v5`
+  - cont_data:[5, 1]
+- `Figure1/NDNFActivationExperiments/Relearning/Opto/NWO5.mat` (123895 bytes): `mat-v5`
+  - cont_data:[5, 1]
+- `Figure1/NDNFActivationExperiments/Relearning/Opto/NWO6.mat` (105781 bytes): `mat-v5`
+  - cont_data:[5, 1]
+- `Figure1/NDNFActivationExperiments/Relearning/Opto/NWO9.mat` (103104 bytes): `mat-v5`
+  - cont_data:[5, 1]
+- `Figure1/NDNFActivationExperiments/Relearning/README_Figure1_Relearning.md` (2878 bytes): `text`
+- `Figure1/VgatCreXChR2_Experiments/RuleA/ICR1_Airpuff_new_20240917_090621.mat` (5990810 bytes): `mat-v5`
+  - SessionData:[1, 1]
+- `Figure1/VgatCreXChR2_Experiments/RuleA/ICR1_Airpuff_new_20240917_165401.mat` (9993943 bytes): `mat-v5`
+  - SessionData:[1, 1]
+- `Figure1/VgatCreXChR2_Experiments/RuleA/ICR1_Airpuff_new_20240918_090324.mat` (9280180 bytes): `mat-v5`
+  - SessionData:[1, 1]
+- `Figure1/VgatCreXChR2_Experiments/RuleA/ICR1_Airpuff_new_20240918_170513.mat` (7731281 bytes): `mat-v5`
+  - SessionData:[1, 1]
+- `Figure1/VgatCreXChR2_Experiments/RuleA/ICR2_Airpuff_new_20240918_120536.mat` (1987016 bytes): `mat-v5`
+  - SessionData:[1, 1]
+- `Figure1/VgatCreXChR2_Experiments/RuleA/ICR2_Airpuff_new_20240919_130117.mat` (276739 bytes): `mat-v5`
+  - SessionData:[1, 1]
+- `Figure1/VgatCreXChR2_Experiments/RuleA/ICR3_Airpuff_new_20240916_172554.mat` (607342 bytes): `mat-v5`
+  - SessionData:[1, 1]
+- `Figure1/VgatCreXChR2_Experiments/RuleA/ICR3_Airpuff_new_20240917_102429.mat` (7460266 bytes): `mat-v5`
+  - SessionData:[1, 1]
+- `Figure1/VgatCreXChR2_Experiments/RuleA/ICR3_Airpuff_new_20240917_195526.mat` (7001268 bytes): `mat-v5`
+  - SessionData:[1, 1]
+- `Figure1/VgatCreXChR2_Experiments/RuleA/ICR3_Airpuff_new_20240918_104532.mat` (6505588 bytes): `mat-v5`
+  - SessionData:[1, 1]
+- `Figure1/VgatCreXChR2_Experiments/RuleA/ICR3_Airpuff_new_20240918_190455.mat` (476592 bytes): `mat-v5`
+  - SessionData:[1, 1]
+- `Figure1/VgatCreXChR2_Experiments/RuleA/RuleA_Stats.mat` (1350 bytes): `mat-v5`
+  - Allstats:[1, 1], Lstats:[1, 1], Rstats:[1, 1]
+- `Figure1/VgatCreXChR2_Experiments/RuleB/ICR1_Airpuff_new_20240919_102930.mat` (254696 bytes): `mat-v5`
+  - SessionData:[1, 1]
+- `Figure1/VgatCreXChR2_Experiments/RuleB/ICR1_Airpuff_new_20240919_161459.mat` (3501172 bytes): `mat-v5`
+  - SessionData:[1, 1]
+- `Figure1/VgatCreXChR2_Experiments/RuleB/ICR1_Airpuff_new_20240920_081217.mat` (3717910 bytes): `mat-v5`
+  - SessionData:[1, 1]
+- `Figure1/VgatCreXChR2_Experiments/RuleB/ICR1_Airpuff_new_20240920_150126.mat` (3144982 bytes): `mat-v5`
+  - SessionData:[1, 1]
+- `Figure1/VgatCreXChR2_Experiments/RuleB/ICR2_Airpuff_new_20240919_185827.mat` (253293 bytes): `mat-v5`
+  - SessionData:[1, 1]
+- `Figure1/VgatCreXChR2_Experiments/RuleB/ICR2_Airpuff_new_20240920_100953.mat` (2059730 bytes): `mat-v5`
+  - SessionData:[1, 1]
+- `Figure1/VgatCreXChR2_Experiments/RuleB/ICR2_Airpuff_new_20240920_165533.mat` (267957 bytes): `mat-v5`
+  - SessionData:[1, 1]
+- `Figure1/VgatCreXChR2_Experiments/RuleB/ICR3_Airpuff_new_20240919_113537.mat` (292729 bytes): `mat-v5`
+  - SessionData:[1, 1]
+- `Figure1/VgatCreXChR2_Experiments/RuleB/ICR3_Airpuff_new_20240919_174932.mat` (1893422 bytes): `mat-v5`
+  - SessionData:[1, 1]
+- `Figure1/VgatCreXChR2_Experiments/RuleB/ICR3_Airpuff_new_20240920_093243.mat` (4112727 bytes): `mat-v5`
+  - SessionData:[1, 1]
+- `Figure1/VgatCreXChR2_Experiments/RuleB/ICR3_Airpuff_new_20240920_174513.mat` (4275337 bytes): `mat-v5`
+  - SessionData:[1, 1]
+- `Figure1/VgatCreXChR2_Experiments/RuleB/SummaryStatsRuleB.mat` (1321 bytes): `mat-v5`
+  - Allstats:[1, 1], Lstats:[1, 1], Rstats:[1, 1]
+- `Figure2/Code/NeuroPixels/PLOTS_STATISTICS/statistics.txt` (765 bytes): `text`
+- `Figure2/Code/NeuroPixels/analyze_and_plot_ephys.py` (28483 bytes): `text`
+- `Figure2/Code/NeuroPixels/requirements.txt` (30 bytes): `text`
+- `Figure2/Data/DCO1_050724_dff.mat` (17603436 bytes): `mat-v5`
+  - branch_amp:[1, 1], branch_freq:[1, 1], cont_data:[1, 1], dff_types:[1, 1], spine_amp:[1, 1], spine_freq:[1, 1]
+- `Figure2/Data/DCO1_090724_dff.mat` (16922307 bytes): `mat-v5`
+  - branch_amp:[1, 1], branch_freq:[1, 1], cont_data:[1, 1], dff_types:[1, 1], spine_amp:[1, 1], spine_freq:[1, 1]
+- `Figure2/Data/DCO2_021124_dff.mat` (27315299 bytes): `mat-v5`
+  - branch_amp:[1, 1], branch_freq:[1, 1], cont_data:[1, 1], dff_types:[1, 1], spine_amp:[1, 1], spine_freq:[1, 1]
+- `Figure2/Data/DCO2_031124_dff.mat` (19239520 bytes): `mat-v5`
+  - branch_amp:[1, 1], branch_freq:[1, 1], cont_data:[1, 1], dff_types:[1, 1], spine_amp:[1, 1], spine_freq:[1, 1]
+- `Figure2/Data/DCO2_041124_dff.mat` (18735985 bytes): `mat-v5`
+  - branch_amp:[1, 1], branch_freq:[1, 1], cont_data:[1, 1], dff_types:[1, 1], spine_amp:[1, 1], spine_freq:[1, 1]
+- `Figure2/Data/DCO2_311024_dff.mat` (30909646 bytes): `mat-v5`
+  - branch_amp:[1, 1], branch_freq:[1, 1], cont_data:[1, 1], dff_types:[1, 1], spine_amp:[1, 1], spine_freq:[1, 1]
+- `Figure2/Data/DCO4_011124_dff.mat` (11983739 bytes): `mat-v5`
+  - branch_amp:[1, 1], branch_freq:[1, 1], cont_data:[1, 1], dff_types:[1, 1], spine_amp:[1, 1], spine_freq:[1, 1]
+- `Figure2/Data/DCO4_021124_dff.mat` (24622247 bytes): `mat-v5`
+  - branch_amp:[1, 1], branch_freq:[1, 1], cont_data:[1, 1], dff_types:[1, 1], spine_amp:[1, 1], spine_freq:[1, 1]
+- `Figure2/Data/NeuroPixels/extracted_data/extracted_neural_data.csv` (41834 bytes): `text`
+- `Figure2/README_Figure2.md` (5430 bytes): `text`
+- `Figure3/FunctionalClustering/Code/HelperFunctions/Violinplot-Matlab-master/README.md` (2125 bytes): `text`
+- `Figure3/FunctionalClustering/Data/SpatialCorrInstructionVSChoiceStats.mat` (19449 bytes): `mat-v5`
+  - inst_noise:[1, 1], inst_signal:[1, 1], resp_noise:[1, 1], resp_signal:[1, 1]
+- `Figure3/FunctionalClustering/Data/SpatialCorr_RuleARuleB.mat` (6689 bytes): `mat-v5`
+  - branch_noise_RuleA:[151, 2], branch_noise_RuleB:[46, 2], branch_signal_RuleA:[151, 2], branch_signal_RuleB:[46, 2]
+- `Figure3/FunctionalClustering/README_Figure3.md` (4859 bytes): `text`
+- `Figure3/Selectivity/Data/SelectivityStatsGluSNFR.mat` (7771063 bytes): `mat-v5`
+  - ConA2_Summ:[1, 1], ConA_Summ:[1, 1], ConB_Summ:[1, 1], x_df:[1, 600]
+- `Figure3/Selectivity/README_SelectivityStats.md` (837 bytes): `text`
+- `Figure4/Data/DataRepDrift_CaImagingDendrites.mat` (2125796 bytes): `mat-v5`
+  - cd_choice_ctr:[1, 5], cd_choice_test:[1, 5], cd_stim_ctr:[1, 5], cd_stim_test:[1, 5], sig_ctr:[1, 1], sig_test:[1, 1], type_sum_ctr:[1, 5], type_sum_test:[1, 5], x_df:[1, 60]
+- `Figure4/Data/DataSummary_CaImagingDendrites.mat` (1582022 bytes): `mat-v5`
+  - cd_choice_ctr:[1, 5], cd_choice_test:[1, 5], cd_stim_ctr:[1, 5], cd_stim_test:[1, 5], sig_ctr:[1, 1], sig_test:[1, 1], type_sum_ctr:[1, 5], type_sum_test:[1, 5], x_df:[1, 60]
+- `Figure4/README_Figure4_Data.md` (3461 bytes): `text`
+- `Figure5/Data/Figure5Data_Selectivity_RepDrift.mat` (8000786 bytes): `mat-v5`
+  - cd_choice_all:[1, 5], cd_stim_all:[1, 5], sig_all:[1, 1], type_sum_all:[1, 5], x_df:[1, 180]
+- `Figure5/Data/Figure5Data_TransitionError.mat` (3419451 bytes): `mat-v5`
+  - ConAB_Summ:[1, 1], ConBA_Summ:[1, 1], ConSum:[1, 1], prob_startAB:[1, 1], prob_startBA:[1, 1], selec_startAB:[1, 1], selec_startBA:[1, 1]
+- `Figure5/README_Figure5_Data.md` (3486 bytes): `text`
+- `Figure6/Data/Figure6Data_Selec_ErrorCoding.mat` (13761811 bytes): `mat-v5`
+  - cd_choice_all:[1, 8], cd_stim_all:[1, 8], error_sum:[1, 4], sig_all:[1, 1], type_sum_all:[1, 8], x_df:[1, 180]
+- `Figure6/README_Figure6_Data.md` (1875 bytes): `text`
+- `datacite.yml` (4668 bytes): `text`
+- `readme.md` (1910 bytes): `text`
