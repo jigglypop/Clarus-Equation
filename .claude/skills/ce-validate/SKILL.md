@@ -21,6 +21,7 @@ description: CE의 고정점·상수 원장·무차원성·브리지·회귀 테
 명령 예시의 `python`은 프로젝트의 기존 interpreter를 뜻한다. 실제 pytest 실행에는 `-B`,
 `PYTHONDONTWRITEBYTECODE=1`, `-p no:cacheprovider`, 실행별 고유 `--basetemp`를 추가한다.
 현재 interpreter가 필요한 dependency를 이미 제공하면 `uv run`으로 다시 감싸지 않는다.
+Windows agent 실행에서는 먼저 `.claude/hooks/python.cmd doctor`를 확인하고, pytest는 같은 래퍼의 `pytest` 모드로 실행한다. 차단된 `.venv`나 대화형 uv 프롬프트를 기다리거나 우회하지 않는다.
 
 ## 절차
 

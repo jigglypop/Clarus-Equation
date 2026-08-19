@@ -12,10 +12,13 @@ Clarus-Equation 연구·구현을 위한 Claude Code 지침.
 | 특정 주장 지위·증명 판정 | /ce-closure-gate 스킬 |
 | 식의 차원·무차원 검사 | /ce-dimensionless 스킬 |
 | 테스트·회귀·수치 검증 | /ce-validate 스킬 |
-| 정본 문서 작성·수정 | /ce-doc-write 스킬 |
+| 주장·상수·판본·진리값 원장 작성·수정 | /ce-ledger-write + ce-ledger-writer |
+| 강의·유도·독자 가이드·논문 원고 작성·수정 | /ce-paper-write + ce-paper-writer |
+| 문서 유형 판별·공통 지위 규약 확인 | /ce-doc-write 스킬 |
 | guard 벤치·ASR·회귀 | /clarus-guard-bench 스킬 |
 | 신규 주장 검증·승격 판단·논문화·병렬 연구 | /ce-research 스킬 (full) |
 | 완결 run의 후속·반복 (v8→v9 등) | /ce-research 스킬 (light, PREDECESSOR 지정) |
+| `.claude`/`.codex` 하네스·역할·실행 정책 수정 | run 없이 대상 파일만 최소 수정 (spot) |
 
 선택한 스킬 하나만 로드한다. 레인은 Agent 도구로 역할 subagent 4종(ce-physics-sourcer, ce-math-verifier, ce-status-auditor, ce-impl-engineer)을 병렬 실행한다 — 역할 카드를 오케스트레이터 문맥에 로드하지 않는다. 우회 경로 탐색(routes)은 math-verifier가 같은 스폰에서 수행하고, 최종 집필은 오케스트레이터가 직접 한다.
 
@@ -41,6 +44,28 @@ Clarus-Equation 연구·구현을 위한 Claude Code 지침.
 - run 현황은 `status`로 본다. stage 파일 재독은 내용을 인용할 때만.
 - PREDECESSOR가 있으면 선행 run이 검증한 결론을 재유도·재대조하지 않고 경로만 인용한다.
 - 상세 계산·로그·발췌는 artifacts/에 쓰고 stage 파일에는 판정·표·경로만 남긴다.
+- `check final`은 앞 단계를 포함한다. 같은 byte에서 모든 stage check를 연속 반복하지 않는다.
+
+## 실행·캐시 규율
+
+- 기본 검증은 변경 파일에 직접 연결된 가장 작은 검사 한 개다. 전체 pytest·전체 bench·release 검증은 사용자가 `전체`, `full`, `release`, `CI 재현`을 명시한 경우에만 실행한다.
+- Windows에서는 `.claude/hooks/python.cmd doctor|python|pytest`를 사용한다. 이 래퍼는 공유 Codex 하네스로 위임하며, 정책 차단된 `.venv`/uv Python이나 대화형 선택 프롬프트를 사용하지 않는다.
+- Python은 `-B`와 `PYTHONDONTWRITEBYTECODE=1`, pytest는 `-p no:cacheprovider`와 실행별 고유 basetemp를 사용한다. Ruff는 `--no-cache`, 문법 검사는 in-memory `compile()`을 우선한다.
+- 현재 interpreter로 가능한 작업에 새 venv나 `uv run`을 만들지 않는다. dependency resolution이 실제로 필요하면 먼저 캐시/정책 전제와 승인 범위를 명시한다.
+- 같은 byte와 명령의 green 검증을 반복하지 않는다. 확대 검증을 생략했다면 실패로 쓰지 말고 실행하지 않았다고 명시한다.
+
+## main Git 인계 규율
+
+- root/main agent만 Git 상태 변경과 발행을 맡는다. subagent는 읽기 전용 상태·diff·hash만 확인하고 add/commit/fetch/pull/rebase/push/branch/worktree 변경을 하지 않는다.
+- main은 루트·branch·upstream·HEAD·remote tip·승인된 변경 경로 manifest를 확인한다. 범위 밖 dirty path는 자동 stash/reset/clean하거나 함께 stage하지 않는다.
+- 발행 시 승인 경로만 stage하고 staged diff·관련 검증을 확인한 뒤 `.codex/hooks/check-large-data.cmd --commit`을 명시적으로 실행한다. push 직전에는 같은 실행기의 `--push`도 실행한다. 이 gate는 연구 binary 확장자와 95MB 초과 Git blob을 막으며 secret scanner를 대신하지 않는다. 일반 fast-forward push만 허용하며 force push와 자동 rebase는 금지한다.
+- push 후 remote main SHA와 local HEAD를 대조하고 commit SHA, 정확한 발행 경로, 검증, 남은 dirt를 보고한다.
+
+## 뇌 알고리즘 경로 선택
+
+- 새 뇌/기억/의식 run 전에 선행 run의 `12-routes.md`, `31-validation.md`, 존재하면 `40-final-report.md`, 그리고 `_workspace/ce/brain-algorithm-route-ledger.md`를 읽는다. 40이 없으면 가장 늦은 numbered audit와 원장 행을 사용하고 closure 부재를 계약에 기록한다.
+- 오케스트레이터는 결과 수치가 양성처럼 보이는 순서가 아니라 인과 식별 가능성, 이전 STOP이 남긴 정보, 독립 falsifier와 대조군, capability dependency로 후보를 정렬한다. endpoint·threshold·seed만 바꾼 재시도는 같은 경로로 보고 퇴역시킨다.
+- simulator 결과를 실제 뇌·기억·의식의 동일성 주장으로 승격하지 않는다. 후보 선택과 퇴역 근거를 계약과 원장에 먼저 고정한 뒤 구현한다.
 
 ## 끈질김 (진취성 규율)
 
@@ -51,7 +76,7 @@ Clarus-Equation 연구·구현을 위한 Claude Code 지침.
 
 ## 데이터 반출 게이트
 
-- git commit/push는 PreToolUse 훅 `check-large-data.sh`(.claude/hooks = .codex/hooks 미러)가 검사한다: 95MB 초과 파일과 `_workspace/` 아래 데이터 확장자(zip·mat·pkl·npy·npz·h5·hdf5·pt·onnx·parquet·bin·exe)는 차단된다.
+- Claude의 PreToolUse와 main의 필수 수동 preflight는 Windows 네이티브 `check-large-data.cmd`를 사용한다. POSIX `check-large-data.sh`는 같은 좁은 정책의 미러다. 95MB 초과 Git blob과 `_workspace/` 아래 지정 연구 binary 확장자를 차단하며, 일반 secret/source scanner는 아니다.
 - 연구 데이터 원본은 커밋하지 않는다. 매니페스트·코드·요약 산출만 커밋하고 원본은 문서화된 DOI에서 재취득한다 (.gitignore가 정본).
 - 게이트에 걸리면 우회(-f, --no-verify)하지 말고 `git rm --cached`로 언트래킹한 뒤 .gitignore 패턴을 보강한다.
 

@@ -28,9 +28,11 @@ target/
 /.cursor
 .claude/*
 !.claude/agents/
+!.claude/commands/
 !.claude/skills/
 !.claude/hooks/
 !.claude/CLAUDE.md
+!.claude/README.md
 
 # Data
 /data/

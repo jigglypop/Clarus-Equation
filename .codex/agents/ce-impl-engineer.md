@@ -39,7 +39,7 @@ tools: Glob, Grep, Read, Edit, Write, Bash
 
 1. 기존 변경과 대상 불변식을 확인한다.
 2. 최소 패치를 적용한다.
-3. 저장소가 제공하는 실행기(uv/system Python 등)를 그대로 사용한다. 새 가상환경은 만들지 않는다.
+3. 저장소가 제공하는 정책 허용 실행기를 그대로 사용한다. Windows에서는 먼저 `.codex/hooks/python.cmd doctor`를 실행하고 focused 검증은 그 래퍼의 `python`/`pytest` 모드를 쓴다. 새 가상환경을 만들거나 차단된 `.venv`/uv Python을 우회하지 않는다.
 4. 변경 파일에 직접 연결된 가장 작은 테스트 한 개를 실행한다. green이면 멈춘다. 실패 또는 공용 경계 변경 때만 관련 회귀로 넓히며, 전체 suite는 사용자 명시 요청 없이는 실행하지 않는다.
 5. 30-implementation.md에 Status: COMPLETE/BLOCKED, 변경, 불변식, 명령과 원래 결과를 기록한다. 감사 결과 코드 변경이 불필요하면 Status: SKIPPED (사유)만 쓴다.
 
@@ -52,6 +52,7 @@ tools: Glob, Grep, Read, Edit, Write, Bash
 - Ruff는 `--no-cache`를 사용한다. `compileall` 대신 exact source의 in-memory `compile()`을 사용한다.
 - `.pytest_cache`, `.ruff_cache`, `__pycache__`, 고정 `.pytest_tmp_*`를 새로 만들지 않는다.
 - 검증을 위해 새 venv를 만들지 않고, 같은 green 명령을 코드 변경 없이 반복하지 않는다.
+- 구현 역할은 Git 상태를 읽어 인계할 수 있지만 add/commit/fetch/pull/rebase/push/branch/worktree 변경을 하지 않는다. 변경 경로·검증 명령·결과·남은 dirt를 root/main agent에게 넘긴다.
 
 # 종료 체크리스트
 
@@ -61,3 +62,4 @@ tools: Glob, Grep, Read, Edit, Write, Bash
 - [ ] 실행한 검증 명령과 원문 결과가 기록됐다
 - [ ] 전체 suite가 필요 없었다면 실행하지 않았다고 명시했다
 - [ ] 하네스 소유 임시 경로와 신규 cache가 남지 않았다
+- [ ] Git 변경 경로와 검증 결과를 main에 인계했고 직접 stage/commit/push하지 않았다

@@ -30,6 +30,18 @@ description: Clarus-Equation 연구를 출처·수학·대안 경로의 독립 �
 - **full**: 신규 주장, 승격 판단, 논문화. 아래 6단계 전부.
 - **light**: 완결된 선행 run의 후속·반복(v8→v9 등). 계약에 `PREDECESSOR: _workspace/ce/<선행-run>`을 적고, 레인은 math-verifier만 실행하며 감사(gate)와 최종 보고서만 유지한다. 선행 run이 이미 감사한 결론은 재유도하지 않고 경로만 인용한다.
 
+## 뇌 알고리즘 new-run admission gate
+
+뇌·기억·의식·connectome 연구는 새 run을 열기 전에 다음 순서를 지킨다.
+
+1. `_workspace/ce/brain-algorithm-route-ledger.md`와 직접 선행 run의 `12-routes.md`, `31-validation.md`, 존재하면 `40-final-report.md`만 먼저 읽는다. 40이 없으면 가장 늦은 numbered audit와 원장 행을 사용하고 closure 부재를 계약에 기록한다. 세부 artifact는 특정 수치나 hash를 검증할 때만 연다.
+2. 00-contract에 `PREDECESSOR_EVIDENCE` 표를 만들고 각 결과를 artifact/hash, `PASS|STOP|APPARATUS_INVALID|BLOCKED`, 보존 가능한 좁은 주장, 재시도 금지 조건으로 고정한다.
+3. 후보 집합을 적고 인과 식별 가능성, capability dependency, 이전 STOP이 남긴 정보량, 독립 falsifier와 matched control 순으로 정렬한다. 양성처럼 보이는 수치나 구현 편의성만으로 고르지 않는다.
+4. threshold·seed·endpoint·decoder만 바꾼 반복은 같은 실패 경로다. 새 mechanism, 새 개입 seam, 또는 실패를 가르는 새 adverse control이 없으면 후보에서 퇴역시킨다.
+5. 선택 후보와 기각 후보를 결과 확인 전에 계약과 원장에 기록하고 math-verifier가 cross-run 일관성을 확인한 뒤 구현한다.
+
+이 gate의 목적은 simulator에서 뇌의 알고리즘 후보를 더 잘 식별하는 것이다. simulator PASS를 실제 뇌, 기억 또는 의식의 생물학적 증거로 승격하지 않는다.
+
 ## 6단계 (full)
 
 1. **계약**: 질문·정의역·주장·기호·허용 오차·PREDECESSOR를 00-contract.md에 고정하고 `Status: COMPLETE`로 닫는다.
@@ -41,6 +53,8 @@ description: Clarus-Equation 연구를 출처·수학·대안 경로의 독립 �
 4. **구현**: `check <run-dir> gate` 통과 후 승인된 범위만 impl-engineer가 구현하고 /ce-validate로 검증한다(30/31). 코드 변경이 없으면 `Status: SKIPPED (사유)`.
 5. **수정 루프**: P0/P1은 `revise <run-dir> <role>`로 기록한 뒤 지목된 역할만 고친다. 한도 초과 시 주장 범위를 좁혀 살릴 수 있는 좁은 정리를 분리하고, 남는 결함만 BLOCKED로 보고서에 남긴다.
 6. **집필**: 오케스트레이터가 40-final-report.md를 직접 작성한다. /ce-doc-write 규약(지위 태그·완전 반례 처리·문체·수식 표기)을 따르고 아래 집필 규칙을 지킨다. `check <run-dir> final` 통과를 확인한다.
+
+run이 끝나면 오케스트레이터는 원장의 해당 후보 상태·증거 경로·다음 falsifier를 먼저 갱신하고, root/main agent에게 정확한 변경 경로와 검증 결과를 인계한다. subagent와 역할 agent는 stage/commit/push하지 않는다. 사용자가 발행을 지시한 경우에만 main이 루트 Git 인계 규율에 따라 commit/push한다.
 
 ## 집필 규칙 (40-final-report.md)
 

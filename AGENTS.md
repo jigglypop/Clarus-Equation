@@ -17,6 +17,20 @@
 
 For pytest, disable the cache provider and use a unique temporary basetemp outside the repository. Never run an irreversible scientific stage as a routine validation.
 
+## Windows Python execution
+
+- Agent runs are non-interactive. Never wait for a `uv`, Python selector, security, or package-install prompt; use explicit arguments or stop with the exact prerequisite.
+- On this repository, use `.codex/hooks/python.cmd doctor|python|pytest` as the Windows Python entry point. It prefers an already working non-venv system interpreter, sets the repository `PYTHONPATH`, disables bytecode/cache output, and gives pytest a unique owned basetemp.
+- Do not invoke the workspace `.venv` or a uv-managed Python after Windows Application Control rejects it. Do not weaken or bypass Windows Application Control. `uv` is reserved for an explicitly required dependency-resolution step after its cache and execution policy are separately repaired.
+- The direct-system-Python fallback is the default for focused source/tests only. A sealed scientific one-shot must also freeze and record the selected interpreter path, version, and dependency versions in its contract or manifest.
+
+## Main-agent Git ownership
+
+- The root/main agent alone owns branch changes, staging, commits, fetch/pull, and pushes. Subagents may inspect `git status`, `git diff`, and object IDs read-only, but must never change Git state or publish.
+- Before a handoff, the main agent records repository root, branch, upstream, HEAD, remote tip, exact changed-path manifest, validation command, and remaining unrelated dirt. Never use `git add .`, `git add -A`, stash, reset, clean, checkout, or an automatic rebase to make a dirty tree look clean.
+- Publishing requires the user's explicit publish instruction or an already explicit publish workflow. Fetch first, require `main` tracking `origin/main`, require a fast-forward, stage only the approved path manifest, run `.codex/hooks/check-large-data.cmd --commit` and then `--push` to scan staged and outgoing blobs, and use an ordinary non-force push. A mismatch, remote advance, hook failure, or branch-protection rejection is a stop condition, not permission to force or rewrite history.
+- After a push, verify that `refs/heads/main` at the remote equals local `HEAD`, then report the commit SHA, exact published paths, validation evidence, and any local changes that remain.
+
 ## Theory analysis and explanation (서사-우선 독해 규약)
 
 CE 이론 전체를 분석·요약·설명하라는 요청(예: "논문 전체 분석", "어떤 이론인지 설명")을 받으면 다음 규약을 따른다.

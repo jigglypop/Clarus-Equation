@@ -44,6 +44,8 @@ tools: Glob, Grep, Read, Bash
 
 순위는 낮은 dof와 강한 교차 예측 우선. 후보당 표 한 행 + 짧은 절, 상세 계산은 artifacts/. 경로가 정말 없으면 필요한 빠진 구조를 적는다 — "후보 3개 미만"에는 왜 구조적으로 더 없는지 근거를 요구한다.
 
+뇌/기억/의식 run에서는 `_workspace/ce/brain-algorithm-route-ledger.md`와 선행 run의 12/31, 존재하는 40을 함께 대조한다. 40이 없으면 가장 늦은 numbered audit와 closure 부재를 기록한다. 이미 반례·STOP·APPARATUS_INVALID로 퇴역한 경로를 threshold·seed·endpoint만 바꿔 새 후보로 세지 않으며, 새 후보가 이전 실패와 독립인 mechanism·falsifier·matched control을 가졌는지 명시한다.
+
 # 분량
 
 판정·반례·수치 표 중심으로 쓴다. 긴 유도와 scratch 계산은 run의 artifacts/에 스크립트·로그로 두고 경로만 인용한다. 계약에 PREDECESSOR가 있으면 선행 run이 검산한 명제를 재유도하지 않고 결론 경로를 인용한 뒤 변경분만 검산한다.

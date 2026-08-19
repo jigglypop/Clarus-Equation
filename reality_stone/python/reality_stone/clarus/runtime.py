@@ -101,6 +101,9 @@ class BrainRuntimeConfig:
     active_ratio: float = 0.125
     idle_threshold: float = 0.08
     active_threshold: float = 0.22
+    # Explicit experiment-only selection override. Default false preserves the
+    # legacy salience/budget path; true makes every module active after a step.
+    force_all_active_selection: bool = False
     bit_lower_threshold: float = 0.10
     bit_upper_threshold: float = 0.30
     refractory_scale: float = 0.35
@@ -150,6 +153,7 @@ class BrainRuntimeConfig:
         if self.dim <= 0:
             raise ValueError("runtime dimension must be positive")
         self.active_ratio = min(max(float(self.active_ratio), 0.0), 1.0)
+        self.force_all_active_selection = bool(self.force_all_active_selection)
         self.memory_topk = max(1, int(self.memory_topk))
         self.memory_capacity = max(1, int(self.memory_capacity))
         self.f1_pull_strength = min(max(float(self.f1_pull_strength), 0.0), 1.0)
@@ -767,6 +771,8 @@ class BrainRuntime:
         return torch.sparse.mm(self.sparse_weight, x.unsqueeze(1)).squeeze(1)
 
     def _select_active(self, salience: torch.Tensor, budget: int) -> torch.Tensor:
+        if self.config.force_all_active_selection:
+            return torch.ones_like(salience, dtype=torch.bool)
         budget = max(0, min(int(budget), salience.numel()))
         mask = torch.zeros_like(salience, dtype=torch.bool)
         if budget == 0:

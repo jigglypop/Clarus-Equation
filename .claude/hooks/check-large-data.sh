@@ -6,7 +6,13 @@
 #   2) _workspace/ 아래 데이터 확장자(zip|mat|pkl|pickle|npy|npz|h5|hdf5|pt|onnx|parquet|bin|exe)는 크기 무관 차단
 # 데이터 원본은 로컬 보관, DOI로 재취득한다 (.gitignore 참조).
 
-INPUT=$(cat)
+if [ "${1:-}" = "--commit" ]; then
+  INPUT="git commit"
+elif [ "${1:-}" = "--push" ]; then
+  INPUT="git push"
+else
+  INPUT=$(cat)
+fi
 case "$INPUT" in
   *"git commit"*|*"git push"*) ;;
   *) exit 0 ;;
@@ -22,13 +28,12 @@ VIOLATIONS=""
 # --- 커밋 전 검사: 스테이징된 파일 ---
 if printf '%s' "$INPUT" | grep -q "git commit"; then
   while IFS= read -r -d '' f; do
-    [ -f "$f" ] || continue
     if printf '%s' "$f" | grep -qiE "^_workspace/.*$DATA_EXT"; then
       VIOLATIONS="$VIOLATIONS
   - [data-ext] $f"
       continue
     fi
-    size=$(wc -c <"$f" 2>/dev/null | tr -d ' ')
+    size=$(git cat-file -s ":$f" 2>/dev/null)
     if [ "${size:-0}" -gt "$LIMIT" ]; then
       VIOLATIONS="$VIOLATIONS
   - [>95MB] $f ($((size / 1048576))MB)"
@@ -45,6 +50,7 @@ if printf '%s' "$INPUT" | grep -q "git push"; then
       sha=${line%% *}
       path=${line#* }
       [ "$sha" = "$path" ] && continue
+      [ "$(git cat-file -t "$sha" 2>/dev/null)" = "blob" ] || continue
       if printf '%s' "$path" | grep -qiE "^_workspace/.*$DATA_EXT"; then
         VIOLATIONS="$VIOLATIONS
   - [push:data-ext] $path"
@@ -55,7 +61,7 @@ if printf '%s' "$INPUT" | grep -q "git push"; then
         VIOLATIONS="$VIOLATIONS
   - [push:>95MB] $path ($((size / 1048576))MB)"
       fi
-    done < <(git rev-list --objects "$range" 2>/dev/null | grep -iE "$DATA_EXT")
+    done < <(git rev-list --objects "$range" 2>/dev/null)
   fi
 fi
 

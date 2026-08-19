@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh \"$CLAUDE_PROJECT_DIR/.claude/hooks/check-large-data.sh\"",
+            "command": "cmd /d /c \".claude\\hooks\\check-large-data.cmd\"",
             "timeout": 30,
             "statusMessage": "Checking commit/push for data payloads"
           }
