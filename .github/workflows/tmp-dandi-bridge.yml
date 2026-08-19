@@ -1,9 +1,9 @@
 name: Temporary DANDI Bridge Test
 
 on:
-  push:
+  pull_request:
     branches:
-      - tmp/neural-routing-direct-20260819
+      - main
     paths:
       - '.tmp-dandi/**'
       - '.github/workflows/tmp-dandi-bridge.yml'
