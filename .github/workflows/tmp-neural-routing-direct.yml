@@ -1,11 +1,11 @@
 name: Temporary Neural Routing Direct Test
 
 on:
-  pull_request:
+  push:
     branches:
-      - main
+      - tmp/neural-routing-direct-20260819
     paths:
-      - '.tmp-neural-routing/**'
+      - '.tmp-neural-routing/run_analysis.py'
       - '.github/workflows/tmp-neural-routing-direct.yml'
   workflow_dispatch:
 
