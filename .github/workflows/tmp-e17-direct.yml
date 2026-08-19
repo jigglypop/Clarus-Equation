@@ -15,7 +15,7 @@ permissions:
 jobs:
   inspect:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 50
     steps:
       - uses: actions/checkout@v4
         with:
@@ -31,11 +31,13 @@ jobs:
         run: python .tmp-e17/probe_figure2.py
       - name: Run Figure2 gate-model test
         run: python .tmp-e17/analyze_figure2_gate.py
+      - name: Run Figure1 relearning test
+        run: python .tmp-e17/analyze_figure1_relearning.py
       - name: Commit temporary E17 results
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -f e17_direct_results/inventory.json e17_direct_results/report.md e17_direct_results/figure2_probe.json e17_direct_results/figure2_gate_results.json e17_direct_results/figure2_gate_report.md
+          git add -f e17_direct_results/inventory.json e17_direct_results/report.md e17_direct_results/figure2_probe.json e17_direct_results/figure2_gate_results.json e17_direct_results/figure2_gate_report.md e17_direct_results/figure1_relearning_results.json e17_direct_results/figure1_relearning_report.md
           if git diff --cached --quiet; then
             echo 'No E17 result changes'
           else
