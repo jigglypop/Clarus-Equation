@@ -362,7 +362,7 @@
       "CA1": 384
     },
     "group": {
-      "ElectrodeGroup1 pynwb.ecephys.ElectrodeGroup at 0x140624917612880\nFields:\n  description: 60 degree insertion targetting hippocampus and neocortex\n  device: Neuropixels 2.0 pynwb.device.Device at 0x140624917144784\n  location: CA3, CA1, RSC\n": 384
+      "ElectrodeGroup1 pynwb.ecephys.ElectrodeGroup at 0x140559939786576\nFields:\n  description: 60 degree insertion targetting hippocampus and neocortex\n  device: Neuropixels 2.0 pynwb.device.Device at 0x140559939878160\n  location: CA3, CA1, RSC\n": 384
     },
     "group_name": {
       "ElectrodeGroup1": 384
