@@ -1,0 +1,4 @@
+#1,  open_field_1,       start=9939,  end=12363   
+#2,  wagon_wheel_1,      start=13670, end=14847   
+#3,  sleep_box_1,        start=14942, end=23133   
+#4,  wagon_wheel_2,      start=23186, end=24936   

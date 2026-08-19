@@ -109,9 +109,13 @@ $$d_3 : d_2 : d_1 = \alpha_s : \alpha_w : \alpha_{em} = 0.118 : 0.034 : 0.008$$
 
 ### 원리 2: 수면-각성 부트스트랩 학습 (3장)
 
-학습을 각성(경로 누적) - NREM(곡률 평탄화) - REM(비선택 경로 재탐색)의 3위상 순환으로 구성한다.
+본 문서에서 제안하는 소프트웨어 schedule은 각성(경로 누적), NREM label의 offline regularization, REM label의 탐색을 순서대로 호출한다. 이 순서는 구현 가설이며 생물학적 NREM과 REM의 고정 알고리즘을 뜻하지 않는다. 수면 중 국소 유지·replay·동기화·표현 변환은 각각 관측 근거가 있지만, 선택적 계산 기하 재정렬과 전체 $\Delta W\to\Delta g\to\Delta x(t)$ 사슬은 아직 [미완성]이다(`3_Sleep.md`).
+
+2026-08 공개 실데이터 재현에서는 수면박탈 뒤 해마 replay 감소와 REM/SWS에 따른 item/category 표현 변화의 반대 방향을 확인했다. 그러나 공개 자료에는 같은 시간창의 spike·SWR·replay가 함께 없어 branching-to-replay 라우팅 가설은 `UNTESTABLE`이며, 꿈 생성 알고리즘이나 AGI 우위의 증거로 승격하지 않는다(`3_Sleep.md` 5.4절).
 
 $$\text{학습} \to \text{서비스} \to \underbrace{\text{NREM}}_{\text{오프라인}} \to \underbrace{\text{REM}}_{\text{오프라인}} \to \text{서비스} \to \cdots$$
+
+[공리: 모델 선택] 위 순환은 CE-AGI runtime의 mode schedule이다. 생물학적 단계 순서나 효능을 유도한 결과가 아니며, wake-only·동일 계산량 regularization·replay-only·순서 교환 대조에서 별도로 시험한다.
 
 스칼라 사상의 국소 수축률 $|B_a'(a^*)|=D_{\text{eff}}a^*=0.1547$은 현재 단계에서 비교용 목표 수렴률이다. 실제 네트워크 점유율 전이 $T_a$가 정의되고 $T_a=B_a$ 또는 제어된 근사임이 증명되기 전까지는 bridge가 아니라 [미완성]이다.
 

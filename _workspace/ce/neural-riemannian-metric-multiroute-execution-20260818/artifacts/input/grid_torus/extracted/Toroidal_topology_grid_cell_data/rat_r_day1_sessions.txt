@@ -1,0 +1,3 @@
+#1,  open_field_1,       start=7457,  end=16045, valid_times=[7457,14778;14890,16045]
+#2,  wagon_wheel_1,      start=16925, end=20704, valid_times=[16925,18026;18183,20704]
+#3,  wagon_wheel_2,      start=20895, end=21640

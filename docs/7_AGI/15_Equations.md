@@ -155,6 +155,52 @@ $$W_{ij} = \epsilon_j \cdot |w_{ij}| \cdot \exp\!\left(-\frac{d_g(i,j)^2}{\sigma
 | $\epsilon_j$ | Dale 부호 | E:I = 80:20 |
 | $|w_{ij}|$ | 가중치 크기 | log-normal 분포 (Song 2005) |
 
+### B.1.1 연결, 유향 비용과 계량의 타입 경계
+
+[정의] raw 연결 강도 $W$, 문맥별 유향 전이 비용 $c_{ij}^{(q)}$, 그 비용의 최단경로 $d_q(i,j)$, SPD tensor가 정하는 리만 거리 $d_g(i,j)$는 서로 다른 객체다. 일반 유향 그래프에서는 $d_q(i,j)\ne d_q(j,i)$ 또는 한쪽이 무한대일 수 있으므로 이를 자동으로 리만 거리라고 부르지 않는다.
+
+[미완성] 연결에서 비용 또는 계량을 추정하려면 활동·gain·지연과 문맥 $q$를 포함한 사상을 먼저 선언해야 한다.
+
+$$
+c^{(q)}=\Phi_q(W,A,\tau,q),
+\qquad
+d_q=\operatorname{ShortestPath}(G,c^{(q)}).
+$$
+
+같은 $W$도 $A$, $\tau$와 $q$가 다르면 다른 비용을 만들 수 있고, 좌표 gauge가 남으면 $W$와 $g$를 관측량에서 개별 식별하지 못할 수 있다. 따라서 이 문서의 $d_g$는 선택한 SPD/Riemannian 구조의 입력이며 raw $W$에서 유일하게 유도된 산출이 아니다. $\Phi_q$를 사용하는 실험은 추정 절차, tie rule, action set과 held-out protocol을 함께 고정해야 한다.
+
+### B.1.2 신경 동역학에서의 계량 후보와 현재 검증 지위
+
+[정의] training/calibration activity에서 고정한 선형화가
+
+$$
+z_{t+1}=Jz_t+b+\varepsilon_t,
+\qquad
+\operatorname{Cov}(\varepsilon_t)=Q
+$$
+
+일 때 finite-horizon process-noise reachability covariance와 그 역계량 후보는
+
+$$
+C_H=\sum_{k=0}^{H-1}J^kQ(J^k)^\top,
+\qquad
+g_H=(C_H+\lambda_C R_C)^{-1}
+$$
+
+이다. 이는 [정의: operational candidate]이며 controllability Gramian이나 raw $W$에서 유일하게 나오는 뇌의 계량이 아니다. $C_H+\lambda_C R_C\succ0$이어야 하고, chart $z'=Pz$에서는 covariance reference가 $R_C'=PR_CP^\top$로 변해야 한다. 직접 metric에 더하는 reference는 별도 객체 $G_0'=P^{-\top}G_0P^{-1}$다.
+
+[반례] 같은 raw $W$에서도 gain, inhibition, delay 또는 $Q$가 달라지면 $g_H$가 달라지고, 좌표 gauge는 $W$의 성분과 $g$의 성분을 함께 바꾼다. 따라서 `연결 -> 계량`은 유일한 항등식이 아니라 측정된 입력, 고정한 estimator와 held-out prediction으로 경쟁시켜야 하는 가설이다.
+
+[산출: retrospective discovery] `_workspace/ce/neural-riemannian-metric-validation-20260818`에서 상태 SPD, graph metric/quasi-metric, directed action/Finsler, distribution metric과 derived readout을 27개 ID로 닫았다. 공식 E17의 11개 session, 3개 animal에서 계산 가능한 5,906개 tuple을 동일 split로 전부 실행했다. $H=5,15,30$의 동물평균 uncertainty NLPD는 increment-covariance 후보 `S2`가 근소하게 낮았지만 `S3/S4-H`와 차이가 작고 동물별 방향이 엇갈렸다. $H=1$은 persistence baseline이 가장 낮았다. 따라서 population winner와 뇌의 핵심식 판정은 금지한다.
+
+관측가능성 기준 `S7-H`는 identity observation에서 $H=1$ feature와 target이 같아 88개 tuple을 `INELIGIBLE_TAUTOLOGY`로 제거했다. Fisher/pullback `S8/S9`는 saline/DCZ decoder의 fit-only rank gate이며 task geometry나 독립 trajectory endpoint가 아니다. E17에는 같은 unit의 direct $W^s$, 계량 입력과 이후 trajectory를 잇는 chain이 없으므로
+
+$$
+\Delta W^s\longrightarrow\Delta g\longrightarrow\Delta x_{0:T}
+$$
+
+는 [미완성]이다. 다음 승격에는 새 동물 cohort에서 same-cell/same-synapse pre/post 연결, calibration activity, 이후 trajectory, causal connectivity intervention, gain/noise control과 source lock이 필요하다.
+
 **E/I 균형 조건** (J.10 유래):
 
 $$\sum_{j \in \mathcal{E}} W_{ij} + \sum_{j \in \mathcal{I}} W_{ij} \approx 0 \qquad\text{(balanced state)}$$

@@ -34,6 +34,18 @@ target/
 /data/
 /.tmp/
 
+# CE research source payloads stay local. Commit manifests, code, and compact
+# derived results; retrieve the original archives from their documented DOIs.
+/_workspace/ce/**/artifacts/realdata/**/*.zip
+/_workspace/ce/**/artifacts/realdata/**/*.mat
+/_workspace/ce/**/artifacts/realdata/**/*.pkl
+/_workspace/ce/**/artifacts/input/**/*.zip
+/_workspace/ce/**/artifacts/realdata/*_repo/
+/_workspace/ce/**/artifacts/realdata/zhong-et-al-2025/
+/_workspace/ce/**/artifacts/input/bci_busch/avatarRT_analysis/
+/_workspace/ce/**/artifacts/input/grid_torus/GridCellTorus-code/
+.DS_Store
+
 # Outputs and models
 /llm_extract/
 *.json
@@ -61,6 +73,8 @@ target/
 !experiments/preregistration/sparse_causal_bridge_v8.json
 !experiments/preregistration/causal_recurrent_geometry_phase_a_v1.json
 !experiments/preregistration/c_elegans_connectome_replay_v1.json
+!/_workspace/ce/neural-riemannian-metric-3d-pfc-20260819/artifacts/gate-a-fixtures-r6-release-final6.json
+!/_workspace/ce/neural-riemannian-metric-3d-pfc-20260819/artifacts/oracle-r6-release-final6.json
 *.pt
 *.pth
 *.csv
@@ -95,6 +109,7 @@ dist/
 *.lib
 *.pdb
 *.ptx
+*.exe
 
 # Coverage/profiling
 .coverage

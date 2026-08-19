@@ -1,0 +1,127 @@
+ # Metadata for DOI registration according to DataCite Metadata Schema 4.1.
+# For detailed schema description see 10.1126/science.adx4358
+
+## Required fields
+
+# The main researchers involved. Include digital identifier (e.g., ORCID)
+# if possible, including the prefix to indicate its type.
+authors:
+  -
+    firstname: "Eduardo"
+    lastname: "Maristany de las Casas"
+    affiliation: "Institute for Biology, Humboldt University of Berlin, Berlin, Germany."
+    id: "ORCID:0000-0002-6621-6838"
+    
+  -
+    firstname: "Kris"
+    lastname: "Killmann"
+    affiliation: "Institute for Biology, Humboldt University of Berlin, Berlin, Germany."
+    
+  -
+    firstname: "Moritz"
+    lastname: "Drüke"
+    affiliation: "Institute for Biology, Humboldt University of Berlin, Berlin, Germany."
+    
+  -
+    firstname: "Lukas"
+    lastname: "Münster"
+    affiliation: "Zentrum für molekulare Neurobiologie, UKE Hamburg, Hamburg, Germany."
+    
+  -
+    firstname: "Christian"
+    lastname: "Ebner"
+    affiliation: "Institute for Biology, Humboldt University of Berlin, Berlin, Germany. NeuroCure Cluster of Excellence Charité Universitätsmedizin Berlin, Berlin, Germany."
+    
+  -
+    firstname: "Robert"
+    lastname: "Sachdev"
+    affiliation: "Institute for Biology, Humboldt University of Berlin, Berlin, Germany."
+    
+  -
+    firstname: "Dieter"
+    lastname: "Jaeger"
+    affiliation: "Department of Biology, Emory University, Atlanta, GA, USA."
+    
+  -
+    firstname: "Matthew E."
+    lastname: "Larkum"
+    affiliation: "Institute for Biology, Humboldt University of Berlin, Berlin, Germany."
+
+
+
+# A title to describe the published resource.
+title: "Tuft dendrites in frontal motor cortex enable flexible learning"
+
+# Additional information about the resource, e.g., a brief abstract.
+description: "This repository contains behavioral, electrophysiological, functional imaging (two-photon calcium and glutamate imaging), and chemogenetic/optogenetic data that support our findings on the role of apical tuft dendrites of layer 5b pyramidal neurons in the anterolateral motor cortex (ALM) during flexible learning. The dataset includes data from a rule-switching behavioral paradigm, NDNF interneuron manipulations, dendritic calcium imaging, synaptic glutamate imaging, and Neuropixels recordings."
+
+
+# List of keywords the resource should be associated with.
+# Give as many keywords as possible, to make the resource findable.
+keywords:
+  - Systems Neuroscience
+  - Motor Cortex
+  - Anterolateral Motor Cortex (ALM)
+  - Flexible Learning
+  - Rule Switching
+  - Dendrites
+  - Apical Tuft Dendrites
+  - Layer 5 Pyramidal Neurons
+  - Layer 5b Extratelencephalic Neurons
+  - NDNF Interneurons
+  - Layer 1 Interneurons
+  - Two-Photon Calcium Imaging
+  - Glutamate Imaging
+  - iGluSNFR
+  - Electrophysiology
+  - Neuropixels
+  - Optogenetics
+  - Chemogenetics
+  - Dendritic Integration
+  - Burst Firing
+  - Synaptic Clustering
+  - Decision Making
+  - Behavior
+
+# License information for this resource. Please provide the license name and/or a link to the license.
+# Please add also a corresponding LICENSE file to the repository.
+license:
+  name: "Creative Commons Attribution 4.0 International Public License"
+  url: "https://creativecommons.org/licenses/by/4.0/"
+
+
+
+## Optional Fields
+
+# Funding information for this resource.
+# Separate funder name and grant number by comma.
+funding:
+  - "NIH, 1R01 NS111470"
+  - "EU, 720270 (HBP SGA1)"
+  - "EU, 785907 (HBP SGA2)"
+  - "EU, 945539 (HBP SGA3)"
+  - "EU, 670118 (ERC ActiveCortex)"
+  - "EU, 101055340 (ERC Cortical Coupling)"
+  - "Einstein Foundation Berlin, EVF-2017-363"
+  - "Einstein Foundation Berlin, EVF-2017-363-2"
+  - "Einstein Foundation Berlin, EVF-2020-571"
+  - "DFG, EXC 257 NeuroCure"
+  - "DFG, LA 3442/3-1"
+  - "DFG, 327654276 (SFB 1315)"
+  - "DFG, LA 3442/6-1"
+
+
+# Related publications. reftype might be: IsSupplementTo, IsDescribedBy, IsReferencedBy.
+# Please provide digital identifier (e.g., DOI) if possible.
+# Add a prefix to the ID, separated by a colon, to indicate the source.
+# Supported sources are: DOI, arXiv, PMID
+references:
+  -
+    id: "doi:10.1126/science.adx4358"
+    reftype: "IsSupplementTo"
+    citation: "Maristany de las Casas E, Killmann K, Drüke M, Münster L, Ebner C, Sachdev R, Jaeger D, Larkum ME, Science 392, eadx4358 (2026). Tuft dendrites in frontal motor cortex enable flexible learning. DOI: 10.1126/science.adx4358"
+
+
+# Resource type. Default is Dataset, other possible values are Software, DataPaper, Image, Text.
+resourcetype: "Dataset"
+

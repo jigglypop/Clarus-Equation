@@ -1,0 +1,14 @@
+=== L5 PYRAMIDAL NEURONS (PUFF) ===
+n = 210
+FR: Ctrl = 11.29 ± 5.75, DCZ = 8.71 ± 4.61, Change = -22.86%, p = 1.7233277475267754e-05
+BR: Ctrl = 6.19 ± 8.09, DCZ = 3.35 ± 5.92, Change = -45.99%, p = 3.1855434379224334e-06
+Effect Size: FR = 0.12 ± 0.22, BR = 0.29 ± 0.38
+Effect Size Difference (FR vs BR): p = 7.508055781002554e-05
+backprop Distance: Ctrl = 131.11 ± 51.17, DCZ = 134.55 ± 53.59, Change = 2.62%, p = 0.06743579286781762
+backprop Speed: Ctrl = 0.40 ± 0.63, DCZ = 0.35 ± 0.39, Change = -12.72%, p = 0.7747396739032382
+
+=== L5 INTERNEURONS (PUFF) ===
+n = 18
+FR: Ctrl = 7.85 ± 4.46, DCZ = 4.78 ± 3.99, Change = -39.18%, p = 0.0022601116584233033
+Effect Size: FR = 0.28 ± 0.37
+Effect Size Difference (Inter vs other): p = 0.045539104949325476
