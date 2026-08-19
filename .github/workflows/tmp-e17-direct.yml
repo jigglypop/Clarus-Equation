@@ -1,4 +1,4 @@
-name: Temporary E17 Direct Inventory
+name: Temporary E17 Direct Test
 
 on:
   pull_request:
@@ -15,7 +15,7 @@ permissions:
 jobs:
   inspect:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
         with:
@@ -27,14 +27,16 @@ jobs:
         run: python -m pip install --upgrade pip numpy scipy h5py
       - name: Inventory official E17 archive
         run: python .tmp-e17/inspect_archive.py
-      - name: Commit inventory to temporary branch
+      - name: Probe Figure2 structures
+        run: python .tmp-e17/probe_figure2.py
+      - name: Commit temporary E17 results
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -f e17_direct_results/inventory.json e17_direct_results/report.md
+          git add -f e17_direct_results/inventory.json e17_direct_results/report.md e17_direct_results/figure2_probe.json
           if git diff --cached --quiet; then
-            echo 'No inventory changes'
+            echo 'No E17 result changes'
           else
-            git commit -m 'test: record temporary E17 archive inventory'
+            git commit -m 'test: record temporary E17 direct results'
             git push origin HEAD:tmp/neural-routing-direct-20260819
           fi
