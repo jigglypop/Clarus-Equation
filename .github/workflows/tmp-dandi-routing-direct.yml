@@ -1,0 +1,40 @@
+name: Temporary DANDI Routing Direct Test
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.tmp-dandi/**'
+      - '.github/workflows/tmp-dandi-routing-direct.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: tmp/dandi-routing-direct-20260819
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip numpy scipy scikit-learn pandas dandi pynwb h5py remfile
+      - name: Run DANDI bridge pilot
+        run: python .tmp-dandi/analyze_bridge.py
+      - name: Commit temporary DANDI results
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f dandi_bridge_results/results.json dandi_bridge_results/report.md
+          if git diff --cached --quiet; then
+            echo 'No DANDI result changes'
+          else
+            git commit -m 'test: record temporary DANDI bridge results'
+            git push origin HEAD:tmp/dandi-routing-direct-20260819
+          fi
