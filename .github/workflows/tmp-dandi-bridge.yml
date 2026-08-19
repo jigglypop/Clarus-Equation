@@ -15,7 +15,7 @@ permissions:
 jobs:
   list-assets:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
         with:
@@ -30,11 +30,13 @@ jobs:
         run: python .tmp-dandi/probe_nwb.py
       - name: Run direct bridge pilot
         run: python .tmp-dandi/analyze_bridge_pilot.py
+      - name: Run fixed multi-animal bridge validation
+        run: python .tmp-dandi/analyze_bridge_multianimal.py
       - name: Commit temporary DANDI results
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -f dandi_bridge_results/assets.json dandi_bridge_results/nwb_probe.json dandi_bridge_results/bridge_pilot_results.json dandi_bridge_results/bridge_pilot_report.md
+          git add -f dandi_bridge_results/assets.json dandi_bridge_results/nwb_probe.json dandi_bridge_results/bridge_pilot_results.json dandi_bridge_results/bridge_pilot_report.md dandi_bridge_results/bridge_multianimal_results.json dandi_bridge_results/bridge_multianimal_report.md
           if git diff --cached --quiet; then
             echo 'No changes'
           else
