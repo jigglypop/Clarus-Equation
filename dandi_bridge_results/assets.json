@@ -1,0 +1,205 @@
+{
+  "status": "COMPLETE",
+  "url": "https://api.dandiarchive.org/api/dandisets/001695/versions/0.260319.2023/assets/?page_size=100",
+  "count": 22,
+  "assets": [
+    {
+      "asset_id": "80545ae4-e6cf-4598-a2e5-d66dbbb2fdcb",
+      "path": "sub-NN-syn-M02/sub-NN-syn-M02_ses-20230504T100000_ecephys.nwb",
+      "size": 26542012,
+      "created": "2026-01-14T04:02:49.434280Z",
+      "modified": "2026-03-19T20:23:09.108304Z",
+      "blob": "a8dcbde7-3dbe-4260-8f78-fe20bf5e0def",
+      "zarr": null
+    },
+    {
+      "asset_id": "006d3cdf-5c66-4b2b-b972-e1f7128eccaf",
+      "path": "sub-NN-syn-M05/sub-NN-syn-M05_ses-20230601T100000_ecephys.nwb",
+      "size": 30679370,
+      "created": "2026-01-14T04:02:48.354659Z",
+      "modified": "2026-03-19T20:23:09.071950Z",
+      "blob": "99dcfeb6-2ebb-4cd8-975a-f663b6ed5129",
+      "zarr": null
+    },
+    {
+      "asset_id": "3fe7b856-a97e-4033-a0fa-efa21c5cd67f",
+      "path": "sub-NN-syn-M05/sub-NN-syn-M05_ses-20230607T100000_ecephys.nwb",
+      "size": 47908658,
+      "created": "2026-01-14T04:02:49.082837Z",
+      "modified": "2026-03-19T20:23:09.091771Z",
+      "blob": "2db0f509-24eb-408f-9104-28df2cec67ff",
+      "zarr": null
+    },
+    {
+      "asset_id": "1e4d5403-a8cc-4814-a904-7aff57f8cc4d",
+      "path": "sub-M02/sub-M02_ses-20240312T100000_behavior+ecephys.nwb",
+      "size": 61347328,
+      "created": "2026-01-14T04:02:18.353053Z",
+      "modified": "2026-03-19T20:23:08.867852Z",
+      "blob": "e4258ab4-a9cb-45ff-b92e-6aec93d44aca",
+      "zarr": null
+    },
+    {
+      "asset_id": "48507af3-9fb8-4ec2-ba63-3e19b2703352",
+      "path": "sub-M01/sub-M01_ses-20240308T100000_ecephys.nwb",
+      "size": 70720864,
+      "created": "2026-01-14T04:02:12.792824Z",
+      "modified": "2026-03-19T20:23:08.803709Z",
+      "blob": "83b8292c-0f6b-448d-ad4c-8f9c3bed96bc",
+      "zarr": null
+    },
+    {
+      "asset_id": "a0c10954-8d63-4114-b91f-e5b0560ee2bc",
+      "path": "sub-M02/sub-M02_ses-20240226T100000_ecephys.nwb",
+      "size": 79311908,
+      "created": "2026-01-14T04:02:14.869714Z",
+      "modified": "2026-03-19T20:23:08.812643Z",
+      "blob": "769be1b5-1550-44f7-ac4a-291bbfc6dcd9",
+      "zarr": null
+    },
+    {
+      "asset_id": "b9876bef-9508-4329-b5ed-8d9da2a3e201",
+      "path": "sub-M02/sub-M02_ses-20240313T100000_behavior+ecephys.nwb",
+      "size": 98347742,
+      "created": "2026-01-14T04:02:27.927132Z",
+      "modified": "2026-03-19T20:23:08.911773Z",
+      "blob": "539100fc-2aeb-43eb-a0ba-209ad70ed4f3",
+      "zarr": null
+    },
+    {
+      "asset_id": "65df8973-2ee8-4e25-ac6d-e4a7a49f90ae",
+      "path": "sub-M02/sub-M02_ses-20240318T100000_behavior+ecephys.nwb",
+      "size": 112530616,
+      "created": "2026-01-14T04:02:28.876395Z",
+      "modified": "2026-03-19T20:23:08.930723Z",
+      "blob": "2db2f006-a622-44a4-9043-2921e146ef48",
+      "zarr": null
+    },
+    {
+      "asset_id": "9a3df357-88e8-48f8-b52c-4abc28e7da03",
+      "path": "sub-M02/sub-M02_ses-20240307T100000_ecephys.nwb",
+      "size": 114018584,
+      "created": "2026-01-14T04:02:16.814580Z",
+      "modified": "2026-03-19T20:23:08.837306Z",
+      "blob": "d1d3cb83-0892-4b7c-94fa-541d59ee3b35",
+      "zarr": null
+    },
+    {
+      "asset_id": "0a41ffc1-8216-4663-8842-14e4222742ad",
+      "path": "sub-M02/sub-M02_ses-20240314T100000_behavior+ecephys.nwb",
+      "size": 121173578,
+      "created": "2026-01-14T04:02:27.025261Z",
+      "modified": "2026-03-19T20:23:08.902768Z",
+      "blob": "97c508d4-5c3f-44b3-b551-5483f7b685b2",
+      "zarr": null
+    },
+    {
+      "asset_id": "6d733831-afbf-44c2-8c46-7b3550f5e672",
+      "path": "sub-M01/sub-M01_ses-20240313T100000_behavior+ecephys.nwb",
+      "size": 125772852,
+      "created": "2026-01-14T04:02:16.791962Z",
+      "modified": "2026-03-19T20:23:08.827788Z",
+      "blob": "686eb43e-7bd2-4bde-adcd-0de5a76b7702",
+      "zarr": null
+    },
+    {
+      "asset_id": "80edb3f8-ff28-4694-9b55-7ef98b4d43dc",
+      "path": "sub-M01/sub-M01_ses-20240314T100000_behavior+ecephys.nwb",
+      "size": 134620736,
+      "created": "2026-01-14T04:02:20.105851Z",
+      "modified": "2026-03-19T20:23:08.884445Z",
+      "blob": "74b01582-786c-4e36-b1a4-86dd4987f5df",
+      "zarr": null
+    },
+    {
+      "asset_id": "ecf6c755-70f4-4b29-aeeb-21c959afcf0b",
+      "path": "sub-M05/sub-M05_ses-20240727T100000_ecephys.nwb",
+      "size": 147103800,
+      "created": "2026-01-14T04:02:45.630390Z",
+      "modified": "2026-03-19T20:23:09.036509Z",
+      "blob": "c78ad825-b884-4b1d-8bee-b5b895003660",
+      "zarr": null
+    },
+    {
+      "asset_id": "52b551c4-2a2f-4a87-82f5-3d804b7cb82a",
+      "path": "sub-M01/sub-M01_ses-20240312T100000_behavior+ecephys.nwb",
+      "size": 187350474,
+      "created": "2026-01-14T04:02:17.772915Z",
+      "modified": "2026-03-19T20:23:08.849827Z",
+      "blob": "b1dd65cb-80a8-4829-a7ce-8645ec2269a9",
+      "zarr": null
+    },
+    {
+      "asset_id": "605ae4d4-454b-435b-97ef-84518ce63932",
+      "path": "sub-M03/sub-M03_ses-20240623T100000_behavior+ecephys.nwb",
+      "size": 189681230,
+      "created": "2026-01-14T04:02:40.040983Z",
+      "modified": "2026-03-19T20:23:09.008572Z",
+      "blob": "516f25d9-ed23-4b59-9ee8-0a841016f080",
+      "zarr": null
+    },
+    {
+      "asset_id": "b597de93-315f-477c-ac3d-1b87f0f3bbe9",
+      "path": "sub-M01/sub-M01_ses-20240318T100000_behavior+ecephys.nwb",
+      "size": 190033984,
+      "created": "2026-01-14T04:02:11.271561Z",
+      "modified": "2026-03-19T20:23:08.784576Z",
+      "blob": "3df0d257-d382-4466-bb90-938765c0774f",
+      "zarr": null
+    },
+    {
+      "asset_id": "4849251b-a219-4d77-beed-b5a176a0b718",
+      "path": "sub-M03/sub-M03_ses-20240622T100000_behavior+ecephys.nwb",
+      "size": 193772642,
+      "created": "2026-01-14T04:02:29.440292Z",
+      "modified": "2026-03-19T20:23:08.948016Z",
+      "blob": "ab70adaf-af98-4fbb-8429-a8eb66c07e2e",
+      "zarr": null
+    },
+    {
+      "asset_id": "919a7252-5344-4417-b29b-e5fda1e04a35",
+      "path": "sub-M03/sub-M03_ses-20240621T100000_behavior+ecephys.nwb",
+      "size": 199825270,
+      "created": "2026-01-14T04:02:38.597985Z",
+      "modified": "2026-03-19T20:23:08.964464Z",
+      "blob": "f992af02-e8ce-4e97-96be-c64a5c55bf0f",
+      "zarr": null
+    },
+    {
+      "asset_id": "8e53f59f-4280-47f0-a208-5f26e498f561",
+      "path": "sub-M03/sub-M03_ses-20240624T100000_behavior+ecephys.nwb",
+      "size": 229336688,
+      "created": "2026-01-14T04:02:44.865520Z",
+      "modified": "2026-03-19T20:23:09.022456Z",
+      "blob": "02c8e995-d570-42c6-a1ed-c825581348b4",
+      "zarr": null
+    },
+    {
+      "asset_id": "091bc936-b149-4598-b89a-e9db45499a69",
+      "path": "sub-M05/sub-M05_ses-20240731T100000_behavior+ecephys.nwb",
+      "size": 239530098,
+      "created": "2026-01-14T04:02:52.640635Z",
+      "modified": "2026-03-19T20:23:09.130088Z",
+      "blob": "f0038008-5e87-4517-9418-9f927d6dfab7",
+      "zarr": null
+    },
+    {
+      "asset_id": "7b927436-b056-4114-85af-2ef4c75582b6",
+      "path": "sub-M05/sub-M05_ses-20240729T100000_behavior+ecephys.nwb",
+      "size": 241713926,
+      "created": "2026-01-14T04:02:38.924534Z",
+      "modified": "2026-03-19T20:23:08.992557Z",
+      "blob": "ad292cc1-44be-48ed-abcf-5d62fd8954ac",
+      "zarr": null
+    },
+    {
+      "asset_id": "8a373385-fad5-40e8-b582-a555fddc57ae",
+      "path": "sub-M05/sub-M05_ses-20240730T100000_behavior+ecephys.nwb",
+      "size": 246983414,
+      "created": "2026-01-14T04:02:47.604449Z",
+      "modified": "2026-03-19T20:23:09.049014Z",
+      "blob": "616bcb92-b31f-4b4a-864d-8910e8205e99",
+      "zarr": null
+    }
+  ]
+}
