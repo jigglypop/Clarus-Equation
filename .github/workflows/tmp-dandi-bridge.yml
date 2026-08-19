@@ -1,0 +1,39 @@
+name: Temporary DANDI Bridge Test
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.tmp-dandi/**'
+      - '.github/workflows/tmp-dandi-bridge.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  list-assets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: tmp/neural-routing-direct-20260819
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install --upgrade pip requests
+      - name: List official DANDI assets
+        run: python .tmp-dandi/list_assets.py
+      - name: Commit temporary asset inventory
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f dandi_bridge_results/assets.json
+          if git diff --cached --quiet; then
+            echo 'No changes'
+          else
+            git commit -m 'test: record temporary DANDI asset list'
+            git push origin HEAD:tmp/neural-routing-direct-20260819
+          fi
