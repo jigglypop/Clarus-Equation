@@ -2,6 +2,24 @@
 
 Status: ACTIVE
 
+## Latest admission decision — 2026-08-20
+
+This section is the authoritative next-route order and supersedes the older
+active-candidate ordering below.  It changes route management only; it does not
+promote a simulator or schema audit into a biological mechanism claim.
+
+| ID | Route status | Formal status | Preserved claim | Evidence | Never-retry / resume rule |
+|---|---|---|---|---|---|
+| BA-EMP-RANDI-SCHEMA | `SCHEMA_AUDIT_COMPLETE / EMPIRICAL_ROUTE_BLOCKED_CONDITIONAL` | **[관측 비교: 입력 감사]** | DANDI exemplar has optogenetic event, 393x105 signal and response-side NeuroPAL-join schema. Canonical source identity and an eligible comparator were not established. | `randi-neural-propagation-source-audit-20260820/40-final-report.md`, `7ec326830b7b3e698c7b9a7878bd5bb7bac3294f65d21f36d7a5793dd31932aa`; validation `31830d6ddf7440520f7836cf6cec593f80f48efcf944dc8be59dc9af3ebc763f` | Do not infer source identity by outcome-tuned spatial matching; do not use pre/post or failed autoresponse as no-light control; do not compute an effect before a new frozen contract. |
+
+| Priority | Candidate | Admission state | Required falsifier / STOP |
+|---:|---|---|---|
+| 1 | BA-EMP-RANDI-ACTIVE | `CONDITIONAL_INPUT` | Validate event-target-to-NeuroPAL mapping, assignment strata, within-stratum positivity, fixed active controls, missingness and carryover before reading response outcomes. Otherwise remain blocked. |
+| 2 | BA-EMP-IBL | `OPEN_INPUT` | Test held-out simultaneous-session predictive transfer only; no causal routing claim without intervention. |
+| 3 | BA-EMP-CLOUD-G | `PASS_INPUT_METRIC_ONLY` | Output-Fisher geometry may be tested within recordings; anatomical source-target routing and causal claims remain blocked. |
+| 4 | BA-BIO-LONG | `BLOCKED_INPUT` | Requires same-cell/synapse longitudinal structure, calibrated activity and intervention data. |
+| 5 | BA-S1 | `DEFERRED_SYNTHETIC` | Do not substitute a synthetic support threshold or lesion seed for real structural evidence. |
+
 이 원장은 BrainRuntime 실험에서 어떤 알고리즘 후보가 살아 있고 어떤 경로가 기각·퇴역했는지를 빠르게 감사하기 위한 문서다. 실제 뇌를 설명하는 논문이나 의식 이론의 서사가 아니다.
 
 ## 정의와 경계
@@ -25,14 +43,16 @@ Status: ACTIVE
 | BA-G2 | compressed SPD metric feature for fixed-W prediction | `STOP` 0/16 | **[산출]** 부정 계산 | $g$는 유효한 압축 표현이지만 raw horizon $B_h$, direct quadratic, $C$ terms보다 유용하지 않았다 | `brainruntime-weight-metric-dynamics-intervention-20260819/artifacts/g2-development-results-v1.json`, `c4fbeeee6cc3e71f596238e902007c30f942cad389d9bf6e45884cdd0437b489` | “metric sufficiency/고유 정보” 경로는 퇴역. 새 독립 mediator 개입 없이는 재개 금지 |
 | BA-G3D-v1 | response/recall diagnostic, first apparatus | `APPARATUS_INVALID` | **[미완성]** | 과학 결과로 사용하지 않는다 | `brainruntime-weight-metric-dynamics-intervention-20260819/artifacts/g3-diagnostic-development-results-v1.json`, `2075e3516ffab8c21691535540443f8b4743609b227416bbd420b40c15e2ee9e` | seed `97701..97716` 영구 퇴역 |
 | BA-G3D | independent response-summary/recall co-change diagnostic | `STOP`; mediation `BLOCKED_NOT_IDENTIFIED` | **[산출]** 부정 계산 + **[미완성]** mediation | M1 continuous recall advantage는 강하지만 global SPD-change 우위와 same-arm correlation은 실패했다 | `brainruntime-weight-metric-dynamics-intervention-20260819/artifacts/g3-diagnostic-development-results-v2.json`, `a0a9321aca3366d1c6c7d4e12f7cfe97d1387e86c6e05799ee90543a01a665b7` | independently manipulable mediator 또는 충분한 causal state model 없이는 mediation 재개 금지 |
+| BA-C1 | frozen action-conditioned predictor at a planner port | `STOP` 0/16 advantage gate | **[산출]** 고정 simulator 부정 계산 | 예측 MSE와 planner-port 개입은 통과했지만, guided policy가 zero-action persistence와 reactive mean-effect control보다 손실이 컸다 | `brainruntime-prediction-guided-metacontrol-20260820/artifacts/c1-development-results.json`, `4e21f994ae1f6f2563a2c00bc13fba7ec9ac812e02701fed54d6eb6cdd49ae0b`; canonical results `de2b59cb54de3a6d2007c3282b13b0c3bb80e45a55c5ec9af923003157be8b28` | seed·goal·threshold·action set retune 금지. confirmation은 봉인하고 합성 controller 후보로 재개하지 않는다 |
 
 ## 활성 후보 순위
 
 | 순위 | ID | 상태 | 선택 이유 | 필수 falsifier / stop 조건 |
 |---:|---|---|---|---|
-| 1 | BA-C1 | `OPEN` | 기존 Loop10의 “예측 readout만 존재” 경계를 직접 넘어서, frozen forecast가 실제 정책 action을 고르는지를 개입할 수 있다 | predictor→policy port shuffle은 손실·행동을 바꾸고, 표시 readout만 shuffle한 arm은 결과가 동등해야 한다. guided policy가 persistence·random·error-magnitude-only·reactive control을 이기지 못하면 STOP |
-| 2 | BA-S1 | `OPEN_CONDITIONAL` | recurrence topology 가설을 직접 lesion하기 전에 현재 M1 구조에서 공정한 SCC matched control이 존재하는지 판정한다 | support가 dense/한 giant SCC라 outside·SCC-preserving matched lesion이 불가능하면 `STRUCTURE_UNDEFINED_STOP`; threshold를 outcome 후 조정하지 않는다 |
-| 3 | BA-BIO-LONG | `BLOCKED_INPUT` | 실제 뇌 주장에 필요한 same-cell/synapse longitudinal $W$, activity, intervention 자료 경로다 | 직접 구조 측정·독립 metric calibration·held-out dynamics·animal-level intervention이 없으면 열지 않는다 |
+| 1 | BA-EMP-CLOUD | `OPEN_REAL_DATA` | 로컬에 이미 보존된 실제 *C. elegans* 전뇌 칼슘 활동과 동시 locomotion 시계열에서 task-output Fisher pullback과 lagged predictive routing을 같은 recording 안에서 독립 추정한다 | 원자료 provenance·MAT schema·시간축·행동 정렬이 통과해야 한다. covariance inverse를 metric으로 부르거나 structural connectome ID를 억지로 결합하면 STOP |
+| 2 | BA-EMP-IBL | `OPEN_INPUT` | IBL Brain-wide Map의 동시 multi-area Neuropixels와 probability block을 이용해 context-sensitive geometry와 source→target predictive transfer를 실제 mammalian brain에서 검정한다 | exact simultaneous VISp/MOs session, quality units, leave-block-out split와 공식 cache가 없으면 실행하지 않는다. lagged transfer를 causal routing으로 승격하지 않는다 |
+| 3 | BA-BIO-LONG | `BLOCKED_INPUT` | 실제 뇌의 구조→기능→행동 사슬에 필요한 same-cell/synapse longitudinal $W$, activity, intervention 자료 경로다 | 직접 구조 측정·독립 metric calibration·held-out dynamics·animal-level intervention이 없으면 열지 않는다 |
+| 4 | BA-S1 | `DEFERRED_SYNTHETIC` | 합성 M1 SCC lesion은 실제 자료 경로보다 우선하지 않는다 | 실제자료 분석이 끝나기 전 새 synthetic support threshold나 lesion seed를 만들지 않는다 |
 
 ## 오케스트레이터 선택 규칙
 
@@ -43,4 +63,4 @@ Status: ACTIVE
 
 ## 현재 인계
 
-**[미완성]** BA-C1 계약·구현과 BA-S1 구조 적격성 preflight는 아직 실행 결과가 없다. 다음 오케스트레이터는 이 두 후보를 같은 “의식” 주장으로 합치지 않고 독립 판정해야 한다.
+**[미완성]** BA-C1은 `STOP`으로 닫혔다. 다음 오케스트레이터는 새 합성 seed 경로를 만들지 않고 BA-EMP-CLOUD의 원자료 적격성부터 판정한다. CloudCell의 neuron identity가 별도 구조 connectome과 검증 가능하게 정렬되지 않으면 구조 라우팅 주장은 삭제하고, 같은 recording 안의 Fisher geometry와 lagged predictive transfer만 독립적으로 보고한다. BA-EMP-IBL은 공식 mammalian replication 입력이 확보된 뒤 연다.

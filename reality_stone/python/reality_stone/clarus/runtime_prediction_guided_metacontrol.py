@@ -19,7 +19,6 @@ from typing import Any, Iterable, Mapping, Sequence
 import torch
 
 from .runtime import BrainRuntime, BrainRuntimeConfig, BrainRuntimeSnapshot, RuntimeMode
-from .temporal_memory import TemporalAuditedMemory
 
 
 DEVELOPMENT_SEEDS = range(97901, 97917)
@@ -122,6 +121,22 @@ class _Predictor:
     mean_effect: torch.Tensor
     alarm_median: float
     audit: dict[str, Any]
+
+
+@dataclass
+class _StepLedger:
+    """Observed calls through the only C1 runtime-transition boundary."""
+
+    selection_calls: int = 0
+    actual_calls: int = 0
+
+    def record(self, phase: str) -> None:
+        if phase == "selection":
+            self.selection_calls += 1
+        elif phase == "actual":
+            self.actual_calls += 1
+        else:
+            raise ValueError("C1 step phase must be selection or actual")
 
 
 def _file_sha256(path: Path) -> str:
@@ -380,7 +395,9 @@ def _build_fixture(seed: int, config: C1MetacontrolConfig) -> _Fixture:
         "base_sparse_weight_sha256": sparse_hash,
         "base_dense_sparse_parity": _dense_sparse_parity(runtime),
         "base_hippocampal_rows": len(runtime.hippocampus),
-        "base_temporal_rows": len(TemporalAuditedMemory(capacity=1)),
+        "base_temporal_store_present": False,
+        "base_temporal_rows": 0,
+        "temporal_zero_provenance": "BrainRuntime_has_no_temporal_store_member",
         "automatic_stdp_updates": int(runtime._stdp_updates),
     }
     return _Fixture(
@@ -448,7 +465,7 @@ def _transition_integrity(
     runtime: BrainRuntime,
     *,
     before_weight_hash: str,
-    expected_step: int,
+    before_step: int,
 ) -> dict[str, Any]:
     state_tensors = (
         runtime.activation,
@@ -458,15 +475,19 @@ def _transition_integrity(
         runtime.stp_u,
         runtime.stp_x,
     )
-    temporal = TemporalAuditedMemory(capacity=1)
     return {
-        "one_actual_step": runtime.step_index == expected_step,
+        "step_before": before_step,
+        "step_after": int(runtime.step_index),
+        "step_delta": int(runtime.step_index - before_step),
+        "one_actual_step": runtime.step_index - before_step == 1,
         "weight_unchanged": _tensor_sha256(runtime.weight) == before_weight_hash,
         "weight_sha256": _tensor_sha256(runtime.weight),
         "dense_sparse_parity": _dense_sparse_parity(runtime),
         "stdp_updates": int(runtime._stdp_updates),
         "hippocampal_rows": len(runtime.hippocampus),
-        "temporal_rows": len(temporal),
+        "temporal_store_present": False,
+        "temporal_rows": 0,
+        "temporal_zero_provenance": "BrainRuntime_has_no_temporal_store_member",
         "state_finite": all(bool(torch.isfinite(value).all()) for value in state_tensors),
     }
 
@@ -475,10 +496,15 @@ def _one_transition(
     snapshot: BrainRuntimeSnapshot,
     drive: torch.Tensor,
     config: C1MetacontrolConfig,
+    *,
+    ledger: _StepLedger | None = None,
+    phase: str = "actual",
 ) -> tuple[torch.Tensor, dict[str, Any]]:
     runtime = BrainRuntime.from_snapshot(snapshot, backend="torch", device="cpu")
     before_step = runtime.step_index
     before_weight_hash = _tensor_sha256(runtime.weight)
+    if ledger is not None:
+        ledger.record(phase)
     runtime.step(
         external_input=drive,
         force_mode=RuntimeMode.WAKE,
@@ -487,9 +513,10 @@ def _one_transition(
     audit = _transition_integrity(
         runtime,
         before_weight_hash=before_weight_hash,
-        expected_step=before_step + 1,
+        before_step=before_step,
     )
     audit["starting_snapshot_sha256"] = _snapshot_sha256(snapshot)
+    audit["ending_snapshot_sha256"] = _snapshot_sha256(runtime.snapshot())
     audit["actual_drive_sha256"] = _tensor_sha256(drive)
     return _summary_from_activation(runtime.activation, config.summary_threshold), audit
 
@@ -724,6 +751,9 @@ def _evaluate_policy(
     integrity_rows: list[bool] = []
     readout_equivalence = True
     edge_port_identity = True
+    snapshot_identity = True
+    selection_step_calls = 0
+    actual_step_calls = 0
     for episode in range(config.policy_states):
         index = start + episode
         snapshot = fixture.snapshots[index]
@@ -733,9 +763,13 @@ def _evaluate_policy(
         )
         current_z = _standardize(_snapshot_summary(snapshot, config), predictor)
         goal = current_z + config.goal_shift * goals[episode % 16]
+        step_ledger = _StepLedger()
         selected, true_costs, reactive_costs = _policy_actions(
             predictions, current_z, goal, predictor, episode, apparatus,
         )
+        # Selection is tensor algebra over an immutable snapshot.  The ledger
+        # is not exposed to the planner and must still be zero here.
+        selection_calls_after_planner = step_ledger.selection_calls
         predicted_z = _standardize(predictions, predictor)
         edge_predictions = predictions[list(EDGE_DERANGEMENT)]
         edge_costs = true_costs[list(EDGE_DERANGEMENT)]
@@ -744,12 +778,21 @@ def _evaluate_policy(
         for arm in ALL_ARMS:
             action_index = selected[arm]
             actual, transition_audit = _one_transition(
-                snapshot, drives[action_index], config,
+                snapshot,
+                drives[action_index],
+                config,
+                ledger=step_ledger,
+                phase="actual",
             )
             loss = float((_standardize(actual, predictor) - goal).square().mean())
             losses[arm].append(loss)
             actions[arm].append(ACTION_VALUES[action_index])
             integrity_rows.append(_transition_audit_ok(transition_audit))
+            expected_snapshot_hash = fixture.snapshot_hashes[index]
+            same_start = (
+                transition_audit["starting_snapshot_sha256"] == expected_snapshot_hash
+            )
+            snapshot_identity = bool(snapshot_identity and same_start)
             planner_predictions = edge_predictions if arm == "edge_shuffle" else predictions
             planner_costs = edge_costs if arm == "edge_shuffle" else true_costs
             displayed = display_predictions if arm == "readout_shuffle" else predictions
@@ -768,8 +811,14 @@ def _evaluate_policy(
                 "tie_rule": "lowest_action_index",
                 "actual_drive": drives[action_index].tolist(),
                 "actual_drive_sha256": _tensor_sha256(drives[action_index]),
-                "candidate_runtime_steps": 0,
-                "actual_runtime_steps": 1,
+                "candidate_runtime_steps": selection_calls_after_planner,
+                "selection_step_calls_observed": selection_calls_after_planner,
+                "actual_runtime_steps": transition_audit["step_delta"],
+                "starting_snapshot_sha256": transition_audit["starting_snapshot_sha256"],
+                "expected_starting_snapshot_sha256": expected_snapshot_hash,
+                "starting_snapshot_matches_fixture": same_start,
+                "ending_snapshot_sha256": transition_audit["ending_snapshot_sha256"],
+                "post_weight_sha256": transition_audit["weight_sha256"],
                 "loss": loss,
                 "transition_integrity": _transition_audit_ok(transition_audit),
             }
@@ -801,9 +850,13 @@ def _evaluate_policy(
                 "goal_sha256": _tensor_sha256(goal),
                 "predicted_standardized": predicted_z.tolist(),
                 "reactive_costs": reactive_costs.tolist(),
+                "selection_step_calls_observed": selection_calls_after_planner,
+                "actual_step_calls_observed": step_ledger.actual_calls,
                 "arms": arm_logs,
             }
         )
+        selection_step_calls += step_ledger.selection_calls
+        actual_step_calls += step_ledger.actual_calls
     mean_losses = {
         arm: float(torch.tensor(values, dtype=torch.float64).mean())
         for arm, values in losses.items()
@@ -824,6 +877,12 @@ def _evaluate_policy(
         left != right
         for left, right in zip(actions["edge_shuffle"], actions["intact"])
     )
+    action_trace_hashes = {
+        arm: _canonical_sha256(values) for arm, values in actions.items()
+    }
+    readout_trace_equal = (
+        action_trace_hashes["readout_shuffle"] == action_trace_hashes["intact"]
+    )
     return {
         "mean_losses": mean_losses,
         "advantages": advantages,
@@ -831,12 +890,15 @@ def _evaluate_policy(
         "minimum_advantage": min(advantages.values()),
         "edge_action_change_rate": edge_changes / config.policy_states,
         "action_traces": actions,
+        "action_trace_hashes": action_trace_hashes,
+        "readout_action_trace_hash_equal": readout_trace_equal,
         "readout_equivalence": readout_equivalence,
         "edge_port_identity": edge_port_identity,
+        "starting_snapshot_identity": snapshot_identity,
         "constant_degenerate": degenerate,
         "all_transition_integrity": all(integrity_rows),
-        "candidate_runtime_steps": 0,
-        "actual_runtime_steps": config.policy_states * len(ALL_ARMS),
+        "candidate_runtime_steps": selection_step_calls,
+        "actual_runtime_steps": actual_step_calls,
         "episode_trace_sha256": _canonical_sha256(traces),
         "episodes": traces,
     }
@@ -876,8 +938,12 @@ def _seed_integrity(
         and prediction["transition_integrity"]
         and policy["all_transition_integrity"]
         and policy["candidate_runtime_steps"] == 0
+        and policy["actual_runtime_steps"]
+        == fixture.audit["policy_states"] * len(ALL_ARMS)
         and policy["readout_equivalence"]
+        and policy["readout_action_trace_hash_equal"]
         and policy["edge_port_identity"]
+        and policy["starting_snapshot_identity"]
         and not policy["constant_degenerate"]
         and denominators_ok
     )
@@ -886,8 +952,16 @@ def _seed_integrity(
 def _c1_prediction_guided_metacontrol_unchecked(
     seed: int,
     config: C1MetacontrolConfig | None = None,
+    *,
+    _confirmation_manifest: Path | None = None,
 ) -> dict[str, Any]:
     seed = int(seed)
+    if seed in CONFIRMATION_SEEDS:
+        if _confirmation_manifest is None:
+            raise RuntimeError(
+                "official C1 confirmation seeds require a verified development manifest"
+            )
+        verify_c1_confirmation_manifest(_confirmation_manifest)
     config = replace(config or C1MetacontrolConfig(), seed=seed)
     apparatus = _global_apparatus(config)
     fixture = _build_fixture(seed, config)
@@ -1209,7 +1283,10 @@ def run_c1_stage(
             raise RuntimeError("C1 confirmation execution requires a verified development manifest")
         verify_c1_confirmation_manifest(confirmation_manifest)
         results = [
-            _c1_prediction_guided_metacontrol_unchecked(seed)
+            _c1_prediction_guided_metacontrol_unchecked(
+                seed,
+                _confirmation_manifest=confirmation_manifest,
+            )
             for seed in CONFIRMATION_SEEDS
         ]
     else:
