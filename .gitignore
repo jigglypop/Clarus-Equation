@@ -29,6 +29,8 @@ target/
 .claude/*
 !.claude/agents/
 !.claude/skills/
+!.claude/hooks/
+!.claude/CLAUDE.md
 
 # Data
 /data/
@@ -50,6 +52,7 @@ target/
 /llm_extract/
 *.json
 !.codex/hooks.json
+!.claude/settings.json
 !benchmarks/core_claims_v1.json
 !benchmarks/neural_language_synthetic_v1.json
 !benchmarks/neural_language_blind_synthetic_v1.json
