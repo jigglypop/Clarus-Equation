@@ -1,0 +1,1418 @@
+{
+  "status": "COMPLETE",
+  "seed": 20260819,
+  "draws": 20000,
+  "source": "https://doi.gin.g-node.org/10.12751/g-node.etlk5k/10.12751_g-node.etlk5k.zip",
+  "pairing_audit": [
+    {
+      "session": "DCO1_020724",
+      "animal": "DCO1",
+      "variable": "branch_amp",
+      "n_sal": 7,
+      "n_dcz": 7,
+      "n_paired_finite": 7,
+      "equal_length": true
+    },
+    {
+      "session": "DCO1_020724",
+      "animal": "DCO1",
+      "variable": "branch_freq",
+      "n_sal": 7,
+      "n_dcz": 7,
+      "n_paired_finite": 7,
+      "equal_length": true
+    },
+    {
+      "session": "DCO1_020724",
+      "animal": "DCO1",
+      "variable": "spine_amp",
+      "n_sal": 17,
+      "n_dcz": 17,
+      "n_paired_finite": 17,
+      "equal_length": true
+    },
+    {
+      "session": "DCO1_020724",
+      "animal": "DCO1",
+      "variable": "spine_freq",
+      "n_sal": 17,
+      "n_dcz": 17,
+      "n_paired_finite": 17,
+      "equal_length": true
+    },
+    {
+      "session": "DCO1_050724",
+      "animal": "DCO1",
+      "variable": "branch_amp",
+      "n_sal": 4,
+      "n_dcz": 4,
+      "n_paired_finite": 4,
+      "equal_length": true
+    },
+    {
+      "session": "DCO1_050724",
+      "animal": "DCO1",
+      "variable": "branch_freq",
+      "n_sal": 4,
+      "n_dcz": 4,
+      "n_paired_finite": 4,
+      "equal_length": true
+    },
+    {
+      "session": "DCO1_050724",
+      "animal": "DCO1",
+      "variable": "spine_amp",
+      "n_sal": 7,
+      "n_dcz": 7,
+      "n_paired_finite": 7,
+      "equal_length": true
+    },
+    {
+      "session": "DCO1_050724",
+      "animal": "DCO1",
+      "variable": "spine_freq",
+      "n_sal": 7,
+      "n_dcz": 7,
+      "n_paired_finite": 7,
+      "equal_length": true
+    },
+    {
+      "session": "DCO1_090724",
+      "animal": "DCO1",
+      "variable": "branch_amp",
+      "n_sal": 2,
+      "n_dcz": 2,
+      "n_paired_finite": 2,
+      "equal_length": true
+    },
+    {
+      "session": "DCO1_090724",
+      "animal": "DCO1",
+      "variable": "branch_freq",
+      "n_sal": 2,
+      "n_dcz": 2,
+      "n_paired_finite": 2,
+      "equal_length": true
+    },
+    {
+      "session": "DCO1_090724",
+      "animal": "DCO1",
+      "variable": "spine_amp",
+      "n_sal": 4,
+      "n_dcz": 4,
+      "n_paired_finite": 4,
+      "equal_length": true
+    },
+    {
+      "session": "DCO1_090724",
+      "animal": "DCO1",
+      "variable": "spine_freq",
+      "n_sal": 4,
+      "n_dcz": 4,
+      "n_paired_finite": 4,
+      "equal_length": true
+    },
+    {
+      "session": "DCO1_300624",
+      "animal": "DCO1",
+      "variable": "branch_amp",
+      "n_sal": 3,
+      "n_dcz": 3,
+      "n_paired_finite": 2,
+      "equal_length": true
+    },
+    {
+      "session": "DCO1_300624",
+      "animal": "DCO1",
+      "variable": "branch_freq",
+      "n_sal": 3,
+      "n_dcz": 3,
+      "n_paired_finite": 3,
+      "equal_length": true
+    },
+    {
+      "session": "DCO1_300624",
+      "animal": "DCO1",
+      "variable": "spine_amp",
+      "n_sal": 7,
+      "n_dcz": 7,
+      "n_paired_finite": 7,
+      "equal_length": true
+    },
+    {
+      "session": "DCO1_300624",
+      "animal": "DCO1",
+      "variable": "spine_freq",
+      "n_sal": 7,
+      "n_dcz": 7,
+      "n_paired_finite": 7,
+      "equal_length": true
+    },
+    {
+      "session": "DCO2_011124",
+      "animal": "DCO2",
+      "variable": "branch_amp",
+      "n_sal": 6,
+      "n_dcz": 6,
+      "n_paired_finite": 6,
+      "equal_length": true
+    },
+    {
+      "session": "DCO2_011124",
+      "animal": "DCO2",
+      "variable": "branch_freq",
+      "n_sal": 6,
+      "n_dcz": 6,
+      "n_paired_finite": 6,
+      "equal_length": true
+    },
+    {
+      "session": "DCO2_011124",
+      "animal": "DCO2",
+      "variable": "spine_amp",
+      "n_sal": 8,
+      "n_dcz": 8,
+      "n_paired_finite": 8,
+      "equal_length": true
+    },
+    {
+      "session": "DCO2_011124",
+      "animal": "DCO2",
+      "variable": "spine_freq",
+      "n_sal": 8,
+      "n_dcz": 8,
+      "n_paired_finite": 8,
+      "equal_length": true
+    },
+    {
+      "session": "DCO2_021124",
+      "animal": "DCO2",
+      "variable": "branch_amp",
+      "n_sal": 5,
+      "n_dcz": 5,
+      "n_paired_finite": 5,
+      "equal_length": true
+    },
+    {
+      "session": "DCO2_021124",
+      "animal": "DCO2",
+      "variable": "branch_freq",
+      "n_sal": 5,
+      "n_dcz": 5,
+      "n_paired_finite": 5,
+      "equal_length": true
+    },
+    {
+      "session": "DCO2_021124",
+      "animal": "DCO2",
+      "variable": "spine_amp",
+      "n_sal": 7,
+      "n_dcz": 7,
+      "n_paired_finite": 7,
+      "equal_length": true
+    },
+    {
+      "session": "DCO2_021124",
+      "animal": "DCO2",
+      "variable": "spine_freq",
+      "n_sal": 7,
+      "n_dcz": 7,
+      "n_paired_finite": 7,
+      "equal_length": true
+    },
+    {
+      "session": "DCO2_031124",
+      "animal": "DCO2",
+      "variable": "branch_amp",
+      "n_sal": 2,
+      "n_dcz": 2,
+      "n_paired_finite": 1,
+      "equal_length": true
+    },
+    {
+      "session": "DCO2_031124",
+      "animal": "DCO2",
+      "variable": "branch_freq",
+      "n_sal": 2,
+      "n_dcz": 2,
+      "n_paired_finite": 2,
+      "equal_length": true
+    },
+    {
+      "session": "DCO2_031124",
+      "animal": "DCO2",
+      "variable": "spine_amp",
+      "n_sal": 9,
+      "n_dcz": 9,
+      "n_paired_finite": 9,
+      "equal_length": true
+    },
+    {
+      "session": "DCO2_031124",
+      "animal": "DCO2",
+      "variable": "spine_freq",
+      "n_sal": 9,
+      "n_dcz": 9,
+      "n_paired_finite": 9,
+      "equal_length": true
+    },
+    {
+      "session": "DCO2_041124",
+      "animal": "DCO2",
+      "variable": "branch_amp",
+      "n_sal": 3,
+      "n_dcz": 3,
+      "n_paired_finite": 3,
+      "equal_length": true
+    },
+    {
+      "session": "DCO2_041124",
+      "animal": "DCO2",
+      "variable": "branch_freq",
+      "n_sal": 3,
+      "n_dcz": 3,
+      "n_paired_finite": 3,
+      "equal_length": true
+    },
+    {
+      "session": "DCO2_041124",
+      "animal": "DCO2",
+      "variable": "spine_amp",
+      "n_sal": 6,
+      "n_dcz": 6,
+      "n_paired_finite": 6,
+      "equal_length": true
+    },
+    {
+      "session": "DCO2_041124",
+      "animal": "DCO2",
+      "variable": "spine_freq",
+      "n_sal": 6,
+      "n_dcz": 6,
+      "n_paired_finite": 6,
+      "equal_length": true
+    },
+    {
+      "session": "DCO2_311024",
+      "animal": "DCO2",
+      "variable": "branch_amp",
+      "n_sal": 5,
+      "n_dcz": 5,
+      "n_paired_finite": 4,
+      "equal_length": true
+    },
+    {
+      "session": "DCO2_311024",
+      "animal": "DCO2",
+      "variable": "branch_freq",
+      "n_sal": 5,
+      "n_dcz": 5,
+      "n_paired_finite": 5,
+      "equal_length": true
+    },
+    {
+      "session": "DCO2_311024",
+      "animal": "DCO2",
+      "variable": "spine_amp",
+      "n_sal": 10,
+      "n_dcz": 10,
+      "n_paired_finite": 10,
+      "equal_length": true
+    },
+    {
+      "session": "DCO2_311024",
+      "animal": "DCO2",
+      "variable": "spine_freq",
+      "n_sal": 10,
+      "n_dcz": 10,
+      "n_paired_finite": 10,
+      "equal_length": true
+    },
+    {
+      "session": "DCO4_011124",
+      "animal": "DCO4",
+      "variable": "branch_amp",
+      "n_sal": 2,
+      "n_dcz": 2,
+      "n_paired_finite": 2,
+      "equal_length": true
+    },
+    {
+      "session": "DCO4_011124",
+      "animal": "DCO4",
+      "variable": "branch_freq",
+      "n_sal": 2,
+      "n_dcz": 2,
+      "n_paired_finite": 2,
+      "equal_length": true
+    },
+    {
+      "session": "DCO4_011124",
+      "animal": "DCO4",
+      "variable": "spine_amp",
+      "n_sal": 7,
+      "n_dcz": 7,
+      "n_paired_finite": 7,
+      "equal_length": true
+    },
+    {
+      "session": "DCO4_011124",
+      "animal": "DCO4",
+      "variable": "spine_freq",
+      "n_sal": 7,
+      "n_dcz": 7,
+      "n_paired_finite": 7,
+      "equal_length": true
+    },
+    {
+      "session": "DCO4_021124",
+      "animal": "DCO4",
+      "variable": "branch_amp",
+      "n_sal": 2,
+      "n_dcz": 2,
+      "n_paired_finite": 2,
+      "equal_length": true
+    },
+    {
+      "session": "DCO4_021124",
+      "animal": "DCO4",
+      "variable": "branch_freq",
+      "n_sal": 2,
+      "n_dcz": 2,
+      "n_paired_finite": 2,
+      "equal_length": true
+    },
+    {
+      "session": "DCO4_021124",
+      "animal": "DCO4",
+      "variable": "spine_amp",
+      "n_sal": 9,
+      "n_dcz": 9,
+      "n_paired_finite": 8,
+      "equal_length": true
+    },
+    {
+      "session": "DCO4_021124",
+      "animal": "DCO4",
+      "variable": "spine_freq",
+      "n_sal": 9,
+      "n_dcz": 9,
+      "n_paired_finite": 9,
+      "equal_length": true
+    }
+  ],
+  "variables": {
+    "branch_amp": {
+      "n_pairs": 38,
+      "n_sessions": 11,
+      "animals": [
+        "DCO1",
+        "DCO2",
+        "DCO4"
+      ],
+      "sal_mean": 4.9541100560904985,
+      "dcz_mean": 1.2467493706165393,
+      "paired_median_difference_dcz_minus_sal": -3.3439454298894766,
+      "animal_mean_log_ratios": {
+        "DCO1": -1.7431989346348757,
+        "DCO2": -1.3922954033680313,
+        "DCO4": -1.2953685136942121
+      },
+      "animal_session_log_ratios": {
+        "DCO1": [
+          {
+            "session": "DCO1_020724",
+            "n": 7,
+            "mean_log_ratio": -1.4294370588974978
+          },
+          {
+            "session": "DCO1_050724",
+            "n": 4,
+            "mean_log_ratio": -2.041764168281111
+          },
+          {
+            "session": "DCO1_090724",
+            "n": 2,
+            "mean_log_ratio": -2.183280096626442
+          },
+          {
+            "session": "DCO1_300624",
+            "n": 2,
+            "mean_log_ratio": -1.8041538704316613
+          }
+        ],
+        "DCO2": [
+          {
+            "session": "DCO2_011124",
+            "n": 6,
+            "mean_log_ratio": -1.1451468573698096
+          },
+          {
+            "session": "DCO2_021124",
+            "n": 5,
+            "mean_log_ratio": -1.2553771816402726
+          },
+          {
+            "session": "DCO2_031124",
+            "n": 1,
+            "mean_log_ratio": -2.0546034108271165
+          },
+          {
+            "session": "DCO2_041124",
+            "n": 3,
+            "mean_log_ratio": -1.7993016797361527
+          },
+          {
+            "session": "DCO2_311024",
+            "n": 4,
+            "mean_log_ratio": -1.463334290384199
+          }
+        ],
+        "DCO4": [
+          {
+            "session": "DCO4_011124",
+            "n": 2,
+            "mean_log_ratio": -1.0487365392680084
+          },
+          {
+            "session": "DCO4_021124",
+            "n": 2,
+            "mean_log_ratio": -1.542000488120416
+          }
+        ]
+      },
+      "exact_one_sided_animal_sign_p": 0.125,
+      "hierarchical_bootstrap": {
+        "mean": -1.5698501796594577,
+        "median": -1.5716462080851556,
+        "q025": -1.9448465088902078,
+        "q975": -1.1804247246725814,
+        "p_nonnegative": 4.999750012499375e-05
+      },
+      "baseline_dependence": {
+        "spearman_baseline_vs_log_ratio": -0.47258999890578834,
+        "two_sided_within_animal_shuffle_p": 0.21563921803909805
+      },
+      "loao_model_comparison": {
+        "animals": [
+          "DCO1",
+          "DCO2",
+          "DCO4"
+        ],
+        "folds": [
+          {
+            "held_animal": "DCO1",
+            "n_train": 23,
+            "n_test": 15,
+            "models": [
+              {
+                "name": "gain",
+                "params": [
+                  0.2512476867685747
+                ],
+                "test": {
+                  "rmse": 0.7971240610084177,
+                  "nrmse_sd": 1.0328324697381037,
+                  "mae": 0.6465524931155162
+                }
+              },
+              {
+                "name": "threshold",
+                "params": [
+                  0.25124768674820425,
+                  2.521491630403931e-18
+                ],
+                "success": true,
+                "test": {
+                  "rmse": 0.7971240609768702,
+                  "nrmse_sd": 1.0328324696972275,
+                  "mae": 0.6465524930823234
+                }
+              },
+              {
+                "name": "soft_threshold",
+                "params": [
+                  0.251249813298615,
+                  2.1892937541340956e-18,
+                  0.4511674220059398
+                ],
+                "success": true,
+                "test": {
+                  "rmse": 0.7971299692122122,
+                  "nrmse_sd": 1.032840124989043,
+                  "mae": 0.6465634295466433
+                }
+              }
+            ]
+          },
+          {
+            "held_animal": "DCO2",
+            "n_train": 19,
+            "n_test": 19,
+            "models": [
+              {
+                "name": "gain",
+                "params": [
+                  0.21977220547314993
+                ],
+                "test": {
+                  "rmse": 0.8812692131049669,
+                  "nrmse_sd": 1.2117444175305283,
+                  "mae": 0.752715794930143
+                }
+              },
+              {
+                "name": "threshold",
+                "params": [
+                  0.2197722055205362,
+                  1.0637677092627115e-13
+                ],
+                "success": true,
+                "test": {
+                  "rmse": 0.881269213068048,
+                  "nrmse_sd": 1.211744417479765,
+                  "mae": 0.7527157949278592
+                }
+              },
+              {
+                "name": "soft_threshold",
+                "params": [
+                  0.21976979038716946,
+                  9.871780429674582e-14,
+                  0.4881048738441418
+                ],
+                "success": true,
+                "test": {
+                  "rmse": 0.8811421227941665,
+                  "nrmse_sd": 1.211569668461408,
+                  "mae": 0.7525558097958376
+                }
+              }
+            ]
+          },
+          {
+            "held_animal": "DCO4",
+            "n_train": 34,
+            "n_test": 4,
+            "models": [
+              {
+                "name": "gain",
+                "params": [
+                  0.2281173336905676
+                ],
+                "test": {
+                  "rmse": 0.6885772119625077,
+                  "nrmse_sd": 1.4283467508949905,
+                  "mae": 0.6673829701711991
+                }
+              },
+              {
+                "name": "threshold",
+                "params": [
+                  0.22811733371254378,
+                  5.741481885102429e-17
+                ],
+                "success": true,
+                "test": {
+                  "rmse": 0.6885772119251752,
+                  "nrmse_sd": 1.4283467508175502,
+                  "mae": 0.6673829701292847
+                }
+              },
+              {
+                "name": "soft_threshold",
+                "params": [
+                  0.22811914988723575,
+                  5.232527001339473e-17,
+                  0.4663177348502213
+                ],
+                "success": true,
+                "test": {
+                  "rmse": 0.6885669727025338,
+                  "nrmse_sd": 1.4283255111364548,
+                  "mae": 0.6673723981886658
+                }
+              }
+            ]
+          }
+        ],
+        "animal_mean_metrics": {
+          "gain": {
+            "rmse": 0.7889901620252974,
+            "nrmse_sd": 1.2243078793878743,
+            "mae": 0.6888837527389526
+          },
+          "threshold": {
+            "rmse": 0.7889901619900311,
+            "nrmse_sd": 1.2243078793315143,
+            "mae": 0.6888837527131558
+          },
+          "soft_threshold": {
+            "rmse": 0.7889463549029708,
+            "nrmse_sd": 1.2242451015289688,
+            "mae": 0.6888305458437155
+          }
+        }
+      }
+    },
+    "branch_freq": {
+      "n_pairs": 41,
+      "n_sessions": 11,
+      "animals": [
+        "DCO1",
+        "DCO2",
+        "DCO4"
+      ],
+      "sal_mean": 0.39053132183410383,
+      "dcz_mean": 0.1467226124142475,
+      "paired_median_difference_dcz_minus_sal": -0.25992063492063494,
+      "animal_mean_log_ratios": {
+        "DCO1": -2.2634543957591813,
+        "DCO2": -2.2226352902320214,
+        "DCO4": -1.361141235724635
+      },
+      "animal_session_log_ratios": {
+        "DCO1": [
+          {
+            "session": "DCO1_020724",
+            "n": 7,
+            "mean_log_ratio": -1.605678673855414
+          },
+          {
+            "session": "DCO1_050724",
+            "n": 4,
+            "mean_log_ratio": -1.7861178975003469
+          },
+          {
+            "session": "DCO1_090724",
+            "n": 2,
+            "mean_log_ratio": -1.7528627354638002
+          },
+          {
+            "session": "DCO1_300624",
+            "n": 3,
+            "mean_log_ratio": -4.775107518076671
+          }
+        ],
+        "DCO2": [
+          {
+            "session": "DCO2_011124",
+            "n": 6,
+            "mean_log_ratio": -1.052103712446409
+          },
+          {
+            "session": "DCO2_021124",
+            "n": 5,
+            "mean_log_ratio": -0.20399036258131123
+          },
+          {
+            "session": "DCO2_031124",
+            "n": 2,
+            "mean_log_ratio": -7.213916571245249
+          },
+          {
+            "session": "DCO2_041124",
+            "n": 3,
+            "mean_log_ratio": -1.841270755141423
+          },
+          {
+            "session": "DCO2_311024",
+            "n": 5,
+            "mean_log_ratio": -3.8782243198745343
+          }
+        ],
+        "DCO4": [
+          {
+            "session": "DCO4_011124",
+            "n": 2,
+            "mean_log_ratio": -1.3672035249925132
+          },
+          {
+            "session": "DCO4_021124",
+            "n": 2,
+            "mean_log_ratio": -1.3550789464567572
+          }
+        ]
+      },
+      "exact_one_sided_animal_sign_p": 0.125,
+      "hierarchical_bootstrap": {
+        "mean": -2.2589298935880224,
+        "median": -2.151034748535454,
+        "q025": -3.9884047212502636,
+        "q975": -1.1978969306941738,
+        "p_nonnegative": 4.999750012499375e-05
+      },
+      "baseline_dependence": {
+        "spearman_baseline_vs_log_ratio": -0.24856247110220528,
+        "two_sided_within_animal_shuffle_p": 0.7427128643567822
+      },
+      "loao_model_comparison": {
+        "animals": [
+          "DCO1",
+          "DCO2",
+          "DCO4"
+        ],
+        "folds": [
+          {
+            "held_animal": "DCO1",
+            "n_train": 25,
+            "n_test": 16,
+            "models": [
+              {
+                "name": "gain",
+                "params": [
+                  0.344406137902443
+                ],
+                "test": {
+                  "rmse": 0.1067640513751055,
+                  "nrmse_sd": 1.2180545623716135,
+                  "mae": 0.08874489097991592
+                }
+              },
+              {
+                "name": "threshold",
+                "params": [
+                  0.3444061375077897,
+                  1.2490311604324409e-14
+                ],
+                "success": true,
+                "test": {
+                  "rmse": 0.10676405129317995,
+                  "nrmse_sd": 1.2180545614369376,
+                  "mae": 0.08874489091539552
+                }
+              },
+              {
+                "name": "soft_threshold",
+                "params": [
+                  0.34477519188686395,
+                  4.297366497934571e-14,
+                  0.038181818181818185
+                ],
+                "success": true,
+                "test": {
+                  "rmse": 0.10686759282916383,
+                  "nrmse_sd": 1.2192358508192318,
+                  "mae": 0.08890206680015342
+                }
+              }
+            ]
+          },
+          {
+            "held_animal": "DCO2",
+            "n_train": 20,
+            "n_test": 21,
+            "models": [
+              {
+                "name": "gain",
+                "params": [
+                  0.233044333424819
+                ],
+                "test": {
+                  "rmse": 0.23448533087102913,
+                  "nrmse_sd": 1.1695677993005562,
+                  "mae": 0.14667925216504307
+                }
+              },
+              {
+                "name": "threshold",
+                "params": [
+                  0.23304433349659903,
+                  4.277650247145163e-19
+                ],
+                "success": true,
+                "test": {
+                  "rmse": 0.23448533086431092,
+                  "nrmse_sd": 1.169567799267047,
+                  "mae": 0.14667925216101707
+                }
+              },
+              {
+                "name": "soft_threshold",
+                "params": [
+                  0.23297448561956588,
+                  1.9952889773448744e-19,
+                  0.041653766769865846
+                ],
+                "success": true,
+                "test": {
+                  "rmse": 0.23437701669001,
+                  "nrmse_sd": 1.1690275489665287,
+                  "mae": 0.14663862336759131
+                }
+              }
+            ]
+          },
+          {
+            "held_animal": "DCO4",
+            "n_train": 37,
+            "n_test": 4,
+            "models": [
+              {
+                "name": "gain",
+                "params": [
+                  0.30012522673038294
+                ],
+                "test": {
+                  "rmse": 0.059640602872235056,
+                  "nrmse_sd": 1.3447123550805107,
+                  "mae": 0.050541738026625205
+                }
+              },
+              {
+                "name": "threshold",
+                "params": [
+                  0.3001252262875985,
+                  1.0092343810341725e-14
+                ],
+                "success": true,
+                "test": {
+                  "rmse": 0.059640602815916495,
+                  "nrmse_sd": 1.3447123538107002,
+                  "mae": 0.05054173799676638
+                }
+              },
+              {
+                "name": "soft_threshold",
+                "params": [
+                  0.30032955473885065,
+                  2.5835351032089124e-14,
+                  0.038181818181818185
+                ],
+                "success": true,
+                "test": {
+                  "rmse": 0.05966628663407114,
+                  "nrmse_sd": 1.3452914449991678,
+                  "mae": 0.05055454140331492
+                }
+              }
+            ]
+          }
+        ],
+        "animal_mean_metrics": {
+          "gain": {
+            "rmse": 0.13362999503945658,
+            "nrmse_sd": 1.2441115722508935,
+            "mae": 0.09532196039052805
+          },
+          "threshold": {
+            "rmse": 0.1336299949911358,
+            "nrmse_sd": 1.244111571504895,
+            "mae": 0.09532196035772632
+          },
+          "soft_threshold": {
+            "rmse": 0.13363696538441497,
+            "nrmse_sd": 1.244518281594976,
+            "mae": 0.09536507719035321
+          }
+        }
+      }
+    },
+    "spine_amp": {
+      "n_pairs": 90,
+      "n_sessions": 11,
+      "animals": [
+        "DCO1",
+        "DCO2",
+        "DCO4"
+      ],
+      "sal_mean": 2.8929895780777235,
+      "dcz_mean": 2.06480115206874,
+      "paired_median_difference_dcz_minus_sal": -0.7448065586997379,
+      "animal_mean_log_ratios": {
+        "DCO1": -0.4760385896140627,
+        "DCO2": -0.35527417225277363,
+        "DCO4": -0.14799273233879304
+      },
+      "animal_session_log_ratios": {
+        "DCO1": [
+          {
+            "session": "DCO1_020724",
+            "n": 17,
+            "mean_log_ratio": -0.46784507751451554
+          },
+          {
+            "session": "DCO1_050724",
+            "n": 7,
+            "mean_log_ratio": -0.315005892666549
+          },
+          {
+            "session": "DCO1_090724",
+            "n": 4,
+            "mean_log_ratio": -0.7604868535512566
+          },
+          {
+            "session": "DCO1_300624",
+            "n": 7,
+            "mean_log_ratio": -0.4944279508392229
+          }
+        ],
+        "DCO2": [
+          {
+            "session": "DCO2_011124",
+            "n": 8,
+            "mean_log_ratio": -0.17431181305273358
+          },
+          {
+            "session": "DCO2_021124",
+            "n": 7,
+            "mean_log_ratio": -0.2958375225160398
+          },
+          {
+            "session": "DCO2_031124",
+            "n": 9,
+            "mean_log_ratio": -0.4265148489441773
+          },
+          {
+            "session": "DCO2_041124",
+            "n": 6,
+            "mean_log_ratio": -0.4741776313883214
+          },
+          {
+            "session": "DCO2_311024",
+            "n": 10,
+            "mean_log_ratio": -0.4061910299249275
+          }
+        ],
+        "DCO4": [
+          {
+            "session": "DCO4_011124",
+            "n": 7,
+            "mean_log_ratio": -0.010067106146346745
+          },
+          {
+            "session": "DCO4_021124",
+            "n": 8,
+            "mean_log_ratio": -0.26867765525718357
+          }
+        ]
+      },
+      "exact_one_sided_animal_sign_p": 0.125,
+      "hierarchical_bootstrap": {
+        "mean": -0.3337180528226736,
+        "median": -0.3403660314030107,
+        "q025": -0.5295272211794095,
+        "q975": -0.10380020698480823,
+        "p_nonnegative": 0.0031498425078746064
+      },
+      "baseline_dependence": {
+        "spearman_baseline_vs_log_ratio": -0.2585751327324361,
+        "two_sided_within_animal_shuffle_p": 1.0
+      },
+      "loao_model_comparison": {
+        "animals": [
+          "DCO1",
+          "DCO2",
+          "DCO4"
+        ],
+        "folds": [
+          {
+            "held_animal": "DCO1",
+            "n_train": 55,
+            "n_test": 35,
+            "models": [
+              {
+                "name": "gain",
+                "params": [
+                  0.7338497746406164
+                ],
+                "test": {
+                  "rmse": 0.8664820173715345,
+                  "nrmse_sd": 1.2860404253270472,
+                  "mae": 0.5870263851010306
+                }
+              },
+              {
+                "name": "threshold",
+                "params": [
+                  0.7338497747308894,
+                  1.2937222498056686e-13
+                ],
+                "success": true,
+                "test": {
+                  "rmse": 0.8664820175319787,
+                  "nrmse_sd": 1.28604042556518,
+                  "mae": 0.5870263851930341
+                }
+              },
+              {
+                "name": "soft_threshold",
+                "params": [
+                  0.7338422639852571,
+                  1.2935306133659127e-13,
+                  0.2809868574416292
+                ],
+                "success": true,
+                "test": {
+                  "rmse": 0.8664363040210279,
+                  "nrmse_sd": 1.2859725771599186,
+                  "mae": 0.5869472264056714
+                }
+              }
+            ]
+          },
+          {
+            "held_animal": "DCO2",
+            "n_train": 50,
+            "n_test": 40,
+            "models": [
+              {
+                "name": "gain",
+                "params": [
+                  0.6550235436901005
+                ],
+                "test": {
+                  "rmse": 0.6881973792615931,
+                  "nrmse_sd": 0.8941673488601581,
+                  "mae": 0.53507420683781
+                }
+              },
+              {
+                "name": "threshold",
+                "params": [
+                  0.655023543263287,
+                  7.245026663147142e-17
+                ],
+                "success": true,
+                "test": {
+                  "rmse": 0.6881973794688139,
+                  "nrmse_sd": 0.8941673491293979,
+                  "mae": 0.5350742070184384
+                }
+              },
+              {
+                "name": "soft_threshold",
+                "params": [
+                  0.6550105850811192,
+                  6.83465298051445e-17,
+                  0.25946125334768744
+                ],
+                "success": true,
+                "test": {
+                  "rmse": 0.6881929313627881,
+                  "nrmse_sd": 0.8941615697537532,
+                  "mae": 0.535077055563533
+                }
+              }
+            ]
+          },
+          {
+            "held_animal": "DCO4",
+            "n_train": 75,
+            "n_test": 15,
+            "models": [
+              {
+                "name": "gain",
+                "params": [
+                  0.6331239609052591
+                ],
+                "test": {
+                  "rmse": 1.566550291271478,
+                  "nrmse_sd": 1.239694764748814,
+                  "mae": 0.9269791301823219
+                }
+              },
+              {
+                "name": "threshold",
+                "params": [
+                  0.6331239607401303,
+                  4.04428131790464e-15
+                ],
+                "success": true,
+                "test": {
+                  "rmse": 1.566550291496745,
+                  "nrmse_sd": 1.23969476492708,
+                  "mae": 0.9269791304723325
+                }
+              },
+              {
+                "name": "soft_threshold",
+                "params": [
+                  0.6331140476323946,
+                  3.847150097458072e-15,
+                  0.25909023013754195
+                ],
+                "success": true,
+                "test": {
+                  "rmse": 1.5665356689577494,
+                  "nrmse_sd": 1.2396831933323846,
+                  "mae": 0.9269790792464238
+                }
+              }
+            ]
+          }
+        ],
+        "animal_mean_metrics": {
+          "gain": {
+            "rmse": 1.040409895968202,
+            "nrmse_sd": 1.139967512978673,
+            "mae": 0.6830265740403876
+          },
+          "threshold": {
+            "rmse": 1.040409896165846,
+            "nrmse_sd": 1.1399675132072193,
+            "mae": 0.683026574227935
+          },
+          "soft_threshold": {
+            "rmse": 1.0403883014471884,
+            "nrmse_sd": 1.139939113415352,
+            "mae": 0.6830011204052094
+          }
+        }
+      }
+    },
+    "spine_freq": {
+      "n_pairs": 91,
+      "n_sessions": 11,
+      "animals": [
+        "DCO1",
+        "DCO2",
+        "DCO4"
+      ],
+      "sal_mean": 0.4050056539399514,
+      "dcz_mean": 0.28802579468936174,
+      "paired_median_difference_dcz_minus_sal": -0.1046594982078853,
+      "animal_mean_log_ratios": {
+        "DCO1": -0.31132247704771837,
+        "DCO2": -0.4048922735410458,
+        "DCO4": -1.3332939650387239
+      },
+      "animal_session_log_ratios": {
+        "DCO1": [
+          {
+            "session": "DCO1_020724",
+            "n": 17,
+            "mean_log_ratio": -0.5086151308004259
+          },
+          {
+            "session": "DCO1_050724",
+            "n": 7,
+            "mean_log_ratio": -0.6475124745420778
+          },
+          {
+            "session": "DCO1_090724",
+            "n": 4,
+            "mean_log_ratio": 0.16894296292760624
+          },
+          {
+            "session": "DCO1_300624",
+            "n": 7,
+            "mean_log_ratio": 0.22956942814588763
+          }
+        ],
+        "DCO2": [
+          {
+            "session": "DCO2_011124",
+            "n": 8,
+            "mean_log_ratio": -0.5714252732862437
+          },
+          {
+            "session": "DCO2_021124",
+            "n": 7,
+            "mean_log_ratio": -0.1530953450745612
+          },
+          {
+            "session": "DCO2_031124",
+            "n": 9,
+            "mean_log_ratio": -0.21494358214420498
+          },
+          {
+            "session": "DCO2_041124",
+            "n": 6,
+            "mean_log_ratio": -0.5958008122731454
+          },
+          {
+            "session": "DCO2_311024",
+            "n": 10,
+            "mean_log_ratio": -0.5043324226893235
+          }
+        ],
+        "DCO4": [
+          {
+            "session": "DCO4_011124",
+            "n": 7,
+            "mean_log_ratio": -0.6187971254940055
+          },
+          {
+            "session": "DCO4_021124",
+            "n": 9,
+            "mean_log_ratio": -1.8890137291290605
+          }
+        ]
+      },
+      "exact_one_sided_animal_sign_p": 0.125,
+      "hierarchical_bootstrap": {
+        "mean": -0.6248150302625146,
+        "median": -0.5121214618166187,
+        "q025": -1.6279363569277459,
+        "q975": -0.10939300358277379,
+        "p_nonnegative": 0.004249787510624469
+      },
+      "baseline_dependence": {
+        "spearman_baseline_vs_log_ratio": -0.30805436359244276,
+        "two_sided_within_animal_shuffle_p": 1.0
+      },
+      "loao_model_comparison": {
+        "animals": [
+          "DCO1",
+          "DCO2",
+          "DCO4"
+        ],
+        "folds": [
+          {
+            "held_animal": "DCO1",
+            "n_train": 56,
+            "n_test": 35,
+            "models": [
+              {
+                "name": "gain",
+                "params": [
+                  0.6296353757952576
+                ],
+                "test": {
+                  "rmse": 0.190956926792238,
+                  "nrmse_sd": 1.1641336424507576,
+                  "mae": 0.1358736661187158
+                }
+              },
+              {
+                "name": "threshold",
+                "params": [
+                  0.6296353758834725,
+                  1.0050591983901216e-14
+                ],
+                "success": true,
+                "test": {
+                  "rmse": 0.19095692678787923,
+                  "nrmse_sd": 1.1641336424241853,
+                  "mae": 0.1358736661166066
+                }
+              },
+              {
+                "name": "soft_threshold",
+                "params": [
+                  0.6295788413818176,
+                  9.561663668027858e-15,
+                  0.03875000000000001
+                ],
+                "success": true,
+                "test": {
+                  "rmse": 0.19091308486907482,
+                  "nrmse_sd": 1.1638663682619583,
+                  "mae": 0.13594035038203847
+                }
+              }
+            ]
+          },
+          {
+            "held_animal": "DCO2",
+            "n_train": 51,
+            "n_test": 40,
+            "models": [
+              {
+                "name": "gain",
+                "params": [
+                  0.6569888243170531
+                ],
+                "test": {
+                  "rmse": 0.15008475727862186,
+                  "nrmse_sd": 0.8824628724058917,
+                  "mae": 0.11648217812177046
+                }
+              },
+              {
+                "name": "threshold",
+                "params": [
+                  0.65698882442734,
+                  8.925591130874484e-17
+                ],
+                "success": true,
+                "test": {
+                  "rmse": 0.15008475728206394,
+                  "nrmse_sd": 0.8824628724261304,
+                  "mae": 0.11648217812800406
+                }
+              },
+              {
+                "name": "soft_threshold",
+                "params": [
+                  0.6569341603525337,
+                  7.638717764600924e-17,
+                  0.044444444444444446
+                ],
+                "success": true,
+                "test": {
+                  "rmse": 0.1499106996125431,
+                  "nrmse_sd": 0.8814394545001881,
+                  "mae": 0.1162150332195295
+                }
+              }
+            ]
+          },
+          {
+            "held_animal": "DCO4",
+            "n_train": 75,
+            "n_test": 16,
+            "models": [
+              {
+                "name": "gain",
+                "params": [
+                  0.651877999129704
+                ],
+                "test": {
+                  "rmse": 0.17887424157700282,
+                  "nrmse_sd": 0.7976222974570093,
+                  "mae": 0.1501269263924197
+                }
+              },
+              {
+                "name": "threshold",
+                "params": [
+                  0.6518779989126346,
+                  2.9867036226846313e-18
+                ],
+                "success": true,
+                "test": {
+                  "rmse": 0.17887424157012913,
+                  "nrmse_sd": 0.7976222974263586,
+                  "mae": 0.15012692637339337
+                }
+              },
+              {
+                "name": "soft_threshold",
+                "params": [
+                  0.6518272650971029,
+                  2.4278293476435052e-18,
+                  0.041025641025641026
+                ],
+                "success": true,
+                "test": {
+                  "rmse": 0.17874604839447616,
+                  "nrmse_sd": 0.7970506682505691,
+                  "mae": 0.1500938600571448
+                }
+              }
+            ]
+          }
+        ],
+        "animal_mean_metrics": {
+          "gain": {
+            "rmse": 0.17330530854928758,
+            "nrmse_sd": 0.9480729374378862,
+            "mae": 0.13416092354430198
+          },
+          "threshold": {
+            "rmse": 0.17330530854669077,
+            "nrmse_sd": 0.9480729374255582,
+            "mae": 0.13416092353933468
+          },
+          "soft_threshold": {
+            "rmse": 0.17318994429203136,
+            "nrmse_sd": 0.9474521636709051,
+            "mae": 0.13408308121957094
+          }
+        }
+      }
+    }
+  }
+}
