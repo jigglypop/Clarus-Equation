@@ -1,9 +1,9 @@
 name: Temporary DANDI Bridge Test
 
 on:
-  pull_request:
+  push:
     branches:
-      - main
+      - tmp/neural-routing-direct-20260819
     paths:
       - '.tmp-dandi/**'
       - '.github/workflows/tmp-dandi-bridge.yml'
@@ -13,7 +13,7 @@ permissions:
   contents: write
 
 jobs:
-  list-assets:
+  bridge:
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -26,20 +26,23 @@ jobs:
       - run: python -m pip install --upgrade pip requests numpy scipy pandas pynwb
       - name: List official DANDI assets
         run: python .tmp-dandi/list_assets.py
-      - name: Probe smallest behavior and ecephys NWB
+      - name: Probe official behavior and ecephys NWB
         run: python .tmp-dandi/probe_nwb.py
       - name: Run direct bridge pilot
         run: python .tmp-dandi/analyze_bridge_pilot.py
-      - name: Run fixed multi-animal bridge validation
-        run: python .tmp-dandi/analyze_bridge_multianimal.py
+      - name: Run strict multi-animal bridge audit
+        run: python .tmp-dandi/analyze_bridge_strict.py
       - name: Commit temporary DANDI results
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -f dandi_bridge_results/assets.json dandi_bridge_results/nwb_probe.json dandi_bridge_results/bridge_pilot_results.json dandi_bridge_results/bridge_pilot_report.md dandi_bridge_results/bridge_multianimal_results.json dandi_bridge_results/bridge_multianimal_report.md
+          git pull --rebase origin tmp/neural-routing-direct-20260819
+          git add -f dandi_bridge_results/assets.json dandi_bridge_results/nwb_probe.json
+          git add -f dandi_bridge_results/bridge_pilot_results.json dandi_bridge_results/bridge_pilot_report.md
+          git add -f dandi_bridge_results/bridge_strict_results.json dandi_bridge_results/bridge_strict_report.md
           if git diff --cached --quiet; then
             echo 'No changes'
           else
-            git commit -m 'test: record temporary DANDI direct results'
+            git commit -m 'test: record temporary DANDI bridge results'
             git push origin HEAD:tmp/neural-routing-direct-20260819
           fi
