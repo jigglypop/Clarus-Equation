@@ -163,7 +163,7 @@ Exp1 first-to-last log changes in the coordinate-axis metric costs `(colour, sha
 
 ## Finite equation-family tournament
 
-The released data identify only stagewise three-factor selectivity summaries, so a finite comprehensive operational universe is frozen to matrix spectral functions, Fisher/population norms, scale-shape summaries, regularized precision, stage geometry, and standard accuracy links. Every coefficient and the candidate choice use Exp1 only. Exp2 is evaluated without coefficient refitting at the official 3, 4, 5, and 6-stage binnings.
+The released data identify only stagewise three-factor selectivity summaries, so a finite operational universe is frozen to matrix spectral functions, Fisher/population norms, scale-shape summaries, regularized precision, stage geometry, neuron-level projected-drive gates, and standard accuracy links. Every coefficient and the candidate choice use Exp1 only. Exp2 is evaluated without coefficient refitting at the official 3, 4, 5, and 6-stage binnings.
 
 For each stage,
 
@@ -178,8 +178,8 @@ $$
 \widehat A_{kj}=\ell^{-1}(\widehat z_{kj}).
 $$
 
-- Enumerated producer-link candidates: `336`
-- Distinct producers: `68`
+- Enumerated producer-link candidates: `636`
+- Distinct producers: `128`
 - Links: `identity, probit, logit, cloglog, arcsine`
 - Exp1-only scale `tau`: `0.0035268913`
 - Selection: leave-one-Exp1-stage-out accuracy RMSE; ties prefer fewer parameters.
@@ -199,6 +199,40 @@ $$
 | 4 | 0.048259 | 0.043410 | 0.816197 | 0.748252 |
 | 5 | 0.047183 | 0.040025 | 0.846420 | 0.778571 |
 | 6 | 0.048658 | 0.043033 | 0.839989 | 0.766133 |
+
+### Projected-drive threshold test
+
+The verbal `strength x alignment` factors are not separately identifiable under this projected-drive definition. For neuron row $v_{nk}$ and named factor projector $P_j=e_je_j^T$ they collapse exactly to the dimensionless projected drive
+
+$$
+s_{nk}=\frac{\lVert v_{nk}\rVert}{\sqrt{\tau}},\qquad
+a_{nkj}=\frac{\lVert P_jv_{nk}\rVert}{\lVert v_{nk}\rVert},\qquad
+d_{nkj}=s_{nk}a_{nkj}=\frac{|S_{k,nj}|}{\sqrt{\tau}}.
+$$
+
+The primary gate is applied before population aggregation:
+
+$$
+\gamma_{nkj}=\sigma[\beta(d_{nkj}-\theta)],\qquad
+R_{kj}=\left[N_k^{-1}\sum_n(d_{nkj}\gamma_{nkj})^2\right]^{1/2},
+$$
+
+$$
+h(\widehat A_{kj})=a_j+bR_{kj}.
+$$
+
+Here $\tau$ is recomputed from Exp1 training stages in every fold. The finite grid is $\beta\in\{1,2,4,8\}$ and $\theta\in\{0.25,0.5,0.75,1,1.5\}$. The no-gate row is exactly `SPD power p=1`; threshold-only removes amplitude, while the additive control gives projected RMS and mean gate activation separate coefficients.
+
+| Model | Exp1-selected specification | Link | Params | Exp1 CV RMSE | Mean Exp2 RMSE |
+|---|---|---|---:|---:|---:|
+| No gate | SPD power p=1 | logit | 4 | 0.049888 | 0.059045 |
+| Projected-drive gate | neuron projected-drive gate beta=8 theta=0.75 | logit | 4 | 0.048781 | 0.057462 |
+| Threshold only | threshold-only gate beta=8 theta=1.5 | probit | 4 | 0.050231 | 0.057914 |
+| Additive drive + threshold | projected drive plus threshold beta=8 theta=1 | probit | 5 | 0.050281 | 0.059503 |
+
+Relative to the no-gate projected drive, the Exp1-selected primary gate changes RMSE by `+0.001107` on Exp1 CV and `+0.001583` on the frozen Exp2 readout; positive values favor the gate.
+
+This is a post-discussion discovery test on released pseudopopulation rows. It tests a selectivity-to-decoder calibration surrogate, not a synaptic threshold, effective connectivity, or causal routing mechanism.
 
 ### Every producer, best Exp1-selected link
 
@@ -227,39 +261,95 @@ This table retains every nonduplicated producer family. The best link for each r
 | spectral exponential saturation beta=0.3 | logit | 4 | 0.048295 | 0.055249 | 0.053718 | 0.056110 | 0.055390 | 0.055777 |
 | SPD power p=0.5 | logit | 4 | 0.048402 | 0.054336 | 0.052905 | 0.055263 | 0.054366 | 0.054810 |
 | shifted matrix log epsilon=0.3 | logit | 4 | 0.048637 | 0.053618 | 0.052292 | 0.054517 | 0.053531 | 0.054131 |
+| neuron projected-drive gate beta=8 theta=0.75 | logit | 4 | 0.048781 | 0.057462 | 0.055626 | 0.058598 | 0.057759 | 0.057863 |
 | spectral ratio saturation alpha=10 | logit | 4 | 0.048907 | 0.056763 | 0.055354 | 0.057743 | 0.056807 | 0.057146 |
 | Fisher strict | probit | 1 | 0.048947 | 0.050711 | 0.055554 | 0.048731 | 0.049054 | 0.049504 |
 | regularized precision lambda=1 p=1 | logit | 4 | 0.049008 | 0.053308 | 0.052069 | 0.054202 | 0.053109 | 0.053853 |
 | precision resolvent lambda=1 | logit | 4 | 0.049008 | 0.053308 | 0.052069 | 0.054202 | 0.053109 | 0.053853 |
+| neuron projected-drive gate beta=8 theta=0.5 | logit | 4 | 0.049025 | 0.058020 | 0.056532 | 0.059112 | 0.058095 | 0.058339 |
+| neuron projected-drive gate beta=8 theta=1 | logit | 4 | 0.049070 | 0.056203 | 0.054277 | 0.057378 | 0.056588 | 0.056569 |
+| neuron projected-drive gate beta=4 theta=0.75 | logit | 4 | 0.049186 | 0.056964 | 0.055223 | 0.058123 | 0.057239 | 0.057272 |
+| neuron projected-drive gate beta=4 theta=0.5 | logit | 4 | 0.049189 | 0.057696 | 0.056115 | 0.058825 | 0.057844 | 0.058001 |
 | spectral exponential saturation beta=0.1 | logit | 4 | 0.049308 | 0.057747 | 0.056414 | 0.058795 | 0.057732 | 0.058048 |
 | Fisher-occupancy geometric mix alpha=0.75 | logit | 4 | 0.049405 | 0.085069 | 0.082537 | 0.089221 | 0.081492 | 0.087024 |
+| neuron projected-drive gate beta=4 theta=0.25 | logit | 4 | 0.049417 | 0.058273 | 0.056849 | 0.059402 | 0.058303 | 0.058537 |
 | shape only | logit | 4 | 0.049509 | 0.086268 | 0.083135 | 0.090479 | 0.083152 | 0.088304 |
+| neuron projected-drive gate beta=4 theta=1 | probit | 4 | 0.049517 | 0.056335 | 0.054526 | 0.057535 | 0.056770 | 0.056509 |
 | regularized precision lambda=1 p=0.5 | logit | 4 | 0.049552 | 0.055455 | 0.054334 | 0.056412 | 0.055206 | 0.055870 |
+| neuron projected-drive gate beta=8 theta=0.25 | logit | 4 | 0.049590 | 0.058638 | 0.057326 | 0.059771 | 0.058583 | 0.058872 |
 | relative information stretch | logit | 4 | 0.049696 | 0.028400 | 0.026801 | 0.030615 | 0.028663 | 0.027520 |
 | Fisher-occupancy geometric mix alpha=0.25 | logit | 4 | 0.049781 | 0.087570 | 0.083955 | 0.091831 | 0.084868 | 0.089626 |
+| neuron projected-drive gate beta=2 theta=0.25 | logit | 4 | 0.049873 | 0.057824 | 0.056369 | 0.059032 | 0.057874 | 0.058023 |
 | SPD power p=1 | logit | 4 | 0.049888 | 0.059045 | 0.057788 | 0.060207 | 0.058949 | 0.059236 |
+| neuron projected-drive gate beta=2 theta=0.5 | logit | 4 | 0.050080 | 0.057431 | 0.055932 | 0.058682 | 0.057510 | 0.057600 |
 | population L1 | logit | 4 | 0.050172 | 0.071426 | 0.092639 | 0.061495 | 0.066418 | 0.065151 |
 | shifted matrix log epsilon=1 | logit | 4 | 0.050178 | 0.057678 | 0.056666 | 0.058731 | 0.057360 | 0.057954 |
+| threshold-only gate beta=8 theta=1.5 | probit | 4 | 0.050231 | 0.057914 | 0.053970 | 0.058421 | 0.059969 | 0.059296 |
+| projected drive plus threshold beta=8 theta=1 | probit | 5 | 0.050281 | 0.059503 | 0.057751 | 0.060136 | 0.059977 | 0.060147 |
+| neuron projected-drive gate beta=2 theta=0.75 | arcsine | 4 | 0.050472 | 0.057603 | 0.056031 | 0.058946 | 0.057840 | 0.057596 |
+| neuron projected-drive gate beta=8 theta=1.5 | identity | 4 | 0.050663 | 0.056694 | 0.054937 | 0.058045 | 0.057670 | 0.056124 |
+| projected drive plus threshold beta=4 theta=1 | identity | 5 | 0.050810 | 0.060309 | 0.058495 | 0.061027 | 0.060977 | 0.060738 |
 | precision resolvent lambda=3 | logit | 4 | 0.050881 | 0.059101 | 0.058251 | 0.060221 | 0.058625 | 0.059308 |
 | spectral exponential saturation beta=3 | identity | 4 | 0.051010 | 0.046979 | 0.045302 | 0.048146 | 0.046680 | 0.047789 |
 | precision accessibility | logit | 4 | 0.051021 | 0.052359 | 0.052438 | 0.053408 | 0.051096 | 0.052494 |
+| neuron projected-drive gate beta=2 theta=1 | identity | 4 | 0.051072 | 0.058296 | 0.056664 | 0.059840 | 0.058645 | 0.058034 |
+| neuron projected-drive gate beta=1 theta=0.25 | identity | 4 | 0.051268 | 0.059455 | 0.058191 | 0.061066 | 0.059421 | 0.059143 |
+| neuron projected-drive gate beta=1 theta=0.5 | identity | 4 | 0.051605 | 0.059314 | 0.058146 | 0.060992 | 0.059181 | 0.058938 |
 | shifted matrix log epsilon=3 | logit | 4 | 0.051652 | 0.061412 | 0.060635 | 0.062693 | 0.060845 | 0.061475 |
+| neuron projected-drive gate beta=4 theta=1.5 | identity | 4 | 0.051854 | 0.057425 | 0.055914 | 0.058982 | 0.058008 | 0.056798 |
+| projected drive plus threshold beta=8 theta=0.75 | identity | 5 | 0.051863 | 0.060508 | 0.058924 | 0.061257 | 0.061006 | 0.060843 |
 | Fisher-occupancy arithmetic mix alpha=0.75 | logit | 4 | 0.051980 | 0.088244 | 0.087579 | 0.093147 | 0.083136 | 0.089115 |
+| neuron projected-drive gate beta=1 theta=0.75 | identity | 4 | 0.052013 | 0.059180 | 0.058137 | 0.060934 | 0.058919 | 0.058729 |
 | regularized precision lambda=10 p=2 | logit | 4 | 0.052051 | 0.062113 | 0.061405 | 0.063449 | 0.061448 | 0.062150 |
+| projected drive plus threshold beta=2 theta=1 | identity | 5 | 0.052140 | 0.060485 | 0.058757 | 0.061354 | 0.061055 | 0.060774 |
+| threshold-only gate beta=4 theta=1.5 | arcsine | 4 | 0.052336 | 0.058593 | 0.054479 | 0.058955 | 0.060678 | 0.060261 |
 | regularized precision lambda=10 p=1 | logit | 4 | 0.052390 | 0.062977 | 0.062277 | 0.064391 | 0.062277 | 0.062964 |
 | precision resolvent lambda=10 | logit | 4 | 0.052390 | 0.062977 | 0.062277 | 0.064391 | 0.062277 | 0.062964 |
+| projected drive plus threshold beta=4 theta=0.75 | identity | 5 | 0.052439 | 0.060566 | 0.059021 | 0.061461 | 0.060994 | 0.060787 |
+| projected drive plus threshold beta=2 theta=1.5 | identity | 5 | 0.052456 | 0.060320 | 0.058201 | 0.061084 | 0.061202 | 0.060794 |
+| neuron projected-drive gate beta=1 theta=1 | identity | 4 | 0.052489 | 0.059070 | 0.058186 | 0.060910 | 0.058648 | 0.058536 |
 | regularized precision lambda=10 p=0.5 | logit | 4 | 0.052567 | 0.063408 | 0.062709 | 0.064862 | 0.062690 | 0.063370 |
+| projected drive plus threshold beta=2 theta=0.75 | identity | 5 | 0.052655 | 0.060575 | 0.058973 | 0.061528 | 0.061027 | 0.060773 |
+| projected drive plus threshold beta=1 theta=1 | arcsine | 5 | 0.053037 | 0.059728 | 0.058215 | 0.060666 | 0.060010 | 0.060022 |
+| projected drive plus threshold beta=1 theta=0.75 | arcsine | 5 | 0.053065 | 0.059744 | 0.058266 | 0.060696 | 0.059998 | 0.060017 |
+| projected drive plus threshold beta=4 theta=1.5 | arcsine | 5 | 0.053077 | 0.058760 | 0.056455 | 0.059345 | 0.059756 | 0.059484 |
+| projected drive plus threshold beta=1 theta=0.5 | arcsine | 5 | 0.053135 | 0.059756 | 0.058308 | 0.060723 | 0.059983 | 0.060008 |
+| projected drive plus threshold beta=1 theta=1.5 | arcsine | 5 | 0.053167 | 0.059687 | 0.058098 | 0.060612 | 0.060022 | 0.060017 |
+| projected drive plus threshold beta=1 theta=0.25 | arcsine | 5 | 0.053231 | 0.059761 | 0.058339 | 0.060747 | 0.059965 | 0.059995 |
+| projected drive plus threshold beta=2 theta=0.5 | arcsine | 5 | 0.053271 | 0.059792 | 0.058429 | 0.060775 | 0.059957 | 0.060006 |
+| neuron projected-drive gate beta=2 theta=1.5 | identity | 4 | 0.053307 | 0.057889 | 0.056707 | 0.059698 | 0.057834 | 0.057318 |
 | SPD power p=2 | logit | 4 | 0.053555 | 0.068056 | 0.067065 | 0.069830 | 0.067571 | 0.067757 |
+| threshold-only gate beta=2 theta=1.5 | arcsine | 4 | 0.053568 | 0.059563 | 0.055759 | 0.060032 | 0.061163 | 0.061297 |
+| neuron projected-drive gate beta=1 theta=1.5 | identity | 4 | 0.053585 | 0.059051 | 0.058572 | 0.061082 | 0.058212 | 0.058339 |
+| projected drive plus threshold beta=2 theta=0.25 | logit | 5 | 0.053811 | 0.059281 | 0.058033 | 0.060346 | 0.059226 | 0.059520 |
+| threshold-only gate beta=1 theta=1.5 | logit | 4 | 0.054288 | 0.060418 | 0.057149 | 0.061228 | 0.061352 | 0.061942 |
+| projected drive plus threshold beta=8 theta=1.5 | logit | 5 | 0.054325 | 0.057699 | 0.055319 | 0.058282 | 0.058694 | 0.058502 |
+| projected drive plus threshold beta=4 theta=0.5 | logit | 5 | 0.054380 | 0.059291 | 0.058072 | 0.060349 | 0.059219 | 0.059524 |
 | Fisher-occupancy arithmetic mix alpha=0.25 | logit | 4 | 0.054719 | 0.089818 | 0.085207 | 0.094154 | 0.088261 | 0.091649 |
 | matrix exponential alpha=0.25 | logit | 4 | 0.054795 | 0.067632 | 0.066848 | 0.069569 | 0.066710 | 0.067399 |
+| projected drive plus threshold beta=4 theta=0.25 | logit | 5 | 0.055360 | 0.058916 | 0.057634 | 0.060114 | 0.058819 | 0.059099 |
 | population L4 | identity | 4 | 0.055448 | 0.061209 | 0.065065 | 0.062340 | 0.058649 | 0.058783 |
+| threshold-only gate beta=1 theta=1 | logit | 4 | 0.055617 | 0.061541 | 0.058176 | 0.062628 | 0.062268 | 0.063093 |
+| projected drive plus threshold beta=8 theta=0.5 | logit | 5 | 0.055895 | 0.059167 | 0.057959 | 0.060269 | 0.059068 | 0.059371 |
+| projected drive plus threshold beta=8 theta=0.25 | logit | 5 | 0.056040 | 0.058253 | 0.056810 | 0.059557 | 0.058192 | 0.058451 |
+| threshold-only gate beta=1 theta=0.75 | logit | 4 | 0.056311 | 0.062174 | 0.058756 | 0.063412 | 0.062794 | 0.063734 |
 | matrix exponential alpha=0.5 | logit | 4 | 0.056324 | 0.069899 | 0.068963 | 0.072144 | 0.068901 | 0.069589 |
+| threshold-only gate beta=2 theta=1 | logit | 4 | 0.056416 | 0.062420 | 0.058687 | 0.063702 | 0.063152 | 0.064138 |
+| threshold-only gate beta=1 theta=0.5 | logit | 4 | 0.056999 | 0.062815 | 0.059347 | 0.064204 | 0.063330 | 0.064381 |
+| threshold-only gate beta=4 theta=1 | logit | 4 | 0.057032 | 0.062906 | 0.058687 | 0.064233 | 0.063790 | 0.064914 |
 | spectral condition | logit | 4 | 0.057079 | 0.080729 | 0.081281 | 0.089177 | 0.073483 | 0.078973 |
+| threshold-only gate beta=1 theta=0.25 | logit | 4 | 0.057664 | 0.063441 | 0.059927 | 0.064972 | 0.063856 | 0.065009 |
+| threshold-only gate beta=2 theta=0.75 | logit | 4 | 0.058159 | 0.064158 | 0.060358 | 0.065839 | 0.064557 | 0.065878 |
+| threshold-only gate beta=8 theta=1 | identity | 4 | 0.058331 | 0.062919 | 0.057872 | 0.063892 | 0.064564 | 0.065347 |
 | global intercept | logit | 1 | 0.058509 | 0.087417 | 0.084376 | 0.090797 | 0.085736 | 0.088758 |
 | population Linf | identity | 4 | 0.059046 | 0.066993 | 0.068871 | 0.069576 | 0.064208 | 0.065317 |
 | spectral effective rank | logit | 4 | 0.059180 | 0.086550 | 0.087276 | 0.094149 | 0.079099 | 0.085675 |
+| threshold-only gate beta=4 theta=0.75 | logit | 4 | 0.059813 | 0.065694 | 0.061546 | 0.067687 | 0.065858 | 0.067685 |
+| threshold-only gate beta=2 theta=0.5 | logit | 4 | 0.060070 | 0.065895 | 0.062063 | 0.067947 | 0.065984 | 0.067585 |
 | matrix exponential alpha=1 | logit | 4 | 0.060138 | 0.074028 | 0.072627 | 0.076917 | 0.072921 | 0.073648 |
+| threshold-only gate beta=8 theta=0.75 | logit | 4 | 0.060143 | 0.065920 | 0.061443 | 0.067869 | 0.066079 | 0.068287 |
 | stage progression | logit | 4 | 0.061319 | 0.081168 | 0.075907 | 0.085376 | 0.079473 | 0.083915 |
+| threshold-only gate beta=2 theta=0.25 | logit | 4 | 0.062005 | 0.067511 | 0.063681 | 0.069871 | 0.067340 | 0.069154 |
 | correlation power p=2 | logit | 4 | 0.062819 | 0.102795 | 0.095143 | 0.109489 | 0.101984 | 0.104564 |
 | axis intercepts | logit | 3 | 0.062839 | 0.086199 | 0.083602 | 0.089987 | 0.083970 | 0.087235 |
 | correlation power p=0.5 | logit | 4 | 0.062913 | 0.104551 | 0.096971 | 0.111308 | 0.104030 | 0.105893 |
@@ -267,9 +357,13 @@ This table retains every nonduplicated producer family. The best link for each r
 | correlation power p=-1 | logit | 4 | 0.063010 | 0.106654 | 0.099141 | 0.113563 | 0.106384 | 0.107528 |
 | correlation power p=-2 | logit | 4 | 0.063076 | 0.108040 | 0.100505 | 0.115091 | 0.107930 | 0.108632 |
 | scale plus shape | logit | 5 | 0.064049 | 0.051578 | 0.049740 | 0.052475 | 0.051662 | 0.052436 |
+| threshold-only gate beta=4 theta=0.5 | logit | 4 | 0.064781 | 0.069067 | 0.065194 | 0.071723 | 0.068520 | 0.070832 |
 | Fisher isotropic | logit | 4 | 0.067984 | 0.059024 | 0.070972 | 0.053944 | 0.057784 | 0.053396 |
+| threshold-only gate beta=4 theta=0.25 | logit | 4 | 0.069413 | 0.072545 | 0.068919 | 0.075640 | 0.071580 | 0.074043 |
+| threshold-only gate beta=8 theta=0.5 | logit | 4 | 0.069974 | 0.070849 | 0.067276 | 0.073786 | 0.069700 | 0.072633 |
 | scale only | logit | 4 | 0.074383 | 0.048371 | 0.048429 | 0.048552 | 0.049964 | 0.046540 |
 | log-volume reference | logit | 4 | 0.074383 | 0.048371 | 0.048429 | 0.048552 | 0.049964 | 0.046540 |
+| threshold-only gate beta=8 theta=0.25 | logit | 4 | 0.075014 | 0.076584 | 0.073408 | 0.080032 | 0.075153 | 0.077743 |
 | Fisher-occupancy arithmetic mix alpha=0.5 | logit | 4 | 0.076361 | 0.086475 | 0.083678 | 0.090274 | 0.084387 | 0.087561 |
 | AIRM reference | logit | 4 | 0.080668 | 0.168763 | 0.171110 | 0.177881 | 0.163214 | 0.162845 |
 | spectral trace | logit | 4 | 0.087176 | 0.058375 | 0.055700 | 0.059652 | 0.060506 | 0.057641 |
@@ -282,15 +376,15 @@ The Exp1-main fitted coefficients are applied without refitting to the authors' 
 | Producer | Link | RMSE | MAE | Pearson r | Spearman rho |
 |---|---|---:|---:|---:|---:|
 | Fisher total | probit | 0.026120 | 0.020873 | 0.805066 | 0.776224 |
+| neuron projected-drive gate beta=8 theta=0.75 | logit | 0.027065 | 0.021253 | 0.791329 | 0.804196 |
+| neuron projected-drive gate beta=8 theta=1 | logit | 0.027282 | 0.021449 | 0.786330 | 0.783217 |
+| neuron projected-drive gate beta=4 theta=0.75 | logit | 0.027336 | 0.021370 | 0.785546 | 0.804196 |
+| neuron projected-drive gate beta=4 theta=0.5 | logit | 0.027357 | 0.021241 | 0.785334 | 0.804196 |
 | spectral exponential saturation beta=0.3 | logit | 0.027368 | 0.021459 | 0.786416 | 0.804196 |
 | spectral ratio saturation alpha=3 | probit | 0.027370 | 0.021803 | 0.787243 | 0.804196 |
 | precision resolvent lambda=1 | logit | 0.027429 | 0.021547 | 0.787439 | 0.804196 |
 | regularized precision lambda=1 p=1 | logit | 0.027429 | 0.021547 | 0.787439 | 0.804196 |
 | shifted matrix log epsilon=0.3 | logit | 0.027431 | 0.021578 | 0.786707 | 0.804196 |
-| spectral ratio saturation alpha=10 | logit | 0.027440 | 0.021287 | 0.784302 | 0.804196 |
-| SPD power p=0.5 | logit | 0.027447 | 0.021554 | 0.785460 | 0.804196 |
-| regularized precision lambda=1 p=0.5 | logit | 0.027459 | 0.021301 | 0.785474 | 0.839161 |
-| shifted matrix log epsilon=0.1 | logit | 0.027492 | 0.021880 | 0.786840 | 0.804196 |
 | SPD power p=-1 | logit | 0.028690 | 0.023654 | 0.772887 | 0.755245 |
 | spectral ratio saturation alpha=0.1 | arcsine | 0.029607 | 0.025016 | 0.753287 | 0.755245 |
 | relative precision stretch | logit | 0.033138 | 0.025778 | 0.764434 | 0.853147 |

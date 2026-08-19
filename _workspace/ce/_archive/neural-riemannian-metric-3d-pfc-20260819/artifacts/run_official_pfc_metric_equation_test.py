@@ -657,6 +657,10 @@ def transfer_inputs(processed: Path, experiment: str, stage_count: int = 4) -> t
     return stages, np.asarray(accuracy, dtype=np.float64)
 
 
+GATE_BETAS = (1.0, 2.0, 4.0, 8.0)
+GATE_THRESHOLDS = (0.25, 0.5, 0.75, 1.0, 1.5)
+
+
 def equation_specs() -> list[dict[str, object]]:
     specs: list[dict[str, object]] = [
         {"name": "global intercept", "kind": "global", "formula": "a", "features": 0, "mode": "global"},
@@ -740,6 +744,46 @@ def equation_specs() -> list[dict[str, object]]:
         {"name": "spectral effective rank", "kind": "effective_rank", "formula": "a_j+b exp(H(eig(X)))", "features": 1, "mode": "axis"},
         {"name": "spectral trace", "kind": "trace", "formula": "a_j+b log(tr(X)/3)", "features": 1, "mode": "axis"},
     ]
+    for beta in GATE_BETAS:
+        for threshold in GATE_THRESHOLDS:
+            suffix = f"beta={beta:g} theta={threshold:g}"
+            specs.extend(
+                [
+                    {
+                        "name": f"neuron projected-drive gate {suffix}",
+                        "kind": "projected_gate",
+                        "value": (beta, threshold),
+                        "formula": (
+                            "a_j+b sqrt(mean_n[(d_nj sigmoid("
+                            f"{beta:g}(d_nj-{threshold:g})))^2])"
+                        ),
+                        "features": 1,
+                        "mode": "axis",
+                    },
+                    {
+                        "name": f"threshold-only gate {suffix}",
+                        "kind": "threshold_only",
+                        "value": (beta, threshold),
+                        "formula": (
+                            "a_j+b mean_n[sigmoid("
+                            f"{beta:g}(d_nj-{threshold:g}))]"
+                        ),
+                        "features": 1,
+                        "mode": "axis",
+                    },
+                    {
+                        "name": f"projected drive plus threshold {suffix}",
+                        "kind": "projected_threshold_additive",
+                        "value": (beta, threshold),
+                        "formula": (
+                            "a_j+b_d sqrt(mean_n[d_nj^2])+b_g mean_n[sigmoid("
+                            f"{beta:g}(d_nj-{threshold:g}))]"
+                        ),
+                        "features": 2,
+                        "mode": "axis",
+                    },
+                ]
+            )
     for power in (-2.0, -1.0, -0.5, 0.5, 1.0, 2.0):
         specs.append(
             {
@@ -940,6 +984,23 @@ def equation_features(
             feature = np.sqrt(np.diag(j_matrix))[:, None]
         elif kind == "isotropic_fisher":
             feature = np.full((3, 1), math.sqrt(float(np.trace(j_matrix)) / 3.0))
+        elif kind in {"projected_gate", "threshold_only", "projected_threshold_additive"}:
+            beta, threshold = (float(value) for value in spec["value"])
+            projected_drive = np.abs(points) / math.sqrt(tau)
+            gate = 1.0 / (
+                1.0
+                + np.exp(
+                    -np.clip(beta * (projected_drive - threshold), -50.0, 50.0)
+                )
+            )
+            ungated_rms = np.sqrt(np.mean(projected_drive**2, axis=0))[:, None]
+            gate_mean = np.mean(gate, axis=0)[:, None]
+            if kind == "projected_gate":
+                feature = np.sqrt(np.mean((projected_drive * gate) ** 2, axis=0))[:, None]
+            elif kind == "threshold_only":
+                feature = gate_mean
+            else:
+                feature = np.column_stack([ungated_rms[:, 0], gate_mean[:, 0]])
         elif kind == "accessibility":
             feature = (1.0 / np.sqrt(np.diag(np.linalg.inv(x_matrix))))[:, None]
         elif kind == "power":
@@ -1787,7 +1848,7 @@ def render(
             "",
             "## Finite equation-family tournament",
             "",
-            "The released data identify only stagewise three-factor selectivity summaries, so a finite comprehensive operational universe is frozen to matrix spectral functions, Fisher/population norms, scale-shape summaries, regularized precision, stage geometry, and standard accuracy links. Every coefficient and the candidate choice use Exp1 only. Exp2 is evaluated without coefficient refitting at the official 3, 4, 5, and 6-stage binnings.",
+            "The released data identify only stagewise three-factor selectivity summaries, so a finite operational universe is frozen to matrix spectral functions, Fisher/population norms, scale-shape summaries, regularized precision, stage geometry, neuron-level projected-drive gates, and standard accuracy links. Every coefficient and the candidate choice use Exp1 only. Exp2 is evaluated without coefficient refitting at the official 3, 4, 5, and 6-stage binnings.",
             "",
             "For each stage,",
             "",
@@ -1834,6 +1895,74 @@ def render(
         lines.append(
             f"| {count} | {score['rmse']:.6f} | {score['mae']:.6f} | {score['pearson']:.6f} | {score['spearman']:.6f} |"
         )
+    producer_rows = tournament["best_by_producer"]
+    assert isinstance(producer_rows, list)
+    ungated_drive = next(row for row in producer_rows if row["name"] == "SPD power p=1")
+    best_projected_gate = min(
+        (row for row in producer_rows if row["kind"] == "projected_gate"),
+        key=lambda row: (float(row["cv_rmse"]), str(row["name"])),
+    )
+    best_threshold_only = min(
+        (row for row in producer_rows if row["kind"] == "threshold_only"),
+        key=lambda row: (float(row["cv_rmse"]), str(row["name"])),
+    )
+    best_additive = min(
+        (row for row in producer_rows if row["kind"] == "projected_threshold_additive"),
+        key=lambda row: (float(row["cv_rmse"]), str(row["name"])),
+    )
+    gate_rows = [ungated_drive, best_projected_gate, best_threshold_only, best_additive]
+    cv_gate_gain = float(ungated_drive["cv_rmse"]) - float(best_projected_gate["cv_rmse"])
+    exp2_gate_gain = float(ungated_drive["mean_exp2_rmse"]) - float(
+        best_projected_gate["mean_exp2_rmse"]
+    )
+    lines.extend(
+        [
+            "",
+            "### Projected-drive threshold test",
+            "",
+            "The verbal `strength x alignment` factors are not separately identifiable under this projected-drive definition. For neuron row $v_{nk}$ and named factor projector $P_j=e_je_j^T$ they collapse exactly to the dimensionless projected drive",
+            "",
+            "$$",
+            "s_{nk}=\\frac{\\lVert v_{nk}\\rVert}{\\sqrt{\\tau}},\\qquad",
+            "a_{nkj}=\\frac{\\lVert P_jv_{nk}\\rVert}{\\lVert v_{nk}\\rVert},\\qquad",
+            "d_{nkj}=s_{nk}a_{nkj}=\\frac{|S_{k,nj}|}{\\sqrt{\\tau}}.",
+            "$$",
+            "",
+            "The primary gate is applied before population aggregation:",
+            "",
+            "$$",
+            "\\gamma_{nkj}=\\sigma[\\beta(d_{nkj}-\\theta)],\\qquad",
+            "R_{kj}=\\left[N_k^{-1}\\sum_n(d_{nkj}\\gamma_{nkj})^2\\right]^{1/2},",
+            "$$",
+            "",
+            "$$",
+            "h(\\widehat A_{kj})=a_j+bR_{kj}.",
+            "$$",
+            "",
+            "Here $\\tau$ is recomputed from Exp1 training stages in every fold. The finite grid is $\\beta\\in\\{1,2,4,8\\}$ and $\\theta\\in\\{0.25,0.5,0.75,1,1.5\\}$. The no-gate row is exactly `SPD power p=1`; threshold-only removes amplitude, while the additive control gives projected RMS and mean gate activation separate coefficients.",
+            "",
+            "| Model | Exp1-selected specification | Link | Params | Exp1 CV RMSE | Mean Exp2 RMSE |",
+            "|---|---|---|---:|---:|---:|",
+        ]
+    )
+    gate_labels = (
+        "No gate",
+        "Projected-drive gate",
+        "Threshold only",
+        "Additive drive + threshold",
+    )
+    for label, candidate in zip(gate_labels, gate_rows):
+        lines.append(
+            f"| {label} | {candidate['name']} | {candidate['link']} | {candidate['parameters']} | {candidate['cv_rmse']:.6f} | {candidate['mean_exp2_rmse']:.6f} |"
+        )
+    lines.extend(
+        [
+            "",
+            f"Relative to the no-gate projected drive, the Exp1-selected primary gate changes RMSE by `{cv_gate_gain:+.6f}` on Exp1 CV and `{exp2_gate_gain:+.6f}` on the frozen Exp2 readout; positive values favor the gate.",
+            "",
+            "This is a post-discussion discovery test on released pseudopopulation rows. It tests a selectivity-to-decoder calibration surrogate, not a synaptic threshold, effective connectivity, or causal routing mechanism.",
+        ]
+    )
     lines.extend(
         [
             "",
@@ -1845,8 +1974,6 @@ def render(
             "|---|---|---:|---:|---:|---:|---:|---:|---:|",
         ]
     )
-    producer_rows = tournament["best_by_producer"]
-    assert isinstance(producer_rows, list)
     for candidate in producer_rows:
         bins = candidate["per_binning"]
         lines.append(
@@ -1864,6 +1991,7 @@ def render(
         "relative precision stretch",
         "SPD power p=-1",
         "Fisher total",
+        str(best_projected_gate["name"]),
     }
     alternate_rows = [
         row
