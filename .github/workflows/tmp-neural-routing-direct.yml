@@ -7,6 +7,12 @@ on:
     paths:
       - '.tmp-neural-routing/**'
       - '.github/workflows/tmp-neural-routing-direct.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.tmp-neural-routing/**'
+      - '.github/workflows/tmp-neural-routing-direct.yml'
   workflow_dispatch:
 
 permissions:
@@ -28,6 +34,7 @@ jobs:
       - name: Run official PFC analysis
         run: python .tmp-neural-routing/run_analysis.py
       - name: Commit machine results to temporary branch
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
