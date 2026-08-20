@@ -106,6 +106,9 @@ class BrainRuntimeConfig:
     force_all_active_selection: bool = False
     bit_lower_threshold: float = 0.10
     bit_upper_threshold: float = 0.30
+    neuronwise_active_threshold: tuple[float, ...] | None = None
+    neuronwise_bit_lower_threshold: tuple[float, ...] | None = None
+    neuronwise_bit_upper_threshold: tuple[float, ...] | None = None
     refractory_scale: float = 0.35
     replay_gain: float = 0.28
     goal_gain: float = 0.20
@@ -152,6 +155,14 @@ class BrainRuntimeConfig:
         self.dim = int(self.dim)
         if self.dim <= 0:
             raise ValueError("runtime dimension must be positive")
+        for name in (
+            "neuronwise_active_threshold",
+            "neuronwise_bit_lower_threshold",
+            "neuronwise_bit_upper_threshold",
+        ):
+            setattr(self, name, self._normalize_neuronwise_threshold(name))
+        if self.has_neuronwise_bit_threshold:
+            self.effective_bit_thresholds()
         self.active_ratio = min(max(float(self.active_ratio), 0.0), 1.0)
         self.force_all_active_selection = bool(self.force_all_active_selection)
         self.memory_topk = max(1, int(self.memory_topk))
@@ -171,6 +182,65 @@ class BrainRuntimeConfig:
         if self.stdp_orientation not in {"legacy", "causal"}:
             raise ValueError("stdp_orientation must be legacy or causal")
         self.hippocampal_encoding_enabled = bool(self.hippocampal_encoding_enabled)
+
+    def _normalize_neuronwise_threshold(self, name: str) -> tuple[float, ...] | None:
+        value = getattr(self, name)
+        if value is None:
+            return None
+        if not isinstance(value, (list, tuple)):
+            raise TypeError(f"{name} must be a list or tuple")
+        try:
+            normalized = tuple(float(item) for item in value)
+        except (TypeError, ValueError) as exc:
+            raise TypeError(f"{name} entries must be real numbers") from exc
+        if len(normalized) != self.dim:
+            raise ValueError(f"{name} length must match runtime dimension")
+        if not all(math.isfinite(item) for item in normalized):
+            raise ValueError(f"{name} entries must be finite")
+        return normalized
+
+    @property
+    def has_neuronwise_bit_threshold(self) -> bool:
+        return (
+            self.neuronwise_bit_lower_threshold is not None
+            or self.neuronwise_bit_upper_threshold is not None
+        )
+
+    def effective_active_thresholds(self) -> tuple[float, ...]:
+        values = self._normalize_neuronwise_threshold("neuronwise_active_threshold")
+        if values is not None:
+            return values
+        return (float(self.active_threshold),) * self.dim
+
+    def effective_bit_thresholds(self) -> tuple[tuple[float, ...], tuple[float, ...]]:
+        lower_vector = self._normalize_neuronwise_threshold(
+            "neuronwise_bit_lower_threshold"
+        )
+        upper_vector = self._normalize_neuronwise_threshold(
+            "neuronwise_bit_upper_threshold"
+        )
+        if lower_vector is None and upper_vector is None:
+            return (
+                (float(self.bit_lower_threshold),) * self.dim,
+                (float(self.bit_upper_threshold),) * self.dim,
+            )
+        lower = (
+            lower_vector
+            if lower_vector is not None
+            else (float(self.bit_lower_threshold),) * self.dim
+        )
+        upper = (
+            upper_vector
+            if upper_vector is not None
+            else (float(self.bit_upper_threshold),) * self.dim
+        )
+        if not all(math.isfinite(value) for value in (*lower, *upper)):
+            raise ValueError("effective neuronwise bit thresholds must be finite")
+        if any(low >= high for low, high in zip(lower, upper)):
+            raise ValueError(
+                "effective neuronwise bit lower thresholds must be below upper thresholds"
+            )
+        return lower, upper
 
     def energy_budget(self, mode: RuntimeMode) -> int:
         base = max(1, int(round(self.dim * self.active_ratio)))
@@ -393,6 +463,11 @@ class BrainRuntime:
         self.config = config
         self.device = torch.device(device) if device is not None else weight.device
         self.backend = backend
+        if self.backend == "rust" and self.config.has_neuronwise_bit_threshold:
+            self.config.effective_bit_thresholds()
+            raise ValueError(
+                "the Rust brain kernel does not support neuronwise bit thresholds"
+            )
         self.weight = weight.detach().float().to(self.device)
         pack_backend = "torch" if self.backend == "cuda" else self.backend
         values, col_idx, row_ptr = pack_sparse(
@@ -777,7 +852,12 @@ class BrainRuntime:
         mask = torch.zeros_like(salience, dtype=torch.bool)
         if budget == 0:
             return mask
-        eligible = salience >= self.config.active_threshold
+        active_threshold = torch.tensor(
+            self.config.effective_active_thresholds(),
+            dtype=salience.dtype,
+            device=salience.device,
+        )
+        eligible = salience >= active_threshold
         eligible_count = int(eligible.sum().item())
         if eligible_count == 0:
             return mask
@@ -861,6 +941,13 @@ class BrainRuntime:
         return float(total.item())
 
     def _use_rust(self) -> bool:
+        if self.config.has_neuronwise_bit_threshold:
+            self.config.effective_bit_thresholds()
+            if self.backend == "rust":
+                raise ValueError(
+                    "the Rust brain kernel does not support neuronwise bit thresholds"
+                )
+            return False
         if not _HAS_RUST_KERNEL:
             return False
         if self.backend == "rust":
@@ -876,6 +963,11 @@ class BrainRuntime:
         mode: RuntimeMode,
     ) -> tuple[int, float]:
         """Delegate the cell-step hot path to the Rust kernel."""
+        if self.config.has_neuronwise_bit_threshold:
+            self.config.effective_bit_thresholds()
+            raise ValueError(
+                "the Rust brain kernel does not support neuronwise bit thresholds"
+            )
         budget = self.config.energy_budget(mode)
         mode_int = _MODE_TO_INT.get(mode.value, 0)
         act_np = self.activation.detach().cpu().numpy().astype(np.float32)
@@ -1022,9 +1114,20 @@ class BrainRuntime:
             (1.0 - ADAPTATION_DECAY) * self.adaptation + ADAPTATION_DECAY * activation.square()
         ).clamp(0.0, ADAPTATION_CLAMP)
 
+        bit_lower_values, bit_upper_values = self.config.effective_bit_thresholds()
+        bit_lower = torch.tensor(
+            bit_lower_values,
+            dtype=activation.dtype,
+            device=activation.device,
+        )
+        bit_upper = torch.tensor(
+            bit_upper_values,
+            dtype=activation.dtype,
+            device=activation.device,
+        )
         bitfield = self.bitfield.clone()
-        bitfield[activation >= self.config.bit_upper_threshold] = 1
-        bitfield[activation <= self.config.bit_lower_threshold] = 0
+        bitfield[activation >= bit_upper] = 1
+        bitfield[activation <= bit_lower] = 0
 
         self.activation = activation
         self.refractory = refractory

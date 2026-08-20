@@ -428,6 +428,69 @@ class DimensionlessChecker:
             "dimensionless",
         )
 
+        self.add_formula(
+            "A4 neuron-specific soft-threshold excitability",
+            "a_A4",
+            "1/(1 + exp(-(z-threshold)))",
+            Dimension.DIMENSIONLESS,
+            "6_뇌/11_리만계량_라우팅_논문.md",
+            "z and the calibration-frozen threshold are dimensionless standardized activity",
+        )
+
+        self.add_formula(
+            "A4 state-dependent edge conductance ratio",
+            "r_w_A4",
+            "exp(h_edge)",
+            Dimension.DIMENSIONLESS,
+            "6_뇌/11_리만계량_라우팅_논문.md",
+            "h_edge is a clipped product of dimensionless normalized association and excitability",
+        )
+
+        self.add_formula(
+            "A5 deformation-to-base graph RMS ratio",
+            "chi_A5",
+            "deformation_graph_rms/base_graph_rms",
+            Dimension.DIMENSIONLESS,
+            "6_뇌/11_리만계량_라우팅_논문.md",
+            "Both RMS values act on dimensionless z with Laplacians built from lengths normalized by ell_ref",
+        )
+
+        self.add_formula(
+            "A6 passive directional stretch",
+            "s_A6",
+            "sqrt(pullback_length_sq/reference_length_sq)",
+            Dimension.DIMENSIONLESS,
+            "6_뇌/11_리만계량_라우팅_논문.md",
+            "Both quadratic lengths use the same dimensionless activation chart",
+        )
+
+        self.add_formula(
+            "A6 pre/post principal metric ratio",
+            "Lambda_A6",
+            "post_pullback_length_sq/pre_pullback_length_sq",
+            Dimension.DIMENSIONLESS,
+            "6_뇌/11_리만계량_라우팅_논문.md",
+            "Generalized metric eigenvalues are ratios in one frozen state chart",
+        )
+
+        self.add_formula(
+            "A6 pullback metric-volume log response",
+            "delta_logV_A6",
+            "log(post_metric_determinant/pre_metric_determinant)/2",
+            Dimension.DIMENSIONLESS,
+            "6_뇌/11_리만계량_라우팅_논문.md",
+            "The determinant ratio is dimensionless and is used only when both metrics are SPD",
+        )
+
+        self.add_formula(
+            "A6 reachability-energy log response",
+            "rho_E_A6",
+            "log(post_control_energy/pre_control_energy)",
+            Dimension.DIMENSIONLESS,
+            "6_뇌/11_리만계량_라우팅_논문.md",
+            "Both energies share one frozen actuator, cost, horizon, and normalized endpoint direction",
+        )
+
         # RIEMANN/MRA LAYER
         self.add_formula(
             "Riemann metric attention",
@@ -492,6 +555,8 @@ class DimensionlessChecker:
                 "I_V17",
                 "y_tilde_V18b",
                 "delta_w_V18b",
+                "a_A4",
+                "r_w_A4",
             }:
                 result["status"] = "PASS ✓"
 

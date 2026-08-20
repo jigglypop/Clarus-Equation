@@ -2,7 +2,7 @@
 
 Status: ACTIVE
 
-## Latest admission decision — 2026-08-20
+## Latest admission decision — 2026-08-21
 
 This section is the authoritative next-route order and supersedes the older
 active-candidate ordering below.  It changes route management only; it does not
@@ -10,15 +10,46 @@ promote a simulator or schema audit into a biological mechanism claim.
 
 | ID | Route status | Formal status | Preserved claim | Evidence | Never-retry / resume rule |
 |---|---|---|---|---|---|
-| BA-EMP-RANDI-SCHEMA | `SCHEMA_AUDIT_COMPLETE / EMPIRICAL_ROUTE_BLOCKED_CONDITIONAL` | **[관측 비교: 입력 감사]** | DANDI exemplar has optogenetic event, 393x105 signal and response-side NeuroPAL-join schema. Canonical source identity and an eligible comparator were not established. | `randi-neural-propagation-source-audit-20260820/40-final-report.md`, `7ec326830b7b3e698c7b9a7878bd5bb7bac3294f65d21f36d7a5793dd31932aa`; validation `31830d6ddf7440520f7836cf6cec593f80f48efcf944dc8be59dc9af3ebc763f` | Do not infer source identity by outcome-tuned spatial matching; do not use pre/post or failed autoresponse as no-light control; do not compute an effect before a new frozen contract. |
+| BA-EMP-RANDI | `NATIVE_EVENT_RECOVERY_COMPLETE / PARTIAL_SOURCE_INDEX_SCHEMA / EMPIRICAL_ROUTE_BLOCKED` | **[관측 비교: 입력 감사]** | 113개 numeric-prefix session 중 87개 complete session에서 4,457 stimulation row를 검사했다. 3,537개 nonnegative source-index join 중 2,710개만 nonblank local label에 도달했고 827개는 blank였다. 이것은 event 번호→recording-local source index→일부 local label의 부분 스키마이며, canonical identity 또는 효과·라우팅 결과가 아니다. `PASS_SOURCE_INDEX_JOIN`, `PASS_SOURCE_JOIN`, `PASS_ASSIGNMENT_RECEIPT`은 모두 false다. | `randi-native-event-recovery-20260820/20-audit.md`, `9f9b02797bb2d418ec71a5833cbbd15675777eae6fe655b8a46b5eca72f3ef4f`; validation `31-validation.md`, `3bff495394eb224dfe50acabc923f0fe82004ddb3ed1879f61a1825bb5d362a3`; final `40-final-report.md`, `5c8e01113da8537576a96302f91bc6b03377c916dba7219e0ddfe56eba7de2ec`; machine artifact `artifacts/native_event_audit.json`, `ba55f83e2436f4b2be373c0254d60378efff7d3dca5494895c68a1771c8ebbec` | outcome-tuned spatial matching, pre/post, failed-autoresponse 선택으로 source identity·무광 대조·효과를 만들지 않는다. 재개는 (a) complete original event assignment receipt와 canonical identity confidence/provenance를 함께 가진 immutable 원자료, 또는 (b) frame·unit/z·transform·radius·ambiguity·tie-break를 함께 고정한 완전한 immutable geometric validation object로 한정한다. |
+| BA-A6-P | `MATH_PASS / EMPIRICAL_UNTESTED` | **[조건부 정리]** | 고정 history·input path와 $G_T\succ0$에서 flow derivative $J_T$가 full rank이면 $g_{\rm pass}=J_T^\top G_TJ_T$는 상태좌표의 passive pullback Riemann metric이다. rank loss이면 PSD degeneracy만 남는다. 회로 변화 $W(\varepsilon)$의 $\dot g_\Gamma$는 같은 조건의 국소 민감도다. 실제 뇌, AGI, 또는 피질 주름 효과는 여기서 나오지 않는다. | `brain-circuit-manifold-equations-20260821/11-math.md`, `ec6a23a6093df33204306759e73b86d63086e3a8728d2ae5eb9067ba9fccaf83`; audit `20-audit.md`, `7af493542bedd94986c719e38b121d9d68b966344ddebae9f0e8ebb8e3f6993c`; validation `31-validation.md`, `23531a1fdaf6fab5882a42c61e4bc2692b34a9063c84a3615c6627ec0860c2e9` (`17 passed`, deterministic math witness PASS) | anatomy bridge는 `BLOCKED_INPUT`: longitudinal embedding, thickness, growth/material law, boundary/observation map이 필요하다. independent calibration 없이는 $b_i$와 neuron threshold $\theta_i$가 $b_i-\theta_i$로만 식별된다. |
+| BA-A6-C | `MATH_PASS / EMPIRICAL_UNTESTED` | **[조건부 정리]** | fixed LTV delayed tangent system, $R\succ0$, reachable terminal $v$에서 $E_T^*(v)=v^\top\mathcal W_c(T)^\dagger v$는 finite-horizon endpoint minimum-control-energy다; unreachable $v$에는 $+\infty$다. 이는 actuator $B$, cost $R$, horizon $T$, reference trajectory에 의존하는 endpoint quadratic form이며 local Riemann/sub-Riemannian metric이 아니다. | `brain-circuit-manifold-equations-20260821/00-contract.md`, `54b5d7716c6e57df9113ecaf770bcc61452e8e5019efce92f39bf2940581286b`; math `11-math.md`, `ec6a23a6093df33204306759e73b86d63086e3a8728d2ae5eb9067ba9fccaf83`; final `40-final-report.md`, `80878ce5793b8526c7517dbdc74332e991db3cec0a5b2594454c4ab82df6f3a6` | real edge delay, signed strength, efficacy, calibrated offsets, actuator map and fixed cost must be joined in one session/event frame before empirical use. No A3--A5 threshold·clip·RMS·ridge·horizon/seed retune is admissible; their disjoint real-data failures remain retired. |
+
+## A6 property-loop normalization (2026-08-21)
+
+This normalization supersedes the status, evidence, and retry cells for
+`BA-A6-P` and `BA-A6-C` in the admission table above.  It does not broaden
+their mathematical domains or convert synthetic properties into biological or
+AGI evidence.
+
+| ID | Route status | Formal status | Frozen property evidence | Preserved boundary / next rule |
+|---|---|---|---|---|
+| BA-A6-P | `MATH_PROPERTY_PASS / EMPIRICAL_UNTESTED` | **[conditional theorem]** | Eight of eight frozen smooth delayed fixtures passed passive tangent, total circuit derivative, coordinate-covariance, and rank-gate checks. Property audit `brain-circuit-manifold-property-loop-20260821/20-audit.md`, `3eddcd5830c4eb2d31ec073c05264cd51bd5da2d8ea8827becbe196401f08dd8`; validation `31-validation.md`, `7dbc77f3a844ccd773301f2bec135d80ba1b61fed131417741e08148393a0654`; final source/result `c67f1f790c291f622db6362f31eeb58b9b7e4bc147d7c8d99d08f48fe511074d` / `f6130d58cfe5e8d20b6ea9987c467e473ad9c4a183c4c54f19678e3d1d8a89bd`; final `40-final-report.md`, `d35491b525a6d6b11e16ef46a87f5a2ca85fb65bcb48d5835cc0b260fbf1fd27`. | Revision 1 corrected only the implementation gates and receipt provenance: it kept formula, seeds, fixture, finite-difference step, and tolerances frozen. No formula revision occurred. Cortical anatomy remains `BLOCKED_INPUT` pending longitudinal embedding, thickness, growth/material law, and boundary/observation receipts. Without independent calibration, only $b_i-\theta_i$ is identifiable. |
+| BA-A6-C | `MATH_PROPERTY_PASS / EMPIRICAL_UNTESTED` | **[conditional theorem]** | Eight of eight frozen fixtures passed Gramian PSD, least-norm energy, chart-energy, and $\dot E$ checks; unreachable and rank-deficient adverse controls were killed. Property audit `brain-circuit-manifold-property-loop-20260821/20-audit.md`, `3eddcd5830c4eb2d31ec073c05264cd51bd5da2d8ea8827becbe196401f08dd8`; validation `31-validation.md`, `7dbc77f3a844ccd773301f2bec135d80ba1b61fed131417741e08148393a0654`; final source/result `c67f1f790c291f622db6362f31eeb58b9b7e4bc147d7c8d99d08f48fe511074d` / `f6130d58cfe5e8d20b6ea9987c467e473ad9c4a183c4c54f19678e3d1d8a89bd`; final `40-final-report.md`, `d35491b525a6d6b11e16ef46a87f5a2ca85fb65bcb48d5835cc0b260fbf1fd27`. | Revision 1 is an implementation-gate correction only, not a formula revision. Empirical use still requires real edge delay, signed strength, efficacy, calibrated offsets, actuator map, and fixed cost in one session/event frame; A3--A5 threshold/clip/RMS/ridge/horizon/seed retuning remains inadmissible. |
+
+## A7-H discrete-hybrid normalization (2026-08-21)
+
+This entry supersedes the former `BA-A7-H OPEN / UNTESTED` admission row. It
+records a frozen synthetic runtime property only; it does not promote the
+result to evidence about biological neurons, learning, AGI, cortical folding,
+or physical manifold deformation.
+
+| ID | Route status | Formal status | Frozen property evidence | Preserved revisions / boundary / next rule |
+|---|---|---|---|---|
+| BA-A7-H | `DISCRETE_HYBRID_SPEC_PASS / RUNTIME_DELAY_PARITY_BLOCKED / HETEROGENEOUS_THRESHOLD_RUNTIME_UNIMPLEMENTED / EMPIRICAL_UNTESTED` | **[conditional theorem / implementation property]** | Frozen actual-`BrainRuntime` fixture passed: Torch/mirror one-step max error `4.8676e-8`; full $24\times24$ fixed-branch Jacobian normalized error `2.6270e-12`; reachable clip-face one-sided error `6.5854e-8`; delay-ring first arrival at call $t=2$ (`3.5435e-3`); lifecycle next-tick effect `2.3413e-2`; permutation residuals `0`; and no-delay Torch/Rust error `7.4506e-9`. The delay-on adverse control reproduced the expected activation mismatch `3.3332e-2`, so it is a blocker rather than a parity PASS. Contract `00-contract.md`, `86f72a7f188e63f03edb19efbe9eb67613b254f3aa0db4214953e684658ac1fe`; audit `20-audit.md`, `e74f8875b10da49a2b8eaba48b72ce56fb76d365be1530e5a970566d28748861`; validation `31-validation.md`, `3da81fba48d92497d42f151e41e9362a285a81354169674ecbdc374d3441e67`; final `40-final-report.md`, `0928792665b79de2bf40bfa98d308aeeb10625c50a4cdc326c0bdad567c6ab9e`; final witness/result `9021d90352933d903b7af6c716d47d27773792978060805d931994de6ad8fad8` / `cc6954b7f8120fb231494a4cc5cc0498895270ff1a93dfa834027f3fb22c9e6a`. | P2 apparatus revision 00 preserved the pre-evaluation bad Rust-source-path witness (`4f598977359d0eb6c9488c8d825e2f4aeef3151e98a1d5ef5edb67a55852dd1b`) and corrected only two path literals. P2 apparatus revision 01 preserved the passing witness/result (`2878bca53478dfbbc966f6b6189d7cfddd3611c1aec561061957560c4f847462` / `52ed6b73fa4fdc94132027ed7a5ce1dbb39de85aaa6460469a43028d46bc1d20`) and added only the source-tree package-version receipt `reality_stone.__version__=0.2.10`; every formula, fixture, direction, step, tolerance, source hash, gate, and claim ceiling remained frozen. Discrete bit/TopK/lifecycle crossings remain receipt-only with undefined derivatives; continuous-time saltation and arbitrary chart covariance remain prohibited. Next independent routes are A8-T threshold vectors, then A8-D Rust delay repair. |
+
+## Immediate next priority
 
 | Priority | Candidate | Admission state | Required falsifier / STOP |
 |---:|---|---|---|
-| 1 | BA-EMP-RANDI-ACTIVE | `CONDITIONAL_INPUT` | Validate event-target-to-NeuroPAL mapping, assignment strata, within-stratum positivity, fixed active controls, missingness and carryover before reading response outcomes. Otherwise remain blocked. |
-| 2 | BA-EMP-IBL | `OPEN_INPUT` | Test held-out simultaneous-session predictive transfer only; no causal routing claim without intervention. |
-| 3 | BA-EMP-CLOUD-G | `PASS_INPUT_METRIC_ONLY` | Output-Fisher geometry may be tested within recordings; anatomical source-target routing and causal claims remain blocked. |
-| 4 | BA-BIO-LONG | `BLOCKED_INPUT` | Requires same-cell/synapse longitudinal structure, calibrated activity and intervention data. |
-| 5 | BA-S1 | `DEFERRED_SYNTHETIC` | Do not substitute a synthetic support threshold or lesion seed for real structural evidence. |
+| 1 | BA-A8-T | `OPEN / UNTESTED` | **[unfinished]** Implement neuronwise runtime configuration/state for $\theta_i^-$, $\theta_i^+$, and $\vartheta_i$. The scalar configuration must remain an exactly equivalent broadcast compatibility path. Freeze permutation and guard-receipt checks; stop on any scalar-regression, index-permutation, or guard-semantics mismatch. This is a threshold implementation route, not evidence for biological threshold distributions, AGI, or anatomy. |
+| 2 | BA-A8-D | `OPEN / UNTESTED` | **[unfinished]** In a separate code/contract route, repair Rust to expose and apply the same delay ring buffer, unbounded counter, read-before-write, and snapshot semantics as Torch. Reuse A7-H's delay-on mismatch as the fail-closed adverse control; stop on any mismatch after a frozen shared-state parity fixture. Do not retune the delay mismatch away. |
+
+| Priority | Candidate | Admission state | Required falsifier / STOP |
+|---:|---|---|---|
+| 1 | BA-EMP-IBL | `OPEN_INPUT__PREDICTIVE_TRANSFER_ONLY` | **[미완성]** 공개 IBL 연구의 단순 재실행은 하지 않는다. 공식 cache의 exact simultaneous session에서 source×state interaction 모델이 additive state model보다 held-out predictive transfer를 개선하는지만 사전 고정한다. intervention이 없으므로 causal routing 주장은 금지한다. |
+| 2 | BA-EMP-CLOUD-G | `PASS_INPUT_METRIC_ONLY` | Output-Fisher geometry may be tested within recordings; anatomical source-target routing and causal claims remain blocked. |
+| 3 | BA-BIO-LONG | `BLOCKED_INPUT` | Requires same-cell/synapse longitudinal structure, calibrated activity and intervention data. |
+| 4 | BA-S1 | `DEFERRED_SYNTHETIC` | Do not substitute a synthetic support threshold or lesion seed for real structural evidence. |
 
 이 원장은 BrainRuntime 실험에서 어떤 알고리즘 후보가 살아 있고 어떤 경로가 기각·퇴역했는지를 빠르게 감사하기 위한 문서다. 실제 뇌를 설명하는 논문이나 의식 이론의 서사가 아니다.
 

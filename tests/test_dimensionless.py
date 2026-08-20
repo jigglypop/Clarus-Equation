@@ -234,3 +234,23 @@ def test_v18b_reward_decoder_and_classifier_increment_are_dimensionless() -> Non
     assert formulas["delta_w_V18b"].expected_dim == Dimension.DIMENSIONLESS
     assert checker.check_formula(formulas["y_tilde_V18b"])["status"].startswith("PASS")
     assert checker.check_formula(formulas["delta_w_V18b"])["status"].startswith("PASS")
+
+
+@requires_sympy
+def test_a4_a5_graph_metric_core_arguments_are_dimensionless() -> None:
+    checker = DimensionlessChecker()
+    formulas = {formula.symbol: formula for formula in checker.formulas}
+
+    for symbol in ("a_A4", "r_w_A4", "chi_A5"):
+        assert formulas[symbol].expected_dim == Dimension.DIMENSIONLESS
+        assert checker.check_formula(formulas[symbol])["status"].startswith("PASS")
+
+
+@requires_sympy
+def test_a6_pullback_and_reachability_ratios_are_dimensionless() -> None:
+    checker = DimensionlessChecker()
+    formulas = {formula.symbol: formula for formula in checker.formulas}
+
+    for symbol in ("s_A6", "Lambda_A6", "delta_logV_A6", "rho_E_A6"):
+        assert formulas[symbol].expected_dim == Dimension.DIMENSIONLESS
+        assert checker.check_formula(formulas[symbol])["status"].startswith("PASS")
