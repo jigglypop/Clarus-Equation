@@ -3,6 +3,7 @@ import torch
 from reality_stone.clarus.runtime_alternative_memory import (
     AlternativeMemoryConfig,
     DelayedSignedEligibility,
+    _m1_runtime,
     m0_capacity_rank_sweep,
     m1_delayed_three_factor,
 )
@@ -82,3 +83,31 @@ def test_m1_uses_fixed_clock_equal_schedules_and_zero_store_probes() -> None:
         assert control["pulse_count"] == result["pulse_count"]
         assert control["event_count"] == result["event_count"]
         assert control["interphase_reset_count"] == result["interphase_reset_count"]
+
+
+def test_m1_memory_binding_survives_neuronwise_thresholds() -> None:
+    dim = 16
+    active = tuple(0.18 + 0.08 * i / (dim - 1) for i in range(dim))
+    bit_lower = tuple(0.06 + 0.08 * i / (dim - 1) for i in range(dim))
+    bit_upper = tuple(0.24 + 0.12 * i / (dim - 1) for i in range(dim))
+    config = AlternativeMemoryConfig(
+        dim=dim,
+        replay_epochs=1,
+        replay_ticks=2,
+        rollout_horizon=2,
+        neuronwise_active_threshold=active,
+        neuronwise_bit_lower_threshold=bit_lower,
+        neuronwise_bit_upper_threshold=bit_upper,
+        seed=97201,
+    )
+
+    runtime = _m1_runtime(config)
+    assert runtime.config.effective_active_thresholds() == active
+    assert runtime.config.effective_bit_thresholds() == (bit_lower, bit_upper)
+
+    result = m1_delayed_three_factor(config.seed, config)
+    assert result["status"] == "GO"
+    assert result["clean_accuracy"] == 1.0
+    assert result["corrupt_accuracy"] == 1.0
+    assert result["control_advantage"] == 1.0
+    assert result["hippocampal_rows_after_rollout"] == 0

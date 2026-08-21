@@ -46,6 +46,9 @@ class AlternativeMemoryConfig:
     m1_ltp: float = 1.0
     m1_ltd: float = 0.20
     m1_abstain_threshold: float = 0.20
+    neuronwise_active_threshold: tuple[float, ...] | None = None
+    neuronwise_bit_lower_threshold: tuple[float, ...] | None = None
+    neuronwise_bit_upper_threshold: tuple[float, ...] | None = None
     seed: int = 97201
 
     def native(self) -> NativeLoopsConfig:
@@ -308,6 +311,9 @@ def _m1_runtime(config: AlternativeMemoryConfig) -> BrainRuntime:
             memory_capacity=16,
             replay_gain=1.0,
             hippocampal_encoding_enabled=False,
+            neuronwise_active_threshold=config.neuronwise_active_threshold,
+            neuronwise_bit_lower_threshold=config.neuronwise_bit_lower_threshold,
+            neuronwise_bit_upper_threshold=config.neuronwise_bit_upper_threshold,
         ),
         backend="torch",
         device="cpu",
