@@ -1,6 +1,25 @@
 # CE 멀티레포 이행 실행계획
 
-작성: 2026-08-23. 상태: IN_PROGRESS (사용자 "전부 진행" 승인, 2026-08-23).
+작성: 2026-08-23. 상태: **SPLIT_COMPLETE (1차)** — Phase 0-7 완료, 2026-08-23. 모노레포는 `split-baseline` 태그로 동결.
+
+## 최종 상태 (2026-08-23)
+
+로컬 루트 `C:\dev\ce\` 아래 10개 레포가 각자 독립 구동한다. 통합 신호기(ce-meta/integration-check.sh) **6/6 PASS**.
+
+| 레포 | 태그/pin | 단독 검증 |
+|---|---|---|
+| ce-harness | main (3커밋) | 미러 동일성 3 passed; templates 6종 |
+| ce-core (`clarus-core`) | **v1.0.1** | 41 passed (stdlib+numpy) |
+| ce-cosmo | v0.1.0 | 80 passed |
+| ce-qft | v0.1.0 | 225 passed, 10 skip(교차 가드), q0 선재 결손 10건 |
+| ce-lab | v0.1.0 | riemann 49+2, gr 13 passed; fusion 교차 미배선 15 err + 데이터 15 fail (정직 유지) |
+| ce-brain-bio | main | docs+원장+하네스 정본, live qc2 동행 |
+| ce-agi-runtime | v0.1.0 | 스모크 43 passed (CE_RUNS_PATH 필요) |
+| ce-runs | main | 아카이브 1628파일, `* -text` 동결 |
+| clarus-agent-guard | main | 제품 루트 승격, faithbench 유일본 동행 |
+| ce-meta | main | manifest·interfaces 원장·통합 신호기 |
+
+**남은 작업 (다음 사이클, interfaces.md가 정본)**: C-3 튜플 로컬 복제 해소(ce-cosmo), C-4 ce-lab→ce-qft 의존 배선, C-5 constants 코어 상수 승격 검토, C-2 supported_phenomena 첫 발행, 플러그인 패키징·CI 배선, remote URL 발행(사용자 계정 필요 — push는 전부 미실행).
 
 ## 진행 기록
 
@@ -26,6 +45,8 @@
   - **3차 발견 — 혼합 EOL 봉인 규약**: CRLF 정규화가 rollout-bridge 가족(sparse_causal v4/v5/v7 체인 등) 신규 실패 20건을 유발 — 이 봉인들은 **CRLF 디스크 바이트 기준으로 sha256 봉인**돼 있었다 (dream-bridge는 반대로 LF 강제 — 가족마다 규약이 다름). 조치: 리포 전체 64-hex 봉인 해시 수집 → CRLF 해시가 인용되고 LF 해시는 인용되지 않는 파일 33개(브리지 아티팩트 3, quantum.py, test_runtime_contracts.py, lib.rs, 외부 데이터셋 .m 28)만 명시 목록 기반 CRLF 복원, AMBIGUOUS 6개는 무수정. rollout 브리지 전 회복(70+21 passed).
   - **레포 분리 필수 반영 (정정)**: 모노레포 `.gitattributes`는 이미 봉인 가족별 명시 eol 규약을 갖고 있다(sparse_causal v4/v5/v7 아티팩트는 `eol=crlf`, dream/world-memory 체인은 `eol=lf`). 이번 실패는 전역 정규화가 이 의도된 규약을 덮은 것이며 표적 복원으로 정상화됨. **분리 시 각 레포가 자기 봉인 가족의 attributes 항목을 반드시 이관해야 한다** — 항목 누락 시 fresh clone에서 봉인 즉시 파손. 미지정 파일은 core.autocrlf에 좌우되므로, 분리 레포에는 전역 기본(`* text=auto eol=lf`) + 가족별 예외를 함께 넣는 것을 표준으로 한다.
   - q0_manifest_gate 9건은 부재 데이터(benchmarks/q0_minimal_abelian_higgs_v1.json — HEAD에도 없음) 원인의 선재 결손으로 확인.
+- **Phase 4-5 진척 (2026-08-23)**: 모노레포 Phase 0-2 커밋 `bca0df1` (997파일, gate PASS, push는 발행 지시 대기). **ce-core 완성**: filter-repo로 이력 30커밋 보존 추출 → src/clarus_core 패키지화(stdlib-only) → 단독 41 passed → `v1.0.0` 태그. 추출 중 발견: `bootstrap_solver.py`가 아직 shim(cosmology_registry) import를 쓰고 있었음 — ce-core에서는 core_registry로 수정, 모노레포에도 후속 반영 필요(잔여 작업 목록). ce-lab(73파일)·ce-qft(92파일)·ce-cosmo(31파일) 이력 추출 완료, 패키지 재구조화 3레인 병렬 진행 중.
+- **Phase 6 스코프 결정 (2026-08-23)**: (a) run 증거는 `ce-runs` 레포로 분리(위 표), (b) **reality-stone 엔진 레포는 보류** — Rust 코어가 런타임과 깊게 결합돼 있어 1차 분리에서는 ce-agi-runtime이 reality_stone 전체(Rust 포함, 타 도메인 추출분은 clarus-core 의존으로 교체)를 담고, 엔진 단독 레포는 경계가 측정 가능해질 때 승격한다.
 - 범위 밖 변경 감사 (2026-08-23): worktree에 나타난 루트 잡파일 삭제(`0`, `0$`, `8`, `E`, `death`, `length-biased`, `w`, `zero`)는 어느 에이전트에도 지시되지 않은 변경이라 git checkout으로 전량 복원함. `.active-run` 삭제만 gc 정상 동작으로 유지. 이 잡파일들의 정리 여부는 사용자 결정 사항으로 보류.
 목표: 모노레포를 독립 구동 가능한 레포 9개 + 우산 1개로 분리한다. 각 레포는 단독 clone에서 테스트가 돌고, 교차 결합은 버전 태그와 발행 계약 파일로만 흐른다.
 
@@ -63,6 +84,7 @@
 | `clarus-agent-guard` | `clarus-agent-guard/` 그대로 | 없음 |
 | `ce-meta` | 레포 매니페스트(URL+pin 태그), `interfaces.md`(교차 계약 원장, BR-8류 도메인 간 금지 조항의 정본), 통합 CI, 크로스도메인 run | 전 레포 태그 |
 | (보류) `ce-math` | `docs/9_등호이전/` §1-4 + 등호이전 원장 5건. Phase 0 결정에 따라 독립 또는 ce-qft 동거 | 없음 |
+| `ce-runs` (Phase 6 결정 추가) | `_workspace/ce/` 전체(아카이브 100 run + 원장·프레임) — 읽기 전용 증거 저장소. 뇌 원장과 agi 테스트가 공히 아카이브를 참조하므로 단일 도메인 소유가 불가능해 별도 레포로 분리. 봉인 run(world-memory·v18b는 agi-runtime, qc2는 brain-bio)만 각 소유 레포에 동행하고 나머지는 여기. 소비 레포는 `CE_RUNS_PATH` 환경변수/경로 규약으로 접근 | 없음 |
 
 레포 경계 원칙: 발행-소비 계약을 쓸 가치가 있는 경계에만 레포를 세운다. 그 이하는 레포 내 디렉토리.
 

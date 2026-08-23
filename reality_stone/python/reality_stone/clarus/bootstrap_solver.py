@@ -12,9 +12,9 @@ historical q_ext -> Omega_b readout is not part of this solver.
 import numpy as np
 
 try:
-    from .cosmology_registry import CE_CORE_EXACT_V1, LEGACY_DELTA_5DP_V1
+    from .core_registry import CE_CORE_EXACT_V1, LEGACY_DELTA_5DP_V1
 except ImportError:  # pragma: no cover - supports direct script execution
-    from cosmology_registry import CE_CORE_EXACT_V1, LEGACY_DELTA_5DP_V1
+    from core_registry import CE_CORE_EXACT_V1, LEGACY_DELTA_5DP_V1
 
 try:
     from scipy.optimize import brentq as scipy_brentq
