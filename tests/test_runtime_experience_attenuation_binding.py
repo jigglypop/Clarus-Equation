@@ -1,10 +1,9 @@
 import inspect
 import json
-from pathlib import Path
 
 import torch
 
-from reality_stone.clarus.runtime_experience_attenuation_binding import (
+from reality_stone.clarus.experiments.runtime_experience_attenuation_binding import (
     MAX_COMPENSATION,
     _compensation_vector,
     _experience_block_compensated,
@@ -12,10 +11,10 @@ from reality_stone.clarus.runtime_experience_attenuation_binding import (
 )
 
 
-CALIBRATION_INPUT = Path(
-    "_workspace/ce/brainruntime-experience-attenuation-binding-20260822/"
-    "artifacts/calibration-input.json"
-)
+from _run_paths import run_dir
+
+
+CALIBRATION_INPUT = run_dir("brainruntime-experience-attenuation-binding-20260822") / "artifacts" / "calibration-input.json"
 
 
 def test_compensation_is_local_bounded_and_zero_without_packet() -> None:

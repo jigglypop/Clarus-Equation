@@ -82,10 +82,10 @@ $c=1,2$ 모두 성립). 공유는 **감사 규약과 수학 골격**이지 물�
 
 ## 4. 우주론 쪽 미결 (탐색에서 확인, 별도 트랙)
 
-- `cosmology-full-closure-unification-20260815`: 레인·게이트 완료
+- `_archive/cosmology-full-closure-unification-20260815`: 레인·게이트 완료
   (`Gate: PASS`)이나 30/31/40 부재. U1–U7 각각에 명시된 미완성 항목
   (migration, species bridge, UV coupling, 절대척도, immutable manifest 등).
-- `self-recursive-reference-cosmology-quantum-20260820`: 20/30/31/40 부재,
+- `_archive/self-recursive-reference-cosmology-quantum-20260820`: 20/30/31/40 부재,
   SR-6 `REVISE` (instrument/unravelling·genealogy 확률공간 의무), 정본
   최소 수정안 4건 적용 대기 (`12-routes.md` §5).
 - 이 둘의 완결은 뇌 트랙과 독립 run으로 처리한다.

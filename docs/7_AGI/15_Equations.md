@@ -191,7 +191,7 @@ $$
 
 [반례] 같은 raw $W$에서도 gain, inhibition, delay 또는 $Q$가 달라지면 $g_H$가 달라지고, 좌표 gauge는 $W$의 성분과 $g$의 성분을 함께 바꾼다. 따라서 `연결 -> 계량`은 유일한 항등식이 아니라 측정된 입력, 고정한 estimator와 held-out prediction으로 경쟁시켜야 하는 가설이다.
 
-[산출: retrospective discovery] `_workspace/ce/neural-riemannian-metric-validation-20260818`에서 상태 SPD, graph metric/quasi-metric, directed action/Finsler, distribution metric과 derived readout을 27개 ID로 닫았다. 공식 E17의 11개 session, 3개 animal에서 계산 가능한 5,906개 tuple을 동일 split로 전부 실행했다. $H=5,15,30$의 동물평균 uncertainty NLPD는 increment-covariance 후보 `S2`가 근소하게 낮았지만 `S3/S4-H`와 차이가 작고 동물별 방향이 엇갈렸다. $H=1$은 persistence baseline이 가장 낮았다. 따라서 population winner와 뇌의 핵심식 판정은 금지한다.
+[산출: retrospective discovery] `_workspace/ce/_archive/neural-riemannian-metric-validation-20260818`에서 상태 SPD, graph metric/quasi-metric, directed action/Finsler, distribution metric과 derived readout을 27개 ID로 닫았다. 공식 E17의 11개 session, 3개 animal에서 계산 가능한 5,906개 tuple을 동일 split로 전부 실행했다. $H=5,15,30$의 동물평균 uncertainty NLPD는 increment-covariance 후보 `S2`가 근소하게 낮았지만 `S3/S4-H`와 차이가 작고 동물별 방향이 엇갈렸다. $H=1$은 persistence baseline이 가장 낮았다. 따라서 population winner와 뇌의 핵심식 판정은 금지한다.
 
 관측가능성 기준 `S7-H`는 identity observation에서 $H=1$ feature와 target이 같아 88개 tuple을 `INELIGIBLE_TAUTOLOGY`로 제거했다. Fisher/pullback `S8/S9`는 saline/DCZ decoder의 fit-only rank gate이며 task geometry나 독립 trajectory endpoint가 아니다. E17에는 같은 unit의 direct $W^s$, 계량 입력과 이후 trajectory를 잇는 chain이 없으므로
 

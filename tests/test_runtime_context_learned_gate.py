@@ -5,8 +5,8 @@ import textwrap
 import pytest
 import torch
 
-from reality_stone.clarus.runtime_context_branch_routing import architectural_blocks
-from reality_stone.clarus.runtime_context_learned_gate import (
+from reality_stone.clarus.experiments.runtime_context_branch_routing import architectural_blocks
+from reality_stone.clarus.experiments.runtime_context_learned_gate import (
     FORBIDDEN_GATE_NAMES,
     GateSnapshot,
     LearnedContextGateConfig,

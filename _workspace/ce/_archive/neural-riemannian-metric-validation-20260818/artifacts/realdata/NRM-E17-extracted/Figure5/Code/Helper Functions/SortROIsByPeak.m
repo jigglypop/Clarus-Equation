@@ -68,4 +68,4 @@ title(strcat('Session',num2str(ii)))
 clim([0 maxcol])
 plot_epochs
 end
-end
+end

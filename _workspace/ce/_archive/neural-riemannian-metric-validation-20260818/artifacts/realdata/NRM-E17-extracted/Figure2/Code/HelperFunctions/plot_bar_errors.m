@@ -18,4 +18,4 @@ ylim([ymin ymax])
 end
 xlim([0.5 2.5])
 
-[l,p]=ranksum(A, B);
+[l,p]=ranksum(A, B);

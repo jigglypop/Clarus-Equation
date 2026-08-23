@@ -109,8 +109,8 @@ OOD에서도 V10 우위가 유지된다는 예측은 V11에서 실패했다. Elm
 
 - 구현: `reality_stone/python/reality_stone/clarus/local_cloud_kernel.py`
 - 평가: `reality_stone/python/reality_stone/clarus/local_cloud_benchmark.py`
-- 등록과 결과: `_workspace/ce/agi-v10-local-cloud-development-20260812/artifacts/`
-- confirmation: `_workspace/ce/agi-v10-local-cloud-confirmation-20260812/artifacts/`
+- 등록과 결과: `_workspace/ce/_archive/agi-v10-local-cloud-development-20260812/artifacts/`
+- confirmation: `_workspace/ce/_archive/agi-v10-local-cloud-confirmation-20260812/artifacts/`
 - 개발 결과 SHA-256:
   `CF6F304E1217E7CC446A9B5363C38F52D95261AB513E08F56CF6DF50DDE71302`
 - confirmation 결과 SHA-256:

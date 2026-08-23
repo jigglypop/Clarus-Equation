@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from fractions import Fraction
 
-import reality_stone.clarus as clarus
+from reality_stone.clarus import universe_life_kernel as ulk
 from reality_stone.clarus.universe_life_kernel import (
     ACTIVITY_DELTA_BOUNDARY,
     ACTIVITY_DELTA_MASS,
@@ -133,12 +133,12 @@ def test_h1_citation_both_points_in_u0() -> None:
     assert circ.label == LABEL
 
 
-def test_public_exports_include_activity_pair_names() -> None:
-    assert clarus.registered_activity_pair is registered_activity_pair
-    assert clarus.activity_readout is activity_readout
-    assert clarus.ACTIVITY_NEXT_STAR == ACTIVITY_NEXT_STAR
-    assert clarus.ACTIVITY_NEXT_CIRC == ACTIVITY_NEXT_CIRC
-    assert clarus.ACTIVITY_DELTA_MASS == ACTIVITY_DELTA_MASS
-    assert clarus.ACTIVITY_DELTA_BOUNDARY == ACTIVITY_DELTA_BOUNDARY
-    assert clarus.ACTIVITY_PAIR_CIRC_MASS == ACTIVITY_PAIR_CIRC_MASS
-    assert clarus.ACTIVITY_PAIR_SIGMA == ACTIVITY_PAIR_SIGMA
+def test_module_exports_include_activity_pair_names() -> None:
+    assert ulk.registered_activity_pair is registered_activity_pair
+    assert ulk.activity_readout is activity_readout
+    assert ulk.ACTIVITY_NEXT_STAR == ACTIVITY_NEXT_STAR
+    assert ulk.ACTIVITY_NEXT_CIRC == ACTIVITY_NEXT_CIRC
+    assert ulk.ACTIVITY_DELTA_MASS == ACTIVITY_DELTA_MASS
+    assert ulk.ACTIVITY_DELTA_BOUNDARY == ACTIVITY_DELTA_BOUNDARY
+    assert ulk.ACTIVITY_PAIR_CIRC_MASS == ACTIVITY_PAIR_CIRC_MASS
+    assert ulk.ACTIVITY_PAIR_SIGMA == ACTIVITY_PAIR_SIGMA

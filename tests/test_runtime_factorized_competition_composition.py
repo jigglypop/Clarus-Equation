@@ -1,17 +1,16 @@
 import json
-from pathlib import Path
 
 from reality_stone.clarus.runtime import BrainRuntimeConfig
-from reality_stone.clarus.runtime_factorized_competition_composition import (
+from reality_stone.clarus.experiments.runtime_factorized_competition_composition import (
     analyze_factorized_artifact,
 )
-from reality_stone.clarus.runtime_experience_delayed_binding import _blocks
+from reality_stone.clarus.experiments.runtime_experience_delayed_binding import _blocks
 
 
-CALIBRATION_INPUT = Path(
-    "_workspace/ce/brainruntime-factorized-competition-composition-20260822/"
-    "artifacts/calibration-input.json"
-)
+from _run_paths import run_dir
+
+
+CALIBRATION_INPUT = run_dir("brainruntime-factorized-competition-composition-20260822") / "artifacts" / "calibration-input.json"
 
 
 def test_factorized_config_rejects_jitter_and_nonunit_gain() -> None:

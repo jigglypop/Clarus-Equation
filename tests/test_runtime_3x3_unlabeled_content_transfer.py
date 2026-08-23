@@ -1,11 +1,10 @@
 import inspect
 import json
-from pathlib import Path
 
 import pytest
 import torch
 
-from reality_stone.clarus.runtime_3x3_unlabeled_content_transfer import (
+from reality_stone.clarus.experiments.runtime_3x3_unlabeled_content_transfer import (
     analyze_3x3_unlabeled_content_artifact,
     compile_current_packet_indices,
     discover_unlabeled_parallelograms,
@@ -14,10 +13,10 @@ from reality_stone.clarus.runtime_3x3_unlabeled_content_transfer import (
 )
 
 
-CALIBRATION_INPUT = Path(
-    "_workspace/ce/brainruntime-3x3-unlabeled-content-transfer-20260822/"
-    "artifacts/calibration-input.json"
-)
+from _run_paths import run_dir
+
+
+CALIBRATION_INPUT = run_dir("brainruntime-3x3-unlabeled-content-transfer-20260822") / "artifacts" / "calibration-input.json"
 
 
 def _exact_fixture() -> tuple[torch.Tensor, torch.Tensor]:

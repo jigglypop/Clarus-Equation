@@ -1,0 +1,1 @@
+PINNED: v18b 벤치 하네스(tests/test_v18b_benchmark.py)가 이 run의 동결 live 경로·sha 잠금 artifact를 참조한다. gc 이동 금지. 근거: MULTIREPO_PLAN.md 진행 기록 2026-08-23.

@@ -1,15 +1,14 @@
 import json
-from pathlib import Path
 
-from reality_stone.clarus.runtime_three_event_relevance_no_go import (
+from reality_stone.clarus.experiments.runtime_three_event_relevance_no_go import (
     analyze_relevance_no_go_artifact,
 )
 
 
-CALIBRATION_INPUT = Path(
-    "_workspace/ce/brainruntime-three-event-relevance-no-go-20260822/"
-    "artifacts/calibration-input.json"
-)
+from _run_paths import run_dir
+
+
+CALIBRATION_INPUT = run_dir("brainruntime-three-event-relevance-no-go-20260822") / "artifacts" / "calibration-input.json"
 
 
 def test_three_locally_valid_events_do_not_identify_desired_pair() -> None:

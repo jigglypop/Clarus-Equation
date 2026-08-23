@@ -1,6 +1,5 @@
-from pathlib import Path
 
-from reality_stone.clarus.runtime_curvature_selector_confirmation import (
+from reality_stone.clarus.experiments.runtime_curvature_selector_confirmation import (
     CONFIRMATION_AMPLITUDE,
     CONFIRMATION_DIRECTIONS,
     confirm_development_artifact,
@@ -8,10 +7,10 @@ from reality_stone.clarus.runtime_curvature_selector_confirmation import (
 )
 
 
-DEVELOPMENT = Path(
-    "_workspace/ce/brainruntime-local-stochastic-binding-20260822/"
-    "artifacts/development-results.json"
-)
+from _run_paths import run_dir
+
+
+DEVELOPMENT = run_dir("brainruntime-local-stochastic-binding-20260822") / "artifacts" / "development-results.json"
 
 
 def test_confirmation_catalogue_is_fresh_and_fixed() -> None:

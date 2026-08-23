@@ -1,4 +1,4 @@
-from reality_stone.clarus.runtime_source_only_symmetry_nogo import (
+from reality_stone.clarus.experiments.runtime_source_only_symmetry_nogo import (
     run_source_only_symmetry_seed,
 )
 

@@ -5,7 +5,7 @@ import textwrap
 import pytest
 import torch
 
-from reality_stone.clarus.runtime_broad_edge_selector import (
+from reality_stone.clarus.experiments.runtime_broad_edge_selector import (
     FORBIDDEN_EDGE_SELECTOR_NAMES,
     CountNormalizedEdgeField,
     EdgeFieldSnapshot,

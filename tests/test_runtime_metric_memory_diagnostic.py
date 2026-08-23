@@ -7,9 +7,9 @@ from pathlib import Path
 import pytest
 import torch
 
-import reality_stone.clarus.runtime_alternative_memory as frozen_m1
-from reality_stone.clarus.runtime_alternative_memory import AlternativeMemoryConfig
-from reality_stone.clarus.runtime_metric_memory_diagnostic import (
+import reality_stone.clarus.experiments.runtime_alternative_memory as frozen_m1
+from reality_stone.clarus.experiments.runtime_alternative_memory import AlternativeMemoryConfig
+from reality_stone.clarus.experiments.runtime_metric_memory_diagnostic import (
     ADVERSE_CONDITIONS,
     CONFIRMATION_SEEDS,
     G3DiagnosticConfig,

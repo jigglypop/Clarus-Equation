@@ -221,7 +221,7 @@ $$\theta_{t+1} \leftarrow \theta_{t+1} + G_{\text{rem}} \cdot \mathbb{1}[\mathca
 
 [경험식] 참가자 34명의 공개 E19 자료와 공식 Figure 4 cluster를 재계산하면 REM/SWS 비율은 item-level 변화와 음의 순위상관(`rho=-0.553`, 양측 `p=0.000690`), category-level 변화와 양의 순위상관(`rho=0.470`, 양측 `p=0.00509`)을 보인다. 같은 자료의 기술적 선형 기울기는 각각 `-0.0244`, `0.0147`이다.
 
-[미완성] E15 공개 묶음에는 같은 animal/session/window에 연결된 unit spike timestamp, SWR event와 replay score가 없다. 따라서 branching 또는 transition entropy가 replay를 예측하는지와 sigmoid threshold가 선형 모델보다 나은지는 `UNTESTABLE`이다. E19 결과도 참가자 수준 표현 변화이지 꿈 내용이나 생성적 재조합의 직접 측정이 아니다. 서로 다른 종과 개체의 E13·E15·E19 결과를 하나의 $\Delta W\to\Delta g\to\Delta x(t)$ 사슬로 합치지 않는다. 재현 코드와 해시 manifest는 `_workspace/ce/sleep-replay-routing-realdata-20260818/artifacts/`에 있다.
+[미완성] E15 공개 묶음에는 같은 animal/session/window에 연결된 unit spike timestamp, SWR event와 replay score가 없다. 따라서 branching 또는 transition entropy가 replay를 예측하는지와 sigmoid threshold가 선형 모델보다 나은지는 `UNTESTABLE`이다. E19 결과도 참가자 수준 표현 변화이지 꿈 내용이나 생성적 재조합의 직접 측정이 아니다. 서로 다른 종과 개체의 E13·E15·E19 결과를 하나의 $\Delta W\to\Delta g\to\Delta x(t)$ 사슬로 합치지 않는다. 재현 코드와 해시 manifest는 `_workspace/ce/_archive/sleep-replay-routing-realdata-20260818/artifacts/`에 있다.
 
 ---
 

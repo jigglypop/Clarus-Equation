@@ -54,7 +54,8 @@ $$
 실행:
 
 ```bash
-uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_effective_connectivity_proxy_gate.py
+# 미구현 — 2026-08-23 기준 examples/evolution/mouse_ibl_effective_connectivity_proxy_gate.py 파일 부재
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/evolution/mouse_ibl_effective_connectivity_proxy_gate.py
 ```
 
 Target replication:
@@ -161,7 +162,8 @@ $$
 실행:
 
 ```bash
-uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_lagged_coupling_proxy_gate.py
+# 미구현 — 2026-08-23 기준 examples/evolution/mouse_ibl_lagged_coupling_proxy_gate.py 파일 부재
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/evolution/mouse_ibl_lagged_coupling_proxy_gate.py
 ```
 
 Target replication:
@@ -330,7 +332,8 @@ $\Delta_{U\mid X,R}>0$가 후보 session들에서 반복되면, unit identity는
 실행:
 
 ```bash
-uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_all_unit_nested_regularization_gate.py --permutations 10 --max-units-per-probe 192
+# 미구현 — 2026-08-23 기준 examples/evolution/mouse_ibl_all_unit_nested_regularization_gate.py 파일 부재
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/evolution/mouse_ibl_all_unit_nested_regularization_gate.py --permutations 10 --max-units-per-probe 192
 ```
 
 Target replication:
@@ -461,7 +464,8 @@ $$
 실행:
 
 ```bash
-uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_block_regularized_unit_gate.py
+# 미구현 — 2026-08-23 기준 examples/evolution/mouse_ibl_block_regularized_unit_gate.py 파일 부재
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/evolution/mouse_ibl_block_regularized_unit_gate.py
 ```
 
 Target replication:
@@ -538,7 +542,8 @@ $$
 실행:
 
 ```bash
-uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_temporal_glm_coupling_gate.py
+# 미구현 — 2026-08-23 기준 examples/evolution/mouse_ibl_temporal_glm_coupling_gate.py 파일 부재
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/evolution/mouse_ibl_temporal_glm_coupling_gate.py
 ```
 
 5-candidate panel 결과:
@@ -609,7 +614,8 @@ $$
 실행:
 
 ```bash
-uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_low_rank_unit_transition_gate.py --components 12 --max-units-per-probe 64
+# 미구현 — 2026-08-23 기준 examples/evolution/mouse_ibl_low_rank_unit_transition_gate.py 파일 부재
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/evolution/mouse_ibl_low_rank_unit_transition_gate.py --components 12 --max-units-per-probe 64
 ```
 
 5-candidate panel 결과:
@@ -685,7 +691,8 @@ $$
 실행:
 
 ```bash
-uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_innovation_behavior_gate.py
+# 미구현 — 2026-08-23 기준 examples/evolution/mouse_ibl_innovation_behavior_gate.py 파일 부재
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/evolution/mouse_ibl_innovation_behavior_gate.py
 ```
 
 5-candidate panel 결과:
@@ -729,7 +736,8 @@ $$
 12-session registered panel 실행:
 
 ```bash
-uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_innovation_behavior_gate.py --candidates-json examples/physics/evolution/mouse_ibl_channel_fallback_registered_panel_ranker_results.json --output-stem mouse_ibl_innovation_behavior_12panel
+# 미구현 — 2026-08-23 기준 examples/evolution/mouse_ibl_innovation_behavior_gate.py 파일 부재
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/evolution/mouse_ibl_innovation_behavior_gate.py --candidates-json examples/evolution/mouse_ibl_channel_fallback_registered_panel_ranker_results.json --output-stem mouse_ibl_innovation_behavior_12panel
 ```
 
 12-panel 결과:
@@ -763,7 +771,8 @@ choice와 action은 같은 target으로 합치지 않고 별도 outer session에
 실행:
 
 ```bash
-python3 examples/physics/evolution/mouse_ibl_choice_action_split_from_innovation.py
+# 미구현 — 2026-08-23 기준 examples/evolution/mouse_ibl_choice_action_split_from_innovation.py 파일 부재
+python3 examples/evolution/mouse_ibl_choice_action_split_from_innovation.py
 ```
 
 식 후보:
@@ -829,7 +838,8 @@ directed-axis gate는 full innovation 대신 축별 기여를 시험한다. 여�
 실행:
 
 ```bash
-uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_directed_latent_axis_split_gate.py
+# 미구현 — 2026-08-23 기준 examples/evolution/mouse_ibl_directed_latent_axis_split_gate.py 파일 부재
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/evolution/mouse_ibl_directed_latent_axis_split_gate.py
 ```
 
 식 후보:
@@ -888,7 +898,8 @@ Directed-axis gate의 위험은 사후 선택이다. 12개 축 중 가장 좋은
 실행:
 
 ```bash
-python3 examples/physics/evolution/mouse_ibl_latent_axis_stability_from_directed.py
+# 미구현 — 2026-08-23 기준 examples/evolution/mouse_ibl_latent_axis_stability_from_directed.py 파일 부재
+python3 examples/evolution/mouse_ibl_latent_axis_stability_from_directed.py
 ```
 
 결과:
@@ -926,7 +937,8 @@ Latent-axis stability gate가 막은 것은 사후 선택 문제다. 12개 innov
 실행:
 
 ```bash
-uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_nested_innovation_subspace_gate.py
+# 미구현 — 2026-08-23 기준 examples/evolution/mouse_ibl_nested_innovation_subspace_gate.py 파일 부재
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/evolution/mouse_ibl_nested_innovation_subspace_gate.py
 ```
 
 식 후보:
@@ -1047,7 +1059,8 @@ $$
 실행:
 
 ```bash
-uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_choice_policy_history_gate.py
+# 미구현 — 2026-08-23 기준 examples/evolution/mouse_ibl_choice_policy_history_gate.py 파일 부재
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/evolution/mouse_ibl_choice_policy_history_gate.py
 ```
 
 12-panel model summary:
@@ -1112,7 +1125,8 @@ richer history block은 여러 lag와 상호작용을 추가한 경쟁 설명이
 실행:
 
 ```bash
-uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_richer_choice_policy_gate.py
+# 미구현 — 2026-08-23 기준 examples/evolution/mouse_ibl_richer_choice_policy_gate.py 파일 부재
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/evolution/mouse_ibl_richer_choice_policy_gate.py
 ```
 
 12-panel model summary:
@@ -1195,7 +1209,8 @@ $$
 실행:
 
 ```bash
-uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_choice_neural_synergy_gate.py
+# 미구현 — 2026-08-23 기준 examples/evolution/mouse_ibl_choice_neural_synergy_gate.py 파일 부재
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/evolution/mouse_ibl_choice_neural_synergy_gate.py
 ```
 
 12-panel model summary:
@@ -1308,7 +1323,8 @@ $$
 실행:
 
 ```bash
-uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_choice_innovation_reproducibility_gate.py
+# 미구현 — 2026-08-23 기준 examples/evolution/mouse_ibl_choice_innovation_reproducibility_gate.py 파일 부재
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/evolution/mouse_ibl_choice_innovation_reproducibility_gate.py
 ```
 
 12-panel 결과:
@@ -1375,7 +1391,8 @@ $$
 실행:
 
 ```bash
-uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_choice_innovation_reproducibility_gate.py --candidate-key top_candidates --candidate-limit 24 --min-replications 13 --min-global-top1-count 40 --min-global-top3-count 64 --output-json examples/physics/evolution/mouse_ibl_choice_innovation_reproducibility_24panel_results.json --report-md examples/physics/evolution/mouse_ibl_choice_innovation_reproducibility_24panel_report.md
+# 미구현 — 2026-08-23 기준 examples/evolution/mouse_ibl_choice_innovation_reproducibility_gate.py 파일 부재
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/evolution/mouse_ibl_choice_innovation_reproducibility_gate.py --candidate-key top_candidates --candidate-limit 24 --min-replications 13 --min-global-top1-count 40 --min-global-top3-count 64 --output-json examples/evolution/mouse_ibl_choice_innovation_reproducibility_24panel_results.json --report-md examples/evolution/mouse_ibl_choice_innovation_reproducibility_24panel_report.md
 ```
 
 24-panel 결과:
@@ -1439,11 +1456,16 @@ Choice 쪽은 stable innovation subspace로 닫히지 않았으므로, 다음에
 실행:
 
 ```bash
-uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_action_subspace_mechanism_map.py
-uv run --no-project --with iblatlas python examples/physics/evolution/mouse_ibl_action_ccf_annotation.py
-uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_action_subspace_region_ablation.py --conditions full drop_top_ccf only_top_ccf
-uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_action_subspace_region_ablation.py --conditions full drop_probe only_probe --output-json examples/physics/evolution/mouse_ibl_action_subspace_probe_ablation_results.json --report-md examples/physics/evolution/mouse_ibl_action_subspace_probe_ablation_report.md
-uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_action_top_unit_sufficiency.py
+# 미구현 — 2026-08-23 기준 examples/evolution/mouse_ibl_action_subspace_mechanism_map.py 파일 부재
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/evolution/mouse_ibl_action_subspace_mechanism_map.py
+# 미구현 — 2026-08-23 기준 examples/evolution/mouse_ibl_action_ccf_annotation.py 파일 부재
+uv run --no-project --with iblatlas python examples/evolution/mouse_ibl_action_ccf_annotation.py
+# 미구현 — 2026-08-23 기준 examples/evolution/mouse_ibl_action_subspace_region_ablation.py 파일 부재
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/evolution/mouse_ibl_action_subspace_region_ablation.py --conditions full drop_top_ccf only_top_ccf
+# 미구현 — 2026-08-23 기준 examples/evolution/mouse_ibl_action_subspace_region_ablation.py 파일 부재
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/evolution/mouse_ibl_action_subspace_region_ablation.py --conditions full drop_probe only_probe --output-json examples/evolution/mouse_ibl_action_subspace_probe_ablation_results.json --report-md examples/evolution/mouse_ibl_action_subspace_probe_ablation_report.md
+# 미구현 — 2026-08-23 기준 examples/evolution/mouse_ibl_action_top_unit_sufficiency.py 파일 부재
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/evolution/mouse_ibl_action_top_unit_sufficiency.py
 ```
 
 12-panel target summary:

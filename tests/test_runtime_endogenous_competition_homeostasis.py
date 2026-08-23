@@ -4,7 +4,7 @@ import pytest
 import torch
 
 from reality_stone.clarus.runtime import BrainRuntime, BrainRuntimeConfig, RuntimeMode
-from reality_stone.clarus.runtime_endogenous_competition_homeostasis import (
+from reality_stone.clarus.experiments.runtime_endogenous_competition_homeostasis import (
     CALIBRATION_SEED,
     EndogenousCompetitionConfig,
     run_endogenous_competition_seed,

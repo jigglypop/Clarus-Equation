@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 import torch
 
-from reality_stone.clarus.runtime_prediction_guided_metacontrol import (
+from reality_stone.clarus.experiments.runtime_prediction_guided_metacontrol import (
     ACTION_VALUES,
     CONFIRMATION_SEEDS,
     C1MetacontrolConfig,

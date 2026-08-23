@@ -34,4 +34,4 @@ for ii=1:length(Z)
     Z_choi(ii).srt=Z(ii).srt(choi,:);
     Z_stim(ii).srt=Z(ii).srt(stims,:);
     Z_delay(ii).srt=Z(ii).srt(delay,:);
-end
+end

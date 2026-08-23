@@ -1,15 +1,14 @@
 import json
-from pathlib import Path
 
-from reality_stone.clarus.runtime_all_input_packet_factorization import (
+from reality_stone.clarus.experiments.runtime_all_input_packet_factorization import (
     analyze_all_input_artifact,
 )
 
 
-CALIBRATION_INPUT = Path(
-    "_workspace/ce/brainruntime-all-input-packet-factorization-20260822/"
-    "artifacts/calibration-input.json"
-)
+from _run_paths import run_dir
+
+
+CALIBRATION_INPUT = run_dir("brainruntime-all-input-packet-factorization-20260822") / "artifacts" / "calibration-input.json"
 
 
 def test_fresh_all_input_calibration_passes_with_identity_controls() -> None:

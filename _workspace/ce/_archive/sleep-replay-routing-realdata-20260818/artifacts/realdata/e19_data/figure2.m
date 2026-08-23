@@ -335,4 +335,4 @@ circle_cluster(clusters_idx{1,1}(:,2),clusters_idx{1,1}(:,1),'k',1.5);
 hold on;
 axis xy;
 colorbar;
-clear stats_map h_map h p ci stats P_cluster_idx clusters_idx
+clear stats_map h_map h p ci stats P_cluster_idx clusters_idx

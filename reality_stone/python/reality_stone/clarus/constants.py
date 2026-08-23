@@ -8,7 +8,8 @@ from __future__ import annotations
 
 import math
 
-from .cosmology_registry import LEGACY_DELTA_5DP_V1, LEGACY_ROUNDED_RUNTIME_V1
+from .core_registry import LEGACY_DELTA_5DP_V1
+from .runtime_targets import LEGACY_ROUNDED_RUNTIME_V1
 
 # ---------------------------------------------------------------------------
 # Core CE coupling constant
@@ -27,7 +28,7 @@ T_WAKE: float = 1.0 / (3.0 + AD * (1.0 - AD))
 # ---------------------------------------------------------------------------
 # These names are operational/runtime defaults.  They intentionally retain
 # bit-for-bit parity with the historical literals; scientific exact-chain
-# values live separately in cosmology_registry.CE_CORE_EXACT_V1.
+# values live separately in core_registry.CE_CORE_EXACT_V1.
 ACTIVE_RATIO: float = LEGACY_ROUNDED_RUNTIME_V1.active_ratio
 STRUCT_RATIO: float = LEGACY_ROUNDED_RUNTIME_V1.struct_ratio
 BACKGROUND_RATIO: float = LEGACY_ROUNDED_RUNTIME_V1.background_ratio

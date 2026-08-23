@@ -2,7 +2,7 @@ import math
 
 import torch
 
-from reality_stone.clarus.runtime_metric_intervention import (
+from reality_stone.clarus.experiments.runtime_metric_intervention import (
     MetricInterventionConfig,
     _arm_snapshot,
     _base_fixture,

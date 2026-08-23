@@ -1,18 +1,17 @@
 import json
-from pathlib import Path
 
 import torch
 
-from reality_stone.clarus.runtime_low_degree_hard_negative_transfer import (
+from reality_stone.clarus.experiments.runtime_low_degree_hard_negative_transfer import (
     _hard_panel,
     analyze_low_degree_hard_negative_artifact,
 )
 
 
-CALIBRATION_INPUT = Path(
-    "_workspace/ce/brainruntime-low-degree-hard-negative-transfer-20260822/"
-    "artifacts/calibration-r1-input.json"
-)
+from _run_paths import run_dir
+
+
+CALIBRATION_INPUT = run_dir("brainruntime-low-degree-hard-negative-transfer-20260822") / "artifacts" / "calibration-r1-input.json"
 
 
 def test_midpoint_hard_negative_has_unique_opposite_model_choices() -> None:

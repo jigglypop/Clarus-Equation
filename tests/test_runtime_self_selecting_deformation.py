@@ -1,4 +1,4 @@
-from reality_stone.clarus.runtime_self_selecting_deformation import SelfSelectingDeformationConfig, self_selecting_deformation
+from reality_stone.clarus.experiments.runtime_self_selecting_deformation import SelfSelectingDeformationConfig, self_selecting_deformation
 
 def test_m4r_reuses_one_candidate_bank_and_records_required_receipts() -> None:
     config = SelfSelectingDeformationConfig(dim=16, replay_epochs=1, rollout_horizon=2, seed=97401)

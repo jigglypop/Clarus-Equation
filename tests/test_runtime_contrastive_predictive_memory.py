@@ -1,7 +1,7 @@
 import torch
 
-from reality_stone.clarus.runtime_alternative_memory import AlternativeMemoryConfig
-from reality_stone.clarus.runtime_contrastive_predictive_memory import (
+from reality_stone.clarus.experiments.runtime_alternative_memory import AlternativeMemoryConfig
+from reality_stone.clarus.experiments.runtime_contrastive_predictive_memory import (
     _factor_codebooks,
     _m2_collect_phase,
     _m2_runtime,

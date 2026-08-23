@@ -1,6 +1,6 @@
 import torch
 
-from reality_stone.clarus.runtime_native_loops import (
+from reality_stone.clarus.experiments.runtime_native_loops import (
     NativeLoopsConfig, _codebook, _detach, _loop8_replay_source_audit, _probe_rollout, _runtime, loop6_temporal_selection, loop7_agent_route, loop8_native_replay, loop8_route_b, loop9_route_b, run_native_loops,
 )
 from reality_stone.clarus.temporal_memory import TemporalAuditedMemory, TemporalMemoryEvent

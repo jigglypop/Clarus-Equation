@@ -1,12 +1,12 @@
 import torch
 
-import reality_stone.clarus.runtime_metric_intervention as g1_module
+import reality_stone.clarus.experiments.runtime_metric_intervention as g1_module
 from reality_stone.clarus.runtime import BrainRuntime, BrainRuntimeConfig
-from reality_stone.clarus.runtime_metric_intervention import (
+from reality_stone.clarus.experiments.runtime_metric_intervention import (
     MetricInterventionConfig,
     _base_fixture,
 )
-from reality_stone.clarus.runtime_metric_sufficiency import (
+from reality_stone.clarus.experiments.runtime_metric_sufficiency import (
     G2Config,
     G2_ENVIRONMENTS,
     _g2_bootstrap_lcb,

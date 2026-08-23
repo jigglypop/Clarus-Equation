@@ -1,20 +1,19 @@
 import inspect
 import json
-from pathlib import Path
 
 import torch
 
-from reality_stone.clarus.runtime_experience_delayed_binding import (
+from reality_stone.clarus.experiments.runtime_experience_delayed_binding import (
     _experience_block,
     _local_pair,
     analyze_weight_row,
 )
 
 
-DEVELOPMENT = Path(
-    "_workspace/ce/brainruntime-local-stochastic-binding-20260822/"
-    "artifacts/development-results.json"
-)
+from _run_paths import run_dir
+
+
+DEVELOPMENT = run_dir("brainruntime-local-stochastic-binding-20260822") / "artifacts" / "development-results.json"
 
 
 def _first_weight() -> tuple[int, torch.Tensor]:

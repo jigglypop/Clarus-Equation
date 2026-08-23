@@ -1,11 +1,10 @@
 import inspect
 import json
-from pathlib import Path
 
 import pytest
 import torch
 
-from reality_stone.clarus.runtime_rotating_low_degree_content_transfer import (
+from reality_stone.clarus.experiments.runtime_rotating_low_degree_content_transfer import (
     analyze_rotating_low_degree_artifact,
     compile_low_degree_packet_index,
     generate_low_degree_inputs,
@@ -14,10 +13,10 @@ from reality_stone.clarus.runtime_rotating_low_degree_content_transfer import (
 )
 
 
-CALIBRATION_INPUT = Path(
-    "_workspace/ce/brainruntime-rotating-low-degree-content-transfer-20260822/"
-    "artifacts/calibration-input.json"
-)
+from _run_paths import run_dir
+
+
+CALIBRATION_INPUT = run_dir("brainruntime-rotating-low-degree-content-transfer-20260822") / "artifacts" / "calibration-input.json"
 
 
 def _quadratic_fixture() -> tuple[torch.Tensor, torch.Tensor]:

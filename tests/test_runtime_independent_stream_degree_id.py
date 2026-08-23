@@ -1,19 +1,18 @@
 import json
-from pathlib import Path
 
 import torch
 
-from reality_stone.clarus.runtime_independent_stream_degree_id import (
+from reality_stone.clarus.experiments.runtime_independent_stream_degree_id import (
     _poly_features,
     _studentized_press,
     analyze_degree_id_artifact,
 )
 
 
-CALIBRATION_INPUT = Path(
-    "_workspace/ce/brainruntime-independent-stream-degree-id-20260822/"
-    "artifacts/calibration-input.json"
-)
+from _run_paths import run_dir
+
+
+CALIBRATION_INPUT = run_dir("brainruntime-independent-stream-degree-id-20260822") / "artifacts" / "calibration-input.json"
 
 
 def test_studentized_press_hat_identity_matches_explicit_refit() -> None:

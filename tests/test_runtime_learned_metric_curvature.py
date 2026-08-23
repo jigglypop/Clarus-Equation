@@ -6,11 +6,10 @@ an unavailable backend, a Python/Torch fallback, or a CUDA f32 result is not a
 native scientific-validation pass.
 """
 
-from pathlib import Path
 
 import torch
 
-from reality_stone.clarus.runtime_learned_metric_curvature import (
+from reality_stone.clarus.experiments.runtime_learned_metric_curvature import (
     analyze_development_artifact,
     analyze_weight_code,
     finite_difference_jacobian,
@@ -20,10 +19,10 @@ from reality_stone.clarus.runtime_learned_metric_curvature import (
 )
 
 
-DEVELOPMENT = Path(
-    "_workspace/ce/brainruntime-local-stochastic-binding-20260822/"
-    "artifacts/development-results.json"
-)
+from _run_paths import run_dir
+
+
+DEVELOPMENT = run_dir("brainruntime-local-stochastic-binding-20260822") / "artifacts" / "development-results.json"
 
 
 def test_linear_code_is_flat_and_uniform_code_is_degenerate() -> None:

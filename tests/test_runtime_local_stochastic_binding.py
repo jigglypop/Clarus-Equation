@@ -10,7 +10,7 @@ from reality_stone.clarus.runtime import (
     RuntimeMode,
     _LIFECYCLE_TO_CODE,
 )
-from reality_stone.clarus.runtime_local_stochastic_binding import (
+from reality_stone.clarus.experiments.runtime_local_stochastic_binding import (
     CALIBRATION_SEED,
     LocalStochasticBindingConfig,
     _oja_update,

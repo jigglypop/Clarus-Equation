@@ -1,11 +1,10 @@
 import inspect
 import json
-from pathlib import Path
 
 import pytest
 import torch
 
-from reality_stone.clarus.runtime_z3_twisted_content_transfer import (
+from reality_stone.clarus.experiments.runtime_z3_twisted_content_transfer import (
     analyze_z3_twisted_content_artifact,
     compile_twisted_packet_indices,
     enumerate_unlabeled_cartesian_charts,
@@ -14,10 +13,10 @@ from reality_stone.clarus.runtime_z3_twisted_content_transfer import (
 )
 
 
-CALIBRATION_INPUT = Path(
-    "_workspace/ce/brainruntime-z3-twisted-content-transfer-20260822/"
-    "artifacts/calibration-input.json"
-)
+from _run_paths import run_dir
+
+
+CALIBRATION_INPUT = run_dir("brainruntime-z3-twisted-content-transfer-20260822") / "artifacts" / "calibration-input.json"
 
 
 def _fixture(twist_class: int) -> tuple[torch.Tensor, torch.Tensor]:

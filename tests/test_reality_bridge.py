@@ -7,11 +7,11 @@ import reality_stone.clarus as clarus
 from reality_stone.clarus import reality
 
 
-def test_reality_bridge_is_exposed_on_unified_import_surface():
+def test_reality_bridge_is_exposed_on_module_import_surface():
     assert hasattr(clarus, "BrainRuntime")
-    assert clarus.RealityStoneStatus is reality.RealityStoneStatus
-    assert callable(clarus.has_reality_stone)
-    assert callable(clarus.reality_stone_status)
+    assert reality.RealityStoneStatus is not None
+    assert callable(reality.has_reality_stone)
+    assert callable(reality.status)
 
 
 def test_reality_bridge_status_finds_local_reality_stone_source():

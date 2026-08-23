@@ -1,3 +1,5 @@
+<!-- 도메인: ce-agi-runtime (멀티레포 이행 시 이관 대상, MULTIREPO_PLAN.md 참조) -->
+
 # CloudCell-모나드 경험적 감사
 
 > 작성 기준: 2026-07-31

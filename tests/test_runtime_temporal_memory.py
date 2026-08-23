@@ -2,7 +2,7 @@ import torch
 
 from reality_stone.clarus.agent import RuntimeAgent, RuntimeAgentConfig
 from reality_stone.clarus.runtime import BrainRuntime, BrainRuntimeConfig, RuntimeMode
-from reality_stone.clarus.runtime_temporal_memory import (
+from reality_stone.clarus.experiments.runtime_temporal_memory import (
     RuntimeTemporalAgent,
     TemporalAgentQuery,
     TemporalMemoryController,

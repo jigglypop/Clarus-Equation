@@ -5,7 +5,7 @@ import math
 import pytest
 import torch
 
-from reality_stone.clarus.runtime_topology_routing import (
+from reality_stone.clarus.experiments.runtime_topology_routing import (
     ApparatusInvalid, TopologyRoutingConfig, _shared_sparse_budget, construct_route_mask,
     run_binding_route, run_topology_circuit, run_topology_route,
 )

@@ -1,6 +1,6 @@
 import torch
 
-from reality_stone.clarus.runtime_source_seeded_competition import (
+from reality_stone.clarus.experiments.runtime_source_seeded_competition import (
     allocate_source_bindings,
     run_seeded_source_competition_seed,
     seeded_edge_code,

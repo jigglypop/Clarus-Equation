@@ -1,18 +1,17 @@
 import json
-from pathlib import Path
 
 import torch
 
-from reality_stone.clarus.runtime_binding_composition_no_go import (
+from reality_stone.clarus.experiments.runtime_binding_composition_no_go import (
     _global_wta,
     analyze_composition_artifact,
 )
 
 
-CALIBRATION_INPUT = Path(
-    "_workspace/ce/brainruntime-binding-composition-no-go-20260822/"
-    "artifacts/calibration-input.json"
-)
+from _run_paths import run_dir
+
+
+CALIBRATION_INPUT = run_dir("brainruntime-binding-composition-no-go-20260822") / "artifacts" / "calibration-input.json"
 
 
 def test_global_wta_has_at_most_one_positive_component() -> None:

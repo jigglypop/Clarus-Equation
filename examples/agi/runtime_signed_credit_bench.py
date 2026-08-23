@@ -4,7 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
-from reality_stone.clarus.runtime_credit_benchmark import RuntimeCreditBenchConfig, evaluate_runtime_credit
+from reality_stone.clarus.experiments.runtime_credit_benchmark import RuntimeCreditBenchConfig, evaluate_runtime_credit
 
 
 def main() -> int:

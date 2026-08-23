@@ -1,4 +1,4 @@
-from reality_stone.clarus.runtime_credit_benchmark import (
+from reality_stone.clarus.experiments.runtime_credit_benchmark import (
     RuntimeCreditBenchConfig,
     evaluate_runtime_credit,
 )

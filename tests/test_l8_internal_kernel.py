@@ -14,7 +14,7 @@ from fractions import Fraction
 
 import pytest
 
-import reality_stone.clarus as clarus
+from reality_stone.clarus import universe_life_kernel as ulk
 from reality_stone.clarus.universe_life_kernel import (
     ACTIVITY_DELTA_BOUNDARY,
     ACTIVITY_DELTA_MASS,
@@ -214,10 +214,10 @@ def test_bit_valued_map_cannot_equal_phi() -> None:
             assert type(bit) is not type(image)
 
 
-def test_public_exports_include_host_kernel_names() -> None:
-    assert clarus.HostTuple is HostTuple
-    assert clarus.registered_host_pair is registered_host_pair
-    assert clarus.internal_kernel is internal_kernel
-    assert clarus.activity_readout is activity_readout
-    assert clarus.loop_gate_drives is loop_gate_drives
-    assert clarus.REGISTERED_FLUX_E2 == REGISTERED_FLUX_E2
+def test_module_exports_include_host_kernel_names() -> None:
+    assert ulk.HostTuple is HostTuple
+    assert ulk.registered_host_pair is registered_host_pair
+    assert ulk.internal_kernel is internal_kernel
+    assert ulk.activity_readout is activity_readout
+    assert ulk.loop_gate_drives is loop_gate_drives
+    assert ulk.REGISTERED_FLUX_E2 == REGISTERED_FLUX_E2

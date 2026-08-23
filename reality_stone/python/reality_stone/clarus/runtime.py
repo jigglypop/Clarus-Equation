@@ -954,10 +954,13 @@ class BrainRuntime:
         """F3 ergodic gate (docs/7_AGI/12_Equation.md A.3).
 
         Reports the empirical mode occupancy measure pi_brain on the 3-simplex
-        and its KL divergence to the CE bootstrap fixed point
-        p* = (Omega_Lambda, Omega_DM, Omega_b) = (BACKGROUND_RATIO, STRUCT_RATIO, ACTIVE_RATIO).
+        and its KL divergence to the runtime target tuple
+        p* = (BACKGROUND_RATIO, STRUCT_RATIO, ACTIVE_RATIO), a frozen
+        operational axiom (provenance: pstar-br8-adjudication-20260823); it
+        carries no cosmological interpretation.
 
-        Mapping: WAKE -> Omega_Lambda, NREM -> Omega_DM, REM -> Omega_b.
+        Mapping: WAKE -> BACKGROUND_RATIO, NREM -> STRUCT_RATIO,
+        REM -> ACTIVE_RATIO.
         """
         total = sum(self.mode_occupancy.values())
         if total <= 0:

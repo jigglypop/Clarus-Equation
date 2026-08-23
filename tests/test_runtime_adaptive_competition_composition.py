@@ -1,19 +1,18 @@
 import json
-from pathlib import Path
 
 import torch
 
 from reality_stone.clarus.runtime import BrainRuntimeConfig
-from reality_stone.clarus.runtime_adaptive_competition_composition import (
+from reality_stone.clarus.experiments.runtime_adaptive_competition_composition import (
     analyze_adaptive_artifact,
 )
-from reality_stone.clarus.runtime_experience_delayed_binding import _blocks, _runtime
+from reality_stone.clarus.experiments.runtime_experience_delayed_binding import _blocks, _runtime
 
 
-CALIBRATION_INPUT = Path(
-    "_workspace/ce/brainruntime-adaptive-competition-composition-20260822/"
-    "artifacts/calibration-input.json"
-)
+from _run_paths import run_dir
+
+
+CALIBRATION_INPUT = run_dir("brainruntime-adaptive-competition-composition-20260822") / "artifacts" / "calibration-input.json"
 
 
 def test_adaptive_config_fails_closed_outside_strict_domain() -> None:

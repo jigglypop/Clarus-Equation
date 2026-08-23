@@ -166,7 +166,7 @@ dispatch는 backend·dtype·shape에 따라 동일 API를 어떤 kernel이 소�
 
 수치 동일성 test는 고정 fixture·seed·precision·threshold에서 구현과 reference output을 비교한다. pass는 등록된 inputs의 parity이고, 다른 hardware·length·branch·수학적 참으로 외삽하지 않는다.
 
-`tests/test_riemann_pe_consistency.py`에서
+`tests/test_riemann_pe_consistency.py`(미구현 — 2026-08-23 기준 파일 부재)에서
 
 - 동일 입력에 대해 세 backend의 출력이 atol=1e-4, rtol=1e-3 이내로 일치하는지
 - backward grad가 PyTorch와 1e-3 이내로 일치하는지

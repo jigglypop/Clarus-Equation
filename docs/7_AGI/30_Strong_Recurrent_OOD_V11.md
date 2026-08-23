@@ -69,6 +69,6 @@ small-gain 제약 아래에서도 interaction operator를 학습 가능하게 �
 
 - evaluator: `reality_stone/python/reality_stone/clarus/local_cloud_ood_benchmark.py`
 - one-shot runner: `examples/agi/local_cloud_ood_run.py`
-- run: `_workspace/ce/agi-v11-strong-ood-20260812/`
+- run: `_workspace/ce/_archive/agi-v11-strong-ood-20260812/`
 - result SHA-256:
   `456E95F5E0DC7BE89E86924F721C1A01696BF2D6DA71AD73C8414AC2B6167181`

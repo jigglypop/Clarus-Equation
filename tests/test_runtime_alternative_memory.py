@@ -1,6 +1,6 @@
 import torch
 
-from reality_stone.clarus.runtime_alternative_memory import (
+from reality_stone.clarus.experiments.runtime_alternative_memory import (
     AlternativeMemoryConfig,
     DelayedSignedEligibility,
     _m1_runtime,

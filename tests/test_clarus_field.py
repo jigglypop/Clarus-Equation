@@ -5,7 +5,7 @@ import math
 import numpy as np
 import pytest
 
-import reality_stone.clarus as clarus_public
+from reality_stone.clarus import clarus_field as clarus_field_module
 from reality_stone.clarus.clarus_field import (
     ClarusField,
     ClarusFieldConfig,
@@ -190,8 +190,8 @@ def test_certificate_keeps_conditional_and_failed_claims_explicit() -> None:
     assert not certificate.v14_route_l_inherited
 
 
-def test_clarus_field_is_exported_from_the_public_clarus_package() -> None:
-    assert clarus_public.ClarusField is ClarusField
-    assert clarus_public.ClarusFieldConfig is ClarusFieldConfig
-    assert clarus_public.bounded_hrr_bind is bounded_hrr_bind
-    assert clarus_public.prediction_error_gate_scores is prediction_error_gate_scores
+def test_clarus_field_module_exports_expected_names() -> None:
+    assert clarus_field_module.ClarusField is ClarusField
+    assert clarus_field_module.ClarusFieldConfig is ClarusFieldConfig
+    assert clarus_field_module.bounded_hrr_bind is bounded_hrr_bind
+    assert clarus_field_module.prediction_error_gate_scores is prediction_error_gate_scores

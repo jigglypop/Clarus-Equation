@@ -1,15 +1,14 @@
 import json
-from pathlib import Path
 
-from reality_stone.clarus.runtime_factor_context_relevance_composition import (
+from reality_stone.clarus.experiments.runtime_factor_context_relevance_composition import (
     analyze_factor_context_artifact,
 )
 
 
-CALIBRATION_INPUT = Path(
-    "_workspace/ce/brainruntime-factor-context-relevance-composition-20260822/"
-    "artifacts/calibration-input.json"
-)
+from _run_paths import run_dir
+
+
+CALIBRATION_INPUT = run_dir("brainruntime-factor-context-relevance-composition-20260822") / "artifacts" / "calibration-input.json"
 
 
 def test_unseen_11_context_composes_two_seen_factor_values() -> None:

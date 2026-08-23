@@ -3,7 +3,7 @@ import inspect
 
 import torch
 
-from reality_stone.clarus.runtime_context_branch_routing import (
+from reality_stone.clarus.experiments.runtime_context_branch_routing import (
     ContextBranchConfig,
     ExactDelayEligibility,
     architectural_blocks,

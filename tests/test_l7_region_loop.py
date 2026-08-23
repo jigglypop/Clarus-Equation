@@ -18,7 +18,7 @@ from fractions import Fraction
 
 import pytest
 
-import reality_stone.clarus as clarus
+from reality_stone.clarus import universe_life_kernel as ulk
 from reality_stone.clarus.universe_life_kernel import (
     IDENTITY_WEIGHT,
     LOOP_TASK_PHI1,
@@ -299,12 +299,12 @@ def test_overwrite_requires_washed_host() -> None:
         overwrite_sigma_from_action(_center())  # type: ignore[arg-type]
 
 
-def test_public_exports_include_loop_names() -> None:
-    assert clarus.LOOP_TASK_PHI1 == LOOP_TASK_PHI1
-    assert clarus.LOOP_TASK_PHI2 == LOOP_TASK_PHI2
-    assert clarus.loop_gate_drives is loop_gate_drives
-    assert clarus.overwrite_sigma_from_action is overwrite_sigma_from_action
-    assert clarus.WashedRoleSplit is WashedRoleSplit
-    assert clarus.role_split_drives is role_split_drives
-    assert clarus.registered_start is registered_start
-    assert clarus.IDENTITY_WEIGHT is IDENTITY_WEIGHT
+def test_module_exports_include_loop_names() -> None:
+    assert ulk.LOOP_TASK_PHI1 == LOOP_TASK_PHI1
+    assert ulk.LOOP_TASK_PHI2 == LOOP_TASK_PHI2
+    assert ulk.loop_gate_drives is loop_gate_drives
+    assert ulk.overwrite_sigma_from_action is overwrite_sigma_from_action
+    assert ulk.WashedRoleSplit is WashedRoleSplit
+    assert ulk.role_split_drives is role_split_drives
+    assert ulk.registered_start is registered_start
+    assert ulk.IDENTITY_WEIGHT is IDENTITY_WEIGHT

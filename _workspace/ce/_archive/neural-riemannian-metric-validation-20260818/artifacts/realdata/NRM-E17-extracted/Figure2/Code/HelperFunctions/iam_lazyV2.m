@@ -5,4 +5,4 @@ lul=arrayfun(@(x) x.(condi).(spORb).(actimode), tut, 'UniformOutput', false);
 spineSal{1,1}=cell2mat(lul);
 % end
 output=cell2mat(spineSal');
-end
+end

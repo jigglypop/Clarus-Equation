@@ -325,4 +325,4 @@ for isub = 1:length(data)
 end
 
 hold off;
-clear stats_map h_map h p ci stats P_cluster_idx clusters_idx
+clear stats_map h_map h p ci stats P_cluster_idx clusters_idx

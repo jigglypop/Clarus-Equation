@@ -1,15 +1,14 @@
 import json
-from pathlib import Path
 
-from reality_stone.clarus.runtime_context_packet_relevance_gate import (
+from reality_stone.clarus.experiments.runtime_context_packet_relevance_gate import (
     analyze_context_gate_artifact,
 )
 
 
-CALIBRATION_INPUT = Path(
-    "_workspace/ce/brainruntime-context-packet-relevance-gate-20260822/"
-    "artifacts/calibration-input.json"
-)
+from _run_paths import run_dir
+
+
+CALIBRATION_INPUT = run_dir("brainruntime-context-packet-relevance-gate-20260822") / "artifacts" / "calibration-input.json"
 
 
 def test_context_event_cooccurrence_gate_rejects_matched_distractor() -> None:

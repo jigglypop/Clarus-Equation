@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from fractions import Fraction
 
-import reality_stone.clarus as clarus
+from reality_stone.clarus import universe_life_kernel as ulk
 from reality_stone.clarus.universe_life_kernel import (
     COMPLETE_BINARY_ROUTER,
     IDENTITY_WEIGHT,
@@ -231,12 +231,12 @@ def test_killing_identity_and_swap_both_separate() -> None:
     assert swap_e2 == (1, 0)
 
 
-def test_public_exports_include_routing_names() -> None:
-    assert clarus.RoutedTwoCopy is RoutedTwoCopy
-    assert clarus.routed_drives is routed_drives
-    assert clarus.occupancy_bit is occupancy_bit
-    assert clarus.IDENTITY_WEIGHT is IDENTITY_WEIGHT
-    assert clarus.COMPLETE_BINARY_ROUTER is COMPLETE_BINARY_ROUTER
-    assert clarus.REGISTERED_FLUX_E1 == REGISTERED_FLUX_E1
-    assert clarus.REGISTERED_FLUX_E2 == REGISTERED_FLUX_E2
-    assert clarus.ROUTING_HORIZON == ROUTING_HORIZON
+def test_module_exports_include_routing_names() -> None:
+    assert ulk.RoutedTwoCopy is RoutedTwoCopy
+    assert ulk.routed_drives is routed_drives
+    assert ulk.occupancy_bit is occupancy_bit
+    assert ulk.IDENTITY_WEIGHT is IDENTITY_WEIGHT
+    assert ulk.COMPLETE_BINARY_ROUTER is COMPLETE_BINARY_ROUTER
+    assert ulk.REGISTERED_FLUX_E1 == REGISTERED_FLUX_E1
+    assert ulk.REGISTERED_FLUX_E2 == REGISTERED_FLUX_E2
+    assert ulk.ROUTING_HORIZON == ROUTING_HORIZON

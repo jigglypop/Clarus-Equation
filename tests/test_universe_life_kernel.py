@@ -5,7 +5,7 @@ import inspect
 
 import pytest
 
-import reality_stone.clarus as clarus
+from reality_stone.clarus import universe_life_kernel as ulk
 from reality_stone.clarus.universe_life_kernel import (
     CUBE_CORNERS,
     DIVIDING_DISCRIMINANT_AT_HALF,
@@ -172,14 +172,14 @@ def test_default_chemostat_holds_unit_flux() -> None:
     assert kernel.next_flux(Fraction(2, 5)) == Fraction(2, 5)
 
 
-def test_public_exports_match_module_names() -> None:
-    assert clarus.HybridState is HybridState
-    assert clarus.UniverseState is UniverseState
-    assert clarus.UniverseKernel is UniverseKernel
-    assert clarus.SourceHybridSubsystem is SourceHybridSubsystem
-    assert clarus.NOMINAL_PARAMETERS is NOMINAL_PARAMETERS
-    assert clarus.source_hybrid_step is source_hybrid_step
-    assert clarus.iterate_source is iterate_source
-    assert clarus.admissible_kappa is admissible_kappa
-    assert clarus.SOURCE_EXTINCTION_AREA == SOURCE_EXTINCTION_AREA
-    assert clarus.KAPPA_OPEN_RIGHT == KAPPA_OPEN_RIGHT
+def test_module_exports_match_imported_names() -> None:
+    assert ulk.HybridState is HybridState
+    assert ulk.UniverseState is UniverseState
+    assert ulk.UniverseKernel is UniverseKernel
+    assert ulk.SourceHybridSubsystem is SourceHybridSubsystem
+    assert ulk.NOMINAL_PARAMETERS is NOMINAL_PARAMETERS
+    assert ulk.source_hybrid_step is source_hybrid_step
+    assert ulk.iterate_source is iterate_source
+    assert ulk.admissible_kappa is admissible_kappa
+    assert ulk.SOURCE_EXTINCTION_AREA == SOURCE_EXTINCTION_AREA
+    assert ulk.KAPPA_OPEN_RIGHT == KAPPA_OPEN_RIGHT

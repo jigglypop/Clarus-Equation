@@ -1,25 +1,24 @@
 import json
-from pathlib import Path
 
 import torch
 
-from reality_stone.clarus.runtime_experience_attenuation_binding import (
+from reality_stone.clarus.experiments.runtime_experience_attenuation_binding import (
     _experience_block_compensated,
 )
-from reality_stone.clarus.runtime_experience_delayed_binding import _seal
-from reality_stone.clarus.runtime_factorized_competition_composition import (
+from reality_stone.clarus.experiments.runtime_experience_delayed_binding import _seal
+from reality_stone.clarus.experiments.runtime_factorized_competition_composition import (
     _factorized_snapshot,
 )
-from reality_stone.clarus.runtime_factorized_one_shot_event_composition import (
+from reality_stone.clarus.experiments.runtime_factorized_one_shot_event_composition import (
     _event_probe,
     analyze_one_shot_artifact,
 )
 
 
-CALIBRATION_INPUT = Path(
-    "_workspace/ce/brainruntime-factorized-one-shot-event-composition-20260822/"
-    "artifacts/calibration-r2-input.json"
-)
+from _run_paths import run_dir
+
+
+CALIBRATION_INPUT = run_dir("brainruntime-factorized-one-shot-event-composition-20260822") / "artifacts" / "calibration-r2-input.json"
 
 
 def test_one_shot_ring_gate_preserves_first_packet_and_removes_repeats() -> None:

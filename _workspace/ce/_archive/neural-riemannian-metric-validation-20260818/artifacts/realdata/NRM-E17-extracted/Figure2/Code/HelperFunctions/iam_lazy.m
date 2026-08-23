@@ -5,4 +5,4 @@ for ii=1:length(lul)
 spineSal{ii,1}=cell2mat(avgCell(lul{1,ii}));
 end
 output=cell2mat(spineSal');
-end
+end

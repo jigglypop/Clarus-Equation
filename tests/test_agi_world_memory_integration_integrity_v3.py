@@ -12,6 +12,8 @@ from typing import Any, Callable, Iterable, Mapping
 
 import numpy as np
 
+from _run_paths import run_dir
+
 
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG = (
@@ -27,18 +29,12 @@ BASE_CONFIG = (
     / "agi_world_memory_integration_v2.json"
 )
 AMENDMENT = (
-    ROOT
-    / "_workspace"
-    / "ce"
-    / "agi-world-memory-integration-v1-20260810"
+    run_dir("agi-world-memory-integration-v1-20260810")
     / "revisions"
     / "31-v3-boundary-amendment.md"
 )
 BASE_CONTRACT = (
-    ROOT
-    / "_workspace"
-    / "ce"
-    / "agi-world-memory-integration-v1-20260810"
+    run_dir("agi-world-memory-integration-v1-20260810")
     / "revisions"
     / "00-contract-v2-draft.md"
 )
@@ -806,10 +802,7 @@ def test_v3_registration_merge_and_source_boundary_are_byte_exact() -> None:
     _assert_head_identical(
         "experiments/preregistration/agi_world_memory_integration_v3.json"
     )
-    _assert_head_identical(
-        "_workspace/ce/agi-world-memory-integration-v1-20260810/"
-        "revisions/31-v3-boundary-amendment.md"
-    )
+    _assert_head_identical(AMENDMENT.relative_to(ROOT).as_posix())
     source_records = _source_records(registration)
     callable_records = _callable_records(registration)
     assert len(source_records) == 8

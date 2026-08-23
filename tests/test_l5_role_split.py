@@ -16,7 +16,7 @@ from fractions import Fraction
 
 import pytest
 
-import reality_stone.clarus as clarus
+from reality_stone.clarus import universe_life_kernel as ulk
 from reality_stone.clarus.universe_life_kernel import (
     IDENTITY_WEIGHT,
     NOMINAL_LEAK,
@@ -254,11 +254,11 @@ def test_unfinished_no_wash_second_window_is_not_a_lock() -> None:
     assert occupied == 1
 
 
-def test_public_exports_include_role_split_names() -> None:
-    assert clarus.WashedRoleSplit is WashedRoleSplit
-    assert clarus.role_split_drives is role_split_drives
-    assert clarus.registered_start is registered_start
-    assert clarus.WASH_TASK_TAU1 == WASH_TASK_TAU1
-    assert clarus.WASH_TASK_TAU2 == WASH_TASK_TAU2
-    assert clarus.RoutedTwoCopy is not None
-    assert clarus.IDENTITY_WEIGHT is IDENTITY_WEIGHT
+def test_module_exports_include_role_split_names() -> None:
+    assert ulk.WashedRoleSplit is WashedRoleSplit
+    assert ulk.role_split_drives is role_split_drives
+    assert ulk.registered_start is registered_start
+    assert ulk.WASH_TASK_TAU1 == WASH_TASK_TAU1
+    assert ulk.WASH_TASK_TAU2 == WASH_TASK_TAU2
+    assert ulk.RoutedTwoCopy is not None
+    assert ulk.IDENTITY_WEIGHT is IDENTITY_WEIGHT

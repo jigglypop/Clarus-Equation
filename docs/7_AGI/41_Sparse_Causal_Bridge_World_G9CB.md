@@ -31,8 +31,8 @@
 > 테스트: `../../tests/test_sparse_causal_bridge.py`,
 > `../../tests/test_latent_causal_bridge.py`,
 > `../../tests/test_free_rollout_bridge.py`,
-> `../../tests/test_consensus_rollout_bridge.py`,
-> `../../tests/test_invariant_prior_rollout_bridge.py`,
+> `../../tests/test_consensus_rollout_bridge.py` (미구현 — 2026-08-23 기준 파일 부재),
+> `../../tests/test_invariant_prior_rollout_bridge.py` (미구현 — 2026-08-23 기준 파일 부재),
 > `../../tests/test_invariant_prior_bridge_integrity.py`
 
 ## 1. 왜 방향을 바꿨는가
@@ -690,9 +690,11 @@ randomized experiment다.
 .\.venv\Scripts\python.exe examples/agi/latent_causal_bridge_gate.py --config experiments/preregistration/sparse_causal_bridge_v4.json --split validation
 # 위 validation artifact의 configㆍimplementation SHA가 모두 같은 경우에만
 .\.venv\Scripts\python.exe examples/agi/latent_causal_bridge_gate.py --config experiments/preregistration/sparse_causal_bridge_v4.json --split test
+# 미구현 — 2026-08-23 기준 tests/test_consensus_rollout_bridge.py 파일 부재
 .\.venv\Scripts\python.exe -m pytest tests/test_consensus_rollout_bridge.py tests/test_sparse_causal_bridge_integrity.py -q
 .\.venv\Scripts\python.exe examples/agi/consensus_rollout_bridge_gate.py --config experiments/preregistration/sparse_causal_bridge_v6.json --split validation
 # V6 validation FAIL이므로 V6 locked test는 실행하지 않는다.
+# 미구현 — 2026-08-23 기준 tests/test_invariant_prior_rollout_bridge.py 파일 부재
 .\.venv\Scripts\python.exe -m pytest tests/test_invariant_prior_rollout_bridge.py tests/test_invariant_prior_bridge_integrity.py -q --basetemp .tmp/g9cb-v7
 .\.venv\Scripts\python.exe examples/agi/invariant_prior_rollout_bridge_gate.py --config experiments/preregistration/sparse_causal_bridge_v7.json --split validation
 # V7 validation FAIL이므로 V7 locked test는 실행하지 않는다.

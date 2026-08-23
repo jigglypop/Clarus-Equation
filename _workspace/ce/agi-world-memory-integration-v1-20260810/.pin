@@ -1,0 +1,1 @@
+PINNED: 이 run의 revisions/ prereg 해시체인과 구현 잠금 JSON이 live 경로 문자열을 sha256으로 동결하고 있어 아카이브 이동이 잠금을 깨뜨린다 (tests/test_agi_world_memory_integration*_v3.py). gc가 이 마커를 보고 이동을 건너뛴다. 근거: MULTIREPO_PLAN.md 진행 기록 2026-08-23.

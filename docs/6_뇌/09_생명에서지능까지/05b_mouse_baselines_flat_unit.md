@@ -66,7 +66,8 @@ $\Delta_{\mathrm{timing}}>0$이면 단순 session drift/trial clock 반례가 �
 실행:
 
 ```bash
-uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_task_baseline_comparison_gate.py
+# 미구현 — 2026-08-23 기준 examples/evolution/mouse_ibl_task_baseline_comparison_gate.py 파일 부재
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/evolution/mouse_ibl_task_baseline_comparison_gate.py
 ```
 
 Target replication:
@@ -215,7 +216,8 @@ $$
 실행:
 
 ```bash
-uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_flat_unit_region_comparison_gate.py
+# 미구현 — 2026-08-23 기준 examples/evolution/mouse_ibl_flat_unit_region_comparison_gate.py 파일 부재
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/evolution/mouse_ibl_flat_unit_region_comparison_gate.py
 ```
 
 Target replication:

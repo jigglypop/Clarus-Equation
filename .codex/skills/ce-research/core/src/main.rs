@@ -388,6 +388,12 @@ fn gc(ws: &Path) -> Result<(), String> {
         if !path.is_dir() || name.starts_with('_') || name.starts_with('.') {
             continue;
         }
+        // Runs whose artifacts freeze absolute/relative paths (sha-locked
+        // prereg chains) must never be moved: a `.pin` marker keeps them live.
+        if path.join(".pin").exists() {
+            println!("PINNED {name} (frozen-path run; not archived — see .pin)");
+            continue;
+        }
         match file_status(&path.join(FINAL)) {
             FileStatus::Complete | FileStatus::Abandoned => {
                 fs::create_dir_all(&archive).map_err(|e| e.to_string())?;

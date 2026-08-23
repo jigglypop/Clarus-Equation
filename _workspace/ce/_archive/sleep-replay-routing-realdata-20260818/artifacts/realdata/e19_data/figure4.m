@@ -303,4 +303,4 @@ xlim([0 1.6]);
 % legend('Data', 'Regression Line', 'Confidence Interval', 'Location', 'northwest');
 set(gca,'linewidth',1.5,'fontsize',13,'fontname','arial','ticklength',[0.01 0.02]);
 hold off;
-clear x y lm_cluster coef p x_pred y_pred y_CI p_max_cluster p_min_cluster clusters_idx p_max_idx p_min_idx P_cluster_idx
+clear x y lm_cluster coef p x_pred y_pred y_CI p_max_cluster p_min_cluster clusters_idx p_max_idx p_min_idx P_cluster_idx

@@ -1,3 +1,5 @@
+<!-- 도메인: ce-agi-runtime (멀티레포 이행 시 이관 대상, MULTIREPO_PLAN.md 참조) -->
+
 # STDP 효능 감사
 
 > 기준 checkout: 2026-07-30, `agi-runtime-diffusion-orchestration`

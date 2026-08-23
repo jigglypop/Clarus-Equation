@@ -1,8 +1,7 @@
-from pathlib import Path
 
 import torch
 
-from reality_stone.clarus.runtime_curvature_cost_prediction import (
+from reality_stone.clarus.experiments.runtime_curvature_cost_prediction import (
     analyze_development_artifact,
     flat_nonlinear_counterexample,
     geometry,
@@ -10,10 +9,10 @@ from reality_stone.clarus.runtime_curvature_cost_prediction import (
 )
 
 
-DEVELOPMENT = Path(
-    "_workspace/ce/brainruntime-local-stochastic-binding-20260822/"
-    "artifacts/development-results.json"
-)
+from _run_paths import run_dir
+
+
+DEVELOPMENT = run_dir("brainruntime-local-stochastic-binding-20260822") / "artifacts" / "development-results.json"
 
 
 def test_exact_flat_nonlinear_counterexample_rejects_curvature_sufficiency() -> None:

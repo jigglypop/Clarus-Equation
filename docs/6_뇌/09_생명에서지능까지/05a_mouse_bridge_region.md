@@ -53,7 +53,8 @@ metadata audit은 실제 spike download 전 필요한 파일 묶음과 provenanc
 실행:
 
 ```bash
-uv run --no-project --with ONE-api python examples/physics/evolution/mouse_ibl_neuropixels_audit.py --max-candidates 5
+# 미구현 — 2026-08-23 기준 examples/evolution/mouse_ibl_neuropixels_audit.py 파일 부재
+uv run --no-project --with ONE-api python examples/evolution/mouse_ibl_neuropixels_audit.py --max-candidates 5
 ```
 
 결과:
@@ -94,7 +95,8 @@ $$
 실행:
 
 ```bash
-uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_region_decision_action_gate.py
+# 미구현 — 2026-08-23 기준 examples/evolution/mouse_ibl_region_decision_action_gate.py 파일 부재
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/evolution/mouse_ibl_region_decision_action_gate.py
 ```
 
 loaded arrays:
@@ -257,7 +259,8 @@ candidate audit은 작은 cluster-level metadata로 probe support를 찾는 단�
 실행:
 
 ```bash
-uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_motor_striatum_audit.py --max-candidates 8
+# 미구현 — 2026-08-23 기준 examples/evolution/mouse_ibl_motor_striatum_audit.py 파일 부재
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/evolution/mouse_ibl_motor_striatum_audit.py --max-candidates 8
 ```
 
 candidate probes:
@@ -291,7 +294,8 @@ multi-probe gate는 probe·region·session의 불확실성을 분리해 region �
 실행:
 
 ```bash
-uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_multi_probe_region_gate.py
+# 미구현 — 2026-08-23 기준 examples/evolution/mouse_ibl_multi_probe_region_gate.py 파일 부재
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/evolution/mouse_ibl_multi_probe_region_gate.py
 ```
 
 loaded arrays:
@@ -407,7 +411,8 @@ NYU-30 multi-probe gate 다음 병목은 단일 session 특이성이다. 이를 
 실행:
 
 ```bash
-uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_cross_session_region_generalization_gate.py
+# 미구현 — 2026-08-23 기준 examples/evolution/mouse_ibl_cross_session_region_generalization_gate.py 파일 부재
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/evolution/mouse_ibl_cross_session_region_generalization_gate.py
 ```
 
 candidate panel:
@@ -529,7 +534,8 @@ $$
 실행:
 
 ```bash
-uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/physics/evolution/mouse_ibl_channel_region_rescue_gate.py
+# 미구현 — 2026-08-23 기준 examples/evolution/mouse_ibl_channel_region_rescue_gate.py 파일 부재
+uv run --no-project --with ONE-api --with pandas --with pyarrow python examples/evolution/mouse_ibl_channel_region_rescue_gate.py
 ```
 
 Coverage 결과:

@@ -15,6 +15,8 @@ import pytest
 
 from reality_stone.clarus import agi_world_memory_integration_v3 as v3
 
+from _run_paths import run_dir
+
 
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG = ROOT / "experiments/preregistration/agi_world_memory_integration_v3.json"
@@ -22,13 +24,13 @@ BASE_CONFIG = (
     ROOT / "experiments/preregistration/agi_world_memory_integration_v2.json"
 )
 CONTRACT = (
-    ROOT
-    / "_workspace/ce/agi-world-memory-integration-v1-20260810/revisions"
+    run_dir("agi-world-memory-integration-v1-20260810")
+    / "revisions"
     / "00-contract-v2-draft.md"
 )
 AMENDMENT = (
-    ROOT
-    / "_workspace/ce/agi-world-memory-integration-v1-20260810/revisions"
+    run_dir("agi-world-memory-integration-v1-20260810")
+    / "revisions"
     / "31-v3-boundary-amendment.md"
 )
 
