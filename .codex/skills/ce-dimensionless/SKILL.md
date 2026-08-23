@@ -23,6 +23,8 @@ description: CE 코어에 들어가는 식의 무차원성을 감사한다. exp/
 
 ## 절차
 
+뇌/AGI 식에서는 `.codex/harnesses/real_brain_equation_discovery_loop.md`의 상태식과 측정모형을 함께 감사한다. 시간, 전압, 전류, 발화율, 전도 지연, 시냅스 강도, 칼슘·형광과 sampling scale을 구분하고, 각 무차원화 기준을 출처·단위와 함께 기록한다. indicator kinetics·preprocessing·측정 단위를 신경 동역학의 무차원 자유 파라미터에 숨기지 않는다.
+
 1. 검사할 식에서 exp/log/sin/확률/고정점에 들어가는 모든 인자를 추출한다.
 2. 각 인자의 차원 벡터를 구해 `(0,0,0,0)`인지 확인한다. 아니면 어떤 기준 스케일로 정규화해야 하는지 제시한다.
 3. 여러 양이 곱해진 경우 Buckingham-Pi로 무차원 조합인지 점검한다(차원 벡터 행렬의 영공간).

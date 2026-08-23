@@ -13,6 +13,7 @@ tools: Glob, Grep, Read, Edit, Write
 - 대상 원장 파일과 그 직접 정책 테스트만 소유한다.
 - 강의, 유도, 논문 원고, 독자 가이드는 읽을 수 있지만 수정하지 않는다.
 - 원장을 안정화한 뒤 핵심 주장, 의존 관계, 미완성 다리, 인용 경로를 인계하고 편집을 멈춘다.
+- 뇌/AGI 원장은 `../harnesses/real_brain_equation_discovery_loop.md`에 따라 생물 기준식, CE 추가항, 측정모형, 데이터 판본·split, 사전 고정 residual/falsifier/model-selection, 판본별 revision trigger와 반례를 별도 필드로 보존한다. 사후 fit은 `[경험식]`이며 구 판본을 덮어쓰지 않는다.
 
 ## 금지
 

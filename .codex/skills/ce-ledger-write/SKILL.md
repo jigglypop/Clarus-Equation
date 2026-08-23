@@ -26,6 +26,7 @@ description: CE의 주장·상수·판본·진리값 원장을 정의·정리·�
 4. 완전한 반례가 있는 부모 주장은 활성 원장에서 삭제하고, 보존 가능한 좁은 명제만 새 항목으로 쓴다.
 5. 원장 절은 정의와 정의역 → 공리 → 정리 → 산출 → 관측 비교 → 미완성 과제 순으로 배열한다.
 6. 논문 작성자가 쓸 수 있도록 핵심 기여 후보, 정리 의존 관계, 미완성 다리와 인용 경로를 짧게 인계한다.
+7. 뇌/AGI 원장은 `.codex/harnesses/real_brain_equation_discovery_loop.md`의 생물 기준식, CE 추가항, 측정모형, 데이터 판본·split, observables, residual, falsifier, matched controls, model selection, revision trigger와 claim ceiling을 분리 기록한다. 새 판본은 구 식의 반례·잔차 링크와 독립 confirmation 계획이 없으면 만들지 않는다.
 
 ## 출력 기준
 

@@ -7,6 +7,8 @@ description: clarus-agent-guard 제품의 벤치 7종을 한 번에 돌려 스�
 
 `clarus-agent-guard/`는 별도 상용 가드 제품. 벤치는 산업 지표로만 평가한다: **false-allow / ASR(attack success rate) / false-block**. AGI 지표·과장 금지.
 
+뇌/AGI의 실제 뇌 식 기반 발견 우선순위는 이 별도 제품 벤치의 지표·실행 범위를 바꾸지 않는다. guard 결과를 뇌 기전·AGI 증거로 연결하지 않고, 사용자가 요청한 제품 범위만 다룬다.
+
 ## 실행
 
 ```powershell

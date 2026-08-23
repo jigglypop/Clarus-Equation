@@ -21,6 +21,7 @@ model: sonnet
 
 # 검사
 
+- 뇌/AGI 계약에서는 `../harnesses/real_brain_equation_discovery_loop.md`를 적용한다. 확립 기전식의 원 방정식·정의역·단위·시간척도와 1차 출처를 확인하고, 데이터의 acquisition·preprocessing·measurement model·canonical identity·split 가능성·intervention 여부를 검증한다. 핵심 식·분모·측정모형이 `UNVERIFIED`이면 채점 기준선으로 넘기지 않는다.
 - PDG, Planck, DESI, ACT, SPT 등 원 출처의 값·오차·연도·릴리스 확인
 - 저장소 인용값과 식별자·표·페이지 대조
 - 서로 다른 결합 기준선이 sigma 잔차에 미치는 영향 계산

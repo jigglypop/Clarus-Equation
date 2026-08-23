@@ -83,6 +83,92 @@ def test_mass_scale_lift_closes_as_ratio() -> None:
     assert math.isclose(ratio.value, 29.65 / 938.2720813)
 
 
+def test_ba_srm1_synapse_chart_and_kernel_arguments_are_dimensionless() -> None:
+    # The checker tracks equality of dimensions; the electrical-current base is
+    # not part of CE's four-axis registry, so voltage/resistance use distinct
+    # nonzero representatives and are divided only by like-dimension scales.
+    voltage = dim(1, 2, -3, 0)
+    resistance = dim(1, 2, -2, 0)
+    time = dim(0, 0, 1, 0)
+    ratios = [
+        nondimensionalize(
+            Quantity("resting_psp", 8e-4, voltage),
+            [Quantity("resting_psp_reference", 1e-3, voltage)],
+        ),
+        nondimensionalize(
+            Quantity("soma_distance", 120e-6, LENGTH),
+            [Quantity("metre", 1.0, LENGTH)],
+        ),
+        nondimensionalize(
+            Quantity("input_resistance", 80e6, resistance),
+            [Quantity("ohm", 1.0, resistance)],
+        ),
+        nondimensionalize(
+            Quantity("membrane_tau", 18e-3, time),
+            [Quantity("second", 1.0, time)],
+        ),
+        nondimensionalize(
+            Quantity("late_pulse_psp", 6e-4, voltage),
+            [Quantity("resting_psp_reference", 1e-3, voltage)],
+        ),
+        Quantity("log_variability", -0.3),
+        Quantity("geodesic_over_bandwidth", 1.7),
+    ]
+
+    result = audit_dimensionless(ratios, context="BA-SRM1 log/Fisher/kernel core")
+
+    assert result.passed
+    assert all(quantity.dimensionless for quantity in result.unwrap())
+
+
+def test_ba_srm2_event_history_target_and_kernel_are_dimensionless() -> None:
+    voltage = dim(1, 2, -3, 0)
+    current = dim(1, 2, -3, 0)
+    resistance = dim(1, 2, -2, 0)
+    capacitance = dim(-1, -2, 4, 0)
+    time = dim(0, 0, 1, 0)
+    temperature = dim(0, 0, 0, 1)
+
+    ratios = [
+        nondimensionalize(
+            Quantity("pulse_interval", 20e-3, time),
+            [Quantity("T0", 1e-3, time)],
+        ),
+        nondimensionalize(
+            Quantity("ic_response", 8e-4, voltage),
+            [Quantity("V0", 1e-3, voltage)],
+        ),
+        nondimensionalize(
+            Quantity("stimulus_current", 50e-12, current),
+            [Quantity("I0", 1e-12, current)],
+        ),
+        nondimensionalize(
+            Quantity("input_resistance", 80e6, resistance),
+            [Quantity("R0", 1e6, resistance)],
+        ),
+        nondimensionalize(
+            Quantity("capacitance", 35e-12, capacitance),
+            [Quantity("C0", 1e-12, capacitance)],
+        ),
+        nondimensionalize(
+            Quantity("soma_distance", 120e-6, LENGTH),
+            [Quantity("L0", 100e-6, LENGTH)],
+        ),
+        nondimensionalize(
+            Quantity("bath_temperature", 307.0, temperature),
+            [Quantity("Theta0", 310.0, temperature)],
+        ),
+        Quantity("pulse_count", 8.0),
+        Quantity("pullback_line_element_sq", 1.4),
+        Quantity("kernel_bandwidth_sq", 2.0),
+    ]
+
+    result = audit_dimensionless(ratios, context="BA-SRM2 event/Fisher/kernel core")
+
+    assert result.passed
+    assert all(quantity.dimensionless for quantity in result.unwrap())
+
+
 def test_buckingham_pi_finds_reynolds_number_shape() -> None:
     rho = Quantity("rho", 1.2, dim(1, -3, 0, 0))
     velocity = Quantity("v", 3.0, dim(0, 1, -1, 0))

@@ -21,6 +21,8 @@ tools: Glob, Grep, Read, Bash
 5. 공통 모수 섭동과 A/B 성분 교체로 숨은 자유도를 찾는다.
 6. 교차 예측, dof와 look-elsewhere를 계산한다.
 7. 완전한 반례가 무너뜨리는 부모 명제의 정확한 범위를 지정한다.
+8. 뇌/AGI 식은 `../harnesses/real_brain_equation_discovery_loop.md`에 따라 확립된 생물 기준식 $F_{\mathrm{bio}}$, CE 추가항 $\Delta F_{\mathrm{CE}}$, 측정모형 $\mathcal H$로 분해한다. 각 항의 관측 가능성·구조적/실용적 식별 가능성·대안 모델을 검산하고, 데이터 뒤에 선택한 구조는 target-aware `[경험식]`으로 표시한다.
+9. 잔차 기반 식 개정이 사전 고정한 `REVISION_TRIGGER`와 한 판본 한 구조 변경 규칙을 따르는지 확인한다. 같은 confirmation/held-out 자료가 식 제안과 확인에 중복 사용되면 P0로 판정한다.
 
 수치 일치는 증명이 아니다. 정본에 증명이 없으면 미완성, 관측 패턴에서 고른 식은 경험식이다.
 
@@ -44,7 +46,7 @@ tools: Glob, Grep, Read, Bash
 
 순위는 낮은 dof와 강한 교차 예측 우선. 후보당 표 한 행 + 짧은 절, 상세 계산은 artifacts/. 경로가 정말 없으면 필요한 빠진 구조를 적는다 — "후보 3개 미만"에는 왜 구조적으로 더 없는지 근거를 요구한다.
 
-뇌/기억/의식 run에서는 `_workspace/ce/brain-algorithm-route-ledger.md`와 선행 run의 12/31, 존재하는 40을 함께 대조한다. 40이 없으면 가장 늦은 numbered audit와 closure 부재를 기록한다. 이미 반례·STOP·APPARATUS_INVALID로 퇴역한 경로를 threshold·seed·endpoint만 바꿔 새 후보로 세지 않으며, 새 후보가 이전 실패와 독립인 mechanism·falsifier·matched control을 가졌는지 명시한다.
+뇌/기억/의식 run에서는 `_workspace/ce/brain-algorithm-route-ledger.md`와 선행 run의 12/31, 존재하는 40을 함께 대조한다. 40이 없으면 가장 늦은 numbered audit와 closure 부재를 기록한다. 이미 반례·STOP·APPARATUS_INVALID로 퇴역한 경로를 threshold·seed·endpoint만 바꿔 새 후보로 세지 않으며, 새 후보가 이전 실패와 독립인 mechanism·falsifier·matched control을 가졌는지 명시한다. 실제 기전식·데이터가 연결되는 후보를 L0 합성 후보보다 먼저 정렬한다.
 
 # 분량
 

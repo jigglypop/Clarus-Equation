@@ -243,6 +243,9 @@ fn check(dir: &Path, stage: &str) -> Result<(), String> {
         require(dir, AUDIT, false, &mut problems);
         match gate_verdict(&dir.join(AUDIT)) {
             Some("PASS") => {}
+            // A blocked scientific claim must still be closed with a complete
+            // negative report.  It may never unlock the implementation gate.
+            Some("BLOCKED") if stage == "final" => {}
             Some(other) => problems.push(format!("{AUDIT}: Gate is {other}, need PASS")),
             None => problems.push(format!("{AUDIT}: missing `Gate: PASS` line")),
         }
@@ -250,6 +253,15 @@ fn check(dir: &Path, stage: &str) -> Result<(), String> {
     if depth >= 3 {
         for name in BUILD {
             require(dir, name, true, &mut problems);
+        }
+        if stage == "final" && gate_verdict(&dir.join(AUDIT)) == Some("BLOCKED") {
+            for name in BUILD {
+                if file_status(&dir.join(name)) != FileStatus::Skipped {
+                    problems.push(format!(
+                        "{name}: blocked final requires an explicit SKIPPED reason"
+                    ));
+                }
+            }
         }
     }
     if depth >= 4 {
@@ -451,6 +463,27 @@ mod tests {
         assert!(err.contains("loop8-prereg.md"), "stray root md must block final");
         fs::create_dir_all(dir.join("artifacts")).unwrap();
         fs::rename(dir.join("loop8-prereg.md"), dir.join("artifacts/loop8-prereg.md")).unwrap();
+        assert!(check(&dir, "final").is_ok());
+        assert!(!ws.join(ACTIVE).exists());
+    }
+
+    #[test]
+    fn blocked_final_closes_only_with_skipped_build() {
+        let ws = tmp("blocked-final");
+        let dir = ws.join("run-blocked");
+        fs::create_dir_all(&dir).unwrap();
+        fs::write(ws.join(ACTIVE), "run-blocked").unwrap();
+        fs::write(dir.join(CONTRACT), "Status: COMPLETE\n").unwrap();
+        for name in LANES {
+            fs::write(dir.join(name), "Status: COMPLETE\n").unwrap();
+        }
+        fs::write(dir.join(AUDIT), "Status: COMPLETE\nGate: BLOCKED\n").unwrap();
+        fs::write(dir.join(FINAL), "Status: COMPLETE\n").unwrap();
+        fs::write(dir.join(BUILD[0]), "Status: COMPLETE\n").unwrap();
+        fs::write(dir.join(BUILD[1]), "Status: SKIPPED (blocked)\n").unwrap();
+        assert!(check(&dir, "gate").is_err(), "blocked must not unlock build");
+        assert!(check(&dir, "final").is_err(), "blocked build must be skipped");
+        fs::write(dir.join(BUILD[0]), "Status: SKIPPED (blocked)\n").unwrap();
         assert!(check(&dir, "final").is_ok());
         assert!(!ws.join(ACTIVE).exists());
     }

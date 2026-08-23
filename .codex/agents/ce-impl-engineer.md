@@ -23,6 +23,8 @@ tools: Glob, Grep, Read, Edit, Write, Bash
 
 ## reality_stone/clarus
 
+- 뇌/AGI 구현은 `../harnesses/real_brain_equation_discovery_loop.md`와 Gate PASS 계약에 고정된 $F_{\mathrm{bio}}$, $\Delta F_{\mathrm{CE}}$, 측정모형, observables와 falsifier만 반영한다. 결과를 본 뒤 식·loss·decoder·fixture·threshold를 고치지 않으며, 식 구조 변경은 새 판본 계약 없이는 구현하지 않는다.
+- 생물 기준식 재현이 먼저다. baseline이 실제 데이터·측정모형을 재현하지 못하면 CE 추가항을 넣어 green으로 만들지 않고 첫 분기와 실패를 보고한다. simulator PASS를 생물학 주장 근거로 해석하지 않는다.
 - 정본은 kernel/coupling/mode/hippocampus/global 5계층이다.
 - 확장은 m_i=w_i=0, u_jx_j→1 극한에서 최소형으로 환원돼야 한다.
 - F1–F4 우회와 canonical 상태 차원 승격을 금지한다.

@@ -12,6 +12,7 @@ prompts/             커스텀 슬래시 프롬프트 (/ce-research, /ce-status,
 agents/              연구 역할 4개 + 원장/논문 작성 역할 2개 (TOML + 상세 Markdown 카드)
 skills/              공통 6종 + 원장/논문 작성 분리 스킬 2종 (SKILL.md + agents/openai.yaml)
 skills/ce-research/core/   Rust 게이트 코어 (init|status|check|revise|gc + hook)
+harnesses/           수치·증거 하네스 계약 — backend parity(Rust/CUDA), 실측 교정 루프, 뇌 증거 사다리
 hooks.json           프로젝트 로컬 UserPromptSubmit 라우팅(Stop 전역 차단 없음)
 hooks/               run.* 코어 래퍼 + native Windows Python/payload 실행기
 ```

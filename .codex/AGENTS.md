@@ -60,6 +60,21 @@
 - Windows에서는 `.codex/hooks/python.cmd doctor`로 실행기를 먼저 확인하고, focused Python/pytest는 같은 래퍼의 `python`/`pytest` 모드로 실행한다. 프롬프트 입력을 기다리지 않으며, Application Control이 차단한 `.venv`나 uv-managed Python을 우회하지 않는다.
 - full 검증을 생략한 것은 실패가 아니다. 최종 보고에는 실행한 최소 검사와 생략한 확대 검증을 각각 명시한다.
 
+## 실측 교정 루프
+
+- 수치 검증이 어긋나면(backend parity FAIL, 기준선 잔차 $|z|>3$, 차원 검사 불일치) 같은 명령을 반복하지 말고 `harnesses/empirical_calibration_loop.md`의 루프를 따른다: 최소 재현 → 첫 분기 중간값 → 원인 분류(차원 D·구현 I·정밀도 P·convention C·기준선 B·이론 T) → 교정 1건 → 최소 재검. 불일치당 3사이클 상한, 사이클당 조치 1건.
+- 교정 가능한 것은 구현 코드, 결과를 보기 전에 선언된 자유 파라미터, sourcer가 출처 검증한 기준선 갱신뿐이다. tolerance·fixture·cutoff·acceptance·endpoint·seed는 결과를 본 뒤 바꾸지 않는다.
+- 이론 검증의 수치 비교는 예측값·기준선(출처)·오차·잔차 $z$ 4열로 artifacts에 남긴다. $|z|\le1$은 관측 일치(증명 아님), $1<|z|\le3$은 tension(P2, 결론 의존 시 P1), $|z|>3$은 P0 후보로 루프 진입.
+- T(이론) 분류는 앞 5개 클래스의 기각 근거가 기록된 뒤에만 쓴다. 이론 잔차를 코드 수정으로 흡수해 green을 만들지 않는다 — T 확정은 실패가 아니라 산출이며 closure-gate로 회부한다.
+- **식 개정은 계약 수준 행위다** (`harnesses/empirical_calibration_loop.md` §8): T 확정 잔차만 근거가 되고, 구 판본은 반례와 함께 원장 보존, 새 판본은 새 계약·새 fixture, 강제한 관측 기준선(출처)을 명기한다. 관측 무차원 비율을 falsifier로 먼저 동결하고 자유 파라미터 수 < 재현 비율 수를 요구하며 비율별 개별 재조정을 금지한다.
+
+## 네이티브 성능 경로 (Rust/CUDA)
+
+- 무거운 수치 검증은 Python `float64` oracle → Rust CPU `f64` → CUDA `f64` 순으로 승격하며, 승격 조건은 해당 parity 하네스의 `BACKEND_PARITY_PASS`다. 곡률 진단의 정본 계약은 `harnesses/curvature_backend_parity.md`.
+- 승격 후에도 세션마다 무작위 fixture 표본 3개 이상을 Python oracle과 재대조한다. 표본 실패는 즉시 parity FAIL 강등이다. CUDA `f32`는 속도 진단 전용이며 과학 판정에 쓰지 않는다.
+- 성능 측정은 정확성 gate 통과 후에만, warm-up·반복 횟수·batch 크기를 고정해 artifacts에 기록한다. fallback 발생이나 native 호출 receipt 0은 성능 수치와 무관하게 parity FAIL이다.
+- 빌드 캐시는 `%LOCALAPPDATA%`, 레포 안 `target/` 금지. 훅 이벤트에서 cargo 빌드를 트리거하지 않는다.
+
 ## main Git 인계 규율
 
 - Git 상태 변경과 발행은 root/main agent 한 명만 맡는다. 모든 subagent는 `status`·`diff`·hash 같은 읽기 전용 확인만 하며 `add`·`commit`·`fetch`·`pull`·`rebase`·`push`·branch/worktree 변경을 하지 않는다.
@@ -69,9 +84,13 @@
 
 ## 뇌 알고리즘 경로 선택
 
+- **최우선 과제는 실제 뇌 식 기반 발견 루프다.** 실제 뇌에서 확립된 기전식과 측정모형을 출발점으로 고정하고, CE 가설을 명시적 추가항·새 상태·경계조건으로 분리한 뒤 실제 뇌 데이터의 held-out 잔차와 개입 falsifier로 판정한다. 식 개정은 데이터에 맞춘 사후 조정이 아니라 `harnesses/real_brain_equation_discovery_loop.md`와 `harnesses/empirical_calibration_loop.md`에 따른 새 판본 계약으로만 수행한다.
+- 뇌/AGI `00-contract.md`는 최소한 `BIO_STARTING_MECHANISM`, `CE_DELTA`, `MEASUREMENT_MODEL`, `DATA_PROVENANCE`, `DATA_SPLIT`, `OBSERVABLES`, `RESIDUAL_RULE`, `FALSIFIER`, `MATCHED_CONTROLS`, `MODEL_SELECTION`, `REVISION_TRIGGER`, `CLAIM_CEILING`을 결과 확인 전에 고정한다. 실제 데이터·기전식·측정모형의 핵심 입력이 `UNVERIFIED`이면 채점 구현으로 진행하지 않는다.
+- **주축은 두 질문이다: (1) 실제 뇌가 그 연산을 쓰는가, (2) 실제 뇌 데이터로 반증을 시도했는가.** 시뮬레이터 성립은 보조 증거다. 정본은 `harnesses/brain_evidence_ladder.md` — 증거 사다리 L0(합성)→L1(관측 비율)→L2(창발 통계)→L3(실데이터 예측)→L4(개입 동일성)와 원시 연산 허용 목록을 따르고, 모든 뇌 run 기계 상태에 `BIO_EVIDENCE_Lx`를 명기한다.
+- **L4 이전에 "뇌가 이렇게 동작한다"를 쓰지 않는다.** L1–L3는 "정합"이다. 비허용 원시 연산(부호 자유 W, 알고리즘적 WTA, 전역 열거, 생물 대응 없는 supervisory 신호)을 쓴 run은 추상 알고리즘 트랙으로 강등하고 뇌 주장을 금지한다.
 - 새 뇌/기억/의식 run은 직전 실행의 `12-routes.md`, `31-validation.md`, 존재하면 `40-final-report.md`, 그리고 `_workspace/ce/brain-algorithm-route-ledger.md`를 먼저 읽는다. 40이 없으면 가장 늦은 numbered audit와 원장 행을 사용하고 closure 부재를 계약에 기록한다. 전체 artifact를 재독하거나 실패한 실험을 endpoint·threshold·seed만 바꿔 재시도하지 않는다.
-- 오케스트레이터는 양성처럼 보이는 수치가 아니라 인과 식별 가능성, 기존 STOP이 남긴 정보, 독립 반증 대조군, capability dependency 순서로 다음 후보를 고른다. 선택 근거와 기각·퇴역 경로를 00-contract에 고정한 뒤 레인을 연다.
-- simulator 결과는 실제 뇌의 증거로 자동 승격하지 않는다. 전역 원장은 후보·의존성·증거 경로·상태·다음 falsifier만 관리하고, 서사나 의식 동일시를 기록하지 않는다.
+- 오케스트레이터는 양성처럼 보이는 수치가 아니라 사다리 승급 가능성, 인과 식별 가능성, 기존 STOP이 남긴 정보, 독립 반증 대조군, capability dependency 순서로 다음 후보를 고른다. 선택 근거와 기각·퇴역 경로를 00-contract에 고정한 뒤 레인을 연다.
+- simulator 결과는 실제 뇌의 증거로 자동 승격하지 않는다. L1 비율·L3 데이터는 sourcer 검증 기준선만 쓰고 UNVERIFIED 수치는 게이트에 넣지 않는다. 전역 원장은 후보·의존성·증거 경로·상태·다음 falsifier만 관리하고, 서사나 의식 동일시를 기록하지 않는다.
 
 ## 끈질김 (진취성 규율)
 

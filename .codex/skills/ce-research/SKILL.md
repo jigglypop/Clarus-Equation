@@ -37,11 +37,17 @@ description: Clarus-Equation 연구를 출처·수학·대안 경로의 독립 �
 
 ## 뇌 알고리즘 new-run admission gate
 
+### 실제 뇌 식 기반 발견 최우선 규약
+
+뇌·기억·의식·AGI 연구는 `.codex/harnesses/real_brain_equation_discovery_loop.md`를 최우선 경로로 적용한다. 실제 뇌에서 확립된 기전식과 측정모형을 출발점으로 잠그고, CE 가설은 $F_{\mathrm{bio}}$에 대한 명시적 추가항 $\Delta F_{\mathrm{CE}}$, 새 상태 또는 경계조건으로 분리한다. 실제 뇌 데이터에서 생물 기준식 재현 → CE 식의 분리 적합 → held-out/개입 반증 → 잔차 분류 → 새 판본의 순서로 찾는다. L0 simulator 탐색은 실제 데이터 경로의 식별 가능성이나 장치를 진단할 때만 후순위로 연다.
+
+뇌/AGI `00-contract.md`는 결과를 보기 전에 `BIO_STARTING_MECHANISM`, `CE_DELTA`, `MEASUREMENT_MODEL`, `DATA_PROVENANCE`, `DATA_SPLIT`, `OBSERVABLES`, `RESIDUAL_RULE`, `FALSIFIER`, `MATCHED_CONTROLS`, `MODEL_SELECTION`, `REVISION_TRIGGER`, `CLAIM_CEILING`을 고정한다. 핵심 기전식·분모·측정모형·데이터 provenance가 `UNVERIFIED`이면 채점 구현으로 진행하지 않는다. 데이터에 맞춘 식 개정은 `empirical_calibration_loop.md`에서 T 잔차가 확정된 뒤 한 판본 한 구조 변경으로만 수행하고, 구 식·반례·residual을 원장에 보존하며 새 독립 confirmation을 요구한다.
+
 뇌·기억·의식·connectome 연구는 새 run을 열기 전에 다음 순서를 지킨다.
 
 1. `_workspace/ce/brain-algorithm-route-ledger.md`와 직접 선행 run의 `12-routes.md`, `31-validation.md`, 존재하면 `40-final-report.md`만 먼저 읽는다. 40이 없으면 가장 늦은 numbered audit와 원장 행을 사용하고 closure 부재를 계약에 기록한다. 세부 artifact는 특정 수치나 hash를 검증할 때만 연다.
 2. 00-contract에 `PREDECESSOR_EVIDENCE` 표를 만들고 각 결과를 artifact/hash, `PASS|STOP|APPARATUS_INVALID|BLOCKED`, 보존 가능한 좁은 주장, 재시도 금지 조건으로 고정한다.
-3. 후보 집합을 적고 인과 식별 가능성, capability dependency, 이전 STOP이 남긴 정보량, 독립 falsifier와 matched control 순으로 정렬한다. 양성처럼 보이는 수치나 구현 편의성만으로 고르지 않는다.
+3. 후보 집합을 적고 실제 기전식·데이터 연결 가능성, 사다리 승급 가능성, 인과 식별 가능성, capability dependency, 이전 STOP이 남긴 정보량, 독립 falsifier와 matched control 순으로 정렬한다. 양성처럼 보이는 수치나 구현 편의성만으로 고르지 않는다.
 4. threshold·seed·endpoint·decoder만 바꾼 반복은 같은 실패 경로다. 새 mechanism, 새 개입 seam, 또는 실패를 가르는 새 adverse control이 없으면 후보에서 퇴역시킨다.
 5. 선택 후보와 기각 후보를 결과 확인 전에 계약과 원장에 기록하고 math-verifier가 cross-run 일관성을 확인한 뒤 구현한다.
 

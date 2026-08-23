@@ -124,6 +124,29 @@ class BrainRuntimeConfig:
     axon_delay: bool = True
     max_axon_delay: int = AXON_DELAY_MAX
     forget_tau: float = FORGET_TAU
+    # Optional local competition/homeostasis group.  The default ``None``
+    # leaves the legacy runtime byte-for-byte on its old path.  When enabled,
+    # the state is Torch-only and is part of snapshots.
+    competition_indices: tuple[int, ...] | None = None
+    competition_lateral_gain: float = 0.0
+    competition_homeostasis_gain: float = 0.0
+    competition_homeostasis_rate: float = 0.0
+    competition_homeostasis_decay: float = 0.0
+    competition_novelty_decay: float = 0.8
+    competition_delay_ticks: int = 1
+    competition_epsilon: float = 1e-8
+    # Optional exchangeable multiplicative jitter applied only to a delivered
+    # positive competition packet.  It is zero-preserving (no packet means no
+    # hidden drive) and is disabled by default.  The seed is part of the
+    # structural runtime receipt so snapshot continuation is deterministic.
+    competition_jitter_sigma: float = 0.0
+    competition_jitter_seed: int = 0
+    # Optional strict k-WTA budget derived from the explicit source coordinates
+    # in the axon packet arriving on this tick.  Defaults preserve the legacy
+    # one-winner max-relative competition path exactly.
+    competition_input_indices: tuple[int, ...] | None = None
+    competition_k_from_delayed_input: bool = False
+    competition_factorize_delayed_input: bool = False
     # F1 self-organization (docs/7_AGI/12_Equation.md A.2 condition #2).
     # When enabled, the runtime feeds the empirical active ratio
     #   p_emp = |A_t| / dim
@@ -161,6 +184,9 @@ class BrainRuntimeConfig:
             "neuronwise_bit_upper_threshold",
         ):
             setattr(self, name, self._normalize_neuronwise_threshold(name))
+        self.competition_indices = self._normalize_competition_indices()
+        self.competition_input_indices = self._normalize_competition_input_indices()
+        self.validate_local_competition()
         if self.has_neuronwise_bit_threshold:
             self.effective_bit_thresholds()
         self.active_ratio = min(max(float(self.active_ratio), 0.0), 1.0)
@@ -182,6 +208,131 @@ class BrainRuntimeConfig:
         if self.stdp_orientation not in {"legacy", "causal"}:
             raise ValueError("stdp_orientation must be legacy or causal")
         self.hippocampal_encoding_enabled = bool(self.hippocampal_encoding_enabled)
+
+    def _normalize_competition_indices(self) -> tuple[int, ...] | None:
+        value = self.competition_indices
+        if value is None:
+            return None
+        if not isinstance(value, (list, tuple)):
+            raise TypeError("competition_indices must be a list or tuple")
+        try:
+            normalized = tuple(int(item) for item in value)
+        except (TypeError, ValueError) as exc:
+            raise TypeError("competition_indices entries must be integers") from exc
+        if len(normalized) < 2:
+            raise ValueError("competition_indices must contain at least two neurons")
+        if len(set(normalized)) != len(normalized):
+            raise ValueError("competition_indices must be distinct")
+        if any(index < 0 or index >= self.dim for index in normalized):
+            raise ValueError("competition_indices entries must be within runtime dimension")
+        return normalized
+
+    def _normalize_competition_input_indices(self) -> tuple[int, ...] | None:
+        value = self.competition_input_indices
+        if value is None:
+            return None
+        if not isinstance(value, (list, tuple)):
+            raise TypeError("competition_input_indices must be a list or tuple")
+        try:
+            normalized = tuple(int(item) for item in value)
+        except (TypeError, ValueError) as exc:
+            raise TypeError("competition_input_indices entries must be integers") from exc
+        if not normalized:
+            raise ValueError("competition_input_indices must not be empty")
+        if len(set(normalized)) != len(normalized):
+            raise ValueError("competition_input_indices must be distinct")
+        if any(index < 0 or index >= self.dim for index in normalized):
+            raise ValueError("competition_input_indices entries must be within runtime dimension")
+        return normalized
+
+    @property
+    def has_local_competition(self) -> bool:
+        return self.competition_indices is not None
+
+    def validate_local_competition(self) -> None:
+        self.competition_input_indices = self._normalize_competition_input_indices()
+        values = {
+            "competition_lateral_gain": self.competition_lateral_gain,
+            "competition_homeostasis_gain": self.competition_homeostasis_gain,
+            "competition_homeostasis_rate": self.competition_homeostasis_rate,
+            "competition_homeostasis_decay": self.competition_homeostasis_decay,
+            "competition_novelty_decay": self.competition_novelty_decay,
+            "competition_epsilon": self.competition_epsilon,
+            "competition_jitter_sigma": self.competition_jitter_sigma,
+        }
+        try:
+            normalized = {name: float(value) for name, value in values.items()}
+        except (TypeError, ValueError) as exc:
+            raise TypeError("local competition parameters must be real numbers") from exc
+        if not all(math.isfinite(value) for value in normalized.values()):
+            raise ValueError("local competition parameters must be finite")
+        for name, value in normalized.items():
+            setattr(self, name, value)
+        self.competition_delay_ticks = int(self.competition_delay_ticks)
+        if self.competition_lateral_gain < 0.0 or self.competition_homeostasis_gain < 0.0:
+            raise ValueError("local competition gains must be nonnegative")
+        if not 0.0 <= self.competition_homeostasis_rate <= 1.0:
+            raise ValueError("competition_homeostasis_rate must be in [0, 1]")
+        if not 0.0 <= self.competition_homeostasis_decay <= 1.0:
+            raise ValueError("competition_homeostasis_decay must be in [0, 1]")
+        if not 0.0 <= self.competition_novelty_decay < 1.0:
+            raise ValueError("competition_novelty_decay must be in [0, 1)")
+        if self.competition_delay_ticks < 1:
+            raise ValueError("competition_delay_ticks must be positive")
+        if self.competition_epsilon <= 0.0:
+            raise ValueError("competition_epsilon must be positive")
+        if not 0.0 <= self.competition_jitter_sigma < 1.0:
+            raise ValueError("competition_jitter_sigma must be in [0, 1)")
+        if isinstance(self.competition_jitter_seed, bool) or not isinstance(
+            self.competition_jitter_seed, (int, np.integer)
+        ):
+            raise TypeError("competition_jitter_seed must be an integer")
+        self.competition_jitter_seed = int(self.competition_jitter_seed)
+        if not isinstance(self.competition_k_from_delayed_input, (bool, np.bool_)):
+            raise TypeError("competition_k_from_delayed_input must be boolean")
+        self.competition_k_from_delayed_input = bool(
+            self.competition_k_from_delayed_input
+        )
+        if not isinstance(self.competition_factorize_delayed_input, (bool, np.bool_)):
+            raise TypeError("competition_factorize_delayed_input must be boolean")
+        self.competition_factorize_delayed_input = bool(
+            self.competition_factorize_delayed_input
+        )
+        if (
+            self.competition_k_from_delayed_input
+            and self.competition_factorize_delayed_input
+        ):
+            raise ValueError("adaptive and factorized competition are mutually exclusive")
+        if self.competition_k_from_delayed_input or self.competition_factorize_delayed_input:
+            if not self.has_local_competition or self.competition_input_indices is None:
+                raise ValueError(
+                    "input-aware competition requires competition and input indices"
+                )
+            if not self.axon_delay:
+                raise ValueError("input-aware competition requires axon_delay=True")
+            if self.competition_lateral_gain != 1.0:
+                raise ValueError(
+                    "strict input-aware competition requires competition_lateral_gain=1"
+                )
+            if (
+                self.competition_factorize_delayed_input
+                and self.competition_jitter_sigma != 0.0
+            ):
+                raise ValueError("factorized competition requires jitter_sigma=0")
+        elif self.competition_input_indices is not None:
+            raise ValueError(
+                "competition_input_indices require an input-aware competition mode"
+            )
+        if not self.has_local_competition and any(
+            value != 0.0 for value in (
+                self.competition_lateral_gain,
+                self.competition_homeostasis_gain,
+                self.competition_homeostasis_rate,
+                self.competition_homeostasis_decay,
+                self.competition_jitter_sigma,
+            )
+        ):
+            raise ValueError("competition_indices are required when competition is active")
 
     def _normalize_neuronwise_threshold(self, name: str) -> tuple[float, ...] | None:
         value = getattr(self, name)
@@ -331,6 +482,10 @@ class BrainRuntimeSnapshot:
     nrem_cycle_count: int = 0
     delay_buffer: torch.Tensor | None = None
     delay_idx: int = 0
+    competition_homeostasis: torch.Tensor | None = None
+    competition_usage_buffer: torch.Tensor | None = None
+    competition_usage_idx: int = 0
+    competition_packet_envelope: torch.Tensor | None = None
     brainwave_history: tuple[float, ...] = ()
     last_stdp_gate: float = 0.0
     stdp_pending_learning_signal: float = 0.0
@@ -463,11 +618,15 @@ class BrainRuntime:
         self.config = config
         self.device = torch.device(device) if device is not None else weight.device
         self.backend = backend
+        if self.backend == "rust" and self.config.axon_delay:
+            raise ValueError("the Rust brain kernel does not support axon_delay=True")
         if self.backend == "rust" and self.config.has_neuronwise_bit_threshold:
             self.config.effective_bit_thresholds()
             raise ValueError(
                 "the Rust brain kernel does not support neuronwise bit thresholds"
             )
+        if self.backend == "rust" and self.config.has_local_competition:
+            raise ValueError("the Rust brain kernel does not support local competition")
         self.weight = weight.detach().float().to(self.device)
         pack_backend = "torch" if self.backend == "cuda" else self.backend
         values, col_idx, row_ptr = pack_sparse(
@@ -525,7 +684,10 @@ class BrainRuntime:
             self.weight = self.weight.abs() * self.dale_sign.unsqueeze(1)
             self._rebuild_sparse()
 
-        # Axon delay buffer: ring buffer of recent activations
+        # Axon delay buffer: ring of source-qualified presynaptic packets.
+        # Each packet freezes STP and lifecycle eligibility at emission, so an
+        # already emitted signal is neither erased nor created by source state
+        # changes while it is in flight.
         if self.config.axon_delay:
             self._delay_buffer = torch.zeros(
                 self.config.max_axon_delay, self.config.dim, device=self.device
@@ -534,6 +696,48 @@ class BrainRuntime:
         else:
             self._delay_buffer = None
             self._delay_idx = 0
+
+        self._competition_signature = (
+            tuple(self.config.competition_indices or ()),
+            int(self.config.competition_delay_ticks),
+            float(self.config.competition_jitter_sigma),
+            int(self.config.competition_jitter_seed),
+            tuple(self.config.competition_input_indices or ()),
+            bool(self.config.competition_k_from_delayed_input),
+            bool(self.config.competition_factorize_delayed_input),
+        )
+        if self.config.has_local_competition:
+            self._competition_indices = torch.tensor(
+                self.config.competition_indices,
+                dtype=torch.long,
+                device=self.device,
+            )
+            self._competition_input_indices = (
+                torch.tensor(
+                    self.config.competition_input_indices,
+                    dtype=torch.long,
+                    device=self.device,
+                )
+                if self.config.competition_input_indices is not None
+                else None
+            )
+            self.competition_homeostasis = torch.zeros(
+                self.config.dim, device=self.device,
+            )
+            self._competition_usage_buffer = torch.zeros(
+                self.config.competition_delay_ticks,
+                self.config.dim,
+                device=self.device,
+            )
+            self._competition_usage_idx = 0
+            self.competition_packet_envelope = torch.zeros((), device=self.device)
+        else:
+            self._competition_indices = None
+            self._competition_input_indices = None
+            self.competition_homeostasis = None
+            self._competition_usage_buffer = None
+            self._competition_usage_idx = 0
+            self.competition_packet_envelope = None
 
         # Brainwave history for FFT
         self._brainwave_history: list[float] = []
@@ -845,6 +1049,172 @@ class BrainRuntime:
     def _matvec(self, x: torch.Tensor) -> torch.Tensor:
         return torch.sparse.mm(self.sparse_weight, x.unsqueeze(1)).squeeze(1)
 
+    def _assert_local_competition_config(self) -> None:
+        self.config.validate_local_competition()
+        signature = (
+            tuple(self.config.competition_indices or ()),
+            int(self.config.competition_delay_ticks),
+            float(self.config.competition_jitter_sigma),
+            int(self.config.competition_jitter_seed),
+            tuple(self.config.competition_input_indices or ()),
+            bool(self.config.competition_k_from_delayed_input),
+            bool(self.config.competition_factorize_delayed_input),
+        )
+        if signature != self._competition_signature:
+            raise ValueError(
+                "competition indices, delay, and jitter are structural "
+                "runtime configuration and cannot be mutated after construction"
+            )
+
+    def _advance_local_competition(self) -> int | None:
+        if self._competition_usage_buffer is None:
+            return None
+        self._assert_local_competition_config()
+        slot = self._competition_usage_idx % self.config.competition_delay_ticks
+        delayed_usage = self._competition_usage_buffer[slot].detach().clone()
+        self._competition_usage_buffer[slot].zero_()
+        assert self.competition_homeostasis is not None
+        self.competition_homeostasis = (
+            (1.0 - self.config.competition_homeostasis_decay)
+            * self.competition_homeostasis
+            + self.config.competition_homeostasis_rate * delayed_usage
+        ).clamp(0.0, 1.0)
+        return int(slot)
+
+    def _apply_local_competition(
+        self,
+        recurrent: torch.Tensor,
+        *,
+        input_packet_count: int | None = None,
+    ) -> tuple[torch.Tensor, torch.Tensor | None]:
+        if self._competition_indices is None:
+            return recurrent, None
+        assert self.competition_homeostasis is not None
+        assert self.competition_packet_envelope is not None
+        indices = self._competition_indices
+        raw_positive = recurrent[indices].clamp_min(0.0)
+        packet_mass = raw_positive.sum()
+        envelope = self.competition_packet_envelope
+        novelty = (packet_mass - envelope).clamp_min(0.0) / (
+            self.config.competition_epsilon + packet_mass
+        )
+        self.competition_packet_envelope = torch.maximum(
+            self.config.competition_novelty_decay * envelope,
+            packet_mass.detach(),
+        )
+        if (
+            self.config.competition_jitter_sigma > 0.0
+            and float(packet_mass.item()) > self.config.competition_epsilon
+        ):
+            generator = torch.Generator(device=raw_positive.device)
+            seed = (
+                int(self.config.competition_jitter_seed)
+                + 104_729 * int(self.step_index)
+            ) & 0x7FFF_FFFF_FFFF_FFFF
+            generator.manual_seed(seed)
+            normal = torch.randn(
+                raw_positive.shape,
+                generator=generator,
+                device=raw_positive.device,
+                dtype=raw_positive.dtype,
+            )
+            sigma = self.config.competition_jitter_sigma
+            raw_positive = raw_positive * (1.0 + sigma * torch.tanh(normal))
+        attenuated = raw_positive * torch.exp(
+            -self.config.competition_homeostasis_gain
+            * self.competition_homeostasis[indices]
+        )
+        if input_packet_count is None or int(input_packet_count) <= 1:
+            # Preserve the legacy singleton branch byte-for-byte.
+            peers = attenuated.unsqueeze(0).expand(indices.numel(), -1).clone()
+            peers.fill_diagonal_(float("-inf"))
+            strongest_peer = peers.max(dim=1).values
+            competed = (
+                attenuated
+                - self.config.competition_lateral_gain * strongest_peer
+            ).clamp_min(0.0)
+        elif int(input_packet_count) == 2:
+            # Strict two-route branch.  The third-largest value is the
+            # threshold; a tie at the 2/3 boundary fails closed.
+            ordered = torch.sort(attenuated, descending=True, stable=True).values
+            if float((ordered[1] - ordered[2]).item()) <= 0.0:
+                competed = torch.zeros_like(attenuated)
+            else:
+                competed = (attenuated - ordered[2]).clamp_min(0.0)
+        else:
+            # Capacity above two has not been admitted by the TR17 contract.
+            competed = torch.zeros_like(attenuated)
+        result = recurrent.clone()
+        result[indices] = competed
+        return result, novelty.detach()
+
+    def _apply_factorized_local_competition(
+        self,
+        recurrent: torch.Tensor,
+        delayed_pre: torch.Tensor,
+    ) -> tuple[torch.Tensor, torch.Tensor | None]:
+        """Select each arriving source contribution before summing routes."""
+        if self._competition_indices is None or self._competition_input_indices is None:
+            raise RuntimeError("factorized competition indices are missing")
+        active_sources = self._competition_input_indices[
+            delayed_pre[self._competition_input_indices].abs()
+            > self.config.competition_epsilon
+        ]
+        if active_sources.numel() <= 1:
+            return self._apply_local_competition(
+                recurrent,
+                input_packet_count=int(active_sources.numel()),
+            )
+        assert self.competition_homeostasis is not None
+        assert self.competition_packet_envelope is not None
+        indices = self._competition_indices
+        raw_total = recurrent[indices].clamp_min(0.0)
+        packet_mass = raw_total.sum()
+        envelope = self.competition_packet_envelope
+        novelty = (packet_mass - envelope).clamp_min(0.0) / (
+            self.config.competition_epsilon + packet_mass
+        )
+        self.competition_packet_envelope = torch.maximum(
+            self.config.competition_novelty_decay * envelope,
+            packet_mass.detach(),
+        )
+        attenuation = torch.exp(
+            -self.config.competition_homeostasis_gain
+            * self.competition_homeostasis[indices]
+        )
+        selected_sum = torch.zeros_like(raw_total)
+        for source_index in active_sources.tolist():
+            contribution = (
+                self.weight[indices, int(source_index)]
+                * delayed_pre[int(source_index)]
+            ).clamp_min(0.0)
+            attenuated = contribution * attenuation
+            peers = attenuated.unsqueeze(0).expand(indices.numel(), -1).clone()
+            peers.fill_diagonal_(float("-inf"))
+            selected_sum += (attenuated - peers.max(dim=1).values).clamp_min(0.0)
+        result = recurrent.clone()
+        result[indices] = selected_sum
+        return result, novelty.detach()
+
+    def _commit_local_competition_usage(
+        self,
+        activation: torch.Tensor,
+        novelty: torch.Tensor | None,
+        slot: int | None,
+    ) -> None:
+        if self._competition_usage_buffer is None:
+            return
+        if novelty is None or slot is None or self._competition_indices is None:
+            raise RuntimeError("local competition usage commit is missing step state")
+        positive = activation[self._competition_indices].clamp_min(0.0).square()
+        normalized = positive / (
+            self.config.competition_epsilon + positive.sum()
+        )
+        usage = torch.zeros_like(activation)
+        usage[self._competition_indices] = novelty * normalized
+        self._competition_usage_buffer[slot] = usage.detach()
+        self._competition_usage_idx += 1
+
     def _select_active(self, salience: torch.Tensor, budget: int) -> torch.Tensor:
         if self.config.force_all_active_selection:
             return torch.ones_like(salience, dtype=torch.bool)
@@ -941,6 +1311,15 @@ class BrainRuntime:
         return float(total.item())
 
     def _use_rust(self) -> bool:
+        self._assert_local_competition_config()
+        if self.config.has_local_competition:
+            if self.backend == "rust":
+                raise ValueError("the Rust brain kernel does not support local competition")
+            return False
+        if self.config.axon_delay:
+            if self.backend == "rust":
+                raise ValueError("the Rust brain kernel does not support axon_delay=True")
+            return False
         if self.config.has_neuronwise_bit_threshold:
             self.config.effective_bit_thresholds()
             if self.backend == "rust":
@@ -963,6 +1342,11 @@ class BrainRuntime:
         mode: RuntimeMode,
     ) -> tuple[int, float]:
         """Delegate the cell-step hot path to the Rust kernel."""
+        self._assert_local_competition_config()
+        if self.config.has_local_competition:
+            raise ValueError("the Rust brain kernel does not support local competition")
+        if self.config.axon_delay:
+            raise ValueError("the Rust brain kernel does not support axon_delay=True")
         if self.config.has_neuronwise_bit_threshold:
             self.config.effective_bit_thresholds()
             raise ValueError(
@@ -1059,6 +1443,7 @@ class BrainRuntime:
         Returns (salience, recurrent, energy) to avoid recomputation in step().
         """
         prev_active = self.active_mask().float()
+        competition_slot = self._advance_local_competition()
 
         spike = prev_active
         stp_u = self.stp_u + (-STP_TAU_FAC_INV * self.stp_u + STP_U_BASE * (1.0 - self.stp_u) * spike)
@@ -1068,15 +1453,42 @@ class BrainRuntime:
 
         pre = stp_u * stp_x * self.activation * prev_active
 
-        # Axon delay: use delayed activation for recurrent input
+        # Axon delay: deliver the packet emitted exactly L calls earlier.
+        # Read-before-write makes an L-slot ring a true L-call drive delay.
+        input_packet_count = None
         if self._delay_buffer is not None:
-            delayed = self._delay_buffer[self._delay_idx % self.config.max_axon_delay]
-            pre_delayed = stp_u * stp_x * delayed * prev_active
-            recurrent = self._matvec(pre_delayed)
-            self._delay_buffer[self._delay_idx % self.config.max_axon_delay] = self.activation.detach()
+            slot = self._delay_idx % self.config.max_axon_delay
+            # Keep the delivered packet stable across the read-before-write
+            # ring update below.  A view would alias the overwritten slot and
+            # make provenance-aware competition inspect the newly emitted
+            # packet instead of the packet that actually arrived this tick.
+            delayed_pre = self._delay_buffer[slot].clone()
+            recurrent = self._matvec(delayed_pre)
+            if (
+                self.config.competition_k_from_delayed_input
+                or self.config.competition_factorize_delayed_input
+            ):
+                if self._competition_input_indices is None:
+                    raise RuntimeError("adaptive competition input indices are missing")
+                input_packet_count = int(torch.count_nonzero(
+                    delayed_pre[self._competition_input_indices].abs()
+                    > self.config.competition_epsilon
+                ).item())
+            self._delay_buffer[slot] = pre.detach()
             self._delay_idx += 1
         else:
             recurrent = self._matvec(pre)
+
+        if self.config.competition_factorize_delayed_input:
+            recurrent, competition_novelty = self._apply_factorized_local_competition(
+                recurrent,
+                delayed_pre,
+            )
+        else:
+            recurrent, competition_novelty = self._apply_local_competition(
+                recurrent,
+                input_packet_count=input_packet_count,
+            )
 
         adapt_force = ADAPTATION_COUPLING * self.adaptation
 
@@ -1136,6 +1548,11 @@ class BrainRuntime:
         self.stp_u = stp_u
         self.stp_x = stp_x
         self.bitfield = bitfield
+        self._commit_local_competition_usage(
+            activation,
+            competition_novelty,
+            competition_slot,
+        )
 
         salience = self._compute_salience(activation, external, replay, refractory)
         energy = self._energy(recurrent, replay)
@@ -1224,6 +1641,13 @@ class BrainRuntime:
         self.active_ratio_ema = float(self.config.active_ratio); self._brainwave_history = []
         if self._delay_buffer is not None: self._delay_buffer.zero_()
         self._delay_idx = 0
+        if self.competition_homeostasis is not None:
+            self.competition_homeostasis.zero_()
+        if self._competition_usage_buffer is not None:
+            self._competition_usage_buffer.zero_()
+        self._competition_usage_idx = 0
+        if self.competition_packet_envelope is not None:
+            self.competition_packet_envelope.zero_()
         if self.stdp_tracker is not None: self.stdp_tracker.reset()
         self._stdp_prev_critic_score = 0.0; self._stdp_updates = 0
         self._last_stdp_gate = 0.0; self._stdp_pending_learning_signal = 0.0
@@ -1265,6 +1689,22 @@ class BrainRuntime:
                 else None
             ),
             delay_idx=int(self._delay_idx),
+            competition_homeostasis=(
+                self.competition_homeostasis.detach().cpu().clone()
+                if self.competition_homeostasis is not None
+                else None
+            ),
+            competition_usage_buffer=(
+                self._competition_usage_buffer.detach().cpu().clone()
+                if self._competition_usage_buffer is not None
+                else None
+            ),
+            competition_usage_idx=int(self._competition_usage_idx),
+            competition_packet_envelope=(
+                self.competition_packet_envelope.detach().cpu().clone()
+                if self.competition_packet_envelope is not None
+                else None
+            ),
             brainwave_history=tuple(float(value) for value in self._brainwave_history),
             last_stdp_gate=float(self._last_stdp_gate),
             stdp_pending_learning_signal=float(self._stdp_pending_learning_signal),
@@ -1314,6 +1754,41 @@ class BrainRuntime:
                 )
             runtime._delay_buffer = snapshot.delay_buffer.to(runtime.device).float().clone()
         runtime._delay_idx = int(snapshot.delay_idx)
+        snapshot_homeostasis = getattr(snapshot, "competition_homeostasis", None)
+        snapshot_usage = getattr(snapshot, "competition_usage_buffer", None)
+        snapshot_envelope = getattr(snapshot, "competition_packet_envelope", None)
+        if runtime.config.has_local_competition:
+            if snapshot_homeostasis is None or snapshot_usage is None or snapshot_envelope is None:
+                raise ValueError("snapshot local competition state is required")
+            if tuple(snapshot_homeostasis.shape) != (runtime.config.dim,):
+                raise ValueError("snapshot competition homeostasis shape must match dim")
+            expected_usage_shape = (
+                runtime.config.competition_delay_ticks,
+                runtime.config.dim,
+            )
+            if tuple(snapshot_usage.shape) != expected_usage_shape:
+                raise ValueError(
+                    "snapshot competition usage buffer shape must match "
+                    f"(competition_delay_ticks, dim)={expected_usage_shape}"
+                )
+            if snapshot_envelope.numel() != 1:
+                raise ValueError("snapshot competition packet envelope must be scalar")
+            runtime.competition_homeostasis = (
+                snapshot_homeostasis.to(runtime.device).float().clone()
+            )
+            runtime._competition_usage_buffer = (
+                snapshot_usage.to(runtime.device).float().clone()
+            )
+            runtime._competition_usage_idx = int(
+                getattr(snapshot, "competition_usage_idx", 0)
+            )
+            runtime.competition_packet_envelope = (
+                snapshot_envelope.to(runtime.device).float().reshape(()).clone()
+            )
+        elif any(value is not None for value in (
+            snapshot_homeostasis, snapshot_usage, snapshot_envelope,
+        )):
+            raise ValueError("snapshot local competition state requires configured indices")
         runtime._brainwave_history = [float(value) for value in snapshot.brainwave_history]
         runtime.hippocampus = HippocampusMemory.from_state_dict(
             snapshot.hippocampus,
