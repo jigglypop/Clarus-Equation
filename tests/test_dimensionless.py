@@ -46,13 +46,20 @@ Quantity = _dimensionless.Quantity
 audit_dimensionless = _dimensionless.audit_dimensionless
 buckingham_pi_groups = _dimensionless.buckingham_pi_groups
 check_dimensionless = _dimensionless.check_dimensionless
+compensate_beta_for_affine_defect = _dimensionless.compensate_beta_for_affine_defect
+compensate_beta_for_reference_scale = _dimensionless.compensate_beta_for_reference_scale
 dim = _dimensionless.dim
 evaluate_group = _dimensionless.evaluate_group
 exp_argument = _dimensionless.exp_argument
 exp_arguments = _dimensionless.exp_arguments
 group_dimension = _dimensionless.group_dimension
+linear_equality_defect = _dimensionless.linear_equality_defect
+log_equality_defect = _dimensionless.log_equality_defect
+mahalanobis_equality_defect = _dimensionless.mahalanobis_equality_defect
 nondimensionalize = _dimensionless.nondimensionalize
 require_dimensionless = _dimensionless.require_dimensionless
+typed_equal = _dimensionless.typed_equal
+typed_zero = _dimensionless.typed_zero
 
 Dimension = _checker.Dimension if _checker is not None else None
 DimensionVector = _checker.DimensionVector if _checker is not None else None
@@ -233,6 +240,100 @@ def test_exp_arguments_validates_batch_before_kernel_use() -> None:
 
     assert args.passed
     assert args.unwrap() == (0.31, 1.7)
+
+
+def test_typed_equality_rejects_metre_second_and_preserves_typed_zero() -> None:
+    metre = Quantity("one metre", 1.0, LENGTH)
+    second = Quantity("one second", 1.0, dim(0, 0, 1, 0))
+
+    with pytest.raises(ValueError, match="same dimensions"):
+        typed_equal(metre, second)
+
+    zero_length = typed_zero("zero length", LENGTH)
+    assert typed_equal(zero_length, Quantity("origin", 0.0, LENGTH))
+    with pytest.raises(ValueError, match="same dimensions"):
+        typed_equal(zero_length, Quantity("bare zero", 0.0))
+    with pytest.raises(ValueError, match="finite"):
+        typed_equal(metre, Quantity("infinite length", math.inf, LENGTH))
+
+
+def test_equality_defects_enforce_domains_and_common_unit_rescaling() -> None:
+    left = Quantity("left", 2.0, LENGTH)
+    right = Quantity("right", 1.0, LENGTH)
+    scale = Quantity("scale", 4.0, LENGTH)
+
+    assert math.isclose(linear_equality_defect(left, right, scale), 0.25)
+    assert math.isclose(
+        linear_equality_defect(
+            Quantity("left cm", 200.0, LENGTH),
+            Quantity("right cm", 100.0, LENGTH),
+            Quantity("scale cm", 400.0, LENGTH),
+        ),
+        0.25,
+    )
+    assert math.isclose(log_equality_defect(left, right), math.log(2.0))
+    assert math.isclose(
+        log_equality_defect(Quantity("large", 1e308, LENGTH), Quantity("small", 1e-308, LENGTH)),
+        1418.3924172843322,
+    )
+    adjacent_large = math.nextafter(1e308, math.inf)
+    adjacent_forward = log_equality_defect(Quantity("large", 1e308, LENGTH), Quantity("adjacent", adjacent_large, LENGTH))
+    adjacent_reverse = log_equality_defect(Quantity("adjacent", adjacent_large, LENGTH), Quantity("large", 1e308, LENGTH))
+    assert adjacent_forward > 0.0
+    assert adjacent_forward == adjacent_reverse
+    with pytest.raises(ValueError, match="positive"):
+        log_equality_defect(Quantity("zero", 0.0, LENGTH), right)
+    with pytest.raises(ValueError, match="positive reference scale"):
+        linear_equality_defect(left, right, Quantity("bad scale", 0.0, LENGTH))
+    with pytest.raises(ValueError, match="finite"):
+        linear_equality_defect(Quantity("nan", math.nan, LENGTH), right, scale)
+    with pytest.raises(ValueError, match="finite"):
+        linear_equality_defect(Quantity("large", 1e308, LENGTH), Quantity("negative", -1e308, LENGTH), scale)
+
+
+def test_mahalanobis_equality_defect_requires_spd_covariance() -> None:
+    left = [Quantity("x", 3.0, LENGTH), Quantity("t", 5.0, dim(0, 0, 1, 0))]
+    right = [Quantity("x0", 1.0, LENGTH), Quantity("t0", 1.0, dim(0, 0, 1, 0))]
+    scales = [Quantity("L", 2.0, LENGTH), Quantity("T", 4.0, dim(0, 0, 1, 0))]
+
+    assert math.isclose(mahalanobis_equality_defect(left, right, scales, [[1.0, 0.0], [0.0, 1.0]]), 2.0)
+    for covariance, message in (
+        ([[1.0, 0.0], [0.0, -1.0]], "positive definite"),
+        ([[1.0, 1.0], [1.0, 1.0]], "positive definite"),
+        ([[1.0, 2.0], [0.0, 1.0]], "symmetric"),
+    ):
+        with pytest.raises(ValueError, match=message):
+            mahalanobis_equality_defect(left, right, scales, covariance)
+    with pytest.raises(ValueError, match="finite"):
+        mahalanobis_equality_defect(
+            [Quantity("infinite x", math.inf, LENGTH), left[1]], right, scales, [[1.0, 0.0], [0.0, 1.0]]
+        )
+    with pytest.raises(ValueError, match="finite"):
+        mahalanobis_equality_defect(
+            [Quantity("large x", 1e308, LENGTH), left[1]],
+            [Quantity("zero x", 0.0, LENGTH), right[1]],
+            [Quantity("unit L", 1.0, LENGTH), scales[1]],
+            [[1.0, 0.0], [0.0, 1.0]],
+        )
+
+
+def test_beta_compensation_preserves_affine_gibbs_weight_ratios() -> None:
+    beta = 1.7
+    offset = 3.2
+    multiplier = 2.5
+    delta_i, delta_j = 0.4, 1.1
+    beta_prime = compensate_beta_for_affine_defect(beta, multiplier)
+
+    original_ratio = math.exp(-beta * (delta_i - delta_j))
+    transformed_ratio = math.exp(
+        -beta_prime * ((offset + multiplier * delta_i) - (offset + multiplier * delta_j))
+    )
+    assert math.isclose(transformed_ratio, original_ratio)
+    assert math.isclose(compensate_beta_for_reference_scale(beta, 4.0), 4.0 * beta)
+    with pytest.raises(ValueError, match="finite"):
+        compensate_beta_for_affine_defect(1e308, 1e-308)
+    with pytest.raises(ValueError, match="finite"):
+        compensate_beta_for_reference_scale(1e308, 1e308)
 
 
 @requires_sympy
