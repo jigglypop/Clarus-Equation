@@ -1,0 +1,1 @@
+C:\Users\dongh\OneDrive\Desktop\Clarus-Equation\_workspace\ce\.ce-research-target\debug\ce-research-core.exe: C:\Users\dongh\OneDrive\Desktop\Clarus-Equation\.codex\skills\ce-research\core\src\main.rs

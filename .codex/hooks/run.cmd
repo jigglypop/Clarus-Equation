@@ -1,7 +1,8 @@
 @echo off
 rem Fast path for hooks on Windows: run the prebuilt binary directly and
-rem skip PowerShell startup. Hook events never trigger a build (that would
-rem stall the prompt); manual commands fall back to run.ps1 which rebuilds.
+rem skip shell startup. Hook events never trigger a build (that would stall
+rem the prompt); manual commands use Cargo directly so Windows script execution
+rem policy is neither weakened nor bypassed.
 set "BIN=%LOCALAPPDATA%\ce-research-core\release\ce-research-core.exe"
 if "%~1"=="hook" (
     if exist "%BIN%" (
@@ -12,5 +13,14 @@ if "%~1"=="hook" (
     )
     exit /b 0
 )
-powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0run.ps1" %*
-exit /b %errorlevel%
+where cargo >nul 2>nul
+if not errorlevel 1 (
+    cargo run --quiet --locked --release --target-dir "%LOCALAPPDATA%\ce-research-core" --manifest-path "%~dp0..\skills\ce-research\core\Cargo.toml" -- %*
+    exit /b %errorlevel%
+)
+if exist "%BIN%" (
+    "%BIN%" %*
+    exit /b %errorlevel%
+)
+echo ce-research-core: cargo and prebuilt binary are unavailable 1>&2
+exit /b 2

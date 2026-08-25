@@ -495,6 +495,37 @@ $$
 이 branch는 quartic $Z_2$ portal 진공과 자동으로 같은 모형이 아니다.
 두 potential 사이의 matching을 제시하지 않는 한 별개 모형으로 관리한다.
 
+### 10.4 자기비동일성 시계장과 R1--R2 저장소 사전
+
+이 항목은 비선택 경로의 기회비용ㆍ0차원 측정 기록ㆍ자기측정이라는 직관을 우주론 작용으로 바꿀 때 필요한 기호와 지위를 압축한다. 자세한 유도는 [암흑에너지 유도 §4.7–§4.10](5_유도/04_Dark_Energy_Derivation.md#47-자기비동일성-시계장의-조건부-암흑부문)에 둔다.
+
+**[정의]** $T$는 시간 차원 $-1$의 coarse-grained 시계장이고 $X=-g^{\mu\nu}\nabla_\mu T\nabla_\nu T/2$, $\delta=X/X_*-1$이다. $X>0$은 반복 자기비동일성의 변화 readout이며, 미래 방향 자체는 아니다. 0차원은 추가 시공간 차원이 아니라 측정 사건ㆍ기록의 타입을 가리킨다.
+
+**[공리: R1 열린계 branch]**
+
+$$
+P(T,X)=\rho_\infty\left[\frac\kappa2\delta^2-\left(1-e^{-\Gamma T}\right)\right],
+\qquad s_A(T)=\mu_A^3F_A(\Gamma T)
+$$
+
+를 택한다. $F_A(0)=0$, $\|F_A\|_\infty<\infty$이고 저장소 작용은 $\phi_A$의 정준항과 $s_A\phi_A$를 포함한다. $1-e^{-\Gamma T}$는 무차원 잔류ㆍ기회 누적량이며 독립 에너지가 아니다. 중력 source는 $\rho_\infty$를 포함한 응력텐서에만 있다.
+
+**[정리: 조건부]** 양의 Gaussian 공분산 $\mathbf V+i\hbar\mathbf\Omega/2\succeq0$, cell smearing, 유계 저장소와 명시한 총작용을 전제하면, 영향함수는 인과적 $D_R$과 양의 $N$을 갖고
+
+$$
+\nabla_\mu(T_T^{\mu\nu}+T_\phi^{\mu\nu}+T_{\rm int}^{\mu\nu})=0
+$$
+
+을 만족한다. 초기 평균 $\langle T_i\rangle=0$, $\langle J_i\rangle=\Pi_{\rm F}>0$는 변위 Gaussian 상태로 준비 가능하다.
+
+**[정리: 완전 반례]** 영 전류는 즉시 $\delta<0$, $c_s^2<0$ 가지로 가며, 고전 경계항 하나는 정확한 $T_i=0$과 전류를 함께 유도하지 못한다. 또한 선형 $gT\phi$ 결합은 하방 비유계이므로 활성 R1 경로에서 제거한다.
+
+**[산출: R2 관측창 부분계]** 고정 계량의 $\pi=\delta T$는 gauge-dependent이므로 음의 $m_{\rm eff}^2$를 물리 mode의 질량으로 읽지 않는다. Einstein+clock 단일-clock 부분계에서 lapseㆍshift를 제거하면 $Q_s=XA/H^2>0$, $c_s^2=B/A>0$인 $\zeta$ 작용을 얻고, 동결 관측창에서 $\min c_s^2=9.2138\times10^{-19}$, $\min Q_s/M_{\rm Pl}^2=3.3167\times10^5$ 및 두 감쇠 기울기 $3.93909$, $3.469545$를 확인했다. 이는 유한 관측창의 부분계 진단이며 암흑에너지 증명이나 전체 섭동 안정성 판정이 아니다.
+
+**[산출: R2 cutoff]** canonical 전개는 $\Lambda_3=79.7$--$80.6\,{\rm eV}$, $\Lambda_4=94.8$--$95.8\,{\rm eV}$를 준다. 작은 음속에서는 에너지 cutoff $\Lambda_E=\Lambda_3c_s^{7/4}$와 물리 파수 cutoff $q_{\rm sc}=\Lambda_3c_s^{3/4}$를 구별한다. 관측창 최솟값과 scale margin은 각각 $1.3336\times10^{-14}\,{\rm eV}$, $1.3893\times10^{-5}\,{\rm eV}$, $9.2757\times10^{18}$, $2.1725\times10^{24}$다. $k^4$ crossover의 필요조건은 관측창에서 $\bar M\gtrsim7.31\,{\rm eV}$이나, 실제 completion의 부호ㆍdegeneracyㆍ예측은 주지 않는다.
+
+**[미완성]** $\Pi_{\rm F}$는 초기 Gaussian canonical momentum의 평균 변위일 뿐 0차원 기록에서 산출되지 않는다. 균일 FLRW matching, 내재적 시간 화살, baryonㆍradiationㆍreservoir 섭동과 bath pole을 포함한 full coupled ADM, 정확한 higher-derivative degeneracy와 새 cutoff, Einstein--Boltzmann CMB/LSSㆍlensingㆍhalo, 그리고 절대 DM/DE abundance는 열려 있다. 표준 열린계 문헌은 R1의 동일성을 증명하지 않으며, R2의 부분계 수치를 예측으로 승격하지 않는다.
+
 ## 11. flavor와 질량
 
 flavor와 질량은 symmetry·Yukawa/parameter input·renormalization과 관측 matching의 결합 문제다. 수학적 texture와 실제 spectrum의 인과적 설명을 혼동하지 않는다.
@@ -534,6 +565,9 @@ potential은 별도 모형이 필요하다.
 | conditioned $Dq$와 전이 면 $1/D$의 합성 | **[산출]**, 공동 물리 실현은 **[미완성]** |
 | CKM·PMNS·질량 수치 관계 | **[경험식]** 또는 **[미완성]** |
 | 진공에너지 절대값과 재규격화 | **[미완성]** |
+| R1 유계 Gaussian 저장소의 인과ㆍ양성ㆍ총 Ward 장부 | **[정리: 조건부]** |
+| R2 단일-clock 관측창 안정성 진단과 cutoff 여유 | **[조건부 산출]** |
+| R1--R2의 $\Pi_{\rm F}$ 기원ㆍ결합 섭동 안정성ㆍ우주론 예측 | **[미완성]** |
 
 CE의 이론물리 핵심은 서로 다른 모형 층을 등식으로 뭉개는 데 있지 않다.
 각 층을 일관된 작용·확률공간으로 닫고, 층 사이 사상을 별도 공리와

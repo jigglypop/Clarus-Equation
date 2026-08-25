@@ -1,7 +1,7 @@
 use std::{
     env, fs,
     io::{self, Read},
-    path::{Path, PathBuf},
+    path::{Component, Path, PathBuf},
     time::SystemTime,
 };
 
@@ -14,7 +14,33 @@ const BUILD: &[&str] = &["30-implementation.md", "31-validation.md"];
 const FINAL: &str = "40-final-report.md";
 const ACTIVE: &str = ".active-run";
 const NAG: &str = ".nag";
+const CURRENT_ROUTE: &str = "revisions/current-route";
+const PIVOT_LOG: &str = "revisions/pivots.log";
 const REVISION_LIMIT: usize = 2;
+const CONTROL_FIELDS: &[&str] = &[
+    "Objective-ID",
+    "Failure-Equation",
+    "Minimal-Assumptions",
+    "Counterexample",
+    "First-Failing-Line",
+    "Failure-Type",
+    "Removed-Claims",
+    "Preserved-Objective",
+    "Regression-Test",
+];
+const ROUTE_FIELDS: &[&str] = &[
+    "Objective-ID",
+    "Structural-Class",
+    "Changed-Structure",
+    "Preserved-Objective",
+    "New-Degrees-of-Freedom",
+    "Parameter-Accounting",
+    "Conservation-Law",
+    "Dimension-Check",
+    "Stability-Condition",
+    "Prior-Negative-Control",
+    "Falsifier",
+];
 
 #[derive(PartialEq)]
 enum FileStatus {
@@ -26,17 +52,26 @@ enum FileStatus {
 
 fn main() {
     let args: Vec<_> = env::args().skip(1).collect();
-    let result = match args.iter().map(String::as_str).collect::<Vec<_>>().as_slice() {
+    let result = match args
+        .iter()
+        .map(String::as_str)
+        .collect::<Vec<_>>()
+        .as_slice()
+    {
         ["hook", event] => hook(event),
-        ["init", dir] => init(Path::new(dir)),
+        ["init", dir] => init(Path::new(dir), false),
+        ["init", dir, "--independent"] => init(Path::new(dir), true),
         ["status", dir] => status(Path::new(dir)),
         ["check", dir, stage] => check(Path::new(dir), stage),
         ["revise", dir, role] => revise(Path::new(dir), role),
+        ["pivot", dir, route, control] => pivot(Path::new(dir), route, Path::new(control)),
         ["gc", ws] => gc(Path::new(ws)),
         _ => Err(concat!(
-            "usage: ce-research-core hook <route|stop> | init <run-dir> | ",
+            "usage: ce-research-core hook <route|stop> | init <run-dir> [--independent] | ",
             "status <run-dir> | check <run-dir> <contract|lanes|gate|build|final> | ",
-            "revise <run-dir> <role> | gc <workspace-dir>"
+            "revise <run-dir> <role> | ",
+            "pivot <run-dir> <route-id> <artifacts/negative-controls/file.md> | ",
+            "gc <workspace-dir>"
         )
         .into()),
     };
@@ -142,9 +177,24 @@ fn latest_md_mtime(dir: &Path) -> Option<SystemTime> {
 
 // ---------- run lifecycle ----------
 
-fn init(dir: &Path) -> Result<(), String> {
+fn init(dir: &Path, independent: bool) -> Result<(), String> {
+    if !dir.exists()
+        && let Some(ws) = dir.parent()
+    {
+        let siblings = incomplete_siblings(ws, dir);
+        if !siblings.is_empty() && !independent {
+            return Err(format!(
+                "REUSE required before creating a new run: incomplete run(s): {}. Reuse/close them, or rerun with --independent only after the new-parent admission gate is documented",
+                siblings.join(", ")
+            ));
+        }
+    }
     for sub in ["artifacts", "revisions"] {
         fs::create_dir_all(dir.join(sub)).map_err(|e| e.to_string())?;
+    }
+    let route = dir.join(CURRENT_ROUTE);
+    if !route.exists() {
+        fs::write(&route, "R0\n").map_err(|e| e.to_string())?;
     }
     let contract = dir.join(CONTRACT);
     if !contract.exists() {
@@ -156,9 +206,6 @@ fn init(dir: &Path) -> Result<(), String> {
     }
     if let Some(ws) = dir.parent() {
         fs::write(ws.join(ACTIVE), dir.to_string_lossy().as_bytes()).map_err(|e| e.to_string())?;
-        for name in incomplete_siblings(ws, dir) {
-            println!("REUSE? incomplete run exists: {name}");
-        }
     }
     println!("{}", dir.display());
     Ok(())
@@ -184,6 +231,26 @@ fn incomplete_siblings(ws: &Path, current: &Path) -> Vec<String> {
 
 // ---------- status ----------
 
+fn current_route(dir: &Path) -> String {
+    fs::read_to_string(dir.join(CURRENT_ROUTE))
+        .ok()
+        .map(|route| route.trim().to_owned())
+        .filter(|route| !route.is_empty())
+        .unwrap_or_else(|| "R0".into())
+}
+
+fn revision_entry(line: &str) -> Option<(String, String)> {
+    let line = line.trim();
+    if line.is_empty() {
+        return None;
+    }
+    if let Some((route, role)) = line.split_once('\t') {
+        return Some((route.trim().into(), role.trim().into()));
+    }
+    // Legacy logs predate structural routes and belong to the original route.
+    Some(("R0".into(), line.into()))
+}
+
 // One-screen run overview so the model never rereads stage files just to
 // learn where it is. Output is line-oriented for easy quoting.
 fn status(dir: &Path) -> Result<(), String> {
@@ -205,12 +272,14 @@ fn status(dir: &Path) -> Result<(), String> {
         };
         println!("{name}: {label}");
     }
-    println!(
-        "Gate: {}",
-        gate_verdict(&dir.join(AUDIT)).unwrap_or("none")
-    );
+    println!("Gate: {}", gate_verdict(&dir.join(AUDIT)).unwrap_or("none"));
+    println!("Active route: {}", current_route(dir));
     let log = fs::read_to_string(dir.join("revisions/log")).unwrap_or_default();
-    let mut roles: Vec<&str> = log.lines().map(str::trim).filter(|l| !l.is_empty()).collect();
+    let mut roles: Vec<String> = log
+        .lines()
+        .filter_map(revision_entry)
+        .map(|(route, role)| format!("{route}:{role}"))
+        .collect();
     roles.sort_unstable();
     let mut summary = Vec::new();
     for chunk in roles.chunk_by(|a, b| a == b) {
@@ -218,7 +287,20 @@ fn status(dir: &Path) -> Result<(), String> {
     }
     println!(
         "Revisions: {}",
-        if summary.is_empty() { "none".into() } else { summary.join(", ") }
+        if summary.is_empty() {
+            "none".into()
+        } else {
+            summary.join(", ")
+        }
+    );
+    let pivots = fs::read_to_string(dir.join(PIVOT_LOG)).unwrap_or_default();
+    println!(
+        "Pivots: {}",
+        if pivots.trim().is_empty() {
+            "none".into()
+        } else {
+            pivots.lines().map(str::trim).collect::<Vec<_>>().join(", ")
+        }
     );
     Ok(())
 }
@@ -266,6 +348,7 @@ fn check(dir: &Path, stage: &str) -> Result<(), String> {
     }
     if depth >= 4 {
         require(dir, FINAL, false, &mut problems);
+        problems.extend(validate_pivot_ledger(dir));
         for stray in stray_root_md(dir) {
             problems.push(format!("{stray}: stray root file, move into artifacts/"));
         }
@@ -361,22 +444,361 @@ fn gate_verdict(path: &Path) -> Option<&'static str> {
 // ---------- revision budget ----------
 
 fn revise(dir: &Path, role: &str) -> Result<(), String> {
+    if role.trim().is_empty() || role.contains(['\t', '\n', '\r']) {
+        return Err("role must be a non-empty single-line identifier".into());
+    }
+    let route = current_route(dir);
     let log = dir.join("revisions/log");
     let text = fs::read_to_string(&log).unwrap_or_default();
-    let used = text.lines().filter(|line| line.trim() == role).count();
+    let used = text
+        .lines()
+        .filter_map(revision_entry)
+        .filter(|(logged_route, logged_role)| logged_route == &route && logged_role == role)
+        .count();
     if used >= REVISION_LIMIT {
         return Err(format!(
-            "revision limit ({REVISION_LIMIT}) reached for {role}: mark the finding BLOCKED in \
-             {AUDIT} and record it in {FINAL} instead of revising again"
+            "local revision limit ({REVISION_LIMIT}) reached for {role} on route {route}: \
+             preserve the failed equation in artifacts/negative-controls, register a \
+             structurally different route with `pivot`, and keep the research objective OPEN. \
+             Do not narrow the objective merely because this equation failed"
         ));
     }
     fs::create_dir_all(dir.join("revisions")).map_err(|e| e.to_string())?;
-    fs::write(&log, format!("{text}{role}\n")).map_err(|e| e.to_string())?;
-    println!("OK revision {}/{REVISION_LIMIT} for {role}", used + 1);
+    fs::write(&log, format!("{text}{route}\t{role}\n")).map_err(|e| e.to_string())?;
+    println!(
+        "OK revision {}/{REVISION_LIMIT} for {role} on route {route}",
+        used + 1
+    );
+    Ok(())
+}
+
+fn valid_route_id(route: &str) -> bool {
+    !route.is_empty()
+        && route.len() <= 64
+        && route
+            .bytes()
+            .all(|byte| byte.is_ascii_alphanumeric() || matches!(byte, b'-' | b'_'))
+}
+
+fn valid_control_path(path: &Path) -> bool {
+    if path.is_absolute() || path.extension().is_none_or(|ext| ext != "md") {
+        return false;
+    }
+    let parts: Vec<_> = path.components().collect();
+    parts.len() >= 3
+        && parts
+            .iter()
+            .all(|part| matches!(part, Component::Normal(_)))
+        && parts[0].as_os_str() == "artifacts"
+        && parts[1].as_os_str() == "negative-controls"
+}
+
+fn field_value<'a>(text: &'a str, field: &str) -> Option<&'a str> {
+    let prefix = format!("{field}:");
+    text.lines()
+        .map(str::trim)
+        .find_map(|line| line.strip_prefix(&prefix).map(str::trim))
+        .filter(|value| !value.is_empty())
+}
+
+fn require_fields(text: &str, fields: &[&str], label: &str) -> Result<(), String> {
+    let missing: Vec<_> = fields
+        .iter()
+        .filter(|field| field_value(text, field).is_none())
+        .copied()
+        .collect();
+    if missing.is_empty() {
+        Ok(())
+    } else {
+        Err(format!(
+            "{label} is missing non-empty field(s): {}",
+            missing.join(", ")
+        ))
+    }
+}
+
+fn route_block(routes: &str, route: &str) -> Option<String> {
+    let marker = format!("Route-ID: {route}");
+    let mut found = false;
+    let mut block = String::new();
+    for line in routes.lines() {
+        let trimmed = line.trim();
+        if trimmed.starts_with("Route-ID:") {
+            if found {
+                break;
+            }
+            if trimmed == marker {
+                found = true;
+            }
+        }
+        if found {
+            block.push_str(line);
+            block.push('\n');
+        }
+    }
+    found.then_some(block)
+}
+
+fn normalized_rel(path: &Path) -> String {
+    path.to_string_lossy().replace('\\', "/")
+}
+
+fn validate_pivot_material(dir: &Path, route: &str, control: &Path) -> Result<(), String> {
+    let control_full = dir.join(control);
+    let control_text = fs::read_to_string(&control_full).map_err(|_| {
+        format!(
+            "negative control is missing or not UTF-8 text: {}",
+            control_full.display()
+        )
+    })?;
+    require_fields(
+        &control_text,
+        CONTROL_FIELDS,
+        "negative-control certificate",
+    )?;
+
+    let routes = fs::read_to_string(dir.join("12-routes.md"))
+        .map_err(|_| "12-routes.md is missing or not UTF-8 text".to_string())?;
+    let block = route_block(&routes, route)
+        .ok_or_else(|| format!("12-routes.md must declare `Route-ID: {route}` before pivot"))?;
+    require_fields(&block, ROUTE_FIELDS, &format!("route manifest {route}"))?;
+
+    let class = field_value(&block, "Structural-Class").unwrap_or_default();
+    if !matches!(
+        class,
+        "action-state" | "boundary-source" | "micro-macro" | "observable-readout"
+    ) {
+        return Err(format!(
+            "route manifest {route}: Structural-Class must be action-state, boundary-source, micro-macro, or observable-readout"
+        ));
+    }
+    let control_objective = field_value(&control_text, "Objective-ID").unwrap_or_default();
+    let route_objective = field_value(&block, "Objective-ID").unwrap_or_default();
+    if control_objective != route_objective {
+        return Err(format!(
+            "route manifest {route}: Objective-ID must match its negative control"
+        ));
+    }
+    let declared_control = field_value(&block, "Prior-Negative-Control")
+        .unwrap_or_default()
+        .replace('\\', "/");
+    if declared_control != normalized_rel(control) {
+        return Err(format!(
+            "route manifest {route}: Prior-Negative-Control must equal {}",
+            normalized_rel(control)
+        ));
+    }
+    Ok(())
+}
+
+fn validate_pivot_ledger(dir: &Path) -> Vec<String> {
+    let log_path = dir.join(PIVOT_LOG);
+    let Ok(log) = fs::read_to_string(&log_path) else {
+        return Vec::new();
+    };
+    let mut problems = Vec::new();
+    for line in log.lines().filter(|line| !line.trim().is_empty()) {
+        let Some((route, control)) = line.split_once('\t') else {
+            problems.push(format!("{}: malformed entry `{line}`", PIVOT_LOG));
+            continue;
+        };
+        if let Err(error) = validate_pivot_material(dir, route, Path::new(control)) {
+            problems.push(format!("{}: {error}", PIVOT_LOG));
+        }
+    }
+    problems
+}
+
+fn pivot(dir: &Path, route: &str, control: &Path) -> Result<(), String> {
+    if !dir.is_dir() {
+        return Err(format!("no such run: {}", dir.display()));
+    }
+    if !valid_route_id(route) {
+        return Err(
+            "route-id must contain only ASCII letters, digits, '-' or '_' and be <=64 bytes".into(),
+        );
+    }
+    if route == current_route(dir) {
+        return Err(format!("route {route} is already active"));
+    }
+    if !valid_control_path(control) {
+        return Err(
+            "negative control must be a relative artifacts/negative-controls/*.md path".into(),
+        );
+    }
+    validate_pivot_material(dir, route, control)?;
+    let log_path = dir.join(PIVOT_LOG);
+    let log = fs::read_to_string(&log_path).unwrap_or_default();
+    if log.lines().any(|line| {
+        line.split_once('\t')
+            .is_some_and(|(logged_route, _)| logged_route == route)
+    }) {
+        return Err(format!("route {route} was already registered"));
+    }
+    fs::create_dir_all(dir.join("revisions")).map_err(|e| e.to_string())?;
+    fs::write(
+        &log_path,
+        format!("{log}{route}\t{}\n", normalized_rel(control)),
+    )
+    .map_err(|e| e.to_string())?;
+    fs::write(dir.join(CURRENT_ROUTE), format!("{route}\n")).map_err(|e| e.to_string())?;
+    println!(
+        "OK pivot to {route}; negative control preserved at {}. Parent research objective remains OPEN",
+        control.display()
+    );
     Ok(())
 }
 
 // ---------- garbage collection ----------
+
+fn reference_text_candidate(path: &Path) -> bool {
+    let Some(extension) = path.extension().and_then(|value| value.to_str()) else {
+        return true;
+    };
+    matches!(
+        extension.to_ascii_lowercase().as_str(),
+        "md" | "txt"
+            | "json"
+            | "jsonl"
+            | "yaml"
+            | "yml"
+            | "toml"
+            | "rs"
+            | "py"
+            | "ps1"
+            | "cmd"
+            | "bat"
+            | "sh"
+            | "tex"
+            | "csv"
+            | "html"
+            | "js"
+            | "ts"
+            | "tsx"
+            | "jsx"
+            | "ini"
+            | "cfg"
+            | "lock"
+    )
+}
+
+fn encoded_needles(needles: &[String]) -> Vec<Vec<u8>> {
+    let mut encoded = Vec::new();
+    for needle in needles {
+        encoded.push(needle.as_bytes().to_vec());
+        let mut little = Vec::new();
+        let mut big = Vec::new();
+        for unit in needle.encode_utf16() {
+            little.extend_from_slice(&unit.to_le_bytes());
+            big.extend_from_slice(&unit.to_be_bytes());
+        }
+        encoded.push(little);
+        encoded.push(big);
+    }
+    encoded
+}
+
+fn file_contains_reference(path: &Path, needles: &[Vec<u8>]) -> bool {
+    if !reference_text_candidate(path) {
+        return false;
+    }
+    let Ok(mut file) = fs::File::open(path) else {
+        return false;
+    };
+    let overlap = needles
+        .iter()
+        .map(Vec::len)
+        .max()
+        .unwrap_or(1)
+        .saturating_sub(1);
+    let mut carry = Vec::new();
+    let mut buffer = [0_u8; 64 * 1024];
+    loop {
+        let Ok(read) = file.read(&mut buffer) else {
+            return false;
+        };
+        if read == 0 {
+            return false;
+        }
+        carry.extend_from_slice(&buffer[..read]);
+        if needles
+            .iter()
+            .any(|needle| carry.windows(needle.len()).any(|window| window == needle))
+        {
+            return true;
+        }
+        if carry.len() > overlap {
+            carry.drain(..carry.len() - overlap);
+        }
+    }
+}
+
+fn scan_reference_tree(path: &Path, needles: &[Vec<u8>], hits: &mut Vec<PathBuf>) {
+    if path.is_file() {
+        if file_contains_reference(path, needles) {
+            hits.push(path.to_path_buf());
+        }
+        return;
+    }
+    let Ok(entries) = fs::read_dir(path) else {
+        return;
+    };
+    for entry in entries.flatten() {
+        scan_reference_tree(&entry.path(), needles, hits);
+    }
+}
+
+fn run_references(ws: &Path, run: &Path, name: &str) -> Vec<PathBuf> {
+    let Some(workspace) = ws.parent() else {
+        return Vec::new();
+    };
+    let Some(repo) = workspace.parent() else {
+        return Vec::new();
+    };
+    if ws.file_name().is_none_or(|part| part != "ce")
+        || workspace
+            .file_name()
+            .is_none_or(|part| part != "_workspace")
+    {
+        return Vec::new();
+    }
+    let absolute = run.to_string_lossy();
+    let needles = vec![
+        name.to_string(),
+        format!("_workspace/ce/{name}"),
+        format!("_workspace\\ce\\{name}"),
+        format!("../{name}"),
+        format!("..\\{name}"),
+        absolute.to_string(),
+        absolute.replace('\\', "/"),
+    ];
+    let needles = encoded_needles(&needles);
+    let mut hits = Vec::new();
+    for root in [repo.join("docs"), repo.join(".codex")] {
+        scan_reference_tree(&root, &needles, &mut hits);
+    }
+    if let Ok(entries) = fs::read_dir(repo) {
+        for entry in entries.flatten() {
+            let path = entry.path();
+            if path.is_file() {
+                scan_reference_tree(&path, &needles, &mut hits);
+            }
+        }
+    }
+    if let Ok(entries) = fs::read_dir(ws) {
+        for entry in entries.flatten() {
+            let path = entry.path();
+            let entry_name = entry.file_name().to_string_lossy().into_owned();
+            if path == run || entry_name.starts_with('_') || entry_name.starts_with('.') {
+                continue;
+            }
+            scan_reference_tree(&path, &needles, &mut hits);
+        }
+    }
+    hits.sort();
+    hits.dedup();
+    hits
+}
 
 fn gc(ws: &Path) -> Result<(), String> {
     let archive = ws.join("_archive");
@@ -390,15 +812,38 @@ fn gc(ws: &Path) -> Result<(), String> {
         }
         // Runs whose artifacts freeze absolute/relative paths (sha-locked
         // prereg chains) must never be moved: a `.pin` marker keeps them live.
-        if path.join(".pin").exists() {
-            println!("PINNED {name} (frozen-path run; not archived — see .pin)");
+        let pin = path.join(".pin");
+        if pin.exists() {
+            let reason = fs::read_to_string(&pin).unwrap_or_default();
+            if reason.trim().is_empty() {
+                println!("INVALID_PIN {name} (empty .pin; preserved until a reason is recorded)");
+            } else {
+                println!("PINNED {name} (frozen-path run; not archived — see .pin)");
+            }
+            continue;
+        }
+        let references = run_references(ws, &path, &name);
+        if !references.is_empty() {
+            println!(
+                "REFERENCED {name} (not archived): {}",
+                references
+                    .iter()
+                    .map(|reference| reference.display().to_string())
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            );
             continue;
         }
         match file_status(&path.join(FINAL)) {
             FileStatus::Complete | FileStatus::Abandoned => {
                 fs::create_dir_all(&archive).map_err(|e| e.to_string())?;
+                let target = archive.join(&name);
+                if target.exists() {
+                    println!("COLLISION {name} (archive target exists; not moved)");
+                    continue;
+                }
                 let _ = fs::remove_file(path.join(NAG));
-                fs::rename(&path, archive.join(&name)).map_err(|e| e.to_string())?;
+                fs::rename(&path, &target).map_err(|e| e.to_string())?;
                 println!("ARCHIVED {name}");
                 archived.push(name);
             }
@@ -425,6 +870,48 @@ mod tests {
         dir
     }
 
+    fn write_pivot_material(dir: &Path, route: &str, control: &str) {
+        fs::create_dir_all(dir.join("artifacts/negative-controls")).unwrap();
+        fs::write(
+            dir.join(control),
+            concat!(
+                "Objective-ID: objective-1\n",
+                "Failure-Equation: equation-r0\n",
+                "Minimal-Assumptions: assumption-a\n",
+                "Counterexample: witness-x\n",
+                "First-Failing-Line: line-4\n",
+                "Failure-Type: conservation\n",
+                "Removed-Claims: child-claim\n",
+                "Preserved-Objective: objective-1\n",
+                "Regression-Test: test-r0\n",
+            ),
+        )
+        .unwrap();
+        fs::write(
+            dir.join("12-routes.md"),
+            format!(
+                concat!(
+                    "Status: COMPLETE\n\n",
+                    "Route-ID: {route}\n",
+                    "Objective-ID: objective-1\n",
+                    "Structural-Class: action-state\n",
+                    "Changed-Structure: replace the action variable\n",
+                    "Preserved-Objective: objective-1\n",
+                    "New-Degrees-of-Freedom: field-r\n",
+                    "Parameter-Accounting: one declared input\n",
+                    "Conservation-Law: total current conserved\n",
+                    "Dimension-Check: every term dimension four\n",
+                    "Stability-Condition: positive Hessian\n",
+                    "Prior-Negative-Control: {control}\n",
+                    "Falsifier: negative Hessian\n",
+                ),
+                route = route,
+                control = control,
+            ),
+        )
+        .unwrap();
+    }
+
     #[test]
     fn routes_on_ce_tokens_only() {
         assert!(is_ce_task("clarus-eq research"));
@@ -440,7 +927,11 @@ mod tests {
         let dir = tmp("gate");
         fs::write(dir.join(CONTRACT), "Status: COMPLETE\n").unwrap();
         for name in LANES {
-            fs::write(dir.join(name), "Status: SKIPPED (no observational claims)\n").unwrap();
+            fs::write(
+                dir.join(name),
+                "Status: SKIPPED (no observational claims)\n",
+            )
+            .unwrap();
         }
         fs::write(dir.join(AUDIT), "Status: COMPLETE\nGate: BLOCKED\n").unwrap();
         assert!(check(&dir, "gate").is_err());
@@ -466,9 +957,16 @@ mod tests {
         }
         fs::write(dir.join("loop8-prereg.md"), "scratch\n").unwrap();
         let err = check(&dir, "final").unwrap_err();
-        assert!(err.contains("loop8-prereg.md"), "stray root md must block final");
+        assert!(
+            err.contains("loop8-prereg.md"),
+            "stray root md must block final"
+        );
         fs::create_dir_all(dir.join("artifacts")).unwrap();
-        fs::rename(dir.join("loop8-prereg.md"), dir.join("artifacts/loop8-prereg.md")).unwrap();
+        fs::rename(
+            dir.join("loop8-prereg.md"),
+            dir.join("artifacts/loop8-prereg.md"),
+        )
+        .unwrap();
         assert!(check(&dir, "final").is_ok());
         assert!(!ws.join(ACTIVE).exists());
     }
@@ -487,8 +985,14 @@ mod tests {
         fs::write(dir.join(FINAL), "Status: COMPLETE\n").unwrap();
         fs::write(dir.join(BUILD[0]), "Status: COMPLETE\n").unwrap();
         fs::write(dir.join(BUILD[1]), "Status: SKIPPED (blocked)\n").unwrap();
-        assert!(check(&dir, "gate").is_err(), "blocked must not unlock build");
-        assert!(check(&dir, "final").is_err(), "blocked build must be skipped");
+        assert!(
+            check(&dir, "gate").is_err(),
+            "blocked must not unlock build"
+        );
+        assert!(
+            check(&dir, "final").is_err(),
+            "blocked build must be skipped"
+        );
         fs::write(dir.join(BUILD[0]), "Status: SKIPPED (blocked)\n").unwrap();
         assert!(check(&dir, "final").is_ok());
         assert!(!ws.join(ACTIVE).exists());
@@ -515,6 +1019,90 @@ mod tests {
     }
 
     #[test]
+    fn init_refuses_partial_creation_when_an_incomplete_run_exists() {
+        let ws = tmp("init-reuse");
+        fs::create_dir_all(ws.join("run-open")).unwrap();
+        let proposed = ws.join("run-new");
+        let error = init(&proposed, false).unwrap_err();
+        assert!(error.contains("REUSE required"));
+        assert!(
+            !proposed.exists(),
+            "refused init must not leave a directory"
+        );
+        assert!(init(&proposed, true).is_ok());
+    }
+
+    #[test]
+    fn structural_pivot_preserves_control_and_resets_route_local_budget() {
+        let dir = tmp("pivot");
+        fs::create_dir_all(dir.join("revisions")).unwrap();
+        fs::write(dir.join(CONTRACT), "Status: COMPLETE\nCLAIM: keep-open\n").unwrap();
+        let contract_before = fs::read(dir.join(CONTRACT)).unwrap();
+        write_pivot_material(
+            &dir,
+            "R1-action",
+            "artifacts/negative-controls/failed-r0.md",
+        );
+        assert!(revise(&dir, "math-verifier").is_ok());
+        assert!(revise(&dir, "math-verifier").is_ok());
+        let capped = revise(&dir, "math-verifier").unwrap_err();
+        assert!(capped.contains("structurally different route"));
+        pivot(
+            &dir,
+            "R1-action",
+            Path::new("artifacts/negative-controls/failed-r0.md"),
+        )
+        .unwrap();
+        assert_eq!(current_route(&dir), "R1-action");
+        assert!(revise(&dir, "math-verifier").is_ok());
+        assert!(revise(&dir, "math-verifier").is_ok());
+        assert!(revise(&dir, "math-verifier").is_err());
+        assert_eq!(fs::read(dir.join(CONTRACT)).unwrap(), contract_before);
+        assert!(
+            fs::read_to_string(dir.join(PIVOT_LOG))
+                .unwrap()
+                .contains("R1-action\tartifacts/negative-controls/failed-r0.md")
+        );
+    }
+
+    #[test]
+    fn pivot_rejects_unregistered_or_missing_negative_control() {
+        let dir = tmp("pivot-reject");
+        fs::create_dir_all(dir.join("artifacts/negative-controls")).unwrap();
+        fs::write(dir.join("12-routes.md"), "Route-ID: R1\n").unwrap();
+        assert!(
+            pivot(
+                &dir,
+                "../bad",
+                Path::new("artifacts/negative-controls/missing.md")
+            )
+            .is_err()
+        );
+        assert!(
+            pivot(
+                &dir,
+                "R1",
+                Path::new("artifacts/negative-controls/missing.md")
+            )
+            .is_err()
+        );
+        fs::write(
+            dir.join("artifacts/negative-controls/control.md"),
+            "negative control\n",
+        )
+        .unwrap();
+        assert!(
+            pivot(
+                &dir,
+                "R2",
+                Path::new("artifacts/negative-controls/control.md")
+            )
+            .is_err(),
+            "route must be declared before pivot"
+        );
+    }
+
+    #[test]
     fn gc_archives_complete_runs() {
         let ws = tmp("gc");
         let done = ws.join("run-done");
@@ -527,6 +1115,51 @@ mod tests {
         assert!(ws.join("_archive/run-done").exists());
         assert!(open.exists());
         assert!(!ws.join(ACTIVE).exists());
+    }
+
+    #[test]
+    fn gc_preserves_referenced_pinned_and_colliding_runs() {
+        let root = tmp("gc-safe");
+        let ws = root.join("_workspace/ce");
+        let referenced = ws.join("run-referenced");
+        let unreferenced = ws.join("run-unreferenced");
+        let pinned = ws.join("run-pinned");
+        let colliding = ws.join("run-colliding");
+        let predecessor = ws.join("run-predecessor");
+        let successor = ws.join("run-successor");
+        for dir in [
+            &referenced,
+            &unreferenced,
+            &pinned,
+            &colliding,
+            &predecessor,
+        ] {
+            fs::create_dir_all(dir).unwrap();
+            fs::write(dir.join(FINAL), "Status: COMPLETE\n").unwrap();
+        }
+        fs::create_dir_all(&successor).unwrap();
+        fs::write(
+            successor.join(CONTRACT),
+            "Status: IN_PROGRESS\nPREDECESSOR: ../run-predecessor\n",
+        )
+        .unwrap();
+        fs::write(pinned.join(".pin"), "canonical reference\n").unwrap();
+        fs::create_dir_all(root.join("docs")).unwrap();
+        fs::write(
+            root.join("docs/reference.md"),
+            "See _workspace/ce/run-referenced/40-final-report.md\n",
+        )
+        .unwrap();
+        fs::create_dir_all(ws.join("_archive/run-colliding")).unwrap();
+        gc(&ws).unwrap();
+        assert!(referenced.exists());
+        assert!(pinned.exists());
+        assert!(colliding.exists());
+        assert!(
+            predecessor.exists(),
+            "live-run references must be preserved"
+        );
+        assert!(ws.join("_archive/run-unreferenced").exists());
     }
 
     #[test]
