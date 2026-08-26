@@ -615,14 +615,28 @@ $2.4838\times10^{-17}$이다. 이는 선택 초기값 $\pi_i=1$, $\pi_i'=0$ 및
 포함한 우주론의 안정성 증명도 아니다.
 
 그 다음 Einstein 중력과 이 시계장만 남긴 single-clock 부분계를 unitary gauge로
-정리한다. ADM 계량의 lapse와 shift를 제약식으로 제거하면
+정리한다. ADM 계량에서 lapse를 $N=1+\alpha$, shift를
+$N_i=\partial_i\beta$, 공간계량을 $h_{ij}=a^2e^{2\zeta}\delta_{ij}$로 둔다.
+여기서 $\zeta$는 공간 곡률섭동이다. $\alpha$와 $\beta$에는 시간 이차 미분이
+없으므로 독립 전파장이 아니라 제약 변수다. 선형 Hamiltonianㆍmomentum 제약을
+차례로 풀면
+
+$$
+\alpha=\frac{\dot\zeta}{H},\qquad
+\beta=-\frac\zeta H+\chi,\qquad
+\frac{\partial^2\chi}{a^2}=\frac{\Sigma}{M_{\rm Pl}^2H^2}\dot\zeta,
+\qquad \Sigma=XA.
+\tag{52}
+$$
+
+를 얻는다. 이 식을 원래 작용에 대입하면 제약 변수는 사라지고
 
 $$
 S^{(2)}_\zeta=\int dt\,d^3x\,a^3Q_s\left[
 \dot\zeta^2-c_s^2\frac{(\nabla\zeta)^2}{a^2}\right],
 \qquad
 Q_s=\frac{XA}{H^2},\qquad c_s^2=\frac BA,
-\tag{52}
+\tag{53}
 $$
 
 를 얻는다. 여기서 $\zeta$는 공간 곡률섭동이고,
@@ -631,7 +645,7 @@ $A=P_X+2XP_{XX}$, $B=P_X$다. 이 작용에는 독립적인 $\zeta^2$ 질량항�
 
 $$
 \zeta(t)=C_1+C_2\int^t\frac{dt'}{a^3(t')Q_s(t')}
-\tag{53}
+\tag{54}
 $$
 
 로 쓴다. 식 (53)은 식 (51)의 음의 부호를 물리적 tachyon 판정으로 옮길 수
@@ -641,32 +655,46 @@ $$
 $\min c_s^2=9.2138\times10^{-19}$,
 $\min(Q_s/M_{\rm Pl}^2)=3.3167\times10^5$였고,
 $d\ln(a^3Q_s)/dN$ 및 $d\ln(Ha^3Q_s)/dN$의 최솟값은 각각 $3.93909$와
-$3.469545$였다. 그러므로 이 구간에서는 두 번째 해의 $\dot\zeta$와 식 (53)의
+$3.469545$였다. 그러므로 이 구간에서는 두 번째 해의 $\dot\zeta$와 식 (54)의
 적분함수가 감소한다. 이 결과는 유한 관측창의 단일-clock 부분계에 한정된다.
 무한 미래 수렴, baryonㆍradiationㆍreservoir entropy mode, 또는 전체 ADM
 행렬의 양성을 주장하지 않는다.
 
 ### 4.10.6 작은 음속과 cutoff의 두 척도
 
-작은 $c_s$가 양수라는 사실만으로 EFT가 닫히지는 않는다. $X_*=1/2$에서
-정준장 $\varphi=\sqrt A\,\pi$로 전개하면 leading 상호작용은
+작은 $c_s$가 양수라는 사실만으로 EFT가 닫히지는 않는다. $\delta\to0$의
+decoupling 전개에서는 $X_*=1/2$와 $A_0=4\kappa\rho_\infty$를 쓰므로,
+정준장은 $\varphi=\sqrt{A_0}\,\pi=2\sqrt{\kappa\rho_\infty}\,\pi$다. 이
+배경 주위 전개에서 leading 상호작용은
 
 $$
 \mathcal L_3=\frac{\dot\varphi^3-\dot\varphi(\nabla\varphi)^2}
 {4\sqrt{\kappa\rho_\infty}},\qquad
 \mathcal L_4=\frac{\dot\varphi^4-2\dot\varphi^2(\nabla\varphi)^2+(\nabla\varphi)^4}
 {32\kappa\rho_\infty}.
-\tag{54}
+\tag{55}
 $$
 
 따라서 bare 척도는 $\Lambda_3=2(\kappa\rho_\infty)^{1/4}=79.7$--$80.6\,{\rm eV}$,
 $\Lambda_4=(32\kappa\rho_\infty)^{1/4}=94.8$--$95.8\,{\rm eV}$다. 작은 음속의
-재스케일링에서는 에너지 cutoff와 물리 파수 cutoff를 구별해야 한다.
+재스케일링에서는 $x=c_s\widetilde x$ 및
+$\widetilde\varphi=c_s^{3/2}\varphi$로 둔다. 그러면 공간 미분을 포함한
+cubic 항은
+
+$$
+\int dt\,d^3x\,\frac{\dot\varphi(\nabla\varphi)^2}{\Lambda_3^2}
+=\int dt\,d^3\widetilde x\,
+\frac{\dot{\widetilde\varphi}(\widetilde\nabla\widetilde\varphi)^2}
+{\Lambda_3^2c_s^{7/2}}
+\tag{56}
+$$
+
+로 바뀐다. 따라서 이 항이 강해지는 에너지와 그에 대응하는 물리 파수는 서로 다르며,
 
 $$
 \Lambda_E=\Lambda_3c_s^{7/4},\qquad
 q_{\rm sc}=\Lambda_3c_s^{3/4}=\frac{\Lambda_E}{c_s}.
-\tag{55}
+\tag{57}
 $$
 
 관측창 전체의 최솟값은 각각 $1.3336\times10^{-14}\,{\rm eV}$와
@@ -679,7 +707,7 @@ ghost-condensate형 $k^4$ 경로를 보려면 crossover 파수
 
 $$
 q_\times=\frac{c_s\sqrt A}{\bar M}
-\tag{56}
+\tag{58}
 $$
 
 가 strong-coupling 파수보다 먼저 와야 한다. $q_\times\le q_{\rm sc}$는
@@ -713,6 +741,6 @@ $q_\times/q_{\rm sc}\propto a^{-3/8}$다. 따라서 two-derivative 단독 이론
 | 선형 $gT\phi$ 저장소 | [반례로 제거] | 식 (43)의 하방 비유계성 |
 | 유계 Gaussian 저장소의 인과ㆍ양성ㆍWard 장부 | [조건부 정리] | 식 (42), Gaussian 상태, smearing |
 | 폐쇄시간경로 초기상태 준비 | [공리·미완성] | $\Pi_{\rm F}$ㆍ0차원 사상ㆍ균일 초기면 미산출 |
-| R2 단일-clock 관측창 $Q_s,c_s^2$와 감쇠 진단 | [조건부 산출] | Einstein+clock 부분계, 유한 관측창 |
-| R2 cutoff 분리와 $k^4$ crossover 필요조건 | [조건부 산출] | 고정 $kappa$, canonical 전개, completion 자체는 미완성 |
+| R2 단일-clock 관측창 $Q_s,c_s^2$와 $\dot\zeta$/적분함수 감소 | [조건부 산출] | Einstein+clock 부분계, 유한 관측창 |
+| R2 cutoff 분리와 $k^4$ crossover 필요조건 | [조건부 산출] | 고정 $\kappa$, canonical 전개, completion 자체는 미완성 |
 | 결합 우주론 안정성ㆍ수치 예측 | [미완성] | metric/bath/$k^4$/CMB-LSS gate |

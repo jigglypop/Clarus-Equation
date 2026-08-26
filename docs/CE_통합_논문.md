@@ -723,7 +723,7 @@ $2.1725\times10^{24}$배 위에 있다. $k^4$ crossover가 이 cutoff 전에 오
 $\bar M$의 필요하한은 오늘 $0.225\,{\rm eV}$, 관측창 최악 $7.31\,{\rm eV}$다.
 $\bar M\sim80\,{\rm eV}$ 후보는 필요조건을 충족할 수 있지만 그 사실은
 higher-derivative completion이나 관측 예측을 만들지 않는다. 미래에는
-two-derivative cutoff가 계속 내려가므로 이 완성은 선택지가 아니라 남은 계산
+two-derivative cutoff가 계속 내려가므로, 이 경로는 구체적 후보이며 남은 계산
 과제다.
 
 그러므로 R1에서 R2까지 얻은 것은 포화 readout을 가진 조건부 EFT와 관측창

@@ -252,3 +252,33 @@ $\bar M\sim\Lambda_3\sim80\,{\rm eV}$
 후보는 crossover 조건만으로는 배제되지 않는다. 따라서 R2-D를 다음 활성
 경로로 선택한다. 이 선택은 $\bar M$의 기원·부호·DHOST/ADM degeneracy 또는
 $k^4$ 영역의 cutoff를 이미 증명했다는 뜻이 아니다.
+
+## 10. R3-A — 배경 보존 extrinsic-curvature completion
+
+Route-ID: R3-A-deltaK2-single-clock
+Objective-ID: SNKC-K4-ADM-COMPLETION
+Structural-Class: action-state
+Changed-Structure: 배경에서 0인 $\delta K=K-3H(T)$의 제곱을 unitary-gauge 작용에 추가하고 lapse·shift를 포함한 제약계를 다시 푼다
+Preserved-Objective: 포화 DE-like readout, 같은 clock의 DM-like kinetic 재고, R0의 동결 FLRW 배경과 R1 총 Ward 장부
+New-Degrees-of-Freedom: unitary-gauge EFT 안에서는 없음이 목표이며, $\bar M$ 계수 하나를 추가한다
+Parameter-Accounting: $\bar M(T)$는 새 외부 EFT 함수; 첫 gate에서는 상수 $\bar M\in[8,80]\,{\rm eV}$만 검사하고 예측으로 세지 않는다
+Conservation-Law: 전체 unitary-gauge action의 ADM 제약과 Bianchi identity를 사용하며, $\delta K=0$ 배경에서 기존 총 stress 장부를 이중계상하지 않는다
+Dimension-Check: $[\delta K]=1$, $[\bar M^2]=2$, $[N\sqrt h\,d^4x]=-4$이므로 $\Delta S_{K^2}$는 무차원이다
+Stability-Condition: reduced kinetic $Q>0$, 고주파 $q^4$ 계수 $C_4>0$, 모든 cutoff 아래 pole의 성장률 $<H$, $q_\times\le q_{\rm sc}$
+Prior-Negative-Control: artifacts/negative-controls/r2d-energy-momentum-cutoff-confusion.md
+Falsifier: 최소 $(\delta K)^2$ 항이 추가 scalar ghost, 음의 $q^4$, 빠른 Jeans pole, tensor 불안정 또는 strong-coupling 뒤 crossover를 만들면 이 경로를 기각한다
+
+첫 후보는
+
+$$
+\Delta S_{K^2}=-\frac12\int d^4x\,N\sqrt h\,
+\bar M^2(\delta K)^2
+$$
+
+다. trace $\delta K$는 tensor의 선형 trace에 결합하지 않으므로 tensor
+quadratic action을 건드리지 않을 가능성이 있지만, 이 문장은 제약식과
+2차 전개를 끝내기 전에는 가설이다. scalar sector에서는 decoupling 한계의
+$+(\bar M^2/A)q^4$와 중력 혼합의 Jeans형 항을 함께 계산한다. 이 경로가
+실패하면 다음 구조 후보는 독립 $\delta K^i{}_j\delta K^j{}_i$ 조합 또는
+degenerate scalar--tensor completion이며, 계수만 다시 맞추는 수정은 새
+route로 세지 않는다.

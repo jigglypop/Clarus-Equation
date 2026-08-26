@@ -173,3 +173,51 @@ $V(T)=\rho_\infty(1-e^{-\Gamma T})$를 같은 장의 누적 opportunity readout�
 DM-like 흐름 편차를 함께 만들 수 있다”까지다. 그 장이 실제 비선택 양자경로의
 coarse-graining이라는 microscopic map과 차원 있는 scale의 수치 예측은 별도
 미완성 다리다.
+
+## 8. R3 동결 하위계약 — 배경 보존 $k^4$와 중력 혼합
+
+Subcontract-Status: FROZEN
+
+Objective-ID: SNKC-K4-ADM-COMPLETION
+
+R2가 남긴 질문은 작은 $c_s$의 두-미분 이론을 버리는 일이 아니라, 기존
+균일 배경을 바꾸지 않는 higher-spatial-derivative 항이 물리 scalar mode를
+cutoff 아래에서 일관되게 완성할 수 있는지다. unitary gauge에서
+
+$$
+\delta K:=K-3H(T),
+\qquad
+\Delta S_{K^2}=-\frac12\int d^4x\,N\sqrt h\,
+\bar M^2(T)(\delta K)^2
+$$
+
+를 첫 후보로 고정한다. $[K]=[H]=[\bar M]=1$이므로 새 Lagrangian density는
+차원 4다. $\delta K=0$인 동결 FLRW 배경에서는 이 항과 그 1차 배경 변분이
+사라지므로 R0의 $H(a)$와 R1의 에너지 장부를 tree level에서 보존한다.
+$\bar M(T)$는 0차원 자료에서 유도된 값이 아니라 새 EFT 외부입력이다.
+
+검사 정의역은 동결한 $\kappa=10^{17}$,
+$\gamma\in\{3.5,5,10,20,30\}$, $a\in[10^{-4},1]$이다. 우선 상수
+$\bar M\in[8,80]\,{\rm eV}$ 후보창을 검사하되, 결과를 본 뒤 이 범위를
+재조정해 예측으로 부르지 않는다. 다음을 모두 직접 유도한다.
+
+1. lapse와 scalar shift를 제거한 뒤 남는 자유도 수와 reduced quadratic
+   action;
+2. $q^4$ 계수의 양성, kinetic 양성 및 중력 혼합이 만드는 Jeans형 $q^2$ 항;
+3. $q_\times\le q_{\rm sc}$, 새 분산관계의 최대 성장률과 Hubble 비;
+4. tensor quadratic action의 불변 여부와 unitary-gauge EFT cutoff;
+5. $\bar M$의 허용창이 관측 파수와 두-미분 strong-coupling 사이에 실제로
+   존재하는지.
+
+다음 중 하나면 이 최소 $(\delta K)^2$ 경로를 기각한다.
+
+1. lapse 또는 shift가 새 전파 ghost가 된다.
+2. cutoff 아래에서 reduced kinetic 또는 $q^4$ 계수가 음수다.
+3. Jeans 성장률이 명시한 관측창에서 $H$ 이상이 된다.
+4. $q_\times>q_{\rm sc}$이어서 새 항이 두-미분 strong coupling 뒤에야 켜진다.
+5. tensor ghost/gradient 또는 배경 double counting을 만든다.
+
+R3의 주장 상한은 **Einstein+clock 단일-clock EFT에서 선택한 유한 관측창의
+quadratic scalar completion**이다. 공변 DHOST completion, 저장소와
+baryon·radiation의 entropy mode, nonlinear caustic, loop 안정성, CMB/LSS 및
+$\bar M$의 0차원 기원은 이 하위계약의 결론이 아니다.
