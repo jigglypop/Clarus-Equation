@@ -1,31 +1,38 @@
 ---
 name: ce-research
-description: Clarus-Equation 연구를 출처·수학·대안 경로의 독립 레인, 형식 지위 감사, 구현·수치 검증, 최종 집필로 수행한다. CE/Clarus-EQ 식·가설·논문·코드의 유도, 반례, 재현, 승격 판단이나 병렬 연구를 요청할 때 사용한다. 단순 계산과 guard 제품 벤치만 필요한 요청에는 사용하지 않는다.
+description: Clarus-Equation 연구를 출처·수학·대안 경로의 독립 레인, 형식 지위 감사, 구현·수치 검증, 최종 집필로 수행한다. CE/Clarus-EQ 식·가설·논문·코드의 유도, 반례, 재현, 승격 판단이나 병렬 연구를 요청할 때 사용한다. 단순 계산만 필요한 요청에는 사용하지 않는다.
 ---
 
 # CE Research
 
-역할 카드는 4장(ce-physics-sourcer, ce-math-verifier, ce-status-auditor, ce-impl-engineer)이다. 해당 레인을 실행하는 순간에만 그 카드를 읽는다 — 모든 카드를 선로딩하지 않는다. run 생성과 정본 집필 전에는 `.codex/harnesses/ce_research_docs_policy.md`를 적용한다. 반례 뒤에는 `.codex/harnesses/ce_counterexample_pivot_loop.md`를 적용한다. 원장을 안정화한 뒤의 강의·유도·논문 집필은 `$ce-paper-write`와 `ce-paper-writer`가 맡는다.
+> 현재 저장 정책: 새 `CE_RUN`과 `_workspace/`를 만들지 않는다. 기존 run은 읽기 전용 근거로만 사용하며, 최신 연구 결과·감사표·재현 명령은 루트 `docs/`의 해당 정본에 직접 반영한다. 아래의 run 생성·갱신 명령은 레거시이며 실행하지 않는다.
+
+역할 카드는 4장(ce-physics-sourcer, ce-math-verifier, ce-status-auditor, ce-impl-engineer)이다. 해당 레인을 실행하는 순간에만 그 카드를 읽는다 — 모든 카드를 선로딩하지 않는다. 집필은 역할 카드 없이 아래 집필 규칙으로 직접 한다.
 
 ## 코어 명령
 
-    <codex-home>/hooks/run.sh init|status|check|revise|pivot|gc ...   # POSIX
-    <codex-home>/hooks/run.ps1 init|status|check|revise|pivot|gc ...  # Windows
+    <codex-home>/hooks/run.sh init|status|check|revise|counterexample|pivot|gc ...
+    <codex-home>/hooks/run.ps1 init|status|check|revise|counterexample|pivot|gc ...
 
-- `init <run-dir>`: run 생성. `REUSE?` 목록이 나오면 같은 주제의 미완성 run을 새로 파지 말고 이어받는다.
+- `init <run-dir>`: 기존 경로면 그 run을 재개한다. 다른 미완성 run이 있으면 디렉터리를 만들기 전에 `REUSE_REQUIRED`로 중단한다.
+- `init --new-contract <run-dir>`: 기존 목표와 계보를 공유하지 않는 독립 연구 프로그램일 때만 새 최상위 run을 연다. 같은 프로그램의 새 가설·판본·독립 확인·복구는 아래 epoch/pivot을 쓴다.
 - `status <run-dir>`: 단계별 상태·Gate·수정 카운트 한 화면. 현황 파악에 stage 파일을 재독하지 말고 이것을 쓴다.
 - `check <run-dir> <contract|lanes|gate|build|final>`: 해당 단계까지의 전체 체인을 검사한다. gate는 20-audit.md의 `Gate: PASS`를 요구한다.
-- `revise <run-dir> <role>`: 현재 구조 route의 수정 루프 기록. 한도는 `(route, role)`마다 2회다. 한도가 차면 실패식을 음성대조군으로 고정하고 구조적 피벗을 검토한다.
-- `pivot <run-dir> <route-id> <artifacts/negative-controls/file.md>`: 실패 경로를 보존한 채 같은 부모 목표 안에서 미리 등록한 구조 route로 전환한다. 계약과 목표를 자동 변경하지 않는다.
-- `gc <workspace>`: 참조·`.pin`·archive 충돌을 보존하고, 완결·무참조 run만 `_archive/`로 이동한다. 연구 세션을 마칠 때 실행한다.
+- `revise <run-dir> <role>`: 구현·측정·정밀도 같은 국소 수리 기록. 역할당 3회까지 허용한다. 이 한도는 연구 목표를 축소하거나 `BLOCKED`로 닫는 근거가 아니다. 이론 잔차나 반례라면 같은 run에서 `counterexample`과 `pivot`으로 전환한다.
+- `counterexample <run-dir> <cex-id>`: 반례 또는 실증 모순을 같은 run의 `artifacts/epochs/<cex-id>/`에 연다. 실패한 부모 주장과 witness를 잠그되 새 workspace를 만들지 않는다.
+- `pivot <run-dir> <cex-id> <route-id>`: 최소 3개의 구조적으로 다른 기전 포트폴리오를 검증하고 선택 route를 같은 epoch 안에 연다. threshold·seed·endpoint·decoder만 바꾼 후보는 거부한다.
+- `gc <workspace>`: 완결 run 중 `.pin`, 활성 epoch, 외부 문서·코드의 참조가 없는 것만 `_archive/`로 옮기고 `INDEX.tsv`에 기록한다. 참조된 경로와 미완성 run은 이동하지 않는다.
 
-`_workspace/ce/<run-id>`는 계약·레인·감사·구현 검증·재현 artifact를 보존하는 staging/provenance 공간이다. 사용자용 논문·유도·강의 정본은 반드시 저장소 루트의 기존 `docs` 문서에 반영한다. 외부 복제본의 `docs`는 이를 대신하지 못한다. 같은 주제의 반례 수정, 식 재유도, 수치 재검산과 설명 보강은 새 run이 아니라 기존 active/predecessor run을 이어 쓴다. 새 run admission 조건과 정본 경로는 위 하네스를 따른다.
+계약·레인·원장·검증 receipt·계산 산출물은 `_workspace/ce/<program-id>/`에 쓴다. 상세 논문 정본은 예외로 주제에 맞는 `docs/<분야>/<논문>/00_논문목차.md`와 그 목차가 순서대로 연결한 장별 Markdown 묶음을 제자리 갱신한다. 긴 강의·유도도 같은 입구+장 구조를 쓴다. `_workspace/`에는 논문 사본·초안·v2·final 사본을 만들지 않는다. 새 프로그램 ID에는 retry·recheck·recovery·날짜 판본을 연쇄적으로 붙이지 않는다. 기존 dated run은 그대로 보존하되 후속 가설·반례·재계산은 그 run의 `artifacts/epochs/`에 둔다.
+
+동일한 연구 목표와 증거 계보를 유지하는 동안에는 하나의 `CE_RUN`만 사용한다. 계산 실패 복구, 새 식 판본, 독립 확인, 전수 재계산, 민감도 분석, 검증기, 감사, 표·그림과 원고 수정은 새 작업공간의 근거가 아니며 기존 run의 단계 파일과 `artifacts/epochs/`에 누적한다. 새 작업을 시작하기 전에 `.active-run`과 해당 run의 `status`를 먼저 확인한다.
 
 `.codex` 하네스·스킬·역할 카드의 문구, 실행 범위 또는 cache 정책을 고치는 요청은 이 연구 파이프라인의 대상이 아니다. 이 경우 run과 레인을 만들지 말고 대상 설정 파일만 spot 수정한다.
 
 ## 산출물 위생 (모든 역할 공통)
 
-- run 루트에는 번호 stage 파일 8개만 둔다. 사전등록, 루프별 노트, 검증 스크래치 등 보조 문서는 전부 artifacts/에 만들고 stage 파일에서 경로로 인용한다. `check final`이 루트의 잡파일을 차단한다.
+- run 루트에는 번호 core stage 파일 8개와, 실증 수치 권위가 필요할 때 동결한 `35-result-ledger.md` 하나만 둔다. 사전등록, 루프별 노트, 검증 스크래치 등 보조 문서는 전부 artifacts/에 만들고 stage 파일에서 경로로 인용한다. `check final`이 그 밖의 루트 잡파일을 차단한다.
+- `40-final-report.md`는 논문이 아니라 짧은 인계 기록이다. `DOCS_PAPER: docs/<분야>/<논문>/00_논문목차.md`, run 결론, 증거 경로와 epoch 통합 여부만 적는다. 논문 서사는 그 목차가 연결한 장 파일에만 둔다.
 - stage 파일 이름을 바꾸거나 변형본(10-provenance.md, 30-build-validation.md 등)을 만들지 않는다. 내용이 다르면 절을 나눠 같은 파일 안에 쓴다.
 - 수식은 블록 `$$ ... $$`(별도 줄), 인라인 `$...$`만 쓴다. `\[ \]`·`\( \)`는 렌더링되지 않으므로 금지. 수학 기호는 코드스팬이 아니라 수식 모드로 쓴다.
 - stage check는 단계 전환마다 필요한 것만 한 번 실행한다. 마지막 `check final`이 선행 체인을 포함하므로 같은 byte에서 모든 check를 연속 반복하지 않는다.
@@ -33,9 +40,8 @@ description: Clarus-Equation 연구를 출처·수학·대안 경로의 독립 �
 
 ## 모드 선택
 
-- **full**: 하네스의 새 run admission gate를 통과한 신규 주장, 승격 판단, 독립 protocol. 아래 6단계 전부.
-- **light**: 완결된 선행 run의 후속·반복(v8→v9 등). 계약에 `PREDECESSOR: _workspace/ce/<선행-run>`을 적고, 레인은 math-verifier만 실행하며 감사(gate)와 최종 보고서만 유지한다. 선행 run이 이미 감사한 결론은 재유도하지 않고 경로만 인용한다.
-- **reuse/direct-doc**: 같은 부모 주장의 식 수정·반례 대응·상세화·논문 개정. 새 run을 만들지 않고 기존 run에서 음성대조군과 구조 route를 이어 쓰며 저장소 루트의 기존 `docs` 정본을 갱신한다. 과학 지위가 바뀌면 원장을 먼저 안정화한다.
+- **full**: 신규 주장, 승격 판단, 논문화. 아래 6단계 전부.
+- **light**: 같은 프로그램의 후속·반복. 새 top-level run 대신 epoch를 열고, 기존 감사 결론은 재유도하지 않으며 변경된 기전·falsifier·split만 검산한다.
 
 ## 뇌 알고리즘 new-run admission gate
 
@@ -47,7 +53,7 @@ description: Clarus-Equation 연구를 출처·수학·대안 경로의 독립 �
 
 뇌·기억·의식·connectome 연구는 새 run을 열기 전에 다음 순서를 지킨다.
 
-1. `_workspace/ce/brain-algorithm-route-ledger.md`와 직접 선행 run의 `12-routes.md`, `31-validation.md`, 존재하면 `40-final-report.md`만 먼저 읽는다. 40이 없으면 가장 늦은 numbered audit와 원장 행을 사용하고 closure 부재를 계약에 기록한다. 세부 artifact는 특정 수치나 hash를 검증할 때만 연다.
+1. `_workspace/ce/brain-algorithm-route-ledger.md`와 직접 선행 run의 `12-routes.md`, `31-validation.md`, `40-final-report.md`가 가리키는 `docs/` 조립 목차와 필요한 장만 먼저 읽는다. 연결 기록이 없으면 가장 늦은 numbered audit와 원장 행을 사용하고 closure 부재를 계약에 기록한다. 세부 artifact는 특정 수치나 hash를 검증할 때만 연다.
 2. 00-contract에 `PREDECESSOR_EVIDENCE` 표를 만들고 각 결과를 artifact/hash, `PASS|STOP|APPARATUS_INVALID|BLOCKED`, 보존 가능한 좁은 주장, 재시도 금지 조건으로 고정한다.
 3. 후보 집합을 적고 실제 기전식·데이터 연결 가능성, 사다리 승급 가능성, 인과 식별 가능성, capability dependency, 이전 STOP이 남긴 정보량, 독립 falsifier와 matched control 순으로 정렬한다. 양성처럼 보이는 수치나 구현 편의성만으로 고르지 않는다.
 4. threshold·seed·endpoint·decoder만 바꾼 반복은 같은 실패 경로다. 새 mechanism, 새 개입 seam, 또는 실패를 가르는 새 adverse control이 없으면 후보에서 퇴역시킨다.
@@ -64,34 +70,31 @@ description: Clarus-Equation 연구를 출처·수학·대안 경로의 독립 �
    - 스킵한 레인은 파일에 `Status: SKIPPED (사유 한 줄)`만 쓴다. 각 레인 파일은 판정·표 중심으로 유지하고 상세 계산·로그는 artifacts/에 두고 경로만 인용한다.
 3. **감사**: status-auditor가 20-audit.md에 형식 출처·반례를 기록하고 `Gate: PASS|REVISE|BLOCKED`를 판정한다.
 4. **구현**: `check <run-dir> gate` 통과 후 승인된 범위만 impl-engineer가 구현하고 $ce-validate로 검증한다(30/31). 코드 변경이 없으면 `Status: SKIPPED (사유)`.
-5. **수정·피벗 루프**: P0/P1은 `revise <run-dir> <role>`로 기록한 뒤 지목된 역할만 고친다. 같은 구조의 수정 한도가 차거나 완전한 반례가 나오면 실패식을 `artifacts/negative-controls/`에 고정하고, 실패 원인을 바꾸는 route를 `12-routes.md`에 사전등록한 뒤 `pivot`한다. 정확히 반박된 식과 그 하위 주장은 삭제·비활성화하되 부모 목표는 objective-level no-go가 있기 전까지 `OPEN`으로 유지한다.
-6. **집필**: 40-final-report.md는 run의 증거 요약으로 작성한다. 사용자가 논문·유도·자세한 설명·정본 반영을 요청했으면 원장을 먼저 동결한 뒤 `ce-paper-writer`가 관련 `docs` 정본을 단계별 유도로 자세히 갱신한다. `$ce-doc-write`, `$ce-paper-write`와 정본 집필 하네스를 적용하고 `check <run-dir> final` 및 정본 형식 검사를 확인한다.
+5. **수정·돌파구 루프**: D/I/P/C/B 구현·측정 결함은 `revise`로 최소 수정한다. T 잔차·완전 반례·핵심 실증 모순은 `counterexample`로 부모 주장과 witness를 잠그고, math-verifier가 구조적으로 다른 기전 route를 최소 3개 만든 뒤 하나를 outcome-blind로 선택해 `pivot`한다. 좁은 참 명제는 보존할 수 있지만 그것을 반례 해결이나 돌파구로 세지 않는다. `BLOCKED`는 명시적 no-go·외부 자료 부재·세 route 소진 뒤에만 허용한다.
+6. **집필**: 안정화된 원장과 검증 산출물을 읽기 전용 근거로 삼아 기존 `docs/<분야>/<논문>/00_논문목차.md`와 관련 장을 제자리 갱신한다. 새 장을 만들기 전에 기존 장과 역할이 겹치지 않는지 확인한다. `$ce-paper-write` 규약을 따르고 아래 집필 규칙을 지킨다. `40-final-report.md`에는 목차 경로와 짧은 run 인계만 남긴 뒤 `check <run-dir> final`을 통과한다.
 
 run이 끝나면 오케스트레이터는 원장의 해당 후보 상태·증거 경로·다음 falsifier를 먼저 갱신하고, root/main agent에게 정확한 변경 경로와 검증 결과를 인계한다. subagent와 역할 agent는 stage/commit/push하지 않는다. 사용자가 발행을 지시한 경우에만 main이 루트 Git 인계 규율에 따라 commit/push한다.
 
-`40-final-report.md`만 있고 관련 `docs` 정본이 갱신되지 않은 상태는 논문화 완료가 아니다. 반례가 나온 뒤 같은 주제의 새 workspace를 파는 대신, 실패한 식을 원장과 기존 정본에 보존하고 수정식을 같은 논증 사슬에서 이어 쓴다.
-
-## 집필 규칙 (40-final-report.md)
+## 집필 규칙 (`docs/<분야>/<논문>/00_논문목차.md` + 장 파일)
 
 - 어떤 판정도 강화하지 않는다 — 레인이 경험식이라 한 것을 산출로, BLOCKED를 "사실상 해결"로 바꿔 쓰지 않는다. 새 증거가 필요하면 쓰지 말고 담당 레인으로 돌려보낸다.
-- 구성: 초록(6문장 이내: 배경·문제·방법·핵심 수치·형식 지위·한계) → 서론 → 정의·표기 → 공리(번호+하위분류) → 정리·증명 → 산출 → 관측 비교(중립 서술) → 미완성 과제와 한계(미해결 P0/P1·BLOCKED 그대로) → 재현성(명령·경로) → 참조(식별자+접근 날짜, 2차 인용 금지).
+- 이론·수학 원고 구성: 제목 → 초록(배경·문제·방법·핵심 결과·형식 지위·한계) → 서론 → 정의·표기 → 공리(번호+하위분류) → 정리·증명 → 산출 → 관측 비교(중립 서술) → 미완성 과제와 한계 → 재현성(명령·경로) → 참조(식별자+접근 날짜, 2차 인용 금지).
+- 실증·뇌 원고 구성: 제목 → 초록 → 서론과 연구 질문 → 자료·코호트·provenance → 측정모형·전처리·QC → 사전 고정 endpoint와 통계 → 주 결과 → 사전 고정한 모든 control·sensitivity·음성 결과 → 논의와 대안 설명 → 증거 사다리·주장 상한 → 한계와 다음 반증 조건 → 재현성·자료/코드 → 1차 출처. 핵심 표와 해석에 필요한 그림을 본문에 넣는다.
+- 상세성: 독자가 원장이나 레인 로그를 열지 않아도 표본, 단위, estimand, 분모, 제외/QC, 불확도, 주 수치, sensitivity와 실패를 재구성할 수 있어야 한다. 전수 계산을 했다면 전체 사전 고정 결과를 표로 보존하고 주 결과의 개별 기여도·강건성 진단을 산문으로 해석한다.
 - 본문은 완결된 문단 산문으로 쓴다. 자기완결적으로 — 독자가 레인 파일을 열지 않고도 논증을 따라오게 핵심 유도를 본문에 서술한다. 분량 규율은 중간 레인 산출물용이고 최종 보고서는 완결성이 우선한다.
-- 금지: 돌파구·혁신적 류 과장어, 자명하다 류 증명 회피어, 검증 기록 없는 유도됨·제1원리·닫힘, 기계 검사 상태 문자열(PASS 등)의 본문 복사.
+- 금지: 한 줄 상태 보고서, 원장 표·검산 로그만 나열한 문서, 유리한 endpoint만 고른 요약, 돌파구·혁신적 류 과장어, 자명하다 류 증명 회피어, 검증 기록 없는 유도됨·제1원리·닫힘, 기계 검사 상태 문자열(PASS 등)의 본문 복사.
+- 목차는 `## 논문 조립 순서`에서 같은 논문 폴더의 장 파일을 독자가 읽을 순서대로 연결한다. 각 장은 한 역할만 맡고 다른 장의 표·유도·결론을 복제하지 않는다. `_workspace/`나 run의 `artifacts/`에 논문을 쓰거나 같은 내용을 복제하면 완결 실패다. `docs/README.md`와 분야 읽기 지도에는 목차만 연결한다.
 
 ## 끈질김 (진취성 규율)
 
-- **BLOCKED는 최후 수단이다.** 후보 식이 막히면 작용·상태, 경계·원천, 미시·거시 matching, 관측·readout의 구조 클래스 중 무엇을 시도했고 무엇이 남았는지 기록한다. 실패식은 음성대조군으로 폐기하되, 한 식의 반례만으로 부모 목표를 줄이지 않는다. 목표 축소나 BLOCKED는 결과 전에 명시한 허용 모델 클래스 전체의 no-go, 필수 가정과 계약의 모순, 또는 원리적 비식별성이 있을 때만 쓴다.
+- **BLOCKED는 최후 수단이다.** 주장이 막히면 먼저 반례를 잠그고, 실패한 가정을 서로 다르게 바꾸는 기전 route를 최소 3개 구성해 판별 실험을 시도한다. 구조적으로 가능한 route가 없다는 no-go 또는 세 route의 kill condition 충족을 기록한 뒤에만 BLOCKED를 쓴다.
 - BLOCKED에는 **재개 조건**(무엇이 오면 다시 열리는지)을 반드시 적는다. 재개 조건 없는 BLOCKED는 미완성 감사다.
 - ABANDONED는 구조적 불가능(반례 확정, no-go, 필요한 증거의 원천 부재)의 근거가 있을 때만 쓴다. 분량·피로·세션 길이는 사유가 아니다.
-- 부정 결과도 완결한다: 반례·기각으로 끝나는 run도 40-final-report.md까지 간다. "죽은 경로 확인"은 실패가 아니라 산출이다.
+- 부정 결과도 완결한다: 반례·기각은 실패한 식의 음성대조군이자 다음 pivot의 입력이다. 부모 주장은 철회하되 연구 목표는 모델 클래스 전체의 no-go가 나오기 전까지 자동 축소하지 않는다.
 - run은 시작했으면 반드시 COMPLETE 또는 근거 있는 ABANDONED로 닫는다. 중간 방치 금지 (stop 훅이 잡는다).
 
-닫힘 판단에는 $ce-closure-gate, 무차원 식에는 $ce-dimensionless, 정본 문서 반영에는 $ce-doc-write를 적용한다.
+닫힘 판단에는 `$ce-closure-gate`, 무차원 식에는 `$ce-dimensionless`, 원장에는 `$ce-ledger-write`, 논문과 강의에는 `$ce-paper-write`를 적용한다.
 
 마지막 상태 메시지에 다음을 한 줄로 남긴다.
 
     CE_RUN=_workspace/ce/<run-id>
-
-논문·유도 정본을 고쳤다면 다음 줄도 남긴다.
-
-    CE_DOC=docs/<정본-경로>

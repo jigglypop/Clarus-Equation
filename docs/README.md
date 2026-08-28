@@ -228,17 +228,20 @@ flavor와 질량 branch는 대칭·parameterization·측정 비교의 의존성�
 
 문서 지도는 목적별 진입점을 연결한다. 통합 논문은 서사와 기여를, 강의·유도는 정의와 증명을, 검증 원장은 상태·provenance를, 구현 문서는 실행 범위를 담당한다.
 
+최신 0차원 측정·접힘·암흑부문 연구는 큰 단일 보고서 대신 [최신 연구 조립 목차](6_최신_연구/00_읽기_지도.md)에서 장별로 읽는다. 작업공간 보고서는 과거 근거이고 이 목차와 연결된 `docs/` 문서가 독자용 최신본이다.
+
 ### 9.1 먼저 읽기
 
 처음 읽기는 전체 서사와 형식 지위 규약을 잡는 경로다. 세부 수식은 뒤 문서로 미루되, 공리와 미완성 다리를 건너뛰지 않는다.
 
-1. [CE 통합 논문: 선택, 접힘, readout과 조건부 응용의 현재 지형](CE_통합_논문.md)
-2. [선택과 접힘: 핵심 유도 사슬](5_유도/00_선택과_접힘.md)
-3. [코어 독자 가이드](코어_독자_가이드.md)
-4. [공리계와 기호](axium.md)
-5. [경로적분과 조건부 장론](경로적분.md)
-6. [상수·매개변수 원장](상수.md)
-7. [핵심 정리 증명](검증_원장/참조_핵심_정리_증명.md)
+1. [최신 연구 조립 목차: 측정, 접힘과 암흑 표현](6_최신_연구/00_읽기_지도.md)
+2. [CE 통합 논문: 선택, 접힘, readout과 조건부 응용의 현재 지형](CE_통합_논문.md)
+3. [선택과 접힘: 핵심 유도 사슬](5_유도/00_선택과_접힘.md)
+4. [코어 독자 가이드](코어_독자_가이드.md)
+5. [공리계와 기호](axium.md)
+6. [경로적분과 조건부 장론](경로적분.md)
+7. [상수·매개변수 원장](상수.md)
+8. [핵심 정리 증명](검증_원장/참조_핵심_정리_증명.md)
 
 ### 9.2 강의
 
@@ -266,7 +269,7 @@ flavor와 질량 branch는 대칭·parameterization·측정 비교의 의존성�
 
 통합 논문은 핵심 기여와 의존관계를, 형식수학은 정리의 가정·증명을 제공한다. 구현 검증과 과학적 지위 판정은 각각 별도 문서에서 확인한다.
 
-- [신경 리만 계량과 문맥 의존 라우팅](6_뇌/11_리만계량_라우팅_논문.md)
+- [뇌 검증기준](검증_원장/뇌_검증기준.md)
 - [검증 규약](검증_원장/경로적분_검증_규약.md)
 - [형식 구조 원장](검증_원장/경로적분_전체_진리값_감사.md)
 - [등호 이전](9_등호이전/README.md)
@@ -279,10 +282,9 @@ flavor와 질량 branch는 대칭·parameterization·측정 비교의 의존성�
 
 핵심 수치와 정책 검사는 다음 순서로 실행한다.
 
-    .\.venv\Scripts\python.exe -m pytest tests\test_bootstrap_solver.py -q
-    .\.venv\Scripts\python.exe -m pytest tests\test_dimensionless.py -q
-    .\.venv\Scripts\python.exe tests\run_validation.py
-    .\.venv\Scripts\python.exe -m pytest tests\test_canonical_document_policy.py -q
+    .codex\hooks\python.cmd doctor
+    .codex\hooks\python.cmd source
+    .codex\hooks\python.cmd pytest tests\test_ckm_vcb_nlo_gate.py -q
 
 코드가 방정식을 높은 정밀도로 푸는 것과 그 변수를 자연의 물리량으로
 식별하는 것은 다른 검증이다.

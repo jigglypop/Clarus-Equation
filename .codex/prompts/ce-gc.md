@@ -1,6 +1,5 @@
-연구 세션을 정리하라.
+현재 정책에서는 workspace GC를 실행하지 않는다.
 
-1. `.codex/hooks/run.cmd gc _workspace/ce`를 실행한다.
-2. `ARCHIVED`, `STALE`, `REFERENCED`, `PINNED`, `COLLISION` 목록을 구분해 보고한다. 참조를 자동 재작성하거나 archive 증거를 자동 삭제하지 않는다.
-3. STALE run마다 이어받을지, 40-final-report.md에 `Status: ABANDONED (사유)`를 쓸지 한 줄씩 제안한다. 방치를 기본값으로 두지 않는다.
-4. 정확히 식별한 컴파일 target과 `__pycache__`처럼 재생성 가능한 cache만 실제 경로가 `_workspace/ce` 아래인지 확인한 뒤 별도로 삭제한다. stage 문서와 artifact는 cache로 추정하지 않는다.
+1. 기존 `_workspace/`는 과거 기록이므로 수정·이동·삭제하지 않는다.
+2. 루트 `docs/`에서 중복되거나 낡은 정본 연결만 읽기 전용으로 점검한다.
+3. 정리가 필요하면 정확한 대상과 이유를 보고하고, 명시적 요청 없이 삭제하지 않는다.

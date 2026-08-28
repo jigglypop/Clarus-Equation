@@ -121,15 +121,15 @@ wormhole no-go는
 
 ## 코드 검증
 
-코드 검증은 예제 계산과 기호·수치 회귀를 재현하는 보조 fixture다. 기계 pass는 정리의 가정·무한 공간·측도론적 결론을 증명하지 않으며, 코드 범위 밖 반례는 별도 처리한다.
+코드 검증은 예제 계산과 기호·수치 회귀를 재현하는 보조 fixture다. 기계적 실행 성공은 정리의 가정·무한 공간·측도론적 결론을 증명하지 않으며, 코드 범위 밖 반례는 별도 처리한다.
 
-닫힌 유한 코어는 `reality_stone.clarus.pre_eq`로 내려갔다.
+과거 패키지 코어는 제거되었고, 현재 재현 범위는 저장소에 남은 예제와 테스트다.
 
 검증:
 
 ```powershell
-python -m pytest tests\test_pre_eq.py -q
-python -m pytest tests\test_pre_eq_toy_gate.py -q
+.codex\hooks\python.cmd source
+.codex\hooks\python.cmd pytest tests\test_pre_eq_toy_gate.py -q
 python -m pytest tests\test_pre_eq_fraction.py -q
 python -m pytest tests\test_pre_eq_universal.py -q
 python examples\pre_eq\toy_gate_ablation.py

@@ -32,7 +32,7 @@ description: CE 코어에 들어가는 식의 무차원성을 감사한다. exp/
 
 ```powershell
 python -m pytest tests\test_dimensionless.py -q
-python reality_stone\python\reality_stone\clarus\dimensionless.py
+.codex\hooks\python.cmd python <현재 차원 검사 스크립트.py>
 ```
 
 체커가 아직 다루지 않는 새 식이면 `dimensionless.py`/`dimensionless_checker.py`의 등록 방식을 읽고, 같은 패턴으로 식을 추가한 뒤 테스트를 다시 돌린다. (B10/Co5: 체커 완성은 미완 항목 — 누락 식을 채우는 것이 가치 있는 작업.)

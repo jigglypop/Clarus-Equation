@@ -9,61 +9,33 @@ model for them yet.
 from __future__ import annotations
 
 from dataclasses import dataclass
-import importlib.util
 import json
 from pathlib import Path
-import sys
-from types import ModuleType
 from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[2]
-REGISTRY_PATH = (
-    ROOT
-    / "reality_stone"
-    / "python"
-    / "reality_stone"
-    / "clarus"
-    / "cosmology_registry.py"
-)
 OBSERVATION_MANIFEST_PATH = ROOT / "benchmarks" / "cosmology" / "observations_v1.json"
-_REGISTRY_MODULE_NAME = "_ce_cosmology_registry_v1"
 
-
-def _load_registry_module() -> ModuleType:
-    """Load the stdlib-only registry without importing the package facade."""
-
-    cached = sys.modules.get(_REGISTRY_MODULE_NAME)
-    if cached is not None:
-        return cached
-
-    spec = importlib.util.spec_from_file_location(_REGISTRY_MODULE_NAME, REGISTRY_PATH)
-    if spec is None or spec.loader is None:
-        raise ImportError(f"cannot load CE cosmology registry: {REGISTRY_PATH}")
-    module = importlib.util.module_from_spec(spec)
-    # dataclasses resolves postponed annotations through sys.modules while the
-    # module is executed, so register the lightweight module before exec.
-    sys.modules[_REGISTRY_MODULE_NAME] = module
-    try:
-        spec.loader.exec_module(module)
-    except BaseException:
-        sys.modules.pop(_REGISTRY_MODULE_NAME, None)
-        raise
-    return module
+# Compatibility boundary retained after removal of the reality_stone runtime.
+# The authoritative provenance and distinction from normalized scientific
+# densities live in docs/검증_원장/상수_코어_원장.md §2.3.
+LEGACY_ROUNDED_RUNTIME_RATIOS = (0.0487, 0.2623, 0.6891)
 
 
 def load_ce_ratios_from_constants() -> dict[str, float]:
-    """Read the named compatibility triplet without importing torch modules.
+    """Return the documented legacy compatibility triplet.
 
-    The public function name is preserved for downstream callers.  Its source
-    is now the typed registry rather than AST-parsing assignment literals.
+    This is a historical model boundary, not a CE prediction or a normalized
+    scientific density posterior.  The public name is kept for callers that
+    still reproduce the legacy forward-model boundary.
     """
 
-    runtime = _load_registry_module().LEGACY_ROUNDED_RUNTIME_V1
+    omega_b, omega_c, omega_lambda = LEGACY_ROUNDED_RUNTIME_RATIOS
     return {
-        "omega_b": float(runtime.active_ratio),
-        "omega_c": float(runtime.struct_ratio),
-        "omega_lambda": float(runtime.background_ratio),
+        "omega_b": omega_b,
+        "omega_c": omega_c,
+        "omega_lambda": omega_lambda,
     }
 
 

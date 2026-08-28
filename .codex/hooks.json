@@ -1,15 +1,4 @@
 {
-  "description": "Fast project-local CE routing. Completion checks are explicit, not a global Stop blocker.",
-  "hooks": {
-    "UserPromptSubmit": [{
-      "hooks": [{
-        "type": "command",
-        "command": "sh -c 'if [ -x .codex/hooks/run.sh ]; then exec .codex/hooks/run.sh hook route; fi; exit 0'",
-        "commandWindows": "cmd /d /c \"call \\\".codex\\hooks\\run.cmd\\\" hook route 2>nul || exit /b 0\"",
-        "timeout": 5,
-        "statusMessage": "Routing CE workflow",
-        "additionalContextLimit": 700
-      }]
-    }]
-  }
+  "description": "Direct repository workflow. No automatic CE_RUN or workspace routing.",
+  "hooks": {}
 }

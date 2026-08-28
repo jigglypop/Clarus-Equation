@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import importlib.metadata
+import ast
 import os
 from pathlib import Path
 import shutil
@@ -10,16 +12,24 @@ import tempfile
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-PYTHON_SOURCE = REPO_ROOT / "reality_stone" / "python"
 TEMP_PREFIX = "clarus-pytest-"
 
 
 def _child_environment() -> dict[str, str]:
     env = os.environ.copy()
     env["PYTHONDONTWRITEBYTECODE"] = "1"
+    # Keep finite NumPy/SciPy-style test jobs within the available worker-memory
+    # budget. This is child-process resource determinism, not a test setting.
+    for variable in (
+        "OPENBLAS_NUM_THREADS",
+        "OMP_NUM_THREADS",
+        "MKL_NUM_THREADS",
+        "NUMEXPR_NUM_THREADS",
+    ):
+        env[variable] = "1"
     existing = env.get("PYTHONPATH")
     env["PYTHONPATH"] = (
-        str(PYTHON_SOURCE) + os.pathsep + existing if existing else str(PYTHON_SOURCE)
+        str(REPO_ROOT) + os.pathsep + existing if existing else str(REPO_ROOT)
     )
     return env
 
@@ -37,8 +47,12 @@ def _validate_interpreter() -> None:
 def _doctor(env: dict[str, str]) -> int:
     import numpy
     import pytest
-    import reality_stone
-    import torch
+
+    def optional_version(distribution: str) -> str:
+        try:
+            return importlib.metadata.version(distribution)
+        except importlib.metadata.PackageNotFoundError:
+            return "not-installed"
 
     report = {
         "status": "PASS",
@@ -48,11 +62,11 @@ def _doctor(env: dict[str, str]) -> int:
         "bytecode_disabled": bool(sys.dont_write_bytecode),
         "pythonpath": env["PYTHONPATH"],
         "versions": {
-            "torch": getattr(torch, "__version__", "present"),
+            "torch": optional_version("torch"),
             "numpy": getattr(numpy, "__version__", "present"),
             "pytest": getattr(pytest, "__version__", "present"),
-            "reality_stone": getattr(reality_stone, "__version__", "present"),
         },
+        "repository_root": str(REPO_ROOT),
     }
     print(json.dumps(report, sort_keys=True))
     return 0
@@ -62,6 +76,31 @@ def _run_python(arguments: list[str], env: dict[str, str]) -> int:
     if not arguments:
         raise RuntimeError("python mode requires Python arguments.")
     return subprocess.run([sys.executable, "-B", *arguments], env=env, check=False).returncode
+
+
+def _run_source(arguments: list[str]) -> int:
+    """Parse Python sources in memory without creating bytecode or cache files."""
+
+    targets = [Path(value) for value in arguments] or [
+        REPO_ROOT / ".codex",
+        REPO_ROOT / "tests",
+        REPO_ROOT / "examples",
+        REPO_ROOT / "experiments",
+        REPO_ROOT / "docs",
+    ]
+    files: list[Path] = []
+    for target in targets:
+        resolved = target if target.is_absolute() else REPO_ROOT / target
+        if resolved.is_dir():
+            files.extend(resolved.rglob("*.py"))
+        elif resolved.suffix == ".py" and resolved.is_file():
+            files.append(resolved)
+        else:
+            raise RuntimeError(f"source target is not a Python file or directory: {target}")
+    for path in sorted(set(files)):
+        ast.parse(path.read_text(encoding="utf-8-sig"), filename=str(path))
+    print(json.dumps({"status": "PASS", "python_files": len(set(files))}, sort_keys=True))
+    return 0
 
 
 def _run_pytest(arguments: list[str], env: dict[str, str]) -> int:
@@ -96,7 +135,7 @@ def main(arguments: list[str]) -> int:
     _validate_interpreter()
     env = _child_environment()
     os.environ.update(env)
-    source = str(PYTHON_SOURCE)
+    source = str(REPO_ROOT)
     if source not in sys.path:
         sys.path.insert(0, source)
     mode = arguments[0] if arguments else "doctor"
@@ -107,9 +146,11 @@ def main(arguments: list[str]) -> int:
         return _doctor(env)
     if mode == "python":
         return _run_python(forwarded, env)
+    if mode == "source":
+        return _run_source(forwarded)
     if mode == "pytest":
         return _run_pytest(forwarded, env)
-    raise RuntimeError(f"Unknown mode {mode!r}; expected doctor, python, or pytest.")
+    raise RuntimeError(f"Unknown mode {mode!r}; expected doctor, source, python, or pytest.")
 
 
 if __name__ == "__main__":

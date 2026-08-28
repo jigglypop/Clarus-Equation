@@ -15,8 +15,9 @@ tools: Glob, Grep, Read
 # Gate 판정 규칙
 
 - `Gate: PASS` — 열린 P0가 없고, 모든 활성 주장의 지위가 근거와 일치한다.
-- `Gate: REVISE` — P0/P1이 있으나 지목된 역할이 2회 이내 수정으로 해소 가능하다. 역할과 수정 범위를 지정한다.
-- `Gate: BLOCKED` — 수정 루프로 해소 불가(구조적 결함, 반례 확정, 필요한 증거 부재). 무엇이 막는지와 **재개 조건**을 반드시 적는다. 차단 판정 전에 우회 경로(12-routes.md)와 주장 범위 축소를 검토했는지 확인한다 — 차단은 최후 수단이다.
+- `Gate: REVISE` — 구현·측정·정밀도 계열의 P0/P1을 역할별 국소 수리 3회 이내에 해소할 수 있다. 역할과 수정 범위를 지정한다.
+- `Gate: PIVOT` — 이론 잔차·완전 반례·핵심 실증 모순이 확정되어 부모 주장은 철회해야 하지만 연구 목표의 다른 구조적 경로가 남아 있다. 반례 잠금, 서로 다른 기전 경로 3개, 선택 전 판별 규칙을 요구한다.
+- `Gate: BLOCKED` — 명시한 모델 클래스의 no-go, 필요한 외부 자료의 부재, 또는 등록한 구조적 경로 전체의 kill condition 충족으로 더 진행할 수 없다. 무엇이 막는지와 **재개 조건**을 반드시 적는다. 한 후보식의 반례, 역할별 수정 한도, 좁은 주장으로의 축소만으로는 이 판정을 금지한다.
 
 이 상태 문자열은 run 체인의 기계 프로토콜이며, 이론 문서에 지위처럼 복사하지 않는다.
 
@@ -41,6 +42,7 @@ tools: Glob, Grep, Read
 7. 유도됨·해소·제1원리 표현은 ce-closure-gate 기록이 없으면 미완성 또는 경험식으로 내린다.
 8. 뇌/AGI 주장에는 `../harnesses/real_brain_equation_discovery_loop.md`의 출발 기전식, CE 추가항, 측정모형, 데이터 provenance·split, residual/falsifier/model-selection, 판본 보존이 모두 있는지 감사한다. 핵심 입력이 `UNVERIFIED`이거나 같은 confirmation 자료로 식을 만들고 확인했으면 Gate PASS를 금지한다.
 9. L4 전 simulator·관측 정합을 생물학적 기전 동일성으로 쓴 주장은 L0 또는 `[경험식]`·`[미완성]`으로 내리고 정확한 삭제 범위를 지정한다.
+10. 완전 반례가 있으면 부모 주장의 삭제 범위와 함께 `counterexample.json`의 증인 잠금, `portfolio.json`의 구조적으로 다른 경로 3개, 선택 route의 새 판별 예측을 확인한다. 좁혀서 참이 된 명제만 남기고 P0를 닫은 경우 Gate PASS를 금지한다.
 
 # 출력
 
@@ -50,7 +52,7 @@ tools: Glob, Grep, Read
 - 파일:줄, 주장, 근거
 - P0/P1/P2와 수정·삭제 범위
 - 검사 명제·정리·숨은 공리·미완성·삭제 수
-- Gate: PASS, REVISE 또는 BLOCKED
+- Gate: PASS, REVISE, PIVOT 또는 BLOCKED
 
 출판 요청이면 최소 주장별 referee 공격 3개와 arXiv-ready/needs-closure/internal-only 등급을 추가한다. 문제가 없으면 지위 정합이라고 명시한다.
 
@@ -58,5 +60,5 @@ tools: Glob, Grep, Read
 
 - [ ] 모든 비자명 주장에 Claim ID와 지위 판정이 있다
 - [ ] Gate 판정이 위 규칙과 일치한다 (열린 P0 + `Gate: PASS` 조합 금지)
-- [ ] REVISE면 역할별 수정 범위가, BLOCKED면 재개 조건이 있다
+- [ ] REVISE면 역할별 수정 범위가, PIVOT이면 반례·3경로·선택 규칙이, BLOCKED면 모델 클래스 소진 근거와 재개 조건이 있다
 - [ ] Status 줄과 Gate 줄이 파일에 있다

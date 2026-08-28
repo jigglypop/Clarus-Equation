@@ -1,12 +1,12 @@
 # Fast project-local defaults. User-level provider and authentication settings
 # remain in ~/.codex/config.toml.
-model_reasoning_effort = "medium"
+model_reasoning_effort = "low"
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"
-project_doc_max_bytes = 16384
+project_doc_max_bytes = 8192
 
 [agents]
 enabled = true
 max_concurrent_threads_per_session = 3
-default_subagent_model = "gpt-5.6-terra"
-default_subagent_reasoning_effort = "medium"
+default_subagent_model = "gpt-5.6-luna"
+default_subagent_reasoning_effort = "low"

@@ -13,6 +13,16 @@ if not defined CE_BOOTSTRAP if defined LOCALAPPDATA (
     if exist "%LOCALAPPDATA%\Programs\Python\Python310\python.exe" set "CE_BOOTSTRAP=%LOCALAPPDATA%\Programs\Python\Python310\python.exe"
 )
 
+rem Existing all-users system installs are an allowed fallback only; this does
+rem not create, resolve, or modify an interpreter.
+if not defined CE_BOOTSTRAP if defined SystemDrive (
+    if exist "%SystemDrive%\Python314\python.exe" set "CE_BOOTSTRAP=%SystemDrive%\Python314\python.exe"
+    if exist "%SystemDrive%\Python313\python.exe" set "CE_BOOTSTRAP=%SystemDrive%\Python313\python.exe"
+    if exist "%SystemDrive%\Python312\python.exe" set "CE_BOOTSTRAP=%SystemDrive%\Python312\python.exe"
+    if exist "%SystemDrive%\Python311\python.exe" set "CE_BOOTSTRAP=%SystemDrive%\Python311\python.exe"
+    if exist "%SystemDrive%\Python310\python.exe" set "CE_BOOTSTRAP=%SystemDrive%\Python310\python.exe"
+)
+
 if not defined CE_BOOTSTRAP (
     >&2 echo CE Python harness: no policy-allowed system Python ^>=3.10 was found.
     >&2 echo Set CE_PYTHON to an approved system interpreter; do not bypass Application Control.

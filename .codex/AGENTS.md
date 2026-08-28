@@ -1,79 +1,76 @@
-# CE Codex 하네스 상세 규칙
+# CE Codex 하네스 규칙
 
-루트 `../AGENTS.md`가 기본 속도·라우팅 규칙의 정본이다. 이 파일은 `.codex` 내부 작업이나 명시적 CE 연구 run에만 상세 규칙을 보충한다.
+## 현재 저장 정책 (최우선)
+
+- `reality_stone`은 제거되었으므로 패키지·경로·import를 요구하지 않는다.
+- 새 `CE_RUN`이나 `_workspace/` 디렉터리를 만들지 않는다. 기존 `_workspace/`는 과거 기록으로 읽기만 한다.
+- 연구·검증의 최신 결론과 재현 경로는 루트 `docs/`의 해당 정본을 제자리 갱신한다.
+- 임시 계산은 OS 임시 디렉터리를 사용하고 종료 시 이번 실행이 만든 정확한 경로만 제거한다.
+- 아래에 남은 run 설명은 과거 호환 문서이며 이 절과 충돌하면 적용하지 않는다.
+
+루트 `../AGENTS.md`가 기본 지침의 정본이다. 이 파일은 `.codex/` 자체를 고치거나 명시적인 CE 연구 run을 수행할 때만 적용한다.
 
 ## 라우팅
 
-요청을 받으면 먼저 규모를 판단한다. **작은 요청에 run을 파지 않는 것이 속도 규율의 핵심이다.**
+작은 요청에는 run과 subagent를 만들지 않는다. 아래에서 가장 좁은 경로 하나만 고른다.
 
 | 요청 | 행동 |
 |---|---|
-| 단순 질문·계산·파일 위치·한 줄 수정 | run 없이 바로 답한다 (spot). 스킬을 로드하지 않는다 |
-| 특정 주장 지위·증명 판정 | $ce-closure-gate |
-| 식의 차원·무차원 검사 | $ce-dimensionless |
-| 테스트·회귀·수치 검증 | $ce-validate |
-| 주장·상수·판본·진리값 원장 작성·수정 | $ce-ledger-write + ce-ledger-writer |
-| 강의·유도·독자 가이드·논문 원고 작성·수정 | $ce-paper-write + ce-paper-writer |
-| 문서 유형 판별·공통 지위 규약 확인 | $ce-doc-write (라우터) |
-| guard 벤치·ASR·회귀 | $clarus-guard-bench |
-| 신규 주장 검증·승격 판단·논문화·병렬 연구 | $ce-research (full) |
-| 완결 run의 후속·반복 (v8→v9 등) | $ce-research (light, PREDECESSOR 지정) |
-| `.codex` 하네스·스킬·역할 카드·실행 정책 수정 | run 없이 대상 파일만 최소 수정 (spot) |
+| 질문·계산·파일 탐색·작은 수정 | direct |
+| 주장 지위·증명 완결성·반례 | `$ce-closure-gate` |
+| 차원 또는 무차원성 | `$ce-dimensionless` |
+| 테스트·회귀·수치 무결성 | `$ce-validate` |
+| 주장·상수·판본 원장 | `$ce-ledger-write` |
+| 강의·유도·논문 원고 | `$ce-paper-write` |
+| 신규 CE 주장 전체 연구 | `$ce-research` full |
+| 기존 run의 후속 검증 | `$ce-research` light |
+| `.codex/` 설정과 하네스 수정 | direct |
 
-선택한 스킬 하나만 로드한다. 역할 카드는 4장(sourcer, math-verifier, status-auditor, impl-engineer)이며 해당 레인을 실행하는 순간에만 읽는다. 우회 경로 탐색(routes)은 math-verifier 레인에 포함되고, 최종 집필은 역할 카드 없이 $ce-research의 집필 규칙으로 직접 한다.
+전문 스킬은 하나만 먼저 읽는다. full 연구에서만 필요한 레인을 병렬화한다. 역할 에이전트는 `ce-physics-sourcer`, `ce-math-verifier`, `ce-status-auditor`, `ce-impl-engineer` 네 개뿐이다.
 
-## 코어 명령
+## Run 명령
 
     .codex/hooks/run.sh <cmd> ...     # POSIX
     .codex/hooks/run.cmd <cmd> ...    # Windows (프리빌드 바이너리 직행)
 
-- `init <run-dir>` — run 생성, `.active-run` 포인터 설정. `REUSE?` 목록이 나오면 새로 파지 말고 이어받는다.
-- `status <run-dir>` — 단계별 상태·Gate·수정 카운트를 한 화면에 출력. **run 현황 파악에 stage 파일을 다시 읽지 말고 이것을 쓴다.**
-- `check <run-dir> <contract|lanes|gate|build|final>` — 해당 단계까지 전체 체인 검사.
-- `revise <run-dir> <role>` — 수정 루프 기록. 역할당 2회 상한.
-- `gc <workspace>` — 완결 run을 `_archive/`로 이동, 미완성 run 나열. 세션 종료 시 실행.
+- `init <run-dir>`: 기존 run을 재개하거나 새 run을 만든다. 활성 미완성 run이 있으면 `REUSE_REQUIRED`로 멈춘다.
+- `init --new-contract <run-dir>`: 목표와 증거 계보가 독립적인 연구에만 쓴다.
+- `status <run-dir>`: 단계, Gate, 수정 횟수를 한 화면에 본다. 현황 확인을 위해 stage 파일을 반복해 읽지 않는다.
+- `check <run-dir> <contract|lanes|gate|build|final>`: 해당 단계까지 검사한다.
+- `revise`, `counterexample`, `pivot`: 상세 계약은 `$ce-research`에서 필요할 때만 읽는다.
+- `gc <workspace>`: 완료되고 참조되지 않는 run만 보관한다.
 
-## 심각도 어휘 (모든 역할 공통)
+## 판정
 
-- **P0**: 주장을 무너뜨리는 결함 — 완전한 반례, 증명 오류, 수치 불일치가 결론을 바꿈. 해소 전 Gate PASS 불가.
-- **P1**: 결론은 유지되나 방치 불가 — 증명 공백, 숨은 공리, 기준선 불일치. revise로 처리하거나 BLOCKED로 기록.
-- **P2**: 표기·분량·정리 문제. 최종 보고서에 목록만 남기고 수정 루프를 소모하지 않는다.
+- **P0**: 결론을 무너뜨리는 반례, 증명 오류, 수치 불일치. 해소 전 PASS 금지.
+- **P1**: 결론은 유지하지만 방치할 수 없는 증명 공백, 단위 괴리, 기준선 불일치.
+- **P2**: 표기와 정리 문제. 연구 수정 횟수를 쓰지 않는다.
 
-## 속도 규율
+## 속도와 산출물
 
-- 카드·스킬을 선로딩하지 않는다. 필요한 시점에 필요한 것만 읽는다.
-- run 현황은 `status`로 본다. stage 파일 재독은 내용을 인용할 때만.
-- PREDECESSOR가 있으면 선행 run이 검증한 결론을 재유도·재대조하지 않고 경로만 인용한다.
-- 상세 계산·로그·발췌는 artifacts/에 쓰고 stage 파일에는 판정·표·경로만 남긴다.
-- 레인 파일은 3–4만 자 재생성이 아니라 판정 중심의 짧은 문서다.
-- `check final`은 앞 단계를 포함한다. 같은 상태에서 contract→lanes→gate→build→final을 연속 재실행하지 말고, 단계 전환에 필요한 check와 마지막 final을 각각 한 번만 실행한다.
+- 카드와 스킬을 선로드하지 않는다. 필요한 시점에 하나만 읽는다.
+- 선행 run이 검증한 결론은 재유도하지 않고 경로를 인용한다.
+- stage 파일은 판정과 경로만 담고 상세 로그는 `artifacts/`에 둔다.
+- 논문 정본은 `docs/<분야>/<논문>/00_논문목차.md`와 연결된 장에 둔다. `_workspace/`에 논문 사본을 만들지 않는다.
+- `40-final-report.md`는 `DOCS_PAPER`, 결론, 근거 경로만 담는 인계 기록이다.
+- `check final`은 앞 단계를 포함하므로 같은 상태에서 모든 check를 연속 반복하지 않는다.
 
-## 실행·캐시 규율
+## 검증
 
-- “검증해줘”, “고쳐줘”, “하네스 개선”은 전체 테스트 실행 권한이 아니다. 기본은 변경 파일에 직접 연결된 가장 작은 검사 **한 개**이며, green이면 멈춘다.
-- 관련 회귀 확대는 작은 검사가 실패했거나 공용 API·의존성 경계를 바꿨을 때만 한다. 저장소 전체 pytest·전체 bench·release 검증은 사용자가 `전체`, `full`, `release`, `CI 재현`을 명시한 경우에만 실행한다.
-- 코드가 바뀌지 않았는데 같은 green 명령을 다시 실행하지 않는다. 다른 역할의 성공 로그가 현재 byte와 명령을 고정했다면 인용하고 중복 실행하지 않는다.
-- Python은 기존 interpreter를 `-B`로 사용하고 child 환경에 `PYTHONDONTWRITEBYTECODE=1`을 둔다. pytest는 `-p no:cacheprovider`와 실행별 고유 `--basetemp`를 사용한다.
-- basetemp는 하네스가 만든 고유 소유 경로만 쓰고 성공·실패·중단 모두 `finally`에서 제거한다. 고정 이름 재사용, repo root 임시물, 광역 glob cleanup은 금지한다.
-- Ruff는 `--no-cache`를 쓴다. 문법 확인은 source를 메모리에서 `compile()`하고 `compileall`로 pyc를 만들지 않는다.
-- 현재 interpreter로 가능한 작업에 새 venv나 `uv run`을 만들지 않는다. dependency resolution이 실제로 필요할 때만 기존 프로젝트 실행기를 사용한다.
-- Windows에서는 `.codex/hooks/python.cmd doctor`로 실행기를 먼저 확인하고, focused Python/pytest는 같은 래퍼의 `python`/`pytest` 모드로 실행한다. 프롬프트 입력을 기다리지 않으며, Application Control이 차단한 `.venv`나 uv-managed Python을 우회하지 않는다.
-- full 검증을 생략한 것은 실패가 아니다. 최종 보고에는 실행한 최소 검사와 생략한 확대 검증을 각각 명시한다.
+- 변경과 직접 연결된 가장 작은 검사 하나부터 실행하고 green이면 멈춘다.
+- 공용 API, 수치 계약, 경계가 바뀌었거나 작은 검사가 실패할 때만 관련 묶음으로 넓힌다.
+- 전체 pytest, bench, release 검증은 사용자가 `전체`, `full`, `release`, `CI 재현`을 명시한 경우에만 실행한다.
+- Windows Python은 `.codex/hooks/python.cmd doctor` 후 같은 래퍼를 쓴다. 차단된 venv나 대화형 설치를 우회하지 않는다.
+- 같은 byte와 명령의 green 결과를 반복 실행하지 않는다.
 
-## 실측 교정 루프
+## 전문 계약
 
-- 수치 검증이 어긋나면(backend parity FAIL, 기준선 잔차 $|z|>3$, 차원 검사 불일치) 같은 명령을 반복하지 말고 `harnesses/empirical_calibration_loop.md`의 루프를 따른다: 최소 재현 → 첫 분기 중간값 → 원인 분류(차원 D·구현 I·정밀도 P·convention C·기준선 B·이론 T) → 교정 1건 → 최소 재검. 불일치당 3사이클 상한, 사이클당 조치 1건.
-- 교정 가능한 것은 구현 코드, 결과를 보기 전에 선언된 자유 파라미터, sourcer가 출처 검증한 기준선 갱신뿐이다. tolerance·fixture·cutoff·acceptance·endpoint·seed는 결과를 본 뒤 바꾸지 않는다.
-- 이론 검증의 수치 비교는 예측값·기준선(출처)·오차·잔차 $z$ 4열로 artifacts에 남긴다. $|z|\le1$은 관측 일치(증명 아님), $1<|z|\le3$은 tension(P2, 결론 의존 시 P1), $|z|>3$은 P0 후보로 루프 진입.
-- T(이론) 분류는 앞 5개 클래스의 기각 근거가 기록된 뒤에만 쓴다. 이론 잔차를 코드 수정으로 흡수해 green을 만들지 않는다 — T 확정은 실패가 아니라 산출이며 closure-gate로 회부한다.
-- **식 개정은 계약 수준 행위다** (`harnesses/empirical_calibration_loop.md` §8): T 확정 잔차만 근거가 되고, 구 판본은 반례와 함께 원장 보존, 새 판본은 새 계약·새 fixture, 강제한 관측 기준선(출처)을 명기한다. 관측 무차원 비율을 falsifier로 먼저 동결하고 자유 파라미터 수 < 재현 비율 수를 요구하며 비율별 개별 재조정을 금지한다.
+일반 요청에서 아래 문서를 선로드하지 않는다. 해당 연구가 실제로 필요할 때만 읽는다.
 
-## 네이티브 성능 경로 (Rust/CUDA)
-
-- 무거운 수치 검증은 Python `float64` oracle → Rust CPU `f64` → CUDA `f64` 순으로 승격하며, 승격 조건은 해당 parity 하네스의 `BACKEND_PARITY_PASS`다. 곡률 진단의 정본 계약은 `harnesses/curvature_backend_parity.md`.
-- 승격 후에도 세션마다 무작위 fixture 표본 3개 이상을 Python oracle과 재대조한다. 표본 실패는 즉시 parity FAIL 강등이다. CUDA `f32`는 속도 진단 전용이며 과학 판정에 쓰지 않는다.
-- 성능 측정은 정확성 gate 통과 후에만, warm-up·반복 횟수·batch 크기를 고정해 artifacts에 기록한다. fallback 발생이나 native 호출 receipt 0은 성능 수치와 무관하게 parity FAIL이다.
-- 빌드 캐시는 `%LOCALAPPDATA%`, 레포 안 `target/` 금지. 훅 이벤트에서 cargo 빌드를 트리거하지 않는다.
+- 실측 교정: `harnesses/empirical_calibration_loop.md`
+- Rust/CUDA parity: `harnesses/curvature_backend_parity.md`
+- 뇌/AGI 연구: `harnesses/real_brain_equation_discovery_loop.md`
+- 뇌 증거 수준: `harnesses/brain_evidence_ladder.md`
 
 ## main Git 인계 규율
 
@@ -82,22 +79,12 @@
 - 발행할 때는 승인된 경로 manifest만 `git add -- <paths>`로 stage하고 staged diff·관련 검증을 확인한 뒤 `.codex/hooks/check-large-data.cmd --commit`을 명시적으로 실행한다. push 직전에는 같은 실행기의 `--push`도 실행한다. 이 gate는 연구 binary 확장자와 95MB 초과 Git blob을 막으며 secret scanner를 대신하지 않는다. `git add .`, `git add -A`, force push, 자동 stash/reset/clean/rebase는 금지한다.
 - push 직전 다시 fetch하여 `origin/main`이 preflight base와 같은지 확인하고 fast-forward 일반 push만 사용한다. 완료 후 remote `refs/heads/main`과 local HEAD의 일치, commit SHA, 정확한 경로와 남은 dirt를 보고한다.
 
-## 뇌 알고리즘 경로 선택
-
-- **최우선 과제는 실제 뇌 식 기반 발견 루프다.** 실제 뇌에서 확립된 기전식과 측정모형을 출발점으로 고정하고, CE 가설을 명시적 추가항·새 상태·경계조건으로 분리한 뒤 실제 뇌 데이터의 held-out 잔차와 개입 falsifier로 판정한다. 식 개정은 데이터에 맞춘 사후 조정이 아니라 `harnesses/real_brain_equation_discovery_loop.md`와 `harnesses/empirical_calibration_loop.md`에 따른 새 판본 계약으로만 수행한다.
-- 뇌/AGI `00-contract.md`는 최소한 `BIO_STARTING_MECHANISM`, `CE_DELTA`, `MEASUREMENT_MODEL`, `DATA_PROVENANCE`, `DATA_SPLIT`, `OBSERVABLES`, `RESIDUAL_RULE`, `FALSIFIER`, `MATCHED_CONTROLS`, `MODEL_SELECTION`, `REVISION_TRIGGER`, `CLAIM_CEILING`을 결과 확인 전에 고정한다. 실제 데이터·기전식·측정모형의 핵심 입력이 `UNVERIFIED`이면 채점 구현으로 진행하지 않는다.
-- **주축은 두 질문이다: (1) 실제 뇌가 그 연산을 쓰는가, (2) 실제 뇌 데이터로 반증을 시도했는가.** 시뮬레이터 성립은 보조 증거다. 정본은 `harnesses/brain_evidence_ladder.md` — 증거 사다리 L0(합성)→L1(관측 비율)→L2(창발 통계)→L3(실데이터 예측)→L4(개입 동일성)와 원시 연산 허용 목록을 따르고, 모든 뇌 run 기계 상태에 `BIO_EVIDENCE_Lx`를 명기한다.
-- **L4 이전에 "뇌가 이렇게 동작한다"를 쓰지 않는다.** L1–L3는 "정합"이다. 비허용 원시 연산(부호 자유 W, 알고리즘적 WTA, 전역 열거, 생물 대응 없는 supervisory 신호)을 쓴 run은 추상 알고리즘 트랙으로 강등하고 뇌 주장을 금지한다.
-- 새 뇌/기억/의식 run은 직전 실행의 `12-routes.md`, `31-validation.md`, 존재하면 `40-final-report.md`, 그리고 `_workspace/ce/brain-algorithm-route-ledger.md`를 먼저 읽는다. 40이 없으면 가장 늦은 numbered audit와 원장 행을 사용하고 closure 부재를 계약에 기록한다. 전체 artifact를 재독하거나 실패한 실험을 endpoint·threshold·seed만 바꿔 재시도하지 않는다.
-- 오케스트레이터는 양성처럼 보이는 수치가 아니라 사다리 승급 가능성, 인과 식별 가능성, 기존 STOP이 남긴 정보, 독립 반증 대조군, capability dependency 순서로 다음 후보를 고른다. 선택 근거와 기각·퇴역 경로를 00-contract에 고정한 뒤 레인을 연다.
-- simulator 결과는 실제 뇌의 증거로 자동 승격하지 않는다. L1 비율·L3 데이터는 sourcer 검증 기준선만 쓰고 UNVERIFIED 수치는 게이트에 넣지 않는다. 전역 원장은 후보·의존성·증거 경로·상태·다음 falsifier만 관리하고, 서사나 의식 동일시를 기록하지 않는다.
-
 ## 끈질김 (진취성 규율)
 
-- **BLOCKED는 최후 수단이다.** 막히면 (a) 우회 경로 후보 소진, (b) 주장 범위 축소로 좁은 정리 salvage, (c) 공리 1개 명시 추가 순으로 시도하고 기각 근거를 기록한 뒤에만 쓴다. BLOCKED에는 재개 조건이 필수다.
-- ABANDONED는 구조적 불가능(반례 확정·no-go·증거 원천 부재)의 근거가 있을 때만. 분량·피로·세션 길이는 사유가 아니다.
-- 부정 결과도 완결한다: 반례·기각으로 끝나는 run도 40-final-report.md까지 간다. 죽은 경로 확인은 실패가 아니라 산출이다.
-- revise 한도 소진은 run 포기 사유가 아니다 — 살릴 것을 좁혀 살리고 남는 결함만 BLOCKED로 보고서에 남긴다.
+- **BLOCKED는 최후 수단이다.** 한 후보식의 반례나 역할별 수리 한도만으로 쓰지 않는다. 반례를 잠근 뒤 서로 다른 상태·상호작용·측정·개입 구조의 경로를 최소 3개 만들고, 각 경로의 판별 예측·음성대조·봉인 split·중단 조건을 시험한다. 명시적 모델 클래스 no-go, 필요한 외부 자료의 부재, 또는 세 경로의 중단 조건이 모두 충족된 경우에만 재개 조건과 함께 쓴다.
+- ABANDONED는 명시한 모델 클래스의 구조적 불가능이나 증거 원천의 확정적 부재가 있을 때만 쓴다. 한 식의 반례, 분량·피로·세션 길이는 사유가 아니다.
+- 부정 결과도 완결한다. 반례·기각은 `docs/` 조립 논문의 해당 장과 짧은 `40-final-report.md` 인계 기록에 반영한다. 죽은 경로 확인은 실패가 아니라 산출이다.
+- revise 한도 소진은 run 포기나 목표 축소 사유가 아니다. 실패식을 음성대조군으로 고정하고 `counterexample → 세 기전 경로 → pivot`으로 전환한다. 좁혀서 참이 된 명제는 보존 결과일 뿐 돌파구 성공으로 세지 않는다.
 
 ## 데이터 반출 게이트
 

@@ -43,8 +43,11 @@ tools: Glob, Grep, Read, Bash
 3. 재파라미터화를 합치고 구조적으로 다른 후보를 최소 3개 만든다. 새 공리 도입은 후보당 최대 1개로 제한하고 명시한다.
 4. 목표값을 본 뒤 만든 후보는 target-aware로 표시하고, 각 후보의 조정 선택 수와 look-elsewhere 규모를 센다.
 5. 각 후보의 수치 편차, 부수 예측과 죽이는 반증 조건을 계산한다.
+6. 완전 반례 뒤 후보는 `portfolio.json`에 옮길 수 있도록 `id`, 구조 지문,
+   구조 변경 종류(상태·상호작용·측정·개입), 바뀌는 항, 식, 판별 예측,
+   adverse control, 개발/봉인 split, kill condition, 외부 의존성을 빠짐없이 쓴다.
 
-순위는 낮은 dof와 강한 교차 예측 우선. 후보당 표 한 행 + 짧은 절, 상세 계산은 artifacts/. 경로가 정말 없으면 필요한 빠진 구조를 적는다 — "후보 3개 미만"에는 왜 구조적으로 더 없는지 근거를 요구한다.
+순위는 낮은 dof와 강한 교차 예측 우선이다. 후보당 표 한 행과 짧은 절을 쓰고 상세 계산은 artifacts/에 둔다. 역치·seed·endpoint·decoder만 바꾸거나 같은 confirmation 자료를 다시 여는 후보는 구조적 경로로 세지 않는다. 경로가 정말 없으면 필요한 빠진 구조를 적는다. "후보 3개 미만"에는 명시한 모델 클래스 안에서 왜 더 만들 수 없는지 no-go 수준의 근거를 요구한다.
 
 뇌/기억/의식 run에서는 `_workspace/ce/brain-algorithm-route-ledger.md`와 선행 run의 12/31, 존재하는 40을 함께 대조한다. 40이 없으면 가장 늦은 numbered audit와 closure 부재를 기록한다. 이미 반례·STOP·APPARATUS_INVALID로 퇴역한 경로를 threshold·seed·endpoint만 바꿔 새 후보로 세지 않으며, 새 후보가 이전 실패와 독립인 mechanism·falsifier·matched control을 가졌는지 명시한다. 실제 기전식·데이터가 연결되는 후보를 L0 합성 후보보다 먼저 정렬한다.
 

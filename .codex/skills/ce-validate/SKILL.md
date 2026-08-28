@@ -1,6 +1,6 @@
 ---
 name: ce-validate
-description: CE의 고정점·상수 원장·무차원성·브리지·회귀 테스트를 실행해 수치 무결성을 보고하며, 그 기계 결과를 이론의 수학적 지위와 분리하는 검증 하네스.
+description: CE 런타임의 무차원성·브리지·계층·회귀 테스트를 실행해 수치 무결성을 보고하며, 그 기계 결과를 이론의 수학적 지위와 분리하는 검증 하네스.
 ---
 
 # CE 검증 하네스 실행
@@ -12,16 +12,19 @@ description: CE의 고정점·상수 원장·무차원성·브리지·회귀 테
 아래 목록을 일괄 실행하지 않는다. 요청·변경 파일에 직접 대응하는 **한 항목만** 먼저 고른다.
 
 - 무차원: `python -m pytest tests\test_dimensionless.py -q`
-- bridge 계산: `python -m pytest tests\test_bridge_gates.py tests\test_ckm_vcb_nlo_gate.py -q`
-- 우주론 비율: `python -m pytest tests\test_cosmology_ratio_audit.py -q`
-- bootstrap: `python reality_stone\python\reality_stone\clarus\bootstrap_solver.py`
-- scorecard: `python tests\scorecard.py`
+- bridge 계산: `python -m pytest tests\test_bridge_gates.py -q`
+- 런타임 계층: `python -m pytest tests\test_layer_a.py -q` (변경 계층에 맞춰 a–e 선택)
+- 런타임 상수·수렴: `python -m pytest tests\test_convergence.py -q`
 - 전체 회귀: 사용자가 `전체`, `full`, `release`, `CI 재현`을 명시한 경우에만 `python -m pytest -q`
 
 명령 예시의 `python`은 프로젝트의 기존 interpreter를 뜻한다. 실제 pytest 실행에는 `-B`,
 `PYTHONDONTWRITEBYTECODE=1`, `-p no:cacheprovider`, 실행별 고유 `--basetemp`를 추가한다.
 현재 interpreter가 필요한 dependency를 이미 제공하면 `uv run`으로 다시 감싸지 않는다.
 Windows agent 실행에서는 먼저 `.codex/hooks/python.cmd doctor`를 확인하고, pytest는 같은 래퍼의 `pytest` 모드로 실행한다. 차단된 `.venv`나 대화형 uv 프롬프트를 기다리거나 우회하지 않는다.
+
+`reality_stone` 제거 후 저장소 전체의 무기록 Python 구문 검사는 `.codex/hooks/python.cmd source`를 사용한다. 이 모드는 `.codex`, `tests`, `examples`, `experiments`, `docs`의 `.py`를 메모리에서 AST 파싱하며 pyc나 cache를 만들지 않는다. focused pytest가 제거된 모듈을 요구하면 환경 실패로 기록하고 독립 실행 가능한 가장 가까운 테스트를 선택한다.
+
+`reality_stone` 제거 후 저장소 전체의 무기록 Python 구문 검사는 `.codex/hooks/python.cmd source`를 사용한다. 이 모드는 `.codex`, `tests`, `examples`, `experiments`, `docs`의 `.py`를 메모리에서 AST 파싱하며 pyc나 cache를 만들지 않는다. focused pytest가 제거된 모듈을 요구하면 환경 실패로 기록하고 독립 실행 가능한 가장 가까운 테스트를 선택한다.
 
 ## 절차
 
@@ -44,8 +47,6 @@ Windows agent 실행에서는 먼저 `.codex/hooks/python.cmd doctor`를 확인�
 
 - 뇌/AGI 검증은 `.codex/harnesses/real_brain_equation_discovery_loop.md`의 생물 baseline 재현, measurement-model parity, 사전 고정 held-out residual, 대안 모델, falsifier, matched control과 CE 추가항 ablation을 우선 보고한다. post-hoc refit은 검증 PASS가 아니라 calibration artifact이며 새 판본 계약과 독립 confirmation을 요구한다.
 - 무차원 검사와 수치 일치는 구현 무결성의 증거일 뿐 물리적 참의 증명이 아니다.
-- scorecard는 관측 스냅샷과의 수치 비교다. 형식적 출처는 별도로 `정의/정리/공리/산출/경험식/미완성/예측`으로 기록한다.
-- 외부 입력과 비채점 항목을 분모에 넣지 않는다. `alpha_s`는 외부 입력이다.
 - 부호 있는 sigma 잔차를 보존하고 공분산·상류 입력 오차의 포함 여부를 명시한다.
 - canonical 문서에는 하네스의 상태 문자열을 판정 배지처럼 복사하지 않는다.
 - 완전한 반례가 잠근 폐기 부모 주장은 문서에 되살리지 않고 회귀 테스트에서만 감시한다.
@@ -55,8 +56,6 @@ Windows agent 실행에서는 먼저 `.codex/hooks/python.cmd doctor`를 확인�
 다음을 간결히 보고한다.
 
 - 변경 영역과 실행한 명령
-- bootstrap 잔차
-- scorecard의 전체/채점/외부입력 수와 주의가 필요한 최대 잔차
 - 무차원 검사와 관련 pytest의 성공·실패 개수
 - 기존 기준 대비 회귀
 - 환경 또는 fixture 때문에 실행되지 않은 항목

@@ -1,6 +1,6 @@
 ---
 name: ce-impl-engineer
-description: "레포 전체의 구현 담당 (컴공). clarus-agent-guard 제품, CE-AGI 런타임(reality_stone clarus), 물리 게이트/테스트(examples/physics, tests) 코드를 읽고 고친다. \"guard에 X 추가\", \"runtime 동역학 손봐줘\", \"게이트 스크립트 만들어줘\", \"bench/테스트 안 통과\" 류 작업에 사용. 산출물별 불변식(아래)을 지키고, 수정 후 가장 작은 관련 검증만 실행한다."
+description: "레포 전체의 구현 담당 (컴공). 현재 저장소의 examples, experiments, tests, docs 및 하네스 코드를 읽고 고친다. 제거된 reality_stone 패키지는 전제하지 않는다. 수정 후 가장 작은 관련 검증만 실행한다."
 tools: Glob, Grep, Read, Edit, Write, Bash
 ---
 
@@ -14,14 +14,11 @@ tools: Glob, Grep, Read, Edit, Write, Bash
 
 # 불변식
 
-## clarus-agent-guard
+## 재사용 구현
 
-- 모든 기능을 DAGlet 연산으로 유지한다.
-- 탐지는 fallible, capability/executor 집행은 detection-free다.
-- under-allow는 capability 0, audit은 enforce=true 기본이다.
-- false-allow, ASR, false-block만 보고한다.
+`reality_stone/clarus`는 제거되었다. 공용 구현이 필요하면 현재 저장소의 `examples/`, `experiments/`, `tests/` 구조 안에서 실제 소비 경로를 먼저 확인하고, 존재하지 않는 패키지 API를 복원한다고 가정하지 않는다.
 
-## reality_stone/clarus
+## 레거시 runtime 불변식
 
 - 뇌/AGI 구현은 `../harnesses/real_brain_equation_discovery_loop.md`와 Gate PASS 계약에 고정된 $F_{\mathrm{bio}}$, $\Delta F_{\mathrm{CE}}$, 측정모형, observables와 falsifier만 반영한다. 결과를 본 뒤 식·loss·decoder·fixture·threshold를 고치지 않으며, 식 구조 변경은 새 판본 계약 없이는 구현하지 않는다.
 - 생물 기준식 재현이 먼저다. baseline이 실제 데이터·측정모형을 재현하지 못하면 CE 추가항을 넣어 green으로 만들지 않고 첫 분기와 실패를 보고한다. simulator PASS를 생물학 주장 근거로 해석하지 않는다.
@@ -31,7 +28,7 @@ tools: Glob, Grep, Read, Edit, Write, Bash
 - STDP는 기본 false이며 효능은 검증 전 Hypothesis 이하로 둔다.
 - 변경 전 docs/7_AGI/18_CodeMap.md를 확인한다.
 
-## physics gates
+## 검증 게이트 (examples/*)
 
 - 실패 후보와 수치를 숨기지 않는다.
 - 사전등록 기준을 결과에 맞춰 바꾸지 않는다.
