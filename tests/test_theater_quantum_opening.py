@@ -228,6 +228,25 @@ def test_dynamic_clock_closes_energy_transfer_but_external_quench_does_not() -> 
     ) != 0.0
 
 
+@pytest.mark.parametrize("degeneracy", (True, 0, 1.5))
+def test_degeneracy_must_be_a_positive_integer(degeneracy: object) -> None:
+    with pytest.raises(ValueError, match="positive integer"):
+        QuantumSeatSpecies(
+            label="invalid-degeneracy",
+            degeneracy=degeneracy,  # type: ignore[arg-type]
+            mass_in=1.0,
+            mass_out=2.0,
+            duration=0.5,
+        )
+
+    with pytest.raises(ValueError, match="positive integer"):
+        scalar_energy_transfer_rate(
+            degeneracy=degeneracy,  # type: ignore[arg-type]
+            mass_squared_rate=1.0,
+            renormalized_field_squared=1.0,
+        )
+
+
 @pytest.mark.parametrize(
     ("field", "value", "message"),
     (

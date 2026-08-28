@@ -46,7 +46,11 @@ class QuantumSeatSpecies:
     def __post_init__(self) -> None:
         if not self.label:
             raise ValueError("species label must be non-empty")
-        if isinstance(self.degeneracy, bool) or self.degeneracy < 1:
+        if (
+            isinstance(self.degeneracy, bool)
+            or not isinstance(self.degeneracy, int)
+            or self.degeneracy < 1
+        ):
             raise ValueError("degeneracy must be a positive integer")
         for name, value in (
             ("mass_in", self.mass_in),
@@ -396,7 +400,11 @@ def scalar_energy_transfer_rate(
 ) -> float:
     """Return Q_s=g_s*dot(m_s^2)*<chi_s^2>_ren/2 from the action."""
 
-    if isinstance(degeneracy, bool) or degeneracy < 1:
+    if (
+        isinstance(degeneracy, bool)
+        or not isinstance(degeneracy, int)
+        or degeneracy < 1
+    ):
         raise ValueError("degeneracy must be a positive integer")
     _require_finite("mass_squared_rate", mass_squared_rate)
     _require_finite("renormalized_field_squared", renormalized_field_squared)
