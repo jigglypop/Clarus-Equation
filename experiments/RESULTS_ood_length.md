@@ -1,6 +1,6 @@
 # Length-OOD reproduction — results
 
-Reproducible backing for the table in `docs/7_AGI/19_OOD_Generalization.md`,
+Reproducible backing for the table in `paper/7_AGI/19_OOD_Generalization.md`,
 which previously had no runnable script. Produced by
 `experiments/ood_length_repro.py`.
 

@@ -7,11 +7,12 @@ from urllib.parse import unquote
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PAPER_DIR = ROOT / "docs" / "2_경로적분과_응용"
-LECTURE_DIR = ROOT / "docs" / "1_강의"
-CONSTANTS_DIR = ROOT / "docs" / "3_상수"
-FORMAL_DIR = ROOT / "docs" / "9_등호이전"
-REFERENCE_DIR = ROOT / "docs" / "참조"
+PAPER_ROOT = ROOT / "paper"
+PAPER_DIR = PAPER_ROOT / "2_경로적분과_응용"
+LECTURE_DIR = PAPER_ROOT / "1_강의"
+CONSTANTS_DIR = PAPER_ROOT / "3_상수"
+FORMAL_DIR = PAPER_ROOT / "9_등호이전"
+REFERENCE_DIR = PAPER_ROOT / "참조"
 MATH_NORMALIZER_PATH = PAPER_DIR / "normalize_markdown_math.py"
 
 
@@ -25,7 +26,7 @@ def _load_math_normalizer():
     return module
 
 PHYSICS_APPLICATION_MARKDOWN = tuple(
-    ROOT / "docs" / "4_공학적_활용" / name
+    PAPER_ROOT / "4_공학적_활용" / name
     for name in (
         "01_핵융합_설계.md",
         "02_양자오류보정.md",
@@ -37,7 +38,7 @@ PHYSICS_APPLICATION_MARKDOWN = tuple(
 )
 
 THEORY_DERIVATION_MARKDOWN = tuple(
-    ROOT / "docs" / "5_유도" / name
+    PAPER_ROOT / "5_유도" / name
     for name in (
         "00_선택과_접힘.md",
         "01_Navier_Stokes.md",
@@ -51,11 +52,11 @@ THEORY_DERIVATION_MARKDOWN = tuple(
 
 CANONICAL_MARKDOWN = (
     ROOT / "README.md",
-    ROOT / "docs" / "README.md",
-    ROOT / "docs" / "axium.md",
-    ROOT / "docs" / "경로적분.md",
-    ROOT / "docs" / "상수.md",
-    ROOT / "docs" / "코어_독자_가이드.md",
+    PAPER_ROOT / "README.md",
+    PAPER_ROOT / "axium.md",
+    PAPER_ROOT / "경로적분.md",
+    PAPER_ROOT / "상수.md",
+    PAPER_ROOT / "코어_독자_가이드.md",
 )
 
 OLD_STATUS_TAG = re.compile(
@@ -130,7 +131,7 @@ CODEX_POLICY_FILES = (
 )
 
 NARRATIVE_MARKDOWN = (
-    ROOT / "docs" / "코어_독자_가이드.md",
+    PAPER_ROOT / "코어_독자_가이드.md",
 ) + tuple(sorted(LECTURE_DIR.glob("*.md"))) + THEORY_DERIVATION_MARKDOWN
 
 FORMAL_PROVENANCE = (
@@ -291,7 +292,7 @@ def test_narrative_documents_open_with_reader_orientation() -> None:
 
 
 def test_core_narrative_keeps_verified_fixed_point_scope_and_measure_term() -> None:
-    narrative = (ROOT / "docs" / "5_유도" / "00_선택과_접힘.md").read_text(
+    narrative = (PAPER_ROOT / "5_유도" / "00_선택과_접힘.md").read_text(
         encoding="utf-8"
     )
     assert r"x_0\in[0,1/D]" in narrative
@@ -300,10 +301,10 @@ def test_core_narrative_keeps_verified_fixed_point_scope_and_measure_term() -> N
     assert "잔류 분포" not in narrative
 
 
-def test_all_docs_use_renderable_math_delimiters_outside_code() -> None:
+def test_all_paper_markdown_uses_renderable_math_delimiters_outside_code() -> None:
     normalizer = _load_math_normalizer()
     violations: list[str] = []
-    for path in sorted((ROOT / "docs").rglob("*.md")):
+    for path in sorted(PAPER_ROOT.rglob("*.md")):
         text = path.read_text(encoding="utf-8-sig")
         normalized, block_count, inline_count = normalizer.normalize_text(text)
         if normalized != text:
@@ -342,7 +343,7 @@ def test_all_relative_markdown_links_resolve() -> None:
     link_pattern = re.compile(r"(?<!!)\[[^\]]*\]\(([^)]+)\)")
     violations: list[str] = []
 
-    for path in sorted((ROOT / "docs").rglob("*.md")):
+    for path in sorted(PAPER_ROOT.rglob("*.md")):
         text = path.read_text(encoding="utf-8-sig")
         for match in link_pattern.finditer(text):
             raw_target = match.group(1).strip()
@@ -366,7 +367,7 @@ def test_all_relative_markdown_links_resolve() -> None:
 
 
 def test_salvaged_theory_has_canonical_proofs_and_consistent_eft_signs() -> None:
-    ledger = (ROOT / "docs" / "검증_원장" / "참조_핵심_정리_증명.md").read_text(encoding="utf-8")
+    ledger = (PAPER_ROOT / "검증_원장" / "참조_핵심_정리_증명.md").read_text(encoding="utf-8")
     missing = [
         anchor
         for anchor in SALVAGED_THEORY_ANCHORS
@@ -374,8 +375,8 @@ def test_salvaged_theory_has_canonical_proofs_and_consistent_eft_signs() -> None
     ]
     assert not missing, f"missing canonical proof anchors: {missing}"
 
-    axiom = (ROOT / "docs" / "axium.md").read_text(encoding="utf-8")
-    path_integral = (ROOT / "docs" / "경로적분.md").read_text(encoding="utf-8")
+    axiom = (PAPER_ROOT / "axium.md").read_text(encoding="utf-8")
+    path_integral = (PAPER_ROOT / "경로적분.md").read_text(encoding="utf-8")
     for text in (axiom, path_integral):
         assert r"-\frac12(\nabla\phi)^2" in text
         assert r"M_{\rm Pl}^2-\xi\phi^2" in text

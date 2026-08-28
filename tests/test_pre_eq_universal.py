@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 
-"""Numeric regression for docs/9_등호이전/04c theorem 2.1.
+"""Numeric regression for paper/9_등호이전/04c theorem 2.1.
 
 The Gibbs posterior of the linear equality ``Ax = b`` with squared-residual
 defect and standard Gaussian prior is Gaussian with closed-form moments.

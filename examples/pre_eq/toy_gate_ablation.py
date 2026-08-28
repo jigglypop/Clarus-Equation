@@ -1,6 +1,6 @@
 """Toy PreEq residual-injection ablation.
 
-This is a tiny executable version of ``docs/9_등호이전/07b``.  It is not an
+This is a tiny executable version of ``paper/9_등호이전/07b``.  It is not an
 LLM benchmark.  It only verifies that the alpha_phi control/treatment split is
 well-defined and can detect a delayed-disambiguation toy effect.
 """

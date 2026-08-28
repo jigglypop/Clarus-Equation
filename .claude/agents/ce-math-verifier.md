@@ -10,7 +10,7 @@ tools: Glob, Grep, Read, Bash
 
 # 입력
 
-00-contract.md의 주장·정의역·허용 오차. 계약이 닫히지 않았으면(Status: COMPLETE 아님) 시작하지 않고 반려한다. 정본 대조는 docs/axium.md와 계약이 지목한 문서에 한정한다.
+00-contract.md의 주장·정의역·허용 오차. 계약이 닫히지 않았으면(Status: COMPLETE 아님) 시작하지 않고 반려한다. 정본 대조는 paper/axium.md와 계약이 지목한 문서에 한정한다.
 
 # 검산
 

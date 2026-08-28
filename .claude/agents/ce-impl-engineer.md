@@ -27,7 +27,7 @@ tools: Glob, Grep, Read, Edit, Write, Bash
 - 확장은 m_i=w_i=0, u_jx_j→1 극한에서 최소형으로 환원돼야 한다.
 - F1–F4 우회와 canonical 상태 차원 승격을 금지한다.
 - STDP는 기본 false이며 효능은 검증 전 Hypothesis 이하로 둔다.
-- 변경 전 docs/7_AGI/18_CodeMap.md를 확인한다.
+- 변경 전 paper/7_AGI/18_CodeMap.md를 확인한다.
 
 ## physics gates
 

@@ -1,43 +1,47 @@
 # CE Codex 하네스
 
-현재 하네스는 단일 저장소 direct 모드다. 제거된 `reality_stone`을 요구하지 않고, 자동 CE_RUN 라우팅이나 새 `_workspace/` 생성을 하지 않는다. 검증은 `.codex/hooks/python.cmd doctor|source|python|pytest`로 실행하며 최신 결과는 루트 `docs/` 정본을 직접 갱신한다. 아래 run-core 설명은 과거 호환 정보다.
+현재 하네스는 단일 저장소 direct 모드다. 제거된 `reality_stone`을 요구하지 않고, 자동 CE_RUN 라우팅이나 새 `_workspace/` 생성을 하지 않는다. 검증은 `.codex/hooks/python.cmd doctor|harness|source|python|pytest`로 실행하며 최신 결과는 루트 `paper/` 정본을 직접 갱신한다. run core는 기존 실행 증거 판독을 위한 과거 호환 표면이다.
 
-Clarus-Equation 연구용 프로젝트 로컬 Codex 설정이다. 일반 작업은 빠른 direct 경로를 쓰고, 명시적인 연구 요청만 역할 에이전트와 run 하네스를 사용한다.
+Clarus-Equation 연구용 프로젝트 로컬 Codex 설정이다. 일반 작업은 빠른 direct 경로를 쓰고, 연구 요청은 필요한 source·math·audit 레인만 독립화한다.
 
 ## 구조
 
 ```
 ../AGENTS.md         프로젝트 공통 지침(있는 경우)
-AGENTS.md            `.codex/` 작업과 CE run 라우팅 규칙
+AGENTS.md            `.codex/` 작업에만 추가되는 짧은 라우팅 규칙
 config.toml          low effort 기본값과 최대 3개 병렬 레인
 prompts/             CE 명령 프롬프트 7종
-agents/              독립 연구 역할 4개(TOML + 상세 Markdown 카드)
-skills/              단일 책임 CE 스킬 6개
-skills/ce-research/core/   Rust 게이트 코어 (init|status|check|revise|gc + hook)
+agents/              독립 연구·집필 역할 카드
+skills/              단일 책임 CE 스킬
+skills/ce-research/core/   기존 run 판독용 Rust 호환 코어
 harnesses/           수치·증거 하네스 계약 — backend parity(Rust/CUDA), 실측 교정 루프, 뇌 증거 사다리
-hooks.json           프로젝트 로컬 UserPromptSubmit 라우팅(Stop 전역 차단 없음)
-hooks/               run.* 코어 래퍼 + native Windows Python/payload 실행기
+hooks.json           빈 자동 lifecycle hook 등록(의도된 상태)
+hooks/               native Windows Python·저장소 계약·payload 실행기
 ```
 
-## 설치
+## 진입과 검증
 
-1. 프로젝트 루트에서 Codex를 시작한다. 신뢰된 프로젝트에서는 `.codex/config.toml`, hooks, rules가 로드되고, 신뢰되지 않은 프로젝트에서는 프로젝트 로컬 계층이 건너뛰어진다.
-2. 바이너리 빌드 (1회, OneDrive 밖 `%LOCALAPPDATA%\ce-research-core`에 생성):
+프로젝트 루트에서 Codex를 시작한다. 신뢰된 프로젝트만 `.codex/config.toml`과 프로젝트 로컬 지침을 로드한다.
 
-   ```powershell
-   .\hooks\run.ps1 gc _workspace\ce    # 아무 수동 명령이나 최초 실행 시 빌드됨
-   ```
+```powershell
+.codex\hooks\python.cmd doctor
+.codex\hooks\python.cmd harness
+.codex\hooks\python.cmd source <changed-python-paths>
+.codex\hooks\python.cmd pytest <focused-test-paths> -q
+```
 
-3. 확인: `.codex\hooks\run.cmd status <run-dir>` 이 단계 표를 출력하면 정상.
-4. Windows Python 확인: `.codex\hooks\python.cmd doctor`. focused pytest는 `.codex\hooks\python.cmd pytest <test-path> -q`로 실행한다.
+- `doctor`는 허용된 interpreter와 핵심 dependency를 보고한다.
+- `harness`는 `paper/` 전환, 이전 경로 잔존, 필수 진입점과 AGENTS context budget을 검사한다.
+- `source`는 실행 없이 AST를 파싱한다.
+- `pytest`는 cache를 끄고 저장소 밖의 고유 임시 디렉터리를 사용한다.
 
-## 속도 설계
+## 점진적 공개와 피드백
 
-- **훅은 절대 빌드하지 않는다.** `hook` 이벤트는 프리빌드 바이너리 직행(run.cmd, PowerShell 기동 없음), 바이너리가 없으면 조용히 no-op. cargo 빌드는 수동 명령에서만 일어난다.
-- 훅 timeout은 route 5s로 캡하며 Stop 훅은 사용하지 않는다.
-- run 현황은 `status` 한 번으로 본다 — stage 파일 재독 금지.
-- 작은 요청은 direct(스킬·run 없음), standard는 관련 통합 검사까지, full은 신규 주장·release에만 쓴다.
-- 상세 계산·로그는 artifacts/로 위임하고 stage 파일은 판정·표만 유지한다.
+- 루트 `AGENTS.md`는 저장소 지도·안전 경계·검증 등급만 담는다. 이 파일은 하네스 구조와 부채, 스킬은 반복 workflow, 코드는 정확히 판정할 수 있는 불변조건을 맡는다.
+- 작은 요청은 direct로 처리한다. 관련 스킬과 역할 카드는 trigger가 실제로 맞을 때만 읽고, 독립성이 있는 레인만 병렬화한다.
+- 같은 실패가 반복되면 프롬프트를 늘리기보다 누락된 지도·도구·기계 guard 중 하나를 가장 가까운 소유 표면에 보강한다.
+- 자동 훅은 현재 없다. 저장소 계약은 빠른 `harness` 명령과 집중 테스트가 기계적으로 강제한다.
+- FAST가 green이면 멈추고, 공용 경계나 인접 subsystem이 바뀐 경우에만 STANDARD로 넓힌다.
 
 ## 주의 (Windows)
 
@@ -46,3 +50,11 @@ hooks/               run.* 코어 래퍼 + native Windows Python/payload 실행�
 - 역할 에이전트는 독립 레인만 담당한다. 원장과 논문 작성 규율은 각각 `ce-ledger-write`, `ce-paper-write` 스킬이 단독 소유한다.
 - agent 실행은 stdin이 비대화형일 수 있으므로 uv/Python/보안 프롬프트를 기다리지 않는다. 이 PC에서는 uv cache ACL과 Windows Code Integrity의 enterprise signing policy가 각각 uv cache와 `.venv\Scripts\python.exe`를 차단했다. `python.cmd doctor`는 PowerShell 실행정책을 변경하지 않고 정책 허용된 기존 system Python만 선택하며 dependency를 설치하지 않는다.
 - 근본 조치는 관리자가 서명·allowlist된 Python 경로와 uv cache ACL을 복구하는 것이다. 하네스는 Application Control을 끄거나 차단된 interpreter를 실행하지 않으며 그 전까지 focused 검사만 system Python으로 수행한다.
+
+## 알려진 부채
+
+| 항목 | 현재 경계 | 해소 조건 |
+|---|---|---|
+| `pyproject.toml`의 `reality_stone` packaging metadata | 해당 소스 트리가 제거되어 설치 정본으로 사용하지 않음 | 패키지 복원 또는 packaging metadata 정리 요청 |
+| `.claude/` lifecycle 설정 | Codex의 빈 자동 훅 정책과 별도 표면 | 두 provider 하네스를 함께 정비하는 요청 |
+| retired CE run core | 기존 `_workspace/` 판독 호환만 유지 | 과거 run 호환 폐기 또는 마이그레이션 요청 |

@@ -1,5 +1,7 @@
 # Clarus-Equation Codex rules
 
+시작 지도: 이론·논문·원장은 `paper/README.md`, Codex 구조·명령·알려진 부채는 `.codex/README.md`에서 목적에 맞는 다음 경로만 읽는다.
+
 ## Default: direct implementation
 
 - For ordinary code, test, documentation, and harness work: inspect the target, make the smallest scoped change, and run one focused validation.
@@ -16,6 +18,7 @@
 - FULL/LOCK (explicit request only): full pytest, release gates, scientific stages, or irreversible V5 workflows.
 
 For pytest, disable the cache provider and use a unique temporary basetemp outside the repository. Never run an irreversible scientific stage as a routine validation.
+Harness changes start with `.codex/hooks/python.cmd harness`.
 
 ## Windows Python execution
 
@@ -35,7 +38,7 @@ For pytest, disable the cache provider and use a unique temporary basetemp outsi
 
 CE 이론 전체를 분석·요약·설명하라는 요청(예: "논문 전체 분석", "어떤 이론인지 설명")을 받으면 다음 규약을 따른다.
 
-1. `docs/5_유도/00_선택과_접힘.md`를 먼저 읽고, 물리 서사 3단 — **끼임(환경이 강제하는 선택) → 접힘(비선택 성분의 보존) → 암흑 표현(접힌 에너지의 우주론 readout)** — 을 분석의 골격으로 삼는다. 수치 사슬($\alpha_s \to \Omega$)만 떼어 이론을 특징짓지 않는다.
+1. `paper/5_유도/00_선택과_접힘.md`를 먼저 읽고, 물리 서사 3단 — **끼임(환경이 강제하는 선택) → 접힘(비선택 성분의 보존) → 암흑 표현(접힌 에너지의 우주론 readout)** — 을 분석의 골격으로 삼는다. 수치 사슬($\alpha_s \to \Omega$)만 떼어 이론을 특징짓지 않는다.
 2. 태그 체계가 물리 사상을 `[공리]`/`[미완성]`으로 격리하는 것은 약점의 자백이 아니라 **의도된 감사 규율**이다. 분석 보고는 항상 네 층을 함께 제시한다: 동기 서사(공리 묶음) / 조건부 정리 / 채택 공리 / 미완성 다리.
 3. 관측 근접을 증거로 승격하지 않되, 메커니즘 서사를 생략한 채 경험식 목록만으로 이론을 "수치 우연의 모음"으로 특징짓지도 않는다. 두 방향 모두 오독이다.
 

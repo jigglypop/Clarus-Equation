@@ -19,7 +19,7 @@ OBSERVATION_MANIFEST_PATH = ROOT / "benchmarks" / "cosmology" / "observations_v1
 
 # Compatibility boundary retained after removal of the reality_stone runtime.
 # The authoritative provenance and distinction from normalized scientific
-# densities live in docs/검증_원장/상수_코어_원장.md §2.3.
+# densities live in paper/검증_원장/상수_코어_원장.md §2.3.
 LEGACY_ROUNDED_RUNTIME_RATIOS = (0.0487, 0.2623, 0.6891)
 
 

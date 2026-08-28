@@ -749,7 +749,7 @@ fn check(dir: &Path, stage: &str) -> Result<(), String> {
 }
 
 // The workspace keeps a compact handoff, while a narrative manuscript is an
-// ordered chapter assembly under docs/. This gate prevents run folders from
+// ordered chapter assembly under paper/. This gate prevents run folders from
 // accumulating duplicate papers and verifies the assembled manuscript rather
 // than forcing every chapter into one oversized file.
 fn validate_final_handoff(dir: &Path, problems: &mut Vec<String>) {
@@ -760,7 +760,7 @@ fn validate_final_handoff(dir: &Path, problems: &mut Vec<String>) {
     let handoff_chars = text.chars().filter(|c| !c.is_whitespace()).count();
     if handoff_chars > 8_000 {
         problems.push(format!(
-            "{FINAL}: run 인계 기록이 너무 깁니다({handoff_chars}자). 논문 서사는 docs/ 조립 논문의 해당 장으로 옮기십시오"
+            "{FINAL}: run 인계 기록이 너무 깁니다({handoff_chars}자). 논문 서사는 paper/ 조립 논문의 해당 장으로 옮기십시오"
         ));
     }
 
@@ -775,7 +775,7 @@ fn validate_final_handoff(dir: &Path, problems: &mut Vec<String>) {
         .collect();
     if pointers.len() != 1 {
         problems.push(format!(
-            "{FINAL}: `DOCS_PAPER: docs/<분야>/<논문>/00_논문목차.md` 연결은 정확히 하나여야 합니다"
+            "{FINAL}: `DOCS_PAPER: paper/<분야>/<논문>/00_논문목차.md` 연결은 정확히 하나여야 합니다"
         ));
         return;
     }
@@ -784,39 +784,39 @@ fn validate_final_handoff(dir: &Path, problems: &mut Vec<String>) {
     let components: Vec<_> = relative_path.components().collect();
     if relative_path.is_absolute()
         || components.len() != 4
-        || components[0].as_os_str() != "docs"
+        || components[0].as_os_str() != "paper"
         || !components
             .iter()
             .all(|component| matches!(component, std::path::Component::Normal(_)))
         || relative_path.file_name().and_then(|value| value.to_str()) != Some("00_논문목차.md")
     {
         problems.push(format!(
-            "{FINAL}: DOCS_PAPER는 docs/ 내부 논문 폴더의 00_ 목차 Markdown이어야 합니다: {relative}"
+            "{FINAL}: DOCS_PAPER는 paper/ 내부 논문 폴더의 00_ 목차 Markdown이어야 합니다: {relative}"
         ));
         return;
     }
     let Some(repo_root) = dir
         .ancestors()
-        .find(|ancestor| ancestor.join("docs").is_dir())
+        .find(|ancestor| ancestor.join("paper").is_dir())
     else {
-        problems.push(format!("{FINAL}: 저장소 docs/ 루트를 찾지 못했습니다"));
+        problems.push(format!("{FINAL}: 저장소 paper/ 루트를 찾지 못했습니다"));
         return;
     };
     let paper = repo_root.join(relative_path);
     if !paper.is_file() {
         problems.push(format!(
-            "{FINAL}: 연결한 docs 정본이 없습니다: {}",
+            "{FINAL}: 연결한 paper 정본이 없습니다: {}",
             paper.display()
         ));
         return;
     }
-    let docs_root = repo_root.join("docs");
-    match (fs::canonicalize(&docs_root), fs::canonicalize(&paper)) {
-        (Ok(canonical_docs), Ok(canonical_paper))
-            if canonical_paper.starts_with(&canonical_docs) => {}
+    let paper_root = repo_root.join("paper");
+    match (fs::canonicalize(&paper_root), fs::canonicalize(&paper)) {
+        (Ok(canonical_paper_root), Ok(canonical_paper))
+            if canonical_paper.starts_with(&canonical_paper_root) => {}
         (Ok(_), Ok(_)) => {
             problems.push(format!(
-                "{FINAL}: DOCS_PAPER가 docs/ 밖의 실제 경로를 가리킵니다: {relative}"
+                "{FINAL}: DOCS_PAPER가 paper/ 밖의 실제 경로를 가리킵니다: {relative}"
             ));
             return;
         }
@@ -1344,13 +1344,13 @@ mod tests {
     fn valid_handoff(paper_name: &str, integration: &str) -> String {
         format!(
             "# 연구 run 인계\n\nStatus: COMPLETE\n\n\
-             DOCS_PAPER: docs/뇌/{paper_name}/00_논문목차.md\n\n## 결론\n계산·감사 결과를 정본에 반영했다.\n\n\
+             DOCS_PAPER: paper/뇌/{paper_name}/00_논문목차.md\n\n## 결론\n계산·감사 결과를 정본에 반영했다.\n\n\
              ## epoch 통합\n{integration}\n"
         )
     }
 
-    fn write_docs_paper(root: &Path, paper_name: &str) {
-        let paper = root.join("docs/뇌").join(paper_name);
+    fn write_paper_entry(root: &Path, paper_name: &str) {
+        let paper = root.join("paper/뇌").join(paper_name);
         fs::create_dir_all(&paper).unwrap();
         let detail = "연구 질문과 근거, 계산 절차, 수치 해석, 주장 경계를 독자가 독립적으로 따라갈 수 있게 설명한다. ".repeat(8);
         fs::write(
@@ -1455,7 +1455,7 @@ mod tests {
         let ws = tmp("chain");
         let dir = ws.join("run-a");
         fs::create_dir_all(&dir).unwrap();
-        write_docs_paper(&ws, "paper");
+        write_paper_entry(&ws, "paper");
         fs::write(ws.join(ACTIVE), "run-a").unwrap();
         fs::write(dir.join(FINAL), "Status: COMPLETE\n").unwrap();
         assert!(check(&dir, "final").is_err(), "final alone must not pass");
@@ -1494,7 +1494,7 @@ mod tests {
         let ws = tmp("blocked-final");
         let dir = ws.join("run-blocked");
         fs::create_dir_all(&dir).unwrap();
-        write_docs_paper(&ws, "negative-paper");
+        write_paper_entry(&ws, "negative-paper");
         fs::write(ws.join(ACTIVE), "run-blocked").unwrap();
         fs::write(dir.join(CONTRACT), "Status: COMPLETE\n").unwrap();
         for name in LANES {
@@ -1522,7 +1522,7 @@ mod tests {
     }
 
     #[test]
-    fn final_requires_ordered_chapters_under_docs() {
+    fn final_requires_ordered_chapters_under_paper() {
         let root = tmp("final-paper");
         let dir = root.join("run");
         fs::create_dir_all(&dir).unwrap();
@@ -1534,14 +1534,14 @@ mod tests {
             problems
                 .iter()
                 .any(|problem| problem.contains("DOCS_PAPER")),
-            "인계 기록은 docs 정본을 가리켜야 한다"
+            "인계 기록은 paper 정본을 가리켜야 한다"
         );
 
-        fs::create_dir_all(root.join("docs")).unwrap();
-        fs::write(root.join("docs/paper.md"), "# 단일 파일 논문\n").unwrap();
+        fs::create_dir_all(root.join("paper")).unwrap();
+        fs::write(root.join("paper/paper.md"), "# 단일 파일 논문\n").unwrap();
         fs::write(
             &report,
-            "# 인계\n\nStatus: COMPLETE\n\nDOCS_PAPER: docs/paper.md\n",
+            "# 인계\n\nStatus: COMPLETE\n\nDOCS_PAPER: paper/paper.md\n",
         )
         .unwrap();
         problems.clear();
@@ -1551,15 +1551,15 @@ mod tests {
             "단일 루트 논문 대신 장 조립 목차를 요구해야 한다"
         );
 
-        fs::create_dir_all(root.join("docs/뇌/bad-paper")).unwrap();
+        fs::create_dir_all(root.join("paper/뇌/bad-paper")).unwrap();
         fs::write(
-            root.join("docs/뇌/bad-paper/00_논문목차.md"),
+            root.join("paper/뇌/bad-paper/00_논문목차.md"),
             "# 잘못된 목차\n\n## 초록\n요약\n\n## 논문 조립 순서\n\n1. [밖의 장](../01_밖.md)\n2. [없는 장](02_없음.md)\n",
         )
         .unwrap();
         fs::write(
             &report,
-            "# 인계\n\nStatus: COMPLETE\n\nDOCS_PAPER: docs/뇌/bad-paper/00_논문목차.md\n",
+            "# 인계\n\nStatus: COMPLETE\n\nDOCS_PAPER: paper/뇌/bad-paper/00_논문목차.md\n",
         )
         .unwrap();
         problems.clear();
@@ -1571,14 +1571,14 @@ mod tests {
             "목차 폴더 밖의 장 링크를 거부해야 한다"
         );
 
-        write_docs_paper(&root, "paper");
+        write_paper_entry(&root, "paper");
         fs::write(&report, valid_handoff("paper", "통합 완료")).unwrap();
         problems.clear();
         validate_final_handoff(&dir, &mut problems);
-        assert!(problems.is_empty(), "유효한 docs 조립 논문: {problems:?}");
+        assert!(problems.is_empty(), "유효한 paper 조립 논문: {problems:?}");
 
         fs::write(
-            root.join("docs/뇌/paper/04_남은사본.md"),
+            root.join("paper/뇌/paper/04_남은사본.md"),
             "# 목차에 없는 오래된 장\n\n이 파일은 연결되지 않은 사본이다. ".repeat(20),
         )
         .unwrap();
@@ -1590,12 +1590,12 @@ mod tests {
                 .any(|problem| problem.contains("연결되지 않은 번호 장")),
             "목차에 없는 번호 장 사본을 거부해야 한다"
         );
-        fs::remove_file(root.join("docs/뇌/paper/04_남은사본.md")).unwrap();
+        fs::remove_file(root.join("paper/뇌/paper/04_남은사본.md")).unwrap();
 
         fs::write(
             &report,
             format!(
-                "{}\nDOCS_PAPER: docs/뇌/paper/00_논문목차.md\n",
+                "{}\nDOCS_PAPER: paper/뇌/paper/00_논문목차.md\n",
                 valid_handoff("paper", "통합 완료")
             ),
         )
@@ -1713,7 +1713,7 @@ mod tests {
         assert!(active_epoch_problem(&dir).unwrap().contains("IN_PROGRESS"));
 
         fs::write(route.join("report.md"), "Status: COMPLETE\n").unwrap();
-        write_docs_paper(&ws, "pivot-paper");
+        write_paper_entry(&ws, "pivot-paper");
         fs::write(
             dir.join(FINAL),
             valid_handoff(

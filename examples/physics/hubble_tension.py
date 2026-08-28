@@ -46,7 +46,7 @@ wording is retracted):
   systematics : constant c_s = c/sqrt(3) vs baryon-loaded c_s(a) shifts
                 Delta H_0 from +5.56 to +5.95. Honest report:
                   Delta H_0 = +5.6 +/- 0.4 (model)  vs observed ~ +5.6
-  two epsilons: docs/참조/epsilon_제1원리_유도.md separates eps_* (= e^-1,
+  two epsilons: paper/참조/epsilon_제1원리_유도.md separates eps_* (= e^-1,
                 universal fixed point) from eps_obs ( = (Om_L-Om_m)/(Om_L+Om_m),
                 cosmological asymmetry) and forbids conflating them. With
                 canonical ratios eps_obs = 0.3781 and Om_m = (1-eps_obs)/2

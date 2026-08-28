@@ -1,6 +1,6 @@
 """Fraction-layer regressions for the hard-constraint and uncertainty packages.
 
-Executable companion of ``docs/9_등호이전/05k`` and ``05l``.  Monte Carlo
+Executable companion of ``paper/9_등호이전/05k`` and ``05l``.  Monte Carlo
 estimates with fixed seeds verify, on the finite/free-mode model:
 
 - threshold scaling (05k theorem 3.2): a fixed survival fraction forces

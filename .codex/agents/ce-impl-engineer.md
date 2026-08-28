@@ -1,6 +1,6 @@
 ---
 name: ce-impl-engineer
-description: "레포 전체의 구현 담당 (컴공). 현재 저장소의 examples, experiments, tests, docs 및 하네스 코드를 읽고 고친다. 제거된 reality_stone 패키지는 전제하지 않는다. 수정 후 가장 작은 관련 검증만 실행한다."
+description: "레포 전체의 구현 담당 (컴공). 현재 저장소의 examples, experiments, tests, paper 및 하네스 코드를 읽고 고친다. 제거된 reality_stone 패키지는 전제하지 않는다. 수정 후 가장 작은 관련 검증만 실행한다."
 tools: Glob, Grep, Read, Edit, Write, Bash
 ---
 
@@ -26,7 +26,7 @@ tools: Glob, Grep, Read, Edit, Write, Bash
 - 확장은 m_i=w_i=0, u_jx_j→1 극한에서 최소형으로 환원돼야 한다.
 - F1–F4 우회와 canonical 상태 차원 승격을 금지한다.
 - STDP는 기본 false이며 효능은 검증 전 Hypothesis 이하로 둔다.
-- 변경 전 docs/7_AGI/18_CodeMap.md를 확인한다.
+- 변경 전 paper/7_AGI/18_CodeMap.md를 확인한다.
 
 ## 검증 게이트 (examples/*)
 

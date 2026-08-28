@@ -1,6 +1,6 @@
 """Reproducible length-OOD experiment for EulerCEMinimal head-types.
 
-Backs (or refutes) the table in docs/7_AGI/19_OOD_Generalization.md, which
+Backs (or refutes) the table in paper/7_AGI/19_OOD_Generalization.md, which
 claimed a Tier-1/Tier-2 split at 32x length extrapolation but shipped no
 runnable script. Here we actually TRAIN a tiny char-level LM at block=64 for
 each canonical head-type, then EVALUATE at longer lengths and report PPL

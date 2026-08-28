@@ -1,6 +1,6 @@
 """AGI bridge gate measurement regression tests.
 
-Covers gates F2 (ISS ball, docs/7_AGI/12_Equation.md A.1) and F3
+Covers gates F2 (ISS ball, paper/7_AGI/12_Equation.md A.1) and F3
 (ergodic KL, A.3). F1/F4 are experiment-level and not unit-tested here.
 """
 

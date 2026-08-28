@@ -1,6 +1,6 @@
 """Audit whether alpha_s is a free input or a CE output.
 
-Claim under test (docs/경로적분.md 17.3.1): alpha_s is not an independent free
+Claim under test (paper/경로적분.md 17.3.1): alpha_s is not an independent free
 parameter. It is fixed by two CE-internal relations together with standard QED
 running:
 

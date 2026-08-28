@@ -15,6 +15,7 @@ from examples.physics.quantum_instrument_record_kernel import (
     RecordInstrument,
     apply_nonselective_channel,
     build_energy_resolved_instrument_tree,
+    construct_energy_conserving_collision_instrument,
     construct_luders_energy_instrument,
 )
 
@@ -81,6 +82,27 @@ def test_qnd_instrument_derives_born_kernel_and_harmonic_energy_tree() -> None:
         math.isclose(balance.energy_residual, 0.0, abs_tol=1.0e-12)
         for balance in certificate.flow.balances
     )
+    record = certificate.record_algebra
+    assert record.orthogonal_history_basis
+    assert record.commutative_diagonal_algebra
+    assert record.append_only_history_labels
+    assert not record.physical_pointer_dynamics_derived
+    assert [history.path for history in record.histories] == [
+        ('root', 'A', 'A3'),
+        ('root', 'A', 'A5'),
+        ('root', 'B', 'B3'),
+        ('root', 'B', 'B5'),
+    ]
+    assert np.allclose(
+        [history.probability for history in record.histories],
+        [0.3, 0.15, 0.1, 0.45],
+    )
+    assert math.isclose(record.probability('A'), 0.45)
+    assert math.isclose(record.probability('B'), 0.55)
+    assert record.global_isometry_residual < 1.0e-12
+    assert record.probability_normalization_residual < 1.0e-12
+    assert record.max_history_probability_residual < 1.0e-12
+    assert record.max_prefix_probability_residual < 1.0e-12
 
 
 def test_luders_constructor_derives_coarsest_energy_pvm_and_sharp_record() -> None:
@@ -150,6 +172,36 @@ def test_luders_rejects_ambiguous_near_degeneracy_until_resolved() -> None:
     assert resolved.max_spectral_cluster_width == 0.0
 
 
+def test_energy_certificate_is_invariant_under_energy_unit_rescaling() -> None:
+    root_density = np.diag([0.4, 0.6])
+    receipts = []
+    for unit_scale in (1.0e-18, 1.0, 1.0e18):
+        hamiltonian = unit_scale * np.diag([2.0, 5.0])
+        construction = construct_luders_energy_instrument(hamiltonian)
+        certificate = build_energy_resolved_instrument_tree(
+            hamiltonian,
+            root_density,
+            (construction.instrument,),
+        )
+        receipts.append(
+            (
+                tuple(edge.probability for edge in certificate.transitions),
+                certificate.terminal_energy_resolved,
+                certificate.record_algebra.commutative_diagonal_algebra,
+            )
+        )
+        assert math.isclose(
+            construction.hamiltonian_energy_scale,
+            5.0 * unit_scale,
+        )
+        assert construction.max_relative_hamiltonian_commutator_residual < 1.0e-12
+        assert construction.max_relative_eigenprojector_residual < 1.0e-12
+        assert certificate.max_relative_energy_channel_residual < 1.0e-12
+        assert certificate.max_relative_qnd_commutator_residual < 1.0e-12
+
+    assert receipts == [receipts[0], receipts[0], receipts[0]]
+
+
 def test_luders_tree_skips_subthreshold_records_without_dropping_completeness() -> None:
     hamiltonian = np.diag([2.0, 5.0])
     root_density = np.diag([1.0 - 1.0e-12, 1.0e-12])
@@ -167,6 +219,17 @@ def test_luders_tree_skips_subthreshold_records_without_dropping_completeness() 
     assert math.isclose(certificate.max_completeness_residual, 0.0)
     assert certificate.support_probability_tolerance == 1.0e-10
     assert certificate.terminal_energy_resolved
+    assert len(certificate.record_algebra.histories) == 2
+    assert [
+        history.supported_by_root
+        for history in certificate.record_algebra.histories
+    ] == [True, False]
+    assert math.isclose(
+        certificate.record_algebra.histories[1].probability,
+        1.0e-12,
+        rel_tol=1.0e-5,
+    )
+    assert certificate.record_algebra.global_isometry_residual < 1.0e-12
 
 
 def test_luders_pvm_does_not_make_degenerate_qnd_instrument_unique() -> None:
@@ -289,7 +352,10 @@ def test_energy_changing_instrument_cannot_receive_qnd_certificate() -> None:
         dtype=np.complex128,
     )
 
-    with pytest.raises(ValueError, match='preserve the declared total Hamiltonian'):
+    with pytest.raises(
+        ValueError,
+        match='preserve the declared Hamiltonian-plus-transfer ledger',
+    ):
         build_energy_resolved_instrument_tree(
             hamiltonian,
             root_density,
@@ -303,6 +369,102 @@ def test_energy_changing_instrument_cannot_receive_qnd_certificate() -> None:
                     ),
                 ),
             ),
+        )
+
+
+def _excitation_swap_collision() -> np.ndarray:
+    collision = np.eye(4, dtype=np.complex128)
+    collision[1, 1] = 0.0
+    collision[2, 2] = 0.0
+    collision[1, 2] = 1.0
+    collision[2, 1] = 1.0
+    return collision
+
+
+def test_energy_conserving_collision_closes_system_plus_record_ledger() -> None:
+    system_hamiltonian = np.diag([1.0, 2.0])
+    ancilla_hamiltonian = np.diag([0.0, 1.0])
+    construction = construct_energy_conserving_collision_instrument(
+        system_hamiltonian,
+        ancilla_hamiltonian,
+        _excitation_swap_collision(),
+    )
+
+    assert construction.branch_energy_transfers == (0.0, 1.0)
+    assert construction.relative_total_energy_commutator_residual < 1.0e-12
+    assert construction.relative_ledger_identity_residual < 1.0e-12
+    assert construction.kraus_completeness_residual < 1.0e-12
+    assert not construction.physical_pointer_persistence_derived
+
+    certificate = build_energy_resolved_instrument_tree(
+        system_hamiltonian,
+        np.diag([0.25, 0.75]),
+        (construction.instrument,),
+        require_qnd=False,
+    )
+
+    assert not certificate.qnd_required
+    assert certificate.max_relative_qnd_commutator_residual > 0.0
+    assert certificate.terminal_energy_resolved
+    assert math.isclose(certificate.state('root').energy_expectation, 1.75)
+    assert math.isclose(
+        certificate.state('ancilla-energy-0').system_energy_expectation,
+        1.0,
+    )
+    assert math.isclose(
+        certificate.state('ancilla-energy-0').cumulative_energy_transfer,
+        0.0,
+    )
+    assert math.isclose(
+        certificate.state('ancilla-energy-0').energy_expectation,
+        1.0,
+    )
+    assert math.isclose(
+        certificate.state('ancilla-energy-1').system_energy_expectation,
+        1.0,
+    )
+    assert math.isclose(
+        certificate.state('ancilla-energy-1').cumulative_energy_transfer,
+        1.0,
+    )
+    assert math.isclose(
+        certificate.state('ancilla-energy-1').energy_expectation,
+        2.0,
+    )
+    assert math.isclose(certificate.flow.initial_energy, 1.75)
+    assert math.isclose(certificate.flow.terminal_energy, 1.75)
+    assert np.allclose(
+        [history.probability for history in certificate.record_algebra.histories],
+        [0.25, 0.75],
+    )
+
+
+def test_collision_transfer_receipt_does_not_make_energy_exchange_qnd() -> None:
+    construction = construct_energy_conserving_collision_instrument(
+        np.diag([1.0, 2.0]),
+        np.diag([0.0, 1.0]),
+        _excitation_swap_collision(),
+    )
+
+    with pytest.raises(ValueError, match='QND'):
+        build_energy_resolved_instrument_tree(
+            np.diag([1.0, 2.0]),
+            np.diag([0.25, 0.75]),
+            (construction.instrument,),
+        )
+
+
+def test_non_energy_conserving_collision_cannot_receive_transfer_receipt() -> None:
+    flip_ancilla = np.kron(
+        np.eye(2, dtype=np.complex128),
+        np.array([[0.0, 1.0], [1.0, 0.0]], dtype=np.complex128),
+    )
+
+    with pytest.raises(ValueError, match='conserve total energy'):
+        construct_energy_conserving_collision_instrument(
+            np.diag([1.0, 2.0]),
+            np.diag([0.0, 1.0]),
+            flip_ancilla,
         )
 
 

@@ -78,6 +78,13 @@ def _run_python(arguments: list[str], env: dict[str, str]) -> int:
     return subprocess.run([sys.executable, "-B", *arguments], env=env, check=False).returncode
 
 
+def _run_harness(env: dict[str, str]) -> int:
+    checker = REPO_ROOT / ".codex" / "hooks" / "repository_harness.py"
+    return subprocess.run(
+        [sys.executable, "-B", str(checker)], env=env, check=False
+    ).returncode
+
+
 def _run_source(arguments: list[str]) -> int:
     """Parse Python sources in memory without creating bytecode or cache files."""
 
@@ -86,7 +93,7 @@ def _run_source(arguments: list[str]) -> int:
         REPO_ROOT / "tests",
         REPO_ROOT / "examples",
         REPO_ROOT / "experiments",
-        REPO_ROOT / "docs",
+        REPO_ROOT / "paper",
     ]
     files: list[Path] = []
     for target in targets:
@@ -144,13 +151,19 @@ def main(arguments: list[str]) -> int:
         if forwarded:
             raise RuntimeError("doctor mode takes no arguments.")
         return _doctor(env)
+    if mode == "harness":
+        if forwarded:
+            raise RuntimeError("harness mode takes no arguments.")
+        return _run_harness(env)
     if mode == "python":
         return _run_python(forwarded, env)
     if mode == "source":
         return _run_source(forwarded)
     if mode == "pytest":
         return _run_pytest(forwarded, env)
-    raise RuntimeError(f"Unknown mode {mode!r}; expected doctor, source, python, or pytest.")
+    raise RuntimeError(
+        f"Unknown mode {mode!r}; expected doctor, harness, source, python, or pytest."
+    )
 
 
 if __name__ == "__main__":
