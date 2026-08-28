@@ -42,8 +42,6 @@ Windows agent 실행에서는 먼저 `.codex/hooks/python.cmd doctor`를 확인�
 - 동일 byte에서 이미 green인 명령은 다시 실행하지 않는다. 다른 레인의 재현 가능한 green 로그가 있으면 인용한다.
 
 ## 해석 규칙
-
-- 뇌/AGI 검증은 `.codex/harnesses/real_brain_equation_discovery_loop.md`의 생물 baseline 재현, measurement-model parity, 사전 고정 held-out residual, 대안 모델, falsifier, matched control과 CE 추가항 ablation을 우선 보고한다. post-hoc refit은 검증 통과가 아니라 calibration artifact이며 새 판본 계약과 독립 confirmation을 요구한다.
 - 무차원 검사와 수치 일치는 구현 무결성의 증거일 뿐 물리적 참의 증명이 아니다.
 - 부호 있는 sigma 잔차를 보존하고 공분산·상류 입력 오차의 포함 여부를 명시한다.
 - canonical 문서에는 하네스의 상태 문자열을 판정 배지처럼 복사하지 않는다.

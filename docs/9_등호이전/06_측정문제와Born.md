@@ -108,6 +108,22 @@ $$
 한꺼번에 고정한다. Gibbs formula $\mu_\beta$는 classical probability
 재가중만 정의하므로, 그 자체로 quantum instrument가 아니다.
 
+supplied finite $H$의 coarsest energy PVM에는 Lüders instrument라는
+QD-M5-J1 realization이 있다. 양의 Born weight의 posterior는 energy-only sharp
+record를 주며, 일반 chosen QND tree는 QD-M5-E--F의 Born posterior와 energy
+martingale을 기록 kernel로 사용한다. 그러나 같은 nonselective CPTP channel에는
+서로 다른 instrument와 unravelling이 대응할 수 있다. 또한 $H=E\mathbf1$ 안의
+swap unitary는 같은 $H$와 sharp energy 조건만으로 channel이나 genealogy가
+정해지지 않음을 보인다. 따라서
+[CE 브리지 §4.2](05_CE_브리지.md#42-lüders-energy-record와-일반-qnd-tree)의
+canonical성은 supplied $H$의 coarsest PVM에만 한정된다.
+여기서 sharpness는 해석적 PVM의 $p_e>0$ posterior에 대한 정확한 명제다. 수치
+구현은 exact-equal eigenvalue만 cluster로 인정하고 near-degenerate distinct
+value는 tolerance 안이어도 거부하며, cluster 폭ㆍeigenprojector residual 및
+support threshold를 certificate에 남긴다. 따라서 numerical tree에서
+$0<p_e\leq\texttt{support\_probability\_tolerance}$를 생략하는 규칙을 해석적
+$p_e=0$과 같은 진술로 읽지 않는다.
+
 ## 4. Branch-dependent reweighting의 경계
 
 branch별 가중치는 이미 어떤 branch decomposition과 prior가 주어졌을 때만 정의된다. Born weight를 전제한 prior로 Born weight를 다시 얻으면 순환 논증이 된다.
