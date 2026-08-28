@@ -37,7 +37,7 @@ CE 문서는 하나의 수치식이 아니라 서로 다른 이론 층의 모음
 | 순수 수학 | 함수방정식·외대수·고정점 | 자족 증명 |
 | 공변 장론 | $Z_2$ singlet-portal EFT | 대칭·안정성·운동방정식·stress 보존 |
 | Euclidean 적분 | scalar--Higgs bosonic 유한 격자 cutoff | partition function·모멘트의 존재 |
-| 양자-고전 bridge | reduced dynamics | 조건 목록만 있으며 미시 유도는 열림 |
+| 양자-고전 bridge | finite instrumentㆍenergy-conserving collisionㆍ표지된 기록 | 추상 고전 이력 장부와 계+방출 에너지 장부; 물리 pointerㆍ시공간 사상은 열림 |
 | 확률 코어 | 다형 Poisson offspring | 최소 소멸 고정점·균일 축약 |
 | 우주론 | GR+canonical scalar·dust+$\Lambda$·inflation branch | 배경식·no-go·조건부 해 |
 | flavor | Yukawa·Majorana·Koide toy potential | 존재구성·기하 동치 |
@@ -297,6 +297,17 @@ flavor와 질량 branch는 대칭·parameterization·측정 비교의 의존성�
 
 CE에는 순수 수학, 공변 EFT, scalar--Higgs bosonic 유한 cutoff 측도,
 다형 분지과정, 조건부 GR·flavor 모형으로 살릴 수 있는 구조가 있다.
+양자-고전 bridge에서는 유한 instrument의 결과열을 가환하는 추상 이력 장부로
+구성하는 정리와, supplied energy-conserving collision에서 계와 방출 기록을
+함께 세는 에너지 장부까지는 닫혔다. 두 결과와, supplied mode-to-phase-space
+map 아래의 두 채널 dust/한-slice FLRW 존재 witness는
+[선택과 접힘 §0.3.1](5_유도/00_선택과_접힘.md#031-기록에서-먼저-얻는-보존된-dust-자료)과
+[CE 브리지 §4.2](9_등호이전/05_CE_브리지.md#42-lüders-energy-record와-일반-qnd-tree)에
+나뉘어 적고, 최근 연구의 맥락과 남은 경계는
+[10장](6_최신_연구/10_플랑크_렌더링_경계와_0D_GR_브리지.md#달성한-조건부-구성--qd-m5-j2a부터-qd-m5-j2c)에,
+정확한 형식 지위는 [양자 보존 원장](검증_원장/참조_양자_보존_원장.md)에 둔다.
+이 안내에는 본문을 반복하지 않는다.
+
 가장 큰 열린 문제는
 
 $$
@@ -307,4 +318,6 @@ $$
 \text{cosmological readout}
 $$
 
-의 두 bridge다. 현재 정본에 사전 고정된 독립 관측 예측은 없다.
+의 두 bridge다. 특히 durable physical pointer를 공변 위치ㆍ질량껍질 자료로
+보내고, $\eta$와 readoutㆍ연속 진화를 선택하는 연결은 아직 미완성이다. 현재
+정본에 사전 고정된 독립 관측 예측은 없다.
