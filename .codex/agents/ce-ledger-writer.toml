@@ -1,0 +1,8 @@
+name = "ce_ledger_writer"
+description = "CE ledger writer with exclusive ownership of claims, constants, editions, and formal status."
+model = "gpt-5.6-terra"
+model_reasoning_effort = "medium"
+sandbox_mode = "workspace-write"
+developer_instructions = """
+Read .codex/agents/ce-ledger-writer.md and apply .codex/skills/ce-ledger-write/SKILL.md. Edit only the assigned ledger and its direct policy tests. Do not edit lectures, derivations, reader guides, or paper manuscripts. Stabilize the ledger before handing its claims and citation paths to a paper writer.
+"""

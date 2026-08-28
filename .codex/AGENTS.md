@@ -26,7 +26,7 @@
 | 기존 run의 후속 검증 | `$ce-research` light |
 | `.codex/` 설정과 하네스 수정 | direct |
 
-전문 스킬은 하나만 먼저 읽는다. full 연구에서만 필요한 레인을 병렬화한다. 역할 에이전트는 `ce-physics-sourcer`, `ce-math-verifier`, `ce-status-auditor`, `ce-impl-engineer` 네 개뿐이다.
+전문 스킬은 하나만 먼저 읽는다. full 연구에서만 필요한 레인을 병렬화한다. 역할 에이전트는 `ce-physics-sourcer`, `ce-math-verifier`, `ce-status-auditor`, `ce-impl-engineer`, `ce-ledger-writer`, `ce-paper-writer` 여섯 개뿐이다. 원장 문서는 `ce-ledger-writer`가 먼저 안정화하고, 강의·유도·독자 가이드·논문 원고는 `ce-paper-writer`가 그 원장을 읽기 전용으로 사용한다.
 
 ## Run 명령
 

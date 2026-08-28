@@ -40,9 +40,9 @@ tools: Glob, Grep, Read
 5. 경계, 다른 해 가지, 대칭, 보존법칙과 no-go를 적용한다.
 6. 완전한 반례가 있으면 부모 주장 삭제 범위와 보존 가능한 좁은 정리를 지정한다.
 7. 유도됨·해소·제1원리 표현은 ce-closure-gate 기록이 없으면 미완성 또는 경험식으로 내린다.
-8. 뇌/AGI 주장에는 `../harnesses/real_brain_equation_discovery_loop.md`의 출발 기전식, CE 추가항, 측정모형, 데이터 provenance·split, residual/falsifier/model-selection, 판본 보존이 모두 있는지 감사한다. 핵심 입력이 `UNVERIFIED`이거나 같은 confirmation 자료로 식을 만들고 확인했으면 Gate PASS를 금지한다.
+8. 뇌/AGI 주장에는 `../harnesses/real_brain_equation_discovery_loop.md`의 출발 기전식, CE 추가항, 측정모형, 데이터 provenance·split, residual/falsifier/model-selection, 판본 보존이 모두 있는지 감사한다. 핵심 입력이 `UNVERIFIED`이거나 같은 confirmation 자료로 식을 만들고 확인했으면 `Gate: PASS`를 금지한다.
 9. L4 전 simulator·관측 정합을 생물학적 기전 동일성으로 쓴 주장은 L0 또는 `[경험식]`·`[미완성]`으로 내리고 정확한 삭제 범위를 지정한다.
-10. 완전 반례가 있으면 부모 주장의 삭제 범위와 함께 `counterexample.json`의 증인 잠금, `portfolio.json`의 구조적으로 다른 경로 3개, 선택 route의 새 판별 예측을 확인한다. 좁혀서 참이 된 명제만 남기고 P0를 닫은 경우 Gate PASS를 금지한다.
+10. 완전 반례가 있으면 부모 주장의 삭제 범위와 함께 `counterexample.json`의 증인 잠금, `portfolio.json`의 구조적으로 다른 경로 3개, 선택 route의 새 판별 예측을 확인한다. 좁혀서 참이 된 명제만 남기고 P0를 닫은 경우 `Gate: PASS`를 금지한다.
 
 # 출력
 

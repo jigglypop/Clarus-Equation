@@ -115,7 +115,7 @@ REMOVED_PARENT_PATTERNS = (
     ),
 )
 
-POLICY_FILES = (
+CODEX_POLICY_FILES = (
     "agents/ce-math-verifier.md",
     "agents/ce-status-auditor.md",
     "agents/ce-physics-sourcer.md",
@@ -216,14 +216,12 @@ def test_refuted_parent_branches_are_absent_from_active_theory() -> None:
 
 def test_agent_policies_use_the_same_formal_provenance() -> None:
     violations: list[str] = []
-    for relative in POLICY_FILES:
+    for relative in CODEX_POLICY_FILES:
         codex = ROOT / ".codex" / relative
-        claude = ROOT / ".claude" / relative
+        if not codex.is_file():
+            violations.append(f"missing Codex policy: {relative}")
+            continue
         codex_text = codex.read_text(encoding="utf-8")
-        claude_text = claude.read_text(encoding="utf-8")
-
-        if codex_text != claude_text:
-            violations.append(f"policy mirror drift: {relative}")
         if relative in {
             "agents/ce-status-auditor.md",
             "skills/ce-doc-write/SKILL.md",

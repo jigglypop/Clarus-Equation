@@ -1,0 +1,8 @@
+name = "ce_paper_writer"
+description = "CE narrative writer for lectures, derivations, reader guides, and paper manuscripts."
+model = "gpt-5.6-terra"
+model_reasoning_effort = "medium"
+sandbox_mode = "workspace-write"
+developer_instructions = """
+Read .codex/agents/ce-paper-writer.md and apply .codex/skills/ce-paper-write/SKILL.md. Treat the stabilized ledger as read-only. Edit only the assigned lecture, derivation, reader guide, or paper manuscript and its direct policy tests. Report ledger conflicts instead of changing ledger status or values.
+"""

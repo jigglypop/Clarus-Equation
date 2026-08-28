@@ -12,6 +12,13 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 CLARUS_DIR = ROOT / "reality_stone" / "python" / "reality_stone" / "clarus"
 
+if not CLARUS_DIR.is_dir():
+    pytest.skip(
+        "legacy reality_stone dimensionless registry was removed; use the "
+        "current focused dimension checks and `.codex/hooks/python.cmd source`",
+        allow_module_level=True,
+    )
+
 
 def _load_standalone_module(name: str, filename: str):
     """Load a math gate without importing the torch-backed package facade."""

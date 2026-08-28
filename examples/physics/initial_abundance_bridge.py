@@ -29,6 +29,91 @@ class MatchingChannel:
         return self.composition * self.relative_event_energy * self.matching_efficiency
 
 
+@dataclass(frozen=True)
+class LogRatioIdentifiability:
+    """Local log-Jacobian audit for one matched density ratio.
+
+    The parameter order is ``q_left, q_right, epsilon_left, epsilon_right,
+    eta_left, eta_right``.  One observed ratio supplies one independent row,
+    so the unconstrained local map has rank one and a five-dimensional null
+    space.  Composition normalization or a microscopic matching law can reduce
+    that null space, but neither is supplied by the ratio itself.
+    """
+
+    density_ratio: float
+    parameter_order: tuple[str, ...]
+    log_jacobian: tuple[float, ...]
+    jacobian_rank: int
+    nullity: int
+    energy_efficiency_null_direction: tuple[float, ...]
+    role: str = "CONDITIONAL_IDENTIFIABILITY_THEOREM_NOT_ABUNDANCE_PREDICTION"
+
+
+def log_density_ratio_identifiability(
+    left: MatchingChannel,
+    right: MatchingChannel,
+) -> LogRatioIdentifiability:
+    """Return the exact local log-Jacobian and a matching degeneracy.
+
+    For positive channel entries,
+
+        log(rho_left/rho_right)
+        = log(q_left/q_right)
+        + log(epsilon_left/epsilon_right)
+        + log(eta_left/eta_right).
+
+    The returned null direction rescales the left relative event energy and
+    matching efficiency oppositely.  It therefore changes microscopic
+    matching inputs while leaving the physical-density ratio unchanged.
+    """
+
+    entries = (
+        left.composition,
+        right.composition,
+        left.relative_event_energy,
+        right.relative_event_energy,
+        left.matching_efficiency,
+        right.matching_efficiency,
+    )
+    if any(value <= 0.0 for value in entries):
+        raise ValueError("log-identifiability requires strictly positive entries")
+    return LogRatioIdentifiability(
+        density_ratio=matched_density_ratio(left, right),
+        parameter_order=(
+            "log_q_left",
+            "log_q_right",
+            "log_epsilon_left",
+            "log_epsilon_right",
+            "log_eta_left",
+            "log_eta_right",
+        ),
+        log_jacobian=(1.0, -1.0, 1.0, -1.0, 1.0, -1.0),
+        jacobian_rank=1,
+        nullity=5,
+        energy_efficiency_null_direction=(0.0, 0.0, 1.0, 0.0, -1.0, 0.0),
+    )
+
+
+def matching_degenerate_channel(
+    channel: MatchingChannel,
+    *,
+    energy_rescaling: float,
+) -> MatchingChannel:
+    """Move along an exact energy-efficiency degeneracy of the bridge."""
+
+    if not math.isfinite(energy_rescaling) or energy_rescaling <= 0.0:
+        raise ValueError("energy_rescaling must be finite and positive")
+    return MatchingChannel(
+        composition=channel.composition,
+        relative_event_energy=(
+            channel.relative_event_energy * energy_rescaling
+        ),
+        matching_efficiency=(
+            channel.matching_efficiency / energy_rescaling
+        ),
+    )
+
+
 def matched_density_ratio(left: MatchingChannel, right: MatchingChannel) -> float:
     """Initial physical-density ratio after the common n_event*E scale cancels."""
 
@@ -81,4 +166,3 @@ def kinetic_vacuum_transfer_rate_shape(
     if not math.isfinite(argument):
         raise ValueError("gamma*tau must be finite")
     return amplitude * gamma * math.exp(-argument) * tau_dot
-

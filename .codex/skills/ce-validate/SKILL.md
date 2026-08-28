@@ -24,8 +24,6 @@ Windows agent 실행에서는 먼저 `.codex/hooks/python.cmd doctor`를 확인�
 
 `reality_stone` 제거 후 저장소 전체의 무기록 Python 구문 검사는 `.codex/hooks/python.cmd source`를 사용한다. 이 모드는 `.codex`, `tests`, `examples`, `experiments`, `docs`의 `.py`를 메모리에서 AST 파싱하며 pyc나 cache를 만들지 않는다. focused pytest가 제거된 모듈을 요구하면 환경 실패로 기록하고 독립 실행 가능한 가장 가까운 테스트를 선택한다.
 
-`reality_stone` 제거 후 저장소 전체의 무기록 Python 구문 검사는 `.codex/hooks/python.cmd source`를 사용한다. 이 모드는 `.codex`, `tests`, `examples`, `experiments`, `docs`의 `.py`를 메모리에서 AST 파싱하며 pyc나 cache를 만들지 않는다. focused pytest가 제거된 모듈을 요구하면 환경 실패로 기록하고 독립 실행 가능한 가장 가까운 테스트를 선택한다.
-
 ## 절차
 
 1. `git status --short`와 `git diff --stat`으로 기존 변경을 확인한다.
@@ -45,7 +43,7 @@ Windows agent 실행에서는 먼저 `.codex/hooks/python.cmd doctor`를 확인�
 
 ## 해석 규칙
 
-- 뇌/AGI 검증은 `.codex/harnesses/real_brain_equation_discovery_loop.md`의 생물 baseline 재현, measurement-model parity, 사전 고정 held-out residual, 대안 모델, falsifier, matched control과 CE 추가항 ablation을 우선 보고한다. post-hoc refit은 검증 PASS가 아니라 calibration artifact이며 새 판본 계약과 독립 confirmation을 요구한다.
+- 뇌/AGI 검증은 `.codex/harnesses/real_brain_equation_discovery_loop.md`의 생물 baseline 재현, measurement-model parity, 사전 고정 held-out residual, 대안 모델, falsifier, matched control과 CE 추가항 ablation을 우선 보고한다. post-hoc refit은 검증 통과가 아니라 calibration artifact이며 새 판본 계약과 독립 confirmation을 요구한다.
 - 무차원 검사와 수치 일치는 구현 무결성의 증거일 뿐 물리적 참의 증명이 아니다.
 - 부호 있는 sigma 잔차를 보존하고 공분산·상류 입력 오차의 포함 여부를 명시한다.
 - canonical 문서에는 하네스의 상태 문자열을 판정 배지처럼 복사하지 않는다.
