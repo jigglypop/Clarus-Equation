@@ -29,6 +29,9 @@ from examples.physics.kinetic_dark_sector_gate import (
     profile_desi_bao,
     solve_background,
 )
+from examples.physics.theater_seat_ledger import (
+    uniform_opening_energy_requirement,
+)
 
 
 PLANCK_COMPRESSED_OMEGA_M_H2 = 0.0224 + 0.1200
@@ -92,6 +95,7 @@ class AcousticClosureAudit:
     external_reference_rd_mpc: float
     required_rd_over_external_reference: float
     external_reference_uniform_extra_density_over_baseline: float
+    external_reference_uniform_extra_fraction_of_total: float
     standard_same_boundary_rd_mpc: float
     standard_same_boundary_rs_mpc: float
     required_rd_over_standard_same_boundary: float
@@ -101,7 +105,9 @@ class AcousticClosureAudit:
     declared_geometry_tolerance: float
     compressed_geometry_match_within_tolerance: bool
     rd_uniform_extra_density_over_same_boundary: float
+    rd_uniform_extra_fraction_of_total_same_boundary: float
     rs_uniform_extra_density_over_same_boundary: float
+    rs_uniform_extra_fraction_of_total_same_boundary: float
     omega_m_h2_same_boundary: float
     planck_compressed_omega_m_h2: float
     omega_m_h2_relative_offset: float
@@ -120,19 +126,6 @@ class CommonRescalingCalibration:
     audit: AcousticClosureAudit
     prediction: bool = False
     role: str = "POSTHOC_COMPRESSED_GEOMETRY_CALIBRATION"
-
-
-def _uniform_extra_density_over_baseline(length_scale: float) -> float:
-    """Equivalent uniform-H energy shift for r_new/r_base=length_scale.
-
-    This is the idealized relation H_new/H_base=1/length_scale and therefore
-    rho_extra/rho_base=length_scale**(-2)-1.  A time-localized early component,
-    recombination response, or changed sound speed need not follow this map.
-    """
-
-    if not math.isfinite(length_scale) or length_scale <= 0.0:
-        raise ValueError("length_scale must be finite and positive")
-    return length_scale**-2 - 1.0
 
 
 def acoustic_closure_audit(
@@ -173,6 +166,13 @@ def acoustic_closure_audit(
     signed_gap = rd_same_boundary_scale - rs_same_boundary_scale
     mean_scale = 0.5 * (rd_same_boundary_scale + rs_same_boundary_scale)
     relative_mismatch = abs(signed_gap) / mean_scale
+    external_opening = uniform_opening_energy_requirement(rd_external_scale)
+    rd_same_boundary_opening = uniform_opening_energy_requirement(
+        rd_same_boundary_scale
+    )
+    rs_same_boundary_opening = uniform_opening_energy_requirement(
+        rs_same_boundary_scale
+    )
     h = target.h0_km_s_mpc / 100.0
     omega_m_h2_offset = (
         params.omega_m_h2 / PLANCK_COMPRESSED_OMEGA_M_H2 - 1.0
@@ -199,7 +199,10 @@ def acoustic_closure_audit(
         external_reference_rd_mpc=REFERENCE_RD_MPC,
         required_rd_over_external_reference=rd_external_scale,
         external_reference_uniform_extra_density_over_baseline=(
-            _uniform_extra_density_over_baseline(rd_external_scale)
+            external_opening.extra_density_over_baseline
+        ),
+        external_reference_uniform_extra_fraction_of_total=(
+            external_opening.extra_fraction_of_total
         ),
         standard_same_boundary_rd_mpc=standard_drag.rd_mpc,
         standard_same_boundary_rs_mpc=cmb.sound_horizon_mpc,
@@ -212,10 +215,16 @@ def acoustic_closure_audit(
             relative_mismatch <= geometry_tolerance
         ),
         rd_uniform_extra_density_over_same_boundary=(
-            _uniform_extra_density_over_baseline(rd_same_boundary_scale)
+            rd_same_boundary_opening.extra_density_over_baseline
+        ),
+        rd_uniform_extra_fraction_of_total_same_boundary=(
+            rd_same_boundary_opening.extra_fraction_of_total
         ),
         rs_uniform_extra_density_over_same_boundary=(
-            _uniform_extra_density_over_baseline(rs_same_boundary_scale)
+            rs_same_boundary_opening.extra_density_over_baseline
+        ),
+        rs_uniform_extra_fraction_of_total_same_boundary=(
+            rs_same_boundary_opening.extra_fraction_of_total
         ),
         omega_m_h2_same_boundary=params.omega_m_h2,
         planck_compressed_omega_m_h2=PLANCK_COMPRESSED_OMEGA_M_H2,

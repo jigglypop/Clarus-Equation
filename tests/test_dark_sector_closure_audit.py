@@ -26,6 +26,28 @@ def test_sh0es_target_exposes_acoustic_and_physical_density_conditions() -> None
 
     assert 136.0 < audit.required_rd_mpc < 138.0
     assert 131.0 < audit.required_rs_mpc < 133.5
+    assert math.isclose(
+        audit.external_reference_uniform_extra_density_over_baseline,
+        0.1535,
+        rel_tol=2.0e-3,
+    )
+    assert math.isclose(
+        audit.external_reference_uniform_extra_fraction_of_total,
+        0.1331,
+        rel_tol=2.0e-3,
+    )
+    assert (
+        audit.external_reference_uniform_extra_density_over_baseline
+        > audit.external_reference_uniform_extra_fraction_of_total
+    )
+    assert (
+        audit.rd_uniform_extra_density_over_same_boundary
+        > audit.rd_uniform_extra_fraction_of_total_same_boundary
+    )
+    assert (
+        audit.rs_uniform_extra_density_over_same_boundary
+        > audit.rs_uniform_extra_fraction_of_total_same_boundary
+    )
     assert audit.common_rescaling_relative_mismatch < 2.0e-3
     assert audit.omega_m_h2_relative_offset > 0.17
     assert 0.26 < audit.planck_density_consistent_omega_m0_at_target_h0 < 0.27
