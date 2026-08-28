@@ -17,6 +17,7 @@ from examples.physics.causal_face_simplicity import (
     maximum_poisson_exact_valence_probability,
     minimum_block_depth,
     proper_orthochronous_residual,
+    random_tetrad_block_audit,
     simplicity_block_audit,
     simplicity_residual,
     soft_block_simplicity_weight,
@@ -206,6 +207,15 @@ def test_cross_residual_is_exact_obstruction_for_two_simple_cells() -> None:
     assert simplicity_residual(second) < 1.0e-14
     assert cross_simplicity_residual(first, second) > 0.0
     assert simplicity_residual(first + second) > 0.0
+
+
+def test_random_geometric_cells_generically_leave_the_simple_block_sector() -> None:
+    audit = random_tetrad_block_audit()
+
+    assert audit.sample_count == 1_000
+    assert audit.fraction_above_tolerance == pytest.approx(1.0)
+    assert audit.median_residual == pytest.approx(0.08707009, rel=1.0e-6)
+    assert audit.ninety_percent_residual > audit.median_residual
 
 
 def test_verdict_records_both_topology_and_simplicity_obstructions() -> None:

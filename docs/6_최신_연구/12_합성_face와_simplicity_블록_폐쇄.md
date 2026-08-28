@@ -58,7 +58,7 @@ e_{um}+e_{mv}-e_{uv}
 이는 causal category의 nerve에서 composable morphism pair와 그 composite가 만드는
 2-simplex의 block 제한이다. face endpoint를 별도 무작위 kernel로 선택하지 않는다.
 
-### 조건부 정리 후보: Composition-Face Lemma
+### 조건부 정리: Composition-Face Lemma
 
 fine edge 집합 \(E_{\rm fine}\)과 coarse edge 집합 \(E_{\rm coarse}\)가 같은
 acyclic causal order와 양립한다고 하자. 모든 factorization
@@ -91,8 +91,10 @@ V=M+2,\qquad E=2M+1,\qquad F=M
 
 인 contractible local disk다.
 
+**증명.** factorization과 composite를 동시에 relabel하면 (f=(u,m,v))도 같은 relabeling을 받으므로 attachment는 equivariant하다. acyclic order의 두 edge가 (uprec mprec v)를 주고, oriented simplicial boundary (partial f=e_{um}+e_{mv}-e_{uv})는 fine path와 coarse edge의 차이를 기록한다. 같은 coarse edge의 factorization마다 이 삼각형을 붙이면 공통 edge를 공유하는 fan이 되며, 위의 (V,E,F) 계수에서 (chi=1)이므로 local disk다. (square)
+
 이 결과는 **face의 local attachment**를 정하지만, 여러 fan을 어떤 4차원
-cell incidence로 glue할지는 아직 정하지 않는다.
+cell incidence로 glue할지는 이 정리의 결론이 아니다.
 
 ## 12.2 Q-spine face count를 incidence로 읽기
 
@@ -457,7 +459,7 @@ tests/test_causal_face_simplicity.py
 현재 격리 실행 결과는
 
 ```text
-31 passed
+32 passed
 ```
 
 였다.
