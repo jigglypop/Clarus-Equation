@@ -372,6 +372,67 @@ def soft_block_simplicity_weight(
 
 
 @dataclass(frozen=True)
+class RandomBlockSimplicityAudit:
+    sample_count: int
+    perturbation: float
+    seed: int
+    minimum_residual: float
+    median_residual: float
+    ninety_percent_residual: float
+    maximum_residual: float
+    fraction_above_tolerance: float
+
+
+def random_tetrad_block_audit(
+    *,
+    sample_count: int = 1_000,
+    perturbation: float = 0.35,
+    seed: int = 20_260_828,
+    minimum_determinant: float = 0.2,
+    tolerance: float = 1.0e-6,
+) -> RandomBlockSimplicityAudit:
+    """Return a deterministic diagnostic for generic block-simplicity failure."""
+
+    if isinstance(sample_count, bool) or not isinstance(sample_count, int) or sample_count < 1:
+        raise ValueError("sample_count must be a positive integer")
+    for name, value in (
+        ("perturbation", perturbation),
+        ("minimum_determinant", minimum_determinant),
+        ("tolerance", tolerance),
+    ):
+        if not math.isfinite(value) or value <= 0.0:
+            raise ValueError(f"{name} must be finite and positive")
+
+    generator = np.random.default_rng(seed)
+    reference = geometric_self_dual_triple(np.eye(4))
+    residuals: list[float] = []
+    attempts = 0
+    maximum_attempts = sample_count * 1_000
+    while len(residuals) < sample_count and attempts < maximum_attempts:
+        attempts += 1
+        tetrad = np.eye(4) + perturbation * generator.normal(size=(4, 4))
+        if float(np.linalg.det(tetrad)) <= minimum_determinant:
+            continue
+        candidate = geometric_self_dual_triple(tetrad)
+        residuals.append(simplicity_residual(reference + candidate))
+
+    if len(residuals) != sample_count:
+        raise RuntimeError("could not sample enough positive-orientation tetrads")
+
+    values = np.asarray(residuals)
+    return RandomBlockSimplicityAudit(
+        sample_count=sample_count,
+        perturbation=perturbation,
+        seed=seed,
+        minimum_residual=float(np.min(values)),
+        median_residual=float(np.median(values)),
+        ninety_percent_residual=float(np.quantile(values, 0.9)),
+        maximum_residual=float(np.max(values)),
+        fraction_above_tolerance=float(np.mean(values > tolerance)),
+    )
+
+
+@dataclass(frozen=True)
 class FaceSimplicityVerdict:
     canonical_face_attachment: bool
     one_epoch_nondegenerate_probability: float
