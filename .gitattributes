@@ -25,4 +25,8 @@
 /artifacts/agi/agi_world_memory_integration_*.json text eol=lf
 /_workspace/ce/agi-world-memory-integration-v1-20260810/*.md text eol=lf
 /_workspace/ce/agi-world-memory-integration-v1-20260810/revisions/*.md text eol=lf
+
+# Pantheon fixtures are pinned by raw-byte SHA-256; preserve upstream LF bytes.
+/benchmarks/cosmology/pantheon_binned_v1/lcparam_DS17f.txt text eol=lf
+/benchmarks/cosmology/pantheon_binned_v1/sys_DS17f.txt text eol=lf
 /.gitattributes text eol=lf

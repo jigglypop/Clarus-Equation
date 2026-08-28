@@ -13,8 +13,10 @@ from examples.physics.causal_face_simplicity import (
     face_simplicity_verdict,
     fan_euler_characteristic,
     geometric_self_dual_triple,
+    hard_shared_spacelike_face_match,
     maximum_poisson_exact_valence_probability,
     minimum_block_depth,
+    proper_orthochronous_residual,
     simplicity_block_audit,
     simplicity_residual,
     soft_block_simplicity_weight,
@@ -22,6 +24,43 @@ from examples.physics.causal_face_simplicity import (
 
 
 D = 3.1777584234
+
+
+def _lorentzian_shared_face_fixture() -> tuple[np.ndarray, ...]:
+    left_face = np.array(
+        [
+            [0.0, 1.0, 0.0, 0.0],
+            [0.0, 0.0, 2.0, 0.0],
+            [0.0, 0.0, 0.0, 3.0],
+        ]
+    )
+    left_normal = np.array([1.0, 0.0, 0.0, 0.0])
+    left_apex = np.array([2.0, 0.2, 0.1, 0.0])
+    rapidity = 0.7
+    cosine = math.cosh(rapidity)
+    sine = math.sinh(rapidity)
+    right_to_left = np.array(
+        [
+            [cosine, sine, 0.0, 0.0],
+            [sine, cosine, 0.0, 0.0],
+            [0.0, 0.0, 1.0, 0.0],
+            [0.0, 0.0, 0.0, 1.0],
+        ]
+    )
+    left_to_right = np.linalg.inv(right_to_left)
+    right_face = left_face @ left_to_right.T
+    right_normal = left_to_right @ left_normal
+    desired_right_apex = np.array([-1.5, 0.3, 0.0, 0.2])
+    right_apex = left_to_right @ desired_right_apex
+    return (
+        left_face,
+        left_normal,
+        left_apex,
+        right_face,
+        right_normal,
+        right_apex,
+        right_to_left,
+    )
 
 
 def test_composition_face_is_canonical_factorization_triangle() -> None:
@@ -178,3 +217,127 @@ def test_verdict_records_both_topology_and_simplicity_obstructions() -> None:
     assert not verdict.raw_poisson_simplicial_concentration_possible
     assert not verdict.local_simplicity_closed_under_blocking
     assert "shape-matching" in verdict.remaining_obligation
+
+
+def test_hard_shared_spacelike_face_match_is_boost_invariant() -> None:
+    fixture = _lorentzian_shared_face_fixture()
+    audit = hard_shared_spacelike_face_match(*fixture)
+
+    assert proper_orthochronous_residual(fixture[-1]) < 3.0e-16
+    np.testing.assert_allclose(audit.left_gram, np.diag((1.0, 4.0, 9.0)))
+    np.testing.assert_allclose(audit.right_gram, audit.left_gram, atol=1.0e-14)
+    assert audit.left_wedge_determinant == pytest.approx(-12.0)
+    assert audit.right_wedge_determinant == pytest.approx(9.0)
+    assert audit.left_lapse == pytest.approx(-2.0)
+    assert audit.right_lapse == pytest.approx(1.5)
+    assert audit.hard_match
+    assert audit.status == "FINITE_SHARED_SPACELIKE_FACE_MATCH"
+    assert audit.plebanski_branch == "NOT_TESTED_BY_FACE_GRAM"
+    assert audit.claim_ceiling == "FINITE_CONDITIONAL_SHARED_SPACELIKE_FACE_ONLY"
+
+
+@pytest.mark.parametrize(
+    ("case", "expected_status"),
+    [
+        ("degenerate_wedge", "DEGENERATE_CELL_WEDGE"),
+        ("nonspacelike", "NONSPACELIKE_OR_DEGENERATE_FACE"),
+        ("invalid_normal", "INVALID_FUTURE_FACE_NORMAL"),
+        ("invalid_transport", "NON_PROPER_OR_NON_ORTHOCHRONOUS_TRANSPORT"),
+        ("incompatible_normal", "INCOMPATIBLE_FACE_NORMALS"),
+        ("shape_mismatch", "SHAPE_MISMATCH"),
+        ("orientation_reversal", "ORIENTATION_REVERSING_FACE_MAP"),
+        ("tangent_transport", "INCOMPATIBLE_FACE_TANGENT_TRANSPORT"),
+        ("same_side", "SAME_SIDE_APEX_CONFIGURATION"),
+    ],
+)
+def test_hard_shared_face_match_rejects_each_missing_hypothesis(
+    case: str,
+    expected_status: str,
+) -> None:
+    data = list(_lorentzian_shared_face_fixture())
+    left_face, left_normal, _, _, _, _, right_to_left = data
+    left_to_right = np.linalg.inv(right_to_left)
+
+    if case == "degenerate_wedge":
+        data[2] = left_face[0].copy()
+    elif case == "nonspacelike":
+        bad_left_gauge_face = left_face.copy()
+        bad_left_gauge_face[0] = np.array([2.0, 1.0, 0.0, 0.0])
+        data[3] = bad_left_gauge_face @ left_to_right.T
+    elif case == "invalid_normal":
+        data[4] = -data[4]
+    elif case == "invalid_transport":
+        data[6] = np.diag((-1.0, 1.0, 1.0, 1.0))
+    elif case == "incompatible_normal":
+        data[3] = left_face.copy()
+        data[4] = left_normal.copy()
+        data[5] = np.array([-1.5, 0.3, 0.0, 0.2])
+    elif case == "shape_mismatch":
+        data[3] = data[3].copy()
+        data[3][2] *= 1.1
+    elif case == "orientation_reversal":
+        data[3] = data[3].copy()
+        data[3][0] *= -1.0
+    elif case == "tangent_transport":
+        spatial_rotation = np.array(
+            [
+                [1.0, 0.0, 0.0, 0.0],
+                [0.0, 0.0, -1.0, 0.0],
+                [0.0, 1.0, 0.0, 0.0],
+                [0.0, 0.0, 0.0, 1.0],
+            ]
+        )
+        rotated_left_gauge = left_face @ spatial_rotation.T
+        data[3] = rotated_left_gauge @ left_to_right.T
+    elif case == "same_side":
+        data[5] = left_to_right @ np.array([1.5, 0.3, 0.0, 0.2])
+    else:  # pragma: no cover - the parameter list is exhaustive
+        raise AssertionError(case)
+
+    audit = hard_shared_spacelike_face_match(*data)
+
+    assert not audit.hard_match
+    assert audit.status == expected_status
+    assert audit.plebanski_branch == "NOT_TESTED_BY_FACE_GRAM"
+    assert "GR" not in audit.status
+    assert "CONTINUUM" not in audit.status
+
+
+def test_hard_shared_face_match_fails_closed_on_malformed_data() -> None:
+    data = list(_lorentzian_shared_face_fixture())
+    data[0] = np.zeros((2, 4))
+
+    with pytest.raises(ValueError, match="left_face must have shape"):
+        hard_shared_spacelike_face_match(*data)
+
+
+@pytest.mark.parametrize(
+    "length_scale", [1.0e-200, 1.0e-100, 1.0e-12, 1.0e-3, 1.0e3, 1.0e200]
+)
+def test_hard_shared_face_match_is_invariant_under_length_units(
+    length_scale: float,
+) -> None:
+    data = list(_lorentzian_shared_face_fixture())
+    for index in (0, 2, 3, 5):
+        data[index] = data[index] * length_scale
+
+    audit = hard_shared_spacelike_face_match(*data)
+
+    assert audit.hard_match
+    assert audit.status == "FINITE_SHARED_SPACELIKE_FACE_MATCH"
+
+
+@pytest.mark.parametrize("length_scale", [1.0e-6, 1.0, 1.0e6])
+def test_shape_mismatch_status_is_invariant_under_length_units(
+    length_scale: float,
+) -> None:
+    data = list(_lorentzian_shared_face_fixture())
+    data[3] = data[3].copy()
+    data[3][2] *= 1.1
+    for index in (0, 2, 3, 5):
+        data[index] = data[index] * length_scale
+
+    audit = hard_shared_spacelike_face_match(*data)
+
+    assert not audit.hard_match
+    assert audit.status == "SHAPE_MISMATCH"

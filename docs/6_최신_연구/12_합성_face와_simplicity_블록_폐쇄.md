@@ -7,14 +7,9 @@
 
 를 가장 작은 유한 모형에서 검산한다.
 
-현재 판정은 다음과 같다.
+먼저 결론을 고정한다. composition face, finite bivector inverse, shared spacelike-face hard gluing은 선언한 정상ㆍtransportㆍmatching 조건 아래의 정리다. 반면 local simplicity만으로 glued geometry, incidence/simplicity만으로 unique actionㆍmeasure, finite flat data만으로 continuum Einstein--Hilbert/두 편극이 나온다는 세 부모 명제는 완전 반례로 삭제됐다. “full fixed point가 아직 열려 있다”는 말로 이 삭제된 함의를 보존하지 않는다.
 
-- face attachment topology: block composition의 2-simplex로 조건부 폐쇄.
-- raw Poisson face count가 exact simplicial valence에 집중한다는 주장: 폐기.
-- 일반 polyhedral nondegeneracy를 위한 최소 face incidence: 유한 block에서 확보 가능.
-- local simplicity projector의 block 폐쇄성: 실패.
-- 추가 cross-simplicity/shape-matching amplitude: 필수.
-- full Lorentzian Plebanski fixed point: 여전히 미완성.
+새 Lorentzian continuum 이론을 제안하려면 cross/shape matching, actionㆍmeasure, refinement/RG limit, continuum criterion, EH limit, two-DOF criterion을 독립 공리 또는 정리로 제시해야 한다. 그것은 이 유한 결과의 자동 완성이 아니라 새 모형 계약이다.
 
 ## 12.1 face endpoint를 임의로 뽑지 않는다
 
@@ -422,7 +417,7 @@ full Lorentzian cellular amplitude는 최소한 다음 조건들을 함께 가�
 이 문서의 Gaussian weight는 마지막 obstruction을 검사하는 finite algebra
 proxy다. EPRL/FK 또는 Barrett--Crane amplitude를 새로 유도했다는 뜻이 아니다.
 
-## 12.7 해결된 것과 남은 벽
+## 12.7 유한 결과와 삭제된 부모 주장
 
 ### 해결
 
@@ -435,29 +430,9 @@ proxy다. EPRL/FK 또는 Barrett--Crane amplitude를 새로 유도했다는 뜻�
 5. raw Poisson law는 exact simplicial valence에 집중할 수 없다.
 6. local simplicity의 block 실패를 정확한 cross matrix \(Y^{ij}\)로 분리했다.
 
-### 남은 벽
+local simplicity의 block 실패는 “아직 prove하지 못한 closure”가 아니라, cross residual $Y^{ij}$가 일반적으로 남는 완전 반례다. 같은 incidence에서 $S=0$과 quadratic action은 서로 다른 saddle/Hessian/$Z$를 갖고, invariant normalized Gaussian measures도 분산이 다르다. flat BF closure witness는 common simplicity sector에 들지 않는다. 더구나 $R$과 $R+\alpha R^2$는 flat data를 공유하면서 scalaron을 구별한다. 따라서 finite face data가 unique action/measure, continuum EH, exactly two local degrees of freedom을 entail한다는 주장은 삭제한다.
 
-\[
-\boxed{
-\text{shape matching / cross simplicity가
-RG flow에서 동적으로 유지되는가}
-}
-\]
-
-이다.
-
-단순히 각 microscopic cell에 local simplicity projector를 곱하는 것만으로는
-coarse Plebanski sector가 보존되지 않는다. 다음 단계에서는 shared 3-cell의
-metric data를 parallel transport한 뒤 matching하는 amplitude를 정의하고,
-
-\[
-W_{\rm match}=1
-\]
-
-인 sector가 block transformation 아래 닫히는지 검사해야 한다.
-
-이 문제가 실패하면 split/merge count와 causal face topology가 살아 있어도
-single-metric GR continuum은 나오지 않는다.
+이후 cross/shape matching을 동적으로 유지하는 amplitude나 RG flow를 만들 수는 있다. 그러나 그것은 global matching, measure, refinement criterion과 함께 새로 선언해 시험할 모형이며, local projector의 결과로 부르면 안 된다.
 
 ## 12.8 재현
 
@@ -482,7 +457,7 @@ tests/test_causal_face_simplicity.py
 현재 격리 실행 결과는
 
 ```text
-11 passed
+31 passed
 ```
 
 였다.
@@ -508,4 +483,4 @@ simplicity/shape matching이 자동 보존되지 않는다는 spin-foam 문헌�
 - Euclideanized local simplicity: **재현 PASS**.
 - local simplicity under block: **FAIL**.
 - cross-simplicity soft projector: **candidate implemented**.
-- Lorentzian closure+shape matching+Plebanski RG fixed point: **OPEN**.
+- Lorentzian closure+shape matching+Plebanski RG fixed point: **새 모형 계약이 필요한 별도 문제; 현 유한 결과의 함의 아님**.

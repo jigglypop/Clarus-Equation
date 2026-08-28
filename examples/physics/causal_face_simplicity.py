@@ -15,8 +15,14 @@ steps.
    Local simplicity of two cells does *not* imply simplicity of their block
    sum.  The missing condition is a cross-cell/shape-matching constraint.
 
-The Euclideanized bivector calculations are a finite algebra audit, not a full
-Lorentzian spin-foam amplitude.
+3. Finite Lorentzian gluing:
+   Two nondegenerate cell wedges can share one labelled spacelike 3-face only
+   when its induced Gram matrix matches, the face normals are related by a
+   proper orthochronous Lorentz transport, and the apices lie on opposite
+   sides.  This is a local hard-matching lemma, not a Plebanski-sector test.
+
+The finite audits are not a full Lorentzian spin-foam amplitude, a continuum
+limit, or a derivation of general relativity.
 """
 
 from __future__ import annotations
@@ -217,6 +223,40 @@ def _require_shape(name: str, value: np.ndarray, shape: tuple[int, ...]) -> np.n
     return array
 
 
+def _stable_frobenius_norm(value: np.ndarray) -> float:
+    """Return a Frobenius norm without avoidable scale under/overflow."""
+
+    array = np.asarray(value, dtype=float)
+    maximum = float(np.max(np.abs(array))) if array.size else 0.0
+    if maximum == 0.0:
+        return 0.0
+    return maximum * float(np.linalg.norm(array / maximum))
+
+
+def _scaled_determinant(value: np.ndarray) -> tuple[float, float, float]:
+    """Return determinant, sign, and log(abs(det)) using row normalization."""
+
+    matrix = np.asarray(value, dtype=float)
+    if matrix.ndim != 2 or matrix.shape[0] != matrix.shape[1]:
+        raise ValueError("scaled determinant requires a square matrix")
+    row_scales = np.max(np.abs(matrix), axis=1)
+    if np.any(row_scales == 0.0):
+        return 0.0, 0.0, -math.inf
+    sign, normalized_log_abs = np.linalg.slogdet(matrix / row_scales[:, None])
+    if sign == 0.0:
+        return 0.0, 0.0, -math.inf
+    log_abs = float(normalized_log_abs + math.fsum(math.log(x) for x in row_scales))
+    maximum_log = math.log(np.finfo(float).max)
+    minimum_log = math.log(np.nextafter(0.0, 1.0))
+    if log_abs > maximum_log:
+        determinant = math.copysign(math.inf, float(sign))
+    elif log_abs < minimum_log:
+        determinant = math.copysign(0.0, float(sign))
+    else:
+        determinant = math.copysign(math.exp(log_abs), float(sign))
+    return determinant, float(sign), log_abs
+
+
 def two_form_from_vectors(first: np.ndarray, second: np.ndarray) -> np.ndarray:
     """Return the six independent components of first wedge second."""
 
@@ -400,4 +440,278 @@ def face_simplicity_verdict(branch_mean: float) -> FaceSimplicityVerdict:
             "that is stable under coarse graining; count and local simplicity "
             "projectors alone do not yield a Plebanski continuum"
         ),
+    )
+
+
+_MINKOWSKI_METRIC = np.diag((-1.0, 1.0, 1.0, 1.0))
+
+
+def minkowski_inner(first: np.ndarray, second: np.ndarray) -> float:
+    """Return the (-,+,+,+) inner product of two contravariant vectors."""
+
+    first = _require_shape("first", first, (4,))
+    second = _require_shape("second", second, (4,))
+    return float(first @ _MINKOWSKI_METRIC @ second)
+
+
+def induced_spatial_gram(face_vectors: np.ndarray) -> np.ndarray:
+    """Return the labelled intrinsic Gram matrix of three face tangents."""
+
+    face_vectors = _require_shape("face_vectors", face_vectors, (3, 4))
+    return face_vectors @ _MINKOWSKI_METRIC @ face_vectors.T
+
+
+def proper_orthochronous_residual(transport: np.ndarray) -> float:
+    """Return a zero-only residual for membership in SO^+(1,3)."""
+
+    transport = _require_shape("transport", transport, (4, 4))
+    metric_residual = float(
+        np.linalg.norm(
+            transport.T @ _MINKOWSKI_METRIC @ transport - _MINKOWSKI_METRIC
+        )
+        / np.linalg.norm(_MINKOWSKI_METRIC)
+    )
+    determinant_residual = abs(float(np.linalg.det(transport)) - 1.0)
+    future_cone_residual = max(0.0, 1.0 - float(transport[0, 0]))
+    return max(metric_residual, determinant_residual, future_cone_residual)
+
+
+@dataclass(frozen=True)
+class LorentzianSharedFaceAudit:
+    """Finite conditional audit of one shared spacelike face."""
+
+    left_gram: np.ndarray
+    right_gram: np.ndarray
+    left_wedge_determinant: float
+    right_wedge_determinant: float
+    left_wedge_log_abs_determinant: float
+    right_wedge_log_abs_determinant: float
+    lorentz_residual: float
+    normal_transport_residual: float
+    gram_residual: float
+    tangent_transport_residual: float
+    left_oriented_face_volume: float
+    right_oriented_face_volume: float
+    left_oriented_face_log_abs_volume: float
+    right_oriented_face_log_abs_volume: float
+    left_lapse: float
+    right_lapse: float
+    hard_match: bool
+    status: str
+    plebanski_branch: str = "NOT_TESTED_BY_FACE_GRAM"
+    claim_ceiling: str = "FINITE_CONDITIONAL_SHARED_SPACELIKE_FACE_ONLY"
+
+
+def _normal_residual(
+    face_vectors: np.ndarray,
+    normal: np.ndarray,
+    face_scale: float,
+) -> float:
+    if face_scale <= 0.0:
+        return math.inf
+    norm_residual = abs(minkowski_inner(normal, normal) + 1.0)
+    orthogonality = face_vectors @ _MINKOWSKI_METRIC @ normal
+    return max(
+        norm_residual,
+        _stable_frobenius_norm(orthogonality) / face_scale,
+    )
+
+
+def hard_shared_spacelike_face_match(
+    left_face: np.ndarray,
+    left_normal: np.ndarray,
+    left_apex: np.ndarray,
+    right_face: np.ndarray,
+    right_normal: np.ndarray,
+    right_apex: np.ndarray,
+    right_to_left: np.ndarray,
+    *,
+    tolerance: float = 1.0e-10,
+) -> LorentzianSharedFaceAudit:
+    """Audit a finite Lorentzian two-wedge gluing across one shared 3-face.
+
+    The three tangent vectors on each side have the same labels.  The hard
+    match requires the declared proper orthochronous transport to map every
+    labelled tangent and the future normal.  Equal positive Gram matrices then
+    certify the induced intrinsic isometry; oriented faces, nondegenerate cell
+    wedges, and opposite-side apices are required separately.
+
+    This datum cannot select a Lorentzian Plebanski branch and says nothing
+    about a spin-foam measure, Regge equations, coarse-graining stability,
+    a continuum limit, or propagating graviton degrees of freedom.
+    """
+
+    if not math.isfinite(tolerance) or tolerance <= 0.0:
+        raise ValueError("tolerance must be finite and positive")
+
+    left_face = _require_shape("left_face", left_face, (3, 4))
+    left_normal = _require_shape("left_normal", left_normal, (4,))
+    left_apex = _require_shape("left_apex", left_apex, (4,))
+    right_face = _require_shape("right_face", right_face, (3, 4))
+    right_normal = _require_shape("right_normal", right_normal, (4,))
+    right_apex = _require_shape("right_apex", right_apex, (4,))
+    right_to_left = _require_shape("right_to_left", right_to_left, (4, 4))
+
+    left_face_scale = _stable_frobenius_norm(left_face)
+    right_face_scale = _stable_frobenius_norm(right_face)
+    common_face_scale = max(left_face_scale, right_face_scale)
+    if common_face_scale > 0.0:
+        normalized_left_face = left_face / common_face_scale
+        normalized_right_face = right_face / common_face_scale
+    else:
+        normalized_left_face = left_face
+        normalized_right_face = right_face
+    normalized_left_gram = induced_spatial_gram(normalized_left_face)
+    normalized_right_gram = induced_spatial_gram(normalized_right_face)
+    with np.errstate(over="ignore", under="ignore", invalid="ignore"):
+        common_face_scale_squared = (
+            np.float64(common_face_scale) * np.float64(common_face_scale)
+        )
+        left_gram = common_face_scale_squared * normalized_left_gram
+        right_gram = common_face_scale_squared * normalized_right_gram
+    (
+        left_wedge_determinant,
+        _,
+        left_wedge_log_abs_determinant,
+    ) = _scaled_determinant(np.vstack((left_face, left_apex)))
+    (
+        right_wedge_determinant,
+        _,
+        right_wedge_log_abs_determinant,
+    ) = _scaled_determinant(
+        np.vstack((right_face, right_apex))
+    )
+    lorentz_residual = proper_orthochronous_residual(right_to_left)
+    transported_normal = right_to_left @ right_normal
+    normal_transport_residual = float(
+        np.linalg.norm(left_normal - transported_normal)
+        / max(
+            1.0,
+            float(np.linalg.norm(left_normal)),
+            float(np.linalg.norm(transported_normal)),
+        )
+    )
+    gram_scale = max(
+        _stable_frobenius_norm(normalized_left_gram),
+        _stable_frobenius_norm(normalized_right_gram),
+    )
+    gram_residual = (
+        _stable_frobenius_norm(normalized_left_gram - normalized_right_gram)
+        / gram_scale
+        if gram_scale > 0.0
+        else math.inf
+    )
+    transported_right_face = right_face @ right_to_left.T
+    tangent_scale = max(
+        _stable_frobenius_norm(left_face),
+        _stable_frobenius_norm(transported_right_face),
+    )
+    tangent_transport_residual = (
+        _stable_frobenius_norm(left_face - transported_right_face) / tangent_scale
+        if tangent_scale > 0.0
+        else math.inf
+    )
+    (
+        left_oriented_face_volume,
+        left_orientation_sign,
+        left_oriented_face_log_abs_volume,
+    ) = _scaled_determinant(
+        np.vstack((left_normal, left_face))
+    )
+    (
+        right_oriented_face_volume,
+        right_orientation_sign,
+        right_oriented_face_log_abs_volume,
+    ) = _scaled_determinant(
+        np.vstack((right_normal, right_face))
+    )
+    left_lapse = minkowski_inner(left_normal, left_apex)
+    right_lapse = minkowski_inner(left_normal, right_to_left @ right_apex)
+
+    left_unit_face = left_face / left_face_scale if left_face_scale > 0.0 else left_face
+    right_unit_face = (
+        right_face / right_face_scale if right_face_scale > 0.0 else right_face
+    )
+    left_eigenvalues = np.linalg.eigvalsh(induced_spatial_gram(left_unit_face))
+    right_eigenvalues = np.linalg.eigvalsh(induced_spatial_gram(right_unit_face))
+    left_maximum = float(np.max(left_eigenvalues))
+    right_maximum = float(np.max(right_eigenvalues))
+    left_spacelike = (
+        left_maximum > 0.0
+        and float(np.min(left_eigenvalues)) / left_maximum > tolerance
+    )
+    right_spacelike = (
+        right_maximum > 0.0
+        and float(np.min(right_eigenvalues)) / right_maximum > tolerance
+    )
+    normals_valid = (
+        left_normal[0] > tolerance
+        and right_normal[0] > tolerance
+        and _normal_residual(left_face, left_normal, left_face_scale) <= tolerance
+        and _normal_residual(right_face, right_normal, right_face_scale) <= tolerance
+    )
+    transport_valid = lorentz_residual <= tolerance
+    normals_compatible = normal_transport_residual <= tolerance
+    shape_matches = gram_residual <= tolerance
+    tangents_compatible = tangent_transport_residual <= tolerance
+    orientation_matches = (
+        left_orientation_sign != 0.0
+        and right_orientation_sign != 0.0
+        and left_orientation_sign == right_orientation_sign
+    )
+    wedge_nondegenerate = (
+        left_face_scale > 0.0
+        and right_face_scale > 0.0
+        and abs(left_lapse) / left_face_scale > tolerance
+        and abs(right_lapse) / right_face_scale > tolerance
+    )
+    opposite_sides = (
+        wedge_nondegenerate
+        and (
+            (left_lapse < 0.0 < right_lapse)
+            or (right_lapse < 0.0 < left_lapse)
+        )
+    )
+
+    if not (left_spacelike and right_spacelike):
+        status = "NONSPACELIKE_OR_DEGENERATE_FACE"
+    elif not normals_valid:
+        status = "INVALID_FUTURE_FACE_NORMAL"
+    elif not transport_valid:
+        status = "NON_PROPER_OR_NON_ORTHOCHRONOUS_TRANSPORT"
+    elif not normals_compatible:
+        status = "INCOMPATIBLE_FACE_NORMALS"
+    elif not shape_matches:
+        status = "SHAPE_MISMATCH"
+    elif not orientation_matches:
+        status = "ORIENTATION_REVERSING_FACE_MAP"
+    elif not tangents_compatible:
+        status = "INCOMPATIBLE_FACE_TANGENT_TRANSPORT"
+    elif not wedge_nondegenerate:
+        status = "DEGENERATE_CELL_WEDGE"
+    elif not opposite_sides:
+        status = "SAME_SIDE_APEX_CONFIGURATION"
+    else:
+        status = "FINITE_SHARED_SPACELIKE_FACE_MATCH"
+
+    hard_match = status == "FINITE_SHARED_SPACELIKE_FACE_MATCH"
+    return LorentzianSharedFaceAudit(
+        left_gram=left_gram,
+        right_gram=right_gram,
+        left_wedge_determinant=left_wedge_determinant,
+        right_wedge_determinant=right_wedge_determinant,
+        left_wedge_log_abs_determinant=left_wedge_log_abs_determinant,
+        right_wedge_log_abs_determinant=right_wedge_log_abs_determinant,
+        lorentz_residual=lorentz_residual,
+        normal_transport_residual=normal_transport_residual,
+        gram_residual=gram_residual,
+        tangent_transport_residual=tangent_transport_residual,
+        left_oriented_face_volume=left_oriented_face_volume,
+        right_oriented_face_volume=right_oriented_face_volume,
+        left_oriented_face_log_abs_volume=left_oriented_face_log_abs_volume,
+        right_oriented_face_log_abs_volume=right_oriented_face_log_abs_volume,
+        left_lapse=left_lapse,
+        right_lapse=right_lapse,
+        hard_match=hard_match,
+        status=status,
     )
