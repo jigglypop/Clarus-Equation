@@ -7,12 +7,14 @@ orthonormal recoupling basis and stores
 
     P_Inv tensor_f |j_f, xi_tf> = sum_k c_k |k>.
 
-The invariant projector ``P_Inv`` is the normalized SU(2) Haar group average,
-so the stored nonzero coefficient vector is an explicit numerical
-Livine-Speziale intertwiner witness.  The calculation is deliberately local:
-shared bra/ket orientation, independent tetrahedron frames, the EPRL
-``Y_gamma`` map, Lorentzian SL(2,C) integration, and proper projectors remain
-open.
+The Haar measure convention is ``integral dg = 1``.  In Condon-Shortley phase
+conventions, with magnetic coefficients ordered ``m=-j,...,j``, the invariant
+projector is reconstructed algebraically as ``sum_k |k><k|``.  No Haar
+quadrature is performed.  The stored numerically nonzero coefficient vector
+is then a local Livine-Speziale intertwiner witness.  The calculation is
+deliberately local: shared bra/ket orientation, independent tetrahedron
+frames, a globally glued spin network, the EPRL ``Y_gamma`` map, Lorentzian
+SL(2,C) integration, and proper projectors remain open.
 '''
 
 from __future__ import annotations
@@ -189,7 +191,7 @@ def four_valent_ls_recoupling_coefficients(
     spins_j: Sequence[int],
     direction_spinors: Sequence[Sequence[complex]],
 ) -> tuple[tuple[int, ...], tuple[complex, ...]]:
-    '''Project four coherent states into the invariant recoupling basis.'''
+    '''Apply the algebraically reconstructed Haar projector in a k basis.'''
 
     channels = allowed_four_valent_recoupling_channels(spins_j)
     if len(direction_spinors) != 4:
@@ -226,6 +228,60 @@ def four_valent_ls_recoupling_coefficients(
     return channels, tuple(coefficients)
 
 
+def four_valent_invariant_basis_amplitudes(
+    spins_j: Sequence[int],
+    channel_k: int,
+) -> dict[tuple[int, int, int, int], complex]:
+    '''Return one orthonormal |k> invariant vector in the magnetic basis.'''
+
+    channels = allowed_four_valent_recoupling_channels(spins_j)
+    if type(channel_k) is not int or channel_k not in channels:
+        raise ValueError('channel_k must be an allowed recoupling channel')
+    first_spin, second_spin, third_spin, fourth_spin = spins_j
+    amplitudes: dict[tuple[int, int, int, int], complex] = {}
+    for first_magnetic in range(-first_spin, first_spin + 1):
+        for second_magnetic in range(-second_spin, second_spin + 1):
+            coupled_magnetic = first_magnetic + second_magnetic
+            if abs(coupled_magnetic) > channel_k:
+                continue
+            first_pair = integer_clebsch_gordan(
+                first_spin,
+                first_magnetic,
+                second_spin,
+                second_magnetic,
+                channel_k,
+                coupled_magnetic,
+            )
+            for third_magnetic in range(-third_spin, third_spin + 1):
+                fourth_magnetic = -coupled_magnetic - third_magnetic
+                if not -fourth_spin <= fourth_magnetic <= fourth_spin:
+                    continue
+                second_pair = integer_clebsch_gordan(
+                    third_spin,
+                    third_magnetic,
+                    fourth_spin,
+                    fourth_magnetic,
+                    channel_k,
+                    -coupled_magnetic,
+                )
+                amplitude = (
+                    ((-1) ** (channel_k - coupled_magnetic))
+                    * first_pair
+                    * second_pair
+                    / math.sqrt(2 * channel_k + 1)
+                )
+                if amplitude != 0.0:
+                    amplitudes[
+                        (
+                            first_magnetic,
+                            second_magnetic,
+                            third_magnetic,
+                            fourth_magnetic,
+                        )
+                    ] = complex(amplitude)
+    return amplitudes
+
+
 @dataclass(frozen=True)
 class LocalLivineSpezialeIntertwinerData:
     tetrahedron: TetrahedronId
@@ -238,7 +294,7 @@ class LocalLivineSpezialeIntertwinerData:
     normalized_recoupling_coefficients: tuple[complex, ...]
     normalized_coefficient_norm_residual: float
     product_coherent_state_norm_residual: float
-    nonzero_group_averaged_intertwiner_materialized: bool
+    numerically_nonzero_group_averaged_intertwiner_materialized: bool
 
 
 @dataclass(frozen=True)
@@ -249,15 +305,19 @@ class LorentzianOneToFiveLocalLSCertificate:
     max_spin_j: int
     tetrahedron_data: tuple[LocalLivineSpezialeIntertwinerData, ...]
     min_unnormalized_group_average_norm: float
+    nonzero_tolerance: float
+    minimum_norm_to_tolerance_ratio: float
     max_normalized_coefficient_norm_residual: float
     max_product_coherent_state_norm_residual: float
     all_fifteen_invariant_spaces_nonzero: bool
-    all_fifteen_local_ls_group_averages_materialized: bool
-    normalized_haar_projector_identified_with_invariant_projector: bool
+    all_fifteen_local_ls_group_averages_numerically_nonzero: bool
+    haar_projector_algebraically_reconstructed_from_orthonormal_basis: bool
+    haar_quadrature_numerically_performed: bool
     spin_weighted_geometric_closure_exact: bool
     independent_tetrahedron_su2_frames_constructed: bool
     tetrahedron_time_orientations_assigned: bool
     shared_bra_ket_dualization_constructed: bool
+    globally_glued_spin_network_constructed: bool
     eprl_y_gamma_map_materialized: bool
     lorentzian_sl2c_group_integrals_evaluated: bool
     proper_projectors_materialized: bool
@@ -344,7 +404,9 @@ def certify_lorentzian_one_to_five_local_ls_intertwiners(
                 normalized_recoupling_coefficients=normalized,
                 normalized_coefficient_norm_residual=normalized_norm_residual,
                 product_coherent_state_norm_residual=abs(product_norm - 1.0),
-                nonzero_group_averaged_intertwiner_materialized=nonzero,
+                numerically_nonzero_group_averaged_intertwiner_materialized=(
+                    nonzero
+                ),
             )
         )
 
@@ -361,7 +423,7 @@ def certify_lorentzian_one_to_five_local_ls_intertwiners(
         for record in tetrahedron_records
     )
     all_nonzero = all(
-        record.nonzero_group_averaged_intertwiner_materialized
+        record.numerically_nonzero_group_averaged_intertwiner_materialized
         for record in tetrahedron_records
     )
     closed = (
@@ -377,17 +439,23 @@ def certify_lorentzian_one_to_five_local_ls_intertwiners(
         max_spin_j=largest_spin,
         tetrahedron_data=tuple(tetrahedron_records),
         min_unnormalized_group_average_norm=min_group_norm,
+        nonzero_tolerance=nonzero_tolerance,
+        minimum_norm_to_tolerance_ratio=(
+            min_group_norm / nonzero_tolerance
+        ),
         max_normalized_coefficient_norm_residual=max_normalized_residual,
         max_product_coherent_state_norm_residual=max_product_residual,
         all_fifteen_invariant_spaces_nonzero=(
             spin_certificate.all_fifteen_invariant_intertwiner_spaces_nonzero
         ),
-        all_fifteen_local_ls_group_averages_materialized=all_nonzero,
-        normalized_haar_projector_identified_with_invariant_projector=True,
+        all_fifteen_local_ls_group_averages_numerically_nonzero=all_nonzero,
+        haar_projector_algebraically_reconstructed_from_orthonormal_basis=True,
+        haar_quadrature_numerically_performed=False,
         spin_weighted_geometric_closure_exact=False,
         independent_tetrahedron_su2_frames_constructed=False,
         tetrahedron_time_orientations_assigned=False,
         shared_bra_ket_dualization_constructed=False,
+        globally_glued_spin_network_constructed=False,
         eprl_y_gamma_map_materialized=False,
         lorentzian_sl2c_group_integrals_evaluated=False,
         proper_projectors_materialized=False,

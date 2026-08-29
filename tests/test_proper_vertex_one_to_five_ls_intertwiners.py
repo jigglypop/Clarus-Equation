@@ -11,6 +11,7 @@ from examples.physics.proper_vertex_one_to_five_coherent_boundary import (
 from examples.physics.proper_vertex_one_to_five_ls_intertwiners import (
     allowed_four_valent_recoupling_channels,
     certify_lorentzian_one_to_five_local_ls_intertwiners,
+    four_valent_invariant_basis_amplitudes,
     four_valent_ls_recoupling_coefficients,
     integer_clebsch_gordan,
     spin_coherent_state_coefficients,
@@ -88,6 +89,72 @@ def test_four_spin_zero_projection_is_the_identity_witness() -> None:
     assert coefficients == (1.0 + 0.0j,)
 
 
+def test_nontrivial_recoupling_basis_is_orthonormal_and_su2_invariant() -> None:
+    spins = (1, 1, 1, 1)
+    basis = {
+        channel: four_valent_invariant_basis_amplitudes(spins, channel)
+        for channel in allowed_four_valent_recoupling_channels(spins)
+    }
+
+    for left_channel, left in basis.items():
+        for right_channel, right in basis.items():
+            inner = sum(
+                np.conjugate(left.get(label, 0.0j))
+                * right.get(label, 0.0j)
+                for label in set(left) | set(right)
+            )
+            assert inner == pytest.approx(
+                1.0 if left_channel == right_channel else 0.0,
+                abs=1.0e-14,
+            )
+        assert all(
+            abs(sum(label) * amplitude) < 1.0e-14
+            for label, amplitude in left.items()
+        )
+        raised: dict[tuple[int, int, int, int], complex] = {}
+        for label, amplitude in left.items():
+            for index, (spin, magnetic) in enumerate(zip(spins, label)):
+                if magnetic < spin:
+                    target = list(label)
+                    target[index] += 1
+                    target_label = tuple(target)
+                    raised[target_label] = raised.get(target_label, 0.0j) + (
+                        amplitude
+                        * math.sqrt((spin - magnetic) * (spin + magnetic + 1))
+                    )
+        assert math.sqrt(sum(abs(value) ** 2 for value in raised.values())) < 1.0e-14
+
+
+def test_recoupling_coefficients_equal_direct_magnetic_basis_projection() -> None:
+    spins = (1, 1, 1, 1)
+    spinors = (
+        direction_spinor((0.0, 0.0, 1.0)),
+        direction_spinor((1.0, 0.0, 0.0)),
+        direction_spinor((0.0, 1.0, 0.0)),
+        direction_spinor((0.0, 0.0, -1.0)),
+    )
+    channels, coefficients = four_valent_ls_recoupling_coefficients(
+        spins,
+        spinors,
+    )
+    coherent_states = tuple(
+        spin_coherent_state_coefficients(spin, spinor)
+        for spin, spinor in zip(spins, spinors)
+    )
+
+    for channel, coefficient in zip(channels, coefficients):
+        basis = four_valent_invariant_basis_amplitudes(spins, channel)
+        direct = sum(
+            np.conjugate(amplitude)
+            * math.prod(
+                coherent_states[index][magnetic + spins[index]]
+                for index, magnetic in enumerate(label)
+            )
+            for label, amplitude in basis.items()
+        )
+        assert coefficient == pytest.approx(direct, abs=1.0e-14)
+
+
 def test_all_fifteen_level_three_local_ls_intertwiners_are_materialized() -> None:
     certificate = certify_lorentzian_one_to_five_local_ls_intertwiners()
 
@@ -96,8 +163,9 @@ def test_all_fifteen_level_three_local_ls_intertwiners_are_materialized() -> Non
     assert certificate.global_triangle_spin_count == 20
     assert certificate.max_spin_j == 9
     assert certificate.all_fifteen_invariant_spaces_nonzero
-    assert certificate.all_fifteen_local_ls_group_averages_materialized
+    assert certificate.all_fifteen_local_ls_group_averages_numerically_nonzero
     assert certificate.min_unnormalized_group_average_norm > 0.07
+    assert certificate.minimum_norm_to_tolerance_ratio > 1.0e12
     assert certificate.max_normalized_coefficient_norm_residual < 1.0e-14
     assert certificate.max_product_coherent_state_norm_residual < 1.0e-13
     assert certificate.status == (
@@ -110,7 +178,9 @@ def test_all_fifteen_level_three_local_ls_intertwiners_are_materialized() -> Non
         assert tetrahedron.invariant_space_dimension == len(
             tetrahedron.unnormalized_recoupling_coefficients
         )
-        assert tetrahedron.nonzero_group_averaged_intertwiner_materialized
+        assert (
+            tetrahedron.numerically_nonzero_group_averaged_intertwiner_materialized
+        )
         assert sum(
             abs(value) ** 2
             for value in tetrahedron.normalized_recoupling_coefficients
@@ -144,11 +214,13 @@ def test_computational_cap_and_nonadmissible_small_level_are_rejected() -> None:
 def test_claim_ceiling_is_local_ls_not_eprl_or_proper_gluing() -> None:
     certificate = certify_lorentzian_one_to_five_local_ls_intertwiners()
 
-    assert certificate.normalized_haar_projector_identified_with_invariant_projector
+    assert certificate.haar_projector_algebraically_reconstructed_from_orthonormal_basis
+    assert not certificate.haar_quadrature_numerically_performed
     assert not certificate.spin_weighted_geometric_closure_exact
     assert not certificate.independent_tetrahedron_su2_frames_constructed
     assert not certificate.tetrahedron_time_orientations_assigned
     assert not certificate.shared_bra_ket_dualization_constructed
+    assert not certificate.globally_glued_spin_network_constructed
     assert not certificate.eprl_y_gamma_map_materialized
     assert not certificate.lorentzian_sl2c_group_integrals_evaluated
     assert not certificate.proper_projectors_materialized

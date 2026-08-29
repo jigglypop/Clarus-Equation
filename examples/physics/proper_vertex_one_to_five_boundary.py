@@ -52,7 +52,7 @@ INTERNAL_TETRAHEDRA: tuple[TetrahedronId, ...] = tuple(
 )
 BOUNDARY_TRIANGLES = tuple(combinations(BOUNDARY_VERTICES, 3))
 INTERNAL_TRIANGLES = tuple(
-    (INTERNAL_VERTEX,) + edge
+    tuple(sorted((INTERNAL_VERTEX,) + edge))
     for edge in combinations(BOUNDARY_VERTICES, 2)
 )
 BOUNDARY_EDGES = tuple(combinations(BOUNDARY_VERTICES, 2))
