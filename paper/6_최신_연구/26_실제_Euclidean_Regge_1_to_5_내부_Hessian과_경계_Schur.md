@@ -77,3 +77,5 @@ $$
 22C와 23C의 ceiling은 남아 있다. 얻은 것은 flat fixed-boundary **classical quotient** identity다. raw inverse, Gaussian determinant 또는 integral, proper/EPRL multi-cell block, spin-foam measure와 contour, curved refinement, continuum limit, Einstein--Hilbert dominance는 아직 계산하거나 유도하지 않았다.
 
 proper vertex의 orientation sector는 [Engle (2011)](https://arxiv.org/abs/1111.2865), asymptotic transition-amplitude 맥락은 [Engle--Vilensky--Zipfel (2015)](https://arxiv.org/abs/1505.06683)을 참조할 수 있다. 그러나 이 문헌도 이 저장소의 유한 boundary Schur identity나 proper multicell Gaussian을 증명하지 않는다. 다음 증명은 문헌 이름으로 결론을 닫는 일이 아니라, actual proper/EPRL multi-cell의 $A,B,C$, measure/contour와 gauge-reduced Gaussian을 별도로 계산하는 일이다.
+
+Lorentzian 쪽에서 그 계산의 경계 입력을 어디까지 실제로 만들었는지는 [27장: 닫힘, 스핀 근사, 국소 LS 벡터](27_Lorentzian_1_to_5_닫힘_스핀_LS.md)에서 잇는다.
