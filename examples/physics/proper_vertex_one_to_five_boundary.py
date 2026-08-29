@@ -3,9 +3,10 @@
 The module constructs one rational six-vertex Minkowski placement.  Vertices
 0,...,4 form a nondegenerate Lorentzian four-simplex with five spacelike
 boundary tetrahedra; vertex 5 is its affine barycentre.  Replacing each coarse
-vertex in turn by vertex 5 gives five consistently oriented Lorentzian fine
-four-simplices.  All ten internal and five boundary tetrahedra are spacelike,
-and shared induced edge/triangle geometry is globally identical.
+vertex in turn by vertex 5 gives five Lorentzian fine four-simplices with
+consistent coordinate orientation.  All ten internal and five boundary
+tetrahedra are spacelike, and shared induced edge/triangle geometry is
+globally identical.
 
 This closes only a classical gluing prerequisite.  No coherent spinors,
 half-integer area-spectrum assignment, proper projector, SL(2,C) integral,
@@ -66,7 +67,7 @@ def lorentzian_one_to_five_coordinates(
     *,
     scale: Fraction = Fraction(1),
 ) -> dict[VertexId, RationalVector]:
-    '''Return an exact proper-compatible Lorentzian barycentric placement.'''
+    '''Return an exact Lorentzian barycentric 1-to-5 placement.'''
 
     if not isinstance(scale, Fraction) or scale <= 0:
         raise ValueError('scale must be a positive Fraction')
@@ -171,7 +172,7 @@ def _tetrahedron_edge_data(
 
 
 @dataclass(frozen=True)
-class LorentzianOneToFiveProperBoundaryCertificate:
+class LorentzianOneToFiveClassicalGluingCertificate:
     vertex_count: int
     boundary_edge_count: int
     internal_edge_count: int
@@ -193,15 +194,17 @@ class LorentzianOneToFiveProperBoundaryCertificate:
     inserted_vertex_is_exact_barycentre: bool
     all_five_cells_nondegenerate_lorentzian: bool
     all_fifteen_unique_tetrahedra_spacelike: bool
-    all_fine_cells_share_coarse_orientation: bool
+    all_fine_cells_share_coarse_coordinate_orientation: bool
     all_fine_four_volumes_are_one_fifth_of_coarse: bool
     internal_tetrahedra_have_two_incident_cells: bool
     internal_triangles_have_three_incident_cells: bool
     boundary_triangles_have_two_incident_cells: bool
-    shared_tetrahedron_intrinsic_shape_matching: bool
-    global_triangle_area_squared_labels_consistent: bool
+    globally_embedded_shared_tetrahedron_intrinsic_shapes_match: bool
+    globally_embedded_triangle_area_squared_labels_consistent: bool
     all_triangle_area_squared_positive: bool
-    classical_proper_boundary_geometry_prerequisite_closed: bool
+    classical_lorentzian_gluing_prerequisite_closed: bool
+    geometric_tetrahedron_closure_explicitly_checked: bool
+    quantum_coherent_intertwiner_closure_constructed: bool
     regge_coherent_spinors_materialized: bool
     half_integer_spin_assignment_constructed: bool
     shared_bra_ket_orientation_data_constructed: bool
@@ -213,16 +216,16 @@ class LorentzianOneToFiveProperBoundaryCertificate:
     proper_eprl_multicell_hessian_computed: bool
     status: str
     claim_ceiling: str = (
-        'LORENTZIAN_1_TO_5_CLASSICAL_BOUNDARY_SKELETON_NOT_PROPER_EPRL_AMPLITUDE'
+        'LORENTZIAN_1_TO_5_CLASSICAL_BOUNDARY_SKELETON_ONLY'
     )
 
 
-def certify_lorentzian_one_to_five_proper_boundary(
+def certify_lorentzian_one_to_five_classical_gluing(
     coordinates: Mapping[VertexId, RationalVector] | None = None,
     *,
     scale: Fraction = Fraction(1),
-) -> LorentzianOneToFiveProperBoundaryCertificate:
-    '''Certify the exact classical 1-to-5 Lorentzian gluing prerequisite.'''
+) -> LorentzianOneToFiveClassicalGluingCertificate:
+    '''Certify an exact classical 1-to-5 Lorentzian gluing skeleton.'''
 
     if coordinates is not None and scale != 1:
         raise ValueError('scale cannot be combined with explicit coordinates')
@@ -344,7 +347,7 @@ def certify_lorentzian_one_to_five_proper_boundary(
         and all_triangle_areas_positive
     )
 
-    return LorentzianOneToFiveProperBoundaryCertificate(
+    return LorentzianOneToFiveClassicalGluingCertificate(
         vertex_count=6,
         boundary_edge_count=len(BOUNDARY_EDGES),
         internal_edge_count=len(INTERNAL_EDGES),
@@ -366,7 +369,7 @@ def certify_lorentzian_one_to_five_proper_boundary(
         inserted_vertex_is_exact_barycentre=barycentric,
         all_five_cells_nondegenerate_lorentzian=all_fine_lorentzian,
         all_fifteen_unique_tetrahedra_spacelike=all_unique_tetrahedra_spacelike,
-        all_fine_cells_share_coarse_orientation=same_orientation,
+        all_fine_cells_share_coarse_coordinate_orientation=same_orientation,
         all_fine_four_volumes_are_one_fifth_of_coarse=(
             one_fifth and gram_one_twenty_fifth
         ),
@@ -379,10 +382,16 @@ def certify_lorentzian_one_to_five_proper_boundary(
         boundary_triangles_have_two_incident_cells=all(
             count == 2 for count in boundary_triangle_incidence
         ),
-        shared_tetrahedron_intrinsic_shape_matching=shared_shape_matching,
-        global_triangle_area_squared_labels_consistent=triangle_labels_consistent,
+        globally_embedded_shared_tetrahedron_intrinsic_shapes_match=(
+            shared_shape_matching
+        ),
+        globally_embedded_triangle_area_squared_labels_consistent=(
+            triangle_labels_consistent
+        ),
         all_triangle_area_squared_positive=all_triangle_areas_positive,
-        classical_proper_boundary_geometry_prerequisite_closed=closed,
+        classical_lorentzian_gluing_prerequisite_closed=closed,
+        geometric_tetrahedron_closure_explicitly_checked=False,
+        quantum_coherent_intertwiner_closure_constructed=False,
         regge_coherent_spinors_materialized=False,
         half_integer_spin_assignment_constructed=False,
         shared_bra_ket_orientation_data_constructed=False,
@@ -393,7 +402,7 @@ def certify_lorentzian_one_to_five_proper_boundary(
         standard_proper_eprl_five_vertex_amplitude_derived=False,
         proper_eprl_multicell_hessian_computed=False,
         status=(
-            'LORENTZIAN_PROPER_COMPATIBLE_1_TO_5_CLASSICAL_BOUNDARY_SKELETON_CLOSED'
+            'LORENTZIAN_1_TO_5_CLASSICAL_GLUING_SKELETON_CLOSED'
             if closed
             else 'LORENTZIAN_1_TO_5_BOUNDARY_SKELETON_FAILED'
         ),

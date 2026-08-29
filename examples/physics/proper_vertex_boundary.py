@@ -190,7 +190,12 @@ def lorentzian_four_simplex_audit(
     *,
     tolerance: float = 1.0e-12,
 ) -> LorentzianFourSimplexAudit:
-    """Check one 4-simplex and each of its five boundary tetrahedra."""
+    """Check one 4-simplex and each of its five boundary tetrahedra.
+
+    Signature counts are scale-normalized and use exact leading-minor signs
+    when available.  The stored raw ``gram_eigenvalues`` are diagnostic only
+    and may underflow for extremely small exact rational scales.
+    """
 
     if len(vertices) != 5 or len(set(vertices)) != 5:
         raise ValueError("vertices must contain five distinct labels")
@@ -203,8 +208,26 @@ def lorentzian_four_simplex_audit(
     gram = _gram_matrix(edges)
     determinant = _determinant(gram)
     eigenvalues = _float_eigenvalues(gram)
-    negative = sum(value < -tolerance for value in eigenvalues)
-    positive = sum(value > tolerance for value in eigenvalues)
+    leading_minors = _leading_principal_minors(gram)
+    exact_standard_order_lorentzian = (
+        all(value > 0 for value in leading_minors[:3])
+        and leading_minors[3] < 0
+    )
+    gram_scale = max(abs(value) for row in gram for value in row)
+    normalized_eigenvalues = (
+        _float_eigenvalues(
+            tuple(
+                tuple(value / gram_scale for value in row)
+                for row in gram
+            )
+        )
+        if gram_scale > 0
+        else (0.0, 0.0, 0.0, 0.0)
+    )
+    negative = sum(value < -tolerance for value in normalized_eigenvalues)
+    positive = sum(value > tolerance for value in normalized_eigenvalues)
+    if exact_standard_order_lorentzian:
+        negative, positive = 1, 3
     boundary = tuple(
         spacelike_tetrahedron_audit(tuple(face), coordinates)
         for face in combinations(vertices, 4)

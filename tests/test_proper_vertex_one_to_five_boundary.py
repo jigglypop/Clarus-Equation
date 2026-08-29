@@ -6,7 +6,7 @@ from examples.physics.proper_vertex_one_to_five_boundary import (
     BOUNDARY_TETRAHEDRA,
     FINE_SIMPLICES,
     INTERNAL_TETRAHEDRA,
-    certify_lorentzian_one_to_five_proper_boundary,
+    certify_lorentzian_one_to_five_classical_gluing,
     lorentzian_one_to_five_coordinates,
 )
 
@@ -28,7 +28,7 @@ def test_exact_internal_vertex_is_the_boundary_barycentre() -> None:
 
 
 def test_one_to_five_incidence_counts_are_the_actual_four_dimensional_counts() -> None:
-    audit = certify_lorentzian_one_to_five_proper_boundary()
+    audit = certify_lorentzian_one_to_five_classical_gluing()
 
     assert len(FINE_SIMPLICES) == 5
     assert len(BOUNDARY_TETRAHEDRA) == 5
@@ -47,7 +47,7 @@ def test_one_to_five_incidence_counts_are_the_actual_four_dimensional_counts() -
 
 
 def test_coarse_and_all_fine_cells_are_lorentzian_with_spacelike_tetrahedra() -> None:
-    audit = certify_lorentzian_one_to_five_proper_boundary()
+    audit = certify_lorentzian_one_to_five_classical_gluing()
 
     assert audit.coarse_simplex_audit.nondegenerate_lorentzian
     assert audit.coarse_simplex_audit.all_boundary_tetrahedra_spacelike
@@ -60,36 +60,44 @@ def test_coarse_and_all_fine_cells_are_lorentzian_with_spacelike_tetrahedra() ->
 
 
 def test_barycentric_fine_cells_have_consistent_orientation_and_exact_volume_ratio() -> None:
-    audit = certify_lorentzian_one_to_five_proper_boundary()
+    audit = certify_lorentzian_one_to_five_classical_gluing()
 
     assert audit.coarse_coordinate_determinant == Fraction(-9, 500)
     assert audit.fine_to_coarse_coordinate_determinant_ratios == (Fraction(1, 5),) * 5
     assert audit.fine_to_coarse_gram_determinant_ratios == (Fraction(1, 25),) * 5
-    assert audit.all_fine_cells_share_coarse_orientation
+    assert audit.all_fine_cells_share_coarse_coordinate_orientation
     assert audit.all_fine_four_volumes_are_one_fifth_of_coarse
 
 
 def test_shared_intrinsic_geometry_and_triangle_labels_match_globally() -> None:
-    audit = certify_lorentzian_one_to_five_proper_boundary()
+    audit = certify_lorentzian_one_to_five_classical_gluing()
 
     assert audit.internal_tetrahedra_have_two_incident_cells
     assert audit.internal_triangles_have_three_incident_cells
     assert audit.boundary_triangles_have_two_incident_cells
-    assert audit.shared_tetrahedron_intrinsic_shape_matching
-    assert audit.global_triangle_area_squared_labels_consistent
+    assert audit.globally_embedded_shared_tetrahedron_intrinsic_shapes_match
+    assert audit.globally_embedded_triangle_area_squared_labels_consistent
     assert audit.all_triangle_area_squared_positive
-    assert audit.classical_proper_boundary_geometry_prerequisite_closed
+    assert audit.classical_lorentzian_gluing_prerequisite_closed
+    assert not audit.geometric_tetrahedron_closure_explicitly_checked
+    assert not audit.quantum_coherent_intertwiner_closure_constructed
     assert (
         audit.status
-        == 'LORENTZIAN_PROPER_COMPATIBLE_1_TO_5_CLASSICAL_BOUNDARY_SKELETON_CLOSED'
+        == 'LORENTZIAN_1_TO_5_CLASSICAL_GLUING_SKELETON_CLOSED'
     )
 
 
 def test_positive_rational_scaling_preserves_the_certificate() -> None:
-    unit = certify_lorentzian_one_to_five_proper_boundary()
-    scaled = certify_lorentzian_one_to_five_proper_boundary(scale=Fraction(7, 3))
+    unit = certify_lorentzian_one_to_five_classical_gluing()
+    scaled = certify_lorentzian_one_to_five_classical_gluing(scale=Fraction(7, 3))
+    tiny = certify_lorentzian_one_to_five_classical_gluing(
+        scale=Fraction(1, 10**100)
+    )
 
-    assert scaled.classical_proper_boundary_geometry_prerequisite_closed
+    assert scaled.classical_lorentzian_gluing_prerequisite_closed
+    assert tiny.classical_lorentzian_gluing_prerequisite_closed
+    assert all(item.negative_eigenvalue_count == 1 for item in tiny.fine_simplex_audits)
+    assert all(item.positive_eigenvalue_count == 3 for item in tiny.fine_simplex_audits)
     assert scaled.coarse_coordinate_determinant == (
         unit.coarse_coordinate_determinant * Fraction(7, 3) ** 4
     )
@@ -100,16 +108,16 @@ def test_positive_rational_scaling_preserves_the_certificate() -> None:
 def test_collapsing_the_internal_vertex_is_rejected() -> None:
     coordinates = lorentzian_one_to_five_coordinates()
     coordinates[5] = coordinates[0]
-    audit = certify_lorentzian_one_to_five_proper_boundary(coordinates)
+    audit = certify_lorentzian_one_to_five_classical_gluing(coordinates)
 
     assert not audit.inserted_vertex_is_exact_barycentre
     assert not audit.all_five_cells_nondegenerate_lorentzian
-    assert not audit.classical_proper_boundary_geometry_prerequisite_closed
+    assert not audit.classical_lorentzian_gluing_prerequisite_closed
     assert audit.status == 'LORENTZIAN_1_TO_5_BOUNDARY_SKELETON_FAILED'
 
 
 def test_claim_ceiling_keeps_all_quantum_and_glued_amplitude_steps_open() -> None:
-    audit = certify_lorentzian_one_to_five_proper_boundary()
+    audit = certify_lorentzian_one_to_five_classical_gluing()
 
     assert not audit.regge_coherent_spinors_materialized
     assert not audit.half_integer_spin_assignment_constructed

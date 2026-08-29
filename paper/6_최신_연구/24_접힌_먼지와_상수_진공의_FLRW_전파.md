@@ -54,3 +54,5 @@ $$
 ## 24.4 재현 범위
 
 먼지 branch의 continuity/Friedmann/Raychaudhuri 전파는 [homogeneous_dust_flrw_propagation.py](../../examples/physics/homogeneous_dust_flrw_propagation.py), 상수 진공 branch는 [constant_vacuum_flrw_propagation.py](../../examples/physics/constant_vacuum_flrw_propagation.py)에 있다. 원장의 focused 결과는 각각 `16 passed`, `14 passed`다. 이 회귀는 조건부 homogeneous background만 재현하며 density, selection, renormalization, abundance 또는 CE-specific prediction을 증명하지 않는다.
+
+다음 [25장](25_공유_영수증_먼지_상수진공_FLRW.md)은 두 branch를 한 source receipt 안에서 함께 쓸 때 필요한 분할 규칙과 혼합 해를 다룬다.
