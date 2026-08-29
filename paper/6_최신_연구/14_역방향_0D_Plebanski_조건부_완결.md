@@ -1,6 +1,6 @@
 # 14. 하나의 typed 이력으로 읽는 0D--Plebanski 유한 증인
 
-이 장의 결론은 단순하지만 범위가 좁다. 좌표 없는 $0$차원 seed에서 일반상대론 전체가 저절로 나온다는 결론은 얻지 않았다. 대신 **선언한 typed 규칙을 가진 하나의 이력**을 끝까지 따라가면, 그 이력 안에서 선택된 평탄 $\Lambda=0$ Lorentzian Plebanski/Einstein 해를 실제로 만들 수 있음을 보였다. 이전처럼 서로 독립인 조합론ㆍreadoutㆍGibbsㆍ기하 검사를 나란히 놓는 방식은 감사에서 실패했다. 같은 번호를 달았어도 값이 서로 흘러가지 않으면 하나의 증명이 아니기 때문이다. 지금의 증인은 한 typed trace에서 나온 같은 shared tetrahedron, 같은 Gram defect, 같은 $q$, $\theta$, class record를 다음 단계가 다시 사용한다.
+이 장의 결론은 단순하지만 범위가 좁다. 좌표 없는 $0$차원 seed에서 일반상대론 전체가 저절로 나온다는 결론은 얻지 않았다. 대신 **선언한 typed 규칙을 가진 하나의 이력**을 끝까지 따라가면, 그 이력 안에서 선택된 평탄 $\Lambda=0$ Lorentzian Plebanski/Einstein 해를 실제로 만들 수 있음을 보였다. 이전처럼 서로 독립인 조합론ㆍreadoutㆍGibbsㆍ기하 검사를 나란히 놓는 방식은 감사에서 실패했다. 같은 번호를 달았어도 값이 서로 흘러가지 않으면 하나의 증명이 아니기 때문이다. 지금의 증인은 한 typed trace에서 나온 같은 shared tetrahedron, 같은 Gram defect, 같은 $q$, $\theta$, class record를 다음 단계가 다시 사용한다. 같은 이력을 보존한 비평탄 constant-curvature 증인은 [15장](15_같은_이력의_비평탄_Plebanski_힌지.md)에서 이어진다.
 
 정확한 형식 지위는 [차원 분류 원장 C4](../검증_원장/참조_차원_분류_원장.md#조건부-0dlorentzian-plebanskieinstein-폐쇄)에 고정돼 있다. 이 장은 원장을 바꾸지 않고, 처음 읽는 사람이 그 지위를 따라갈 수 있게 설명한다. CE의 큰 서사인 **끼임 → 접힘 → 암흑 표현** 가운데 여기서 형식적으로 다루는 것은 첫째와 둘째다. 접힌 가능성이 남는다는 유한 정리까지가 접힘의 범위다. 그것이 암흑에너지로 읽힌다는 마지막 단계는 아직 열려 있다.
 
@@ -86,7 +86,7 @@ $B_2$와 $F_2$를 같은 2-form type으로 택하고 background metric 없이 $B
 - 위 한 평탄 증인이 generic curved geometry, refinement-consistent continuum, Einstein--Hilbert 지배, 정확히 두 massless spin-$2$ 자유도를 낳는다는 명제. 평탄 자료만으로 $R$과 $R+\alpha R^2$를 구별할 수 없다는 반례가 있다.
 - 접힌 norm이 우주론에서 암흑에너지로 읽힌다는 명제. 그것에는 별도의 readout map, 보존 법칙, 진화, 독립 관측 계약이 필요하다.
 
-특히 continuum은 열린 다리다. [Finocchiaro--Oriti (2020)](https://arxiv.org/abs/2004.07361)와 [Carrozza (2024)](https://arxiv.org/abs/2404.07834)는 GFT renormalization의 방법과 남은 과제를 정리하지만, 4D Lorentzian EPRL/GFT에서 refinement-consistent Einstein dynamics와 정확히 두 자유도가 나온다는 정리를 제공하지 않는다. [Bruno et al. (2026)](https://arxiv.org/abs/2603.16999)은 너무 강한 Hilbert-space 수렴 요구가 TQFT로 굳을 수 있음을 보이고 distributional rigging-map 길을 제시한다. 그 길 역시 Einstein dynamics의 증명이 아니라 다음에 검증할 criterion이다.
+특히 continuum은 열린 다리다. [15장](15_같은_이력의_비평탄_Plebanski_힌지.md)은 같은 이력에서 하나의 비평탄 constant-curvature 유한 증인까지 닫지만, 실제 proper amplitude, refinement, Einstein--Hilbert 지배와 two-DOF는 여전히 제공하지 않는다. [Finocchiaro--Oriti (2020)](https://arxiv.org/abs/2004.07361)와 [Carrozza (2024)](https://arxiv.org/abs/2404.07834)는 GFT renormalization의 방법과 남은 과제를 정리하지만, 4D Lorentzian EPRL/GFT에서 refinement-consistent Einstein dynamics와 정확히 두 자유도가 나온다는 정리를 제공하지 않는다. [Bruno et al. (2026)](https://arxiv.org/abs/2603.16999)은 너무 강한 Hilbert-space 수렴 요구가 TQFT로 굳을 수 있음을 보이고 distributional rigging-map 길을 제시한다. 그 길 역시 Einstein dynamics의 증명이 아니라 다음에 검증할 criterion이다.
 
 그러므로 “조건부”는 얼버무린 미완성 표지가 아니다. **명시한 계약 아래 한 유한 평탄 존재 증인을 끝까지 증명했다**는 뜻이다. 계약 자체가 자연에서 유도되는가와 continuum으로 살아남는가는 다음 연구의 별도 질문이다.
 

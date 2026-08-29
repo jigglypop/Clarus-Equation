@@ -128,6 +128,7 @@ CODEX_POLICY_FILES = (
     "skills/ce-closure-gate/SKILL.md",
     "skills/ce-dimensionless/SKILL.md",
     "skills/ce-validate/SKILL.md",
+    "skills/ce-explanation-planner/SKILL.md",
 )
 
 NARRATIVE_MARKDOWN = (
@@ -246,6 +247,19 @@ def test_agent_policies_use_the_same_formal_provenance() -> None:
                 violations.append(f".codex/{relative}:{line}: {label}: {match.group(0)}")
 
     assert not violations, "\n".join(violations)
+
+
+def test_explanation_planner_contract_is_complete() -> None:
+    skill = (ROOT / ".codex" / "skills" / "ce-explanation-planner" / "SKILL.md").read_text(
+        encoding="utf-8"
+    )
+    harness = (ROOT / ".codex" / "harnesses" / "explanation_first_planner.md").read_text(
+        encoding="utf-8"
+    )
+    for marker in ("LaTeX", "비유", "[정리]", "[공리]", "증명 경로"):
+        assert marker in skill
+    assert "`.codex/skills/ce-explanation-planner`" in harness
+    assert "수학적 증명이 아니다" in harness
 
 
 def test_ledger_and_paper_writers_have_disjoint_ownership() -> None:

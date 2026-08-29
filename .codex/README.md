@@ -13,6 +13,7 @@ config.toml          low effort 기본값과 최대 3개 병렬 레인
 prompts/             CE 명령 프롬프트 7종
 agents/              독립 연구·집필 역할 카드
 skills/              단일 책임 CE 스킬
+skills/ce-explanation-planner/  수학·물리 판단을 채팅으로 설명하는 증명 계획 스킬
 skills/ce-research/core/   기존 run 판독용 Rust 호환 코어
 harnesses/           수치·증거 하네스 계약 — backend parity(Rust/CUDA), 실측 교정 루프, 뇌 증거 사다리
 hooks.json           빈 자동 lifecycle hook 등록(의도된 상태)
@@ -34,6 +35,9 @@ hooks/               native Windows Python·저장소 계약·payload 실행기
 - `harness`는 `paper/` 전환, 이전 경로 잔존, 필수 진입점과 AGENTS context budget을 검사한다.
 - `source`는 실행 없이 AST를 파싱한다.
 - `pytest`는 cache를 끄고 저장소 밖의 고유 임시 디렉터리를 사용한다.
+
+수학·물리 판단은 `ce-explanation-planner`의 LaTeX·비유·지위·다음 증명 의무
+계약을 따른다. 구조 검사는 `.codex/harnesses/explanation_first_planner.md`에 둔다.
 
 ## 점진적 공개와 피드백
 

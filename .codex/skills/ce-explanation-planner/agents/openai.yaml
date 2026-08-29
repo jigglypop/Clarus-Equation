@@ -1,0 +1,4 @@
+interface:
+  display_name: "CE Explanation Planner"
+  short_description: "Plan clear, rigorous math-and-physics explanations"
+  default_prompt: "Use $ce-explanation-planner to explain the judgment, derivation, analogy, and next proof obligation in chat."

@@ -228,7 +228,7 @@ flavor와 질량 branch는 대칭·parameterization·측정 비교의 의존성�
 
 문서 지도는 목적별 진입점을 연결한다. 통합 논문은 서사와 기여를, 강의·유도는 정의와 증명을, 검증 원장은 상태·provenance를, 구현 문서는 실행 범위를 담당한다.
 
-최신 0차원 측정·접힘·암흑부문 연구는 큰 단일 보고서 대신 [최신 연구 조립 목차](6_최신_연구/00_읽기_지도.md)에서 장별로 읽는다. 그중 [하나의 typed 이력으로 읽는 0D--Plebanski 유한 증인](6_최신_연구/14_역방향_0D_Plebanski_조건부_완결.md)은 같은 shared tetrahedronㆍGram defectㆍreadoutㆍrecord가 이어지는 한 평탄 Lorentzian Plebanski/Einstein 유한 증인을 설명한다. bare $0$차원 유도, continuum GR, 암흑부문 확인을 주장하지 않는다. 작업공간 보고서는 과거 근거이고 이 목차와 연결된 `paper/` 문서가 독자용 최신본이다.
+최신 0차원 측정·접힘·암흑부문 연구는 큰 단일 보고서 대신 [최신 연구 조립 목차](6_최신_연구/00_읽기_지도.md)에서 장별로 읽는다. 그중 [하나의 typed 이력으로 읽는 0D--Plebanski 유한 증인](6_최신_연구/14_역방향_0D_Plebanski_조건부_완결.md)은 같은 shared tetrahedronㆍGram defectㆍreadoutㆍrecord가 이어지는 한 평탄 Lorentzian Plebanski/Einstein 유한 증인을 설명한다. 이어지는 [같은 이력의 비평탄 Plebanski 힌지](6_최신_연구/15_같은_이력의_비평탄_Plebanski_힌지.md)는 원래 두 simplex를 보존하고 하나를 더해 닫힌 hinge link 위의 constant-curvature 유한 증인을 설명한다. [proper vertex의 경계와 rank-one 수축](6_최신_연구/16_proper_vertex_경계와_rank_one_수축.md)은 flat 단일-vertex 외부 정리와 조건부 수축을 curved amplitude와 구분하고, [곡률 단일가지 가우스 템플릿](6_최신_연구/17_곡률_단일가지_가우스_템플릿.md)은 실제 curved block으로 가기 전의 local Gaussian 경계를 적는다. [분포적 refinement와 rigging map](6_최신_연구/18_분포적_refinement와_rigging_map.md)은 강한 Hilbert-norm 수렴을 쓰지 않는 직접계 모형을 분리하며, [선형화 Einstein 두 편광 수용 정리](6_최신_연구/19_선형화_Einstein_두_편광_수용_정리.md)는 supplied linearized action의 두 편광 기준을 적는다. [게이지 보존 Fierz--Pauli 격자 refinement](6_최신_연구/20_게이지_보존_Fierz_Pauli_격자_refinement.md) 뒤의 네 장은 두 미분 Fierz--Pauli 유일성, refinement Hessian/Ward와 Schur 유효커널, TT physical pole, 접힌 먼지와 상수 진공의 조건부 FLRW 전파를 차례로 분리한다. 이 문서들은 bare $0$차원 유도, standard multi-vertex amplitude, continuum GR, 암흑부문 확인을 주장하지 않는다. 작업공간 보고서는 과거 근거이고 이 목차와 연결된 `paper/` 문서가 독자용 최신본이다.
 
 ### 9.1 먼저 읽기
 

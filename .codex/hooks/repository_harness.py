@@ -43,12 +43,19 @@ REQUIRED_PATHS = (
     Path(".codex/config.toml"),
     Path(".codex/hooks/python.cmd"),
     Path("tests/test_canonical_document_policy.py"),
+    Path(".codex/skills/ce-explanation-planner/SKILL.md"),
+    Path(".codex/skills/ce-explanation-planner/agents/openai.yaml"),
+    Path(".codex/agents/ce-explanation-planner.md"),
+    Path(".codex/agents/ce-explanation-planner.toml"),
+    Path(".codex/prompts/ce-explain-plan.md"),
+    Path(".codex/harnesses/explanation_first_planner.md"),
 )
 REQUIRED_AGENT_REFERENCES = (
     "paper/README.md",
     ".codex/README.md",
     ".codex/hooks/python.cmd",
 )
+PLANNER_MARKERS = ("LaTeX", "비유", "[정리]", "[공리]", "증명 경로")
 
 
 def iter_active_text_files(
@@ -117,6 +124,15 @@ def check_repository(root: Path = REPO_ROOT) -> list[str]:
     for relative in REQUIRED_PATHS:
         if not (root / relative).exists():
             violations.append(f"missing harness entrypoint: {relative.as_posix()}")
+
+    planner = root / ".codex" / "skills" / "ce-explanation-planner" / "SKILL.md"
+    if planner.is_file():
+        planner_text = planner.read_text(encoding="utf-8-sig")
+        for marker in PLANNER_MARKERS:
+            if marker not in planner_text:
+                violations.append(
+                    f"explanation planner missing invariant marker: {marker}"
+                )
 
     violations.extend(find_retired_path_references(root))
 
