@@ -66,6 +66,13 @@ def _scaled_zero(value: float, reference_scale: float, tolerance: float) -> bool
     return abs(value) <= tolerance * scale
 
 
+def _relative_residual(value: float, *reference_terms: float) -> float:
+    scale = max(abs(term) for term in reference_terms)
+    if scale == 0.0:
+        return 0.0 if value == 0.0 else math.inf
+    return abs(value) / scale
+
+
 @dataclass(frozen=True)
 class PartitionedDarkReceipt:
     source_receipt_id: str
@@ -393,25 +400,25 @@ def propagate_partitioned_dust_vacuum_flat_flrw(
         (0.0, 0.0, 0.0, pressure),
     )
     normalized_residuals = (
-        abs(continuity_residual)
-        / max(1.0, abs(density_dot), abs(3.0 * hubble * (rho_total + pressure))),
-        abs(friedmann_residual)
-        / max(1.0, hubble**2, abs(gravitational_factor * rho_total)),
-        abs(raychaudhuri_residual)
-        / max(
-            1.0,
-            abs(hubble_dot),
-            abs(4.0 * math.pi * newton * (rho_total + pressure)),
+        _relative_residual(
+            continuity_residual,
+            density_dot,
+            3.0 * hubble * (rho_total + pressure),
         ),
-        abs(acceleration_residual)
-        / max(
-            1.0,
-            abs(acceleration),
-            abs(
-                4.0 * math.pi * newton * (rho_total + 3.0 * pressure) / 3.0
-            ),
+        _relative_residual(
+            friedmann_residual, hubble**2, gravitational_factor * rho_total
         ),
-        abs(scale_residual) / max(1.0, abs(x), abs(reconstructed_x)),
+        _relative_residual(
+            raychaudhuri_residual,
+            hubble_dot,
+            4.0 * math.pi * newton * (rho_total + pressure),
+        ),
+        _relative_residual(
+            acceleration_residual,
+            acceleration,
+            4.0 * math.pi * newton * (rho_total + 3.0 * pressure) / 3.0,
+        ),
+        _relative_residual(scale_residual, x, reconstructed_x),
     )
     closed = all(value <= tolerance for value in normalized_residuals)
 

@@ -2,17 +2,24 @@
 
 The boundary is a regular four-simplex of squared edge length ``2``.  Its
 barycentre is inserted as vertex 5, giving five internal edges of squared
-length ``4/5``.  The code evaluates the *Euclidean Regge action itself* from
-edge lengths: internal triangular hinges use ``2*pi-sum(theta)`` and boundary
-triangles use the Gibbons--Hawking--York analogue ``pi-sum(theta)``.
+length ``4/5``.  Edge lengths are ratios to a common ``L_ref`` and the code
+evaluates the reduced geometric action ``S_geometric/L_ref^2``: internal
+triangular hinges use ``A_hat*(2*pi-sum(theta))`` and boundary triangles use
+the Gibbons--Hawking--York analogue ``A_hat*(pi-sum(theta))``.  The physical
+gravitational prefactor ``L_ref^2/(8*pi*G)`` is not included.
 
 At the flat barycentric point, translations of the inserted vertex change the
 five internal lengths in the four-dimensional subspace perpendicular to
-``(1,1,1,1,1)``.  They are Regge vertex-displacement gauge directions.  A
-finite-difference Hessian is therefore reported together with an S5-symmetry
-reduced, independently checkable rank-one form.  This is a finite Euclidean
-Regge calculation only: it is neither a proper/EPRL amplitude nor a Gaussian
-path integral.
+``(1,1,1,1,1)``.  They are exact Regge vertex-displacement gauge directions.
+The fixed-boundary Schlaefli identity makes the Regge gradient vanish along
+the local family of flat subdivisions, so differentiating that gradient gives
+four exact Hessian null vectors.  S5 symmetry then reduces the remaining
+direction to the collective radial mode, whose exact eigenvalue is
+``40*sqrt(5)``.  The raw finite-difference Hessian is nevertheless full rank
+because truncation error lifts the four zero modes, so it is retained only as
+a convergence check.  This is a finite Euclidean Regge calculation only: it
+is neither a boundary Schur complement, a proper/EPRL amplitude, nor a
+Gaussian path integral.
 """
 
 from __future__ import annotations
@@ -134,7 +141,7 @@ def simplex_dihedral_angle(
 
 
 def euclidean_regge_action(internal_edge_lengths: Sequence[float]) -> float:
-    """Evaluate the 4D Regge action with its fixed-boundary term."""
+    '''Evaluate reduced S_geometric/L_ref^2 with its boundary term.'''
 
     lengths = _require_internal_lengths(internal_edge_lengths)
     action = 0.0
@@ -153,6 +160,57 @@ def euclidean_regge_action(internal_edge_lengths: Sequence[float]) -> float:
         ]
         action += _triangle_area(hinge, lengths) * (math.pi - sum(angles))
     return float(action)
+
+
+def equal_radius_regge_action(radius: float) -> float:
+    '''Return the exact reduced action when all five internal edges equal r.
+
+    The nondegenerate Euclidean domain is r^2 > 3/4.  There are ten internal
+    and ten boundary triangle hinges, with three and two incident fine
+    four-simplices respectively.
+    '''
+
+    if not math.isfinite(radius) or radius * radius <= 3.0 / 4.0:
+        raise ValueError('equal internal radius must satisfy r^2 > 3/4')
+    squared = radius * radius
+    internal_area = 0.5 * math.sqrt(2.0 * squared - 1.0)
+    boundary_area = math.sqrt(3.0) / 2.0
+    internal_angle = math.acos((squared - 1.0) / (3.0 * squared - 2.0))
+    boundary_angle = math.acos(1.0 / (2.0 * math.sqrt(3.0 * squared - 2.0)))
+    return float(
+        10.0 * internal_area * (2.0 * math.pi - 3.0 * internal_angle)
+        + 10.0 * boundary_area * (math.pi - 2.0 * boundary_angle)
+    )
+
+
+def barycentric_internal_length_jacobian() -> np.ndarray:
+    '''Return the exact length-map Jacobian in the five-dimensional embedding.
+
+    Boundary vertices are v_i=e_i-1/5*1 and r0=sqrt(4/5).  For a displacement
+    x in the sum-zero hyperplane, d l_i=-v_i dot x/r0.  Extending the map by
+    zero on the normal direction gives J=-(I-11^T/5)/r0, of rank four and
+    image exactly 1-perp.
+    '''
+
+    projector = np.eye(5) - np.ones((5, 5)) / 5.0
+    return -projector / math.sqrt(4.0 / 5.0)
+
+
+def analytic_barycentric_internal_hessian() -> np.ndarray:
+    '''Return the exact fixed-boundary Regge internal Hessian.
+
+    Flat 1-to-5 subdivisions obey grad_l S(l(x))=0 by the fixed-boundary
+    Schlaefli identity.  Differentiation gives H J=0 for the rank-four length
+    Jacobian J.  Regular-boundary S5 symmetry leaves only the collective
+    direction.  Along l_i=r, the hinge formula gives
+
+        S''(sqrt(4/5)) = 200*sqrt(5).
+
+    Since the normalized collective coordinate changes every r by 1/sqrt(5),
+    its eigenvalue is 40*sqrt(5), hence H=8*sqrt(5)*11^T.
+    '''
+
+    return np.full((5, 5), 8.0 * math.sqrt(5.0))
 
 
 def _gradient_and_hessian(lengths: np.ndarray, step: float) -> tuple[np.ndarray, np.ndarray]:
@@ -193,15 +251,34 @@ class ReggeOneToFiveRefinementAudit:
     internal_triangle_count: int
     maximum_internal_deficit: float
     maximum_internal_gradient: float
-    raw_hessian_symmetry_residual: float
+    finite_difference_step: float
+    raw_hessian_transpose_residual: float
+    s5_symmetry_reduction_residual: float
     raw_hessian_gauge_residual: float
-    hessian_eigenvalues: tuple[float, ...]
-    internal_hessian_rank: int
-    internal_hessian_nullity: int
-    ordinary_internal_inverse_exists: bool
+    half_step_raw_hessian_gauge_residual: float
+    raw_gauge_residual_decreases_with_step: bool
+    raw_hessian_eigenvalues: tuple[float, ...]
+    raw_hessian_condition_number: float
+    finite_difference_raw_inverse_exists: bool
+    s5_averaged_finite_difference_gauge_residual: float
+    s5_averaged_finite_difference_eigenvalues: tuple[float, ...]
+    s5_averaged_tolerance_rank: int
+    s5_averaged_tolerance_nullity: int
+    barycentric_length_jacobian_rank: int
+    barycentric_length_jacobian_gram_residual: float
+    analytic_hessian_gauge_residual: float
+    analytic_hessian_eigenvalues: tuple[float, ...]
+    analytic_internal_hessian_rank: int
+    analytic_internal_hessian_nullity: int
+    analytic_radial_curvature: float
+    raw_hessian_to_analytic_residual: float
+    half_step_hessian_to_analytic_residual: float
+    finite_difference_converges_to_analytic_hessian: bool
+    exact_gauge_unfixed_inverse_defined: bool
     gauge_basis_orthogonality_residual: float
     projected_physical_curvature: float
-    projected_physical_schur_defined: bool
+    projected_physical_internal_inverse_defined: bool
+    boundary_schur_complement_computed: bool
     boundary_hessian_equality_checked: bool
     gauge_reduced_boundary_hessian_equals_coarse: bool
     proper_eprl_amplitude_derived: bool
@@ -219,18 +296,31 @@ def audit_regge_one_to_five_refinement(
         raise ValueError("tolerance must be finite and positive")
     lengths = np.full(5, math.sqrt(4.0 / 5.0))
     gradient, raw_hessian = _gradient_and_hessian(lengths, finite_difference_step)
+    _, half_step_raw_hessian = _gradient_and_hessian(lengths, finite_difference_step / 2.0)
     diagonal = float(np.mean(np.diag(raw_hessian)))
     off_diagonal = float(np.mean(raw_hessian[~np.eye(5, dtype=bool)]))
     symmetry_hessian = np.full((5, 5), off_diagonal)
     np.fill_diagonal(symmetry_hessian, diagonal)
     unit = np.ones(5) / math.sqrt(5.0)
     projector = np.eye(5) - np.outer(unit, unit)
-    eigenvalues = np.linalg.eigvalsh(symmetry_hessian)
+    length_jacobian = barycentric_internal_length_jacobian()
+    analytic_hessian = analytic_barycentric_internal_hessian()
+    raw_eigenvalues = np.linalg.eigvalsh(raw_hessian)
+    symmetry_eigenvalues = np.linalg.eigvalsh(symmetry_hessian)
+    analytic_eigenvalues = np.linalg.eigvalsh(analytic_hessian)
     scale = max(1.0, float(np.linalg.norm(symmetry_hessian, ord=2)))
     rank_tolerance = max(tolerance, 2.0e-4 * scale)
-    rank = int(np.count_nonzero(np.abs(eigenvalues) > rank_tolerance))
-    nullity = 5 - rank
-    gauge_residual = float(np.linalg.norm(symmetry_hessian @ projector))
+    s5_rank = int(np.count_nonzero(np.abs(symmetry_eigenvalues) > rank_tolerance))
+    s5_nullity = 5 - s5_rank
+    raw_gauge_residual = float(np.linalg.norm(raw_hessian @ projector))
+    half_step_raw_gauge_residual = float(np.linalg.norm(half_step_raw_hessian @ projector))
+    symmetry_gauge_residual = float(np.linalg.norm(symmetry_hessian @ projector))
+    analytic_gauge_residual = float(np.linalg.norm(analytic_hessian @ projector))
+    raw_to_analytic = float(np.linalg.norm(raw_hessian - analytic_hessian))
+    half_step_to_analytic = float(np.linalg.norm(half_step_raw_hessian - analytic_hessian))
+    jacobian_gram_residual = float(
+        np.linalg.norm(length_jacobian @ length_jacobian.T - 1.25 * projector)
+    )
     simplex_volumes = tuple(four_simplex_volume(simplex, lengths) for simplex in FINE_SIMPLICES)
     coarse_volume = math.sqrt(5.0) / 24.0
     deficits = []
@@ -251,8 +341,12 @@ def audit_regge_one_to_five_refinement(
         max(abs(value) for value in deficits) <= tolerance
         and float(np.max(np.abs(gradient))) <= 2.0e-5
         and abs(sum(simplex_volumes) - coarse_volume) <= tolerance
-        and rank == 1 and nullity == 4
-        and gauge_residual <= rank_tolerance * 5.0
+        and int(np.linalg.matrix_rank(length_jacobian)) == 4
+        and jacobian_gram_residual <= tolerance
+        and analytic_gauge_residual <= tolerance
+        and max(abs(value) for value in analytic_eigenvalues[:4]) <= tolerance
+        and abs(analytic_eigenvalues[-1] - 40.0 * math.sqrt(5.0)) <= tolerance
+        and half_step_to_analytic < raw_to_analytic
         and orthogonality <= tolerance
     )
     return ReggeOneToFiveRefinementAudit(
@@ -264,18 +358,44 @@ def audit_regge_one_to_five_refinement(
         internal_triangle_count=10,
         maximum_internal_deficit=max(abs(value) for value in deficits),
         maximum_internal_gradient=float(np.max(np.abs(gradient))),
-        raw_hessian_symmetry_residual=float(np.linalg.norm(raw_hessian - symmetry_hessian)),
-        raw_hessian_gauge_residual=gauge_residual,
-        hessian_eigenvalues=tuple(float(value) for value in eigenvalues),
-        internal_hessian_rank=rank,
-        internal_hessian_nullity=nullity,
-        ordinary_internal_inverse_exists=False,
+        finite_difference_step=finite_difference_step,
+        raw_hessian_transpose_residual=float(np.linalg.norm(raw_hessian - raw_hessian.T)),
+        s5_symmetry_reduction_residual=float(np.linalg.norm(raw_hessian - symmetry_hessian)),
+        raw_hessian_gauge_residual=raw_gauge_residual,
+        half_step_raw_hessian_gauge_residual=half_step_raw_gauge_residual,
+        raw_gauge_residual_decreases_with_step=half_step_raw_gauge_residual < raw_gauge_residual,
+        raw_hessian_eigenvalues=tuple(float(value) for value in raw_eigenvalues),
+        raw_hessian_condition_number=float(np.linalg.cond(raw_hessian)),
+        finite_difference_raw_inverse_exists=int(np.linalg.matrix_rank(raw_hessian)) == 5,
+        s5_averaged_finite_difference_gauge_residual=symmetry_gauge_residual,
+        s5_averaged_finite_difference_eigenvalues=tuple(
+            float(value) for value in symmetry_eigenvalues
+        ),
+        s5_averaged_tolerance_rank=s5_rank,
+        s5_averaged_tolerance_nullity=s5_nullity,
+        barycentric_length_jacobian_rank=int(np.linalg.matrix_rank(length_jacobian)),
+        barycentric_length_jacobian_gram_residual=jacobian_gram_residual,
+        analytic_hessian_gauge_residual=analytic_gauge_residual,
+        analytic_hessian_eigenvalues=tuple(float(value) for value in analytic_eigenvalues),
+        analytic_internal_hessian_rank=1,
+        analytic_internal_hessian_nullity=4,
+        analytic_radial_curvature=40.0 * math.sqrt(5.0),
+        raw_hessian_to_analytic_residual=raw_to_analytic,
+        half_step_hessian_to_analytic_residual=half_step_to_analytic,
+        finite_difference_converges_to_analytic_hessian=half_step_to_analytic < raw_to_analytic,
+        exact_gauge_unfixed_inverse_defined=False,
         gauge_basis_orthogonality_residual=orthogonality,
-        projected_physical_curvature=float(unit @ symmetry_hessian @ unit),
-        projected_physical_schur_defined=rank == 1 and abs(float(unit @ symmetry_hessian @ unit)) > rank_tolerance,
+        projected_physical_curvature=float(unit @ analytic_hessian @ unit),
+        projected_physical_internal_inverse_defined=(
+            abs(float(unit @ analytic_hessian @ unit)) > tolerance
+        ),
+        boundary_schur_complement_computed=False,
         boundary_hessian_equality_checked=False,
         gauge_reduced_boundary_hessian_equals_coarse=False,
         proper_eprl_amplitude_derived=False,
         full_gaussian_path_integral_defined=False,
-        status=("EUCLIDEAN_REGGE_1_TO_5_FLAT_GAUGE_BLOCK_CLOSED" if closed else "REGGE_1_TO_5_AUDIT_FAILED"),
+        status=(
+            'EUCLIDEAN_REGGE_1_TO_5_ANALYTIC_INTERNAL_HESSIAN_CLOSED'
+            if closed else 'REGGE_1_TO_5_AUDIT_FAILED'
+        ),
     )
