@@ -6,7 +6,7 @@
 
 ## 27.1 먼저 고정한 것: 15개 사면체의 기하학적 닫힘
 
-24장에서 잡은 Lorentzian $1\to5$ 고전 gluing skeleton에는 boundary tetrahedron 다섯 개와 internal tetrahedron 열 개, 모두 15개의 spacelike tetrahedron이 있다. spacelike라는 말은 각 사면체의 내부 기하가 양의 정부호인 3차원 Euclidean 기하로 읽힌다는 뜻이다. 전역 vertex label을 정렬하고 induced Gram matrix에 Cholesky convention을 적용하면, 각 사면체에 임의성이 없는 intrinsic 좌표표를 하나 고를 수 있다.
+24장에서 잡은 Lorentzian $1\to5$ 고전 gluing skeleton에는 boundary tetrahedron 다섯 개와 internal tetrahedron 열 개, 모두 15개의 spacelike tetrahedron이 있다. spacelike라는 말은 각 사면체의 내부 기하가 양의 정부호인 3차원 Euclidean 기하로 읽힌다는 뜻이다. 전역 vertex label을 정렬하고 induced Gram matrix에 Cholesky convention을 적용하면, **이 규약 안에서 결정론적인** intrinsic 좌표 대표를 하나 고를 수 있다. 이것이 물리적으로 유일하거나 frame-independent한 대표라는 뜻은 아니다.
 
 사면체 $t$의 면 $f$에 대해 outward unit normal을 $n_f\in\mathbb R^3$, 면적을 $a_f>0$라 쓰면, outward area vector는 $a_fn_f$이고 다음 항등식이 성립한다.
 
@@ -92,7 +92,7 @@ $$
 
 ## 27.4 실제로 만든 국소 LS 벡터
 
-작은 계산 수준 $N=3$에서 앞 절의 전역 triangle spin label과 식 (3)의 방향 spinor를 각 사면체에 넣었다. 네 면의 coherent state의 텐서곱을 four-valent invariant recoupling basis $\{|k\rangle\}$에 정사영한다.
+앞 절의 $N\ge118$은 모든 사면체에 한꺼번에 적용한 보수적 **충분조건**이지, admissible한 최소 수준이라는 정리는 아니다. $N=3$은 이 상계를 만족해서 고른 값이 아니라, exact four-spin criterion으로 별도로 검사한 작은 계산 수준이다. 이 경우 우연히도 15개 four-valent invariant space가 모두 0이 아니므로, 그 전역 triangle spin label과 식 (3)의 방향 spinor를 각 사면체에 넣을 수 있다. 네 면의 coherent state의 텐서곱을 four-valent invariant recoupling basis $\{|k\rangle\}$에 정사영한다.
 
 $$
 P_{\rm inv}=\sum_k |k\rangle\langle k|,
