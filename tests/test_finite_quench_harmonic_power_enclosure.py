@@ -73,7 +73,7 @@ def test_exact_two_cell_band_power_encloses_complex_transfer() -> None:
     assert not receipt.full_angular_auto_power_enclosed
 
 
-def test_two_certified_tails_promote_band_to_full_power_enclosure() -> None:
+def test_two_opaque_tails_assemble_conditional_but_not_proven_full_power() -> None:
     receipt = enclose_convergence_harmonic_auto_power(
         ell=2,
         cells=(
@@ -89,21 +89,31 @@ def test_two_certified_tails_promote_band_to_full_power_enclosure() -> None:
         ),
     )
 
-    assert receipt.reduced_full_angular_power_interval == (
+    assert receipt.reduced_full_angular_power_interval is None
+    assert receipt.conditional_reduced_full_angular_power_interval == (
         Fraction(10),
         Fraction(69),
     )
     assert receipt.band_log_k_over_pivot_interval == (-2, 1)
-    assert receipt.certified_low_k_tail_domain_upper_endpoint == -2
-    assert receipt.certified_high_k_tail_domain_lower_endpoint == 1
-    assert receipt.both_exterior_tail_integral_upper_bounds_certified
-    assert receipt.certified_tail_domains_locked_to_partition_exterior
+    assert receipt.certified_low_k_tail_domain_upper_endpoint is None
+    assert receipt.certified_high_k_tail_domain_lower_endpoint is None
+    assert receipt.supplied_low_k_tail_domain_upper_endpoint == -2
+    assert receipt.supplied_high_k_tail_domain_lower_endpoint == 1
+    assert receipt.opaque_exterior_tail_contract_accepted
+    assert not receipt.reconstructible_exterior_tail_proof_verified
+    assert not receipt.both_exterior_tail_integral_upper_bounds_certified
+    assert not receipt.certified_tail_domains_locked_to_partition_exterior
     assert receipt.exterior_tail_bound_certificate is not None
     assert (
         receipt.exterior_tail_bound_certificate.proof_reference
         == "synthetic exact exterior-tail proof"
     )
-    assert receipt.full_angular_auto_power_enclosed
+    assert receipt.exterior_tail_bound_certificate.opaque_external_tail_claim_only
+    assert not (
+        receipt.exterior_tail_bound_certificate
+        .nonnegative_reduced_integrand_on_exterior_domains_proven
+    )
+    assert not receipt.full_angular_auto_power_enclosed
 
 
 def test_zero_transfer_gives_exact_zero_auto_power() -> None:
@@ -121,8 +131,10 @@ def test_zero_transfer_gives_exact_zero_auto_power() -> None:
     )
 
     assert receipt.reduced_band_angular_power_interval == (0, 0)
-    assert receipt.reduced_full_angular_power_interval == (0, 0)
+    assert receipt.reduced_full_angular_power_interval is None
+    assert receipt.conditional_reduced_full_angular_power_interval == (0, 0)
     assert receipt.exact_rational_nonnegative_cell_sum_proven
+    assert not receipt.full_angular_auto_power_enclosed
 
 
 def test_receipt_locks_dimensionless_four_pi_convention_and_nonclaims() -> None:
@@ -191,7 +203,7 @@ def test_invalid_power_harmonic_and_tail_contracts_fail_closed() -> None:
             low=-1,
             high=0,
         )
-    with pytest.raises(ValueError, match="must be certified"):
+    with pytest.raises(ValueError, match="must be explicitly supplied"):
         ConvergenceHarmonicExteriorTailBoundCertificate.freeze(
             ell=2,
             band_log_k_over_pivot_interval=(0, 1),
@@ -213,16 +225,21 @@ def test_missing_falsified_or_mismatched_tail_certificate_fails_closed() -> None
 
     assert receipt.certified_low_k_reduced_tail_upper_bound is None
     assert receipt.certified_high_k_reduced_tail_upper_bound is None
+    assert receipt.supplied_low_k_reduced_tail_upper_bound is None
+    assert receipt.supplied_high_k_reduced_tail_upper_bound is None
     assert receipt.reduced_full_angular_power_interval is None
+    assert receipt.conditional_reduced_full_angular_power_interval is None
+    assert not receipt.opaque_exterior_tail_contract_accepted
+    assert not receipt.reconstructible_exterior_tail_proof_verified
     assert not receipt.certified_tail_domains_locked_to_partition_exterior
     assert not receipt.full_angular_auto_power_enclosed
 
     certificate = _tail_certificate(ell=2, band=(0, 1), low=0, high=0)
     falsified = replace(
         certificate,
-        high_k_exterior_reduced_integral_upper_bound_certified=False,
+        high_k_exterior_reduced_integral_upper_bound_certified=True,
     )
-    with pytest.raises(ValueError, match="proof prerequisites"):
+    with pytest.raises(ValueError, match="opaque exterior-tail contract boundary"):
         enclose_convergence_harmonic_auto_power(
             ell=2,
             cells=(_cell((0, 1), (1, 1), (1, 1)),),

@@ -8,11 +8,13 @@ interval must hold on an entire log-k cell, rather than merely at a grid node.
 The adopted dimensionless convention is
 
     C_ell^{kappa kappa}
-        = 4 pi integral d ln(k) P_R(k) |Delta_ell^kappa(k)|^2.
+        = 4 pi integral d ln(k) mathcal P_R(k) |Delta_ell^kappa(k)|^2.
 
 The exact receipt encloses C_ell / (4 pi), so the transcendental factor remains
-symbolic.  A full-spectrum enclosure is returned only when certified low- and
-high-k tail upper bounds are both supplied.
+symbolic.  A supplied opaque low/high tail contract can assemble a conditional
+full-range interval, but it cannot by itself prove that the tail numbers bound
+the exterior integrals.  Full-spectrum proof remains false until a
+reconstructible majorant-and-remainder receipt is verified.
 """
 
 from __future__ import annotations
@@ -112,7 +114,12 @@ class ConvergenceHarmonicLogKCellEnvelope:
 
 @dataclass(frozen=True)
 class ConvergenceHarmonicExteriorTailBoundCertificate:
-    """Supplied proof contract for both exterior reduced-integral tails."""
+    """Opaque supplied claim for both exterior reduced-integral tails.
+
+    This legacy public name is retained for compatibility.  The freeze method
+    checks types, signs, labels, and provenance metadata only; it does not
+    reconstruct either exterior integral proof.
+    """
 
     ell: int
     band_log_k_over_pivot_interval: tuple[Fraction, Fraction]
@@ -123,9 +130,10 @@ class ConvergenceHarmonicExteriorTailBoundCertificate:
     nonnegative_reduced_integrand_on_exterior_domains_proven: bool
     low_k_exterior_reduced_integral_upper_bound_certified: bool
     high_k_exterior_reduced_integral_upper_bound_certified: bool
+    opaque_external_tail_claim_only: bool
     role: str = (
-        "SUPPLIED_CERTIFICATE_FOR_BOTH_EXTERIOR_NONNEGATIVE_REDUCED_"
-        "HARMONIC_POWER_INTEGRAL_UPPER_BOUNDS"
+        "SUPPLIED_OPAQUE_EXTERNAL_TAIL_BOUND_CLAIM_NOT_A_RECONSTRUCTIBLE_"
+        "EXTERIOR_INTEGRAL_PROOF"
     )
 
     @classmethod
@@ -159,10 +167,10 @@ class ConvergenceHarmonicExteriorTailBoundCertificate:
             "high-k reduced tail upper bound",
         )
         if low_tail < 0 or high_tail < 0:
-            raise ValueError("certified reduced tail bounds must be nonnegative")
+            raise ValueError("supplied reduced tail bounds must be nonnegative")
         if exterior_integral_bounds_certified is not True:
             raise ValueError(
-                "both exterior reduced-integral bounds must be certified"
+                "both exterior reduced-integral bounds must be explicitly supplied"
             )
         if not isinstance(proof_reference, str) or not proof_reference.strip():
             raise ValueError("tail certificate requires a nonempty proof reference")
@@ -172,10 +180,11 @@ class ConvergenceHarmonicExteriorTailBoundCertificate:
             low_k_reduced_tail_upper_bound=low_tail,
             high_k_reduced_tail_upper_bound=high_tail,
             proof_reference=proof_reference.strip(),
-            dimensionless_log_k_exterior_domains_locked=True,
-            nonnegative_reduced_integrand_on_exterior_domains_proven=True,
-            low_k_exterior_reduced_integral_upper_bound_certified=True,
-            high_k_exterior_reduced_integral_upper_bound_certified=True,
+            dimensionless_log_k_exterior_domains_locked=False,
+            nonnegative_reduced_integrand_on_exterior_domains_proven=False,
+            low_k_exterior_reduced_integral_upper_bound_certified=False,
+            high_k_exterior_reduced_integral_upper_bound_certified=False,
+            opaque_external_tail_claim_only=True,
         )
 
 
@@ -212,6 +221,13 @@ class ConvergenceHarmonicPowerEnclosureReceipt:
     reduced_full_angular_power_interval: (
         tuple[Fraction, Fraction] | None
     )
+    supplied_low_k_reduced_tail_upper_bound: Fraction | None
+    supplied_high_k_reduced_tail_upper_bound: Fraction | None
+    supplied_low_k_tail_domain_upper_endpoint: Fraction | None
+    supplied_high_k_tail_domain_lower_endpoint: Fraction | None
+    conditional_reduced_full_angular_power_interval: (
+        tuple[Fraction, Fraction] | None
+    )
     dimensionless_log_k_coordinate_used: bool
     dimensionless_primordial_curvature_power_used: bool
     dimensionless_convergence_transfer_used: bool
@@ -222,6 +238,8 @@ class ConvergenceHarmonicPowerEnclosureReceipt:
     binwide_not_nodewise_envelopes_required: bool
     exact_rational_nonnegative_cell_sum_proven: bool
     band_limited_angular_auto_power_enclosed: bool
+    opaque_exterior_tail_contract_accepted: bool
+    reconstructible_exterior_tail_proof_verified: bool
     both_exterior_tail_integral_upper_bounds_certified: bool
     certified_tail_domains_locked_to_partition_exterior: bool
     full_angular_auto_power_enclosed: bool
@@ -254,8 +272,9 @@ def enclose_convergence_harmonic_auto_power(
     supplied interval must contain its function for every k in that cell.
     Grid-node samples alone do not satisfy this contract.
 
-    A typed exterior-tail certificate must bind both omitted reduced
-    integrals to this exact ell and finite partition.  Raw tail numbers are
+    The legacy typed exterior-tail object binds supplied tail numbers to this
+    exact ell and finite partition.  It can produce a clearly labelled
+    conditional interval, but opaque numbers plus a proof-reference string are
     deliberately not accepted as evidence for a full-spectrum enclosure.
     """
 
@@ -352,16 +371,18 @@ def enclose_convergence_harmonic_auto_power(
         ):
             raise ValueError("exterior tails require a frozen certificate")
         certificate = exterior_tail_certificate
-        if not (
-            certificate.dimensionless_log_k_exterior_domains_locked
-            and certificate
-            .nonnegative_reduced_integrand_on_exterior_domains_proven
-            and certificate
-            .low_k_exterior_reduced_integral_upper_bound_certified
-            and certificate
-            .high_k_exterior_reduced_integral_upper_bound_certified
+        if not certificate.opaque_external_tail_claim_only or any(
+            (
+                certificate.dimensionless_log_k_exterior_domains_locked,
+                certificate
+                .nonnegative_reduced_integrand_on_exterior_domains_proven,
+                certificate
+                .low_k_exterior_reduced_integral_upper_bound_certified,
+                certificate
+                .high_k_exterior_reduced_integral_upper_bound_certified,
+            )
         ):
-            raise ValueError("exterior-tail certificate proof prerequisites fail")
+            raise ValueError("opaque exterior-tail contract boundary is falsified")
         if certificate.ell != harmonic or (
             certificate.band_log_k_over_pivot_interval != band
         ):
@@ -371,14 +392,18 @@ def enclose_convergence_harmonic_auto_power(
         low_tail = certificate.low_k_reduced_tail_upper_bound
         high_tail = certificate.high_k_reduced_tail_upper_bound
         if low_tail < 0 or high_tail < 0:
-            raise ValueError("certified reduced tail bounds must be nonnegative")
-    tails_certified = certificate is not None
-    full_interval = (
+            raise ValueError("supplied reduced tail bounds must be nonnegative")
+    opaque_tail_contract_accepted = certificate is not None
+    conditional_full_interval = (
         (
             reduced_lower,
             reduced_upper + low_tail + high_tail,
         )
-        if tails_certified and low_tail is not None and high_tail is not None
+        if (
+            opaque_tail_contract_accepted
+            and low_tail is not None
+            and high_tail is not None
+        )
         else None
     )
 
@@ -405,19 +430,26 @@ def enclose_convergence_harmonic_auto_power(
         reduced_integrand_cell_intervals=tuple(integrand_intervals),
         reduced_band_angular_power_interval=(reduced_lower, reduced_upper),
         exterior_tail_bound_certificate=certificate,
-        certified_low_k_reduced_tail_upper_bound=low_tail,
-        certified_high_k_reduced_tail_upper_bound=high_tail,
-        certified_low_k_tail_domain_upper_endpoint=(
+        certified_low_k_reduced_tail_upper_bound=None,
+        certified_high_k_reduced_tail_upper_bound=None,
+        certified_low_k_tail_domain_upper_endpoint=None,
+        certified_high_k_tail_domain_lower_endpoint=None,
+        reduced_full_angular_power_interval=None,
+        supplied_low_k_reduced_tail_upper_bound=low_tail,
+        supplied_high_k_reduced_tail_upper_bound=high_tail,
+        supplied_low_k_tail_domain_upper_endpoint=(
             band[0]
-            if tails_certified
+            if opaque_tail_contract_accepted
             else None
         ),
-        certified_high_k_tail_domain_lower_endpoint=(
+        supplied_high_k_tail_domain_lower_endpoint=(
             band[1]
-            if tails_certified
+            if opaque_tail_contract_accepted
             else None
         ),
-        reduced_full_angular_power_interval=full_interval,
+        conditional_reduced_full_angular_power_interval=(
+            conditional_full_interval
+        ),
         dimensionless_log_k_coordinate_used=True,
         dimensionless_primordial_curvature_power_used=True,
         dimensionless_convergence_transfer_used=True,
@@ -428,9 +460,11 @@ def enclose_convergence_harmonic_auto_power(
         binwide_not_nodewise_envelopes_required=True,
         exact_rational_nonnegative_cell_sum_proven=True,
         band_limited_angular_auto_power_enclosed=True,
-        both_exterior_tail_integral_upper_bounds_certified=tails_certified,
-        certified_tail_domains_locked_to_partition_exterior=(
-            tails_certified
+        opaque_exterior_tail_contract_accepted=(
+            opaque_tail_contract_accepted
         ),
-        full_angular_auto_power_enclosed=tails_certified,
+        reconstructible_exterior_tail_proof_verified=False,
+        both_exterior_tail_integral_upper_bounds_certified=False,
+        certified_tail_domains_locked_to_partition_exterior=False,
+        full_angular_auto_power_enclosed=False,
     )
