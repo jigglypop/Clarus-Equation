@@ -56,7 +56,7 @@ Clarus-Equation 연구·구현을 위한 Claude Code 지침.
 
 ## 실측 교정 루프와 식 개정
 
-- 수치 검증이 어긋나면(backend parity FAIL, 기준선 잔차 $|z|>3$, 차원 불일치) 같은 명령을 반복하지 말고 `.codex/harnesses/empirical_calibration_loop.md`(정본)의 루프를 따른다: 최소 재현 → 첫 분기 중간값 → 원인 분류(차원 D·구현 I·정밀도 P·convention C·기준선 B·이론 T) → 교정 1건 → 최소 재검. 불일치당 3사이클 상한.
+- 수치 검증이 어긋나면(backend parity FAIL, 기준선 잔차 $|z|>3$, 차원 불일치) 같은 명령을 반복하지 말고 `.claude/harnesses/empirical_calibration_loop.md`(`.codex` 미러와 동기)의 루프를 따른다: 최소 재현 → 첫 분기 중간값 → 원인 분류(차원 D·구현 I·정밀도 P·convention C·기준선 B·이론 T) → 교정 1건 → 최소 재검. 불일치당 3사이클 상한.
 - 교정 가능한 것은 구현 코드, 결과를 보기 전에 선언된 자유 파라미터, sourcer가 출처 검증한 기준선 갱신뿐이다. tolerance·fixture·cutoff·acceptance·seed는 결과를 본 뒤 바꾸지 않는다.
 - **식 개정은 계약 수준 행위다.** T(이론) 분류가 확정된 잔차만 식 개정의 근거가 되며, 개정은 (a) 구 판본을 반례·기각 근거와 함께 원장에 보존하고, (b) 새 판본을 새 계약·새 동결 fixture로 세우며, (c) 어떤 관측 기준선(출처 포함)이 개정을 강제했는지 명기한다. 조용한 식 수정, 코드로 이론 잔차 흡수, 판본 기록 없는 덮어쓰기는 금지.
 - 실험 결과로 식을 세울 때는 관측에서 무차원 비율들을 falsifier로 먼저 동결하고, 자유 파라미터 수가 재현할 비율 수보다 적어야 하며, 비율별 개별 재조정을 금지한다. 관측 근접은 증명이 아니다.
@@ -70,8 +70,8 @@ Clarus-Equation 연구·구현을 위한 Claude Code 지침.
 
 ## 뇌 알고리즘 경로 선택
 
-- **최우선 과제는 실제 뇌 식 기반 발견 루프다.** 실제 뇌에서 확립된 기전식($F_{\rm bio}$)과 측정모형($\mathcal H$)을 출발점으로 고정하고, CE 가설을 명시적 추가항($\Delta F_{\rm CE}$)으로 분리한 뒤 실제 뇌 데이터의 held-out 잔차와 개입 falsifier로 판정한다. 정본: `.codex/harnesses/real_brain_equation_discovery_loop.md` — 계약 필수 필드 12종(`BIO_STARTING_MECHANISM`…`CLAIM_CEILING`)을 결과 확인 전에 고정하고, 핵심 입력이 `UNVERIFIED`이면 채점 구현으로 진행하지 않는다. 식 개정은 사이클당 구조 변경 1건·새 판본 계약으로만.
-- **주축은 두 질문이다: (1) 실제 뇌가 그 연산을 쓰는가(기전 실재성), (2) 실제 뇌 데이터로 반증을 시도했는가(데이터 검증).** 시뮬레이터 성립은 보조 증거다. 정본 규정은 `.codex/harnesses/brain_evidence_ladder.md` — 증거 사다리 L0(합성)→L1(관측 비율)→L2(창발 통계)→L3(실데이터 예측)→L4(개입 동일성)와 원시 연산 허용 목록(스파이크·STDP·3-인자·측방억제·Dale·항상성·2시간척도·수면 스케일링)을 따른다.
+- **최우선 과제는 실제 뇌 식 기반 발견 루프다.** 실제 뇌에서 확립된 기전식($F_{\rm bio}$)과 측정모형($\mathcal H$)을 출발점으로 고정하고, CE 가설을 명시적 추가항($\Delta F_{\rm CE}$)으로 분리한 뒤 실제 뇌 데이터의 held-out 잔차와 개입 falsifier로 판정한다. 정본: `.claude/harnesses/real_brain_equation_discovery_loop.md`(`.codex` 미러와 동기) — 계약 필수 필드 12종(`BIO_STARTING_MECHANISM`…`CLAIM_CEILING`)을 결과 확인 전에 고정하고, 핵심 입력이 `UNVERIFIED`이면 채점 구현으로 진행하지 않는다. 식 개정은 사이클당 구조 변경 1건·새 판본 계약으로만.
+- **주축은 두 질문이다: (1) 실제 뇌가 그 연산을 쓰는가(기전 실재성), (2) 실제 뇌 데이터로 반증을 시도했는가(데이터 검증).** 시뮬레이터 성립은 보조 증거다. 정본 규정은 `.claude/harnesses/brain_evidence_ladder.md`(`.codex` 미러와 동기) — 증거 사다리 L0(합성)→L1(관측 비율)→L2(창발 통계)→L3(실데이터 예측)→L4(개입 동일성)와 원시 연산 허용 목록(스파이크·STDP·3-인자·측방억제·Dale·항상성·2시간척도·수면 스케일링)을 따른다.
 - **L4 이전에는 "뇌가 이렇게 동작한다"를 쓰지 않는다.** L1–L3 통과는 "정합"이다. 비허용 원시 연산(부호 자유 W, 알고리즘적 WTA, 전역 열거)을 쓴 run은 추상 알고리즘 트랙으로 강등하고 뇌 주장을 금지한다. 모든 뇌 run 기계 상태에 사다리 위치(`BIO_EVIDENCE_Lx`)를 명기한다.
 - 새 뇌/기억/의식 run 전에 선행 run의 `12-routes.md`, `31-validation.md`, 존재하면 `40-final-report.md`, 그리고 `_workspace/ce/brain-algorithm-route-ledger.md`를 읽는다. 40이 없으면 가장 늦은 numbered audit와 원장 행을 사용하고 closure 부재를 계약에 기록한다.
 - 오케스트레이터는 결과 수치가 양성처럼 보이는 순서가 아니라 사다리 승급 가능성, 인과 식별 가능성, 이전 STOP이 남긴 정보, 독립 falsifier와 대조군, capability dependency로 후보를 정렬한다. endpoint·threshold·seed만 바꾼 재시도는 같은 경로로 보고 퇴역시킨다.

@@ -10,10 +10,11 @@ settings.json        훅: native payload gate + UserPromptSubmit + Stop
 commands/            슬래시 커맨드 8종 (/ce-research, /ce-status, /ce-gc 등)
 agents/              연구 역할 4종 + 원장/논문 작성 역할 2종
 skills/              공통 연구·검증·작성 스킬 8종
+harnesses/           수치·증거 하네스 계약 4종 미러 + 인덱스 README
 hooks/               canonical run 위임 + Windows Python/payload 위임 래퍼
 ```
 
-Rust 코어와 Windows 실행기의 단일 출처는 각각 `.codex/skills/ce-research/core`와 `.codex/hooks/`다. Claude의 `run.*`, `python.cmd`, `check-large-data.cmd`는 이 정본으로 위임한다. 역할 카드와 공통 스킬의 과학 규율은 provider 경로를 제외하고 함께 갱신한다.
+Rust 코어와 Windows 실행기의 단일 출처는 각각 `.codex/skills/ce-research/core`와 `.codex/hooks/`다. Claude의 `run.*`, `python.cmd`, `check-large-data.cmd`는 이 정본으로 위임한다. 역할 카드·공통 스킬·`harnesses/` 계약의 과학 규율은 provider 경로를 제외하고 함께 갱신한다.
 
 ## 설치
 
