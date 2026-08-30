@@ -66,6 +66,20 @@ def _unit_direction_cosine_fraction(value: object) -> Fraction:
     return result
 
 
+def _real_phase_fraction(value: object) -> Fraction:
+    """Freeze a finite supplied real-mode observer phase in radians."""
+
+    if isinstance(value, bool):
+        raise ValueError("observer phase must be a real scalar")
+    if isinstance(value, float):
+        return _binary_fraction(value)
+    if isinstance(value, (Fraction, Integral)):
+        return Fraction(value)
+    raise ValueError(
+        "observer phase must be an int, Fraction, or finite float"
+    )
+
+
 def _ceil_fraction(value: Fraction) -> int:
     return -(-value.numerator // value.denominator)
 
@@ -276,6 +290,103 @@ def _inverse_sqrt_interval(
     if result.upper * result.upper * interval.lower < 1:
         raise ValueError("inverse-square-root upper enclosure failed")
     return result
+
+
+def _sqrt_interval(
+    interval: _RationalInterval,
+) -> _RationalInterval:
+    """Return an exact dyadic enclosure of sqrt(interval)."""
+
+    if interval.lower < 0:
+        raise ValueError("square-root interval must be nonnegative")
+    scale = 1 << _INTERVAL_DYADIC_BITS
+    scale_squared = scale * scale
+
+    def point_bounds(value: Fraction) -> tuple[Fraction, Fraction]:
+        target_floor = (
+            scale_squared * value.numerator // value.denominator
+        )
+        lower_integer = math.isqrt(target_floor)
+        lower = Fraction(lower_integer, scale)
+        if (
+            lower_integer * lower_integer * value.denominator
+            == scale_squared * value.numerator
+        ):
+            upper = lower
+        else:
+            upper = Fraction(lower_integer + 1, scale)
+        return lower, upper
+
+    lower, _ = point_bounds(interval.lower)
+    _, upper = point_bounds(interval.upper)
+    result = _RationalInterval(lower, upper)
+    if result.lower * result.lower > interval.lower:
+        raise ValueError("square-root lower enclosure failed")
+    if result.upper * result.upper < interval.upper:
+        raise ValueError("square-root upper enclosure failed")
+    return result
+
+
+@lru_cache(maxsize=None)
+def _principal_cosine_point_interval(
+    value: Fraction,
+) -> _RationalInterval:
+    """Enclose cos(value) for an exact 0 <= value <= 3/2."""
+
+    if not 0 <= value <= Fraction(3, 2):
+        raise ValueError(
+            "principal cosine point must lie in [0, 3/2]"
+        )
+    value_squared = value * value
+    term = Fraction(1)
+    polynomial = term
+    for order in range(1, 11):
+        term *= -value_squared / ((2 * order - 1) * (2 * order))
+        polynomial += term
+    remainder = value**21 / math.factorial(21)
+    result = _outward_dyadic(
+        _RationalInterval(
+            polynomial - remainder,
+            polynomial + remainder,
+        )
+    )
+    if result.lower <= 0 or result.upper > 1:
+        raise ValueError("principal cosine enclosure lost its range")
+    return result
+
+
+def _cosine_interval_or_unit_hull(
+    interval: _RationalInterval,
+) -> tuple[_RationalInterval, bool]:
+    """Return a sharp principal-domain cosine hull or the safe unit hull."""
+
+    principal_limit = Fraction(3, 2)
+    if (
+        interval.lower < -principal_limit
+        or interval.upper > principal_limit
+    ):
+        return _RationalInterval(Fraction(-1), Fraction(1)), False
+
+    maximum_absolute_argument = max(
+        abs(interval.lower),
+        abs(interval.upper),
+    )
+    minimum_absolute_argument = (
+        Fraction(0)
+        if interval.lower <= 0 <= interval.upper
+        else min(abs(interval.lower), abs(interval.upper))
+    )
+    lower = _principal_cosine_point_interval(
+        maximum_absolute_argument
+    ).lower
+    upper = (
+        Fraction(1)
+        if minimum_absolute_argument == 0
+        else _principal_cosine_point_interval(
+            minimum_absolute_argument
+        ).upper
+    )
+    return _outward_dyadic(_RationalInterval(lower, upper)), True
 
 
 @dataclass(frozen=True)
@@ -788,6 +899,102 @@ class BackgroundConformalMetricTimeIntegralReceipt:
 
 
 @dataclass(frozen=True)
+class FixedModeBornLensingGlobalPhaseSignWedgeReceipt:
+    """Global supplied-phase direction wedge with one strict sign law."""
+
+    supplied_observer_phase: Fraction
+    principal_phase_absolute_limit: Fraction
+    dimensionless_fixed_wavenumber_upper_bound: Fraction
+    dimensionless_source_distance_upper_bound: Fraction
+    dimensionless_phase_slope_upper_bound: Fraction
+    absolute_direction_cosine_wedge_upper_bound: Fraction | None
+    physical_absolute_direction_cosine_wedge_upper_bound: Fraction | None
+    analytic_regular_global_weyl_average_interval: (
+        tuple[Fraction, Fraction] | None
+    )
+    analytic_regular_global_weyl_average_certified_sign: int | None
+    nonparallel_born_convergence_certified_sign_in_wedge: int | None
+    normalized_nonparallel_response_certified_sign_in_wedge: int | None
+    exact_rational_triangle_phase_bound_proven: bool
+    principal_cosine_strictly_positive_in_wedge: bool
+    nonnegative_kernel_and_positive_interior_measure_used: bool
+    nonparallel_direction_required_for_strict_sign: bool
+    global_phase_direction_sign_wedge_enclosed: bool
+    zero_amplitude_zero_response_proven: bool
+    physical_orientation_distribution_supplied: bool = False
+    isotropic_cosmological_ensemble_claimed: bool = False
+    source_population_distribution_supplied: bool = False
+    perturbed_or_post_born_geodesic_enclosed: bool = False
+    all_k_einstein_boltzmann_solution_enclosed: bool = False
+    primordial_power_spectrum_supplied: bool = False
+    shear_or_lensing_map_enclosed: bool = False
+    angular_power_spectrum_enclosed: bool = False
+    cmb_lss_likelihood_enclosed: bool = False
+    role: str = (
+        "CONDITIONAL_GLOBAL_SUPPLIED_PHASE_AND_DIRECTION_COSINE_WEDGE_SIGN_"
+        "LAW_FOR_ONE_REAL_COSINE_BORN_MODE_NOT_ORIENTATION_ENSEMBLE_MAP_"
+        "POWER_SPECTRUM_POST_BORN_GEODESIC_OR_LIKELIHOOD"
+    )
+
+
+@dataclass(frozen=True)
+class FixedModeBornLensingRealPhaseIntervalReceipt:
+    """Signed interval for one supplied real cosine Born-lensing mode."""
+
+    supplied_direction_cosine: Fraction
+    supplied_observer_phase: Fraction
+    dimensionless_fixed_wavenumber_interval: tuple[Fraction, Fraction]
+    transverse_wavenumber_squared_fraction: Fraction
+    dimensionless_phase_cell_intervals: (
+        tuple[tuple[Fraction, Fraction], ...]
+    )
+    cosine_cell_intervals: tuple[tuple[Fraction, Fraction], ...]
+    dimensionless_geometric_kernel_cell_intervals: (
+        tuple[tuple[Fraction, Fraction], ...]
+    )
+    frozen_pl_weyl_average_cell_intervals: (
+        tuple[tuple[Fraction, Fraction], ...]
+    )
+    analytic_regular_weyl_average_cell_intervals: (
+        tuple[tuple[Fraction, Fraction], ...] | None
+    )
+    frozen_pl_born_convergence_interval: tuple[Fraction, Fraction]
+    analytic_regular_born_convergence_interval: (
+        tuple[Fraction, Fraction] | None
+    )
+    normalized_analytic_regular_born_convergence_interval: (
+        tuple[Fraction, Fraction] | None
+    )
+    analytic_regular_born_convergence_certified_sign: int | None
+    normalized_analytic_regular_born_convergence_certified_sign: int | None
+    exact_rational_positive_square_root_enclosure_proven: bool
+    real_cosine_mode_amplitude_convention_adopted: bool
+    unperturbed_ray_observer_plus_chi_sightline_convention_adopted: bool
+    observer_phase_and_direction_cosine_supplied: bool
+    phase_intervals_enclosed_by_exact_rational_arithmetic: bool
+    principal_cosine_taylor_degree: int
+    principal_cosine_domain_on_every_cell: bool
+    cosine_strictly_positive_on_every_cell: bool
+    positive_geometric_kernel_on_an_interior_cell: bool
+    frozen_pl_signed_real_mode_interval_enclosed: bool
+    analytic_regular_signed_real_mode_interval_enclosed: bool
+    parallel_mode_transverse_zero_proven: bool
+    source_redshift_calibration_supplied: bool = False
+    source_population_distribution_supplied: bool = False
+    perturbed_or_post_born_geodesic_enclosed: bool = False
+    all_k_einstein_boltzmann_solution_enclosed: bool = False
+    primordial_power_spectrum_supplied: bool = False
+    shear_or_lensing_map_enclosed: bool = False
+    angular_power_spectrum_enclosed: bool = False
+    cmb_lss_likelihood_enclosed: bool = False
+    role: str = (
+        "CONDITIONAL_SUPPLIED_DIRECTION_AND_PHASE_REAL_COSINE_SINGLE_MODE_"
+        "FLAT_BACKGROUND_BORN_LENSING_SIGNED_INTERVAL_NOT_FULL_MAP_SHEAR_"
+        "POWER_SPECTRUM_POST_BORN_GEODESIC_OR_LIKELIHOOD"
+    )
+
+
+@dataclass(frozen=True)
 class FixedModeBornLensingOrientationEnvelopeReceipt:
     """Orientation-resolved modulus law for one fixed Born-lensing mode."""
 
@@ -835,6 +1042,9 @@ class FixedModeBornLensingAbsoluteEnvelopeReceipt:
     dimensionless_fixed_wavenumber_squared_interval: (
         tuple[Fraction, Fraction]
     )
+    dimensionless_fixed_wavenumber_interval: tuple[Fraction, Fraction]
+    frozen_pl_weyl_average_node_values: tuple[Fraction, ...]
+    analytic_regular_uniform_tube_radius_upper_bound: Fraction | None
     dimensionless_conformal_cell_measure_intervals: (
         tuple[tuple[Fraction, Fraction], ...]
     )
@@ -964,6 +1174,381 @@ class FixedModeBornLensingAbsoluteEnvelopeReceipt:
             uniform_direction_cosine_mean_absolute_envelope_enclosed=(
                 uniform_mean is not None
             ),
+        )
+
+    def at_real_mode_phase(
+        self,
+        direction_cosine: object,
+        observer_phase: object,
+    ) -> FixedModeBornLensingRealPhaseIntervalReceipt:
+        """Enclose one real cosine mode on the adopted unperturbed ray."""
+
+        mu = _unit_direction_cosine_fraction(direction_cosine)
+        phase_at_observer = _real_phase_fraction(observer_phase)
+        transverse_fraction = 1 - mu * mu
+        q_squared = _RationalInterval(
+            *self.dimensionless_fixed_wavenumber_squared_interval
+        )
+        q_interval = _RationalInterval(
+            *self.dimensionless_fixed_wavenumber_interval
+        )
+        exact_q_interval = _sqrt_interval(q_squared)
+        if q_interval != exact_q_interval:
+            raise ValueError(
+                "stored fixed-wavenumber interval is not the exact enclosure"
+            )
+
+        cell_measures = tuple(
+            _RationalInterval(*interval)
+            for interval in self
+            .dimensionless_conformal_cell_measure_intervals
+        )
+        source_side = tuple(
+            _RationalInterval(*interval)
+            for interval in self
+            .dimensionless_source_side_distance_node_intervals
+        )
+        observer_side = tuple(
+            _RationalInterval(*interval)
+            for interval in self
+            .dimensionless_observer_side_distance_node_intervals
+        )
+        source_distance = _RationalInterval(
+            *self.dimensionless_source_distance_interval
+        )
+        cell_count = len(cell_measures)
+        if not (
+            len(source_side) == cell_count + 1
+            and len(observer_side) == cell_count + 1
+            and len(self.frozen_pl_weyl_average_node_values)
+            == cell_count + 1
+            and len(
+                self.dimensionless_geometric_kernel_cell_upper_bounds
+            )
+            == cell_count
+        ):
+            raise ValueError(
+                "fixed-mode real-phase receipt data are not aligned"
+            )
+
+        q_mu = _interval_scale(q_interval, mu)
+        phase_intervals: list[_RationalInterval] = []
+        cosine_intervals: list[_RationalInterval] = []
+        kernel_intervals: list[_RationalInterval] = []
+        frozen_psi_intervals: list[_RationalInterval] = []
+        analytic_psi_intervals: list[_RationalInterval] | None = (
+            None
+            if self.analytic_regular_uniform_tube_radius_upper_bound
+            is None
+            else []
+        )
+        frozen_integral = _point_interval(0)
+        analytic_integral = (
+            None
+            if analytic_psi_intervals is None
+            else _point_interval(0)
+        )
+        principal_domain_on_every_cell = True
+        cosine_positive_on_every_cell = True
+        positive_interior_kernel = False
+        radius = self.analytic_regular_uniform_tube_radius_upper_bound
+
+        for index, measure in enumerate(cell_measures):
+            observer_cell = _RationalInterval(
+                observer_side[index + 1].lower,
+                observer_side[index].upper,
+            )
+            phase_interval = _interval_add(
+                _point_interval(phase_at_observer),
+                _interval_multiply(q_mu, observer_cell),
+            )
+            cosine_interval, principal_domain = (
+                _cosine_interval_or_unit_hull(phase_interval)
+            )
+            principal_domain_on_every_cell &= principal_domain
+            cosine_positive_on_every_cell &= cosine_interval.lower > 0
+
+            kernel_lower = (
+                source_side[index].lower
+                * observer_side[index + 1].lower
+                / source_distance.upper
+            )
+            kernel_interval = _outward_dyadic(
+                _RationalInterval(
+                    kernel_lower,
+                    self
+                    .dimensionless_geometric_kernel_cell_upper_bounds[
+                        index
+                    ],
+                )
+            )
+            positive_interior_kernel |= kernel_interval.lower > 0
+
+            left_psi = self.frozen_pl_weyl_average_node_values[index]
+            right_psi = self.frozen_pl_weyl_average_node_values[index + 1]
+            frozen_psi = _RationalInterval(
+                min(left_psi, right_psi),
+                max(left_psi, right_psi),
+            )
+            geometry_measure = _interval_multiply(
+                measure,
+                kernel_interval,
+            )
+            frozen_term = _interval_multiply(
+                _interval_multiply(
+                    geometry_measure,
+                    frozen_psi,
+                ),
+                cosine_interval,
+            )
+            frozen_integral = _interval_add(
+                frozen_integral,
+                frozen_term,
+            )
+
+            phase_intervals.append(phase_interval)
+            cosine_intervals.append(cosine_interval)
+            kernel_intervals.append(kernel_interval)
+            frozen_psi_intervals.append(frozen_psi)
+
+            if analytic_psi_intervals is not None:
+                if radius is None or analytic_integral is None:
+                    raise ValueError(
+                        "materialized real-phase branch lost its radius"
+                    )
+                analytic_psi = _RationalInterval(
+                    frozen_psi.lower - radius,
+                    frozen_psi.upper + radius,
+                )
+                analytic_term = _interval_multiply(
+                    _interval_multiply(
+                        geometry_measure,
+                        analytic_psi,
+                    ),
+                    cosine_interval,
+                )
+                analytic_integral = _interval_add(
+                    analytic_integral,
+                    analytic_term,
+                )
+                analytic_psi_intervals.append(analytic_psi)
+
+        transverse_q_squared = _interval_scale(
+            q_squared,
+            transverse_fraction,
+        )
+        frozen_kappa = _interval_scale(
+            _interval_multiply(
+                transverse_q_squared,
+                frozen_integral,
+            ),
+            Fraction(-1),
+        )
+        if transverse_fraction == 0:
+            analytic_kappa = _point_interval(0)
+        elif analytic_integral is None:
+            analytic_kappa = None
+        else:
+            analytic_kappa = _interval_scale(
+                _interval_multiply(
+                    transverse_q_squared,
+                    analytic_integral,
+                ),
+                Fraction(-1),
+            )
+
+        if analytic_kappa is None or self.primordial_potential_amplitude == 0:
+            normalized_kappa = None
+        else:
+            normalized_kappa = _interval_divide(
+                analytic_kappa,
+                _point_interval(self.primordial_potential_amplitude),
+            )
+
+        def pairs(
+            intervals: list[_RationalInterval]
+            | tuple[_RationalInterval, ...],
+        ) -> tuple[tuple[Fraction, Fraction], ...]:
+            return tuple(
+                (interval.lower, interval.upper)
+                for interval in intervals
+            )
+
+        analytic_pair = (
+            None
+            if analytic_kappa is None
+            else (analytic_kappa.lower, analytic_kappa.upper)
+        )
+        normalized_pair = (
+            None
+            if normalized_kappa is None
+            else (normalized_kappa.lower, normalized_kappa.upper)
+        )
+        return FixedModeBornLensingRealPhaseIntervalReceipt(
+            supplied_direction_cosine=mu,
+            supplied_observer_phase=phase_at_observer,
+            dimensionless_fixed_wavenumber_interval=(
+                q_interval.lower,
+                q_interval.upper,
+            ),
+            transverse_wavenumber_squared_fraction=(
+                transverse_fraction
+            ),
+            dimensionless_phase_cell_intervals=pairs(phase_intervals),
+            cosine_cell_intervals=pairs(cosine_intervals),
+            dimensionless_geometric_kernel_cell_intervals=pairs(
+                kernel_intervals
+            ),
+            frozen_pl_weyl_average_cell_intervals=pairs(
+                frozen_psi_intervals
+            ),
+            analytic_regular_weyl_average_cell_intervals=(
+                None
+                if analytic_psi_intervals is None
+                else pairs(analytic_psi_intervals)
+            ),
+            frozen_pl_born_convergence_interval=(
+                frozen_kappa.lower,
+                frozen_kappa.upper,
+            ),
+            analytic_regular_born_convergence_interval=analytic_pair,
+            normalized_analytic_regular_born_convergence_interval=(
+                normalized_pair
+            ),
+            analytic_regular_born_convergence_certified_sign=(
+                _certified_component_sign(analytic_pair)
+            ),
+            normalized_analytic_regular_born_convergence_certified_sign=(
+                _certified_component_sign(normalized_pair)
+            ),
+            exact_rational_positive_square_root_enclosure_proven=True,
+            real_cosine_mode_amplitude_convention_adopted=True,
+            unperturbed_ray_observer_plus_chi_sightline_convention_adopted=(
+                True
+            ),
+            observer_phase_and_direction_cosine_supplied=True,
+            phase_intervals_enclosed_by_exact_rational_arithmetic=True,
+            principal_cosine_taylor_degree=20,
+            principal_cosine_domain_on_every_cell=(
+                principal_domain_on_every_cell
+            ),
+            cosine_strictly_positive_on_every_cell=(
+                cosine_positive_on_every_cell
+            ),
+            positive_geometric_kernel_on_an_interior_cell=(
+                positive_interior_kernel
+            ),
+            frozen_pl_signed_real_mode_interval_enclosed=True,
+            analytic_regular_signed_real_mode_interval_enclosed=(
+                analytic_kappa is not None
+            ),
+            parallel_mode_transverse_zero_proven=(
+                transverse_fraction == 0
+            ),
+        )
+
+    def global_real_mode_sign_wedge(
+        self,
+        observer_phase: object,
+    ) -> FixedModeBornLensingGlobalPhaseSignWedgeReceipt:
+        """Certify a whole direction-cosine wedge at one supplied phase."""
+
+        phase_at_observer = _real_phase_fraction(observer_phase)
+        principal_limit = Fraction(3, 2)
+        q_interval = _RationalInterval(
+            *self.dimensionless_fixed_wavenumber_interval
+        )
+        source_distance = _RationalInterval(
+            *self.dimensionless_source_distance_interval
+        )
+        phase_slope_upper = q_interval.upper * source_distance.upper
+        if phase_slope_upper <= 0:
+            raise ValueError(
+                "global phase wedge requires positive q times distance"
+            )
+
+        phase_margin = principal_limit - abs(phase_at_observer)
+        if phase_margin < 0:
+            direction_wedge_upper = None
+            physical_direction_wedge_upper = None
+        else:
+            direction_wedge_upper = phase_margin / phase_slope_upper
+            physical_direction_wedge_upper = min(
+                Fraction(1),
+                direction_wedge_upper,
+            )
+
+        radius = self.analytic_regular_uniform_tube_radius_upper_bound
+        if radius is None:
+            global_psi_pair = None
+            global_psi_sign = None
+        else:
+            global_psi_pair = (
+                min(self.frozen_pl_weyl_average_node_values) - radius,
+                max(self.frozen_pl_weyl_average_node_values) + radius,
+            )
+            global_psi_sign = _certified_component_sign(global_psi_pair)
+
+        phase_wedge_enclosed = (
+            physical_direction_wedge_upper is not None
+            and global_psi_sign is not None
+        )
+        convergence_sign = (
+            None
+            if not phase_wedge_enclosed
+            else -global_psi_sign
+        )
+        amplitude = self.primordial_potential_amplitude
+        amplitude_sign = (
+            1 if amplitude > 0 else -1 if amplitude < 0 else 0
+        )
+        normalized_sign = (
+            None
+            if convergence_sign is None or amplitude_sign == 0
+            else convergence_sign * amplitude_sign
+        )
+        zero_response = (
+            amplitude == 0
+            and radius == 0
+            and all(
+                value == 0
+                for value in self.frozen_pl_weyl_average_node_values
+            )
+        )
+        return FixedModeBornLensingGlobalPhaseSignWedgeReceipt(
+            supplied_observer_phase=phase_at_observer,
+            principal_phase_absolute_limit=principal_limit,
+            dimensionless_fixed_wavenumber_upper_bound=q_interval.upper,
+            dimensionless_source_distance_upper_bound=(
+                source_distance.upper
+            ),
+            dimensionless_phase_slope_upper_bound=phase_slope_upper,
+            absolute_direction_cosine_wedge_upper_bound=(
+                direction_wedge_upper
+            ),
+            physical_absolute_direction_cosine_wedge_upper_bound=(
+                physical_direction_wedge_upper
+            ),
+            analytic_regular_global_weyl_average_interval=global_psi_pair,
+            analytic_regular_global_weyl_average_certified_sign=(
+                global_psi_sign
+            ),
+            nonparallel_born_convergence_certified_sign_in_wedge=(
+                convergence_sign
+            ),
+            normalized_nonparallel_response_certified_sign_in_wedge=(
+                normalized_sign
+            ),
+            exact_rational_triangle_phase_bound_proven=True,
+            principal_cosine_strictly_positive_in_wedge=(
+                direction_wedge_upper is not None
+            ),
+            nonnegative_kernel_and_positive_interior_measure_used=True,
+            nonparallel_direction_required_for_strict_sign=True,
+            global_phase_direction_sign_wedge_enclosed=(
+                phase_wedge_enclosed
+            ),
+            zero_amplitude_zero_response_proven=zero_response,
         )
 
 
@@ -1890,6 +2475,7 @@ class FiniteQuenchTraceEndpointEnclosure:
             raise ValueError(
                 "dimensionless fixed wavenumber squared lost nonnegativity"
             )
+        fixed_wavenumber = _sqrt_interval(fixed_wavenumber_squared)
 
         kernel_upper_bounds: list[Fraction] = []
         frozen_geometry_integral = Fraction(0)
@@ -1959,6 +2545,16 @@ class FiniteQuenchTraceEndpointEnclosure:
             dimensionless_fixed_wavenumber_squared_interval=(
                 fixed_wavenumber_squared.lower,
                 fixed_wavenumber_squared.upper,
+            ),
+            dimensionless_fixed_wavenumber_interval=(
+                fixed_wavenumber.lower,
+                fixed_wavenumber.upper,
+            ),
+            frozen_pl_weyl_average_node_values=tuple(
+                node[0] for node in frozen_nodes
+            ),
+            analytic_regular_uniform_tube_radius_upper_bound=(
+                analytic_materialized_radius
             ),
             dimensionless_conformal_cell_measure_intervals=pairs(
                 cell_measures

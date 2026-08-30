@@ -86,6 +86,70 @@ def test_inverse_square_root_interval_rejects_nonpositive_domain() -> None:
         )
 
 
+@pytest.mark.parametrize(
+    ("lower", "upper"),
+    [
+        (Fraction(0), Fraction(0)),
+        (Fraction(1), Fraction(1)),
+        (Fraction(4), Fraction(9)),
+        (Fraction(1, 3), Fraction(7, 5)),
+    ],
+)
+def test_square_root_interval_uses_exact_square_inequalities(
+    lower: Fraction,
+    upper: Fraction,
+) -> None:
+    result = endpoint_module._sqrt_interval(
+        endpoint_module._RationalInterval(lower, upper)
+    )
+
+    assert result.lower >= 0
+    assert result.lower * result.lower <= lower
+    assert result.upper * result.upper >= upper
+
+
+def test_square_root_interval_rejects_negative_domain() -> None:
+    with pytest.raises(ValueError, match="nonnegative"):
+        endpoint_module._sqrt_interval(
+            endpoint_module._RationalInterval(Fraction(-1), Fraction(1))
+        )
+
+
+@pytest.mark.parametrize(
+    "value",
+    [Fraction(0), Fraction(1, 2), Fraction(1), Fraction(3, 2)],
+)
+def test_principal_cosine_interval_contains_reference_and_stays_positive(
+    value: Fraction,
+) -> None:
+    result = endpoint_module._principal_cosine_point_interval(value)
+    reference = math.cos(float(value))
+
+    assert float(result.lower) <= reference <= float(result.upper)
+    assert 0 < result.lower <= result.upper <= 1
+
+
+def test_cosine_interval_uses_principal_hull_or_safe_unit_fallback() -> None:
+    principal, sharp = endpoint_module._cosine_interval_or_unit_hull(
+        endpoint_module._RationalInterval(
+            Fraction(-1, 2),
+            Fraction(1),
+        )
+    )
+    assert sharp
+    assert principal.lower <= Fraction.from_float(math.cos(1.0))
+    assert principal.upper == 1
+
+    fallback, sharp = endpoint_module._cosine_interval_or_unit_hull(
+        endpoint_module._RationalInterval(Fraction(2), Fraction(3))
+    )
+    assert not sharp
+    assert fallback == endpoint_module._RationalInterval(
+        Fraction(-1),
+        Fraction(1),
+    )
+
+
 def test_outward_dyadic_rounding_and_negative_division_keep_inclusion() -> None:
     original = endpoint_module._RationalInterval(
         Fraction(-17, 13),
@@ -747,6 +811,239 @@ def test_default_trace_endpoint_has_exact_rational_materialized_ball() -> None:
     ):
         with pytest.raises(ValueError, match="direction cosine"):
             born.at_direction_cosine(invalid_direction)
+    real_phase = born.at_real_mode_phase(Fraction(1, 2), Fraction(0))
+    q_interval = real_phase.dimensionless_fixed_wavenumber_interval
+    assert q_interval[0] >= 0
+    assert q_interval[0] ** 2 <= q_squared[0]
+    assert q_interval[1] ** 2 >= q_squared[1]
+    assert len(real_phase.dimensionless_phase_cell_intervals) == (
+        enclosure.refined_step_count
+    )
+    assert all(
+        0 <= interval[0] <= interval[1] <= Fraction(3, 2)
+        for interval in real_phase.dimensionless_phase_cell_intervals
+    )
+    assert all(
+        0 < interval[0] <= interval[1] <= 1
+        for interval in real_phase.cosine_cell_intervals
+    )
+    assert (
+        real_phase.dimensionless_geometric_kernel_cell_intervals[0][0]
+        == 0
+    )
+    assert (
+        real_phase.dimensionless_geometric_kernel_cell_intervals[-1][0]
+        == 0
+    )
+    assert any(
+        interval[0] > 0
+        for interval in (
+            real_phase.dimensionless_geometric_kernel_cell_intervals
+        )
+    )
+    assert (
+        real_phase.analytic_regular_weyl_average_cell_intervals
+        is not None
+    )
+    assert min(
+        interval[0]
+        for interval in (
+            real_phase.analytic_regular_weyl_average_cell_intervals
+        )
+    ) > 0
+    assert real_phase.frozen_pl_born_convergence_interval[1] < 0
+    assert real_phase.analytic_regular_born_convergence_interval is not None
+    assert real_phase.analytic_regular_born_convergence_interval[1] < 0
+    assert (
+        real_phase.normalized_analytic_regular_born_convergence_interval
+        is not None
+    )
+    assert (
+        real_phase
+        .normalized_analytic_regular_born_convergence_interval[1]
+        < 0
+    )
+    assert real_phase.analytic_regular_born_convergence_certified_sign == -1
+    assert (
+        real_phase
+        .normalized_analytic_regular_born_convergence_certified_sign
+        == -1
+    )
+    assert max(
+        abs(value)
+        for value in real_phase.analytic_regular_born_convergence_interval
+    ) <= half_orientation.oriented_analytic_regular_absolute_upper_bound
+    assert real_phase.exact_rational_positive_square_root_enclosure_proven
+    assert real_phase.real_cosine_mode_amplitude_convention_adopted
+    assert (
+        real_phase
+        .unperturbed_ray_observer_plus_chi_sightline_convention_adopted
+    )
+    assert real_phase.observer_phase_and_direction_cosine_supplied
+    assert real_phase.phase_intervals_enclosed_by_exact_rational_arithmetic
+    assert real_phase.principal_cosine_taylor_degree == 20
+    assert real_phase.principal_cosine_domain_on_every_cell
+    assert real_phase.cosine_strictly_positive_on_every_cell
+    assert real_phase.positive_geometric_kernel_on_an_interior_cell
+    assert real_phase.frozen_pl_signed_real_mode_interval_enclosed
+    assert real_phase.analytic_regular_signed_real_mode_interval_enclosed
+    assert not real_phase.parallel_mode_transverse_zero_proven
+    assert not real_phase.source_redshift_calibration_supplied
+    assert not real_phase.source_population_distribution_supplied
+    assert not real_phase.perturbed_or_post_born_geodesic_enclosed
+    assert not real_phase.all_k_einstein_boltzmann_solution_enclosed
+    assert not real_phase.primordial_power_spectrum_supplied
+    assert not real_phase.shear_or_lensing_map_enclosed
+    assert not real_phase.angular_power_spectrum_enclosed
+    assert not real_phase.cmb_lss_likelihood_enclosed
+    negative_mu_phase = born.at_real_mode_phase(
+        Fraction(-1, 2),
+        Fraction(0),
+    )
+    assert all(
+        interval[1] <= 0
+        for interval in negative_mu_phase.dimensionless_phase_cell_intervals
+    )
+    assert negative_mu_phase.cosine_cell_intervals == (
+        real_phase.cosine_cell_intervals
+    )
+    assert negative_mu_phase.analytic_regular_born_convergence_interval == (
+        real_phase.analytic_regular_born_convergence_interval
+    )
+    zero_crossing_phase = born.at_real_mode_phase(
+        Fraction(-1, 2),
+        Fraction(1, 4),
+    )
+    assert any(
+        interval[0] < 0 < interval[1]
+        for interval in (
+            zero_crossing_phase.dimensionless_phase_cell_intervals
+        )
+    )
+    assert zero_crossing_phase.principal_cosine_domain_on_every_cell
+    assert zero_crossing_phase.cosine_strictly_positive_on_every_cell
+    assert (
+        zero_crossing_phase
+        .analytic_regular_born_convergence_certified_sign
+        == -1
+    )
+    broad_phase = born.at_real_mode_phase(Fraction(1, 2), Fraction(10))
+    assert not broad_phase.principal_cosine_domain_on_every_cell
+    assert not broad_phase.cosine_strictly_positive_on_every_cell
+    assert broad_phase.analytic_regular_born_convergence_interval is not None
+    assert (
+        broad_phase.analytic_regular_born_convergence_interval[0]
+        < 0
+        < broad_phase.analytic_regular_born_convergence_interval[1]
+    )
+    assert broad_phase.analytic_regular_born_convergence_certified_sign is None
+    parallel_phase = born.at_real_mode_phase(Fraction(1), Fraction(10))
+    assert parallel_phase.analytic_regular_born_convergence_interval == (
+        Fraction(0),
+        Fraction(0),
+    )
+    assert parallel_phase.parallel_mode_transverse_zero_proven
+    for invalid_phase in (True, "crest", math.inf):
+        with pytest.raises(ValueError):
+            born.at_real_mode_phase(Fraction(1, 2), invalid_phase)
+    phase_wedge = born.global_real_mode_sign_wedge(Fraction(0))
+    assert phase_wedge.supplied_observer_phase == 0
+    assert phase_wedge.principal_phase_absolute_limit == Fraction(3, 2)
+    assert (
+        phase_wedge.dimensionless_phase_slope_upper_bound
+        == phase_wedge.dimensionless_fixed_wavenumber_upper_bound
+        * phase_wedge.dimensionless_source_distance_upper_bound
+    )
+    assert (
+        phase_wedge.absolute_direction_cosine_wedge_upper_bound
+        == Fraction(3, 2)
+        / phase_wedge.dimensionless_phase_slope_upper_bound
+    )
+    assert (
+        phase_wedge.physical_absolute_direction_cosine_wedge_upper_bound
+        == phase_wedge.absolute_direction_cosine_wedge_upper_bound
+    )
+    assert math.isclose(
+        float(
+            phase_wedge
+            .physical_absolute_direction_cosine_wedge_upper_bound
+        ),
+        0.8518825574563257,
+        rel_tol=0,
+        abs_tol=1.0e-15,
+    )
+    assert phase_wedge.analytic_regular_global_weyl_average_interval is not None
+    assert phase_wedge.analytic_regular_global_weyl_average_interval[0] > 0
+    assert (
+        phase_wedge.analytic_regular_global_weyl_average_certified_sign
+        == 1
+    )
+    assert (
+        phase_wedge
+        .nonparallel_born_convergence_certified_sign_in_wedge
+        == -1
+    )
+    assert (
+        phase_wedge
+        .normalized_nonparallel_response_certified_sign_in_wedge
+        == -1
+    )
+    assert phase_wedge.exact_rational_triangle_phase_bound_proven
+    assert phase_wedge.principal_cosine_strictly_positive_in_wedge
+    assert (
+        phase_wedge
+        .nonnegative_kernel_and_positive_interior_measure_used
+    )
+    assert phase_wedge.nonparallel_direction_required_for_strict_sign
+    assert phase_wedge.global_phase_direction_sign_wedge_enclosed
+    assert not phase_wedge.zero_amplitude_zero_response_proven
+    assert not phase_wedge.physical_orientation_distribution_supplied
+    assert not phase_wedge.isotropic_cosmological_ensemble_claimed
+    assert not phase_wedge.source_population_distribution_supplied
+    assert not phase_wedge.perturbed_or_post_born_geodesic_enclosed
+    assert not phase_wedge.all_k_einstein_boltzmann_solution_enclosed
+    assert not phase_wedge.primordial_power_spectrum_supplied
+    assert not phase_wedge.shear_or_lensing_map_enclosed
+    assert not phase_wedge.angular_power_spectrum_enclosed
+    assert not phase_wedge.cmb_lss_likelihood_enclosed
+    wedge_boundary_phase = born.at_real_mode_phase(
+        Fraction(999_999, 1_000_000)
+        * phase_wedge
+        .physical_absolute_direction_cosine_wedge_upper_bound,
+        Fraction(0),
+    )
+    assert wedge_boundary_phase.principal_cosine_domain_on_every_cell
+    assert (
+        wedge_boundary_phase.analytic_regular_born_convergence_certified_sign
+        == -1
+    )
+    outside_wedge_mu = (
+        phase_wedge.physical_absolute_direction_cosine_wedge_upper_bound
+        + 1
+    ) / 2
+    outside_wedge_phase = born.at_real_mode_phase(
+        outside_wedge_mu,
+        Fraction(0),
+    )
+    assert not outside_wedge_phase.principal_cosine_domain_on_every_cell
+    edge_phase_wedge = born.global_real_mode_sign_wedge(Fraction(3, 2))
+    assert (
+        edge_phase_wedge.physical_absolute_direction_cosine_wedge_upper_bound
+        == 0
+    )
+    assert (
+        edge_phase_wedge
+        .nonparallel_born_convergence_certified_sign_in_wedge
+        == -1
+    )
+    outside_phase_wedge = born.global_real_mode_sign_wedge(Fraction(2))
+    assert outside_phase_wedge.absolute_direction_cosine_wedge_upper_bound is None
+    assert (
+        outside_phase_wedge
+        .nonparallel_born_convergence_certified_sign_in_wedge
+        is None
+    )
+    assert not outside_phase_wedge.global_phase_direction_sign_wedge_enclosed
     assert not enclosure.numerical_method_convergence_theorem_proven
     assert not enclosure.observable_transfer_function_enclosed
 
@@ -896,6 +1193,24 @@ def test_zero_path_has_exact_zero_endpoint_radius() -> None:
         zero_orientation.uniform_direction_cosine_mean_absolute_upper_bound
         == 0
     )
+    zero_phase = zero_born.at_real_mode_phase(
+        Fraction(1, 2),
+        Fraction(0),
+    )
+    assert zero_phase.analytic_regular_born_convergence_interval == (
+        Fraction(0),
+        Fraction(0),
+    )
+    assert (
+        zero_phase.normalized_analytic_regular_born_convergence_interval
+        is None
+    )
+    zero_phase_wedge = zero_born.global_real_mode_sign_wedge(Fraction(0))
+    assert zero_phase_wedge.analytic_regular_global_weyl_average_interval == (
+        Fraction(0),
+        Fraction(0),
+    )
+    assert zero_phase_wedge.zero_amplitude_zero_response_proven
     zero_response = enclosure.amplitude_normalized_response
     assert zero_response.amplitude_sign == 0
     assert not zero_response.normalization_defined
@@ -1141,6 +1456,38 @@ def test_symbolic_radius_branch_never_emits_component_signs(
         not symbolic_orientation
         .orientation_resolved_absolute_envelope_enclosed
     )
+    symbolic_phase = symbolic_born.at_real_mode_phase(
+        Fraction(1, 2),
+        Fraction(0),
+    )
+    assert symbolic_phase.frozen_pl_signed_real_mode_interval_enclosed
+    assert symbolic_phase.analytic_regular_born_convergence_interval is None
+    assert (
+        not symbolic_phase
+        .analytic_regular_signed_real_mode_interval_enclosed
+    )
+    symbolic_parallel_phase = symbolic_born.at_real_mode_phase(
+        Fraction(1),
+        Fraction(10),
+    )
+    assert (
+        symbolic_parallel_phase.analytic_regular_born_convergence_interval
+        == (Fraction(0), Fraction(0))
+    )
+    assert (
+        symbolic_parallel_phase
+        .analytic_regular_signed_real_mode_interval_enclosed
+    )
+    symbolic_phase_wedge = symbolic_born.global_real_mode_sign_wedge(
+        Fraction(0)
+    )
+    assert symbolic_phase_wedge.analytic_regular_global_weyl_average_interval is None
+    assert (
+        symbolic_phase_wedge
+        .nonparallel_born_convergence_certified_sign_in_wedge
+        is None
+    )
+    assert not symbolic_phase_wedge.global_phase_direction_sign_wedge_enclosed
 
 
 def test_negative_curvature_path_has_certified_negative_sign() -> None:
@@ -1228,6 +1575,45 @@ def test_negative_curvature_path_has_certified_negative_sign() -> None:
         > 0
     )
     assert not negative_born.signed_single_mode_convergence_enclosed
+    negative_phase = negative_born.at_real_mode_phase(
+        Fraction(1, 2),
+        Fraction(0),
+    )
+    assert negative_phase.analytic_regular_born_convergence_interval is not None
+    assert negative_phase.analytic_regular_born_convergence_interval[0] > 0
+    assert negative_phase.analytic_regular_born_convergence_certified_sign == 1
+    assert (
+        negative_phase.normalized_analytic_regular_born_convergence_interval
+        is not None
+    )
+    assert (
+        negative_phase
+        .normalized_analytic_regular_born_convergence_interval[1]
+        < 0
+    )
+    assert (
+        negative_phase
+        .normalized_analytic_regular_born_convergence_certified_sign
+        == -1
+    )
+    negative_phase_wedge = negative_born.global_real_mode_sign_wedge(
+        Fraction(0)
+    )
+    assert (
+        negative_phase_wedge
+        .analytic_regular_global_weyl_average_certified_sign
+        == -1
+    )
+    assert (
+        negative_phase_wedge
+        .nonparallel_born_convergence_certified_sign_in_wedge
+        == 1
+    )
+    assert (
+        negative_phase_wedge
+        .normalized_nonparallel_response_certified_sign_in_wedge
+        == -1
+    )
 
 
 def test_rational_enclosure_requires_positive_present_reservoir() -> None:
