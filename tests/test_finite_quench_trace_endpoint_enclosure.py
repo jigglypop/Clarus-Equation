@@ -666,6 +666,87 @@ def test_default_trace_endpoint_has_exact_rational_materialized_ball() -> None:
     assert not born.angular_power_spectrum_enclosed
     assert not born.cmb_lss_likelihood_enclosed
     assert enclosure.conditional_fixed_mode_born_lensing_absolute_envelope_enclosed
+    transverse_orientation = born.at_direction_cosine(Fraction(0))
+    assert transverse_orientation.supplied_direction_cosine == 0
+    assert transverse_orientation.direction_cosine_squared == 0
+    assert (
+        transverse_orientation.transverse_wavenumber_squared_fraction
+        == 1
+    )
+    assert (
+        transverse_orientation.oriented_analytic_regular_absolute_upper_bound
+        == born.analytic_regular_born_convergence_absolute_upper_bound
+    )
+    half_orientation = born.at_direction_cosine(Fraction(1, 2))
+    float_half_orientation = born.at_direction_cosine(0.5)
+    assert (
+        float_half_orientation.supplied_direction_cosine
+        == Fraction.from_float(0.5)
+        == half_orientation.supplied_direction_cosine
+    )
+    assert half_orientation.direction_cosine_squared == Fraction(1, 4)
+    assert (
+        half_orientation.transverse_wavenumber_squared_fraction
+        == Fraction(3, 4)
+    )
+    assert (
+        half_orientation.oriented_analytic_regular_absolute_upper_bound
+        == Fraction(3, 4)
+        * born.analytic_regular_born_convergence_absolute_upper_bound
+    )
+    assert (
+        half_orientation.uniform_direction_cosine_mean_absolute_upper_bound
+        == Fraction(2, 3)
+        * born.analytic_regular_born_convergence_absolute_upper_bound
+    )
+    assert (
+        half_orientation.uniform_direction_cosine_mean_normalized_upper_bound
+        == Fraction(2, 3)
+        * born
+        .normalized_analytic_regular_born_convergence_absolute_upper_bound
+    )
+    assert half_orientation.oriented_bound_strictly_below_unity
+    assert half_orientation.exact_supplied_direction_cosine_frozen
+    assert half_orientation.transverse_wavenumber_identity_used
+    assert half_orientation.orientation_resolved_absolute_envelope_enclosed
+    assert half_orientation.uniform_direction_cosine_measure_adopted
+    assert (
+        half_orientation
+        .uniform_direction_cosine_mean_absolute_envelope_enclosed
+    )
+    assert not half_orientation.signed_convergence_enclosed
+    assert not half_orientation.spatial_mode_phase_supplied
+    assert not half_orientation.physical_orientation_distribution_supplied
+    assert not half_orientation.isotropic_cosmological_ensemble_claimed
+    assert not half_orientation.shear_or_lensing_map_enclosed
+    assert not half_orientation.angular_power_spectrum_enclosed
+    assert not half_orientation.primordial_power_spectrum_supplied
+    assert not half_orientation.cmb_lss_likelihood_enclosed
+    for parallel_direction in (Fraction(-1), Fraction(1)):
+        parallel_orientation = born.at_direction_cosine(
+            parallel_direction
+        )
+        assert (
+            parallel_orientation.transverse_wavenumber_squared_fraction
+            == 0
+        )
+        assert (
+            parallel_orientation
+            .oriented_analytic_regular_absolute_upper_bound
+            == 0
+        )
+        assert (
+            parallel_orientation.oriented_normalized_absolute_upper_bound
+            == 0
+        )
+    for invalid_direction in (
+        Fraction(-1001, 1000),
+        Fraction(1001, 1000),
+        True,
+        "parallel",
+    ):
+        with pytest.raises(ValueError, match="direction cosine"):
+            born.at_direction_cosine(invalid_direction)
     assert not enclosure.numerical_method_convergence_theorem_proven
     assert not enclosure.observable_transfer_function_enclosed
 
@@ -807,6 +888,14 @@ def test_zero_path_has_exact_zero_endpoint_radius() -> None:
     assert zero_born.single_mode_convergence_bound_strictly_below_unity
     assert zero_born.conditional_single_mode_born_convergence_absolute_envelope_enclosed
     assert enclosure.conditional_fixed_mode_born_lensing_absolute_envelope_enclosed
+    zero_orientation = zero_born.at_direction_cosine(Fraction(1, 2))
+    assert zero_orientation.oriented_frozen_pl_absolute_upper_bound == 0
+    assert zero_orientation.oriented_analytic_regular_absolute_upper_bound == 0
+    assert zero_orientation.oriented_normalized_absolute_upper_bound is None
+    assert (
+        zero_orientation.uniform_direction_cosine_mean_absolute_upper_bound
+        == 0
+    )
     zero_response = enclosure.amplitude_normalized_response
     assert zero_response.amplitude_sign == 0
     assert not zero_response.normalization_defined
@@ -1032,6 +1121,25 @@ def test_symbolic_radius_branch_never_emits_component_signs(
     assert (
         not enclosure
         .conditional_fixed_mode_born_lensing_absolute_envelope_enclosed
+    )
+    symbolic_orientation = symbolic_born.at_direction_cosine(Fraction(1, 2))
+    assert (
+        symbolic_orientation.oriented_analytic_regular_absolute_upper_bound
+        is None
+    )
+    assert (
+        symbolic_orientation.oriented_normalized_absolute_upper_bound
+        is None
+    )
+    assert symbolic_orientation.oriented_bound_strictly_below_unity is None
+    assert (
+        symbolic_orientation
+        .uniform_direction_cosine_mean_absolute_upper_bound
+        is None
+    )
+    assert (
+        not symbolic_orientation
+        .orientation_resolved_absolute_envelope_enclosed
     )
 
 
