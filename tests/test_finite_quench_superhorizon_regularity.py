@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from fractions import Fraction
 import math
 
 import pytest
@@ -125,6 +126,96 @@ def test_dust_regular_series_is_exactly_constant() -> None:
     assert receipt.series_curvature_potential == pytest.approx(0.7)
     assert receipt.series_curvature_log_derivative == pytest.approx(0.0)
     assert receipt.series_curvature_second_log_derivative == pytest.approx(0.0)
+
+
+def test_exact_regular_initial_enclosure_has_rational_tail_proof() -> None:
+    _, gate, floating = _mode()
+    exact_8 = gate.construct_exact_regular_initial_enclosure(
+        n=-5.0,
+        k_over_a_h=0.05,
+        primordial_potential_amplitude=1.0e-5,
+        highest_partial_sum_order=8,
+    )
+    exact_16 = gate.construct_exact_regular_initial_enclosure(
+        n=-5.0,
+        k_over_a_h=0.05,
+        primordial_potential_amplitude=1.0e-5,
+        highest_partial_sum_order=16,
+    )
+
+    assert exact_16.curvature_interval[0] >= exact_8.curvature_interval[0]
+    assert exact_16.curvature_interval[1] <= exact_8.curvature_interval[1]
+    assert (
+        exact_16.curvature_prime_interval[0]
+        >= exact_8.curvature_prime_interval[0]
+    )
+    assert (
+        exact_16.curvature_prime_interval[1]
+        <= exact_8.curvature_prime_interval[1]
+    )
+    assert exact_16.curvature_tail_abs_upper_bound > 0
+    assert exact_16.curvature_prime_tail_abs_upper_bound > 0
+    assert (
+        exact_16.curvature_tail_ratio_upper_bound
+        < exact_8.curvature_tail_ratio_upper_bound
+        < 1
+    )
+    assert floating.next_series_term_bound == 0.0
+    assert exact_16.exact_binary_float_inputs_frozen
+    assert exact_16.source_off_pure_reservoir_series_equation_proven
+    assert exact_16.exact_series_recurrence_proven
+    assert exact_16.tail_ratios_monotone_and_strictly_below_one
+    assert exact_16.exact_rational_tail_enclosures_proven
+    assert exact_16.unique_past_bounded_regular_mode_enclosed
+    assert exact_16.normalized_dimensionless_series_proven
+    assert exact_16.potential_amplitude_is_free_initial_data
+    assert not exact_16.physical_primordial_amplitude_supplied
+    assert not exact_16.scalar_clock_initial_interval_enclosed
+
+
+def test_exact_regular_recurrence_first_term_is_algebraically_exact() -> None:
+    _, gate, _ = _mode()
+    exact = gate.construct_exact_regular_initial_enclosure(
+        n=-5.0,
+        k_over_a_h=0.05,
+        primordial_potential_amplitude=1.0e-5,
+        highest_partial_sum_order=1,
+    )
+    amplitude = exact.primordial_potential_amplitude
+    coupling = (
+        exact.reservoir_equation_of_state
+        * exact.kappa_initial_squared
+    )
+    expected_first = -(
+        amplitude
+        * coupling
+        / (
+            exact.exponential_rate
+            * (
+                exact.exponential_rate
+                + exact.potential_friction
+            )
+        )
+    )
+    assert exact.curvature_partial_sum == amplitude + expected_first
+    assert (
+        exact.curvature_prime_partial_sum
+        == exact.exponential_rate * expected_first
+    )
+
+
+def test_exact_dust_regular_initial_interval_is_a_point() -> None:
+    _, gate, _ = _mode(w=0.0, amplitude=0.7)
+    exact = gate.construct_exact_regular_initial_enclosure(
+        n=-5.0,
+        k_over_a_h=0.05,
+        primordial_potential_amplitude=0.7,
+    )
+    amplitude = Fraction.from_float(0.7)
+    assert exact.curvature_interval == (amplitude, amplitude)
+    assert exact.curvature_prime_interval == (Fraction(0), Fraction(0))
+    assert exact.curvature_tail_abs_upper_bound == 0
+    assert exact.curvature_prime_tail_abs_upper_bound == 0
 
 
 def test_regular_numerator_cancels_to_kappa_squared_over_coupling() -> None:

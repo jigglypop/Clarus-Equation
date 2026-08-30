@@ -88,6 +88,26 @@ def test_compact_c1_bump_support_normalization_and_endpoint_slope() -> None:
     assert abs(right_slope) < 1.0e-4
 
 
+@pytest.mark.parametrize("width", [0.1, 0.01, 0.001, 1.0e-4])
+def test_nonbinary_source_widths_keep_exact_compact_endpoints(
+    width: float,
+) -> None:
+    bridge = _bridge(half_width=width)
+    center = bridge.config.n_star
+    left = bridge.config.n_minus
+    right = bridge.config.n_plus
+    assert compact_c1_bump(left, center, width) == 0.0
+    assert compact_c1_bump(right, center, width) == 0.0
+    assert compact_c1_bump_derivative(left, center, width) == 0.0
+    assert compact_c1_bump_derivative(right, center, width) == 0.0
+    assert compact_c1_cumulative(left, center, width) == 0.0
+    assert compact_c1_cumulative(right, center, width) == 1.0
+    assert bridge.source(left) == 0.0
+    assert bridge.source(right) == 0.0
+    assert bridge.source_derivative(left) == 0.0
+    assert bridge.source_derivative(right) == 0.0
+
+
 def test_pre_during_post_production_behavior_and_exact_present_abundance() -> None:
     bridge = _bridge()
     c = bridge.config

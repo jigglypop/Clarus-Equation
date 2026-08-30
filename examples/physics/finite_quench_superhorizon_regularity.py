@@ -23,8 +23,9 @@ spectrum, or a microphysical transfer law.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from fractions import Fraction
 import math
-from numbers import Real
+from numbers import Integral, Real
 
 from examples.physics.finite_quench_flat_gr_background import (
     FiniteQuenchTwoFluidFlatGRBackground,
@@ -46,6 +47,14 @@ def _finite_real(value: object, name: str) -> float:
     if not math.isfinite(result):
         raise ValueError(f"{name} must be a finite real number")
     return result
+
+
+def _binary_fraction(value: float) -> Fraction:
+    """Freeze one finite Python float as its exact binary rational."""
+
+    if not math.isfinite(value):
+        raise ValueError("binary-fraction input must be finite")
+    return Fraction.from_float(value)
 
 
 def _finite_sum(name: str, *values: float) -> float:
@@ -160,6 +169,46 @@ class SuperhorizonRegularModeReceipt:
     )
 
 
+@dataclass(frozen=True)
+class ExactRegularModeInitialEnclosureReceipt:
+    """Exact-rational enclosure of the analytic regular trace initial state."""
+
+    n: Fraction
+    source_minus: Fraction
+    reservoir_equation_of_state: Fraction
+    kappa_initial: Fraction
+    kappa_initial_squared: Fraction
+    primordial_potential_amplitude: Fraction
+    exponential_rate: Fraction
+    potential_friction: Fraction
+    highest_partial_sum_order: int
+    terms_in_partial_sum: int
+    curvature_partial_sum: Fraction
+    first_omitted_curvature_term_abs: Fraction
+    curvature_tail_ratio_upper_bound: Fraction
+    curvature_tail_abs_upper_bound: Fraction
+    curvature_interval: tuple[Fraction, Fraction]
+    curvature_prime_partial_sum: Fraction
+    first_omitted_curvature_prime_term_abs: Fraction
+    curvature_prime_tail_ratio_upper_bound: Fraction
+    curvature_prime_tail_abs_upper_bound: Fraction
+    curvature_prime_interval: tuple[Fraction, Fraction]
+    exact_binary_float_inputs_frozen: bool
+    source_off_pure_reservoir_series_equation_proven: bool
+    exact_series_recurrence_proven: bool
+    tail_ratios_monotone_and_strictly_below_one: bool
+    exact_rational_tail_enclosures_proven: bool
+    unique_past_bounded_regular_mode_enclosed: bool
+    normalized_dimensionless_series_proven: bool
+    potential_amplitude_is_free_initial_data: bool = True
+    physical_primordial_amplitude_supplied: bool = False
+    scalar_clock_initial_interval_enclosed: bool = False
+    role: str = (
+        "EXACT_RATIONAL_SOURCE_OFF_REGULAR_TRACE_INITIAL_STATE_"
+        "WITH_FREE_AMPLITUDE_NOT_PHYSICAL_PRIMORDIAL_SPECTRUM"
+    )
+
+
 class FiniteQuenchSuperhorizonRegularity:
     """Audit the regularized source-off system and its bounded-past mode."""
 
@@ -198,6 +247,172 @@ class FiniteQuenchSuperhorizonRegularity:
         if not math.isfinite(kappa * kappa) or kappa * kappa <= 0.0:
             raise ValueError("kappa squared must remain positive and finite")
         return kappa
+
+    def construct_exact_regular_initial_enclosure(
+        self,
+        *,
+        n: object,
+        k_over_a_h: object,
+        primordial_potential_amplitude: object,
+        highest_partial_sum_order: object = 16,
+    ) -> ExactRegularModeInitialEnclosureReceipt:
+        """Enclose the source-off analytic regular mode by exact rationals.
+
+        With x = n - n_i, r = 1 + 3w, f = (5 + 3w)/2, and
+        K_i = kappa_i^2, the bounded-past solution of
+
+            psi'' + f psi' + w K_i exp(r x) psi = 0
+
+        has psi = sum_m t_m exp(m r x), where
+
+            t_m / t_(m-1) = -w K_i / [m r (m r + f)].
+
+        At x = 0 the decreasing absolute term ratios give geometric
+        enclosures for both psi and psi'. All inputs are the exact binary
+        rationals represented by the validated Python floats.
+        """
+
+        background = self._early_background(n)
+        kappa = self._validated_kappa(k_over_a_h)
+        amplitude = _finite_real(
+            primordial_potential_amplitude,
+            "primordial_potential_amplitude",
+        )
+        if isinstance(highest_partial_sum_order, bool) or not isinstance(
+            highest_partial_sum_order,
+            Integral,
+        ):
+            raise ValueError("highest_partial_sum_order must be an integer")
+        order = int(highest_partial_sum_order)
+        if not 0 <= order <= 256:
+            raise ValueError(
+                "highest_partial_sum_order must lie between 0 and 256"
+            )
+
+        config = self.bridge.config
+        n_exact = _binary_fraction(background.n)
+        source_minus = (
+            _binary_fraction(config.n_star)
+            - _binary_fraction(config.half_width)
+        )
+        if n_exact > source_minus:
+            raise ValueError(
+                "exact regular series requires a source-off initial node"
+            )
+
+        w = _binary_fraction(config.w_reservoir)
+        kappa_exact = _binary_fraction(kappa)
+        kappa_squared = kappa_exact * kappa_exact
+        amplitude_exact = _binary_fraction(amplitude)
+        rate = 1 + 3 * w
+        friction = (5 + 3 * w) / 2
+        coupling = w * kappa_squared
+        if (
+            not Fraction(0) <= w <= Fraction(1)
+            or rate <= 0
+            or friction <= 0
+            or kappa_squared <= 0
+        ):
+            raise ValueError("exact regular-series assumptions failed")
+
+        term = amplitude_exact
+        curvature_partial = term
+        curvature_prime_partial = Fraction(0)
+        for m in range(1, order + 1):
+            m_exact = Fraction(m)
+            term *= (
+                -coupling
+                / (
+                    m_exact
+                    * rate
+                    * (m_exact * rate + friction)
+                )
+            )
+            curvature_partial += term
+            curvature_prime_partial += m_exact * rate * term
+
+        first_omitted_index = order + 1
+        first_omitted_index_exact = Fraction(first_omitted_index)
+        first_omitted = term * (
+            -coupling
+            / (
+                first_omitted_index_exact
+                * rate
+                * (
+                    first_omitted_index_exact * rate
+                    + friction
+                )
+            )
+        )
+        first_omitted_abs = abs(first_omitted)
+        next_index = Fraction(order + 2)
+        curvature_tail_ratio = coupling / (
+            next_index * rate * (next_index * rate + friction)
+        )
+        curvature_prime_first_abs = (
+            first_omitted_index_exact * rate * first_omitted_abs
+        )
+        curvature_prime_tail_ratio = coupling / (
+            first_omitted_index_exact
+            * rate
+            * (next_index * rate + friction)
+        )
+        if (
+            not Fraction(0) <= curvature_tail_ratio < Fraction(1)
+            or not Fraction(0)
+            <= curvature_prime_tail_ratio
+            < Fraction(1)
+        ):
+            raise ValueError("regular-series tail ratio is not contractive")
+
+        curvature_tail = first_omitted_abs / (
+            1 - curvature_tail_ratio
+        )
+        curvature_prime_tail = curvature_prime_first_abs / (
+            1 - curvature_prime_tail_ratio
+        )
+        curvature_interval = (
+            curvature_partial - curvature_tail,
+            curvature_partial + curvature_tail,
+        )
+        curvature_prime_interval = (
+            curvature_prime_partial - curvature_prime_tail,
+            curvature_prime_partial + curvature_prime_tail,
+        )
+
+        return ExactRegularModeInitialEnclosureReceipt(
+            n=n_exact,
+            source_minus=source_minus,
+            reservoir_equation_of_state=w,
+            kappa_initial=kappa_exact,
+            kappa_initial_squared=kappa_squared,
+            primordial_potential_amplitude=amplitude_exact,
+            exponential_rate=rate,
+            potential_friction=friction,
+            highest_partial_sum_order=order,
+            terms_in_partial_sum=order + 1,
+            curvature_partial_sum=curvature_partial,
+            first_omitted_curvature_term_abs=first_omitted_abs,
+            curvature_tail_ratio_upper_bound=curvature_tail_ratio,
+            curvature_tail_abs_upper_bound=curvature_tail,
+            curvature_interval=curvature_interval,
+            curvature_prime_partial_sum=curvature_prime_partial,
+            first_omitted_curvature_prime_term_abs=(
+                curvature_prime_first_abs
+            ),
+            curvature_prime_tail_ratio_upper_bound=(
+                curvature_prime_tail_ratio
+            ),
+            curvature_prime_tail_abs_upper_bound=curvature_prime_tail,
+            curvature_prime_interval=curvature_prime_interval,
+            exact_binary_float_inputs_frozen=True,
+            source_off_pure_reservoir_series_equation_proven=True,
+            exact_series_recurrence_proven=True,
+            tail_ratios_monotone_and_strictly_below_one=True,
+            exact_rational_tail_enclosures_proven=True,
+            unique_past_bounded_regular_mode_enclosed=True,
+            normalized_dimensionless_series_proven=True,
+        )
 
     def construct_system(
         self,

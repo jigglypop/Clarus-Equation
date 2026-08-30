@@ -253,13 +253,31 @@ def test_explanation_planner_contract_is_complete() -> None:
     skill = (ROOT / ".codex" / "skills" / "ce-explanation-planner" / "SKILL.md").read_text(
         encoding="utf-8"
     )
+    agent = (ROOT / ".codex" / "agents" / "ce-explanation-planner.md").read_text(
+        encoding="utf-8"
+    )
+    agent_toml = (ROOT / ".codex" / "agents" / "ce-explanation-planner.toml").read_text(
+        encoding="utf-8"
+    )
+    prompt = (ROOT / ".codex" / "prompts" / "ce-explain-plan.md").read_text(
+        encoding="utf-8"
+    )
     harness = (ROOT / ".codex" / "harnesses" / "explanation_first_planner.md").read_text(
         encoding="utf-8"
     )
     for marker in ("LaTeX", "비유", "[정리]", "[공리]", "증명 경로"):
         assert marker in skill
+    for contract in (skill, agent, agent_toml, prompt, harness):
+        for marker in ("목표 계약", "완료 조건", "목표 이탈", "복귀 행동"):
+            assert marker in contract
     assert "`.codex/skills/ce-explanation-planner`" in harness
     assert "수학적 증명이 아니다" in harness
+
+    research = (ROOT / ".codex" / "skills" / "ce-research" / "SKILL.md").read_text(
+        encoding="utf-8"
+    )
+    assert "목표 정렬 게이트" in research
+    assert "어느 미완성 고리를 닫는지" in research
 
 
 def test_ledger_and_paper_writers_have_disjoint_ownership() -> None:

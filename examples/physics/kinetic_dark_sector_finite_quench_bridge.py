@@ -133,6 +133,10 @@ def compact_c1_bump(n: object, n_star: object, half_width: object) -> float:
     width = _finite_real(half_width, "half_width")
     if width <= 0.0:
         raise ValueError("half_width must be > 0")
+    lower = center - width
+    upper = center + width
+    if n_value <= lower or n_value >= upper:
+        return 0.0
     x = (n_value - center) / width
     if abs(x) >= 1.0:
         return 0.0
@@ -151,6 +155,10 @@ def compact_c1_bump_derivative(
     width = _finite_real(half_width, "half_width")
     if width <= 0.0:
         raise ValueError("half_width must be > 0")
+    lower = center - width
+    upper = center + width
+    if n_value <= lower or n_value >= upper:
+        return 0.0
     x = (n_value - center) / width
     if abs(x) >= 1.0:
         return 0.0
@@ -165,6 +173,12 @@ def compact_c1_cumulative(n: object, n_star: object, half_width: object) -> floa
     width = _finite_real(half_width, "half_width")
     if width <= 0.0:
         raise ValueError("half_width must be > 0")
+    lower = center - width
+    upper = center + width
+    if n_value <= lower:
+        return 0.0
+    if n_value >= upper:
+        return 1.0
     x = (n_value - center) / width
     if x <= -1.0:
         return 0.0

@@ -6,6 +6,9 @@ import math
 
 import pytest
 
+from examples.physics.finite_quench_flat_gr_background import (
+    FiniteQuenchTwoFluidFlatGRBackground,
+)
 from examples.physics.finite_quench_regular_metric_evolution import (
     FiniteQuenchRegularMetricEvolution,
 )
@@ -15,12 +18,17 @@ from examples.physics.kinetic_dark_sector_finite_quench_bridge import (
 )
 
 
-def _bridge(*, w_reservoir: float = 0.1) -> FiniteQuenchBridge:
+def _bridge(
+    *,
+    w_reservoir: float = 0.1,
+    half_width: float = 0.5,
+    omega_prod0: float = 0.12,
+) -> FiniteQuenchBridge:
     return FiniteQuenchBridge(
         FiniteQuenchBridgeConfig(
             n_star=-4.0,
-            half_width=0.5,
-            omega_prod0=0.12,
+            half_width=half_width,
+            omega_prod0=omega_prod0,
             reservoir_present_density=0.21,
             w_reservoir=w_reservoir,
             w_open=2.1767e-4,
@@ -28,8 +36,18 @@ def _bridge(*, w_reservoir: float = 0.1) -> FiniteQuenchBridge:
     )
 
 
-def _evolution(*, w: float = 0.1, kappa_initial: float = 0.05):
-    bridge = _bridge(w_reservoir=w)
+def _evolution(
+    *,
+    w: float = 0.1,
+    kappa_initial: float = 0.05,
+    half_width: float = 0.5,
+    omega_prod0: float = 0.12,
+):
+    bridge = _bridge(
+        w_reservoir=w,
+        half_width=half_width,
+        omega_prod0=omega_prod0,
+    )
     return bridge, FiniteQuenchRegularMetricEvolution(
         bridge,
         n_initial=-5.0,
@@ -55,8 +73,389 @@ def test_step_doubled_regular_evolution_crosses_source_and_reconstructs_today() 
     assert receipt.final_effective_full_reconstruction_holds
     assert receipt.final_regular_rhs_matches_full_system
     assert receipt.finite_time_source_on_evolution_numerically_verified
+    assert receipt.trace_generator_bound.trace_coefficients_bounded_on_interval
+    assert (
+        receipt.trace_flow_stability
+        .finite_interval_continuous_dependence_bound_proven
+    )
+    assert receipt.source_edges_aligned_in_coarse_mesh
+    assert receipt.analytic_resolution_bound_holds
+    assert receipt.normalized_source_shape_resolution_holds
+    assert receipt.refined_step_count == 2 * receipt.coarse_step_count
+    assert receipt.maximum_characteristic_scale_step <= (
+        1.0 + 256.0 * math.ulp(1.0)
+    )
     assert receipt.kappa_final > receipt.kappa_initial
     assert not receipt.failure_reasons
+
+
+@pytest.mark.parametrize(
+    ("w", "half_width"),
+    [
+        (0.0, 0.5),
+        (0.1, 0.5),
+        (1.0, 0.5),
+        (0.1, 1.0e-4),
+    ],
+)
+def test_analytic_trace_bound_contains_sampled_coefficients(
+    w: float,
+    half_width: float,
+) -> None:
+    bridge, evolution = _evolution(w=w, half_width=half_width)
+    bound = evolution.trace_generator_bound()
+    expected_source_bound = (
+        bridge.config.omega_prod0
+        * math.exp(-3.0 * bridge.config.n_minus)
+        * 15.0
+        / (16.0 * bridge.config.half_width)
+    )
+    assert bound.source_upper_bound == pytest.approx(expected_source_bound)
+    assert bound.source_right_endpoint == bridge.config.n_plus
+    assert bound.source_enthalpy_lower_bound is not None
+    assert bound.source_enthalpy_lower_bound > 0.0
+    assert bound.component_density_nonnegativity_derived_from_bridge
+    assert bound.source_bound_derived_analytically
+    assert bound.enthalpy_monotonicity_proven
+    assert bound.kappa_monotonicity_proven
+    assert bound.trace_coefficients_bounded_on_interval
+    assert not bound.mesh_rule_is_stability_or_error_theorem
+    assert not bound.source_shape_step_floor_is_error_theorem
+
+    nodes = {
+        evolution.n_initial,
+        evolution.n_final,
+        bridge.config.n_minus,
+        bridge.config.n_star,
+        bridge.config.n_plus,
+    }
+    nodes.update(
+        evolution.n_initial
+        + (evolution.n_final - evolution.n_initial) * index / 256
+        for index in range(257)
+    )
+    for n in sorted(nodes):
+        _, _, negative_restoring, negative_damping = (
+            evolution.trace_conditioned_matrix(n)
+        )
+        assert abs(negative_damping) <= (
+            bound.damping_upper_bound
+            + 1.0e-12 * max(1.0, bound.damping_upper_bound)
+        )
+        assert abs(negative_restoring) <= (
+            bound.restoring_absolute_upper_bound
+            + 1.0e-12 * max(
+                1.0,
+                bound.restoring_absolute_upper_bound,
+            )
+        )
+
+
+@pytest.mark.parametrize(
+    ("w", "half_width"),
+    [
+        (0.0, 0.5),
+        (0.1, 0.5),
+        (1.0, 0.5),
+        (0.1, 1.0e-4),
+    ],
+)
+def test_trace_coefficient_signs_follow_exact_positive_decompositions(
+    w: float,
+    half_width: float,
+) -> None:
+    bridge, evolution = _evolution(w=w, half_width=half_width)
+    nodes = {
+        evolution.n_initial,
+        evolution.n_final,
+        bridge.config.n_minus,
+        bridge.config.n_star,
+        bridge.config.n_plus,
+    }
+    nodes.update(
+        evolution.n_initial
+        + (evolution.n_final - evolution.n_initial) * index / 64
+        for index in range(65)
+    )
+    for n in sorted(nodes):
+        background = FiniteQuenchTwoFluidFlatGRBackground(
+            bridge
+        ).construct(n)
+        rho_p = background.produced_density
+        rho_r = background.reservoir_density
+        total_density = background.total_density
+        enthalpy = background.total_enthalpy
+        source = background.produced_source
+        pressure_ratio = (
+            w * (3.0 * (1.0 + w) * rho_r + source) / enthalpy
+        )
+        kappa = evolution.reduced.k_over_a_h(n)
+        damping_excess = (
+            3.0
+            * w
+            * rho_r
+            * (
+                (1.0 + 2.0 * w) * rho_p
+                + (1.0 + w) * rho_r
+            )
+            / (2.0 * total_density * enthalpy)
+            + w * source / enthalpy
+        )
+        restoring_decomposition = (
+            3.0
+            * w
+            * w
+            * rho_p
+            * rho_r
+            / (total_density * enthalpy)
+            + w * source / enthalpy
+            + (kappa * kappa / 3.0) * pressure_ratio
+        )
+        _, _, negative_restoring, negative_damping = (
+            evolution.trace_conditioned_matrix(n)
+        )
+        damping = -negative_damping
+        restoring = -negative_restoring
+        assert damping == pytest.approx(
+            2.5 + damping_excess,
+            rel=2.0e-12,
+            abs=2.0e-12,
+        )
+        assert restoring == pytest.approx(
+            restoring_decomposition,
+            rel=2.0e-12,
+            abs=2.0e-12,
+        )
+        assert damping >= 2.5 - 2.0e-12
+        assert restoring >= -2.0e-12
+
+
+@pytest.mark.parametrize(
+    ("w", "half_width"),
+    [
+        (0.0, 0.5),
+        (0.1, 0.5),
+        (1.0, 0.5),
+        (0.1, 1.0e-4),
+    ],
+)
+def test_trace_flow_receipt_proves_only_the_safe_stability_statements(
+    w: float,
+    half_width: float,
+) -> None:
+    _, evolution = _evolution(w=w, half_width=half_width)
+    flow = evolution.trace_flow_stability_bound()
+    bound = flow.generator_bound
+    assert flow.damping_lower_bound == 2.5
+    assert flow.restoring_lower_bound == 0.0
+    assert flow.wronskian_log_ratio_lower_bound <= (
+        flow.wronskian_log_ratio_upper_bound
+    )
+    assert flow.wronskian_log_ratio_upper_bound < 0.0
+    assert flow.wronskian_contraction_factor_representable
+    assert flow.wronskian_contraction_factor_upper_bound is not None
+    assert flow.wronskian_contraction_factor_upper_bound == pytest.approx(
+        math.exp(flow.wronskian_log_ratio_upper_bound)
+    )
+    assert flow.direct_euclidean_weight == 1.0
+    assert flow.balanced_weight == pytest.approx(
+        0.5 * bound.restoring_absolute_upper_bound
+    )
+    assert flow.selected_log_amplification_upper_bound == min(
+        flow.direct_euclidean_log_amplification_upper_bound,
+        flow.balanced_log_amplification_upper_bound,
+    )
+    assert flow.selected_log_amplification_upper_bound == pytest.approx(
+        flow.selected_euclidean_conversion_log_penalty
+        + flow.selected_logarithmic_norm_rate_upper_bound
+        * flow.interval_width
+    )
+    assert math.isfinite(flow.selected_log_amplification_upper_bound)
+    assert flow.coefficient_signs_derived_analytically
+    assert flow.frozen_generator_has_no_positive_real_eigenvalue
+    assert flow.wronskian_identity_proven
+    assert flow.fundamental_matrix_invertibility_proven
+    assert flow.forward_phase_area_contraction_proven
+    assert flow.finite_interval_continuous_dependence_bound_proven
+    assert not flow.individual_solution_norm_monotone_decay_proven
+    assert not flow.no_transient_growth_proven
+    assert not flow.numerical_method_stability_theorem_proven
+    assert not flow.rigorous_interval_enclosure_proven
+
+
+def test_wronskian_underflow_keeps_the_log_bound_without_false_zero() -> None:
+    representable = (
+        FiniteQuenchRegularMetricEvolution
+        ._representable_wronskian_contraction_factor(-1.0)
+    )
+    underflowed = (
+        FiniteQuenchRegularMetricEvolution
+        ._representable_wronskian_contraction_factor(-1_000.0)
+    )
+    assert representable == pytest.approx(math.exp(-1.0))
+    assert underflowed is None
+
+
+def test_conditional_duhamel_receipt_propagates_assumed_p_norm_bounds() -> None:
+    _, evolution = _evolution()
+    receipt = evolution.trace_residual_error_bound(
+        initial_defect_p_upper_bound=2.0e-6,
+        terminal_weighted_residual_p_upper_bound=3.0e-6,
+    )
+    expected_metric = (
+        math.exp(receipt.metric_log_propagator_upper_bound) * 2.0e-6
+        + 3.0e-6
+    )
+    expected_euclidean = expected_metric / math.sqrt(
+        min(receipt.weight_p, 1.0)
+    )
+    assert receipt.metric_endpoint_error_upper_bound == pytest.approx(
+        expected_metric
+    )
+    assert receipt.euclidean_endpoint_error_upper_bound == pytest.approx(
+        expected_euclidean
+    )
+    assert receipt.endpoint_error_radius_representable
+    assert not receipt.endpoint_error_exactly_zero_under_assumptions
+    assert receipt.dimensionless_contract_assumed_by_normalized_system
+    assert receipt.duhamel_identity_proven
+    assert receipt.fixed_weight_metric_error_bound_proven
+    assert receipt.conditional_a_posteriori_error_bound_proven
+    assert not receipt.approximate_path_absolute_continuity_verified_by_module
+    assert not receipt.dense_output_residual_certified_by_module
+    assert not receipt.initial_defect_certified_by_module
+    assert not receipt.piecewise_join_defects_included_by_module
+    assert not receipt.coefficient_interval_enclosure_proven
+    assert not receipt.outward_rounding_proven
+    assert not receipt.floating_point_evaluation_is_rigorous
+    assert not receipt.rigorous_interval_enclosure_proven
+    assert receipt.weight_p > 1.0
+    assert receipt.metric_to_euclidean_log_factor == 0.0
+    assert (
+        receipt.flow_stability.selected_euclidean_conversion_log_penalty
+        > 0.0
+    )
+
+
+def test_conditional_duhamel_receipt_handles_zero_and_overflow_in_log_domain() -> None:
+    _, evolution = _evolution()
+    zero = evolution.trace_residual_error_bound(
+        initial_defect_p_upper_bound=0.0,
+        terminal_weighted_residual_p_upper_bound=0.0,
+    )
+    assert zero.metric_endpoint_error_log_upper_bound is None
+    assert zero.euclidean_endpoint_error_log_upper_bound is None
+    assert zero.metric_endpoint_error_upper_bound == 0.0
+    assert zero.euclidean_endpoint_error_upper_bound == 0.0
+    assert zero.endpoint_error_exactly_zero_under_assumptions
+    assert zero.endpoint_error_radius_representable
+
+    overflow = evolution.trace_residual_error_bound(
+        initial_defect_p_upper_bound=1.0e308,
+        terminal_weighted_residual_p_upper_bound=1.0e308,
+    )
+    assert overflow.metric_endpoint_error_log_upper_bound is not None
+    assert overflow.euclidean_endpoint_error_log_upper_bound is not None
+    assert overflow.euclidean_endpoint_error_upper_bound is None
+    assert not overflow.endpoint_error_radius_representable
+
+
+@pytest.mark.parametrize(
+    ("initial_defect", "weighted_residual"),
+    [(-1.0, 0.0), (0.0, -1.0), (math.inf, 0.0), (0.0, math.nan)],
+)
+def test_conditional_duhamel_receipt_rejects_invalid_assumed_bounds(
+    initial_defect: float,
+    weighted_residual: float,
+) -> None:
+    _, evolution = _evolution()
+    with pytest.raises(ValueError):
+        evolution.trace_residual_error_bound(
+            initial_defect_p_upper_bound=initial_defect,
+            terminal_weighted_residual_p_upper_bound=weighted_residual,
+        )
+
+
+def test_source_edges_are_exact_nodes_of_the_nested_mesh() -> None:
+    bridge, evolution = _evolution(half_width=1.0e-4)
+    bound = evolution.trace_generator_bound()
+    target = max(
+        512,
+        math.ceil(
+            (evolution.n_final - evolution.n_initial)
+            * bound.characteristic_rate_upper_bound
+        ),
+    )
+    coarse = evolution._piecewise_coarse_mesh(target)
+    refined = evolution._refined_mesh(coarse)
+    assert bridge.config.n_minus in coarse
+    assert bridge.config.n_plus in coarse
+    assert refined[::2] == coarse
+    assert len(refined) - 1 == 2 * (len(coarse) - 1)
+    assert evolution._active_source_step_count(coarse) >= (
+        bound.minimum_active_source_coarse_steps
+    )
+    maximum_step = max(
+        right - left
+        for left, right in zip(coarse[:-1], coarse[1:], strict=True)
+    )
+    assert maximum_step * bound.characteristic_rate_upper_bound <= (
+        1.0 + 256.0 * math.ulp(1.0)
+    )
+
+
+def test_narrow_source_is_resolved_and_step_doubling_converges() -> None:
+    _, evolution = _evolution(half_width=1.0e-4)
+    receipt = evolution.construct(
+        primordial_potential_amplitude=1.0e-5,
+        coarse_step_count=512,
+        relative_tolerance=1.0e-8,
+    )
+    assert receipt.active_source_coarse_step_count >= (
+        receipt.trace_generator_bound.minimum_active_source_coarse_steps
+    )
+    assert receipt.source_edges_aligned_in_coarse_mesh
+    assert receipt.analytic_resolution_bound_holds
+    assert receipt.normalized_source_shape_resolution_holds
+    assert receipt.magnus_step_doubling_converged
+    assert receipt.finite_time_source_on_evolution_numerically_verified
+    assert not receipt.failure_reasons
+
+
+def test_pathologically_narrow_source_fails_before_excessive_work() -> None:
+    _, evolution = _evolution(half_width=1.0e-8)
+    with pytest.raises(ValueError, match="source-aware resolution"):
+        evolution.construct(
+            primordial_potential_amplitude=1.0e-5,
+            coarse_step_count=512,
+            relative_tolerance=1.0e-8,
+        )
+
+
+@pytest.mark.parametrize("w", [-1.0, -0.5, 1.1, 1000.0])
+def test_evolution_rejects_reservoir_barotropes_outside_strict_branch(
+    w: float,
+) -> None:
+    bridge = _bridge(w_reservoir=w)
+    with pytest.raises(ValueError, match="0 <= w_R <= 1"):
+        FiniteQuenchRegularMetricEvolution(
+            bridge,
+            n_initial=-5.0,
+            kappa_initial=0.05,
+        )
+
+
+def test_zero_source_needs_no_normalized_source_shape_floor() -> None:
+    _, evolution = _evolution(omega_prod0=0.0)
+    receipt = evolution.construct(
+        primordial_potential_amplitude=1.0e-5,
+        coarse_step_count=512,
+        relative_tolerance=1.0e-8,
+    )
+    assert receipt.trace_generator_bound.source_upper_bound == 0.0
+    assert receipt.active_source_coarse_step_count == 0
+    assert receipt.normalized_source_shape_resolution_holds
+    assert receipt.magnus_step_doubling_converged
 
 
 def test_general_regular_metric_matrix_matches_full_system_across_source() -> None:
@@ -214,6 +613,9 @@ def test_causal_sound_speed_boundaries_can_cross_the_source(w: float) -> None:
     )
     assert receipt.finite_time_source_on_evolution_numerically_verified
     assert receipt.maximum_final_phase_step <= 1.0
+    assert receipt.maximum_characteristic_scale_step <= (
+        1.0 + 256.0 * math.ulp(1.0)
+    )
     if w == 1.0:
         assert receipt.requested_coarse_step_count == 512
         assert receipt.coarse_step_count > receipt.requested_coarse_step_count
@@ -307,6 +709,11 @@ def test_receipt_keeps_numerical_evolution_below_interval_and_observable_proof()
     _, _, receipt = _construct()
     assert not receipt.rigorous_interval_enclosure_proven
     assert not receipt.numerical_method_stability_theorem_proven
+    assert (
+        not receipt.trace_flow_stability
+        .numerical_method_stability_theorem_proven
+    )
+    assert not receipt.trace_flow_stability.no_transient_growth_proven
     assert not receipt.microphysical_covariant_transfer_law_proven
     assert not receipt.primordial_amplitude_predicted
     assert not receipt.observable_transfer_function_proven

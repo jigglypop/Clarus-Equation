@@ -56,6 +56,14 @@ REQUIRED_AGENT_REFERENCES = (
     ".codex/hooks/python.cmd",
 )
 PLANNER_MARKERS = ("LaTeX", "비유", "[정리]", "[공리]", "증명 경로")
+PLANNER_ALIGNMENT_PATHS = (
+    Path(".codex/skills/ce-explanation-planner/SKILL.md"),
+    Path(".codex/agents/ce-explanation-planner.md"),
+    Path(".codex/agents/ce-explanation-planner.toml"),
+    Path(".codex/prompts/ce-explain-plan.md"),
+    Path(".codex/harnesses/explanation_first_planner.md"),
+)
+PLANNER_ALIGNMENT_MARKERS = ("목표 계약", "완료 조건", "목표 이탈", "복귀 행동")
 
 
 def iter_active_text_files(
@@ -132,6 +140,17 @@ def check_repository(root: Path = REPO_ROOT) -> list[str]:
             if marker not in planner_text:
                 violations.append(
                     f"explanation planner missing invariant marker: {marker}"
+                )
+
+    for relative in PLANNER_ALIGNMENT_PATHS:
+        path = root / relative
+        if not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8-sig")
+        for marker in PLANNER_ALIGNMENT_MARKERS:
+            if marker not in text:
+                violations.append(
+                    f"{relative.as_posix()} missing goal-alignment marker: {marker}"
                 )
 
     violations.extend(find_retired_path_references(root))

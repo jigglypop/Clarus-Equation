@@ -1,4 +1,4 @@
 interface:
-  display_name: "CE Explanation Planner"
-  short_description: "Plan clear, rigorous math-and-physics explanations"
-  default_prompt: "Use $ce-explanation-planner to explain the judgment, derivation, analogy, and next proof obligation in chat."
+  display_name: "CE Goal-Aligned Proof Planner"
+  short_description: "Explain proof plans and audit goal drift"
+  default_prompt: "Use $ce-explanation-planner to state the goal contract, explain each proof step, audit drift, and give the next proof obligation."
