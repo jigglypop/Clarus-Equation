@@ -571,7 +571,6 @@ def test_default_trace_endpoint_has_exact_rational_materialized_ball() -> None:
         for left, right in zip(
             source_side_distances,
             source_side_distances[1:],
-            strict=True,
         )
     )
     assert all(
@@ -579,7 +578,6 @@ def test_default_trace_endpoint_has_exact_rational_materialized_ball() -> None:
         for left, right in zip(
             observer_side_distances,
             observer_side_distances[1:],
-            strict=True,
         )
     )
     assert born.dimensionless_source_side_distance_node_intervals[0] == (

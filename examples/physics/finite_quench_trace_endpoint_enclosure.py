@@ -48,6 +48,24 @@ def _binary_fraction(value: float) -> Fraction:
     return Fraction.from_float(value)
 
 
+def _unit_direction_cosine_fraction(value: object) -> Fraction:
+    """Freeze an exact supplied sightline direction cosine in [-1, 1]."""
+
+    if isinstance(value, bool):
+        raise ValueError("direction cosine must be a real scalar")
+    if isinstance(value, float):
+        result = _binary_fraction(value)
+    elif isinstance(value, (Fraction, Integral)):
+        result = Fraction(value)
+    else:
+        raise ValueError(
+            "direction cosine must be an int, Fraction, or finite float"
+        )
+    if not -1 <= result <= 1:
+        raise ValueError("direction cosine must lie in [-1, 1]")
+    return result
+
+
 def _ceil_fraction(value: Fraction) -> int:
     return -(-value.numerator // value.denominator)
 
@@ -770,6 +788,42 @@ class BackgroundConformalMetricTimeIntegralReceipt:
 
 
 @dataclass(frozen=True)
+class FixedModeBornLensingOrientationEnvelopeReceipt:
+    """Orientation-resolved modulus law for one fixed Born-lensing mode."""
+
+    supplied_direction_cosine: Fraction
+    direction_cosine_squared: Fraction
+    transverse_wavenumber_squared_fraction: Fraction
+    unoriented_frozen_pl_absolute_upper_bound: Fraction
+    oriented_frozen_pl_absolute_upper_bound: Fraction
+    unoriented_analytic_regular_absolute_upper_bound: Fraction | None
+    oriented_analytic_regular_absolute_upper_bound: Fraction | None
+    unoriented_normalized_absolute_upper_bound: Fraction | None
+    oriented_normalized_absolute_upper_bound: Fraction | None
+    uniform_direction_cosine_mean_absolute_upper_bound: Fraction | None
+    uniform_direction_cosine_mean_normalized_upper_bound: Fraction | None
+    oriented_bound_strictly_below_unity: bool | None
+    exact_supplied_direction_cosine_frozen: bool
+    transverse_wavenumber_identity_used: bool
+    orientation_resolved_absolute_envelope_enclosed: bool
+    uniform_direction_cosine_measure_adopted: bool
+    uniform_direction_cosine_mean_absolute_envelope_enclosed: bool
+    signed_convergence_enclosed: bool = False
+    spatial_mode_phase_supplied: bool = False
+    physical_orientation_distribution_supplied: bool = False
+    isotropic_cosmological_ensemble_claimed: bool = False
+    shear_or_lensing_map_enclosed: bool = False
+    angular_power_spectrum_enclosed: bool = False
+    primordial_power_spectrum_supplied: bool = False
+    cmb_lss_likelihood_enclosed: bool = False
+    role: str = (
+        "CONDITIONAL_SUPPLIED_DIRECTION_FIXED_FOURIER_MODE_BORN_LENSING_"
+        "ABSOLUTE_ENVELOPE_AND_FORMAL_UNIFORM_MU_MEAN_NOT_SIGNED_MAP_"
+        "COSMOLOGICAL_ENSEMBLE_POWER_SPECTRUM_OR_LIKELIHOOD"
+    )
+
+
+@dataclass(frozen=True)
 class FixedModeBornLensingAbsoluteEnvelopeReceipt:
     """Conditional absolute envelope for one Born-lensing Fourier mode."""
 
@@ -831,6 +885,86 @@ class FixedModeBornLensingAbsoluteEnvelopeReceipt:
         "LENSING_CONVERGENCE_ABSOLUTE_ENVELOPE_NOT_SIGNED_MAP_SHEAR_"
         "POWER_SPECTRUM_OR_LIKELIHOOD"
     )
+
+    def at_direction_cosine(
+        self,
+        direction_cosine: object,
+    ) -> FixedModeBornLensingOrientationEnvelopeReceipt:
+        """Resolve the modulus envelope at an exactly supplied direction."""
+
+        mu = _unit_direction_cosine_fraction(direction_cosine)
+        mu_squared = mu * mu
+        transverse_fraction = 1 - mu_squared
+
+        def scale(value: Fraction | None) -> Fraction | None:
+            if value is None:
+                return None
+            return transverse_fraction * value
+
+        oriented_analytic = scale(
+            self.analytic_regular_born_convergence_absolute_upper_bound
+        )
+        oriented_normalized = scale(
+            self
+            .normalized_analytic_regular_born_convergence_absolute_upper_bound
+        )
+        uniform_mean = (
+            None
+            if self.analytic_regular_born_convergence_absolute_upper_bound
+            is None
+            else Fraction(2, 3)
+            * self.analytic_regular_born_convergence_absolute_upper_bound
+        )
+        uniform_normalized_mean = (
+            None
+            if self
+            .normalized_analytic_regular_born_convergence_absolute_upper_bound
+            is None
+            else Fraction(2, 3)
+            * self
+            .normalized_analytic_regular_born_convergence_absolute_upper_bound
+        )
+        return FixedModeBornLensingOrientationEnvelopeReceipt(
+            supplied_direction_cosine=mu,
+            direction_cosine_squared=mu_squared,
+            transverse_wavenumber_squared_fraction=transverse_fraction,
+            unoriented_frozen_pl_absolute_upper_bound=(
+                self.frozen_pl_born_convergence_absolute_upper_bound
+            ),
+            oriented_frozen_pl_absolute_upper_bound=(
+                transverse_fraction
+                * self.frozen_pl_born_convergence_absolute_upper_bound
+            ),
+            unoriented_analytic_regular_absolute_upper_bound=(
+                self.analytic_regular_born_convergence_absolute_upper_bound
+            ),
+            oriented_analytic_regular_absolute_upper_bound=(
+                oriented_analytic
+            ),
+            unoriented_normalized_absolute_upper_bound=(
+                self
+                .normalized_analytic_regular_born_convergence_absolute_upper_bound
+            ),
+            oriented_normalized_absolute_upper_bound=oriented_normalized,
+            uniform_direction_cosine_mean_absolute_upper_bound=uniform_mean,
+            uniform_direction_cosine_mean_normalized_upper_bound=(
+                uniform_normalized_mean
+            ),
+            oriented_bound_strictly_below_unity=(
+                None
+                if oriented_analytic is None
+                else oriented_analytic < 1
+            ),
+            exact_supplied_direction_cosine_frozen=True,
+            transverse_wavenumber_identity_used=True,
+            orientation_resolved_absolute_envelope_enclosed=(
+                oriented_analytic is not None
+            ),
+            uniform_direction_cosine_measure_adopted=True,
+            uniform_direction_cosine_mean_absolute_envelope_enclosed=(
+                uniform_mean is not None
+            ),
+        )
 
 
 @dataclass(frozen=True)
