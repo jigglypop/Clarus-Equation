@@ -770,6 +770,70 @@ class BackgroundConformalMetricTimeIntegralReceipt:
 
 
 @dataclass(frozen=True)
+class FixedModeBornLensingAbsoluteEnvelopeReceipt:
+    """Conditional absolute envelope for one Born-lensing Fourier mode."""
+
+    n_source: Fraction
+    n_observer: Fraction
+    refined_step_count: int
+    primordial_potential_amplitude: Fraction
+    initial_k_over_a_h: Fraction
+    dimensionless_fixed_wavenumber_squared_interval: (
+        tuple[Fraction, Fraction]
+    )
+    dimensionless_conformal_cell_measure_intervals: (
+        tuple[tuple[Fraction, Fraction], ...]
+    )
+    dimensionless_source_side_distance_node_intervals: (
+        tuple[tuple[Fraction, Fraction], ...]
+    )
+    dimensionless_observer_side_distance_node_intervals: (
+        tuple[tuple[Fraction, Fraction], ...]
+    )
+    dimensionless_source_distance_interval: tuple[Fraction, Fraction]
+    dimensionless_geometric_kernel_cell_upper_bounds: tuple[Fraction, ...]
+    dimensionless_geometric_kernel_upper_bound: Fraction
+    frozen_pl_weyl_average_absolute_geometry_integral_upper_bound: Fraction
+    analytic_uniform_tube_geometry_measure_upper_bound: Fraction
+    frozen_pl_born_convergence_absolute_upper_bound: Fraction
+    analytic_regular_born_convergence_absolute_upper_bound: Fraction | None
+    normalized_analytic_regular_born_convergence_absolute_upper_bound: (
+        Fraction | None
+    )
+    single_mode_convergence_bound_strictly_below_unity: bool | None
+    source_and_observer_planes_fixed_at_interval_endpoints: bool
+    flat_background_born_weak_lensing_equation_adopted: bool
+    newtonian_gauge_zero_anisotropic_stress_adopted: bool
+    single_fixed_fourier_mode_adopted: bool
+    exact_rational_dimensionless_fixed_wavenumber_enclosed: bool
+    positive_conformal_cell_measure_enclosed: bool
+    prefix_and_suffix_distances_accumulated_independently: bool
+    source_distance_identity_enclosed_by_intersection: bool
+    nonnegative_flat_lensing_kernel_enclosed_cellwise: bool
+    transverse_wavenumber_bounded_by_total_wavenumber: bool
+    spatial_fourier_phase_modulus_bounded_by_one: bool
+    uniform_analytic_trace_tube_used: bool
+    conditional_single_mode_born_convergence_absolute_envelope_enclosed: bool
+    signed_single_mode_convergence_enclosed: bool = False
+    transverse_mode_orientation_supplied: bool = False
+    spatial_mode_phase_on_null_path_supplied: bool = False
+    source_redshift_calibration_supplied: bool = False
+    source_population_distribution_supplied: bool = False
+    born_weak_field_validity_independently_derived: bool = False
+    perturbed_or_post_born_geodesic_enclosed: bool = False
+    all_k_einstein_boltzmann_solution_enclosed: bool = False
+    primordial_power_spectrum_supplied: bool = False
+    shear_or_lensing_map_enclosed: bool = False
+    angular_power_spectrum_enclosed: bool = False
+    cmb_lss_likelihood_enclosed: bool = False
+    role: str = (
+        "CONDITIONAL_FLAT_BACKGROUND_BORN_SINGLE_FIXED_FOURIER_MODE_"
+        "LENSING_CONVERGENCE_ABSOLUTE_ENVELOPE_NOT_SIGNED_MAP_SHEAR_"
+        "POWER_SPECTRUM_OR_LIKELIHOOD"
+    )
+
+
+@dataclass(frozen=True)
 class TraceEndpointEnclosureReceipt:
     """Endpoint balls for frozen-node and analytic-regular trace IVPs."""
 
@@ -824,6 +888,9 @@ class TraceEndpointEnclosureReceipt:
     background_conformal_metric_time_integral: (
         BackgroundConformalMetricTimeIntegralReceipt
     )
+    fixed_mode_born_lensing_absolute_envelope: (
+        FixedModeBornLensingAbsoluteEnvelopeReceipt
+    )
     refined_nodes_frozen_as_exact_binary_rationals: bool
     continuous_piecewise_linear_reconstruction_proven: bool
     piecewise_join_defect_zero_proven: bool
@@ -841,6 +908,7 @@ class TraceEndpointEnclosureReceipt:
     conditional_weyl_metric_endpoint_enclosed: bool
     analytic_regular_uniform_trace_path_tube_proven: bool
     background_conformal_metric_time_integral_enclosed: bool
+    conditional_fixed_mode_born_lensing_absolute_envelope_enclosed: bool
     numerical_node_roundoff_absorbed_into_frozen_path: bool
     normalized_dimensionless_model_assumed: bool
     physical_primordial_initial_condition_enclosed: bool = False
@@ -1577,6 +1645,239 @@ class FiniteQuenchTraceEndpointEnclosure:
             unperturbed_flat_background_radial_null_measure_used=True,
         )
 
+    @staticmethod
+    def _fixed_mode_born_lensing_absolute_envelope_receipt(
+        *,
+        frozen_mesh: tuple[Fraction, ...],
+        frozen_nodes: tuple[tuple[Fraction, Fraction], ...],
+        parameters: _FrozenTraceParameters,
+        analytic_materialized_radius: Fraction | None,
+        amplitude: Fraction,
+    ) -> FixedModeBornLensingAbsoluteEnvelopeReceipt:
+        """Enclose one fixed-mode Born convergence contribution in modulus.
+
+        Adopt the flat-background Born equation
+
+        kappa = integral dchi K(chi) nabla_perp^2 Phi_W
+
+        with a source at the initial slice, an observer at the final slice,
+        K = chi_O chi_S / chi_s, and Phi_W = psi on the conditional
+        zero-anisotropic-stress branch.  For one Fourier mode,
+        k_perp^2 <= k^2 and the phase has modulus one.  The result is an
+        absolute upper bound only; it does not determine a sign or a map.
+        """
+
+        if (
+            len(frozen_mesh) < 2
+            or len(frozen_nodes) != len(frozen_mesh)
+        ):
+            raise ValueError(
+                "fixed-mode Born envelope requires aligned PL nodes"
+            )
+        if any(
+            left_n >= right_n
+            for left_n, right_n in zip(frozen_mesh, frozen_mesh[1:])
+        ):
+            raise ValueError(
+                "fixed-mode Born envelope mesh must be strictly increasing"
+            )
+        if (
+            parameters.n_initial != frozen_mesh[0]
+            or parameters.n_final != frozen_mesh[-1]
+        ):
+            raise ValueError(
+                "fixed-mode Born envelope parameters and mesh disagree"
+            )
+
+        cell_measures: list[_RationalInterval] = []
+        for left_n, right_n in zip(
+            frozen_mesh[:-1],
+            frozen_mesh[1:],
+            strict=True,
+        ):
+            density = _total_density_interval(
+                left_n,
+                right_n,
+                parameters,
+            )
+            weight = _interval_multiply(
+                _monotone_exp_range(-right_n, -left_n),
+                _inverse_sqrt_interval(density),
+            )
+            measure = _interval_scale(weight, right_n - left_n)
+            if measure.lower <= 0:
+                raise ValueError(
+                    "fixed-mode Born conformal cell measure lost positivity"
+                )
+            cell_measures.append(measure)
+
+        source_side = [_point_interval(0)]
+        for measure in cell_measures:
+            source_side.append(_interval_add(source_side[-1], measure))
+
+        observer_side = [_point_interval(0) for _ in frozen_mesh]
+        for index in range(len(cell_measures) - 1, -1, -1):
+            observer_side[index] = _interval_add(
+                cell_measures[index],
+                observer_side[index + 1],
+            )
+
+        source_distance_lower = max(
+            source_side[-1].lower,
+            observer_side[0].lower,
+        )
+        source_distance_upper = min(
+            source_side[-1].upper,
+            observer_side[0].upper,
+        )
+        if not 0 < source_distance_lower <= source_distance_upper:
+            raise ValueError(
+                "fixed-mode Born source-distance enclosures do not overlap"
+            )
+        source_distance = _RationalInterval(
+            source_distance_lower,
+            source_distance_upper,
+        )
+
+        initial_density = _total_density_point_interval(
+            frozen_mesh[0],
+            parameters,
+        )
+        fixed_wavenumber_squared = _interval_multiply(
+            _point_interval(
+                parameters.kappa_initial * parameters.kappa_initial
+            ),
+            _interval_multiply(
+                _rational_exp_interval(2 * frozen_mesh[0]),
+                initial_density,
+            ),
+        )
+        if fixed_wavenumber_squared.lower < 0:
+            raise ValueError(
+                "dimensionless fixed wavenumber squared lost nonnegativity"
+            )
+
+        kernel_upper_bounds: list[Fraction] = []
+        frozen_geometry_integral = Fraction(0)
+        tube_geometry_measure = Fraction(0)
+        global_kernel_upper = source_distance.upper / 4
+        for index, (left_y, right_y, measure) in enumerate(
+            zip(
+                frozen_nodes[:-1],
+                frozen_nodes[1:],
+                cell_measures,
+                strict=True,
+            )
+        ):
+            independent_distance_upper = (
+                source_side[index + 1].upper
+                * observer_side[index].upper
+                / source_distance.lower
+            )
+            kernel_upper = min(
+                independent_distance_upper,
+                global_kernel_upper,
+            )
+            if kernel_upper < 0:
+                raise ValueError(
+                    "fixed-mode Born geometric kernel lost nonnegativity"
+                )
+            kernel_upper_bounds.append(kernel_upper)
+            weighted_geometry_upper = measure.upper * kernel_upper
+            pl_absolute_upper = max(abs(left_y[0]), abs(right_y[0]))
+            frozen_geometry_integral += (
+                weighted_geometry_upper * pl_absolute_upper
+            )
+            tube_geometry_measure += weighted_geometry_upper
+
+        q_squared_upper = fixed_wavenumber_squared.upper
+        frozen_born_upper = q_squared_upper * frozen_geometry_integral
+        if analytic_materialized_radius is None:
+            analytic_born_upper = None
+            normalized_analytic_born_upper = None
+            below_unity = None
+        else:
+            analytic_born_upper = q_squared_upper * (
+                frozen_geometry_integral
+                + analytic_materialized_radius * tube_geometry_measure
+            )
+            normalized_analytic_born_upper = (
+                None
+                if amplitude == 0
+                else analytic_born_upper / abs(amplitude)
+            )
+            below_unity = analytic_born_upper < 1
+
+        def pairs(
+            intervals: list[_RationalInterval],
+        ) -> tuple[tuple[Fraction, Fraction], ...]:
+            return tuple(
+                (interval.lower, interval.upper)
+                for interval in intervals
+            )
+
+        return FixedModeBornLensingAbsoluteEnvelopeReceipt(
+            n_source=frozen_mesh[0],
+            n_observer=frozen_mesh[-1],
+            refined_step_count=len(frozen_mesh) - 1,
+            primordial_potential_amplitude=amplitude,
+            initial_k_over_a_h=parameters.kappa_initial,
+            dimensionless_fixed_wavenumber_squared_interval=(
+                fixed_wavenumber_squared.lower,
+                fixed_wavenumber_squared.upper,
+            ),
+            dimensionless_conformal_cell_measure_intervals=pairs(
+                cell_measures
+            ),
+            dimensionless_source_side_distance_node_intervals=pairs(
+                source_side
+            ),
+            dimensionless_observer_side_distance_node_intervals=pairs(
+                observer_side
+            ),
+            dimensionless_source_distance_interval=(
+                source_distance.lower,
+                source_distance.upper,
+            ),
+            dimensionless_geometric_kernel_cell_upper_bounds=tuple(
+                kernel_upper_bounds
+            ),
+            dimensionless_geometric_kernel_upper_bound=max(
+                kernel_upper_bounds
+            ),
+            frozen_pl_weyl_average_absolute_geometry_integral_upper_bound=(
+                frozen_geometry_integral
+            ),
+            analytic_uniform_tube_geometry_measure_upper_bound=(
+                tube_geometry_measure
+            ),
+            frozen_pl_born_convergence_absolute_upper_bound=(
+                frozen_born_upper
+            ),
+            analytic_regular_born_convergence_absolute_upper_bound=(
+                analytic_born_upper
+            ),
+            normalized_analytic_regular_born_convergence_absolute_upper_bound=(
+                normalized_analytic_born_upper
+            ),
+            single_mode_convergence_bound_strictly_below_unity=below_unity,
+            source_and_observer_planes_fixed_at_interval_endpoints=True,
+            flat_background_born_weak_lensing_equation_adopted=True,
+            newtonian_gauge_zero_anisotropic_stress_adopted=True,
+            single_fixed_fourier_mode_adopted=True,
+            exact_rational_dimensionless_fixed_wavenumber_enclosed=True,
+            positive_conformal_cell_measure_enclosed=True,
+            prefix_and_suffix_distances_accumulated_independently=True,
+            source_distance_identity_enclosed_by_intersection=True,
+            nonnegative_flat_lensing_kernel_enclosed_cellwise=True,
+            transverse_wavenumber_bounded_by_total_wavenumber=True,
+            spatial_fourier_phase_modulus_bounded_by_one=True,
+            uniform_analytic_trace_tube_used=True,
+            conditional_single_mode_born_convergence_absolute_envelope_enclosed=(
+                analytic_born_upper is not None
+            ),
+        )
+
     def coefficient_bounds(self) -> RationalTraceCoefficientBoundReceipt:
         """Derive exact-rational A, B, kappa, and logarithmic-norm bounds."""
 
@@ -2059,6 +2360,15 @@ class FiniteQuenchTraceEndpointEnclosure:
                 amplitude=exact_regular.primordial_potential_amplitude,
             )
         )
+        fixed_mode_born_lensing_absolute_envelope = (
+            self._fixed_mode_born_lensing_absolute_envelope_receipt(
+                frozen_mesh=frozen_mesh,
+                frozen_nodes=frozen_nodes,
+                parameters=parameters,
+                analytic_materialized_radius=analytic_materialized_radius,
+                amplitude=exact_regular.primordial_potential_amplitude,
+            )
+        )
 
         return TraceEndpointEnclosureReceipt(
             coefficient_bounds=coefficient_bounds,
@@ -2132,6 +2442,9 @@ class FiniteQuenchTraceEndpointEnclosure:
             background_conformal_metric_time_integral=(
                 background_conformal_metric_time_integral
             ),
+            fixed_mode_born_lensing_absolute_envelope=(
+                fixed_mode_born_lensing_absolute_envelope
+            ),
             refined_nodes_frozen_as_exact_binary_rationals=True,
             continuous_piecewise_linear_reconstruction_proven=True,
             piecewise_join_defect_zero_proven=True,
@@ -2164,6 +2477,10 @@ class FiniteQuenchTraceEndpointEnclosure:
             background_conformal_metric_time_integral_enclosed=(
                 background_conformal_metric_time_integral
                 .materialized_analytic_regular_metric_time_integral_enclosed
+            ),
+            conditional_fixed_mode_born_lensing_absolute_envelope_enclosed=(
+                fixed_mode_born_lensing_absolute_envelope
+                .conditional_single_mode_born_convergence_absolute_envelope_enclosed
             ),
             numerical_node_roundoff_absorbed_into_frozen_path=True,
             normalized_dimensionless_model_assumed=True,
