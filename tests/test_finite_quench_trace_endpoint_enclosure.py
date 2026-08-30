@@ -543,6 +543,131 @@ def test_default_trace_endpoint_has_exact_rational_materialized_ball() -> None:
     assert not conformal.primordial_power_spectrum_supplied
     assert not conformal.cmb_lss_likelihood_enclosed
     assert enclosure.background_conformal_metric_time_integral_enclosed
+    born = enclosure.fixed_mode_born_lensing_absolute_envelope
+    assert born.n_source == enclosure.n_initial
+    assert born.n_observer == enclosure.n_final
+    assert born.refined_step_count == enclosure.refined_step_count
+    assert len(born.dimensionless_conformal_cell_measure_intervals) == (
+        enclosure.refined_step_count
+    )
+    assert len(
+        born.dimensionless_source_side_distance_node_intervals
+    ) == enclosure.refined_step_count + 1
+    assert len(
+        born.dimensionless_observer_side_distance_node_intervals
+    ) == enclosure.refined_step_count + 1
+    assert all(
+        interval[0] > 0
+        for interval in born.dimensionless_conformal_cell_measure_intervals
+    )
+    source_side_distances = (
+        born.dimensionless_source_side_distance_node_intervals
+    )
+    observer_side_distances = (
+        born.dimensionless_observer_side_distance_node_intervals
+    )
+    assert all(
+        left[1] < right[1]
+        for left, right in zip(
+            source_side_distances,
+            source_side_distances[1:],
+            strict=True,
+        )
+    )
+    assert all(
+        left[1] > right[1]
+        for left, right in zip(
+            observer_side_distances,
+            observer_side_distances[1:],
+            strict=True,
+        )
+    )
+    assert born.dimensionless_source_side_distance_node_intervals[0] == (
+        Fraction(0),
+        Fraction(0),
+    )
+    assert born.dimensionless_observer_side_distance_node_intervals[-1] == (
+        Fraction(0),
+        Fraction(0),
+    )
+    source_distance = born.dimensionless_source_distance_interval
+    assert 0 < source_distance[0] <= source_distance[1]
+    assert (
+        conformal.dimensionless_background_conformal_time_interval[0]
+        <= source_distance[0]
+        <= source_distance[1]
+        <= conformal.dimensionless_background_conformal_time_interval[1]
+    )
+    q_squared = born.dimensionless_fixed_wavenumber_squared_interval
+    initial_density_reference = (
+        evolution.bridge.production_density(evolution.n_initial)
+        + evolution.bridge.reservoir_density(evolution.n_initial)
+    )
+    q_squared_reference = (
+        evolution.kappa_initial**2
+        * math.exp(2 * evolution.n_initial)
+        * initial_density_reference
+    )
+    assert float(q_squared[0]) <= q_squared_reference <= float(q_squared[1])
+    assert q_squared[0] > 0
+    assert (
+        0
+        < born.dimensionless_geometric_kernel_upper_bound
+        <= source_distance[1] / 4
+    )
+    for index, kernel_upper in enumerate(
+        born.dimensionless_geometric_kernel_cell_upper_bounds
+    ):
+        independent_distance_upper = (
+            source_side_distances[index + 1][1]
+            * observer_side_distances[index][1]
+            / source_distance[0]
+        )
+        assert kernel_upper == min(
+            independent_distance_upper,
+            source_distance[1] / 4,
+        )
+    assert born.frozen_pl_born_convergence_absolute_upper_bound > 0
+    assert (
+        born.analytic_regular_born_convergence_absolute_upper_bound
+        is not None
+    )
+    assert (
+        born.analytic_regular_born_convergence_absolute_upper_bound
+        > born.frozen_pl_born_convergence_absolute_upper_bound
+    )
+    assert (
+        born.normalized_analytic_regular_born_convergence_absolute_upper_bound
+        == born.analytic_regular_born_convergence_absolute_upper_bound
+        / abs(born.primordial_potential_amplitude)
+    )
+    assert born.single_mode_convergence_bound_strictly_below_unity
+    assert born.source_and_observer_planes_fixed_at_interval_endpoints
+    assert born.flat_background_born_weak_lensing_equation_adopted
+    assert born.newtonian_gauge_zero_anisotropic_stress_adopted
+    assert born.single_fixed_fourier_mode_adopted
+    assert born.exact_rational_dimensionless_fixed_wavenumber_enclosed
+    assert born.positive_conformal_cell_measure_enclosed
+    assert born.prefix_and_suffix_distances_accumulated_independently
+    assert born.source_distance_identity_enclosed_by_intersection
+    assert born.nonnegative_flat_lensing_kernel_enclosed_cellwise
+    assert born.transverse_wavenumber_bounded_by_total_wavenumber
+    assert born.spatial_fourier_phase_modulus_bounded_by_one
+    assert born.uniform_analytic_trace_tube_used
+    assert born.conditional_single_mode_born_convergence_absolute_envelope_enclosed
+    assert not born.signed_single_mode_convergence_enclosed
+    assert not born.transverse_mode_orientation_supplied
+    assert not born.spatial_mode_phase_on_null_path_supplied
+    assert not born.source_redshift_calibration_supplied
+    assert not born.source_population_distribution_supplied
+    assert not born.born_weak_field_validity_independently_derived
+    assert not born.perturbed_or_post_born_geodesic_enclosed
+    assert not born.all_k_einstein_boltzmann_solution_enclosed
+    assert not born.primordial_power_spectrum_supplied
+    assert not born.shear_or_lensing_map_enclosed
+    assert not born.angular_power_spectrum_enclosed
+    assert not born.cmb_lss_likelihood_enclosed
+    assert enclosure.conditional_fixed_mode_born_lensing_absolute_envelope_enclosed
     assert not enclosure.numerical_method_convergence_theorem_proven
     assert not enclosure.observable_transfer_function_enclosed
 
@@ -581,6 +706,19 @@ def test_uniform_path_tube_rejects_a_nonmonotone_mesh() -> None:
             frozen_nodes=((Fraction(0), Fraction(0)),) * 4,
             parameters=owner._frozen_parameters(),
             analytic_symbolic_radius=zero_radius,
+            analytic_materialized_radius=Fraction(0),
+            amplitude=Fraction(1),
+        )
+    with pytest.raises(ValueError, match="strictly increasing"):
+        owner._fixed_mode_born_lensing_absolute_envelope_receipt(
+            frozen_mesh=(
+                Fraction(0),
+                Fraction(2),
+                Fraction(1),
+                Fraction(3),
+            ),
+            frozen_nodes=((Fraction(0), Fraction(0)),) * 4,
+            parameters=owner._frozen_parameters(),
             analytic_materialized_radius=Fraction(0),
             amplitude=Fraction(1),
         )
@@ -657,6 +795,20 @@ def test_zero_path_has_exact_zero_endpoint_radius() -> None:
     assert not zero_conformal.normalization_defined
     assert zero_conformal.materialized_analytic_regular_metric_time_integral_enclosed
     assert enclosure.background_conformal_metric_time_integral_enclosed
+    zero_born = enclosure.fixed_mode_born_lensing_absolute_envelope
+    assert zero_born.frozen_pl_born_convergence_absolute_upper_bound == 0
+    assert (
+        zero_born.analytic_regular_born_convergence_absolute_upper_bound
+        == 0
+    )
+    assert (
+        zero_born
+        .normalized_analytic_regular_born_convergence_absolute_upper_bound
+        is None
+    )
+    assert zero_born.single_mode_convergence_bound_strictly_below_unity
+    assert zero_born.conditional_single_mode_born_convergence_absolute_envelope_enclosed
+    assert enclosure.conditional_fixed_mode_born_lensing_absolute_envelope_enclosed
     zero_response = enclosure.amplitude_normalized_response
     assert zero_response.amplitude_sign == 0
     assert not zero_response.normalization_defined
@@ -860,6 +1012,29 @@ def test_symbolic_radius_branch_never_emits_component_signs(
     )
     assert not symbolic_conformal.materialized_analytic_regular_metric_time_integral_enclosed
     assert not enclosure.background_conformal_metric_time_integral_enclosed
+    symbolic_born = enclosure.fixed_mode_born_lensing_absolute_envelope
+    assert symbolic_born.frozen_pl_born_convergence_absolute_upper_bound > 0
+    assert (
+        symbolic_born.analytic_regular_born_convergence_absolute_upper_bound
+        is None
+    )
+    assert (
+        symbolic_born
+        .normalized_analytic_regular_born_convergence_absolute_upper_bound
+        is None
+    )
+    assert (
+        symbolic_born.single_mode_convergence_bound_strictly_below_unity
+        is None
+    )
+    assert (
+        not symbolic_born
+        .conditional_single_mode_born_convergence_absolute_envelope_enclosed
+    )
+    assert (
+        not enclosure
+        .conditional_fixed_mode_born_lensing_absolute_envelope_enclosed
+    )
 
 
 def test_negative_curvature_path_has_certified_negative_sign() -> None:
@@ -927,6 +1102,26 @@ def test_negative_curvature_path_has_certified_negative_sign() -> None:
     )
     assert negative_conformal.normalized_weyl_average_response_certified_sign == 1
     assert negative_conformal.normalized_weyl_sum_response_certified_sign == 1
+    negative_born = enclosure.fixed_mode_born_lensing_absolute_envelope
+    assert (
+        negative_born.analytic_regular_born_convergence_absolute_upper_bound
+        is not None
+    )
+    assert (
+        negative_born.analytic_regular_born_convergence_absolute_upper_bound
+        > 0
+    )
+    assert (
+        negative_born
+        .normalized_analytic_regular_born_convergence_absolute_upper_bound
+        is not None
+    )
+    assert (
+        negative_born
+        .normalized_analytic_regular_born_convergence_absolute_upper_bound
+        > 0
+    )
+    assert not negative_born.signed_single_mode_convergence_enclosed
 
 
 def test_rational_enclosure_requires_positive_present_reservoir() -> None:
