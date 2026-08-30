@@ -1,8 +1,0 @@
-{
-  "atol": 1e-11,
-  "curved_origin_abs": 1.6174481234408717,
-  "curved_origin_scalar": -1.6174481234408717,
-  "oracle": "numpy.linalg.eigh float64",
-  "rtol": 1e-09,
-  "symmetric_exp_log_relative": 4.305119494058189e-15
-}

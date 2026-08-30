@@ -185,6 +185,31 @@ def test_degenerate_tetrahedron_and_invalid_future_normal_are_rejected() -> None
         canonical_pure_boost((1.0, 1.0, 0.0, 0.0))
 
 
+def test_exact_near_null_normal_is_rejected_before_float_normalization() -> None:
+    epsilon = Fraction(1, 10**30)
+    coordinates = {
+        0: (Fraction(0), Fraction(0), Fraction(0), Fraction(0)),
+        1: (Fraction(0), Fraction(1), Fraction(0), Fraction(0)),
+        2: (Fraction(0), Fraction(0), Fraction(1), Fraction(0)),
+        3: (
+            Fraction(1) - epsilon,
+            Fraction(0),
+            Fraction(0),
+            Fraction(1),
+        ),
+    }
+
+    with pytest.raises(ValueError, match='too near-null'):
+        exact_tetrahedron_future_normal((0, 1, 2, 3), coordinates)
+
+    with pytest.raises(ValueError, match='positive Fraction'):
+        exact_tetrahedron_future_normal(
+            (0, 1, 2, 3),
+            coordinates,
+            max_normal_condition_squared=Fraction(0),
+        )
+
+
 def test_claim_ceiling_is_normal_coset_data_not_an_eprl_boundary_frame() -> None:
     certificate = certify_lorentzian_one_to_five_frame_lifts()
 

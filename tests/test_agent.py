@@ -12,6 +12,7 @@ from reality_stone.clarus.agent import (
     RuntimeAgent,
     RuntimeAgentConfig,
     RuntimeAgentStep,
+    HybridDecisionAudit,
     RuntimeTextAgent,
     RuntimeTextAgentTurn,
     TextEnvironment,
@@ -28,6 +29,7 @@ from reality_stone.clarus.runtime import BrainRuntime, BrainRuntimeConfig, Runti
 from reality_stone.clarus.belief_control import BeliefControlConfig, BeliefController
 from reality_stone.clarus.adaptive_scc_tower_controller import AdaptiveTowerController
 from reality_stone.clarus.nested_scc_tower import NestedTowerGenerator, TowerSpec
+from reality_stone.clarus.episodic_memory import AuditedEpisodicMemory
 
 
 class TestCritic:
@@ -314,8 +316,175 @@ class TestRuntimeAgent:
         assert runtime.step_index == 0
 
     def test_nested_scc_and_belief_control_are_mutually_exclusive(self):
-        with pytest.raises(ValueError, match="cannot be enabled together"):
+        with pytest.raises(ValueError, match="mutually exclusive"):
             RuntimeAgentConfig(belief_control_enabled=True, nested_scc_enabled=True)
+
+    def test_episodic_memory_recall_can_select_audited_action(self):
+        runtime = make_runtime(dim=2)
+        memory = AuditedEpisodicMemory(
+            dim=2,
+            recall_similarity=0.9,
+            recall_margin=0.05,
+        )
+        cue = torch.tensor([1.0, 0.0])
+        assert memory.upsert(cue, 1, "seed:1", priority=1.0, timestamp=0) == "ADD"
+        agent = RuntimeAgent(
+            runtime,
+            action_embeddings=torch.eye(2),
+            config=RuntimeAgentConfig(action_count=2, episodic_memory_enabled=True),
+            episodic_memory=memory,
+        )
+
+        out = agent.step(observation=cue, force_mode=RuntimeMode.WAKE)
+
+        assert out.action_index == 1
+        assert out.episodic_action_used
+        assert out.episodic_recall is not None
+        assert out.episodic_recall.evidence_id == "seed:1"
+        assert out.episodic_operation == "UPDATE"
+        assert memory.audit_log[-1]["evidence_id"] == "runtime-step:1"
+
+    def test_episodic_memory_abstains_then_learns_without_changing_default_path(self):
+        runtime = make_runtime(dim=2)
+        agent = RuntimeAgent(
+            runtime,
+            action_embeddings=torch.eye(2),
+            config=RuntimeAgentConfig(action_count=2, episodic_memory_enabled=True),
+        )
+        cue = torch.tensor([0.0, 1.0])
+
+        first = agent.step(observation=cue, force_mode=RuntimeMode.WAKE)
+        second = agent.step(observation=cue, force_mode=RuntimeMode.WAKE)
+
+        assert first.episodic_recall is not None and first.episodic_recall.abstained
+        assert not first.episodic_action_used
+        assert first.episodic_operation == "ADD"
+        assert second.episodic_action_used
+        assert second.action_index == first.action_index
+
+    def test_hybrid_memory_breaks_near_optimal_planner_tie_and_commits_real_action(self):
+        runtime = make_runtime(dim=2)
+        controller = BeliefController(
+            BeliefControlConfig(observation_dim=2, action_count=2, horizon=1),
+        )
+        observation = torch.zeros(2)
+        goal = torch.tensor([1.0, 0.0])
+        memory = AuditedEpisodicMemory(dim=4, recall_similarity=0.9, recall_margin=0.05)
+        memory.upsert(torch.cat((observation, goal)), 1, "goal-a:1", priority=1.0, timestamp=0)
+        agent = RuntimeAgent(
+            runtime,
+            action_embeddings=torch.eye(2),
+            config=RuntimeAgentConfig(
+                action_count=2,
+                belief_control_enabled=True,
+                episodic_memory_enabled=True,
+                episodic_plan_cost_ratio=0.0,
+            ),
+            belief_controller=controller,
+            episodic_memory=memory,
+        )
+
+        out = agent.step(
+            observation=observation,
+            task_goal=goal,
+            force_mode=RuntimeMode.WAKE,
+        )
+
+        assert isinstance(out.hybrid_decision, HybridDecisionAudit)
+        assert out.hybrid_decision.planner_action == 0
+        assert out.hybrid_decision.memory_action == 1
+        assert out.hybrid_decision.accepted
+        assert out.action_index == 1
+        assert controller.last_action == 1
+
+    def test_hybrid_memory_is_goal_conditioned(self):
+        runtime = make_runtime(dim=2)
+        observation = torch.zeros(2)
+        old_goal = torch.tensor([1.0, 0.0])
+        new_goal = torch.tensor([-1.0, 0.0])
+        memory = AuditedEpisodicMemory(dim=4, recall_similarity=0.9, recall_margin=0.05)
+        memory.upsert(
+            torch.cat((observation, old_goal)),
+            1,
+            "old-goal:1",
+            priority=1.0,
+            timestamp=0,
+        )
+        agent = RuntimeAgent(
+            runtime,
+            action_embeddings=torch.eye(2),
+            config=RuntimeAgentConfig(
+                action_count=2,
+                belief_control_enabled=True,
+                episodic_memory_enabled=True,
+            ),
+            episodic_memory=memory,
+        )
+
+        out = agent.step(
+            observation=observation,
+            task_goal=new_goal,
+            force_mode=RuntimeMode.WAKE,
+        )
+
+        assert out.episodic_recall is not None and out.episodic_recall.abstained
+        assert not out.episodic_action_used
+        assert out.hybrid_decision is not None
+        assert out.hybrid_decision.reason == "memory-abstained"
+
+    def test_hybrid_rejects_confident_memory_when_planner_cost_is_worse(self):
+        runtime = make_runtime(dim=2)
+        controller = BeliefController(
+            BeliefControlConfig(observation_dim=2, action_count=2, horizon=1),
+        )
+        controller.action_effect[:, 0] = torch.tensor([1.0, 0.0])
+        controller.action_effect[:, 1] = torch.tensor([-1.0, 0.0])
+        observation = torch.zeros(2)
+        goal = torch.tensor([1.0, 0.0])
+        memory = AuditedEpisodicMemory(dim=4, recall_similarity=0.9, recall_margin=0.05)
+        memory.upsert(
+            torch.cat((observation, goal)),
+            1,
+            "stale-action:1",
+            priority=1.0,
+            timestamp=0,
+        )
+        agent = RuntimeAgent(
+            runtime,
+            action_embeddings=torch.eye(2),
+            config=RuntimeAgentConfig(
+                action_count=2,
+                belief_control_enabled=True,
+                episodic_memory_enabled=True,
+                episodic_plan_cost_ratio=0.05,
+            ),
+            belief_controller=controller,
+            episodic_memory=memory,
+        )
+
+        out = agent.step(
+            observation=observation,
+            task_goal=goal,
+            force_mode=RuntimeMode.WAKE,
+        )
+
+        assert out.episodic_recall is not None and not out.episodic_recall.abstained
+        assert out.hybrid_decision is not None
+        assert not out.hybrid_decision.accepted
+        assert out.hybrid_decision.reason == "planner-cost-bound-exceeded"
+        assert out.action_index == 0
+        assert controller.last_action == 0
+
+    def test_episodic_memory_is_exclusive_with_nested_scc(self):
+        with pytest.raises(ValueError, match="mutually exclusive"):
+            RuntimeAgentConfig(
+                nested_scc_enabled=True,
+                episodic_memory_enabled=True,
+            )
+
+    def test_hybrid_cost_ratio_rejects_nonfinite_values(self):
+        with pytest.raises(ValueError, match="finite and non-negative"):
+            RuntimeAgentConfig(episodic_plan_cost_ratio=float("nan"))
 
     def test_disabled_nested_scc_ignores_supplied_controller_and_preserves_legacy_path(self):
         runtime = make_runtime(dim=2)
@@ -369,6 +538,43 @@ class TestTextEnvironment:
         assert turn.agent_step.working_memory_size == 2
         assert turn.agent_step.goal_norm > 0.0
 
+    def test_runtime_text_agent_runs_goal_conditioned_hybrid_loop(self):
+        runtime = make_runtime()
+        env = TextEnvironment(dim=16, actions=["answer", "reflect"])
+        agent = RuntimeTextAgent(
+            runtime,
+            environment=env,
+            config=RuntimeAgentConfig(
+                action_count=2,
+                belief_control_enabled=True,
+                episodic_memory_enabled=True,
+            ),
+        )
+
+        turn = agent.ask(
+            "Explain the bootstrap loop.",
+            goal="Give a concise and accurate explanation.",
+        )
+
+        assert turn.agent_step.belief_plan is not None
+        assert turn.agent_step.episodic_recall is not None
+        assert turn.agent_step.hybrid_decision is not None
+        assert turn.agent_step.episodic_operation == "ADD"
+
+    def test_runtime_text_hybrid_requires_explicit_goal(self):
+        runtime = make_runtime()
+        agent = RuntimeTextAgent(
+            runtime,
+            config=RuntimeAgentConfig(
+                belief_control_enabled=True,
+                episodic_memory_enabled=True,
+            ),
+        )
+
+        with pytest.raises(ValueError, match="goal is required"):
+            agent.ask("Explain the bootstrap loop.")
+        assert runtime.step_index == 0
+
     def test_runtime_text_agent_exports_from_package(self):
         import reality_stone.clarus as clarus
 
@@ -377,3 +583,4 @@ class TestTextEnvironment:
         assert clarus.AdaptiveTowerController is AdaptiveTowerController
         assert clarus.NestedTowerGenerator is NestedTowerGenerator
         assert clarus.cosine_action_evidence is cosine_action_evidence
+        assert clarus.AuditedEpisodicMemory is AuditedEpisodicMemory

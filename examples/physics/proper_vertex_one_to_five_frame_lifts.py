@@ -47,6 +47,7 @@ PAULI_MATRICES = (
     np.asarray(((1.0, 0.0), (0.0, -1.0)), dtype=complex),
 )
 HERMITEAN_VECTOR_BASIS = (IDENTITY_TWO,) + PAULI_MATRICES
+DEFAULT_MAX_NORMAL_CONDITION_SQUARED = Fraction(10**24)
 
 
 def _subtract(left: RationalVector, right: RationalVector) -> RationalVector:
@@ -86,6 +87,7 @@ class ExactTetrahedronFutureNormal:
         Fraction,
     ]
     exact_vector_squared: Fraction
+    exact_normal_condition_squared: Fraction
     exact_tangent_annihilations: tuple[Fraction, Fraction, Fraction]
     future_unit_normal: np.ndarray
     unit_timelike_residual: float
@@ -94,6 +96,10 @@ class ExactTetrahedronFutureNormal:
 def exact_tetrahedron_future_normal(
     tetrahedron: TetrahedronId,
     coordinates: Mapping[VertexId, RationalVector],
+    *,
+    max_normal_condition_squared: Fraction = (
+        DEFAULT_MAX_NORMAL_CONDITION_SQUARED
+    ),
 ) -> ExactTetrahedronFutureNormal:
     '''Construct the exact normal line and a scale-safe future unit vector.'''
 
@@ -102,6 +108,13 @@ def exact_tetrahedron_future_normal(
         raise ValueError('tetrahedron must contain four distinct vertices')
     if any(vertex not in coordinates for vertex in vertices):
         raise ValueError('all tetrahedron vertices need coordinates')
+    if (
+        not isinstance(max_normal_condition_squared, Fraction)
+        or max_normal_condition_squared <= 0
+    ):
+        raise ValueError(
+            'max_normal_condition_squared must be a positive Fraction'
+        )
     base = coordinates[vertices[0]]
     tangents = tuple(
         _subtract(coordinates[vertex], base) for vertex in vertices[1:]
@@ -133,6 +146,11 @@ def exact_tetrahedron_future_normal(
     if squared >= 0 or contravariant[0] <= 0:
         raise ValueError('tetrahedron normal line must be future timelike')
     component_scale = max(abs(value) for value in contravariant)
+    condition_squared = component_scale**2 / (-squared)
+    if condition_squared > max_normal_condition_squared:
+        raise ValueError(
+            'tetrahedron normal is too near-null for stable float normalization'
+        )
     scaled = np.asarray(
         [float(value / component_scale) for value in contravariant]
     )
@@ -146,6 +164,7 @@ def exact_tetrahedron_future_normal(
         exact_future_covector=covector,  # type: ignore[arg-type]
         exact_future_contravariant_vector=contravariant,  # type: ignore[arg-type]
         exact_vector_squared=squared,
+        exact_normal_condition_squared=condition_squared,
         exact_tangent_annihilations=annihilations,
         future_unit_normal=future,
         unit_timelike_residual=unit_residual,
@@ -207,6 +226,7 @@ class CellTetrahedronFrameIncidence:
     opposite_vertex: VertexId
     exact_future_covector: tuple[Fraction, Fraction, Fraction, Fraction]
     exact_normal_vector_squared: Fraction
+    exact_normal_condition_squared: Fraction
     exact_face_evaluation: Fraction
     outward_side_sign: int
     future_unit_normal: np.ndarray
@@ -242,6 +262,7 @@ class LorentzianOneToFiveFrameLiftCertificate:
     shared_outward_normals_are_opposite: bool
     shared_exact_face_evaluations_are_opposite: bool
     max_tangent_annihilation_residual: float
+    max_exact_normal_condition_squared: Fraction
     max_unit_timelike_residual: float
     max_boost_e0_residual: float
     max_boost_lorentz_residual: float
@@ -272,6 +293,9 @@ def certify_lorentzian_one_to_five_frame_lifts(
     *,
     scale: Fraction = Fraction(1),
     tolerance: float = 2.0e-12,
+    max_normal_condition_squared: Fraction = (
+        DEFAULT_MAX_NORMAL_CONDITION_SQUARED
+    ),
 ) -> LorentzianOneToFiveFrameLiftCertificate:
     '''Certify all 25 normal incidences and their rotation-free lifts.'''
 
@@ -279,6 +303,13 @@ def certify_lorentzian_one_to_five_frame_lifts(
         raise ValueError('scale cannot be combined with explicit coordinates')
     if not math.isfinite(tolerance) or tolerance <= 0.0:
         raise ValueError('tolerance must be finite and positive')
+    if (
+        not isinstance(max_normal_condition_squared, Fraction)
+        or max_normal_condition_squared <= 0
+    ):
+        raise ValueError(
+            'max_normal_condition_squared must be a positive Fraction'
+        )
     placement = (
         lorentzian_one_to_five_coordinates(scale=scale)
         if coordinates is None
@@ -297,6 +328,7 @@ def certify_lorentzian_one_to_five_frame_lifts(
             normal_data = exact_tetrahedron_future_normal(
                 tetrahedron,
                 placement,
+                max_normal_condition_squared=max_normal_condition_squared,
             )
             base = placement[tetrahedron[0]]
             opposite_displacement = _subtract(
@@ -325,6 +357,9 @@ def certify_lorentzian_one_to_five_frame_lifts(
                     exact_future_covector=normal_data.exact_future_covector,
                     exact_normal_vector_squared=(
                         normal_data.exact_vector_squared
+                    ),
+                    exact_normal_condition_squared=(
+                        normal_data.exact_normal_condition_squared
                     ),
                     exact_face_evaluation=evaluation,
                     outward_side_sign=outward_sign,
@@ -467,6 +502,9 @@ def certify_lorentzian_one_to_five_frame_lifts(
         ),
         max_tangent_annihilation_residual=max(
             record.tangent_annihilation_residual for record in records
+        ),
+        max_exact_normal_condition_squared=max(
+            record.exact_normal_condition_squared for record in records
         ),
         max_unit_timelike_residual=max(
             record.unit_timelike_residual for record in records

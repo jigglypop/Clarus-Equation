@@ -1,6 +1,6 @@
 # 27. Lorentzian $1\to5$: 닫힘, 스핀 근사, 국소 LS 벡터
 
-이 장은 실제 Lorentzian $1\to5$ 기하에서 양자 경계 자료를 만들기 위해 어디까지 전진했는지 설명한다. 결론부터 말하면, 15개 spacelike tetrahedron의 **기하학적 닫힘**과 그에 붙이는 **방향 spinor**는 고정했고, 하나의 단순한 선형 면적--스핀 대응이 정확히 성립할 수 없다는 장애도 증명했다. 그 뒤 반올림 오차를 제어하는 정수 스핀 족과, 작은 스핀 수준에서 15개의 0이 아닌 국소 Livine--Speziale(LS) 벡터까지 구성했다. 아직 이것은 다섯 vertex를 잇는 proper EPRL 진폭이나 그 Hessian이 아니다. 이 순서를 구분해야 다음 증명이 무엇인지 정확해진다.
+이 장은 실제 Lorentzian $1\to5$ 기하에서 양자 경계 자료를 만들기 위해 어디까지 전진했는지 설명한다. 결론부터 말하면, 15개 spacelike tetrahedron의 **기하학적 닫힘**과 그에 붙이는 **방향 spinor**는 고정했고, 하나의 선형 면적--스핀 대응이 정확히 성립할 수 없다는 장애도 증명했다. 그 뒤 반올림 오차를 제어하는 정수 스핀 족과, 작은 스핀 수준에서 15개의 0이 아닌 국소 Livine--Speziale(LS) 벡터까지 구성했다. 아직 이것은 다섯 vertex를 잇는 proper EPRL 진폭이나 그 Hessian이 아니다. 이 순서를 구분해야 다음 증명이 무엇인지 정확해진다.
 
 가장 쉬운 비유는 접힌 종이 모형이다. 각 사면체는 네 면을 가진 작은 방이고, 네 면이 미는 힘이 합쳐서 0이어야 방이 공중에서 기울지 않는다. 이 균형을 먼저 확인한 뒤에야 각 면에 붙일 양자 표지와, 이웃 방의 표지를 어떻게 서로 읽을지를 정할 수 있다. 방마다 표지를 만든 사실만으로 건물 전체의 출입 규칙이 완성되는 것은 아니다.
 
@@ -116,13 +116,14 @@ $$
 
 ## 27.5 여기서 멈추지 않고 이어갈 정확한 순서
 
-국소 LS 벡터는 globally glued spin network가 아니다. 독립 tetrahedron $SU(2)$ frame, future/outward normal의 선택, shared face에서 어느 쪽을 ket으로 읽고 어느 쪽을 bra로 읽을지, 그리고 Lorentzian boost 자료가 아직 빠져 있다. 따라서 식 (10)을 proper amplitude의 saddle 또는 Hessian으로 승격할 수 없다.
+국소 LS 벡터는 globally glued spin network가 아니다. [28장](28_future_outward_normal과_SL2C_coset_lift.md)은 이제 1단계, 곧 고정 유리수 증인에서 future/outward normal을 분리하고 미래 normal의 rotation-free $SL(2,\mathbb C)/SU(2)$ coset lift를 구성했다. 이 결과는 independent tetrahedron $SU(2)$ tangent frame이나 full boundary frame을 만들지 않는다. 따라서 식 (10)을 proper amplitude의 saddle 또는 Hessian으로 승격할 수 없다.
 
-다음 증명은 아래 순서를 건너뛰지 않는다.
+다음 순서에서 1단계와 2단계의 local section, declared flat affine coframe, 고전 oriented bivector와 pointwise-labelled parity obstruction은 정리됐고, intrinsic/curved Regge phase와 3--4단계는 남아 있다.
 
-1. future/outward normal과 $SL(2,\mathbb C)/SU(2)$ coset lift를 구성한다.
-2. 독립 $SU(2)$ tangent frame, Regge phase, shared-face bra--ket gluing을 구성한다.
-3. $Y_\gamma$, proper projector, gauge fixing과 적분 measure를 실제로 넣는다.
-4. 그 뒤에만 standard proper EPRL 다섯-vertex 합과 gauge-reduced Hessian을 계산한다.
+1. **완료:** future/outward normal과 rotation-free $SL(2,\mathbb C)/SU(2)$ coset lift를 구성했다.
+2. **부분 완료:** [29장](29_접공간_SU2_section과_cell_local_J_dual_gluing.md)은 독립 $SU(2)$ tangent frame과 cell-local $J$-dualized bra--ket matching을, [30장](30_전역_flat_coframe_connection과_zero_deficit.md)은 declared common affine flat gauge의 global coframe cocycle와 zero-deficit transport를, [31장](31_exact_oriented_bivector와_full_shape_반례.md)은 exact classical oriented bivector를 구성했다. [32장](32_full_shape_parity_obstruction과_split_Lorentz_transport.md)은 fixed labels의 24/26 parity obstruction을 닫아 global pointwise-labelled $SU(2)$ transport가 없음을 보인다. [33장](33_incidence_spinor와_Cartan_dual_EH_sector.md)은 node를 oriented incidence로 바꾸어 100-node local section을 닫고 finite $Y_\gamma$/projector 표본 및 Cartan-dual fixed-cell EH orientation/Plebanski candidate를 분리한다. 이것은 pointwise no-go를 철회하거나 Regge phase, EH dynamics를 얻은 결과가 아니다.
+3. **부분 완료:** [34장](34_single_cell_proper_kernel_contract.md)은 Cartan-dual branch의 한 cell에서 다섯 LS recoupling vector, 열 Eq.-(53) target projector, root-gauge-fixed 네 relative $SL(2,\mathbb C)$ factor를 contract로 정했다. [35장](35_CP1_pointwise_proper_coefficient.md)은 그 고정 frames에서 열 compact $\mathbb{CP}^1$ alpha pairing의 product coefficient를 quadrature로 추정했다. finite spin-weighted closure, product Haar density와 noncompact measure/integral은 여기에 없다.
+4. **잔여:** global state/network, full $Y_\gamma$ representation, proper projector insertion의 full operator, Haar density 및 gauge-fixed $SL(2,\mathbb C)$ 적분 measure를 실제로 넣고, 그 뒤에만 five-vertex/Hessian을 계산한다.
+4. **잔여:** 그 뒤에만 standard proper EPRL 다섯-vertex 합과 gauge-reduced Hessian을 계산한다.
 
 이 순서는 앞 단계의 약점을 감추기 위한 가지치기가 아니라, 각 단계가 다음 단계의 입력이 되도록 증명의 방향을 고정한 것이다. 26장의 Euclidean classical quotient Schur와 이 장의 Lorentzian local boundary data는 서로 보완적인 준비물이다. 둘을 합쳐도 아직 양자 multi-vertex 진폭은 아니며, 바로 그 차이가 다음 계산에서 검증할 대상이다.

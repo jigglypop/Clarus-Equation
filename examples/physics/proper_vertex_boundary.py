@@ -132,9 +132,28 @@ def _leading_principal_minors(
 def _float_eigenvalues(
     matrix: Sequence[Sequence[Fraction]],
 ) -> tuple[float, ...]:
-    values = np.linalg.eigvalsh(
-        np.asarray([[float(item) for item in row] for row in matrix])
-    )
+    """Return diagnostic eigenvalues, possibly normalized by the max entry.
+
+    Exact principal minors, not these floating-point values, decide whether the
+    Gram matrix is positive definite.  The overflow fallback therefore preserves
+    only eigenvalue signs and relative conditioning, not the matrix's original
+    physical scale.
+    """
+    try:
+        numeric = np.asarray(
+            [[float(item) for item in row] for row in matrix]
+        )
+    except OverflowError:
+        exact_scale = max(abs(item) for row in matrix for item in row)
+        if exact_scale <= 0:
+            return tuple(0.0 for _ in matrix)
+        numeric = np.asarray(
+            [
+                [float(item / exact_scale) for item in row]
+                for row in matrix
+            ]
+        )
+    values = np.linalg.eigvalsh(numeric)
     return tuple(float(value) for value in values)
 
 
@@ -193,8 +212,8 @@ def lorentzian_four_simplex_audit(
     """Check one 4-simplex and each of its five boundary tetrahedra.
 
     Signature counts are scale-normalized and use exact leading-minor signs
-    when available.  The stored raw ``gram_eigenvalues`` are diagnostic only
-    and may underflow for extremely small exact rational scales.
+    when available.  The stored ``gram_eigenvalues`` are diagnostic only;
+    they may underflow at tiny scale or be scale-normalized after overflow.
     """
 
     if len(vertices) != 5 or len(set(vertices)) != 5:

@@ -1,7 +1,0 @@
-/bin/
-/official_data/
-/rust/nrm3d-core/target/
-/gate-a-fixtures-*.json
-/oracle-*.json
-!/gate-a-fixtures-r6-release-final6.json
-!/oracle-r6-release-final6.json
