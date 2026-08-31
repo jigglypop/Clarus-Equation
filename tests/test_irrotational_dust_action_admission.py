@@ -153,6 +153,16 @@ def test_action_and_kinetic_sources_cannot_be_summed() -> None:
 def test_lambda_positivity_is_an_admission_not_an_action_theorem() -> None:
     dust, receipt_gradient, scale = _canonical_arguments()
     negative = replace(dust, rest_energy_density=-1.0)
+    zero_vector = (0.0, 0.0, 0.0, 0.0)
+    zero_tensor = (zero_vector, zero_vector, zero_vector, zero_vector)
+    zero = replace(
+        dust,
+        surface_number_density=0.0,
+        rest_number_density=0.0,
+        rest_energy_density=0.0,
+        current=zero_vector,
+        stress=zero_tensor,
+    )
 
     with pytest.raises(ValueError, match="non-negative by admission"):
         admit_irrotational_dust_action(
@@ -161,6 +171,40 @@ def test_lambda_positivity_is_an_admission_not_an_action_theorem() -> None:
             reference_mass_scale=scale,
         )
     assert certificate().lambda_nonnegative_admission
+    zero_receipt = admit_irrotational_dust_action(
+        zero,
+        receipt_gradient_covector=receipt_gradient,
+        reference_mass_scale=scale,
+    )
+    assert zero_receipt.rest_energy_density == 0.0
+    assert zero_receipt.isotropic_pressure == 0.0
+    assert zero_receipt.equation_of_state is None
+    tiny_density = 1.0e-15
+    tiny_number_density = tiny_density / dust.mass
+    tiny_current = tuple(
+        tiny_number_density * component for component in dust.four_velocity
+    )
+    tiny_stress = tuple(
+        tuple(
+            tiny_density * dust.four_velocity[mu] * dust.four_velocity[nu]
+            for nu in range(4)
+        )
+        for mu in range(4)
+    )
+    tiny = replace(
+        dust,
+        surface_number_density=tiny_number_density * dust.gamma,
+        rest_number_density=tiny_number_density,
+        rest_energy_density=tiny_density,
+        current=tiny_current,
+        stress=tiny_stress,
+    )
+    tiny_receipt = admit_irrotational_dust_action(
+        tiny,
+        receipt_gradient_covector=receipt_gradient,
+        reference_mass_scale=scale,
+    )
+    assert tiny_receipt.equation_of_state == 0.0
 
 
 def test_timelike_dust_worldline_is_subluminal_but_not_no_signalling_proof() -> None:
@@ -190,6 +234,8 @@ def test_certificate_keeps_the_physical_claim_ceiling_false() -> None:
     assert not receipt.independent_holdout_prediction_derived
     assert not receipt.two_residual_classes_reduced
     assert not receipt.complexity_penalty_success
+    assert not receipt.curved_metric_continuum_verified
+    assert not receipt.flow_jacobian_computed_from_dynamics
 
 
 def test_invalid_kinematics_and_transport_fail_closed() -> None:

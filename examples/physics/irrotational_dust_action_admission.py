@@ -10,7 +10,9 @@ locally with
 
 and the on-shell action stress is exactly the existing kinetic dust stress.
 The two stresses are therefore matched representations of one allocation and
-must not be added.  The metric is supplied and has signature (-,+,+,+).
+must not be added.  The formulas state the covariant action, while this finite
+certificate checks only a supplied Minkowski local chart with signature
+(-,+,+,+); it is not a curved-spacetime solver or a caustic finder.
 """
 
 from __future__ import annotations
@@ -278,7 +280,7 @@ class IrrotationalDustActionReceipt:
     mass_current_match_residual: float
     rest_energy_density: float
     isotropic_pressure: float
-    equation_of_state: float
+    equation_of_state: float | None
     coordinate_speed: float
     proper_time_interval_squared: float
     worldline_speed_below_c: bool
@@ -307,6 +309,8 @@ class IrrotationalDustActionReceipt:
     independent_holdout_prediction_derived: bool
     two_residual_classes_reduced: bool
     complexity_penalty_success: bool
+    curved_metric_continuum_verified: bool
+    flow_jacobian_computed_from_dynamics: bool
 
 
 def admit_irrotational_dust_action(
@@ -328,7 +332,12 @@ def admit_irrotational_dust_action(
     proper_time_step: float = 1.0,
     tolerance: float = DEFAULT_TOLERANCE,
 ) -> IrrotationalDustActionReceipt:
-    """Certify exact local equivalence to the supplied kinetic dust data."""
+    """Certify exact local equivalence to the supplied kinetic dust data.
+
+    ``lagrangian_flow_jacobian`` is a supplied pre-caustic contract value.  The
+    function rejects a nonpositive value but does not derive a flow map or find
+    its caustics.
+    """
 
     tolerance = _finite_positive(tolerance, "tolerance")
     scale = _finite_positive(reference_mass_scale, "reference_mass_scale")
@@ -491,7 +500,7 @@ def admit_irrotational_dust_action(
         mass_current_match_residual=current_match,
         rest_energy_density=density,
         isotropic_pressure=pressure,
-        equation_of_state=0.0,
+        equation_of_state=0.0 if density > 0.0 else None,
         coordinate_speed=coordinate_speed,
         proper_time_interval_squared=interval_squared,
         worldline_speed_below_c=coordinate_speed < 1.0,
@@ -520,6 +529,8 @@ def admit_irrotational_dust_action(
         independent_holdout_prediction_derived=False,
         two_residual_classes_reduced=False,
         complexity_penalty_success=False,
+        curved_metric_continuum_verified=False,
+        flow_jacobian_computed_from_dynamics=False,
     )
 
 
