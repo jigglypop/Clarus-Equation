@@ -1,0 +1,55 @@
+{
+  "schema_version": "ce.dark-energy.zerod-counterexample.v1",
+  "parent_claim_id": "DE-0D-ABSOLUTE-UNIQUE",
+  "parent_claim": "A stationary dimensionless 0D selection fixed point uniquely determines the absolute dark-energy density and H(z).",
+  "formal_status": "REFUTED_WITHIN_DECLARED_MODEL_CLASS",
+  "model_class": {
+    "spacetime_dimension": 4,
+    "q_role": "stationary_spacetime_independent_dimensionless_parameter",
+    "dynamics": "local_diffeomorphism_invariant_derivative_expansion",
+    "gravity_limit": "flat_FLRW_leading_Einstein_Hilbert",
+    "matter_density_fixed": true
+  },
+  "counterterm": {
+    "formula": "delta_S = - integral d4x sqrt(-g) c M_*^4 f(q)",
+    "form_factor": "f(q) = 1 + q^2",
+    "allowed_by_locality": true,
+    "allowed_by_diffeomorphism_invariance": true,
+    "constant_vacuum_stress_is_bianchi_conserved": true
+  },
+  "common_inputs": {
+    "q": 0.048646719644028225,
+    "D": 3.1777584234099736,
+    "M_star": 1.0,
+    "M_pl_reduced": 1.0,
+    "rho_m": 1.0,
+    "counterterm_form_factor": 1.0023665033321247
+  },
+  "model_a": {
+    "c": 0.0,
+    "rho_vac": 0.0,
+    "H_squared": 0.3333333333333333
+  },
+  "model_b": {
+    "c": 0.25,
+    "rho_vac": 0.2505916258330312,
+    "H_squared": 0.41686387527767704
+  },
+  "preserved_between_models": [
+    "q",
+    "Poisson_selection_update",
+    "controlled_depth_rendering_sequence",
+    "locality",
+    "diffeomorphism_invariance",
+    "vacuum_stress_conservation"
+  ],
+  "changed_between_models": [
+    "allowed_vacuum_counterterm_coefficient",
+    "absolute_vacuum_density",
+    "Friedmann_expansion"
+  ],
+  "narrow_survivor": "The controlled discrete rendering sequence remains a conditional relative readout and does not determine an absolute source.",
+  "reproducer": ".codex\\hooks\\python.cmd python examples\\physics\\zerod_selection_dark_energy_no_go.py --pretty",
+  "focused_test": ".codex\\hooks\\python.cmd pytest tests\\test_zerod_selection_dark_energy_no_go.py -q",
+  "counterexample_complete": true
+}

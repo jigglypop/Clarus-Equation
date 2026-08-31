@@ -55,6 +55,8 @@ target/
 *.json
 !.codex/hooks.json
 !.claude/settings.json
+!paper/검증_원장/dark_energy_zerod_closure/counterexample.json
+!paper/검증_원장/dark_energy_zerod_closure/portfolio.json
 !benchmarks/core_claims_v1.json
 !benchmarks/neural_language_synthetic_v1.json
 !benchmarks/neural_language_blind_synthetic_v1.json

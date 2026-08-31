@@ -1,0 +1,64 @@
+{
+  "schema_version": "ce.dark-energy.zerod-portfolio.v1",
+  "target": "Obtain a parameter-free absolute dark-energy prediction from observation selection and 0D probability flow, or close the declared model class by no-go.",
+  "fixed_parent_result": "DE-0D-ABSOLUTE-UNIQUE is refuted for stationary dimensionless q in local covariant EFT.",
+  "routes": [
+    {
+      "id": "P1_LOCAL_Q_FIELD",
+      "mechanism_fingerprint": ["local_field", "kinetic_term", "potential", "initial_value_problem"],
+      "changed_assumption": "q is promoted from a stationary 0D parameter to q(x)",
+      "current_result": "A source can exist, but kinetic normalization, potential scale, matter coupling, and initial data are new inputs.",
+      "status": "OPEN_ONLY_AS_NEW_MODEL",
+      "reopen_when": "A microscopic action derives all q-field coefficients, its dimensionful scale, and cosmological initial data."
+    },
+    {
+      "id": "P2_GLOBAL_CONSTRAINT",
+      "mechanism_fingerprint": ["global_four_volume", "boundary_flux", "integration_constant"],
+      "changed_assumption": "local derivative expansion is replaced or supplemented by a global constraint",
+      "current_result": "Vacuum sensitivity may be controlled, but the four-volume, flux, boundary datum, or integration constant remains external.",
+      "status": "INCOMPLETE",
+      "reopen_when": "The 0D process uniquely fixes the global datum and its boundary prescription without target fitting."
+    },
+    {
+      "id": "P3_CTP_NONLOCAL_MEMORY",
+      "mechanism_fingerprint": ["closed_time_path", "retarded_kernel", "noise_kernel", "environment_state"],
+      "changed_assumption": "a causal nonlocal influence functional supplies the source",
+      "current_result": "A mean backreaction is possible, but spectral density, IR scale, causal prescription, and initial state are not fixed by q.",
+      "status": "INCOMPLETE",
+      "reopen_when": "A microscopic environment derives the normalized retarded kernel, noise, Ward identity, and dimensionful scale."
+    },
+    {
+      "id": "P4_CAUSAL_EVENT_VOLUME",
+      "mechanism_fingerprint": ["causal_order", "event_density", "sprinkling_scale", "continuum_metric"],
+      "changed_assumption": "event order and count supply spacetime volume and stochastic source",
+      "current_result": "Causal order fixes at most conformal structure; event density needs a length scale and a q-to-volume correlation law.",
+      "status": "INCOMPLETE",
+      "reopen_when": "The event process derives the discreteness scale, signed correlation law, continuum metric response, and H(z) distribution."
+    },
+    {
+      "id": "P5_UV_DIMENSIONAL_TRANSMUTATION",
+      "mechanism_fingerprint": ["protecting_symmetry", "renormalization_group", "anomaly_scale", "uv_matching"],
+      "changed_assumption": "a UV theory forbids or uniquely matches the vacuum counterterm",
+      "current_result": "This is the only local escape from additive counterterm freedom, but no protecting symmetry or UV matching construction is supplied.",
+      "status": "INCOMPLETE",
+      "reopen_when": "A UV-complete model derives the hierarchy and fixes the renormalized vacuum coefficient without cosmology input."
+    },
+    {
+      "id": "P6_RELATIVE_DETECTOR_OPACITY",
+      "mechanism_fingerprint": ["instrument", "photon_survival", "distance_duality", "calibration"],
+      "changed_assumption": "dark energy is treated as an apparent distance readout rather than an absolute source",
+      "current_result": "A constant rendering factor cancels after calibration. Target-matching opacity needs a free n(z) and large distance-duality violation.",
+      "status": "REFUTED_FOR_FULL_DARK_ENERGY_SHAPE_RELATIVE_PROTOCOL_SURVIVES",
+      "reopen_when": "A physical detector protocol derives n(z,E), passes distance duality, BAO, lensing, growth, and standard-siren controls."
+    }
+  ],
+  "escape_requirements_all_required": [
+    "symmetry_or_uv_matching_fixes_the_vacuum_counterterm",
+    "a_dimensionful_scale_is_derived",
+    "q_dynamics_or_a_causal_nonlocal_state_kernel_is_fixed",
+    "all_wilson_coefficients_and_cosmological_initial_global_data_are_fixed"
+  ],
+  "declared_class_exhausted": true,
+  "absolute_dark_energy_prediction": false,
+  "next_falsifier": "A predeclared physical intervention must predict a nonconstant channel-invariant distance or source response without fitting n(z), a kernel, or a vacuum coefficient."
+}

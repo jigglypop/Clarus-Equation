@@ -44,6 +44,9 @@ try:
         HISTORICAL_PRIMORDIAL_PROJECTOR_MODEL_ID,
         readouts,
     )
+    from examples.physics.phase_area_horizon_dynamics_no_go import (
+        audit_phase_area_horizon_end_to_end,
+    )
 except ModuleNotFoundError:  # Direct execution from examples/physics.
     from ce_residual_forward_model import CEForwardParams, parameter_provenance
     from cosmological_constant_holographic_gate import (
@@ -67,6 +70,9 @@ except ModuleNotFoundError:  # Direct execution from examples/physics.
     from primordial_spectrum_readout_gate import (
         HISTORICAL_PRIMORDIAL_PROJECTOR_MODEL_ID,
         readouts,
+    )
+    from phase_area_horizon_dynamics_no_go import (
+        audit_phase_area_horizon_end_to_end,
     )
 
 
@@ -108,6 +114,10 @@ def _historical_reproductions() -> dict[str, Any]:
             "legacy_relative_error_percent": rel_error(
                 legacy_lambda_mev, RHO_LAMBDA_OBS_MEV
             ),
+            'n_gauge_supplied': True,
+            'n_e_relation_supplied': True,
+            'omega_lambda_supplied_for_legacy_mixed_readout': True,
+            'phase_area_dynamics_closure': False,
             "target_aware": True,
             "physical_closure": False,
         },
@@ -164,6 +174,25 @@ def build_audit(*, include_historical_reproduction: bool = False) -> dict[str, A
         entry.closure_role == "legacy_model_boundary"
         and not entry.qualifies_as_physical_prediction
         for entry in density_provenance
+    )
+
+    phase_area = audit_phase_area_horizon_end_to_end()
+    physical_phase_no_go = (
+        not phase_area.physical_efold.accelerates
+        and not phase_area.physical_efold.compatible_with_exact_de_sitter
+        and not phase_area.physical_efold.unique_dark_energy_prediction
+    )
+    boundary_phase_no_go = (
+        phase_area.boundary_label.all_histories_reconstructed
+        and phase_area.boundary_label.histories_are_distinct
+        and not phase_area.boundary_label.phase_relation_selects_one_history
+        and not phase_area.boundary_label.unique_hubble_history
+    )
+    phase_scale_fail_closed = (
+        phase_area.inputs.n_gauge_is_supplied
+        and phase_area.inputs.n_e_relation_is_supplied
+        and phase_area.inputs.omega_lambda_is_supplied
+        and not phase_area.inputs.absolute_scale_unique
     )
 
     target_hypotheses = {
@@ -261,6 +290,84 @@ def build_audit(*, include_historical_reproduction: bool = False) -> dict[str, A
     ]
 
     audit_ok = all(check["status"] != "ERROR" for check in checks)
+    checks.extend(
+        [
+            _check(
+                'U6_PHASE_AREA_PHYSICAL_EFOLD',
+                'CLOSED_EXCLUDED' if physical_phase_no_go else 'ERROR',
+                (
+                    'A universal positive phase-area slope per physical e-fold '
+                    'implies deceleration and fails exact de Sitter.'
+                ),
+                {
+                    'slope_status': 'ADOPTED_AXIOM',
+                    'epsilon_H': phase_area.physical_efold.epsilon_h,
+                    'w_effective': phase_area.physical_efold.effective_w_flat_gr,
+                    'q_deceleration': (
+                        phase_area.physical_efold.deceleration_parameter
+                    ),
+                    'exact_de_sitter_entropy_slope': (
+                        phase_area.physical_efold.exact_de_sitter_entropy_slope
+                    ),
+                    'accelerates': phase_area.physical_efold.accelerates,
+                    'unique_dark_energy_prediction': False,
+                },
+            ),
+            _check(
+                'U6_PHASE_AREA_BOUNDARY_LABEL',
+                'CLOSED_NARROWED' if boundary_phase_no_go else 'ERROR',
+                (
+                    'A boundary phase label can inverse-encode distinct supplied '
+                    'H(z) histories and therefore does not select one.'
+                ),
+                {
+                    'witnesses': [
+                        {
+                            'name': witness.name,
+                            'z': witness.z,
+                            'H_over_H0': witness.hubble_ratio,
+                            'phase_label': witness.phase_label,
+                            'reconstruction_residual': (
+                                witness.reconstruction_residual
+                            ),
+                        }
+                        for witness in phase_area.boundary_label.witnesses
+                    ],
+                    'physical_efold_map_derived': False,
+                    'unique_hubble_history': False,
+                },
+            ),
+            _check(
+                'U6_PHASE_AREA_SCALE_INPUTS',
+                'CLOSED_NARROWED' if phase_scale_fail_closed else 'ERROR',
+                (
+                    'Phase-area scale benchmarks retain supplied counts, epoch, '
+                    'and Omega_Lambda inputs.'
+                ),
+                {
+                    'N_gauge_supplied': phase_area.inputs.n_gauge_is_supplied,
+                    'N_e_relation_supplied': (
+                        phase_area.inputs.n_e_relation_is_supplied
+                    ),
+                    'Omega_Lambda_supplied': (
+                        phase_area.inputs.omega_lambda_is_supplied
+                    ),
+                    'true_de_sitter_quarter_scale_meV': (
+                        phase_area.inputs.true_de_sitter_quarter_scale_mev
+                    ),
+                    'legacy_mixed_quarter_scale_meV': (
+                        phase_area.inputs.legacy_mixed_quarter_scale_mev
+                    ),
+                    'dln_rho_d_D_eff': (
+                        phase_area.inputs.dln_density_d_d_eff
+                    ),
+                    'absolute_scale_unique': False,
+                },
+            ),
+        ]
+    )
+    audit_ok = all(check.get('status') != 'ERROR' for check in checks)
+
     blockers = [
         {
             "id": "U5_FULL_LIKELIHOOD_MISSING",
