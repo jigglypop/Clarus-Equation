@@ -309,11 +309,141 @@ class CertifiedPowerLawTail:
     def isotropic_integral_bound_from(self, q: float) -> float:
         if not math.isfinite(q) or q < self.start_q:
             raise ValueError("tail bound is not certified at the requested q")
-        return (
-            self.coefficient
-            * q ** (3.0 - self.exponent)
-            / (2.0 * math.pi**2 * (self.exponent - 3.0))
+        try:
+            bound = (
+                self.coefficient
+                * q ** (3.0 - self.exponent)
+                / (2.0 * math.pi**2 * (self.exponent - 3.0))
+            )
+        except OverflowError as error:
+            raise ValueError("tail integral bound is not finite") from error
+        if not math.isfinite(bound):
+            raise ValueError("tail integral bound is not finite")
+        return bound
+
+    def pointwise_bound_at(self, q: float) -> float:
+        if not math.isfinite(q) or q < self.start_q:
+            raise ValueError("tail bound is not certified at the requested q")
+        try:
+            bound = self.coefficient * q ** (-self.exponent)
+        except OverflowError as error:
+            raise ValueError("tail pointwise bound is not finite") from error
+        if not math.isfinite(bound):
+            raise ValueError("tail pointwise bound is not finite")
+        return bound
+
+
+@dataclass(frozen=True)
+class CertifiedInfraredPowerLaw:
+    """External certificate |s(q)| <= coefficient*q^exponent below end_q."""
+
+    coefficient: float
+    exponent: float
+    end_q: float
+
+    def __post_init__(self) -> None:
+        if not math.isfinite(self.coefficient) or self.coefficient < 0.0:
+            raise ValueError("infrared coefficient must be finite and non-negative")
+        if not math.isfinite(self.exponent) or self.exponent <= -3.0:
+            raise ValueError("infrared exponent must be finite and greater than minus three")
+        if not math.isfinite(self.end_q) or self.end_q <= 0.0:
+            raise ValueError("infrared end_q must be finite and positive")
+
+    def isotropic_integral_bound_to(self, q: float) -> float:
+        if not math.isfinite(q) or q <= 0.0 or q > self.end_q:
+            raise ValueError("infrared bound is not certified at the requested q")
+        try:
+            bound = (
+                self.coefficient
+                * q ** (self.exponent + 3.0)
+                / (2.0 * math.pi**2 * (self.exponent + 3.0))
+            )
+        except OverflowError as error:
+            raise ValueError("infrared integral bound is not finite") from error
+        if not math.isfinite(bound):
+            raise ValueError("infrared integral bound is not finite")
+        return bound
+
+    def pointwise_bound_at(self, q: float) -> float:
+        if not math.isfinite(q) or q <= 0.0 or q > self.end_q:
+            raise ValueError("infrared bound is not certified at the requested q")
+        try:
+            bound = self.coefficient * q**self.exponent
+        except OverflowError as error:
+            raise ValueError("infrared pointwise bound is not finite") from error
+        if not math.isfinite(bound):
+            raise ValueError("infrared pointwise bound is not finite")
+        return bound
+
+
+@dataclass(frozen=True)
+class GaussianBogoliubovProfile:
+    r"""Analytic rapidly decreasing squeeze profile on comoving momentum.
+
+    The profile is
+
+    ``beta(q)=B exp[-(q/Q)^2] exp(i phi_beta)`` and
+    ``alpha(q)=sqrt(1+|beta(q)|^2) exp(i phi_alpha)``.
+
+    It fixes a smooth state family and exact Bogoliubov normalization.  Rapid
+    decrease of this one profile is not, by itself, a Hadamard proof for the
+    reference state or an absolute bound on the evolved mode-stress kernel.
+    """
+
+    amplitude: float
+    q_scale: float
+    beta_phase: float = 0.0
+    alpha_phase: float = 0.0
+
+    def __post_init__(self) -> None:
+        if not math.isfinite(self.amplitude) or self.amplitude < 0.0:
+            raise ValueError("Gaussian squeeze amplitude must be finite and non-negative")
+        if not math.isfinite(self.q_scale) or self.q_scale <= 0.0:
+            raise ValueError("Gaussian squeeze q_scale must be finite and positive")
+        if not math.isfinite(self.beta_phase) or not math.isfinite(self.alpha_phase):
+            raise ValueError("Gaussian squeeze phases must be finite")
+
+    def beta_at(self, q: float) -> complex:
+        if not math.isfinite(q) or q <= 0.0:
+            raise ValueError("Gaussian squeeze q must be finite and positive")
+        try:
+            scaled_q_squared = (q / self.q_scale) ** 2
+        except OverflowError:
+            scaled_q_squared = math.inf
+        magnitude = self.amplitude * math.exp(-scaled_q_squared)
+        return magnitude * complex(
+            math.cos(self.beta_phase),
+            math.sin(self.beta_phase),
         )
+
+    def alpha_at(self, q: float) -> complex:
+        beta_magnitude = abs(self.beta_at(q))
+        magnitude = math.sqrt(1.0 + beta_magnitude * beta_magnitude)
+        return magnitude * complex(
+            math.cos(self.alpha_phase),
+            math.sin(self.alpha_phase),
+        )
+
+
+@dataclass(frozen=True)
+class GaussianBogoliubovIntegrabilityCertificate:
+    """Exact q^3 amplitude moments, not a mode-stress or Hadamard proof."""
+
+    profile: GaussianBogoliubovProfile
+    tail_start_q: float
+    maximum_initial_occupation: float
+    anomalous_q3_amplitude_moment_upper: float
+    particle_q3_amplitude_squared_moment_upper: float
+    status: str = "GAUSSIAN_BOGOLIUBOV_AMPLITUDE_MOMENTS_ONLY"
+    profile_verified_on_ensemble_q_grid: bool = True
+    bogoliubov_normalization_exact_by_construction: bool = True
+    rapid_decrease_profile_declared: bool = True
+    stress_power_counting_moments_finite: bool = True
+    evolved_mode_stress_tail_bounded: bool = False
+    time_global_tail_ward_certified: bool = False
+    reference_state_hadamard_proved: bool = False
+    full_state_hadamard_proved: bool = False
+    absolute_renormalized_stress_proved: bool = False
 
 
 @dataclass(frozen=True)
@@ -329,6 +459,41 @@ class IntegratedStress:
     tail_certificate_independently_derived_by_integrator: bool = False
     hadamard_state_proved: bool = False
     absolute_reference_vacuum_stress_renormalized: bool = False
+
+
+@dataclass(frozen=True)
+class IRUVIntegratedStress:
+    """Finite q-grid central stress plus separate external IR and UV bounds."""
+
+    energy_density_over_h0_four: float
+    pressure_over_h0_four: float
+    energy_ir_absolute_bound: float
+    pressure_ir_absolute_bound: float
+    energy_uv_absolute_bound: float
+    pressure_uv_absolute_bound: float
+    status: str = "FINITE_Q_GRID_PLUS_EXTERNAL_IR_AND_UV_BOUNDS"
+    external_ir_uv_certificates_trusted: bool = True
+    certificates_independently_derived_by_integrator: bool = False
+    hadamard_state_proved: bool = False
+    absolute_reference_vacuum_stress_renormalized: bool = False
+
+    @property
+    def energy_external_ir_uv_remainder_absolute_bound(self) -> float:
+        return self.energy_ir_absolute_bound + self.energy_uv_absolute_bound
+
+    @property
+    def pressure_external_ir_uv_remainder_absolute_bound(self) -> float:
+        return self.pressure_ir_absolute_bound + self.pressure_uv_absolute_bound
+
+
+@dataclass(frozen=True)
+class SqueezedFLRWNodeIntegralCertificate:
+    """Caller-supplied pointwise IR/UV bounds for one ensemble time node."""
+
+    energy_ir: CertifiedInfraredPowerLaw
+    pressure_ir: CertifiedInfraredPowerLaw
+    energy_uv: CertifiedPowerLawTail
+    pressure_uv: CertifiedPowerLawTail
 
 
 @dataclass(frozen=True)
@@ -492,6 +657,103 @@ class SqueezedFLRWStressTrajectory:
     absolute_abundance_computed: bool = False
     growth_lensing_computed: bool = False
     analytic_persistent_dark_energy_no_go_proved_by_this_function: bool = False
+    physical_dark_matter_dark_energy_identification: bool = False
+
+
+@dataclass(frozen=True)
+class SqueezedFLRWStressEnsembleNode:
+    """One synchronized time node after isotropic integration over q."""
+
+    n: float
+    x: float
+    h0_cosmic_time: float
+    scale_factor: float
+    conformal_hubble: float
+    hubble_over_h0: float
+    background_d_log_h_d_n: float
+    created_stress: IRUVIntegratedStress
+    particle_grid_stress: ModeStress
+    anomalous_grid_stress: ModeStress
+    created_central_equation_of_state: float | None
+    created_external_ir_uv_equation_of_state_interval: tuple[float, float] | None
+    external_ir_uv_positive_density_acceleration_at_sample: bool
+    external_ir_uv_de_like_at_sample: bool
+
+
+@dataclass(frozen=True)
+class SqueezedFLRWStressEnsembleTimeWindow:
+    """Cosmic-time average formed after the synchronized q integral."""
+
+    start_n: float
+    end_n: float
+    h0_cosmic_time_duration: float
+    created_central_stress_time_average: ModeStress
+    particle_grid_stress_time_average: ModeStress
+    anomalous_grid_stress_time_average: ModeStress
+    created_energy_external_ir_uv_remainder_time_average_bound: float
+    created_pressure_external_ir_uv_remainder_time_average_bound: float
+    created_central_equation_of_state: float | None
+    created_external_ir_uv_equation_of_state_interval: tuple[float, float] | None
+    particle_grid_equation_of_state: float | None
+    max_hubble_to_mass: float
+    max_physical_momentum_to_mass: float
+    particle_grid_comoving_energy_relative_span: float
+    status: str = "COSMIC_TIME_WEIGHTED_FINITE_Q_GRID_ENSEMBLE_WINDOW"
+
+
+@dataclass(frozen=True)
+class SqueezedFLRWStressEnsembleWardReceipt:
+    """Central-grid Ward receipt plus sampled IR/UV balance uncertainty."""
+
+    central_grid: SqueezedFLRWTrajectoryWardReceipt
+    sampled_ir_uv_balance_uncertainty_bound: float
+    status: str = "FINITE_Q_AND_TIME_GRID_ENSEMBLE_WARD_DIAGNOSTIC"
+    ensemble_ward_recomputed_after_q_integration: bool = True
+    mode_ward_receipts_merely_summed: bool = False
+    time_continuous_ir_uv_ward_certified: bool = False
+
+
+@dataclass(frozen=True)
+class SqueezedFLRWStressEnsemble:
+    """Conditional fixed-comoving-q aggregate of E49 stress trajectories."""
+
+    nodes: tuple[SqueezedFLRWStressEnsembleNode, ...]
+    whole_window: SqueezedFLRWStressEnsembleTimeWindow
+    late_window: SqueezedFLRWStressEnsembleTimeWindow
+    ward: SqueezedFLRWStressEnsembleWardReceipt
+    q_values: tuple[float, ...]
+    mu: float
+    sampled_accelerating_run_node_width: float
+    sampled_accelerating_run_grid_upper: float
+    sampled_de_like_run_node_width: float
+    sampled_de_like_run_grid_upper: float
+    required_persistent_de_efolds: float
+    late_finite_q_grid_cold_adiabatic_gates_pass: bool
+    late_particle_grid_dm_like_diagnostic_pass: bool
+    sampled_nodes_meet_required_de_run_length: bool
+    dimensions_pass: bool
+    bogoliubov_integrability_certificate: (
+        GaussianBogoliubovIntegrabilityCertificate | None
+    ) = None
+    status: str = "CONDITIONAL_FIXED_Q_FLRW_SQUEEZED_ENSEMBLE_DIAGNOSTIC"
+    fixed_comoving_q_grid_verified: bool = True
+    synchronized_time_grid_verified: bool = True
+    analytic_bogoliubov_profile_verified: bool = False
+    absolute_bogoliubov_amplitude_moments_certified: bool = False
+    evolved_mode_stress_tail_derived_from_profile: bool = False
+    pointwise_external_ir_uv_certificates_trusted: bool = True
+    pointwise_certificates_derived_by_this_function: bool = False
+    time_global_tail_ward_certified: bool = False
+    q_quadrature_error_certified: bool = False
+    time_quadrature_error_certified: bool = False
+    continuous_de_persistence_certified: bool = False
+    full_ir_uv_particle_sector_coldness_proved: bool = False
+    hadamard_state_proved: bool = False
+    absolute_reference_vacuum_stress_renormalized: bool = False
+    full_renormalized_flrw_stress: bool = False
+    einstein_backreaction_computed: bool = False
+    absolute_abundance_computed: bool = False
+    growth_lensing_computed: bool = False
     physical_dark_matter_dark_energy_identification: bool = False
 
 
@@ -850,15 +1112,10 @@ def time_dependent_mass_counterterm(
     )
 
 
-def integrate_isotropic_stress_with_certified_tail(
+def _integrate_isotropic_stress_grid(
     q_values: tuple[float, ...],
     stresses: tuple[ModeStress, ...],
-    *,
-    energy_tail: CertifiedPowerLawTail,
-    pressure_tail: CertifiedPowerLawTail,
-) -> IntegratedStress:
-    """Integrate q^2 s(q)/(2 pi^2) and attach exact UV-tail error bounds."""
-
+) -> ModeStress:
     if len(q_values) != len(stresses) or len(q_values) < 2:
         raise ValueError("q_values and stresses must have the same length of at least two")
     if not all(math.isfinite(q) and q > 0.0 for q in q_values):
@@ -874,21 +1131,6 @@ def integrate_isotropic_stress_with_certified_tail(
             )
         ):
             raise ValueError("stress samples must be finite")
-
-    last_q = q_values[-1]
-    if last_q < energy_tail.start_q or last_q < pressure_tail.start_q:
-        raise ValueError("the q grid must reach both certified tail domains")
-    if (
-        abs(stresses[-1].energy_density_over_h0_four)
-        > energy_tail.coefficient * last_q ** (-energy_tail.exponent)
-    ):
-        raise ValueError("last energy sample violates its certified tail bound")
-    if (
-        abs(stresses[-1].pressure_over_h0_four)
-        > pressure_tail.coefficient * last_q ** (-pressure_tail.exponent)
-    ):
-        raise ValueError("last pressure sample violates its certified tail bound")
-
     energy_terms: list[float] = []
     pressure_terms: list[float] = []
     for left, right, left_stress, right_stress in zip(
@@ -915,9 +1157,39 @@ def integrate_isotropic_stress_with_certified_tail(
             )
         )
     measure = 1.0 / (2.0 * math.pi**2)
-    return IntegratedStress(
+    return ModeStress(
         energy_density_over_h0_four=measure * math.fsum(energy_terms),
         pressure_over_h0_four=measure * math.fsum(pressure_terms),
+    )
+
+
+def integrate_isotropic_stress_with_certified_tail(
+    q_values: tuple[float, ...],
+    stresses: tuple[ModeStress, ...],
+    *,
+    energy_tail: CertifiedPowerLawTail,
+    pressure_tail: CertifiedPowerLawTail,
+) -> IntegratedStress:
+    """Integrate q^2 s(q)/(2 pi^2) and attach exact UV-tail error bounds."""
+
+    central = _integrate_isotropic_stress_grid(q_values, stresses)
+    last_q = q_values[-1]
+    if last_q < energy_tail.start_q or last_q < pressure_tail.start_q:
+        raise ValueError("the q grid must reach both certified tail domains")
+    if (
+        abs(stresses[-1].energy_density_over_h0_four)
+        > energy_tail.pointwise_bound_at(last_q)
+    ):
+        raise ValueError("last energy sample violates its certified tail bound")
+    if (
+        abs(stresses[-1].pressure_over_h0_four)
+        > pressure_tail.pointwise_bound_at(last_q)
+    ):
+        raise ValueError("last pressure sample violates its certified tail bound")
+
+    return IntegratedStress(
+        energy_density_over_h0_four=central.energy_density_over_h0_four,
+        pressure_over_h0_four=central.pressure_over_h0_four,
         energy_tail_absolute_bound=energy_tail.isotropic_integral_bound_from(last_q),
         pressure_tail_absolute_bound=pressure_tail.isotropic_integral_bound_from(last_q),
     )
@@ -1399,6 +1671,82 @@ def _stress_equation_of_state(stress: ModeStress, floor: float) -> float | None:
     )
 
 
+def _external_ir_uv_equation_of_state_interval(
+    stress: ModeStress,
+    *,
+    energy_absolute_bound: float,
+    pressure_absolute_bound: float,
+) -> tuple[float, float] | None:
+    rho_low = stress.energy_density_over_h0_four - energy_absolute_bound
+    rho_high = stress.energy_density_over_h0_four + energy_absolute_bound
+    if rho_low <= 0.0 or not math.isfinite(rho_high):
+        return None
+    pressure_low = stress.pressure_over_h0_four - pressure_absolute_bound
+    pressure_high = stress.pressure_over_h0_four + pressure_absolute_bound
+    ratios = (
+        pressure_low / rho_low,
+        pressure_low / rho_high,
+        pressure_high / rho_low,
+        pressure_high / rho_high,
+    )
+    return min(ratios), max(ratios)
+
+
+def _time_average_mode_stress(
+    h0_times: tuple[float, ...],
+    stresses: tuple[ModeStress, ...],
+) -> ModeStress:
+    if len(h0_times) != len(stresses) or len(h0_times) < 2:
+        raise ValueError("time-average arrays must share a length of at least two")
+    duration = h0_times[-1] - h0_times[0]
+    if not math.isfinite(duration) or duration <= 0.0:
+        raise ValueError("time-average duration must be finite and positive")
+    energy_terms: list[float] = []
+    pressure_terms: list[float] = []
+    for index in range(len(h0_times) - 1):
+        width = h0_times[index + 1] - h0_times[index]
+        if not math.isfinite(width) or width <= 0.0:
+            raise ValueError("time-average grid must be strictly increasing")
+        energy_terms.append(
+            0.5
+            * width
+            * (
+                stresses[index].energy_density_over_h0_four
+                + stresses[index + 1].energy_density_over_h0_four
+            )
+        )
+        pressure_terms.append(
+            0.5
+            * width
+            * (
+                stresses[index].pressure_over_h0_four
+                + stresses[index + 1].pressure_over_h0_four
+            )
+        )
+    return ModeStress(
+        math.fsum(energy_terms) / duration,
+        math.fsum(pressure_terms) / duration,
+    )
+
+
+def _time_average_nonnegative_bound(
+    h0_times: tuple[float, ...],
+    bounds: tuple[float, ...],
+) -> float:
+    if len(h0_times) != len(bounds) or len(h0_times) < 2:
+        raise ValueError("time-bound arrays must share a length of at least two")
+    if not all(math.isfinite(value) and value >= 0.0 for value in bounds):
+        raise ValueError("time-dependent error bounds must be finite and non-negative")
+    duration = h0_times[-1] - h0_times[0]
+    terms = tuple(
+        0.5
+        * (h0_times[index + 1] - h0_times[index])
+        * (bounds[index] + bounds[index + 1])
+        for index in range(len(bounds) - 1)
+    )
+    return math.fsum(terms) / duration
+
+
 def _trajectory_time_window(
     nodes: tuple[SqueezedFLRWStressTrajectoryNode, ...],
 ) -> SqueezedFLRWStressTimeWindow:
@@ -1407,38 +1755,19 @@ def _trajectory_time_window(
     duration = nodes[-1].h0_cosmic_time - nodes[0].h0_cosmic_time
     if not math.isfinite(duration) or duration <= 0.0:
         raise ValueError("stress time-window duration must be finite and positive")
-
-    def average(selector: Callable[[SqueezedFLRWModeStressDifference], ModeStress]) -> ModeStress:
-        energy_terms: list[float] = []
-        pressure_terms: list[float] = []
-        for left, right in zip(nodes, nodes[1:]):
-            width = right.h0_cosmic_time - left.h0_cosmic_time
-            left_stress = selector(left.receipt)
-            right_stress = selector(right.receipt)
-            energy_terms.append(
-                0.5
-                * width
-                * (
-                    left_stress.energy_density_over_h0_four
-                    + right_stress.energy_density_over_h0_four
-                )
-            )
-            pressure_terms.append(
-                0.5
-                * width
-                * (
-                    left_stress.pressure_over_h0_four
-                    + right_stress.pressure_over_h0_four
-                )
-            )
-        return ModeStress(
-            math.fsum(energy_terms) / duration,
-            math.fsum(pressure_terms) / duration,
-        )
-
-    created = average(lambda receipt: receipt.created_state_dependent_stress)
-    particle = average(lambda receipt: receipt.created_particle_stress)
-    anomalous = average(lambda receipt: receipt.created_anomalous_stress)
+    h0_times = tuple(node.h0_cosmic_time for node in nodes)
+    created = _time_average_mode_stress(
+        h0_times,
+        tuple(node.receipt.created_state_dependent_stress for node in nodes),
+    )
+    particle = _time_average_mode_stress(
+        h0_times,
+        tuple(node.receipt.created_particle_stress for node in nodes),
+    )
+    anomalous = _time_average_mode_stress(
+        h0_times,
+        tuple(node.receipt.created_anomalous_stress for node in nodes),
+    )
     energy_scale = max(
         abs(node.receipt.created_state_dependent_stress.energy_density_over_h0_four)
         for node in nodes
@@ -1473,21 +1802,34 @@ def _trajectory_time_window(
     )
 
 
-def _trajectory_global_ward(
-    nodes: tuple[SqueezedFLRWStressTrajectoryNode, ...],
+def _global_ward_from_arrays(
+    x_values: tuple[float, ...],
+    scale_factors: tuple[float, ...],
+    conformal_hubbles: tuple[float, ...],
+    stresses: tuple[ModeStress, ...],
 ) -> SqueezedFLRWTrajectoryWardReceipt:
+    lengths = {
+        len(x_values),
+        len(scale_factors),
+        len(conformal_hubbles),
+        len(stresses),
+    }
+    if len(lengths) != 1 or len(x_values) < 3:
+        raise ValueError("global Ward arrays must share a length of at least three")
+    if any(right <= left for left, right in zip(x_values, x_values[1:])):
+        raise ValueError("global Ward x grid must be strictly increasing")
     interval_residuals: list[float] = []
     interval_scales: list[float] = []
-    for left, right in zip(nodes, nodes[1:]):
-        left_stress = left.receipt.created_state_dependent_stress
-        right_stress = right.receipt.created_state_dependent_stress
-        left_a = left.receipt.scale_factor
-        right_a = right.receipt.scale_factor
+    for index in range(len(x_values) - 1):
+        left_stress = stresses[index]
+        right_stress = stresses[index + 1]
+        left_a = scale_factors[index]
+        right_a = scale_factors[index + 1]
         left_boundary = left_a**3 * left_stress.energy_density_over_h0_four
         right_boundary = right_a**3 * right_stress.energy_density_over_h0_four
         boundary_change = right_boundary - left_boundary
-        left_hubble = left.receipt.background_jet.d1 / left_a
-        right_hubble = right.receipt.background_jet.d1 / right_a
+        left_hubble = conformal_hubbles[index]
+        right_hubble = conformal_hubbles[index + 1]
         left_integrand = (
             3.0
             * left_hubble
@@ -1502,7 +1844,7 @@ def _trajectory_global_ward(
         )
         pressure_integral = (
             0.5
-            * (right.x - left.x)
+            * (x_values[index + 1] - x_values[index])
             * (left_integrand + right_integrand)
         )
         interval_residuals.append(boundary_change + pressure_integral)
@@ -1518,27 +1860,26 @@ def _trajectory_global_ward(
         relative_signed = abs(signed) / balance_scale
         relative_accumulated = accumulated / balance_scale
 
-    total_x = nodes[-1].x - nodes[0].x
+    total_x = x_values[-1] - x_values[0]
     max_energy = max(
-        abs(node.receipt.created_state_dependent_stress.energy_density_over_h0_four)
-        for node in nodes
+        abs(stress.energy_density_over_h0_four) for stress in stresses
     )
     derivative_floor = max(1.0e-300, math.ulp(1.0) * max_energy / total_x)
     finite_difference_residuals: list[float] = []
     finite_difference_scales: list[float] = []
-    for left, center, right in zip(nodes, nodes[1:], nodes[2:]):
-        h_left = center.x - left.x
-        h_right = right.x - center.x
-        left_rho = left.receipt.created_state_dependent_stress.energy_density_over_h0_four
-        center_stress = center.receipt.created_state_dependent_stress
-        right_rho = right.receipt.created_state_dependent_stress.energy_density_over_h0_four
+    for index in range(1, len(x_values) - 1):
+        h_left = x_values[index] - x_values[index - 1]
+        h_right = x_values[index + 1] - x_values[index]
+        left_rho = stresses[index - 1].energy_density_over_h0_four
+        center_stress = stresses[index]
+        right_rho = stresses[index + 1].energy_density_over_h0_four
         derivative = (
             -h_right / (h_left * (h_left + h_right)) * left_rho
             + (h_right - h_left) / (h_left * h_right)
             * center_stress.energy_density_over_h0_four
             + h_left / (h_right * (h_left + h_right)) * right_rho
         )
-        hubble = center.receipt.background_jet.d1 / center.receipt.scale_factor
+        hubble = conformal_hubbles[index]
         dilution = 3.0 * hubble * (
             center_stress.energy_density_over_h0_four
             + center_stress.pressure_over_h0_four
@@ -1564,22 +1905,50 @@ def _trajectory_global_ward(
     )
 
 
+def _trajectory_global_ward(
+    nodes: tuple[SqueezedFLRWStressTrajectoryNode, ...],
+) -> SqueezedFLRWTrajectoryWardReceipt:
+    return _global_ward_from_arrays(
+        tuple(node.x for node in nodes),
+        tuple(node.receipt.scale_factor for node in nodes),
+        tuple(
+            node.receipt.background_jet.d1 / node.receipt.scale_factor
+            for node in nodes
+        ),
+        tuple(node.receipt.created_state_dependent_stress for node in nodes),
+    )
+
+
+def _grid_resolved_boolean_span(
+    n_values: tuple[float, ...],
+    truth_values: tuple[bool, ...],
+) -> tuple[float, float]:
+    if len(n_values) != len(truth_values) or len(n_values) < 2:
+        raise ValueError("span arrays must share a length of at least two")
+    if any(right <= left for left, right in zip(n_values, n_values[1:])):
+        raise ValueError("span e-fold grid must be strictly increasing")
+    longest = 0.0
+    start: float | None = None
+    for n, is_true in zip(n_values, truth_values):
+        if is_true:
+            if start is None:
+                start = n
+            longest = max(longest, n - start)
+        else:
+            start = None
+    max_step = max(right - left for left, right in zip(n_values, n_values[1:]))
+    total_span = n_values[-1] - n_values[0]
+    return longest, min(total_span, longest + 2.0 * max_step)
+
+
 def _grid_resolved_true_span(
     nodes: tuple[SqueezedFLRWStressTrajectoryNode, ...],
     predicate: Callable[[SqueezedFLRWStressTrajectoryNode], bool],
 ) -> tuple[float, float]:
-    longest = 0.0
-    start: float | None = None
-    for node in nodes:
-        if predicate(node):
-            if start is None:
-                start = node.n
-            longest = max(longest, node.n - start)
-        else:
-            start = None
-    max_step = max(right.n - left.n for left, right in zip(nodes, nodes[1:]))
-    total_span = nodes[-1].n - nodes[0].n
-    return longest, min(total_span, longest + 2.0 * max_step)
+    return _grid_resolved_boolean_span(
+        tuple(node.n for node in nodes),
+        tuple(predicate(node) for node in nodes),
+    )
 
 
 def trace_squeezed_flrw_mode_stress(
@@ -1843,6 +2212,615 @@ def trace_squeezed_flrw_mode_stress(
             de_like_span[1] < required_persistent_de_efolds
         ),
         dimensions_pass=all(value == 0.0 for value in core_dimensions.values()),
+    )
+
+
+def _integrate_ir_uv_stress(
+    q_values: tuple[float, ...],
+    stresses: tuple[ModeStress, ...],
+    certificate: SqueezedFLRWNodeIntegralCertificate,
+) -> IRUVIntegratedStress:
+    uv_integrated = integrate_isotropic_stress_with_certified_tail(
+        q_values,
+        stresses,
+        energy_tail=certificate.energy_uv,
+        pressure_tail=certificate.pressure_uv,
+    )
+    first_q = q_values[0]
+    energy_ir_bound_at_first = certificate.energy_ir.pointwise_bound_at(first_q)
+    pressure_ir_bound_at_first = certificate.pressure_ir.pointwise_bound_at(first_q)
+    if (
+        abs(stresses[0].energy_density_over_h0_four)
+        > energy_ir_bound_at_first
+    ):
+        raise ValueError("first energy sample violates its certified infrared bound")
+    if abs(stresses[0].pressure_over_h0_four) > pressure_ir_bound_at_first:
+        raise ValueError("first pressure sample violates its certified infrared bound")
+    return IRUVIntegratedStress(
+        energy_density_over_h0_four=uv_integrated.energy_density_over_h0_four,
+        pressure_over_h0_four=uv_integrated.pressure_over_h0_four,
+        energy_ir_absolute_bound=(
+            certificate.energy_ir.isotropic_integral_bound_to(first_q)
+        ),
+        pressure_ir_absolute_bound=(
+            certificate.pressure_ir.isotropic_integral_bound_to(first_q)
+        ),
+        energy_uv_absolute_bound=uv_integrated.energy_tail_absolute_bound,
+        pressure_uv_absolute_bound=uv_integrated.pressure_tail_absolute_bound,
+    )
+
+
+def _ensemble_time_window(
+    nodes: tuple[SqueezedFLRWStressEnsembleNode, ...],
+    *,
+    mu: float,
+    maximum_q: float,
+) -> SqueezedFLRWStressEnsembleTimeWindow:
+    if len(nodes) < 2:
+        raise ValueError("an ensemble time window needs at least two nodes")
+    h0_times = tuple(node.h0_cosmic_time for node in nodes)
+    duration = h0_times[-1] - h0_times[0]
+    created = _time_average_mode_stress(
+        h0_times,
+        tuple(
+            ModeStress(
+                node.created_stress.energy_density_over_h0_four,
+                node.created_stress.pressure_over_h0_four,
+            )
+            for node in nodes
+        ),
+    )
+    particle = _time_average_mode_stress(
+        h0_times,
+        tuple(node.particle_grid_stress for node in nodes),
+    )
+    anomalous = _time_average_mode_stress(
+        h0_times,
+        tuple(node.anomalous_grid_stress for node in nodes),
+    )
+    energy_bound = _time_average_nonnegative_bound(
+        h0_times,
+        tuple(
+            node.created_stress.energy_external_ir_uv_remainder_absolute_bound
+            for node in nodes
+        ),
+    )
+    pressure_bound = _time_average_nonnegative_bound(
+        h0_times,
+        tuple(
+            node.created_stress.pressure_external_ir_uv_remainder_absolute_bound
+            for node in nodes
+        ),
+    )
+    created_energy_scale = max(
+        abs(node.created_stress.energy_density_over_h0_four) for node in nodes
+    )
+    particle_energy_scale = max(
+        abs(node.particle_grid_stress.energy_density_over_h0_four)
+        for node in nodes
+    )
+    created_floor = max(math.ulp(1.0) * created_energy_scale, 1.0e-300)
+    particle_floor = max(math.ulp(1.0) * particle_energy_scale, 1.0e-300)
+    comoving_particle_energies = tuple(
+        node.scale_factor**3
+        * node.particle_grid_stress.energy_density_over_h0_four
+        for node in nodes
+    )
+    comoving_scale = max(
+        max(abs(value) for value in comoving_particle_energies),
+        1.0e-300,
+    )
+    return SqueezedFLRWStressEnsembleTimeWindow(
+        start_n=nodes[0].n,
+        end_n=nodes[-1].n,
+        h0_cosmic_time_duration=duration,
+        created_central_stress_time_average=created,
+        particle_grid_stress_time_average=particle,
+        anomalous_grid_stress_time_average=anomalous,
+        created_energy_external_ir_uv_remainder_time_average_bound=energy_bound,
+        created_pressure_external_ir_uv_remainder_time_average_bound=pressure_bound,
+        created_central_equation_of_state=_stress_equation_of_state(
+            created,
+            created_floor,
+        ),
+        created_external_ir_uv_equation_of_state_interval=(
+            _external_ir_uv_equation_of_state_interval(
+                created,
+                energy_absolute_bound=energy_bound,
+                pressure_absolute_bound=pressure_bound,
+            )
+        ),
+        particle_grid_equation_of_state=_stress_equation_of_state(
+            particle,
+            particle_floor,
+        ),
+        max_hubble_to_mass=max(
+            abs(node.conformal_hubble) / (node.scale_factor * mu)
+            for node in nodes
+        ),
+        max_physical_momentum_to_mass=max(
+            maximum_q / (node.scale_factor * mu) for node in nodes
+        ),
+        particle_grid_comoving_energy_relative_span=(
+            max(comoving_particle_energies) - min(comoving_particle_energies)
+        )
+        / comoving_scale,
+    )
+
+
+def _sampled_ir_uv_balance_uncertainty(
+    nodes: tuple[SqueezedFLRWStressEnsembleNode, ...],
+) -> float:
+    first = nodes[0]
+    last = nodes[-1]
+    endpoint_bound = (
+        first.scale_factor**3
+        * first.created_stress.energy_external_ir_uv_remainder_absolute_bound
+        + last.scale_factor**3
+        * last.created_stress.energy_external_ir_uv_remainder_absolute_bound
+    )
+    pressure_terms: list[float] = []
+    for left, right in zip(nodes, nodes[1:]):
+        left_integrand_bound = (
+            3.0
+            * abs(left.conformal_hubble)
+            * left.scale_factor**3
+            * left.created_stress.pressure_external_ir_uv_remainder_absolute_bound
+        )
+        right_integrand_bound = (
+            3.0
+            * abs(right.conformal_hubble)
+            * right.scale_factor**3
+            * right.created_stress.pressure_external_ir_uv_remainder_absolute_bound
+        )
+        pressure_terms.append(
+            0.5
+            * (right.x - left.x)
+            * (left_integrand_bound + right_integrand_bound)
+        )
+    return endpoint_bound + math.fsum(pressure_terms)
+
+
+def _gaussian_q3_tail_moment(
+    *,
+    q_scale: float,
+    tail_start_q: float,
+    exponential_rate: float,
+) -> float:
+    r"""Return ``integral_q0^inf q^3 exp[-rate (q/Q)^2] dq``."""
+
+    try:
+        scaled_start_squared = (tail_start_q / q_scale) ** 2
+    except OverflowError:
+        return 0.0
+    if math.isinf(scaled_start_squared):
+        return 0.0
+    try:
+        moment = (
+            q_scale**4
+            * math.exp(-exponential_rate * scaled_start_squared)
+            * (
+                scaled_start_squared / (2.0 * exponential_rate)
+                + 1.0 / (2.0 * exponential_rate**2)
+            )
+        )
+    except OverflowError as error:
+        raise ValueError("Gaussian q^3 tail moment is not finite") from error
+    if not math.isfinite(moment) or moment < 0.0:
+        raise ValueError("Gaussian q^3 tail moment is not finite")
+    return moment
+
+
+def certify_gaussian_bogoliubov_profile_on_ensemble(
+    trajectories: tuple[SqueezedFLRWStressTrajectory, ...],
+    *,
+    profile: GaussianBogoliubovProfile,
+    verification_tolerance: float = 1.0e-10,
+) -> GaussianBogoliubovIntegrabilityCertificate:
+    r"""Verify one analytic squeeze profile and certify two exact q^3 moments.
+
+    The two moments control the profile factors ``|alpha beta|`` and
+    ``|beta|^2`` under quartic stress-kernel power counting.  They do not
+    derive a bound for the evolved mode kernels and therefore do not replace
+    a Hadamard or adiabatic-renormalization proof.
+    """
+
+    if len(trajectories) < 2:
+        raise ValueError("a Gaussian ensemble certificate needs at least two modes")
+    if (
+        not math.isfinite(verification_tolerance)
+        or verification_tolerance <= 0.0
+        or verification_tolerance > 1.0e-4
+    ):
+        raise ValueError(
+            "Gaussian profile verification_tolerance must lie in (0, 1e-4]"
+        )
+
+    def close(actual: complex, expected: complex) -> bool:
+        return abs(actual - expected) <= verification_tolerance * max(
+            1.0,
+            abs(actual),
+            abs(expected),
+        )
+
+    maximum_initial_occupation = 0.0
+    q_values: list[float] = []
+    for trajectory in trajectories:
+        q = trajectory.q
+        expected_beta = profile.beta_at(q)
+        expected_alpha = profile.alpha_at(q)
+        if not close(trajectory.beta, expected_beta) or not close(
+            trajectory.alpha,
+            expected_alpha,
+        ):
+            raise ValueError(
+                "ensemble Bogoliubov coefficients do not match the Gaussian profile"
+            )
+        if (
+            not math.isfinite(trajectory.initial_occupation)
+            or trajectory.initial_occupation < 0.0
+        ):
+            raise ValueError("ensemble initial occupations must be finite and non-negative")
+        maximum_initial_occupation = max(
+            maximum_initial_occupation,
+            trajectory.initial_occupation,
+        )
+        q_values.append(q)
+
+    tail_start_q = max(q_values)
+    anomalous_profile_moment = _gaussian_q3_tail_moment(
+        q_scale=profile.q_scale,
+        tail_start_q=tail_start_q,
+        exponential_rate=1.0,
+    )
+    particle_profile_moment = _gaussian_q3_tail_moment(
+        q_scale=profile.q_scale,
+        tail_start_q=tail_start_q,
+        exponential_rate=2.0,
+    )
+    occupation_factor = 1.0 + 2.0 * maximum_initial_occupation
+    anomalous_upper = (
+        occupation_factor
+        * math.sqrt(1.0 + profile.amplitude**2)
+        * profile.amplitude
+        * anomalous_profile_moment
+    )
+    particle_upper = (
+        occupation_factor
+        * profile.amplitude**2
+        * particle_profile_moment
+    )
+    if not all(math.isfinite(value) and value >= 0.0 for value in (
+        anomalous_upper,
+        particle_upper,
+    )):
+        raise ValueError("Gaussian profile amplitude-moment bound is not finite")
+    return GaussianBogoliubovIntegrabilityCertificate(
+        profile=profile,
+        tail_start_q=tail_start_q,
+        maximum_initial_occupation=maximum_initial_occupation,
+        anomalous_q3_amplitude_moment_upper=anomalous_upper,
+        particle_q3_amplitude_squared_moment_upper=particle_upper,
+    )
+
+
+def aggregate_squeezed_flrw_stress_ensemble(
+    trajectories: tuple[SqueezedFLRWStressTrajectory, ...],
+    *,
+    node_certificates: tuple[SqueezedFLRWNodeIntegralCertificate, ...],
+    bogoliubov_profile: GaussianBogoliubovProfile | None = None,
+    bogoliubov_profile_tolerance: float = 1.0e-10,
+    synchronization_tolerance: float = 1.0e-9,
+    late_window_efolds: float = 1.0,
+    maximum_hubble_to_mass_for_cold: float = 0.1,
+    maximum_momentum_to_mass_for_cold: float = 0.1,
+    maximum_abs_particle_w_for_dm_like: float = 0.1,
+    maximum_particle_comoving_span_for_dm_like: float = 0.1,
+    de_like_w_tolerance: float = 0.1,
+    required_persistent_de_efolds: float = 1.0,
+) -> SqueezedFLRWStressEnsemble:
+    r"""Aggregate synchronized E49 trajectories on one fixed comoving q grid.
+
+    Each time node is integrated with ``q^2 dq/(2*pi^2)``.  The caller supplies
+    separate pointwise certificates for the unsampled infrared and ultraviolet
+    regions.  They do not bound quadrature error inside the sampled q/time
+    grids or control tail time derivatives.  Accordingly, equation-of-state
+    intervals below propagate only those external IR/UV remainders, and run
+    lengths refer only to sampled nodes.  The Ward receipt is a finite-grid
+    diagnostic with a sampled remainder balance bound, not a full-tail Ward
+    proof, a continuous-persistence proof, or an absolute renormalized stress
+    tensor.  When an analytic Gaussian profile is supplied, the function also
+    verifies every trajectory coefficient and records exact amplitude moments;
+    those moments still do not certify the evolved stress tail.
+    """
+
+    if len(trajectories) < 2:
+        raise ValueError("an ensemble requires at least two q trajectories")
+    controls = (
+        ("synchronization_tolerance", synchronization_tolerance),
+        ("bogoliubov_profile_tolerance", bogoliubov_profile_tolerance),
+        ("late_window_efolds", late_window_efolds),
+        ("maximum_hubble_to_mass_for_cold", maximum_hubble_to_mass_for_cold),
+        ("maximum_momentum_to_mass_for_cold", maximum_momentum_to_mass_for_cold),
+        ("maximum_abs_particle_w_for_dm_like", maximum_abs_particle_w_for_dm_like),
+        (
+            "maximum_particle_comoving_span_for_dm_like",
+            maximum_particle_comoving_span_for_dm_like,
+        ),
+        ("de_like_w_tolerance", de_like_w_tolerance),
+        ("required_persistent_de_efolds", required_persistent_de_efolds),
+    )
+    for name, value in controls:
+        if not math.isfinite(value) or value <= 0.0:
+            raise ValueError(f"{name} must be finite and positive")
+    if synchronization_tolerance > 1.0e-4:
+        raise ValueError("synchronization_tolerance must not exceed 1e-4")
+
+    q_values = tuple(trajectory.q for trajectory in trajectories)
+    if not all(math.isfinite(q) and q > 0.0 for q in q_values):
+        raise ValueError("ensemble q values must be finite and positive")
+    if any(right <= left for left, right in zip(q_values, q_values[1:])):
+        raise ValueError("ensemble q values must be strictly increasing")
+    base = trajectories[0]
+    node_count = len(base.nodes)
+    if node_count < 3:
+        raise ValueError("ensemble trajectories need at least three time nodes")
+    if len(node_certificates) != node_count:
+        raise ValueError("one IR/UV certificate is required for every time node")
+    total_efolds = base.nodes[-1].n - base.nodes[0].n
+    if late_window_efolds > total_efolds:
+        raise ValueError("late_window_efolds must not exceed the trajectory interval")
+    mu = base.mu
+
+    def mismatched(actual: float, expected: float) -> bool:
+        return abs(actual - expected) > synchronization_tolerance * max(
+            1.0,
+            abs(actual),
+            abs(expected),
+        )
+
+    for trajectory in trajectories:
+        if len(trajectory.nodes) != node_count:
+            raise ValueError("ensemble trajectories must share one time-node count")
+        if mismatched(trajectory.mu, mu):
+            raise ValueError("ensemble trajectories must share one constant mass")
+        if not (
+            trajectory.minimal_coupling_verified
+            and trajectory.constant_positive_mass_verified_on_sampled_solution
+            and trajectory.constant_bogoliubov_coefficients_assumed
+            and trajectory.dimensions_pass
+        ):
+            raise ValueError("ensemble trajectory does not satisfy the E49 contract")
+        if (
+            trajectory.initial_occupation_basis_declaration
+            != base.initial_occupation_basis_declaration
+        ):
+            raise ValueError("ensemble occupation basis declarations must agree")
+        for base_node, node in zip(base.nodes, trajectory.nodes):
+            if mismatched(node.receipt.q, trajectory.q) or mismatched(
+                node.receipt.mu,
+                mu,
+            ):
+                raise ValueError(
+                    "ensemble trajectory q/mass metadata must match every receipt"
+                )
+            synchronized_values = (
+                (node.n, base_node.n),
+                (node.x, base_node.x),
+                (node.h0_cosmic_time, base_node.h0_cosmic_time),
+                (node.receipt.scale_factor, base_node.receipt.scale_factor),
+                *zip(
+                    node.receipt.background_jet.derivatives,
+                    base_node.receipt.background_jet.derivatives,
+                ),
+            )
+            if any(mismatched(actual, expected) for actual, expected in synchronized_values):
+                raise ValueError(
+                    "ensemble trajectories must share synchronized time and background grids"
+                )
+
+    bogoliubov_certificate = (
+        certify_gaussian_bogoliubov_profile_on_ensemble(
+            trajectories,
+            profile=bogoliubov_profile,
+            verification_tolerance=bogoliubov_profile_tolerance,
+        )
+        if bogoliubov_profile is not None
+        else None
+    )
+
+    ensemble_nodes: list[SqueezedFLRWStressEnsembleNode] = []
+    for index, certificate in enumerate(node_certificates):
+        mode_nodes = tuple(trajectory.nodes[index] for trajectory in trajectories)
+        created_samples = tuple(
+            node.receipt.created_state_dependent_stress for node in mode_nodes
+        )
+        particle_samples = tuple(
+            node.receipt.created_particle_stress for node in mode_nodes
+        )
+        anomalous_samples = tuple(
+            node.receipt.created_anomalous_stress for node in mode_nodes
+        )
+        created = _integrate_ir_uv_stress(q_values, created_samples, certificate)
+        particle = _integrate_isotropic_stress_grid(q_values, particle_samples)
+        anomalous = _integrate_isotropic_stress_grid(q_values, anomalous_samples)
+        decomposition_scale = max(
+            1.0,
+            abs(created.energy_density_over_h0_four),
+            abs(created.pressure_over_h0_four),
+        )
+        decomposition_residual = max(
+            abs(
+                created.energy_density_over_h0_four
+                - particle.energy_density_over_h0_four
+                - anomalous.energy_density_over_h0_four
+            ),
+            abs(
+                created.pressure_over_h0_four
+                - particle.pressure_over_h0_four
+                - anomalous.pressure_over_h0_four
+            ),
+        )
+        if decomposition_residual > 10.0 * math.ulp(1.0) * decomposition_scale:
+            raise ValueError("integrated particle/anomalous stress decomposition failed")
+        energy_bound = created.energy_external_ir_uv_remainder_absolute_bound
+        pressure_bound = created.pressure_external_ir_uv_remainder_absolute_bound
+        central_stress = ModeStress(
+            created.energy_density_over_h0_four,
+            created.pressure_over_h0_four,
+        )
+        energy_scale = max(abs(created.energy_density_over_h0_four), 1.0e-300)
+        interval = _external_ir_uv_equation_of_state_interval(
+            central_stress,
+            energy_absolute_bound=energy_bound,
+            pressure_absolute_bound=pressure_bound,
+        )
+        external_ir_uv_acceleration = (
+            created.energy_density_over_h0_four - energy_bound > 0.0
+            and created.energy_density_over_h0_four
+            + energy_bound
+            + 3.0 * (created.pressure_over_h0_four + pressure_bound)
+            < 0.0
+        )
+        external_ir_uv_de_like = (
+            interval is not None
+            and interval[0] >= -1.0 - de_like_w_tolerance
+            and interval[1] <= -1.0 + de_like_w_tolerance
+        )
+        reference = mode_nodes[0]
+        background_jet = reference.receipt.background_jet
+        if background_jet.d1 <= 0.0:
+            raise ValueError("ensemble FLRW constraint data require an expanding branch")
+        try:
+            hubble_over_h0 = background_jet.d1 / reference.receipt.scale_factor**2
+            background_d_log_h_d_n = (
+                reference.receipt.scale_factor
+                * background_jet.d2
+                / background_jet.d1**2
+                - 2.0
+            )
+        except (OverflowError, ZeroDivisionError) as error:
+            raise ValueError("ensemble FLRW background expansion data are not finite") from error
+        if not all(math.isfinite(value) for value in (
+            hubble_over_h0,
+            background_d_log_h_d_n,
+        )):
+            raise ValueError("ensemble FLRW background expansion data are not finite")
+        ensemble_nodes.append(
+            SqueezedFLRWStressEnsembleNode(
+                n=reference.n,
+                x=reference.x,
+                h0_cosmic_time=reference.h0_cosmic_time,
+                scale_factor=reference.receipt.scale_factor,
+                conformal_hubble=(
+                    background_jet.d1
+                    / reference.receipt.scale_factor
+                ),
+                hubble_over_h0=hubble_over_h0,
+                background_d_log_h_d_n=background_d_log_h_d_n,
+                created_stress=created,
+                particle_grid_stress=particle,
+                anomalous_grid_stress=anomalous,
+                created_central_equation_of_state=_stress_equation_of_state(
+                    central_stress,
+                    max(math.ulp(1.0) * energy_scale, 1.0e-300),
+                ),
+                created_external_ir_uv_equation_of_state_interval=interval,
+                external_ir_uv_positive_density_acceleration_at_sample=(
+                    external_ir_uv_acceleration
+                ),
+                external_ir_uv_de_like_at_sample=external_ir_uv_de_like,
+            )
+        )
+
+    nodes = tuple(ensemble_nodes)
+    late_target = nodes[-1].n - late_window_efolds
+    late_nodes = tuple(
+        node
+        for node in nodes
+        if node.n >= late_target - synchronization_tolerance
+    )
+    if len(late_nodes) < 2:
+        raise ValueError("ensemble late window contains fewer than two nodes")
+    whole_window = _ensemble_time_window(nodes, mu=mu, maximum_q=q_values[-1])
+    late_window = _ensemble_time_window(
+        late_nodes,
+        mu=mu,
+        maximum_q=q_values[-1],
+    )
+    central_ward = _global_ward_from_arrays(
+        tuple(node.x for node in nodes),
+        tuple(node.scale_factor for node in nodes),
+        tuple(node.conformal_hubble for node in nodes),
+        tuple(
+            ModeStress(
+                node.created_stress.energy_density_over_h0_four,
+                node.created_stress.pressure_over_h0_four,
+            )
+            for node in nodes
+        ),
+    )
+    ward = SqueezedFLRWStressEnsembleWardReceipt(
+        central_grid=central_ward,
+        sampled_ir_uv_balance_uncertainty_bound=(
+            _sampled_ir_uv_balance_uncertainty(nodes)
+        ),
+    )
+    n_values = tuple(node.n for node in nodes)
+    acceleration_span = _grid_resolved_boolean_span(
+        n_values,
+        tuple(
+            node.external_ir_uv_positive_density_acceleration_at_sample
+            for node in nodes
+        ),
+    )
+    de_like_span = _grid_resolved_boolean_span(
+        n_values,
+        tuple(node.external_ir_uv_de_like_at_sample for node in nodes),
+    )
+    cold_gates = (
+        late_window.max_hubble_to_mass <= maximum_hubble_to_mass_for_cold
+        and late_window.max_physical_momentum_to_mass
+        <= maximum_momentum_to_mass_for_cold
+    )
+    particle_dm_like = (
+        cold_gates
+        and late_window.particle_grid_equation_of_state is not None
+        and abs(late_window.particle_grid_equation_of_state)
+        <= maximum_abs_particle_w_for_dm_like
+        and late_window.particle_grid_comoving_energy_relative_span
+        <= maximum_particle_comoving_span_for_dm_like
+    )
+    dimension_manifest = {
+        "fixed_q_grid": 1.0 - 1.0,
+        "isotropic_q_measure": 0.0,
+        "h0_cosmic_time": 1.0 - 1.0,
+        "integrated_stress_over_h0_four": 4.0 - 4.0,
+        "conformal_ward_over_h0_five": 5.0 - 5.0,
+    }
+    return SqueezedFLRWStressEnsemble(
+        nodes=nodes,
+        whole_window=whole_window,
+        late_window=late_window,
+        ward=ward,
+        q_values=q_values,
+        mu=mu,
+        sampled_accelerating_run_node_width=acceleration_span[0],
+        sampled_accelerating_run_grid_upper=acceleration_span[1],
+        sampled_de_like_run_node_width=de_like_span[0],
+        sampled_de_like_run_grid_upper=de_like_span[1],
+        required_persistent_de_efolds=required_persistent_de_efolds,
+        late_finite_q_grid_cold_adiabatic_gates_pass=cold_gates,
+        late_particle_grid_dm_like_diagnostic_pass=particle_dm_like,
+        sampled_nodes_meet_required_de_run_length=(
+            de_like_span[0] >= required_persistent_de_efolds
+        ),
+        dimensions_pass=all(value == 0.0 for value in dimension_manifest.values()),
+        bogoliubov_integrability_certificate=bogoliubov_certificate,
+        analytic_bogoliubov_profile_verified=bogoliubov_certificate is not None,
+        absolute_bogoliubov_amplitude_moments_certified=(
+            bogoliubov_certificate is not None
+        ),
     )
 
 

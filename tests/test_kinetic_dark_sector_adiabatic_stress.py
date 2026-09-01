@@ -4,10 +4,13 @@ import math
 import pytest
 
 from examples.physics.kinetic_dark_sector_adiabatic_stress import (
+    CertifiedInfraredPowerLaw,
     CertifiedPowerLawTail,
     MassSquaredJet,
     ModeStress,
     ScaleFactorJet,
+    SqueezedFLRWNodeIntegralCertificate,
+    aggregate_squeezed_flrw_stress_ensemble,
     bare_mode_stress,
     fourth_order_adiabatic_initial_state,
     fourth_order_counterterm,
@@ -67,12 +70,17 @@ def _de_sitter_trajectory_jet(n: float) -> ScaleFactorJet:
     )
 
 
-def _massive_de_sitter_solution(*, steps: int, mu: float = 40.0):
+def _massive_de_sitter_solution(
+    *,
+    steps: int,
+    mu: float = 40.0,
+    q: float = 0.2,
+):
     background = _DeSitterTrajectoryBackground()
     solution = solve_flrw_mode(
         background,
         FLRWModeSpec(
-            comoving_wavenumber_over_h0=0.2,
+            comoving_wavenumber_over_h0=q,
             mass_over_h0=lambda _n: mu,
             curvature_coupling=0.0,
             initial_n=-2.0,
@@ -83,8 +91,13 @@ def _massive_de_sitter_solution(*, steps: int, mu: float = 40.0):
     return background, solution
 
 
-def _massive_de_sitter_stress_trajectory(*, steps: int, beta: complex | None = None):
-    background, solution = _massive_de_sitter_solution(steps=steps)
+def _massive_de_sitter_stress_trajectory(
+    *,
+    steps: int,
+    beta: complex | None = None,
+    q: float = 0.2,
+):
+    background, solution = _massive_de_sitter_solution(steps=steps, q=q)
     beta_value = complex(math.sqrt(0.5)) if beta is None else beta
     return trace_squeezed_flrw_mode_stress(
         background,
@@ -94,6 +107,88 @@ def _massive_de_sitter_stress_trajectory(*, steps: int, beta: complex | None = N
         beta=beta_value,
         late_window_efolds=1.0,
         canonical_tolerance=1.0e-4,
+    )
+
+
+def _squeezed_ensemble_trajectories(
+    q_values: tuple[float, ...],
+    *,
+    steps: int,
+    zero_squeeze: bool = False,
+):
+    trajectories = []
+    for q in q_values:
+        beta = 0.0j if zero_squeeze else 0.15j * math.exp(-8.0 * q * q)
+        trajectories.append(
+            _massive_de_sitter_stress_trajectory(
+                steps=steps,
+                q=q,
+                beta=beta,
+            )
+        )
+    return tuple(trajectories)
+
+
+def _squeezed_ensemble_certificates(trajectories):
+    """Build caller-asserted endpoint envelopes for contract-plumbing tests.
+
+    These fixtures do not derive an analytic bound on either omitted half-axis.
+    The production API therefore keeps the certificates explicitly external.
+    """
+
+    q_min = trajectories[0].q
+    q_max = trajectories[-1].q
+    certificates = []
+    for index in range(len(trajectories[0].nodes)):
+        first = trajectories[0].nodes[index].receipt.created_state_dependent_stress
+        last = trajectories[-1].nodes[index].receipt.created_state_dependent_stress
+
+        def coefficient(value: float, q: float, exponent: float) -> float:
+            if value == 0.0:
+                return 0.0
+            return 1.01 * abs(value) * q ** (-exponent)
+
+        certificates.append(
+            SqueezedFLRWNodeIntegralCertificate(
+                energy_ir=CertifiedInfraredPowerLaw(
+                    coefficient(first.energy_density_over_h0_four, q_min, 0.0),
+                    0.0,
+                    q_min,
+                ),
+                pressure_ir=CertifiedInfraredPowerLaw(
+                    coefficient(first.pressure_over_h0_four, q_min, 0.0),
+                    0.0,
+                    q_min,
+                ),
+                energy_uv=CertifiedPowerLawTail(
+                    coefficient(last.energy_density_over_h0_four, q_max, -7.0),
+                    7.0,
+                    q_max,
+                ),
+                pressure_uv=CertifiedPowerLawTail(
+                    coefficient(last.pressure_over_h0_four, q_max, -7.0),
+                    7.0,
+                    q_max,
+                ),
+            )
+        )
+    return tuple(certificates)
+
+
+def _squeezed_ensemble(
+    q_values: tuple[float, ...],
+    *,
+    steps: int,
+    zero_squeeze: bool = False,
+):
+    trajectories = _squeezed_ensemble_trajectories(
+        q_values,
+        steps=steps,
+        zero_squeeze=zero_squeeze,
+    )
+    return aggregate_squeezed_flrw_stress_ensemble(
+        trajectories,
+        node_certificates=_squeezed_ensemble_certificates(trajectories),
     )
 
 
@@ -199,12 +294,36 @@ def test_certified_power_law_tail_has_exact_integral_bound() -> None:
         pressure_tail=CertifiedPowerLawTail(2.0, 5.0, 2.0),
     )
 
+    assert result.energy_density_over_h0_four == pytest.approx(
+        0.703125 / (2.0 * math.pi**2)
+    )
     assert result.energy_tail_absolute_bound == pytest.approx(
         1.0 / (4.0 * math.pi**2 * 4.0**2)
     )
     assert result.pressure_tail_absolute_bound == pytest.approx(
         2.0 / (4.0 * math.pi**2 * 4.0**2)
     )
+
+
+def test_certified_infrared_power_law_has_exact_isotropic_bound() -> None:
+    certificate = CertifiedInfraredPowerLaw(2.0, 0.0, 1.0)
+
+    assert certificate.isotropic_integral_bound_to(0.5) == pytest.approx(
+        1.0 / (24.0 * math.pi**2)
+    )
+    with pytest.raises(ValueError, match="infrared bound"):
+        certificate.isotropic_integral_bound_to(2.0)
+
+
+def test_external_power_law_bounds_fail_closed_on_nonfinite_evaluation() -> None:
+    with pytest.raises(ValueError, match="not finite"):
+        CertifiedPowerLawTail(1.0e308, 4.0, 1.0e-300).pointwise_bound_at(
+            1.0e-300
+        )
+    with pytest.raises(ValueError, match="not finite"):
+        CertifiedInfraredPowerLaw(1.0e308, -2.9, 1.0).pointwise_bound_at(
+            1.0e-300
+        )
 
 
 def test_certified_tail_fails_if_last_sample_violates_bound() -> None:
@@ -755,6 +874,157 @@ def test_global_squeezed_trajectory_fails_closed_outside_contract() -> None:
             maximum_reference_phase_step=1.0e-6,
             canonical_tolerance=1.0e-4,
         )
+
+
+def test_squeezed_flrw_ensemble_integrates_hidden_modes_with_explicit_bounds() -> None:
+    q_values = tuple(0.05 + 1.15 * index / 16.0 for index in range(17))
+    ensemble = _squeezed_ensemble(q_values, steps=1200)
+
+    assert len(ensemble.nodes) == 1201
+    assert ensemble.q_values == q_values
+    assert ensemble.nodes[-1].created_stress.energy_ir_absolute_bound > 0.0
+    assert ensemble.nodes[-1].created_stress.energy_uv_absolute_bound > 0.0
+    assert ensemble.ward.central_grid.relative_signed_residual < 2.0e-3
+    assert ensemble.ward.central_grid.relative_absolute_accumulated_residual < 2.0e-3
+    assert ensemble.ward.sampled_ir_uv_balance_uncertainty_bound > 0.0
+    assert ensemble.late_finite_q_grid_cold_adiabatic_gates_pass
+    assert abs(ensemble.late_window.particle_grid_equation_of_state) < 2.0e-3
+    assert ensemble.late_particle_grid_dm_like_diagnostic_pass
+    assert not ensemble.sampled_nodes_meet_required_de_run_length
+    assert ensemble.dimensions_pass
+    assert ensemble.ward.ensemble_ward_recomputed_after_q_integration
+    assert not ensemble.ward.mode_ward_receipts_merely_summed
+    assert not ensemble.time_global_tail_ward_certified
+    assert not ensemble.q_quadrature_error_certified
+    assert not ensemble.time_quadrature_error_certified
+    assert not ensemble.continuous_de_persistence_certified
+    assert not ensemble.full_ir_uv_particle_sector_coldness_proved
+    assert not ensemble.hadamard_state_proved
+    assert not ensemble.einstein_backreaction_computed
+    assert not ensemble.physical_dark_matter_dark_energy_identification
+
+
+def test_squeezed_flrw_ensemble_zero_control_and_contract_failures() -> None:
+    q_values = (0.05, 0.625, 1.2)
+    zero_trajectories = _squeezed_ensemble_trajectories(
+        q_values,
+        steps=900,
+        zero_squeeze=True,
+    )
+    zero_certificates = _squeezed_ensemble_certificates(zero_trajectories)
+    zero = aggregate_squeezed_flrw_stress_ensemble(
+        zero_trajectories,
+        node_certificates=zero_certificates,
+    )
+
+    assert all(
+        node.created_stress.energy_density_over_h0_four == 0.0
+        and node.created_stress.pressure_over_h0_four == 0.0
+        and node.created_stress.energy_external_ir_uv_remainder_absolute_bound
+        == 0.0
+        and node.created_stress.pressure_external_ir_uv_remainder_absolute_bound
+        == 0.0
+        for node in zero.nodes
+    )
+    assert zero.ward.central_grid.relative_signed_residual == 0.0
+    assert zero.ward.sampled_ir_uv_balance_uncertainty_bound == 0.0
+
+    trajectories = _squeezed_ensemble_trajectories(q_values, steps=900)
+    certificates = _squeezed_ensemble_certificates(trajectories)
+    with pytest.raises(ValueError, match="every time node"):
+        aggregate_squeezed_flrw_stress_ensemble(
+            trajectories,
+            node_certificates=certificates[:-1],
+        )
+    with pytest.raises(ValueError, match="strictly increasing"):
+        aggregate_squeezed_flrw_stress_ensemble(
+            tuple(reversed(trajectories)),
+            node_certificates=certificates,
+        )
+    shifted = replace(
+        trajectories[-1],
+        nodes=(
+            replace(
+                trajectories[-1].nodes[0],
+                x=trajectories[-1].nodes[0].x + 1.0e-3,
+            ),
+            *trajectories[-1].nodes[1:],
+        ),
+    )
+    with pytest.raises(ValueError, match="synchronized"):
+        aggregate_squeezed_flrw_stress_ensemble(
+            (*trajectories[:-1], shifted),
+            node_certificates=certificates,
+        )
+    inconsistent_q = replace(
+        trajectories[-1],
+        nodes=(
+            replace(
+                trajectories[-1].nodes[0],
+                receipt=replace(
+                    trajectories[-1].nodes[0].receipt,
+                    q=trajectories[-1].q + 1.0e-3,
+                ),
+            ),
+            *trajectories[-1].nodes[1:],
+        ),
+    )
+    with pytest.raises(ValueError, match="q/mass metadata"):
+        aggregate_squeezed_flrw_stress_ensemble(
+            (*trajectories[:-1], inconsistent_q),
+            node_certificates=certificates,
+        )
+    bad_first_certificate = replace(
+        certificates[0],
+        energy_ir=CertifiedInfraredPowerLaw(0.0, 0.0, q_values[0]),
+    )
+    with pytest.raises(ValueError, match="first energy sample"):
+        aggregate_squeezed_flrw_stress_ensemble(
+            trajectories,
+            node_certificates=(bad_first_certificate, *certificates[1:]),
+        )
+
+
+def test_squeezed_flrw_ensemble_q_quadrature_converges() -> None:
+    def q_grid(intervals: int) -> tuple[float, ...]:
+        return tuple(0.05 + 1.15 * index / intervals for index in range(intervals + 1))
+
+    coarse = _squeezed_ensemble(q_grid(4), steps=900)
+    medium = _squeezed_ensemble(q_grid(8), steps=900)
+    fine = _squeezed_ensemble(q_grid(16), steps=900)
+
+    def endpoint_error(left, right) -> float:
+        return math.hypot(
+            left.nodes[-1].created_stress.energy_density_over_h0_four
+            - right.nodes[-1].created_stress.energy_density_over_h0_four,
+            left.nodes[-1].created_stress.pressure_over_h0_four
+            - right.nodes[-1].created_stress.pressure_over_h0_four,
+        )
+
+    assert endpoint_error(medium, fine) < endpoint_error(coarse, fine) / 3.0
+    assert abs(
+        medium.late_window.particle_grid_equation_of_state
+        - fine.late_window.particle_grid_equation_of_state
+    ) < abs(
+        coarse.late_window.particle_grid_equation_of_state
+        - fine.late_window.particle_grid_equation_of_state
+    ) / 3.0
+
+
+def test_squeezed_flrw_ensemble_time_ward_converges() -> None:
+    q_values = (0.05, 0.3375, 0.625, 0.9125, 1.2)
+    coarse = _squeezed_ensemble(q_values, steps=600)
+    medium = _squeezed_ensemble(q_values, steps=1200)
+    fine = _squeezed_ensemble(q_values, steps=2400)
+
+    assert (
+        medium.ward.central_grid.relative_absolute_accumulated_residual
+        < coarse.ward.central_grid.relative_absolute_accumulated_residual / 3.0
+    )
+    assert (
+        fine.ward.central_grid.max_finite_difference_relative_residual
+        < medium.ward.central_grid.max_finite_difference_relative_residual / 3.0
+    )
 
 
 @pytest.mark.parametrize(
