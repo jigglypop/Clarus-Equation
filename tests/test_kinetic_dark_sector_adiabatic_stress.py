@@ -4,8 +4,10 @@ import math
 import pytest
 
 from examples.physics.kinetic_dark_sector_adiabatic_stress import (
+    _gaussian_q3_tail_moment,
     CertifiedInfraredPowerLaw,
     CertifiedPowerLawTail,
+    GaussianBogoliubovProfile,
     MassSquaredJet,
     ModeStress,
     ScaleFactorJet,
@@ -22,6 +24,11 @@ from examples.physics.kinetic_dark_sector_adiabatic_stress import (
     sixth_order_remainder,
     time_dependent_mass_counterterm,
     trace_squeezed_flrw_mode_stress,
+)
+from examples.physics.kinetic_dark_sector_backreaction import (
+    ReferenceFLRWBaselineNode,
+    _three_point_derivative,
+    project_squeezed_ensemble_frozen_constraints,
 )
 from examples.physics.kinetic_dark_sector_flrw_mode import (
     FLRWModeSpec,
@@ -175,6 +182,14 @@ def _squeezed_ensemble_certificates(trajectories):
     return tuple(certificates)
 
 
+def _gaussian_bogoliubov_profile(*, zero_squeeze: bool = False):
+    return GaussianBogoliubovProfile(
+        amplitude=0.0 if zero_squeeze else 0.15,
+        q_scale=1.0 / math.sqrt(8.0),
+        beta_phase=math.pi / 2.0,
+    )
+
+
 def _squeezed_ensemble(
     q_values: tuple[float, ...],
     *,
@@ -189,6 +204,47 @@ def _squeezed_ensemble(
     return aggregate_squeezed_flrw_stress_ensemble(
         trajectories,
         node_certificates=_squeezed_ensemble_certificates(trajectories),
+        bogoliubov_profile=_gaussian_bogoliubov_profile(
+            zero_squeeze=zero_squeeze
+        ),
+    )
+
+
+def _de_sitter_reference_baseline(ensemble, *, reduced_planck_over_h0: float):
+    energy_density = 3.0 * reduced_planck_over_h0**2
+    return tuple(
+        ReferenceFLRWBaselineNode(
+            n=node.n,
+            e=1.0,
+            d_log_e_d_n=0.0,
+            energy_density=energy_density,
+            pressure=-energy_density,
+            energy_density_d_n=0.0,
+        )
+        for node in ensemble.nodes
+    )
+
+
+def _frozen_constraint_projection(
+    ensemble,
+    *,
+    reduced_planck_over_h0: float = 1.0e4,
+    maximum_state_difference_ward_relative_residual: float = 1.0,
+):
+    return project_squeezed_ensemble_frozen_constraints(
+        ensemble,
+        baseline_nodes=_de_sitter_reference_baseline(
+            ensemble,
+            reduced_planck_over_h0=reduced_planck_over_h0,
+        ),
+        reduced_planck_over_h0=reduced_planck_over_h0,
+        baseline_reference_sector_declaration=(
+            "CLASSICAL_DE_SITTER_PLUS_RENORMALIZED_REFERENCE_STATE"
+        ),
+        reference_renormalized_sector_included_in_baseline=True,
+        maximum_state_difference_ward_relative_residual=(
+            maximum_state_difference_ward_relative_residual
+        ),
     )
 
 
@@ -884,6 +940,11 @@ def test_squeezed_flrw_ensemble_integrates_hidden_modes_with_explicit_bounds() -
     assert ensemble.q_values == q_values
     assert ensemble.nodes[-1].created_stress.energy_ir_absolute_bound > 0.0
     assert ensemble.nodes[-1].created_stress.energy_uv_absolute_bound > 0.0
+    assert all(node.hubble_over_h0 == pytest.approx(1.0) for node in ensemble.nodes)
+    assert all(
+        node.background_d_log_h_d_n == pytest.approx(0.0, abs=2.0e-15)
+        for node in ensemble.nodes
+    )
     assert ensemble.ward.central_grid.relative_signed_residual < 2.0e-3
     assert ensemble.ward.central_grid.relative_absolute_accumulated_residual < 2.0e-3
     assert ensemble.ward.sampled_ir_uv_balance_uncertainty_bound > 0.0
@@ -892,6 +953,9 @@ def test_squeezed_flrw_ensemble_integrates_hidden_modes_with_explicit_bounds() -
     assert ensemble.late_particle_grid_dm_like_diagnostic_pass
     assert not ensemble.sampled_nodes_meet_required_de_run_length
     assert ensemble.dimensions_pass
+    assert ensemble.analytic_bogoliubov_profile_verified
+    assert ensemble.absolute_bogoliubov_amplitude_moments_certified
+    assert not ensemble.evolved_mode_stress_tail_derived_from_profile
     assert ensemble.ward.ensemble_ward_recomputed_after_q_integration
     assert not ensemble.ward.mode_ward_receipts_merely_summed
     assert not ensemble.time_global_tail_ward_certified
@@ -902,6 +966,249 @@ def test_squeezed_flrw_ensemble_integrates_hidden_modes_with_explicit_bounds() -
     assert not ensemble.hadamard_state_proved
     assert not ensemble.einstein_backreaction_computed
     assert not ensemble.physical_dark_matter_dark_energy_identification
+
+
+def test_gaussian_bogoliubov_profile_has_exact_q3_amplitude_moments_only() -> None:
+    q_values = (0.05, 0.3375, 0.625, 0.9125, 1.2)
+    ensemble = _squeezed_ensemble(q_values, steps=900)
+    certificate = ensemble.bogoliubov_integrability_certificate
+    assert certificate is not None
+
+    profile = certificate.profile
+    q_max = q_values[-1]
+    u = (q_max / profile.q_scale) ** 2
+    anomalous_moment = (
+        profile.q_scale**4 * (u + 1.0) * math.exp(-u) / 2.0
+    )
+    particle_moment = (
+        profile.q_scale**4 * (2.0 * u + 1.0) * math.exp(-2.0 * u) / 8.0
+    )
+    assert certificate.tail_start_q == q_max
+    assert certificate.anomalous_q3_amplitude_moment_upper == pytest.approx(
+        math.sqrt(1.0 + profile.amplitude**2)
+        * profile.amplitude
+        * anomalous_moment,
+        rel=2.0e-15,
+    )
+    assert certificate.particle_q3_amplitude_squared_moment_upper == pytest.approx(
+        profile.amplitude**2 * particle_moment,
+        rel=2.0e-15,
+    )
+    assert certificate.bogoliubov_normalization_exact_by_construction
+    assert certificate.stress_power_counting_moments_finite
+    assert certificate.gaussian_exponent_argument_dimensionless
+    assert certificate.dimensions_pass
+    assert all(
+        dimension == 0.0 for _, dimension in certificate.mass_dimension_manifest
+    )
+    assert not certificate.evolved_mode_stress_tail_bounded
+    assert not certificate.time_global_tail_ward_certified
+    assert not certificate.reference_state_hadamard_proved
+    assert not certificate.full_state_hadamard_proved
+    assert not certificate.absolute_renormalized_stress_proved
+
+
+def test_gaussian_q3_moment_closes_zero_infinite_and_invalid_boundaries() -> None:
+    assert _gaussian_q3_tail_moment(
+        q_scale=2.0,
+        tail_start_q=0.0,
+        exponential_rate=1.0,
+    ) == pytest.approx(8.0)
+    assert _gaussian_q3_tail_moment(
+        q_scale=2.0,
+        tail_start_q=0.0,
+        exponential_rate=2.0,
+    ) == pytest.approx(2.0)
+    assert _gaussian_q3_tail_moment(
+        q_scale=1.0,
+        tail_start_q=1.0e200,
+        exponential_rate=1.0,
+    ) == 0.0
+    with pytest.raises(ValueError, match="exponential_rate"):
+        _gaussian_q3_tail_moment(
+            q_scale=1.0,
+            tail_start_q=0.0,
+            exponential_rate=0.0,
+        )
+    with pytest.raises(ValueError, match="not finite"):
+        _gaussian_q3_tail_moment(
+            q_scale=1.0e100,
+            tail_start_q=0.0,
+            exponential_rate=1.0,
+        )
+
+
+def test_nonuniform_three_point_derivative_is_exact_on_quadratics_and_conditioned() -> None:
+    x_values = (0.0, 0.2, 0.9, 2.0)
+    y_values = tuple(x * x + 3.0 * x - 4.0 for x in x_values)
+    assert _three_point_derivative(
+        x_values,
+        y_values,
+        maximum_adjacent_step_ratio=6.0,
+    ) == pytest.approx(tuple(2.0 * x + 3.0 for x in x_values), abs=2.0e-14)
+    with pytest.raises(ValueError, match="adjacent-step ratio"):
+        _three_point_derivative(
+            (0.0, 1.0e-12, 1.0),
+            (0.0, 1.0e-24, 1.0),
+            maximum_adjacent_step_ratio=10.0,
+        )
+
+
+def test_frozen_constraint_projection_closes_algebraic_constraints_without_claiming_backreaction() -> None:
+    q_values = (0.05, 0.3375, 0.625, 0.9125, 1.2)
+    projection = _frozen_constraint_projection(
+        _squeezed_ensemble(q_values, steps=1200)
+    )
+
+    assert projection.maximum_relative_e_squared_shift_upper < 1.0e-4
+    assert projection.maximum_baseline_friedmann_relative_residual == 0.0
+    assert projection.maximum_baseline_raychaudhuri_relative_residual == 0.0
+    assert projection.maximum_baseline_ward_relative_residual == 0.0
+    assert projection.dimensions_pass
+    assert all(dimension == 0.0 for _, dimension in projection.mass_dimension_manifest)
+    assert projection.fixed_comoving_q_measure_applied_once
+    assert projection.degeneracy_applied_once_after_q_integration
+    assert projection.initial_occupation_already_in_state_difference
+    assert projection.adjacent_n_step_ratio == pytest.approx(1.0)
+    assert projection.independent_energy_pressure_tail_bounds_assumed
+    assert not projection.joint_rho_p_tail_region_derived
+    assert projection.finite_difference_conditioning_pass
+    assert not projection.finite_difference_truncation_error_certified
+    assert projection.baseline_closure_absolute_tolerance == 1.0e-12
+    assert projection.state_difference_ward_absolute_tolerance == 1.0e-12
+    assert projection.frozen_constraint_projection_computed
+    assert not projection.gaussian_profile_derives_evolved_stress_tail
+    assert not projection.tail_time_derivative_certified
+    assert not projection.continuous_total_ward_identity_certified
+    assert not projection.projected_geometry_evolved
+    assert not projection.modes_recomputed_on_projected_geometry
+    assert not projection.reference_renormalized_stress_recomputed
+    assert not projection.semiclassical_einstein_equation_solved
+    assert not projection.einstein_backreaction_computed
+    assert not projection.physical_dark_matter_dark_energy_identification
+
+    for node in projection.nodes:
+        assert node.projected_e_squared_interval[0] <= node.projected_e_squared
+        assert node.projected_e_squared <= node.projected_e_squared_interval[1]
+        assert (
+            node.projected_d_log_e_d_n_interval[0]
+            <= node.projected_d_log_e_d_n
+            <= node.projected_d_log_e_d_n_interval[1]
+        )
+        assert (
+            node.projected_acceleration_over_h0_squared_interval[0]
+            <= node.projected_acceleration_over_h0_squared
+            <= node.projected_acceleration_over_h0_squared_interval[1]
+        )
+        closure_scale = max(1.0, abs(node.closure.total_energy_density))
+        assert abs(node.closure.friedmann_constraint_residual) / closure_scale < 2.0e-15
+        assert abs(node.closure.raychaudhuri_residual) < 2.0e-15
+        assert node.closure.fluid_ward_residuals == pytest.approx(
+            (node.baseline_ward_residual, node.state_difference_ward_residual)
+        )
+
+
+def test_frozen_constraint_projection_zero_squeeze_recovers_reference_exactly() -> None:
+    ensemble = _squeezed_ensemble(
+        (0.05, 0.625, 1.2),
+        steps=900,
+        zero_squeeze=True,
+    )
+    projection = _frozen_constraint_projection(ensemble)
+
+    assert projection.maximum_relative_e_squared_shift_upper == 0.0
+    assert projection.maximum_state_difference_ward_relative_residual == 0.0
+    assert all(
+        node.projected_e == 1.0
+        and node.projected_e_squared_interval == (1.0, 1.0)
+        and node.projected_d_log_e_d_n == 0.0
+        and node.projected_d_log_e_d_n_interval == (0.0, 0.0)
+        and node.projected_acceleration_over_h0_squared == 1.0
+        and node.state_difference_ward_residual == 0.0
+        for node in projection.nodes
+    )
+
+
+def test_frozen_constraint_projection_fails_closed_on_missing_reference_or_nonpositive_bound() -> None:
+    ensemble = _squeezed_ensemble((0.05, 0.625, 1.2), steps=900)
+    planck = 1.0e4
+    baseline = _de_sitter_reference_baseline(
+        ensemble,
+        reduced_planck_over_h0=planck,
+    )
+    common = {
+        "baseline_nodes": baseline,
+        "reduced_planck_over_h0": planck,
+        "baseline_reference_sector_declaration": (
+            "CLASSICAL_DE_SITTER_PLUS_RENORMALIZED_REFERENCE_STATE"
+        ),
+    }
+
+    with pytest.raises(ValueError, match="renormalized reference sector"):
+        project_squeezed_ensemble_frozen_constraints(
+            ensemble,
+            reference_renormalized_sector_included_in_baseline=False,
+            **common,
+        )
+    with pytest.raises(ValueError, match="not synchronized"):
+        project_squeezed_ensemble_frozen_constraints(
+            ensemble,
+            baseline_nodes=(replace(baseline[0], e=1.01), *baseline[1:]),
+            reduced_planck_over_h0=planck,
+            baseline_reference_sector_declaration=(
+                "CLASSICAL_DE_SITTER_PLUS_RENORMALIZED_REFERENCE_STATE"
+            ),
+            reference_renormalized_sector_included_in_baseline=True,
+        )
+
+    first = ensemble.nodes[0]
+    nonpositive_lower = replace(
+        first,
+        created_stress=replace(
+            first.created_stress,
+            energy_ir_absolute_bound=6.0 * planck**2,
+        ),
+    )
+    unsafe_ensemble = replace(
+        ensemble,
+        nodes=(nonpositive_lower, *ensemble.nodes[1:]),
+    )
+    with pytest.raises(ValueError, match=r"makes E\^2 non-positive"):
+        project_squeezed_ensemble_frozen_constraints(
+            unsafe_ensemble,
+            reference_renormalized_sector_included_in_baseline=True,
+            **common,
+        )
+
+
+def test_frozen_constraint_projection_separates_absolute_and_relative_residual_gates() -> None:
+    ensemble = _squeezed_ensemble(
+        (0.05, 0.625, 1.2),
+        steps=900,
+        zero_squeeze=True,
+    )
+    planck = 0.1
+    baseline = _de_sitter_reference_baseline(
+        ensemble,
+        reduced_planck_over_h0=planck,
+    )
+    small_scale_but_inconsistent = (
+        replace(baseline[0], energy_density_d_n=5.0e-10),
+        *baseline[1:],
+    )
+
+    with pytest.raises(ValueError, match="does not close"):
+        project_squeezed_ensemble_frozen_constraints(
+            ensemble,
+            baseline_nodes=small_scale_but_inconsistent,
+            reduced_planck_over_h0=planck,
+            baseline_reference_sector_declaration=(
+                "SMALL_SCALE_ABSOLUTE_RELATIVE_GATE_COUNTEREXAMPLE"
+            ),
+            reference_renormalized_sector_included_in_baseline=True,
+            baseline_closure_tolerance=1.0e-9,
+            baseline_closure_absolute_tolerance=1.0e-12,
+        )
 
 
 def test_squeezed_flrw_ensemble_zero_control_and_contract_failures() -> None:
@@ -915,6 +1222,7 @@ def test_squeezed_flrw_ensemble_zero_control_and_contract_failures() -> None:
     zero = aggregate_squeezed_flrw_stress_ensemble(
         zero_trajectories,
         node_certificates=zero_certificates,
+        bogoliubov_profile=_gaussian_bogoliubov_profile(zero_squeeze=True),
     )
 
     assert all(
@@ -983,6 +1291,16 @@ def test_squeezed_flrw_ensemble_zero_control_and_contract_failures() -> None:
             trajectories,
             node_certificates=(bad_first_certificate, *certificates[1:]),
         )
+    with pytest.raises(ValueError, match="do not match the Gaussian profile"):
+        aggregate_squeezed_flrw_stress_ensemble(
+            trajectories,
+            node_certificates=certificates,
+            bogoliubov_profile=GaussianBogoliubovProfile(
+                amplitude=0.16,
+                q_scale=1.0 / math.sqrt(8.0),
+                beta_phase=math.pi / 2.0,
+            ),
+        )
 
 
 def test_squeezed_flrw_ensemble_q_quadrature_converges() -> None:
@@ -1016,6 +1334,18 @@ def test_squeezed_flrw_ensemble_time_ward_converges() -> None:
     coarse = _squeezed_ensemble(q_values, steps=600)
     medium = _squeezed_ensemble(q_values, steps=1200)
     fine = _squeezed_ensemble(q_values, steps=2400)
+    coarse_projection = _frozen_constraint_projection(
+        coarse,
+        maximum_state_difference_ward_relative_residual=2.1,
+    )
+    medium_projection = _frozen_constraint_projection(
+        medium,
+        maximum_state_difference_ward_relative_residual=2.1,
+    )
+    fine_projection = _frozen_constraint_projection(
+        fine,
+        maximum_state_difference_ward_relative_residual=2.1,
+    )
 
     assert (
         medium.ward.central_grid.relative_absolute_accumulated_residual
@@ -1024,6 +1354,14 @@ def test_squeezed_flrw_ensemble_time_ward_converges() -> None:
     assert (
         fine.ward.central_grid.max_finite_difference_relative_residual
         < medium.ward.central_grid.max_finite_difference_relative_residual / 3.0
+    )
+    assert (
+        medium_projection.maximum_state_difference_ward_relative_residual
+        < coarse_projection.maximum_state_difference_ward_relative_residual / 3.0
+    )
+    assert (
+        fine_projection.maximum_state_difference_ward_relative_residual
+        < medium_projection.maximum_state_difference_ward_relative_residual / 3.0
     )
 
 

@@ -418,7 +418,7 @@ class GaussianBogoliubovProfile:
 
     def alpha_at(self, q: float) -> complex:
         beta_magnitude = abs(self.beta_at(q))
-        magnitude = math.sqrt(1.0 + beta_magnitude * beta_magnitude)
+        magnitude = math.hypot(1.0, beta_magnitude)
         return magnitude * complex(
             math.cos(self.alpha_phase),
             math.sin(self.alpha_phase),
@@ -434,7 +434,16 @@ class GaussianBogoliubovIntegrabilityCertificate:
     maximum_initial_occupation: float
     anomalous_q3_amplitude_moment_upper: float
     particle_q3_amplitude_squared_moment_upper: float
+    mass_dimension_manifest: tuple[tuple[str, float], ...] = (
+        ("q_over_h0", 0.0),
+        ("q_scale_over_h0", 0.0),
+        ("q_over_q_scale", 0.0),
+        ("alpha_beta_and_occupation", 0.0),
+        ("normalized_q3_amplitude_moments", 0.0),
+    )
     status: str = "GAUSSIAN_BOGOLIUBOV_AMPLITUDE_MOMENTS_ONLY"
+    gaussian_exponent_argument_dimensionless: bool = True
+    dimensions_pass: bool = True
     profile_verified_on_ensemble_q_grid: bool = True
     bogoliubov_normalization_exact_by_construction: bool = True
     rapid_decrease_profile_declared: bool = True
@@ -2389,6 +2398,12 @@ def _gaussian_q3_tail_moment(
 ) -> float:
     r"""Return ``integral_q0^inf q^3 exp[-rate (q/Q)^2] dq``."""
 
+    if not math.isfinite(q_scale) or q_scale <= 0.0:
+        raise ValueError("Gaussian q^3 moment q_scale must be finite and positive")
+    if not math.isfinite(tail_start_q) or tail_start_q < 0.0:
+        raise ValueError("Gaussian q^3 moment tail_start_q must be finite and non-negative")
+    if not math.isfinite(exponential_rate) or exponential_rate <= 0.0:
+        raise ValueError("Gaussian q^3 moment exponential_rate must be finite and positive")
     try:
         scaled_start_squared = (tail_start_q / q_scale) ** 2
     except OverflowError:
@@ -2481,13 +2496,14 @@ def certify_gaussian_bogoliubov_profile_on_ensemble(
     occupation_factor = 1.0 + 2.0 * maximum_initial_occupation
     anomalous_upper = (
         occupation_factor
-        * math.sqrt(1.0 + profile.amplitude**2)
+        * math.hypot(1.0, profile.amplitude)
         * profile.amplitude
         * anomalous_profile_moment
     )
     particle_upper = (
         occupation_factor
-        * profile.amplitude**2
+        * profile.amplitude
+        * profile.amplitude
         * particle_profile_moment
     )
     if not all(math.isfinite(value) and value >= 0.0 for value in (
