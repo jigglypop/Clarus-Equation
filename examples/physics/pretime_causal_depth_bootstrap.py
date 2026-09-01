@@ -363,7 +363,7 @@ class SelfNonidentityStitchAudit:
     planck_endpoint_calibration_supplied: bool = True
     unique_stitch_law_derived: bool = False
     status: str = (
-        OPERATIONAL_NONIDENTITY_STITCH_CLOSED_RENDERER_TIME_AND_GEOMETRY_SUPPLIED
+        "OPERATIONAL_NONIDENTITY_STITCH_CLOSED_RENDERER_TIME_AND_GEOMETRY_SUPPLIED"
     )
 
 
@@ -488,6 +488,95 @@ def _self_nonidentity_render_witness(
         erasing_render_change,
         recurrence_first_change,
         recurrence_endpoint_change,
+    )
+
+
+def audit_self_nonidentity_stitch(
+    *,
+    microsteps_per_planck_render: int = 4,
+    theta: float = math.pi / 5.0,
+    tolerance: float = DEFAULT_TOLERANCE,
+) -> SelfNonidentityStitchAudit:
+    """Normalize dimensionless boundary changes to one rendered interval."""
+
+    microsteps = _positive_integer(
+        microsteps_per_planck_render, "microsteps_per_planck_render"
+    )
+    tolerance = _positive_finite(tolerance, "tolerance")
+    pointer_rotation(theta)
+    path_data = _self_nonidentity_path_data(microsteps, theta, tolerance)
+    states, densities, changes, angles, coordinates = path_data[:5]
+    total_angle, uniformity_residual = path_data[5:]
+    render_data = _self_nonidentity_render_witness(states, densities)
+    (
+        joint_norm_residual,
+        faithful_residual,
+        identity_change,
+        erasing_event_change,
+        erasing_render_change,
+        recurrence_first_change,
+        recurrence_endpoint_change,
+    ) = render_data
+    every_step_nonfixed = all(change > tolerance for change in changes)
+    stitch_defined = total_angle > tolerance
+    spans_interval = bool(
+        stitch_defined
+        and abs(coordinates[0]) <= tolerance
+        and abs(coordinates[-1] - 1.0) <= tolerance
+    )
+    coencoded = joint_norm_residual <= tolerance
+    faithful = faithful_residual <= tolerance
+    identity_counterexample = identity_change <= tolerance
+    erasing_counterexample = bool(
+        erasing_event_change > tolerance
+        and erasing_render_change <= tolerance
+    )
+    recurrence_counterexample = bool(
+        recurrence_first_change > tolerance
+        and recurrence_endpoint_change <= tolerance
+    )
+    closed = bool(
+        every_step_nonfixed
+        and spans_interval
+        and coencoded
+        and faithful
+        and identity_counterexample
+        and erasing_counterexample
+        and recurrence_counterexample
+    )
+    status = (
+        "OPERATIONAL_NONIDENTITY_STITCH_CLOSED_RENDERER_TIME_AND_GEOMETRY_SUPPLIED"
+        if closed
+        else "OPERATIONAL_NONIDENTITY_STITCH_DEGENERATE_OR_AUDIT_FAILED"
+    )
+    return SelfNonidentityStitchAudit(
+        microsteps_per_planck_render=microsteps,
+        zero_d_event_register_dimension=microsteps + 1,
+        declared_render_algebra_dimension=4,
+        step_angle=float(theta),
+        dimensionless_depth_increment=1.0 / microsteps,
+        adjacent_state_changes=changes,
+        adjacent_bures_angles=angles,
+        normalized_stitch_coordinates=coordinates,
+        total_bures_arclength=total_angle,
+        endpoint_state_change=_trace_distance(densities[0], densities[-1]),
+        stitch_coordinate_uniformity_residual=uniformity_residual,
+        joint_event_render_history_norm_residual=joint_norm_residual,
+        faithful_renderer_distance_residual=faithful_residual,
+        identity_channel_state_change=identity_change,
+        erasing_probe_event_change=erasing_event_change,
+        erasing_probe_render_change=erasing_render_change,
+        recurrence_first_step_change=recurrence_first_change,
+        recurrence_endpoint_change=recurrence_endpoint_change,
+        every_step_operationally_nonfixed=every_step_nonfixed,
+        nonidentity_stitch_defined=stitch_defined,
+        stitch_spans_unit_render_interval=spans_interval,
+        event_register_and_rendered_slices_coencoded=coencoded,
+        faithful_renderer_preserves_change=faithful,
+        identity_counterexample_closed=identity_counterexample,
+        erasing_renderer_counterexample_closed=erasing_counterexample,
+        recurrence_counterexample_closed=recurrence_counterexample,
+        status=status,
     )
 
 
@@ -635,9 +724,12 @@ class PretimeCausalDepthCertificate:
     history_constraint: HistoryConstraintAudit
     planck_matching: PlanckRenderingMatchingAudit
     quantum_speed_limit: QuantumSpeedLimitAudit
+    self_nonidentity_stitch: SelfNonidentityStitchAudit
     local_domino: CausalQuantumDominoCertificate | None
     continuous_time_two_hop_early_arrival_probability: float
     exact_graph_cone_and_history_constraint_closed: bool
+    formal_history_stitch_and_exact_graph_cone_closed: bool
+    single_microstep_qsl_cap_necessary_condition_satisfied: bool
     parent_subplanck_tick_solves_bootstrap: bool
     first_seed_derived: bool
     clock_order_derived: bool
@@ -685,6 +777,11 @@ def certify_pretime_causal_depth_bootstrap(
         ),
         tolerance=tolerance,
     )
+    stitch = audit_self_nonidentity_stitch(
+        microsteps_per_planck_render=microsteps_per_planck_render,
+        theta=theta,
+        tolerance=tolerance,
+    )
     domino: CausalQuantumDominoCertificate | None = None
     if matching.local_causality_satisfied:
         domino = certify_causal_quantum_domino(
@@ -704,6 +801,13 @@ def certify_pretime_causal_depth_bootstrap(
     )
     finite_closed = bool(
         history.history_constraint_closed
+        and stitch.nonidentity_stitch_defined
+        and stitch.stitch_spans_unit_render_interval
+        and stitch.event_register_and_rendered_slices_coencoded
+        and stitch.faithful_renderer_preserves_change
+        and stitch.identity_counterexample_closed
+        and stitch.erasing_renderer_counterexample_closed
+        and stitch.recurrence_counterexample_closed
         and matching.local_causality_satisfied
         and domino is not None
         and domino.structural_causal_support_exact
@@ -716,9 +820,14 @@ def certify_pretime_causal_depth_bootstrap(
         history_constraint=history,
         planck_matching=matching,
         quantum_speed_limit=qsl,
+        self_nonidentity_stitch=stitch,
         local_domino=domino,
         continuous_time_two_hop_early_arrival_probability=early_tail,
         exact_graph_cone_and_history_constraint_closed=finite_closed,
+        formal_history_stitch_and_exact_graph_cone_closed=finite_closed,
+        single_microstep_qsl_cap_necessary_condition_satisfied=(
+            qsl.single_microstep_not_excluded_by_cap_bound
+        ),
         parent_subplanck_tick_solves_bootstrap=False,
         first_seed_derived=False,
         clock_order_derived=False,
@@ -735,6 +844,8 @@ def certify_pretime_causal_depth_bootstrap(
             "nearest-neighbour graph and scheduled local gates",
             "fresh equal-gap batteries and their readout basis",
             "Planck matching ratio between causal depth and rendered units",
+            "ordered operational boundary changes in the event register",
+            "faithful renderer, slice identification, and endpoint calibration",
             "interaction generator capable of the declared pointer angle",
             "durable local record and covariant source map",
         ),
@@ -742,13 +853,16 @@ def certify_pretime_causal_depth_bootstrap(
             ("n", "integer causal-depth label, not physical time"),
             ("theta", "pointer rotation angle"),
             ("sin(theta)^2", "one-edge pointer-label probability"),
+            ("J_n=||rho_(n+1)-rho_n||_1/2", "boundary change readout"),
+            ("A_n=acos|<psi_n|psi_(n+1)>", "pure-state Bures angle"),
+            ("zeta_n=sum_(r<n)A_r/sum_r A_r", "normalized stitch coordinate"),
             ("alpha_t=Delta t/t_P", "rendered time ratio"),
             ("alpha_l=ell/ell_P", "rendered length ratio"),
             ("alpha_l/alpha_t", "front speed divided by c"),
             ("Delta E/E_P >= theta/alpha_t", "quantum-speed lower bound"),
         ),
         status=(
-            "PRETIME_HISTORY_AND_EXACT_LOCAL_CONE_CLOSED_BOOTSTRAP_AND_DARK_SOURCE_OPEN"
+            "PRETIME_FORMAL_HISTORY_NONIDENTITY_STITCH_AND_EXACT_LOCAL_CONE_CLOSED_QSL_EXECUTION_AND_DARK_SOURCE_OPEN"
             if finite_closed
             else "PRETIME_HISTORY_OR_CAUSAL_MATCHING_AUDIT_FAILED"
         ),
