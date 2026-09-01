@@ -246,6 +246,21 @@ def _default_smooth_momentum_max(species: QuantumSeatSpecies) -> float:
     )
 
 
+def _simpson_weight(index: int, intervals: int) -> float:
+    if index in (0, intervals):
+        return 1.0
+    return 4.0 if index % 2 else 2.0
+
+
+def _simpson_spherical_factor(
+    species: QuantumSeatSpecies,
+    step: float,
+) -> float:
+    """Return g/(2 pi^2) times Simpson's h/3 normalization."""
+
+    return species.degeneracy / (2.0 * math.pi * math.pi) * step / 3.0
+
+
 def integrate_quench_densities(
     species: QuantumSeatSpecies,
     *,
@@ -290,7 +305,7 @@ def integrate_quench_densities(
     for index in range(intervals + 1):
         momentum = index * step
         mode = mode_function(species, momentum)
-        weight = 1.0 if index in (0, intervals) else (4.0 if index % 2 else 2.0)
+        weight = _simpson_weight(index, intervals)
         occupation = mode.created_occupation
         radial_number = momentum * momentum * occupation
         number_sum += weight * radial_number
@@ -304,13 +319,12 @@ def integrate_quench_densities(
         momentum2_sum += weight * momentum**4 * occupation
         max_residual = max(max_residual, abs(mode.normalization_residual))
 
-    spherical_factor = (
-        species.degeneracy / (2.0 * math.pi * math.pi) * step / 3.0
-    )
-    number_density = spherical_factor * number_sum
-    energy_density = spherical_factor * energy_sum
-    pressure = spherical_factor * pressure_sum
-    momentum2_density = spherical_factor * momentum2_sum
+    # The helper's /3 is Simpson's h/3, not the pressure average.
+    simpson_spherical_factor = _simpson_spherical_factor(species, step)
+    number_density = simpson_spherical_factor * number_sum
+    energy_density = simpson_spherical_factor * energy_sum
+    pressure = simpson_spherical_factor * pressure_sum
+    momentum2_density = simpson_spherical_factor * momentum2_sum
     if number_density > 0.0:
         mean_energy = energy_density / number_density
         rms_momentum = math.sqrt(momentum2_density / number_density)
@@ -342,6 +356,323 @@ def integrate_quench_densities(
         ),
         stress_role=(
             "ASYMPTOTIC_OUT_EXCESS_NOT_FULL_RENORMALIZED_FLRW_STRESS"
+        ),
+    )
+
+
+@dataclass(frozen=True)
+class LateSqueezedStressEnvelopeAudit:
+    """Phase-independent bounds for the late squeezed created excess."""
+
+    label: str
+    averaging_duration: float
+    momentum_max: float
+    intervals: int
+    created_energy_density: float
+    dephased_created_pressure: float
+    dephased_created_equation_of_state: float
+    dephased_created_field_variance: float
+    static_out_created_anomalous_energy_density_coefficient: float
+    instantaneous_anomalous_pressure_independent_phase_upper: float
+    boxcar_anomalous_pressure_integrated_triangle_upper: float
+    one_over_time_anomalous_pressure_coefficient: float
+    one_over_time_anomalous_pressure_upper: float
+    boxcar_pressure_lower: float
+    boxcar_pressure_upper: float
+    boxcar_equation_of_state_lower: float
+    boxcar_equation_of_state_upper: float
+    instantaneous_anomalous_field_variance_independent_phase_upper: float
+    boxcar_anomalous_field_variance_integrated_triangle_upper: float
+    one_over_time_anomalous_field_variance_coefficient: float
+    one_over_time_anomalous_field_variance_upper: float
+    sufficient_averaging_duration_for_nonnegative_pressure: float
+    sufficient_averaging_duration_for_no_acceleration: float
+    nonnegative_pressure_certified_by_one_over_time_bound: bool
+    no_acceleration_certified_by_one_over_time_bound: bool
+    maximum_bogoliubov_residual: float
+    exact_no_mass_quench: bool
+    numerical_created_excess_resolved: bool
+    mass_dimension_manifest: tuple[tuple[str, float], ...]
+    dimensionless_core_argument_mass_dimensions: tuple[tuple[str, float], ...]
+    dimensions_pass: bool
+    status: str
+    phase_resolved_value_available: bool = False
+    global_time_supremum_computed: bool = False
+    instantaneous_bound_is_independent_phase_triangle_bound: bool = True
+    full_initial_state_stress_computed: bool = False
+    constant_initial_occupation_used_only_as_created_excess_stimulation: bool = True
+    initial_state_assumed_isotropic_number_diagonal: bool = True
+    anomalous_energy_cancels_exactly: bool = True
+    static_out_created_excess_scope: bool = True
+    out_vacuum_normal_ordering: bool = True
+    finite_momentum_window_only: bool = True
+    analytic_uv_tail_certificate: bool = False
+    full_renormalized_flrw_stress: bool = False
+    cosmological_phase_propagation: bool = False
+    conditional_long_time_no_sustained_dark_energy_scope_declared: bool = True
+    long_time_no_sustained_dark_energy_numerically_certified: bool = False
+    physical_dark_matter_dark_energy_identification: bool = False
+
+
+def integrate_late_squeezed_stress_envelope(
+    species: QuantumSeatSpecies,
+    *,
+    averaging_duration: float,
+    momentum_max: float | None = None,
+    intervals: int = 2400,
+) -> LateSqueezedStressEnvelopeAudit:
+    r"""Bound the unobserved Bogoliubov phase in the static out region.
+
+    With ``B_k=|beta_k|^2`` and
+    ``A_k=alpha_k beta_k^*``, the created excess has
+
+    ``rho = integral omega (1+2 n_k) B_k``
+
+    and its anomalous contribution cancels exactly from the out Hamiltonian.
+    Its pressure coefficient is instead
+
+    ``-(m_out^2+2 k^2/3) (1+2 n_k) Re(A_k e^-2i omega t)/omega``.
+
+    The input is assumed isotropic and number-diagonal, with no initial
+    anomalous correlator.  The complex phase of ``A_k`` is not reconstructed
+    by the occupation-only quench result.  Consequently this function returns
+    conservative triangle bounds, not a phase-resolved pressure or an attained
+    global time maximum.
+    A boxcar average supplies ``|sinc(omega T)|`` and hence the explicit
+    ``C_p/T`` dephasing bound.  The result is the smooth-quench created excess
+    above the static out vacuum; it is not a covariantly renormalized FLRW
+    stress tensor.  A momentum-independent nonzero initial occupation is used
+    only as the Bose stimulation factor multiplying the UV-finite excess.
+    """
+
+    _require_finite("averaging_duration", averaging_duration)
+    if averaging_duration <= 0.0:
+        raise ValueError("averaging_duration must be positive")
+
+    production = integrate_quench_densities(
+        species,
+        protocol="smooth",
+        momentum_max=momentum_max,
+        intervals=intervals,
+    )
+    upper = production.momentum_max
+    even_intervals = production.intervals
+    step = upper / even_intervals
+    dephased_field_variance_sum = 0.0
+    instantaneous_pressure_sum = 0.0
+    boxcar_pressure_sum = 0.0
+    pressure_one_over_time_coefficient_sum = 0.0
+    instantaneous_field_variance_sum = 0.0
+    boxcar_field_variance_sum = 0.0
+    field_variance_one_over_time_coefficient_sum = 0.0
+    maximum_residual = 0.0
+    stimulation = 1.0 + 2.0 * species.initial_mode_occupation
+
+    for index in range(even_intervals + 1):
+        momentum = index * step
+        mode = smooth_tanh_mode(species, momentum)
+        weight = _simpson_weight(index, even_intervals)
+        radial_measure = momentum * momentum
+        created_occupation = stimulation * mode.beta_squared
+        alpha_beta_magnitude = math.sqrt(
+            mode.alpha_squared * mode.beta_squared
+        )
+        anomalous_amplitude = stimulation * alpha_beta_magnitude
+        omega = mode.omega_out
+        pressure_coefficient = (
+            species.mass_out * species.mass_out
+            + (2.0 / 3.0) * momentum * momentum
+        ) / omega
+        omega_time = omega * averaging_duration
+        _require_finite("omega_times_averaging_duration", omega_time)
+        absolute_boxcar_sinc = abs(math.sin(omega_time) / omega_time)
+
+        dephased_field_variance_sum += (
+            weight * radial_measure * created_occupation / omega
+        )
+        pressure_envelope = (
+            radial_measure * pressure_coefficient * anomalous_amplitude
+        )
+        instantaneous_pressure_sum += weight * pressure_envelope
+        boxcar_pressure_sum += (
+            weight * pressure_envelope * absolute_boxcar_sinc
+        )
+        pressure_one_over_time_coefficient_sum += (
+            weight * pressure_envelope / omega
+        )
+        field_variance_envelope = (
+            radial_measure * anomalous_amplitude / omega
+        )
+        instantaneous_field_variance_sum += (
+            weight * field_variance_envelope
+        )
+        boxcar_field_variance_sum += (
+            weight * field_variance_envelope * absolute_boxcar_sinc
+        )
+        field_variance_one_over_time_coefficient_sum += (
+            weight * field_variance_envelope / omega
+        )
+        maximum_residual = max(
+            maximum_residual,
+            abs(mode.normalization_residual),
+        )
+
+    simpson_spherical_factor = _simpson_spherical_factor(species, step)
+    dephased_field_variance = (
+        simpson_spherical_factor * dephased_field_variance_sum
+    )
+    instantaneous_pressure_upper = (
+        simpson_spherical_factor * instantaneous_pressure_sum
+    )
+    boxcar_pressure_upper = (
+        simpson_spherical_factor * boxcar_pressure_sum
+    )
+    pressure_one_over_time_coefficient = (
+        simpson_spherical_factor
+        * pressure_one_over_time_coefficient_sum
+    )
+    pressure_one_over_time_upper = (
+        pressure_one_over_time_coefficient / averaging_duration
+    )
+    instantaneous_field_variance_upper = (
+        simpson_spherical_factor * instantaneous_field_variance_sum
+    )
+    boxcar_field_variance_upper = (
+        simpson_spherical_factor * boxcar_field_variance_sum
+    )
+    field_variance_one_over_time_coefficient = (
+        simpson_spherical_factor
+        * field_variance_one_over_time_coefficient_sum
+    )
+    field_variance_one_over_time_upper = (
+        field_variance_one_over_time_coefficient / averaging_duration
+    )
+
+    energy_density = production.excess_energy_density
+    particle_pressure = production.dephased_pressure
+    if particle_pressure > 0.0:
+        duration_for_nonnegative_pressure = (
+            pressure_one_over_time_coefficient / particle_pressure
+        )
+    else:
+        duration_for_nonnegative_pressure = (
+            0.0 if pressure_one_over_time_coefficient == 0.0 else math.inf
+        )
+    no_acceleration_denominator = particle_pressure + energy_density / 3.0
+    if no_acceleration_denominator > 0.0:
+        duration_for_no_acceleration = (
+            pressure_one_over_time_coefficient
+            / no_acceleration_denominator
+        )
+    else:
+        duration_for_no_acceleration = (
+            0.0 if pressure_one_over_time_coefficient == 0.0 else math.inf
+        )
+
+    pressure_lower = particle_pressure - boxcar_pressure_upper
+    pressure_upper = particle_pressure + boxcar_pressure_upper
+    if energy_density > 0.0:
+        equation_of_state_lower = pressure_lower / energy_density
+        equation_of_state_upper = pressure_upper / energy_density
+    else:
+        equation_of_state_lower = 0.0
+        equation_of_state_upper = 0.0
+
+    mass_dimensions = {
+        "averaging_duration": -1.0,
+        "momentum_max": 1.0,
+        "created_energy_density": 4.0,
+        "dephased_created_pressure": 4.0,
+        "dephased_created_field_variance": 2.0,
+        "pressure_one_over_time_coefficient": 3.0,
+        "field_variance_one_over_time_coefficient": 1.0,
+    }
+    dimensionless_core_dimensions = {
+        "omega_times_averaging_duration": 1.0 - 1.0,
+        "boxcar_sinc_argument": 1.0 - 1.0,
+        "dephased_created_equation_of_state": 4.0 - 4.0,
+    }
+    dimensions_pass = all(
+        dimension == 0.0
+        for dimension in dimensionless_core_dimensions.values()
+    )
+    exact_no_mass_quench = species.mass_in == species.mass_out
+    numerical_created_excess_resolved = energy_density > 0.0
+
+    return LateSqueezedStressEnvelopeAudit(
+        label=species.label,
+        averaging_duration=averaging_duration,
+        momentum_max=upper,
+        intervals=even_intervals,
+        created_energy_density=energy_density,
+        dephased_created_pressure=particle_pressure,
+        dephased_created_equation_of_state=production.equation_of_state,
+        dephased_created_field_variance=dephased_field_variance,
+        static_out_created_anomalous_energy_density_coefficient=0.0,
+        instantaneous_anomalous_pressure_independent_phase_upper=(
+            instantaneous_pressure_upper
+        ),
+        boxcar_anomalous_pressure_integrated_triangle_upper=(
+            boxcar_pressure_upper
+        ),
+        one_over_time_anomalous_pressure_coefficient=(
+            pressure_one_over_time_coefficient
+        ),
+        one_over_time_anomalous_pressure_upper=(
+            pressure_one_over_time_upper
+        ),
+        boxcar_pressure_lower=pressure_lower,
+        boxcar_pressure_upper=pressure_upper,
+        boxcar_equation_of_state_lower=equation_of_state_lower,
+        boxcar_equation_of_state_upper=equation_of_state_upper,
+        instantaneous_anomalous_field_variance_independent_phase_upper=(
+            instantaneous_field_variance_upper
+        ),
+        boxcar_anomalous_field_variance_integrated_triangle_upper=(
+            boxcar_field_variance_upper
+        ),
+        one_over_time_anomalous_field_variance_coefficient=(
+            field_variance_one_over_time_coefficient
+        ),
+        one_over_time_anomalous_field_variance_upper=(
+            field_variance_one_over_time_upper
+        ),
+        sufficient_averaging_duration_for_nonnegative_pressure=(
+            duration_for_nonnegative_pressure
+        ),
+        sufficient_averaging_duration_for_no_acceleration=(
+            duration_for_no_acceleration
+        ),
+        nonnegative_pressure_certified_by_one_over_time_bound=(
+            exact_no_mass_quench
+            or (
+                numerical_created_excess_resolved
+                and averaging_duration >= duration_for_nonnegative_pressure
+            )
+        ),
+        no_acceleration_certified_by_one_over_time_bound=(
+            exact_no_mass_quench
+            or (
+                numerical_created_excess_resolved
+                and averaging_duration >= duration_for_no_acceleration
+            )
+        ),
+        maximum_bogoliubov_residual=maximum_residual,
+        exact_no_mass_quench=exact_no_mass_quench,
+        numerical_created_excess_resolved=numerical_created_excess_resolved,
+        mass_dimension_manifest=tuple(mass_dimensions.items()),
+        dimensionless_core_argument_mass_dimensions=tuple(
+            dimensionless_core_dimensions.items()
+        ),
+        dimensions_pass=dimensions_pass,
+        status=(
+            "PASS_ZERO_QUENCH_NO_SQUEEZED_EXCESS"
+            if exact_no_mass_quench
+            else (
+                "PASS_CONDITIONAL_STATIC_OUT_FINITE_WINDOW_SQUEEZED_ENVELOPE"
+                if numerical_created_excess_resolved
+                else "FAIL_NUMERICAL_CREATED_EXCESS_UNRESOLVED"
+            )
         ),
     )
 

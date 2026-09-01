@@ -219,11 +219,11 @@ Python 환경이 준비돼 있다면 다음 명령으로 핵심 계산을 재현
 ```powershell
 .codex\hooks\python.cmd doctor
 .codex\hooks\python.cmd harness
-.codex\hooks\python.cmd pytest tests\test_bootstrap_solver.py -q
+.codex\hooks\python.cmd source
+.codex\hooks\python.cmd pytest tests\test_repository_harness.py tests\test_cosmology_ratio_audit.py -q
 .codex\hooks\python.cmd python tests\scorecard.py
-.codex\hooks\python.cmd python tests\run_validation.py
 .codex\hooks\python.cmd python examples\physics\proof_completion_attempt.py
-.codex\hooks\python.cmd pytest tests\test_dimensionless.py -q
+.codex\hooks\python.cmd pytest tests\test_representation_invariant_measure_bridge.py -q
 .codex\hooks\python.cmd python paper\2_경로적분과_응용\validate_manuscript.py
 ```
 
@@ -250,26 +250,13 @@ Python 환경이 준비돼 있다면 다음 명령으로 핵심 계산을 재현
 | 코드 | 범위 |
 | --- | --- |
 | [`tests/scorecard.py`](tests/scorecard.py) | 입력을 제외한 정본 수치 스코어카드 |
-| [`tests/run_validation.py`](tests/run_validation.py) | 고정점·스코어카드·실제 차원 검사 통합 |
 | [`examples/physics/proof_completion_attempt.py`](examples/physics/proof_completion_attempt.py) | 원 주장과 조건부 후손 분리 |
 | [`examples/physics/cosmology_ratio_audit.py`](examples/physics/cosmology_ratio_audit.py) | 후기우주 비율 산술 감사 |
 | [`examples/physics/ce_residual_forward_model.py`](examples/physics/ce_residual_forward_model.py) | DESI DR2 공분산 전방검사 |
-| [`examples/physics/quantum_jump_bridge_gate.py`](examples/physics/quantum_jump_bridge_gate.py) | 양자점프 bridge gate |
-| [`examples/physics/fusion_resonance_loop_gate.py`](examples/physics/fusion_resonance_loop_gate.py) | 핵융합 공명 회귀검사 |
-| [`examples/physics/fusion_full_loop_gate.py`](examples/physics/fusion_full_loop_gate.py) | 핵융합 전 분기 감사 |
-| [`examples/physics/fusion_equation_iteration_gate.py`](examples/physics/fusion_equation_iteration_gate.py) | 퍼텐셜–열반응률 반복 게이트 |
-| [`examples/physics/fusion_remaining_branches_gate.py`](examples/physics/fusion_remaining_branches_gate.py) | UV·source·reactor/ICF 잔여분기 |
-| [`examples/physics/fusion_direct_scattering_gate.py`](examples/physics/fusion_direct_scattering_gate.py) | Born·Hulthén 핵물리 대조군 |
-| [`examples/physics/fusion_floquet_source_gate.py`](examples/physics/fusion_floquet_source_gate.py) | QED Floquet와 CE scalar 비동일성 |
-| [`examples/physics/fusion_flavor_aligned_gate.py`](examples/physics/fusion_flavor_aligned_gate.py) | flavor-aligned 후보 제약 |
-| [`examples/physics/fusion_flavor_margin_robustness_gate.py`](examples/physics/fusion_flavor_margin_robustness_gate.py) | finite-size·Pb·NA62 강건성 |
-| [`examples/physics/fusion_operator_alternatives_gate.py`](examples/physics/fusion_operator_alternatives_gate.py) | 대체 연산자 no-go |
-| [`examples/physics/fusion_spin_operator_gate.py`](examples/physics/fusion_spin_operator_gate.py) | spin 연산자 투영과 제약 |
-| [`examples/physics/fusion_spin_polarization_control_gate.py`](examples/physics/fusion_spin_polarization_control_gate.py) | 편극 대조군과 source 장부 |
-| [`examples/physics/fusion_polarized_evidence_gate.py`](examples/physics/fusion_polarized_evidence_gate.py) | 편극 evidence 회귀검사 |
-| [`examples/physics/fusion_sciencedb_payload_gate.py`](examples/physics/fusion_sciencedb_payload_gate.py) | ScienceDB payload 무결성 |
-| [`examples/physics/fusion_sciencedb_reactivity_gate.py`](examples/physics/fusion_sciencedb_reactivity_gate.py) | D–T 표의 Maxwellian 반응률 |
-| [`examples/physics/fusion_scalar_current_gate.py`](examples/physics/fusion_scalar_current_gate.py) | scalar current와 공동 공분산 결손 |
+| [`examples/physics/quantum_instrument_record_kernel.py`](examples/physics/quantum_instrument_record_kernel.py) | 유한 양자 instrument 기록 커널 |
+| [`examples/physics/representation_invariant_measure_bridge.py`](examples/physics/representation_invariant_measure_bridge.py) | 표현 불변 측도와 등각 부피 감사 |
+| [`examples/physics/record_fold_bilinear_admission.py`](examples/physics/record_fold_bilinear_admission.py) | 기록 접힘 bilinear 허용 조건 |
+| [`examples/physics/zerod_selection_dark_energy_no_go.py`](examples/physics/zerod_selection_dark_energy_no_go.py) | 0차원 선택–암흑에너지 사상 반례 |
 
 기존 실행 산출물의 상수명은 호환성을 위해 유지한다. 현재 문서에는 direct D–T
 reaction/source/burn/wall 산출을 물리 예측으로 두지 않는다.
@@ -277,9 +264,9 @@ reaction/source/burn/wall 산출을 물리 예측으로 두지 않는다.
 ## 11. 구현 표면
 
 현재 `reality_stone/` 패키지 트리는 제거되어 있으며 import·빌드 전제로 사용하지
-않는다. `pyproject.toml`의 packaging 항목은 남은 레거시 metadata이므로 현재 설치
-정본이 아니다. 실행 가능한 연구 표면은 `examples/`, `experiments/`, `tests/`이고,
-Windows 진입점은 `.codex/hooks/python.cmd`다.
+않는다. `pyproject.toml`은 Ruff와 pytest 설정만 담으며 이 저장소를 설치 가능한
+패키지로 선언하지 않는다. 실행 가능한 연구 표면은 `examples/`, `experiments/`,
+`tests/`이고, Windows 진입점은 `.codex/hooks/python.cmd`다.
 
 ## 12. 읽는 사람에게
 

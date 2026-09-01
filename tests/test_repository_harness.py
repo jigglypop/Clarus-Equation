@@ -32,3 +32,19 @@ def test_retired_document_path_is_detected(tmp_path: Path) -> None:
 
     assert len(violations) == 1
     assert violations[0].startswith("README.md:1:")
+
+
+def test_retired_runtime_import_is_detected(tmp_path: Path) -> None:
+    harness = _load_harness()
+    tests = tmp_path / "tests"
+    tests.mkdir()
+    (tests / "test_legacy.py").write_text(
+        "from reality_stone.clarus import runtime\nfrom clarus import pre_eq\n",
+        encoding="utf-8",
+    )
+
+    violations = harness.find_retired_runtime_imports(tmp_path)
+
+    assert len(violations) == 2
+    assert violations[0].replace("\\", "/").startswith("tests/test_legacy.py:1:")
+    assert violations[1].endswith(":2: retired runtime import")

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 import json
 import re
 import sys
@@ -21,6 +22,8 @@ ACTIVE_TEXT_PATHS = (
     Path("tests"),
     Path("benchmarks"),
 )
+ACTIVE_PYTHON_PATHS = (Path("examples"), Path("experiments"), Path("tests"))
+RETIRED_RUNTIME_MODULES = ("reality_stone", "clarus")
 TEXT_SUFFIXES = frozenset(
     {
         ".cmd",
@@ -106,6 +109,41 @@ def find_retired_path_references(
     return violations
 
 
+def find_retired_runtime_imports(
+    root: Path, relative_paths: Iterable[Path] = ACTIVE_PYTHON_PATHS
+) -> list[str]:
+    """Reject imports from the package removed during the repository split."""
+
+    violations: list[str] = []
+    for relative in relative_paths:
+        candidate = root / relative
+        if candidate.is_file():
+            paths: Iterable[Path] = (candidate,)
+        elif candidate.is_dir():
+            paths = candidate.rglob("*.py")
+        else:
+            paths = ()
+        for path in paths:
+            if IGNORED_PARTS.intersection(path.relative_to(root).parts):
+                continue
+            tree = ast.parse(path.read_text(encoding="utf-8-sig"), filename=str(path))
+            for node in ast.walk(tree):
+                modules: tuple[str, ...] = ()
+                if isinstance(node, ast.Import):
+                    modules = tuple(alias.name for alias in node.names)
+                elif isinstance(node, ast.ImportFrom) and node.module:
+                    modules = (node.module,)
+                if any(
+                    module == retired or module.startswith(f"{retired}.")
+                    for module in modules
+                    for retired in RETIRED_RUNTIME_MODULES
+                ):
+                    violations.append(
+                        f"{path.relative_to(root)}:{node.lineno}: retired runtime import"
+                    )
+    return sorted(violations)
+
+
 def _instruction_budget(root: Path) -> tuple[int | None, int]:
     config = (root / ".codex" / "config.toml").read_text(encoding="utf-8-sig")
     match = re.search(r"(?m)^project_doc_max_bytes\s*=\s*(\d+)\s*$", config)
@@ -154,6 +192,7 @@ def check_repository(root: Path = REPO_ROOT) -> list[str]:
                 )
 
     violations.extend(find_retired_path_references(root))
+    violations.extend(find_retired_runtime_imports(root))
 
     agents_path = root / "AGENTS.md"
     if agents_path.is_file():

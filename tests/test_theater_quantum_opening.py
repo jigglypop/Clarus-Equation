@@ -9,6 +9,7 @@ from examples.physics.theater_quantum_opening import (
     SuddenQuenchUVVerdict,
     bosonic_out_occupation,
     instantaneous_mode,
+    integrate_late_squeezed_stress_envelope,
     integrate_quench_densities,
     multi_species_opening,
     scalar_energy_transfer_rate,
@@ -179,6 +180,252 @@ def test_smooth_density_converges_when_momentum_window_is_extended() -> None:
         lower.excess_energy_density,
         rel=2.0e-8,
     )
+
+
+def test_late_squeezed_stress_separates_energy_from_hidden_phase() -> None:
+    species = QuantumSeatSpecies(
+        label="squeezed",
+        degeneracy=1,
+        mass_in=math.sqrt(3.0),
+        mass_out=math.sqrt(7.0),
+        duration=0.2,
+    )
+    audit = integrate_late_squeezed_stress_envelope(
+        species,
+        averaging_duration=100.0,
+        momentum_max=30.0,
+        intervals=400,
+    )
+
+    assert audit.created_energy_density == pytest.approx(
+        0.008675684216652192,
+        rel=2.0e-12,
+    )
+    assert audit.dephased_created_pressure == pytest.approx(
+        0.001206593673204608,
+        rel=2.0e-12,
+    )
+    assert audit.dephased_created_equation_of_state == pytest.approx(
+        0.1390776384977983,
+        rel=2.0e-12,
+    )
+    assert audit.static_out_created_anomalous_energy_density_coefficient == 0.0
+    assert audit.anomalous_energy_cancels_exactly
+    assert (
+        audit.boxcar_anomalous_pressure_integrated_triangle_upper
+        <= audit.one_over_time_anomalous_pressure_upper
+        <= audit.instantaneous_anomalous_pressure_independent_phase_upper
+    )
+    assert (
+        audit.boxcar_anomalous_field_variance_integrated_triangle_upper
+        <= audit.one_over_time_anomalous_field_variance_upper
+        <= audit.instantaneous_anomalous_field_variance_independent_phase_upper
+    )
+    assert audit.boxcar_pressure_lower > 0.0
+    assert audit.dimensions_pass
+    assert dict(audit.dimensionless_core_argument_mass_dimensions) == {
+        "omega_times_averaging_duration": 0.0,
+        "boxcar_sinc_argument": 0.0,
+        "dephased_created_equation_of_state": 0.0,
+    }
+    assert not audit.phase_resolved_value_available
+    assert not audit.global_time_supremum_computed
+    assert not audit.full_renormalized_flrw_stress
+    assert audit.initial_state_assumed_isotropic_number_diagonal
+    assert audit.static_out_created_excess_scope
+    assert audit.finite_momentum_window_only
+    assert not audit.analytic_uv_tail_certificate
+    assert audit.conditional_long_time_no_sustained_dark_energy_scope_declared
+    assert not audit.long_time_no_sustained_dark_energy_numerically_certified
+    assert not audit.physical_dark_matter_dark_energy_identification
+
+
+def test_late_squeezed_one_over_time_bound_and_certificates_scale() -> None:
+    species = QuantumSeatSpecies(
+        label="dephasing",
+        degeneracy=1,
+        mass_in=math.sqrt(3.0),
+        mass_out=math.sqrt(7.0),
+        duration=0.2,
+    )
+    short = integrate_late_squeezed_stress_envelope(
+        species,
+        averaging_duration=10.0,
+        momentum_max=30.0,
+        intervals=400,
+    )
+    long = integrate_late_squeezed_stress_envelope(
+        species,
+        averaging_duration=100.0,
+        momentum_max=30.0,
+        intervals=400,
+    )
+
+    assert long.one_over_time_anomalous_pressure_coefficient == pytest.approx(
+        short.one_over_time_anomalous_pressure_coefficient,
+    )
+    assert long.one_over_time_anomalous_pressure_upper == pytest.approx(
+        short.one_over_time_anomalous_pressure_upper / 10.0,
+    )
+    assert (
+        long.one_over_time_anomalous_field_variance_upper
+        == pytest.approx(
+            short.one_over_time_anomalous_field_variance_upper / 10.0
+        )
+    )
+    assert short.sufficient_averaging_duration_for_no_acceleration == (
+        pytest.approx(14.384712836797233)
+    )
+    assert not short.no_acceleration_certified_by_one_over_time_bound
+    assert not short.nonnegative_pressure_certified_by_one_over_time_bound
+    assert long.no_acceleration_certified_by_one_over_time_bound
+    assert long.nonnegative_pressure_certified_by_one_over_time_bound
+
+
+def test_late_squeezed_created_excess_bose_stimulation_is_not_full_state() -> None:
+    vacuum = QuantumSeatSpecies(
+        label="vacuum",
+        degeneracy=1,
+        mass_in=1.0,
+        mass_out=2.0,
+        duration=0.3,
+    )
+    occupied = QuantumSeatSpecies(
+        label="occupied",
+        degeneracy=1,
+        mass_in=1.0,
+        mass_out=2.0,
+        duration=0.3,
+        initial_mode_occupation=2.0,
+    )
+    vacuum_audit = integrate_late_squeezed_stress_envelope(
+        vacuum,
+        averaging_duration=2.0,
+        momentum_max=30.0,
+        intervals=400,
+    )
+    occupied_audit = integrate_late_squeezed_stress_envelope(
+        occupied,
+        averaging_duration=2.0,
+        momentum_max=30.0,
+        intervals=400,
+    )
+
+    for occupied_value, vacuum_value in (
+        (
+            occupied_audit.created_energy_density,
+            vacuum_audit.created_energy_density,
+        ),
+        (
+            occupied_audit.dephased_created_pressure,
+            vacuum_audit.dephased_created_pressure,
+        ),
+        (
+            occupied_audit.one_over_time_anomalous_pressure_coefficient,
+            vacuum_audit.one_over_time_anomalous_pressure_coefficient,
+        ),
+        (
+            occupied_audit.dephased_created_field_variance,
+            vacuum_audit.dephased_created_field_variance,
+        ),
+    ):
+        assert occupied_value == pytest.approx(5.0 * vacuum_value)
+    assert (
+        occupied_audit
+        .constant_initial_occupation_used_only_as_created_excess_stimulation
+    )
+    assert not occupied_audit.full_initial_state_stress_computed
+
+
+def test_late_squeezed_envelope_converges_and_zero_quench_is_exact() -> None:
+    species = QuantumSeatSpecies(
+        label="envelope-convergence",
+        degeneracy=1,
+        mass_in=math.sqrt(3.0),
+        mass_out=math.sqrt(7.0),
+        duration=0.2,
+    )
+    lower = integrate_late_squeezed_stress_envelope(
+        species,
+        averaging_duration=1.0,
+        momentum_max=20.0,
+        intervals=400,
+    )
+    upper = integrate_late_squeezed_stress_envelope(
+        species,
+        averaging_duration=1.0,
+        momentum_max=30.0,
+        intervals=600,
+    )
+    assert upper.one_over_time_anomalous_pressure_coefficient == pytest.approx(
+        lower.one_over_time_anomalous_pressure_coefficient,
+        rel=1.0e-4,
+    )
+    assert (
+        upper.instantaneous_anomalous_field_variance_independent_phase_upper
+        == pytest.approx(
+            lower.instantaneous_anomalous_field_variance_independent_phase_upper,
+            rel=3.0e-5,
+        )
+    )
+
+    no_change = QuantumSeatSpecies(
+        label="no-change",
+        degeneracy=1,
+        mass_in=2.0,
+        mass_out=2.0,
+        duration=0.2,
+    )
+    zero = integrate_late_squeezed_stress_envelope(
+        no_change,
+        averaging_duration=1.0,
+        momentum_max=20.0,
+        intervals=400,
+    )
+    assert zero.created_energy_density == 0.0
+    assert zero.instantaneous_anomalous_pressure_independent_phase_upper == 0.0
+    assert zero.exact_no_mass_quench
+    assert zero.status == "PASS_ZERO_QUENCH_NO_SQUEEZED_EXCESS"
+
+    underflowed = QuantumSeatSpecies(
+        label="underflowed-nonzero-change",
+        degeneracy=1,
+        mass_in=1.0,
+        mass_out=2.0,
+        duration=1.0e6,
+    )
+    unresolved = integrate_late_squeezed_stress_envelope(
+        underflowed,
+        averaging_duration=1.0,
+        momentum_max=20.0,
+        intervals=400,
+    )
+    assert unresolved.created_energy_density == 0.0
+    assert not unresolved.exact_no_mass_quench
+    assert not unresolved.numerical_created_excess_resolved
+    assert not unresolved.no_acceleration_certified_by_one_over_time_bound
+    assert unresolved.status == "FAIL_NUMERICAL_CREATED_EXCESS_UNRESOLVED"
+
+
+@pytest.mark.parametrize("averaging_duration", (0.0, -1.0, math.inf))
+def test_late_squeezed_envelope_requires_positive_finite_time(
+    averaging_duration: float,
+) -> None:
+    species = QuantumSeatSpecies(
+        label="bad-time",
+        degeneracy=1,
+        mass_in=1.0,
+        mass_out=2.0,
+        duration=0.2,
+    )
+
+    with pytest.raises(ValueError, match="averaging_duration"):
+        integrate_late_squeezed_stress_envelope(
+            species,
+            averaging_duration=averaging_duration,
+            momentum_max=20.0,
+            intervals=400,
+        )
 
 
 def test_multiple_material_weights_produce_normalized_distinct_fractions() -> None:

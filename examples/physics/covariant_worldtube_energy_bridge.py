@@ -34,6 +34,9 @@ from typing import Sequence
 import numpy as np
 
 from examples.physics.causal_quantum_domino import BatteryOutcomeReceipt
+from examples.physics.finite_ctp_diagonal_source_obstruction import (
+    QuantumKickConservationAudit,
+)
 
 
 SPACETIME_DIMENSION = 4
@@ -144,6 +147,88 @@ class FlatReceiptCurrentCounterexample:
     branch_stress_from_receipt_derived: bool = False
     covariant_action_from_receipt_derived: bool = False
     record_to_gravity_source_derived: bool = False
+
+
+@dataclass(frozen=True)
+class FlatQuantumKickWorldtubeReceipt:
+    """Conditional match of a conserved finite kick to a flat worldtube.
+
+    The supplied shared inertial basis uses signature ``(-,+,+,+)``.  For
+    each closed sector ``s`` the audited discrete identity is
+
+        Delta P_s^nu + Phi_s^nu
+          = sum_i Delta V_i eta^(nu alpha) Q_(s,i,alpha).
+
+    This is the integrated worldtube consequence of a local Ward identity.
+    The routine does not derive the localization ``Q``, a local stress whose
+    divergence is ``Q``, or the identification of the Hilbert-space operator
+    components with a physical Lorentz four-vector.
+    """
+
+    sector_count: int
+    component_count: int
+    quadrature_cell_count: int
+    quantum_mean_kicks: tuple[tuple[float, ...], ...]
+    integrated_exchange_four_momenta: tuple[tuple[float, ...], ...]
+    lateral_outward_four_momentum_fluxes: tuple[tuple[float, ...], ...]
+    predicted_worldtube_kicks: tuple[tuple[float, ...], ...]
+    maximum_dimensionless_sector_matching_residual: float
+    maximum_dimensionless_local_exchange_residual: float
+    dimensionless_integrated_exchange_residual: float
+    dimensionless_total_quantum_kick_residual: float
+    current_mass_dimension: int
+    four_volume_mass_dimension: int
+    integrated_source_mass_dimension: int
+    lateral_flux_mass_dimension: int
+    kick_mass_dimension: int
+    normalized_residual_mass_dimension: int
+    dimensions_pass: bool
+    quantum_operator_conservation_certified: bool
+    all_receivers_included: bool
+    local_exchange_currents_cancel: bool
+    integrated_exchange_cancels: bool
+    numerical_integrated_worldtube_matching_holds: bool
+    same_local_action_identification_supplied: bool
+    shared_inertial_four_vector_basis_supplied: bool
+    conditional_quantum_to_worldtube_bridge_holds: bool
+    worldtube_localization_supplied: bool = True
+    lateral_flux_supplied: bool = True
+    operator_components_as_physical_four_vector_derived: bool = False
+    exchange_current_from_quantum_dynamics_derived: bool = False
+    local_stress_from_quantum_kick_derived: bool = False
+    general_curved_spacetime_transport_derived: bool = False
+    physical_clarus_source_derived: bool = False
+
+
+@dataclass(frozen=True)
+class FlatChargeStressKernelCounterexample:
+    """Two conserved local stresses with exactly the same four charges."""
+
+    spatial_volume: float
+    energy_density: float
+    shear_amplitude: float
+    profile_a_stress_contravariant: tuple[tuple[float, ...], ...]
+    profile_b_stress_contravariant: tuple[tuple[float, ...], ...]
+    profile_a_four_momentum: tuple[float, float, float, float]
+    profile_b_four_momentum: tuple[float, float, float, float]
+    dimensionless_four_momentum_residual: float
+    dimensionless_local_stress_difference: float
+    maximum_dimensionless_ward_residual: float
+    stress_mass_dimension: int
+    spatial_volume_mass_dimension: int
+    four_momentum_mass_dimension: int
+    normalized_residual_mass_dimension: int
+    dimensions_pass: bool
+    both_profiles_symmetric: bool
+    both_profiles_divergence_free: bool
+    both_profiles_satisfy_dominant_energy_condition: bool
+    same_complete_four_momentum: bool
+    local_stresses_distinct: bool
+    finite_charge_to_local_stress_nonuniqueness_certified: bool
+    periodic_spatial_cell_supplied: bool = True
+    local_action_for_profiles_derived: bool = False
+    local_stress_selected_by_finite_charges: bool = False
+    cosmological_perturbations_selected_by_background_charges: bool = False
 
 
 def _finite_scalar(value: float, name: str) -> float:
@@ -265,6 +350,299 @@ def _maximum_positive_covector_norm(
     if float(np.min(squared)) < -1.0e-12:
         raise ArithmeticError("observer-induced covector norm became negative")
     return math.sqrt(max(0.0, float(np.max(squared))))
+
+
+def audit_flat_quantum_kick_worldtube_receipt(
+    *,
+    kick_audit: QuantumKickConservationAudit,
+    exchange_currents_covariant: Sequence[Sequence[Sequence[float]]],
+    proper_four_volume_weights: Sequence[float],
+    lateral_outward_four_momentum_fluxes: Sequence[Sequence[float]],
+    same_local_action_identification_supplied: bool,
+    shared_inertial_four_vector_basis_supplied: bool,
+    reference_mass_scale: float,
+    tolerance: float = DEFAULT_TOLERANCE,
+) -> FlatQuantumKickWorldtubeReceipt:
+    """Match a finite four-kick to a supplied flat-worldtube Ward receipt.
+
+    The equality tested here is the discrete, flat-frame version of
+
+        Delta P_s^nu + Phi_s^nu = integral_W Q_s^nu dV.
+
+    ``same_local_action_identification_supplied`` records the indispensable
+    premise that the quantum unitary and the local current are two
+    descriptions of the same interaction.  A true value is a caller contract,
+    not an independent derivation of that premise.
+    """
+
+    if not isinstance(kick_audit, QuantumKickConservationAudit):
+        raise TypeError("kick_audit must be a QuantumKickConservationAudit")
+    for value, name in (
+        (same_local_action_identification_supplied, "same_local_action_identification_supplied"),
+        (shared_inertial_four_vector_basis_supplied, "shared_inertial_four_vector_basis_supplied"),
+    ):
+        if not isinstance(value, (bool, np.bool_)):
+            raise ValueError(f"{name} must be boolean")
+    tolerance = _positive_scalar(tolerance, "tolerance")
+    if tolerance > MAX_TOLERANCE:
+        raise ValueError(f"tolerance must not exceed {MAX_TOLERANCE}")
+    reference_mass_scale = _positive_scalar(
+        reference_mass_scale,
+        "reference_mass_scale",
+    )
+    if kick_audit.component_count != SPACETIME_DIMENSION:
+        raise ValueError("kick_audit must contain exactly four declared components")
+
+    currents = np.asarray(exchange_currents_covariant, dtype=float)
+    expected_prefix = (kick_audit.sector_count,)
+    if (
+        currents.ndim != 3
+        or currents.shape[0:1] != expected_prefix
+        or currents.shape[1] == 0
+        or currents.shape[2] != SPACETIME_DIMENSION
+        or not np.all(np.isfinite(currents))
+    ):
+        raise ValueError(
+            "exchange_currents_covariant must have shape "
+            "(sector_count, cell_count, 4)"
+        )
+    cell_count = currents.shape[1]
+    volume_weights = np.asarray(proper_four_volume_weights, dtype=float)
+    if (
+        volume_weights.shape != (cell_count,)
+        or not np.all(np.isfinite(volume_weights))
+        or np.any(volume_weights <= 0.0)
+    ):
+        raise ValueError(
+            "proper_four_volume_weights must contain one positive finite value per cell"
+        )
+    lateral_fluxes = np.asarray(
+        lateral_outward_four_momentum_fluxes,
+        dtype=float,
+    )
+    if (
+        lateral_fluxes.shape
+        != (kick_audit.sector_count, SPACETIME_DIMENSION)
+        or not np.all(np.isfinite(lateral_fluxes))
+    ):
+        raise ValueError(
+            "lateral_outward_four_momentum_fluxes must have shape "
+            "(sector_count, 4)"
+        )
+
+    mean_kicks = np.asarray(kick_audit.mean_kicks, dtype=float)
+    if mean_kicks.shape != lateral_fluxes.shape:
+        raise ValueError("kick_audit mean_kicks have an inconsistent shape")
+    minkowski_inverse = np.diag((-1.0, 1.0, 1.0, 1.0))
+    integrated_sources = np.einsum(
+        "n,sna,ab->sb",
+        volume_weights,
+        currents,
+        minkowski_inverse,
+        optimize=True,
+    )
+    predicted_kicks = integrated_sources - lateral_fluxes
+    matching_residuals = mean_kicks - predicted_kicks
+    local_exchange_residuals = np.sum(currents, axis=0)
+    integrated_exchange_residual = np.sum(integrated_sources, axis=0)
+    total_quantum_kick = np.sum(mean_kicks, axis=0)
+
+    momentum_scale = reference_mass_scale
+    current_scale = reference_mass_scale**5
+    maximum_matching_residual = float(
+        np.max(np.linalg.norm(matching_residuals, axis=1)) / momentum_scale
+    )
+    maximum_local_exchange_residual = float(
+        np.max(np.linalg.norm(local_exchange_residuals, axis=1)) / current_scale
+    )
+    dimensionless_integrated_exchange_residual = float(
+        np.linalg.norm(integrated_exchange_residual) / momentum_scale
+    )
+    dimensionless_total_quantum_kick_residual = float(
+        np.linalg.norm(total_quantum_kick) / momentum_scale
+    )
+
+    current_mass_dimension = 5
+    four_volume_mass_dimension = -4
+    integrated_source_mass_dimension = 1
+    lateral_flux_mass_dimension = 1
+    kick_mass_dimension = 1
+    normalized_residual_mass_dimension = 0
+    dimensions_pass = (
+        current_mass_dimension + four_volume_mass_dimension
+        == integrated_source_mass_dimension
+        and integrated_source_mass_dimension == lateral_flux_mass_dimension
+        and lateral_flux_mass_dimension == kick_mass_dimension
+        and kick_mass_dimension - 1 == normalized_residual_mass_dimension
+    )
+    local_exchange_cancels = maximum_local_exchange_residual <= tolerance
+    integrated_exchange_cancels = (
+        dimensionless_integrated_exchange_residual <= tolerance
+    )
+    numerical_matching = maximum_matching_residual <= tolerance
+    conditional_bridge = (
+        kick_audit.operator_conservation_certified
+        and kick_audit.all_receivers_included
+        and local_exchange_cancels
+        and integrated_exchange_cancels
+        and dimensionless_total_quantum_kick_residual <= tolerance
+        and numerical_matching
+        and bool(same_local_action_identification_supplied)
+        and bool(shared_inertial_four_vector_basis_supplied)
+        and dimensions_pass
+    )
+
+    return FlatQuantumKickWorldtubeReceipt(
+        sector_count=kick_audit.sector_count,
+        component_count=kick_audit.component_count,
+        quadrature_cell_count=cell_count,
+        quantum_mean_kicks=tuple(
+            tuple(float(item) for item in row) for row in mean_kicks
+        ),
+        integrated_exchange_four_momenta=tuple(
+            tuple(float(item) for item in row) for row in integrated_sources
+        ),
+        lateral_outward_four_momentum_fluxes=tuple(
+            tuple(float(item) for item in row) for row in lateral_fluxes
+        ),
+        predicted_worldtube_kicks=tuple(
+            tuple(float(item) for item in row) for row in predicted_kicks
+        ),
+        maximum_dimensionless_sector_matching_residual=maximum_matching_residual,
+        maximum_dimensionless_local_exchange_residual=(
+            maximum_local_exchange_residual
+        ),
+        dimensionless_integrated_exchange_residual=(
+            dimensionless_integrated_exchange_residual
+        ),
+        dimensionless_total_quantum_kick_residual=(
+            dimensionless_total_quantum_kick_residual
+        ),
+        current_mass_dimension=current_mass_dimension,
+        four_volume_mass_dimension=four_volume_mass_dimension,
+        integrated_source_mass_dimension=integrated_source_mass_dimension,
+        lateral_flux_mass_dimension=lateral_flux_mass_dimension,
+        kick_mass_dimension=kick_mass_dimension,
+        normalized_residual_mass_dimension=normalized_residual_mass_dimension,
+        dimensions_pass=dimensions_pass,
+        quantum_operator_conservation_certified=(
+            kick_audit.operator_conservation_certified
+        ),
+        all_receivers_included=kick_audit.all_receivers_included,
+        local_exchange_currents_cancel=local_exchange_cancels,
+        integrated_exchange_cancels=integrated_exchange_cancels,
+        numerical_integrated_worldtube_matching_holds=numerical_matching,
+        same_local_action_identification_supplied=bool(
+            same_local_action_identification_supplied
+        ),
+        shared_inertial_four_vector_basis_supplied=bool(
+            shared_inertial_four_vector_basis_supplied
+        ),
+        conditional_quantum_to_worldtube_bridge_holds=conditional_bridge,
+    )
+
+
+def construct_flat_charge_stress_kernel_counterexample(
+    *,
+    spatial_volume: float,
+    energy_density: float,
+    shear_amplitude: float,
+    reference_mass_scale: float,
+    tolerance: float = DEFAULT_TOLERANCE,
+) -> FlatChargeStressKernelCounterexample:
+    """Construct a Ward-preserving kernel of the charge-to-stress map.
+
+    On a flat periodic spatial cell, compare constant stresses
+
+        T_A = diag(rho, 0, 0, 0),
+        T_B = diag(rho, s, -s, 0).
+
+    Both are symmetric and divergence-free.  Their complete surface charges
+    ``P^nu = integral T^(0 nu) d^3x`` agree, while their local spatial stresses
+    differ whenever ``s != 0``.  Requiring ``|s| <= rho`` keeps both type-I
+    tensors inside the dominant-energy bound for this explicit witness.
+    """
+
+    tolerance = _positive_scalar(tolerance, "tolerance")
+    if tolerance > MAX_TOLERANCE:
+        raise ValueError(f"tolerance must not exceed {MAX_TOLERANCE}")
+    reference_mass_scale = _positive_scalar(
+        reference_mass_scale,
+        "reference_mass_scale",
+    )
+    spatial_volume = _positive_scalar(spatial_volume, "spatial_volume")
+    energy_density = _positive_scalar(energy_density, "energy_density")
+    shear_amplitude = _finite_scalar(shear_amplitude, "shear_amplitude")
+    if abs(shear_amplitude) / reference_mass_scale**4 <= tolerance:
+        raise ValueError("shear_amplitude must be nonzero at the declared tolerance")
+    if abs(shear_amplitude) > energy_density:
+        raise ValueError("the explicit dominant-energy witness requires |shear| <= rho")
+
+    stress_a = np.diag((energy_density, 0.0, 0.0, 0.0))
+    stress_b = np.diag(
+        (energy_density, shear_amplitude, -shear_amplitude, 0.0)
+    )
+    momentum_a = spatial_volume * stress_a[0]
+    momentum_b = spatial_volume * stress_b[0]
+    momentum_scale = reference_mass_scale
+    stress_scale = reference_mass_scale**4
+    momentum_residual = float(np.linalg.norm(momentum_a - momentum_b) / momentum_scale)
+    stress_difference = float(np.linalg.norm(stress_a - stress_b, ord=2) / stress_scale)
+    ward_residual = 0.0
+
+    stress_mass_dimension = 4
+    spatial_volume_mass_dimension = -3
+    four_momentum_mass_dimension = 1
+    normalized_residual_mass_dimension = 0
+    dimensions_pass = (
+        stress_mass_dimension + spatial_volume_mass_dimension
+        == four_momentum_mass_dimension
+        and four_momentum_mass_dimension - 1 == normalized_residual_mass_dimension
+    )
+    symmetric = bool(
+        np.array_equal(stress_a, stress_a.T)
+        and np.array_equal(stress_b, stress_b.T)
+    )
+    divergence_free = ward_residual <= tolerance
+    dominant_energy = bool(abs(shear_amplitude) <= energy_density)
+    same_momentum = momentum_residual <= tolerance
+    distinct = stress_difference > tolerance
+    witness = (
+        symmetric
+        and divergence_free
+        and dominant_energy
+        and same_momentum
+        and distinct
+        and dimensions_pass
+    )
+
+    return FlatChargeStressKernelCounterexample(
+        spatial_volume=spatial_volume,
+        energy_density=energy_density,
+        shear_amplitude=shear_amplitude,
+        profile_a_stress_contravariant=tuple(
+            tuple(float(item) for item in row) for row in stress_a
+        ),
+        profile_b_stress_contravariant=tuple(
+            tuple(float(item) for item in row) for row in stress_b
+        ),
+        profile_a_four_momentum=tuple(float(item) for item in momentum_a),
+        profile_b_four_momentum=tuple(float(item) for item in momentum_b),
+        dimensionless_four_momentum_residual=momentum_residual,
+        dimensionless_local_stress_difference=stress_difference,
+        maximum_dimensionless_ward_residual=ward_residual,
+        stress_mass_dimension=stress_mass_dimension,
+        spatial_volume_mass_dimension=spatial_volume_mass_dimension,
+        four_momentum_mass_dimension=four_momentum_mass_dimension,
+        normalized_residual_mass_dimension=normalized_residual_mass_dimension,
+        dimensions_pass=dimensions_pass,
+        both_profiles_symmetric=symmetric,
+        both_profiles_divergence_free=divergence_free,
+        both_profiles_satisfy_dominant_energy_condition=dominant_energy,
+        same_complete_four_momentum=same_momentum,
+        local_stresses_distinct=distinct,
+        finite_charge_to_local_stress_nonuniqueness_certified=witness,
+    )
 
 
 def audit_closed_branch_worldtube(

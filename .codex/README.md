@@ -32,7 +32,7 @@ hooks/               native Windows Python·저장소 계약·payload 실행기
 ```
 
 - `doctor`는 허용된 interpreter와 핵심 dependency를 보고한다.
-- `harness`는 `paper/` 전환, 이전 경로 잔존, 필수 진입점과 AGENTS context budget을 검사한다.
+- `harness`는 `paper/` 전환, 이전 경로 잔존, 제거된 런타임 import, 필수 진입점과 AGENTS context budget을 검사한다.
 - `source`는 실행 없이 AST를 파싱한다.
 - `pytest`는 cache를 끄고 저장소 밖의 고유 임시 디렉터리를 사용한다.
 
@@ -60,6 +60,5 @@ hooks/               native Windows Python·저장소 계약·payload 실행기
 
 | 항목 | 현재 경계 | 해소 조건 |
 |---|---|---|
-| `pyproject.toml`의 `reality_stone` packaging metadata | 해당 소스 트리가 제거되어 설치 정본으로 사용하지 않음 | 패키지 복원 또는 packaging metadata 정리 요청 |
 | `.claude/` lifecycle 설정 | Codex의 빈 자동 훅 정책과 별도 표면 | 두 provider 하네스를 함께 정비하는 요청 |
 | retired CE run core | 기존 `_workspace/` 판독 호환만 유지 | 과거 run 호환 폐기 또는 마이그레이션 요청 |

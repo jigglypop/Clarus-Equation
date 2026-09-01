@@ -35,6 +35,10 @@ from examples.physics.theater_quantum_opening import (
     integrate_quench_densities,
     smooth_tanh_mode,
 )
+from examples.physics.kinetic_dark_sector_perturbation_gate import (
+    GaussianNormalModePerturbationAudit,
+    audit_gaussian_normal_mode_perturbations,
+)
 from examples.physics.kinetic_dark_sector_quench_tail_bound import (
     smooth_quench_present_tail_certificate,
 )
@@ -46,6 +50,15 @@ def _positive_finite(value: object, name: str) -> float:
     result = float(value)
     if not math.isfinite(result) or result <= 0.0:
         raise ValueError(f"{name} must be a positive finite real number")
+    return result
+
+
+def _finite_real(value: object, name: str) -> float:
+    if isinstance(value, bool) or not isinstance(value, Real):
+        raise ValueError(f"{name} must be a finite real number")
+    result = float(value)
+    if not math.isfinite(result):
+        raise ValueError(f"{name} must be a finite real number")
     return result
 
 
@@ -339,5 +352,456 @@ def smooth_quench_collisionless_abundance(
         tail_numerical_status=tail.numerical_status,
         production_approximation=(
             "ASYMPTOTIC_MINKOWSKI_CREATED_EXCESS_HSTAR_DURATION_NOT_CERTIFIED"
+        ),
+    )
+
+
+@dataclass(frozen=True)
+class FixedBasisBilinearQuenchCosmologyAudit:
+    """Composition receipt for a two-field Gaussian quench and late WKB gate.
+
+    The path is the explicitly supplied interpolation
+
+    ``K(t) = K_in + s(t) (K_out-K_in)``,
+    ``s(t) = (1+tanh(t/tau))/2``.
+
+    Only commuting, nondegenerate endpoint matrices are admitted.  Under that
+    restriction one fixed orthogonal basis diagonalizes the whole path, so the
+    two exact scalar Bogoliubov spectra may be used without omitting a rotating-
+    basis mixing term.  The produced state is a squeezed Gaussian state, not
+    the finite coherent-product state used by the E45 cell witness.
+    """
+
+    initial_action_parameter_manifest: tuple[float, float, float, float]
+    final_action_parameter_manifest: tuple[float, float, float, float]
+    interpolation: str
+    matrix_commutator_frobenius_ev4: float
+    matrix_commutator_relative_residual: float
+    fixed_basis_off_diagonal_relative_residual: float
+    initial_normal_mode_gap_fraction: float
+    final_normal_mode_gap_fraction: float
+    fixed_basis_mode_mass_squared_at_initial_ev2: tuple[float, float]
+    fixed_basis_mode_mass_squared_at_final_ev2: tuple[float, float]
+    fixed_basis_mode_masses_at_initial_ev: tuple[float, float]
+    fixed_basis_mode_masses_at_final_ev: tuple[float, float]
+    quench_duration_ev_minus1: float
+    hubble_at_production_ev: float
+    local_quench_ratio: float
+    local_quench_limit: float
+    local_quench_pass: bool
+    quench_species: tuple[QuantumSeatSpecies, QuantumSeatSpecies]
+    abundance_certificates: tuple[
+        CollisionlessAbundanceCertificate,
+        CollisionlessAbundanceCertificate,
+    ]
+    present_created_number_densities_ev3: tuple[float, float]
+    present_created_rest_density_constants_ev4: tuple[float, float]
+    present_created_energy_densities_ev4: tuple[float, float]
+    present_created_pressures_ev4: tuple[float, float]
+    present_background_rms_momentum_ratio_upper: tuple[float, float]
+    present_dust_replacement_relative_errors: tuple[float, float]
+    present_created_energy_density_total_ev4: float
+    present_dust_input_density_total_ev4: float
+    omega_created_today: float
+    omega_dust_input_today: float
+    omega_vacuum_today: float
+    omega_created_energy_plus_vacuum_today: float
+    omega_dust_input_plus_vacuum_today: float
+    background_cold_pass: bool
+    perturbation_audit: GaussianNormalModePerturbationAudit
+    mass_dimension_manifest: tuple[tuple[str, float], ...]
+    dimensionless_core_argument_mass_dimensions: tuple[tuple[str, float], ...]
+    dimensions_pass: bool
+    failed_gates: tuple[str, ...]
+    status: str
+    mode_order: str = "FINAL_MASS_ASCENDING_IN_FIXED_NORMAL_BASIS"
+    fixed_normal_basis_path_derived: bool = True
+    conditional_created_abundance_forward_map_derived: bool = True
+    conditional_wkb_composition_derived: bool = True
+    late_dephased_created_excess_only: bool = True
+    bogoliubov_phase_and_anomalous_correlator_propagated: bool = False
+    created_state_is_e45_product_gaussian: bool = False
+    quench_profile_supplied: bool = True
+    initial_in_state_supplied: bool = True
+    entropy_history_supplied: bool = True
+    quench_driver_energy_ledger_derived: bool = False
+    covariant_qft_stress_renormalized: bool = False
+    absolute_abundance_predicted: bool = False
+    vacuum_energy_derived: bool = False
+    integrated_out_environment_stress_added: bool = False
+    full_growth_or_lensing_derived: bool = False
+    physical_dark_matter_dark_energy_identification: bool = False
+
+
+def _bilinear_mass_matrix_data(
+    *,
+    system_mass: float,
+    environment_mass: float,
+    coupling: float,
+    endpoint: str,
+) -> tuple[float, float, float, float, float]:
+    if system_mass <= 0.0 or environment_mass <= 0.0:
+        raise ValueError(f"{endpoint} endpoint masses must be positive")
+    system_mass_squared = system_mass * system_mass
+    environment_mass_squared = environment_mass * environment_mass
+    determinant = (
+        system_mass_squared * environment_mass_squared - coupling * coupling
+    )
+    if determinant <= 0.0:
+        raise ValueError(
+            f"{endpoint} bilinear mass matrix must be positive definite"
+        )
+    frobenius = math.sqrt(
+        system_mass_squared * system_mass_squared
+        + environment_mass_squared * environment_mass_squared
+        + 2.0 * coupling * coupling
+    )
+    return (
+        system_mass_squared,
+        environment_mass_squared,
+        coupling,
+        determinant,
+        frobenius,
+    )
+
+
+def audit_fixed_basis_bilinear_quench_cosmology(
+    *,
+    initial_system_mass_ev: float,
+    initial_environment_mass_ev: float,
+    initial_bilinear_coupling_ev2: float,
+    initial_vacuum_energy_density_ev4: float,
+    final_system_mass_ev: float,
+    final_environment_mass_ev: float,
+    final_bilinear_coupling_ev2: float,
+    final_vacuum_energy_density_ev4: float,
+    quench_duration_ev_minus1: float,
+    initial_mode_occupations: tuple[float, float],
+    entropy: EntropyRedshiftContract,
+    cosmology: NaturalUnitCosmology,
+    hubble_at_production_ev: float,
+    comoving_wavenumber_ev: float,
+    momentum_max_ev: float | None = None,
+    intervals: int = 2400,
+    validity_limit: float = 0.1,
+    commuting_tolerance: float = 2.0e-12,
+) -> FixedBasisBilinearQuenchCosmologyAudit:
+    """Map a fixed-basis Gaussian quench to abundance and a WKB discriminator.
+
+    In each admitted normal mode the invisible in-vacuum superposition obeys
+    ``a_out = alpha*a_in + beta*a_in^dagger``.  Its late dephased observable
+    effect is the created excess ``(1+2*n_in)|beta_p|^2``.  This function
+    integrates that excess over all momenta, redshifts it to today, replaces
+    the cold part by its exactly conserved rest-density constant, and passes
+    only that dust input to the retained two-field WKB perturbation gate.
+
+    The calculation is exact for the supplied flat-space tanh profile and
+    conditional for cosmology.  It deliberately does not infer the profile,
+    its power source, the in-state, entropy history, or the independent vacuum
+    constant from the endpoint action.
+    """
+
+    scalar_inputs = {
+        "initial_system_mass_ev": initial_system_mass_ev,
+        "initial_environment_mass_ev": initial_environment_mass_ev,
+        "initial_bilinear_coupling_ev2": initial_bilinear_coupling_ev2,
+        "initial_vacuum_energy_density_ev4": initial_vacuum_energy_density_ev4,
+        "final_system_mass_ev": final_system_mass_ev,
+        "final_environment_mass_ev": final_environment_mass_ev,
+        "final_bilinear_coupling_ev2": final_bilinear_coupling_ev2,
+        "final_vacuum_energy_density_ev4": final_vacuum_energy_density_ev4,
+        "hubble_at_production_ev": hubble_at_production_ev,
+        "comoving_wavenumber_ev": comoving_wavenumber_ev,
+    }
+    checked = {
+        name: _finite_real(value, name) for name, value in scalar_inputs.items()
+    }
+    duration = _positive_finite(
+        quench_duration_ev_minus1,
+        "quench_duration_ev_minus1",
+    )
+    limit = _positive_finite(validity_limit, "validity_limit")
+    if limit > 0.25:
+        raise ValueError("validity_limit must lie in (0, 0.25]")
+    tolerance = _positive_finite(
+        commuting_tolerance,
+        "commuting_tolerance",
+    )
+    if tolerance > 1.0e-6:
+        raise ValueError("commuting_tolerance must be <= 1e-6")
+    if checked["hubble_at_production_ev"] < 0.0:
+        raise ValueError("hubble_at_production_ev must be nonnegative")
+    if checked["comoving_wavenumber_ev"] <= 0.0:
+        raise ValueError("comoving_wavenumber_ev must be positive")
+    if not isinstance(entropy, EntropyRedshiftContract):
+        raise ValueError("entropy must be an EntropyRedshiftContract")
+    if not isinstance(cosmology, NaturalUnitCosmology):
+        raise ValueError("cosmology must be a NaturalUnitCosmology")
+    try:
+        occupations_input = tuple(initial_mode_occupations)
+    except TypeError as error:
+        raise ValueError("initial_mode_occupations must contain two values") from error
+    if len(occupations_input) != 2:
+        raise ValueError("initial_mode_occupations must contain two values")
+    occupations = tuple(
+        _finite_real(value, f"initial_mode_occupations[{index}]")
+        for index, value in enumerate(occupations_input)
+    )
+    if any(value < 0.0 for value in occupations):
+        raise ValueError("initial mode occupations must be nonnegative")
+
+    initial_data = _bilinear_mass_matrix_data(
+        system_mass=checked["initial_system_mass_ev"],
+        environment_mass=checked["initial_environment_mass_ev"],
+        coupling=checked["initial_bilinear_coupling_ev2"],
+        endpoint="initial",
+    )
+    final_data = _bilinear_mass_matrix_data(
+        system_mass=checked["final_system_mass_ev"],
+        environment_mass=checked["final_environment_mass_ev"],
+        coupling=checked["final_bilinear_coupling_ev2"],
+        endpoint="final",
+    )
+    initial_a, initial_d, initial_b, _, initial_norm = initial_data
+    final_a, final_d, final_b, _, final_norm = final_data
+
+    commutator_entry = (
+        final_b * (initial_a - initial_d)
+        - initial_b * (final_a - final_d)
+    )
+    commutator_norm = math.sqrt(2.0) * abs(commutator_entry)
+    commutator_relative = commutator_norm / (initial_norm * final_norm)
+    if commutator_relative > tolerance:
+        raise ValueError(
+            "endpoint mass matrices do not share a fixed normal basis"
+        )
+
+    initial_radius = math.hypot(0.5 * (initial_a - initial_d), initial_b)
+    initial_gap_fraction = 2.0 * initial_radius / initial_norm
+    if initial_gap_fraction <= tolerance:
+        raise ValueError(
+            "initial normal masses are degenerate; per-mode preparation is "
+            "basis-dependent"
+        )
+    final_radius = math.hypot(0.5 * (final_a - final_d), final_b)
+    final_gap_fraction = 2.0 * final_radius / final_norm
+    if final_gap_fraction <= tolerance:
+        raise ValueError(
+            "final normal masses are degenerate; per-mode abundance is basis-dependent"
+        )
+    angle = 0.5 * math.atan2(2.0 * final_b, final_a - final_d)
+    cosine = math.cos(angle)
+    sine = math.sin(angle)
+
+    def fixed_basis_entries(
+        diagonal_a: float,
+        diagonal_d: float,
+        off_diagonal: float,
+    ) -> tuple[float, float, float]:
+        mode_minus = (
+            diagonal_a * sine * sine
+            - 2.0 * off_diagonal * sine * cosine
+            + diagonal_d * cosine * cosine
+        )
+        mode_plus = (
+            diagonal_a * cosine * cosine
+            + 2.0 * off_diagonal * sine * cosine
+            + diagonal_d * sine * sine
+        )
+        rotated_off_diagonal = (
+            off_diagonal * (cosine * cosine - sine * sine)
+            + (diagonal_d - diagonal_a) * sine * cosine
+        )
+        return mode_minus, mode_plus, rotated_off_diagonal
+
+    initial_minus, initial_plus, initial_rotated_off = fixed_basis_entries(
+        initial_a,
+        initial_d,
+        initial_b,
+    )
+    final_minus, final_plus, final_rotated_off = fixed_basis_entries(
+        final_a,
+        final_d,
+        final_b,
+    )
+    fixed_basis_residual = max(
+        abs(initial_rotated_off) / initial_norm,
+        abs(final_rotated_off) / final_norm,
+    )
+    if fixed_basis_residual > tolerance:
+        raise ValueError("fixed-basis diagonalization residual exceeds tolerance")
+    mode_mass_squared_in = (initial_minus, initial_plus)
+    mode_mass_squared_out = (final_minus, final_plus)
+    all_mode_mass_squared = (*mode_mass_squared_in, *mode_mass_squared_out)
+    if any(value <= 0.0 for value in all_mode_mass_squared):
+        raise ValueError("fixed-basis normal masses must remain positive")
+    mode_masses_in = tuple(math.sqrt(value) for value in mode_mass_squared_in)
+    mode_masses_out = tuple(math.sqrt(value) for value in mode_mass_squared_out)
+
+    labels = ("fixed-basis-final-minus", "fixed-basis-final-plus")
+    species = tuple(
+        QuantumSeatSpecies(
+            label=label,
+            degeneracy=1,
+            mass_in=mass_in,
+            mass_out=mass_out,
+            duration=duration,
+            initial_mode_occupation=occupation,
+        )
+        for label, mass_in, mass_out, occupation in zip(
+            labels,
+            mode_masses_in,
+            mode_masses_out,
+            occupations,
+            strict=True,
+        )
+    )
+    abundance = tuple(
+        smooth_quench_collisionless_abundance(
+            mode_species,
+            entropy=entropy,
+            cosmology=cosmology,
+            momentum_max=momentum_max_ev,
+            intervals=intervals,
+        )
+        for mode_species in species
+    )
+    rest_densities = tuple(
+        certificate.present_rest_density for certificate in abundance
+    )
+    if sum(rest_densities) <= 0.0:
+        raise ValueError(
+            "the supplied quench creates no positive dust input for the WKB gate"
+        )
+
+    energy_densities = tuple(
+        certificate.present_energy_density for certificate in abundance
+    )
+    pressure_densities = tuple(
+        certificate.present_pressure for certificate in abundance
+    )
+    number_densities = tuple(
+        certificate.present_number_density for certificate in abundance
+    )
+    rms_momentum_ratio_upper = tuple(
+        math.sqrt(2.0 * certificate.relative_kinetic_energy_upper_bound)
+        for certificate in abundance
+    )
+    dust_replacement_errors = tuple(
+        certificate.relative_kinetic_energy for certificate in abundance
+    )
+    background_cold_pass = max(rms_momentum_ratio_upper) <= limit
+    local_quench_ratio = checked["hubble_at_production_ev"] * duration
+    local_quench_pass = local_quench_ratio <= limit
+
+    perturbation = audit_gaussian_normal_mode_perturbations(
+        system_mass_ev=checked["final_system_mass_ev"],
+        environment_mass_ev=checked["final_environment_mass_ev"],
+        bilinear_coupling_ev2=checked["final_bilinear_coupling_ev2"],
+        vacuum_energy_density_ev4=checked["final_vacuum_energy_density_ev4"],
+        scale_factor=1.0,
+        hubble_ev=cosmology.hubble_today,
+        comoving_wavenumber_ev=checked["comoving_wavenumber_ev"],
+        comoving_mode_density_constants_ev4=rest_densities,
+        reduced_planck_mass_ev=cosmology.reduced_planck_mass,
+        validity_limit=limit,
+    )
+    failed_gates: list[str] = []
+    if not local_quench_pass:
+        failed_gates.append("local_quench_Hstar_tau")
+    if not background_cold_pass:
+        failed_gates.append("created_background_cold")
+    failed_gates.extend(
+        f"present_perturbation_{gate}" for gate in perturbation.failed_gates
+    )
+
+    critical_density = cosmology.critical_density_today
+    total_energy_density = math.fsum(energy_densities)
+    total_rest_density = math.fsum(rest_densities)
+    omega_created = total_energy_density / critical_density
+    omega_dust = total_rest_density / critical_density
+    omega_vacuum = (
+        checked["final_vacuum_energy_density_ev4"] / critical_density
+    )
+    dimension_manifest = {
+        "normal_mode_mass_squared": 2.0,
+        "quench_duration": -1.0,
+        "hubble_at_production": 1.0,
+        "matrix_commutator": 4.0,
+        "created_number_density": 3.0,
+        "created_energy_density": 4.0,
+        "created_pressure": 4.0,
+    }
+    dimensionless_core_dimensions = {
+        "pi_tau_omega": -1.0 + 1.0,
+        "Hstar_tau": 1.0 - 1.0,
+        "matrix_commutator_relative_residual": 4.0 - 4.0,
+        "rms_momentum_over_mass": 1.0 - 1.0,
+        "omega_created_today": 4.0 - 4.0,
+    }
+    dimensions_pass = all(
+        dimension == 0.0 for dimension in dimensionless_core_dimensions.values()
+    )
+    if not dimensions_pass:
+        failed_gates.append("dimensions")
+
+    failures = tuple(failed_gates)
+    return FixedBasisBilinearQuenchCosmologyAudit(
+        initial_action_parameter_manifest=(
+            checked["initial_system_mass_ev"],
+            checked["initial_environment_mass_ev"],
+            checked["initial_bilinear_coupling_ev2"],
+            checked["initial_vacuum_energy_density_ev4"],
+        ),
+        final_action_parameter_manifest=(
+            checked["final_system_mass_ev"],
+            checked["final_environment_mass_ev"],
+            checked["final_bilinear_coupling_ev2"],
+            checked["final_vacuum_energy_density_ev4"],
+        ),
+        interpolation=(
+            "K(t)=K_in+(1+tanh(t/tau))*(K_out-K_in)/2_IN_FIXED_BASIS"
+        ),
+        matrix_commutator_frobenius_ev4=commutator_norm,
+        matrix_commutator_relative_residual=commutator_relative,
+        fixed_basis_off_diagonal_relative_residual=fixed_basis_residual,
+        initial_normal_mode_gap_fraction=initial_gap_fraction,
+        final_normal_mode_gap_fraction=final_gap_fraction,
+        fixed_basis_mode_mass_squared_at_initial_ev2=mode_mass_squared_in,
+        fixed_basis_mode_mass_squared_at_final_ev2=mode_mass_squared_out,
+        fixed_basis_mode_masses_at_initial_ev=mode_masses_in,
+        fixed_basis_mode_masses_at_final_ev=mode_masses_out,
+        quench_duration_ev_minus1=duration,
+        hubble_at_production_ev=checked["hubble_at_production_ev"],
+        local_quench_ratio=local_quench_ratio,
+        local_quench_limit=limit,
+        local_quench_pass=local_quench_pass,
+        quench_species=species,
+        abundance_certificates=abundance,
+        present_created_number_densities_ev3=number_densities,
+        present_created_rest_density_constants_ev4=rest_densities,
+        present_created_energy_densities_ev4=energy_densities,
+        present_created_pressures_ev4=pressure_densities,
+        present_background_rms_momentum_ratio_upper=rms_momentum_ratio_upper,
+        present_dust_replacement_relative_errors=dust_replacement_errors,
+        present_created_energy_density_total_ev4=total_energy_density,
+        present_dust_input_density_total_ev4=total_rest_density,
+        omega_created_today=omega_created,
+        omega_dust_input_today=omega_dust,
+        omega_vacuum_today=omega_vacuum,
+        omega_created_energy_plus_vacuum_today=omega_created + omega_vacuum,
+        omega_dust_input_plus_vacuum_today=omega_dust + omega_vacuum,
+        background_cold_pass=background_cold_pass,
+        perturbation_audit=perturbation,
+        mass_dimension_manifest=tuple(dimension_manifest.items()),
+        dimensionless_core_argument_mass_dimensions=tuple(
+            dimensionless_core_dimensions.items()
+        ),
+        dimensions_pass=dimensions_pass,
+        failed_gates=failures,
+        status=(
+            "PASS_CONDITIONAL_FIXED_BASIS_QUENCH_TO_WKB"
+            if not failures
+            else "FAIL_CONDITIONAL_FIXED_BASIS_QUENCH_TO_WKB_GATES"
         ),
     )
