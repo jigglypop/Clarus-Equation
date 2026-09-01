@@ -420,6 +420,104 @@ $[\xi]=L$, $[\delta\chi]=L^{-1}$, $[\Delta_{\rm FP}]=L^{-2}$로 바로잡았고,
 FP/Berezin consistency이며 global determinantㆍfunctional measureㆍheat
 kernelㆍloopㆍBRST/QMEㆍHilbertㆍHDA/M2는 계속 미완성이다.
 
+[E69-Y--AA 원장](../검증_원장/참조_양자_보존_원장.md#qnb-e69-y)은
+E69-E/F/G/H의 independently reconstructed raw traces를 source-supplied
+Eq. (19)에 넣고, Eq. (22)/(23)/(27) coefficient를 fit 입력에서 배제한 채
+$\mathcal B_7$ coefficient를 역산했다. $n=4,\ldots,8$의 60개 fixture design
+rank는 모두 7이고 Weyl을 빼면 6이다. Bosonic/ghost fit 120개, fit 뒤 source
+coefficient 70개, $n=4,\ldots,7$ degree-bounded interpolation의 독립 $n=8$
+holdout 14개 residual은 모두 0이다.
+
+$n=4$ raw 조합은
+$(71/60,-241/60,29/24,0,1/6,1,1)$이고 4D bulk GB quotient 뒤
+$(43/60,1/40,0,1/6,1,1)$로 Eq. (28)을 재현했다. 13개 잘못된
+quotient/sign/rank/oracle/weight/copy 대조는 모두 nonzero다. Focused 회귀는
+**8 passed in 57.02s**, production receipt는 PASS이며 세 독립 감사의
+P0/P1은 없다. 이는 supplied Eq. (19)를 쓰는 finite coefficient synthesis일
+뿐 Eq. (19) theorem, global determinant, boundaryㆍevanescent completion,
+one-loop renormalizationㆍBRST/QMEㆍHilbertㆍHDA/M2의 독립 증명이 아니다.
+
+[E70-A--D 원장](../검증_원장/참조_양자_보존_원장.md#qnb-e70-a)은
+E54--E69의 finite reference evidence와 실제 양자 M2를 분리해 닫았다. M2에
+필요한 공통 조밀 정의역, regulator/ordering/adjoint/structure function,
+all-smearing regulator-removal identity, 비자명 physical sector, 양의 완비 inner
+product, M1 고유 BV--BRST/ST--QME breaking의 여섯 묶음은 모두 아직 없다.
+E69의 gravity+massless scalar 하나와 M1의 gravity+물질 스칼라 $\chi$+
+무차원 reference scalar 넷이라는 field-content mismatch도 잠갔다. $Q=0$인
+1차원 negative-norm Hermitian toy와
+$\sigma_x,\sigma_z$ direct-sum nonclosing extension은 nilpotency에서 positivity로,
+검사한 finite sector에서 임의 extension/continuum closure로 가는 두 추론을
+반박한다. 값 $-1,4$는 dimensionless finite toy 값이며 M1 anomaly가 아니다.
+보정판은 **6 passed in 0.14s**, production receipt는 PASS다. M2는
+**미완성**, 모형은 유지, M3--M9는 동결하며 다음 경로는 M1-specific
+perturbative BV--BRST다.
+
+[E70-E--I 원장](../검증_원장/참조_양자_보존_원장.md#qnb-e70-e)은 그 경로의
+첫 고전 단계를 닫았다. Prinz v2의 rescaled perturbative BRST를 literal
+transcription하지 않고 M1 전체 $g_{\mu\nu}+\chi+4X$ field content에 unscaled
+covariant하게 adapt했다. Independent symmetric second-jet algebra 안에서
+ghost 4, scalar 5, metric 10, antighost 4, auxiliary 4의 27개 base-field
+square는 모두 exact zero이고 coefficient-level locked first-map mismatch도
+0이다. Wrong sign, commuting ghost, ungraded rule, unsymmetric jet, missing
+scalar/metric slot, broken doublet, reference multiplicity와 $\chi$ 누락은 모두
+실패했다. 보정판은 **7 passed in 0.92s**, production receipt는 PASS이고 세
+독립 재감사의 P0/P1은 없다. 초기 four-X-only receipt는 superseded다.
+Second-jet 자체의 differential, action/BV/CME와 quantum
+QME/ST/Hilbert/HDA/M2는 아직 계산하지 않았으므로 M3--M9는 계속 동결한다.
+
+[E70-J--M 원장](../검증_원장/참조_양자_보존_원장.md#qnb-e70-j)은
+action 단계의 범위를 더 좁고 정확하게 닫았다. M1 bulk 여섯 항이 각각
+dimension 4 scalar이고 $\sqrt{-g}$와 함께 weight-one density라는
+type/naturality certificate에서
+$s\mathcal L_i=\partial_\rho(c^\rho\mathcal L_i)$를 얻되, 24개 boundary-current
+component와 open-boundary flux를 버리지 않았다. Abstract coordinate-gauge
+family의 $\Psi=\int\bar c(F+\alpha B/2)$는 독립 전개와 locked target이 exact
+일치했다. 반대로 dimension 4이나 weight 0인 $M^3\chi$는 $s^2=0$이면서
+Euler residual 네 항이 남아 nilpotency가 action invariance를 함의하지 않음을
+보였다. 교정판은 **7 passed in 0.92s**, production receipt PASS, 세 재감사
+P0/P1 없음이다. 이는 full coordinate-jet action variation이나
+GHY/boundary/global theorem, M1-derived gauge, BV/CME/QME가 아니므로 M3--M9는
+계속 동결한다.
+
+[E70-N--Q 원장](../검증_원장/참조_양자_보존_원장.md#qnb-e70-n)은 그 다음
+BV 입장 단계를 닫았다. Standard antifield review와 Prinz v2의 역할을 분리하고,
+M1의 27개 base field 전부에 반대 parityㆍ고정 ghost numberㆍ보완 질량차원을
+가진 27개 antifield를 대응시켰다. E70-E 준비 중 구판의 right-Hamiltonian
+$sF=(F,S)$와 E70-B의 standard left derivation 혼용이 P1임을 발견해,
+$sF=(S,F)$와 odd-field antifield minus sign으로 보정했다. 선언한 좌/우 미분
+convention은 nonzero ghost map을 포함한 일곱 canonical pair의 비자명
+rotation+doublet toy에서 $(S,S)/2=0$을 exact하게 내며, bad invariant actionㆍ
+broken doubletㆍwrong bracket signㆍwrong odd-antifield sign 대조가 살아 있다.
+E70-C의 여섯 AFN0 type/naturality 입력과 E70-B의 27 AFN1 nilpotency
+입력을 합친 33-input formal decomposition도 분리 기록했다. 보정판은 **7 passed
+in 1.71s**, production receipt PASS이고 보정 재감사의 P0/P1은 없다. 이는
+field--antifield type ledger와 finite toy calibration이지 full M1 antifield
+functional/CME, local functional quotient, QME 또는 quantum M2가 아니다.
+따라서 M3--M9는 계속 동결한다.
+
+[E70-R--V 원장](../검증_원장/참조_양자_보존_원장.md#qnb-e70-r)은 실제
+local-functional 계산법을 bounded 1D witness에서 통과시켰다. M1의
+$\chi+4X$ label을 맞춘 five-coordinate first-order reparametrization toy에서
+$\mathcal L_0=\sum p_aDq_a-nH$와 14 field--antifield pairs, order 0--4의
+140 jets를 고정했다. Exact Euler calculus는 nonzero current
+$s\mathcal L_0=D(c\mathcal L_0)$와 Noether identity를 재현한다. Standard-left
+extended functional의 master density는 30항으로 비영이지만, 독립 current
+$J_M=-cnH$에 대해 $\mathcal M=D J_M$이고 28개 Euler residual이 모두 0이다.
+Wrong lapse coupling/weight, ghost sign/star 누락, uniform-plus antifield, wrong
+bracket와 naive partial derivative는 모두 실패했다. 보정판은 **8 passed in
+2.05s**, production receipt PASS, 세 독립 감사 P0/P1/P2 없음이다. 이는
+dimensionless 1D bounded local-BV quotient이지 4D M1 functional/CME, unbounded
+variational bicomplex, boundary completion, QME 또는 quantum M2가 아니다.
+M3--M9는 계속 동결한다.
+
+[E70-W--AA 원장](../검증_원장/참조_양자_보존_원장.md#qnb-e70-w)은 이 계산을 4D로 넓히되 metric theory라고 부르지 않는 독립 density witness를 닫았다. $\chi+4X$ 다섯 scalar, 독립 weight-one symmetric contravariant density $h^{\mu\nu}$, 독립 weight-one density $\rho$, ghost/nonminimal sector의 28 field--28 antifield를 $|I|\le3$의 1,960 generator (even/odd 각 980)에 놓았다. Classical density의 BRST 변화는 $\partial_\mu(c^\mu\mathcal L)$이고, standard-left extended density의 2,604-term master density는 AFN0 984항과 AFN1 1,620항으로 분해된다. 독립 AFN0ㆍAFN1 current 388ㆍ1,752항, 합친 2,140항의 divergence와 각각 정확히 일치하며 56 Euler residual은 0이다. 누락 density trace, index transport, ghost/star/bracket 부호와 naive partial--Euler 대조는 모두 실패했다. Canonical hash `832ccc6d55f444038d14c1a91740bbd7d0ef0da63b5165888ef030055d2572f5`에서 **8 tests PASS**, production runner PASS다. 그러나 $h=\sqrt{-g}g^{-1}$, $\rho=\sqrt{-g}$, Einstein--Hilbert/full M1 functional, global boundary, QME와 M2는 계산하지 않았으므로 M3--M9는 계속 동결한다.
+
+[E70-H 원장](../검증_원장/참조_양자_보존_원장.md#qnb-e70-ai)은 독립 torsion-free affine connection을 둔 4D curvature witness를 추가했다. $h^{\mu\nu}$ 10성분, $\Gamma^\lambda{}_{\mu\nu}$ 40성분, ghost 4성분의 54개 base generator와 1,890개 bounded jets에서 nonsymmetric Ricci covariance와 $s\mathcal L_P=\partial_\mu(c^\mu\mathcal L_P)$를 exact하게 확인했다. **8 passed in 193.47s**, runner PASS, 세 감사 none이지만, 이는 finite-jet covariant Lagrangian adaptation일 뿐 connection EOM, Levi--Civita/metric compatibility, Einstein--HilbertㆍGHY/global boundary, full M1 BV/CME, QME, physical Hilbert나 M2를 열지 않는다. 따라서 M3--M9와 새 관측 예측은 계속 동결한다.
+
+[E70-I 원장](../검증_원장/참조_양자_보존_원장.md#qnb-e70-al)은 같은 torsion-free 40-component connection에 직접 Euler variation을 수행했다. Retained boundary current와 trace compatibility는 exact하게 맞고, 네 nondegenerate rational fixture에서 local Levi--Civita solution을 재구성했다. **8 passed in 182.26s**, runner PASS, 세 감사 none이지만, 이는 boundary variation을 $\delta\Gamma|_{\partial M}=0$으로 고정한 local bulk 계산이다. Unrestricted projective metric-affine theory, Palatini/GHYㆍglobal equivalence, full M1 BV/CME, QME와 M2를 열지 않으며 M3--M9와 새 관측 예측은 계속 동결한다.
+
+[E70-J 원장](../검증_원장/참조_양자_보존_원장.md#qnb-e70-ao)은 E70-C와 E70-I의 검증된 입력을 한 normalized first-order M1 classical bulk density로 조립했다. 69개 field와 2,415개 bounded jet에서 일곱 unit receipt와 mixed local-divergence identity가 exact하게 맞는다. **8 passed in 225.06s**, runner PASS, post-fix contract test **1 passed in 0.22s**, 세 감사 none이지만, prime coefficient fixture는 algebraic sentinel일 뿐 물리 계수 추론이 아니다. 이 결과는 full M1 BV/CME, QME, quantum HDA/M2를 열지 않으며 M3--M9와 새 관측 예측은 계속 동결한다.
+
 | 순서 | 연구 패키지: 입력 → 작업 → 최소 산출물 | 통과 조건 | 탈락ㆍ중단 조건 | 선행 의존성 |
 |---|---|---|---|---|
 | M0 | 기준선ㆍ용어: 표준 QFT, LCQFT, 제약, CP, 관계적 관측량의 정의와 회복 기준을 한 계약으로 고정한다. | 기호ㆍ단위ㆍ상태/관측량/과정의 타입이 혼동 없이 정리된다. | 입자 수, 좌표 라벨, 관찰자 기록을 같은 객체로 섞으면 중단한다. | 없음 |
@@ -1495,7 +1593,7 @@ declared_finite_fp_berezin_gate_passed=true다. 수학ㆍ형식ㆍ1차출처 감
 Eq. (24)의 $1/4$, 또는 $-2$의 Gaussian 유도를 명시했다는 승격은 계속
 금지한다.
 
-## 지금 바로 할 한 가지 — E69-I 사전등록
+## E69-I 사전등록과 완료 계약
 
 다음 subgate는 **E69-I: independently reconstructed raw operator trace에서
 finite heat-kernel coefficient를 합성하는 gate**다. Source Eq. (19)의
@@ -1623,6 +1721,865 @@ determinant, boundaryㆍevanescent completion, continuum one-loop
 renormalizationㆍBRST/ST/QMEㆍHilbertㆍHDA/M2의 증명이 아니다. Full E69은
 **[미완성]**이며 M3--M9는 계속 동결하고 새 관측 예측은 없다.
 
+실행 결과 $n=4,5,6,7,8$에서 차원당 12개, 총 60개 fixture와 60개 curvature
+audit가 PASS했다. Design rank는 $(7,7,7,7,7)$이고 같은 표본에서 Weyl을
+제거하면 $(6,6,6,6,6)$으로 떨어진다. 각 차원의 pure-Weyl/generic 표본에서
+bosonicㆍghost $W^2$ representation을 직접 재계산한 20개 audit residual도
+0이다. 검증된 $W^2$ trace를 나머지 fixture에 재사용해 production 실행을
+약 3분에서 43초로 줄였으며 coefficient 결과는 변하지 않았다.
+
+Bosonic/ghost overdetermined fit의 **120개 exact residual**, fit 완료 뒤
+Eq. (23)/(27) oracle과 비교한 **70개 coefficient residual**, $n=4,5,6,7$
+lift에서 예측한 **14개 $n=8$ holdout residual은 모두 0**이다. $n=4$에서는
+
+$$
+c_{\rm bos}-2c_{\rm gh}
+=(71/60,-241/60,29/24,0,1/6,1,1)
+\tag{36.59}
+$$
+
+이고 4D bulk GB quotient 뒤
+$(43/60,1/40,0,1/6,1,1)$로 source Eq. (28)과 일치한다.
+Generic Euler density는 $76047987335/24972948>0$이라 pointwise GB 경로가
+거부됐다.
+
+Bulk quotient 누락/$+4\mathfrak D$, wrong $W^2$, scalar identity 및
+$-RY/6$ 누락, ghost outer sign, coefficient permutation, raw density 훼손,
+ghost weight $+2,-1,0$, premature bosonic $P$ 삭제, $n=4$ coefficient의
+$n=8$ 복사는 모두 nonzero mismatch를 냈다. $n=3$ full-rank identification과
+$n=2$ pole도 fail-closed다. Focused 회귀는 **8 passed in 57.02s**,
+production runner는 declared_operator_trace_synthesis_gate_passed=true다.
+수학ㆍ형식ㆍ1차출처 감사의 최종 판정은 모두 P0/P1 없음이다.
+
+## E70-A M2 admission closure 사전등록과 완료 계약
+
+E69의 finite reference lane을 닫은 뒤 먼저 금지해야 할 부모 승격은
+“finite BRST/trace/coefficient PASS이면 M2 양자 제약과 양의 physical Hilbert도
+PASS”라는 추론이다. 실제 M2 통과식은 한 구성 안에서 공통 불변 조밀 정의역
+$\mathcal D$, regulatorㆍorderingㆍadjointㆍstructure-function prescription과
+
+$$
+\lim_{\epsilon\to0}
+\left(
+[\widehat C_{A,\epsilon}[f],\widehat C_{B,\epsilon}[g]]
+-i\hbar\widehat C_{C,\epsilon}[\mathfrak f^C{}_{AB}(f,g)]
+\right)\psi=0
+\quad(\forall f,g,\ \psi\in\mathcal D)
+\tag{36.60}
+$$
+
+의 topology, 비자명한 joint kernel/rigging map, null quotient 뒤 양의 완비
+inner product를 함께 요구한다. E54--E69에는 이 여섯 입력이 없다. 더구나
+E69 source의 field content는 Einstein--Hilbert gravity와 massless quantum
+scalar 1개인 반면 M1은 gravity, $V(\chi)$를 갖는 물질 스칼라 $\chi$ 하나와
+네 무차원 Klein--Gordon reference scalar $X^A$를 포함하므로, source one-loop
+결과를 M1의 ST/QME 또는 HDA로 직접 이전하지 않는다.
+
+두 유한 반례를 사전고정한다.
+
+1. 1차원 비퇴화 Hermitian form을 $[-1]$, $Q=0$으로 두면
+   $Q^2=0$이고 $H^0$는 1차원이지만 유일한 비영 상태 norm은 $-1$이다.
+   따라서 nilpotency와 nontrivial cohomology는 positivity를 함의하지 않는다.
+   이는 strict indefinite Krein space가 아니라 negative-definite Hermitian toy다.
+2. 검사한 2차원 block에서 두 constraint를 0으로 두면 commutator residual은
+   0이다. 여기에
+
+$$
+A_{\rm ext}=\begin{pmatrix}0&1\\1&0\end{pmatrix},\qquad
+B_{\rm ext}=\begin{pmatrix}1&0\\0&-1\end{pmatrix}
+\tag{36.61}
+$$
+
+   를 direct-sum하면 보이지 않던 block의 commutator entrywise $L^1$ norm은 4다.
+   유한 sector의 닫힘은 전체 domain/regulator limit 닫힘을 함의하지 않는다.
+   이는 stipulated zero-RHS abelian target의 nonclosing extension이지 실제
+   regulator-limit M1 anomaly 계산이 아니다. $-1$과 4는 dimensionless
+   normalized finite-matrix 값이다.
+
+이 gate는 finite E54--E69 lane을 보존하되
+m1_specific_quantum_m2_passed=false, model_abandoned=false,
+m3_to_m9_unlocked=false로 분리한다. 네 대안
+Dirac/RAQ--master, M1-specific perturbative BV--BRST, nondegenerate
+four-clock reduced quantization, discrete/refinement 가운데 다음 실행 경로는
+**M1-specific perturbative BV--BRST**로 고정한다. 이는 M1 action과 직접
+field content를 공유하고 E69의 source trace를 단순 이전하지 않기 때문이다.
+
+Evidence manifest, 두 반례, 네 금지 승격, 네 대안과 E69-I upstream hash는
+canonical SHA-256
+`10bee0b3b0e1c95c4945d0a61e198bfa1c29e80f0075b2ce8a83101e79096f26`로
+잠갔다. 이는 물질 스칼라 $\chi$ 누락을 복원한 보정판이며, 이전
+`c2ef70...` snapshot은 현재 증거에서 폐기한다. derivation status는
+finite_reference_lane_closed_quantum_m2_incomplete다.
+actual_m1_anomaly_computed, all_quantizations_no_go_proved,
+positive_physical_hilbert_proved는 false다. 따라서 PASS는 M2 성공이 아니라
+부당한 부모 승격을 거부하고 다음 대안의 정확한 입력을 고정했다는 뜻이다.
+
+네 금지 승격은 (i) finite counterexample에서 continuum/all-quantization
+no-go로, (ii) finite positive Gram에서 양의 완비 physical Hilbert로,
+(iii) finite BRST cohomology 차원에서 full quantum M2로, (iv) tree/finite ST에서
+all-loop ST/QME로 가는 추론이다. 구현은 이 목록, field-content mismatch,
+missing evidence count 6과 false status flag를 hash와 함께 fail-closed로
+검사한다. 보정판 focused 회귀는 **6 passed in 0.14s**, production runner는
+declared_m2_admission_closure_gate_passed=true다. 독립 수학ㆍ형식 감사에서
+P0는 없었고, Krein/anomaly 용어 P1 두 건은 위 표현으로 교정했다.
+
+## E70-B M1 $\chi+4X$ classical BRST jet 사전등록과 완료 계약
+
+선택한 다음 경로의 첫 단계는 quantum QME가 아니라 **M1의 전체 field
+content에 맞는 고전 diffeomorphism BRST differential 자체**를 세우는 일이다.
+M1은 Einstein gravity, $V(\chi)$를 갖는 물질 스칼라 $\chi$ 하나와
+positive internal metric을 갖는 무차원 Klein--Gordon reference scalar
+$X^A$, $A=0,1,2,3$를 포함한다.
+
+1차 근거는 [Prinz v2](https://arxiv.org/abs/2206.00780v2)의 Definition 3.1과
+Eq. (32)--(33), Proposition 3.3과 Eq. (35), Remark 2.14로 고정한다.
+최신 v2는 2025-06-01 판본이다. Definition/Eq. (32)--(33)은 rescaled
+perturbative diffeomorphism BRST differential을, Proposition/Eq. (35)는
+Jacobi identity에 따른 classical nilpotency를 제공한다. Remark 2.14는
+quantum lift에 anomaly 부재와 ST identity가 별도로 필요함을 명시한다.
+Source 자체는 $\varkappa,\zeta$로 rescale한 perturbative
+$h,C,\bar C,B$와 general matter bundle을 쓰며 M1의 특수한 $\chi+4X$
+content를 직접 다루지 않는다. 따라서 아래 식은 literal transcription이 아니라
+**unscaled covariant, convention-adapted M1 construction**이며,
+`source_contains_four_reference_scalars=false`를 계약에 잠근다. 이 변환만으로
+$X^A$의 관계적 clock/rod 해석이 증명됐다고 하지 않는다.
+
+부호 convention과 graded rule은
+
+$$
+sg_{\mu\nu}=\mathcal L_cg_{\mu\nu},\qquad
+s\chi=c^\rho\partial_\rho\chi,\qquad
+sX^A=c^\rho\partial_\rho X^A,\qquad
+sc^\mu=c^\rho\partial_\rho c^\mu,
+\tag{36.62}
+$$
+
+$$
+s\bar c_\mu=B_\mu,\qquad sB_\mu=0,\qquad
+s(uv)=s(u)v+(-1)^{|u|}u\,s(v)
+\tag{36.63}
+$$
+
+로 잠근다. 4D에서 $g_{\mu\nu},\chi,X^A,c^\mu$의 독립 jet을 2차
+미분까지 두고 commuting-even/exterior-odd monomial을 분리한 exact rational
+sparse algebra를 사용한다. Symmetric second partial을 canonicalize하므로
+정상 결과는 표본점의 근사가 아니라 선언한 jet polynomial의 coefficient-wise
+zero다. 질량차원은
+
+$$
+[x]=L,\quad[\partial]=L^{-1},\quad[c]=L,\quad
+[\chi]=L^{-1},\quad[g]=[X^A]=[s]=L^0
+\tag{36.64}
+$$
+
+로 고정한다. 정상 catalog의 산술은
+
+$$
+\begin{aligned}
+N_{\rm even}&=10(1+4+10)+5(1+4+10)+4=229,\\
+N_{\rm odd}&=4(1+4+10)+4=64,\\
+N_{\rm all}&=293
+\end{aligned}
+\tag{36.65}
+$$
+
+이다. 앞줄은 metric jet 150개, $\chi+4X$ scalar jet 75개와 auxiliary
+4개이고, 둘째 줄은 ghost jet 60개와 antighost 4개다. Base-field
+$s^2$ component는 ghost 4+scalar 5+metric 10+antighost 4+auxiliary 4의
+**27개**다. Differential image는 base와 first jet까지만 정의한다.
+Second jet은 이 27개 제곱의 독립 coefficient이며 그 자체의 $s$-상에는
+third jet이 필요하다. 따라서 full 293-generator differential이나 모든
+local jet의 nilpotency를 주장하지 않는다.
+
+Nilpotency만 검사하면 $s\chi=sX=0$ 같은 잘못된 trivial differential도
+통과하므로 모든 $sc,s\chi,sX,sg,s\bar c$의 첫 변환 nonzero/locked form,
+metric symmetry, matter/reference scalar count $1+4$, mass dimension과 ghost
+number를 별도 gate로 둔다. 구현식과 독립적으로 조립한 coefficient-level
+golden oracle과도 정확히 비교한다. Kill control은 $sc$만의 부호 반전,
+commuting ghost, ungraded Leibniz, unsymmetrized second jet, scalar transport
+누락, metric Lie slot 하나 누락, $sB\ne0$, reference scalar 3개로 축소,
+matter scalar $\chi$ 제거의 아홉 개다. 앞 네 경로와 broken doublet은
+nonzero nilpotency residual을, transport/Lie-slot 누락은 first-transformation
+mismatch를, 두 multiplicity 변경은 서로 독립적인 contract 거부를 내야 한다.
+
+보정된 E70-A upstream hash
+`10bee0b3b0e1c95c4945d0a61e198bfa1c29e80f0075b2ce8a83101e79096f26`를
+포함한 canonical contract는
+`f994c00debc61bda8ca9ebc867ae98f13b5fa3a0ea89a46f18e193dcb61f9bec`로
+잠갔다. 이 단계의 PASS는 independent symmetric second-jet algebra 안의
+27개 base-field classical BRST square가 exact zero라는 뜻뿐이다.
+Action-density invariance, gauge-fixing fermion, antifield/BV antibracket와
+classical master equation은 다음 subgate이며, QMEㆍloop/ST anomalyㆍregulatorㆍ
+positive physical HilbertㆍHDA/M2는 false status로 남긴다.
+
+최종 실행에서 293개 generator 중 odd는 64개, even은 229개였고, 27개
+base-field nilpotency residual은 모두 term count 0이었다. 별도 coefficient
+assembly로 만든 locked first-transformation oracle mismatch도 0이다.
+다섯 scalar와 네 ghost의 base map은 각각 성분당 4항, metric
+diagonal/off-diagonal은 8/12항, $s\bar c_\mu=B_\mu$는 1항이라 zero
+differential shortcut이 배제된다. 95개 geometric map의 mass dimension과
+전체 103개 image의 ghost number도 일치했다.
+
+음성대조 residual term count는 wrong $sc$ sign 724, commuting ghost 1318,
+ungraded Leibniz 60, unsymmetrized second jet 612, broken doublet 20이다.
+Scalar transport와 metric Lie slot 하나를 제거한 locked-oracle mismatch는
+20과 40이다. Reference scalar를 3개로 줄인 contract와 $\chi$를 제거한
+contract는 각각 거부됐다. 보정판 focused 회귀는 **7 passed in 0.92s**,
+production runner는
+`declared_exact_classical_brst_jet_gate_passed=true`다.
+
+이 보정은 판본 지위도 바꾼다. E70-C 준비 중 E54의 canonical M1 action을
+재독해 초기 E70-A/B가 물질 스칼라 $\chi$를 누락했음을 발견했다. 이전
+E70-A `c2ef70...`, E70-B `14fecc...` 및 278-generator/26-base receipt는
+**superseded stale evidence**이며 현재 PASS나 M2 근거로 재사용하지 않는다.
+보정된 293-generator/27-base snapshot만 정본이다.
+
+첫 수학 감사가 지적한 “full jet differential” 오독 위험은 second-jet image를
+정의하지 않고 27개 base square만 검산한다는 범위를 코드ㆍcontractㆍreceiptㆍ
+문서에 함께 고정해 해소했다. 출처 경계는 unscaled covariant adaptation/not
+literal transcription과 source flag로 잠갔고, term-count-only 회귀 위험은
+별도 coefficient-level oracle로 막았다. 보정 안정판의 수학ㆍ형식ㆍ1차출처
+재감사는 독립적으로 $293=229+64$, 27 base, 95/103 maps와 출처 범위를
+검산했으며 P0/P1은 모두 없다. Contract hash는 구현 snapshot 식별자일 뿐
+source artifact 인증 hash가 아니다.
+
+## E70-C M1 bulk density type/naturality와 gauge-fermion exactness 완료 계약
+
+E70-B의 $s^2=0$만으로는 action invariance가 따라오지 않는다. 이를 별도
+명제로 분리하기 위해 1차 근거를
+[Prinz v2](https://arxiv.org/abs/2206.00780v2)의 Lemma 3.5/Eq. (38),
+Proposition 3.6/Eq. (40)--(41), Remark 2.14로 확장했다. Eq. (38)은
+weight-$w$ scalar density $\mathfrak f_w$에 대해
+
+$$
+\begin{aligned}
+s\mathfrak f_w
+&=c^\rho\partial_\rho\mathfrak f_w
++w(\partial_\rho c^\rho)\mathfrak f_w\\
+&=\partial_\rho(c^\rho\mathfrak f_w)
++(w-1)(\partial_\rho c^\rho)\mathfrak f_w
+\end{aligned}
+\tag{36.66}
+$$
+
+를 준다. 따라서 weight가 정확히 1일 때에만 두 번째 항이 사라진다.
+이 source 결과와 M1 bulk의 tensor type을 결합한다. 여섯 독립 항의
+질량차원 장부는 다음과 같다.
+
+| M1 bulk 항 | 계수 차원 | scalar monomial 차원 | 합 | density weight |
+|---|---:|---:|---:|---:|
+| $M_P^2R/2$ | 2 | 2 | 4 | 1 |
+| $-M_P^2\Lambda$ | 4 | 0 | 4 | 1 |
+| $-(\nabla\chi)^2/2$ | 0 | 4 | 4 | 1 |
+| $-m^2\chi^2/2$ | 2 | 2 | 4 | 1 |
+| $-\lambda\chi^4/4!$ | 0 | 4 | 4 | 1 |
+| $-\mu_X^2\delta_{AB}(\nabla X^A)(\nabla X^B)/2$ | 2 | 2 | 4 | 1 |
+
+$\sqrt{-g}$는 dimensionless weight-one density이므로 각 항은
+
+$$
+s\mathcal L_i=\partial_\rho J_i^\rho,\qquad
+J_i^\rho=c^\rho\mathcal L_i
+\tag{36.67}
+$$
+
+를 만족한다. 구현은 “저장된 total dimension이 4인가”를 되읽지 않고
+실제로 계수 차원+monomial 차원$-4$를 계산한다. 여섯 차원 residual과 여섯
+weight residual은 모두 0이고, current는 여섯 항$\times$네 방향의 24성분이다.
+$\sqrt{-g}$를 제거하면 여섯 weight residual이 모두 $-1$이며, reference
+kinetic에서 $\mu_X^2$를 제거하면 dimension residual은 $-2$다.
+
+여기서 중요한 범위 제한이 있다. 이 결과는 $R,\sqrt{-g}$와 모든 장 변환을
+성분별 coordinate jet으로 새로 전개한 검산이 아니라, 각 M1 항의 scalar
+type과 source-supplied naturality를 결합한 exact **type/naturality
+certificate**다. Open-boundary flux $\int_{\partial M}n_\rho J^\rho$는
+버리지 않는다. GHY variation, boundary cancellation, compact-support 조건의
+물리적 실현이나 integrated/global action invariance는 아직 증명하지 않았다.
+
+Gauge-fixing은 action-density 인증과 독립으로 계산한다. Prinz의
+Eq. (40)--(41)은 perturbative de Donder gauge의 한 fermion을 주지만, 여기서
+쓰는 일반 $F^\mu$ family는 M1 convention에 맞춘 abstract coordinate-density
+construction이다:
+
+$$
+\begin{aligned}
+\Psi&=\int d^4x\,\bar c_\mu
+\left(F^\mu+{\alpha\over2}B^\mu\right),\\
+s\Psi&=\int d^4x\left[
+B_\mu F^\mu+{\alpha\over2}B_\mu B^\mu-\bar c_\mu sF^\mu
+\right].
+\end{aligned}
+\tag{36.68}
+$$
+
+$s\bar c_\mu=B_\mu$, $sB_\mu=0$와 graded Leibniz가 ghost 항의 minus
+sign을 강제한다. $[F]=[sF]=1$, $[\bar c]=[B]=3$, $[\alpha]=-2$로
+각 integrand의 차원을 4로 고정하고, $gh(\Psi)=-1$, $gh(s\Psi)=0$을
+검사했다. 네 성분에서 independently expanded $s\Psi$와 별도 locked target의
+mismatch는 0이고 $s^2\Psi=0$, dimension/ghost-number audit는 8/8 PASS다.
+Wrong ghost sign, $B^2$ 누락, commuting gauge ghost, broken doublet은 각각
+4, 4, 4, 8항의 nonzero mismatch/residual을 낸다. 이 결과는 $F^\mu$를 M1
+action에서 유도하거나 gauge-fixed density의 공변성을 증명하지 않는다.
+
+Nilpotency에서 action invariance로 가는 잘못된 승격은 exact 반례로 닫는다.
+Inert mass scale $M$을 써 dimension 4이나 weight 0인
+
+$$
+\mathcal L_{\rm bad}=M^3\chi,\qquad
+s\mathcal L_{\rm bad}=M^3c^\mu\partial_\mu\chi,\qquad
+s^2\mathcal L_{\rm bad}=0
+\tag{36.69}
+$$
+
+를 두면, 수평 Euler derivative는
+$E_\chi(s\mathcal L_{\rm bad})=-M^3\partial_\mu c^\mu$다. 네 방향의
+독립 odd monomial 네 항이 locked oracle과 일치하고 0이 아니므로
+$s\mathcal L_{\rm bad}$는 horizontal divergence가 아니다. 즉 E70-B의
+27개 nilpotent base square가 action invariance를 자동 보장하지 않는다.
+
+E70-B hash를 upstream으로 포함한 canonical contract는
+`55f0984aed5db1682d6f0e84bdea2520a9a54197fdcc87ab06b679cc763def41`로
+잠갔다. Focused 회귀는 **7 passed in 0.92s**, source parse와 production
+runner는 PASS다. 첫 수학 감사가 bulk 결과를 full coordinate expansion으로
+읽을 수 있다는 P1을 찾아 type/naturality로 재명명하고,
+`full_coordinate_jet_action_variation_computed=false`,
+`functional_measure_computed=false`,
+`m3_relational_observables_unlocked=false`를 fail-closed로 추가했다.
+차원 residual도 계수+monomial에서 직접 다시 계산한다. 교정판 수학ㆍ형식ㆍ
+1차출처 재감사의 P0/P1은 모두 없다.
+
+따라서 E70-C가 닫은 것은 retained current modulo $d_H$의 M1 bulk
+type/naturality와 abstract $s\Psi$ exactness다. Full coordinate-jet action
+variation, boundary-completed/global invariance, M1-derived gauge condition,
+BV antifield/CME, functional measure, QME, loop ST/anomaly cancellation,
+positive physical Hilbert, HDA/quantum M2는 계속 **미완성**이다. M3--M9는
+동결되고 새 관측 예측은 없다.
+
+## E70-D M1 field--antifield 원장과 finite BV master admission 완료 계약
+
+E70-C가 bulk density의 type/naturality와 abstract gauge-fermion exactness를
+닫았어도, 이것만으로 BV classical master equation(CME)이 생기지는 않는다.
+CME에는 모든 field의 antifield, 좌ㆍ우 functional derivative, boundary를 포함한
+local functional quotient와 실제 extended action이 필요하다. E70-D의 목적은 이
+간격을 숨기지 않고, 지금 정확히 만들 수 있는 BV type ledger와 sign calibration을
+먼저 고정하는 것이다.
+
+1차 BV 근거는
+[Fuster--Henneaux--Maas, *BRST-antifield Quantization: A Short Review*](https://arxiv.org/abs/hep-th/0506098)다.
+[Prinz v2](https://arxiv.org/abs/2206.00780v2)는 perturbative
+diffeomorphism-BRST differential과 고전 nilpotency를 공급하지만 full
+antifield action이나 M1 CME를 유도하지 않는다. 그러므로 아래 assignment와
+antibracket는 standard BV convention을 M1 field content에 적용한 것이며 어느
+source의 literal M1 transcription도 아니다.
+
+$$
+\epsilon(\Phi_A^*)=\epsilon(\Phi^A)+1\pmod2,
+\qquad gh(\Phi_A^*)=-gh(\Phi^A)-1,
+\qquad [\Phi_A^*]=4-[\Phi^A],
+\tag{36.70}
+$$
+
+$$
+(F,G)=\sum_A\left[
+ {\partial_rF\over\partial\Phi^A}{\partial_lG\over\partial\Phi_A^*}
+-{\partial_rF\over\partial\Phi_A^*}{\partial_lG\over\partial\Phi^A}
+\right],
+\qquad sF=(S,F).
+\tag{36.71}
+$$
+
+E70-B의 27개 base field를 하나도 줄이지 않고 다음처럼 잠갔다.
+
+| M1 field 묶음 | 성분 수 | parity | ghost number | 질량차원 |
+|---|---:|---:|---:|---:|
+| $c^\mu$ | 4 | odd | 1 | $-1$ |
+| $\chi$ | 1 | even | 0 | 1 |
+| $X^A$ | 4 | even | 0 | 0 |
+| $g_{\mu\nu}=g_{\nu\mu}$ | 10 | even | 0 | 0 |
+| $\bar c_\mu$ | 4 | odd | $-1$ | 3 |
+| $B_\mu$ | 4 | even | 0 | 3 |
+
+Base count는 even 19/odd 8이고, (36.70)으로 생성한 antifield count는 even
+8/odd 19다. 27쌍 각각에서 이름, parity, ghost number, antifield number 1,
+$[\Phi_A^*]+[\Phi^A]=4$를 검사했다. 또한 형식적 density term
+$\Phi_A^*s\Phi^A$의 parity even, ghost number 0, dimension 4가 모두 맞아
+type mismatch는 0이다. 한 field--antifield 쌍 누락과 antifield parity 변조는
+contract hash 검증 전에라도 거부된다. 다만 이 표는 extended action의 항을
+실제로 모두 구성했다는 뜻이 아니라 필요한 type domain을 완전하게 열거한
+원장이다.
+
+부호와 좌ㆍ우 미분은 결과를 0으로 되읽는 대신 비자명 유한 모형에서 독립적으로
+검산했다. $x,y,B$는 even, $c,\bar c,u,v$는 odd이고 각 field에 canonical
+antifield가 있을 때
+
+$$
+S_{\rm toy}={1\over2}(x^2+y^2)+x^*cy-y^*cx-\bar c^*B-u^*uv
+\tag{36.72}
+$$
+
+를 둔다. Exterior algebra에서 직접 미분하면
+$(x,x^*)=1$, $(x^*,x)=-1$이고 $sF=(S_{\rm toy},F)$가 rotation
+$sx=cy$, $sy=-cx$, doublet $s\bar c=B$, $sB=0$과 nonzero ghost map
+$su=uv$, $sv=0$을 되돌린다. 일곱 map의
+mismatch와
+
+$$
+{1\over2}(S_{\rm toy},S_{\rm toy})
+=0
+\tag{36.73}
+$$
+
+의 residual은 exact 0이다. 세 음성 대조는 서로 다른 실패를 보존한다.
+$S_0$를 $x^2/2$로 바꾼 bad invariant action은 $xyc$ 한 항, $B^*J$를 추가한
+broken doublet은 $\bar c^*J$ 한 항, antibracket 둘째 항의 부호 반전은
+canonical residual 한 항, odd-field antifield 부호를 uniform plus로 되돌린
+혼용 대조는 transformation mismatch 두 항을 남긴다. 따라서 정상 0은 상수
+zero evaluator나 term-count 착시가 아니다. 동시에 (36.73)은 이 일곱-pair
+toy의 CME일 뿐 M1
+functional CME가 아니다.
+
+M1 쪽에서는 master residual의 **입력 지위**만 antifield number로 분리했다.
+Local functional variational calculus와 horizontal-boundary quotient가 별도로
+구성된 뒤에만 사용할 형식은
+
+$$
+{1\over2}(S_{\rm ext},S_{\rm ext})
+=sS_0\big|_{\mathrm{AFN}=0}
+ +\sum_A(-1)^{\epsilon_A}\Phi_A^*s^2\Phi^A
+  \big|_{\mathrm{AFN}=1}
+\tag{36.74}
+$$
+
+이다. AFN0 입력은 E70-C의 여섯 bulk type/naturality residual 0과 retained
+boundary flux이고, AFN1 입력은 E70-B의 27 base nilpotency residual 0이다.
+총 33개 입력의 provenance는 잠겼지만, E70-C는 full coordinate-jet action
+variation이 아니고 E70-B도 all-jet differential이 아니므로 구현은
+`formal_m1_master_residual_decomposition_admitted=true`와
+`full_m1_classical_master_equation_computed=false`를 동시에 요구한다.
+
+E70-E 준비 계산은 구판의 $sF=(F,S)$가 right-Hamiltonian differential인 반면
+E70-B의 $s$는 standard left graded Leibniz differential이라는 P1을 실제
+$c^*cc'$ sector에서 검출했다. 구판 uniform $+\Phi_A^*s\Phi^A$를 폐기하고,
+Fuster--Henneaux--Maas Eq. (4.4)--(4.6)에 맞춘 (36.71)과
+star-left ordering의 $(-1)^{\epsilon_A}$를 (36.72), (36.74)에 적용했다.
+Nonzero $su=uv$가 이 보정을 검증한다.
+
+E70-B/C hash를 upstream으로 포함한 보정 canonical contract는
+`90397427cad532820a1d301a416e7c417a07ae92fdb0862fd9ccf481e277fb58`로
+잠갔다. Focused 회귀는 **7 passed in 1.71s**, source parse와 production
+runner는 PASS다.
+
+따라서 E70-D가 닫은 것은 27쌍 M1 field--antifield **type ledger**, 선언한
+canonical sign의 finite BV calibration, 그리고 AFN0/AFN1 formal input
+admission이다. Full M1 antifield functional, jet-antifield variational
+calculus, local functionalㆍboundary quotient, full M1 CME, BV measure, QME,
+loop ST/anomaly cancellation, positive physical Hilbert, HDA/quantum M2는 계속
+**미완성**이다. M3 relational observables를 unlock하지 않고 M3--M9를 계속
+동결하며 새 관측 예측은 없다.
+
+## E70-E bounded local-functional Euler/BV quotient 완료 계약
+
+E70-D는 field--antifield type과 pointwise sign을 고정했지만, functional
+derivative가 derivative jet을 integration by parts하는 과정은 아직 없었다.
+E70-E는 이 빈칸을 곧바로 4D Einstein--Hilbert 작용이라고 부르지 않고, 모든
+단계를 exact하게 볼 수 있는 1D 재매개화 모형에서 먼저 시험한다. 목적은
+“master density가 0처럼 보인다”가 아니라, 비영 density가 실제 total
+derivative인지 Euler derivative와 독립 current로 판정하는 것이다.
+
+형식 근거는
+[Fuster--Henneaux--Maas](https://arxiv.org/abs/hep-th/0506098)의 Sec. 3.4,
+Eq. (4.4)--(4.7)과
+[Barnich--Brandt--Henneaux v3](https://arxiv.org/abs/hep-th/0002245v3)의
+local BRST cohomology다. Prinz v2는 left diffeomorphism-BRST nilpotency의
+보조 근거다. 이 문헌들은 아래의 specific 1D action을 공급하지 않는다. M1의
+$\chi+4X$와 label 수만 맞춘 convention-adapted polynomial toy이며, 모든
+$t/t_*$, $q/q_*$, $p/p_*$, $n/n_*$와 coefficient는 dimensionless exact
+coordinate로 정규화한다. 이 무차원화는 물리적 normalization이나
+renormalization을 대신하지 않는다.
+
+$a\in\{\chi,X^0,X^1,X^2,X^3\}$에 대해
+
+$$
+H={1\over2}\sum_a(p_a^2+q_a^2),qquad
+\mathcal L_0=\sum_a p_aDq_a-nH
+\tag{36.75}
+$$
+
+를 둔다. $q_a,p_a$는 1D scalar, $n$은 lapse density이고 left BRST map은
+
+$$
+sq_a=cDq_a,quad sp_a=cDp_a,quad
+sn=cDn+(Dc)n,quad sc=cDc,quad
+s\bar c=B,quad sB=0
+\tag{36.76}
+$$
+
+이다. 14개 base map의 $s^2$ residual은 전부 exact 0이다. Density를 직접
+변환하면
+
+$$
+s\mathcal L_0=D J_0,qquad J_0=c\mathcal L_0
+\tag{36.77}
+$$
+
+이고 양변은 각각 45항, mismatch는 0이다. $J_0$의 15항을 버리지 않는다.
+단순 partial derivative가 아니라
+
+$$
+E_z(f)=\sum_{k=0}^{4}(-D)^k
+{\partial f\over\partial z_{(k)}}
+\tag{36.78}
+$$
+
+를 계산하면
+
+$$
+E_{q_a}=-Dp_a-nq_a,qquad
+E_{p_a}=Dq_a-np_a,qquad E_n=-H
+\tag{36.79}
+$$
+
+이고 실제 Noether identity
+
+$$
+\sum_a(E_{q_a}Dq_a+E_{p_a}Dp_a)+E_nDn-D(nE_n)=0
+\tag{36.80}
+$$
+
+도 exact하게 닫힌다. Naive $\partial\mathcal L_0/\partial q_\chi$는
+$-Dp_\chi$를 놓쳐 Euler result와 한 항 차이가 난다. 이 대조가 integration by
+parts가 실제 계산 경로에 들어갔음을 보장한다.
+
+Field 14개와 antifield 14개의 jet order를 $0\le k\le4$로 고정하면 140개
+generator, even/odd 각 70개다. $D z_{(4)}$가 필요하면 조용히 truncate하지 않고
+terminal-jet error로 거부한다. 이 bounded algebra에서 canonical pair 두 부호,
+odd left/right derivative, known $D(qp)$의 Euler residual을 검산했다. Ghost jet이
+든 graded-Jacobi fixture는 세 nested bracket 중 둘이 비영인데도 signed sum이
+0이므로 trivial all-zero sample이 아니다. 이 결과는 order 4의 sample이지
+unbounded local antibracket theorem의 증명이 아니다.
+
+E70-D에서 보정한 source-standard $sF=(S,F)$와 star-left ordering을 쓰면
+
+$$
+\begin{aligned}
+\mathcal L_{\rm ext}={}&\mathcal L_0
++\sum_a\left(q_a^*cDq_a+p_a^*cDp_a\right)\\
+&+n^*\left[cDn+(Dc)n\right]-c^*cDc-\bar c^*B .
+\end{aligned}
+\tag{36.81}
+$$
+
+Odd field $c,\bar c$의 minus sign이 핵심이다. Functional antibracket가 생성한
+14개 map과 (36.76)의 mismatch는 0이다. 이제 master density를 항별로
+계산하면 그것 자체는 30항으로 비영이다. 그러나 antibracket helper와 독립으로
+잠근 current
+
+$$
+J_M=-cnH
+\tag{36.82}
+$$
+
+에 대해
+
+$$
+\mathcal M={1\over2}(S,S)_{\rm density}=D J_M
+\tag{36.83}
+$$
+
+가 exact하게 성립한다. $J_M$은 10항, $DJ_M$은 30항, mismatch는 0이다.
+$\mathcal M$을 28개 field/antifield Euler operator에 넣은 residual도 모두 0이고,
+AFN0은 30항, AFN1은 0이다. 따라서 closed/periodic 또는 compact-support
+boundary condition을 실제로 채택할 때 local functional CME가 성립한다. 여기서는
+open endpoint를 버리지 않으므로 boundary-completed/global action invariance를
+주장하지 않는다.
+
+음성 대조는 서로 다른 지름길을 막는다.
+
+- $-nH$를 $-H$로 바꾸면 density identity 10항과 비영 Euler 11개가 남는다.
+- $sn$에서 $(Dc)n$을 빼면 identity 10항과 비영 Euler 12개가 남는다.
+- $sc$ 부호를 뒤집으면 11개 base square가 실패하고 master Euler 23개가 남는다.
+- $-c^*cDc$를 빼면 master 41항과 비영 Euler 23개가 남는다.
+- odd antifield까지 uniform plus로 쓰면 map mismatch 2항과 master Euler 23개가 남는다.
+- antibracket 둘째 부호를 바꾸면 canonicalㆍantisymmetryㆍJacobi residual이 각각 한 항이다.
+
+이 구조 때문에 (36.83)은 master evaluator가 스스로 current를 만들어 0으로
+만드는 순환 검사가 아니다. Bad density와 ghost/star/sign 변형은 같은
+normalization과 Euler code를 쓰면서도 명확히 탈락한다.
+
+보정 E70-D hash를 upstream으로 포함한 canonical contract는
+`28ba17e093c42eb9dc67c79c93bae05c09b6db87c3e6576e45ba1ac02b0863c6`로
+잠갔다. Focused 회귀는 **8 passed in 2.05s**, source parse와 production
+runner는 PASS다. 형식ㆍ수학ㆍ출처 세 독립 감사의 P0/P1/P2는 모두 없다.
+
+따라서 E70-E가 닫은 것은 dimensionless five-label 1D reparametrization
+toy에서 $J\le4$의 actual Euler variational calculus, local BV antibracket,
+retained nonzero current와 CME modulo $D$다. 4D M1 Einstein--Hilbert action,
+unbounded variational bicomplex, GHYㆍasymptotic/global boundary completion,
+full M1 antifield functional/CME, BV measure, QME, continuum ST/anomaly
+cancellation, positive physical Hilbert, HDA/quantum M2는 계속 **미완성**이다.
+M3 relational observables를 unlock하지 않고 M3--M9를 계속 동결하며 새 관측
+예측은 없다.
+
+## E70-F 4D 독립 density scalar local-BV witness 완료 계약
+
+E70-E의 1D witness는 integration by parts와 local BV quotient가 실제로 계산되는지를 보였지만, 4차원에서 tensor density가 ghost derivative를 어떻게 받는지까지 검사하지는 않았다. E70-F는 그 다음 질문을 제한된 모형으로 분리한다. 즉, 4D local BRST--BV 계산에서 weight-one density의 변환, multi-index Euler operator, antifield-number별 master current가 서로 양립하는지를 exact polynomial 계산으로 묻는다. 이 단계는 Einstein--Hilbert 작용을 새로 유도하거나 M1의 functional CME를 주장하는 단계가 아니다.
+
+형식적 기준은 Euler derivative가 모두 0일 때 total derivative인지를 판정하는 [Fuster--Henneaux--Maas](https://arxiv.org/abs/hep-th/0506098) Sec. 3.4와, standard-left $sF=(S,F)$ 및 CME의 Eqs. (4.4)--(4.7)이다. Local BRST/antifield quotient의 배경은 [Barnich--Brandt--Henneaux v3](https://arxiv.org/abs/hep-th/0002245v3)로 둔다. [Prinz v2](https://arxiv.org/abs/2206.00780v2)는 weight-one density가 total derivative로 변환하는 identity의 보조 근거일 뿐, 아래 independent-$h$ polynomial toy를 문자 그대로 제공하는 문헌도 M1의 literal model도 아니다.
+
+여기서 $a=0,\ldots,4$는 $\phi_a=(\chi,X^0,X^1,X^2,X^3)$를 뜻한다. $h^{\mu\nu}$의 열 성분과 $\rho$는 독립 변수이며 $h^{\mu\nu}=\sqrt{-g}g^{\mu\nu}$, $\rho=\sqrt{-g}$, determinant 또는 inverse metric 관계를 부과하지 않는다. 따라서 첫 독자는 이 $h$를 metric의 다른 기호로 읽어서는 안 된다. 모든 장과 계수는 dimensionless exact coordinate로 정규화하고, 다루는 classical density는
+
+$$
+\mathcal L=-\frac12h^{\mu\nu}\sum_{a=0}^4\partial_\mu\phi_a\partial_\nu\phi_a-\rho\left(\frac12\chi^2+\frac14\chi^4\right).
+\tag{36.84}
+$$
+
+그 선택이 weight-one density임을 검증하려면 scalar, rank-two contravariant density, scalar density와 ghost의 변환을 같은 convention으로 고정해야 한다.
+
+$$
+\begin{aligned}
+s\phi_a&=c^\rho\partial_\rho\phi_a,&sc^\mu&=c^\rho\partial_\rho c^\mu,\\
+sh^{\mu\nu}&=c^\rho\partial_\rho h^{\mu\nu}-h^{\rho\nu}\partial_\rho c^\mu-h^{\mu\rho}\partial_\rho c^\nu+(\partial_\rho c^\rho)h^{\mu\nu},\\
+s\rho&=c^\rho\partial_\rho\rho+(\partial_\rho c^\rho)\rho,&s\bar c_\mu&=B_\mu,\qquad sB_\mu=0.
+\end{aligned}
+\tag{36.85}
+$$
+
+28개 base component의 $s^2$는 exact 0이고, (36.84)를 직접 변환해
+
+$$
+s\mathcal L=\partial_\mu(c^\mu\mathcal L)
+\tag{36.86}
+$$
+
+를 얻는다. 이 식은 action의 global invariance를 전제한 표기가 아니다. open boundary flux를 남긴 local density identity다.
+
+계산은 symmetric 4D multi-index $|I|\le3$의 35개 jet만 허용한다. Field와 antifield를 합친 56 base variable은 1,960 generator, 즉 even/odd 각 980개를 만든다. 각 변수 $z$에 대해
+
+$$
+E_z(f)=\sum_{|I|\le3}(-D)^I\frac{\partial f}{\partial z_I}
+\tag{36.87}
+$$
+
+를 사용하고, terminal jet에 추가 $D_\mu$가 필요하면 값을 잘라내지 않고 계산을 중단한다.
+
+이 선택은 unbounded variational bicomplex의 대체물이 아니라 검사한 finite local quotient의 범위를 보존하는 장치다.
+
+Standard-left ordering으로 field antifield 항을 붙인 extended density의 master density는 2,604항으로 비영이다.
+
+따라서 pointwise zero를 주장하지 않는다. AFN0의 984항은 $J_0^\mu=c^\mu\mathcal L+h^{\mu\nu}\sum_a(\partial_\nu\phi_a)(c^\rho\partial_\rho\phi_a)$의 388항 divergence와 정확히 일치한다.
+
+AFN1의 1,620항도 homotopy로 구성한 1,752항 current의 divergence와 일치한다. 두 current를 합친 2,140항 current는 전체 master density를 재현하고 direct mismatch와 remainder는 0이며, 56개 Euler residual도 모두 0이다. Nonperiodic endpoint fixture를 보존한 채 얻은 결과이므로, 여기서 global/asymptotic boundary theorem을 끌어내지 않는다.
+
+음성 대조는 각 항이 필요한 이유를 드러낸다. $h$의 density trace를 빼면 classical mismatch 200과 scalar Euler residual 168이 남고, $\rho$ trace를 빼면 각각 8이다. $h$의 두 번째 index transport를 누락하면 mismatch 200과 nilpotency failure 6이 생긴다. Potential 앞의 $\rho$를 없애면 8/8 residual이 남는다.
+
+Ghost 부호 반전은 16개 nilpotency failure와 32개 master Euler residual을 낸다. Ghost-antifield 생략과 uniform-plus star coefficient도 transformation mismatch 및 master Euler residual 32개를 남긴다. Wrong antibracket sign은 canonical, graded-antisymmetry, Jacobi control을 각각 하나씩 깨고, naive partial derivative는 Euler result와 26항 다르다. 따라서 current를 master evaluator가 순환적으로 만들어 zero로 보이게 한 검사가 아니다.
+
+E70-E hash를 upstream으로 포함한 canonical contract는 `832ccc6d55f444038d14c1a91740bbd7d0ef0da63b5165888ef030055d2572f5`로 고정했다. Focused 회귀는 **8 tests PASS**, production runner도 PASS다.
+
+E70-F가 허용하는 최강 결론은 다섯 scalar와 독립 weight-one $h^{\mu\nu},\rho$를 가진 bounded 4D polynomial toy에서 multi-index Euler/local BV quotient, explicit AFN0ㆍAFN1 retained currents, 그리고 CME modulo $d_H$를 계산했다는 것이다. Metric determinant/inverse relation, Einstein--Hilbert action, full 4D M1 functional/CME, unbounded calculus, global boundary completion, functional measure, QME, continuum loop ST/anomaly cancellation, positive physical Hilbert와 quantum HDA/M2는 모두 **미완성**이다. 그러므로 M3 관계적 관측량을 unlock하지 않고 M3--M9를 계속 동결하며 새 관측 예측은 없다.
+
+## E70-G 4D metric--density compatibility BV witness 완료 계약
+
+E70-F는 독립 density 변수가 4차원 local BV quotient 안에서 일관되게 변환할 수 있음을 보였다. E70-G는 그 변수들이 국소 metric patch와 이어질 수 있는 가장 작은 대수적 조건을 따로 검사한다. 목표는 $h^{\mu\nu}$와 $\rho$에 Einstein--Hilbert 동역학을 부과하는 일이 아니다. 독립 symmetric contravariant weight-one density $h^{\mu\nu}$, weight-one scalar density $\rho$, 다섯 scalar $\phi_a=(\chi,X^0,X^1,X^2,X^3)$ 및 ghost/nonminimal sector에 weight-minus-one scalar-density multiplier $\ell$을 더한 toy에서 determinant compatibility와 local CME quotient를 계산하는 일이다. 독자는 먼저 constraint가 성립하는지, 그 다음에만 어느 국소 patch에서 metric을 재구성할 수 있는지를 읽어야 한다.
+
+Compatibility polynomial은
+
+$$
+C=\det h+\rho^2
+\tag{36.88}
+$$
+
+로 정의한다. 여기서 $h$는 $4\times4$ symmetric matrix $(h^{\mu\nu})$이며, $C=0$은 아직 metric 정의가 아니다. 특히 determinant의 각 raw product factor가 네 개의 weight-one $h$ 성분을 곱하므로 weight 합이 $4$라는 형식적 세기와, contravariant index 수축까지 완료한 $\det h$가 좌표변환에서 받는 geometric density weight $2$는 서로 다르다. 계산은 후자의 변환 법칙을 사용한다. 따라서 $C$는 weight-two scalar density이고, weight $-1$인 $\ell$을 곱한 $\ell C$는 action density가 된다. Antifield 규칙 $w(\Phi^*)=1-w(\Phi)$는 $w(\ell^*)=2$를 준다.
+
+이 구분은 BRST covariance에서 직접 검증한다. $s(\det h)$는 weight-two target과, $sC$는 $C$의 weight-two target과, $s(\ell C)$는 weight-one target과 각각 exact하게 일치한다. 이 결과는 raw factor weight를 geometric density weight로 오인해서 얻은 표기가 아니다. 29개 field와 29개 antifield를 두고 symmetric multi-index $|I|\le3$만 허용하면 2,030개 generator, 즉 even/odd 각 1,015개가 생긴다. 추가 total derivative가 terminal jet을 요구하면 계산은 silent truncation을 하지 않고 중단한다. 이 유한 jet quotient 밖의 variational bicomplex를 주장하지 않는 이유도 여기에 있다.
+
+Determinant polynomial은 17항이며, adjugate identity의 16 residual은 모두 exact 0이다. 29개 base BRST square와 BV-derived transformation mismatch도 모두 0이다. 이 결과는 compatibility ideal이 bounded local BRST differential 아래 안정적이라는 산출이다. Curvature, Einstein equation, 또는 중력의 전역 기하를 유도한 결과는 아니다.
+
+조건부 재구성은 더 좁다. $\rho>0$, $C=0$, $h$가 real symmetric nondegenerate Lorentzian이라는 국소 patch 조건에서만
+
+$$
+g^{\mu\nu}=\frac{h^{\mu\nu}}{\rho}
+\tag{36.89}
+$$
+
+와 그 inverse를 재구성한다. 고정 fixture $\rho=4$, $\det h=-16$은 $C=0$, inverse-product residual $0$, $\det g_{\mu\nu}=-16$, $\det g^{\mu\nu}=-1/16$을 준다. $\rho=0$, negative $\rho$, incompatible determinant, nonsymmetric $h$는 모두 거부한다. Time orientation의 선택과 global patch reconstruction은 이 계약에 포함하지 않는다.
+
+Extended density의 master density는 3,036항으로 비영이며 AFN0가 1,356항, AFN1이 1,680항이다. 따라서 pointwise CME를 주장하지 않는다. Analytic AFN0 current는 460항이고, $\ell C$ 때문에 추가되는 compatibility increment는 72항이다. AFN1 homotopy current는 1,800항이며, 두 부분을 보존한 full retained current는 2,260항이다. 그 divergence는 3,036항 master density와 일치하고 mismatch는 $0$이다. 58개 Euler residual도 모두 $0$이므로, 이 유한 local quotient 안에서는 explicit current를 갖는 CME modulo $d_H$를 계산했다.
+
+음성 대조는 계산의 의존성을 분리한다. $h$의 density weight를 누락하면 covariance mismatch가 68개 남는다. $\ell$을 weight zero로 바꾸면 densityㆍclassicalㆍEuler-$\ell$ residual이 각각 72개 남고, $\ell^*$를 빼면 transformation mismatch 8개와 master-$\ell$ Euler residual 300개가 생긴다. Constraint의 부호를 틀리게 두면 numerical residual은 $-32$이고, antibracket의 부호를 뒤집으면 canonical, graded-antisymmetry, Jacobi control이 각각 하나씩 실패한다. 따라서 retained current를 master evaluator가 순환적으로 구성하여 영으로 보이게 한 검사가 아니다.
+
+문헌의 역할도 제한한다. [Fuster--Henneaux--Maas](https://arxiv.org/abs/hep-th/0506098)는 Euler-total-derivative 기준과 standard-left BV convention을, [Barnich--Brandt--Henneaux v3](https://arxiv.org/abs/hep-th/0002245v3)는 local BRST quotient의 배경을 제공한다. [Prinz v2](https://arxiv.org/abs/2206.00780v2)는 density/BRST weight identity의 보조 근거다. [hep-th/0501204](https://arxiv.org/abs/hep-th/0501204)는 2차원 precedent로만 쓰며, [Ohta--Percacci--Pereira](https://arxiv.org/abs/1605.00454)는 densitized parametrization precedent로만 쓴다. 어느 문헌도 여기의 4차원 identity를 문자 그대로 제공하지 않는다. 그 identity의 determinantㆍadjugate 대수는 이 bounded toy에서 계산한 산출이다.
+
+이 단계의 receipt는 [검증 원장 QNB-E70-AB--AH](../검증_원장/참조_양자_보존_원장.md)의 안정화된 계약을 따른다. E70-F hash를 upstream으로 포함한 canonical SHA-256은 `6dcb7db9da4c85c6f67d06c566d50352fa76ea52151b62f1f5f41c87c4e5dc9b`이며, focused 회귀는 **8 passed in 117.79s**, production runner는 PASS, 독립 audit P0/P1/P2는 모두 none이다.
+
+E70-G가 허용하는 최강 결론은 bounded 4D polynomial toy에서 metric-density determinant compatibility, positive-$\rho$ local reconstruction, weight-minus-one multiplier를 포함한 local BV quotient와 explicit retained currents를 계산했다는 것이다. Curvature/EH/GHY, full M1 functional CME, QME와 M2는 모두 **미완성**이다. 그러므로 M3 관계적 관측량을 unlock하지 않고 M3--M9를 계속 동결하며 새 관측 예측은 없다.
+
+## E70-H 4D torsion-free Palatini curvature BRST 완료 계약
+
+E70-G는 determinant compatibility가 국소 metric patch의 필요조건으로 작동하는지를 검산했지만, independent connection의 curvature가 같은 diffeomorphism-BRST convention 아래 어떻게 변환하는지는 검사하지 않았다. E70-H는 이 빈칸을 유한 jet 계산으로 분리한다. 목표는 connection의 운동방정식을 풀거나 $\Gamma$를 Levi--Civita connection으로 식별하는 일이 아니다. 독자는 먼저 independent affine connection의 변환을 고정하고, 그 변환으로 Ricci tensor와 Palatini density가 정말 covariance와 total-divergence identity를 만족하는지를 차례로 확인한다.
+
+여기서 $h^{\mu\nu}=h^{\nu\mu}$는 independent symmetric contravariant weight-one density이고, $\Gamma^\lambda{}_{\mu\nu}=\Gamma^\lambda{}_{\nu\mu}$는 torsion-free independent affine connection이다. $c^\mu$는 odd diffeomorphism ghost다. 이 세 묶음은 $10+40+4=54$개의 base component를 이룬다. Covariant Lagrangian adaptation에서 사용할 BRST convention은
+
+$$
+\begin{aligned}
+s\Gamma^\lambda{}_{\mu\nu}
+  &=c^\rho\partial_\rho\Gamma^\lambda{}_{\mu\nu}
+    -\Gamma^\rho{}_{\mu\nu}\partial_\rho c^\lambda
+    +\Gamma^\lambda{}_{\rho\nu}\partial_\mu c^\rho
+    +\Gamma^\lambda{}_{\mu\rho}\partial_\nu c^\rho
+    +\partial_\mu\partial_\nu c^\lambda,\\
+sc^\mu&=c^\rho\partial_\rho c^\mu,\\
+sh^{\mu\nu}
+  &=c^\rho\partial_\rho h^{\mu\nu}
+    -h^{\rho\nu}\partial_\rho c^\mu-h^{\mu\rho}\partial_\rho c^\nu
+    +(\partial_\rho c^\rho)h^{\mu\nu}.
+\end{aligned}
+\tag{36.90}
+$$
+
+이다. 마지막 inhomogeneous second-ghost-derivative 항은 connection이 tensor가 아니라는 점을 보존한다. Symmetric 4D multi-index $|I|\le3$의 35개 jet만 허용하면 총 1,890 generator가 생기며, 그중 1,750개는 even, 140개는 odd다. terminal jet에 다시 horizontal derivative가 필요하거나 unsymmetrized connection name을 요청하면 값을 추정하지 않고 거부한다.
+
+Ricci tensor는 대칭을 가정하지 않고 다음 순서로 정의한다.
+
+$$
+\begin{aligned}
+R_{\mu\nu}
+  &=\partial_\lambda\Gamma^\lambda{}_{\nu\mu}
+    -\partial_\nu\Gamma^\lambda{}_{\lambda\mu}
+    +\Gamma^\lambda{}_{\lambda\sigma}\Gamma^\sigma{}_{\nu\mu}
+    -\Gamma^\lambda{}_{\nu\sigma}\Gamma^\sigma{}_{\lambda\mu},\\
+\mathcal L_P&=h^{\mu\nu}R_{\mu\nu}.
+\end{aligned}
+\tag{36.91}
+$$
+
+54개 base BRST map의 nilpotency residual은 모두 exact 0이다. 16개 Ricci component는 총 396 sparse term으로 전개되며 성분마다 24--27항을 가진다. 각 tensor covariance residual도 0이다. 더구나 여섯 off-diagonal antisymmetry fixture는 모두 nonzero이고 합계 48항이므로, 계산은 $R_{\mu\nu}=R_{\nu\mu}$를 숨겨 가정하지 않는다. Palatini density는 직접 변환하여
+
+$$
+s\mathcal L_P=\partial_\mu\!\left(c^\mu\mathcal L_P\right)
+\tag{36.92}
+$$
+
+를 얻는다. $\mathcal L_P$ 자체는 276항이고, 좌변과 divergence는 각각 4,032항이며 mismatch는 0이다. 보존한 current는 1,104항이다. 이는 open boundary flux를 제거한 global action statement가 아니라 bounded local polynomial quotient의 density identity다.
+
+대조군은 nilpotency 하나만으로 curvature covariance나 density identity를 대신할 수 없음을 보인다. Affine inhomogeneous 항을 빼면 nilpotency는 우연히 0으로 남지만 Ricci covariance 16개가 nonzero가 되고 최대 residual은 39, density mismatch는 372다. Lower-index transport 하나를 빼면 nilpotency/Ricci/density 실패는 각각 40/16/1,786이고, upper-index transport의 부호를 틀리게 두면 40/16/2,040이다. $h$의 weight-one trace를 빼면 density mismatch는 1,104다. Ghost 부호 반전은 nilpotency 50개와 최대 residual 121을 남긴다. Ricci derivative coefficient와 product coefficient를 각각 바꾸면 Ricci covariance 16개와 density mismatch 200/256이 생긴다. Unsymmetrized name과 terminal jet도 모두 거부한다.
+
+출처는 역할을 좁혀 사용한다. [Kiriushcheva--Kuzmin--McKeon](https://arxiv.org/abs/hep-th/0609219)과 [McKeon](https://arxiv.org/abs/1005.3001)은 $d>2$ first-order Einstein--Hilbert/affine canonical analysis의 배경이다. [Kiriushcheva--Kuzmin--McKeon의 2D 분석](https://arxiv.org/abs/hep-th/0503231)은 $h$--$\Gamma$ 선례와 canonical gauge transformation이 diffeomorphism과 자동으로 같지 않다는 경계를 제공한다. E70-H는 이 문헌의 literal transcription이나 canonical equivalence가 아니라, 그 경계를 보존한 finite-jet covariant Lagrangian adaptation이다.
+
+이 단계의 receipt는 [검증 원장 QNB-E70-AI--AK](../검증_원장/참조_양자_보존_원장.md)의 안정화된 계약을 따른다. E70-G contract `6dcb7db9da4c85c6f67d06c566d50352fa76ea52151b62f1f5f41c87c4e5dc9b`를 verified한 canonical SHA-256은 `ac12325f300917aeeacb55d12dfed0ac28718fb265b044e34c4581f2c48db5b2`다. Focused regression은 **8 passed in 193.47s**, runner는 PASS, 독립 audit P0/P1/P2는 모두 none이다.
+
+E70-H가 허용하는 최강 결론은 유한 4D torsion-free affine finite-jet quotient에서 covariant Lagrangian diffeomorphism-BRST, nonsymmetric Ricci covariance, Palatini bulk density의 local total-divergence identity를 계산했다는 것이다. 이 단계에는 metric-density constraint도 포함하지 않는다. $\Gamma$ EOM, metric compatibility, Levi--Civita relation, first/second-order equivalence, GHY와 global boundary completion, scalar/full M1 BV-CME, functional measure, QME, continuum ST, positive physical Hilbert와 M2는 모두 **미완성**이다. 그러므로 M3--M9와 새 관측 예측은 계속 동결한다.
+
+## E70-I torsion-free Palatini connection EOM과 local Levi--Civita 환원 완료 계약
+
+E70-H는 independent torsion-free connection으로 만든 Ricci density의 BRST covariance를 계산했지만, 그 connection을 변분했을 때 남는 bulk equation과 boundary current를 분리하지 않았다. E70-I는 그 변분 문제를 먼저 고정한다. 이 단계에서는 lower pair가 symmetric인 $\Gamma^\lambda{}_{\mu\nu}=\Gamma^\lambda{}_{\nu\mu}$의 40성분을 **변분 전에** 독립 변수로 정하고, bulk variation에서만 $\delta\Gamma|_{\partial M}=0$을 둔다. 따라서 off-diagonal lower pair는 둘이 아니라 하나의 변수이며 Euler coefficient에 factor $2$가 필요하다. 이 convention은 unrestricted projective metric-affine variation과 다르므로, 그 이론의 solution classification을 여기로 가져오지 않는다.
+
+Palatini density $\mathcal L_P=h^{\mu\nu}R_{\mu\nu}(\Gamma)$의 first variation은 boundary current를 남긴 채
+
+$$
+\begin{aligned}
+\delta\mathcal L_P
+ &=E_\lambda{}^{\mu\nu}\,\delta\Gamma^\lambda{}_{\mu\nu}
+   +\partial_\lambda\Theta^\lambda,\\
+\Theta^\lambda
+ &=h^{\mu\nu}\delta\Gamma^\lambda{}_{\nu\mu}
+   -h^{\lambda\nu}\delta\Gamma^\rho{}_{\rho\nu}.
+\end{aligned}
+\tag{36.93}
+$$
+
+로 쓴다. 식 (36.93)은 $\delta\Gamma$를 경계에서 영으로 두어 bulk Euler equation을 읽는 convention이지, Palatini/GHY boundary completion이나 global variational principle을 주장하는 식이 아니다. Direct raw variation은 456항이고 bulk도 456항이다. Divergence는 168항이며 analytic boundary current는 84항으로, 두 계산의 mismatch는 모두 0이다. Boundary current를 생략하면 168개 residual이 남는다.
+
+연결 계수는 다음처럼 정리된다.
+
+$$
+\begin{aligned}
+E_\lambda{}^{\mu\nu}
+  &=-\nabla_\lambda h^{\mu\nu}+\delta_\lambda^{(\mu}F^{\nu)},
+&F^\nu&=\nabla_\rho h^{\rho\nu},\\
+E_\mu{}^{\mu\nu}&=\frac32F^\nu.
+\end{aligned}
+\tag{36.94}
+$$
+
+40개 independent Euler coefficient는 direct coefficient와 모두 mismatch 0이다. 4차원 trace의 네 residual도 0이므로 $F^\nu=0$이고, 이 고정된 torsion-free convention 안에서는 $\nabla_\lambda h^{\mu\nu}=0$이 뒤따른다. Symmetrized trace term을 빼면 Euler residual 16개, 총 224항, 최대 residual 14가 남는다. 따라서 trace reduction은 numerical fixture의 사후 해석이 아니라 bulk coefficient 자체의 검산을 거친다.
+
+국소 환원은 four rational positive-$\rho$ fixture에서만 확인한다. $\rho=(1,1,1,4)$인 네 nondegenerate jet fixture는 각각 $40\times40$ connection system의 rank 40을 갖고, solve residual, determinant compatibility residual, Levi--Civita mismatch는 모두 0이다. 이때 $g^{\mu\nu}=h^{\mu\nu}/\rho$의 inverse $g_{\mu\nu}$를 정의하고, 비교 대상은
+
+$$
+\Gamma^\lambda{}_{\mu\nu}[g]
+=\frac12g^{\lambda\rho}
+\left(\partial_\mu g_{\rho\nu}+\partial_\nu g_{\rho\mu}-\partial_\rho g_{\mu\nu}\right)
+\tag{36.95}
+$$
+
+이다. 이는 선언한 nondegenerate local patch의 conditional local uniqueness fixture이지, global first/second-order equivalence의 증명이 아니다.
+
+대조군은 범위를 더 분명하게 한다. Wrong density trace는 rank 40을 우연히 보존해도 correct-equation residual 16개, Levi--Civita mismatch 28개와 최대 $5/3$을 남긴다. Singular $h$ fixture의 rank는 33이다. Unrestricted projective shift는 lower-symmetry violation 24개를 내므로, 이 40-variable torsion-free domain에 허용되지 않는다. Degenerateㆍnonsymmetricㆍterminal input도 모두 거부한다. 이 결과는 rank 하나나 connection equation 하나만으로 boundary completion, global equivalence, 또는 unrestricted projective freedom을 대체할 수 없음을 보인다.
+
+출처는 서로 다른 변분 domain을 구분하는 데 쓴다. [Olmo--Rubiera-Garcia](https://arxiv.org/abs/1306.4210)는 torsion을 변분 전후 어느 시점에 고정하는지가 달라질 수 있음을 보이는 배경이고, [Kiriushcheva--Kuzmin--McKeon](https://arxiv.org/abs/hep-th/0609219)은 $d>2$ first-order canonical 배경이다. [Bernal et al.](https://arxiv.org/abs/1606.08756)과 [Bejarano et al.](https://arxiv.org/abs/1907.04137)은 unrestricted affine/projective Palatini 해의 비유일성과 projective freedom의 경계다. E70-I는 이 문헌들을 literal transcription하지 않으며, torsion-free-before-variation finite-jet bulk convention과 unrestricted projective metric-affine theory의 canonical equivalence를 주장하지 않는다.
+
+이 단계의 receipt는 [검증 원장 QNB-E70-AL--AN](../검증_원장/참조_양자_보존_원장.md)의 안정화된 계약을 따른다. E70-H hash `ac12325f300917aeeacb55d12dfed0ac28718fb265b044e34c4581f2c48db5b2`를 verified한 canonical SHA-256은 `729f5cb49d911013923af65e201d7ec838db12d06883eb57337f03c23a1196df`다. Pycompile과 runner는 PASS, focused regression은 **8 passed in 182.26s**, 독립 audit P0/P1/P2는 모두 none이다.
+
+E70-I가 허용하는 최강 결론은 고정한 torsion-free bounded 4D Palatini bulk quotient에서 direct Euler variation, trace compatibility, retained local boundary current, 네 nondegenerate rational local uniqueness fixture를 계산했다는 것이다. Palatini/GHY boundary completion, global first/second-order equivalence, full M1 action/BV/CME, functional measure, QME, continuum ST, positive physical Hilbert와 M2는 모두 **미완성**이다. 그러므로 M3--M9와 새 관측 예측은 계속 동결한다.
+
+## E70-J normalized first-order M1 classical bulk 조립 완료 계약
+
+E70-I는 중력 Palatini bulk의 connection variation까지 분리했지만, $\chi$, 네 reference scalar $X^A$, metric-density compatibility를 포함한 M1 classical density가 같은 BRST convention 아래 실제로 함께 조립되는지는 아직 검사하지 않았다. E70-J는 이 질문을 coefficient의 물리적 유도와 분리해 푼다. 먼저 internal M1 Eq. (37.1)의 coefficient dictionary를 **계약 입력**으로 고정하고, 그 고정값으로 각 항의 local-divergence receipt를 확인한 뒤에만 합친 density를 검사한다. 따라서 독자는 이 절에서 계수의 관측 추론이 아니라, 명시한 first-order bulk ansatz가 서로 다른 sector를 섞을 때도 같은 local BRST calculus를 유지하는지를 읽어야 한다.
+
+고정한 density는 independent torsion-free connection의 Ricci tensor $R_{\mu\nu}(\Gamma)$, contravariant density $h^{\mu\nu}$, density $\rho$, scalar $\chi$, reference scalar $X^A$, multiplier $\ell$로
+
+$$
+\begin{aligned}
+\mathcal L_{\mathrm{M1,bulk}}
+ &=a_Rh^{\mu\nu}R_{\mu\nu}-a_\Lambda\rho
+   -\frac{a_{\chi K}}{2}h^{\mu\nu}\partial_\mu\chi\partial_\nu\chi\\
+ &\quad-\rho\left(\frac{a_m}{2}\chi^2+\frac{a_4}{24}\chi^4\right)
+   -\frac{a_X}{2}h^{\mu\nu}\sum_{A=0}^{3}\partial_\mu X^A\partial_\nu X^A\\
+ &\quad+a_C\ell\left(\det h+\rho^2\right).
+\end{aligned}
+\tag{36.96}
+$$
+
+로 둔다. Physical dictionary는 scale normalization 전 $a_R=M_P^2/2$, $a_\Lambda=M_P^2\Lambda$, $a_{\chi K}=1$, $a_m=m^2$, $a_4=\lambda$, $a_X=\mu_X^2$이며 $a_C$는 auxiliary multiplier coefficient다. 반면 $(2,3,5,7,11,13,17)$의 distinct-prime fixture는 계산 중 계수와 sector를 섞지 않았는지 찾는 algebraic sentinel이다. 이 fixture를 physical coefficient inference, parameter fit, 또는 M1의 물리적 도출로 읽지 않는다.
+
+Catalog는 69개 base field, 즉 even 61개와 odd 8개로 구성하고, symmetric four-dimensional multi-index $|I|\le3$의 35개만 허용한다. 따라서 bounded jet은 2,415개이며 even 2,135개와 odd 280개다. 69개 BRST map의 square는 모두 0이고 E70-I에서 공유한 $h/c$ map 14개의 upstream mismatch도 0이다. Invalid coefficient fixture와 terminal jet request는 값을 보간하지 않고 reject한다.
+
+일곱 unit receipt는 같은 결론을 다른 sector마다 요구한다. 각 receipt의 $(\text{density};\text{variation}/\text{current})$ term count는 Palatini $(276;4{,}032/1{,}104)$, cosmological $(1;8/4)$, $\chi$ kinetic $(10;144/40)$, mass $(1;12/4)$, quartic $(1;12/4)$, four-$X$ kinetic $(40;576/160)$, compatibility $(18;372/72)$다. 매 receipt에서 divergence와 variation은 같고 mismatch는 0이다. 이를 합쳐 직접 전개하면
+
+$$
+s\mathcal L_{\mathrm{M1,bulk}}
+=\partial_\mu J^\mu_{\mathrm{M1,bulk}},
+\qquad
+(N_{\mathcal L},N_{s\mathcal L},N_J,N_{\mathrm{mismatch}})
+=(347,5{,}156,1{,}388,0).
+\tag{36.97}
+$$
+
+여기서 $J^\mu_{\mathrm{M1,bulk}}$는 retained current다. 식 (36.97)은 open boundary flux를 없앤 global action identity가 아니라, 선언한 finite-jet quotient에서 보존한 current까지 포함한 local identity다.
+
+중력과 compatibility sector도 조립 뒤에 다시 분리해 검사한다. $\Gamma$에 대한 40개 Euler coefficient는 총 456항으로 E70-I Palatini coefficient $E_P$의 $a_R E_P$와 일치하며, $\ell$에 대한 18개 Euler coefficient는 $a_CC$, $C=\det h+\rho^2$와 일치한다.
+
+$$
+\begin{aligned}
+\frac{\delta\mathcal L_{\mathrm{M1,bulk}}}{\delta\Gamma}
+ &=a_RE_P,\\
+\frac{\delta\mathcal L_{\mathrm{M1,bulk}}}{\delta\ell}
+ &=a_C\left(\det h+\rho^2\right).
+\end{aligned}
+\tag{36.98}
+$$
+
+이는 모든 field EOM이나 임의 metric-affine matter coupling을 증명하지 않는다. 특히 $\Gamma$ Euler factorization은 이 고정된 ansatz에서 matter 항이 connection equation에 숨어 들어가지 않았다는 assembly check다.
+
+제어군은 어느 항이 identity를 지지하는지 드러낸다. Wrong gravity factor는 40개 nonzero $\Gamma$ Euler residual, 총 456항과 최대 17을 남긴다. Gamma--matter contamination은 residual 1, $\ell$ BRST map omission은 144, wrong cosmological scalar는 4, shared map perturbation은 1의 residual을 낸다. Retained current를 생략하면 mixed identity residual은 5,156이다. 그러므로 unit receipt를 더한 성공이나 prime sentinel 하나만으로 physical normalization 또는 full dynamics를 주장할 수 없다.
+
+출처는 ansatz의 범위를 표시하는 데 쓴다. [Kiriushcheva--Kuzmin--McKeon](https://arxiv.org/abs/hep-th/0609219)은 first-order Einstein--Hilbert canonical analysis의 배경이며, [Prinz](https://arxiv.org/abs/2206.00780v2)는 density BRST convention의 배경이다. [Alvarez, Anero, Santos-Garcia](https://arxiv.org/html/1706.02622v7)는 Levi--Civita-background one-loop 계산의 caveat를 제공한다. 이 문헌들은 independent-$\Gamma$ full M1 density의 literal derivation, coefficient dictionary의 물리적 도출, 또는 양자 M2의 증거가 아니다.
+
+이 단계의 receipt는 [검증 원장 QNB-E70-AO--AQ](../검증_원장/참조_양자_보존_원장.md)의 안정화된 계약을 따른다. E70-C `55f0984aed5db1682d6f0e84bdea2520a9a54197fdcc87ab06b679cc763def41`와 E70-I `729f5cb49d911013923af65e201d7ec838db12d06883eb57337f03c23a1196df`를 verified한 canonical contract SHA-256은 `89837f5e904dd2cd37e8e67c2b71c06b940490d3446b6805c5a1081fe655cce1`다. Pycompile PASS, focused regression은 **8 passed in 225.06s**, independent runner JSON PASS, post-fix contract test는 **1 passed in 0.22s**이며 formal/math/source audit P0/P1/P2는 모두 none이다.
+
+E70-J가 허용하는 최강 결론은 고정한 coefficient dictionary 아래 bounded first-order M1 bulk density를 seven unit receipt와 함께 exact local-divergence identity로 조립했다는 것이다. Physical-coefficient inference, arbitrary metric-affine matter, all-field EOM, boundary/GHY/global equivalence, full M1 BV/CME, functional measure/QME/continuum ST, positive physical Hilbert, quantum HDA/M2는 모두 **미완성**이다. 그러므로 M3--M9와 새 관측 예측은 계속 동결한다.
+
 ## 1차 문헌
 
 - [Brunetti, Fredenhagen, Verch, *The Generally Covariant Locality Principle*](https://arxiv.org/abs/math-ph/0112041)
@@ -1633,9 +2590,16 @@ renormalizationㆍBRST/ST/QMEㆍHilbertㆍHDA/M2의 증명이 아니다. Full E6
 - [Giesel, Vetter, *Reduced Loop Quantization with four Klein--Gordon Scalar Fields as Reference Matter*](https://arxiv.org/abs/1610.07422)
 - ['t Hooft, Veltman, *One-loop divergencies in the theory of gravitation*](https://www.numdam.org/article/AIHPA_1974__20_1_69_0.pdf)
 - [Alvarez, Anero, Santos-Garcia, *One-loop divergences in first order Einstein-Hilbert gravity*, v7](https://arxiv.org/html/1706.02622v7)
+- [Kiriushcheva, Kuzmin, McKeon, *A Canonical Analysis of the Einstein-Hilbert Action in First Order Form*](https://arxiv.org/abs/hep-th/0609219)
+- [McKeon, *The Canonical Structure of the First Order Einstein-Hilbert Action*](https://arxiv.org/abs/1005.3001)
+- [Kiriushcheva, Kuzmin, McKeon, *Peculiarities of the Canonical Analysis of the First Order Form of the Einstein-Hilbert Action in Two Dimensions in Terms of the Metric Tensor or the Metric Density*](https://arxiv.org/abs/hep-th/0503231)
+- [Olmo, Rubiera-Garcia, *Importance of torsion and invariant volumes in Palatini theories of gravity*](https://arxiv.org/abs/1306.4210)
+- [Bernal et al., *On the (non-)uniqueness of the Levi-Civita solution in the Einstein-Hilbert-Palatini formalism*](https://arxiv.org/abs/1606.08756)
+- [Bejarano et al., *Geometric inequivalence of metric and Palatini formulations of General Relativity*](https://arxiv.org/abs/1907.04137)
 - [Slavnov, *Ward identities in gauge theories*](https://doi.org/10.1007/BF01090719)
 - [Becchi, Rouet, Stora, *Renormalization of Gauge Theories*](https://doi.org/10.1016/0003-4916(76)90156-1)
 - [Batalin, Vilkovisky, *Gauge algebra and quantization*](https://doi.org/10.1016/0370-2693(81)90205-7)
+- [Fuster, Henneaux, Maas, *BRST-antifield Quantization: A Short Review*](https://arxiv.org/abs/hep-th/0506098)
 - [Calzetta, Hu, *Nonequilibrium quantum fields: Closed-time-path effective action, Wigner function, and Boltzmann equation*](https://doi.org/10.1103/PhysRevD.37.2878)
 - [Giulini, Marolf, *On the Generality of Refined Algebraic Quantization*](https://arxiv.org/abs/gr-qc/9812024)
 - [Marolf, *Group Averaging and Refined Algebraic Quantization: Where are we now?*](https://arxiv.org/abs/gr-qc/0011112)
@@ -1643,6 +2607,7 @@ renormalizationㆍBRST/ST/QMEㆍHilbertㆍHDA/M2의 증명이 아니다. Full E6
 - [Zinn--Justin, *Renormalization of Gauge Theories*](https://arxiv.org/abs/hep-th/9906115)
 - [Barnich, Brandt, Henneaux, *Local BRST cohomology in gauge theories*](https://arxiv.org/abs/hep-th/0002245)
 - [Barvinsky et al., *Renormalization of gauge theories in the background-field approach*](https://arxiv.org/abs/1705.03480)
+- [Prinz, *The BRST Double Complex for the Coupling of Gravity to Gauge Theories*, v2](https://arxiv.org/abs/2206.00780v2)
 - [Alvarez--Gaumé, Witten, *Gravitational Anomalies*](https://doi.org/10.1016/0550-3213(84)90066-X)
 - [Han, Ma, *Master Constraint Operator in Loop Quantum Gravity*](https://arxiv.org/abs/gr-qc/0510014)
 - [Cheung et al., *The Effective Field Theory of Inflation*](https://arxiv.org/abs/0709.0293)
