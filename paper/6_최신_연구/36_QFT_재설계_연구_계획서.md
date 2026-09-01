@@ -265,6 +265,161 @@ continuumㆍcutoffㆍrenormalization은 포함하지 않는다. 그러므로 이
 projected $H_3$ exchange, full quartic Hamiltonian, S-matrix 또는 strong-coupling
 scale로 부르지 않으며 M2와 M3--M9는 계속 동결한다.
 
+[E68-AA--AB 원장](../검증_원장/참조_양자_보존_원장.md#qnb-e68-aa)은
+네 real-harmonic oscillator에서 64개 signed cubic assignment를 normal-order한 뒤,
+두 diagonal initial state가 한 번의 $H_3$ 삽입으로 도달하는 Fock target을
+algebraically 닫았다. Initial state마다 candidate 12개ㆍactive 4개가 나왔고,
+occupation-factor 조립은 독립 Kronecker Fock matrix와 최대
+$1.39\times10^{-17}$까지 일치했다. 두 rotating target은 E68-V--X의 branch-keyed
+certificate를 재사용하고, 나머지 target의 near resonance는 개별적으로
+fail-closed한다.
+
+첫 256/512와 512/1024 grid는 $\kappa=0.05$에서 각각
+$1.64\times10^{-8}$, $1.16\times10^{-8}$로 $10^{-8}$ 문턱을 넘어서 실패했다.
+임계치를 낮추지 않고 1024/2048로 올렸다. 이어 사후 수학 감사가 active count가
+영수증에는 있지만 PASS 조건에 빠진 P1을 찾아 `==4` 조건과 회귀를 추가했고,
+네 momentum을 처음부터 다시 실행해 최종 **4/4 PASS**를 얻었다. 최대 exact-star
+normalized error는 $4.47\times10^{-5}$, 최대 vertex grid residual은
+$9.49\times10^{-9}$, 최소 음성대조/오차 비는 $1.19\times10^3$이고 focused
+회귀는 **2 passed in 40.43s**다.
+
+이 결과는 frozen four-oscillatorㆍ채택한 normal-order conventionㆍ유한시간의
+**all-signed diagonal-survival consistency**다. Off-diagonal scattering, full Fock
+evolution, complete exchange, full quartic matrix, continuumㆍSK/in-inㆍregulatorㆍ
+countertermㆍstrong coupling은 포함하지 않는다. 따라서 E68 전체나 M2로
+승격하지 않고 M3--M9도 계속 동결한다.
+
+[E69-A--C 원장](../검증_원장/참조_양자_보존_원장.md#qnb-e69-a)은
+supplied $O(\hbar)$ breaking을 exactㆍclosed non-exactㆍnon-closed로 구분하는
+finite ST cohomology 입장 게이트를 닫았다. 세 differential rank는 $(1,1,1)$,
+cohomology 차원은 $(0,1,1,0)$이고, $\Delta=(3/8,0,0)$은
+$\Xi=(0,3/8,0)$으로 residual 0에 제거됐다. Anomaly control의 image distance와
+non-closed control의 closure residual은 각각 1이다.
+
+첫 감사에서 exact zero remainder만 쓴 자명한 basis check와 unit singular만 쓴
+rank evidence의 P1/P2를 찾았다. Nonzero quotient coordinate 0.60의 비직교 basis
+불변성, retained singular/threshold $10^{10}$, nilpotency control/tolerance
+$10^9$, near-threshold rank ambiguity 탐지를 PASS에 연결해 보강했다. 최종
+focused 회귀는 **3 passed in 0.12s**, 독립 재감사의 잔여 P0/P1/P2는 없다.
+이는 supplied finite coefficient complex의 algebraic anomaly admission이며 실제
+loop integralㆍcontinuum $H^1(s|d)$ㆍST/QMEㆍCTPㆍphysical HilbertㆍM2가 아니다.
+
+[E69-D--F 원장](../검증_원장/참조_양자_보존_원장.md#qnb-e69-d)은
+arXiv:1706.02622v7의 Einstein--massless-quantum-scalar Eq. (28)을 로컬
+payload로 잠그고 exact rational vector $(43/60,1/40,1/6,1,1)$을 재현했다.
+여기서 $Q=R_{\mu\nu}R^{\mu\nu}$, $X=(\nabla\phi)^2$, $Y=\Box\phi$이며,
+source background EOM으로 $X=2R$, $Q=R^2$, $Y=0$을 얻어 Eq. (30)의
+$D_{\rm on}=203R^2/40$을 확인했다. On-shell 4점과 off-shell 3점의 항등식
+residual은 정확히 0이고, Eq. (28)/(30) 혼동, $\bar\phi=0$에서 scalar loop를
+제거하는 shortcut, $X^2$ㆍ$RX$ 누락, 잘못된 EOM과 $Y$ 차수 대조는 모두
+nonzero로 검출됐다.
+
+첫 수학 감사가 단항식 차원을 $L^{-4}$로 하드코딩한 P1을 찾아냈다. 이를
+$[R_{\mu\nu}]=[R]=[X]=[Y]=L^{-2}$에서 ordered factor의 지수를 실제 합산하는
+계산으로 바꾸고 훼손된 $[X]$ 대조를 추가했다. 최종 focused 회귀는
+**5 passed in 0.06s**, production receipt는 PASS다. 이 결과는 local
+transcription checksum과 supplied 4차원 EOM 아래의 source reproduction이다.
+SHA-256은 내려받은 논문 artifact나 원격 source의 독립 인증 hash가 아니며,
+Gauss--Bonnet flag도 finite-boundary completion을 뜻하지 않는다. Heat-kernel
+traceㆍghost determinant의 재구성, loopㆍrenormalization, pure Einstein,
+continuum ST/QMEㆍCTPㆍphysical HilbertㆍHDA/M2는 여전히 미완성이므로
+M3--M9는 계속 동결한다.
+
+[E69-G--I 원장](../검증_원장/참조_양자_보존_원장.md#qnb-e69-g)은 source
+Eq. (23)/(27)의 $n$-의존 coefficient formula를 $n=4$에서 각각 평가하고,
+ghost weight $-2$와 4D integrated-bulk Gauss--Bonnet quotient를 거쳐
+Eq. (28)을 재구성했다. 공통 $1/360$ 이전 vector는
+$g_{\rm 2+gf}=(382,-1102,595,-720,-60,720,360)$,
+$g_{\rm gh}=(-22,172,80,-360,-60,180,0)$,
+$g_{\rm raw}=(426,-1446,435,0,60,360,360)$이다. 한 source lane의 잘못된
+$P=-4$ 산출은 원문 분모와 최종 $P=0$ 소거에 모두 모순되어 폐기하고
+$P=-2$로 정정했다.
+
+세 bulk representative는 exact residual 0, 깨진 대표는 $71/420$이고,
+wrong ghost/basis/GB, $R^2$ㆍ$RX$ㆍ$X^2$ 생략, $n=5$ 혼용과 차원 훼손
+controls가 모두 nonzero다. 감사 보강 뒤 focused 회귀는 **5 passed in
+0.08s**, production receipt는 PASS이며 최종 P0/P1은 없다. 이는 source
+coefficient formula assembly일 뿐 Laplace operatorㆍEq. (22) traceㆍheat-kernel
+coefficientㆍghost determinant의 독립 도출이 아니고, finite boundaryㆍ
+$n\ne4$ evanescentㆍrenormalizationㆍST/QMEㆍHDA/M2도 미완성이다.
+
+[E69-J--L 원장](../검증_원장/참조_양자_보존_원장.md#qnb-e69-j)은 source
+Eq. (19)와 supplied Eq. (22), ghost Eq. (24)--(26)의 trace input을
+rational-polynomial pair로 조립해 Eq. (23)/(27)의 일곱 성분을 각각
+항등 재현했다. 총 14개 cross-product residual polynomial은 0이고,
+$n=3,4,5$의 42 exact component가 모두 맞았으며 $n=2$ pole은 거부됐다.
+$n=4$ 상수 복사 impostor mismatch는 Eq. (23) $538/45$, Eq. (27) $1/20$이다.
+
+여덟 symbolic 음성대조는 각각 1개 이상 nonzero component를 냈고, 모든
+invariant와 universal formula contribution의 $L^{-4}$ 차원도 primitive
+exponent에서 산출했다. Focused 회귀는 **6 passed in 0.11s**, production
+receipt는 PASS이며 독립 감사 P0/P1은 없다. 이는 supplied trace identity의
+source-consistency 증거이지 Eq. (19), Eq. (22) trace tensor, ghost determinant와
+weight의 독립 도출이 아니다. Total derivativeㆍboundaryㆍevanescentㆍloopㆍ
+renormalizationㆍST/QMEㆍHDA/M2는 계속 미완성이다.
+
+[E69-M--O 원장](../검증_원장/참조_양자_보존_원장.md#qnb-e69-m)은 source-v7
+Eq. (24)--(26)의 ghost potential과 vector curvature action을 Euclidean
+$n=3,4,5$ exact rational fixture에서 직접 수축했다. Generic/zero-vector 두
+fixture의 네 식, 총 24개 residual은 모두 0이고 세 curvature audit와 훼손
+거부도 통과했다. Frobenius/Ricci/$vv^{\mathsf T}$/cross-term/$W$-index/generic
+fixture/rank-deficient identity 음성대조는 모두 nonzero다.
+
+첫 수학 감사가 불변량 차원 기저의 $X$ 표기 오류와
+$\operatorname{tr}\mathbb I=n$의 자명한 `n-n` 검사를 P1로 찾아냈다. 기저를
+$(E,Q,R,X,P,X^2)$로 명시하고 실제 $\delta_{ab}$ 행렬 trace 및 rank-$(n-1)$
+대조를 추가한 뒤 focused 회귀는 **7 passed in 0.18s**, production receipt는
+PASS, 수학ㆍ형식 재감사는 P0/P1 없음이다. 이 gate는 $W^2$에 보이지 않는
+$W$의 선형 전체 부호를 판정하지 않으며, FP operator/determinantㆍghost weightㆍ
+Lorentzian/globalㆍheat kernel/loopㆍboundaryㆍST/QMEㆍHilbertㆍHDA/M2는
+계속 미완성이다.
+
+[E69-P--R 원장](../검증_원장/참조_양자_보존_원장.md#qnb-e69-p)은
+$\operatorname{Sym}^2V\oplus1$의 raw representation matrix를 직접 만들어
+$n=3,4,5$의 identity trace와 세 genericㆍ두 Weyl-added curvature trace를
+검산했다. Bundle rank는 $(7,11,16)$이고 총 8개 exact residual은 모두 0이다.
+$n=4,5$의 별도 Weyl tensor는 nonzeroㆍRicci-flat이며 이를 버리는 shortcut은
+mismatch 208로 실패했다.
+
+기저 정규화, half/omitted/relative-sign action, curvature index, Frobenius trace,
+scalar identity와 dimension controls도 모두 nonzero이고 focused 회귀는
+**7 passed in 8.99s**, production receipt는 PASS다. 세 독립 감사의 P0/P1은
+없다. 이는 local finite Euclidean representation의 두 trace만 닫으며
+Eq. (18), Eq. (22)의 $\mathcal Y$ 두 trace, determinantㆍheat kernelㆍloopㆍ
+Lorentzian/globalㆍST/QMEㆍHilbertㆍHDA/M2는 계속 미완성이다.
+
+[E69-S--U 원장](../검증_원장/참조_양자_보존_원장.md#qnb-e69-s)은 source
+Eq. (17)--(18)의 raw DeWitt metric과 potential을 local normal-coordinate
+point에서 직접 구성했다. Rank $(7,11,16)$ metric inverse residual은 모두 0,
+$n=2$ pole은 거부됐고 9개 fixture의 trY 및 raw-trY2/bulk quotient, 총
+18개 exact residual이 모두 0이다. Flat
+$H=\operatorname{diag}(1,2,4)$ 표본은
+$\mathfrak D=-28$, raw-minus-bulk $=-112=4\mathfrak D$를 냈다.
+
+14개 잘못된 metric/basis/block/trace/divergence/coefficient/Weyl/$n$ 변형은
+모두 nonzero이고 focused 회귀는 **8 passed in 2.77s**, production receipt는
+PASS다. Source 감사에서 원문의 partial Hessian 표기를 global하게 공변화할
+위험을 찾아 local normal-coordinate point로 계약과 hash를 다시 잠그고
+재실행했다. 최종 수학ㆍ형식ㆍ1차출처 감사에는 P0/P1이 없다. Source가
+IBP를 명시했다거나 pointwise Eq. (22), boundary 또는 integrated action을
+증명했다는 뜻은 아니며 operatorㆍheat kernelㆍloopㆍHDA/M2도 미완성이다.
+
+[E69-V--X 원장](../검증_원장/참조_양자_보존_원장.md#qnb-e69-v)은 source
+Eq. (11)/(13)의 linearized gauge jet에서 Eq. (24)--(26)의 local FP action을
+구성하고, 별도 exterior algebra에서 finite Berezin determinant를 직접
+계산했다. 9개 curvature/vector fixture의 commutator와 두 FP 관계, 총
+72개 exact component는 모두 0이고 $N=1,2,3$ Berezin/Leibniz 값은
+$(2,7,16)$이다. Singular reference는 ratio 전에 거부하며 scale ratio는
+$(2,4,8)$, 선언한 effective-action exponent의 비는 $-2$다.
+
+12개 부호ㆍtraceㆍscalarㆍRicciㆍorientationㆍinverseㆍmultiplicity 대조는
+모두 nonzero이고 focused 회귀는 **8 passed in 0.21s**, production receipt는
+PASS다. 첫 수학 감사가 gauge parameter의 길이 차원을 P1로 지적해
+$[\xi]=L$, $[\delta\chi]=L^{-1}$, $[\Delta_{\rm FP}]=L^{-2}$로 바로잡았고,
+수정 안정판의 수학ㆍ형식ㆍ1차출처 감사에는 P0/P1이 없다. 이는 local finite
+FP/Berezin consistency이며 global determinantㆍfunctional measureㆍheat
+kernelㆍloopㆍBRST/QMEㆍHilbertㆍHDA/M2는 계속 미완성이다.
+
 | 순서 | 연구 패키지: 입력 → 작업 → 최소 산출물 | 통과 조건 | 탈락ㆍ중단 조건 | 선행 의존성 |
 |---|---|---|---|---|
 | M0 | 기준선ㆍ용어: 표준 QFT, LCQFT, 제약, CP, 관계적 관측량의 정의와 회복 기준을 한 계약으로 고정한다. | 기호ㆍ단위ㆍ상태/관측량/과정의 타입이 혼동 없이 정리된다. | 입자 수, 좌표 라벨, 관찰자 기록을 같은 객체로 섞으면 중단한다. | 없음 |
@@ -307,78 +462,1166 @@ CE의 출발 동기는 [선택과 접힘](../5_유도/00_선택과_접힘.md)에
 | 양자 제약 닫힘ㆍ양의 physical Hilbert, 관계적 대수, 완전한 회복 증명 | **[미완성]** |
 | 독립 새 관측 | **[예측: 없음]** |
 
-## 지금 바로 할 한 가지
+## E69-A 사전등록과 완료 계약
 
-다음 subgate는 **normal-ordered all-signed cubic Fock closure와 rotating
-truncation의 직접 비교**다. 공간 basis는 E68이 실제로 사용한 real cosine/sine
-harmonic이므로 continuum의 독립 $\pm k$ oscillator라고 재해석하지 않는다. 네
-oscillator의 순서를 $(k,0),(k,1),(2k,0),(2k,1)$로 고정하고, signed projected
-vertex $V^{\sigma_1\sigma_2\sigma_3}_{ab;c}$에서
-$O_{m,+}=a_m$, $O_{m,-}=a_m^\dagger$로 두어
+다음 subgate는 **E69-A: supplied $O(\hbar)$ ST breaking의 유한 cohomology
+입장 게이트**다. 이는 실제 Feynman 적분에서 one-loop breaking을 산출하는
+계산이 아니다. 먼저 E61의 quartet complex를 확장한 고정 coefficient-space에서
+“closed”, “counterterm으로 제거 가능”, “closed지만 non-exact anomaly control”,
+“non-closed consistency failure”를 서로 구분할 수 있는지 검증한다.
+
+Ghost-number complex를
 
 $$
-H_3^{\rm NO}={1\over2}\sum_{a,b,c=0}^1
-\sum_{\sigma_1,\sigma_2,\sigma_3=\pm1}
-V^{\sigma_1\sigma_2\sigma_3}_{ab;c}
-{:O_{k,a,\sigma_1}O_{k,b,\sigma_2}
-O_{2k,c,\sigma_3}:}
+C^{-1}\xrightarrow{B_{-1}}C^0\xrightarrow{B_0}C^1
+\xrightarrow{B_1}C^2,\qquad
+C^0=(x,q,B),\quad C^1=(c,a,u),\quad C^2=(v)
 \tag{36.12}
 $$
 
-를 채택한다. $1/2$는 두 $k$ harmonic leg의 symmetric Taylor 계수이며 normal
-ordering은 이 subgate의 명시적 양자화 규약이다. Ordering contraction을 action에서
-유도했다고 주장하지 않는다.
+로 두고 $B_{-1}\bar c=B$, $B_0q=c$, $B_1u=v$만 비영으로 고정한다.
+따라서 $B_0B_{-1}=0$, $B_1B_0=0$이고, $a$는 의도적으로 넣은 closed
+non-exact $H^1$ representative다. 이는 continuum local BRST complex가 아니라
+gate가 anomaly 후보를 잘못 제거하지 않는지 검사하는 유한 음성대조다.
 
-두 initial state
-$|I_0\rangle=|2,0;0,0\rangle$,
-$|I_1\rangle=|0,2;0,0\rangle$ 각각에 대해 64 signed assignment를 모두
-적용하고, occupation factor가 0이 아닌 algebraic target 전체를
+부호는
 
 $$
-N_a=\{|n\rangle:\langle n|H_3^{\rm NO}|I_a\rangle\ne0\}
+\mathcal S(\Gamma_0+\hbar\Gamma_1)
+=\hbar\Delta+O(\hbar^2),\qquad
+\Gamma_1^R=\Gamma_1-\Xi,\qquad
+\Delta^R=\Delta-B_0\Xi
 \tag{36.13}
 $$
 
-로 생성한다. 한 삽입에서 $k$ occupation 합은 최대 4, $2k$ occupation 합은
-정확히 1이므로 임의 cutoff를 조정하지 않고 이 reachable closure를 쓸 수 있다.
-Occupation-factor 조립과 독립 tensor-product creation/annihilation matrix를
-비교하고, candidate target 수ㆍactive target 수ㆍ각 target의 기여를 영수증에
-남긴다.
+여기서 $\hbar$는 물리 단위를 가진 상수가 아니라 perturbative order를 표시하는
+formal dimensionless parameter다. $\Gamma_1,\Delta,\Xi$의 수치 성분도 각
+operator의 선언 reference scale로 나눈 dimensionless coefficient coordinate다.
+이 정규화는 차원 정합만 보장하며 continuum operator matching을 뜻하지 않는다.
 
-Diagonal survival exchange는
+로 고정한다. 독립 입력 breaking은 $\Delta_{\rm in}=(3/8,0,0)$으로 하며,
+solver에는 정답 counterterm을 주지 않는다. $B_1\Delta_{\rm in}=0$과
+$\Delta_{\rm in}\in\operatorname{im}B_0$를 각각 검사한 뒤 pseudoinverse가
+$\Xi_*$를 구하고 $\|\Delta_{\rm in}-B_0\Xi_*\|$를 기록한다. 별도
+$\Delta_{\rm anom}=(0,1,0)$은 closed지만 image distance가 1이어야 하고,
+$\Delta_{\rm open}=(0,0,1)$은 $\|B_1\Delta_{\rm open}\|=1$로 consistency를
+실패해야 한다. Wrong counterterm sign과 $B_1B_0\ne0$ 변형도 fail-closed
+대조로 둔다.
+
+통과 조건은 (i) 모든 shapeㆍghost numberㆍfinite/provenance 필드가 존재하고,
+(ii) nilpotency residual $<10^{-12}$, (iii) supplied breaking의 closure와 제거 후
+residual $<10^{-12}$, (iv) anomaly control의 closure $<10^{-12}$ 및 image
+distance $>0.9$, non-closed control residual $>0.9$, (v) 고정된 well-conditioned
+basis change 뒤 rank, $H^1$ 차원, exact/non-exact 판정이 불변이고 covariance
+residual $<10^{-10}$인 것이다. SVD singular spectrumㆍrank thresholdㆍcondition
+number를 영수증에 남기며 missing, NaN, rank ambiguity는 자동 FAIL한다.
+
+계약에는 $1,R,R^2,R_{\mu\nu}R^{\mu\nu},R_{\mu\nu\rho\sigma}R^{\mu\nu\rho\sigma},
+\Box R,(\nabla\phi)^2,m^2\phi^2,\xi R\phi^2,\phi^3,\phi^4$의 최소 진단
+catalogue를 기록한다. 그러나 Gauss--Bonnetㆍ유한시간 경계항과 scalar--gravity
+고차 연산자를 포함한 complete basis라고 표시하지 않으며, 모든 coefficient는
+“미계산”으로 둔다. UV regulator, loop integral, local counterterm 계수,
+regulator independence, BV measure Laplacian, CTP doubling 플래그도 모두
+미계산으로 fail-closed 고정한다.
+
+이 subgate의 PASS 문구는 “지정한 finite BRST/ST complex에서 supplied breaking이
+$B_0$-exact이고 선언 counterterm으로 제거되며, 별도의 nontrivial class와
+non-closed vector를 올바르게 거부했다”까지만 허용한다. 실제 one-loop
+renormalization, continuum $H^1(s|d)$, ST/QME anomaly cancellation, curved-space
+local covariance, in-in/CTP, positive physical Hilbert와 HDA/M2는 계속
+**[미완성]**이다. M3--M9는 동결한다.
+
+## E69-B 사전등록과 완료 계약
+
+완료한 subgate는 **E69-B: arXiv:1706.02622v7 Eq. (28)--(30)의
+Einstein--massless-quantum-scalar source reproduction**이다. 현재 v7의 field
+content는 pure Einstein이 아니라 metricㆍconnection과 minimally coupled
+massless quantum scalar를 함께 적분한 이론이다. 따라서 $\bar\phi=0$ 배경만으로
+scalar determinant를 제거했다고 해석하지 않는다. 이전에 후보로 검토한
+$(7/10,1/60)$ pure-gravity vector는 이 v7 source와 맞지 않아 부모 경로에서
+폐기하고 mismatch control로만 사용한다.
+
+Local transcription lock은
+`arXiv:1706.02622v7`, 2021-09-11, harmonic/de Donder gauge,
+arXiv metadata title `One-loop divergences in first order Einstein-Hilbert gravity`,
+Eq. (28), Eq. (30), quantum scalar multiplicity 1과 canonical transcription
+SHA-256
+`37653a585f767212830cf49ba21cc9661c6509fa3f49d4f78c4a16ce5c869189`
+로 고정한다. Ordered basis를
 
 $$
-\mathcal A_{aa}^{(2),\rm full}
-=-\sum_{n\in N_a}
-|\langle n|H_3^{\rm NO}|I_a\rangle|^2
-I(E_a-E_n,E_n-E_a;\Delta\tau)
+Q=R_{\mu\nu}R^{\mu\nu},\qquad
+X=(\nabla\phi)^2,\qquad Y=\Box\phi,
+$$
+
+$$
+D={43\over60}Q+{1\over40}R^2+{1\over6}RX+X^2+Y^2,
+\qquad
+\Delta S={1\over(4\pi)^2\epsilon}\int d^4x\sqrt{|g|}\,D
 \tag{36.14}
 $$
 
-로 계산한다. E68-Z의 두 $|1_{2k,c}\rangle$만 남긴 rotating 열과
-(36.14)의 counterrotatingㆍnumber-scattering 열을 합치기 전에 별도 기록한다.
-같은 reachable star의 exact Hermitian matrix exponential과
-$H_0+\lambda H_3^{\rm NO}+\lambda^2H_4$를
-$\lambda=(1,1/2,1/4)$에서 비교한다.
+로 둔다. 차원 계약에서는 기준길이 $L_*$에 대해
+$\bar R=RL_*^2$, $\bar Q=QL_*^4$, $\bar X=XL_*^2$,
+$\bar Y=YL_*^2$, $\bar D=DL_*^4$로 해석한다. 구현은 primitive length
+exponent에서 ordered monomial 지수를 실제 합산한다. 따라서 coefficient와
+$\epsilon$은 무차원이고 모든 합은 같은 $L^{-4}$ 차원이다. 이 차원 검사는
+source의 물리적 정당성이나 regulator independence를 증명하지 않는다.
 
-통과 조건은 (i) 64 signed assignment와 sign-flip conjugation 완전성,
-(ii) combinatorial/explicit-Fock residual $<10^{-12}$, Hermiticity
-$<10^{-10}$, (iii) step $<2\times10^{-4}$, grid $<10^{-8}$,
-rod-unitary pullback $<10^{-6}$, (iv) analytic/triangle kernel residual
-$<10^{-10}$, (v) exact-star normalized error $<10^{-4}$와 사전고정한
-quarter-scaling residual, (vi) rotating subset이 E68-Z의 retained matrix
-elements를 같은 certificate 규약 아래 재현하는 것이다. Wrong $1/2$, unordered
-contraction 삽입, counterrotating target 하나 누락, occupation cap 축소와
-rotating-only 대조를 각각 독립 음성대조로 둔다. Full-minus-rotating이 자체
-수치오차의 10배를 넘으면 rotating-only 부모 경로를 이 finite ansatz에서
-기각하고, 넘지 않으면 차이를 비검출로 기록할 뿐 임계치를 낮추지 않는다.
+같은 source의 4차원 background EOM은
 
-누락 target, factorial 중복, 비Hermitian signed 조립, exact-star refinement 실패가
-나오면 이 경로를 중단한다. 통과해도 두 diagonal initial state와 두 real
-harmonic의 normal-ordering convention에 한정된다. Off-diagonal
-$|1,1\rangle$ scattering, full quartic matrix, continuum momentum conservation,
-SK/in-in correlator, vector/tensor/mixed sector, loop ST/QME, BRST physical
-Hilbert와 HDA/M2는 계속 **[미완성]**이며 M3--M9는 동결한다.
+$$
+{1\over2}g_{\mu\nu}R-R_{\mu\nu}
+-{1\over4}g_{\mu\nu}X
++{1\over2}\nabla_\mu\phi\nabla_\nu\phi=0,
+\qquad Y=0.
+\tag{36.15}
+$$
+
+Trace와 원래 tensor 식을 분리해 $X=2R$, $Q=R^2$, $Y=0$을 유도하고,
+직접 치환으로 $D_{\rm on}=203R^2/40$을 얻는다. 두 번째 독립 경로는
+$\delta Q=Q-R^2$, $\delta X=X-2R$에 대한 exact polynomial identity
+
+$$
+D-{203\over40}R^2
+={43\over60}\delta Q+{25\over6}R\delta X
++(\delta X)^2+Y^2
+\tag{36.16}
+$$
+
+를 유리수 sample에서 검증한다. $R\in\{-2,-1/3,0,5/7\}$의 on-EOM 점과
+별도 off-shell $(R,Q,X,Y)$ 점을 모두 `fractions.Fraction`으로 계산해 floating
+tolerance 없이 항등식 residual 0을 요구한다.
+
+통과 조건은 (i) source IDㆍ날짜ㆍ제목ㆍequationㆍfield contentㆍpayload hash가
+모두 일치하고, (ii) coefficient vector가 정확히
+$(43/60,1/40,1/6,1,1)$이며, (iii) trace/tensor/scalar EOM 두 단계와 직접 치환,
+residual identity가 모두 $203/40$을 재현하고, (iv) source가 Gauss--Bonnet을
+사용했다는 사실과 유한 경계 completion 미계산을 별도 flag로 남기는 것이다.
+Stale coefficient, scalar multiplicity $1\to0$, $X^2$ 또는 $RX$ 누락,
+$X=R$, $Q=R^2/4$, Eq. (28)/(30) 혼용, $\bar\phi=0\Rightarrow$ scalar-loop 제거,
+source hash 변경은 각각 fail-closed 음성대조다.
+
+`derivation_status`는 `source_reproduction_only`로 고정하고
+`loop_integral_evaluated`, `heat_kernel_trace_derived`, `ghost_determinant_derived`,
+`regularization_scheme_implemented`, `independent_feynman_diagram_check`,
+`renormalization_proof`, `boundary_counterterm_computed`는 모두 false로 둔다.
+따라서 PASS는 “v7 Eq. (28)의 exact rational 전사와 supplied EOM 아래 Eq. (30)의
+축약을 재현했다”까지만 뜻한다. 독립 one-loop 도출, pure-gravity 계수,
+ST/QME anomaly cancellation, finite-boundary/in-in renormalization, physical Hilbert,
+HDA/M2는 계속 **[미완성]**이고 M3--M9는 동결한다.
+
+실행 결과 coefficient와 EOM 대입, on-shell rational 4점, off-shell rational
+3점, 일곱 음성대조가 exact arithmetic으로 통과했다. 사후 차원 P1 보강 뒤
+focused 회귀는 **5 passed in 0.06s**이고 production runner는
+`declared_one_loop_source_reproduction_gate_passed=true`다. 형식 감사의 P0/P1은
+없고, 수학 감사에서 남긴 provenance와 Gauss--Bonnet 지적은 각각 “local
+transcription checksum”과 “source-use flag only”라는 claim ceiling으로
+격리했다.
+
+## E69-C 사전등록과 완료 계약
+
+완료한 subgate는 **E69-C: source-locked Eq. (23)/(27)의 exact Fraction
+assembly와 4차원 bulk Gauss--Bonnet quotient**다. 이 단계의 목적은 이미
+전사한 Eq. (28)을 답으로 넣고 다시 비교하는 것이 아니다. Eq. (23)의
+gaugeㆍmetricㆍscalar 최소 연산자 기여와 Eq. (27)의 ghost 기여를 각각
+$n=4$에 대입하고, source가 명시한 ghost 부호ㆍ중복도
+$a_2-2a_2^{\rm gh}$ 및 Eq. (29)의 bulk quotient를 거쳐 Eq. (28)에
+도달하는지를 exact rational arithmetic으로 검사한다.
+
+Source lock은 arXiv metadata title
+`One-loop divergences in first order Einstein-Hilbert gravity`와 HTML 내부
+heading `One-Loop in first order quantum gravity`를 별도 필드로 보존한다.
+Field contentㆍgaugeㆍprefactor $[(4\pi)^2\epsilon]^{-1}$, Eq. (23), (27)--(29),
+ghost weight $-2$와 canonical local transcription SHA-256
+`88cb5281c058f0983281d2e20017be987de6e2ab6bb53af41fa6fcc205ae9f17`도
+잠근다. 여기서
+
+$$
+E=R_{\mu\nu\rho\sigma}R^{\mu\nu\rho\sigma},\quad
+Q=R_{\mu\nu}R^{\mu\nu},\quad
+P=R^{\mu\nu}\nabla_\mu\phi\nabla_\nu\phi,\quad
+X=(\nabla\phi)^2,\quad Y=\Box\phi
+$$
+
+로 두고 ordered basis를
+
+$$
+(E,Q,R^2,P,RX,X^2,Y^2)
+\tag{36.17}
+$$
+
+로 고정한다. Source Eq. (23)과 Eq. (27)의 $n$-의존 coefficient를 문자 그대로
+유리함수로 구현한 뒤 $n=4$에서 공통 $1/360$ 이전 integer vector
+
+$$
+g_{\rm 2+gf}=(382,-1102,595,-720,-60,720,360),
+\tag{36.18}
+$$
+
+$$
+g_{\rm gh}=(-22,172,80,-360,-60,180,0)
+\tag{36.19}
+$$
+
+를 각각 얻어야 한다. 따라서 signed assembly는
+
+$$
+g_{\rm raw}=g_{\rm 2+gf}-2g_{\rm gh}
+=(426,-1446,435,0,60,360,360).
+\tag{36.20}
+$$
+
+특히 $P$ 계수는 background EOM으로 버리는 것이 아니라
+$-720-2(-360)=0$으로 ghost subtraction 자체에서 소거되어야 한다.
+
+Eq. (29)는 pointwise identity로 사용하지 않는다. 경계와 위상 기여를 계산하지
+않는 이 gate에서는 오직 4차원 적분 bulk의 formal quotient
+
+$$
+E-4Q+R^2=\text{total derivative}
+\tag{36.21}
+$$
+
+를 적용한다. Coefficient map은
+
+$$
+(a_E,a_Q,a_{R^2},a_P,a_{RX},a_{X^2},a_{Y^2})
+\mapsto
+(4a_E+a_Q,-a_E+a_{R^2},a_P,a_{RX},a_{X^2},a_{Y^2})
+\tag{36.22}
+$$
+
+이고, Eq. (36.20)의 $1/360$ vector는 출력 basis
+$(Q,R^2,P,RX,X^2,Y^2)$에서
+
+$$
+\left({43\over60},{1\over40},0,{1\over6},1,1\right)
+\tag{36.23}
+$$
+
+로 가야 한다. $P=0$을 별도 보존한 뒤에만 Eq. (28)의 5차원 basis와
+비교하여, $P$를 조기에 삭제한 false PASS를 막는다.
+
+통과 조건은 다음과 같다.
+
+1. Source metadataㆍequationㆍfield contentㆍordered basisㆍcanonical local
+   transcription payload가 잠금과 일치한다.
+2. 모든 $n=4$ 대입, common $1/360$, ghost sign/multiplicity, raw vector,
+   quotient map, Eq. (28) 비교를 `fractions.Fraction`으로 수행하고 tolerance
+   없는 exact equality를 요구한다.
+3. $a_2+2a_2^{\rm gh}$, $a_2-a_2^{\rm gh}$, ghost 미포함, $P$의 조기 삭제,
+   wrong GB sign, Eq. (28)을 raw vector로 오인하는 대조, curvature basis 순서
+   교환, $R^2$ㆍ$RX$ㆍ$X^2$ 개별 생략, $n=5$ raw vector 혼용을 모두 거부한다.
+4. $[E]=[Q]=[R^2]=[P]=[RX]=[X^2]=[Y^2]=L^{-4}$를 primitive factor 지수의
+   실제 합으로 산출하고, 의도적으로 $[X]$를 훼손한 대조가 실패해야 한다.
+5. 적어도 세 rational curvature/scalar point에서 GB-related raw density와
+   reduced density가 exact 일치하고, GB 관계를 깨뜨린 점은 nonzero residual을
+   내야 한다.
+
+`derivation_status`는 `source_coefficient_assembly_only`로 고정한다.
+`heat_kernel_trace_derived`, `ghost_determinant_derived`,
+`loop_integral_evaluated`, `regularization_scheme_implemented`,
+`finite_boundary_completed`, `evanescent_terms_controlled`,
+`independent_source_artifact_authenticated`, `renormalization_proof`,
+`continuum_st_qme_proved`, `local_covariance_proved`, `in_in_ctp_completed`,
+`positive_physical_hilbert_proved`, `quantum_hda_m2_proved`는 모두 false다.
+
+따라서 PASS는 “잠근 source Eq. (23)/(27)의 계수를 exact rational로 조합하고,
+명시한 4D bulk Gauss--Bonnet quotient 아래 Eq. (28)의 coefficient vector로
+환원했다”까지만 뜻한다. 이는 heat-kernel trace나 ghost determinant의 독립 도출,
+one-loop renormalization의 새 증명, finite-boundaryㆍ$n\ne4$ evanescent 결과,
+pure Einstein, continuum ST/QME, local covariance, CTP, physical Hilbert 또는
+HDA/M2의 증명이 아니다. Full E69은 **[미완성]**이며 M3--M9는 계속 동결하고
+새 관측 예측은 없다.
+
+실행 결과 Eq. (23), Eq. (27), signed raw와 reduced vector가 모두 사전고정값에
+exact 일치했다. 형식 감사에서 항 생략ㆍbasis permutationㆍ$n=5$ 혼용을
+receipt에 직접 드러내라는 P1을 보강한 뒤 focused 회귀는 **5 passed in
+0.08s**이고, production runner는
+`declared_source_coefficient_assembly_gate_passed=true`다. 최종 독립 수학ㆍ
+형식 감사의 P0/P1은 없다. 세 rational sample은 선택한 bulk quotient
+representative만 검사한다는 P2와 파일명의 `reconstruction`이 operator/trace
+도출로 오독될 수 있다는 위험은 `source_coefficient_assembly_only` status와
+모든 상위 claim flag false로 격리했다.
+
+## E69-D 사전등록과 완료 계약
+
+완료한 subgate는 **E69-D: v7 Eq. (19)과 supplied trace identity에서
+Eq. (23)/(27)을 symbolic rational-polynomial로 재현하는 gate**다. 목적은
+source의 최종 counterterm을 다시 전사하는 것이 아니다. Eq. (19)의 universal
+minimal-operator formula에 source Eq. (22)의 gaugeㆍmetricㆍscalar trace
+identity를 대입하여 Eq. (23)의 $n$-의존 coefficient를 항등식으로 얻고,
+ghost sector에서는 Eq. (24)--(26)의 operator trace contraction을 같은 formula에
+대입해 Eq. (27)을 얻는지를 검사한다.
+
+기호 충돌을 피하려고
+$E=R_{\mu\nu\rho\sigma}R^{\mu\nu\rho\sigma}$,
+$Q=R_{\mu\nu}R^{\mu\nu}$,
+$P=R^{\mu\nu}\nabla_\mu\phi\nabla_\nu\phi$,
+$X=(\nabla\phi)^2$, $Y=\Box\phi$로 두고, minimal operator potential은
+$\mathcal Y$로 쓴다. Ordered invariant basis는
+
+$$
+(E,Q,R^2,P,RX,X^2,Y^2)
+\tag{36.24}
+$$
+
+다. Eq. (19)의 common factor $1/360$을 제외한 조합은
+
+$$
+\begin{aligned}
+\mathcal H[\mathcal Y,W]
+&=(2E-2Q+5R^2)\operatorname{tr}\mathbb I
++180\operatorname{tr}\mathcal Y^2\\
+&\quad-60R\operatorname{tr}\mathcal Y
++30\operatorname{tr}W_{\mu\nu}W^{\mu\nu}.
+\end{aligned}
+\tag{36.25}
+$$
+
+Source Eq. (22)의 trace input은
+
+$$
+\begin{aligned}
+\operatorname{tr}\mathbb I
+ &=\frac{n(n+1)}2+1,\\
+\operatorname{tr}\mathcal Y
+ &=\frac{n(n-1)}2R+\frac{8+3n-n^2}{4}X,\\
+\operatorname{tr}\mathcal Y^2
+ &=3E+\frac{n^2-8n+4}{n-2}Q
+ +\frac{n^3-5n^2+8n+4}{2(n-2)}R^2\\
+ &\quad-\left[\frac{2n(n-4)}{n-2}+4\right]P
+ +\frac{n^3-7n^2+10n+8}{2(2-n)}RX\\
+ &\quad+\frac{n^3-n^2+14n-40}{8(n-2)}X^2+2Y^2,\\
+\operatorname{tr}W_{\mu\nu}W^{\mu\nu}
+ &=-(n+2)E
+\end{aligned}
+\tag{36.26}
+$$
+
+로 잠근다. $n\ne2$에서 Eq. (36.25)를 전개ㆍ통분한 common-$1/360$
+numerator vector는 source Eq. (23)의
+
+$$
+\begin{aligned}
+g_{\rm 2+gf}(n)=\bigg(
+&482-29n+n^2,\,
+\frac{724-1440n+181n^2-n^3}{n-2},\\
+&\frac{5(140+264n-145n^2+25n^3)}{2(n-2)},\,
+-\frac{360(-4-2n+n^2)}{n-2},\\
+&-\frac{15(32+62n-37n^2+5n^3)}{n-2},\,
+\frac{45(n^3-n^2+14n-40)}{2(n-2)},\,360
+\bigg)
+\end{aligned}
+\tag{36.27}
+$$
+
+와 성분별 rational-polynomial identity여야 한다.
+
+Ghost branch에서는 Eq. (24)--(26)의 source-supplied operator와 curvature
+convention에서
+
+$$
+\operatorname{tr}\mathbb I=n,\qquad
+\operatorname{tr}\mathcal Y=-R+X,\qquad
+\operatorname{tr}\mathcal Y^2=Q-2P+X^2,\qquad
+\operatorname{tr}W_{\mu\nu}W^{\mu\nu}=-E
+\tag{36.28}
+$$
+
+를 조립한다. Eq. (36.25)에 대입한 결과는 source Eq. (27)의
+
+$$
+g_{\rm gh}(n)
+=(2n-30,180-2n,5n+60,-360,-60,180,0)
+\tag{36.29}
+$$
+
+와 항등 일치해야 한다. 두 vector 모두 $1/360$을 보존한다. Downstream
+ghost weight $-2$는 source/path-integral convention으로 잠그지만 이 gate에서
+새로 유도하지 않는다.
+
+구현은 외부 CAS에 의존하지 않는 exact polynomial/rational pair를 사용한다.
+덧셈ㆍ곱셈ㆍscale 뒤 두 rational function의 분자ㆍ분모를 교차곱해 정규화된
+polynomial 차이가 identically zero인지 검사한다. 별도로 $n=3,4,5$를
+`fractions.Fraction`으로 평가해 symbolic identity와 source Eq. (23)/(27)
+function을 각각 교차 확인한다.
+
+통과 조건은 다음과 같다.
+
+1. Eq. (19), (22)--(27), 두 제목 필드, theoryㆍgaugeㆍbasisㆍformula payload의
+   canonical local checksum
+   `684ace59f009a4ce2a3c680b835df786ea9bab0803ce308365645b5331811ebc`이
+   일치하고 missing symbolㆍzero denominatorㆍ
+   basis 순서 변경은 receipt 생성 전에 실패한다.
+2. Eq. (23)/(27)의 모든 symbolic cross-product residual polynomial이 exact
+   zero이며 $n=3,4,5$의 모든 component도 exact 일치해야 한다.
+3. $n=2$ pole을 명시적으로 거부하고, $n=4$ 값만 복사한 impostor는
+   $n=3,5$에서 nonzero mismatch를 내야 한다.
+4. $-60R\operatorname{tr}\mathcal Y$ 누락, $\operatorname{tr}W^2$ 부호 반전,
+   $\operatorname{tr}\mathbb I$의 scalar $+1$ 누락, Eq. (22)의 $P$ㆍ$RX$
+   성분 누락, ghost $-2P\to+2P$와 ghost $\operatorname{tr}W^2$ 부호 반전을
+   각각 nonzero symbolic mismatch로 검출한다.
+5. 모든 basis term과 Eq. (36.25)의 네 contribution이 $L^{-4}$임을 primitive
+   exponent에서 산출하고, $[X]$ 훼손 대조를 거부한다.
+
+이 gate에서 Eq. (19), Eq. (22), Eq. (24)--(26), total-derivative omission
+convention과 downstream ghost weight $-2$는 source-supplied input이다.
+Eq. (19)가 “usual four-dimensional” formula로 소개되면서 $n$을 유지한다는
+source의 범위도 그대로 기록한다. $n=3,5$ 검사는 유리함수 대수의 verification
+point일 뿐 임의 차원의 heat-kernel theorem이나 evanescent operator의 물리
+처리를 뜻하지 않는다.
+
+`derivation_status`는 `source_trace_identity_assembly_only`로 고정한다.
+`universal_heat_kernel_formula_derived`, `eq22_trace_tensors_derived`,
+`ghost_determinant_derived`, `ghost_weight_derived`,
+`loop_integral_evaluated`, `regularization_scheme_implemented`,
+`finite_boundary_completed`, `evanescent_terms_controlled`,
+`independent_source_artifact_authenticated`, `renormalization_proof`,
+`continuum_st_qme_proved`, `local_covariance_proved`, `in_in_ctp_completed`,
+`positive_physical_hilbert_proved`, `quantum_hda_m2_proved`는 모두 false다.
+
+따라서 PASS는 “잠근 v7 Eq. (19)과 supplied Eq. (22), Eq. (24)--(26)의 trace
+input을 symbolic rational-polynomial로 조합해 Eq. (23)과 Eq. (27)의
+$n$-의존 coefficient를 항등 재현했다”까지만 뜻한다. 이는 heat-kernel trace
+tensor나 ghost determinant의 독립 도출, loopㆍrenormalization,
+finite-boundary/$n\ne4$ 물리 결과, pure Einstein, continuum ST/QME,
+local covariance, CTP, physical Hilbert 또는 HDA/M2의 증명이 아니다.
+Full E69은 **[미완성]**이며 M3--M9는 계속 동결하고 새 관측 예측은 없다.
+
+실행 결과 Eq. (23)/(27)의 14개 symbolic residual polynomial과 42개 exact
+spot component가 모두 0이고, $n=2$ source-domain pole 및 모든 음성대조가
+사전고정대로 작동했다. Focused 회귀는 **6 passed in 0.11s**, production
+runner는 `declared_source_trace_identity_assembly_gate_passed=true`다.
+수학 감사는 rational cross-product와 pole semantics, 각 contribution slot,
+control count와 차원 계산을 독립 검산해 P0/P1 없음으로 판정했다. 형식 감사도
+checksumㆍsupplied formulaㆍ$n$-차원ㆍtotal-derivative claim ceiling이 모두
+fail-closed임을 확인했다.
+
+## E69-E 사전등록과 완료 계약
+
+완료한 subgate는 **E69-E: ghost vector operator의 finite-exact trace
+contraction 검산**이다. E69-D가 source Eq. (22)의 trace identity를 입력으로
+삼아 Eq. (27)을 조합했다면, 이 단계는 Eq. (24)--(26)의 ghost vector
+operator에서 쓰인 네 trace contraction을 별도 유한 기하 표본으로 직접
+확인한다. 대상은 Euclidean orthonormal frame의 점별 대수이며, 미분 연산자,
+Faddeev--Popov determinant 또는 ghost weight를 계산하지 않는다.
+
+차원 $n\in\{3,4,5\}$의 Euclidean frame에서 off-diagonal 성분을 가진 대칭
+유리수 행렬 $S_{ab}$와 유리수 vector $v_a$를 고정한다. Kronecker delta로
+지표를 올리고 내리고, algebraic curvature tensor를
+
+$$
+R_{abcd}
+=\delta_{ac}S_{bd}-\delta_{ad}S_{bc}
+-\delta_{bc}S_{ad}+\delta_{bd}S_{ac}
+\tag{36.30}
+$$
+
+로 둔다. Ricci contraction과 scalar curvature는
+
+$$
+R_{bd}=\sum_aR_{abad},\qquad R=\sum_bR_{bb}
+\tag{36.31}
+$$
+
+이고, invariants는
+
+$$
+\begin{aligned}
+E&=\sum_{a,b,c,d}R_{abcd}R_{abcd},&
+Q&=\sum_{a,b}R_{ab}R_{ab},\\
+X&=\sum_av_a^2,&
+P&=\sum_{a,b}R_{ab}v_av_b
+\end{aligned}
+\tag{36.32}
+$$
+
+다. Eq. (26)의 ghost potential과 source convention에 맞춘 vector-bundle
+curvature matrix는
+
+$$
+\mathcal Y_{ab}=-R_{ab}+v_av_b,\qquad
+(W_{\mu\nu})_a{}^b=R_{ab\mu\nu}
+\tag{36.33}
+$$
+
+로 고정한다. 검사할 항등식은
+
+$$
+\begin{aligned}
+\operatorname{tr}\mathbb I&=n,\\
+\operatorname{tr}\mathcal Y&=-R+X,\\
+\operatorname{tr}\mathcal Y^2&=Q-2P+X^2,\\
+\sum_{\mu,\nu}\operatorname{tr}(W_{\mu\nu}W_{\mu\nu})&=-E.
+\end{aligned}
+\tag{36.34}
+$$
+
+세 번째 식은
+$\operatorname{tr}(-{\rm Ric}+vv^{\mathsf T})^2
+=Q-2v^{\mathsf T}{\rm Ric}\,v+(v^{\mathsf T}v)^2$다. 마지막 식은
+$R_{ab\mu\nu}R_{ba\mu\nu}=-E$라는 matrix trace이며, 단순 Frobenius 합
+$\sum R_{ab\mu\nu}^2=+E$와 구별한다.
+
+각 $n$에서 $S$와 $v\ne0$인 generic `Fraction` fixture를 고정하고
+$E,Q,R,X,P$가 모두 nonzero인지 검사한다. 같은 $S$에 $v=0$인 별도 fixture도
+실행해 $X=P=0$, $\operatorname{tr}\mathcal Y=-R$,
+$\operatorname{tr}\mathcal Y^2=Q$ 극한을 확인한다. 모든 비교는 floating
+tolerance 없이 exact residual 0을 요구한다. Frameㆍdimensionㆍtensor formula와
+fixture payload의 canonical local SHA-256은
+`38657a0defe69d3391f1affede36221d65f241a6cd413d4263a9ad735aa45488`로
+첫 실행 전에 잠근다.
+
+입력 curvature에는 두 지표쌍 각각의 antisymmetry, pair-exchange symmetry,
+first Bianchi identity, Ricci symmetry와 Eq. (36.31) contraction을 PASS에
+연결한다. 이는 trace 식이 우연히 맞는 비곡률 배열을 받지 않게 한다.
+음성대조는 다음을 모두 포함한다.
+
+- $W$ matrix trace 대신 Frobenius contraction을 써 $+E$를 얻는 변형.
+- 올바른 $\sum_aR_{abad}$ 대신 $\sum_aR_{baad}=-R_{bd}$를 쓰는 Ricci 변형.
+- $\mathcal Y=-{\rm Ric}-vv^{\mathsf T}$, $vv^{\mathsf T}$ 누락,
+  또는 $\operatorname{tr}\mathcal Y^2$의 $-2P$ 누락.
+- $(W_{\mu\nu})_a{}^b$의 사전고정 index placement를 바꾼 변형.
+- $v=0$ fixture만 통과시키고 $v\ne0$ fixture를 누락하는 변형.
+- $\mathbb I=\delta_{ab}$의 마지막 대각 원소를 지워 rank $n-1$로 만든 변형.
+
+$W_{\mu\nu}\mapsto-W_{\mu\nu}$의 전체 부호 반전은 제곱 trace에서 보이지
+않는다. 따라서 이 gate는 source가 선언한 matrix-index convention 아래
+$W^2$ contraction을 검산하지만, covector/vector commutator의 선형 전체 부호를
+독립 판정하지 않는다.
+
+$[\mathrm{Ric}]=[R]=[\mathcal Y]=[W]=[X]=L^{-2}$와
+$[E]=[Q]=[P]=[X^2]=L^{-4}$는 primitive factor에서 실제 합산한다. 기저를
+$(E,Q,R,X,P,X^2)$로 명시하면 exponent vector는
+$(-4,-4,-2,-2,-4,-4)$이고, $[X]$를 $L^{-1}$로 훼손한 대조는
+$(-4,-4,-2,-1,-3,-2)$를 내어 PASS를 거부해야 한다.
+
+`derivation_status`는 `finite_ghost_trace_contraction_only`로 고정한다.
+`fp_operator_derived`, `fp_determinant_derived`, `ghost_weight_derived`,
+`eq19_heat_kernel_derived`, `loop_integral_evaluated`,
+`regularization_scheme_implemented`, `finite_boundary_completed`,
+`evanescent_terms_controlled`, `independent_source_artifact_authenticated`,
+`renormalization_proof`, `continuum_st_qme_proved`,
+`local_covariance_proved`, `in_in_ctp_completed`,
+`positive_physical_hilbert_proved`, `quantum_hda_m2_proved`는 모두 false다.
+
+실행은 사전등록을 그대로 구현했다. $3$개 차원, generic/zero-vector 두 fixture,
+네 trace의 **24개 exact residual이 모두 0**이고 curvature symmetryㆍBianchiㆍ
+Ricci audit는 모두 PASS, 한 curvature 성분 훼손은 거부됐다. 음성대조의 합산
+mismatch는 Frobenius $159435184/33075$, wrong Ricci $408$, wrong outer sign
+$157427/1800$, outer-product 누락 $186165551/4320000$, cross-term 누락
+$9529/225$, wrong $W$ index $39858796/11025$, generic fixture 누락
+$5413/240$, rank-deficient identity $3$이다. $W\mapsto-W$의 squared-trace
+residual은 예상대로 0이고 `w_linear_sign_determined=false`다. Focused 회귀는
+**7 passed in 0.18s**, production runner는
+`declared_finite_ghost_trace_contraction_gate_passed=true`이며 수정 안정판의
+독립 수학ㆍ형식 감사에는 P0/P1이 없다.
+
+따라서 PASS는 “사전고정한 Euclidean finite curvature/vector fixture에서
+Eq. (24)--(26)에 대응하는 ghost potential과 vector curvature action의 네
+대수적 trace contraction이 Eq. (36.34)를 exact rational로 만족한다”까지만
+뜻한다. 이것은 Eq. (24)--(26)의 독립 유도, Faddeev--Popov determinant,
+ghost factor $-2$, Eq. (19), one-loop divergence, total derivativeㆍfinite
+boundary, renormalization, continuum ST/QME, local covariance, CTP,
+physical Hilbert 또는 HDA/M2의 증명이 아니다. Full E69은 **[미완성]**이며
+M3--M9는 계속 동결하고 새 관측 예측은 없다.
+
+## E69-F 사전등록과 완료 계약
+
+완료한 subgate는 **E69-F: Eq. (20)--(22)의
+$\operatorname{Sym}^2V\oplus1$ bundle curvature trace를 finite-exact로 검산하는
+gate**다. E69-E가 ghost vector bundle을 검사했다면, 이 단계는 metric
+fluctuation의 symmetric rank-two tensor와 quantum scalar의 합 bundle에서
+$\operatorname{tr}\mathbb I$와 $\operatorname{tr}W^2$만 직접 구성한다.
+Eq. (22)의 $\operatorname{tr}\mathcal Y$와
+$\operatorname{tr}\mathcal Y^2$는 이 gate의 입력도 산출도 아니다.
+
+차원 $n$의 Euclidean orthonormal frame에서
+
+$$
+\mathcal B=\operatorname{Sym}^2V\oplus\mathbb R,\qquad
+\dim\mathcal B=\frac{n(n+1)}2+1
+\tag{36.35}
+$$
+
+로 둔다. $\operatorname{Sym}^2V$는 unordered pair $i\le j$의 raw coordinate
+basis를 쓴다. $i=j$ basis는 $B^{ii}_{ab}=\delta_{ai}\delta_{bi}$,
+$i<j$ basis는
+$B^{ij}_{ab}=\delta_{ai}\delta_{bj}+\delta_{aj}\delta_{bi}$이고, 출력
+coordinate는 $c_{ij}(T)=T_{ij}$다. 이는 orthonormalized tensor basis가
+아니므로 injection과 extraction에 같은 raw convention을 유지한다.
+
+Source Eq. (20)--(21)에 대응하는 tensor block action은
+
+$$
+(W_{\mu\nu}h)^{ab}
+=R^a{}_{c\mu\nu}h^{cb}+R^b{}_{c\mu\nu}h^{ac},\qquad
+W_{\mu\nu}^{\rm scalar}=0
+\tag{36.36}
+$$
+
+로 고정한다. Eq. (21)의 $1/2$는 ordered $(\rho,\sigma)$ 합에서 대칭 tensor를
+표현하는 계수이므로, 위 unordered raw basis action에 추가 $1/2$를 곱하지
+않는다. 실제 bundle identity와 각 $W_{\mu\nu}$ 행렬을 구성해
+
+$$
+\operatorname{tr}_{\mathcal B}\mathbb I
+=\frac{n(n+1)}2+1,\qquad
+\sum_{\mu,\nu}\operatorname{tr}_{\mathcal B}
+(W_{\mu\nu}W_{\mu\nu})=-(n+2)E,\quad
+E=R_{abcd}R_{abcd}
+\tag{36.37}
+$$
+
+를 검사한다. 오른쪽 trace는
+$\sum_{\mu,\nu,p,q}(W_{\mu\nu})_{pq}(W_{\mu\nu})_{qp}$이며 entrywise
+Frobenius 제곱합이 아니다.
+
+$n=3,4,5$의 generic rational fixture는 Eq. (36.30)의
+$R^{(S)}=\delta\owedge S$를 사용한다. 이것만으로는 $n\ge4$의 Weyl-sensitive
+오류를 잡지 못하므로 $n=4,5$에는 첫 네 축에서
+
+$$
+C_{1212}=1,\quad C_{1313}=-1,\quad
+C_{2424}=-1,\quad C_{3434}=1
+\tag{36.38}
+$$
+
+이고 나머지를 Riemann 대칭으로 생성한 exact tensor를 별도 고정한다. $n=5$는
+이를 첫 네 축에 그대로 embed한다. 매 실행에서 antisymmetry, pair exchange,
+first Bianchi와
+
+$$
+C\ne0,\qquad \operatorname{Ric}(C)=0,qquad
+R^{(S+C)}=R^{(S)}+C
+\tag{36.39}
+$$
+
+를 확인하고, Eq. (36.37)은 세 generic fixture와 두 $S+C$ fixture 모두에서
+exact residual 0이어야 한다. Frameㆍdimensionㆍbasisㆍactionㆍ$S$와 $C$의
+성분을 담은 canonical payload는 첫 production 실행 전에
+`23826e568c1fd9e995437e9fb088f23372e7ca97167003b19a4016989e70e1a7`로
+잠근다.
+
+음성대조는 다음을 모두 PASS 결선에 연결한다.
+
+- scalar identity block 누락 또는 rank-deficient bundle identity.
+- $i<j$ 출력 coordinate를 $2T_{ij}$로 읽는 off-diagonal normalization 변형.
+- Eq. (36.36) 전체에 잘못된 $1/2$를 곱하거나 두 tensor slot 중 하나를 누락한
+  변형, 두 번째 slot의 상대 부호를 바꾼 변형.
+- $R^a{}_{c\mu\nu}$의 index placement를 바꾼 변형.
+- matrix-product trace를 entrywise Frobenius 제곱합으로 바꾼 변형.
+- $S+C$에서 $C$를 버리고 Ricci/$S$만으로 curvature action을 재구성하는 변형.
+- generic fixture를 빼고 bundle dimension만 확인하는 변형.
+
+$W_{\mu\nu}\mapsto-W_{\mu\nu}$의 전체 부호는 Eq. (36.37)에 보이지 않는다.
+따라서 이 gate는 선형 commutator convention의 전체 부호를 독립 판정하지
+않는다. $[\mathbb I]=L^0$, $[R]=[W]=L^{-2}$,
+$[E]=[\operatorname{tr}W^2]=L^{-4}$를 primitive factor에서 계산하고,
+$[R]$을 $L^{-1}$로 훼손한 차원 대조는 PASS를 거부해야 한다.
+
+`derivation_status`는 `finite_sym2_bundle_curvature_trace_only`로 고정한다.
+`eq22_trY_derived`, `eq22_trY2_derived`, `eq18_operator_derived`,
+`gauge_fixing_derived`, `functional_determinant_derived`,
+`heat_kernel_trace_derived`, `fp_determinant_derived`,
+`ghost_weight_derived`, `loop_integral_evaluated`,
+`regularization_scheme_implemented`, `finite_boundary_completed`,
+`evanescent_terms_controlled`, `independent_source_artifact_authenticated`,
+`renormalization_proof`, `continuum_st_qme_proved`,
+`local_covariance_proved`, `in_in_ctp_completed`,
+`positive_physical_hilbert_proved`, `quantum_hda_m2_proved`는 모두 false다.
+
+실행 결과 bundle rank는 $(7,11,16)$이고 세 identity 및 세 genericㆍ두
+Weyl-added curvature trace의 **8개 exact residual이 모두 0**이다. Generic,
+pure-Weyl, Weyl-added를 합한 7개 curvature audit가 모두 PASS하고, Weyl
+fixture는 nonzeroㆍRicci-flat이며 한 성분 훼손은 거부됐다. Scalar curvature
+block도 모든 fixture에서 0이다.
+
+Scalar identity, off-diagonal normalization, half action, second-slot 누락,
+relative slot sign, wrong curvature index, Frobenius trace, Weyl drop의 mismatch는
+각각 $3$, $37364587/675$, $1020539221/44100$, $9468018587/396900$,
+$95787383/3675$, $2393281099/44100$, $1463281703/22050$, $208$이다.
+Generic fixture liveness는 $79717592/33075>0$이고, $W\mapsto-W$의 squared
+residual은 0이라 `w_linear_sign_determined=false`를 유지한다. Focused 회귀는
+**7 passed in 8.99s**, production runner는
+`declared_finite_sym2_curvature_trace_gate_passed=true`이며 세 독립 감사 모두
+P0/P1 없음으로 판정했다.
+
+따라서 PASS는 “사전고정한 finite Euclidean algebraic-curvature fixture에서 raw
+$\operatorname{Sym}^2V\oplus1$ representation을 구성해 source Eq. (22)의
+$\operatorname{tr}\mathbb I$와 $\operatorname{tr}W^2$ target을 exact rational로
+재현했다”까지만 뜻한다. 이는 Eq. (18)의 potential/minimal operator,
+Eq. (22)의 나머지 두 $\mathcal Y$ trace, gauge fixing, determinant, heat kernel,
+one-loop divergence, boundaryㆍevanescent completion, renormalization, continuum
+BRST/ST/QME, local covariance, CTP, physical Hilbert 또는 HDA/M2의 증명이
+아니다. Full E69은 **[미완성]**이며 M3--M9는 계속 동결하고 새 관측 예측은
+없다.
+
+## E69-G 사전등록과 완료 계약
+
+완료한 subgate는 **E69-G: Eq. (17)--(18)의 raw potential matrix에서 Eq. (22)의
+$\operatorname{tr}\mathcal Y$와 bulk
+$\operatorname{tr}\mathcal Y^2$ representative까지 가는 finite-exact
+quotient gate**다. 원문은 Eq. (22) 직전에 적분부분적분 과정을 밝히지 않지만,
+Eq. (18)의 mixed Hessian block을 직접 제곱하면 pointwise
+$H_{\mu\nu}H^{\mu\nu}$가 남는다. 따라서 raw pointwise trace와 source bulk
+표현을 처음부터 같은 식으로 놓지 않고 그 차이를 독립 계산한다.
+
+Euclidean orthonormal **local normal-coordinate point**와 E69-F의 raw unordered
+$\operatorname{Sym}^2V\oplus\mathbb R$ basis를 유지한다. Source Eq. (17)의
+DeWitt block과 그 역은
+
+$$
+C_{ab,cd}=\frac14(\delta_{ac}\delta_{bd}+\delta_{ad}\delta_{bc}
+-\delta_{ab}\delta_{cd}),\qquad
+C^{-1}_{ab,cd}=\delta_{ac}\delta_{bd}+\delta_{ad}\delta_{bc}
+-\frac{2}{n-2}\delta_{ab}\delta_{cd}
+\tag{36.40}
+$$
+
+다. Raw basis tensor를 $B_p^{ab}$라 하면
+$G_{pq}=B_p^{ab}C_{ab,cd}B_q^{cd}$, scalar block $G_{\phi\phi}=1$로
+행렬을 직접 만들고 exact Gauss--Jordan inverse가
+$G^{-1}G=\mathbb I$인지 검사한다. $n=2$ pole은 명시적으로 거부한다.
+
+$v_a=\nabla_a\bar\phi$로 두고, source가 mixed block에 쓴
+$\partial_a\partial_b\bar\phi$는 이 normal-coordinate point에서만
+$H_{ab}=\partial_a\partial_b\bar\phi=\nabla_a\nabla_b\bar\phi$로 식별한다.
+이를 global covariantization으로 주장하지 않는다. 이어
+$Z=\operatorname{tr}H$, $X=v_av_a$로 두고 source Eq. (18)을
+
+$$
+\begin{aligned}
+\mathcal Y^{hh}_{\mu\nu,\rho\sigma}
+={}&C_{\mu\nu,\rho\sigma}\left(R-\frac12X\right)
+-\frac12(R_{\mu\rho\nu\sigma}+R_{\nu\rho\mu\sigma})\\
+&+\frac12(\delta_{\mu\nu}R_{\rho\sigma}
+ +\delta_{\rho\sigma}R_{\mu\nu})\\
+&-\frac14(\delta_{\mu\rho}R_{\nu\sigma}
+ +\delta_{\mu\sigma}R_{\nu\rho}
+ +\delta_{\nu\rho}R_{\mu\sigma}
+ +\delta_{\nu\sigma}R_{\mu\rho})\\
+&-\frac14\bigl(
+\delta_{\mu\nu}v_\rho v_\sigma+\delta_{\rho\sigma}v_\mu v_\nu
+-\delta_{\mu\rho}v_\nu v_\sigma-\delta_{\mu\sigma}v_\nu v_\rho\\
+&\hspace{29mm}
+-\delta_{\nu\rho}v_\mu v_\sigma-\delta_{\nu\sigma}v_\mu v_\rho
+\bigr),
+\end{aligned}
+\tag{36.41}
+$$
+
+$$
+\mathcal Y^{h\phi}_{ab}=\mathcal Y^{\phi h}_{ab}
+=H_{ab}-\frac12\delta_{ab}Z,\qquad
+\mathcal Y^{\phi\phi}=X
+\tag{36.42}
+$$
+
+로 전사한다. Covariant raw matrix는 basis tensor를 양쪽에 실제 수축해 만들고
+$A=G^{-1}\mathcal Y$를 계산한다. 첫 target은 pointwise 항등식
+
+$$
+\operatorname{tr}A
+=\frac{n(n-1)}2R+\frac{8+3n-n^2}{4}X
+\tag{36.43}
+$$
+
+다. 두 번째 source-supplied bulk representative는
+
+$$
+\begin{aligned}
+\mathcal B_{22}(n)={}&3E
++\frac{n^2-8n+4}{n-2}Q
++\frac{n^3-5n^2+8n+4}{2(n-2)}R^2\\
+&-\left(\frac{2n(n-4)}{n-2}+4\right)P
++\frac{n^3-7n^2+10n+8}{2(2-n)}RX\\
+&+2Z^2
++\frac{n^3-n^2+14n-40}{8(n-2)}X^2 ,
+\end{aligned}
+\tag{36.44}
+$$
+
+여기서 $E=R_{abcd}R_{abcd}$, $Q=R_{ab}R_{ab}$,
+$P=R_{ab}v_av_b$다. Raw matrix trace와의 차이를 비교할 quotient는 source
+formula에서 역으로 맞추지 않고 Eq. (42)의 mixed block과 공변미분 교환자로
+사전고정한다.
+
+$$
+\mathfrak D=H_{ab}H_{ab}-Z^2+P
+=\nabla_\mu(v_\nu H^{\mu\nu}-v^\mu Z),\qquad
+\operatorname{tr}(A^2)-\mathcal B_{22}(n)=4\mathfrak D .
+\tag{36.45}
+$$
+
+마지막 divergence 식은
+$[\nabla^2,\nabla_\nu]\bar\phi=R_{\nu\lambda}v^\lambda$ convention 아래의
+bulk identity다. Gate residual은
+$\operatorname{tr}(A^2)-\mathcal B_{22}-4\mathfrak D$이며,
+$\operatorname{tr}(A^2)=\mathcal B_{22}$를 pointwise로 요구하지 않는다.
+
+Fixture는 $n=3,4,5$의 세 generic $\delta\owedge S$, $n=4,5$의 두
+Weyl-added curvature에 nonzero rational $v$와
+
+$$
+H_{ii}=i+2,\qquad H_{ij}=\frac1{i+j+5}\quad(i\ne j)
+\tag{36.46}
+$$
+
+를 결합한다. 같은 세 generic curvature에서 $v=0$ fixture도 실행하고,
+$n=3$ flatㆍ$v=0$ㆍ$H=\operatorname{diag}(1,2,4)$ 표본은
+$\mathfrak D=-28$, raw-minus-bulk $=-112$를 내야 한다. 총 9개 fixture마다
+Eq. (36.43)과 Eq. (36.45)의 exact residual 0, 즉 18개 exact component를
+요구한다. Generic 표본은
+$E,Q,R,X,P,H_{ab}H_{ab},Z,\mathfrak D$의 필요한 nonzero liveness를
+검사하고 pure Weyl tensor의 Ricci-flatness도 다시 감사한다.
+SourceㆍframeㆍbasisㆍDeWitt metric/inverseㆍEq. (18) 전사ㆍfixtureㆍquotient
+payload는 첫 실행 전에
+993123d20fc3f95d52d013fe7bdf7951867a6d8e2b40e53c662d93f42527af40로
+잠근다.
+
+음성대조는 $C^{-1}$ trace coefficient 훼손, $G^{-1}$ 대신 raw Euclidean
+identity 사용, off-diagonal basis normalization 변경, $\mathcal Y^{hh}$ 한
+성분/index 훼손, mixed block 누락ㆍ상대 부호 변경, Eq. (36.42)의
+$-\delta_{ab}Z/2$ 부호 변경, scalar block 누락,
+$\operatorname{tr}(A^2)$를 $(\operatorname{tr}A)^2$로 교체, Ricci contraction
+부호 변경, quotient coefficient $4$ 변경, pointwise
+$\mathfrak D=0$ 강제, Weyl drop와 $n=4$ coefficient를 $n=3,5$에 복사하는
+변형을 포함한다. 두 mixed block을 동시에 부호 반전하면 squared trace에
+보이지 않으므로 그 선형 전체 부호는 판정하지 않는다.
+
+$[G]=[C]=[C^{-1}]=L^0$, $[v]=L^{-1}$,
+$[R_{abcd}]=[H]=[X]=[\mathcal Y]=L^{-2}$,
+$[\operatorname{tr}A]=L^{-2}$와
+$[E]=[Q]=[R^2]=[P]=[RX]=[H^2]=[Z^2]=[X^2]
+=[\mathfrak D]=[\operatorname{tr}A^2]=L^{-4}$를 primitive factor에서
+계산하고 gradient 또는 Hessian exponent 훼손을 거부한다.
+
+derivation status는 finite_sym2_potential_bulk_quotient_only로 고정한다.
+source_eq22_pointwise_identity_proved, integration_by_parts_source_explicit,
+finite_boundary_completed, endpoint_terms_computed,
+eq18_operator_derived, gauge_fixing_derived,
+functional_determinant_derived, heat_kernel_trace_derived,
+fp_determinant_derived, ghost_weight_derived, loop_integral_evaluated,
+regularization_scheme_implemented, evanescent_terms_controlled,
+independent_source_artifact_authenticated, renormalization_proof,
+continuum_st_qme_proved, local_covariance_proved, in_in_ctp_completed,
+positive_physical_hilbert_proved, quantum_hda_m2_proved는 모두 false다.
+
+실행 결과 rank $(7,11,16)$ raw metric의 exact inverse residual은 모두 0이고
+$n=2$ pole은 거부됐다. 세 generic-vector, 세 generic-zero-vector, 두
+Weyl-added, 한 flat-Hessian의 총 9개 fixture에서 trY와 Eq. (36.45)의
+**18개 exact residual이 모두 0**이다. 일곱 curvature audit, potential matrix
+symmetry, Weyl Ricci-flatness와 모든 liveness 검사도 PASS했다. Flat 표본은
+raw trace $-14$, source bulk $98$, 차이 $-112=4(-28)$을 재현했다.
+
+Wrong DeWitt/raw metric, off-diagonal basis, 훼손한 $Y^{hh}$, mixed 누락ㆍ
+상대부호, Hessian trace 부호, scalar 누락, trace-square 혼동, Ricci 부호,
+quotient coefficient, pointwise 강제, Weyl drop, $n=4$ 복사의 14개 mismatch는
+모두 nonzero다. 두 mixed block 동시 부호 반전 residual만 0이므로 선형 부호는
+판정하지 않는다. Focused 회귀는 **8 passed in 2.77s**, production runner는
+declared_finite_sym2_potential_bulk_gate_passed=true다. 1차출처 감사 뒤
+local normal-coordinate convention과 hash
+993123d20fc3f95d52d013fe7bdf7951867a6d8e2b40e53c662d93f42527af40으로
+재잠그고 처음부터 재실행했으며, 최종 수학ㆍ형식ㆍ출처 감사에는 P0/P1이 없다.
+
+따라서 PASS는 “source-v7 Eq. (17)--(18)의 고정된 local normal-coordinate
+Euclidean raw
+matrix에서 $\operatorname{tr}A$를 pointwise 재현하고,
+$\operatorname{tr}(A^2)$와 source Eq. (22)의 supplied bulk representative
+차이가 선언한 $4\mathfrak D$ quotient임을 $n=3,4,5$ exact fixture에서
+확인했다”까지만 뜻한다. 원문이 이 적분부분적분 단계를 명시했다는 주장,
+pointwise Eq. (22) 전체 항등식, 유한 boundary/endpoint 또는 integrated action
+동일성, full operatorㆍgauge fixingㆍdeterminantㆍheat kernelㆍloopㆍ
+renormalizationㆍST/QMEㆍHilbertㆍHDA/M2의 증명이 아니다. Full E69은
+**[미완성]**이며 M3--M9는 계속 동결하고 새 관측 예측은 없다.
+
+## E69-H 사전등록과 완료 계약
+
+다음 subgate는 **E69-H: linearized Faddeev--Popov variation과 finite Berezin
+determinant에서 ghost weight를 분리 유도하는 gate**다. Source는 Eq. (11),
+Eq. (13), Eq. (24)--(26)과 최종 $-2$를 제시하지만 그 사이의 FP Jacobian과
+Grassmann 적분을 전개하지 않는다. 따라서 source 전사, 채택 convention,
+독립 finite algebra를 구분한다.
+
+Local Euclidean normal-coordinate point에서 quantum/background split의
+선형부를
+
+$$
+\delta h_{\mu\nu}=\nabla_\mu\xi_\nu+\nabla_\nu\xi_\mu,\qquad
+\delta\varphi=\xi^\rho v_\rho,\qquad
+\chi_\nu=\nabla^\mu h_{\mu\nu}-\frac12\nabla_\nu h-\varphi v_\nu
+\tag{36.47}
+$$
+
+로 고정한다. 원문 Eq. (11)의 scalar $\phi/\bar\phi$ 표기는 모호하므로
+$\delta\varphi=\xi\cdot v$는 background split의 **채택 선형화**이며 source가
+명시적으로 유도했다고 쓰지 않는다.
+
+$K_{\mu\nu\rho}=\nabla_\mu\nabla_\nu\xi_\rho$와 arbitrary symmetric second jet
+$S_{(\mu\nu)\rho}$를
+
+$$
+K_{\mu\nu\rho}
+=S_{\mu\nu\rho}
++\frac12R_{\mu\nu\rho\sigma}\xi^\sigma,\qquad
+K_{\mu\nu\rho}-K_{\nu\mu\rho}
+=R_{\mu\nu\rho\sigma}\xi^\sigma
+\tag{36.48}
+$$
+
+로 구성한다. Source curvature convention에서 Eq. (36.47)을 성분별로
+변분해
+
+$$
+\begin{aligned}
+\delta\chi_\nu
+&=\sum_\mu K_{\mu\mu\nu}
+ +\sum_\mu K_{\mu\nu\mu}
+ -\sum_\mu K_{\nu\mu\mu}
+ -v_\nu(v\cdot\xi)\\
+&=\Box\xi_\nu+R_{\nu\rho}\xi^\rho-v_\nu v_\rho\xi^\rho,\\
+\Delta_{\rm FP}&:=-\frac{\delta\chi}{\delta\xi}
+=-\mathbb I\Box-\operatorname{Ric}+vv^{\mathsf T}
+\end{aligned}
+\tag{36.49}
+$$
+
+를 검사한다. 마지막 정의의 overall minus는 source Eq. (24)--(26)에 맞춘
+채택 convention이다. 따라서 유도 대상은 principal term에 대한 potential의
+상대 부호이며, $\Delta_{\rm FP}\mapsto-\Delta_{\rm FP}$의 전역 determinant
+phase나 log branch는 판정하지 않는다.
+
+Dimensionful normal coordinate와 무차원 $h_{\mu\nu},\varphi$ convention에서는
+$[\xi]=L$, $[\nabla]=[v]=L^{-1}$로 둔다. 따라서
+$[\Box\xi]=[\operatorname{Ric}\xi]=[vv^{\mathsf T}\xi]=L^{-1}$이고
+$[\Delta_{\rm FP}]=L^{-2}$다. 첫 focused 실행 뒤 독립 수학 감사가
+$[\xi]=L^0$로 둔 action-term 라벨의 P1을 찾아 이 표기로 수정했다. FP 계수,
+exact residual과 determinant/Berezin 결과는 바뀌지 않는다.
+
+각 $n=3,4,5$에서 E69-E의 generic rational curvatureㆍ$v$ㆍ$\xi$와 별도
+rational symmetric $S_{\mu\nu\rho}$를 잠근다. Expanded gauge variation과
+Eq. (36.49)의 residual은 exact 0이어야 하고, $v=0$, Ricci-flat Weyl,
+flat-curvature 표본도 따로 실행한다. Gauge trace coefficient $1/2$ 변경,
+scalar gauge term 누락/부호 반전, commutator 부호, Ricci contraction/index,
+$\Delta=+\delta\chi$, generic fixture 누락을 음성대조로 둔다.
+
+통계 레인은 differential-operator 계산과 독립이다. Grassmann generator
+$(\bar c_1,\ldots,\bar c_N,c_1,\ldots,c_N)$의 exterior algebra와 top-form
+orientation을 처음부터 고정하고, truncated exponential을 직접 전개해
+
+$$
+\int D\bar c\,Dc\,
+\exp(-\bar c_iM_{ij}c_j)=\det M
+\tag{36.50}
+$$
+
+를 $N=1,2,3$의 nonsingular rational matrix에서 exact하게 검사한다. Determinant
+우변은 별도 Leibniz permutation 합으로 계산한다. $N=1,3$은 exponent sign
+오류를 잡고, off-diagonal $N=2$ 표본은 diagonal shortcut을 막으며,
+singular matrix는 zero mode로 명시적으로 reject한다.
+
+Absolute log나 dimensionful determinant를 계산하지 않는다. 같은 차원의
+nonsingular reference $M_0,A_0$와 positive real-boson matrix $A$에 대해
+dimensionless ratio만 두고
+
+$$
+W_{\rm gh}(M;M_0)
+=-\log\left|\frac{\det M}{\det M_0}\right|,\qquad
+W_{\rm b}(A;A_0)
+=+\frac12\log\left(\frac{\det A}{\det A_0}\right)
+\tag{36.51}
+$$
+
+라는 선언된 Euclidean Gaussian convention을 쓴다. $M\mapsto\lambda M$,
+$A\mapsto\lambda A$에서 log-ratio coefficient는 각각 $-N$과 $N/2$이므로
+
+$$
+w_{\rm gh/b}=\frac{-1}{1/2}=-2
+\tag{36.52}
+$$
+
+다. Wrong Berezin orientation, $\exp(+\bar cMc)$, determinant inverse,
+real-ghost half weight, species multiplicity 변경, reference ratio 누락,
+singular matrix 허용을 모두 kill control로 둔다. $M\mapsto-M$과 basis
+permutation/rescaling의 determinant ratio 및 odd-$N$ sign/log-branch 한계도
+receipt에 남긴다.
+
+SourceㆍframeㆍEq. (11)/(13)/(24)--(26)ㆍlinearizationㆍjetㆍBerezin orderingㆍ
+matrix fixturesㆍreference-ratio convention은 첫 실행 전에 canonical
+SHA-256
+0f98583d2bc462d2f4252499a0e3f59c6573169b717f66f4c682849c0298ff49로
+잠근다. derivation status는
+finite_linear_fp_variation_and_berezin_weight_only로 고정한다.
+linearized_background_split_assumed는 true이고,
+fp_derivation_source_explicit, grassmann_measure_source_explicit,
+ghost_minus_two_derivation_source_explicit, action_prefactor_derived,
+global_fp_operator_completed, boundary_conditions_completed,
+zero_mode_sector_resolved, functional_measure_derived,
+functional_determinant_computed, log_branch_resolved,
+brst_bv_measure_proved, heat_kernel_derived, loop_integral_evaluated,
+renormalization_proof, continuum_st_qme_proved, local_covariance_proved,
+in_in_ctp_completed, positive_physical_hilbert_proved,
+quantum_hda_m2_proved는 모두 false다.
+
+따라서 PASS는 “고정한 local finite gauge-jet basis에서 linearized FP
+operator와 Eq. (26) potential의 상대 부호를 구성하고, 별도 finite Berezin
+identity 및 dimensionless logdet scaling convention에서 relative ghost weight
+$-2$를 확인했다”까지만 뜻한다. Eq. (11)의 완전한 split, source-explicit FP
+유도, Eq. (24)의 $1/4$ normalization, global/functional determinant,
+Grassmann path-integral measure, zero-mode와 boundary, BRST/BVㆍST/QME,
+heat kernelㆍloopㆍrenormalizationㆍHilbertㆍHDA/M2의 증명이 아니다. Full
+E69은 **[미완성]**이며 M3--M9는 계속 동결하고 새 관측 예측은 없다.
+
+실행 결과 세 generic-vector, 세 generic-zero-vector, 두 pure-Weyl, 한
+flat-vector의 총 9개 fixture와 여섯 curvature audit가 PASS했다. 아홉
+commutator residual, expanded gauge variation 36성분, FP operator relation
+36성분의 총 **72개 exact component는 모두 0**이고 gauge-parameter rescaling
+residual도 0이다. 독립 exterior-algebra 적분과 Leibniz determinant는
+$N=1,2,3$에서 각각 $(2,7,16)$으로 같고 singular matrix는 reference ratio
+전에 거부됐다. Transposeㆍdiagonal similarityㆍpermutation basis를 보존하며
+$\det(2M)/\det M=(2,4,8)$, relative weight는 정확히 $-2$다.
+
+Wrong commutator/gauge trace/scalar omission/scalar flip/Ricci sign/FP sign과
+positive exponent/wrong orientation/determinant inverse, ghost inverse/half/
+doubled multiplicity의 12개 대조는 모두 nonzero다. 첫 focused 실행 뒤 독립
+수학 감사가 $[\xi]=L^0$ 차원 라벨의 P1을 찾아 dimensionful-coordinate
+convention의 $[\xi]=L$로 수정했다. 수정 뒤 focused 회귀는
+**8 passed in 0.21s**, production runner는
+declared_finite_fp_berezin_gate_passed=true다. 수학ㆍ형식ㆍ1차출처 감사의
+최종 판정은 모두 P0/P1 없음이다. 출처가 FP Jacobian, Grassmann measure,
+Eq. (24)의 $1/4$, 또는 $-2$의 Gaussian 유도를 명시했다는 승격은 계속
+금지한다.
+
+## 지금 바로 할 한 가지 — E69-I 사전등록
+
+다음 subgate는 **E69-I: independently reconstructed raw operator trace에서
+finite heat-kernel coefficient를 합성하는 gate**다. Source Eq. (19)의
+
+$$
+\operatorname{tr}a_2=
+\frac{2E-2Q+5R^2}{360}\operatorname{tr}\mathbb I
++\frac12\operatorname{tr}\mathcal Y^2
+-\frac16R\operatorname{tr}\mathcal Y
++\frac1{12}\operatorname{tr}W^2
+\tag{36.53}
+$$
+
+는 **source-supplied heat-kernel theorem input**으로 쓴다. 이 식 자체를
+유도했다고 표시하지 않는다. 반면 우변의 trace는 source Eq. (22) coefficient
+table을 넣지 않고 E69-E/F/G의 실제 finite matrix contraction에서 다시
+계산한다. Ghost weight $-2$는 E69-H의 별도 finite Berezin exponent 결과를
+채택한다.
+
+Ordered coefficient basis를
+
+$$
+\mathcal B_7=(E,Q,R^2,P,RX,X^2,Z^2),\quad
+P=R_{\mu\nu}v^\mu v^\nu,\quad X=v^2,\quad Z=\Box\phi
+\tag{36.54}
+$$
+
+로 고정한다. Bosonic potential은 raw matrix의
+$\operatorname{tr}\mathcal Y$와 $\operatorname{tr}\mathcal Y^2_{\rm raw}$를
+계산한 뒤 E69-G에서 분리한
+
+$$
+\operatorname{tr}\mathcal Y^2_{\rm bulk}
+=\operatorname{tr}\mathcal Y^2_{\rm raw}
+-4\mathfrak D,\qquad
+\mathfrak D=H_{\mu\nu}H^{\mu\nu}-Z^2+P
+\tag{36.55}
+$$
+
+를 선언한 integrated-bulk quotient로 쓴다. Ghost는 실제
+$\mathcal Y_{\rm gh}=-\operatorname{Ric}+vv^{\mathsf T}$ matrix와 vector-bundle
+$W$를 직접 수축한다. Eq. (22), Eq. (23), Eq. (27)의 source coefficient는
+fit 입력으로 접근하지 않고 fit이 끝난 뒤 oracle 비교에만 쓴다.
+
+각 $n=4,5,6,7$에서 pure Weyl, identity-$S$, traceless-$S$, flat-$v$,
+flat-$H$, traceless-$S+v$, identity-$S+v$와 다섯 seeded
+$\delta\owedge S+tC/v/H$ 표본, 총 12개 exact fixture를 고정한다. Invariant
+design matrix가 rank 7이어야 하고, 일곱 독립 행으로 구한 coefficient가
+나머지 다섯 overdetermined 행에서도 residual 0이어야 한다. Weyl이 없는
+$n=3$은 $E,Q,R^2$를 독립 식별할 수 없으므로 full-rank identification
+차원으로 쓰지 않는다. $n=8$의 raw coefficient는 같은 독립 fit으로 얻되
+$n$-의존 polynomial interpolation에는 넣지 않는 holdout이다.
+
+각 차원의 independently fitted bosonic/ghost vector를 fit 완료 뒤에만
+source Eq. (23)/(27)과 비교한다. 차원 의존성은
+
+$$
+p_i(n)=360(n-2)c_i(n),\qquad \deg p_i\le3
+\tag{36.56}
+$$
+
+라는 명시적 rational-form degree bound를 **채택**해 $n=4,5,6,7$에서
+interpolate하고 $n=8$에서 holdout 검증한다. 이는 declared degree bound 아래의
+finite 검산이지 all-$n$ symbolic theorem이 아니다.
+
+그 뒤에만
+
+$$
+c_{\rm raw}(n)=c_{\rm bos}(n)-2c_{\rm gh}(n)
+\tag{36.57}
+$$
+
+를 만들고 $n=4$의 $P$ coefficient가 0인지 확인한다. 마지막으로 오직
+4차원 integrated bulk에서
+
+$$
+E-4Q+R^2\sim0,\qquad
+(a_E,a_Q,a_{R^2})\mapsto(4a_E+a_Q,-a_E+a_{R^2})
+\tag{36.58}
+$$
+
+를 적용해 source Eq. (28)의
+$(43/60,1/40,0,1/6,1,1)$을 비교한다. Generic fixture의 Euler density가
+nonzero인지 검사해 Eq. (36.58)을 pointwise-zero identity로 쓰는 경로를
+금지한다.
+
+Kill controls는 $\mathfrak D$ quotient 누락과 잘못된 $+4\mathfrak D$,
+$W^2$ 부호 반전, scalar identity rank 누락, ghost weight
+$+2,-1,0$, bosonic $P$의 premature 삭제, $n=4$ vector를 $n=8$에 복사,
+Weyl을 뺀 rank-deficient design, 한 raw density 훼손, pointwise GB 강제,
+$n=2$ pole 허용과 source/upstream hash mutation이다. 모든
+$\mathcal B_7$, $\mathfrak D$, Eq. (36.53) density는 $L^{-4}$,
+coefficient와 $n$은 무차원이어야 하며 primitive exponent 훼손은 PASS를
+거부한다.
+
+Sourceㆍupstream E69-D/E/F/G/H hashㆍframeㆍbasisㆍdimensionsㆍ12-fixture
+generatorㆍEq. (36.53)--(36.58) convention은 첫 synthesis 실행 전에
+canonical SHA-256
+b7f30c9948b1853335a519d65b5c6796b2fd8ec58fd7532ecdad714b4bc0d83c로
+잠근다. derivation status는
+finite_raw_trace_to_source_coefficient_synthesis_only다.
+source_eq22_coefficients_used_as_fit_input,
+source_eq23_eq27_used_as_fit_input, eq19_theorem_independently_derived,
+all_n_symbolic_identity_proved, 두 quotient의 pointwise_zero,
+finite_boundary_completed, global_minimal_operator_derived,
+functional_measure_derived, functional_determinant_computed,
+heat_kernel_proper_time_integral_derived, loop_integral_evaluated,
+regularization_scheme_implemented, evanescent_terms_controlled,
+renormalization_proof, continuum_st_qme_proved, local_covariance_proved,
+in_in_ctp_completed, positive_physical_hilbert_proved,
+quantum_hda_m2_proved는 모두 false다.
+
+초기 payload
+814e6197b7b5373c11b45cbec338afb6905b796c21d8340e8891e7d6e892191b의
+첫 실행은 coefficient 계산 전에 기존 Weyl helper가 $n=6$을 거부해
+중단됐다. 따라서 고정 4D Ricci-flat $C$를 $n>4$의 추가 축에 0으로 embed하는
+규칙을 fixture formula에 명시하고 위 새 hash로 다시 잠갔다. 이 수정은
+실패한 실행의 수치 결과를 사용하지 않았다.
+
+따라서 PASS는 “고정한 local finite Euclidean raw operator/trace fixture에서
+independent trace를 Eq. (19)의 supplied map으로 합성하고, exact rational
+coefficient fit과 holdout이 source Eq. (23)/(27)/(28)에 일치함을 확인했다”까지만
+뜻한다. Eq. (19)의 독립 증명, all-background/all-$n$ theorem, global
+determinant, boundaryㆍevanescent completion, continuum one-loop
+renormalizationㆍBRST/ST/QMEㆍHilbertㆍHDA/M2의 증명이 아니다. Full E69은
+**[미완성]**이며 M3--M9는 계속 동결하고 새 관측 예측은 없다.
 
 ## 1차 문헌
 
@@ -388,6 +1631,12 @@ Hilbert와 HDA/M2는 계속 **[미완성]**이며 M3--M9는 동결한다.
 - [Donnelly, Giddings, *Observables, gravitational dressing, and obstructions to locality*](https://doi.org/10.1103/PhysRevD.94.104038)
 - [Hollands, Wald, *Existence of local covariant time ordered products of quantum fields in curved spacetime*](https://arxiv.org/abs/gr-qc/0111108)
 - [Giesel, Vetter, *Reduced Loop Quantization with four Klein--Gordon Scalar Fields as Reference Matter*](https://arxiv.org/abs/1610.07422)
+- ['t Hooft, Veltman, *One-loop divergencies in the theory of gravitation*](https://www.numdam.org/article/AIHPA_1974__20_1_69_0.pdf)
+- [Alvarez, Anero, Santos-Garcia, *One-loop divergences in first order Einstein-Hilbert gravity*, v7](https://arxiv.org/html/1706.02622v7)
+- [Slavnov, *Ward identities in gauge theories*](https://doi.org/10.1007/BF01090719)
+- [Becchi, Rouet, Stora, *Renormalization of Gauge Theories*](https://doi.org/10.1016/0003-4916(76)90156-1)
+- [Batalin, Vilkovisky, *Gauge algebra and quantization*](https://doi.org/10.1016/0370-2693(81)90205-7)
+- [Calzetta, Hu, *Nonequilibrium quantum fields: Closed-time-path effective action, Wigner function, and Boltzmann equation*](https://doi.org/10.1103/PhysRevD.37.2878)
 - [Giulini, Marolf, *On the Generality of Refined Algebraic Quantization*](https://arxiv.org/abs/gr-qc/9812024)
 - [Marolf, *Group Averaging and Refined Algebraic Quantization: Where are we now?*](https://arxiv.org/abs/gr-qc/0011112)
 - [Thiemann, *Quantum Spin Dynamics VIII. The Master Constraint*](https://arxiv.org/abs/gr-qc/0510011)
