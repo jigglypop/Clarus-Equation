@@ -42,8 +42,15 @@ an exact integrated remainder bound.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
+import cmath
 import math
+
+from examples.physics.kinetic_dark_sector_flrw_mode import (
+    FLRWBackgroundLike,
+    FLRWModeSolution,
+)
 
 
 _MAX_TIME_DEGREE = 6
@@ -318,6 +325,190 @@ class IntegratedStress:
     energy_tail_absolute_bound: float
     pressure_tail_absolute_bound: float
     status: str = "FINITE_GRID_PLUS_CERTIFIED_POWER_LAW_UV_TAIL"
+    external_tail_certificate_trusted: bool = True
+    tail_certificate_independently_derived_by_integrator: bool = False
+    hadamard_state_proved: bool = False
+    absolute_reference_vacuum_stress_renormalized: bool = False
+
+
+@dataclass(frozen=True)
+class SqueezedFLRWModeStressDifference:
+    """One finite state-dependent stress difference on a fixed FLRW event."""
+
+    q: float
+    mu: float
+    scale_factor: float
+    background_jet: ScaleFactorJet
+    alpha: complex
+    beta: complex
+    initial_occupation: float
+    beta_squared: float
+    bogoliubov_normalization_residual: float
+    reference_wronskian_residual: float
+    squeezed_wronskian_residual: float
+    reference_eom_relative_residual: float
+    squeezed_eom_relative_residual: float
+    reference_stress: ModeStress
+    squeezed_stress: ModeStress
+    preexisting_particle_stress: ModeStress
+    created_particle_stress: ModeStress
+    created_anomalous_stress: ModeStress
+    created_state_dependent_stress: ModeStress
+    full_reference_mode_subtracted_stress: ModeStress
+    reference_field_squared_over_h0_two: float
+    created_particle_field_squared_over_h0_two: float
+    created_anomalous_field_squared_over_h0_two: float
+    created_state_dependent_field_squared_over_h0_two: float
+    full_reference_mode_subtracted_field_squared_over_h0_two: float
+    created_dimensionless_conformal_continuity_residual: float
+    full_dimensionless_conformal_continuity_residual: float
+    comoving_proper_time_rate_per_dimensionless_conformal_time: float
+    static_minkowski_background: bool
+    static_minkowski_anomalous_energy_cancellation_pass: bool
+    mass_dimension_manifest: tuple[tuple[str, float], ...]
+    dimensionless_core_argument_mass_dimensions: tuple[tuple[str, float], ...]
+    dimensions_pass: bool
+    status: str = (
+        "PASS_CONDITIONAL_EVENT_LOCAL_PER_MODE_FLRW_STATE_DIFFERENCE_"
+        "NO_TIME_PROPAGATION"
+    )
+    minimal_coupling_constant_mass: bool = True
+    phase_resolved_from_supplied_bogoliubov_coefficients: bool = True
+    phase_derived_from_quench_profile: bool = False
+    initial_occupation_basis_declaration: str = (
+        "CALLER_DECLARED_NUMBER_DIAGONAL_IN_SQUEEZED_U_BASIS"
+    )
+    density_matrix_basis_verified_by_this_function: bool = False
+    v_basis_number_only_input_supported: bool = False
+    constant_bogoliubov_coefficients_assumed: bool = True
+    same_local_counterterm_cancels_in_state_difference: bool = True
+    reference_mode_eom_input_verified_at_event: bool = True
+    exact_mode_propagation_verified_by_this_function: bool = False
+    per_mode_state_difference_computed: bool = True
+    hadamard_or_uv_admissibility_proved: bool = False
+    integrated_uv_tail_certified: bool = False
+    absolute_reference_vacuum_stress_renormalized: bool = False
+    full_renormalized_flrw_stress: bool = False
+    local_noncomoving_observer_readout_available: bool = True
+    universal_planck_tick_assumed: bool = False
+    quench_driver_ward_ledger_closed: bool = False
+    einstein_backreaction_computed: bool = False
+    absolute_abundance_computed: bool = False
+    growth_lensing_computed: bool = False
+    persistent_dark_energy_from_phase_proved: bool = False
+    physical_dark_matter_dark_energy_identification: bool = False
+
+
+@dataclass(frozen=True)
+class SqueezedFLRWStressTrajectoryNode:
+    """One sampled event on a continuously propagated reference mode."""
+
+    n: float
+    x: float
+    h0_cosmic_time: float
+    receipt: SqueezedFLRWModeStressDifference
+    created_equation_of_state: float | None
+    positive_density_acceleration_diagnostic: bool
+    de_like_state_difference_diagnostic: bool
+    hubble_to_mass: float
+    physical_momentum_to_mass: float
+
+
+@dataclass(frozen=True)
+class SqueezedFLRWTrajectoryWardReceipt:
+    """Independent finite-grid continuity receipts for one stress trajectory."""
+
+    endpoint_plus_pressure_integral_signed_residual: float
+    interval_absolute_accumulated_residual: float
+    balance_absolute_scale: float
+    relative_signed_residual: float
+    relative_absolute_accumulated_residual: float
+    max_finite_difference_relative_residual: float
+    status: str = "FINITE_GRID_GLOBAL_CREATED_STRESS_WARD_DIAGNOSTIC"
+
+
+@dataclass(frozen=True)
+class SqueezedFLRWStressTimeWindow:
+    """Cosmic-time-weighted stress readout on one sampled e-fold window."""
+
+    start_n: float
+    end_n: float
+    h0_cosmic_time_duration: float
+    created_stress_time_average: ModeStress
+    particle_stress_time_average: ModeStress
+    anomalous_stress_time_average: ModeStress
+    created_equation_of_state: float | None
+    particle_equation_of_state: float | None
+    max_hubble_to_mass: float
+    max_physical_momentum_to_mass: float
+    particle_comoving_energy_relative_span: float
+    status: str = "COSMIC_TIME_WEIGHTED_STATE_DIFFERENCE_WINDOW"
+
+
+@dataclass(frozen=True)
+class SqueezedFLRWStressTrajectory:
+    """Global diagnostics for a supplied FLRW mode and exact jet provider."""
+
+    nodes: tuple[SqueezedFLRWStressTrajectoryNode, ...]
+    whole_window: SqueezedFLRWStressTimeWindow
+    late_window: SqueezedFLRWStressTimeWindow
+    ward: SqueezedFLRWTrajectoryWardReceipt
+    q: float
+    mu: float
+    alpha: complex
+    beta: complex
+    initial_occupation: float
+    max_reference_phase_step: float
+    anomalous_phase_turns: float
+    late_half_cycle_efold_diagnostic: float
+    accelerating_state_difference_span_lower: float
+    accelerating_state_difference_span_grid_upper: float
+    de_like_state_difference_span_lower: float
+    de_like_state_difference_span_grid_upper: float
+    required_persistent_de_efolds: float
+    late_cold_adiabatic_gates_pass: bool
+    late_dm_like_average_diagnostic_pass: bool
+    grid_diagnostic_excludes_required_de_persistence: bool
+    dimensions_pass: bool
+    status: str = "CONDITIONAL_GLOBAL_FLRW_SQUEEZED_STATE_DIFFERENCE_DIAGNOSTIC"
+    continuously_propagated_reference_solution_used: bool = True
+    event_second_derivative_reconstructed_from_mode_rhs: bool = True
+    global_ward_uses_independent_finite_grid_balance: bool = True
+    scale_factor_jet_provider_supplied_by_caller: bool = True
+    scale_factor_jet_exactness_proved_by_this_function: bool = False
+    constant_positive_mass_verified_on_sampled_solution: bool = True
+    minimal_coupling_verified: bool = True
+    constant_bogoliubov_coefficients_assumed: bool = True
+    initial_occupation_basis_declaration: str = (
+        "CALLER_DECLARED_NUMBER_DIAGONAL_IN_SQUEEZED_U_BASIS"
+    )
+    phase_derived_from_quench_profile: bool = False
+    de_like_span_is_einstein_acceleration_proof: bool = False
+    hadamard_or_uv_admissibility_proved: bool = False
+    integrated_uv_tail_certified: bool = False
+    absolute_reference_vacuum_stress_renormalized: bool = False
+    full_renormalized_flrw_stress: bool = False
+    einstein_backreaction_computed: bool = False
+    absolute_abundance_computed: bool = False
+    growth_lensing_computed: bool = False
+    analytic_persistent_dark_energy_no_go_proved_by_this_function: bool = False
+    physical_dark_matter_dark_energy_identification: bool = False
+
+
+@dataclass(frozen=True)
+class LocalIsotropicObserverStressReadout:
+    """Readout of an isotropic shell/ensemble stress for one local observer."""
+
+    relative_speed: float
+    lorentz_gamma: float
+    comoving_energy_density: float
+    isotropic_pressure: float
+    observer_energy_density: float
+    observer_proper_time_rate_per_comoving_cosmic_time: float
+    status: str = "LOCAL_ISOTROPIC_STRESS_OBSERVER_CONTRACTION"
+    local_tetrad_supplied: bool = True
+    observer_worldline_global_evolution_computed: bool = False
+    universal_planck_tick_assumed: bool = False
 
 
 @dataclass(frozen=True)
@@ -810,4 +1001,915 @@ def renormalized_mode_stress(
         pressure_over_h0_four=(
             bare.pressure_over_h0_four - subtraction.pressure_over_h0_four
         ),
+    )
+
+
+def _finite_complex(name: str, value: complex) -> complex:
+    converted = complex(value)
+    if not math.isfinite(converted.real) or not math.isfinite(converted.imag):
+        raise ValueError(f"{name} must be finite")
+    return converted
+
+
+def _scale_mode_stress(stress: ModeStress, factor: float) -> ModeStress:
+    return ModeStress(
+        energy_density_over_h0_four=(
+            factor * stress.energy_density_over_h0_four
+        ),
+        pressure_over_h0_four=factor * stress.pressure_over_h0_four,
+    )
+
+
+def _subtract_mode_stress(left: ModeStress, right: ModeStress) -> ModeStress:
+    return ModeStress(
+        energy_density_over_h0_four=(
+            left.energy_density_over_h0_four
+            - right.energy_density_over_h0_four
+        ),
+        pressure_over_h0_four=(
+            left.pressure_over_h0_four - right.pressure_over_h0_four
+        ),
+    )
+
+
+def _add_mode_stress(left: ModeStress, right: ModeStress) -> ModeStress:
+    return ModeStress(
+        energy_density_over_h0_four=(
+            left.energy_density_over_h0_four
+            + right.energy_density_over_h0_four
+        ),
+        pressure_over_h0_four=(
+            left.pressure_over_h0_four + right.pressure_over_h0_four
+        ),
+    )
+
+
+def _minimal_mode_eom_relative_residual(
+    jet: ScaleFactorJet,
+    *,
+    q: float,
+    mu: float,
+    u: complex,
+    d2u_dx2: complex,
+) -> float:
+    effective_frequency_squared = (
+        q * q
+        + jet.a * jet.a * mu * mu
+        - jet.d2 / jet.a
+    )
+    second_term = effective_frequency_squared * u
+    residual = d2u_dx2 + second_term
+    scale = max(1.0, abs(d2u_dx2), abs(second_term))
+    return abs(residual) / scale
+
+
+def _minimal_mode_conformal_continuity_residual(
+    jet: ScaleFactorJet,
+    *,
+    q: float,
+    mu: float,
+    u: complex,
+    du_dx: complex,
+    d2u_dx2: complex,
+) -> float:
+    """Return the dimensionless continuity residual.
+
+    Since ``rho`` and ``p`` are divided by ``H0^4`` while ``x=H0*eta``,
+    this equals the physical conformal-time residual divided by ``H0^5``.
+    """
+
+    a = jet.a
+    conformal_hubble = jet.d1 / a
+    conformal_hubble_derivative = (
+        jet.d2 / a - conformal_hubble * conformal_hubble
+    )
+    physical_derivative_mode = du_dx - conformal_hubble * u
+    derivative_of_physical_derivative_mode = (
+        d2u_dx2
+        - conformal_hubble_derivative * u
+        - conformal_hubble * du_dx
+    )
+    frequency_squared = q * q + a * a * mu * mu
+    frequency_squared_derivative = 2.0 * a * jet.d1 * mu * mu
+    amplitude = abs(u) ** 2
+    amplitude_derivative = 2.0 * (du_dx * u.conjugate()).real
+    kinetic = abs(physical_derivative_mode) ** 2
+    kinetic_derivative = 2.0 * (
+        derivative_of_physical_derivative_mode
+        * physical_derivative_mode.conjugate()
+    ).real
+    energy_bracket = kinetic + frequency_squared * amplitude
+    energy_bracket_derivative = (
+        kinetic_derivative
+        + frequency_squared_derivative * amplitude
+        + frequency_squared * amplitude_derivative
+    )
+    energy = 0.5 * energy_bracket / a**4
+    pressure = 0.5 / a**4 * (
+        kinetic - (q * q / 3.0 + a * a * mu * mu) * amplitude
+    )
+    energy_derivative = 0.5 / a**4 * (
+        energy_bracket_derivative
+        - 4.0 * conformal_hubble * energy_bracket
+    )
+    return energy_derivative + 3.0 * conformal_hubble * (energy + pressure)
+
+
+def minimal_squeezed_flrw_mode_stress_difference(
+    jet: ScaleFactorJet,
+    *,
+    q: float,
+    mu: float,
+    reference_u: complex,
+    reference_du_dx: complex,
+    reference_d2u_dx2: complex,
+    alpha: complex,
+    beta: complex,
+    initial_occupation: float = 0.0,
+    canonical_tolerance: float = 1.0e-9,
+) -> SqueezedFLRWModeStressDifference:
+    r"""Return the finite created-state stress difference for one FLRW mode.
+
+    The reference mode ``v`` and ``u=alpha*v+beta*v*`` use the same constant-
+    mass, minimally coupled FLRW equation.  The caller declares
+    ``initial_occupation`` to be number-diagonal in the squeezed ``u`` basis;
+    a number-only occupation in the ``v`` basis represents a different input
+    and is not accepted as an equivalent density matrix.  The returned
+    created excess is
+
+    ``(1+2*n) * (T_bare[u] - T_bare[v])``.
+
+    A common local adiabatic counterterm cancels in this difference.  This is
+    not the absolute renormalized reference-vacuum stress, and its momentum
+    integral is finite only after a Hadamard/UV tail condition is supplied.
+    The complex Bogoliubov phase is an input; this function does not derive it
+    from the quench profile.  The EOM and continuity receipts are event-local
+    checks using caller-supplied second derivatives.  They do not propagate a
+    mode over a time interval; time-dependent alpha or beta would require an
+    explicit driver/source Ward ledger outside this API.
+    """
+
+    _validate_parameters(q, mu, 0.0)
+    reference_u = _finite_complex("reference_u", reference_u)
+    reference_du_dx = _finite_complex(
+        "reference_du_dx",
+        reference_du_dx,
+    )
+    reference_d2u_dx2 = _finite_complex(
+        "reference_d2u_dx2",
+        reference_d2u_dx2,
+    )
+    alpha = _finite_complex("alpha", alpha)
+    beta = _finite_complex("beta", beta)
+    if not math.isfinite(initial_occupation) or initial_occupation < 0.0:
+        raise ValueError("initial_occupation must be finite and non-negative")
+    if (
+        not math.isfinite(canonical_tolerance)
+        or canonical_tolerance <= 0.0
+        or canonical_tolerance > 1.0e-4
+    ):
+        raise ValueError("canonical_tolerance must lie in (0, 1e-4]")
+
+    beta_squared = abs(beta) ** 2
+    bogoliubov_residual = abs(abs(alpha) ** 2 - beta_squared - 1.0)
+    if bogoliubov_residual > canonical_tolerance:
+        raise ValueError("Bogoliubov normalization exceeds canonical_tolerance")
+    reference_wronskian = (
+        reference_u * reference_du_dx.conjugate()
+        - reference_u.conjugate() * reference_du_dx
+    )
+    reference_wronskian_residual = abs(reference_wronskian - 1.0j)
+    if reference_wronskian_residual > canonical_tolerance:
+        raise ValueError("reference Wronskian exceeds canonical_tolerance")
+    reference_eom_residual = _minimal_mode_eom_relative_residual(
+        jet,
+        q=q,
+        mu=mu,
+        u=reference_u,
+        d2u_dx2=reference_d2u_dx2,
+    )
+    if reference_eom_residual > canonical_tolerance:
+        raise ValueError("reference mode EOM exceeds canonical_tolerance")
+
+    squeezed_u = alpha * reference_u + beta * reference_u.conjugate()
+    squeezed_du_dx = (
+        alpha * reference_du_dx + beta * reference_du_dx.conjugate()
+    )
+    squeezed_d2u_dx2 = (
+        alpha * reference_d2u_dx2
+        + beta * reference_d2u_dx2.conjugate()
+    )
+    squeezed_wronskian = (
+        squeezed_u * squeezed_du_dx.conjugate()
+        - squeezed_u.conjugate() * squeezed_du_dx
+    )
+    squeezed_wronskian_residual = abs(squeezed_wronskian - 1.0j)
+    squeezed_eom_residual = _minimal_mode_eom_relative_residual(
+        jet,
+        q=q,
+        mu=mu,
+        u=squeezed_u,
+        d2u_dx2=squeezed_d2u_dx2,
+    )
+    if squeezed_wronskian_residual > canonical_tolerance:
+        raise ValueError("squeezed Wronskian exceeds canonical_tolerance")
+    if squeezed_eom_residual > canonical_tolerance:
+        raise ValueError("squeezed mode EOM exceeds canonical_tolerance")
+
+    reference_stress = bare_mode_stress(
+        jet,
+        q=q,
+        mu=mu,
+        xi=0.0,
+        u=reference_u,
+        du_dx=reference_du_dx,
+    )
+    squeezed_stress = bare_mode_stress(
+        jet,
+        q=q,
+        mu=mu,
+        xi=0.0,
+        u=squeezed_u,
+        du_dx=squeezed_du_dx,
+    )
+    stimulation = 1.0 + 2.0 * initial_occupation
+    created_state_stress = _scale_mode_stress(
+        _subtract_mode_stress(squeezed_stress, reference_stress),
+        stimulation,
+    )
+    created_particle_stress = _scale_mode_stress(
+        reference_stress,
+        2.0 * stimulation * beta_squared,
+    )
+    created_anomalous_stress = _subtract_mode_stress(
+        created_state_stress,
+        created_particle_stress,
+    )
+    preexisting_particle_stress = _scale_mode_stress(
+        reference_stress,
+        2.0 * initial_occupation,
+    )
+    full_reference_mode_subtracted_stress = _add_mode_stress(
+        preexisting_particle_stress,
+        created_state_stress,
+    )
+
+    inverse_a_squared = 1.0 / (jet.a * jet.a)
+    reference_field_squared = abs(reference_u) ** 2 * inverse_a_squared
+    squeezed_field_squared = abs(squeezed_u) ** 2 * inverse_a_squared
+    created_state_field_squared = stimulation * (
+        squeezed_field_squared - reference_field_squared
+    )
+    created_particle_field_squared = (
+        2.0 * stimulation * beta_squared * reference_field_squared
+    )
+    created_anomalous_field_squared = (
+        created_state_field_squared - created_particle_field_squared
+    )
+    full_reference_mode_subtracted_field_squared = (
+        2.0 * initial_occupation * reference_field_squared
+        + created_state_field_squared
+    )
+
+    reference_continuity_residual = _minimal_mode_conformal_continuity_residual(
+        jet,
+        q=q,
+        mu=mu,
+        u=reference_u,
+        du_dx=reference_du_dx,
+        d2u_dx2=reference_d2u_dx2,
+    )
+    squeezed_continuity_residual = _minimal_mode_conformal_continuity_residual(
+        jet,
+        q=q,
+        mu=mu,
+        u=squeezed_u,
+        du_dx=squeezed_du_dx,
+        d2u_dx2=squeezed_d2u_dx2,
+    )
+    created_continuity_residual = stimulation * (
+        squeezed_continuity_residual - reference_continuity_residual
+    )
+    full_continuity_residual = (
+        stimulation * squeezed_continuity_residual
+        - reference_continuity_residual
+    )
+
+    static_minkowski = all(
+        derivative == 0.0
+        for derivative in (
+            jet.d1,
+            jet.d2,
+            jet.d3,
+            jet.d4,
+            jet.d5,
+            jet.d6,
+        )
+    )
+    energy_scale = max(
+        1.0,
+        abs(created_state_stress.energy_density_over_h0_four),
+        abs(created_particle_stress.energy_density_over_h0_four),
+    )
+    minkowski_cancellation_pass = (
+        static_minkowski
+        and abs(created_anomalous_stress.energy_density_over_h0_four)
+        <= canonical_tolerance * energy_scale
+    )
+    mass_dimensions = {
+        "physical_comoving_wavenumber": 1.0,
+        "physical_mass": 1.0,
+        "physical_mode_function": -0.5,
+        "physical_field_squared": 2.0,
+        "physical_energy_density": 4.0,
+        "physical_pressure": 4.0,
+        "physical_conformal_continuity_residual": 5.0,
+        "physical_proper_time": -1.0,
+    }
+    core_dimensions = {
+        "q_equals_k_over_H0": 1.0 - 1.0,
+        "mu_equals_m_over_H0": 1.0 - 1.0,
+        "bogoliubov_normalization": 0.0,
+        "wronskian_normalization_in_x_units": 0.0,
+        "proper_to_conformal_time_rate": 0.0,
+        "conformal_continuity_residual_over_H0_five": 5.0 - 5.0,
+    }
+    dimensions_pass = all(value == 0.0 for value in core_dimensions.values())
+    return SqueezedFLRWModeStressDifference(
+        q=q,
+        mu=mu,
+        scale_factor=jet.a,
+        background_jet=jet,
+        alpha=alpha,
+        beta=beta,
+        initial_occupation=initial_occupation,
+        beta_squared=beta_squared,
+        bogoliubov_normalization_residual=bogoliubov_residual,
+        reference_wronskian_residual=reference_wronskian_residual,
+        squeezed_wronskian_residual=squeezed_wronskian_residual,
+        reference_eom_relative_residual=reference_eom_residual,
+        squeezed_eom_relative_residual=squeezed_eom_residual,
+        reference_stress=reference_stress,
+        squeezed_stress=squeezed_stress,
+        preexisting_particle_stress=preexisting_particle_stress,
+        created_particle_stress=created_particle_stress,
+        created_anomalous_stress=created_anomalous_stress,
+        created_state_dependent_stress=created_state_stress,
+        full_reference_mode_subtracted_stress=(
+            full_reference_mode_subtracted_stress
+        ),
+        reference_field_squared_over_h0_two=reference_field_squared,
+        created_particle_field_squared_over_h0_two=(
+            created_particle_field_squared
+        ),
+        created_anomalous_field_squared_over_h0_two=(
+            created_anomalous_field_squared
+        ),
+        created_state_dependent_field_squared_over_h0_two=(
+            created_state_field_squared
+        ),
+        full_reference_mode_subtracted_field_squared_over_h0_two=(
+            full_reference_mode_subtracted_field_squared
+        ),
+        created_dimensionless_conformal_continuity_residual=(
+            created_continuity_residual
+        ),
+        full_dimensionless_conformal_continuity_residual=(
+            full_continuity_residual
+        ),
+        comoving_proper_time_rate_per_dimensionless_conformal_time=jet.a,
+        static_minkowski_background=static_minkowski,
+        static_minkowski_anomalous_energy_cancellation_pass=(
+            minkowski_cancellation_pass
+        ),
+        mass_dimension_manifest=tuple(mass_dimensions.items()),
+        dimensionless_core_argument_mass_dimensions=tuple(
+            core_dimensions.items()
+        ),
+        dimensions_pass=dimensions_pass,
+    )
+
+
+def _stress_equation_of_state(stress: ModeStress, floor: float) -> float | None:
+    if stress.energy_density_over_h0_four <= floor:
+        return None
+    return (
+        stress.pressure_over_h0_four
+        / stress.energy_density_over_h0_four
+    )
+
+
+def _trajectory_time_window(
+    nodes: tuple[SqueezedFLRWStressTrajectoryNode, ...],
+) -> SqueezedFLRWStressTimeWindow:
+    if len(nodes) < 2:
+        raise ValueError("a stress time window needs at least two nodes")
+    duration = nodes[-1].h0_cosmic_time - nodes[0].h0_cosmic_time
+    if not math.isfinite(duration) or duration <= 0.0:
+        raise ValueError("stress time-window duration must be finite and positive")
+
+    def average(selector: Callable[[SqueezedFLRWModeStressDifference], ModeStress]) -> ModeStress:
+        energy_terms: list[float] = []
+        pressure_terms: list[float] = []
+        for left, right in zip(nodes, nodes[1:]):
+            width = right.h0_cosmic_time - left.h0_cosmic_time
+            left_stress = selector(left.receipt)
+            right_stress = selector(right.receipt)
+            energy_terms.append(
+                0.5
+                * width
+                * (
+                    left_stress.energy_density_over_h0_four
+                    + right_stress.energy_density_over_h0_four
+                )
+            )
+            pressure_terms.append(
+                0.5
+                * width
+                * (
+                    left_stress.pressure_over_h0_four
+                    + right_stress.pressure_over_h0_four
+                )
+            )
+        return ModeStress(
+            math.fsum(energy_terms) / duration,
+            math.fsum(pressure_terms) / duration,
+        )
+
+    created = average(lambda receipt: receipt.created_state_dependent_stress)
+    particle = average(lambda receipt: receipt.created_particle_stress)
+    anomalous = average(lambda receipt: receipt.created_anomalous_stress)
+    energy_scale = max(
+        abs(node.receipt.created_state_dependent_stress.energy_density_over_h0_four)
+        for node in nodes
+    )
+    floor = max(math.ulp(1.0) * energy_scale, 1.0e-300)
+    comoving_particle_energies = tuple(
+        node.receipt.scale_factor**3
+        * node.receipt.created_particle_stress.energy_density_over_h0_four
+        for node in nodes
+    )
+    comoving_scale = max(
+        max(abs(value) for value in comoving_particle_energies),
+        1.0e-300,
+    )
+    return SqueezedFLRWStressTimeWindow(
+        start_n=nodes[0].n,
+        end_n=nodes[-1].n,
+        h0_cosmic_time_duration=duration,
+        created_stress_time_average=created,
+        particle_stress_time_average=particle,
+        anomalous_stress_time_average=anomalous,
+        created_equation_of_state=_stress_equation_of_state(created, floor),
+        particle_equation_of_state=_stress_equation_of_state(particle, floor),
+        max_hubble_to_mass=max(node.hubble_to_mass for node in nodes),
+        max_physical_momentum_to_mass=max(
+            node.physical_momentum_to_mass for node in nodes
+        ),
+        particle_comoving_energy_relative_span=(
+            max(comoving_particle_energies) - min(comoving_particle_energies)
+        )
+        / comoving_scale,
+    )
+
+
+def _trajectory_global_ward(
+    nodes: tuple[SqueezedFLRWStressTrajectoryNode, ...],
+) -> SqueezedFLRWTrajectoryWardReceipt:
+    interval_residuals: list[float] = []
+    interval_scales: list[float] = []
+    for left, right in zip(nodes, nodes[1:]):
+        left_stress = left.receipt.created_state_dependent_stress
+        right_stress = right.receipt.created_state_dependent_stress
+        left_a = left.receipt.scale_factor
+        right_a = right.receipt.scale_factor
+        left_boundary = left_a**3 * left_stress.energy_density_over_h0_four
+        right_boundary = right_a**3 * right_stress.energy_density_over_h0_four
+        boundary_change = right_boundary - left_boundary
+        left_hubble = left.receipt.background_jet.d1 / left_a
+        right_hubble = right.receipt.background_jet.d1 / right_a
+        left_integrand = (
+            3.0
+            * left_hubble
+            * left_a**3
+            * left_stress.pressure_over_h0_four
+        )
+        right_integrand = (
+            3.0
+            * right_hubble
+            * right_a**3
+            * right_stress.pressure_over_h0_four
+        )
+        pressure_integral = (
+            0.5
+            * (right.x - left.x)
+            * (left_integrand + right_integrand)
+        )
+        interval_residuals.append(boundary_change + pressure_integral)
+        interval_scales.append(abs(boundary_change) + abs(pressure_integral))
+
+    signed = math.fsum(interval_residuals)
+    accumulated = math.fsum(abs(value) for value in interval_residuals)
+    balance_scale = math.fsum(interval_scales)
+    if balance_scale == 0.0:
+        relative_signed = 0.0 if signed == 0.0 else math.inf
+        relative_accumulated = 0.0 if accumulated == 0.0 else math.inf
+    else:
+        relative_signed = abs(signed) / balance_scale
+        relative_accumulated = accumulated / balance_scale
+
+    total_x = nodes[-1].x - nodes[0].x
+    max_energy = max(
+        abs(node.receipt.created_state_dependent_stress.energy_density_over_h0_four)
+        for node in nodes
+    )
+    derivative_floor = max(1.0e-300, math.ulp(1.0) * max_energy / total_x)
+    finite_difference_residuals: list[float] = []
+    finite_difference_scales: list[float] = []
+    for left, center, right in zip(nodes, nodes[1:], nodes[2:]):
+        h_left = center.x - left.x
+        h_right = right.x - center.x
+        left_rho = left.receipt.created_state_dependent_stress.energy_density_over_h0_four
+        center_stress = center.receipt.created_state_dependent_stress
+        right_rho = right.receipt.created_state_dependent_stress.energy_density_over_h0_four
+        derivative = (
+            -h_right / (h_left * (h_left + h_right)) * left_rho
+            + (h_right - h_left) / (h_left * h_right)
+            * center_stress.energy_density_over_h0_four
+            + h_left / (h_right * (h_left + h_right)) * right_rho
+        )
+        hubble = center.receipt.background_jet.d1 / center.receipt.scale_factor
+        dilution = 3.0 * hubble * (
+            center_stress.energy_density_over_h0_four
+            + center_stress.pressure_over_h0_four
+        )
+        finite_difference_residuals.append(abs(derivative + dilution))
+        finite_difference_scales.extend((abs(derivative), abs(dilution)))
+    finite_difference_global_scale = max(
+        max(finite_difference_scales),
+        derivative_floor,
+    )
+    return SqueezedFLRWTrajectoryWardReceipt(
+        endpoint_plus_pressure_integral_signed_residual=signed,
+        interval_absolute_accumulated_residual=accumulated,
+        balance_absolute_scale=balance_scale,
+        relative_signed_residual=relative_signed,
+        relative_absolute_accumulated_residual=relative_accumulated,
+        # Normalize the L-infinity residual by one trajectory-wide L-infinity
+        # scale.  A pointwise denominator is singular at harmless crossings
+        # where both Ward terms pass through zero.
+        max_finite_difference_relative_residual=(
+            max(finite_difference_residuals) / finite_difference_global_scale
+        ),
+    )
+
+
+def _grid_resolved_true_span(
+    nodes: tuple[SqueezedFLRWStressTrajectoryNode, ...],
+    predicate: Callable[[SqueezedFLRWStressTrajectoryNode], bool],
+) -> tuple[float, float]:
+    longest = 0.0
+    start: float | None = None
+    for node in nodes:
+        if predicate(node):
+            if start is None:
+                start = node.n
+            longest = max(longest, node.n - start)
+        else:
+            start = None
+    max_step = max(right.n - left.n for left, right in zip(nodes, nodes[1:]))
+    total_span = nodes[-1].n - nodes[0].n
+    return longest, min(total_span, longest + 2.0 * max_step)
+
+
+def trace_squeezed_flrw_mode_stress(
+    background: FLRWBackgroundLike,
+    solution: FLRWModeSolution,
+    *,
+    scale_factor_jet_at_n: Callable[[float], ScaleFactorJet],
+    alpha: complex,
+    beta: complex,
+    initial_occupation: float = 0.0,
+    sample_stride: int = 1,
+    late_window_efolds: float = 1.0,
+    maximum_reference_phase_step: float = math.pi / 4.0,
+    canonical_tolerance: float = 1.0e-7,
+    background_tolerance: float = 1.0e-8,
+    maximum_hubble_to_mass_for_cold: float = 0.1,
+    maximum_momentum_to_mass_for_cold: float = 0.1,
+    maximum_abs_late_w_for_dm_like: float = 0.1,
+    de_like_w_tolerance: float = 0.1,
+    required_persistent_de_efolds: float = 1.0,
+) -> SqueezedFLRWStressTrajectory:
+    r"""Trace E48 state-dependent stress along one propagated FLRW mode.
+
+    The mode solution must use constant positive mass and minimal coupling
+    ``xi=0``.  A caller-supplied scale-factor jet is checked against ``a``,
+    ``a'`` and the mode frequency at every sampled event.  Higher derivatives
+    are carried for provenance but are not used to infer an absolute
+    adiabatically renormalized stress.
+
+    Global continuity is tested independently with finite differences and the
+    endpoint-plus-pressure integral.  Acceleration and dark-energy spans refer
+    only to the reference-mode-subtracted state difference on the fixed
+    background; they are not Einstein-backreaction results.
+    """
+
+    if isinstance(sample_stride, bool) or not isinstance(sample_stride, int) or sample_stride < 1:
+        raise ValueError("sample_stride must be a positive integer")
+    positive_controls = (
+        ("late_window_efolds", late_window_efolds),
+        ("maximum_reference_phase_step", maximum_reference_phase_step),
+        ("canonical_tolerance", canonical_tolerance),
+        ("background_tolerance", background_tolerance),
+        ("maximum_hubble_to_mass_for_cold", maximum_hubble_to_mass_for_cold),
+        ("maximum_momentum_to_mass_for_cold", maximum_momentum_to_mass_for_cold),
+        ("maximum_abs_late_w_for_dm_like", maximum_abs_late_w_for_dm_like),
+        ("de_like_w_tolerance", de_like_w_tolerance),
+        ("required_persistent_de_efolds", required_persistent_de_efolds),
+    )
+    for name, value in positive_controls:
+        if not math.isfinite(value) or value <= 0.0:
+            raise ValueError(f"{name} must be finite and positive")
+    if canonical_tolerance > 1.0e-4:
+        raise ValueError("canonical_tolerance must not exceed 1e-4")
+    if background_tolerance > 1.0e-4:
+        raise ValueError("background_tolerance must not exceed 1e-4")
+    if solution.spec.curvature_coupling != 0.0:
+        raise ValueError("global squeezed stress currently requires minimal coupling xi=0")
+    background_nodes = tuple(background.nodes)
+    if len(background_nodes) < 2:
+        raise ValueError("background must contain at least two ordered nodes")
+    background_n_values = tuple(float(node.n) for node in background_nodes)
+    if not all(math.isfinite(value) for value in background_n_values):
+        raise ValueError("background e-fold nodes must be finite")
+    if any(
+        right <= left
+        for left, right in zip(background_n_values, background_n_values[1:])
+    ):
+        raise ValueError("background e-fold nodes must be strictly increasing")
+    supplied_background_window = (
+        background_n_values[0],
+        background_n_values[-1],
+    )
+    if any(
+        abs(actual - expected)
+        > background_tolerance * max(1.0, abs(actual), abs(expected))
+        for actual, expected in zip(
+            supplied_background_window,
+            solution.background_window,
+        )
+    ):
+        raise ValueError("solution background window does not match supplied background")
+    mode_nodes = solution.nodes
+    if len(mode_nodes) < 3:
+        raise ValueError("mode solution must contain at least three nodes")
+    if any(right.n <= left.n or right.x <= left.x for left, right in zip(mode_nodes, mode_nodes[1:])):
+        raise ValueError("mode solution n and x coordinates must be strictly increasing")
+    total_efolds = mode_nodes[-1].n - mode_nodes[0].n
+    if late_window_efolds > total_efolds:
+        raise ValueError("late_window_efolds must not exceed the solution interval")
+
+    mass_values = tuple(float(solution.spec.mass_over_h0(node.n)) for node in mode_nodes)
+    if not all(math.isfinite(value) and value > 0.0 for value in mass_values):
+        raise ValueError("global squeezed stress requires a finite positive mass")
+    mu = mass_values[0]
+    if max(abs(value - mu) for value in mass_values) > background_tolerance * max(1.0, mu):
+        raise ValueError("global squeezed stress requires constant mass")
+    q = solution.spec.comoving_wavenumber_over_h0
+    _validate_parameters(q, mu, 0.0)
+
+    indices = list(range(0, len(mode_nodes), sample_stride))
+    if indices[-1] != len(mode_nodes) - 1:
+        indices.append(len(mode_nodes) - 1)
+    if len(indices) < 3:
+        raise ValueError("sampled trajectory must contain at least three nodes")
+
+    sampled: list[tuple[object, ScaleFactorJet, float, SqueezedFLRWModeStressDifference]] = []
+    for index in indices:
+        node = mode_nodes[index]
+        jet = scale_factor_jet_at_n(node.n)
+        if not isinstance(jet, ScaleFactorJet):
+            raise ValueError("scale_factor_jet_at_n must return ScaleFactorJet")
+        expected_a = math.exp(node.n)
+        e2 = float(background.at_n(node.n).e2)
+        if not math.isfinite(e2) or e2 <= 0.0:
+            raise ValueError("background e2 must be finite and positive")
+        expected_d1 = expected_a**2 * math.sqrt(e2)
+        expected_omega_squared = q * q + jet.a * jet.a * mu * mu - jet.d2 / jet.a
+        for name, actual, expected in (
+            ("scale factor", jet.a, expected_a),
+            ("first scale-factor derivative", jet.d1, expected_d1),
+            ("minimal mode frequency", node.omega_squared, expected_omega_squared),
+        ):
+            relative = abs(actual - expected) / max(1.0, abs(actual), abs(expected))
+            if relative > background_tolerance:
+                raise ValueError(f"{name} is inconsistent with background or mode solution")
+        receipt = minimal_squeezed_flrw_mode_stress_difference(
+            jet,
+            q=q,
+            mu=mu,
+            reference_u=node.u,
+            reference_du_dx=node.du_dx,
+            reference_d2u_dx2=-node.omega_squared * node.u,
+            alpha=alpha,
+            beta=beta,
+            initial_occupation=initial_occupation,
+            canonical_tolerance=canonical_tolerance,
+        )
+        sampled.append((node, jet, e2, receipt))
+
+    phase_steps = tuple(
+        cmath.phase(right[0].u / left[0].u)
+        for left, right in zip(sampled, sampled[1:])
+    )
+    max_phase_step = max(abs(value) for value in phase_steps)
+    if max_phase_step > maximum_reference_phase_step:
+        raise ValueError("reference phase step exceeds the declared sampling bound")
+
+    h0_times = [0.0]
+    for left, right in zip(sampled, sampled[1:]):
+        delta_x = right[0].x - left[0].x
+        delta_time = 0.5 * (left[1].a + right[1].a) * delta_x
+        if not math.isfinite(delta_time) or delta_time <= 0.0:
+            raise ValueError("dimensionless cosmic time must be strictly increasing")
+        h0_times.append(h0_times[-1] + delta_time)
+
+    max_created_energy = max(
+        abs(item[3].created_state_dependent_stress.energy_density_over_h0_four)
+        for item in sampled
+    )
+    energy_floor = max(math.ulp(1.0) * max_created_energy, 1.0e-300)
+    trajectory_nodes: list[SqueezedFLRWStressTrajectoryNode] = []
+    for h0_time, (node, jet, e2, receipt) in zip(h0_times, sampled):
+        stress = receipt.created_state_dependent_stress
+        equation_of_state = _stress_equation_of_state(stress, energy_floor)
+        accelerating = (
+            stress.energy_density_over_h0_four > energy_floor
+            and stress.energy_density_over_h0_four
+            + 3.0 * stress.pressure_over_h0_four
+            < 0.0
+        )
+        de_like = (
+            equation_of_state is not None
+            and abs(equation_of_state + 1.0) <= de_like_w_tolerance
+        )
+        trajectory_nodes.append(
+            SqueezedFLRWStressTrajectoryNode(
+                n=node.n,
+                x=node.x,
+                h0_cosmic_time=h0_time,
+                receipt=receipt,
+                created_equation_of_state=equation_of_state,
+                positive_density_acceleration_diagnostic=accelerating,
+                de_like_state_difference_diagnostic=de_like,
+                hubble_to_mass=abs(jet.d1) / (jet.a * jet.a * mu),
+                physical_momentum_to_mass=q / (jet.a * mu),
+            )
+        )
+    nodes_tuple = tuple(trajectory_nodes)
+    late_target = nodes_tuple[-1].n - late_window_efolds
+    late_nodes = tuple(
+        node
+        for node in nodes_tuple
+        if node.n >= late_target - background_tolerance
+    )
+    if len(late_nodes) < 2:
+        raise ValueError("late window contains fewer than two sampled nodes")
+    whole_window = _trajectory_time_window(nodes_tuple)
+    late_window = _trajectory_time_window(late_nodes)
+    ward = _trajectory_global_ward(nodes_tuple)
+    acceleration_span = _grid_resolved_true_span(
+        nodes_tuple,
+        lambda node: node.positive_density_acceleration_diagnostic,
+    )
+    de_like_span = _grid_resolved_true_span(
+        nodes_tuple,
+        lambda node: node.de_like_state_difference_diagnostic,
+    )
+
+    late_phase_rates = tuple(
+        2.0 * abs(phase_step) / (right[0].n - left[0].n)
+        for phase_step, left, right in zip(phase_steps, sampled, sampled[1:])
+        if 0.5 * (left[0].n + right[0].n) >= late_nodes[0].n
+    )
+    minimum_late_phase_rate = min(late_phase_rates)
+    late_half_cycle = (
+        math.pi / minimum_late_phase_rate
+        if minimum_late_phase_rate > 0.0
+        else math.inf
+    )
+    cold_gates = (
+        late_window.max_hubble_to_mass <= maximum_hubble_to_mass_for_cold
+        and late_window.max_physical_momentum_to_mass
+        <= maximum_momentum_to_mass_for_cold
+    )
+    late_dm_like = (
+        cold_gates
+        and late_window.created_equation_of_state is not None
+        and abs(late_window.created_equation_of_state)
+        <= maximum_abs_late_w_for_dm_like
+    )
+    core_dimensions = {
+        "n_equals_log_a": 0.0,
+        "x_equals_H0_eta": 1.0 - 1.0,
+        "h0_cosmic_time": 1.0 - 1.0,
+        "q_equals_k_over_H0": 1.0 - 1.0,
+        "mu_equals_m_over_H0": 1.0 - 1.0,
+        "reference_phase": 0.0,
+        "physical_conformal_ward_over_H0_five": 5.0 - 5.0,
+    }
+    return SqueezedFLRWStressTrajectory(
+        nodes=nodes_tuple,
+        whole_window=whole_window,
+        late_window=late_window,
+        ward=ward,
+        q=q,
+        mu=mu,
+        alpha=complex(alpha),
+        beta=complex(beta),
+        initial_occupation=initial_occupation,
+        max_reference_phase_step=max_phase_step,
+        anomalous_phase_turns=abs(math.fsum(phase_steps)) / math.pi,
+        late_half_cycle_efold_diagnostic=late_half_cycle,
+        accelerating_state_difference_span_lower=acceleration_span[0],
+        accelerating_state_difference_span_grid_upper=acceleration_span[1],
+        de_like_state_difference_span_lower=de_like_span[0],
+        de_like_state_difference_span_grid_upper=de_like_span[1],
+        required_persistent_de_efolds=required_persistent_de_efolds,
+        late_cold_adiabatic_gates_pass=cold_gates,
+        late_dm_like_average_diagnostic_pass=late_dm_like,
+        grid_diagnostic_excludes_required_de_persistence=(
+            de_like_span[1] < required_persistent_de_efolds
+        ),
+        dimensions_pass=all(value == 0.0 for value in core_dimensions.values()),
+    )
+
+
+def integrate_squeezed_created_stress_with_certified_tail(
+    receipts: tuple[SqueezedFLRWModeStressDifference, ...],
+    *,
+    energy_tail: CertifiedPowerLawTail,
+    pressure_tail: CertifiedPowerLawTail,
+) -> IntegratedStress:
+    """Integrate one-event created stress using caller-certified UV bounds.
+
+    The power-law certificates are trusted external inputs.  This wrapper
+    checks their domains and final samples but neither derives the bounds from
+    the squeezed kernels nor proves that the state is Hadamard.
+    """
+
+    if len(receipts) < 2:
+        raise ValueError("at least two squeezed mode receipts are required")
+    first = receipts[0]
+    if any(
+        receipt.background_jet != first.background_jet or receipt.mu != first.mu
+        for receipt in receipts[1:]
+    ):
+        raise ValueError("all squeezed receipts must share one background jet and mass")
+    integrated = integrate_isotropic_stress_with_certified_tail(
+        tuple(receipt.q for receipt in receipts),
+        tuple(receipt.created_state_dependent_stress for receipt in receipts),
+        energy_tail=energy_tail,
+        pressure_tail=pressure_tail,
+    )
+    return IntegratedStress(
+        energy_density_over_h0_four=integrated.energy_density_over_h0_four,
+        pressure_over_h0_four=integrated.pressure_over_h0_four,
+        energy_tail_absolute_bound=integrated.energy_tail_absolute_bound,
+        pressure_tail_absolute_bound=integrated.pressure_tail_absolute_bound,
+        status=(
+            "FINITE_SQUEEZED_CREATED_STRESS_GRID_PLUS_EXTERNALLY_CERTIFIED_UV_TAIL"
+        ),
+    )
+
+
+def local_isotropic_stress_observer_readout(
+    stress: ModeStress,
+    *,
+    relative_speed: float,
+) -> LocalIsotropicObserverStressReadout:
+    r"""Contract an isotropic diag(rho,p,p,p) with a local four-velocity.
+
+    The event-local relation is ``rho_obs=(rho+p)*gamma^2-p`` and the moving
+    clock samples ``d tau_obs / dt_comoving = 1/gamma``.  No global worldline,
+    foliation, collapse rule, or universal Planck tick is introduced.
+    A direction-resolved individual Fourier mode is generally anisotropic;
+    the input must already be an angularly averaged shell or isotropic ensemble.
+    """
+
+    if not math.isfinite(relative_speed) or abs(relative_speed) >= 1.0:
+        raise ValueError("relative_speed must be finite with magnitude below one")
+    rho = stress.energy_density_over_h0_four
+    pressure = stress.pressure_over_h0_four
+    if not math.isfinite(rho) or not math.isfinite(pressure):
+        raise ValueError("stress entries must be finite")
+    gamma = 1.0 / math.sqrt(1.0 - relative_speed * relative_speed)
+    return LocalIsotropicObserverStressReadout(
+        relative_speed=relative_speed,
+        lorentz_gamma=gamma,
+        comoving_energy_density=rho,
+        isotropic_pressure=pressure,
+        observer_energy_density=(rho + pressure) * gamma * gamma - pressure,
+        observer_proper_time_rate_per_comoving_cosmic_time=1.0 / gamma,
     )
