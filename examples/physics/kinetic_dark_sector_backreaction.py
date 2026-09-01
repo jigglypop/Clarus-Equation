@@ -33,6 +33,7 @@ renormalized stress by ledger arithmetic.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 import math
 from typing import TYPE_CHECKING
@@ -409,8 +410,9 @@ def _three_point_derivative(
             indices = (index - 1, index, index + 1)
         xs = tuple(x_values[item] for item in indices)
         ys = tuple(y_values[item] for item in indices)
+        local_origin = ys[1]
         derivative = math.fsum(
-            value
+            (value - local_origin)
             * (2.0 * evaluation_x - xs[(position + 1) % 3] - xs[(position + 2) % 3])
             / (
                 (xs[position] - xs[(position + 1) % 3])
@@ -814,3 +816,1280 @@ def project_squeezed_ensemble_frozen_constraints(
         ),
         dimensions_pass=True,
     )
+
+
+@dataclass(frozen=True)
+class MeanFieldFLRWBackgroundNode:
+    """One dimensionless expanding-background node for an E53 iteration."""
+
+    n: float
+    e2: float
+
+    def __post_init__(self) -> None:
+        _finite("mean-field background n", self.n)
+        _finite("mean-field background e2", self.e2)
+        if self.e2 <= 0.0:
+            raise ValueError("mean-field expanding background requires positive E^2")
+
+
+@dataclass(frozen=True)
+class MeanFieldFLRWBackground:
+    """Piecewise-linear E^2 background with fixed derivative guard nodes.
+
+    Only ``a``, ``a'`` and ``a''`` are certified for the state-difference
+    trajectory.  The higher entries of the compatibility ``ScaleFactorJet``
+    are zero placeholders and must never be used for absolute adiabatic
+    subtraction.
+    """
+
+    nodes: tuple[MeanFieldFLRWBackgroundNode, ...]
+    active_window: tuple[float, float]
+    curvature_derivative_step_n: float = 1.0e-4
+    status: str = (
+        "EXPANDING_E2_GRID_FIXED_GUARD_POSITIONS_EXTRAPOLATED_VALUES_"
+        "STATE_DIFFERENCE_ONLY"
+    )
+    expanding_branch_only: bool = True
+    boundary_guard_grid_fixed: bool = True
+    boundary_guard_values_extrapolated_after_update: bool = True
+    state_difference_jet_derivative_order: int = 2
+    higher_jet_derivatives_certified: bool = False
+    suitable_for_absolute_adiabatic_subtraction: bool = False
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.nodes, tuple) or len(self.nodes) < 5:
+            raise ValueError("mean-field background needs at least five nodes")
+        n_values = tuple(node.n for node in self.nodes)
+        if any(right <= left for left, right in zip(n_values, n_values[1:])):
+            raise ValueError("mean-field background nodes must be strictly increasing")
+        start, end = self.active_window
+        if not all(math.isfinite(value) for value in (start, end)) or end <= start:
+            raise ValueError("mean-field active_window must be finite and ordered")
+        step = _finite(
+            "mean-field curvature_derivative_step_n",
+            self.curvature_derivative_step_n,
+        )
+        if step <= 0.0:
+            raise ValueError("curvature_derivative_step_n must be positive")
+        if start - step < n_values[0] or end + step > n_values[-1]:
+            raise ValueError("active window needs fixed derivative guard nodes")
+        active = tuple(node for node in self.nodes if start <= node.n <= end)
+        if len(active) < 3:
+            raise ValueError("mean-field active window needs at least three nodes")
+        tolerance = 32.0 * math.ulp(1.0) * max(1.0, abs(start), abs(end))
+        if abs(active[0].n - start) > tolerance or abs(active[-1].n - end) > tolerance:
+            raise ValueError("active window endpoints must be explicit background nodes")
+
+    @property
+    def active_nodes(self) -> tuple[MeanFieldFLRWBackgroundNode, ...]:
+        start, end = self.active_window
+        return tuple(node for node in self.nodes if start <= node.n <= end)
+
+    def at_n(self, n: float) -> MeanFieldFLRWBackgroundNode:
+        n = _finite("requested mean-field e-fold", n)
+        if n < self.nodes[0].n or n > self.nodes[-1].n:
+            raise ValueError("requested e-fold is outside the mean-field background")
+        lo, hi = 0, len(self.nodes) - 1
+        while hi - lo > 1:
+            middle = (lo + hi) // 2
+            if self.nodes[middle].n <= n:
+                lo = middle
+            else:
+                hi = middle
+        left, right = self.nodes[lo], self.nodes[hi]
+        weight = (n - left.n) / (right.n - left.n)
+        e2 = left.e2 + weight * (right.e2 - left.e2)
+        return MeanFieldFLRWBackgroundNode(n=n, e2=e2)
+
+    def d_log_h_d_n(self, n: float) -> float:
+        step = self.curvature_derivative_step_n
+        left = math.log(self.at_n(n - step).e2)
+        right = math.log(self.at_n(n + step).e2)
+        return (right - left) / (4.0 * step)
+
+    def state_difference_scale_factor_jet_at_n(self, n: float):
+        """Return the second-order jet used by the state-difference trace."""
+
+        from examples.physics.kinetic_dark_sector_adiabatic_stress import (
+            ScaleFactorJet,
+        )
+
+        a = math.exp(_finite("state-difference jet n", n))
+        e2 = self.at_n(n).e2
+        d_log_h_d_n = self.d_log_h_d_n(n)
+        d1 = a * a * math.sqrt(e2)
+        d2 = a**3 * e2 * (2.0 + d_log_h_d_n)
+        return ScaleFactorJet(a, d1, d2, 0.0, 0.0, 0.0, 0.0)
+
+    def with_active_e2(self, values: tuple[float, ...]) -> "MeanFieldFLRWBackground":
+        active = self.active_nodes
+        if not isinstance(values, tuple) or len(values) != len(active):
+            raise ValueError("one E^2 update is required per active background node")
+
+        left_slope = (values[1] - values[0]) / (active[1].n - active[0].n)
+        right_slope = (values[-1] - values[-2]) / (
+            active[-1].n - active[-2].n
+        )
+        active_values = {node.n: value for node, value in zip(active, values)}
+
+        def updated_node(node: MeanFieldFLRWBackgroundNode) -> MeanFieldFLRWBackgroundNode:
+            if node.n < active[0].n:
+                value = values[0] + left_slope * (node.n - active[0].n)
+            elif node.n > active[-1].n:
+                value = values[-1] + right_slope * (node.n - active[-1].n)
+            else:
+                try:
+                    value = active_values[node.n]
+                except KeyError as error:
+                    raise ValueError(
+                        "active background grid changed during E^2 update"
+                    ) from error
+            return MeanFieldFLRWBackgroundNode(node.n, value)
+
+        return MeanFieldFLRWBackground(
+            nodes=tuple(updated_node(node) for node in self.nodes),
+            active_window=self.active_window,
+            curvature_derivative_step_n=self.curvature_derivative_step_n,
+        )
+
+
+@dataclass(frozen=True)
+class SemiclassicalReferenceSourceNode:
+    """Caller-supplied classical plus renormalized-reference source."""
+
+    n: float
+    energy_density: float
+    pressure: float
+    energy_density_d_n: float
+    energy_absolute_bound: float = 0.0
+    pressure_absolute_bound: float = 0.0
+
+    def __post_init__(self) -> None:
+        for name, value in (
+            ("reference source n", self.n),
+            ("reference source energy_density", self.energy_density),
+            ("reference source pressure", self.pressure),
+            ("reference source energy_density_d_n", self.energy_density_d_n),
+            ("reference source energy_absolute_bound", self.energy_absolute_bound),
+            ("reference source pressure_absolute_bound", self.pressure_absolute_bound),
+        ):
+            _finite(name, value)
+        if self.energy_absolute_bound < 0.0 or self.pressure_absolute_bound < 0.0:
+            raise ValueError("reference source absolute bounds must be non-negative")
+
+
+@dataclass(frozen=True)
+class ModeRecomputedSemiclassicalResponse:
+    """One candidate-background response supplied to the E53 fixed-point loop."""
+
+    ensemble: "SqueezedFLRWStressEnsemble"
+    reference_source_nodes: tuple[SemiclassicalReferenceSourceNode, ...]
+    maximum_mode_wronskian_residual: float
+    mode_solution_count: int
+    renormalization_scheme_declaration: str
+    state_preparation_declaration: str
+    finite_reference_split_adjustment_nodes: (
+        tuple[SemiclassicalReferenceSourceNode, ...]
+    ) = ()
+    status: str = "CALLER_RECOMPUTED_MODES_AND_REFERENCE_SOURCE_RESPONSE"
+    modes_recomputed_on_candidate_background: bool = True
+    reference_source_evaluated_on_candidate_background: bool = True
+    absolute_reference_renormalization_supplied_by_caller: bool = True
+    absolute_reference_renormalization_derived_by_fixed_point_solver: bool = False
+    same_regulator_and_finite_counterterm_convention_declared: bool = True
+
+    def __post_init__(self) -> None:
+        _finite(
+            "maximum_mode_wronskian_residual",
+            self.maximum_mode_wronskian_residual,
+        )
+        if self.maximum_mode_wronskian_residual < 0.0:
+            raise ValueError("maximum_mode_wronskian_residual must be non-negative")
+        if (
+            isinstance(self.mode_solution_count, bool)
+            or not isinstance(self.mode_solution_count, int)
+            or self.mode_solution_count < 1
+        ):
+            raise ValueError("mode_solution_count must be a positive integer")
+        for name, declaration in (
+            ("renormalization_scheme_declaration", self.renormalization_scheme_declaration),
+            ("state_preparation_declaration", self.state_preparation_declaration),
+        ):
+            if not isinstance(declaration, str) or not declaration.strip():
+                raise ValueError(f"{name} must be a non-empty string")
+
+
+@dataclass(frozen=True)
+class MeanFieldFixedPointIteration:
+    iteration: int
+    maximum_fixed_point_relative_residual: float
+    maximum_damped_update_relative: float
+    minimum_target_e_squared_lower: float
+    maximum_friedmann_relative_residual: float
+    maximum_raychaudhuri_relative_residual: float
+    maximum_reference_ward_relative_residual: float
+    maximum_state_difference_ward_relative_residual: float
+    maximum_total_ward_relative_residual: float
+    maximum_constraint_propagation_relative_residual: float
+    maximum_geometry_derivative_relative_mismatch: float
+    maximum_reference_derivative_consistency_relative_residual: float
+    maximum_split_derivative_consistency_relative_residual: float
+    maximum_raychaudhuri_tail_robust_relative_residual: float
+    maximum_raychaudhuri_absolute_uncertainty: float
+    minimum_acceleration_lower_bound: float
+    maximum_acceleration_upper_bound: float
+    maximum_mode_wronskian_residual: float
+    empirical_residual_ratio: float | None
+
+
+@dataclass(frozen=True)
+class ModeRecomputedMeanFieldFixedPoint:
+    """Conditional mode-recomputed fixed point with an external reference source."""
+
+    background: MeanFieldFLRWBackground
+    final_response: ModeRecomputedSemiclassicalResponse
+    iterations: tuple[MeanFieldFixedPointIteration, ...]
+    reduced_planck_over_h0: float
+    damping: float
+    response_evaluation_count: int
+    maximum_final_fixed_point_relative_residual: float
+    maximum_final_friedmann_relative_residual: float
+    maximum_final_raychaudhuri_relative_residual: float
+    maximum_final_reference_ward_relative_residual: float
+    maximum_final_state_difference_ward_relative_residual: float
+    maximum_final_total_ward_relative_residual: float
+    maximum_final_constraint_propagation_relative_residual: float
+    maximum_final_geometry_derivative_relative_mismatch: float
+    maximum_final_reference_derivative_consistency_relative_residual: float
+    maximum_final_split_derivative_consistency_relative_residual: float
+    maximum_final_raychaudhuri_tail_robust_relative_residual: float
+    maximum_final_raychaudhuri_absolute_uncertainty: float
+    minimum_final_acceleration_lower_bound: float
+    maximum_final_acceleration_upper_bound: float
+    final_response_reproducibility_relative_residual: float
+    maximum_observed_empirical_residual_ratio: float
+    geometry_derivative_relative_tolerance: float
+    mass_dimension_manifest: tuple[tuple[str, float], ...]
+    dimensions_pass: bool
+    status: str = (
+        "CONDITIONAL_CALLBACK_CONTRACTED_MODE_RECOMPUTED_REFERENCE_SUPPLIED_"
+        "CENTRAL_GRID_MEAN_FIELD_FIXED_POINT"
+    )
+    expanding_branch_only: bool = True
+    fixed_boundary_guard_grid_used: bool = True
+    boundary_guard_values_extrapolated_after_update: bool = True
+    modes_recomputed_each_iteration_by_callback_contract: bool = True
+    final_modes_recomputed_on_converged_background_by_callback_contract: bool = True
+    reference_source_evaluated_each_iteration_by_callback_contract: bool = True
+    callback_recomputation_declarations_independently_proved: bool = False
+    aggregate_numeric_response_reproducibility_checked: bool = True
+    complete_internal_mode_trajectory_reproducibility_proved: bool = False
+    state_difference_mean_field_fixed_point_converged: bool = True
+    friedmann_ray_ward_checked_together: bool = True
+    finite_reference_split_contract_supported: bool = True
+    reference_and_split_derivatives_checked_against_node_grid: bool = True
+    mode_and_ray_use_same_background_derivative: bool = True
+    pressure_tail_propagated_to_raychaudhuri_gate: bool = True
+    independent_energy_pressure_tail_rectangle_used: bool = True
+    joint_energy_pressure_tail_region_derived: bool = False
+    continuous_tail_ward_certified: bool = False
+    state_difference_jet_derivative_order: int = 2
+    higher_jet_derivatives_certified: bool = False
+    absolute_reference_renormalization_derived: bool = False
+    full_hadamard_state_proved: bool = False
+    full_renormalized_stress_derived: bool = False
+    contraction_mapping_proved: bool = False
+    fixed_point_uniqueness_proved: bool = False
+    higher_curvature_order_reduction_performed: bool = False
+    runaway_absence_proved: bool = False
+    semiclassical_einstein_equation_solved: bool = False
+    full_einstein_backreaction_computed: bool = False
+    stochastic_noise_kernel_computed: bool = False
+    semiclassical_stability_proved: bool = False
+    universal_planck_tick_assumed: bool = False
+    physical_dark_matter_dark_energy_identification: bool = False
+    absolute_abundance_computed: bool = False
+    growth_lensing_computed: bool = False
+
+
+@dataclass(frozen=True)
+class _MeanFieldResponseEvaluation:
+    target_e_squared: tuple[float, ...]
+    target_e_squared_lower: tuple[float, ...]
+    target_e_squared_upper: tuple[float, ...]
+    total_energy_density: tuple[float, ...]
+    total_pressure: tuple[float, ...]
+    total_energy_density_d_n: tuple[float, ...]
+    total_energy_absolute_bounds: tuple[float, ...]
+    total_pressure_absolute_bounds: tuple[float, ...]
+    raychaudhuri_absolute_uncertainties: tuple[float, ...]
+    acceleration_lower_bounds: tuple[float, ...]
+    acceleration_upper_bounds: tuple[float, ...]
+    reference_derivative_consistency_residuals: tuple[float, ...]
+    split_derivative_consistency_residuals: tuple[float, ...]
+    reference_ward_residuals: tuple[float, ...]
+    state_difference_ward_residuals: tuple[float, ...]
+    total_ward_residuals: tuple[float, ...]
+    friedmann_residuals: tuple[float, ...]
+    raychaudhuri_residuals: tuple[float, ...]
+    constraint_propagation_residuals: tuple[float, ...]
+    maximum_fixed_point_relative_residual: float
+    maximum_friedmann_relative_residual: float
+    maximum_raychaudhuri_relative_residual: float
+    maximum_reference_ward_relative_residual: float
+    maximum_state_difference_ward_relative_residual: float
+    maximum_total_ward_relative_residual: float
+    maximum_constraint_propagation_relative_residual: float
+    maximum_geometry_derivative_relative_mismatch: float
+    maximum_reference_derivative_consistency_relative_residual: float
+    maximum_split_derivative_consistency_relative_residual: float
+    maximum_raychaudhuri_tail_robust_relative_residual: float
+
+
+def _mean_field_response_evaluation(
+    background: MeanFieldFLRWBackground,
+    response: ModeRecomputedSemiclassicalResponse,
+    *,
+    planck_squared: float,
+    degeneracy: int,
+    synchronization_tolerance: float,
+    ward_absolute_tolerance: float,
+    ward_relative_tolerance: float,
+    maximum_mode_wronskian_residual: float,
+    maximum_adjacent_n_step_ratio: float,
+) -> _MeanFieldResponseEvaluation:
+    ensemble = response.ensemble
+    active_nodes = background.active_nodes
+    ensemble_nodes = ensemble.nodes
+    if len(ensemble_nodes) != len(active_nodes):
+        raise ValueError("response ensemble must cover every active background node")
+    if len(response.reference_source_nodes) != len(active_nodes):
+        raise ValueError("response needs one reference source per active node")
+    if response.finite_reference_split_adjustment_nodes and (
+        len(response.finite_reference_split_adjustment_nodes) != len(active_nodes)
+    ):
+        raise ValueError("finite reference-split adjustment must cover every active node")
+    if not (
+        response.modes_recomputed_on_candidate_background
+        and response.reference_source_evaluated_on_candidate_background
+        and response.absolute_reference_renormalization_supplied_by_caller
+        and response.same_regulator_and_finite_counterterm_convention_declared
+    ):
+        raise ValueError("response does not satisfy the E53 recomputation contract")
+    if not (
+        ensemble.dimensions_pass
+        and ensemble.analytic_bogoliubov_profile_verified
+        and ensemble.absolute_bogoliubov_amplitude_moments_certified
+        and ensemble.pointwise_external_ir_uv_certificates_trusted
+        and ensemble.bogoliubov_integrability_certificate is not None
+    ):
+        raise ValueError("response ensemble does not satisfy the E51/E52 contract")
+    if ensemble.evolved_mode_stress_tail_derived_from_profile:
+        raise ValueError("Gaussian amplitude profile cannot stand in for a stress-tail proof")
+    if response.mode_solution_count != len(ensemble.q_values):
+        raise ValueError("response mode count must equal the ensemble q-grid size")
+    if response.maximum_mode_wronskian_residual > maximum_mode_wronskian_residual:
+        raise ValueError("recomputed mode Wronskian residual exceeds its ceiling")
+
+    n_values = tuple(node.n for node in active_nodes)
+    candidate_e_squared = tuple(node.e2 for node in active_nodes)
+    grid_candidate_e_squared_d_n = _three_point_derivative(
+        n_values,
+        candidate_e_squared,
+        maximum_adjacent_step_ratio=maximum_adjacent_n_step_ratio,
+    )
+    grid_d_log_h_d_n = tuple(
+        0.5 * derivative / e2
+        for derivative, e2 in zip(
+            grid_candidate_e_squared_d_n,
+            candidate_e_squared,
+        )
+    )
+    mode_d_log_h_d_n = tuple(
+        background.d_log_h_d_n(node.n) for node in active_nodes
+    )
+    mode_candidate_e_squared_d_n = tuple(
+        2.0 * e2 * d_log
+        for e2, d_log in zip(candidate_e_squared, mode_d_log_h_d_n)
+    )
+
+    adjustment_nodes = response.finite_reference_split_adjustment_nodes or tuple(
+        SemiclassicalReferenceSourceNode(
+            n=node.n,
+            energy_density=0.0,
+            pressure=0.0,
+            energy_density_d_n=0.0,
+        )
+        for node in active_nodes
+    )
+    reference_grid_energy_d_n = _three_point_derivative(
+        n_values,
+        tuple(node.energy_density for node in response.reference_source_nodes),
+        maximum_adjacent_step_ratio=maximum_adjacent_n_step_ratio,
+    )
+    adjustment_grid_energy_d_n = _three_point_derivative(
+        n_values,
+        tuple(node.energy_density for node in adjustment_nodes),
+        maximum_adjacent_step_ratio=maximum_adjacent_n_step_ratio,
+    )
+    reference_derivative_consistency = tuple(
+        supplied.energy_density_d_n - grid
+        for supplied, grid in zip(
+            response.reference_source_nodes,
+            reference_grid_energy_d_n,
+        )
+    )
+    split_derivative_consistency = tuple(
+        supplied.energy_density_d_n - grid
+        for supplied, grid in zip(
+            adjustment_nodes,
+            adjustment_grid_energy_d_n,
+        )
+    )
+    for name, nodes, grid_values, residuals in (
+        (
+            "reference source",
+            response.reference_source_nodes,
+            reference_grid_energy_d_n,
+            reference_derivative_consistency,
+        ),
+        (
+            "finite reference-split adjustment",
+            adjustment_nodes,
+            adjustment_grid_energy_d_n,
+            split_derivative_consistency,
+        ),
+    ):
+        for node, grid_value, residual in zip(nodes, grid_values, residuals):
+            if not _residual_within_absolute_relative_tolerance(
+                residual,
+                node.energy_density_d_n,
+                grid_value,
+                absolute_tolerance=ward_absolute_tolerance,
+                relative_tolerance=ward_relative_tolerance,
+            ):
+                raise ValueError(
+                    f"{name} supplied energy derivative disagrees with its node grid"
+                )
+    for active, ensemble_node, reference, adjustment in zip(
+        active_nodes,
+        ensemble_nodes,
+        response.reference_source_nodes,
+        adjustment_nodes,
+    ):
+        expected_e = math.sqrt(active.e2)
+        expected_d_log_h_d_n = background.d_log_h_d_n(active.n)
+        synchronized = (
+            (ensemble_node.n, active.n),
+            (reference.n, active.n),
+            (adjustment.n, active.n),
+            (ensemble_node.hubble_over_h0, expected_e),
+            (ensemble_node.background_d_log_h_d_n, expected_d_log_h_d_n),
+        )
+        if any(
+            abs(actual - expected)
+            > synchronization_tolerance * max(1.0, abs(actual), abs(expected))
+            for actual, expected in synchronized
+        ):
+            raise ValueError(
+                "response ensemble/reference source is not synchronized to candidate background"
+            )
+
+    def scaled(name: str, value: float) -> float:
+        return _finite(name, degeneracy * value)
+
+    central_delta_energy = tuple(
+        scaled(
+            "mean-field degeneracy-scaled state-difference energy",
+            node.created_stress.energy_density_over_h0_four,
+        )
+        for node in ensemble_nodes
+    )
+    central_delta_pressure = tuple(
+        scaled(
+            "mean-field degeneracy-scaled state-difference pressure",
+            node.created_stress.pressure_over_h0_four,
+        )
+        for node in ensemble_nodes
+    )
+    central_delta_energy_d_n = _three_point_derivative(
+        n_values,
+        central_delta_energy,
+        maximum_adjacent_step_ratio=maximum_adjacent_n_step_ratio,
+    )
+
+    total_energy: list[float] = []
+    total_pressure: list[float] = []
+    total_energy_d_n: list[float] = []
+    total_energy_bounds: list[float] = []
+    total_pressure_bounds: list[float] = []
+    target_e_squared: list[float] = []
+    target_e_squared_lower: list[float] = []
+    target_e_squared_upper: list[float] = []
+    ray_uncertainties: list[float] = []
+    acceleration_lower: list[float] = []
+    acceleration_upper: list[float] = []
+    reference_ward: list[float] = []
+    state_ward: list[float] = []
+    total_ward: list[float] = []
+    friedmann: list[float] = []
+    raychaudhuri: list[float] = []
+    propagation: list[float] = []
+    geometry_mismatch: list[float] = []
+
+    for (
+        active,
+        ensemble_node,
+        reference,
+        adjustment,
+        delta_r,
+        delta_p,
+        delta_r_d_n,
+        reference_r_d_n,
+        adjustment_r_d_n,
+        mode_d_log,
+        grid_d_log,
+        mode_e2_d_n,
+    ) in zip(
+        active_nodes,
+        ensemble_nodes,
+        response.reference_source_nodes,
+        adjustment_nodes,
+        central_delta_energy,
+        central_delta_pressure,
+        central_delta_energy_d_n,
+        reference_grid_energy_d_n,
+        adjustment_grid_energy_d_n,
+        mode_d_log_h_d_n,
+        grid_d_log_h_d_n,
+        mode_candidate_e_squared_d_n,
+    ):
+        state_r = delta_r + adjustment.energy_density
+        state_p = delta_p + adjustment.pressure
+        state_r_d_n = delta_r_d_n + adjustment_r_d_n
+        total_r = reference.energy_density + state_r
+        total_p = reference.pressure + state_p
+        total_r_d_n = reference_r_d_n + state_r_d_n
+        energy_bound = (
+            reference.energy_absolute_bound
+            + adjustment.energy_absolute_bound
+            + scaled(
+                "mean-field degeneracy-scaled state-difference energy bound",
+                ensemble_node.created_stress.energy_external_ir_uv_remainder_absolute_bound,
+            )
+        )
+        pressure_bound = (
+            reference.pressure_absolute_bound
+            + adjustment.pressure_absolute_bound
+            + scaled(
+                "mean-field degeneracy-scaled state-difference pressure bound",
+                ensemble_node.created_stress.pressure_external_ir_uv_remainder_absolute_bound,
+            )
+        )
+        target = total_r / (3.0 * planck_squared)
+        target_lower = (total_r - energy_bound) / (3.0 * planck_squared)
+        target_upper = (total_r + energy_bound) / (3.0 * planck_squared)
+        ray_uncertainty = (energy_bound + pressure_bound) / (
+            2.0 * planck_squared
+        )
+        acceleration = -(total_r + 3.0 * total_p) / (6.0 * planck_squared)
+        acceleration_uncertainty = (energy_bound + 3.0 * pressure_bound) / (
+            6.0 * planck_squared
+        )
+        if not all(
+            math.isfinite(value)
+            for value in (
+                target,
+                target_lower,
+                target_upper,
+                ray_uncertainty,
+                acceleration,
+                acceleration_uncertainty,
+            )
+        ):
+            raise ValueError("mean-field Friedmann target is not finite")
+        if target <= 0.0 or target_lower <= 0.0:
+            raise ValueError("mean-field Friedmann target or tail lower bound is non-positive")
+
+        reference_residual = reference_r_d_n + 3.0 * (
+            reference.energy_density + reference.pressure
+        )
+        state_residual = state_r_d_n + 3.0 * (state_r + state_p)
+        total_residual = total_r_d_n + 3.0 * (total_r + total_p)
+        for name, residual, derivative_term, pressure_term in (
+            (
+                "reference source",
+                reference_residual,
+                reference_r_d_n,
+                3.0 * (reference.energy_density + reference.pressure),
+            ),
+            (
+                "state-difference source",
+                state_residual,
+                state_r_d_n,
+                3.0 * (state_r + state_p),
+            ),
+            (
+                "total source",
+                total_residual,
+                total_r_d_n,
+                3.0 * (total_r + total_p),
+            ),
+        ):
+            if not _residual_within_absolute_relative_tolerance(
+                residual,
+                derivative_term,
+                pressure_term,
+                absolute_tolerance=ward_absolute_tolerance,
+                relative_tolerance=ward_relative_tolerance,
+            ):
+                raise ValueError(f"{name} finite-grid Ward residual exceeds its ceiling")
+
+        friedmann_residual = 3.0 * planck_squared * active.e2 - total_r
+        ray_residual = active.e2 * mode_d_log + (
+            total_r + total_p
+        ) / (2.0 * planck_squared)
+        propagation_residual = 3.0 * planck_squared * mode_e2_d_n - total_r_d_n
+
+        total_energy.append(total_r)
+        total_pressure.append(total_p)
+        total_energy_d_n.append(total_r_d_n)
+        total_energy_bounds.append(energy_bound)
+        total_pressure_bounds.append(pressure_bound)
+        target_e_squared.append(target)
+        target_e_squared_lower.append(target_lower)
+        target_e_squared_upper.append(target_upper)
+        ray_uncertainties.append(ray_uncertainty)
+        acceleration_lower.append(acceleration - acceleration_uncertainty)
+        acceleration_upper.append(acceleration + acceleration_uncertainty)
+        reference_ward.append(reference_residual)
+        state_ward.append(state_residual)
+        total_ward.append(total_residual)
+        friedmann.append(friedmann_residual)
+        raychaudhuri.append(ray_residual)
+        propagation.append(propagation_residual)
+        geometry_mismatch.append(mode_d_log - grid_d_log)
+
+    fixed_relative = max(
+        abs(target - active.e2) / max(1.0, abs(target), abs(active.e2))
+        for target, active in zip(target_e_squared, active_nodes)
+    )
+    friedmann_relative = max(
+        _relative_residual(
+            residual,
+            3.0 * planck_squared * active.e2,
+            total_r,
+        )
+        for residual, active, total_r in zip(
+            friedmann,
+            active_nodes,
+            total_energy,
+        )
+    )
+    ray_relative = max(
+        _relative_residual(
+            residual,
+            active.e2 * mode_d_log,
+            (total_r + total_p) / (2.0 * planck_squared),
+        )
+        for residual, active, mode_d_log, total_r, total_p in zip(
+            raychaudhuri,
+            active_nodes,
+            mode_d_log_h_d_n,
+            total_energy,
+            total_pressure,
+        )
+    )
+    ray_tail_robust_relative = max(
+        (abs(residual) + uncertainty)
+        / max(
+            1.0,
+            abs(active.e2 * mode_d_log),
+            abs((total_r + total_p) / (2.0 * planck_squared)),
+        )
+        for residual, uncertainty, active, mode_d_log, total_r, total_p in zip(
+            raychaudhuri,
+            ray_uncertainties,
+            active_nodes,
+            mode_d_log_h_d_n,
+            total_energy,
+            total_pressure,
+        )
+    )
+    reference_ward_relative = max(
+        _relative_residual(
+            residual,
+            derivative,
+            3.0 * (node.energy_density + node.pressure),
+        )
+        for residual, node, derivative in zip(
+            reference_ward,
+            response.reference_source_nodes,
+            reference_grid_energy_d_n,
+        )
+    )
+    state_ward_relative = max(
+        _relative_residual(residual, derivative, 3.0 * (energy + pressure))
+        for residual, derivative, energy, pressure in zip(
+            state_ward,
+            tuple(
+                derivative + adjustment_derivative
+                for derivative, adjustment_derivative in zip(
+                    central_delta_energy_d_n,
+                    adjustment_grid_energy_d_n,
+                )
+            ),
+            tuple(
+                energy + adjustment.energy_density
+                for energy, adjustment in zip(central_delta_energy, adjustment_nodes)
+            ),
+            tuple(
+                pressure + adjustment.pressure
+                for pressure, adjustment in zip(central_delta_pressure, adjustment_nodes)
+            ),
+        )
+    )
+    total_ward_relative = max(
+        _relative_residual(
+            residual,
+            derivative,
+            3.0 * (energy + pressure),
+        )
+        for residual, derivative, energy, pressure in zip(
+            total_ward,
+            total_energy_d_n,
+            total_energy,
+            total_pressure,
+        )
+    )
+    propagation_relative = max(
+        _relative_residual(
+            residual,
+            3.0 * planck_squared * derivative,
+            total_derivative,
+        )
+        for residual, derivative, total_derivative in zip(
+            propagation,
+            mode_candidate_e_squared_d_n,
+            total_energy_d_n,
+        )
+    )
+    geometry_relative = max(
+        _relative_residual(mismatch, local, grid)
+        for mismatch, local, grid in zip(
+            geometry_mismatch,
+            mode_d_log_h_d_n,
+            grid_d_log_h_d_n,
+        )
+    )
+    reference_derivative_relative = max(
+        _relative_residual(residual, node.energy_density_d_n, grid)
+        for residual, node, grid in zip(
+            reference_derivative_consistency,
+            response.reference_source_nodes,
+            reference_grid_energy_d_n,
+        )
+    )
+    split_derivative_relative = max(
+        _relative_residual(residual, node.energy_density_d_n, grid)
+        for residual, node, grid in zip(
+            split_derivative_consistency,
+            adjustment_nodes,
+            adjustment_grid_energy_d_n,
+        )
+    )
+    return _MeanFieldResponseEvaluation(
+        target_e_squared=tuple(target_e_squared),
+        target_e_squared_lower=tuple(target_e_squared_lower),
+        target_e_squared_upper=tuple(target_e_squared_upper),
+        total_energy_density=tuple(total_energy),
+        total_pressure=tuple(total_pressure),
+        total_energy_density_d_n=tuple(total_energy_d_n),
+        total_energy_absolute_bounds=tuple(total_energy_bounds),
+        total_pressure_absolute_bounds=tuple(total_pressure_bounds),
+        raychaudhuri_absolute_uncertainties=tuple(ray_uncertainties),
+        acceleration_lower_bounds=tuple(acceleration_lower),
+        acceleration_upper_bounds=tuple(acceleration_upper),
+        reference_derivative_consistency_residuals=(
+            reference_derivative_consistency
+        ),
+        split_derivative_consistency_residuals=split_derivative_consistency,
+        reference_ward_residuals=tuple(reference_ward),
+        state_difference_ward_residuals=tuple(state_ward),
+        total_ward_residuals=tuple(total_ward),
+        friedmann_residuals=tuple(friedmann),
+        raychaudhuri_residuals=tuple(raychaudhuri),
+        constraint_propagation_residuals=tuple(propagation),
+        maximum_fixed_point_relative_residual=fixed_relative,
+        maximum_friedmann_relative_residual=friedmann_relative,
+        maximum_raychaudhuri_relative_residual=ray_relative,
+        maximum_reference_ward_relative_residual=reference_ward_relative,
+        maximum_state_difference_ward_relative_residual=state_ward_relative,
+        maximum_total_ward_relative_residual=total_ward_relative,
+        maximum_constraint_propagation_relative_residual=propagation_relative,
+        maximum_geometry_derivative_relative_mismatch=geometry_relative,
+        maximum_reference_derivative_consistency_relative_residual=(
+            reference_derivative_relative
+        ),
+        maximum_split_derivative_consistency_relative_residual=(
+            split_derivative_relative
+        ),
+        maximum_raychaudhuri_tail_robust_relative_residual=(
+            ray_tail_robust_relative
+        ),
+    )
+
+
+def _mean_field_response_numeric_fingerprint(
+    response: ModeRecomputedSemiclassicalResponse,
+    evaluation: _MeanFieldResponseEvaluation,
+) -> tuple[float, ...]:
+    """Fingerprint every numeric response channel used by the E53 receipt."""
+
+    values: list[float] = [response.maximum_mode_wronskian_residual]
+    for nodes in (
+        response.reference_source_nodes,
+        response.finite_reference_split_adjustment_nodes,
+    ):
+        for node in nodes:
+            values.extend(
+                (
+                    node.n,
+                    node.energy_density,
+                    node.pressure,
+                    node.energy_density_d_n,
+                    node.energy_absolute_bound,
+                    node.pressure_absolute_bound,
+                )
+            )
+    for node in response.ensemble.nodes:
+        stress = node.created_stress
+        values.extend(
+            (
+                node.n,
+                node.hubble_over_h0,
+                node.background_d_log_h_d_n,
+                stress.energy_density_over_h0_four,
+                stress.pressure_over_h0_four,
+                stress.energy_external_ir_uv_remainder_absolute_bound,
+                stress.pressure_external_ir_uv_remainder_absolute_bound,
+            )
+        )
+    for sequence in (
+        evaluation.target_e_squared,
+        evaluation.target_e_squared_lower,
+        evaluation.target_e_squared_upper,
+        evaluation.total_energy_density,
+        evaluation.total_pressure,
+        evaluation.total_energy_density_d_n,
+        evaluation.total_energy_absolute_bounds,
+        evaluation.total_pressure_absolute_bounds,
+        evaluation.raychaudhuri_absolute_uncertainties,
+        evaluation.acceleration_lower_bounds,
+        evaluation.acceleration_upper_bounds,
+        evaluation.reference_derivative_consistency_residuals,
+        evaluation.split_derivative_consistency_residuals,
+        evaluation.reference_ward_residuals,
+        evaluation.state_difference_ward_residuals,
+        evaluation.total_ward_residuals,
+        evaluation.friedmann_residuals,
+        evaluation.raychaudhuri_residuals,
+        evaluation.constraint_propagation_residuals,
+    ):
+        values.extend(sequence)
+    return tuple(_finite("mean-field response fingerprint value", value) for value in values)
+
+
+def _maximum_relative_fingerprint_difference(
+    first: tuple[float, ...],
+    second: tuple[float, ...],
+) -> float:
+    if len(first) != len(second):
+        raise ValueError("mean-field response fingerprint length changed")
+    return max(
+        (
+            abs(left - right) / max(1.0, abs(left), abs(right))
+            for left, right in zip(first, second)
+        ),
+        default=0.0,
+    )
+
+
+def solve_squeezed_state_difference_mean_field_fixed_point(
+    initial_background: MeanFieldFLRWBackground,
+    *,
+    recompute_response: Callable[
+        [MeanFieldFLRWBackground, int],
+        ModeRecomputedSemiclassicalResponse,
+    ],
+    reduced_planck_over_h0: float,
+    degeneracy: int = 1,
+    damping: float = 0.7,
+    maximum_iterations: int = 24,
+    fixed_point_relative_tolerance: float = 1.0e-8,
+    constraint_absolute_tolerance: float = 1.0e-8,
+    constraint_relative_tolerance: float = 0.1,
+    ward_absolute_tolerance: float = 1.0e-8,
+    ward_relative_tolerance: float = 0.1,
+    synchronization_tolerance: float = 1.0e-8,
+    response_reproducibility_tolerance: float = 1.0e-10,
+    geometry_derivative_relative_tolerance: float = 1.0e-5,
+    maximum_mode_wronskian_residual: float = 1.0e-4,
+    maximum_adjacent_n_step_ratio: float = 4.0,
+    runaway_growth_factor: float = 1.05,
+    runaway_patience: int = 3,
+) -> ModeRecomputedMeanFieldFixedPoint:
+    r"""Solve a conditional background--mode mean-field fixed point.
+
+    The callback must rebuild every mode and evaluate an externally specified
+    classical plus renormalized-reference source on each candidate background.
+    The solver itself derives neither that absolute reference stress nor the
+    missing higher scale-factor jet needed by fourth-order subtraction.
+    """
+
+    if not callable(recompute_response):
+        raise ValueError("recompute_response must be callable")
+    reduced_planck_over_h0 = _finite(
+        "reduced_planck_over_h0",
+        reduced_planck_over_h0,
+    )
+    if reduced_planck_over_h0 <= 0.0:
+        raise ValueError("reduced_planck_over_h0 must be positive")
+    if isinstance(degeneracy, bool) or not isinstance(degeneracy, int) or degeneracy < 1:
+        raise ValueError("degeneracy must be a positive integer")
+    damping = _finite("mean-field damping", damping)
+    if damping <= 0.0 or damping > 1.0:
+        raise ValueError("mean-field damping must lie in (0, 1]")
+    if (
+        isinstance(maximum_iterations, bool)
+        or not isinstance(maximum_iterations, int)
+        or maximum_iterations < 1
+    ):
+        raise ValueError("maximum_iterations must be a positive integer")
+    if (
+        isinstance(runaway_patience, bool)
+        or not isinstance(runaway_patience, int)
+        or runaway_patience < 1
+    ):
+        raise ValueError("runaway_patience must be a positive integer")
+    positive_controls = (
+        ("fixed_point_relative_tolerance", fixed_point_relative_tolerance),
+        ("constraint_relative_tolerance", constraint_relative_tolerance),
+        ("ward_relative_tolerance", ward_relative_tolerance),
+        ("synchronization_tolerance", synchronization_tolerance),
+        ("response_reproducibility_tolerance", response_reproducibility_tolerance),
+        (
+            "geometry_derivative_relative_tolerance",
+            geometry_derivative_relative_tolerance,
+        ),
+        ("maximum_mode_wronskian_residual", maximum_mode_wronskian_residual),
+        ("maximum_adjacent_n_step_ratio", maximum_adjacent_n_step_ratio),
+        ("runaway_growth_factor", runaway_growth_factor),
+    )
+    for name, value in positive_controls:
+        value = _finite(name, value)
+        if value <= 0.0:
+            raise ValueError(f"{name} must be positive")
+    if maximum_adjacent_n_step_ratio < 1.0:
+        raise ValueError("maximum_adjacent_n_step_ratio must be at least one")
+    if runaway_growth_factor <= 1.0:
+        raise ValueError("runaway_growth_factor must exceed one")
+    for name, value in (
+        ("constraint_absolute_tolerance", constraint_absolute_tolerance),
+        ("ward_absolute_tolerance", ward_absolute_tolerance),
+    ):
+        value = _finite(name, value)
+        if value < 0.0:
+            raise ValueError(f"{name} must be non-negative")
+    try:
+        planck_squared = reduced_planck_over_h0**2
+    except OverflowError as error:
+        raise ValueError("reduced Planck ratio squared is not finite") from error
+    planck_squared = _finite("reduced Planck ratio squared", planck_squared)
+
+    background = initial_background
+    iterations: list[MeanFieldFixedPointIteration] = []
+    previous_fixed_residual: float | None = None
+    consecutive_growth = 0
+    response_evaluation_count = 0
+    contract: tuple[object, ...] | None = None
+    observed_ratios: list[float] = []
+
+    def evaluate(at_background: MeanFieldFLRWBackground, iteration: int):
+        nonlocal response_evaluation_count, contract
+        response = recompute_response(at_background, iteration)
+        response_evaluation_count += 1
+        if not isinstance(response, ModeRecomputedSemiclassicalResponse):
+            raise ValueError("recompute_response returned the wrong response type")
+        evaluation = _mean_field_response_evaluation(
+            at_background,
+            response,
+            planck_squared=planck_squared,
+            degeneracy=degeneracy,
+            synchronization_tolerance=synchronization_tolerance,
+            ward_absolute_tolerance=ward_absolute_tolerance,
+            ward_relative_tolerance=ward_relative_tolerance,
+            maximum_mode_wronskian_residual=maximum_mode_wronskian_residual,
+            maximum_adjacent_n_step_ratio=maximum_adjacent_n_step_ratio,
+        )
+        certificate = response.ensemble.bogoliubov_integrability_certificate
+        assert certificate is not None
+        current_contract = (
+            response.ensemble.q_values,
+            response.ensemble.mu,
+            certificate.profile,
+            response.mode_solution_count,
+            response.renormalization_scheme_declaration.strip(),
+            response.state_preparation_declaration.strip(),
+        )
+        if contract is None:
+            contract = current_contract
+        elif current_contract != contract:
+            raise ValueError("mode/state/renormalization response contract changed during iteration")
+        return response, evaluation
+
+    for iteration_index in range(maximum_iterations):
+        response, evaluation = evaluate(background, iteration_index)
+        fixed_residual = evaluation.maximum_fixed_point_relative_residual
+        residual_ratio = None
+        if previous_fixed_residual is not None and previous_fixed_residual > 0.0:
+            residual_ratio = fixed_residual / previous_fixed_residual
+            if math.isfinite(residual_ratio):
+                observed_ratios.append(residual_ratio)
+            if (
+                residual_ratio > runaway_growth_factor
+                and fixed_residual > fixed_point_relative_tolerance
+            ):
+                consecutive_growth += 1
+            else:
+                consecutive_growth = 0
+            if consecutive_growth >= runaway_patience:
+                raise ValueError("mean-field fixed-point iteration detected a runaway")
+
+        current_e2 = tuple(node.e2 for node in background.active_nodes)
+        updated_e2 = tuple(
+            (1.0 - damping) * current + damping * target
+            for current, target in zip(current_e2, evaluation.target_e_squared)
+        )
+        update_relative = max(
+            abs(updated - current) / max(1.0, abs(updated), abs(current))
+            for updated, current in zip(updated_e2, current_e2)
+        )
+        iterations.append(
+            MeanFieldFixedPointIteration(
+                iteration=iteration_index,
+                maximum_fixed_point_relative_residual=fixed_residual,
+                maximum_damped_update_relative=update_relative,
+                minimum_target_e_squared_lower=min(
+                    evaluation.target_e_squared_lower
+                ),
+                maximum_friedmann_relative_residual=(
+                    evaluation.maximum_friedmann_relative_residual
+                ),
+                maximum_raychaudhuri_relative_residual=(
+                    evaluation.maximum_raychaudhuri_relative_residual
+                ),
+                maximum_reference_ward_relative_residual=(
+                    evaluation.maximum_reference_ward_relative_residual
+                ),
+                maximum_state_difference_ward_relative_residual=(
+                    evaluation.maximum_state_difference_ward_relative_residual
+                ),
+                maximum_total_ward_relative_residual=(
+                    evaluation.maximum_total_ward_relative_residual
+                ),
+                maximum_constraint_propagation_relative_residual=(
+                    evaluation.maximum_constraint_propagation_relative_residual
+                ),
+                maximum_geometry_derivative_relative_mismatch=(
+                    evaluation.maximum_geometry_derivative_relative_mismatch
+                ),
+                maximum_reference_derivative_consistency_relative_residual=(
+                    evaluation.maximum_reference_derivative_consistency_relative_residual
+                ),
+                maximum_split_derivative_consistency_relative_residual=(
+                    evaluation.maximum_split_derivative_consistency_relative_residual
+                ),
+                maximum_raychaudhuri_tail_robust_relative_residual=(
+                    evaluation.maximum_raychaudhuri_tail_robust_relative_residual
+                ),
+                maximum_raychaudhuri_absolute_uncertainty=max(
+                    evaluation.raychaudhuri_absolute_uncertainties
+                ),
+                minimum_acceleration_lower_bound=min(
+                    evaluation.acceleration_lower_bounds
+                ),
+                maximum_acceleration_upper_bound=max(
+                    evaluation.acceleration_upper_bounds
+                ),
+                maximum_mode_wronskian_residual=(
+                    response.maximum_mode_wronskian_residual
+                ),
+                empirical_residual_ratio=residual_ratio,
+            )
+        )
+
+        if fixed_residual <= fixed_point_relative_tolerance:
+            final_response, final_evaluation = evaluate(
+                background,
+                iteration_index + 1,
+            )
+            reproducibility = _maximum_relative_fingerprint_difference(
+                _mean_field_response_numeric_fingerprint(response, evaluation),
+                _mean_field_response_numeric_fingerprint(
+                    final_response,
+                    final_evaluation,
+                ),
+            )
+            if reproducibility > response_reproducibility_tolerance:
+                raise ValueError("final response is not reproducible on the same background")
+            if (
+                final_evaluation.maximum_fixed_point_relative_residual
+                > fixed_point_relative_tolerance
+            ):
+                raise ValueError("final recomputation left the fixed-point tolerance")
+
+            active_nodes = background.active_nodes
+            mode_d_log = tuple(
+                background.d_log_h_d_n(node.n) for node in active_nodes
+            )
+            mode_e2_d_n = tuple(
+                2.0 * node.e2 * d_log
+                for node, d_log in zip(active_nodes, mode_d_log)
+            )
+            for (
+                node,
+                derivative,
+                d_log,
+                total_r,
+                total_p,
+                total_r_d_n,
+                ray_uncertainty,
+            ) in zip(
+                active_nodes,
+                mode_e2_d_n,
+                mode_d_log,
+                final_evaluation.total_energy_density,
+                final_evaluation.total_pressure,
+                final_evaluation.total_energy_density_d_n,
+                final_evaluation.raychaudhuri_absolute_uncertainties,
+            ):
+                friedmann_residual = 3.0 * planck_squared * node.e2 - total_r
+                ray_residual = node.e2 * d_log + (
+                    total_r + total_p
+                ) / (2.0 * planck_squared)
+                propagation_residual = 3.0 * planck_squared * derivative - total_r_d_n
+                for name, residual, scales in (
+                    (
+                        "final Friedmann",
+                        friedmann_residual,
+                        (3.0 * planck_squared * node.e2, total_r),
+                    ),
+                    (
+                        "final Raychaudhuri",
+                        ray_residual,
+                        (
+                            node.e2 * d_log,
+                            (total_r + total_p) / (2.0 * planck_squared),
+                        ),
+                    ),
+                    (
+                        "final constraint propagation",
+                        propagation_residual,
+                        (3.0 * planck_squared * derivative, total_r_d_n),
+                    ),
+                ):
+                    if not _residual_within_absolute_relative_tolerance(
+                        residual,
+                        *scales,
+                        absolute_tolerance=constraint_absolute_tolerance,
+                        relative_tolerance=constraint_relative_tolerance,
+                    ):
+                        raise ValueError(f"{name} residual exceeds its ceiling")
+                if not _residual_within_absolute_relative_tolerance(
+                    abs(ray_residual) + ray_uncertainty,
+                    node.e2 * d_log,
+                    (total_r + total_p) / (2.0 * planck_squared),
+                    absolute_tolerance=constraint_absolute_tolerance,
+                    relative_tolerance=constraint_relative_tolerance,
+                ):
+                    raise ValueError(
+                        "final Raychaudhuri residual plus independent tail rectangle "
+                        "exceeds its ceiling"
+                    )
+            if (
+                final_evaluation.maximum_geometry_derivative_relative_mismatch
+                > geometry_derivative_relative_tolerance
+            ):
+                raise ValueError("final background derivative representations disagree")
+
+            return ModeRecomputedMeanFieldFixedPoint(
+                background=background,
+                final_response=final_response,
+                iterations=tuple(iterations),
+                reduced_planck_over_h0=reduced_planck_over_h0,
+                damping=damping,
+                response_evaluation_count=response_evaluation_count,
+                maximum_final_fixed_point_relative_residual=(
+                    final_evaluation.maximum_fixed_point_relative_residual
+                ),
+                maximum_final_friedmann_relative_residual=(
+                    final_evaluation.maximum_friedmann_relative_residual
+                ),
+                maximum_final_raychaudhuri_relative_residual=(
+                    final_evaluation.maximum_raychaudhuri_relative_residual
+                ),
+                maximum_final_reference_ward_relative_residual=(
+                    final_evaluation.maximum_reference_ward_relative_residual
+                ),
+                maximum_final_state_difference_ward_relative_residual=(
+                    final_evaluation.maximum_state_difference_ward_relative_residual
+                ),
+                maximum_final_total_ward_relative_residual=(
+                    final_evaluation.maximum_total_ward_relative_residual
+                ),
+                maximum_final_constraint_propagation_relative_residual=(
+                    final_evaluation.maximum_constraint_propagation_relative_residual
+                ),
+                maximum_final_geometry_derivative_relative_mismatch=(
+                    final_evaluation.maximum_geometry_derivative_relative_mismatch
+                ),
+                maximum_final_reference_derivative_consistency_relative_residual=(
+                    final_evaluation.maximum_reference_derivative_consistency_relative_residual
+                ),
+                maximum_final_split_derivative_consistency_relative_residual=(
+                    final_evaluation.maximum_split_derivative_consistency_relative_residual
+                ),
+                maximum_final_raychaudhuri_tail_robust_relative_residual=(
+                    final_evaluation.maximum_raychaudhuri_tail_robust_relative_residual
+                ),
+                maximum_final_raychaudhuri_absolute_uncertainty=max(
+                    final_evaluation.raychaudhuri_absolute_uncertainties
+                ),
+                minimum_final_acceleration_lower_bound=min(
+                    final_evaluation.acceleration_lower_bounds
+                ),
+                maximum_final_acceleration_upper_bound=max(
+                    final_evaluation.acceleration_upper_bounds
+                ),
+                final_response_reproducibility_relative_residual=reproducibility,
+                maximum_observed_empirical_residual_ratio=(
+                    max(observed_ratios) if observed_ratios else 0.0
+                ),
+                geometry_derivative_relative_tolerance=(
+                    geometry_derivative_relative_tolerance
+                ),
+                mass_dimension_manifest=(
+                    ("N_and_E_squared", 0.0),
+                    ("q_mu_and_bogoliubov_profile", 0.0),
+                    ("Mbar_Pl_over_H0", 0.0),
+                    ("rho_pressure_and_source_over_H0_four", 0.0),
+                    ("fixed_point_and_constraint_residuals", 0.0),
+                ),
+                dimensions_pass=True,
+            )
+
+        background = background.with_active_e2(updated_e2)
+        previous_fixed_residual = fixed_residual
+
+    raise ValueError("mean-field fixed-point iteration did not converge")

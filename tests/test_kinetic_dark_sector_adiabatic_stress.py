@@ -26,9 +26,14 @@ from examples.physics.kinetic_dark_sector_adiabatic_stress import (
     trace_squeezed_flrw_mode_stress,
 )
 from examples.physics.kinetic_dark_sector_backreaction import (
+    MeanFieldFLRWBackground,
+    MeanFieldFLRWBackgroundNode,
+    ModeRecomputedSemiclassicalResponse,
     ReferenceFLRWBaselineNode,
+    SemiclassicalReferenceSourceNode,
     _three_point_derivative,
     project_squeezed_ensemble_frozen_constraints,
+    solve_squeezed_state_difference_mean_field_fixed_point,
 )
 from examples.physics.kinetic_dark_sector_flrw_mode import (
     FLRWModeSpec,
@@ -244,6 +249,146 @@ def _frozen_constraint_projection(
         reference_renormalized_sector_included_in_baseline=True,
         maximum_state_difference_ward_relative_residual=(
             maximum_state_difference_ward_relative_residual
+        ),
+    )
+
+
+def _mean_field_background(
+    *,
+    steps: int = 60,
+    e2: float = 1.0,
+    initial_n: float = -0.2,
+    final_n: float = 0.0,
+) -> MeanFieldFLRWBackground:
+    step = (final_n - initial_n) / steps
+    return MeanFieldFLRWBackground(
+        nodes=tuple(
+            MeanFieldFLRWBackgroundNode(
+                n=initial_n + index * step,
+                e2=e2,
+            )
+            for index in range(-2, steps + 3)
+        ),
+        active_window=(initial_n, final_n),
+        curvature_derivative_step_n=step / 4.0,
+    )
+
+
+def _mode_recomputed_mean_field_response(
+    background: MeanFieldFLRWBackground,
+    *,
+    reduced_planck_over_h0: float,
+    zero_squeeze: bool,
+    reference_target_e2: float = 1.0,
+    reference_gain: float = 0.0,
+    finite_reference_split: float = 0.0,
+    time_dependent_reference_split: bool = False,
+    reference_energy_absolute_bound: float = 0.0,
+    reference_pressure_absolute_bound: float = 0.0,
+) -> ModeRecomputedSemiclassicalResponse:
+    active = background.active_nodes
+    steps = len(active) - 1
+    q_values = (0.1, 0.3, 0.5)
+    profile = _gaussian_bogoliubov_profile(zero_squeeze=zero_squeeze)
+    trajectories = []
+    solutions = []
+    for q in q_values:
+        solution = solve_flrw_mode(
+            background,
+            FLRWModeSpec(
+                comoving_wavenumber_over_h0=q,
+                mass_over_h0=lambda _n: 4.0,
+                curvature_coupling=0.0,
+                initial_n=active[0].n,
+                final_n=active[-1].n,
+                steps=steps,
+                curvature_derivative_step_n=(
+                    background.curvature_derivative_step_n
+                ),
+                adiabatic_derivative_step_n=(
+                    background.curvature_derivative_step_n
+                ),
+            ),
+        )
+        solutions.append(solution)
+        trajectories.append(
+            trace_squeezed_flrw_mode_stress(
+                background,
+                solution,
+                scale_factor_jet_at_n=(
+                    background.state_difference_scale_factor_jet_at_n
+                ),
+                alpha=profile.alpha_at(q),
+                beta=profile.beta_at(q),
+                late_window_efolds=0.1,
+                maximum_reference_phase_step=math.pi / 2.0,
+                canonical_tolerance=1.0e-4,
+                background_tolerance=1.0e-7,
+                required_persistent_de_efolds=0.1,
+            )
+        )
+    trajectories_tuple = tuple(trajectories)
+    ensemble = aggregate_squeezed_flrw_stress_ensemble(
+        trajectories_tuple,
+        node_certificates=_squeezed_ensemble_certificates(trajectories_tuple),
+        bogoliubov_profile=profile,
+        late_window_efolds=0.1,
+        required_persistent_de_efolds=0.1,
+    )
+
+    candidate_average_e2 = sum(node.e2 for node in active) / len(active)
+    supplied_target_e2 = reference_target_e2 + reference_gain * (
+        candidate_average_e2 - reference_target_e2
+    )
+    reference_energy = (
+        3.0 * reduced_planck_over_h0**2 * supplied_target_e2
+    )
+    reference_nodes = []
+    split_nodes = []
+    for node in active:
+        if time_dependent_reference_split:
+            split_energy = finite_reference_split * math.exp(
+                -3.0 * (node.n - active[0].n)
+            )
+            split_pressure = 0.0
+            split_energy_d_n = -3.0 * split_energy
+        else:
+            split_energy = finite_reference_split
+            split_pressure = -finite_reference_split
+            split_energy_d_n = 0.0
+        reference_nodes.append(
+            SemiclassicalReferenceSourceNode(
+                n=node.n,
+                energy_density=reference_energy + split_energy,
+                pressure=-reference_energy + split_pressure,
+                energy_density_d_n=split_energy_d_n,
+                energy_absolute_bound=reference_energy_absolute_bound,
+                pressure_absolute_bound=reference_pressure_absolute_bound,
+            )
+        )
+        split_nodes.append(
+            SemiclassicalReferenceSourceNode(
+                n=node.n,
+                energy_density=-split_energy,
+                pressure=-split_pressure,
+                energy_density_d_n=-split_energy_d_n,
+            )
+        )
+    return ModeRecomputedSemiclassicalResponse(
+        ensemble=ensemble,
+        reference_source_nodes=tuple(reference_nodes),
+        finite_reference_split_adjustment_nodes=(
+            tuple(split_nodes) if finite_reference_split != 0.0 else ()
+        ),
+        maximum_mode_wronskian_residual=max(
+            solution.max_wronskian_residual for solution in solutions
+        ),
+        mode_solution_count=len(solutions),
+        renormalization_scheme_declaration=(
+            "TEST_EXTERNAL_REFERENCE_AND_COMMON_FINITE_COUNTERTERMS"
+        ),
+        state_preparation_declaration=(
+            "FIXED_GAUSSIAN_BOGOLIUBOV_PROFILE_REBUILT_ON_EACH_BACKGROUND"
         ),
     )
 
@@ -1208,6 +1353,383 @@ def test_frozen_constraint_projection_separates_absolute_and_relative_residual_g
             reference_renormalized_sector_included_in_baseline=True,
             baseline_closure_tolerance=1.0e-9,
             baseline_closure_absolute_tolerance=1.0e-12,
+        )
+
+
+def test_mean_field_background_builds_only_a_second_order_state_difference_jet() -> None:
+    background = _mean_field_background(steps=40)
+    n = -0.1
+    a = math.exp(n)
+    jet = background.state_difference_scale_factor_jet_at_n(n)
+
+    assert jet.derivatives == pytest.approx(
+        (a, a**2, 2.0 * a**3, 0.0, 0.0, 0.0, 0.0),
+        abs=2.0e-14,
+    )
+    assert background.state_difference_jet_derivative_order == 2
+    assert not background.higher_jet_derivatives_certified
+    assert not background.suitable_for_absolute_adiabatic_subtraction
+
+    active = background.active_nodes
+    sloped = background.with_active_e2(
+        tuple(1.0 + 0.02 * (node.n - active[0].n) for node in active)
+    )
+    left_guard = sloped.nodes[0]
+    right_guard = sloped.nodes[-1]
+    assert left_guard.e2 == pytest.approx(
+        1.0 + 0.02 * (left_guard.n - active[0].n),
+        abs=2.0e-14,
+    )
+    assert right_guard.e2 == pytest.approx(
+        1.0 + 0.02 * (right_guard.n - active[0].n),
+        abs=2.0e-14,
+    )
+
+
+def test_mode_recomputed_mean_field_zero_squeeze_recovers_reference_exactly() -> None:
+    planck = 20.0
+    fingerprints = []
+
+    def recompute(background, _iteration):
+        fingerprints.append(tuple(node.e2 for node in background.active_nodes))
+        return _mode_recomputed_mean_field_response(
+            background,
+            reduced_planck_over_h0=planck,
+            zero_squeeze=True,
+        )
+
+    fixed_point = solve_squeezed_state_difference_mean_field_fixed_point(
+        _mean_field_background(),
+        recompute_response=recompute,
+        reduced_planck_over_h0=planck,
+        fixed_point_relative_tolerance=1.0e-12,
+        constraint_absolute_tolerance=1.0e-10,
+        constraint_relative_tolerance=1.0e-6,
+        ward_absolute_tolerance=1.0e-10,
+        ward_relative_tolerance=1.0e-6,
+    )
+
+    assert len(fingerprints) == 2
+    assert fingerprints[0] == fingerprints[1]
+    assert fixed_point.response_evaluation_count == 2
+    assert fixed_point.maximum_final_fixed_point_relative_residual == 0.0
+    assert all(node.e2 == 1.0 for node in fixed_point.background.active_nodes)
+    assert all(
+        node.created_stress.energy_density_over_h0_four == 0.0
+        and node.created_stress.pressure_over_h0_four == 0.0
+        for node in fixed_point.final_response.ensemble.nodes
+    )
+    assert fixed_point.modes_recomputed_each_iteration_by_callback_contract
+    assert (
+        fixed_point.final_modes_recomputed_on_converged_background_by_callback_contract
+    )
+    assert fixed_point.reference_source_evaluated_each_iteration_by_callback_contract
+    assert not fixed_point.callback_recomputation_declarations_independently_proved
+    assert fixed_point.aggregate_numeric_response_reproducibility_checked
+    assert not fixed_point.complete_internal_mode_trajectory_reproducibility_proved
+    assert fixed_point.mode_and_ray_use_same_background_derivative
+    assert fixed_point.pressure_tail_propagated_to_raychaudhuri_gate
+    assert fixed_point.reference_and_split_derivatives_checked_against_node_grid
+    assert fixed_point.independent_energy_pressure_tail_rectangle_used
+    assert not fixed_point.joint_energy_pressure_tail_region_derived
+    assert not fixed_point.continuous_tail_ward_certified
+    assert fixed_point.dimensions_pass
+    assert all(dimension == 0.0 for _, dimension in fixed_point.mass_dimension_manifest)
+    assert not fixed_point.higher_jet_derivatives_certified
+    assert not fixed_point.absolute_reference_renormalization_derived
+    assert not fixed_point.full_hadamard_state_proved
+    assert not fixed_point.semiclassical_einstein_equation_solved
+    assert not fixed_point.physical_dark_matter_dark_energy_identification
+
+
+def test_mode_recomputed_mean_field_updates_background_and_rebuilds_modes() -> None:
+    planck = 30.0
+    fingerprints = []
+
+    def recompute(background, _iteration):
+        fingerprints.append(tuple(node.e2 for node in background.active_nodes))
+        return _mode_recomputed_mean_field_response(
+            background,
+            reduced_planck_over_h0=planck,
+            zero_squeeze=False,
+        )
+
+    fixed_point = solve_squeezed_state_difference_mean_field_fixed_point(
+        _mean_field_background(e2=1.0002),
+        recompute_response=recompute,
+        reduced_planck_over_h0=planck,
+        damping=0.8,
+        maximum_iterations=12,
+        fixed_point_relative_tolerance=2.0e-7,
+        constraint_absolute_tolerance=2.0e-7,
+        constraint_relative_tolerance=0.25,
+        ward_absolute_tolerance=2.0e-7,
+        ward_relative_tolerance=0.25,
+    )
+
+    assert len(fixed_point.iterations) >= 2
+    assert len(fingerprints) == fixed_point.response_evaluation_count
+    assert fixed_point.response_evaluation_count == len(fixed_point.iterations) + 1
+    assert fingerprints[0] != fingerprints[-1]
+    assert fingerprints[-2] == fingerprints[-1]
+    assert fixed_point.maximum_final_fixed_point_relative_residual <= 2.0e-7
+    assert fixed_point.final_response_reproducibility_relative_residual == 0.0
+    assert fixed_point.maximum_observed_empirical_residual_ratio < 1.0
+    assert fixed_point.maximum_final_geometry_derivative_relative_mismatch < 1.0e-5
+    assert fixed_point.maximum_final_raychaudhuri_absolute_uncertainty > 0.0
+    assert fixed_point.maximum_final_raychaudhuri_tail_robust_relative_residual < 2.0e-7
+
+
+def test_mode_recomputed_mean_field_time_grid_and_relaxation_refinement_agree() -> None:
+    planck = 30.0
+
+    def solve_refinement(*, steps: int, damping: float):
+        return solve_squeezed_state_difference_mean_field_fixed_point(
+            _mean_field_background(steps=steps, e2=1.0002),
+            recompute_response=lambda background, _iteration: (
+                _mode_recomputed_mean_field_response(
+                    background,
+                    reduced_planck_over_h0=planck,
+                    zero_squeeze=False,
+                )
+            ),
+            reduced_planck_over_h0=planck,
+            damping=damping,
+            maximum_iterations=16,
+            fixed_point_relative_tolerance=2.0e-7,
+            constraint_absolute_tolerance=2.0e-7,
+            constraint_relative_tolerance=0.3,
+            ward_absolute_tolerance=2.0e-7,
+            ward_relative_tolerance=0.3,
+        )
+
+    coarse = solve_refinement(steps=40, damping=0.6)
+    fine = solve_refinement(steps=80, damping=0.8)
+    coarse_end = coarse.background.active_nodes[-1].e2
+    fine_end = fine.background.active_nodes[-1].e2
+
+    assert abs(coarse_end - fine_end) < 5.0e-7
+    assert coarse.maximum_final_fixed_point_relative_residual <= 2.0e-7
+    assert fine.maximum_final_fixed_point_relative_residual <= 2.0e-7
+    assert coarse.maximum_observed_empirical_residual_ratio < 1.0
+    assert fine.maximum_observed_empirical_residual_ratio < 1.0
+    assert (
+        fine.maximum_final_geometry_derivative_relative_mismatch
+        < coarse.maximum_final_geometry_derivative_relative_mismatch
+    )
+
+
+def test_mode_recomputed_mean_field_rejects_cached_modes_after_geometry_changes() -> None:
+    planck = 20.0
+    cached = None
+
+    def recompute(background, _iteration):
+        nonlocal cached
+        if cached is None:
+            cached = _mode_recomputed_mean_field_response(
+                background,
+                reduced_planck_over_h0=planck,
+                zero_squeeze=True,
+            )
+        return cached
+
+    with pytest.raises(ValueError, match="not synchronized to candidate background"):
+        solve_squeezed_state_difference_mean_field_fixed_point(
+            _mean_field_background(e2=1.001),
+            recompute_response=recompute,
+            reduced_planck_over_h0=planck,
+            damping=1.0,
+            fixed_point_relative_tolerance=1.0e-10,
+        )
+
+
+def test_mode_recomputed_mean_field_is_invariant_under_finite_reference_split() -> None:
+    planck = 20.0
+
+    def solve_with_split(split: float):
+        return solve_squeezed_state_difference_mean_field_fixed_point(
+            _mean_field_background(),
+            recompute_response=lambda background, _iteration: (
+                _mode_recomputed_mean_field_response(
+                    background,
+                    reduced_planck_over_h0=planck,
+                    zero_squeeze=True,
+                    finite_reference_split=split,
+                )
+            ),
+            reduced_planck_over_h0=planck,
+            fixed_point_relative_tolerance=1.0e-12,
+            constraint_absolute_tolerance=1.0e-10,
+            constraint_relative_tolerance=1.0e-6,
+            ward_absolute_tolerance=1.0e-10,
+            ward_relative_tolerance=1.0e-6,
+        )
+
+    unsplit = solve_with_split(0.0)
+    split = solve_with_split(7.0)
+    assert tuple(node.e2 for node in split.background.active_nodes) == pytest.approx(
+        tuple(node.e2 for node in unsplit.background.active_nodes),
+        abs=0.0,
+    )
+    assert split.maximum_final_total_ward_relative_residual == 0.0
+
+    time_dependent_split = solve_squeezed_state_difference_mean_field_fixed_point(
+        _mean_field_background(),
+        recompute_response=lambda background, _iteration: (
+            _mode_recomputed_mean_field_response(
+                background,
+                reduced_planck_over_h0=planck,
+                zero_squeeze=True,
+                finite_reference_split=0.01,
+                time_dependent_reference_split=True,
+            )
+        ),
+        reduced_planck_over_h0=planck,
+        fixed_point_relative_tolerance=1.0e-12,
+        constraint_absolute_tolerance=1.0e-8,
+        constraint_relative_tolerance=1.0e-5,
+        ward_absolute_tolerance=1.0e-7,
+        ward_relative_tolerance=1.0e-3,
+    )
+    assert tuple(
+        node.e2 for node in time_dependent_split.background.active_nodes
+    ) == pytest.approx(
+        tuple(node.e2 for node in unsplit.background.active_nodes),
+        abs=0.0,
+    )
+    assert (
+        time_dependent_split.maximum_final_split_derivative_consistency_relative_residual
+        < 1.0e-5
+    )
+
+
+def test_mode_recomputed_mean_field_rejects_nonpositive_branch_and_runaway() -> None:
+    planck = 20.0
+    with pytest.raises(ValueError, match=r"positive E\^2"):
+        MeanFieldFLRWBackgroundNode(n=0.0, e2=0.0)
+
+    with pytest.raises(ValueError, match="non-positive"):
+        solve_squeezed_state_difference_mean_field_fixed_point(
+            _mean_field_background(),
+            recompute_response=lambda background, _iteration: (
+                _mode_recomputed_mean_field_response(
+                    background,
+                    reduced_planck_over_h0=planck,
+                    zero_squeeze=True,
+                    reference_target_e2=-1.0,
+                )
+            ),
+            reduced_planck_over_h0=planck,
+        )
+
+    with pytest.raises(ValueError, match="detected a runaway"):
+        solve_squeezed_state_difference_mean_field_fixed_point(
+            _mean_field_background(e2=1.001),
+            recompute_response=lambda background, _iteration: (
+                _mode_recomputed_mean_field_response(
+                    background,
+                    reduced_planck_over_h0=planck,
+                    zero_squeeze=True,
+                    reference_gain=2.0,
+                )
+            ),
+            reduced_planck_over_h0=planck,
+            damping=1.0,
+            maximum_iterations=8,
+            fixed_point_relative_tolerance=1.0e-10,
+            runaway_patience=2,
+        )
+
+
+def test_mode_recomputed_mean_field_requires_same_background_reproducibility() -> None:
+    planck = 20.0
+
+    def drifting_response(background, iteration):
+        return _mode_recomputed_mean_field_response(
+            background,
+            reduced_planck_over_h0=planck,
+            zero_squeeze=True,
+            reference_target_e2=1.0 + iteration * 1.0e-4,
+        )
+
+    with pytest.raises(ValueError, match="final response is not reproducible"):
+        solve_squeezed_state_difference_mean_field_fixed_point(
+            _mean_field_background(),
+            recompute_response=drifting_response,
+            reduced_planck_over_h0=planck,
+            fixed_point_relative_tolerance=1.0e-12,
+        )
+
+
+def test_mode_recomputed_mean_field_fingerprint_catches_hidden_response_drift() -> None:
+    planck = 20.0
+
+    def drifting_wronskian(background, iteration):
+        response = _mode_recomputed_mean_field_response(
+            background,
+            reduced_planck_over_h0=planck,
+            zero_squeeze=True,
+        )
+        if iteration == 0:
+            return response
+        return replace(
+            response,
+            maximum_mode_wronskian_residual=(
+                response.maximum_mode_wronskian_residual + 1.0e-6
+            ),
+        )
+
+    with pytest.raises(ValueError, match="final response is not reproducible"):
+        solve_squeezed_state_difference_mean_field_fixed_point(
+            _mean_field_background(),
+            recompute_response=drifting_wronskian,
+            reduced_planck_over_h0=planck,
+            fixed_point_relative_tolerance=1.0e-12,
+        )
+
+
+def test_mode_recomputed_mean_field_rejects_fabricated_source_derivative() -> None:
+    planck = 20.0
+
+    def fabricated_derivative(background, _iteration):
+        response = _mode_recomputed_mean_field_response(
+            background,
+            reduced_planck_over_h0=planck,
+            zero_squeeze=True,
+        )
+        first = replace(
+            response.reference_source_nodes[0],
+            energy_density_d_n=1.0,
+        )
+        return replace(
+            response,
+            reference_source_nodes=(first, *response.reference_source_nodes[1:]),
+        )
+
+    with pytest.raises(ValueError, match="derivative disagrees with its node grid"):
+        solve_squeezed_state_difference_mean_field_fixed_point(
+            _mean_field_background(),
+            recompute_response=fabricated_derivative,
+            reduced_planck_over_h0=planck,
+        )
+
+
+def test_mode_recomputed_mean_field_pressure_tail_enters_ray_gate() -> None:
+    planck = 20.0
+
+    with pytest.raises(ValueError, match="independent tail rectangle"):
+        solve_squeezed_state_difference_mean_field_fixed_point(
+            _mean_field_background(),
+            recompute_response=lambda background, _iteration: (
+                _mode_recomputed_mean_field_response(
+                    background,
+                    reduced_planck_over_h0=planck,
+                    zero_squeeze=True,
+                    reference_pressure_absolute_bound=1.0,
+                )
+            ),
+            reduced_planck_over_h0=planck,
+            fixed_point_relative_tolerance=1.0e-12,
         )
 
 
