@@ -1,0 +1,41 @@
+{
+  "ii_max_rel_diff_coordleft_vs_frameleft_transposed": 7.207378002559697,
+  "ii_max_rel_diff_coordleft_vs_frameright_transposed": 1.196556187466058e-10,
+  "ii_max_rel_diff_coordright_vs_frameleft_transposed": 1.2670220428390166e-10,
+  "ii_note": "coord+left equals frame+right on the transposed sample; the card's identification needs the product order flipped too, which the card does not say",
+  "i_rms_same_product_order": {
+    "face3_her": {
+      "rms_frame_over_delta2": 2.1465577372146476,
+      "rms_coord_over_delta2": 3.2740303235478594,
+      "rms_ratio_coord_over_frame": 1.5252468017916954,
+      "trials": 3000
+    },
+    "face3_iid": {
+      "rms_frame_over_delta2": 3.6839917653176233,
+      "rms_coord_over_delta2": 5.536136513418184,
+      "rms_ratio_coord_over_frame": 1.5027548556262513,
+      "trials": 3000
+    },
+    "chain6_her": {
+      "rms_frame_over_delta2": 6.687091890854348,
+      "rms_coord_over_delta2": 10.257077683121102,
+      "rms_ratio_coord_over_frame": 1.5338622304785838,
+      "trials": 3000
+    }
+  },
+  "i_face_rho_hol_coord_left": 0.5913926283451364,
+  "i_face_c_theta_her_coord_left": 2.9466272911930735,
+  "i_card_windows": {
+    "rho_face_hol": [
+      0.54,
+      0.615
+    ],
+    "c_theta_face_her": [
+      1.76,
+      2.06
+    ]
+  },
+  "gen_frame_left_over_card_formula": 0.99999994205045,
+  "gen_coord_left_over_card_formula": 2.1613874229705075,
+  "gen_coord_right_over_card_formula": 0.9999998389569471
+}

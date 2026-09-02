@@ -533,7 +533,7 @@ questions:
   status: open
   priority: 2
   origin: 'paper/진전_원장.md §2 (2026-09-02 사용자 지시: 원래 CE 프로그램 일괄 카드)'
-  attempts: 1
+  attempts: 2
   consecutive_low: 0
   pivots_tried: []
   notes: '[E-20260902-014] 카드 반례 기각(채택 전) → 재추측: F-02 3단 확장 후보(Q-0008 F-02 사다리 따름정리로): 3-cell 합성 face
@@ -543,3 +543,37 @@ questions:
     결정함수로 하드코딩하지 않는다), 그렇지 않으면 θ_iso 정의로 φ_κ=0.4290007392를 예측하는 대안 경로를 택해야 한다 — 이번 세션에서는 F-02를 세우지 않는다(사용자
     결정 대기).'
   force_pivot: conjecture
+- id: Q-0016
+  title: '경쟁 가설 A — 분할 보존 상속 커널: split 사건이 mismatch 증분을 자식들 사이에 보존 제약(형제 반상관)으로 분배하면 F-02의 조상 커널 κ=AAᵀ가
+    κ_split=A(I−S)Aᵀ 꼴로 바뀌고, Q-spine 깊이 b 블록 표 E[D/n_b²](F-02 4단, 미측정)의 진폭이 F-02 예측(0.754배)과 사전등록 숫자만큼
+    갈린다는 예측식'
+  kind: conjecture
+  status: open
+  priority: 2
+  origin: 'paper/진전_원장.md §2 (2026-09-03 사용자 지시 "다른 가능성도": E-018 커널 법칙의 가정별 경쟁 카드 일괄)'
+  attempts: 1
+  consecutive_low: 0
+  pivots_tried: []
+  notes: ''
+- id: Q-0017
+  title: '경쟁 가설 B — 병합 평균 정렬: 투영 정렬 공리(Q-0010) 없이 merge 사건의 라벨 평균(수축)만으로 공통 계량 attractor가 생기는지 — 세대당 merge
+    비율 q에서 상속 지수 γ(q)가 사전등록 임계 q★에서 부호를 바꾼다는 예측식(사용자 프로그램이 폐기한 "coarse-graining⇒GR 자동"의 정량 재검)'
+  kind: conjecture
+  status: open
+  priority: 2
+  origin: 'paper/진전_원장.md §2 (2026-09-03 사용자 지시 "다른 가능성도": E-018 커널 법칙의 가정별 경쟁 카드 일괄)'
+  attempts: 1
+  consecutive_low: 0
+  pivots_tried: []
+  notes: ''
+- id: Q-0018
+  title: '경쟁 가설 C — 결정론 분할 Δ 분기의 ε★: 라벨 증분이 가우스 등방이 아니라 split 방향에 결정된 tetrad 변위 Δ(방향만 무작위)일 때 ε★²=c_Δ
+    δ⁴의 c_Δ가 10이 아닌 기하 상수로 고정되고, 물리 MC(미측정 결정론 분기)에서 F-02와 사전등록 숫자만큼 갈린다는 예측식'
+  kind: conjecture
+  status: open
+  priority: 2
+  origin: 'paper/진전_원장.md §2 (2026-09-03 사용자 지시 "다른 가능성도": E-018 커널 법칙의 가정별 경쟁 카드 일괄)'
+  attempts: 1
+  consecutive_low: 0
+  pivots_tried: []
+  notes: ''

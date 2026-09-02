@@ -1,0 +1,80 @@
+{
+ "script": "a1_constants",
+ "seed": 424243,
+ "G0": {
+  "matrix": [
+   [
+    2.0,
+    0.0,
+    0.0
+   ],
+   [
+    0.0,
+    2.0,
+    0.0
+   ],
+   [
+    0.0,
+    0.0,
+    2.0
+   ]
+  ],
+  "norm_sq": 12.0,
+  "is_2I": true
+ },
+ "A_M_tensor_from_physics_code": {
+  "T2": 59.99999999997904,
+  "T2_dev_from_60": -2.0961010704922955e-11,
+  "T4": 1.9999999999992497,
+  "T4_dev_from_2": -7.502887200416808e-13,
+  "sum_a_M_aa_maxabs": 2.220446049250313e-16,
+  "M_symmetric_in_ab": 0.0
+ },
+ "B_support": {
+  "max_abs_L_on_antisym_basis": 5.957153355424051e-17,
+  "max_abs_M_antisym_any": 1.9626155733547187e-17,
+  "max_abs_M_identity_any": 5.551115123125783e-17,
+  "max_abs_M_overall_scale": 0.6666666666665692,
+  "claim_L_kills_antisymmetric": true,
+  "claim_M_kills_trace": true
+ },
+ "C_stiefel_C1": {
+  "invariant_theory_solve": [
+   0.06944444444444445,
+   -0.013888888888888888
+  ],
+  "exact_rationals": [
+   "5/72",
+   "-1/72"
+  ],
+  "solve_matches_exact": true,
+  "haar_mc_max_abs_dev": 0.0002585358527944751,
+  "haar_mc_samples": 500000,
+  "trace": 1.0,
+  "eig_mult_0": 1,
+  "eig_mult_1_18": 9,
+  "eig_mult_1_12": 6,
+  "operator_identity_max_dev": 1.3877787807814457e-17
+ },
+ "D_contractions": {
+  "T2_C1": 0.18518518518512078,
+  "T2_C1_minus_5_over_27": -6.439293542825908e-14,
+  "identity_T2C1_minus_(1_18)^2_T2": -6.439293542825908e-14,
+  "mean_floor_maxabs": 2.2551405187698492e-17,
+  "Q4_1": 0.16666666666660415,
+  "Q4_1_minus_1_over_6": -6.250555628639631e-14,
+  "Q4_uniaxial_E00": 0.0,
+  "Q4_symmetric_part_only": 0.16666666666660415,
+  "Q4_1_minus_Q4_sym": 0.0,
+  "orbit_min": 0.1666666666666045,
+  "orbit_max": 0.16666666666661353,
+  "orbit_spread": 9.020562075079397e-15,
+  "c2": 7.901234567898487,
+  "c2_minus_640_over_81": -2.7471358521324873e-12,
+  "c4": -4.345679012344265,
+  "c4_plus_352_over_81": 1.4139800441625994e-12,
+  "c_delta": 3.555555555554222,
+  "c_delta_minus_32_over_9": -1.333155807969888e-12,
+  "c_delta_minus_256Q4_over_12": 4.440892098500626e-16
+ }
+}
