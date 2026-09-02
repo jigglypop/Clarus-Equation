@@ -65,7 +65,7 @@ OUT["A_E_comm_norm2_independent"] = M(k2, 0, 1, 0, 1)
 OUT["B_swapped"] = M(k2, 0, 1, 1, 0)
 OUT["C_self_pairing"] = M(k2, 0, 0, 1, 1)
 OUT["exact_E_tr_S2T2"] = float(np.einsum("ikkj,jlli->", P, P))
-OUT["exact_E_tr_STST"] = float(np.einsum("ikjl,kilj->", P, P))
+OUT["exact_E_tr_STST"] = float(np.einsum("abcd,bcda->", P, P))
 OUT["card_claim_36"] = 36.0
 
 # ---- the law on random / special kappas (exact, no MC)

@@ -1,0 +1,185 @@
+{
+  "reverse_consistency_gate": {
+    "7": {
+      "sampler_used": "SPLIT (the F-01 P_micro)",
+      "trials": 192,
+      "observed_ratio_over_iid": 2.7397682444678186,
+      "F01_prediction": 2.7080128015453204,
+      "F02_prediction": 1.6557465381632106,
+      "rel_dev_of_F01": 0.011726474448118251,
+      "rel_dev_of_F02": 0.6547026862620888,
+      "F02_outside_a_5pct_window": true
+    },
+    "15": {
+      "sampler_used": "SPLIT (the F-01 P_micro)",
+      "trials": 192,
+      "observed_ratio_over_iid": 4.46919903470669,
+      "F01_prediction": 4.503966505838413,
+      "F02_prediction": 3.1639838259374287,
+      "rel_dev_of_F01": -0.007719300551337294,
+      "rel_dev_of_F02": 0.41252271837469023,
+      "F02_outside_a_5pct_window": true
+    }
+  },
+  "reverse_gate_note": "The card records F-02 K1/K3 numbers as a measurement that puts F-01 outside the window. The mirror experiment (same physics renderer, F-01 sampler) puts F-02 outside by a larger margin. The gate is symmetric and therefore carries no evidence about which P_micro is physical: it reports which sampler was coded.",
+  "s_tolerance_K_A2": {
+    "s_min_passing": 0.71,
+    "s_max_passing": 1.0,
+    "n_passing_of_101": 30,
+    "rows_every_10": [
+      {
+        "s": 0.0,
+        "ratio_15": 3.1639838259374287,
+        "slope": 0.2926759103206689,
+        "pass_ratio": false,
+        "pass_slope": false
+      },
+      {
+        "s": 0.1,
+        "ratio_15": 3.287230705972083,
+        "slope": 0.2741796472226888,
+        "pass_ratio": false,
+        "pass_slope": false
+      },
+      {
+        "s": 0.2,
+        "ratio_15": 3.4135937400666507,
+        "slope": 0.2565400836447856,
+        "pass_ratio": false,
+        "pass_slope": false
+      },
+      {
+        "s": 0.3,
+        "ratio_15": 3.5427395013750553,
+        "slope": 0.23978125874397074,
+        "pass_ratio": false,
+        "pass_slope": false
+      },
+      {
+        "s": 0.4,
+        "ratio_15": 3.6743745823512026,
+        "slope": 0.22390079334406102,
+        "pass_ratio": false,
+        "pass_slope": false
+      },
+      {
+        "s": 0.5,
+        "ratio_15": 3.8082408553948386,
+        "slope": 0.20887892636806504,
+        "pass_ratio": false,
+        "pass_slope": false
+      },
+      {
+        "s": 0.6,
+        "ratio_15": 3.9441111417419132,
+        "slope": 0.19468490352221052,
+        "pass_ratio": false,
+        "pass_slope": false
+      },
+      {
+        "s": 0.7000000000000001,
+        "ratio_15": 4.081785323675343,
+        "slope": 0.181281438602077,
+        "pass_ratio": true,
+        "pass_slope": false
+      },
+      {
+        "s": 0.8,
+        "ratio_15": 4.221086898320692,
+        "slope": 0.1686277926629983,
+        "pass_ratio": true,
+        "pass_slope": true
+      },
+      {
+        "s": 0.9,
+        "ratio_15": 4.361859949863386,
+        "slope": 0.15668187162456232,
+        "pass_ratio": true,
+        "pass_slope": true
+      },
+      {
+        "s": 1.0,
+        "ratio_15": 4.503966505838413,
+        "slope": 0.1454016314460059,
+        "pass_ratio": true,
+        "pass_slope": true
+      }
+    ]
+  },
+  "families": {
+    "star_of_chains": {
+      "10": {
+        "k": 3,
+        "ratio": 1.6023489932885904
+      },
+      "26": {
+        "k": 5,
+        "ratio": 1.1846776375377883
+      },
+      "65": {
+        "k": 8,
+        "ratio": 1.0674621989166657
+      },
+      "122": {
+        "k": 11,
+        "ratio": 1.0347941114402448
+      },
+      "257": {
+        "k": 16,
+        "ratio": 1.0161439946059965
+      }
+    },
+    "caterpillar": {
+      "9": {
+        "k": 3,
+        "ratio": 1.6274154589371983
+      },
+      "25": {
+        "k": 5,
+        "ratio": 1.1100188073901989
+      },
+      "64": {
+        "k": 8,
+        "ratio": 1.0178356248839595
+      },
+      "121": {
+        "k": 11,
+        "ratio": 1.004882941582059
+      }
+    }
+  },
+  "cayley_paired_ratio": {
+    "8": {
+      "trials": 3000,
+      "E_paired_ratio": 1.7352796812335916,
+      "se": 0.006946525236540445
+    },
+    "16": {
+      "trials": 3000,
+      "E_paired_ratio": 1.4352744734463316,
+      "se": 0.003986117213544428
+    },
+    "32": {
+      "trials": 3000,
+      "E_paired_ratio": 1.2385560461605067,
+      "se": 0.0025059413263221614
+    },
+    "64": {
+      "trials": 1000,
+      "E_paired_ratio": 1.1268288129055872,
+      "se": 0.002738389573132529
+    },
+    "128": {
+      "trials": 1000,
+      "E_paired_ratio": 1.064439917090711,
+      "se": 0.0018579706315499866
+    }
+  },
+  "qspine_b8_sign": {
+    "trees": 20000,
+    "fraction_D_split_lt_D_f02": 0.01765,
+    "min_paired_ratio": 0.8962204586068762,
+    "mean_paired_ratio": 1.321305608323863,
+    "seed": 424242
+  }
+}

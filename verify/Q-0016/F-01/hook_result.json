@@ -32,10 +32,10 @@
     },
     {
       "type": "identity",
-      "lhs": "(n-1) + (n-1)*(n-2)*(-1/(n-2))**2",
-      "rhs": "(n-1)**2/(n-2)",
+      "lhs": "(m+1) + (m+1)*m*(-1/m)**2",
+      "rhs": "(m+1)**2/m",
       "symbolic": "pass",
-      "max_rel_err": 0.0,
+      "max_rel_err": 1.2606403376388874e-16,
       "numeric": "pass",
       "index": 3
     },
@@ -44,7 +44,7 @@
       "lhs": "(m+1)**2*(1-s)**2/(m+2)**4 + 2*(m+1)*(1-s)**2/(m+2)**4 + (m+1)*(1 - 2*(1-s)/(m+2) + (m+1)*(1-s)/(m+2)**2)**2 + (m+1)*m*(-s/m - 2*(1-s)/(m+2) + (m+1)*(1-s)/(m+2)**2)**2",
       "rhs": "(1-s)*(m + 1/(m+2)**2) + s*(m+1)**2/m - s*(1-s)*(m+1)*(m+4)/((m+2)**2*m)",
       "symbolic": "pass",
-      "max_rel_err": 2.781503630845306e-16,
+      "max_rel_err": 3.45124160204035e-16,
       "numeric": "pass",
       "index": 4
     },
@@ -154,7 +154,7 @@
       "lhs": "-(1 + s/k)/(k+1) + (1-s)/(k+1)",
       "rhs": "-s/k",
       "symbolic": "pass",
-      "max_rel_err": 5.940222736746783e-17,
+      "max_rel_err": 7.938611606369348e-17,
       "numeric": "pass",
       "index": 16
     },
@@ -192,6 +192,31 @@
       "max_rel_err": 6.88500924095337e-06,
       "numeric": "pass",
       "index": 21
+    },
+    {
+      "type": "identity",
+      "lhs": "((k+1) + (k+1)*k*(-s/k))/(k+1)",
+      "rhs": "1 - s",
+      "symbolic": "pass",
+      "max_rel_err": 7.566152497211686e-17,
+      "numeric": "pass",
+      "index": 22
+    },
+    {
+      "type": "identity",
+      "lhs": "(4*n*p*(1-p))**2",
+      "rhs": "4*(4*n**2*p**2*(1-p)**2)",
+      "symbolic": "pass",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 23
+    },
+    {
+      "type": "numeric",
+      "expr": "2465/64 - 2529/64 + 1",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 24
     }
   ],
   "symbolic": "pass",

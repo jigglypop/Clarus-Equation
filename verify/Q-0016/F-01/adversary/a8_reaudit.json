@@ -1,0 +1,74 @@
+{
+  "prereg_values_identical": true,
+  "prereg_windows_identical": true,
+  "prereg_constants_identical": true,
+  "theory_table_b8_identical": true,
+  "git_diff_kill_and_prediction_files": "",
+  "kill_scripts_unmodified": true,
+  "Rsq_symbolic": "1 - s",
+  "Rsq_symbolic_equals_1_minus_s": true,
+  "R_vs_s": [
+    {
+      "s": 0.0,
+      "R_measured": 1.0009687510882792,
+      "R_predicted_sqrt_1_minus_s": 1.0,
+      "abs_err": 0.0009687510882792072,
+      "split_events": 2324,
+      "in_KT_window": false
+    },
+    {
+      "s": 0.25,
+      "R_measured": 0.8677367241661413,
+      "R_predicted_sqrt_1_minus_s": 0.8660254037844386,
+      "abs_err": 0.0017113203817027411,
+      "split_events": 2304,
+      "in_KT_window": false
+    },
+    {
+      "s": 0.5,
+      "R_measured": 0.7083211586030969,
+      "R_predicted_sqrt_1_minus_s": 0.7071067811865476,
+      "abs_err": 0.0012143774165492838,
+      "split_events": 2426,
+      "in_KT_window": false
+    },
+    {
+      "s": 0.71,
+      "R_measured": 0.5385815898732237,
+      "R_predicted_sqrt_1_minus_s": 0.5385164807134505,
+      "abs_err": 6.510915977320231e-05,
+      "split_events": 2306,
+      "in_KT_window": false
+    },
+    {
+      "s": 0.9,
+      "R_measured": 0.3172622718303368,
+      "R_predicted_sqrt_1_minus_s": 0.3162277660168379,
+      "abs_err": 0.0010345058134988983,
+      "split_events": 2369,
+      "in_KT_window": false
+    },
+    {
+      "s": 0.99,
+      "R_measured": 0.1003803980981522,
+      "R_predicted_sqrt_1_minus_s": 0.10000000000000005,
+      "abs_err": 0.0003803980981521571,
+      "split_events": 2269,
+      "in_KT_window": false
+    },
+    {
+      "s": 1.0,
+      "R_measured": 1.4161239940879464e-16,
+      "R_predicted_sqrt_1_minus_s": 0.0,
+      "abs_err": 1.4161239940879464e-16,
+      "split_events": 2265,
+      "in_KT_window": true
+    }
+  ],
+  "R_max_abs_err": 0.0017113203817027411,
+  "KT_window_excludes_s_band_0p71": true,
+  "selftest_stdout": "{\"selftest\": \"ok\", \"split_sampler\": {\"R\": 1.4400821741578076e-16, \"split_events\": 2324, \"increments\": 8025}, \"f02_heritable_sampler\": {\"R\": 1.0009687510882792, \"split_events\": 2324, \"increments\": 8025}}",
+  "selftest_returncode": 0,
+  "not_implemented_stdout": "{\"card\": \"F-01\", \"question\": \"Q-0016\", \"kill\": \"K_T\", \"seed\": 20260902, \"window\": [0.0, 0.1], \"preregistered\": {\"R_split_card\": 0.0, \"R_f02_iid\": 1.0}, \"min_split_events\": 1000, \"status\": \"not_implemented\", \"reason\": \"CE self-recursion renderer not implemented (ladder step 2)\", \"verdict\": null}",
+  "not_implemented_returncode": 0
+}

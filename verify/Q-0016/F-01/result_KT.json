@@ -1,0 +1,18 @@
+{
+  "card": "F-01",
+  "question": "Q-0016",
+  "kill": "K_T",
+  "seed": 20260902,
+  "window": [
+    0.0,
+    0.1
+  ],
+  "preregistered": {
+    "R_split_card": 0.0,
+    "R_f02_iid": 1.0
+  },
+  "min_split_events": 1000,
+  "status": "not_implemented",
+  "reason": "CE self-recursion renderer not implemented (ladder step 2)",
+  "verdict": null
+}

@@ -81,12 +81,25 @@ WINDOWS = {
     "c_theta_face_iid": (2.27, 2.66),
     "delta_ratio_face_her": (0.235, 0.265),
 }
+# revision 2 (2026-09-03, adversary P1): K6 = coordinate-index transport convention (E_u^{-1} E_v, same
+# product order) predicts E theta^2 = (21/2) delta^4 Theta, i.e. every c_theta x sqrt(7/3).  If the kill
+# statistics land in these windows (disjoint from the K1/K4 windows) the card's frame convention is dead.
+# K1-K5 numbers, windows, seed and trials above are unchanged from revision 1.
+K6_COORD_CONVENTION = {
+    "c_theta_face_her": 2.9163333,
+    "c_theta_face_iid": 3.7649701,
+    "c_theta_her_16": 6.1957198,
+    "c_theta_her_32": 6.5427998,
+    "c_theta_her_64": 6.7104956,
+}
+K6_WINDOWS = {k: (round(v * 0.92, 3), round(v * 1.08, 3)) for k, v in K6_COORD_CONVENTION.items()}
+
 ALTERNATIVES = {
     "c_theta_her_*": "F-01 pairing sqrt(3)/2 = 0.866 (any n); iid-kernel values 11.09/21.81/43.27",
     "theta_slope_her": "residual-like 0.997 is INSIDE the window (the claim is equality); sqrt-law 0.53",
     "theta_slope_iid": "residual-like -0.482 (holonomy = residual); perimeter-free 0.0",
-    "rho_face_hol": "residual unsigned sqrt(5)/3 = 0.745; residual signed (+,+,-) 3.543; F-01 1.0",
-    "c_theta_face_her": "F-01 0.866; signed-boundary pairing 0.273 (pilot); iid-universal 2.465",
+    "rho_face_hol": "residual unsigned sqrt(5)/3 = 0.745; F-01 1.0 (convention-invariant: cannot replace K6)",
+    "c_theta_face_her": "F-01 0.866; iid-universal 2.465; coordinate convention 2.916 (K6)",
     "delta_ratio_face_her": "O(delta) holonomy 0.5",
 }
 
@@ -178,6 +191,18 @@ def verdicts(stats: dict) -> dict:
                 "window": [low, high],
                 "inside": bool(low <= value <= high),
             }
+    k6 = {}
+    for name, (low, high) in K6_WINDOWS.items():
+        if name in stats:
+            value = float(stats[name])
+            k6[name] = {
+                "value": value,
+                "coord_convention_value": K6_COORD_CONVENTION[name],
+                "window": [low, high],
+                "inside_coord_window": bool(low <= value <= high),
+            }
+    if k6:
+        out["K6_coord_convention"] = {"triggered": any(v["inside_coord_window"] for v in k6.values()), "per_stat": k6}
     return out
 
 

@@ -1,0 +1,169 @@
+{
+  "1_exact_generator_assembly": {
+    "3": {
+      "abs_gap": 1.6634831361019505e-15,
+      "rel_gap": 3.6027383071178957e-16,
+      "generator_is_antisymmetric": 0.0,
+      "bch_collapse_abs_gap": 2.5133742693021536e-16
+    },
+    "4": {
+      "abs_gap": 1.859416423549057e-15,
+      "rel_gap": 6.541574606280395e-16,
+      "generator_is_antisymmetric": 0.0,
+      "bch_collapse_abs_gap": 8.130062465403937e-16
+    },
+    "5": {
+      "abs_gap": 4.6497009778816265e-15,
+      "rel_gap": 4.2394721741395926e-16,
+      "generator_is_antisymmetric": 0.0,
+      "bch_collapse_abs_gap": 1.1102230246251565e-15
+    },
+    "7": {
+      "abs_gap": 4.534279142523387e-15,
+      "rel_gap": 5.010240249997241e-16,
+      "generator_is_antisymmetric": 0.0,
+      "bch_collapse_abs_gap": 1.056171682913856e-15
+    }
+  },
+  "2_recovers_limits": {
+    "pure_gauge_theta": 5.0876810486276e-16,
+    "identical_labels_theta": 0.0,
+    "two_cell_loop_theta": 0.0,
+    "single_transport_angle_minus_alpha": 0.0,
+    "gauge_times_common_tetrad_theta": 0.0,
+    "delta_ratio_single_sample": 0.24903221592609673
+  },
+  "3_parity": {
+    "E_norm2_selfdual": 18.026624275954756,
+    "E_norm2_antiselfdual": 18.03294939044879,
+    "E_norm2_total": 36.059573666403544,
+    "ratio_plus_over_minus": 0.9996492468116512,
+    "half_of_total": 18.029786833201772,
+    "trials": 200000
+  },
+  "4_isserlis_side": {
+    "E_tr_S2T2": 25.0,
+    "E_tr_STST": 7.0,
+    "card_verify3": "2*(5/2)^2*4 - 2*7 = 36",
+    "assembled": 36.0
+  },
+  "5_preregistration_table": {
+    "c_theta_her_16": {
+      "theory": 4.0560507,
+      "window": [
+        3.73,
+        4.38
+      ],
+      "window_centre": 4.055,
+      "centre_minus_theory": -0.001050700000000404,
+      "half_width_rel": 0.08012720353816088,
+      "pilot": null,
+      "pilot_inside": null,
+      "pilot_dev_rel": null
+    },
+    "c_theta_her_32": {
+      "theory": 4.2832679,
+      "window": [
+        3.94,
+        4.63
+      ],
+      "window_centre": 4.285,
+      "centre_minus_theory": 0.0017320999999999032,
+      "half_width_rel": 0.08054597752337647,
+      "pilot": null,
+      "pilot_inside": null,
+      "pilot_dev_rel": null
+    },
+    "c_theta_her_64": {
+      "theory": 4.3930506,
+      "window": [
+        4.04,
+        4.74
+      ],
+      "window_centre": 4.390000000000001,
+      "centre_minus_theory": -0.003050599999999015,
+      "half_width_rel": 0.07967128810216757,
+      "pilot": null,
+      "pilot_inside": null,
+      "pilot_dev_rel": null
+    },
+    "theta_slope_her": {
+      "theory": 1.0543077,
+      "window": [
+        0.95,
+        1.15
+      ],
+      "window_centre": 1.0499999999999998,
+      "centre_minus_theory": -0.0043077000000002474,
+      "half_width_rel": 0.09484897056144043,
+      "pilot": null,
+      "pilot_inside": null,
+      "pilot_dev_rel": null
+    },
+    "theta_slope_iid": {
+      "theory": 0.5,
+      "window": [
+        0.4,
+        0.6
+      ],
+      "window_centre": 0.5,
+      "centre_minus_theory": 0.0,
+      "half_width_rel": 0.19999999999999996,
+      "pilot": null,
+      "pilot_inside": null,
+      "pilot_dev_rel": null
+    },
+    "rho_face_hol": {
+      "theory": 0.5773503,
+      "window": [
+        0.54,
+        0.615
+      ],
+      "window_centre": 0.5775,
+      "centre_minus_theory": 0.00014970000000003036,
+      "half_width_rel": 0.06495190181766594,
+      "pilot": 0.5646202445828142,
+      "pilot_inside": true,
+      "pilot_dev_rel": -0.022049101589079887
+    },
+    "c_theta_face_her": {
+      "theory": 1.9091883,
+      "window": [
+        1.76,
+        2.06
+      ],
+      "window_centre": 1.9100000000000001,
+      "centre_minus_theory": 0.0008117000000000818,
+      "half_width_rel": 0.07856742051059082,
+      "pilot": 1.9037058512651062,
+      "pilot_inside": true,
+      "pilot_dev_rel": -0.0028716123678811023
+    },
+    "c_theta_face_iid": {
+      "theory": 2.4647515,
+      "window": [
+        2.27,
+        2.66
+      ],
+      "window_centre": 2.465,
+      "centre_minus_theory": 0.0002484999999996518,
+      "half_width_rel": 0.07911548081013443,
+      "pilot": 2.471693541518498,
+      "pilot_inside": true,
+      "pilot_dev_rel": 0.0028165279617429896
+    },
+    "delta_ratio_face_her": {
+      "theory": 0.25,
+      "window": [
+        0.235,
+        0.265
+      ],
+      "window_centre": 0.25,
+      "centre_minus_theory": 0.0,
+      "half_width_rel": 0.06000000000000005,
+      "pilot": 0.24851983605588582,
+      "pilot_inside": true,
+      "pilot_dev_rel": -0.005920655776456729
+    }
+  }
+}

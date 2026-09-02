@@ -1,0 +1,89 @@
+{
+  "1_exact_generator_identities": {
+    "3": {
+      "frame_minus_shape_formula": 1.692862592547962e-15,
+      "coord_minus_predicted_formula": 1.428266430710657e-15,
+      "norm_ratio_coord_over_frame": 0.8302247808430008
+    },
+    "4": {
+      "frame_minus_shape_formula": 2.286089127109703e-15,
+      "coord_minus_predicted_formula": 1.8038988979531736e-15,
+      "norm_ratio_coord_over_frame": 1.4146205977821553
+    },
+    "6": {
+      "frame_minus_shape_formula": 3.833084183753514e-15,
+      "coord_minus_predicted_formula": 4.6257812371663175e-15,
+      "norm_ratio_coord_over_frame": 1.685256892830855
+    }
+  },
+  "2_structure_constants": {
+    "A_sym_E_comm_norm2": 36.0,
+    "A_asym_E_comm_norm2": 12.0,
+    "note": "card constant 36 (shape channel); antisymmetric channel constant"
+  },
+  "3_two_conventions_exact": {
+    "face_her": {
+      "Theta": 1.0,
+      "E_theta2_frame_over_delta4": 4.5,
+      "E_theta2_coord_over_delta4": 10.5,
+      "frame_coefficient_over_Theta": 4.5,
+      "coord_coefficient_over_Theta": 10.5,
+      "rms_ratio_coord_over_frame": 1.5275252316519468
+    },
+    "face_iid": {
+      "Theta": 3.0,
+      "E_theta2_frame_over_delta4": 13.5,
+      "E_theta2_coord_over_delta4": 31.5,
+      "frame_coefficient_over_Theta": 4.5,
+      "coord_coefficient_over_Theta": 10.5,
+      "rms_ratio_coord_over_frame": 1.5275252316519468
+    },
+    "chain_her_6": {
+      "Theta": 10.0,
+      "E_theta2_frame_over_delta4": 45.0,
+      "E_theta2_coord_over_delta4": 105.0,
+      "frame_coefficient_over_Theta": 4.5,
+      "coord_coefficient_over_Theta": 10.5,
+      "rms_ratio_coord_over_frame": 1.5275252316519468
+    },
+    "iid_6": {
+      "Theta": 6.0,
+      "E_theta2_frame_over_delta4": 27.0,
+      "E_theta2_coord_over_delta4": 63.0,
+      "frame_coefficient_over_Theta": 4.5,
+      "coord_coefficient_over_Theta": 10.5,
+      "rms_ratio_coord_over_frame": 1.5275252316519468
+    }
+  },
+  "3_note": "frame 9/2 vs coord 21/2 ; ratio sqrt(7/3) = 1.527525",
+  "4_card_numbers_under_coord_convention": {
+    "c_theta_face_her": 2.9163333142835377,
+    "card_window_K4": [
+      1.76,
+      2.06
+    ],
+    "c_theta_face_iid": 3.7649701194033405,
+    "card_window_K4_iid": [
+      2.27,
+      2.66
+    ],
+    "c_theta_chain_limit": 6.87386354243376,
+    "c_theta_her_16": 6.195719785109541,
+    "card_window_K1_16": [
+      3.73,
+      4.38
+    ],
+    "rho_face_hol_unchanged": 0.5773502691896258,
+    "measured_a2_coord_face_her": 2.9466272911930735,
+    "measured_a2_rms_ratio": [
+      1.5252468017916954,
+      1.5027548556262513,
+      1.5338622304785838
+    ]
+  },
+  "5_rotation_only_labels": {
+    "frame_generator_norm": 7.28550816809042e-16,
+    "coord_generator_norm": 2.795694122412367,
+    "card_claim": "asym part is exactly gauge -> frame generator must vanish"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "martingale": {
+    "tree": "complete binary d=2 (n=7)",
+    "iid_mean": 0.0006755232430772105,
+    "iid_sd": 0.7083412575145064,
+    "iid_se_of_mean": 0.001293248283840903,
+    "split_mean": 3.016024568402072e-20,
+    "split_sd": 8.987999409839762e-17,
+    "split_max_abs": 8.881784197001252e-16,
+    "verdict": "F-02 iid increments ALREADY give E[child label | parent] = parent label, i.e. the tree-martingale property in expectation. F-01 strengthens it to an almost-sure pathwise identity. Section 11.6 lambda = D(1-m) = 1 is first-moment criticality of the offspring COUNT, so it does not by itself select the pathwise version."
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "card": "Q-0018 F-01",
+  "mode": "card_audit",
+  "adversary_model": "opus",
+  "date": "2026-09-03",
+  "counterexamples": [],
+  "defects": [
+    {"id": "P1-a", "where": "predicts P4 observable text", "what": "denominator 256 instead of D_coh(16)=64; literal implementation gives c_coh_16=1.4321 and falsely fires K3", "fix": "text only; value 464/81 and window unchanged"},
+    {"id": "P1-b", "where": "free_parameters / dof", "what": "12 pre-registered numbers are fixed by 2 constants (lambda9, Q4); Q4 already measured by check H, so K1-K5 carry ~3 independent new numbers"},
+    {"id": "P1-c", "where": "predicts P7 (c_chain_2)", "what": "B_chain(2)=diag(0,1/2) is a pure self term, identical in leading order to check H/P12; already_observed should be true"},
+    {"id": "P1-d", "where": "c2 = 10*(8/9)^2", "what": "(8/9) is the pure-gauge share of the assumed label second moment, not a geometric constant; the c-observable is not gauge invariant"},
+    {"id": "P1-e", "where": "kill K1-K5", "what": "all kills are internal to a simulation that implements the card axiom; the axiom itself is unfalsifiable by them"},
+    {"id": "P2-a", "where": "consistency gate G1", "what": "chain n=2 physical CV measured 3.19*delta (1.66% at delta=0.005), not the 0.5% written in the card"},
+    {"id": "P2-b", "where": "ladder step 2", "what": "third contraction coefficient is (trB)^2 - sum_u B_uu^2, not (trB)^2 (immaterial, Schur kills it)"},
+    {"id": "P2-c", "where": "K5", "what": "K5 window [37.48,56.22] overlaps F-02 K1 window [26.0,39.1] on 8.6% of its width; the K5 slope window contains the gaussian value 0.5302"},
+    {"id": "P2-d", "where": "recovers[2] / step 6", "what": "the two appearances of 32/9 use normalisations differing by 4; both equal Q4/12 by the definition c_delta=256Q4/12, so it is not an independent cross-check"}
+  ],
+  "independent_reproduction": {
+    "method": "M_ab rebuilt by 5-point Richardson differentiation of geometric_self_dual_triple + optimal_internal_alignment (physics code), not the card sympy path",
+    "G0_norm_sq": 12.0, "T2": 59.99999999997904, "T4": 1.9999999999992497,
+    "sum_a_M_aa": 2.22e-16, "L_on_antisymmetric": 5.96e-17, "M_on_identity": 5.55e-17,
+    "C1_entries": [0.06944444444444445, -0.013888888888888888],
+    "C1_haar_mc_max_dev": 0.0002585358527944751,
+    "T2_C1": 0.18518518518512078, "schur_floor": 2.26e-17,
+    "Q4": 0.16666666666660415, "Q4_orbit_spread": 9.02e-15, "Q4_uniaxial_E00": 0.0,
+    "Q4_symmetric_part_equals_Q4": 0.0,
+    "c2": 7.901234567898487, "c4": -4.345679012344265, "c_delta": 3.555555555554222
+  },
+  "physical_probe_adversary_seeds": {
+    "note": "NOT the pre-registered run (seeds 424243-424251, independent code); every K1-K4 statistic lands inside the card window",
+    "chain_n16": {"c": 7.1475, "se": 0.0877, "window": [6.618, 7.5705], "alt_C_is_I16": 8.8033, "gauss": 10.0},
+    "iid_n16": {"c": 3.8066, "se": 0.0418, "window": [3.6358, 4.0185]},
+    "iid_n8": {"c": 4.0988, "se": 0.0427, "window": [3.8938, 4.3037]},
+    "coh_n16": {"c": 5.7177, "se": 0.0568, "window": [5.442, 6.0148], "alt_kernel_diag": 7.6296},
+    "chain_n2": {"c": 3.55472, "se": 0.00108, "window": [3.3778, 3.7333]},
+    "z_floor_max": 2.5630053197627447,
+    "two_cell_antisym_only_eps_over_d2_at_d0.001": 1.8857781740546517e-06,
+    "two_cell_sym_over_shear_ratio": 2.0002166794379113,
+    "delta_truncation_chain16_c": {"0.02": 6.9036, "0.005": 6.8774, "0.00125": 6.8769},
+    "min_det_tetrad_at_d0.02": 0.9156997261406167
+  },
+  "cayley_k5": {"E_S_gen_brute_vs_meir_moon_rel_err_n6": 2.44e-14,
+                "E_S_mc_z_n128": 0.52, "ratio_128_det": 46.85038567003285,
+                "ratio_128_gauss": 32.55366798958406, "gauss_inside_K5_window": false},
+  "gauge_family": {"note": "same visible deformation, gauge part stripped and renormalised to the same total norm",
+                   "Xi_prime": "2*sqrt(2)*(n m^T + m n^T)",
+                   "c2": 31.60493827159394, "c_delta": 14.222222222222221},
+  "status": "pass",
+  "severity": "P1",
+  "recommendation": "revise"
+}

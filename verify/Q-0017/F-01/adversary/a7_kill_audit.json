@@ -1,0 +1,130 @@
+{
+ "prereg_vs_predictions_json": {
+  "k1_slope_q1_f02grid": {
+   "card_script": 0.1973,
+   "predictions_json": 0.19729680342220315,
+   "abs_diff": 3.1965777968490094e-06
+  },
+  "k2_slope_q1_plateaugrid": {
+   "card_script": 0.1544,
+   "predictions_json": 0.154388098909619,
+   "abs_diff": 1.1901090381016832e-05
+  },
+  "k2_ratio_1024_q1_over_iid": {
+   "card_script": 34.516,
+   "predictions_json": 34.51575271039235,
+   "abs_diff": 0.0002472896076497477
+  },
+  "k2_ratio_1024_q05_over_q1": {
+   "card_script": 1.667,
+   "predictions_json": 1.6665354979912896,
+   "abs_diff": 0.00046450200871039904
+  },
+  "k3_slope_L2_q1": {
+   "card_script": -0.3789,
+   "predictions_json": -0.3789010215334116,
+   "abs_diff": 1.0215334115826202e-06
+  },
+  "k5_slope_L1_q1": {
+   "card_script": -0.0474,
+   "predictions_json": -0.047418743958779624,
+   "abs_diff": 1.8743958779626757e-05
+  }
+ },
+ "window_vs_formula": {
+  "k1_slope_q1_f02grid": {
+   "window": [
+    0.1,
+    0.3
+   ],
+   "prereg_finite_size_value": 0.1973,
+   "formula_asymptotic": "Cayley d_tree=2 -> 0",
+   "formula_value": 0.0,
+   "formula_value_inside_window": false,
+   "alternative": "q=0 exact 0.5302"
+  },
+  "k2_slope_q1_plateaugrid": {
+   "window": [
+    0.05,
+    0.25
+   ],
+   "prereg_finite_size_value": 0.1544,
+   "formula_asymptotic": "Cayley d_tree=2 -> 0",
+   "formula_value": 0.0,
+   "formula_value_inside_window": false,
+   "alternative": "q=0 exact 0.5061 / iid -0.50"
+  },
+  "k2_ratio_1024_q1_over_iid": {
+   "window": [
+    27.6,
+    41.4
+   ],
+   "prereg_finite_size_value": 34.516,
+   "formula_asymptotic": "no closed prediction (amplitude)",
+   "formula_value": null,
+   "formula_value_inside_window": null,
+   "alternative": "q=0 262.86 / aligned 1.0"
+  },
+  "k2_ratio_1024_q05_over_q1": {
+   "window": [
+    1.42,
+    1.92
+   ],
+   "prereg_finite_size_value": 1.667,
+   "formula_asymptotic": "S_star = 2/q mechanism -> 2.0",
+   "formula_value": 2.0,
+   "formula_value_inside_window": false,
+   "alternative": "no mechanism 1.0"
+  },
+  "k3_slope_L2_q1": {
+   "window": [
+    -0.48,
+    -0.28
+   ],
+   "prereg_finite_size_value": -0.3789,
+   "formula_asymptotic": "d_tree=3 -> -1/3",
+   "formula_value": -0.3333333333333333,
+   "formula_value_inside_window": true,
+   "alternative": "q=0 +0.2695 / floor -0.50"
+  },
+  "k5_slope_L1_q1": {
+   "window": [
+    -0.15,
+    0.05
+   ],
+   "prereg_finite_size_value": -0.0474,
+   "formula_asymptotic": "cone d_tree=2 -> 0",
+   "formula_value": 0.0,
+   "formula_value_inside_window": true,
+   "alternative": "q=0 0.504"
+  },
+  "k4_gamma_cone_q_independence": {
+   "window": [
+    -0.15,
+    0.15
+   ],
+   "prereg_finite_size_value": 0.0,
+   "formula_asymptotic": "0 for every q>0",
+   "formula_value": 0.0,
+   "formula_value_inside_window": true,
+   "alternative": "q-dependent sign change +-0.3",
+   "already_seen_smoke_offset77": [
+    -0.007,
+    -0.04,
+    -0.027
+   ]
+  }
+ },
+ "per_trial_seconds_cayley": {
+  "128": 0.09655916690826416,
+  "512": 0.4057900905609131,
+  "1024": 0.7904290358225504,
+  "1496": 1.2775745391845703
+ },
+ "estimated_minutes": {
+  "k1": 0.7982224464416504,
+  "k2_min": 6.551986397637261,
+  "k3_min": 6.422032442959872,
+  "k5_min": 3.252286136978202
+ }
+}

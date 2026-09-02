@@ -1,0 +1,84 @@
+{
+  "1_theta_computable_with_gram_disabled": {
+    "ok": true,
+    "theta": 0.00023679326337456012
+  },
+  "1_residual_uses_gram": true,
+  "1_theta_over_eps_per_sample": {
+    "mean": 2.1901116587024743,
+    "std_over_mean": 0.46630494644038,
+    "min": 0.24949757531945135,
+    "max": 8.034874734061514,
+    "corr_theta2_eps2": 0.4671167547984741,
+    "note": "F-01 had a fixed ratio to 4e-16; here the per-sample ratio has O(1) spread"
+  },
+  "2_exponents": {
+    "card_pairing_theta_extensive_vs_eps_intensive": {
+      "her": [
+        1.0543076790551675,
+        0.9967339541389985
+      ],
+      "iid": [
+        0.49999999999999983,
+        -0.4824026680271503
+      ],
+      "card_story": "her: equal (1.054 vs 0.997); iid: split (+0.500 vs -0.482)"
+    },
+    "both_extensive_theta_vs_n_times_eps": {
+      "her": [
+        1.0543076790551675,
+        1.996733954138998
+      ],
+      "iid": [
+        0.49999999999999983,
+        0.5175973319728493
+      ]
+    },
+    "both_intensive_theta_over_n_vs_eps": {
+      "her": [
+        0.054307679055167216,
+        0.9967339541389985
+      ],
+      "iid": [
+        -0.4999999999999997,
+        -0.4824026680271503
+      ]
+    },
+    "note": "under either like-for-like normalisation the card's story inverts: iid agrees, her splits"
+  },
+  "3_face_replication_seed_777001": {
+    "trials": 6000,
+    "theta_her_over_delta2": 2.112882255885355,
+    "theta_her_se_rel": 0.006219529975057974,
+    "theta_iid_over_delta2": 3.693490569721663,
+    "predicted_her_3_over_sqrt2": 2.1213203435596424,
+    "predicted_iid_sqrt13p5": 3.6742346141747673,
+    "rho_face_hol": 0.5720556790387525,
+    "rho_predicted": 0.5773502691896258,
+    "c_theta_face_her": 1.8996816867551605,
+    "c_theta_face_her_predicted": 1.9091883092036785,
+    "c_theta_face_iid": 2.477964146473564,
+    "c_theta_face_iid_predicted": 2.4647515087732477,
+    "eps_her_over_delta2": 1.112229628056457,
+    "eps_her_predicted_10_over_9": 1.1111111111111112,
+    "pilot_values": {
+      "rho": 0.5646202445828142,
+      "c_her": 1.9037058512651062,
+      "c_iid": 2.471693541518498
+    }
+  },
+  "4_timing": {
+    "per_call": {
+      "16": {
+        "holonomy_s": 0.0004604800007655285,
+        "residual_s": 0.010200845000508708
+      },
+      "64": {
+        "holonomy_s": 0.001354575000004843,
+        "residual_s": 0.044779425000888294
+      }
+    },
+    "estimated_chain_mode_seconds": 87.23761920332907,
+    "estimated_face_mode_seconds": 12.61847347319126
+  }
+}
