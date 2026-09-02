@@ -79,3 +79,5 @@ tools: Glob, Grep, Read, Bash
 - [ ] 12-routes.md가 COMPLETE 또는 SKIPPED(사유)로 닫혔다
 - [ ] routes 후보마다 dof 수, target-aware 여부, 죽이는 반증 시험이 있고 승격·닫힘 언어가 없다
 - [ ] 두 파일 모두 Status 줄이 상단에 있다
+
+routes 후보는 `../harnesses/goal_pursuit.md`의 주차장 후보다. 오케스트레이터 판정 없이 후보를 구현·확장하지 않으며, 표적과 무관한 경로는 한 줄로만 남긴다.

@@ -1,23 +1,24 @@
 # CE Codex 하네스
 
-현재 하네스는 단일 저장소 direct 모드다. 제거된 `reality_stone`을 요구하지 않고, 자동 CE_RUN 라우팅이나 새 `_workspace/` 생성을 하지 않는다. 검증은 `.codex/hooks/python.cmd doctor|harness|source|python|pytest`로 실행하며 최신 결과는 루트 `paper/` 정본을 직접 갱신한다. run core는 기존 실행 증거 판독을 위한 과거 호환 표면이다.
+현재 하네스는 단일 저장소 direct 모드다. 제거된 `reality_stone`을 요구하지 않고, 자동 CE_RUN 라우팅을 하지 않는다. 검증은 `.codex/hooks/python.cmd doctor|harness|source|python|pytest|links|lint`로 실행하며 최신 결과는 루트 `paper/` 정본을 직접 갱신한다. run core는 기존 실행 증거 판독을 위한 과거 호환 표면이다.
 
-Clarus-Equation 연구용 프로젝트 로컬 Codex 설정이다. 일반 작업은 빠른 direct 경로를 쓰고, 연구 요청은 필요한 source·math·audit 레인만 독립화한다.
+`paper/`에는 결과만 쓴다. 시행착오·중간 계산·아이디어 주차장은 `_workspace/` 노트(파일 20개·48KB·640KB·21일 상한, `harness`가 강제)에 둔다. 연구 현황판이자 유일한 표적은 `paper/진전_원장.md` §2다. 진전 정의는 `harnesses/closure_budget.md`, 매몰 방지는 `harnesses/goal_pursuit.md`가 소유한다. `.claude/`는 2026-09-02 v2부터 독립 설계(연구 루프 5 에이전트, `ledger/` yaml 원장)이며 `.codex`와 미러 관계가 아니다. 두 하네스가 공유하는 것은 `hooks/python.cmd`·`paper_links.py`·`paper_lint.py`·`goal_reminder.py`와 `harnesses/` 계약뿐이다.
 
 ## 구조
 
 ```
-../AGENTS.md         프로젝트 공통 지침(있는 경우)
+../AGENTS.md         프로젝트 공통 지침
 AGENTS.md            `.codex/` 작업에만 추가되는 짧은 라우팅 규칙
 config.toml          low effort 기본값과 최대 3개 병렬 레인
-prompts/             CE 명령 프롬프트 7종
-agents/              독립 연구·집필 역할 카드
-skills/              단일 책임 CE 스킬
+prompts/             CE 명령 프롬프트 8종 (ce-research, ce-light, ce-status, ce-gc, ce-audit, ce-dim, ce-validate, ce-explain-plan)
+agents/              독립 연구·집필 역할 카드 7종
+skills/              단일 책임 CE 스킬 8종
 skills/ce-explanation-planner/  목표 정렬을 감사하고 수학·물리 판단을 채팅으로 설명하는 증명 계획 스킬
-skills/ce-research/core/   기존 run 판독용 Rust 호환 코어
-harnesses/           수치·증거 하네스 계약 — backend parity(Rust/CUDA), 실측 교정 루프, 뇌 증거 사다리
+skills/ce-research/core/   기존 run 판독용 Rust 호환 코어 (은퇴)
+harnesses/           수치·증거 하네스 계약 — closure_budget(닫힘 예산), goal_pursuit(매몰 방지), explanation_first_planner, empirical_calibration_loop, curvature_backend_parity, brain_evidence_ladder, real_brain_equation_discovery_loop
 hooks.json           빈 자동 lifecycle hook 등록(의도된 상태)
-hooks/               native Windows Python·저장소 계약·payload 실행기
+hooks/               native Windows Python·저장소 계약·payload 실행기·paper 링크 검사기(paper_links)·독자 lint(paper_lint)·표적 주입(goal_reminder)
+../_workspace/       시행착오 노트. README가 상한을 정하고 harness가 강제
 ```
 
 ## 진입과 검증
@@ -29,12 +30,16 @@ hooks/               native Windows Python·저장소 계약·payload 실행기
 .codex\hooks\python.cmd harness
 .codex\hooks\python.cmd source <changed-python-paths>
 .codex\hooks\python.cmd pytest <focused-test-paths> -q
+.codex\hooks\python.cmd links [--strict]
 ```
 
 - `doctor`는 허용된 interpreter와 핵심 dependency를 보고한다.
 - `harness`는 `paper/` 전환, 이전 경로 잔존, 제거된 런타임 import, 필수 진입점과 AGENTS context budget을 검사한다.
 - `source`는 실행 없이 AST를 파싱한다.
 - `pytest`는 cache를 끄고 저장소 밖의 고유 임시 디렉터리를 사용한다.
+- `links`는 `paper/`의 상대 링크·헤딩/HTML 앵커·고아 문서를 검사한다. 깨진 파일 링크만 실패이고, `--strict`면 깨진 앵커도 실패다. 문서 무결성 검사일 뿐 주장의 지위와 무관하다.
+- `lint`는 `paper/`의 과정 서술 표현과 영어 명사 비율(상한 0.25)을 파일별로 보고한다. 권고용이며 `--strict`에서만 실패한다.
+- `harness`는 `_workspace/` 상한(파일 수·크기·무활동 21일·`.md`만)도 검사한다.
 
 수학·물리 판단은 `ce-explanation-planner`의 목표 계약·계획 설명·목표 이탈
 감사·LaTeX·비유·지위·다음 증명 의무 계약을 따른다. 구조 검사는
@@ -60,5 +65,6 @@ hooks/               native Windows Python·저장소 계약·payload 실행기
 
 | 항목 | 현재 경계 | 해소 조건 |
 |---|---|---|
-| `.claude/` lifecycle 설정 | Codex의 빈 자동 훅 정책과 별도 표면 | 두 provider 하네스를 함께 정비하는 요청 |
-| retired CE run core | 기존 `_workspace/` 판독 호환만 유지 | 과거 run 호환 폐기 또는 마이그레이션 요청 |
+| retired CE run core | 기존 `_workspace/` 판독 호환만 유지. 저장소에 `_workspace/`가 없으므로 실사용 없음 | 과거 run 호환 폐기 요청 |
+| `paper/` 구조 부채 | 6_최신_연구 26–35장이 본선에서 벗어난 부록이며 제목이 영어 명사열, 양자 원장이 414KB 단일 파일, 고아 문서 23건 | `REDESIGN_2026-09.md` Phase 2의 사용자 확인 |
+| `.codex` 안의 `ce-*` 역할 카드·스킬 | Codex 전용. Claude 쪽 미러는 2026-09-02에 삭제됨 | Codex 하네스도 5역할 구조로 줄일지 사용자 결정 |

@@ -62,3 +62,5 @@ tools: Glob, Grep, Read, Edit, Write, Bash
 - [ ] 전체 suite가 필요 없었다면 실행하지 않았다고 명시했다
 - [ ] 하네스 소유 임시 경로와 신규 cache가 남지 않았다
 - [ ] Git 변경 경로와 검증 결과를 main에 인계했고 직접 stage/commit/push하지 않았다
+
+감사로 승인된 범위 밖의 코드를 함께 고치지 않는다. 발견한 개선점은 `_workspace/` 노트 주차장에 한 줄로 남긴다(`../harnesses/goal_pursuit.md`).

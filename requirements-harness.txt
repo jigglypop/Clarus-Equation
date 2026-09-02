@@ -1,0 +1,6 @@
+# .claude 연구 하네스 의존성 (고정). 정책 허용 시스템 Python에 관리자가 설치한다.
+# 하네스는 자동 설치하지 않는다. sympy가 없으면 기호검증은 skipped로 강등된다.
+pyyaml>=6.0
+sympy>=1.12
+numpy>=1.26
+pytest>=8.0

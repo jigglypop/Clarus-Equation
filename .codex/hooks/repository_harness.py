@@ -52,6 +52,12 @@ REQUIRED_PATHS = (
     Path(".codex/agents/ce-explanation-planner.toml"),
     Path(".codex/prompts/ce-explain-plan.md"),
     Path(".codex/harnesses/explanation_first_planner.md"),
+    Path(".codex/hooks/paper_links.py"),
+    Path(".codex/harnesses/closure_budget.md"),
+    Path(".codex/harnesses/goal_pursuit.md"),
+    Path(".codex/hooks/goal_reminder.py"),
+    Path(".codex/hooks/paper_lint.py"),
+    Path("_workspace/README.md"),
 )
 REQUIRED_AGENT_REFERENCES = (
     "paper/README.md",
@@ -156,6 +162,48 @@ def _instruction_budget(root: Path) -> tuple[int | None, int]:
     return maximum, total
 
 
+WORKSPACE_ROOT = Path("_workspace")
+WORKSPACE_MAX_FILES = 20
+WORKSPACE_MAX_FILE_BYTES = 48 * 1024
+WORKSPACE_MAX_TOTAL_BYTES = 640 * 1024
+WORKSPACE_MAX_IDLE_DAYS = 21
+
+
+def check_workspace_budget(root: Path = REPO_ROOT) -> list[str]:
+    """Keep _workspace/ small: flat, Markdown only, bounded size and age."""
+
+    import time
+
+    workspace = root / WORKSPACE_ROOT
+    violations: list[str] = []
+    if not workspace.is_dir():
+        return violations
+    notes = [p for p in workspace.iterdir() if p.name != "README.md"]
+    total = 0
+    now = time.time()
+    for entry in sorted(notes):
+        rel = entry.relative_to(root).as_posix()
+        if entry.is_dir():
+            violations.append(f"workspace subdirectory not allowed: {rel}/")
+            continue
+        if entry.suffix != ".md":
+            violations.append(f"workspace non-Markdown file not allowed: {rel}")
+            continue
+        size = entry.stat().st_size
+        total += size
+        if size > WORKSPACE_MAX_FILE_BYTES:
+            violations.append(f"workspace note exceeds {WORKSPACE_MAX_FILE_BYTES // 1024} KB: {rel} ({size} bytes)")
+        idle_days = (now - entry.stat().st_mtime) / 86400
+        if idle_days > WORKSPACE_MAX_IDLE_DAYS:
+            violations.append(f"workspace note idle {idle_days:.0f} days (absorb or delete): {rel}")
+    files = [p for p in notes if p.is_file() and p.suffix == ".md"]
+    if len(files) > WORKSPACE_MAX_FILES:
+        violations.append(f"workspace holds {len(files)} notes > {WORKSPACE_MAX_FILES}")
+    if total > WORKSPACE_MAX_TOTAL_BYTES:
+        violations.append(f"workspace total {total} bytes > {WORKSPACE_MAX_TOTAL_BYTES}")
+    return violations
+
+
 def check_repository(root: Path = REPO_ROOT) -> list[str]:
     root = root.resolve()
     violations: list[str] = []
@@ -164,6 +212,7 @@ def check_repository(root: Path = REPO_ROOT) -> list[str]:
     retired_root = root / RETIRED_DOCUMENT_ROOT
     if not paper_root.is_dir():
         violations.append(f"missing canonical paper root: {CANONICAL_PAPER_ROOT}/")
+    violations.extend(check_workspace_budget(root))
     if retired_root.exists():
         violations.append(f"retired document root still exists: {RETIRED_DOCUMENT_ROOT}/")
 

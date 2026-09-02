@@ -85,6 +85,24 @@ def _run_harness(env: dict[str, str]) -> int:
     ).returncode
 
 
+def _run_links(arguments: list[str], env: dict[str, str]) -> int:
+    """Check paper/ Markdown links, anchors and orphan documents."""
+
+    checker = REPO_ROOT / ".codex" / "hooks" / "paper_links.py"
+    return subprocess.run(
+        [sys.executable, "-B", str(checker), *arguments], env=env, check=False
+    ).returncode
+
+
+def _run_lint(arguments: list[str], env: dict[str, str]) -> int:
+    """Advisory readability lint for paper/ (process words, Latin ratio)."""
+
+    checker = REPO_ROOT / ".codex" / "hooks" / "paper_lint.py"
+    return subprocess.run(
+        [sys.executable, "-B", str(checker), *arguments], env=env, check=False
+    ).returncode
+
+
 def _run_source(arguments: list[str]) -> int:
     """Parse Python sources in memory without creating bytecode or cache files."""
 
@@ -161,8 +179,12 @@ def main(arguments: list[str]) -> int:
         return _run_source(forwarded)
     if mode == "pytest":
         return _run_pytest(forwarded, env)
+    if mode == "links":
+        return _run_links(forwarded, env)
+    if mode == "lint":
+        return _run_lint(forwarded, env)
     raise RuntimeError(
-        f"Unknown mode {mode!r}; expected doctor, harness, source, python, or pytest."
+        f"Unknown mode {mode!r}; expected doctor, harness, source, python, pytest, links, or lint."
     )
 
 

@@ -33,6 +33,7 @@ target/
 !.claude/hooks/
 !.claude/CLAUDE.md
 !.claude/README.md
+!.claude/ACCEPTANCE.md
 
 # Data
 /data/
@@ -55,6 +56,7 @@ target/
 *.json
 !.codex/hooks.json
 !.claude/settings.json
+!verify/**/*.json
 !paper/검증_원장/dark_energy_zerod_closure/counterexample.json
 !paper/검증_원장/dark_energy_zerod_closure/portfolio.json
 !benchmarks/core_claims_v1.json
@@ -124,3 +126,6 @@ dist/
 htmlcov/
 *.profraw
 *.profdata
+
+# Research-loop runtime (headless driver logs; ledger/ derivations/ verify/ are tracked)
+logs/
