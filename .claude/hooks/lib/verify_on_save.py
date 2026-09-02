@@ -1,6 +1,6 @@
 """PostToolUse(Write|Edit|MultiEdit) 유도 파일 자동 검증. fail-open.
 
-derivations/**/*.derivation.md 가 저장되면 verify_derivation.py를 60초 제한으로 돌리고
+derivations/**/*.derivation.md 또는 *.formula.md(추측 카드)가 저장되면 verify_derivation.py를 60초 제한으로 돌리고
 결과 JSON을 additionalContext로 문맥에 넣는다. 실패해도 차단하지 않는다(exit 0).
 이유: 탐색 단계는 fail-open이며, 실패 사실이 문맥에 들어오는 것으로 충분하다.
 """
@@ -29,7 +29,7 @@ def is_derivation(path: Path, root: Path) -> bool:
         relative = path.resolve().relative_to(root).as_posix()
     except ValueError:
         return False
-    return relative.startswith("derivations/") and relative.endswith(".derivation.md")
+    return relative.startswith("derivations/") and relative.endswith((".derivation.md", ".formula.md"))
 
 
 def run_verifier(path: Path, root: Path) -> dict:

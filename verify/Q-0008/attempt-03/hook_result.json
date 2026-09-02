@@ -1,0 +1,110 @@
+{
+  "file": "C:\\dev\\ce\\Clarus-Equation\\derivations\\Q-0008\\attempt-03.derivation.md",
+  "question": "Q-0008",
+  "attempt": 3,
+  "card": null,
+  "sympy": true,
+  "details": [
+    {
+      "type": "identity",
+      "lhs": "(x - (x+y+z)/3)**2 + (y - (x+y+z)/3)**2 + (z - (x+y+z)/3)**2",
+      "rhs": "x**2 + y**2 + z**2 - (x+y+z)**2/3",
+      "symbolic": "pass",
+      "max_rel_err": 7.865043724958112e-16,
+      "numeric": "pass",
+      "index": 0
+    },
+    {
+      "type": "identity",
+      "lhs": "Sum(v**2,(v,1,n)) - (n*(n+1)/2)**2/n",
+      "rhs": "n*(n**2-1)/12",
+      "symbolic": "pass",
+      "max_rel_err": 1.7018987682876655e-16,
+      "numeric": "pass",
+      "index": 1
+    },
+    {
+      "type": "identity",
+      "lhs": "(n*x + y)**2",
+      "rhs": "n**2*x**2 + 2*n*x*y + y**2",
+      "symbolic": "pass",
+      "max_rel_err": 4.882098471740449e-16,
+      "numeric": "pass",
+      "index": 2
+    },
+    {
+      "type": "identity",
+      "lhs": "-n*a_tot + q_tot",
+      "rhs": "-n*(a_tot - q_tot/n)",
+      "symbolic": "pass",
+      "max_rel_err": 1.7887805729517134e-16,
+      "numeric": "pass",
+      "index": 3
+    },
+    {
+      "type": "identity",
+      "lhs": "n*p*(1-p)**2 + n*(1-p)*p**2",
+      "rhs": "n*p*(1-p)",
+      "symbolic": "pass",
+      "max_rel_err": 2.3023306458503963e-16,
+      "numeric": "pass",
+      "index": 4
+    },
+    {
+      "type": "identity",
+      "lhs": "n_B*((n-n_B)/n)**2 + (n-n_B)*(n_B/n)**2",
+      "rhs": "n_B*(n-n_B)/n",
+      "symbolic": "pass",
+      "max_rel_err": 1.1584935909132068e-16,
+      "numeric": "pass",
+      "index": 5
+    },
+    {
+      "type": "identity",
+      "lhs": "(1/n)*(1-1/n)",
+      "rhs": "(n-1)/n**2",
+      "symbolic": "pass",
+      "max_rel_err": 1.2892912544034077e-17,
+      "numeric": "pass",
+      "index": 6
+    },
+    {
+      "type": "numeric",
+      "expr": "((64-1)/64**2)/((8-1)/8**2) - 0.140625",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 7
+    },
+    {
+      "type": "limit",
+      "expr": "p*(1-p)",
+      "var": "p",
+      "point": 1,
+      "expected": 0,
+      "result": "0",
+      "symbolic": "pass",
+      "index": 8
+    },
+    {
+      "type": "limit",
+      "expr": "n*(n-1)/n**2",
+      "var": "n",
+      "point": "oo",
+      "expected": 1,
+      "result": "1",
+      "symbolic": "pass",
+      "index": 9
+    },
+    {
+      "type": "identity",
+      "lhs": "1*(x - x/1)**2",
+      "rhs": "0",
+      "symbolic": "pass",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 10
+    }
+  ],
+  "symbolic": "pass",
+  "numeric": "pass"
+}

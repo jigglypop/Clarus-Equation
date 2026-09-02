@@ -1,0 +1,239 @@
+{
+  "question": "Q-0008",
+  "attempt": 3,
+  "ladder_step": 2,
+  "seed": 20260902,
+  "tolerances": {
+    "TOL_IDENT": 1e-12,
+    "TOL_CELL": 1e-12,
+    "TOL_ALG": 1e-12
+  },
+  "grid": {
+    "n": [
+      2,
+      5,
+      17
+    ],
+    "delta": [
+      0.3,
+      0.05
+    ],
+    "trials": 20,
+    "species_n": [
+      4,
+      8,
+      16,
+      32,
+      64
+    ],
+    "p": [
+      0.5,
+      0.25
+    ]
+  },
+  "not_run": [
+    "verify/Q-0008/F-02/check_modes.py (pre-registered kills K1/K2/K3/K5 and the K4 consistency window, ladder steps 6-7)"
+  ],
+  "symbolic": {
+    "status": "pass",
+    "theorem_exact_for_n": {
+      "2": true,
+      "3": true,
+      "5": true,
+      "8": true,
+      "17": true
+    },
+    "cell_simplicity_is_necessary": {
+      "2": true,
+      "3": true,
+      "5": true
+    },
+    "centering_identity_for_n": {
+      "2": true,
+      "3": true,
+      "5": true,
+      "8": true,
+      "17": true
+    },
+    "two_species_sum_np(1-p)": true,
+    "defect_p_eq_1_over_n": true,
+    "general_n_centering_label_family_v": true
+  },
+  "bilinearity": {
+    "status": "pass",
+    "max_rel_err_G(A,B)=G(B,A)^T": 1.6199778939693428e-16,
+    "max_rel_err_bilinear": 2.7308037666457606e-16,
+    "max_rel_err_gram_symmetric": 1.282039377110526e-16
+  },
+  "identity": {
+    "status": "pass",
+    "max_rel_err": 4.120452620461931e-13,
+    "max_cell_simplicity_residual_after_alignment": 1.2224691364013184e-15,
+    "rows": [
+      {
+        "delta": 0.3,
+        "n": 2,
+        "trials": 20,
+        "max_rel_err": 8.351563892117918e-15
+      },
+      {
+        "delta": 0.3,
+        "n": 5,
+        "trials": 20,
+        "max_rel_err": 1.2181645398146213e-14
+      },
+      {
+        "delta": 0.3,
+        "n": 17,
+        "trials": 20,
+        "max_rel_err": 7.435929946392998e-15
+      },
+      {
+        "delta": 0.05,
+        "n": 2,
+        "trials": 20,
+        "max_rel_err": 4.120452620461931e-13
+      },
+      {
+        "delta": 0.05,
+        "n": 5,
+        "trials": 20,
+        "max_rel_err": 2.0528504994557284e-13
+      },
+      {
+        "delta": 0.05,
+        "n": 17,
+        "trials": 20,
+        "max_rel_err": 2.9905472197150667e-13
+      }
+    ]
+  },
+  "nonsimple_generalization": {
+    "status": "pass",
+    "max_rel_err": 2.3849705772726306e-15,
+    "min_tau_scale_note": "tau_v is O(1) here, so the check is not vacuous",
+    "max_tau_norm": 4.820460806319854
+  },
+  "corollary_two_species": {
+    "status": "pass",
+    "max_rel_err": 2.3973701402784495e-15,
+    "n_independence_relative_spread": {
+      "0.5": 0.0,
+      "0.25": 0.0
+    },
+    "rows": [
+      {
+        "p": 0.5,
+        "n": 4,
+        "eps": 0.04052128331064392,
+        "eps_predicted": 0.04052128331064382,
+        "rel_err": 2.3973701402784495e-15
+      },
+      {
+        "p": 0.5,
+        "n": 8,
+        "eps": 0.04052128331064392,
+        "eps_predicted": 0.04052128331064382,
+        "rel_err": 2.3973701402784495e-15
+      },
+      {
+        "p": 0.5,
+        "n": 16,
+        "eps": 0.04052128331064392,
+        "eps_predicted": 0.04052128331064382,
+        "rel_err": 2.3973701402784495e-15
+      },
+      {
+        "p": 0.5,
+        "n": 32,
+        "eps": 0.04052128331064392,
+        "eps_predicted": 0.04052128331064382,
+        "rel_err": 2.3973701402784495e-15
+      },
+      {
+        "p": 0.5,
+        "n": 64,
+        "eps": 0.04052128331064392,
+        "eps_predicted": 0.04052128331064382,
+        "rel_err": 2.3973701402784495e-15
+      },
+      {
+        "p": 0.25,
+        "n": 4,
+        "eps": 0.030993396867784673,
+        "eps_predicted": 0.030993396867784736,
+        "rel_err": 2.0149467772626506e-15
+      },
+      {
+        "p": 0.25,
+        "n": 8,
+        "eps": 0.030993396867784673,
+        "eps_predicted": 0.030993396867784736,
+        "rel_err": 2.0149467772626506e-15
+      },
+      {
+        "p": 0.25,
+        "n": 16,
+        "eps": 0.030993396867784673,
+        "eps_predicted": 0.030993396867784736,
+        "rel_err": 2.0149467772626506e-15
+      },
+      {
+        "p": 0.25,
+        "n": 32,
+        "eps": 0.030993396867784673,
+        "eps_predicted": 0.030993396867784736,
+        "rel_err": 2.0149467772626506e-15
+      },
+      {
+        "p": 0.25,
+        "n": 64,
+        "eps": 0.030993396867784673,
+        "eps_predicted": 0.030993396867784736,
+        "rel_err": 2.0149467772626506e-15
+      }
+    ]
+  },
+  "corollary_defect": {
+    "status": "pass",
+    "max_rel_err": 1.1365408026674913e-14,
+    "numerator_law_ratio_64_over_8": 0.140625,
+    "denominator_drift_max_over_grid": 0.1905050807344567,
+    "note": "denominator drift is the size of the 1+O(||Delta||/n) correction to the pure (n-1)/n^2 numerator law; no pre-registered window is judged here",
+    "rows": [
+      {
+        "n": 4,
+        "eps": 0.06549804782918275,
+        "eps_predicted": 0.06549804782918274,
+        "rel_err": 2.118809379480649e-16
+      },
+      {
+        "n": 8,
+        "eps": 0.034190114798968815,
+        "eps_predicted": 0.03419011479896873,
+        "rel_err": 2.4354035467993833e-15
+      },
+      {
+        "n": 16,
+        "eps": 0.017400033135388685,
+        "eps_predicted": 0.017400033135388883,
+        "rel_err": 1.1365408026674913e-14
+      },
+      {
+        "n": 32,
+        "eps": 0.008770241801819848,
+        "eps_predicted": 0.008770241801819829,
+        "rel_err": 2.1757619307355155e-15
+      },
+      {
+        "n": 64,
+        "eps": 0.0044019694724097246,
+        "eps_predicted": 0.0044019694724096925,
+        "rel_err": 7.290460442017317e-15
+      }
+    ]
+  },
+  "numeric": "pass",
+  "max_rel_err": 4.120452620461931e-13,
+  "verdict": "identity holds exactly"
+}

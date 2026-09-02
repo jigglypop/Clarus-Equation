@@ -1,0 +1,69 @@
+{
+  "frozen_constants": {
+    "SEED": 20260902,
+    "DELTA": 0.005,
+    "TRIALS": 8192,
+    "N_CELLS": 36,
+    "CAT_K": 6,
+    "MIN_DET": 0.05,
+    "KAPPA4": {
+      "gauss": 0.0,
+      "rademacher": -2.0,
+      "uniform": -1.2,
+      "laplace": 3.0,
+      "spike64": 61.0
+    },
+    "EXACT": {
+      "cat6_S_gen": 287.35648148148147,
+      "cat6_S_ker": 125.05324074074075,
+      "cat6_D": 640.3611111111111,
+      "iid36_S_gen": 34.02777777777778,
+      "iid36_D": 35.0,
+      "c4": 0.016666666666666666
+    }
+  },
+  "label_map_max_abs_diff_vs_independent": {
+    "gauss": 0.0,
+    "rademacher": 0.0,
+    "uniform": 8.881784197001252e-16,
+    "laplace": 1.8207657603852567e-14,
+    "spike64": 0.0
+  },
+  "heritable_vs_ancestor_matrix_max_abs_diff": 1.7763568394002505e-15,
+  "empirical_kappa4": {
+    "gauss": {
+      "declared": 0.0,
+      "var": 0.9978152230958602,
+      "excess_kurtosis": -0.0067311519392330155
+    },
+    "rademacher": {
+      "declared": -2.0,
+      "var": 0.9999996751,
+      "excess_kurtosis": -2.0
+    },
+    "uniform": {
+      "declared": -1.2,
+      "var": 0.999330291585624,
+      "excess_kurtosis": -1.2000276440384448
+    },
+    "laplace": {
+      "declared": 3.0,
+      "var": 0.9957391339863726,
+      "excess_kurtosis": 2.960150824936558
+    },
+    "spike64": {
+      "declared": 61.0,
+      "var": 0.9863999675999999,
+      "excess_kurtosis": 61.882400648824
+    }
+  },
+  "lattice_cat6": {
+    "S_gen": 287.35648148148135,
+    "exact_S_gen": 287.35648148148147,
+    "S_ker": 125.05324074074079,
+    "exact_S_ker": 125.05324074074075,
+    "D": 640.3611111111113,
+    "exact_D": 640.3611111111111,
+    "n": 36
+  }
+}

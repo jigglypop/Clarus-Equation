@@ -1,0 +1,32 @@
+{
+  "driver_vs_matrix": {
+    "cases": 300,
+    "max_rel_err": 6.765513541646599e-15
+  },
+  "pathwise": {
+    "rows": [
+      {
+        "b": 4,
+        "trials": 384,
+        "eps_star_from_qspine": 7.876476529075429e-05,
+        "corr_eps2_vs_D_over_n2": 0.37187327981672935,
+        "mean_D_over_n2": 0.34838654100873295,
+        "rms_eps": 4.649033414246208e-05
+      },
+      {
+        "b": 8,
+        "trials": 384,
+        "eps_star_from_qspine": 7.73247821026662e-05,
+        "corr_eps2_vs_D_over_n2": 0.46169652189277066,
+        "mean_D_over_n2": 1.2914249567986273,
+        "rms_eps": 8.78725627062283e-05
+      }
+    ],
+    "rms_iid_36": 1.2921845526469309e-05,
+    "eps_star_from_iid": 7.863085962460933e-05,
+    "eps_star_ratio_qspine_over_iid": 0.9833897590821409,
+    "independent_sample_ratio_b8_over_iid36": 6.800310569123333,
+    "predicted_from_same_sample_trees": 6.9151732630106775
+  },
+  "runtime_s": 23.96949809999205
+}

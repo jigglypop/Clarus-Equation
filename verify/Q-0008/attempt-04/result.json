@@ -1,0 +1,389 @@
+{
+  "question": "Q-0008",
+  "card": "F-02",
+  "attempt": 4,
+  "ladder_step": 6,
+  "executed_modes": [
+    "her",
+    "mix",
+    "iid",
+    "defect"
+  ],
+  "command": ".claude\\hooks\\python.cmd python verify\\Q-0008\\F-02\\check_modes.py --mode <her|mix|iid|defect>",
+  "seed": 20260902,
+  "delta": 0.005,
+  "constants_match_card": true,
+  "constants_compared": {
+    "SEED": 20260902,
+    "DELTA": 0.005,
+    "MIN_DET": 0.05,
+    "SIZES": [
+      8,
+      16,
+      32,
+      64,
+      128
+    ],
+    "TRIALS": 256,
+    "MIX_N": 32,
+    "MIX_TRIALS": 1024,
+    "DEFECT_GRID": [
+      4,
+      8,
+      16,
+      32,
+      64
+    ],
+    "DEFECT_PERTURBATION": 0.35,
+    "DEFECT_MIN_DET": 0.2,
+    "PREREGISTERED": {
+      "her_slope": 0.5302,
+      "her_ratio_128": 32.554,
+      "mix_X_32": 0.7406,
+      "iid_slope": -0.4783,
+      "defect_ratio_64_over_8": 0.140625,
+      "defect_slope": -0.9069
+    },
+    "WINDOWS": {
+      "her_slope": [
+        0.43,
+        0.63
+      ],
+      "her_ratio_128": [
+        26.0,
+        39.1
+      ],
+      "mix_X_32": [
+        0.49,
+        0.99
+      ],
+      "iid_slope": [
+        -0.58,
+        -0.38
+      ],
+      "defect_ratio_64_over_8": [
+        0.124,
+        0.158
+      ],
+      "defect_slope": [
+        -0.96,
+        -0.86
+      ]
+    }
+  },
+  "results": {
+    "her_slope": {
+      "mode": "her",
+      "role": "kill K1",
+      "value": 0.5576106551570001,
+      "se_bootstrap": 0.01868561368857134,
+      "ci95_bootstrap": [
+        0.5219865739840722,
+        0.5947319840240505
+      ],
+      "window": [
+        0.43,
+        0.63
+      ],
+      "preregistered": 0.5302,
+      "card_uncertainty": 0.1,
+      "within_card_uncertainty": true,
+      "in_window": true,
+      "script_verdict": "survive",
+      "sigma_to_nearest_window_edge": 3.8740683634744775,
+      "sigma_to_low_edge": 6.829353174257825,
+      "sigma_to_high_edge": 3.8740683634744775,
+      "deviation_from_preregistered_in_se": 1.4669389838539415,
+      "pass": true
+    },
+    "her_ratio_128": {
+      "mode": "her",
+      "role": "kill K1",
+      "value": 34.24199061956648,
+      "se_bootstrap": 1.6843333233672915,
+      "ci95_bootstrap": [
+        31.063376180945156,
+        37.64903444899835
+      ],
+      "window": [
+        26.0,
+        39.1
+      ],
+      "preregistered": 32.554,
+      "card_uncertainty": 6.5,
+      "within_card_uncertainty": true,
+      "in_window": true,
+      "script_verdict": "survive",
+      "sigma_to_nearest_window_edge": 2.884232778059315,
+      "sigma_to_low_edge": 4.893325154363881,
+      "sigma_to_high_edge": 2.884232778059315,
+      "deviation_from_preregistered_in_se": 1.002171361302687,
+      "pass": true
+    },
+    "mix_X_32": {
+      "mode": "mix",
+      "role": "kill K2",
+      "value": 0.8193510400305117,
+      "se_bootstrap": 0.0880432935980372,
+      "ci95_bootstrap": [
+        0.6484614619273064,
+        0.9966179132744775
+      ],
+      "window": [
+        0.49,
+        0.99
+      ],
+      "preregistered": 0.7406,
+      "card_uncertainty": 0.25,
+      "within_card_uncertainty": true,
+      "in_window": true,
+      "script_verdict": "survive",
+      "sigma_to_nearest_window_edge": 1.9382391661605516,
+      "sigma_to_low_edge": 3.7407850907323867,
+      "sigma_to_high_edge": 1.9382391661605516,
+      "deviation_from_preregistered_in_se": 0.8944581331776454,
+      "pass": true
+    },
+    "iid_slope": {
+      "mode": "iid",
+      "role": "kill K5",
+      "value": -0.4799658222826968,
+      "se_bootstrap": 0.009155021551230566,
+      "ci95_bootstrap": [
+        -0.497738230501188,
+        -0.46223472549414596
+      ],
+      "window": [
+        -0.58,
+        -0.38
+      ],
+      "preregistered": -0.4783,
+      "card_uncertainty": 0.1,
+      "within_card_uncertainty": true,
+      "in_window": true,
+      "script_verdict": "survive",
+      "sigma_to_nearest_window_edge": 10.91923396611338,
+      "sigma_to_low_edge": 10.926700407805937,
+      "sigma_to_high_edge": 10.91923396611338,
+      "deviation_from_preregistered_in_se": -0.18195722133203318,
+      "pass": true
+    },
+    "defect_ratio_64_over_8": {
+      "mode": "defect",
+      "role": "consistency K4 (not kill)",
+      "value": 0.14306936148581373,
+      "se_bootstrap": null,
+      "ci95_bootstrap": null,
+      "window": [
+        0.124,
+        0.158
+      ],
+      "preregistered": 0.140625,
+      "card_uncertainty": 0.017,
+      "within_card_uncertainty": true,
+      "in_window": true,
+      "script_verdict": "survive",
+      "sigma_to_nearest_window_edge": null,
+      "sigma_to_low_edge": null,
+      "sigma_to_high_edge": null,
+      "deviation_from_preregistered_in_se": null,
+      "consistency": true,
+      "note": "deterministic single Delta sample; no trial variance (kill status revoked in card rev.2)"
+    },
+    "defect_slope": {
+      "mode": "defect",
+      "role": "consistency K4 (not kill)",
+      "value": -0.8981828134067237,
+      "se_bootstrap": null,
+      "ci95_bootstrap": null,
+      "window": [
+        -0.96,
+        -0.86
+      ],
+      "preregistered": -0.9069,
+      "card_uncertainty": 0.05,
+      "within_card_uncertainty": true,
+      "in_window": true,
+      "script_verdict": "survive",
+      "sigma_to_nearest_window_edge": null,
+      "sigma_to_low_edge": null,
+      "sigma_to_high_edge": null,
+      "deviation_from_preregistered_in_se": null,
+      "consistency": true,
+      "note": "deterministic single Delta sample; no trial variance (kill status revoked in card rev.2)"
+    }
+  },
+  "kills_fired": [],
+  "k4_consistency": "consistent",
+  "timing": {
+    "run_start_utc": "2026-09-02T14:13:09Z",
+    "run_end_utc": "2026-09-02T14:16:53Z",
+    "per_mode": {
+      "her": {
+        "start_utc": "2026-09-02T14:13:09Z",
+        "end_utc": "2026-09-02T14:14:48Z",
+        "elapsed_s": 99.0
+      },
+      "mix": {
+        "start_utc": "2026-09-02T14:14:48Z",
+        "end_utc": "2026-09-02T14:16:04Z",
+        "elapsed_s": 76.0
+      },
+      "iid": {
+        "start_utc": "2026-09-02T14:16:05Z",
+        "end_utc": "2026-09-02T14:16:53Z",
+        "elapsed_s": 48.0
+      },
+      "defect": {
+        "start_utc": "2026-09-02T14:16:53Z",
+        "end_utc": "2026-09-02T14:16:53Z",
+        "elapsed_s": 0.0
+      }
+    },
+    "elapsed_s_total": 224.0
+  },
+  "se_bootstrap": {
+    "B": 2000,
+    "seed": 20260902,
+    "elapsed_s": 208.86319419997744,
+    "reproduction_ok": true,
+    "reproduction_max_abs_diff": {
+      "her": {
+        "rms_her": 0.0,
+        "rms_iid": 0.0
+      },
+      "mix": 0.0,
+      "iid": 0.0
+    }
+  },
+  "runtime_min_total": 7.214386569999624,
+  "raw": {
+    "her": {
+      "sizes": [
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "rms_her": [
+        4.986942319847886e-05,
+        7.6642674710274e-05,
+        0.00011848589670652173,
+        0.00017038494622980468,
+        0.00023101582247149615
+      ],
+      "rms_iid": [
+        2.5261915444738095e-05,
+        2.0006587630631154e-05,
+        1.4060514121105656e-05,
+        9.623871206170522e-06,
+        6.746565205221732e-06
+      ],
+      "trials": 256,
+      "delta": 0.005,
+      "seed": 20260902,
+      "slope": 0.5576106551570001,
+      "ratio_her_over_iid": [
+        1.9740950882197001,
+        3.830871917054459,
+        8.426853789696597,
+        17.70440840070254,
+        34.24199061956648
+      ],
+      "ratio_128": 34.24199061956648
+    },
+    "mix": {
+      "n": 32,
+      "trials": 1024,
+      "delta": 0.005,
+      "seed": 20260902,
+      "rms_iid": 1.4034246409305986e-05,
+      "rms_her": 0.00010799629205976159,
+      "rms_mix": 0.00011446399332413492,
+      "X": 0.8193510400305117
+    },
+    "iid": {
+      "sizes": [
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "rms": [
+        2.596723509960783e-05,
+        1.9298496139892388e-05,
+        1.4035659388471364e-05,
+        9.485270603916804e-06,
+        7.018463310547838e-06
+      ],
+      "trials": 256,
+      "delta": 0.005,
+      "seed": 20260902,
+      "rejections": 0,
+      "slope": -0.4799658222826968,
+      "exact_prediction_slope": -0.478347557133974
+    },
+    "defect": {
+      "grid": [
+        4,
+        8,
+        16,
+        32,
+        64
+      ],
+      "eps": [
+        0.05331084917780331,
+        0.03127810991675995,
+        0.01689848245790583,
+        0.008780065123281212,
+        0.004474939214273945
+      ],
+      "seed": 20260902,
+      "perturbation": 0.35,
+      "slope": -0.8981828134067237,
+      "ratio_64_over_8": 0.14306936148581373,
+      "exact_identity_prediction_ratio": 0.140625
+    },
+    "her_local_slopes": [
+      0.6199923932200609,
+      0.6284955314794893,
+      0.5240825305239399,
+      0.4391937895597918
+    ],
+    "iid_rms_over_exact_shape": [
+      7.851753863943985e-05,
+      7.972560443376142e-05,
+      8.066812299556283e-05,
+      7.648203317673235e-05,
+      7.971685254032374e-05
+    ],
+    "defect_r48": 0.586711905721866
+  },
+  "logs": {
+    "her": "{\"verdict\": {\"her_slope\": \"survive\", \"her_ratio_128\": \"survive\"}, \"stats\": {\"her_slope\": 0.5576106551570001, \"her_ratio_128\": 34.24199061956648}}",
+    "mix": "{\"verdict\": {\"mix_X_32\": \"survive\"}, \"stats\": {\"mix_X_32\": 0.8193510400305117}}",
+    "iid": "{\"verdict\": {\"iid_slope\": \"survive\"}, \"stats\": {\"iid_slope\": -0.4799658222826968}}",
+    "defect": "{\"verdict\": {\"defect_ratio_64_over_8\": \"survive\", \"defect_slope\": \"survive\"}, \"stats\": {\"defect_ratio_64_over_8\": 0.14306936148581373, \"defect_slope\": -0.8981828134067237}}"
+  },
+  "environment": {
+    "python": "3.11.9",
+    "numpy": "2.4.6",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "machine": "AMD64",
+    "processor": "AMD64 Family 25 Model 97 Stepping 2, AuthenticAMD"
+  },
+  "integrity": {
+    "check_modes.py_sha256": "fdb0e4e5b46a854ec6421e39b190a23ce72b6bb8a1d1ccfa6ba43df95033fffe",
+    "driver_numbers.py_sha256": "a9357717da5f011638e26983b955e8e2ab92d87334463f02d7d2eb9fa47318c7",
+    "card_sha256": "17ac890a2bc1f5d76f4ed4f9f5bf593a70454e4f11a31c041618d0c8e34bc54c",
+    "note": "script and card not edited in this attempt; hashes recorded for the judge"
+  },
+  "provenance_notes": [
+    "verify/Q-0008/F-02/result.json is shared between attempts; at run time a concurrent attempt-05 process wrote a qspine block (K3, ladder step 7) into it. That block is not produced or evaluated by attempt-04.",
+    "F-02_result_snapshot.json is a verbatim copy of the shared file taken after the four attempt-04 runs.",
+    "Standard errors come from check_se.py, which replays the identical seeds/sampling order and bootstraps trials (B=2000); replayed RMS agree with the script output to < 1e-12.",
+    "defect mode is deterministic for the pre-registered seed; the disclosed r48 = eps(8)/eps(4) is reproduced."
+  ]
+}

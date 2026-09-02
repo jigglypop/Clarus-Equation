@@ -1,0 +1,148 @@
+id: E-20260902-014
+question: Q-0015
+attempt: 1
+timestamp: 2026-09-02T23:45:00+09:00
+claim: "F-01(예측식) 사다리 attempt 1: 14.2의 선언 계약 $\\theta=\\sqrt\\Delta$를 12.4의 정규화 simplicity
+  잔차 $\\bar\\epsilon$에 붙여 $\\theta=c_\\theta\\bar\\epsilon/\\sqrt{1-\\bar\\epsilon^2}$,
+  $c_\\theta=\\sqrt3/2$(단위 $\\Sigma_0$의 Gram $G_0=2\\det(e)\\mathbb 1_3$에서 정확)로 닫고, 그로부터
+  '블록 잔차의 RG 지수 = 곡률 각의 RG 지수'(거듭제곱 1, 대안 거듭제곱 ½)를 주장한다. 12.1 attachment 규칙
+  아래 모든 합성 face는 조부–부–자 3-chain이므로 face 커널 $\\|H_3\\kappa_fH_3\\|_F^2=10/9$(깊이·tree
+  무관)이고 $\\rho_{\\rm face}=\\sqrt5/3$, 두 채널($\\theta_{\\rm iso}^2+\\theta_{\\rm mis}^2$) 분해로
+  $\\theta_{\\rm mis}$만 예측한다고 선언한다. card-check PASS, verify 13/13 pass(symbolic pass, numeric
+  pass), 예측 6·자유 파라미터 0·kill 7·사다리 7단으로 등록됐으나 adversary(opus, status=fail,
+  severity=P0)가 refute를 권고했다: (1) `check_theta.py`가 같은 Gram에서 $\\epsilon$과
+  $\\theta=1.5\\|{\\rm tl}\\,G\\|/{\\rm tr}\\,G$를 동시에 계산할 뿐 blk·face·scale 어느 mode에도 평행운반·
+  연결·홀로노미가 없다 — $\\theta$는 $\\epsilon$의 고정 결정함수(상대오차 4e-16)이고 '거듭제곱 1 vs ½'
+  판별은 스크립트에 하드코딩되어 있으며 대안 0.2651은 실제로는 P4 값의 절반일 뿐이다. (2) 카드가 쓰는
+  $\\Delta$(trace-정규화)는 14.2 구현의 $\\Delta$(절대 기준 $\\mathbb 1_3$)와 다른 양이다 — 순수 등각
+  왜곡에서 구현 각은 0.381인데 카드 정규화는 1.3e-16을 준다; $c_\\theta=\\sqrt d/2$는 Plebanski 기하가
+  아니라 Gram 첨자 차원 세기(d=2..6에서 확인)로 재현된다. (3) 10/9는 3-chain의 고유 성질이 아니다 — 형제
+  face도 10/9, cousin face는 40/9이므로 3단의 '3-chain이라서'라는 논증은 오류이고 '$\\forall$tree
+  보편성'은 12.1 규칙 조건부일 뿐이다. (4) 카드의 유일한 실질 숫자(K4)는 미선언 부호 규약에 의존한다 —
+  12.1의 방향 있는 경계 $(+,+,-)$로 합하면 $\\rho_{\\rm face}=3.543$으로 창 $[0.685,0.806]$ 밖 약 4.7배다.
+  (5) K1·K5·K6은 발동이 원리상 불가능한 항등식이고 K2·K7은 F-02가 이미 통과한 검정과 사실상 같은 것인데
+  카드 predicts의 already_observed:false 표기는 F-02 result.json에 같은 규약 결과가 이미 있다는 사실과
+  모순되며, K3는 사실상 결정된 값이라 실질적으로 반증력 있는 kill은 K4 하나뿐이다. (6) 4단 두 채널 분해는
+  $\\theta_{\\rm iso}$가 정의도 계산도 되지 않은 공백으로 남는다. 살아남는 것: $\\theta^2(1-\\epsilon^2)
+  =(3/4)\\epsilon^2$ 항등식(임의 SPD 3x3 Gram에서 항상 참), 10/9·2·$\\sqrt5/3$의 사전등록 재현, 조합론
+  재계산 일치, smoke 이탈 3건은 독립 씨앗 재실행으로 잡음임을 확인, K3 face 깊이 무관성
+  1.00084±0.00043, K4 $\\rho_{\\rm face}$ pooled 0.74001±0.0034(예측 0.745356 대비 -1.6σ), 사전등록
+  무결(창·seed·tol 조작 없음; 다만 7단 '예측시험' 표기는 부정확하다 — 실제로는 F-02 지수를 그대로
+  상속한 회귀검사이지 맹검 예측시험이 아니다). 곡률 홀로노미 각의 RG 지수가 잔차의 RG 지수와 같다는
+  부모 주장(카드의 핵심 신규성)은 반증 가능한 곡률 예측으로서 무너진다. 살아남는 좁은 명제는 '12.1
+  attachment 규칙·F-02 가우스 상속 라벨 모형 아래 3-cell 합성 face 블록합(부호 없는 합)의 중심화 커널은
+  10/9로 조부 깊이·tree 무관, 12.4 잔차의 상속/i.i.d. RMS 비는 $\\sqrt5/3$(독립 24576+24576 표본
+  0.74001±0.0034)'이며, 이는 곡률 카드가 아니라 Q-0008/F-02 사다리의 따름정리로 옮겨 닫는 것이 맞다."
+level: L2
+verdict: refute
+pivot_step: null
+ladder_step: null
+card: derivations/Q-0015/F-01.formula.md
+kill_triggered: null
+derivation: derivations/Q-0015/F-01.formula.md
+verification:
+  symbolic: pass
+  numeric: pass
+  lean: skipped
+  artifacts: verify/Q-0015/F-01/
+adversary:
+  model_note: "adversary opus 실행. status=fail, severity=P0, refute 권고. 산출물
+    verify/Q-0015/F-01/adversary/{a1_ctheta_identity,a2_face_kernel,a3_face_mc,a3_timing,
+    a4_blk_mc,a5_hinge_scale,a6_recovers_exec,a7_face_model_choice}.{json,py}."
+  counterexamples:
+    - input: "`check_theta.py`의 blk·face·scale 세 mode 전체(θ와 ε의 계산 경로 대조,
+        a1_ctheta_identity.py)"
+      expected: "θ는 실제 face 운반 홀로노미(평행운반·연결)에서 독립적으로 계산되고, ε과의 관계
+        θ=c_θε/√(1-ε²)는 그 두 독립 계산의 사후 관계식이어야 한다"
+      observed: "같은 Gram에서 ε과 θ=1.5‖tlG‖/trG를 동시에 계산할 뿐 blk·face·scale 어디에도 평행운반·
+        연결·홀로노미 코드가 없다 — θ는 ε의 고정 결정함수(상대오차 4e-16)이고 '거듭제곱 1 vs ½' 판별은
+        스크립트에 하드코딩되어 있다. 대안 0.2651은 P4 값(0.5302)의 정확히 절반"
+      note: "카드의 핵심 신규 주장(곡률 각과 잔차가 독립 대상이며 지수가 이전된다)이 관측이 아니라
+        정의로 성립하고 있다는 뜻"
+    - input: "14.2 구현의 Δ(절대 기준 $\\mathbb 1_3$) vs 카드가 쓰는 Δ(trace-정규화)를 순수 등각 왜곡
+        입력으로 대조 (a5_hinge_scale.py, a7_face_model_choice.py)"
+      expected: "카드 문구대로 '14.2 계약 θ=√Δ를 그대로 적용'했다면 두 Δ가 같은 순서로 움직여야 한다"
+      observed: "순수 등각 왜곡에서 14.2 구현 각은 0.381인데 카드 정규화의 값은 1.3e-16 — 두 Δ는 다른
+        양이다. $c_\\theta=\\sqrt d/2$는 d=2..6에서 재현되는 Gram 첨자 차원 세기이며 Plebanski 기하와
+        무관"
+      note: "'14.2 계약 그대로'라는 왜 절 문장이 성립하지 않는다"
+    - input: "10/9가 3-chain 고유 성질인지 형제(sibling)·사촌(cousin) face 커널과 대조
+        (a2_face_kernel.py)"
+      expected: "3-chain(조부–부–자)만 10/9이고 다른 위상의 합성 face는 다른 값이어야 3단의
+        '3-chain이라서 10/9'라는 논증이 성립한다"
+      observed: "형제 face도 10/9, cousin face는 40/9 — 10/9는 3-chain의 고유 성질이 아니라 더 넓은
+        대칭의 결과이며 '∀tree 보편성'은 12.1 규칙 조건부일 뿐이다"
+      note: "3단 보조정리의 인과 논증(3-chain ⇒ 10/9)이 오류"
+    - input: "K4($\\rho_{\\rm face}$)의 부호 규약: 카드가 미선언인 부호 없는 합 vs 12.1의 방향 있는
+        경계 $(+,+,-)$로 합산 (a3_face_mc.py, a4_blk_mc.py)"
+      expected: "카드 유일의 실질 kill 숫자가 부호 규약과 무관하게 창 [0.685,0.806] 안에 있어야 한다"
+      observed: "방향 있는 경계 $(+,+,-)$로 합하면 $\\rho_{\\rm face}=3.543$ — 창 밖 약 4.7배. 부호
+        없는 합으로만 예측 창 안(pooled 0.74001±0.0034)"
+      note: "카드가 부호 규약을 명시하지 않아 유일한 실질 판별 숫자가 규약 선택에 좌우된다"
+    - input: "kill 7종(K1-K7)의 실질 반증력 감사 — 발동 가능성과 F-02 기존 검정과의 중복
+        (a6_recovers_exec.py, hook_result.json 대조)"
+      expected: "7개 kill이 각각 독립적으로 반증 가능하고 predicts의 already_observed:false(P4·P5)가
+        사실이어야 한다"
+      observed: "K1·K5·K6은 정의상 발동 불가능한 항등식, K2·K7은 F-02가 이미 통과한 검정과 사실상
+        동일한데 카드는 already_observed:false로 표기 — F-02 result.json에 같은 규약의 결과가 이미
+        존재해 이 표기는 사실과 다르다. K3는 사실상 결정된 값. 실질적으로 반증력 있는 kill은 K4 하나뿐"
+      note: "사전등록 kill 7종의 대다수가 형식적이며 카드의 반증 가능성이 문구보다 약하다"
+  survived_checks:
+    - "θ²(1-ε²)=(3/4)ε² 항등식은 임의 SPD 3x3 Gram에서 항상 참(sympy 재검증, 카드와 별개로 확인)"
+    - "10/9·2·√5/3의 사전등록 값 자체는 조합론적으로 정확히 재현된다(a2_face_kernel.py)"
+    - "smoke 이탈 3건은 독립 씨앗 재실행으로 표본 잡음임을 확인(잡음, 구조적 반례 아님)"
+    - "K3 face 깊이 무관성 1.00084±0.00043 — 창 [0.90,1.10] 안, 부호 없는 합에서 생존"
+    - "K4 ρ_face pooled 0.74001±0.0034(독립 24576+24576 표본, 부호 없는 합) — 예측 0.745356 대비
+      -1.6σ로 창 안 생존"
+    - "사전등록 무결성: 창·seed·tolerance·예측 숫자 조작 없음(preregistration_intact=true)"
+    - "card-check PASS, verify 13/13 pass(symbolic·numeric) — 카드 형식·내부 항등식 자체는 결함 없음"
+sourcer:
+  prior_art:
+    - ref: "Regge 1961 General relativity without coordinates; Barrett 1994 deficit angle/holonomy"
+      relation: generalizes
+      note: "sourcer 원문 relation=partial을 ledger 스키마로 정규화: 힌지 deficit angle=홀로노미
+        회전 각이라는 사다리 1a단 표준 결과이며, 카드는 이를 mismatch 채널의 블록 흐름으로 확장한다고
+        주장한다"
+    - ref: "Plebanski 1977; Krasnov 2009 Plebanski formulation of general relativity"
+      relation: generalizes
+      note: "sourcer 원문 relation=partial을 정규화: F=(Ψ+λ̄/3)Σ의 trace/traceless 분해(사다리 4단)는
+        표준 결과이고, 카드는 이를 곡률 각-잔차 정규화 상수 c_θ로 확장한다고 주장한다"
+    - ref: "Urbantke 1984 On integrability properties of SU(2) Yang-Mills fields"
+      relation: generalizes
+      note: "sourcer 원문 relation=partial을 정규화: triple→metric density, conformal 정규화(13.1)는
+        표준 결과이고 카드는 이를 단위 Σ_0 Gram의 정규화 상수로 확장한다고 주장한다"
+    - ref: "Dittrich–Speziale 2008 area-angle Regge calculus; Freidel–Speziale 2010 twisted geometries;
+        HRVW twisted geometry"
+      relation: generalizes
+      note: "sourcer 원문 relation=partial을 정규화: shape mismatch가 남기는 twist angle의 기하는
+        표준 결과이나, 블록 흐름 지수·잔차-각 정규화 상수는 문헌에 없다고 카드는 주장한다"
+    - ref: "Bahr–Dittrich–Steinhaus 2011-2014; Dittrich 2016 spin foam coarse graining;
+        Dittrich–Martin-Benito–Steinhaus 2014; Asante coarse-graining"
+      relation: generalizes
+      note: "sourcer 원문 relation=partial을 정규화: 곡률·simplicity의 coarse-graining 흐름은
+        표준 결과이나 곡률 각을 잔차 커널 노름에 c_θ로 정확히 잇는 식은 문헌에 없다고 카드는 주장한다"
+  overall: partial
+  ce_specific_confirmed: "c_θ=√3/2·거듭제곱 1·10/9·√5/3의 조합 자체는 문헌에서 찾지 못했다(신규성은
+    유지). 다만 adversary가 그 조합을 구성하는 핵심 논증(θ-ε 독립성, Δ 정규화 일치, 3-chain⇒10/9
+    인과, 부호 규약)을 P0로 반증했으므로 신규성과 별개로 부모 주장은 채택 불가"
+assumptions:
+  - "두 채널 분해 θ_tot²=θ_iso²+θ_mis²에서 θ_iso가 정의도 계산도 되지 않은 채 4단이 남아 있다(공백)"
+  - "K4의 유일한 실질 숫자가 미선언 부호 규약에 의존한다 — 부호 없는 합이면 0.74001±0.0034(창 안),
+    12.1 방향 있는 경계 (+,+,-)로 합하면 3.543(창 밖 4.7배)"
+  - "카드가 쓰는 Δ(trace-정규화)와 14.2 구현의 Δ(절대 기준 1_3)는 순수 등각 왜곡에서 서로 다른 값을
+    준다(0.381 vs 1.3e-16) — '14.2 계약 그대로'라는 전제가 성립하지 않는다"
+  - "c_θ=√d/2는 기하 상수가 아니라 Gram 첨자 차원 세기로 재현된다(d=2..6 확인)"
+  - "10/9는 3-chain 고유 성질이 아니라 형제 face(10/9)·사촌 face(40/9)를 포함한 더 넓은 대칭의 결과다"
+  - "predicts P4·P5의 already_observed:false 표기는 사실과 다르다 — F-02 result.json에 같은 규약의
+    결과가 이미 있다"
+  - "K1·K5·K6은 정의상 발동 불가능한 항등식이라 원리적으로 반증력이 없고, K2·K7은 F-02가 이미 통과한
+    검정과 사실상 중복이며, K3는 사실상 결정된 값이다 — 사전등록 7종 kill 중 실질적으로 반증력 있는
+    것은 K4 하나뿐이었다"
+open_questions_spawned: []
+next_action: "F-02 3단 확장 후보(Q-0008 F-02 사다리 따름정리로): 3-cell 합성 face 블록합의 중심화
+  커널은 10/9(조부 깊이·tree 무관), ρ_face=√5/3(부호 없는 합, pooled 0.74001±0.0034) — 부호 규약을
+  12.1 방향 있는 경계 (+,+,-)로 바꾸면 3.543이 되는 것이 판별 숫자다. 이 좁은 명제는 곡률 카드가 아니라
+  Q-0008/F-02 사다리에서 닫는다. Q-0015(F-01)는 이번 attempt에서 폐기된 곡률 홀로노미 카드이며,
+  재추측(F-02)은 face 운반 홀로노미 각을 Ψ≠0 배위에서 Gram 잔차와 독립적으로 실제 계산하는 카드여야
+  하고(현재 카드처럼 θ를 ε의 결정함수로 하드코딩하지 않는다), 그렇지 않으면 θ_iso 정의로 φ_κ=0.4290007392를
+  예측하는 대안 경로를 택해야 한다 — 이번 세션에서는 F-02를 세우지 않는다(사용자 결정 대기)."

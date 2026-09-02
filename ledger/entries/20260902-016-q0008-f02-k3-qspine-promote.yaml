@@ -1,0 +1,82 @@
+id: E-20260902-016
+question: Q-0008
+attempt: 5
+timestamp: 2026-09-02T23:58:00+09:00
+claim: "카드 F-02 사다리 7단(예측시험 K3, Q-spine 깊이 b 블록)을 사전등록 그대로 실행해 두 판정 통계 모두 창 안임을 확인하고
+  7단을 promote로 닫는다: $n$-지수 $\\hat\\gamma_Q=0.49986\\pm0.0114$(창 $[0.42,0.59]$, 사전등록값 $0.5047$과 $-0.42\\sigma$,
+  창 경계까지 $7.0\\sigma$/$7.9\\sigma$)와 진폭비 $\\widehat R=\\mathrm{RMS}_Q(8)/\\mathrm{RMS}_{\\rm iid}(36)=6.6714\\pm0.193$
+  (창 $[6.01,7.65]$, 사전등록값 $6.832$과 $-0.83\\sigma$, 창 경계까지 $3.4\\sigma$/$5.1\\sigma$). 판별 통계인 진폭비가 chain류(23.11,
+  $85.2\\sigma$)·균등 Cayley(36)(9.064, $12.4\\sigma$)·평균장(8.245, $8.2\\sigma$) 세 대안을 모두 창 밖으로 배제한다(기울기
+  창은 카드 문구대로 평균장 $0.533$을 포함해 $2.9\\sigma$로만 가르므로 판별은 진폭비가 담당). adversary(opus) 독립 재실행이
+  비트 단위로 일치하고 다른 두 seed(20260903 → $0.5186/7.134$, 424242 → $0.5083/6.799$)도 모두 창 안이며, driver
+  $D=\\|H\\kappa H\\|_F^2$의 명시 행렬 재계산이 $6.8\\times10^{-15}$ 이내로 일치하고 카드 tree-only MC 표를 독립 재현했다
+  (status pass, P0 없음, 반례 0건, promote 권고). 이 promote는 사다리 완주가 아니다 — 3·4·5·6단이 여전히 open이므로
+  '커널 법칙'(3단) 자체는 아직 증명되지 않았고, 7단 통과는 그 법칙이 참이라는 가정 아래 조건부로만 의미를 가진다."
+level: L3
+verdict: promote
+pivot_step: null
+ladder_step: 7
+ladder_cited: null
+card: derivations/Q-0008/F-02.formula.md
+kill_triggered: null
+derivation: derivations/Q-0008/attempt-05.derivation.md
+verification:
+  symbolic: pass
+  numeric: pass
+  lean: skipped
+  artifacts: verify/Q-0008/attempt-05/
+adversary:
+  model_note: "adversary(opus) 실행 감사, 산출물 verify/Q-0008/attempt-05/adversary/a1–a3(a1 독립 재실행·다중 seed,
+    a2 4단 경로별 상계·tree-only MC 재현, a3 사전등록 무결성 3중 대조·창 대비 σ 재계산). status pass, P0 없음, promote 권고."
+  counterexamples: []
+  survived_checks:
+    - "사전등록 무결성 3중 대조: 카드 K3 문구·`check_qspine.py` 상수·`predictions.json` 숫자(slope 0.5047/0.50469, ratio
+      6.832/6.83243)가 일치하고, mtime 순서(카드→스크립트→result.json)가 정합하며, `result_official_F-02.json`이 공식
+      `result.json` 두 스냅샷과 바이트 동일(a3 official_copy_identical=true)"
+    - "독립 재실행 비트 일치: 같은 seed(20260902)로 재구동한 RMS 7개·i.i.d. RMS·두 통계가 최대 차 0.0(a1 same_seed)"
+    - "다른 seed 2개 모두 창 안: seed 20260903 → slope 0.5186/ratio 7.134, seed 424242 → slope 0.5083/ratio 6.799
+      (a1 other_seeds, 둘 다 in_window=true); 3-seed 경험 SD가 부트스트랩 SE(0.0114/0.193)와 정합"
+    - "델타법 SE가 부트스트랩 SE와 1.4~2% 이내로 일치(a1 method); 관측 평균 $n$ 격자로 재적합한 기울기 0.50158은 사전등록값과
+      $0.15\\sigma$(a3 recomputed.slope_observed_mean_n_grid_SENSITIVITY)"
+    - "driver $D=\\|H\\kappa H\\|_F^2$의 명시 행렬 직접 계산이 tree-only MC와 $6.8\\times10^{-15}$ 이내로 일치(a2); 카드
+      tree-only MC 표(b=2..8)를 독립 재현(예측 slope 0.50511, ratio 6.8340 — 카드 사전등록 0.5047/6.832와 z 대체로
+      2σ 이내, a1 tree_mc)"
+    - "4단 경로별 상계 $D/n^2\\le b^2$를 관측 진폭이 만족(a3 step4_bound.bound_ok=true, $\\sqrt{D/n^2}_{\\rm obs}=1.096\\le8$)"
+    - "ε★ 공통성 독립 확인: Q-spine b=8 블록과 i.i.d. n=36 블록의 진폭비(관측/카드표)가 0.976~0.983으로 같은 상수 규약을
+      공유함을 시사(a3 per_depth obs_over_card)"
+    - "card-check(F-02) 및 자체 hook 13/13 pass(symbolic·numeric); 실행 전 상수 10항목 대조 일치·실행 후 상수·창·seed 불변,
+      기각 재추출 0회"
+  hidden_assumptions:
+    - "P1(1) 감사 추적이 파일 mtime 순서뿐이다 — git 커밋이나 별도 파일 버전 추적이 없어, 사전등록이 실행보다 먼저였다는
+      증거가 시스템 시각에 의존한다"
+    - "P1(2) `check_modes.py`가 공식 `F-02/result.json`을 read-modify-write로 병합 저장한다 — attempt 4(6단)와 attempt
+      5(7단)가 같은 파일에 동시 기록할 경쟁 창이 실재했다(이번 실행에서는 데이터 손실 없음, official_copy_identical=true로
+      확인)"
+    - "P1(3) 창 반폭이 부트스트랩 SE의 7.5배(기울기)·4.2배(진폭비)다 — 통과가 주는 정보량은 창 자체보다 훨씬 좁고, 진폭비는
+      원 seed·독립 재계산 모두에서 카드표 대비 약 $-2\\%$(기울기 쪽은 $-1.7\\%$) 계통 결손이 반복된다(a3 per_depth
+      obs_over_card 평균 $\\approx0.976$·a1 tree_mc z들이 대체로 음). $\\delta=0.005$ 한 점만 시험해 이 결손이 $O(\\delta^4)$
+      절단 항인지 다른 원인인지 분리되지 않는다"
+    - "P1(4) 3·4·5·6단이 open인 채로 7단을 실행했다 — '커널 법칙'(3단)이 아직 증명되지 않았으므로 이 promote를 사다리 완주나
+      조건부 정리 승격으로 읽어서는 안 된다"
+    - "P2 참고: '대안 셋 배제'는 독립적인 물리 대안 3개가 아니다(chain은 4단 상계로 이미 정리로 배제되고, 평균장은 같은
+      법칙의 다른 규약이다); 기각 0회는 $\\delta=0.005$에서 자명하게 기대되는 값이다; Q-spine 정의(깊이 절단)의 예외 사례는
+      이번 attempt·adversary 기록에 없다; 재현 스크립트(`check_qspine.py`)는 공식 스크립트와 같은 난수 호출 순서를 쓰는
+      같은 코드의 재실행이지 독립 구현이 아니다"
+sourcer: null
+assumptions:
+  - "실행 규약은 카드 F-02 K3 문구 그대로: seed 20260902(Q-spine), i.i.d. n=36 seed 20260903, b∈{2,…,8}, 512 trials/b,
+    δ=0.005, MIN_DET=0.05 — 결과를 본 뒤 상수·창을 바꾸지 않았다"
+  - "표준오차(부트스트랩 B=2000·델타법)는 사전등록 항목이 아니라 이 attempt가 덧붙인 보고량이다; 창 통과 판정 자체는
+    카드 규약대로 SE와 무관하게 점추정값의 창 포함 여부만으로 한다"
+  - "이 attempt는 K3(7단)만 실행·보고한다. K1·K2·K5(6단)와 K4 일관성 검사는 attempt 4의 범위이며, 병합된
+    `verify/Q-0008/F-02/result.json`에 그 블록이 함께 있어도 이 항목의 판정과는 무관하다"
+  - "P_micro 가우스 등방 κ⊗I_16·O(δ⁴) 절단(3단 scope 가정)은 이 attempt가 유도하지 않았다 — 7단 통과는 그 가정이 참이라는
+    조건 아래에서만 의미를 가지는 조건부 결과다"
+  - "진폭비의 약 2% 계통 결손(hidden_assumptions P1-3)은 이번 attempt가 판정에 쓰지 않았다(창 안이므로) — 3단 O(δ⁴)
+    상계를 δ 다점 시험으로 유도할 때 이 결손의 원인(절단 항 vs 다른 효과)을 판정해야 한다"
+open_questions_spawned: []
+next_action: "다음 attempt는 사다리 3단(커널 법칙 보조정리)을 promote 또는 continue 시도한다: 등방성(internal SO(3), 16
+  기저방향 합 0)·Wick 전개·O(δ⁴) 절단 항의 명시 상계를 유도하고, δ를 0.005 한 점이 아니라 3점(예: 0.02/0.01/0.005)으로
+  사전등록 시험해 7단에서 반복 관측된 진폭비 약 2% 계통 결손이 O(δ⁴) 항인지 다른 원인인지 판정한다(hidden_assumptions
+  P1-3). 3단이 닫혀야 6단(K1·K2·K5, 이미 attempt 4가 실행)·7단(이번 attempt)의 통과가 '조건부 정리'로 격상될 수 있다.
+  부차: kill 스크립트의 result.json read-modify-write 병합 경쟁 창(P1-2)은 하네스 과제로 남긴다(결과에 영향 없음)."

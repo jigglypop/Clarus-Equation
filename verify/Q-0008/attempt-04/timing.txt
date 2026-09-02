@@ -1,0 +1,10 @@
+run_start 2026-09-02T14:13:09Z
+[her] start 2026-09-02T14:13:09Z
+[her] end 2026-09-02T14:14:48Z rc=0 elapsed_s=
+[mix] start 2026-09-02T14:14:48Z
+[mix] end 2026-09-02T14:16:04Z rc=0 elapsed_s=
+[iid] start 2026-09-02T14:16:05Z
+[iid] end 2026-09-02T14:16:53Z rc=0 elapsed_s=
+[defect] start 2026-09-02T14:16:53Z
+[defect] end 2026-09-02T14:16:53Z rc=0 elapsed_s=
+run_end 2026-09-02T14:16:53Z

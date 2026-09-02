@@ -1,0 +1,106 @@
+{
+ "closed_form_check": {
+  "max_rel_gram_diff": 0.0,
+  "max_rel_offdiag": 0.0,
+  "max_abs_residual_diff": 0.0,
+  "cases": "n in 2,3,5,7 x delta in 0.005,0.1,0.3,1.0 x 20 draws"
+ },
+ "zero_modes": {
+  "single_e11": {
+   "0.005": {
+    "closed_form_max": 1.4183485231591102e-16,
+    "pipeline_max": 1.4183485231591102e-16
+   },
+   "0.1": {
+    "closed_form_max": 0.0,
+    "pipeline_max": 0.0
+   },
+   "0.3": {
+    "closed_form_max": 1.2944375649331979e-16,
+    "pipeline_max": 1.2944375649331979e-16
+   },
+   "1.0": {
+    "closed_form_max": 1.6580279902529334e-16,
+    "pipeline_max": 1.6580279902529334e-16
+   },
+   "3.0": {
+    "closed_form_max": 0.0,
+    "pipeline_max": 0.0
+   }
+  },
+  "3diag_g_g_g_0": {
+   "0.005": {
+    "closed_form_max": 1.4229190825738463e-16,
+    "pipeline_max": 1.4229190825738463e-16
+   },
+   "0.1": {
+    "closed_form_max": 1.5496125295162356e-16,
+    "pipeline_max": 1.5496125295162356e-16
+   },
+   "0.3": {
+    "closed_form_max": 1.5422717565258788e-16,
+    "pipeline_max": 1.5422717565258788e-16
+   },
+   "1.0": {
+    "closed_form_max": 0.0,
+    "pipeline_max": 0.0
+   },
+   "3.0": {
+    "closed_form_max": 1.2551695806700524e-16,
+    "pipeline_max": 1.2551695806700524e-16
+   }
+  },
+  "3diag_0_g_g_g": {
+   "0.005": {
+    "closed_form_max": 0.0,
+    "pipeline_max": 0.0
+   },
+   "0.1": {
+    "closed_form_max": 0.0,
+    "pipeline_max": 0.0
+   },
+   "0.3": {
+    "closed_form_max": 1.6081485811668568e-16,
+    "pipeline_max": 1.6081485811668568e-16
+   },
+   "1.0": {
+    "closed_form_max": 1.412906832502301e-16,
+    "pipeline_max": 1.412906832502301e-16
+   },
+   "3.0": {
+    "closed_form_max": 1.563163302617086e-16,
+    "pipeline_max": 1.563163302617086e-16
+   }
+  },
+  "trace_g_g_g_g": {
+   "0.005": {
+    "closed_form_max": 1.4220867482295106e-16,
+    "pipeline_max": 1.4220867482295106e-16
+   },
+   "0.1": {
+    "closed_form_max": 1.2700759053740082e-16,
+    "pipeline_max": 1.2700759053740082e-16
+   },
+   "0.3": {
+    "closed_form_max": 1.3804368906382018e-16,
+    "pipeline_max": 1.5361283524785916e-16
+   },
+   "1.0": {
+    "closed_form_max": 1.5443491496029166e-16,
+    "pipeline_max": 1.5443491496029166e-16
+   },
+   "3.0": {
+    "closed_form_max": 1.5438607296462068e-16,
+    "pipeline_max": 1.5438607296462068e-16
+   }
+  },
+  "two_g_g_0_0": {
+   "0.005": {
+    "closed_form_max": 9.89432752465814e-06,
+    "pipeline_max": 9.89432752465814e-06
+   },
+   "0.1": {
+    "closed_form_max": 0.00452157977490388,
+    "pipeline_max": 0.004521579774903966
+   },
+  

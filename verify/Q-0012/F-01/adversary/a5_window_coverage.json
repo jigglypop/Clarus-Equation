@@ -1,0 +1,150 @@
+{
+  "replicates": 400,
+  "trials_per_replicate": 8192,
+  "stats": {
+    "a_cat6": {
+      "prereg": 0.0074790218,
+      "mean": 0.007516971776653316,
+      "sd": 0.0006023657188653482,
+      "median_delta_method_se": NaN,
+      "sd_over_delta_se": null,
+      "window": [
+        0.004961,
+        0.009997
+      ],
+      "fire_rate": 0.0,
+      "z_mean_vs_prereg": 1.2600310895779727
+    },
+    "a_iid36": {
+      "prereg": 0.0162037037,
+      "mean": 0.016238376272073314,
+      "sd": 0.00044075720524009094,
+      "median_delta_method_se": NaN,
+      "sd_over_delta_se": null,
+      "window": [
+        0.014412,
+        0.017996
+      ],
+      "fire_rate": 0.0,
+      "z_mean_vs_prereg": 1.5733184465777845
+    },
+    "rho_cat6_laplace": {
+      "prereg": 1.0224370653,
+      "mean": 1.0225279622946326,
+      "sd": 0.004693292574327216,
+      "median_delta_method_se": 0.004989764931684999,
+      "sd_over_delta_se": 0.9405839029660127,
+      "window": [
+        1.0026,
+        1.0422
+      ],
+      "fire_rate": 0.0,
+      "z_mean_vs_prereg": 0.3873485114903436
+    },
+    "rho_cat6_rademacher": {
+      "prereg": 0.9850419565,
+      "mean": 0.9849313160136272,
+      "sd": 0.010667348590999255,
+      "median_delta_method_se": 0.010898993643581958,
+      "sd_over_delta_se": 0.9787461980291079,
+      "window": [
+        0.9417,
+        1.0284
+      ],
+      "fire_rate": 0.0,
+      "z_mean_vs_prereg": -0.20743765037590742
+    },
+    "rho_cat6_spike64": {
+      "prereg": 1.456220328,
+      "mean": 1.4585330533255234,
+      "sd": 0.036814182253154,
+      "median_delta_method_se": 0.03850177400448607,
+      "sd_over_delta_se": 0.9561684676883866,
+      "window": [
+        1.302,
+        1.6104
+      ],
+      "fire_rate": 0.0,
+      "z_mean_vs_prereg": 1.2564317249368608
+    },
+    "rho_cat6_uniform": {
+      "prereg": 0.9910251739,
+      "mean": 0.9908670452764166,
+      "sd": 0.004334175728578302,
+      "median_delta_method_se": 0.004487269987253718,
+      "sd_over_delta_se": 0.9658825390247774,
+      "window": [
+        0.9733,
+        1.0088
+      ],
+      "fire_rate": 0.0,
+      "z_mean_vs_prereg": -0.7296825670486217
+    },
+    "rho_iid36_laplace": {
+      "prereg": 1.0486111111,
+      "mean": 1.0487367440986326,
+      "sd": 0.003389867108733213,
+      "median_delta_method_se": 0.003355117262735869,
+      "sd_over_delta_se": 1.010357267205918,
+      "window": [
+        1.0352,
+        1.062
+      ],
+      "fire_rate": 0.0,
+      "z_mean_vs_prereg": 0.7412266888509443
+    },
+    "rho_iid36_rademacher": {
+      "prereg": 0.9675925926,
+      "mean": 0.9674622409751485,
+      "sd": 0.007843382224886052,
+      "median_delta_method_se": 0.007627063616994887,
+      "sd_over_delta_se": 1.0283619776566642,
+      "window": [
+        0.9371,
+        0.9981
+      ],
+      "fire_rate": 0.0,
+      "z_mean_vs_prereg": -0.33238626172732544
+    },
+    "rho_iid36_spike64": {
+      "prereg": 1.9884259259,
+      "mean": 1.9905394701745982,
+      "sd": 0.02700136048847227,
+      "median_delta_method_se": 0.027256340863101157,
+      "sd_over_delta_se": 0.9906450988447216,
+      "window": [
+        1.8786,
+        2.0982
+      ],
+      "fire_rate": 0.0,
+      "z_mean_vs_prereg": 1.565509467940069
+    },
+    "rho_iid36_uniform": {
+      "prereg": 0.9805555556,
+      "mean": 0.9805943077021125,
+      "sd": 0.002935766947702852,
+      "median_delta_method_se": 0.003127625700014242,
+      "sd_over_delta_se": 0.9386567413388002,
+      "window": [
+        0.9681,
+        0.9931
+      ],
+      "fire_rate": 0.0,
+      "z_mean_vs_prereg": 0.2639998528690688
+    },
+    "slope_ratio": {
+      "prereg": 0.4615624864,
+      "mean": 0.46297301623825815,
+      "sd": 0.035805999800726136,
+      "median_delta_method_se": NaN,
+      "sd_over_delta_se": null,
+      "window": [
+        0.2974,
+        0.6257
+      ],
+      "fire_rate": 0.0,
+      "z_mean_vs_prereg": 0.7878734547887241
+    }
+  },
+  "any_window_fire_rate": 0.0
+}

@@ -1,0 +1,40 @@
+{
+  "seeds": 200,
+  "n": 50,
+  "K1a_k_carrier": {
+    "distinct_values": [
+      2
+    ],
+    "constant": true,
+    "note": "코드에서 carrier_at_1=False 하드코딩; 값은 (e)와 동치"
+  },
+  "K1b_unbounded_min_cycles": {
+    "min": 44,
+    "max": 274,
+    "zero_count": 0,
+    "constant": false
+  },
+  "K1c_tree_b1": {
+    "distinct_values": [
+      0
+    ],
+    "constant": true,
+    "note": "split_only_tree 는 정점마다 부모 1개 => 항상 forest"
+  },
+  "K1d_flat_fraction_M1": {
+    "distinct_values": [
+      1.0
+    ],
+    "constant": true,
+    "note": "M=1 이면 chosen=m 이므로 U_face=U U^{-1}=I, 정의상 항등"
+  },
+  "K1e_flat_fraction_all": {
+    "min": 0.8110599078341014,
+    "max": 0.9659863945578231,
+    "hit_one_count": 0
+  },
+  "falsifiable_subconditions": [
+    "K1b_unbounded_min_cycles",
+    "K1e_flat_fraction_all"
+  ]
+}

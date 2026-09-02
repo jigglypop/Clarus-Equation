@@ -1,0 +1,58 @@
+{
+ "script": "a5_misc",
+ "seed": 20260902,
+ "step2_identity_max_rel_err": 3.7654009741130663e-16,
+ "delta2_coefficient_vs_Phi": [
+  {
+   "delta": 0.0001,
+   "rel_err": 0.00014008529383021076
+  },
+  {
+   "delta": 0.001,
+   "rel_err": 0.0006742775344203101
+  },
+  {
+   "delta": 0.01,
+   "rel_err": 0.01309438877668596
+  }
+ ],
+ "K2_numbers": {
+  "n": 32,
+  "E_tr_H_kappa_exact": 92.38472762671584,
+  "card_note_value": 92.3847,
+  "E_D_C_32": 2008.0806177039074,
+  "card_note_E_D": 2008.0806,
+  "X32_from_exact": 0.7405574568988049,
+  "card_prereg_value": 0.7406,
+  "sum_Nk_equals_n": 32.0,
+  "rel_err_cross": 2.9903994769320263e-07,
+  "rel_err_ED": 8.81633299698592e-09,
+  "rel_err_X32": 5.744410099262076e-05,
+  "K2_window": [
+   0.49,
+   0.99
+  ]
+ },
+ "S8_2_implication_counterexample": {
+  "construction": "D/n^2 = depth^2 * (2 + sin(ln n)), depth = n^{1/2}",
+  "ratio_bounds": [
+   1.004488319673784,
+   2.973811499207967
+  ],
+  "asymp_holds": true,
+  "local_gamma_min": 0.22047385122105795,
+  "local_gamma_max": 0.7806368657858787,
+  "target_1_over_d_tree": 0.5,
+  "weak_exponent_lim_ln_eps_over_ln_n": 0.5054757685244434,
+  "note": "the order relation fixes the weak exponent lim ln eps / ln n = 1/d_tree but NOT the local log-derivative gamma; (S8.2) needs D/(n^2 depth^2) -> const (regular variation), which every family the derivation tests does satisfy"
+ },
+ "B_tl_over_gram_range": {
+  "min": 0.026567607494228436,
+  "max": 0.11381394895312999,
+  "claimed_in_derivation": [
+   0.027,
+   0.114
+  ]
+ },
+ "C_b_rejections": 0
+}

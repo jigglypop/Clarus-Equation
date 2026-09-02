@@ -1,0 +1,171 @@
+id: E-20260902-017
+question: Q-0013
+attempt: 2
+timestamp: 2026-09-03T01:00:00+09:00
+claim: >-
+  F-02(예측식, revision 2, 재추측 카드) [공리: 후보]. master 식
+  $\bar\epsilon_{\rm block}(n)^2=\delta^4[(\mathrm{tr}H\kappa)^2\lVert\mathrm{tl}\mathcal
+  G(\Sigma)\rVert_F^2+2\lVert H\kappa H\rVert_F^2\,T(\Sigma)]/(12n^2)$은 F-01(E-20260902-013 기각)의
+  master를 유지하고, 바닥 소멸 조건을 축 무게 균형이 아니라 SO(3) 동변 사상 $\mathrm{tl}\mathcal G$의 핵으로
+  다시 세운다: 5개 유리수 선형 조건 $W_1=W_2=W_3$, $X_{12}=X_{23}=X_{31}=0$(계수 108쌍 유리수 분모≤4,
+  $\dim\ker=131$) — 단 이 동치는 $O(\delta^2)$ 명제로 한정한다. 자기쌍대 짝 상관 $C_k$가 축 무게를
+  $P_l-P_m$으로 옮기고, 대각 라벨 세 곱 등식 $(\Sigma A)(\Sigma B)=(\Sigma A')(\Sigma B')=(\Sigma
+  A'')(\Sigma B'')$이 정확 영모드를 준다. 예산 $T(I_{16})=60=8+28+24$, $\epsilon_\star(I_{16})=\sqrt{10}\delta^2$(Q-0008
+  F-02의 자유 파라미터 소거), 네 정확 영모드 독립 합의 비가산성 $4\delta^4$. card-check PASS(kind 예측식,
+  ladder 7단, predicts 15[already_observed 4], kill 3[K1–K3]+일관성 검사 2[K4·K5], free_parameters
+  0), 훅 26/26 pass(symbolic·numeric). sourcer(haiku)가 Capovilla–Dell–Jacobson–Mason·Krasnov·De
+  Pietri–Freidel·Speziale–Wieland·Dittrich를 unrelated로, Schur 보조정리·SO(3) 동변 사상의 기약분해(고전
+  불변론, Weyl)를 generalizes로 정규화(원문 special_case_expression 표기는 사다리 1단 외부기존 인용
+  관계일 뿐이며 핵 5조건·세 곱 등식 영모드·예산/비가산성 조합을 재발견하지 않음)해 overall novel로 판정했다.
+  adversary 1차(opus)가 P0 없이 P1 반례 3건 — 회전 영모드 $(e_{01}-e_{10})/\sqrt2$의 $O(\delta^4)$ 바닥(박스는
+  $O(\delta^2)$ 명제로 한정, K1 창 반폭의 1.7e-4배로 kill 무해), spin-2 다중도 12로 정정(Casimir 60/5=12,
+  Schur는 12-파라미터 족만 보증하고 계수표가 원소 하나로 고정), '진부분집합' 서술 정정(핵 $\dim=131$과
+  $w$-균형 $\dim=134$은 서로 포함하지 않음, 교집합 129) — 을 냈고 revision 2가 전부 반영했다. adversary
+  재감사(opus)가 사전등록 무결성 100%(값 15/15 rev1=rev2, 스크립트 sha256 불변, 창 11/11 동일, 훅
+  26/26), 독립 재구성(dim ker 131·rank 5·핵 5조건과 일치·규칙 실패 0·예산 정확), 격자 밖 기하 MC(seed
+  20260903: 핵 $\Sigma_b$ 바닥 0 대비 관측 비 0.975~1.007, 노름 보편성 $\Sigma_o$ vs $\Sigma_d$ 바닥
+  0.11276±0.0069 vs 0.11344±0.0014)로 status pass·adopt 권고를 냈고, 자기 정정으로 $\delta^4$
+  산술은 카드(1.7e-4)가 맞고 1차 SUMMARY의 1.7e-5는 인수 10 오기였음을 기록했다. 재감사에서 새 P1 1건:
+  4단의 추가 문장 "임의의 cell별 정렬 사상에서 성립"이 c3_alignment_scan.py로 거짓임(polar 정렬은
+  rel_err/δ≈0.1922 상수로 항등식 성립하나, 추가 회전 크기 s에서 rel_err는 s²에 비례·δ 무관, s=1에서
+  0.488) — 이 문장은 미완 4단의 부수 서술에 한정되고 박스·master·사전등록·kill과 무관해 P0가 아니고
+  P2로 강등도 불가(반례가 있는 거짓 진술)하다. card-check PASS·sourcer novel·adversary P0 없음이라는
+  adopt 요건을 충족해 adopt(조건부 2건)로 판정한다.
+level: L3
+verdict: adopt
+pivot_step: null
+ladder_step: null
+ladder_cited: null
+card: derivations/Q-0013/F-02.formula.md
+kill_triggered: null
+derivation: derivations/Q-0013/F-02.formula.md
+verification:
+  symbolic: pass
+  numeric: pass
+  lean: skipped
+  artifacts: verify/Q-0013/F-02/
+adversary:
+  model_note: "1차 카드 감사·재감사 모두 opus(Fable 5.1 안전장치 오탐 회피 규정에 따름). 산출물
+    verify/Q-0013/F-02/adversary/(1차 SUMMARY.json·b1–b11, 재감사 c_SUMMARY.json·c0–c3)."
+  counterexamples: []
+  survived_checks:
+    - "card-check PASS(kind 예측식, ladder 7단, predicts 15, kill 3), 훅 26/26 symbolic+numeric
+      pass(hook_result 재실행 00:44:56)"
+    - "사전등록 무결성 100%(c_SUMMARY.preregistration_intact): card 값 rev1 vs rev2 15/15 동일,
+      script PRED 13/13·WINDOW 12/12 동일, 스크립트 sha256 불변(35d7488967f8dcf9, mtime
+      23:52:56 < card rev2 mtime 00:44:42), kill 창 11/11 카드=스크립트 일치"
+    - "독립 재구성(opus, 다른 기저·다른 유한차분+Richardson): dim ker=131, rank(map)=5,
+      Sym^2(R^16) dim=136, 카드 5조건과 같은 부분공간(주각 min cos 0.9999999999999989),
+      규칙 대 직접계산 최대 상대오차 3.79e-13, 유리수 계수표 실패 0/108"
+    - "예산·비가산성 독립 재계산: T=60=8+28+24, eps_star^2(I16)=10, (I4)=4/3, (I12)=14/3,
+      비가산성=4 — 전부 정확 유리수로 재현"
+    - "격자 밖 기하 MC(seed 20260903, delta=0.005, n in {6,9,12,24,33}): 핵 원소(full-rank·랜덤)의
+      관측/master 비 0.975~1.007(mc_se_rel 0.041); 직접 바닥 탐사(n=33, 400 trial) univ_o(T=11/3)
+      0.11276±0.00694 vs univ_d(T=1/6) 0.11344±0.00139 — 노름 보편성 확인, 방향 코사인
+      0.9999999로 F-01 닫힌 식 배제; 핵 Sigma_b 관측 0.00328±0.00549(F-01 0.2041 예측을 37σ
+      배제)"
+    - "2단 정확 영모드: 닫힌 식 Gram = 파이프라인 최대 상대차 0.0(n in {2,3,5,7}, delta<=1.0),
+      (g,g,0,0) 위반량 항등식 오차 0.0 — 반증 위험 0인 대수 항등식(K4는 일관성 검사로 재분류,
+      kill 아님)"
+    - "MIN_DET=0.05 재추출 규약이 F-01 K4의 delta=0.3 실행 불가(Urbantke 판별식<0)를 해소함을
+      확인(zero_delta1.0_resampled=229회, delta=0.1 det<=MIN_DET 확률 ~0/추출)"
+    - "1차 반례 3건이 revision 2에 전부 반영되고 재감사에서 재확인됨: 회전 영모드 delta^4 바닥은
+      K1 창 반폭의 1.7e-4배(자기 정정: 1차 SUMMARY의 1.7e-5는 인수 10 오기, quadrature 효과로는
+      1.4e-9)로 kill 무해; spin-2 다중도 12(Casimir 60/5, intertwiner dim 12) 독립 재확인;
+      핵(dim131)과 w-균형(dim134)은 서로 포함 관계가 아님(교집합 129, neither_contains_the_other=true)"
+    - "재감사 새 P1(c3_alignment_scan.py): 4단 '임의의 cell별 정렬 사상에서 성립' 문장이 거짓 —
+      polar 정렬에서는 rel_err/delta가 0.1922로 상수(O(delta) 항등식 성립), 추가 회전 크기
+      s*delta에서는 rel_err가 s^2에 비례하고 delta 무관(s=1: rel_err 0.488, s=3: 4.40, s=10: 48.9);
+      cell Gram=2 det(e) I는 정확히 참이나 v=v 항만 없애고 v≠w 교차항 R_v R_w^T를 O(delta^2)로
+      남긴다. 미완 4단 부수 문장에 한정, 박스·master·사전등록·kill과 무관 — P0 아님"
+    - "must_fix 상태(재감사): 1·2·4·5·6·7 반영, 3 부분 반영(P2 잔여: result.json의 script
+      verdict()가 iso_eps2·univ_d·zero까지 검사해 카드 규칙 K1–K3과 어긋날 수 있음), 8 반영했으나
+      새 P1(위 정렬 반례) 생성"
+  hidden_assumptions:
+    - "scope: Euclidean 자기쌍대 대수(양의 branch)·polar-aligned 정확 simple cell·곱형 라벨 공분산
+      kappa⊗Sigma·i.i.d. cell만 다룬다(비곱형·Lorentzian은 밖)"
+    - "박스의 <=>는 O(delta^2) 명제이지 delta 정확 명제가 아니다 — 핵 원소라도 delta^4 바닥이
+      남을 수 있다(회전 영모드 예, K1 창의 1.7e-4배로 kill 무해). delta 정확 예외는 2단 대각
+      라벨 세 곱 등식뿐이다"
+    - "MIN_DET=0.05 재추출 규약이 필요하다(det(I+delta l)>0 보장); delta<=0.1에서 위반 확률은
+      무시 가능(~0)"
+    - "4단 '정렬 무관성' 문장은 임의의 cell별 정렬에서 성립하지 않는다 — polar(1계 최적) 정렬과
+      o(delta)로 일치하는 사상에서만 성립한다는 것이 이 단에서 증명할 내용이며, c3_report.json이
+      반례를 기록한다(adopt_condition 1)"
+    - "result.json의 스크립트 verdict()는 iso_eps2_over_delta2·univ_d_eps64_over_delta2·zero_max_residual까지
+      검사해 status가 카드의 판정 규칙(K1–K3만 kill, K4·K5는 일관성)과 어긋날 수 있다 — 카드가
+      아니라 스크립트 출력이 판정 기준이라는 경고가 필요하다(adopt_condition 2)"
+  parking:
+    - "adopt_condition 1: 4단 '임의의 cell별 정렬 사상에서 성립' 문장을 '정렬 회전이 polar(1계
+      최적)와 o(delta)로 일치하는 임의의 사상에서 성립(이 단에서 증명할 것)'으로 다음 4단 attempt
+      머리에서 정정하고, 반례 c3_report.json을 그 attempt의 원장 항목에 기록한다"
+    - "adopt_condition 2: 죽는 조건 문단에 'result.json의 status·kill_fired는 판정이 아니며 카드의
+      K1–K3(및 카드 본문의 already_observed·일관성 규약)만 판정 기준이다' 한 줄을 추가한다"
+    - "다음 attempt에서 먼저 1단(외부기존 — Isserlis/Wick, SO(3) 동변 사상·Schur, Plebanski
+      simplicity, Procrustes)을 sourcer 인용으로 ladder_cited 닫고(attempt 소모 없음), 이어
+      2단(대각 라벨 세 곱 등식 보조정리, 파이프라인 오차 0.0으로 이미 증명 가능)을 promote
+      시도하며 adopt_condition 1–2를 반영한다"
+sourcer:
+  prior_art:
+    - ref: "Capovilla–Dell–Jacobson–Mason 1991 self-dual 2-form / Ashtekar 변수 정식화"
+      url: null
+      relation: unrelated
+      note: "자기쌍대 이중형식 대수의 표준 정식화이나 라벨 공분산의 동변 사상 핵·계수표·예산 분해는
+        문헌에 없다"
+    - ref: "Krasnov (Plebanski형 작용, BF 이론의 simplicity 제약 일반화)"
+      url: null
+      relation: unrelated
+      note: "simplicity 제약의 작용 수준 일반화이지 블록 잔차 공분산의 동변 사상 핵 조건이 아니다"
+    - ref: "De Pietri–Freidel 1999 SO(4) Plebanski action / 자기쌍대 이중벡터 삼중항(12.4 기초)"
+      url: null
+      relation: unrelated
+      note: "사다리 1c(외부기존)의 기초 인용일 뿐 카드의 고유 주장(핵 5조건·세 곱 등식·예산·비가산성)을
+        재발견하지 않는다"
+    - ref: "Speziale–Wieland (twisted geometry, shape mismatch)"
+      url: null
+      relation: unrelated
+      note: "국소 shape mismatch 조건이지 라벨 공분산 사상의 핵으로 바닥 소멸을 특정하는 식이 아니다"
+    - ref: "Dittrich–Eckert–Martin-Benito 2012; Bahr–Dittrich–Steinhaus spin foam coarse graining"
+      url: "https://arxiv.org/abs/1409.2407"
+      relation: unrelated
+      note: "simplicity constraint의 RG 흐름은 다루나 바닥의 미시 기원을 라벨 공분산 사상의 핵으로
+        쓰는 식이 없다"
+    - ref: "Schur 보조정리·SO(3) 동변 사상의 기약분해(Weyl, 고전 불변론)"
+      url: null
+      relation: generalizes
+      note: "원문 special_case_expression 표기를 정규화 — Schur는 Sym^2(R^16)의 spin-2 다중도가
+        12임을 통해 tl G가 12-파라미터 족의 원소라는 존재만 보증하고(intertwiner dim 12, adversary
+        b1·c-series 독립 재확인), 어느 원소인지(유리수 계수 108쌍, 실패 0)는 카드의 계산 결과다 —
+        사다리 1단(외부기존) 인용 관계일 뿐 핵 5조건·세 곱 등식 영모드·예산/비가산성 조합을 재발견하지
+        않는다"
+  overall: novel
+  ce_specific_confirmed: "SO(3) 동변 사상 tl G(Sigma)의 핵을 다섯 유리수 선형 조건(W 균형·X=0)으로
+    명시하고 그 계수표(108쌍, 분모<=4)를 계산한 것, 자기쌍대 짝 상관이 축 무게를 옮긴다는 것(C_k), 대각
+    라벨의 세 곱 등식 영모드, 예산 60=8+28+24와 비가산성 4delta^4의 조합은 선행 문헌에서 찾지 못했다.
+    Schur·동변 분해 자체는 고전적이라 generalizes로 정규화했다"
+assumptions:
+  - "F-01 승계: master 식(등방·rank-1·n=1·delta->0 극한 복원)·T(I_16)=60·eps_star=sqrt10 delta^2·
+    F-02(Q-0008)의 자유 파라미터 소거는 F-01(E-20260902-013)에서 이미 생존해 F-02가 그대로 물려받는다
+    — 죽은 것은 F-01의 축 무게 닫힌식뿐이었다"
+  - "adopt_condition 1: 4단 '임의의 cell별 정렬 사상에서 성립' 문장을 '정렬 회전이 polar(1계 최적)와
+    o(delta)로 일치하는 임의의 사상에서 성립(이 단에서 증명할 것)'으로 다음 4단 attempt에서 정정하고
+    반례 c3_report.json을 원장에 기록한다"
+  - "adopt_condition 2: 죽는 조건 문단에 'result.json의 status/kill_fired는 판정이 아니며 카드의
+    K1–K3만 본다'는 한 줄을 추가한다"
+  - "Q-0008 F-02 카드의 b4 정정이 완료됨(revision 3): '-0.006 기울기의 O(delta^2) 바닥이 생겨
+    i.i.d. 기울기가 무너진다'는 revision 2까지의 기록은 기계 오차 위의 잡음이었다고 철회되고, 실재하는
+    O(delta^2) 바닥은 상관된 비대각 조합에서 생기며 그 완화 조건이 축 무게 균형이 아니라 tl G(Sigma)=0
+    (5개 독립 조건)이라는 이 카드의 결론으로 정정됐다(출처 Q-0013 E-20260902-013)"
+  - "박스의 <=>는 O(delta^2) 명제로 한정한다(delta^4 잔여는 kill 무해); MIN_DET=0.05 재추출·
+    i.i.d. gaussian 라벨·곱형 kappa⊗Sigma·polar-aligned 정확 simple cell scope는 카드 그대로다"
+open_questions_spawned: []
+next_action: "다음 attempt에서 먼저 사다리 1단(외부기존 — Isserlis/Wick 4점 공식·SO(3) 동변 사상과
+  Schur·Plebanski simplicity·Procrustes 최적 회전)을 sourcer 인용으로 ladder_cited 닫고(attempt
+  소모 없음), 이어 2단(대각 라벨 세 곱 등식 보조정리 — 닫힌 식 Gram = 파이프라인 오차 0.0으로 이미
+  증명 가능, adversary b5/c2 근거)을 promote 시도한다. 같은 attempt에서 adopt_condition 1(4단
+  '임의의 cell별 정렬 사상' 문장을 polar(1계 최적)·o(delta) 일치로 좁히고 c3 반례 기록)·2(죽는 조건에
+  result.json 판정 경고 한 줄)를 반영한다. 6단(사전등록 물리 실행 K1–K3, check_floor.py --mode
+  kernel/diag/univ)은 2·3·4단 promote 이후로 이월한다. paper: 이 카드(핵 5조건·유리수 계수표·예산
+  60=8+28+24)가 Q-0008 F-02의 자유 파라미터 eps_star를 계산값 sqrt10 delta^2로 없앤다는 점을
+  §5 행에 반영한다(사다리 완주 전이므로 지위는 [공리: 후보]·[예측: 사전등록]에 한정, [정리] 승격
+  아님)."

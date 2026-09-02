@@ -1,0 +1,122 @@
+id: E-20260902-007
+question: Q-0008
+attempt: 2
+timestamp: 2026-09-02T21:40:00+09:00
+claim: "F-02(예측식, revision 2) $\\bar\\epsilon_{block}(n)^2=\\epsilon_\\star^2\\|H\\kappa H\\|_F^2/n^2$,
+  $H=I-J/n$, $\\kappa=w_{coh}^2\\Sigma_s\\mathbf 1_s\\mathbf 1_s^\\top+w_{iid}^2 I+w_{her}^2AA^\\top$
+  ($A_{vu}=[u\\preceq v]$)를 채택한다(진전: 예측). card-check PASS(kill 4·predicts 8·free_parameters
+  1·ladder 7단), `verify/Q-0008/F-02/hook_result.json` symbolic=pass·numeric=pass 17/17(극한 복원 5종·닫힌
+  식 4종·차원 항등식), sourcer(haiku) prior_art 5건 전부 generalizes/unrelated로 정규화(identical·special_case
+  없음, 카드 전체 재발견 아님), adversary 재감사(opus, Fable 5.1 안전장치 오탐으로 대체)가 must_fix 8건 중 7건
+  반영·1건(scope)은 caterpillar를 반례로 잘못 기록한 자체 오류로 정정(b9: caterpillar도 γ→0.5000으로
+  γ_her=1/d_tree 법칙을 만족, star-of-chains만 배제)만 남겨 P0·P1 없이 P2 표기만으로 통과했다(verdict_recommendation:
+  adopt). F-01(1차 카드, E-20260902-006 refute)의 구동량 오류(label 합 W_2, γ_her=1/(2 d_tree))를
+  정확 항등식 기반 커널 노름 ‖HκH‖_F²과 γ_her=1/d_tree로 교체했고, defect 희석 (n−1)/n²·혼합 교차항
+  2 tr(Hκ)·조건부 정렬 공리 필요성(5단)을 추가했다."
+level: L3
+verdict: adopt
+pivot_step: null
+ladder_step: null
+ladder_cited: null
+card: derivations/Q-0008/F-02.formula.md
+kill_triggered: null
+derivation: derivations/Q-0008/F-02.formula.md
+verification:
+  symbolic: pass
+  numeric: pass
+  lean: skipped
+  artifacts: verify/Q-0008/F-02/
+adversary:
+  model_note: "1차(must_fix 8건 P1)는 opus 정상 실행. prover 수정 1회 후 재감사도 opus(Fable 5.1 API 안전장치
+    오탐으로 대체 실행, 오케스트레이터 보고)."
+  counterexamples: []
+  survived_checks:
+    - "사전등록 무결성 3경로 대조 8/8 (preregistration_intact=true, numbers_unchanged=true)"
+    - "hook_result.json 17/17 pass (symbolic·numeric 모두)"
+    - "card-check PASS(kill 4, predicts 8; consistency_checks는 카드 스키마가 무시하고 adopt-card는 kill 목록만
+      복사하므로 K4는 사다리 kill로 들어가지 않는다)"
+    - "판별 대안(chain·balanced binary·star·평균장·quadrature) 전부 kill 창 밖"
+    - "b9 tree족 판별력: chain 0.33·caterpillar 0.35·Cayley 20.1/77(κ~깊이 족, γ→0.5000) vs 배제족 star-of-chains
+      1.29·balanced binary 1.97(포화, γ 법칙 밖)"
+    - "b2 구동식(정확 커널) vs 조밀행렬 직접 계산 상대오차 9.3e−16"
+    - "b8 정확 블록 항등식 3줄 증명(δ=0.3, 상대오차 1e−14) — 2단 보조정리의 기반"
+  audits:
+    dimension: "P2 — γ_her·P_micro가 symbols/dimensions 표에 명시 선언되지 않음, D_her 미사용(카드 표기 정리
+      과제, 재계산 아님)"
+    recovers: "P2 — 다섯 극한(verify index 0·5·6·3·2)이 비항진 실제 실행으로 지정됨, F-01 대비 rev-1 P1 해소"
+    dof: "ok — 자유 파라미터 1(ε_★, 전부 상쇄)이 already_observed=false 사전등록 숫자 6개보다 적다(K4 두 행은
+      already_observed=true라 자유도 비교에서 제외); ε_★의 절대 진폭 자체는 미시험(비율·지수만 예측)"
+    content: "P2 — 동어반복 아님(K3 지수류는 Q-0009로 열려 있고, K5는 비등방 모형에서 실제 발동하며, K2 교차항은
+      quadrature 암묵 가정을 실질적으로 시험한다); K1은 F-01 adversary가 이미 관측한 n≤32 값으로 상당 부분
+      선결정되어 있다는 우려는 남는다(already_observed 형식상 false)"
+    kill_executable: "P2 — K1·K2·K3·K5는 실행 가능하고 창이 서로 일치하며 판별 대안이 전부 창 밖이지만,
+      check_modes.py가 K4(consistency_check)에도 'KILL' 문자열을 출력해 지위로 오독될 위험이 있다(adopt_condition 2)"
+    ladder_complete: "P2 — 7단을 모두 닫으면 조건부 정리가 된다(가정된 P_micro·w_her≠0 공리·고정 ε_res 아래);
+      5단(반집중 보조정리)이 증명 대상으로 가장 약하고, 3단은 O(δ⁴) 충분조건·CRT 분기점 인용이 아직 없다"
+  parking:
+    - "5단 하위꼬리 반집중 보조정리(별도 lemma 질문 후보)"
+    - "3단 O(δ⁴) 충분조건 증명·CRT 분기점 인용"
+    - "비등방 O(δ²) 바닥 모형(F-03/별도 카드 후보, K5가 실제 발동한 비등방 raw 관측이 근거)"
+    - "ε_★ 절대 진폭 관측량 설계(현재는 비율·지수만 예측)"
+    - "check_modes.py verdict 출력에서 'KILL' 문자열을 kill/consistency_check로 분리 표기"
+sourcer:
+  prior_art:
+    - ref: "Aldous 1991–1993 CRT; Janson 2003 Wiener index arXiv:math/0309284; Meir–Moon 1970 subtree
+        size law"
+      url: "https://arxiv.org/abs/math/0309284"
+      relation: generalizes
+      note: "sourcer 원문 relation=partial을 스키마로 정규화: tree 이차 범함수 극한(사다리 1d·1e단 외부기존)은
+        알려짐; 카드는 이를 정확 중심화 커널 노름·defect 희석 (n−1)/n²·혼합 교차항으로 확장한다"
+    - ref: "Isserlis 1918 / Wick 가우스 2차 형식 분산 Var(ξᵀMξ)=2‖M‖_F²"
+      url: null
+      relation: generalizes
+      note: "sourcer 원문 relation=special_case를 스키마로 정규화: 이 identical 관계는 카드 전체가 아니라 사다리
+        1a단(외부기존 그대로 인용)에 대한 것이며, 카드는 이를 tree label 공분산 κ⊗I_16에 적용해 확장한다(1단은
+        다음 attempt에서 ladder_cited로 닫는다)"
+    - ref: "Lyons–Pemantle–Peres 1995 size-biased GW (Q-process spine)"
+      url: null
+      relation: generalizes
+      note: "sourcer 원문 relation=partial을 정규화: size-biased spine·Q-spine 알려짐(사다리 1f·4단 외부기존);
+        카드는 깊이 b 절단 상계 D/n²≤b²와 진폭 0.754×Cayley로 확장한다"
+    - ref: "Dittrich–Eckert–Martin-Benito 2012 arXiv:1109.4927; Bahr–Dittrich–Steinhaus arXiv:1101.4775,
+        1208.3388; Dittrich 2016 arXiv:1409.2407"
+      url: "https://arxiv.org/abs/1409.2407"
+      relation: unrelated
+      note: "sourcer 원문 relation=partial을 정규화: spin foam coarse graining RG·simplicity defect는
+        다루나 ‖HκH‖_F² 식·γ_her=1/d_tree·정렬 공리 필요 결론이 문헌에 없어 공유 결과가 확인되지 않는다"
+    - ref: "Freidel–Speziale 2010 arXiv:1001.2748; Dittrich–Speziale 2008; Livine 2013"
+      url: "https://arxiv.org/abs/1001.2748"
+      relation: unrelated
+      note: "twisted geometry 국소 shape mismatch; 블록 지수·정렬 공리와 관계 없음"
+  overall: partial_with_novel_synthesis
+  ce_specific_confirmed: "정확 항등식의 1차항 상쇄(polar-aligned tetrad 특화), 커널 노름의 세 mode 표현·닫힌
+    식 4종, γ_her=1/d_tree 예측(scope 한정), Q-spine 상계·진폭 0.754배, 정렬 공리 필요성, 교차항
+    2 tr(Hκ) 명시는 문헌에서 찾지 못했다"
+assumptions:
+  - "5단 하위꼬리 반집중은 유계 미증명(cv(D/n²) 0.295→0.446 증가) — 사다리에서 가장 약한 고리"
+  - "3단 O(δ⁴) 절단 상계는 δ=0.005 regime에서 아직 크기가 산정되지 않았다(hidden assumption)"
+  - "ε_★는 가우스/결정론 분기마다 다른 상수이며(adversary b3 R2b, 0.3804배) 절대 진폭은 미시험 — 예측은
+    모두 같은 분기 안의 비율·지수라 상쇄된다"
+  - "P_micro 등방성 가정(가우스 등방 κ⊗I_16)은 유도가 아니라 가정이며, 비등방 라벨은 scope 밖 반례로
+    기록됐다(i.i.d. 기울기 −0.006, K5 발동) — 물리적으로 배제되지는 않는다"
+  - "Ω_align/Ω_mis는 '가정된 P_micro 아래 승산비'이고 10.10 counting measure Ω(C)와의 대응은 이 카드 밖이다"
+  - "Q-spine 블록 정의(스핀 GW+Poisson side)의 대표성은 Q-0009가 다루는 문제이며, F-02 사다리 4단(경로별
+    상계·MC)과 7단(K3 예측시험)이 그 답을 실질적으로 흡수한다 — Q-0009는 별도 attempt가 불필요하다(사용자
+    확인 전 질문 자체를 삭제하지 않는다)"
+  - "K1(γ_her)은 F-01 attempt에서 이미 공개된 n≤32 관측(1.995/4.000/7.995 등)으로 정보가 상당 부분
+    선결정되어 있다 — 형식상 already_observed=false이나 완전한 blind 예측은 아니다"
+  - "adopt_condition 1(scope 정정): b9에 따르면 caterpillar는 반례가 아니라 γ_her=1/d_tree 법칙을 만족한다
+    (γ→0.5000, k=1000..3375) — 카드 scope 문구의 caterpillar 배제는 사다리 3단 attempt에서 prover가
+    정정한다(주장 확대 방향, 결과-후행 약화 아님, 숫자·kill·tolerance는 불변)"
+  - "adopt_condition 2: K4(defect 희석)는 사전등록 seed의 r48=ε(8)/ε(4)=0.5867 공개와 두 통계의 상관
+    0.997/0.999로 kill 자격을 잃어 원장 kill 목록(K1·K2·K3·K5)에서 제외하고 consistency_checks로만 다룬다;
+    check_modes.py가 K4에도 출력하는 'KILL' 문자열은 지위가 아니다"
+  - "adopt_condition 3: 실질 위험은 K3(Q-spine, 7단)·K2(혼합 교차항, 6단)에 있고, 5단(반집중 보조정리)이
+    사다리에서 증명 부담이 가장 크다"
+open_questions_spawned: []
+next_action: "이번 attempt는 카드가 채택되기 전이라 question.ladder가 비어 있어 ladder_cited가 적용되지 않았다
+  (adopt_card_into_question이 같은 호출 안에서 뒤에 실행됨) — 다음 attempt(3)에서 먼저 사다리 1단(외부기존
+  1a Wick·1b CLT·1c Cayley=Poisson(1) GW·1d Aldous CRT·1e Meir–Moon·1f LPP, 이번 sourcer 인용으로 전부
+  대응됨)을 ladder_cited로 닫고(attempt 소모 없음), 이어서 2단(정확 블록 항등식, adversary b8 3줄 증명 재사용)을
+  promote 시도한다. 3단 attempt에서 scope의 caterpillar 문구를 adopt_condition 1대로 정정한다. Q-0009는
+  F-02 4단·7단에 흡수되어 별도 attempt 불필요(사용자 확인 전 삭제하지 않음)."

@@ -1,0 +1,71 @@
+{
+  "tetrahedron": {
+    "I": {
+      "rank_d2": 3,
+      "nullity_ker_d2": 1,
+      "rank_of_3curvature_on_ker_d2": 0,
+      "max_abs_3curvature_coeff": 2.220446049250313e-16,
+      "degree3_carrier_present": false
+    },
+    "II": {
+      "rank_d2": 3,
+      "nullity_ker_d2": 1,
+      "rank_of_3curvature_on_ker_d2": 0,
+      "max_abs_3curvature_coeff": 0.0,
+      "degree3_carrier_present": false
+    }
+  },
+  "k1_grids": [
+    {
+      "I": {
+        "rank_d2": 196,
+        "nullity_ker_d2": 10,
+        "rank_of_3curvature_on_ker_d2": 0,
+        "max_abs_3curvature_coeff": 6.106226635438361e-16,
+        "degree3_carrier_present": false
+      },
+      "II": {
+        "rank_d2": 196,
+        "nullity_ker_d2": 10,
+        "rank_of_3curvature_on_ker_d2": 0,
+        "max_abs_3curvature_coeff": 4.40619762898109e-16,
+        "degree3_carrier_present": false
+      },
+      "n": 50
+    },
+    {
+      "I": {
+        "rank_d2": 311,
+        "nullity_ker_d2": 10,
+        "rank_of_3curvature_on_ker_d2": 0,
+        "max_abs_3curvature_coeff": 9.65086761661972e-16,
+        "degree3_carrier_present": false
+      },
+      "II": {
+        "rank_d2": 311,
+        "nullity_ker_d2": 10,
+        "rank_of_3curvature_on_ker_d2": 0,
+        "max_abs_3curvature_coeff": 4.907753952617864e-16,
+        "degree3_carrier_present": false
+      },
+      "n": 100
+    },
+    {
+      "I": {
+        "rank_d2": 833,
+        "nullity_ker_d2": 35,
+        "rank_of_3curvature_on_ker_d2": 0,
+        "max_abs_3curvature_coeff": 7.771561172376096e-16,
+        "degree3_carrier_present": false
+      },
+      "II": {
+        "rank_d2": 833,
+        "nullity_ker_d2": 35,
+        "rank_of_3curvature_on_ker_d2": 0,
+        "max_abs_3curvature_coeff": 7.216449660063518e-16,
+        "degree3_carrier_present": false
+      },
+      "n": 200
+    }
+  ]
+}

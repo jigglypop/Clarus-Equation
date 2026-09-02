@@ -1,0 +1,92 @@
+{
+ "reproduction_ok": true,
+ "sigma_to_window": {
+  "her_slope": {
+   "value": 0.5576106551570001,
+   "se": 0.01868561368857134,
+   "window": [
+    0.43,
+    0.63
+   ],
+   "preregistered": 0.5302,
+   "in_window": true,
+   "sigma": {
+    "to_low": 6.829353174257825,
+    "to_high": 3.8740683634744775,
+    "nearest": 3.8740683634744775
+   },
+   "dev_from_prereg_over_se": 1.4669389838539415
+  },
+  "her_ratio_128": {
+   "value": 34.24199061956648,
+   "se": 1.6843333233672915,
+   "window": [
+    26.0,
+    39.1
+   ],
+   "preregistered": 32.554,
+   "in_window": true,
+   "sigma": {
+    "to_low": 4.893325154363881,
+    "to_high": 2.884232778059315,
+    "nearest": 2.884232778059315
+   },
+   "dev_from_prereg_over_se": 1.002171361302687
+  },
+  "mix_X_32": {
+   "value": 0.8193510400305117,
+   "se": 0.0880432935980372,
+   "window": [
+    0.49,
+    0.99
+   ],
+   "preregistered": 0.7406,
+   "in_window": true,
+   "sigma": {
+    "to_low": 3.7407850907323867,
+    "to_high": 1.9382391661605516,
+    "nearest": 1.9382391661605516
+   },
+   "dev_from_prereg_over_se": 0.8944581331776454
+  },
+  "iid_slope": {
+   "value": -0.4799658222826968,
+   "se": 0.009155021551230566,
+   "window": [
+    -0.58,
+    -0.38
+   ],
+   "preregistered": -0.4783,
+   "in_window": true,
+   "sigma": {
+    "to_low": 10.926700407805937,
+    "to_high": 10.91923396611338,
+    "nearest": 10.91923396611338
+   },
+   "dev_from_prereg_over_se": -0.18195722133203318
+  },
+  "defect_ratio_64_over_8": {
+   "value": 0.14306936148581373,
+   "se": null,
+   "window": [
+    0.124,
+    0.158
+   ],
+   "preregistered": 0.140625,
+   "in_window": true,
+   "sigma": null
+  },
+  "defect_slope": {
+   "value": -0.8981828134067237,
+   "se": null,
+   "window": [
+    -0.96,
+    -0.86
+   ],
+   "preregistered": -0.9069,
+   "in_window": true,
+   "sigma": null
+  }
+ },
+ "elapsed_s": 208.86319419997744
+}

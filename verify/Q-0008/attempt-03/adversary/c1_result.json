@@ -1,0 +1,256 @@
+{
+  "seed": 20260902,
+  "tol": 1e-12,
+  "primitives_match_repo": {
+    "max_rel_err": 2.3052620142015687e-16,
+    "ok": true
+  },
+  "huygens_general_no_premise": {
+    "max_rel_err": 1.1367257010030776e-14,
+    "ok": true,
+    "rows": [
+      {
+        "n": 1,
+        "max_rel_err": 0.0
+      },
+      {
+        "n": 2,
+        "max_rel_err": 7.467707983618437e-16
+      },
+      {
+        "n": 3,
+        "max_rel_err": 3.008497397792823e-15
+      },
+      {
+        "n": 5,
+        "max_rel_err": 1.0279889110655866e-15
+      },
+      {
+        "n": 17,
+        "max_rel_err": 4.500552370532767e-15
+      },
+      {
+        "n": 64,
+        "max_rel_err": 1.1367257010030776e-14
+      }
+    ],
+    "note": "premise-free parallel-axis identity; the claimed theorem is this plus tl gram(X_v)=0"
+  },
+  "basepoint_inert_nonsimple_reference": {
+    "max_rel_err": 6.288427683030196e-15,
+    "ok": true,
+    "min_tl_gram_sigma0_norm": 2.366933809523899,
+    "note": "S5.4 holds verbatim with tl gram(Sigma_0) nonzero, so that assumption is superfluous"
+  },
+  "s42_breaks_for_nonsimple_reference": {
+    "rel_errs": [
+      0.41643143530840765,
+      0.4303408377399083,
+      0.39071897710802866
+    ],
+    "ok": true,
+    "note": "S4.2 plus S5.1 is one route, not a necessary one"
+  },
+  "weighted_generalisation": {
+    "max_rel_err": 1.1540504514954264e-13,
+    "ok": true,
+    "rows": [
+      {
+        "n": 2,
+        "max_rel_err": 1.1540504514954264e-13
+      },
+      {
+        "n": 5,
+        "max_rel_err": 8.786073018237489e-15
+      },
+      {
+        "n": 17,
+        "max_rel_err": 6.8314900112826406e-15
+      }
+    ],
+    "note": "n -> W = sum w_v and mean -> weighted mean; needs W nonzero"
+  },
+  "weighted_W_equals_zero": {
+    "tl_gram_Y_norm": 2.482745450264734,
+    "note": "W=0: the weighted form is undefined and tl gram(Y) is generally nonzero"
+  },
+  "three_species_general_corollary": {
+    "max_rel_err": 1.4945605856125675e-15,
+    "n_spread": 2.7591887734385784e-15,
+    "ok": true,
+    "rows": [
+      {
+        "n": 4,
+        "eps": 0.06035594784123252,
+        "eps_pred": 0.060355947841232556,
+        "rel_err": 5.748309944663715e-16
+      },
+      {
+        "n": 8,
+        "eps": 0.060355947841232487,
+        "eps_pred": 0.060355947841232556,
+        "rel_err": 1.1496619889327438e-15
+      },
+      {
+        "n": 16,
+        "eps": 0.060355947841232466,
+        "eps_pred": 0.060355947841232556,
+        "rel_err": 1.4945605856125675e-15
+      },
+      {
+        "n": 32,
+        "eps": 0.06035594784123257,
+        "eps_pred": 0.060355947841232556,
+        "rel_err": 2.2993239778654843e-16
+      },
+      {
+        "n": 64,
+        "eps": 0.06035594784123263,
+        "eps_pred": 0.060355947841232556,
+        "rel_err": 1.264628187826015e-15
+      }
+    ],
+    "note": "eps = norm(tl(sum_s f_s gram(D_s) - gram(Dbar))) / norm(gram(Sigma_0+Dbar)), n-free"
+  },
+  "limit_n1": {
+    "eps": 8.239811017226492e-16,
+    "rhs": 0.0,
+    "ok": true
+  },
+  "limit_all_eta_equal": {
+    "rows": [
+      {
+        "n": 2,
+        "eps_block": 4.854725399462238e-16
+      },
+      {
+        "n": 8,
+        "eps_block": 4.854725399462238e-16
+      },
+      {
+        "n": 64,
+        "eps_block": 4.854725399462238e-16
+      }
+    ],
+    "ok": true,
+    "note": "RHS vanishes identically so the block is exactly simple (13.3 / 13.5)"
+  },
+  "conditioning_vs_delta": {
+    "rows": [
+      {
+        "delta": 0.3,
+        "max_rel_err_vs_tl": 4.09395727399277e-15,
+        "max_err_vs_gram_scale": 4.179383888889565e-16,
+        "tl_over_gram": 0.17487212576028857,
+        "exceeds_TOL_IDENT": false
+      },
+      {
+        "delta": 0.05,
+        "max_rel_err_vs_tl": 1.7935201566237993e-13,
+        "max_err_vs_gram_scale": 3.3488714817446146e-16,
+        "tl_over_gram": 0.004387832877274709,
+        "exceeds_TOL_IDENT": false
+      },
+      {
+        "delta": 0.005,
+        "max_rel_err_vs_tl": 1.561255023967165e-11,
+        "max_err_vs_gram_scale": 3.742283981905741e-16,
+        "tl_over_gram": 5.576027559471051e-05,
+        "exceeds_TOL_IDENT": true
+      },
+      {
+        "delta": 0.001,
+        "max_rel_err_vs_tl": 6.353553669510473e-10,
+        "max_err_vs_gram_scale": 4.030023212164486e-16,
+        "tl_over_gram": 2.669803167475281e-06,
+        "exceeds_TOL_IDENT": true
+      }
+    ],
+    "note": "cancellation: norm(tl gram Y) ~ delta^2 norm(gram Y), so the roundoff floor of the attempt normalisation grows like delta^-2; the card runs at delta=0.005"
+  },
+  "pn_noninteger_drift": {
+    "p_target": 0.3,
+    "relative_spread": 0.13390334304402032,
+    "rows": [
+      {
+        "n": 4,
+        "n_B": 1,
+        "p_eff": 0.25,
+        "eps": 0.016214809754671006
+      },
+      {
+        "n": 8,
+        "n_B": 2,
+        "p_eff": 0.25,
+        "eps": 0.016214809754671128
+      },
+      {
+        "n": 16,
+        "n_B": 5,
+        "p_eff": 0.3125,
+        "eps": 0.018721709204674995
+      },
+      {
+        "n": 32,
+        "n_B": 10,
+        "p_eff": 0.3125,
+        "eps": 0.018721709204674572
+      },
+      {
+        "n": 64,
+        "n_B": 19,
+        "p_eff": 0.296875,
+        "eps": 0.018152738566640774
+      }
+    ],
+    "note": "with pn non-integer the n-independence survives only up to O(1/n) rounding of n_B"
+  },
+  "alignment_so3": {
+    "max_det_minus_one": 2.220446049250313e-15,
+    "max_rel_err_conjugation": 3.556063055931233e-16,
+    "max_cell_simplicity_after_alignment": 7.835066077510739e-16,
+    "ok": true
+  },
+  "random_sample_20": {
+    "max_rel_err": 5.32933343652248e-12,
+    "ok": true,
+    "worst_samples": [
+      {
+        "k": 16,
+        "n": 13,
+        "delta": 0.010288989450043773,
+        "group": "aligned",
+        "rel_err": 5.32933343652248e-12
+      },
+      {
+        "k": 19,
+        "n": 30,
+        "delta": 0.01277648326137854,
+        "group": "aligned",
+        "rel_err": 3.0277519941934395e-12
+      },
+      {
+        "k": 4,
+        "n": 8,
+        "delta": 0.012796892711625278,
+        "group": "aligned",
+        "rel_err": 1.6239844060567174e-12
+      },
+      {
+        "k": 11,
+        "n": 4,
+        "delta": 0.01632750307820061,
+        "group": "aligned",
+        "rel_err": 8.035276415262677e-13
+      },
+      {
+        "k": 8,
+        "n": 7,
+        "delta": 0.022640904551046163,
+        "group": "aligned",
+        "rel_err": 7.767596586808831e-13
+      }
+    ],
+    "note": "TOL_IDENT=1e-12 is not attainable at small delta, see conditioning_vs_delta"
+  }
+}

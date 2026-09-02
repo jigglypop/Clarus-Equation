@@ -1,0 +1,1 @@
+{"verdict": {"iid_slope": "survive"}, "stats": {"iid_slope": -0.4799658222826968}}

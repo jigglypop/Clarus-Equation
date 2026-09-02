@@ -1,0 +1,24 @@
+{
+ "seed": 555013,
+ "trials": 128,
+ "8": {
+  "rms_delta": 5.258272870735277e-05,
+  "rms_half_delta": 1.312889492860847e-05,
+  "ratio": 4.005114595956783,
+  "ratio_minus_4": 0.005114595956783319,
+  "rel_quartic_contamination": 0.0012786489891958297,
+  "per_trial_ratio_mean": 4.001552535149471,
+  "per_trial_ratio_sd": 0.027485236108552913,
+  "per_trial_ratio_max_abs_dev_from_4": 0.09285739936249815
+ },
+ "128": {
+  "rms_delta": 0.00022573867007980408,
+  "rms_half_delta": 5.633793107158554e-05,
+  "ratio": 4.006868299671321,
+  "ratio_minus_4": 0.0068682996713214095,
+  "rel_quartic_contamination": 0.0017170749178303524,
+  "per_trial_ratio_mean": 4.002209405654384,
+  "per_trial_ratio_sd": 0.050375720642320876,
+  "per_trial_ratio_max_abs_dev_from_4": 0.171074395216134
+ }
+}

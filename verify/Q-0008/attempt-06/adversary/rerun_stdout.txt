@@ -1,0 +1,8 @@
+A constants: {'T2': 59.999999999991225, 'T4': 2.0000000000000013, 'sum_a_Maa_max_abs': 1.7763568394002505e-15, 'normG0_sq': 12.0, 'eps_star_sq_over_delta4': 9.999999999998538, 'pass': True}
+B equivariance worst: 1.2248309854548732e-15 pass True
+C-a surrogate max |rel|: 0.005795154145504355 pass True (31s)
+C-b physical max |rel|: 0.05815303804431049 max|z| 2.4723363967830023 pass5% False | C-c crn max|mean-1|: 0.0006603492464521965 pass1% True (149s)
+D closed forms worst: 8.53916344162731e-16 pass True
+E gamma grid: {'chain': 0.994, 'star': -0.4538, 'balanced_binary': 0.2267, 'cayley_exact_grid': 0.5302, 'star_of_chains': 0.2416, 'caterpillar': 0.4885}
+F delta3 conclusion: 잡음 max implied tau: 0.0002590512743722574 (227s)
+numeric: fail -> result.json (227s)

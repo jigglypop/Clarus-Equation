@@ -23,6 +23,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 LIB = ROOT / ".claude" / "hooks" / "lib"
 SPEC_SKILLS = (
+    "conjecture-first",
     "research-loop",
     "evidence-ladder",
     "pivot-playbook",
@@ -397,3 +398,242 @@ def test_after_attempt_transitions(repo: Path) -> None:
     qs = yaml.safe_load((repo / "ledger" / "questions.yaml").read_text(encoding="utf-8"))["questions"]
     assert qs[0]["status"] == "resolved"
     assert qs[1]["id"] == "Q-TEST-2" and qs[1]["status"] == "open"
+
+
+# ---------------------------------------------------------------- v3 추측 우선 (카드·사다리·재발견)
+
+CARD_VALID = """---
+question: Q-TEST-1
+card: F-01
+kind: 예측식
+formula: "R - ((1+sqrt(5))/2)**2"
+formula_latex: '$$ R=\\phi^2 $$'
+symbols:
+  n: positive integer
+dimensions: {R: 1, n: 1}
+free_parameters: []
+predicts:
+  - {observable: "R", value: 2.6180339887, uncertainty: 0, baseline: {source: "E40", value: 2.618, error: 1.0e-3}, comparison_frozen: true}
+recovers:
+  - {limit: "blockade 제거", known: "R → 1", check: 0}
+kill:
+  - "N ≥ 2^10에서 |R(N)-φ²| > 1e-3"
+  - "Parry 외 측도에서 R ≠ φ²"
+ladder:
+  - {step: 1, claim: "Perron 고유값이 φ", kind: 외부기존}
+  - {step: 2, claim: "history 공간이 golden-mean 부분이동과 동형", kind: 보조정리}
+  - {step: 3, claim: "R(N)→φ²", kind: 수치시험}
+novelty:
+  ce_specific: "blockade만으로 단일 무차원 비율"
+  nearest_prior_art: []
+verify:
+  - type: identity
+    lhs: "((1+sqrt(5))/2)**2"
+    rhs: "(1+sqrt(5))/2 + 1"
+---
+
+## 왜 이 식인가
+
+예시.
+"""
+
+
+def _write_card(root: Path, text: str = CARD_VALID) -> Path:
+    path = root / "derivations" / "Q-TEST-1" / "F-01.formula.md"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+    return path
+
+
+def _sourced(prior_art: list[dict]) -> dict:
+    return {"prior_art": prior_art}
+
+
+def test_v3_card_check_and_adopt_requires_novelty(repo: Path) -> None:
+    _write_questions(repo, [_question(status="active", attempts=1)])
+    card = _write_card(repo)
+    assert _run("ledger.py", "card-check", str(card), root=repo).returncode == 0
+    broken = _run("ledger.py", "card-check", str(_write_card(repo, CARD_VALID.replace("kill:\n  - \"N", "kill:\n  - \"X\"\nkill_old:\n  - \"N"))), root=repo)
+    assert broken.returncode == 1 and "kill" in broken.stderr
+    _write_card(repo)
+    adopt = _entry(
+        repo,
+        verdict="adopt",
+        card="derivations/Q-TEST-1/F-01.formula.md",
+        derivation="derivations/Q-TEST-1/F-01.formula.md",
+        sourcer=_sourced([]),
+    )
+    path = _write_entry(repo, adopt)
+    assert _run("ledger.py", "validate", str(path), root=repo).returncode == 0
+    # sourcer 미실행이면 adopt 불가
+    path = _write_entry(repo, {**adopt, "sourcer": None})
+    result = _run("ledger.py", "validate", str(path), root=repo)
+    assert result.returncode == 1 and "sourcer" in result.stderr
+    # 재발견이면 adopt 불가
+    path = _write_entry(repo, {**adopt, "sourcer": _sourced([{"ref": "Parry 1964", "relation": "identical", "note": ""}])})
+    result = _run("ledger.py", "validate", str(path), root=repo)
+    assert result.returncode == 1 and "재발견" in result.stderr
+    # refute는 근거가 있어야 한다
+    path = _write_entry(repo, {**adopt, "verdict": "refute", "sourcer": _sourced([])})
+    assert _run("ledger.py", "validate", str(path), root=repo).returncode == 1
+    path = _write_entry(repo, {**adopt, "verdict": "refute", "kill_triggered": "kill 1", "sourcer": _sourced([])})
+    assert _run("ledger.py", "validate", str(path), root=repo).returncode == 0
+
+
+def test_v3_adopt_opens_ladder_and_promote_closes_steps(repo: Path) -> None:
+    _write_questions(repo, [_question(status="active", attempts=1)])
+    _write_card(repo)
+    _write_entry(
+        repo,
+        _entry(repo, verdict="adopt", card="derivations/Q-TEST-1/F-01.formula.md", derivation="derivations/Q-TEST-1/F-01.formula.md", sourcer=_sourced([])),
+    )
+    out = _run("ledger.py", "after-attempt", "Q-TEST-1", "1", root=repo)
+    assert out.returncode == 0, out.stderr
+    q = yaml.safe_load((repo / "ledger" / "questions.yaml").read_text(encoding="utf-8"))["questions"][0]
+    assert q["kind"] == "conjecture" and q["status"] == "active" and q["card_status"] == "채택"
+    assert [s["status"] for s in q["ladder"]] == ["open", "open", "open"]
+    ladder = _run("ledger.py", "ladder", "Q-TEST-1", root=repo)
+    assert ladder.returncode == 0 and '"progress": "0/3"' in ladder.stdout
+
+    # attempt 2: 1단 인용(cited) + 2단 promote
+    q["attempts"] = 2
+    _write_questions(repo, [q])
+    _write_entry(
+        repo,
+        _entry(repo, id="E-20260902-002", attempt=2, ladder_step=2, ladder_cited=[{"step": 1, "ref": "Perron 1907"}]),
+        name="20260902-002-step2.yaml",
+    )
+    out = _run("ledger.py", "after-attempt", "Q-TEST-1", "2", root=repo)
+    assert out.returncode == 0, out.stderr
+    q = yaml.safe_load((repo / "ledger" / "questions.yaml").read_text(encoding="utf-8"))["questions"][0]
+    assert [s["status"] for s in q["ladder"]] == ["cited", "closed", "open"] and q["status"] == "active"
+
+    # attempt 3: 마지막 단 promote → resolved, 카드 정리
+    q["attempts"] = 3
+    _write_questions(repo, [q])
+    _write_entry(repo, _entry(repo, id="E-20260902-003", attempt=3, ladder_step=3), name="20260902-003-step3.yaml")
+    out = _run("ledger.py", "after-attempt", "Q-TEST-1", "3", root=repo)
+    assert out.returncode == 0, out.stderr
+    q = yaml.safe_load((repo / "ledger" / "questions.yaml").read_text(encoding="utf-8"))["questions"][0]
+    assert q["status"] == "resolved" and q["card_status"] == "정리"
+
+
+def test_v3_rediscovery_twice_forces_conjecture(repo: Path) -> None:
+    _write_questions(repo, [_question(status="active", attempts=1)])
+    _write_entry(
+        repo,
+        _entry(repo, level="L2", verdict="pivot", pivot_step="partial", verification={"symbolic": "skipped", "numeric": "pass", "lean": "skipped"},
+               sourcer=_sourced([{"ref": "QRF 2020", "relation": "identical", "note": ""}])),
+    )
+    assert _run("ledger.py", "after-attempt", "Q-TEST-1", "1", root=repo).returncode == 0
+    q = yaml.safe_load((repo / "ledger" / "questions.yaml").read_text(encoding="utf-8"))["questions"][0]
+    assert q["rediscoveries"] == 1 and "force_pivot" not in q
+    q["attempts"] = 2
+    _write_questions(repo, [q])
+    _write_entry(
+        repo,
+        _entry(repo, id="E-20260902-002", attempt=2, level="L2", verdict="pivot", pivot_step="alt_derivation",
+               verification={"symbolic": "skipped", "numeric": "pass", "lean": "skipped"},
+               sourcer=_sourced([{"ref": "QRF 2021", "relation": "special_case", "note": ""}])),
+        name="20260902-002-again.yaml",
+    )
+    assert _run("ledger.py", "after-attempt", "Q-TEST-1", "2", root=repo).returncode == 0
+    q = yaml.safe_load((repo / "ledger" / "questions.yaml").read_text(encoding="utf-8"))["questions"][0]
+    assert q["rediscoveries"] == 2 and q["force_pivot"] == "conjecture" and q["status"] == "active"
+    summary = _run("ledger.py", "summary", root=repo)
+    assert "conjecture" in summary.stdout
+    # refute(재발견)된 카드도 질문을 죽이지 않고 재추측을 요구한다
+    _write_card(repo)
+    q["attempts"] = 3
+    _write_questions(repo, [q])
+    _write_entry(
+        repo,
+        _entry(repo, id="E-20260902-003", attempt=3, verdict="refute", card="derivations/Q-TEST-1/F-01.formula.md",
+               derivation="derivations/Q-TEST-1/F-01.formula.md",
+               sourcer=_sourced([{"ref": "Parry 1964", "relation": "identical", "note": ""}])),
+        name="20260902-003-refute.yaml",
+    )
+    assert _run("ledger.py", "after-attempt", "Q-TEST-1", "3", root=repo).returncode == 0
+    q = yaml.safe_load((repo / "ledger" / "questions.yaml").read_text(encoding="utf-8"))["questions"][0]
+    assert q["status"] == "active" and q["force_pivot"] == "conjecture"
+
+
+def test_v3_card_counterexample_refute_keeps_question_active(repo: Path) -> None:
+    # 채택 전 카드가 adversary 반례(P0)로 죽으면(재발견도 kill 발동도 아님) 질문은 살아서 재추측을 요구한다.
+    question = _question(status="active", attempts=1)
+    question["kind"] = "conjecture"
+    _write_questions(repo, [question])
+    _write_card(repo)
+    _write_entry(
+        repo,
+        _entry(repo, level="L2", verdict="refute", card="derivations/Q-TEST-1/F-01.formula.md",
+               derivation="derivations/Q-TEST-1/F-01.formula.md",
+               adversary={"counterexamples": [{"input": "사다리 3단 보조정리", "expected": "1차 잔차", "observed": "정확 항등식으로 2차"}],
+                          "survived_checks": ["dimension"]},
+               sourcer=_sourced([{"ref": "Aldous 1993", "relation": "generalizes", "note": ""}])),
+    )
+    assert _run("ledger.py", "after-attempt", "Q-TEST-1", "1", root=repo).returncode == 0
+    q = yaml.safe_load((repo / "ledger" / "questions.yaml").read_text(encoding="utf-8"))["questions"][0]
+    assert q["status"] == "active" and q["force_pivot"] == "conjecture" and "card" not in q
+    # 채택된 카드에 사전등록 kill이 발동하면 그때는 parked
+    q["attempts"] = 2
+    _write_questions(repo, [q])
+    _write_entry(
+        repo,
+        _entry(repo, id="E-20260902-002", attempt=2, verdict="refute", kill_triggered="kill 1",
+               card="derivations/Q-TEST-1/F-01.formula.md", derivation="derivations/Q-TEST-1/F-01.formula.md",
+               sourcer=_sourced([])),
+        name="20260902-002-kill.yaml",
+    )
+    assert _run("ledger.py", "after-attempt", "Q-TEST-1", "2", root=repo).returncode == 0
+    q = yaml.safe_load((repo / "ledger" / "questions.yaml").read_text(encoding="utf-8"))["questions"][0]
+    assert q["status"] == "parked"
+
+
+def test_v3_batch_adopt_queues_when_another_question_active(repo: Path) -> None:
+    # 일괄 카드 모드: 다른 질문이 active면 채택된 카드는 open 큐에 남고 사다리는 열린다.
+    other = _question(qid="Q-TEST-0", status="active", attempts=1)
+    mine = _question(status="open", attempts=1)
+    mine["kind"] = "conjecture"
+    _write_questions(repo, [other, mine])
+    _write_card(repo)
+    _write_entry(
+        repo,
+        _entry(repo, verdict="adopt", card="derivations/Q-TEST-1/F-01.formula.md",
+               derivation="derivations/Q-TEST-1/F-01.formula.md", sourcer=_sourced([])),
+    )
+    assert _run("ledger.py", "after-attempt", "Q-TEST-1", "1", root=repo).returncode == 0
+    qs = yaml.safe_load((repo / "ledger" / "questions.yaml").read_text(encoding="utf-8"))["questions"]
+    mine = next(q for q in qs if q["id"] == "Q-TEST-1")
+    assert mine["status"] == "open" and mine["card_status"] == "채택" and len(mine["ladder"]) == 3
+    assert next(q for q in qs if q["id"] == "Q-TEST-0")["status"] == "active"
+
+
+def test_v3_reduction_exhaustion_expands_instead_of_parking(repo: Path) -> None:
+    question = _question(status="active", attempts=1)
+    question["pivots_tried"] = ["partial", "alt_derivation", "reformulate"]
+    _write_questions(repo, [question])
+    _write_entry(repo, _entry(repo, level="L2", verdict="pivot", pivot_step="weaken", verification={"symbolic": "skipped", "numeric": "pass", "lean": "skipped"}))
+    assert _run("ledger.py", "after-attempt", "Q-TEST-1", "1", root=repo).returncode == 0
+    q = yaml.safe_load((repo / "ledger" / "questions.yaml").read_text(encoding="utf-8"))["questions"][0]
+    assert q["status"] == "active" and q["force_pivot"] == "conjecture"
+    # 확장까지 소진하면 그때 parked
+    q["pivots_tried"] = ["partial", "alt_derivation", "reformulate", "weaken", "conjecture"]
+    q["attempts"] = 2
+    q.pop("force_pivot")
+    _write_questions(repo, [q])
+    _write_entry(repo, _entry(repo, id="E-20260902-002", attempt=2, level="L2", verdict="pivot", pivot_step="generalize", verification={"symbolic": "skipped", "numeric": "pass", "lean": "skipped"}), name="20260902-002-gen.yaml")
+    assert _run("ledger.py", "after-attempt", "Q-TEST-1", "2", root=repo).returncode == 0
+    q = yaml.safe_load((repo / "ledger" / "questions.yaml").read_text(encoding="utf-8"))["questions"][0]
+    assert q["status"] == "parked"
+
+
+def test_v3_verify_on_save_handles_formula_card(repo: Path) -> None:
+    path = _write_card(repo)
+    result = _run("verify_on_save.py", stdin={"tool_name": "Write", "tool_input": {"file_path": str(path), "content": CARD_VALID}}, root=repo)
+    assert result.returncode == 0
+    hook_result = repo / "verify" / "Q-TEST-1" / "F-01" / "hook_result.json"
+    assert hook_result.is_file(), "card verify artifacts must go to verify/<Q>/F-NN/"
+    data = json.loads(hook_result.read_text(encoding="utf-8"))
+    assert data["numeric"] == "pass"
+    assert data["symbolic"] == ("pass" if HAVE_SYMPY else "skipped")

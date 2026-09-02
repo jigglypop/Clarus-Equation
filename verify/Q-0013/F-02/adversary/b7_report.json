@@ -1,0 +1,26 @@
+{
+  "exact_arithmetic": true,
+  "denominators_present": [
+    1,
+    2,
+    3,
+    4,
+    6
+  ],
+  "max_denominator": 6,
+  "nonzero_unordered_pairs": 108,
+  "T_I16_exact": "60",
+  "T_DD_exact": "8",
+  "T_OO_exact": "28",
+  "twice_T_DO_exact": "24",
+  "budget_identity_holds": true,
+  "sum_a_tlM_aa_is_zero": true,
+  "card_rule_exact_failures": [],
+  "card_rule_exact_ok": true,
+  "map_rank_exact": 5,
+  "dim_kernel_exact": 131,
+  "eps_star_I16_sq_exact": "10",
+  "eps_star_I4_sq_exact": "4/3",
+  "eps_star_I12_sq_exact": "14/3",
+  "nonadditivity_exact": "4"
+}

@@ -1,0 +1,100 @@
+id: E-20260902-013
+question: Q-0013
+attempt: 1
+timestamp: '2026-09-02T23:40:00+09:00'
+claim: 'F-01(예측식) $\bar\epsilon_{\rm block}(n)^2=\delta^4[(\mathrm{tr}H\kappa)^2\lVert\mathrm{tl}\mathcal
+  G(\Sigma)\rVert_F^2+2\lVert H\kappa H\rVert_F^2\,T(\Sigma)]/(12n^2)$와 축 균형 판별식 $\epsilon_{\rm floor}=\delta^2\lVert
+  w-\bar w\rVert/(4\sqrt3)$($w_k$=자기쌍대 축 무게)는 card-check PASS·verify 17/17 pass(symbolic·numeric 전부 pass)로
+  등록됐으나, adversary(opus)가 scope 안(곱형 라벨 공분산 κ⊗Σ) P0 반례 3개로 핵심 판별 명제 ''$w_1=w_2=w_3$ ⇔ 바닥=0''을 반증했다: rank-1
+  $(e_{01}+e_{02}+e_{03})/\sqrt3$(축 균형인데 관측 바닥 0.117933, 카드 닫힌식 예측 0 — 충분성 위반), $(e_{00}+e_{11})/\sqrt2$(두
+  정확 영모드의 상관 결합, w=0인데 관측 바닥 0.235937·기울기 +0.011 — b4가 원래 본 O($\delta^2$) 바닥 이상현상이 바로 이 지점이다), $e_{01}\otimes
+  e_{01}+((e_{00}+e_{11})/2)^{\otimes2}$(w=(1,0,0) 불균형인데 $\mathrm{tl}\mathcal G(\Sigma)=0$ 정확·관측 바닥 사실상
+  0(0.026976), 기울기 -0.4708 — 필요성 위반); 원인은 비대각 240쌍 중 192쌍에서 $\mathrm{tl}M^{ab}\neq0$인데 카드의 $w_k$는 대각 16성분만
+  보는 것이고, 참 조건은 $\mathrm{tl}\mathcal G(\Sigma)=0$(5개 독립 조건)이다. 동시에 adversary는 b4 (2)에 대한 카드의 재해석이 옳음을
+  재확인했다(500·200 trial 재현 RMS 4e-17대, 기계 오차) — 다만 F-02(Q-0008) 카드가 그 관측을 ''-0.006 기울기의 O($\delta^2$) 바닥''으로
+  기록한 부분은 정정이 필요하다. K4(정확 영모드, δ=0.3)는 사전등록대로 실행 불가(Urbantke 판별식<0 예외, 기대 54.5/126976회, MIN_DET 미선언)이고
+  K5는 이산 SO(4) 대칭에 의한 정확 항등식(정보 0)이다. master 식(등방·rank-1·n=1·$\delta\to0$ 극한, 반례 3개 포함 6개 $\Sigma$)·$T(I_{16})=60$(독립
+  재계산)·$\epsilon_\star=\sqrt{10}\delta^2$(F-02 자유 파라미터 소거, 규약 비 0.9928)·축 클래스 분해·정확 대각 영모드·사전등록 무결은 모두
+  생존한다.'
+level: L2
+verdict: refute
+pivot_step: null
+ladder_step: null
+card: derivations/Q-0013/F-01.formula.md
+kill_triggered: null
+derivation: derivations/Q-0013/F-01.formula.md
+verification:
+  symbolic: pass
+  numeric: pass
+  lean: skipped
+  artifacts: verify/Q-0013/F-01/
+adversary:
+  model_note: adversary는 하네스 정책상 opus로 실행됨(Fable 5.1 API 안전장치 오탐 회피, CLAUDE.md 에이전트 로스터 지정). 산출물 verify/Q-0013/F-01/adversary/{SUMMARY.json,a1-a6*.py,a2-a6_report.json}.
+  counterexamples:
+  - input: 축 균형 rank-1 Σ=uu^T, u=(e01+e02+e03)/√3 (w=(1/3,1/3,1/3), n=64, 카드 사전등록 δ)
+    expected: 카드 닫힌식 ε_floor=(δ²/4√3)‖w-w̄‖=0 (축 균형 ⇒ 바닥 0)
+    observed: RMS/δ² = 0.117933 (master 식 예측 0.11783674와 0.13% 일치, 카드 닫힌식과는 불일치) — 축 균형인데 바닥이 정확히 관측된다
+    note: '''w1=w2=w3 ⇒ 바닥 0''의 충분성이 거짓; master 식은 생존하고 카드의 축-무게 판별식만 죽는다'
+  - input: Σ=uu^T, u=(e00+e11)/√2 (두 정확 대각 영모드의 상관 결합, w=(0,0,0))
+    expected: w=0 ⇒ 닫힌식 ε_floor=0, n-지수 -1/2(요동만)
+    observed: RMS/δ²=0.235937(master 예측 0.23567349와 0.11% 일치), log-log 기울기 +0.0114(요동 지배라면 -0.4534 근방이어야
+      함) — n-무관 바닥이 실재한다. adversary b4가 원래 관측한 O(δ²) 바닥·기울기 이상현상이 정확히 이 지점이다
+    note: 카드의 정확 영모드 보조정리(대각 성분 하나만 요동)는 각 e_μμ 단독으로는 참이지만 두 영모드의 선형결합은 더 이상 영모드가 아니다 — 카드가 이 상관 케이스를
+      배제하지 않았다
+  - input: Σ=e01⊗e01+v⊗v, v=(e00+e11)/2 (w=(1,0,0), 축 불균형)
+    expected: w1≠w̄ ⇒ 카드 닫힌식 예측 바닥 0.11963588
+    observed: tl𝒢(Σ)=0 정확(tl M_(00)(11)이 tl M_(01)(01)과 정확히 반평행, cos=-1.0000000000) ⇒ 관측 바닥 사실상 0(0.026976,
+      master 예측 0.0292317과 부합), 기울기 -0.4708(요동 지배)
+    note: 축 불균형인데 바닥이 없다 — 필요성도 거짓. 참 조건은 tl𝒢(Σ)=0(대각 16성분이 아니라 비대각 240쌍 중 192개까지 포함하는 5개 독립 조건)
+  - input: K4(정확 영모드) 사전등록 절차 --mode zero, n=64, δ=0.3 리터럴 실행
+    expected: 잔차 계산이 완료되어 stats.zero_max_residual과 임계값 1e-12를 비교 가능
+    observed: ValueError('Urbantke metric must be positive and nondegenerate') 발생 — δ=0.3에서 Urbantke 판별식<0인
+      draw가 사전등록 126976회 중 기대 54.5회 나오는데 카드가 MIN_DET 재추출 규약을 선언하지 않아 실행이 중단된다
+    note: K4는 카드가 사전등록한 형태 그대로는 기계적으로 판정 불가능하다(절차 결함); F-02(Q-0008)는 이미 MIN_DET=0.05 재추출을 선언해 같은 문제를 피했다
+  - input: 사다리 2단 '모든 δ에서 정확 영모드' 문구를 손으로 만든 대각-성분-편향 Σ에 큰 δ로 시험(n=2)
+    expected: e=I+δe_μμ(대각 성분 하나만 요동)이면 모든 δ에서 tl𝒢(Y,Y)=0
+    observed: 1+δ·l_μμ ≤ -1이 되도록 만든 경우 잔차 0.8165(정확 0이 아님) — polar factor가 더 이상 I가 아니게 되는 영역에서 항등식이 깨진다
+    note: 정확 영모드 보조정리는 1+δ·l_μμ>-1 제한 아래서만 참이다(카드 predicts의 δ∈{0.005,0.3}은 이 제한 안이라 K4 원래 판정에는 영향 없음,
+      다만 '모든 δ'라는 서술은 정정 대상)
+  survived_checks:
+  - T(I_16)=60.000000000000, 독립 재계산 일치(구조상수 합)
+  - ε_star/δ²=√10=3.1622776602 정확 재현(analytic vs finite-difference L̃, maxdiff 6.25e-12) — F-02(Q-0008)의
+    자유 파라미터가 계산값으로 고정된다는 핵심 주장은 생존
+  - 'ε_star 규약이 F-02(Q-0008)와 일치: iid n=2 관측 RMS/δ²=1.569774 vs 예측 √10/2=1.581139(비 0.9928)'
+  - master 식이 반례 3개를 포함한 6개 Σ 전부에서 MC와 0.1~3% 내 일치
+  - 'recovers 5개 전부 실행 확인: n=1(max residual 1.159e-15), δ→0 수렴, coherent p=1/2 n-무관(4값 전부 1.563068), 등방
+    n=64 관측 0.39369 vs 예측 0.39218'
+  - 'K5(축 클래스 등가) 정확: 360회 실현에서 (0,1) vs (2,3) 최대 상대차 0.000e+00(이산 SO(4) 대칭에 의한 항등식)'
+  - '사전등록 무결성: PRED/WINDOW 스크립트 저장 22:50:51, smoke 22:51:01, 카드 마지막 편집 22:51:39(공개 문단만 추가) — 값·창은 관측 뒤
+    바뀌지 않음'
+  - verify 17/17 symbolic pass·numeric pass, card-check PASS
+sourcer:
+  prior_art:
+  - ref: De Pietri–Freidel 1999 SO(4) Plebanski action / 자기쌍대 이중벡터 삼중항(12.4 기초)
+    relation: generalizes
+    note: 'sourcer 원문 relation=special_case를 정규화: 사다리 1단(외부기존, self-dual bivector 대수)의 기초 인용일 뿐이며 카드의
+      고유 주장(축 무게 판별식·정확 영모드·ε_star 계산)을 재발견하지 않는다'
+  - ref: Isserlis 1918 / Wick 1950 (4점 공분산)
+    relation: unrelated
+    note: 사다리 4단 Wick 분리의 표준 도구이나 축 불균형 판별·영모드 진술은 없다
+  - ref: Livine–Speziale 2007 coherent intertwiners
+    relation: unrelated
+    note: shape 자유도의 가장 가까운 물리적 대응이나 블록 잔차 바닥을 축 무게로 판별하는 식은 없다
+  overall: novel_combination
+  ce_specific_confirmed: 축-무게 비등방 판별식과 정확 대각 영모드, ε_star 계산값 고정 주장은 문헌에서 찾지 못했다(이번 adversary 반례로 판별식 자체는
+    무효화됨)
+assumptions:
+- 카드 scope는 곱형 라벨 공분산 κ⊗Σ(cell 간 커널×cell 내부 16성분)만 다루며, adversary 반례 3개 모두 이 scope 안에서 나왔다 — scope 자체는
+  넓어지지 않는다
+- 참 바닥-소멸 조건은 tl𝒢(Σ)=0(비대각 240쌍 중 192를 포함하는 5개 독립 조건)이고, 카드의 축 무게 w_k(대각 16성분만)는 이 조건의 진부분집합만 본다
+- b4 (2)의 '-0.006 기울기' 기록은 재현되지 않는 잡음(RMS~4e-17)이었다는 카드의 재해석은 이번 adversary 재실행으로 확인됐으나, Q-0008 F-02 카드
+  자체의 scope·kill 문구는 아직 정정되지 않았다
+- K4(정확 영모드, δ=0.3)는 MIN_DET 재추출 규약이 선언되지 않아 사전등록대로는 기계적으로 판정 불가능하다
+- 사다리 2단 '모든 δ'는 1+δ·l_μμ>-1 제한이 필요하다(카드 predicts의 δ∈{0.005,0.3}은 이 제한 안이라 영향 없음)
+- adversary는 하네스 정책상 opus로 실행됨(Fable 5.1 API 안전장치 오탐 회피)
+open_questions_spawned: []
+next_action: 'F-02(같은 세션, 재추측 1회): 바닥 소멸 조건을 tl𝒢(Σ)=0(5개 독립 조건)으로 다시 세우고 (a) 상관 rank-1 Σ 바닥 0.11784(already_observed=true로
+  표시, 이번 attempt에서 이미 관측됨), (b) 반평행 상쇄 방향의 정확 소멸(necessity 반례를 일반화), (c) ε_star=√10δ²(등방, 미관측)을 predicts로
+  등록한다. K4는 MIN_DET 재추출 규약을 선언한 뒤 δ=0.3을 재사전등록한다. K5는 kill이 아니라 이산 SO(4) 대칭에 의한 일관성 검사로 재분류한다. 사다리 2단
+  ''모든 δ'' 서술은 1+δ·l_μμ>-1 제한을 명시한다. 별도: Q-0008 F-02 카드의 scope·kill 문구 중 ''-0.006 기울기의 O(δ²) 바닥이 생겨 i.i.d.
+  기울기가 무너진다'' 기록은 재현되지 않는 기계오차(RMS~4e-17)로 정정이 필요하다(이번 attempt에서 독립 재현).'

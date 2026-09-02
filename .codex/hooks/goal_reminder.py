@@ -12,6 +12,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 LEDGER = REPO_ROOT / "paper" / "진전_원장.md"
+QUESTIONS = REPO_ROOT / "ledger" / "questions.yaml"
 FIELDS = ("트랙", "현재 하위 목표", "완료 조건", "kill 조건", "마지막 갱신일")
 LIMITS = {"트랙": 40, "현재 하위 목표": 120, "완료 조건": 90, "kill 조건": 60, "마지막 갱신일": 20}
 
@@ -20,6 +21,29 @@ def clean(cell: str) -> str:
     cell = re.sub(r"\[([^\]]+)\]\([^)]*\)", r"\1", cell)
     cell = cell.replace("**", "").strip()
     return re.sub(r"\s+", " ", cell)
+
+
+def conjecture_line() -> str | None:
+    """active 질문의 추측 카드·다음 사다리 단 한 줄. 이유: 식이 먼저라는 규율을 매 턴 상기시킨다."""
+    try:
+        import yaml
+
+        data = yaml.safe_load(QUESTIONS.read_text(encoding="utf-8-sig")) or {}
+    except Exception:
+        return None
+    for q in data.get("questions") or []:
+        if q.get("status") != "active":
+            continue
+        if q.get("card"):
+            ladder = q.get("ladder") or []
+            done = sum(1 for s in ladder if s.get("status") in ("closed", "cited"))
+            nxt = next((s for s in ladder if s.get("status") in ("open", "blocked")), None)
+            step = f"다음 단 {nxt.get('step')}: {str(nxt.get('claim', ''))[:60]}" if nxt else "열린 단 없음"
+            return f"[추측] {q.get('id')} {q.get('card_kind', '')} {str(q.get('formula', ''))[:50]} 사다리 {done}/{len(ladder)} — {step}"
+        if q.get("force_pivot"):
+            return f"[추측] {q.get('id')} 카드 없음, force_pivot={q['force_pivot']} — 이번 attempt는 예측식·예산식 카드 작성"
+        return f"[추측] {q.get('id')} 카드 없음 — 식을 먼저 세운다(conjecture-first)"
+    return None
 
 
 def main() -> int:
@@ -47,6 +71,9 @@ def main() -> int:
     print("[표적] " + rows.get("트랙", "?") + " — " + rows.get("현재 하위 목표", "?"))
     if "완료 조건" in rows:
         print("[완료] " + rows["완료 조건"])
+    line = conjecture_line()
+    if line:
+        print(line)
     print("[규율] 아이디어는 주차장에 한 줄, 실행 금지. 종료 전 진전 원장 §2·§7 갱신 + links.")
     return 0
 

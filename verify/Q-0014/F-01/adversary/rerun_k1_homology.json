@@ -1,0 +1,153 @@
+{
+  "what": "adversary independent rerun of Q-0014 F-01 K1 (seed/grid unchanged)",
+  "seed": 20260902,
+  "sizes": [
+    50,
+    100,
+    200
+  ],
+  "stats": {
+    "unbounded_min_cycles_max": 807,
+    "unbounded_per_size": [
+      211,
+      208,
+      807
+    ],
+    "pure_fine_unbounded_per_size": [
+      0,
+      0,
+      0
+    ],
+    "tree_b1_max": 0,
+    "flat_fraction_M1_min": 1.0,
+    "flat_fraction_all_max": 0.9190031152647975,
+    "H1_per_size": [
+      9,
+      38,
+      63
+    ],
+    "H2_per_size": [
+      10,
+      10,
+      35
+    ]
+  },
+  "per_size": [
+    {
+      "n": 50,
+      "fine_edges": 103,
+      "coarse_edges": 172,
+      "faces": 206,
+      "components": 1,
+      "b1_skeleton": 205,
+      "b1_fine_only": 54,
+      "tree_b1": 0,
+      "flat_fraction_M1": 1.0,
+      "flat_fraction_all": 0.8349514563106796,
+      "M_histogram": {
+        "1": 144,
+        "2": 22,
+        "3": 6
+      },
+      "triangle_census": {
+        "triangles_total": 417,
+        "unbounded": 211,
+        "pure_fine_total": 21,
+        "pure_fine_unbounded": 0,
+        "kinds": {
+          "CCC": 48,
+          "CCF": 109,
+          "CCFC": 25,
+          "CFCFC": 1,
+          "CFF": 16,
+          "CFFC": 12
+        }
+      },
+      "boundary2": {
+        "E_undirected": 254,
+        "F": 206,
+        "rank_d2_Q": 196,
+        "rank_d2_GF2": 196
+      },
+      "H1_dim": 9,
+      "H2_dim_ker_d2": 10
+    },
+    {
+      "n": 100,
+      "fine_edges": 184,
+      "coarse_edges": 295,
+      "faces": 321,
+      "components": 1,
+      "b1_skeleton": 349,
+      "b1_fine_only": 85,
+      "tree_b1": 0,
+      "flat_fraction_M1": 1.0,
+      "flat_fraction_all": 0.9190031152647975,
+      "M_histogram": {
+        "1": 269,
+        "2": 26
+      },
+      "triangle_census": {
+        "triangles_total": 529,
+        "unbounded": 208,
+        "pure_fine_total": 34,
+        "pure_fine_unbounded": 0,
+        "kinds": {
+          "CCC": 45,
+          "CCF": 134,
+          "CCFC": 11,
+          "CFF": 16,
+          "CFFC": 2
+        }
+      },
+      "boundary2": {
+        "E_undirected": 448,
+        "F": 321,
+        "rank_d2_Q": 311,
+        "rank_d2_GF2": 311
+      },
+      "H1_dim": 38,
+      "H2_dim_ker_d2": 10
+    },
+    {
+      "n": 200,
+      "fine_edges": 405,
+      "coarse_edges": 759,
+      "faces": 868,
+      "components": 1,
+      "b1_skeleton": 896,
+      "b1_fine_only": 206,
+      "tree_b1": 0,
+      "flat_fraction_M1": 1.0,
+      "flat_fraction_all": 0.8744239631336406,
+      "M_histogram": {
+        "1": 654,
+        "2": 101,
+        "3": 4
+      },
+      "triangle_census": {
+        "triangles_total": 1675,
+        "unbounded": 807,
+        "pure_fine_total": 77,
+        "pure_fine_unbounded": 0,
+        "kinds": {
+          "CCC": 167,
+          "CCF": 524,
+          "CCFC": 59,
+          "CFCFC": 1,
+          "CFF": 41,
+          "CFFC": 15
+        }
+      },
+      "boundary2": {
+        "E_undirected": 1095,
+        "F": 868,
+        "rank_d2_Q": 833,
+        "rank_d2_GF2": 833
+      },
+      "H1_dim": 63,
+      "H2_dim_ker_d2": 35
+    }
+  ],
+  "kill_b_fires": true
+}

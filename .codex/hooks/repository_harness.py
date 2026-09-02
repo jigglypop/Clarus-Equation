@@ -58,6 +58,8 @@ REQUIRED_PATHS = (
     Path(".codex/hooks/goal_reminder.py"),
     Path(".codex/hooks/paper_lint.py"),
     Path("_workspace/README.md"),
+    Path(".claude/hooks/lib/ledger.py"),
+    Path(".claude/skills/conjecture-first/SKILL.md"),
 )
 REQUIRED_AGENT_REFERENCES = (
     "paper/README.md",

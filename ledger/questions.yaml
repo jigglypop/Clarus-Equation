@@ -73,13 +73,473 @@ questions:
     다른 항목으로 옮길지 — 택일 후 add-question은 사용자 결정 이후에 실행한다. 잔여(비표적 변경): C4 시계 창·instrument 의존성, [E,Π]≠0 결합-드레싱에서
     Page≠Lüders(θ≥0.05)의 정도, 연속 미니초공간(ℓ²(Z)/비콤팩트 군평균) 재유도는 재개 시에만 다룬다.'
 - id: Q-0006
+  kind: kill_test
   title: 'M2·M3 문헌 도입 kill test: M1 작용(중력+χ+Klein–Gordon 기준 스칼라 4개, E54-A)이 BFHPR 2016(arXiv:1605.02573)·BFR
     2016(arXiv:1306.1058)의 기준장 클래스와 pAQFT BV 구성 조건(비퇴화 gradient, Hadamard, QME 해결 가능)에 들어가는지, 4D 보손 물질의
     미분동형 BRST 이상항 부재의 명시 출처가 있는지 확인해 M2·M3를 [정리: 문헌, EFT 조건부]로 채택할 수 있는지 판정'
-  status: active
+  status: open
   priority: 1
   origin: 'paper/진전_원장.md §2 (2026-09-02 사용자 동의: M2·M3 문헌 도입, 프론티어 M4)'
   attempts: 1
   consecutive_low: 0
   pivots_tried: []
+  notes: '[2026-09-02 사용자 지시 범위변경] Q-0008(원래 CE 프로그램, 공통 metric 정렬 카드) 우선으로 일시 open 전환. attempt 1 항목 E-20260902-005
+    유효. 재개: M4 준비 사용자 결정 뒤.'
+- id: Q-0008
+  title: '공통 계량(single-metric) 섹터의 미시 다중도: Q-spine split/merge quotient 아래 coarse block이 하나의 metric으로
+    렌더링될 다중도 Ω_align와 mismatch 다중도의 비(또는 그 장부)를 식으로 먼저 세우고, 11.9 ''simplicity projection의 microscopic
+    weight''·13.8 ''common-metric sector RG attractor''·10.10 ''Ω(C) counting measure'' 벽을 사다리로 닫는다'
+  kind: conjecture
+  status: active
+  priority: 1
+  origin: 'paper/진전_원장.md §2 (2026-09-02 사용자 지시 [범위변경]: 원래 CE 프로그램 #20·#24 — 공통 metric 정렬 동역학)'
+  attempts: 6
+  consecutive_low: 0
+  pivots_tried: []
+  notes: '[E-20260902-006] 카드 반례 기각(채택 전) → 재추측: F-02(같은 세션, 재추측 1회): 정확 항등식 tl[gram(Σ_v X_v)]=−n Σ_v
+    tl[gram(η_v−η̄)]을 사다리 3단 보조정리로 교체, 구동량을 E‖HκH‖_F²(κ_vw=depth(v∧w)+1)로 재정의, γ_coh=0·γ_iid=−1/2·γ_her=1/d_tree
+    사전등록(균등 Cayley 유한-n 0.529, ratio(n=32)=8.07/ratio(8)=1.989/ratio(16)=4.006), Σw²=1 명시, Ω_align/Ω_mis을
+    10.10 counting measure 대응 여부까지 정직화(현재는 가정된 P_micro 아래 승산비), ε_res n-무관 규약 명시, SO(4)=Euclidean 범위 선언,
+    결론 단(정렬 공리 필요) 추가, 혼합 mode 가법성 kill 신설, tree 형태 의존성 (chain/Cayley/star/balanced binary 값이 다름)을 kill
+    또는 명시 가정으로 흡수. sourcer로 E‖HκH‖²~n³ 문헌(Wiener index/CRT quadratic functional 계열) 대조. Q-0009(Q-spine
+    블록의 진짜 보편류: spine chain 지배 vs 균등 Cayley) 답이 F-02의 전제(카드가 균등 Cayley로 조건화된 GW를 쓰지만 실제 Q-spine 블록은 size-biased
+    spine이 지배)를 좌우하므로 F-02 사다리 4단에서 함께 다룬다. [E-20260902-007] 카드 채택(예측): eps_n**2 - eps_star**2*D_kappa/n**2'
+  card: derivations/Q-0008/F-02.formula.md
+  card_kind: 예측식
+  card_status: 채택
+  formula: eps_n**2 - eps_star**2*D_kappa/n**2
+  kill:
+  - 'K1 (heritable Cayley): `.claude\hooks\python.cmd python verify\Q-0008\F-02\check_modes.py --mode
+    her` → `result.json` `stats.her_slope` ∉ [0.43, 0.63] 또는 `stats.her_ratio_128` ∉ [26.0, 39.1]이면 죽는다.
+    chain 0.994·binary 0.227·F-01 0.226 쪽이면 γ_her=1/d_tree 법칙(κ~깊이 족)이 죽고, ratio가 13.7(binary)·153(chain)
+    쪽이면 커널 D의 조합론이 죽는다.'
+  - 'K2 (혼합 교차항): `--mode mix` → `stats.mix_X_32` ∉ [0.49, 0.99]이면 죽는다. 0 근처면 커널 가법성(κ=Σw²κ_m)이 틀린 것이고,
+    창 위면 label 공분산 밖의 상관(비가우스·비선형)이 있다.'
+  - 'K3 (Q-spine 블록): `--mode qspine` → `stats.qspine_slope_vs_En` ∉ [0.42, 0.59] 또는 `stats.qspine_ratio_b8_over_iid36`
+    ∉ [6.01, 7.65]이면 죽는다. 기울기 1 근처면 chain 류(spine 지배), 진폭 9.06 근처면 ''Q-spine≠Cayley 진폭'' 주장이, 8.25 근처면
+    E[D/n²](random n) 규약이 죽는다. 판별 구조: 기울기 창 [0.42,0.59]는 평균장 대안 0.533을 포함하므로 기울기만으로는 평균장 규약을 가르지 못하고,
+    규약 판별은 진폭비 창 [6.01,7.65](평균장 8.245·Cayley 9.064 모두 밖)가 담당한다; chain 류 기울기 1.0은 4단 경로별 상계 D/n²≤b²가 정리로
+    이미 배제하므로 기울기 창은 그 상계의 수치 확인이다.'
+  - 'K5 (i.i.d. 통제): `--mode iid` → `stats.iid_slope` ∉ [−0.58, −0.38]이면 죽는다. −0.38 위면 traceless 평균 바닥(3단
+    등방성 전제 거짓; 가우스 등방 κ⊗I_16 scope 안에서).'
+  ladder:
+  - step: 1
+    claim: '외부기존 — 1a Wick/Isserlis: 표준 가우스 ξ에 대해 Var(ξᵀ(M⊗q)ξ)=2‖M‖_F²‖q‖_F² (Isserlis 1918); 1b CLT(i.i.d.
+      블록 n^{−1/2}); 1c 균등 rooted Cayley tree = Poisson(1) 임계 GW의 크기 조건화; 1d 깊이~n^{1/2}, d_tree=2 (Aldous
+      CRT 1991–93); 1e 부분트리 크기 법칙 N_k=C(n,k)k^{k−1}(n−k)^{n−k}/n^{n−1} (Meir–Moon 1970); 1f size-biased
+      GW spine (Lyons–Pemantle–Peres 1995). 각각 sourcer 인용으로 닫는다'
+    kind: 외부기존
+    status: cited
+    entry: E-20260902-008 1a Isserlis 1918 Biometrika 12:134–139 (DOI 10.1093/biomet/12.1-2.134) / Wick
+      1950 Phys. Rev. 80:268; 1b Billingsley Probability and Measure 3rd ed. Thm 27.1 / Feller An Introduction
+      to Probability Theory II 2nd ed. §VIII.4; 1c Kennedy 1975 J. Appl. Probab. 12:800–806 (DOI 10.2307/3212735)
+      / Pitman Combinatorial Stochastic Processes LNM 1875 §6 / Aldous 1991 CRT II; 1d Aldous CRT I (Ann.
+      Probab. 19, 1991) · CRT III (Ann. Probab. 21, 1993) / Rényi–Szekeres 1967 J. Austral. Math. Soc.
+      7:497–507; 1e Meir–Moon 1978 Canad. J. Math. 30:997–1015 (DOI 10.4153/CJM-1978-085-0, 부분트리 크기 법칙의
+      직접 출처; 저장소는 n≤7 전수열거로 독립 확인); 1f Lyons–Pemantle–Peres 1995 Ann. Probab. 23:1125–1138 (DOI 10.1214/aop/1176988176).
+      sourcer(haiku) 확정본, 6건 전부 ok — 카드 사다리 1단 외부기존을 문헌 인용으로 닫는다(attempt 소모 없음).
+  - step: 2
+    claim: '정확 블록 항등식: polar-aligned 정확 simple cell X_v=Σ_0+η_v의 합 Y에 대해 tl[gram(Y)]=−n Σ_v tl[gram(η_v−η̄)]
+      (모든 δ, 1차항 정확 상쇄; adversary b8이 3줄 증명 제시). 따름정리: 두 종 결정론 Δ에서 ε=p(1−p)‖tl gram Δ‖/‖gram(Σ_0+(1−p)Δ)‖
+      정확(13.5 n-무관 재현, verify[6]), defect p=1/n에서 (n−1)/n² 희석'
+    kind: 보조정리
+    status: closed
+    entry: E-20260902-008
+  - step: 3
+    claim: '커널 법칙: 가우스 등방 label(공분산 κ⊗I_16, scope 가정)·traceless 2차 평균 0(internal SO(3) 등방성, 16 기저방향 합
+      정확히 0)·O(δ⁴) 절단에서 ε²=ε_★²‖HκH‖_F²/n²; 닫힌 식 4종 ‖HIH‖²=n−1, 두 종 4n²p²(1−p)², chain (n²−1)(2n²+7)/180,
+      star n−2+1/n² (n≤11 독립 재계산 일치); 교차항 tr(Hκ)=Σ s_u(1−s_u/n). γ_her=1/d_tree는 전형적 쌍의 κ_vw가 깊이와 같은 차수인
+      족(균등 Cayley·chain·caterpillar) 한정 — Cayley 유한 격자 0.5302, caterpillar γ→0.5000(adversary b9, k=1000..3375;
+      0.4758은 n≤1600 유한크기값)로 법칙 부합; star-of-chains(0.2476)·balanced binary(K1 격자 0.2267, 깊이 log n)는 scope
+      밖'
+    kind: 보조정리
+    status: closed
+    entry: E-20260902-018
+  - step: 4
+    claim: 'Q-spine 깊이 b 블록 수치시험: E[n_b]=b(b+1)/2 정확(verify[12]); 상계 D/n²≤b²는 경로별 정리(모든 tree에서 κ_vw=|path(v)∩path(w)|≤b,
+      ‖HκH‖_F≤‖κ‖_F≤nb) ⇒ RMS_Q≤ε_★b ⇒ n-지수≤1/2(chain 류 배제); 유한 b 표 E[D/n_b²] (b=2..8)는 tree-only MC(seed
+      20261902, M=200000/b, 통계오차<0.1%) — 크기 조건화 Cayley와 같은 d_tree=2 류, 진폭 0.754배'
+    kind: 수치시험
+    status: open
+    entry: null
+  - step: 5
+    claim: '조건부 따름정리: [공리: 후보] w_her≠0(자기재귀 상속, scope에 선언)과 고정 ε_res 규약 아래 γ_her>0 ⇒ P_micro[ε_block≤ε_res]→0
+      ⇒ Ω_align/Ω_mis→0 ⇒ coarse-graining은 공통 metric attractor를 주지 못하고 상속 증분을 O(B_0) 접선(scale+SO(3))으로
+      투영하는 정렬 공리가 필요하다. 공리 선언 자체는 닫는 대상이 아니다'
+    kind: 보조정리
+    status: open
+    entry: null
+  - step: 6
+    claim: '수치시험 K1·K2·K5 (`check_modes.py --mode her|mix|iid`, seed 20260902): γ_her 0.530±0.10, ratio(128)
+      32.6±20%, X(32) 0.74±0.25, γ_iid −0.478±0.10. K4 defect(0.1406±12%·−0.907±0.05, 창 불변)는 같은 실행에서 일관성
+      검사로 동반 기록(kill 아님)'
+    kind: 수치시험
+    status: closed
+    entry: E-20260902-015
+  - step: 7
+    claim: '예측시험 K3 (`--mode qspine`): Q-spine n-지수 0.505±0.085, RMS_Q(8)/RMS_iid(36)=6.83±12% — 통과하면
+      가정된 P_micro(가우스 등방 κ⊗I_16)·w_her≠0 공리·고정 ε_res 규약 아래 Ω_align/Ω_mis 세 흐름(∞·const·0)과 정렬 공리 필요성이 조건부
+      정리가 된다'
+    kind: 예측시험
+    status: closed
+    entry: E-20260902-016
+  rediscoveries: 0
+- id: Q-0009
+  title: 'Q-spine 블록(size-biased spine, 자식 chain 지배)의 heritable 지수 보편류: 균등 rooted Cayley tree(d_tree=2,
+    gamma_her=1/d_tree=0.5)와 같은가 아니면 spine 지배 chain 지수(gamma_her=1)로 갈라지는가 -- F-02 구동량 E||H kappa H||_F^^2
+    보편류 가정의 전제'
+  kind: conjecture
+  status: open
+  priority: 2
+  origin: E-20260902-006
+  attempts: 0
+  consecutive_low: 0
+  pivots_tried: []
   notes: ''
+- id: Q-0010
+  title: '정렬 공리 카드(13.8): 상속 증분 ξ_v를 common-orbit 접선 T_{B_0}O=span{B_0, so(3)·B_0}(4차원)로 투영하는 사영 P_align
+    아래 F-02 상속 mode의 블록 지수가 +1/d_tree에서 i.i.d. 값 −1/2로 전환(relevant→irrelevant)한다는 예측식과 정렬/접힘 예산식 ‖ξ‖²=‖P_align
+    ξ‖²+‖(1−P_align)ξ‖²'
+  kind: conjecture
+  status: open
+  priority: 2
+  origin: 'paper/진전_원장.md §2 (2026-09-02 사용자 지시: 원래 CE 프로그램 일괄 카드)'
+  attempts: 1
+  consecutive_low: 0
+  pivots_tried: []
+  notes: '[E-20260902-010] 카드 채택(예측): eps_align_n**2 - eps_star**2*(n-1)/n**2'
+  card: derivations/Q-0010/F-01.formula.md
+  card_kind: 예측식
+  card_status: 채택
+  formula: eps_align_n**2 - eps_star**2*(n-1)/n**2
+  kill:
+  - 'K1 (정렬 전환): `.claude\hooks\python.cmd python verify\Q-0010\F-01\check_align.py --mode align` → `result.json`
+    `stats.align_slope` ∉ [−0.58, −0.38] 또는 `stats.align_ratio_128` ∉ [0.85, 1.18] 또는 `stats.align_ratio_32`
+    ∉ [0.85, 1.18] 또는 `stats.align_ratio_spread` ∉ [1.00, 1.25]이면 죽는다. 기울기가 +0.5 쪽이면 정렬 규칙이 상속 mode를 접지
+    못하는 것이고, 비가 1보다 크게 남으면(예: 7·32) 접힘이 부분적이며, 비가 0.85 아래로 내려가면 접힘이 과잉이라 커널 환원(c_3=c_0)이 틀린 것이다. 검정력의
+    범위: 전달 채널 ⊆ ker M̃인 대안(scale+asd·sd+asd₁·7차원)에는 검정력 0(a2·a4).'
+  - 'K2 (ker M̃ 밖 채널의 누출): `--mode rand4` → `stats.rand4_ratio_128` ∉ [5.8, 8.8] 또는 `stats.rand4_slope`
+    ∉ [0.10, 0.31]이면 죽는다. 대조값 7.299·0.2055는 seed 20260902 고정 4평면의 값이다(Haar 앙상블 중앙 8.87, 평균 8.84±1.22,
+    52.7%가 창 상한 위 — 창·값 불변, 이 씨앗에 대한 시험). rand4 통계가 K1의 정렬 창(1.00±0.18, −0.478) 안으로 들어오면 ''ker M̃ 밖 4차원도
+    접으면 된다''는 뜻이고 예산 누출 c_1/c_0=0.0475가 죽는다. 반대로 rand4가 무사영값(32.554·+0.53)까지 올라가도 예산 계수 (0.0475, 0.1779,
+    0.5966)가 틀린 것이므로 죽는다. K2는 ker M̃ 안의 4평면들을 궤도 접선과 가르지 못한다 — 그 판별은 K4다.'
+  - 'K3 (tree 족 보편성): `--mode qspine` → `stats.qspine_align_ratio` ∉ [0.85, 1.18]이면 죽는다. 6.8 근처면 Q-spine의
+    spine 상속이 정렬 규칙을 뚫고 남은 것이고, 그러면 κ_eff=I(3단)가 tree 족에 보편적이지 않다.'
+  - 'K4 (궤도 접선 특정성 — 사원수 닫힘; 사전등록 2026-09-02 revision 2): `--mode closure` → fold=0((1−P)ξ_v≡0, 전달 채널만
+    켠 블록), δ=0.2, n∈{8,16,32}, 64 trials/size, seed 20260902(사영마다 같은 난수), 통계 = max_n RMS(12.4 정규화 잔차).
+    `stats.closure_align` > 1e−12 또는 `stats.closure_alt2` < 1e−3 또는 `stats.closure_null7` < 1e−3이면 죽는다.
+    closure_align이 1e−12 위면 선형 전달 규칙이 궤도 O(B_0)를 정확히 유지하지 못하는 것(사원수 닫힘 주장 사망)이고, 대조 P_alt2=so(3)_sd⊕so(3)_asd,1·P_null7=scale⊕so(3)_sd⊕so(3)_asd가
+    1e−3 아래면 이 통계에 판별력이 없어 ''궤도 접선을 특정한다''가 반증 불가능이 되어 죽는다. P_alt1=scale⊕so(3)_asd(우측 사원수)는 `stats.closure_alt1`
+    ≤ 1e−12로 기록만 한다(kill 아님; sd/asd는 scope의 렌더링 정의). 비교 기준은 `--mode struct`의 13.3 정확 궤도 잔차(2.2e−16).'
+  ladder:
+  - step: 1
+    claim: '외부기존 — 1a 13.3 Common-Metric Orbit Closure(저장소 내부 정리, examples/physics/urbantke_shape_matching_rg.py):
+      한 conformal 궤도 O(B_0)={αR·B_0} 안의 cell들은 polar 정렬 뒤 합이 정확히 simple; 1b so(4)=so(3)_sd⊕so(3)_asd 자기쌍대
+      분해와 4×4 tetrad 증분의 16=1+3+3+9 분해, span{1,so(3)_sd}≅H 사원수 부분대수(표준); 1c anti-self-dual 3방향이 dΦ의 커널(자기쌍대
+      삼중항을 바꾸지 않는다); 1d F-02(채택 카드) 커널 법칙 ε²=ε_★²‖HκH‖_F²/n²와 정확 Cayley 표. 각각 sourcer 인용으로 닫는다'
+    kind: 외부기존
+    status: open
+    entry: null
+  - step: 2
+    claim: '보조정리(제약 기울기 소멸, 증명 가능): 모든 기하 삼중항은 simple — tl G(Φ(e),Φ(e))≡0 ∀ 비퇴화 e(12.4). e=I에서 미분하면 2
+      tl G(B_0, dΦξ)=0 ∀ξ∈R^16, 즉 B_0는 dΦ의 상 전체와 tl-G-직교. dΦ(scale)∝B_0이므로 2차형식 M_a의 scale 행·열은 정확히 0(따름정리;
+      driver 3.9e−14와 a9의 무작위 ξ 200개 검사는 근거이지 증명이 아니다). 따라서 정렬 채널로 누적되는 scale은 깊이 √n으로 커져도 블록 잔차를 만들지
+      않는다. 또한 rank dΦ=13, dim T_{B_0}O=4, 접힌 가시 차원 13−4=9(SVD, tol 1e−8), ker M̃=scale⊕so(3)_sd⊕so(3)_asd
+      7차원'
+    kind: 보조정리
+    status: open
+    entry: null
+  - step: 3
+    claim: '보조정리(커널 환원): 정렬 규칙의 label 공분산은 κ_her⊗P+I⊗(1−P)이고 블록 잔차의 2차 모멘트는 E‖S‖²/2=c_1‖HκH‖_F²+2c_2 tr(HκH)+c_3(n−1)로
+      정확히 쪼개진다(예산 항등식 c_0=c_1+2c_2+c_3). P⊆ker M̃이면 M̃_aP=0 ⇒ (c_1,c_2,c_3)=(0,0,60)=(0,0,c_0) ⇒ κ_eff=I
+      ⇒ D_align=n−1, ρ=√(c_3/c_0)=1 — P_align(누출 5.9e−15)은 그 한 예이고 scale+asd·sd+asd₁·7차원 전부도 같다(a2). 죽이는
+      것: 전달 채널이 잔차를 조금이라도 나르면(c_1>0, ker M̃ 밖) 상속 지수가 살아난다'
+    kind: 보조정리
+    status: open
+    entry: null
+  - step: 4
+    claim: '보조정리(등방성 유지 ⇒ 바닥 없음, 증명 가능): Σ_a M̃_a² = (20/3)Π_sym9 정확(접힌 9방향의 특이값이 전부 √(20/3)=2.581989,
+      verify[15]; a2 독립 재계산) ⇒ 접힌 9차원(대칭 traceless)의 잔차 생성기는 등방이고 그 공분산은 B_0를 고정하는 대각 SO(3)에 불변 ⇒ E[tl
+      gram]∝tl(I_3)=0 ⇒ O(δ²) 바닥이 없다(driver max|tr M̃_a|=7.3e−14는 근거). F-02 scope의 비등방 반례((0,0) 성분만 요동,
+      기울기 −0.006)와 대비되는 지점이며, 바닥이 생기면 −1/2 예측이 즉시 죽는다'
+    kind: 보조정리
+    status: open
+    entry: null
+  - step: 5
+    claim: '수치시험 K1 (`check_align.py --mode align`, seed 20260902/20260903, δ=0.005, 256 trials): γ_align=−0.478±0.10,
+      ρ(32)=ρ(128)=1.00±0.18, ρ_spread≤1.25. 통과하면 ''전달 채널 ⊆ ker M̃ ⇒ 상속 mode가 relevant에서 irrelevant로 전환''이
+      수치로 선다(어떤 4평면인지는 아직 아니다)'
+    kind: 수치시험
+    status: open
+    entry: null
+  - step: 6
+    claim: '예측시험 K2+K4 (`--mode rand4`, `--mode closure`): K2 — ker M̃ 밖의 씨앗 고정 4평면 대조 ρ_rand4(128)=7.30±1.5,
+      γ_rand4=0.206±0.105(누출 c_1/c_0=0.0475). K4 — fold=0·δ=0.2·n∈{8,16,32}·64 trials·seed 20260902에서
+      궤도 닫힘 잔차 closure_align≤1e−12 vs closure_alt2·closure_null7≥1e−3. 둘을 통과하면 전환의 원인이 ''전달 채널 ⊆ ker M̃''이고
+      그 안에서 궤도 접선을 특정하는 것이 사원수 닫힘임이 판별된다(문헌과 갈라지는 자리: 임의의 gauge 사영이 아니라 공통 계량 궤도의 접선, 즉 사원수로 닫히는 채널이어야
+      한다)'
+    kind: 예측시험
+    status: open
+    entry: null
+  - step: 7
+    claim: '예측시험 K3 + 결론(`--mode qspine`): Q-spine 깊이 8 블록에서도 ρ=1.00±0.18 ⇒ κ_eff=I가 tree 족에 보편. 네 시험을
+      통과하면 [공리: 후보] 정렬 규칙 아래 γ_align<0 ⇒ E ε_block²→0 ⇒ (Markov) P_micro[ε_block≤ε_res]→1 — 이것이 이 카드 몫(쉬운
+      절반)이고, 반대 방향 P→0의 하위꼬리 반집중은 F-02 5단(미완) 수입이다. 그 둘이 합쳐져야 ''공통 계량 sector가 blocking의 attractor가 되려면
+      정렬 공리가 필요하고 충분하다''가 조건부 정리가 된다. 접힘 다중도 9 ln(1/h_coord)=41.45 nats는 좌표 해상도 규약 아래 9의 산술 재서술이며 결론의
+      전제가 아니다'
+    kind: 예측시험
+    status: open
+    entry: null
+  rediscoveries: 0
+- id: Q-0011
+  title: '공통조상 2차 모멘트 법칙: 상속 mode 블록 지수 γ_her = ½·(무작위 쌍 공통조상 수 κ_vw의 2차 모멘트 지수) — star-of-chains 1/4,
+    Cayley 1/2, chain 1, balanced binary 0(log), random recursive tree 0(log)을 하나의 식으로 예측(F-02 3단 scope
+    제한의 확장)'
+  kind: conjecture
+  status: parked
+  priority: 2
+  origin: 'paper/진전_원장.md §2 (2026-09-02 사용자 지시: 원래 CE 프로그램 일괄 카드)'
+  attempts: 1
+  consecutive_low: 0
+  pivots_tried: []
+  notes: '[E-20260902-011] 기각: F-02(같은 세션, 재추측 1회): 하한을 상수 1/4 대신 수리된 샌드위치 C/ln n ≤ c ≤ 2(양끝 구성적, C는 아직
+    유도되지 않은 상수)로 교체하거나, 반증되지 않은 지수 법칙 γ_her=½·exp_n μ₂^eff(9족 경험, 가중 지수 정확히 1의 specificity)만을 독립적으로 시험하는
+    단독 카드로 좁힌다 — 두 후보 모두 사용자 결정 뒤 신규 질문으로 등록한다(add-question 보류). adversary가 제기한 Aldous/Meir–Moon 재발견 의심(극단
+    하한 붕괴)은 다음 카드의 sourcer 단계에서 재확인한다. 하네스 교훈(소규모 담금질·유한 매개화 전수 최소값은 점근 하한의 증거가 아니다; power_profile처럼 유계
+    매개화는 최적 프로파일을 표현 못해 인공적으로 정체할 수 있다)은 _workspace parking 노트로 남긴다.'
+- id: Q-0012
+  title: '비가우스 4차 누적항: 라벨 분포의 초과 첨도 κ4=Eξ⁴−3에 대해 블록 잔차 ε²=ε_★²[‖HκH‖_F²/n² + c·κ4·Σ_v(HκH)_vv²/n²] — Rademacher(−2)·균등(−1.2)·Laplace(+3)
+    라벨에서 her/iid 비의 이동량을 예측(F-02 커널 법칙의 가우스 가정 확장)'
+  kind: conjecture
+  status: open
+  priority: 2
+  origin: 'paper/진전_원장.md §2 (2026-09-02 사용자 지시: 원래 CE 프로그램 일괄 카드)'
+  attempts: 1
+  consecutive_low: 0
+  pivots_tried: []
+  notes: '[E-20260902-012] 카드 채택(예측): eps_n**2 - eps_star**2*(D_kappa + k4*S_gen/60)/n**2'
+  card: derivations/Q-0012/F-01.formula.md
+  card_kind: 예측식
+  card_status: 채택
+  formula: eps_n**2 - eps_star**2*(D_kappa + k4*S_gen/60)/n**2
+  kill:
+  - 'K1 (진폭·c_4=1/60): `.claude\hooks\python.cmd python verify\Q-0012\F-01\check_cumulant.py --mode labels`
+    → `result.json` `stats.rho_iid36_spike64` ∉ [1.8786, 2.0982] 또는 `stats.rho_iid36_laplace` ∉ [1.0352,
+    1.0620]이면 죽는다. 두 통계가 1.0 쪽이면 ''라벨 분포는 잔차에 안 들어온다''(F-02의 가우스 보편성 판독)가 참이고 카드가 죽는다. spike64가 2.98 쪽이면
+    c_4=1/30, 1.49 쪽이면 c_4=1/120 — 어느 쪽이든 2단의 정확 상수가 틀린 것이다.'
+  - 'K2 (생성자형 대 커널형): 같은 실행 `stats.rho_cat6_spike64` ∉ [1.3020, 1.6104] 또는 `stats.a_cat6` ∉ [0.004961,
+    0.009997]이면 죽는다. 1.1985·0.003255 쪽이면 4차 보정의 대각이 생성자 AᵀHA가 아니라 커널 HκH(adversary b4 추정)이고 카드의 생성자-대각
+    보조정리(3단)와 함께 식이 죽는다.'
+  - 'K3 (κ4 선형성): 같은 실행에서 `stats.rho_iid36_uniform` ∉ [0.9681, 0.9931], `stats.rho_iid36_rademacher` ∉
+    [0.9371, 0.9981], `stats.rho_cat6_laplace` ∉ [1.0026, 1.0422], `stats.rho_cat6_uniform` ∉ [0.9733,
+    1.0088], `stats.rho_cat6_rademacher` ∉ [0.9417, 1.0284] 중 하나라도 발동하면 죽는다. spike64(큰 lever)는 맞는데 작은
+    lever 점들이 빠지면 이동이 κ4에 1차가 아니라는 뜻이고(6차 이상 누적이 들어옴) 2차 형식 구조 자체가 틀린 것이다.'
+  - 'K4 (c_4-무관 구조 시험): 같은 실행 `stats.slope_ratio` ∉ [0.2974, 0.6257]이면 죽는다. 0.2009 쪽이면 커널형, 1.0 쪽이면 ''보정이
+    mode에 무관한 상수 인자''라는 뜻이다. 이 통계에서는 c_4가 상쇄되므로 K1 통과·K4 발동이면 상수는 맞고 대각 구조가 틀린 것으로 진단이 갈린다.'
+  - 'K5 (2차 형식 구조; revision 2): `--mode form` → `stats.form_rms_rel_err_delta0005` > 0.03 또는 `stats.form_ratio_delta_scaling`
+    ∉ [3.0, 7.0]이면 죽는다(고정 배치 12개, n∈{3,5,8,12}, 가우스·Rademacher·상속 라벨, seed 20260902+777; 첫 통계는 δ=0.005에서
+    배치별 상대오차 |ε_phys/ε_form−1|의 12개 RMS, 둘째는 그 RMS의 δ=0.005 대 δ=0.001 비이며 O(δ) 배 항이면 5여야 한다). 배치 12개는
+    한 씨앗의 무작위 추출이므로 두 통계 모두 표본분포를 가진다(초판의 ''표본오차가 없다''는 오류). 창의 근거는 사전등록 씨앗이 아닌 독립 씨앗 300개(500000+911k)의
+    표본분포다: 초판 통계 max|rel_err|는 중앙값 0.0158·p90 0.0247·최대 0.0551로 창 0.02에서 카드가 참일 때 오발동 0.223(adversary
+    a8), RMS는 중앙값 0.0067·p99 0.0132·최대 0.0164로 0.02 이상에서 오발동 0/300이고 창 0.03은 300 씨앗 최대의 1.8배다(`verify/Q-0012/F-01/k5_rms_window_design.json`);
+    δ-비는 300 씨앗에서 [4.73, 5.31]로 [3,7] 밖 0/300. 사전등록 씨앗 SEED+777 배치는 이 수정 시점까지 실행되지 않았다. 잔차가 ''2차 형식 +
+    O(δ)''가 아니면(예: 정렬 1차항 누락으로 Σ_aM_aa≠0) 상대오차가 δ에 비례해 줄지 않으므로 δ-비가 5에서 벗어나 둘째 통계가 죽이고, 차이가 크면 첫 통계도 죽인다.'
+  ladder:
+  - step: 1
+    claim: '외부기존 — 1a 2차 형식의 4차 누적 분산: 성분이 i.i.d.·평균 0·분산 1·초과첨도 κ4인 ζ와 대칭 M에 대해 Var(ζᵀMζ)=2 tr(M²)+κ4
+      Σ_i M_ii² (Isserlis/Wick + 4차 누적 전개; Mathai–Provost 1992 Quadratic Forms in Random Variables Thm
+      3.2b.2). 1b Pearson 하한 κ4≥−2(Cauchy–Schwarz, 등호 Rademacher). 1c 2차 형식의 2차 모멘트에는 5차 이상 누적이 들어오지 않는다(정확).
+      1d Meir–Moon 1970 부분트리 크기 법칙 N_k. 1e RMT 4-moment universality(Tao–Vu 2011)와의 대비. 각각 sourcer 인용으로
+      닫는다'
+    kind: 외부기존
+    status: open
+    entry: null
+  - step: 2
+    claim: '보조정리(기하 상수): F-02 2단의 정확 항등식 tl G(Y,Y)=−n Σ_v tl G(d_v,d_v)에서 선행 δ 차수의 잔차는 ε=δ²‖Σ_v Φ(D_v)‖/(n‖G_0‖),
+      Φ(d)=Σ_ab d_a d_b M_ab, M_ab=tl sym G(Le_a,Le_b)이고 L은 SO(3) polar 정렬을 포함한 1차 도함수다. 여기서 T_2=Σ_ab‖M_ab‖²=60,
+      T_4=Σ_a‖M_aa‖²=2, c_4=T_4/(2T_2)=1/60, Σ_a M_aa=0(F-02 3단 등방성 전제의 정확형), ‖G_0‖=2√3 — 넷 다 격자·분포와 무관한
+      기하 상수. 해석 경로(adversary a1, 대수로 닫힘): 정렬 미분의 극분해 1차항 Ω=skew(C_1)/4, L=Σ''+ΩΣ_0에서 M_ab를 정확 유리수로 재계산하면
+      ‖M_ab‖²의 다중도가 {0:52, 1/8:96, 1/6:24, 1/2:72, 2/3:12}(합 256)이고 T_2=96/8+24/6+72/2+12·2/3=60(verify[15]),
+      대각 16개는 1/6이 12개·0이 4개라 T_4=2(verify[16]), Σ_aM_aa=0·‖G_0‖²=12도 정확. 수치 L·M과의 차 ≤1.5e−13'
+    kind: 보조정리
+    status: open
+    entry: null
+  - step: 3
+    claim: '보조정리(조립): 라벨 ξ=Aζ의 중심화는 D=(HA⊗I_16)ζ이므로 방향 α의 2차 형식 행렬은 (AᵀHA)⊗Q^{(α)}이고, 1a단을 α에 합하면 Eε²=ε_★²[tr((AᵀHA)²)+c_4κ_4Σ_u((AᵀHA)_uu)²]/n².
+      첫 항은 tr((AᵀHA)²)=tr((HκH)²)=D_kappa로 F-02와 같지만 둘째 항의 대각은 커널 HκH가 아니라 생성자 AᵀHA다 — 같은 κ의 두 생성자가 4차에서
+      갈라진다. 따름정리: S_gen^iid=(n−1)²/n, S_gen^cat(k) 닫힌 식, E S_gen^Cayley=Σ_k N_k k²(1−k/n)²'
+    kind: 보조정리
+    status: open
+    entry: null
+  - step: 4
+    claim: '수치시험(사전등록 씨앗, 결과 미확인): (i) 2차 형식이 실제 블록 잔차를 재현하는가 — 고정 배치 12개에서 δ=0.005 상대오차 RMS가 창 0.03 안이고
+      δ=0.001에서 RMS가 3~7배 줄어드는가(O(δ) 배 항, 대칭 분포에서 평균 0 ⇒ E[ε²] 편향 O(δ²)); (ii) 상수 c_4=1/60·Σ_a M_aa=0·‖G_0‖=2√3를
+      코드에서 재계산; (iii) 격자 상수 — 캐터필러 k=6의 S_gen=62069/216·S_ker=54023/432·D=23053/36 정확 유리수, Cayley E S_gen을
+      Meir–Moon 합과 n≤7 전수열거로 대조; (iv) O(δ) 절단 편향의 실측 상계(adversary a3, 비사전등록 씨앗, 384 trials 짝지음): ρ_phys/ρ_form−1은
+      δ=0.005에서 cat6·spike64 +1.39e−2±5.9e−3, cat6 나머지 ≤1.8e−3, iid36 전부 ≤1.2e−3이고 δ=0.001에서 cat6·spike64
+      +1.5e−3으로 δ²에 맞게 줄어든다 — 사전등록 값은 O(δ⁴) 절단 2차형식의 값이지 물리 실행의 기대값이 아니며, 그 차(최대 1.4%)는 해당 창 반폭(P5: 0.154)의
+      9%라 판정을 옮기지 못한다. 죽이는 것: K5'
+    kind: 수치시험
+    status: open
+    entry: null
+  - step: 5
+    claim: '수치시험(대리모형): 테트라드 없는 2차 형식 MC(같은 A·같은 짝지음, 40000 표본)가 ρ=1+κ4c_4S_gen/D를 8개 (mode,분포) 점에서 1σ
+      안으로 재현하고 커널형 대안을 cat6·spike64에서 10σ로 배제하는지 — 3단 조립의 산술 검산이자 사전등록 창(4σ)의 설계 계산. 물리 잔차를 쓰지 않으므로 예측
+      판정이 아니다'
+    kind: 수치시험
+    status: open
+    entry: null
+  - step: 6
+    claim: '수치시험(δ-절단 확인; 관측이 아니라 O(δ⁴) 절단 모형 안의 사전등록 물리 실행): `check_cumulant.py --mode labels` (n=36,
+      δ=0.005, 8192 trials, 5분포×2mode, 역-CDF 공통난수, seed 20260902) → K1·K2·K3·K4. 여기서 틀릴 수 있는 것은 셋이다 —
+      c_4 값(K1: 1/30·1/120이면 창 밖, ±5.5%), 대각이 생성자인가 커널인가(K2·K4: 커널형 대안은 P5에서 창 하단 아래, 예측값에서 6.7σ), O(δ)
+      절단 편향(4단 (iv) 상계 1.4%가 창 반폭의 9%). 통과하면 9개 비(독립 정보 ≈4)가 자유 파라미터 0으로 맞는 것이고, 하나라도 창 밖이면 카드는 기각이며 재추측은
+      F-02(Q-0012)다'
+    kind: 수치시험
+    status: open
+    entry: null
+  - step: 7
+    claim: '보조정리(결론): 라벨 분포 보편성 계급 — (a) O(δ⁴) 절단 2차형식의 2차 모멘트는 라벨 분포의 4차 누적까지로 정확히 닫힌다(5차 이상 누적은 이 2차형식에는
+      들어올 수 없다; 물리 잔차에는 O(δ) 편향이 따로 붙고 그 크기는 4단 (iv)의 실측 상계 — δ=0.005에서 ≤1.4%, δ²로 감소 — 로 한정된다). 따라서 F-02의
+      RG 지수 γ(γ_her=1/d_tree, γ_iid=−1/2)는 모든 대칭 i.i.d. 라벨 분포에 보편이며 분포는 진폭 ε_★만 유한 인자 √(1+c_4κ_4S_gen/D)≥√(29/30)로
+      옮긴다. (b) 그 인자는 커널이 아니라 생성자를 보므로 κ만으로 쓴 F-02의 라벨 보편성 판독은 2차 모멘트에서만 참이다 — 다만 상속 족에서는 S_gen/D~n^{−1/2}(adversary
+      a6: Cayley 로그기울기 −0.512, 캐터필러 −0.494)라 큰 n에서 진폭 보편성도 회복되고, 진폭 비보편이 남는 것은 i.i.d. mode(S_gen/D→1,
+      verify[13])와 유한 n의 상속 격자다. 결론: F-02 5단의 정렬 공리 필요성은 라벨 분포 선택에 의존하지 않는다(조건부 정리의 전제 하나가 제거된다)'
+    kind: 보조정리
+    status: open
+    entry: null
+  rediscoveries: 0
+- id: Q-0013
+  title: '비등방 바닥 법칙: cell 내부 라벨 공분산 Σ_16이 등방(∝I_16)에서 벗어나면 블록 잔차에 n-무관 바닥 ε_floor²=ε_★²·‖tl G(Σ)‖²/‖G(I)‖²이
+    생겨 F-02의 모든 지수를 0으로 보낸다 — 바닥 크기를 비등방 측도의 식으로 예측하고 축 회전 불변을 kill로(adversary b4 −0.006 모형의 정량화)'
+  kind: conjecture
+  status: open
+  priority: 2
+  origin: 'paper/진전_원장.md §2 (2026-09-02 사용자 지시: 원래 CE 프로그램 일괄 카드)'
+  attempts: 2
+  consecutive_low: 0
+  pivots_tried: []
+  notes: '[E-20260902-013] 카드 반례 기각(채택 전) → 재추측: F-02(같은 세션, 재추측 1회): 바닥 소멸 조건을 tl𝒢(Σ)=0(5개 독립 조건)으로 다시
+    세우고 (a) 상관 rank-1 Σ 바닥 0.11784(already_observed=true로 표시, 이번 attempt에서 이미 관측됨), (b) 반평행 상쇄 방향의 정확
+    소멸(necessity 반례를 일반화), (c) ε_star=√10δ²(등방, 미관측)을 predicts로 등록한다. K4는 MIN_DET 재추출 규약을 선언한 뒤 δ=0.3을
+    재사전등록한다. K5는 kill이 아니라 이산 SO(4) 대칭에 의한 일관성 검사로 재분류한다. 사다리 2단 ''모든 δ'' 서술은 1+δ·l_μμ>-1 제한을 명시한다. 별도:
+    Q-0008 F-02 카드의 scope·kill 문구 중 ''-0.006 기울기의 O(δ²) 바닥이 생겨 i.i.d. 기울기가 무너진다'' 기록은 재현되지 않는 기계오차(RMS~4e-17)로
+    정정이 필요하다(이번 attempt에서 독립 재현). [E-20260902-017] 카드 채택(예측): eps_n**2 - delta**4*(trHk**2*F2 + 2*D*T)/(12*n**2)'
+  card: derivations/Q-0013/F-02.formula.md
+  card_kind: 예측식
+  card_status: 채택
+  formula: eps_n**2 - delta**4*(trHk**2*F2 + 2*D*T)/(12*n**2)
+  kill:
+  - 'K1 (핵 예측): `.claude\hooks\python.cmd python verify\Q-0013\F-02\check_floor.py --mode kernel` → `result.json`
+    `stats.ker_eps64_over_delta2` ∉ [0.06959, 0.08509] 또는 `stats.ker_slope` ∉ [-0.5056, -0.4013] 이면 죽는다.
+    0.215·기울기 -0.13 쪽이면 자기쌍대 짝 상관 C_1 이 축 무게를 옮긴다(W_2 += 2C_1, W_3 -= 2C_1)는 3단의 핵 구조가 거짓이고 바닥 조건은 tl
+    G=0 이 아니다.'
+  - 'K2 (eps_star 분해): `--mode diag` → `stats.diag_eps2_over_delta2` ∉ [0.52739, 0.62731] 또는 `stats.diag_eps64_over_delta2`
+    ∉ [0.12819, 0.15822] 또는 `stats.diag_slope` ∉ [-0.5037, -0.4032] 또는 `stats.off_eps2_over_delta2` ∉
+    [1.01470, 1.14554] 또는 `stats.cross_eps2_sq_over_delta4` ∉ [0.71025, 1.28975] 이면 죽는다. diag 가 0 쪽이면
+    ''영모드의 합은 영모드''이고 M^{(mu mu)(nu nu)} 구조상수가 틀린 것, cross 가 0 쪽이면 예산 60=8+28+24 의 교차항이 없는 것이다. (iso n=2
+    는 이미 관측된 일관성 항목이라 판정에서 뺀다 — 창 밖이면 기록만.)'
+  - 'K3 (노름 보편성): `--mode univ` → `stats.univ_o_eps64_over_delta2` ∉ [0.13748, 0.16490] 또는 `stats.univ_o_eps4_over_delta2`
+    ∉ [0.29748, 0.40222] 또는 `stats.univ_floor_hat_over_delta2` ∉ [0.09661, 0.13909] 이면 죽는다. floor_hat
+    이 0.31 쪽이면 바닥이 tl G 의 상(像)이 아니라 w 자체에 의존하는 것이다. 대각 짝 `stats.univ_d_eps64_over_delta2` 는 이미 관측된 값(0.117933,
+    adversary a3)이라 판정에서 뺀다 — 창 [0.11280, 0.12287] 밖이면 기록만(already_observed; K2 가 iso n=2 에 한 것과 같은 규약).'
+  ladder:
+  - step: 1
+    claim: 외부기존 — 1a Isserlis/Wick 4점 공식(가우스 2차 형식의 공분산 2 tr(B Sigma B Sigma)); 1b SO(3) 동변 선형 사상과 Schur
+      보조정리 — Sym^2(R^16) 의 spin-2 다중도는 12(Casimir 계산 60/5, 동변 사상 공간 12차원)라 Schur 는 12-파라미터 족만 주고, tl G
+      가 그 족의 어느 원소인지는 3단 계수표(유리수, adversary b7 정확 검증)가 고정한다; 1c Plebanski simplicity constraint 와 자기쌍대
+      2-형식 삼중항(12.4); 1d polar/Procrustes 최적 회전(Kabsch). sourcer 인용으로 닫는다
+    kind: 외부기존
+    status: open
+    entry: null
+  - step: 2
+    claim: '정확 영모드 보조정리(모든 delta, det(I+delta l)>0 즉 MIN_DET 조건 아래): 대각 라벨 e_v=diag(1+a_v,1+b_v,1+c_v,1+d_v)
+      블록의 Gram 은 대각이고 tl G=0 ⇔ (ΣA)(ΣB)=(ΣA'')(ΣB'')=(ΣA'''')(ΣB''''). 단일 e_mu mu, diag(g,g,g,0), diag(0,g,g,g),
+      전체 trace 는 성립(정렬 회전 = I), (e00+e11) 은 n=2 에서 (g1-g2)^2 로 깨져 F-01 반례 (ii) 의 바닥을 정확히 준다. 검사: K4(일관성,
+      kill 아님) — adversary b5 가 닫힌 식 Gram = 파이프라인(오차 0.0, delta<=1.0)으로 항등식임을 확인, 반증 위험 0; 잔차>1e-12 는
+      배관 결함'
+    kind: 보조정리
+    status: open
+    entry: null
+  - step: 3
+    claim: 'tl G 의 정확 형태와 핵: 구조상수 tl M^{ab} 는 {P_1,P_2,S_12,S_23,S_31} 기저에서 유리수 계수(비영 108쌍, 분모 <= 4)이고
+      tl G(Sigma)=Σ W_k P_k + (1/4)Σ X_lm S_lm 의 W_k=w_k+2p_k-4D_k+2(C_m-C_l), X_lm 규칙이 성립한다(`--mode constants`
+      규칙 대 M 오차 2.7e-14, SO(3) 동변 5e-16). 핵 = {W 균형, X=0} 5조건, dim 131 — O(delta^2) 명제(delta^4 잔여는 scope).
+      codim 이 5 인 것은 tl G 가 spin-2 로 가는 하나의 동변 사상이기 때문이고(Sym^2(R^16) 의 spin-2 다중도 12, ''spin-2 성분 없는 부분''은
+      codim 60), 12-파라미터 Schur 족의 어느 원소인지는 계수표(유리수 108쌍, adversary b7 정확 검증 실패 0)가 고정한다. w 균형(dim 134)과
+      핵(dim 131)은 서로 포함하지 않는다(교집합 129): w 균형은 p_k(짝 대칭 상관), D_k(대각-대각 상관), C_k(자기쌍대 짝 교차 상관 — 무게 전이 P_l-P_m),
+      X(클래스 교차·대각x비대각 상관)를 놓치고, 핵은 w 불균형을 C_k 로 보상한 Sigma_b 를 품는다 — F-01 반례 (i)=X, (ii)=D, (iii)=D 상쇄.
+      죽이는 것: K1·K3 에서 핵 원소 Sigma_b 가 바닥을 갖거나 Sigma_o 의 floor_hat 이 e03 과 다른 경우'
+    kind: 보조정리
+    status: open
+    entry: null
+  - step: 4
+    claim: 'Wick 분리: E||tl G(Y)||^2 = ||E tl G(Y)||^2 + Var, Var = 2 n^2 delta^4 ||H kappa H||_F^2 T(Sigma)
+      로 master 식; 정렬 무관성(adversary 제안, 이 단에서 증명할 것): 각 cell 의 Gram 이 정확히 2 det(e_v) I 이므로 2차 cell 항 Q~_v
+      와 정렬 세부가 traceless 부분에서 상쇄되어 tl gram(Y) = -n delta^2 Σ_v tl M(xi~_v, xi~_v) + O(delta^3), M(y,y)=Σ_ab
+      y_a y_b M^{ab}, 가 임의의 cell 별 정렬 사상에서 성립한다(polar 정렬 특정이 아님); Σ_ab ||tl M^ab||_F^2 = 60 = T_DD + T_OO
+      + 2 T_DO = 8+28+24 ⇒ eps_star(I16)=sqrt10 delta^2, eps_star(I4)=(2/sqrt3)delta^2, eps_star(I12)=sqrt(14/3)delta^2,
+      비가산성 4 delta^4; n=2 규약 eps(2)=eps_star/2 가 Q-0008 F-02 verify[7] 와 같다. rank-1 에서 T=F2 ⇒ sqrt(n^2-1)/n.
+      죽이는 것: K2 의 cross 가 0 쪽인 경우, 비가우스 4차 cumulant 가 delta=0.005 에서 경합하는 경우(scope)'
+    kind: 보조정리
+    status: open
+    entry: null
+  - step: 5
+    claim: '수치시험 K1 (`check_floor.py --mode kernel`, 씨앗 20260902, MIN_DET=0.05): 핵 원소 Sigma_b 의 바닥 0 —
+      n=64 값 0.07734 창 [0.06959,0.08509]·기울기 -0.4534 창 [-0.5056,-0.4013]. 같은 단에서 일관성 검사 K4(`--mode zero`:
+      3-대각 정확 영모드 <=1e-12, delta=0.1 포함)·K5(`--mode axis`: 비 1)를 실행해 기록한다 — 불일치는 배관 결함이지 kill 이 아니다'
+    kind: 수치시험
+    status: open
+    entry: null
+  - step: 6
+    claim: '수치시험 K2 (`--mode diag`): I_4 n=2 0.57735 창 [0.52739,0.62731]·n=64 0.14321 창 [0.12819,0.15822]·기울기
+      -0.4534, I_12 n=2 1.08012 창 [1.01470,1.14554], 비가산성 1.0 창 [0.71025,1.28975]'
+    kind: 수치시험
+    status: open
+    entry: null
+  - step: 7
+    claim: '예측시험 K3 (`--mode univ`): Sigma_o (w=(1,0,3), 상관 C_1=1/2) 의 n=64 0.15119 창 [0.13748,0.16490]·n=4
+      0.34985 창 [0.29748,0.40222]·floor_hat 0.11785 창 [0.09661,0.13909] = 대각 e03 의 바닥. 통과하면 ''Q-0008 F-02
+      3단의 등방성 가정은 tl G(Sigma)=0 다섯 조건으로 약화되고 eps_star 는 sqrt10 delta^2 로 계산된다''가 조건부 정리; eps_res 의 미시
+      기원(바닥 = 렌더링 해상도 하한)은 별도 질문'
+    kind: 예측시험
+    status: open
+    entry: null
+  rediscoveries: 0
+- id: Q-0014
+  title: '렌더링 차원 예측식: split/merge 2-complex의 첫 곡률 carrier가 합성 2-face이므로 Hodge 자기쌍대 조건 2=N−2에서 N=4, 국소
+    well-posed 화면 갱신에서 시간 1 ⇒ 3+1 (사용자 #17·10.7 정리 B). kill: 첫 nonvanishing holonomy carrier 차원≠2인 split/merge
+    변형, CE 인과 순서가 (2,2) ultrahyperbolic well-posed(Craig–Weinstein 2008)를 배제 못 함'
+  kind: conjecture
+  status: parked
+  priority: 2
+  origin: 'paper/진전_원장.md §2 (2026-09-02 사용자 지시: 원래 CE 프로그램 일괄 카드)'
+  attempts: 1
+  consecutive_low: 0
+  pivots_tried: []
+  notes: '[E-20260902-009] 기각: force_pivot=conjecture로 같은 세션에서 F-02(재추측 1회)를 시도할 수 있으나, 그 전에 사용자 결정이 필요한
+    재개 조건 네 가지를 먼저 택해야 한다: (i) H_1,H_2≠0을 허용하는 복합체 위에서 ''min carrier 차수가 왜 렌더링 차원을 정하는가''를 별도 사다리 단(또는
+    새 공리)으로 정식화할지, (ii) self-duality 전제(''carrier 차수=자기사상 차수'')를 명시 공리로 승격하거나 다른 readout(예: carrier가 나르는
+    (k-1)-cycle의 Betti 계수)으로 교체할지, (iii) fine∩coarse holonomy를 fine-경로 값과 coarse-직접 값 중 하나로 단일 규약화할지(현재
+    이중 정의), (iv) K2를 N→∞ 점근값이 아니라 카드 격자 N∈{8,16,32}에서 재사전등록할지(현재 창 [1.90,2.00] 밖 1.8989이고 seed에 따라 뒤집힘).
+    이 네 가지 중 하나도 정하지 않고 같은 formula로 F-02를 세우면 이번 attempt와 같은 자리에서 다시 막힌다. 살아 남는 좁은 명제(parent_scope): ''12.1
+    규칙 아래 acyclic 인과 순서의 순수 fine 삼각형은 항상 합성 face로 덮인다''(0/0/0, 세 격자 전부) — 이는 유지하되 그로부터 N_render=4를 끌어내는
+    다음 단계는 이번 카드로는 닫히지 않는다.'
+- id: Q-0015
+  title: '합성 face 홀로노미 = 블록 잔차: 15장 θ=√Δ 사상 아래 Q-spine 합성 face의 홀로노미 각 RMS θ_f(n)가 F-02 블록 잔차와 같은 지수(상속
+    +1/d_tree, i.i.d. −1/2, coherent 0)로 흐르고 비례상수 c_θ가 tetrad 기하로 고정된다는 예측식 — mismatch가 곡률의 씨앗(사용자 #23,
+    11.9 항목 1·2)'
+  kind: conjecture
+  status: open
+  priority: 2
+  origin: 'paper/진전_원장.md §2 (2026-09-02 사용자 지시: 원래 CE 프로그램 일괄 카드)'
+  attempts: 1
+  consecutive_low: 0
+  pivots_tried: []
+  notes: '[E-20260902-014] 카드 반례 기각(채택 전) → 재추측: F-02 3단 확장 후보(Q-0008 F-02 사다리 따름정리로): 3-cell 합성 face
+    블록합의 중심화 커널은 10/9(조부 깊이·tree 무관), ρ_face=√5/3(부호 없는 합, pooled 0.74001±0.0034) — 부호 규약을 12.1 방향 있는
+    경계 (+,+,-)로 바꾸면 3.543이 되는 것이 판별 숫자다. 이 좁은 명제는 곡률 카드가 아니라 Q-0008/F-02 사다리에서 닫는다. Q-0015(F-01)는 이번 attempt에서
+    폐기된 곡률 홀로노미 카드이며, 재추측(F-02)은 face 운반 홀로노미 각을 Ψ≠0 배위에서 Gram 잔차와 독립적으로 실제 계산하는 카드여야 하고(현재 카드처럼 θ를 ε의
+    결정함수로 하드코딩하지 않는다), 그렇지 않으면 θ_iso 정의로 φ_κ=0.4290007392를 예측하는 대안 경로를 택해야 한다 — 이번 세션에서는 F-02를 세우지 않는다(사용자
+    결정 대기).'
+  force_pivot: conjecture

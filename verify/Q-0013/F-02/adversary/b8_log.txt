@@ -1,0 +1,43 @@
+{
+  "n1_max_residual": 1.030009760276438e-15,
+  "H0_identical_labels_max_residual": 1.1043637714807933e-15,
+  "delta_to_zero_generic": {
+    "0.01": 10.397486400397309,
+    "0.001": 10.415625585781582,
+    "0.0001": 10.41690063748742,
+    "1e-05": 10.417023206334001,
+    "master": 9.649462529683339
+  },
+  "coherent_two_species_p_half": {
+    "6": 1.57916925911614,
+    "10": 1.7826146680595183,
+    "18": 1.398787593538721,
+    "predicted_eps_star_2p1mp": 1.5811388300841898
+  },
+  "isotropic_offgrid": {
+    "5": {
+      "obs": 1.2258845412491082,
+      "master": 1.2649110640673518
+    },
+    "11": {
+      "obs": 0.8924045476651074,
+      "master": 0.9090909090909091
+    },
+    "23": {
+      "obs": 0.6781431793432331,
+      "master": 0.6448868249648403
+    }
+  },
+  "subspaces": {
+    "dim_kernel": 131,
+    "dim_w_balanced": 134,
+    "dim_intersection": 129,
+    "kernel_subset_of_w_balanced": false,
+    "w_balanced_subset_of_kernel": false
+  },
+  "_meta": {
+    "seed": 20260903,
+    "delta": 0.005,
+    "note": "off-grid sizes"
+  }
+}

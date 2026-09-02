@@ -1,0 +1,115 @@
+id: E-20260902-018
+question: Q-0008
+attempt: 6
+timestamp: 2026-09-03T00:40:00+09:00
+claim: |-
+  사다리 3단(커널 법칙, 카드 F-02)을 promote로 닫는다: 2단 정확 항등식(E-20260902-008)과
+  Isserlis/Wick 전개로 $\bar\epsilon^2:=E[\epsilon^2]=\epsilon_\star^2\,\lVert H\kappa H\rVert_F^2/n^2\,(1+O(\delta^2))$,
+  $\epsilon_\star^2=2T_2\delta^4/\lVert G_0\rVert_F^2=10\,\delta^4$($T_2=60$·$\lVert G_0\rVert^2=12$는
+  Q-0012 a1의 sympy 정확 유리수 구조상수; 가우스와 i.i.d. 분기가 하나의 $\epsilon_\star$를 공유해 E-20260902-015의
+  hidden assumption을 해소한다). 평균 바닥 없음($E[\mathrm{tl\,gram}\,Y]=0$)은 SO(4) 켤레 등변성
+  $\xi\mapsto\Lambda\xi\Lambda^{\top}$ + Schur로 모든 $\delta$에서 정확(검사 B, 상대오차 $\le1.2\times10^{-15}$;
+  adversary a2가 이 작용이 유일하게 옳은 켤레임을 재확인, 한쪽곱 대안은 0.31~2.89로 배제). 닫힌 식 4종
+  ($\lVert HIH\rVert^2=n-1$, 두 종 $4n^2p^2(1-p)^2$, chain $(n^2-1)(2n^2+7)/180$, star $n-2+1/n^2$)과
+  교차항 $\mathrm{tr}(H\kappa)=\sum_us_u(1-s_u/n)$, 혼합 가법성을 기호로 증명(훅 23/23; 검사 D $n\le11$
+  전수·무작위 대칭 $\kappa$, 최대 상대오차 $8.5\times10^{-16}$; adversary a1 독립 재유도 정확 0).
+  $\gamma_{\rm her}=1/d_{\rm tree}$는 **강화된 조건 (C)**: $D(n)/(n^2\,\mathrm{depth}(n)^2)\to\mathrm{const}$
+  (정칙변동 — $D/n^2\asymp\mathrm{depth}^2$만으로는 부족함을 adversary가 진동 반례
+  $D/n^2=\mathrm{depth}^2(2+\sin\ln n)$, $\gamma\in[0.22,0.78]$로 보임)이고 $\mathrm{depth}\asymp n^{1/d_{\rm tree}}$인
+  족의 조건부 따름정리이며, 유도가 다룬 6족(chain·caterpillar$\to1/90$, 균등 Cayley·star-of-chains의
+  강한 재해석 $\to1/6$, star, balanced binary)이 모두 강한 형태를 만족한다. $O(\delta^4)$ 절단의 닫힌 상계는
+  유도하지 않았다 — 실측 상계뿐(이 attempt의 $\delta$ 3점 시험 $|\tau(0.005)|\le0.026\%$, adversary의
+  attempt-04 공통난수 재해석 상계 $0.17$–$0.23\%$; (S10.5) 정직 기록). 검사 C-b(물리 MC 2000 trial, 5% 창)는
+  선언대로 **미통과(2/12 창 밖)**로 기록하되, adversary 독립 seed(424242, 8000 trial) 재실행에서 편차가
+  소멸함을 확인해(i.i.d. $n{=}2$ $+1.34\%$/$z{=}{+}1.02$, 두 종 $n{=}8$ $+0.28\%$/$z{=}{+}0.21$) 원인이
+  법칙의 결함이 아니라 검정력 부족(rank-1 사례의 5% 창은 $1.97\sigma$, 법칙이 참이어도 $\ge2/12$ 창밖
+  확률 $7.2\%$)임을 판정했다. status pass, P0 없음.
+level: L3
+verdict: promote
+pivot_step: null
+ladder_step: 3
+ladder_cited: null
+card: derivations/Q-0008/F-02.formula.md
+kill_triggered: null
+derivation: derivations/Q-0008/attempt-06.derivation.md
+verification:
+  symbolic: pass
+  numeric: pass
+  lean: skipped
+  artifacts: verify/Q-0008/attempt-06/
+adversary:
+  model_note: "adversary(opus) 유도 감사, 산출물 verify/Q-0008/attempt-06/adversary/a1–a6(a1 대수 재유도,
+    a2 SO(4) 등변성·전사성, a3 C-b 판정 재계산, a4 극한 5종, a5 기타 감사, a6 C-b 요약). status pass,
+    P0 없음, promote 권고."
+  counterexamples: []
+  survived_checks:
+    - "대수 독립 재유도: Isserlis 재유도 sympy 정확 0; $(\\mathrm{tr}K)^2$ 항이 $\\lVert E[\\Phi]\\rVert^2$라
+      소멸 조건이 정확히 $\\Sigma_aM_{aa}=0$임을 재확인, 교차 계수 $2T_2$; $T_2=60$ 다중도가 정확 유리수
+      $96/8+24/6+72/2+12\\cdot2/3$(Richardson 3스텝 $1\\times10^{-11}$), $G_0=2I$ 정확"
+    - "SO(4) 등변성(검사 B): $\\Lambda\\xi\\Lambda^{\\top}$ 켤레가 유일하게 옳은 작용($1.8\\times10^{-15}$;
+      한쪽곱 대안은 상대오차 0.31~2.89로 배제), $R_0$ 준동형($5.5\\times10^{-16}$)·전사(Haar 각 분포 일치)로
+      Schur 적용이 정당함을 확인; '모든 $\\delta$에서 정확'은 tetrad가 $(\\delta,\\xi)$를 곱으로만 봄
+      ($Y(\\xi,0.2)-Y(2\\xi,0.1)=0.0$)"
+    - "검사 C-a(대리모형 $10^5$ trial, i.i.d.·chain·두 종 $\\times$ $n\\in\\{2,4,8,16\\}$): 12건 모두 2% 창 안,
+      최대 $|{\\rm rel}|$ 0.58%($z=-1.7$)"
+    - "검사 C-c(공통난수 비, 물리/대리모형): 12건 모두 1% 창 안, 평균 편차 최대 0.066%"
+    - "C-b '미통과' 원인 재판정: rank-1 6사례의 5% 창은 $1.97\\sigma$, 법칙이 참이어도 $\\ge2/12$ 창밖
+      확률 $7.2\\%$; 독립 seed 424242(8000 trial)에서 i.i.d. $n{=}2$ $+1.34\\%$($z{=}{+}1.02$)·두 종
+      $n{=}8$ $+0.28\\%$($z{=}{+}0.21$)로 편차 소멸(공유 라벨 표본 요동이 원인, 법칙 결함 아님)"
+    - "닫힌 식 4종 독립 재구성(검사 D): $n\\le11$ 전수·무작위 대칭 $\\kappa$, 최대 상대오차 $8.5\\times10^{-16}$;
+      K2 사전등록 수 Meir–Moon 유리수 재계산 일치; 극한 5종 통과"
+    - "random_sample_20 통과(max$|z|$ 2.48); 훅 23/23 재현; 스크립트 재실행 수치 비트 일치
+      (result.json 해시만 wall_seconds로 다름 — 원본 백업·복구로 확인)"
+  hidden_assumptions:
+    - "P1(1) 조건 (C)를 원 derivation 문언인 $D/n^2\\asymp\\mathrm{depth}^2$로 두면 국소 $\\gamma$가 진동하는
+      반례(D/n²=depth²(2+sin ln n): γ∈[0.22,0.78])가 존재한다 — 강화형 $D/(n^2\\cdot\\mathrm{depth}^2)\\to
+      \\mathrm{const}$(정칙변동)로 바꾸면 성립하며, 유도의 6족은 모두 강한 형태를 만족한다(star-of-chains의
+      $D/(n^2\\mathrm{depth})\\to1/6$ 재해석 포함). 이번 claim은 강화형으로 기록한다"
+    - "$O(\\delta^4)$ 닫힌 상계는 유도되지 않았다(구조만: 홀수 차수 소멸·$\\delta^2$ 상대) — 실측 상계는 이
+      attempt 자체 $\\delta$ 3점 시험 $|\\tau(0.005)|\\le0.026\\%$와 adversary의 attempt-04 재해석 상계
+      $0.17$–$0.23\\%$뿐이다((S10.5); E-20260902-016의 7단 진폭비 $-2\\%$ 결손 판정은 '절단 아님·잡음'
+      그대로 유지)"
+    - "C-b 5% 창은 rank-1 사례에서 검정력이 없다(설계 결함이지 정직성 위반은 아니다) — 이 attempt는 선언한
+      기준대로 '미통과'로 정직하게 기록했고, 판정(잡음)은 별도 재계산으로 뒷받침만 한다"
+    - "P2 참고: '재실행 비트 동일'은 파일 단위 확인이라 부정확한 표현이었다(내용은 일치, 해시는 wall_seconds로
+      다름); 조건 (C) 문언이 카드 scope 원문('비중심화 $\\kappa_{vw}\\sim$깊이')과 이 attempt의 형식화
+      ('중심화 RMS~깊이')가 다르며 star-of-chains에서 값이 갈리나 6족 판정 자체는 일치; MIN_DET 재추출
+      기준이 $\\xi\\to-\\xi$에 비대칭이나 $\\delta\\le0.02$에서 발동 0이라 공허; 균등 Cayley $E\\,D/n^3$은
+      '안정'이 아니라 아직 상승 중(0.0664@8192, 극한 $1/15$은 추측); 7단 결손은 $-2.35\\%/0.81\\sigma$로
+      더 정확히 표기해야 한다; (S3.1)에 기호 충돌 하나"
+    - "재발견 참고: Schur 논거 자체는 표준 도구이나 이 문제(cell label 공분산 커널)에 대한 적용은 새롭다;
+      닫힌 식이 Wiener index 계열과 일치하는지는 sourcer가 미확인이다; $\\epsilon_\\star^2=10\\delta^4$와
+      조건 (C)·닫힌 식은 CE 고유다"
+sourcer:
+  prior_art:
+    - ref: "Freidel–Speziale 2010 twisted geometries (SO(4)/Plebanski simplicity 공변성); De Pietri–Freidel 1999
+        SO(4) simplicity constraints"
+      relation: generalizes
+      note: "등방성 보조정리(S4, 검사 B)는 이 문헌들이 세운 Plebanski SO(4) 공변성의 특수화다 — 카드가
+        새로 증명하는 것은 켤레 등변성 자체가 아니라, 그로부터 라벨 분포 대칭(가우스 등방 $\\kappa\\otimes I_{16}$)이
+        $E[\\mathrm{tl\\,gram}\\,Y]=0$을 강제한다는 응용(Schur 논거)이다. 부분 cited"
+    - ref: "CE 고유 — $\\epsilon_\\star^2=2T_2\\delta^4/\\lVert G_0\\rVert^2=10\\delta^4$, 커널 법칙의 닫힌 식 4종·교차항,
+        조건 (C)(정칙변동 형태)"
+      relation: unrelated
+      note: "sourcer(haiku) novel_lemma 판정: 문헌에 대응하는 선행 결과를 찾지 못했다. Wiener index/CRT
+        quadratic functional 계열(Janson 2003 등, 1단·1단 외부기존과 인접)과의 닫힌 식 일치 여부는
+        미확인으로 남긴다"
+assumptions:
+  - "P_micro 등방성(카드 scope 가정): label $\\xi_v\\in\\mathbb R^{16}$의 결합 분포는 중심 가우스, 공분산
+    $\\kappa\\otimes I_{16}$ — 실제로 쓰는 성질은 동시 켤레 불변·$\\xi\\to-\\xi$ 대칭·Isserlis 쌍 축약(가우스 전용;
+    비가우스 첨도는 Q-0012)"
+  - "정확 simple cell·polar 정렬(attempt-03 전제 그대로), 양의 Euclidean branch, MIN_DET=0.05 재추출은
+    $\\delta=0.005$에서 발동 0"
+  - "2단 항등식 $\\mathrm{tl\\,gram}(Y)=-n\\sum_v\\mathrm{tl\\,gram}(\\eta_v-\\bar\\eta)$은 E-20260902-008(강한 형태)을 인용"
+  - "구조상수 $T_2=60$, $\\lVert G_0\\rVert^2=12$, $\\Sigma_aM_{aa}=0$은 Q-0012 adversary a1의 sympy 정확 유리수
+    계산을 인용하고 이 attempt의 검사 A가 수치로 재확인한다"
+  - "조건부 따름정리 (S8)의 조건 (C)(강화형: $D/(n^2\\mathrm{depth}^2)\\to\\mathrm{const}$)는 증명하지 않는다.
+    소속·제외는 정확 계산으로 확인한 사실이지 정리가 아니다"
+  - "검사 C-b의 5% 창은 rank-1 사례에서 검정력이 낮다(2–3σ 수준) — 결과를 본 뒤 창을 바꾸지 않고 미통과
+    그대로 기록했다; 결정적 검사는 공통난수 비(C-c)와 대리모형(C-a)이다"
+open_questions_spawned: []
+next_action: "다음 attempt는 4단(Q-spine 깊이 $b$ 블록 수치시험 — 이미 표는 있으나 이번 attempt에서 유도하지
+  못한 $O(\\delta^4)$ 닫힌 상계를 함께 유도) 또는 5단(조건부 반집중 보조정리, 사다리에서 가장 약한 단) 중
+  진행한다. 카드 revision 4에서 갱신할 것: free_parameters 자유도 1→0(가우스 분기, $\\epsilon_\\star=\\sqrt{10}\\delta^2$
+  유도 — 결정론 $\\Delta$ 분기는 별도 상수로 scope 밖 유지), 조건 (C)를 정칙변동 강화형 문언으로, star-of-chains·
+  caterpillar scope 문구를 이번 attempt의 6족 표에 맞춰 정합화."

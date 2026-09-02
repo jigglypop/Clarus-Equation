@@ -1,0 +1,151 @@
+id: E-20260902-012
+question: Q-0012
+attempt: 1
+timestamp: 2026-09-03T00:15:00+09:00
+claim: "F-01(예측식, revision 2) $\\bar\\epsilon_{\\rm block}^2=\\frac{\\epsilon_\\star^2}{n^2}\\bigl[\\|H\\kappa
+  H\\|_F^2+c_4\\kappa_4\\sum_u((A^{\\!\\top}HA)_{uu})^2\\bigr]$, $c_4=T_4/(2T_2)=2/120=1/60$(Plebanski tl-Gram
+  구조상수), 4차 보정 대각은 공분산 커널이 아니라 라벨 생성자 $A$(캐터필러 $k=6$에서 커널형 대안 대비 2.30배, P5·P9에서
+  각각 2.7σ·2.4σ로 배제)라는 F-02 커널 법칙의 비가우스 확장을 채택한다(진전: 예측). card-check PASS(kind 예측식, ladder
+  7단, predicts 9, kill 5, free_parameters 0), `verify/Q-0012/F-01/hook_result.json` symbolic=pass·numeric=pass
+  18/18(극한 복원 5종·차원 항등식·격자 유리수·기하 상수 해석 경로 포함). sourcer(haiku, 2회 실행)가 Mathai–Provost
+  1992·Isserlis/Wick·Pearson 하한을 카드 사다리 1단(외부기존) 범위에서 identical로, Meir–Moon 1970을 3단 따름정리
+  범위에서 special_case로 보고했으나 이는 카드 식 전체가 아니라 이미 외부기존·따름정리로 표시된 좁은 부분에 대한 것이라
+  ledger 어휘로 generalizes 정규화하고 다음 attempt의 ladder_cited 후보로 옮긴다(재발견 아님); ICA 식별가능성(Comon
+  1994, Cardoso 1989/1999, Hyvärinen–Oja 2000)과의 대조에서는 '같은 2차 통계의 두 생성자를 4차 누적이 가른다'는
+  정성 기제가 identical이지만 정량 내용(c_4=1/60이라는 Plebanski 기하 상수, S_gen 격자 닫힌 식, 상속 족 n^{-1/2}
+  진폭 보편 회복)은 선행 없음이라 카드 전체는 partial_with_novel_synthesis로 판정됐다. adversary 재감사(opus)가
+  status pass·adopt 권고를 내며 불변성(revision 2에서 K1–K4 value·uncertainty·창 불변), K5 설계 맹검(SEED+777
+  미실행·result.json 부재), 독립 300씨앗 오발동 0/300, kill 감도 12/12·1% 왜곡 11/12를 확인했다. 동시에 c_4=1/60이
+  i.i.d. 성분 직교기저 규약에 조건부(tl 사영 제거 1/28, 정렬항 제거 0, sym/antisym 기저 1/30, SO(4)×SO(4) 회전
+  [0.0130,0.0156], Haar O(16) 0.038–0.080; G→λG·지수 재매개화는 불변)임을 밝혀 '격자·분포 무관 순수 기하 상수'
+  novelty 문구가 과장임을 지적했고(P2), K1(ρ=1, κ4=0)은 '4차 결합 없음'과 '정렬항(1차 미분) 없음'이 같은 관측값을
+  주어 퇴화하며 이 둘을 K5(2차 형식 구조 시험)가 크기로 가른다는 것, 2단 '죽이는 것' 문구가 정렬항 제거의 실제 결과(모든
+  $M_{aa}=0\\Rightarrow c_4=0$이지 $\\sum_a M_{aa}\\ne0$이 아님)와 다르다는 것, K1 정밀도 표기(±5.5%→±11.1%)와
+  4단 O(δ) 편향 상계 표기(창 반폭 9%→13.1%, 중심 3.47σ)가 부정확하다는 P2 4건을 남겼다. P0·P1 없이 P2 표기 4건만
+  남아 adopt 요건(card-check PASS·sourcer 실행·prior_art에 identical/special_case 없음·adversary P0/P1 없음)을
+  충족한다."
+level: L3
+verdict: adopt
+pivot_step: null
+ladder_step: null
+ladder_cited: null
+card: derivations/Q-0012/F-01.formula.md
+kill_triggered: null
+derivation: derivations/Q-0012/F-01.formula.md
+verification:
+  symbolic: pass
+  numeric: pass
+  lean: skipped
+  artifacts: verify/Q-0012/F-01/
+adversary:
+  model_note: "1차 카드 감사·재감사 모두 opus. 산출물 verify/Q-0012/F-01/adversary/a1–a8(1차, must_fix 대응 및
+    K5 재설계)·b1–b6(재감사: 독립 씨앗·kill 감도·c4 규약·se 스케일·claim 산술·라벨-경로 항등)."
+  counterexamples: []
+  survived_checks:
+    - "훅 18/18 pass(symbolic·numeric 모두, verify/Q-0012/F-01/hook_result.json) — 극한 복원 5종·차원 항등식·격자
+      유리수(캐터필러 k=6, Cayley Meir–Moon 합)·기하 상수 해석 경로(a1, verify[15][16]) 포함"
+    - "불변성 통과: revision 2에서 K1–K4의 value·uncertainty·창 9개 predicts 전부가 revision 1과 한 글자도 다르지
+      않음(b3·b5)"
+    - "K5 설계 맹검 확인: 사전등록 씨앗 SEED+777 배치가 이 시점까지 실행되지 않았고 result.json이 부재함(a8·b1) —
+      prover가 결과를 보고 창을 맞추지 않았다"
+    - "독립 300씨앗 표본분포에서 K5 RMS 통계 오발동 0/300(초판 max 통계의 오발동 0.223은 재현됨, a8·b1); δ-비
+      [4.73, 5.31] 전부 사전등록 창 [3,7] 안"
+    - "kill 감도 시험 12/12 발동: 정렬항 제거·c_4 2배·c_4=0·정렬 왜곡 ×2 등 왜곡 모형이 K1–K5 중 하나 이상을 실제로
+      발동시킴(b2)"
+    - "1% 규모 왜곡 11/12 발동 — kill 창이 지나치게 느슨하지 않음을 확인(b2)"
+    - "판별 대안(커널형 대각, adversary b4 추정)이 P5(cat6 spike64)에서 2.7σ, P9(기울기비)에서 2.4σ로 사전등록
+      창 밖 — 생성자 대 커널 판별력이 실제로 작동함을 확인"
+  audits:
+    dimension: "ok — symbols/dimensions 표와 formula가 일치, D_kappa·S_gen·c4·k4 모두 무차원(=1) 선언"
+    recovers: "ok — κ4→0(F-02 커널 법칙 그대로)·n=1(카드 첨도가 있어도 잔차 0)·i.i.d. 유한 n·b4 관측(+1.279% 정확
+      예측)·분산 양의성(29/30>0) 5종이 비항진 실제 실행(verify[0][3][1][12][11])"
+    dof: "ok — free_parameters 0(=F-02와 동일 ε_★뿐, 이미 상쇄) < already_observed=false 사전등록 숫자 9개"
+    content: "P2 — c_4=1/60은 i.i.d. 성분 직교기저 규약에 조건부다(tl 사영 제거 1/28, 정렬항 제거 0, sym/antisym
+      기저 1/30, SO(4)×SO(4) 회전 [0.0130,0.0156], Haar O(16) 0.038–0.080; G→λG·지수 재매개화에는 불변) — novelty의
+      '순수 기하 상수' 표현이 이 조건을 명시하지 않는다"
+    kill_executable: "P2 — K1 ρ=1(κ4=0)은 '4차 결합 없음'과 '정렬항(1차 미분) 없음'이 같은 관측값을 줘 퇴화한다(두
+      기제를 K1 단독으로 못 가르고 K5가 2차 형식 구조로 가른다); K1 정밀도 표기 ±5.5%가 재계산상 ±11.1%; 4단 O(δ)
+      편향 상계 표기 '창 반폭 9%'가 재계산상 13.1%(중심에서 3.47σ)"
+    ladder_complete: "P2 — 2단 '죽이는 것' 문구가 부정확하다: 정렬 $R(\\delta)$ 1차 항을 빼면 실제로는 $\\sum_a
+      M_{aa}\\ne0$이 되는 것이 아니라 $M_{ab}$의 모든 대각 성분이 0이 되어($\\sum_a M_{aa}=0$은 여전히 참) $c_4=0$이
+      되며, 이는 K1·K5가 크기 붕괴로 잡는다. 1단(외부기존)·3단 따름정리는 이번 attempt에서 아직 ladder_cited로
+      닫히지 않았다(카드 채택 시점에 사다리가 열림)"
+  hidden_assumptions:
+    - "i.i.d. 성분 직교기저 가정: c_4=1/60은 이 기저에 조건부인 규약 의존 상수다(tl 사영 제거 1/28, 정렬항 제거 0,
+      sym/antisym 기저 1/30, SO(4)×SO(4) 회전 [0.0130,0.0156], Haar O(16) 0.038–0.080) — '격자·분포 무관 순수
+      기하 상수'는 이 조건 아래로 좁혀야 한다"
+    - "MIN_DET 비대칭 재추출 규약(Q-0013 F-02 계열)과 이 카드의 격자 유리수 계산의 정합은 별도로 확인되지 않았다"
+    - "물리 sd(ε_★의 절대 진폭)는 미측정 — 9개 predicts는 전부 비(ratio)이며 절대 진폭 kill은 없다"
+    - "adversary a6의 Cayley MC 점근 기울기(캐터필러 −0.494, Cayley −0.512)는 로그-로그 회귀에서 0.3~0.5% 편차가
+      있어 상속 족 n^{-1/2} 진폭 보편 회복은 근사다"
+    - "K1(ρ=1, κ4=0)은 '4차 결합 없음'과 '정렬항 없음'이 같은 통계값을 주어 겹친다 — K5(2차 형식 구조 시험)가 실질
+      판별을 맡는다"
+  parking:
+    - "adopt_condition 1: 2단 카드 문구를 '정렬항 제거 시 모든 $M_{aa}=0\\Rightarrow c_4=0$(K1·K5가 크기 붕괴로
+      잡는다)'로 정정한다(현재 '$\\sum_a M_{aa}\\ne0$이 되어 K5가 발동한다'는 부정확)"
+    - "adopt_condition 2: novelty·c_4 표기에 'i.i.d. 성분 직교기저 규약 아래' 조건을 명시하고 SO(4)×SO(4)·Haar
+      O(16) 편차 범위를 붙인다"
+    - "adopt_condition 3: K1 정밀도 창 표기를 ±5.5%에서 ±11.1%로 정정한다"
+    - "adopt_condition 4: 4단 O(δ) 편향 상계 표기를 '창 반폭 9%'에서 '13.1%(중심에서 3.47σ)'로 정정한다"
+    - "다음 attempt에서 1단(Mathai–Provost·Isserlis/Wick·Pearson 하한·5차 누적 부재·Meir–Moon·RMT 대비)을 sourcer
+      인용으로 ladder_cited 닫고, 이어 2단(c_4 해석적 유도, adversary a1 극분해 경로 흡수)을 promote 시도한다"
+    - "6단(사전등록 물리 실행 K1–K4, `check_cumulant.py --mode labels`, 약 25분)은 2단 promote 이후로 이월한다"
+sourcer:
+  prior_art:
+    - ref: "Mathai–Provost 1992 Quadratic Forms in Random Variables Thm 3.2b.2; Seber–Lee 2003 §1.6"
+      url: null
+      relation: generalizes
+      note: "sourcer 원문 relation=identical을 정규화: 이 identical 관계는 카드 전체가 아니라 사다리 1a단(외부기존,
+        이미 그렇게 표시됨)에 대한 것이며, 카드는 이를 Plebanski simplicity 잔차의 2차 형식·라벨 생성자 대각 S_gen으로
+        확장한다(다음 attempt에서 1단을 ladder_cited로 닫는다)"
+    - ref: "Isserlis 1918 / Wick 정리; Pearson 1916 초과첨도 하한 κ4≥−2"
+      url: null
+      relation: generalizes
+      note: "sourcer 원문 relation=identical을 정규화: 1a·1b단(외부기존)에 대한 것이지 카드 식 전체가 아니다"
+    - ref: "Meir–Moon 1970 부분트리 크기 법칙 N_k; Aldous 1991–1993 CRT"
+      url: null
+      relation: generalizes
+      note: "sourcer 원문 relation=special_case를 정규화: 3단 따름정리(Cayley E S_gen=Σ_k N_k k²(1−k/n)²) 범위에서만
+        special_case이고, 3단의 실질 내용(대각이 커널이 아니라 생성자라는 조립 결과)과 카드 전체는 special_case가
+        아니다 — 3단을 별도 cited 후보로 다음 attempt에 남긴다"
+    - ref: "Tao–Vu 2011 four moment theorem; Erdős–Schlein–Yau 2010 universality; Chatterjee 2009 second-order
+        Poincaré"
+      url: null
+      relation: generalizes
+      note: "'4차 모멘트가 통계를 정한다'는 RMT 보편성 계급의 원형(1e단 대비); 카드는 4차가 다를 때 얼마나 다른지를
+        c_4·S_gen으로 정확히 준다는 점에서 확장"
+    - ref: "Dittrich–Bahr–Steinhaus 2011–2016 spin foam coarse graining; Freidel–Speziale 2010 twisted geometries"
+      url: "https://arxiv.org/abs/1409.2407"
+      relation: unrelated
+      note: "simplicity constraint의 RG는 다루나 라벨 분포 계급·첨도 보정 식이 문헌에 없다"
+    - ref: "Comon 1994 Signal Processing 36, 287–314; Cardoso 1989 ICASSP; Cardoso 1999 Neural Computation
+        11, 157–192; Hyvärinen–Oja 2000 (ICA 식별가능성)"
+      url: null
+      relation: generalizes
+      note: "같은 공분산을 주는 두 생성자를 비가우스 4차 누적이 가른다는 정성 명제는 ICA 식별가능성과 identical한
+        메커니즘이나(adversary·sourcer 공통 지적), 카드가 더하는 정량 내용 — (i) 갈라지는 양이 c_4=1/60이라는
+        Plebanski tl-Gram 기하 상수 곱하기 S_gen이라는 정확 계수, (ii) 관측량이 소스 추정이 아니라 simplicity
+        잔차의 2차 모멘트, (iii) 상속 족에서 n^{-1/2}로 사라지는 진폭 비보편·지수 보편의 분리 — 는 선행 문헌에
+        없다. 셋을 걷어내면 카드 3단의 정성 메커니즘만 남아 special_case가 되므로 신규성은 정량 부분에 한정된다"
+  overall: partial_with_novel_synthesis
+  ce_specific_confirmed: "라벨 분포 4차 누적 보정의 계수가 tl-Gram 2차 형식의 대각비라는 순수(단, i.i.d. 성분 직교기저
+    조건부) 기하 상수 c_4=1/60이라는 것, 그 대각이 공분산 커널이 아니라 라벨 생성자 A^T H A라는 것, 캐터필러·Cayley
+    닫힌 식, 상속 족에서 진폭 비보편이 n^{-1/2}로 사라지고 지수는 항상 보편이라는 결론의 조합은 선행 문헌에서 찾지
+    못했다. '같은 2차 통계의 두 생성자를 4차 누적이 가른다'는 메커니즘 자체는 ICA 식별가능성의 재발견이다."
+assumptions:
+  - "i.i.d. 성분 직교기저 가정: c_4=1/60은 이 기저에 조건부인 규약 의존 상수다(tl 사영 제거 1/28, 정렬항 제거 0,
+    sym/antisym 기저 1/30, SO(4)×SO(4) 회전 [0.0130,0.0156], Haar O(16) 0.038–0.080; G→λG·지수 재매개화는 불변)"
+  - "MIN_DET 비대칭 재추출 규약과 이 카드 격자 유리수 계산의 정합은 미확인"
+  - "물리 sd(ε_★ 절대 진폭)는 미측정 — 9개 predicts는 모두 비(ratio)이며 절대 진폭 kill이 없다"
+  - "adversary a6 Cayley MC 점근 기울기(−0.512·−0.494)에 로그-로그 회귀 0.3~0.5% 편차가 있어 n^{-1/2} 스케일링은
+    근사다"
+  - "K1(ρ=1, κ4=0)은 '4차 결합 없음'과 '정렬항 없음'이 같은 관측값을 주어 퇴화하며, K5(2차 형식 구조 시험)가 실질
+    판별을 맡는다"
+  - "2단 카드 문구의 '정렬항 제거 시 Σ_a M_aa≠0' 서술은 adversary 재계산과 다르다(실제로는 모든 M_aa=0·c_4=0) —
+    다음 attempt에서 prover가 정정한다"
+open_questions_spawned: []
+next_action: "다음 사다리 attempt에서 먼저 1단(외부기존 — Mathai–Provost·Isserlis/Wick·Pearson 하한·5차 누적
+  부재·Meir–Moon·RMT 4-moment 대비, 이번 sourcer 인용으로 전부 대응됨)을 ladder_cited로 닫고(attempt 소모 없음),
+  이어 2단(c_4 해석적 유도, adversary a1 극분해 경로 흡수)을 promote 시도한다. 같은 attempt에서 adopt_condition
+  1–4(2단 '죽이는 것' 문구 정정, c_4 규약 조건 명시, K1 정밀도 ±11.1% 정정, 4단 편향 상계 13.1%/3.47σ 정정)를
+  반영한다. 3단(조립 따름정리, Meir–Moon cited 후보 포함) 이후 6단(사전등록 물리 실행 K1–K4, 약 25분)을 실행한다."

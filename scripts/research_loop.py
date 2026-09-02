@@ -30,7 +30,8 @@ import ledger  # noqa: E402
 
 PROMPT = (
     "research-loop 스킬에 따라 {qid}의 attempt {attempt}을 한 바퀴 돌리고 "
-    "(prover 후보→prover 유도→adversary→[sourcer]→judge 판정·원장) "
+    "(ledger.py ladder로 확인해 카드가 없거나 force_pivot=conjecture면 prover 추측→adversary 카드 감사→sourcer 신규성→judge adopt/refute; "
+    "카드가 있으면 다음 사다리 단 하나: prover 유도→adversary→[sourcer]→judge 판정·원장) "
     "ledger/entries/에 기록한 뒤 종료하라. 오케스트레이터는 직접 유도·판정하지 않는다."
 )
 

@@ -1,0 +1,93 @@
+{
+  "seed": 20260902,
+  "lorentzian_triple_is_self_dual_and_simple": {
+    "max_rel_err_hodge_eq_plus_i_B": 7.665236272713857e-16,
+    "max_normalised_tl_gram": 3.2473891677161714e-16,
+    "example_gram_constants": [
+      [
+        3.3306690738754696e-16,
+        2.0
+      ],
+      [
+        0.0,
+        2.000000000000001
+      ],
+      [
+        -5.551115123125783e-17,
+        1.9999999999999991
+      ]
+    ],
+    "ok": true,
+    "note": "gram = 2i delta_ij: the Lorentzian branch has an IMAGINARY simplicity constant"
+  },
+  "identity_lorentz_frames": {
+    "max_rel_err": 1.0162054672722231e-15,
+    "ok": true
+  },
+  "identity_lorentzian": {
+    "max_rel_err": 2.743596049380224e-15,
+    "ok": true,
+    "rows": [
+      {
+        "delta": 0.3,
+        "n": 2,
+        "max_rel_err": 1.1773849965793109e-15
+      },
+      {
+        "delta": 0.3,
+        "n": 5,
+        "max_rel_err": 1.4650587961463971e-15
+      },
+      {
+        "delta": 0.3,
+        "n": 17,
+        "max_rel_err": 2.743596049380224e-15
+      },
+      {
+        "delta": 0.05,
+        "n": 2,
+        "max_rel_err": 1.9861420263261272e-15
+      },
+      {
+        "delta": 0.05,
+        "n": 5,
+        "max_rel_err": 1.603591011741154e-15
+      },
+      {
+        "delta": 0.05,
+        "n": 17,
+        "max_rel_err": 2.3274445457027258e-15
+      }
+    ]
+  },
+  "identity_mixed_signature": {
+    "max_rel_err": 1.5098386946719908e-15,
+    "ok": true
+  },
+  "identity_reversed_orientation_cells": {
+    "max_rel_err": 1.4193020632966227e-15,
+    "ok": true,
+    "sample_gram_traces": [
+      -1.2442677652336962,
+      -1.2844295268142947,
+      -5.7071308337364215,
+      -1.68535207892308,
+      -1.3445202830262808
+    ],
+    "polar_alignment_refused_fraction": 1.0,
+    "note": "cells outside the positive branch stay exactly simple; the identity does not see it"
+  },
+  "degenerate_block_Y_zero": {
+    "norm_Y": 0.0,
+    "norm_gram_Y": 0.0,
+    "each_cell_tl_gram": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "eps_via_repo": Infinity,
+    "corollary_denominator": 0.0,
+    "note": "identity holds (0 = 0) but corollaries (a)/(b) are 0/0: nondegeneracy is assumed"
+  }
+}

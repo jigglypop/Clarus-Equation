@@ -1,0 +1,113 @@
+id: E-20260902-006
+question: Q-0008
+attempt: 1
+timestamp: 2026-09-02T19:10:00+09:00
+claim: "F-01(예측식) $\\bar\\epsilon_{block}(n)^2=\\bar\\epsilon_{block}(1)^2[w_{coh}^2+w_{iid}^2 n^{-1}+w_{her}^2 n^{1/2}]$,
+  $\\gamma_{her}=+1/4=1/(2 d_{tree})$ ($d_{tree}=2$, Poisson(1) 임계 GW 크기조건화=균등 rooted Cayley tree)는
+  card-check PASS·verify 7/7 pass(극한 복원 4종·차원 항등식)로 등록됐으나, adversary가 사다리 3단(선형화
+  보조정리: '2차 평균은 SO(4) 등방성으로 순수 trace라 잔차 바닥이 없다')을 정확 항등식
+  $\\mathrm{tl}[\\mathrm{gram}(\\Sigma_v X_v)]=-n\\,\\Sigma_v\\,\\mathrm{tl}[\\mathrm{gram}(\\eta_v-\\bar\\eta)]$(상대오차
+  1.06e-14, 무작위 tetrad 4·8회 재현)로 반증했다: 실제 구동량은 label 합 $W_2$가 아니라
+  $E\\lVert H\\kappa H\\rVert_F^2$($\\kappa_{vw}=\\mathrm{depth}(v\\wedge w)+1$)이고, 보정 법칙은
+  $\\gamma_{her}=1/d_{tree}$(카드 값의 2배)이며 chain(+0.999)·Cayley(+0.510)·star(−0.483)·balanced
+  binary(+0.136)로 tree 형태에 따라 갈린다. K1·K4는 원안대로 생존(경계 안), K2·K3는 보정 이론값(0.529,
+  8.07)과 별도 실측(δ=0.001, seed 4242, n≤32: RMS비 1.995±0.028/4.000±0.057/7.995±0.151)이 사전등록
+  창 [0.126,0.326]·[8.92,13.38] 밖을 가리키나, 사전등록된 정확 조건(δ=0.02, seed 20260902, n∈{8..128})의
+  리터럴 실행은 이번 attempt에서 수행되지 않았다 — 이는 카드 F-01 자체를 채택 불가로 만드는 반례(3단
+  보조정리 거짓, 식의 지수 오류)로 충분하며 K2·K3 kill 발동 여부는 미확정으로 남긴다. 세 mode 분류와
+  '상속 mismatch가 relevant(γ_her>0)'라는 정성 결론은 반례를 통과해 강화된다(+1/4→+1/2 후보)."
+level: L2
+verdict: refute
+pivot_step: null
+ladder_step: null
+card: derivations/Q-0008/F-01.formula.md
+kill_triggered: null
+derivation: derivations/Q-0008/F-01.formula.md
+verification:
+  symbolic: pass
+  numeric: pass
+  lean: skipped
+  artifacts: verify/Q-0008/F-01/
+adversary:
+  model_note: "Fable 5.1 API 안전장치 오탐으로 2회 중단되어 opus로 대체 실행됨(오케스트레이터 보고)."
+  counterexamples:
+    - input: "사다리 3단 선형화 보조정리: 2차 평균 traceless 성분=0 (verify/Q-0008/F-01/adversary/a4_step3_lemma_is_false.py, a8_exact_driver.py)"
+      expected: "1차 잔차 |A·Σ_v δe_v|/n이 지배, O(δ²) 항은 무관 → 잔차 지수 = label합 지수 − 1 = +1/4"
+      observed: "정확 항등식 tl[gram(Σ_v X_v)]=−n Σ_v tl[gram(η_v−η̄)] (상대오차 1.06e-14); 잔차는 δ² 중심화 2차
+        형식이며 실측 δ-지수 2.000–2.008; 구동량은 W_2가 아니라 E‖HκH‖_F²"
+      note: "카드의 핵심 유도 단계 자체가 거짓"
+    - input: "K2 kill 창 [0.126,0.326] (γ_her, 균등 rooted Cayley, n∈{8..128}, δ=0.02, seed 20260902 사전등록;
+        adversary 실측은 δ=0.001, seed 4242, n≤32 별도 조건)"
+      expected: "카드 값 γ_her=0.2261±0.1, 점근 +1/4"
+      observed: "보정 이론(γ_her=1/d_tree, d_tree=2) 점근값 +1/2 (=0.5), 유한-n 이론값 0.529 — 사전등록 창 밖으로
+        project됨. 사전등록 정확 조건(δ=0.02, seed 20260902)의 리터럴 실행 결과는 아직 없음"
+      note: "카드 K2는 3단 보조정리 위에 세워졌으므로 그 보조정리 반례만으로 이미 무효; 창 이탈은 이론적 project이지
+        확정 관측은 아님"
+    - input: "K3 kill 창 [8.92,13.38] (RMS_her/RMS_iid, n=32, δ=0.02, 256 trials, seed 20260902 사전등록)"
+      expected: "카드 값 11.1528±2.23"
+      observed: "보정 이론값 8.07; 별도 조건(δ=0.001, seed 4242) 실측 7.995±0.151 — 두 값 모두 사전등록 창 밖으로
+        project. 사전등록 정확 조건의 리터럴 실행은 미수행"
+      note: "K2와 같은 사유로 이미 무효인 카드 위의 kill; project된 이탈은 참고치"
+    - input: "카드 formula의 상속(heritable) mode 항 w_her^2 · n^{1/2} (γ_her=+1/4)"
+      expected: "h(n) ~ n^{1/2}"
+      observed: "정확 항등식·기울기 실측으로 h(n) ~ n^{1} (γ_her=1/d_tree=+1/2, 카드값의 2배)"
+      note: "novelty 문구 γ_her=1/(2 d_tree)도 함께 무효, 보정 후보는 γ_her=1/d_tree"
+    - input: "novelty 문구 '보편류 지수 γ_her=1/(2 d_tree)'를 chain·Cayley·star·balanced binary 네 tree 형태로 교차검증"
+      expected: "tree 형태와 무관하게 1/(2 d_tree)=1/4로 고정"
+      observed: "chain +0.999, Cayley +0.510, star −0.483, balanced binary +0.136 — tree 형태에 따라 갈리며
+        d_tree=2 Cayley 값도 카드의 1/4이 아니라 1/(2)≈0.51"
+      note: "'보편류 하나'라는 카드 전제 자체가 무효; F-02는 tree 형태 의존성을 kill로 명시해야 한다"
+    - input: "K4 kill 창 [−0.1,0.1] (γ_coh, `repeated_coherent_mismatch_residual`)"
+      expected: "죽는 조건이 원리상 발동 가능(coherent mode가 scale 불변이 아닐 경우)"
+      observed: "simplicity_residual이 0차 동차성 항등식이라 γ_coh는 정의상 항상 정확히 0 — kill이 무내용이라
+        원리적으로 발동 불가"
+      note: "K4는 kill이 아니라 항등식 검증(index 1·5와 중복)"
+  survived_checks:
+    - "사전등록 무결성: 카드의 모든 predicts 숫자가 명시된 조합론 공식으로 정확 재현, 창·seed·크기가 카드와 일치
+      (preregistration_intact=true)"
+    - "3단 이후 등방성 절반: traceless 성분 자체는 0 (z≈0.4), 다만 구동량 재해석이 필요"
+    - "E[W_2(n)]~n^{5/2} (Aldous ISE), d_tree=2 고정 — 사다리 1·2단은 반례 없이 생존"
+    - "verify 7/7 pass, card-check PASS, K1–K3 실행 가능(스크립트·창·seed 사전 고정 확인)"
+    - "세 mode 분류(coherent·i.i.d.·heritable)와 heritable mode가 relevant(γ_her>0)라는 정성 결론은
+      반례를 통과하고 오히려 강화(+1/4→+1/2 후보)"
+sourcer:
+  prior_art:
+    - ref: "Aldous 1993 ISE; Janson–Marckert 2005 discrete snakes"
+      url: "https://link.springer.com/article/10.1007/s00440-003-0297-8"
+      relation: generalizes
+      note: "sourcer 원문 relation=partial을 ledger 스키마로 정규화: 사다리 2단 label 합 n^{5/2}는 표준 외부기존
+        결과이고, 카드는 이를 mismatch mode 분류·heritable 지수 논증으로 확장한다(mode 삼분류는 카드 고유)"
+    - ref: "Lyons–Pemantle–Peres 1995 size-biased GW"
+      url: "https://www.researchgate.net/publication/2805913_Biased_Random_Walks_on_Galton-Watson_Trees"
+      relation: generalizes
+      note: "sourcer 원문 relation=partial을 정규화: 사다리 4단 spine E[n_b]=b(b+1)/2의 외부기존 근거이며 카드는
+        이를 Q-spine 블록 지수 논증으로 확장한다"
+    - ref: "Dittrich 2016 coarse graining spin foam intertwiners arXiv:1609.02429"
+      url: "https://arxiv.org/abs/1609.02429"
+      relation: unrelated
+      note: "sourcer 원문 relation=disjoint를 정규화: simplicity RG 흐름은 있으나 mismatch mode 분류·heritable
+        지수 없음"
+  overall: partial
+  ce_specific_confirmed: "mismatch 세 mode 분류·heritable relevance·정렬 공리 필요 논증은 문헌에서 찾지 못함"
+assumptions:
+  - "Σw²=1이 미선언(free_parameters=[]가 과장; adversary dof 감사 P1)"
+  - "ε_res가 n-무관이라는 가정이 명시되지 않음(재척도하면 heritable 흐름이 상수로 바뀔 수 있음)"
+  - "w(모드 구성비)가 n·b에 무관, 혼합 mode 가법성은 검증되지 않음(kill 부재)"
+  - "SO(4) 등방성 = Euclidean 배경(12.4) 범위인지, 13.8 Lorentzian 범위까지인지 미선언"
+  - "P_micro(가우스 tetrad 섭동 + 균등 rooted Cayley tree)가 10.10이 요구한 counting measure와 같다는
+    가정은 검증되지 않음; Ω 정의는 이 가정된 P_micro 아래 승산비"
+  - "Q-spine 깊이 b 절단(4단)이 명시되지 않음"
+  - "K1은 중심화·평균(MIN_DET 미선언), K2/K3는 비중심화·RMS로 절차가 서로 다름"
+  - "adversary 실측(K2/K3 project)은 δ=0.001·seed 4242·n≤32이며 카드 사전등록(δ=0.02·seed 20260902·n≤128)의
+    리터럴 실행이 아님 — kill_triggered로 기록하지 않은 이유"
+  - "adversary 실행 주체가 Fable 5.1이 아니라 opus로 2회 대체됨(API 안전장치 오탐)"
+open_questions_spawned: [Q-0009]
+next_action: "F-02(같은 세션, 재추측 1회): 정확 항등식 tl[gram(Σ_v X_v)]=−n Σ_v tl[gram(η_v−η̄)]을 사다리 3단 보조정리로
+  교체, 구동량을 E‖HκH‖_F²(κ_vw=depth(v∧w)+1)로 재정의, γ_coh=0·γ_iid=−1/2·γ_her=1/d_tree 사전등록(균등
+  Cayley 유한-n 0.529, ratio(n=32)=8.07/ratio(8)=1.989/ratio(16)=4.006), Σw²=1 명시, Ω_align/Ω_mis을
+  10.10 counting measure 대응 여부까지 정직화(현재는 가정된 P_micro 아래 승산비), ε_res n-무관 규약 명시,
+  SO(4)=Euclidean 범위 선언, 결론 단(정렬 공리 필요) 추가, 혼합 mode 가법성 kill 신설, tree 형태 의존성
+  (chain/Cayley/star/balanced binary 값이 다름)을 kill 또는 명시 가정으로 흡수. sourcer로 E‖HκH‖²~n³
+  문헌(Wiener index/CRT quadratic functional 계열) 대조. Q-0009(Q-spine 블록의 진짜 보편류: spine chain
+  지배 vs 균등 Cayley) 답이 F-02의 전제(카드가 균등 Cayley로 조건화된 GW를 쓰지만 실제 Q-spine 블록은
+  size-biased spine이 지배)를 좌우하므로 F-02 사다리 4단에서 함께 다룬다."

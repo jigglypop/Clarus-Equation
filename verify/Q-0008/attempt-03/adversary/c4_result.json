@@ -1,0 +1,275 @@
+{
+  "formula_matches_ledger": true,
+  "kill_matches_ledger": [
+    {
+      "i": 0,
+      "same": true
+    },
+    {
+      "i": 1,
+      "same": true
+    },
+    {
+      "i": 2,
+      "same": true
+    },
+    {
+      "i": 3,
+      "same": true
+    }
+  ],
+  "kill_count": {
+    "card": 4,
+    "ledger": 4
+  },
+  "ladder_matches_ledger": [
+    {
+      "step": 1,
+      "same_claim": true,
+      "same_kind": true
+    },
+    {
+      "step": 2,
+      "same_claim": true,
+      "same_kind": true
+    },
+    {
+      "step": 3,
+      "same_claim": true,
+      "same_kind": true
+    },
+    {
+      "step": 4,
+      "same_claim": true,
+      "same_kind": true
+    },
+    {
+      "step": 5,
+      "same_claim": true,
+      "same_kind": true
+    },
+    {
+      "step": 6,
+      "same_claim": true,
+      "same_kind": true
+    },
+    {
+      "step": 7,
+      "same_claim": true,
+      "same_kind": true
+    }
+  ],
+  "preregistered_in_script": {
+    "iid_slope": "-0.4783",
+    "her_slope": "0.5302",
+    "her_ratio_128": "32.554",
+    "mix_X_32": "0.7406",
+    "qspine_slope_vs_En": "0.5047",
+    "qspine_ratio_b8_over_iid36": "6.832",
+    "defect_ratio_64_over_8": "0.140625",
+    "defect_slope": "-0.9069"
+  },
+  "windows_in_script": {
+    "iid_slope": "-0.58, -0.38",
+    "her_slope": "0.43, 0.63",
+    "her_ratio_128": "26.0, 39.1",
+    "mix_X_32": "0.49, 0.99",
+    "qspine_slope_vs_En": "0.42, 0.59",
+    "qspine_ratio_b8_over_iid36": "6.01, 7.65",
+    "defect_ratio_64_over_8": "0.124, 0.158",
+    "defect_slope": "-0.96, -0.86"
+  },
+  "card_predicts": [
+    {
+      "observable": "K1 γ_her: 균등 rooted Cayley tree(Prüfer) ",
+      "value": 0.5302,
+      "uncertainty": 0.1
+    },
+    {
+      "observable": "K1 RMS_her(128)/RMS_iid(128), 같은 실행의 n=1",
+      "value": 32.554,
+      "uncertainty": 6.5
+    },
+    {
+      "observable": "K2 혼합 초과 X(32)=(RMS_mix²−RMS_iid²−RMS_he",
+      "value": 0.7406,
+      "uncertainty": 0.25
+    },
+    {
+      "observable": "K3 Q-spine 깊이 b 블록 RMS_Q(b)의 ln E[n_b] 기",
+      "value": 0.5047,
+      "uncertainty": 0.085
+    },
+    {
+      "observable": "K3 진폭비 RMS_Q(8)/RMS_iid(36) (Q: seed 202",
+      "value": 6.832,
+      "uncertainty": 0.82
+    },
+    {
+      "observable": "K4 defect 희석 ε(64)/ε(8): 종 B=Σ(I) (n−1)개",
+      "value": 0.140625,
+      "uncertainty": 0.017
+    },
+    {
+      "observable": "K4 defect 기울기 d ln ε/d ln n, 같은 실행 n∈{4,",
+      "value": -0.9069,
+      "uncertainty": 0.05
+    },
+    {
+      "observable": "K5(통제) γ_iid: i.i.d. 비중심화 tetrad 섭동 블록 R",
+      "value": -0.4783,
+      "uncertainty": 0.1
+    }
+  ],
+  "value_pm_uncertainty_matches_window": [
+    {
+      "key": "her_slope",
+      "card_value": 0.5302,
+      "script_value": 0.5302,
+      "value_agrees": true,
+      "window": [
+        0.43,
+        0.63
+      ],
+      "value_pm_u": [
+        0.4302,
+        0.6302
+      ],
+      "window_agrees": true
+    },
+    {
+      "key": "her_ratio_128",
+      "card_value": 32.554,
+      "script_value": 32.554,
+      "value_agrees": true,
+      "window": [
+        26.0,
+        39.1
+      ],
+      "value_pm_u": [
+        26.054000000000002,
+        39.054
+      ],
+      "window_agrees": false
+    },
+    {
+      "key": "mix_X_32",
+      "card_value": 0.7406,
+      "script_value": 0.7406,
+      "value_agrees": true,
+      "window": [
+        0.49,
+        0.99
+      ],
+      "value_pm_u": [
+        0.49060000000000004,
+        0.9906
+      ],
+      "window_agrees": true
+    },
+    {
+      "key": "qspine_slope_vs_En",
+      "card_value": 0.5047,
+      "script_value": 0.5047,
+      "value_agrees": true,
+      "window": [
+        0.42,
+        0.59
+      ],
+      "value_pm_u": [
+        0.4197,
+        0.5897
+      ],
+      "window_agrees": true
+    },
+    {
+      "key": "qspine_ratio_b8_over_iid36",
+      "card_value": 6.832,
+      "script_value": 6.832,
+      "value_agrees": true,
+      "window": [
+        6.01,
+        7.65
+      ],
+      "value_pm_u": [
+        6.012,
+        7.652
+      ],
+      "window_agrees": true
+    },
+    {
+      "key": "defect_ratio_64_over_8",
+      "card_value": 0.140625,
+      "script_value": 0.140625,
+      "value_agrees": true,
+      "window": [
+        0.124,
+        0.158
+      ],
+      "value_pm_u": [
+        0.123625,
+        0.15762500000000002
+      ],
+      "window_agrees": true
+    },
+    {
+      "key": "defect_slope",
+      "card_value": -0.9069,
+      "script_value": -0.9069,
+      "value_agrees": true,
+      "window": [
+        -0.96,
+        -0.86
+      ],
+      "value_pm_u": [
+        -0.9569000000000001,
+        -0.8569
+      ],
+      "window_agrees": true
+    },
+    {
+      "key": "iid_slope",
+      "card_value": -0.4783,
+      "script_value": -0.4783,
+      "value_agrees": true,
+      "window": [
+        -0.58,
+        -0.38
+      ],
+      "value_pm_u": [
+        -0.5783,
+        -0.37829999999999997
+      ],
+      "window_agrees": true
+    }
+  ],
+  "caterpillar_mentions": [
+    "\\quad\\bigl[\\text{scope: 전형적 쌍의 }\\kappa_{vw}=|{\\rm path}(v)\\cap{\\rm path}(w)|\\text{가 깊이 }n^{1/d_{\\rm tree}}\\text{와 같은 차수인 tree 족 — 균등 rooted Cayley·cha",
+    "- \"γ_her=1/d_tree(d_tree: 깊이~n^{1/d_tree})는 전형적 쌍의 κ_vw=|path(v)∩path(w)|(공통조상 수+1)가 깊이와 같은 차수인 tree 족(균등 rooted Cayley·chain 포함)에 한정. 반례(adversary b2",
+    "- {step: 3, claim: \"커널 법칙: 가우스 등방 label(공분산 κ⊗I_16, scope 가정)·traceless 2차 평균 0(internal SO(3) 등방성, 16 기저방향 합 정확히 0)·O(δ⁴) 절단에서 ε²=ε_★²‖HκH‖_F²/n²; 닫힌",
+    "11장의 Q-spine quotient는 coarse block에 persistent spine 하나와 접힌 side tree를 남기고, 13장은 그 block이 하나의 metric으로 렌더링되려면 polar-aligned 합 $Y=\\sum_v X_v$의 simplic",
+    "- scope 반례 기록(카드를 죽이지 않고 범위를 정한다): γ_her=1/d_tree — star-of-chains 0.2476(깊이 지수 0.5032), caterpillar 0.4758; 등방성 — 비등방 (0,0) 성분 라벨의 i.i.d. 기울기 −0.006."
+  ],
+  "sigma_of_any_tetrad_is_exactly_simple": {
+    "max_residual": 2.937901237446384e-14,
+    "worst_near_degenerate": [
+      0.04735887278319624,
+      9.644949076887925e-16
+    ],
+    "note": "gram(Sigma(e)) = 2 det(e) I, so the cell-simplicity premise is automatic in the model"
+  },
+  "gram_equals_2det_identity": {
+    "gram_diag": [
+      1.0035821716517068,
+      1.0035821716517066,
+      1.0035821716517066
+    ],
+    "two_det": 1.0035821716517066
+  },
+  "negative_of_reference": {
+    "simplicity_residual": 0.0,
+    "urbantke_refuses_minus_reference": true,
+    "note": "-Sigma_0 is exactly simple; the block {Sigma_0,-Sigma_0} gives Y=0 (corollary 0/0), excluded only by the positive-branch scope, not by the derivation assumptions",
+    "polar_alignment_accepts": false
+  }
+}

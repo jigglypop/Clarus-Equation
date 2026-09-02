@@ -1,0 +1,3 @@
+{"seed": 300007, "her_slope": null, "her_ratio_128": null, "mix_X_32": 0.6589481472018541, "iid_slope": null, "min_det_audit": {"calls": 3072, "nan_rejections": 0, "min_det": 0.8612559010257409, "cells": 98304}, "elapsed_s_total": 79.25612400000682}
+{"seed": 400009, "her_slope": null, "her_ratio_128": null, "mix_X_32": 0.7525652711020717, "iid_slope": null, "min_det_audit": {"calls": 3072, "nan_rejections": 0, "min_det": 0.871870134951159, "cells": 98304}, "elapsed_s_total": 75.50916499999585}
+{"seed": 500011, "her_slope": null, "her_ratio_128": null, "mix_X_32": 0.7871119186526794, "iid_slope": null, "min_det_audit": {"calls": 3072, "nan_rejections": 0, "min_det": 0.886851060955106, "cells": 98304}, "elapsed_s_total": 73.1031899000227}

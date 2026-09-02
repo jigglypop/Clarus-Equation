@@ -1,0 +1,126 @@
+{
+ "script": "a2_symmetry",
+ "seed": 20260902,
+ "action_check": [
+  {
+   "delta": 0.05,
+   "n": 2,
+   "conjugation_rel_err": 1.2268243011749094e-15,
+   "left_only_rel_err": 0.14217260842226725,
+   "right_only_rel_err": 0.11670942029872303
+  },
+  {
+   "delta": 0.05,
+   "n": 3,
+   "conjugation_rel_err": 1.2283447325192536e-15,
+   "left_only_rel_err": 0.08438499370855648,
+   "right_only_rel_err": 0.14002812186040992
+  },
+  {
+   "delta": 0.05,
+   "n": 5,
+   "conjugation_rel_err": 1.3189510179189718e-15,
+   "left_only_rel_err": 0.12425023673641651,
+   "right_only_rel_err": 0.10210524623557797
+  },
+  {
+   "delta": 0.2,
+   "n": 2,
+   "conjugation_rel_err": 1.1455916079180034e-15,
+   "left_only_rel_err": 2.1510984375831446,
+   "right_only_rel_err": 1.1755998694928713
+  },
+  {
+   "delta": 0.2,
+   "n": 3,
+   "conjugation_rel_err": 1.1446790503152066e-15,
+   "left_only_rel_err": 0.6958283249911894,
+   "right_only_rel_err": 0.7520897358857194
+  },
+  {
+   "delta": 0.2,
+   "n": 5,
+   "conjugation_rel_err": 1.5104678028494891e-15,
+   "left_only_rel_err": 0.36513439742872905,
+   "right_only_rel_err": 0.408824358170185
+  },
+  {
+   "delta": 0.5,
+   "n": 2,
+   "conjugation_rel_err": 1.8173319722298506e-15,
+   "left_only_rel_err": 2.8919475516168247,
+   "right_only_rel_err": 0.6767890529679421
+  },
+  {
+   "delta": 0.5,
+   "n": 3,
+   "conjugation_rel_err": 5.25110325258401e-16,
+   "left_only_rel_err": 0.0,
+   "right_only_rel_err": 0.7374012528722481
+  },
+  {
+   "delta": 0.5,
+   "n": 5,
+   "conjugation_rel_err": 7.530457472637163e-16,
+   "left_only_rel_err": 0.41454698602792334,
+   "right_only_rel_err": 0.31032194436074934
+  }
+ ],
+ "conjugation_max_rel_err": 1.8173319722298506e-15,
+ "left_only_min_rel_err": 0.0,
+ "R0_group": {
+  "homomorphism_max_err": 5.454871001296254e-16,
+  "angle_hist": [
+   0.005,
+   0.02,
+   0.06,
+   0.095,
+   0.16,
+   0.1825,
+   0.23,
+   0.2475
+  ],
+  "haar_so3_hist": [
+   0.0031880801994459114,
+   0.021732840761277548,
+   0.05599909019807511,
+   0.10077010265741074,
+   0.14922989734258926,
+   0.19400090980192491,
+   0.22826715923872232,
+   0.24681191980055417
+  ],
+  "max_hist_dev": 0.011500909801924919,
+  "angle_max": 3.1360663082298847,
+  "note": "surjectivity onto SO(3) is what Schur needs"
+ },
+ "delta2_order_equivariance_max_rel_err": 1.9666111553022366e-13,
+ "homogeneity_delta_xi_product_max_err": 0.0,
+ "min_det_rule": {
+  "max_det_change_under_conjugation": 1.3322676295501878e-15,
+  "max_det_change_under_parity": 3.701336577567577,
+  "note": "MIN_DET conditioning is conjugation invariant (isotropy lemma survives) but NOT parity invariant (odd-order vanishing argument is formally conditional; numerically vacuous at delta<=0.02)"
+ },
+ "E_tl_gram_Y_zero": {
+  "n2": {
+   "delta": 0.3,
+   "draws": 20000,
+   "rejected": 839,
+   "norm_mean_tl": 0.010949692663429218,
+   "rms_tl": 2.245527670133659,
+   "norm_mean_over_rms": 0.004876222550745709,
+   "expected_if_zero_mean_1sigma": 0.007071067811865475,
+   "z_like": 0.689602006441411
+  },
+  "n5": {
+   "delta": 0.3,
+   "draws": 20000,
+   "rejected": 2204,
+   "norm_mean_tl": 0.06970409276008871,
+   "rms_tl": 10.706345654476603,
+   "norm_mean_over_rms": 0.006510540104871694,
+   "expected_if_zero_mean_1sigma": 0.007071067811865475,
+   "z_like": 0.9207294114683503
+  }
+ }
+}

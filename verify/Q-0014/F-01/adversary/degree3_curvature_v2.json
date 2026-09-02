@@ -1,0 +1,131 @@
+{
+  "tetrahedron": {
+    "V": 4,
+    "fine": 5,
+    "coarse": 3,
+    "fine_cap_coarse": 2,
+    "faces": 4,
+    "identified": {
+      "E": 6,
+      "rank_d2": 3,
+      "H2_ker_d2": 1
+    },
+    "distinct": {
+      "E": 8,
+      "rank_d2": 4,
+      "H2_ker_d2": 0
+    },
+    "conv_I": {
+      "flat_faces": 3,
+      "flat_fraction_all": 0.75,
+      "rank_3curv_on_ker_d2_identified": 1,
+      "max_abs_3curv_identified": 0.5000000000000002,
+      "rank_3curv_on_ker_d2_distinct": 0
+    },
+    "conv_II": {
+      "flat_faces": 4,
+      "flat_fraction_all": 1.0,
+      "rank_3curv_on_ker_d2_identified": 0,
+      "max_abs_3curv_identified": 0.0,
+      "rank_3curv_on_ker_d2_distinct": 0
+    }
+  },
+  "k1_grids": [
+    {
+      "V": 50,
+      "fine": 103,
+      "coarse": 172,
+      "fine_cap_coarse": 21,
+      "faces": 206,
+      "identified": {
+        "E": 254,
+        "rank_d2": 196,
+        "H2_ker_d2": 10
+      },
+      "distinct": {
+        "E": 275,
+        "rank_d2": 204,
+        "H2_ker_d2": 2
+      },
+      "conv_I": {
+        "flat_faces": 172,
+        "flat_fraction_all": 0.8349514563106796,
+        "rank_3curv_on_ker_d2_identified": 8,
+        "max_abs_3curv_identified": 0.5391129455449968,
+        "rank_3curv_on_ker_d2_distinct": 0
+      },
+      "conv_II": {
+        "flat_faces": 179,
+        "flat_fraction_all": 0.8689320388349514,
+        "rank_3curv_on_ker_d2_identified": 0,
+        "max_abs_3curv_identified": 4.40619762898109e-16,
+        "rank_3curv_on_ker_d2_distinct": 0
+      },
+      "n": 50
+    },
+    {
+      "V": 100,
+      "fine": 184,
+      "coarse": 295,
+      "fine_cap_coarse": 31,
+      "faces": 321,
+      "identified": {
+        "E": 448,
+        "rank_d2": 311,
+        "H2_ker_d2": 10
+      },
+      "distinct": {
+        "E": 479,
+        "rank_d2": 320,
+        "H2_ker_d2": 1
+      },
+      "conv_I": {
+        "flat_faces": 295,
+        "flat_fraction_all": 0.9190031152647975,
+        "rank_3curv_on_ker_d2_identified": 9,
+        "max_abs_3curv_identified": 0.5407947090132884,
+        "rank_3curv_on_ker_d2_distinct": 0
+      },
+      "conv_II": {
+        "flat_faces": 305,
+        "flat_fraction_all": 0.9501557632398754,
+        "rank_3curv_on_ker_d2_identified": 0,
+        "max_abs_3curv_identified": 4.907753952617864e-16,
+        "rank_3curv_on_ker_d2_distinct": 0
+      },
+      "n": 100
+    },
+    {
+      "V": 200,
+      "fine": 405,
+      "coarse": 759,
+      "fine_cap_coarse": 69,
+      "faces": 868,
+      "identified": {
+        "E": 1095,
+        "rank_d2": 833,
+        "H2_ker_d2": 35
+      },
+      "distinct": {
+        "E": 1164,
+        "rank_d2": 861,
+        "H2_ker_d2": 7
+      },
+      "conv_I": {
+        "flat_faces": 759,
+        "flat_fraction_all": 0.8744239631336406,
+        "rank_3curv_on_ker_d2_identified": 28,
+        "max_abs_3curv_identified": 0.6272887880283611,
+        "rank_3curv_on_ker_d2_distinct": 0
+      },
+      "conv_II": {
+        "flat_faces": 774,
+        "flat_fraction_all": 0.8917050691244239,
+        "rank_3curv_on_ker_d2_identified": 0,
+        "max_abs_3curv_identified": 7.216449660063518e-16,
+        "rank_3curv_on_ker_d2_distinct": 0
+      },
+      "n": 200
+    }
+  ]
+}

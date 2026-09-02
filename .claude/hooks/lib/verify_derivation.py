@@ -1,8 +1,8 @@
 """derivation.md 프론트매터의 verify 블록을 기계검증한다. LLM 호출 없음.
 
-사용: verify_derivation.py <derivations/<Q>/attempt-NN.derivation.md> [--no-write]
+사용: verify_derivation.py <derivations/<Q>/attempt-NN.derivation.md | F-NN.formula.md> [--no-write]
 출력(stdout): {"symbolic": pass|fail|skipped, "numeric": pass|fail|skipped, "details": [...]}
-저장: verify/<Q>/attempt-NN/hook_result.json (--no-write가 없을 때)
+저장: verify/<Q>/attempt-NN/hook_result.json, 카드는 verify/<Q>/F-NN/hook_result.json (--no-write가 없을 때)
 
 검사 유형
   identity   lhs, rhs                  sympy simplify(lhs-rhs)==0 → symbolic. 표본 대조 → numeric
@@ -338,6 +338,7 @@ def verify_file(path: Path) -> dict[str, Any]:
         "file": str(path),
         "question": front.get("question"),
         "attempt": front.get("attempt"),
+        "card": front.get("card"),
         "sympy": HAVE_SYMPY,
     }
     if "_frontmatter_error" in front:
@@ -368,7 +369,11 @@ def verify_file(path: Path) -> dict[str, Any]:
     return result
 
 
-def artifacts_dir(front_question: Any, front_attempt: Any, root: Path) -> Path | None:
+def artifacts_dir(front_question: Any, front_attempt: Any, root: Path, front_card: Any = None) -> Path | None:
+    """derivation은 verify/<Q>/attempt-NN/, 추측 카드(F-NN.formula.md)는 verify/<Q>/F-NN/."""
+    if front_question and front_card:
+        card = re.sub(r"[^0-9A-Za-z_-]+", "-", str(front_card)).strip("-") or "card"
+        return root / "verify" / str(front_question) / card
     if not front_question or front_attempt is None:
         return None
     try:
@@ -398,7 +403,7 @@ def main(argv: list[str]) -> int:
         return 0
     result = verify_file(path)
     if write:
-        target = artifacts_dir(result.get("question"), result.get("attempt"), root)
+        target = artifacts_dir(result.get("question"), result.get("attempt"), root, result.get("card"))
         if target is not None:
             target.mkdir(parents=True, exist_ok=True)
             (target / "hook_result.json").write_text(json.dumps(result, ensure_ascii=False, indent=2, default=str), encoding="utf-8")

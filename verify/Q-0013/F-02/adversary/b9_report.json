@@ -1,0 +1,49 @@
+{
+  "univ_o": {
+    "F": 0.40824829046386346,
+    "T": 3.666666666666667,
+    "floor_pred_over_delta2": 0.11427988382812904,
+    "floor_obs_over_delta2": 0.11275937767173862,
+    "mean_matrix_se_over_delta2": 0.006935860533122287,
+    "direction_cosine_vs_pred": 0.9997082112550884
+  },
+  "univ_d": {
+    "F": 0.4082482904638632,
+    "T": 0.16666666666666682,
+    "floor_pred_over_delta2": 0.11427988382812895,
+    "floor_obs_over_delta2": 0.11344437917850737,
+    "mean_matrix_se_over_delta2": 0.0013872647619773044,
+    "direction_cosine_vs_pred": 0.9999999999999998
+  },
+  "kernel_sigma_b": {
+    "F": 9.365193520018405e-16,
+    "T": 2.333333333333334,
+    "floor_pred_over_delta2": 2.6215743029311835e-16,
+    "floor_obs_over_delta2": 0.0032794998074985207,
+    "mean_matrix_se_over_delta2": 0.005486707940336272,
+    "direction_cosine_vs_pred": null
+  },
+  "ce_i": {
+    "F": 0.4082482904638633,
+    "T": 0.1666666666666669,
+    "floor_pred_over_delta2": 0.11427988382812898,
+    "floor_obs_over_delta2": 0.11275505240284667,
+    "mean_matrix_se_over_delta2": 0.001409220546784577,
+    "direction_cosine_vs_pred": 0.9999999999999998
+  },
+  "ce_ii": {
+    "F": 0.8164965809275461,
+    "T": 0.6666666666663728,
+    "floor_pred_over_delta2": 0.22855976765620742,
+    "floor_obs_over_delta2": 0.22830074999630634,
+    "mean_matrix_se_over_delta2": 0.0026576797719968233,
+    "direction_cosine_vs_pred": 1.0
+  },
+  "_meta": {
+    "n": 33,
+    "trials": 400,
+    "delta": 0.005,
+    "seed_base": 20260903,
+    "note": "direct floor probe, off-grid n, not a preregistered statistic"
+  }
+}

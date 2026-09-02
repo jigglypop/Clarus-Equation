@@ -5,7 +5,9 @@ description: 유도·증명·계산 과정을 쓰거나 고칠 때, derivations/
 
 # 유도 파일 계약
 
-파일 위치: `derivations/<Q-id>/attempt-NN.derivation.md` (NN은 두 자리).
+파일 위치: `derivations/<Q-id>/attempt-NN.derivation.md` (NN은 두 자리). 추측 카드
+`derivations/<Q-id>/F-NN.formula.md`는 conjecture-first 스킬의 계약을 따르며 같은 훅이 verify
+블록을 돌린다(산출물 `verify/<Q>/F-NN/`). 유도 파일은 프론트매터 `ladder_step`으로 어느 단을 닫는지 적는다.
 저장 즉시 PostToolUse 훅이 `verify_derivation.py`를 돌리고 결과가 문맥에 들어온다.
 이유: verify 블록이 없으면 루프가 한 바퀴 느려진다. 블록이 최우선 산출물이다.
 
@@ -15,6 +17,7 @@ description: 유도·증명·계산 과정을 쓰거나 고칠 때, derivations/
 ---
 question: Q-0007
 attempt: 4
+ladder_step: 2         # 카드 사다리의 몇 단인가 (lemma 질문이면 생략)
 claim: "한 문장"
 assumptions:
   - "ρ ∈ C^1 이며 ρ(x)=O(|x|^{-n-1})"

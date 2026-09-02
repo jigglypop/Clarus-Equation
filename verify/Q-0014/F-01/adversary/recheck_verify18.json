@@ -1,0 +1,139 @@
+{
+  "summary": {
+    "all_reproduced": true,
+    "counts": {
+      "TAUTOLOGY": 6,
+      "ARITHMETIC": 12,
+      "EXTERNAL": 0
+    },
+    "falsifiable_against_external_data": 0
+  },
+  "rows": [
+    {
+      "index": 0,
+      "desc": "a**(d-2)/a == a**(d-3)",
+      "reproduced": true,
+      "kind": "TAUTOLOGY",
+      "detail": "지수법칙. d, a 무관하게 항등"
+    },
+    {
+      "index": 1,
+      "desc": "lim_{d->3} a**(d-3) == 1",
+      "reproduced": true,
+      "kind": "TAUTOLOGY",
+      "detail": "a**0=1. '지수 0 => d=3'의 역방향 대입일 뿐, 'a 의존성 소멸 => d=3'을 시험하지 않는다"
+    },
+    {
+      "index": 2,
+      "desc": "(-1)**(k*(2k-k))*(-1) == (-1)**(k**2+1)",
+      "reproduced": true,
+      "kind": "TAUTOLOGY",
+      "detail": "k*(2k-k)=k^2 재서술"
+    },
+    {
+      "index": 3,
+      "desc": "k=2: (-1)**4*(-1)+1 == 0",
+      "reproduced": true,
+      "kind": "ARITHMETIC",
+      "detail": ""
+    },
+    {
+      "index": 4,
+      "desc": "k=3: (-1)**9*(-1)-1 == 0",
+      "reproduced": true,
+      "kind": "ARITHMETIC",
+      "detail": ""
+    },
+    {
+      "index": 5,
+      "desc": "lim_{k->2} (2k-2)/2 == 1",
+      "reproduced": true,
+      "kind": "TAUTOLOGY",
+      "detail": ""
+    },
+    {
+      "index": 6,
+      "desc": "(4*3/2)/2 - 3 == 0",
+      "reproduced": true,
+      "kind": "ARITHMETIC",
+      "detail": ""
+    },
+    {
+      "index": 7,
+      "desc": "(6*5/2)/2 > 5",
+      "reproduced": true,
+      "kind": "ARITHMETIC",
+      "detail": ""
+    },
+    {
+      "index": 8,
+      "desc": "(2M+1)-(M+2)+1 == M",
+      "reproduced": true,
+      "kind": "TAUTOLOGY",
+      "detail": "선형 항등식"
+    },
+    {
+      "index": 9,
+      "desc": "M=0: (1)-(2)+1 == 0",
+      "reproduced": true,
+      "kind": "ARITHMETIC",
+      "detail": ""
+    },
+    {
+      "index": 10,
+      "desc": "(2k-1)+1 == 2k",
+      "reproduced": true,
+      "kind": "TAUTOLOGY",
+      "detail": "장부 항등식; n_time=1을 이미 대입한 뒤의 재서술"
+    },
+    {
+      "index": 11,
+      "desc": "P(F_1>= 4) == 0.1762918862",
+      "reproduced": true,
+      "kind": "ARITHMETIC",
+      "detail": "상속 상수 D=3.1777584234의 닫힌 형태 재평가"
+    },
+    {
+      "index": 12,
+      "desc": "P(F_5>= 4) == 0.9946550103",
+      "reproduced": true,
+      "kind": "ARITHMETIC",
+      "detail": "상속 상수 D=3.1777584234의 닫힌 형태 재평가"
+    },
+    {
+      "index": 13,
+      "desc": "P(F_1>= 2) == 0.6399752045",
+      "reproduced": true,
+      "kind": "ARITHMETIC",
+      "detail": "상속 상수 D=3.1777584234의 닫힌 형태 재평가"
+    },
+    {
+      "index": 14,
+      "desc": "P(F_2>= 2) == 0.9312576369",
+      "reproduced": true,
+      "kind": "ARITHMETIC",
+      "detail": "상속 상수 D=3.1777584234의 닫힌 형태 재평가"
+    },
+    {
+      "index": 15,
+      "desc": "P(F_3>= 2) == 0.9890448472",
+      "reproduced": true,
+      "kind": "ARITHMETIC",
+      "detail": "상속 상수 D=3.1777584234의 닫힌 형태 재평가"
+    },
+    {
+      "index": 16,
+      "desc": "P(F_4>= 2) == 0.9984000309",
+      "reproduced": true,
+      "kind": "ARITHMETIC",
+      "detail": "상속 상수 D=3.1777584234의 닫힌 형태 재평가"
+    },
+    {
+      "index": 17,
+      "desc": "(T/CFL)*ln(lambda) == 1.9501765989",
+      "reproduced": true,
+      "kind": "ARITHMETIC",
+      "detail": "von Neumann 증폭인자의 N->infty 점근값. 유한 격자 최소제곱 기울기와 다르다"
+    }
+  ]
+}

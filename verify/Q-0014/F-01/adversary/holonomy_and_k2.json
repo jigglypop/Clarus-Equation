@@ -1,0 +1,85 @@
+{
+  "holonomy_consistency": [
+    {
+      "n": 50,
+      "edges_in_fine_and_coarse": 21,
+      "double_defined_with_face": 21,
+      "min_gap": 0.847627277225331,
+      "median_gap": 2.020167944954271,
+      "max_gap": 2.649149123076995,
+      "b1_identified_cells": 205,
+      "b1_distinct_fine_coarse_cells": 226,
+      "faces": 206
+    },
+    {
+      "n": 100,
+      "edges_in_fine_and_coarse": 31,
+      "double_defined_with_face": 31,
+      "min_gap": 0.8896191722627982,
+      "median_gap": 2.0099000367171302,
+      "max_gap": 2.8104661597790765,
+      "b1_identified_cells": 349,
+      "b1_distinct_fine_coarse_cells": 380,
+      "faces": 321
+    },
+    {
+      "n": 200,
+      "edges_in_fine_and_coarse": 69,
+      "double_defined_with_face": 69,
+      "min_gap": 0.696305373034887,
+      "median_gap": 1.9067906349323644,
+      "max_gap": 2.74403901690353,
+      "b1_identified_cells": 896,
+      "b1_distinct_fine_coarse_cells": 965,
+      "faces": 868
+    }
+  ],
+  "K2": {
+    "22": {
+      "N": [
+        8,
+        16,
+        32
+      ],
+      "A": [
+        269873.55796266807,
+        839701851652.8617,
+        1.592856894332319e+25
+      ],
+      "lnA": [
+        12.505708824450052,
+        27.45631272726969,
+        58.03015651767739
+      ],
+      "slope": 1.8988538800296169
+    },
+    "31": {
+      "N": [
+        8,
+        16,
+        32
+      ],
+      "A": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "lnA": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "slope": 0.0
+    },
+    "closed_form_slope": 1.9501765988535769,
+    "card_prereg_slope_22": 1.9502,
+    "card_window_22": [
+      1.9,
+      2.0
+    ],
+    "in_window_22": false,
+    "in_window_31": true,
+    "amp_31_N32": 1.0,
+    "amp_31_le_3": true
+  }
+}

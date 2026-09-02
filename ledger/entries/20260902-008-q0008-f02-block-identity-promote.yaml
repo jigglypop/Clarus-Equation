@@ -1,0 +1,113 @@
+id: E-20260902-008
+question: Q-0008
+attempt: 3
+timestamp: 2026-09-02T23:15:00+09:00
+claim: "사다리 2단(정확 블록 항등식)을 강한 형태로 닫는다: 임의의 대칭 쌍선형 형식 T와 삼중항 {X_v}에
+  대해 전제 없이 성립하는 평행축(König–Huygens) 항등식 T(ΣX,ΣX)=nΣ_vT(X_v,X_v)−nΣ_vT(X_v−X̄,X_v−X̄)에
+  cell simplicity(tl gram X_v=0, 모든 v)만 대입하면 tl gram(Y)=−nΣ_v tl gram(η_v−η̄)가 모든 δ에서 정확히
+  성립하고, 이는 기준점 Σ_0의 simplicity 여부(adversary c1 basepoint_inert, 최대 상대오차 6.3e−15)·polar
+  정렬 순서(cell별 상이 SO(3))·가중치(무가중 13.2 규약뿐 아니라 n→W=Σw_v 일반화도 W≠0에서 성립, c1
+  weighted_generalisation 1.15e−13)·signature(Euclid/Lorentz/혼합 블록, c2 최대 2.7e−15)·배향·라벨
+  분포에 무관하다. 따름정리 (a) 두 종 결정론 Δ에서 ε=p(1−p)‖tl gram Δ‖_F/‖gram(Σ_0+(1−p)Δ)‖_F가 (pn
+  정수·분모 비퇴화 조건에서) n에 무관하게 정확(13.5 n-무관성 재현, verify[6]); (b) 결함 cell 1개에서
+  p(1−p)=(n−1)/n²로 정확히 희석된다(K4 일관성 검사 숫자 0.140625와 일치)."
+level: L3
+verdict: promote
+pivot_step: null
+ladder_step: 2
+ladder_cited:
+  - step: 1
+    ref: "1a Isserlis 1918 Biometrika 12:134–139 (DOI 10.1093/biomet/12.1-2.134) / Wick 1950 Phys.
+      Rev. 80:268; 1b Billingsley Probability and Measure 3rd ed. Thm 27.1 / Feller An Introduction
+      to Probability Theory II 2nd ed. §VIII.4; 1c Kennedy 1975 J. Appl. Probab. 12:800–806 (DOI
+      10.2307/3212735) / Pitman Combinatorial Stochastic Processes LNM 1875 §6 / Aldous 1991 CRT II;
+      1d Aldous CRT I (Ann. Probab. 19, 1991) · CRT III (Ann. Probab. 21, 1993) / Rényi–Szekeres
+      1967 J. Austral. Math. Soc. 7:497–507; 1e Meir–Moon 1978 Canad. J. Math. 30:997–1015 (DOI
+      10.4153/CJM-1978-085-0, 부분트리 크기 법칙의 직접 출처; 저장소는 n≤7 전수열거로 독립 확인); 1f
+      Lyons–Pemantle–Peres 1995 Ann. Probab. 23:1125–1138 (DOI 10.1214/aop/1176988176). sourcer(haiku)
+      확정본, 6건 전부 ok — 카드 사다리 1단 외부기존을 문헌 인용으로 닫는다(attempt 소모 없음)."
+card: derivations/Q-0008/F-02.formula.md
+kill_triggered: null
+derivation: derivations/Q-0008/attempt-03.derivation.md
+verification:
+  symbolic: pass
+  numeric: pass
+  lean: skipped
+  artifacts: verify/Q-0008/attempt-03/
+adversary:
+  model_note: "adversary(opus) 유도 감사, 산출물 verify/Q-0008/attempt-03/adversary/c1–c4. 명제를 임의
+    대칭 쌍선형 형식·임의 삼중항의 premise-free 평행축 항등식으로 일반화한 뒤 cell simplicity를 대입해
+    독립 재확인했다(verdict_recommendation: promote, 반례 없음)."
+  counterexamples: []
+  survived_checks:
+    - "기호층 (S5.4) n=2,3,5,8,17 5/5 잔차 0; 전제를 빼면 n=2,3,5 3/3 잔차 비영(전제가 유일하게 쓰이는 자리, S8.4)"
+    - "물리 실행 수치층: n∈{2,5,17}, δ∈{0.3,0.05}, 20 trial, 최대 상대오차 4.120452620461931e-13; 정렬 후
+      cell 정확 simplicity 잔차 최대 1.2224691364013184e-15"
+    - "따름정리 (a)(b) 수치 대조: 두 종 p∈{1/2,1/4} n=4..64 상대오차 2.40e-15·n-퍼짐 0.0; 결함 하나 n=4..64
+      상대오차 1.14e-14, 분자비 0.140625"
+    - "adversary c1 basepoint_inert_nonsimple_reference: Σ_0가 정확히 simple이 아니어도(tl gram Σ_0≠0,
+      최소 노름 2.37) (S5.4)가 그대로 성립(최대 상대오차 6.3e-15) — 이 전제는 명제 반례 아님, 카드 assumptions의
+      과잉 전제였음을 드러낸다(P1 해소: 원장에는 이 강한 형태를 기록)"
+    - "adversary c1 weighted_generalisation: n→W=Σw_v, 평균→가중평균으로 일반화해도 W≠0이면 성립(최대
+      상대오차 1.15e-13); W=0은 정의되지 않음 — 명제 반례 아님, 무가중 규약(13.2, W=n≠0)의 경계일 뿐"
+    - "adversary c1 pn_noninteger_drift: 따름정리 (a)에서 pn이 정수가 아니면 n_B=round(pn) 반올림으로 ε이
+      최대 13.4% 표류 — 명제 반례 아님, 따름정리 (a)의 숨은 가정(pn 정수)의 경계"
+    - "adversary c3 degenerate_block_Y_zero({Σ_0,−Σ_0} 반대 기준점): 항등식은 0=0으로 그대로 성립하지만
+      ε의 분모·분자가 모두 0이라 따름정리 (a)(b)는 정의되지 않음 — 명제 반례 아님, 분모 비퇴화 가정의 경계"
+    - "adversary c2 identity_lorentzian/identity_mixed_signature/identity_reversed_orientation_cells:
+      Lorentzian(허수 simplicity 상수 gram=2i I)·혼합 signature·배향이 반대인 cell(polar alignment
+      거부율 1.0) 모두에서 (S5.4)가 그대로 성립하거나 정렬 규약 밖으로 자연히 제외됨(최대 상대오차 2.7e-15)"
+    - "adversary c1 random_sample_20: seed 20260902, 40개 무작위 구성(n=4..30, δ 무작위, aligned/misaligned)
+      최대 상대오차 5.33e-12(δ가 작을수록 tl gram 자체가 δ² 스케일이라 뜨는 조건수 한계, S8.2)"
+    - "card-check(F-02) PASS: kill 4, predicts 8, ladder 7단; adversary c4 card_and_premises가 카드의
+      formula·kill 4건·사다리 7단 claim이 원장과 문자 그대로 일치함을 확인"
+  hidden_assumptions:
+    - "따름정리 (a)(b)는 분모 비퇴화(‖gram(Y)‖_F≠0)를 필요로 한다 — 반대 기준점처럼 Y=0이면 ε이 0/0"
+    - "따름정리 (a)의 n-무관성은 pn이 정수일 때 정확하다; 비정수 p에서는 반올림으로 최대 13.4% 표류한다"
+    - "positive branch/polar alignment 수렴: 배향이 반대이거나 정렬이 거부되는 cell은 13.2 규약 밖으로
+      제외된다(adversary c2, 거부율 1.0인 사례로 확인) — 정리 자체가 이를 배제하는 것이 아니라 규약이 배제한다"
+    - "카드 P2: check_modes.py 실행 규약(δ=0.005)에서는 ‖tl gram Y‖를 자기 자신으로 정규화한 상대오차가
+      1.56e-11로 TOL_IDENT(1e-12)를 넘는다(adversary c1 conditioning_vs_delta) — ‖gram Y‖ 정규화면
+      ≤4e-16. 이 항등식(attempt-03, δ=0.3/0.05)에는 영향 없으나 3단 커널 법칙(δ=0.005 regime) attempt는
+      정규화를 바꿔 시작해야 한다"
+sourcer:
+  prior_art:
+    - ref: "Freidel–Speziale 2010 twisted geometries; Livine–Speziale 2007 coherent intertwiners"
+      relation: unrelated
+      note: "shape mismatch(twisted vs Regge)의 국소 기하만 다루며, cell 단위 tl gram의 1차항이 정확히
+        상쇄되는 평행축형 블록 항등식은 다루지 않는다"
+    - ref: "Plücker/Gram 이차 형식 문헌 (simplicity constraint의 대수적 정식화)"
+      relation: unrelated
+      note: "Plücker 관계·Gram 행렬의 표준 대수는 개별 bivector의 simplicity 판정이며, 정확 simple cell의
+        합에 대한 중심화(König–Huygens) 항등식·그 defect 희석 (n−1)/n² 따름정리는 없다"
+  overall: novel_lemma
+  ce_specific_confirmed: "정확 simple cell의 합이 만족하는 premise-free 평행축 항등식과 그로부터 정확히
+    나오는 두 따름정리(두 종 n-무관성, defect (n-1)/n² 희석)를 문헌에서 찾지 못했다 — 2단은 인용으로
+    닫히지 않고(사다리 1단과 대비) 이 attempt의 자체 유도로 닫힌다. 순수 대수 부분(평행축/König–Huygens
+    항등식 자체)은 임의 대칭 쌍선형 형식에 대해 교과서적이라는 점은 정직하게 기록한다(재발견 의심,
+    rediscovery_suspect) — 새로운 것은 정확 simple cell(12.4 tetrad audit)에 대입해 Plebanski simplicity
+    잔차의 중심화 구조를 얻는 물리적 적용이다."
+assumptions:
+  - "cell simplicity: tl gram(X_v)=0 (모든 v=1..n) — (S5.4) 항등식의 유일한 전제(S8.1); Σ_0의 simplicity·δ
+    크기·signature·라벨 분포·polar 정렬 순서에는 의존하지 않는다(adversary c1 basepoint_inert 확인, P1
+    전제 팽창 해소: 원장에는 이 premise-free 강한 형태를 기록한다)"
+  - "따름정리 (a)(b)는 분모 비퇴화(‖gram(Y)‖_F≠0)를 필요로 한다"
+  - "따름정리 (a)는 label 값이 정확히 두 개 {0,Δ}이고 pn이 정수일 때 정확하다(비정수 p는 반올림 표류 경계,
+    hidden_assumptions 참조)"
+  - "따름정리 (b)는 결함 cell이 정확히 1개일 때다"
+  - "카드 P1(문서 내부 표기 불일치, 이번 attempt 중 해소됨): adversary 감사 시점에는 caterpillar 정정이
+    카드 scope 절 1문장에만 반영되고 formula_latex·3단 claim 본문·'죽는 조건' 절·questions.yaml 3단 claim
+    사본 4곳이 옛 표기였으나, 오케스트레이터가 병렬 지시한 prover 수정이 이 항목 기록 시점에 완료되어
+    5곳(formula_latex·scope·ladder[2].claim·본문·죽는 조건) 모두 'Cayley·chain·caterpillar 포함,
+    star-of-chains·balanced binary 제외'로 일치함을 확인했다(card-check 재실행 PASS, 방향은 강화라 애초
+    P0은 아니었다)"
+open_questions_spawned: []
+next_action: "attempt 4는 사다리 3단(커널 법칙 보조정리: 가우스 등방 label·traceless 2차 평균 0·O(δ⁴)
+  상계)을 promote 또는 continue 시도한다. 카드 caterpillar 표기 통일(병렬 지시)은 이미 완료·확인됐으므로
+  시작 전 남은 처리는 hidden_assumptions의 정규화 문제뿐이다: ‖tl gram Y‖ 자기정규화는 δ=0.005에서 상대오차
+  1.56e-11로 TOL_IDENT(1e-12)를 넘는다(adversary c1 conditioning_vs_delta) — 3단·6단 실행 전에 ‖gram Y‖
+  정규화로 바꾸거나 TOL을 명시적으로 재사전등록해야 한다. 대안으로 사용자가 '검증'을 먼저 지시하면
+  오케스트레이터 판단 아래 사다리 6단(check_modes.py --mode her|mix|iid, K1·K2·K5 사전등록 수치시험)을
+  먼저 실행할 수 있다 — 이 경우도 3단이 아직 열려 있으므로 6단 결과는 사후 정당화가 아니라 사전등록 값
+  재확인으로만 쓴다. 부차: (S8.2) 수치 인용 행 오기·verify[7] 산술 동어반복·산문의 $$ 블록 사용은 문서
+  정리 과제로 남긴다(결과에 영향 없음, P2)."

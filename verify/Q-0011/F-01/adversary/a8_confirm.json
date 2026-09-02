@@ -1,0 +1,31 @@
+{
+  "n": 4051399,
+  "spine_len": 912,
+  "construction": "root -> spine of m vertices with the listed subtree sizes; every size drop is hung as leaves at that spine vertex (a caterpillar with a power-law size profile)",
+  "float_spine_formula": {
+    "D": 11549206857804.6,
+    "A": 11549194284563.127,
+    "B": 12573241.473374182,
+    "At": 46713938230587.47,
+    "c": 0.24723256687962955
+  },
+  "exact_rational_c": 0.24723256687962955,
+  "exact_rational_c_str": "47391690636612764502312961/191688705233103130745005020",
+  "exact_minus_float": 0.0,
+  "violates_lower_bound_0.25": true,
+  "margin_below_quarter": 0.0027674331203704507,
+  "parent_len": 4051399,
+  "adversary_O(n)_on_parent_array": {
+    "c": 0.2472325682864894,
+    "D": 11549206923524.566,
+    "At": 46713938230587.48
+  },
+  "card_tree_stats": {
+    "c": 0.24723256661494192,
+    "D": 11549206845440.0,
+    "n2_mu2_eff": 46713938230587.48,
+    "max_depth": 913.0
+  },
+  "card_c_outside_window": true,
+  "seconds": 12.20497465133667
+}

@@ -1,0 +1,60 @@
+{
+  "P2_c4_sharpness": {
+    "card_says": "c4 tested to +-5.5%",
+    "rho": 1.9884259259259258,
+    "half_width": 0.1098,
+    "half_width_over_rho": 0.05521955762514552,
+    "CORRECT_half_width_over_(rho-1)": 0.11108571428571427,
+    "c4_window": [
+      0.014815238095238097,
+      0.018518095238095236
+    ]
+  },
+  "P5_kernel_alt": {
+    "rho_gen": 1.4562203280363606,
+    "rho_ker": 1.198540259884228,
+    "sigma_gen_minus_ker": 6.6860422457740665,
+    "card_says_6.7_sigma": 6.7,
+    "sigma_ker_below_window_low": 2.68447691011344,
+    "card_says_2.7": 2.7
+  },
+  "P9_kernel_alt": {
+    "gen": 0.46156248644428055,
+    "ker": 0.20086508728334088,
+    "sigma_ker_below_window_low": 2.3522152221408166,
+    "card_says_2.4": 2.4
+  },
+  "truncation_bias_share": {
+    "card_says": "1.4% is 9% of the P5 half-width 0.1542",
+    "relative_bias": 0.013922,
+    "half_width": 0.1542,
+    "naive_relative_over_halfwidth": 0.09028534370946822,
+    "CORRECT_absolute_shift": 0.02027349940692221,
+    "CORRECT_share_of_halfwidth": 0.1314753528334774,
+    "shifted_centre": 1.4764938274432828,
+    "sigma_from_upper_edge": 3.4744725624472554
+  },
+  "misc": {
+    "S_gen_over_S_ker_cat6": 2.2978731281121005,
+    "card_says_2.30": 2.3,
+    "a_cat6": 0.00747902177108788,
+    "a_cat6_kernel_alt": 0.003254758358757838,
+    "card_says_0.003255": 0.003255,
+    "P1_gauss_sigma": 14.510779436152585,
+    "card_says_14sigma": 14,
+    "b4_cayley_recover_pct": 1.2790382757366547,
+    "F02_gamma_shift_over_K5_width": 0.002691065662002153,
+    "dof_spike_weight": 0.9961343242027713
+  },
+  "K3_windows_that_contain_the_null": {
+    "rho_cat6_uniform": [
+      0.9733,
+      1.0088
+    ],
+    "rho_cat6_rademacher": [
+      0.9417,
+      1.0284
+    ],
+    "note": "these two cannot discriminate rho = 1; the card calls them linearity controls"
+  }
+}

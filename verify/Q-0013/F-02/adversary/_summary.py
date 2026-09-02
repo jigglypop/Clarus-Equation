@@ -1,0 +1,67 @@
+import json
+from pathlib import Path
+R = Path(r"C:/dev/ce/Clarus-Equation/verify/Q-0013/F-02/adversary")
+S = {
+ "audit": "adversary card audit, Q-0013 F-02, 2026-09-03 (opus, independent reconstruction)",
+ "independent_map": {
+   "L_tilde": "central difference + Richardson on the real pipeline; vs card analytic 2.2e-13",
+   "dim_kernel_recomputed": 131, "map_rank": 5, "sym2_dim": 136,
+   "card_5_conditions_define_same_subspace": True, "principal_angle_min_cos": 0.9999999999999989,
+   "rule_vs_direct_max_relerr": 3.79e-13,
+   "exact_rational": {"card_rule_failures": 0, "rank": 5, "dim_ker": 131,
+                      "T": 60, "T_DD": 8, "T_OO": 28, "2T_DO": 24,
+                      "eps_star2_I16": "10", "eps_star2_I4": "4/3", "eps_star2_I12": "14/3",
+                      "nonadditivity": "4", "nonzero_pairs": 108,
+                      "coefficient_denominators": [1, 2, 4]},
+   "spin2_multiplicity_in_Sym2_R16": 12,
+   "intertwiner_dim": 12,
+   "note": "kernel is codim 5 because tl G is ONE equivariant map; 'no spin-2 component' would be codim 60"
+ },
+ "geometry_mc_offgrid": {
+   "seed": 20260903, "delta": 0.005, "sizes": [6, 12, 24, 9, 33],
+   "random_full_rank_kernel_sigma_ratio_to_master": [1.001, 0.977, 0.990, 0.994, 0.988, 1.007, 0.975, 1.006, 1.000],
+   "generic_sigma_ratio_to_master": [1.012, 0.994, 1.006, 1.002, 1.011, 0.966],
+   "mc_se_rel": 0.041
+ },
+ "direct_floor_probe_n33_400tr": {
+   "univ_o_T_11_3": {"pred": 0.11428, "obs": 0.11276, "se": 0.00694},
+   "univ_d_T_1_6": {"pred": 0.11428, "obs": 0.11344, "se": 0.00139},
+   "kernel_sigma_b": {"pred": 0.0, "obs": 0.00328, "se": 0.00549},
+   "ce_i": {"pred": 0.11428, "obs": 0.11276, "se": 0.00141},
+   "ce_ii": {"pred": 0.22856, "obs": 0.22830, "se": 0.00266},
+   "direction_cosine_vs_tlG": 0.9999999,
+   "verdict": "norm universality (K3) and the kernel floor (K1) confirmed ahead of the prereg run; F-01 closed form excluded"
+ },
+ "delta4_counterexample": {
+   "sigma": "(e01-e10)/sqrt2 rank-1 (F=0 and T=0)",
+   "mean_matrix_over_delta4": {"n9": [0.05173, 0.05169, 0.05146, 0.05066, 0.04770],
+                               "n33": [0.05871, 0.05866, 0.05840, 0.05748, 0.05412],
+                               "deltas": [0.005, 0.02, 0.05, 0.1, 0.2]},
+   "implication": "exact-in-delta iff-box is false; the equivalence is O(delta^2). At delta=0.005 the residual floor is 1.3e-6/delta^2 = 1.7e-5 of the K1 window half width -> kills unaffected"
+ },
+ "step2_exact": {"closed_form_gram_vs_pipeline_max_rel_diff": 0.0,
+                 "zero_modes_machine_zero_up_to_delta": 3.0,
+                 "ggg00_violation_identity_err": 0.0,
+                 "implication": "K4 is an algebraic identity, zero refutation risk"},
+ "truncation_bias_closed_form_delta0p005": {"diag4": [-0.0046, -0.0048, -0.0028, 0.0006, -0.0021],
+                                            "ce_ii": [-0.0156, 0.0025, 0.0037, -0.0019, 0.0009],
+                                            "n": [3, 5, 9, 33, 65], "mc_se": 0.0045,
+                                            "note": "the 1% systematic allowance is adequate; the correction scales as delta^2 not delta"},
+ "prereg": {"timeline": {"structure_constants": "23:50:45", "script_PRED_WINDOW": "23:52:56",
+                         "card": "23:57:34", "hook": "23:57:53", "smoke": "23:58:12"},
+            "PRED_vs_exact_maxdiff": 4.2e-9, "window_sigma_equivalent": [4.0, 5.23],
+            "intact": True},
+ "kill_executability": {"kernel": True, "diag": True, "univ": True, "zero": True, "axis": True,
+                        "zero_delta0.3_fixed_by_MIN_DET": True, "zero_delta1.0_resampled": 229,
+                        "p_det_below_min_det_delta0.1": 0.0},
+ "identities": {"e01_vs_e03_per_realization": 2.76e-16, "e01_vs_e02": 2.54e-16},
+ "subspaces": {"dim_kernel": 131, "dim_w_balanced": 134, "dim_intersection": 129,
+               "neither_contains_the_other": True},
+ "smoke_prose": {"card_says": "0.9~1.14", "actual_range": [0.897, 2.079],
+                 "outside": {"univ_d_n8": 0.897, "cross": 1.161, "floor_hat": 2.079},
+                 "cause": "floor_hat hard-codes the (4,64) constants, so the smoke value is not a valid test of it"},
+ "recovers_executed": {"n1_max": 1.03e-15, "H0_identical_labels_max": 1.10e-15,
+                       "delta_to_zero_plateau": 10.417, "iso_offgrid_ratio": [0.969, 0.982, 1.052]}
+}
+(R / "SUMMARY.json").write_text(json.dumps(S, ensure_ascii=False, indent=2), encoding="utf-8")
+print("written", (R / "SUMMARY.json").stat().st_size)

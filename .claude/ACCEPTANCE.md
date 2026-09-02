@@ -93,3 +93,24 @@
 | `python.cmd links --json` | 깨진 링크 0, 앵커 0, 고아 22(Phase 2 보류) |
 | `goal-reminder.cmd`, `session-start.cmd`, `scripts\research-loop.cmd --dry-run` | 정상 출력 |
 | `rm -rf ex-claude` | settings.json deny 규칙이 차단 → `rmdir /s /q`로 삭제 (게이트 동작 확인) |
+
+## 8. v3 추측 우선 (2026-09-02, 사용자 지시: "재발견 말고 새 정리·공리 발견 위주, 예측식·예산식을 먼저 만들고 스텝으로 증명")
+
+진단(실측): Q-0002·Q-0005·Q-0006이 연속으로 문헌 재발견에 수렴한 원인 5가지 — (1) prover 후보 선택 기준 "반증이 가장 싼 것" (2) pivot 4단계 전부 축소 (3) closure-gate §2에서 공리는 숨은 가정의 고백으로만 생기고 "축소 후보" (4) sourcer identical → 질문 통째 park (5) 진전 정의(닫힘·기각·축소)에 새 식·예측 없음. 부수 결함: `.claude/hooks/python.cmd`·`check-large-data.cmd`가 작업 트리에서 삭제돼 훅 6종이 침묵 실패(복구함).
+
+| 변경 | 내용 |
+|---|---|
+| `lib/ledger.py` | verdict `adopt`·`refute`, pivot `conjecture`·`generalize`(확장) + 축소 4, 질문 `kind`·`card`·`ladder`·`rediscoveries`·`force_pivot`, 항목 `ladder_step`·`ladder_cited`·`card`·`kill_triggered`, `card-check`·`adopt-card`·`ladder` 서브커맨드. adopt는 sourcer 실행 필수·identical/special_case 거부. 재발견 2회 또는 축소 4단계 소진 → `force_pivot: conjecture` 자동 |
+| `lib/verify_on_save.py`·`verify_derivation.py` | `derivations/**/*.formula.md`도 검증, 산출물 `verify/<Q>/F-NN/` |
+| 스킬 | `conjecture-first` 신설(+`references/card-example.md`), research-loop·pivot-playbook·evidence-ladder·ledger-format 재작성, closure-gate·derivation-style 보강 |
+| 에이전트·커맨드 | prover(모드: 추측), adversary(카드 감사 6종), judge(adopt/refute·사다리), sourcer(신규성) 갱신, `/conjecture` 신설, `/attempt`·`/status` 갱신 |
+| `.codex` | closure_budget §1 진전 종류 "예측"·§2 개설 조건, goal_pursuit §3, ce-research 1-1 식 고정, prompts/ce-research, AGENTS.md, README, ce-closure-gate, goal_reminder.py `[추측]` 줄, repository_harness REQUIRED_PATHS(+ledger.py, conjecture-first) |
+| paper·workspace | 진전 원장 §2 "현재 추측" 행·§7 하네스 행·§8 규칙 6, `_workspace/20260902-harness-추측우선_전환.md`(첫 카드 후보 주차장) |
+
+| 검증 | 결과 |
+|---|---|
+| `python.cmd pytest tests\test_harness.py -q` | 19 passed (v2 14 + v3 5: 카드 계약·adopt 신규성 거부·사다리 닫힘/resolved·재발견 2회 강제·축소 소진 시 확장·카드 verify 훅) |
+| `python.cmd harness` | PASS (지침 예산 7813/8192) |
+| 훅 4종 수동 호출 | goal-reminder `[추측]` 줄 출력, session-start 카드 면제 줄, Stop 훅 exit 0, 예시 카드 card-check PASS·symbolic pass |
+| `python.cmd links` | 깨진 링크 64·앵커 82 — 전부 HEAD(6c6f02a0)에서 삭제된 `상수_우주론_원장.md`·`참조_차원_분류_원장.md`·`37_QFT_M0_M2_…md`를 가리키는 기존 결함(진전 원장 §7 "3파일 삭제 상태" 사용자 결정 대기). 이 세션이 추가한 링크는 깨진 것 없음 |
+| `python.cmd pytest tests\test_repository_harness.py tests\test_canonical_document_policy.py -q` | 12 passed, 3 failed — `test_ledger_and_paper_writers_have_disjoint_ownership`(ce-paper-write 문구), `test_all_paper_markdown_uses_renderable_math_delimiters_outside_code`(12·13장·DE 원장), `test_all_relative_markdown_links_resolve`(위 삭제 파일). 세 건 모두 HEAD(6c6f02a0) 분리 worktree에서 동일하게 실패함을 확인 — 이 세션 이전의 결함이며 이 세션은 해당 파일을 건드리지 않았다 |

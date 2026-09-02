@@ -1,0 +1,34 @@
+[
+  {
+    "n": 1000000,
+    "m": 2000,
+    "p": 128.0,
+    "c_from_card_tree_stats": 0.36251528113921183,
+    "outside_window": false,
+    "sec": 1.9
+  },
+  {
+    "n": 1000000,
+    "m": 5000,
+    "p": 128.0,
+    "c_from_card_tree_stats": 0.32787973086436695,
+    "outside_window": false,
+    "sec": 1.8
+  },
+  {
+    "n": 5000000,
+    "m": 5000,
+    "p": 128.0,
+    "c_from_card_tree_stats": 0.4112124764699437,
+    "outside_window": false,
+    "sec": 9.4
+  },
+  {
+    "n": 5000000,
+    "m": 12000,
+    "p": 128.0,
+    "c_from_card_tree_stats": 0.35020394773656455,
+    "outside_window": false,
+    "sec": 9.4
+  }
+]

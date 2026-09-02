@@ -1,0 +1,149 @@
+{
+  "theta_is_a_function_of_eps": {
+    "max_rel_err_over_200_sampled_blocks": 4.15487040876787e-16,
+    "large_delta_probe": [
+      {
+        "delta": 0.05,
+        "eps": 0.00285091279839047,
+        "theta": 0.002468972940941076,
+        "pred": 0.0024689729409410758,
+        "rel_err": 1.7565233778094774e-16
+      },
+      {
+        "delta": 0.05,
+        "eps": 0.0020463716059483366,
+        "theta": 0.0017722135070315083,
+        "pred": 0.001772213507031508,
+        "rel_err": 1.223557058090099e-16
+      },
+      {
+        "delta": 0.05,
+        "eps": 0.004365212822181172,
+        "theta": 0.0037804212152260253,
+        "pred": 0.0037804212152260253,
+        "rel_err": 0.0
+      },
+      {
+        "delta": 0.05,
+        "eps": 0.0023274165863898496,
+        "theta": 0.0020156073481497013,
+        "pred": 0.002015607348149701,
+        "rel_err": 2.1516138517371188e-16
+      },
+      {
+        "delta": 0.05,
+        "eps": 0.0015209238667512777,
+        "theta": 0.0013171602292632635,
+        "pred": 0.0013171602292632635,
+        "rel_err": 0.0
+      },
+      {
+        "delta": 0.05,
+        "eps": 0.0023298361572522143,
+        "theta": 0.0020177027750264242,
+        "pred": 0.0020177027750264242,
+        "rel_err": 0.0
+      },
+      {
+        "delta": 0.05,
+        "eps": 0.004919151896804821,
+        "theta": 0.0042601620518378375,
+        "pred": 0.0042601620518378375,
+        "rel_err": 0.0
+      },
+      {
+        "delta": 0.05,
+        "eps": 0.002611485095191975,
+        "theta": 0.002261620146013876,
+        "pred": 0.0022616201460138765,
+        "rel_err": 1.917567234969001e-16
+      }
+    ],
+    "large_delta_max_rel_err": 2.4250595939543244e-16,
+    "eps_range_large_delta": [
+      0.0015209238667512777,
+      0.27303533039712075
+    ],
+    "note": "check_theta.eps_and_theta computes BOTH numbers from the same 3x3 gram: eps = ||tlG||/||G||, theta = 1.5||tlG||/trG.  theta is a fixed deterministic function of eps.  No holonomy, connection or parallel transport is evaluated in modes blk/face/scale.  Therefore K1,K2,K5,K7 and P1,P4,P5,P6 cannot discriminate the card's power-1 law from the power-1/2 alternative: the script hard-codes power 1 at line `theta = 1.5 * tl_norm / trace(gram)`."
+  },
+  "power_half_counterfactual": {
+    "slope_eps": 0.4984134256403234,
+    "slope_theta_card": 0.49841343983684155,
+    "slope_sqrt_eps": 0.2492067128201617,
+    "note": "the '1/2 law' baseline 0.2651 is exactly half the eps slope BY ARITHMETIC; it is a different DECLARED mapping, not a state of the world the run can select between."
+  },
+  "recovers_executed": {
+    "R0_common_orbit": {
+      "identical_cells_zero_label": {
+        "eps": 0.0,
+        "theta": 0.0
+      },
+      "identical_cells_same_random_label": {
+        "eps": 3.6626784329228227e-16,
+        "theta": 3.171972568804543e-16
+      },
+      "card_expects": 0.0,
+      "executed": true
+    },
+    "R1_coherent_two_species_p=1/2": {
+      "by_n": {
+        "8": {
+          "eps": 1.5057717121949302e-05,
+          "theta": 1.3040365552086352e-05,
+          "theta_over_eps": 0.8660254038826177
+        },
+        "16": {
+          "eps": 1.505771712199034e-05,
+          "theta": 1.3040365552121893e-05,
+          "theta_over_eps": 0.8660254038826177
+        },
+        "32": {
+          "eps": 1.5057717122110782e-05,
+          "theta": 1.3040365552226199e-05,
+          "theta_over_eps": 0.8660254038826177
+        },
+        "64": {
+          "eps": 1.5057717120586915e-05,
+          "theta": 1.3040365550906489e-05,
+          "theta_over_eps": 0.8660254038826176
+        }
+      },
+      "theta_ratio_64_over_8": 0.9999999999095223,
+      "card_expects_n_independent": 1.0,
+      "executed": true
+    },
+    "R4_tetrad_rescale": {
+      "by_alpha": {
+        "0.4": {
+          "eps": 3.412926419613702e-05,
+          "theta": 2.9556809823539336e-05,
+          "theta_over_eps": 0.8660254042888149
+        },
+        "1.0": {
+          "eps": 3.412926419605838e-05,
+          "theta": 2.9556809823471224e-05,
+          "theta_over_eps": 0.8660254042888146
+        },
+        "2.5": {
+          "eps": 3.412926419613955e-05,
+          "theta": 2.955680982354152e-05,
+          "theta_over_eps": 0.8660254042888146
+        },
+        "40.0": {
+          "eps": 3.412926419613955e-05,
+          "theta": 2.955680982354152e-05,
+          "theta_over_eps": 0.8660254042888146
+        }
+      },
+      "ratio_2p5_over_1": 1.0,
+      "executed": true
+    },
+    "R3_flat_limit_phi_kappa_over_kappa": {
+      "1.0": 0.4290007391955229,
+      "0.01": 0.49916812232656466,
+      "0.0001": 0.49999166681249735,
+      "1e-06": 0.4999999166666813
+    },
+    "R3_note": "phi_kappa is the ISOTROPIC channel, which scope[1] declares the card does NOT predict.  A limit of a quantity outside the card's own scope cannot constrain it."
+  }
+}

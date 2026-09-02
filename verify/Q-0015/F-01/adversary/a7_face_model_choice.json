@@ -1,0 +1,61 @@
+{
+  "sign_convention_sensitivity": {
+    "card: (+,+,+) unsigned sum": {
+      "D_chain": 1.1111111111111112,
+      "D_iid": 2.0000000000000004,
+      "rho_face": 0.7453559924999298
+    },
+    "oriented boundary: (+,+,-)": {
+      "D_chain": 25.111111111111114,
+      "D_iid": 2.0000000000000004,
+      "rho_face": 3.543381937578216
+    },
+    "(+,-,+)": {
+      "D_chain": 22.44444444444445,
+      "D_iid": 2.0000000000000004,
+      "rho_face": 3.3499585403736303
+    },
+    "(-,+,+)": {
+      "D_chain": 12.66666666666667,
+      "D_iid": 2.0000000000000004,
+      "rho_face": 2.516611478423583
+    }
+  },
+  "sign_note": "H_3 centering is only the right projector when all three cells enter with the same sign (the O(delta^0) reference term is n*Sigma_0 with n=3).  With the oriented boundary the reference term is 1*Sigma_0 and the whole 3-cell derivation would have to be redone.  The card never states which it means.",
+  "sign_convention_monte_carlo_1024": {
+    "(+,+,+)": {
+      "theta_her": 2.4120730396241623e-05,
+      "theta_iid": 3.294419269483096e-05,
+      "rho": 0.7321694181331764
+    },
+    "(+,+,-)": {
+      "theta_her": 0.00011427357438670443,
+      "theta_iid": 3.243348040733067e-05,
+      "rho": 3.5233213627260342
+    }
+  },
+  "sign_mc_note": "flipping the sign of a LABEL is not the same as flipping the sign of the CELL in the block sum; this row only shows the label-symmetry of the Gaussian model. The real ambiguity is which bivectors are added, and 12.1 says the boundary is oriented while the card adds all three with +.",
+  "attachment_variants": {
+    "chain u<-m<-v (12.1)": {
+      "D": 1.1111111111111112,
+      "rho_face_vs_iid": 0.7453559924999299,
+      "inside_K4_window_[0.685,0.806]": true
+    },
+    "siblings m,v of u": {
+      "D": 1.1111111111111116,
+      "rho_face_vs_iid": 0.74535599249993,
+      "inside_K4_window_[0.685,0.806]": true
+    },
+    "cousins (different branches)": {
+      "D": 4.444444444444445,
+      "rho_face_vs_iid": 1.4907119849998598,
+      "inside_K4_window_[0.685,0.806]": false
+    },
+    "u,m siblings; v child of m": {
+      "D": 2.6666666666666674,
+      "rho_face_vs_iid": 1.1547005383792517,
+      "inside_K4_window_[0.685,0.806]": false
+    }
+  },
+  "attachment_note": "10/9 is NOT a consequence of 3-chain-ness: the sibling face gives 10/9 too. It IS destroyed by the cousin/merge variants of 11.9 item 1 (rho = 1.49, outside K4).  So K4 tests the 12.1 attachment rule, not the card's curvature-angle mapping."
+}

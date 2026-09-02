@@ -1,0 +1,97 @@
+id: E-20260902-015
+question: Q-0008
+attempt: 4
+timestamp: 2026-09-02T23:20:00+09:00
+claim: "사다리 6단(수치시험 K1·K2·K5, K4 일관성 동반)을 카드 F-02 사전등록 그대로 실행해 네 판정
+  통계 모두 창 안임을 확인하고 6단을 promote로 닫는다: her_slope 0.5576±0.0187(창 [0.43,0.63],
+  사전등록 0.5302, 위 경계까지 3.9σ), her_ratio_128 34.242±1.684(창 [26.0,39.1], 사전등록
+  32.554, 위 경계까지 2.9σ), mix_X_32 0.8194±0.088(창 [0.49,0.99], 사전등록 0.7406, 위
+  경계까지 1.9σ), iid_slope −0.4800±0.009(창 [−0.58,−0.38], 사전등록 −0.4783, 위 경계까지
+  10.9σ)이며 K1·K2·K5 kill 발동 없음. 동반 일관성 검사 K4도 창 안(defect_ratio_64_over_8
+  0.14307∈[0.124,0.158], defect_slope −0.8982∈[−0.96,−0.86])이다. adversary(opus) 독립
+  재실행이 세 모드(her/mix/iid) 모두 비트 단위로 일치하고 다른 seed 5개(her/mix/iid는
+  100003·200003, mix만 추가로 300007·400009·500011)도 전부 창 안이며, K2 6-seed 앙상블 평균
+  0.7362±0.0607(사전등록 대비 z=−0.18)로 관측이 판정 방향으로 편향돼 있지 않음을 확인했다
+  (status pass, P0 없음, 반례 0건, promote 권고). her_slope의 +1.5σ 편차는 라벨 잡음(분산의
+  89%)과 3-seed 평균 0.5400±0.0164(z=+1.04)로 대부분 설명되고 O(δ⁴) 오염은 0.13~0.17%로
+  직접 배제됐다(단일 ε★ 적합 χ²=20.14/14, p≈0.13). 이 promote는 사다리 완주가 아니다 —
+  3·4·5단이 여전히 open이므로 6단 통과는 사전등록 예측의 미기각일 뿐, '커널 법칙'(3단)
+  자체는 아직 증명되지 않았고 조건부 정리가 아니다."
+level: L3
+verdict: promote
+pivot_step: null
+ladder_step: 6
+ladder_cited: null
+card: derivations/Q-0008/F-02.formula.md
+kill_triggered: null
+derivation: derivations/Q-0008/attempt-04.derivation.md
+verification:
+  symbolic: pass
+  numeric: pass
+  lean: skipped
+  artifacts: verify/Q-0008/attempt-04/
+adversary:
+  model_note: "adversary(opus) 실행 감사, 산출물 verify/Q-0008/attempt-04/adversary/. status
+    pass, P0 없음, 반례 0건, promote 권고."
+  counterexamples: []
+  survived_checks:
+    - "비트 단위 재현: 같은 seed(20260902)로 her·mix·iid 세 모드를 재구동한 결과가 모두
+      stdout_log=snapshot=shared_now=attempt_result 정확히 동일(repro_bit_exact 3/3)"
+    - "다른 seed 5개 모두 창 안: her/mix/iid는 seed 100003·200003, mix만 추가로 300007·
+      400009·500011 — 전부 in_window=true"
+    - "K2 6-seed 앙상블 평균 0.7362±0.0607, 사전등록 대비 z=−0.18; 창 상단 초과 확률을
+      사전등록값 중심으로 재계산하면 ≈2e−5(prover가 보고한 2.6%는 부트스트랩 SE 중심의
+      보수적 과대 추정)"
+    - "her_slope +1.5σ 원인 분해: 라벨 잡음이 분산의 89%를 설명, O(δ⁴) 오염은 상한 0.13~
+      0.17%로 직접 배제, 3-seed 평균 0.5400±0.0164(z=+1.04)"
+    - "단일 ε★로 her·iid 두 분기를 적합한 χ²=20.14/14(p≈0.13); her-only vs iid-only
+      분리 적합 z=0.67로 두 분기 간 유의한 불일치 없음"
+    - "K4 강등(일관성 검사, kill 아님) 독립 확인: 독립 Δ 500개 표본에서 32.2% 오발동률로
+      카드 rev.2의 '사전등록 훼손' 판단과 정합"
+    - "사전등록 무결성 3중 대조: sha256 3/3(check_modes.py·card·assemble_result.py), 6개
+      창이 모두 값±카드 불확실도 형태로 사전등록과 일치, 시간 사슬 21:54(스크립트)<22:11
+      (adopt)<22:16(진전 원장)<23:07(카드 rev.2)<23:13(실행)이 정합"
+    - "min_det_audit: her·mix·iid 세 모드 합계 288,768 call·1,054,336 cell 중 재추출
+      (nan_rejections) 0건, 관측 최소 det 0.804~0.953(MIN_DET=0.05보다 훨씬 크다)"
+    - "카드 상수 대조: constants_match_card=true(SEED·DELTA·MIN_DET·SIZES·TRIALS·MIX_N·
+      MIX_TRIALS·DEFECT_GRID·DEFECT_PERTURBATION·DEFECT_MIN_DET 10항목 전부 일치); 실행
+      전후 카드·스크립트·창·seed 불변, 기각 재추출 0회"
+    - "훅 25/25 pass(symbolic·numeric 항목별 pass, verify[0]–[24])"
+  hidden_assumptions:
+    - "ε★ 단일 상수 가정: her·iid 두 분기를 하나의 ε★로 적합한 χ²=20.14/14(p≈0.13)로 통계적
+      으로 배제되지는 않으나 유의성이 강하지 않다 — 3단에서 명시적으로 다뤄야 할 가정이다"
+    - "O(δ⁴) 절단 상한 0.13~0.17%(δ=0.005 한 점에서 her_slope 편차 분해로 추정한 값) — 3단
+      커널 법칙 유도 시 δ 다점 시험으로 명시 상계를 채워야 할 숫자다"
+    - "MIN_DET=0.05 재추출 조건은 이번 실행 구간(관측 최소 det 0.804~0.953)에서 한 번도
+      발동하지 않아 사실상 불활성이다"
+    - "감사 추적이 파일 mtime 순서(스크립트 21:54<adopt 22:11<진전 원장 22:16<카드 rev.2
+      23:07<실행 23:13)에만 의존한다 — git 커밋이 없어 사전등록이 실행보다 먼저였다는
+      증거가 시스템 시각뿐이다"
+    - "P1(1): check_modes.py의 `rejections` 필드가 죽은 상수다(실측 기각은 별도 min_det_audit
+      로 집계되며 0/1,054,336 cell, 관측 최소 det 0.804) — '기각 0회' 주장 자체는 참이나
+      근거 필드가 스크립트 안에서 정정돼야 한다(하네스 spot 후보)"
+    - "P1(2): her_slope의 n=8·16·32 점은 F-01 adversary가 이미 관측했다(E-20260902-007
+      P2로 기록) — 이 attempt의 증거 가중은 n=64·128에 있고 n=8·16·32를 새 증거로 다시
+      계상하지 않는다"
+    - "P2(참고): bootstrap SE가 독립 추정자보다 3~5% 작고(판정 자체는 불변), her 잔차는
+      두꺼운 꼬리(ESS 64~107)다; 본문 서술 두 곳(국소 기울기 추세·2.6% 초과확률 과대 추정)은
+      문서 정리 과제로 남긴다"
+sourcer: null
+assumptions:
+  - "실행 규약은 카드 F-02 K1·K2·K5(+K4) 문구 그대로: seed 20260902(her 비교열 iid는 seed
+    20260903), δ=0.005, MIN_DET=0.05, n∈{8,16,32,64,128} 256 trials/size, mix n=32 1024
+    trials, defect 격자{4,8,16,32,64} — 결과를 본 뒤 상수·창을 바꾸지 않았다"
+  - "이 attempt는 6단(K1·K2·K5, K4 일관성)만 실행·판정한다. 7단(K3 Q-spine)은 별도 attempt
+    범위이며, 공유 파일 verify/Q-0008/F-02/result.json에 그 블록이 병합돼 있어도 이 항목의
+    판정과는 무관하다"
+  - "P_micro 가우스 등방 κ⊗I_16·O(δ⁴) 절단(3단 scope 가정)은 이 attempt가 유도하지 않았다 —
+    6단 통과는 그 가정이 참이라는 조건 아래에서만 의미를 가지는 조건부 결과다"
+  - "표준오차(부트스트랩 B=2000)는 사전등록 항목이 아니라 이 attempt가 덧붙인 보고량이다;
+    창 통과 판정 자체는 점추정값의 창 포함 여부만으로 한다"
+open_questions_spawned: []
+next_action: "다음 attempt는 사다리 3단(커널 법칙 보조정리)을 유도한다: 등방성(internal SO(3),
+  16 기저방향 합 0)·Wick 전개·O(δ⁴) 절단 항의 명시 상계(이번 attempt가 추정한 0.13~0.17%를
+  δ 다점 시험으로 확정)를 유도하고, δ를 0.005 한 점이 아니라 3점(예: 0.02/0.01/0.005)으로
+  사전등록 시험한다. 3단이 닫히면 이미 promote된 6단(이 attempt)·7단이 조건부 정리로 격상될
+  수 있다. 부차: check_modes.py의 `rejections` 죽은 상수 정정(P1-1)은 하네스 spot 후보로
+  남긴다."

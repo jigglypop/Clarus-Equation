@@ -1,0 +1,195 @@
+id: E-20260902-009
+question: Q-0014
+attempt: 1
+timestamp: 2026-09-02T23:20:00+09:00
+claim: "F-01(예측식) N_render=2k, k:=첫 nonvanishing holonomy carrier의 cell 차수(정의상 k>=2),
+  CE 입력(12.1 Composition-Face) k=2 ⇒ (n_space,n_time)=(3,1), N_render=4를 predicts 7개(신규 4·
+  already_observed 3)·kill 4·사다리 7단으로 등록했다(card-check PASS, verify 18/18 pass, sourcer
+  overall=novel). prover가 사전등록 격자(seed 20260902, n∈{50,100,200}, 블록 깊이 b=1) 그대로 K1을
+  실행하자 하위조건 (b) unbounded_min_cycles=807(n=200; n=50/100은 211/208)이 발동했다(카드 kill
+  문구가 명시적으로 fine∪coarse 위에서라고 적었으므로 발동은 문구 그대로 정당, kill_fired: true).
+  adversary(opus)가 같은 seed·격자에서 독립 재현(211/208/807 정확 일치)하고 seed 200개 전수 스캔으로
+  0인 경우가 하나도 없음(44~274, zero_count=0)을 확인했다 — 구조적 이유는 coarse 변을 포함한 혼합
+  삼각형(CCC·CCF·CCFC·CFCFC·CFF·CFFC)에는 12.1 규칙이 face를 붙이지 않기 때문이며, 순수 fine
+  삼각형만은 세 크기 모두에서 항상 0개가 unbounded(0/0/0)로 남아 좁은 명제로 생존한다. 독립적으로
+  adversary는 사다리 2단(iii) 'fan에서 모든 독립 1-cycle이 2-cell로 bound ⇒ 3-cell 불필요'의 반례를
+  찾았다: K1 격자에서 실제 H1=9/38/63·H2(ker d2)=10/10/35이고, 정점 4개짜리 최소 반례(fine edge
+  {0-1,1-2,2-3,0-2,1-3}, coarse edge {0-2,0-3,1-3})의 face-식별 quotient가 정확히 사면체 경계 S^2를
+  이루는 명시 2-cycle(계수 (0,1,2)=1,(0,1,3)=-1,(0,2,3)=1,(1,2,3)=-1, 경계 L-infinity 오차 0)이라
+  3-cell이 필요하며, holonomy 정합(face-consistent, conv_II) 규약을 강제하면 이 최소 반례 위에서
+  flat_fraction_all=1.0이 되어 K1(e)도 함께 발동한다(k=3, N=6 분기가 살아난다는 뜻). 셋째로 content
+  감사(P0)는 N=2k가 'Hodge 중간차수 자기사상이 endomorphism ⇔ N=2k'라는 정의적 동치일 뿐이고 k=2 ⇒
+  N=4에는 카드 novelty 절이 스스로 '판정 대기'로 남긴 self-duality 전제('첫 carrier가 자기사상
+  차수여야 렌더링 차원을 정한다')가 별도로 필요함을 지적했다 — 그 전제 없이는 k=2가 N=5,6,7과도
+  형식적으로 양립한다(K4/verify[4]가 보이듯 N=6에서도 실수 self-duality가 존재해 Hodge 조건만으로는
+  N=6이 배제되지 않으므로 카드 자신도 이를 인정하고 K1의 k=2에 유일 근거를 둔다). 사전등록대로
+  기계적으로 판정 가능한 것은 kill (b)이므로 이를 refute의 근거로 기록하고, 2단 독립 반례·content
+  P0·holonomy 이중 정의·K2 유한 격자 window 이탈(1.9502 점근값 대비 실측 1.8989, [1.90,2.00] 밖)은
+  hidden_assumptions와 재개 조건으로 남긴다. verify 18개는 전부 카드 내부 항등식·자체 상수 재현이며
+  외부 관측·독립 데이터 시험은 0개다(dof 감사 P1: 자유 파라미터 1개(D_branch)가 핵심 세 정수 예측에는
+  전혀 관여하지 않아 실질적으로 데이터에 반응해 움직이는 숫자가 없다)."
+level: L2
+verdict: refute
+pivot_step: null
+ladder_step: null
+card: derivations/Q-0014/F-01.formula.md
+kill_triggered: "K1(b) unbounded_min_cycles=807 (씨앗 200개 전부 발동; 사전등록 격자 n∈{50,100,200}, seed 20260902)"
+derivation: derivations/Q-0014/F-01.formula.md
+verification:
+  symbolic: pass
+  numeric: pass
+  lean: skipped
+  artifacts: verify/Q-0014/F-01/
+adversary:
+  model_note: "Fable 5.1 API 안전장치 오탐으로 카드 감사가 중단되어 opus로 대체 실행됨(오케스트레이터
+    보고). status=fail, severity=P0, kill_fired_confirmed=true. 산출물
+    verify/Q-0014/F-01/adversary/{degree3_curvature,degree3_curvature_v2,holonomy_and_k2,
+    k2_robustness,kill_falsifiability,recheck_verify18,rerun_k1_homology,tetra_counterexample}.
+    {json,py}."
+  counterexamples:
+    - input: "K1(b) unbounded_min_cycles, 사전등록 격자(seed 20260902, n∈{50,100,200}) 독립 재현 +
+        seed 200개 전수 스캔(n=50 고정)"
+      expected: "prereg 값 0 (12.1 규칙 아래 최소 1-cycle은 전부 합성 face로 덮여야 함)"
+      observed: "n=50/100/200에서 211/208/807(원 실행과 정확 일치); 200개 seed 전부 0이 아님(최소 44,
+        최대 274, zero_count=0). unbounded 삼각형은 전부 CCC·CCF·CCFC·CFCFC·CFF·CFFC(coarse 변을 하나
+        이상 포함) 유형이고, 순수 fine 삼각형(pure_fine_total)은 세 크기 모두에서 unbounded=0(21/34/…
+        중 0개)"
+      note: "kill (b)는 카드 문구(fine∪coarse 위에서)대로 정당하게 발동한다; prover의 '순수 fine만
+        의도' 진단은 카드에 없는 사후 재해석이다"
+    - input: "사다리 2단(iii) 'fan에서 b_1=M=F이므로 모든 독립 1-cycle이 2-cell로 bound ⇒ 3-cell
+        불필요'를 K1 격자 전체 위상으로 확장 검증 + 최소 반례 구성"
+      expected: "임의 복합체에서 H_1=0(모든 1-cycle이 2-cell로 bound)이고 H_2(ker d2)=0(3-cell 불필요)"
+      observed: "K1 격자(n=50/100/200)에서 실제 H1=9/38/63, H2(ker d2)=10/10/35 — fan 국소 성질이
+        전역으로 확장되지 않는다. 최소 반례(V=4, fine edge {0-1,0-2,1-2,1-3,2-3}, coarse edge
+        {0-2,0-3,1-3}, face 4개)의 식별 quotient는 사면체 경계 S^2와 동형인 명시 2-cycle을 갖는다
+        (2-cycle 계수 {(0,1,2):1,(0,1,3):-1,(0,2,3):1,(1,2,3):-1}, 경계의 L-infinity 노름 0.0) — 이
+        2-cycle을 bound하려면 3-cell이 필요하다. 같은 최소 반례에서 holonomy를 face-consistent(conv_II)
+        규약으로 강제하면 flat_fraction_all=0.75→1.0으로 바뀌어 K1(e)도 함께 발동한다(3-cell로 곡률
+        이동, k=3·N=6 분기)"
+      note: "카드가 살아남으려면 sourcer novelty의 '판별 대안 k=3'을 K1(e)가 이미 배제했다는 전제가
+        필요한데, 이 최소 반례는 정합 holonomy 규약 아래 그 배제가 성립하지 않음을 보인다"
+    - input: "content 감사(P0): N=2k ⇒ N_render=4(k=2)의 논리적 충분성"
+      expected: "carrier 차수 k만으로 렌더링 차원 N이 유일하게 정해진다(카드 predicts[0])"
+      observed: "N=2k는 'Hodge 중간차수 자기사상 *: Λ^k→Λ^{N-k}가 endomorphism ⇔ N=2k'의 정의적 동치일
+        뿐이다. k=2에서 N=4를 얻으려면 '첫 carrier가 렌더링 차원을 정하려면 그 carrier 차수가 자기사상
+        차수여야 한다'는 self-duality 전제가 별도로 필요한데, 카드 novelty 절 스스로 이를 '판정 대기'로
+        남긴다. verify[4]가 보이듯 k=3(N=6)에서도 실수 self-duality가 존재해(*^2=+1) Hodge 조건만으로는
+        N=6이 배제되지 않으므로, 그 전제 없이는 k=2가 형식적으로 N=5,6,7과도 양립한다"
+      note: "P0(무내용 인접): 식이 거짓이 아니라 결론을 내는 데 필요한 전제 하나가 공리로 승격되지 않은
+        채 novelty 산문에만 있다"
+    - input: "K1 하위조건 (a)(c)(d)(e)의 반증 가능성(200 seed 스캔)"
+      expected: "kill 문구의 다섯 하위조건이 모두 사전등록 격자 위에서 독립적으로 반증 가능해야 한다"
+      observed: "(a) k_carrier: 200 seed 전부 상수 2(distinct_values=[2]) — 반증 불가능한 코드 상수;
+        (c) tree_b1: 200 seed 전부 상수 0 — split-only DAG는 항상 forest이므로 항등식; (d)
+        flat_fraction_M1: 200 seed 전부 상수 1.0 — M=1이면 U_face=U U^{-1}=I가 정의상 항등; (e)
+        flat_fraction_all: 무작위 격자에서는 0.811~0.966 범위로 1.0에 도달한 적이 없음(hit_one_count=0,
+        random 200 seed) — 무작위 대형 격자에서는 사실상 도달 불가능한 값이나, 정합 holonomy 규약을
+        강제한 위 최소 반례에서는 도달함(1.0). 실제로 반증력을 가진 것은 (b) 하나뿐이었다"
+      note: "사전등록의 5중 kill 목록이 실질적으로 단일 조건(b)에 의존했다는 뜻이며, 그 조건이 이번
+        attempt에서 발동했다"
+    - input: "블록 holonomy 이중 정의: fine 변이면서 동시에 coarse 변인 edge(fine∩coarse)의 holonomy를
+        fine-경로 값과 coarse-직접 값 두 가지로 각각 계산해 비교(n=50/100/200)"
+      expected: "카드 scope의 블록 렌더링 규칙(coarse holonomy=사전순 첫 factorization의 fine 곱) 아래
+        두 값이 규약적으로 일치하거나 규약이 명시돼야 한다"
+      observed: "fine∩coarse edge 21/31/69개(n=50/100/200) 전부에서 두 값이 다르다(gap 중앙값
+        2.02/2.01/1.91 rad, 최소 0.70~0.89, 최대 2.65~2.81) — 이 edge들에서 holonomy가 실제로는 두
+        경쟁 정의를 갖고 카드가 그중 하나를 명시 규약으로 고정하지 않았다"
+      note: "K1(e)·flat_fraction_all이 이 규약 선택에 민감한 측정량이라는 뜻(위 최소 반례 conv_II 결과와
+        연결)"
+    - input: "K2(예측시험, 사다리 6단 사전등록) slope_22=1.9502±0.05, 창 [1.90,2.00]을 카드 격자
+        N∈{8,16,32}, seed 20260902 그대로 실행"
+      expected: "닫힌 형태 점근값 1.9501765989와 유한 격자 실측이 창 [1.90,2.00] 안에서 일치"
+      observed: "slope_22=1.8988538800296169(카드 격자 리터럴) — 창 [1.90,2.00] 바로 밖(체계 편향
+        약 -0.051). seed_shift_1(같은 격자, seed만 이동)은 1.9352(창 안), seed_shift_2는 1.8905(창
+        밖)로 seed에 따라 판정이 뒤집힌다"
+      note: "카드가 사전등록한 값은 N→∞ 닫힌 형태 점근값이고 유한 격자(N≤32) 창은 별도로 사전등록되지
+        않은 파생 조건이라 이 항목만으로는 kill_triggered에 넣지 않는다(카드 문구는 슬로프 자체를
+        [1.90,2.00]으로 사전등록했으므로 엄밀히는 K2도 발동 조건에 해당하나, 이번 refute의 근거는
+        (b) 하나로 충분해 이중 계상하지 않는다)"
+    - input: "verify 18/18(hook_result.json)의 성격 — 외부 관측·독립 데이터 대조 여부"
+      expected: "카드 predicts 4개 신규 숫자 중 최소 일부가 외부 데이터로 시험됨"
+      observed: "18개 전부 카드 내부 항등식(자기유사 지수, Hodge 제곱, BF pairing, 12.1/12.2 재현,
+        leapfrog 증폭 닫힌 형태)의 자체 재현이며 외부 관측 데이터 대조는 0개; predicts[0]·[1]·[2]는
+        already_observed=true(적합 아님, 재현일 뿐)이고 신규 4개(predicts[3]-[6])는 전부 카드 자체
+        모형의 내부 예측이다"
+      note: "sourcer도 '여분 차원 관측 상한 baseline은 미검증'이라고 별도로 표시했다"
+  survived_checks:
+    - "K1 하위조건 (a)(c)(d)는 200 seed 전수에서 상수로 생존: k_carrier=2, tree_b1=0,
+      flat_fraction_M1=1.0"
+    - "순수 fine 삼각형의 unbounded 수는 n=50/100/200 전부 0(0/0/0) — 좁은 명제 'acyclic 인과 순서의
+      순수 fine 삼각형은 항상 합성 face로 덮인다'는 생존한다"
+    - "recovers[1](12.1 fan, verify[8] identity)·recovers[0](tree, verify[9])은 그대로 성립,
+      contractible fan은 반증되지 않음"
+    - "사전등록 무결성(preregistration_intact=true): 카드 파일 mtime이 K1 실행 이전이고 kill 발동 이후
+      카드가 수정되지 않았다"
+    - "verify 18/18 pass, card-check PASS — 카드 형식·항등식 자체는 결함 없음"
+sourcer:
+  prior_art:
+    - ref: "Tegmark 1997, On the dimensionality of spacetime (Class. Quantum Grav. 14, L69)"
+      relation: generalizes
+      note: "(3,1) 이외 signature·차원을 안정성·예측가능성(ultrahyperbolic 부적정성 포함)으로 거르는
+        표준 논증과 같은 결론(index-one 배제)을 다른 논증(인류원리 필터 vs 국소 갱신 세밀화 극한)으로
+        얻는다 — 동일도 special_case도 아니다"
+    - ref: "Ehrenfest 1917"
+      relation: unrelated
+      note: "궤도 안정성 기반 차원 선택의 원형이나 이 카드의 carrier-차수 readout과 무관"
+    - ref: "Craig–Weinstein 2008, arXiv:0812.0210"
+      relation: generalizes
+      note: "sourcer 원 판정을 정규화: (2,2) ultrahyperbolic 적정성이 비국소 제약 아래서만 성립함을
+        보인 보완적 결과 — 카드 4단이 배제해야 할 정확한 사례이고, 카드는 이를 '국소성' 배제 기준의
+        정식화 근거로 인용한다(비국소 제약 vs 카드의 국소성 요구는 3단 인용 관계이지 카드 재발견이
+        아니다)"
+    - ref: "Plebanski 1977; Krasnov 2020, Formulations of General Relativity"
+      relation: unrelated
+      note: "4D를 먼저 가정하고 self-dual 2-form 형식을 세우는 문헌 — 카드는 4를 출력으로 내려 하므로
+        방향이 반대"
+    - ref: "Myrheim 1978; Meyer 1988 causal set dimension estimators"
+      relation: unrelated
+      note: "순서구간 밀도 기반 readout이며 이 카드의 carrier cell-차수 readout과 다르다"
+    - ref: "Baez–Huerta 2011, An invitation to higher gauge theory"
+      relation: unrelated
+      note: "2-group fake-flatness/3-form 곡률 이동은 K1(e)가 시험하는 정확한 대안(k=3, N=6)이지만
+        문헌 자체는 이 카드의 결론을 재발견하지 않는다"
+    - ref: "Dittrich–Bahr–Steinhaus spin foam coarse graining; Freidel–Speziale twisted geometries"
+      relation: unrelated
+      note: "블록 quotient·refinement에서 face 구조를 다루지만 차원을 carrier 차수로 읽지 않는다"
+  overall: novel
+  ce_specific_confirmed: "split/merge 블록 quotient에서 처음 비자명 holonomy를 나르는 cell의 차수로
+    렌더링 차원을 읽고 그 차수를 12.2 Poisson face-count 법칙 위에서 정량화(b_95=3, b_99=4)하는 논증은
+    문헌에서 찾지 못했다. 여분 차원 관측 상한(Eöt-Wash·LHC monojet) baseline은 이번 sourcer 실행에서
+    검증되지 않았다(prover 기억 기반 기록)"
+assumptions:
+  - "블록 렌더링 규칙 공리(scope: coarse edge holonomy=사전순 첫 factorization의 fine 곱)는 정의적
+    선택이며, fine∩coarse edge(21/31/69개)에서 fine-경로 값과 이 규칙의 값이 실제로 다르다(median gap
+    ≈2.0 rad) — 카드가 이 이중 정의를 단일 규약으로 명시하지 않았다"
+  - "N=2k에서 k=2 ⇒ N=4로 가려면 '첫 carrier 차수가 Hodge 중간차수 자기사상 차수와 같아야 렌더링
+    차원을 정한다'는 self-duality 전제가 명시 공리로 필요하다(카드 novelty가 '판정 대기'로만 둔 채
+    predicts[0]에서 암묵적으로 사용)"
+  - "K1 하위조건 (a)(c)(d)는 12.1 규칙·정의에서 나오는 상수 항등식이라 원리적으로 반증 불가능하고,
+    (e)는 무작위 대형 격자에서 사실상 도달 불가능한 값이다 — 카드의 5중 kill은 실질적으로 (b) 단일
+    조건에 반증력이 집중돼 있었다"
+  - "K2 사전등록값 1.9502(±0.05, 창 [1.90,2.00])는 leapfrog 증폭인자의 N→∞ 닫힌 형태 점근값이며, 카드
+    격자 N∈{8,16,32}의 유한-N 실측(1.8989)은 창 밖이고 seed를 옮기면 판정이 뒤집힌다 — 이번 refute의
+    근거로는 쓰지 않았으나 재개 시 반드시 재사전등록해야 한다"
+  - "adversary 최소 반례(정합 holonomy 규약 conv_II 아래 사면체 face-quotient에서 flat_fraction_all=1.0)는
+    무작위 대형 격자(n=50/100/200)에서는 재현되지 않았다(conv_II flat_fraction_all은 0.87~0.95로 여전히
+    1.0 미만) — K1(e)의 전역 발동은 확정되지 않았고, 국소 위상 구조에서만 확인됐다"
+  - "dof 감사(P1): 명시 자유 파라미터는 D_branch 1개뿐이나 핵심 세 정수 예측(N_render=4, n_time=1,
+    d=3)에는 전혀 관여하지 않는다 — 카드 자신도 이를 밝혔으나(free_parameters 절), 실질적으로 데이터에
+    반응해 움직이는 숫자가 0개라는 뜻이라 신규 예측 4개(predicts[3]-[6])의 '적합 아님' 지위가 얼마나
+    강한지는 별도 판단이 필요하다"
+  - "절차: 카드 attempt(사다리 열리기 전) 단계에서 5단(K1) 사전등록 수치시험이 실행됐다 — conjecture-first
+    §3의 통상 순서(카드 채택 후 사다리 단별 attempt)와 다르지만, prover가 카드에 이미 사전등록된 절차·
+    seed·격자를 문자 그대로 실행했고 카드를 사후 수정하지 않았으므로 사전등록 무결성은 지켜졌다"
+open_questions_spawned: []
+next_action: "force_pivot=conjecture로 같은 세션에서 F-02(재추측 1회)를 시도할 수 있으나, 그 전에
+  사용자 결정이 필요한 재개 조건 네 가지를 먼저 택해야 한다: (i) H_1,H_2≠0을 허용하는 복합체 위에서
+  'min carrier 차수가 왜 렌더링 차원을 정하는가'를 별도 사다리 단(또는 새 공리)으로 정식화할지, (ii)
+  self-duality 전제('carrier 차수=자기사상 차수')를 명시 공리로 승격하거나 다른 readout(예: carrier가
+  나르는 (k-1)-cycle의 Betti 계수)으로 교체할지, (iii) fine∩coarse holonomy를 fine-경로 값과
+  coarse-직접 값 중 하나로 단일 규약화할지(현재 이중 정의), (iv) K2를 N→∞ 점근값이 아니라 카드 격자
+  N∈{8,16,32}에서 재사전등록할지(현재 창 [1.90,2.00] 밖 1.8989이고 seed에 따라 뒤집힘). 이 네 가지
+  중 하나도 정하지 않고 같은 formula로 F-02를 세우면 이번 attempt와 같은 자리에서 다시 막힌다. 살아
+  남는 좁은 명제(parent_scope): '12.1 규칙 아래 acyclic 인과 순서의 순수 fine 삼각형은 항상 합성
+  face로 덮인다'(0/0/0, 세 격자 전부) — 이는 유지하되 그로부터 N_render=4를 끌어내는 다음 단계는
+  이번 카드로는 닫히지 않는다."

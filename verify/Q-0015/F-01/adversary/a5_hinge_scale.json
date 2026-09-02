@@ -1,0 +1,64 @@
+{
+  "K5_scale": {
+    "0.001": {
+      "c_theta_identity_tetrad": 0.8660254037844387,
+      "c_theta_random_tetrad": 0.8660254037844386,
+      "G_scales_as_alpha^4": 0.9999999999999998
+    },
+    "0.4": {
+      "c_theta_identity_tetrad": 0.8660254037844386,
+      "c_theta_random_tetrad": 0.8660254037844387,
+      "G_scales_as_alpha^4": 1.0
+    },
+    "1.0": {
+      "c_theta_identity_tetrad": 0.8660254037844387,
+      "c_theta_random_tetrad": 0.8660254037844386,
+      "G_scales_as_alpha^4": 1.0
+    },
+    "2.5": {
+      "c_theta_identity_tetrad": 0.8660254037844387,
+      "c_theta_random_tetrad": 0.8660254037844386,
+      "G_scales_as_alpha^4": 1.0
+    },
+    "1000.0": {
+      "c_theta_identity_tetrad": 0.8660254037844387,
+      "c_theta_random_tetrad": 0.8660254037844387,
+      "G_scales_as_alpha^4": 1.0000000000000002
+    }
+  },
+  "K5_note": "theta = (3/2)||tlG||/trG and eps = ||tlG||/||G|| are EACH invariant under G -> lambda G, so their ratio cannot depend on alpha; and G(alpha e) = alpha^4 G(e) exactly.  K5 has no failure mode other than a coding bug.",
+  "K5_anisotropic_gram_ratio_is_still_alpha_free": {
+    "0.4": 0.7799121635593054,
+    "1.0": 0.7799121635593053,
+    "2.5": 0.7799121635593054
+  },
+  "K6_hinge": {
+    "per_vertex_simplicity_tracefree_residual": {
+      "0": 1.6437986971595823e-16,
+      "1": 0.0,
+      "2": 0.0,
+      "3": 0.0,
+      "4": 0.0,
+      "5": 1.6437986971595823e-16
+    },
+    "worst": 1.6437986971595823e-16,
+    "c_theta_times_worst": 1.4235714304479612e-16,
+    "K6_window_upper": 1e-12,
+    "margin_orders_of_magnitude": 3.8466207364052694,
+    "phi_kappa_exact_primal_holonomy": 0.4290007391955229
+  },
+  "K6_note": "15.5 already reports these residuals at ~1e-16 (exact solution, machine zero). K6 multiplies an ALREADY PUBLISHED machine-zero by 0.866 and asks whether it is below 1e-12.  It has no failure mode short of a coding bug.",
+  "two_channel": {
+    "phi_kappa (exact transport angle, 15.4)": 0.4290007391955229,
+    "card_theta_mis (from gram residual)": 1.4235714304479612e-16,
+    "ratio_card_theta_over_phi_kappa": 3.3183426049975855e-16,
+    "theta_iso_computed_anywhere": false,
+    "note": "theta_tot^2 = theta_iso^2 + theta_mis^2 is asserted from Frobenius orthogonality of Psi and (lambda/3)delta in F = (Psi + lambda/3 delta) Sigma.  That orthogonality is a statement about the CURVATURE 2-FORM components; theta_mis here is defined from a GRAM mismatch of a block SUM of Sigma's, with no computed map to either F component.  No theta_iso is ever constructed, so the identity is never evaluated with two nonzero terms.  In the single corpus configuration where an exact curvature angle exists (phi_kappa = 0.429), the card's theta is 1e-16 -- i.e. zero overlap."
+  },
+  "small_angle_regime": {
+    "eps_rms_n128_measured": 0.00022,
+    "eps_max_n128_measured": 0.00074,
+    "nonlinear_correction_1/sqrt(1-eps^2)-1_at_n128": 2.738001125823786e-07,
+    "note": "the 'exact' 1/sqrt(1-eps^2) factor that distinguishes the card from the naive theta = c_theta*eps is 2.7e-7 at the largest eps on the frozen grid, i.e. ~6 orders below the tightest window (K1 half-width 0.01).  The exactness is untested."
+  }
+}

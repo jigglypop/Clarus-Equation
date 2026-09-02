@@ -1,0 +1,1 @@
+{"verdict": {"defect_ratio_64_over_8": "survive", "defect_slope": "survive"}, "stats": {"defect_ratio_64_over_8": 0.14306936148581373, "defect_slope": -0.8981828134067237}}

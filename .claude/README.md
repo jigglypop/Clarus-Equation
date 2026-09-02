@@ -1,10 +1,23 @@
-# CE Claude 하네스 (v2, 2026-09-02)
+# CE Claude 하네스 (v3 추측 우선, 2026-09-02)
 
 Claude Code용 Clarus-Equation 연구 하네스. 가설→유도→기계검증→반증→판정으로 도는
 **내부 루프**를 게이트 없이 빠르게 돌리고, 통과한 결과(L3 이상)만 원장(`ledger/`)에
 쌓아 논문 단계의 **외부 루프**(/paper)로 넘긴다. v1(HARNESS_SPEC, `ACCEPTANCE.md`)의
 루프·훅·원장 코드를 그대로 쓰되 에이전트를 15종에서 5종으로 줄이고, 옛 `ce-*` 미러와
 제거된 제품의 잔존물을 지웠다. `.codex/`는 Codex 전용이며 더 이상 미러 관계가 아니다.
+
+## v3: 추측 우선 (2026-09-02)
+
+v2 루프는 세 질문 연속으로 문헌 재발견에 수렴했다. 원인은 순서였다. 후보 선택 기준이 "반증이 가장 싼 것"이라
+문헌 보조정리로 흘렀고, pivot 4단계가 전부 축소 방향이었고, 공리는 숨은 가정의 고백으로만 생겼으며, sourcer가
+identical이면 질문을 통째로 park했고, 진전 정의에 "새 식"이 없었다. v3는 순서를 뒤집는다.
+
+- **식이 먼저.** 질문은 추측 카드(`derivations/<Q>/F-NN.formula.md`, 예측식·예산식)로 시작한다. 유도 없이
+  `[공리: 후보]`로 선언하고 숫자·극한 복원·kill·사다리를 사전등록한다(`ledger.py card-check`).
+- **한 attempt = 사다리 한 단.** `after-attempt`가 단을 닫고 `ladder <Q>`가 다음 단을 보여 준다.
+- **재발견은 확장 신호.** pivot이 확장 2(conjecture·generalize) + 축소 4가 됐다. 재발견 2회 또는 축소 4단계 소진이면
+  `force_pivot: conjecture`가 기계적으로 붙는다. 카드 adopt는 sourcer 실행이 필수이고 identical·special_case면 거부된다.
+- **진전 종류에 예측 추가.** 카드 채택 = 예측. 스킬 `conjecture-first`, 커맨드 `/conjecture`가 새로 생겼다.
 
 ## 설계 원칙 (하네스 설계론)
 
@@ -36,28 +49,29 @@ Claude Code용 Clarus-Equation 연구 하네스. 가설→유도→기계검증�
 CLAUDE.md            프로젝트 지침
 settings.json        permissions + 훅 6종
 agents/              prover adversary sourcer judge paper-writer
-skills/              research-loop evidence-ladder pivot-playbook derivation-style ledger-format ko-academic-prose
-                     closure-gate dimensionless explain-plan validate
-commands/            /attempt /paper /explain-plan /audit /dim /validate /status /gc
+skills/              conjecture-first research-loop evidence-ladder pivot-playbook derivation-style ledger-format
+                     ko-academic-prose closure-gate dimensionless explain-plan validate
+commands/            /attempt /conjecture /paper /explain-plan /audit /dim /validate /status /gc
 hooks/
   session-start.cmd  SessionStart → lib/session_start.py (원장 요약 40줄)
   goal-reminder.cmd  UserPromptSubmit → .codex/hooks/goal_reminder.py (진전 원장 §2 주입)
   check-large-data.cmd PreToolUse Bash|PowerShell → 데이터 반출 게이트
   write-gate.cmd     PreToolUse Write|Edit → lib/write_gate.py (허용 경로, ledger/는 judge만)
-  verify-on-save.cmd PostToolUse Write|Edit → lib/verify_on_save.py (derivation 자동 검증, fail-open)
+  verify-on-save.cmd PostToolUse Write|Edit → lib/verify_on_save.py (derivation·추측 카드 자동 검증, fail-open)
   ledger-or-block.cmd Stop·SubagentStop → lib/ledger_or_block.py (원장 항목 없으면 exit 2, 3회 후 INCOMPLETE)
   python.cmd         .codex/hooks/python.cmd 위임 (doctor harness source pytest links lint)
-  lib/ledger.py      원장 읽기·쓰기·검증·상태 전이
+  lib/ledger.py      원장 읽기·쓰기·검증·상태 전이·추측 카드(card-check/adopt-card)·사다리(ladder)·재발견 카운터
   lib/verify_derivation.py  verify 블록 기계검증 (sympy 선택, numpy 필수)
 ../ledger/  ../derivations/  ../verify/  ../scripts/research_loop.py  ../tests/test_harness.py
 ```
 
 ## 루프 한 바퀴
 
-prover(후보 3~5, 반증조건) → 오케스트레이터가 1개 선택 → prover(derivation + verify 블록,
-저장 즉시 훅 검증, 필요 시 수치 스크립트) → adversary(반례·survived·숨은 가정·지위) →
-[반례 없을 때 sourcer] → judge(L0~L4, verdict, 원장 항목 + questions.yaml). Stop 훅이 항목
-존재·스키마·등급 일치를 검사한다. 상태 전이는 `ledger.py after-attempt`.
+카드 attempt(카드 없음): prover(추측: F-NN.formula.md, 저장 즉시 훅 verify) → adversary(카드 감사 6종) →
+sourcer(신규성, 필수) → judge(adopt: 사다리 열림 | refute: 재발견이면 같은 세션 재추측). 사다리 attempt(카드
+있음): 다음 open 단 하나 → 외부기존이면 sourcer 인용으로 cited, 아니면 prover(유도 + verify 블록 또는 수치
+스크립트) → adversary(반례·survived·숨은 가정·지위) → [반례 없을 때 sourcer] → judge(L0~L4, promote로 단 닫힘,
+kill 발동이면 refute). Stop 훅이 항목 존재·스키마·등급 일치를 검사한다. 상태·사다리 전이는 `ledger.py after-attempt`.
 
 ## 설치·검증
 
@@ -69,7 +83,7 @@ scripts\research-loop.cmd --dry-run
 ```
 
 의존성은 `requirements-harness.txt`(pyyaml, sympy, numpy, pytest). 하네스는 설치하지
-않는다. **sympy가 없으면 기호검증이 항상 skipped라 최고 등급이 L2다.**
+않는다. **sympy가 없으면 기호검증이 항상 skipped라 최고 등급이 L2다** (2026-09-02 현재 설치되어 있어 L3 가능).
 
 ## 주의
 

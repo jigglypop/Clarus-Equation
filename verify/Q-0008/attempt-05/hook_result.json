@@ -1,0 +1,117 @@
+{
+  "file": "C:\\dev\\ce\\Clarus-Equation\\derivations\\Q-0008\\attempt-05.derivation.md",
+  "question": "Q-0008",
+  "attempt": 5,
+  "card": null,
+  "sympy": true,
+  "details": [
+    {
+      "type": "identity",
+      "lhs": "Sum(b-k,(k,0,b-1))",
+      "rhs": "b*(b+1)/2",
+      "symbolic": "pass",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 0
+    },
+    {
+      "type": "numeric",
+      "expr": "sqrt(1.26071)*36/sqrt(35) - 6.8324",
+      "max_rel_err": 4.394676708496803e-05,
+      "numeric": "pass",
+      "index": 1
+    },
+    {
+      "type": "numeric",
+      "expr": "abs(6.832 - 0.82 - 6.01) + abs(6.832 + 0.82 - 7.65)",
+      "max_rel_err": 0.00399999999999956,
+      "numeric": "pass",
+      "index": 2
+    },
+    {
+      "type": "numeric",
+      "expr": "abs(0.5047 - 0.085 - 0.42) + abs(0.5047 + 0.085 - 0.59)",
+      "max_rel_err": 0.000599999999999934,
+      "numeric": "pass",
+      "index": 3
+    },
+    {
+      "type": "numeric",
+      "expr": "(((log(3)-(log(3)+log(6)+log(10)+log(15)+log(21)+log(28)+log(36))/7)*log(2.4445995224839616e-05)+(log(6)-(log(3)+log(6)+log(10)+log(15)+log(21)+log(28)+log(36))/7)*log(3.7538025652719802e-05)+(log(10)-(log(3)+log(6)+log(10)+log(15)+log(21)+log(28)+log(36))/7)*log(4.6815328766737140e-05)+(log(15)-(log(3)+log(6)+log(10)+log(15)+log(21)+log(28)+log(36))/7)*log(5.7590550732849545e-05)+(log(21)-(log(3)+log(6)+log(10)+log(15)+log(21)+log(28)+log(36))/7)*log(6.8282495463181531e-05)+(log(28)-(log(3)+log(6)+log(10)+log(15)+log(21)+log(28)+log(36))/7)*log(7.6025621089825042e-05)+(log(36)-(log(3)+log(6)+log(10)+log(15)+log(21)+log(28)+log(36))/7)*log(8.6758014992257244e-05))/((log(3)-(log(3)+log(6)+log(10)+log(15)+log(21)+log(28)+log(36))/7)**2+(log(6)-(log(3)+log(6)+log(10)+log(15)+log(21)+log(28)+log(36))/7)**2+(log(10)-(log(3)+log(6)+log(10)+log(15)+log(21)+log(28)+log(36))/7)**2+(log(15)-(log(3)+log(6)+log(10)+log(15)+log(21)+log(28)+log(36))/7)**2+(log(21)-(log(3)+log(6)+log(10)+log(15)+log(21)+log(28)+log(36))/7)**2+(log(28)-(log(3)+log(6)+log(10)+log(15)+log(21)+log(28)+log(36))/7)**2+(log(36)-(log(3)+log(6)+log(10)+log(15)+log(21)+log(28)+log(36))/7)**2)) - 0.4998573796",
+      "max_rel_err": 9.914125076448954e-12,
+      "numeric": "pass",
+      "index": 4
+    },
+    {
+      "type": "numeric",
+      "expr": "8.6758014992257244e-05/1.3004484948818125e-05 - 6.6713918570",
+      "max_rel_err": 1.7912817062981645e-11,
+      "numeric": "pass",
+      "index": 5
+    },
+    {
+      "type": "inequality",
+      "lhs": "0.42",
+      "rhs": "0.4998573796",
+      "relation": "<=",
+      "violations": [],
+      "numeric": "pass",
+      "index": 6
+    },
+    {
+      "type": "inequality",
+      "lhs": "0.4998573796",
+      "rhs": "0.59",
+      "relation": "<=",
+      "violations": [],
+      "numeric": "pass",
+      "index": 7
+    },
+    {
+      "type": "inequality",
+      "lhs": "6.01",
+      "rhs": "6.6713918570",
+      "relation": "<=",
+      "violations": [],
+      "numeric": "pass",
+      "index": 8
+    },
+    {
+      "type": "inequality",
+      "lhs": "6.6713918570",
+      "rhs": "7.65",
+      "relation": "<=",
+      "violations": [],
+      "numeric": "pass",
+      "index": 9
+    },
+    {
+      "type": "numeric",
+      "expr": "abs((0.4998573796 - 0.42)/0.011401636 - 7.004028) + abs((6.6713918570 - 6.01)/0.193028948 - 3.426387)",
+      "max_rel_err": 2.67821527621948e-07,
+      "numeric": "pass",
+      "index": 10
+    },
+    {
+      "type": "inequality",
+      "lhs": "6.6713918570*sqrt(35)/36",
+      "rhs": "8",
+      "relation": "<=",
+      "violations": [],
+      "numeric": "pass",
+      "index": 11
+    },
+    {
+      "type": "limit",
+      "expr": "log(b)/log(b*(b+1)/2)",
+      "var": "b",
+      "point": "oo",
+      "expected": "1/2",
+      "result": "1/2",
+      "symbolic": "pass",
+      "index": 12
+    }
+  ],
+  "symbolic": "pass",
+  "numeric": "pass"
+}

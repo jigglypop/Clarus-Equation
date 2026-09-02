@@ -1,0 +1,1 @@
+{"seed": 20260902, "her_slope": null, "her_ratio_128": null, "mix_X_32": null, "iid_slope": -0.4799658222826968, "min_det_audit": {"calls": 1280, "nan_rejections": 0, "min_det": 0.9531145567170054, "cells": 63488}, "elapsed_s_total": 50.88668679998955}

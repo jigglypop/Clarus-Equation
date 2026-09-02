@@ -1,0 +1,129 @@
+id: E-20260902-010
+question: Q-0010
+attempt: 1
+timestamp: 2026-09-02T23:59:00+09:00
+claim: "F-01(예측식, revision 2, 정렬 공리 카드) [공리: 후보] 상속 증분 $\\xi_v$를 공통 conformal 궤도 접선
+  $T_{B_0}O=\\mathrm{span}\\{B_0,\\mathfrak{so}(3)\\cdot B_0\\}$(4차원)로 사영한 성분만 전달하고 나머지 9차원(대칭
+  traceless)을 접는 정렬 규칙을 채택한다(진전: 예측). 전환의 원인은 잔차 생성기 공통 영공간
+  $\\ker\\tilde M=\\mathrm{scale}\\oplus\\mathfrak{so}(3)_{\\rm sd}\\oplus\\mathfrak{so}(3)_{\\rm asd}$(7차원)이고
+  궤도 접선은 그 안에서 사원수 부분대수 $\\mathrm{span}\\{\\mathbb 1,\\mathfrak{so}(3)_{\\rm sd}\\}\\cong\\mathbb H$로
+  닫히는 한 예다: (c_1,2c_2,c_3)=(0,0,c_0)⇒κ_eff=I⇒$\\bar\\epsilon_{\\rm align}^2=\\epsilon_\\star^2(n-1)/n^2$,
+  γ_align=−1/2(F-02의 +1/d_tree에서 전환), ρ=1. card-check PASS(kill 4·predicts 9·ladder 7단), 훅
+  `verify/Q-0010/F-01/hook_result.json` symbolic=pass·numeric=pass 17/17. sourcer(haiku)가 EPRL Y-map·Barbour
+  best matching·Dittrich coarse-graining·Freidel–Speziale·Wilson block-spin 5건을 unrelated/generalizes로
+  정규화하고(identical·special_case 없음) overall novel로 판정했다. adversary 1차(opus, must_fix 8건 P1)를
+  prover가 revision 2에서 6건 반영·2건 부분 반영(S_gap 규약 명시, verify[15]는 상수 산술이라 항등식 검사 아님을
+  scope에 공개)한 뒤 재감사(opus)가 status pass·adopt 권고를 냈고, K1–K3 값·창·seed·격자가 rev 1과 bit-level로
+  불변임을 확인했다(불변성 통과). 잔여 P1 1건(1차원 경쟁 공리 R1=scale만 전달이 K1·K3·K4를 전부 통과해 사전등록
+  숫자 어느 것도 전달 채널의 4차원성 자체를 시험하지 못한다)은 카드 scope가 이미 '실질 새 내용=scale 전달+9
+  접힘'으로 공개한 것과 novelty·K4 제목의 '궤도 접선 특정성' 표현 사이의 내부 불일치이며, rand4 7.299(누출
+  0.0475)·ρ=1 n/tree 무관·K4 사원수 닫힘(≤1e−12 vs 대조 ≥1e−3)이 실질 내용이라 P0 무내용은 아니다 — judge는
+  option (A) adopt를 선택하고 adopt 조건을 이 항목과 notes에 기록한다(다음 사다리 attempt에서 novelty·K4 제목
+  표기 축소 + K4(b) 새 kill 사전등록 + so(4) 분해 재발견 의심 sourcer 대조)."
+level: L3
+verdict: adopt
+pivot_step: null
+ladder_step: null
+ladder_cited: null
+card: derivations/Q-0010/F-01.formula.md
+kill_triggered: null
+derivation: derivations/Q-0010/F-01.formula.md
+verification:
+  symbolic: pass
+  numeric: pass
+  lean: skipped
+  artifacts: verify/Q-0010/F-01/
+adversary:
+  model_note: "1차 카드 감사·재감사 모두 opus(Fable 5.1 안전장치 오탐 회피 규정에 따름). 산출물
+    `verify/Q-0010/F-01/adversary/a1–a9`(1차 8건 must_fix 대응)·`b1–b4`(재감사: b1 K4 창 여유, b2 정확 닫힘
+    정리, b3 불변성, b4 R1 경쟁 공리)."
+  counterexamples: []
+  survived_checks:
+    - "불변성 통과: K1–K3 값·창·seed·격자가 revision 1과 bit-level로 동일, 다른 실행 모드도 bit-level 불변, 훅
+      17/17(b3)"
+    - "K4 정확 닫힘 정리(b2): ker M̃의 4평면 중 정확 닫힘은 span{1,so(3)_sd}(궤도 접선)와 span{1,so(3)_asd}(우측
+      사원수) 두 점뿐임을 X=c1+a_sd+a_asd ⇒ e^Te=u^Tu−δ²A², A²∝1 ⟺ a_sd·a_asd=0 으로 대수적으로 증명(카드는
+      '사원수 부분대수'까지만 특정한다고 정직하게 좁힌 상태)"
+    - "K4 창은 사전등록 격자 밖 대조에서도 안전: 격자 밖 alt2 6.5배·null7 21배 여유로 거짓 사망 위험 무시 가능(b1)"
+    - "must_fix 8건 중 6건 반영 확인(전환 원인 = 전달 채널 ⊆ ker M̃ 명시, ε_res/h_coord 기호 분리, 7단의 F-02
+      5단 의존 명시, polar 정렬 역할·raw M 실패 숫자 공개, recovers 인덱스 정정, 2·4단 증명 형태); 2건은 부분
+      반영으로 카드 scope·본문에 명시 공개(S_gap numbers.json 키 이름, verify[15]는 상수 산술 검사)"
+    - "잔여 P1(b4, content): R1(1차원, scale만 전달)이 K1(예산 (0,0,1), ρ=1)·K3·K4(닫힘 잔차 2e−17)를 전부
+      통과 — 사전등록 숫자 어느 것도 전달 채널의 4차원성을 시험하지 않음을 확인했으나, 이는 카드 scope가 이미
+      '실질 새 내용=scale 전달+9 접힘'으로 공개한 것과 novelty·K4 제목 표현 사이의 표기 불일치이지 K1–K4
+      예측·kill 자체를 깨는 반례가 아니다"
+  hidden_assumptions:
+    - "K4는 맹검이 아닌 '정보 있는 사전등록'이다 — adversary가 사전등록 격자 밖에서 같은 통계(1.5e−16 vs
+      4.1e−3·1.5e−2)를 이미 봤다(카드 scope가 공개); align 쪽은 대수적으로 증명 가능해 독립 확증은 아니지만
+      거짓 사망 위험은 아니다"
+    - "K4 문턱 1e−3은 δ=0.2 규약 의존(δ=0.1이면 alt2 2.3e−4로 좁아진다); MIN_DET 조건화가 δ=0.2에서 발동한다(최대
+      약 10%)"
+    - "재발견 의심: K4의 닫힘 정리는 so(4)=su(2)⊕su(2) (반)자기쌍대 분해(Atiyah–Hitchin–Singer 1978; Plebanski)의
+      재서술일 가능성이 있고 ker M̃=T_1(ℝ₊SO(4)) 동정도 표준일 수 있다 — 이번 sourcer 실행은 이 항목을 보지
+      못했다(sourcer 판정 필요)"
+    - "numbers.json 키 이름 불일치(표기 과제, 재계산 아님)"
+  audits:
+    dimension: "ok — 16=1+3+3+9, rank dΦ=13, dim T=4, dim ker M̃=7이 adversary 독립 재계산(다른 G·다른 기저)으로
+      재현됨(a1·a2)"
+    recovers: "ok — P→0(F-02 i.i.d. mode)·P→I(F-02 상속 mode)·fold=0(궤도 닫힘) 세 극한이 구성상 항등 또는 13.3
+      정리로 실제 실행됨(a6)"
+    dof: "ok — 자유 파라미터 1(ε_★, 전부 상쇄) < already_observed=false 사전등록 숫자 7개(dof 정직화 문구로 독립
+      내용은 셋: ρ=1의 n/tree 무관성, 누출 c1/c0=0.0475, 사원수 닫힘)"
+    content: "P1 잔여(b4) — R1 경쟁 공리가 K1·K3·K4를 전부 통과해 사전등록 숫자가 4차원성 자체를 판별하지 못한다.
+      동어반복은 아니다(rand4 7.299·ρ=1·K4 닫힘은 실질 내용)만, novelty·K4 제목의 '궤도 접선 특정성' 주장은
+      scope의 '사원수 부분대수까지만 특정' 공개와 표기가 어긋난다 — 다음 attempt에서 정정·새 kill 필요"
+    kill_executable: "ok — K1·K2·K3·K4 모두 `verify/Q-0010/F-01/check_align.py`의 실행 가능 모드(align·rand4·qspine·closure)로
+      계산되며 창이 명시적이다; K4 창의 δ 규약 의존성은 P2로 기록"
+    ladder_complete: "ok — 7단 중 1단(외부기존)은 이 attempt에서 열려 있고, 2단(제약 기울기 소멸·ker M̃ 구조)이
+      b2 정리를 흡수해 다음 attempt에서 promote 후보"
+  parking:
+    - "novelty.ce_specific·K4 제목 표기를 '사원수 부분대수 특정성(4차원성은 사전등록 숫자로 미시험)'으로 축소"
+    - "K4(b)(polar 회전각 분산 또는 rank(dΦ|_P)=4 판별)를 새 kill로 사전등록해 4차원성 자체를 시험"
+    - "so(4) 자기쌍대 분해(Atiyah–Hitchin–Singer 1978; Plebanski) 재발견 의심을 다음 attempt sourcer가 대조"
+    - "numbers.json 키 이름 정리(표기 과제)"
+sourcer:
+  prior_art:
+    - ref: "Engle–Pereira–Rovelli–Livine 2008 EPRL Y-map / Barrett–Crane 1998 simplicity projector"
+      url: null
+      relation: unrelated
+      note: "표현 공간의 simplicity 사영이지 블록 상속 채널의 잔차 커널 사영이 아니며, 영공간 7차원·궤도 접선
+        4차원·사원수 닫힘의 판별 숫자를 내놓지 않는다"
+    - ref: "Barbour–Bertotti 1982 / Anderson 2012 best matching, shape dynamics conformal orbit 사영"
+      url: null
+      relation: unrelated
+      note: "구성 공간의 gauge 제거이지 잔차 생성기 예산의 커널 환원(κ_eff=I)이 아니다"
+    - ref: "Dittrich–Eckert–Martin-Benito 2012; Bahr–Dittrich–Steinhaus 2011–2014; Dittrich 2016 spin foam
+        coarse graining"
+      url: "https://arxiv.org/abs/1409.2407"
+      relation: unrelated
+      note: "coarse graining의 기하성 흐름은 다루나 상속 채널을 접는 공리·지수 전환 숫자가 문헌에 없다"
+    - ref: "Freidel–Speziale 2010 twisted geometries; Livine–Speziale 2007 coherent intertwiners"
+      url: "https://arxiv.org/abs/1001.2748"
+      relation: unrelated
+      note: "국소 shape mismatch 조건이지 블록 흐름 지수 진술이 아니다"
+    - ref: "Wilson 1971 block-spin RG, 대칭이 허용하는 연산자만 흐름에 남는 표준 논리"
+      url: null
+      relation: generalizes
+      note: "사영이 relevant 연산자를 지운다는 일반형은 알려져 있으나, 카드는 어떤 사영이어야 하는지를 영공간·사원수
+        닫힘으로 특정하고 무작위 4차원·비닫힘 4평면 대조로 판별한다는 점에서 CE 고유"
+  overall: novel
+  ce_specific_confirmed: "궤도 접선 사영 공리 → 커널 붕괴(c_1=c_2=0) → 상속 지수 −1/2 전환 → 무작위 4차원 대조
+    ρ_rand4=7.30 판별 → 사원수 닫힘(K4)에 의한 궤도 접선 특정 — 이 조합은 선행 문헌에서 찾지 못했다. so(4) 자기쌍대
+    분해와의 관계는 이번 실행이 대조하지 못했다(adversary 재발견 의심, 다음 attempt로 이월)"
+assumptions:
+  - "P_micro: 증분 ξ_v는 16차원 직교기저에서 i.i.d. 표준정규(등방). 비등방 반례(F-02 scope)는 이 카드에서도 범위 밖"
+  - "O(δ⁴) 절단은 (전달×접힘) 교차 보정에만 필요하고 선형 전달 규칙 자체(사원수 닫힘)는 δ=0.2에서도 정확하다(a6)"
+  - "S_gap 41.4465는 h_coord=1e−2 규약 아래 접힌 가시 차원 9의 산술 재서술이며 already_observed=true라 예측 수에서
+    제외(10.10 counting measure는 미정의)"
+  - "7단의 하위꼬리 반집중(필요 방향)은 F-02 5단(미완) 수입이며 이 카드 몫은 쉬운 절반(γ_align<0 ⇒ Markov)뿐이다"
+  - "adopt_condition 1: novelty·K4 제목의 '궤도 접선 특정성'을 '사원수 부분대수 특정성(4차원성은 사전등록 숫자로
+    미시험)'으로 다음 사다리 attempt(2단)에서 정정한다 — R1이 K1·K3·K4를 동일하게 통과하는 P1 잔여(b4) 반영"
+  - "adopt_condition 2: K4(b)(polar 회전각 분산 또는 rank(dΦ|_P)=4 판별: align 4, alt1 1, R1 1, sd-only 3)를 다음
+    attempt에서 새 kill로 사전등록해 4차원성 자체를 시험한다"
+  - "adopt_condition 3: so(4)=su(2)⊕su(2) (반)자기쌍대 분해 재서술 가능성(Atiyah–Hitchin–Singer 1978; Plebanski)을
+    다음 attempt에서 sourcer가 대조한다(이번 sourcer는 이 항목을 보지 못했다)"
+open_questions_spawned: []
+next_action: "다음 attempt에서 먼저 사다리 1단(외부기존 — 13.3 궤도 닫힘·so(4) 자기쌍대 분해·16=1+3+3+9·F-02 커널
+  법칙)을 sourcer 인용으로 ladder_cited 닫고(attempt 소모 없음), 이어 2단(제약 기울기 소멸·rank dΦ=13·dim ker
+  M̃=7 보조정리, b2 정확 닫힘 정리 흡수)을 promote 시도한다. 같은 attempt에서 adopt_condition 1–3(novelty·K4
+  표기 축소, K4(b) 새 kill 사전등록, so(4) 분해 sourcer 대조)을 반영한다."

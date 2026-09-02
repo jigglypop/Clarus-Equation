@@ -1,0 +1,122 @@
+{
+  "zero_mode_generic_worst": 0.9907674310307879,
+  "zero_mode_flip_probe": [
+    {
+      "comp": [
+        0,
+        0
+      ],
+      "delta": 0.3,
+      "max": 0.9997115580951115,
+      "median": 0.18255483474660017,
+      "n_cells_with_a_below_minus1": 761
+    },
+    {
+      "comp": [
+        0,
+        0
+      ],
+      "delta": 1.0,
+      "max": 0.9992927526967437,
+      "median": 0.1748054295879402,
+      "n_cells_with_a_below_minus1": 748
+    },
+    {
+      "comp": [
+        1,
+        1
+      ],
+      "delta": 0.3,
+      "max": 0.9934375463637396,
+      "median": 0.20125658526774962,
+      "n_cells_with_a_below_minus1": 759
+    },
+    {
+      "comp": [
+        1,
+        1
+      ],
+      "delta": 1.0,
+      "max": 0.9998123377208961,
+      "median": 0.15581259461807834,
+      "n_cells_with_a_below_minus1": 689
+    },
+    {
+      "comp": [
+        2,
+        2
+      ],
+      "delta": 0.3,
+      "max": 0.996696555832391,
+      "median": 0.17492718286873907,
+      "n_cells_with_a_below_minus1": 734
+    },
+    {
+      "comp": [
+        2,
+        2
+      ],
+      "delta": 1.0,
+      "max": 0.9999216857764215,
+      "median": 0.20049539964410346,
+      "n_cells_with_a_below_minus1": 751
+    }
+  ],
+  "zero_mode_handbuilt_flip": [
+    {
+      "comp": [
+        0,
+        0
+      ],
+      "n": 2,
+      "residual": 0.816496580927726
+    },
+    {
+      "comp": [
+        0,
+        0
+      ],
+      "n": 4,
+      "residual": 0.11704114719613057
+    },
+    {
+      "comp": [
+        0,
+        0
+      ],
+      "n": 8,
+      "residual": 0.045363778633514
+    },
+    {
+      "comp": [
+        1,
+        1
+      ],
+      "n": 2,
+      "residual": 0.816496580927726
+    },
+    {
+      "comp": [
+        1,
+        1
+      ],
+      "n": 4,
+      "residual": 0.11704114719613057
+    },
+    {
+      "comp": [
+        1,
+        1
+      ],
+      "n": 8,
+      "residual": 0.045363778633514
+    }
+  ],
+  "k4_executability": {
+    "p_det_negative": 0.0004290603331968372,
+    "prereg_draws_at_delta_0p3": 126976,
+    "expected_negative_dets": 54.4803648680016,
+    "card_cell_raises_on_negative_det": "ValueError: Urbantke metric must be positive and nondegenerate",
+    "card_mode_zero_n64_delta0p3": "RAISED ValueError: Urbantke metric must be positive and nondegenerate"
+  }
+}

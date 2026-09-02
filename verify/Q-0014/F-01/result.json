@@ -1,0 +1,113 @@
+{
+  "card": "derivations/Q-0014/F-01.formula.md",
+  "kill": "K1",
+  "seed": 20260902,
+  "sizes": [
+    50,
+    100,
+    200
+  ],
+  "block_depth": 1,
+  "stats": {
+    "k_carrier": [
+      2
+    ],
+    "unbounded_min_cycles": 807,
+    "tree_b1": 0,
+    "flat_fraction_M1": 1.0,
+    "flat_fraction_all": 0.9190031152647975
+  },
+  "per_size": [
+    {
+      "n": 50,
+      "fine_edges": 103,
+      "coarse_edges": 172,
+      "faces": 206,
+      "b1_skeleton": 205,
+      "k_carrier": 2,
+      "unbounded_min_cycles": 211,
+      "tree_b1": 0,
+      "flat_fraction_M1": 1.0,
+      "flat_fraction_all": 0.8349514563106796,
+      "M_histogram": {
+        "1": 144,
+        "2": 22,
+        "3": 6
+      },
+      "mean_M": 1.197674418604651
+    },
+    {
+      "n": 100,
+      "fine_edges": 184,
+      "coarse_edges": 295,
+      "faces": 321,
+      "b1_skeleton": 349,
+      "k_carrier": 2,
+      "unbounded_min_cycles": 208,
+      "tree_b1": 0,
+      "flat_fraction_M1": 1.0,
+      "flat_fraction_all": 0.9190031152647975,
+      "M_histogram": {
+        "1": 269,
+        "2": 26
+      },
+      "mean_M": 1.088135593220339
+    },
+    {
+      "n": 200,
+      "fine_edges": 405,
+      "coarse_edges": 759,
+      "faces": 868,
+      "b1_skeleton": 896,
+      "k_carrier": 2,
+      "unbounded_min_cycles": 807,
+      "tree_b1": 0,
+      "flat_fraction_M1": 1.0,
+      "flat_fraction_all": 0.8744239631336406,
+      "M_histogram": {
+        "1": 654,
+        "2": 101,
+        "3": 4
+      },
+      "mean_M": 1.1436100131752305
+    }
+  ],
+  "poisson": {
+    "P_F_ge2": [
+      0.6399752044828841,
+      0.9312576369064867,
+      0.9890448472224814,
+      0.9984000308967017,
+      0.9997780805322082
+    ],
+    "P_F_ge4": [
+      0.17629188622245506,
+      0.6327438406318276,
+      0.8904197604701277,
+      0.9739978016710592,
+      0.9946550103039831
+    ],
+    "b95_curv": 3,
+    "b99_curv": 4,
+    "b95_F4": 4,
+    "b99_F4": 5,
+    "gap_b95": 1
+  },
+  "prereg": {
+    "k_carrier": 2,
+    "unbounded_min_cycles": 0,
+    "tree_b1": 0,
+    "flat_fraction_M1": 1.0,
+    "flat_fraction_all_lt": 1.0,
+    "b95_curv": 3,
+    "b99_curv": 4,
+    "gap_b95": 1,
+    "P_F_ge2_b1_to_b4": [
+      0.6399752045,
+      0.9312576369,
+      0.9890448472,
+      0.9984000309
+    ]
+  },
+  "kill_fired": true
+}

@@ -1,0 +1,119 @@
+{
+  "audit": "adversary card audit, Q-0013 F-01, 2026-09-02",
+  "b4_reexamination": {
+    "card_correct": true,
+    "b4_part2_rms_rerun_500tr": [
+      4.666988e-17,
+      4.447321e-17,
+      3.976346e-17,
+      3.848985e-17
+    ],
+    "b4_part2_rms_rerun_200tr": [
+      4.849e-17,
+      4.65e-17,
+      4.083e-17,
+      4.005e-17
+    ],
+    "b4_slope_rerun": {
+      "500tr": -0.099554,
+      "200tr": -0.101454,
+      "recorded_in_F02": -0.006
+    },
+    "scale_for_comparison": {
+      "isotropic_law_delta0.005_n4": 3.423e-05,
+      "O_delta2_floor_interpretation": 2.946e-06
+    },
+    "verdict": "residuals at 4e-17 = machine epsilon; the -0.006 slope was a noise slope and is not reproducible"
+  },
+  "counterexamples": {
+    "sufficiency_1": {
+      "sigma": "rank1 u=(e01+e02+e03)/sqrt3",
+      "w": [
+        0.3333,
+        0.3333,
+        0.3333
+      ],
+      "card_closed_form_eps64_over_delta2": 0.02066993,
+      "master_eps64": 0.11783674,
+      "observed_eps64_400tr": 0.117933
+    },
+    "sufficiency_2": {
+      "sigma": "rank1 u=(e00+e11)/sqrt2 (two exact zero modes, correlated)",
+      "w": [
+        0,
+        0,
+        0
+      ],
+      "card_closed_form_eps64_over_delta2": 0.04133986,
+      "master_eps64": 0.23567349,
+      "observed_eps64_400tr": 0.235937,
+      "observed_loglog_slope": 0.0114
+    },
+    "necessity": {
+      "sigma": "e01 x e01 + v x v, v=(e00+e11)/2",
+      "w": [
+        1,
+        0,
+        0
+      ],
+      "card_closed_form_eps64_over_delta2": 0.11963588,
+      "master_eps64": 0.0292317,
+      "observed_eps64_400tr": 0.02697616,
+      "observed_loglog_slope": -0.4708,
+      "reason": "tl M_(00)(11) is exactly antiparallel to tl M_(01)(01), cos = -1.0000000000"
+    },
+    "root_cause": {
+      "nonzero_offdiagonal_tlM_pairs": "192 of 240",
+      "max_offdiag_norm": 0.816497,
+      "max_diag_norm": 0.408248,
+      "correct_condition": "floor = 0 iff tl G(Sigma) = 0 (5 conditions); w-balance is only a proper subset"
+    }
+  },
+  "k4_executability": {
+    "card_mode_zero_n64_delta0p3": "RAISED ValueError: Urbantke metric must be positive and nondegenerate",
+    "p_det_negative_at_delta_0p3": 0.00042906,
+    "prereg_draws_at_delta_0p3": 126976,
+    "expected_failures": 54.5,
+    "note": "F-02 declared MIN_DET=0.05 resampling for exactly this; F-01 script omits it and scope does not declare it"
+  },
+  "zero_mode": {
+    "exact_for_single_diagonal_component": true,
+    "restriction": "requires 1 + delta*label_mumu > -1 (polar factor = I); hand-built violation gives residual 0.8165 at n=2",
+    "checked": "4 components x delta in {0.005,0.3,1,3} x n in {2,4,16,64}"
+  },
+  "safe_kills": {
+    "K5": "exact per-realization identity, worst relative difference 0.000e+00 over 360 realizations (discrete SO(4) symmetry (0 2)(1 3)); also (1,0) vs (0,1) exact",
+    "K4": "already observed at delta=0.005; unobserved delta=0.3 part not executable"
+  },
+  "survived": {
+    "T_I16": 60.0,
+    "sum_a_tl_M_aa": 3.846e-16,
+    "eps_star_over_delta2": 3.1622776602,
+    "sqrt10": 3.1622776602,
+    "analytic_vs_card_fd_Ltilde_maxdiff": 6.25e-12,
+    "eps_star_convention_vs_F02": {
+      "observed_iid_n2_rms_over_delta2_3000tr": 1.569774,
+      "predicted_sqrt10_over_2": 1.581139,
+      "ratio": 0.9928
+    },
+    "recovers_executed": {
+      "n_eq_1_max_residual": 1.159e-15,
+      "delta_to_zero_converged": {
+        "1e-2": 1.068591,
+        "1e-5": 1.068699
+      },
+      "coherent_p_half_n_independent": {
+        "4": 1.563068,
+        "8": 1.563068,
+        "16": 1.563068,
+        "32": 1.563068
+      },
+      "iso_n64_observed_vs_pred": [
+        0.39369,
+        0.39218
+      ]
+    },
+    "verify_block": "17/17 symbolic pass (repo card-check); none of them tests the closed-form/master bridge",
+    "preregistration": "script PRED(9)+WINDOW(9) written 22:50:51 match the card exactly; post-save smoke 22:51:01; card last edited 22:51:39 (disclosure paragraph only)"
+  }
+}

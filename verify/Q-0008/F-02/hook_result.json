@@ -1,0 +1,153 @@
+{
+  "file": "C:\\dev\\ce\\Clarus-Equation\\derivations\\Q-0008\\F-02.formula.md",
+  "question": "Q-0008",
+  "attempt": null,
+  "card": "F-02",
+  "sympy": true,
+  "details": [
+    {
+      "type": "limit",
+      "expr": "4*n**2*p**2*(1-p)**2",
+      "var": "p",
+      "point": 1,
+      "expected": 0,
+      "result": "0",
+      "symbolic": "pass",
+      "index": 0
+    },
+    {
+      "type": "identity",
+      "lhs": "n**2*((1 - 1/n) - (n-1)*(1/n))**2",
+      "rhs": "0",
+      "symbolic": "pass",
+      "max_rel_err": 1.509929076399593e-31,
+      "numeric": "pass",
+      "index": 1
+    },
+    {
+      "type": "identity",
+      "lhs": "n*(1-1/n)**2 + n*(n-1)*(1/n)**2",
+      "rhs": "n-1",
+      "symbolic": "pass",
+      "max_rel_err": 1.7763568394002506e-16,
+      "numeric": "pass",
+      "index": 2
+    },
+    {
+      "type": "numeric",
+      "expr": "(1-1)/1**2 + (1 - 2 + 1/1**2) + (1-1)*(1+1)*(2*1**2+7)/180",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 3
+    },
+    {
+      "type": "identity",
+      "lhs": "(n_B - n_B**2/n)**2 + ((n-n_B) - (n-n_B)**2/n)**2 + 2*(n_B*(n-n_B)/n)**2",
+      "rhs": "4*n_B**2*(n-n_B)**2/n**2",
+      "symbolic": "pass",
+      "max_rel_err": 1.5803886471532478e-16,
+      "numeric": "pass",
+      "index": 4
+    },
+    {
+      "type": "numeric",
+      "expr": "sqrt(4*n**2*(1/2)**2*(1-1/2)**2)/n - 1/2",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 5
+    },
+    {
+      "type": "identity",
+      "lhs": "n_B*((n-n_B)/n)**2 + (n-n_B)*(n_B/n)**2",
+      "rhs": "n_B*(n-n_B)/n",
+      "symbolic": "pass",
+      "max_rel_err": 1.8558952053435452e-16,
+      "numeric": "pass",
+      "index": 6
+    },
+    {
+      "type": "numeric",
+      "expr": "(eps_star/2)**2 - eps_star**2*(2-1)/2**2",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 7
+    },
+    {
+      "type": "identity",
+      "lhs": "(n-1) - 2*(1-1/n) + (1-1/n)**2",
+      "rhs": "n - 2 + 1/n**2",
+      "symbolic": "pass",
+      "max_rel_err": 1.09923071745065e-16,
+      "numeric": "pass",
+      "index": 8
+    },
+    {
+      "type": "identity",
+      "lhs": "n*(n+1)*(n**2+n+1)/6 - 2*((2*n+1)**2*(n*(n+1)*(2*n+1)/6) - 2*(2*n+1)*(n**2*(n+1)**2/4) + n*(n+1)*(2*n+1)*(3*n**2+3*n-1)/30)/(4*n) + (n*(n+1)*(2*n+1)/6)**2/n**2",
+      "rhs": "(n-1)*(n+1)*(2*n**2+7)/180",
+      "symbolic": "pass",
+      "max_rel_err": 3.920235783504001e-15,
+      "numeric": "pass",
+      "index": 9
+    },
+    {
+      "type": "limit",
+      "expr": "sqrt(n-1)/n",
+      "var": "n",
+      "point": "oo",
+      "expected": 0,
+      "result": "0",
+      "symbolic": "pass",
+      "index": 10
+    },
+    {
+      "type": "limit",
+      "expr": "sqrt((n-1)*(n+1)*(2*n**2+7)/180)/n**2",
+      "var": "n",
+      "point": "oo",
+      "expected": "sqrt(10)/30",
+      "result": "sqrt(10)/30",
+      "symbolic": "pass",
+      "index": 11
+    },
+    {
+      "type": "identity",
+      "lhs": "Sum(b-k,(k,0,b-1))",
+      "rhs": "b*(b+1)/2",
+      "symbolic": "pass",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 12
+    },
+    {
+      "type": "numeric",
+      "expr": "(8-1)*(8+1)*(2*8**2+7)/180 - 47.25",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 13
+    },
+    {
+      "type": "numeric",
+      "expr": "2*92.3847/sqrt(31*2008.0806) - 0.7406",
+      "max_rel_err": 4.27612928923793e-05,
+      "numeric": "pass",
+      "index": 14
+    },
+    {
+      "type": "numeric",
+      "expr": "sqrt(1.26071)*36/sqrt(35) - 6.8324",
+      "max_rel_err": 4.394676708496803e-05,
+      "numeric": "pass",
+      "index": 15
+    },
+    {
+      "type": "numeric",
+      "expr": "(63/64**2)/(7/64) - 0.140625",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 16
+    }
+  ],
+  "symbolic": "pass",
+  "numeric": "pass"
+}

@@ -1,0 +1,58 @@
+{
+  "K5_exact_identity_worst_rel": 0.0,
+  "K5_10_vs_01_worst_rel": 0.0,
+  "eps_star_n2_observed_over_delta2": 1.569773990506159,
+  "eps_star_n2_predicted": 1.5811388300841898,
+  "eps_star_ratio": 0.9928122443381991,
+  "convention": {
+    "F02_delta": 0.005,
+    "F02_min_det": 0.05,
+    "F01_delta": 0.005,
+    "F01_has_min_det": false
+  },
+  "kill_executability": {
+    "rank1": {
+      "ok": true,
+      "stats": {
+        "r01_eps64_over_delta2": 0.11959441942546564,
+        "r01_ratio_64_over_4": 0.8654010341626178,
+        "r01_slope": -0.20855925009198445
+      }
+    },
+    "iso": {
+      "ok": true,
+      "stats": {
+        "iso_eps64_over_delta2": 1.0082870927638155,
+        "iso_slope": -0.4411339176858712
+      }
+    },
+    "piso": {
+      "ok": true,
+      "stats": {
+        "piso_eps64_over_delta2": 0.13613201285375198,
+        "piso_slope": -0.7550931230533173
+      }
+    },
+    "axis": {
+      "ok": true,
+      "stats": {
+        "axis_ratio_23_over_01": 1.0
+      }
+    },
+    "mix": {
+      "ok": true,
+      "stats": {
+        "mix_eps64_over_delta2": 0.21004695492218858,
+        "mix_slope": -0.4103920855784647
+      }
+    },
+    "zero_zero(smoke d=0.005+0.3, n<=8, 16 tr)": {
+      "ok": true,
+      "max": 1.4389276406429639e-16
+    },
+    "zero_zero(prereg-ish d=0.3 incl n=64, 512 tr)": {
+      "ok": false,
+      "error": "ValueError: Urbantke metric must be positive and nondegenerate"
+    }
+  }
+}

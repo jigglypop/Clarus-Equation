@@ -2,7 +2,7 @@
 
 현재 하네스는 단일 저장소 direct 모드다. 제거된 `reality_stone`을 요구하지 않고, 자동 CE_RUN 라우팅을 하지 않는다. 검증은 `.codex/hooks/python.cmd doctor|harness|source|python|pytest|links|lint`로 실행하며 최신 결과는 루트 `paper/` 정본을 직접 갱신한다. run core는 기존 실행 증거 판독을 위한 과거 호환 표면이다.
 
-`paper/`에는 결과만 쓴다. 시행착오·중간 계산·아이디어 주차장은 `_workspace/` 노트(파일 20개·48KB·640KB·21일 상한, `harness`가 강제)에 둔다. 연구 현황판이자 유일한 표적은 `paper/진전_원장.md` §2다. 진전 정의는 `harnesses/closure_budget.md`, 매몰 방지는 `harnesses/goal_pursuit.md`가 소유한다. `.claude/`는 2026-09-02 v2부터 독립 설계(연구 루프 5 에이전트, `ledger/` yaml 원장)이며 `.codex`와 미러 관계가 아니다. 두 하네스가 공유하는 것은 `hooks/python.cmd`·`paper_links.py`·`paper_lint.py`·`goal_reminder.py`와 `harnesses/` 계약뿐이다.
+`paper/`에는 결과만 쓴다. 시행착오·중간 계산·아이디어 주차장은 `_workspace/` 노트(파일 20개·48KB·640KB·21일 상한, `harness`가 강제)에 둔다. 연구 현황판이자 유일한 표적은 `paper/진전_원장.md` §2다. 진전 정의는 `harnesses/closure_budget.md`, 매몰 방지는 `harnesses/goal_pursuit.md`가 소유한다. `.claude/`는 2026-09-02 v2부터 독립 설계(연구 루프 5 에이전트, `ledger/` yaml 원장)이며 v3부터 추측 우선(예측식·예산식 카드를 먼저 세우고 사다리로 증명, `harnesses/closure_budget.md` §1·§2)이다. `.codex`와 미러 관계가 아니다. 두 하네스가 공유하는 것은 `hooks/python.cmd`·`paper_links.py`·`paper_lint.py`·`goal_reminder.py`와 `harnesses/` 계약뿐이다.
 
 ## 구조
 

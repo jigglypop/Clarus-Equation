@@ -1,0 +1,100 @@
+{
+  "seed": 20260902,
+  "card_ratio": 0.140625,
+  "card_slope": -0.9069,
+  "card_spec_defect": {
+    "rows": [
+      {
+        "n": 4,
+        "eps": 0.05331084917780331,
+        "eps_from_identity": 0.05331084917780343,
+        "eps_pure_numerator_law": 0.05473674152112818,
+        "denominator_over_reference": 1.0267467572795375
+      },
+      {
+        "n": 8,
+        "eps": 0.03127810991675995,
+        "eps_from_identity": 0.03127810991675982,
+        "eps_pure_numerator_law": 0.03192976588732477,
+        "denominator_over_reference": 1.0208342502887544
+      },
+      {
+        "n": 16,
+        "eps": 0.01689848245790583,
+        "eps_from_identity": 0.016898482457905897,
+        "eps_pure_numerator_law": 0.017105231725352554,
+        "denominator_over_reference": 1.012234783091421
+      },
+      {
+        "n": 32,
+        "eps": 0.008780065123281212,
+        "eps_from_identity": 0.0087800651232811,
+        "eps_pure_numerator_law": 0.00883770305809882,
+        "denominator_over_reference": 1.0065646363675467
+      },
+      {
+        "n": 64,
+        "eps": 0.004474939214273945,
+        "eps_from_identity": 0.0044749392142738815,
+        "eps_pure_numerator_law": 0.0044901233279050455,
+        "denominator_over_reference": 1.0033931441085793
+      }
+    ],
+    "ratio_64_over_8": 0.14306936148581373,
+    "slope": -0.8981828134067237,
+    "r48_eps8_over_eps4": 0.586711905721866,
+    "ratio_in_window": true,
+    "slope_in_window": true,
+    "ratio_deviation_from_card": 0.017382126121342045,
+    "slope_deviation_from_card": 0.00871718659327636,
+    "max_rel_err_identity_prediction": 1.4149333396794901e-14,
+    "window_fraction_used_by_denominator_drift": 0.14702926230458516
+  },
+  "delta_scale_scan": {
+    "rows": [
+      {
+        "perturbation": 0.05,
+        "ratio_64_over_8": 0.14030368148605418,
+        "slope": -0.9086189130850929,
+        "in_ratio_window": true,
+        "in_slope_window": true
+      },
+      {
+        "perturbation": 0.1,
+        "ratio_64_over_8": 0.14022207102069578,
+        "slope": -0.90925936844021,
+        "in_ratio_window": true,
+        "in_slope_window": true
+      },
+      {
+        "perturbation": 0.2,
+        "ratio_64_over_8": 0.14073990801978517,
+        "slope": -0.9074099263510272,
+        "in_ratio_window": true,
+        "in_slope_window": true
+      },
+      {
+        "perturbation": 0.3,
+        "ratio_64_over_8": 0.14209933639002398,
+        "slope": -0.901974629344223,
+        "in_ratio_window": true,
+        "in_slope_window": true
+      },
+      {
+        "perturbation": 0.35,
+        "ratio_64_over_8": 0.14306936148581373,
+        "slope": -0.8981828134067237,
+        "in_ratio_window": true,
+        "in_slope_window": true
+      },
+      {
+        "perturbation": 0.5,
+        "ratio_64_over_8": 0.14700148343282218,
+        "slope": -0.884081617408694,
+        "in_ratio_window": true,
+        "in_slope_window": true
+      }
+    ],
+    "note": "the pure numerator law 0.140625 is the delta -> 0 limit; the observable moves down monotonically with the size of Delta"
+  }
+}

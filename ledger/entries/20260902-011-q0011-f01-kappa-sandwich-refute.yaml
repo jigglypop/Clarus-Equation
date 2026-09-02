@@ -1,0 +1,135 @@
+id: E-20260902-011
+question: Q-0011
+attempt: 1
+timestamp: 2026-09-02T23:10:00+09:00
+claim: >-
+  카드 F-01(예측식, [공리: 후보]) $D:=\lVert H\kappa H\rVert_F^2=c\,n^2\mu_2^{\rm eff}$,
+  $\kappa^{\rm eff}_{vw}=\sum_{u\preceq v,w}(1-s_u/n)$, $\mu_2^{\rm eff}=\mathbb E[(\kappa^{\rm eff}_{vw})^2]$에
+  대해 진폭 샌드위치 $1/4\le c\le2$가 **모든** 뿌리 tree·모든 $n\ge2$에서 성립한다고 사전등록했다(K1–K5는
+  물리 예측 6개로 card-check PASS·verify 14/14·sourcer novel[정규화 후 재발견 없음]로 살아남았으나, 카드
+  고유 새 내용(tree 조합론 사잇값 부등식)을 단독으로 시험하는 것은 K6 하나뿐이다). adversary가 $n=4{,}051{,}399$
+  애벌레(caterpillar) tree(스파인 912개, 부분트리 크기 멱법칙 프로파일 $\alpha=0.92$, 가중 동적범위
+  $R\approx1650$)를 구성해 $c=0.24723256687962955<1/4$를 얻었고, 이 값은 카드 자신의
+  `check_families.tree_stats(parent)['c']`(0.24723256661494192)·독립 $O(n)$ 구동식(0.2472325682864894)·
+  정확 유리수(같은 값, `exact_minus_float`=0.0) 세 경로가 일치해 K6(하한 위반)이 발동했다. 더 나아가
+  최적화 담금질로 $c_{\min}(n)\approx4/\ln n\to0$(예: $n=10^4$: 0.371, $10^6$: 0.269, $10^7$: 0.236,
+  $10^{10}$: 0.169)를 보였으므로, 카드가 "모든 $n$에서 고정된 상수 하한 $1/4$"로 사전등록한 명제는
+  단순히 창을 벗어난 것이 아니라 참인 상수 하한이 애초에 존재하지 않는다(연속극한 최적 프로파일
+  $G\propto1/t$에서 바닥이 $2/\ln R\to0$). 상한 $c\le2$(2-split 극한 수렴, 담금질·구조 족 전수는 미달성
+  추정)와 양의 분해 $D=A+B$(정확, 상쇄 없음)·$A\le\tilde A$·지수 법칙 $\gamma_{\rm her}=\tfrac12\exp_n\mu_2^{\rm eff}$
+  (9족 경험, 최대 지수 차 0.016로 깊이 법칙·raw-$\kappa$ 법칙을 이김, 가중 지수 정확히 1이 load-bearing)는
+  반례를 통과해 좁은 명제로 생존한다.
+level: L2
+verdict: refute
+pivot_step: null
+ladder_step: null
+ladder_cited: null
+card: derivations/Q-0011/F-01.formula.md
+kill_triggered: "K6: c(T)=0.2472<1/4 (n=4,051,399 멱법칙 프로파일 애벌레 tree; 카드 자신의 tree_stats로 확인; c_min~4/ln n→0)"
+derivation: derivations/Q-0011/F-01.formula.md
+verification:
+  symbolic: pass
+  numeric: pass
+  lean: skipped
+  artifacts: verify/Q-0011/F-01/
+adversary:
+  model_note: "adversary는 opus로 실행됨(CLAUDE.md 라우팅: Fable 5.1 안전장치 오탐 회피를 위해 adversary는 항상 opus)."
+  counterexamples:
+    - input: "K6 사전등록 창 [1/4, 2] 전체, `verify/Q-0011/F-01/check_families.py`의 `tree_stats(parent)['c']`;
+        검증 대상 tree: n=4,051,399 애벌레(caterpillar, 스파인 912정점, 크기 강하가 멱법칙 α=0.92를
+        따르는 부분트리를 각 스파인 정점에 잎으로 매담, 동적범위 R≈1650) — `a12_summary.json`,
+        `a8_confirm.json`"
+      expected: "모든 뿌리 tree·모든 n≥2에서 c=D/(n²μ₂^eff) ∈ [1/4, 2] (카드 K6 사전등록)"
+      observed: "c=0.24723256687962955 (정확 유리수 47391690636612764502312961/191688705233103130745005020,
+        exact_minus_float=0.0) — 독립 O(n) 구동식 0.2472325682864894, 카드 자신의 tree_stats 함수
+        0.24723256661494192(card_c_outside_window=true) 세 경로 모두 [0.25,2.0] 밖. margin_below_quarter=
+        0.002767"
+      note: "세 독립 경로 일치로 코드 버그 배제(`a8_confirm.json`); split2_formula_vs_On_max_abs=3.4e-14 등
+        나머지 항등식은 정상 동작해 이 tree만의 특이 현상이 아님"
+    - input: "카드 사다리 3단 보조정리 (iii)·K6 사전등록이 함축하는 '하한 1/4은 n과 무관한 상수'라는 명제;
+        power-law caterpillar를 담금질로 최적화한 c_min(n) 추세, `a12_summary.json` c_min_trend"
+      expected: "c_min이 n을 키워도 1/4 근방에서 안정(상수 하한)"
+      observed: "c_min(n)이 계속 감소: n=1e4:0.3713, 1e5:0.3141, 1e6:0.2686, 1e7:0.2355, 1e8:0.2090,
+        1e10:0.1694, 1e14:0.1522 — c_min·ln n은 완만히 증가(3.4→4.9)하되 c_min 자체는 계속 하강.
+        연속극한 A/Ã=2∫tG²/(∫G)²의 최적 가중밀도 G∝1/t(w^{-2})에서 바닥이 2/ln R로 유도되어(R=동적범위)
+        n→∞에서 바닥 자체가 0으로 붕괴함을 정성적으로 설명"
+      note: "K6는 이미 위 반례로 발동했으므로 이 항목은 독립 kill이 아니라 '수리된 상한만 남고 하한은
+        상수가 아니라 O(1/ln n) 이하'라는 더 강한 진술을 뒷받침하는 보강 증거"
+    - input: "카드 4단 공개 배터리(`--mode battery`, power_profile 모드 s_j=n(1-(j/m)^p))가 공개한 관측
+        최소값 0.3287(n≤~2e5, 무한 배터리 통과) — 카드 본문이 이를 하한의 안전마진으로 인용"
+      expected: "배터리 관측 최소값이 참 c_min(n)에 근접한 근사이며, K6 사전등록 창 [0.25,2.0]에 대한
+        견고한 사전 증거 역할을 한다"
+      observed: "`a13_cardfamily.json`·`a14_realgen.json`·`a15_cardfam_bign.json`: power_profile 매개화는
+        tail-count(m)가 유계라 최적 프로파일(p=−1, w^{-2} 가중밀도)을 표현하지 못해 n=5,000,000까지
+        키워도 c가 0.33~0.41에서 정체(예: n=5e6, m=12000, p=128 근방에서 c≈0.36–0.41). 즉 카드가
+        공개한 최소값 0.3287(n=2e5)은 참 하한의 근사가 아니라 매개화가 표현 가능한 영역의 경계일 뿐인
+        인공물"
+      note: "이 항목만으로는 카드를 죽이지 않지만(비-kill 소비), 카드 본문이 배터리 최소값을 하한의
+        근거처럼 서술한 부분의 대표성을 약화시킨다"
+  survived_checks:
+    - "상한 c≤2 생존: 담금질(n≤250) 최대 1.9257·구조 족 2188개 전수 최대 1.9901·2-split 정확식이 n→∞에서
+      2로 수렴(split2_sup=1.99999999998, n=1e12) — sup=2 미달성 추정으로 반례 없음"
+    - "양의 분해 D=A+B(정확, 상쇄 없음) 생존: `a1_validate.json` 전수 n≤7(873 shape) fast_vs_matrix_D 오차
+      6.9e-16, AplusB_vs_D=0.0, A_le_Atilde_violations=0"
+    - "A≤Ã(경로 위 가중 단조) 증명 가능 부분 생존: 전수 검사에서 위반 0건"
+    - "지수 법칙 γ_her=½·exp_n μ₂^eff 생존: `a10_recovers.json` 9족(chain·star·caterpillar 등)에서
+      gamma_from_D 대 gamma_from_mu2_w1_card 최대 차 0.016로 깊이 법칙(gamma_depth_law)·raw-κ 법칙
+      (gamma_from_mu2_w0_raw_kappa)보다 항상 더 가깝게 일치"
+    - "가중 지수 정확히 1의 specificity 생존: (1-s_u/n)^1 대신 제곱 가중(w²)을 쓰면 broom에서 지수가
+      −0.498로 관측값(−0.0349)과 크게 어긋남 — 가중 지수가 임의가 아니라 load-bearing"
+    - "사전등록 예측 6수 독립 재계산 일치: adversary 재계산과 카드 predictions.json 최대 차 4.5e-5"
+    - "K1–K5 실행 가능성 생존: 다른 seed(20265144) smoke(`a11_smoke.json`, n≤16, trials≤16, 사전등록 grid
+      비접촉)에서 broom/tls 기울기 부호·크기가 카드 예측과 정성적으로 일치"
+    - "사전등록 무결(preregistration_intact=true): result.json 부재 확인, predictions.json이 이번 attempt
+      이전에 이미 존재(카드가 결과를 보고 숫자를 바꾸지 않았음)"
+sourcer:
+  prior_art:
+    - ref: "Felsenstein 1985 'Phylogenies and the comparative method' (Brownian 계통형질 공분산=공유
+        경로 길이 행렬)"
+      relation: generalizes
+      note: "sourcer 원문 relation=generalizes 유지: κ_vw(공유 조상)와 같은 대상이나 계통비교법이라는
+        다른 용도. 카드가 새로 세우는 것은 이중중심화 노름의 조상별 국소 가중 (1−s_u/n) 사잇값 부등식"
+    - ref: "Gower 1966 principal coordinates analysis (이중중심화 H)"
+      relation: generalizes
+      note: "sourcer 원문 relation=special_case를 ledger 스키마로 정규화: 이중중심화 자체는 사다리 1단
+        외부기존 표준기법(인용으로 닫힘). 카드 고유 내용은 조상마다 (1−s_u/n)로 국소 가중해 D와 μ₂^eff를
+        사잇값 짓는 부등식이며 이 부등식 자체는 문헌에 없음"
+    - ref: "Janson 2003 'The Wiener index of simply generated random trees'"
+      relation: unrelated
+      note: "Wiener index 계열 범함수와 대상은 겹치나(Σs_u류) 이중중심화 커널 노름·사잇값 부등식이라는
+        목적이 다름"
+    - ref: "Aldous 1991–1993 CRT; Meir–Moon 1970 부분트리 크기 통계"
+      relation: generalizes
+      note: "sourcer 원문 relation=special_case를 정규화: 부분트리 크기(s_u) 통계는 사다리 1단 외부기존
+        인용 대상. 카드 고유 내용은 그 통계의 (1−s_u/n) 가중 2차 모멘트와 D의 사잇값 부등식 — adversary는
+        극단 프로파일에서의 하한 붕괴(c_min~4/ln n)가 이 계열의 극값 결과와 겹칠 가능성을 제기했으나
+        미확인(재발견 의심, K6 반증과는 별개 사안)"
+    - ref: "Devroye 1987 random recursive tree 깊이 ~ln n"
+      relation: unrelated
+      note: "K4(RRT) 물리 예측의 배경 통계일 뿐 이 카드의 사잇값 부등식과 무관"
+    - ref: "Székely–Rizzo distance correlation / energy statistics"
+      relation: unrelated
+      note: "거리기반 통계량 계열이나 tree 조상공유 커널·이중중심화 사잇값과 목적이 다름"
+  overall: "sourcer 원문 verdict=novel; ledger 정규화 후 prior_art에 identical·special_case 없음(재발견
+    아님). adversary가 항목 4(Aldous/Meir–Moon)에 대해 극단 프로파일 하한 붕괴의 재발견 가능성을 제기했으나
+    확인되지 않았다"
+  ce_specific_confirmed: "이중중심화 조상공유 커널 노름과 조상별 국소 유효가중 (1−s_u/n) 2차 모멘트의
+    tree-족-무제한 사잇값 부등식(1/4≤c≤2)은 문헌에서 찾지 못함 — 단 이 부등식 자체가 K6로 반증됨"
+assumptions:
+  - "카드 사전등록 kill 6개 중 K1–K5는 정확 D와 F-02 3단 커널 법칙만의 함수이며, 이 카드 고유 내용(진폭
+    샌드위치)을 독립적으로 시험하는 것은 K6 하나뿐이라는 자유도(dof) 구조가 카드 본문에 명시되지 않았다"
+  - "카드 4단 공개 배터리(power_profile 매개화)가 최적 프로파일(w^{-2} 가중밀도, p=−1)을 표현할 수 없어
+    관측 최소값 0.3287이 참 하한의 신뢰할 수 있는 근사라는 암묵 전제가 있었다 — 실제로는 매개화 인공물"
+  - "샌드위치 하한 1/4이 n과 무관한 상수라는 전제가 사다리 3단에서 증명되지 않은 채 K6 창으로만
+    사전등록됐다 — 참 점근은 상수가 아니라 O(1/ln n) 이하로 보인다"
+  - "가중 지수가 정확히 1((1−s_u/n)^1)이어야 한다는 specificity가 카드 본문에서 강조되지 않았다(제곱
+    가중이면 broom에서 어긋남)"
+  - "adversary 실행 주체는 CLAUDE.md 현행 라우팅에 따라 opus(항상)이며 이는 대체가 아니라 정상 경로다"
+open_questions_spawned: []
+next_action: "F-02(같은 세션, 재추측 1회): 하한을 상수 1/4 대신 수리된 샌드위치 C/ln n ≤ c ≤ 2(양끝
+  구성적, C는 아직 유도되지 않은 상수)로 교체하거나, 반증되지 않은 지수 법칙 γ_her=½·exp_n μ₂^eff(9족
+  경험, 가중 지수 정확히 1의 specificity)만을 독립적으로 시험하는 단독 카드로 좁힌다 — 두 후보 모두
+  사용자 결정 뒤 신규 질문으로 등록한다(add-question 보류). adversary가 제기한 Aldous/Meir–Moon 재발견
+  의심(극단 하한 붕괴)은 다음 카드의 sourcer 단계에서 재확인한다. 하네스 교훈(소규모 담금질·유한
+  매개화 전수 최소값은 점근 하한의 증거가 아니다; power_profile처럼 유계 매개화는 최적 프로파일을
+  표현 못해 인공적으로 정체할 수 있다)은 _workspace parking 노트로 남긴다."

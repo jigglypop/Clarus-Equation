@@ -1,0 +1,54 @@
+{
+  "audit": "adversary card RE-audit, Q-0013 F-02 revision 2, 2026-09-03 (opus). No preregistered-size run.",
+  "preregistration_intact": {
+    "card_values_rev1_vs_rev2": "15/15 identical (b3_report.card_pred transcription vs parsed rev2)",
+    "script_PRED_now_vs_b6_verbatim_import": "13/13 identical",
+    "script_WINDOW_now_vs_b6": "12/12 identical (zero_max_residual had no model window in b6, script value (-1e-12,1e-12) unchanged)",
+    "script_constants": {"DELTA": 0.005, "ZERO_DELTAS": [0.005, 0.1], "SIZES": [4, 8, 16, 32, 64],
+                          "TRIALS": 512, "N2_TRIALS": 3000, "SEED": 20260902, "MIN_DET": 0.05,
+                          "MODEL_REPLICATES": 200},
+    "script_untouched": {"sha256_16": "35d7488967f8dcf9", "mtime": "2026-09-02 23:52:56",
+                          "card_rev2_mtime": "2026-09-03 00:44:42"},
+    "card_kill_windows_vs_script_WINDOW": "11/11 identical",
+    "hook_result": "26/26 symbolic+numeric pass (re-run 00:44:56)"
+  },
+  "delta4_arithmetic": {
+    "verdict": "1.7e-4 (the card) is right; my rev-1 SUMMARY's 1.7e-5 was a factor-10 slip",
+    "mean_matrix_over_delta4": {"n9": 0.051733, "n33": 0.058709},
+    "residual_in_delta2_units_at_delta_0.005": {"n9": 1.293e-06, "n33": 1.468e-06},
+    "ratio_to_K1_half_width_0.00775": {"n9": 1.669e-04, "n33": 1.894e-04},
+    "quadrature_effect_on_the_K1_value_in_window_units": {"n9": 1.4e-09, "n33": 1.8e-09}
+  },
+  "new_counterexample_step4_alignment": {
+    "card_sentence": "tl gram(Y) = -n delta^2 sum_v tl M(xi~,xi~) + O(delta^3) holds for an ARBITRARY per-cell alignment map (not specifically polar)",
+    "polar_alignment": {"rel_err_over_delta": [0.19312, 0.19236, 0.19222, 0.19222],
+                         "deltas": [0.05, 0.02, 0.005, 0.001],
+                         "note": "identity confirmed for polar: relative error is O(delta)"},
+    "extra_per_cell_rotation_of_size_s_times_delta_at_delta_0.005": {
+      "0.1": 0.00478, "0.3": 0.04354, "1.0": 0.48768, "3.0": 4.3977, "10.0": 48.873,
+      "scaling": "rel_err ~ s^2 and delta-independent (s=1 gives 0.484 at delta=0.02 too)"},
+    "no_alignment": 1.3772,
+    "cell_gram_is_2detE_I": "exactly true (rel dev 0.0) but only kills the v=v terms; the v!=w cross terms carry R_v R_w^T at O(delta^2)",
+    "implication": "ladder step 4's alignment-independence qualifier is false; the identity needs alignments agreeing with the polar/optimal rotation to o(delta). P1, confined to a not-yet-closed ladder step; no preregistered number depends on it."
+  },
+  "script_verdict_vs_card_adjudication": {
+    "script_verdict_checks": ["ker_eps64_over_delta2", "ker_slope", "diag_eps2_over_delta2",
+      "diag_eps64_over_delta2", "diag_slope", "off_eps2_over_delta2", "iso_eps2_over_delta2",
+      "cross_eps2_sq_over_delta4", "univ_o_eps64_over_delta2", "univ_o_eps4_over_delta2",
+      "univ_floor_hat_over_delta2", "univ_d_eps64_over_delta2", "zero_max_residual"],
+    "card_says_record_only": ["iso_eps2_over_delta2", "univ_d_eps64_over_delta2", "zero_max_residual"],
+    "issue": "result.json verdict.status can read 'refuted' on a non-kill stat; the card (frozen prose) is the adjudication rule. P2: add one line to the card, do not touch the frozen script."
+  },
+  "floor_hat": {
+    "prereg_grid_4_64_with_exact_eps": {"univ_o": 0.11785113019775793, "univ_d": 0.11785113019775793,
+                                          "kernel": 0.0, "diag4": 0.0, "abs_err": 0.0},
+    "smoke_grid_4_8_misuse": {"univ_o": 0.27032, "univ_d": 0.11686, "kernel": 0.19902, "diag4": 0.36851},
+    "verdict": "the (4,64) hard-coding is exact on the preregistered grid and meaningless on the smoke grid, exactly as the card now states"
+  },
+  "must_fix_status": {"1": "반영", "2": "반영", "3": "반영(P2 잔여: 스크립트 verdict 문구)", "4": "반영",
+                       "5": "반영", "6": "반영", "7": "반영", "8": "반영했으나 새 P1(정렬 무관성 반례)"},
+  "artifacts": ["c1_invariance.py", "c1_report.json", "c2_step4_and_delta4.py", "c2_report.json",
+                 "c3_alignment_scan.py", "c3_report.json", "c0_shape.py"],
+  "status": "pass_with_P1",
+  "verdict_recommendation": "adopt with conditions"
+}
