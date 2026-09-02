@@ -1,0 +1,83 @@
+id: E-20260902-002
+question: Q-0002
+attempt: 2
+timestamp: 2026-09-02T15:16:25+09:00
+claim: "N_1=N_2=N인 Z_N 이상 시계 둘 + 계 S의 mod-N 제약 모형(대표원 규약 |ε|<N/2,
+  운동학적 분할 사영 P_b, 시계–S 비결합)에서: (1) E_total=ω(O^{(i)}_{H_S})는 관측자 i·τ
+  무관 =⟨H_S⟩_Ψ; (2) E_unseen=Σ_{b≠b'}ω(O_{P_bH_SP_b'})는 정확식; (3) [P_b,H_S]=0
+  ⇒ E_unseen≡0(E39-C 재현); (4a-다듬음) Z_N 불변성 [D(H_S), e^{2πiH_S/N}]=0의 실패
+  ⇔ E_unseen(및 두 준위 프레임차 2Re(āb D_ee'))의 프레임 의존, 단 이 iff는 합에 한하고
+  개별 항목 p_b·E_b는 대표원 규약 자체에 의존(iff 아님); (4b) Φ 수송 사영 O^{(2)}_{ΦP_bΦ†}는
+  정의상 관측자1 장부를 재현(독립 내용 없는 동어반복); (5) 대표원 균일 이동은 ΔE_total=Nm,
+  일반 이동은 정확히 ΔE_total=N⟨K⟩_Ψ(정수배라는 원 문구는 균일 이동·고유상태로 범위 제한).
+  이 좁힌 범위 밖의 부모 문구 — 규약 없이 정의되는 관측자 무관 총에너지, 규약 무관 프레임
+  공변 비선택 장부 — 는 반증됨."
+level: L2
+verdict: pivot
+pivot_step: alt_derivation
+derivation: derivations/Q-0002/attempt-02.derivation.md
+verification:
+  symbolic: skipped
+  numeric: pass
+  lean: skipped
+  artifacts: verify/Q-0002/attempt-02/
+adversary:
+  counterexamples:
+    - input: "N=7 구성A2, K=P_hi(시계1 상반부 사영, 균일 아닌 부분 대표원 이동)로 대표원 재선택"
+      expected: "E_unseen과 프레임차 값이 대표원 규약과 무관(장부가 규약-불변)"
+      observed: "max_abs_dE_unseen=0.839, max_abs_d_frame_diff=1.018 — N의 배수가 아니며
+        규약 고정 후에만 정의됨(adv_result.json A_representative_dependence_of_E_unseen)"
+    - input: "N=7, ε=(0,0,0,7) mod-N 축퇴 사례로 원 문구 '[D(H_S),H_S]≠0 ⇒ 프레임 의존' 검사"
+      expected: "comm_D_HS=11.76≠0이므로 프레임 의존이 나타난다(원 과제 문구 그대로)"
+      observed: "max_frame_diff_E_unseen(20상태)≈1.1e-15로 사실상 0. 참 기준은
+        Z_N 불변성 [D(H_S), e^{2πiH_S/N}]=0이지 [D,H_S]=0이 아님(adv_result_b.json)"
+    - input: "N=13 구성B, S7.1 '분할 프레임 무관' 주장에 대해 p_0, E_b 개별 항목만 비교"
+      expected: "분할 전체가 프레임 무관이므로 개별 항목도 무관"
+      observed: "합(E_unseen,E_seen)은 잔차~1e-16으로 무관하나 p_0 최대차 0.281,
+        E_b 최대차 0.266으로 개별 항목은 의존(adv_result.json B_A2_partition_entries)"
+    - input: "N_1=7,N_2=13, 정렬 격자 L∈{91,7,14}로 V_1,V_2 유니터리성 검사"
+      expected: "N_1≠N_2는 K1/K3 주장 범위 밖으로 단순 비적용 처리 가능"
+      observed: "L=7 선택 시 V_2V_2†-1=1.0(유니터리 완전 실패); N_1≠N_2는 범위 제한이
+        아니라 구조 붕괴이며 필요조건으로 승격해야 함(adv_result.json C_N1_ne_N2)"
+    - input: "Φ:=V_2V_1†에 시계-분할 사영 대신 임의 유니터리 V_2를 대입해 (4b) 수송 검사 재실행"
+      expected: "(4b) 수송 공변성 검사가 Φ의 특정 구성(시계-분할 사영)을 변별한다"
+      observed: "임의 유니터리로도 항등식이 자동 성립(잔차~8.9e-16) — Φ 정의상 동어반복,
+        변별력 0(adv_result.json F_transport_tautology)"
+    - input: "거울 상태(관측자1이 시계 상태를 확정하는 얽힘 상태)에서 (1)(3) 재해석"
+      expected: "(1)(3)은 관측자 무관 총에너지에 대한 비자명한 물리적 진술"
+      observed: "E_seen1=0.68, E_seen2=2.816로 부호 반전 — Dirac 관측량 자명 재진술 +
+        시계–S 얽힘 진술로 재해석 필요(adv_result.json I_mirror_state)"
+  survived_checks:
+    - "무작위 H_S 20개(N=7)에서 claim(1)(2) 잔차 ≤3e-15 (adv_result.json D_random_HS_20,
+      all_claim1/all_claim2=true)"
+    - "다듬은 기준 [D(H_S),e^{2πiH_S/N}]=0과 프레임차 유무가 20/20 상태에서 일치
+      (criterion_consistent, mod-N 축퇴 반례 포함)"
+    - "두 준위 프레임차 공식 2Re(āb D_ee') 20/20 일치(잔차~1e-13 수준, two_level 필드)"
+    - "감김 회계 ΔE_total=N⟨K⟩_Ψ가 구성 A2·B 모두에서 accounting_residual~8.9e-16"
+    - "E39-C 한 영수증 재현: p_L E*+E1=E*, E_total=E*가 관측자·τ 무관(K3_3_E39C, 잔차 0)"
+sourcer: null
+assumptions:
+  - "N_1=N_2=N (동일 위수 Z_N 이상 시계 둘); N_1≠N_2는 범위 밖이 아니라 V_i 유니터리
+    붕괴로 이어짐(adversary d) — 다음 attempt에서 필요조건으로 명시해야 함"
+  - "대표원 규약 |ε|<N/2 고정; 규약 없이는 E_unseen·프레임차 자체가 미정의(adversary a)"
+  - "P_b는 운동학적(시계 고유공간) 분할 사영; 동역학적 분할은 범위 밖"
+  - "시계–S 비결합(H=H_1+H_2+H_S, 상호작용항 없음)"
+  - "다듬은 (4a) 기준은 [D(H_S), e^{2πiH_S/N}]=0(Z_N 불변성)이며 iff는 합(E_unseen)에
+    한정; 개별 p_b·E_b는 이 기준과 무관하게 대표원 규약에 의존(adversary c)"
+  - "(4b) 수송 공변성 검사는 Φ:=V_2V_1†의 정의상 항등식(동어반복, adversary e);
+    독립 검증력 없음 — claim에서 '정의'로만 취급"
+  - "ce_specific_content: 이번 attempt의 생존 내용은 부모(attempt-01) 문구의 반례
+    정정과 E39-C 어휘 대응뿐이며, 정리 수준의 새 내용은 없음(adversary 판정)"
+  - "sourcer 미실행(반례 존재로 판정 지침에 따라 스킵); attempt-01(E-20260902-001)의
+    문헌 대조를 참고만 하고 이번 attempt에서 재확인하지 않음"
+  - "mod-N 군평균 Π에서 A↦O_A는 20 무작위 쌍 곱 보존(잔차~1e-16, S2_*_A_to_O_A_preserves_products)이나
+    exact-kernel Π는 미보존(잔차 0.43~0.58, X_exact_kernel_A_to_O_A_fails_products) —
+    Q-0003(대수 준동형 여부)의 부분 해소 후보. 별도 attempt에서 정리로 닫아야 함"
+open_questions_spawned: []
+next_action: "attempt-03은 pivot_step=alt_derivation으로 진행한다: 유한 mod-N Z_N
+  시계 대신 ℓ²(Z) 양방향 무한 이상 시계(U(1) 시계, 진짜 부분공간 ker H)에서 K3을
+  재유도해 대표원 규약 의존(adversary a,b) 자체를 모형에서 제거한다(Q-0004의 자연스러운
+  해소 경로). 이 재유도에서 N_1≠N_2에 대응하는 서로 다른 시계 '해상도' 조합에서
+  V_i 유니터리 붕괴(adversary d)가 재현되는지 반드시 재검토하고, (4b)는 독립 주장이
+  아니라 Φ의 정의로만 claim에 명시한다. ce_specific_content 부재(정리 수준 새 내용
+  없음)를 감안해 attempt-03에서도 sourcer를 반례 유무 확인 후에만 실행한다."

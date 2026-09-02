@@ -1,0 +1,761 @@
+{
+  "claim": "C1+C3+C2",
+  "question": "Q-0005",
+  "attempt": 1,
+  "seed": 20260902,
+  "tol": 1e-10,
+  "sep": 0.001,
+  "rank_tol_rel": 1e-08,
+  "model": {
+    "N": 16,
+    "H_g": [
+      0,
+      1,
+      1,
+      2,
+      2,
+      2,
+      3,
+      3,
+      4,
+      5
+    ],
+    "H_g_B": [
+      0,
+      0,
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      5,
+      5
+    ],
+    "H_r": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "dim_kin": 1120,
+    "dim_phys": 70
+  },
+  "d_k": [
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    2,
+    4,
+    7,
+    9,
+    10,
+    10,
+    9,
+    8,
+    6,
+    3
+  ],
+  "c3": {
+    "A": {
+      "1": {
+        "mode_E": 6,
+        "tie_set": [
+          6
+        ],
+        "mean_E": 5.8,
+        "weights": [
+          0.0,
+          1.0,
+          3.0,
+          6.0,
+          8.0,
+          9.0,
+          10.0,
+          9.0,
+          7.0,
+          4.0,
+          2.0,
+          1.0
+        ],
+        "f_k_reachable": [
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.9,
+          0.888889,
+          0.75,
+          0.5,
+          0.333333
+        ],
+        "f_max_dev": 0.7810185185185187,
+        "Lambda_star": 10,
+        "Lambda_star_signed": -6
+      },
+      "2": {
+        "mode_E": 6,
+        "tie_set": [
+          6,
+          7
+        ],
+        "mean_E": 6.3,
+        "weights": [
+          0.0,
+          0.0,
+          1.0,
+          3.0,
+          6.0,
+          8.0,
+          9.0,
+          9.0,
+          7.0,
+          4.0,
+          2.0,
+          1.0
+        ],
+        "f_k_reachable": [
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.9,
+          0.8,
+          0.666667,
+          0.375,
+          0.166667,
+          0.0
+        ],
+        "f_max_dev": 0.6590277777777779,
+        "Lambda_star": 10,
+        "Lambda_star_signed": -6
+      },
+      "3": {
+        "mode_E": 6,
+        "tie_set": [
+          6,
+          7
+        ],
+        "mean_E": 6.8,
+        "weights": [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          3.0,
+          6.0,
+          8.0,
+          8.0,
+          7.0,
+          4.0,
+          2.0,
+          1.0
+        ],
+        "f_k_reachable": [
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.888889,
+          0.8,
+          0.6,
+          0.333333,
+          0.125,
+          0.0,
+          0.0
+        ],
+        "f_max_dev": 0.5622685185185184,
+        "Lambda_star": 10,
+        "Lambda_star_signed": -6
+      },
+      "4": {
+        "mode_E": 7,
+        "tie_set": [
+          7
+        ],
+        "mean_E": 7.3,
+        "weights": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          3.0,
+          6.0,
+          7.0,
+          6.0,
+          4.0,
+          2.0,
+          1.0
+        ],
+        "f_k_reachable": [
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          0.857143,
+          0.777778,
+          0.6,
+          0.3,
+          0.111111,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "f_max_dev": 0.5294973544973545,
+        "Lambda_star": 9,
+        "Lambda_star_signed": -7
+      }
+    },
+    "B": {
+      "1": {
+        "mode_E": 6,
+        "tie_set": [
+          6
+        ],
+        "mean_E": 6.0,
+        "weights": [
+          0.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0,
+          7.0,
+          10.0,
+          7.0,
+          6.0,
+          5.0,
+          4.0,
+          3.0
+        ],
+        "f_k_reachable": [
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.7,
+          0.857143,
+          0.833333,
+          0.8,
+          0.75
+        ],
+        "f_max_dev": 0.8283730158730159,
+        "Lambda_star": 10,
+        "Lambda_star_signed": -6
+      },
+      "2": {
+        "mode_E": 6,
+        "tie_set": [
+          6,
+          7
+        ],
+        "mean_E": 6.5,
+        "weights": [
+          0.0,
+          0.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0,
+          7.0,
+          7.0,
+          6.0,
+          5.0,
+          4.0,
+          3.0
+        ],
+        "f_k_reachable": [
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.7,
+          0.6,
+          0.714286,
+          0.666667,
+          0.6,
+          0.0
+        ],
+        "f_max_dev": 0.6900793650793652,
+        "Lambda_star": 10,
+        "Lambda_star_signed": -6
+      },
+      "3": {
+        "mode_E": 6,
+        "tie_set": [
+          6,
+          8
+        ],
+        "mean_E": 7.0,
+        "weights": [
+          0.0,
+          0.0,
+          0.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0,
+          4.0,
+          6.0,
+          5.0,
+          4.0,
+          3.0
+        ],
+        "f_k_reachable": [
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.571429,
+          0.6,
+          0.5,
+          0.571429,
+          0.5,
+          0.0,
+          0.0
+        ],
+        "f_max_dev": 0.5619047619047619,
+        "Lambda_star": 10,
+        "Lambda_star_signed": -6
+      },
+      "4": {
+        "mode_E": 6,
+        "tie_set": [
+          6,
+          9
+        ],
+        "mean_E": 7.5,
+        "weights": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          3.0,
+          4.0,
+          5.0,
+          3.0,
+          3.0,
+          5.0,
+          4.0,
+          3.0
+        ],
+        "f_k_reachable": [
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          0.5,
+          0.428571,
+          0.5,
+          0.4,
+          0.428571,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "f_max_dev": 0.5619047619047619,
+        "Lambda_star": 10,
+        "Lambda_star_signed": -6
+      }
+    }
+  },
+  "checks": {
+    "S1_no_wrap_max_specH0_lt_N": {
+      "pass": true,
+      "max_spec": 11,
+      "N": 16
+    },
+    "S1_group_average_equals_shell_indicator": {
+      "pass": true,
+      "residual": 1.0535300014771846e-15,
+      "tol": 1e-10
+    },
+    "S1_Pi_is_projector": {
+      "pass": true,
+      "residual": 1.0535300014771836e-15,
+      "tol": 1e-10
+    },
+    "S1_dim_phys_70": {
+      "pass": true,
+      "value": 70,
+      "expected": 70
+    },
+    "S1_d_of_E_table": {
+      "pass": true,
+      "value": [
+        1,
+        3,
+        6,
+        8,
+        9,
+        10,
+        10,
+        9,
+        7,
+        4,
+        2,
+        1
+      ],
+      "expected": [
+        1,
+        3,
+        6,
+        8,
+        9,
+        10,
+        10,
+        9,
+        7,
+        4,
+        2,
+        1
+      ]
+    },
+    "S1_d_k_unreachable_zero": {
+      "pass": true,
+      "d_k": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        2,
+        4,
+        7,
+        9,
+        10,
+        10,
+        9,
+        8,
+        6,
+        3
+      ]
+    },
+    "S1_d_of_E_table_B_sums_to_70": {
+      "pass": true,
+      "value": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        10,
+        10,
+        7,
+        6,
+        5,
+        4,
+        3
+      ]
+    },
+    "C1a_uniform_tau_equals_Lambda_eigenvector_k0": {
+      "pass": true,
+      "residual": 2.708703930004854e-15,
+      "tol": 1e-10
+    },
+    "C1a_delta_tau0_has_flat_Lambda_amplitudes": {
+      "pass": true,
+      "residual": 0.0,
+      "tol": 1e-10
+    },
+    "C1a_closed_form_p_Lambda_60_states": {
+      "pass": true,
+      "max_residual": 2.220446049250313e-16,
+      "tol": 1e-10,
+      "examples_first_phi": {
+        "delta_tau0": [
+          0.016036,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.001987,
+          0.013447,
+          0.044913,
+          0.138872,
+          0.142034,
+          0.140898,
+          0.181979,
+          0.079994,
+          0.08102,
+          0.114853,
+          0.043967
+        ],
+        "window4": [
+          0.038487,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.005324,
+          0.02358,
+          0.01191,
+          0.0,
+          0.040139,
+          0.173208,
+          0.05875,
+          0.0,
+          0.090407,
+          0.403271,
+          0.154924
+        ],
+        "uniform_tau": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "C1b_rank_of_200_random_measures_equals_12": {
+      "pass": true,
+      "rank": 12,
+      "expected": 12,
+      "rank_tol_rel": 1e-08,
+      "smallest_kept_sv": 0.16907229352841094,
+      "largest_dropped_sv": 1.3634297052082443e-16
+    },
+    "C1b_unreachable_sectors_zero": {
+      "pass": true,
+      "max": 3.1363021092922283e-31,
+      "tol": 1e-10
+    },
+    "C1b_measures_not_all_equal_to_dk_over_70": {
+      "pass": true,
+      "max_dev_from_dk": 0.12973541758674262,
+      "sep": 0.001
+    },
+    "C1c_generic_A_all_commutators_below_TOL": {
+      "pass": false,
+      "max_norm": 2.8762349507060385,
+      "min_norm": 2.1801411672587685,
+      "tol": 1e-10,
+      "note": "pre-declared: pass -> strengthen wording to Lambda superselection; fail -> no strengthening"
+    },
+    "C1c_generic_A_commutators_above_SEP": {
+      "pass": true,
+      "min_norm": 2.1801411672587685,
+      "sep": 0.001
+    },
+    "C1c_diag_A_commutes_with_Lambda": {
+      "pass": true,
+      "max_norm": 2.674000448096106e-15,
+      "tol": 1e-10
+    },
+    "C1c_tau_averaged_O_commutes_with_Lambda": {
+      "pass": true,
+      "max_norm": 2.9051964067988666e-15,
+      "tol": 1e-10
+    },
+    "C1c_tau5_generic_A_commutator_above_SEP": {
+      "pass": true,
+      "norm": 2.69798199497985,
+      "sep": 0.001
+    },
+    "C2_haar_p_equals_dk_over_70": {
+      "pass": true,
+      "residual": 1.5265566588595902e-16,
+      "tol": 1e-10,
+      "p": [
+        0.014286,
+        -0.0,
+        -0.0,
+        -0.0,
+        0.0,
+        0.014286,
+        0.028571,
+        0.057143,
+        0.1,
+        0.128571,
+        0.142857,
+        0.142857,
+        0.128571,
+        0.114286,
+        0.085714,
+        0.042857
+      ]
+    },
+    "C2_lueders_equals_TrEPk_over_sum_eps1to4": {
+      "pass": true,
+      "max_residual": 2.498001805406602e-16,
+      "tol": 1e-10
+    },
+    "C3a_selection_function_constant_eps1": {
+      "pass": false,
+      "max_dev": 0.7810185185185187,
+      "tol": 1e-10,
+      "note": "pre-declared: pass -> reject C3 (no peak); fail -> conditioning moves the peak"
+    },
+    "C3a_selection_function_nonconstant_all_eps": {
+      "pass": true,
+      "devs": {
+        "1": 0.7810185185185187,
+        "2": 0.6590277777777779,
+        "3": 0.5622685185185184,
+        "4": 0.5294973544973545
+      },
+      "sep": 0.001
+    },
+    "C3b_mode_nondecreasing_in_eps_A": {
+      "pass": true,
+      "modes_E": [
+        6,
+        6,
+        6,
+        7
+      ],
+      "tie_sets": [
+        [
+          6
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          7
+        ]
+      ]
+    },
+    "C3b_mode_shifts_with_eps_A": {
+      "pass": true,
+      "shift": 1
+    },
+    "C3b_mode_shifts_with_multiplicity_B_some_eps": {
+      "pass": true,
+      "modes_A": [
+        6,
+        6,
+        6,
+        7
+      ],
+      "modes_B": [
+        6,
+        6,
+        6,
+        6
+      ],
+      "tie_sets_B": [
+        [
+          6
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          6,
+          8
+        ],
+        [
+          6,
+          9
+        ]
+      ]
+    },
+    "C3b_mean_shifts_with_multiplicity_B_gt_SEP": {
+      "pass": true,
+      "max_mean_shift": 0.20000000000000018,
+      "means_A": [
+        5.8,
+        6.3,
+        6.8,
+        7.3
+      ],
+      "means_B": [
+        6.0,
+        6.5,
+        7.0,
+        7.5
+      ],
+      "sep": 0.001
+    },
+    "C3b_sign_Lambda_star_negative_representative": {
+      "pass": true,
+      "Lambda_star": [
+        10,
+        10,
+        10,
+        9
+      ],
+      "signed": [
+        -6,
+        -6,
+        -6,
+        -7
+      ]
+    },
+    "C3b_scale_peak_is_order_input_energies": {
+      "pass": true,
+      "note": "peak at E* inside spec H_0; no hierarchy generated"
+    }
+  },
+  "conditional_wording": {
+    "C1c_superselection_wording_strengthened": false,
+    "C3_rejected_by_constant_selection_function": false
+  },
+  "required_checks": [
+    "S1_no_wrap_max_specH0_lt_N",
+    "S1_group_average_equals_shell_indicator",
+    "S1_Pi_is_projector",
+    "S1_dim_phys_70",
+    "S1_d_of_E_table",
+    "S1_d_k_unreachable_zero",
+    "S1_d_of_E_table_B_sums_to_70",
+    "C1a_uniform_tau_equals_Lambda_eigenvector_k0",
+    "C1a_delta_tau0_has_flat_Lambda_amplitudes",
+    "C1a_closed_form_p_Lambda_60_states",
+    "C1b_rank_of_200_random_measures_equals_12",
+    "C1b_unreachable_sectors_zero",
+    "C1b_measures_not_all_equal_to_dk_over_70",
+    "C1c_generic_A_commutators_above_SEP",
+    "C1c_diag_A_commutes_with_Lambda",
+    "C1c_tau_averaged_O_commutes_with_Lambda",
+    "C1c_tau5_generic_A_commutator_above_SEP",
+    "C2_haar_p_equals_dk_over_70",
+    "C2_lueders_equals_TrEPk_over_sum_eps1to4",
+    "C3a_selection_function_nonconstant_all_eps",
+    "C3b_mode_nondecreasing_in_eps_A",
+    "C3b_mode_shifts_with_eps_A",
+    "C3b_mode_shifts_with_multiplicity_B_some_eps",
+    "C3b_mean_shifts_with_multiplicity_B_gt_SEP",
+    "C3b_sign_Lambda_star_negative_representative",
+    "C3b_scale_peak_is_order_input_energies"
+  ],
+  "all_pass": true
+}

@@ -1,0 +1,36 @@
+{
+  "H_N_scaling": {
+    "5": {
+      "omega": 0.9599999999999999,
+      "conditioned": 0.19199999999999998,
+      "conditioned_times_N": 0.9599999999999999
+    },
+    "9": {
+      "omega": 0.96,
+      "conditioned": 0.10666666666666666,
+      "conditioned_times_N": 0.96
+    },
+    "17": {
+      "omega": 0.96,
+      "conditioned": 0.05647058823529411,
+      "conditioned_times_N": 0.96
+    },
+    "33": {
+      "omega": 0.9600000000000002,
+      "conditioned": 0.029090909090909098,
+      "conditioned_times_N": 0.9600000000000002
+    }
+  },
+  "G2_tau_unitary_difference": {
+    "res": 0.0
+  },
+  "S5_7_boundary": {
+    "norm_image_interior": 1.0,
+    "norm_image_boundary": 0.0,
+    "note": "ideal clock would give 1 in both; boundary state is annihilated (finite-N artifact)"
+  },
+  "S2_algebra_not_homomorphism": {
+    "res": 0.9999999999999999,
+    "note": "O_A O_B != O_AB on H_phys at boundary: A->O^{(1)}_A is not an algebra homomorphism at finite N"
+  }
+}

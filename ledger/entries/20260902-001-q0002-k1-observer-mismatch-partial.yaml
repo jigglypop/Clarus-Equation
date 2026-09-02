@@ -1,0 +1,82 @@
+id: E-20260902-001
+question: Q-0002
+attempt: 1
+timestamp: 2026-09-02T14:39:39+09:00
+claim: "유한 이상 시계 모형(N=2M+1, 정수 스펙트럼 H_i=diag(-M..M), 정수 ε, 겹침 조건
+  |ε_s-ε_s'|≤2M, exact-kernel Π)에서 [O_S,H_S]=0 ⇒ O^{(1)}_{1⊗O_S}=O^{(2)}_{1⊗O_S}
+  on H_phys(단일 연산자 항등식), 그리고 Φ_12=R_2R_1^{-1}는 V_1→V_2 유니터리이며
+  O^{(1)}_A=O^{(2)}_{Φ_12 A Φ_12^†}이다. 단, A↦O^{(i)}_A는 대수 준동형이 아니다
+  (유한 N에서 곱을 보존하지 않음, ‖O_{σx}^2-O_1‖=1)."
+level: L2
+verdict: pivot
+pivot_step: partial
+derivation: derivations/Q-0002/attempt-01.derivation.md
+verification:
+  symbolic: skipped
+  numeric: pass
+  lean: skipped
+  artifacts: verify/Q-0002/attempt-01/
+adversary:
+  counterexamples:
+    - input: "N=5, ε=(0,5) — 겹침 가정 |ε_s-ε_s'|≤2M 위반"
+      expected: "[O_S,H_S]=0 ⇒ O^{(1)}_{1⊗O_S}=O^{(2)}_{1⊗O_S} on H_phys"
+      observed: "함의가 깨짐: 겹침 가정을 벗어나면 (i)의 ⇒ 방향이 거짓"
+      note: "명시 가정(겹침) 밖. weaken이 아니라 partial로 정의역 제한이 우선"
+    - input: "ε=(0, 1/2) 비정수"
+      expected: "K1의 물리 힐베르트 공간 섹터가 정의됨"
+      observed: "정수 아닌 ε에서 물리 섹터가 소실됨 (ker H 공집합)"
+      note: "N=2M+1, ε∈Z 가정 밖"
+    - input: "k=±M 경계 (스펙트럼 끝)"
+      expected: "O^{(1)}_{σx} 스펙트럼이 경계 인공물 없이 채워짐"
+      observed: "고윳값 0이 다중도 1/(2N-1)로 나타나는 경계 인공물 존재"
+      note: "exact-kernel Π의 유한-N 경계 효과. (i)(ii) 자체를 반증하지 않으나 claim에 명시 필요"
+    - input: "N=7, O_S=σx: A↦O^{(i)}_A 곱셈 보존 검사 ‖O_{σx}^2-O_1‖"
+      expected: "0 (A↦O_A가 대수 준동형이면 O_{AB}=O_A O_B)"
+      observed: "1 (접근 대수는 유한 N에서 곱을 보존하지 않음, 대수로 닫히지 않음)"
+      note: "(ii)를 단일 연산자 항등식 이상(대수 준동형)으로 읽으면 반례. Φ가 V_1→V_2 유니터리라는 좁은 주장은 생존"
+    - input: "Π를 exact-kernel 대신 Z_N 군평균(mod N)으로 치환"
+      expected: "동일 Φ_12, 동일 실패 집합"
+      observed: "Φ_12와 실패 집합이 exact-kernel 선택에 의존해 달라짐"
+      note: "Π 선택이 숨은 가정이었음. claim은 exact-kernel Π에 한정"
+  survived_checks:
+    - "N=7, ε=(1,-2), 무작위 20 상태에서 (i)(ii) 잔차 0"
+    - "N1≠N2 이어도 (i)(ii) 성립"
+    - "τ≠0 일반화 (환원 정의)에서도 유니터리 차이로만 남음"
+    - "N→∞ 규격에서 정규화 일관"
+    - "3준위 S로 확장해도 (i)⇒ 생존"
+    - "차원(dim H_phys) 셈 이상 없음"
+sourcer:
+  prior_art:
+    - ref: "Höhn, Smith, Lock (2021) 'Trinity of relational quantum dynamics', arXiv:1912.00033 §VI"
+      relation: special_case
+      note: "확인 신뢰도 MEDIUM-LOW(정리 번호 미확인). K1이 이 절의 유한 특수 사례일 가능성"
+    - ref: "de la Hamette, Galley, Höhn, Loveridge, Müller (2021), arXiv:2110.13824 §7"
+      relation: generalizes
+      note: "MEDIUM. 'gauge induced QRF transformations are always unitary'가 Φ_12 유니터리성을 포괄"
+    - ref: "Ali Ahmad, Lock, Hamette, Höhn (2022) PRL 128, 170401, arXiv:2103.01232 정리 2"
+      relation: special_case
+      note: "MEDIUM. K1이 이 정리의 유한 특수 사례일 가능성"
+    - ref: "Vanrietvelde, Höhn, Giacomini, Castro-Ruiz (2020) Quantum 4, 225, arXiv:1809.00556 §4.3"
+      relation: special_case
+      note: "MEDIUM-LOW. identical 여부는 정리 단위 대조 없이 미확정이라 보수적으로 special_case"
+    - ref: "Höhn, Smith, Lock (2021) Frontiers in Physics, arXiv:2007.00580"
+      relation: special_case
+      note: "LOW. 웹 접근 한계로 정리 번호 미확인"
+assumptions:
+  - "N_i=2M_i+1 (대칭 정수 스펙트럼), ε_s∈Z"
+  - "겹침 조건 |ε_s-ε_s'|≤2M ((i)의 ⇒ 방향에 한함)"
+  - "Π는 exact-kernel(직교사영) 선택; Z_N 군평균 등 다른 선택과는 결과가 다름"
+  - "A↦O^{(i)}_A는 단일 연산자 항등식으로만 사용; 곱 보존(대수 준동형)은 주장하지 않음"
+open_questions_spawned:
+  - id: Q-0003
+    title: "관측자 접근 대수 𝒜_i의 정의(A↦O_A^{(i)}가 생성하는 부분대수 vs 상)와 유한 N에서의
+      곱셈 비보존(‖O_{σx}^2-O_1‖=1)이 N→∞ 극한에서 회복되는지를 정리 또는 반례로 닫는다"
+    priority: 2
+  - id: Q-0004
+    title: "K3 제약 수준 에너지 장부 E_unseen: exact-kernel Π 하 유한 N 경계 소멸(k=±M
+      인공물) 문제와 대안 커널(Z_N 군평균 등)에서의 재정의 가능성"
+    priority: 2
+next_action: "attempt-02는 이 항목의 좁혀진 claim(정수 ε·겹침·exact-kernel Π)을 새 출발점으로
+  K2(Φ_12=R_2R_1^{-1}의 S-의존성, ε0≠ε1)를 진행한다. 대수 비폐쇄는 Q-0003으로,
+  exact-kernel 경계 소멸은 Q-0004로 분리해 별도 attempt로 다룬다. 문헌 대조는
+  정리 번호 확정 전까지 special_case로만 인용한다."

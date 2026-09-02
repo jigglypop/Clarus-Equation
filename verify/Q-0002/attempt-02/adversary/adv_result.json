@@ -1,0 +1,572 @@
+{
+  "A_representative_dependence_of_E_unseen": {
+    "K=P_hi": {
+      "Pi_residual": 7.109737278934242e-17,
+      "comm_K_HS": 4.440892098500626e-16,
+      "eps_new": [
+        -4,
+        0,
+        0,
+        19
+      ],
+      "max_abs_dE_unseen": 0.8391601822648898,
+      "max_abs_d_frame_diff": 1.017776771997555,
+      "max_abs_dE_total": 4.832457946451823,
+      "dE_unseen_over_N_fractional_max": 0.06455078325114537,
+      "norm_X_of_K": 0.29999999999999993
+    },
+    "K=P_lo": {
+      "Pi_residual": 4.440892098500626e-16,
+      "comm_K_HS": 4.440892098500626e-16,
+      "eps_new": [
+        0,
+        0,
+        6,
+        9
+      ],
+      "max_abs_dE_unseen": 0.8391601822648898,
+      "max_abs_d_frame_diff": 1.0177767719975546,
+      "max_abs_dE_total": 4.689828009087195,
+      "dE_unseen_over_N_fractional_max": 0.06455078325114537,
+      "norm_X_of_K": 0.29999999999999993
+    },
+    "K=P_hi-P_lo": {
+      "Pi_residual": 7.109737278934242e-17,
+      "comm_K_HS": 9.992007221626409e-16,
+      "eps_new": [
+        -17,
+        0,
+        0,
+        19
+      ],
+      "max_abs_dE_unseen": 1.6783203645297806,
+      "max_abs_d_frame_diff": 2.0355535439951096,
+      "max_abs_dE_total": 2.367423059892305,
+      "dE_unseen_over_N_fractional_max": 0.12910156650229082,
+      "norm_X_of_K": 0.5999999999999999
+    },
+    "K=1_uniform": {
+      "Pi_residual": 0.0,
+      "comm_K_HS": 0.0,
+      "eps_new": [
+        9,
+        13,
+        13,
+        19
+      ],
+      "max_abs_dE_unseen": 2.9976021664879227e-15,
+      "max_abs_d_frame_diff": 5.10702591327572e-15,
+      "max_abs_dE_total": 13.000000000000005,
+      "dE_unseen_over_N_fractional_max": 2.3058478203753253e-16,
+      "norm_X_of_K": 0.0
+    }
+  },
+  "H_integer_K_scan": {
+    "m=-3": {
+      "eps": [
+        -33,
+        -4,
+        0,
+        0
+      ],
+      "within_half_N": false,
+      "abs_Dprime_hi_lo": 0.0,
+      "norm_comm_Dprime_Hprime": 201.83999999999992
+    },
+    "m=-2": {
+      "eps": [
+        -20,
+        -4,
+        0,
+        0
+      ],
+      "within_half_N": false,
+      "abs_Dprime_hi_lo": 0.0,
+      "norm_comm_Dprime_Hprime": 61.43999999999996
+    },
+    "m=-1": {
+      "eps": [
+        -7,
+        -4,
+        0,
+        0
+      ],
+      "within_half_N": false,
+      "abs_Dprime_hi_lo": 0.0,
+      "norm_comm_Dprime_Hprime": 2.1599999999999975
+    },
+    "m=0": {
+      "eps": [
+        -4,
+        0,
+        0,
+        6
+      ],
+      "within_half_N": true,
+      "abs_Dprime_hi_lo": 2.3999999999999995,
+      "norm_comm_Dprime_Hprime": 24.0
+    },
+    "m=1": {
+      "eps": [
+        -4,
+        0,
+        0,
+        19
+      ],
+      "within_half_N": false,
+      "abs_Dprime_hi_lo": 5.519999999999998,
+      "norm_comm_Dprime_Hprime": 126.95999999999998
+    },
+    "m=2": {
+      "eps": [
+        -4,
+        0,
+        0,
+        32
+      ],
+      "within_half_N": false,
+      "abs_Dprime_hi_lo": 8.639999999999999,
+      "norm_comm_Dprime_Hprime": 311.0399999999999
+    },
+    "m=3": {
+      "eps": [
+        -4,
+        0,
+        0,
+        45
+      ],
+      "within_half_N": false,
+      "abs_Dprime_hi_lo": 11.76,
+      "norm_comm_Dprime_Hprime": 576.2399999999998
+    },
+    "analytic": "Dprime_vw = (gh/r)[-1 + N(m2-m1)/(2r)], zero iff N(m2-m1)=2r; impossible under |eps|<N/2 since 2r<N"
+  },
+  "B_A2_partition_entries": {
+    "max_abs_p0_diff": 0.28122764824798874,
+    "max_abs_Eb_diff": 0.2662700629001583,
+    "max_abs_E_unseen_diff": 3.3306690738754696e-16,
+    "max_abs_E_seen_diff": 2.220446049250313e-16,
+    "comm_Pb_HS": 2.0,
+    "comm_D_HS": 0.0,
+    "note": "S7.1 says the partition is frame-independent when [D,H_S]=0; only the sums are; p_b, E_b are not"
+  },
+  "C_N1_ne_N2": {
+    "N1=7,N2=13,L=91": {
+      "L": 91,
+      "phys_dim": 7,
+      "4N1": 28,
+      "4N2": 52,
+      "V1dagV1_minus_1": 1.1102230246251565e-16,
+      "V1V1dag_minus_1": 1.0,
+      "V2dagV2_minus_1": 1.1102230246251565e-16,
+      "V2V2dag_minus_1": 1.0,
+      "lam_range": [
+        -4,
+        24
+      ]
+    },
+    "N1=7,N2=13,L=7": {
+      "L": 7,
+      "phys_dim": 52,
+      "4N1": 28,
+      "4N2": 52,
+      "V1dagV1_minus_1": 1.225535237703939e-16,
+      "V1V1dag_minus_1": 1.225535237703939e-16,
+      "V2dagV2_minus_1": 1.0000000000000004,
+      "V2V2dag_minus_1": 1.0,
+      "lam_range": [
+        -4,
+        24
+      ]
+    },
+    "N1=7,N2=14,L=14": {
+      "L": 14,
+      "phys_dim": 28,
+      "4N1": 28,
+      "4N2": 56,
+      "V1dagV1_minus_1": 1.225535237703939e-16,
+      "V1V1dag_minus_1": 1.0,
+      "V2dagV2_minus_1": 1.225535237703939e-16,
+      "V2V2dag_minus_1": 1.225535237703939e-16,
+      "lam_range": [
+        -4,
+        25
+      ]
+    },
+    "N1=13,N2=13,L=13_control": {
+      "L": 13,
+      "phys_dim": 52,
+      "4N1": 52,
+      "4N2": 52,
+      "V1dagV1_minus_1": 1.225535237703939e-16,
+      "V1V1dag_minus_1": 1.225535237703939e-16,
+      "V2dagV2_minus_1": 1.225535237703939e-16,
+      "V2V2dag_minus_1": 1.225535237703939e-16,
+      "lam_range": [
+        -4,
+        30
+      ]
+    }
+  },
+  "D_random_HS_20": {
+    "all_claim1": true,
+    "all_claim2": true,
+    "criterion_iff_consistent_all": true,
+    "two_level_formula_all": true,
+    "n_with_D_commuting": 5,
+    "rows": [
+      {
+        "eps": [
+          -4,
+          -3,
+          -1,
+          2
+        ],
+        "comm_D_HS": 0.0,
+        "max_frame_diff": 8.881784197001252e-16,
+        "claim1_res": 1.3322676295501878e-15,
+        "claim2_res": 8.881784197001252e-16,
+        "criterion_consistent": true,
+        "two_level": null
+      },
+      {
+        "eps": [
+          -3,
+          -1,
+          -1,
+          3
+        ],
+        "comm_D_HS": 3.989921638345266,
+        "max_frame_diff": 0.5371268988391305,
+        "claim1_res": 1.1102230246251565e-15,
+        "claim2_res": 4.440892098500626e-16,
+        "criterion_consistent": true,
+        "two_level": {
+          "observed": 0.8917487936123537,
+          "predicted": 0.8917487936123545
+        }
+      },
+      {
+        "eps": [
+          -4,
+          -2,
+          0,
+          4
+        ],
+        "comm_D_HS": 7.990961121253606,
+        "max_frame_diff": 0.7227569916371821,
+        "claim1_res": 9.992007221626409e-16,
+        "claim2_res": 4.440892098500626e-16,
+        "criterion_consistent": true,
+        "two_level": {
+          "observed": -0.5573349105908678,
+          "predicted": -0.557334910590868
+        }
+      },
+      {
+        "eps": [
+          -4,
+          -4,
+          -4,
+          -2
+        ],
+        "comm_D_HS": 0.34573787326898847,
+        "max_frame_diff": 0.06109615179353156,
+        "claim1_res": 2.6645352591003757e-15,
+        "claim2_res": 1.1518563880486e-15,
+        "criterion_consistent": true,
+        "two_level": {
+          "observed": -0.09942827623763684,
+          "predicted": -0.09942827623763563
+        }
+      },
+      {
+        "eps": [
+          -2,
+          -1,
+          2,
+          3
+        ],
+        "comm_D_HS": 0.0,
+        "max_frame_diff": 6.106226635438361e-16,
+        "claim1_res": 6.661338147750939e-16,
+        "claim2_res": 4.440892098500626e-16,
+        "criterion_consistent": true,
+        "two_level": null
+      },
+      {
+        "eps": [
+          -4,
+          -1,
+          2,
+          2
+        ],
+        "comm_D_HS": 8.297767769267333,
+        "max_frame_diff": 0.745208431309227,
+        "claim1_res": 7.771561172376096e-16,
+        "claim2_res": 2.914335439641036e-16,
+        "criterion_consistent": true,
+        "two_level": {
+          "observed": -0.4280228040857448,
+          "predicted": -0.42802280408574495
+        }
+      },
+      {
+        "eps": [
+          0,
+          1,
+          3,
+          5
+        ],
+        "comm_D_HS": 3.7284234480068705,
+        "max_frame_diff": 0.6498798030305779,
+        "claim1_res": 1.7763568394002505e-15,
+        "claim2_res": 1.0824674490095276e-15,
+        "criterion_consistent": true,
+        "two_level": {
+          "observed": 0.33902027772894683,
+          "predicted": 0.3390202777289471
+        }
+      },
+      {
+        "eps": [
+          -3,
+          -2,
+          3,
+          5
+        ],
+        "comm_D_HS": 10.533722469451343,
+        "max_frame_diff": 0.8853623557150285,
+        "claim1_res": 1.3322676295501878e-15,
+        "claim2_res": 8.326672684688674e-16,
+        "criterion_consistent": true,
+        "two_level": {
+          "observed": 0.5144175868103331,
+          "predicted": 0.5144175868103338
+        }
+      },
+      {
+        "eps": [
+          -4,
+          3,
+          4,
+          5
+        ],
+        "comm_D_HS": 0.0,
+        "max_frame_diff": 1.3322676295501878e-15,
+        "claim1_res": 2.6645352591003757e-15,
+        "claim2_res": 8.881784197001252e-16,
+        "criterion_consistent": true,
+        "two_level": null
+      },
+      {
+        "eps": [
+          -5,
+          -2,
+          1,
+          3
+        ],
+        "comm_D_HS": 12.682397549985497,
+        "max_frame_diff": 0.737502142195323,
+        "claim1_res": 1.1102230246251565e-15,
+        "claim2_res": 4.996003610813204e-16,
+        "criterion_consistent": true,
+        "two_level": {
+          "observed": -0.03789519549895326,
+          "predicted": -0.03789519549895346
+        }
+      },
+      {
+        "eps": [
+          0,
+          3,
+          4,
+          5
+        ],
+        "comm_D_HS": 4.214114481008299,
+        "max_frame_diff": 0.7300719950232355,
+        "claim1_res": 2.220446049250313e-15,
+        "claim2_res": 1.1657341758564144e-15,
+        "criterion_consistent": true,
+        "two_level": {
+          "observed": 0.3258854647535361,
+          "predicted": 0.32588546475353597
+        }
+      },
+      {
+        "eps": [
+          -5,
+          -4,
+          0,
+          1
+        ],
+        "comm_D_HS": 5.317164183339828,
+        "max_frame_diff": 0.6597998972536545,
+        "claim1_res": 1.7763568394002505e-15,
+        "claim2_res": 9.992007221626409e-16,
+        "criterion_consistent": true,
+        "two_level": {
+          "observed": -0.8258548685821325,
+          "predicted": -0.8258548685821324
+        }
+      },
+      {
+        "eps": [
+          -3,
+          -1,
+          0,
+          5
+        ],
+        "comm_D_HS": 0.0,
+        "max_frame_diff": 4.440892098500626e-16,
+        "claim1_res": 6.661338147750939e-16,
+        "claim2_res": 4.440892098500626e-16,
+        "criterion_consistent": true,
+        "two_level": null
+      },
+      {
+        "eps": [
+          -5,
+          -3,
+          -2,
+          1
+        ],
+        "comm_D_HS": 3.055357149720642,
+        "max_frame_diff": 0.5147076116729297,
+        "claim1_res": 3.1086244689504383e-15,
+        "claim2_res": 1.0824674490095276e-15,
+        "criterion_consistent": true,
+        "two_level": {
+          "observed": -0.5924605399345029,
+          "predicted": -0.5924605399345018
+        }
+      },
+      {
+        "eps": [
+          -3,
+          -2,
+          1,
+          3
+        ],
+        "comm_D_HS": 4.886809262494054,
+        "max_frame_diff": 0.7888799067578305,
+        "claim1_res": 1.3322676295501878e-15,
+        "claim2_res": 3.885780586188048e-16,
+        "criterion_consistent": true,
+        "two_level": {
+          "observed": -0.2942085069394358,
+          "predicted": -0.2942085069394354
+        }
+      },
+      {
+        "eps": [
+          -4,
+          2,
+          4,
+          4
+        ],
+        "comm_D_HS": 7.992303148390005,
+        "max_frame_diff": 0.748746018461532,
+        "claim1_res": 1.5543122344752192e-15,
+        "claim2_res": 8.881784197001252e-16,
+        "criterion_consistent": true,
+        "two_level": {
+          "observed": 0.6963668642380206,
+          "predicted": 0.6963668642380205
+        }
+      },
+      {
+        "eps": [
+          -2,
+          -2,
+          -2,
+          3
+        ],
+        "comm_D_HS": 0.0,
+        "max_frame_diff": 4.961309141293668e-16,
+        "claim1_res": 8.881784197001252e-16,
+        "claim2_res": 4.440892098500626e-16,
+        "criterion_consistent": true,
+        "two_level": null
+      },
+      {
+        "eps": [
+          -5,
+          -2,
+          0,
+          0
+        ],
+        "comm_D_HS": 3.1720313823461113,
+        "max_frame_diff": 0.5525461430761158,
+        "claim1_res": 1.3322676295501878e-15,
+        "claim2_res": 6.38378239159465e-16,
+        "criterion_consistent": true,
+        "two_level": {
+          "observed": 0.03257756787714827,
+          "predicted": 0.03257756787714773
+        }
+      },
+      {
+        "eps": [
+          -4,
+          1,
+          2,
+          4
+        ],
+        "comm_D_HS": 6.564572850026233,
+        "max_frame_diff": 0.7166525646982121,
+        "claim1_res": 2.220446049250313e-15,
+        "claim2_res": 4.440892098500626e-16,
+        "criterion_consistent": true,
+        "two_level": {
+          "observed": 0.19512761836915488,
+          "predicted": 0.195127618369155
+        }
+      },
+      {
+        "eps": [
+          -4,
+          -2,
+          2,
+          5
+        ],
+        "comm_D_HS": 12.876445536770607,
+        "max_frame_diff": 0.8928377272381679,
+        "claim1_res": 9.43689570931383e-16,
+        "claim2_res": 3.885780586188048e-16,
+        "criterion_consistent": true,
+        "two_level": {
+          "observed": 0.36074959268282547,
+          "predicted": 0.3607495926828257
+        }
+      }
+    ]
+  },
+  "E_offlattice_tau": {
+    "claim1_offlattice_res": 1.1102230246251565e-16,
+    "V_unitary_offlattice_res": 4.527362242881128e-16,
+    "S3_2_offlattice_res": 1.3112031012361733,
+    "E_unseen_offlattice": 0.05494655574438578,
+    "mean_winding_state0": 0.9360009669582424
+  },
+  "F_transport_tautology": {
+    "random_unitary_as_frame2_transported_residual": 8.881784197001252e-16,
+    "note": "Phi := V2 V1dag gives <V2 c|Phi Y Phidag|V2 c> = <V1 c|Y|V1 c> for ANY unitary V2; K3_4b has no content beyond the definition of Phi"
+  },
+  "G_E39": {
+    "comm_Pb_HSprime": 0.0,
+    "HSprime_diag_in_rq_basis": true,
+    "eps": [
+      0,
+      1,
+      1,
+      2
+    ]
+  },
+  "I_mirror_state": {
+    "E_seen1": 0.6799999999999995,
+    "E_seen2": 2.81586516428355,
+    "diff_1_minus_2": -2.13586516428355,
+    "note": "clock-1-definite state: observer 1 decoheres, observer 2 sees the interference; sign flips vs S7.5"
+  }
+}

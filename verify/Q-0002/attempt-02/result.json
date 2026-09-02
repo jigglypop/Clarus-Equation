@@ -1,0 +1,423 @@
+{
+  "claim": "K3",
+  "question": "Q-0002",
+  "attempt": 2,
+  "seed": 20260902,
+  "tol": 1e-10,
+  "sep": 0.001,
+  "n_states": 20,
+  "configs": {
+    "A0": "N=7,E*=1,g=0",
+    "A2": "N=7,E*=1,g=2 sigma_x (task-literal)",
+    "B": "N=13,E*=1,(g,h)=(3,4)",
+    "E39": "N=7,H_S'=E*(n_Q+1-n_R)",
+    "X": "exact kernel N=7 with A2 H_S"
+  },
+  "checks": {
+    "spectra_integer_and_within_half_N": {
+      "pass": true,
+      "eps_A0": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "eps_A2": [
+        -1,
+        0,
+        0,
+        3
+      ],
+      "eps_B": [
+        -4,
+        0,
+        0,
+        6
+      ],
+      "N_A": 7,
+      "N_B": 13
+    },
+    "S1_A0_Pi_group_average_equals_modN_kernel_projector": {
+      "pass": true,
+      "residual": 1.0925222694330652e-15,
+      "tol": 1e-10
+    },
+    "S1_A0_Pi_idempotent_hermitian": {
+      "pass": true,
+      "residual": 0.0,
+      "tol": 1e-10
+    },
+    "S1_A0_phys_dim_equals_4N": {
+      "pass": true,
+      "value": 28,
+      "expected": 28
+    },
+    "S1_A0_Hfull_consistent_with_lam": {
+      "pass": true,
+      "residual": 0.0
+    },
+    "S2_A0_V_i_unitary_onto_full_Cj_x_S_all_tau": {
+      "pass": true,
+      "residual": 3.3306690738754696e-16,
+      "tol": 1e-10
+    },
+    "S2_A0_O_full_definition_equals_B_Vdag_A_V_Bdag": {
+      "pass": true,
+      "residual": 3.6818079004695136e-15,
+      "tol": 1e-10
+    },
+    "S2_A0_A_to_O_A_preserves_products_20_random_AB": {
+      "pass": true,
+      "max_rel_residual": 3.173824952280585e-16,
+      "tol": 1e-10
+    },
+    "S3_A0_reduced_state_evolves_with_Hj_plus_HS_on_lattice": {
+      "pass": true,
+      "residual": 1.4473738896896063e-15,
+      "tol": 1e-10
+    },
+    "S5_A0_Phi_dag_Phi_eq_1_full_space_all_tau": {
+      "pass": true,
+      "residual": 6.661338147750939e-16,
+      "tol": 1e-10
+    },
+    "S5_A0_Phi_commutes_with_1xHS": {
+      "pass": true,
+      "residual": 0.0,
+      "tol": 1e-10
+    },
+    "S1_A2_Pi_group_average_equals_modN_kernel_projector": {
+      "pass": true,
+      "residual": 2.599811419986317e-15,
+      "tol": 1e-10
+    },
+    "S1_A2_Pi_idempotent_hermitian": {
+      "pass": true,
+      "residual": 2.220446049250313e-16,
+      "tol": 1e-10
+    },
+    "S1_A2_phys_dim_equals_4N": {
+      "pass": true,
+      "value": 28,
+      "expected": 28
+    },
+    "S1_A2_Hfull_consistent_with_lam": {
+      "pass": true,
+      "residual": 4.440892098500625e-15
+    },
+    "S2_A2_V_i_unitary_onto_full_Cj_x_S_all_tau": {
+      "pass": true,
+      "residual": 6.669523511157069e-16,
+      "tol": 1e-10
+    },
+    "S2_A2_O_full_definition_equals_B_Vdag_A_V_Bdag": {
+      "pass": true,
+      "residual": 4.446576497760142e-15,
+      "tol": 1e-10
+    },
+    "S2_A2_A_to_O_A_preserves_products_20_random_AB": {
+      "pass": true,
+      "max_rel_residual": 4.129917019899771e-16,
+      "tol": 1e-10
+    },
+    "S3_A2_reduced_state_evolves_with_Hj_plus_HS_on_lattice": {
+      "pass": true,
+      "residual": 1.534929365333185e-15,
+      "tol": 1e-10
+    },
+    "S5_A2_Phi_dag_Phi_eq_1_full_space_all_tau": {
+      "pass": true,
+      "residual": 9.173170108524743e-16,
+      "tol": 1e-10
+    },
+    "S5_A2_Phi_commutes_with_1xHS": {
+      "pass": true,
+      "residual": 0.0,
+      "tol": 1e-10
+    },
+    "S1_B_Pi_group_average_equals_modN_kernel_projector": {
+      "pass": true,
+      "residual": 7.606066068029026e-15,
+      "tol": 1e-10
+    },
+    "S1_B_Pi_idempotent_hermitian": {
+      "pass": true,
+      "residual": 1.362114991127945e-16,
+      "tol": 1e-10
+    },
+    "S1_B_phys_dim_equals_4N": {
+      "pass": true,
+      "value": 52,
+      "expected": 52
+    },
+    "S1_B_Hfull_consistent_with_lam": {
+      "pass": true,
+      "residual": 4.468540092749573e-15
+    },
+    "S2_B_V_i_unitary_onto_full_Cj_x_S_all_tau": {
+      "pass": true,
+      "residual": 4.448620844610102e-16,
+      "tol": 1e-10
+    },
+    "S2_B_O_full_definition_equals_B_Vdag_A_V_Bdag": {
+      "pass": true,
+      "residual": 3.970001006717735e-15,
+      "tol": 1e-10
+    },
+    "S2_B_A_to_O_A_preserves_products_20_random_AB": {
+      "pass": true,
+      "max_rel_residual": 3.7290714190631916e-16,
+      "tol": 1e-10
+    },
+    "S3_B_reduced_state_evolves_with_Hj_plus_HS_on_lattice": {
+      "pass": true,
+      "residual": 1.8639851282838345e-14,
+      "tol": 1e-10
+    },
+    "S5_B_Phi_dag_Phi_eq_1_full_space_all_tau": {
+      "pass": true,
+      "residual": 8.381325794920288e-16,
+      "tol": 1e-10
+    },
+    "S5_B_Phi_commutes_with_1xHS": {
+      "pass": true,
+      "residual": 1.6510523009092642e-15,
+      "tol": 1e-10
+    },
+    "K3_1_A0_E_total_equals_<HS>_all_i_tau_20_states": {
+      "pass": true,
+      "residual": 3.3306690738754696e-16,
+      "tol": 1e-10
+    },
+    "K3_1_A0_omega_O_1_equals_1": {
+      "pass": true,
+      "residual": 4.440892098500626e-16,
+      "tol": 1e-10
+    },
+    "K3_2_A0_E_unseen_equals_offdiag_formula": {
+      "pass": true,
+      "residual": 1.1102230246251565e-16,
+      "tol": 1e-10
+    },
+    "K3_1_A2_E_total_equals_<HS>_all_i_tau_20_states": {
+      "pass": true,
+      "residual": 5.551115123125783e-16,
+      "tol": 1e-10
+    },
+    "K3_1_A2_omega_O_1_equals_1": {
+      "pass": true,
+      "residual": 5.551115123125783e-16,
+      "tol": 1e-10
+    },
+    "K3_2_A2_E_unseen_equals_offdiag_formula": {
+      "pass": true,
+      "residual": 3.3306690738754696e-16,
+      "tol": 1e-10
+    },
+    "K3_1_B_E_total_equals_<HS>_all_i_tau_20_states": {
+      "pass": true,
+      "residual": 9.992007221626409e-16,
+      "tol": 1e-10
+    },
+    "K3_1_B_omega_O_1_equals_1": {
+      "pass": true,
+      "residual": 4.440892098500626e-16,
+      "tol": 1e-10
+    },
+    "K3_2_B_E_unseen_equals_offdiag_formula": {
+      "pass": true,
+      "residual": 6.106226635438361e-16,
+      "tol": 1e-10
+    },
+    "K3_3_A0_E_unseen_zero_all_i_tau": {
+      "pass": true,
+      "residual": 1.1102230246251565e-16,
+      "tol": 1e-10,
+      "comm_Pb_HS": 0.0
+    },
+    "K3_3_A0_sum_pb_Eb_equals_E_total": {
+      "pass": true,
+      "residual": 1.1102230246251565e-16,
+      "tol": 1e-10
+    },
+    "K3_3_A0_pb_and_Eb_observer_and_tau_independent": {
+      "pass": true,
+      "residual": 3.3306690738754696e-16,
+      "tol": 1e-10
+    },
+    "K3_3_E39C_one_receipt_pm_E+pL_E=E_and_E_total=E_star_all_i_tau": {
+      "pass": true,
+      "residual": 0.0,
+      "tol": 1e-10,
+      "p_L": 0.5849835714501206,
+      "eps_E39": [
+        0,
+        1,
+        1,
+        2
+      ]
+    },
+    "K3_3_A0_correlated_state_E_total=pL_E_star_E1=E_star_E0=0": {
+      "pass": true,
+      "residual": 1.1102230246251565e-16,
+      "tol": 1e-10
+    },
+    "NEG_A2_literal_sigma_x_only_E_unseen_frame_independent_because_[D(HS),HS]=0": {
+      "pass": true,
+      "max_diff_obs1_obs2": 3.3306690738754696e-16,
+      "max_tau_variation": 2.7755575615628914e-16,
+      "tol": 1e-10,
+      "comm_D_HS": 0.0,
+      "comm_Pb_HS": 2.0,
+      "note": "task-literal claim (4a) is false for this H_S; sharpened criterion [D(H_S),H_S]!=0 needed"
+    },
+    "K3_4a_B_E_unseen_frame_dependent_exists": {
+      "pass": true,
+      "n_states_with_diff_gt_sep": 20,
+      "max_diff": 1.0044925413594987,
+      "min_diff": 0.07244176413053552,
+      "sep": 0.001,
+      "comm_D_HS": 24.0,
+      "max_tau_variation_obs1": 1.1094691822734029
+    },
+    "K3_4a_B_two_level_state_E_seen_diff_equals_2Re(conj(a)b D_ee')": {
+      "pass": true,
+      "observed": 2.13586516428355,
+      "predicted": 2.13586516428355,
+      "k1": 2,
+      "k1p": 12,
+      "D_ee": 2.3999999999999995,
+      "tol": 1e-10
+    },
+    "K3_4b_B_transported_projections_reproduce_observer1_ledger_exactly": {
+      "pass": true,
+      "residual": 1.3322676295501878e-15,
+      "tol": 1e-10
+    },
+    "NEG_B_identity_transport_fails": {
+      "pass": true,
+      "residual": 1.0044925413594987,
+      "sep": 0.001
+    },
+    "K3_4b_B_transport_covariance_tau1_ne_tau2": {
+      "pass": true,
+      "residual": 3.3306690738754696e-16,
+      "tol": 1e-10
+    },
+    "K3_5_A2_uniform_representative_shift_moves_E_total_by_exactly_N_m": {
+      "pass": true,
+      "tol": 1e-10,
+      "uniform_m=1": {
+        "Pi_residual": 0.0,
+        "shift": 7.0,
+        "expected": 7
+      },
+      "uniform_m=-2": {
+        "Pi_residual": 0.0,
+        "shift": -13.999999999999998,
+        "expected": -14
+      }
+    },
+    "K3_5_A2_single_eigenvalue_shift_Pi_unchanged_and_dE=N<P_e>": {
+      "pass": true,
+      "Pi_residual": 0.0,
+      "accounting_residual": 8.881784197001252e-16,
+      "tol": 1e-10,
+      "shift_over_N_fractional_parts": [
+        0.29402335911778266,
+        0.4361119698274503,
+        0.2477056975860596,
+        0.3751350637378774,
+        0.16327660169975672
+      ],
+      "is_integer_multiple_of_N_for_random_states": 0,
+      "note": "literal (5) 'integer multiple of N' holds only for uniform shifts or H_S eigenstates; exact rule is dE_total = N<K>_Psi"
+    },
+    "K3_5_A2_clock_representative_shift_leaves_Pi_and_E_total_and_moves_winding_by_1": {
+      "pass": true,
+      "Pi_residual": 0.0,
+      "dE": -1.1102230246251565e-16,
+      "winding_spectrum": [
+        0,
+        1,
+        2
+      ],
+      "shift_residual": 1.7763568394002505e-15,
+      "tol": 1e-10,
+      "note": "H_phys = ker(H mod N), not ker H: H|Psi> = N W |Psi> with integer W; the constraint fixes total energy only mod N"
+    },
+    "K3_5_B_uniform_representative_shift_moves_E_total_by_exactly_N_m": {
+      "pass": true,
+      "tol": 1e-10,
+      "uniform_m=1": {
+        "Pi_residual": 0.0,
+        "shift": 13.000000000000004,
+        "expected": 13
+      },
+      "uniform_m=-2": {
+        "Pi_residual": 0.0,
+        "shift": -26.000000000000004,
+        "expected": -26
+      }
+    },
+    "K3_5_B_single_eigenvalue_shift_Pi_unchanged_and_dE=N<P_e>": {
+      "pass": true,
+      "Pi_residual": 7.109737278934242e-17,
+      "accounting_residual": 8.881784197001252e-16,
+      "tol": 1e-10,
+      "shift_over_N_fractional_parts": [
+        0.2717416483745192,
+        0.24390142057160308,
+        0.2959398350822606,
+        0.2147193298042707,
+        0.2504025328347049
+      ],
+      "is_integer_multiple_of_N_for_random_states": 0,
+      "note": "literal (5) 'integer multiple of N' holds only for uniform shifts or H_S eigenstates; exact rule is dE_total = N<K>_Psi"
+    },
+    "K3_5_B_clock_representative_shift_leaves_Pi_and_E_total_and_moves_winding_by_1": {
+      "pass": true,
+      "Pi_residual": 0.0,
+      "dE": -1.6653345369377348e-16,
+      "winding_spectrum": [
+        0,
+        1,
+        2
+      ],
+      "shift_residual": 3.552713678800501e-15,
+      "tol": 1e-10,
+      "note": "H_phys = ker(H mod N), not ker H: H|Psi> = N W |Psi> with integer W; the constraint fixes total energy only mod N"
+    },
+    "X_exact_kernel_phys_dim": {
+      "pass": true,
+      "value": 24,
+      "expected": 24,
+      "modN_dim": 28
+    },
+    "X_exact_kernel_A_to_O_A_fails_products_20_random_AB": {
+      "pass": true,
+      "min_rel_residual": 0.42548941320412953,
+      "max_rel_residual": 0.5821412523801406,
+      "sep": 0.001
+    },
+    "X_exact_kernel_Phi_dag_Phi_ne_1": {
+      "pass": true,
+      "residual": 1.0,
+      "rank_Phi": 24,
+      "full_dim": 28
+    },
+    "X_boundary_annihilation_exact_vs_modN": {
+      "pass": true,
+      "exact_min_norm": 3.251767952832689e-17,
+      "exact_n_annihilated": 4,
+      "modN_min_norm": 0.9999999999999998,
+      "modN_max_norm": 1.0
+    },
+    "X_exact_kernel_claim1_still_holds": {
+      "pass": true,
+      "residual": 2.7755575615628914e-16,
+      "tol": 1e-10
+    }
+  },
+  "all_pass": true
+}

@@ -1,0 +1,58 @@
+{
+  "file": "C:\\Users\\22310326\\Desktop\\Clarus-Equation\\derivations\\Q-0002\\attempt-01.derivation.md",
+  "question": "Q-0002",
+  "attempt": 1,
+  "sympy": false,
+  "details": [
+    {
+      "type": "identity",
+      "lhs": "(-k2-e1)-(-k2-e0)",
+      "rhs": "e0-e1",
+      "symbolic": "skipped",
+      "reason": "sympy-not-installed",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 0
+    },
+    {
+      "type": "identity",
+      "lhs": "sin((-k2-e0)*tau)+sin((k2+e0)*tau)",
+      "rhs": "0",
+      "symbolic": "skipped",
+      "reason": "sympy-not-installed",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 1
+    },
+    {
+      "type": "identity",
+      "lhs": "cos((-k2-e0)*tau)-cos((k2+e0)*tau)",
+      "rhs": "0",
+      "symbolic": "skipped",
+      "reason": "sympy-not-installed",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 2
+    },
+    {
+      "type": "identity",
+      "lhs": "((ar*br+ai*bi)+(br*ar+bi*ai))/N",
+      "rhs": "2*(ar*br+ai*bi)/N",
+      "symbolic": "skipped",
+      "reason": "sympy-not-installed",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 3
+    },
+    {
+      "type": "numeric",
+      "expr": "N*(1/sqrt(N))**2 - 1",
+      "max_rel_err": 2.220446049250313e-16,
+      "numeric": "pass",
+      "index": 4
+    }
+  ],
+  "symbolic": "skipped",
+  "numeric": "pass",
+  "reason": "sympy-not-installed"
+}

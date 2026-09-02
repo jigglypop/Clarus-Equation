@@ -1,0 +1,95 @@
+{
+  "file": "C:\\Users\\22310326\\Desktop\\Clarus-Equation\\derivations\\Q-0002\\attempt-02.derivation.md",
+  "question": "Q-0002",
+  "attempt": 2,
+  "sympy": false,
+  "details": [
+    {
+      "type": "identity",
+      "lhs": "(Es+sqrt(g**2+h**2))*(Es-sqrt(g**2+h**2))",
+      "rhs": "Es**2-g**2-h**2",
+      "symbolic": "skipped",
+      "reason": "sympy-not-installed",
+      "max_rel_err": 6.864074805032632e-16,
+      "numeric": "pass",
+      "index": 0
+    },
+    {
+      "type": "identity",
+      "lhs": "cos((k1+N)*2*pi*n/N)-cos(k1*2*pi*n/N)",
+      "rhs": "0",
+      "symbolic": "skipped",
+      "reason": "sympy-not-installed",
+      "max_rel_err": 6.994405055138486e-15,
+      "numeric": "pass",
+      "index": 1
+    },
+    {
+      "type": "identity",
+      "lhs": "sin((-k2-e+N*m)*2*pi*n/N)+sin((k2+e)*2*pi*n/N)",
+      "rhs": "0",
+      "symbolic": "skipped",
+      "reason": "sympy-not-installed",
+      "max_rel_err": 2.6709679834144066e-14,
+      "numeric": "pass",
+      "index": 2
+    },
+    {
+      "type": "identity",
+      "lhs": "cos((-k2-e+N*m)*2*pi*n/N)-cos((k2+e)*2*pi*n/N)",
+      "rhs": "0",
+      "symbolic": "skipped",
+      "reason": "sympy-not-installed",
+      "max_rel_err": 1.2490009027033011e-14,
+      "numeric": "pass",
+      "index": 3
+    },
+    {
+      "type": "identity",
+      "lhs": "(Es+g*x+h*z)-(Es+h*z)",
+      "rhs": "g*x",
+      "symbolic": "skipped",
+      "reason": "sympy-not-installed",
+      "max_rel_err": 1.8100771659859603e-16,
+      "numeric": "pass",
+      "index": 4
+    },
+    {
+      "type": "identity",
+      "lhs": "(ar*br+ai*bi)*d+(br*ar+bi*ai)*d",
+      "rhs": "2*(ar*br+ai*bi)*d",
+      "symbolic": "skipped",
+      "reason": "sympy-not-installed",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 5
+    },
+    {
+      "type": "identity",
+      "lhs": "((Es+N*m)-Es)-N*m",
+      "rhs": "0",
+      "symbolic": "skipped",
+      "reason": "sympy-not-installed",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 6
+    },
+    {
+      "type": "numeric",
+      "expr": "(1+sqrt(3**2+4**2))-6",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 7
+    },
+    {
+      "type": "numeric",
+      "expr": "(1-sqrt(3**2+4**2))+4",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 8
+    }
+  ],
+  "symbolic": "skipped",
+  "numeric": "pass",
+  "reason": "sympy-not-installed"
+}

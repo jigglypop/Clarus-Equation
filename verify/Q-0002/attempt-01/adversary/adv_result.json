@@ -1,0 +1,124 @@
+{
+  "A_eps05_N5": {
+    "phys_dim": 5,
+    "sectors": [
+      0
+    ],
+    "norm_O1": 0.0,
+    "norm_O2": 0.0,
+    "diff": 0.0,
+    "commutator": 5.0,
+    "claim_i_forward_holds": false
+  },
+  "B_eps_half": {
+    "phys_dim": 5,
+    "diff": 0.0,
+    "claim_i_forward_holds": false
+  },
+  "B_check_k1_kernel_threshold_bug": {
+    "true_ker_dim": 5,
+    "check_k1_would_count": 10,
+    "max_H_on_fake_phys": 0.4
+  },
+  "C_boundary_zero_eigen": {
+    "5": {
+      "phys_dim": 9,
+      "n_zero_eigs": 1,
+      "frac": 0.1111111111111111,
+      "expected_ideal_clock_spectrum": "{+1,-1} only"
+    },
+    "9": {
+      "phys_dim": 17,
+      "n_zero_eigs": 1,
+      "frac": 0.058823529411764705,
+      "expected_ideal_clock_spectrum": "{+1,-1} only"
+    },
+    "17": {
+      "phys_dim": 33,
+      "n_zero_eigs": 1,
+      "frac": 0.030303030303030304,
+      "expected_ideal_clock_spectrum": "{+1,-1} only"
+    },
+    "33": {
+      "phys_dim": 65,
+      "n_zero_eigs": 1,
+      "frac": 0.015384615384615385,
+      "expected_ideal_clock_spectrum": "{+1,-1} only"
+    }
+  },
+  "D_N1_5_N2_7": {
+    "phys_dim": 10,
+    "iso_res": 0.0,
+    "cov_res": 1.6714668169501625e-15,
+    "shapes": [
+      [
+        14,
+        10
+      ],
+      [
+        10,
+        10
+      ]
+    ]
+  },
+  "E_modN_vs_exact": {
+    "dim_exact": 9,
+    "dim_modN": 10,
+    "Phi_exact_on_k2eq2_s1": 0.0,
+    "Phi_modN_on_k2eq2_s1_target_k1_s": [
+      2,
+      1
+    ],
+    "Phi_diff": 1.0,
+    "Phi_modN_unitary_full": 0.0
+  },
+  "E_modN_claim_i_eps01": {
+    "diff": 1.9021130325903073
+  },
+  "E_modN_claim_i_eps05_wrap": {
+    "phys_dim": 10,
+    "diff": 0.0,
+    "note": "eps differ by N: wrap makes them degenerate; forward (i) fails"
+  },
+  "F_random20_N7_eps1m2": {
+    "phys_dim": 11,
+    "cov_max": 0.0,
+    "commuting_agree_max": 0.0,
+    "noncommuting_min_diff": 0.43106161349052957,
+    "iso": 0.0
+  },
+  "G_tau_nonzero": {
+    "iso": 1.1102230246251565e-16,
+    "cov": 1.7732104945054593e-15,
+    "Phi_vs_tau0": 1.9414920301383136
+  },
+  "H_N_scaling": {
+    "5": {
+      "omega": 0.0,
+      "conditioned": 0.0,
+      "norm_conditioned": 0.4472135954999579
+    },
+    "9": {
+      "omega": 0.0,
+      "conditioned": 0.0,
+      "norm_conditioned": 0.3333333333333333
+    },
+    "17": {
+      "omega": 0.0,
+      "conditioned": 0.0,
+      "norm_conditioned": 0.24253562503633297
+    },
+    "33": {
+      "omega": 0.0,
+      "conditioned": 0.0,
+      "norm_conditioned": 0.17407765595569785
+    }
+  },
+  "I_covariance_tautology_random_isometries": {
+    "res": 5.418099292228186e-15
+  },
+  "J_3level": {
+    "phys_dim": 12,
+    "diff": 1.7320508075688772
+  }
+}

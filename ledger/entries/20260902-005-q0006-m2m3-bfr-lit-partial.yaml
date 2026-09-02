@@ -1,0 +1,135 @@
+id: E-20260902-005
+question: Q-0006
+attempt: 1
+timestamp: 2026-09-02T18:20:00+09:00
+claim: |-
+  M1 작용(E54-A: 중력+V(χ)+무차원 Klein–Gordon 기준 스칼라 X^A 4개, μ_X²>0, 양의 내부 metric
+  δ_AB)에 대해 M2·M3 문헌 도입 kill test(사전등록 `_workspace/20260902-qftnext-M4_문헌도입_
+  끼임instrument.md`, kill 1·2·3)를 수행했다. 세 kill 모두 발동하지 않았으나 셋 다 "부분"이며,
+  이는 [정리: 문헌, EFT 조건부] 판정이 아니라 아래처럼 [미완성]으로 좁혀 기록해야 한다 —
+  초안의 [정리] 태그를 그대로 36장 행에 넣으면 M2·M3가 통과한 것으로 오독되는 위험이 있다
+  (adversary 지위 감사).
+
+  M3 = [미완성] — 채택 틀은 BFHPR 2016(arXiv:1605.02573)이 아니라 BFR 2016(arXiv:1306.1058)
+  일반 틀(정의)이다(adversary 정정; §2 원 문구의 출처 라벨은 기각). 유도 자체가 채택한 4조건
+  (a) 공변 partial observable 스칼라 4개, (b) 배경 근방 단사성 det(∂_μX^A)≠0, (c) 섭동적
+  BV 구성에서 QME 해결, (d) 선형화 게이지 고정계의 Hadamard 상태 중 (a)만 충족한다. (b)는
+  요청의 "E58"=정본 E61-D형 상수-X̄ 평탄 배경에서 det=0으로 실패하고, 요청의 "E59"=정본
+  E62-A 비퇴화 FLRW 국소 patch에서만 det=μ_X⁴u a³b³≠0 (uβ≠0)으로 조건부 국소 통과한다
+  (E78은 정본에 없다). (c)(d)는 미검증이다. 따라서 "BFR 클래스 안"이라고 뭉뚱그려 쓰지 않고
+  "(a) 충족, (b) 배경 조건부, (c)(d) 미검증"으로만 좁혀 쓴다. 채택한 (a)–(d) 목록에는 BFR의
+  배경 독립성 조건이 빠져 있었다(adversary 지적, 이번 attempt에서 보강하지 않음). BFHPR
+  2016의 "external fields ... not useful ... because these fields would appear in the
+  final gauge-invariant expressions"는 우주론 섭동론 목적에 상대적인 판단이지 불가능 판정이
+  아니며, CE는 X^A를 물질로 선언했으므로 최종식에 남는 것이 의도된 특징이다 — 다만 BFHPR의
+  배경(inflaton FLRW)·기준 좌표(비국소 조화)·관측량 대수는 M1과 다르므로 BFHPR 결과의 직접
+  이전이 아니다. M1 적응에서 새로 증명해야 할 것(P1–P6): P1 X^A 요동의 dressed 관측량 대수
+  기여와 고정 배경 극한의 억제 조건, P2 강결합 스케일 Λ_sc(μ_X,M_P)와 EFT 유효 영역, P3 E62
+  patch 전역 쌍곡성+선형화 게이지 고정계 normal hyperbolicity+Hadamard 존재, P4 국소 단사→
+  patch 덮개·gluing(compact Σ 대 noncompact rod X^i=βx^i 충돌 해소), P5 dressing·edge/
+  boundary sector 명세, P6 M1 field content에서 QME 해결(M2와 공유) — 여섯 항목 모두 미증명.
+
+  M2 = [미완성: 미통과 유지] — 하위 항목만 [정리: 외부 기존]으로 생존한다: 4D 공변 미분동형
+  BRST 이상항 부재는 Alvarez-Gaumé–Witten 1984 차원 정리(중력 이상항은 d=4k+2 카이럴 장에만,
+  4∉{4k+2})와 hep-th/0404033의 명시 문장("there are no field-theoretic diffeomorphism
+  anomalies", 4D)으로 뒷받침되나, 보손 물질 전용 명시 문장은 미확인이고 국소 BRST cohomology
+  H¹(s|d)(ghost number 1) 계산 출처가 없다. 36장 식 (36.7) 정준 HDA 이상항과 공변 BV/QME
+  이상항의 동치, M1 field content에서 QME 해결 가능성(재규격화 조건·EFT truncation·GHY 경계항),
+  그리고 E54-H1이 요구하는 양의 물리 내적이 이 동치에서 자동으로 따라오는지는 모두 미증명이며
+  탈락 표시한다(adversary). "Bardeen–Zumino 항상 가능" 문장은 무출처로 확인되어(adversary
+  P2) 이 기록에서는 주장으로 유지하지 않는다.
+
+  프론티어 M4로의 "이동"은 36장 173행("각 마일스톤은 전 단계가 통과했을 때만 시작한다")·
+  QNB-E54-H4("M3--M9에는 진입하지 않는다")와 충돌한다 — M3는 dressing·edge 미정의(P5)로 아직
+  중단 조건 경계에 있다. 사용자의 명시적 재선언(규칙 단서 추가 또는 E54-H4 개정) 없이 M4 작업을
+  시작하면 규칙 위반이다. M4 착수에 실제 필요한 최소 전제만 추리면 A1(E62형 국소 patch 고정),
+  P4의 국소부(전역부는 불필요), P5(dressing 차수 명세, 전체 사양은 불필요), 정의 수준 선언(자유
+  Weyl C*-완비화 또는 ħ-절단 중 택일), tree-level 관계적 대수의 존재, P3을 "임의의 ω"가 아니라
+  조건부 존재로 좁힌 형태, E37-D 금지 규칙의 편입이다 — P2, P1(승격 주장이 아니면), P6 full
+  QME, P4 전역부, BFHPR 특수 구성, M2 항목 전부는 M4 착수에 불필요하다.
+
+  Q-0006 자체의 진전 종류: 축소(M2·M3 도입 경로를 "문헌 도입 여부의 이분법적 판정"에서 "BFR
+  일반 틀 채택(정의)+ 적응 목록 P1–P6 + M4 조건부 준비 전제 A1/P4국소/P5/정의수준"으로 좁힘).
+  닫힘·승격이 아니다.
+level: L2
+verdict: continue
+pivot_step: null
+derivation: derivations/Q-0006/attempt-01.derivation.md
+verification:
+  symbolic: skipped
+  numeric: pass
+  lean: skipped
+  artifacts: verify/Q-0006/attempt-01/
+adversary:
+  counterexamples: []
+  survived_checks:
+    - "무작위 20 샘플에서 det(∂_μX^A)=μ_X⁴ u a³b³ 항등식 재확인(S2.3), max_rel_err 5.7e-16"
+    - "차원 검사: 양변 4차원 검사 일치(dimension S2.3)"
+    - "극한 검사: u→0, β→0에서 det→0; a→0(β 고정)·무차원형 a-스캔에서 상수 재현"
+    - "known-exact 대조: 상수 X̄ 배경(E61-D형)에서 det=0 — (C2) 실패를 독립 재확인"
+    - "AGW 차원 급수 검사: 4∉{4k+2}(4D는 카이럴 이상항 차원 급수 밖)"
+    - "SO(4) 대칭 검사: A-색인 SO(4) 회전이 det_J를 보존 — (C2)는 SO(4)-불변이고 E62 ansatz의
+      SO(4)→SO(3) 파괴는 배경 선택일 뿐 조건 자체의 파괴가 아님"
+sourcer:
+  prior_art:
+    - title: "Brunetti–Fredenhagen–Hoefer–Pinamonti–Rejzner 2016 (BFHPR, arXiv:1605.02573)"
+      relation: special_case
+      note: "M1의 X^A 사용은 BFHPR이 명시적으로 배제한 'external fields as reference
+        coordinates like Brown–Kuchař' 클래스에 든다(BFHPR 원문 인용: 'not useful ...
+        because these fields would appear in the final gauge-invariant expressions').
+        BFHPR 자체 결과(inflaton FLRW 배경, 비국소 조화 좌표)의 직접 이전은 아니다."
+    - title: "Brunetti–Fredenhagen–Rejzner 2016 (BFR, arXiv:1306.1058)"
+      relation: generalizes
+      note: "M3가 채택하는 관계적 관측량 일반 틀(정의). M1의 X^A는 이 틀의 특수 사례이며 4조건
+        중 (a)만 완전 충족, (b)는 배경 조건부, (c)(d)는 미검증."
+    - title: "Alvarez-Gaumé–Witten 1984"
+      relation: generalizes
+      note: "중력(미분동형) 이상항 차원 정리(d=4k+2 카이럴 장에만). M2 하위 [정리: 외부 기존]의
+        근거 중 하나."
+    - title: "hep-th/0404033"
+      relation: identical
+      note: "'there are no field-theoretic diffeomorphism anomalies' 4D 문장을 그대로 인용
+        (S4.2). 보손 물질 전용 명시 문장은 아니며 AGW로부터 함의될 뿐."
+    - title: "Giesel–Thiemann; Brown–Kuchař"
+      relation: special_case
+      note: "관계적 관측량·기준장 구성의 다른 특수 사례. pAQFT(BV/QME) 구성에 적용된 사례는
+        확인하지 못했다."
+assumptions:
+  - "문헌 사실은 sourcer 2026-09-02 확인 범위(절·식·정리 번호 미확보)에 한정한다. 요청의
+    'E58'·'E59' 라벨은 정본 E61-D형 상수-X̄ 평탄 배경·E62-A 비퇴화 FLRW 국소 patch를 가리키며,
+    E78은 정본에 없다(진전 원장 §2 이력)."
+  - "'BFR 클래스 안'은 유도 자체 4조건 (a) 공변 partial observable·(b) 단사성·(c) 섭동적
+    BV·QME 해결·(d) Hadamard 상태 중 (a)만 완전 충족한다. (b)는 E62-A형 배경에서만 조건부
+    국소 통과(E61-D형은 실패), (c)(d)는 미검증이며 채택한 (a)–(d) 목록에는 BFR의 배경 독립성
+    조건이 빠져 있다(adversary 지적, 이번 attempt에서 보강하지 않음)."
+  - "M2 하위 [정리: 외부 기존]은 AGW 1984 + hep-th/0404033의 4D 미분동형 이상항 부재에만
+    한정된다. 36장 식 (36.7) 정준 HDA 이상항과 BV/QME 이상항의 동치, M1 field content의 QME
+    해결 가능성, E54-H1이 요구하는 양의 물리 내적이 이 동치에서 자동으로 따라오는지는 모두
+    미증명이며 이 entry에서 탈락 표시한다(adversary)."
+  - "'Bardeen–Zumino 항상 가능' 문장은 무출처로 확인되어(adversary P2) 주장으로 유지하지
+    않는다."
+  - "초안의 [정리]/[정리: 문헌, EFT 조건부] 태그는 M2·M3 통과로 오독될 위험이 있어(adversary
+    지위 감사, P0급) 이 entry는 M3=[미완성], M2=[미완성: 미통과 유지]로만 기록한다."
+  - "'프론티어 M4로 이동'은 36장 173행('전 단계가 통과했을 때만 시작한다')·QNB-E54-H4('M3--M9에는
+    진입하지 않는다', 참조_양자_보존_원장.md 3252행)와 충돌한다. M3는 dressing·edge 미정의(P5)로
+    아직 중단 조건 경계에 있으며, 사용자의 명시적 재선언(규칙 단서 추가 또는 E54-H4 개정) 없이
+    M4 작업을 시작하면 규칙 위반이다(adversary)."
+  - "M4 착수에 실제 필요한 전제만 추리면 A1(E62형 patch 고정)·P4의 국소부(전역부 불필요)·P5
+    (dressing 차수 명세)·정의 수준 선언(자유 Weyl C*-완비화 또는 ħ-절단 택일)·tree-level 관계적
+    대수 존재·P3의 조건부 존재('임의의 ω' 아님)·E37-D 금지 규칙 편입이다; P2·P1(승격 주장
+    아니면)·P6 full QME·P4 전역부·BFHPR 특수 구성·M2 항목 전부는 불필요하다(adversary)."
+  - "sympy 미설치로 symbolic 전부 skipped. numeric은 derivation frontmatter의 산술 항등식
+    2개(hook_result.json)와 adversary 재검산 6종(verify/Q-0006/attempt-01/adversary/
+    checks.json)뿐이며, 문헌 조건 대조 자체를 수치로 검증한 것이 아니다."
+open_questions_spawned: []
+next_action: |-
+  verdict=continue: 같은 BFR 특수 사례 경로를 유지하되, attempt 2는 곧바로 M4로 진행하지 않는다.
+  사용자가 먼저 정해야 할 것 두 가지: (a) 36장 173행 규칙 단서 추가 또는 QNB-E54-H4 개정 중
+  택일 — 재선언 없이 "프론티어 M4 이동"을 시작하면 현재 문구상 규칙 위반이다; (b) M2의 통과
+  조건을 (36.7) 정준 HDA 이상항 기준에서 공변 BV/QME 이상항 기준으로 바꿀지 — 바꾸지 않으면
+  AGW/hep-th 문헌은 M2를 조건부로도 닫지 못한다. 사용자 결정 뒤에는 Q-0007 문장을 "가정 A1
+  (E62형 patch)·P4 국소부·P5(dressing 차수)·정의 수준 선언 아래, 추상 관계적 망 위의 조건부
+  정리: 끼임 CP instrument·접힘 여대수·무신호"로 좁히고, E26/E28/E37 승격 주장은 이 문장과
+  분리된 별도 claim으로 다룬다(add-question은 사용자 결정 이후에 실행). 잔여(비표적, 재개
+  시에만): sourcer 정밀화(BFR·BFHPR·AGW·hep-th/0404033의 정확한 절·정리 번호), P3(E62
+  선형화계 Hadamard 존재), P6(M1 QME 해결).

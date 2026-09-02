@@ -1,0 +1,131 @@
+{
+  "file": "C:\\Users\\22310326\\Desktop\\Clarus-Equation\\derivations\\Q-0005\\attempt-01.derivation.md",
+  "question": "Q-0005",
+  "attempt": 1,
+  "sympy": false,
+  "details": [
+    {
+      "type": "identity",
+      "lhs": "cos(2*pi*n)",
+      "rhs": "1",
+      "symbolic": "skipped",
+      "reason": "sympy-not-installed",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 0
+    },
+    {
+      "type": "identity",
+      "lhs": "sin(2*pi*n)",
+      "rhs": "0",
+      "symbolic": "skipped",
+      "reason": "sympy-not-installed",
+      "max_rel_err": 1.4695761589768238e-15,
+      "numeric": "pass",
+      "index": 1
+    },
+    {
+      "type": "identity",
+      "lhs": "(kp-k)*x",
+      "rhs": "kp*x-k*x",
+      "symbolic": "skipped",
+      "reason": "sympy-not-installed",
+      "max_rel_err": 1.852907106319151e-16,
+      "numeric": "pass",
+      "index": 2
+    },
+    {
+      "type": "identity",
+      "lhs": "a/(a+b)+b/(a+b)",
+      "rhs": "1",
+      "symbolic": "skipped",
+      "reason": "sympy-not-installed",
+      "max_rel_err": 5.551115123125783e-17,
+      "numeric": "pass",
+      "index": 3
+    },
+    {
+      "type": "identity",
+      "lhs": "(d*f)/(d*f+g)",
+      "rhs": "1/(1+g/(d*f))",
+      "symbolic": "skipped",
+      "reason": "sympy-not-installed",
+      "max_rel_err": 8.090617833938862e-17,
+      "numeric": "pass",
+      "index": 4
+    },
+    {
+      "type": "numeric",
+      "expr": "1+3+6+8+9+10+10+9+7+4+2+1-70",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 5
+    },
+    {
+      "type": "numeric",
+      "expr": "16*10*7-1120",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 6
+    },
+    {
+      "type": "numeric",
+      "expr": "16-12-4",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 7
+    },
+    {
+      "type": "numeric",
+      "expr": "1+1+2+3+2+1-10",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 8
+    },
+    {
+      "type": "numeric",
+      "expr": "(10-1)-9",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 9
+    },
+    {
+      "type": "numeric",
+      "expr": "(-6) % 16 - 10",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 10
+    },
+    {
+      "type": "numeric",
+      "expr": "(((-7)+8) % 16) - 8 - (-7)",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 11
+    },
+    {
+      "type": "numeric",
+      "expr": "(4*1+5*3+6*6+7*7+8*6+9*4+10*2+11*1)/30-7.3",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 12
+    },
+    {
+      "type": "numeric",
+      "expr": "(4*3+5*4+6*5+7*3+8*3+9*5+10*4+11*3)/30-7.5",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 13
+    },
+    {
+      "type": "numeric",
+      "expr": "(1+3+6+7+6+4+2+1)-30",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 14
+    }
+  ],
+  "symbolic": "skipped",
+  "numeric": "pass",
+  "reason": "sympy-not-installed"
+}

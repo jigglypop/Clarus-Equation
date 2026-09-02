@@ -1,0 +1,143 @@
+{
+  "file": "C:\\Users\\22310326\\Desktop\\Clarus-Equation\\derivations\\Q-0002\\attempt-03.derivation.md",
+  "question": "Q-0002",
+  "attempt": 3,
+  "sympy": false,
+  "details": [
+    {
+      "type": "identity",
+      "lhs": "(N/2+sqrt((N/2)**2+lam**2))*(N/2-sqrt((N/2)**2+lam**2))",
+      "rhs": "-lam**2",
+      "symbolic": "skipped",
+      "reason": "sympy-not-installed",
+      "max_rel_err": 2.180754031617157e-15,
+      "numeric": "pass",
+      "index": 0
+    },
+    {
+      "type": "identity",
+      "lhs": "((sin(phi)+cos(phi))/sqrt(2))**2",
+      "rhs": "(1+sin(2*phi))/2",
+      "symbolic": "skipped",
+      "reason": "sympy-not-installed",
+      "max_rel_err": 1.2584851260181644e-16,
+      "numeric": "pass",
+      "index": 1
+    },
+    {
+      "type": "identity",
+      "lhs": "((cos(phi)-sin(phi))/sqrt(2))**2",
+      "rhs": "(1-sin(2*phi))/2",
+      "symbolic": "skipped",
+      "reason": "sympy-not-installed",
+      "max_rel_err": 1.239975909551593e-16,
+      "numeric": "pass",
+      "index": 2
+    },
+    {
+      "type": "identity",
+      "lhs": "(1+sin(2*phi))/2+(1-sin(2*phi))/2",
+      "rhs": "1",
+      "symbolic": "skipped",
+      "reason": "sympy-not-installed",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 3
+    },
+    {
+      "type": "identity",
+      "lhs": "(1+lam/sqrt((N/2)**2+lam**2))/2",
+      "rhs": "(1+2*lam/sqrt(N**2+4*lam**2))/2",
+      "symbolic": "skipped",
+      "reason": "sympy-not-installed",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 4
+    },
+    {
+      "type": "identity",
+      "lhs": "(1-R)*h*(1-R)-h",
+      "rhs": "R*h*R-R*h-h*R",
+      "symbolic": "skipped",
+      "reason": "sympy-not-installed",
+      "max_rel_err": 3.0364039493670256e-16,
+      "numeric": "pass",
+      "index": 5
+    },
+    {
+      "type": "identity",
+      "lhs": "cos((N-1)*2*pi*n/N)-cos(2*pi*n/N)",
+      "rhs": "0",
+      "symbolic": "skipped",
+      "reason": "sympy-not-installed",
+      "max_rel_err": 3.0010036385476035e-15,
+      "numeric": "pass",
+      "index": 6
+    },
+    {
+      "type": "identity",
+      "lhs": "sin((N-1)*2*pi*n/N)+sin(2*pi*n/N)",
+      "rhs": "0",
+      "symbolic": "skipped",
+      "reason": "sympy-not-installed",
+      "max_rel_err": 2.511144918888662e-15,
+      "numeric": "pass",
+      "index": 7
+    },
+    {
+      "type": "identity",
+      "lhs": "(1-(1+x))**2-x**2",
+      "rhs": "0",
+      "symbolic": "skipped",
+      "reason": "sympy-not-installed",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 8
+    },
+    {
+      "type": "numeric",
+      "expr": "(8/2)**2+3**2-5**2",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 9
+    },
+    {
+      "type": "numeric",
+      "expr": "(6/2)**2+4**2-5**2",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 10
+    },
+    {
+      "type": "numeric",
+      "expr": "(24/2)**2+5**2-13**2",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 11
+    },
+    {
+      "type": "numeric",
+      "expr": "2*(1/3)/(1-(1/3)**2)-2*3/8",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 12
+    },
+    {
+      "type": "numeric",
+      "expr": "sqrt((1+3/5)/2)-2/sqrt(5)",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 13
+    },
+    {
+      "type": "numeric",
+      "expr": "sqrt((1+4/5)/2)-3/sqrt(10)",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 14
+    }
+  ],
+  "symbolic": "skipped",
+  "numeric": "pass",
+  "reason": "sympy-not-installed"
+}

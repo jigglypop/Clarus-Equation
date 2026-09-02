@@ -1,0 +1,85 @@
+questions:
+- id: Q-0001
+  title: E59의 비퇴화 FLRW 배경에서 rank-5 scalar bundle을 포함한 metric–scalar physical algebra와 양의 Hadamard state의
+    overlap을 구성하거나 반증한다 (진전 원장 §2 표적)
+  status: open
+  priority: 3
+  origin: paper/진전_원장.md §2
+  attempts: 0
+  consecutive_low: 0
+  pivots_tried: []
+  notes: 첫 attempt는 E78-E 다섯 항 중 (iv) section S 위 positivity를 좁은 claim으로 잡는다.
+- id: Q-TEST-1
+  title: 모든 n≥1에 대해 Σ_{k=1}^n k = n(n+1)/2
+  status: open
+  priority: 5
+  origin: human
+  attempts: 0
+  consecutive_low: 0
+  pivots_tried: []
+  notes: 수용 테스트 A9용 가짜 질문. 실제 연구 질문이 아니다.
+- id: Q-0002
+  title: 이상 시계 둘+계 S의 유한 제약 모형(H|Ψ>>=0)에서 관측자별 접근 대수 A_i, frame-change 동형 Φ_ij, 비선택 성분의 제약 수준 에너지 장부를
+    정리 또는 반례로 닫는다 (영감 ①②, 36장 M2/M3 testbed)
+  status: parked
+  priority: 1
+  origin: paper/진전_원장.md §2 (2026-09-02 사용자 결정)
+  attempts: 3
+  consecutive_low: 0
+  pivots_tried:
+  - partial
+  - alt_derivation
+  - reformulate
+  notes: '[사용자 결정 2026-09-02, 사람의 명시적 정정] parked: 3회 attempt(E-20260902-001~003) 모두 QRF 문헌 재발견, 영감 ②는
+    이 언어로 지지·반증 불가 → Q-0005로 재정식화. 재개 조건: ℓ²(Z)/열린 경계 마무리가 필요해질 때. attempt3=K6+K8(시계–S 결합 모형). 잔여: K7
+    raw 슬라이스 장부, K9 적색편이 결합 무내용 보조정리, ℓ²(Z) 재유도. attempt1=K1. 잔여 후보: K2 Phi_12=N R_2 R_1^-1 유니터리·S-의존(eps0!=eps1);
+    K3 제약 수준 에너지 장부 E_unseen 정확식·Phi 수송 공변성; K4 퇴화 시계면 Phi 부재(rank); K5 색인 groupoid cocycle Phi_13=Phi_23
+    Phi_12. 우선순위 K1>K2>K4>K3>K5.'
+- id: Q-0003
+  title: '접근 대수 A_i의 정의: A↦O^^{(i)}_A의 상은 유한 N에서 곱에 닫히지 않음(‖O_σx²−O_1‖=1). 생성 대수로 정의하거나 N→∞ U(1) 이상 시계
+    극한(ℓ²(Z), ker H 진짜 부분공간)에서 *-준동형임을 보여 겹침 가정과 S6.2 오기를 함께 제거'
+  status: open
+  priority: 2
+  origin: E-20260902-001
+  attempts: 0
+  consecutive_low: 0
+  pivots_tried: []
+  notes: ''
+- id: Q-0004
+  title: exact-kernel Π 유한 N에서 (S5.7) 에너지 이동 식이 경계 상태 k=±M에서 소멸 → (v) 비선택 에너지 장부 E_total=E_seen+E_unseen는
+    N→∞ 또는 mod-N 군평균(감김 회계 명시) 중 하나를 택해야 시작 가능. 어느 Π가 이상 시계인지 결정
+  status: open
+  priority: 2
+  origin: E-20260902-001
+  attempts: 0
+  consecutive_low: 0
+  pivots_tried: []
+  notes: ''
+- id: Q-0005
+  title: '관측자 조건화 분포로서의 Λ (영감 ② 재정식화): 제약(군평균/rigging)이 Λ 섹터 위 측도를 고정하는지, 관측자 존재(기록·시계 부분계) 관측량으로 조건화한
+    분포가 인류원리 입력 없이 관측 Λ 근방에 봉우리를 만드는지를 유한/미니초공간 모형에서 정리 또는 반례로 닫는다'
+  status: parked
+  priority: 1
+  origin: paper/진전_원장.md §2 (2026-09-02 사용자 결정 '권고대로')
+  attempts: 1
+  consecutive_low: 0
+  pivots_tried: []
+  notes: 'attempt1=C1+C3+C2 (공유 모형 N=16, H_g 10차원, H_r 7차원). 잔여: C4 시계 창·instrument 의존성. 문헌 kill 지점: Unruh–Wald
+    1989, Smolin 2009, Page 2008, Weinberg 1987, Sorkin everpresent Λ. [E-20260902-004] parked: verdict=park.
+    표적 (i)은 유한 모형에서 정당하게 기각되어(문헌 재발견, sourcer 대조는 재개 시 우선 수행) 닫힌다. (ii) 문구는 (i)의 따름(moot)일 뿐 독립적으로 검증·반증되지
+    않았고, prover가 사전등록 kill 기준을 사후 변경한 결함이 있어 같은 문구로는 더 진행할 수 없다. 이 attempt은 표적을 재정의하지 않는다(표적 변경은 사용자만,
+    CLAUDE.md). 사용자 결정이 필요한 갈림길: (A) Q-0005를 이 결과로 parked 처리하고 ''① CE가 Λ 섹터 위 상태 선택 공리를 제공하는가 (T-균일 상태
+    ⇒ Λ=0, 또는 T–Λ 불확정성에서 Sorkin형 요동 통계)''를 새 표적으로 재정식화할지, (B) (ii)를 폐기하고 (i)의 닫힘만 진전 원장 §2에 반영한 뒤 §2 자체를
+    다른 항목으로 옮길지 — 택일 후 add-question은 사용자 결정 이후에 실행한다. 잔여(비표적 변경): C4 시계 창·instrument 의존성, [E,Π]≠0 결합-드레싱에서
+    Page≠Lüders(θ≥0.05)의 정도, 연속 미니초공간(ℓ²(Z)/비콤팩트 군평균) 재유도는 재개 시에만 다룬다.'
+- id: Q-0006
+  title: 'M2·M3 문헌 도입 kill test: M1 작용(중력+χ+Klein–Gordon 기준 스칼라 4개, E54-A)이 BFHPR 2016(arXiv:1605.02573)·BFR
+    2016(arXiv:1306.1058)의 기준장 클래스와 pAQFT BV 구성 조건(비퇴화 gradient, Hadamard, QME 해결 가능)에 들어가는지, 4D 보손 물질의
+    미분동형 BRST 이상항 부재의 명시 출처가 있는지 확인해 M2·M3를 [정리: 문헌, EFT 조건부]로 채택할 수 있는지 판정'
+  status: active
+  priority: 1
+  origin: 'paper/진전_원장.md §2 (2026-09-02 사용자 동의: M2·M3 문헌 도입, 프론티어 M4)'
+  attempts: 1
+  consecutive_low: 0
+  pivots_tried: []
+  notes: ''

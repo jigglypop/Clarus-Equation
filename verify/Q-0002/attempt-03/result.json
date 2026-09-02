@@ -1,0 +1,649 @@
+{
+ "claim": "K6+K8",
+ "seed": 20260902,
+ "tol": 1e-10,
+ "sep": 0.001,
+ "tol_spec": 1e-08,
+ "n_checks": 102,
+ "n_fail": 0,
+ "checks": {
+  "N8_lam3_integer_spectrum": {
+   "value": 2.1316282072803006e-14,
+   "pass": true,
+   "note": ""
+  },
+  "N8_lam3_Pi_equals_group_average": {
+   "value": 2.0266792457680274e-14,
+   "pass": true,
+   "note": ""
+  },
+  "N8_lam3_phys_dim_equals_4N": {
+   "value": 32,
+   "pass": true,
+   "note": ""
+  },
+  "N8_lam3_norm_[HS,C]_equals_lam": {
+   "value": 3.0,
+   "pass": true,
+   "note": ""
+  },
+  "N8_lam3_V1_unitary": {
+   "value": 2.2404225716179215e-15,
+   "pass": true,
+   "note": ""
+  },
+  "N8_lam3_V2_not_isometric": {
+   "value": 1.000000000000002,
+   "pass": true,
+   "note": ""
+  },
+  "K6i_N8_lam3_tau0_V2dV2_spec_in_declared_set": {
+   "value": {
+    "declared": [
+     0.0,
+     1.0,
+     2.0
+    ],
+    "max_dist": 4.884981308350689e-15,
+    "unique": [
+     -0.0,
+     1.0,
+     2.0
+    ]
+   },
+   "pass": true,
+   "note": ""
+  },
+  "K6i_N8_lam3_tau0_each_declared_value_attained": {
+   "value": [
+    5.354085958486668e-18,
+    1.1102230246251565e-16,
+    6.661338147750939e-16
+   ],
+   "pass": true,
+   "note": ""
+  },
+  "K6i_N8_lam3_tau0_V2dV2_block_diagonal_in_k1": {
+   "value": 0.0,
+   "pass": true,
+   "note": ""
+  },
+  "K6i_N8_lam3_tau0_block_equals_Gram_of_slices": {
+   "value": 4.011059008170298e-16,
+   "pass": true,
+   "note": ""
+  },
+  "K6i_N8_lam3_tau1_V2dV2_spec_in_declared_set": {
+   "value": {
+    "declared": [
+     0.0,
+     1.0,
+     2.0
+    ],
+    "max_dist": 4.3298697960381105e-15,
+    "unique": [
+     -0.0,
+     1.0,
+     2.0
+    ]
+   },
+   "pass": true,
+   "note": ""
+  },
+  "K6i_N8_lam3_tau1_each_declared_value_attained": {
+   "value": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "pass": true,
+   "note": ""
+  },
+  "K6i_N8_lam3_tau1_V2dV2_block_diagonal_in_k1": {
+   "value": 0.0,
+   "pass": true,
+   "note": ""
+  },
+  "K6i_N8_lam3_tau1_block_equals_Gram_of_slices": {
+   "value": 4.1477561260903153e-16,
+   "pass": true,
+   "note": ""
+  },
+  "K6i_N8_lam3_c_value": {
+   "value": {
+    "c": 0.8944271909999159,
+    "c_prime": 0.4472135954999579,
+    "phi": 0.3217505543966422
+   },
+   "pass": true,
+   "note": "informational"
+  },
+  "K6ii_N8_lam3_E2_normalized_polarization_violation_max_gt_SEP": {
+   "value": {
+    "max": 0.10258114073959967,
+    "min": 0.0013573674900742017,
+    "n_pairs_gt_SEP": 20,
+    "n_pairs": 20
+   },
+   "pass": true,
+   "note": ""
+  },
+  "K6ii_N8_lam3_E1_exactly_quadratic": {
+   "value": 8.881784197001252e-16,
+   "pass": true,
+   "note": ""
+  },
+  "K6ii_N8_lam3_E1_minus_E2_polarization_violation_gt_SEP": {
+   "value": 0.21266463006441855,
+   "pass": true,
+   "note": ""
+  },
+  "K8b_N8_lam3_Q2_closed_form": {
+   "value": 1.9595699714342704e-14,
+   "pass": true,
+   "note": ""
+  },
+  "K8b_N8_lam3_Q2_closed_form_tau1": {
+   "value": 1.963639324878305e-14,
+   "pass": true,
+   "note": ""
+  },
+  "K8b_N8_lam3_Q2_ne_1": {
+   "value": 1.0000000000000036,
+   "pass": true,
+   "note": ""
+  },
+  "K8b_N8_lam3_Q2_not_a_projector": {
+   "value": 2.0000000000000098,
+   "pass": true,
+   "note": "1-Q2 is not a projector: spectrum of Q2 = [-0.0, 1.0, 2.0]"
+  },
+  "K8b_N8_lam3_defect_identity_residual": {
+   "value": 1.6757837504866458e-15,
+   "pass": true,
+   "note": ""
+  },
+  "K8b_N8_lam3_defect_depends_only_on_1_minus_Q2": {
+   "value": 1.0318096870765704e-15,
+   "pass": true,
+   "note": ""
+  },
+  "K8b_N8_lam3_defect_zero_when_Q2_replaced_by_1": {
+   "value": 0.0,
+   "pass": true,
+   "note": ""
+  },
+  "K8b_N8_lam3_defect_nontrivial_max_|Erel_b-Ekin_b|/omega(O1)": {
+   "value": 0.6863795136917006,
+   "pass": true,
+   "note": ""
+  },
+  "K8a_N8_lam3_observer1_projection_homomorphism": {
+   "value": 5.7353819962055074e-15,
+   "pass": true,
+   "note": ""
+  },
+  "N6_lam4_integer_spectrum": {
+   "value": 1.4210854715202004e-14,
+   "pass": true,
+   "note": ""
+  },
+  "N6_lam4_Pi_equals_group_average": {
+   "value": 1.9169260020515208e-14,
+   "pass": true,
+   "note": ""
+  },
+  "N6_lam4_phys_dim_equals_4N": {
+   "value": 24,
+   "pass": true,
+   "note": ""
+  },
+  "N6_lam4_norm_[HS,C]_equals_lam": {
+   "value": 4.0,
+   "pass": true,
+   "note": ""
+  },
+  "N6_lam4_V1_unitary": {
+   "value": 2.6517707681394246e-15,
+   "pass": true,
+   "note": ""
+  },
+  "N6_lam4_V2_not_isometric": {
+   "value": 0.9486832980505152,
+   "pass": true,
+   "note": ""
+  },
+  "K6i_N6_lam4_tau0_V2dV2_spec_in_declared_set": {
+   "value": {
+    "declared": [
+     0.05131670194948623,
+     1.0,
+     1.9486832980505138
+    ],
+    "max_dist": 2.6645352591003757e-15,
+    "unique": [
+     0.051317,
+     1.0,
+     1.948683
+    ]
+   },
+   "pass": true,
+   "note": ""
+  },
+  "K6i_N6_lam4_tau0_each_declared_value_attained": {
+   "value": [
+    1.249000902703301e-16,
+    0.0,
+    2.220446049250313e-16
+   ],
+   "pass": true,
+   "note": ""
+  },
+  "K6i_N6_lam4_tau0_V2dV2_block_diagonal_in_k1": {
+   "value": 0.0,
+   "pass": true,
+   "note": ""
+  },
+  "K6i_N6_lam4_tau0_block_equals_Gram_of_slices": {
+   "value": 5.04769838884044e-16,
+   "pass": true,
+   "note": ""
+  },
+  "K6i_N6_lam4_tau1_V2dV2_spec_in_declared_set": {
+   "value": {
+    "declared": [
+     0.05131670194948623,
+     1.0,
+     1.9486832980505138
+    ],
+    "max_dist": 2.886579864025407e-15,
+    "unique": [
+     0.051317,
+     1.0,
+     1.948683
+    ]
+   },
+   "pass": true,
+   "note": ""
+  },
+  "K6i_N6_lam4_tau1_each_declared_value_attained": {
+   "value": [
+    1.3877787807814457e-16,
+    1.1102230246251565e-16,
+    2.220446049250313e-16
+   ],
+   "pass": true,
+   "note": ""
+  },
+  "K6i_N6_lam4_tau1_V2dV2_block_diagonal_in_k1": {
+   "value": 0.0,
+   "pass": true,
+   "note": ""
+  },
+  "K6i_N6_lam4_tau1_block_equals_Gram_of_slices": {
+   "value": 4.969365150250649e-16,
+   "pass": true,
+   "note": ""
+  },
+  "K6i_N6_lam4_c_value": {
+   "value": {
+    "c": 0.9486832980505138,
+    "c_prime": 0.316227766016838,
+    "phi": 0.4636476090008061
+   },
+   "pass": true,
+   "note": "informational"
+  },
+  "K6ii_N6_lam4_E2_normalized_polarization_violation_max_gt_SEP": {
+   "value": {
+    "max": 0.30952376732986964,
+    "min": 0.0004471066535562951,
+    "n_pairs_gt_SEP": 19,
+    "n_pairs": 20
+   },
+   "pass": true,
+   "note": ""
+  },
+  "K6ii_N6_lam4_E1_exactly_quadratic": {
+   "value": 8.881784197001252e-16,
+   "pass": true,
+   "note": ""
+  },
+  "K6ii_N6_lam4_E1_minus_E2_polarization_violation_gt_SEP": {
+   "value": 0.2917793927427049,
+   "pass": true,
+   "note": ""
+  },
+  "K8b_N6_lam4_Q2_closed_form": {
+   "value": 2.2185693809827812e-14,
+   "pass": true,
+   "note": ""
+  },
+  "K8b_N6_lam4_Q2_closed_form_tau1": {
+   "value": 2.200495186438859e-14,
+   "pass": true,
+   "note": ""
+  },
+  "K8b_N6_lam4_Q2_ne_1": {
+   "value": 0.948683298050515,
+   "pass": true,
+   "note": ""
+  },
+  "K8b_N6_lam4_Q2_not_a_projector": {
+   "value": 1.848683298050517,
+   "pass": true,
+   "note": "1-Q2 is not a projector: spectrum of Q2 = [0.051317, 1.0, 1.948683]"
+  },
+  "K8b_N6_lam4_defect_identity_residual": {
+   "value": 8.814472468044272e-16,
+   "pass": true,
+   "note": ""
+  },
+  "K8b_N6_lam4_defect_depends_only_on_1_minus_Q2": {
+   "value": 7.969299485294731e-16,
+   "pass": true,
+   "note": ""
+  },
+  "K8b_N6_lam4_defect_zero_when_Q2_replaced_by_1": {
+   "value": 0.0,
+   "pass": true,
+   "note": ""
+  },
+  "K8b_N6_lam4_defect_nontrivial_max_|Erel_b-Ekin_b|/omega(O1)": {
+   "value": 1.1118555508040797,
+   "pass": true,
+   "note": ""
+  },
+  "K8a_N6_lam4_observer1_projection_homomorphism": {
+   "value": 6.3298028773177616e-15,
+   "pass": true,
+   "note": ""
+  },
+  "N24_lam5_integer_spectrum": {
+   "value": 6.394884621840902e-14,
+   "pass": true,
+   "note": ""
+  },
+  "N24_lam5_Pi_equals_group_average": {
+   "value": 1.1898702548045419e-13,
+   "pass": true,
+   "note": ""
+  },
+  "N24_lam5_phys_dim_equals_4N": {
+   "value": 96,
+   "pass": true,
+   "note": ""
+  },
+  "N24_lam5_norm_[HS,C]_equals_lam": {
+   "value": 5.0,
+   "pass": true,
+   "note": ""
+  },
+  "N24_lam5_V1_unitary": {
+   "value": 3.61960109147642e-15,
+   "pass": true,
+   "note": ""
+  },
+  "N24_lam5_V2_not_isometric": {
+   "value": 1.0000000000000002,
+   "pass": true,
+   "note": ""
+  },
+  "K6i_N24_lam5_tau0_V2dV2_spec_in_declared_set": {
+   "value": {
+    "declared": [
+     0.0,
+     1.0,
+     2.0
+    ],
+    "max_dist": 1.4432899320127035e-14,
+    "unique": [
+     -0.0,
+     1.0,
+     2.0
+    ]
+   },
+   "pass": true,
+   "note": ""
+  },
+  "K6i_N24_lam5_tau0_each_declared_value_attained": {
+   "value": [
+    0.0,
+    1.1102230246251565e-16,
+    2.220446049250313e-16
+   ],
+   "pass": true,
+   "note": ""
+  },
+  "K6i_N24_lam5_tau0_V2dV2_block_diagonal_in_k1": {
+   "value": 0.0,
+   "pass": true,
+   "note": ""
+  },
+  "K6i_N24_lam5_tau0_block_equals_Gram_of_slices": {
+   "value": 6.774598240960874e-16,
+   "pass": true,
+   "note": ""
+  },
+  "K6i_N24_lam5_tau1_V2dV2_spec_in_declared_set": {
+   "value": {
+    "declared": [
+     0.0,
+     1.0,
+     2.0
+    ],
+    "max_dist": 1.3766765505351941e-14,
+    "unique": [
+     -0.0,
+     1.0,
+     2.0
+    ]
+   },
+   "pass": true,
+   "note": ""
+  },
+  "K6i_N24_lam5_tau1_each_declared_value_attained": {
+   "value": [
+    5.551115123125783e-17,
+    0.0,
+    8.881784197001252e-16
+   ],
+   "pass": true,
+   "note": ""
+  },
+  "K6i_N24_lam5_tau1_V2dV2_block_diagonal_in_k1": {
+   "value": 0.0,
+   "pass": true,
+   "note": ""
+  },
+  "K6i_N24_lam5_tau1_block_equals_Gram_of_slices": {
+   "value": 4.805709102953746e-16,
+   "pass": true,
+   "note": ""
+  },
+  "K6i_N24_lam5_c_value": {
+   "value": {
+    "c": 0.8320502943378437,
+    "c_prime": 0.5547001962252291,
+    "phi": 0.19739555984988075
+   },
+   "pass": true,
+   "note": "informational"
+  },
+  "K6ii_N24_lam5_E2_normalized_polarization_violation_max_gt_SEP": {
+   "value": {
+    "max": 0.022909553971872665,
+    "min": 2.3046201083620765e-05,
+    "n_pairs_gt_SEP": 15,
+    "n_pairs": 20
+   },
+   "pass": true,
+   "note": ""
+  },
+  "K6ii_N24_lam5_E1_exactly_quadratic": {
+   "value": 8.881784197001252e-16,
+   "pass": true,
+   "note": ""
+  },
+  "K6ii_N24_lam5_E1_minus_E2_polarization_violation_gt_SEP": {
+   "value": 0.059281632737410384,
+   "pass": true,
+   "note": ""
+  },
+  "K8b_N24_lam5_Q2_closed_form": {
+   "value": 9.651060377037997e-14,
+   "pass": true,
+   "note": ""
+  },
+  "K8b_N24_lam5_Q2_closed_form_tau1": {
+   "value": 9.659423428020606e-14,
+   "pass": true,
+   "note": ""
+  },
+  "K8b_N24_lam5_Q2_ne_1": {
+   "value": 1.0000000000000007,
+   "pass": true,
+   "note": ""
+  },
+  "K8b_N24_lam5_Q2_not_a_projector": {
+   "value": 2.000000000000003,
+   "pass": true,
+   "note": "1-Q2 is not a projector: spectrum of Q2 = [-0.0, 1.0, 2.0]"
+  },
+  "K8b_N24_lam5_defect_identity_residual": {
+   "value": 1.867657067761235e-15,
+   "pass": true,
+   "note": ""
+  },
+  "K8b_N24_lam5_defect_depends_only_on_1_minus_Q2": {
+   "value": 1.4052557119850222e-15,
+   "pass": true,
+   "note": ""
+  },
+  "K8b_N24_lam5_defect_zero_when_Q2_replaced_by_1": {
+   "value": 0.0,
+   "pass": true,
+   "note": ""
+  },
+  "K8b_N24_lam5_defect_nontrivial_max_|Erel_b-Ekin_b|/omega(O1)": {
+   "value": 0.2609683571300758,
+   "pass": true,
+   "note": ""
+  },
+  "K8a_N24_lam5_observer1_projection_homomorphism": {
+   "value": 7.169110070203364e-15,
+   "pass": true,
+   "note": ""
+  },
+  "N8_lam0_V2_unitary": {
+   "value": 2.4441574809578864e-16,
+   "pass": true,
+   "note": ""
+  },
+  "K6ii_N8_lam0_E2_normalized_exactly_quadratic": {
+   "value": 1.1102230246251565e-15,
+   "pass": true,
+   "note": ""
+  },
+  "K8a_N8_lam0_observer2_projection_homomorphism": {
+   "value": 4.440892098500626e-16,
+   "pass": true,
+   "note": ""
+  },
+  "K8b_N8_lam0_Q2_equals_1": {
+   "value": 2.4441574809578864e-16,
+   "pass": true,
+   "note": ""
+  },
+  "K8b_N8_lam0_Q2_closed_form": {
+   "value": 1.5723240736534154e-15,
+   "pass": true,
+   "note": ""
+  },
+  "N6_lam0_V2_unitary": {
+   "value": 2.4441574809578864e-16,
+   "pass": true,
+   "note": ""
+  },
+  "K6ii_N6_lam0_E2_normalized_exactly_quadratic": {
+   "value": 8.881784197001252e-16,
+   "pass": true,
+   "note": ""
+  },
+  "K8a_N6_lam0_observer2_projection_homomorphism": {
+   "value": 4.440892098500626e-16,
+   "pass": true,
+   "note": ""
+  },
+  "K8b_N6_lam0_Q2_equals_1": {
+   "value": 2.4441574809578864e-16,
+   "pass": true,
+   "note": ""
+  },
+  "K8b_N6_lam0_Q2_closed_form": {
+   "value": 1.927573443482035e-15,
+   "pass": true,
+   "note": ""
+  },
+  "N24_lam0_V2_unitary": {
+   "value": 2.4441574809578864e-16,
+   "pass": true,
+   "note": ""
+  },
+  "K6ii_N24_lam0_E2_normalized_exactly_quadratic": {
+   "value": 6.661338147750939e-16,
+   "pass": true,
+   "note": ""
+  },
+  "K8a_N24_lam0_observer2_projection_homomorphism": {
+   "value": 4.440892098500626e-16,
+   "pass": true,
+   "note": ""
+  },
+  "K8b_N24_lam0_Q2_equals_1": {
+   "value": 2.4441574809578864e-16,
+   "pass": true,
+   "note": ""
+  },
+  "K8b_N24_lam0_Q2_closed_form": {
+   "value": 1.6182421559063186e-14,
+   "pass": true,
+   "note": ""
+  },
+  "NEG_N8_lam2_spectrum_not_integer": {
+   "value": 0.47213595499958494,
+   "pass": true,
+   "note": ""
+  },
+  "NEG_N8_lam2_group_average_not_projector": {
+   "value": 0.7058908190140061,
+   "pass": true,
+   "note": ""
+  },
+  "K9_rate_N8_lam2_gcd1_HS_Dirac": {
+   "value": 0.0,
+   "pass": true,
+   "note": ""
+  },
+  "K9_rate_N8_lam2_gcd1_V2_unitary": {
+   "value": 2.4441574809578874e-16,
+   "pass": true,
+   "note": ""
+  },
+  "K9_rate_N8_lam2_gcd1_Delta_zero": {
+   "value": 8.948457268302955e-17,
+   "pass": true,
+   "note": ""
+  },
+  "K9_rate_N8_lam1_gcd2_V2_not_unitary": {
+   "value": {
+    "V2dV2-1": 1.0,
+    "gcd": 2,
+    "Delta_norm": 2.9999999999999996
+   },
+   "pass": true,
+   "note": ""
+  }
+ },
+ "all_pass": true
+}

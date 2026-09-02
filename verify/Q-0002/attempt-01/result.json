@@ -1,0 +1,165 @@
+{
+  "claim": "K1",
+  "question": "Q-0002",
+  "attempt": 1,
+  "seed": 20260902,
+  "tol": 1e-10,
+  "sep": 0.001,
+  "N": 5,
+  "eps": [
+    0,
+    1
+  ],
+  "a": [
+    -0.290841333831407,
+    0.43728393091349466
+  ],
+  "b": [
+    -0.002808742109375433,
+    -0.8509913003478786
+  ],
+  "checks": {
+    "phys_dim_eps01": {
+      "pass": true,
+      "value": 9,
+      "expected": 9
+    },
+    "S2_sqrtN_R_i_isometry_on_Hphys": {
+      "pass": true,
+      "residual": 0.0,
+      "tol": 1e-10
+    },
+    "S3_reduced_state_evolves_with_H2_plus_HS": {
+      "pass": true,
+      "residual": 6.877910602720239e-17,
+      "tol": 1e-10
+    },
+    "S4_sigma_x_observers_differ_20_random_states": {
+      "pass": true,
+      "min_diff": 0.018237965626142882,
+      "sep": 0.001
+    },
+    "S4_sigma_z_observers_agree_20_random_states": {
+      "pass": true,
+      "max_diff": 0.0,
+      "tol": 1e-10
+    },
+    "S4_omega_is_real": {
+      "pass": true,
+      "max_imag": 4.163336342344337e-17,
+      "tol": 1e-10
+    },
+    "S4_ab_state_sigma_x_differs": {
+      "pass": true,
+      "diff": 0.7426158453756551,
+      "sep": 0.001
+    },
+    "S4_ab_state_sigma_z_agrees": {
+      "pass": true,
+      "diff": 0.0,
+      "tol": 1e-10
+    },
+    "S4_hand_obs1_conditioned_equals_2Re(conj(a)b)/N": {
+      "pass": true,
+      "value": -0.14852316907513102,
+      "expected": -0.14852316907513102,
+      "tol": 1e-10
+    },
+    "S4_hand_obs1_omega_equals_2Re(conj(a)b)": {
+      "pass": true,
+      "value": -0.7426158453756551,
+      "expected": -0.7426158453756551,
+      "tol": 1e-10
+    },
+    "S4_hand_obs2_conditioned_zero": {
+      "pass": true,
+      "value": 0.0,
+      "tol": 1e-10
+    },
+    "S4_hand_obs2_omega_zero": {
+      "pass": true,
+      "value": 0.0,
+      "tol": 1e-10
+    },
+    "S5_Phi_matches_energy_basis_map": {
+      "pass": true,
+      "residual": 0.0,
+      "tol": 1e-10
+    },
+    "S5_PhiDag_Phi_eq_P_V1": {
+      "pass": true,
+      "residual": 0.0,
+      "tol": 1e-10
+    },
+    "S5_Phi_PhiDag_eq_P_V2": {
+      "pass": true,
+      "residual": 0.0,
+      "tol": 1e-10
+    },
+    "S5_rank_P_V1_equals_phys_dim": {
+      "pass": true,
+      "value": 9,
+      "expected": 9
+    },
+    "S5_literal_N_R2_R1inv_equals_N_times_Phi": {
+      "pass": true,
+      "residual": 8.881784197001252e-16,
+      "note": "candidate text has normalisation slip; correct Phi = R2 R1^{-1}"
+    },
+    "S5_Phi_transports_conditioned_states": {
+      "pass": true,
+      "residual": 0.0,
+      "tol": 1e-10
+    },
+    "S5_covariance_operator_identity_20_A_S": {
+      "pass": true,
+      "max_residual": 0.0,
+      "tol": 1e-10
+    },
+    "S5_covariance_operator_identity_20_A_full": {
+      "pass": true,
+      "max_residual": 0.0,
+      "tol": 1e-10
+    },
+    "S5_covariance_expectation_20x20": {
+      "pass": true,
+      "max_residual": 0.0,
+      "tol": 1e-10
+    },
+    "S4_i_commuting_OS_agree_20": {
+      "pass": true,
+      "max_residual": 0.0,
+      "tol": 1e-10
+    },
+    "S4_i_noncommuting_OS_differ_20": {
+      "pass": true,
+      "min_residual": 0.33929729334082404,
+      "min_commutator_norm": 0.17837914336708335,
+      "sep": 0.001
+    },
+    "NEG_eps00_sigma_x_agree_20_random_states": {
+      "pass": true,
+      "max_diff": 0.0,
+      "tol": 1e-10,
+      "phys_dim": 10
+    },
+    "NEG_eps00_ab_state_both_observers_2Re(conj(a)b)": {
+      "pass": true,
+      "w1": -0.7426158453756551,
+      "w2": -0.7426158453756551,
+      "expected": -0.7426158453756551,
+      "tol": 1e-10
+    },
+    "NEG_Phi_identity_fails_sigma_x": {
+      "pass": true,
+      "residual": 1.9021130325903073,
+      "sep": 0.001
+    },
+    "NEG_Phi_identity_fails_20_random_A_S": {
+      "pass": true,
+      "min_residual": 1.5941961395780069,
+      "sep": 0.001
+    }
+  },
+  "all_pass": true
+}

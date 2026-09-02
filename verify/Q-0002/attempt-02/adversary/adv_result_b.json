@@ -1,0 +1,23 @@
+{
+  "degenerate_modN_N7_eps_0_7": {
+    "eps": [
+      0,
+      0,
+      0,
+      7
+    ],
+    "comm_D_HS": 11.76,
+    "comm_D_US": 7.47898893788656e-16,
+    "max_frame_diff_E_unseen_20_states": 1.1102230246251565e-15,
+    "note": "[D,H_S] != 0 yet no frame dependence: eps differ by N so k1 = k1p; criterion is Z_N invariance [D,U_S]=0"
+  },
+  "control_same_HS_N13": {
+    "eps": [
+      0,
+      0,
+      0,
+      7
+    ],
+    "max_frame_diff_E_unseen_20_states": 0.46283009609688364
+  }
+}

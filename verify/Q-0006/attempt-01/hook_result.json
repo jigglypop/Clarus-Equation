@@ -1,0 +1,31 @@
+{
+  "file": "C:\\Users\\22310326\\Desktop\\Clarus-Equation\\derivations\\Q-0006\\attempt-01.derivation.md",
+  "question": "Q-0006",
+  "attempt": 1,
+  "sympy": false,
+  "details": [
+    {
+      "type": "identity",
+      "lhs": "(mu*u)*(mu*a*b)**3",
+      "rhs": "mu**4*u*a**3*b**3",
+      "symbolic": "skipped",
+      "reason": "sympy-not-installed",
+      "max_rel_err": 3.207491042357592e-16,
+      "numeric": "pass",
+      "index": 0
+    },
+    {
+      "type": "identity",
+      "lhs": "4*k+2",
+      "rhs": "4*(k+1)-2",
+      "symbolic": "skipped",
+      "reason": "sympy-not-installed",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 1
+    }
+  ],
+  "symbolic": "skipped",
+  "numeric": "pass",
+  "reason": "sympy-not-installed"
+}

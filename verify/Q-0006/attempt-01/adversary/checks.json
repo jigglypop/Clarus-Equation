@@ -1,0 +1,51 @@
+{
+ "seed": 20260902,
+ "checks": [
+  {
+   "name": "random_sample_20 S2.3 det identity",
+   "max_rel_err": 5.721763212795093e-16,
+   "pass": true
+  },
+  {
+   "name": "dimension S2.3",
+   "lhs_dim": 4,
+   "rhs_dim": 4,
+   "pass": true
+  },
+  {
+   "name": "limits",
+   "values": {
+    "u->0": 0.0,
+    "beta->0": 0.0,
+    "a->0, beta fixed": [
+     1.5379,
+     1.5379,
+     1.5379
+    ],
+    "dimless form a-scan": [
+     2.6144299999999996,
+     2.614429999999999,
+     2.61443,
+     2.6144299999999996
+    ]
+   },
+   "pass": true
+  },
+  {
+   "name": "known-exact E61-D constant X",
+   "det": 0.0,
+   "pass": true
+  },
+  {
+   "name": "AGW dims",
+   "four_in_4k+2": false,
+   "pass": true
+  },
+  {
+   "name": "symmetry SO(4) on A-index preserves det (C2 is SO(4)-invariant; E62 ansatz choice breaks SO(4)->SO(3) only as background)",
+   "det_J": 1.5379000000000003,
+   "det_RJ": 1.5379000000000005,
+   "pass": true
+  }
+ ]
+}

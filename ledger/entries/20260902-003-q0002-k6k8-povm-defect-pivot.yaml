@@ -1,0 +1,106 @@
+id: E-20260902-003
+question: Q-0002
+attempt: 3
+timestamp: 2026-09-02T16:05:00+09:00
+claim: "결합 모형 C=H_1+H_2+H_S+λ(T_2⊗σ_-^Q+h.c.) (Z_N 군평균 Π, (N,λ)∈{(8,3),(6,4),(24,5)})
+  에서: λ≠0인 관측자2 임베딩 V_2는 등거리가 아니며 V_2†V_2/N은 H_phys 위 비균일 두-결과
+  시계-2 읽기 POVM이다(Σ_τ V_2†V_2=N; 열린 경계 재유도에서도 Q_2≠1 생존, Smith–Ahmadi
+  2019의 관찰과 부합). 결함 항등식 E_rel,b−E_kin,b=V_2†P_b(Q_2H_SQ_2−H_S)P_bV_2 (Q_2=V_2V_2†)
+  는 임의의 선형사상 V·자기수반 H·사영 P에 대해 성립하는 항등식이며(무작위 V 5회, 잔차~1e-11),
+  내용은 'A↦V†AV가 곱을 보존 ⟺ VV†=1'이라는 교과서 보조정리로 환원된다 — K8(b)는
+  이를 넘는 독립 내용이 없다(E-20260902-001에서 이미 확인된 비준동형의 재발견). 관측자1·
+  λ=0 준동형(K8a)은 생존한다. (N,λ)=(8,3),(6,4),(24,5)에서 관측된 정수 스펙트럼·{1±c}
+  이분법은 시계 2의 순환 감김(mod-N) 인공물이다: 열린 경계에서는 모든 정수 λ에서 스펙트럼이
+  정수이고 항상 {0,1,2}이며, 순환에서만 피타고라스 조건 (N/2)²+λ²=정수²로 세 점이 특별해진다
+  (열린 경계 잔차~1e-14 vs 순환 잔차 0.06~0.47, N8_lam3/N6_lam4만 예외적으로 정수).
+  K9는 gcd(1+λ,N)=1일 때 적색편이형 결합이 무내용이라는 좁은 보조정리로만 생존하며,
+  gcd≠1을 결합의 필요조건으로 보는 원 문구는 기각된다(H_S가 이미 Dirac이어도 같은 결함이
+  발생, gcd=2 사례에서 Delta_norm=3.0). 부모 (B) 문구('관측자 간 에너지 차이=Dirac X의
+  기댓값')는 E^{(2)} 정규화 장부의 polarization 위반(0.10/0.31/0.023)으로 attempt-02
+  (E-20260902-002)에 이어 재확인 기각된다. 영감 ②는 이번 결과로 지지도 반증도 되지 않는다
+  (adversary inspiration2_verdict=무관)."
+level: L2
+verdict: pivot
+pivot_step: reformulate
+derivation: derivations/Q-0002/attempt-03.derivation.md
+verification:
+  symbolic: skipped
+  numeric: pass
+  lean: skipped
+  artifacts: verify/Q-0002/attempt-03/
+adversary:
+  counterexamples:
+    - input: "무작위 선형사상 V(등거리 아님)·무작위 자기수반 H·사영 P 5쌍으로 K8(b) 결함
+        항등식 S5.1/S5.2를 재검산(V_2=관측자2 임베딩이라는 모형 특유 구조 없이)"
+      expected: "결함 항등식이 K8(b) 모형(관측자2 임베딩 V_2, Q_2=V_2V_2†)에 특유한 물리적
+        관계"
+      observed: "임의의 V,H,P에 대해 자동 성립(잔차 2.0e-11~1.0e-10, 5회 시행). 내용은
+        'A↦V†AV가 곱을 보존 ⟺ VV†=1' 교과서 보조정리로 환원되며 E-20260902-001의 비준동형
+        재발견(adv_result.json A_K8b_identity_is_tautology)"
+      note: "K8(b)의 독립 내용은 Q_2≠1 하나뿐"
+    - input: "열린 경계(순환 아님) 시계 2로 동일 (N,λ) 값에서 정수 스펙트럼·{1±c} 이분법
+        재검사"
+      expected: "(8,3),(6,4),(24,5) 세 점만 정수 스펙트럼을 주는 물리적으로 특별한 구조"
+      observed: "열린 경계에서는 모든 정수 λ에서 스펙트럼이 정수이고 항상 {0,1,2}로 붕괴
+        (open_int_res~1e-14 전부); 순환에서만 (N/2)²+λ²=정수²(피타고라스) 조건으로 세 점이
+        특별해짐(N8_lam2 cyclic_int_res=0.47 vs N8_lam3=2e-14; adv_result.json
+        B_integer_condition_is_wraparound_artifact)"
+      note: "정수 조건이 구조라는 주장 기각; (6,4)/(8,3) 형의 물리적 구분도 함께 기각"
+    - input: "gcd(1+λ,N)≠1이면서 H_S가 이미 Dirac(비선택 결함이 없어야 할 기준)인 사례로
+        K9 '필요' 재검사"
+      expected: "gcd≠1은 K9가 예측하는 대로 적색편이형 결합이 유내용이 되는 필요조건"
+      observed: "N8_lam1_gcd2 사례에서 V_2가 유니터리가 아닌데(V2dV2-1=1.0) H_S는 Dirac,
+        Delta_norm=3.0으로 같은 종류 결함이 gcd 기준과 무관하게 발생(adv_result.json
+        K9_rate_N8_lam1_gcd2_V2_not_unitary)"
+      note: "K9는 gcd=1일 때 무내용이라는 좁은 충분조건으로만 생존, 필요조건 문구는 기각"
+    - input: "격자 밖 τ(비정수 시계 판독)에서 (6,4) 구성의 c-value 형태 재검사"
+      expected: "(N,λ) 세 점의 c-value가 격자점에서만 정의되는 고정된 물리적 지표"
+      observed: "격자 밖 τ에서 (6,4)에 c′ 형(c'=0.316227766)이 별도로 출현 — 세 점의
+        구분이 격자 선택에 의존하는 인공물임을 재확인(adv_result.json 관련 항목)"
+      note: "parent_scope.falls: (6,4)/(8,3) 형의 물리적 구분"
+    - input: "부모 (B) 문구('관측자 간 에너지 차이=Dirac X의 기댓값')를 E^{(2)} 정규화
+        장부의 polarization 검사로 재확인(attempt-02 E-20260902-002의 기각을 K6/K8 모형에서
+        재현)"
+      expected: "E^{(2)}가 이차형식(⟺ 어떤 Dirac X에 대한 기댓값)"
+      observed: "polarization 위반 0.10/0.31/0.023 (세 (N,λ)점 모두), E1은 정확히
+        이차형식(잔차~9e-16)이지만 E1−E2 위반은 0.21/0.29/0.06 — (B) 문구 재확인 기각
+        (K6ii_*_E2_normalized_polarization_violation, K6ii_*_E1_minus_E2_polarization_violation_gt_SEP)"
+      note: "attempt-02에 이어 두 번째 독립 모형에서 부모 (B) 문구 기각"
+  survived_checks:
+    - "V_2†V_2/N=H_phys 위 비균일 두-결과 시계-2 읽기 POVM(Σ_τ V_2†V_2=N; N8_lam3/N6_lam4/
+      N24_lam5 세 구성 모두 τ=0,1 블록 대각, Gram 보조정리로 폐형; 열린 경계에서도 Q_2≠1
+      생존 — Smith–Ahmadi 2019 관찰과 부합)"
+    - "관측자1·λ=0 준동형 K8(a) (K8a_*_observer1/observer2_projection_homomorphism, 세
+      구성·λ=0 대조군 모두 잔차 ≤7e-15)"
+    - "K8(b) 결함 항등식 자체(정의로서)는 정확: defect_identity_residual ≤1.9e-15, 세
+      구성 모두"
+    - "K9 gcd(1+λ,N)=1 ⇒ V_2 유니터리·Δ=0(무내용 보조정리): K9_rate_N8_lam2_gcd1_V2_unitary
+      2.4e-16, K9_rate_N8_lam2_gcd1_Delta_zero 8.9e-17"
+    - "격자·순환 스펙트럼 집합 {0,1,2} 또는 {1±c}가 13점(3 주 구성 × τ=0,1 + 3 대조군
+      λ=0) 전수에서 K6(i) 문구 그대로 재현(max_dist ≤1.4e-14)"
+sourcer: null
+assumptions:
+  - "C=H_1+H_2+H_S+λ(T_2⊗σ_-^Q+h.c.), Π는 Z_N 군평균(attempt-01의 exact-kernel과 다름)"
+  - "(N,λ)∈{(8,3),(6,4),(24,5)}는 순환(mod-N) 감김에서 피타고라스 조건 (N/2)²+λ²=정수²를
+    만족하는 특별점일 뿐 물리적 구조가 아님(adversary B); 열린 경계 재유도가 이 인공물을
+    제거하는지는 attempt-04에서 확인 필요"
+  - "K8(b) 결함 항등식은 임의 선형사상에 대한 동어반복; 독립 내용은 Q_2≠1(등거리 아님)
+    하나뿐(adversary A)"
+  - "K9는 gcd(1+λ,N)=1이 무내용 충분조건일 뿐, gcd≠1을 결합의 필요조건으로 보는 원 문구는
+    기각(adversary 반례: gcd=2, H_S Dirac에서도 같은 결함)"
+  - "sourcer 미실행(반례 존재, 판정 지침에 따라 스킵); attempt-01의 Smith–Ahmadi 등
+    문헌 대조를 참고만 하고 이번 attempt에서 재확인하지 않음"
+  - "ce_specific_content: attempt-01·02·03 세 차례 연속 '정리 수준 새 내용 없음'이며
+    이번 adversary 판정으로 inspiration2_verdict=무관(K8(b)는 영감 ②를 지지도 반증도
+    않음)이 확정됨 — next_action의 사용자 판단 요청 사유"
+open_questions_spawned: []
+next_action: "attempt-04는 pivot_step=reformulate로 진행하되 갈림길 두 갈래를 사용자에게
+  명시적으로 올린다. (a) 좁은 마무리 경로: ℓ²(Z)/열린 경계 무한 이상 시계로 K8(b)의
+  Q_2≠1·비균일 시계-2 POVM 부분만 재유도해 순환 감김 인공물(정수 스펙트럼·(N,λ) 세 점·
+  {1±c} 이분법)을 모형에서 제거하고, Smith–Ahmadi 2019 arXiv:1712.00081의 special_case로
+  정리해 Q-0003·Q-0004의 잔여를 닫는다. (b) 표적 재검토 경로: attempt-01·02·03 세 차례
+  연속으로 ce_specific_content가 없고 이번 K8(b)가 영감 ②와 무관으로 판정됐으므로, 영감
+  ②('관측자 간 에너지 차이가 Dirac 관측량')의 정식화 자체가 이 유한/이상 시계 대수 언어로는
+  검증 불가능할 가능성을 사용자에게 보고하고 표적 재정의 또는 영감 ②의 다른 언어(예:
+  동역학적 QRF, 비평형 열역학 언어)로의 재정식화 여부를 묻는다. 하네스는 사용자 결정
+  전까지 (a)만 기계적으로 진행하고 영감 ②를 다시 정식화하지 않는다."
