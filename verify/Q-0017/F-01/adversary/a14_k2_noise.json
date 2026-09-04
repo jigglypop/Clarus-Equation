@@ -1,0 +1,27 @@
+{
+ "n": 512,
+ "trials_used": 60,
+ "seed": 424242,
+ "target_trials": 128,
+ "merge_q1": {
+  "rel_se_of_RMS_at_60": 0.10464174367254307,
+  "rel_se_of_RMS_at_128": 0.07164330433265666,
+  "cv_of_squared_residual": 1.6211029222474587
+ },
+ "merge_q05": {
+  "rel_se_of_RMS_at_60": 0.10449122838559016,
+  "rel_se_of_RMS_at_128": 0.07154025356026482,
+  "cv_of_squared_residual": 1.6187711494485855
+ },
+ "iid": {
+  "rel_se_of_RMS_at_128": 0.026970422098044945
+ },
+ "k2b_ratio_rel_se": 0.07655172580581297,
+ "k2c_ratio_rel_se": 0.10124609096241022,
+ "k2b_window_halfwidth_rel": 0.19990728937304442,
+ "k2c_window_halfwidth_rel": 0.14997000599880023,
+ "k2b_window_in_sigma": 2.6114014709497826,
+ "k2c_window_in_sigma": 1.4812424319125546,
+ "k2b_false_kill_prob": 0.009017196738676736,
+ "k2c_false_kill_prob": 0.1385419828493123
+}

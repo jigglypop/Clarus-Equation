@@ -1,0 +1,82 @@
+{
+ "card": "derivations/Q-0017/F-01.formula.md",
+ "mode": "card_audit",
+ "model": "opus",
+ "date": "2026-09-03/04",
+ "checks": {
+  "dimension": "pass - every symbol dimensionless; ln n / ln RMS arguments dimensionless; eps_star^2=10 delta^4 with delta dimensionless",
+  "recovers": "pass - chain/star merge-inert and equal to the F-02 closed forms exactly (a1); n=1 -> D=0; q=0 -> F-02 exact Cayley table (a1,a4)",
+  "dof": "pass - 0 free parameters vs 6+ pre-registered numbers",
+  "content": "P1 - the headline exponent law is not gated by any pre-registered window except K4/K3; 3 of 5 windows exclude the law's own asymptotic value",
+  "kill_executable": "P1 - all runnable (k1 0.8min, k2 6.6min, k3 6.4min, k5 3.3min); K4 h=90 needs ~0.5GB float64 (died twice here, ok in float32); K2c window ~1.0 sigma -> ~33% false kill",
+  "ladder_complete": "P1 - the ancestry-fluctuation term ||H(kappa-E kappa)H||^2 is 96-99% of the observable for d_tree>=3 and appears nowhere in the 7 steps"
+ },
+ "key_numbers": {
+  "gamma_G_exact_vs_law_max_err_over_a_in_0_to_6": 0.0,
+  "gamma_G_a1p5_asymptote": -0.2,
+  "card_step3_claim_a1p5": -0.17,
+  "indep_cayley_q1_gamma": 0.2155,
+  "card_k1_prereg": 0.1973,
+  "indep_layered_a2_q1_gamma": -0.3773,
+  "card_k3_prereg": -0.3789,
+  "auntie_local_merge_gamma_cone": 0.5022,
+  "law_cone": 0.0,
+  "auntie_local_merge_gamma_a2": 0.3,
+  "law_a2": -0.3333,
+  "k4_replicate_offset179": [
+   -0.1051,
+   -0.1037,
+   0.0002
+  ],
+  "k4_window": [
+   -0.15,
+   0.15
+  ],
+  "k4_false_kill_prob_q025": 0.0905,
+  "k2c_false_kill_prob_at_n256": 0.327,
+  "k2b_false_kill_prob_at_n256": 0.085,
+  "crossover_n_middle_branch_d_tree_3": 1164000000000000.0,
+  "card_claim": "n ~ 1e5",
+  "kernel_law_DAG_offgrid_ratio": [
+   0.9886,
+   0.9688,
+   1.0153,
+   0.9904
+  ]
+ },
+ "new_exact_result": "E[kappa_vw] = sum_{k<=min(d_v,d_w)} S_k/W_k and E[kappa_vv] = same|_{d_v-1} + S_{d_v}, with S_d = 1 + (1 - q_eff/2 - 1/W_{d-1}) S_{d-1}, q_eff = q*1[W_{d-1}>=2]; verified to <=1.1% MC (a10). Upgrades the card hub factor from 'h_q >= 1' to 'h_q = S_star exactly', and gives the exact finite-width fixed point S_star = 2/(q + 2/W) instead of the card 2/q.",
+ "artifacts": [
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a10_meankernel_identity.json",
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a10_meankernel_identity.py",
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a11_k4_power.json",
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a11_k4_power.py",
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a12_kernel_law_dag.json",
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a12_kernel_law_dag.py",
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a13_crossover.json",
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a13_crossover.py",
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a14_k2_noise.json",
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a14_k2_noise.py",
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a14_run.log",
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a1_kernel_indep.json",
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a1_kernel_indep.py",
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a2_spread_recursion.json",
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a2_spread_recursion.py",
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a3_G_exponent.json",
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a3_G_exponent.py",
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a4_indep_gamma.json",
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a4_indep_gamma.py",
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a5_rule_dependence.json",
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a5_rule_dependence.py",
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a6_hub_and_k4.json",
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a6_hub_and_k4.py",
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a6_run.log",
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a7_kill_audit.json",
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a7_kill_audit.py",
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a8_mean_vs_fluct.json",
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a8_mean_vs_fluct.py",
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a8_run.log",
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a9_k4_replicate.json",
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a9_k4_replicate.py",
+  "C:\\dev\\ce\\Clarus-Equation\\verify\\Q-0017\\F-01\\adversary\\a9_run.log"
+ ]
+}
