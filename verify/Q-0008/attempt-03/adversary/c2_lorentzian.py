@@ -23,11 +23,11 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[4]
 sys.path.insert(0, str(ROOT))
 
-from examples.physics.causal_face_simplicity import (  # noqa: E402
+from examples.physics.gravity.causal_face_simplicity import (  # noqa: E402
     geometric_self_dual_triple,
     simplicity_residual,
 )
-from examples.physics.urbantke_shape_matching_rg import optimal_internal_alignment  # noqa: E402
+from examples.physics.gravity.urbantke_shape_matching_rg import optimal_internal_alignment  # noqa: E402
 
 SEED = 20260902
 PAIR_INDEX = ((0, 1), (0, 2), (0, 3), (2, 3), (3, 1), (1, 2))

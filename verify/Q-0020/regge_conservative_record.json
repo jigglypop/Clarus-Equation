@@ -1,0 +1,899 @@
+{
+  "status": "[산출]",
+  "source_sha256": "06d48d9496ae2657d653ec1d508dd425b45da596543ca8ce4aae189245e68be5",
+  "dependencies": {
+    "regge_conditional_dynamics.py": "ae4c078e0a5a4b3b5a9a64dd587b8f35409a65569b7c088107ecea88b52f80e7",
+    "regge_postconstraint_projection.py": "0d1abb5317b96ee24dfe0e844f581df527dc8286656e8486444bb8748c407fe8",
+    "regge_quantum_constraint_transfer.py": "0f49325180ab4e0e19cb2546c0576fbf6ac93840163a7db3e7d75fd064e26898",
+    "regge_coalescing_kernel.py": "79bbf93a1ee98343dc3f8d890c334702d69fd36ad710b6790f7bab3bb9020f5c",
+    "regge_internal_marginal.py": "6690a402d1d750e1dc3ce340cbb0d1d96f2fa34b074dc45b8bfc4f4c416d53a6",
+    "regge_pachner_constraints.py": "5badf64159a9880caa4edfb520ee8d28bd1d0f392d8277d8bcf5c3aaa2cdc656",
+    "regge_pachner_creation.py": "68c5f330bd2e4732970e5b9379f3fdbd86e236fe301a45521eea0663d04e3705",
+    "regge_pachner_transport.py": "c995451a5b12e47470f37c19926574c2cbfd7a20aeb07c0c76e541aef143b415",
+    "regge_tent_transfer.py": "e509b0b583a99258730650584e812d9b6f097383629b4e855636c8e87c710f71"
+  },
+  "overlap": [
+    {
+      "width": 2.0,
+      "overlap_error": 1.1102230246251565e-16,
+      "normalization_error": 1.1102230246251565e-16,
+      "mean_error": 2.220446049250313e-16,
+      "variance_error": 6.106226635438361e-16
+    },
+    {
+      "width": 4.0,
+      "overlap_error": 2.220446049250313e-16,
+      "normalization_error": 2.220446049250313e-16,
+      "mean_error": 4.440892098500626e-16,
+      "variance_error": 2.886579864025407e-15
+    },
+    {
+      "width": 8.0,
+      "overlap_error": 1.1102230246251565e-16,
+      "normalization_error": 0.0,
+      "mean_error": 0.0,
+      "variance_error": 2.6645352591003757e-15
+    },
+    {
+      "width": 16.0,
+      "overlap_error": 3.3306690738754696e-16,
+      "normalization_error": 2.220446049250313e-16,
+      "mean_error": 1.7763568394002505e-15,
+      "variance_error": 1.7763568394002505e-14
+    }
+  ],
+  "grids": [
+    {
+      "size": 16,
+      "kind": "length",
+      "record": [
+        {
+          "width": 2.0,
+          "worst_noise_squared": 0.15245356097191598,
+          "continuum_noise_squared": 0.15289788811938337,
+          "continuum_difference": 0.00044432714746739377,
+          "upper_bound_squared": 0.20561675835602827,
+          "input_noise_squared": {
+            "0.0": 0.1409225916133353,
+            "1.0": 0.07927087502581562,
+            "5.0": 0.014728574404330315
+          },
+          "core_spectrum_error": 1.6653345369377348e-16,
+          "core_minimum_effect": 1.6403934271624008e-06
+        },
+        {
+          "width": 4.0,
+          "worst_noise_squared": 0.04520813885169575,
+          "continuum_noise_squared": 0.04536744525318802,
+          "continuum_difference": 0.00015930640149226794,
+          "upper_bound_squared": 0.05140418958900707,
+          "input_noise_squared": {
+            "0.0": 0.04150694861573068,
+            "1.0": 0.023298536505177138,
+            "5.0": 0.004482386315244642
+          },
+          "core_spectrum_error": 2.0122792321330962e-16,
+          "core_minimum_effect": 2.047516081326787e-07
+        },
+        {
+          "width": 8.0,
+          "worst_noise_squared": 0.012101874037209512,
+          "continuum_noise_squared": 0.012147320287022777,
+          "continuum_difference": 4.5446249813264894e-05,
+          "upper_bound_squared": 0.012851047397251767,
+          "input_noise_squared": {
+            "0.0": 0.011083967046495901,
+            "1.0": 0.006214632808724472,
+            "5.0": 0.0012109403058108573
+          },
+          "core_spectrum_error": 1.3183898417423734e-16,
+          "core_minimum_effect": 2.55855639301444e-08
+        },
+        {
+          "width": 16.0,
+          "worst_noise_squared": 0.003116474656041375,
+          "continuum_noise_squared": 0.003128464245265958,
+          "continuum_difference": 1.1989589224582764e-05,
+          "upper_bound_squared": 0.0032127618493129418,
+          "input_noise_squared": {
+            "0.0": 0.0028515583918650115,
+            "1.0": 0.0015982066301172056,
+            "5.0": 0.00031297024692821364
+          },
+          "core_spectrum_error": 1.7997756063259374e-16,
+          "core_minimum_effect": 3.197972669693894e-09
+        }
+      ]
+    },
+    {
+      "size": 32,
+      "kind": "length",
+      "record": [
+        {
+          "width": 2.0,
+          "worst_noise_squared": 0.15278690356069857,
+          "continuum_noise_squared": 0.15289788811938337,
+          "continuum_difference": 0.00011098455868480128,
+          "upper_bound_squared": 0.20561675835602827,
+          "input_noise_squared": {
+            "0.0": 0.14096575444717066,
+            "1.0": 0.07899971171835111,
+            "5.0": 0.014539772489891507
+          },
+          "core_spectrum_error": 6.106226635438361e-16,
+          "core_minimum_effect": 9.909497363152483e-08
+        },
+        {
+          "width": 4.0,
+          "worst_noise_squared": 0.0453276313238959,
+          "continuum_noise_squared": 0.04536744525318802,
+          "continuum_difference": 3.9813929292115136e-05,
+          "upper_bound_squared": 0.05140418958900707,
+          "input_noise_squared": {
+            "0.0": 0.04153587198310649,
+            "1.0": 0.02321344614521596,
+            "5.0": 0.004420428942139458
+          },
+          "core_spectrum_error": 7.008282842946301e-16,
+          "core_minimum_effect": 1.2382384612688959e-08
+        },
+        {
+          "width": 8.0,
+          "worst_noise_squared": 0.012135960183380435,
+          "continuum_noise_squared": 0.012147320287022777,
+          "continuum_difference": 1.1360103642341426e-05,
+          "upper_bound_squared": 0.012851047397251767,
+          "input_noise_squared": {
+            "0.0": 0.011093335902262032,
+            "1.0": 0.0061913863023132076,
+            "5.0": 0.0011937774077108525
+          },
+          "core_spectrum_error": 7.389922007661198e-16,
+          "core_minimum_effect": 1.5476611674818075e-09
+        },
+        {
+          "width": 16.0,
+          "worst_noise_squared": 0.0031254670173479,
+          "continuum_noise_squared": 0.003128464245265958,
+          "continuum_difference": 2.9972279180579334e-06,
+          "upper_bound_squared": 0.0032127618493129418,
+          "input_noise_squared": {
+            "0.0": 0.002854137195073898,
+            "1.0": 0.0015921719116927233,
+            "5.0": 0.0003084915137508323
+          },
+          "core_spectrum_error": 7.502679033599691e-16,
+          "core_minimum_effect": 1.934535067083595e-10
+        }
+      ]
+    },
+    {
+      "size": 64,
+      "kind": "length",
+      "record": [
+        {
+          "width": 2.0,
+          "worst_noise_squared": 0.1528701480533672,
+          "continuum_noise_squared": 0.15289788811938337,
+          "continuum_difference": 2.774006601616308e-05,
+          "upper_bound_squared": 0.20561675835602827,
+          "input_noise_squared": {
+            "0.0": 0.14096598131733515,
+            "1.0": 0.07892245039524678,
+            "5.0": 0.014510863960252703
+          },
+          "core_spectrum_error": 2.7755575615628914e-16,
+          "core_minimum_effect": 6.143782512123339e-09
+        },
+        {
+          "width": 4.0,
+          "worst_noise_squared": 0.045357492562696715,
+          "continuum_noise_squared": 0.04536744525318802,
+          "continuum_difference": 9.952690491303595e-06,
+          "upper_bound_squared": 0.05140418958900707,
+          "input_noise_squared": {
+            "0.0": 0.041540400759133074,
+            "1.0": 0.02318970248105417,
+            "5.0": 0.004410763667708118
+          },
+          "core_spectrum_error": 3.400058012914542e-16,
+          "core_minimum_effect": 7.679033709257763e-10
+        },
+        {
+          "width": 8.0,
+          "worst_noise_squared": 0.012144480352284517,
+          "continuum_noise_squared": 0.012147320287022777,
+          "continuum_difference": 2.839934738260025e-06,
+          "upper_bound_squared": 0.012851047397251767,
+          "input_noise_squared": {
+            "0.0": 0.011094995162070038,
+            "1.0": 0.006184944505061444,
+            "5.0": 0.0011910853078871608
+          },
+          "core_spectrum_error": 3.7643499428696714e-16,
+          "core_minimum_effect": 9.598579218227333e-11
+        },
+        {
+          "width": 16.0,
+          "worst_noise_squared": 0.0031277149488731087,
+          "continuum_noise_squared": 0.003128464245265958,
+          "continuum_difference": 7.492963928490415e-07,
+          "upper_bound_squared": 0.0032127618493129418,
+          "input_noise_squared": {
+            "0.0": 0.002854610222945756,
+            "1.0": 0.001590504177684941,
+            "5.0": 0.00030778754099716776
+          },
+          "core_spectrum_error": 4.553649124439119e-16,
+          "core_minimum_effect": 1.1998155393381092e-11
+        }
+      ]
+    },
+    {
+      "size": 16,
+      "kind": "squared",
+      "record": [
+        {
+          "width": 2.0,
+          "worst_noise_squared": 0.10727408400570264,
+          "continuum_noise_squared": 0.10747387435461483,
+          "continuum_difference": 0.00019979034891219605,
+          "upper_bound_squared": 0.13707783890401887,
+          "input_noise_squared": {
+            "0.0": 0.09587039629435969,
+            "1.0": 0.0774837320496845,
+            "5.0": 0.024582531784018223
+          },
+          "core_spectrum_error": 5.551115123125783e-17,
+          "core_minimum_effect": 6.262904636054213e-07
+        },
+        {
+          "width": 4.0,
+          "worst_noise_squared": 0.0308153444781643,
+          "continuum_noise_squared": 0.030874637026909683,
+          "continuum_difference": 5.929254874538145e-05,
+          "upper_bound_squared": 0.03426945972600472,
+          "input_noise_squared": {
+            "0.0": 0.027307203981535067,
+            "1.0": 0.02231247469262264,
+            "5.0": 0.007055908502167571
+          },
+          "core_spectrum_error": 4.5102810375396984e-17,
+          "core_minimum_effect": 7.847214384371831e-08
+        },
+        {
+          "width": 8.0,
+          "worst_noise_squared": 0.008153448781243529,
+          "continuum_noise_squared": 0.008169326558741667,
+          "continuum_difference": 1.5877777498138e-05,
+          "upper_bound_squared": 0.00856736493150118,
+          "input_noise_squared": {
+            "0.0": 0.007202506767987958,
+            "1.0": 0.005908291640938205,
+            "5.0": 0.0018663774288218942
+          },
+          "core_spectrum_error": 1.0408340855860843e-17,
+          "core_minimum_effect": 9.822655610391009e-09
+        },
+        {
+          "width": 16.0,
+          "worst_noise_squared": 0.00208985752003777,
+          "continuum_noise_squared": 0.0020939468962853894,
+          "continuum_difference": 4.089376247619521e-06,
+          "upper_bound_squared": 0.002141841232875295,
+          "input_noise_squared": {
+            "0.0": 0.0018437450079228984,
+            "1.0": 0.0015149137490009276,
+            "5.0": 0.0004783214086011608
+          },
+          "core_spectrum_error": 1.0755285551056204e-16,
+          "core_minimum_effect": 1.228669741897025e-09
+        }
+      ]
+    },
+    {
+      "size": 32,
+      "kind": "squared",
+      "record": [
+        {
+          "width": 2.0,
+          "worst_noise_squared": 0.10742405889286082,
+          "continuum_noise_squared": 0.10747387435461483,
+          "continuum_difference": 4.981546175401863e-05,
+          "upper_bound_squared": 0.13707783890401887,
+          "input_noise_squared": {
+            "0.0": 0.0953874910465825,
+            "1.0": 0.07701130894905642,
+            "5.0": 0.024580646867779003
+          },
+          "core_spectrum_error": 2.7755575615628914e-17,
+          "core_minimum_effect": 1.9610125460833064e-08
+        },
+        {
+          "width": 4.0,
+          "worst_noise_squared": 0.03085985520952749,
+          "continuum_noise_squared": 0.030874637026909683,
+          "continuum_difference": 1.4781817382191614e-05,
+          "upper_bound_squared": 0.03426945972600472,
+          "input_noise_squared": {
+            "0.0": 0.027167502716445576,
+            "1.0": 0.022171051986717098,
+            "5.0": 0.007053284913760908
+          },
+          "core_spectrum_error": 5.898059818321144e-17,
+          "core_minimum_effect": 2.4552213432148766e-09
+        },
+        {
+          "width": 8.0,
+          "worst_noise_squared": 0.008165368543623569,
+          "continuum_noise_squared": 0.008169326558741667,
+          "continuum_difference": 3.958015118097832e-06,
+          "upper_bound_squared": 0.00856736493150118,
+          "input_noise_squared": {
+            "0.0": 0.007165441491477237,
+            "1.0": 0.0058703125326380855,
+            "5.0": 0.0018654753103724837
+          },
+          "core_spectrum_error": 3.9898639947466563e-17,
+          "core_minimum_effect": 3.0715311513893164e-10
+        },
+        {
+          "width": 16.0,
+          "worst_noise_squared": 0.0020929275250873075,
+          "continuum_noise_squared": 0.0020939468962853894,
+          "continuum_difference": 1.0193711980819274e-06,
+          "upper_bound_squared": 0.002141841232875295,
+          "input_noise_squared": {
+            "0.0": 0.0018342338488950337,
+            "1.0": 0.001505120377445547,
+            "5.0": 0.0004780686783557537
+          },
+          "core_spectrum_error": 2.6020852139652106e-17,
+          "core_minimum_effect": 3.8408424020564144e-11
+        }
+      ]
+    },
+    {
+      "size": 64,
+      "kind": "squared",
+      "record": [
+        {
+          "width": 2.0,
+          "worst_noise_squared": 0.10746142874209169,
+          "continuum_noise_squared": 0.10747387435461483,
+          "continuum_difference": 1.2445612523143135e-05,
+          "upper_bound_squared": 0.13707783890401887,
+          "input_noise_squared": {
+            "0.0": 0.09525194823400317,
+            "1.0": 0.0768797367176129,
+            "5.0": 0.024584860926474845
+          },
+          "core_spectrum_error": 2.3592239273284576e-16,
+          "core_minimum_effect": 6.136906574772659e-10
+        },
+        {
+          "width": 4.0,
+          "worst_noise_squared": 0.03087094415426598,
+          "continuum_noise_squared": 0.030874637026909683,
+          "continuum_difference": 3.69287264370341e-06,
+          "upper_bound_squared": 0.03426945972600472,
+          "input_noise_squared": {
+            "0.0": 0.027128793857971296,
+            "1.0": 0.022132196203271608,
+            "5.0": 0.007053823899094655
+          },
+          "core_spectrum_error": 2.6020852139652106e-16,
+          "core_minimum_effect": 7.678138077967789e-11
+        },
+        {
+          "width": 8.0,
+          "worst_noise_squared": 0.008168337769210422,
+          "continuum_noise_squared": 0.008169326558741667,
+          "continuum_difference": 9.8878953124458e-07,
+          "upper_bound_squared": 0.00856736493150118,
+          "input_noise_squared": {
+            "0.0": 0.007155219351801982,
+            "1.0": 0.0058599269691366725,
+            "5.0": 0.0018655513158367196
+          },
+          "core_spectrum_error": 2.445960101127298e-16,
+          "core_minimum_effect": 9.601950304660558e-12
+        },
+        {
+          "width": 16.0,
+          "worst_noise_squared": 0.0020936922392820138,
+          "continuum_noise_squared": 0.0020939468962853894,
+          "continuum_difference": 2.5465700337562805e-07,
+          "upper_bound_squared": 0.002141841232875295,
+          "input_noise_squared": {
+            "0.0": 0.0018316158667194247,
+            "1.0": 0.0015024474232797579,
+            "5.0": 0.0004780812418486335
+          },
+          "core_spectrum_error": 2.7885679876327174e-16,
+          "core_minimum_effect": 1.200526518178851e-12
+        }
+      ]
+    }
+  ],
+  "finite_battery": [
+    {
+      "size": 3,
+      "packet_size": 8,
+      "kind": "length",
+      "minimum_battery_energy": 0.0,
+      "unitary_error": 2.220446049250313e-16,
+      "conservation_error": 4.440892098500626e-16,
+      "effect_error": 5.551115123125783e-17,
+      "noise_error": 9.71445146547012e-17,
+      "isometry_difference_error": 1.942890293094024e-16,
+      "noise_squared": 0.07301672298523035,
+      "witness_noise_squared": 0.0711684439935073,
+      "way_lower_bound": 0.047952193223695254,
+      "exchange_input": "평균 성분과 중심 에너지 성분의 실수 중첩; 교환자 최악 상태와 구별",
+      "system_energy_change": -0.26669433042779556,
+      "battery_energy_change": 0.26669433042779467,
+      "energy_budget_error": 8.881784197001252e-16
+    },
+    {
+      "size": 4,
+      "packet_size": 16,
+      "kind": "length",
+      "minimum_battery_energy": 0.0,
+      "unitary_error": 0.0,
+      "conservation_error": 0.0,
+      "effect_error": 8.326672684688674e-17,
+      "noise_error": 1.457167719820518e-16,
+      "isometry_difference_error": 2.706168622523819e-16,
+      "noise_squared": 0.03904453926374682,
+      "witness_noise_squared": 0.03831826252342143,
+      "way_lower_bound": 0.028175293009292984,
+      "exchange_input": "평균 성분과 중심 에너지 성분의 실수 중첩; 교환자 최악 상태와 구별",
+      "system_energy_change": -0.27582840026664157,
+      "battery_energy_change": 0.2758284002666418,
+      "energy_budget_error": 2.220446049250313e-16
+    },
+    {
+      "size": 3,
+      "packet_size": 8,
+      "kind": "squared",
+      "minimum_battery_energy": 0.0,
+      "unitary_error": 3.3306690738754696e-16,
+      "conservation_error": 4.440892098500626e-16,
+      "effect_error": 4.163336342344337e-17,
+      "noise_error": 1.1796119636642288e-16,
+      "isometry_difference_error": 2.636779683484747e-16,
+      "noise_squared": 0.0524774148365535,
+      "witness_noise_squared": 0.05101824721150899,
+      "way_lower_bound": 0.03469346367525933,
+      "exchange_input": "평균 성분과 중심 에너지 성분의 실수 중첩; 교환자 최악 상태와 구별",
+      "system_energy_change": -0.21986233680936573,
+      "battery_energy_change": 0.21986233680936618,
+      "energy_budget_error": 4.440892098500626e-16
+    },
+    {
+      "size": 4,
+      "packet_size": 16,
+      "kind": "squared",
+      "minimum_battery_energy": 0.0,
+      "unitary_error": 2.220446049250313e-16,
+      "conservation_error": 0.0,
+      "effect_error": 1.6653345369377348e-16,
+      "noise_error": 1.6046192152785466e-16,
+      "isometry_difference_error": 3.213575239247035e-16,
+      "noise_squared": 0.027297043706529234,
+      "witness_noise_squared": 0.02675210300871335,
+      "way_lower_bound": 0.019847306716478694,
+      "exchange_input": "평균 성분과 중심 에너지 성분의 실수 중첩; 교환자 최악 상태와 구별",
+      "system_energy_change": -0.22721349563524074,
+      "battery_energy_change": 0.22721349563524118,
+      "energy_budget_error": 4.440892098500626e-16
+    }
+  ],
+  "repeated_record": [
+    {
+      "size": 3,
+      "packet_size": 8,
+      "kind": "length",
+      "count": 1,
+      "isometry_error": 4.440892098500626e-16,
+      "mixed_record_probability_bound": 0.0,
+      "same_as_single_error": 0.0,
+      "energy_operator_error": 6.661338147750939e-16,
+      "noise_squared": 0.07301672298523024,
+      "reference_gram_error": 4.163336342344337e-17,
+      "system_energy_change": -0.26669433042779556,
+      "battery_energy_change": 0.26669433042779517,
+      "full_inverse_error": 5.551115123125783e-17,
+      "archive_probability": 0.5000000000000003,
+      "archive_recovery_fidelity": 0.5000000000000006,
+      "archive_formula_error": 5.551115123125783e-16,
+      "archive_record_reset_error": 2.7755575615628914e-17,
+      "archive_sb_state_error": 2.7755575615628914e-17,
+      "archive_energy_operator_error": 8.881784197001252e-16
+    },
+    {
+      "size": 3,
+      "packet_size": 8,
+      "kind": "length",
+      "count": 2,
+      "isometry_error": 2.220446049250313e-16,
+      "mixed_record_probability_bound": 2.2354721615528666e-32,
+      "same_as_single_error": 2.7755575615628914e-17,
+      "energy_operator_error": 8.881784197001252e-16,
+      "noise_squared": 0.07301672298523024,
+      "reference_gram_error": 2.7755575615628914e-17,
+      "system_energy_change": -0.26669433042779533,
+      "battery_energy_change": 0.26669433042779556,
+      "full_inverse_error": 1.1102230246251565e-16,
+      "archive_probability": 0.5000000000000002,
+      "archive_recovery_fidelity": 0.5000000000000006,
+      "archive_formula_error": 5.551115123125783e-16,
+      "archive_record_reset_error": 1.3877787807814457e-17,
+      "archive_sb_state_error": 5.551115123125783e-17,
+      "archive_energy_operator_error": 8.881784197001252e-16
+    },
+    {
+      "size": 3,
+      "packet_size": 8,
+      "kind": "length",
+      "count": 3,
+      "isometry_error": 4.440892098500626e-16,
+      "mixed_record_probability_bound": 3.3359354213614367e-32,
+      "same_as_single_error": 5.551115123125783e-17,
+      "energy_operator_error": 1.3322676295501878e-15,
+      "noise_squared": 0.07301672298523024,
+      "reference_gram_error": 2.7755575615628914e-17,
+      "system_energy_change": -0.26669433042779533,
+      "battery_energy_change": 0.26669433042779594,
+      "full_inverse_error": 1.1102230246251565e-16,
+      "archive_probability": 0.5000000000000002,
+      "archive_recovery_fidelity": 0.5000000000000007,
+      "archive_formula_error": 6.661338147750939e-16,
+      "archive_record_reset_error": 1.3877787807814457e-17,
+      "archive_sb_state_error": 2.7755575615628914e-17,
+      "archive_energy_operator_error": 8.881784197001252e-16
+    },
+    {
+      "size": 3,
+      "packet_size": 8,
+      "kind": "length",
+      "count": 5,
+      "isometry_error": 4.440892098500626e-16,
+      "mixed_record_probability_bound": 5.600109259658714e-32,
+      "same_as_single_error": 5.551115123125783e-17,
+      "energy_operator_error": 1.3322676295501878e-15,
+      "noise_squared": 0.07301672298523024,
+      "reference_gram_error": 2.7755575615628914e-17,
+      "system_energy_change": -0.26669433042779533,
+      "battery_energy_change": 0.26669433042779594,
+      "full_inverse_error": 1.1102230246251565e-16,
+      "archive_probability": 0.5000000000000002,
+      "archive_recovery_fidelity": 0.5000000000000007,
+      "archive_formula_error": 6.661338147750939e-16,
+      "archive_record_reset_error": 1.3877787807814457e-17,
+      "archive_sb_state_error": 2.7755575615628914e-17,
+      "archive_energy_operator_error": 8.881784197001252e-16
+    },
+    {
+      "size": 4,
+      "packet_size": 16,
+      "kind": "length",
+      "count": 1,
+      "isometry_error": 8.881784197001252e-16,
+      "mixed_record_probability_bound": 0.0,
+      "same_as_single_error": 0.0,
+      "energy_operator_error": 8.881784197001252e-16,
+      "noise_squared": 0.039044539263747124,
+      "reference_gram_error": 1.734723475976807e-17,
+      "system_energy_change": -0.2758284002666416,
+      "battery_energy_change": 0.2758284002666421,
+      "full_inverse_error": 5.551115123125783e-17,
+      "archive_probability": 0.5000000000000002,
+      "archive_recovery_fidelity": 0.5000000000000002,
+      "archive_formula_error": 2.220446049250313e-16,
+      "archive_record_reset_error": 6.938893903907228e-18,
+      "archive_sb_state_error": 5.551115123125783e-17,
+      "archive_energy_operator_error": 8.881784197001252e-16
+    },
+    {
+      "size": 4,
+      "packet_size": 16,
+      "kind": "length",
+      "count": 2,
+      "isometry_error": 2.220446049250313e-16,
+      "mixed_record_probability_bound": 1.764722227240281e-33,
+      "same_as_single_error": 5.551115123125783e-17,
+      "energy_operator_error": 8.881784197001252e-16,
+      "noise_squared": 0.039044539263747145,
+      "reference_gram_error": 2.7755575615628914e-17,
+      "system_energy_change": -0.2758284002666416,
+      "battery_energy_change": 0.27582840026664207,
+      "full_inverse_error": 1.1102230246251565e-16,
+      "archive_probability": 0.5000000000000002,
+      "archive_recovery_fidelity": 0.5000000000000003,
+      "archive_formula_error": 3.3306690738754696e-16,
+      "archive_record_reset_error": 1.3877787807814457e-17,
+      "archive_sb_state_error": 5.551115123125783e-17,
+      "archive_energy_operator_error": 8.881784197001252e-16
+    },
+    {
+      "size": 4,
+      "packet_size": 16,
+      "kind": "length",
+      "count": 3,
+      "isometry_error": 2.220446049250313e-16,
+      "mixed_record_probability_bound": 5.2884434248925775e-33,
+      "same_as_single_error": 5.551115123125783e-17,
+      "energy_operator_error": 1.7763568394002505e-15,
+      "noise_squared": 0.039044539263747145,
+      "reference_gram_error": 2.42861286636753e-17,
+      "system_energy_change": -0.2758284002666416,
+      "battery_energy_change": 0.2758284002666422,
+      "full_inverse_error": 1.1102230246251565e-16,
+      "archive_probability": 0.5000000000000002,
+      "archive_recovery_fidelity": 0.5000000000000002,
+      "archive_formula_error": 2.220446049250313e-16,
+      "archive_record_reset_error": 1.3877787807814457e-17,
+      "archive_sb_state_error": 5.551115123125783e-17,
+      "archive_energy_operator_error": 8.881784197001252e-16
+    },
+    {
+      "size": 4,
+      "packet_size": 16,
+      "kind": "length",
+      "count": 5,
+      "isometry_error": 4.440892098500626e-16,
+      "mixed_record_probability_bound": 1.2918655225027922e-32,
+      "same_as_single_error": 1.1102230246251565e-16,
+      "energy_operator_error": 1.7763568394002505e-15,
+      "noise_squared": 0.039044539263747124,
+      "reference_gram_error": 2.42861286636753e-17,
+      "system_energy_change": -0.2758284002666416,
+      "battery_energy_change": 0.2758284002666422,
+      "full_inverse_error": 1.1102230246251565e-16,
+      "archive_probability": 0.5000000000000002,
+      "archive_recovery_fidelity": 0.5000000000000002,
+      "archive_formula_error": 2.220446049250313e-16,
+      "archive_record_reset_error": 1.214306433183765e-17,
+      "archive_sb_state_error": 2.0816681711721685e-17,
+      "archive_energy_operator_error": 8.881784197001252e-16
+    },
+    {
+      "size": 3,
+      "packet_size": 8,
+      "kind": "squared",
+      "count": 1,
+      "isometry_error": 6.661338147750939e-16,
+      "mixed_record_probability_bound": 0.0,
+      "same_as_single_error": 0.0,
+      "energy_operator_error": 1.3322676295501878e-15,
+      "noise_squared": 0.05247741483655341,
+      "reference_gram_error": 1.734723475976807e-17,
+      "system_energy_change": -0.21986233680936573,
+      "battery_energy_change": 0.2198623368093656,
+      "full_inverse_error": 5.551115123125783e-17,
+      "archive_probability": 0.49999999999999956,
+      "archive_recovery_fidelity": 0.4999999999999994,
+      "archive_formula_error": 6.106226635438361e-16,
+      "archive_record_reset_error": 2.7755575615628914e-17,
+      "archive_sb_state_error": 5.551115123125783e-17,
+      "archive_energy_operator_error": 8.881784197001252e-16
+    },
+    {
+      "size": 3,
+      "packet_size": 8,
+      "kind": "squared",
+      "count": 2,
+      "isometry_error": 2.220446049250313e-16,
+      "mixed_record_probability_bound": 9.626210644210467e-33,
+      "same_as_single_error": 5.551115123125783e-17,
+      "energy_operator_error": 1.3322676295501878e-15,
+      "noise_squared": 0.052477414836553424,
+      "reference_gram_error": 2.42861286636753e-17,
+      "system_energy_change": -0.21986233680936576,
+      "battery_energy_change": 0.2198623368093655,
+      "full_inverse_error": 8.326672684688674e-17,
+      "archive_probability": 0.5,
+      "archive_recovery_fidelity": 0.49999999999999994,
+      "archive_formula_error": 5.551115123125783e-17,
+      "archive_record_reset_error": 2.9087844295519054e-17,
+      "archive_sb_state_error": 5.551115123125783e-17,
+      "archive_energy_operator_error": 4.440892098500626e-16
+    },
+    {
+      "size": 3,
+      "packet_size": 8,
+      "kind": "squared",
+      "count": 3,
+      "isometry_error": 7.979727989493313e-17,
+      "mixed_record_probability_bound": 1.7754768323533116e-32,
+      "same_as_single_error": 5.551115123125783e-17,
+      "energy_operator_error": 1.3322676295501878e-15,
+      "noise_squared": 0.052477414836553424,
+      "reference_gram_error": 3.469446951953614e-17,
+      "system_energy_change": -0.2198623368093658,
+      "battery_energy_change": 0.21986233680936546,
+      "full_inverse_error": 1.1102230246251565e-16,
+      "archive_probability": 0.4999999999999999,
+      "archive_recovery_fidelity": 0.499999999999999,
+      "archive_formula_error": 9.992007221626409e-16,
+      "archive_record_reset_error": 2.7755575615628914e-17,
+      "archive_sb_state_error": 2.7755575615628914e-17,
+      "archive_energy_operator_error": 8.881784197001252e-16
+    },
+    {
+      "size": 3,
+      "packet_size": 8,
+      "kind": "squared",
+      "count": 5,
+      "isometry_error": 4.440892098500626e-16,
+      "mixed_record_probability_bound": 2.9491808994616407e-32,
+      "same_as_single_error": 5.551115123125783e-17,
+      "energy_operator_error": 1.3322676295501878e-15,
+      "noise_squared": 0.05247741483655341,
+      "reference_gram_error": 2.7755575615628914e-17,
+      "system_energy_change": -0.21986233680936582,
+      "battery_energy_change": 0.21986233680936546,
+      "full_inverse_error": 1.6653345369377348e-16,
+      "archive_probability": 0.4999999999999999,
+      "archive_recovery_fidelity": 0.499999999999999,
+      "archive_formula_error": 9.992007221626409e-16,
+      "archive_record_reset_error": 2.7755575615628914e-17,
+      "archive_sb_state_error": 1.3877787807814457e-17,
+      "archive_energy_operator_error": 8.881784197001252e-16
+    },
+    {
+      "size": 4,
+      "packet_size": 16,
+      "kind": "squared",
+      "count": 1,
+      "isometry_error": 8.881784197001252e-16,
+      "mixed_record_probability_bound": 0.0,
+      "same_as_single_error": 0.0,
+      "energy_operator_error": 5.551115123125783e-16,
+      "noise_squared": 0.027297043706529595,
+      "reference_gram_error": 2.0816681711721685e-17,
+      "system_energy_change": -0.2272134956352409,
+      "battery_energy_change": 0.22721349563524126,
+      "full_inverse_error": 5.551115123125783e-17,
+      "archive_probability": 0.5000000000000001,
+      "archive_recovery_fidelity": 0.5,
+      "archive_formula_error": 0.0,
+      "archive_record_reset_error": 2.0816681711721685e-17,
+      "archive_sb_state_error": 2.7755575615628914e-17,
+      "archive_energy_operator_error": 8.881784197001252e-16
+    },
+    {
+      "size": 4,
+      "packet_size": 16,
+      "kind": "squared",
+      "count": 2,
+      "isometry_error": 4.440892098500626e-16,
+      "mixed_record_probability_bound": 6.805360819331924e-33,
+      "same_as_single_error": 2.7755575615628914e-17,
+      "energy_operator_error": 1.5543122344752192e-15,
+      "noise_squared": 0.027297043706529592,
+      "reference_gram_error": 1.3877787807814457e-17,
+      "system_energy_change": -0.22721349563524074,
+      "battery_energy_change": 0.22721349563524124,
+      "full_inverse_error": 1.1102230246251565e-16,
+      "archive_probability": 0.5000000000000003,
+      "archive_recovery_fidelity": 0.5000000000000004,
+      "archive_formula_error": 4.440892098500626e-16,
+      "archive_record_reset_error": 2.0816681711721685e-17,
+      "archive_sb_state_error": 5.551115123125783e-17,
+      "archive_energy_operator_error": 2.6645352591003757e-15
+    },
+    {
+      "size": 4,
+      "packet_size": 16,
+      "kind": "squared",
+      "count": 3,
+      "isometry_error": 6.661338147750939e-16,
+      "mixed_record_probability_bound": 1.3767299859486113e-32,
+      "same_as_single_error": 5.551115123125783e-17,
+      "energy_operator_error": 1.7763568394002505e-15,
+      "noise_squared": 0.027297043706529595,
+      "reference_gram_error": 1.734723475976807e-17,
+      "system_energy_change": -0.22721349563524051,
+      "battery_energy_change": 0.2272134956352416,
+      "full_inverse_error": 1.6653345369377348e-16,
+      "archive_probability": 0.5,
+      "archive_recovery_fidelity": 0.5000000000000006,
+      "archive_formula_error": 5.551115123125783e-16,
+      "archive_record_reset_error": 2.7755575615628914e-17,
+      "archive_sb_state_error": 5.551115123125783e-17,
+      "archive_energy_operator_error": 2.6645352591003757e-15
+    },
+    {
+      "size": 4,
+      "packet_size": 16,
+      "kind": "squared",
+      "count": 5,
+      "isometry_error": 8.881784197001252e-16,
+      "mixed_record_probability_bound": 2.475915819868776e-32,
+      "same_as_single_error": 1.1102230246251565e-16,
+      "energy_operator_error": 2.6645352591003757e-15,
+      "noise_squared": 0.027297043706529585,
+      "reference_gram_error": 1.3877787807814457e-17,
+      "system_energy_change": -0.2272134956352403,
+      "battery_energy_change": 0.22721349563524193,
+      "full_inverse_error": 1.6653345369377348e-16,
+      "archive_probability": 0.49999999999999994,
+      "archive_recovery_fidelity": 0.5000000000000007,
+      "archive_formula_error": 7.216449660063518e-16,
+      "archive_record_reset_error": 2.310344289442917e-17,
+      "archive_sb_state_error": 5.551115123125783e-17,
+      "archive_energy_operator_error": 2.6645352591003757e-15
+    }
+  ],
+  "resources": [
+    {
+      "kind": "length",
+      "target_rms": 0.1,
+      "apparatus_std_necessary": 1.4023789311975083,
+      "battery_width_sufficient": 9.068996821171087,
+      "battery_std_sufficient": 1.63927583967259,
+      "battery_mean": 5.5344984105855435,
+      "constructed_rms": 0.09757836108833591,
+      "reference_trace_distance_bound": 0.14142135623730953
+    },
+    {
+      "kind": "length",
+      "target_rms": 0.01,
+      "apparatus_std_necessary": 14.429714711894572,
+      "battery_width_sufficient": 90.68996821171088,
+      "battery_std_sufficient": 16.3927583967259,
+      "battery_mean": 46.34498410585544,
+      "constructed_rms": 0.009977723296041888,
+      "reference_trace_distance_bound": 0.014142135623730952
+    },
+    {
+      "kind": "length",
+      "target_rms": 0.001,
+      "apparatus_std_necessary": 144.3371631516522,
+      "battery_width_sufficient": 906.8996821171088,
+      "battery_std_sufficient": 163.927583967259,
+      "battery_mean": 454.4498410585544,
+      "constructed_rms": 0.0009997792442013882,
+      "reference_trace_distance_bound": 0.0014142135623730952
+    },
+    {
+      "kind": "squared",
+      "target_rms": 0.1,
+      "apparatus_std_necessary": 1.1396880664852505,
+      "battery_width_sufficient": 7.40480489693061,
+      "battery_std_sufficient": 1.338463118290097,
+      "battery_mean": 4.702402448465305,
+      "constructed_rms": 0.09744317855713132,
+      "reference_trace_distance_bound": 0.14142135623730953
+    },
+    {
+      "kind": "squared",
+      "target_rms": 0.01,
+      "apparatus_std_necessary": 11.781294024379871,
+      "battery_width_sufficient": 74.0480489693061,
+      "battery_std_sufficient": 13.38463118290097,
+      "battery_mean": 38.02402448465305,
+      "constructed_rms": 0.009976598175883047,
+      "reference_trace_distance_bound": 0.014142135623730952
+    },
+    {
+      "kind": "squared",
+      "target_rms": 0.001,
+      "apparatus_std_necessary": 117.85074835947749,
+      "battery_width_sufficient": 740.480489693061,
+      "battery_std_sufficient": 133.84631182900972,
+      "battery_mean": 371.2402448465305,
+      "constructed_rms": 0.0009997682383879134,
+      "reference_trace_distance_bound": 0.0014142135623730952
+    }
+  ],
+  "asymptotic_resource_ratio": 1.1357236167732239,
+  "scope": "공급된 길이 에너지와 공동 사영의 단회·동일 계 반복 기록. 양의 배터리, 기록 상관과 외부 복사 뒤의 환류",
+  "unfinished": [
+    "실제 미시 작용·물리 시간·배터리 준비·국소 기록 결합·원래 정준 제약과의 양립",
+    "독립 새 계의 투입·외부 기록 초기화·충전, 0D 보충·공통 계량·GR·모든 힘·암흑부문·허블 텐션"
+  ]
+}

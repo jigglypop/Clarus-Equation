@@ -10,8 +10,8 @@ ROOT = Path(__file__).resolve().parents[4]
 sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(ROOT / "verify" / "Q-0015" / "F-01"))
 sys.path.insert(0, str(ROOT / "verify" / "Q-0008" / "F-02"))
 import check_theta as C  # noqa: E402
-from examples.physics.causal_face_simplicity import geometric_self_dual_triple, plebanski_gram  # noqa: E402
-from examples.physics.curved_plebanski_hinge import (  # noqa: E402
+from examples.physics.gravity.causal_face_simplicity import geometric_self_dual_triple, plebanski_gram  # noqa: E402
+from examples.physics.gravity.curved_plebanski_hinge import (  # noqa: E402
     exact_primal_triangle_holonomy, de_sitter_plebanski_point_audit, reference_vertex_coordinates,
 )
 

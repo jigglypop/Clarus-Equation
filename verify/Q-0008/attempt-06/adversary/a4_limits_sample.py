@@ -22,8 +22,8 @@ for p in (ROOT, ROOT / "verify" / "Q-0012" / "F-01", ROOT / "verify" / "Q-0008" 
 
 from check_cumulant import gram_form, linear_map, quadratic_tensor, tl  # noqa: E402
 from driver_numbers import cayley_exact, tree_arrays, uniform_rooted_tree  # noqa: E402
-from examples.physics.causal_face_simplicity import geometric_self_dual_triple, plebanski_gram  # noqa: E402
-from examples.physics.urbantke_shape_matching_rg import optimal_internal_alignment  # noqa: E402
+from examples.physics.gravity.causal_face_simplicity import geometric_self_dual_triple, plebanski_gram  # noqa: E402
+from examples.physics.gravity.urbantke_shape_matching_rg import optimal_internal_alignment  # noqa: E402
 
 SEED = 20260902
 MIN_DET = 0.05

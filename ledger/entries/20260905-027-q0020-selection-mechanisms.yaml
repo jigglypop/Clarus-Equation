@@ -1,0 +1,76 @@
+id: E-20260905-027
+question: Q-0020
+attempt: 4
+timestamp: 2026-09-05T00:00:00+09:00
+claim: >-
+  [산출] 접착 전 W 가우스 길이 측도와 기록·조건부 선택·에너지 보존 이완을
+  분리한다. 불일치와 가환하는 비선택 기록은 불일치 분포를 보존한다.
+  공급된 이완은 가능하지만 같은 유한 환경 재사용은 재증가를 허용한다.
+  표준 반무한 사슬은 환경 재설정 없는 국소 이완의 대조 모형이며,
+  경계 결합상태는 그 이완을 막는 정확한 음성대조다. CE 동역학의 채택은 아니다.
+level: L2
+verdict: continue
+pivot_step: null
+ladder_step: null
+card: null
+derivation: derivations/Q-0020/conditional_composition.derivation.md
+verification:
+  symbolic: skipped
+  numeric: pass
+  lean: skipped
+  artifacts: verify/Q-0020/selection_mechanisms.json
+adversary:
+  counterexamples:
+    - input: "불일치 라벨(0,1,2), 균등 중첩, 분해능0.5인 완비 대각 Kraus 기록"
+      expected: "비선택 기록을 soft-fold 조건부 가중치와 동일시하면 불일치 평균이 감소"
+      observed: "비선택 평균5/3 그대로. 성공 결과만 조건화하면0.12034926, 성공확률0.37855692."
+    - input: "이완 확률0.6의 에너지 보존 충돌, 동일한 3준위 환경 재사용"
+      expected: "새 환경 채널의 기하급수 감소를 그대로 반복"
+      observed: "같은 환경에서는 평균2/3,1/15,1.3066667,1.4106667; 세 번째 충돌부터 재증가."
+    - input: "반무한 사슬의 경계 에너지 이동 delta/g=2"
+      expected: "무한 환경만으로 모든 국소 들뜸이 사라진다는 명제"
+      observed: "정규화된 경계 결합상태가 있으며 경계 초기 들뜸의 점근 생존확률9/16."
+  survived_checks:
+    - "비선택 기록의 분포 보존 및 조건부 두 분기의 확률 합1"
+    - "전체 충돌의 유니터리 잔차9.52e-18, 에너지 교환자 잔차0"
+    - "독립 7차원 Hamiltonian 대각화와 사슬 경계 스펙트럼 공식 일치"
+    - "2048/4096사슬의 지정 유한시각 확률차7.32e-19; 무한시간 수치 증명은 아님"
+    - "delta/g=2 결합상태의64절단 고유벡터 잔차4.70e-20"
+assumptions:
+  - "W=직합 |H_a|, 무차원 길이 발생 좌표, kappa=1, h=2e-5의 공급 측도"
+  - "접착 제약 행공간의 정규직교 기저로 불일치 노름을 정의; 비선형 좌표 불변량은 아님"
+  - "기록 no-go는 모든 Kraus가 해당 불일치와 가환하는 경우로 한정"
+  - "이완의 표적0, 비용(0,1,4), 진공 환경과 결합은 외부 입력"
+  - "자율 사슬의 무한 국소 이완은 반무한 균일 사슬과 초기 진공 환경/단일 들뜸 전제"
+  - "무한 환경 극한을 먼저 취함; 유한 사슬의 무한시간 수렴을 주장하지 않음"
+conditional_results:
+  - status: "[정리: 조건부]"
+    claim: "불일치 관측량 Y와 가환하는 완비 Kraus 집합은 모든 유계 함수 f(Y)의 평균을 비선택적으로 보존한다. 별도 Hamiltonian/feedback/drift가 있는 일반 채널은 이 결론의 대상이 아니다."
+  - status: "[정리: 조건부]"
+    claim: "주어진 Gaussian 불일치 고유분산 lambda_i에 soft 가중치를 곱하면 분산은 lambda_i/(1+lambda_i/eps^2), log 성공확률은 -sum log(1+lambda_i/eps^2)/2다. 성공 분기 조건화 또는 별도 측도 채택이다."
+  - status: "[산출]"
+    claim: "5/25단체의 미조건화 불일치 rank35/210, 방향당 평균제곱1.33424/4.79358. eps=0.1 조건화 뒤 총평균0.34034/2.02322, log 성공확률-76.2522/-503.061. 서로 다른 깊이의 공급 모형으로 시간 성장률이 아니다."
+  - status: "[정리: 조건부]"
+    claim: "H/g=3I+사슬 인접행렬의 반무한 단일들뜸 모형에서 경계 진폭은 exp(-3i tau) J1(2tau)/tau이며 국소 생존확률은0으로 간다. 총 에너지와 들뜸은 보존된다."
+  - status: "[정리: 조건부]"
+    claim: "경계 detuning d=delta/g>1이면 비율1/d의 결합상태가 생기고, 경계 초기상태의 점근 생존확률은(1-d^-2)^2다. d=2에서9/16."
+sources:
+  - url: https://arxiv.org/abs/quant-ph/0312059
+    role: "표준 결어긋남과 선택의 구분. 대각 기록 항등식은 본 유도에서 직접 증명."
+  - url: https://arxiv.org/abs/0803.1447
+    role: "설계된 소산으로 상태 준비가 가능하다는 기존 결과. CE의 결합을 공급하지 않는다."
+  - url: https://arxiv.org/abs/quant-ph/0611164
+    role: "식(10)의 균일 반무한 사슬 진폭 J1(2t)/t를 표준 대조 모형으로 사용. 신규 CE 법칙 아님. 경계 detuning 반례는 여기서 별도 직접 유도."
+audit_limitations:
+  - "독립 math-agent 요청은 agent thread limit으로 실행되지 않음. root 수학 검산·테스트·원문 확인이며 독립 에이전트 감사로 보고하지 않는다."
+  - "W 헤세 수치의 유한차분 오차 상계는 미완성. 대각 기록 항등식과 해석적 사슬 결과는 이 수치와 독립이다."
+unfinished:
+  - "미시 split/merge 작용에서 불일치 관측량과 실제 방출 결합을 도출"
+  - "공통 계량 모드는 보존하면서 불일치의 국소 스펙트럼이 적분 가능한 절대연속 밀도를 갖는지 검증"
+  - "열적 재유입, 경계 결합상태, 증가하는 불일치 모드 수에 대한 잔류 제어"
+  - "Lorentzian·3+1 Plebanski/Einstein 극한 및 관측 계약"
+next_action: >-
+  soft-fold를 비선택 기록으로 해석하는 경로를 사용하지 않는다.
+  실제 CE split/merge 작용에서 불일치와 환경의 비가환 에너지 교환 결합을 도출하고,
+  방출 모드의 결합상태 및 열적 재유입을 반증 조건으로 검사한다.
+  기존 F-01 기각은 유지하며 표준 사슬 모형을 신규 예측 카드로 채택하지 않는다.

@@ -22,7 +22,7 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "verify" / "Q-0012" / "F-01"))
 from check_cumulant import (linear_map, quadratic_tensor, gram_form, REFERENCE, run_form, SEED,
                             tl, basis_16, DERIV_H)  # noqa
-from examples.physics.causal_face_simplicity import geometric_self_dual_triple  # noqa
+from examples.physics.gravity.causal_face_simplicity import geometric_self_dual_triple  # noqa
 
 OUT = Path(__file__).parent
 WIN_RMS, WIN_RATIO = 0.03, (3.0, 7.0)

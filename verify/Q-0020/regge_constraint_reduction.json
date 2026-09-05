@@ -1,0 +1,179 @@
+{
+  "status": "[산출]",
+  "source_sha256": "2f5172c475d1eb774ef50b59e642ab73cc236f391215dbbd4faab7d317a56809",
+  "dependencies": {
+    "regge_pachner_constraints.py": "5badf64159a9880caa4edfb520ee8d28bd1d0f392d8277d8bcf5c3aaa2cdc656",
+    "regge_pachner_creation.py": "68c5f330bd2e4732970e5b9379f3fdbd86e236fe301a45521eea0663d04e3705",
+    "regge_pachner_transport.py": "c995451a5b12e47470f37c19926574c2cbfd7a20aeb07c0c76e541aef143b415",
+    "regge_tent_transfer.py": "e509b0b583a99258730650584e812d9b6f097383629b4e855636c8e87c710f71"
+  },
+  "scope": "공급한 공유 길이·정준 위상공간·beta=1에서 실제 두 제약의 국소 축약",
+  "exact_formulas": {
+    "bracket_flat_family": "3*sqrt(2)*(1-h**2)",
+    "dirac_ey": "1/a (a!=0)",
+    "liouville_density": "abs(a) de dy dz dp_z (a!=0)",
+    "squared_density": "abs(a)/(4*e*y) dE dY dz dp_z",
+    "rank_h1": 26,
+    "rank_regular": 28
+  },
+  "cases": [
+    {
+      "h": 0.5,
+      "e": 1.0,
+      "y": 1.6329931618554523,
+      "minimum_gram_eigenvalue": 0.15199875156082265,
+      "equation_residual": 2.6645352591003757e-15,
+      "curvature_residual": 2.6645352591003757e-15,
+      "expected_bracket": 3.1819805153394642,
+      "bracket_formula_error": 1.2877254818022266e-11,
+      "independent_hessian_error": 1.6468604258079722e-11,
+      "step_difference": 7.864819906444609e-12,
+      "flat_hessian_ee": -7.794228634041559,
+      "flat_hessian_error": 1.8388846001471393e-11,
+      "hessian_skew": 1.151380201801986e-11,
+      "reduction": {
+        "bracket": 3.181980515326587,
+        "constraint_rank": 2,
+        "pullback_rank": 28,
+        "smallest_singular_values": [
+          0.15079320328496584,
+          0.15079320328496576
+        ],
+        "tangent_residual": 0.0,
+        "second_class": true,
+        "dirac_ey": 0.31426968052862625,
+        "dirac_pair_error": 0.0,
+        "inverse_residual": 1.4300956725836048e-16,
+        "liouville_density": 3.1819805153265865,
+        "determinant_sign": 1.0,
+        "density_error": 4.440892098500626e-16,
+        "coordinate_check": {
+          "canonical_residual": 1.0828430354094715e-18,
+          "squared_bracket": 0.48713928962677533,
+          "bracket_error": 0.0,
+          "density_squared": 0.4871392896267753,
+          "density_error": 5.551115123125783e-17,
+          "restored_density_error": 0.0,
+          "jacobian_factor": 6.531972647421809
+        }
+      }
+    },
+    {
+      "h": 0.9,
+      "e": 1.8,
+      "y": 1.6329931618554523,
+      "minimum_gram_eigenvalue": 0.15199875156082304,
+      "equation_residual": 1.6875389974302412e-16,
+      "curvature_residual": 8.881784197001252e-16,
+      "expected_bracket": 0.8061017305526641,
+      "bracket_formula_error": 8.350542479718115e-12,
+      "independent_hessian_error": 1.2193135390248244e-11,
+      "step_difference": 2.5442981055334712e-12,
+      "flat_hessian_ee": -3.5541682571503674,
+      "flat_hessian_error": 1.9031887177334283e-11,
+      "hessian_skew": 3.9804984012551066e-12,
+      "reduction": {
+        "bracket": 0.8061017305443136,
+        "constraint_rank": 2,
+        "pullback_rank": 28,
+        "smallest_singular_values": [
+          0.12546452298458483,
+          0.1254645229845847
+        ],
+        "tangent_residual": 0.0,
+        "second_class": true,
+        "dirac_ey": 1.240538212620829,
+        "dirac_pair_error": 0.0,
+        "inverse_residual": 2.220446049250313e-16,
+        "liouville_density": 0.8061017305443133,
+        "determinant_sign": 1.0,
+        "density_error": 2.220446049250313e-16,
+        "coordinate_check": {
+          "canonical_residual": 4.81448614640602e-18,
+          "squared_bracket": 0.06856034446555782,
+          "bracket_error": 1.3877787807814457e-17,
+          "density_squared": 0.06856034446555782,
+          "density_error": 2.7755575615628914e-17,
+          "restored_density_error": 3.3306690738754696e-16,
+          "jacobian_factor": 11.757550765359257
+        }
+      }
+    },
+    {
+      "h": 1.0,
+      "e": 2.0,
+      "y": 1.6329931618554523,
+      "minimum_gram_eigenvalue": 0.15199875156082246,
+      "equation_residual": 0.0,
+      "curvature_residual": 1.7763568394002505e-15,
+      "expected_bracket": 0.0,
+      "bracket_formula_error": 9.25185853854297e-12,
+      "independent_hessian_error": 1.4432899320127035e-11,
+      "step_difference": 1.850371707708593e-12,
+      "flat_hessian_ee": -1.5520290571658952e-13,
+      "flat_hessian_error": 1.5520290571658952e-13,
+      "hessian_skew": 1.4654196281048567e-11,
+      "reduction": {
+        "bracket": 9.25185853854297e-12,
+        "constraint_rank": 2,
+        "pullback_rank": 26,
+        "smallest_singular_values": [
+          2.1130014659478782e-12,
+          2.1129344651402156e-12
+        ],
+        "tangent_residual": 0.0,
+        "second_class": false,
+        "dirac_ey": null,
+        "liouville_density": null,
+        "inverse_residual": null,
+        "coordinate_check": null
+      }
+    },
+    {
+      "h": 1.1,
+      "e": 2.2,
+      "y": 1.6329931618554523,
+      "minimum_gram_eigenvalue": 0.15199875156082263,
+      "equation_residual": 1.4921397450962101e-15,
+      "curvature_residual": 4.440892098500626e-15,
+      "expected_bracket": -0.8909545442950508,
+      "bracket_formula_error": 2.7198687746476935e-11,
+      "independent_hessian_error": 2.3723800701702658e-11,
+      "step_difference": 3.3769320673116e-11,
+      "flat_hessian_ee": 4.801244838563136,
+      "flat_hessian_error": 1.779731917395111e-11,
+      "hessian_skew": 1.0838662260785836e-11,
+      "reduction": {
+        "bracket": -0.8909545442678521,
+        "constraint_rank": 2,
+        "pullback_rank": 28,
+        "smallest_singular_values": [
+          0.25578673080885894,
+          0.25578673080885894
+        ],
+        "tangent_residual": 0.0,
+        "second_class": true,
+        "dirac_ey": -1.1223917162033858,
+        "dirac_pair_error": 0.0,
+        "inverse_residual": 1.1102230246251565e-16,
+        "liouville_density": 0.8909545442678521,
+        "determinant_sign": 1.0,
+        "density_error": 0.0,
+        "coordinate_check": {
+          "canonical_residual": 3.586670408606864e-18,
+          "squared_bracket": -0.06199954595085695,
+          "bracket_error": 1.3877787807814457e-17,
+          "density_squared": 0.06199954595085696,
+          "density_error": 2.0816681711721685e-17,
+          "restored_density_error": 2.220446049250313e-16,
+          "jacobian_factor": 14.370339824327981
+        }
+      }
+    }
+  ],
+  "unfinished": [
+    "제약 행렬의 계수가 변하는 영역에서의 일반 이력·양자 상태 전달",
+    "정상식 밖의 물리 경로측도·내적·준비·분해능",
+    "공통 계량의 동역학적 선택과 0D에서 3+1 Plebanski/Einstein 다리"
+  ]
+}

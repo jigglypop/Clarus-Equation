@@ -7,8 +7,8 @@ import numpy as np
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[3]
 sys.path.insert(0, str(ROOT))
-from examples.physics.causal_face_simplicity import geometric_self_dual_triple, plebanski_gram
-from examples.physics.urbantke_shape_matching_rg import optimal_internal_alignment
+from examples.physics.gravity.causal_face_simplicity import geometric_self_dual_triple, plebanski_gram
+from examples.physics.gravity.urbantke_shape_matching_rg import optimal_internal_alignment
 
 M = np.load(HERE / "M_tensor_adversary.npy")
 I4 = np.eye(4)

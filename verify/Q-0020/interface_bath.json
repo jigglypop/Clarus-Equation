@@ -1,0 +1,118 @@
+{
+  "scope": "post hoc diagnostic of supplied pair-difference oscillator/bath coupling",
+  "python": "3.11.9",
+  "numpy": "2.4.6",
+  "source_sha256": "546db9d6373411da6b56b76c5835c7cb99b12c206adc250c29bd89aaca9ca8e8",
+  "owner_histograms": {
+    "1": {
+      "3": 10,
+      "4": 5
+    },
+    "2": {
+      "4": 25,
+      "9": 10,
+      "12": 5
+    }
+  },
+  "common_onsite_over_bath_hopping": 10,
+  "finite_chain_check_sites": 96,
+  "owner_checks": [
+    {
+      "owners": 3,
+      "pair_channels": 3,
+      "mismatch_modes": 2,
+      "laplacian_residual": 0.0,
+      "common_mode_coupling_residual": 0.0,
+      "raw_effective_coupling_squared": 3,
+      "raw_bound_pair": {
+        "bound_states": 2,
+        "relative_energies": [
+          -2.1213203435596424,
+          2.1213203435596424
+        ],
+        "boundary_weight_per_state": 0.25,
+        "long_time_mean_survival": 0.125,
+        "asymptotic_survival_oscillates": true
+      },
+      "finite_chain_bound_energy_residual": 4.440892098500626e-16,
+      "finite_chain_boundary_weight_residual": 5.551115123125783e-16,
+      "normalized_pair_strength": 0.5773502691896258,
+      "normalized_effective_coupling_squared": 1,
+      "normalized_bound_states": 0
+    },
+    {
+      "owners": 4,
+      "pair_channels": 6,
+      "mismatch_modes": 3,
+      "laplacian_residual": 0.0,
+      "common_mode_coupling_residual": 0.0,
+      "raw_effective_coupling_squared": 4,
+      "raw_bound_pair": {
+        "bound_states": 2,
+        "relative_energies": [
+          -2.3094010767585034,
+          2.3094010767585034
+        ],
+        "boundary_weight_per_state": 0.3333333333333333,
+        "long_time_mean_survival": 0.2222222222222222,
+        "asymptotic_survival_oscillates": true
+      },
+      "finite_chain_bound_energy_residual": 3.552713678800501e-15,
+      "finite_chain_boundary_weight_residual": 3.885780586188048e-16,
+      "normalized_pair_strength": 0.5,
+      "normalized_effective_coupling_squared": 1,
+      "normalized_bound_states": 0
+    },
+    {
+      "owners": 9,
+      "pair_channels": 36,
+      "mismatch_modes": 8,
+      "laplacian_residual": 0.0,
+      "common_mode_coupling_residual": 0.0,
+      "raw_effective_coupling_squared": 9,
+      "raw_bound_pair": {
+        "bound_states": 2,
+        "relative_energies": [
+          -3.181980515339464,
+          3.181980515339464
+        ],
+        "boundary_weight_per_state": 0.4375,
+        "long_time_mean_survival": 0.3828125,
+        "asymptotic_survival_oscillates": true
+      },
+      "finite_chain_bound_energy_residual": 8.881784197001252e-16,
+      "finite_chain_boundary_weight_residual": 6.661338147750939e-16,
+      "normalized_pair_strength": 0.3333333333333333,
+      "normalized_effective_coupling_squared": 1,
+      "normalized_bound_states": 0
+    },
+    {
+      "owners": 12,
+      "pair_channels": 66,
+      "mismatch_modes": 11,
+      "laplacian_residual": 0.0,
+      "common_mode_coupling_residual": 0.0,
+      "raw_effective_coupling_squared": 12,
+      "raw_bound_pair": {
+        "bound_states": 2,
+        "relative_energies": [
+          -3.6181361349331636,
+          3.6181361349331636
+        ],
+        "boundary_weight_per_state": 0.45454545454545453,
+        "long_time_mean_survival": 0.4132231404958677,
+        "asymptotic_survival_oscillates": true
+      },
+      "finite_chain_bound_energy_residual": 1.7763568394002505e-15,
+      "finite_chain_boundary_weight_residual": 9.992007221626409e-16,
+      "normalized_pair_strength": 0.2886751345948129,
+      "normalized_effective_coupling_squared": 1,
+      "normalized_bound_states": 0
+    }
+  ],
+  "threshold": "v^2 > 2 creates two normalizable bound states; v^2=2 is not a bound state",
+  "infinite_bath_limit_precedes_time_average": true,
+  "literal_length_matching_from_vacuum_proved": false,
+  "microscopic_CE_coupling_derived": false,
+  "normalization_physically_selected": false
+}

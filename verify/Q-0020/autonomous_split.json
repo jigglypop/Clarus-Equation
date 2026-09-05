@@ -1,0 +1,798 @@
+{
+  "scope": "공급한 분할 등거리 사상·부문 에너지·배터리의 시간 독립 유니터리 실현",
+  "energy_unit": "hbar*omega",
+  "time_unit": "tau=omega*t",
+  "coupling_unit": "g/(hbar*omega)",
+  "numpy": "2.4.6",
+  "source_hashes": {
+    "autonomous_split.py": "dcaa19444b71b42e066b55181276b2ff4a648774aab6e6633398e4fb42bd24d4",
+    "split_energy_transport.py": "1537898ef785a2b8deca86735a572dd98ba0317867a1b335d7a0d5b2298e981c",
+    "split_quantum_source.py": "37382cda6ee4ecda19bdd21cae946e92c3afdb781e8e7e1766f0068e4f602c1a",
+    "predict_split_kernel.py": "71188b8ffd88c3acc54edfec6057c19862160e467fc6f77724f54195e05b0065",
+    "interface_bath.py": "546db9d6373411da6b56b76c5835c7cb99b12c206adc250c29bd89aaca9ca8e8"
+  },
+  "coordinate_checks": [
+    {
+      "branching": 2,
+      "occupation": 0,
+      "coordinate": [
+        -0.7,
+        1.1
+      ],
+      "wavefunction": 0.26854807565440253,
+      "applied_energy": 0.26854807565440264,
+      "expected_energy": 0.26854807565440253,
+      "residual": 1.1102230246251565e-16
+    },
+    {
+      "branching": 2,
+      "occupation": 0,
+      "coordinate": [
+        -0.32999999999999996,
+        1.4700000000000002
+      ],
+      "wavefunction": 0.2328931933051864,
+      "applied_energy": 0.23289319330518646,
+      "expected_energy": 0.2328931933051864,
+      "residual": 5.551115123125783e-17
+    },
+    {
+      "branching": 2,
+      "occupation": 1,
+      "coordinate": [
+        -0.7,
+        1.1
+      ],
+      "wavefunction": 0.07595686614793043,
+      "applied_energy": 0.15191373229586094,
+      "expected_energy": 0.15191373229586086,
+      "residual": 8.326672684688674e-17
+    },
+    {
+      "branching": 2,
+      "occupation": 1,
+      "coordinate": [
+        -0.32999999999999996,
+        1.4700000000000002
+      ],
+      "wavefunction": 0.18773560615724688,
+      "applied_energy": 0.37547121231449393,
+      "expected_energy": 0.37547121231449376,
+      "residual": 1.6653345369377348e-16
+    },
+    {
+      "branching": 2,
+      "occupation": 2,
+      "coordinate": [
+        -0.7,
+        1.1
+      ],
+      "wavefunction": -0.17470079214023992,
+      "applied_energy": -0.52410237642072,
+      "expected_energy": -0.5241023764207198,
+      "residual": 2.220446049250313e-16
+    },
+    {
+      "branching": 2,
+      "occupation": 2,
+      "coordinate": [
+        -0.32999999999999996,
+        1.4700000000000002
+      ],
+      "wavefunction": -0.05767106076865599,
+      "applied_energy": -0.17301318230596807,
+      "expected_energy": -0.17301318230596796,
+      "residual": 1.1102230246251565e-16
+    },
+    {
+      "branching": 2,
+      "occupation": 3,
+      "coordinate": [
+        -0.7,
+        1.1
+      ],
+      "wavefunction": -0.0905470414013444,
+      "applied_energy": -0.3621881656053778,
+      "expected_energy": -0.3621881656053776,
+      "residual": 2.220446049250313e-16
+    },
+    {
+      "branching": 2,
+      "occupation": 3,
+      "coordinate": [
+        -0.32999999999999996,
+        1.4700000000000002
+      ],
+      "wavefunction": -0.1801257681893534,
+      "applied_energy": -0.720503072757414,
+      "expected_energy": -0.7205030727574137,
+      "residual": 3.3306690738754696e-16
+    },
+    {
+      "branching": 3,
+      "occupation": 0,
+      "coordinate": [
+        -0.7,
+        0.20000000000000007,
+        1.1
+      ],
+      "wavefunction": 0.13910772710341202,
+      "applied_energy": 0.20866159065511797,
+      "expected_energy": 0.20866159065511802,
+      "residual": 5.551115123125783e-17
+    },
+    {
+      "branching": 3,
+      "occupation": 0,
+      "coordinate": [
+        -0.32999999999999996,
+        0.5700000000000001,
+        1.4700000000000002
+      ],
+      "wavefunction": 0.12063852142523789,
+      "applied_energy": 0.18095778213785677,
+      "expected_energy": 0.18095778213785682,
+      "residual": 5.551115123125783e-17
+    },
+    {
+      "branching": 3,
+      "occupation": 1,
+      "coordinate": [
+        -0.7,
+        0.20000000000000007,
+        1.1
+      ],
+      "wavefunction": 0.03934560686010813,
+      "applied_energy": 0.09836401715027028,
+      "expected_energy": 0.09836401715027032,
+      "residual": 4.163336342344337e-17
+    },
+    {
+      "branching": 3,
+      "occupation": 1,
+      "coordinate": [
+        -0.32999999999999996,
+        0.5700000000000001,
+        1.4700000000000002
+      ],
+      "wavefunction": 0.09724692089219891,
+      "applied_energy": 0.24311730223049716,
+      "expected_energy": 0.24311730223049727,
+      "residual": 1.1102230246251565e-16
+    },
+    {
+      "branching": 3,
+      "occupation": 2,
+      "coordinate": [
+        -0.7,
+        0.20000000000000007,
+        1.1
+      ],
+      "wavefunction": -0.09049489577824868,
+      "applied_energy": -0.3167321352238702,
+      "expected_energy": -0.3167321352238704,
+      "residual": 1.6653345369377348e-16
+    },
+    {
+      "branching": 3,
+      "occupation": 2,
+      "coordinate": [
+        -0.32999999999999996,
+        0.5700000000000001,
+        1.4700000000000002
+      ],
+      "wavefunction": -0.029873571663550914,
+      "applied_energy": -0.10455750082242822,
+      "expected_energy": -0.10455750082242819,
+      "residual": 2.7755575615628914e-17
+    },
+    {
+      "branching": 3,
+      "occupation": 3,
+      "coordinate": [
+        -0.7,
+        0.20000000000000007,
+        1.1
+      ],
+      "wavefunction": -0.046903308074674965,
+      "applied_energy": -0.21106488633603723,
+      "expected_energy": -0.21106488633603734,
+      "residual": 1.1102230246251565e-16
+    },
+    {
+      "branching": 3,
+      "occupation": 3,
+      "coordinate": [
+        -0.32999999999999996,
+        0.5700000000000001,
+        1.4700000000000002
+      ],
+      "wavefunction": -0.09330502981456104,
+      "applied_energy": -0.41987263416552445,
+      "expected_energy": -0.41987263416552467,
+      "residual": 2.220446049250313e-16
+    },
+    {
+      "branching": 4,
+      "occupation": 0,
+      "coordinate": [
+        -0.7,
+        -0.09999999999999998,
+        0.5,
+        1.1
+      ],
+      "wavefunction": 0.07543941343883616,
+      "applied_energy": 0.15087882687767232,
+      "expected_energy": 0.15087882687767232,
+      "residual": 0.0
+    },
+    {
+      "branching": 4,
+      "occupation": 0,
+      "coordinate": [
+        -0.32999999999999996,
+        0.27,
+        0.87,
+        1.4700000000000002
+      ],
+      "wavefunction": 0.06542339152506496,
+      "applied_energy": 0.13084678305012992,
+      "expected_energy": 0.13084678305012992,
+      "residual": 0.0
+    },
+    {
+      "branching": 4,
+      "occupation": 1,
+      "coordinate": [
+        -0.7,
+        -0.09999999999999998,
+        0.5,
+        1.1
+      ],
+      "wavefunction": 0.021337488324534647,
+      "applied_energy": 0.06401246497360395,
+      "expected_energy": 0.06401246497360394,
+      "residual": 1.3877787807814457e-17
+    },
+    {
+      "branching": 4,
+      "occupation": 1,
+      "coordinate": [
+        -0.32999999999999996,
+        0.27,
+        0.87,
+        1.4700000000000002
+      ],
+      "wavefunction": 0.05273790912697937,
+      "applied_energy": 0.15821372738093809,
+      "expected_energy": 0.1582137273809381,
+      "residual": 2.7755575615628914e-17
+    },
+    {
+      "branching": 4,
+      "occupation": 2,
+      "coordinate": [
+        -0.7,
+        -0.09999999999999998,
+        0.5,
+        1.1
+      ],
+      "wavefunction": -0.04907622314642968,
+      "applied_energy": -0.19630489258571873,
+      "expected_energy": -0.19630489258571873,
+      "residual": 0.0
+    },
+    {
+      "branching": 4,
+      "occupation": 2,
+      "coordinate": [
+        -0.32999999999999996,
+        0.27,
+        0.87,
+        1.4700000000000002
+      ],
+      "wavefunction": -0.01620071559321769,
+      "applied_energy": -0.06480286237287076,
+      "expected_energy": -0.06480286237287076,
+      "residual": 0.0
+    },
+    {
+      "branching": 4,
+      "occupation": 3,
+      "coordinate": [
+        -0.7,
+        -0.09999999999999998,
+        0.5,
+        1.1
+      ],
+      "wavefunction": -0.02543609994334901,
+      "applied_energy": -0.12718049971674503,
+      "expected_energy": -0.12718049971674505,
+      "residual": 2.7755575615628914e-17
+    },
+    {
+      "branching": 4,
+      "occupation": 3,
+      "coordinate": [
+        -0.32999999999999996,
+        0.27,
+        0.87,
+        1.4700000000000002
+      ],
+      "wavefunction": -0.050600184955009286,
+      "applied_energy": -0.25300092477504643,
+      "expected_energy": -0.25300092477504643,
+      "residual": 0.0
+    }
+  ],
+  "evolution_checks": [
+    {
+      "branching": 2,
+      "coupling": 0.25,
+      "battery_gap": 0.5,
+      "delta": 0.5,
+      "finite_invariant_dimension": 28,
+      "maximum_probability": 1.0,
+      "free_energy_commutator_norm": 0.0,
+      "rows": [
+        {
+          "tau": 0.0,
+          "child_probability": 5.004680467665245e-34,
+          "oscillator_energy_change": -8.881784197001252e-16,
+          "battery_energy_change": -2.220446049250313e-16,
+          "interaction_energy": 1.1185571585378685e-17,
+          "residuals": {
+            "rabi_probability": 5.004680467665245e-34,
+            "norm": 7.771561172376096e-16,
+            "total_energy": 1.3322676295501878e-15,
+            "oscillator_flow": 8.881784197001252e-16,
+            "battery_flow": 2.220446049250313e-16,
+            "interaction_flow": 1.1185571585378685e-17
+          }
+        },
+        {
+          "tau": 3.141592653589793,
+          "child_probability": 0.5000000000000001,
+          "oscillator_energy_change": 0.2499999999999994,
+          "battery_energy_change": -0.2500000000000002,
+          "interaction_energy": 1.3877787807814457e-17,
+          "residuals": {
+            "rabi_probability": 0.0,
+            "norm": 6.661338147750939e-16,
+            "total_energy": 1.3322676295501878e-15,
+            "oscillator_flow": 6.661338147750939e-16,
+            "battery_flow": 1.6653345369377348e-16,
+            "interaction_flow": 1.3877787807814457e-17
+          }
+        },
+        {
+          "tau": 6.283185307179586,
+          "child_probability": 0.9999999999999992,
+          "oscillator_energy_change": 0.4999999999999989,
+          "battery_energy_change": -0.49999999999999983,
+          "interaction_energy": 1.1185571585378296e-17,
+          "residuals": {
+            "rabi_probability": 7.771561172376096e-16,
+            "norm": 7.771561172376096e-16,
+            "total_energy": 1.3322676295501878e-15,
+            "oscillator_flow": 7.216449660063518e-16,
+            "battery_flow": 2.220446049250313e-16,
+            "interaction_flow": 1.1185571585378296e-17
+          }
+        },
+        {
+          "tau": 12.566370614359172,
+          "child_probability": 5.891303364138472e-30,
+          "oscillator_energy_change": -1.0269562977782487e-15,
+          "battery_energy_change": -2.498001805406602e-16,
+          "interaction_energy": 1.1185571585377212e-17,
+          "residuals": {
+            "rabi_probability": 5.876305766311854e-30,
+            "norm": 8.881784197001252e-16,
+            "total_energy": 1.3322676295501878e-15,
+            "oscillator_flow": 1.0269562977782517e-15,
+            "battery_flow": 2.4980018054065726e-16,
+            "interaction_flow": 1.1185571585377212e-17
+          }
+        }
+      ]
+    },
+    {
+      "branching": 2,
+      "coupling": 0.25,
+      "battery_gap": 0.0,
+      "delta": 0.5,
+      "finite_invariant_dimension": 28,
+      "maximum_probability": 0.4999999999999999,
+      "free_energy_commutator_norm": 0.3535533905932738,
+      "rows": [
+        {
+          "tau": 0.0,
+          "child_probability": 4.680731075620133e-34,
+          "oscillator_energy_change": 1.1701827689050335e-33,
+          "battery_energy_change": 0.0,
+          "interaction_energy": -1.081749864296286e-17,
+          "residuals": {
+            "rabi_probability": 4.680731075620133e-34,
+            "norm": 3.3306690738754696e-16,
+            "total_energy": 0.0,
+            "oscillator_flow": 9.361462151240269e-34,
+            "battery_flow": 0.0,
+            "interaction_flow": 1.081749864296286e-17
+          }
+        },
+        {
+          "tau": 2.221441469079183,
+          "child_probability": 0.25000000000000006,
+          "oscillator_energy_change": 0.12500000000000006,
+          "battery_energy_change": 0.0,
+          "interaction_energy": -0.125,
+          "residuals": {
+            "rabi_probability": 5.551115123125783e-17,
+            "norm": 2.220446049250313e-16,
+            "total_energy": 0.0,
+            "oscillator_flow": 2.7755575615628914e-17,
+            "battery_flow": 0.0,
+            "interaction_flow": 2.7755575615628914e-17
+          }
+        },
+        {
+          "tau": 4.442882938158366,
+          "child_probability": 0.4999999999999999,
+          "oscillator_energy_change": 0.2500000000000001,
+          "battery_energy_change": 0.0,
+          "interaction_energy": -0.24999999999999994,
+          "residuals": {
+            "rabi_probability": 0.0,
+            "norm": 2.220446049250313e-16,
+            "total_energy": 2.220446049250313e-16,
+            "oscillator_flow": 1.6653345369377348e-16,
+            "battery_flow": 0.0,
+            "interaction_flow": 0.0
+          }
+        },
+        {
+          "tau": 8.885765876316732,
+          "child_probability": 6.189497676859523e-31,
+          "oscillator_energy_change": 2.7755575615630436e-17,
+          "battery_energy_change": 0.0,
+          "interaction_energy": -6.027760614610744e-18,
+          "residuals": {
+            "rabi_probability": 5.672285985578922e-31,
+            "norm": 2.220446049250313e-16,
+            "total_energy": 4.440892098500626e-16,
+            "oscillator_flow": 2.775557561563013e-17,
+            "battery_flow": 0.0,
+            "interaction_flow": 6.027760614610434e-18
+          }
+        }
+      ]
+    },
+    {
+      "branching": 3,
+      "coupling": 0.25,
+      "battery_gap": 1.0,
+      "delta": 1.0,
+      "finite_invariant_dimension": 48,
+      "maximum_probability": 1.0,
+      "free_energy_commutator_norm": 0.0,
+      "rows": [
+        {
+          "tau": 0.0,
+          "child_probability": 5.004680467665245e-34,
+          "oscillator_energy_change": -8.881784197001252e-16,
+          "battery_energy_change": -4.440892098500626e-16,
+          "interaction_energy": 1.1185571585378685e-17,
+          "residuals": {
+            "rabi_probability": 5.004680467665245e-34,
+            "norm": 7.771561172376096e-16,
+            "total_energy": 1.7763568394002505e-15,
+            "oscillator_flow": 8.881784197001252e-16,
+            "battery_flow": 4.440892098500626e-16,
+            "interaction_flow": 1.1185571585378685e-17
+          }
+        },
+        {
+          "tau": 3.141592653589793,
+          "child_probability": 0.49999999999999994,
+          "oscillator_energy_change": 0.4999999999999998,
+          "battery_energy_change": -0.5000000000000002,
+          "interaction_energy": 0.0,
+          "residuals": {
+            "rabi_probability": 1.6653345369377348e-16,
+            "norm": 5.551115123125783e-16,
+            "total_energy": 1.3322676295501878e-15,
+            "oscillator_flow": 1.6653345369377348e-16,
+            "battery_flow": 2.7755575615628914e-16,
+            "interaction_flow": 0.0
+          }
+        },
+        {
+          "tau": 6.283185307179586,
+          "child_probability": 0.9999999999999991,
+          "oscillator_energy_change": 0.999999999999998,
+          "battery_energy_change": -0.9999999999999997,
+          "interaction_energy": 1.1185571585377286e-17,
+          "residuals": {
+            "rabi_probability": 8.881784197001252e-16,
+            "norm": 8.881784197001252e-16,
+            "total_energy": 1.3322676295501878e-15,
+            "oscillator_flow": 1.1102230246251565e-15,
+            "battery_flow": 5.551115123125783e-16,
+            "interaction_flow": 1.1185571585377286e-17
+          }
+        },
+        {
+          "tau": 12.566370614359172,
+          "child_probability": 7.628555220531595e-30,
+          "oscillator_energy_change": -1.026956297778242e-15,
+          "battery_energy_change": -4.996003610813204e-16,
+          "interaction_energy": 1.118557158537307e-17,
+          "residuals": {
+            "rabi_probability": 7.613557622704976e-30,
+            "norm": 8.881784197001252e-16,
+            "total_energy": 2.220446049250313e-15,
+            "oscillator_flow": 1.0269562977782497e-15,
+            "battery_flow": 4.9960036108131285e-16,
+            "interaction_flow": 1.118557158537307e-17
+          }
+        }
+      ]
+    },
+    {
+      "branching": 3,
+      "coupling": 0.25,
+      "battery_gap": 0.0,
+      "delta": 1.0,
+      "finite_invariant_dimension": 48,
+      "maximum_probability": 0.19999999999999998,
+      "free_energy_commutator_norm": 0.7071067811865476,
+      "rows": [
+        {
+          "tau": 0.0,
+          "child_probability": 1.3030509415547674e-34,
+          "oscillator_energy_change": -8.881784197001252e-16,
+          "battery_energy_change": 0.0,
+          "interaction_energy": -5.707562837049554e-18,
+          "residuals": {
+            "rabi_probability": 1.3030509415547674e-34,
+            "norm": 7.771561172376096e-16,
+            "total_energy": 1.1102230246251565e-15,
+            "oscillator_flow": 8.881784197001252e-16,
+            "battery_flow": 0.0,
+            "interaction_flow": 5.707562837049554e-18
+          }
+        },
+        {
+          "tau": 1.4049629462081452,
+          "child_probability": 0.09999999999999992,
+          "oscillator_energy_change": 0.09999999999999928,
+          "battery_energy_change": 0.0,
+          "interaction_energy": -0.09999999999999994,
+          "residuals": {
+            "rabi_probability": 9.71445146547012e-17,
+            "norm": 4.440892098500626e-16,
+            "total_energy": 1.1102230246251565e-15,
+            "oscillator_flow": 6.38378239159465e-16,
+            "battery_flow": 0.0,
+            "interaction_flow": 1.3877787807814457e-17
+          }
+        },
+        {
+          "tau": 2.8099258924162904,
+          "child_probability": 0.1999999999999999,
+          "oscillator_energy_change": 0.1999999999999994,
+          "battery_energy_change": 0.0,
+          "interaction_energy": -0.1999999999999999,
+          "residuals": {
+            "rabi_probability": 8.326672684688674e-17,
+            "norm": 5.551115123125783e-16,
+            "total_energy": 8.881784197001252e-16,
+            "oscillator_flow": 4.996003610813204e-16,
+            "battery_flow": 0.0,
+            "interaction_flow": 0.0
+          }
+        },
+        {
+          "tau": 5.619851784832581,
+          "child_probability": 2.954845470797045e-32,
+          "oscillator_energy_change": -4.163336342344336e-16,
+          "battery_energy_change": 0.0,
+          "interaction_energy": -1.57886208046209e-18,
+          "residuals": {
+            "rabi_probability": 2.6548935142646735e-32,
+            "norm": 4.440892098500626e-16,
+            "total_energy": 6.661338147750939e-16,
+            "oscillator_flow": 4.1633363423443365e-16,
+            "battery_flow": 0.0,
+            "interaction_flow": 1.5788620804620605e-18
+          }
+        }
+      ]
+    },
+    {
+      "branching": 4,
+      "coupling": 0.25,
+      "battery_gap": 1.5,
+      "delta": 1.5,
+      "finite_invariant_dimension": 78,
+      "maximum_probability": 1.0,
+      "free_energy_commutator_norm": 0.0,
+      "rows": [
+        {
+          "tau": 0.0,
+          "child_probability": 5.004680467665245e-34,
+          "oscillator_energy_change": -8.881784197001252e-16,
+          "battery_energy_change": -6.661338147750939e-16,
+          "interaction_energy": 1.1185571585378685e-17,
+          "residuals": {
+            "rabi_probability": 5.004680467665245e-34,
+            "norm": 7.771561172376096e-16,
+            "total_energy": 1.3322676295501878e-15,
+            "oscillator_flow": 8.881784197001252e-16,
+            "battery_flow": 6.661338147750939e-16,
+            "interaction_flow": 1.1185571585378685e-17
+          }
+        },
+        {
+          "tau": 3.141592653589793,
+          "child_probability": 0.5000000000000002,
+          "oscillator_energy_change": 0.7499999999999998,
+          "battery_energy_change": -0.7500000000000009,
+          "interaction_energy": 0.0,
+          "residuals": {
+            "rabi_probability": 1.1102230246251565e-16,
+            "norm": 6.661338147750939e-16,
+            "total_energy": 1.3322676295501878e-15,
+            "oscillator_flow": 5.551115123125783e-16,
+            "battery_flow": 5.551115123125783e-16,
+            "interaction_flow": 0.0
+          }
+        },
+        {
+          "tau": 6.283185307179586,
+          "child_probability": 0.9999999999999992,
+          "oscillator_energy_change": 1.4999999999999978,
+          "battery_energy_change": -1.4999999999999996,
+          "interaction_energy": 1.118557158537805e-17,
+          "residuals": {
+            "rabi_probability": 7.771561172376096e-16,
+            "norm": 7.771561172376096e-16,
+            "total_energy": 8.881784197001252e-16,
+            "oscillator_flow": 1.1102230246251565e-15,
+            "battery_flow": 6.661338147750939e-16,
+            "interaction_flow": 1.118557158537805e-17
+          }
+        },
+        {
+          "tau": 12.566370614359172,
+          "child_probability": 8.437485660053341e-30,
+          "oscillator_energy_change": -8.881784197000907e-16,
+          "battery_energy_change": -6.661338147750939e-16,
+          "interaction_energy": 1.1185571585376226e-17,
+          "residuals": {
+            "rabi_probability": 8.422488062226722e-30,
+            "norm": 7.771561172376096e-16,
+            "total_energy": 1.7763568394002505e-15,
+            "oscillator_flow": 8.881784197001033e-16,
+            "battery_flow": 6.661338147750813e-16,
+            "interaction_flow": 1.1185571585376226e-17
+          }
+        }
+      ]
+    },
+    {
+      "branching": 4,
+      "coupling": 0.25,
+      "battery_gap": 0.0,
+      "delta": 1.5,
+      "finite_invariant_dimension": 78,
+      "maximum_probability": 0.1,
+      "free_energy_commutator_norm": 1.0606601717798212,
+      "rows": [
+        {
+          "tau": 0.0,
+          "child_probability": 2.9377742132043355e-35,
+          "oscillator_energy_change": 1.0282209746215173e-34,
+          "battery_energy_change": 0.0,
+          "interaction_energy": 2.7100619057524935e-18,
+          "residuals": {
+            "rabi_probability": 2.9377742132043355e-35,
+            "norm": 3.3306690738754696e-16,
+            "total_energy": 0.0,
+            "oscillator_flow": 5.87554842640867e-35,
+            "battery_flow": 0.0,
+            "interaction_flow": 2.7100619057524935e-18
+          }
+        },
+        {
+          "tau": 0.99345882657961,
+          "child_probability": 0.049999999999999975,
+          "oscillator_energy_change": 0.07500000000000014,
+          "battery_energy_change": 0.0,
+          "interaction_energy": -0.07499999999999997,
+          "residuals": {
+            "rabi_probability": 4.163336342344337e-17,
+            "norm": 2.220446049250313e-16,
+            "total_energy": 0.0,
+            "oscillator_flow": 1.8041124150158794e-16,
+            "battery_flow": 0.0,
+            "interaction_flow": 1.3877787807814457e-17
+          }
+        },
+        {
+          "tau": 1.98691765315922,
+          "child_probability": 0.09999999999999995,
+          "oscillator_energy_change": 0.14999999999999997,
+          "battery_energy_change": 0.0,
+          "interaction_energy": -0.14999999999999994,
+          "residuals": {
+            "rabi_probability": 5.551115123125783e-17,
+            "norm": 2.220446049250313e-16,
+            "total_energy": 4.440892098500626e-16,
+            "oscillator_flow": 5.551115123125783e-17,
+            "battery_flow": 0.0,
+            "interaction_flow": 2.7755575615628914e-17
+          }
+        },
+        {
+          "tau": 3.97383530631844,
+          "child_probability": 4.387683105560139e-32,
+          "oscillator_energy_change": 4.440892098500627e-16,
+          "battery_energy_change": 0.0,
+          "interaction_energy": -1.3377051571211652e-18,
+          "residuals": {
+            "rabi_probability": 4.237707127293953e-32,
+            "norm": 1.1102230246251565e-16,
+            "total_energy": 2.220446049250313e-16,
+            "oscillator_flow": 4.440892098500626e-16,
+            "battery_flow": 0.0,
+            "interaction_flow": 1.3377051571210993e-18
+          }
+        }
+      ]
+    }
+  ],
+  "max_residual": 2.220446049250313e-15,
+  "ternary_gap_ledger": [
+    {
+      "depth": 0,
+      "energy_exact": "0"
+    },
+    {
+      "depth": 1,
+      "energy_exact": "1"
+    },
+    {
+      "depth": 2,
+      "energy_exact": "4"
+    },
+    {
+      "depth": 3,
+      "energy_exact": "13"
+    },
+    {
+      "depth": 4,
+      "energy_exact": "40"
+    },
+    {
+      "depth": 5,
+      "energy_exact": "121"
+    }
+  ],
+  "time_independent_hamiltonian_constructed": true,
+  "finite_subspace_exactly_invariant": true,
+  "bare_fock_gaussian_truncation_used": false,
+  "unitary_and_sector_energies_supplied": true,
+  "coupling_contains_supplied_nonlocal_isometry": true,
+  "absolute_mode_count_ground_offset_supplied": true,
+  "reversible_cycle_returns_parent_and_battery": true,
+  "cycle_leaves_net_children_or_records": false,
+  "split_output_is_stationary": false,
+  "merges_arbitrary_child_states": false,
+  "global_tree_hamiltonian_constructed": false,
+  "fixed_free_energy_bound_replaced": false,
+  "CE_local_action_derived": false,
+  "bath_coupling_derived": false,
+  "common_metric_selection_proved": false
+}

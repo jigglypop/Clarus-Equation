@@ -8,6 +8,7 @@
 - Do not create a CE research run, preregistration, audit bundle, or full report unless the user explicitly asks for research, a new scientific claim, formal closure, preregistration, or release evidence.
 - Do not run bare `pytest`, the full suite, all benchmarks, or packaging by default. Use the narrowest changed test or a source-only check first.
 - Keep one implementation owner. Use subagents only for independent read-only mapping or research, and audit a stable snapshot after the implementation owner stops editing.
+- 모델 분담: 좁은 탐색·출처 수집·형식 확인은 Luna, 코드·문서 초안과 수학 검산은 Terra, 핵심 증명·상충 판정은 메인 Astra가 맡는다. 독립 자식은 필요한 자료만 전달하는 `fork_turns="none"`과 명시 모델을 우선한다. 호출·승급 기준은 `.codex/README.md`의 모델 분담 규칙을 따른다.
 - 강의(`1_강의`)·유도(`5_유도`)·논문 원고류 문서를 작성·수정할 때는 `.codex/skills/ce-doc-write/SKILL.md`의 "문서 유형: 원장과 논문형"과 "처음 읽는 독자 게이트"를 적용한다. 태그 블록만 나열한 원장체 강의·유도 문서는 완성으로 보고하지 않는다.
 - 문서 작성 소유권을 분리한다. 주장·상수·판본·진리값 원장은 `ce-ledger-writer`와 `$ce-ledger-write`, 강의·유도·독자 가이드·논문 원고는 `ce-paper-writer`와 `$ce-paper-write`가 맡는다. 두 유형이 함께 바뀌면 원장을 먼저 안정화한 뒤 논문 작성자는 이를 읽기 전용으로 사용하며, 두 작성자가 같은 파일이나 지위를 동시에 수정하지 않는다.
 

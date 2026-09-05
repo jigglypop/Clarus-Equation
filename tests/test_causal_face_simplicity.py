@@ -5,7 +5,7 @@ import math
 import numpy as np
 import pytest
 
-from examples.physics.causal_face_simplicity import (
+from examples.physics.gravity.causal_face_simplicity import (
     CompositionFace,
     composition_faces,
     cross_simplicity_residual,

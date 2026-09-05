@@ -1,0 +1,348 @@
+{
+  "status": "[산출]",
+  "scope": "실제 내부 변의 고전 경계 제거와 두 공급 측도의 전체 유한 구간 적분",
+  "source_sha256": "6690a402d1d750e1dc3ce340cbb0d1d96f2fa34b074dc45b8bfc4f4c416d53a6",
+  "dependencies": {
+    "regge_pachner_constraints.py": "5badf64159a9880caa4edfb520ee8d28bd1d0f392d8277d8bcf5c3aaa2cdc656",
+    "regge_pachner_creation.py": "68c5f330bd2e4732970e5b9379f3fdbd86e236fe301a45521eea0663d04e3705",
+    "regge_pachner_transport.py": "c995451a5b12e47470f37c19926574c2cbfd7a20aeb07c0c76e541aef143b415",
+    "regge_tent_transfer.py": "e509b0b583a99258730650584e812d9b6f097383629b4e855636c8e87c710f71"
+  },
+  "interval": [
+    0,
+    1.2018504251546631
+  ],
+  "symmetric_endpoint_actions": [
+    14.510394913873741,
+    16.389952386227286
+  ],
+  "symmetric_endpoint_gradients": [
+    3.032841556666098,
+    -3.5172823260420394
+  ],
+  "exact_certificate": {
+    "gram_determinant": "-4*e**2*(9*e**2 - 13)/27",
+    "internal_angle_cosine_derivative": "-24*e/(3*e**2 - 7)**2",
+    "stationary_gradient": "0",
+    "internal_hessian": "-9*sqrt(3)/2",
+    "cospherical_area_derivative": "0",
+    "global_uniqueness": "theta_i는 열린 구간에서 엄격히 증가하고 면적 미분은 양수다. e=1만 정상점이며 엄격한 전역 최대다."
+  },
+  "classical_cases": [
+    {
+      "internal_length": 0.9999999999999991,
+      "interval": [
+        0.0,
+        1.2018504251546624
+      ],
+      "minimum_crossing_barycentric": 0.24999999999999978,
+      "action": 16.610289934789524,
+      "action_residual": 3.552713678800501e-15,
+      "gradient_residual": 7.863796754643452e-15,
+      "internal_equation_residual": 3.3306690738754728e-15,
+      "flatness_residual": 3.552713678800501e-15,
+      "internal_hessian": -7.794228634051834,
+      "boundary_schur_residual": 5.08980288277569e-10,
+      "hessian_skew": 1.0701557468369859e-09
+    },
+    {
+      "internal_length": 1.0999999999999992,
+      "interval": [
+        0.0,
+        1.322035467670129
+      ],
+      "minimum_crossing_barycentric": 0.24999999999999978,
+      "action": 20.098450821095327,
+      "action_residual": 0.0,
+      "gradient_residual": 6.858267381329109e-15,
+      "internal_equation_residual": 4.7628567756419246e-15,
+      "flatness_residual": 3.552713678800501e-15,
+      "internal_hessian": -7.794228634253898,
+      "boundary_schur_residual": 5.496191786902822e-10,
+      "hessian_skew": 6.882230766834511e-10
+    },
+    {
+      "internal_length": 0.9884966545678973,
+      "interval": [
+        0.0032247684028863205,
+        1.1921409740810045
+      ],
+      "minimum_crossing_barycentric": 0.24967388803563906,
+      "action": 16.613518344570743,
+      "action_residual": 0.0,
+      "gradient_residual": 2.937374022976103e-15,
+      "internal_equation_residual": 1.6790377448612332e-16,
+      "flatness_residual": 8.881784197001252e-16,
+      "internal_hessian": -7.757656153816917,
+      "boundary_schur_residual": 3.5818942083132777e-10,
+      "hessian_skew": 6.785441699572931e-10
+    }
+  ],
+  "closed_formula_errors": [
+    1.0658141036401503e-14,
+    4.440892098500626e-14
+  ],
+  "integrals": [
+    {
+      "beta": 0,
+      "measure": "length",
+      "kernel": [
+        1.0,
+        0.0
+      ],
+      "adaptive_error_estimate": 1.1102230246251565e-14,
+      "quadrature_difference": 3.9968028886505635e-15
+    },
+    {
+      "beta": 0,
+      "measure": "squared",
+      "kernel": [
+        1.0000000000000002,
+        0.0
+      ],
+      "adaptive_error_estimate": 1.1102230246251569e-14,
+      "quadrature_difference": 1.7541523789077473e-14
+    },
+    {
+      "beta": 10,
+      "measure": "length",
+      "kernel": [
+        -0.12877563773381995,
+        0.2581377100115493
+      ],
+      "adaptive_error_estimate": 1.372363399225796e-12,
+      "quadrature_difference": 1.3342322010040118e-14,
+      "saddle": [
+        -0.08847821926625797,
+        0.21904523716045207
+      ],
+      "endpoints": [
+        -0.027374770860502298,
+        0.04311605623356159
+      ],
+      "saddle_only_error": 0.05614359597285854,
+      "saddle_and_endpoints_error": 0.013534550026206588,
+      "scaled_decaying_kernel": 0.027486032048796565,
+      "decaying_endpoint_leading": 0.0274346773081179,
+      "decaying_ratio_to_leading": 1.0018718915517724
+    },
+    {
+      "beta": 10,
+      "measure": "squared",
+      "kernel": [
+        -0.2045117555581381,
+        0.3958794420713993
+      ],
+      "adaptive_error_estimate": 3.416244626292307e-12,
+      "quadrature_difference": 7.659985749706165e-15,
+      "saddle": [
+        -0.14723665676595643,
+        0.3645133081053138
+      ],
+      "endpoints": [
+        -0.02419105279829819,
+        0.04065991885343954
+      ],
+      "saddle_only_error": 0.06530138820601437,
+      "saddle_and_endpoints_error": 0.03436464079337668,
+      "scaled_decaying_kernel": 0.0015167771044312442,
+      "decaying_endpoint_leading": 0.0015053230380011188,
+      "decaying_ratio_to_leading": 1.0076090421397754
+    },
+    {
+      "beta": 40,
+      "measure": "length",
+      "kernel": [
+        -0.09593146055874152,
+        -0.09027592379046206
+      ],
+      "adaptive_error_estimate": 1.8176541250639314e-11,
+      "quadrature_difference": 2.1363956243953223e-14,
+      "saddle": [
+        -0.0864149677901068,
+        -0.08052798360592724
+      ],
+      "endpoints": [
+        -0.00977761181032516,
+        -0.00810283472809059
+      ],
+      "saddle_only_error": 0.013622994254448835,
+      "saddle_and_endpoints_error": 0.0016656995877876474,
+      "scaled_decaying_kernel": 0.006859456106214989,
+      "decaying_endpoint_leading": 0.006858669327029475,
+      "decaying_ratio_to_leading": 1.0001147130949166
+    },
+    {
+      "beta": 40,
+      "measure": "squared",
+      "kernel": [
+        -0.15268287039843986,
+        -0.14434809170868465
+      ],
+      "adaptive_error_estimate": 1.9688004961195578e-11,
+      "quadrature_difference": 8.201244235224437e-15,
+      "saddle": [
+        -0.14380319876990727,
+        -0.13400666492348962
+      ],
+      "endpoints": [
+        -0.00991937772500938,
+        -0.0064426856077053705
+      ],
+      "saddle_only_error": 0.013630615400051312,
+      "saddle_and_endpoints_error": 0.004034993374976531,
+      "scaled_decaying_kernel": 9.41258993429681e-05,
+      "decaying_endpoint_leading": 9.408268987506992e-05,
+      "decaying_ratio_to_leading": 1.0004592711789548
+    },
+    {
+      "beta": 160,
+      "measure": "length",
+      "kernel": [
+        0.034465214654070174,
+        -0.050063199414911455
+      ],
+      "adaptive_error_estimate": 3.5002289227908465e-11,
+      "quadrature_difference": 4.509342587948336e-14,
+      "saddle": [
+        0.035478548178076295,
+        -0.04721597525865943
+      ],
+      "endpoints": [
+        -0.0010535258194358152,
+        -0.002703691254896404
+      ],
+      "saddle_only_error": 0.0030221730967665856,
+      "saddle_and_endpoints_error": 0.00014905406530340228,
+      "scaled_decaying_kernel": 0.0017146796108320412,
+      "decaying_endpoint_leading": 0.0017146673317573688,
+      "decaying_ratio_to_leading": 1.000007161199403
+    },
+    {
+      "beta": 160,
+      "measure": "squared",
+      "kernel": [
+        0.057004593700679375,
+        -0.0807758120936324
+      ],
+      "adaptive_error_estimate": 2.7092243981791706e-11,
+      "quadrature_difference": 1.2473192090068135e-14,
+      "saddle": [
+        0.059039872908495494,
+        -0.07857213222283184
+      ],
+      "endpoints": [
+        -0.002196942094198367,
+        -0.001979226162654468
+      ],
+      "saddle_only_error": 0.0029997610616081024,
+      "saddle_and_endpoints_error": 0.0002766122844957703,
+      "scaled_decaying_kernel": 5.8803365629734125e-06,
+      "decaying_endpoint_leading": 5.88016811719187e-06,
+      "decaying_ratio_to_leading": 1.0000286464227188
+    },
+    {
+      "beta": 640,
+      "measure": "length",
+      "kernel": [
+        0.006379899393389151,
+        -0.028759329359884303
+      ],
+      "adaptive_error_estimate": 3.5401335275885915e-11,
+      "quadrature_difference": 5.4328530779436043e-14,
+      "saddle": [
+        0.006485133210206361,
+        -0.028809060594862924
+      ],
+      "endpoints": [
+        -0.0001213211526766921,
+        6.467951611108326e-05
+      ],
+      "saddle_only_error": 0.00011639309229682353,
+      "saddle_and_endpoints_error": 2.1960270578271973e-05,
+      "scaled_decaying_kernel": 0.00042866702478606473,
+      "decaying_endpoint_leading": 0.0004286668329393422,
+      "decaying_ratio_to_leading": 1.000000447542725
+    },
+    {
+      "beta": 640,
+      "measure": "squared",
+      "kernel": [
+        0.010682638017984237,
+        -0.04869162380321143
+      ],
+      "adaptive_error_estimate": 3.8824985369856133e-11,
+      "quadrature_difference": 6.9032648869337134e-15,
+      "saddle": [
+        0.010791913992744654,
+        -0.04794117469510493
+      ],
+      "endpoints": [
+        -0.00015290621776618076,
+        -0.000723265415722839
+      ],
+      "saddle_only_error": 0.0007583634369599351,
+      "saddle_and_endpoints_error": 5.140575100464599e-05,
+      "scaled_decaying_kernel": 3.675111652329959e-07,
+      "decaying_endpoint_leading": 3.675105073244919e-07,
+      "decaying_ratio_to_leading": 1.0000017901760383
+    }
+  ],
+  "passive_coordinate_change_residual": 3.771999064951609e-14,
+  "stationary_density_ratio": 1.6641005886756874,
+  "cospherical_control": {
+    "points": [
+      [
+        -1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.5773502691896258,
+        0.5773502691896258,
+        0.5773502691896258
+      ],
+      [
+        0.0,
+        0.5773502691896258,
+        -0.5773502691896258,
+        -0.5773502691896258
+      ],
+      [
+        0.0,
+        -0.5773502691896258,
+        0.5773502691896258,
+        -0.5773502691896258
+      ],
+      [
+        0.0,
+        -0.5773502691896258,
+        -0.5773502691896258,
+        0.5773502691896258
+      ]
+    ],
+    "internal_length": 2.0,
+    "internal_hessian_numeric": -1.1651859117231544e-14,
+    "minimum_gram_eigenvalue": 0.15199875156082246,
+    "schur_rejected": true,
+    "exact_reason": "여섯 꼭짓점이 단위 구면 위에 있다. e=2의 내부 면적 미분과 평탄 결손각이 모두 0이므로 H_ee=0이다."
+  },
+  "assumptions": [
+    "공유 길이와 유클리드 레게 단체를 공급한다. 14개 경계 길이는 동일하다.",
+    "무차원 beta와 진동 부호, 정규화 de/L 및 2e de/L² 측도를 각각 공급한다.",
+    "감쇠 대조는 양의 s 부호에 exp(-beta*s)를 적용한 별도 유한 적분이다."
+  ],
+  "unfinished": [
+    "일반 비평탄 이력의 전체 상위 커널과 물리 측도·내적·초기 준비·분해능·환경",
+    "반복 합성의 비국소 경계 인자와 공통 계량의 동역학적 선택",
+    "0D에서 3+1 Plebanski/Einstein으로 가는 전체 다리"
+  ]
+}

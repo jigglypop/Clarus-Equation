@@ -1,0 +1,573 @@
+{
+  "scope": "공급한 분할 사상·배터리·연속 환경에서 자식 확률의 점근적 유지",
+  "energy_unit": "hbar*omega",
+  "time_unit": "tau=omega*t",
+  "coupling_definition": "integral |v(x)|^2 dx = strength",
+  "interpreter": "C:\\Users\\dongh\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+  "python": "3.11.9",
+  "numpy": "2.4.6",
+  "scipy": "1.17.1",
+  "source_hashes": {
+    "autonomous_split_continuum.py": "d5b0f8e1b2f9fac51f05b1dedef7e922709fc16adbf6409fd150933ad8fba819",
+    "autonomous_split.py": "dcaa19444b71b42e066b55181276b2ff4a648774aab6e6633398e4fb42bd24d4",
+    "continuum_bath.py": "42675f0b049eaa7bc28979398fecbde120ab74bceebe51133c1d53ae85f4170e",
+    "split_quantum_source.py": "37382cda6ee4ecda19bdd21cae946e92c3afdb781e8e7e1766f0068e4f602c1a",
+    "split_energy_transport.py": "1537898ef785a2b8deca86735a572dd98ba0317867a1b335d7a0d5b2298e981c",
+    "predict_split_kernel.py": "71188b8ffd88c3acc54edfec6057c19862160e467fc6f77724f54195e05b0065",
+    "interface_bath.py": "546db9d6373411da6b56b76c5835c7cb99b12c206adc250c29bd89aaca9ca8e8"
+  },
+  "spectral_moments": [
+    {
+      "power": 0,
+      "value": 0.9999999999999983,
+      "expected": 1.0,
+      "residual": 1.6653345369377348e-15,
+      "quadrature_error_estimate": 1.4129521371899274e-11
+    },
+    {
+      "power": 1,
+      "value": 0.999999999999993,
+      "expected": 1.0,
+      "residual": 6.994405055138486e-15,
+      "quadrature_error_estimate": 9.784628180352072e-13
+    },
+    {
+      "power": 2,
+      "value": 1.2500000000000013,
+      "expected": 1.25,
+      "residual": 1.3322676295501878e-15,
+      "quadrature_error_estimate": 1.139961141435693e-13
+    }
+  ],
+  "continuum_rows": [
+    {
+      "branching": 2,
+      "battery_gap": 1.5,
+      "delta": 0.5,
+      "endpoint": 1.0,
+      "strength": 0.25,
+      "tau": 0.0,
+      "amplitude": [
+        1.0,
+        0.0
+      ],
+      "first_energy_amplitude": [
+        1.0,
+        0.0
+      ],
+      "parent_probability": 1.0,
+      "child_probability": 0.0,
+      "oscillator_energy_change": 0.0,
+      "battery_energy_change": -0.0,
+      "outgoing_energy": 0.0,
+      "interaction_energy": 0.0,
+      "energy_balance_residual": 0.0,
+      "quadrature_error_estimate": 0.0,
+      "moment_relative_residual": 0.0
+    },
+    {
+      "branching": 2,
+      "battery_gap": 1.5,
+      "delta": 0.5,
+      "endpoint": 1.0,
+      "strength": 0.25,
+      "tau": 0.25,
+      "amplitude": [
+        0.9616221196649771,
+        -0.24489371232319343
+      ],
+      "first_energy_amplitude": [
+        0.9395160327809948,
+        -0.3016793882717516
+      ],
+      "parent_probability": 0.9846900313643986,
+      "child_probability": 0.015309968635601412,
+      "oscillator_energy_change": 0.007654984317800706,
+      "battery_energy_change": -0.022964952953402118,
+      "outgoing_energy": 0.03001246290969939,
+      "interaction_energy": -0.014702494274097866,
+      "energy_balance_residual": 1.1102230246251565e-16,
+      "quadrature_error_estimate": 1.9205151425050526e-12,
+      "moment_relative_residual": 6.994405055138486e-15
+    },
+    {
+      "branching": 2,
+      "battery_gap": 1.5,
+      "delta": 0.5,
+      "endpoint": 1.0,
+      "strength": 0.25,
+      "tau": 1.0,
+      "amplitude": [
+        0.5074882453716373,
+        -0.7406720050911358
+      ],
+      "first_energy_amplitude": [
+        0.32756620950123083,
+        -0.7828062375027509
+      ],
+      "parent_probability": 0.8061393383161066,
+      "child_probability": 0.19386066168389338,
+      "oscillator_energy_change": 0.09693033084194669,
+      "battery_energy_change": -0.29079099252584006,
+      "outgoing_energy": 0.31406200545245033,
+      "interaction_energy": -0.12020134376855696,
+      "energy_balance_residual": 0.0,
+      "quadrature_error_estimate": 1.5966661555121094e-12,
+      "moment_relative_residual": 6.994405055138486e-15
+    },
+    {
+      "branching": 2,
+      "battery_gap": 1.5,
+      "delta": 0.5,
+      "endpoint": 1.0,
+      "strength": 0.25,
+      "tau": 3.0,
+      "amplitude": [
+        -0.45630947149382683,
+        -0.22470547334689508
+      ],
+      "first_energy_amplitude": [
+        -0.4513264966297047,
+        -0.01721439324185679
+      ],
+      "parent_probability": 0.25871088352702776,
+      "child_probability": 0.7412891164729722,
+      "oscillator_energy_change": 0.3706445582364861,
+      "battery_energy_change": -1.1119336747094584,
+      "outgoing_energy": 0.8390854364669238,
+      "interaction_energy": -0.09779631999395155,
+      "energy_balance_residual": 0.0,
+      "quadrature_error_estimate": 1.9106728234176717e-12,
+      "moment_relative_residual": 6.994405055138486e-15
+    },
+    {
+      "branching": 2,
+      "battery_gap": 1.5,
+      "delta": 0.5,
+      "endpoint": 1.0,
+      "strength": 0.25,
+      "tau": 20.0,
+      "amplitude": [
+        -0.0009620221485888814,
+        0.0005224602135630301
+      ],
+      "first_energy_amplitude": [
+        0.00031552298278649714,
+        0.00018688102986948125
+      ],
+      "parent_probability": 1.1984512891318947e-06,
+      "child_probability": 0.9999988015487109,
+      "oscillator_energy_change": 0.49999940077435545,
+      "battery_energy_change": -1.4999982023230665,
+      "outgoing_energy": 1.0000016102556792,
+      "interaction_energy": -2.8087069683696903e-06,
+      "energy_balance_residual": 1.4269752304156384e-16,
+      "quadrature_error_estimate": 3.217573175682129e-12,
+      "moment_relative_residual": 6.994405055138486e-15
+    },
+    {
+      "branching": 2,
+      "battery_gap": 1.5,
+      "delta": 0.5,
+      "endpoint": 1.0,
+      "strength": 0.25,
+      "tau": 100.0,
+      "amplitude": [
+        -4.517792370052997e-05,
+        3.4467038350746698e-06
+      ],
+      "first_energy_amplitude": [
+        9.843694115490224e-08,
+        9.097034426108382e-07
+      ],
+      "parent_probability": 2.052924557217626e-09,
+      "child_probability": 0.9999999979470754,
+      "oscillator_energy_change": 0.4999999989735377,
+      "battery_energy_change": -1.499999996920613,
+      "outgoing_energy": 1.000000002055548,
+      "interaction_energy": -4.1084725109800165e-09,
+      "energy_balance_residual": 1.6220102409799432e-16,
+      "quadrature_error_estimate": 2.2306369835690913e-12,
+      "moment_relative_residual": 6.994405055138486e-15
+    },
+    {
+      "branching": 3,
+      "battery_gap": 2.0,
+      "delta": 1.0,
+      "endpoint": 1.0,
+      "strength": 0.25,
+      "tau": 0.0,
+      "amplitude": [
+        1.0,
+        0.0
+      ],
+      "first_energy_amplitude": [
+        1.0,
+        0.0
+      ],
+      "parent_probability": 1.0,
+      "child_probability": 0.0,
+      "oscillator_energy_change": 0.0,
+      "battery_energy_change": -0.0,
+      "outgoing_energy": 0.0,
+      "interaction_energy": 0.0,
+      "energy_balance_residual": 0.0,
+      "quadrature_error_estimate": 0.0,
+      "moment_relative_residual": 0.0
+    },
+    {
+      "branching": 3,
+      "battery_gap": 2.0,
+      "delta": 1.0,
+      "endpoint": 1.0,
+      "strength": 0.25,
+      "tau": 0.25,
+      "amplitude": [
+        0.9616221196649771,
+        -0.24489371232319343
+      ],
+      "first_energy_amplitude": [
+        0.9395160327809948,
+        -0.3016793882717516
+      ],
+      "parent_probability": 0.9846900313643986,
+      "child_probability": 0.015309968635601412,
+      "oscillator_energy_change": 0.015309968635601412,
+      "battery_energy_change": -0.030619937271202824,
+      "outgoing_energy": 0.03001246290969939,
+      "interaction_energy": -0.014702494274097866,
+      "energy_balance_residual": 1.1102230246251565e-16,
+      "quadrature_error_estimate": 1.9205151425050526e-12,
+      "moment_relative_residual": 6.994405055138486e-15
+    },
+    {
+      "branching": 3,
+      "battery_gap": 2.0,
+      "delta": 1.0,
+      "endpoint": 1.0,
+      "strength": 0.25,
+      "tau": 1.0,
+      "amplitude": [
+        0.5074882453716373,
+        -0.7406720050911358
+      ],
+      "first_energy_amplitude": [
+        0.32756620950123083,
+        -0.7828062375027509
+      ],
+      "parent_probability": 0.8061393383161066,
+      "child_probability": 0.19386066168389338,
+      "oscillator_energy_change": 0.19386066168389338,
+      "battery_energy_change": -0.38772132336778675,
+      "outgoing_energy": 0.31406200545245033,
+      "interaction_energy": -0.12020134376855696,
+      "energy_balance_residual": 0.0,
+      "quadrature_error_estimate": 1.5966661555121094e-12,
+      "moment_relative_residual": 6.994405055138486e-15
+    },
+    {
+      "branching": 3,
+      "battery_gap": 2.0,
+      "delta": 1.0,
+      "endpoint": 1.0,
+      "strength": 0.25,
+      "tau": 3.0,
+      "amplitude": [
+        -0.45630947149382683,
+        -0.22470547334689508
+      ],
+      "first_energy_amplitude": [
+        -0.4513264966297047,
+        -0.01721439324185679
+      ],
+      "parent_probability": 0.25871088352702776,
+      "child_probability": 0.7412891164729722,
+      "oscillator_energy_change": 0.7412891164729722,
+      "battery_energy_change": -1.4825782329459445,
+      "outgoing_energy": 0.8390854364669238,
+      "interaction_energy": -0.09779631999395155,
+      "energy_balance_residual": 0.0,
+      "quadrature_error_estimate": 1.9106728234176717e-12,
+      "moment_relative_residual": 6.994405055138486e-15
+    },
+    {
+      "branching": 3,
+      "battery_gap": 2.0,
+      "delta": 1.0,
+      "endpoint": 1.0,
+      "strength": 0.25,
+      "tau": 20.0,
+      "amplitude": [
+        -0.0009620221485888814,
+        0.0005224602135630301
+      ],
+      "first_energy_amplitude": [
+        0.00031552298278649714,
+        0.00018688102986948125
+      ],
+      "parent_probability": 1.1984512891318947e-06,
+      "child_probability": 0.9999988015487109,
+      "oscillator_energy_change": 0.9999988015487109,
+      "battery_energy_change": -1.9999976030974218,
+      "outgoing_energy": 1.0000016102556792,
+      "interaction_energy": -2.8087069683696903e-06,
+      "energy_balance_residual": 3.167522057904819e-17,
+      "quadrature_error_estimate": 3.217573175682129e-12,
+      "moment_relative_residual": 6.994405055138486e-15
+    },
+    {
+      "branching": 3,
+      "battery_gap": 2.0,
+      "delta": 1.0,
+      "endpoint": 1.0,
+      "strength": 0.25,
+      "tau": 100.0,
+      "amplitude": [
+        -4.517792370052997e-05,
+        3.4467038350746698e-06
+      ],
+      "first_energy_amplitude": [
+        9.843694115490224e-08,
+        9.097034426108382e-07
+      ],
+      "parent_probability": 2.052924557217626e-09,
+      "child_probability": 0.9999999979470754,
+      "oscillator_energy_change": 0.9999999979470754,
+      "battery_energy_change": -1.9999999958941508,
+      "outgoing_energy": 1.000000002055548,
+      "interaction_energy": -4.1084725109800165e-09,
+      "energy_balance_residual": 5.1178721635478665e-17,
+      "quadrature_error_estimate": 2.2306369835690913e-12,
+      "moment_relative_residual": 6.994405055138486e-15
+    },
+    {
+      "branching": 4,
+      "battery_gap": 2.5,
+      "delta": 1.5,
+      "endpoint": 1.0,
+      "strength": 0.25,
+      "tau": 0.0,
+      "amplitude": [
+        1.0,
+        0.0
+      ],
+      "first_energy_amplitude": [
+        1.0,
+        0.0
+      ],
+      "parent_probability": 1.0,
+      "child_probability": 0.0,
+      "oscillator_energy_change": 0.0,
+      "battery_energy_change": -0.0,
+      "outgoing_energy": 0.0,
+      "interaction_energy": 0.0,
+      "energy_balance_residual": 0.0,
+      "quadrature_error_estimate": 0.0,
+      "moment_relative_residual": 0.0
+    },
+    {
+      "branching": 4,
+      "battery_gap": 2.5,
+      "delta": 1.5,
+      "endpoint": 1.0,
+      "strength": 0.25,
+      "tau": 0.25,
+      "amplitude": [
+        0.9616221196649771,
+        -0.24489371232319343
+      ],
+      "first_energy_amplitude": [
+        0.9395160327809948,
+        -0.3016793882717516
+      ],
+      "parent_probability": 0.9846900313643986,
+      "child_probability": 0.015309968635601412,
+      "oscillator_energy_change": 0.022964952953402118,
+      "battery_energy_change": -0.03827492158900353,
+      "outgoing_energy": 0.03001246290969939,
+      "interaction_energy": -0.014702494274097866,
+      "energy_balance_residual": 1.1102230246251565e-16,
+      "quadrature_error_estimate": 1.9205151425050526e-12,
+      "moment_relative_residual": 6.994405055138486e-15
+    },
+    {
+      "branching": 4,
+      "battery_gap": 2.5,
+      "delta": 1.5,
+      "endpoint": 1.0,
+      "strength": 0.25,
+      "tau": 1.0,
+      "amplitude": [
+        0.5074882453716373,
+        -0.7406720050911358
+      ],
+      "first_energy_amplitude": [
+        0.32756620950123083,
+        -0.7828062375027509
+      ],
+      "parent_probability": 0.8061393383161066,
+      "child_probability": 0.19386066168389338,
+      "oscillator_energy_change": 0.29079099252584006,
+      "battery_energy_change": -0.48465165420973344,
+      "outgoing_energy": 0.31406200545245033,
+      "interaction_energy": -0.12020134376855696,
+      "energy_balance_residual": 0.0,
+      "quadrature_error_estimate": 1.5966661555121094e-12,
+      "moment_relative_residual": 6.994405055138486e-15
+    },
+    {
+      "branching": 4,
+      "battery_gap": 2.5,
+      "delta": 1.5,
+      "endpoint": 1.0,
+      "strength": 0.25,
+      "tau": 3.0,
+      "amplitude": [
+        -0.45630947149382683,
+        -0.22470547334689508
+      ],
+      "first_energy_amplitude": [
+        -0.4513264966297047,
+        -0.01721439324185679
+      ],
+      "parent_probability": 0.25871088352702776,
+      "child_probability": 0.7412891164729722,
+      "oscillator_energy_change": 1.1119336747094584,
+      "battery_energy_change": -1.8532227911824306,
+      "outgoing_energy": 0.8390854364669238,
+      "interaction_energy": -0.09779631999395155,
+      "energy_balance_residual": 0.0,
+      "quadrature_error_estimate": 1.9106728234176717e-12,
+      "moment_relative_residual": 6.994405055138486e-15
+    },
+    {
+      "branching": 4,
+      "battery_gap": 2.5,
+      "delta": 1.5,
+      "endpoint": 1.0,
+      "strength": 0.25,
+      "tau": 20.0,
+      "amplitude": [
+        -0.0009620221485888814,
+        0.0005224602135630301
+      ],
+      "first_energy_amplitude": [
+        0.00031552298278649714,
+        0.00018688102986948125
+      ],
+      "parent_probability": 1.1984512891318947e-06,
+      "child_probability": 0.9999988015487109,
+      "oscillator_energy_change": 1.4999982023230665,
+      "battery_energy_change": -2.499997003871777,
+      "outgoing_energy": 1.0000016102556792,
+      "interaction_energy": -2.8087069683696903e-06,
+      "energy_balance_residual": 1.9036938434598312e-16,
+      "quadrature_error_estimate": 3.217573175682129e-12,
+      "moment_relative_residual": 6.994405055138486e-15
+    },
+    {
+      "branching": 4,
+      "battery_gap": 2.5,
+      "delta": 1.5,
+      "endpoint": 1.0,
+      "strength": 0.25,
+      "tau": 100.0,
+      "amplitude": [
+        -4.517792370052997e-05,
+        3.4467038350746698e-06
+      ],
+      "first_energy_amplitude": [
+        9.843694115490224e-08,
+        9.097034426108382e-07
+      ],
+      "parent_probability": 2.052924557217626e-09,
+      "child_probability": 0.9999999979470754,
+      "oscillator_energy_change": 1.499999996920613,
+      "battery_energy_change": -2.4999999948676885,
+      "outgoing_energy": 1.000000002055548,
+      "interaction_energy": -4.1084725109800165e-09,
+      "energy_balance_residual": 5.984358082703699e-17,
+      "quadrature_error_estimate": 2.2306369835690913e-12,
+      "moment_relative_residual": 6.994405055138486e-15
+    }
+  ],
+  "finite_checks": [
+    {
+      "tau": 0.25,
+      "finite": {
+        "modes": 64,
+        "amplitude": [
+          0.961622119664977,
+          -0.24489371232319387
+        ],
+        "parent_probability": 0.9846900313643988,
+        "outgoing_energy": 0.030012462909701637,
+        "interaction_energy": -0.01470249427409958,
+        "energy_balance_residual": 8.881784197001252e-16,
+        "norm_residual": 1.1102230246251565e-15
+      },
+      "comparison_residual": 2.248201624865942e-15
+    },
+    {
+      "tau": 1.0,
+      "finite": {
+        "modes": 64,
+        "amplitude": [
+          0.5074882453716383,
+          -0.740672005091131
+        ],
+        "parent_probability": 0.8061393383161005,
+        "outgoing_energy": 0.3140620054524762,
+        "interaction_energy": -0.12020134376857594,
+        "energy_balance_residual": 8.881784197001252e-16,
+        "norm_residual": 1.1102230246251565e-15
+      },
+      "comparison_residual": 2.5868196473766147e-14
+    },
+    {
+      "tau": 3.0,
+      "finite": {
+        "modes": 64,
+        "amplitude": [
+          -0.4563094714910541,
+          -0.2247054733424711
+        ],
+        "parent_probability": 0.2587108835225091,
+        "outgoing_energy": 0.8390854365163367,
+        "interaction_energy": -0.0977963200388441,
+        "energy_balance_residual": 1.7763568394002505e-15,
+        "norm_residual": 1.3322676295501878e-15
+      },
+      "comparison_residual": 4.941291820159677e-11
+    }
+  ],
+  "gap_only_control": {
+    "endpoint": 0.0,
+    "strength": 0.25,
+    "bound_energy": -0.17953414265366063,
+    "endpoint_atom_mass": 0.8244304111543549,
+    "asymptotic_parent_probability": 0.6796855028361386,
+    "asymptotic_child_probability": 0.3203144971638614,
+    "secular_residual": 0.0,
+    "interpretation": "원자 질량 w의 진폭 기여는 w*exp(-i*z*tau), 잔류 확률은 w^2",
+    "finite_128_bound_energy": -0.17953414388003375,
+    "finite_128_atom_mass": 0.8244303644196845
+  },
+  "max_checked_residual": 4.941291820159677e-11,
+  "strict_decay_condition": "battery_gap-(branching-1)/2 > strength > 0",
+  "time_independent_hamiltonian_constructed": true,
+  "conditional_asymptotic_child_probability_one": true,
+  "reference_information_preserved_on_split_image": true,
+  "finite_environment_proves_infinite_time_limit": false,
+  "critical_endpoint_equals_strength_tested": false,
+  "stationary_global_state_proved": false,
+  "physical_pointer_label_record_derived": false,
+  "unitary_isometry_and_environment_supplied": true,
+  "initial_parent_and_charged_battery_supplied": true,
+  "autonomous_initial_preparation_derived": false,
+  "battery_recharged_with_children_retained": false,
+  "global_tree_hamiltonian_constructed": false,
+  "fixed_free_energy_bound_replaced": false,
+  "CE_local_action_derived": false,
+  "common_metric_selection_proved": false
+}

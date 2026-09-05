@@ -1,0 +1,687 @@
+{
+  "scope": "기존 위치 라벨 분할을 재현하는 공급된 양자 변환과 진공 환경의 조건부 점유 계산",
+  "python": "3.11.9",
+  "numpy": "2.4.6",
+  "source_sha256": "37382cda6ee4ecda19bdd21cae946e92c3afdb781e8e7e1766f0068e4f602c1a",
+  "classical_split_source_sha256": "71188b8ffd88c3acc54edfec6057c19862160e467fc6f77724f54195e05b0065",
+  "bath_source_sha256": "546db9d6373411da6b56b76c5835c7cb99b12c206adc250c29bd89aaca9ca8e8",
+  "quadrature_convention": "[q,p]=i; vacuum covariance I/2",
+  "output_number_unit": "dimensionless",
+  "free_excitation_energy": "hbar*omega*output_number; equal-frequency energy above k-mode vacuum",
+  "energy_is_universal_minimum_work": false,
+  "infinite_bath_limit_precedes_time_average": true,
+  "bath_initial_state": "각 차이 모드와 독립인 반무한 진공 사슬",
+  "common_onsite_over_bath_hopping": 10,
+  "all_historical_labels_are_simultaneous_canonical_modes": false,
+  "q0016_physical_card_revived": false,
+  "q0017_merge_rule_combined": false,
+  "autonomous_source_action_derived_from_CE": false,
+  "microscopic_coupling_derived_from_CE": false,
+  "common_metric_selection_proved": false,
+  "resource_budget": {
+    "scope": "고정된 현재 위치 공분산과 같은 진동수에서의 자유 에너지 하한 및 반복 분할 자원 제약",
+    "root_q_variance": 0.5,
+    "lower_bound_requires_gaussian_state": false,
+    "bound_attained_by_supplied_pure_gaussian": true,
+    "universal_preparation_work_minimum_proved": false,
+    "normal_ordered_energy_unit": "hbar*omega",
+    "all_initial_system_modes_vacuum_for_battery_bound": true,
+    "battery_bound_requires_nonnegative_battery_hamiltonian": true,
+    "battery_bound_requires_conservation_of_system_plus_battery_free_energy": true,
+    "infinite_depth_possible_with_fixed_gap_and_finite_mean_battery": false,
+    "exact_squeezing_from_sharp_finite_total_energy_support_possible": false,
+    "finite_mean_energy_alone_excludes_finite_depth_exact_preparation": false,
+    "physical_gap_or_battery_derived_from_CE": false,
+    "merge_or_bath_between_splits_included": false,
+    "cases": [
+      {
+        "branching": 2,
+        "depth": 1,
+        "frontier_modes": 2,
+        "minimum_number_exact": "11/16",
+        "minimum_number": 0.6875,
+        "trace_q_exact": "3",
+        "trace_inverse_q_exact": "3/2",
+        "residuals": {
+          "stored_source_vs_quantum_q": 6.707437923744493e-16,
+          "hierarchical_spectrum": 4.440892098500626e-16,
+          "canonical_pair": 3.1560822113208575e-16,
+          "energy_lower_bound": 2.220446049250313e-16,
+          "attained_energy": 2.220446049250313e-16,
+          "minimum_momentum_covariance": 4.046035655711836e-17
+        }
+      },
+      {
+        "branching": 2,
+        "depth": 2,
+        "frontier_modes": 4,
+        "minimum_number_exact": "103/32",
+        "minimum_number": 3.21875,
+        "trace_q_exact": "10",
+        "trace_inverse_q_exact": "7/4",
+        "residuals": {
+          "stored_source_vs_quantum_q": 1.8676842118715256e-15,
+          "hierarchical_spectrum": 2.220446049250313e-15,
+          "canonical_pair": 7.217583184508995e-16,
+          "energy_lower_bound": 0.0,
+          "attained_energy": 8.881784197001252e-16,
+          "minimum_momentum_covariance": 7.384300342650183e-17
+        }
+      },
+      {
+        "branching": 2,
+        "depth": 3,
+        "frontier_modes": 8,
+        "minimum_number_exact": "663/64",
+        "minimum_number": 10.359375,
+        "trace_q_exact": "28",
+        "trace_inverse_q_exact": "23/8",
+        "residuals": {
+          "stored_source_vs_quantum_q": 3.3454392974351074e-15,
+          "hierarchical_spectrum": 2.6645352591003757e-15,
+          "canonical_pair": 1.0458735197506035e-15,
+          "energy_lower_bound": 0.0,
+          "attained_energy": 1.7763568394002505e-15,
+          "minimum_momentum_covariance": 1.2064125652132897e-16
+        }
+      },
+      {
+        "branching": 2,
+        "depth": 4,
+        "frontier_modes": 16,
+        "minimum_number_exact": "3671/128",
+        "minimum_number": 28.6796875,
+        "trace_q_exact": "72",
+        "trace_inverse_q_exact": "87/16",
+        "residuals": {
+          "stored_source_vs_quantum_q": 9.090279413851974e-15,
+          "hierarchical_spectrum": 4.884981308350689e-15,
+          "canonical_pair": 1.6360237275942216e-15,
+          "energy_lower_bound": 1.4210854715202004e-14,
+          "attained_energy": 7.105427357601002e-15,
+          "minimum_momentum_covariance": 1.297726142375141e-16
+        }
+      },
+      {
+        "branching": 2,
+        "depth": 5,
+        "frontier_modes": 32,
+        "minimum_number_exact": "18775/256",
+        "minimum_number": 73.33984375,
+        "trace_q_exact": "176",
+        "trace_inverse_q_exact": "343/32",
+        "residuals": {
+          "stored_source_vs_quantum_q": 2.0601144798503415e-14,
+          "hierarchical_spectrum": 2.842170943040401e-14,
+          "canonical_pair": 2.0936610407191867e-15,
+          "energy_lower_bound": 2.842170943040401e-14,
+          "attained_energy": 2.842170943040401e-14,
+          "minimum_momentum_covariance": 2.6476547677306565e-16
+        }
+      },
+      {
+        "branching": 2,
+        "depth": 6,
+        "frontier_modes": 64,
+        "minimum_number_exact": "91479/512",
+        "minimum_number": 178.669921875,
+        "trace_q_exact": "416",
+        "trace_inverse_q_exact": "1367/64",
+        "residuals": {
+          "stored_source_vs_quantum_q": 3.6361117655407895e-14,
+          "hierarchical_spectrum": 2.842170943040401e-14,
+          "canonical_pair": 3.316449105638593e-15,
+          "energy_lower_bound": 0.0,
+          "attained_energy": 2.842170943040401e-14,
+          "minimum_momentum_covariance": 3.8565640762050175e-16
+        }
+      },
+      {
+        "branching": 3,
+        "depth": 1,
+        "frontier_modes": 3,
+        "minimum_number_exact": "1",
+        "minimum_number": 1.0,
+        "trace_q_exact": "9/2",
+        "trace_inverse_q_exact": "2",
+        "residuals": {
+          "stored_source_vs_quantum_q": 5.164867343875475e-16,
+          "hierarchical_spectrum": 4.440892098500626e-16,
+          "canonical_pair": 3.5640620289653365e-16,
+          "energy_lower_bound": 0.0,
+          "attained_energy": 0.0,
+          "minimum_momentum_covariance": 1.435201045766804e-16
+        }
+      },
+      {
+        "branching": 3,
+        "depth": 2,
+        "frontier_modes": 9,
+        "minimum_number_exact": "22/3",
+        "minimum_number": 7.333333333333333,
+        "trace_q_exact": "45/2",
+        "trace_inverse_q_exact": "14/3",
+        "residuals": {
+          "stored_source_vs_quantum_q": 2.04949161042934e-15,
+          "hierarchical_spectrum": 1.7763568394002505e-15,
+          "canonical_pair": 9.401228722118526e-16,
+          "energy_lower_bound": 8.881784197001252e-16,
+          "attained_energy": 8.881784197001252e-16,
+          "minimum_momentum_covariance": 1.4380430325408824e-16
+        }
+      },
+      {
+        "branching": 3,
+        "depth": 3,
+        "frontier_modes": 27,
+        "minimum_number_exact": "319/9",
+        "minimum_number": 35.44444444444444,
+        "trace_q_exact": "189/2",
+        "trace_inverse_q_exact": "122/9",
+        "residuals": {
+          "stored_source_vs_quantum_q": 8.294391501525097e-15,
+          "hierarchical_spectrum": 1.0658141036401503e-14,
+          "canonical_pair": 1.8727692031971976e-15,
+          "energy_lower_bound": 1.4210854715202004e-14,
+          "attained_energy": 0.0,
+          "minimum_momentum_covariance": 2.264644463206053e-16
+        }
+      },
+      {
+        "branching": 3,
+        "depth": 4,
+        "frontier_modes": 81,
+        "minimum_number_exact": "3964/27",
+        "minimum_number": 146.8148148148148,
+        "trace_q_exact": "729/2",
+        "trace_inverse_q_exact": "1094/27",
+        "residuals": {
+          "stored_source_vs_quantum_q": 2.7525062828653895e-14,
+          "hierarchical_spectrum": 1.5987211554602254e-14,
+          "canonical_pair": 3.489873982305825e-15,
+          "energy_lower_bound": 2.842170943040401e-14,
+          "attained_energy": 0.0,
+          "minimum_momentum_covariance": 1.2180864581995255e-15
+        }
+      },
+      {
+        "branching": 4,
+        "depth": 1,
+        "frontier_modes": 4,
+        "minimum_number_exact": "43/32",
+        "minimum_number": 1.34375,
+        "trace_q_exact": "6",
+        "trace_inverse_q_exact": "11/4",
+        "residuals": {
+          "stored_source_vs_quantum_q": 9.121412916732176e-16,
+          "hierarchical_spectrum": 6.661338147750939e-16,
+          "canonical_pair": 2.6795965632671764e-16,
+          "energy_lower_bound": 4.440892098500626e-16,
+          "attained_energy": 0.0,
+          "minimum_momentum_covariance": 1.7155353963899272e-16
+        }
+      },
+      {
+        "branching": 4,
+        "depth": 2,
+        "frontier_modes": 16,
+        "minimum_number_exact": "1691/128",
+        "minimum_number": 13.2109375,
+        "trace_q_exact": "40",
+        "trace_inverse_q_exact": "155/16",
+        "residuals": {
+          "stored_source_vs_quantum_q": 4.106324615650731e-15,
+          "hierarchical_spectrum": 5.329070518200751e-15,
+          "canonical_pair": 5.862741069378192e-16,
+          "energy_lower_bound": 7.105427357601002e-15,
+          "attained_energy": 0.0,
+          "minimum_momentum_covariance": 2.8040713052571676e-16
+        }
+      },
+      {
+        "branching": 4,
+        "depth": 3,
+        "frontier_modes": 64,
+        "minimum_number_exact": "43419/512",
+        "minimum_number": 84.802734375,
+        "trace_q_exact": "224",
+        "trace_inverse_q_exact": "2459/64",
+        "residuals": {
+          "stored_source_vs_quantum_q": 1.6110097386971715e-14,
+          "hierarchical_spectrum": 1.0436096431476471e-14,
+          "canonical_pair": 1.196401743835972e-15,
+          "energy_lower_bound": 1.4210854715202004e-14,
+          "attained_energy": 0.0,
+          "minimum_momentum_covariance": 7.153325535637887e-16
+        }
+      }
+    ]
+  },
+  "cases": [
+    {
+      "children": 2,
+      "contrast_q_variance": 2.0,
+      "contrast_p_variance": 0.125,
+      "contrast_initial_number_per_mode": 0.5625,
+      "contrast_initial_number_total": 0.5625,
+      "vacuum_input_output_number": 0.6874999999999998,
+      "common_mode_number_after_squeeze": 0.125,
+      "naive_both_quadrature_cp_min_eigenvalue": -0.5000000000000001,
+      "position_only_cp_min_eigenvalue": -1.5566941467771207e-16,
+      "residuals": {
+        "stored_sampler_covariance": 4.440892098500626e-16,
+        "position_noise_matches_stored_source": 4.440892098500626e-16,
+        "parent_map": 1.5700924586837752e-16,
+        "symplectic": 4.463374267214424e-16,
+        "naive_cp_negative_eigenvalue": 1.1102230246251565e-16,
+        "vacuum_input_number_formula": 2.220446049250313e-16
+      },
+      "raw_coupling_squared": 2,
+      "raw_contrast_number_long_time_mean": 0.0,
+      "normalized_coupling_squared": 1,
+      "normalized_contrast_number_long_time_mean": 0.0,
+      "finite_bath_number_checks": [
+        {
+          "time_g_over_hbar": 0.0,
+          "q_variance_from_covariance": 1.9999999999999987,
+          "q_variance_from_amplitude": 1.999999999999999,
+          "q_variance_identity_residual": 2.220446049250313e-16,
+          "boundary_number_from_covariance": 0.5624999999999993,
+          "boundary_number_from_amplitude": 0.5624999999999997,
+          "number_identity_residual": 3.3306690738754696e-16,
+          "total_number_residual": 7.105427357601002e-15
+        },
+        {
+          "time_g_over_hbar": 0.15707963267948966,
+          "q_variance_from_covariance": 0.14316616710694846,
+          "q_variance_from_amplitude": 0.14316616710694907,
+          "q_variance_identity_residual": 6.106226635438361e-16,
+          "boundary_number_from_covariance": 0.5352507493395755,
+          "boundary_number_from_amplitude": 0.5352507493395762,
+          "number_identity_residual": 6.661338147750939e-16,
+          "total_number_residual": 7.105427357601002e-15
+        },
+        {
+          "time_g_over_hbar": 0.3,
+          "q_variance_from_covariance": 1.7165713580344475,
+          "q_variance_from_amplitude": 1.716571358034448,
+          "q_variance_identity_residual": 4.440892098500626e-16,
+          "boundary_number_from_covariance": 0.46786098996144276,
+          "boundary_number_from_amplitude": 0.4678609899614432,
+          "number_identity_residual": 4.440892098500626e-16,
+          "total_number_residual": 7.105427357601002e-15
+        },
+        {
+          "time_g_over_hbar": 1.0,
+          "q_variance_from_covariance": 0.5473739479545418,
+          "q_variance_from_amplitude": 0.5473739479545421,
+          "q_variance_identity_residual": 3.3306690738754696e-16,
+          "boundary_number_from_covariance": 0.028196483053763988,
+          "boundary_number_from_amplitude": 0.028196483053764383,
+          "number_identity_residual": 3.95516952522712e-16,
+          "total_number_residual": 0.0
+        },
+        {
+          "time_g_over_hbar": 5.0,
+          "q_variance_from_covariance": 0.5829195124479671,
+          "q_variance_from_amplitude": 0.5829195124479679,
+          "q_variance_identity_residual": 7.771561172376096e-16,
+          "boundary_number_from_covariance": 0.03402247513290113,
+          "boundary_number_from_amplitude": 0.03402247513290165,
+          "number_identity_residual": 5.204170427930421e-16,
+          "total_number_residual": 7.105427357601002e-15
+        },
+        {
+          "time_g_over_hbar": 20.0,
+          "q_variance_from_covariance": 0.5000038008576396,
+          "q_variance_from_amplitude": 0.5000038008576393,
+          "q_variance_identity_residual": 3.3306690738754696e-16,
+          "boundary_number_from_covariance": 3.0527480745279334e-05,
+          "boundary_number_from_amplitude": 3.0527480745149894e-05,
+          "number_identity_residual": 1.2944018686761316e-16,
+          "total_number_residual": 0.0
+        }
+      ]
+    },
+    {
+      "children": 3,
+      "contrast_q_variance": 1.5,
+      "contrast_p_variance": 0.16666666666666666,
+      "contrast_initial_number_per_mode": 0.33333333333333337,
+      "contrast_initial_number_total": 0.6666666666666667,
+      "vacuum_input_output_number": 1.0,
+      "common_mode_number_after_squeeze": 0.33333333333333337,
+      "naive_both_quadrature_cp_min_eigenvalue": -1.0000000000000009,
+      "position_only_cp_min_eigenvalue": -1.7715895271899323e-16,
+      "residuals": {
+        "stored_sampler_covariance": 2.0770370905276122e-16,
+        "position_noise_matches_stored_source": 4.2276033262255756e-16,
+        "parent_map": 1.9229626863835638e-16,
+        "symplectic": 5.04034485850175e-16,
+        "naive_cp_negative_eigenvalue": 8.881784197001252e-16,
+        "vacuum_input_number_formula": 0.0
+      },
+      "raw_coupling_squared": 3,
+      "raw_contrast_number_long_time_mean": 0.08333333333333334,
+      "normalized_coupling_squared": 1,
+      "normalized_contrast_number_long_time_mean": 0.0,
+      "finite_bath_number_checks": [
+        {
+          "time_g_over_hbar": 0.0,
+          "q_variance_from_covariance": 1.5000000000000009,
+          "q_variance_from_amplitude": 1.5000000000000004,
+          "q_variance_identity_residual": 4.440892098500626e-16,
+          "boundary_number_from_covariance": 0.3333333333333338,
+          "boundary_number_from_amplitude": 0.33333333333333354,
+          "number_identity_residual": 2.7755575615628914e-16,
+          "total_number_residual": 4.773959005888173e-15
+        },
+        {
+          "time_g_over_hbar": 0.15707963267948966,
+          "q_variance_from_covariance": 0.19068929892562056,
+          "q_variance_from_amplitude": 0.19068929892562037,
+          "q_variance_identity_residual": 1.942890293094024e-16,
+          "boundary_number_from_covariance": 0.3093107010743801,
+          "boundary_number_from_amplitude": 0.3093107010743798,
+          "number_identity_residual": 2.7755575615628914e-16,
+          "total_number_residual": 2.3314683517128287e-15
+        },
+        {
+          "time_g_over_hbar": 0.3,
+          "q_variance_from_covariance": 1.2351069406434345,
+          "q_variance_from_amplitude": 1.2351069406434345,
+          "q_variance_identity_residual": 0.0,
+          "boundary_number_from_covariance": 0.25171959303793656,
+          "boundary_number_from_amplitude": 0.2517195930379366,
+          "number_identity_residual": 5.551115123125783e-17,
+          "total_number_residual": 4.773959005888173e-15
+        },
+        {
+          "time_g_over_hbar": 1.0,
+          "q_variance_from_covariance": 0.5026042538367184,
+          "q_variance_from_amplitude": 0.5026042538367183,
+          "q_variance_identity_residual": 1.1102230246251565e-16,
+          "boundary_number_from_covariance": 0.0014339308891961888,
+          "boundary_number_from_amplitude": 0.0014339308891960756,
+          "number_identity_residual": 1.1319070680748666e-16,
+          "total_number_residual": 2.3314683517128287e-15
+        },
+        {
+          "time_g_over_hbar": 5.0,
+          "q_variance_from_covariance": 0.5478461532355364,
+          "q_variance_from_amplitude": 0.5478461532355361,
+          "q_variance_identity_residual": 3.3306690738754696e-16,
+          "boundary_number_from_covariance": 0.017560555831980462,
+          "boundary_number_from_amplitude": 0.01756055583198027,
+          "number_identity_residual": 1.9081958235744878e-16,
+          "total_number_residual": 2.3314683517128287e-15
+        },
+        {
+          "time_g_over_hbar": 20.0,
+          "q_variance_from_covariance": 0.4999919405584708,
+          "q_variance_from_amplitude": 0.49999194055847085,
+          "q_variance_identity_residual": 5.551115123125783e-17,
+          "boundary_number_from_covariance": 0.0001593005541837833,
+          "boundary_number_from_amplitude": 0.00015930055418339727,
+          "number_identity_residual": 3.8603018351346385e-16,
+          "total_number_residual": 4.773959005888173e-15
+        }
+      ]
+    },
+    {
+      "children": 4,
+      "contrast_q_variance": 1.3333333333333333,
+      "contrast_p_variance": 0.1875,
+      "contrast_initial_number_per_mode": 0.26041666666666663,
+      "contrast_initial_number_total": 0.7812499999999999,
+      "vacuum_input_output_number": 1.34375,
+      "common_mode_number_after_squeeze": 0.5625,
+      "naive_both_quadrature_cp_min_eigenvalue": -1.5000000000000002,
+      "position_only_cp_min_eigenvalue": -1.0469225021023803e-16,
+      "residuals": {
+        "stored_sampler_covariance": 2.0770370905276122e-16,
+        "position_noise_matches_stored_source": 3.925231146709438e-16,
+        "parent_map": 0.0,
+        "symplectic": 3.789521801460776e-16,
+        "naive_cp_negative_eigenvalue": 2.220446049250313e-16,
+        "vacuum_input_number_formula": 0.0
+      },
+      "raw_coupling_squared": 4,
+      "raw_contrast_number_long_time_mean": 0.17361111111111108,
+      "normalized_coupling_squared": 1,
+      "normalized_contrast_number_long_time_mean": 0.0,
+      "finite_bath_number_checks": [
+        {
+          "time_g_over_hbar": 0.0,
+          "q_variance_from_covariance": 1.3333333333333346,
+          "q_variance_from_amplitude": 1.333333333333334,
+          "q_variance_identity_residual": 6.661338147750939e-16,
+          "boundary_number_from_covariance": 0.2604166666666674,
+          "boundary_number_from_amplitude": 0.26041666666666685,
+          "number_identity_residual": 5.551115123125783e-16,
+          "total_number_residual": 2.3314683517128287e-15
+        },
+        {
+          "time_g_over_hbar": 0.15707963267948966,
+          "q_variance_from_covariance": 0.2172812724204297,
+          "q_variance_from_amplitude": 0.21728127242042905,
+          "q_variance_identity_residual": 6.38378239159465e-16,
+          "boundary_number_from_covariance": 0.23559893964964285,
+          "boundary_number_from_amplitude": 0.23559893964964235,
+          "number_identity_residual": 4.996003610813204e-16,
+          "total_number_residual": 2.3314683517128287e-15
+        },
+        {
+          "time_g_over_hbar": 0.3,
+          "q_variance_from_covariance": 1.05385916368653,
+          "q_variance_from_amplitude": 1.0538591636865298,
+          "q_variance_identity_residual": 2.220446049250313e-16,
+          "boundary_number_from_covariance": 0.1779538871174633,
+          "boundary_number_from_amplitude": 0.1779538871174629,
+          "number_identity_residual": 3.885780586188048e-16,
+          "total_number_residual": 2.3314683517128287e-15
+        },
+        {
+          "time_g_over_hbar": 1.0,
+          "q_variance_from_covariance": 0.5439732624461897,
+          "q_variance_from_amplitude": 0.5439732624461898,
+          "q_variance_identity_residual": 1.1102230246251565e-16,
+          "boundary_number_from_covariance": 0.023170889158299124,
+          "boundary_number_from_amplitude": 0.023170889158299346,
+          "number_identity_residual": 2.220446049250313e-16,
+          "total_number_residual": 2.3314683517128287e-15
+        },
+        {
+          "time_g_over_hbar": 5.0,
+          "q_variance_from_covariance": 0.5860315317117488,
+          "q_variance_from_amplitude": 0.5860315317117489,
+          "q_variance_identity_residual": 1.1102230246251565e-16,
+          "boundary_number_from_covariance": 0.029695725588679944,
+          "boundary_number_from_amplitude": 0.029695725588679955,
+          "number_identity_residual": 1.0408340855860843e-17,
+          "total_number_residual": 2.3314683517128287e-15
+        },
+        {
+          "time_g_over_hbar": 20.0,
+          "q_variance_from_covariance": 0.4938505536271112,
+          "q_variance_from_amplitude": 0.4938505536271114,
+          "q_variance_identity_residual": 1.6653345369377348e-16,
+          "boundary_number_from_covariance": 0.03950767446144865,
+          "boundary_number_from_amplitude": 0.039507674461448705,
+          "number_identity_residual": 5.551115123125783e-17,
+          "total_number_residual": 2.3314683517128287e-15
+        }
+      ]
+    },
+    {
+      "children": 9,
+      "contrast_q_variance": 1.125,
+      "contrast_p_variance": 0.2222222222222222,
+      "contrast_initial_number_per_mode": 0.17361111111111116,
+      "contrast_initial_number_total": 1.3888888888888893,
+      "vacuum_input_output_number": 3.166666666666667,
+      "common_mode_number_after_squeeze": 1.7777777777777777,
+      "naive_both_quadrature_cp_min_eigenvalue": -3.9999999999999996,
+      "position_only_cp_min_eigenvalue": -4.042882475042436e-16,
+      "residuals": {
+        "stored_sampler_covariance": 1.414581638583768e-15,
+        "position_noise_matches_stored_source": 5.23691153334427e-16,
+        "parent_map": 0.0,
+        "symplectic": 7.652669416946728e-16,
+        "naive_cp_negative_eigenvalue": 4.440892098500626e-16,
+        "vacuum_input_number_formula": 4.440892098500626e-16
+      },
+      "raw_coupling_squared": 9,
+      "raw_contrast_number_long_time_mean": 0.5316840277777779,
+      "normalized_coupling_squared": 1,
+      "normalized_contrast_number_long_time_mean": 0.0,
+      "finite_bath_number_checks": [
+        {
+          "time_g_over_hbar": 0.0,
+          "q_variance_from_covariance": 1.125000000000002,
+          "q_variance_from_amplitude": 1.125000000000001,
+          "q_variance_identity_residual": 8.881784197001252e-16,
+          "boundary_number_from_covariance": 0.17361111111111227,
+          "boundary_number_from_amplitude": 0.17361111111111147,
+          "number_identity_residual": 8.049116928532385e-16,
+          "total_number_residual": 3.1086244689504383e-15
+        },
+        {
+          "time_g_over_hbar": 0.15707963267948966,
+          "q_variance_from_covariance": 0.2793630929055274,
+          "q_variance_from_amplitude": 0.2793630929055267,
+          "q_variance_identity_residual": 7.216449660063518e-16,
+          "boundary_number_from_covariance": 0.1378980669340466,
+          "boundary_number_from_amplitude": 0.1378980669340459,
+          "number_identity_residual": 6.938893903907228e-16,
+          "total_number_residual": 3.1086244689504383e-15
+        },
+        {
+          "time_g_over_hbar": 0.3,
+          "q_variance_from_covariance": 0.7367153043820751,
+          "q_variance_from_amplitude": 0.7367153043820748,
+          "q_variance_identity_residual": 3.3306690738754696e-16,
+          "boundary_number_from_covariance": 0.0677017533608657,
+          "boundary_number_from_amplitude": 0.06770175336086534,
+          "number_identity_residual": 3.608224830031759e-16,
+          "total_number_residual": 3.1086244689504383e-15
+        },
+        {
+          "time_g_over_hbar": 1.0,
+          "q_variance_from_covariance": 0.7337036615501373,
+          "q_variance_from_amplitude": 0.7337036615501371,
+          "q_variance_identity_residual": 2.220446049250313e-16,
+          "boundary_number_from_covariance": 0.1133925990024065,
+          "boundary_number_from_amplitude": 0.11339259900240622,
+          "number_identity_residual": 2.7755575615628914e-16,
+          "total_number_residual": 3.1086244689504383e-15
+        },
+        {
+          "time_g_over_hbar": 5.0,
+          "q_variance_from_covariance": 0.9135755861792687,
+          "q_variance_from_amplitude": 0.913575586179268,
+          "q_variance_identity_residual": 6.661338147750939e-16,
+          "boundary_number_from_covariance": 0.12756689638228325,
+          "boundary_number_from_amplitude": 0.1275668963822826,
+          "number_identity_residual": 6.38378239159465e-16,
+          "total_number_residual": 3.1086244689504383e-15
+        },
+        {
+          "time_g_over_hbar": 20.0,
+          "q_variance_from_covariance": 0.4766887381315808,
+          "q_variance_from_amplitude": 0.47668873813158047,
+          "q_variance_identity_residual": 3.3306690738754696e-16,
+          "boundary_number_from_covariance": 0.06373193877873284,
+          "boundary_number_from_amplitude": 0.06373193877873246,
+          "number_identity_residual": 3.885780586188048e-16,
+          "total_number_residual": 3.1086244689504383e-15
+        }
+      ]
+    },
+    {
+      "children": 12,
+      "contrast_q_variance": 1.0909090909090908,
+      "contrast_p_variance": 0.22916666666666669,
+      "contrast_initial_number_per_mode": 0.16003787878787878,
+      "contrast_initial_number_total": 1.7604166666666665,
+      "vacuum_input_output_number": 4.28125,
+      "common_mode_number_after_squeeze": 2.5208333333333335,
+      "naive_both_quadrature_cp_min_eigenvalue": -5.5,
+      "position_only_cp_min_eigenvalue": -4.030153969746873e-16,
+      "residuals": {
+        "stored_sampler_covariance": 9.434854637437614e-16,
+        "position_noise_matches_stored_source": 7.711855592701269e-16,
+        "parent_map": 9.614813431917819e-17,
+        "symplectic": 8.985844550776828e-16,
+        "naive_cp_negative_eigenvalue": 0.0,
+        "vacuum_input_number_formula": 0.0
+      },
+      "raw_coupling_squared": 12,
+      "raw_contrast_number_long_time_mean": 0.7274449035812671,
+      "normalized_coupling_squared": 1,
+      "normalized_contrast_number_long_time_mean": 0.0,
+      "finite_bath_number_checks": [
+        {
+          "time_g_over_hbar": 0.0,
+          "q_variance_from_covariance": 1.0909090909090908,
+          "q_variance_from_amplitude": 1.0909090909090908,
+          "q_variance_identity_residual": 0.0,
+          "boundary_number_from_covariance": 0.16003787878787878,
+          "boundary_number_from_amplitude": 0.16003787878787878,
+          "number_identity_residual": 0.0,
+          "total_number_residual": 1.0769163338864018e-14
+        },
+        {
+          "time_g_over_hbar": 0.15707963267948966,
+          "q_variance_from_covariance": 0.30161053942816474,
+          "q_variance_from_amplitude": 0.3016105394281648,
+          "q_variance_identity_residual": 5.551115123125783e-17,
+          "boundary_number_from_covariance": 0.11723013579244812,
+          "boundary_number_from_amplitude": 0.1172301357924481,
+          "number_identity_residual": 1.3877787807814457e-17,
+          "total_number_residual": 1.0769163338864018e-14
+        },
+        {
+          "time_g_over_hbar": 0.3,
+          "q_variance_from_covariance": 0.6495991391706127,
+          "q_variance_from_amplitude": 0.6495991391706128,
+          "q_variance_identity_residual": 1.1102230246251565e-16,
+          "boundary_number_from_covariance": 0.04172832847667607,
+          "boundary_number_from_amplitude": 0.04172832847667619,
+          "number_identity_residual": 1.1796119636642288e-16,
+          "total_number_residual": 3.6637359812630166e-15
+        },
+        {
+          "time_g_over_hbar": 1.0,
+          "q_variance_from_covariance": 0.6932563201012701,
+          "q_variance_from_amplitude": 0.6932563201012703,
+          "q_variance_identity_residual": 1.1102230246251565e-16,
+          "boundary_number_from_covariance": 0.09208459235023159,
+          "boundary_number_from_amplitude": 0.0920845923502318,
+          "number_identity_residual": 2.0816681711721685e-16,
+          "total_number_residual": 1.0769163338864018e-14
+        },
+        {
+          "time_g_over_hbar": 5.0,
+          "q_variance_from_covariance": 0.7315262059852914,
+          "q_variance_from_amplitude": 0.7315262059852916,
+          "q_variance_identity_residual": 2.220446049250313e-16,
+          "boundary_number_from_covariance": 0.06970263515064445,
+          "boundary_number_from_amplitude": 0.06970263515064452,
+          "number_identity_residual": 6.938893903907228e-17,
+          "total_number_residual": 1.0769163338864018e-14
+        },
+        {
+          "time_g_over_hbar": 20.0,
+          "q_variance_from_covariance": 0.4459137896014665,
+          "q_variance_from_amplitude": 0.44591378960146655,
+          "q_variance_identity_residual": 5.551115123125783e-17,
+          "boundary_number_from_covariance": 0.13056122296471961,
+          "boundary_number_from_amplitude": 0.13056122296472028,
+          "number_identity_residual": 6.661338147750939e-16,
+          "total_number_residual": 1.0769163338864018e-14
+        }
+      ]
+    }
+  ]
+}

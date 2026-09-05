@@ -1,0 +1,138 @@
+{
+ "question": "Q-0019",
+ "card": "F-02",
+ "mode": "card_audit",
+ "model_note": "opus (Fable 5.1 safeguard false-positive avoidance)",
+ "P0_K1_fired": {
+  "cmd": "predict_action_metric.py --mode two_level",
+  "killed": true,
+  "ratios": {
+   "triv": -12.590992342777227,
+   "std": 12.369093573739109,
+   "[3,2]": 0.2941131595478097
+  },
+  "window": [
+   0.75,
+   1.25
+  ],
+  "note": "triv \uac00 -12.59 (\ub808\ubca81 \uc5d0\uc11c \uc815\ud655\ud788 1 \uc774\ub77c\ub358 \ube14\ub85d\uc774 25-cell \uc5d0\uc11c \uc74c\uc218), std 12.37, [3,2] 0.294. \uc14b \ub2e4 \ucc3d \ubc16."
+ },
+ "P0_chart": {
+  "p=3_clusters": [
+   {
+    "lambda2": 1.0000421321938957,
+    "mult": 1
+   },
+   {
+    "lambda2": 1.2059105579907032,
+    "mult": 5
+   },
+   {
+    "lambda2": 1.2332515482409292,
+    "mult": 4
+   }
+  ],
+  "note": "p=3 \ucc28\ud2b8\uc5d0\uc11c std 1.233>1 (\uc218\ucd95->\uc99d\ud3ed \ubc18\uc804), [3,2] 1.206. \uc815\uc131 \ud310\uc815 \uc18c\uba78.",
+  "area_chart": [
+   {
+    "lambda2": -1.6669881664835895,
+    "mult": 5
+   },
+   {
+    "lambda2": -0.23534962691365927,
+    "mult": 1
+   },
+   {
+    "lambda2": 2307.27,
+    "mult": 1
+   },
+   {
+    "lambda2": 2307.58,
+    "mult": 1
+   },
+   {
+    "lambda2": 2308.07,
+    "mult": 2
+   }
+  ]
+ },
+ "P0_sign": {
+  "absN_absM": [
+   {
+    "lambda2": 0.7584242265954556,
+    "mult": 4
+   },
+   {
+    "lambda2": 1.0000000128749145,
+    "mult": 1
+   },
+   {
+    "lambda2": 1.4723736848934101,
+    "mult": 5
+   }
+  ],
+  "conformal_wick": [
+   {
+    "lambda2": 0.7584242265954537,
+    "mult": 4
+   },
+   {
+    "lambda2": 1.0,
+    "mult": 1
+   },
+   {
+    "lambda2": 1.4723736848934084,
+    "mult": 5
+   }
+  ],
+  "posdef_rayleigh_std": 0.2411908093777172,
+  "note": "std 0.4297 -> 0.7584 (|N|,|M| \ub610\ub294 conformal Wick). [3,2] \ub294 \ubd88\ubcc0. \uc0ac\uc804\ub4f1\ub85d std \uac12\uc740 \ubd80\ud638 \uaddc\uc57d \uc758\uc874."
+ },
+ "P0_kappa_split": {
+  "asymmetric_fixed_signature_N": [
+   19,
+   31,
+   0
+  ],
+  "all_to_first_cell_signature_N": [
+   31,
+   19,
+   0
+  ],
+  "glue_identity_survives_any_split": 2.272500897797952e-10,
+  "note": "\uc7a5\ubd80 \ud56d\ub4f1\uc2dd sum J^T H_a J = H_f \ub294 \uc5b4\ub5a4 \ubd84\ubc30\uc5d0\uc11c\ub3c4 \uc131\ub9bd -> \ub4f1\ubd84\ud560\uc744 \uace0\uc815\ud558\uc9c0 \ubabb\ud55c\ub2e4. \ub2e4\ub978 \ubd84\ubc30\ub294 \uad70\uc9d1 (1,4,5) \uc790\uccb4\ub97c \uae6c\ub2e4."
+ },
+ "P1_fd_precision": {
+  "h_scan_spread_std": 1.4762881400676164e-06,
+  "h_scan_spread_32": 1.8258736165233103e-06,
+  "card_claimed_uncertainty": 5e-07,
+  "note": "h=4e-3/2e-3/1e-3 Richardson \uac12 \ud37c\uc9d0\uc774 1.5-1.8e-6 \ub85c \uce74\ub4dc\uc758 5e-7 \ubcf4\ub2e4 3\ubc30 \uc774\uc0c1. \ub9c8\uc9c0\ub9c9 \uc790\ub9bf\uc218 \uc815\ub2f9\ud654 \uc548 \ub428."
+ },
+ "spectrum_reproduced": {
+  "method": "\uc644\uc804 \ub3c5\ub9bd \uc7ac\uad6c\ud604(\uc790\uccb4 Cayley-Menger \ubd80\ud53c\u00b7\uc774\uba74\uac01\u00b7\ub4f1\ubd84\ud560 kappa\u00b7\uc790\uccb4 FD Hessian)",
+  "eigs": [
+   0.4296818415532068,
+   1.0000000128749142,
+   1.472373684893408
+  ],
+  "mult": [
+   4,
+   1,
+   5
+  ],
+  "max_dev_from_card": 4.155320681986652e-08,
+  "match": true
+ },
+ "survived": [
+  "\ub3c5\ub9bd \uc7ac\ud604",
+  "\uc88c\ud45c(\uc120\ud615 P) \ubd88\ubcc0 K3 2.8e-15",
+  "K2 \ube44\uc815\uaddc \ud1b5\uacfc",
+  "recovers so4/\uacf5\ud1b5alpha/\ucf54\ud788\ub7f0\ud2b8/glued lambda=1",
+  "mu \ud56d\ub4f1\uc2dd 1.1e-7",
+  "\uc2a4\ucf00\uc77c \ubd88\ubcc0(sq 2->8)",
+  "\ucc28\uc6d0 \ubb34\ucc28\uc6d0",
+  "delta O(delta^2)",
+  "dof 0"
+ ],
+ "artifacts": "verify/Q-0019/F-02/adversary/"
+}

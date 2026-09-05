@@ -1,0 +1,120 @@
+id: E-20260905-023
+question: Q-0019
+attempt: 2
+timestamp: 2026-09-05T00:00:00+09:00
+claim: "F-02(예측식, F-01 대체) — mismatch를 재는 2차 형식을 unglued 셀별 작용 Hessian $N=\\oplus_a H_a$
+  (길이 차트)와 coarse Schur 보완 $H_c$ 로 좌표 불변하게 재정의하고, 가법 전파자 항등식
+  $\\lambda_{S,\\rho}^2=1+\\mu_\\rho$ 로 펜슬 $\\det(M-\\lambda_S^2N)=0$ 을 $S_5$ 기약표현별로 풀면
+  $(\\lambda_{\\rm triv}^2,\\lambda_{\\rm std}^2,\\lambda_{[3,2]}^2)=(1,\\,0.4296818,\\,1.4723737)$
+  (중복도 1,4,5) — 스케일 marginal·std 수축·[3,2] 증폭으로 갈라져 정렬 공리(Q-0010 확장)가 여전히
+  필요하다는 조건부 결론은 card-check PASS·hook_result 11/11 pass로 등록됐으나, adversary(opus)가
+  사전등록 kill K1을 발동시켜 반증했다: `predict_action_metric.py --mode two_level` 실행 결과
+  $r_\\rho=\\lambda_2^2/\\lambda_1^4$ 가 triv $-12.591$, std $12.369$, $[3,2]$ $0.294$로 창 $[0.75,1.25]$
+  전부 밖(triv는 1단계에서 정확히 1이던 블록이 25-cell 2단계에서 음수로 붕괴, signature
+  $N=(90,160,0)$) — 카드가 주장한 '자기유사 조립 아래 블록 사상 성질'이 두 단계째에서 죽는다.
+  추가 P0 3건이 정성적 불안정성을 확증한다: (ii) $|N|,|M|$ 정부호화 또는 conformal Wick 회전에서
+  std $0.4297\\to0.7584$로 이동(부호 규약 의존, triv 1·$[3,2]$ 1.4724는 불변, 정부호 Rayleigh 0.241);
+  (iii) $s=\\ell^3$ 비선형 차트에서 $(\\text{triv }1,\\,[3,2]\\ 1.2059\\times5,\\,\\text{std }1.2333\\times4)$로
+  std가 1을 넘어 정성적으로 뒤집히고(수축→증폭), 넓이 차트에서는 군집 $(1,4,5)$ 자체가
+  $(-1.667\\times5,\\,-0.235\\times1,\\,2307\\ldots\\times3)$로 붕괴 — F-01의 좌표 인공물이 비선형
+  재매개화 경로로 재발; (iv) unglued 등분할 상수 $\\kappa_t$ 의 cell간 분배(비대칭 예시
+  signature $(19,31,0)$ vs $(31,19,0)$)가 숨은 자유 입력이며, 장부 항등식 $\\sum_a J_a^\\top H_aJ_a=H_f$
+  는 모든 분배에서 성립(잔차 2.27e−10)해 어떤 분배가 옳은지 고정하지 못하고 비대칭 분배는 군집
+  $(1,4,5)$ 자체를 흩뜨린다. P1(비발동): FD 불확실도 카드 사전등록 5e−7이 h-스캔 실측 퍼짐
+  1.5~1.8e−6보다 3배 이상 과소; K3는 사다리 2단 congruence 보조정리의 재진술이라 항진명제이며
+  실행돼도 발동 불가능. survived 11건: 완전 독립 재구현(자체 Cayley-Menger·이면각·등분할
+  $\\kappa$·자체 FD Hessian)이 카드 값을 4.16e−8 정밀도로 재현(버그 없음); K2 비정규 경계 통과
+  (ratio 1.0515/0.9923, count 5/5); K3 좌표 불변 2.8e−15; recovers 4종(so(4) 게이지 0, 공통 스케일
+  $\\alpha$ Rayleigh 1, 코히런트 3e−7, glued 극한 $\\lambda\\equiv1$ perfect action); $\\mu$ 항등식
+  1.1e−7; 배경 스케일 불변; $\\delta$ 선형화 O($\\delta^2$); 자유도 0 < 사전등록 숫자 14. sourcer:
+  novel — BDH 2011(New J. Phys. 13, 045009) 선형화 coarse graining 관계를 이 카드가 generalize함
+  (glued 극한에서 $\\lambda\\equiv1$ 복원, unglued mismatch 항이 추가), Bahr–Dittrich 2009는
+  unrelated, 사다리 1단은 DFS 2007 외부기존 인용."
+level: L2
+verdict: refute
+pivot_step: null
+ladder_step: null
+card: derivations/Q-0019/F-02.formula.md
+kill_triggered: "K1 (두 단계 조립): `.claude\\hooks\\python.cmd python verify\\Q-0019\\F-02\\predict_action_metric.py --mode two_level` → `result_two_level.json` `lambda2_over_lambda1_squared` 의 triv·std·[3,2] 중 하나라도 ∉ [0.75, 1.25] 이거나 군집이 셋이 아니거나 `max_imag_ratio` > 1e−6 이면 죽는다(`killed` true). 실행값: killed=true, r_triv=-12.590992342777227, r_std=12.369093573739109, r_[3,2]=0.2941131595478097 (창 [0.75,1.25] 전부 밖), signature N=(90,160,0)."
+derivation: derivations/Q-0019/F-02.formula.md
+verification:
+  symbolic: pass
+  numeric: pass
+  lean: skipped
+  artifacts: verify/Q-0019/F-02/
+adversary:
+  model_note: "opus (Fable 5.1 safeguard false-positive avoidance)."
+  counterexamples:
+    - input: "P0-1 사전등록 kill K1 발동 — `predict_action_metric.py --mode two_level`
+        (verify/Q-0019/F-02/adversary/k1_run.log, SUMMARY.json P0_K1_fired)"
+      expected: "세 군집 r_ρ=λ₂²/λ₁⁴ ∈[0.75,1.25], max_imag_ratio ≤1e−6 (자기유사 조립 성립,
+        killed=false)"
+      observed: "killed=true. r_triv=−12.590992342777227, r_std=12.369093573739109,
+        r_[3,2]=0.2941131595478097 — 셋 다 창 밖. triv는 1단계에서 정확히 1이던 블록이
+        25-cell 2단계 조립에서 음수로 붕괴(1단계의 '정확히 1'이 두 단계에서 유지되지 않음),
+        signature N=(90,160,0)"
+      note: "사전등록 kill 발동 — 카드 refute 필수 조건"
+    - input: "P0-2 부호 규약 의존 (verify/Q-0019/F-02/adversary/b2_sign.json)"
+      expected: "카드는 부호 규약(부정부호 펜슬, |H_ind|<|H_c| 비교)이 물리적으로 유일하다고
+        암묵 전제"
+      observed: "|N|,|M| 정부호화 또는 conformal Wick 회전에서 std 0.4296818→0.7584242265954556으로
+        이동(정부호 Rayleigh 0.2411908093777172). triv 1·[3,2] 1.4723736848934101/84은 불변이지만
+        std는 규약에 따라 값이 거의 두 배로 변함"
+      note: "std 성분의 지위(수축/증폭)가 부호 규약 선택에 의존"
+    - input: "P0-3 비선형 차트 의존 (verify/Q-0019/F-02/adversary/b3_chart.json)"
+      expected: "카드는 '가법 전파자 항등식'이 길이 차트에서 정의된 정리이며 임의 좌표에서
+        불변이라 서술(F-01의 좌표 인공물 문제를 이 카드가 해결했다고 주장)"
+      observed: "s=ℓ³ 차트: (triv 1.0000421321938957×1, [3,2] 1.2059105579907032×5,
+        std 1.2332515482409292×4) — std가 1을 넘어 정성적으로 뒤집힘(수축→증폭). 넓이 차트:
+        군집 (1,4,5) 자체가 (−1.6669881664835895×5, −0.23534962691365927×1,
+        2307~2308×3)로 완전히 붕괴"
+      note: "카드가 주장한 좌표 불변성은 선형 P 켤레에서만 성립하고 비선형 재매개화에서는
+        F-01과 같은 좌표 인공물이 재발"
+    - input: "P0-4 unglued 등분할 κ·3-cell 평균 L이 숨은 자유 입력
+        (verify/Q-0019/F-02/adversary/b4_split.json)"
+      expected: "장부 항등식 ΣJᵀH_aJ=H_f 가 등분할 규약(내부 hinge 2π/3 균등분배)을 유일하게
+        고정"
+      observed: "비대칭 분배 예시 signature (19,31,0) vs (31,19,0) — 장부 항등식은
+        glue_identity_survives_any_split=2.272500897797952e−10로 모든 분배에서 성립해
+        등분할을 고정하지 못하고, 비대칭 분배는 군집 (1,4,5) 자체를 흩뜨린다"
+      note: "카드 scope의 'regular 배경에서 S_5가 분할을 유일하게 고정' 서술이 장부 항등식만으로는
+        보장되지 않음을 확인"
+  survived_checks:
+    - "완전 독립 재구현(자체 Cayley-Menger 부피·이면각·등분할 κ·자체 FD Hessian)이 카드 값
+      (0.4296818415532068×4, 1.0000000128749142×1, 1.472373684893408×5)을
+      max_dev_from_card=4.155320681986652e−08 정밀도로 재현(버그 없음)"
+    - "K2 비정규 경계 통과: ratio 1.0515/0.9923, count 5/5"
+    - "K3 좌표 불변 2.8e−15"
+    - "recovers 4종: so(4) 게이지 0, 공통 스케일 α Rayleigh 1, 코히런트 3e−7, glued 극한
+      λ≡1(BDH 2011 perfect action 재현)"
+    - "μ 항등식 잔차 1.1e−7"
+    - "배경 스케일 불변, δ 선형화 O(δ²)"
+    - "자유도 0 < 사전등록 숫자 14"
+  P1_not_triggered:
+    - "FD 불확실도: 카드 사전등록 5e−7이 h-스캔 실측 퍼짐(std 1.4762881400676164e−06,
+      [3,2] 1.8258736165233103e−06)보다 3배 이상 과소 — 마지막 자릿수 정당화 안 됨"
+    - "K3는 사다리 2단 congruence 항등식의 재진술이라 항진명제이며 발동 불가능"
+sourcer:
+  prior_art:
+    - {ref: "Bahr–Dittrich–He 2011, New J. Phys. 13, 045009, 선형화 coarse graining(Gaussian 유도 coarse Hessian)", relation: generalizes, note: "F-02는 이 관계를 일반화한다 — glued 극한(fine 공간을 15차원 glued 격자로 제한)에서 λ≡1로 복원되고(recovers), unglued cell mismatch를 허용해 μ_ρ≠0 항이 추가된다"}
+    - {ref: "Bahr–Dittrich 2009, Improved and perfect actions in discrete gravity", relation: unrelated, note: "1→5 조립 coarse graining 형태는 유사하나 mismatch 블록 증폭 스펙트럼 없음"}
+    - {ref: "Dittrich–Freidel–Speziale 2007, Linearized dynamics from the 4-simplex Regge action", relation: unrelated, note: "사다리 1단 외부기존으로만 인용, vertex displacement 게이지·선형화 Hessian"}
+  overall: novel
+  ce_specific_confirmed: "unglued mismatch의 좌표 불변 펜슬 스펙트럼 자체는 문헌에 없음(F-02가 BDH 2011을 generalize); 다만 K1 발동으로 두 단계 조립 성질은 확인되지 않았고, P0-2/P0-3으로 규약·차트 의존성이 재확인돼 문헌과의 관계는 glued 극한 한 점에서만 검증됨"
+assumptions:
+  - "카드는 '가법 전파자 항등식'이 길이 차트 안에서 정리이므로 임의의 재매개화에도 좌표 불변이
+    유지된다고 scope에 선언했으나, 비선형 차트(P0-3)에서 이 선언이 거짓으로 관측됨"
+  - "카드는 등분할 상수 κ_t의 cell간 균등 분배가 S_5 대칭으로 유일하게 고정된다고 전제했으나,
+    장부 항등식만으로는 분배가 고정되지 않음(P0-4) — S_5 대칭 자체가 분배를 고정하는지는
+    카드에서 별도로 증명되지 않은 채 규약으로 선언됨"
+  - "카드는 부정부호 펜슬의 부호 규약(|H_ind|<|H_c| 해석)이 유일한 물리적 선택이라고 암묵
+    전제했으나, 정부호화·conformal Wick 대안에서 std 값이 이동함(P0-2)"
+open_questions_spawned: []
+next_action: "같은 세션 재추측 2회 소진(F-01 반례 refute, F-02 kill refute) — after-attempt가
+  Q-0019 상태를 정한다. 구조적 교훈: 접착(glued)하면 λ≡1(perfect action, BDH 2011 재현)이고,
+  mismatch 증폭은 정의상 off-shell(unglued) 개념이라 그 증폭률은 unglued 자유도를 어떻게
+  재는가(부호 규약·차트 재매개화·등분할 측도)에 전적으로 의존한다(P0-2·P0-3·P0-4가 독립적으로
+  확인). 즉 13.8 attractor 질문은 결정론 선형화로 측도 선택을 피해 갈 수 없고, 10.10 장의
+  Ω(C)/P_micro 벽으로 되돌아간다 — 사다리 8단째가 필요해진다면 카드가 약한 신호이므로, 이
+  질문은 mismatch 증폭률을 규약-불변 방식(측도를 명시적으로 사전등록하는 방식)으로 재추측하기
+  전에는 결정론 2차 형식 경로를 재시도하지 말 것을 권고한다."

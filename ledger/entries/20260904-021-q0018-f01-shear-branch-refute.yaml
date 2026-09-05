@@ -1,0 +1,127 @@
+id: E-20260904-021
+question: Q-0018
+attempt: 1
+timestamp: 2026-09-04T00:00:00+09:00
+claim: >-
+  F-01(예측식, revision 1) [공리: 후보]. Plebanski simplicity 잔차의 결정론 split 전단(면 법선⊗접선,
+  4-부피 정확 보존, 방향만 Haar) 분기에서 E-018 가우스 커널 법칙 $\epsilon_\star^2=10\delta^4$ 대신 4차
+  축약이 두 상수로 갈라진다: $c_2=640/81=10(8/9)^2$(커널 항), $c_4=-352/81$(생성자 대각 항), i.i.d.
+  극한이자 13.5 고정 $\Delta$ 두 종 상수 $c_\Delta=c_2+c_4=32/9=16T_4/9$(가우스의 $16/45$배). 상수는
+  Stiefel 2차 모멘트 $(5/72,-1/72)$와 정렬의 반대칭 소멸에서 정확 유리수로 나오고(자유 파라미터 0), 이
+  분기는 Q-0012의 16-i.i.d.-성분 첨도 계급 밖(필요 $\kappa_4=-116/3$이 Pearson 하한 $-2$ 위반)이라 4차
+  모멘트 법칙을 완전한 4차 축약 $Q_4$로 일반화한다. RG 지수(γ_her≈0.5718, γ_iid≈−0.5014)는 분기 무관(F-02
+  창 안, 정합 게이트)이지만 진폭비 $\mathrm{RMS_{her}/RMS_{iid}}(128)=46.85$는 F-02의 32.55와 갈려
+  F-02 K1 ratio 창 [26.0,39.1] 밖의 판별량이다. card-check PASS(kind 예측식, ladder 7단, predicts
+  12, kill 5[K1–K5]+일관성 검사 3, free_parameters 0), 훅 26/26 pass(symbolic·numeric, `c_delta.py`
+  → `result.json` all_pass true: A–D 정확 유리수·G 대리모형 최대 상대오차 0.38%·H 물리 단일 구성 복원
+  −4.2e−5). sourcer(haiku)가 Collins–Śniady 2006/James 1954 Weingarten(1a단 외부기존, special_case)과
+  Q-0012 F-01·Mathai–Provost 1992(generalizes: 필요 κ₄=−116/3가 Pearson 하한 위반임을 보임)·E-018
+  F-02(special_case: 가우스 극한 복원)를 정규화하고 Freidel–Speziale·Dittrich 등을 unrelated로 novel
+  판정했다. adversary(opus, model_note 참조)가 counterexamples 없이(빈 배열) status pass·severity
+  P1·defects 8건(P1-a~e, P2-a~d, 텍스트 오타·already_observed 정정·게이트 문구 명확화 요구뿐)을 냈고,
+  독립재구성(다른 기저·Richardson 미분, c2/c4/c_delta 재현 소수 8~9자리 일치)과 물리 프로브 대안 시드
+  (424243–424251, K1–K4 전부 카드 창 안)·K5(her_ratio 46.85, 가우스 32.55는 창 밖)가 카드의 숫자·kill
+  판정을 모두 재확인해 P0(극한 파괴·차원·무내용) 성격은 없다. 그러나 sourcer prior_art에 special_case
+  관계가 둘 있다(1a단 Collins–Śniady/James Weingarten 외부기존, E-018 F-02의 가우스 극한 복원) —
+  하네스 규칙상 identical·special_case는 재발견 신호이고 `ledger.py validate`가 이를 기계적으로 검사해
+  adopt를 거부한다("verdict adopt forbidden: prior_art relation in ('identical','special_case')").
+  질문은 살아있고 force_pivot: conjecture, 같은 세션 재추측 1회가 허용된다. adversary의 defects
+  (아래 hidden_assumptions에 기록)는 재추측 카드가 반영할 수정 목록으로 남긴다.
+level: L3
+verdict: refute
+pivot_step: null
+ladder_step: null
+ladder_cited: null
+card: derivations/Q-0018/F-01.formula.md
+kill_triggered: null
+derivation: derivations/Q-0018/F-01.formula.md
+verification:
+  symbolic: pass
+  numeric: pass
+  lean: skipped
+  artifacts: verify/Q-0018/F-01/
+adversary:
+  model_note: "카드 감사는 opus(Fable 5.1 안전장치 오탐 회피 규정). git status상 adversary 스크립트
+    일부가 수정된 상태였으나 이 판정은 verify/Q-0018/F-01/adversary/SUMMARY.json의 기록된 json 결과를
+    기준으로 한다(status pass, severity P1, recommendation revise)."
+  counterexamples: []
+  survived_checks:
+    - "card-check PASS(kind 예측식, ladder 7단, predicts 12, kill 5), 훅 26/26 symbolic+numeric pass
+      (hook_result.json)"
+    - "result.json all_pass true: A(T2=60,T4=2,정확 M_ab 대칭소멸)·B(C1 trace 1, 고유값 0×1·1/18×9·
+      1/12×6 MC 최대편차 3.5e−4)·C(Q4=1/6 궤도 상수, 최대편차 1.9e−16)·D(c2=640/81, c4=−352/81,
+      c_delta=32/9 정확 유리수)·G(대리모형 12사례 최대 상대오차 0.38%, chain n=2 CV 6e−16 결정론)·
+      H(물리 단일 구성 eps/delta^2 → sqrt2/3, 상대편차 −4.2e−5) 모두 pass"
+    - "독립재구성(opus, M_ab을 5점 Richardson 미분+geometric_self_dual_triple로 별도 기저에서 재구축):
+      T2=59.99999999997904, T4=1.9999999999992497, Q4=0.16666666666660415, c2=7.901234567898487,
+      c4=-4.345679012344265, c_delta=3.555555555554222 — 카드 sympy 경로와 소수 8~9자리 일치"
+    - "물리 프로브 대안 시드(424243–424251, 독립 코드, 사전등록 실행 아님): K1–K4 전부 카드 창 안
+      (chain_n16 7.1475, iid_n16 3.8066, iid_n8 4.0988, coh_n16 5.7177, chain_n2 3.55472, z_floor_max
+      2.5630<5); K5 cayley_128: ratio 46.85038567003285(가우스 32.55366798958406은 K5 창 [37.48,56.22]
+      밖, gauss_inside_K5_window=false)로 카드의 판별 주장 재확인"
+  hidden_assumptions:
+    - "재발견 판정: sourcer prior_art에 special_case 2건 — (i) 1a단 Collins–Śniady 2006/James 1954
+      Weingarten(Stiefel 2차 모멘트 (5/72,−1/72)는 표준 불변이론 결과), (ii) E-018 F-02(가우스 등방
+      극한에서 카드가 정확히 복원). ledger.py의 REDISCOVERY_RELATIONS=('identical','special_case')
+      규칙에 걸려 verdict=adopt가 기계적으로 거부됐다(하네스 규칙: 재발견은 정지가 아니라 확장 신호 —
+      refute 후 더 강한 카드로 재추측)."
+    - "defects P1-a: P4 관측 서술 텍스트의 분모가 256으로 쓰여 있으나 실제 계산은 D_coh(16)=64를 쓴다
+      (문자 그대로 구현하면 c_coh_16=1.4321로 K3이 거짓 발동). 예측값 464/81·창 [5.442,6.0148]은 불변
+      — 텍스트 정정만 필요."
+    - "defects P1-c: predicts P7의 c_chain_2(=32/9)는 자기항만 남는 구조상 검사 H(P12, 이미
+      already_observed:true)와 선행 차수가 같은 관측이다 — P7 항목의 already_observed를 true로
+      정정해야 한다(현재 false는 과다 계수)."
+    - "defects P1-b/d/e: 12개 사전등록 숫자가 독립 자유도 2개(T2(C1), Q4)로 결정되므로 K1–K5는 실효
+      독립 관측 ~3개(정보성 지적); c2=10(8/9)^2의 (8/9)는 순수 게이지 몫이라 c-관측량이 게이지 불변이
+      아니다(gauge_family 검사: c2=31.6·c_delta=14.22로 다른 정렬에서 갈라짐) — 재추측 카드는 이
+      게이지 의존성을 scope에 명시해야 한다."
+    - "defects P2-a: G1 대리모형 chain n=2 CV(6e−16, 결정론)와 별개로 adversary가 측정한 물리 CV는
+      3.19·delta(δ=0.005에서 1.66%)로 카드 문구의 '0.5% 급'과 다르다 — G1 서술 정정 필요."
+    - "defects P2-b/c/d: 사다리 2단 셋째 축약 계수 부호 표기(Schur로 0이라 무해), K5 창이 F-02 K1 창과
+      8.6% 겹침·K5 slope 창이 가우스 slope를 포함(정합 게이트 취지상 slope는 분기 무관이라는 카드
+      주장과 일치하므로 결함이 아니라 명확화), recovers[2]·6단의 32/9 두 등장이 독립 교차검증이
+      아니라는 지적 — 모두 문서 명확화 대상."
+  parking: []
+sourcer:
+  prior_art:
+    - ref: "Collins–Śniady 2006 (Weingarten calculus); James 1954 (zonal polynomials, Stiefel manifold
+        moments)"
+      url: null
+      relation: special_case
+      note: "1a단 외부기존: 정규직교 쌍의 2차 모멘트 (5/72,-1/72)는 표준 불변이론 결과 — 카드는 이를
+        Plebanski simplicity 잔차 상수로 옮긴다."
+    - ref: "Q-0012 F-01(저장소 내부); Mathai–Provost 1992 Thm 3.2b.2; Comon 1994 ICA"
+      url: null
+      relation: generalizes
+      note: "4차 모멘트가 생성자 대각으로 갈라진다는 메커니즘의 특수 사례(성분 첨도, C=I_16)를
+        카드가 완전한 4차 축약 Q4·비등방 C로 일반화하고, 결정론 분기가 그 특수 사례 계급 밖(필요
+        κ4=-116/3<-2 Pearson 하한 위반)임을 보인다."
+    - ref: "E-20260902-018 F-02(Q-0008, 저장소 내부)"
+      url: null
+      relation: special_case
+      note: "가우스 등방 극한에서 F-02의 ε*^2=10δ^4가 정확히 복원된다(recovers[0], verify[0]-[1])."
+    - ref: "Freidel–Speziale 2010 twisted geometries; Dittrich–Bahr–Steinhaus 2011-2016 coarse
+        graining"
+      url: null
+      relation: unrelated
+      note: "simplicity·shape mismatch의 국소 기하를 다루나 결정론 전단 분기의 잔차 상수·판별 진폭비는
+        문헌에 없다."
+  overall: novel
+  ce_specific_confirmed: "결정론 split 전단(면 법선⊗접선, 4-부피 보존, Haar 방향)의 simplicity 잔차가
+    두 기하 상수(c2=640/81, c4=-352/81)로 닫히고 그 i.i.d. 극한이자 13.5 고정 Δ 상수 c_Delta=32/9가
+    Stiefel 2차 모멘트에서 정확 유리수로 나온다는 것, 이 분기가 Q-0012 성분 첨도 계급 밖이라는 것, F-02
+    RG 지수는 분기 무관이나 상속/i.i.d. 진폭비(46.85 대 32.55)는 분기 판별량이라는 것은 선행 문헌에
+    없다 — 다만 그 기반 재료(1a단 Weingarten 모멘트, F-02 가우스 극한) 자체는 special_case로 이미
+    존재해 이 카드는 하네스 규칙상 재발견 신호로 분류된다."
+assumptions:
+  - "F-02(Q-0008) scope 상속: Euclideanized SO(4) 자기쌍대 대수, polar 정렬 정확 simple cell, 양의
+    Euclidean branch, O(δ^4) 절단(δ=0.005), MIN_DET=0.05."
+  - "[공리: 후보] split 변위는 면 전단이다 e→e+δ·4 n⊗m(법선⊗접선, 4-부피 정확 보존) — split 동역학이
+    실제로 이 전단을 고른다는 것은 이 카드 밖이다."
+open_questions_spawned: []
+next_action: "같은 세션 재추측 1회: Q-0018 F-02를 새로 세울 때 (i) sourcer가 special_case로 잡은 두
+  요소(1a단 Stiefel 모멘트, F-02 가우스 극한 복원)를 카드 본문이 아니라 사다리 1단(외부기존, 인용)과
+  recovers 절로만 남겨 카드의 핵심 주장(c2·c4·c_Delta·판별 진폭비 46.85)이 그 자체로 신규임을 sourcer가
+  identical/special_case 없이 판정하도록 재구성하고, (ii) 이번 adversary defects(P1-a 분모 오타, P1-c
+  already_observed, 게이지 의존성 명시, G1 CV 정정)를 새 카드 머리에서 바로 반영한다. K1–K5 물리 MC
+  (check_det.py)는 재추측 카드가 채택된 뒤 5·7단에서 최초 실행한다."

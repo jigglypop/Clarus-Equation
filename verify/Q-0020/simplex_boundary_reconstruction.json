@@ -1,0 +1,543 @@
+{
+  "status": "면적–각 복원과 부호의 조건부 판정; 동역학적 선택은 미완성",
+  "linear": {
+    "petersen_spectrum": {
+      "1": 5,
+      "3": 1,
+      "-2": 4
+    },
+    "area_squared_jacobian_determinant": "3/67108864",
+    "closure_rank": 20,
+    "matching_rank": 20,
+    "combined_rank": 30,
+    "fixed_area_rank": 30,
+    "geometry_tangent_rank": 10,
+    "constraint_jacobian_error": 1.9354184921382966e-11,
+    "geometry_tangent_constraint_error": 8.60423954307521e-11,
+    "area_squared_jacobian_error": 0,
+    "fixed_area_smallest_singular": 0.2824540830409338
+  },
+  "reconstruction": [
+    {
+      "label": "regular",
+      "squared": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "constraints_error": 1.1102230246251565e-16,
+      "restored_edge_error": 2.220446049250313e-16,
+      "owner_edge_mismatch": 0,
+      "tetrahedron_volumes": [
+        0.11785113019775789,
+        0.11785113019775789,
+        0.11785113019775789,
+        0.11785113019775789,
+        0.11785113019775789
+      ],
+      "gram_spectrum": [
+        0.4999999999999998,
+        0.5,
+        0.5,
+        2.5
+      ],
+      "gram_determinant": 0.31250000000000006,
+      "inertia": [
+        0,
+        0,
+        4
+      ],
+      "four_angle_choice_error": 1.1102230246251565e-16,
+      "four_cosines": [
+        0.24999999999999997,
+        0.25000000000000006,
+        0.25000000000000006,
+        0.25,
+        0.25,
+        0.25000000000000006,
+        0.25000000000000006,
+        0.25,
+        0.25,
+        0.25
+      ],
+      "euclidean_action_error": 0,
+      "euclidean_gradient_error": 6.00582250598336e-10
+    },
+    {
+      "label": "perturbed",
+      "squared": [
+        1.0039733866159013,
+        1.0186407817193446,
+        1.0161699280763918,
+        0.9988325171314484,
+        0.9825684845517282,
+        0.982330906885597,
+        0.99833821194365,
+        1.0158733572769831,
+        1.0188146111335954,
+        1.0044577982820049
+      ],
+      "constraints_error": 6.661338147750939e-16,
+      "restored_edge_error": 6.661338147750939e-16,
+      "owner_edge_mismatch": 1.1102230246251565e-15,
+      "tetrahedron_volumes": [
+        0.11787903782773819,
+        0.11998876561911927,
+        0.11794484085257889,
+        0.11843279132795763,
+        0.11838134508435254
+      ],
+      "gram_spectrum": [
+        0.4856263948218855,
+        0.5029924669143605,
+        0.5118142668011064,
+        2.5371834850057327
+      ],
+      "gram_determinant": 0.31719623802202745,
+      "inertia": [
+        0,
+        0,
+        4
+      ],
+      "four_angle_choice_error": 2.498001805406602e-16,
+      "four_cosines": [
+        0.24169858288367752,
+        0.24480706483676454,
+        0.2424279099294848,
+        0.2643387674200434,
+        0.26765569348245477,
+        0.2627670309787866,
+        0.24335530302585737,
+        0.24192287011707267,
+        0.23922639593327846,
+        0.25166952136376447
+      ],
+      "euclidean_action_error": 8.881784197001252e-16,
+      "euclidean_gradient_error": 2.949713806543741e-10
+    }
+  ],
+  "signature": [
+    {
+      "label": "apex_0.3541666666666667",
+      "squared": [
+        1,
+        1,
+        1,
+        0.3541666666666667,
+        1,
+        1,
+        0.3541666666666667,
+        1,
+        0.3541666666666667,
+        0.3541666666666667
+      ],
+      "constraints_error": 2.3314683517128287e-15,
+      "restored_edge_error": 1.7208456881689926e-15,
+      "owner_edge_mismatch": 1.9984014443252818e-15,
+      "tetrahedron_volumes": [
+        0.02083333333333338,
+        0.02083333333333338,
+        0.02083333333333338,
+        0.02083333333333338,
+        0.11785113019775789
+      ],
+      "gram_spectrum": [
+        -0.01756801341088647,
+        0.4999999999999997,
+        0.5,
+        2.3717346800775525
+      ],
+      "gram_determinant": -0.01041666666666666,
+      "inertia": [
+        1,
+        0,
+        3
+      ],
+      "four_angle_choice_error": 4.884981308350689e-15,
+      "four_cosines": [
+        -2.333333333333329,
+        -2.333333333333329,
+        -2.3333333333333286,
+        1.4142135623730931,
+        -2.333333333333329,
+        -2.3333333333333286,
+        1.4142135623730934,
+        -2.3333333333333286,
+        1.4142135623730934,
+        1.4142135623730934
+      ],
+      "euclidean_action_error": null,
+      "euclidean_gradient_error": null,
+      "r2": 0.3541666666666667,
+      "height_squared": -0.020833333333333315,
+      "side_determinant_error": 6.938893903907228e-18,
+      "full_determinant_error": 1.734723475976807e-18,
+      "coordinate_reconstruction_error": 2.220446049250313e-16,
+      "time_reflection_edge_error": 0,
+      "all_edges_spacelike": true
+    },
+    {
+      "label": "apex_0.375",
+      "squared": [
+        1,
+        1,
+        1,
+        0.375,
+        1,
+        1,
+        0.375,
+        1,
+        0.375,
+        0.375
+      ],
+      "constraints_error": 1.1102230246251565e-16,
+      "restored_edge_error": 5.551115123125783e-16,
+      "owner_edge_mismatch": 1.3322676295501878e-15,
+      "tetrahedron_volumes": [
+        0.029462782549439497,
+        0.029462782549439497,
+        0.029462782549439497,
+        0.029462782549439497,
+        0.11785113019775789
+      ],
+      "gram_spectrum": [
+        4.597017211338539e-17,
+        0.4999999999999998,
+        0.5,
+        2.375
+      ],
+      "gram_determinant": 0,
+      "inertia": [
+        0,
+        1,
+        3
+      ],
+      "four_angle_choice_error": 3.3306690738754696e-16,
+      "four_cosines": [
+        -0.9999999999999994,
+        -0.9999999999999994,
+        -0.9999999999999996,
+        0.9999999999999997,
+        -0.9999999999999997,
+        -0.9999999999999996,
+        1,
+        -0.9999999999999997,
+        1,
+        1
+      ],
+      "euclidean_action_error": null,
+      "euclidean_gradient_error": null,
+      "r2": 0.375,
+      "height_squared": 0,
+      "side_determinant_error": 0,
+      "full_determinant_error": 0,
+      "coordinate_reconstruction_error": null,
+      "time_reflection_edge_error": null,
+      "all_edges_spacelike": false
+    },
+    {
+      "label": "apex_0.4",
+      "squared": [
+        1,
+        1,
+        1,
+        0.4,
+        1,
+        1,
+        0.4,
+        1,
+        0.4,
+        0.4
+      ],
+      "constraints_error": 5.273559366969494e-16,
+      "restored_edge_error": 4.996003610813204e-16,
+      "owner_edge_mismatch": 9.992007221626409e-16,
+      "tetrahedron_volumes": [
+        0.0372677996249965,
+        0.0372677996249965,
+        0.0372677996249965,
+        0.0372677996249965,
+        0.11785113019775789
+      ],
+      "gram_spectrum": [
+        0.02101738774484058,
+        0.5000000000000001,
+        0.5000000000000004,
+        2.37898261225516
+      ],
+      "gram_determinant": 0.012500000000000072,
+      "inertia": [
+        0,
+        0,
+        4
+      ],
+      "four_angle_choice_error": 8.326672684688674e-16,
+      "four_cosines": [
+        -0.4999999999999994,
+        -0.4999999999999993,
+        -0.4999999999999993,
+        0.7905694150420945,
+        -0.49999999999999895,
+        -0.49999999999999895,
+        0.7905694150420945,
+        -0.49999999999999883,
+        0.7905694150420944,
+        0.7905694150420944
+      ],
+      "euclidean_action_error": 8.881784197001252e-16,
+      "euclidean_gradient_error": 1.7460033419069987e-10,
+      "r2": 0.4,
+      "height_squared": 0.025000000000000022,
+      "side_determinant_error": 4.163336342344337e-17,
+      "full_determinant_error": 6.071532165918825e-17,
+      "coordinate_reconstruction_error": 2.220446049250313e-16,
+      "time_reflection_edge_error": 0,
+      "all_edges_spacelike": false
+    },
+    {
+      "label": "apex_1.0",
+      "squared": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "constraints_error": 1.1102230246251565e-16,
+      "restored_edge_error": 2.220446049250313e-16,
+      "owner_edge_mismatch": 0,
+      "tetrahedron_volumes": [
+        0.11785113019775789,
+        0.11785113019775789,
+        0.11785113019775789,
+        0.11785113019775789,
+        0.11785113019775789
+      ],
+      "gram_spectrum": [
+        0.4999999999999998,
+        0.5,
+        0.5,
+        2.5
+      ],
+      "gram_determinant": 0.31250000000000006,
+      "inertia": [
+        0,
+        0,
+        4
+      ],
+      "four_angle_choice_error": 1.1102230246251565e-16,
+      "four_cosines": [
+        0.24999999999999997,
+        0.25000000000000006,
+        0.25000000000000006,
+        0.25,
+        0.25,
+        0.25000000000000006,
+        0.25000000000000006,
+        0.25,
+        0.25,
+        0.25
+      ],
+      "euclidean_action_error": 0,
+      "euclidean_gradient_error": 6.00582250598336e-10,
+      "r2": 1,
+      "height_squared": 0.625,
+      "side_determinant_error": 1.1102230246251565e-16,
+      "full_determinant_error": 5.551115123125783e-17,
+      "coordinate_reconstruction_error": 2.220446049250313e-16,
+      "time_reflection_edge_error": 0,
+      "all_edges_spacelike": false
+    }
+  ],
+  "unglued": [
+    {
+      "eta": 0.05,
+      "area_change": 0,
+      "closure_error": 1.1102230246251565e-16,
+      "matching_defect": 0.03757355139872859,
+      "owner_edge_mismatch": 0.05083406843798666,
+      "changed_tetrahedron_gram_minimum": 0.4698844449979834
+    },
+    {
+      "eta": 0.2,
+      "area_change": 0,
+      "closure_error": 1.3877787807814457e-16,
+      "matching_defect": 0.14727196538476156,
+      "owner_edge_mismatch": 0.21354879960873174,
+      "changed_tetrahedron_gram_minimum": 0.371424468159203
+    }
+  ],
+  "inverse_area": {
+    "success": true,
+    "length_error": 8.43769498715119e-15,
+    "area_error": 1.1102230246251565e-15,
+    "gram_minimum": 0.4891164762644456
+  },
+  "lorentz_action": [
+    {
+      "T": 0.03,
+      "v": 0,
+      "beta": 1,
+      "coupling": 1,
+      "regge_real": -0.0006153820626982193,
+      "regge_imaginary": -5.441398092702653,
+      "regge_action_error": 7.646661082105766e-15,
+      "regge_gradient_error": 3.726186026398182e-15,
+      "regge_difference_error": 2.481782016006129e-9,
+      "scalar_action_error": 0,
+      "scalar_gradient_error": 0,
+      "scalar_volume_error": 4.868067754459915e-17,
+      "scalar_norm_error": 0,
+      "scalar_norm_relative_error": 0,
+      "total_derivative": -0.06183722950361714,
+      "derivative_formula": -0.06183722950362087
+    },
+    {
+      "T": 0.03,
+      "v": 1,
+      "beta": 1,
+      "coupling": 1,
+      "regge_real": -0.0006153820626982193,
+      "regge_imaginary": -5.441398092702653,
+      "regge_action_error": 7.646661082105766e-15,
+      "regge_gradient_error": 3.726186026398182e-15,
+      "regge_difference_error": 2.481782016006129e-9,
+      "scalar_action_error": 2.7033930649622562e-14,
+      "scalar_gradient_error": 2.7000623958883807e-12,
+      "scalar_volume_error": 4.868067754459915e-17,
+      "scalar_norm_error": 1.2232703738845885e-10,
+      "scalar_norm_relative_error": 1.1009433364961297e-13,
+      "total_derivative": -16.430049756972693,
+      "derivative_formula": -16.430049756969996
+    },
+    {
+      "T": 0.1,
+      "v": 0,
+      "beta": 1,
+      "coupling": 1,
+      "regge_real": -0.024661826231031525,
+      "regge_imaginary": -5.441398092702653,
+      "regge_action_error": 1.1102230246251565e-16,
+      "regge_gradient_error": 5.551115123125783e-16,
+      "regge_difference_error": 2.6976698652703135e-10,
+      "scalar_action_error": 0,
+      "scalar_gradient_error": 0,
+      "scalar_volume_error": 4.336808689942018e-19,
+      "scalar_norm_error": 0,
+      "scalar_norm_relative_error": 0,
+      "total_derivative": -0.785729844094251,
+      "derivative_formula": -0.7857298440942504
+    },
+    {
+      "T": 0.1,
+      "v": 1,
+      "beta": 1,
+      "coupling": 1,
+      "regge_real": -0.024661826231031525,
+      "regge_imaginary": -5.441398092702653,
+      "regge_action_error": 1.1102230246251565e-16,
+      "regge_gradient_error": 5.551115123125783e-16,
+      "regge_difference_error": 2.6976698652703135e-10,
+      "scalar_action_error": 8.326672684688674e-17,
+      "scalar_gradient_error": 1.9984014443252818e-15,
+      "scalar_volume_error": 4.336808689942018e-19,
+      "scalar_norm_error": 7.105427357601002e-14,
+      "scalar_norm_relative_error": 7.105427357601003e-16,
+      "total_derivative": -2.2588689715662227,
+      "derivative_formula": -2.258868971566224
+    },
+    {
+      "T": 0.14433756729740646,
+      "v": 0,
+      "beta": 1,
+      "coupling": 1,
+      "regge_real": -0.08293286466867511,
+      "regge_imaginary": -5.441398092702653,
+      "regge_action_error": 2.886579864025407e-15,
+      "regge_gradient_error": 2.6645352591003757e-15,
+      "regge_difference_error": 1.020107998073172e-9,
+      "scalar_action_error": 0,
+      "scalar_gradient_error": 0,
+      "scalar_volume_error": 1.734723475976807e-18,
+      "scalar_norm_error": 0,
+      "scalar_norm_relative_error": 0,
+      "total_derivative": -2.000381460668202,
+      "derivative_formula": -2.000381460668205
+    },
+    {
+      "T": 0.14433756729740646,
+      "v": 1,
+      "beta": 1,
+      "coupling": 1,
+      "regge_real": -0.08293286466867511,
+      "regge_imaginary": -5.441398092702653,
+      "regge_action_error": 2.886579864025407e-15,
+      "regge_gradient_error": 2.6645352591003757e-15,
+      "regge_difference_error": 1.020107998073172e-9,
+      "scalar_action_error": 8.326672684688674e-17,
+      "scalar_gradient_error": 1.2212453270876722e-15,
+      "scalar_volume_error": 1.734723475976807e-18,
+      "scalar_norm_error": 5.684341886080802e-14,
+      "scalar_norm_relative_error": 1.1842378929335006e-15,
+      "total_derivative": -2.7074882418547506,
+      "derivative_formula": -2.707488241854752
+    },
+    {
+      "T": 0.19,
+      "v": 0,
+      "beta": 1,
+      "coupling": 1,
+      "regge_real": -0.23776232093528904,
+      "regge_imaginary": -5.441398092702653,
+      "regge_action_error": 0,
+      "regge_gradient_error": 1.9539925233402755e-14,
+      "regge_difference_error": 4.652921603565119e-9,
+      "scalar_action_error": 0,
+      "scalar_gradient_error": 0,
+      "scalar_volume_error": 1.734723475976807e-18,
+      "scalar_norm_error": 0,
+      "scalar_norm_relative_error": 0,
+      "total_derivative": -5.653078946176537,
+      "derivative_formula": -5.653078946176517
+    },
+    {
+      "T": 0.19,
+      "v": 1,
+      "beta": 1,
+      "coupling": 1,
+      "regge_real": -0.23776232093528904,
+      "regge_imaginary": -5.441398092702653,
+      "regge_action_error": 0,
+      "regge_gradient_error": 1.9539925233402755e-14,
+      "regge_difference_error": 4.652921603565119e-9,
+      "scalar_action_error": 1.3877787807814457e-17,
+      "scalar_gradient_error": 2.7755575615628914e-16,
+      "scalar_volume_error": 1.734723475976807e-18,
+      "scalar_norm_error": 1.4210854715202004e-14,
+      "scalar_norm_relative_error": 5.130118552187923e-16,
+      "total_derivative": -6.061150726639688,
+      "derivative_formula": -6.061150726639668
+    }
+  ],
+  "dependencies": {
+    "simplex_boundary_reconstruction.py": "cacbc60e2f8187f1f2b8c4ab2b2202c65d81fb7a364def4e8973ea2a5d520ff4",
+    "regge_tent_transfer.py": "e509b0b583a99258730650584e812d9b6f097383629b4e855636c8e87c710f71",
+    "regge_lorentz_clock.py": "78c73eb545264e86b0cf757d1d646871f9eff1e9dbfd7a89cec600eac720eda1"
+  },
+  "sources": [
+    "https://arxiv.org/abs/0802.0864v3",
+    "https://arxiv.org/abs/0907.2440"
+  ]
+}

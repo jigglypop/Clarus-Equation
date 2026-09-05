@@ -1,0 +1,41 @@
+{
+  "mode": "two_level",
+  "cells": 25,
+  "lambda2_clusters": {
+    "triv": {
+      "lambda2": -12.590992342777227,
+      "multiplicity": 1
+    },
+    "[3,2]": {
+      "lambda2": 0.6376033046692976,
+      "multiplicity": 5
+    },
+    "std": {
+      "lambda2": 2.2836618269757825,
+      "multiplicity": 4
+    }
+  },
+  "lambda2_level1": {
+    "triv": 1.0,
+    "std": 0.4296818,
+    "[3,2]": 1.4723737
+  },
+  "lambda2_over_lambda1_squared": {
+    "triv": -12.590992342777227,
+    "std": 12.369093573739109,
+    "[3,2]": 0.2941131595478097
+  },
+  "max_imag_ratio": 0.0,
+  "signature_N": {
+    "pos": 90,
+    "neg": 160,
+    "zero": 0
+  },
+  "rank_M": 10,
+  "kill_window": [
+    0.75,
+    1.25
+  ],
+  "reality_tol": 1e-06,
+  "killed": true
+}

@@ -1,0 +1,57 @@
+{
+  "gauge_gTNg": [
+    [
+      3.745730574600259e-07,
+      8.012668306633941e-11,
+      -1.4163870076799867e-10,
+      -4.681104393000624e-10
+    ],
+    [
+      8.012468466489509e-11,
+      3.738637497363584e-07,
+      1.0930687466270683e-09,
+      -3.5894620609155936e-11
+    ],
+    [
+      -1.416389228126036e-10,
+      1.0930691907162782e-09,
+      3.7708069688946466e-07,
+      -1.5482548576528643e-09
+    ],
+    [
+      -4.681113274784821e-10,
+      -3.589573083218056e-11,
+      -1.5482550796974692e-09,
+      3.705774118678562e-07
+    ]
+  ],
+  "gauge_gTNg_norm": 7.480669933084362e-07,
+  "gauge_Ng_norm": 29.43920242526246,
+  "gauge_is_null_of_unglued_N": true,
+  "gauge_Ng_itself_norm": 29.43920242526246,
+  "gauge_is_exact_null_vector": false,
+  "gauge_note": "g^T N g ~ 0 (2.5e-8) but N g is NOT zero (norm below). So g spans a NULL CONE direction of the indefinite form, not a kernel. The unglued Gaussian does not literally diverge along g, but the quadratic form vanishes there: exp(-kappa/2 * 0) = 1, flat direction => the DENOMINATOR integral is divergent along g regardless. Both numerator and denominator are formal.",
+  "m_by_gauge_convention": {
+    "gauge_in_numerator_only": {
+      "m": 39,
+      "lstar2": 62.06884225954214
+    },
+    "gauge_in_both (cancels)": {
+      "m": 35,
+      "lstar2": 55.70280715599935
+    }
+  },
+  "lstar2_relative_spread": 0.10256410256410259,
+  "rank_check": {
+    "rank_Gam": 35,
+    "rank_[Gam;g]": 39,
+    "independent": true
+  },
+  "normalization_constants": {
+    "kappa_prefactor": "1/(8 pi)  from S = S_geo/(8 pi G)",
+    "16pi2_origin": "delta normalization convention: (2pi)^{-m/2} kappa^{m/2} with kappa=l^2/(8 pi lP^2) gives -(m/2)ln(16 pi^2) when written as m ln(l/lP)",
+    "check_2pi_times_8pi": 157.91367041742973,
+    "equals_16pi2": true,
+    "verdict": "16 pi^2 = 2pi * 8pi exactly: the constant is entirely a delta-normalization + action-normalization artifact, as the card admits. It fixes Gamma_min and l_Omega but not lstar."
+  }
+}

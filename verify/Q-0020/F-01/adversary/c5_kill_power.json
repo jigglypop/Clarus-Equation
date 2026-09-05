@@ -1,0 +1,78 @@
+{
+  "fd_step_scan_level1": {
+    "h=0.004": {
+      "d_R": 7.482015926815549,
+      "d_W": 4.197570460145197,
+      "m": 39,
+      "cond_N": 80.05643178102265
+    },
+    "h=0.002": {
+      "d_R": 7.482042027338306,
+      "d_W": 4.197596512637077,
+      "m": 39,
+      "cond_N": 80.05618655005362
+    },
+    "h=0.001": {
+      "d_R": 7.4820436441008455,
+      "d_W": 4.197598122139984,
+      "m": 39,
+      "cond_N": 80.05617315727814
+    },
+    "h=0.0005": {
+      "d_R": 7.482043733905756,
+      "d_W": 4.19759820427469,
+      "m": 39,
+      "cond_N": 80.05617975350606
+    }
+  },
+  "fd_spread_level1": {
+    "d_R_max_minus_min": 2.780709020644423e-05,
+    "d_W_max_minus_min": 2.7744129492468517e-05
+  },
+  "k1_noise_estimate": {
+    "level1_m": 39,
+    "fd_spread_per_39_modes_R": 2.780709020644423e-05,
+    "per_mode_R": 7.130023129857494e-07,
+    "total_modes_in_residual": 468,
+    "projected_residual_noise_R": 0.00033368508247733075,
+    "K1_tol": 0.01,
+    "noise_exceeds_tol": false
+  },
+  "k4_noise_estimate": {
+    "per_mode_W": 7.11387935704321e-07,
+    "projected_residual_noise_W": 0.0003329295539096222,
+    "K4_min": 0.01,
+    "noise_alone_can_exceed_K4_min": false,
+    "note": "K4 kills the card only if |r_W| < 1e-2. If FD noise alone is >1e-2, K4 can NEVER fire => K4 has zero power (auto-pass)."
+  },
+  "cond_note": "N is block diagonal (per-cell 10x10); cond(N_250) = max over cells ~ same as level-1. The 250-dim issue is mode COUNT (234), not conditioning.",
+  "k3_scan": {
+    "amp=0.05": {
+      "S_hat_c": 7.881086601826562,
+      "lstar2_ratio": 1.001877737771235,
+      "in_window": true
+    },
+    "amp=0.1": {
+      "S_hat_c": 7.836432017784515,
+      "lstar2_ratio": 1.0075867688123554,
+      "in_window": true
+    },
+    "amp=0.15": {
+      "S_hat_c": 7.761097745914386,
+      "lstar2_ratio": 1.0173670625361928,
+      "in_window": true
+    },
+    "amp=0.2": {
+      "S_hat_c": 7.653650284085235,
+      "lstar2_ratio": 1.0316495949959519,
+      "in_window": true
+    }
+  },
+  "k3_random20": {
+    "n": 20,
+    "min": 1.0025380692057526,
+    "max": 1.009264746332174,
+    "frac_in_window": 1.0,
+    "note": "ratio depends ONLY on S_hat_c(irregular) since m is fixed at 39; K3 tests the coarse action, not the fold volume."
+  }
+}

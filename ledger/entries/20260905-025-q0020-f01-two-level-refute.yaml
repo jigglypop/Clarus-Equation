@@ -1,0 +1,57 @@
+id: E-20260905-025
+question: Q-0020
+attempt: 2
+timestamp: 2026-09-05T00:00:00+09:00
+claim: >-
+  [산출] F-01 사전등록 K1 발동으로 카드를 기각한다.
+  r_R=direct.d_R-level1.d_R-sum(subcell.d_R)=-21.793173995710767,
+  허용오차 0.01, direct.m=m_composed=234다. K4는 미발동이다.
+  K2와 K3도 사전등록 seed 20260902의 단일 불규칙 경계에서 미발동이며
+  일반 불규칙 경계에 대한 정리가 아니다. 전체 중력 브리지 목표는 유지한다.
+level: L2
+verdict: refute
+pivot_step: null
+ladder_step: 6
+card: derivations/Q-0020/F-01.formula.md
+kill_triggered: K1
+derivation: derivations/Q-0020/conditional_composition.derivation.md
+verification:
+  symbolic: skipped
+  numeric: pass
+  lean: skipped
+  artifacts: verify/Q-0020/
+adversary:
+  counterexamples:
+    - input: "F-01 사전등록 two_level; 원 카드와 원 소스는 counterexample.json에 보존"
+      expected: "abs(r_R)<=0.01, direct.m=m_composed=234"
+      observed: "r_R=-21.793173995710767; m=234; K1=true"
+  survived_checks:
+    - "K2·K3: 사전등록 단일 경계에서 미발동"
+    - "K4: r_W=5.691629178068638로 미발동"
+    - "별도 양의 측도 조건부 합성: 잔차 1.8829382497642655e-13"
+sourcer:
+  summary: "Gaussian 조건부 합성은 표준 정리의 적용이다. 아래 문헌은 CE 4D 측도 고유성을 증명하지 않는다."
+  references:
+    - https://arxiv.org/abs/1011.3667
+    - https://arxiv.org/abs/1110.6866
+conditional_results:
+  - status: "[정리: 조건부]"
+    claim: "공급한 양의 정부호 공분산에서 결합 Gaussian 제약 밀도는 첫 제약 밀도와 조건부 다음 밀도의 곱이다."
+    assumptions: "동일 전역 측도, 독립 선형 제약, 고정 제약 좌표와 정규화"
+  - status: "[산출]"
+    claim: "25-cell W 측도에서 전역/국소/나머지 rank=234/195/39, 합성 잔차 1.88e-13, d_W=-12.6391691353152."
+    ceiling: "나머지 39방향과 원 level-1 물리적 coarse map의 동일성은 미증명"
+  - status: "[정리: 조건부]"
+    claim: "s>0, 양의 고윳값, 스케일과 독립인 상대 분해능 eps 아래 soft-fold 비용은 유일한 최소 t_star<4*pi*m/s를 갖는다."
+    boundary: "고정 절대 길이 분해능이면 eps는 t^(-1/2)에 비례하여 접힘 비용은 상수다. s>0이면 유한 양의 최소는 없다."
+  - status: "[산출]"
+    claim: "m=234, eps=0.1/1/10에서 t_star=293.2056541002403/115.22060549044843/22.333602683642923."
+    ceiling: "사후 진단이며 독립 예측이나 물리적 척도 유도가 아니다."
+unfinished:
+  - "물리적 상위 길이 사상 및 제약 정규화/게이지 야코비안"
+  - "분해능 법칙과 양의 측도의 독립 물리 유도"
+  - "공통 계량 집중, Lorentzian 극한, 연속 중력 브리지"
+assumptions:
+  - "전역 W 양의 측도, 무차원 길이 변동, 고정 직교 제약 좌표를 외부 공급한다."
+  - "유한 분해능 정류점에는 양의 경계 비용 및 스케일과 독립인 상대 분해능을 추가로 가정한다."
+next_action: "전역 미시 측도에서 물리적 상위 길이 사상과 분해능 법칙을 함께 유도하고 공통 계량 선택을 시험한다."

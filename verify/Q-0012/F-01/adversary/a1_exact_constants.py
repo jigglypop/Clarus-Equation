@@ -24,7 +24,7 @@ PAIRS = [(0, 1), (0, 2), (0, 3), (2, 3), (3, 1), (1, 2)]   # must match _PAIR_IN
 
 
 def check_pair_index():
-    from examples.physics.causal_face_simplicity import _PAIR_INDEX
+    from examples.physics.gravity.causal_face_simplicity import _PAIR_INDEX
     assert list(_PAIR_INDEX) == PAIRS, f"_PAIR_INDEX mismatch: {list(_PAIR_INDEX)}"
 
 

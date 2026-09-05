@@ -3,7 +3,7 @@ import math
 
 import pytest
 
-from examples.physics.kinetic_dark_sector_adiabatic_stress import (
+from examples.physics.darksector.kinetic_dark_sector_adiabatic_stress import (
     _gaussian_q3_tail_moment,
     CertifiedInfraredPowerLaw,
     CertifiedPowerLawTail,
@@ -25,7 +25,7 @@ from examples.physics.kinetic_dark_sector_adiabatic_stress import (
     time_dependent_mass_counterterm,
     trace_squeezed_flrw_mode_stress,
 )
-from examples.physics.kinetic_dark_sector_backreaction import (
+from examples.physics.darksector.kinetic_dark_sector_backreaction import (
     MeanFieldFLRWBackground,
     MeanFieldFLRWBackgroundNode,
     ModeRecomputedSemiclassicalResponse,
@@ -35,7 +35,7 @@ from examples.physics.kinetic_dark_sector_backreaction import (
     project_squeezed_ensemble_frozen_constraints,
     solve_squeezed_state_difference_mean_field_fixed_point,
 )
-from examples.physics.kinetic_dark_sector_flrw_mode import (
+from examples.physics.darksector.kinetic_dark_sector_gate import (
     FLRWModeSpec,
     solve_flrw_mode,
 )

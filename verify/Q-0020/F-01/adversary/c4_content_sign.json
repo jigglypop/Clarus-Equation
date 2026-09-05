@@ -1,0 +1,41 @@
+{
+  "stationary": {
+    "S_c>0 (module convention)": {
+      "lstar2": 62.06884225954214,
+      "real_stationary_point_exists": true,
+      "gamma_monotone_decreasing": false,
+      "gamma_at_l=0.1": 181.03186390413725,
+      "gamma_at_l=100": 3053.2991718097333,
+      "argmin_index_interior": true
+    },
+    "S_c<0 (GHP S_E=-S_geo/8piG)": {
+      "lstar2": null,
+      "real_stationary_point_exists": false,
+      "gamma_monotone_decreasing": true,
+      "gamma_at_l=0.1": 181.02558055832634,
+      "gamma_at_l=100": -3230.0466391078758,
+      "argmin_index_interior": false
+    }
+  },
+  "sign_flip_kills_lstar": true,
+  "competition": {
+    "entropy_dominant_range": "l < lstar = 7.878 lP",
+    "action_dominant_range": "l > lstar",
+    "gamma_min_over_hbar_R": 30.227143106956248,
+    "gamma_min_positive": true,
+    "note": "Gamma_min > 0 : Omega_fold < 1 at the crossover, i.e. the fold volume NEVER beats the action at block level. 'Competition' is only in the derivative, not in which term wins.",
+    "ln_Omega_at_lstar_R": -10.727143106956248,
+    "Omega_lt_1_at_lstar": true
+  },
+  "budget_parts_count": 2,
+  "conserved_by_is_identity": {
+    "claim": "(2pi)^{-m/2} det(K^T N^-1 K)^{-1/2} kappa^{m/2} and Schur det ratio = prod(1-sigma^2)",
+    "verified_numerically_in_c1": true,
+    "tautology_risk": "The Schur ratio identity is a linear-algebra theorem (true for any N,K), not a physical constraint. It constrains nothing about the physics; it only certifies the code computed the same object two ways."
+  },
+  "lstar_independent_of_c": {
+    "dGamma/dl": "S l/(4pi) - m/l, c drops out",
+    "true": true,
+    "but": "lstar depends on m (convention: gauge in numerator) and on |S_c| (sign convention)"
+  }
+}

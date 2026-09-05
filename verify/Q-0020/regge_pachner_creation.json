@@ -1,0 +1,109 @@
+{
+  "status": "[산출]",
+  "scope": "공급한 경계 2→3 기하와 길이 측도의 조건부 준비 대조",
+  "source_sha256": "68c5f330bd2e4732970e5b9379f3fdbd86e236fe301a45521eea0663d04e3705",
+  "geometry_source_sha256": "e509b0b583a99258730650584e812d9b6f097383629b4e855636c8e87c710f71",
+  "counts": {
+    "old_edges": 14,
+    "new_edges": 15,
+    "old_triangles": 16,
+    "new_triangles": 19
+  },
+  "new_edge_interval": [
+    0.0,
+    1.632993161855452
+  ],
+  "classical_cases": [
+    {
+      "z": 0.1,
+      "curvature": 1.3704614844717777,
+      "increment": -2.254382220125419,
+      "new_momentum": 2.834856717252645,
+      "action_residual": 8.881784197001252e-16,
+      "gradient_residual": 6.280369834735101e-16,
+      "curvature_formula_residual": 6.661338147750939e-16,
+      "inverse_residual": 1.0007415106216802e-16
+    },
+    {
+      "z": 0.3,
+      "curvature": 0.9614110187641025,
+      "increment": -1.3628812662559315,
+      "new_momentum": 2.580408676225665,
+      "action_residual": 6.661338147750939e-16,
+      "gradient_residual": 8.881784197001252e-16,
+      "curvature_formula_residual": 9.992007221626409e-16,
+      "inverse_residual": 6.206335383118183e-17
+    },
+    {
+      "z": 0.7071067811865475,
+      "curvature": 8.881784197001252e-16,
+      "increment": -0.05873677501938568,
+      "new_momentum": 1.0852184130224136,
+      "action_residual": 4.440892098500626e-16,
+      "gradient_residual": 9.155133597044475e-16,
+      "curvature_formula_residual": 6.661338147750939e-16,
+      "inverse_residual": 2.7755575615628914e-17
+    },
+    {
+      "z": 0.8,
+      "curvature": -0.28379410920832715,
+      "increment": 0.0621593009941086,
+      "new_momentum": 0.4894128515686407,
+      "action_residual": 2.220446049250313e-15,
+      "gradient_residual": 4.965068306494546e-16,
+      "curvature_formula_residual": 8.881784197001252e-16,
+      "inverse_residual": 0.0
+    },
+    {
+      "z": 0.95,
+      "curvature": -0.9356754682118527,
+      "increment": 0.04599120663263667,
+      "new_momentum": -0.5900596344218125,
+      "action_residual": -1.3322676295501878e-15,
+      "gradient_residual": 9.42055475210265e-16,
+      "curvature_formula_residual": 8.881784197001252e-16,
+      "inverse_residual": 0.0
+    }
+  ],
+  "preparations": {
+    "uniform": {
+      "norm_squared": 0.9999999999999992,
+      "curvature_mean": 0.4292036732051071,
+      "constraint_residual_squared": 0.0
+    },
+    "first": {
+      "norm_squared": 0.9999999999999966,
+      "curvature_mean": 0.4910783300958491,
+      "constraint_residual_squared": 3.7500000000000173
+    },
+    "second": {
+      "norm_squared": 0.9999999999999964,
+      "curvature_mean": 0.18231973885245445,
+      "constraint_residual_squared": 5.249999999999983
+    }
+  },
+  "exact_curvature_means": {
+    "uniform": 0.42920367320510344,
+    "first": 0.4910783300958528,
+    "second": 0.18231973885245623
+  },
+  "preparation_overlap": [
+    0.9354143466934821,
+    -2.7755575615628914e-17
+  ],
+  "mismatched_inverse_probability": 0.874999999999994,
+  "mismatched_projection_loss": 0.12499999999999958,
+  "projector_idempotence_residual": 3.5020825915323815e-15,
+  "quadrature_order_convergence": 1.5987211554602254e-14,
+  "curvature_exact_residual": 3.6637359812630166e-15,
+  "alternatives": {
+    "phase_only": "유한 구간의 균등 준비는 정규화되고 내부 제약 잔차가 0이다. 위상으로 켤레화한 주기 운동량의 자기수반 도메인을 별도로 택하면 허용할 수 있다.",
+    "dirichlet_preparations": "두 다항 준비는 각자 등거리 삽입과 영상 위 역을 갖지만 같은 정확한 양자 제약의 해가 아니다. 도함수 노름은 제약 잔차이며 물리 에너지가 아니다.",
+    "coarse_graining": "J†J=I는 준비된 영상에서의 복원이다. JJ†는 사영이며 임의 새 상태 전체의 항등연산자가 아니다. 환류·환경 초기화 장치는 아직 공급되지 않았다."
+  },
+  "unfinished": [
+    "일반 기존 길이 변동에서 구간·정규화의 의존성과 이전 운동량 제약의 양자 연산자 처리",
+    "물리 측도·경계조건·초기 준비·방출·환류 및 질량·시간의 같은 작용 유도",
+    "공통 계량의 동역학적 선택과 0D에서 3+1 Plebanski/Einstein으로 가는 전체 다리"
+  ]
+}

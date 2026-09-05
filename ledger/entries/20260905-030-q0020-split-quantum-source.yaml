@@ -1,0 +1,316 @@
+id: E-20260905-030
+question: Q-0020
+attempt: 7
+claim: '[정리: 조건부] Q-0016에 저장된 자식 증분의 위치 공분산은 명시적인 가우시안 정준 변환으로 실현할 수 있다. 위치와 운동량을 동시에 복사하고 증분 합을 모두 0으로 두는 확장은 완전양성 행렬의 고유값 -(k-1)/2 때문에 불가능하다. 위치만 같은 법칙으로 상속하는 변환은 부모의 압축과
+  보조 진공의 압축·직교혼합을 공급하면 가능하다. 생성된 차이 모드의 점유를 E-028의 독립 반무한 진공 환경에 전달하면 결합 규약에 따라 잔류량이 달라진다. 미시 작용 고리 자체를 닫은 결과는 아니다. 준비 항목 확장: 고정된 위치 공분산과 같은 에너지 간격에서 이 순수 가우시안이 최소 자유 에너지를
+  달성한다. 반복 분할의 하한은 B_D~D*k^D/2이므로 명시한 닫힌 자원 장부에서 같은 유한 배터리로 모든 깊이를 실현하는 경로는 배제된다.'
+level: L2
+verdict: continue
+derivation: derivations/Q-0020/conditional_composition.derivation.md
+card: null
+ladder_step: null
+verification:
+  symbolic: skipped
+  numeric: pass
+  lean: skipped
+  artifacts: verify/Q-0020/split_quantum_source.json
+  command: .codex/hooks/python.cmd pytest tests/test_split_quantum_source.py -q
+  result: 24 passed
+adversary:
+  counterexamples:
+  - input: k>=2, X=1_k tensor I2, Y=(nu P) tensor I2, nu=k/(k-1), P=I-11^T/k
+    expected: 고전 증분 합 보존을 위치와 운동량 양쪽으로 확장한 양자 채널
+    observed: 공통 모드의 완전양성 행렬 고유값은 +/-(k-1)/2. 유한 얽힘 참조 입력에서도 출력 불확정성 위반. 고전 위치 규칙 자체는 반박하지 않는다.
+  survived_checks:
+  - '실제 split_C 및 split_labels에 기저 입력을 넣어 공분산 검사: k=2,3,4,9,12, 최대 잔차1.42e-15'
+  - 공급된 정준 변환의 위치 잡음과 저장 공분산 일치7.72e-16 이하, 정준 형식 보존9.0e-16 이하
+  - 얽힌 참조 상태에서 위치 전용 변환의 출력 불확정성 양성, 위치·운동량 동시 복사는 음성
+  - 64모드 유한 사슬에서 전체 공분산과 점유 진폭 항등식·전체 들뜸수 보존의 최대 잔차1.08e-14
+  - 수기 독립 수학 감사로 차이 점유·반무한 환경 잔류값 확인; 기계 기호검산 또는 Lean 증명은 미실행
+  - 13개 반복 분할의 원본 고전 공분산과 정준 합성 일치 최대3.64e-14; 등호 에너지 잔차2.85e-14
+  - 임의 교차 공분산을 더하는 물리 정준 전단에서도 고정Q 에너지가 하한보다 커짐; 뿌리 분산1/2와1을 별도로 검사
+definitions:
+- 무차원 정준 좌표 [q,p]=i, 진공 공분산 I2/2. 한 부모를 대체하는 k개의 현재 모드만 양자 출력으로 해석
+- P=I-11^T/k, nu=k/(k-1); 자식 위치=q_parent+eta, Cov(eta)=nu P
+- 위치 전용 채널 X의 자식별 블록은 diag(1,1/k); Y의 위치 블록 nu P, 운동량 블록 P/(4nu), 교차 블록0
+- 모든 입력이 진공인 자유 에너지 검산에서는 N=(q^2+p^2-1)/2, E_exc=hbar*omega*N; 같은 주파수의 k개 진공 기준
+assumptions:
+- 부모 공통 위치 이득sqrt(k), 운동량 이득1/sqrt(k); 각 차이 보조 모드 공분산 diag(nu,1/(4nu))의 순수 압축 상태와 직교혼합을 공급
+- 위치 분포의 상속식은 임의 부모 입력에 적용되지만 총 준비 들뜸수 수치는 부모까지 진공인 경우
+- 상태 준비 후 각 차이 모드에 독립 수보존 반무한 사슬을 연결하며 초기 상태는 모드와 진공 환경의 곱
+- 환경 내부 이동 에너지 g>0, 모든 진동자의 공통 에너지10g, 무차원 시간gt/hbar. 수치 비교 k=2,3,4,9,12에서는 전체 한 입자 스펙트럼 양수
+- 쌍 결합 eta=g이면 유효 결합제곱 k; eta=g/sqrt(k)이면1. 두 결합 규약 모두 추가 입력
+- 반무한 환경을 먼저 정의한 뒤 장시간 평균. 유한 사슬 계산은 점유 항등식 검산이며 무한시간 방출의 증명이 아님
+- '준비 에너지 하한: 고정된 양의 위치 공분산 Q, 독립 정준 좌표 [q_i,p_j]=i delta_ij, 공통 각진동수 omega>0 및 에너지 간격 hbar*omega. 비가우스 상태와 임의의 위치·운동량 교차 공분산도 허용'
+- '반복 분할: 완전 k진 트리 깊이D, 현재 잎수n=k^D. 각 부모에 같은 독립 단위 주변 분산의 합0 증분을 더하며, 분할 사이에 병합이나 환경 방출을 넣지 않음'
+- 각 분할에 필요한 추가 모드는 진공으로 공급하고 부모를 현재 자식 모드로 대체한다. 역사 속 부모를 별도의 현재 정준 모드로 더하지 않음
+- '배터리 제약: 처음 배정된 모든 계 모드는 진공(v0=1/2), H_b>=0, [U,H_sys+H_b]=0, H_sys=hbar*omega sum a_dagger a. 초기 배터리 밖의 시계·펌프·외부 일 저장고는 없음'
+- 원본 Q-0016 고전 뿌리 분산1은 진공 뿌리 분산1/2와 다름. v0=1을 쓰면 뿌리 상태의 준비 에너지를 별도로 포함
+conditional_results:
+- status: '[정리: 조건부]'
+  claim: 명시한 압축·혼합은 정준 변환이며 기존 고전 자식 위치 잡음을 정확히 재현한다. Q-0016의 모든 역사 라벨을 독립 동시 정준 모드로 선언하지 않는다.
+- status: '[산출]'
+  claim: 차이 모드당 초기 들뜸수 N0=(k+1)^2/[8k(k-1)]. 모든 입력이 진공이면 출력의 전체 자유 들뜸수는 (3k^2-2k+3)/(8k), k=2/3/4에서11/16,1,43/32.
+- status: '[정리: 조건부]'
+  claim: 수보존 선형 진공 환경에서 N(t)=N0|A(t)|^2는 한 들뜸 부분공간에 제한되지 않는 기대값 항등식이다. 초기 상관 또는 열 환경에서는 같은 식을 적용하지 않는다.
+- status: '[산출]'
+  claim: 차이 모드 전체의 장시간 평균 점유는 결합제곱k에서 k=3은1/12, k=4는25/144. 결합제곱1이면0. 점유 소멸은 위치 분산의 진공 바닥1/2를 없애지 않는다.
+- status: '[정리: 조건부]'
+  claim: 모든 유한 이차 모멘트 상태의 고정 위치 공분산Q>0에서 운동량 공분산P_mom>=Q^-1/4. 따라서 평균 총 점유수는 (trQ+trQ^-1/4-n)/2 이상이며 교차 공분산0인 순수 가우시안이 등호를 달성한다. 일반 준비 작업의 최소 일을 뜻하지 않는다.
+- status: '[산출]'
+  claim: 완전 k진 반복 분할의 마지막 잎 공분산Q_D는 고유값nv0 하나와, r=1..D마다 nu*k^(D-r)를 다중도(k-1)k^(r-1)로 갖는다. trQ_D=n(v0+D), trQ_D^-1=1/(nv0)+(k-1)/(k+1)*(n-1/n).
+- status: '[산출]'
+  claim: 진공 뿌리 v0=1/2에서 최소 점유 B_D=n(D-1/2)/2+(k-1)(n-1/n)/(8(k+1))+1/(4n), 점근값 D*k^D/2. E-030 국소 정준 변환의 반복이 등호를 달성한다. k=2,D=2/3에서103/32,663/64.
+source_boundary:
+- Q-0016의 고전 증분 정의만 재사용한다. 기각된 F-01 물리 카드를 부활시키거나 Q-0017의 독립 평균 병합 가설과 혼합하지 않음
+- 표준 가우시안 채널과 정준 변환의 적용이며 새로운 CE 공리·예측 또는 문헌 신규성 주장 없음
+- Weedbrook et al., Gaussian Quantum Information, Rev. Mod. Phys. 84,621(2012), arXiv:1110.3234 식109. 원문의 진공 공분산I 규약을 여기의I/2로 환산. https://arxiv.org/abs/1110.3234
+- 위 고정Q 최적화는 Weedbrook 외 arXiv:1110.3234 식17의 일반 공분산 불확정성을 I/2 진공 규약으로 환산한 직접 귀결. 준비 작업 최소일이나 신규 CE 법칙을 주장하지 않음
+audit_limitations:
+- fold_ledger 수학·원장 초안, code_map 실제 소스 조사·안정 코드 읽기 감사, root 단독 구현과 수치 실행
+- 자유 들뜸수는 이 특정 준비의 진공 위 자유 에너지이며 최소일 정리나 자율 보존 에너지 예산이 아님
+- 압축 펌프·보조 상태·환경·스위칭 준비 에너지의 공급원을 계산하지 않음
+unfinished:
+- 실제 미시 작용이 상태 준비 에너지를 공급하는 방식과 물리 정준 좌표의 정의
+- 같은 작용이 eta(k)/g(k), 초기 환경 및 응답을 고정한다는 유도
+- 공통 계량 선택과 0D→3+1 Plebanski/Einstein
+next_action: 실제 split/merge 후보의 생성·병합·환류와 준비·환경 에너지를 같은 상태 및 미시 작용에서 계산하고, 그 작용이 잡음과 eta(k)/g(k)를 고정하여 공통 계량을 선택하는지 판정한다. 고정 간격·유한 배터리 후보는 B_D 하한과 비교하며, 간격이나 잡음 법칙을 바꾸면 독립된
+  물리 근거를 제시하고 하한을 다시 계산한다. 자원 환류 자체를 정렬의 증거로 승격하지 않는다.
+timestamp: '2026-09-05T05:31:42+09:00'
+resource_bound:
+  status: '[정리: 조건부]'
+  claim: 명시한 진공 입력·동일 에너지 간격·배터리 외 자원 없음·에너지 보존 조건에서는 E_b(initial)>=hbar*omega*B_D. 고정Q 최적화와 명시한 닫힌 에너지 장부의 필요조건이며 CE의 보편 에너지 예산이 아니다.
+  new_result_scope: 기존 E-030의 준비 에너지 고리를 확장. 새 질문·카드·사다리·E번호를 개설하지 않음
+  numeric_cases: 13
+  max_position_covariance_residual: 3.64e-14
+  max_minimum_number_residual: 2.85e-14
+  fraction_checks: 이진 깊이0,1,2,3,16,32의 계층 고유값 다중도·trace·역trace를 정확한 유리수로 검산
+finite_battery_exclusion:
+  status: '[정리: 조건부]'
+  claim: 병합·환류·간격 변화·외부 자원 없이 동일한 유한 초기 평균 에너지의 배터리로 위의 분할을 모든 깊이에서 실현할 수 없다. B_D가 발산하기 때문이다.
+  sharp_cutoff: 초기 총 자유 에너지의 지지집합에 유한한 상한까지 있으면 비자명한 정확한 압축 가우시안 출력은 무한한 점유수 꼬리 때문에 준비할 수 없다. 평균 에너지가 유한하다는 것만으로는 유한 지지집합을 뜻하지 않는다.
+  boundary: 고정 공분산만 지정하는 일반 비가우스 상태와 특정한 정확 가우시안 상태를 구분한다. 고전 라벨·CE 전체·모든 유한 깊이 프로토콜·주파수 재척도화·새 잡음 법칙을 기각하지 않는다.
+updated_at: '2026-09-05T18:02:29+09:00'
+continuum_environment:
+  status: '[정리: 조건부]'
+  scope: '원장 §2의 준비·환경 장부: E-030의 k=3 압축 차이 모드를 상한 없는 연속 환경에 준비한 뒤의 국소 방출'
+  definitions:
+  - '[정의] 에너지 단위 E_*, 무차원 시간 tau=E_*t/hbar; h는 C|0>+L2(R_+,dx)에서 h00=epsilon, 환경 에너지=x, J(x)=kappa*x*exp(-x)'
+  - '[정의] H/E_*=dGamma(h)+u*n0(n0-1)/2; u=U/E_*'
+  assumptions:
+  - '[공리] epsilon>kappa>0, u>=0; 초기 실제 분할 차이 모드와 진공 환경의 곱, J와 E_*를 외부에서 공급'
+  - '[공리] 유한 사슬의 공통 간격10g를 쓰는 E-030과 달리 환경은 [0,infinity)의 연속 에너지를 갖는다. 이 스펙트럼 변경의 CE 기원은 미유도'
+  - '[공리] 무한 환경을 먼저 정의한 뒤 장시간 극한을 취한다. 지수 꼬리의 double 반올림은 정확한 물리적 절단이 아니다'
+  conditional_results:
+  - status: '[정리: 조건부]'
+    claim: u=0이면 순환성과 순수 절대연속 스펙트럼에 의해 실제 전체 압축 초기상태의 국소 점유 <n0(t)>가 0으로 간다.
+  - status: '[정리: 조건부]'
+    claim: u>0이면 N=2의 측도 rho2=rho0*rho0와 rank-one 분모가 특이 잔류를 배제한다. 완비 파동연산자와 자유 강국소소멸로 <n0(t)>_{N=2}->0.
+  - status: '[산출]'
+    claim: k=3은 N0=1/3, p2=sqrt(3)/16. 수 보존으로 u>0 전체 초기상태의 limsup<n0(t)> <= 1/3-sqrt(3)/8=0.11682698238722367. 등호나 완전 방출은 주장하지 않는다.
+  - status: '[산출]'
+    claim: 초기 에너지는 E_init/E_*=epsilon*N0+u*(3*N0^2+N0)/2이고 kappa와 무관하다. epsilon=2,u=8,k=3이면10/3. 같은 H의 기대값이며 준비를 자율적으로 구현한 결과가 아니다.
+  - status: '[산출]'
+    claim: 선형 국소 점유가 0으로 가도 무차원 위치 분산은 진공값1/2로 간다. 계량 불일치의 정확한 소멸과 동일시하지 않는다.
+  proof_dependency:
+  - 'Kato 1957 Theorem 1: 자기수반 연산자의 유계 자기수반 rank-one 차이에 대한 파동연산자 완비성. https://doi.org/10.3792/pja/1195525063'
+  - verify/Q-0020/continuum_bath.py 모듈 설명의 순환성, 실축 resolvent 경계값, N=2 측도 및 자유 강국소소멸 증명
+  verification:
+    symbolic: skipped
+    numeric: pass
+    lean: skipped
+    artifacts: verify/Q-0020/continuum_bath.json
+    command: .codex/hooks/python.cmd pytest tests/test_continuum_bath.py -q
+    result: 14 passed
+    evidence: Hamiltonian 모멘트 최대오차3.56e-15; 독립 주값 적분오차4.45e-16 미만; 별형128모드의 tau<=5 진폭오차3.39e-9 미만
+    boundary: 유한 수치 적분은 무한 시간 증명의 대체물이 아니다. 기존 E-030 검증24개는 별도 범위로 보존
+  source_boundary:
+  - 표준 Friedrichs 및 trace-class 산란 이론의 조건부 적용. 새 CE 물리 후보·공리·관측 예측의 채택이 아님
+  - 초기 평균 에너지 계산은 자율 준비, 병합, 환류 또는 순환 일의 증명이 아니다
+  unfinished:
+  - u>0인 실제 압축 초기상태의 N>=4 다체 산란과 완전 국소 방출
+  - 실제 CE 불일치 좌표에서 환경 채널로 가는 사상 및 공통 방향 보존
+  - 같은 자율 미시 작용에서 준비·병합·환류·잡음·결합 법칙과 공통 계량 선택을 유도
+energy_transport:
+  status: '[정리: 조건부]'
+  scope: 'E-030의 명시적 정준 분할 S와 공급한 양의 이차 에너지 형식 G_in의 전달; 자유 단위 진동자 에너지·자율 생성자·공간 해석과 구분'
+  definitions:
+  - '[정의] R_out=S R_in, H/(hbar*omega)=R^T G R/2, [q,p]=i. 에너지와 초과 에너지의 단위는 hbar*omega'
+  assumptions:
+  - 'S는 E-030의 명시적 가역 정준 변환, G_in은 공급한 양의 대칭 형식'
+  - '첫 단계 입력은 부모와 k-1개 보조 모드의 독립 단위 진동자 형식 I; k는 2 이상의 정수'
+  - '자식별 독립성은 서로 다른 자식의 q,p 교차항 부재이며 공간적 국소성이나 공간 차원을 뜻하지 않음'
+  conditional_results:
+  - status: '[정리: 조건부]'
+    claim: '위 전제에서 G_out=S^{-T}G_inS^{-1}는 모든 입력의 이차 에너지를 보존하는 유일한 양의 대칭 출력 형식이다. 이는 S의 자율 해밀토니안 생성, 해밀토니안 전환 일 또는 제어기를 유도하지 않는다.'
+  - status: '[산출]'
+    claim: '독립 단위 진동자 입력의 첫 분할 자식 교차항은 q에서 (3-k)/(2k^2), p에서 (k-3)/(k-1)이므로 k=3에서만 동시에 0이다. k=3의 둘째 분할에서 부모 G=diag(1/3,3)와 새 보조의 단위 형식은 q,p 교차항 -2/27,2를 낸다.'
+  - status: '[산출]'
+    claim: '둘째 3진 분할에서 보조 해밀토니안 형식을 부모와 맞추면 자식별 형식은 diag(1/9,9)이다. 기존 진공 상태를 쓰면 차이 방향의 q 잡음 분산은 1.5이고 보조 두 개의 바닥 에너지 위 준비 들뜸은 2/3이다. 새 형식의 바닥상태를 쓰면 들뜸은 0이나 q 잡음 분산은 4.5다. 해밀토니안 변경과 상태 변경은 별개다.'
+  - status: '[정리: 조건부]'
+    claim: '진공 뿌리의 전체 깊이 D에서 E-030 현재 잎 위치 공분산 Q_D에 대한 전달 형식은 G_q=(2Q_D)^(-1), G_p=2Q_D이고, 전달된 순수 공분산은 그 형식의 바닥상태다. 이는 원래 단위 자유 진동자 형식에서의 E-030 고정-Q 준비 하한을 제거하지 않는다.'
+  verification:
+    symbolic: skipped
+    numeric: pass
+    lean: skipped
+    artifacts: verify/Q-0020/split_energy_transport.json
+    command: .codex/hooks/python.cmd pytest tests/test_split_energy_transport.py -q
+    result: 15 passed in 0.17s
+    independent_math_audit: pass
+    independent_code_audit: pass
+    evidence: '첫 분할 4개와 현재 잎 6개 구성에서 에너지·공분산 항등식 최대 잔차 5.95e-14 미만'
+  source_boundary:
+  - '표준 정준 좌표변환을 저장된 E-030 분할에 적용한 조건부 결과. 새 CE 물리 후보·공리·관측 예측·문헌 신규성의 주장이 아님'
+  - 'Weedbrook et al., Gaussian Quantum Information, arXiv:1110.3234의 가우시안 정준 변환 배경. https://arxiv.org/abs/1110.3234'
+  unfinished:
+  - 'CE의 국소 미시 작용에서 분할·병합·환류를 생성하고 해밀토니안 전환과 보조 상태 준비의 에너지 원천을 계산'
+  - '환경 결합, 물리 정준 좌표와 공간 해석 및 공통 계량 선택'
+autonomous_split:
+  status: '[정리: 조건부]'
+  scope: '공급한 분할 등거리 사상 V, 부모·자식 부문 에너지와 충전 배터리 아래의 시간 독립 단일 분할·역병합; 영구 분할·전역 트리와 구분'
+  definitions:
+  - '[정의] [q,p]=i, 에너지 단위 hbar*omega, tau=omega*t, kappa=g/(hbar*omega). U^dagger R U=S R, V psi=U(psi tensor vacuum^(k-1)), H_P=hbar*omega*(N+1/2), H_C=U*hbar*omega*(sum N+k/2)*U^dagger'
+  - '[정의] Delta_0=(k-1)/2, H_B=b*hbar*omega*|1><1|, W|P,1,psi>=|C,0,Vpsi>. 나머지 부분공간에서 W=0. H_free=(H_P direct_sum H_C) tensor I_B + I tensor H_B, H_tot=H_free+g(W+W^dagger)'
+  assumptions:
+  - 'k>=2 정수, omega>0, g>0, b>=0. U, 부모·자식 부문 에너지, 절대 모드수 바닥 차이, 비국소 등거리 결합 W, 초기 부모 상태와 충전 배터리를 공급'
+  - '바닥 에너지 차이는 채택한 부문 해밀토니안의 입력이며 CE 또는 중력에서 보편적으로 유도한 값이 아님'
+  - '좌표 검산은 전달된 Hermite 파동함수의 이차 미분 방정식을 검사. 수치 시간 진화의 총 점유 제한은 H_free, W, W^dagger의 정확한 불변 부분공간이며 원래 자유 Fock 기저에서 가우시안을 절단한 것이 아님'
+  conditional_results:
+  - status: '[정리: 조건부]'
+    claim: 'H_C V=V(H_P+hbar*omega*Delta_0). W는 유계 부분 등거리 사상이므로 H_tot은 자기수반이며 하한 유계다. b=Delta_0이면 [H_free,W]=0이고 tau=pi/(2*kappa)에서 완전 분할한다. 초기 부모와 외부 참조계의 얽힘에도 같은 선형 사상이 적용된다.'
+  - status: '[정리: 조건부]'
+    claim: '공명에서 tau=pi/kappa이면 부모 부문과 충전 배터리가 복귀하고 부모 상태에는 자유 진화가 남는다. 상호작용 표현에서는 정확한 왕복이며, 자식·기록을 남기는 순생성 순환은 아니다. Im(V) 밖의 보조 들뜸은 W와 결합하지 않으므로 임의 자식 상태를 병합하지 않는다.'
+  - status: '[산출]'
+    claim: 'delta=Delta_0-b이면 P_max=kappa^2/(kappa^2+delta^2/4). kappa=1/4,b=0에서 k=2/3/4는 각각 1/2,1/5,1/10이다. 에너지 단위 hbar*omega에서 초기 부모·충전 배터리 상태의 변화는 Delta E_osc=Delta_0*P, Delta E_b=-b*P, E_int=-(Delta_0-b)*P이며 합은 0이다.'
+  - status: '[산출]'
+    claim: '완전 k진 깊이 D에서 새 모드의 바닥 차이를 합한 장부는 (k^D-1)/2이다. JSON은 3진 깊이0..5를 표본으로 남긴다. 이 합은 전역 자율 트리의 구현도, 기존 고정-Q 자유에너지 하한 B_D의 대체물도 아니다.'
+  verification:
+    symbolic: skipped
+    numeric: pass
+    lean: skipped
+    artifacts: verify/Q-0020/autonomous_split.json
+    command: .codex/hooks/python.cmd pytest tests/test_autonomous_split.py -q
+    result: 20 passed in 0.15s
+    source_parse: 2 pass
+    max_residual: 2.220446049250313e-15
+    independent_code_audit: pass
+    independent_math_audit: pass
+  source_boundary:
+  - '시간 독립 Rabi형 완전 전달과 두 준위 배터리 장부를 기존 분할 사상에 적용한 결과. CE 국소 작용·새 공리·예측·물리 후보의 채택이 아님'
+  - 'Horodecki and Oppenheim, arXiv:1111.3834: 유한계 열역학의 일반 상태변환 및 두 준위 일 저장소의 배경. https://arxiv.org/abs/1111.3834'
+  - 'Christandl et al., quant-ph/0309131: 시간 독립 결합의 완전 상태전달 선례. 임의 V의 국소 실현 정리는 아님. https://arxiv.org/abs/quant-ph/0309131'
+  unfinished:
+  - '분할 후 자식을 유지하는 환경·기록과 병합·환류를 동일 자율 작용에 넣고, 초기 충전·상태 준비와 환경 결합의 에너지 원천을 계산'
+  - '전역 트리 해밀토니안, CE 국소 작용, 물리 공간 해석, 공통 계량 선택과 0D→3+1 Plebanski/Einstein'
+autonomous_split_continuum:
+  status: '[정리: 조건부]'
+  scope: '공급한 V·부문 에너지·충전 배터리와 연속 환경 아래 시간 독립 단일 분할의 자식 부문 점근 유지; 정지 상태·포인터 기록·영구 선택과 구분'
+  definitions:
+  - '[정의] E_*=hbar*omega, tau=omega*t, Delta_0=(k-1)/2, epsilon=b-Delta_0. 환경은 C|vac> direct_sum L^2(R_+,dx), v(x)=sqrt(c*x*exp(-x)), c>0이다. c는 결합 벡터의 노름 제곱이며 앞 Rabi 모형의 kappa와 다르다.'
+  - '[정의] 활동 부문에서 H_full/E_*=H_P/E_*+Delta_0+h, h=[[epsilon,<v|],[|v>,x]]. W_v=(|C,0>V<P,1|) tensor |v><vac|이고 H_full=H_free+E_*(W_v+W_v^dagger)다. 나머지 부문은 자유 진화한다.'
+  assumptions:
+  - 'V와 H_C V=V(H_P+E_*Delta_0), b, 비국소 결합·환경 형상함수·부문 바닥 오프셋, 초기 부모 상태·충전 배터리·비점유 환경을 공급'
+  - '엄격 점근 결과에는 epsilon>c>0과 무한 연속 환경을 먼저 정의한 뒤 장시간 극한을 취하는 순서가 필요하다'
+  conditional_results:
+  - status: '[정리: 조건부]'
+    claim: 'epsilon>c>0이면 공급한 H_full은 자기수반이고 하한 유계이며 활동 부문의 endpoint 스펙트럼은 순수 절대연속이다. 따라서 P_C(t)->1이다. 자식 부문에서 환경을 trace한 비정규화 상태는 P_C(t)V rho_psi(t)V^dagger이며 외부 참조 정보는 이 분할 영상에서 유지된다.'
+  - status: '[산출]'
+    claim: '에너지 단위 E_*에서 Delta E_osc=Delta_0 P_C, Delta E_b=-bP_C, E_out+E_int=epsilon P_C다. 엄격 경우 장시간에는 E_out->epsilon, E_int->0이며 합 에너지 장부가 닫힌다. 초기 배터리에 저장해 공급하는 에너지는 bE_*이고 부모 평균 에너지도 입력이다. 초기 준비 과정이나 그 일의 전역 최솟값을 유도한 것이 아니다.'
+  - status: '[산출]'
+    claim: '간격만 충전한 대조 epsilon=0,c=1/4에서는 bound energy z=-0.17953414265366063, endpoint 스펙트럼 원자 질량 w=0.8244304111543549, 점근 부모 확률 w^2=0.6796855028361386이다. 이는 엄격 충분조건 epsilon>c를 만족하지 않는 대조이며 임계 epsilon=c의 판정은 아니다.'
+  verification:
+    symbolic: skipped
+    numeric: pass
+    lean: skipped
+    artifacts: verify/Q-0020/autonomous_split_continuum.json
+    command: .codex/hooks/python.cmd pytest tests/test_autonomous_split_continuum.py -q
+    result: 17 passed in 0.54s
+    source_parse: 2 pass
+    max_residual: 4.941291820159677e-11
+    independent_math_audit: pass
+    independent_code_audit: pass
+  source_boundary:
+  - 'Friedrichs형 결합상태의 배경은 Miyamoto, quant-ph/0510058v1 §§II–III. 이 형식의 엄격 절대연속성과 점근 결과는 자체 유도이며 새 CE 후보·공리·예측의 채택이 아니다. https://arxiv.org/abs/quant-ph/0510058v1'
+  unfinished:
+  - '임계 epsilon=c, 환경의 분할 사건 표지에서 물리 포인터 라벨·측정 선택·기하 정렬로 가는 사상'
+  - '실제 분할·기하 불일치의 미시 작용에서 V와 환경 결합을 정하고, 자식을 유지하는 반복 분할의 초기 준비·충전·재충전·병합·환류를 같은 장부에 연결'
+  - '전역 트리, CE 국소 작용, 물리 공간 해석, 공통 계량과 0D→3+1 Plebanski/Einstein'
+quadratic_generator:
+  status: '[정리: 조건부]'
+  scope: '보조 진공을 보존하는 수동 회전으로 같은 분할 등거리 사상 V를 내는 k=2,3의 양의 시간 독립 이차 생성자; 원래 지정 전체 S와 공간적 국소 작용을 구분'
+  definitions:
+  - '[정의] [q,p]=i, H_gen/E_*=R^T K R/2, tau=E_*t/hbar, J=direct_sum [[0,1],[-1,0]]. 원래 전체 S의 q 블록 행렬식 절댓값은 sqrt(k)*(2k/(k-1))^((k-1)/2)이다.'
+  - '[정의] S_prime=S(I_parent direct_sum R_anc), R_anc은 각 보조 모드의 수동 회전이다. 보조 진공에서 S_prime은 V의 출력을 전역 위상까지 보존한다.'
+  assumptions:
+  - '초기 k개 모드와 보조 진공, 수동 회전각, 조밀한 결합과 판독 시간 tau=1을 공급'
+  - 'k=2에는 보조각 2pi/3, k=3에는 13pi/9와 4pi/5를 택한다'
+  conditional_results:
+  - status: '[정리: 조건부]'
+    claim: '지정된 원래 전체 S는 q 블록 행렬식 절댓값이 1보다 커서 단위원 고유값만 갖는 exp(JK), K>0의 형태가 될 수 없다. 이는 같은 V를 주는 모든 전체 정준 실현의 불가능성이 아니다.'
+  - status: '[정리: 조건부]'
+    claim: '위 R_anc를 넣은 S_prime은 k=2,3에서 단위원 위 단순 비실수 고유값을 갖는다. 유리수 구간 증명서로 y=lambda+lambda^(-1)의 모든 근을 (-2,2)에 가둔다. 정준 고유기저 T와 양의 회전각 theta_j로 K=T^(-T) diag(theta_1,theta_1,...,theta_k,theta_k) T^(-1)>0를 잡으면 exp(JK)=S_prime이다.'
+  - status: '[산출]'
+    claim: '각 회전각에 2pi*n을 더하면 같은 V에 서로 다른 양의 K를 얻는다. n=0/1의 진공 초기 상태가 해당 생성자 바닥 위에 갖는 에너지는 E_* 단위로 k=2에서 2.06881034918/6.86368672579, k=3에서 4.57672614688/15.04738179561이다. 이는 실제 준비 일의 최솟값이 아니라 서로 다른 H_gen에서 평가한 에너지 차이다.'
+  - status: '[산출]'
+    claim: 'n=0에서 k=2,3의 최소 K 고유값은 각각 0.19101247,0.07909879이다. 진공 입력에 외부 H_0->H_gen->H_0 전환을 택하고 H_0/E_*=R^T R/2로 고정하면 순 전환 일은 k=2에서 11/16, k=3에서 1로 n과 무관하다. 켜는 일과 끄는 일은 각각 달라지며 전환 자체는 자율적이지 않다.'
+  verification:
+    symbolic: skipped
+    numeric: pass
+    lean: skipped
+    artifacts: verify/Q-0020/split_quadratic_generator.json
+    command: .codex/hooks/python.cmd pytest tests/test_split_quadratic_generator.py -q
+    result: 21 passed in 0.28s
+    source_parse: 2 pass
+    max_residual: 1.322194054309205e-13
+    exact_root_interval_certificate: '정수·유리수 구간 연산; CAS·Lean·부동소수점 증명서 미사용'
+    independent_math_audit: pass
+    independent_code_audit: pass
+  source_boundary:
+  - '지정 S의 장애를 동일 V의 모든 실현으로 확대하지 않는다. 이 k=2,3 증인은 기존 저장 분할의 조건부 구현이며 새 CE 물리 후보·공리·예측의 채택이 아니다.'
+  - 'Gaussian 정준변환과 수동 보조 변환의 배경: Weedbrook et al., Gaussian Quantum Information, arXiv:1110.3234. https://arxiv.org/abs/1110.3234'
+  unfinished:
+  - '초기 모드·보조 상태·시계의 자율 준비, 방출 환경과 자식 유지, 충전·병합·환류를 하나의 작용으로 결합'
+  - '결합의 기하 불일치 기원, 공간적 국소성, 일반 k, 공통 계량과 0D→3+1 Plebanski/Einstein'
+autonomous_split_clock:
+  status: '[정리: 조건부]'
+  scope: '기존 k=2,3의 같은 분할 사상을 공급한 위치시계로 구현하고, 전달된 출력 해밀토니안 아래 분할 부분공간을 보존하는 조건부 작용'
+  definitions:
+  - '[정의] x=X/L_*, P=L_*p/hbar, tau=E_*t/hbar, mu=M E_*L_*^2/hbar^2, [x,P]=i. G=R^T K R/2, H_0/E_*=R^T R/2, U_f=exp(-i f(x)G), H_out=U_1 H_0 U_1^dagger.'
+  - '[정의] f=0(x<=0), f=1(x>=L), 중간 z=x/L에서 f=10z^3-15z^4+6z^5. H_tot/E_*=U_f[P^2/(2mu)+H_0/E_*]U_f^dagger. 정의역은 자유 총 해밀토니안 정의역의 U_f 상으로 정한다.'
+  assumptions:
+  - '[공리: 검증 모형] 위 H_tot 하나를 추가한 선택은 paper/진전_원장.md §2의 닫힘 예산 §2(c)에 기록한다. k=2,3의 G, f, 시계의 질량·폭·거리·운동량, 기존 모드와 보조 진공, 입력 및 출력 에너지 형식을 공급한다.'
+  - '시계 초기 상태는 평균 위치 -d, 위치 표준편차 sigma, 평균 운동량 p0>0, 운동량 분산 1/(4sigma^2)의 최소불확정 Gaussian이다. 내부·참조계와 독립인 유한 시각의 곱 입력이다.'
+  - '구별도 상계와 별도로 이 곱 입력의 유한 전체 에너지를 주장하려면 <G^2>가 유한해야 한다. 수치 에너지 표본의 내부 입력은 모든 모드 진공이다.'
+  conditional_results:
+  - status: '[정리: 조건부]'
+    claim: 'H_tot은 자기수반·양이며 시간 독립이다. 전개식의 운동항은 (P+f_prime G)^2/(2mu)이고 G^2 사차항을 포함한다. 양의 운동량 지지의 정규화 입사 상태에서는 점근적으로 같은 V를 구현한다. 이는 유한 시각에 완전히 왼쪽에 지지된 곱 입력 조건과 같지 않다.'
+  - status: '[정리: 조건부]'
+    claim: 'H_out V=V[H_P+E_*(k-1)/2]이므로 출력 자유 진화는 Im V 안에 머물며 부모의 자유 위상을 보존한다. 상태 정지나 U_1 자체의 Im V 불변성을 주장하지 않는다. 감김 수가 달라도 U_1은 전역 위상만 달라 H_out은 동일하고 중간 G와 결합은 달라질 수 있다.'
+  - status: '[정리: 조건부]'
+    claim: '임의 부모·참조 입력에 대해 D(tau)<=min{1,2sqrt(Phi(-d/sigma))+2sqrt(Phi((L+d-p0*tau/mu)/sqrt(sigma^2+tau^2/(4mu^2 sigma^2))))}. D는 실제 진화와 U_1을 적용한 자유 진화 목표 사이의 구별도 ||rho-sigma||_1/2이다. 첫 확률은 초기 X>0 위치 꼬리, 두 번째는 자유 시계의 X<L 확률이며 tau>=0에서 감소한다.'
+  - status: '[산출]'
+    claim: 'sigma=1,d=8,p0=4,mu=L=1에서 D의 위 상계는 tau>=6.5573이면 0.001 이하이다. 경계 시각의 수치값은 6.55721541274647. tau=8,16,32의 상계는 2.2043748198e-4,4.2886970932e-6,5.2838740613e-7이다. 상계의 극한 9.9767414113e-8은 실제 오차 하한이 아니다.'
+  - status: '[산출]'
+    claim: '시계 운동에너지는 8.125 E_*다. 초기 위치 꼬리의 교차항·G^2·전달된 퍼텐셜을 포함한 전체 진공 곱 입력 에너지는 k2의 감김0/1에서 9.12500000000001/9.125000000000071 E_*, k3에서 9.625000000000023/9.625000000000194 E_*다. sigma=mu=L=1,d=p0=1의 겹침 대조에서 k2의 같은 출력 H_out에도 초기 에너지는 6.39664370548747/45.88185026936151 E_*로 달라진다.'
+  - status: '[정리: 조건부]'
+    claim: '완전제곱의 양의 (f_prime G)^2/(2mu) 항만 제거한 이차형식은 하한이 없다. chi=4/sqrt(5)*sin(pi*x)^3 (0<x<1)와 G의 한 정상 모드 점유수 n을 U_f로 변환한 상태족에서 완전식 에너지는 n에 선형이고, 제거항은 양의 이차식이다. 이 반례는 원래 양의 작용이나 다른 자율 시계 전체를 기각하지 않으며 제거된 작용 자체의 시간 독립 에너지 보존을 부정하지 않는다.'
+  verification:
+    symbolic: skipped
+    numeric: pass
+    lean: skipped
+    artifacts: verify/Q-0020/autonomous_split_clock.json
+    command: .codex/hooks/python.cmd pytest tests/test_autonomous_split_clock.py -q
+    result: 16 passed in 0.59s
+    source_parse: 2 pass
+    independent_math_audit: pass
+    independent_code_audit: pass
+    max_transport_residual: 7.077685404653677e-14
+    grid_state_residual: 6.986714945430784e-15
+    grid_energy_residual: 3.552713678800501e-15
+    grid_scope: '65점 시계·비가환 2차원 내부계·2차원 참조의 직접 행렬 진화. 실제 k2/3 연속 산란이나 무한 시간 증명과 구별'
+  source_boundary:
+  - 'Woods, Silva, Oppenheim, Autonomous quantum machines and the finite sized Quasi-Ideal clock, arXiv:1607.04591v4. 자율 제어의 일반 배경이며 위 위치시계 작용이나 CE 유도의 출처로 쓰지 않는다. https://arxiv.org/abs/1607.04591v4'
+  - '유니터리 좌표 변환 자체의 신규성을 주장하지 않는다. 기존 E-030 분할에 대한 유한 독립 시계의 오차·에너지 검산이며 새 CE 물리 후보 또는 관측 예측을 채택하지 않는다.'
+  unfinished:
+  - '시계와 보조 진공을 준비하는 장치·에너지 원천, 출력 형식의 기하학적 기원, 고정 자유 에너지 장부에서의 충전·병합·환류 및 방출 환경과 합성'
+  - '물리 공간의 국소성, 일반 k·전역 트리, 공통 계량 선택, 0D→3+1 Plebanski/Einstein와 여덟 성공 게이트'

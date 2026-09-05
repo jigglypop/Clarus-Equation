@@ -16,8 +16,8 @@ for p in (ROOT, ROOT / "verify" / "Q-0012" / "F-01", ROOT / "verify" / "Q-0008" 
     sys.path.insert(0, str(p))
 
 from check_cumulant import gram_form, linear_map, quadratic_tensor, tl  # noqa: E402
-from examples.physics.causal_face_simplicity import _PAIR_INDEX, geometric_self_dual_triple, plebanski_gram  # noqa: E402
-from examples.physics.urbantke_shape_matching_rg import optimal_internal_alignment  # noqa: E402
+from examples.physics.gravity.causal_face_simplicity import _PAIR_INDEX, geometric_self_dual_triple, plebanski_gram  # noqa: E402
+from examples.physics.gravity.urbantke_shape_matching_rg import optimal_internal_alignment  # noqa: E402
 
 SEED = 20260902
 REF = geometric_self_dual_triple(np.eye(4))

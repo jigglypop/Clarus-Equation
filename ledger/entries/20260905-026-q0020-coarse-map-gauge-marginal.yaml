@@ -1,0 +1,1425 @@
+id: E-20260905-026
+question: Q-0020
+attempt: 3
+timestamp: 2026-09-05T00:00:00+09:00
+claim: >-
+  [산출] 정규 25단체에서 명시적 상위 변 길이 평균 사상은 국소 제약 뒤의
+  55자유도를 상위 길이 50개와 보이지 않는 내부 방향 5개로 분리한다.
+  상위 접착과 직접 접착의 부분공간 잔차는 1.38e-14다.
+  공급한 W 양의 측도를 두 게이지 절단면에 각각 제한하면 경계 공분산이
+  상대 Frobenius 노름 0.0013046764만큼 다르다. 남은 게이지 명명 방향 4개를
+  적분하면 두 절단면의 경계 공분산이 동일한 주변 공분산과 2.0e-14 이내에서 일치한다.
+level: L2
+verdict: continue
+pivot_step: null
+ladder_step: null
+card: null
+derivation: derivations/Q-0020/conditional_composition.derivation.md
+verification:
+  symbolic: skipped
+  numeric: pass
+  lean: skipped
+  artifacts: verify/Q-0020/coarse_length_map.json
+adversary:
+  counterexamples:
+    - input: "양의 정밀도 [[2,1],[1,2]], 물리 좌표 q, 제거 좌표 u"
+      expected: "u=0과 u=q 절단면에서 q 분산이 같다는 일반 명제"
+      observed: "각각 1/2와 1/6. u 적분 뒤에는 두 좌표계 모두 2/3."
+  survived_checks:
+    - "상위 길이 rank50, 국소 잔여55, 내부 방향5"
+    - "두 게이지 절단면의 기하학적 대표 변환 잔차 9.16e-15"
+    - "표준 슈어 적분 뒤 경계 공분산 일치 2.0e-14"
+assumptions:
+  - "유클리드 비퇴화 정규 배경의 1→5→25 중점 분할과 고정 변 길이 좌표"
+  - "부모 변의 자식 단체별 발생 길이 평균, 접착하면 발생값이 같음"
+  - "W=직합 |H_a|의 양의 정밀도를 외부 공급, kappa=1"
+  - "남은 게이지로 명명한 방향은 W의 영방향이 아니며 확률적 제거 변수로 적분함"
+conditional_results:
+  - status: "[정리: 조건부]"
+    claim: "양의 Gaussian에서 제거 방향 전체를 적분한 물리적 선형 관측량의 분포는 대표 절단면을 바꾸어도 같다. 슈어 보완과 좌표 Jacobian을 포함한다."
+  - status: "[정리: 조건부]"
+    claim: "양의 정부호 정밀도는 비영 평행이동 방향을 게이지 영방향으로 가질 수 없다. 방향 g의 비용 g^T N g는 양수다."
+  - status: "[산출]"
+    claim: "현재 4개 조정 게이지 방향의 비용 행렬 고윳값은 모두 약58.83903으로 양수다."
+  - status: "[산출]"
+    claim: "국소 게이지까지 포함해 모든 내부 변수를 적분한 25단체/5단체 경계 공분산은 상대 노름 0.226694777만큼 다르며, 비의 고윳값은 0.67305498(5중),0.77790725(4중),1.16080682(1중)다."
+    ceiling: "해당 정규 배경의 공급된 W 처방에 대한 사후 수치 진단이다. 단일 스칼라 재정규화로 일치하지 않으며 일반 중력 이론에 대한 부정 정리가 아니다."
+regge_tent_transfer:
+  status: '[산출]'
+  target_link: 'Q-0020의 실제 기하 작용에서 경계 전달을 정하는 고리. 기존 분할 V와 새 모드 생성은 미유도다.'
+  scope: '공급한 평탄 유클리드 천막 이동의 경계 길이 정준 전달과 두 단계 합성'
+  definitions:
+    - '무차원 길이 ell/ell_star, S/hbar=beta*S_hat_Regge; S_hat_Regge=sum_boundary A(pi-sum theta)+sum_internal A(2pi-sum theta). beta=ell_star^2/(8pi ell_P^2), 검산값 beta=1.'
+    - '입·출력 별 모서리 각각 5개, 천막변 1개가 동적 변수이며 이웃 길이 9개는 고정한다. 각 단계는 삼각쌍뿔 연결 구조의 6개 4차원 단체다.'
+    - 'A,B,C는 천막변을 제거한 경계 Hessian의 블록이다. Y는 정점 변위의 길이 미분, e는 Y에 직교하는 단위 벡터다. 길이 섭동 q=e Q, 배경 운동량을 뺀 p의 몫 P=e^T p를 쓴다.'
+    - 'p_in=-A q_in-B q_out, p_out=B^T q_in+C q_out. a=e_in^T A e_in, b=e_in^T B e_out, c=e_out^T C e_out.'
+  assumptions:
+    - '[공리: 검증 모형] 공유 길이, 전역 평탄 R4 매장과 유클리드 가지, beta를 공급한다. 경계 외재 곡률은 허용하며 원시 Y^T p_bar=0을 요구하지 않는다.'
+    - '[공리: 검증 모형] 단위 벡터 몫과 L^2(dQ)에서 exp(i S/hbar) 진동 양자화를 별도로 택한다. 물리 질량과 좌표 척도는 이 선택으로 정해지지 않는다.'
+  conditional_results:
+    - status: '[정리: 조건부]'
+      claim: '천막변 정상 조건과 H_tt!=0에서 슈어 제거가 가능하다. rank Y_in=rank Y_out=4, Y_in^T B=B Y_out=0, b!=0이면 경계 몫은 1차원이고 M=[[-a/b,-1/b],[b-ca/b,-c/b]]의 행렬식은 1이다. 이 랭크 전제는 모든 평탄 기하의 자동 결론으로 두지 않는다.'
+    - status: '[정리: 조건부]'
+      claim: '동일 가지에서 두 천막변과 내부 물리 3차원 블록이 가역이고 d=c1+a2!=0이면 ae=a1-b1^2/d, be=-b1*b2/d, ce=c2-b2^2/d이며 Me=M2*M1이다. 단위규격 진동 커널의 합성에는 exp(i*pi*sign(d)/4)가 곱해진다. d<0에서도 진동 합성은 성립하지만 실수 exp(-S)의 중간 가우스 적분은 발산한다.'
+    - status: '[정리: 조건부]'
+      claim: '공유 이웃 길이를 고정하면 Sglobal=S1+S2-beta*pi*sum(fixed_link_areas)이다. 마지막 경계 모서리 항은 동적 Hessian에는 기여하지 않지만 전체 작용과 위상에서는 보존한다.'
+  numerical_results:
+    status: '[산출]'
+    first_coefficients: [93.84944770139691, 8.699735313740419, -6.017428742192966]
+    second_coefficients: [-15.148382487932768, 13.098225919673812, -12.615787524665048]
+    composed_coefficients: [97.42528014676132, 5.383734048357542, -4.510096683076846]
+    pole_hessians: [-1.023958247608171, 46.46706410320846]
+    middle_denominator: -21.165811230125733
+    mixed_ranks: '수치 허용오차 1e-8에서 두 단계 모두 1; 정점 변위는 각각 4'
+    full_complex: '12개 4차원 단체, 모서리 26개, 삼각형 43개, 동적 길이 17개; 내부 7개 중 게이지 4개와 물리 3개'
+    direct_action_corner_residual: 7.105427357601002e-15
+    internal_stationarity_residual: 6.189432929296259e-15
+    schur_order_residual: 1.8541058605173616e-10
+    canonical_composition_residual: 4.278164330702506e-14
+    gaussian_maslov_residual: 4.163336342344337e-17
+    coefficient_step_convergence: 3.3052875404961175e-10
+    precision_boundary: '해석적 gradient의 두 간격 중앙차분과 리처드슨 보정이다. 잔차와 간격 대조는 수치 검산이며 엄밀 구간 오차 증명은 아니다.'
+  negative_controls:
+    - '이웃 경계가 평면인 대조군도 최소 Gram 고윳값 0.2437012872로 단체는 비퇴화다. 그러나 H_tt가 0이므로 천막변 제거를 거부한다.'
+    - '천막변 길이에 0.001을 더한 정상 조건 밖 대조군은 내부 결손각·천막변 정상 조건에서 거부한다.'
+    - 'd<0의 실수 가우스 발산과 마슬로프 위상 생략을 양의 확률 측도 구성으로 승격하지 않는다.'
+  verification:
+    symbolic: skipped
+    numeric: pass
+    lean: skipped
+    artifacts: verify/Q-0020/regge_tent_transfer.json
+    command: '.codex/hooks/python.cmd pytest tests/test_regge_tent_transfer.py -q'
+    result: '14 passed'
+    source_sha256: e509b0b583a99258730650584e812d9b6f097383629b4e855636c8e87c710f71
+    independent_math_audit: pass
+    independent_code_audit: pass
+  source_boundary:
+    - 'Dittrich & Hoehn, Canonical simplicial gravity, arXiv:1108.1974v2. 정준 작용·천막 이동의 문헌 근거이며 현재 비대칭 기하의 계수 표를 제공하는 출처는 아니다.'
+    - 'Hoehn, Canonical linearized Regge Calculus, arXiv:1411.5672v2. 평탄 배경에서 선형화한 정점 변위 대칭의 근거다. 내부 곡률이 있는 일반 배경으로 확대하지 않는다.'
+    - '정준 레게 수학과 프레넬 합성의 문헌 결과를 CE 신규 정리로 세지 않는다. 현재 기하의 계수·합성 잔차만 별도 산출로 기록한다.'
+  unfinished:
+    - '실제 생성·병합과 새 모드 초기상태·측도·방출을 같은 작용과 에너지 장부로 연결. 고정 차원 천막 전달에서 E-030의 V는 미유도다.'
+    - '물리 측도·질량·로런츠 시간, 공통 계량의 동역학적 선택, 일반 재귀와 0D에서 3+1 Plebanski/Einstein으로 가는 다리'
+unfinished:
+  - "정밀도 주석(2026-09-05): 위 W 비용·공분산 숫자는 h=0.002 실행값이며 수렴된 물리 수치가 아니다. recursive_kernel.py의 동일 경계 주변화에서 h=2e-5와 1e-5는 25/5단체 비를 약0.66364(5),0.7098(4),1.000(1)로 산출한다. 기존1.1608을 팽창 증거로 사용하지 않는다. 접착 공간과 같은 측도의 Schur 합성 항등식은 이 간격 의존성과 분리한다."
+  - "W 양의 가중치와 제거 변수 측도의 미시적 물리 유도"
+  - "분해능 법칙과 공통 계량 집중의 동역학"
+  - "전체 재귀 계층에서 동일 작용/측도가 유지되는지와 Lorentzian·연속 GR 극한"
+regge_pachner_creation:
+  status: '[산출]'
+  target_link: 'Q-0020에서 실제 경계 2→3 이동이 새 길이와 곡률 모드를 만드는 조건부 고리다. 공통 계량 선택과 E-030의 분할 V는 미유도다.'
+  scope: '공급한 유클리드 레게 작용·공유 길이·길이 측도 아래 두 내부 단체 (50123),(50124)에 (01234)를 더하는 경계 파흐너 2→3 이동'
+  definitions:
+    - '길이는 x_e=ell_e/ell_star, 작용은 s=S/hbar=beta*S_hat_Regge이며 beta=ell_star^2/(8*pi*ell_P^2)를 공급한다. 새 모서리는 무차원 y=x_34다.'
+    - '모서리 14개·삼각형 16개에서 모서리 15개·삼각형 19개가 된다. 새 모서리는 (34) 하나이며 기존 경계 삼각형 (012)이 내부 삼각형이 된다.'
+    - '국소 기존 모서리 9개가 모두 1인 절단면에서 I_y=(0,sqrt(8/3))다. 일반 길이에서는 밑면의 Gram 양의 정부호성과 두 접착 사면체의 양의 높이를 전제로 구간을 계산한다.'
+    - 'Delta s=beta*[pi*(A_012+A_034+A_134+A_234)-sum_{t subset (01234)} A_t*theta_t]. 새 단체의 경계 작용에서 기존 경계 삼각형 여섯 개의 pi*A_t 항을 뺀다.'
+    - '고정 기존 기하의 새 섬유에서 J_chi psi(y)=exp(i Delta s(y))*chi(y)*psi, int |chi|^2 dy=1로 정의한다. 아래 제약 노름은 정규화 부모 입력에 대해 쓴다.'
+  assumptions:
+    - '[공리: 검증 모형] 공유 길이·유클리드 가지·beta를 공급한다. 이미 공유 길이를 정했으므로 공통 계량 선택 모형이 아니다.'
+    - '[공리: 검증 모형] 평탄 길이 측도 dy와 균등 또는 지정한 디리클레 다항 준비를 공급한다. 미시적 준비·방출·환경의 유도가 아니다.'
+    - '[공리: 검증 모형] 역제거는 직전 생성의 제약면에 제한한다. 일반적인 전방 3→2나 임의 새 상태 전체의 단위 역과 동일시하지 않는다.'
+  conditional_results:
+    - status: '[정리: 조건부]'
+      claim: '작용 증분에서 p_prime_e=p_e+partial_e Delta s, p_y=partial_y Delta s가 따른다. 이 새 운동량 제약면 위에서 직전 생성을 역제거하면 원래 길이·운동량을 복원한다.'
+    - status: '[정리: 조건부]'
+      claim: '정규화한 chi마다 J_chi^dagger J_chi=I이고 J_chi J_chi^dagger는 준비된 섬유 영상으로의 사영이다. 같은 작용과 각 준비의 역복원만으로 chi는 유일하지 않다.'
+    - status: '[정리: 조건부]'
+      claim: '내부 미분식 C_y=-i partial_y-partial_y Delta s는 C_y J_chi psi=-i exp(i Delta s)(partial_y chi)psi를 준다. 두 다항 준비는 같은 정확 양자 제약의 해가 아니다.'
+    - status: '[정리: 조건부]'
+      claim: 'I=(0,L), dy, 주기 운동량 P_per를 공급하고 U=exp(i Delta s)라 두면 C=U P_per U^dagger는 U Dom(P_per)에서 자기수반이다. U/sqrt(L)는 영모드다. 끝점 기하의 정칙성이나 다른 기존 운동량 제약까지의 일치는 이 명제로 증명하지 않는다.'
+  numerical_results:
+    status: '[산출]'
+    source_sha256: '68c5f330bd2e4732970e5b9379f3fdbd86e236fe301a45521eea0663d04e3705'
+    geometry_source_sha256: 'e509b0b583a99258730650584e812d9b6f097383629b4e855636c8e87c710f71'
+    point_interval: [0.0, 1.632993161855452]
+    curvature: 'epsilon_012(y)=pi/2-2*asin(y/L), L=sqrt(8/3). y=sqrt(4/3)에서 0이며 다른 길이에는 내부 곡률을 허용한다.'
+    action_residual: 2.220446049250313e-15
+    gradient_residual: 9.42055475210265e-16
+    inverse_residual: 1.0007415106216802e-16
+    preparations: 'chi_1=sqrt(30/L)*z*(1-z), chi_2=sqrt(105/L)*z^2*(1-z), z=y/L. 각 노름은 1이다.'
+    exact_curvature_means: ['296/15-49*pi/8', '1264/35-183*pi/16']
+    curvature_means: [0.4910783300958491, 0.18231973885245445]
+    inverse_comparison: 'inner(chi_1,chi_2)=sqrt(14)/4. 엇갈린 역의 성공 확률 7/8, 준비 영상 밖 사영 손실 1/8.'
+    constraint_norms: '15/4,21/4. 제약 잔차 제곱노름이며 물리 에너지가 아니다.'
+    quadrature_order_convergence: 1.5987211554602254e-14
+    precision_boundary: '40점과 56점 구적 및 직접 기하와 닫힌 적분식의 대조다. 엄밀 구간 오차 증명이 아니다.'
+  alternatives:
+    - '균등 chi_0=1/sqrt(L)는 유한 구간에서 정규화되고 내부 제약 잔차가 0이다. U Dom(P_per)를 별도로 택하는 위상 전용 가능성을 보존한다. 끝점 값을 쓰는 경계 위상은 수치 검산하지 않았다.'
+    - '두 디리클레 준비는 각각 등거리 삽입·영상 위 역을 갖지만 정확한 C_y 영모드가 아니다. 디리클레 -i partial_y 자체를 자기수반 운동량이라고 부르지 않는다.'
+    - '사영을 포함하는 역합성은 임의 새 상태의 모든 정보를 되돌리지 않는다. 환류·환경 초기화·추적소실의 에너지 장부는 미구성이다.'
+  verification:
+    symbolic: skipped
+    numeric: pass
+    lean: skipped
+    artifacts: verify/Q-0020/regge_pachner_creation.json
+    command: '.codex/hooks/python.cmd pytest tests/test_regge_pachner_creation.py -q'
+    result: '15 passed'
+    independent_math_audit: pass
+    independent_code_audit: pass
+    checks: '일반 Gram 구간과 끝점 거부, 직접 전체 작용의 차분, 곡률, 정준 생성과 제약면 역, 참조 입력의 등거리 삽입, 준비·사영·제약 잔차를 대조한다.'
+  source_boundary:
+    - 'Dittrich & Höhn, Canonical simplicial gravity, arXiv:1108.1974v2 (2012), https://arxiv.org/abs/1108.1974v2. 새 길이와 사후·사전 제약의 정준 형식을 따른다.'
+    - 'Höhn, Quantization of systems with temporally varying discretization II: Local evolution moves, arXiv:1401.7731v3 (2014-10-27), https://arxiv.org/abs/1401.7731v3. 변하는 이산화의 역합성·사영에 관한 문헌 경계다.'
+    - '문헌의 정준 형식을 CE 신규 정리로 세지 않는다. 이 특정 기하의 곡률·준비 대조가 현재 추가 산출이며 물리 측도와 CE 상태는 문헌에서 정해지지 않는다.'
+  unfinished:
+    - '일반 q-의존 구간·정규화와 경계 정준 전달은 아래 regge_pachner_transport의 공급 모형에서 처리했다. 실제 중력 제약 및 물리 측도·연산자 순서와의 동일성은 미완성이다.'
+    - '물리 측도·초기 준비·방출·환류·환경 및 질량·시간을 같은 작용에서 유도'
+    - '공통 계량의 동역학적 선택과 0D에서 3+1 Plebanski/Einstein으로 가는 전체 다리'
+regge_pachner_transport:
+  status: '[산출]'
+  target_link: '기존 열네 경계 길이가 변할 때 경계 2→3 생성의 정규화와 정준 전달을 함께 검사한다. 전체 중력 제약·물리 준비·공통 계량 선택은 미유도다.'
+  scope: '공급한 무차원 14좌표·du dy 측도·인위적 주기 섬유 도메인의 단위 공액 전달'
+  definitions:
+    - '공유 사면체 (0125)의 양의 대각 촐레스키 좌표 6개와 꼭짓점 3,4의 투영·양의 높이 좌표 각각 4개로 u in R^14와 기존 길이 q(u)를 정의한다. 역변환은 공유 그램 행렬의 촐레스키 분해와 높이 복원이다.'
+    - 'A=a^2, B=b^2, D=B-A>0, t=(y^2-A)/D in (0,1), r=dy/dt=D/(2y), v_i=(partial_i A+t partial_i D)/(2y). T f=exp(i Delta s)/sqrt(r) f(u,t)는 L2(du dt)에서 L2(du dy)로 간다.'
+    - 'Pi_i=-i(partial_i+v_i partial_y+(partial_y v_i)/2)-(partial_i Delta s+v_i partial_y Delta s), C=-i(r partial_y+(partial_y r)/2)-r partial_y Delta s. partial_i는 y 고정 미분이다.'
+  assumptions:
+    - '[공리: 검증 모형] du dy를 공급한다. 평탄 dq dy로 옮길 때에는 |det(dq/du)|^(-1/2)가 추가되며, 물리 측도를 유도한 것은 아니다.'
+    - '[공리: 검증 모형] R^14의 운동량 P_i와 주기 섬유 운동량 P_t의 자기수반 도메인을 공급한다. 주기는 서로 다른 퇴화 끝점의 인위적 식별이며 실제 경계 기하에서 따르지 않는다.'
+    - '[공리: 검증 모형] 표적 연산자의 도메인은 원래 도메인의 T-영상이다. 공유 길이·유클리드 가지·무차원 작용 Delta s는 앞선 생성 모형에서 공급한다.'
+  conditional_results:
+    - status: '[정리: 조건부]'
+      claim: 'dy=r dt이므로 T는 단위 사상이다. Pi_i=T P_i T^dagger, C=T P_t T^dagger는 자기수반이고 강가환하며, 전달된 공통 불변 코어에서 [Pi_i,Pi_j]=[Pi_i,C]=0이다. J psi=T(psi*1)에 대해 Pi_i J=J P_i와 C J=0이다.'
+    - status: '[정리: 조건부]'
+      claim: '단위 기준 기하에서 u_6만 delta만큼 바꾸면 a=|delta|여서 길이 아래끝의 미분은 존재하지 않는다. A=delta^2와 길이제곱 좌표는 내부 y>0에서 매끄럽다. 이를 끝점 기하의 정칙성으로 확대하지 않는다.'
+    - status: '[정리: 조건부]'
+      claim: '내부 시험함수에서 [epsilon,C]=i*r*partial_y epsilon이고 길이제곱 좌표의 계수는 -1/sqrt(t*(1-t))다. C를 게이지 제약으로 해석하면 이 곡률은 디랙 관측량이 아니다. 동일 상태·관측량을 함께 수동 좌표변환하면 평균은 보존된다.'
+  numerical_results:
+    status: '[산출]'
+    source_sha256: 'c995451a5b12e47470f37c19926574c2cbfd7a20aeb07c0c76e541aef143b415'
+    dependencies: 'regge_pachner_creation.py 및 regge_tent_transfer.py의 SHA256은 JSON에 보존하며 위 생성 모형의 해시와 같다.'
+    chart: '참조점 야코비안 계수 14, 최소 특이값 0.16246725219629599. 전역 역구성의 근거와 표본의 수치 확인을 구분한다.'
+    momentum_residual_max: [2.397050843522892e-10, 6.924131683896475e-11]
+    vector_bracket_residual_max: [1.716681056226964e-08, 1.9229626863835638e-16]
+    residual_scope: '네 파동함수 대조의 기존·새 운동량 잔차와 기존끼리·기존/새 벡터장 교환계수 잔차다. 수치 교환계수만으로 연산자 도메인 정리를 증명하지 않는다.'
+    half_divergence_control: '반발산항 생략 시 기존 운동량 오차는 0.2344893451 이상이다. 길이제곱 좌표의 새 운동량 오차는 0.3712855647 이상이며 길이 좌표에서는 partial_y r=0이다.'
+    cusp: '길이 아래끝의 좌·우 차분은 -1,1이고 제곱 끝점의 중심 차분은 0이다.'
+    curvature_constraint: 't=0.43의 길이제곱 좌표에서 r*partial_y epsilon=-2.019892908397527이다.'
+    preparations: '기준 구간 (0,L)에서 길이·길이제곱 상수 준비는 exp(i Delta s)/sqrt(L), exp(i Delta s)*sqrt(2y/L^2)다. 곡률 평균은 정확히 2-pi/2와 0이며 수치는 0.42920367320510366,1.3830082912225095e-15다. 겹침은 2*sqrt(2)/3이다.'
+    passive_change: '같은 상태의 수동 변환은 노름과 평균을 보존한다. 평균 잔차 5.551115123125783e-17, 48/64점 구적 차이 최대 5.662137425588298e-15다. 엄밀 구간 오차 증명이 아니다.'
+  negative_controls:
+    - 'a=0의 일반 길이 좌표 미분과 반발산항을 생략한 전달을 거부한다.'
+    - '좌표마다 상수인 서로 다른 준비의 평균 차이를 물리적으로 비동등한 두 이론이나 게이지 불변 예측으로 승격하지 않는다.'
+    - '전달한 정준 대수를 실제 레게 전체 중력 제약의 해법으로 읽지 않는다.'
+  verification:
+    symbolic: skipped
+    numeric: pass
+    lean: skipped
+    artifacts: verify/Q-0020/regge_pachner_transport.json
+    command: '.codex/hooks/python.cmd pytest tests/test_regge_pachner_transport.py -q'
+    result: '16 passed'
+    independent_math_audit: pass
+    independent_code_audit: pass
+  source_boundary:
+    - 'Höhn, Quantization of systems with temporally varying discretization I: Evolving Hilbert spaces, arXiv:1401.6062v3 (2014-10-02), https://arxiv.org/abs/1401.6062v3. 물리 측도·제약·연산자 순서를 별도로 다루는 문헌 경계다.'
+    - '표준 단위 공액 수학은 CE 신규 정리가 아니다. 추가 산출은 이 기하의 14좌표 전달·아래끝 특이점·반발산항 및 준비 대조다.'
+  unfinished:
+    - '경계 갱신·새 사후 제약과 Pi_i,C의 조건부 관계 및 다른 전방 병합의 사전 제약은 아래 regge_pachner_constraints에서 직접 대조했다. 일반 이력의 전체 중력 제약·물리 측도·내적은 미완성이다.'
+    - '물리 측도·비선택 준비·방출·환류·환경 에너지와 공통 계량 선택 및 0D에서 3+1 Plebanski/Einstein으로 가는 다리'
+regge_pachner_constraints:
+  status: '[산출]'
+  target_link: '실제 2→3 뒤 다른 전방 3→2의 사전 제약을 같은 작용에서 판정한다. 이는 사후 제약만으로 전체 진화를 게이지화하는 추론을 배제하고 상위 작용의 내부 주변화로 연결하는 고리다.'
+  scope: '공유 길이·유클리드 beta=1·평탄 여섯 점과 초기 p_old=partial s_old를 공급한 4단체 기하 및 기존 단위 기하의 별도 양자 순서 대조'
+  definitions:
+    - '기존 (50123),(50124)에 (01234), 이어 (01345)를 더한다. 마지막 이동은 경계 사면체 (0134),(0135),(0145)를 (0345),(1345)로 바꾸고 변 e=(01)을 내부화한다. 새 변 y=(34)는 최종 경계에 남는다.'
+    - '무차원 좌표 r0=(-1/2,0,0,0),r1=(1/2,0,0,0), r2..5의 첫 성분 0 및 마지막 세 성분 (1,1,1),(1,-1,-1),(-1,1,-1),(-1,-1,1)을 sqrt(3)으로 나눈 점을 쓴다. y0=sqrt(8/3)는 이 기하 구간의 내부점이다.'
+    - '각 실제 국소 증분 Delta s_1,Delta s_2는 전체 경계각 상수 보정을 포함한다. 중간 위상공간의 c=p_y-partial_y Delta s_1, F=p_e+partial_e Delta s_2가 사후·사전 제약이다.'
+  assumptions:
+    - '[공리: 검증 모형] 위 기하와 공유 길이, beta=1, 초기 p_old=partial s_old를 공급한다. 원래 CE 미시 작용이나 공통 계량 선택의 유도가 아니다.'
+    - '[공리: 검증 모형] 양자 대조는 기존 du dy 측도·길이제곱 좌표·주기 섬유 도메인을 사용한다. 새 평탄 기준점과 원래 단위 기하의 섬유를 동일시하지 않는다.'
+  conditional_results:
+    - status: '[정리: 조건부]'
+      claim: 'dy=v_i du_i+r dt와 정준 1형식으로 Pi_i^cl=p_prime_ui-partial_i Delta s_1+v_i c, C^cl=r c가 따른다. c=0에서 실제 경계 운동량 갱신과 일치한다.'
+    - status: '[정리: 조건부]'
+      claim: 'c_hat=-i partial_y-partial_y Delta s_1에 대해 내부 코어에서 C=(r c_hat+c_hat r)/2=sqrt(r)c_hat sqrt(r), Pi_i=-i partial_i-partial_i Delta s_1+(v_i c_hat+c_hat v_i)/2다. 공액 도메인은 별도이며 대칭화 합의 개별 항을 준비 상태에 자동 적용하지 않는다.'
+    - status: '[정리: 조건부]'
+      claim: '원래 단위 기하의 chi_t=exp(i Delta s_1)*sqrt(2y/L^2)는 C chi_t=0이나 c_hat chi_t=-i chi_t/(2y)다. eta L<y<L의 절단 제곱노름은 log(1/eta)/(2L^2)이며 eta→0에서 발산한다. 이 준비는 단순 미분 제약의 위상 변환 H1 도메인에 없다.'
+    - status: '[정리: 조건부]'
+      claim: '평탄 네 단체에서 모든 내부 힌지 01k의 partial_e A=3/8, partial_y epsilon=-3*sqrt(2)/2이므로 H_(e,y)=-9*sqrt(2)/4다. {c,F}=-partial_y partial_e(Delta s_1+Delta s_2)=9*sqrt(2)/4이고 두 제약의 2x2 푸아송 행렬은 비특이다. c를 전체 진화의 독립 게이지 제약으로 자동 승격할 수 없다.'
+    - status: '[정리: 조건부]'
+      claim: '초기 p_old=partial s_old이면 F=partial_e s_four다. 기준점에서 F=0과 partial_y F=-9*sqrt(2)/4가 성립하므로, 고정 기존 자료에서 y의 근은 기준점 부근에서 국소적으로 유일하다. 일반 이력의 전역 유일성이나 공통 계량의 유일 선택이 아니다.'
+  numerical_results:
+    status: '[산출]'
+    source_sha256: '5badf64159a9880caa4edfb520ee8d28bd1d0f392d8277d8bcf5c3aaa2cdc656'
+    dependencies: 'creation·transport·tent 세 구현의 SHA256을 JSON에 보존한다. 기존 세 소스는 수정하지 않았다.'
+    action_gradient_inverse_residuals: [3.1086244689504383e-15, 1.837746106097754e-15, 7.850462293418876e-17]
+    constraints: 'y/y0=(0.85,0.95,1,1.05,1.1)의 모든 c는 0이다. F는 각각 0.5935292887896022,0.23265654694538518,-2.886579864025407e-15,-0.30067999168727977,-0.7468845010662515다. 직전 역제거는 모두 성공하고 전방 병합은 기준점만 허용한다.'
+    mixed_derivative: '정확 그램 미분 H=-9*sqrt(2)/4=-3.181980515339464. 기울기 차분은 -3.1819805153372274, 전체 작용의 두 간격 네 점 차분 오차는 최대 1.2505174407095865e-7이다. 차분 오차는 엄밀 구간 경계가 아니다.'
+    root: '국소 구간 (0.95y0,1.05y0)의 근은 1.6329931618554514이며 내부 방정식 잔차는 3.3306690738754696e-16이다.'
+    ordering: '두 내부 파동함수 대조의 C 잔차는 최대 6.924148129356457e-11이고 c_hat 잔차는 0.4184478483570652,0.41146272934248984다. 이 점별 검산과 해석적 도메인 발산 증명을 구분한다.'
+  negative_controls:
+    - '사후 제약만 만족하는 새 길이를 후속 전방 병합의 해로 받아들이지 않는다.'
+    - '단위 공액의 영모드와 단순 미분 연산자의 도메인을 동일시하지 않는다.'
+    - '평탄 네 단체의 국소 근과 제약 결합을 일반 비평탄 이력·전체 중력 제약·공통 계량 선택으로 확대하지 않는다.'
+  verification:
+    symbolic: pass
+    numeric: pass
+    lean: skipped
+    artifacts: verify/Q-0020/regge_pachner_constraints.json
+    command: '.codex/hooks/python.cmd pytest tests/test_regge_pachner_constraints.py -q'
+    result: '12 passed; source 2 pass'
+    independent_math_audit: pass
+    independent_code_audit: pass
+  source_boundary:
+    - 'Dittrich & Höhn, Canonical simplicial gravity, arXiv:1108.1974v2, §5.2 (5.18)·§5.3 (5.23), https://arxiv.org/abs/1108.1974v2: 새 사후 제약과 내부화되는 변의 사전 제약의 정준 형식이다.'
+    - 'Höhn, Quantization of systems with temporally varying discretization II, arXiv:1401.7731v3, §2.1·§4.6·§7, https://arxiv.org/abs/1401.7731v3: 사전·사후 제약과 게이지, 시간역과 전방 진화를 구분한다.'
+    - '표준 정준 원리는 CE 신규 정리가 아니다. 추가 증거는 지정 네 단체의 정확 혼합 계수·전방 제약·도메인 대조다.'
+  unfinished:
+    - '일반 비평탄 이력의 내부 변 주변화와 전체 유효 상위 작용·제약·측도·내적. 지정 네 단체의 대칭 내부 적분은 regge_internal_marginal에 분리한다.'
+    - '물리 초기 준비·방출·환류·환경 에너지·분해능, 공통 계량의 동역학적 선택과 0D에서 3+1 Plebanski/Einstein 다리'
+regge_internal_marginal:
+  status: '[산출]'
+  target_link: '실제 내부 변 01을 주변화해 경계 유효 작용·커널을 구하고, 같은 고전 해에서 서로 다른 측도가 만드는 진폭을 대조한다.'
+  scope: '공유 길이와 단위 계수의 유클리드 레게 작용 s를 공급한다. 대칭 경계의 전체 진동 적분은 beta>=0에서 두 정규화 측도별로 계산한다.'
+  definitions:
+    - 'coarse 복합체는 (02345),(12345)이며 네 단체와 같은 14개 경계 변을 갖는다. 대칭 구간은 0<e<L, e=x01, L=sqrt(13)/3이다.'
+    - '측도는 mu_l de=de/L, mu_s de=2e de/L^2다. 같은 mu_l의 z=e^2 수동 변환은 dz/(2L sqrt(z))다.'
+    - '일반 경계의 고전 비교는 공유 사면체와 선분 01의 교점이 내부에 있는 비퇴화 평탄 완성 분기와 H_ee!=0으로 제한한다.'
+  conditional_results:
+    - status: '[정리: 조건부]'
+      claim: '대칭 구간에서 s_prime=((5-2e^2)/sqrt(5-e^2))*(2pi-3theta_i), cos(theta_i)=-(3e^2+1)/(2(7-3e^2))다. theta_i는 엄격 증가하므로 e=1은 유일한 정상점이자 엄격한 전역 최대점이고 H_ee=-9sqrt(3)/2다.'
+    - status: '[정리: 조건부]'
+      claim: '같은 평탄 영역을 덮는 두 분할의 고전 경계 작용은 같다. H_ee!=0에서 내부 정상식을 미분하면 경계 헤시안은 H_bb-H_be H_ee^(-1) H_eb다.'
+    - status: '[정리: 조건부]'
+      claim: '고정 대칭 기하·실수 적분 경로·두 다항 밀도에서 beta→+infinity의 K는 mu(1) exp(i beta s(1)-i pi/4) sqrt(4pi/(9beta sqrt(3)))와 양 끝점 [mu(L)exp(i beta s(L))/s_prime(L)-mu(0)exp(i beta s(0))/s_prime(0)]/(i beta)의 합에 O(beta^(-3/2))를 더한 것이다.'
+      proof_boundary: '매끄러운 분할 함수로 세 기여를 나눈다. 좌끝은 위상 좌표에서 매끄럽고, 우끝은 s(L-delta)=s(L)-s_prime(L)delta-c delta^(3/2)+O(delta^2), c>0인 퓌죄 전개다. 변환 진폭의 sqrt(u)항 Fourier 적분이 O(beta^(-3/2))다. 균등한 나머지 제어를 포함한 증명은 유도 §7에 둔다. 일반 측도나 일반 경계 기하의 정리가 아니다.'
+      proof: 'derivations/Q-0020/conditional_composition.derivation.md#내부-변-적분이-남기는-경계-진폭'
+    - status: '[정리: 조건부]'
+      claim: '두 끝점 작용은 유한하며 두 공급 측도의 진동·감쇠 적분은 모두 유한하다. 양의 s에 exp(-beta*s)를 쓰는 별도 감쇠 대조는 좌끝 s(0)<s(L)이 지배한다. exp(beta*s(0))로 곱한 적분은 각각 1/(L beta s_prime(0))+O(beta^(-2)), 2/(L^2 beta^2 s_prime(0)^2)+O(beta^(-3))다.'
+    - status: '[정리: 조건부]'
+      claim: '같은 측도의 수동 좌표변환은 커널을 보존한다. 두 공급 밀도의 정상위상 계수 비는 2/L=6/sqrt(13)이며 고전 근의 유일성은 두 커널 중 하나를 고르지 않는다.'
+    - status: '[정리: 조건부]'
+      claim: '두 꼭짓점을 (-1,0,0,0),(1,0,0,0)으로 바꾼 여섯 단위 구면 점에서 e=2이고 단체들은 비퇴화다. 내부 면적 A=e sqrt(8-e^2)/4의 A_prime(2)=0과 평탄 결손각 0으로 H_ee=0이다. 이 제어 기하에는 가우스 슈어 제거를 적용할 수 없다.'
+  numerical_results:
+    status: '[산출]'
+    source_sha256: '6690a402d1d750e1dc3ce340cbb0d1d96f2fa34b074dc45b8bfc4f4c416d53a6'
+    dependencies: 'constraints·creation·transport·tent 네 구현의 SHA256을 JSON에 보존한다.'
+    classical: '세 평탄 분기의 작용·경계 기울기·슈어 잔차 최대는 3.552713678800501e-15,7.863796754643452e-15,5.496191786902822e-10이다.'
+    closed_formula: '대칭 닫힌 작용·미분과 실제 기하 계산의 차이는 최대 1.0658141036401503e-14,4.440892098500626e-14다.'
+    endpoints: 's(0)=14.510394913873741, s(L)=16.389952386227286, s_prime(0)=3.032841556666098, s_prime(L)=-19pi/(12sqrt(2))다.'
+    kernels: 'beta=0에서 둘 다 1이다. beta=10에서 K_l=-0.12877563773381995+0.2581377100115493i, K_s=-0.2045117555581381+0.3958794420713993i다.'
+    quadrature: 'beta=(0,10,40,160,640), 두 측도의 적응 구적과 1024점 구적 차이는 최대 5.4328530779436043e-14다. 이는 엄밀 구간 오차 경계가 아니다.'
+    passive_coordinate_change: 'beta=10에서 같은 측도의 z=e^2 수동 변환 잔차는 3.771999064951609e-14다.'
+    cospherical_control: 'e=2, H_ee 수치값 -1.1651859117231544e-14, 정확값 0. 개별 단체 그램 최소 고유값은 양수이며 상대 기준 1e-8||H||에서 슈어 제거를 거부한다.'
+  negative_controls:
+    - '같은 고전 정상점과 고전 경계 작용의 일치에서 양자 커널·물리 측도의 유일 선택을 추론하지 않는다.'
+    - '진동 정상위상 근사를 전체 감쇠 적분과 동일시하지 않으며, 국소 음의 헤시안을 유한 구간 적분의 발산으로 해석하지 않는다.'
+    - '평탄 완성만으로 가우스 제거를 허용하지 않는다. 내부 헤시안의 비특이성도 요구한다.'
+  verification:
+    symbolic: pass
+    numeric: pass
+    lean: skipped
+    artifacts: verify/Q-0020/regge_internal_marginal.json
+    command: '.codex/hooks/python.cmd pytest tests/test_regge_internal_marginal.py -q'
+    result: '15 passed'
+    independent_math_audit: pass
+    independent_code_audit: pass
+  source_boundary:
+    - 'Dittrich, Kaminski, Steinhaus, arXiv:1404.5288v2 §II–III·V, https://arxiv.org/html/1404.5288: 4D 선형화 이론의 단체별 인수분해 측도 불변성 장애와 비국소 D 인자다. S_R=-sum A epsilon으로 여기의 s와 부호가 반대다.'
+    - '표준 레게·정상위상 원리는 CE 신규 정리가 아니다. 추가 산출은 지정 네 단체의 실제 전체 내부 적분, 두 정규화 측도와 특이 평탄 기하의 대조다.'
+  unfinished:
+    - '일반 경계의 전체 커널과 반복 합성의 측도·비국소 인자. 대칭 높이 계열의 H_ee=0 통과는 regge_coalescing_kernel에 분리한다.'
+    - '물리 측도·내적·초기 준비·분해능·환경의 독립 고정, 공통 계량의 동역학적 선택과 0D에서 3+1 Plebanski/Einstein 다리'
+regge_coalescing_kernel:
+  status: '[산출]'
+  target_link: '실제 네 단체의 경계 높이를 변화시켜 내부 정상점 합류에서 전체 커널과 측도 의존성을 판정하고, 다음 실제 합성으로 넘길 고리다.'
+  scope: '같은 네 단체와 공유 길이, 무차원 유클리드 레게 작용을 공급한다. 정상점 분류는 h>0, 균일 근사와 전체 구적 대조는 h in [0.9,1.1]이며 h=0.5는 기존 기하 회귀다.'
+  definitions:
+    - 'r0=(-h,0,0,0), r1=(h,0,0,0)이고 나머지 네 점은 기존 단위 정사면체다. 허용 구간은 0<e<L(h), L(h)=2sqrt(h^2+1/9)이다.'
+    - '원 e-밀도 mu는 1/L(h) 또는 2e/L(h)^2다. t=e/L(h)로 바꾸면 K_h(beta)=int_0^1 rho(t) exp(i beta s(L(h)t;h))dt이며 rho=1 또는 2t다.'
+  conditional_results:
+    - status: '[정리: 조건부]'
+      claim: '정상점은 평탄 e_f=2h와, h>sqrt(7)/3일 때만 구간 안에 있는 e_a=sqrt(2(h^2+1))뿐이다. h!=1에서 e_a는 비평탄이고 두 근 중 작은 근은 국소 최대, 큰 근은 국소 최소다. h=1에서는 두 근이 e=2로 합류한다.'
+    - status: '[정리: 조건부]'
+      claim: '평탄 분기의 H_ee=12sqrt(3)h(h^2-1)이다. h=1,e=2에서 s_prime=s_second=0, s_third=48sqrt(3), s_fourth=720sqrt(3)이며 엄격한 정상 변곡점이다.'
+    - status: '[정리: 조건부]'
+      claim: '두 정규화 측도에서 모든 유한 실수 beta의 전체 K는 |K|<=1이고 h>0에서 연속이다. 고정 구간 t에서 지배수렴을 적용한다. 두 측도는 beta=0 정규화가 같아도 일반 beta의 커널은 다르다.'
+    - status: '[정리: 조건부]'
+      claim: '합류점에서 exp(-i beta s_c)K=2pi*mu(2,1)*Ai(0)/(24sqrt(3)*beta)^(1/3)+O(beta^(-2/3))다. beta→+infinity, 고정 h=1, 두 공급 밀도와 실수 경로에 한정한다.'
+    - status: '[정리: 조건부]'
+      claim: '두 정상값에 맞춘 국소 삼차 정규형 s=s_bar+u^3/3-Delta*u에서 Delta~kappa^2(h-1)^2/4, kappa=(24sqrt(3))^(1/3)다. 따라서 합류 창은 |h-1|=O(beta^(-1/3))이며 양쪽에 두 실수 분기가 남는다. Ai와 Ai_prime 계수는 정상점의 측도·헤시안으로 정해지고 h=1의 해석적 극한을 갖는다.'
+      proof_boundary: '표준 CFU 균일근사의 적용이다. 두 정상점과 양 끝을 분리한다. h=sqrt(7)/3의 정상점-끝점 합류는 포함하지 않는다. 두 에어리 항과 끝점 항을 합친 전체 근사의 보편 수치 오차 상계는 여기서 주장하지 않는다.'
+    - status: '[정리: 조건부]'
+      claim: '공급한 유한 경계 측도 nu와 F in L1(nu)에 대해 int nu(dh) F(h) K_h는 int nu(dh) dt F(h) rho(t) exp(i beta s(L(h)t;h))와 같다. 절대적분가능성과 푸비니 정리에 따른 전달 규칙이며 전체 복소 K의 크기도 보존한다. 일반 경계의 실제 다음 복합체 합성이나 물리 측도 유도는 아니다.'
+  proof: 'derivations/Q-0020/conditional_composition.derivation.md#두-정상점이-합류할-때의-경계-진폭'
+  numerical_results:
+    status: '[산출]'
+    source_sha256: '79bbf93a1ee98343dc3f8d890c334702d69fd36ad710b6790f7bab3bb9020f5c'
+    artifacts: 'verify/Q-0020/regge_coalescing_kernel.json'
+    geometry: '여섯 높이의 실제 작용·기울기와 닫힌 식 차이는 최대 1.7763568394002505e-14,1.5987211554602254e-14다. 정상 분기 헤시안의 실제 기울기 차분과 해석식 차이는 최대 6.506528649197207e-11이다.'
+    curved_branch: 'h=0.99,e_a=1.9900251254695254에서 내부 방정식 잔차는 0, 내부 결손각 절댓값은 0.10772467764570681, H=0.43089871058281903이다. 개별 단체는 비퇴화다.'
+    kernels: 'h=1,beta=20에서 K_length=0.010836399737152974+0.11880727722544934i, K_squared=0.0200309522533354+0.22173817065434526i다.'
+    quadrature: 'h=(0.9,0.99,1,1.01,1.1), beta=(0,20,80,320), 두 측도와 h=1,beta=(80,320,1280)에서 적응 구적과 4096/8192점 구적 차이는 최대 1.5121237595394632e-13이다. 엄밀 구간 오차 상계는 아니다.'
+    continuity: 'beta=20,length,h=1±1e-6에서 중심 전체 K와의 최대 차이는 3.5713625275600945e-5다. 같은 두 높이의 개별 Gaussian 합의 최대 크기는 58.31703463626356으로 정규화된 전체 K의 상계 1을 넘는다.'
+    critical_asymptotic: 'beta=1280에서 위상 제거 후 beta^(1/3)K는 각각 0.30298498788770506-0.012520527763352936i,0.5750875657650196-0.019018918064160922i이며 선도 극한은 0.3054521428675304,0.5795546925843309다. 두 에어리 항과 끝점을 합친 절대 오차는 1.620134593767186e-5,3.381049933332143e-5다.'
+  negative_controls:
+    - '개별 Gaussian 근사의 발산으로 전체 유한구간 K의 발산을 추론하지 않는다.'
+    - '내부 정상방정식만으로 평탄성을 판정하지 않는다. 곡률이 있는 정상해 자체를 물리적 실패로 판정하지도 않는다.'
+    - '공급한 두 측도의 beta=0 정규화나 평탄 고전 분기로 물리 측도를 고르지 않는다.'
+    - '비임계 두 정상점을 부동소수점으로 분리할 수 없으면 에어리 계수 계산을 거부한다. 정확한 h=1은 별도 해석식으로 처리한다.'
+  verification:
+    symbolic: pass
+    numeric: pass
+    lean: skipped
+    artifacts: verify/Q-0020/regge_coalescing_kernel.json
+    command: '.codex/hooks/python.cmd pytest tests/test_regge_coalescing_kernel.py -q'
+    result: '23 passed in 2.09s'
+    independent_math_audit: pass
+    independent_code_audit: pass
+  source_boundary:
+    - 'NIST DLMF §36.12(ii), 식 (36.12.11)–(36.12.12), https://dlmf.nist.gov/36.12.ii: 두 정상점의 정상값·헤시안·진폭으로 정하는 에어리 균일근사다. §2.4(v), https://dlmf.nist.gov/2.4.v는 정칙 삼차 변환의 조건을 설명한다.'
+    - '표준 정상점 합류·지배수렴·푸비니 정리는 CE 신규 정리가 아니다. 추가 산출은 지정 실제 기하의 곡률 분기와 특이 헤시안을 지나는 전체 커널·측도 대조다.'
+  unfinished:
+    - '곡률 있는 정상분기를 포함한 일반 경계 전체 K와 실제 다음 복합체 합성, 전역 측도·절대적분가능성 조건의 검산'
+    - '물리 측도·내적·초기 준비·분해능·환경의 독립 고정, 공통 계량의 동역학적 선택과 0D에서 3+1 Plebanski/Einstein 다리'
+regge_two_edge_composition:
+  status: '[산출]'
+  target_link: '실제 일곱 단체의 두 내부 변을 같은 결합측도로 주변화해, 단계적 전달·직접 전체 적분·소거 순서가 일치하는 범위를 판정한다.'
+  scope: '기존 네 단체에 (02346),(02356),(02456)를 더하는 경계 1→4,2→3,3→2 합성이다. 최종 7개 4단체·20개 모서리 중 18개가 경계이고 e=x_01,f=x_02를 모두 적분한다.'
+  definitions:
+    - '기준점은 기존 여섯 점의 h=1/2 및 r_6=(-1,1/sqrt(3),1/sqrt(3),1/sqrt(3))이다. 정렬한 경계 길이 b_i에 대해 b_i[1+0.002(-1+2i/17)]와 b_i[1+0.0015 cos(i)], i=0,...,17의 변형 둘을 검사한다. 모든 길이·beta는 무차원이고 실수 유클리드 레게 작용을 공급한다.'
+    - 'E=e^2,F=f^2>0에서 D는 세 Gram 양성 타원과 두 띠의 교집합이다. 기준 경계에서는 0<E<13/9, (37-8sqrt(7))/36<F<(37+8sqrt(7))/36, 1152E^2-768EF-704E+336F^2-840F+525<0이다.'
+    - 'D 위 전역 결합측도 de df/V_length 또는 dE dF/V_squared를 각각 공급한다. w(f)=e_+(f)-e_-(f), W(f)=e_+(f)^2-e_-(f)^2이면 조건부 밀도는 de/w 또는 2e de/W이고 f 주변밀도는 w/V_length 또는 2fW/V_squared다.'
+    - '증분 Delta s=s_shell-pi(A_034+A_035+A_045+A_234+A_235+A_245)다. 여섯 삼각형은 접합 뒤에도 외부 경계에 남는 모서리 삼각형이며 모두 고정 경계 길이만 포함한다. 전체 증분은 f에 의존하지만 e에는 의존하지 않는다.'
+  conditional_results:
+    - status: '[정리: 조건부]'
+      claim: '각 단체의 고정 Gram 블록에 대한 Schur 여유를 취하면 결합 셀의 허용영역은 E,F의 타원이다. 양의 띠와 이 타원들의 교집합이 비어 있지 않으면 각 축의 열린 사영과 절단 구간이 한 구간을 이룬다. 임의 경계의 비공집합을 가정하지 않는다.'
+    - status: '[정리: 조건부]'
+      claim: '전역 확률측도에서 유도한 조건부 K_old(f)와 주변밀도 p_f에 대해 K_7=int p_f(f) exp(i beta Delta s(f)) K_old(f) df다. 실수 작용의 위상 절댓값이 1이므로 절대적분가능하고 |K_7|<=1이다. Fubini에 의해 직접 이중적분과 반대 소거 순서가 일치한다.'
+    - status: '[정리: 조건부]'
+      claim: '조건부 적분 뒤 바깥 변수를 다시 균등 정규화하면 조건부 질량 인자를 없앤 다른 결합측도가 된다. beta=0 정규화가 같아도 일반 beta에서 K의 동일성을 보장하지 않는다. dE dF=4ef de df이며 길이와 제곱길이의 균등 측도는 서로 다른 공급 선택이다.'
+    - status: '[정리: 조건부]'
+      claim: '기준 e=2/3,f=7/10에서 fine 일곱 단체의 모든 선도 Gram 소행렬식이 양수지만, 기존 네 단체를 동일 중간 경계의 COARSE=(02345),(12345)로 치환하면 첫 단체 행렬식은 -1132/5625다. 추가 세 단체를 보존하는 7→5 치환이며, f는 이 단계의 중간 경계변이다. 엄격한 부호와 연속성 때문에 실패는 fine 영역의 열린 이웃에서도 유지된다. 해당 치환은 fine 지지 전체에서 정의되지 않는다.'
+      proof_boundary: '이는 지정 동일 경계 치환의 반례다. 다른 상위 길이 사상·확장된 경계 상태공간·일반 GR 모형 전체의 기각이 아니다.'
+  proof: 'derivations/Q-0020/conditional_composition.derivation.md#두-내부-변을-모두-적분하는-실제-후속-합성'
+  numerical_results:
+    status: '[산출]'
+    source_sha256: 'bd2ee6063fe9f58e367581f7f4986182c918160362c6464b84bb72707aee99a1'
+    artifacts: 'verify/Q-0020/regge_two_edge_composition.json'
+    geometry: '기준·두 경계 변형에서 작용 항등식 최대 차이는 1.4210854715202004e-14, 독립 스칼라 기하 비교는 7.105427357601002e-15다.'
+    quadrature: '각 분할 구간의 64/128점 구적 차이는 최대 2.7435413135161065e-7, 두 128점 소거 순서 차이는 5.430637642140219e-8이다. beta=(0,1,5,20), 두 공급 측도, 세 경계에서 비교한다. 수치 영역 추정·구적 수렴 대조이며 엄밀 구간 오차 인증이 아니다.'
+    transfer: '조건부 K_old와 주변질량을 명시적으로 전달한 합성과 직접 전체 위상의 적분 차이는 최대 1.4432899320127035e-14다. beta=0에서 주변질량과 전체 K는 반올림 오차 안에서 1이다.'
+    reference_volumes: 'V_length=0.5248087404278625, V_squared=1.355565164331551이다.'
+    kernels_beta5: '기준 경계에서 K_length=0.366420944910574+0.21093605887204164i, K_squared=0.43862959723228123+0.3729709136506212i다.'
+  negative_controls:
+    - '길이 측도의 beta=5에서 바깥 변을 균일 재정규화하면 e 먼저 제거시 0.414426153871836+0.23938743953203961i, f 먼저 제거시 0.3063305711777415+0.18104956166602826i다. 원 결합측도의 순서 교환과 다르다.'
+    - '기준 coarse (02345)의 Gram 행렬식은 -(144F^2-616F+289)/108이다. coarse f 하한 (8-sqrt(13))/6보다 작은 f=7/10도 fine 영역에서는 허용된다. 기존 coarse 양성 검사를 이 영역에 재사용하면 유효 fine 지지를 잘못 제거한다.'
+    - '같은 정규화와 단계 합성으로 두 공급 측도 중 물리 측도를 고르지 않는다. 상위 작용을 원래 W 또는 단위 크기의 위상으로 재대입하지 않는다.'
+  verification:
+    symbolic: pass
+    numeric: pass
+    lean: skipped
+    artifacts: 'verify/Q-0020/regge_two_edge_composition.json'
+    command: '.codex/hooks/python.cmd pytest tests/test_regge_two_edge_composition.py -q'
+    result: '20 passed in 2.84s'
+    independent_math_audit: pass
+    independent_code_audit: pass
+  source_boundary:
+    - 'Schur 보수·Fubini·확률측도에서의 |K|<=1은 표준 수학이며 CE 신규 정리로 세지 않는다. 추가 산출은 지정 실제 일곱 단체의 전체 내부변 적분·조건부 전달·경계 변형 대조 및 동일 경계 치환의 정확한 지지 반례다.'
+  unfinished:
+    - '지지 전체에서 정의된 상위 사상과 유도된 전체 커널을 보존하는 일반 재귀 흐름'
+    - '곡률 정상분기를 포함한 더 넓은 경계 변형, 물리 측도·내적·초기 준비·분해능의 독립 고정'
+    - '공통 계량의 동역학적 선택과 0D에서 3+1 Plebanski/Einstein 다리'
+regge_boundary_pushforward:
+  status: '[산출]'
+  target_link: '기하의 지지 전체에서 경계 질량·복소 진폭을 보존하고, 허용되는 상위 상태와 재귀 흐름에 필요한 조건을 판정한다.'
+  scope: '앞선 실제 일곱 단체·기준과 두 경계 변형·두 공급측도·beta=(0,1,5,20)다. 경계 쌍을 저장·재독한 다음 기존 내부 작용을 재계산하지 않고 추가 세 단체의 위상을 곱한다.'
+  definitions:
+    - '각 허용 f에서 m(f)=int rho_e(e)de, A_beta(f)=int rho_e(e)exp(i beta s_old(e,f))de를 같은 e 절단에서 정규화 전에 저장한다. 길이 기준은 rho_e=rho_f=1이고 제곱길이 기준은 rho_e=2e,rho_f=2f다. K=int rho_f A_beta exp(i beta Delta s)df / int rho_f m df다.'
+    - '경계 표는 각 구간의 theta=(x+1)pi/4, f=f_-+(f_+-f_-)sin(theta)^2에서 Chebyshev 보간한다. 질량과 진폭의 실수·허수 계수를 함께 직렬화하며 바깥 적분에 df/dx와 rho_f를 보존한다.'
+    - '같은 여섯 꼭짓점·(01) 비재도입·중복 없는 비퇴화 유클리드 4-단체 충전의 제한 클래스와, 새 꼭짓점 7을 도입한 여덟 단체 원뿔 충전을 구별한다. 원뿔의 등길이 R^2=max_tau r_circ(tau)^2+c는 c=1,4로 공급한다.'
+  conditional_results:
+    - status: '[정리: 조건부]'
+      claim: '양의 기준밀도 m과 |A|<=m, 양의 고정 결합 가중치 rho 및 전체 int rho m<infinity에서 선형 주변화는 |A_prime|<=m_prime를 보존한다. m_prime=0이면 A_prime=0이다. 정규화 재삽입 없이 고정된 전체 가중치와 위상을 사용하면 Fubini에 의해 연속 주변화의 결합법칙이 성립한다.'
+      proof_boundary: '고정 전역 측도의 복소 진폭 주변화다. 서로 다른 모든 세분화에서 양립하는 측도족이나 물리적 삽입 사상의 존재를 증명하지 않는다.'
+    - status: '[정리: 조건부]'
+      claim: '여섯 기존 꼭짓점으로 만드는 4-단체 중 (01)을 포함하지 않는 후보는 (02345),(12345)뿐이며 동일 경계 사면체가 둘을 모두 강제한다. f=7/10 반례의 열린 이웃에서는 지정 제한 클래스 전체의 유클리드 충전이 불가능하다.'
+      proof_boundary: '새 정점·제거변 재도입·확장된 경계 상태공간을 허용하는 경로와 일반 GR 모형 전체의 no-go가 아니다.'
+    - status: '[정리: 조건부]'
+      claim: '유한한 비퇴화 유클리드 경계 사면체가 공유 변 길이를 일치시키고 PL 3-구를 이루면 R^2>max_tau r_circ(tau)^2인 등변 원뿔은 유클리드 단체들로 된 PL 4-볼 충전이다. 각 사면체의 외심 위 높이 sqrt(R^2-r_circ^2)에 새 꼭짓점을 두어 증명한다. 전체 복합체의 R4 단일 매장을 가정하지 않는다.'
+    - status: '[정리: 조건부]'
+      claim: '제외 지지의 확률 질량이 0<p<1이면 K=(1-p)K_keep+pK_excluded이고 |K-K_keep|<=2p다. beta=0에서는 둘 다 1이므로 이 정규화만으로 지지 절단의 손실을 검출할 수 없다.'
+  proof: 'derivations/Q-0020/conditional_composition.derivation.md#경계-질량과-진폭으로-보존하는-전체-지지'
+  numerical_results:
+    status: '[산출]'
+    source_sha256: 'f10239cd6dd00a5eb610a6c6af04dfe4121dab129fc3c547530f8e2f5338d360'
+    artifacts: 'verify/Q-0020/regge_boundary_pushforward.json'
+    transfer: '저장·재독한 경계 쌍과 추가 위상으로 얻은 전달과 직접 전체 적분 차이는 최대 3.4638958368304884e-14다. 같은 내부128점의 보간32/64 차이는 최대 3.1871916230797287e-10, 내부64/128 차이는 최대 2.743542200087042e-7, 두 차수를 함께 바꾼 차이는 최대 2.7440894076664915e-7이다.'
+    approximation_boundary: '수치 표본에서 max(|A|-m)은 4.45e-15 이하이며 질량 차이는 8.89e-15 이하다. 지정 표본의 보간·구적 수렴 검사이며 연속 지지 전체의 엄밀 오차 인증이 아니다.'
+    coarse_cut: '기준에서 상위 두 단체 불가 영역의 질량 비율은 length=0.04300490550803183, squared=0.03100391775007952다. beta=5에서 그 영역을 제외하고 재정규화한 K는 각각 0.3623867644365322+0.19043506510534616i,0.43627546585859706+0.364944986624502i다. beta=0의 전체·절단 K는 모두 1이다.'
+    invalid_sample: 'f=0.7의 m은 length=0.3418829565501138, squared=0.453387796292707이며 beta=5의 A는 각각 -0.13355245537016117+0.2544655181285264i,-0.14564507357987655+0.35125685107984234i다. 상위 두 단체의 비허용 영역에서도 유도 경계 진폭은 영이 아니다.'
+    cone_control: '기준 f=0.7에서 max r_circ^2=5.176217988757049다. c=1,4의 R^2는 6.176217988757049,9.176217988757049, 작용은 45.366682421374115,55.97948552919066, 최소 Gram 고윳값은 0.004676563951946383,0.012090369940726783이다. 두 원뿔은 동일 중간 경계를 보존한다.'
+  negative_controls:
+    - '조건부 K=A/m만 저장하면 다음 주변화에 필요한 m을 잃는다. 상위 단체 허용 지지로 (m,A)를 잘라내는 절차도 원 전역 측도를 보존하지 않는다.'
+    - '원뿔 충전의 존재는 새 길이·작용·측도를 유일하게 고르지 않는다. 원뿔 작용을 저장한 기존 A의 위상으로 재대입하지 않는다.'
+    - '같은 고정 전역 측도에서의 Fubini 일치는 여러 세분화 사이 측도의 양립과 동역학적 삽입 선택을 대신하지 않는다.'
+  verification:
+    symbolic: '독립 수학 검산; 기계 증명 없음'
+    numeric: pass
+    lean: skipped
+    artifacts: 'verify/Q-0020/regge_boundary_pushforward.json'
+    command: '.codex/hooks/python.cmd pytest tests/test_regge_boundary_pushforward.py -q'
+    result: '17 passed in 0.63s'
+    independent_math_audit: pass
+    independent_code_audit: pass
+  source_boundary:
+    - 'Dittrich, arXiv:1205.6127v1 (2012-05-28), https://arxiv.org/abs/1205.6127v1, §6 식 (6.5)–(6.7), §7 식 (7.4)–(7.10): 경계 삽입 사상과 진폭·측도의 원통적 일관성을 정의한다. 일반 4D 중력의 완성된 유도는 아니며 이 문헌이 현재 fiber mass를 직접 도출했다고 주장하지 않는다.'
+    - 'Bahr, Dittrich, Steinhaus, arXiv:1101.4775v1 (2011-01-25), https://arxiv.org/abs/1101.4775v1, §2 식 (2.5)–(2.6): 재매개변수 불변 1차원 모형의 전파함수 합성과 별도 양자 측도를 다룬다. 일반 4D 측도의 유일성으로 확대하지 않는다.'
+    - '표준 복소 측도 주변화·결합법칙·지배와 원뿔 존재는 CE 신규 정리가 아니다. 추가 산출은 지정 일곱 단체의 경계 쌍 재사용·상위 지지 절단·원뿔 대조와 제한된 단체 충전 클래스의 배제다.'
+  unfinished:
+    - '전체 허용 경계 상태의 동역학적 삽입과 여러 세분화 측도의 양립 조건'
+    - '물리 측도·내적·초기 준비·분해능의 독립 고정, 공통 계량의 동역학적 선택과 0D에서 3+1 Plebanski/Einstein 다리'
+regge_boundary_embeddings:
+  status: '[산출]'
+  target_link: '유도된 상위 커널을 보존하는 삽입의 조건을 좁히고, 진폭 일관성에서 물리 선택으로 가는 미완성 고리를 판정한다.'
+  scope: 'WHOLE7의 두 공급 확률측도 mu와 nu=pi_*mu를 유지한다. s는 추가 세 단체 이전의 OLD4 작용이다. 기준·두 경계 변형, f=(0.7,0.9,1.1), 두 조건부측도, beta=(0,1,5,20), 같은 중간 경계의 원뿔 c=1,4를 비교한다.'
+  definitions:
+    - '표준 Borel 확률공간에서 P_s(v)=int exp(i beta s)v dmu, I psi=psi(f), K=E_mu[exp(i beta s)|f]다. 실수 가측 상위 작용 t와 J_j psi=j psi(f)를 두며, 모든 경계 함수에 대한 등거리는 E_mu[|j|^2|f]=1이다.'
+    - '독립 미분 대조는 열린 절단의 콤팩트 지지에서 D=-i partial_e, 제곱길이 측도에서는 D=-i(partial_e+1/(2e))다. 중력 제약이나 전체 자기수반 도메인으로 선언하지 않는다.'
+  conditional_results:
+    - status: '[정리: 조건부]'
+      claim: '자연 삽입의 유도 진폭은 K다. 실수 t의 순수위상과 모든 경계 상태에서 일치할 필요충분조건은 K=exp(i beta t) nu-a.e.다. 이때 조건부 위상이 거의 확실히 일정해야 한다.'
+    - status: '[정리: 조건부]'
+      claim: 'E[|j|^2|f]=1이고 E[exp(i beta s)j|f]=exp(i beta t)이면 조건부 Cauchy–Schwarz 등호로 j=exp(i beta(t-s))가 a.e. 유일하다. 임의 실수 가측 t에 이 삽입이 존재한다. 경계 곱셈 보존·등거리·가환 투영망의 끝점 작용차 합성도 성립하므로 이 조건들은 t를 선택하지 못한다.'
+    - status: '[정리: 조건부]'
+      claim: '강제 삽입과 자연 삽입의 조건부 거리 제곱은 d_t^2=2-2Re[exp(i beta t)conj(K)]다. beta!=0이면 min_t d_t^2=2(1-|K|)이며 K=0에서 모든 목표 위상이 동률이다. beta=0에서는 j=1, d=0이다.'
+    - status: '[정리: 조건부]'
+      claim: '같은 beta-독립 j,s,t가 0을 포함한 열린 beta 구간에서 등거리와 진폭 일관성을 만족하면 beta=0에서 E[j|f]=1과 E[|j|^2|f]=1로 j=1이다. 비가 무리수인 두 비영 beta의 위상 등호로 s=t mu-a.e.다. 추가 모멘트 가정은 필요하지 않다.'
+      proof_boundary: 'beta-독립 삽입을 별도로 요구한 조건부 결과다. 동역학 의존 삽입을 금지하는 물리 법칙이나 GR의 no-go가 아니다.'
+  proof: 'derivations/Q-0020/conditional_composition.derivation.md#진폭을-맞추는-삽입과-물리적-선택'
+  numerical_results:
+    status: '[산출]'
+    source_sha256: '58955a9e0e7a8ac00d4e5ff19e09623f3a40c9ee7eb768073022466256e07e2a'
+    artifacts: 'verify/Q-0020/regge_boundary_embeddings.json'
+    identities: '세 경계·세 절단·두 측도·두 원뿔 전체에서 진폭 잔차 최대 8.134553132076825e-14, 노름 5.551115123125783e-16, 거리식 2.930988785010413e-14, 끝점 위상 합성 2.2739144253568546e-13, 최소거리식 1.7763568394002505e-15다.'
+    reference_beta5: '기준 f=0.7에서 K_length=-0.3906379443837476+0.7443059480953019i, K_squared=-0.3212373045003142+0.7747382129253654i다. min d^2는 각각 0.3188226173750651,0.32260594448481883이다.'
+    cone_distances: '같은 기준 beta=5에서 c=1,4의 원뿔 작용은 45.366682421374115,55.97948552919066이다. 강제 삽입의 d^2는 length에서 1.739756639576731,1.6863978562372721, squared에서 1.592033923888154,1.8369111123271635다.'
+    frozen_control: '기준 f=0.7 length에서 beta=1의 삽입 j_1을 고정해 beta=0에 넣은 조건부 오차 |E[j_1|f]-1|은 c=1,4에서 1.3856718275975473,1.9628674962643977이다. beta=0에서 j를 새로 계산하지 않는다.'
+    derivative: 'beta=5에서 독립 위상 곱 연산자 M_j와의 국소 교환자 [D,M_j]의 계수 크기는 세 경계·세 절단에서 3.7228387939736676 이상 11.400872322113853 이하다. -beta partial_e(s)J와 직접 Richardson 차분의 최대 차이는 1.15768787330596e-9다. 기울기의 물리 제약 지위는 주장하지 않는다.'
+    quadrature: '최초 64/128 차이 2.112753450189686e-6은 정한 1e-6 기준을 넘었다. 128/256 차이 2.6321132939877145e-7로 수렴 검사를 통과했다. 전체 지지의 엄밀 오차 인증은 아니다.'
+  negative_controls:
+    - '같은 경계의 두 원뿔 작용 모두 진폭 일관성을 만족시키므로 이 일관성만으로 목표 작용을 물리적으로 선택할 수 없다.'
+    - '자연 삽입에서 |K|<1인 경우 그 크기를 버리고 실수 상위 작용의 순수위상을 재대입하지 않는다.'
+    - '모든 미세 곱셈 관측량은 위상 곱과 교환한다. 경계 관측량의 전달과 coarse 공간에 없는 내부 관측량의 정의 문제를 구분한다. 독립 고정 미분 연산자는 일반적으로 위상 곱과 교환하지 않는다.'
+    - '세 단계 위상 합성은 같은 투영망의 망원경 항등식이며 여러 독립 세분화의 물리 측도족 존재 증명이 아니다.'
+  verification:
+    symbolic: '독립 수학 검산; 기계 증명 없음'
+    numeric: pass
+    lean: skipped
+    artifacts: 'verify/Q-0020/regge_boundary_embeddings.json'
+    command: '.codex/hooks/python.cmd pytest tests/test_regge_boundary_embeddings.py -q'
+    result: '11 passed in 0.67s'
+    independent_math_audit: pass
+    independent_code_audit: pass
+  source_boundary:
+    - 'Dittrich, arXiv:1205.6127v1 (2012-05-28), https://arxiv.org/abs/1205.6127v1, §7 식 (7.4)–(7.10): 측도·진폭 일관성과 작용의 요동 의존성을 상쇄하는 삽입의 특수 예다. 문헌은 반선형 진폭을 쓰므로 현재 선형 규약과 켤레 방향을 구별한다. 임의 상위 작용의 일반식이나 일반 4D 물리 선택을 직접 증명한 출처로 인용하지 않는다.'
+    - '조건부 Cauchy–Schwarz와 위상 공액은 CE 신규 정리가 아니다. 추가 산출은 실제 두 원뿔 목표를 구분하지 못하는 정량 대조, 자연 상태와의 강제 거리, 독립 미분 잔차다.'
+  unfinished:
+    - '목표 상위 작용과 독립된 원래 제약·진공 조건으로 삽입과 측도를 고정하고 여러 세분화에서 양립시키는 유도'
+    - '물리 내적·초기 준비·분해능, 공통 계량의 동역학적 선택과 0D에서 3+1 Plebanski/Einstein 다리'
+regge_constraint_reduction:
+  status: '[산출]'
+  target_link: '실제 두 레게 제약의 정준 축약과 계수 변화를 계산해, 국소 축약 측도에서 물리 경로측도로 가는 미완성 고리를 판정한다.'
+  scope: '공유 무차원 길이·표준 정준 형식·beta=1·기존 네 유클리드 4차원 단체를 공급한다. 기존 평탄 여섯 점의 h=(0.5,0.9,1,1.1)와 작은 비대칭 길이 변형을 검사한다.'
+  definitions:
+    - 'q=(e,y,z_1,...,z_13), e=x01, y=x34, omega=sum dq_i wedge dp_i다. A,B는 실제 두 이동의 작용 증분이고 c=p_y-A_y, F=p_e+B_e, a={c,F}=-(A+B)_ey다.'
+    - '제약면 C에서 p_y=A_y, p_e=-B_e이므로 omega_C=-de wedge dB_e+dy wedge dA_y+sum dz_i wedge dp_zi다. 제약 교환 행렬은 ((0,a),(-a,0))다.'
+  conditional_results:
+    - status: '[정리: 조건부]'
+      claim: 'a!=0이면 C는 28차원 심플렉틱 공간이며 {e,y}_D=1/a다. 그 리우빌 측도는 |a| de dy dz dp_z이고, 원래 위상공간의 sqrt(det{chi_i,chi_j}) delta(c)delta(F) dq dp를 두 운동량에 적분한 것과 같다. 여기서 sqrt(det)=|a|이지 sqrt(|a|)가 아니다.'
+    - status: '[정리: 조건부]'
+      claim: 'e,y>0에서 E=e^2,Y=y^2, P_E=p_e/(2e),P_Y=p_y/(2y)는 정준 좌표변환이다. 제약면에서 새 제약 c/(2y),F/(2e)의 교환자는 a/(4ey)이며 같은 측도는 |a|/(4ey) dE dY dz dp_z다.'
+    - status: '[정리: 조건부]'
+      claim: '평탄 여섯 점 계열에서 a(h)=3 sqrt(2)(1-h^2)다. rim 정사면체 외접반지름의 제곱 R^2는 동차성·S4 대칭으로 partial_y(R^2)=y0/8, y0=sqrt(8/3)이다. e_flat=2 sqrt(h^2+1-R^2)의 미분과 S_e(flat)=0, H_ee=12 sqrt(3) h(h^2-1)을 결합하면 이 식을 얻는다.'
+    - status: '[정리: 조건부]'
+      claim: 'h=1에서도 dc,dF는 서로 다른 운동량 성분 때문에 독립이지만 a=0이다. 제약면은 28차원인 채 omega_C의 계수가 28에서 26으로 감소한다. 이 두 제약만의 제2종 역행렬은 존재하지 않으며, 가역 좌표변환이나 가역 제약 재정의로 이 계수 감소를 없앨 수 없다.'
+    - status: '[정리: 조건부]'
+      claim: 'a!=0인 국소 영역에서 초기 p_old=partial s_old를 추가하면 중간 운동량은 partial(s_old+A)다. F=0과의 교차는 14차원 라그랑주 부분다양체이며 omega_C의 당김은 0이다. 그 위의 확률 밀도는 리우빌 체적의 제한만으로 결정되지 않는다.'
+  proof: 'derivations/Q-0020/conditional_composition.derivation.md#원래-제약의-정준-축약과-계수-퇴화'
+  numerical_results:
+    source_sha256: '2f5172c475d1eb774ef50b59e642ab73cc236f391215dbbd4faab7d317a56809'
+    artifacts: 'verify/Q-0020/regge_constraint_reduction.json'
+    bracket_h: 'h=0.5,0.9,1,1.1의 계산값은 3.181980515326587,0.8061017305443136,9.25185853854297e-12,-0.8909545442678521이며 정확식 대비 최대 차이는 2.7198687746476935e-11이다.'
+    checks: '전체 작용 헤시안의 독립 대조 차이 최대 2.3723800701702658e-11, 두 차분 간격 차이 3.3769320673116e-11, 축약 역행렬 잔차 2.220446049250313e-16, 좌표 밀도 복원 오차 3.33066907387547e-16이다. 모든 검사점의 최소 그램 고윳값은 0.15199875156082246 이상이다.'
+    singular_policy: '수치적으로 |a|<=1e-7이면 역행렬·리우빌 밀도를 null로 기록한다. h=1에서 정확히 a=0이라는 판정은 수식 유도에 근거하며, null은 확률 0이라는 뜻이 아니다.'
+  rejected_inference: '비퇴화 단체이면 이 두 제약이 항상 제2종이므로 하나의 가역 축약 공식으로 전 영역을 덮는다는 추론은 h=1에서 기각된다. 영 밀도의 연속 연장 자체를 금지하는 결과는 아니며, 그런 연장이 특이 부문의 물리 확률이나 전체 중력 게이지를 정한다는 증거도 아니다.'
+  verification:
+    symbolic: '독립 수학 검산; 기계 증명 없음'
+    numeric: pass
+    independent_math_audit: pass
+    artifacts: 'verify/Q-0020/regge_constraint_reduction.json'
+    command: '.codex/hooks/python.cmd pytest tests/test_regge_constraint_reduction.py -q'
+    result: '11 passed in 1.78s'
+  source_boundary:
+    - 'Henneaux, Slavnov, arXiv:hep-th/9406161v1 (1994-06-24), https://arxiv.org/abs/hep-th/9406161, 식 (1): 일반 위상공간 제약 측도다. 식 (12)-(13)의 승수 적분 뒤 측도와 구별한다. 이 문헌은 현재 레게 모형의 양자 구성공간 측도를 직접 유도하지 않는다.'
+    - 'Dittrich, Höhn, arXiv:1108.1974v2 (2012-11-23), https://arxiv.org/abs/1108.1974v2, §7 PDF p.45 첫 두 문단: 사전·사후 제약의 일반 비가환과 단일 제약의 자동 게이지 해석을 구별한다. 현재 h계열 수치의 직접 출처는 아니다.'
+    - '디랙 축약·리우빌 체적·라그랑주 부분다양체는 표준 결과이며 CE 신규 정리가 아니다. 추가 산출은 같은 실제 파흐너 이력의 a(h)와 정상점 합류에서의 제약 계수 변화다.'
+  unfinished:
+    - '계수가 변하는 일반 이력에서 원래 제약과 양자 상태·전체 경계 커널 전달의 양립'
+    - '정상방정식 밖까지 적분하는 물리 경로측도·내적·초기 준비·분해능의 독립 유도'
+    - '공통 계량의 동역학적 선택과 0D에서 3+1 Plebanski/Einstein 다리'
+regge_quantum_constraint_transfer:
+  status: '[산출]'
+  target_link: '원래 사전 제약의 양자 커널 전달과 실제 구간의 끝점 항을 계산해, 상태 제약에서 물리 경로측도로 가는 조건을 판정한다.'
+  scope: '기존 네 단체의 전체 그램 허용 구간과 실제 두 번째 이동의 작용 B를 사용한다. h=(0.5,0.9,1,1.1)에서 연산자·도메인 대조는 beta=5, 전체 커널·경계 미분은 beta=(0,1,5,20)로 검사한다. 길이·제곱길이 밀도를 대조하며 생성 사후 제약 c를 포함한 전체 제약의 공통 해를 구성한 결과는 아니다.'
+  definitions:
+    - '고정 경계 b에서 I=(l,r), d=r-l, rho>0다. rho와 B는 내부에서 매끄럽고, 내적은 L2(rho de), F_rho=-i(partial_e+0.5 partial_e log rho)+beta B_e, U_k psi=int rho k exp(i beta B)psi de다. 밀도 rho는 내적, mu는 전체 커널의 공급 확률측도 밀도로 구별한다.'
+    - 'W psi=sqrt(rho)exp(i beta B)psi=:phi, D_theta=W^-1{phi in H1(I):phi(r)=exp(i theta)phi(l)}로 연산자 도메인을 공급한다. 끝점 조건은 변환된 phi의 자취에 부과한다.'
+  conditional_results:
+    - status: '[정리: 조건부]'
+      claim: 'U_k F_rho psi=-i[rho k exp(i beta B)psi]_l^r+i int rho(k_e+0.5(partial_e log rho)k)exp(i beta B)psi de다. 모든 내부 콤팩트 시험함수에서 U_k F_rho=0일 필요충분조건은 k=C(b)/sqrt(rho)다.'
+    - status: '[정리: 조건부]'
+      claim: 'W는 단위 사상이고 F_rho=W^-1(-i partial_e)W다. C!=0일 때 U_k F_rho=0이 자기수반 도메인 D_theta 전체에서 성립할 필요충분조건은 exp(i theta)=1이다. 내부 시험함수만으로는 이 끝점 조건을 판정할 수 없다.'
+    - status: '[정리: 조건부]'
+      claim: 'D_0와 C=1/sqrt(d)를 공급하면 U_k^dagger U_k는 단일 영모드의 사영이고 U_k U_k^dagger=1이다. 정규화된 영모드 psi_0=exp(-i beta B)/sqrt(d rho)의 길이 확률은 rho|psi_0|^2 de=de/d다. 이 분포는 단일 제약·도메인 아래 고정되지만 정상식 밖 경로측도의 유도나 c=0 동시해는 아니다.'
+    - status: '[정리: 조건부]'
+      claim: '밀도를 rho_tilde로 바꾸고 상태를 sqrt(rho/rho_tilde)배 하며 연산자·커널·효과·도메인을 함께 옮기면 같은 물리 상태의 단위 표현변환이다. 같은 좌표 함수 1을 두 밀도에서 그대로 사용하는 전체 커널 비교는 다른 준비의 대조다.'
+    - status: '[정리: 조건부]'
+      claim: '평탄 대칭 경계의 L=2sqrt(h^2+1/9), K_mu=int_0^L mu exp(i beta S)de에 대해 i beta int mu S_e exp(i beta S)de+int mu_e exp(i beta S)de=[mu exp(i beta S)]_0^L다. beta=0에서도 나누기 없이 유효하다.'
+    - status: '[정리: 조건부]'
+      claim: '같은 구간에서 partial_h K_mu=int_0^L (mu_h+i beta mu S_h)exp(i beta S)de+L_h mu(L)exp(i beta S(L))다. 마지막 항의 절댓값은 mu=1/L에서 h/(h^2+1/9), mu=2e/L^2에서 그 두 배다.'
+  proof: 'derivations/Q-0020/conditional_composition.derivation.md#양자-사전-제약의-전달과-끝점-조건'
+  numerical_results:
+    source_sha256: '0f49325180ab4e0e19cb2546c0576fbf6ac93840163a7db3e7d75fd064e26898'
+    artifacts: 'verify/Q-0020/regge_quantum_constraint_transfer.json'
+    geometry: '전체 허용 구간은 상위 두 단체 조건 없이 네 실제 단체의 그램 구간을 교차해 구한다. 상위 두 단체가 불가한 x02=0.7,x01=2/3 증인도 통과한다. S_h의 면적 미분식과 전체 기울기의 대조 오차 최대 8.881784197001252e-15다.'
+    checks: '원래 B의 기울기와 파동함수 차분 오차 최대 8.830943717101376e-10, 전체 제약 삽입 항등식의 384차 오차 1.932140169255771e-12, h 미분 오차 1.6963403600619175e-9, 192/384차 전체 커널 차이 5.114155929179841e-14다.'
+    endpoint: 'h=1에서 경계 미분 끝점 항의 크기는 길이 측도 0.9, 제곱길이 측도 1.8이다. beta=0에서 K=1, partial_h K=0이어도 끝점 항을 빼면 이 오차가 남는다.'
+    domain_control: 'h=1, theta=pi, 정규화된 첫 반주기 모드에서 U_k F_rho는 약 0.9486832980504925i다. 주기 영모드는 U=1, 주기 첫 들뜬 모드는 U가 0이다. 두 밀도에서 같은 변환 상태를 쓰면 노름·전달 진폭이 일치한다.'
+    density_control: 'k=1과 끝점이 0인 사인 상태를 사용하면 제곱길이 측도의 비영 내부 밀도 항이 남는다. h=1에서 직접 삽입 0.4789470366930227i, 밀도 미분항 0.4789471637230608i이며 전체 경우의 항등식 오차 최대 2.2282542710971853e-7이다.'
+    preparation_control: 'h=1,beta=20의 K_length=0.010836399737150997+0.11880727722546455i, K_squared=0.02003095225332966+0.22173817065434498i다. 서로 다른 준비를 공변 표현변환의 실패로 해석하지 않는다.'
+  rejected_inference: '내부에서 사전 제약의 소거를 확인하면 자기수반 도메인 전체의 끝점 조건과 물리 경로측도도 자동 결정된다는 추론을 제외한다. 선택한 D_0에서 단일 영모드의 균일 길이 분포가 고정되는 결과는 보존한다.'
+  verification:
+    symbolic: '독립 수학 레인의 부분적분·도메인·영모드 검산; 기계 증명 없음'
+    numeric: pass
+    independent_math_audit: pass
+    command: '.codex/hooks/python.cmd pytest tests/test_regge_quantum_constraint_transfer.py -q'
+    result: '11 passed in 6.29s'
+  source_boundary:
+    - 'Höhn, arXiv:1401.7731v3 (2014-10-27), https://arxiv.org/abs/1401.7731v3, §4.3 정리 4.2의 type-II 갱신과 §4.6의 역이동 합성·측도 부분 고정. 일반 type-III의 비상수 측도와 비유일성은 PDF p.20에 명시한다. 현재 유한 그램 구간의 물리 측도를 직접 고정한 출처가 아니다.'
+    - 'Bonneau, Faraut, Valent, arXiv:quant-ph/0103153v1 (2001-03-28), https://arxiv.org/abs/quant-ph/0103153v1, §5.3 식 (14)-(15): 유한 구간 운동량의 자기수반 확장과 위상 경계조건·이산 스펙트럼. 현재 중력의 물리 경계조건을 선택한 출처가 아니다.'
+    - '부분적분·단위 공액·자기수반 확장은 표준 결과다. 추가 산출은 실제 레게 전체 구간의 제약 삽입과 움직이는 끝점 항을 기존 특이 기하에서도 보존한 정량 대조다.'
+  unfinished:
+    - '사후 c와 사전 F를 각 이동의 출력·입력 조건으로 처리한 전체 양자 제약 전달과 공통 도메인'
+    - '경계조건·내적·초기 준비·물리 경로측도와 분해능을 독립 작용에서 고정하는 유도'
+    - '공통 계량의 동역학적 선택과 0D에서 3+1 Plebanski/Einstein 다리'
+regge_postconstraint_projection:
+  status: '[산출]'
+  target_link: '원래 사후 제약이 사전 제약의 영모드를 보존하는지 판정하고, 실제 두 제약의 정준 축약으로 가는 대안을 고정한다.'
+  scope: '기존 네 유클리드 4차원 단체·공유 무차원 길이·양의 내적 rho·주기 F 도메인을 공급한다. h=(0.5,0.9,1,1.1,sqrt(5/3)), beta=0,5를 수치 대조한다. 모든 h>0의 비영 누설은 별도 해석적 증명이다.'
+  definitions:
+    - 'q=(e,y,z1,...,z13), A,B는 실제 두 이동의 무차원 작용 증분, G=(A+B)_y=S_y다. x,h,beta,A,B,G와 정준 운동량은 모두 기준척도로 무차원화한다.'
+    - '매끄러운 경계 구역에서 I=(l,r), d=r-l, t=(e-l)/d, v=l_y+t d_y, T psi=sqrt(d rho)exp(i beta B)psi(l+dt,b), J phi=exp(-i beta B)phi/sqrt(d rho), P=JJ^dagger다.'
+    - 'C는 T C T^-1=-i partial_y-beta G로 1차 작용이 존재하는 상태에 정의한다. C=c+(vF+Fv)/2는 내부 형식미분식으로만 쓴다. vJ가 주기 F 도메인에 속하지 않을 수 있으므로 Fv의 자기수반 연산자 합성을 가정하지 않는다.'
+  conditional_results:
+    - status: '[정리: 조건부]'
+      claim: 'G가 각 섬유에서 제곱적분가능하고 표시한 1차 작용이 존재하면 CJ phi=J(-i partial_y phi)-beta GJ phi, J^dagger CJ=-i partial_y-beta mean(G)다. (1-P)CJ phi=-beta(G-mean(G))J phi이고 섬유별 누설 제곱은 beta^2 Var_de/d(G)|phi|^2다. 적분한 노름 차이는 이차형식 항등이며 C^2의 연산자 항등을 선언하지 않는다.'
+    - status: '[정리: 조건부]'
+      claim: '원래 c도 cJ=CJ+i d_y J/(2d)를 만족하므로 (1-P)cJ=(1-P)CJ다. c와 C를 같은 양자 연산자로 놓지 않아도 누설 반례는 보존된다.'
+    - status: '[정리: 조건부]'
+      claim: '대칭 실제 기하족에서 G_e(2h)=3sqrt(2)(h^2-1), G(0)=2sqrt(2)pi/3이며 h=1에서는 G(L)=pi/sqrt(3)다. h!=1에서는 내부 기울기가 비영이고 h=1에서는 끝점이 달라 모든 h>0에서 Var(G)>0다. beta!=0에서 단일 F 영모드의 부분공간은 원래 c에 불변이 아니다. 기준 경계의 구간 전환에서는 한쪽 구역의 극한으로 해석한다.'
+    - status: '[정리: 조건부]'
+      claim: 'Delta=G(L)-G(0), G_n=int_0^1 G(Lt)exp(-2pi i n t)dt다. G는 절대연속이고 G_e는 적분가능하므로 nG_n -> -Delta/(2pi i), R_N/N -> 2Delta^2/L^2이며 R_N=sum_0<|n|<=N (2pi n/L)^2 |G_n|^2다. h=1의 비영 Delta는 주기 H1 조건을 막는다. 유한 L2 누설과 F(CJ)의 주기 연산자 도메인 불능을 구별한다.'
+    - status: '[정리: 조건부]'
+      claim: 'beta!=0에서 p_prime_i=p_i+beta partial_i B는 정준 이동이다. 두 제약면에서 P_y=beta G, Pi_z=p_z+beta B_z로 omega_C=dy wedge dP_y+sum dz wedge dPi_z다. beta G_e!=0인 국소 구역에서 e를 역함수로 제거하며 전체 28차원 제약면 형식의 계수는 28, G_e=0에서는 26이다.'
+    - status: '[정리: 조건부]'
+      claim: '대칭 기하족의 내부 최소점은 h^2>7/9일 때 e_c=sqrt(2(h^2+1))다. h=1에서는 e_c=2, G_ee=6sqrt(2), P_y-P_c=3sqrt(2)beta(e-2)^2+O((e-2)^3)로 두 국소 길이 가지가 만난다. 유한 구간의 P_y 상을 전역 반직선으로 확대하지 않으며 국소 역함수가 전역 양자화를 고정하지 않는다.'
+  numerical_results:
+    source_sha256: '0d1abb5317b96ee24dfe0e844f581df527dc8286656e8486444bb8748c407fe8'
+    artifacts: 'verify/Q-0020/regge_postconstraint_projection.json'
+    geometry: '실제 작용의 경계 gradient 대조 최대 8.881784197001252e-16, 구간 대조 6.661338147750939e-16, 한쪽 상한 미분 대조 1.173900976425557e-10이다. y0에서 왼쪽 상한 미분은 0이고 오른쪽은 -4y0/(9L)다.'
+    operator: 'C와 원래 c의 독립 파동 차분 최대 1.5202484519607708e-9다. x02를 1.02배 한 비대칭 경계의 제곱길이 밀도에서 연결항을 빼면 잔차 0.0005800225519294822가 남는다.'
+    projection: 'h=1: mean(G)=2.244438327760022, Var(G)=0.1702520758063384, beta=5 누설제곱=4.25630189515846. 128/256차 평균·분산 차이 최대 2.6645352591003757e-15다. beta=0 누설은 0이다.'
+    endpoint_control: 'h=sqrt(5/3)에서는 끝점 차가 수치상 -8.88e-16이지만 분산은 0.09420088483936725로 남는다.'
+    fourier: 'h=1에서 Delta=-1.148122594538027, 이론적 R_N/N 한계는 0.5931834714399288이다. N=(16,64,256,1024)의 값은 (0.7764767101,0.6868876595,0.6390537721,0.6156081131)이다. 격자 2^17/2^18 차이는 3.0145914517332173e-5이며 이 차이를 유한 N의 점근 오차와 구별한다.'
+    branches: 'h=1에서 G_c=1.6298523955272612, 두 가지 역함수 잔차 최대 2.4424906541753444e-15다. G-G_c=0.001에서는 e=(1.9840291490999196,2.0147526321013713)이며, 편차를 줄이면 두 가지 간격의 이차 근사 비가 1로 접근한다.'
+  proof: 'derivations/Q-0020/conditional_composition.derivation.md#사후-제약의-사영-누설과-정준-가지'
+  rejected_inference:
+    - '단일 F 영모드로 사영하면 사후 c가 보존되며 h=1의 점별 교환자 0이 이를 회복한다는 추론을 기각한다.'
+    - 'v(l)!=v(r)인 움직이는 구간에서 vJ의 주기 끝점 불일치를 무시하고 Fv를 주기 연산자곱으로 쓰는 추론을 기각한다.'
+    - 'G_e=0을 지나 두 국소 역함수를 단일 전역 좌표로 쓰는 경로를 제외한다. 두 가지와 특이 부문을 보존하는 대안은 남긴다.'
+  verification:
+    symbolic: '독립 수학 검산; 기계 증명 없음'
+    numeric: pass
+    independent_math_audit: pass
+    command: '.codex/hooks/python.cmd pytest tests/test_regge_postconstraint_projection.py -q'
+    result: '11 passed in 2.92s'
+  source_boundary:
+    - '사영의 평균·분산, 푸리에 부분적분, 정준 운동량 이동과 국소 역함수 정리는 표준 수학이다. 기존 regge_quantum_constraint_transfer와 regge_constraint_reduction의 출처·도메인 경계를 재사용한다.'
+    - '추가 산출은 실제 네 단체의 G와 전 h>0 비영 누설, 움직이는 그램 경계의 전환, h=1 푸리에 성장 계수와 두 길이 가지다. 미시적 중력 양자화나 우주론 관측 예측의 유도가 아니다.'
+  unfinished:
+    - '두 길이 가지·특이 경계를 유지한 실제 양자 전달의 작용·내적·접합 공리와 원래 전체 커널·정준 제약의 대조'
+    - '물리 미시작용·측도·분해능·공통 계량·3+1 Plebanski/Einstein·암흑부문·허블 텐션 연결'
+regge_branch_quantization:
+  status: '[산출]'
+  target_link: '실제 두 길이 가지의 전체 커널·제약 전달을 보존하고, 그 좌표변환이 물리 양자화를 고정하는지 판정한다.'
+  scope: '실제 네 유클리드 4-단체, h=(0.9,1,1.1), 두 공급 측도와 무차원 map_beta=5를 쓴다. 적분 시험의 별도 위상 lambda=(0,5,20) 중 lambda=beta가 원래 커널이며 lambda=0은 정규화 대조다. 고정 두 운동량 구간의 Y 후보를 실제 28차원 축약의 편극으로 동일시하지 않는다.'
+  definitions:
+    - 'beta>0,h^2>7/9에서 P=beta G, P_c=beta G(e_c), e_-<e_c<e_+, kappa_sigma=|partial_e P(e_sigma)|다. U_rho psi=sqrt(rho(e_sigma)/kappa_sigma)psi(e_sigma)는 두 가지의 L2(dP) 직접합으로 가는 사상이다.'
+    - '별도 고정 경계 후보 Y=i partial_P에는 H1(P) 도메인을 사용한다. 아래끝 벡터 a, 위끝 벡터 b에 b=M a, M in U(2)를 공급한다. M은 미시 작용에서 유도되지 않았다.'
+    - '부모 전달에는 f=W psi=sqrt(rho)exp(i beta B)psi, Phi_sigma=Vf=f(e_sigma)/sqrt(kappa_sigma), v_sigma=partial_e P=minus kappa(왼쪽), plus kappa(오른쪽)를 쓴다. D(F_br)=V{f in H1(0,L):f(L)=f(0)}다.'
+  conditional_results:
+    - status: '[정리: 조건부]'
+      claim: 'U_rho는 두 가지를 모두 남기면 단위 사상이고, K_mu(lambda)=sum_sigma int mu(e_sigma)exp(i lambda S(e_sigma))dP/kappa_sigma다. 한 가지 생략은 그 가지 질량·진폭을 잃는다. 두 성분을 스칼라 합으로 압축하는 사상은 등거리가 아니다.'
+    - status: '[정리: 조건부]'
+      claim: '고정 두 P 구간의 Y는 결핍지수 (2,2), 경계형식 i(b_f^*b_g-a_f^*a_g), 자기수반 도메인 b=M a를 갖는다. 항등 접합의 스펙트럼은 두 집합 2pi Z/Delta_-와 2pi Z/Delta_+의 합집합(중복 포함), 교환 접합은 2pi Z/(Delta_-+Delta_+)다. 유계 P는 전역 Weyl 평행이동 관계를 만족하는 자기수반 정준짝을 갖지 못한다.'
+    - status: '[정리: 조건부]'
+      claim: 'Pc의 두 아래끝만 국소 접합하고 위끝을 각각 차단하면 음의 정부호 경계형식을 상쇄할 수 없어 자기수반 확장이 아니다. a=(1,1),b=(0,0)의 결함은 -2i다. 한 가지의 Y 부호 반전은 이 국소 결함을 상쇄할 수 있지만 같은 P와의 정준 교환자 부호도 바꾸며 외곽 접합 의무가 남는다.'
+    - status: '[정리: 조건부]'
+      claim: 'h=1,a0=3sqrt(2)beta,delta=P-Pc에서 원래 균일 길이 상태의 가지 합 밀도는 [L sqrt(a0)]^-1 delta^-1/2에 점근한다. 각 파동은 [sqrt(2L)a0^1/4]^-1 delta^-1/4로 L2에 속하지만 Y의 모든 H1 도메인 밖이다. 양 가지의 절단 미분적분 D_epsilon에 epsilon^3/2 D_epsilon -> [24L sqrt(a0)]^-1다.'
+    - status: '[정리: 조건부]'
+      claim: 'F_br=V(-i partial_e)V^-1=-i(v partial_P+0.5 partial_P v)는 부모 주기 도메인의 정확한 상에서 자기수반이다. sqrt(kappa)Phi의 임계점 양쪽 자취는 같고 외곽 두 자취는 주기적으로 연결된다. v Phi_f^*Phi_g의 임계점 극한은 부호가 반대여서 상쇄되며 v=0만 대입하지 않는다. 고유값 2pi n/L와 1차원 영모드를 보존한다. 동일 단위변환은 원래 c의 사영 누설 노름도 보존한다.'
+  proof: 'derivations/Q-0020/conditional_composition.derivation.md#두-정준-가지의-양자-전달과-접합'
+  numerical_results:
+    source_sha256: '59e13cb36c6cf496ea2a660035de7cbc27de473141697dd0fd739f35eb177697'
+    artifacts: 'verify/Q-0020/regge_branch_quantization.json'
+    coarea: '전체 K 차이 최대 8.944771426296981e-11, 노름 차이 1.5051959678658022e-10, 정규화 차이 8.945510998614736e-11이다. 96/192차 차이 0.00023611348291187694는 기준 미통과로 보존하며 192/384차 차이는 1.0740863753966323e-10이다.'
+    branch_loss: 'h=1,lambda=0에서 오른쪽 가지를 버리면 길이 측도 질량 0.05131670195, 제곱길이 측도 질량 0.1을 잃는다. 야코비안을 빼면 정규화 오차는 각각 2.59554890858,2.77160221549다.'
+    junctions: 'h=1,beta=5에서 Pc=8.149261977636307, 두 폭은 6.660347816224915,0.9197348435347816이다. 항등 접합의 첫 양의 고유값 0.9433719500164025, 영모드 중복도2; 교환 접합은 0.8289072282199592, 중복도1이다. 고유함수 경계 잔차 최대 2.4492935982947064e-16이다.'
+    critical: '균일 길이 상태의 합 밀도 계수 0.10298835719535587, 미분적분 계수 0.004291181549806495다. delta=6.25e-5에서 밀도 점근비 1.0000223424166368, epsilon=6.25e-6에서 미분적분 점근비 0.9999877794413311이다.'
+    inherited: '부모 F 전달의 독립 파동 차분 잔차 최대 7.690025651056659e-9, 연결항 생략 잔차 최대 22.38177660557226이다. 첫 양의 고유값은 2.98037647973883이다. 서로 반대인 두 상수의 가중 임계점 자취 차2는 해석적 음성 대조다.'
+  rejected_inference:
+    - '두 역가지만 남기면 같은 자료에서 유일한 정준 양자 접합과 물리 측도가 결정된다는 추론을 기각한다.'
+    - '동일 부호 i partial_P의 두 아래끝 국소 접합과 개별 외곽 차단으로 자기수반성을 얻는 처방을 기각한다. 다른 연산자·전체 경계의 대안은 보존한다.'
+    - 'L2 상태의 Y 도메인 실패를 상태 자체나 모든 양자화의 불가능으로 확대하지 않는다. 부모 F의 정확한 가중 도메인 전달은 살아 있다.'
+  verification:
+    symbolic: '독립 수학 검산; 기계 증명 없음'
+    numeric: pass
+    independent_math_audit: pass
+    command: '.codex/hooks/python.cmd pytest tests/test_regge_branch_quantization.py -q'
+    result: '13 passed in 1.51s; source2 PASS'
+  source_boundary:
+    - 'Jorgensen, Pedersen, Tian, arXiv:1110.5948v1 (2011-10-26), https://arxiv.org/abs/1110.5948v1, §2.2 식 (2.4)–(2.6), Proposition 2.2 및 §3.1: 두 유한 구간의 자기수반 미분 연산자와 끝점 선택이다. 이 문헌의 -i/(2pi) 미분을 현재 i 미분의 부호·정규화로 바꿔 쓴다. 레게의 물리 접합을 선택한 출처가 아니다.'
+    - '가지별 변수변환·자기수반 확장·단위 공액은 표준 수학이다. 추가 산출은 실제 기하의 가지 질량·복소 커널·임계 밀도·접합 스펙트럼·원래 제약의 가중 자취 전달이다.'
+  unfinished:
+    - '실제 28차원 축약에서 편극·움직이는 경계·물리 미시작용·내적·측도를 고정하고 두 가지와 계수 퇴화 부문을 포함한 동역학을 구성하는 일'
+    - '공통 계량의 동역학적 형성, 0D에서 3+1 Plebanski/Einstein, 같은 작용의 암흑에너지·암흑물질·허블 텐션 검증'
+
+regge_conditional_dynamics:
+  status: '[산출]'
+  target_link: '실제 28차원 경계 관계를 임계점 너머까지 보존하고, 공급 측도에서 조건부 읽기와 남은 진폭의 정량 장부를 구성한다.'
+  scope: '고전 관계는 q=(e,y,z13),Pi13 전체에서 다룬다. 조건부 읽기의 연산자·수치는 대칭 z를 고정한 실제 2차원 공동 그램 영역에 한정한다. 공유 유클리드 기하·무차원 beta와 작용·두 공동 측도·조건부 읽기는 공급 전제다. 이는 유일한 물리 양자화나 에너지·총 응력의 유도가 아니다.'
+  definitions:
+    - 'S=A+B이며 경계 관계는 입력(e,z;-beta S_e,Pi-beta S_z), 출력(y,z;beta S_y,Pi)다. S_final=S_old(e,z)+S를 구별한다. 전체 작용으로 바꾸면 입력의 경계 위상·운동량도 함께 옮긴다.'
+    - 'y0=sqrt(8/3),q0=h^2+1,L=2sqrt(h^2+1/9), Y(e)^2=4y0^2-y0^4/(q0-e^2/4)다. D={0<e<L,0<y<Y(e)}, Y_min=y0,Y_max=Y(0)이며 ell(y)=min(L,2sqrt(q0-y0^4/(4y0^2-y^2)))다.'
+    - 'mu는 D 위 정규화한 de dy 또는 4ey de dy이고 mu_E,mu_Y는 그 주변측도다. T_beta psi(y)=E_mu[exp(i beta S)psi(e)|y], R_beta psi(e,y)=exp(i beta S)psi(e)-T_beta psi(y)다. 실제 작용은 유한 길이·유계 면적·0..pi 이면각으로 유계이며 D 내부에서 매끄럽다.'
+  conditional_results:
+    - status: '[정리: 조건부]'
+      claim: 'theta_out-theta_in=beta dS다. e,y,z,Pi를 곱 위상공간에서 직접 복원하므로 관계는 S_ey=0에서도 56차원 공간 안의 28차원 라그랑주 매장이다. S_ey!=0에서 두 투영의 계수는 28, S_ey=0에서는 각각 27이고 당긴 2형식의 계수는 26이다. 단일값 지도의 실패가 경계 관계의 소멸은 아니다.'
+    - status: '[정리: 조건부]'
+      claim: '조건부 기댓값의 직교성으로 ||psi||_muE^2=||T_beta psi||_muY^2+||R_beta psi||_mu^2다. R_beta의 조건부 평균은 0이다. 양쪽을 보존한 사상은 등거리지만 이 정의만으로 물리 시간의 동역학이나 에너지 보존을 얻지 못한다.'
+    - status: '[정리: 조건부]'
+      claim: 'D 전체에서 T_beta의 Hilbert-Schmidt 제곱노름은 길이 측도에서 1+log(Y_max/y0), 제곱길이 측도에서 1+2log(Y_max/y0) 이하이므로 콤팩트다. 공통 직사각형 0<e<L,0<y<y0 때문에 T_0의 최고 특이값1은 단순하며 다음 특이값과 간격이 있다.'
+    - status: '[정리: 조건부]'
+      claim: '노름 등호는 exp(i beta S)psi(e)=g(y) a.e.와 동치다. beta!=0이고 내부 열린 집합에서 S_ey!=0이면 등호인 비영 상태가 없다. 콤팩트성으로 연산자 노름도 엄격히 1보다 작다. 실제 대칭 기하족의 모든 h>0은 이 비영 혼합 미분 조건을 만족한다.'
+    - status: '[정리: 조건부]'
+      claim: 'beta->0에서 1-||T_beta||^2=beta^2 C_int+O(beta^4), C_int=inf E_mu[(S-a(e)-b(y))^2]>0이다. inf는 실수 a in L2(mu_E),b in L2(mu_Y)에 대해 취한다. 중심화 T_0의 노름이 1보다 작아 가법 부분공간은 닫혀 있고 최소값이 달성된다. 유계 S와 고립 최고 고유값은 해석적 섭동을 허용하며 beta 부호 대칭이 홀수항을 제거한다.'
+    - status: '[정리: 조건부]'
+      claim: 'S->S+a(e)+b(y)는 T를 입력·출력의 단위 위상 곱으로 바꾸므로 ||T_beta||와 C_int가 불변이다. 분리 가능한 위상은 C_int=0이고 모든 beta에 노름1을 보존한다. 서로 다른 공동 측도 사이의 불변성은 요구하지 않는다.'
+  proof: 'derivations/Q-0020/conditional_composition.derivation.md#두-경계의-관계와-조건부-위상-예산'
+  numerical_results:
+    source_sha256: 'ae4c078e0a5a4b3b5a9a64dd587b8f35409a65569b7c088107ecea88b52f80e7'
+    artifacts: 'verify/Q-0020/regge_conditional_dynamics.json'
+    geometry: 'h=(0.5,0.9,1,1.1)에서 일괄 작용과 원래 단체 계산 차이 최대 7.105427357601002e-15, 정준 갱신 차이 1.1546319456101628e-14, 지지 차이 4.3298697960381105e-15다. 각 h에서 영역 밖 점3개를 거부했다.'
+    relation: 'h=(0.9,1,1.1),beta=5에서 전체 관계 계수는 모두28, 입출력 투영은28/27/28, 당김 형식은28/26/28이다. 미분 계수 판정 문턱1e-6, 라그랑주 잔차 최대6.19875706320272e-10이다. 독립 해석적 증명과 수치 계수 판정을 구별한다.'
+    weak_phase: 'h=1,n=128에서 C_int는 길이0.05970139700162974, 제곱길이0.024009409258750156이다. beta=0.025에서 gap/beta^2는 각각0.05969956662319474,0.024008878900261262다. 유한 셀 근사이며 연속 극한의 엄밀 오차 인증은 아니다.'
+    finite_phase: 'h=1,n=128,beta=5에서 ||T_beta||^2는 길이0.441278788676333, 제곱길이0.7005071737313249다. 최적 입력의 남은 진폭까지 포함한 노름 장부 오차 최대1.9984014443252818e-15다.'
+    convergence: '곡선 경계로 잘린 공동 셀의 질량·중심을 4차 구적으로 계산하고 중심에서 실제 증분 작용을 평가했다. n=32/64/128에서 C_int가 수렴하며 마지막 상대차는 길이 약0.0202%,제곱길이 약0.0564%다. 공동 부피의 독립 적분 차이는 최대1.78e-14다.'
+    controls: 'n=128에서 분리 위상의 C_int는 2.64e-28 이하, 노름제곱은 1과 1e-15 이내다. 격자의 행·열 경계 위상을 추가한 C 차이는1.39e-17 이하다. 셀 중심의 e가 y행에 따라 조금 달라져 S_old(e)의 추가는 유한 격자에서 정확한 열 위상이 아니다. 전체/증분 C 차이는 n128에서2.12e-6,2.25e-6으로 감소한다. 이 차이를 연속 경계 위상 불변성의 실패로 해석하지 않는다.'
+  rejected_inference:
+    - '실제 축약 2형식의 계수 감소를 전체 경계 정준 관계의 소멸로 해석하는 추론을 기각한다.'
+    - '유한 공동 측도의 위상 평균 T_beta만으로 모든 입력의 노름을 보존한다는 추론을 기각한다. 직교 잔여 R_beta를 유지하는 대안은 보존한다.'
+    - '유한 이산 위상표의 C_int>0만으로 모든 비영 beta의 엄격 수축을 선언하지 않는다. 2x2 부호곱 위상은 beta=pi/2에서 노름이 부활하며, 연속 증명의 내부 미분 조건이 필수다.'
+    - '노름 잔여를 에너지 밀도·암흑부문 원천으로 즉시 승격하지 않는다. 에너지 연산자·기준척도·총 응력과 물리 측도의 독립 유도가 필요하다.'
+  verification:
+    symbolic: '독립 수학 검산; 기계 증명 없음'
+    numeric: pass
+    independent_math_audit: pass
+    command: '.codex/hooks/python.cmd pytest tests/test_regge_conditional_dynamics.py -q'
+    result: '17 passed in 2.63s; source2 PASS'
+  source_boundary:
+    - 'Höhn, arXiv:1401.7731v3 (2014-10-27), https://arxiv.org/abs/1401.7731v3, §2.2 식 (2.6)–(2.8): 일반 복소 측도 M은 양자 보정을 포함하고 물리 전파자는 사전·사후 제약 투영을 요구한다. 현재의 조건부 읽기나 두 공급 측도를 고정한 출처가 아니다.'
+    - '생성함수의 라그랑주 관계, 조건부 사영, 콤팩트성 및 고립 고유값 섭동은 표준 수학이다. 추가 산출은 실제 전체 경계 관계의 계수, 공동 그램 영역 및 두 공급 측도의 위상 예산 계수다.'
+  unfinished:
+    - '실제 미시작용에서 공동 측도·조건부 읽기·초기 준비를 유도하고 28차원 경계 관계와 제약을 만족하는 물리 양자 전달로 구현하는 일'
+    - '남은 진폭의 에너지 연산자·기준척도·총 응력, 공통 계량의 동역학, 0D에서 3+1 Plebanski/Einstein과 같은 작용의 암흑에너지·암흑물질·허블 텐션 검증'
+
+  energy_split:
+    status: '[산출]'
+    target_link: '실제 공동 영역의 준비상에서 비상수 길이 에너지를 평균·잔여의 대각항만으로 분할할 수 있는지 판정한다.'
+    definitions:
+      - '고정 대칭 z의 공동 L2(mu)에서 Pf=E_mu[f|y], Q=1-P, chi=exp(i beta S)I psi다. P는 조건부 직교사영이며 입력공간의 T_beta^dagger T_beta와 다르다.'
+      - '유계 실연속 epsilon(e)>0에 대해 H/E_star=M_epsilon을 검사 연산자로 공급한다. E_star의 물리값은 미정이다. X_epsilon=2 Re <P chi,M_epsilon Q chi>는 무차원이며 E_full/E_star=<P chi,M_epsilon P chi>+<Q chi,M_epsilon Q chi>+X_epsilon이다.'
+    conditional_results:
+      - status: '[정리: 조건부]'
+        claim: '임의의 고정 실수 beta에서 모든 복소 입력 psi의 X_epsilon=0일 필요충분조건은 epsilon이 거의 모든 점에서 상수라는 것이다. 두 실제 공동측도에 대한 결과이며, 일반 미분 연산자나 모든 물리 해밀토니안의 금지 정리는 아니다.'
+        proof_boundary: 'p=a(e)b(y)1_D/Z의 교차항 커널 대각에서 위상을 소거한다. A(y)=int_0^ell(y) a(e)de로 두고 dnu proportional to a(e)b(y)1_D/A(y)를 정규화하면 대각 영조건은 epsilon의 e->y->e 조건부 평균 고정점이다. 두 평균의 노름 등호와 공통 직사각형으로 epsilon이 상수임을 얻는다. 커널은 내부에서 연속이므로 모든 입력의 이차형 소거에서 대각 조건으로 갈 수 있다.'
+      - status: '[정리: 조건부]'
+        claim: 'beta=0, psi=(1+epsilon)/||1+epsilon||에서 X_epsilon=2 E_y[(1+epsilon_bar) Var(epsilon|y)]/E_e[(1+epsilon)^2]다. 양의 비상수 epsilon이면 엄격히 양수다. 상수 epsilon에서는 모든 입력의 교차항이 0이다.'
+      - status: '[정리: 조건부]'
+        claim: '같은 측도에서 S->S+a(e)+b(y)는 교차항의 입력 연산자를 입력 위상으로 단위 공액하므로 그 스펙트럼을 보존한다. 서로 다른 측도나 서로 다른 beta 사이의 스펙트럼 불변성은 주장하지 않는다.'
+      - status: '[정리: 조건부]'
+        claim: 'sigma=|chi><chi|를 P sigma P+Q sigma Q로 바꾼 대각 상태의 공급 에너지 변화는 -E_star X_epsilon이다. 전체 확률은 보존되지만 같은 공급 에너지는 일반적으로 보존되지 않는다. 실제 기록 장치와 교환 부문의 총에너지 보존은 별도 동역학을 요구한다.'
+    proof: 'derivations/Q-0020/conditional_composition.derivation.md#조건부-평균과-잔여의-에너지-교차항'
+    numerical_results:
+      source_sha256: 'ae4c078e0a5a4b3b5a9a64dd587b8f35409a65569b7c088107ecea88b52f80e7'
+      artifacts: 'verify/Q-0020/regge_conditional_dynamics.json'
+      setup: 'h=1, beta=(0,1,5), 두 공동측도, epsilon=1+e/L, 각 축 n=(32,64,128). 곡선 경계로 자른 공동 셀과 실제 작용은 유지하고 epsilon은 입력 열의 중점에서 평가한다.'
+      beta5: 'n=128의 무차원 X_epsilon 극값은 길이 (-0.18252387430078426,0.22544391401250516), 제곱길이 (-0.14111521386961703,0.20155944525189268)다. n=64->128의 세 beta 전체 극값 최대 상대차는 각각 0.0006863060996418202,0.0012429639806632586이다. 연속 극한의 엄밀 오차 인증은 아니다.'
+      checks: '에너지 장부 잔차 1.3877787807814457e-15, 행렬/직접합 차이 2.498001805406602e-16, 위상독립 대각항 차이 6.938893903907228e-17, 상수 에너지 교차항 5.561946577567963e-17, 경계 위상 공액 차이 1.1488860242214323e-16, beta=0 양의 입력 항등식 차이 2.8449465006019636e-16이다.'
+      controls: '상수 epsilon=2에서 교차항이 0이다. 별도의 균등 2x2 공동측도, S=((1,-1),(-1,1)), epsilon=(1,2)에서는 교차행렬이 diag(-1/2,1/2)이며 모든 beta에서 성립한다. beta=0,1,pi/2,5로 검산했다.'
+    rejected_inference:
+      - '비상수 길이 에너지를 실제 준비상에서 평균·잔여의 대각 에너지 두 항만으로 항상 분할하는 처방을 기각한다. 같은 교차항을 보존하거나 물리 기록 장치의 교환을 계산하는 대안은 남긴다.'
+      - '교차항의 부호나 비영값을 암흑에너지·물리 방출·총 응력·실제 시간 진화의 에너지 보존 위반으로 해석하지 않는다.'
+    verification:
+      symbolic: '독립 수학 검산; 기계 증명 없음'
+      numeric: pass
+      independent_math_audit: pass
+      command: '.codex/hooks/python.cmd pytest tests/test_regge_conditional_dynamics.py -q'
+      result: '17 passed in 2.63s; source2 PASS'
+    source_boundary:
+      - '직교분해의 교차항과 조건부 평균의 등호 조건은 표준 수학이다. 실제 두 측도·준비상의 필요충분조건과 원래 작용을 넣은 교차항 극값을 추가했다.'
+      - '기존 E35의 총량에서 국소 응력을 정할 수 없다는 반례와 E37의 기록 장치 포함 총에너지 조건을 유지한다. 여기서는 물리 해밀토니안이나 국소 응력을 도출하지 않았다.'
+    unfinished:
+      - '조건부 사영을 물리 기록 결합으로 구현하고, 같은 해밀토니안에서 유한 장치 자원과 교환 에너지를 원래 정준 제약과 함께 계산하는 일'
+      - '미시 작용에서 실제 H·측도·준비·응력과 공통 계량을 유도하고 3+1 Plebanski/Einstein·암흑부문·허블 텐션을 같은 식으로 검증하는 일'
+
+regge_conservative_record:
+  status: '[산출]'
+  target_link: '접힘의 에너지 경로 보존에 필요한 조건부 기록을 구성하고, 장치 에너지 자원과 근사 오차를 함께 판정한다.'
+  scope: '고정 대칭 z의 공동 조건부 사영 P와 두 공동측도, 공급 에너지 H_s/E_star=1+e/L을 사용한다. 수치는 h=1이다. 물리 시간·국소 미시작용·배터리 준비·0D 에너지 보충·힘의 통합을 유도한 것은 아니다.'
+  definitions:
+    - 'P는 공동 L2(mu)의 조건부 평균, Q=1-P다. 기록계 R=C^2, H_R=0, 판독 M=|0><0|, 배터리 H_b/E_star=b>=0, H_A=H_R+H_b를 공급한다. 초기 곱상태와 강한 총에너지 보존, [M,H_A]=0을 요구한다.'
+    - 'N=U^dagger M U-P, eta(chi)^2=<N^2>, eta_sup=sup_chi eta(chi)다. eta는 무차원 RMS이며 확률과 다르다. 모든 공동 입력의 하한을 Ran(exp(i beta S)I)에만 제한한 최적 하한으로 옮기지 않는다.'
+  conditional_results:
+    - status: '[정리: 조건부]'
+      claim: '각 섬유의 ||i[P,H_s/E_star]||는 epsilon의 조건부 표준편차다. 전체 상한 sigma_star^2는 길이 1/12, 제곱길이 1/18이며 공통 직사각형에서 달성된다. 교환자 최악 상태의 계 에너지 분산 v_star는 각각 7/60,9/100이다.'
+    - status: '[정리: 조건부]'
+      claim: '유한 장치 분산과 판독 가환 조건 아래 eta_sup^2>=sigma_star^2/[4(v_star+Var(H_A/E_star))]다. 정확한 모든 입력 기록은 유한 분산으로 불가능하지만 반복 가능성은 이 하한의 전제가 아니다.'
+    - status: '[정리: 조건부]'
+      claim: '전체 에너지 t=epsilon+b의 섬유에서 t>=2이면 U_0=P tensor I+Q tensor X, t<2이면 항등을 택한다. 이는 양의 배터리 스펙트럼에서 단위이며 총에너지와 강하게 가환한다. 초기 사인 파동의 지지 1<b<1+W는 모두 t>2에 들어간다.'
+    - status: '[정리: 조건부]'
+      claim: '배터리 파동 eta_W=sqrt(2/W) sin(pi(b-1)/W)의 자기상관은 c_W(d)=(1-r)cos(pi r)+sin(pi r)/pi, r=|d|/W<=1이며 밖에서는0이다. 각 섬유 기록 효과 F=P circ c_W의 자취는1이고 B=F+P-FP-PF>=0, ||B||=gamma_y=1-<u,Fu>다.'
+    - status: '[정리: 조건부]'
+      claim: 'eta_sup^2=esssup_y gamma_y, eta_sup<=pi sigma_star/W다. 배터리 평균은 1+W/2, 분산은 kW^2, k=1/12-1/(2pi^2)다. 같은 배터리 상태를 붙인 이상 기록 V_0와 구성 V_W는 ||V_W-V_0||=sqrt(2)eta_sup를 만족하며 참조계 포함 모든 입력의 거리(자취노름의 절반)는 이 값 이하이다.'
+    - status: '[정리: 조건부]'
+      claim: 'eta 목표를 delta로 두고 W=pi sigma_star/delta를 택하면 충분하다. delta->0의 구성 표준편차와 위 필요 하한 주항의 비는 sqrt(pi^2/3-2)다. 이 비를 전역 최적성 또는 실제 준비상 전용 최적성으로 해석하지 않는다.'
+  proof: 'derivations/Q-0020/conditional_composition.derivation.md#에너지를-보존하는-근사-기록과-장치-자원'
+  numerical_results:
+    source_sha256: '06d48d9496ae2657d653ec1d508dd425b45da596543ca8ce4aae189245e68be5'
+    artifacts: 'verify/Q-0020/regge_conservative_record.json'
+    setup: '선행9개와 현재 소스의 해시를 대조한다. 두 측도, 각 축16/32/64분할, W=2/4/8/16에서 섬유 오차와 실제 작용 exp(i beta S)의 psi(e)=1 입력을 beta=0/1/5로 검사한다.'
+    resources: 'delta=0.01에서 장치 에너지 표준편차/E_star의 필요 하한은 길이14.429714711894572,제곱길이11.781294024379871이다. 구성값은16.3927583967259,13.38463118290097이고 배터리 평균/E_star는46.34498410585544,38.02402448465305다. 구성 RMS는0.009977723296041888,0.009976598175883047이다.'
+    convergence: 'n64,W16의 최악 오차 제곱은0.0031277149488731087,0.0020936922392820138이며 연속 적분은0.003128464245265958,0.0020939468962853894다. 마지막 격자의 오차 제곱 최대 상대차는0.0007192306022529849,0.0003653801603447082다. 연속 적분의 수치값을 엄밀 오차 인증으로 세지 않는다.'
+    finite_blocks: '두 측도와 (n,m)=(3,8),(4,16)의 네 유한 대조에서 단위성3.33e-16, 총에너지 가환4.44e-16, 기록 효과1.67e-16, 오차 행렬1.61e-16, 전체 등거리 차이3.22e-16, 에너지 장부8.89e-16 이하를 확인했다.'
+    exchange: 'n4,m16의 실수 중첩 입력에서 계/배터리 에너지 변화(E_star 단위)는 길이(-0.27582840026664157,+0.2758284002666418), 제곱길이(-0.22721349563524074,+0.22721349563524118)다. 교환자 하한에는 별도의 허수 중첩 상태를 사용한다.'
+  rejected_inference:
+    - '유한 분산과 판독 가환 조건에서 현재 P의 모든 공동 입력을 오차 없이 기록하는 경로를 기각한다. 양의 유한 에너지와 비영 오차의 보존 전달은 유지한다.'
+    - '단회 보존 전달을 배터리의 무한 재사용·상태 복귀·0D 에너지 생성이나 보충·물리 응력·힘의 통합으로 승격하지 않는다.'
+  verification:
+    symbolic: '독립 수학·구현 검산; 기계 증명 없음'
+    numeric: pass
+    independent_math_audit: pass
+    command: '.codex/hooks/python.cmd pytest tests/test_regge_conservative_record.py -q'
+    result: '12 passed in 1.77s; source2 PASS; 단회와 반복 기록을 함께 검증'
+  source_boundary:
+    - 'Ozawa, https://arxiv.org/abs/quant-ph/0112154v1 (2001-12-24), 식(3),(4),(6),(13),(14): 측정 오차·보존·판독 가환 조건과 필요 하한. 현재 P나 에너지 척도를 도출한 출처가 아니다.'
+    - 'Åberg, https://arxiv.org/abs/1304.1060v3 (2014-10-20), 식(1),(5), 부록D: 에너지 이동을 보상하는 저장계와 하한 있는 사다리의 표준 구성. 현재의 연속 사인 파동·조건부 P·단회 자원 상수는 별도 도출이며 촉매 재사용을 주장하지 않는다.'
+  repeated_record:
+    status: '[산출]'
+    target_link: '같은 계의 접힘 기록과 환류에서 에너지·상관의 보존을 판정하고 기록 수를 원천 에너지로 중복 계산하는 경로를 배제한다.'
+    definitions:
+      - '전체 SB의 직접적분 사영 A는 A_t=P(t>=2), A_t=I(t<2)이고 C=I-A다. z=psi tensor eta_W이며 같은 SB에 새 영에너지 R_j의 |0>만 공급한다. 각 전달은 U_j=A tensor I+C tensor X_j다.'
+    conditional_results:
+      - status: '[정리: 조건부]'
+        claim: 'U_N...U_1=A tensor I+C tensor (X_N...X_1)이므로 V_N psi=Az tensor |0^N>+Cz tensor |1^N>다. 모든 유한 N에서 혼합 기록은 없고 각 포인터 RMS 오차 eta_N=eta_1이다. SB 축약상태 A|z><z|A+C|z><z|C, 각 에너지 변화와 그 합0은 단회와 같다.'
+      - status: '[정리: 조건부]'
+        claim: '같은 초기 배터리를 붙인 이상 기록 V_0,N과의 차이는 단회처럼 (V_N-V_0,N)^dagger(V_N-V_0,N)=2B, 연산자 노름 sqrt(2)eta_sup다. 참조계를 포함한 자취 거리 상계도 N과 무관하다.'
+      - status: '[정리: 조건부]'
+        claim: '외부 복사 없는 전체 역연산은 입력과 모든 기록을 복원한다. 영에너지 외부 기록에 두 결과를 복사한 뒤 내부만 역전하면 (Az tensor |0>_ext+Cz tensor |1>_ext) tensor |0^N>_R다. 내부 기록만 초기화되고 SB 축약상태와 에너지 교환은 기록 직후와 같다.'
+      - status: '[정리: 조건부]'
+        claim: '순수 z와 p=<z,Az>에서 후자의 초기 SB 상태 복원 충실도는 p^2+(1-p)^2다. 모든 순수 입력을 복원하는 단위 과정은 입력에 의존하는 외부 기록을 남길 수 없다. 제한된 직교 입력만의 복원이나 외부 복사까지 함께 되돌리는 과정은 예외다.'
+    proof: 'derivations/Q-0020/conditional_composition.derivation.md#같은-계의-반복-기록과-상관을-남기는-환류'
+    numerical_results:
+      source_sha256: '06d48d9496ae2657d653ec1d508dd425b45da596543ca8ce4aae189245e68be5'
+      artifacts: 'verify/Q-0020/regge_conservative_record.json'
+      setup: '같은 두 측도의 공통 직사각형 섬유, (n,m)=(3,8),(4,16), N=1,2,3,5의16대조. 각 기록 비트에 총에너지별 전달을 순차 적용하며 닫힌 합성식을 구현에 재대입하지 않는다.'
+      checks: '최대 에너지 연산자 잔차2.6645352591003757e-15, 혼합 기록 확률 상계5.600109259658714e-32, 단회 출력 차이1.1102230246251565e-16, 전체 역 차이1.6653345369377348e-16, 충실도식 차이9.992007221626409e-16이다. p=1/2 입력의 복원 충실도는0.5±1.0e-15다.'
+      exchange: 'n4,m16,N5의 계/배터리 교환(E_star 단위)은 길이(-0.2758284002666416,+0.2758284002666422), 제곱길이(-0.2272134956352403,+0.22721349563524193)이며 단회와 같다.'
+      scope: '에너지 연산자와 출력 등거리 비교는 유한 섬유의 모든 계 입력에 대한 검사다. 외부 복사는 직교 기록 가지별 역전의 합으로 구현하므로 외부를 버린 축약상태와 충실도에는 동치이며 별도 외부 CNOT 행렬 구현 검사는 아니다. 모든 유한 N의 주장은 해석적 합성 증명에 의존한다.'
+    rejected_inference:
+      - '같은 계의 기록 복사 횟수를 독립 표본 수나 새 에너지 공급 횟수로 세는 추론을 기각한다. 동일 기록 복사의 임의 유한 N 가능성은 유지하되 독립 새 계의 무제한 처리 능력으로 확대하지 않는다.'
+      - '외부 기록을 남기고 내부만 역전하면 일반 순수 입력의 계·배터리가 완전히 복원된다는 추론을 p=1/2 반례로 기각한다.'
+    verification:
+      symbolic: '독립 수학·안정 소스 검산; 기계 증명 없음'
+      numeric: pass
+      independent_math_audit: pass
+      command: '.codex/hooks/python.cmd pytest tests/test_regge_conservative_record.py -q'
+      result: '12 passed in 1.77s; source2 PASS'
+    source_boundary:
+      - '직교 제어 기록의 반복과 순수상태 보존의 내적 논증은 표준 양자정보 구조다. 기존 양의 배터리·실제 공동 사영의 기록에 적용해 N 전체의 자원 장부와 외부 복사 뒤의 회복을 닫았다. 새 CE 물리 법칙이나 관측 예측으로 세지 않는다.'
+      - 'Vaccaro, Croke, Barnett, https://arxiv.org/abs/1804.05154v1 (2018-04-14), 1절: 새 qubit들의 반복 처리에서 같은 주변상태와 독립 표본을 구별하며 상관을 추적한다. 여기의 동일 S 복사와 별개이며 그 논문의 자원 감소율을 재사용하지 않는다.'
+    unfinished:
+      - '원래 정준 제약과 A 및 H의 양립, 독립 새 계 투입의 원천, 외부 기억 초기화·재충전 에너지를 같은 물리 작용에서 유도하는 일'
+  unfinished:
+    - '같은 미시작용에서 P와 H_s 및 배터리 준비·재충전·기록 결합을 유도하고, 원래 정준 제약과 독립 새 계 투입·외부 기억의 상관을 포함한 총장부를 판정하는 일'
+    - '접힘의 에너지 경로와0D 보충, 공통 계량·3+1 Plebanski/Einstein·전자기·약력·강력 통합, 같은 식의 암흑부문·허블 텐션 검증'
+
+regge_source_response:
+  status: '[산출]'
+  target_link: '응답이라는 사용자 영감을 실제 최종 레게 작용의 외부 원천 응답으로 시험하고, 접힘의 두 가지와 전체 진폭을 함께 남긴다.'
+  scope: 'R은 최종 네 단체의 작용이며 기존 S=A+B와 구별한다. 높이 h=1, L=2sqrt(10)/3, 원래 경계 위상 준비 p_old=beta partial R_old를 사용한다.'
+  axioms:
+    - '[공리: 검증 모형] 무차원 외부 원천 j를 s_j=beta(R-je)로 결합하고 F_j=F-beta j로 둔다. beta>0에서 정류식은 R_e=j다. j의 미시적 기원·에너지·시간은 공급하지 못한 열린 의무다.'
+    - '[공리: 검증 모형] 전체 구간의 정규화 측도 rho=1/L 또는2e/L^2를 유지한다. 종교적 응답 비유는 동기이며 물리적 동일성·즉각적 응답·모든 자극에 대한 비영 응답을 전제하지 않는다.'
+  conditional_results:
+    - status: '[정리: 조건부]'
+      claim: '작용의 기존 정확 미분 R_eee=48sqrt(3), R_eeee=720sqrt(3)에서 R_e(2+delta)=24sqrt(3)delta^2+120sqrt(3)delta^3+O(delta^4)다. 충분히 작은 j>0의 두 국소 정상점은 e_+/-=2 +/- sqrt(j/(24sqrt(3)))-5sqrt(3)j/144+O(j^(3/2))다.'
+    - status: '[정리: 조건부]'
+      claim: '정칙 정상 가지에서 de_+/-/dj=1/R_ee=+/-1/(2sqrt(24sqrt(3)j))+O(1)이다. j=0에는 유한한 선형 역헤시안이 없으므로 그 점의 반응은 비선형 두 가지로 읽는다. 이는 시간 없는 정적 민감도다.'
+    - status: '[정리: 조건부]'
+      claim: 'a=-beta G_e와 G_ee(2)=6sqrt(2)를 사용하면 a_+/-/(beta sqrt(j))->-/+3^(1/4), a_+/-^2/(beta^2 j)->sqrt(3)다. 공급한 H_square=a^2/2에는 H_square/(beta^2j)->sqrt(3)/2지만 물리적 에너지의 산출은 아니다.'
+    - status: '[정리: 조건부]'
+      claim: '전체 열린 그램 구간에서 R_e=2(4-e^2)(2pi-3theta)/sqrt(8-e^2), cos(theta)+1/2=3(4-e^2)/(16-3e^2)다. 두 인자의 부호가 같아 R_e>0이고 e=2에서만0이다. 따라서 j<0에는 이 전체 구간의 실수 정상점이 없다.'
+    - status: '[정리: 조건부]'
+      claim: '초기 준비 p_old=beta partial R_old와 생성 이동의 정준 전달을 함께 쓰면 c=0이고 F_j=beta(R_e-j)다. 원천은 제약면 자체를 바꾸므로 고정 C의 매끄러운 흐름에 대한 계수 비통과 정리와 모순되지 않는다.'
+    - status: '[정리: 조건부]'
+      claim: 'K_beta(j)=integral rho exp[i beta(R-je)]de는 고정 유한 beta>=0에서 복소 j 전체의 정칙 함수다. 실수 j에서 |K|<=1, |partial_j^n K|<=(beta L)^n이다. 로그미분은 K가 영이 아닌 곳에서만 국소 정의하며 영점 근방의 유계를 주장하지 않는다. beta=0에서는 K=1이고 양의 차수 미분은0이다.'
+  proof: 'derivations/Q-0020/conditional_composition.derivation.md#외부-원천의-비선형-응답'
+  numerical_results:
+    source_sha256: '7e86165028cb4c4d771c4d4ca4b8feaf0e5023bd97d7aba2e8272ca25b30ca33'
+    artifacts: 'verify/Q-0020/regge_source_response.json'
+    setup: '정상점·원래 제약·a의 수치 검사는 beta=1, j=10^-2,...,10^-6의 두 가지다. 일반 beta 의존성은 정확한 배율 복원식이다. K는 beta=0,1,5,20, j=-.01,0,.01과 두 측도의24조건을 계산한다.'
+    branches: '직접 레게 기울기 잔차4.579669976578771e-16, F_j 잔차4.735795089416683e-16, 원천 차분 민감도의 상대오차4.941212453766899e-9 이하다. j=1e-6의 근은1.9998448390374826,2.0001550406812023이고 민감도는-77.61056360153924,77.49028227778714다.'
+    asymptotics: 'j=1e-6의 중심 이동 계수는-0.06014065756509979, 정확 계수와 차이는4.524513777526273e-9다. a^2/j는1.729232965124859,1.7348744625119825이며 sqrt(3)과의 최대 차이는 j=.01의0.31402에서 j=1e-6의0.00282366으로 감소한다.'
+    kernel: '512/256점 구적 차이는0·1·2차를 합해 최대2.3822415798378985e-11, 원천의 독립 유한 차분은 1차1.0331220632663583e-9,2차5.365195739429459e-7이다.'
+    negative_source: '실수 정상점이 없는 j=-.01,beta20에서 |K|는 길이 측도0.11913934577350449, 제곱길이 측도0.22012047713662863이다. 정상점 부재를 전체 진폭 소멸로 해석할 수 없다.'
+    limitations: '고정된 두 근 탐색 구간은 검사한 작은 양의 j의 국소 가지용이다. 전역 양의 원천 해 찾기·시간 의존 응답·관측 확률·에너지 보존을 검사한 결과가 아니다.'
+  verification:
+    symbolic: '정확 테일러 계수·음의 원천 무근 부호·sqrt(3) 배율·전체 적분 정칙성의 독립 수학 검산'
+    numeric: pass
+    independent_math_audit: pass
+    command: '.codex/hooks/python.cmd pytest tests/test_regge_source_response.py -q'
+    result: '6 passed in 1.97s; source2 PASS'
+  source_boundary:
+    - '정상점 합류와 균일 진동 적분의 표준 배경은 NIST DLMF https://dlmf.nist.gov/36.12 다. 제곱근 지수 자체를 새 물리 법칙으로 주장하지 않는다.'
+    - '추가 산출은 고정한 실제 R의 원천 의존 두 가지·중심 이동·a^2/(beta^2 j) 계수와 전체 K의 수치 응답이다. 지연 그린 함수나 암흑부문 원천은 미유도다.'
+  unfinished:
+    - 'j의 자유도·반작용·총에너지를 포함하는 같은 미시 작용을 정하고, 물리 시간·인과적 지연 응답·물리 내적을 도출한다.'
+    - '두 길이 가지·전체 커널과 원래 공동 제약의 양립, 접힘 보존·0D 보충·공통 계량·3+1 Plebanski/Einstein·모든 힘·암흑부문·허블 텐션 검증'
+
+regge_joint_energy_flow:
+  status: '[산출]'
+  target_link: '원래 두 제약의 실제 에너지 적합성을 판정하고, 접힘·분할·병합을 매끄러운 단일 흐름으로 구현할 수 있는 범위를 정한다.'
+  scope: '비퇴화 유클리드 네 단체의 공유 무차원 길이 q=(e,y,z13), 실제 두 이동의 c=p_y-beta A_y, F=p_e+beta B_e, S=A+B, G=S_y, a=-beta G_e다. beta는 비영 상수이고 30차원 정준 공간의 공동 제약면 C는 28차원이다.'
+  axioms:
+    - '[공리: 검증 모형] 무차원 흐름 매개변수 tau와 H/E_star=mathcal_H를 공급한다. 고정 L의 선형 길이 1+e/L, beta G, a^2/2를 비교한다. 물리 시간·에너지 척도·미시 해밀토니안은 미유도다.'
+    - '[공리: 검증 모형] 높이 h=.9,1,1.1, beta=1,5의 6점과 작은 e,y,z 변형 3점, beta=1의 세 구성 궤도 tau=0.002를 택한다. 기존 공급 모형의 확장이며 새 CE 물리 후보가 아니다.'
+  definitions:
+    - '[정의] 정준 이동 p_prime=p+beta dB, Pi=p_z+beta B_z에서 omega_C=dy wedge d(beta G)+sum dz wedge dPi다. a de wedge dy와 beta G_z dy wedge dz 교차항을 모두 유지한다.'
+    - '[정의] H_T=mathcal_H+u c+v F에서 제약면 위 승수식은 u={F,mathcal_H}/a, v=-{c,mathcal_H}/a이며 a!=0에서만 나눗셈으로 정의한다.'
+  conditional_results:
+    - status: '[정리: 조건부]'
+      claim: '매끄러운 C에서 닫힌 omega_C와 매끄러운 i_X omega_C=d mathcal_H를 가정하면 L_X omega_C=0, Phi_tau^*omega_C=omega_C다. 국소 흐름이 존재하는 유한 시간에는 rank를 보존하므로 이 C의 rank28 정칙층과 rank26 퇴화층 사이를 통과하지 못한다. 임의의 남은 운동량 의존성을 허용해도 성립한다.'
+    - status: '[정리: 조건부]'
+      claim: 'a_e!=0인 국소 구역에서 구성공간 에너지 mathcal_H(e,y,z)의 매끄러운 제약 보존 흐름이 존재할 필요충분조건은 a=0 면 전체에서 H_e=H_y=0이다. 이는 국소형 mathcal_H=H0(z)+a^2 k와 동치다. 한 점에서만 미분이 0인 조건이나 전역 분류로 확대하지 않는다.'
+    - status: '[정리: 조건부]'
+      claim: '국소형의 흐름은 e_dot=2a_y k+a k_y, y_dot=-2a_e k-a k_e, z_dot=0, Pi_dot=beta G_z y_dot-H_z이며 a_dot=a(a_e k_y-a_y k_e)다. 모든 성분을 포함한 매끄러운 연장은 정칙 구역의 흐름으로 정해지며 퇴화면에서 임의의 핵 벡터를 독립적으로 추가할 수 없다.'
+    - status: '[정리: 조건부]'
+      claim: 'mathcal_H=1+e/L은 a=0에서 {F,mathcal_H}=-1/L을 남기므로 두 제약 보존 승수가 없다. mathcal_H=f(beta G)도 아래 정확한 퇴화점에서 f_prime(beta G)!=0이면 {c,mathcal_H}=-beta f_prime G_y!=0이므로 배제된다. 임계값에서 f_prime=0인 예외는 별도 근방 적합성 검사가 필요하다.'
+    - status: '[정리: 조건부]'
+      claim: '높이 h=1,e=2,y=sqrt(8/3)에서 Theta_s=pi-2acos(sqrt(15)/5)>0, Theta_r=pi-acos(-4/5)>0이고 G_y=-7sqrt(2)Theta_s/8-5sqrt(3)Theta_r/9-7sqrt(3)/30<0이다. 실제 네 y-삼각형의 면적·이면각 미분과 정확한 그램 역행렬로 계산한다.'
+    - status: '[정리: 조건부]'
+      claim: '공급한 비음수 mathcal_H=a^2/2는 e_dot=a_y,y_dot=-a_e,z_dot=0,a_dot=0의 매끄러운 흐름을 갖는다. h=1,e=2에서 a_e=-6sqrt(2)beta라 좌표 흐름은 비정지다. a=0에서는 dH=0이므로 전체 벡터는 omega_C의 핵에 속한다. 이것을 물리적 에너지 운동·유일 에너지·공통 계량 선택으로 승격하지 않는다.'
+  proof: 'derivations/Q-0020/conditional_composition.derivation.md#공동-제약의-에너지-흐름과-퇴화면'
+  numerical_results:
+    source_sha256: '60d1ab970f6811e5c7424767e4f964ee5c493c8abeb1d53b5766f935ffe78c66'
+    artifacts: 'verify/Q-0020/regge_joint_energy_flow.json'
+    setup: '현재 소스와 의존 소스9개의 해시를 보존한다. 전체 30차원 벡터의 점별 접선 검사는 9점이며, 시간 적분은 구성 q만의 3궤도다.'
+    exact_certificate: 'G_y=-3.216283419183549; 네 삼각형 합과 음의 닫힌식의 기호 차이는0이다. 각도·면적의 개별 정확 항도 JSON에 보존한다.'
+    derivative_checks: '평탄 a 공식 오차5.1810407815840634e-11, a_e의 독립 해석식 오차1.4674741066755814e-7, 외부 차분 간격 .002/.001의 차이1.4782928872136836e-6, 변형 경계의 독립 작용 혼합 차분 차이1.1941854913266603e-7이다.'
+    full_tangent: '전체 두 제약율 잔차8.296865416923538e-9, 원래 p_e,p_y 접선의 독립 차분 차이4.4140364252598374e-7, Pi_z 전달식 차이6.601715085707838e-8이다. Pi_z 변화를 0으로 버릴 때 결함은 최대370.6597166061904다.'
+    conservation: '점별 에너지율 잔차9.094947017729282e-13, a율 잔차9.026217719207061e-14다. e=1.98,2,2.02에서 시작한 구성 궤도의 a 변화6.62432886322506e-11, 에너지 변화1.3284540134606004e-11, 4/8단계 끝점 차이1.0764256153095175e-10 이하다.'
+    limitations: '기계 검사는 짧은 구성 궤도와 전체 벡터의 점별 접성이다. 전체 운동량 궤도의 적분·장시간 완비성·폐곡선 홀로노미·모든 경계 통과를 검사한 것이 아니다. rank 비통과는 별도의 해석적 증명이다.'
+  rejected_inference:
+    - '고정한 C의 정칙층과 퇴화층을 매끄러운 단일 Hamilton 흐름으로 잇는 경로를 배제한다. 이산 정준 관계나 제약면 자체를 바꾸는 확장 작용은 이 명제의 범위 밖이다.'
+    - '선형 길이와 비임계 f(beta G)를 실제 공동 제약의 매끄러운 에너지로 채택하는 경로를 배제한다. 관련 정확 증인은 같은 JSON의 fold_certificate와 flat_points에 보존한다.'
+  verification:
+    symbolic: '실제 그램 역행렬·면적·각도 미분의 정확식과 독립 수학 검산; 형식 증명기로 검증하지 않음'
+    numeric: pass
+    independent_math_audit: pass
+    command: '.codex/hooks/python.cmd pytest tests/test_regge_joint_energy_flow.py -q'
+    result: '7 passed in 11.35s; source2 PASS'
+  source_boundary:
+    - 'Dirac 승수·카르탕 공식·하다마르 나눗셈은 표준 수학이다. 실제 레게 G_y의 정확한 부호, 현재 후보의 불일치와 전체 접선·궤도 대조가 추가 산출이다. 관측 예측이나 신규성의 보편 판정은 아니다.'
+    - 'Dittrich-Hoehn, https://arxiv.org/abs/1108.1974v2 (2012-11-23), 6--7절은 이산 작용의 정준 관계와 사전·사후 제약의 배경이다. 공급 a^2/2 에너지의 미시 유도 출처가 아니다.'
+    - 'https://web.ma.utexas.edu/users/uhlen/solitons/notes.pdf p41: 카르탕 공식과 텐서 보존의 표준 배경. 가변 계수에 대한 적용은 이 절의 자체 증명으로 명시한다.'
+  unfinished:
+    - '같은 작용의 이산 정준 관계와 전체 커널에서 두 길이 가지·에너지 교차항·보조자원을 보존하는 전달을 원래 공동 제약과 대조하는 일'
+    - '물리 시간·에너지·내적·편극·장치 준비와 환류, 0D 보충·공통 계량·3+1 중력·전자기·약력·강력·암흑부문·허블 텐션'
+
+regge_record_constraint:
+  status: '[산출]'
+  target_link: '접힘 기록이 실제 사전 제약의 영모드를 보존하는지 판정하고, 장치 포함 제약과 원래 두 제약의 축약을 구별한다.'
+  scope: '공동 공간의 조건부 rho_y de와 p_y dy, 실제 두 번째 레게 작용 B, 공급 주기 F_s 도메인, 검사 에너지 epsilon=1+e/L이다. Pi_F는 한 사전 제약의 사영이며 전체 중력 물리사영이 아니다.'
+  definitions:
+    - 'ell=ell(y), rho=1/ell 또는2e/ell^2, j_F=exp(-i beta B)/sqrt(ell rho), J_F phi=j_F phi(y), Pi_F=J_F J_F^dagger. 표적 a=1과 a=j_F의 양의 배터리 기록을 비교한다.'
+    - '곱 준비 z=j_F tensor eta_W에서 lambda_W는 두 기록 가지를 합한 Pi_F tensor I_b 밖의 제곱노름이다. q=<z,Az>, k=(<j_F| tensor I_b)Az이면 lambda_W=2(q-||k||^2)다.'
+  conditional_results:
+    - status: '[정리: 조건부]'
+      claim: '기존 조건부 표적 a=1은 W->infinity에서 lambda=2p(1-p), p=|<1,j_F>|^2다. beta=0의 제곱길이 측도에서 p=8/9, lambda=16/81이므로 영모드 불변성을 일반적으로 주장할 수 없다. p=0,1의 예외는 유지한다.'
+    - status: '[정리: 조건부]'
+      claim: '영모드 표적 a=j_F와 곱 준비에서는 nu가 폭 alpha=ell/L의 균등 에너지 분포다. phi_nu(k)=exp(i k epsilon_center)sinc(alpha k/2)이고 lambda_W=2 integral dk/(2pi) |eta_hat_W|^2 |phi_nu|^2(1-|phi_nu|^2)>0이다. beta와 두 rho에 독립이며 버퍼 b>1로 양의 배터리 계산과 전체 실선 푸리에 계산이 일치한다.'
+    - status: '[정리: 조건부]'
+      claim: '사인 배터리의 영모드 표적 누설은 0<lambda_W<=pi^2 alpha^2/(6W^2), W^2 lambda_W->pi^2 alpha^2/6이다. 유한 W의 정확한 원래 F_s 영모드 보존은 이 구성에서 불가능하지만 근사 보존은 개선된다.'
+  apparatus_constraint_alternative:
+    status: '[공리: 검증 모형]'
+    definition: 't=epsilon(e)+b>2 부문의 (e,t) 좌표에서 F_t=F_s의 위상·밀도 공액 주기 도메인을 공급한다. 전체 F_tot=direct-integral F_t는 (e,b)에서 F_s+i epsilon_prime partial_b다. 끝점은 고정 t에서 이어 b_upper=b_lower-alpha다.'
+    conditional_result: '[정리: 조건부] 야코비안1인 좌표변환과 주기 미분의 직접적분 도메인에서 F_tot은 자기수반이고 H_tot/E_star=M_t와 강하게 가환한다. F_tot의 영 스펙트럼 사영 A_tot과 기록 U=A_tot tensor I+(I-A_tot) tensor X는 둘 모두와 강하게 가환한다.'
+    preparation: '정규화 chi in L2(t>2)에 대해 Psi_chi=j_F(e)chi(epsilon+b)는 양의 배터리 상태이며 F_tot=0이다. 유한 구간 지지의 H1 chi에는 내부 미분식 F_s^loc Psi=-i epsilon_prime j_F chi_prime(t)가 비영이다. 이는 원래 자기수반 F_s의 작용이 아니다.'
+    domain_boundary: '원래 고정 b 주기 도메인은 chi(1+b)=chi(1+alpha+b)를 요구한다. alpha>0의 반직선 주기성을 만족하는 L2 chi는0뿐이므로 비영 상관 준비는 그 도메인 밖이다. 에너지별 이동 접합을 갖는 F_tot의 도메인과 구별한다.'
+    distinction: '곱 준비의 원래 F_s 사영 누설 O(W^-2)와 상관 준비의 F_tot 누설0을 구별한다. F_tot 영모드에서 기록 라벨0의 확률은1이다. 이는 물리적 결과 선택 법칙이나 원래 F_s·사후 c의 보존 증명이 아니다.'
+  proof: 'derivations/Q-0020/conditional_composition.derivation.md#기록의-사전-제약-누설과-장치-포함-제약'
+  numerical_results:
+    source_sha256: '95ed3797ad240b1aa32c18f9aaaace31ee4d943f98ba5a50565c0da65fbf1905'
+    artifacts: 'verify/Q-0020/regge_record_constraint.json'
+    setup: '현재와 선행10개 소스 해시. h1,y/Y0=.75/1/1.03,beta0/1/5,두 측도·두 표적,n32/64/128의108격자 각각 W2/8/32/128을 계산한다.'
+    convergence: '마지막 격자 최대 상대변화0.002965794243756241, 작용 배열과 개별 기하의 차이7.993605777301127e-15다. 직접 파동8대조의 공식 차이1.7659484985443896e-15, 유한 전체 블록8대조의 에너지 잔차5.655198531684391e-16이다.'
+    adapted_continuum: 'alpha1에서 W2/8/32/128/512의 누설은0.19702234458604806/0.022791020129003997/0.001565427951505755/0.00009977925431835463/0.000006265326849029622이다. W512의 W^2 lambda=1.6424178415120212이며 점근 상수pi^2/6=1.6449340668482264다.'
+    apparatus: '실제 작용 파동36차분의 총제약 잔차1.5602978241062808e-9, 계 단독 잔차0.3056267445596831--0.6300656749310596이다. 고정 b의 잘못된 경계 결함1.01465867667874--1.0329287188579808, 에너지에 맞춰 이동한 경계 결함0이다. 고정 t 유한 사영/제약 가환 잔차6.420215791079834e-16, 고유모드 잔차2.02e-15 이하를 확인했다.'
+    limitations: '계 단독 수치는 도메인 밖 상관 준비의 내부 미분식 잔차다. 위상·밀도 제거 후 경계 포락선과 고정 t 유한 스펙트럼을 대조했다. 전체 경계형식·무한차원 자기수반성·강한 가환성은 해석적 직접적분 증명이며 유한 행렬만으로 증명하지 않는다.'
+  rejected_inference:
+    - '총에너지 보존 기록이면 원래 사전 F_s의 영모드도 자동 보존된다는 추론을 기각한다.'
+    - '표적을 j_F로 바꾸기만 하면 유한 곱 배터리에서 원래 F_s 영모드가 정확히 보존된다는 추론을 기각한다.'
+    - '장치 포함 F_tot의 영모드 기록을 원래 사후 c까지의 양자 축약·물리 선택·미시 에너지 유도로 확대하지 않는다.'
+  verification:
+    symbolic: '독립 수학 및 안정 구현 검산; 기계 증명 없음'
+    numeric: pass
+    independent_math_audit: pass
+    command: '.codex/hooks/python.cmd pytest tests/test_regge_record_constraint.py -q'
+    result: '10 passed in 3.30s; source2 PASS'
+  source_boundary:
+    - '사영 누설·푸리에 상관·직접적분·주기 미분의 공액은 표준 수학이다. 현재 두 측도와 실제 B를 넣은 누설, 그 감소율과 장치 제약의 범위를 산출했다. 새 CE 관측 법칙은 아니다.'
+    - 'Dittrich-Hoehn, https://arxiv.org/abs/1108.1974v2 (2012-11-23), 7절: 사전·사후 제약은 서로 일반적으로 가환하지 않으며 각각을 자동으로 게이지 대칭으로 읽을 수 없다. 현재 F_tot를 원래 레게 제약으로 도출한 출처가 아니다.'
+  unfinished:
+    - '원래 사전·사후 제약을 함께 축약한 공간에서 물리 내적·편극·기록과 에너지 교환을 같은 작용으로 정하는 일'
+    - '장치 제약 기여·상관 준비·외부 기억·충전의 미시 유도, 0D 보충·공통 계량·3+1 중력·모든 힘·암흑부문·허블 텐션'
+
+regge_scalar_source:
+  status: '[산출]'
+  target_link: '외부 j를 공급하던 고리에서 같은 단체의 스칼라 작용으로 원천과 기하·장 경계 운동량을 함께 계산하고, 에너지·시간 유도로 갈 입력을 판별한다.'
+  scope: 'h=1의 네 유클리드 4-단체, 공유 무차원 길이 15개와 꼭짓점 장 6개다. 총작용 s=beta R+kappa S_phi, beta,kappa>0, S_phi=1/2 sum V Delta_phi^T G^-1 Delta_phi를 공급한다. 장도 기준척도로 나눈 무차원 변수다.'
+  axioms:
+    - '[공리: 검증 모형] 질량 없는 스칼라의 단체별 선형 보간과 V=sqrt(det G)/24를 택한다. 같은 규칙을 old/middle/final 및 추가 두 단체에 각각 적용한다. 기존 공유 계량과 경계 준비의 물리적 기원은 미유도다.'
+    - '[공리: 검증 모형] phi_0=m-v/2, phi_1=m+v/2, phi_2,...,phi_5=0의 경계 자료를 공급한다. 생성·병합에서 장의 값은 유지하고 그 경계 운동량을 전체 작용 증분으로 갱신한다.'
+  definitions:
+    - '[정의] L=2sqrt(10)/3, r=sqrt(40/9-e^2), d=sqrt(3)r/(9e), b=4sqrt(3)e/(9r), 0<e<L다. 이 경계 준비에서는 T(e)=S_phi=(d v^2+b m^2)/2다.'
+    - '[정의] eta=sqrt(kappa/beta)|v|, zeta=m/v는 v!=0에서 정의한다. j_eff(e)=-kappa T_e/beta이고, 외부 독립 원천과 달리 같은 기하의 함수다.'
+    - '[정의] A_tot=beta A+kappa A_phi, B_tot=beta B+kappa B_phi, c_tot=p_y-(A_tot)_y, F_tot=p_e+(B_tot)_e, a_tot=-(A_tot+B_tot)_{ey}다. 길이 미분에서 꼭짓점 장은 고정한다.'
+  conditional_results:
+    - status: '[정리: 조건부]'
+      claim: '각 단체에서 det G=4e^2r^2/3, V=e sqrt(3)r/36, Delta_phi^T G^-1 Delta_phi=v^2/e^2+4m^2/r^2다. 네 항을 더하면 T=(d v^2+b m^2)/2를 얻는다.'
+    - status: '[정리: 조건부]'
+      claim: '초기 전체 경계 위상 p_old=d(beta R_old+kappa S_phi,old)를 준비하면 p_middle=p_old+dA_tot, p_final=p_middle+dB_tot이다. 생성 제약 c_tot=0과 병합 제약 F_tot=beta R_e+kappa T_e=0이 함께 따른다. 스칼라 경계 운동량 pi_phi=kappa K phi도 합성한다. kappa=0이면 원래 중력 관계를 복원한다.'
+    - status: '[정리: 조건부]'
+      claim: '고정 |zeta|<1/6, eta->0+에서 e_pm=2 +/- sqrt(5(1-36zeta^2)) eta/36 +(-5/1728-85zeta^2/144) eta^2+O(eta^3)다. 전체 제약 괄호는 a_tot^2/(beta kappa v^2)->5(1-36zeta^2)/18이다. 경계 원뿔에 가까워질 때 균일한 근사로 주장하지 않는다.'
+    - status: '[정리: 조건부]'
+      claim: '고정 |zeta|>1/6이면 e=2로 접근하는 작은 eta의 정상 가지가 없다. v=0,m!=0이면 R_e>=0와 b_prime>0 때문에 열린 허용구간 전체에 정상근이 없다. |zeta|=1/6이면 e=2가 정확근이며 다른 근은 e=2-25 eta^2/648+O(eta^4)다.'
+    - status: '[정리: 조건부]'
+      claim: '연결된 양의 그램 복합체에서 모든 꼭짓점 장을 자유변분해 K phi=0이면 S_phi=0이고 phi는 공통 상수다. 비영 원천은 경계 준비 또는 다른 동역학을 필요로 한다. sum pi_phi=0은 장의 상수 이동 항등식이며 에너지 보존식이 아니다.'
+    - status: '[정리: 조건부]'
+      claim: '실수 beta,kappa,v,m에서 두 정규화 측도의 전체 K=integral rho exp(i beta R+i kappa T) de는 절댓값<=1이고 매개변수에 연속이다. 길이측도 rho=1/L, 고정 v!=0에서 kappa->0+이면 K_kappa-K_0=i sqrt(3)v^2 exp(i beta R(0)) kappa log(1/kappa)/18+O(kappa), R(0)=8sqrt(3)pi/3다. 따라서 kappa=0의 유한 첫 미분과 복소 전체함수 성질을 갖지 않는다.'
+    - status: '[정리: 조건부]'
+      claim: '제곱길이 측도 rho=2e/L^2에서는 integral rho T가 유한하므로 kappa=0의 첫 미분은 i integral rho T exp(i beta R) de다. 길이측도의 로그계수 수치와 구별하며 이 미분의 수치 검산은 수행하지 않았다.'
+  proof: 'derivations/Q-0020/conditional_composition.derivation.md#스칼라-원천과-기하의-상호-응답'
+  numerical_results:
+    source_sha256: 'f31a9a5518bc7e6fa269f26c81cda5ae8ff74b1f5795fa3e5f046897467f65e0'
+    artifacts: 'verify/Q-0020/regge_scalar_source.json'
+    setup: 'zeta=0,1/12와 eta=.1,.03,.01,.003,.001의 20근, eta=.01에서 (beta,kappa)=(1,.2),(5,1),(2,3)의 6근을 대조한다. 별도 기하 3점은 정상방정식 밖에서 작용·미분·조성만 검사한다. threshold 3점과 순수 차이 모드의 끝점 5결합을 검사한다.'
+    stationary: '26근의 F_tot 최대7.28583859910259e-17, c_tot=0, 조성2.8303748234037585e-14, 최종 운동량5.329070518200751e-15, 장 이동 전하9.540979117872439e-18, 독립 혼합 괄호5.024950247567439e-11이다.'
+    geometry: '실제 그램 조립과 닫힌 작용 차이3.7947076036992655e-19, e 힘 차이1.951563910473908e-18이다. 일반 기하의 길이 차분5.833389327136729e-13, 길이-장 교차미분2.8739233215446802e-12, 작용 전미분 대조2.0110843546028434e-11이다. 최소 그램은 근 집합0.14362496772670327, 일반 기하0.12345770646611769다.'
+    branch_coefficient: 'eta=.001,zeta=0에서 제곱비0.27768116554125877/0.27787440594998775, 목표5/18, 최대차9.662817220995601e-5다. zeta=1/12의 제곱비0.208248217656128/0.2084185572891313, 목표5/24, 최대차8.522395579796394e-5다.'
+    threshold: 'eta=.03,.01,.003에서 -25/648 계수의 절대차는1.0375231655430917e-5,1.1534470848936773e-6,1.0380868400994281e-7이다.'
+    endpoint: '길이측도 beta=v=1,m=0에서 로그 복소계수는 -0.0896004514304703-0.0350858712691475i다. kappa=1e-5/1e-6 두 점의 로그 기울기 절대차2.9301236030269173e-6이다. 구적 허용치 변경 차이 최대7.076665845739972e-10, 보고 오차 추정3.7577091068265945e-11이다.'
+    limits: '수치 오차 추정은 엄밀 구적 상계가 아니다. 주된 26근은 정규화된 기하 모형의 반응이며 시간 궤도·에너지 보존·물리 원천 준비를 검사하지 않았다.'
+  rejected_routes:
+    oscillator:
+      status: '[정리: 조건부]'
+      claim: '독립 (Q,P) 조화원천 H_s=P^2/(2M)+M Omega^2 Q^2/2와 F_j=F-beta gQ를 붙여도 {c,F_j}=a다. a=0에서 beta gP/M!=0이면 F_j 보존 방정식을 만족하는 유한 승수가 없다.'
+      witness: 'verify/Q-0020/regge_scalar_source.json#negative_controls'
+      reopening: '같은 미시 작용에서 원천 기여를 포함한 전체 제약과 에너지 전달을 다시 유도한다.'
+    auxiliary_e:
+      status: '[미완성]'
+      claim: 'e를 보조변수로 놓고 R(e)를 퍼텐셜로 쓰는 별도 연속시간 작용은 원래 이산 레게 작용의 유도로 인정하지 않는다. 접힘점의 헤시안만으로 평형 안정성을 판정하지 않는다.'
+      reopening: '시간·운동항·원래 정준 관계 사이의 실제 작용 유도를 제공한다.'
+  verification:
+    symbolic: '그램 행렬·원뿔·분기·끝점 로그 및 자유변분 영원천 정리의 독립 수학 감사; 전체 기계 증명은 아님'
+    numeric: pass
+    independent_math_audit: pass
+    command: '.codex/hooks/python.cmd pytest tests/test_regge_scalar_source.py -q'
+    result: '9 passed in 2.74s; source2 PASS'
+  source_boundary:
+    - 'Quantum Finite Elements for Lattice Field Theory, arXiv:1601.01367v1, 2016-01-07, §2, https://arxiv.org/html/1601.01367v1#S2: 단체별 스칼라 선형 보간 작용의 표준 입력이다.'
+    - '새 검증식은 그 표준 작용을 지정한 실제 레게 생성·병합에 넣은 원천 원뿔·분기 계수·끝점 계수다. 물리적 신규성이나 독립 관측 예측으로 승격하지 않는다.'
+  unfinished:
+    - '비영 경계 장의 준비와 원천 저장·환류를 같은 작용에서 유도한다. 로런츠 부호·시간방향·초기자료·정준 전달을 정하고 공변 에너지 교환 장부를 도출한다.'
+    - '공통 계량 선택·3+1 Plebanski/Einstein·전자기·약력·강력 통합 및 같은 작용의 암흑에너지·암흑물질·허블 텐션 검증'
+
+regge_lorentz_clock:
+  status: '[산출]'
+  target_link: '같은 네 단체의 로런츠 경계 문제에서 준비된 스칼라의 시간·경계 에너지와 기하 반작용을 연결한다.'
+  scope: '4개 4-단체, 내부 사면체 6개, 경계 사면체 8개와 부호 있는 무차원 길이제곱 15개다. 고정 복소 가지 근방의 검산이며, 고전 정준 생성함수는 복소 레게 작용 S_C의 실수부다.'
+  axioms:
+    - '[공리: 검증 모형] 로런츠 부호 (-+++), 공유 계량, 방향 0->1을 보존하는 접합과 양의 beta,kappa를 공급한다. 일반 접합의 시간방향·홀로노미를 코드가 인증하지 않는다.'
+    - '[공리: 검증 모형] s_01=-T^2, s_0j=s_1j=b=35/36, s_jk=8/3, j,k=2,...,5와 phi=(-v/2,v/2,0,0,0,0)를 공급한다. 스칼라는 각 단체에서 선형 보간한다.'
+    - '[공리: 검증 모형] S_C=-i sum_h sqrt(V_h^2) epsilon_h, epsilon_h=k_h pi+sum theta_h, k_h=1(경계),2(내부), sqrt(-a)=i sqrt(a), log(-a)=log(a)-i pi 가지를 택한다. s_cl=beta Re S_C+kappa S_phi, S_phi=-sum sqrt(-det G) Delta_phi^T G^-1 Delta_phi/48이다.'
+  definitions:
+    - '[정의] C=sqrt(3)/9, D=4(b-8/9)=1/3, r=sqrt(D+T^2), T_0=1/3, xi=kappa v^2/beta다. S_L,phi=kappa S_phi=kappa C r v^2/(2T)다.'
+    - '[정의] 모든 계산은 무차원이며 t_phys=(ell_star/c)t, E_phys=(hbar c/ell_star)E, rho_phys=(hbar c/ell_star^4)rho로 복원한다. 척도 ell_star와 경계 장 준비를 미시적으로 유도하지 않았다.'
+  conditional_results:
+    - status: '[정리: 조건부]'
+      claim: '각 셀 det G=-4T^2r^2/3이며 로런츠 부호다. 경계 사면체 그램 고유값은 4/3,4/3,1/4이다. 방향 01을 보존하는 접합에서 t=T(lambda_1-lambda_0)/2와 미래 단위 u=-grad t가 연속이며 (grad t)^2=-1이다.'
+    - status: '[정리: 조건부]'
+      claim: 'z=b+T^2/4, A=T sqrt(4b+T^2)/4, epsilon=2pi-3acos((3z-4)/(6z-4))이면 R_L_prime=4A_prime epsilon이다. 정상식 beta R_L_prime-kappa C D v^2/(2rT^2)=0은 모든 xi>0에서 유일한 T>T_0를 주고 T=T_0+(9/74)xi+O(xi^2)다. xi=0에서 T_0의 평탄 로런츠 해를 복원한다.'
+    - status: '[정리: 조건부]'
+      claim: 'phi=vt/T, rho=p=kappa v^2/(2T^2), V_3=4Cr, V_4=TV_3/4다. u가 접합에서 보존되어 스칼라 응력의 내부 법선 플럭스가 상쇄된다. E_in=E_out=rho V_3이며 바깥 방향의 부호 있는 에너지 플럭스 합은 0이다.'
+    - status: '[정리: 조건부]'
+      claim: '고정 경계 b에서 -partial_T S_L,phi=ED/(4r^2)다. 꼭짓점 운동량은 pi_0=-kappa Crv/T, pi_1=+kappa Crv/T, 바깥 네 값 0이며 기저 함수로 가중한 장 플럭스다. 장 이동 전하·가중 운동량·에너지를 동일시하지 않는다.'
+    - status: '[정리: 조건부]'
+      claim: '초기 p_old=d s_cl,old를 준비하면 새 단체와 경계각 상수 변화로 만든 두 증분이 전체 고전 작용·운동량을 합성한다. c=p_s34-partial_s34 Delta s_1=0, F=p_s01+partial_s01 Delta s_2=partial_s01 s_cl,final=0이며 kappa=0에서 같은 로런츠 중력 관계를 복원한다.'
+    - status: '[정리: 조건부]'
+      claim: '대칭 경계에서 Im S_C=-8sqrt(3)pi/3은 바깥 네 꼭짓점 2345가 만드는 네 삼각형 모서리 항이며 내부 T 미분은 0이다. 2345 자체는 복합체의 경계 사면체가 아니다. 경계 길이 변화에는 일반적으로 변한다. 허수항을 보존하지만 양자 경로적분의 측도·윤곽·유니터리성을 정하지 않는다.'
+  proof: 'derivations/Q-0020/conditional_composition.derivation.md#로런츠-시계의-에너지와-기하-응답'
+  numerical_results:
+    source_sha256: '78c73eb545264e86b0cf757d1d646871f9eff1e9dbfd7a89cec600eac720eda1'
+    artifacts: 'verify/Q-0020/regge_lorentz_clock.json'
+    setup: 'xi=1,.1,.01,.001,.0001,.00001의 6 정상점, 대칭 및 두 일반 길이 변형 3점, 별도 T=.2,1/3,.6,1.5의 시계 플럭스를 대조한다. 정상식 밖 기하점은 차분·합성만 검사한다.'
+    response: 'xi=1e-5에서 T=0.33333454953797714, 응답계수0.12162046438279893, 9/74와의 절대차1.157238822699358e-6이다.'
+    stationary: 'F 최대5.799620190290091e-15, c=0, 경계 허수항 오차1.7763568394002505e-15, 내부 허수 미분1.9254784543480922e-15다.'
+    geometry: '복소 레게 차분1.2738998744807553e-10, 스칼라 차분1.1077389006075578e-12, 혼합미분3.932076886314917e-12, 작용·운동량 합성3.3893637946200144e-15다.'
+    clock: '시계 노름 최대2.886579864025407e-15, 양쪽 에너지 크기 오차2.6645352591003757e-15다. 경계 사면체 그램 최소고유값은1/4이다. 기계 검산은 공급된 접합의 국소 노름·플럭스이며 일반 CTC 부재 인증은 아니다.'
+  verification:
+    symbolic: '로런츠 기하·유일 정상점·9/74 응답·시계 응력·경계 플럭스의 독립 수학 검토; 전체 형식 기계 증명은 아님'
+    numeric: pass
+    independent_math_audit: pass
+    independent_code_audit: pass
+    command: '.codex/hooks/python.cmd pytest tests/test_regge_lorentz_clock.py -q'
+    result: '9 passed in 1.68s; source2 PASS'
+  source_boundary:
+    - 'Borissova, Dittrich, Qu, Schiffer, Spikes and spines in 4D Lorentzian simplicial quantum gravity, arXiv:2407.13601v2 (2024-10-23), II.1 식(1)-(3), https://arxiv.org/html/2407.13601v2#S2.SS1: 복소 레게 작용·각도·경계 pi 및 가지 규약의 표준 입력이다.'
+    - '선형 스칼라 보간은 앞 항목의 FEM 입력에 로런츠 kinetic 부호를 택한 공리다. 지정한 네 셀의 9/74 계수·경계 플럭스가 현재 산출이며 새 관측 법칙이나 미시적 발생 증명이 아니다.'
+  rejected_inferences:
+    - '[정리: 조건부] v!=0인 질량 없는 순수 시계의 w=p/rho는1이므로 그 장 자체를 w=-1 암흑에너지 또는 w~0 차가운 암흑물질로 동일시하는 경로는 성립하지 않는다. 전체 CE 암흑부문의 기각으로 확대하지 않는다.'
+    - '[미완성] 로런츠 부호와 유한 경계 정상응답을 공급한 것만으로 지연 그린 함수·경계 준비·에너지 보충·재충전·환류가 유도되지는 않는다. 유클리드 합류 가지와 로런츠 가지의 연속 연결도 미유도다.'
+    - '[정리: 조건부] Lambda=0, 추가 응력 없음, 표준 최소결합 질량 없는 스칼라, 고정 비영 시간 기울기 q_phys 및 평행 u를 보존하는 매끄러운 Einstein 연속극한은 불가능하다. nabla u=0이면 Ricci 항등식으로 R_uu=0인 반면 자취를 제거한 Einstein 방정식은 R_uu=8pi G kappa_phys q_phys^2>0을 요구한다. 유한 제한 경계변분 해를 부정하지 않는다. 독립 Terra 수학 검토가 확인한 해석적 반례이며 집중 수치9시험의 결과와 분리한다.'
+  unfinished:
+    - '같은 작용에서 시간방향 세분화와 초기자료·접합조건을 고정하고 미래 인과 지지만 갖는 응답을 구성한다. 고정 경계 문제의 헤시안 역을 지연 그린 함수로 바꾸어 부르지 않는다.'
+    - '미시 원천 준비·저장·환류, 접힘의 에너지 보존과 0D 보충·분할·병합, 공통 계량의 동역학적 선택, 3+1 Plebanski/Einstein 및 전자기·약력·강력, 같은 식의 암흑부문·허블 텐션과 원래 여덟 성공 게이트는 미완성이다.'
+
+zero_dimensional_time_status:
+  status: '[공리]'
+  user_instruction: '2026-09-06: 시간은 0차원에서 전부 존재하거나 없고, 벗어나면서 생긴다는 사용자 방향을 무시간 기본상태와 관계적 시간의 출현으로 정식화한다.'
+  claim: '0D 기본상태에는 물리 시계·외부 시간변수를 두지 않는다. 분할·병합·관계·보존 기록에서 사건 순서와 측정 가능한 시간 척도가 출현해야 한다.'
+  definitions:
+    - '[정의] 가능 이력은 허용된 전이의 연쇄이며, 사건은 특정 이력에서 기록으로 구별되는 전이다. 모든 가능성을 같은 물리 시간에 이미 실현된 것으로 동일시하지 않는다. 실현·선택의 물리 법칙은 별도 증명 의무다.'
+    - '[정의] 계산 인덱스·구적 인덱스·재귀 깊이는 물리 시간이 아니다. 여기서 tau는 먼저 순서를 표시하는 실수값 함수이며 물리 시계가 아니다.'
+  conditional_results:
+    - status: '[정리: 조건부]'
+      claim: '유한 유향 그래프의 모든 변 a->b에서 tau(a)<tau(b)인 함수가 존재할 필요충분조건은 유향 순환이 없는 것이다. 순환은 엄격 부등식의 모순을 주고, 비순환 그래프는 위상 정렬의 순번을 tau로 삼을 수 있다.'
+    - status: '[정리: 조건부]'
+      claim: '상태만의 그래프에 분할과 역병합을 양방향 변으로 넣으면 상태에만 의존하는 엄격 단조 tau는 없다. 이것은 가역 전이 또는 시간의 존재 자체를 기각하지 않는다. 같은 상태로 돌아와도 기록 R0!=R2이면 (C0,R0)->(C1,R1)->(C0,R2)의 사건들은 다르므로 상태 순환과 사건 순환을 구별해야 한다.'
+  boundaries:
+    - '[공리] 공간 차원이 0이라는 것만으로 무시간이 따라오지는 않으므로 무시간성을 독립적으로 채택한다.'
+    - '[미완성] 로런츠 부호·스칼라 시계·T·9/74 응답은 출현 후에 공급한 유효 모형의 자료이며 0D의 시간 발생 증거로 역대입하지 않는다.'
+  next_proof_link:
+    - '[미완성] 분할·보존 기록이 만드는 사건들의 비순환 부분순서와 그 물리적 발생을 유도한다. 순서 함수에서 시계 척도·고유시간·계량으로 가는 추가 고리를 증명한다.'
+    - '[미완성] 기록의 에너지 비용·유한 자원·환류를 포함해 같은 작용의 인과적 응답과 출현 후 중력 검증을 잇는다. 전체 목표·여덟 성공 게이트·F-01 기각을 유지한다.'
+
+relational_split_clock:
+  status: '[산출]'
+  target_link: '기존 양의 자율 분할 작용을 외부 tau 진화 없이 고정 에너지 제약으로 읽고, 위치·플럭스·에너지 공변 시계의 판독과 자원 조건을 분리한다.'
+  scope: '기존 k=2 이차 분할 생성자와 H=U_f(P^2/(2mu)+H_0)U_f^dagger, U_f=exp[-if(X)G], Pi=P+f_prime G를 사용한다. 독립 두 준위 증인도 비교한다. X,mu,E,f,G,입력 띠와 입사 방향은 공급값이며 0D에서의 발생은 미유도다.'
+  axioms:
+    - '[공리: 검증 모형] 기존 양의 자기수반 H의 고정 에너지 제약 C=H-E를 택한다. H_0의 입력 스펙트럼 0<=h<=h_max<E와 +방향을 공급한다. 무차원 X=X_phys/L_star, mu=M E_star L_star^2/hbar^2를 유지한다.'
+    - '[공리: 검증 모형] 위치 판독 및 플럭스 내적, 별도의 에너지 공변 시계 POVM을 각각 명시한다. 고정 E 해는 위치 L2 상태가 아닌 일반화된 에너지 껍질 상태이며 group averaging의 전체 상수는 Fourier 규약에 따른다.'
+  definitions:
+    - '[정의] P_E=sqrt(2mu(E-H_0)), V=P_E/mu, p_0=sqrt(2mu E), tau=mu X/p_0, Psi=U_f V^(-1/2) exp(iP_EX)a다. tau는 공급 시계의 위치로 보정한 무차원 값이며 물리 척도는 hbar/E_star를 곱한다.'
+  conditional_results:
+    - status: '[정리: 조건부]'
+      claim: 'Pi=UPU^dagger, (H-E)Psi=0, j=Re(Psi^dagger Pi Psi)/mu=||a||^2다. +껍질의 플럭스 진폭 a에 물리 내적을 정규화할 수 있다. 국소 covariant kinetic과 dressed internal 에너지 기댓값의 합은 E다.'
+    - status: '[정리: 조건부]'
+      claim: 'chi=exp(-ip_0X)V^(1/2)U_f^dagger Psi는 i partial_tau chi=h_pos chi, h_pos=2E(1-sqrt(1-H_0/E))를 만족한다. 물리적으로 회전된 상태에는 i(partial_tau U)U^dagger=v_0 f_prime G를 유지한다.'
+    - status: '[정리: 조건부]'
+      claim: 'd(h)=h_pos(h)-h=h^2/[E(1+sqrt(1-h/E))^2]>=0이고 ||exp(-i tau h_pos)-exp(-i tau H_0)||<=min(2,|tau|d(h_max))다. h_max/E->0에서 h_pos=H_0+H_0^2/(4E)+O(E^-2)를 얻는다.'
+    - status: '[정리: 조건부]'
+      claim: '위치 조건화의 스펙트럼 확률은 |a_h|^2/V_h를 정규화한 값이며 플럭스 확률 |a_h|^2와 일반적으로 다르다. 이는 상대 상태의 물리 내적과 국소 위치 판독을 같은 것으로 놓지 못하게 한다.'
+    - status: '[정리: 조건부]'
+      claim: '에너지 정규화 |epsilon,+>=sqrt(mu/p)|p>와 반직선 스펙트럼의 공변 시계 POVM |s,+>=integral_0^infty exp(-i epsilon s)|epsilon,+>d epsilon/sqrt(2pi)를 쓰면 껍질 조건화는 exp(iEs)exp(-iH_0s)a/sqrt(2pi)다. 전역 위상 제거 후 H_0 진화가 정확하다. 이 POVM은 비직교이며 자기수반 시간 연산자의 PVM이 아니다.'
+    - status: '[정리: 조건부]'
+      claim: 'dressed 계의 에너지 시계 판독은 U(|s,+><s,+| tensor I)U^dagger라는 일반적으로 공동 관측량이다. 국소 X 판독과 같은 측정이 아니므로 H_0^2/(4E)를 판독 독립적인 CE 보정이나 관측 잔차로 승격할 수 없다.'
+  proof: 'derivations/Q-0020/conditional_composition.derivation.md#무시간-분할-제약에서-읽는-두-시계'
+  numerical_results:
+    source_sha256: 'ea29a3787f351e2199531c36a98532e9923b2a64e00b94bfafa813715eb5237e'
+    artifacts: 'verify/Q-0020/relational_split_clock.json'
+    setup: '기존 비가환 2준위의 참조계 포함 상태 5위치, 실제 k=2 생성자의 Fock 절단 6,10,14,20,28,40,56,64를 대조한다. 작은 세 절단은 위치 .2,.5,.8, 나머지는 .5에서 제약을 차분한다. 별도 6에너지*3관계시각과 4판독 세기를 비교한다.'
+    residuals: '상태 노름으로 나눈 제약 최대2.257650112762552e-7, 플럭스3.5466074521650626e-12, 국소 에너지 합1.0026113272942894e-10, 조건화 전달1.6741589695961298e-14다.'
+    fock: '절단6,10,14의 진공 출력 공분산 최대성분 오차는 .764134,.902218,.456116으로 기준1e-3을 넘는다. 40에서도 .00437005이며, 56/64에서 .00017999245500655014/.000042217287357093625로 통과한다. 마지막 경계 점유1.2062144198260895e-8이다.'
+    finite_energy: 'E=16384,h_max=3에서 E*d(h_max)/h_max^2=.2500228908032743, 1/4와의 차이2.289080327427806e-5다. 세 관계시각의 전달 차이는 정량 상계 아래다.'
+    readout: 'E=3.1의 위치·플럭스 확률 총변동거리는 .21367842356271483이며 E=64에서 .002376862754315305다. 이는 서로 다른 판독의 비교이며 독립 우주론 예측이 아니다.'
+    limitations: 'Fock 수렴은 회전된 진공의 공분산 증인이다. 전체 무한차원 연산자 노름, 모든 위치에서의 균일 차분 오차나 유한 정규화 장치의 준비를 수치로 증명하지 않는다.'
+  rejected_routes:
+    - '[정리: 조건부] 양방향 정상파의 j=||a_plus||^2-||a_minus||^2는 영일 수 있고 위치 판독 노드가 생긴다. 무시간 제약 자체가 단일 방향·영구 사건 기록을 선택한다는 추론은 성립하지 않는다.'
+    - '[정리: 조건부] E=h_max 채널은 P_E=V=0이므로 V^(-1/2) 정규화가 특이하다. 문턱 채널을 포함한 같은 플럭스 감소 사상은 사용할 수 없다.'
+    - '[산출] Pi^2의 (f_prime G)^2 항을 빼면 내부 위치에서 제약 잔차가 크게 남는다. 실제 분할의 x=.5에서는 약369.56245이며 이전 완전제곱 양성 조건을 보존한다.'
+  verification:
+    independent_math_audit: pass
+    independent_code_audit: pass
+    numeric: pass
+    command: '.codex/hooks/python.cmd pytest tests/test_relational_split_clock.py -q'
+    hash_command: '.codex/hooks/python.cmd pytest tests/test_relational_split_clock.py::test_saved_report_tracks_the_same_source_bytes -q'
+    result: '수치8 passed in6.56s; 최초 JSON 미작성으로 hash1 skipped, 작성 뒤 해당 node1 passed in0.70s; source2 PASS. 같은 수치 검사를 다시 실행하지 않았다.'
+  source_boundary:
+    - 'Höhn, Smith, Lock, Equivalence of Approaches to Relational Quantum Dynamics in Relativistic Settings, Frontiers in Physics 2021-06-18, doi:10.3389/fphy.2021.587083, arXiv:2007.00580v1 (2020-07-01), §3/4.2/5, https://www.frontiersin.org/journals/physics/articles/10.3389/fphy.2021.587083/full: quadratic clock의 방향 부문·공변 POVM·관계적 조건화의 표준 방법 입력이다.'
+    - '기존 분할 생성자는 verify/Q-0020/split_quadratic_generator.py, 양의 자율 시계는 autonomous_split_clock.py에서 가져온다. 문헌의 관계적 시계 정리를 CE G나 0D 시간 발생의 증명으로 사용하지 않는다.'
+  unfinished:
+    - '0D 무시간 공리에서 기록으로 구별되는 사건·순서·시계 척도·입사 방향과 준비를 같은 작용으로 유도한다. 실제 기록 장치가 어떤 판독을 구현하는지, 그 에너지 비용·정규화·반작용·환류를 고정한다.'
+    - '시간 이후의 비평행 시계·동적 공간 계량, 공통 계량의 선택·3+1 Plebanski/Einstein·다른 힘·암흑부문·허블 텐션과 원래 여덟 성공 게이트는 미완성이다.'
+
+relational_record_clock:
+  status: '[산출]'
+  target_link: '실제 레게 섬유의 기록을 같은 입출력 에너지 연산자의 무시간 시계에 연결하고, 기록 정확도에 필요한 배터리 폭과 시계 간격을 함께 판정한다.'
+  scope: '기존 regge_record_constraint.fiber의 위상 표적 u 또는 측도 표적, 등간격 검사 에너지 h_i, 양의 배터리, 에너지 퇴화 기록 비트와 위치 결합을 공급한다. 미시 작용·시계·준비의 발생은 미유도다.'
+  axioms:
+    - '[공리: 검증 모형] h_i=h_base+i delta, b_m=m delta, H_R=0이며 완전 총에너지 섬유 T에서 H_I=lambda_T I다. P=uu^dagger, Q=I-P, V_rec=P tensor I+Q tensor X_R, K=pi(I-V_rec)/2와 기존 단조 profile을 쓴다.'
+    - '[공리: 검증 모형] H=(P_X+f_prime K)^2/(2mu)+H_I, C=H-E, +입사 방향을 택한다. [K,H_I]=0이므로 f_prime=0인 양 끝의 에너지는 P_X^2/(2mu)+H_I로 같다. 제곱항을 포함한 전체 H는 양의 유니터리 켤레다.'
+    - '[정의] n은 계 준위 수, M은 배터리의 점유 준위 수다. 배터리 사인 준비는 m=n+1,...,n+M에 지지하고 T=n+1,...,2n+M-1이다. 플럭스 진폭 a_Ti=psi_i chi_(T-i)를 공급한다.'
+    - '[정의] g=E-lambda_max>0이고 E-lambda_T=g+delta(T_max-T)로 직접 계산한다. 고정 E 해는 일반화 상태이며 플럭스 곱준비를 정규화된 실험실 위치 곱준비로 동일시하지 않는다.'
+  conditional_results:
+    - status: '[정리: 조건부]'
+      claim: 'K=pi Q tensor |minus><minus|이므로 j_1(X)=sin^2(pi f/2) q_flux, j_0=1-j_1, d_X j_1=(pi/2)f_prime sin(pi f)q_flux다. 기록별 전류는 교환되고 전체 플럭스와 H_I는 보존된다. 양의 방향과 단조 profile은 공급 조건이다.'
+    - status: '[정리: 조건부]'
+      claim: 'p_T=||a_T||^2, q_T=||Q a_T||^2, w_T=[g+delta(T_max-T)]^(-1/2)이면 q_flux=sum q_T, q_pos=sum(w_T q_T)/sum(w_T p_T)다. 위치 포인터 확률은 sin^2(pi f/2)q_pos이고 두 판독을 혼합하지 않는다.'
+    - status: '[정리: 조건부]'
+      claim: '표적 입력 psi=u에서 q_flux<=2 Var_u(i)[1-cos(pi/(M+1))]<=pi^2 Var_u(i)/(M+1)^2다. 이는 유한 사인 배터리의 자기상관에서 나온다. q_pos<=sqrt((g+lambda_max-lambda_min)/g)q_flux는 일반 입력에도 적용된다.'
+    - status: '[정리: 조건부]'
+      claim: '|q_pos-q_flux|<=TV(p,p_w)<=(sqrt(w_max)-sqrt(w_min))/(sqrt(w_max)+sqrt(w_min))다. 마지막 분포 상계는 두 끝점 분포에서 날카롭지만 고정 기록 표적에 대한 포화를 보장하지 않는다.'
+    - status: '[정리: 조건부]'
+      claim: '고정 M, psi=u, u_(n-1)!=0에서 g가 양수 쪽으로 0에 접근하면 q_pos->1-|u_(n-1)|^2다. 마지막 섬유의 유일 입사 성분과 위치 가중치의 발산이 원인이다. g=0의 정규화된 상태를 정의한 결과는 아니다.'
+    - status: '[정리: 조건부]'
+      claim: '같은 상관 출력에 V_rec를 다시 적용하면 계·배터리·기록을 복원하되 기록도 지운다. 외부에 기록을 보존한 역전은 기존 p_0^2+p_1^2 충실도 경계를 유지한다. 새 영구 기록·환류 정리로 세지 않는다.'
+  proof: 'derivations/Q-0020/conditional_composition.derivation.md#자율-기록-장치와-시계의-에너지-문턱'
+  numerical_results:
+    source_sha256: '848bc526c14fc628df4742033d37be14f84c53be30041c0ba03e0c5f0b452ec2'
+    artifacts: 'verify/Q-0020/relational_record_clock.json'
+    setup: '10 위치/질량/간격 대조, n=4,8 및 M=8,16,32,64의 16 자원 대조, 12 문턱 대조, beta=0,1,5의 6 실제 작용 위상 대조다.'
+    local: '제약의 독립 차분 잔차 최대9.294755436846768e-9, 기록 전류1.8451906669270102e-13, 전류 원천 차분1.4381829060994278e-10, 위치 포인터1.1102230246251565e-16, 에너지1.779909553079051e-12다.'
+    threshold: 'n=4,M=32에서 q_flux=.010869761413847753은 g와 무관하다. q_pos는 g/delta=.01에서 .01801590711607264, 1e-6에서 .2687852843930506, 1e-10에서 .7363515359682586, 1e-16에서 .7499860938628122다. 극한3/4와 차이는1.3906137187778e-5다.'
+    resources: 'n=4의 균등 위상 표적, g=(lambda_max-lambda_min)/2에서 M=8,16,32,64의 q_flux는 .1248917070,.0390445393,.0108697614,.0028628825로 감소한다. 마지막 q_pos=.0029812719다.'
+    energy: '별도 실수 에너지 편차 중첩에서 계 에너지 변화-.2758284002666417, 배터리+.27582840026664124, 장부 잔차4.44e-16이다. 같은 상태의 위치 가중 장부도2.78e-16이다.'
+    controls: '직접 행렬 지수와 차이4.87e-16, 왕복 복원2.16e-16, 외부 기록 보존 뒤 충실도.5009335394다. 양방향 정상파 전류는2.12e-14 이하이고 판독 노드가 있다. 제곱항을 뺀 중심 잔차는 두 조건 모두4.34보다 크다.'
+    bound_scope: 'JSON의 target_packet_bound와 target_asymptotic_bound는 psi=u 전용 참고값이다. exchange와 다른 phase-control 입력에 그 상계를 적용하지 않는다. threshold_limit_if_target에는 최대 섬유가 활성이라는 조건도 필요하다.'
+  rejected_inferences:
+    - '[정리: 조건부] 배터리 폭에 따른 플럭스 기록 정확도만으로 국소 위치 기록도 정확하다고 보장하는 추론은 문턱 극한으로 기각된다. 배터리를 포함한 활성 총에너지 간격을 함께 통제하면 자원 상계를 다시 사용할 수 있다.'
+    - '[미완성] 총 H_I와 새 고정 에너지 제약 C 보존을 원래 레게 사전 제약 F의 정확 보존으로 승격하지 않는다. 퇴화 기억의 쓰기 에너지가 0인 공급 모형은 준비·소거·재충전 비용의 발생을 유도하지 않는다.'
+  verification:
+    independent_math_audit: pass
+    independent_code_audit: pass
+    numeric: pass
+    command: '.codex/hooks/python.cmd pytest tests/test_relational_record_clock.py -q'
+    result: '최초 수치8 passed in0.63s, JSON 전 hash1 skipped; 양방향 대조 추가 뒤 해당 node1 passed in0.56s; JSON 후 hash node1 passed in0.54s; source2 PASS. 전체 수치 검사를 반복하지 않았다.'
+  source_boundary:
+    - 'Woods, Silva, Oppenheim, Autonomous Quantum Machines and Finite-Sized Clocks, Annales Henri Poincare 20,125-218(2019), doi:10.1007/s00023-018-0736-9, https://arxiv.org/abs/1607.04591: 시간 독립 전체 작용을 이용한 자율 제어의 표준 방법 경계다. 현재 K나 레게 작용·0D 발생을 유도한 출처가 아니다.'
+    - '관계적 고정 에너지 판독은 앞 relational_split_clock의 Hohn-Smith-Lock 문헌 경계를 유지한다. 여기의 산출은 기존 실제 레게 표적·보존 기록·시계 문턱을 연결한 조건부 검증이며 새 CE 관측 예측이 아니다.'
+  unfinished:
+    - '실제 제약의 생성자와 유한 준비·판독 상호작용에서 현재 공급한 K, 결합 위치와 폭, 시계 간격 g를 유도한다. 기록 보존·외부 기억·보충·저장·재충전·환류를 같은 에너지 장부로 닫는다.'
+    - '0D에서 사건 순서와 시계 척도의 발생, 비평행 시계의 동적 공간 계량, 공통 계량 선택, 3+1 Plebanski/Einstein과 모든 힘, 같은 작용의 암흑부문·허블 텐션은 미완성이다.'
+
+constraint_resonance_record:
+  status: '[산출]'
+  target_link: '기록 사영의 직접 공급을 실제 장치 포함 제약 생성자의 결합으로 대체하고, 유한 분해능·준비·선택 및 비선택 에너지 장부의 범위를 판정한다.'
+  scope: 'F_tot=F_s+i partial_b/L_up의 고정 총에너지 t=1+e/L_up+b 주기 정의역과 레게 위상을 사용한다. 시계·기록 비트·결합·주기 경계·준비는 공급값이다. 원래 고정 b의 F_s와 구별한다.'
+  axioms:
+    - '[공리: 검증 모형] 고정 t에서 F_tot=J(-i partial_e)J^dagger, 주기 스펙트럼 lambda_n=2pi n/L, H_I=t이다. t>1+L/L_up의 준비 지지로 b>0을 유지한다. 이 상관 섬유를 임의 독립 배터리로 읽지 않는다.'
+    - '[공리: 검증 모형] D_gamma=F_tot tensor sigma_z+gamma I tensor sigma_x, K_gamma=pi D_gamma/(2gamma), U_f=exp(-ifK_gamma), gamma>0이다. H=U_f(P_X^2/(2mu)+H_I)U_f^dagger로 정의역까지 옮기며 C=H-E를 쓴다.'
+    - '[정의] 모든 제약·결합은 무차원 규약이고 pi/(2gamma)는 외부 물리 시간이 아닌 결합면적이다. 연산자 전개는 공통 코어에서 읽으며 연속 구성에는 F_tot와 H_I의 강한 가환을 유지한다.'
+  conditional_results:
+    - status: '[정리: 조건부]'
+      claim: '[U_f,F_tot]=[U_f,H_I]=0이고 전체 변환은 F_tot 분포와 에너지를 보존한다. 양 끝의 f_prime=0에서 같은 자유 에너지를 복원한다. 포인터1은 이번 구성에서 영모드 검출이며 이전 기록 비트의 표적 보수와 라벨이 다르다.'
+    - status: '[정리: 조건부]'
+      claim: '고윳값 lambda의 검출 응답은 R_gamma(lambda;f)=gamma^2/(lambda^2+gamma^2) sin^2[pi f sqrt(lambda^2+gamma^2)/(2gamma)]다. f=1에서 R_gamma(0)=1, |lambda|>=Delta이면 R_gamma<=epsilon=gamma^2/(Delta^2+gamma^2)다.'
+    - status: '[정리: 조건부]'
+      claim: '고립 영모드의 사전확률 p_0>0에서 검출 뒤 비영모드 잔류는 epsilon(1-p_0)/(p_0+epsilon(1-p_0)) 이하이다. p_0=0인 입력에서는 검출 후 잔류가1일 수 있다. 검출은 유한 분해능 필터이며 정확한 영사영이 아니다.'
+    - status: '[정리: 조건부]'
+      claim: 'a_n(t)=c_n chi(t)의 준비와 유한 위치 가중 적분에서는 w(t)=(E-t)^(-1/2)가 약분되어 위치·플럭스 검출확률이 같다. 모드와 총에너지의 상관이 있으면 이 소거는 보장되지 않는다.'
+    - status: '[정리: 조건부]'
+      claim: '두 원자 준비의 상위 에너지에 영모드, 하위에 비영모드를 둔 대조는 문턱에서 위치 검출1로 간다. 연속 균등 에너지의 위 절반에 영모드, 아래 절반에 검출률 r인 비영모드를 둔 별도 대조는 r+(1-r)/sqrt(2)로 간다. 연속 끝점의 적분 가능성을 원자적 문턱과 구별한다.'
+    - status: '[정리: 조건부]'
+      claim: '포인터 두 분기의 비정규화 에너지 E_r=<Psi_r|H_I|Psi_r>는 합산하여 초기 에너지를 복원한다. 고정 t 섬유에서는 E_r=t p_r이고 각 조건부 평균은 t이다. 미검출 분기를 삭제하지 않는다.'
+    - status: '[정리: 조건부]'
+      claim: '기억을 버린 무조건부 채널도 모든 F_tot 스펙트럼 사영 P_B에 Phi^dagger(P_B)=P_B를 만족한다. 같은 비파괴 기록의 유한 반복은 무조건부 영모드 확률을 증가시키지 않는다. 사후조건화에 따른 정밀도와 자율적 집중을 구별한다.'
+  proof: 'derivations/Q-0020/conditional_composition.derivation.md#제약-생성자의-공명-기록과-스펙트럼-간격'
+  numerical_results:
+    source_sha256: '4ffeffd1ea4f144b54198361fbb74e70ac0fe8a5a0b5bcb4715b5adc6c966b16'
+    artifacts: 'verify/Q-0020/constraint_resonance_record.json'
+    setup: '17,33,65 푸리에 절단과 beta=0,5 및 9 분해능 비의54조건, 3 직접행렬, 6 시계 위치, 12 실제 F_tot 미분을 대조한다. 사전 5비 외에 특수 위상 상쇄 밖의 .3,.17,.07,.01037을 추가했다.'
+    differential: '실제 레게 위상과 배터리 보상을 넣은 고유방정식 잔차 최대9.123176775626181e-10, F_s만 쓴 잔차는 모든 표본에서.3564189690 이상이다.'
+    operator: '직접 행렬 지수 차이7.091118973074556e-15, 제약 교환자1.7822587704405203e-12, 제약 모드 분포5.56e-17, 에너지 장부3.47e-16 이하이다. 시계 제약 차분4.083463698603728e-8, 플럭스2.56e-12, 위치 판독2.23e-16 이하이다.'
+    calibration: '65절단에서 gamma/Delta=.01의 최대 비영 응답6.167450778682104e-9는 .01037에서.00004322444835704957로 커진다. 특수 비율의 상쇄를 보편 gamma^4 법칙으로 승격하지 않는다.'
+    prior: '65절단 beta5의 실제 위상과 다른 균등 준비에서 p_0=.03714871503774031이다. gamma/Delta=.01037의 검출확률.03715787450598633, 사후 비영 잔류.0002465014042863247이며 상계.002779185692615813 이하다.'
+    branch_energy: '고정 t=2.8에서 미검출 확률.9628421254940139와 에너지 기여2.695957951383239, 검출 확률.03715787450598636와 기여.10404204861676176을 모두 보존한다. 에너지 합 잔차8.88e-16이다. 기여는 확률을 곱한 에너지이며 조건부 평균은 양쪽 모두2.8이다.'
+    preparation: '곱 형태의 모드/총에너지 준비에서 세 간격의 위치·플럭스 차이는5.56e-17 이하다. 상관 준비의 g=1e-12에서 두 원자 위치확률.9999990022, 연속 대조.7077427508이며 연속 극한.7077430431과 구별한다.'
+  rejected_inferences:
+    - '[정리: 조건부] 경계 비틀림 theta가 2pi의 배수가 아니면 정확 영모드가 없다. 그런데 최소 |lambda|/gamma=.001에서 검출은.9999990000003833이다. 경계·간격 확인 없는 검출을 제약의 정확 만족으로 읽는 추론을 기각한다.'
+    - '[정리: 조건부] 비영 스펙트럼이0에 축적하면 어느 유한 gamma에서도 응답의 비영 부문 연산자 노름이1이다. 간격 없는 정확 영사영의 균일 근사를 주장할 수 없다.'
+    - '[정리: 조건부] 같은 비파괴 공명 기록의 반복만으로 F_tot 영모드에 무조건부 집중한다는 경로는 분포 보존으로 기각된다. 원래 두 제약이나 공통 계량 전체의 불가능성으로 확대하지 않는다.'
+  verification:
+    independent_math_audit: pass
+    independent_code_audit: pass
+    numeric: pass
+    command: '.codex/hooks/python.cmd pytest tests/test_constraint_resonance_record.py -q'
+    result: '최초 수치8 passed in1.43s, JSON 전 hash1 skipped; 특수 상쇄 밖 분해능 추가 뒤 해당 node1 passed in.87s; 분기 장부 추가 뒤 해당 node1 passed in1.01s; 최종 hash node1 passed in.72s; source2 PASS. 변경하지 않은 검사를 반복하지 않았다.'
+    independent_paper_math_audit: pass
+    first_reader_gate: pass
+    document_integrity: 'YAML 중복 키 없음, 전체177 식 태그 중복 없음, 새7.239–248의 수식 구분자·실제 앵커·문자 검사 통과. 의존 소스5 해시 일치, 작업장48KiB·주차8행 상한 충족.'
+    repository_checks: 'harness PASS(활성문서468, 지침7178/8192바이트), lint 비엄격 PASS(159문서). links는 기존 깨진 파일106·앵커81·고아22로 FAIL이며 증가하지 않았다. 새 유도 앵커는 확인했다.'
+  source_boundary:
+    - 'Beloy, Hyper-Ramsey spectroscopy with probe-laser-intensity fluctuations, Physical Review A97,031406(2018), doi:10.1103/PhysRevA.97.031406: 이준위 회전과 분광 판독의 표준 방법이다. 문헌 H=(Omega sigma_x+delta sigma_z)/2에 Omega=2gamma,delta=2lambda를 대응한다.'
+    - '이 문헌은 현재 레게 제약·주기 경계·결합면적·0D 시간 발생의 출처가 아니다. 표준 공명 응답을 기존 실제 제약과 선택/비선택 에너지 장부에 연결한 조건부 산출이며 새 CE 관측 예측이 아니다.'
+  unfinished:
+    - '실제 공동 제약에서 허용되는 경계조건·근영 스펙트럼·유한 준비·분해능 보정과 제어 자원을 결정한다. 원래 고정 b의 F_s, 다른 제약과의 공동 축약을 현재 F_tot로 대신하지 않는다.'
+    - '공통 계량의 자율 선택을 기록의 사후조건화로 대체하지 않는다. 실제 공동 축약에서 기하 불일치 분포를 바꾸는 상호작용과 보충·저장·재충전·환류를 유도한다.'
+    - '0D 시간·공통 계량·3+1 Plebanski/Einstein·다른 힘·암흑에너지·암흑물질·허블 텐션과 원래 여덟 성공 게이트는 미완성이다.'
+
+tetrahedron_matching_flow:
+  status: '[산출]'
+  target_link: '공유 길이에서 사라졌던 소유자별 자유도를 독립 양자 사면체 형상으로 검사하고, 조건부 일치·보존 방출·여러 접착의 양립을 구별한다.'
+  scope: '현재 원래 레게 공동 축약은 변마다 하나의 공유 길이를 쓰므로 소유자별 길이 차가 없다. 별도 SU(2) 사면체 두 공간과 쌍대 식별을 공급한 검증이다. 이 공간을 원래 공동 제약의 축약과 동일시하지 않는다.'
+  axioms:
+    - '[공리: 검증 모형] 같은 네 면적의 불변 사면체 공간 차원은 d=2j+1이다. J=j(j+1), A=J_1 dot J_2/J, B=J_1 dot J_3/J, D_O=O tensor I-I tensor O^T, M=D_A^2+D_B^2를 공급한다. 쌍대 전치와 기준 기저를 함께 정한다.'
+    - '[공리: 검증 모형] M의 고유한 영벡터를 Omega, 들뜬 고윳값을 epsilon_a라 한다. 각 a마다 초기 환경 진공의 반무한 사슬을 공급하여 |a,0>를 뿌리, |Omega> tensor |a,n>, n>=1을 나머지 사슬로 식별한다. 한 들뜸 직합에서 H_a=epsilon_a I+g Adj, 0<2g<Delta_j, tau=g s다. 수치의 g=Delta_j/4는 공급 규약이다.'
+    - '[정의] M,epsilon_a,g,s,tau는 무차원이다. 물리 에너지는 별도 E_star를 곱한다. s는 공급된 진화 매개변수이며 물리 시계로 해석하려면 척도와 판독이 더 필요하다. 0D 외부 시간을 도입하거나 발생을 증명하지 않는다.'
+  conditional_results:
+    - status: '[정리: 조건부]'
+      claim: 'A_kk=[k(k+1)-2J]/(2J), B_kk=-k(k+1)/(4J), |B_k,k-1|=k[(2j+1)^2-k^2]/[4J sqrt(4k^2-1)]. A의 단순 스펙트럼과 B의 연결된 인접 성분 때문에 공통 교환대수는 스칼라이고 ker M=span{Omega}, Omega=vec(I)/sqrt(d)다.'
+    - status: '[정리: 조건부]'
+      claim: 'j=1/2에서 M의 스펙트럼은 0,8/9,8/3,32/9다. C=-i[A,B]의 올바른 D_C도 Omega를 소거한다. 전치를 생략한 C의 동일 방향 차이를 추가하면 이 영공간이 사라진다.'
+    - status: '[정리: 조건부]'
+      claim: 'Omega의 각 주변상태는 I/d이고 <A>=-1/3, Var(A)=16/45+1/[15j(j+1)]다. 두 사본의 차이 D_A=0과 한 사본의 국소 양자 분산은 다르다. 분산의 큰 j 극한16/45만으로 여러 기하의 중첩을 허용하는 공통 계량 부문을 기각하지 않는다.'
+    - status: '[정리: 조건부]'
+      claim: '고립한 M의 단위 진화는 M의 분포를 보존한다. 공급한 반무한 초기 진공 사슬에서는 f(tau)=J_1(2tau)/tau, f(0)=1, <M>_tau=f^2 E_0, <H_B>_tau=(1-f^2)E_0, <H_hop>_tau=0이며 총에너지는 E_0다. f->0은 반무한 극한을 먼저 정한 결과이고 매 시각의 엄격 단조 감소는 주장하지 않는다.'
+    - status: '[정리: 조건부]'
+      claim: '전체 등거리 전달은 외부 참조와 입력 내적을 보존하고, 국소 계는 Omega로 접근한다. 순수 입력의 초기 들뜸 확률 p에서 추적 거리는 sqrt(p^2 f^4+p(1-p)f^2)다. 일반 혼합/참조 입력에 이 등식을 그대로 적용하지 않는다.'
+    - status: '[정리: 조건부]'
+      claim: '같은 세 물리 형상 공간에 P12=|Omega12><Omega12| tensor I3, P23=I1 tensor |Omega23><Omega23|를 두면 P12 P23 P12=P12/d^2, ||P12+P23||=1+1/d다. 따라서 M12+M23>=Delta_j(1-1/d)I>0이다. 가운데 형상 공간을 재사용한 두 완전 일치는 양립하지 않는다.'
+  proof: 'derivations/Q-0020/conditional_composition.derivation.md#독립-사면체의-일치-에너지와-접착의-양립성'
+  numerical_results:
+    source_sha256: 'd06a28b33adac79dadacfaa7f5ec20f69799668119cab61c7a1eccc734a5c6bc'
+    artifacts: 'verify/Q-0020/tetrahedron_matching_flow.json'
+    geometry: '2j=1,2,3,4에서 기존 실제 네 스핀 텐서 투영과 재결합 A/B/부피의 차이 최대6.24e-16. 각 M의 영공간은 하나다. 간격은 .8888888889,.1909830056,.0814280529,.0449649083이다.'
+    gap_exploration: '2j=4,8,16,32의 간격은 .0449649083,.0108379446,.0025983163,.0006190687이다. 큰 스핀의 보편 점근 법칙을 주장하지 않는다. 고정 g가 모든 j에서 2g<Delta_j를 만족한다고 가정하지 않는다.'
+    emission: 'j=.5,1,2와 tau=0,1,3,8,20을 대조했다. tau20의 에너지 잔류비는 .00003971414403이다. j1/2에서 초기1.8419615829, 계.00007315192761, 저장소1.8418884310이며 장부 최대잔차1.78e-15다.'
+    information: '두 외부 참조 대조의 등거리 잔차 최대2.07e-15, 참조 주변상태 잔차2.27e-16이다. 서로 다른 입력의 환경 표지를 지우면 등거리 결함2.44918/7.48236이다.'
+    finite_environment: '128/256 사슬의 지정 시각 에너지 차이는8.45e-17 이하. 8위치 사슬의 tau20 생존 .4340054335는 반무한 .00003971414와 다르므로 유한 사슬의 영구 방출로 승격하지 않는다.'
+    shared_copy: 'j=.5,1,1.5,2에서 M12+M23의 최소 에너지는 .7446420799,.2920339654,.1610461806,.1043534650이다. 하한 .4444444444,.1273220038,.0610710397,.0359719266보다 크다.'
+  rejected_inferences:
+    - '[산출] 이미 공유 길이를 쓴 원래 레게 계산의 변화만으로 소유자별 불일치가 줄었다고 해석하는 경로는 현재 상태공간에 해당 변수가 없어 성립하지 않는다.'
+    - '[정리: 조건부] 완전한 두 사본 형상 일치가 한 사본의 고전적 단일 모양을 자동 선택한다는 추론은 주변 분산의 양의 극한으로 기각된다. 공통 계량의 양자 중첩 전체를 기각하지 않는다.'
+    - '[정리: 조건부] 같은 가운데 물리 형상 자유도에 두 완전 Bell 접착을 겹치는 반복 경로는 양의 에너지 하한으로 기각된다. 인터페이스별 독립 형상 복사본과 전체 스핀폼을 배제하지 않는다.'
+    - '[정리: 조건부] 고립 M만의 방출, 유한 환경의 영구 방출, 환경 표지를 삭제한 정보 보존은 각각 분포 보존·재귀·등거리 결함으로 배제된다.'
+  verification:
+    independent_math_audit: pass
+    independent_code_audit: pass
+    numeric: pass
+    command: '.codex/hooks/python.cmd pytest tests/test_tetrahedron_matching_flow.py -q'
+    result: '최초7 passed in1.33s, JSON 전 hash1 skipped; 참조정보 추가 node1 passed in1.18s; 세 사본 추가 node1 passed in1.64s; 최종 hash node1 passed in.43s; source2 PASS. 변경하지 않은 검사를 반복하지 않았다.'
+    independent_paper_math_audit: pass
+    first_reader_gate: pass
+    document_integrity: 'YAML 중복 키 없음, 전체186 식 태그 중복 없음, 새13.1–9의 수식 구분자·실제 앵커·문자 검사 통과. 의존 소스2 해시 일치, 작업장48KiB·주차8행 상한 충족.'
+    repository_checks: 'harness PASS(활성문서469, 지침7178/8192바이트), lint 비엄격 PASS(159문서). links는 기존 깨진 파일106·앵커81·고아22로 FAIL이며 증가하지 않았다. 새 유도 앵커를 확인했다.'
+  source_boundary:
+    - 'Freidel–Speziale, arXiv:1001.2748v3, DOI10.1103/PhysRevD.82.084040: 면적 일치와 추가 형상 접착의 운동학적 구별이다. 현재 레게 공유 길이는 후자를 공급한다.'
+    - 'Baytas–Bianchi–Yokomizo, Gluing polyhedra with entanglement in loop quantum gravity, arXiv:1805.05856v2: Bell-network와 vector geometry 상관의 표준 배경이다. 이 문헌이 현재 M, 저장소 또는 완전 Regge 접착의 자율 선택을 유도하지 않는다.'
+    - '실제 네 스핀 불변상태는 기존 Livine–Speziale arXiv:0705.0674 구현을 재사용한다. 반무한 사슬 방출은 기존 Longhi arXiv:quant-ph/0611164의 표준 방법이며 새 CE 관측 예측이 아니다.'
+  unfinished:
+    - '독립 인터페이스 형상 복사본과 한 4단체 내부의 실제 기하 양립을 연결한다. 세 사본 하한을 환경 재사용의 반례와 혼동하지 않는다.'
+    - 'M·방출 결합·초기 준비·에너지 기준·저장소와 재충전·환류를 원래 제약과 동일한 작용에서 결정한다. 전체 시공간의 국소성·여러 들뜸·물리 측도·고전 극한도 남아 있다.'
+    - '끼임·선택 → 접힘 보존 → 0D 보충·분할·병합과 사건 순서·시계 척도 → 공통 계량 → 3+1 Plebanski/Einstein·모든 힘 → 같은 작용의 암흑에너지·암흑물질·허블 텐션, 원래 여덟 성공 게이트와 F-01 기각을 유지한다.'
+
+simplex_boundary_reconstruction:
+  status: '[산출]'
+  target_link: '독립 사면체의 형상을 한 실제 4단체의 공통 길이와 연결하고, 기하 복원과 물리 시간의 동역학적 선택을 구별한다.'
+  scope: '면적10개와 사면체 내부 이면각 코사인30개의 좌표40개다. N은 폐합제약20개, C는 공유 삼각형 각 일치제약30개이며 자료의 개수가 아니다. 차원4·조합·경계 자료·작용을 공급한다.'
+  units: 'x_e=ell_e^2/ell_star^2, a_t=A_t^2/ell_star^4, 정규화 면적 w_t=(A_t/ell_star^2)/(sqrt(3)/4). T와 v는 공급 기준 길이·장으로 나눈 값이고 beta와 kappa는 S/hbar의 무차원 계수다.'
+  conditional_results:
+    - status: '[정리: 조건부]'
+      claim: '정규점에서 D(N,C)는50x40 계수30, 면적고정 각 부분50x30도 계수30이며 N와 C 각각의 계수는20이다. 실제 길이제곱10개의 접공간은10차원이며 이를 소거한다.'
+    - status: '[정리: 조건부]'
+      claim: '정규점의 길이제곱→면적제곱 Jacobian은10x10 P/8이다. Petersen 행렬 P 자체의 스펙트럼은3(1),1(5),-2(4), det(P/8)=3/67108864이므로 국소 역함수가 있다. 전역 유일성 또는 모든 형상의 정칙성을 주장하지 않는다.'
+    - status: '[정리: 조건부]'
+      claim: '각 유클리드 경계 사면체의 면적법선 Gram Q는 양의 반정부호·계수3·Q1=0이다. V3^2=(2/9)sqrt(det Q[1:,1:]), ell_ij^2=4(Q_pp Q_qq-Q_pq^2)/(9V3^2)이며 p,q는 i,j의 여집합 면이다. 이는 로런츠4단체의 공간꼴 경계에도 적용하지만 시간꼴 사면체의 공식은 아니다.'
+    - status: '[정리: 조건부]'
+      claim: '바닥6변제곱1·꼭짓점4변제곱r^2에서 옆G3det=3(r^2-1/3)/4, G4det=(r^2-3/8)/2이다. 1/3<r^2<3/8은 로런츠, r^2=3/8은 계수3 퇴화, r^2>3/8은 유클리드다. r^2=17/48에서 각각1/64,-1/96이고 T=+/-1/sqrt(48)은 같은 경계 자료다.'
+    - status: '[정리: 조건부]'
+      claim: '0<T<1/sqrt(24), r^2=3/8-T^2, A0=sqrt(3)/4, As=sqrt(1-8T^2)/(4sqrt(2)), alpha=acosh(1/sqrt(1-24T^2)), b=acosh((1+8T^2)/(1-24T^2))를 둔다. 기존 복소 가지의 R=Re S_Regge=-4A0 alpha+6As b, R_prime=-6sqrt(2)T b/sqrt(1-8T^2)<0이다. R=-16sqrt(2)T^3-128sqrt(2)T^5+O(T^7)이며 허수 경계항 -pi sqrt(3)은 T와 무관하다.'
+    - status: '[정리: 조건부]'
+      claim: '바닥 장0·꼭짓점 장v에서 S_phi=kappa v^2/(48sqrt(2)T). beta,kappa>0이면 d(beta R+S_phi)/dT<0이므로 이 가족의 내부 정지점은 없다. 정상점은 같은 고정 가지·준비에서 검사하며 중력 부호를 뒤집지 않는다.'
+  numerical_results:
+    artifact: 'verify/Q-0020/simplex_boundary_reconstruction.json'
+    source_sha256: 'cacbc60e2f8187f1f2b8c4ab2b2202c65d81fb7a364def4e8973ea2a5d520ff4'
+    geometry: '정규·비대칭·서로 다른 부호 가족의 제약·길이복원·소유자일치·각선택 잔차 최대4.884981308350689e-15, 기존 유클리드 작용 미분 차이6.00582250598336e-10.'
+    linear: '정확 유리수 소거로 계수 확인. 독립 차분 Jacobian 차이1.9354184921382966e-11, 길이 접공간 제약잔차8.60423954307521e-11. 비선형 면적 역복원 길이오차8.43769498715119e-15.'
+    negative_control: '면적과 폐합을 보존하는 사면체 변형 eta=.05,.2에서 삼각형 각 결함 .0375735514,.1472719654와 소유자 변제곱 차이 .0508340684,.2135487996이 남는다.'
+    action: 'T=.03,.1,1/sqrt(48),.19 및 v=0,1. 기존 로런츠 작용차이7.646661082105766e-15, 기울기차이1.9539925233402755e-14, 독립 차분4.652921603565119e-9. 스칼라 기울기 절대차이2.7000623958883807e-12.'
+    conditioning: 'T=.03에서 스칼라 노름 크기는1111.11이고 절대차이1.2232703738845885e-10, 상대차이1.1009433364961297e-13이다. 기하 절대1e-10와 작용 기울기1e-7 기준을 유지하고 큰 노름은 상대잔차로 구분했다. 새 경계 작용은 G의 최소고유값<=1e-10||G||를 거부하며 기존 API의 퇴화점 반올림을 엄밀 인증으로 쓰지 않는다.'
+  rejected_routes:
+    - '면적 일치와 사면체 폐합만으로 공유 삼각형의 형상이 맞는다는 경로는 명시 변형으로 기각한다.'
+    - '경계 폐합·형상 일치만으로 유클리드4단체 또는 유일 시간 방향이 정해진다는 경로는17/48 가족과 T 반사로 기각한다.'
+    - '이 고정 단일 높이 가족의 양의 자유 스칼라가 Lorentz 시간 크기를 정상점으로 정한다는 경로는 전 구간 음의 도함수로 기각한다. 다른 복합체·공간변분·전체 CE의 불가능 정리가 아니다.'
+  verification:
+    numeric: pass
+    commands:
+      - '.codex/hooks/python.cmd pytest tests/test_simplex_boundary_reconstruction.py -q'
+      - '.codex/hooks/python.cmd pytest tests/test_simplex_boundary_reconstruction.py::test_saved_artifact_sources -q'
+      - '.codex/hooks/python.cmd source verify/Q-0020/simplex_boundary_reconstruction.py tests/test_simplex_boundary_reconstruction.py'
+    result: '6 passed, 1 artifact skipped in1.74s; 저장 후 hash1 passed in1.27s; source2 PASS'
+    repository_checks: 'harness FAIL: 이번 편집 범위 밖에서 삭제된 .claude/hooks/lib/ledger.py 및 .claude/skills/conjecture-first/SKILL.md 누락. links FAIL106 파일/81 앵커/22 고아로 기존 집계와 동일, 내부 링크1403. 비엄격 lint PASS159 문서/상한초과69/과정표현15. 연구 집중 검사와 별도 판정한다.'
+    independent_math_audit: pass
+    independent_code_audit: pass
+    formal_proof_assistant: '사용하지 않음'
+  source_boundary:
+    - 'Dittrich–Speziale, arXiv:0802.0864v3(2008-07-17), New J. Phys.10:083006, DOI10.1088/1367-2630/10/8/083006. 면적–각 N/C와 레게 극한의 표준 출처다. 본 그램 부호 대조는 그 논문의 Riemannian 정의역을 생략하는 추론을 배제하며 논문 정리의 반증은 아니다.'
+    - 'Barrett 외, arXiv:0907.2440v4(2010-05-27), Class. Quantum Grav.27:165009, DOI10.1088/0264-9381/27/16/165009. 로런츠 경계의 양쪽 레게 위상은 표준 배경이며 본 CE 작용·차원·시간 방향의 발생을 유도하지 않는다.'
+  unfinished:
+    - '독립 인터페이스 양자 형상과 위 고전 N/C를 동일 작용·양자 제약으로 연결하는 의무가 남는다. 고전 복원을 미시적 자율 선택으로 승격하지 않는다.'
+    - '공간기하도 변하는 두 구간의 합성 작용, 실제 공동 제약, 에너지·정보 저장소·준비·보충·재충전·환류, 0D의 사건 순서와 시계 척도가 미완성이다.'
+    - '공통 계량·3+1 Plebanski/Einstein·모든 힘·동일 작용과 공통 theta의 암흑에너지·암흑물질·허블 텐션 및 원래 여덟 성공 게이트를 유지하며 F-01 기각을 유지한다.'
+regge_spatial_slabs:
+  status: '[산출]'
+  target_link: '한 단체의 무정지 반례 뒤 공간 기하를 함께 변분하여 실제 두 구간 로런츠 작용의 내부 해와 합성을 판정한다.'
+  scope: '정규 4단체 경계의 다섯 사면체를 각 공간층으로 공급하고, 두 사면체 프리즘을 전역 꼭짓점 순서로 각각 네 4단체로 나눈 40단체 복합체다. 외부 두 층과 장은 경계조건이며 시간 방향·차원·조합은 유도하지 않는다.'
+  units: '공간 크기 a_n, 시간꼴 연결 길이 m_n, 장 phi_n과 모든 변제곱은 고정 기준으로 무차원화한다. beta=kappa=1인 S/hbar를 계산한다.'
+  conditional_results:
+    - status: '[정리: 조건부]'
+      claim: '한 사면체 프리즘의 공통 국소 좌표에서 T_n^2=m_n^2+3(a_{n+1}-a_n)^2/8이고 수직 변제곱은 -m_n^2, 대각 변제곱은 a_n a_{n+1}-m_n^2다. 모든 단체가 (-+++)인 실제 로런츠 복합체를 이룬다.'
+    - status: '[정리: 조건부]'
+      claim: '전체 작용과 두 슬랩 작용의 합은 작용·복소 중력·기울기에서 각각 3.56e-15,1.78e-15,1.78e-15 이내로 일치하며 스칼라 상수이동 전하는 정확히 보존된다.'
+    - status: '[기각: 제한된 범위]'
+      claim: 'a0=a2=1, phi0=-1, phi2=1의 대칭 축약 정상점 a1=1.0849771930551, m0=m1=.0930725114791은 축약잔차1.98e-12지만 원래 내부 변40개 잔차1.727922744와 장5개 잔차.146862384를 남긴다. 대칭 축약 해를 전체 방정식 해로 자동 승격하는 경로를 기각한다.'
+    - status: '[산출]'
+      claim: '같은 경계를 유지하고 내부 변40개와 장5개를 독립 변분하면 44평가에서 최대 방정식 잔차1.0675872e-10인 해가 있다. 최소 로런츠 관성 여유는.00214023, 고정경계 Hessian은 상대1e-8에서 계수45이며 최소 특잇값.147486이다.'
+    - status: '[정리: 조건부]'
+      claim: '내부 장 방정식과 전역 장 이동대칭으로 두 경계의 스칼라 정준 전하는 -6.30953996124,+6.30953996132이고 합은8.38e-11 이하다. 이는 작용에서 유도한 경계 장부이며 접힘 저장소 에너지나 0D 보충량과 동일시하지 않는다.'
+  numerical_results:
+    artifact: 'verify/Q-0020/regge_spatial_slabs.json'
+    source_sha256: '7a3dd3486a8ef91b094d6137fcf6238c1490770793ad1b75b33f29761bb1536d'
+    gradient: '대표 내부 변6개·내부 장5개의 독립 작용 차분 최대오차8.56e-10,3.91e-10.'
+    verification: '집중검사4 passed, 최초 hash1 skipped in26.49s; 저장 후 hash1 passed in.57s; source PASS.'
+  source_boundary:
+    - 'Jercher–Steinhaus, arXiv:2312.11639은 로런츠 4-frustum·질량 없는 스칼라·인과 정칙성과 관계적 Friedmann 극한의 외부 배경이다. 현재 40단체 staircase의 해나 CE 시간 발생을 그 문헌에서 가져오지 않는다.'
+    - 'Liu–Williams, arXiv:1501.07614는 닫힌 Regge FLRW와 전역·국소 변분의 차이를 비교하는 외부 배경이다. 현재 결과는 국소 내부 방정식을 직접 검사한다.'
+  unfinished:
+    - '현재 해의 경계조건·삼각분할 순서 의존성, 여러 초기값에서의 해의 유일성, 더 미세한 공간 복합체의 수렴과 연속 Einstein–스칼라 극한을 강하게 검증한다.'
+    - '외부 경계가 공급한 시간 방향을 0D 사건 순서의 발생으로 승격하지 않는다. 사전·사후 제약, 접힘 저장소·준비·보충·재충전·환류를 같은 작용에 연결해야 한다.'
+    - '공통 계량·Plebanski/Einstein·전자기·약력·강력·암흑에너지·암흑물질·허블 텐션과 여덟 성공 게이트는 미완성이고 F-01 기각을 유지한다.'
+next_action: "40단체의 실제 내부 정상점을 유지하되, 경계조건·staircase 순서·초기값 의존성을 강하게 시험하고 공간 복합체를 미세화해 Einstein–질량없는 스칼라의 관계적 Friedmann 극한을 복원하는지 판정한다. 대칭 축약 해를 전체 방정식 해로 승격하지 않고, 경계 스칼라 전하 보존을 접힘 저장소 에너지로 동일시하지 않는다. 그 뒤 사전·사후 제약과 저장소·준비·보충·재충전·환류를 같은 작용에 연결한다. 외부 시간 없는 0D의 사건 순서·시계 척도 → 공통 계량 → 3+1 Plebanski/Einstein·모든 힘 → 공통 theta의 암흑에너지·암흑물질·허블 텐션과 원래 여덟 성공 게이트, F-01 기각을 유지한다."

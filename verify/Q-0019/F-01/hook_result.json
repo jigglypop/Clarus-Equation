@@ -1,0 +1,102 @@
+{
+  "file": "C:\\dev\\ce\\Clarus-Equation\\derivations\\Q-0019\\F-01.formula.md",
+  "question": "Q-0019",
+  "attempt": null,
+  "card": "F-01",
+  "sympy": true,
+  "details": [
+    {
+      "type": "numeric",
+      "expr": "(1/3 + 4*5/9 + 5*11/9)/40 - 13/60",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 0
+    },
+    {
+      "type": "identity",
+      "lhs": "5*(s - (5*s)/5)",
+      "rhs": "0",
+      "symbolic": "pass",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 1
+    },
+    {
+      "type": "identity",
+      "lhs": "sqrt(5*x**2/5)",
+      "rhs": "sqrt(x**2)",
+      "symbolic": "pass",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 2
+    },
+    {
+      "type": "numeric",
+      "expr": "log(sqrt(13/60))/log(5) - (-0.47513)",
+      "max_rel_err": 3.3347328445842983e-06,
+      "numeric": "pass",
+      "index": 3
+    },
+    {
+      "type": "numeric",
+      "expr": "sqrt(11/9) - 1.105542",
+      "max_rel_err": 4.03214866828705e-07,
+      "numeric": "pass",
+      "index": 4
+    },
+    {
+      "type": "numeric",
+      "expr": "1 + 4 + 5 - 10",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 5
+    },
+    {
+      "type": "numeric",
+      "expr": "5*10 - 10 - 40",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 6
+    },
+    {
+      "type": "numeric",
+      "expr": "13/60 - 1/5 - 1/60",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 7
+    },
+    {
+      "type": "limit",
+      "expr": "(13/60)**(k/2)",
+      "var": "k",
+      "point": "oo",
+      "expected": 0,
+      "result": "0",
+      "symbolic": "pass",
+      "index": 8
+    },
+    {
+      "type": "numeric",
+      "expr": "(sqrt(1/3) - 0.577350) + (sqrt(5/9) - 0.745356)",
+      "max_rel_err": 2.6168955569172425e-07,
+      "numeric": "pass",
+      "index": 9
+    },
+    {
+      "type": "numeric",
+      "expr": "13/60 - 0.216667",
+      "max_rel_err": 3.33333333324415e-07,
+      "numeric": "pass",
+      "index": 10
+    },
+    {
+      "type": "numeric",
+      "expr": "sqrt(13/60) - 0.465475",
+      "max_rel_err": 3.318743686531178e-07,
+      "numeric": "pass",
+      "index": 11
+    }
+  ],
+  "symbolic": "pass",
+  "numeric": "pass"
+}

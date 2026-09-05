@@ -25,8 +25,8 @@ F02 = ROOT / "verify" / "Q-0008" / "F-02"
 sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(F02))
 from check_modes import block_residual, MIN_DET, REFERENCE  # noqa: E402
 from driver_numbers import tree_arrays, uniform_rooted_tree  # noqa: E402
-from examples.physics.causal_face_simplicity import geometric_self_dual_triple, simplicity_residual  # noqa: E402
-from examples.physics.urbantke_shape_matching_rg import optimal_internal_alignment  # noqa: E402
+from examples.physics.gravity.causal_face_simplicity import geometric_self_dual_triple, simplicity_residual  # noqa: E402
+from examples.physics.gravity.urbantke_shape_matching_rg import optimal_internal_alignment  # noqa: E402
 
 import importlib.util  # noqa: E402
 spec = importlib.util.spec_from_file_location("q0010_driver", ROOT / "verify/Q-0010/F-01/driver_numbers.py")

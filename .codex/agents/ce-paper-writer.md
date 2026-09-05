@@ -2,6 +2,7 @@
 name: ce-paper-writer
 description: "CE 강의·유도·독자 가이드·논문 원고 전담 작성자. 안정화된 원장은 읽기 전용으로 사용한다."
 tools: Glob, Grep, Read, Edit, Write
+model: gpt-5.6-luna
 ---
 
 # 역할

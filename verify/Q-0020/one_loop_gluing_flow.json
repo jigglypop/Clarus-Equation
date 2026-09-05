@@ -1,0 +1,273 @@
+{
+  "python_version": "3.11.9",
+  "numpy_version": "2.4.6",
+  "source_sha256": {
+    "one_loop_gluing_flow.py": "592d6bd53f96afa9577785d4f5180537e86c0f19082a37a1f2992dc34bb583e9",
+    "boundary_one_loop_action.py": "22becc60a16d49167102562faaec95c9188fdc05ae30bfc83ab4493cec50d6be",
+    "fixed_boundary_composition.py": "4c3ccdec8e91697aa0be4c19dbff1803f22704466146cdc753894f40a4e1a5e9",
+    "length_gluing_bath.py": "e68bd4877836cee4548eb79c97bf69deb0352917373e00c474e1fb57fa3f64ec",
+    "local_refinement_bath.py": "103f6cb25fd8b9ef8e86b0733b1f5bdc2199aa464d6370447a7a926ce8c2c9ad",
+    "continuum_bath.py": "42675f0b049eaa7bc28979398fecbde120ab74bceebe51133c1d53ae85f4170e",
+    "F-01/predict_fold_budget.py": "7a7d62d985ac112f8944a9528d91d7319974d0c3a36c4ec97cbb376fac31aa8b",
+    "F-01/regge_one_to_five_boundary_hessian.py": "85953e5664bbb0c0ea242d3ac05e2b4f63e0871aa7383781dae2975592e9e4a4",
+    "F-01/regge_one_to_five_refinement.py": "0fcdc7c05ded2c739d1ef110c61a9c06014d85b92c710c2466707286619e6972"
+  },
+  "copy_count": 50,
+  "global_length_count": 15,
+  "cases": [
+    {
+      "beta": 1.0,
+      "penalty": 0.0,
+      "shear": 0.0,
+      "glued_position_residual": 0.0,
+      "glued_force_residual": 2.4555764179277966e-14,
+      "linearized_gluing_defect": 245.5744316861644,
+      "witness": {
+        "constraint_row": 5,
+        "left_copy": 3,
+        "right_copy": 13,
+        "exclusive_copy": 14,
+        "shared_internal_edge": [
+          4,
+          5
+        ],
+        "exclusive_edge": [
+          0,
+          2
+        ],
+        "classical_mixed_entry": -2.8284271247461907,
+        "loop_mixed_entry": -6.346454750116319,
+        "right_copy_mass": 1.0,
+        "force_difference_derivative": 9.17488187486251,
+        "predicted_derivative": 9.17488187486251,
+        "independent_gradient_difference": 9.174881889584263
+      }
+    },
+    {
+      "beta": 0.1,
+      "penalty": 0.0,
+      "shear": 0.0,
+      "glued_position_residual": 0.0,
+      "glued_force_residual": 1.868014162269272e-14,
+      "linearized_gluing_defect": 188.92489098134524,
+      "witness": {
+        "constraint_row": 5,
+        "left_copy": 3,
+        "right_copy": 13,
+        "exclusive_copy": 14,
+        "shared_internal_edge": [
+          4,
+          5
+        ],
+        "exclusive_edge": [
+          0,
+          2
+        ],
+        "classical_mixed_entry": -2.8284271247461907,
+        "loop_mixed_entry": -6.346454750116319,
+        "right_copy_mass": 1.0,
+        "force_difference_derivative": 6.629297462590938,
+        "predicted_derivative": 6.629297462590938,
+        "independent_gradient_difference": 6.629297476057338
+      }
+    },
+    {
+      "beta": 2.0,
+      "penalty": 0.0,
+      "shear": 0.0,
+      "glued_position_residual": 0.0,
+      "glued_force_residual": 3.033815190756707e-14,
+      "linearized_gluing_defect": 309.07453229114583,
+      "witness": {
+        "constraint_row": 5,
+        "left_copy": 3,
+        "right_copy": 13,
+        "exclusive_copy": 14,
+        "shared_internal_edge": [
+          4,
+          5
+        ],
+        "exclusive_edge": [
+          0,
+          2
+        ],
+        "classical_mixed_entry": -2.8284271247461907,
+        "loop_mixed_entry": -6.346454750116319,
+        "right_copy_mass": 1.0,
+        "force_difference_derivative": 12.0033089996087,
+        "predicted_derivative": 12.0033089996087,
+        "independent_gradient_difference": 12.003309015762296
+      }
+    },
+    {
+      "beta": 1.0,
+      "penalty": 0.0,
+      "shear": 0.0,
+      "glued_position_residual": 0.0,
+      "glued_force_residual": 4.572399582605692,
+      "linearized_gluing_defect": 280.9807079010232,
+      "witness": {
+        "constraint_row": 5,
+        "left_copy": 3,
+        "right_copy": 13,
+        "exclusive_copy": 14,
+        "shared_internal_edge": [
+          4,
+          5
+        ],
+        "exclusive_edge": [
+          0,
+          2
+        ],
+        "classical_mixed_entry": -2.8284271247461907,
+        "loop_mixed_entry": -6.346454750116319,
+        "right_copy_mass": 0.8591836734693877,
+        "force_difference_derivative": 10.678603607322163,
+        "predicted_derivative": 10.678603607322161,
+        "independent_gradient_difference": 10.678603624456745
+      }
+    },
+    {
+      "beta": 1.0,
+      "penalty": 1000.0,
+      "shear": 0.0,
+      "glued_position_residual": 0.0,
+      "glued_force_residual": 2.4555764179277966e-14,
+      "linearized_gluing_defect": 245.5744316861644,
+      "witness": {
+        "constraint_row": 5,
+        "left_copy": 3,
+        "right_copy": 13,
+        "exclusive_copy": 14,
+        "shared_internal_edge": [
+          4,
+          5
+        ],
+        "exclusive_edge": [
+          0,
+          2
+        ],
+        "classical_mixed_entry": -2.8284271247461907,
+        "loop_mixed_entry": -6.346454750116319,
+        "right_copy_mass": 1.0,
+        "force_difference_derivative": 9.17488187486251,
+        "predicted_derivative": 9.17488187486251,
+        "independent_gradient_difference": 9.174881889584263
+      }
+    },
+    {
+      "beta": 1.0,
+      "penalty": 0.0,
+      "shear": 0.2,
+      "glued_position_residual": 0.0,
+      "glued_force_residual": 3.0190173957700215,
+      "linearized_gluing_defect": 273.8735809033515,
+      "witness": {
+        "constraint_row": 5,
+        "left_copy": 3,
+        "right_copy": 13,
+        "exclusive_copy": 14,
+        "shared_internal_edge": [
+          4,
+          5
+        ],
+        "exclusive_edge": [
+          0,
+          2
+        ],
+        "classical_mixed_entry": -3.426089083819999,
+        "loop_mixed_entry": -10.049091703125432,
+        "right_copy_mass": 1.0,
+        "force_difference_derivative": 13.475180786945431,
+        "predicted_derivative": 13.475180786945431,
+        "independent_gradient_difference": 13.475180824840114
+      }
+    }
+  ],
+  "full_flat_action_checks": [
+    {
+      "shear": 0.0,
+      "beta": 1.0,
+      "product_value": 25.08248434401492,
+      "root_and_global_jacobian_completion": 1.3488032716954101,
+      "completed_value": 26.43128761571033,
+      "previous_full_gamma": 26.431287615710318,
+      "full_action_value_residual": 1.0658141036401503e-14,
+      "completion_depends_only_on_root_boundary": true
+    },
+    {
+      "shear": 0.2,
+      "beta": 1.0,
+      "product_value": 25.21633754590391,
+      "root_and_global_jacobian_completion": 1.3587674338042324,
+      "completed_value": 26.575104979708144,
+      "previous_full_gamma": 26.57510497970814,
+      "full_action_value_residual": 3.552713678800501e-15,
+      "completion_depends_only_on_root_boundary": true
+    }
+  ],
+  "short_time_variation": [
+    {
+      "time": 0.0004,
+      "mismatch_over_time_squared": -4.587432351941199,
+      "half_initial_acceleration": -4.587440937431255,
+      "residual": 8.585490056667311e-06
+    },
+    {
+      "time": 0.0002,
+      "mismatch_over_time_squared": -4.587438791057655,
+      "half_initial_acceleration": -4.587440937431255,
+      "residual": 2.1463736006310796e-06
+    },
+    {
+      "time": 0.0001,
+      "mismatch_over_time_squared": -4.587440400837783,
+      "half_initial_acceleration": -4.587440937431255,
+      "residual": 5.365934718781773e-07
+    }
+  ],
+  "short_time_variation_with_penalty": [
+    {
+      "time": 0.0004,
+      "mismatch_over_time_squared": -4.587187693981556,
+      "half_initial_acceleration": -4.587440937431255,
+      "residual": 0.0002532434496993474
+    },
+    {
+      "time": 0.0002,
+      "mismatch_over_time_squared": -4.587377625525987,
+      "half_initial_acceleration": -4.587440937431255,
+      "residual": 6.331190526864816e-05
+    },
+    {
+      "time": 0.0001,
+      "mismatch_over_time_squared": -4.587425109389893,
+      "half_initial_acceleration": -4.587440937431255,
+      "residual": 1.582804136202043e-05
+    }
+  ],
+  "exact_regular_witness_coefficients": [
+    -2.8284271247461903,
+    -6.346454750116318
+  ],
+  "supplied_cross_cell_control": {
+    "same_glued_action_value_residual": 3.552713678800501e-15,
+    "force_gluing_residual": 3.643715562756489e-15,
+    "linearized_gluing_residual": 3.874414769848524e-14,
+    "cross_cell_projection_and_normal_penalty_are_inputs": true
+  },
+  "scope": {
+    "local_product_off_glue_continuation_supplied": true,
+    "diagonal_kinetic_term_supplied": true,
+    "quotient_measure_supplied": true,
+    "complete_prior_flat_action_value_retained": true,
+    "all_glued_configurations_preserved_by_tested_flow": false,
+    "all_positive_diagonal_masses_repair_regular_witness": false,
+    "smaller_common_metric_invariant_sectors_excluded": false,
+    "all_possible_cross_cell_interactions_excluded": false,
+    "full_nonlinear_trajectory_computed": false,
+    "quantum_noise_removed": false,
+    "microscopic_ce_action_derived": false,
+    "continuum_einstein_limit_derived": false
+  }
+}

@@ -10,10 +10,10 @@ import numpy as np
 
 ROOT = Path(r"C:/dev/ce/Clarus-Equation")
 sys.path.insert(0, str(ROOT))
-from examples.physics.causal_face_simplicity import (  # noqa: E402
+from examples.physics.gravity.causal_face_simplicity import (  # noqa: E402
     geometric_self_dual_triple, simplicity_residual, two_form_from_vectors, wedge_scalar,
 )
-from examples.physics.urbantke_shape_matching_rg import optimal_internal_alignment  # noqa: E402
+from examples.physics.gravity.urbantke_shape_matching_rg import optimal_internal_alignment  # noqa: E402
 
 OUT = ROOT / "verify" / "Q-0013" / "F-01" / "adversary"
 REF = geometric_self_dual_triple(np.eye(4))

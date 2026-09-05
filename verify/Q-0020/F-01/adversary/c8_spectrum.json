@@ -1,0 +1,86 @@
+{
+  "sigma2_W_sorted": [
+    -1.123109693288077e-16,
+    1.2886668662920521e-18,
+    0.3208245912618409,
+    0.320824591269754,
+    0.3208245915550402,
+    0.3208245918077349,
+    0.3208245921223694,
+    0.7448006760885597,
+    0.7448006764872324,
+    0.74480067673596,
+    0.7448006768290264
+  ],
+  "rho_R_sorted": [
+    -1.3273033635673008,
+    -1.3273033611405056,
+    -1.3273033601593496,
+    -1.3273033544191466,
+    -1.6614358510549804e-16,
+    1.4668381703365285e-17,
+    0.32082459126184226,
+    0.32082459126975393,
+    0.32082459155503984,
+    0.32082459180773504,
+    0.32082459212236925
+  ],
+  "sigma2_W_clusters": [
+    {
+      "value": -5.551115123125783e-17,
+      "multiplicity": 2
+    },
+    {
+      "value": 0.32082459160334786,
+      "multiplicity": 5
+    },
+    {
+      "value": 0.7448006765351946,
+      "multiplicity": 4
+    }
+  ],
+  "rho_R_clusters": [
+    {
+      "value": -1.3273033598215758,
+      "multiplicity": 4
+    },
+    {
+      "value": -7.573760170106638e-17,
+      "multiplicity": 2
+    },
+    {
+      "value": 0.3208245916033481,
+      "multiplicity": 5
+    }
+  ],
+  "three_two_sector": {
+    "sigma2_W": 0.32082459160334786,
+    "rho_R": 0.3208245916033481,
+    "abs_diff": 2.220446049250313e-16,
+    "identical": true
+  },
+  "multiplicities_W": [
+    2,
+    5,
+    4
+  ],
+  "multiplicities_R": [
+    4,
+    2,
+    5
+  ],
+  "ladder_step3_says": "(2,4,5)",
+  "observed": "W: (2,5,4) by increasing value; R: (4,2,5) by increasing value",
+  "ladder_step3_mismatch": "Ladder step 3 claims clusters are (2,4,5) and 'kills the card if clusters are not (2,4,5)'. consistency_checks and the card body say (2,5,4). As multiset {2,4,5} both agree; as an ordered tuple they do not. P2 notation ambiguity in the kill condition of step 3.",
+  "trivial_sigma2_W": -5.551115123125783e-17,
+  "trivial_is_zero": true,
+  "std_sector": {
+    "sigma2_W": 0.7448006765351946,
+    "rho_R": -1.3273033598215758,
+    "convention_dependent": true
+  },
+  "sigma2_max_lt_1": true,
+  "rho_max": 0.32082459212236925,
+  "any_rho_gt_1": false,
+  "one_minus_rho_min": 0.6791754078776308
+}

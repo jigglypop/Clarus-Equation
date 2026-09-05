@@ -2,7 +2,7 @@ import math
 
 import pytest
 
-from examples.physics.time_homogeneous_pointer_qca import (
+from examples.physics.record.time_homogeneous_pointer_qca import (
     certify_continuous_hamiltonian_front,
     certify_time_homogeneous_pointer_qca,
 )

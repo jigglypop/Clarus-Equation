@@ -1,0 +1,126 @@
+id: E-20260904-020
+question: Q-0017
+attempt: 1
+timestamp: 2026-09-04T00:00:00+09:00
+claim: >-
+  F-01(예측식, revision 1) [공리: 후보] 병합 평균 규칙(경쟁 가설 B, 사영 없음): merge 사건에서 두 부모
+  라벨을 산술 평균해 상속하면 커널은 DAG 조상 가중 $\kappa_q=A_qA_q^{\top}$(Henderson 관계행렬 재귀와
+  같은 식)이고, 지수 법칙 $\gamma_{\rm merge}(q)=\max(2/d_{\rm tree}-1,\,-1/2)$가 $q\in(0,1]$
+  전 구간에서 $q$에 무관하게 성립한다. 임계 차원은 정확히 $d_{\rm tree}=2$(균등 Cayley·Q-spine·cone)에서
+  지수 0(정체, $c_\infty(q)\propto q^{-2}$)이고, $d_{\rm tree}\ge3$에서 attractor(층 트리 $a=2$:
+  $-0.379$)가 생기며, 질문 원문의 가설 B("$q^\star$에서 부호 전환")는 F-02 격자 21점 스캔이 전 구간
+  $[0.197,0.530]>0$이라 이 카드 스스로 부정한다($q_\star=\varnothing$로 사전등록). card-check PASS(kind
+  예측식, free_parameters 0, ladder 7단, predicts 8[already_observed 1], kill 4[K1–K4]+통제 1[K5]),
+  훅 21/21 symbolic+numeric pass. sourcer(haiku)가 Bamieh–Jovanović–Mitra–Patterson 2012(부분
+  유사, 무향 격자·연속시간 H₂ 노름), Henderson 1976(관계행렬 재귀가 커널 정의 성분만 일치 — 카드
+  핵심인 중심화 Frobenius 노름의 n-지수·트리 차원 법칙·simplicity 잔차 대응은 문헌에 없어 unrelated),
+  Derrida–Manrubia–Zanette 1999/2000(부분 유사, 조상 가중 분포만), Aldous–Lanoue 2012(무관, 잡음
+  없는 평균화)와 대조해 카드 핵심(지수 법칙 자체와 $q$ 무관성·임계 차원 2·가설 B 부정)을 novel로
+  판정했다(prior_art 4건 전부 unrelated — identical·special_case 없음). ladder step 1(외부기존,
+  E-018 커널 법칙·F-02 정확 표·Henderson·Derrida–Manrubia–Zanette·Bamieh·Cayley 프로파일 6항목)
+  인용 목록이 이미 있다.
+  adversary(opus) SUMMARY가 P0 없이 P1 3건 — content(지수 법칙 헤드라인이 K3/K4 창 외에는 사실상
+  게이트되지 않고, 5개 창 중 3개가 법칙 자체의 점근값을 배제), kill_executable(K4 h=90이 float64에서
+  메모리 부족으로 두 번 죽었고 K2c 창이 약 1σ 폭이라 약 33% 허위 kill 확률), ladder_complete(조상-요동항
+  $\|H(\kappa-E\kappa)H\|^2$이 $d_{\rm tree}\ge3$에서 관측량의 96–99%를 차지하는데 7단 어디에도
+  없음) — 을 냈고 rev 1에는 이 세 지적이 반영되지 않았다. P0가 없어 refute 사유는 아니지만 rev 1 미반영
+  P1이므로 adopt 조건부로 판정한다. adversary가 새로 유도한 정확식 $S_\star=2/(q+2/W)$(카드의 근사
+  $2/q$를 유한폭 보정으로 개선)도 다음 attempt에서 반영해야 한다. 질문이 부정된 것(가설 B)은 refute
+  사유가 아니다 — 카드는 자기 예측(지수 법칙·임계 차원 2)을 냈고 그 예측이 card-check·sourcer novel을
+  통과했다. F-02 값과의 정합(q=0 극한, E-015 측정 0.5576)은 kill이 아니라 정합 게이트로 이미 통과 기록됐다.
+level: L3
+verdict: adopt
+pivot_step: null
+ladder_step: null
+ladder_cited: null
+card: derivations/Q-0017/F-01.formula.md
+kill_triggered: null
+derivation: derivations/Q-0017/F-01.formula.md
+card_status: 후보
+verification:
+  symbolic: pass
+  numeric: pass
+  lean: skipped
+  artifacts: verify/Q-0017/F-01/
+adversary:
+  model_note: "카드 감사 opus(Fable 5.1 안전장치 오탐 회피 규정에 따름). 산출물
+    verify/Q-0017/F-01/adversary/SUMMARY.json·a10–a14(및 a1–a9)."
+  counterexamples: []
+  survived_checks:
+    - "card-check PASS(kind 예측식, free_parameters 0, ladder 7단, predicts 8[already_observed
+      1], kill 4[K1–K4]+통제 1[K5]), 훅 21/21 symbolic+numeric pass"
+    - "dimension pass — 모든 기호 무차원, ln n/ln RMS 인자 무차원"
+    - "recovers pass — chain/star merge-불활성이 F-02 닫힌 식과 정확히 일치(a1); n=1: D=0;
+      q=0: F-02 정확 Cayley 표(a1, a4)"
+    - "dof pass — 자유 파라미터 0 vs 사전등록 숫자 6개 이상"
+    - "독립 재구성(opus, a3): gamma_G 법칙식(2/d_tree−1)과 층 트리 exact 값의 최대오차 0(a in
+      0..6), 단 카드 3단의 a=1.5 점근 주장 −0.17은 독립 계산 −0.20과 어긋남(scope 문단이 이미
+      '미시험 점근 주장'으로 한정한 부분)"
+    - "K1·K3 사전등록 숫자의 독립 근사 재현: indep_cayley_q1_gamma 0.2155 vs 카드 K1 0.1973;
+      indep_layered_a2_q1_gamma −0.3773 vs 카드 K3 −0.3789(a12 kernel_law_DAG_offgrid_ratio
+      0.97–1.02로 커널 법칙이 DAG 가중 A_qA_qᵀ에도 성립함을 확인)"
+  hidden_assumptions:
+    - "content(P1, rev1 미반영): 헤드라인 지수 법칙 max(2/d_tree−1,−1/2)은 K3·K4 창 외에는
+      사실상 게이트되지 않고, 5개 사전등록 창 중 3개(K1·K2a·K5)가 법칙 자체의 점근값을 배제한다
+      (카드 scope 문단이 유한 크기 값으로만 시험한다고 이미 밝혔으나, 이 한정이 죽는 조건 문단에는
+      요약되지 않음)"
+    - "kill_executable(P1, rev1 미반영): K4 h=90은 float64에서 약 0.5GB로 이 환경에서 두 번
+      죽었다(float32면 통과); K2c 창(1.42–1.92)은 약 1σ 폭이라 재현 시 약 33% 허위 kill 확률
+      (a14_k2_noise)"
+    - "ladder_complete(P1, rev1 미반영): 조상-요동항 ‖H(κ−Eκ)H‖²가 d_tree≥3에서 관측량의
+      96–99%를 차지하는데(a8_mean_vs_fluct) 카드 7단 어디에도 이 항이 명시되지 않는다 — 3단의
+      '세대 평균 걷기 커널' 논증은 평균(E κ)만 다루고 요동 성분의 지수 기여를 별도로 증명하지 않는다"
+    - "adversary가 새로 유도(a10): 정확식 S_★=2/(q+2/W)(유한 폭 보정), 카드의 근사 S_★=2/q는
+      W→∞ 극한에서만 정확 — MC와 1.1% 이내 일치, 카드 근사를 대체하지 않고 개선한다"
+  parking:
+    - "adopt_condition 1: 다음 attempt(사다리 2단 이상)에서 죽는 조건 문단에 K1·K2a·K5 창이
+      점근값을 배제하는 유한 크기 게이트라는 한 줄을 명시한다"
+    - "adopt_condition 2: K4를 재실행할 때 float32 경로 또는 h=90 크기 축소로 메모리 문제를
+      피하고, K2c 창 재현성(≈33% 허위 kill)을 사다리 6단 판정 시 함께 기록한다"
+    - "adopt_condition 3: 3단 보조정리를 요동항 ‖H(κ−Eκ)H‖²의 지수 기여까지 포함하도록 다음
+      attempt에서 확장하거나, 왜 평균항만으로 충분한지 별도로 증명한다(현재는 gap)"
+    - "adopt_condition 4: S_★=2/q를 S_★=2/(q+2/W)로 다음 revision에서 갱신하는 것을 검토한다
+      (수치 차이는 1.1% 이내라 사전등록 숫자를 바꿀 필요는 없을 수 있음)"
+sourcer:
+  prior_art:
+    - ref: "Bamieh–Jovanović–Mitra–Patterson 2012 'Coherence in large-scale networks:
+        dimension-dependent limitations of local feedback' (IEEE TAC)"
+      url: null
+      relation: unrelated
+      note: "noisy consensus의 차원 의존 coherence(1D 발산·2D 로그·≥3D 유계)가 이 카드의 임계
+        차원 2 구조와 같은 모양이나(부분적 유사) 무향 격자·연속 시간 H₂ 노름이고 트리 차원 지수
+        법칙·simplicity 잔차·q 무관성은 없다 — 결과 자체는 무관"
+    - ref: "Henderson 1976 'A simple method for computing the inverse of a numerator
+        relationship matrix'"
+      url: null
+      relation: unrelated
+      note: "관계행렬 재귀 a_ij=(a_sj+a_dj)/2가 merge 커널의 정의 성분(A_q 재귀)과 같은 식이나,
+        이 카드의 핵심 결과인 중심화 Frobenius 노름의 n-지수·트리 차원 법칙·simplicity 잔차 대응은
+        문헌에 없다 — 커널 정의 하나가 같을 뿐 카드가 세우는 지수 법칙 자체와는 무관(카드 핵심
+        밖의 부속 정의 일치일 뿐이라 unrelated)"
+    - ref: "Derrida–Manrubia–Zanette 1999 PRL 82:1987; 2000 J. Theor. Biol."
+      url: null
+      relation: unrelated
+      note: "양친 계보의 조상 가중 분포·혼합 시간을 다루나(부분적 유사) 블록 잔차 지수는 없다 —
+        결과 자체는 무관"
+    - ref: "Aldous–Lanoue 2012 'A lecture on the averaging process'"
+      url: null
+      relation: unrelated
+      note: "쌍 평균 동역학의 분산 수축이나 잡음 주입·세대 구조·정체 진폭 2/q 없음(disjoint)"
+  overall: novel
+  ce_specific_confirmed: "사영 공리 없이 merge 사건의 라벨 평균만 넣은 coarse-graining을 DAG 조상 가중
+    커널로 적고 F-02 커널 법칙에 얹어, 상속 mode의 블록 지수가 q>0 전 구간에서 q 무관하게 트리 차원
+    하나로 정해진다는 지수 법칙(임계 차원 2에서 정체, 질문의 q 임계 부재)은 선행 문헌에서 찾지 못했다"
+assumptions:
+  - "P_micro: 증분 ξ_v는 16차원 등방 표준정규(F-02 scope와 동일); O(δ⁴) 절단(E-018 실측 상계
+    0.026%~0.23%); 결정론 Δ 분기는 Q-0018 몫"
+  - "지수 법칙은 n→∞ 점근 진술이고 중간값 2/d_tree−1(1<a<3)은 접두 계수가 작아 도달 가능한 n에서
+    바닥 −1/2에 가려지므로 미시험 점근 주장으로 남는다(카드 scope, adversary a3 독립 확인)"
+  - "adopt_condition 1–4(위 parking): 죽는 조건 문단의 유한 크기 게이트 명시, K4 메모리 회피,
+    3단 요동항 gap 처리, S_★ 정확식 반영을 다음 attempt(2단 이상)에서 이행한다"
+open_questions_spawned: []
+next_action: "다음 attempt에서 사다리 1단(외부기존 — E-018 커널 법칙·F-02 정확 표·Henderson·
+  Derrida–Manrubia–Zanette·Bamieh·Cayley 프로파일)을 sourcer 인용으로 ladder_cited 닫고(attempt
+  소모 없음), 이어 2단(보조정리: 질량 보존·merge 수축·샌드위치) promote를 시도한다. 같은 attempt에서
+  adopt_condition 1(죽는 조건에 유한 크기 게이트 한 줄)·2(K4 float32/축소)·3(3단에 요동항 gap 처리
+  또는 별도 증명 추가)·4(S_★=2/(q+2/W) 반영 검토)를 revision 2에 반영한다."

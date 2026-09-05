@@ -92,7 +92,7 @@ $B_2$와 $F_2$를 같은 2-form type으로 택하고 background metric 없이 $B
 
 ## 14.6 재현 범위
 
-증명서는 [구현](../../examples/physics/zerod_plebanski_closure.py)과 [회귀 검사](../../tests/test_zerod_plebanski_closure.py)에 있다. 집중 검사는 다음과 같다.
+증명서는 [구현](../../examples/physics/gravity/zerod_plebanski_closure.py)과 [회귀 검사](../../tests/test_zerod_plebanski_closure.py)에 있다. 집중 검사는 다음과 같다.
 
 ```powershell
 .codex/hooks/python.cmd pytest tests/test_zerod_plebanski_closure.py -q

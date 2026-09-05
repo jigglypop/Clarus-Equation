@@ -5,11 +5,11 @@ import math
 import numpy as np
 import pytest
 
-from examples.physics.causal_face_simplicity import (
+from examples.physics.gravity.causal_face_simplicity import (
     geometric_self_dual_triple,
     simplicity_residual,
 )
-from examples.physics.urbantke_shape_matching_rg import (
+from examples.physics.gravity.urbantke_shape_matching_rg import (
     centered_shape_fluctuation_scaling,
     common_metric_block,
     conformal_metric_residual,

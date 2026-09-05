@@ -4,7 +4,7 @@ import math
 
 import pytest
 
-from examples.physics.ce_residual_forward_model import (
+from examples.physics.darksector.ce_residual_forward_model import (
     CEForwardParams,
     RECOMBINATION_REDSHIFT_UNIT,
     RECOMBINATION_XE_CONVENTION,

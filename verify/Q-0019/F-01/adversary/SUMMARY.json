@@ -1,0 +1,18 @@
+{
+  "question": "Q-0019",
+  "card": "F-01",
+  "mode": "card_audit",
+  "model_note": "opus (Fable 5.1 safeguard false-positive avoidance)",
+  "spectrum_reproduced": {
+    "method": "완전 독립 재구현 (Cholesky 좌표, 직접 10x10 Gram solve, SYMIDX 파라미터화)",
+    "eigs_5sigma_squared": [1.2222222222222223, 0.5555555555555556, 0.3333333333333333],
+    "mult": [5, 4, 1],
+    "max_abs_dev": 9.99e-16,
+    "match": true,
+    "S5_equivariance_max_err_over_all_120_perms": 1.11e-15,
+    "character_multiplicities": {"trivial": 1, "standard4": 1, "[3,2]_5": 1}
+  },
+  "normalization_sign_stable": false,
+  "key_finding": "제곱거리(Regge 길이) 좌표에서 같은 사상은 열 방향 모두 정확히 sqrt(2/3)=0.8165<1 인 등방 수축이다. 스펙트럼 갈림(1/3,5/9,11/9)과 lambda_max>1 은 계량<->길이 좌표변환 P (조건수 sqrt5) 의 켤레에서만 생긴다.",
+  "exact_identity_edge_coords": "중심화 sum_a D_a[e]=0 => y[e] = -(1/3)(D_i[e]+D_j[e]); edge별 분리; sum=0 초평면 위 |e_i+e_j|^2 사영 = 6/5; lambda^2 = (1/9)(6/5)(5) = 2/3 (모든 방향, 축퇴)"
+}

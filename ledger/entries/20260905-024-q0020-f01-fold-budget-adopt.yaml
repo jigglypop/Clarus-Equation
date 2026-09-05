@@ -1,0 +1,103 @@
+id: E-20260905-024
+question: Q-0020
+attempt: 1
+timestamp: 2026-09-05T00:00:00+09:00
+claim: "F-01(예산식, revision 2) — unglued Regge 작용의 접힘 부피를 DE 원장 §7.3 정규화 불변
+  Schur 스펙트럼으로 닫아 10.10의 미정의 $\\Omega(C)$ 를 $\\Gamma_{\\rm eff}(b)=S_c(b)-\\hbar\\ln
+  \\Omega_{\\rm fold}(b)$ 로 정의한다. $\\ln\\Omega_{\\rm fold}=m\\ln(\\ell/\\ell_P)+\\tfrac12\\sum
+  \\ln(1-\\sigma_i^2)+\\tfrac12\\ln\\det C-\\tfrac m2\\ln16\\pi^2$, $m=39=35(\\text{접착})+4(\\text{게이지})$.
+  card-check PASS, hook_result 14/14 pass(symbolic·numeric). 교차 스케일 $\\ell_\\star^2/\\ell_P^2
+  =4\\pi m/\\hat S_c=62.0688$ (분자만 게이지 고정 조건부, $\\hat S_c=7.8958852$), 부호 규약(R·W)
+  무관 숫자는 정확히 둘 — $[3,2]$ 섹터 $\\sigma^2=\\rho=0.3208245916$ (일치 2.2e−16)과 trivial
+  $\\sigma^2=0$ (중복 2) — 나머지($m$·$\\ell_\\star^2$·$d$·$\\Gamma_{\\min}$·$\\ell_\\Omega$)는 게이지
+  규약(분자만 vs 분모까지) 또는 $|S_c|$ 부호 공리에 조건부임을 카드가 명시. adversary(opus)
+  1차 감사에서 4경로 독립 재현($d_R$ 잔차 4.17e−14), recovers 5/5 실행 통과(glued Schur
+  3.05e−8, $\\sigma\\equiv0$ 극한 7e−15, F-02 다리 $\\lambda^2=1/(1-\\rho)$ 3.4e−15, 스케일 2→8
+  불변 1.6e−6), K1 토이 반례로 가법성이 자명하지 않음(잔차 5e−4~4.7e−2, 무내용 아님) 확인,
+  K3 검정력 결손(사전등록 진폭 0.1에서 예상 비 1.0025–1.0093, 창 $[0.8,1.25]$의 약 30배, 검정력
+  ≈0)을 지적해 must_fix 8건 발부 — 카드 revision 2가 전부 반영해 재감사(SUMMARY_rev2.json)
+  status pass, severity P2, adopt_recommended true, 사전등록 불변 확인(predicts 10개·uncertainty
+  10개·kill 4개·verify 14개·tol 11개 rev1과 byte 일치). 잔여 P2 2건(K3 배수는 '약 30배'가 아니라
+  27.0배; recovers[1] glued Schur 2.4e−8의 산출 경로 미명시, 감사 자체의 독립 경로는 3.05e−8)은
+  본문 수정 없이 다음 revision 채택 조건으로 남긴다. P0 발동 없음."
+level: L3
+verdict: adopt
+pivot_step: null
+ladder_step: null
+card: derivations/Q-0020/F-01.formula.md
+kill_triggered: null
+derivation: derivations/Q-0020/F-01.formula.md
+verification:
+  symbolic: pass
+  numeric: pass
+  lean: skipped
+  artifacts: verify/Q-0020/F-01/
+adversary:
+  model_note: "opus (Fable 5.1 safeguard false-positive avoidance)."
+  status: pass
+  severity: P2
+  adopt_recommended: true
+  first_pass_summary: verify/Q-0020/F-01/adversary/SUMMARY.json
+  reaudit_summary: verify/Q-0020/F-01/adversary/SUMMARY_rev2.json
+  must_fix_resolved: "8/8 (rev1 P0 4건·P2 4건, rev2에서 전부 해소 — preregistration_unchanged true)"
+  residual_defects:
+    - "P2: K3 '약 30배'는 감사 재계산으로 27.0배(상단 여유 기준) — kill 숫자에는 영향 없음"
+    - "P2: recovers[1] glued Schur 2.4e−8의 산출 경로가 카드에 미명시(감사의 독립 direct fine→glued 경로는 3.05e−8로 같은 자릿수, naive A−BC⁺Bᵀ 경로는 실패)"
+  counterexamples: []
+  survived_checks:
+    - "독립 재현 4경로(QR·Schur complement·Cholesky·delta-regularized Monte Carlo): d_R 7.4820420, d_W 4.1975965, basis 의존성 4.17e−14"
+    - "recovers 5/5: 빈 K, glued Schur 3.05e−8, σ≡0 (d_iso 7e−15), F-02 다리 3.4e−15, 스케일 2→8 1.6e−6"
+    - "K1 가법성 토이 반례(잔차 4.66e−2·1.15e−2·5e−4·7.6e−3·1.61e−2): 가법성이 일반 선형대수 항진명제가 아니라는 것을 확인 — K1이 무내용이 아님"
+    - "부호 반전(GHP): 정류점 소멸을 확인해 |S_c| 공리 의존을 실증"
+    - "dof: 자유 파라미터 0 < 사전등록 10개(관측 6 + 미관측 K1~K4 4개)"
+sourcer:
+  verdict: partial
+  novelty_note: "unglued Regge 작용에서 접힘 부피 Ω_fold 정의 및 §7.3 Schur 스펙트럼과의 연결은
+    선행 문헌에서 동일 명시를 찾지 못함; 교차 스케일 62.07 ℓ_P²는 UNVERIFIED(문헌 부재)."
+  ladder_citations:
+    step1: "Faddeev–Popov 1967; Rocek–Williams 1981 'Quantum Regge calculus'"
+    step2: "DE 원장 §7.3"
+    step3: "26장·22장"
+  prior_art:
+    - ref: "Bahr–Dittrich–He 2011 (BDH2011, arXiv:1011.3667)"
+      sourcer_label: special_case
+      body_quote: "'BDH는 카드의 특수 사례' — 카드가 unglued 공간을 다루고 BDH는 이미 접착된
+        상태라 카드의 특수 사례"
+      relation: generalizes
+      reason: "sourcer 라벨은 special_case이나 본문 문언은 방향을 반대로 서술한다(BDH가 카드의
+        특수 사례). 카드가 unglued 접착 제약의 Gaussian 부피 Ω_fold를 정의하고(BDH는 이 개념이
+        없음), glued 극한(recovers[1], 완전 접착)에서 BDH의 perfect action을 복원한다 — 정의상
+        카드가 BDH를 포함·확장(generalizes)하며 BDH가 카드의 특수 사례다. 하네스 정의(카드가
+        문헌의 특수 사례면 special_case, 카드가 문헌을 포함·확장하면 generalizes)를 본문
+        문언에 그대로 적용해 라벨을 정정한다."
+    - ref: "Gibbons–Hawking–Perry 1978 (GHP1978)"
+      sourcer_label: generalizes
+      body_quote: "카드가 GHP 회전을 cell 별 |H_a| 로 구현해 일반화 — 회전이 가법성을 깨는지(K4)는
+        문헌에 없음"
+      relation: generalizes
+      reason: "라벨과 본문 문언이 일치. GHP의 conformal 회전을 W 규약(cell별 |H_a|)으로
+        구체적으로 구현하고 K4 가법성 판별이라는 문헌에 없는 예측을 추가한다."
+    - ref: "Dittrich–Steinhaus 2014 (DS2014)"
+      sourcer_label: special_case
+      body_quote: "카드는 DS의 quotient 틀의 '구체화·색인화'(틀의 적용, 같은 주장 아님)"
+      relation: unrelated
+      reason: "본문 문언은 카드가 DS 문헌의 논리적 특수 사례라고도, DS를 포함·확장한다고도 말하지
+        않는다 — 카드는 DS의 refining=quotient/embedding 이라는 일반 틀을 특정 사례(Regge 접힘
+        부피)에 적용한 것으로, 같은 주장의 부분집합(special_case)이 아니다. 하네스 정의의 두
+        관계 중 어느 쪽도 본문이 주장하지 않으므로 special_case로 기계적으로 옮기지 않고
+        unrelated로 기록한다(Q-0018 E-021 재발 방지 — 라벨과 본문이 모순될 때 라벨을 그대로
+        옮기지 않는다). 재발견 판정 대상이 아니라 관계 방향 기록의 정확성 문제로 취급한다."
+next_action: "채택 조건(다음 revision 반영): K3 배수를 '약 30배' 대신 27.0배로 정정, recovers[1]
+  glued Schur 잔차 2.4e−8의 산출 경로(F-02 predict 참조인지 독립 재계산인지)를 명시. 사다리
+  1단은 사실상 닫힘(외부기존 인용: BDH 2011·GHP 1978·Faddeev–Popov 1967·Rocek–Williams 1981·
+  DE §7.3·26장·22장, Dittrich–Steinhaus 2014); 다음 attempt는 2단(Gaussian 제약 부피 항등식,
+  Fourier 표현 + [J_p K] 직교 분해)을 유도로 닫는다."
+assumptions:
+  - "[공리: 후보] Gaussian 측도: unglued mismatch 위의 측도는 자기 작용의 Gaussian e^{-κξᵀNξ/2}"
+  - "[공리: 후보] 게이지를 분자에만 거는 정의(m=39); 분모에도 걸면 m=35"
+  - "[공리: 후보] S_c 의 부호: |S_c| 를 비용으로 쓴다(GHP 부호면 정류점 ℓ★ 소멸)"
+notes: "부호 규약 무관 숫자 둘: [3,2] σ²=ρ=0.3208245916(중복 5, R·W 일치 2.2e−16), trivial σ²=0
+  (중복 2). 조건부 숫자(게이지 규약·|S_c| 부호 공리 아래에서만): m=39(분자만 게이지 고정,
+  분모까지 고정하면 35), ℓ★²/ℓ_P²=62.0688(35 규약이면 55.7028, 10.3% 낮음), d·Γ_min·ℓ_Ω 전부
+  규약 의존. 카드 지위 [공리: 후보](Gaussian 측도·게이지 분자 고정·|S_c| 비용 셋), 채택 숫자는
+  [예측: 사전등록](predicts 10개, K1·K2·K3·K4 미실행)."

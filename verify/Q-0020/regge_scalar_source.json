@@ -1,0 +1,880 @@
+{
+  "status": "[산출]",
+  "source_sha256": "f31a9a5518bc7e6fa269f26c81cda5ae8ff74b1f5795fa3e5f046897467f65e0",
+  "dependencies": {
+    "regge_coalescing_kernel.py": "79bbf93a1ee98343dc3f8d890c334702d69fd36ad710b6790f7bab3bb9020f5c",
+    "regge_constraint_reduction.py": "2f5172c475d1eb774ef50b59e642ab73cc236f391215dbbd4faab7d317a56809",
+    "regge_postconstraint_projection.py": "0d1abb5317b96ee24dfe0e844f581df527dc8286656e8486444bb8748c407fe8",
+    "regge_pachner_constraints.py": "5badf64159a9880caa4edfb520ee8d28bd1d0f392d8277d8bcf5c3aaa2cdc656",
+    "regge_pachner_creation.py": "68c5f330bd2e4732970e5b9379f3fdbd86e236fe301a45521eea0663d04e3705",
+    "regge_pachner_transport.py": "c995451a5b12e47470f37c19926574c2cbfd7a20aeb07c0c76e541aef143b415",
+    "regge_tent_transfer.py": "e509b0b583a99258730650584e812d9b6f097383629b4e855636c8e87c710f71",
+    "regge_internal_marginal.py": "6690a402d1d750e1dc3ce340cbb0d1d96f2fa34b074dc45b8bfc4f4c416d53a6",
+    "regge_quantum_constraint_transfer.py": "0f49325180ab4e0e19cb2546c0576fbf6ac93840163a7db3e7d75fd064e26898"
+  },
+  "scope": "공급 스칼라 FEM 작용의 실제 레게 원천·정준 경계 반작용·전체 진폭 끝점",
+  "certificate": {
+    "gram_determinant": "-4*e**2*(9*e**2 - 40)/27",
+    "determinant_identity": "0",
+    "norm_identity": "0",
+    "d_derivatives": [
+      "sqrt(3)/27",
+      "-5*sqrt(3)/27",
+      "-35*sqrt(3)/54"
+    ],
+    "b_derivatives": [
+      "4*sqrt(3)/3",
+      "20*sqrt(3)/3",
+      "90*sqrt(3)"
+    ]
+  },
+  "branches": [
+    {
+      "eta": 0.1,
+      "ratio": 0.0,
+      "beta": 1.0,
+      "kappa": 1.0,
+      "expected_square_ratio": 0.2777777777777778,
+      "branches": [
+        {
+          "composition_residual": 5.440092820663267e-15,
+          "c_residual": 0.0,
+          "F_residual": 6.245004513516506e-17,
+          "final_momentum_residual": 4.440892098500626e-16,
+          "shift_charge_residual": 5.204170427930421e-18,
+          "scalar_action": 0.0003306541408219581,
+          "field_momentum_norm": 0.009352311408104731,
+          "scalar_geometry_force_norm": 0.002159518321748316,
+          "edge": 1.9937584791479965,
+          "a_total": 0.051789048155126076,
+          "a_squared_ratio": 0.2682105508813967,
+          "independent_bracket_error": 2.0361830277426662e-11,
+          "closed_action_error": 5.421010862427522e-20,
+          "closed_force_error": 1.5178830414797062e-18,
+          "minimum_gram": 0.1604126759300334
+        },
+        {
+          "composition_residual": 4.963043864769645e-15,
+          "c_residual": 0.0,
+          "F_residual": 3.8163916471489756e-17,
+          "final_momentum_residual": 1.3322676295501878e-15,
+          "shift_charge_residual": 5.204170427930421e-18,
+          "scalar_action": 0.00031072204756763563,
+          "field_momentum_norm": 0.00878854667596976,
+          "scalar_geometry_force_norm": 0.002266256884764137,
+          "edge": 2.006183719516833,
+          "a_total": -0.053619090895841305,
+          "a_squared_ratio": 0.28750069084964913,
+          "independent_bracket_error": 3.429131978371913e-13,
+          "closed_action_error": 1.0842021724855044e-19,
+          "closed_force_error": 8.673617379884035e-19,
+          "minimum_gram": 0.14362496772670327
+        }
+      ],
+      "square_ratio_error": 0.009722913071871342,
+      "branch_remainder": 1.3547645187905744e-06,
+      "scaled_remainder": 0.0013547645187905741,
+      "center_coefficient": -0.0028900667585318725,
+      "expected_center": -0.0028935185185185184
+    },
+    {
+      "eta": 0.03,
+      "ratio": 0.0,
+      "beta": 1.0,
+      "kappa": 1.0,
+      "expected_square_ratio": 0.2777777777777778,
+      "branches": [
+        {
+          "composition_residual": 3.471181675429591e-15,
+          "c_residual": 0.0,
+          "F_residual": 1.6479873021779667e-17,
+          "final_momentum_residual": 8.881784197001252e-16,
+          "shift_charge_residual": 8.673617379884035e-19,
+          "scalar_action": 2.913598065713337e-05,
+          "field_momentum_norm": 0.002746966599890546,
+          "scalar_geometry_force_norm": 0.00019753563699313907,
+          "edge": 1.9981339705397303,
+          "a_total": 0.01572889402591038,
+          "a_squared_ratio": 0.2748867858647992,
+          "independent_bracket_error": 4.597808245243584e-12,
+          "closed_action_error": 3.3881317890172014e-20,
+          "closed_force_error": 8.131516293641283e-20,
+          "minimum_gram": 0.15451827595930415
+        },
+        {
+          "composition_residual": 5.384581669432009e-15,
+          "c_residual": 0.0,
+          "F_residual": 7.806255641895632e-18,
+          "final_momentum_residual": 8.881784197001252e-16,
+          "shift_charge_residual": 4.336808689942018e-19,
+          "scalar_action": 2.8598043652598893e-05,
+          "field_momentum_norm": 0.002696249412722877,
+          "scalar_geometry_force_norm": 0.0002004122602765947,
+          "edge": 2.0018608216843403,
+          "a_total": -0.01589385988302867,
+          "a_squared_ratio": 0.2806830910903868,
+          "independent_bracket_error": 1.1146916722992728e-12,
+          "closed_action_error": 0.0,
+          "closed_force_error": 1.0842021724855044e-19,
+          "minimum_gram": 0.14948284880733043
+        }
+      ],
+      "square_ratio_error": 0.0029053133126090147,
+      "branch_remainder": 3.586975738656406e-08,
+      "scaled_remainder": 0.0013285095328357062,
+      "center_coefficient": -0.002893208849780788,
+      "expected_center": -0.0028935185185185184
+    },
+    {
+      "eta": 0.01,
+      "ratio": 0.0,
+      "beta": 1.0,
+      "kappa": 1.0,
+      "expected_square_ratio": 0.2777777777777778,
+      "branches": [
+        {
+          "composition_residual": 4.9509008004378074e-15,
+          "c_residual": 0.0,
+          "F_residual": 1.0842021724855044e-18,
+          "final_momentum_residual": 8.881784197001252e-16,
+          "shift_charge_residual": 3.2526065174565133e-19,
+          "scalar_action": 3.2174567315243405e-06,
+          "field_momentum_norm": 0.0009100341892140666,
+          "scalar_geometry_force_norm": 2.205314272378306e-05,
+          "edge": 1.9993785793398313,
+          "a_total": 0.005261296318459575,
+          "a_squared_ratio": 0.2768123895063628,
+          "independent_bracket_error": 5.395751553893824e-12,
+          "closed_action_error": 1.2705494208814505e-21,
+          "closed_force_error": 3.3881317890172014e-20,
+          "minimum_gram": 0.1528381777198975
+        },
+        {
+          "composition_residual": 5.9396931817445875e-15,
+          "c_residual": 0.0,
+          "F_residual": 9.75781955236954e-18,
+          "final_momentum_residual": 4.440892098500626e-16,
+          "shift_charge_residual": 6.505213034913027e-19,
+          "scalar_action": 3.197533884488099e-06,
+          "field_momentum_norm": 0.0009043991571181195,
+          "scalar_geometry_force_norm": 2.215966706367701e-05,
+          "edge": 2.0006208419633444,
+          "a_total": -0.005279628399077391,
+          "a_squared_ratio": 0.2787447603234449,
+          "independent_bracket_error": 1.1308075135996187e-11,
+          "closed_action_error": 1.6940658945086007e-21,
+          "closed_force_error": 5.082197683525802e-20,
+          "minimum_gram": 0.1511597278943475
+        }
+      ],
+      "square_ratio_error": 0.0009669825456671277,
+      "branch_remainder": 1.3214465077737714e-09,
+      "scaled_remainder": 0.0013214465077737712,
+      "center_coefficient": -0.002893484121191392,
+      "expected_center": -0.0028935185185185184
+    },
+    {
+      "eta": 0.003,
+      "ratio": 0.0,
+      "beta": 1.0,
+      "kappa": 1.0,
+      "expected_square_ratio": 0.2777777777777778,
+      "branches": [
+        {
+          "composition_residual": 7.494005416219807e-15,
+          "c_residual": 0.0,
+          "F_residual": 2.5912431922403556e-17,
+          "final_momentum_residual": 4.440892098500626e-16,
+          "shift_charge_residual": 1.0842021724855044e-19,
+          "scalar_action": 2.889440417675254e-07,
+          "field_momentum_norm": 0.00027241905508968816,
+          "scalar_geometry_force_norm": 1.988119846101472e-06,
+          "edge": 1.9998136349246491,
+          "a_total": 0.0015803138624874008,
+          "a_squared_ratio": 0.2774879893299831,
+          "independent_bracket_error": 2.4300557009346302e-11,
+          "closed_action_error": 5.823351512373315e-22,
+          "closed_force_error": 2.117582368135751e-21,
+          "minimum_gram": 0.15225053670557223
+        },
+        {
+          "composition_residual": 6.158268339717665e-15,
+          "c_residual": 0.0,
+          "F_residual": 2.233456475320139e-17,
+          "final_momentum_residual": 8.881784197001252e-16,
+          "shift_charge_residual": 5.421010862427522e-20,
+          "scalar_action": 2.8840612718741436e-07,
+          "field_momentum_norm": 0.0002719119043599606,
+          "scalar_geometry_force_norm": 1.9909959502733477e-06,
+          "edge": 2.0001863129920734,
+          "a_total": -0.0015819637757387558,
+          "a_squared_ratio": 0.2780677097499578,
+          "independent_bracket_error": 1.2419106541761149e-11,
+          "closed_action_error": 0.0,
+          "closed_force_error": 8.470329472543003e-22,
+          "minimum_gram": 0.15174700264130356
+        }
+      ],
+      "square_ratio_error": 0.0002899319721800242,
+      "branch_remainder": 3.561506645155532e-11,
+      "scaled_remainder": 0.0013190765352427897,
+      "center_coefficient": -0.0028935154025886175,
+      "expected_center": -0.0028935185185185184
+    },
+    {
+      "eta": 0.001,
+      "ratio": 0.0,
+      "beta": 1.0,
+      "kappa": 1.0,
+      "expected_square_ratio": 0.2777777777777778,
+      "branches": [
+        {
+          "composition_residual": 2.850150671029894e-15,
+          "c_residual": 0.0,
+          "F_residual": 2.3852447794681098e-18,
+          "final_momentum_residual": 4.440892098500626e-16,
+          "shift_charge_residual": 6.776263578034403e-20,
+          "scalar_action": 3.208497571363318e-08,
+          "field_momentum_norm": 9.075001560526278e-05,
+          "scalar_geometry_force_norm": 2.2100854646913403e-07,
+          "edge": 1.9999378841057895,
+          "a_total": 0.0005269546143087266,
+          "a_squared_ratio": 0.27768116554125877,
+          "independent_bracket_error": 9.542428587756835e-12,
+          "closed_action_error": 1.3234889800848443e-23,
+          "closed_force_error": 1.5881867761018131e-22,
+          "minimum_gram": 0.15208267590444033
+        },
+        {
+          "composition_residual": 8.02483079986871e-15,
+          "c_residual": 0.0,
+          "F_residual": 3.1712913545201005e-18,
+          "final_momentum_residual": 4.440892098500626e-16,
+          "shift_charge_residual": 5.421010862427522e-20,
+          "scalar_action": 3.206505295886289e-08,
+          "field_momentum_norm": 9.069366554527091e-05,
+          "scalar_geometry_force_norm": 2.2111506867328837e-07,
+          "edge": 2.0000621101071743,
+          "a_total": -0.0005271379382571394,
+          "a_squared_ratio": 0.27787440594998775,
+          "independent_bracket_error": 1.7905907442536395e-11,
+          "closed_action_error": 0.0,
+          "closed_force_error": 3.1763735522036263e-22,
+          "minimum_gram": 0.15191483124223953
+        }
+      ],
+      "square_ratio_error": 9.662817220995601e-05,
+      "branch_remainder": 1.3176126856251358e-12,
+      "scaled_remainder": 0.0013176126856251358,
+      "center_coefficient": -0.0028935180917954995,
+      "expected_center": -0.0028935185185185184
+    },
+    {
+      "eta": 0.1,
+      "ratio": 0.08333333333333333,
+      "beta": 1.0,
+      "kappa": 1.0,
+      "expected_square_ratio": 0.20833333333333334,
+      "branches": [
+        {
+          "composition_residual": 2.831068712794149e-15,
+          "c_residual": 0.0,
+          "F_residual": 3.122502256758253e-17,
+          "final_momentum_residual": 1.3322676295501878e-15,
+          "shift_charge_residual": 9.540979117872439e-18,
+          "scalar_action": 0.0004074872088472609,
+          "field_momentum_norm": 0.0187130096655011,
+          "scalar_geometry_force_norm": 0.0017038771300298212,
+          "edge": 1.9945516173573534,
+          "a_total": 0.04475669928266016,
+          "a_squared_ratio": 0.20031621306784722,
+          "independent_bracket_error": 7.413694658175984e-12,
+          "closed_action_error": 3.7947076036992655e-19,
+          "closed_force_error": 1.951563910473908e-18,
+          "minimum_gram": 0.15934560245900378
+        },
+        {
+          "composition_residual": 5.88418203051333e-15,
+          "c_residual": 0.0,
+          "F_residual": 7.28583859910259e-17,
+          "final_momentum_residual": 8.881784197001252e-16,
+          "shift_charge_residual": 8.673617379884035e-19,
+          "scalar_action": 0.0003945507853813004,
+          "field_momentum_norm": 0.019267526526572203,
+          "scalar_geometry_force_norm": 0.0017176550793885918,
+          "edge": 2.0053084143124127,
+          "a_total": -0.04663044772612159,
+          "a_squared_ratio": 0.2174398655138558,
+          "independent_bracket_error": 4.02775035546199e-13,
+          "closed_action_error": 2.710505431213761e-19,
+          "closed_force_error": 1.734723475976807e-18,
+          "minimum_gram": 0.14481256419073893
+        }
+      ],
+      "square_ratio_error": 0.009106532180522459,
+      "branch_remainder": 8.025264555122646e-07,
+      "scaled_remainder": 0.0008025264555122644,
+      "center_coefficient": -0.006998416511683201,
+      "expected_center": -0.00699266975308642
+    },
+    {
+      "eta": 0.03,
+      "ratio": 0.08333333333333333,
+      "beta": 1.0,
+      "kappa": 1.0,
+      "expected_square_ratio": 0.20833333333333334,
+      "branches": [
+        {
+          "composition_residual": 4.440892098500626e-15,
+          "c_residual": 0.0,
+          "F_residual": 1.474514954580286e-17,
+          "final_momentum_residual": 1.7763568394002505e-15,
+          "shift_charge_residual": 2.168404344971009e-19,
+          "scalar_action": 3.6259737903703255e-05,
+          "field_momentum_norm": 0.005668203411749907,
+          "scalar_geometry_force_norm": 0.00015383354257486105,
+          "edge": 1.9983799831527331,
+          "a_total": 0.013610408180195172,
+          "a_squared_ratio": 0.20582578981280406,
+          "independent_bracket_error": 7.86020554199851e-14,
+          "closed_action_error": 1.3552527156068805e-20,
+          "closed_force_error": 1.3552527156068805e-19,
+          "minimum_gram": 0.15418630410646708
+        },
+        {
+          "composition_residual": 8.422082475867398e-15,
+          "c_residual": 0.0,
+          "F_residual": 3.209238430557093e-17,
+          "final_momentum_residual": 4.440892098500626e-16,
+          "shift_charge_residual": 1.951563910473908e-18,
+          "scalar_action": 3.591036147015219e-05,
+          "field_momentum_norm": 0.005718076990885337,
+          "scalar_geometry_force_norm": 0.0001542079188385973,
+          "edge": 2.0016074291108863,
+          "a_total": -0.013778408811521757,
+          "a_squared_ratio": 0.21093838819713379,
+          "independent_bracket_error": 7.550758629459864e-12,
+          "closed_action_error": 2.710505431213761e-20,
+          "closed_force_error": 5.149960319306146e-19,
+          "minimum_gram": 0.14982564570444312
+        }
+      ],
+      "square_ratio_error": 0.0026050548638004434,
+      "branch_remainder": 2.054725589673012e-08,
+      "scaled_remainder": 0.0007610094776566713,
+      "center_coefficient": -0.006993186877974406,
+      "expected_center": -0.00699266975308642
+    },
+    {
+      "eta": 0.01,
+      "ratio": 0.08333333333333333,
+      "beta": 1.0,
+      "kappa": 1.0,
+      "expected_square_ratio": 0.20833333333333334,
+      "branches": [
+        {
+          "composition_residual": 7.882583474838611e-15,
+          "c_residual": 0.0,
+          "F_residual": 5.637851296924623e-18,
+          "final_momentum_residual": 8.881784197001252e-16,
+          "shift_charge_residual": 5.421010862427522e-19,
+          "scalar_action": 4.015855075516503e-06,
+          "field_momentum_norm": 0.0018948273184798883,
+          "scalar_geometry_force_norm": 1.710698206958899e-05,
+          "edge": 1.9994613871172977,
+          "a_total": 0.004555074155753145,
+          "a_squared_ratio": 0.20748700564410225,
+          "independent_bracket_error": 7.51136305932043e-12,
+          "closed_action_error": 5.082197683525802e-21,
+          "closed_force_error": 1.0164395367051604e-20,
+          "minimum_gram": 0.1527263414181714
+        },
+        {
+          "composition_residual": 4.718447854656915e-15,
+          "c_residual": 0.0,
+          "F_residual": 2.3852447794681098e-18,
+          "final_momentum_residual": 8.881784197001252e-16,
+          "shift_charge_residual": 8.131516293641283e-19,
+          "scalar_action": 4.002914905120542e-06,
+          "field_momentum_norm": 0.001900368504642211,
+          "scalar_geometry_force_norm": 1.7120855573734752e-05,
+          "edge": 2.0005372143372604,
+          "a_total": -0.004573734692782818,
+          "a_squared_ratio": 0.20919049039965143,
+          "independent_bracket_error": 1.0682168691267258e-11,
+          "closed_action_error": 3.3881317890172014e-21,
+          "closed_force_error": 2.371692252312041e-20,
+          "minimum_gram": 0.15127276676393497
+        }
+      ],
+      "square_ratio_error": 0.0008571570663180872,
+      "branch_remainder": 7.494040943356595e-10,
+      "scaled_remainder": 0.0007494040943356594,
+      "center_coefficient": -0.006992727210608507,
+      "expected_center": -0.00699266975308642
+    },
+    {
+      "eta": 0.003,
+      "ratio": 0.08333333333333333,
+      "beta": 1.0,
+      "kappa": 1.0,
+      "expected_square_ratio": 0.20833333333333334,
+      "branches": [
+        {
+          "composition_residual": 4.773959005888173e-15,
+          "c_residual": 0.0,
+          "F_residual": 1.940721888749053e-17,
+          "final_momentum_residual": 8.881784197001252e-16,
+          "shift_charge_residual": 1.0842021724855044e-19,
+          "scalar_action": 3.610186767872346e-07,
+          "field_momentum_norm": 0.0005690260806109789,
+          "scalar_geometry_force_norm": 1.5400705511677514e-06,
+          "edge": 1.9998385627799138,
+          "a_total": 0.0013684680452652534,
+          "a_squared_ratio": 0.20807831010134484,
+          "independent_bracket_error": 1.5260021328164508e-11,
+          "closed_action_error": 2.117582368135751e-22,
+          "closed_force_error": 2.117582368135751e-22,
+          "minimum_gram": 0.1522168603588502
+        },
+        {
+          "composition_residual": 6.5503158452884236e-15,
+          "c_residual": 0.0,
+          "F_residual": 2.2876665839444144e-17,
+          "final_momentum_residual": 2.220446049250313e-15,
+          "shift_charge_residual": 1.6263032587282567e-19,
+          "scalar_action": 3.606692912576212e-07,
+          "field_momentum_norm": 0.0005695247840618415,
+          "scalar_geometry_force_norm": 1.5404451594777845e-06,
+          "edge": 2.000161311351941,
+          "a_total": -0.0013701474301723731,
+          "a_squared_ratio": 0.2085893311564398,
+          "independent_bracket_error": 1.6356672960515795e-12,
+          "closed_action_error": 3.705769144237564e-22,
+          "closed_force_error": 2.117582368135751e-22,
+          "minimum_gram": 0.1517807872169317
+        }
+      ],
+      "square_ratio_error": 0.0002559978231064519,
+      "branch_remainder": 2.0123014365935887e-11,
+      "scaled_remainder": 0.0007452968283679958,
+      "center_coefficient": -0.0069926747355471735,
+      "expected_center": -0.00699266975308642
+    },
+    {
+      "eta": 0.001,
+      "ratio": 0.08333333333333333,
+      "beta": 1.0,
+      "kappa": 1.0,
+      "expected_square_ratio": 0.20833333333333334,
+      "branches": [
+        {
+          "composition_residual": 8.002279394681011e-15,
+          "c_residual": 0.0,
+          "F_residual": 1.4907779871675686e-18,
+          "final_momentum_residual": 1.3322676295501878e-15,
+          "shift_charge_residual": 2.0328790734103208e-20,
+          "scalar_action": 4.010023960972109e-08,
+          "field_momentum_norm": 0.00018973065622304963,
+          "scalar_geometry_force_norm": 1.7113287488786414e-07,
+          "edge": 1.9999462015727099,
+          "a_total": 0.0004563422155095099,
+          "a_squared_ratio": 0.208248217656128,
+          "independent_bracket_error": 8.153934287751657e-12,
+          "closed_action_error": 6.617444900424221e-23,
+          "closed_force_error": 1.0587911840678754e-22,
+          "minimum_gram": 0.1520714384539571
+        },
+        {
+          "composition_residual": 5.9396931817445875e-15,
+          "c_residual": 0.0,
+          "F_residual": 2.8189256484623115e-18,
+          "final_momentum_residual": 8.881784197001252e-16,
+          "shift_charge_residual": 5.421010862427522e-20,
+          "scalar_action": 4.00872994018961e-08,
+          "field_momentum_norm": 0.00018978606768531783,
+          "scalar_geometry_force_norm": 1.7114674934687723e-07,
+          "edge": 2.0000537844419495,
+          "a_total": -0.00045652881320802885,
+          "a_squared_ratio": 0.2084185572891313,
+          "independent_bracket_error": 2.527068940390287e-12,
+          "closed_action_error": 0.0,
+          "closed_force_error": 2.117582368135751e-22,
+          "minimum_gram": 0.15192608071813637
+        }
+      ],
+      "square_ratio_error": 8.522395579796394e-05,
+      "branch_remainder": 7.44737604918555e-13,
+      "scaled_remainder": 0.000744737604918555,
+      "center_coefficient": -0.006992670442684812,
+      "expected_center": -0.00699266975308642
+    }
+  ],
+  "coupling_scaling": [
+    {
+      "eta": 0.01,
+      "ratio": 0.0,
+      "beta": 1.0,
+      "kappa": 0.2,
+      "expected_square_ratio": 0.2777777777777778,
+      "branches": [
+        {
+          "composition_residual": 4.9509008004378074e-15,
+          "c_residual": 0.0,
+          "F_residual": 1.0842021724855044e-18,
+          "final_momentum_residual": 8.881784197001252e-16,
+          "shift_charge_residual": 1.192622389734055e-19,
+          "scalar_action": 1.60872836576217e-05,
+          "field_momentum_norm": 0.00040697966178631164,
+          "scalar_geometry_force_norm": 2.2053142723783073e-05,
+          "edge": 1.9993785793398313,
+          "a_total": 0.005261296318459618,
+          "a_squared_ratio": 0.27681238950636733,
+          "independent_bracket_error": 5.395794921980723e-12,
+          "closed_action_error": 3.3881317890172014e-21,
+          "closed_force_error": 2.168404344971009e-19,
+          "minimum_gram": 0.1528381777198975
+        },
+        {
+          "composition_residual": 5.9396931817445875e-15,
+          "c_residual": 0.0,
+          "F_residual": 9.75781955236954e-18,
+          "final_momentum_residual": 4.440892098500626e-16,
+          "shift_charge_residual": 1.084202172485515e-20,
+          "scalar_action": 1.5987669422440496e-05,
+          "field_momentum_norm": 0.0004044595988219255,
+          "scalar_geometry_force_norm": 2.2159667063677037e-05,
+          "edge": 2.0006208419633444,
+          "a_total": -0.005279628399077312,
+          "a_squared_ratio": 0.2787447603234366,
+          "independent_bracket_error": 1.1308154065914344e-11,
+          "closed_action_error": 1.0164395367051604e-20,
+          "closed_force_error": 3.2526065174565133e-19,
+          "minimum_gram": 0.1511597278943475
+        }
+      ],
+      "square_ratio_error": 0.000966982545658801,
+      "branch_remainder": 1.3214465077737714e-09,
+      "scaled_remainder": 0.0013214465077737712,
+      "center_coefficient": -0.002893484121191392,
+      "expected_center": -0.0028935185185185184
+    },
+    {
+      "eta": 0.01,
+      "ratio": 0.0,
+      "beta": 5.0,
+      "kappa": 1.0,
+      "expected_square_ratio": 0.2777777777777778,
+      "branches": [
+        {
+          "composition_residual": 2.8303748234037585e-14,
+          "c_residual": 0.0,
+          "F_residual": 5.204170427930421e-18,
+          "final_momentum_residual": 5.329070518200751e-15,
+          "shift_charge_residual": 8.673617379884035e-19,
+          "scalar_action": 1.60872836576217e-05,
+          "field_momentum_norm": 0.002034898308931558,
+          "scalar_geometry_force_norm": 0.00011026571361891537,
+          "edge": 1.9993785793398313,
+          "a_total": 0.026306481592298092,
+          "a_squared_ratio": 0.27681238950636733,
+          "independent_bracket_error": 3.327023725963052e-11,
+          "closed_action_error": 3.3881317890172014e-21,
+          "closed_force_error": 2.168404344971009e-19,
+          "minimum_gram": 0.1528381777198975
+        },
+        {
+          "composition_residual": 2.5979218776228663e-14,
+          "c_residual": 0.0,
+          "F_residual": 4.85722573273506e-17,
+          "final_momentum_residual": 3.552713678800501e-15,
+          "shift_charge_residual": 0.0,
+          "scalar_action": 1.5987669422440496e-05,
+          "field_momentum_norm": 0.0020222979941096272,
+          "scalar_geometry_force_norm": 0.00011079833531838517,
+          "edge": 2.0006208419633444,
+          "a_total": -0.02639814199538656,
+          "a_squared_ratio": 0.27874476032343665,
+          "independent_bracket_error": 5.024950247567439e-11,
+          "closed_action_error": 1.0164395367051604e-20,
+          "closed_force_error": 3.2526065174565133e-19,
+          "minimum_gram": 0.1511597278943475
+        }
+      ],
+      "square_ratio_error": 0.0009669825456588566,
+      "branch_remainder": 1.3214465077737714e-09,
+      "scaled_remainder": 0.0013214465077737712,
+      "center_coefficient": -0.002893484121191392,
+      "expected_center": -0.0028935185185185184
+    },
+    {
+      "eta": 0.01,
+      "ratio": 0.0,
+      "beta": 2.0,
+      "kappa": 3.0,
+      "expected_square_ratio": 0.2777777777777778,
+      "branches": [
+        {
+          "composition_residual": 9.901801600875615e-15,
+          "c_residual": 0.0,
+          "F_residual": 2.168404344971009e-18,
+          "final_momentum_residual": 1.7763568394002505e-15,
+          "shift_charge_residual": 1.4094628242311558e-18,
+          "scalar_action": 2.14497115434956e-06,
+          "field_momentum_norm": 0.002229119412061861,
+          "scalar_geometry_force_norm": 4.4106285447566165e-05,
+          "edge": 1.9993785793398313,
+          "a_total": 0.010522592636919091,
+          "a_squared_ratio": 0.2768123895063596,
+          "independent_bracket_error": 1.0791444127189465e-11,
+          "closed_action_error": 4.235164736271502e-22,
+          "closed_force_error": 2.879912020664621e-20,
+          "minimum_gram": 0.1528381777198975
+        },
+        {
+          "composition_residual": 1.1879386363489175e-14,
+          "c_residual": 0.0,
+          "F_residual": 1.951563910473908e-17,
+          "final_momentum_residual": 8.881784197001252e-16,
+          "shift_charge_residual": 1.0842021724855044e-18,
+          "scalar_action": 2.1316892563254003e-06,
+          "field_momentum_norm": 0.002215316458742586,
+          "scalar_geometry_force_norm": 4.4319334127354094e-05,
+          "edge": 2.0006208419633444,
+          "a_total": -0.010559256798154696,
+          "a_squared_ratio": 0.2787447603234403,
+          "independent_bracket_error": 2.2616235273442697e-11,
+          "closed_action_error": 1.6940658945086007e-21,
+          "closed_force_error": 4.743384504624082e-20,
+          "minimum_gram": 0.1511597278943475
+        }
+      ],
+      "square_ratio_error": 0.0009669825456625203,
+      "branch_remainder": 1.3214465077737714e-09,
+      "scaled_remainder": 0.0013214465077737712,
+      "center_coefficient": -0.002893484121191392,
+      "expected_center": -0.0028935185185185184
+    }
+  ],
+  "geometry_checks": [
+    {
+      "offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "length_gradient_error": 5.833389327136729e-13,
+      "mixed_reciprocity_error": 2.8739233215446802e-12,
+      "action_differential_error": 9.06405853151604e-12,
+      "scale_identity_error": 4.85722573273506e-17,
+      "field_euler_error": 0.0,
+      "constant_mode_error": 1.1102230246251565e-16,
+      "eigenvalues": [
+        3.549081780193687e-17,
+        0.12830005981991702,
+        0.19245008972987515,
+        0.19245008972987535,
+        0.19245008972987546,
+        1.732050807568876
+      ],
+      "shift_charge": -1.3877787807814457e-16,
+      "canonical": {
+        "composition_residual": 2.8622937353617317e-15,
+        "c_residual": 0.0,
+        "F_residual": 0.09130794507233932,
+        "final_momentum_residual": 4.440892098500626e-16,
+        "shift_charge_residual": 5.551115123125783e-17,
+        "scalar_action": 0.02576425576258706,
+        "field_momentum_norm": 0.11762306400185797,
+        "scalar_geometry_force_norm": 0.1309498973844577
+      },
+      "minimum_gram": 0.15199875156082246
+    },
+    {
+      "offset": [
+        -0.02,
+        0.01,
+        0.003
+      ],
+      "length_gradient_error": 2.4896057437828745e-13,
+      "mixed_reciprocity_error": 1.4079848398296235e-12,
+      "action_differential_error": 2.633556567266382e-12,
+      "scale_identity_error": 0.0,
+      "field_euler_error": 6.938893903907228e-18,
+      "constant_mode_error": 1.1102230246251565e-16,
+      "eigenvalues": [
+        -1.384214950967405e-16,
+        0.14059204757297075,
+        0.1944409453243071,
+        0.19663525667766246,
+        0.1978239292773923,
+        1.5871008764924985
+      ],
+      "shift_charge": 6.938893903907228e-18,
+      "canonical": {
+        "composition_residual": 8.770761894538737e-15,
+        "c_residual": 0.0,
+        "F_residual": 0.07355425669364198,
+        "final_momentum_residual": 8.881784197001252e-16,
+        "shift_charge_residual": 6.938893903907228e-18,
+        "scalar_action": 0.02753967434685468,
+        "field_momentum_norm": 0.11724094629779774,
+        "scalar_geometry_force_norm": 0.12591973054518224
+      },
+      "minimum_gram": 0.17882500607409063
+    },
+    {
+      "offset": [
+        0.02,
+        -0.01,
+        -0.002
+      ],
+      "length_gradient_error": 2.771324836281508e-13,
+      "mixed_reciprocity_error": 1.2085332734557142e-12,
+      "action_differential_error": 2.0110843546028434e-11,
+      "scale_identity_error": 2.0816681711721685e-17,
+      "field_euler_error": 6.938893903907228e-18,
+      "constant_mode_error": 1.1102230246251565e-16,
+      "eigenvalues": [
+        4.631285031268241e-17,
+        0.11541338854424135,
+        0.1873613325974524,
+        0.18850265349989204,
+        0.19114058563454375,
+        1.9177171221503373
+      ],
+      "shift_charge": -1.249000902703301e-16,
+      "canonical": {
+        "composition_residual": 9.200973316580985e-15,
+        "c_residual": 0.0,
+        "F_residual": 0.0769432882892513,
+        "final_momentum_residual": 8.881784197001252e-16,
+        "shift_charge_residual": 1.3877787807814457e-17,
+        "scalar_action": 0.023970071678606257,
+        "field_momentum_norm": 0.12032461210127252,
+        "scalar_geometry_force_norm": 0.1364794235598161
+      },
+      "minimum_gram": 0.12345770646611769
+    }
+  ],
+  "threshold": [
+    {
+      "eta": 0.03,
+      "flat_residual": 0.0,
+      "other_edge": 1.9999652871154863,
+      "scaled_other_shift": -0.038569871681924814,
+      "coefficient_error": 1.0375231655430917e-05
+    },
+    {
+      "eta": 0.01,
+      "flat_residual": 0.0,
+      "other_edge": 1.9999961420906534,
+      "scaled_other_shift": -0.03857909346649535,
+      "coefficient_error": 1.1534470848936773e-06
+    },
+    {
+      "eta": 0.003,
+      "flat_residual": 0.0,
+      "other_edge": 1.999999652778712,
+      "scaled_other_shift": -0.038580143104896235,
+      "coefficient_error": 1.0380868400994281e-07
+    }
+  ],
+  "endpoint_cases": [
+    {
+      "kappa": 0.01,
+      "difference": [
+        -0.0026095768181572873,
+        -0.004420300253242691
+      ],
+      "quadrature_error_estimate": 3.7577091068265945e-11,
+      "tolerance_difference": 1.7048514673286556e-10
+    },
+    {
+      "kappa": 0.001,
+      "difference": [
+        -0.0004695154579805293,
+        -0.0005256395667145628
+      ],
+      "quadrature_error_estimate": 2.3483615429515632e-11,
+      "tolerance_difference": 7.076665845739972e-10
+    },
+    {
+      "kappa": 0.0001,
+      "difference": [
+        -6.761772800354114e-05,
+        -6.067591439892571e-05
+      ],
+      "quadrature_error_estimate": 3.040266645241679e-11,
+      "tolerance_difference": 2.5371304379910318e-11
+    },
+    {
+      "kappa": 1e-05,
+      "difference": [
+        -8.825373347378591e-06,
+        -6.875878979997009e-06
+      ],
+      "quadrature_error_estimate": 2.8688296091417447e-11,
+      "tolerance_difference": 3.659248097131855e-11
+    },
+    {
+      "kappa": 1e-06,
+      "difference": [
+        -1.0888564248426345e-06,
+        -7.683781570493302e-07
+      ],
+      "quadrature_error_estimate": 2.5067357647710327e-13,
+      "tolerance_difference": 4.456293425174442e-14
+    }
+  ],
+  "endpoint_log_slopes": [
+    {
+      "kappa": 0.001,
+      "slope": [
+        -0.09057549134638643,
+        -0.03631116246026609
+      ],
+      "coefficient_error": 0.001565899530832853
+    },
+    {
+      "kappa": 0.0001,
+      "slope": [
+        -0.08975208893850706,
+        -0.03522978478472412
+      ],
+      "coefficient_error": 0.00020905748924451517
+    },
+    {
+      "kappa": 1e-05,
+      "slope": [
+        -0.08962103304252617,
+        -0.0351034818458511
+      ],
+      "coefficient_error": 2.7087546338710858e-05
+    },
+    {
+      "kappa": 1e-06,
+      "slope": [
+        -0.08960324234380378,
+        -0.03508676369678827
+      ],
+      "coefficient_error": 2.9301236030269173e-06
+    }
+  ],
+  "endpoint_log_coefficient": [
+    -0.0896004514304703,
+    -0.0350858712691475
+  ],
+  "negative_controls": {
+    "pure_mean": "R_e>=0, b'>0: 전체 열린 구간 무근",
+    "outside_cone": "|m/v|>1/6: e=2에 접근하는 국소 정상 가지 없음",
+    "oscillator": "a=0, beta*g*P/M!=0이면 원래 F_j 보존 불가",
+    "auxiliary_action": "별도 Qdot² 및 R(e) 퍼텐셜은 원래 정준 모형의 유도가 아님"
+  },
+  "unfinished": [
+    "경계 스칼라 준비와 계량을 공급했으므로 0D 원천·공통 계량 선택은 미유도",
+    "유클리드 작용·이동 전하를 에너지로 승격할 수 없음",
+    "로런츠 물리 시간·인과 응답·총에너지·환류의 같은 작용 유도",
+    "3+1 Plebanski/Einstein·다른 힘·암흑부문·허블 텐션"
+  ]
+}

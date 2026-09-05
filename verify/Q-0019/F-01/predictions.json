@@ -1,0 +1,58 @@
+{
+  "card": "Q-0019 F-01",
+  "seed": 20260902,
+  "convention": "λ = ‖L M‖_F / ‖M‖_rms, M = 중심화 Sym(4) 편차, 경계 제곱길이 = 3-cell 평균, 내부 길이 = flat section",
+  "lambda_iso": 0.4654746681256314,
+  "lambda_iso_squared": 0.21666666666666667,
+  "lambda_max": 1.1055415967851336,
+  "lambda_max_squared": 1.222222222222223,
+  "lambda_coh": 1.0,
+  "coherent_identity_residual": 2.6470311443056e-16,
+  "lambda_scale": 0.5773502691896258,
+  "lambda_scale_squared": 0.3333333333333334,
+  "gamma_geo": -0.4751333347328446,
+  "spectrum_sqrt5_sigma": [
+    1.1055415967851336,
+    1.1055415967851334,
+    1.1055415967851332,
+    1.105541596785133,
+    1.1055415967851328,
+    0.7453559924999302,
+    0.7453559924999301,
+    0.7453559924999298,
+    0.7453559924999298,
+    0.5773502691896258
+  ],
+  "spectrum_clusters": [
+    {
+      "value": 1.1055415967851336,
+      "value_squared": 1.222222222222223,
+      "multiplicity": 5
+    },
+    {
+      "value": 0.7453559924999302,
+      "value_squared": 0.555555555555556,
+      "multiplicity": 4
+    },
+    {
+      "value": 0.5773502691896258,
+      "value_squared": 0.3333333333333334,
+      "multiplicity": 1
+    }
+  ],
+  "rank": 10,
+  "gauge_residual_linear": 6.075205882105184e-17,
+  "gauge_residual_nonlinear": 3.7173594584320824e-16,
+  "orbit_recovers": {
+    "metric_fine_rms": 6.699099189196011e-16,
+    "metric_coarse": 5.017887433917504e-16,
+    "eps12_fine_rms": 1.9472520063949393e-16,
+    "eps12_coarse": 5.687567620930936e-33
+  },
+  "mc_iso": {
+    "samples": 20000,
+    "rms_lambda": 0.46634138206318676,
+    "mean_lambda": 0.45615472855247324,
+    "max_lambda": 0.8345030162833573
+  }
+}

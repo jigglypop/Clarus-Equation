@@ -1,0 +1,107 @@
+{
+  "status": "[산출]",
+  "scope": "공급한 두 좌표·곱 측도의 경계 정준 전달과 운동학적 준비 대조",
+  "source_sha256": "c995451a5b12e47470f37c19926574c2cbfd7a20aeb07c0c76e541aef143b415",
+  "dependencies": {
+    "regge_pachner_creation.py": "68c5f330bd2e4732970e5b9379f3fdbd86e236fe301a45521eea0663d04e3705",
+    "regge_tent_transfer.py": "e509b0b583a99258730650584e812d9b6f097383629b4e855636c8e87c710f71"
+  },
+  "reference_coordinates": [
+    0.0,
+    -0.14384103622589064,
+    -0.01695077583784049,
+    0.5,
+    0.5,
+    0.28867513459481264,
+    0.5,
+    0.2886751345948128,
+    -0.542450802896648,
+    -0.4938748479281496,
+    0.5,
+    0.2886751345948128,
+    -0.6102571532587293,
+    -0.6116578835845333
+  ],
+  "chart_rank": 14,
+  "chart_smallest_singular": 0.16246725219629599,
+  "cases": [
+    {
+      "coordinate": "squared",
+      "excited": false,
+      "t": 0.43,
+      "old_momentum_residual": 2.397050843522892e-10,
+      "new_momentum_residual": 6.924131683896475e-11,
+      "old_vector_commutator": 1.6004043016517018e-10,
+      "cross_vector_commutator": 1.9229626863835638e-16,
+      "omitted_half_divergence_old_error": 0.3173875285508198,
+      "omitted_half_divergence_new_error": 0.5210285025378489,
+      "curvature_constraint_commutator_coefficient": -2.019892908397527
+    },
+    {
+      "coordinate": "squared",
+      "excited": true,
+      "t": 0.43,
+      "old_momentum_residual": 1.7123346378616561e-10,
+      "new_momentum_residual": 5.3525516973593046e-11,
+      "old_vector_commutator": 1.6004043016517018e-10,
+      "cross_vector_commutator": 1.9229626863835638e-16,
+      "omitted_half_divergence_old_error": 0.23476032967100577,
+      "omitted_half_divergence_new_error": 0.38538635582039893,
+      "curvature_constraint_commutator_coefficient": -2.019892908397527
+    },
+    {
+      "coordinate": "squared",
+      "excited": true,
+      "t": 0.43,
+      "old_momentum_residual": 1.4932914225598347e-10,
+      "new_momentum_residual": 2.8973909616860286e-11,
+      "old_vector_commutator": 2.0280964745579932e-10,
+      "cross_vector_commutator": 6.206335383118183e-17,
+      "omitted_half_divergence_old_error": 0.2344893450735999,
+      "omitted_half_divergence_new_error": 0.3712855647551889,
+      "curvature_constraint_commutator_coefficient": -2.019892908411503
+    },
+    {
+      "coordinate": "length",
+      "excited": true,
+      "t": 0.43,
+      "old_momentum_residual": 1.0646992599588243e-10,
+      "new_momentum_residual": 5.939371374250342e-11,
+      "old_vector_commutator": 1.716681056226964e-08,
+      "cross_vector_commutator": 7.850462293418876e-17,
+      "omitted_half_divergence_old_error": 0.33708379284316586,
+      "omitted_half_divergence_new_error": 5.939371374250342e-11,
+      "curvature_constraint_commutator_coefficient": -2.1198141954896887
+    }
+  ],
+  "cusp": {
+    "left_derivative": -0.9999999999998899,
+    "right_derivative": 0.9999999999998899,
+    "squared_endpoint_central_derivative": 0.0
+  },
+  "preparation_comparison": {
+    "length_norm": 0.9999999999999959,
+    "squared_norm": 0.999999999999996,
+    "length_curvature_mean": 0.42920367320510366,
+    "squared_curvature_mean": 1.3830082912225095e-15,
+    "overlap": 0.9428090415820594,
+    "passive_norm": 0.9999999999999959,
+    "passive_curvature_residual": 5.551115123125783e-17
+  },
+  "quadrature_convergence": 5.662137425588298e-15,
+  "assumptions": [
+    "du dy를 공급하며 평탄 dq dy에는 |det(dq/du)|^(-1/2)를 추가해야 한다",
+    "주기 섬유 운동량은 서로 다른 퇴화 끝점을 인위적으로 식별하는 공급 도메인이다",
+    "자기수반 도메인은 원래 곱 공간 도메인의 단위 사상 영상으로 정의한다"
+  ],
+  "negative_controls": [
+    "길이 구간의 아래끝 a=0에서는 일반 길이 좌표 미분을 거부한다",
+    "반발산항을 빼면 실제 열네 운동량 전달 잔차가 사라지지 않는다",
+    "새 제약을 게이지로 취급하면 곡률은 디랙 관측량이 아니다",
+    "동일 상태·관측량을 함께 옮기면 평균은 같다; 좌표별 상수 준비는 다른 준비 선택이다"
+  ],
+  "unfinished": [
+    "전달한 정준 대수와 실제 레게 전체 중력 제약의 동일성 및 비선택 상태의 물리 준비",
+    "물리 측도·방출·환류·환경 에너지와 공통 계량 선택 및 0D에서 3+1 중력으로 가는 다리"
+  ]
+}

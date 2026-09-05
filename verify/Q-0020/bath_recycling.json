@@ -1,0 +1,548 @@
+{
+  "scope": "conditional Fock energy transfer; supplied nonlocal spectral operator",
+  "energy_unit": "E_*",
+  "time_unit": "hbar/E_*",
+  "python": "3.11.9",
+  "numpy": "2.4.6",
+  "source_sha256": {
+    "bath_recycling.py": "0fb0af6302d90fe29e4fbd67ba454158877e1b5256e673e0f28909697f2cbc90",
+    "continuum_bath.py": "42675f0b049eaa7bc28979398fecbde120ab74bceebe51133c1d53ae85f4170e",
+    "split_quantum_source.py": "37382cda6ee4ecda19bdd21cae946e92c3afdb781e8e7e1766f0068e4f602c1a"
+  },
+  "memory": {
+    "nodes": 128,
+    "first_system_number": 0.11052272938502522,
+    "first_system_covariance": [
+      [
+        0.6083086187175418,
+        -0.221034369627925
+      ],
+      [
+        -0.221034369627925,
+        0.6127368400525086
+      ]
+    ],
+    "system_bath_cross_covariance_norm": 0.4962422400833372,
+    "fresh_second_system_number": 0.036645821132146546,
+    "same_environment": [
+      {
+        "off_delay": 0.0,
+        "system_number": 0.09914553048959565,
+        "second_switch_on_work_over_Estar": 0.43081970098130573,
+        "balance_residual": 2.220446049250313e-15
+      },
+      {
+        "off_delay": 0.5,
+        "system_number": 0.06723552633716998,
+        "second_switch_on_work_over_Estar": 0.32765251649225025,
+        "balance_residual": 1.3600232051658168e-15
+      },
+      {
+        "off_delay": 1.0,
+        "system_number": 0.04890179327343419,
+        "second_switch_on_work_over_Estar": 0.24522706014219656,
+        "balance_residual": 1.7486012637846216e-15
+      },
+      {
+        "off_delay": 2.0,
+        "system_number": 0.0317851899231828,
+        "second_switch_on_work_over_Estar": 0.1469462720754485,
+        "balance_residual": 2.0539125955565396e-15
+      },
+      {
+        "off_delay": 4.0,
+        "system_number": 0.038776737250653226,
+        "second_switch_on_work_over_Estar": 0.17634614850463248,
+        "balance_residual": 3.927413949611491e-15
+      }
+    ],
+    "echo_system_number": 0.3333333333333327,
+    "echo_remaining_bath_number": 1.155068658067819e-30,
+    "echo_phase_free_energy_change": 0.0,
+    "echo_net_switch_work_over_Estar": 9.992007221626409e-16,
+    "echo_spectral_phase_is_supplied": true,
+    "same_bath_is_fresh_vacuum": false
+  },
+  "recovery": [
+    {
+      "alpha": 0.5,
+      "spectral_nodes": 128,
+      "laplace_nodes": 64,
+      "initial_bath_energy_over_Estar": 1.0296030138306178,
+      "battery_energy_gain_over_Estar": 0.18333519019586908,
+      "remaining_bath_energy_over_Estar": 0.8462678236347487,
+      "initial_battery_mean_over_Estar": 1.5,
+      "final_battery_mean_over_Estar": 1.683335190195869,
+      "source_system_energy_over_Estar": 1.1087575842067674,
+      "bath_vacuum_probability_preserved": 0.7711958282859176,
+      "normalization_residual": 1.1102230246251565e-15,
+      "photon_number_truncation_used": false,
+      "battery_gain_is_reusable_work_proved": false
+    },
+    {
+      "alpha": 0.1,
+      "spectral_nodes": 128,
+      "laplace_nodes": 64,
+      "initial_bath_energy_over_Estar": 1.0296030138306178,
+      "battery_energy_gain_over_Estar": 0.6556942330074425,
+      "remaining_bath_energy_over_Estar": 0.37390878082317536,
+      "initial_battery_mean_over_Estar": 1.5,
+      "final_battery_mean_over_Estar": 2.1556942330074422,
+      "source_system_energy_over_Estar": 1.1087575842067674,
+      "bath_vacuum_probability_preserved": 0.7711958282859176,
+      "normalization_residual": 1.1102230246251565e-15,
+      "photon_number_truncation_used": false,
+      "battery_gain_is_reusable_work_proved": false
+    },
+    {
+      "alpha": 0.01,
+      "spectral_nodes": 128,
+      "laplace_nodes": 64,
+      "initial_bath_energy_over_Estar": 1.0296030138306178,
+      "battery_energy_gain_over_Estar": 0.9750257349865552,
+      "remaining_bath_energy_over_Estar": 0.054577278844062604,
+      "initial_battery_mean_over_Estar": 1.5,
+      "final_battery_mean_over_Estar": 2.475025734986555,
+      "source_system_energy_over_Estar": 1.1087575842067674,
+      "bath_vacuum_probability_preserved": 0.7711958282859176,
+      "normalization_residual": 1.1102230246251565e-15,
+      "photon_number_truncation_used": false,
+      "battery_gain_is_reusable_work_proved": false
+    }
+  ],
+  "retired_source_transfer": {
+    "spectral_nodes": 128,
+    "one_particle_transfer_residual": 2.0092530022012816e-15,
+    "unitarity_residual": 5.033694391778724e-14,
+    "retired_source_number": 0.0,
+    "remaining_bath_number": 1.0767314503371816e-30,
+    "new_mode_number": 0.33333333333333276,
+    "free_energy_change_over_Estar": -1.1842378929335002e-15,
+    "ideal_net_switch_work_over_Estar": 9.992007221626409e-16,
+    "existing_system_participates": true,
+    "reference_entanglement_preserved_by_exact_operator": true,
+    "all_fock_sectors_transfer_by_passive_lift": true,
+    "battery_return_requires_exact_inverse_if_recovery_was_applied": true,
+    "spectral_phase_and_switch_control_supplied": true,
+    "additional_source_copies_created": 0,
+    "autonomous_clock_controller_cycle_closed": false,
+    "local_causal_CE_action_derived": false
+  },
+  "next_split": {
+    "single_resource": [
+      {
+        "alpha": 0.5,
+        "independent_resource_copies": 1,
+        "survival_probability": 0.33156818815507566,
+        "joint_vacuum_probability": 0.7711958282859176,
+        "target_nonvacuum_probability": 0.25,
+        "joint_resource_trace_distance_lower_bound": 0.021195828285917595,
+        "joint_resource_squared_fidelity_upper_bound": 0.9993830389628672,
+        "battery_energy_strict_upper_bound_over_Estar": 4.0,
+        "battery_only_first_missing_pair": 1,
+        "battery_only_tail_exact": {
+          "base": 4,
+          "exponent": -1
+        },
+        "battery_only_trace_distance_lower_bound_float": 0.25,
+        "battery_only_tail_underflow": false,
+        "finite_alpha_battery_only_exact_preparation_excluded": true,
+        "joint_resource_exact_preparation_excluded_by_vacuum_bound": true,
+        "zero_bound_proves_preparation": false,
+        "existing_system_participates": false,
+        "additional_work_or_excited_auxiliaries_supplied": false
+      },
+      {
+        "alpha": 0.1,
+        "independent_resource_copies": 1,
+        "survival_probability": 0.33156818815507566,
+        "joint_vacuum_probability": 0.7711958282859176,
+        "target_nonvacuum_probability": 0.25,
+        "joint_resource_trace_distance_lower_bound": 0.021195828285917595,
+        "joint_resource_squared_fidelity_upper_bound": 0.9993830389628672,
+        "battery_energy_strict_upper_bound_over_Estar": 20.0,
+        "battery_only_first_missing_pair": 5,
+        "battery_only_tail_exact": {
+          "base": 4,
+          "exponent": -5
+        },
+        "battery_only_trace_distance_lower_bound_float": 0.0009765625,
+        "battery_only_tail_underflow": false,
+        "finite_alpha_battery_only_exact_preparation_excluded": true,
+        "joint_resource_exact_preparation_excluded_by_vacuum_bound": true,
+        "zero_bound_proves_preparation": false,
+        "existing_system_participates": false,
+        "additional_work_or_excited_auxiliaries_supplied": false
+      },
+      {
+        "alpha": 0.01,
+        "independent_resource_copies": 1,
+        "survival_probability": 0.33156818815507566,
+        "joint_vacuum_probability": 0.7711958282859176,
+        "target_nonvacuum_probability": 0.25,
+        "joint_resource_trace_distance_lower_bound": 0.021195828285917595,
+        "joint_resource_squared_fidelity_upper_bound": 0.9993830389628672,
+        "battery_energy_strict_upper_bound_over_Estar": 200.0,
+        "battery_only_first_missing_pair": 50,
+        "battery_only_tail_exact": {
+          "base": 4,
+          "exponent": -50
+        },
+        "battery_only_trace_distance_lower_bound_float": 7.888609052210105e-31,
+        "battery_only_tail_underflow": false,
+        "finite_alpha_battery_only_exact_preparation_excluded": true,
+        "joint_resource_exact_preparation_excluded_by_vacuum_bound": true,
+        "zero_bound_proves_preparation": false,
+        "existing_system_participates": false,
+        "additional_work_or_excited_auxiliaries_supplied": false
+      }
+    ],
+    "analytic_moment_bound": {
+      "spectral_variance": 1.5,
+      "time": 1.0,
+      "survival_probability_lower_bound": 0.0625,
+      "joint_resource_trace_distance_lower_bound": 0.0007331378299120235,
+      "uses_numerical_spectral_integral": false
+    },
+    "analytic_distance_exact_at_K_3_over_2_tau_1": {
+      "numerator": 1,
+      "denominator": 1364
+    },
+    "pooled_vacuum_bounds": [
+      {
+        "alpha": 0.1,
+        "independent_resource_copies": 1,
+        "survival_probability": 0.33156818815507566,
+        "joint_vacuum_probability": 0.7711958282859176,
+        "target_nonvacuum_probability": 0.25,
+        "joint_resource_trace_distance_lower_bound": 0.021195828285917595,
+        "joint_resource_squared_fidelity_upper_bound": 0.9993830389628672,
+        "battery_energy_strict_upper_bound_over_Estar": 20.0,
+        "battery_only_first_missing_pair": 5,
+        "battery_only_tail_exact": {
+          "base": 4,
+          "exponent": -5
+        },
+        "battery_only_trace_distance_lower_bound_float": 0.0009765625,
+        "battery_only_tail_underflow": false,
+        "finite_alpha_battery_only_exact_preparation_excluded": true,
+        "joint_resource_exact_preparation_excluded_by_vacuum_bound": true,
+        "zero_bound_proves_preparation": false,
+        "existing_system_participates": false,
+        "additional_work_or_excited_auxiliaries_supplied": false
+      },
+      {
+        "alpha": 0.1,
+        "independent_resource_copies": 2,
+        "survival_probability": 0.33156818815507566,
+        "joint_vacuum_probability": 0.5947430055656024,
+        "target_nonvacuum_probability": 0.25,
+        "joint_resource_trace_distance_lower_bound": 0.0,
+        "joint_resource_squared_fidelity_upper_bound": 1.0,
+        "battery_energy_strict_upper_bound_over_Estar": 20.0,
+        "battery_only_first_missing_pair": 5,
+        "battery_only_tail_exact": {
+          "base": 4,
+          "exponent": -5
+        },
+        "battery_only_trace_distance_lower_bound_float": 0.0009765625,
+        "battery_only_tail_underflow": false,
+        "finite_alpha_battery_only_exact_preparation_excluded": true,
+        "joint_resource_exact_preparation_excluded_by_vacuum_bound": false,
+        "zero_bound_proves_preparation": false,
+        "existing_system_participates": false,
+        "additional_work_or_excited_auxiliaries_supplied": false
+      },
+      {
+        "alpha": 0.1,
+        "independent_resource_copies": 4,
+        "survival_probability": 0.33156818815507566,
+        "joint_vacuum_probability": 0.3537192426692063,
+        "target_nonvacuum_probability": 0.25,
+        "joint_resource_trace_distance_lower_bound": 0.0,
+        "joint_resource_squared_fidelity_upper_bound": 1.0,
+        "battery_energy_strict_upper_bound_over_Estar": 20.0,
+        "battery_only_first_missing_pair": 5,
+        "battery_only_tail_exact": {
+          "base": 4,
+          "exponent": -5
+        },
+        "battery_only_trace_distance_lower_bound_float": 0.0009765625,
+        "battery_only_tail_underflow": false,
+        "finite_alpha_battery_only_exact_preparation_excluded": true,
+        "joint_resource_exact_preparation_excluded_by_vacuum_bound": false,
+        "zero_bound_proves_preparation": false,
+        "existing_system_participates": false,
+        "additional_work_or_excited_auxiliaries_supplied": false
+      }
+    ],
+    "pooled_tail_screen": [
+      {
+        "independent_resource_copies": 1,
+        "trials": 250000,
+        "seed": 512701,
+        "spectral_nodes": 128,
+        "mean_resource_energy_over_Estar": 2.533051994796848,
+        "mean_standard_error": 0.004859518071912674,
+        "expected_mean_resource_energy_over_Estar": 2.529603013830618,
+        "joint_vacuum_frequency": 0.7702,
+        "joint_vacuum_probability": 0.7711958282859176,
+        "gates": [
+          {
+            "pair_threshold": 1,
+            "resource_tail": 0.163768,
+            "target_tail": 0.25,
+            "target_minus_resource": 0.086232,
+            "standard_error": 0.0007401298323294366
+          },
+          {
+            "pair_threshold": 2,
+            "resource_tail": 0.046668,
+            "target_tail": 0.0625,
+            "target_minus_resource": 0.015832,
+            "standard_error": 0.0004218535185393148
+          },
+          {
+            "pair_threshold": 3,
+            "resource_tail": 0.011692,
+            "target_tail": 0.015625,
+            "target_minus_resource": 0.003933000000000001,
+            "standard_error": 0.0002149911359661137
+          },
+          {
+            "pair_threshold": 4,
+            "resource_tail": 0.00284,
+            "target_tail": 0.00390625,
+            "target_minus_resource": 0.00106625,
+            "standard_error": 0.00010643184485857604
+          },
+          {
+            "pair_threshold": 5,
+            "resource_tail": 0.000752,
+            "target_tail": 0.0009765625,
+            "target_minus_resource": 0.00022456250000000004,
+            "standard_error": 5.482461111581185e-05
+          },
+          {
+            "pair_threshold": 6,
+            "resource_tail": 0.000184,
+            "target_tail": 0.000244140625,
+            "target_minus_resource": 6.0140625e-05,
+            "standard_error": 2.7126823920245436e-05
+          }
+        ],
+        "photon_number_truncation_used": false,
+        "numerical_necessary_condition_screen_only": true,
+        "continuous_spectrum_tail_error_certified": false,
+        "coherent_preparation_unitary_constructed": false
+      },
+      {
+        "independent_resource_copies": 2,
+        "trials": 250000,
+        "seed": 512702,
+        "spectral_nodes": 128,
+        "mean_resource_energy_over_Estar": 3.5564267001187013,
+        "mean_standard_error": 0.00683404179076509,
+        "expected_mean_resource_energy_over_Estar": 3.5592060276612356,
+        "joint_vacuum_frequency": 0.59492,
+        "joint_vacuum_probability": 0.5947430055656024,
+        "gates": [
+          {
+            "pair_threshold": 1,
+            "resource_tail": 0.303352,
+            "target_tail": 0.25,
+            "target_minus_resource": -0.05335200000000001,
+            "standard_error": 0.0009194119078976517
+          },
+          {
+            "pair_threshold": 2,
+            "resource_tail": 0.107552,
+            "target_tail": 0.0625,
+            "target_minus_resource": -0.045051999999999995,
+            "standard_error": 0.0006196275245532593
+          },
+          {
+            "pair_threshold": 3,
+            "resource_tail": 0.033608,
+            "target_tail": 0.015625,
+            "target_minus_resource": -0.017983,
+            "standard_error": 0.0003604358602359094
+          },
+          {
+            "pair_threshold": 4,
+            "resource_tail": 0.010064,
+            "target_tail": 0.00390625,
+            "target_minus_resource": -0.00615775,
+            "standard_error": 0.00019962681086467318
+          },
+          {
+            "pair_threshold": 5,
+            "resource_tail": 0.002916,
+            "target_tail": 0.0009765625,
+            "target_minus_resource": -0.0019394375000000002,
+            "standard_error": 0.0001078424210410727
+          },
+          {
+            "pair_threshold": 6,
+            "resource_tail": 0.000848,
+            "target_tail": 0.000244140625,
+            "target_minus_resource": -0.000603859375,
+            "standard_error": 5.821617974412268e-05
+          }
+        ],
+        "photon_number_truncation_used": false,
+        "numerical_necessary_condition_screen_only": true,
+        "continuous_spectrum_tail_error_certified": false,
+        "coherent_preparation_unitary_constructed": false
+      },
+      {
+        "independent_resource_copies": 4,
+        "trials": 250000,
+        "seed": 512704,
+        "spectral_nodes": 128,
+        "mean_resource_energy_over_Estar": 5.621870485034087,
+        "mean_standard_error": 0.00966419380299705,
+        "expected_mean_resource_energy_over_Estar": 5.618412055322471,
+        "joint_vacuum_frequency": 0.35352,
+        "joint_vacuum_probability": 0.3537192426692063,
+        "gates": [
+          {
+            "pair_threshold": 1,
+            "resource_tail": 0.521904,
+            "target_tail": 0.25,
+            "target_minus_resource": -0.27190400000000003,
+            "standard_error": 0.000999039968737988
+          },
+          {
+            "pair_threshold": 2,
+            "resource_tail": 0.25104,
+            "target_tail": 0.0625,
+            "target_minus_resource": -0.18853999999999999,
+            "standard_error": 0.0008672229664855515
+          },
+          {
+            "pair_threshold": 3,
+            "resource_tail": 0.105756,
+            "target_tail": 0.015625,
+            "target_minus_resource": -0.090131,
+            "standard_error": 0.0006150501393024799
+          },
+          {
+            "pair_threshold": 4,
+            "resource_tail": 0.041416,
+            "target_tail": 0.00390625,
+            "target_minus_resource": -0.03750975,
+            "standard_error": 0.00039850076508834965
+          },
+          {
+            "pair_threshold": 5,
+            "resource_tail": 0.015516,
+            "target_tail": 0.0009765625,
+            "target_minus_resource": -0.0145394375,
+            "standard_error": 0.00024718619495432996
+          },
+          {
+            "pair_threshold": 6,
+            "resource_tail": 0.005404,
+            "target_tail": 0.000244140625,
+            "target_minus_resource": -0.005159859375,
+            "standard_error": 0.0001466260111167183
+          }
+        ],
+        "photon_number_truncation_used": false,
+        "numerical_necessary_condition_screen_only": true,
+        "continuous_spectrum_tail_error_certified": false,
+        "coherent_preparation_unitary_constructed": false
+      }
+    ],
+    "replacement_bounds": [
+      {
+        "independent_resource_copies": 1,
+        "independent_target_copies": 1,
+        "survival_probability": 0.33156818815507566,
+        "resource_joint_vacuum_probability": 0.7711958282859176,
+        "target_joint_vacuum_probability": 0.75,
+        "trace_distance_lower_bound": 0.021195828285917595,
+        "exact_preparation_excluded_by_this_bound": true,
+        "exact_count_ratio_necessary_upper_bound": 0.9031252551348099,
+        "fixed_error_asymptotic_capacity_proved": false,
+        "zero_bound_proves_preparation": false,
+        "existing_system_participates": false,
+        "battery_initial_energy_upper_bound_over_Estar": 2.0
+      },
+      {
+        "independent_resource_copies": 2,
+        "independent_target_copies": 1,
+        "survival_probability": 0.33156818815507566,
+        "resource_joint_vacuum_probability": 0.5947430055656024,
+        "target_joint_vacuum_probability": 0.75,
+        "trace_distance_lower_bound": 0.0,
+        "exact_preparation_excluded_by_this_bound": false,
+        "exact_count_ratio_necessary_upper_bound": 0.9031252551348099,
+        "fixed_error_asymptotic_capacity_proved": false,
+        "zero_bound_proves_preparation": false,
+        "existing_system_participates": false,
+        "battery_initial_energy_upper_bound_over_Estar": 2.0
+      },
+      {
+        "independent_resource_copies": 2,
+        "independent_target_copies": 2,
+        "survival_probability": 0.33156818815507566,
+        "resource_joint_vacuum_probability": 0.5947430055656024,
+        "target_joint_vacuum_probability": 0.5625,
+        "trace_distance_lower_bound": 0.032243005565602445,
+        "exact_preparation_excluded_by_this_bound": true,
+        "exact_count_ratio_necessary_upper_bound": 0.9031252551348099,
+        "fixed_error_asymptotic_capacity_proved": false,
+        "zero_bound_proves_preparation": false,
+        "existing_system_participates": false,
+        "battery_initial_energy_upper_bound_over_Estar": 2.0
+      },
+      {
+        "independent_resource_copies": 4,
+        "independent_target_copies": 4,
+        "survival_probability": 0.33156818815507566,
+        "resource_joint_vacuum_probability": 0.3537192426692063,
+        "target_joint_vacuum_probability": 0.31640625,
+        "trace_distance_lower_bound": 0.03731299266920629,
+        "exact_preparation_excluded_by_this_bound": true,
+        "exact_count_ratio_necessary_upper_bound": 0.9031252551348099,
+        "fixed_error_asymptotic_capacity_proved": false,
+        "zero_bound_proves_preparation": false,
+        "existing_system_participates": false,
+        "battery_initial_energy_upper_bound_over_Estar": 2.0
+      },
+      {
+        "independent_resource_copies": 4,
+        "independent_target_copies": 12,
+        "survival_probability": 0.33156818815507566,
+        "resource_joint_vacuum_probability": 0.3537192426692063,
+        "target_joint_vacuum_probability": 0.03167635202407837,
+        "trace_distance_lower_bound": 0.3220428906451279,
+        "exact_preparation_excluded_by_this_bound": true,
+        "exact_count_ratio_necessary_upper_bound": 0.9031252551348099,
+        "fixed_error_asymptotic_capacity_proved": false,
+        "zero_bound_proves_preparation": false,
+        "existing_system_participates": false,
+        "battery_initial_energy_upper_bound_over_Estar": 2.0
+      }
+    ]
+  },
+  "max_64_128_energy_difference": 1.865174681370263e-13,
+  "laplace_64_128_difference": 9.32476318382669e-13,
+  "bath_energy_difference_from_continuum_integral": 1.461053500406706e-13,
+  "conditional_results": {
+    "all_fock_sector_energy_preserving_unitary_constructed": true,
+    "system_marginal_preserved_by_bath_battery_unitary": true,
+    "time_independent_semibounded_generator_exists_by_spectral_calculus": true,
+    "generator_is_supplied_nonlocal_operator": true,
+    "bath_reset_to_vacuum": false,
+    "battery_low_entropy_or_reusable_work_proved": false,
+    "source_clock_controller_cycle_closed": false,
+    "remaining_system_energy_growth_removed": false,
+    "local_causal_CE_action_derived": false,
+    "common_metric_selection_proved": false
+  },
+  "finite_spectral_grid_realizes_energy_transfer_unitary": false,
+  "physical_candidate_adopted": false
+}

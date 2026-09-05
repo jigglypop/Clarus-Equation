@@ -1,0 +1,1814 @@
+{
+  "python_version": "3.11.9",
+  "numpy_version": "2.4.6",
+  "source_sha256": {
+    "coherent_regge_curvature.py": "59667dda668599e3b49f9cdecfd26fce21684b2d531280d09ff0a58d25dfb6e1",
+    "coherent_tetrahedron_overlap.py": "5e939ef71928cf78055aa2ba80749e8663c801475f6f6c1c55431793cd4fe369",
+    "fixed_boundary_composition.py": "4c3ccdec8e91697aa0be4c19dbff1803f22704466146cdc753894f40a4e1a5e9",
+    "length_gluing_bath.py": "e68bd4877836cee4548eb79c97bf69deb0352917373e00c474e1fb57fa3f64ec",
+    "local_refinement_bath.py": "103f6cb25fd8b9ef8e86b0733b1f5bdc2199aa464d6370447a7a926ce8c2c9ad",
+    "continuum_bath.py": "42675f0b049eaa7bc28979398fecbde120ab74bceebe51133c1d53ae85f4170e",
+    "F-01/predict_fold_budget.py": "7a7d62d985ac112f8944a9528d91d7319974d0c3a36c4ec97cbb376fac31aa8b",
+    "F-01/regge_one_to_five_boundary_hessian.py": "85953e5664bbb0c0ea242d3ac05e2b4f63e0871aa7383781dae2975592e9e4a4",
+    "F-01/regge_one_to_five_refinement.py": "0fcdc7c05ded2c739d1ef110c61a9c06014d85b92c710c2466707286619e6972"
+  },
+  "exact_state_comparisons": [
+    {
+      "two_j": 1,
+      "cosine": 0.4,
+      "state_residual": 1.543648247888646e-16,
+      "projection_norm_residual": 8.326672684688674e-17
+    },
+    {
+      "two_j": 1,
+      "cosine": 0.5773502691896258,
+      "state_residual": 9.571683335172333e-17,
+      "projection_norm_residual": 2.7755575615628914e-17
+    },
+    {
+      "two_j": 1,
+      "cosine": 0.8,
+      "state_residual": 2.52948727201835e-16,
+      "projection_norm_residual": 1.6653345369377348e-16
+    },
+    {
+      "two_j": 2,
+      "cosine": 0.4,
+      "state_residual": 1.6773845836231181e-16,
+      "projection_norm_residual": 1.3877787807814457e-17
+    },
+    {
+      "two_j": 2,
+      "cosine": 0.5773502691896258,
+      "state_residual": 1.4392305376273736e-16,
+      "projection_norm_residual": 0.0
+    },
+    {
+      "two_j": 2,
+      "cosine": 0.8,
+      "state_residual": 3.647146176693597e-16,
+      "projection_norm_residual": 1.8041124150158794e-16
+    },
+    {
+      "two_j": 4,
+      "cosine": 0.4,
+      "state_residual": 1.6754153354438309e-16,
+      "projection_norm_residual": 2.0816681711721685e-17
+    },
+    {
+      "two_j": 4,
+      "cosine": 0.5773502691896258,
+      "state_residual": 1.7690986716582084e-16,
+      "projection_norm_residual": 1.3877787807814457e-17
+    },
+    {
+      "two_j": 4,
+      "cosine": 0.8,
+      "state_residual": 3.8551011850916575e-16,
+      "projection_norm_residual": 1.1796119636642288e-16
+    },
+    {
+      "two_j": 8,
+      "cosine": 0.4,
+      "state_residual": 2.2578869556677063e-16,
+      "projection_norm_residual": 2.42861286636753e-17
+    },
+    {
+      "two_j": 8,
+      "cosine": 0.5773502691896258,
+      "state_residual": 2.7469183554338913e-16,
+      "projection_norm_residual": 3.469446951953614e-17
+    },
+    {
+      "two_j": 8,
+      "cosine": 0.8,
+      "state_residual": 2.377773967303941e-16,
+      "projection_norm_residual": 2.0816681711721685e-17
+    },
+    {
+      "two_j": 16,
+      "cosine": 0.4,
+      "state_residual": 2.7017728064733446e-16,
+      "projection_norm_residual": 1.6479873021779667e-17
+    },
+    {
+      "two_j": 16,
+      "cosine": 0.5773502691896258,
+      "state_residual": 3.2287475130817257e-16,
+      "projection_norm_residual": 2.949029909160572e-17
+    },
+    {
+      "two_j": 16,
+      "cosine": 0.8,
+      "state_residual": 3.9213920849993375e-16,
+      "projection_norm_residual": 3.729655473350135e-17
+    }
+  ],
+  "geometry_checks": [
+    {
+      "a": 0.6,
+      "b": 1.0,
+      "triangles": 19,
+      "boundary_phi_residual": 0.0,
+      "boundary_tetrahedra": 9,
+      "triangle_incidences": 30,
+      "minimum_cell_gram_eigenvalue": 0.6928203230275507,
+      "direct_action": 21.98281422920583,
+      "closed_action": 21.982814229205825,
+      "action_residual": 3.552713678800501e-15,
+      "deficit_residual": 0.0,
+      "schlafli_chain_rule_residual": 4.440892098500626e-15
+    },
+    {
+      "a": 1.0,
+      "b": 1.0,
+      "triangles": 19,
+      "boundary_phi_residual": 2.220446049250313e-16,
+      "boundary_tetrahedra": 9,
+      "triangle_incidences": 30,
+      "minimum_cell_gram_eigenvalue": 1.1547005383792506,
+      "direct_action": 23.288370922211325,
+      "closed_action": 23.288370922211325,
+      "action_residual": 0.0,
+      "deficit_residual": 1.7763568394002505e-15,
+      "schlafli_chain_rule_residual": 8.881784197001252e-16
+    },
+    {
+      "a": 1.28,
+      "b": 1.0,
+      "triangles": 19,
+      "boundary_phi_residual": 1.1102230246251565e-16,
+      "boundary_tetrahedra": 9,
+      "triangle_incidences": 30,
+      "minimum_cell_gram_eigenvalue": 0.49051636441605595,
+      "direct_action": 23.708806988994098,
+      "closed_action": 23.708806988994095,
+      "action_residual": 3.552713678800501e-15,
+      "deficit_residual": 0.0,
+      "schlafli_chain_rule_residual": 4.218847493575595e-15
+    },
+    {
+      "a": 1.49,
+      "b": 1.0,
+      "triangles": 19,
+      "boundary_phi_residual": 2.220446049250313e-16,
+      "boundary_tetrahedra": 9,
+      "triangle_incidences": 30,
+      "minimum_cell_gram_eigenvalue": 0.021361767914058027,
+      "direct_action": 23.588030443810656,
+      "closed_action": 23.588030443810652,
+      "action_residual": 3.552713678800501e-15,
+      "deficit_residual": 1.0658141036401503e-14,
+      "schlafli_chain_rule_residual": 6.217248937900877e-15
+    }
+  ],
+  "regular_action_check": {
+    "incidence_action": 23.28837092221132,
+    "supplement_single_theta_b_expression": 35.15141556708669,
+    "difference": 11.863044644875362
+  },
+  "cases": [
+    {
+      "two_j": 19,
+      "boundary_spin": 9.5,
+      "gamma": 0.0,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "admissible_bulk_labels": 14,
+      "reference_two_ja": 25,
+      "requested_reference_area_ratio": 1.28,
+      "actual_reference_area_ratio": 1.3006649542861801,
+      "reference_area_ratio_snap_error": 0.020664954286180093,
+      "reference_curvature": 0.37252060715311064,
+      "complex_curvature_expectation": [
+        0.41526936278506416,
+        0.0
+      ],
+      "scaled_partition": [
+        2.1076435761207093,
+        0.0
+      ],
+      "scaled_curvature_numerator": [
+        0.8752398048336808,
+        0.0
+      ],
+      "log_weight_shift": 0.0,
+      "scaled_envelope_sum": 2.1076435761207093,
+      "cancellation_ratio": 1.0,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "phase_off_envelope_curvature": 0.4152693627850641,
+      "labelwise_squared_modulus_curvature": 0.38100097375575326,
+      "envelope_spin_sigma": 0.8231359748887016,
+      "linear_phase_sigma": 0.0,
+      "leading_local_envelope_spin_sigma": 0.8309489698388164,
+      "envelope_width_relative_to_leading": 0.9905975032959842,
+      "gamma_sqrt_boundary_spin": 0.0,
+      "measured_phase_sigma": 0.0,
+      "linear_gaussian_cancellation_estimate": 1.0,
+      "all_admissible_labels_in_branch_summed": true
+    },
+    {
+      "two_j": 19,
+      "boundary_spin": 9.5,
+      "gamma": 0.01,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "admissible_bulk_labels": 14,
+      "reference_two_ja": 25,
+      "requested_reference_area_ratio": 1.28,
+      "actual_reference_area_ratio": 1.3006649542861801,
+      "reference_area_ratio_snap_error": 0.020664954286180093,
+      "reference_curvature": 0.37252060715311064,
+      "complex_curvature_expectation": [
+        0.41525095683438484,
+        -0.002904558835417097
+      ],
+      "scaled_partition": [
+        2.107595194536763,
+        -0.00715877255423421
+      ],
+      "scaled_curvature_numerator": [
+        0.8751601280748692,
+        -0.00909432139667986
+      ],
+      "log_weight_shift": 0.0,
+      "scaled_envelope_sum": 2.1076435761207093,
+      "cancellation_ratio": 0.9999828131847488,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "phase_off_envelope_curvature": 0.4152693627850641,
+      "labelwise_squared_modulus_curvature": 0.38100097375575326,
+      "envelope_spin_sigma": 0.8231359748887016,
+      "linear_phase_sigma": 0.0030686216619334504,
+      "leading_local_envelope_spin_sigma": 0.8309489698388164,
+      "envelope_width_relative_to_leading": 0.9905975032959842,
+      "gamma_sqrt_boundary_spin": 0.030822070014844882,
+      "measured_phase_sigma": 0.005863027244164704,
+      "linear_gaussian_cancellation_estimate": 0.9999952917916316,
+      "all_admissible_labels_in_branch_summed": true
+    },
+    {
+      "two_j": 19,
+      "boundary_spin": 9.5,
+      "gamma": 0.1,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "admissible_bulk_labels": 14,
+      "reference_two_ja": 25,
+      "requested_reference_area_ratio": 1.28,
+      "actual_reference_area_ratio": 1.3006649542861801,
+      "reference_area_ratio_snap_error": 0.020664954286180093,
+      "reference_curvature": 0.37252060715311064,
+      "complex_curvature_expectation": [
+        0.4134357298110956,
+        -0.02893583285695414
+      ],
+      "scaled_partition": [
+        2.102829498325951,
+        -0.07125345928792813
+      ],
+      "scaled_curvature_numerator": [
+        0.8673230701202542,
+        -0.0903058488325022
+      ],
+      "log_weight_shift": 0.0,
+      "scaled_envelope_sum": 2.1076435761207093,
+      "cancellation_ratio": 0.9982885019198641,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "phase_off_envelope_curvature": 0.4152693627850641,
+      "labelwise_squared_modulus_curvature": 0.38100097375575326,
+      "envelope_spin_sigma": 0.8231359748887016,
+      "linear_phase_sigma": 0.030686216619334506,
+      "leading_local_envelope_spin_sigma": 0.8309489698388164,
+      "envelope_width_relative_to_leading": 0.9905975032959842,
+      "gamma_sqrt_boundary_spin": 0.3082207001484488,
+      "measured_phase_sigma": 0.05863027244164703,
+      "linear_gaussian_cancellation_estimate": 0.9995292888740549,
+      "all_admissible_labels_in_branch_summed": true
+    },
+    {
+      "two_j": 19,
+      "boundary_spin": 9.5,
+      "gamma": 0.5,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "admissible_bulk_labels": 14,
+      "reference_two_ja": 25,
+      "requested_reference_area_ratio": 1.28,
+      "actual_reference_area_ratio": 1.3006649542861801,
+      "reference_area_ratio_snap_error": 0.020664954286180093,
+      "reference_curvature": 0.37252060715311064,
+      "complex_curvature_expectation": [
+        0.3732435065048543,
+        -0.13260480220413343
+      ],
+      "scaled_partition": [
+        2.0001823289730876,
+        -0.3204245647742752
+      ],
+      "scaled_curvature_numerator": [
+        0.7040652300817231,
+        -0.3848301702323216
+      ],
+      "log_weight_shift": 0.0,
+      "scaled_envelope_sum": 2.1076435761207093,
+      "cancellation_ratio": 0.9611138244630478,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "phase_off_envelope_curvature": 0.4152693627850641,
+      "labelwise_squared_modulus_curvature": 0.38100097375575326,
+      "envelope_spin_sigma": 0.8231359748887016,
+      "linear_phase_sigma": 0.15343108309667253,
+      "leading_local_envelope_spin_sigma": 0.8309489698388164,
+      "envelope_width_relative_to_leading": 0.9905975032959842,
+      "gamma_sqrt_boundary_spin": 1.541103500742244,
+      "measured_phase_sigma": 0.2931513622082352,
+      "linear_gaussian_cancellation_estimate": 0.9882984532819524,
+      "all_admissible_labels_in_branch_summed": true
+    },
+    {
+      "two_j": 199,
+      "boundary_spin": 99.5,
+      "gamma": 0.0,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "admissible_bulk_labels": 149,
+      "reference_two_ja": 255,
+      "requested_reference_area_ratio": 1.28,
+      "actual_reference_area_ratio": 1.28000623451568,
+      "reference_area_ratio_snap_error": 6.234515679937047e-06,
+      "reference_curvature": 0.5447777037592987,
+      "complex_curvature_expectation": [
+        0.5459122537663162,
+        0.0
+      ],
+      "scaled_partition": [
+        6.896025792891295,
+        0.0
+      ],
+      "scaled_curvature_numerator": [
+        3.7646249826279345,
+        0.0
+      ],
+      "log_weight_shift": 0.0,
+      "scaled_envelope_sum": 6.896025792891295,
+      "cancellation_ratio": 1.0,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "phase_off_envelope_curvature": 0.5459122537663162,
+      "labelwise_squared_modulus_curvature": 0.5453534286618945,
+      "envelope_spin_sigma": 2.7516355715337784,
+      "linear_phase_sigma": 0.0,
+      "leading_local_envelope_spin_sigma": 2.7434529331999213,
+      "envelope_width_relative_to_leading": 1.0029826056918398,
+      "gamma_sqrt_boundary_spin": 0.0,
+      "measured_phase_sigma": 0.0,
+      "linear_gaussian_cancellation_estimate": 1.0,
+      "all_admissible_labels_in_branch_summed": true
+    },
+    {
+      "two_j": 199,
+      "boundary_spin": 99.5,
+      "gamma": 0.01,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "admissible_bulk_labels": 149,
+      "reference_two_ja": 255,
+      "requested_reference_area_ratio": 1.28,
+      "actual_reference_area_ratio": 1.28000623451568,
+      "reference_area_ratio_snap_error": 6.234515679937047e-06,
+      "reference_curvature": 0.5447777037592987,
+      "complex_curvature_expectation": [
+        0.5458912003823851,
+        -0.0033683321385142508
+      ],
+      "scaled_partition": [
+        6.895111694482254,
+        -0.025215971264562296
+      ],
+      "scaled_curvature_numerator": [
+        3.763895863905125,
+        -0.03699020314158967
+      ],
+      "log_weight_shift": 0.0,
+      "scaled_envelope_sum": 6.896025792891295,
+      "cancellation_ratio": 0.9998741318283679,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "phase_off_envelope_curvature": 0.5459122537663162,
+      "labelwise_squared_modulus_curvature": 0.5453534286618945,
+      "envelope_spin_sigma": 2.7516355715337784,
+      "linear_phase_sigma": 0.014990411450625197,
+      "leading_local_envelope_spin_sigma": 2.7434529331999213,
+      "envelope_width_relative_to_leading": 1.0029826056918398,
+      "gamma_sqrt_boundary_spin": 0.09974968671630002,
+      "measured_phase_sigma": 0.015867029703972673,
+      "linear_gaussian_cancellation_estimate": 0.9998876500939939,
+      "all_admissible_labels_in_branch_summed": true
+    },
+    {
+      "two_j": 199,
+      "boundary_spin": 99.5,
+      "gamma": 0.1,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "admissible_bulk_labels": 149,
+      "reference_two_ja": 255,
+      "requested_reference_area_ratio": 1.28,
+      "actual_reference_area_ratio": 1.28000623451568,
+      "reference_area_ratio_snap_error": 6.234515679937047e-06,
+      "reference_curvature": 0.5447777037592987,
+      "complex_curvature_expectation": [
+        0.5438153878307096,
+        -0.033551707981330725
+      ],
+      "scaled_partition": [
+        6.805757259093876,
+        -0.2436114470438331
+      ],
+      "scaled_curvature_numerator": [
+        3.692901943203679,
+        -0.360824433703082
+      ],
+      "log_weight_shift": 0.0,
+      "scaled_envelope_sum": 6.896025792891295,
+      "cancellation_ratio": 0.9875421137397274,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "phase_off_envelope_curvature": 0.5459122537663162,
+      "labelwise_squared_modulus_curvature": 0.5453534286618945,
+      "envelope_spin_sigma": 2.7516355715337784,
+      "linear_phase_sigma": 0.14990411450625196,
+      "leading_local_envelope_spin_sigma": 2.7434529331999213,
+      "envelope_width_relative_to_leading": 1.0029826056918398,
+      "gamma_sqrt_boundary_spin": 0.9974968671630002,
+      "measured_phase_sigma": 0.15867029703972674,
+      "linear_gaussian_cancellation_estimate": 0.9888272620919076,
+      "all_admissible_labels_in_branch_summed": true
+    },
+    {
+      "two_j": 199,
+      "boundary_spin": 99.5,
+      "gamma": 0.5,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "admissible_bulk_labels": 149,
+      "reference_two_ja": 255,
+      "requested_reference_area_ratio": 1.28,
+      "actual_reference_area_ratio": 1.28000623451568,
+      "reference_area_ratio_snap_error": 6.234515679937047e-06,
+      "reference_curvature": 0.5447777037592987,
+      "complex_curvature_expectation": [
+        0.4981259921104489,
+        -0.15331536583482946
+      ],
+      "scaled_partition": [
+        5.162402973748234,
+        -0.47766974011880503
+      ],
+      "scaled_curvature_numerator": [
+        2.4982929920177286,
+        -1.0294154137048421
+      ],
+      "log_weight_shift": 0.0,
+      "scaled_envelope_sum": 6.896025792891295,
+      "cancellation_ratio": 0.7518032963127693,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "phase_off_envelope_curvature": 0.5459122537663162,
+      "labelwise_squared_modulus_curvature": 0.5453534286618945,
+      "envelope_spin_sigma": 2.7516355715337784,
+      "linear_phase_sigma": 0.7495205725312598,
+      "leading_local_envelope_spin_sigma": 2.7434529331999213,
+      "envelope_width_relative_to_leading": 1.0029826056918398,
+      "gamma_sqrt_boundary_spin": 4.987484335815001,
+      "measured_phase_sigma": 0.7933514851986336,
+      "linear_gaussian_cancellation_estimate": 0.7551109821402134,
+      "all_admissible_labels_in_branch_summed": true
+    },
+    {
+      "two_j": 1999,
+      "boundary_spin": 999.5,
+      "gamma": 0.0,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "admissible_bulk_labels": 1499,
+      "reference_two_ja": 2559,
+      "requested_reference_area_ratio": 1.28,
+      "actual_reference_area_ratio": 1.280000062343764,
+      "reference_area_ratio_snap_error": 6.23437639291069e-08,
+      "reference_curvature": 0.5448278409260734,
+      "complex_curvature_expectation": [
+        0.5449441574873215,
+        0.0
+      ],
+      "scaled_partition": [
+        21.801775964736734,
+        0.0
+      ],
+      "scaled_curvature_numerator": [
+        11.880750434830794,
+        0.0
+      ],
+      "log_weight_shift": -8.113509863960644e-13,
+      "scaled_envelope_sum": 21.80177596473673,
+      "cancellation_ratio": 1.0000000000000002,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "phase_off_envelope_curvature": 0.5449441574873215,
+      "labelwise_squared_modulus_curvature": 0.5448860793387358,
+      "envelope_spin_sigma": 8.697814487221914,
+      "linear_phase_sigma": 0.0,
+      "leading_local_envelope_spin_sigma": 8.695206343726793,
+      "envelope_width_relative_to_leading": 1.000299951880613,
+      "gamma_sqrt_boundary_spin": 0.0,
+      "measured_phase_sigma": 0.0,
+      "linear_gaussian_cancellation_estimate": 1.0,
+      "all_admissible_labels_in_branch_summed": true
+    },
+    {
+      "two_j": 1999,
+      "boundary_spin": 999.5,
+      "gamma": 0.01,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "admissible_bulk_labels": 1499,
+      "reference_two_ja": 2559,
+      "requested_reference_area_ratio": 1.28,
+      "actual_reference_area_ratio": 1.280000062343764,
+      "reference_area_ratio_snap_error": 6.23437639291069e-08,
+      "reference_curvature": 0.5448278409260734,
+      "complex_curvature_expectation": [
+        0.544923303029425,
+        -0.003349773451622738
+      ],
+      "scaled_partition": [
+        21.77687270909927,
+        -0.07940994478807291
+      ],
+      "scaled_curvature_numerator": [
+        11.866459400968871,
+        -0.11621991946760943
+      ],
+      "log_weight_shift": -8.113509863960644e-13,
+      "scaled_envelope_sum": 21.80177596473673,
+      "cancellation_ratio": 0.9988643828409987,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "phase_off_envelope_curvature": 0.5449441574873215,
+      "labelwise_squared_modulus_curvature": 0.5448860793387358,
+      "envelope_spin_sigma": 8.697814487221914,
+      "linear_phase_sigma": 0.047388118493913035,
+      "leading_local_envelope_spin_sigma": 8.695206343726793,
+      "envelope_width_relative_to_leading": 1.000299951880613,
+      "gamma_sqrt_boundary_spin": 0.31614869919074473,
+      "measured_phase_sigma": 0.047672026819934335,
+      "linear_gaussian_cancellation_estimate": 0.9988778132358248,
+      "all_admissible_labels_in_branch_summed": true
+    },
+    {
+      "two_j": 1999,
+      "boundary_spin": 999.5,
+      "gamma": 0.1,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "admissible_bulk_labels": 1499,
+      "reference_two_ja": 2559,
+      "requested_reference_area_ratio": 1.28,
+      "actual_reference_area_ratio": 1.280000062343764,
+      "reference_area_ratio_snap_error": 6.23437639291069e-08,
+      "reference_curvature": 0.5448278409260734,
+      "complex_curvature_expectation": [
+        0.5428670449018365,
+        -0.03336785279668535
+      ],
+      "scaled_partition": [
+        19.461124289809504,
+        -0.5678127330340729
+      ],
+      "scaled_curvature_numerator": [
+        10.545856341984274,
+        -0.957622751000204
+      ],
+      "log_weight_shift": -8.113509863960644e-13,
+      "scaled_envelope_sum": 21.80177596473673,
+      "cancellation_ratio": 0.893019267315776,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "phase_off_envelope_curvature": 0.5449441574873215,
+      "labelwise_squared_modulus_curvature": 0.5448860793387358,
+      "envelope_spin_sigma": 8.697814487221914,
+      "linear_phase_sigma": 0.47388118493913034,
+      "leading_local_envelope_spin_sigma": 8.695206343726793,
+      "envelope_width_relative_to_leading": 1.000299951880613,
+      "gamma_sqrt_boundary_spin": 3.1614869919074473,
+      "measured_phase_sigma": 0.47672026819934343,
+      "linear_gaussian_cancellation_estimate": 0.8937924507853657,
+      "all_admissible_labels_in_branch_summed": true
+    },
+    {
+      "two_j": 1999,
+      "boundary_spin": 999.5,
+      "gamma": 0.5,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "admissible_bulk_labels": 1499,
+      "reference_two_ja": 2559,
+      "requested_reference_area_ratio": 1.28,
+      "actual_reference_area_ratio": 1.280000062343764,
+      "reference_area_ratio_snap_error": 6.23437639291069e-08,
+      "reference_curvature": 0.5448278409260734,
+      "complex_curvature_expectation": [
+        0.4975777945244981,
+        -0.15257767563436492
+      ],
+      "scaled_partition": [
+        1.3300338930003017,
+        1.0157458285473497
+      ],
+      "scaled_curvature_numerator": [
+        0.816775468676979,
+        0.30247908925713757
+      ],
+      "log_weight_shift": -8.113509863960644e-13,
+      "scaled_envelope_sum": 21.80177596473673,
+      "cancellation_ratio": 0.07676154889938361,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "phase_off_envelope_curvature": 0.5449441574873215,
+      "labelwise_squared_modulus_curvature": 0.5448860793387358,
+      "envelope_spin_sigma": 8.697814487221914,
+      "linear_phase_sigma": 2.3694059246956516,
+      "leading_local_envelope_spin_sigma": 8.695206343726793,
+      "envelope_width_relative_to_leading": 1.000299951880613,
+      "gamma_sqrt_boundary_spin": 15.807434959537236,
+      "measured_phase_sigma": 2.3836013409967167,
+      "linear_gaussian_cancellation_estimate": 0.06038332924645255,
+      "all_admissible_labels_in_branch_summed": true
+    },
+    {
+      "two_j": 199,
+      "boundary_spin": 99.5,
+      "gamma": 0.1,
+      "spectrum": "casimir",
+      "measure": "dimension",
+      "admissible_bulk_labels": 149,
+      "reference_two_ja": 255,
+      "requested_reference_area_ratio": 1.28,
+      "actual_reference_area_ratio": 1.28000623451568,
+      "reference_area_ratio_snap_error": 6.234515679937047e-06,
+      "reference_curvature": 0.5447777037592987,
+      "complex_curvature_expectation": [
+        0.5390222961013321,
+        -0.03323348313542457
+      ],
+      "scaled_partition": [
+        6.802376139157974,
+        -0.22123727718539607
+      ],
+      "scaled_curvature_numerator": [
+        3.659279920153578,
+        -0.3453184778332001
+      ],
+      "log_weight_shift": 5.545177444479562,
+      "scaled_envelope_sum": 6.890275247660839,
+      "cancellation_ratio": 0.9877650242010825,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "phase_off_envelope_curvature": 0.5410973956035889,
+      "labelwise_squared_modulus_curvature": 0.5405442845076632,
+      "envelope_spin_sigma": 2.748704618477897,
+      "linear_phase_sigma": 0.14974444150047803,
+      "leading_local_envelope_spin_sigma": 2.7434529331999213,
+      "envelope_width_relative_to_leading": 1.0019142611175946,
+      "gamma_sqrt_boundary_spin": 0.9974968671630002,
+      "measured_phase_sigma": 0.15723442067659657,
+      "linear_gaussian_cancellation_estimate": 0.9888509179834605,
+      "all_admissible_labels_in_branch_summed": true
+    },
+    {
+      "two_j": 199,
+      "boundary_spin": 99.5,
+      "gamma": 0.1,
+      "spectrum": "linear",
+      "measure": "unit",
+      "admissible_bulk_labels": 149,
+      "reference_two_ja": 255,
+      "requested_reference_area_ratio": 1.28,
+      "actual_reference_area_ratio": 1.28,
+      "reference_area_ratio_snap_error": 0.0,
+      "reference_curvature": 0.5448283473468205,
+      "complex_curvature_expectation": [
+        0.5438659316553274,
+        -0.03355512217422408
+      ],
+      "scaled_partition": [
+        6.805916722989452,
+        -0.24362215062336692
+      ],
+      "scaled_curvature_numerator": [
+        3.693331468288717,
+        -0.3608711550681578
+      ],
+      "log_weight_shift": -1.1590728377086634e-13,
+      "scaled_envelope_sum": 6.896205188973437,
+      "cancellation_ratio": 0.9875395882260036,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "phase_off_envelope_curvature": 0.5459630334572201,
+      "labelwise_squared_modulus_curvature": 0.5454041393005492,
+      "envelope_spin_sigma": 2.751707224072125,
+      "linear_phase_sigma": 0.14992080992735232,
+      "leading_local_envelope_spin_sigma": 2.7434690124406766,
+      "envelope_width_relative_to_leading": 1.0030028447903332,
+      "gamma_sqrt_boundary_spin": 0.9974968671630002,
+      "measured_phase_sigma": 0.15868649277037944,
+      "linear_gaussian_cancellation_estimate": 0.9888247872070257,
+      "all_admissible_labels_in_branch_summed": true
+    }
+  ],
+  "joint_scaling_cases": [
+    {
+      "two_j": 19,
+      "boundary_spin": 9.5,
+      "gamma": 0.3244428422615251,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "admissible_bulk_labels": 14,
+      "reference_two_ja": 25,
+      "requested_reference_area_ratio": 1.28,
+      "actual_reference_area_ratio": 1.3006649542861801,
+      "reference_area_ratio_snap_error": 0.020664954286180093,
+      "reference_curvature": 0.37252060715311064,
+      "complex_curvature_expectation": [
+        0.39664293927600497,
+        -0.09059504233994065
+      ],
+      "scaled_partition": [
+        2.0592795816760807,
+        -0.22128472445020772
+      ],
+      "scaled_curvature_numerator": [
+        0.796751407086314,
+        -0.27433154441453106
+      ],
+      "log_weight_shift": 0.0,
+      "scaled_envelope_sum": 2.1076435761207093,
+      "cancellation_ratio": 0.9826779133906081,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "phase_off_envelope_curvature": 0.4152693627850641,
+      "labelwise_squared_modulus_curvature": 0.38100097375575326,
+      "envelope_spin_sigma": 0.8231359748887016,
+      "linear_phase_sigma": 0.09955923338229734,
+      "leading_local_envelope_spin_sigma": 0.8309489698388164,
+      "envelope_width_relative_to_leading": 0.9905975032959842,
+      "gamma_sqrt_boundary_spin": 1.0,
+      "measured_phase_sigma": 0.19022172233535528,
+      "linear_gaussian_cancellation_estimate": 0.995056240330345,
+      "all_admissible_labels_in_branch_summed": true
+    },
+    {
+      "two_j": 199,
+      "boundary_spin": 99.5,
+      "gamma": 0.1002509414234171,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "admissible_bulk_labels": 149,
+      "reference_two_ja": 255,
+      "requested_reference_area_ratio": 1.28,
+      "actual_reference_area_ratio": 1.28000623451568,
+      "reference_area_ratio_snap_error": 6.234515679937047e-06,
+      "reference_curvature": 0.5447777037592987,
+      "complex_curvature_expectation": [
+        0.5438048938516847,
+        -0.033635236175525156
+      ],
+      "scaled_partition": [
+        6.805309398427137,
+        -0.24417991089012683
+      ],
+      "scaled_curvature_numerator": [
+        3.6925475060674335,
+        -0.36168441938593704
+      ],
+      "log_weight_shift": 0.0,
+      "scaled_envelope_sum": 6.896025792891295,
+      "cancellation_ratio": 0.9874801630018573,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "phase_off_envelope_curvature": 0.5459122537663162,
+      "labelwise_squared_modulus_curvature": 0.5453534286618945,
+      "envelope_spin_sigma": 2.7516355715337784,
+      "linear_phase_sigma": 0.15028028602495475,
+      "leading_local_envelope_spin_sigma": 2.7434529331999213,
+      "envelope_width_relative_to_leading": 1.0029826056918398,
+      "gamma_sqrt_boundary_spin": 1.0,
+      "measured_phase_sigma": 0.15906846654165838,
+      "linear_gaussian_cancellation_estimate": 0.9887714340744128,
+      "all_admissible_labels_in_branch_summed": true
+    },
+    {
+      "two_j": 1999,
+      "boundary_spin": 999.5,
+      "gamma": 0.03163068526170533,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "admissible_bulk_labels": 1499,
+      "reference_two_ja": 2559,
+      "requested_reference_area_ratio": 1.28,
+      "actual_reference_area_ratio": 1.280000062343764,
+      "reference_area_ratio_snap_error": 6.23437639291069e-08,
+      "reference_curvature": 0.5448278409260734,
+      "complex_curvature_expectation": [
+        0.5447355847146448,
+        -0.010591812069716747
+      ],
+      "scaled_partition": [
+        21.554042595219606,
+        -0.2440756924403412
+      ],
+      "scaled_curvature_numerator": [
+        11.738668792206198,
+        -0.36125308354735697
+      ],
+      "log_weight_shift": -8.113509863960644e-13,
+      "scaled_envelope_sum": 21.80177596473673,
+      "cancellation_ratio": 0.988700394381325,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "phase_off_envelope_curvature": 0.5449441574873215,
+      "labelwise_squared_modulus_curvature": 0.5448860793387358,
+      "envelope_spin_sigma": 8.697814487221914,
+      "linear_phase_sigma": 0.14989186612253608,
+      "leading_local_envelope_spin_sigma": 8.695206343726793,
+      "envelope_width_relative_to_leading": 1.000299951880613,
+      "gamma_sqrt_boundary_spin": 1.0,
+      "measured_phase_sigma": 0.15078988761289183,
+      "linear_gaussian_cancellation_estimate": 0.9888290775884405,
+      "all_admissible_labels_in_branch_summed": true
+    },
+    {
+      "two_j": 19,
+      "boundary_spin": 9.5,
+      "gamma": 0.9733285267845753,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "admissible_bulk_labels": 14,
+      "reference_two_ja": 25,
+      "requested_reference_area_ratio": 1.28,
+      "actual_reference_area_ratio": 1.3006649542861801,
+      "reference_area_ratio_snap_error": 0.020664954286180093,
+      "reference_curvature": 0.37252060715311064,
+      "complex_curvature_expectation": [
+        0.2862695960712777,
+        -0.20832301897156677
+      ],
+      "scaled_partition": [
+        1.7956642154966875,
+        -0.4869879627365925
+      ],
+      "scaled_curvature_numerator": [
+        0.4125932670497847,
+        -0.5134880378156588
+      ],
+      "log_weight_shift": 0.0,
+      "scaled_envelope_sum": 2.1076435761207093,
+      "cancellation_ratio": 0.8827530312748418,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "phase_off_envelope_curvature": 0.4152693627850641,
+      "labelwise_squared_modulus_curvature": 0.38100097375575326,
+      "envelope_spin_sigma": 0.8231359748887016,
+      "linear_phase_sigma": 0.29867770014689204,
+      "leading_local_envelope_spin_sigma": 0.8309489698388164,
+      "envelope_width_relative_to_leading": 0.9905975032959842,
+      "gamma_sqrt_boundary_spin": 3.0,
+      "measured_phase_sigma": 0.5706651670060658,
+      "linear_gaussian_cancellation_estimate": 0.9563759555602659,
+      "all_admissible_labels_in_branch_summed": true
+    },
+    {
+      "two_j": 199,
+      "boundary_spin": 99.5,
+      "gamma": 0.3007528242702513,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "admissible_bulk_labels": 149,
+      "reference_two_ja": 255,
+      "requested_reference_area_ratio": 1.28,
+      "actual_reference_area_ratio": 1.28000623451568,
+      "reference_area_ratio_snap_error": 6.234515679937047e-06,
+      "reference_curvature": 0.5447777037592987,
+      "complex_curvature_expectation": [
+        0.5275449764036757,
+        -0.09780854931450689
+      ],
+      "scaled_partition": [
+        6.154768793244593,
+        -0.549199257391082
+      ],
+      "scaled_curvature_numerator": [
+        3.193200975152272,
+        -0.8917163163147463
+      ],
+      "log_weight_shift": 0.0,
+      "scaled_envelope_sum": 6.896025792891295,
+      "cancellation_ratio": 0.8960556898098905,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "phase_off_envelope_curvature": 0.5459122537663162,
+      "labelwise_squared_modulus_curvature": 0.5453534286618945,
+      "envelope_spin_sigma": 2.7516355715337784,
+      "linear_phase_sigma": 0.45084085807486424,
+      "leading_local_envelope_spin_sigma": 2.7434529331999213,
+      "envelope_width_relative_to_leading": 1.0029826056918398,
+      "gamma_sqrt_boundary_spin": 3.0,
+      "measured_phase_sigma": 0.4772053996249751,
+      "linear_gaussian_cancellation_estimate": 0.9033648729738193,
+      "all_admissible_labels_in_branch_summed": true
+    },
+    {
+      "two_j": 1999,
+      "boundary_spin": 999.5,
+      "gamma": 0.09489205578511598,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "admissible_bulk_labels": 1499,
+      "reference_two_ja": 2559,
+      "requested_reference_area_ratio": 1.28,
+      "actual_reference_area_ratio": 1.280000062343764,
+      "reference_area_ratio_snap_error": 6.23437639291069e-08,
+      "reference_curvature": 0.5448278409260734,
+      "complex_curvature_expectation": [
+        0.5430730693483785,
+        -0.031675788707753
+      ],
+      "scaled_partition": [
+        19.68116968856954,
+        -0.5585467133480331
+      ],
+      "scaled_curvature_numerator": [
+        10.670620823462308,
+        -0.9267482505689268
+      ],
+      "log_weight_shift": -8.113509863960644e-13,
+      "scaled_envelope_sum": 21.80177596473673,
+      "cancellation_ratio": 0.9030958686016077,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "phase_off_envelope_curvature": 0.5449441574873215,
+      "labelwise_squared_modulus_curvature": 0.5448860793387358,
+      "envelope_spin_sigma": 8.697814487221914,
+      "linear_phase_sigma": 0.4496755983676081,
+      "leading_local_envelope_spin_sigma": 8.695206343726793,
+      "envelope_width_relative_to_leading": 1.000299951880613,
+      "gamma_sqrt_boundary_spin": 3.0,
+      "measured_phase_sigma": 0.4523696628386754,
+      "linear_gaussian_cancellation_estimate": 0.9038389637675135,
+      "all_admissible_labels_in_branch_summed": true
+    }
+  ],
+  "two_bulk_partial_sums": [
+    {
+      "two_j": 19,
+      "boundary_spin": 9.5,
+      "gamma": 0.0,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "bulk_label_count_per_side": 14,
+      "bulk_label_pairs": 196,
+      "common_face_areas_fixed": true,
+      "second_bulk_label_fixed": false,
+      "orientation": "same",
+      "curvature_observable": "mean_of_two_bulk_deficits",
+      "phase_reference_two_ja": 25,
+      "phase_reference_curvature": 0.37252060715311064,
+      "scaled_partition": [
+        36.790804469800975,
+        0.0
+      ],
+      "scaled_curvature_numerator": [
+        126.62125534034874,
+        0.0
+      ],
+      "scaled_relative_mismatch_numerator": [
+        0.4525773065188736,
+        0.0
+      ],
+      "log_weight_shift": 0.0,
+      "scaled_envelope_sum": 36.790804469800975,
+      "cancellation_ratio": 1.0,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "complex_mean_curvature": [
+        3.441654977788903,
+        0.0
+      ],
+      "complex_relative_area_mismatch": [
+        0.012301370221201958,
+        0.0
+      ],
+      "phase_off_mean_curvature": 3.441654977788903,
+      "phase_off_relative_area_mismatch": 0.012301370221201958,
+      "phase_off_common_area_ratio_mean": 0.7101268527829807,
+      "phase_off_common_area_ratio_variance": 0.14064938995991771,
+      "opposite_orientation_scaled_partition": [
+        36.790804469800975,
+        0.0
+      ],
+      "opposite_orientation_partition_ratio": 1.0,
+      "opposite_orientation_is_separate_control": true,
+      "all_admissible_bulk_pairs_in_branch_summed": true
+    },
+    {
+      "two_j": 19,
+      "boundary_spin": 9.5,
+      "gamma": 0.1,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "bulk_label_count_per_side": 14,
+      "bulk_label_pairs": 196,
+      "common_face_areas_fixed": true,
+      "second_bulk_label_fixed": false,
+      "orientation": "same",
+      "curvature_observable": "mean_of_two_bulk_deficits",
+      "phase_reference_two_ja": 25,
+      "phase_reference_curvature": 0.37252060715311064,
+      "scaled_partition": [
+        7.533171151171182,
+        -7.889040733647454
+      ],
+      "scaled_curvature_numerator": [
+        6.785162783678125,
+        -22.217091574772137
+      ],
+      "scaled_relative_mismatch_numerator": [
+        0.06615506134658997,
+        -0.07370936998912977
+      ],
+      "log_weight_shift": 0.0,
+      "scaled_envelope_sum": 36.790804469800975,
+      "cancellation_ratio": 0.29648858357973934,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "complex_mean_curvature": [
+        1.9026274895564586,
+        -0.956726677792703
+      ],
+      "complex_relative_area_mismatch": [
+        0.00907549600929591,
+        -0.00028041474849685254
+      ],
+      "phase_off_mean_curvature": 3.441654977788903,
+      "phase_off_relative_area_mismatch": 0.012301370221201958,
+      "phase_off_common_area_ratio_mean": 0.7101268527829807,
+      "phase_off_common_area_ratio_variance": 0.14064938995991771,
+      "opposite_orientation_scaled_partition": [
+        33.33103952145549,
+        0.0
+      ],
+      "opposite_orientation_partition_ratio": 0.905961149852394,
+      "opposite_orientation_is_separate_control": true,
+      "all_admissible_bulk_pairs_in_branch_summed": true
+    },
+    {
+      "two_j": 19,
+      "boundary_spin": 9.5,
+      "gamma": 0.5,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "bulk_label_count_per_side": 14,
+      "bulk_label_pairs": 196,
+      "common_face_areas_fixed": true,
+      "second_bulk_label_fixed": false,
+      "orientation": "same",
+      "curvature_observable": "mean_of_two_bulk_deficits",
+      "phase_reference_two_ja": 25,
+      "phase_reference_curvature": 0.37252060715311064,
+      "scaled_partition": [
+        3.7403341612495287,
+        -2.225188260356745
+      ],
+      "scaled_curvature_numerator": [
+        0.6378835685072924,
+        -0.8977999143603342
+      ],
+      "scaled_relative_mismatch_numerator": [
+        0.011090669560298434,
+        -0.02642487742132115
+      ],
+      "log_weight_shift": 0.0,
+      "scaled_envelope_sum": 36.790804469800975,
+      "cancellation_ratio": 0.11829560661409017,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "complex_mean_curvature": [
+        0.2314313588198397,
+        -0.10234956427212077
+      ],
+      "complex_relative_area_mismatch": [
+        0.0052943434633583395,
+        -0.00391514925379491
+      ],
+      "phase_off_mean_curvature": 3.441654977788903,
+      "phase_off_relative_area_mismatch": 0.012301370221201958,
+      "phase_off_common_area_ratio_mean": 0.7101268527829807,
+      "phase_off_common_area_ratio_variance": 0.14064938995991771,
+      "opposite_orientation_scaled_partition": [
+        10.662076943648108,
+        0.0
+      ],
+      "opposite_orientation_partition_ratio": 0.28980276722135473,
+      "opposite_orientation_is_separate_control": true,
+      "all_admissible_bulk_pairs_in_branch_summed": true
+    },
+    {
+      "two_j": 99,
+      "boundary_spin": 49.5,
+      "gamma": 0.0,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "bulk_label_count_per_side": 74,
+      "bulk_label_pairs": 5476,
+      "common_face_areas_fixed": true,
+      "second_bulk_label_fixed": false,
+      "orientation": "same",
+      "curvature_observable": "mean_of_two_bulk_deficits",
+      "phase_reference_two_ja": 133,
+      "phase_reference_curvature": 0.015557446969461708,
+      "scaled_partition": [
+        447.7883023344936,
+        0.0
+      ],
+      "scaled_curvature_numerator": [
+        1554.769719462434,
+        0.0
+      ],
+      "scaled_relative_mismatch_numerator": [
+        1.1442942396511773,
+        0.0
+      ],
+      "log_weight_shift": 0.0,
+      "scaled_envelope_sum": 447.78830233449366,
+      "cancellation_ratio": 0.9999999999999999,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "complex_mean_curvature": [
+        3.472108832135226,
+        0.0
+      ],
+      "complex_relative_area_mismatch": [
+        0.0025554357576683642,
+        0.0
+      ],
+      "phase_off_mean_curvature": 3.4721088321352256,
+      "phase_off_relative_area_mismatch": 0.0025554357576683634,
+      "phase_off_common_area_ratio_mean": 0.6932696023193939,
+      "phase_off_common_area_ratio_variance": 0.16296756634404788,
+      "opposite_orientation_scaled_partition": [
+        447.7883023344936,
+        0.0
+      ],
+      "opposite_orientation_partition_ratio": 0.9999999999999999,
+      "opposite_orientation_is_separate_control": true,
+      "all_admissible_bulk_pairs_in_branch_summed": true
+    },
+    {
+      "two_j": 99,
+      "boundary_spin": 49.5,
+      "gamma": 0.1,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "bulk_label_count_per_side": 74,
+      "bulk_label_pairs": 5476,
+      "common_face_areas_fixed": true,
+      "second_bulk_label_fixed": false,
+      "orientation": "same",
+      "curvature_observable": "mean_of_two_bulk_deficits",
+      "phase_reference_two_ja": 133,
+      "phase_reference_curvature": 0.015557446969461708,
+      "scaled_partition": [
+        46.17413414625477,
+        -38.60555377216964
+      ],
+      "scaled_curvature_numerator": [
+        -19.232655522729615,
+        -33.43128201897183
+      ],
+      "scaled_relative_mismatch_numerator": [
+        0.06195263789947064,
+        -0.052997069536002084
+      ],
+      "log_weight_shift": 0.0,
+      "scaled_envelope_sum": 447.78830233449366,
+      "cancellation_ratio": 0.13440883690352698,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "complex_mean_curvature": [
+        0.11113558847249137,
+        -0.6311072556313216
+      ],
+      "complex_relative_area_mismatch": [
+        0.0013544990064511917,
+        -1.5287461717514507e-05
+      ],
+      "phase_off_mean_curvature": 3.4721088321352256,
+      "phase_off_relative_area_mismatch": 0.0025554357576683634,
+      "phase_off_common_area_ratio_mean": 0.6932696023193939,
+      "phase_off_common_area_ratio_variance": 0.16296756634404788,
+      "opposite_orientation_scaled_partition": [
+        277.0025614404977,
+        3.552713678800501e-15
+      ],
+      "opposite_orientation_partition_ratio": 0.6186016025795587,
+      "opposite_orientation_is_separate_control": true,
+      "all_admissible_bulk_pairs_in_branch_summed": true
+    },
+    {
+      "two_j": 99,
+      "boundary_spin": 49.5,
+      "gamma": 0.5,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "bulk_label_count_per_side": 74,
+      "bulk_label_pairs": 5476,
+      "common_face_areas_fixed": true,
+      "second_bulk_label_fixed": false,
+      "orientation": "same",
+      "curvature_observable": "mean_of_two_bulk_deficits",
+      "phase_reference_two_ja": 133,
+      "phase_reference_curvature": 0.015557446969461708,
+      "scaled_partition": [
+        16.180775146555753,
+        -18.37781901295518
+      ],
+      "scaled_curvature_numerator": [
+        2.658720031409376,
+        -3.1224153537884587
+      ],
+      "scaled_relative_mismatch_numerator": [
+        0.015436249414704829,
+        -0.02943867264905003
+      ],
+      "log_weight_shift": 0.0,
+      "scaled_envelope_sum": 447.78830233449366,
+      "cancellation_ratio": 0.054681976352315836,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "complex_mean_curvature": [
+        0.1674612180513879,
+        -0.00277139978430359
+      ],
+      "complex_relative_area_mismatch": [
+        0.0013189452523179855,
+        -0.0003213279627744117
+      ],
+      "phase_off_mean_curvature": 3.4721088321352256,
+      "phase_off_relative_area_mismatch": 0.0025554357576683634,
+      "phase_off_common_area_ratio_mean": 0.6932696023193939,
+      "phase_off_common_area_ratio_variance": 0.16296756634404788,
+      "opposite_orientation_scaled_partition": [
+        61.536011543582525,
+        -1.7763568394002505e-15
+      ],
+      "opposite_orientation_partition_ratio": 0.13742210598796684,
+      "opposite_orientation_is_separate_control": true,
+      "all_admissible_bulk_pairs_in_branch_summed": true
+    },
+    {
+      "two_j": 199,
+      "boundary_spin": 99.5,
+      "gamma": 0.0,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "bulk_label_count_per_side": 149,
+      "bulk_label_pairs": 22201,
+      "common_face_areas_fixed": true,
+      "second_bulk_label_fixed": false,
+      "orientation": "same",
+      "curvature_observable": "mean_of_two_bulk_deficits",
+      "phase_reference_two_ja": 267,
+      "phase_reference_curvature": 0.015771885931040508,
+      "scaled_partition": [
+        1283.1865083862901,
+        0.0
+      ],
+      "scaled_curvature_numerator": [
+        4464.643115722069,
+        0.0
+      ],
+      "scaled_relative_mismatch_numerator": [
+        1.6519628313386385,
+        0.0
+      ],
+      "log_weight_shift": 0.0,
+      "scaled_envelope_sum": 1283.1865083862901,
+      "cancellation_ratio": 1.0,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "complex_mean_curvature": [
+        3.479340755644879,
+        0.0
+      ],
+      "complex_relative_area_mismatch": [
+        0.0012873910538664516,
+        0.0
+      ],
+      "phase_off_mean_curvature": 3.4793407556448783,
+      "phase_off_relative_area_mismatch": 0.0012873910538664518,
+      "phase_off_common_area_ratio_mean": 0.6897142485700143,
+      "phase_off_common_area_ratio_variance": 0.16708217004636072,
+      "opposite_orientation_scaled_partition": [
+        1283.18650838629,
+        0.0
+      ],
+      "opposite_orientation_partition_ratio": 0.9999999999999998,
+      "opposite_orientation_is_separate_control": true,
+      "all_admissible_bulk_pairs_in_branch_summed": true
+    },
+    {
+      "two_j": 199,
+      "boundary_spin": 99.5,
+      "gamma": 0.1,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "bulk_label_count_per_side": 149,
+      "bulk_label_pairs": 22201,
+      "common_face_areas_fixed": true,
+      "second_bulk_label_fixed": false,
+      "orientation": "same",
+      "curvature_observable": "mean_of_two_bulk_deficits",
+      "phase_reference_two_ja": 267,
+      "phase_reference_curvature": 0.015771885931040508,
+      "scaled_partition": [
+        92.29379413479751,
+        -90.0416771855578
+      ],
+      "scaled_curvature_numerator": [
+        0.8259167257112248,
+        22.935636461258213
+      ],
+      "scaled_relative_mismatch_numerator": [
+        0.05321643790377452,
+        -0.058254173259774195
+      ],
+      "log_weight_shift": 0.0,
+      "scaled_envelope_sum": 1283.1865083862901,
+      "cancellation_ratio": 0.10048459971170581,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "complex_mean_curvature": [
+        -0.11963059593929466,
+        0.13179539398294374
+      ],
+      "complex_relative_area_mismatch": [
+        0.000610914557280006,
+        -3.517464999291807e-05
+      ],
+      "phase_off_mean_curvature": 3.4793407556448783,
+      "phase_off_relative_area_mismatch": 0.0012873910538664518,
+      "phase_off_common_area_ratio_mean": 0.6897142485700143,
+      "phase_off_common_area_ratio_variance": 0.16708217004636072,
+      "opposite_orientation_scaled_partition": [
+        572.6764091106282,
+        -7.105427357601002e-15
+      ],
+      "opposite_orientation_partition_ratio": 0.446292417639907,
+      "opposite_orientation_is_separate_control": true,
+      "all_admissible_bulk_pairs_in_branch_summed": true
+    },
+    {
+      "two_j": 199,
+      "boundary_spin": 99.5,
+      "gamma": 0.5,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "bulk_label_count_per_side": 149,
+      "bulk_label_pairs": 22201,
+      "common_face_areas_fixed": true,
+      "second_bulk_label_fixed": false,
+      "orientation": "same",
+      "curvature_observable": "mean_of_two_bulk_deficits",
+      "phase_reference_two_ja": 267,
+      "phase_reference_curvature": 0.015771885931040508,
+      "scaled_partition": [
+        34.60339485225132,
+        -38.197268439129154
+      ],
+      "scaled_curvature_numerator": [
+        -2.3228856482081803,
+        -0.545903241856425
+      ],
+      "scaled_relative_mismatch_numerator": [
+        0.016968825840351573,
+        -0.028823737986822803
+      ],
+      "log_weight_shift": 0.0,
+      "scaled_envelope_sum": 1283.1865083862901,
+      "cancellation_ratio": 0.04016604744971635,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "complex_mean_curvature": [
+        -0.022408947576360902,
+        -0.04051232065104297
+      ],
+      "complex_relative_area_mismatch": [
+        0.0006355030699888138,
+        -0.00013146850613917214
+      ],
+      "phase_off_mean_curvature": 3.4793407556448783,
+      "phase_off_relative_area_mismatch": 0.0012873910538664518,
+      "phase_off_common_area_ratio_mean": 0.6897142485700143,
+      "phase_off_common_area_ratio_variance": 0.16708217004636072,
+      "opposite_orientation_scaled_partition": [
+        127.51585038493607,
+        0.0
+      ],
+      "opposite_orientation_partition_ratio": 0.0993743696271382,
+      "opposite_orientation_is_separate_control": true,
+      "all_admissible_bulk_pairs_in_branch_summed": true
+    },
+    {
+      "two_j": 399,
+      "boundary_spin": 199.5,
+      "gamma": 0.0,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "bulk_label_count_per_side": 299,
+      "bulk_label_pairs": 89401,
+      "common_face_areas_fixed": true,
+      "second_bulk_label_fixed": false,
+      "orientation": "same",
+      "curvature_observable": "mean_of_two_bulk_deficits",
+      "phase_reference_two_ja": 535,
+      "phase_reference_curvature": 0.015825488724582115,
+      "scaled_partition": [
+        3657.806697636647,
+        0.0
+      ],
+      "scaled_curvature_numerator": [
+        12744.671516616989,
+        0.0
+      ],
+      "scaled_relative_mismatch_numerator": [
+        2.366966972621047,
+        0.0
+      ],
+      "log_weight_shift": 0.0,
+      "scaled_envelope_sum": 3657.806697636647,
+      "cancellation_ratio": 1.0,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "complex_mean_curvature": [
+        3.484238662707757,
+        0.0
+      ],
+      "complex_relative_area_mismatch": [
+        0.0006471000706927385,
+        0.0
+      ],
+      "phase_off_mean_curvature": 3.484238662707757,
+      "phase_off_relative_area_mismatch": 0.0006471000706927384,
+      "phase_off_common_area_ratio_mean": 0.6874001689391455,
+      "phase_off_common_area_ratio_variance": 0.16962807422580245,
+      "opposite_orientation_scaled_partition": [
+        3657.8066976366476,
+        0.0
+      ],
+      "opposite_orientation_partition_ratio": 1.0000000000000002,
+      "opposite_orientation_is_separate_control": true,
+      "all_admissible_bulk_pairs_in_branch_summed": true
+    },
+    {
+      "two_j": 399,
+      "boundary_spin": 199.5,
+      "gamma": 0.1,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "bulk_label_count_per_side": 299,
+      "bulk_label_pairs": 89401,
+      "common_face_areas_fixed": true,
+      "second_bulk_label_fixed": false,
+      "orientation": "same",
+      "curvature_observable": "mean_of_two_bulk_deficits",
+      "phase_reference_two_ja": 535,
+      "phase_reference_curvature": 0.015825488724582115,
+      "scaled_partition": [
+        150.3932984223803,
+        -157.4401634838242
+      ],
+      "scaled_curvature_numerator": [
+        -2.6661491616350794,
+        -37.46174211485879
+      ],
+      "scaled_relative_mismatch_numerator": [
+        0.04899999010171373,
+        -0.05718246586244781
+      ],
+      "log_weight_shift": 0.0,
+      "scaled_envelope_sum": 3657.806697636647,
+      "cancellation_ratio": 0.05952423748932518,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "complex_mean_curvature": [
+        0.11595713833061508,
+        -0.12770137699242276
+      ],
+      "complex_relative_area_mismatch": [
+        0.0003453622445829587,
+        -1.8674885407981437e-05
+      ],
+      "phase_off_mean_curvature": 3.484238662707757,
+      "phase_off_relative_area_mismatch": 0.0006471000706927384,
+      "phase_off_common_area_ratio_mean": 0.6874001689391455,
+      "phase_off_common_area_ratio_variance": 0.16962807422580245,
+      "opposite_orientation_scaled_partition": [
+        1135.2331907239052,
+        0.0
+      ],
+      "opposite_orientation_partition_ratio": 0.31035898957082475,
+      "opposite_orientation_is_separate_control": true,
+      "all_admissible_bulk_pairs_in_branch_summed": true
+    },
+    {
+      "two_j": 399,
+      "boundary_spin": 199.5,
+      "gamma": 0.5,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "bulk_label_count_per_side": 299,
+      "bulk_label_pairs": 89401,
+      "common_face_areas_fixed": true,
+      "second_bulk_label_fixed": false,
+      "orientation": "same",
+      "curvature_observable": "mean_of_two_bulk_deficits",
+      "phase_reference_two_ja": 535,
+      "phase_reference_curvature": 0.015825488724582115,
+      "scaled_partition": [
+        66.47443924774447,
+        -79.02548079219783
+      ],
+      "scaled_curvature_numerator": [
+        0.03499961734872274,
+        -0.78389142272399
+      ],
+      "scaled_relative_mismatch_numerator": [
+        0.017804827249943027,
+        -0.029080427208672384
+      ],
+      "log_weight_shift": 0.0,
+      "scaled_envelope_sum": 3657.806697636647,
+      "cancellation_ratio": 0.02823168676374133,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "complex_mean_curvature": [
+        0.006027261226062158,
+        -0.004627104943720045
+      ],
+      "complex_relative_area_mismatch": [
+        0.0003264910524202202,
+        -4.933196660135925e-05
+      ],
+      "phase_off_mean_curvature": 3.484238662707757,
+      "phase_off_relative_area_mismatch": 0.0006471000706927384,
+      "phase_off_common_area_ratio_mean": 0.6874001689391455,
+      "phase_off_common_area_ratio_variance": 0.16962807422580245,
+      "opposite_orientation_scaled_partition": [
+        256.92742760816043,
+        7.105427357601002e-15
+      ],
+      "opposite_orientation_partition_ratio": 0.07024084344702095,
+      "opposite_orientation_is_separate_control": true,
+      "all_admissible_bulk_pairs_in_branch_summed": true
+    },
+    {
+      "two_j": 799,
+      "boundary_spin": 399.5,
+      "gamma": 0.0,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "bulk_label_count_per_side": 599,
+      "bulk_label_pairs": 358801,
+      "common_face_areas_fixed": true,
+      "second_bulk_label_fixed": false,
+      "orientation": "same",
+      "curvature_observable": "mean_of_two_bulk_deficits",
+      "phase_reference_two_ja": 1073,
+      "phase_reference_curvature": -0.00833585286477323,
+      "scaled_partition": [
+        10395.889234196067,
+        0.0
+      ],
+      "scaled_curvature_numerator": [
+        36256.54354646079,
+        0.0
+      ],
+      "scaled_relative_mismatch_numerator": [
+        3.3761743776507176,
+        0.0
+      ],
+      "log_weight_shift": 0.0,
+      "scaled_envelope_sum": 10395.889234196067,
+      "cancellation_ratio": 1.0,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "complex_mean_curvature": [
+        3.4875846336645364,
+        0.0
+      ],
+      "complex_relative_area_mismatch": [
+        0.00032476051846966445,
+        0.0
+      ],
+      "phase_off_mean_curvature": 3.4875846336645355,
+      "phase_off_relative_area_mismatch": 0.0003247605184696644,
+      "phase_off_common_area_ratio_mean": 0.6858750525612035,
+      "phase_off_common_area_ratio_variance": 0.17123076690596517,
+      "opposite_orientation_scaled_partition": [
+        10395.889234196065,
+        0.0
+      ],
+      "opposite_orientation_partition_ratio": 0.9999999999999998,
+      "opposite_orientation_is_separate_control": true,
+      "all_admissible_bulk_pairs_in_branch_summed": true
+    },
+    {
+      "two_j": 799,
+      "boundary_spin": 399.5,
+      "gamma": 0.1,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "bulk_label_count_per_side": 599,
+      "bulk_label_pairs": 358801,
+      "common_face_areas_fixed": true,
+      "second_bulk_label_fixed": false,
+      "orientation": "same",
+      "curvature_observable": "mean_of_two_bulk_deficits",
+      "phase_reference_two_ja": 1073,
+      "phase_reference_curvature": -0.00833585286477323,
+      "scaled_partition": [
+        311.69770478296743,
+        -320.9299050251647
+      ],
+      "scaled_curvature_numerator": [
+        2.045990339631784,
+        -41.76823622999513
+      ],
+      "scaled_relative_mismatch_numerator": [
+        0.05001068496052143,
+        -0.0575660974923689
+      ],
+      "log_weight_shift": 0.0,
+      "scaled_envelope_sum": 10395.889234196067,
+      "cancellation_ratio": 0.04303459706750111,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "complex_mean_curvature": [
+        0.07015890047111592,
+        -0.06176544347201732
+      ],
+      "complex_relative_area_mismatch": [
+        0.00017018560538626125,
+        -9.459316747805038e-06
+      ],
+      "phase_off_mean_curvature": 3.4875846336645355,
+      "phase_off_relative_area_mismatch": 0.0003247605184696644,
+      "phase_off_common_area_ratio_mean": 0.6858750525612035,
+      "phase_off_common_area_ratio_variance": 0.17123076690596517,
+      "opposite_orientation_scaled_partition": [
+        2305.6152073021026,
+        2.842170943040401e-14
+      ],
+      "opposite_orientation_partition_ratio": 0.2217814325799134,
+      "opposite_orientation_is_separate_control": true,
+      "all_admissible_bulk_pairs_in_branch_summed": true
+    },
+    {
+      "two_j": 799,
+      "boundary_spin": 399.5,
+      "gamma": 0.5,
+      "spectrum": "casimir",
+      "measure": "unit",
+      "bulk_label_count_per_side": 599,
+      "bulk_label_pairs": 358801,
+      "common_face_areas_fixed": true,
+      "second_bulk_label_fixed": false,
+      "orientation": "same",
+      "curvature_observable": "mean_of_two_bulk_deficits",
+      "phase_reference_two_ja": 1073,
+      "phase_reference_curvature": -0.00833585286477323,
+      "scaled_partition": [
+        134.2172592904677,
+        -156.7475851779124
+      ],
+      "scaled_curvature_numerator": [
+        -1.074163720343824,
+        -0.7077242096247668
+      ],
+      "scaled_relative_mismatch_numerator": [
+        0.017694712362321518,
+        -0.029142083182768504
+      ],
+      "log_weight_shift": 0.0,
+      "scaled_envelope_sum": 10395.889234196067,
+      "cancellation_ratio": 0.01985006720884767,
+      "denominator_resolved": true,
+      "denominator_cancellation_threshold": 1e-12,
+      "complex_mean_curvature": [
+        -0.0007805088471250864,
+        -0.006184503326991815
+      ],
+      "complex_relative_area_mismatch": [
+        0.0001630395036053362,
+        -2.6718133889664347e-05
+      ],
+      "phase_off_mean_curvature": 3.4875846336645355,
+      "phase_off_relative_area_mismatch": 0.0003247605184696644,
+      "phase_off_common_area_ratio_mean": 0.6858750525612035,
+      "phase_off_common_area_ratio_variance": 0.17123076690596517,
+      "opposite_orientation_scaled_partition": [
+        516.2811005001753,
+        -2.842170943040401e-14
+      ],
+      "opposite_orientation_partition_ratio": 0.049662043223962865,
+      "opposite_orientation_is_separate_control": true,
+      "all_admissible_bulk_pairs_in_branch_summed": true
+    }
+  ],
+  "two_bulk_measure_control": {
+    "two_j": 199,
+    "boundary_spin": 99.5,
+    "gamma": 0.5,
+    "spectrum": "casimir",
+    "measure": "dimension",
+    "bulk_label_count_per_side": 149,
+    "bulk_label_pairs": 22201,
+    "common_face_areas_fixed": true,
+    "second_bulk_label_fixed": false,
+    "orientation": "same",
+    "curvature_observable": "mean_of_two_bulk_deficits",
+    "phase_reference_two_ja": 267,
+    "phase_reference_curvature": 0.015771885931040508,
+    "scaled_partition": [
+      28.283250937063382,
+      -30.905350448276263
+    ],
+    "scaled_curvature_numerator": [
+      -2.280353460580422,
+      -1.661176609855432
+    ],
+    "scaled_relative_mismatch_numerator": [
+      0.013818934190011782,
+      -0.023156451673748447
+    ],
+    "log_weight_shift": 11.39418697301081,
+    "scaled_envelope_sum": 371.3419036787892,
+    "cancellation_ratio": 0.11281708304636136,
+    "denominator_resolved": true,
+    "denominator_cancellation_threshold": 1e-12,
+    "complex_mean_curvature": [
+      -0.007496263192325009,
+      -0.06692481197012225
+    ],
+    "complex_relative_area_mismatch": [
+      0.0006304560277044298,
+      -0.00012982903568920965
+    ],
+    "phase_off_mean_curvature": 1.6189480595152663,
+    "phase_off_relative_area_mismatch": 0.0009793937496573829,
+    "phase_off_common_area_ratio_mean": 1.0660731933964558,
+    "phase_off_common_area_ratio_variance": 0.08851224574983618,
+    "opposite_orientation_scaled_partition": [
+      100.77148323337221,
+      1.7763568394002505e-15
+    ],
+    "opposite_orientation_partition_ratio": 0.27137116020318447,
+    "opposite_orientation_is_separate_control": true,
+    "all_admissible_bulk_pairs_in_branch_summed": true
+  },
+  "scope": {
+    "exact_symmetric_ls_overlap_used": true,
+    "bulk_spin_singlet_parity_enforced": true,
+    "regge_phase_includes_boundary_action": true,
+    "normalized_intertwiners_and_measure_supplied": true,
+    "barbero_immirzi_parameter_supplied": true,
+    "one_orientation_sector_supplied": true,
+    "general_area_to_length_branches_exhausted": false,
+    "complex_expectation_is_probability_average": false,
+    "low_spin_linear_spectrum_accuracy_proven": false,
+    "floating_point_cancellation_error_rigorously_bounded": false,
+    "source_gaussian_tables_used_as_validation_target": false,
+    "uniform_exact_sum_joint_limit_proven": false,
+    "gamma_running_law_physically_derived": false,
+    "all_common_face_spins_summed": false,
+    "full_orientation_sum_implemented": false,
+    "two_bulk_sum_is_physical_refinement": false,
+    "microscopic_ce_dynamics_derived": false,
+    "autonomous_split_merge_energy_budget_derived": false,
+    "common_metric_continuum_sector_proven": false,
+    "continuum_einstein_limit_derived": false
+  }
+}

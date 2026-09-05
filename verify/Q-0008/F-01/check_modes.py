@@ -29,11 +29,11 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
 
-from examples.physics.causal_face_simplicity import (  # noqa: E402
+from examples.physics.gravity.causal_face_simplicity import (  # noqa: E402
     geometric_self_dual_triple,
     simplicity_residual,
 )
-from examples.physics.urbantke_shape_matching_rg import (  # noqa: E402
+from examples.physics.gravity.urbantke_shape_matching_rg import (  # noqa: E402
     optimal_internal_alignment,
     repeated_coherent_mismatch_residual,
 )

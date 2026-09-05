@@ -12,7 +12,7 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
-from examples.physics.causal_face_simplicity import (
+from examples.physics.gravity.causal_face_simplicity import (
     geometric_self_dual_triple, plebanski_gram, simplicity_residual,
 )
 
@@ -95,7 +95,7 @@ out["delta_convention_clash"] = cmp
 
 # ---------- (iii-b) does the shipped 14.2 member reproduce theta = c_theta eps ?
 try:
-    from examples.physics.zerod_plebanski_closure import _typed_history_member
+    from examples.physics.gravity.zerod_plebanski_closure import _typed_history_member
     rows = {}
     for tag, x in (("x=(0,0,0)", (0.0, 0.0, 0.0)),
                    ("x=(0.2,0.2,0.2) conformal", (0.2, 0.2, 0.2)),

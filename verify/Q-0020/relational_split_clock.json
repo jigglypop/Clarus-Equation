@@ -1,0 +1,561 @@
+{
+  "model": "기존 양의 분할 작용의 무시간 제약과 두 시계 판독",
+  "dependencies": {
+    "relational_split_clock.py": "ea29a3787f351e2199531c36a98532e9923b2a64e00b94bfafa813715eb5237e",
+    "autonomous_split_clock.py": "c0095f4f3246fc91d5f6250b79a1d7aa46705c402a882bfbf0221ff7010ecdd3",
+    "split_quadratic_generator.py": "f3a80386242e888a163d01d3fcfc473d056f69a033c6a983aff2c16d7ed28526",
+    "split_quantum_source.py": "37382cda6ee4ecda19bdd21cae946e92c3afdb781e8e7e1766f0068e4f602c1a"
+  },
+  "source": "https://www.frontiersin.org/journals/physics/articles/10.3389/fphy.2021.587083/full",
+  "two_level": [
+    {
+      "x": -0.3,
+      "energy": 8,
+      "constraint_relative_residual": 7.355804155531864e-10,
+      "flux": 1.0000000000000278,
+      "flux_error": 2.7977620220553945e-14,
+      "total_energy_error": 4.2099657093785936e-13,
+      "covariant_kinetic_energy": 6.982120021884891,
+      "dressed_internal_energy": 1.017879978115529,
+      "conditional_reduction_error": 3.1841175791839423e-16,
+      "omitted_square_residual": 7.355804155531864e-10
+    },
+    {
+      "x": 0.2,
+      "energy": 8,
+      "constraint_relative_residual": 1.361816226945039e-9,
+      "flux": 1.0000000000000624,
+      "flux_error": 6.261657858885883e-14,
+      "total_energy_error": 8.72191208145523e-13,
+      "covariant_kinetic_energy": 6.9821200218853425,
+      "dressed_internal_energy": 1.0178799781155292,
+      "conditional_reduction_error": 4.1993065790173963e-16,
+      "omitted_square_residual": 0.6498272518550555
+    },
+    {
+      "x": 0.5,
+      "energy": 8,
+      "constraint_relative_residual": 1.528703749716257e-9,
+      "flux": 0.9999999999999393,
+      "flux_error": 6.050715484207103e-14,
+      "total_energy_error": 8.277822871605167e-13,
+      "covariant_kinetic_energy": 6.982120021883643,
+      "dressed_internal_energy": 1.0178799781155292,
+      "conditional_reduction_error": 4.078842319869557e-16,
+      "omitted_square_residual": 3.8732722490524907
+    },
+    {
+      "x": 0.8,
+      "energy": 8,
+      "constraint_relative_residual": 4.4120178383320376e-9,
+      "flux": 0.9999999999996798,
+      "flux_error": 3.199662756969701e-13,
+      "total_energy_error": 4.454214774796128e-12,
+      "covariant_kinetic_energy": 6.982120021880017,
+      "dressed_internal_energy": 1.017879978115529,
+      "conditional_reduction_error": 2.6450916908785674e-16,
+      "omitted_square_residual": 0.6498272516034449
+    },
+    {
+      "x": 1.3,
+      "energy": 8,
+      "constraint_relative_residual": 3.235872690203364e-9,
+      "flux": 1.000000000000045,
+      "flux_error": 4.529709940470639e-14,
+      "total_energy_error": 5.933031843596837e-13,
+      "covariant_kinetic_energy": 6.982120021885064,
+      "dressed_internal_energy": 1.0178799781155288,
+      "conditional_reduction_error": 6.904514128607142e-16,
+      "omitted_square_residual": 3.235872690203364e-9
+    }
+  ],
+  "finite_energy": [
+    {
+      "energy": 4,
+      "maximum_correction": 1,
+      "scaled_coefficient": 0.4444444444444444,
+      "coefficient_error": 0.19444444444444442,
+      "propagator": [
+        {
+          "time": 0.25,
+          "operator_error": 0.24934946677045539,
+          "bound": 0.25
+        },
+        {
+          "time": 1,
+          "operator_error": 0.958851077208406,
+          "bound": 1
+        },
+        {
+          "time": 3,
+          "operator_error": 1.994989973208109,
+          "bound": 2
+        }
+      ]
+    },
+    {
+      "energy": 16,
+      "maximum_correction": 0.15558979628808564,
+      "scaled_coefficient": 0.27660408228993005,
+      "coefficient_error": 0.026604082289930053,
+      "propagator": [
+        {
+          "time": 0.25,
+          "operator_error": 0.0388949969396694,
+          "bound": 0.03889744907202141
+        },
+        {
+          "time": 1,
+          "operator_error": 0.15543290433283902,
+          "bound": 0.15558979628808564
+        },
+        {
+          "time": 3,
+          "operator_error": 0.4625435491937343,
+          "bound": 0.4667693888642569
+        }
+      ]
+    },
+    {
+      "energy": 64,
+      "maximum_correction": 0.0360051854935297,
+      "scaled_coefficient": 0.2560368746206556,
+      "coefficient_error": 0.006036874620655608,
+      "propagator": [
+        {
+          "time": 0.25,
+          "operator_error": 0.009001265985285539,
+          "bound": 0.009001296373382425
+        },
+        {
+          "time": 1,
+          "operator_error": 0.03600324068487399,
+          "bound": 0.0360051854935297
+        },
+        {
+          "time": 3,
+          "operator_error": 0.10796305345370542,
+          "bound": 0.1080155564805891
+        }
+      ]
+    },
+    {
+      "energy": 256,
+      "maximum_correction": 0.008840941220276682,
+      "scaled_coefficient": 0.251475661376759,
+      "coefficient_error": 0.0014756613767589744,
+      "propagator": [
+        {
+          "time": 0.25,
+          "operator_error": 0.0022102348551814323,
+          "bound": 0.0022102353050691705
+        },
+        {
+          "time": 1,
+          "operator_error": 0.008840912427480804,
+          "bound": 0.008840941220276682
+        },
+        {
+          "time": 3,
+          "operator_error": 0.026522046261408902,
+          "bound": 0.026522823660830044
+        }
+      ]
+    },
+    {
+      "energy": 1024,
+      "maximum_correction": 0.002200490181456488,
+      "scaled_coefficient": 0.2503668828679382,
+      "coefficient_error": 0.0003668828679381786,
+      "propagator": [
+        {
+          "time": 0.25,
+          "operator_error": 0.0005501225384271245,
+          "bound": 0.000550122545364122
+        },
+        {
+          "time": 1,
+          "operator_error": 0.0022004897374928046,
+          "bound": 0.002200490181456488
+        },
+        {
+          "time": 3,
+          "operator_error": 0.006601458557365455,
+          "bound": 0.006601470544369464
+        }
+      ]
+    },
+    {
+      "energy": 16384,
+      "maximum_correction": 0.0001373416758562908,
+      "scaled_coefficient": 0.2500228908032743,
+      "coefficient_error": 0.00002289080327427806,
+      "propagator": [
+        {
+          "time": 0.25,
+          "operator_error": 0.000034335418962346026,
+          "bound": 0.0000343354189640727
+        },
+        {
+          "time": 1,
+          "operator_error": 0.0001373416757481675,
+          "bound": 0.0001373416758562908
+        },
+        {
+          "time": 3,
+          "operator_error": 0.00041202502465388066,
+          "bound": 0.0004120250275688724
+        }
+      ]
+    }
+  ],
+  "fock": [
+    {
+      "cutoff": 6,
+      "dimension": 36,
+      "gaussian_covariance_error": 0.7641339707220306,
+      "boundary_occupation": 0.058719261695755295,
+      "generator_hermiticity_error": 0,
+      "checks": [
+        {
+          "x": 0.2,
+          "energy": 16,
+          "constraint_relative_residual": 1.6709226788385055e-9,
+          "flux": 0.9999999999999658,
+          "flux_error": 3.4083846855992306e-14,
+          "total_energy_error": 9.396927680427325e-13,
+          "covariant_kinetic_energy": 14.317522040064727,
+          "dressed_internal_energy": 1.6824779599343338,
+          "conditional_reduction_error": 3.168423872388047e-16,
+          "omitted_square_residual": 62.081221154377516
+        },
+        {
+          "x": 0.5,
+          "energy": 16,
+          "constraint_relative_residual": 2.6177856916399538e-8,
+          "flux": 1.0000000000010827,
+          "flux_error": 1.0828005159169152e-12,
+          "total_energy_error": 3.0322411248562275e-11,
+          "covariant_kinetic_energy": 14.317522040095987,
+          "dressed_internal_energy": 1.682477959934335,
+          "conditional_reduction_error": 2.5825832297635725e-15,
+          "omitted_square_residual": 369.56245023248147
+        },
+        {
+          "x": 0.8,
+          "energy": 16,
+          "constraint_relative_residual": 3.0432205719404034e-8,
+          "flux": 0.9999999999998054,
+          "flux_error": 1.9451107391432743e-13,
+          "total_energy_error": 5.588418616753188e-12,
+          "covariant_kinetic_energy": 14.317522040060073,
+          "dressed_internal_energy": 1.6824779599343385,
+          "conditional_reduction_error": 2.4719998221169555e-15,
+          "omitted_square_residual": 61.89409524755603
+        }
+      ]
+    },
+    {
+      "cutoff": 10,
+      "dimension": 100,
+      "gaussian_covariance_error": 0.9022183735949798,
+      "boundary_occupation": 0.04113301961694173,
+      "generator_hermiticity_error": 0,
+      "checks": [
+        {
+          "x": 0.2,
+          "energy": 16,
+          "constraint_relative_residual": 6.774144770589832e-9,
+          "flux": 0.9999999999999534,
+          "flux_error": 4.651834473179406e-14,
+          "total_energy_error": 1.3464784842653899e-12,
+          "covariant_kinetic_energy": 14.31752204006432,
+          "dressed_internal_energy": 1.6824779599343336,
+          "conditional_reduction_error": 1.009299030464793e-15,
+          "omitted_square_residual": 62.08122115444818
+        },
+        {
+          "x": 0.5,
+          "energy": 16,
+          "constraint_relative_residual": 6.182050014911498e-8,
+          "flux": 1.0000000000019797,
+          "flux_error": 1.9798607198140417e-12,
+          "total_energy_error": 5.53086465515662e-11,
+          "covariant_kinetic_energy": 14.317522040120977,
+          "dressed_internal_energy": 1.6824779599343327,
+          "conditional_reduction_error": 1.5190314895914261e-15,
+          "omitted_square_residual": 369.56245021863526
+        },
+        {
+          "x": 0.8,
+          "energy": 16,
+          "constraint_relative_residual": 8.852200974218668e-8,
+          "flux": 0.9999999999986845,
+          "flux_error": 1.3153922395758855e-12,
+          "total_energy_error": 3.931255321276694e-11,
+          "covariant_kinetic_energy": 14.317522040026374,
+          "dressed_internal_energy": 1.6824779599343138,
+          "conditional_reduction_error": 1.1554723134750795e-14,
+          "omitted_square_residual": 61.89409522733768
+        }
+      ]
+    },
+    {
+      "cutoff": 14,
+      "dimension": 196,
+      "gaussian_covariance_error": 0.45611603233208925,
+      "boundary_occupation": 0.00664267943602566,
+      "generator_hermiticity_error": 0,
+      "checks": [
+        {
+          "x": 0.2,
+          "energy": 16,
+          "constraint_relative_residual": 5.358955860988797e-9,
+          "flux": 1.0000000000000049,
+          "flux_error": 4.9960036108132044e-15,
+          "total_energy_error": 2.3092638912203256e-13,
+          "covariant_kinetic_energy": 14.317522040065898,
+          "dressed_internal_energy": 1.6824779599343345,
+          "conditional_reduction_error": 7.03990028339605e-16,
+          "omitted_square_residual": 62.081221154118644
+        },
+        {
+          "x": 0.5,
+          "energy": 16,
+          "constraint_relative_residual": 9.909246586696863e-8,
+          "flux": 1.000000000002301,
+          "flux_error": 2.301159263140562e-12,
+          "total_energy_error": 6.506439831355237e-11,
+          "covariant_kinetic_energy": 14.317522040130731,
+          "dressed_internal_energy": 1.6824779599343336,
+          "conditional_reduction_error": 3.437519916129634e-15,
+          "omitted_square_residual": 369.56245020959506
+        },
+        {
+          "x": 0.8,
+          "energy": 16,
+          "constraint_relative_residual": 9.527780679193951e-8,
+          "flux": 0.9999999999970721,
+          "flux_error": 2.9277691382390003e-12,
+          "total_energy_error": 8.329514855631714e-11,
+          "covariant_kinetic_energy": 14.317522039982395,
+          "dressed_internal_energy": 1.6824779599343107,
+          "conditional_reduction_error": 1.468559151472813e-14,
+          "omitted_square_residual": 61.89409524403433
+        }
+      ]
+    },
+    {
+      "cutoff": 20,
+      "dimension": 400,
+      "gaussian_covariance_error": 0.17031192100227793,
+      "boundary_occupation": 0.0011612439788029917,
+      "generator_hermiticity_error": 0,
+      "checks": [
+        {
+          "x": 0.5,
+          "energy": 16,
+          "constraint_relative_residual": 1.2188184525996296e-7,
+          "flux": 0.9999999999995441,
+          "flux_error": 4.557465516086268e-13,
+          "total_energy_error": 1.3955059330328368e-11,
+          "covariant_kinetic_energy": 14.31752204005171,
+          "dressed_internal_energy": 1.6824779599343342,
+          "conditional_reduction_error": 3.3290496049145782e-15,
+          "omitted_square_residual": 369.56245022258037
+        }
+      ]
+    },
+    {
+      "cutoff": 28,
+      "dimension": 784,
+      "gaussian_covariance_error": 0.04322607891517305,
+      "boundary_occupation": 0.00012462052412256846,
+      "generator_hermiticity_error": 0,
+      "checks": [
+        {
+          "x": 0.5,
+          "energy": 16,
+          "constraint_relative_residual": 1.1372239783652099e-7,
+          "flux": 1.000000000000788,
+          "flux_error": 7.881473251813986e-13,
+          "total_energy_error": 2.283684352732962e-11,
+          "covariant_kinetic_energy": 14.317522040088507,
+          "dressed_internal_energy": 1.682477959934328,
+          "conditional_reduction_error": 1.2782032099690259e-14,
+          "omitted_square_residual": 369.5624502276221
+        }
+      ]
+    },
+    {
+      "cutoff": 40,
+      "dimension": 1600,
+      "gaussian_covariance_error": 0.004370046666458072,
+      "boundary_occupation": 0.000004856736340396334,
+      "generator_hermiticity_error": 0,
+      "checks": [
+        {
+          "x": 0.5,
+          "energy": 16,
+          "constraint_relative_residual": 1.1279891034067998e-7,
+          "flux": 1.0000000000020077,
+          "flux_error": 2.0078383400345956e-12,
+          "total_energy_error": 5.67510483051592e-11,
+          "covariant_kinetic_energy": 14.317522040122418,
+          "dressed_internal_energy": 1.6824779599343331,
+          "conditional_reduction_error": 1.4563248961024576e-15,
+          "omitted_square_residual": 369.5624502188998
+        }
+      ]
+    },
+    {
+      "cutoff": 56,
+      "dimension": 3136,
+      "gaussian_covariance_error": 0.00017999245500655014,
+      "boundary_occupation": 8.366974701389425e-8,
+      "generator_hermiticity_error": 0,
+      "checks": [
+        {
+          "x": 0.5,
+          "energy": 16,
+          "constraint_relative_residual": 1.2154611395596682e-7,
+          "flux": 1.0000000000007312,
+          "flux_error": 7.313039063205906e-13,
+          "total_energy_error": 2.028244239227206e-11,
+          "covariant_kinetic_energy": 14.317522040085947,
+          "dressed_internal_energy": 1.6824779599343351,
+          "conditional_reduction_error": 8.22882898533959e-15,
+          "omitted_square_residual": 369.562450231054
+        }
+      ]
+    },
+    {
+      "cutoff": 64,
+      "dimension": 4096,
+      "gaussian_covariance_error": 0.000042217287357093625,
+      "boundary_occupation": 1.2062144198260895e-8,
+      "generator_hermiticity_error": 0,
+      "checks": [
+        {
+          "x": 0.5,
+          "energy": 16,
+          "constraint_relative_residual": 2.257650112762552e-7,
+          "flux": 1.0000000000035465,
+          "flux_error": 3.5466074521650626e-12,
+          "total_energy_error": 1.0026113272942894e-10,
+          "covariant_kinetic_energy": 14.317522040165917,
+          "dressed_internal_energy": 1.6824779599343427,
+          "conditional_reduction_error": 1.6741589695961298e-14,
+          "omitted_square_residual": 369.562450207196
+        }
+      ]
+    }
+  ],
+  "directions": {
+    "energy": 4,
+    "samples": [
+      {
+        "x": 0,
+        "density": 0.755928946018454,
+        "flux": 0
+      },
+      {
+        "x": 0.5937052058618629,
+        "density": 3.466673899897024e-33,
+        "flux": 7.841689871504338e-17
+      },
+      {
+        "x": 1.1874104117237259,
+        "density": 0.755928946018454,
+        "flux": 1.9798973445842653e-17
+      }
+    ],
+    "interpretation": "방향 선택 전 정상파는 위치밀도를 갖지만 영 플럭스와 판독 노드를 갖는다"
+  },
+  "readouts": [
+    {
+      "energy": 3.1,
+      "flux_probability": [
+        0.4444444444444444,
+        0.4444444444444444,
+        0.1111111111111111
+      ],
+      "position_probability": [
+        0.2834995481090081,
+        0.39171091721716594,
+        0.324789534673826
+      ],
+      "probability_total_variation": 0.21367842356271483,
+      "energy_clock_schrodinger_error": 0,
+      "position_clock_state_difference": 0.6691033360296671,
+      "position_clock_trace_distance": 0.5208165590586682,
+      "scope": "에너지 공변 시계와 위치 시계는 다른 판독이다. dressed 에너지 시계는 일반적으로 공동 관측량이다."
+    },
+    {
+      "energy": 4,
+      "flux_probability": [
+        0.4444444444444444,
+        0.4444444444444444,
+        0.1111111111111111
+      ],
+      "position_probability": [
+        0.3762570409175597,
+        0.46081888118875647,
+        0.16292407789368385
+      ],
+      "probability_total_variation": 0.06818740352688477,
+      "energy_clock_schrodinger_error": 1.2586013583571652e-16,
+      "position_clock_state_difference": 0.3953055293170319,
+      "position_clock_trace_distance": 0.27310176440925876,
+      "scope": "에너지 공변 시계와 위치 시계는 다른 판독이다. dressed 에너지 시계는 일반적으로 공동 관측량이다."
+    },
+    {
+      "energy": 16,
+      "flux_probability": [
+        0.4444444444444444,
+        0.4444444444444444,
+        0.1111111111111111
+      ],
+      "position_probability": [
+        0.4340953382399752,
+        0.4493313635857154,
+        0.11657329817430934
+      ],
+      "probability_total_variation": 0.010349106204469216,
+      "energy_clock_schrodinger_error": 0,
+      "position_clock_state_difference": 0.0691305294566394,
+      "position_clock_trace_distance": 0.043060640350643095,
+      "scope": "에너지 공변 시계와 위치 시계는 다른 판독이다. dressed 에너지 시계는 일반적으로 공동 관측량이다."
+    },
+    {
+      "energy": 64,
+      "flux_probability": [
+        0.4444444444444444,
+        0.4444444444444444,
+        0.1111111111111111
+      ],
+      "position_probability": [
+        0.4420675816901292,
+        0.44561838236004975,
+        0.11231403594982119
+      ],
+      "probability_total_variation": 0.002376862754315305,
+      "energy_clock_schrodinger_error": 9.639819490876586e-17,
+      "position_clock_state_difference": 0.01621436829373368,
+      "position_clock_trace_distance": 0.009946728035757637,
+      "scope": "에너지 공변 시계와 위치 시계는 다른 판독이다. dressed 에너지 시계는 일반적으로 공동 관측량이다."
+    }
+  ],
+  "scope": {
+    "external_time_propagation_used": false,
+    "constraint_supplied": true,
+    "clock_coordinate_and_energy_sector_supplied": true,
+    "incoming_direction_supplied": true,
+    "physical_clock_origin_derived": false,
+    "persistent_record_order_derived": false,
+    "finite_normalizable_preparation_derived": false,
+    "readout_independent_correction": false,
+    "common_metric_or_einstein_limit_derived": false,
+    "dark_sector_or_hubble_result": false
+  }
+}

@@ -1,0 +1,199 @@
+{
+  "prereg_values": {
+    "observed": [
+      39.0,
+      0.7448007,
+      -1.3273034,
+      7.482042,
+      62.0688,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      1.0
+    ],
+    "expected_rev1": [
+      39,
+      0.7448007,
+      -1.3273034,
+      7.482042,
+      62.0688,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      1.0
+    ],
+    "match": true
+  },
+  "prereg_uncertainties": {
+    "observed": [
+      0.0,
+      1e-06,
+      1e-06,
+      1e-05,
+      0.001,
+      1e-05,
+      0.01,
+      0.99,
+      0.5,
+      0.25
+    ],
+    "expected_rev1": [
+      0,
+      1e-06,
+      1e-06,
+      1e-05,
+      0.001,
+      1e-05,
+      0.01,
+      0.99,
+      0.5,
+      0.25
+    ],
+    "match": true
+  },
+  "kill_numbers_intact": {
+    "K1_tol_1e-2": true,
+    "K1_m_234": true,
+    "K2_m_39": true,
+    "K2_nneg_31": true,
+    "K2_spec_0.5": true,
+    "K3_window": true,
+    "K4_present": true
+  },
+  "kill_all_intact": true,
+  "verify_block": {
+    "n_details_rev1": 14,
+    "n_entries_in_card": 14,
+    "all_rev1_expr_present": true,
+    "missing": [],
+    "tols": [
+      1e-12,
+      1e-12,
+      1e-06,
+      0.001,
+      0.001,
+      0.0001,
+      1e-06,
+      2e-06,
+      1e-05,
+      1e-12,
+      0.001
+    ],
+    "tols_expected": [
+      1e-12,
+      1e-12,
+      1e-06,
+      0.001,
+      0.001,
+      0.0001,
+      1e-06,
+      2e-06,
+      1e-05,
+      1e-12,
+      0.001
+    ],
+    "tols_match": true
+  },
+  "claim_two_conv_free_numbers": {
+    "card_value": 0.3208245916,
+    "sigma2_W": 0.32082459160334786,
+    "rho_R": 0.3208245916033481,
+    "abs_diff": 2.220446049250313e-16,
+    "card_value_ok_1e-9": true,
+    "trivial_mult_W": 2,
+    "trivial_mult_R": 2,
+    "three_two_mult_W": [
+      5
+    ],
+    "three_two_mult_R": [
+      5
+    ],
+    "std_convention_dependent": true,
+    "card_claims_R_W_agree_2.2e-16": true
+  },
+  "claim_k3_power": {
+    "card_range": [
+      1.0025,
+      1.0093
+    ],
+    "audit_range": [
+      1.0025380692057526,
+      1.009264746332174
+    ],
+    "match": true,
+    "n_seeds": 20,
+    "effect": 0.009264746332174001,
+    "window_upper_halfwidth": 0.25,
+    "ratio": 26.98400917160748,
+    "card_says_30x": true,
+    "window_over_effect_using_lower_0.2": 21.587207337285985
+  },
+  "claim_Sc_axiom": {
+    "sign_flip_kills_lstar": true,
+    "GHP_monotone": true,
+    "card_has_axiom_line": true,
+    "card_counts_three_axioms": 5
+  },
+  "claim_gauge_conditional": {
+    "lstar2_m39": 62.06884225954214,
+    "lstar2_m35": 55.70280715599935,
+    "spread": 0.10256410256410259,
+    "card_says_10.3pct": true,
+    "spread_is_10.26": true,
+    "card_says_55.7028": true
+  },
+  "claim_step3_tuple": {
+    "step3_2_5_4": true,
+    "step3_2_4_5": false,
+    "consistency_2_5_4": true,
+    "observed_W": [
+      2,
+      5,
+      4
+    ],
+    "observed_R": [
+      4,
+      2,
+      5
+    ]
+  },
+  "claim_gamma_min": {
+    "gamma_min_R": 30.227143106956248,
+    "card_has_30.23_33.51": true,
+    "positive": true,
+    "lnOmega_at_lstar": -10.727143106956248,
+    "card_has_10.73": true
+  },
+  "claim_glued_recover": {
+    "card_has_2.4e-8": true,
+    "c3_direct_max_abs_diff": 3.051454830482747e-08,
+    "c3_pass": true,
+    "c2_naive_route_pass": false
+  },
+  "claim_k1_exact": {
+    "card_says_exact": true,
+    "toy_max_residual": 0.0466440612897876,
+    "generic_theorem": false
+  },
+  "dof": {
+    "free_parameters_empty": true,
+    "n_predicts": 10,
+    "observed": 6,
+    "unobserved": 4
+  },
+  "comparison_frozen": [
+    "true",
+    "true",
+    "true",
+    "true",
+    "true",
+    "true",
+    "true",
+    "true",
+    "true",
+    "true"
+  ],
+  "revision_field": "2"
+}

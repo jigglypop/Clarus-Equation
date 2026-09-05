@@ -1,12 +1,13 @@
-# Fast project-local defaults. User-level provider and authentication settings
-# remain in ~/.codex/config.toml.
+# 프로젝트 기본값. 메인 모델은 앱의 사용자 선택을 유지한다.
 model_reasoning_effort = "low"
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"
 project_doc_max_bytes = 8192
+tool_output_token_limit = 4000
 
 [agents]
 enabled = true
 max_concurrent_threads_per_session = 3
 default_subagent_model = "gpt-5.6-luna"
 default_subagent_reasoning_effort = "low"
+# 역할 TOML의 명시 모델과 호출 시 모델 선택도 확인한다.

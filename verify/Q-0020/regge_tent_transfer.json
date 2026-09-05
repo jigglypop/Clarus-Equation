@@ -1,0 +1,269 @@
+{
+  "scope": {
+    "supplied_flat_euclidean_regge_action": true,
+    "one_physical_boundary_direction_numerically_verified": true,
+    "two_step_global_action_and_quotient_composition": true,
+    "oscillatory_quantization_separately_supplied": true,
+    "euclidean_middle_gaussian_converges": false,
+    "existing_split_V_derived": false,
+    "physical_clock_or_mass_derived": false,
+    "common_metric_selected": false,
+    "lorentzian_einstein_limit_derived": false
+  },
+  "conventions": {
+    "lengths": "ell/ell_star",
+    "action": "S/hbar = beta * sum(area*deficit)",
+    "beta": 1.0,
+    "physical_beta": "ell_star^2/(8*pi*ell_P^2)",
+    "boundary_angle": "pi-sum(theta)",
+    "bulk_angle": "2*pi-sum(theta)",
+    "basis_sign": "largest absolute component positive",
+    "kernel": "sqrt(abs(b)/(2*pi))*exp(i*(a*Q0^2+2*b*Q0*Q1+c*Q1^2)/2)",
+    "background_action_corner": "Sglobal=S1+S2-beta*pi*sum(fixed_link_areas)",
+    "kernel_background": "quadratic perturbations; background action and linear momenta removed"
+  },
+  "geometry": {
+    "points": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.09
+      ],
+      [
+        -0.5,
+        0.8660254037844386,
+        0.0,
+        -0.06
+      ],
+      [
+        -0.5,
+        -0.8660254037844386,
+        0.0,
+        0.12
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.03
+      ],
+      [
+        0.0,
+        0.0,
+        -1.0,
+        -0.09
+      ],
+      [
+        0.08,
+        -0.04,
+        0.03,
+        0.0
+      ],
+      [
+        0.1,
+        0.02,
+        -0.02,
+        0.5
+      ],
+      [
+        0.05,
+        0.05,
+        0.01,
+        1.0
+      ]
+    ],
+    "link": [
+      [
+        0,
+        1,
+        3
+      ],
+      [
+        0,
+        1,
+        4
+      ],
+      [
+        1,
+        2,
+        3
+      ],
+      [
+        1,
+        2,
+        4
+      ],
+      [
+        0,
+        2,
+        3
+      ],
+      [
+        0,
+        2,
+        4
+      ]
+    ],
+    "one_step_counts": [
+      6,
+      20,
+      29
+    ],
+    "two_step_counts": [
+      12,
+      26,
+      43
+    ],
+    "one_step_dynamic_variables": 11,
+    "two_step_dynamic_variables": 17
+  },
+  "first": {
+    "coefficients": [
+      93.84944770139691,
+      8.699735313740419,
+      -6.017428742192966
+    ],
+    "canonical_map": [
+      [
+        -10.787621038673496,
+        -0.11494602581995723
+      ],
+      [
+        73.61347621173987,
+        0.6916795195698655
+      ]
+    ],
+    "minimum_gram_eigenvalue": 0.23674631413552913,
+    "bulk_deficit_residual": 1.7763568394002505e-15,
+    "pole_gradient": -3.107367707615523e-15,
+    "pole_hessian": -1.023958247608171,
+    "mixed_singular_values": [
+      8.69973531374042,
+      1.561114563723596e-10,
+      7.482653376949265e-12,
+      4.680660707274991e-12,
+      2.824711769588263e-13
+    ],
+    "gauge_singular_values": [
+      [
+        1.408846218156966,
+        1.2747668298600416,
+        1.1743046305290488,
+        0.1055011743604289
+      ],
+      [
+        1.2449830731150404,
+        1.1893023214223446,
+        1.0676742475679297,
+        0.9463872553012899
+      ]
+    ],
+    "mixed_gauge_residual": 2.1301549474090674e-10,
+    "hessian_skew": 8.413811788290416e-11,
+    "raw_boundary_gradient_contractions": [
+      0.012230066316177388,
+      4.0674459951346975
+    ]
+  },
+  "second": {
+    "coefficients": [
+      -15.148382487932768,
+      13.098225919673812,
+      -12.615787524665048
+    ],
+    "canonical_map": [
+      [
+        1.1565216984980826,
+        -0.07634621712379987
+      ],
+      [
+        -1.4922060962427324,
+        0.9631676535458034
+      ]
+    ],
+    "minimum_gram_eigenvalue": 0.0737610494442383,
+    "bulk_deficit_residual": 1.9984014443252818e-15,
+    "pole_gradient": -5.067772137168082e-15,
+    "pole_hessian": 46.46706410320846,
+    "mixed_singular_values": [
+      13.09822591967381,
+      1.1936348301360463e-11,
+      7.69375189614478e-12,
+      3.7760577690477774e-12,
+      1.1366731060301836e-12
+    ],
+    "gauge_singular_values": [
+      [
+        1.2449830731150404,
+        1.1893023214223446,
+        1.0676742475679297,
+        0.9463872553012899
+      ],
+      [
+        1.5661610331262457,
+        0.9848624599873066,
+        0.9091236470629024,
+        0.866417767347675
+      ]
+    ],
+    "mixed_gauge_residual": 2.1894750092018745e-11,
+    "hessian_skew": 2.7860857603019916e-10,
+    "raw_boundary_gradient_contractions": [
+      4.067445995134699,
+      7.325409817673327
+    ]
+  },
+  "composition": {
+    "coefficients": [
+      97.42528014676132,
+      5.383734048357542,
+      -4.510096683076846
+    ],
+    "middle_denominator": -21.165811230125733,
+    "middle_eigenvalues": [
+      -21.165811230125737,
+      -4.4435199667608824e-11,
+      -1.6176883077516636e-11,
+      -9.57614154796937e-12,
+      4.038494967440822e-12
+    ],
+    "internal_physical_eigenvalues": [
+      -20.935276189615468,
+      -1.5609370512197596,
+      98.66505832263698
+    ],
+    "maslov_phase": [
+      0.7071067811865476,
+      -0.7071067811865476
+    ],
+    "fixed_corner": 18.391185387340943,
+    "residuals": {
+      "action_with_corner": 7.105427357601002e-15,
+      "assembled_hessian": 4.991376678964767e-11,
+      "global_hessian_skew": 2.937483395786894e-10,
+      "global_bulk_deficits": 1.9984014443252818e-15,
+      "internal_stationarity": 6.189432929296259e-15,
+      "internal_gauge": 8.623940411791534e-11,
+      "middle_gauge": 4.925013647074376e-11,
+      "schur_order": 1.8541058605173616e-10,
+      "coefficients": 6.756088083817855e-11,
+      "canonical_composition": 4.278164330702506e-14,
+      "gaussian_with_maslov": 4.163336342344337e-17,
+      "gaussian_norm": 4.440892098500626e-16
+    }
+  },
+  "hessian_step_convergence": 3.3052875404961175e-10,
+  "controls": {
+    "planar_minimum_gram_eigenvalue": 0.2437012872051091,
+    "planar_rejected": "천막변의 2차 미분이 특이하여 제거할 수 없다",
+    "offshell_rejected": "평탄한 내부와 천막변 정상 조건이 성립하지 않는다"
+  },
+  "source_sha256": {
+    "regge_tent_transfer.py": "e509b0b583a99258730650584e812d9b6f097383629b4e855636c8e87c710f71"
+  },
+  "sources": [
+    "https://arxiv.org/abs/1108.1974v2",
+    "https://arxiv.org/abs/1411.5672v2"
+  ]
+}

@@ -46,12 +46,12 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "verify" / "Q-0008" / "F-02"))
 
 from driver_numbers import cayley_exact, n_k_log  # noqa: E402
-from examples.physics.causal_face_simplicity import (  # noqa: E402
+from examples.physics.gravity.causal_face_simplicity import (  # noqa: E402
     _PAIR_INDEX,
     geometric_self_dual_triple,
     plebanski_gram,
 )
-from examples.physics.urbantke_shape_matching_rg import optimal_internal_alignment  # noqa: E402
+from examples.physics.gravity.urbantke_shape_matching_rg import optimal_internal_alignment  # noqa: E402
 
 # ------------------------------------------------------------------ declared constants (frozen)
 SEED = 20260902

@@ -14,7 +14,7 @@ import numpy as np
 
 ROOT = Path(r"c:/dev/ce/Clarus-Equation")
 sys.path.insert(0, str(ROOT))
-from examples.physics.causal_face_simplicity import geometric_self_dual_triple  # noqa: E402
+from examples.physics.gravity.causal_face_simplicity import geometric_self_dual_triple  # noqa: E402
 
 np.set_printoptions(precision=4, suppress=True, linewidth=140)
 PHI = lambda e: geometric_self_dual_triple(e).reshape(-1)   # (18,)

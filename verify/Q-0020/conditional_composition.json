@@ -1,0 +1,33 @@
+{
+  "scope": "post-refutation diagnostic; supplied global positive Wick measure, dimensionless coordinates, kappa=1",
+  "python": "C:\\Users\\dongh\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+  "python_version": "3.11.9",
+  "numpy": "2.4.6",
+  "source_sha256": "7a7d62d985ac112f8944a9528d91d7319974d0c3a36c4ec97cbb376fac31aa8b",
+  "ranks": {
+    "global": 234,
+    "local": 195,
+    "outer": 39
+  },
+  "subspace_residual": 2.1029528946848325e-14,
+  "symmetry_residual": 2.7593516735278557e-14,
+  "orthogonality_residual": 1.0295626192369474e-14,
+  "global_basis_log_density": -227.67078590520862,
+  "direct_log_density": -227.6707859052085,
+  "local_log_density": -201.72141157891005,
+  "conditional_outer_log_density": -25.949374326298642,
+  "reset_outer_log_density": -70.04463836138831,
+  "chain_residual": 1.8829382497642655e-13,
+  "basis_residual": 1.1368683772161603e-13,
+  "correlation_correction": 44.09526403508967,
+  "d_W": -12.6391691353152,
+  "soft_fold_stationary_t": {
+    "0.1": 293.2056541002403,
+    "1.0": 115.22060549044843,
+    "10.0": 22.333602683642923
+  },
+  "soft_fold_action_assumption": "positive boundary cost s=10 sqrt(3)/4 (pi-acos(1/4)); kappa=t/(8*pi)",
+  "hard_density_stationary_t_upper_bound": 372.4130535572529,
+  "physical_measure_uniqueness_proved": false,
+  "common_metric_attractor_proved": false
+}

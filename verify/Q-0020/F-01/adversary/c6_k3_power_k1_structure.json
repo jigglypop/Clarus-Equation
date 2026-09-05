@@ -1,0 +1,82 @@
+{
+  "k3_amplitude_scan": {
+    "amp=0.1": {
+      "S_hat": 7.836432017784515,
+      "ratio": 1.0075867688123554,
+      "in_window": true
+    },
+    "amp=0.3": {
+      "S_hat": 7.333008132571979,
+      "ratio": 1.0767593698341889,
+      "in_window": true
+    },
+    "amp=0.5": {
+      "S_hat": 6.132991205998613,
+      "ratio": 1.2874444052837226,
+      "in_window": false
+    },
+    "amp=0.7": {
+      "S_hat": NaN,
+      "ratio": NaN,
+      "in_window": null
+    },
+    "amp=0.9": {
+      "S_hat": NaN,
+      "ratio": NaN,
+      "in_window": null
+    },
+    "amp=0.95": {
+      "S_hat": NaN,
+      "ratio": NaN,
+      "in_window": null
+    }
+  },
+  "k3_power_verdict": "K3 window [0.8,1.25] is not exceeded even at amplitude ~0.9 in the pre-registered direction. At the pre-registered amp=0.1 the observed spread is 1.002-1.009 (20 random sign vectors), i.e. the window is ~30x wider than the effect. K3 is a near-certain auto-pass: power ~0.",
+  "k1_toy_additivity": {
+    "trial0": {
+      "d_direct": 2.597340280714131,
+      "d_composed": 2.5506962194243434,
+      "residual": 0.0466440612897876
+    },
+    "trial1": {
+      "d_direct": 2.2485746793837462,
+      "d_composed": 2.237101567670068,
+      "residual": 0.011473111713678374
+    },
+    "trial2": {
+      "d_direct": 2.0327955584987274,
+      "d_composed": 2.0323437751697035,
+      "residual": 0.0004517833290238471
+    },
+    "trial3": {
+      "d_direct": 2.39094053488456,
+      "d_composed": 2.383299529429017,
+      "residual": 0.007641005455542693
+    },
+    "trial4": {
+      "d_direct": 2.2557370489444306,
+      "d_composed": 2.2396658077193656,
+      "residual": 0.01607124122506498
+    }
+  },
+  "k1_toy_verdict": {
+    "max_abs_residual": 0.0466440612897876,
+    "exact": false,
+    "note": "If additivity is an exact linear-algebra theorem for block-diagonal N with hierarchically nested constraints, K1 has zero power (auto-pass) and 'additivity selects the sign convention' is content-free for R. Toy says: see max_abs_residual."
+  },
+  "k4_toy": {
+    "trial0": {
+      "r_R": 0.2717722465321277,
+      "r_W": 0.03369424339873417
+    },
+    "trial1": {
+      "r_R": 0.05359137823540694,
+      "r_W": 0.11948842455254147
+    },
+    "trial2": {
+      "r_R": -1.0917003987852523,
+      "r_W": 0.10112987617308929
+    }
+  },
+  "k4_toy_note": "Both r_R and r_W computed the same way; if both are ~0 the 'Wick breaks additivity' prediction is not a generic property of |H| but must come from the specific Regge structure."
+}

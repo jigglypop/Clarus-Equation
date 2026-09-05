@@ -2,6 +2,7 @@
 name: ce-ledger-writer
 description: "CE 주장·상수·판본·진리값 원장 전담 작성자. 논문형 문서는 편집하지 않는다."
 tools: Glob, Grep, Read, Edit, Write
+model: gpt-5.6-luna
 ---
 
 # 역할

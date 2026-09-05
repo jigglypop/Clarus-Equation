@@ -1,0 +1,225 @@
+{
+  "scope": "고정된 정준 분할과 입력 에너지의 전달 형식 및 반복 분할의 준비 조건",
+  "energy_unit": "hbar*omega",
+  "quadratures": "dimensionless; [q,p]=i",
+  "numpy": "2.4.6",
+  "source_hashes": {
+    "split_energy_transport.py": "1537898ef785a2b8deca86735a572dd98ba0317867a1b335d7a0d5b2298e981c",
+    "split_quantum_source.py": "37382cda6ee4ecda19bdd21cae946e92c3afdb781e8e7e1766f0068e4f602c1a",
+    "predict_split_kernel.py": "71188b8ffd88c3acc54edfec6057c19862160e467fc6f77724f54195e05b0065",
+    "interface_bath.py": "546db9d6373411da6b56b76c5835c7cb99b12c206adc250c29bd89aaca9ca8e8"
+  },
+  "first_split": [
+    {
+      "branching": 2,
+      "q_off_diagonal": 0.12499999999999999,
+      "p_off_diagonal": -0.9999999999999998,
+      "child_independence_residual": 0.9999999999999998,
+      "residuals": {
+        "energy_identity": 2.2791951491936944e-16,
+        "q_projector_formula": 1.962615573354719e-17,
+        "p_projector_formula": 1.2947314098277875e-15
+      }
+    },
+    {
+      "branching": 3,
+      "q_off_diagonal": -3.888311952043155e-17,
+      "p_off_diagonal": -4.351873305568401e-16,
+      "child_independence_residual": 4.351873305568401e-16,
+      "residuals": {
+        "energy_identity": 3.709228515663589e-16,
+        "q_projector_formula": 1.4342971941998055e-16,
+        "p_projector_formula": 2.4796653264973487e-15
+      }
+    },
+    {
+      "branching": 4,
+      "q_off_diagonal": -0.031250000000000035,
+      "p_off_diagonal": 0.3333333333333329,
+      "child_independence_residual": 0.33333333333333337,
+      "residuals": {
+        "energy_identity": 4.437552812824049e-16,
+        "q_projector_formula": 8.19553578544471e-17,
+        "p_projector_formula": 1.2287917140018453e-15
+      }
+    },
+    {
+      "branching": 5,
+      "q_off_diagonal": -0.04000000000000003,
+      "p_off_diagonal": 0.4999999999999997,
+      "child_independence_residual": 0.5000000000000009,
+      "residuals": {
+        "energy_identity": 8.451984427621597e-16,
+        "q_projector_formula": 1.8489255396817212e-16,
+        "p_projector_formula": 2.7352975428562675e-15
+      }
+    }
+  ],
+  "recursive_frontier": [
+    {
+      "branching": 2,
+      "depth": 1,
+      "frontier_modes": 2,
+      "child_independence_residual": 0.9999999999999998,
+      "transported_energy_above_its_ground": -1.1102230246251565e-16,
+      "fixed_free_excitation_energy": 0.6874999999999998,
+      "residuals": {
+        "energy_identity": 2.2791951491936944e-16,
+        "q_precision": 1.3018518929051675e-16,
+        "p_coefficient": 7.021666937153402e-16,
+        "ground_covariance": 1.2605126751125787e-16
+      }
+    },
+    {
+      "branching": 2,
+      "depth": 2,
+      "frontier_modes": 4,
+      "child_independence_residual": 1.0000000000000016,
+      "transported_energy_above_its_ground": 0.0,
+      "fixed_free_excitation_energy": 3.218749999999999,
+      "residuals": {
+        "energy_identity": 3.5146521481302803e-16,
+        "q_precision": 1.7751909394495047e-16,
+        "p_coefficient": 3.2023728339893768e-15,
+        "ground_covariance": 1.32123992471267e-16
+      }
+    },
+    {
+      "branching": 3,
+      "depth": 1,
+      "frontier_modes": 3,
+      "child_independence_residual": 4.351873305568401e-16,
+      "transported_energy_above_its_ground": 0.0,
+      "fixed_free_excitation_energy": 1.0,
+      "residuals": {
+        "energy_identity": 3.709228515663589e-16,
+        "q_precision": 1.5443928890205408e-16,
+        "p_coefficient": 2.5410537032573055e-15,
+        "ground_covariance": 1.8779463779928638e-16
+      }
+    },
+    {
+      "branching": 3,
+      "depth": 2,
+      "frontier_modes": 9,
+      "child_independence_residual": 1.9999999999999987,
+      "transported_energy_above_its_ground": 0.0,
+      "fixed_free_excitation_energy": 7.333333333333334,
+      "residuals": {
+        "energy_identity": 9.706432642406446e-16,
+        "q_precision": 2.9283580229906195e-16,
+        "p_coefficient": 1.2180273534964713e-14,
+        "ground_covariance": 4.257866070794793e-16
+      }
+    },
+    {
+      "branching": 3,
+      "depth": 3,
+      "frontier_modes": 27,
+      "child_independence_residual": 3.9999999999999987,
+      "transported_energy_above_its_ground": 3.552713678800501e-15,
+      "fixed_free_excitation_energy": 35.44444444444445,
+      "residuals": {
+        "energy_identity": 2.430873692914882e-15,
+        "q_precision": 4.948923722243363e-16,
+        "p_coefficient": 5.944546683702866e-14,
+        "ground_covariance": 2.417147053915988e-15
+      }
+    },
+    {
+      "branching": 4,
+      "depth": 2,
+      "frontier_modes": 16,
+      "child_independence_residual": 2.333333333333335,
+      "transported_energy_above_its_ground": -3.552713678800501e-15,
+      "fixed_free_excitation_energy": 13.2109375,
+      "residuals": {
+        "energy_identity": 1.6576037517585071e-15,
+        "q_precision": 5.491834083823495e-16,
+        "p_coefficient": 1.093837339868539e-14,
+        "ground_covariance": 1.7938451834247618e-15
+      }
+    }
+  ],
+  "second_ternary_split": {
+    "q_off_diagonal": -0.07407407407407414,
+    "p_off_diagonal": 1.9999999999999991,
+    "energy": [
+      [
+        0.2592592592592593,
+        0.0,
+        -0.07407407407407414,
+        0.0,
+        -0.07407407407407404,
+        0.0
+      ],
+      [
+        0.0,
+        5.0,
+        0.0,
+        1.9999999999999991,
+        0.0,
+        1.9999999999999996
+      ],
+      [
+        -0.07407407407407414,
+        0.0,
+        0.2592592592592593,
+        0.0,
+        -0.07407407407407404,
+        0.0
+      ],
+      [
+        0.0,
+        1.9999999999999991,
+        0.0,
+        4.999999999999998,
+        0.0,
+        1.999999999999999
+      ],
+      [
+        -0.07407407407407404,
+        0.0,
+        -0.07407407407407404,
+        0.0,
+        0.2592592592592592,
+        0.0
+      ],
+      [
+        0.0,
+        1.9999999999999996,
+        0.0,
+        1.999999999999999,
+        0.0,
+        4.999999999999997
+      ]
+    ]
+  },
+  "matched_ancilla_energy": {
+    "child_independence_residual": 9.33242772815879e-16,
+    "states": [
+      {
+        "ancilla_state": "original_vacuum",
+        "input_q_variance": 0.5,
+        "contrast_q_noise": 1.4999999999999993,
+        "ancilla_excess_energy": 0.6666666666666667,
+        "unit_noise_preserved": true
+      },
+      {
+        "ancilla_state": "new_energy_ground_state",
+        "input_q_variance": 1.5,
+        "contrast_q_noise": 4.499999999999998,
+        "ancilla_excess_energy": 0.0,
+        "unit_noise_preserved": false
+      }
+    ]
+  },
+  "input_energy_is_supplied": true,
+  "transport_is_autonomous_generator": false,
+  "hamiltonian_switch_work_derived": false,
+  "bath_coupling_derived": false,
+  "physical_spatial_locality_tested": false,
+  "branching_three_implies_spatial_dimension_three": false,
+  "common_metric_selection_proved": false,
+  "fixed_free_energy_preparation_bound_removed": false
+}

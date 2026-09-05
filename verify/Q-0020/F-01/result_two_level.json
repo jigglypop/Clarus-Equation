@@ -1,0 +1,83 @@
+{
+  "mode": "two_level",
+  "direct": {
+    "cells": 25,
+    "dof": 250,
+    "m": 234,
+    "m_glue": 210,
+    "m_gauge": 24,
+    "d_R": -6.375964761843079,
+    "d_W": -12.639169135309103,
+    "d_P35": null,
+    "n_neg_R": 151,
+    "rank_P": 160,
+    "identity_7_3_W": -1.0443201858834072e-11,
+    "gauge_gNg_over_Ng": 0.01019857716624415
+  },
+  "level1_regular": {
+    "m": 39,
+    "d_R": 7.482042027338306,
+    "d_W": 4.197596512637077,
+    "d_P35": 10.368393210111696
+  },
+  "subcells": [
+    {
+      "m": 39,
+      "d_R": 1.5870332182565847,
+      "d_W": -4.505679185489841,
+      "d_P35": null,
+      "n_neg_R": 24
+    },
+    {
+      "m": 39,
+      "d_R": 1.5870338730771336,
+      "d_W": -4.505678542324573,
+      "d_P35": null,
+      "n_neg_R": 24
+    },
+    {
+      "m": 39,
+      "d_R": 1.5870331323269968,
+      "d_W": -4.505679273508716,
+      "d_P35": null,
+      "n_neg_R": 24
+    },
+    {
+      "m": 39,
+      "d_R": 1.5870330713142047,
+      "d_W": -4.505679335033397,
+      "d_P35": null,
+      "n_neg_R": 24
+    },
+    {
+      "m": 39,
+      "d_R": 1.5870339115544643,
+      "d_W": -4.505678489658293,
+      "d_P35": null,
+      "n_neg_R": 24
+    }
+  ],
+  "m_composed": 234,
+  "additivity_residual": {
+    "d_R": -21.793173995710767,
+    "d_W": 5.691629178068638,
+    "d_P35": null
+  },
+  "kill_K1": {
+    "tol": 0.01,
+    "m_expected": 234,
+    "killed": true
+  },
+  "kill_K4": {
+    "min_abs_r_W": 0.01,
+    "killed": false
+  },
+  "killed": true,
+  "provenance": {
+    "python": "C:\\Users\\dongh\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+    "python_version": "3.11.9",
+    "numpy": "2.4.6",
+    "source_sha256": "7a7d62d985ac112f8944a9528d91d7319974d0c3a36c4ec97cbb376fac31aa8b",
+    "nonfinite_policy": "undefined numerical entries are null, not zero"
+  }
+}

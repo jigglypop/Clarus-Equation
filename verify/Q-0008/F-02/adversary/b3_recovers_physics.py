@@ -15,9 +15,9 @@ import numpy as np
 
 ROOT = Path(r"C:/dev/ce/Clarus-Equation")
 sys.path.insert(0, str(ROOT))
-from examples.physics.causal_face_simplicity import (
+from examples.physics.gravity.causal_face_simplicity import (
     geometric_self_dual_triple, plebanski_gram, simplicity_residual, wedge_scalar)
-from examples.physics.urbantke_shape_matching_rg import optimal_internal_alignment
+from examples.physics.gravity.urbantke_shape_matching_rg import optimal_internal_alignment
 
 REF = geometric_self_dual_triple(np.eye(4))
 DELTA = 0.005

@@ -52,8 +52,8 @@ sys.path.insert(0, str(F02))
 
 from check_modes import block_residual, fit_slope, rms  # noqa: E402  (frozen F-02 pipeline)
 from driver_numbers import qspine_block, tree_arrays, uniform_rooted_tree  # noqa: E402  (F-02 trees)
-from examples.physics.causal_face_simplicity import geometric_self_dual_triple  # noqa: E402
-from examples.physics.urbantke_shape_matching_rg import optimal_internal_alignment  # noqa: E402
+from examples.physics.gravity.causal_face_simplicity import geometric_self_dual_triple  # noqa: E402
+from examples.physics.gravity.urbantke_shape_matching_rg import optimal_internal_alignment  # noqa: E402
 
 import importlib.util  # noqa: E402
 
@@ -263,7 +263,7 @@ def run_struct(orbit_sizes=(2, 4, 8, 16, 32, 64)) -> dict:
             rotation = np.eye(3) + np.sin(angle) * cross + (1.0 - np.cos(angle)) * (cross @ cross)
             candidate = scale * (rotation @ reference)
             blocked += optimal_internal_alignment(reference, candidate).aligned_candidate
-        from examples.physics.causal_face_simplicity import simplicity_residual
+        from examples.physics.gravity.causal_face_simplicity import simplicity_residual
 
         worst = max(worst, float(simplicity_residual(blocked)))
     return {

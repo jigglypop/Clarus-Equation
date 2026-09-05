@@ -1,0 +1,301 @@
+{
+  "python_version": "3.11.9",
+  "numpy_version": "2.4.6",
+  "source_sha256": {
+    "coherent_tetrahedron_overlap.py": "5e939ef71928cf78055aa2ba80749e8663c801475f6f6c1c55431793cd4fe369"
+  },
+  "localization": [
+    {
+      "two_j": 2,
+      "spin": 1.0,
+      "dimension": 3,
+      "projection_norm_squared": 0.09876543209876543,
+      "normalized_state_residual": 2.220446049250313e-16,
+      "shape_precision": [
+        [
+          6.400000000004308,
+          1.4231890189541743e-15
+        ],
+        [
+          1.4231890189541743e-15,
+          1.066666666672747
+        ]
+      ],
+      "precision_eigenvalues": [
+        1.066666666672747,
+        6.400000000004308
+      ],
+      "precision_divided_by_spin": [
+        [
+          6.400000000004308,
+          1.4231890189541743e-15
+        ],
+        [
+          1.4231890189541743e-15,
+          1.066666666672747
+        ]
+      ],
+      "difference_step_residual": 3.1320685121485596e-11,
+      "displaced_shape_fidelity": 0.9412064381979892,
+      "independent_haar_overlap_residual": 3.925231146709438e-17,
+      "leading_saddle_precision": [
+        [
+          4.0,
+          -1.8401000025057786e-33
+        ],
+        [
+          -1.8401000025057786e-33,
+          0.6666666666666666
+        ]
+      ],
+      "relative_saddle_difference": 0.6000000000012945
+    },
+    {
+      "two_j": 4,
+      "spin": 2.0,
+      "dimension": 5,
+      "projection_norm_squared": 0.039575848629346544,
+      "normalized_state_residual": 2.220446049250313e-16,
+      "shape_precision": [
+        [
+          9.915492957743451,
+          4.468063630012868e-15
+        ],
+        [
+          4.468063630012868e-15,
+          1.6525821596338313
+        ]
+      ],
+      "precision_eigenvalues": [
+        1.6525821596338313,
+        9.915492957743451
+      ],
+      "precision_divided_by_spin": [
+        [
+          4.957746478871726,
+          2.234031815006434e-15
+        ],
+        [
+          2.234031815006434e-15,
+          0.8262910798169156
+        ]
+      ],
+      "difference_step_residual": 1.1946711102388442e-10,
+      "displaced_shape_fidelity": 0.9098392286712423,
+      "independent_haar_overlap_residual": 1.734723475976807e-17,
+      "leading_saddle_precision": [
+        [
+          8.0,
+          -3.680200005011557e-33
+        ],
+        [
+          -3.680200005011557e-33,
+          1.3333333333333333
+        ]
+      ],
+      "relative_saddle_difference": 0.23943661971813257
+    },
+    {
+      "two_j": 8,
+      "spin": 4.0,
+      "dimension": 9,
+      "projection_norm_squared": 0.015014653821972004,
+      "normalized_state_residual": 4.440892098500626e-16,
+      "shape_precision": [
+        [
+          17.66312549272178,
+          1.6022160142032693e-14
+        ],
+        [
+          1.6022160142032693e-14,
+          2.9438542487997448
+        ]
+      ],
+      "precision_eigenvalues": [
+        2.9438542487997448,
+        17.66312549272178
+      ],
+      "precision_divided_by_spin": [
+        [
+          4.415781373180445,
+          4.005540035508173e-15
+        ],
+        [
+          4.005540035508173e-15,
+          0.7359635621999362
+        ]
+      ],
+      "difference_step_residual": 1.5153765359278119e-10,
+      "displaced_shape_fidelity": 0.8453124263088645,
+      "independent_haar_overlap_residual": 2.1942709178604383e-17,
+      "leading_saddle_precision": [
+        [
+          16.0,
+          -7.360400010023114e-33
+        ],
+        [
+          -7.360400010023114e-33,
+          2.6666666666666665
+        ]
+      ],
+      "relative_saddle_difference": 0.10394534329524073
+    },
+    {
+      "two_j": 16,
+      "spin": 8.0,
+      "dimension": 17,
+      "projection_norm_squared": 0.005509817949910683,
+      "normalized_state_residual": 0.0,
+      "shape_precision": [
+        [
+          33.57520651668602,
+          6.193897106632878e-14
+        ],
+        [
+          6.193897106632878e-14,
+          5.595867752808003
+        ]
+      ],
+      "precision_eigenvalues": [
+        5.595867752808003,
+        33.57520651668602
+      ],
+      "precision_divided_by_spin": [
+        [
+          4.196900814585753,
+          7.742371383291097e-15
+        ],
+        [
+          7.742371383291097e-15,
+          0.6994834691010003
+        ]
+      ],
+      "difference_step_residual": 2.806151177043064e-10,
+      "displaced_shape_fidelity": 0.7266132869743153,
+      "independent_haar_overlap_residual": 1.1669158735712432e-17,
+      "leading_saddle_precision": [
+        [
+          32.0,
+          -1.472080002004623e-32
+        ],
+        [
+          -1.472080002004623e-32,
+          5.333333333333333
+        ]
+      ],
+      "relative_saddle_difference": 0.04922520364657506
+    }
+  ],
+  "frame_composition": [
+    {
+      "two_j": 1,
+      "dimension": 2,
+      "nonzero_frame_states": 204,
+      "single_spin_frame_residual": 7.07050159149938e-17,
+      "invariant_frame_residual": 2.2222452653154457e-16,
+      "normalized_measure_total": 2.000000000000001,
+      "omitting_projection_norm_residual": 7.601397897755386,
+      "omitting_norm_after_trace_rescaling_residual": 2.0010982316557915e-17,
+      "amplitude": [
+        0.9259382186642042,
+        0.3083674528302194
+      ],
+      "amplitude_composition_residual": 1.2412670766236366e-16,
+      "direct_fidelity": 0.9524520707480372,
+      "squared_moduli_composition": 0.5000000000000002,
+      "measurement_channel_trace": 1.0000000000000004,
+      "measurement_channel_purity": 0.5000000000000003,
+      "instrument_uses_this_finite_frame": true
+    },
+    {
+      "two_j": 2,
+      "dimension": 3,
+      "nonzero_frame_states": 6264,
+      "single_spin_frame_residual": 7.374615660451806e-16,
+      "invariant_frame_residual": 3.270958051791919e-15,
+      "normalized_measure_total": 3.0000000000000053,
+      "omitting_projection_norm_residual": 42.72189349347036,
+      "omitting_norm_after_trace_rescaling_residual": 0.1348975019940657,
+      "amplitude": [
+        0.7692705523269692,
+        0.5763020883196683
+      ],
+      "amplitude_composition_residual": 1.9100999153570945e-15,
+      "direct_fidelity": 0.923901279679051,
+      "squared_moduli_composition": 0.5238609330557205,
+      "measurement_channel_trace": 1.0000000000000022,
+      "measurement_channel_purity": 0.41109274667882467,
+      "instrument_uses_this_finite_frame": true
+    }
+  ],
+  "shape_operator_checks": [
+    {
+      "two_j": 1,
+      "singlet_generator_residual": 1.5700924586837752e-16,
+      "commutator_triple_product_residual": 3.1416377478298365e-16,
+      "cosine_covariance": [
+        [
+          0.4444444444444449,
+          -0.22222222222222243
+        ],
+        [
+          -0.22222222222222243,
+          0.44444444444444486
+        ]
+      ],
+      "robertson_determinant": 0.14814814814814847,
+      "robertson_lower_bound": 0.14814814814814845,
+      "uncertainty_ratio": 1.0000000000000002
+    },
+    {
+      "two_j": 2,
+      "singlet_generator_residual": 5.264421326198382e-16,
+      "commutator_triple_product_residual": 8.046887153770224e-16,
+      "cosine_covariance": [
+        [
+          0.30555555555555575,
+          -0.15277777777777787
+        ],
+        [
+          -0.15277777777777787,
+          0.30555555555555586
+        ]
+      ],
+      "robertson_determinant": 0.07002314814814825,
+      "robertson_lower_bound": 0.046875000000000056,
+      "uncertainty_ratio": 1.4938271604938276
+    },
+    {
+      "two_j": 4,
+      "singlet_generator_residual": 5.598724278897605e-16,
+      "commutator_triple_product_residual": 5.113273199053242e-15,
+      "cosine_covariance": [
+        [
+          0.16431924882629098,
+          -0.08215962441314548
+        ],
+        [
+          -0.08215962441314548,
+          0.1643192488262909
+        ]
+      ],
+      "robertson_determinant": 0.020250611651127386,
+      "robertson_lower_bound": 0.015886398201415037,
+      "uncertainty_ratio": 1.27471383975026
+    }
+  ],
+  "scope": {
+    "su2_four_face_kinematics_supplied": true,
+    "equal_face_areas_supplied": true,
+    "coherent_state_family_supplied": true,
+    "full_complex_overlap_retained": true,
+    "normalized_projection_measure_retained": true,
+    "closed_shape_slice_used_as_full_frame_measure": false,
+    "asymptotic_width_law_rigorously_proven_here": false,
+    "physical_length_resolution_derived_from_ce": false,
+    "regge_action_phase_or_refinement_dynamics_derived": false,
+    "microscopic_split_merge_energy_budget_derived": false,
+    "stationary_common_metric_sector_selected": false,
+    "continuum_einstein_limit_derived": false
+  }
+}

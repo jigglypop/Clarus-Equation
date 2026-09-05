@@ -70,8 +70,8 @@ $$
 ## 9. 재현성
 
 - 매니페스트: `experiments/preregistration/cosmology_snkc_quench_bg_v1.json` (sha256 위 §6).
-- forward model·교정: `examples/physics/kinetic_dark_sector_quench_gate.py`; focused test `tests/test_kinetic_dark_sector_quench_gate.py` (6 passed).
-- 봉인 평가: `examples/physics/kinetic_dark_sector_quench_holdout_eval.py`; focused test `tests/test_kinetic_dark_sector_quench_holdout_eval.py` (8 passed, 합성 자료 전용).
+- forward model·교정: `examples/physics/darksector/kinetic_dark_sector_quench_gate.py`; focused test `tests/test_kinetic_dark_sector_quench_gate.py` (6 passed).
+- 봉인 평가: `examples/physics/darksector/kinetic_dark_sector_quench_holdout_eval.py`; focused test `tests/test_kinetic_dark_sector_quench_holdout_eval.py` (8 passed, 합성 자료 전용).
 - holdout 자료: `benchmarks/cosmology/snkc_quench_bg_holdout_v1/` — 11개 원본 파일, 파일별 sha256·출처 URL·commit·접근일은 그 README에 고정.
 - 실행: 레포 루트에서 `.claude\hooks\python.cmd pytest tests/test_kinetic_dark_sector_quench_gate.py tests/test_kinetic_dark_sector_quench_holdout_eval.py`. 환경 receipt: doctor PASS, Python 3.11.9, numpy 2.4.6 (2026-08-30).
 

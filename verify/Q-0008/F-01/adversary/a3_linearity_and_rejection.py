@@ -14,8 +14,8 @@ from pathlib import Path
 import numpy as np
 ROOT = Path(r"C:/dev/ce/Clarus-Equation"); sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT/"verify"/"Q-0008"/"F-01"))
-from examples.physics.causal_face_simplicity import geometric_self_dual_triple, simplicity_residual
-from examples.physics.urbantke_shape_matching_rg import optimal_internal_alignment
+from examples.physics.gravity.causal_face_simplicity import geometric_self_dual_triple, simplicity_residual
+from examples.physics.gravity.urbantke_shape_matching_rg import optimal_internal_alignment
 import check_modes as CM
 
 def her_labels(n, rng):

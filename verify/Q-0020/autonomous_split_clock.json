@@ -1,0 +1,229 @@
+{
+  "status": "conditional",
+  "source_sha256": {
+    "autonomous_split_clock.py": "c0095f4f3246fc91d5f6250b79a1d7aa46705c402a882bfbf0221ff7010ecdd3",
+    "split_quadratic_generator.py": "f3a80386242e888a163d01d3fcfc473d056f69a033c6a983aff2c16d7ed28526",
+    "split_quantum_source.py": "37382cda6ee4ecda19bdd21cae946e92c3afdb781e8e7e1766f0068e4f602c1a"
+  },
+  "clock_parameters": {
+    "sigma": 1.0,
+    "distance": 8.0,
+    "momentum": 4.0,
+    "mass": 1.0,
+    "length": 1.0
+  },
+  "tolerance": 0.001,
+  "completion_time": 6.55721541274647,
+  "clock_bounds": [
+    {
+      "time": 6.55721541274647,
+      "initial_position_tail": 6.22096057427174e-16,
+      "negative_momentum_probability": 6.22096057427174e-16,
+      "unfinished_probability": 2.499750587685667e-07,
+      "trace_distance_bound": 0.0009999999999999979,
+      "limiting_bound": 9.976741411320024e-08,
+      "clock_kinetic_energy": 8.125
+    },
+    {
+      "time": 8,
+      "initial_position_tail": 6.22096057427174e-16,
+      "negative_momentum_probability": 6.22096057427174e-16,
+      "unfinished_probability": 1.2142673368509565e-08,
+      "trace_distance_bound": 0.00022043748198345296,
+      "limiting_bound": 9.976741411320024e-08,
+      "clock_kinetic_energy": 8.125
+    },
+    {
+      "time": 16,
+      "initial_position_tail": 6.22096057427174e-16,
+      "negative_momentum_probability": 6.22096057427174e-16,
+      "unfinished_probability": 4.491884730684553e-12,
+      "trace_distance_bound": 4.2886970932223805e-06,
+      "limiting_bound": 9.976741411320024e-08,
+      "clock_kinetic_energy": 8.125
+    },
+    {
+      "time": 32,
+      "initial_position_tail": 6.22096057427174e-16,
+      "negative_momentum_probability": 6.22096057427174e-16,
+      "unfinished_probability": 5.724144750734605e-14,
+      "trace_distance_bound": 5.283874061325678e-07,
+      "limiting_bound": 9.976741411320024e-08,
+      "clock_kinetic_energy": 8.125
+    }
+  ],
+  "initial_product_energies": [
+    {
+      "branching": 2,
+      "winding": 0,
+      "clock_kinetic_energy": 8.125,
+      "bare_internal_energy": 1.0,
+      "gauge_cross_energy": 4.797894333192423e-15,
+      "gauge_square_energy": 5.215062741292649e-15,
+      "transported_potential_excess": 1.3917641552065343e-16,
+      "total_energy": 9.12500000000001,
+      "generator_vacuum_mean": 4.847369432503253,
+      "generator_vacuum_second_moment": 42.12296457322506
+    },
+    {
+      "branching": 2,
+      "winding": 1,
+      "clock_kinetic_energy": 8.125,
+      "bare_internal_energy": 1.0,
+      "gauge_cross_energy": 1.5762886813233585e-14,
+      "gauge_square_energy": 5.533160952065556e-14,
+      "transported_potential_excess": 3.6689754552276634e-16,
+      "total_energy": 9.125000000000071,
+      "generator_vacuum_mean": 15.925431116286463,
+      "generator_vacuum_second_moment": 446.9229888958885
+    },
+    {
+      "branching": 3,
+      "winding": 0,
+      "clock_kinetic_energy": 8.125,
+      "bare_internal_energy": 1.5,
+      "gauge_cross_energy": 8.158736806345433e-15,
+      "gauge_square_energy": 1.4560025214480405e-14,
+      "transported_potential_excess": 3.9111197435519047e-16,
+      "total_energy": 9.625000000000023,
+      "generator_vacuum_mean": 8.24286836192229,
+      "generator_vacuum_second_moment": 117.60384423348302
+    },
+    {
+      "branching": 3,
+      "winding": 1,
+      "clock_kinetic_energy": 8.125,
+      "bare_internal_energy": 1.5,
+      "gauge_cross_energy": 2.7851105935749314e-14,
+      "gauge_square_energy": 1.6346240354626807e-13,
+      "transported_potential_excess": 1.0124107133227568e-15,
+      "total_energy": 9.625000000000194,
+      "generator_vacuum_mean": 28.138301971425825,
+      "generator_vacuum_second_moment": 1320.314131432092
+    }
+  ],
+  "overlap_preparation_control": [
+    {
+      "branching": 2,
+      "winding": 0,
+      "clock_kinetic_energy": 0.625,
+      "bare_internal_energy": 1.0,
+      "gauge_cross_energy": 0.6414164812236819,
+      "gauge_square_energy": 3.9511125032965797,
+      "transported_potential_excess": 0.17911472096720898,
+      "total_energy": 6.39664370548747,
+      "generator_vacuum_mean": 4.847369432503253,
+      "generator_vacuum_second_moment": 42.12296457322506
+    },
+    {
+      "branching": 2,
+      "winding": 1,
+      "clock_kinetic_energy": 0.625,
+      "bare_internal_energy": 1.0,
+      "gauge_cross_energy": 2.1072943027788793,
+      "gauge_square_energy": 41.92114746262802,
+      "transported_potential_excess": 0.22840850395460277,
+      "total_energy": 45.88185026936151,
+      "generator_vacuum_mean": 15.925431116286463,
+      "generator_vacuum_second_moment": 446.9229888958885
+    }
+  ],
+  "transport": [
+    {
+      "branching": 2,
+      "minimum_output_form_eigenvalue": 0.2500000000000022,
+      "free_evolution_intertwining_residual": 7.077685404653677e-14,
+      "winding_output_form_residual": 3.1057318629498045e-14
+    },
+    {
+      "branching": 3,
+      "minimum_output_form_eigenvalue": 0.33333333333333265,
+      "free_evolution_intertwining_residual": 3.0382396091715616e-14,
+      "winding_output_form_residual": 2.7254293469146742e-14
+    }
+  ],
+  "finite_grid": {
+    "internal_dimension": 2,
+    "reference_dimension": 2,
+    "clock_sites": 65,
+    "minimum_total_eigenvalue": 0.5080544769208345,
+    "noncommutation_norm": 0.8485281374238568,
+    "state_factorization_residual": 6.986714945430784e-15,
+    "energy_conservation_residual": 3.552713678800501e-15,
+    "norm_residual": 6.661338147750939e-16,
+    "product_input_trace_distance": 0.2994677896577399,
+    "discrete_trace_distance_bound": 0.5914122142923837,
+    "continuum_scattering_or_infinite_time_proved_by_grid": false
+  },
+  "missing_square": [
+    {
+      "branching": 2,
+      "occupation": 0,
+      "full_square_energy": 10.645772237831444,
+      "omitted_square_energy": 11.07438703055925,
+      "truncated_form_energy": -0.4286147927278048
+    },
+    {
+      "branching": 2,
+      "occupation": 4,
+      "full_square_energy": 17.78950544740148,
+      "omitted_square_energy": 33.66496863516185,
+      "truncated_form_energy": -15.875463187760367
+    },
+    {
+      "branching": 2,
+      "occupation": 16,
+      "full_square_energy": 39.220705076111585,
+      "omitted_square_energy": 174.9045340986336,
+      "truncated_form_energy": -135.68382902252202
+    },
+    {
+      "branching": 2,
+      "occupation": 64,
+      "full_square_energy": 124.94550359095201,
+      "omitted_square_energy": 1841.8801056974794,
+      "truncated_form_energy": -1716.9346021065273
+    },
+    {
+      "branching": 3,
+      "occupation": 0,
+      "full_square_energy": 12.049100564889539,
+      "omitted_square_energy": 19.27964535561716,
+      "truncated_form_energy": -7.23054479072762
+    },
+    {
+      "branching": 3,
+      "occupation": 4,
+      "full_square_energy": 21.6673836867977,
+      "omitted_square_energy": 32.87937327523054,
+      "truncated_form_energy": -11.211989588432843
+    },
+    {
+      "branching": 3,
+      "occupation": 16,
+      "full_square_energy": 50.52223305252218,
+      "omitted_square_energy": 95.32861557329599,
+      "truncated_form_energy": -44.80638252077381
+    },
+    {
+      "branching": 3,
+      "occupation": 64,
+      "full_square_energy": 165.94163051542012,
+      "omitted_square_energy": 669.8764628539378,
+      "truncated_form_energy": -503.9348323385177
+    }
+  ],
+  "scope": {
+    "positive_time_independent_clock_action_constructed": true,
+    "finite_product_preparation_error_bounded_with_reference": true,
+    "output_subspace_preserved_under_transported_hamiltonian": true,
+    "same_bare_input_output_hamiltonian": false,
+    "clock_and_ancilla_preparation_derived": false,
+    "full_action_is_quadratic": false,
+    "kinetic_square_retained": true,
+    "finite_clock_exact_zero_error_proved": false,
+    "spatial_locality_or_CE_action_derived": false,
+    "common_metric_selected": false,
+    "charging_merge_recycling_cycle_closed": false
+  }
+}

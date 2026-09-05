@@ -10,8 +10,8 @@ import numpy as np
 ROOT = Path(r"C:/dev/ce/Clarus-Equation")
 OUT = ROOT / "verify" / "Q-0013" / "F-02" / "adversary"
 sys.path.insert(0, str(ROOT))
-from examples.physics.causal_face_simplicity import geometric_self_dual_triple, plebanski_gram
-from examples.physics.urbantke_shape_matching_rg import optimal_internal_alignment
+from examples.physics.gravity.causal_face_simplicity import geometric_self_dual_triple, plebanski_gram
+from examples.physics.gravity.urbantke_shape_matching_rg import optimal_internal_alignment
 
 spec = importlib.util.spec_from_file_location("cf", ROOT / "verify/Q-0013/F-02/check_floor.py")
 cf = importlib.util.module_from_spec(spec); sys.modules["cf"] = cf; spec.loader.exec_module(cf)

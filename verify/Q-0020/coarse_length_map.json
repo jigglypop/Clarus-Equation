@@ -1,0 +1,51 @@
+{
+  "scope": "post-refutation diagnostic; regular Euclidean 25 cells; supplied positive Wick precision; kappa=1",
+  "python": "3.11.9",
+  "numpy": "2.4.6",
+  "source_sha256": "6404f2e49a248b6f39cb65a269ba5e405b8fb46afa3cdbdcb4d0e2edb5f92ea8",
+  "reference_sha256": "7a7d62d985ac112f8944a9528d91d7319974d0c3a36c4ec97cbb376fac31aa8b",
+  "local_dimension": 55,
+  "parent_length_rank": 50,
+  "parent_invisible_dimension": 5,
+  "before_top_gauge_dimension": 20,
+  "global_dimension": 16,
+  "hierarchical_dimension": 16,
+  "gluing_projector_residual": 1.3810367884827395e-14,
+  "adjusted_gauge_constraint_residual": 1.9138852269971628e-15,
+  "gauge_fixing_matrix_rank": 4,
+  "gauge_transport_constraint_residual": 9.160143115662096e-15,
+  "boundary_gauge_shift_residual": 0.0,
+  "transported_covariance_residual": 9.522206491610892e-14,
+  "boundary_covariance_slice_relative_difference": 0.0013046764124107942,
+  "global_vs_gauge_marginal_relative_difference": 0.009380386711331833,
+  "hierarchical_vs_gauge_marginal_relative_difference": 0.008077782682609919,
+  "global_integrated_gauge_residual": 1.9997218644800773e-14,
+  "hierarchical_integrated_gauge_residual": 1.3802852043394613e-14,
+  "positive_gauge_cost_eigenvalues": [
+    58.839033187789596,
+    58.83903319110866,
+    58.83903319141472,
+    58.83903319480484
+  ],
+  "all_gauge_integrated_comparison": {
+    "fine_glued_dimension": 40,
+    "top_glued_dimension": 15,
+    "boundary_covariance_relative_difference": 0.2266947769847387,
+    "fine_over_top_covariance_eigenvalues": [
+      0.6730549765641026,
+      0.6730549768527373,
+      0.6730549773672534,
+      0.6730549776210412,
+      0.6730549776310919,
+      0.7779072468548196,
+      0.777907248219867,
+      0.7779072502299186,
+      0.7779072511968691,
+      1.1608068215912724
+    ],
+    "normalization": "same global dimensionless length coordinates and kappa=1; all non-boundary variables integrated",
+    "scope": "post hoc comparison of two supplied Wick model levels, not a universal no-go"
+  },
+  "physical_measure_derived": false,
+  "common_metric_attractor_proved": false
+}

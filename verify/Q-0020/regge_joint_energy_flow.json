@@ -1,0 +1,592 @@
+{
+  "status": "[산출]",
+  "source_sha256": "60d1ab970f6811e5c7424767e4f964ee5c493c8abeb1d53b5766f935ffe78c66",
+  "dependencies": {
+    "regge_constraint_reduction.py": "2f5172c475d1eb774ef50b59e642ab73cc236f391215dbbd4faab7d317a56809",
+    "regge_postconstraint_projection.py": "0d1abb5317b96ee24dfe0e844f581df527dc8286656e8486444bb8748c407fe8",
+    "regge_quantum_constraint_transfer.py": "0f49325180ab4e0e19cb2546c0576fbf6ac93840163a7db3e7d75fd064e26898",
+    "regge_coalescing_kernel.py": "79bbf93a1ee98343dc3f8d890c334702d69fd36ad710b6790f7bab3bb9020f5c",
+    "regge_internal_marginal.py": "6690a402d1d750e1dc3ce340cbb0d1d96f2fa34b074dc45b8bfc4f4c416d53a6",
+    "regge_pachner_constraints.py": "5badf64159a9880caa4edfb520ee8d28bd1d0f392d8277d8bcf5c3aaa2cdc656",
+    "regge_pachner_creation.py": "68c5f330bd2e4732970e5b9379f3fdbd86e236fe301a45521eea0663d04e3705",
+    "regge_pachner_transport.py": "c995451a5b12e47470f37c19926574c2cbfd7a20aeb07c0c76e541aef143b415",
+    "regge_tent_transfer.py": "e509b0b583a99258730650584e812d9b6f097383629b4e855636c8e87c710f71"
+  },
+  "scope": "기존 실제 공동 제약의 공급 에너지 적합성과 매끄러운 국소 흐름",
+  "formulas": {
+    "multipliers": "u={F,H}/a, v=-{c,H}/a",
+    "configuration_normal_form": "H=H0(z)+a^2*k near a_e!=0",
+    "square_flow": "e_dot=a_y, y_dot=-a_e, z_dot=0",
+    "shifted_momentum": "Pi_dot=beta*G_z*y_dot-H_z",
+    "rank_invariance": "smooth i_X omega_C=dH implies Phi_t^*omega_C=omega_C",
+    "fold_a_e": "-6*sqrt(2)*beta at height=1,e=2,y=sqrt(8/3)"
+  },
+  "fold_certificate": {
+    "rows": [
+      {
+        "triangle": [
+          0,
+          3,
+          4
+        ],
+        "area_y": "sqrt(3)/6",
+        "area_yy": "-7*sqrt(2)/16",
+        "exterior_angle": "pi - 2*acos(sqrt(15)/5)",
+        "exterior_angle_y": "9/10",
+        "term": "7*sqrt(2)*(-pi + 2*acos(sqrt(15)/5))/16 + 3*sqrt(3)/20",
+        "value": -0.8366568789187193
+      },
+      {
+        "triangle": [
+          1,
+          3,
+          4
+        ],
+        "area_y": "sqrt(3)/6",
+        "area_yy": "-7*sqrt(2)/16",
+        "exterior_angle": "pi - 2*acos(sqrt(15)/5)",
+        "exterior_angle_y": "9/10",
+        "term": "7*sqrt(2)*(-pi + 2*acos(sqrt(15)/5))/16 + 3*sqrt(3)/20",
+        "value": -0.8366568789187193
+      },
+      {
+        "triangle": [
+          2,
+          3,
+          4
+        ],
+        "area_y": "sqrt(2)/3",
+        "area_yy": "-5*sqrt(3)/18",
+        "exterior_angle": "pi - acos(-4/5)",
+        "exterior_angle_y": "-2*sqrt(6)/5",
+        "term": "sqrt(3)*(-25*pi - 24 + 25*acos(-4/5))/90",
+        "value": -0.7714848306730551
+      },
+      {
+        "triangle": [
+          3,
+          4,
+          5
+        ],
+        "area_y": "sqrt(2)/3",
+        "area_yy": "-5*sqrt(3)/18",
+        "exterior_angle": "pi - acos(-4/5)",
+        "exterior_angle_y": "-2*sqrt(6)/5",
+        "term": "sqrt(3)*(-25*pi - 24 + 25*acos(-4/5))/90",
+        "value": -0.7714848306730551
+      }
+    ],
+    "g_y_exact": "-7*sqrt(2)*(pi - 2*acos(sqrt(15)/5))/8 - 5*sqrt(3)*(pi - acos(-4/5))/9 - 7*sqrt(3)/30",
+    "g_y_value": -3.216283419183549,
+    "symbolic_difference": "0",
+    "strict_negative_bound": "-7*sqrt(3)/30",
+    "sign_reason": "두 외재각이 양수이므로 G_y < -7*sqrt(3)/30 < 0"
+  },
+  "flat_points": [
+    {
+      "height": 0.9,
+      "beta": 1.0,
+      "flat_a_error": 5.249911616544978e-12,
+      "analytic_a_e_error": 4.918701890233024e-09,
+      "derivative_step_difference": 1.770191415673139e-08,
+      "candidates": {
+        "a": 0.806101730557914,
+        "g": 1.4463651345950865,
+        "g_y": -3.6458848397088093,
+        "cases": [
+          {
+            "candidate": "length",
+            "constraint_obstruction": [
+              -0.0,
+              -0.520971533735391
+            ],
+            "multipliers": [
+              -0.6462850952755299,
+              0.0
+            ],
+            "consistency_residual": 8.789746708259827e-12
+          },
+          {
+            "candidate": "action_gradient",
+            "constraint_obstruction": [
+              3.6458848397088093,
+              0.806101730557914
+            ],
+            "multipliers": [
+              1.0,
+              -4.522859462397435
+            ],
+            "consistency_residual": 6.151301690238142e-11
+          }
+        ]
+      },
+      "square_flow": {
+        "a": 0.806101730557914,
+        "a_e": -2.195566550665532,
+        "a_y": 2.4681723978205263,
+        "energy": 0.3249000000042319,
+        "multipliers": [
+          2.195566550665532,
+          2.4681723978205263
+        ],
+        "qdot_e_y": [
+          2.4681723978205263,
+          2.195566550665532
+        ],
+        "configuration_speed": 3.303390298430458,
+        "constraint_rate_residual": 3.356781519414653e-11,
+        "energy_rate_residual": 0.0,
+        "a_rate_residual": 3.639114208851877e-16,
+        "momentum_tangent_residual": 1.9015704566527347e-09,
+        "shifted_rest_momentum_residual": 5.357989607546187e-10,
+        "omitted_shifted_momentum_defect": 4.02973669261754,
+        "minimum_gram": 0.15199875156082304
+      }
+    },
+    {
+      "height": 0.9,
+      "beta": 5.0,
+      "flat_a_error": 2.62501131942372e-11,
+      "analytic_a_e_error": 2.4593528991090352e-08,
+      "derivative_step_difference": 8.85096405056629e-08,
+      "candidates": {
+        "a": 4.03050865278957,
+        "g": 1.4463651345950865,
+        "g_y": -3.6458848397088093,
+        "cases": [
+          {
+            "candidate": "length",
+            "constraint_obstruction": [
+              -0.0,
+              -0.520971533735391
+            ],
+            "multipliers": [
+              -0.12925701905510598,
+              0.0
+            ],
+            "consistency_residual": 8.789635685957364e-12
+          },
+          {
+            "candidate": "action_gradient",
+            "constraint_obstruction": [
+              18.229424198544045,
+              4.03050865278957
+            ],
+            "multipliers": [
+              1.0,
+              -4.5228594623974345
+            ],
+            "consistency_residual": 3.0756197588743817e-10
+          }
+        ]
+      },
+      "square_flow": {
+        "a": 4.03050865278957,
+        "a_e": -10.977832753327641,
+        "a_y": 12.340861989102336,
+        "energy": 8.122500000105799,
+        "multipliers": [
+          10.977832753327641,
+          12.340861989102336
+        ],
+        "qdot_e_y": [
+          12.340861989102336,
+          10.977832753327641
+        ],
+        "configuration_speed": 16.516951492152057,
+        "constraint_rate_residual": 8.392078143515391e-10,
+        "energy_rate_residual": 0.0,
+        "a_rate_residual": 5.214984101032858e-15,
+        "momentum_tangent_residual": 4.685347221311531e-08,
+        "shifted_rest_momentum_residual": 1.3394242159847636e-08,
+        "omitted_shifted_momentum_defect": 100.74341731543733,
+        "minimum_gram": 0.15199875156082304
+      }
+    },
+    {
+      "height": 1.0,
+      "beta": 1.0,
+      "flat_a_error": 1.0362081563168127e-11,
+      "analytic_a_e_error": 5.770479205580159e-09,
+      "derivative_step_difference": 1.0454600030129768e-07,
+      "candidates": {
+        "a": -1.0362081563168127e-11,
+        "g": 1.6298523955272612,
+        "g_y": -3.2162834191947396,
+        "cases": [
+          {
+            "candidate": "length",
+            "constraint_obstruction": [
+              -0.0,
+              -0.4743416490252569
+            ],
+            "multipliers": null,
+            "consistency_residual": null
+          },
+          {
+            "candidate": "action_gradient",
+            "constraint_obstruction": [
+              3.2162834191947396,
+              -1.0362081563168127e-11
+            ],
+            "multipliers": null,
+            "consistency_residual": null
+          }
+        ]
+      },
+      "square_flow": {
+        "a": -1.0362081563168127e-11,
+        "a_e": -8.48528136846808,
+        "a_y": 4.934324553889584e-09,
+        "energy": 5.368636716087441e-23,
+        "multipliers": [
+          8.48528136846808,
+          4.934324553889584e-09
+        ],
+        "qdot_e_y": [
+          4.934324553889584e-09,
+          8.48528136846808
+        ],
+        "configuration_speed": 8.48528136846808,
+        "constraint_rate_residual": 1.6642980050729762e-10,
+        "energy_rate_residual": 0.0,
+        "a_rate_residual": 1.7898335371320107e-24,
+        "momentum_tangent_residual": 7.756248976420466e-09,
+        "shifted_rest_momentum_residual": 2.2563870771818983e-09,
+        "omitted_shifted_momentum_defect": 8.179079891310444,
+        "minimum_gram": 0.15199875156082246
+      }
+    },
+    {
+      "height": 1.0,
+      "beta": 5.0,
+      "flat_a_error": 5.1810407815840634e-11,
+      "analytic_a_e_error": 2.885238359340292e-08,
+      "derivative_step_difference": 5.227300050592021e-07,
+      "candidates": {
+        "a": -5.1810407815840634e-11,
+        "g": 1.6298523955272612,
+        "g_y": -3.2162834191947396,
+        "cases": [
+          {
+            "candidate": "length",
+            "constraint_obstruction": [
+              -0.0,
+              -0.4743416490252569
+            ],
+            "multipliers": null,
+            "consistency_residual": null
+          },
+          {
+            "candidate": "action_gradient",
+            "constraint_obstruction": [
+              16.0814170959737,
+              -5.1810407815840634e-11
+            ],
+            "multipliers": null,
+            "consistency_residual": null
+          }
+        ]
+      },
+      "square_flow": {
+        "a": -5.1810407815840634e-11,
+        "a_e": -42.426406842340405,
+        "a_y": 2.4671622769447918e-08,
+        "energy": 1.3421591790218601e-21,
+        "multipliers": [
+          42.426406842340405,
+          2.4671622769447918e-08
+        ],
+        "qdot_e_y": [
+          2.4671622769447918e-08,
+          42.426406842340405
+        ],
+        "configuration_speed": 42.426406842340405,
+        "constraint_rate_residual": 4.1607450126824736e-09,
+        "energy_rate_residual": 0.0,
+        "a_rate_residual": 3.743587449982308e-23,
+        "momentum_tangent_residual": 1.6564467841817532e-07,
+        "shifted_rest_momentum_residual": 5.640967515319062e-08,
+        "omitted_shifted_momentum_defect": 204.47699728276112,
+        "minimum_gram": 0.15199875156082246
+      }
+    },
+    {
+      "height": 1.1,
+      "beta": 1.0,
+      "flat_a_error": 7.306932836570468e-12,
+      "analytic_a_e_error": 2.9349489949481722e-08,
+      "derivative_step_difference": 2.956585696267666e-07,
+      "candidates": {
+        "a": -0.8909545442877439,
+        "g": 1.8206783915554046,
+        "g_y": -2.8405055856946713,
+        "cases": [
+          {
+            "candidate": "length",
+            "constraint_obstruction": [
+              -0.0,
+              -0.4350110929243061
+            ],
+            "multipliers": [
+              0.4882528471439216,
+              -0.0
+            ],
+            "consistency_residual": 9.712175508269638e-12
+          },
+          {
+            "candidate": "action_gradient",
+            "constraint_obstruction": [
+              2.8405055856946713,
+              -0.8909545442877439
+            ],
+            "multipliers": [
+              1.0,
+              3.1881599391419657
+            ],
+            "consistency_residual": 6.341815961263819e-11
+          }
+        ]
+      },
+      "square_flow": {
+        "a": -0.8909545442877439,
+        "a_e": -16.68418447274711,
+        "a_y": -2.727980011330048,
+        "energy": 0.3968999999934907,
+        "multipliers": [
+          16.68418447274711,
+          -2.727980011330048
+        ],
+        "qdot_e_y": [
+          -2.727980011330048,
+          16.68418447274711
+        ],
+        "configuration_speed": 16.90573531269409,
+        "constraint_rate_residual": 3.318767483051488e-10,
+        "energy_rate_residual": 7.105427357601002e-15,
+        "a_rate_residual": 2.326016414246838e-15,
+        "momentum_tangent_residual": 1.7734398838342713e-08,
+        "shifted_rest_momentum_residual": 2.640685892174588e-09,
+        "omitted_shifted_momentum_defect": 14.826388664247633,
+        "minimum_gram": 0.15199875156082263
+      }
+    },
+    {
+      "height": 1.1,
+      "beta": 5.0,
+      "flat_a_error": 3.653433111594495e-11,
+      "analytic_a_e_error": 1.4674741066755814e-07,
+      "derivative_step_difference": 1.4782928872136836e-06,
+      "candidates": {
+        "a": -4.45477272143872,
+        "g": 1.8206783915554046,
+        "g_y": -2.8405055856946713,
+        "cases": [
+          {
+            "candidate": "length",
+            "constraint_obstruction": [
+              -0.0,
+              -0.4350110929243061
+            ],
+            "multipliers": [
+              0.0976505694287843,
+              -0.0
+            ],
+            "consistency_residual": 9.712175508269638e-12
+          },
+          {
+            "candidate": "action_gradient",
+            "constraint_obstruction": [
+              14.202527928473357,
+              -4.45477272143872
+            ],
+            "multipliers": [
+              1.0,
+              3.1881599391419657
+            ],
+            "consistency_residual": 3.170885776171417e-10
+          }
+        ]
+      },
+      "square_flow": {
+        "a": -4.45477272143872,
+        "a_e": -83.42092236373558,
+        "a_y": -13.639900056650353,
+        "energy": 9.922499999837267,
+        "multipliers": [
+          83.42092236373558,
+          -13.639900056650353
+        ],
+        "qdot_e_y": [
+          -13.639900056650353,
+          83.42092236373558
+        ],
+        "configuration_speed": 84.52867656347051,
+        "constraint_rate_residual": 8.296865416923538e-09,
+        "energy_rate_residual": 9.094947017729282e-13,
+        "a_rate_residual": 9.026217719207061e-14,
+        "momentum_tangent_residual": 4.4140364252598374e-07,
+        "shifted_rest_momentum_residual": 6.601715085707838e-08,
+        "omitted_shifted_momentum_defect": 370.6597166061904,
+        "minimum_gram": 0.15199875156082263
+      }
+    }
+  ],
+  "deformed_points": [
+    {
+      "offsets": [
+        -0.02,
+        0.01,
+        0.0
+      ],
+      "square_flow": {
+        "a": 0.15080504352245802,
+        "a_e": -6.483531235717493,
+        "a_y": 0.4199512125700744,
+        "energy": 0.011371080575905228,
+        "multipliers": [
+          6.483531235717493,
+          0.4199512125700744
+        ],
+        "qdot_e_y": [
+          0.4199512125700744,
+          6.483531235717493
+        ],
+        "configuration_speed": 6.497117538221351,
+        "constraint_rate_residual": 4.199085523737267e-12,
+        "energy_rate_residual": 5.551115123125783e-17,
+        "a_rate_residual": 1.7711874778821254e-16,
+        "momentum_tangent_residual": 1.0232515279540166e-08,
+        "shifted_rest_momentum_residual": 9.217551166784688e-10,
+        "omitted_shifted_momentum_defect": 6.353013949091358,
+        "minimum_gram": 0.17882500607409063
+      },
+      "independent_action_hessian_error": 1.1941854913266603e-07
+    },
+    {
+      "offsets": [
+        0.02,
+        -0.01,
+        0.0
+      ],
+      "square_flow": {
+        "a": -0.19365130716320067,
+        "a_e": -11.3729444046874,
+        "a_y": -0.6613458759642532,
+        "energy": 0.018750414383008146,
+        "multipliers": [
+          11.3729444046874,
+          -0.6613458759642532
+        ],
+        "qdot_e_y": [
+          -0.6613458759642532,
+          11.3729444046874
+        ],
+        "configuration_speed": 11.392157074047276,
+        "constraint_rate_residual": 2.814593003108712e-11,
+        "energy_rate_residual": 0.0,
+        "a_rate_residual": 1.6174963941607607e-16,
+        "momentum_tangent_residual": 2.8752822345268214e-09,
+        "shifted_rest_momentum_residual": 1.675294569736252e-09,
+        "omitted_shifted_momentum_defect": 10.895619142000184,
+        "minimum_gram": 0.12477914071731183
+      },
+      "independent_action_hessian_error": 6.397401128288571e-08
+    },
+    {
+      "offsets": [
+        0.01,
+        0.01,
+        0.003
+      ],
+      "square_flow": {
+        "a": -0.08982929146824266,
+        "a_e": -10.247103726287085,
+        "a_y": -0.3157692135547068,
+        "energy": 0.004034650802843247,
+        "multipliers": [
+          10.247103726287085,
+          -0.3157692135547068
+        ],
+        "qdot_e_y": [
+          -0.3157692135547068,
+          10.247103726287085
+        ],
+        "configuration_speed": 10.251967858587717,
+        "constraint_rate_residual": 4.18622247977396e-10,
+        "energy_rate_residual": 0.0,
+        "a_rate_residual": 1.6245772867759647e-16,
+        "momentum_tangent_residual": 1.4234160516934935e-09,
+        "shifted_rest_momentum_residual": 2.3045125807641398e-09,
+        "omitted_shifted_momentum_defect": 10.002330074917213,
+        "minimum_gram": 0.14042075525998615
+      },
+      "independent_action_hessian_error": 1.0430545316353346e-07
+    }
+  ],
+  "configuration_trajectories": [
+    {
+      "steps": 8,
+      "duration": 0.002,
+      "beta": 1.0,
+      "initial_a": 0.14674424244742745,
+      "final_a": 0.14674424242559306,
+      "maximum_a_change": 2.7015417680686937e-11,
+      "maximum_energy_change": 3.964358355479369e-12,
+      "minimum_gram": 0.17774899862643045,
+      "initial_e_y": [
+        1.98,
+        1.6329931618554523
+      ],
+      "final_e_y": [
+        1.980807862075104,
+        1.6459263509543467
+      ],
+      "endpoint_step_difference": 9.0436547139916e-12
+    },
+    {
+      "steps": 8,
+      "duration": 0.002,
+      "beta": 1.0,
+      "initial_a": -1.0362081563168127e-11,
+      "final_a": -8.511709855459534e-12,
+      "maximum_a_change": 2.4424906541753444e-11,
+      "maximum_energy_change": 5.122117683205875e-23,
+      "minimum_gram": 0.15199875155889234,
+      "initial_e_y": [
+        2.0,
+        1.6329931618554523
+      ],
+      "final_e_y": [
+        2.000000000000573,
+        1.6504326672582088
+      ],
+      "endpoint_step_difference": 2.7704061267286306e-11
+    },
+    {
+      "steps": 8,
+      "duration": 0.002,
+      "beta": 1.0,
+      "initial_a": -0.2005416647569517,
+      "final_a": -0.20054166469551937,
+      "maximum_a_change": 6.62432886322506e-11,
+      "maximum_energy_change": 1.3284540134606004e-11,
+      "minimum_gram": 0.12477914071731183,
+      "initial_e_y": [
+        2.02,
+        1.6329931618554523
+      ],
+      "final_e_y": [
+        2.018485000393647,
+        1.6575852912547655
+      ],
+      "endpoint_step_difference": 1.0764256153095175e-10
+    }
+  ],
+  "unfinished": [
+    "공급 에너지와 시간의 실제 미시 작용 유도",
+    "계수 변화의 이산 정준 관계와 전체 양자 커널에서의 에너지 전달",
+    "물리 내적·편극·장치 준비와 환류·0D 보충",
+    "공통 계량·3+1 중력·전자기·약력·강력·암흑부문·허블 텐션"
+  ]
+}

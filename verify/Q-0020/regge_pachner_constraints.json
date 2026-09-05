@@ -1,0 +1,300 @@
+{
+  "status": "[산출]",
+  "scope": "공급한 실제 경계 2→3 뒤 전방 3→2의 제약 결합과 양자 순서·도메인 대조",
+  "source_sha256": "5badf64159a9880caa4edfb520ee8d28bd1d0f392d8277d8bcf5c3aaa2cdc656",
+  "dependencies": {
+    "regge_pachner_creation.py": "68c5f330bd2e4732970e5b9379f3fdbd86e236fe301a45521eea0663d04e3705",
+    "regge_pachner_transport.py": "c995451a5b12e47470f37c19926574c2cbfd7a20aeb07c0c76e541aef143b415",
+    "regge_tent_transfer.py": "e509b0b583a99258730650584e812d9b6f097383629b4e855636c8e87c710f71"
+  },
+  "reference_points": [
+    [
+      -0.5,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.5,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.5773502691896258,
+      0.5773502691896258,
+      0.5773502691896258
+    ],
+    [
+      0.0,
+      0.5773502691896258,
+      -0.5773502691896258,
+      -0.5773502691896258
+    ],
+    [
+      0.0,
+      -0.5773502691896258,
+      0.5773502691896258,
+      -0.5773502691896258
+    ],
+    [
+      0.0,
+      -0.5773502691896258,
+      -0.5773502691896258,
+      0.5773502691896258
+    ]
+  ],
+  "boundary_moves": {
+    "first_removed": [
+      [
+        0,
+        1,
+        2,
+        3
+      ],
+      [
+        0,
+        1,
+        2,
+        4
+      ]
+    ],
+    "first_added": [
+      [
+        0,
+        1,
+        3,
+        4
+      ],
+      [
+        0,
+        2,
+        3,
+        4
+      ],
+      [
+        1,
+        2,
+        3,
+        4
+      ]
+    ],
+    "second_removed": [
+      [
+        0,
+        1,
+        3,
+        4
+      ],
+      [
+        0,
+        1,
+        3,
+        5
+      ],
+      [
+        0,
+        1,
+        4,
+        5
+      ]
+    ],
+    "second_added": [
+      [
+        0,
+        3,
+        4,
+        5
+      ],
+      [
+        1,
+        3,
+        4,
+        5
+      ]
+    ],
+    "final_internal_edges": [
+      [
+        0,
+        1
+      ]
+    ]
+  },
+  "cases": [
+    {
+      "factor": 0.85,
+      "postconstraint": 0.0,
+      "preconstraint": 0.5935292887896022,
+      "internal_equation_residual": 2.220446049250313e-16,
+      "action_residual": 2.220446049250313e-15,
+      "gradient_residual": 1.538370149106851e-15,
+      "undo_residual": 7.850462293418876e-17,
+      "forward_accepted": false,
+      "mixed_hessian": -1.9311056732469278,
+      "hessian_skew": 1.9626155733547187e-11,
+      "curvature": [
+        0.4397505606604304,
+        0.3516218243923728,
+        0.3516218243923728,
+        0.4397505606604304
+      ]
+    },
+    {
+      "factor": 0.95,
+      "postconstraint": 0.0,
+      "preconstraint": 0.23265654694538518,
+      "internal_equation_residual": 3.3306690738754696e-16,
+      "action_residual": 1.5543122344752192e-15,
+      "gradient_residual": 1.5463617361248926e-15,
+      "undo_residual": 7.850462293418876e-17,
+      "forward_accepted": false,
+      "mixed_hessian": -2.5705074309713183,
+      "hessian_skew": 8.406589042284668e-11,
+      "curvature": [
+        0.16202145904377252,
+        0.1481872702167415,
+        0.1481872702167415,
+        0.16202145904377252
+      ]
+    },
+    {
+      "factor": 1,
+      "postconstraint": 0.0,
+      "preconstraint": -2.886579864025407e-15,
+      "internal_equation_residual": 2.220446049250313e-16,
+      "action_residual": 4.440892098500626e-16,
+      "gradient_residual": 1.837746106097754e-15,
+      "undo_residual": 7.850462293418876e-17,
+      "forward_accepted": true,
+      "mixed_hessian": -3.1819805153372274,
+      "hessian_skew": 9.551374855760182e-11,
+      "curvature": [
+        -2.6645352591003757e-15,
+        -8.881784197001252e-16,
+        -8.881784197001252e-16,
+        -2.6645352591003757e-15
+      ]
+    },
+    {
+      "factor": 1.05,
+      "postconstraint": 0.0,
+      "preconstraint": -0.30067999168727977,
+      "internal_equation_residual": 2.220446049250313e-16,
+      "action_residual": 3.1086244689504383e-15,
+      "gradient_residual": 1.2161883888976235e-15,
+      "undo_residual": 7.850462293418876e-17,
+      "forward_accepted": false,
+      "mixed_hessian": -4.316730697072336,
+      "hessian_skew": 1.1775693440128314e-10,
+      "curvature": [
+        -0.18893077725490315,
+        -0.21197587832813625,
+        -0.21197587832813625,
+        -0.18893077725490315
+      ]
+    },
+    {
+      "factor": 1.1,
+      "postconstraint": 0.0,
+      "preconstraint": -0.7468845010662515,
+      "internal_equation_residual": 4.440892098500626e-16,
+      "action_residual": 1.5543122344752192e-15,
+      "gradient_residual": 1.121270291988505e-15,
+      "undo_residual": 7.850462293418876e-17,
+      "forward_accepted": false,
+      "mixed_hessian": -7.12517854717723,
+      "hessian_skew": 3.0944010212723314e-10,
+      "curvature": [
+        -0.4291304193413854,
+        -0.5667155820802825,
+        -0.5667155820802825,
+        -0.42913041934138585
+      ]
+    }
+  ],
+  "exact_certificate": {
+    "area_derivative": "3/8",
+    "dihedral_derivatives": {
+      "2": [
+        "0",
+        "0",
+        "3*sqrt(2)/2"
+      ],
+      "3": [
+        "0",
+        "3*sqrt(2)/4",
+        "3*sqrt(2)/4"
+      ],
+      "4": [
+        "0",
+        "3*sqrt(2)/4",
+        "3*sqrt(2)/4"
+      ],
+      "5": [
+        "0",
+        "0",
+        "3*sqrt(2)/2"
+      ]
+    },
+    "deficit_derivatives": {
+      "2": "-3*sqrt(2)/2",
+      "3": "-3*sqrt(2)/2",
+      "4": "-3*sqrt(2)/2",
+      "5": "-3*sqrt(2)/2"
+    },
+    "mixed": "-9*sqrt(2)/4",
+    "poisson_bracket": "9*sqrt(2)/4",
+    "value": -3.181980515339464
+  },
+  "action_mixed_finite_difference": [
+    -3.1819803902877197,
+    -3.1819805161129957
+  ],
+  "action_mixed_error": 1.2505174407095865e-07,
+  "root": 1.6329931618554514,
+  "reference_new_length": 1.6329931618554523,
+  "root_residual": 3.3306690738754696e-16,
+  "local_uniqueness": "기준점의 비영 혼합 미분에 따른 국소 유일성만 주장한다",
+  "ordering": [
+    {
+      "t": 0.43,
+      "y": 1.0708252269472673,
+      "naive_residual": 0.4184478483570652,
+      "naive_formula_error": 5.560914687269536e-11,
+      "ordered_residual": 6.924148129356457e-11,
+      "relative_naive_residual": 0.46692960477963547
+    },
+    {
+      "t": 0.43,
+      "y": 1.065874379906559,
+      "naive_residual": 0.41146272934248984,
+      "naive_formula_error": 9.804037802645985e-12,
+      "ordered_residual": 1.1960481335893449e-11,
+      "relative_naive_residual": 0.46909843168958865
+    }
+  ],
+  "naive_domain": {
+    "cutoffs": [
+      0.1,
+      0.001,
+      1e-06
+    ],
+    "exact_truncated_squared_norms": [
+      0.4317347049363836,
+      1.2952041148091507,
+      2.5904082296183013
+    ],
+    "endpoint_behavior": "단위 기준 섬유에서 단순 미분 제약의 제곱노름은 log(1/eta)/(2L^2)로 발산한다",
+    "domain_boundary": "대칭화 미분식은 내부 코어에서만 같고 준비 상태는 단순 미분 연산자의 도메인에 없다"
+  },
+  "assumptions": [
+    "공유 길이·유클리드 레게 작용 beta=1과 평탄 여섯 점을 공급한다",
+    "초기 경계 운동량은 실제 이전 복합체 작용의 기울기로 공급한다",
+    "양자 순서 비교는 이전에 공급한 du dy·주기 섬유 도메인의 범위다"
+  ],
+  "unfinished": [
+    "비평탄 일반 이력의 전체 제약·물리 양자측도·내적·초기 준비·방출·환류",
+    "공통 계량의 동역학적 선택과 0D에서 3+1 Plebanski/Einstein으로 가는 전체 다리"
+  ]
+}

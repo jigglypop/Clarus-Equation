@@ -2,7 +2,7 @@ import math
 
 import pytest
 
-from examples.physics.autonomous_covariant_single_collision import (
+from examples.physics.causal.autonomous_covariant_single_collision import (
     certify_autonomous_covariant_single_collision,
     smooth_compact_bump,
     smooth_compact_bump_derivative,

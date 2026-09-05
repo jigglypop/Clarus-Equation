@@ -59,8 +59,7 @@ def select_question(forced: str | None, dry_run: bool) -> str | None:
         questions = ledger.load_questions(REPO_ROOT)
         target = ledger.find_question(questions, forced)
         if target is None:
-            print(f"unknown question: {forced}", file=sys.stderr)
-            return None
+            raise ValueError(f"unknown question: {forced}")
         if target.get("status") in ("resolved",):
             print(f"{forced} is already {target['status']}", file=sys.stderr)
             return None
@@ -74,7 +73,11 @@ def select_question(forced: str | None, dry_run: bool) -> str | None:
     args = ["next-question"] + (["--dry-run"] if dry_run else [])
     completed = ledger_cmd(*args)
     output = completed.stdout.strip()
-    if completed.returncode != 0 or output == "NONE" or not output:
+    if completed.returncode != 0:
+        raise RuntimeError(completed.stderr.strip() or f"next-question failed ({completed.returncode})")
+    if not output:
+        raise RuntimeError("next-question returned empty output")
+    if output == "NONE":
         return None
     return output
 
@@ -112,7 +115,11 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     for iteration in range(1, args.max_iters + 1):
-        qid = select_question(args.question, args.dry_run)
+        try:
+            qid = select_question(args.question, args.dry_run)
+        except (ValueError, RuntimeError) as exc:
+            print(str(exc), file=sys.stderr)
+            return 2
         if qid is None:
             print("선택 가능한 open/active 질문이 없다 (escalated/parked/resolved만 남음). 사람 개입 필요.")
             return 0

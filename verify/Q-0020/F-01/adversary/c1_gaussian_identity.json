@@ -1,0 +1,40 @@
+{
+  "rank_qr": 39,
+  "rank_svd": 39,
+  "subspace_agreement": 5.143015996767931e-15,
+  "d_R_qr": 7.4820420273383474,
+  "d_R_svd": 7.482042027338306,
+  "d_R_basis_diff": 4.1744385725905886e-14,
+  "n_neg_qr": 31,
+  "n_neg_svd": 31,
+  "d_W_qr": 4.19759651263711,
+  "d_W_svd": 4.197596512637077,
+  "d_W_basis_diff": 3.375077994860476e-14,
+  "card_d_R": 7.482042027338306,
+  "card_d_W": 4.197596512637077,
+  "reproduce_d_R_err": 4.1744385725905886e-14,
+  "reproduce_d_W_err": 3.375077994860476e-14,
+  "schur_inverse_residual_R": 2.4584236655963916e-13,
+  "d_via_schur_R": 7.482042027338357,
+  "schur_inverse_residual_W": 5.794291645507898e-14,
+  "d_via_schur_W": 4.197596512637086,
+  "d_W_cholesky": 4.197596512637088,
+  "toy_identity": {
+    "analytic": 2.5505313398255076,
+    "delta_regularized": [
+      2.443609725460857,
+      2.5327475339983536,
+      2.546060063100658
+    ],
+    "rel_err_finest": 0.0017530765668441908
+  },
+  "indefinite_note": {
+    "n_neg_of_KtNinvK": 31,
+    "signature_N": [
+      10,
+      40
+    ],
+    "explain": "N has 10 positive / 40 negative eigenvalues; exp(-kappa xi^T N xi/2) diverges along 40 directions. R takes |det| of K^T N^-1 K, of which 31/39 eigenvalues are negative: the 'volume ratio' is a product of 31 negative numbers whose absolute value is retained and phase e^{i pi*31/2} discarded. This is a declared convention, not a convergent integral."
+  },
+  "discarded_phase_deg": 270.0
+}

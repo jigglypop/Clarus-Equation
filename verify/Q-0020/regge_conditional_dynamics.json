@@ -1,0 +1,1320 @@
+{
+  "status": "[산출]",
+  "source_sha256": "ae4c078e0a5a4b3b5a9a64dd587b8f35409a65569b7c088107ecea88b52f80e7",
+  "dependencies": {
+    "regge_postconstraint_projection.py": "0d1abb5317b96ee24dfe0e844f581df527dc8286656e8486444bb8748c407fe8",
+    "regge_quantum_constraint_transfer.py": "0f49325180ab4e0e19cb2546c0576fbf6ac93840163a7db3e7d75fd064e26898",
+    "regge_coalescing_kernel.py": "79bbf93a1ee98343dc3f8d890c334702d69fd36ad710b6790f7bab3bb9020f5c",
+    "regge_internal_marginal.py": "6690a402d1d750e1dc3ce340cbb0d1d96f2fa34b074dc45b8bfc4f4c416d53a6",
+    "regge_pachner_constraints.py": "5badf64159a9880caa4edfb520ee8d28bd1d0f392d8277d8bcf5c3aaa2cdc656",
+    "regge_pachner_creation.py": "68c5f330bd2e4732970e5b9379f3fdbd86e236fe301a45521eea0663d04e3705",
+    "regge_pachner_transport.py": "c995451a5b12e47470f37c19926574c2cbfd7a20aeb07c0c76e541aef143b415",
+    "regge_tent_transfer.py": "e509b0b583a99258730650584e812d9b6f097383629b4e855636c8e87c710f71"
+  },
+  "geometry": [
+    {
+      "h": 0.5,
+      "action_error": 3.552713678800501e-15,
+      "canonical_error": 1.1546319456101628e-14,
+      "support_error": 1.1657341758564144e-15,
+      "minimum_gram": 0.013980222607435033,
+      "outside_rejections": 3
+    },
+    {
+      "h": 0.9,
+      "action_error": 0.0,
+      "canonical_error": 5.329070518200751e-15,
+      "support_error": 4.3298697960381105e-15,
+      "minimum_gram": 0.020513175847096752,
+      "outside_rejections": 3
+    },
+    {
+      "h": 1.0,
+      "action_error": 3.552713678800501e-15,
+      "canonical_error": 7.105427357601002e-15,
+      "support_error": 2.55351295663786e-15,
+      "minimum_gram": 0.022715351677724125,
+      "outside_rejections": 3
+    },
+    {
+      "h": 1.1,
+      "action_error": 7.105427357601002e-15,
+      "canonical_error": 5.329070518200751e-15,
+      "support_error": 6.661338147750939e-16,
+      "minimum_gram": 0.025099736078571057,
+      "outside_rejections": 3
+    }
+  ],
+  "relations": [
+    {
+      "h": 0.9,
+      "mixed_derivative": -0.8061017305600418,
+      "relation_rank": 28,
+      "input_projection_rank": 28,
+      "output_projection_rank": 28,
+      "pullback_rank": 28,
+      "lagrangian_error": 4.348373883189538e-10,
+      "hessian_skew": 8.69674748882332e-11,
+      "rank_tolerance": 1e-06
+    },
+    {
+      "h": 1.0,
+      "mixed_derivative": 0.0,
+      "relation_rank": 28,
+      "input_projection_rank": 27,
+      "output_projection_rank": 27,
+      "pullback_rank": 26,
+      "lagrangian_error": 3.14563190310461e-10,
+      "hessian_skew": 6.29126380620922e-11,
+      "rank_tolerance": 1e-06
+    },
+    {
+      "h": 1.1,
+      "mixed_derivative": 0.8909545442974581,
+      "relation_rank": 28,
+      "input_projection_rank": 28,
+      "output_projection_rank": 28,
+      "pullback_rank": 28,
+      "lagrangian_error": 6.19875706320272e-10,
+      "hessian_skew": 1.239748304016075e-10,
+      "rank_tolerance": 1e-06
+    }
+  ],
+  "grids": [
+    {
+      "size": 32,
+      "h": 1.0,
+      "kind": "length",
+      "volume": 5.169499939337726,
+      "volume_error": 1.687538997430238e-14,
+      "minimum_gram": 0.0005417485684314585,
+      "coefficient": 0.05975811579861284,
+      "normal_equation_error": 1.0362804364616451e-15,
+      "full_action_coefficient": 0.0597954201935219,
+      "boundary_phase_coefficient_error": 0.0,
+      "separable_coefficient": 1.6695333292113014e-31,
+      "separable_norm_squared": 0.9999999999999996,
+      "transfer": [
+        {
+          "beta": 0.0,
+          "norm_squared": 0.9999999999999998,
+          "second_singular": 0.21251288172294935,
+          "optimal_remainder": 2.3397203228439134e-30,
+          "budget_error": 6.661338147750939e-16,
+          "spectral_budget_error": 2.2204460492502897e-16,
+          "weak_phase_ratio": null,
+          "hilbert_schmidt_squared": 1.0708220008148177
+        },
+        {
+          "beta": 0.025,
+          "norm_squared": 0.999962652320731,
+          "second_singular": 0.21261606718131276,
+          "optimal_remainder": 3.7347679269655884e-05,
+          "budget_error": 4.440892098500626e-16,
+          "spectral_budget_error": 6.605908311682618e-16,
+          "weak_phase_ratio": 0.059756286830392455,
+          "hilbert_schmidt_squared": 1.0708220008148177
+        },
+        {
+          "beta": 0.05,
+          "norm_squared": 0.9998506229990216,
+          "second_singular": 0.2129249301999682,
+          "optimal_remainder": 0.00014937700097748346,
+          "budget_error": 8.881784197001252e-16,
+          "spectral_budget_error": 9.06664066741003e-16,
+          "weak_phase_ratio": 0.05975080039135604,
+          "hilbert_schmidt_squared": 1.0708220008148177
+        },
+        {
+          "beta": 0.1,
+          "norm_squared": 0.9994027113845682,
+          "second_singular": 0.21415019656714473,
+          "optimal_remainder": 0.0005972886154311435,
+          "budget_error": 4.440892098500626e-16,
+          "spectral_budget_error": 7.022377471188612e-16,
+          "weak_phase_ratio": 0.05972886154318456,
+          "hilbert_schmidt_squared": 1.0708220008148177
+        },
+        {
+          "beta": 0.2,
+          "norm_squared": 0.9976143513329611,
+          "second_singular": 0.21890045792776536,
+          "optimal_remainder": 0.0023856486670391815,
+          "budget_error": 2.220446049250313e-16,
+          "spectral_budget_error": 2.393918396847994e-16,
+          "weak_phase_ratio": 0.05964121667597354,
+          "hilbert_schmidt_squared": 1.0708220008148177
+        },
+        {
+          "beta": 1.0,
+          "norm_squared": 0.9430721395160172,
+          "second_singular": 0.319848828895981,
+          "optimal_remainder": 0.05692786048398223,
+          "budget_error": 3.3306690738754696e-16,
+          "spectral_budget_error": 5.620504062164855e-16,
+          "weak_phase_ratio": 0.056927860483982795,
+          "hilbert_schmidt_squared": 1.0708220008148177
+        },
+        {
+          "beta": 5.0,
+          "norm_squared": 0.4410910690290631,
+          "second_singular": 0.609871089314357,
+          "optimal_remainder": 0.5589089309709381,
+          "budget_error": 1.3322676295501878e-15,
+          "spectral_budget_error": 1.1102230246251565e-15,
+          "weak_phase_ratio": 0.022356357238837478,
+          "hilbert_schmidt_squared": 1.0708220008148177
+        }
+      ],
+      "energy_probe": "epsilon=1+e/L; 각 입력 셀 중점의 검사 에너지이며 물리 해밀토니안은 미유도",
+      "energy": [
+        {
+          "beta": 0.0,
+          "minimum": -0.25962769382628276,
+          "maximum": 0.28097044845459274,
+          "hermitian_error": 5.551115123125783e-17,
+          "diagonal_phase_error": 6.938893903907228e-17,
+          "spectral_error": 1.1102230246251565e-16,
+          "states": [
+            {
+              "total": 1.1902611628956346,
+              "kept": 0.7780348893805697,
+              "remainder": 0.6718539673413476,
+              "cross": -0.25962769382628265,
+              "budget_error": 1.6653345369377348e-16,
+              "norm_error": 0.0,
+              "diagonal_state_energy_change": 0.2596276938262829
+            },
+            {
+              "total": 1.7793219114100096,
+              "kept": 0.7472093926036396,
+              "remainder": 0.7511420703517776,
+              "cross": 0.28097044845459285,
+              "budget_error": 4.440892098500626e-16,
+              "norm_error": 4.440892098500626e-16,
+              "diagonal_state_energy_change": -0.2809704484545925
+            }
+          ],
+          "positive_input": {
+            "total": 1.5375208020167839,
+            "kept": 1.4584165435833074,
+            "remainder": 0.018202465047810375,
+            "cross": 0.060901793385666377,
+            "budget_error": 2.914335439641036e-16,
+            "norm_error": 0.0,
+            "diagonal_state_energy_change": -0.06090179338566615
+          },
+          "zero_phase_identity_error": 8.326672684688674e-17
+        },
+        {
+          "beta": 1.0,
+          "minimum": -0.2539274152117708,
+          "maximum": 0.2761576666465906,
+          "hermitian_error": 1.962615573354719e-17,
+          "diagonal_phase_error": 4.5102810375396984e-17,
+          "spectral_error": 1.6653345369377348e-16,
+          "states": [
+            {
+              "total": 1.1863179545717875,
+              "kept": 0.7591928045915113,
+              "remainder": 0.6810525651920472,
+              "cross": -0.253927415211771,
+              "budget_error": 0.0,
+              "norm_error": 2.220446049250313e-16,
+              "diagonal_state_energy_change": 0.253927415211771
+            },
+            {
+              "total": 1.7859653088176484,
+              "kept": 0.7473329638337252,
+              "remainder": 0.7624746783373331,
+              "cross": 0.2761576666465905,
+              "budget_error": 3.885780586188048e-16,
+              "norm_error": 4.440892098500626e-16,
+              "diagonal_state_energy_change": -0.27615766664659014
+            }
+          ],
+          "positive_input": {
+            "total": 1.5375208020167839,
+            "kept": 0.21702822015772893,
+            "remainder": 1.2197568899062528,
+            "cross": 0.10073569195280266,
+            "budget_error": 4.718447854656915e-16,
+            "norm_error": 0.0,
+            "diagonal_state_energy_change": -0.10073569195280219
+          },
+          "zero_phase_identity_error": null
+        },
+        {
+          "beta": 5.0,
+          "minimum": -0.18313090946628385,
+          "maximum": 0.22510818310582498,
+          "hermitian_error": 2.7755575615628914e-17,
+          "diagonal_phase_error": 3.9898639947466563e-17,
+          "spectral_error": 1.1102230246251565e-16,
+          "states": [
+            {
+              "total": 1.1400251346003996,
+              "kept": 0.4696422726506454,
+              "remainder": 0.8535137714160381,
+              "cross": -0.18313090946628396,
+              "budget_error": 0.0,
+              "norm_error": 1.1102230246251565e-16,
+              "diagonal_state_energy_change": 0.18313090946628408
+            },
+            {
+              "total": 1.8344752909306998,
+              "kept": 0.5363574887490393,
+              "remainder": 1.073009619075836,
+              "cross": 0.22510818310582506,
+              "budget_error": 4.718447854656915e-16,
+              "norm_error": 4.440892098500626e-16,
+              "diagonal_state_energy_change": -0.22510818310582437
+            }
+          ],
+          "positive_input": {
+            "total": 1.5375208020167839,
+            "kept": 0.063674283855201,
+            "remainder": 1.4395868071251976,
+            "cross": 0.03425971103638592,
+            "budget_error": 5.551115123125783e-16,
+            "norm_error": 0.0,
+            "diagonal_state_energy_change": -0.034259711036385365
+          },
+          "zero_phase_identity_error": null
+        }
+      ],
+      "constant_energy_cross_error": 2.823925224926892e-17,
+      "boundary_phase_energy_error": 6.455875440461582e-17
+    },
+    {
+      "size": 64,
+      "h": 1.0,
+      "kind": "length",
+      "volume": 5.16949993933771,
+      "volume_error": 8.881784197001252e-16,
+      "minimum_gram": 0.00013553550066742852,
+      "coefficient": 0.05971346770131696,
+      "normal_equation_error": 4.2668776498167027e-16,
+      "full_action_coefficient": 0.059722358936489084,
+      "boundary_phase_coefficient_error": 1.3877787807814457e-17,
+      "separable_coefficient": 1.9208272485681965e-32,
+      "separable_norm_squared": 1.0000000000000013,
+      "transfer": [
+        {
+          "beta": 0.0,
+          "norm_squared": 1.0000000000000013,
+          "second_singular": 0.2129801227728524,
+          "optimal_remainder": 2.8248079363306208e-30,
+          "budget_error": 2.220446049250313e-16,
+          "spectral_budget_error": 1.3322676295501906e-15,
+          "weak_phase_ratio": null,
+          "hilbert_schmidt_squared": 1.075857495136525
+        },
+        {
+          "beta": 0.025,
+          "norm_squared": 0.9999626802264776,
+          "second_singular": 0.2130836426277193,
+          "optimal_remainder": 3.731977352292508e-05,
+          "budget_error": 1.1102230246251565e-16,
+          "spectral_budget_error": 5.321738601009318e-16,
+          "weak_phase_ratio": 0.05971163763582864,
+          "hilbert_schmidt_squared": 1.075857495136525
+        },
+        {
+          "beta": 0.05,
+          "norm_squared": 0.9998507346302379,
+          "second_singular": 0.21339349491932735,
+          "optimal_remainder": 0.00014926536976208373,
+          "budget_error": 1.5543122344752192e-15,
+          "spectral_budget_error": 3.561604136614882e-17,
+          "weak_phase_ratio": 0.059706147904847726,
+          "hilbert_schmidt_squared": 1.075857495136525
+        },
+        {
+          "beta": 0.1,
+          "norm_squared": 0.9994031580409332,
+          "second_singular": 0.2146225179623837,
+          "optimal_remainder": 0.0005968419590682842,
+          "budget_error": 4.440892098500626e-16,
+          "spectral_budget_error": 1.4436151926644492e-15,
+          "weak_phase_ratio": 0.05968419590668404,
+          "hilbert_schmidt_squared": 1.0758574951365247
+        },
+        {
+          "beta": 0.2,
+          "norm_squared": 0.9976161400525684,
+          "second_singular": 0.21938504956305885,
+          "optimal_remainder": 0.002383859947432909,
+          "budget_error": 8.881784197001252e-16,
+          "spectral_budget_error": 1.287598500043785e-15,
+          "weak_phase_ratio": 0.05959649868579052,
+          "hilbert_schmidt_squared": 1.075857495136525
+        },
+        {
+          "beta": 1.0,
+          "norm_squared": 0.9431183318605801,
+          "second_singular": 0.32029192181427013,
+          "optimal_remainder": 0.056881668139419486,
+          "budget_error": 1.1102230246251565e-15,
+          "spectral_budget_error": 3.7470027081099033e-16,
+          "weak_phase_ratio": 0.05688166813941986,
+          "hilbert_schmidt_squared": 1.0758574951365247
+        },
+        {
+          "beta": 5.0,
+          "norm_squared": 0.44127271360242665,
+          "second_singular": 0.61031222082344,
+          "optimal_remainder": 0.5587272863975742,
+          "budget_error": 1.3322676295501878e-15,
+          "spectral_budget_error": 7.771561172376096e-16,
+          "weak_phase_ratio": 0.022349091455902935,
+          "hilbert_schmidt_squared": 1.075857495136525
+        }
+      ],
+      "energy_probe": "epsilon=1+e/L; 각 입력 셀 중점의 검사 에너지이며 물리 해밀토니안은 미유도",
+      "energy": [
+        {
+          "beta": 0.0,
+          "minimum": -0.25944613053185817,
+          "maximum": 0.2810894761225814,
+          "hermitian_error": 4.85722573273506e-17,
+          "diagonal_phase_error": 4.9439619065339e-17,
+          "spectral_error": 1.1102230246251565e-16,
+          "states": [
+            {
+              "total": 1.1903583762358059,
+              "kept": 0.7785315815349803,
+              "remainder": 0.6712729252326839,
+              "cross": -0.25944613053185805,
+              "budget_error": 2.220446049250313e-16,
+              "norm_error": 6.661338147750939e-16,
+              "diagonal_state_energy_change": 0.2594461305318583
+            },
+            {
+              "total": 1.7793064976542565,
+              "kept": 0.7470898092809781,
+              "remainder": 0.7511272122506981,
+              "cross": 0.2810894761225814,
+              "budget_error": 1.1102230246251565e-15,
+              "norm_error": 8.881784197001252e-16,
+              "diagonal_state_energy_change": -0.2810894761225802
+            }
+          ],
+          "positive_input": {
+            "total": 1.5375301889793382,
+            "kept": 1.458409453239137,
+            "remainder": 0.018204092171854126,
+            "cross": 0.06091664356834768,
+            "budget_error": 5.204170427930421e-16,
+            "norm_error": 2.220446049250313e-16,
+            "diagonal_state_energy_change": -0.06091664356834725
+          },
+          "zero_phase_identity_error": 2.8449465006019636e-16
+        },
+        {
+          "beta": 1.0,
+          "minimum": -0.25372265949814377,
+          "maximum": 0.2762789410604317,
+          "hermitian_error": 1.4304896245381992e-17,
+          "diagonal_phase_error": 2.949348774913697e-17,
+          "spectral_error": 1.1102230246251565e-16,
+          "states": [
+            {
+              "total": 1.1864343958098087,
+              "kept": 0.7595688308542956,
+              "remainder": 0.6805882244536576,
+              "cross": -0.2537226594981439,
+              "budget_error": 6.661338147750939e-16,
+              "norm_error": 4.440892098500626e-16,
+              "diagonal_state_energy_change": 0.25372265949814454
+            },
+            {
+              "total": 1.7859911172459044,
+              "kept": 0.7473790897382901,
+              "remainder": 0.7623330864471838,
+              "cross": 0.2762789410604316,
+              "budget_error": 1.1102230246251565e-15,
+              "norm_error": 8.881784197001252e-16,
+              "diagonal_state_energy_change": -0.2762789410604305
+            }
+          ],
+          "positive_input": {
+            "total": 1.5375301889793382,
+            "kept": 0.21747873495473552,
+            "remainder": 1.2191231481530374,
+            "cross": 0.10092830587156593,
+            "budget_error": 6.106226635438361e-16,
+            "norm_error": 4.440892098500626e-16,
+            "diagonal_state_energy_change": -0.10092830587156532
+          },
+          "zero_phase_identity_error": null
+        },
+        {
+          "beta": 5.0,
+          "minimum": -0.18264922757976712,
+          "maximum": 0.2253773907308295,
+          "hermitian_error": 1.4304896245381992e-17,
+          "diagonal_phase_error": 3.382780277580086e-17,
+          "spectral_error": 2.7755575615628914e-17,
+          "states": [
+            {
+              "total": 1.1402648824395185,
+              "kept": 0.46986474732899725,
+              "remainder": 0.8530493626902889,
+              "cross": -0.18264922757976715,
+              "budget_error": 3.885780586188048e-16,
+              "norm_error": 6.661338147750939e-16,
+              "diagonal_state_energy_change": 0.18264922757976754
+            },
+            {
+              "total": 1.834545101575391,
+              "kept": 0.5369804729004457,
+              "remainder": 1.0721872379441169,
+              "cross": 0.22537739073082946,
+              "budget_error": 9.43689570931383e-16,
+              "norm_error": 6.661338147750939e-16,
+              "diagonal_state_energy_change": -0.22537739073082852
+            }
+          ],
+          "positive_input": {
+            "total": 1.5375301889793382,
+            "kept": 0.06374587333836508,
+            "remainder": 1.4394294874893352,
+            "cross": 0.03435482815163855,
+            "budget_error": 6.245004513516506e-16,
+            "norm_error": 4.440892098500626e-16,
+            "diagonal_state_energy_change": -0.03435482815163793
+          },
+          "zero_phase_identity_error": null
+        }
+      ],
+      "constant_energy_cross_error": 2.7758963540648015e-17,
+      "boundary_phase_energy_error": 5.205189591115934e-17
+    },
+    {
+      "size": 128,
+      "h": 1.0,
+      "kind": "length",
+      "volume": 5.16949993933771,
+      "volume_error": 8.881784197001252e-16,
+      "minimum_gram": 1.1990693991756666e-05,
+      "coefficient": 0.05970139700162974,
+      "normal_equation_error": 1.1053034572675036e-15,
+      "full_action_coefficient": 0.059703520597064505,
+      "boundary_phase_coefficient_error": 1.3877787807814457e-17,
+      "separable_coefficient": 7.90764527005525e-31,
+      "separable_norm_squared": 1.0000000000000009,
+      "transfer": [
+        {
+          "beta": 0.0,
+          "norm_squared": 1.0000000000000004,
+          "second_singular": 0.21310043311632243,
+          "optimal_remainder": 4.579970204111205e-30,
+          "budget_error": 1.3322676295501878e-15,
+          "spectral_budget_error": 4.440892098500672e-16,
+          "weak_phase_ratio": null,
+          "hilbert_schmidt_squared": 1.078824237943956
+        },
+        {
+          "beta": 0.025,
+          "norm_squared": 0.9999626877708605,
+          "second_singular": 0.2132040439919804,
+          "optimal_remainder": 3.7312229139974876e-05,
+          "budget_error": 1.5543122344752192e-15,
+          "spectral_budget_error": 4.781534868568416e-16,
+          "weak_phase_ratio": 0.05969956662319474,
+          "hilbert_schmidt_squared": 1.078824237943956
+        },
+        {
+          "beta": 0.05,
+          "norm_squared": 0.9998507648101176,
+          "second_singular": 0.21351416557546612,
+          "optimal_remainder": 0.00014923518988328824,
+          "budget_error": 0.0,
+          "spectral_budget_error": 8.75330623956172e-16,
+          "weak_phase_ratio": 0.05969407595296515,
+          "hilbert_schmidt_squared": 1.078824237943956
+        },
+        {
+          "beta": 0.1,
+          "norm_squared": 0.9994032787979544,
+          "second_singular": 0.21474421149590958,
+          "optimal_remainder": 0.0005967212020464813,
+          "budget_error": 1.9984014443252818e-15,
+          "spectral_budget_error": 9.120308674948063e-16,
+          "weak_phase_ratio": 0.05967212020455691,
+          "hilbert_schmidt_squared": 1.078824237943956
+        },
+        {
+          "beta": 0.2,
+          "norm_squared": 0.9976166236778657,
+          "second_singular": 0.2195100883087229,
+          "optimal_remainder": 0.0023833763221341167,
+          "budget_error": 6.661338147750939e-16,
+          "spectral_budget_error": 1.3964523981613297e-16,
+          "weak_phase_ratio": 0.059584408053356394,
+          "hilbert_schmidt_squared": 1.078824237943956
+        },
+        {
+          "beta": 1.0,
+          "norm_squared": 0.9431308410858632,
+          "second_singular": 0.32040599996122154,
+          "optimal_remainder": 0.056869158914137394,
+          "budget_error": 0.0,
+          "spectral_budget_error": 5.967448757360216e-16,
+          "weak_phase_ratio": 0.0568691589141368,
+          "hilbert_schmidt_squared": 1.078824237943956
+        },
+        {
+          "beta": 5.0,
+          "norm_squared": 0.441278788676333,
+          "second_singular": 0.6104455137511762,
+          "optimal_remainder": 0.5587212113236676,
+          "budget_error": 4.440892098500626e-16,
+          "spectral_budget_error": 5.551115123125783e-16,
+          "weak_phase_ratio": 0.02234884845294668,
+          "hilbert_schmidt_squared": 1.078824237943956
+        }
+      ],
+      "energy_probe": "epsilon=1+e/L; 각 입력 셀 중점의 검사 에너지이며 물리 해밀토니안은 미유도",
+      "energy": [
+        {
+          "beta": 0.0,
+          "minimum": -0.25939135826090354,
+          "maximum": 0.2811212104642092,
+          "hermitian_error": 4.5102810375396984e-17,
+          "diagonal_phase_error": 4.9439619065339e-17,
+          "spectral_error": 5.551115123125783e-17,
+          "states": [
+            {
+              "total": 1.1904099510310817,
+              "kept": 0.7786758751346291,
+              "remainder": 0.6711254341573576,
+              "cross": -0.2593913582609036,
+              "budget_error": 1.3877787807814457e-15,
+              "norm_error": 1.3322676295501878e-15,
+              "diagonal_state_energy_change": 0.25939135826090487
+            },
+            {
+              "total": 1.779293388447163,
+              "kept": 0.7470522947453099,
+              "remainder": 0.7511198832376441,
+              "cross": 0.2811212104642092,
+              "budget_error": 3.885780586188048e-16,
+              "norm_error": 4.440892098500626e-16,
+              "diagonal_state_energy_change": -0.2811212104642089
+            }
+          ],
+          "positive_input": {
+            "total": 1.537532521491708,
+            "kept": 1.458408400281106,
+            "remainder": 0.018204319454730614,
+            "cross": 0.06091980175587218,
+            "budget_error": 8.187894806610529e-16,
+            "norm_error": 6.661338147750939e-16,
+            "diagonal_state_energy_change": -0.06091980175587142
+          },
+          "zero_phase_identity_error": 1.8041124150158794e-16
+        },
+        {
+          "beta": 1.0,
+          "minimum": -0.25366228189560786,
+          "maximum": 0.2763106887131286,
+          "hermitian_error": 7.152448122690996e-18,
+          "diagonal_phase_error": 2.6020852139652106e-17,
+          "spectral_error": 1.6653345369377348e-16,
+          "states": [
+            {
+              "total": 1.1864911266169926,
+              "kept": 0.7596867992602478,
+              "remainder": 0.6804666092523539,
+              "cross": -0.253662281895608,
+              "budget_error": 1.1102230246251565e-15,
+              "norm_error": 1.1102230246251565e-15,
+              "diagonal_state_energy_change": 0.25366228189560913
+            },
+            {
+              "total": 1.7859907701011597,
+              "kept": 0.7473869662429193,
+              "remainder": 0.762293115145112,
+              "cross": 0.2763106887131286,
+              "budget_error": 2.220446049250313e-16,
+              "norm_error": 2.220446049250313e-16,
+              "diagonal_state_energy_change": -0.27631068871312836
+            }
+          ],
+          "positive_input": {
+            "total": 1.537532521491708,
+            "kept": 0.2176115330319847,
+            "remainder": 1.218939562315425,
+            "cross": 0.10098142614429913,
+            "budget_error": 1.0685896612017132e-15,
+            "norm_error": 4.440892098500626e-16,
+            "diagonal_state_energy_change": -0.10098142614429806
+          },
+          "zero_phase_identity_error": null
+        },
+        {
+          "beta": 5.0,
+          "minimum": -0.18252387430078426,
+          "maximum": 0.22544391401250516,
+          "hermitian_error": 7.152448122690996e-18,
+          "diagonal_phase_error": 1.9950498419548985e-17,
+          "spectral_error": 2.498001805406602e-16,
+          "states": [
+            {
+              "total": 1.1403627532297538,
+              "kept": 0.46995055944742736,
+              "remainder": 0.8529360680831117,
+              "cross": -0.1825238743007845,
+              "budget_error": 8.049116928532385e-16,
+              "norm_error": 8.881784197001252e-16,
+              "diagonal_state_energy_change": 0.18252387430078532
+            },
+            {
+              "total": 1.834561264300489,
+              "kept": 0.5371389130610125,
+              "remainder": 1.0719784372269716,
+              "cross": 0.2254439140125053,
+              "budget_error": 4.440892098500626e-16,
+              "norm_error": 2.220446049250313e-16,
+              "diagonal_state_energy_change": -0.22544391401250485
+            }
+          ],
+          "positive_input": {
+            "total": 1.537532521491708,
+            "kept": 0.06378545894235052,
+            "remainder": 1.439365827643393,
+            "cross": 0.034381234905965286,
+            "budget_error": 8.326672684688674e-16,
+            "norm_error": 6.661338147750939e-16,
+            "diagonal_state_energy_change": -0.03438123490596445
+          },
+          "zero_phase_identity_error": null
+        }
+      ],
+      "constant_energy_cross_error": 1.3904866443919908e-17,
+      "boundary_phase_energy_error": 3.469595570033056e-17
+    },
+    {
+      "size": 32,
+      "h": 1.0,
+      "kind": "squared",
+      "volume": 24.340947923920737,
+      "volume_error": 1.7763568394002505e-14,
+      "minimum_gram": 0.0005524630073206534,
+      "coefficient": 0.024089292671922745,
+      "normal_equation_error": 8.627538787553402e-17,
+      "full_action_coefficient": 0.024132220741947187,
+      "boundary_phase_coefficient_error": 3.469446951953614e-18,
+      "separable_coefficient": 1.1534390125247769e-29,
+      "separable_norm_squared": 1.0000000000000004,
+      "transfer": [
+        {
+          "beta": 0.0,
+          "norm_squared": 1.0000000000000009,
+          "second_singular": 0.3486223296213364,
+          "optimal_remainder": 4.5359803505181004e-30,
+          "budget_error": 2.220446049250313e-16,
+          "spectral_budget_error": 8.881784197001298e-16,
+          "weak_phase_ratio": null,
+          "hilbert_schmidt_squared": 1.208436439517011
+        },
+        {
+          "beta": 0.025,
+          "norm_squared": 0.9999849445242167,
+          "second_singular": 0.3486506937858411,
+          "optimal_remainder": 1.5055475782350979e-05,
+          "budget_error": 1.1102230246251565e-15,
+          "spectral_budget_error": 9.367184897754802e-16,
+          "weak_phase_ratio": 0.024088761253260312,
+          "hilbert_schmidt_squared": 1.208436439517011
+        },
+        {
+          "beta": 0.05,
+          "norm_squared": 0.9999397820822734,
+          "second_singular": 0.34873573247571366,
+          "optimal_remainder": 6.0217917726067404e-05,
+          "budget_error": 0.0,
+          "spectral_budget_error": 5.230597855884755e-16,
+          "weak_phase_ratio": 0.024087167090636182,
+          "hilbert_schmidt_squared": 1.208436439517011
+        },
+        {
+          "beta": 0.1,
+          "norm_squared": 0.9997591920806779,
+          "second_singular": 0.34907508396385484,
+          "optimal_remainder": 0.00024080791932103586,
+          "budget_error": 1.3322676295501878e-15,
+          "spectral_budget_error": 1.0921168483446486e-15,
+          "weak_phase_ratio": 0.024080791932212794,
+          "hilbert_schmidt_squared": 1.208436439517011
+        },
+        {
+          "beta": 0.2,
+          "norm_squared": 0.9990377873969124,
+          "second_singular": 0.35041987010445663,
+          "optimal_remainder": 0.0009622126030864474,
+          "budget_error": 1.3322676295501878e-15,
+          "spectral_budget_error": 1.1503385050071202e-15,
+          "weak_phase_ratio": 0.02405531507718994,
+          "hilbert_schmidt_squared": 1.208436439517011
+        },
+        {
+          "beta": 1.0,
+          "norm_squared": 0.976740150861351,
+          "second_singular": 0.3859236548789405,
+          "optimal_remainder": 0.023259849138649164,
+          "budget_error": 6.661338147750939e-16,
+          "spectral_budget_error": 1.8388068845354155e-16,
+          "weak_phase_ratio": 0.02325984913864898,
+          "hilbert_schmidt_squared": 1.208436439517011
+        },
+        {
+          "beta": 5.0,
+          "norm_squared": 0.6996631087103755,
+          "second_singular": 0.5773711798077674,
+          "optimal_remainder": 0.3003368912896235,
+          "budget_error": 6.661338147750939e-16,
+          "spectral_budget_error": 9.992007221626409e-16,
+          "weak_phase_ratio": 0.01201347565158498,
+          "hilbert_schmidt_squared": 1.208436439517011
+        }
+      ],
+      "energy_probe": "epsilon=1+e/L; 각 입력 셀 중점의 검사 에너지이며 물리 해밀토니안은 미유도",
+      "energy": [
+        {
+          "beta": 0.0,
+          "minimum": -0.1946571556242647,
+          "maximum": 0.22404857785623988,
+          "hermitian_error": 4.163336342344337e-17,
+          "diagonal_phase_error": 4.2500725161431774e-17,
+          "spectral_error": 2.7755575615628914e-17,
+          "states": [
+            {
+              "total": 1.3123985702324947,
+              "kept": 0.9012506095403647,
+              "remainder": 0.6058051163163947,
+              "cross": -0.19465715562426467,
+              "budget_error": 0.0,
+              "norm_error": 2.220446049250313e-16,
+              "diagonal_state_energy_change": 0.19465715562426467
+            },
+            {
+              "total": 1.8300471234171132,
+              "kept": 0.8620934620753095,
+              "remainder": 0.7439050834855641,
+              "cross": 0.2240485778562399,
+              "budget_error": 2.498001805406602e-16,
+              "norm_error": 2.220446049250313e-16,
+              "diagonal_state_energy_change": -0.22404857785623977
+            }
+          ],
+          "positive_input": {
+            "total": 1.6587107671272059,
+            "kept": 1.6110123155720992,
+            "remainder": 0.010613122045197647,
+            "cross": 0.03708532950990932,
+            "budget_error": 3.122502256758253e-16,
+            "norm_error": 0.0,
+            "diagonal_state_energy_change": -0.03708532950990895
+          },
+          "zero_phase_identity_error": 2.7755575615628914e-17
+        },
+        {
+          "beta": 1.0,
+          "minimum": -0.19095498492748467,
+          "maximum": 0.22135059473379812,
+          "hermitian_error": 3.1031676915590914e-17,
+          "diagonal_phase_error": 3.4867510341210807e-17,
+          "spectral_error": 1.3877787807814457e-16,
+          "states": [
+            {
+              "total": 1.3119919975961063,
+              "kept": 0.8724729160020421,
+              "remainder": 0.6304740665215489,
+              "cross": -0.1909549849274848,
+              "budget_error": 5.551115123125783e-17,
+              "norm_error": 0.0,
+              "diagonal_state_energy_change": 0.19095498492748475
+            },
+            {
+              "total": 1.8366332350433543,
+              "kept": 0.8778365412193033,
+              "remainder": 0.7374460990902529,
+              "cross": 0.22135059473379823,
+              "budget_error": 1.942890293094024e-16,
+              "norm_error": 0.0,
+              "diagonal_state_energy_change": -0.22135059473379814
+            }
+          ],
+          "positive_input": {
+            "total": 1.6587107671272059,
+            "kept": 0.8205500932898833,
+            "remainder": 0.7139103265007549,
+            "cross": 0.12425034733656785,
+            "budget_error": 1.5265566588595902e-16,
+            "norm_error": 0.0,
+            "diagonal_state_energy_change": -0.1242503473365677
+          },
+          "zero_phase_identity_error": null
+        },
+        {
+          "beta": 5.0,
+          "minimum": -0.14198395269327777,
+          "maximum": 0.20132645856374123,
+          "hermitian_error": 3.1031676915590914e-17,
+          "diagonal_phase_error": 4.0766001685454967e-17,
+          "spectral_error": 1.1102230246251565e-16,
+          "states": [
+            {
+              "total": 1.2953559909645125,
+              "kept": 0.5822856322434757,
+              "remainder": 0.8550543114143142,
+              "cross": -0.14198395269327777,
+              "budget_error": 3.0531133177191805e-16,
+              "norm_error": 2.220446049250313e-16,
+              "diagonal_state_energy_change": 0.14198395269327735
+            },
+            {
+              "total": 1.8710691405395092,
+              "kept": 0.8511991510070622,
+              "remainder": 0.8185435309687059,
+              "cross": 0.20132645856374135,
+              "budget_error": 2.498001805406602e-16,
+              "norm_error": 4.440892098500626e-16,
+              "diagonal_state_energy_change": -0.2013264585637411
+            }
+          ],
+          "positive_input": {
+            "total": 1.6587107671272059,
+            "kept": 0.2265500695668501,
+            "remainder": 1.3671089754227035,
+            "cross": 0.06505172213765237,
+            "budget_error": 5.551115123125783e-17,
+            "norm_error": 0.0,
+            "diagonal_state_energy_change": -0.06505172213765231
+          },
+          "zero_phase_identity_error": null
+        }
+      ],
+      "constant_energy_cross_error": 5.561946577567963e-17,
+      "boundary_phase_energy_error": 1.1488860242214323e-16
+    },
+    {
+      "size": 64,
+      "h": 1.0,
+      "kind": "squared",
+      "volume": 24.340947923920723,
+      "volume_error": 3.552713678800501e-15,
+      "minimum_gram": 0.00024102094596258191,
+      "coefficient": 0.02402294896861973,
+      "normal_equation_error": 7.136222934464326e-16,
+      "full_action_coefficient": 0.0240327747930072,
+      "boundary_phase_coefficient_error": 6.938893903907228e-18,
+      "separable_coefficient": 8.256020054262736e-30,
+      "separable_norm_squared": 1.0,
+      "transfer": [
+        {
+          "beta": 0.0,
+          "norm_squared": 1.0000000000000009,
+          "second_singular": 0.3495815869621546,
+          "optimal_remainder": 1.314057807796947e-29,
+          "budget_error": 4.440892098500626e-16,
+          "spectral_budget_error": 8.881784197001384e-16,
+          "weak_phase_ratio": null,
+          "hilbert_schmidt_squared": 1.2264246849332934
+        },
+        {
+          "beta": 0.025,
+          "norm_squared": 0.999984985988496,
+          "second_singular": 0.3496099188432346,
+          "optimal_remainder": 1.50140115032419e-05,
+          "budget_error": 6.661338147750939e-16,
+          "spectral_budget_error": 8.134463968297728e-16,
+          "weak_phase_ratio": 0.02402241840648855,
+          "hilbert_schmidt_squared": 1.2264246849332932
+        },
+        {
+          "beta": 0.05,
+          "norm_squared": 0.999939947932965,
+          "second_singular": 0.34969486024521695,
+          "optimal_remainder": 6.0052067035536316e-05,
+          "budget_error": 4.440892098500626e-16,
+          "spectral_budget_error": 5.705207356890285e-16,
+          "weak_phase_ratio": 0.024020826813986314,
+          "hilbert_schmidt_squared": 1.2264246849332934
+        },
+        {
+          "beta": 0.1,
+          "norm_squared": 0.9997598553805994,
+          "second_singular": 0.35003381609472206,
+          "optimal_remainder": 0.00024014461939985562,
+          "budget_error": 0.0,
+          "spectral_budget_error": 7.284483346386983e-16,
+          "weak_phase_ratio": 0.024014461940058403,
+          "hilbert_schmidt_squared": 1.2264246849332934
+        },
+        {
+          "beta": 0.2,
+          "norm_squared": 0.9990404389494508,
+          "second_singular": 0.35137692055838776,
+          "optimal_remainder": 0.0009595610505482272,
+          "budget_error": 8.881784197001252e-16,
+          "spectral_budget_error": 9.464000763625968e-16,
+          "weak_phase_ratio": 0.023989026263729337,
+          "hilbert_schmidt_squared": 1.2264246849332934
+        },
+        {
+          "beta": 1.0,
+          "norm_squared": 0.9768050874231569,
+          "second_singular": 0.3867923988323717,
+          "optimal_remainder": 0.023194912576843404,
+          "budget_error": 0.0,
+          "spectral_budget_error": 2.636779683484747e-16,
+          "weak_phase_ratio": 0.02319491257684314,
+          "hilbert_schmidt_squared": 1.2264246849332934
+        },
+        {
+          "beta": 5.0,
+          "norm_squared": 0.7004021316474107,
+          "second_singular": 0.5774982095522384,
+          "optimal_remainder": 0.2995978683525905,
+          "budget_error": 1.3322676295501878e-15,
+          "spectral_budget_error": 1.2212453270876722e-15,
+          "weak_phase_ratio": 0.011983914734103571,
+          "hilbert_schmidt_squared": 1.2264246849332934
+        }
+      ],
+      "energy_probe": "epsilon=1+e/L; 각 입력 셀 중점의 검사 에너지이며 물리 해밀토니안은 미유도",
+      "energy": [
+        {
+          "beta": 0.0,
+          "minimum": -0.19401029079715473,
+          "maximum": 0.22411573580775546,
+          "hermitian_error": 2.7755575615628914e-17,
+          "diagonal_phase_error": 3.8163916471489756e-17,
+          "spectral_error": 1.3877787807814457e-16,
+          "states": [
+            {
+              "total": 1.3134178202619413,
+              "kept": 0.9033630914415498,
+              "remainder": 0.6040650196175464,
+              "cross": -0.19401029079715487,
+              "budget_error": 5.551115123125783e-17,
+              "norm_error": 2.220446049250313e-16,
+              "diagonal_state_energy_change": 0.19401029079715482
+            },
+            {
+              "total": 1.830052121192629,
+              "kept": 0.8617848442611793,
+              "remainder": 0.7441515411236943,
+              "cross": 0.22411573580775537,
+              "budget_error": 8.326672684688674e-17,
+              "norm_error": 0.0,
+              "diagonal_state_energy_change": -0.22411573580775546
+            }
+          ],
+          "positive_input": {
+            "total": 1.6587600963896518,
+            "kept": 1.6111241429494112,
+            "remainder": 0.010598924382481011,
+            "cross": 0.037037029057759456,
+            "budget_error": 1.5959455978986625e-16,
+            "norm_error": 2.220446049250313e-16,
+            "diagonal_state_energy_change": -0.03703702905775952
+          },
+          "zero_phase_identity_error": 1.249000902703301e-16
+        },
+        {
+          "beta": 1.0,
+          "minimum": -0.19029790431067134,
+          "maximum": 0.22141906252808458,
+          "hermitian_error": 2.7755575615628914e-17,
+          "diagonal_phase_error": 4.860322466063819e-17,
+          "spectral_error": 1.942890293094024e-16,
+          "states": [
+            {
+              "total": 1.3130199583837139,
+              "kept": 0.8745480304633361,
+              "remainder": 0.6287698322310493,
+              "cross": -0.19029790431067153,
+              "budget_error": 2.7755575615628914e-17,
+              "norm_error": 0.0,
+              "diagonal_state_energy_change": 0.1902979043106714
+            },
+            {
+              "total": 1.8366739698203483,
+              "kept": 0.8776209635036453,
+              "remainder": 0.7376339437886184,
+              "cross": 0.22141906252808458,
+              "budget_error": 5.551115123125783e-17,
+              "norm_error": 0.0,
+              "diagonal_state_energy_change": -0.22141906252808452
+            }
+          ],
+          "positive_input": {
+            "total": 1.6587600963896518,
+            "kept": 0.8208710828262663,
+            "remainder": 0.7135855852136272,
+            "cross": 0.12430342834975817,
+            "budget_error": 9.71445146547012e-17,
+            "norm_error": 0.0,
+            "diagonal_state_energy_change": -0.12430342834975816
+          },
+          "zero_phase_identity_error": null
+        },
+        {
+          "beta": 5.0,
+          "minimum": -0.14129083328618966,
+          "maximum": 0.20151560759712212,
+          "hermitian_error": 2.7809732887839817e-17,
+          "diagonal_phase_error": 6.072151678411219e-17,
+          "spectral_error": 1.942890293094024e-16,
+          "states": [
+            {
+              "total": 1.296604990605243,
+              "kept": 0.5837441933518601,
+              "remainder": 0.8541516305395729,
+              "cross": -0.1412908332861897,
+              "budget_error": 2.7755575615628914e-16,
+              "norm_error": 2.220446049250313e-16,
+              "diagonal_state_energy_change": 0.14129083328618997
+            },
+            {
+              "total": 1.8712660690397138,
+              "kept": 0.852248188885447,
+              "remainder": 0.8175022725571448,
+              "cross": 0.20151560759712192,
+              "budget_error": 1.3877787807814457e-16,
+              "norm_error": 2.220446049250313e-16,
+              "diagonal_state_energy_change": -0.20151560759712206
+            }
+          ],
+          "positive_input": {
+            "total": 1.6587600963896518,
+            "kept": 0.22682063248697704,
+            "remainder": 1.3668421259366386,
+            "cross": 0.06509733796603591,
+            "budget_error": 3.191891195797325e-16,
+            "norm_error": 0.0,
+            "diagonal_state_energy_change": -0.06509733796603623
+          },
+          "zero_phase_identity_error": null
+        }
+      ],
+      "constant_energy_cross_error": 2.823925224926892e-17,
+      "boundary_phase_energy_error": 8.328677811781311e-17
+    },
+    {
+      "size": 128,
+      "h": 1.0,
+      "kind": "squared",
+      "volume": 24.34094792392072,
+      "volume_error": 0.0,
+      "minimum_gram": 1.1990618338658839e-05,
+      "coefficient": 0.024009409258750156,
+      "normal_equation_error": 6.560134651212995e-16,
+      "full_action_coefficient": 0.024011661884912536,
+      "boundary_phase_coefficient_error": 3.469446951953614e-18,
+      "separable_coefficient": 2.639203483408601e-28,
+      "separable_norm_squared": 1.0000000000000004,
+      "transfer": [
+        {
+          "beta": 0.0,
+          "norm_squared": 1.0000000000000004,
+          "second_singular": 0.3498296019202315,
+          "optimal_remainder": 1.1683444201328642e-29,
+          "budget_error": 2.220446049250313e-16,
+          "spectral_budget_error": 4.440892098500743e-16,
+          "weak_phase_ratio": null,
+          "hilbert_schmidt_squared": 1.237211208826311
+        },
+        {
+          "beta": 0.025,
+          "norm_squared": 0.9999849944506873,
+          "second_singular": 0.3498579174184482,
+          "optimal_remainder": 1.5005549312379135e-05,
+          "budget_error": 1.1102230246251565e-16,
+          "spectral_budget_error": 2.8415583688129464e-16,
+          "weak_phase_ratio": 0.024008878900261262,
+          "hilbert_schmidt_squared": 1.2372112088263112
+        },
+        {
+          "beta": 0.05,
+          "norm_squared": 0.9999399817801936,
+          "second_singular": 0.349942809580471,
+          "optimal_remainder": 6.00182198059097e-05,
+          "budget_error": 1.1102230246251565e-16,
+          "spectral_budget_error": 4.806268230628241e-16,
+          "weak_phase_ratio": 0.024007287922556127,
+          "hilbert_schmidt_squared": 1.237211208826311
+        },
+        {
+          "beta": 0.1,
+          "norm_squared": 0.999759990744966,
+          "second_singular": 0.3502815671175777,
+          "optimal_remainder": 0.0002400092550318952,
+          "budget_error": 8.881784197001252e-16,
+          "spectral_budget_error": 2.0842160462775094e-15,
+          "weak_phase_ratio": 0.024000925503397937,
+          "hilbert_schmidt_squared": 1.237211208826311
+        },
+        {
+          "beta": 0.2,
+          "norm_squared": 0.9990409800135169,
+          "second_singular": 0.35162385778121213,
+          "optimal_remainder": 0.0009590199864829543,
+          "budget_error": 1.1102230246251565e-15,
+          "spectral_budget_error": 1.1297386637298956e-16,
+          "weak_phase_ratio": 0.02397549966207668,
+          "hilbert_schmidt_squared": 1.237211208826311
+        },
+        {
+          "beta": 1.0,
+          "norm_squared": 0.9768182871356726,
+          "second_singular": 0.3870071351025876,
+          "optimal_remainder": 0.023181712864327287,
+          "budget_error": 6.661338147750939e-16,
+          "spectral_budget_error": 6.591949208711867e-17,
+          "weak_phase_ratio": 0.023181712864327353,
+          "hilbert_schmidt_squared": 1.237211208826311
+        },
+        {
+          "beta": 5.0,
+          "norm_squared": 0.7005071737313249,
+          "second_singular": 0.5774176586384704,
+          "optimal_remainder": 0.299492826268675,
+          "budget_error": 8.881784197001252e-16,
+          "spectral_budget_error": 1.1102230246251565e-16,
+          "weak_phase_ratio": 0.011979713050747005,
+          "hilbert_schmidt_squared": 1.237211208826311
+        }
+      ],
+      "energy_probe": "epsilon=1+e/L; 각 입력 셀 중점의 검사 에너지이며 물리 해밀토니안은 미유도",
+      "energy": [
+        {
+          "beta": 0.0,
+          "minimum": -0.19382783132816767,
+          "maximum": 0.22413676640439978,
+          "hermitian_error": 1.3877787807814457e-17,
+          "diagonal_phase_error": 2.6020852139652106e-17,
+          "spectral_error": 1.1102230246251565e-16,
+          "states": [
+            {
+              "total": 1.3137477869129532,
+              "kept": 0.9039814053866972,
+              "remainder": 0.6035942128544238,
+              "cross": -0.19382783132816778,
+              "budget_error": 5.551115123125783e-17,
+              "norm_error": 0.0,
+              "diagonal_state_energy_change": 0.19382783132816783
+            },
+            {
+              "total": 1.8300292986321383,
+              "kept": 0.8616919565284735,
+              "remainder": 0.7442005756992649,
+              "cross": 0.2241367664043998,
+              "budget_error": 2.7755575615628914e-17,
+              "norm_error": 0.0,
+              "diagonal_state_energy_change": -0.22413676640439983
+            }
+          ],
+          "positive_input": {
+            "total": 1.6587723966183427,
+            "kept": 1.6111530009334123,
+            "remainder": 0.010595138286813001,
+            "cross": 0.037024257398117294,
+            "budget_error": 1.5959455978986625e-16,
+            "norm_error": 1.1102230246251565e-16,
+            "diagonal_state_energy_change": -0.03702425739811743
+          },
+          "zero_phase_identity_error": 4.163336342344337e-17
+        },
+        {
+          "beta": 1.0,
+          "minimum": -0.19011413214724993,
+          "maximum": 0.22143929124047798,
+          "hermitian_error": 1.3985787785349405e-17,
+          "diagonal_phase_error": 2.5153490401663703e-17,
+          "spectral_error": 1.942890293094024e-16,
+          "states": [
+            {
+              "total": 1.3133528938243961,
+              "kept": 0.8751505388424046,
+              "remainder": 0.6283164871292416,
+              "cross": -0.19011413214725004,
+              "budget_error": 0.0,
+              "norm_error": 0.0,
+              "diagonal_state_energy_change": 0.19011413214725015
+            },
+            {
+              "total": 1.836665967320882,
+              "kept": 0.8775567387249432,
+              "remainder": 0.7376699373554607,
+              "cross": 0.22143929124047818,
+              "budget_error": 5.551115123125783e-17,
+              "norm_error": 2.220446049250313e-16,
+              "diagonal_state_energy_change": -0.22143929124047812
+            }
+          ],
+          "positive_input": {
+            "total": 1.6587723966183427,
+            "kept": 0.8209582459457415,
+            "remainder": 0.7134931664418336,
+            "cross": 0.12432098423076782,
+            "budget_error": 1.6653345369377348e-16,
+            "norm_error": 1.1102230246251565e-16,
+            "diagonal_state_energy_change": -0.12432098423076776
+          },
+          "zero_phase_identity_error": null
+        },
+        {
+          "beta": 5.0,
+          "minimum": -0.14111521386961703,
+          "maximum": 0.20155944525189268,
+          "hermitian_error": 1.3904866443919908e-17,
+          "diagonal_phase_error": 2.342278214507786e-17,
+          "spectral_error": 1.1102230246251565e-16,
+          "states": [
+            {
+              "total": 1.2970364492808946,
+              "kept": 0.5839941997642852,
+              "remainder": 0.8541574633862259,
+              "cross": -0.14111521386961695,
+              "budget_error": 3.885780586188048e-16,
+              "norm_error": 2.220446049250313e-16,
+              "diagonal_state_energy_change": 0.14111521386961656
+            },
+            {
+              "total": 1.8713175094210754,
+              "kept": 0.8524945968189459,
+              "remainder": 0.8172634673502367,
+              "cross": 0.20155944525189257,
+              "budget_error": 2.7755575615628914e-16,
+              "norm_error": 0.0,
+              "diagonal_state_energy_change": -0.20155944525189273
+            }
+          ],
+          "positive_input": {
+            "total": 1.6587723966183427,
+            "kept": 0.2269184177066983,
+            "remainder": 1.3667402034851925,
+            "cross": 0.065113775426452,
+            "budget_error": 8.326672684688674e-17,
+            "norm_error": 1.1102230246251565e-16,
+            "diagonal_state_energy_change": -0.06511377542645191
+          },
+          "zero_phase_identity_error": null
+        }
+      ],
+      "constant_energy_cross_error": 1.4304896245381992e-17,
+      "boundary_phase_energy_error": 4.401593767320266e-17
+    }
+  ],
+  "scope": "공급 공동 측도에서 실제 두 경계 작용의 조건부 읽기·잔여 진폭 보존과 검사 에너지의 교차항",
+  "unfinished": [
+    "실제 축약의 양자화·물리 측도·초기 준비·에너지 장부",
+    "미시 접힘·공통 계량·GR·암흑부문·허블 텐션"
+  ]
+}

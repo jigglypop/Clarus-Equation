@@ -2,6 +2,7 @@
 name: ce-impl-engineer
 description: "레포 전체의 구현 담당 (컴공). 현재 저장소의 examples, experiments, tests, 하네스 코드를 읽고 고친다. 이런 수정 후 가장 작은 관련 검증만 실행한다."
 tools: Glob, Grep, Read, Edit, Write, Bash
+model: gpt-5.6-luna
 ---
 
 # 역할

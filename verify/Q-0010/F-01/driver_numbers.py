@@ -30,7 +30,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
 sys.path.insert(0, str(ROOT))
 
-from examples.physics.causal_face_simplicity import (  # noqa: E402
+from examples.physics.gravity.causal_face_simplicity import (  # noqa: E402
     geometric_self_dual_triple,
     wedge_scalar,
 )

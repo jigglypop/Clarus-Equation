@@ -1,0 +1,119 @@
+id: E-20260904-019
+question: Q-0016
+attempt: 1
+timestamp: 2026-09-04T00:00:00+09:00
+claim: >-
+  F-01(예측식, revision 2, 신규 카드) [공리: 후보]. F-02(Q-0008)가 자식 cell 증분을 부모 label에
+  독립으로 더한다고 두어 상속 커널을 $AA^{\top}$로 둔 자리에, 이 카드는 split 사건이 부모의 렌더 기하를
+  경로별로 분배한다($\sum_{c\in{\rm ch}(z)}\eta_c=0$ a.s.)는 공리 후보를 세운다. 증분 공분산
+  $C=I-\sum_z(J_{{\rm ch}(z)}-I)/(k_z-1)$, 커널 $\kappa_{\rm split}=ACA^{\top}=AA^{\top}-B$($B$:
+  비교불가쌍/(k_lca-1))를 유도하고, chain·star(s)·complete binary(Haar 직교 $\Sigma|T_z|^2$)·두 종
+  불변의 닫힌 식 4종과 조건 (C) 족의 유한크기 상계, 이론 판별 통계 $R=\sqrt{1-s}$(이론 kill $K_T$)를 준다.
+  card-check PASS(kind 예측식, ladder 7단, free_parameters 0), 훅 25/25 pass(symbolic·numeric,
+  hook_result.json). sourcer(haiku)가 Felsenstein 1973/1985 phylogenetic covariance
+  $AA^{\top}$·independent contrasts를 generalizes(형제 반상관·경로별 zero-sum 증분 커널은 문헌에
+  없음), Haar 1910·Gavish–Nadler–Coifman 2010을 generalizes(직교 구조는 기존, $D_{\rm split}$
+  닫힌 식은 카드 고유)로 판정했으나, Benjamini–Peres 1994 tree martingale은 special_case로
+  판정했다 — 자식평균=부모 기댓값판 마팅게일은 F-02의 i.i.d. 증분도 이미 만족하므로(a5 독립 재현:
+  iid_mean≈6.8e-4, split_mean≈3e-20) 카드의 핵심 갱신(경로별 a.s. 보존)이 기존 개념(tree-indexed
+  마팅게일)의 특수 사례로 흡수된다는 뜻이다. adversary(opus) 1차 감사가 P0 없이 P1 지적 다수를 냈고
+  카드가 revision 2에서 전부 반영했다(정합 게이트 대칭화, 부호 반례 족 기록, theory_table 재분류,
+  s=1 극점 선언, 2단 재배치, K_A3 재분류 등, verify/Q-0016/F-01/adversary/a2·a4·a5·a6 독립 확인). 그러나
+  card-check·훅 통과와 adversary P0 없음만으로는 adopt 요건이 충족되지 않는다: sourcer가 낸
+  special_case 관계(Benjamini–Peres) 하나가 재발견 신호이고, 하네스 규칙(identical·special_case →
+  refute, 질문은 살고 force_pivot=conjecture, 같은 세션 재추측 1회 허용)과 ledger.py 스키마 강제
+  (verdict adopt forbidden when prior_art relation in identical/special_case)가 이를 그대로
+  적용해 refute로 판정한다. 이는 카드 결함이 아니라 확장 신호다 — 카드의 실제 신규 내용(경로별 보존,
+  닫힌 식 4종, R=sqrt(1-s) 판별 통계)은 sourcer도 "닫힌 식·상계·R 통계는 신규"로 인정했으므로, 같은
+  세션에서 마팅게일 언어를 명시적으로 흡수·초과하는 더 강한 카드로 재추측하는 것이 다음 수순이다.
+level: L2
+verdict: refute
+pivot_step: null
+ladder_step: null
+ladder_cited: null
+card: derivations/Q-0016/F-01.formula.md
+kill_triggered: null
+derivation: derivations/Q-0016/F-01.formula.md
+verification:
+  symbolic: pass
+  numeric: pass
+  lean: skipped
+  artifacts: verify/Q-0016/F-01/
+adversary:
+  model_note: "카드 감사는 opus로 실행됐다(Fable 5.1 안전장치 오탐 회피 규정). 산출물
+    verify/Q-0016/F-01/adversary/(SUMMARY.json 없음, a1_algebra·a2_sign_and_limits·
+    a3_exact_and_qspine·a4_kill_audit·a5_circularity_and_s·a6_reverse_gate_and_s·
+    a7_sample20·a8_reaudit)."
+  counterexamples:
+    - input: "n=8 parent=[-1,0,1,2,3,4,5,5] (긴 사슬 끝 두 갈래)"
+      expected: "D_split >= D_F02 (카드 서술의 '앙상블 평균에서 잔차 증가' 방향)"
+      observed: "D_split=2465/64 < D_F02=2529/64 (차 -1, 정확 유리수; 카드 scope에 이미 반례 족으로
+        기록, a2가 독립 재확인 — kill이 아니라 부호 비고정 scope 확인)"
+  survived_checks:
+    - "card-check PASS(kind 예측식, ladder 7단, free_parameters 0), 훅 25/25 symbolic+numeric
+      pass(hook_result.json)"
+    - "6개 사전등록 창 전부 카드값과 일치(a4 recomputed_window vs card_window, window_matches_
+      card=true 6/6), F-02 대안 6개 전부 창 밖(alt_outside_window=true 6/6, 마진 1.44–4.73 반폭)"
+    - "sampler 검증(a4): 형제 증분 합·자식평균-부모 오차 모두 <2.3e-16(qspine_b5·cbin_d3·star8·k2),
+      텐서 구조(16성분 독립 적용) 오차 0.059(허용 스케일 3.0 대비 미소)"
+    - "부호·극한 census(a2): n≤13 전수 20298개 모양 중 위반 116개(카드 서술과 일치), deep-chain/
+      terminal-fork 계열 점근 수렴(비→1), condition (C) 상계 재계산이 카드 상계와 일치, 두 종 규약
+      배수 4.0 exact(9개 (n,p) 조합)"
+    - "$K_T$ 이론 kill 순환성·재현(a5): $R^2=1-s$ 항등식이 s=0,0.25,0.5,0.71,0.9,0.99,1.0에서 수치
+      재현(최대 절대오차 0.0017), s=1에서 R=1.4e-16(카드 값 0 재현), F-02 iid에서 R=1.0010(카드 값
+      1 재현), K_A2 허용 밴드 s=0.71이 $K_T$ 창 [0,0.1] 밖임을 확인(KT_window_excludes_s_band_
+      0p71=true); not_implemented 실행이 카드 선언(status not_implemented, verdict null)과 정확히
+      일치, 사전등록 값·창·스크립트 sha256 rev1=rev2 무결(prereg_values_identical 등 전부 true)"
+    - "정합 게이트 대칭성 확인(rev.2 반영 사항, a4 physics_mc_mini): split sampler 위 물리 MC에서 이
+      카드 예측(2.708/4.504, n=7/15)이 창 안(관측 2.740/4.469)이고 F-02 예측(1.656/3.164)은 멀리
+      벗어남 — 거울 실험이 카드 서술대로 재현됨"
+  hidden_assumptions:
+    - "K_T(이론 kill)는 자기재귀 렌더링 G[p_n]의 실제 구현(`render_labels`)이 있어야 판정 가능하며
+      카드 시점에는 not_implemented·verdict null이다 — 사다리 2단이 이 카드와 F-02의 우열을 가르는
+      유일한 단이고, K_A1–K_A3(sampler MC)는 어느 쪽이 카드이든 통과 확률≈1인 E-018 따름정리 검사에
+      불과하다(진전으로 계상 안 됨)"
+    - "s=1은 물리적 유도가 아니라 C⪰0을 유지하는 PSD 허용 구간의 선언된 극점 선택이다 — K_A2 진폭비
+      창이 허용하는 실제 자유도는 s∈[0.71,1.00](창폭 0.29)이고, K_T가 이를 s≥0.99로 좁힌다"
+    - "정합 게이트(K1·K3 값과의 비교)는 F-02의 i.i.d. sampler 위 시뮬레이션이라 이 카드와 다른 것은
+      정의상 당연하며 증거값 0이다 — 저장소에 두 sampler를 가를 독립 물리 sampler가 없다"
+    - "부호 주장은 시험한 앙상블(Cayley·Q-spine·star·complete binary·caterpillar·star-of-chains)의
+      평균에서만 성립하고 tree별로는 부호가 고정되지 않는다(반례 족 명시)"
+  parking: []
+sourcer:
+  prior_art:
+    - ref: "Felsenstein 1973/1985 phylogenetic Brownian covariance (AA^T) / independent
+        contrasts"
+      url: null
+      relation: generalizes
+      note: "AA^T 커널·형제 차 자체는 이 계열이나 형제 반상관 zero-sum 증분 커널(C 행렬)과 그것을
+        Plebanski simplicity 잔차 진폭으로 옮긴 식은 문헌에 없다 — 카드가 이 계열을 일반화한다"
+    - ref: "Haar 1910; Gavish–Nadler–Coifman 2010 multiscale wavelets on trees"
+      url: null
+      relation: generalizes
+      note: "complete binary의 열 직교 구조는 기존이나 D_split 닫힌 식(2n^2+6n-4(n+1)log2(n+1))은
+        카드 고유 — 카드가 이 직교 구조를 일반화한다"
+    - ref: "Benjamini–Peres 1994 tree-indexed Markov chains / tree martingale"
+      url: null
+      relation: special_case
+      note: "기댓값판 마팅게일(자식평균=부모)은 F-02 i.i.d. 증분도 만족한다(a5 확인, iid_mean
+        6.8e-4≈0); 카드 고유 내용은 경로별(a.s.) 보존뿐"
+  overall: special_case
+  ce_specific_confirmed: "split 사건의 경로별 보존 제약이 상속 커널을 AA^T-B로 바꾼다는 것, 그
+    닫힌 식 4종·조건 (C) 족 상계·라벨만으로 정의된 판별 통계 R=sqrt(1-s)는 선행 문헌에서 찾지 못했다 —
+    다만 카드의 갱신 자체가 기존 tree martingale 개념의 특수 사례(경로별 a.s. 보존)로 표현되므로
+    overall은 special_case(재발견 신호)"
+assumptions:
+  - "scope: Euclideanized SO(4) 자기쌍대 대수, 가우스 등방 label kappa_split⊗I_16, O(delta^4) 절단,
+    delta=0.005, MIN_DET=0.05 — F-02 scope를 그대로 상속한다"
+  - "s=1 고정(자유 파라미터 아님, PSD 허용 구간의 선언된 극점); 부분 보존 s<1은 이 카드가 아니라 새
+    카드에서만 다룬다"
+  - "정합 게이트(K1·K3)는 대칭이며 증거값 0이다 — 판별은 사다리 2단과 이론 kill K_T뿐이다"
+  - "K_A1–K_A3(sampler MC, 6·7단)는 E-018 따름정리 검사로 통과 확률≈1이며 진전으로 계상하지 않는다"
+open_questions_spawned: []
+next_action: "질문 Q-0016은 살아있다(force_pivot=conjecture). 같은 세션에서 재추측 1회 허용 —
+  Benjamini–Peres tree martingale을 명시적으로 흡수·초과하는 더 강한 카드로 다음 attempt를 세운다:
+  경로별(a.s.) zero-sum 보존이 기댓값판 마팅게일의 순증분(strict refinement)임을 카드 본문에서 직접
+  진술하고, sourcer가 신규로 인정한 부분(닫힌 식 4종·조건 (C) 상계·R=sqrt(1-s) 판별 통계)을 novelty
+  절에서 tree-indexed 마팅게일 문헌과의 관계로 명시해 special_case 재분류 여지를 없앤다. 카드의 수학적
+  내용(kappa_split=AA^T-B, 닫힌 식, K_T)은 재사용 가능하므로 재유도가 아니라 문헌 관계 서술의 정정이
+  핵심이다."

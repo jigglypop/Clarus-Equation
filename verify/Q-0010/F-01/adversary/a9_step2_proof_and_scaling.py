@@ -16,7 +16,7 @@ ROOT = Path(r"c:/dev/ce/Clarus-Equation")
 F02 = ROOT / "verify" / "Q-0008" / "F-02"
 sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(F02))
 from check_modes import block_residual  # noqa: E402
-from examples.physics.causal_face_simplicity import geometric_self_dual_triple, plebanski_gram  # noqa: E402
+from examples.physics.gravity.causal_face_simplicity import geometric_self_dual_triple, plebanski_gram  # noqa: E402
 
 I4 = np.eye(4)
 

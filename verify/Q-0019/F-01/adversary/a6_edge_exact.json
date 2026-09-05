@@ -1,0 +1,23 @@
+{
+  "edge_coord_lambda_max_squared_exact": [
+    2,
+    3
+  ],
+  "edge_coord_lambda_max_exact_float": 0.816496580927726,
+  "edge_coord_trace_exact": [
+    4,
+    3
+  ],
+  "edge_coord_lambda_iso_squared_exact": [
+    1,
+    6
+  ],
+  "edge_coord_lambda_iso_exact_float": 0.408248290463863,
+  "all_ten_singular_values_equal": true,
+  "proof": "\uc911\uc2ec\ud654 sum_a D_a[e]=0 \uc5d0\uc11c y[e]=-(1/3)(D_i[e]+D_j[e]); edge\ubcc4 \ubd84\ub9ac; sum=0 \ucd08\ud3c9\uba74 \uc704 |e_i+e_j| \uc0ac\uc601 \ub178\ub984^2=6/5; lambda^2=(1/9)(6/5)*5=2/3 \ubaa8\ub4e0 \ubc29\ud5a5.",
+  "card_metric_coord_values": {
+    "lambda_max_sq": 1.2222222222222223,
+    "lambda_iso_sq": 0.21666666666666667
+  },
+  "contrast": "\uae38\uc774 \uc88c\ud45c: \uc644\uc804 \ucd95\ud1f4 2/3(\uc2a4\ud399\ud2b8\ub7fc \uac08\ub9bc \uc5c6\uc74c, \uc804\ubd80 <1). \uacc4\ub7c9 \uc88c\ud45c: 1/3,5/9,11/9 \uc138 \uac08\ub798."
+}

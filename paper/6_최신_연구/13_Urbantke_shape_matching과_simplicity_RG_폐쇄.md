@@ -406,7 +406,7 @@ Lorentzian convolution을 쓰는 새 모형은 face closure, cell normal, linear
 구현:
 
 ```text
-examples/physics/urbantke_shape_matching_rg.py
+examples/physics/gravity/urbantke_shape_matching_rg.py
 ```
 
 회귀:

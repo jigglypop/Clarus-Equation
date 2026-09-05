@@ -497,6 +497,29 @@ def _validate_data_roles(
         )
         if supersedes == manifest.get("manifest_id"):
             errors.append("an assignment manifest cannot supersede itself")
+        # 자료 파일 검사를 꺼도 선행 판본의 신뢰 기준은 유지한다.
+        trusted_revision = next(
+            (
+                number
+                for number, anchors in (
+                    (1, FROZEN_V1_MANIFEST_SHA256),
+                    (2, FROZEN_V2_MANIFEST_SHA256),
+                )
+                if supersedes in anchors
+            ),
+            None,
+        )
+        if trusted_revision is None:
+            errors.append("배정의 선행 판본은 등록된 동결 기준이어야 합니다")
+        else:
+            if not supersedes.startswith(f"ce-{manifest.get('domain')}-"):
+                errors.append("배정과 선행 판본의 연구 분야가 일치해야 합니다")
+            if (
+                isinstance(revision, int)
+                and not isinstance(revision, bool)
+                and revision <= trusted_revision
+            ):
+                errors.append("배정 판본은 선행 판본보다 엄격히 커야 합니다")
     if placeholder_id in exploratory_ids:
         errors.append("future holdout placeholder ID must not be an exploratory dataset ID")
     return future, set(exploratory_ids)

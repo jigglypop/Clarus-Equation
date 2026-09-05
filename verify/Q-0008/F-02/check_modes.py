@@ -44,11 +44,11 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(HERE))
 
 from driver_numbers import qspine_block, tree_arrays, uniform_rooted_tree  # noqa: E402
-from examples.physics.causal_face_simplicity import (  # noqa: E402
+from examples.physics.gravity.causal_face_simplicity import (  # noqa: E402
     geometric_self_dual_triple,
     simplicity_residual,
 )
-from examples.physics.urbantke_shape_matching_rg import optimal_internal_alignment  # noqa: E402
+from examples.physics.gravity.urbantke_shape_matching_rg import optimal_internal_alignment  # noqa: E402
 
 SEED = 20260902
 DELTA = 0.005

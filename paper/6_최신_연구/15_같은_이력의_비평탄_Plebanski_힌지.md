@@ -198,7 +198,7 @@ distributional rigging-map criterion을 검사하고, 그 한계에서 Einstein-
 
 ## 15.6 재현 경로
 
-구현은 [curved_plebanski_hinge.py](../../examples/physics/curved_plebanski_hinge.py), 집중
+구현은 [curved_plebanski_hinge.py](../../examples/physics/gravity/curved_plebanski_hinge.py), 집중
 회귀는 [test_curved_plebanski_hinge.py](../../tests/test_curved_plebanski_hinge.py)에 있다.
 Windows에서는 다음 명령으로 확인한다.
 

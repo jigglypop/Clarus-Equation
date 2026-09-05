@@ -1,0 +1,69 @@
+{
+  "lstar2_by_convention": {
+    "R(m=39)": 62.06884225954214,
+    "W(m=39)": 62.06884225954214,
+    "P35(m=35)": 55.70280715599935,
+    "gauge-in-denominator(m=35)": 55.70280715599935
+  },
+  "lstar2_depends_only_on_m": true,
+  "convention_free_scope": "R and W only; P35 and gauge-in-denominator give 55.7028 (10.3% lower)",
+  "recover_empty_K": {
+    "m": 0,
+    "ln_omega": 0.0,
+    "expected": 0.0,
+    "pass": true
+  },
+  "recover_sigma_zero": {
+    "half_sum_log1m": 0.0,
+    "expected": 0.0,
+    "pass": true,
+    "B_norm_isotropic": 4.314438024925243e-15,
+    "B_is_zero": true,
+    "d_iso": 19.387919330205413,
+    "d_iso_expected_-m/2*ln(nu)": 19.387919330205406,
+    "d_iso_err": 7.105427357601002e-15
+  },
+  "recover_glued_schur": {
+    "max_abs_diff_Heff_Hc": 2.855568807753747,
+    "rel": 1.0000000960988724,
+    "pass": false
+  },
+  "recover_f02_bridge": {
+    "residual": 3.358973513375975e-15,
+    "lam2_clusters": [
+      {
+        "value": 0.42968184434566614,
+        "multiplicity": 4
+      },
+      {
+        "value": 0.9999999999999999,
+        "multiplicity": 2
+      },
+      {
+        "value": 1.4723736867339285,
+        "multiplicity": 5
+      }
+    ],
+    "pass": true
+  },
+  "recover_scale": {
+    "d_R_shift": 1.6167625398466612e-06,
+    "d_W_shift": 1.6095029069518318e-06,
+    "pass": true
+  },
+  "recover_single_cell": {
+    "note": "1 cell -> gluing_rows \ub294 \ube48 \ud589\ub82c(\uac01 \ubcc0 \uc18c\uc720\uc790 1\uba85), \uac8c\uc774\uc9c0 \ub0b4\ubd80\uc815\uc810 \uc5c6\uc74c -> m=0, ln Omega=0 = Gamma_eff=S_c",
+    "m_expected": 0
+  },
+  "kappa_limits": {
+    "kappa->0 (l=1e-3 lP)": -360.6303594847674,
+    "kappa->inf (l=1e3 lP)": 178.17455227583935,
+    "note": "ln Omega -> -inf as l->0 (kappa->0) and -> +inf as l->inf; Omega_fold is a RATIO so >1 is allowed"
+  },
+  "dof": {
+    "free_parameters": 0,
+    "prereg_numbers_observed": 12,
+    "prereg_numbers_unobserved": 6,
+    "ratio_ok": true
+  }
+}

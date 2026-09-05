@@ -48,17 +48,17 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "verify" / "Q-0008" / "F-02"))
 
 from driver_numbers import tree_arrays, uniform_rooted_tree  # noqa: E402
-from examples.physics.causal_face_simplicity import (  # noqa: E402
+from examples.physics.gravity.causal_face_simplicity import (  # noqa: E402
     geometric_self_dual_triple,
     plebanski_gram,
 )
-from examples.physics.curved_plebanski_hinge import (  # noqa: E402
+from examples.physics.gravity.curved_plebanski_hinge import (  # noqa: E402
     constructive_curved_plebanski_hinge_witness,
     de_sitter_plebanski_point_audit,
     exact_primal_triangle_holonomy,
     reference_vertex_coordinates,
 )
-from examples.physics.urbantke_shape_matching_rg import optimal_internal_alignment  # noqa: E402
+from examples.physics.gravity.urbantke_shape_matching_rg import optimal_internal_alignment  # noqa: E402
 
 # ------------------------------------------------------------------ frozen constants
 SEED_HER = 20260902

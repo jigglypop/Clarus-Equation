@@ -517,11 +517,11 @@ def battery() -> dict:
 
 # ---------------------------------------------------------------- physics (kill side)
 def _physics():
-    from examples.physics.causal_face_simplicity import (  # noqa: PLC0415
+    from examples.physics.gravity.causal_face_simplicity import (  # noqa: PLC0415
         geometric_self_dual_triple,
         simplicity_residual,
     )
-    from examples.physics.urbantke_shape_matching_rg import optimal_internal_alignment  # noqa: PLC0415
+    from examples.physics.gravity.urbantke_shape_matching_rg import optimal_internal_alignment  # noqa: PLC0415
 
     return geometric_self_dual_triple, simplicity_residual, optimal_internal_alignment
 

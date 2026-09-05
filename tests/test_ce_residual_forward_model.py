@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import math
 
-from examples.physics.ce_residual_forward_model import (
+import pytest
+
+from examples.physics.darksector.ce_residual_forward_model import (
     BAODataPoint,
     C_KM_S,
     CEForwardParams,
@@ -505,3 +507,34 @@ def test_parameter_provenance_separates_predictions_inputs_and_assumptions() -> 
     assert entries["w0"].role == "model_assumption"
     assert entries["wa"].role == "model_assumption"
     assert entries["gravity_mu_coupling"].role == "model_assumption"
+
+
+@pytest.mark.parametrize(
+    "matrix",
+    [
+        ((1.0, 2.0), (2.0, 1.0)),
+        ((1.0, 1.0), (1.0, 1.0)),
+        ((float("nan"), 0.0), (0.0, 1.0)),
+        ((float("inf"), 0.0), (0.0, 1.0)),
+        ((1.0, 0.2), (0.3, 1.0)),
+    ],
+)
+def test_invalid_covariance_is_rejected_by_parser_and_direct_assessment(matrix):
+    text = ";".join(",".join(str(value) for value in row) for row in matrix)
+    with pytest.raises(ValueError):
+        parse_covariance_matrix(text)
+    params = CEForwardParams()
+    prediction = bao_observable(0.5, params, n=101).dm_over_rd
+    data = (BAODataPoint(0.5, "dm", prediction - 1.0, 1.0),) * 2
+    with pytest.raises(ValueError):
+        assess_bao_fit(data, params, covariance=matrix, n=101)
+
+
+def test_covariance_validation_preserves_different_observable_units():
+    matrix = parse_covariance_matrix("1e-12,0.25;0.25,1e12")
+    inverse = invert_matrix(matrix)
+    # 오차 단위가 크게 달라도 양의 정부호인 입력은 보존한다.
+    for i in range(2):
+        for j in range(2):
+            product = sum(matrix[i][k] * inverse[k][j] for k in range(2))
+            assert product == pytest.approx(float(i == j), abs=1e-12)

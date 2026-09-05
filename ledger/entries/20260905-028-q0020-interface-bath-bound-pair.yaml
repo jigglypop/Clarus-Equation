@@ -1,0 +1,60 @@
+id: E-20260905-028
+question: Q-0020
+attempt: 5
+timestamp: 2026-09-05T00:00:00+09:00
+claim: >-
+  [정리: 조건부] 공유 변의 소유자 k개 사이 모든 쌍의 진동자 차이를 동일한 독립
+  진공 사슬에 결합하면 공통 모드는 보존되지만 유효 결합 제곱 q=k(eta/g)^2가 된다.
+  q>2이면 두 결합상태가 생겨 완전 방출이 실패한다. 공급한 대조 모형의 경계이며
+  CE에서 미시 결합이 유도되었다는 주장이 아니다.
+level: L2
+verdict: continue
+derivation: derivations/Q-0020/conditional_composition.derivation.md
+card: null
+ladder_step: null
+verification:
+  symbolic: skipped
+  numeric: pass
+  lean: skipped
+  artifacts: verify/Q-0020/interface_bath.json
+adversary:
+  counterexamples:
+    - input: 'k=3, eta=g, 쌍마다 동일한 반무한 진공 사슬'
+      expected: '공통 모드 보존만으로 불일치 들뜸을 완전히 방출'
+      observed: 'q=3, 결합상태 두 개, 각 경계 무게1/4; 장시간 평균 생존확률1/8.'
+    - input: 'k=4, eta=g'
+      expected: '공유 세포 수가 늘어도 완전 방출'
+      observed: 'q=4, 각 경계 무게1/3; 평균 생존확률2/9. 점별 극한 아닌 진동의 시간 평균.'
+  survived_checks:
+    - 'D^T D=kI-11^T 및 D1=0, 잔차0'
+    - '1->5 소유자 수 {3:10,4:5}, 1->5->25 {4:25,9:10,12:5}'
+    - '96위치 독립 대각화: 에너지 잔차3.56e-15 이하, 경계 무게 잔차1.00e-15 이하'
+    - 'q=2는 정규화 가능한 결합상태 없음; eta=g/sqrt(k) 추가 규약은 q=1'
+assumptions:
+  - '고정 공유 변의 모든 소유자 쌍에 독립 동일한 반무한 진공 사슬을 공급'
+  - '진동자 수보존 선형 hopping, 단일들뜸 공간, 내부 hopping g>0와 경계 결합 eta>0'
+  - '공통 onsite10g를 공급; 검사 k<=12에서 전체 단일들뜸 Hamiltonian 양수'
+  - '무한 사슬 극한을 먼저 취한 뒤 장시간 평균. 유한 사슬 점근 감쇠 주장 없음'
+  - '실제 길이/계량 불일치와 진동자 들뜸의 대응은 미유도'
+conditional_results:
+  - status: '[정리: 조건부]'
+    claim: 'q>2의 상대 결합에너지 E_pm/g=±q/sqrt(q-1), 각 경계 무게 w=(q-2)/(2(q-1)); 생존확률은4w^2 cos^2(E_b t/hbar)+o(1), 시간 평균2w^2.'
+  - status: '[정리: 조건부]'
+    claim: '이 사슬 클래스에서 0<k(eta/g)^2<=2는 결합상태 없는 국소 방출 영역. eta=g/sqrt(k)는 그중 하나이며 유일하게 선택되지 않음.'
+  - status: '[산출]'
+    claim: 'eta=g에서 k=3,4,9,12의 평균 생존확률은1/8,2/9,49/128,50/121. 소유자 수는 헤세 유한차분과 독립.'
+source_boundary:
+  - '11장 §11.9: count와 persistent-line measure만 닫힘, simplicity microscopic weight 미유도'
+  - '13장 §13.7-13.8: soft weight는 후보이며 action/measure 비식별성이 명시됨'
+  - 'E-027 표준 사슬을 쌍 발생행렬과 결합한 조건부 직접 계산. 문헌 신규성 및 CE 법칙 도출을 주장하지 않음'
+audit_limitations:
+  - '독립 읽기 전용 매핑 에이전트 요청은 thread limit으로 실행되지 않음. root 원문 확인·수학 검산·테스트'
+  - '진공 들뜸수0은 좌표의 영점 분산0을 뜻하지 않으며 문자 그대로의 공통 길이는 미유도'
+unfinished:
+  - '실제 정준 변수·방출 결합·환경 스펙트럼 및 소유자 수에 따른 eta(k)/g(k) 도출'
+  - '열적 재유입·모드 수 증가·기하 좌표의 양자 분산 제어'
+  - 'Lorentzian·공통 계량·3+1 Plebanski/Einstein 브리지'
+next_action: >-
+  CE 분할·병합 자원 또는 작용에서 eta(k)/g(k)를 고정할 수 있는지 검사하고,
+  그 법칙이 방출 영역을 재귀적으로 지키는지 판정한다.
+  임의 정규화를 채택해 물리적 정렬을 증명했다고 보고하지 않는다.

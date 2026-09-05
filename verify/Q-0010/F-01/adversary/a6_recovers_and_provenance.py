@@ -13,8 +13,8 @@ F02 = ROOT / "verify" / "Q-0008" / "F-02"
 sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(F02))
 from check_modes import block_residual, fit_slope, rms, heritable_labels, REFERENCE  # noqa: E402
 from driver_numbers import tree_arrays, uniform_rooted_tree  # noqa: E402
-from examples.physics.causal_face_simplicity import geometric_self_dual_triple, simplicity_residual  # noqa: E402
-from examples.physics.urbantke_shape_matching_rg import optimal_internal_alignment  # noqa: E402
+from examples.physics.gravity.causal_face_simplicity import geometric_self_dual_triple, simplicity_residual  # noqa: E402
+from examples.physics.gravity.urbantke_shape_matching_rg import optimal_internal_alignment  # noqa: E402
 
 import importlib.util  # noqa: E402
 spec = importlib.util.spec_from_file_location("q0010_driver", ROOT / "verify/Q-0010/F-01/driver_numbers.py")
@@ -113,7 +113,7 @@ for delta in (0.02, 0.04, 0.08, 0.16):
     print("        delta=%.3f  RMS residual = %.4e" % (delta, rms(vals)))
 
 # ---------- (c) rho(theta): interpolate orbit tangent -> random 4-plane -------------------------
-from examples.physics.causal_face_simplicity import plebanski_gram  # noqa: E402
+from examples.physics.gravity.causal_face_simplicity import plebanski_gram  # noqa: E402
 I4 = np.eye(4)
 
 

@@ -1,0 +1,102 @@
+{
+  "scope": "counterexample to coupling uniqueness from common-mode preservation and parent pullback",
+  "python": "3.11.9",
+  "numpy": "2.4.6",
+  "source_sha256": "7d6f43134f94f54a587f9345ed43ea5e0aa4fb6d59c9c6604eaa9c92eb37b81c",
+  "bath_source_sha256": "546db9d6373411da6b56b76c5835c7cb99b12c206adc250c29bd89aaca9ca8e8",
+  "parent_weights": [
+    0.5,
+    0.5
+  ],
+  "child_weights": [
+    0.5,
+    0.25,
+    0.25
+  ],
+  "initial_new_mode": [
+    0.0,
+    0.7071067811865475,
+    -0.7071067811865475
+  ],
+  "exact_symbolic_checks": {
+    "isometry": true,
+    "common_mode_transport": true,
+    "new_direction_invisible_to_parent": true,
+    "common_mode_kernel": true,
+    "same_parent_pullback_for_all_beta": true,
+    "coupling_factorization": true,
+    "new_direction_eigenvalue": true
+  },
+  "cases": [
+    {
+      "beta": 0.0,
+      "new_mode_coupling_squared": 1.0,
+      "coupling_gram": [
+        [
+          0.5000000000000001,
+          -0.3535533905932738,
+          -0.35355339059327373
+        ],
+        [
+          -0.3535533905932738,
+          0.75,
+          -0.25
+        ],
+        [
+          -0.35355339059327373,
+          -0.25,
+          0.75
+        ]
+      ],
+      "parent_pullback_residual": 2.3551386880256624e-16,
+      "common_mode_residual": 1.1443916996305594e-16,
+      "new_direction_eigen_residual": 4.4325579645879136e-17,
+      "new_mode_spectrum": {
+        "bound_states": 0,
+        "long_time_mean_survival": 0.0
+      },
+      "finite_chain_bound_states": 0
+    },
+    {
+      "beta": 2.0,
+      "new_mode_coupling_squared": 3.0,
+      "coupling_gram": [
+        [
+          0.5000000000000001,
+          -0.3535533905932738,
+          -0.3535533905932738
+        ],
+        [
+          -0.3535533905932738,
+          1.7499999999999998,
+          -1.2499999999999998
+        ],
+        [
+          -0.3535533905932738,
+          -1.2499999999999998,
+          1.7499999999999998
+        ]
+      ],
+      "parent_pullback_residual": 2.7194799110210365e-16,
+      "common_mode_residual": 1.0007415106216802e-16,
+      "new_direction_eigen_residual": 6.280574740105556e-16,
+      "new_mode_spectrum": {
+        "bound_states": 2,
+        "relative_energies": [
+          -2.1213203435596424,
+          2.1213203435596424
+        ],
+        "boundary_weight_per_state": 0.25,
+        "long_time_mean_survival": 0.125,
+        "asymptotic_survival_oscillates": true
+      },
+      "finite_chain_bound_states": 2
+    }
+  ],
+  "bath_initial_state": "vacuum; identical semi-infinite chains in both cases",
+  "common_onsite_over_bath_hopping": 10,
+  "infinite_bath_limit_precedes_time_average": true,
+  "conserved_geometric_weights_derived_from_CE": false,
+  "microscopic_coupling_derived_from_CE": false,
+  "common_metric_selection_proved": false
+}

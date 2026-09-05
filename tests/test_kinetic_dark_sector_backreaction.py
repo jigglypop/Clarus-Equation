@@ -1,6 +1,6 @@
 import pytest
 
-from examples.physics.kinetic_dark_sector_backreaction import (
+from examples.physics.darksector.kinetic_dark_sector_backreaction import (
     ConservedFluid,
     ScalarBackreactionChannel,
     backreaction_closure_receipt,

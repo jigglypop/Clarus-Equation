@@ -1,0 +1,116 @@
+{
+  "file": "C:\\dev\\ce\\Clarus-Equation\\derivations\\Q-0020\\F-01.formula.md",
+  "question": "Q-0020",
+  "attempt": null,
+  "card": "F-01",
+  "sympy": true,
+  "details": [
+    {
+      "type": "identity",
+      "lhs": "(a - b**2/c)/a",
+      "rhs": "1 - b**2/(a*c)",
+      "symbolic": "pass",
+      "max_rel_err": 1.7647866287997722e-16,
+      "numeric": "pass",
+      "index": 0
+    },
+    {
+      "type": "numeric",
+      "expr": "35 + 4 - 39",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 1
+    },
+    {
+      "type": "numeric",
+      "expr": "(210 + 24 - 234) + (6*39 - 234)",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 2
+    },
+    {
+      "type": "numeric",
+      "expr": "10*sqrt(3)/4*(pi - acos(1/4)) - 7.8958852",
+      "max_rel_err": 1.581718311882696e-08,
+      "numeric": "pass",
+      "index": 3
+    },
+    {
+      "type": "numeric",
+      "expr": "4*pi*39/7.8958852 - 62.0688",
+      "max_rel_err": 4.2383879730323315e-05,
+      "numeric": "pass",
+      "index": 4
+    },
+    {
+      "type": "numeric",
+      "expr": "4*pi*35/7.8958852 - 55.7028",
+      "max_rel_err": 7.267584337000699e-06,
+      "numeric": "pass",
+      "index": 5
+    },
+    {
+      "type": "numeric",
+      "expr": "39*log(2) - 27.03274",
+      "max_rel_err": 4.1837864728222485e-08,
+      "numeric": "pass",
+      "index": 6
+    },
+    {
+      "type": "identity",
+      "lhs": "diff(S*l**2/(8*pi) - m*log(l), l)",
+      "rhs": "S*l/(4*pi) - m/l",
+      "symbolic": "pass",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 7
+    },
+    {
+      "type": "limit",
+      "expr": "l**39",
+      "var": "l",
+      "point": 0,
+      "expected": 0,
+      "result": "0",
+      "symbolic": "pass",
+      "index": 8
+    },
+    {
+      "type": "numeric",
+      "expr": "(39/2)*log(16*pi**2) - 98.7099456",
+      "max_rel_err": 3.180234386945813e-08,
+      "numeric": "pass",
+      "index": 9
+    },
+    {
+      "type": "numeric",
+      "expr": "(1/(1 + 1.3273034) - 0.4296818) + (1/(1 - 0.3208246) - 1.4723737)",
+      "max_rel_err": 4.18645635380521e-08,
+      "numeric": "pass",
+      "index": 10
+    },
+    {
+      "type": "numeric",
+      "expr": "exp(91.2279036/39) - 10.3726965",
+      "max_rel_err": 2.05873362801867e-08,
+      "numeric": "pass",
+      "index": 11
+    },
+    {
+      "type": "numeric",
+      "expr": "log(1 - 0)/2",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 12
+    },
+    {
+      "type": "numeric",
+      "expr": "39/2 - (39/2)*log(62.0688423) + 91.2279036 - 30.2271431",
+      "max_rel_err": 1.02183221883934e-08,
+      "numeric": "pass",
+      "index": 13
+    }
+  ],
+  "symbolic": "pass",
+  "numeric": "pass"
+}

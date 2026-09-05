@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import copy
+import json
 from pathlib import Path
 
 import pytest
@@ -67,7 +68,8 @@ def _assign_synthetic_future_holdout(manifest: dict) -> None:
 
 @pytest.mark.parametrize("path", [COSMOLOGY_PATH, QUANTUM_PATH])
 def test_unassigned_manifest_is_structurally_valid_but_not_evaluation_ready(path):
-    report = validate_manifest(_load(path))
+    # 동결 문법과 현재 작업공간의 과거 파일 보유 여부를 별도로 검증한다.
+    report = validate_manifest(_load(path), verify_artifacts=False)
 
     assert report.structurally_valid, report.errors
     assert report.holdout_status == "unassigned"
@@ -120,12 +122,14 @@ def test_rehashing_an_edited_v2_does_not_overwrite_the_frozen_trust_anchor():
     assert any("frozen v2 digest mismatch" in error for error in report.errors)
 
 
-def test_artifact_digest_is_independent_of_manifest_self_digest():
+def test_artifact_digest_is_independent_of_manifest_self_digest(tmp_path):
     manifest = _load(COSMOLOGY_PATH)
+    manifest["input_artifacts"][0]["path"] = "fixture.bin"
     manifest["input_artifacts"][0]["sha256"] = "0" * 64
+    (tmp_path / "fixture.bin").write_bytes(b"frozen-test-data")
     _rehash(manifest)
 
-    report = validate_manifest(manifest)
+    report = validate_manifest(manifest, repo_root=tmp_path)
 
     assert not report.structurally_valid
     assert any("sha256 mismatch for" in error for error in report.errors)
@@ -343,10 +347,71 @@ def test_validator_rejects_artifact_paths_outside_repository():
 
 
 def test_cli_distinguishes_freeze_validation_from_evaluation_readiness(capsys):
-    assert main([]) == 0
+    assert main(["--no-verify-artifacts"]) == 0
     valid_output = capsys.readouterr().out
     assert valid_output.count("VALID holdout=unassigned evaluation=NOT_READY") == 2
 
-    assert main(["--require-assigned-holdout"]) == 1
+    assert main(["--no-verify-artifacts", "--require-assigned-holdout"]) == 1
     blocked_output = capsys.readouterr().out
     assert blocked_output.count("future holdout is not assigned") == 2
+
+
+@pytest.mark.parametrize("path", [COSMOLOGY_PATH, QUANTUM_PATH])
+@pytest.mark.parametrize("revision", [1, 2])
+def test_assignment_must_advance_beyond_its_trusted_parent(path, revision):
+    manifest = _load(path)
+    _assign_synthetic_future_holdout(manifest)
+    manifest["freeze"]["protocol_revision"] = revision
+    _rehash(manifest)
+    report = validate_manifest(manifest, verify_artifacts=False)
+    assert not report.evaluation_ready
+    assert "배정 판본은 선행 판본보다 엄격히 커야 합니다" in report.errors
+
+
+@pytest.mark.parametrize(
+    "parent, expected",
+    [
+        ("unknown-parent", "등록된 동결 기준"),
+        ("ce-quantum-future-holdout-v2", "연구 분야"),
+    ],
+)
+def test_assignment_requires_a_trusted_parent_in_the_same_domain(parent, expected):
+    manifest = _load(COSMOLOGY_PATH)
+    _assign_synthetic_future_holdout(manifest)
+    manifest["supersedes_manifest_id"] = parent
+    _rehash(manifest)
+    report = validate_manifest(manifest, verify_artifacts=False)
+    assert not report.structurally_valid
+    assert not report.evaluation_ready
+    assert any(expected in error for error in report.errors)
+
+
+@pytest.mark.parametrize("path", [COSMOLOGY_V1_PATH, COSMOLOGY_PATH])
+def test_assignment_can_advance_each_registered_parent(path):
+    manifest = _load(path)
+    _assign_synthetic_future_holdout(manifest)
+    _rehash(manifest)
+    report = validate_manifest(manifest, verify_artifacts=False)
+    assert report.structurally_valid, report.errors
+    assert report.evaluation_ready
+
+
+def test_missing_artifacts_prevent_evaluation(tmp_path):
+    manifest = _load(COSMOLOGY_PATH)
+    _assign_synthetic_future_holdout(manifest)
+    _rehash(manifest)
+    report = validate_manifest(manifest, repo_root=tmp_path)
+    assert not report.structurally_valid
+    assert not report.evaluation_ready
+    assert any("path does not exist" in error for error in report.errors)
+
+
+def test_cli_checks_artifacts_by_default(tmp_path, capsys):
+    manifest = _load(COSMOLOGY_PATH)
+    manifest["manifest_id"] = "synthetic-missing-artifact"
+    manifest["input_artifacts"][0]["path"] = "missing-fixture/not-present.bin"
+    _rehash(manifest)
+    path = tmp_path / "manifest.json"
+    path.write_text(json.dumps(manifest), encoding="utf-8")
+    assert main([str(path)]) == 1
+    assert "missing-fixture/not-present.bin" in capsys.readouterr().out

@@ -1,0 +1,95 @@
+{
+  "file": "C:\\dev\\ce\\Clarus-Equation\\derivations\\Q-0019\\F-02.formula.md",
+  "question": "Q-0019",
+  "attempt": null,
+  "card": "F-02",
+  "sympy": true,
+  "details": [
+    {
+      "type": "numeric",
+      "expr": "(1 + 4*0.4296818 + 5*1.4723737)/10 - 1.0080596",
+      "max_rel_err": 3.00000000397205e-08,
+      "numeric": "pass",
+      "index": 0
+    },
+    {
+      "type": "identity",
+      "lhs": "h*(1/h + g)",
+      "rhs": "1 + h*g",
+      "symbolic": "pass",
+      "max_rel_err": 1.218800189462922e-16,
+      "numeric": "pass",
+      "index": 1
+    },
+    {
+      "type": "numeric",
+      "expr": "((0.4296818 - 1) - (-0.5703182)) + ((1.4723737 - 1) - 0.4723737)",
+      "max_rel_err": 1.11022302462516e-16,
+      "numeric": "pass",
+      "index": 2
+    },
+    {
+      "type": "numeric",
+      "expr": "(sqrt(0.4296818) - 0.655501) + (sqrt(1.4723737) - 1.213414)",
+      "max_rel_err": 2.50129326140325e-07,
+      "numeric": "pass",
+      "index": 3
+    },
+    {
+      "type": "numeric",
+      "expr": "1 + 4 + 5 - 10",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 4
+    },
+    {
+      "type": "numeric",
+      "expr": "(10 + 40 - 50) + (5*2 - 10) + (5*8 - 40) + (2 + 9 + 4 - 15)",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 5
+    },
+    {
+      "type": "numeric",
+      "expr": "(0.4296818**2 - 0.1846264) + (1.4723737**2 - 2.1678843)",
+      "max_rel_err": 6.17029299043725e-08,
+      "numeric": "pass",
+      "index": 6
+    },
+    {
+      "type": "limit",
+      "expr": "0.4296818**k",
+      "var": "k",
+      "point": "oo",
+      "expected": 0,
+      "result": "0",
+      "symbolic": "pass",
+      "index": 7
+    },
+    {
+      "type": "numeric",
+      "expr": "(4*0.4296818 + 5*1.4723737)/9 - 1.0089551",
+      "max_rel_err": 2.22222222845403e-08,
+      "numeric": "pass",
+      "index": 8
+    },
+    {
+      "type": "numeric",
+      "expr": "((2/1)*(2/1 - 1) - 2) + (2/2)*(2/2 - 1)",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 9
+    },
+    {
+      "type": "identity",
+      "lhs": "(2*S)/(2*S)",
+      "rhs": "1",
+      "symbolic": "pass",
+      "max_rel_err": 0.0,
+      "numeric": "pass",
+      "index": 10
+    }
+  ],
+  "symbolic": "pass",
+  "numeric": "pass"
+}

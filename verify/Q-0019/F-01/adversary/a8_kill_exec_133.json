@@ -1,0 +1,73 @@
+{
+  "functions_present": [
+    "run_delta",
+    "run_irregular",
+    "run_predict",
+    "run_two_level"
+  ],
+  "kill_keys_resolvable": {
+    "two_level": {
+      "lambda_2_over_lambda_1_squared": true,
+      "lambda_2": true
+    },
+    "irregular": {
+      "ratio_iso": true,
+      "ratio_max": true,
+      "sign_flip_iso": true,
+      "lambda_max_irregular": true
+    },
+    "delta": {
+      "max_rel_change_0p01_to_0p005": true
+    }
+  },
+  "all_kill_keys_present": true,
+  "windows_hardcoded_in_code": {
+    "two_level": true,
+    "irregular": true,
+    "delta": true
+  },
+  "irregular_geometry_realizable": {
+    "cholesky_ok": true,
+    "error": null,
+    "boundary_gram_cond": 2.6121695613162905,
+    "squared_lengths": [
+      1.8,
+      2.2,
+      1.8,
+      2.2,
+      1.8,
+      1.8,
+      1.8,
+      2.2,
+      1.8,
+      2.2
+    ]
+  },
+  "two_level_subcell_gram_cond": [
+    30.938955304065132,
+    30.9389553040651,
+    30.938955304065157,
+    30.938955304065157,
+    30.938955304065136
+  ],
+  "per_cell_alpha_mismatch": {
+    "alphas": [
+      1.0,
+      1.1,
+      0.9,
+      1.05,
+      0.95
+    ],
+    "metric_fine_rms": 0.2829664291042315,
+    "metric_coarse": 0.16337074401495516,
+    "eps12_fine_rms": 6.028815040253227e-17,
+    "eps12_coarse": 0.0005616394715669292,
+    "note": "12.4 simplicity \uc794\ucc28\uac00 0 \uc774\uba74 13.3 \uc758\ubbf8\ub85c\ub294 \uc5ec\uc804\ud788 \uada4\ub3c4 \uc548(\uac01 cell \uc774 simple). Regge \uacc4\ub7c9 \uc811\ucc29\ub9cc \uae68\uc9c4\ub2e4."
+  },
+  "common_alpha": {
+    "metric_coarse_dev_from_identity": 0.4200000000000006,
+    "metric_coarse": 6.050771504375621e-16,
+    "eps12_coarse": 1.5165945285501754e-16,
+    "note": "\uacf5\ud1b5 alpha \ub294 coarse \uacc4\ub7c9\uc744 alpha^2 I \ub85c \uc815\ud655\ud788 \uc62e\uae34\ub2e4(\uc911\uc2ec\ud654\uac00 \uc9c0\uc6c0). \uce74\ub4dc recovers[0] \uc740 '\uc911\uc2ec\ud654 \ub4a4 0'\uc744 \ub9d0\ud560 \ubfd0."
+  }
+}

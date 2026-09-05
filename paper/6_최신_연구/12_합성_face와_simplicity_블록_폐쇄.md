@@ -441,7 +441,7 @@ local simplicity의 block 실패는 “아직 prove하지 못한 closure”가 �
 구현:
 
 ```text
-examples/physics/causal_face_simplicity.py
+examples/physics/gravity/causal_face_simplicity.py
 ```
 
 회귀:

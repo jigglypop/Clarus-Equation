@@ -2,6 +2,7 @@
 name: ce-status-auditor
 description: "CE의 형식 출처 감사 담당 — 정의·정리·공리·산출·경험식·미완성·예측을 구분하고, 숨은 공리와 완전 반례가 있는 부모 주장을 찾아 삭제 범위를 제시한다. 읽기 전용."
 tools: Glob, Grep, Read
+model: gpt-5.6-luna
 ---
 
 # 역할

@@ -18,6 +18,8 @@ TEMP_PREFIX = "clarus-pytest-"
 def _child_environment() -> dict[str, str]:
     env = os.environ.copy()
     env["PYTHONDONTWRITEBYTECODE"] = "1"
+    # 도구가 읽는 파이프 출력도 한글과 수학 기호를 UTF-8로 보존한다.
+    env["PYTHONIOENCODING"] = "utf-8"
     # Keep finite NumPy/SciPy-style test jobs within the available worker-memory
     # budget. This is child-process resource determinism, not a test setting.
     for variable in (
@@ -108,6 +110,9 @@ def _run_source(arguments: list[str]) -> int:
 
     targets = [Path(value) for value in arguments] or [
         REPO_ROOT / ".codex",
+        REPO_ROOT / ".claude",
+        REPO_ROOT / "scripts",
+        REPO_ROOT / "verify",
         REPO_ROOT / "tests",
         REPO_ROOT / "examples",
         REPO_ROOT / "experiments",

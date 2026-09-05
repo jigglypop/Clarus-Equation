@@ -637,3 +637,13 @@ def test_v3_verify_on_save_handles_formula_card(repo: Path) -> None:
     data = json.loads(hook_result.read_text(encoding="utf-8"))
     assert data["numeric"] == "pass"
     assert data["symbolic"] == ("pass" if HAVE_SYMPY else "skipped")
+
+
+def test_examples_sector_structure() -> None:
+    """examples/physics는 섹터 디렉터리·한국어 docstring·시험 존재 규칙을 지킨다."""
+    spec = importlib.util.spec_from_file_location("examples_index", LIB / "examples_index.py")
+    module = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(module)
+    problems = module.violations(ROOT)
+    assert problems == [], "\n".join(problems)

@@ -16,7 +16,7 @@ Three independent layers, in this order:
       cell-simplicity substitution, must leave a nonzero residual (that is where the premise is
       used, and it is the only place).
   (B) NUMERIC, physics.  Random tetrads e = I + delta*N(0,1)^{4x4} (seed 20260902), polar-aligned
-      to Sigma(I) with examples.physics.urbantke_shape_matching_rg.optimal_internal_alignment,
+      to Sigma(I) with examples.physics.gravity.urbantke_shape_matching_rg.optimal_internal_alignment,
       n in {2,5,17}, delta in {0.3, 0.05}.  Relative error of the identity must be <= TOL_IDENT.
       delta = 0.3 is deliberately large: the identity is not a small-delta statement.
   (C) COROLLARIES.  (a) two deterministic species (13.5): eps = p(1-p) ||tl gram Delta|| /
@@ -44,13 +44,13 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
 
-from examples.physics.causal_face_simplicity import (  # noqa: E402
+from examples.physics.gravity.causal_face_simplicity import (  # noqa: E402
     geometric_self_dual_triple,
     plebanski_gram,
     simplicity_residual,
     wedge_scalar,
 )
-from examples.physics.urbantke_shape_matching_rg import optimal_internal_alignment  # noqa: E402
+from examples.physics.gravity.urbantke_shape_matching_rg import optimal_internal_alignment  # noqa: E402
 
 # ---------------------------------------------------------------- pre-declared constants
 SEED = 20260902

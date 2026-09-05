@@ -5,7 +5,7 @@ import math
 import numpy as np
 import pytest
 
-from examples.physics.finite_ctp_diagonal_source_obstruction import (
+from examples.physics.record.finite_ctp_diagonal_source_obstruction import (
     apply_influence_gram,
     audit_controlled_history_observable_expectation,
     audit_joint_environment_slice_memory,

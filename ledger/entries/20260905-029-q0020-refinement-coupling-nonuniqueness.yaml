@@ -1,0 +1,57 @@
+id: E-20260905-029
+question: Q-0020
+attempt: 6
+claim: '[정리: 조건부] 양의 가중치와 부모 좌표 복사를 공급해도 상위 결합의 끌어옴과 공통 모드 보존만으로 새 자식 차이 방향의 결합은 결정되지 않는다. R_beta=P_new+beta uu^T는 모든 beta>=0에서
+  같은 부모 결합을 주지만, 새 방향의 결합제곱은 1+beta다. beta=0과 2는 같은 반무한 진공 환경에서 장시간 평균 생존확률 0과 1/8을 준다. 유한 행렬의 비유일성 반례이며 점근 방출 결론은 E-028의
+  반무한 사슬 정리에 의존한다.'
+level: L2
+verdict: continue
+derivation: derivations/Q-0020/conditional_composition.derivation.md
+card: null
+ladder_step: null
+verification:
+  symbolic: pass
+  numeric: pass
+  lean: skipped
+  artifacts: verify/Q-0020/refinement_coupling.json
+adversary:
+  counterexamples:
+  - input: 부모 가중치 (1/2,1/2), 자식 가중치 (1/2,1/4,1/4), R_beta=P_new+beta uu^T, beta=0 또는 2
+    expected: 같은 부모 끌어옴과 공통 모드 보존이 새 방향의 결합 및 방출을 유일하게 결정
+    observed: 모든 보존식이 같지만 q=1 또는 3; 새 u 초기 들뜸의 시간 평균 생존확률은 0 또는 1/8.
+  survived_checks:
+  - T^T T=I, T v_old=v_new, T^T u=0 등 근호 행렬 항등식 7개 SymPy 정확 확인
+  - C_beta^T C_beta=P_new+beta uu^T 및 같은 부모 끌어옴, 최대 잔차2.72e-16
+  - 공통 모드 결합 잔차1.15e-16 이하, 새 방향 고유식 잔차6.29e-16 이하
+  - 같은 96위치 독립 사슬 대각화에서 beta=0/2의 띠 바깥 고유상태 수0/2
+  - 부모 복사 T x_old는 u를 점유하지 않음; 실제 split의 새 들뜸 생성은 별도 의무
+assumptions:
+- 양의 무차원 가중치 w, 가중합 보존, x_i=sqrt(w_i) q_i 및 자식 q가 부모 q를 복사하는 사상을 공급
+- T의 행은 (1,0),(0,1/sqrt(2)),(0,1/sqrt(2)); u=(0,1,-1)/sqrt(2)
+- 무차원 계-환경 결합 행렬 C_beta=P_new+(sqrt(1+beta)-1)uu^T, R_beta=C_beta^T C_beta
+- 같은 독립 반무한 진공 사슬, 내부 이동 에너지 g>0, 모든 위치의 공통 onsite10g, 수보존 단일들뜸
+- 비교 초기 상태는 새로운 u 방향의 한 들뜸; 실제 CE split이 이를 만드는지는 가정하지 않음
+- 반무한 환경을 먼저 정의한 뒤 장시간 평균. 유한 사슬의 무한시간 감쇠를 주장하지 않음
+conditional_results:
+- status: '[정리: 조건부]'
+  claim: T^T P_new T=P_old이나 ker(T^T)의 새 방향에 beta uu^T를 더해도 부모 끌어옴은 같다. 공통 모드 보존과 양의 정부호인 차이 부분도 beta>=0 전부에서 유지된다.
+- status: '[정리: 조건부]'
+  claim: R=alpha P라는 등방 결합 형태를 모든 단계에 추가로 제한하면, 둘 이상의 부모에서 정확한 끌어옴은 alpha의 단계별 동일성을 요구한다. alpha의 값이나 bath g는 정하지 않으며 부모 하나의
+    P=0에서는 alpha도 제한하지 않는다.
+- status: '[산출]'
+  claim: beta=0/2의 새 모드 q=1/3, 정규화 가능한 결합상태0/2, 장시간 평균 생존0/1/8. 두 모형은 동일한 부모 결합을 갖는다.
+source_boundary:
+- Q-0016 구현의 zero-sum 자식 증분과 단위 주변 분산은 양의 기하 가중 보존량의 정의가 아님
+- Q-0017 구현의 부모 평균 계수1/2,1/2는 상속 라벨 규칙이며 x=sqrt(w)q의 물리 사상 또는 bath 결합을 정하지 않음
+- E-028의 조건부 사슬 결과를 사용한 직접 선형대수 반례. 새 CE 공리·예측 카드 또는 문헌 신규성 주장 없음
+audit_limitations:
+- code_map이 기존 split/merge 정의를 읽기 전용 조사하고 fold_ledger가 독립 선형대수 감사를 수행
+- root 단독 구현 후 code_map이 안정화된 코드·테스트를 읽기 전용 검토; 심각한 불일치 발견 없음
+- 분할 복사로 생기지 않는 u 들뜸을 비교 입력으로 공급하므로 실제 CE 동역학 전체의 반례가 아님
+unfinished:
+- 실제 기하 보존량·정준 좌표·새 자식 차이 모드의 생성 규칙
+- 같은 미시 작용에서 나온 잡음·응답·환경 상태 및 eta(k)/g(k)의 규칙
+- 열적 재유입·영점 길이 분산 및 0D→공통 계량→3+1 Plebanski/Einstein
+next_action: 부모 평균이나 보존식에서 결합을 역으로 정하는 경로를 반복하지 않는다. 실제 split의 새 차이 자유도에 작용하는 항과 초기 상태를 명시하고, 동일 작용에서 생성·응답 및 환경 결합을 계산한다.
+  새 물리 후보가 beta 자유도를 독립적으로 고정하는지와 실제 점유된 모드의 방출을 함께 판정한다.
+timestamp: '2026-09-05T05:10:26+09:00'

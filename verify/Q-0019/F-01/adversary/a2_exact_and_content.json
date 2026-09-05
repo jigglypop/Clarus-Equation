@@ -1,0 +1,19 @@
+{
+  "closed_form_reproduces": true,
+  "spectrum_sqrt5": [
+    1.1055415967851336,
+    1.1055415967851336,
+    1.1055415967851334,
+    1.1055415967851332,
+    1.1055415967851332,
+    0.7453559924999303,
+    0.7453559924999299,
+    0.7453559924999299,
+    0.7453559924999299,
+    0.5773502691896257
+  ],
+  "L_is_local_in_squared_distance": true,
+  "note_flat_section": "L \uc740 \uc81c\uacf1\uac70\ub9ac \uc88c\ud45c\uc5d0\uc11c d^G_ij=(1/3)sum_{a notin ij} d^(a)_ij \ub85c \uc644\uc804\ud788 \uba85\uc2dc\uc801. \ub0b4\ubd80 \uae38\uc774/Schur/flat section \uc740 \uc2dd\uc5d0 \uc804\ud600 \ub4f1\uc7a5\ud558\uc9c0 \uc54a\ub294\ub2e4.",
+  "sum_of_squares_5trace": 8.666666666666668,
+  "iso_sq": 0.2166666666666667
+}

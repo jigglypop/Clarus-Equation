@@ -27,7 +27,7 @@ ROOT = HERE.parents[2]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(HERE))
 
-from examples.physics.causal_face_simplicity import composition_faces  # noqa: E402
+from examples.physics.gravity.causal_face_simplicity import composition_faces  # noqa: E402
 from check_carrier import SEED, SIZES, split_merge_dag, two_step_coarse  # noqa: E402
 
 

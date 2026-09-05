@@ -1,0 +1,76 @@
+{
+  "mode": "irregular",
+  "squared_lengths": [
+    1.8,
+    2.2,
+    1.8,
+    2.2,
+    1.8,
+    1.8,
+    1.8,
+    2.2,
+    1.8,
+    2.2
+  ],
+  "fold": {
+    "m": 39,
+    "m_glue": 35,
+    "m_gauge": 4,
+    "d_R": 7.5432336974911856,
+    "d_W": 4.228709142867441,
+    "d_P35": 10.398761472417473,
+    "n_neg_R": 31,
+    "rank_P": 39,
+    "rank_P_glue": 35,
+    "sigma2_W": [
+      5.1581990525340237e-05,
+      0.017190487466731033,
+      0.3067975715288145,
+      0.32450791485609726,
+      0.32516228876243686,
+      0.35096313540457474,
+      0.35096313581085054,
+      0.7385180393081213,
+      0.7445311199043252,
+      0.7445311200383706,
+      0.7755513226831747
+    ],
+    "sigma2_W_max": 0.7755513226831747,
+    "half_sum_log_1msig2_W": -3.7993803554166345,
+    "identity_7_3_W": -1.5987211554602254e-14,
+    "rho_R_max_imag_ratio": 0.0,
+    "gauge_gNg_over_Ng": 4.308783038884366e-08,
+    "signature_N": [
+      10,
+      40
+    ]
+  },
+  "S_hat_c_irregular": 7.836432017784515,
+  "lstar2_over_lP2": 62.53974421621584,
+  "lstar2_ratio_to_regular": 1.0075874548278012,
+  "spec_shift_W": -0.10076995541663436,
+  "reference": {
+    "n_neg_R": 31,
+    "half_sum_log_1msig2_W": -3.6986104,
+    "lstar2_over_lP2": 62.0688
+  },
+  "kill_K2": {
+    "spec_tol": 0.5,
+    "killed": false
+  },
+  "kill_K3": {
+    "window": [
+      0.8,
+      1.25
+    ],
+    "killed": false
+  },
+  "killed": false,
+  "provenance": {
+    "python": "C:\\Users\\dongh\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+    "python_version": "3.11.9",
+    "numpy": "2.4.6",
+    "source_sha256": "7a7d62d985ac112f8944a9528d91d7319974d0c3a36c4ec97cbb376fac31aa8b",
+    "nonfinite_policy": "undefined numerical entries are null, not zero"
+  }
+}

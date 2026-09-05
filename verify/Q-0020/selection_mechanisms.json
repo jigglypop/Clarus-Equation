@@ -1,0 +1,159 @@
+{
+  "scope": "supplied Gaussian and finite-channel mechanism diagnostics; not a new physical prediction",
+  "python": "3.11.9",
+  "numpy": "2.4.6",
+  "fd_step": 2e-05,
+  "source_sha256": "a5bbe4d64fd2656eac9e59c611b5a26411ca7d6aceb90ef753728a65ac236e7b",
+  "reference_sha256": "7a7d62d985ac112f8944a9528d91d7319974d0c3a36c4ec97cbb376fac31aa8b",
+  "finite_controls": {
+    "labels": [
+      0.0,
+      1.0,
+      2.0
+    ],
+    "initial_probabilities": [
+      0.3333333333333333,
+      0.3333333333333333,
+      0.3333333333333333
+    ],
+    "initial_mismatch": 1.6666666666666665,
+    "projective_record_mismatch": 1.6666666666666665,
+    "soft_record_unconditional_mismatch": 1.6666666666666665,
+    "soft_record_conditioned_mismatch": 0.1203492598941421,
+    "soft_record_acceptance": 0.3785569152881717,
+    "record_completeness_residual": 1.1102230246251565e-16,
+    "unconditional_population_residual": 5.551115123125783e-17,
+    "relaxation_probability": 0.6,
+    "relaxed_mismatch": 0.6666666666666666,
+    "relaxation_completeness_residual": 0.0,
+    "relaxation_energy_intertwining_residual": 0.0,
+    "collision_unitarity_residual": 9.513227392130806e-18,
+    "collision_energy_commutator_residual": 0.0,
+    "same_environment_mismatch_steps_1_to_4": [
+      0.6666666666666666,
+      0.06666666666666667,
+      1.3066666666666669,
+      1.410666666666667
+    ],
+    "fresh_environment_mismatch_steps_1_to_4": [
+      0.6666666666666666,
+      0.26666666666666666,
+      0.10666666666666669,
+      0.04266666666666668
+    ],
+    "relaxation_target_and_energy_supplied": true
+  },
+  "autonomous_bath_control": {
+    "model": "vacuum plus one excitation in a supplied semi-infinite hopping chain",
+    "dimensionless_time": [
+      0.0,
+      1.0,
+      5.0,
+      10.0,
+      100.0
+    ],
+    "finite_chain_sites": 2048,
+    "boundary_survival_probability": [
+      1.0,
+      0.33261150388220256,
+      7.559518637848994e-05,
+      4.4666664871046276e-05,
+      2.9489828672062154e-07
+    ],
+    "4096_site_probability_difference": 7.318364664277155e-19,
+    "environment_reset": false,
+    "time_dependent_drive": false,
+    "infinite_uniform_chain_local_decay": "integrable boundary spectral density implies amplitude tends to zero",
+    "finite_chain_infinite_time_decay_claimed": false,
+    "detuned_negative_control": {
+      "boundary_detuning_over_hopping": 2.0,
+      "localized_state_energy_over_hopping": 5.5,
+      "finite_truncation_eigenvector_residual": 4.694733121053626e-20,
+      "infinite_chain_boundary_survival_limit": 0.5625
+    },
+    "metric_mismatch_to_excitation_map_supplied": true,
+    "new_CE_dynamics_derived": false
+  },
+  "unglued_models": [
+    {
+      "depth": 1,
+      "cells": 5,
+      "unglued_coordinates": 50,
+      "mismatch_rank": 35,
+      "no_gluing_or_gauge_conditioned": true,
+      "mismatch_metric": "orthogonal projector in supplied occurrence-length coordinates",
+      "spectrum_min": 0.0639617382497164,
+      "spectrum_max": 2.8153982005333993,
+      "prior_mean_squared_mismatch": 1.334237603739826,
+      "exact_gluing_probability": 0.0,
+      "soft_conditioning": [
+        {
+          "resolution": 0.1,
+          "prior_total_squared_mismatch": 46.69831613089391,
+          "posterior_total_squared_mismatch": 0.3403360464944754,
+          "posterior_per_mode_squared_mismatch": 0.009723887042699298,
+          "log_acceptance": -76.25220744805519
+        },
+        {
+          "resolution": 1.0,
+          "prior_total_squared_mismatch": 46.69831613089391,
+          "posterior_total_squared_mismatch": 16.046324930361873,
+          "posterior_per_mode_squared_mismatch": 0.4584664265817678,
+          "log_acceptance": -12.744413250979635
+        },
+        {
+          "resolution": 10.0,
+          "prior_total_squared_mismatch": 46.69831613089391,
+          "posterior_total_squared_mismatch": 45.6691458769886,
+          "posterior_per_mode_squared_mismatch": 1.3048327393425314,
+          "log_acceptance": -0.23089711519757547
+        }
+      ],
+      "fixed_rank_concentration_requires_resolution_to_zero": true,
+      "physical_resolution_law_derived": false
+    },
+    {
+      "depth": 2,
+      "cells": 25,
+      "unglued_coordinates": 250,
+      "mismatch_rank": 210,
+      "no_gluing_or_gauge_conditioned": true,
+      "mismatch_metric": "orthogonal projector in supplied occurrence-length coordinates",
+      "spectrum_min": 0.015913454499712272,
+      "spectrum_max": 19.55655997958177,
+      "prior_mean_squared_mismatch": 4.7935830889405775,
+      "exact_gluing_probability": 0.0,
+      "soft_conditioning": [
+        {
+          "resolution": 0.1,
+          "prior_total_squared_mismatch": 1006.6524486775213,
+          "posterior_total_squared_mismatch": 2.0232222155939157,
+          "posterior_per_mode_squared_mismatch": 0.00963439150282817,
+          "log_acceptance": -503.0609575022343
+        },
+        {
+          "resolution": 1.0,
+          "prior_total_squared_mismatch": 1006.6524486775213,
+          "posterior_total_squared_mismatch": 109.39274699656112,
+          "posterior_per_mode_squared_mismatch": 0.5209178428407673,
+          "log_acceptance": -120.69054493337651
+        },
+        {
+          "resolution": 10.0,
+          "prior_total_squared_mismatch": 1006.6524486775213,
+          "posterior_total_squared_mismatch": 884.5786587975002,
+          "posterior_per_mode_squared_mismatch": 4.212279327607144,
+          "log_acceptance": -4.712366515237913
+        }
+      ],
+      "fixed_rank_concentration_requires_resolution_to_zero": true,
+      "physical_resolution_law_derived": false
+    }
+  ],
+  "physical_common_metric_selection_proved": false,
+  "sources": [
+    "https://arxiv.org/abs/quant-ph/0312059",
+    "https://arxiv.org/abs/0803.1447",
+    "https://arxiv.org/abs/quant-ph/0611164"
+  ]
+}

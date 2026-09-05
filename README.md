@@ -220,10 +220,10 @@ Python 환경이 준비돼 있다면 다음 명령으로 핵심 계산을 재현
 .codex\hooks\python.cmd doctor
 .codex\hooks\python.cmd harness
 .codex\hooks\python.cmd source
-.codex\hooks\python.cmd pytest tests\test_repository_harness.py tests\test_cosmology_ratio_audit.py -q
-.codex\hooks\python.cmd python tests\scorecard.py
-.codex\hooks\python.cmd python examples\physics\proof_completion_attempt.py
-.codex\hooks\python.cmd pytest tests\test_representation_invariant_measure_bridge.py -q
+.codex\hooks\python.cmd pytest tests\test_repository_harness.py tests\test_cosmology.py -q
+.codex\hooks\python.cmd python verify\Q-0020\bath_recycling.py
+.codex\hooks\python.cmd pytest tests\test_bath_recycling.py -q
+.codex\hooks\python.cmd pytest tests\test_causal_light_geometry.py -q
 .codex\hooks\python.cmd python paper\2_경로적분과_응용\validate_manuscript.py
 ```
 
@@ -249,14 +249,12 @@ Python 환경이 준비돼 있다면 다음 명령으로 핵심 계산을 재현
 
 | 코드 | 범위 |
 | --- | --- |
-| [`tests/scorecard.py`](tests/scorecard.py) | 입력을 제외한 정본 수치 스코어카드 |
-| [`examples/physics/proof_completion_attempt.py`](examples/physics/proof_completion_attempt.py) | 원 주장과 조건부 후손 분리 |
-| [`examples/physics/cosmology_ratio_audit.py`](examples/physics/cosmology_ratio_audit.py) | 후기우주 비율 산술 감사 |
-| [`examples/physics/ce_residual_forward_model.py`](examples/physics/ce_residual_forward_model.py) | DESI DR2 공분산 전방검사 |
-| [`examples/physics/quantum_instrument_record_kernel.py`](examples/physics/quantum_instrument_record_kernel.py) | 유한 양자 instrument 기록 커널 |
-| [`examples/physics/representation_invariant_measure_bridge.py`](examples/physics/representation_invariant_measure_bridge.py) | 표현 불변 측도와 등각 부피 감사 |
-| [`examples/physics/record_fold_bilinear_admission.py`](examples/physics/record_fold_bilinear_admission.py) | 기록 접힘 bilinear 허용 조건 |
-| [`examples/physics/zerod_selection_dark_energy_no_go.py`](examples/physics/zerod_selection_dark_energy_no_go.py) | 0차원 선택–암흑에너지 사상 반례 |
+| [물리 모듈 색인](examples/physics/README.md) | 현재 네 분야의 계산 모듈과 대응 테스트 |
+| [우주론 계산](examples/physics/darksector/cosmology.py) | FLRW 배경·밀도비·성장률 계산 |
+| [잔차 전방 모형](examples/physics/darksector/ce_residual_forward_model.py) | 우주론 잔차의 공분산 전방검사 |
+| [양자 기록 커널](examples/physics/record/instrument_record_kernel.py) | 유한 양자 기구의 기록 커널 |
+| [인과 기하 검사](examples/physics/causal/causal_light_geometry.py) | 인과 순서와 계량 복원의 조건부 검사 |
+| [환경 에너지 환류 검사](verify/Q-0020/bath_recycling.py) | 환경 기억·에너지 회수·다음 분할의 자원 경계 |
 
 기존 실행 산출물의 상수명은 호환성을 위해 유지한다. 현재 문서에는 direct D–T
 reaction/source/burn/wall 산출을 물리 예측으로 두지 않는다.

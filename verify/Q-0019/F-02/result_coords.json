@@ -1,0 +1,25 @@
+{
+  "mode": "coords",
+  "seeds": [
+    20260903,
+    20260904,
+    20260905
+  ],
+  "deviations": {
+    "20260903": {
+      "deviation": 1.7763568249965179e-15,
+      "condition_number": 7.1865728675226
+    },
+    "20260904": {
+      "deviation": 2.8422083648694983e-15,
+      "condition_number": 7.079463039670045
+    },
+    "20260905": {
+      "deviation": 2.7130170755572484e-15,
+      "condition_number": 6.769842732277985
+    }
+  },
+  "max_deviation": 2.8422083648694983e-15,
+  "kill_tol": 1e-08,
+  "killed": false
+}

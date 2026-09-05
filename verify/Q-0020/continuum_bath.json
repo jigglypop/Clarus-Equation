@@ -1,0 +1,995 @@
+{
+  "scope": "supplied positive unbounded continuum and actual squeezed contrast",
+  "python": "3.11.9",
+  "numpy": "2.4.6",
+  "scipy": "1.17.1",
+  "source_sha256": {
+    "continuum_bath.py": "42675f0b049eaa7bc28979398fecbde120ab74bceebe51133c1d53ae85f4170e",
+    "split_quantum_source.py": "37382cda6ee4ecda19bdd21cae946e92c3afdb781e8e7e1766f0068e4f602c1a",
+    "interface_bath.py": "546db9d6373411da6b56b76c5835c7cb99b12c206adc250c29bd89aaca9ca8e8",
+    "F-01/predict_fold_budget.py": "7a7d62d985ac112f8944a9528d91d7319974d0c3a36c4ec97cbb376fac31aa8b"
+  },
+  "energy_unit": "E_star",
+  "dimensionless_time": "E_star*t/hbar",
+  "conditional_results": {
+    "linear_full_source_local_number_limit": 0.0,
+    "repulsive_two_particle_local_number_limit": 0.0,
+    "k3_nonlinear_full_source_limsup_number_upper_bound": 0.11682698238722367
+  },
+  "proof_dependency": "Kato 1957 Theorem 1 plus the spectral and local-decay argument in module docstring",
+  "proof_reference": "https://doi.org/10.3792/pja/1195525063",
+  "finite_numerics_prove_infinite_time_limit": false,
+  "nonlinear_full_source_complete_emission_proved": false,
+  "zero_occupation_means_zero_coordinate_variance": false,
+  "source_preparation_and_energy_recycling_derived": false,
+  "microscopic_coupling_derived_from_CE": false,
+  "common_metric_selection_proved": false,
+  "cases": [
+    {
+      "epsilon": 2.0,
+      "kappa": 0.5,
+      "spectral_moments": [
+        [
+          0.999999999999999,
+          6.291208685977531e-12
+        ],
+        [
+          1.9999999999999964,
+          2.9976828855175444e-12
+        ],
+        [
+          4.500000000000002,
+          4.82456777530868e-12
+        ]
+      ],
+      "moment_residual": 3.552713678800501e-15,
+      "source_linear": {
+        "children": 3,
+        "mean_number": 0.33333333333333304,
+        "anomalous_moment": 0.6666666666666663,
+        "two_particle_probability": 0.10825317547305481,
+        "initial_q_variance": 1.4999999999999993,
+        "initial_p_variance": 0.16666666666666666,
+        "initial_energy_over_Estar": 0.6666666666666661,
+        "nonlinear_full_source_limsup_number_upper_bound": 0.11682698238722342,
+        "linear_asymptotic_q_variance": 0.5
+      },
+      "source_nonlinear_u8": {
+        "children": 3,
+        "mean_number": 0.33333333333333304,
+        "anomalous_moment": 0.6666666666666663,
+        "two_particle_probability": 0.10825317547305481,
+        "initial_q_variance": 1.4999999999999993,
+        "initial_p_variance": 0.16666666666666666,
+        "initial_energy_over_Estar": 3.333333333333329,
+        "nonlinear_full_source_limsup_number_upper_bound": 0.11682698238722342,
+        "linear_asymptotic_q_variance": 0.5
+      },
+      "linear_time_samples": [
+        {
+          "time_Estar_t_over_hbar": 0.0,
+          "amplitude_real": 0.999999999999999,
+          "amplitude_imag": 0.0,
+          "quadrature_error_estimate": 6.291208685977531e-12,
+          "linear_mean_number": 0.33333333333333237,
+          "linear_q_variance": 1.4999999999999973
+        },
+        {
+          "time_Estar_t_over_hbar": 0.5,
+          "amplitude_real": 0.5077929928467773,
+          "amplitude_imag": -0.7916443760103498,
+          "quadrature_error_estimate": 5.795466335541501e-13,
+          "linear_mean_number": 0.2948515138843674,
+          "linear_q_variance": 0.5489534508946816
+        },
+        {
+          "time_Estar_t_over_hbar": 1.0,
+          "amplitude_real": -0.3371193756715035,
+          "amplitude_imag": -0.7149564585751416,
+          "quadrature_error_estimate": 1.5278325119457965e-12,
+          "linear_mean_number": 0.2082707370371506,
+          "linear_q_variance": 0.4432618942337082
+        },
+        {
+          "time_Estar_t_over_hbar": 2.0,
+          "amplitude_real": -0.21347112738339094,
+          "amplitude_imag": 0.3899086567720987,
+          "quadrature_error_estimate": 1.7775698753152757e-13,
+          "linear_mean_number": 0.06586622761738602,
+          "linear_q_variance": 0.49489366868439516
+        },
+        {
+          "time_Estar_t_over_hbar": 5.0,
+          "amplitude_real": 0.02123058691079536,
+          "amplitude_imag": 0.13462780876998992,
+          "quadrature_error_estimate": 1.5794139154830183e-12,
+          "linear_mean_number": 0.006191794904928598,
+          "linear_q_variance": 0.4944091888558405
+        },
+        {
+          "time_Estar_t_over_hbar": 10.0,
+          "amplitude_real": -0.017323901824179228,
+          "amplitude_imag": 0.014142999502210575,
+          "quadrature_error_estimate": 2.0806915995835826e-12,
+          "linear_mean_number": 0.00016671400311110948,
+          "linear_q_variance": 0.5002334427627739
+        },
+        {
+          "time_Estar_t_over_hbar": 20.0,
+          "amplitude_real": -0.0007414533885640484,
+          "amplitude_imag": -0.00028820483173116064,
+          "quadrature_error_estimate": 1.59003595794544e-12,
+          "linear_mean_number": 2.1093838414876532e-07,
+          "linear_q_variance": 0.5000005220657858
+        }
+      ]
+    },
+    {
+      "epsilon": 2.0,
+      "kappa": 1.5,
+      "spectral_moments": [
+        [
+          0.9999999999999991,
+          5.560507496420585e-12
+        ],
+        [
+          1.9999999999999971,
+          3.1892764588813525e-12
+        ],
+        [
+          5.5,
+          1.049306196527334e-11
+        ]
+      ],
+      "moment_residual": 2.886579864025407e-15,
+      "source_linear": {
+        "children": 3,
+        "mean_number": 0.33333333333333304,
+        "anomalous_moment": 0.6666666666666663,
+        "two_particle_probability": 0.10825317547305481,
+        "initial_q_variance": 1.4999999999999993,
+        "initial_p_variance": 0.16666666666666666,
+        "initial_energy_over_Estar": 0.6666666666666661,
+        "nonlinear_full_source_limsup_number_upper_bound": 0.11682698238722342,
+        "linear_asymptotic_q_variance": 0.5
+      },
+      "source_nonlinear_u8": {
+        "children": 3,
+        "mean_number": 0.33333333333333304,
+        "anomalous_moment": 0.6666666666666663,
+        "two_particle_probability": 0.10825317547305481,
+        "initial_q_variance": 1.4999999999999993,
+        "initial_p_variance": 0.16666666666666666,
+        "initial_energy_over_Estar": 3.333333333333329,
+        "nonlinear_full_source_limsup_number_upper_bound": 0.11682698238722342,
+        "linear_asymptotic_q_variance": 0.5
+      },
+      "linear_time_samples": [
+        {
+          "time_Estar_t_over_hbar": 0.0,
+          "amplitude_real": 0.9999999999999991,
+          "amplitude_imag": 0.0,
+          "quadrature_error_estimate": 5.560507496420585e-12,
+          "linear_mean_number": 0.3333333333333324,
+          "linear_q_variance": 1.4999999999999973
+        },
+        {
+          "time_Estar_t_over_hbar": 0.5,
+          "amplitude_real": 0.4447981208719528,
+          "amplitude_imag": -0.6951125063256581,
+          "quadrature_error_estimate": 5.037041726845278e-13,
+          "linear_mean_number": 0.22700892159385258,
+          "linear_q_variance": 0.5367849028477741
+        },
+        {
+          "time_Estar_t_over_hbar": 1.0,
+          "amplitude_real": -0.19927017611888678,
+          "amplitude_imag": -0.3741184051665753,
+          "quadrature_error_estimate": 6.553006980044098e-13,
+          "linear_mean_number": 0.05989106139161126,
+          "linear_q_variance": 0.49305374272899155
+        },
+        {
+          "time_Estar_t_over_hbar": 2.0,
+          "amplitude_real": 0.27341105797758936,
+          "amplitude_imag": -0.00643334266502069,
+          "quadrature_error_estimate": 8.822624270524428e-13,
+          "linear_mean_number": 0.024931664840756748,
+          "linear_q_variance": 0.5747398106584761
+        },
+        {
+          "time_Estar_t_over_hbar": 5.0,
+          "amplitude_real": 0.023103195369845064,
+          "amplitude_imag": -0.12245964702077868,
+          "quadrature_error_estimate": 1.6798316789807137e-12,
+          "linear_mean_number": 0.005176707594916975,
+          "linear_q_variance": 0.4955349692534793
+        },
+        {
+          "time_Estar_t_over_hbar": 10.0,
+          "amplitude_real": 0.006090989580184167,
+          "amplitude_imag": -0.06729703224813884,
+          "quadrature_error_estimate": 6.811003038233081e-13,
+          "linear_mean_number": 0.0015219969011576492,
+          "linear_q_variance": 0.4985274699709302
+        },
+        {
+          "time_Estar_t_over_hbar": 20.0,
+          "amplitude_real": -0.0177099753547069,
+          "amplitude_imag": -0.033471674579134233,
+          "quadrature_error_estimate": 1.978778558230763e-12,
+          "linear_mean_number": 0.0004779987420652619,
+          "linear_q_variance": 0.4999401922273538
+        }
+      ]
+    }
+  ],
+  "refinement": {
+    "scope": "supplied linear pair baths after all recursive source preparation",
+    "epsilon": 2.0,
+    "pair_strength": 0.5,
+    "topology_source": "F-01/predict_fold_budget.py:refine",
+    "topology": [
+      {
+        "depth": 1,
+        "cells": 5,
+        "old_edge_owners": 3,
+        "max_owners": 4,
+        "owner_histogram": {
+          "3": 10,
+          "4": 5
+        }
+      },
+      {
+        "depth": 2,
+        "cells": 25,
+        "old_edge_owners": 9,
+        "max_owners": 12,
+        "owner_histogram": {
+          "4": 25,
+          "9": 10,
+          "12": 5
+        }
+      },
+      {
+        "depth": 3,
+        "cells": 125,
+        "old_edge_owners": 27,
+        "max_owners": 36,
+        "owner_histogram": {
+          "4": 125,
+          "12": 25,
+          "27": 10,
+          "36": 5
+        }
+      },
+      {
+        "depth": 4,
+        "cells": 625,
+        "old_edge_owners": 81,
+        "max_owners": 108,
+        "owner_histogram": {
+          "4": 625,
+          "12": 125,
+          "36": 25,
+          "81": 10,
+          "108": 5
+        }
+      }
+    ],
+    "rows": [
+      {
+        "depth": 1,
+        "owners": 3,
+        "infinite_bound": {
+          "collective_strength": 1.5,
+          "time": 1.0,
+          "quasimode_energy": 4.5,
+          "quasimode_residual_squared": 1.1999999999999997,
+          "initial_distance": 0.6714213740394577,
+          "phase_removed_norm_bound": 2.4382878630892475,
+          "survival_probability_lower_bound": 0.0,
+          "target_survival": 0.5,
+          "time_to_target_lower_bound": 0.0
+        },
+        "finite_64_mode_survival": 0.3315681881549604,
+        "residual_squared_error": 3.552713678800501e-14,
+        "recursive_source": {
+          "depth": 1,
+          "branching_per_step": 3,
+          "owners": 3,
+          "total_number_exact": "1",
+          "total_number": 1.0,
+          "common_number_exact": "1/3",
+          "contrast_number_exact": "2/3",
+          "contrast_number": 0.6666666666666666,
+          "bare_energy_over_Estar": 2.0,
+          "counterterm_energy_over_Estar": 1.0,
+          "total_energy_over_Estar": 3.0,
+          "quantum_source_derived_from_geometric_refinement": false
+        }
+      },
+      {
+        "depth": 2,
+        "owners": 9,
+        "infinite_bound": {
+          "collective_strength": 4.5,
+          "time": 1.0,
+          "quasimode_energy": 7.5,
+          "quasimode_residual_squared": 0.5454545454545454,
+          "initial_distance": 0.43695758665277606,
+          "phase_removed_norm_bound": 1.6124641191815485,
+          "survival_probability_lower_bound": 0.0,
+          "target_survival": 0.5,
+          "time_to_target_lower_bound": 0.0
+        },
+        "finite_64_mode_survival": 0.7393472991623083,
+        "residual_squared_error": 1.5987211554602254e-14,
+        "recursive_source": {
+          "depth": 2,
+          "branching_per_step": 3,
+          "owners": 9,
+          "total_number_exact": "22/3",
+          "total_number": 7.333333333333333,
+          "common_number_exact": "16/9",
+          "contrast_number_exact": "50/9",
+          "contrast_number": 5.555555555555555,
+          "bare_energy_over_Estar": 14.666666666666666,
+          "counterterm_energy_over_Estar": 25.0,
+          "total_energy_over_Estar": 39.666666666666664,
+          "quantum_source_derived_from_geometric_refinement": false
+        }
+      },
+      {
+        "depth": 3,
+        "owners": 27,
+        "infinite_bound": {
+          "collective_strength": 13.5,
+          "time": 1.0,
+          "quasimode_energy": 16.5,
+          "quasimode_residual_squared": 0.20689655172413796,
+          "initial_distance": 0.264947989786617,
+          "phase_removed_norm_bound": 0.984754805720576,
+          "survival_probability_lower_bound": 0.26535787253173565,
+          "target_survival": 0.5,
+          "time_to_target_lower_bound": 0.5176790503360917
+        },
+        "finite_64_mode_survival": 0.8158340602128064,
+        "residual_squared_error": 6.411537967210279e-15,
+        "recursive_source": {
+          "depth": 3,
+          "branching_per_step": 3,
+          "owners": 27,
+          "total_number_exact": "319/9",
+          "total_number": 35.44444444444444,
+          "common_number_exact": "169/27",
+          "contrast_number_exact": "788/27",
+          "contrast_number": 29.185185185185187,
+          "bare_energy_over_Estar": 70.88888888888889,
+          "counterterm_energy_over_Estar": 394.0,
+          "total_energy_over_Estar": 464.8888888888889,
+          "quantum_source_derived_from_geometric_refinement": false
+        }
+      },
+      {
+        "depth": 4,
+        "owners": 81,
+        "infinite_bound": {
+          "collective_strength": 40.5,
+          "time": 1.0,
+          "quasimode_energy": 43.5,
+          "quasimode_residual_squared": 0.07228915662650602,
+          "initial_distance": 0.15570266595525503,
+          "phase_removed_norm_bound": 0.5802717608794425,
+          "survival_probability_lower_bound": 0.6916289846129392,
+          "target_survival": 0.5,
+          "time_to_target_lower_bound": 1.688427724355742
+        },
+        "finite_64_mode_survival": 0.9680032190689025,
+        "residual_squared_error": 1.942890293094024e-15,
+        "recursive_source": {
+          "depth": 4,
+          "branching_per_step": 3,
+          "owners": 81,
+          "total_number_exact": "3964/27",
+          "total_number": 146.8148148148148,
+          "common_number_exact": "1600/81",
+          "contrast_number_exact": "10292/81",
+          "contrast_number": 127.06172839506173,
+          "bare_energy_over_Estar": 293.6296296296296,
+          "counterterm_energy_over_Estar": 5146.0,
+          "total_energy_over_Estar": 5439.62962962963,
+          "quantum_source_derived_from_geometric_refinement": false
+        }
+      },
+      {
+        "depth": 5,
+        "owners": 243,
+        "infinite_bound": {
+          "collective_strength": 121.5,
+          "time": 1.0,
+          "quasimode_energy": 124.5,
+          "quasimode_residual_squared": 0.024489795918367356,
+          "initial_distance": 0.09044331583396721,
+          "phase_removed_norm_bound": 0.3373787909551248,
+          "survival_probability_lower_bound": 0.8894145526876545,
+          "target_survival": 0.5,
+          "time_to_target_lower_bound": 3.7348850940807976
+        },
+        "finite_64_mode_survival": 0.9829935529469018,
+        "residual_squared_error": 7.632783294297951e-16,
+        "recursive_source": {
+          "depth": 5,
+          "branching_per_step": 3,
+          "owners": 243,
+          "total_number_exact": "45517/81",
+          "total_number": 561.9382716049382,
+          "common_number_exact": "14641/243",
+          "contrast_number_exact": "121910/243",
+          "contrast_number": 501.6872427983539,
+          "bare_energy_over_Estar": 1123.8765432098764,
+          "counterterm_energy_over_Estar": 60955.0,
+          "total_energy_over_Estar": 62078.87654320987,
+          "quantum_source_derived_from_geometric_refinement": false
+        }
+      },
+      {
+        "depth": 6,
+        "owners": 729,
+        "infinite_bound": {
+          "collective_strength": 364.5,
+          "time": 1.0,
+          "quasimode_energy": 367.5,
+          "quasimode_residual_squared": 0.008207934336525308,
+          "initial_distance": 0.05232448825039108,
+          "phase_removed_norm_bound": 0.1952466273341526,
+          "survival_probability_lower_bound": 0.9622420618539773,
+          "target_survival": 0.5,
+          "time_to_target_lower_bound": 7.292881020111733
+        },
+        "finite_64_mode_survival": 0.9917122385014849,
+        "residual_squared_error": 4.718447854656915e-16,
+        "recursive_source": {
+          "depth": 6,
+          "branching_per_step": 3,
+          "owners": 729,
+          "total_number_exact": "498226/243",
+          "total_number": 2050.312757201646,
+          "common_number_exact": "132496/729",
+          "contrast_number_exact": "1362182/729",
+          "contrast_number": 1868.562414266118,
+          "bare_energy_over_Estar": 4100.625514403292,
+          "counterterm_energy_over_Estar": 681091.0,
+          "total_energy_over_Estar": 685191.6255144033,
+          "quantum_source_derived_from_geometric_refinement": false
+        }
+      },
+      {
+        "depth": 7,
+        "owners": 2187,
+        "infinite_bound": {
+          "collective_strength": 1093.5,
+          "time": 1.0,
+          "quasimode_energy": 1096.5,
+          "quasimode_residual_squared": 0.0027409776153494753,
+          "initial_distance": 0.030230249648225068,
+          "phase_removed_norm_bound": 0.1128148459674714,
+          "survival_probability_lower_bound": 0.9873133058672914,
+          "target_survival": 0.5,
+          "time_to_target_lower_bound": 13.464142143977954
+        },
+        "finite_64_mode_survival": 0.9971329542442446,
+        "residual_squared_error": 3.1138286393783687e-16,
+        "recursive_source": {
+          "depth": 7,
+          "branching_per_step": 3,
+          "owners": 2187,
+          "total_number_exact": "5281195/729",
+          "total_number": 7244.437585733882,
+          "common_number_exact": "1194649/2187",
+          "contrast_number_exact": "14648936/2187",
+          "contrast_number": 6698.187471422039,
+          "bare_energy_over_Estar": 14488.875171467764,
+          "counterterm_energy_over_Estar": 7324468.0,
+          "total_energy_over_Estar": 7338956.875171468,
+          "quantum_source_derived_from_geometric_refinement": false
+        }
+      },
+      {
+        "depth": 8,
+        "owners": 6561,
+        "infinite_bound": {
+          "collective_strength": 3280.5,
+          "time": 1.0,
+          "quasimode_energy": 3283.5,
+          "quasimode_residual_squared": 0.0009142160597287827,
+          "initial_distance": 0.017457431269553347,
+          "phase_removed_norm_bound": 0.06515086855393581,
+          "survival_probability_lower_bound": 0.9957598685596675,
+          "target_survival": 0.5,
+          "time_to_target_lower_bound": 24.158349546326512
+        },
+        "finite_64_mode_survival": 0.9990118381971833,
+        "residual_squared_error": 6.613633252161577e-17,
+        "recursive_source": {
+          "depth": 8,
+          "branching_per_step": 3,
+          "owners": 6561,
+          "total_number_exact": "54705208/2187",
+          "total_number": 25013.81252857796,
+          "common_number_exact": "10758400/6561",
+          "contrast_number_exact": "153357224/6561",
+          "contrast_number": 23374.062490474014,
+          "bare_energy_over_Estar": 50027.62505715592,
+          "counterterm_energy_over_Estar": 76678612.0,
+          "total_energy_over_Estar": 76728639.62505716,
+          "quantum_source_derived_from_geometric_refinement": false
+        }
+      }
+    ],
+    "bare_negative_control": {
+      "epsilon": 2.0,
+      "strength": 4.5,
+      "energy": -0.4724046174618743,
+      "secular_residual": 8.881784197001252e-16
+    },
+    "normalized_control": {
+      "pair_strength_rule": "1.5/owners",
+      "collective_strength": 1.5,
+      "survival_at_time_one": 0.33156818815498923,
+      "quadrature_error_estimate": 6.441812112493435e-13,
+      "normalization_physically_derived": false
+    },
+    "conditional_limits": {
+      "strength_then_time": 1.0,
+      "time_then_strength": 0.0
+    },
+    "limit_order_note": "inner limit named first; survival is a fraction of initial contrast occupation",
+    "complete_square_action_supplied": true,
+    "full_hamiltonian_has_positive_gap": false,
+    "uniform_fixed_time_emission_proved": false,
+    "finite_bath_is_infinite_time_proof": false,
+    "interleaved_work": {
+      "scope": "externally driven three-way split and fresh vacuum collision",
+      "coupling_rule": "pair strength=constant collective strength/owners",
+      "response": {
+        "epsilon": 2.0,
+        "collective_strength": 1.5,
+        "time": 1.0,
+        "amplitude": [
+          -0.4051216003582537,
+          0.4092000453056629
+        ],
+        "first_energy_amplitude": [
+          -1.6987344368608344,
+          2.1257281499166596
+        ],
+        "survival_probability": 0.33156818815498923,
+        "bath_energy_per_initial_number": 1.5444045207461459,
+        "interaction_energy_per_initial_number": 0.7951068207113918,
+        "switch_on_work_per_initial_number": 1.5,
+        "switch_off_work_per_initial_number": -1.2924591029438757,
+        "net_switch_work_per_initial_number": 0.20754089705612433,
+        "quadrature_error_estimate": 2.027514393777166e-12,
+        "moment_relative_residual": 3.6637359812630166e-15
+      },
+      "rows": [
+        {
+          "depth": 1,
+          "owners": 3,
+          "pair_strength": 0.5,
+          "contrast_number_before": 0.6666666666666667,
+          "contrast_number_after": 0.22104545876999282,
+          "source_work_over_Estar": 2.0,
+          "switch_on_work_over_Estar": 1.0,
+          "switch_off_work_over_Estar": -0.8616394019625839,
+          "emitted_energy_over_Estar": 1.0296030138307641,
+          "system_energy_over_Estar": 1.1087575842066522,
+          "system_energy_per_owner": 0.3695858614022174,
+          "total_external_work_over_Estar": 2.138360598037416,
+          "total_emitted_energy_over_Estar": 1.0296030138307641,
+          "external_work_lower_bound_over_Estar": 1.029603013830764,
+          "balance_relative_residual": 1.0383870949026254e-16,
+          "contrast_number_identity_residual": 2.7755575615628914e-17
+        },
+        {
+          "depth": 2,
+          "owners": 9,
+          "pair_strength": 0.16666666666666666,
+          "contrast_number_before": 3.02917146950319,
+          "contrast_number_after": 1.0043768957539587,
+          "source_work_over_Estar": 5.565330028819973,
+          "switch_on_work_over_Estar": 4.543757204254785,
+          "switch_off_work_over_Estar": -3.9150802401372746,
+          "emitted_energy_over_Estar": 4.678266111615972,
+          "system_energy_over_Estar": 2.624498465528163,
+          "system_energy_per_owner": 0.29161094061424037,
+          "total_external_work_over_Estar": 8.332367590974899,
+          "total_emitted_energy_over_Estar": 5.707869125446736,
+          "external_work_lower_bound_over_Estar": 3.0888090414922917,
+          "balance_relative_residual": 5.329688170875615e-17,
+          "contrast_number_identity_residual": 7.330209173053136e-17
+        },
+        {
+          "depth": 3,
+          "owners": 27,
+          "pair_strength": 0.05555555555555555,
+          "contrast_number_before": 10.120313773193837,
+          "contrast_number_after": 3.3555741013378624,
+          "source_work_over_Estar": 17.620018654862136,
+          "switch_on_work_over_Estar": 15.180470659790757,
+          "switch_off_work_over_Estar": -13.080091660812657,
+          "emitted_energy_over_Estar": 15.629858342690047,
+          "system_energy_over_Estar": 6.715037776678349,
+          "system_energy_per_owner": 0.24870510283993885,
+          "total_external_work_over_Estar": 28.052765244815134,
+          "total_emitted_energy_over_Estar": 21.337727468136784,
+          "external_work_lower_bound_over_Estar": 9.266427124476875,
+          "balance_relative_residual": 6.332198711599622e-17,
+          "contrast_number_identity_residual": 8.776194489667763e-17
+        },
+        {
+          "depth": 4,
+          "owners": 81,
+          "pair_strength": 0.018518518518518517,
+          "contrast_number_before": 31.354657625281913,
+          "contrast_number_after": 10.396207019034737,
+          "source_work_over_Estar": 56.7076794619078,
+          "switch_on_work_over_Estar": 47.03198643792287,
+          "switch_off_work_over_Estar": -40.52461266748421,
+          "emitted_energy_over_Estar": 48.424274982933,
+          "system_energy_over_Estar": 21.5058160260918,
+          "system_energy_per_owner": 0.2655039015566889,
+          "total_external_work_over_Estar": 91.2678184771616,
+          "total_emitted_energy_over_Estar": 69.76200245106978,
+          "external_work_lower_bound_over_Estar": 27.799281373430624,
+          "balance_relative_residual": 2.335574842093666e-16,
+          "contrast_number_identity_residual": 1.1330736636511297e-16
+        },
+        {
+          "depth": 5,
+          "owners": 243,
+          "pair_strength": 0.006172839506172839,
+          "contrast_number_before": 95.0489973441205,
+          "contrast_number_after": 31.51522383533841,
+          "source_work_over_Estar": 169.15372865727556,
+          "switch_on_work_over_Estar": 142.57349601618074,
+          "switch_off_work_over_Estar": -122.8469418430968,
+          "emitted_energy_over_Estar": 146.7941011906481,
+          "system_energy_over_Estar": 63.591997665803184,
+          "system_energy_per_owner": 0.26169546364528057,
+          "total_external_work_over_Estar": 280.1481013075211,
+          "total_emitted_energy_over_Estar": 216.55610364171787,
+          "external_work_lower_bound_over_Estar": 83.39784412029188,
+          "balance_relative_residual": 7.608933265410189e-17,
+          "contrast_number_identity_residual": 3.7377708109198305e-17
+        },
+        {
+          "depth": 6,
+          "owners": 729,
+          "pair_strength": 0.00205761316872428,
+          "contrast_number_before": 286.13446888057126,
+          "contrast_number_after": 94.87308741542114,
+          "source_work_over_Estar": 508.6924285784403,
+          "switch_on_work_over_Estar": 429.2017033208569,
+          "switch_off_work_over_Estar": -369.81709897070544,
+          "emitted_energy_over_Estar": 441.90736728045164,
+          "system_energy_over_Estar": 189.7616633139433,
+          "system_energy_per_owner": 0.26030406490252855,
+          "total_external_work_over_Estar": 848.2251342361128,
+          "total_emitted_energy_over_Estar": 658.4634709221696,
+          "external_work_lower_bound_over_Estar": 250.19353236087565,
+          "balance_relative_residual": 6.701454197298641e-17,
+          "contrast_number_identity_residual": 9.932990436837882e-17
+        },
+        {
+          "depth": 7,
+          "owners": 2187,
+          "pair_strength": 0.0006858710562414266,
+          "contrast_number_before": 859.392359416568,
+          "contrast_number_after": 284.94716752599265,
+          "source_work_over_Estar": 1529.7781673176648,
+          "switch_on_work_over_Estar": 1289.0885391248519,
+          "switch_off_work_over_Estar": -1110.7294779283582,
+          "emitted_energy_over_Estar": 1327.249444977644,
+          "system_energy_over_Estar": 570.6494468504574,
+          "system_energy_per_owner": 0.260927959236606,
+          "total_external_work_over_Estar": 2556.362362750271,
+          "total_emitted_energy_over_Estar": 1985.7129158998137,
+          "external_work_lower_bound_over_Estar": 750.5805970826269,
+          "balance_relative_residual": 4.4472113726203376e-17,
+          "contrast_number_identity_residual": 6.614373311324107e-17
+        },
+        {
+          "depth": 8,
+          "owners": 6561,
+          "pair_strength": 0.00022862368541380886,
+          "contrast_number_before": 2579.1660745915515,
+          "contrast_number_after": 855.1694223031362,
+          "source_work_over_Estar": 4588.1877576882325,
+          "switch_on_work_over_Estar": 3868.749111887327,
+          "switch_off_work_over_Estar": -3333.466671109874,
+          "emitted_energy_over_Estar": 3983.2757453542836,
+          "system_energy_over_Estar": 1710.843899961859,
+          "system_energy_per_owner": 0.26075962505134265,
+          "total_external_work_over_Estar": 7679.832561215957,
+          "total_emitted_energy_over_Estar": 5968.988661254098,
+          "external_work_lower_bound_over_Estar": 2251.7417912478804,
+          "balance_relative_residual": 2.960659280405349e-17,
+          "contrast_number_identity_residual": 1.3223673982252577e-16
+        },
+        {
+          "depth": 9,
+          "owners": 19683,
+          "pair_strength": 7.620789513793629e-05,
+          "contrast_number_before": 7738.487067101307,
+          "contrast_number_after": 2565.8361358995962,
+          "source_work_over_Estar": 13766.164822782373,
+          "switch_on_work_over_Estar": 11607.730600651961,
+          "switch_off_work_over_Estar": -10001.67805288854,
+          "emitted_energy_over_Estar": 11951.354410166841,
+          "system_energy_over_Estar": 5131.706860340812,
+          "system_energy_per_owner": 0.26071771886098727,
+          "total_external_work_over_Estar": 23052.04993176175,
+          "total_emitted_energy_over_Estar": 17920.34307142094,
+          "external_work_lower_bound_over_Estar": 6755.225373743642,
+          "balance_relative_residual": 3.945396198885555e-17,
+          "contrast_number_identity_residual": 5.87643743464708e-17
+        },
+        {
+          "depth": 10,
+          "owners": 59049,
+          "pair_strength": 2.540263171264543e-05,
+          "contrast_number_before": 23216.450007372783,
+          "contrast_number_after": 7697.836264335479,
+          "source_work_over_Estar": 41301.98420186469,
+          "switch_on_work_over_Estar": 34824.675011059175,
+          "switch_off_work_over_Estar": -30006.312150070364,
+          "emitted_energy_over_Estar": 35855.590347063415,
+          "system_energy_over_Estar": 15396.463576130893,
+          "system_energy_per_owner": 0.26074046260107525,
+          "total_external_work_over_Estar": 69172.39699461526,
+          "total_emitted_energy_over_Estar": 53775.933418484354,
+          "external_work_lower_bound_over_Estar": 20265.676121230925,
+          "balance_relative_residual": 2.629646336655727e-16,
+          "contrast_number_identity_residual": 3.917458101837717e-17
+        },
+        {
+          "depth": 11,
+          "owners": 177147,
+          "pair_strength": 8.467543904215143e-06,
+          "contrast_number_before": 69650.33883710363,
+          "contrast_number_after": 23093.836652599522,
+          "source_work_over_Estar": 123904.66137283875,
+          "switch_on_work_over_Estar": 104475.50825565544,
+          "switch_off_work_over_Estar": -90020.21445313994,
+          "emitted_energy_over_Estar": 107568.2981715237,
+          "system_energy_over_Estar": 46188.12057996142,
+          "system_energy_per_owner": 0.2607332925760042,
+          "total_external_work_over_Estar": 207532.35216996953,
+          "total_emitted_energy_over_Estar": 161344.23159000804,
+          "external_work_lower_bound_over_Estar": 60797.02836369278,
+          "balance_relative_residual": 3.155345074777526e-16,
+          "contrast_number_identity_residual": 1.0446406630124576e-16
+        },
+        {
+          "depth": 12,
+          "owners": 531441,
+          "pair_strength": 2.822514634738381e-06,
+          "contrast_number_before": 208952.00533228414,
+          "contrast_number_after": 69281.83781937709,
+          "source_work_over_Estar": 371715.9509315347,
+          "switch_on_work_over_Estar": 313428.0079984262,
+          "switch_off_work_over_Estar": -270061.9213700879,
+          "emitted_energy_over_Estar": 322706.4216541524,
+          "system_energy_over_Estar": 138563.73648568196,
+          "system_energy_per_owner": 0.26073211604991325,
+          "total_external_work_over_Estar": 622614.3897298425,
+          "total_emitted_energy_over_Estar": 484050.65324416046,
+          "external_work_lower_bound_over_Estar": 182391.08509107833,
+          "balance_relative_residual": 1.8697820633000207e-16,
+          "contrast_number_identity_residual": 6.964238129816363e-17
+        }
+      ],
+      "limiting": {
+        "contrast_covariance_per_owner": [
+          [
+            0.6020656554232252,
+            -0.23477190647849525
+          ],
+          [
+            -0.23477190647849527,
+            0.6586669630619079
+          ]
+        ],
+        "contrast_number_per_owner": 0.13036630924256654,
+        "contraction_upper_bound": 0.33156818815498923,
+        "common_scaled_spectral_radius": 0.577350269189626,
+        "system_energy_per_owner_if_common_vanishes": 0.26073261848513307,
+        "common_vanishes_per_owner": true,
+        "lyapunov_residual": 1.1102230246251565e-16
+      },
+      "final_common_covariance": [
+        [
+          0.5501056238870965,
+          0.1759592669511157
+        ],
+        [
+          0.17595926695111574,
+          0.5107413038984662
+        ]
+      ],
+      "final_contrast_cohorts": [
+        {
+          "multiplicity": 2,
+          "covariance": [
+            [
+              0.5798252765368171,
+              -0.2462100097313127
+            ],
+            [
+              -0.2462100097313127,
+              0.7480363019782112
+            ]
+          ]
+        },
+        {
+          "multiplicity": 6,
+          "covariance": [
+            [
+              0.5798254158382884,
+              -0.24620914772768107
+            ],
+            [
+              -0.24620914772768107,
+              0.7480341772494961
+            ]
+          ]
+        },
+        {
+          "multiplicity": 18,
+          "covariance": [
+            [
+              0.5798235398914486,
+              -0.2462057598151793
+            ],
+            [
+              -0.24620575981517936,
+              0.7480330967988001
+            ]
+          ]
+        },
+        {
+          "multiplicity": 54,
+          "covariance": [
+            [
+              0.5798186520509552,
+              -0.2462070616990587
+            ],
+            [
+              -0.24620706169905873,
+              0.7480503381366168
+            ]
+          ]
+        },
+        {
+          "multiplicity": 162,
+          "covariance": [
+            [
+              0.5798262818501938,
+              -0.2462403911742707
+            ],
+            [
+              -0.24624039117427068,
+              0.7480934433080211
+            ]
+          ]
+        },
+        {
+          "multiplicity": 486,
+          "covariance": [
+            [
+              0.5798854682265763,
+              -0.2462928779653499
+            ],
+            [
+              -0.24629287796534993,
+              0.7480198115026536
+            ]
+          ]
+        },
+        {
+          "multiplicity": 1458,
+          "covariance": [
+            [
+              0.5799303018945561,
+              -0.2460910145243614
+            ],
+            [
+              -0.2460910145243614,
+              0.7474856075113601
+            ]
+          ]
+        },
+        {
+          "multiplicity": 4374,
+          "covariance": [
+            [
+              0.5794784707993932,
+              -0.24522397618215946
+            ],
+            [
+              -0.2452239761821595,
+              0.747124307434803
+            ]
+          ]
+        },
+        {
+          "multiplicity": 13122,
+          "covariance": [
+            [
+              0.5781985862253939,
+              -0.24538668166656258
+            ],
+            [
+              -0.24538668166656258,
+              0.751286128795757
+            ]
+          ]
+        },
+        {
+          "multiplicity": 39366,
+          "covariance": [
+            [
+              0.5798381878781517,
+              -0.2535873680476993
+            ],
+            [
+              -0.25358736804769927,
+              0.7626052261978344
+            ]
+          ]
+        },
+        {
+          "multiplicity": 118098,
+          "covariance": [
+            [
+              0.5946446968261025,
+              -0.26793543504344225
+            ],
+            [
+              -0.2679354350434423,
+              0.7465958226178777
+            ]
+          ]
+        },
+        {
+          "multiplicity": 354294,
+          "covariance": [
+            [
+              0.6083086187174471,
+              -0.22103436962786677
+            ],
+            [
+              -0.22103436962786674,
+              0.6127368400525457
+            ]
+          ]
+        }
+      ],
+      "source_axes": "fixed laboratory quadratures; free common phase is retained",
+      "vacuum_reference": "normal ordered epsilon sum a_dagger a; initially all modes vacuum",
+      "minimum_external_work_per_owner": 0.34320100461025466,
+      "bath_energy_recycled": false,
+      "bath_reuse_solved": false,
+      "phase_corrected_to_preserve_unattenuated_source": false,
+      "pump_clock_and_reservoir_autonomous": false,
+      "physical_coupling_normalization_derived": false,
+      "common_metric_selection_proved": false,
+      "source_reference": "Strasberg et al., arXiv:1610.01829v3, equations 44 and 46"
+    },
+    "interleaved_splitting_and_emission_solved": false,
+    "autonomous_preparation_or_recycling_derived": false,
+    "common_metric_selection_proved": false
+  }
+}

@@ -5,8 +5,8 @@ import sys, math
 from pathlib import Path
 import numpy as np
 ROOT = Path(r"C:/dev/ce/Clarus-Equation"); sys.path.insert(0, str(ROOT))
-from examples.physics.causal_face_simplicity import geometric_self_dual_triple, simplicity_residual
-from examples.physics.urbantke_shape_matching_rg import optimal_internal_alignment, repeated_coherent_mismatch_residual
+from examples.physics.gravity.causal_face_simplicity import geometric_self_dual_triple, simplicity_residual
+from examples.physics.gravity.urbantke_shape_matching_rg import optimal_internal_alignment, repeated_coherent_mismatch_residual
 
 rng = np.random.default_rng(20260902)
 REF = geometric_self_dual_triple(np.eye(4))

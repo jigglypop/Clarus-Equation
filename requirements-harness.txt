@@ -1,6 +1,9 @@
-# .claude 연구 하네스 의존성 (고정). 정책 허용 시스템 Python에 관리자가 설치한다.
+# 연구 하네스 의존성의 최소 버전. 정책 허용 시스템 Python에 관리자가 설치한다.
+# 정확한 재현에는 실행 시 선택한 Python과 실제 의존성 버전을 별도 기록한다.
+# 현재 직접 의존성 스냅샷: requirements-harness-pinned.txt.
 # 하네스는 자동 설치하지 않는다. sympy가 없으면 기호검증은 skipped로 강등된다.
 pyyaml>=6.0
 sympy>=1.12
 numpy>=1.26
 pytest>=8.0
+scipy>=1.10

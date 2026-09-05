@@ -1,22 +1,357 @@
+from __future__ import annotations
+
 import math
 
 import numpy as np
 import pytest
 
-from examples.physics.zerod_plebanski_closure import (
+from examples.physics.gravity.causal_face_simplicity import (
+    hard_shared_spacelike_face_match,
+)
+from examples.physics.gravity.zerod_plebanski_closure import (
+    MINKOWSKI_METRIC,
+    bivector_face_reconstruction_audit,
+    bivector_from_normal_edge,
+    block_rg_verdict,
+    blocked_rendered_mean,
+    common_linear_simplicity_nullity,
     constant_curvature_einstein_audit,
     constructive_zerod_to_plebanski_witness,
+    continuum_gr_dof_no_go,
+    critical_block_moments,
+    critical_borel_asymptotic_ratio,
+    critical_side_tree_total_progeny_probability,
+    critical_split_merge,
     decoherent_fold_audit,
     face_holonomy_audit,
     finite_constraint_concentration,
     flat_chiral_plebanski_audit,
     form_degree_closure,
+    heat_time_from_area,
+    hodge_dual,
     ir_einstein_dominance_audit,
+    marked_joint_probability,
+    massive_spin_two_polarization_count,
+    massive_traceless_transverse_basis_4d,
+    massless_spin_two_polarization_count,
+    massless_tt_basis_4d,
     planck_resolution_quotient,
+    q_spine_distinct_probability,
     quadratic_stationary_phase_audit,
     simplex_interaction_audit,
+    spine_fixed_point,
     typed_rank_four_event_trace,
 )
+
+
+D_CE = 3.1777584234
+
+
+# ---------------------------------------------------------------------------
+# 분할/병합 블록 RG (구 test_planck_rendering_block_rg)
+# ---------------------------------------------------------------------------
+
+
+def test_critical_marking_is_unique_and_gives_exact_ce_numbers() -> None:
+    params = critical_split_merge(D_CE)
+
+    assert params.distinct_probability == pytest.approx(1.0 / D_CE)
+    assert params.merge_probability == pytest.approx(1.0 - 1.0 / D_CE)
+    assert params.distinct_intensity == pytest.approx(1.0)
+    assert params.face_intensity == pytest.approx(D_CE - 1.0)
+
+
+def test_marked_poisson_joint_law_is_normalized_on_a_large_window() -> None:
+    params = critical_split_merge(D_CE)
+    probability = math.fsum(
+        marked_joint_probability(
+            branch_mean=D_CE,
+            distinct_probability=params.distinct_probability,
+            distinct_count=rendered,
+            face_count=faces,
+        )
+        for rendered in range(16)
+        for faces in range(24)
+    )
+
+    assert probability == pytest.approx(1.0, abs=1.0e-12)
+
+
+def test_blocking_fixes_the_mean_but_not_the_poisson_law() -> None:
+    assert blocked_rendered_mean(1.0, depth=8) == pytest.approx(1.0)
+    audit = critical_block_moments(D_CE, depth=8)
+
+    assert audit.output_mean == pytest.approx(1.0)
+    assert audit.output_variance == pytest.approx(8.0)
+    assert not audit.poisson_family_closed
+    assert audit.expected_face_events == pytest.approx(8.0 * (D_CE - 1.0))
+
+
+def test_noncritical_rendered_mean_flows_away_under_blocking() -> None:
+    assert blocked_rendered_mean(0.9, depth=4) == pytest.approx(0.9**4)
+    assert blocked_rendered_mean(1.1, depth=4) == pytest.approx(1.1**4)
+    assert blocked_rendered_mean(0.9, depth=4) < 0.9
+    assert blocked_rendered_mean(1.1, depth=4) > 1.1
+
+
+def test_spine_conditioning_has_one_persistent_line_and_stationary_side_law() -> None:
+    audit = spine_fixed_point(D_CE)
+
+    assert audit.persistent_spine_count == 1
+    assert audit.rendered_continuation_mean == pytest.approx(2.0)
+    assert audit.folded_side_branch_mean == pytest.approx(1.0)
+    assert audit.face_event_mean == pytest.approx(D_CE - 1.0)
+    assert audit.shift_invariant_local_law
+    assert math.fsum(q_spine_distinct_probability(k) for k in range(1, 20)) == pytest.approx(
+        1.0,
+        abs=1.0e-15,
+    )
+
+
+def test_critical_side_tree_has_borel_three_halves_tail() -> None:
+    first_mass = critical_side_tree_total_progeny_probability(1)
+    assert first_mass == pytest.approx(math.exp(-1.0))
+    assert critical_borel_asymptotic_ratio(10_000) == pytest.approx(1.0, rel=5.0e-5)
+
+
+def test_heat_time_is_additive_in_area() -> None:
+    first = heat_time_from_area(area=2.0, planck_area=0.5)
+    second = heat_time_from_area(area=3.0, planck_area=0.5)
+    combined = heat_time_from_area(area=5.0, planck_area=0.5)
+
+    assert combined == pytest.approx(first + second)
+
+
+def test_verdict_keeps_the_remaining_geometry_obligation_explicit() -> None:
+    verdict = block_rg_verdict(D_CE)
+
+    assert verdict.critical_rendered_mean == pytest.approx(1.0)
+    assert verdict.critical_face_intensity == pytest.approx(D_CE - 1.0)
+    assert not verdict.full_poisson_measure_fixed
+    assert verdict.spine_local_measure_fixed
+    assert verdict.side_sector_scale_free
+    assert "simplicity" in verdict.remaining_obligation
+
+
+@pytest.mark.parametrize("branch_mean", (1.0, 0.5, -1.0, math.inf))
+def test_critical_split_merge_rejects_invalid_domain(branch_mean: float) -> None:
+    with pytest.raises(ValueError):
+        critical_split_merge(branch_mean)
+
+
+# ---------------------------------------------------------------------------
+# 연속 GR / 두 자유도 무유도 정리 (구 test_continuum_gr_dof_no_go)
+# ---------------------------------------------------------------------------
+
+
+def _minkowski_trace(tensor: np.ndarray) -> float:
+    return float(np.sum(MINKOWSKI_METRIC * tensor))
+
+
+def test_covariant_r_squared_counterexample_deletes_unique_gr_implication() -> None:
+    audit = continuum_gr_dof_no_go(alpha_over_reference_length_squared=2.0)
+
+    assert audit.scalaron_mass_squared_times_reference_length_squared == pytest.approx(
+        1.0 / 12.0
+    )
+    assert audit.einstein_hilbert_polarizations == 2
+    assert audit.r_plus_r_squared_polarizations == 3
+    assert audit.shared_flat_stationary_background
+    assert audit.shared_finite_flat_face_data
+    assert audit.both_actions_diffeomorphism_invariant
+    assert not audit.unique_continuum_action_follows
+    assert not audit.exactly_two_dof_follow
+    assert audit.status == "FINITE_FACE_TO_UNIQUE_CONTINUUM_GR_IMPLICATION_DISPROVED"
+
+
+def test_massless_tt_basis_has_exactly_plus_and_cross() -> None:
+    basis = massless_tt_basis_4d()
+    null_covector = np.array((-1.0, 0.0, 0.0, 1.0))
+
+    assert massless_spin_two_polarization_count(4) == 2
+    assert len(basis) == 2
+    for tensor in basis:
+        np.testing.assert_allclose(tensor, tensor.T)
+        assert _minkowski_trace(tensor) == pytest.approx(0.0)
+        np.testing.assert_allclose(null_covector @ tensor, np.zeros(4))
+    assert np.linalg.matrix_rank(np.stack([item.ravel() for item in basis])) == 2
+
+
+def test_massive_rest_frame_basis_has_five_independent_polarizations() -> None:
+    basis = massive_traceless_transverse_basis_4d()
+    timelike_covector = np.array((-1.0, 0.0, 0.0, 0.0))
+
+    assert massive_spin_two_polarization_count(4) == 5
+    assert len(basis) == 5
+    for tensor in basis:
+        np.testing.assert_allclose(tensor, tensor.T)
+        assert _minkowski_trace(tensor) == pytest.approx(0.0)
+        np.testing.assert_allclose(timelike_covector @ tensor, np.zeros(4))
+    assert np.linalg.matrix_rank(np.stack([item.ravel() for item in basis])) == 5
+
+
+@pytest.mark.parametrize("alpha", [0.0, -1.0, float("inf")])
+def test_counterexample_requires_nontachyonic_finite_alpha(alpha: float) -> None:
+    with pytest.raises(ValueError, match="alpha"):
+        continuum_gr_dof_no_go(alpha)
+
+
+# ---------------------------------------------------------------------------
+# 로렌츠 이중벡터 재구성 (구 test_lorentzian_bivector_reconstruction)
+# ---------------------------------------------------------------------------
+
+
+def _boost() -> np.ndarray:
+    rapidity = 0.7
+    cosine = math.cosh(rapidity)
+    sine = math.sinh(rapidity)
+    return np.array(
+        [
+            [cosine, sine, 0.0, 0.0],
+            [sine, cosine, 0.0, 0.0],
+            [0.0, 0.0, 1.0, 0.0],
+            [0.0, 0.0, 0.0, 1.0],
+        ]
+    )
+
+
+def _geometric_face() -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    transform = _boost()
+    normal = transform @ np.array([1.0, 0.0, 0.0, 0.0])
+    rest_edges = np.array(
+        [
+            [0.0, 1.0, 0.0, 0.0],
+            [0.0, 0.0, 2.0, 0.0],
+            [0.0, 0.0, 0.0, 3.0],
+        ]
+    )
+    edges = rest_edges @ transform.T
+    bivectors = np.asarray(
+        [bivector_from_normal_edge(normal, edge) for edge in edges]
+    )
+    return normal, edges, bivectors
+
+
+def test_lorentzian_hodge_star_squares_to_minus_one() -> None:
+    normal = np.array([1.0, 0.0, 0.0, 0.0])
+    edge = np.array([0.0, 1.0, 0.0, 0.0])
+    bivector = bivector_from_normal_edge(normal, edge)
+    dual = hodge_dual(bivector)
+
+    assert dual[2, 3] == pytest.approx(1.0)
+    np.testing.assert_allclose(hodge_dual(dual), -bivector, atol=1.0e-15)
+
+
+def test_linear_simple_bivectors_reconstruct_edges_and_gram() -> None:
+    normal, edges, bivectors = _geometric_face()
+    audit = bivector_face_reconstruction_audit(normal, bivectors)
+
+    np.testing.assert_allclose(audit.reconstructed_edges, edges, atol=1.0e-14)
+    np.testing.assert_allclose(audit.edge_gram, np.diag((1.0, 4.0, 9.0)), atol=1.0e-14)
+    np.testing.assert_allclose(audit.bivector_gram, audit.edge_gram, atol=1.0e-14)
+    assert audit.common_normal_nullity == 1
+    assert audit.hard_reconstruction
+    assert audit.status == "FINITE_LINEAR_SIMPLE_FACE_RECONSTRUCTED"
+    assert audit.plebanski_branch == "NOT_TESTED_BY_LINEAR_FACE_DATA"
+    assert audit.claim_ceiling == "FINITE_LINEAR_SIMPLE_FACE_RECONSTRUCTION_ONLY"
+
+
+def test_rank_deficient_linear_simple_data_are_rejected() -> None:
+    normal, _, bivectors = _geometric_face()
+    bivectors[2] = bivectors[1]
+
+    audit = bivector_face_reconstruction_audit(normal, bivectors)
+
+    assert not audit.hard_reconstruction
+    assert audit.status == "NONSPACELIKE_OR_RANK_DEFICIENT_FACE"
+
+
+def test_bf_pair_has_no_common_linear_simplicity_normal() -> None:
+    basis = np.eye(4)
+    time_space = np.outer(basis[0], basis[1]) - np.outer(basis[1], basis[0])
+    space_space = np.outer(basis[2], basis[3]) - np.outer(basis[3], basis[2])
+
+    assert common_linear_simplicity_nullity(
+        np.asarray((time_space, space_space))
+    ) == 0
+
+
+def test_declared_wrong_normal_fails_linear_simplicity() -> None:
+    basis = np.eye(4)
+    normal = basis[0]
+    spatial = np.outer(basis[2], basis[3]) - np.outer(basis[3], basis[2])
+    bivectors = np.asarray((spatial, 2.0 * spatial, 3.0 * spatial))
+
+    audit = bivector_face_reconstruction_audit(normal, bivectors)
+
+    assert not audit.hard_reconstruction
+    assert audit.status == "LINEAR_SIMPLICITY_FAILED"
+
+
+def test_reconstructed_bivector_faces_feed_proper_shared_face_gluing() -> None:
+    left_normal = np.array([1.0, 0.0, 0.0, 0.0])
+    left_edges = np.array(
+        [
+            [0.0, 1.0, 0.0, 0.0],
+            [0.0, 0.0, 2.0, 0.0],
+            [0.0, 0.0, 0.0, 3.0],
+        ]
+    )
+    left_bivectors = np.asarray(
+        [bivector_from_normal_edge(left_normal, edge) for edge in left_edges]
+    )
+    right_to_left = _boost()
+    left_to_right = np.linalg.inv(right_to_left)
+    right_normal = left_to_right @ left_normal
+    right_edges = left_edges @ left_to_right.T
+    right_bivectors = np.asarray(
+        [bivector_from_normal_edge(right_normal, edge) for edge in right_edges]
+    )
+    left_audit = bivector_face_reconstruction_audit(left_normal, left_bivectors)
+    right_audit = bivector_face_reconstruction_audit(right_normal, right_bivectors)
+
+    gluing = hard_shared_spacelike_face_match(
+        left_audit.reconstructed_edges,
+        left_normal,
+        np.array([2.0, 0.2, 0.1, 0.0]),
+        right_audit.reconstructed_edges,
+        right_normal,
+        left_to_right @ np.array([-1.5, 0.3, 0.0, 0.2]),
+        right_to_left,
+    )
+
+    assert left_audit.hard_reconstruction
+    assert right_audit.hard_reconstruction
+    assert gluing.hard_match
+    assert gluing.status == "FINITE_SHARED_SPACELIKE_FACE_MATCH"
+
+
+@pytest.mark.parametrize(
+    "length_scale", [1.0e-200, 1.0e-100, 1.0e-6, 1.0e100, 1.0e200]
+)
+def test_bivector_reconstruction_is_invariant_under_length_units(
+    length_scale: float,
+) -> None:
+    normal, edges, _ = _geometric_face()
+    scaled_edges = edges * length_scale
+    bivectors = np.asarray(
+        [bivector_from_normal_edge(normal, edge) for edge in scaled_edges]
+    )
+
+    audit = bivector_face_reconstruction_audit(normal, bivectors)
+
+    assert audit.hard_reconstruction
+    np.testing.assert_allclose(
+        audit.reconstructed_edges / length_scale,
+        edges,
+        rtol=2.0e-15,
+        atol=1.0e-14,
+    )
+
+
+# ---------------------------------------------------------------------------
+# 0D→플레바인스키 구성적 유한 닫힘
+# ---------------------------------------------------------------------------
 
 
 def test_same_type_two_form_closure_selects_three_plus_one() -> None:

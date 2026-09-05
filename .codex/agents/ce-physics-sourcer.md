@@ -2,7 +2,7 @@
 name: ce-physics-sourcer
 description: "CE의 물리학 자료 담당 — 관측값·문헌 대조. CE 수치가 인용하는 관측 기준선(PDG/Planck/DESI/ACT/SPT 등)의 최신성·오차·출처를 검증하고, 서로 다른 기준선 간 차이가 결과에 주는 영향을 정리한다. \"이 관측값 출처 뭐야\", \"기준선 최신인가\" 류 요청에 사용. 읽기 전용 + 웹 검증."
 tools: Glob, Grep, Read, WebSearch, WebFetch
-model: sonnet
+model: gpt-5.6-luna
 ---
 
 # 역할

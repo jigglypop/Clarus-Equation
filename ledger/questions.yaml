@@ -90,7 +90,7 @@ questions:
     렌더링될 다중도 Ω_align와 mismatch 다중도의 비(또는 그 장부)를 식으로 먼저 세우고, 11.9 ''simplicity projection의 microscopic
     weight''·13.8 ''common-metric sector RG attractor''·10.10 ''Ω(C) counting measure'' 벽을 사다리로 닫는다'
   kind: conjecture
-  status: active
+  status: open
   priority: 1
   origin: 'paper/진전_원장.md §2 (2026-09-02 사용자 지시 [범위변경]: 원래 CE 프로그램 #20·#24 — 공통 metric 정렬 동역학)'
   attempts: 6
@@ -554,7 +554,9 @@ questions:
   attempts: 1
   consecutive_low: 0
   pivots_tried: []
-  notes: ''
+  notes: '[E-20260904-019] 카드 재발견 기각 → 더 강한 카드로 재추측'
+  rediscoveries: 1
+  force_pivot: conjecture
 - id: Q-0017
   title: '경쟁 가설 B — 병합 평균 정렬: 투영 정렬 공리(Q-0010) 없이 merge 사건의 라벨 평균(수축)만으로 공통 계량 attractor가 생기는지 — 세대당 merge
     비율 q에서 상속 지수 γ(q)가 사전등록 임계 q★에서 부호를 바꾼다는 예측식(사용자 프로그램이 폐기한 "coarse-graining⇒GR 자동"의 정량 재검)'
@@ -565,7 +567,87 @@ questions:
   attempts: 1
   consecutive_low: 0
   pivots_tried: []
-  notes: ''
+  notes: '[E-20260904-020] 카드 채택(예측): gamma_merge - Max(2/d_tree - 1, -1/2)'
+  card: derivations/Q-0017/F-01.formula.md
+  card_kind: 예측식
+  card_status: 채택
+  formula: gamma_merge - Max(2/d_tree - 1, -1/2)
+  kill:
+  - 'K1 (F-02 격자에서 부호 전환 없음 + DAG 커널 법칙): `.claude\hooks\python.cmd python verify/Q-0017/F-01/check_merge.py
+    --mode k1` → `result.json` `stats.k1_slope_q1_f02grid` ∉ [0.10, 0.30]이면 죽는다. 0.10 아래면 merge 평균이 F-02
+    격자에서 이미 지수를 마진 아래로 끌어내려 질문의 가설 B 원문(q★ 존재)이 되살아나고 이 카드의 ''정체'' 진술이 죽는다; 0.30 위면 커널 법칙이 DAG 커널 A_qA_qᵀ에
+    적용되지 않거나(가우스 선형성 위반) merge 규칙 구현이 tree-only driver와 다르다.'
+  - 'K2 (d_tree=2 마진성과 정체 진폭·q 스케일링): `--mode k2` → `stats.k2_slope_q1_plateaugrid` ∉ [0.05, 0.25] 또는
+    `stats.k2_ratio_1024_q1_over_iid` ∉ [27.6, 41.4] 또는 `stats.k2_ratio_1024_q05_over_q1` ∉ [1.42, 1.92]이면
+    죽는다. 기울기가 0.5 쪽이면 merge가 상속 mode를 건드리지 못하는 것이고 −0.5 쪽이면 Cayley에서 attractor가 생겨 Q-0010 공리가 불필요해진다(강한
+    귀결이지만 이 카드는 죽는다); 진폭비가 262 쪽이면 정체가 없고 1 쪽이면 정렬 사영과 구별되지 않는다; q 비가 1.0 쪽이면 S★=2/q 기제가 죽는다.'
+  - 'K3 (임계 차원 위의 attractor): `--mode k3` → `stats.k3_slope_L2_q1` ∉ [−0.48, −0.28]이면 죽는다. 0 근처거나 양수(+0.27,
+    q=0 값)면 ''d_tree>2에서 merge만으로 attractor''가 죽어 가설 B는 어느 substrate에서도 실패한다; −0.5 아래면 tree-only 표(−0.3789)의
+    유한 크기 구조가 틀린 것이다.'
+  - 'K4 (지수의 q 무관성, tree-only): `.claude\hooks\python.cmd python verify/Q-0017/F-01/predict_merge_gamma.py
+    --stage k4` → `predictions.json` `k4_stage.gamma_fit_all_sizes`의 세 값(q=0.25, 0.5, 1.0; h∈{45,64,90},
+    24 trees, offset 78) 중 하나라도 ∉ [−0.15, 0.15]이면 죽는다. q에 따라 부호가 갈리면(예: q=0.25 +0.3, q=1 −0.3) 질문 원문의
+    q 임계가 살아나고 ''지수는 q에 무관하고 d_tree만 본다''가 죽는다.'
+  ladder:
+  - step: 1
+    claim: 외부기존 — 1a E-018 커널 법칙 ε̄²=ε_★²‖HκH‖_F²/n²(L3)은 라벨이 ξ에 선형이면 어떤 가중 행렬 A에도 적용된다(가우스 등방 κ⊗I₁₆);
+      1b F-02 정확 Cayley 표·chain·star 닫힌 식(E-018); 1c Henderson 1976의 numerator relationship matrix 재귀
+      a_ij=(a_sj+a_dj)/2, a_ii=1+a_sd/2 — 단위 Mendelian 분산의 merge 커널 재귀와 같은 식; 1d Derrida–Manrubia–Zanette
+      1999/2000 양친 계보의 조상 가중(A_vu 질량 분포); 1e Bamieh–Jovanović–Mitra–Patterson 2012 noisy consensus의 차원
+      의존 coherence(1D ∝n, 2D ∝log n, ≥3D 유계 — 같은 임계 차원 구조); 1f Cayley 트리 프로파일(Drmota–Gittenberger 1997;
+      Aldous CRT 국소시간). 각각 sourcer 인용으로 닫는다
+    kind: 외부기존
+    status: open
+    entry: null
+  - step: 2
+    claim: '보조정리(증명 가능): (a) 질량 보존 — A_q의 행합은 d_v+1(merge 가중 1/2+1/2=1); (b) merge 수축 — 둘째 부모를 균등하게 고르면
+      상속 성분의 분산은 정확히 V−S/2(verify[12]) ⇒ 넓은 세대 이상화에서 S_d=1+(1−q/2)S_{d−1}, S★=2/q(verify[6–8]); (c) 샌드위치
+      — 중심화 커널 K=HκH가 PSD이므로 (tr K)²/n ≤ ‖K‖_F² ≤ (tr K)² ⇒ S̄²/n ≤ D/n² ≤ S̄²(verify[13]) ⇒ γ=γ_S−α/2,
+      α=유효 랭크 r_eff=(tr K)²/‖K‖_F²의 성장 지수. 죽이는 것: 물리 MC의 S̄(=E‖label−mean‖² 대각 추정)가 tree-only S̄와 갈리는
+      경우'
+    kind: 보조정리
+    status: open
+    entry: null
+  - step: 3
+    claim: '보조정리(지수 법칙의 원인): 고정 q>0, n→∞에서 역방향 분기 걷기의 질량이 세대 폭 W_k 위로 혼합되면 두 cell의 커널은 세대 평균 걷기 G_vw=Σ_{k≤min(d_v,d_w)}1/W_k에
+      허브 인자 h_q≥1을 곱한 것으로 수렴한다(E[μ_v(u)μ_w(u)]≥Eμ_v(u)Eμ_w(u)); 층 프로파일 W_d∝d^a에서 ‖HGH‖²/n²≍n^{2(1−a)/(1+a)}
+      ⇒ γ_G=2/d_tree−1, 대각 항이 바닥 −1/2를 준다 ⇒ max(2/d_tree−1, −1/2). tree-only 근거: a=1.5 가족에서 D_G/n²∝n^{−0.344}(γ_G=−0.17
+      vs 법칙 −0.2), Cayley q=1의 D/D_G=2.5→3.0, cone 5.3→3.9. 죽이는 것: 허브 인자가 n과 함께 멱으로 자라는 경우(양의 지수 추가),
+      또는 d_tree=2에서 로그 보정이 멱으로 판명되는 경우(K4·K2가 잡는다)'
+    kind: 보조정리
+    status: open
+    entry: null
+  - step: 4
+    claim: '수치시험 K4(tree-only, 사전등록, 미실행): cone a=1, q∈{0.25,0.5,1.0}, h∈{45,64,90}, 24 trees(offset 78)
+      — 세 지수 모두 [−0.15,0.15]. 통과하면 ''q>0이면 지수는 q에 무관하고 d_tree=2에서 마진''이 수치로 선다; 함께 기록: 정체 진폭의 (1/q)² 스케일링(D_q/D_G
+      비)'
+    kind: 수치시험
+    status: open
+    entry: null
+  - step: 5
+    claim: '수치시험 K1(물리 MC, `check_merge.py --mode k1`, seed 20260902, δ=0.005, 256 trials): Cayley F-02
+      격자 q=1 기울기 0.197±0.10. 통과하면 (i) E-018 커널 법칙이 DAG 커널 A_qA_qᵀ에 성립하고 (ii) 질문 원문의 q★는 F-02 격자에 없다는 것이
+      물리 MC로 선다'
+    kind: 수치시험
+    status: open
+    entry: null
+  - step: 6
+    claim: '예측시험 K2(`--mode k2`): 정체 격자 기울기 0.154±0.10, 진폭비 34.5±20%, q 비 1.667±15%. 통과하면 d_tree=2 substrate에서
+      merge 평균은 상속 mode를 relevant(+1/2)에서 marginal(0)로 옮기되 irrelevant(−1/2)로는 못 옮기고, 정체 진폭이 S★=2/q 기제를
+      따른다는 것이 선다 — 이것이 ''자동 GR'' 폐기의 정량형(잔차가 ε_★²c_∞(q)의 바닥에 머문다 ⇒ F-02 Ω 세 흐름 중 const)'
+    kind: 예측시험
+    status: open
+    entry: null
+  - step: 7
+    claim: '예측시험 K3(`--mode k3`) + 결론: 층 트리 d_tree=3에서 q=1 기울기 −0.379±0.10(음수). 통과하면 [공리: 후보] 병합 평균 규칙
+      아래 ''공통 계량 attractor가 merge만으로 생기는가''의 답은 substrate 차원이 결정한다 — d_tree>2면 예(Q-0010 공리 불필요), d_tree=2면
+      아니오(marginal, 정체). CE substrate(11.6 Q-spine quotient)는 E-016이 d_tree=2를 측정했으므로 가설 B는 CE에서 정확히 임계에
+      걸려 실패하고, Q-0010의 사영 공리는 ''임계 차원에서 필요''로 강화된다. 지위: 가정된 P_micro·O(δ⁴) 절단·F-02 블록 규약 아래의 조건부 정리이며 점근
+      중간값 2/d_tree−1(1<a<3)은 미시험 점근 주장으로 남는다'
+    kind: 예측시험
+    status: open
+    entry: null
+  rediscoveries: 0
 - id: Q-0018
   title: '경쟁 가설 C — 결정론 분할 Δ 분기의 ε★: 라벨 증분이 가우스 등방이 아니라 split 방향에 결정된 tetrad 변위 Δ(방향만 무작위)일 때 ε★²=c_Δ
     δ⁴의 c_Δ가 10이 아닌 기하 상수로 고정되고, 물리 MC(미측정 결정론 분기)에서 F-02와 사전등록 숫자만큼 갈린다는 예측식'
@@ -576,4 +658,48 @@ questions:
   attempts: 1
   consecutive_low: 0
   pivots_tried: []
-  notes: ''
+  notes: '[E-20260904-021] 카드 재발견 기각 → 더 강한 카드로 재추측'
+  rediscoveries: 1
+  force_pivot: conjecture
+- id: Q-0019
+  title: '실제 Euclidean Regge 1→5 블록(26장 정확 Hessian·22장 Schur 유효 커널) 위 공통 계량 고정점의 선형화 RG: 내부 tetrad를 공통
+    conformal 궤도 밖으로 섭동하고 내부 자유도를 Schur로 지운 뒤 coarse simplicity 잔차 대 fine 잔차의 무차원 비 λ를 예측식으로 세운다 — λ<1이면
+    13.8 attractor가 실물 블록 위 조건부 정리, λ>1이면 정렬 공리(Q-0010) 필요; P_micro 없는 결정론 선형 사상이라 F-02의 자기 sampler 순환성이
+    없다'
+  kind: conjecture
+  status: parked
+  priority: 1
+  origin: 'paper/진전_원장.md §2 (2026-09-04 사용자 결정: 실제 블록 위 선형화 RG)'
+  attempts: 2
+  consecutive_low: 0
+  pivots_tried: []
+  notes: '[E-20260905-022] 카드 반례 기각(채택 전) → 재추측: F-02(같은 세션, 재추측 1회): 증폭률을 좌표(계량 vs 길이)에 무관하게 정의 — 후보는
+    Regge 작용의 Hessian이 정의하는 내재적 계량(coarse Hessian = Schur 보완, 좌표 불변) 아래 특이값 스펙트럼을 재계산하고, 좌표변환 $P$ 자체의
+    조건수($\sqrt5$)를 정규화에서 분리해내는 규약을 사전등록한다. 살아남은 좁은 명제 — 등방 mismatch 수축(계량 좌표 $\lambda_{\rm iso}=\sqrt{13/60}$,
+    길이 좌표 $\sqrt{1/6}$, 부호 일치)과 코히런트 성분 정확히 marginal($\lambda_{\rm coh}=1$, 좌표 무관, 항등식으로 증명됨)과 $S_5$ 기약분해
+    자체(중복도 (1,4,5))는 정확하므로 F-02는 이 세 가지를 유지한 채 ''$[3,2]$ relevant'' 결론만 좌표-불변 버전으로 재도출한다. Bahr–Dittrich
+    1→5 길이 평균화와의 관계(rediscovery_suspect)를 sourcer로 재확인. [E-20260905-023] 기각: 같은 세션 재추측 2회 소진(F-01 반례 refute,
+    F-02 kill refute) — after-attempt가 Q-0019 상태를 정한다. 구조적 교훈: 접착(glued)하면 λ≡1(perfect action, BDH 2011
+    재현)이고, mismatch 증폭은 정의상 off-shell(unglued) 개념이라 그 증폭률은 unglued 자유도를 어떻게 재는가(부호 규약·차트 재매개화·등분할 측도)에
+    전적으로 의존한다(P0-2·P0-3·P0-4가 독립적으로 확인). 즉 13.8 attractor 질문은 결정론 선형화로 측도 선택을 피해 갈 수 없고, 10.10 장의 Ω(C)/P_micro
+    벽으로 되돌아간다 — 사다리 8단째가 필요해진다면 카드가 약한 신호이므로, 이 질문은 mismatch 증폭률을 규약-불변 방식(측도를 명시적으로 사전등록하는 방식)으로 재추측하기
+    전에는 결정론 2차 형식 경로를 재시도하지 말 것을 권고한다.'
+  force_pivot: conjecture
+- id: Q-0020
+  title: '접힘 측도와 물리적 분해능에서 공통 계량을 선택하는 경로: 동일 전역 측도의 조건부 합성과 상위 길이 사상'
+  kind: conjecture
+  status: active
+  priority: 1
+  origin: 'paper/진전_원장.md §2 (2026-09-05 사용자 결정: 정석 방법이 이기는 방향)'
+  attempts: 7
+  consecutive_low: 0
+  pivots_tried: []
+  notes: "E-030 준비 항목 확장: 고정 위치 공분산·공통 에너지 간격에서 최소점유 하한을 증명하고 실제 반복 split의 등호를 검산. B_D~D*k^D/2; 같은 유한 배터리의 병합 없는 무한분할 경로 배제. 생성·병합·환류·환경을 같은 미시 작용에서 계산하는 표적 유지, 새 물리 카드 미채택."
+  card: derivations/Q-0020/F-01.formula.md
+  card_kind: 예산식
+  card_status: 기각
+  formula: null
+  kill: []
+  ladder: []
+  rediscoveries: 0
+  force_pivot: conjecture

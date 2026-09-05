@@ -1,0 +1,104 @@
+{
+  "card": "Q-0020 F-01",
+  "revision": 2,
+  "mode": "card_reaudit",
+  "model": "opus",
+  "card_check": "PASS (ladder 7, predicts 10, kill 4)",
+  "hook_rerun": "14/14 pass (symbolic pass, numeric pass) - identical to stored hook_result.json",
+  "preregistration_unchanged": {
+    "values_match": true,
+    "uncertainties_match": true,
+    "kill_numbers_intact": true,
+    "verify_entries": 14,
+    "verify_expr_all_present": true,
+    "verify_tols_match": true,
+    "comparison_frozen_all_true": true,
+    "verdict": "UNCHANGED - no post-hoc adjustment"
+  },
+  "must_fix": [
+    {
+      "id": 1,
+      "item": "content PARTIAL: two budget parts never trade dominance (Gamma_min>0)",
+      "resolved": true,
+      "evidence": "scope[2], ladder step5, body: 'Gamma_min/hbar>0 (R 30.23, W 33.51)', 'competition only in the derivative', lnOmega=-10.73<0 at lstar. Matches c4 (30.2271, -10.7271)."
+    },
+    {
+      "id": 2,
+      "item": "lstar exists only under |S_c| sign choice; call it an axiom",
+      "resolved": true,
+      "evidence": "new scope item '[공리: 후보] S_c 의 부호' + body lists three axioms. Matches c4 sign_flip_kills_lstar=true, GHP monotone decreasing."
+    },
+    {
+      "id": 3,
+      "item": "K3 power ~0 must be stated, window must not be narrowed",
+      "resolved": true,
+      "evidence": "predicts[K3].note, kill K3, ladder step7, body all state '1.0025-1.0093 (20 seeds), window ~30x the effect, power ~0, window not narrowed post hoc'. Audit: range 1.002538-1.009265, upper margin/effect = 27.0x."
+    },
+    {
+      "id": 4,
+      "item": "ladder step3 cluster tuple (2,4,5) inconsistent with body (2,5,4)",
+      "resolved": true,
+      "evidence": "step3 now reads (2,5,4) with explicit ordering '(trivial, [3,2], std 순; consistency_checks 와 같은 순서쌍)'. Matches observed W multiplicities [2,5,4]."
+    },
+    {
+      "id": 5,
+      "item": "m=39 and lstar^2=62.0688 are NOT convention free (gauge choice)",
+      "resolved": true,
+      "evidence": "formula_latex header now says '게이지 규약·|S_c| 부호 선택에는 조건부', '분자만 게이지 고정'; scope[3] states 39 vs 35 -> 62.0688 vs 55.7028 (10.3% lower). Matches c7 spread 0.10256."
+    },
+    {
+      "id": 6,
+      "item": "'additivity selects gauge convention m=39' is an unexecuted assumption, not observation",
+      "resolved": true,
+      "evidence": "scope[1] and ladder step6 both say two_level 미실행 -> 현재는 가정, K1 이 시험한다, '사전등록 예측이지 관측이 아니다'."
+    },
+    {
+      "id": 7,
+      "item": "convention-free numbers are exactly two, with multiplicities",
+      "resolved": true,
+      "evidence": "formula_latex and scope[3]: '[3,2] sigma2_W=rho_R=0.3208245916 (2.2e-16), trivial sigma2=0 (중복 2)'. Matches c8: 3208245916033..., abs_diff 2.22e-16, trivial mult 2 in both R and W, [3,2] mult 5 in both. std sector convention dependent."
+    },
+    {
+      "id": 8,
+      "item": "P convention incompatible with gauge fixing (rank 35) must be recorded as observation",
+      "resolved": true,
+      "evidence": "scope[3] '관측: P 는 게이지 고정과 양립하지 않는다(rank(KᵀV_+)=35<39) — P35 로 대체', predicts[4] reports d_P35 and rank_P, body repeats it. Matches c7 rank_[Gam;g]=39, c2 P35 lstar 55.7028."
+    }
+  ],
+  "new_defects": [
+    {
+      "level": "P2",
+      "item": "K3 '약 30배' is the upper-margin ratio 27.0x (or 48.6x for full window width 0.45); the card quotes the auditor's own round figure. Direction and order of magnitude correct, no effect on any kill number."
+    },
+    {
+      "level": "P2",
+      "item": "recovers[1] cites 'glued Schur 2.4e-8' from F-02 predict; the auditor's independent direct fine->glued route gives 3.05e-8 (c3, pass), while a naive A-BC^+B^T route fails (c2 recover_glued_schur pass=false). Same order of magnitude, but the card does not say which route produces 2.4e-8."
+    },
+    {
+      "level": "none",
+      "item": "K1 'exact identity prediction' wording checked: toy block-diagonal counterexample gives residual 0.047 (c6), so additivity is NOT a generic linear-algebra theorem. The claim is therefore falsifiable and content-bearing, not tautological."
+    }
+  ],
+  "residual_P1": [
+    {
+      "item": "steps 6-7 unexecuted: K1/K2/K3/K4 all 미실행. The card is a conjecture, not a theorem.",
+      "status": "expected for [공리: 후보]; card states 미실행 in every relevant note"
+    },
+    {
+      "item": "K3 retains power ~0 for the ratio condition. Disclosed in card, window correctly frozen. Effectively K3 tests only sign(S_hat_c).",
+      "status": "disclosed, not concealed - acceptable at card stage"
+    }
+  ],
+  "checks": {
+    "dimension": "pass (unchanged)",
+    "recovers": "5/5 pass (unchanged; empty K, glued Schur, sigma=0, F-02 bridge, scale 2->8)",
+    "dof": "pass - 0 free parameters vs 10 pre-registered predicts (6 observed + 4 unobserved)",
+    "content": "pass - the two-part budget no longer overclaims: derivative-level competition only, Gamma_min>0 stated, lstar declared axiom-conditional",
+    "kill_executable": "pass with disclosure - K1/K2/K4 executable (FD noise 3.3e-4 << 1e-2), K3 power ~0 disclosed",
+    "ladder_complete": "pass - 7 steps, step3 tuple fixed, steps 6-7 pre-registered and unexecuted"
+  },
+  "status": "pass",
+  "severity": "P2",
+  "adopt_recommended": true,
+  "adopt_note": "[공리: 후보] adoptable. Three declared axioms (Gaussian measure, gauge-in-numerator, |S_c| sign) are explicit and un-derived, as the ceiling permits. Preregistration byte-identical to rev1. Remaining defects are P2 wording only."
+}

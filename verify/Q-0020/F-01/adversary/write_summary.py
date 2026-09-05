@@ -1,0 +1,35 @@
+import json
+from pathlib import Path
+HERE = Path(__file__).resolve().parent
+s = {
+ "card": "Q-0020 F-01", "mode": "card_audit", "model": "opus",
+ "checks": {
+  "dimension": "pass - all of l/lP, kappa=l^2/8pi lP^2, S_hat_c, sigma^2, rho, m are dimensionless; ln argument dimensionless",
+  "recovers": "5/5 executed and pass (empty K, glued Schur 3e-8, sigma=0 with d_iso err 7e-15, F-02 bridge 3.4e-15, scale 2->8 1.6e-6)",
+  "dof": "pass - 0 free parameters vs 12 observed + 6 unobserved pre-registered numbers",
+  "content": "PARTIAL - budget has 2 parts but they never trade dominance (Gamma_min>0 in all conventions); lstar exists only under the |S_c| sign choice",
+  "kill_executable": "K1/K4 executable (FD noise 3.3e-4 << 1e-2 window); K2 executable; K3 power ~0",
+  "ladder_complete": "7 steps, steps 6-7 unexecuted; step 3 cluster tuple notation inconsistent with body"
+ },
+ "independent_reimplementation": {
+  "routes": ["QR orthonormal basis", "Schur complement inverse", "Cholesky (W)", "delta-regularized Monte Carlo toy"],
+  "d_R_reproduced": 7.4820420273383474, "d_W_reproduced": 4.19759651263711,
+  "max_basis_dependence": 4.17e-14, "toy_identity_rel_err": 1.75e-3
+ },
+ "convention_free_numbers": [
+  {"quantity": "[3,2] sector sigma^2 = rho = 0.3208245916", "scope": "R and W agree to 2.2e-16 - genuinely convention free across the two sign conventions"},
+  {"quantity": "trivial sigma^2 = 0 (multiplicity 2)", "scope": "exact in both"},
+  {"quantity": "m = 39", "scope": "NOT convention free: 39 only under gauge-in-numerator; gauge-in-both gives 35"},
+  {"quantity": "lstar^2/lP^2 = 62.0688", "scope": "NOT convention free: = 4 pi m / S_hat_c, linear in m; P35 and gauge-in-both both give 55.7028 (10.3% lower); also requires S_c>0 sign choice"},
+  {"quantity": "d, Gamma_min, l_Omega", "scope": "convention dependent (card admits)"}
+ ],
+ "k3_power": {"prereg_amplitude": 0.1, "observed_ratio_range_20_seeds": [1.0025, 1.0093],
+              "window": [0.8, 1.25], "amplitude_needed_to_exit_window": 0.5,
+              "verdict": "auto-pass, power ~0"},
+ "k1_k4_noise": {"fd_spread_level1_d_R": 2.78e-5, "projected_468_mode_noise": 3.34e-4, "tol": 1e-2, "executable": True},
+ "k1_generic": {"toy_residuals": [0.0466, 0.0115, 0.0005, 0.0076, 0.0161],
+                "verdict": "additivity is NOT a generic linear-algebra theorem; K1 has real content"},
+ "sign_flip": {"S_c_negative_GHP": "no stationary point, Gamma_eff monotonically decreasing, lstar vanishes"},
+}
+(HERE/"SUMMARY.json").write_text(json.dumps(s, ensure_ascii=True, indent=2), encoding="utf-8")
+print(json.dumps(s, ensure_ascii=True, indent=1))

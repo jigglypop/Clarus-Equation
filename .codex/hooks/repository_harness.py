@@ -11,6 +11,7 @@ from typing import Iterable
 REPO_ROOT = Path(__file__).resolve().parents[2]
 CANONICAL_PAPER_ROOT = "paper"
 RETIRED_DOCUMENT_ROOT = "do" + "cs"
+WEB_URL = re.compile(r"https?://[^\s<>()\[\]\"'`]+", re.IGNORECASE)
 ACTIVE_TEXT_PATHS = (
     Path("AGENTS.md"),
     Path("README.md"),
@@ -110,7 +111,9 @@ def find_retired_path_references(
     for path in iter_active_text_files(root, relative_paths):
         text = path.read_text(encoding="utf-8-sig")
         for line_number, line in enumerate(text.splitlines(), start=1):
-            if any(pattern in line for pattern in patterns):
+            # 외부 문서 URL과 저장소에서 폐기한 상대 경로를 구분한다.
+            local_text = WEB_URL.sub("", line)
+            if any(pattern in local_text for pattern in patterns):
                 violations.append(
                     f"{path.relative_to(root)}:{line_number}: retired path reference"
                 )

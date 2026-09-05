@@ -22,7 +22,7 @@ description: CE 런타임의 무차원성·브리지·계층·회귀 테스트�
 현재 interpreter가 필요한 dependency를 이미 제공하면 `uv run`으로 다시 감싸지 않는다.
 Windows agent 실행에서는 먼저 `.codex/hooks/python.cmd doctor`를 확인하고, pytest는 같은 래퍼의 `pytest` 모드로 실행한다. 차단된 `.venv`나 대화형 uv 프롬프트를 기다리거나 우회하지 않는다.
 
-`reality_stone` 제거 후 저장소 전체의 무기록 Python 구문 검사는 `.codex/hooks/python.cmd source`를 사용한다. 이 모드는 `.codex`, `tests`, `examples`, `experiments`, `paper`의 `.py`를 메모리에서 AST 파싱하며 pyc나 cache를 만들지 않는다. focused pytest가 제거된 모듈을 요구하면 환경 실패로 기록하고 독립 실행 가능한 가장 가까운 테스트를 선택한다.
+`reality_stone` 제거 후 저장소 전체의 무기록 Python 구문 검사는 `.codex/hooks/python.cmd source`를 사용한다. 이 모드는 `.codex`, `.claude`, `scripts`, `verify`, `tests`, `examples`, `experiments`, `paper`의 `.py`를 메모리에서 AST 파싱하며 pyc나 cache를 만들지 않는다. focused pytest가 제거된 모듈을 요구하면 환경 실패로 기록하고 독립 실행 가능한 가장 가까운 테스트를 선택한다.
 
 ## 절차
 

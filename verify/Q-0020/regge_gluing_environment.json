@@ -1,0 +1,222 @@
+{
+  "python_version": "3.11.9",
+  "numpy_version": "2.4.6",
+  "source_sha256": {
+    "regge_gluing_environment.py": "de627cf156e73e61e31aadfd74f7a06252c373c71d14647dcc57f3a8ba33c42c",
+    "length_gluing_bath.py": "e68bd4877836cee4548eb79c97bf69deb0352917373e00c474e1fb57fa3f64ec",
+    "local_refinement_bath.py": "103f6cb25fd8b9ef8e86b0733b1f5bdc2199aa464d6370447a7a926ce8c2c9ad",
+    "continuum_bath.py": "42675f0b049eaa7bc28979398fecbde120ab74bceebe51133c1d53ae85f4170e",
+    "F-01/predict_fold_budget.py": "7a7d62d985ac112f8944a9528d91d7319974d0c3a36c4ec97cbb376fac31aa8b",
+    "F-01/regge_one_to_five_boundary_hessian.py": "85953e5664bbb0c0ea242d3ac05e2b4f63e0871aa7383781dae2975592e9e4a4",
+    "F-01/regge_one_to_five_refinement.py": "0fcdc7c05ded2c739d1ef110c61a9c06014d85b92c710c2466707286619e6972"
+  },
+  "geometry": [
+    {
+      "difference_step": 0.002,
+      "coarse_spectrum": [
+        -4.781030658362046,
+        -4.781030658362046,
+        -4.781030658362046,
+        -4.781030658362046,
+        -4.781030658362046,
+        -1.557427278727569,
+        -1.557427278727569,
+        -1.557427278727569,
+        -1.557427278727569,
+        1.5791770431634369
+      ],
+      "coarse_hessian_difference": 1.8247445297115865e-08,
+      "section_pullback_difference": 3.644465247101002e-07,
+      "cycle_gluing_residual": 0.0,
+      "cycle_internal_section_residual": 0.0,
+      "cycle_exact_curvature": -4.781030658362046,
+      "cycle_raw_curvature": -4.781030654821272,
+      "penalty_curvatures": [
+        {
+          "strength": 0.0,
+          "curvature": -4.781030654821272
+        },
+        {
+          "strength": 1.0,
+          "curvature": -4.781030654821272
+        },
+        {
+          "strength": 100.0,
+          "curvature": -4.781030654821279
+        },
+        {
+          "strength": 10000.0,
+          "curvature": -4.781030654820551
+        }
+      ],
+      "fixed_boundary_radial_curvature": 89.4427176951947,
+      "fixed_boundary_exact_radial_curvature": 89.44271909999159,
+      "fixed_boundary_gauge_residual": 5.984571549535726e-07,
+      "frequency_checks": [
+        {
+          "frequency": 0.0,
+          "schur_residual": 9.062099802400752e-16,
+          "correction_on_glued_residual": 0.0
+        },
+        {
+          "frequency": 0.1,
+          "schur_residual": 2.357875541382791e-15,
+          "correction_on_glued_residual": 5.659701499187686e-19
+        },
+        {
+          "frequency": 1.0,
+          "schur_residual": 2.367235969820209e-15,
+          "correction_on_glued_residual": 3.6880726988814706e-17
+        },
+        {
+          "frequency": 10.0,
+          "schur_residual": 4.713218745517821e-14,
+          "correction_on_glued_residual": 9.51413198280327e-17
+        }
+      ],
+      "memory_on_glued_residual": 8.210209988395745e-17,
+      "noise_on_glued_residual": 6.397344083151129e-17,
+      "mass_shift_on_glued_residual": 5.5075762930801937e-17,
+      "unconstrained_flow_mixing_residual": 67.97272634374039,
+      "boundary_precision_threshold": 4.781030658362046,
+      "boundary_state_alternatives": [
+        {
+          "supplied_boundary_precision": 5.281030658362046,
+          "smallest_curvature": 0.499999999999998,
+          "cycle_variance": 2.0000000000000004
+        },
+        {
+          "supplied_boundary_precision": 5.781030658362046,
+          "smallest_curvature": 0.9999999999999992,
+          "cycle_variance": 1.0
+        }
+      ],
+      "rotated_curvature_residual": 7.281792106598043e-15,
+      "contour_phase_in_spectral_coordinates": [
+        0.0,
+        1.0
+      ],
+      "conjugate_contour_phase": [
+        0.0,
+        -1.0
+      ],
+      "full_nonlinear_regge_integral_tested": false,
+      "lorentzian_instability_inferred": false
+    },
+    {
+      "difference_step": 0.001,
+      "coarse_spectrum": [
+        -4.781030658362046,
+        -4.781030658362046,
+        -4.781030658362046,
+        -4.781030658362046,
+        -4.781030658362046,
+        -1.557427278727569,
+        -1.557427278727569,
+        -1.557427278727569,
+        -1.557427278727569,
+        1.5791770431634369
+      ],
+      "coarse_hessian_difference": 5.0432163960923787e-08,
+      "section_pullback_difference": 4.350805464919398e-08,
+      "cycle_gluing_residual": 0.0,
+      "cycle_internal_section_residual": 0.0,
+      "cycle_exact_curvature": -4.781030658362046,
+      "cycle_raw_curvature": -4.781030650657936,
+      "penalty_curvatures": [
+        {
+          "strength": 0.0,
+          "curvature": -4.781030650657936
+        },
+        {
+          "strength": 1.0,
+          "curvature": -4.781030650657936
+        },
+        {
+          "strength": 100.0,
+          "curvature": -4.781030650657922
+        },
+        {
+          "strength": 10000.0,
+          "curvature": -4.781030650655303
+        }
+      ],
+      "fixed_boundary_radial_curvature": 89.44271901224117,
+      "fixed_boundary_exact_radial_curvature": 89.44271909999159,
+      "fixed_boundary_gauge_residual": 4.072983263754185e-08,
+      "frequency_checks": [
+        {
+          "frequency": 0.0,
+          "schur_residual": 1.2676734380733507e-15,
+          "correction_on_glued_residual": 0.0
+        },
+        {
+          "frequency": 0.1,
+          "schur_residual": 2.5202221056452986e-15,
+          "correction_on_glued_residual": 5.659701499187686e-19
+        },
+        {
+          "frequency": 1.0,
+          "schur_residual": 2.1971051825603826e-15,
+          "correction_on_glued_residual": 3.6880726988814706e-17
+        },
+        {
+          "frequency": 10.0,
+          "schur_residual": 4.713218745517821e-14,
+          "correction_on_glued_residual": 9.51413198280327e-17
+        }
+      ],
+      "memory_on_glued_residual": 8.210209988395745e-17,
+      "noise_on_glued_residual": 6.397344083151129e-17,
+      "mass_shift_on_glued_residual": 5.5075762930801937e-17,
+      "unconstrained_flow_mixing_residual": 67.97272712849029,
+      "boundary_precision_threshold": 4.781030658362046,
+      "boundary_state_alternatives": [
+        {
+          "supplied_boundary_precision": 5.281030658362046,
+          "smallest_curvature": 0.499999999999998,
+          "cycle_variance": 2.0000000000000004
+        },
+        {
+          "supplied_boundary_precision": 5.781030658362046,
+          "smallest_curvature": 0.9999999999999992,
+          "cycle_variance": 1.0
+        }
+      ],
+      "rotated_curvature_residual": 7.281792106598043e-15,
+      "contour_phase_in_spectral_coordinates": [
+        0.0,
+        1.0
+      ],
+      "conjugate_contour_phase": [
+        0.0,
+        -1.0
+      ],
+      "full_nonlinear_regge_integral_tested": false,
+      "lorentzian_instability_inferred": false
+    }
+  ],
+  "initial_slip": {
+    "samples": 241,
+    "time": 0.2,
+    "with_initial_slip_residual": 1.76323585944407e-14,
+    "omitting_initial_slip_residual": 0.043115291511238885,
+    "slip_norm": 0.04311529151123053,
+    "bath_mean_initially_zero": true,
+    "conditional_displaced_initial_state": false
+  },
+  "scope": {
+    "system_mass_supplied": true,
+    "bath_spectrum_and_temperature_supplied": true,
+    "counterterm_preserves_static_hessian": true,
+    "damping_and_noise_computed_from_same_supplied_action": true,
+    "gluing_environment_selects_system_kinetic_mass": false,
+    "boundary_integrated_real_quadratic_measure_stabilized": false,
+    "fixed_boundary_glued_gauge_quotient_positive": true,
+    "boundary_state_precision_uniquely_derived": false,
+    "complex_contour_is_real_length_probability": false,
+    "physical_regge_time_dynamics_derived": false,
+    "common_metric_selected": false,
+    "continuum_einstein_limit_derived": false
+  }
+}

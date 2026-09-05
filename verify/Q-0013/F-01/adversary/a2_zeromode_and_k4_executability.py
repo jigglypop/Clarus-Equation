@@ -12,10 +12,10 @@ from scipy.stats import norm as _norm
 
 ROOT = Path(r"C:/dev/ce/Clarus-Equation")
 sys.path.insert(0, str(ROOT))
-from examples.physics.causal_face_simplicity import (  # noqa: E402
+from examples.physics.gravity.causal_face_simplicity import (  # noqa: E402
     geometric_self_dual_triple, plebanski_gram, simplicity_residual, wedge_scalar,
 )
-from examples.physics.urbantke_shape_matching_rg import (  # noqa: E402
+from examples.physics.gravity.urbantke_shape_matching_rg import (  # noqa: E402
     cross_wedge_matrix, optimal_internal_alignment,
 )
 

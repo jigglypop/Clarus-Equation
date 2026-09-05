@@ -3,7 +3,7 @@ import math
 import numpy as np
 import pytest
 
-from examples.physics.curved_plebanski_hinge import (
+from examples.physics.gravity.curved_plebanski_hinge import (
     constructive_curved_plebanski_hinge_witness,
     curved_hinge_trace_audit,
     de_sitter_plebanski_point_audit,
