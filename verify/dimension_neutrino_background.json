@@ -1,0 +1,138 @@
+{
+  "rows": [
+    {
+      "beta": 0.0,
+      "base": {
+        "H0_over_Href": 1.0,
+        "q_today": 0.0,
+        "masses_today_eV": [
+          0.0,
+          0.008654478609367522,
+          0.050129831437977126
+        ],
+        "DM_Href_over_c_at_z_038_0698_148": [
+          0.3458400485445696,
+          0.5833153685811583,
+          1.0091348936014461
+        ],
+        "maximum_raychaudhuri_constraint_error": 1.3055112546567216e-12,
+        "Lambda_input": 2.095655831234277
+      },
+      "refined": {
+        "H0_over_Href": 1.0,
+        "q_today": 0.0,
+        "masses_today_eV": [
+          0.0,
+          0.008654478609367522,
+          0.050129831437977126
+        ],
+        "DM_Href_over_c_at_z_038_0698_148": [
+          0.3458400485445696,
+          0.5833153685811587,
+          1.009134893601447
+        ],
+        "maximum_raychaudhuri_constraint_error": 1.1466383398328617e-12,
+        "Lambda_input": 2.095655831234277
+      },
+      "relative_distance_refinement": [
+        0.0,
+        6.661338147750939e-16,
+        8.881784197001252e-16
+      ]
+    },
+    {
+      "beta": 0.1,
+      "base": {
+        "H0_over_Href": 0.9999999999999338,
+        "q_today": 0.0001836676999212504,
+        "masses_today_eV": [
+          0.0,
+          0.008654637565645294,
+          0.05013075216951629
+        ],
+        "DM_Href_over_c_at_z_038_0698_148": [
+          0.345839943855736,
+          0.5833150422748696,
+          1.0091340805281577
+        ],
+        "maximum_raychaudhuri_constraint_error": 1.017297357464031e-12,
+        "Lambda_input": 2.0956533509821225
+      },
+      "refined": {
+        "H0_over_Href": 0.9999999999999338,
+        "q_today": 0.00018366769992790238,
+        "masses_today_eV": [
+          0.0,
+          0.0086546375656453,
+          0.050130752169516325
+        ],
+        "DM_Href_over_c_at_z_038_0698_148": [
+          0.34583994385573513,
+          0.5833150422748696,
+          1.0091340805281575
+        ],
+        "maximum_raychaudhuri_constraint_error": 9.943157408542902e-13,
+        "Lambda_input": 2.0956533509821225
+      },
+      "relative_distance_refinement": [
+        -2.55351295663786e-15,
+        0.0,
+        -2.220446049250313e-16
+      ]
+    },
+    {
+      "beta": 1.0,
+      "base": {
+        "H0_over_Href": 1.0000000000000098,
+        "q_today": 0.0018182958923578737,
+        "masses_today_eV": [
+          0.0,
+          0.00867022932766704,
+          0.050221065224438546
+        ],
+        "DM_Href_over_c_at_z_038_0698_148": [
+          0.3458298004571452,
+          0.5832834145473984,
+          1.009055165410326
+        ],
+        "maximum_raychaudhuri_constraint_error": 9.747758156208874e-13,
+        "Lambda_input": 2.0954128517335455
+      },
+      "refined": {
+        "H0_over_Href": 1.00000000000001,
+        "q_today": 0.0018182958924230124,
+        "masses_today_eV": [
+          0.0,
+          0.008670229327667606,
+          0.050221065224441815
+        ],
+        "DM_Href_over_c_at_z_038_0698_148": [
+          0.3458298004571452,
+          0.5832834145473971,
+          1.009055165410322
+        ],
+        "maximum_raychaudhuri_constraint_error": 8.548717289613705e-13,
+        "Lambda_input": 2.095412851733535
+      },
+      "relative_distance_refinement": [
+        0.0,
+        -2.3314683517128287e-15,
+        -3.9968028886505635e-15
+      ]
+    }
+  ],
+  "status": "supplied_neutrino_only_exponential_branch_no_fit",
+  "initial_state": "scalar positions and velocities zero at a=0.01",
+  "input_masses": "NuFIT60 IC24+SK NO rank-two conditional masses at q=0",
+  "normalization_inputs": {
+    "Mpl_eV": 2.435e+27,
+    "Href_eV": 1.4377e-33,
+    "Tnu0_eV": 0.000168,
+    "Omega_cold": 0.3,
+    "Omega_photon": 5e-05,
+    "Mstar_over_Href": 3
+  },
+  "scope": "homogeneous adiabatic collisionless neutrinos; independent initial/boundary inputs",
+  "joint_rmse": null,
+  "scientific_success": false
+}

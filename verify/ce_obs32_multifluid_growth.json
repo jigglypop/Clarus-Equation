@@ -1,0 +1,225 @@
+{
+  "scope": "three nonrelativistic conserved equal-number populations plus baryons; short-wave long-range limit",
+  "assumptions": [
+    "same supplied adiabatic preparation",
+    "no collisions or conversion between eigenstates",
+    "no primordial normalization or survey likelihood"
+  ],
+  "baseline": {
+    "D_today": 0.7789810167707882,
+    "f_today": 0.5127962477302371,
+    "dark_contrasts_over_baryon": [
+      1.0,
+      1.0,
+      1.0000000000000002
+    ],
+    "species_q": [
+      9.83053988819077e-18,
+      -0.1554404570895146,
+      0.15544045708951465
+    ]
+  },
+  "cases": [
+    {
+      "r": 0.15,
+      "initial_theta": 0.1,
+      "D_today": 0.779328428953533,
+      "f_today": 0.5134235326135757,
+      "dark_contrasts_over_baryon": [
+        1.0000033497784921,
+        1.0001252397278009,
+        0.999872391658257
+      ],
+      "species_q": [
+        -0.0014861305379680306,
+        -0.05035637468251766,
+        0.051426857733356555
+      ],
+      "wavelength_checks": [
+        {
+          "k_h_Mpc": 0.01,
+          "max_aH_over_k_squared": 0.033452651605561,
+          "max_abs_scalar_mass_squared_over_physical_k_squared": 0.0011625444751558096,
+          "finite_mass_D_relative_change": 3.668176873361517e-13
+        },
+        {
+          "k_h_Mpc": 0.1,
+          "max_aH_over_k_squared": 0.00033452651605561,
+          "max_abs_scalar_mass_squared_over_physical_k_squared": 1.1625444751558095e-05,
+          "finite_mass_D_relative_change": 3.9968028886505635e-15
+        }
+      ],
+      "D_change_from_baseline_percent": 0.044598286128327835,
+      "D_change_from_effective_fluid_percent": -2.510634766750286e-06,
+      "solver_absolute_difference": 9.037215420448774e-14
+    },
+    {
+      "r": 0.15,
+      "initial_theta": 0.3,
+      "D_today": 0.7821088654528926,
+      "f_today": 0.5184613205335343,
+      "dark_contrasts_over_baryon": [
+        1.0000299599892193,
+        1.0003640389599397,
+        0.9996146534182511
+      ],
+      "species_q": [
+        -0.004451443604510665,
+        -0.04887101118064556,
+        0.05209840141546925
+      ],
+      "wavelength_checks": [
+        {
+          "k_h_Mpc": 0.01,
+          "max_aH_over_k_squared": 0.034042145375179966,
+          "max_abs_scalar_mass_squared_over_physical_k_squared": 0.0011199994071964731,
+          "finite_mass_D_relative_change": 3.1363800445660672e-12
+        },
+        {
+          "k_h_Mpc": 0.1,
+          "max_aH_over_k_squared": 0.00034042145375179974,
+          "max_abs_scalar_mass_squared_over_physical_k_squared": 1.119999407196473e-05,
+          "finite_mass_D_relative_change": 3.086420008457935e-14
+        }
+      ],
+      "D_change_from_baseline_percent": 0.4015307966130699,
+      "D_change_from_effective_fluid_percent": -2.211326624035337e-05,
+      "solver_absolute_difference": 1.0014211682118912e-13
+    },
+    {
+      "r": 0.15,
+      "initial_theta": 0.5,
+      "D_today": 0.7876747562257737,
+      "f_today": 0.5286391503925245,
+      "dark_contrasts_over_baryon": [
+        1.0000821605065877,
+        1.0005797227728206,
+        0.9993611787353962
+      ],
+      "species_q": [
+        -0.007395784833227583,
+        -0.04696387426799032,
+        0.05239423863703101
+      ],
+      "wavelength_checks": [
+        {
+          "k_h_Mpc": 0.01,
+          "max_aH_over_k_squared": 0.03524742955354745,
+          "max_abs_scalar_mass_squared_over_physical_k_squared": 0.0010332973075283598,
+          "finite_mass_D_relative_change": 7.852829497778657e-12
+        },
+        {
+          "k_h_Mpc": 0.1,
+          "max_aH_over_k_squared": 0.00035247429553547443,
+          "max_abs_scalar_mass_squared_over_physical_k_squared": 1.0332973075283601e-05,
+          "finite_mass_D_relative_change": 7.860379014346108e-14
+        }
+      ],
+      "D_change_from_baseline_percent": 1.1160399634672302,
+      "D_change_from_effective_fluid_percent": -5.880638956901052e-05,
+      "solver_absolute_difference": 1.142419492339286e-13
+    },
+    {
+      "r": 0.35,
+      "initial_theta": 0.1,
+      "D_today": 0.7793534232020312,
+      "f_today": 0.5134697081878743,
+      "dark_contrasts_over_baryon": [
+        1.0000109008271647,
+        1.0006973975431246,
+        0.99932087224865
+      ],
+      "species_q": [
+        -0.00277481224790243,
+        -0.15755608863243725,
+        0.15310198182976217
+      ],
+      "wavelength_checks": [
+        {
+          "k_h_Mpc": 0.01,
+          "max_aH_over_k_squared": 0.03345807280213825,
+          "max_abs_scalar_mass_squared_over_physical_k_squared": 0.0011549596278924378,
+          "finite_mass_D_relative_change": 3.358049394108775e-10
+        },
+        {
+          "k_h_Mpc": 0.1,
+          "max_aH_over_k_squared": 0.0003345807280213825,
+          "max_abs_scalar_mass_squared_over_physical_k_squared": 1.1549596278924378e-05,
+          "finite_mass_D_relative_change": 3.3568703372566233e-12
+        }
+      ],
+      "D_change_from_baseline_percent": 0.047806868617494835,
+      "D_change_from_effective_fluid_percent": -5.13703609761329e-05,
+      "solver_absolute_difference": 9.636735853746359e-14
+    },
+    {
+      "r": 0.35,
+      "initial_theta": 0.3,
+      "D_today": 0.7823326709987791,
+      "f_today": 0.5188780489818885,
+      "dark_contrasts_over_baryon": [
+        1.000097354881379,
+        1.0021199301667327,
+        0.998040492453744
+      ],
+      "species_q": [
+        -0.008317941465508637,
+        -0.16096211652478282,
+        0.1478947268702131
+      ],
+      "wavelength_checks": [
+        {
+          "k_h_Mpc": 0.01,
+          "max_aH_over_k_squared": 0.03409147585901197,
+          "max_abs_scalar_mass_squared_over_physical_k_squared": 0.0011106683256190142,
+          "finite_mass_D_relative_change": 2.9126987488581335e-09
+        },
+        {
+          "k_h_Mpc": 0.1,
+          "max_aH_over_k_squared": 0.0003409147585901197,
+          "max_abs_scalar_mass_squared_over_physical_k_squared": 1.110668325619014e-05,
+          "finite_mass_D_relative_change": 2.911826335605383e-11
+        }
+      ],
+      "D_change_from_baseline_percent": 0.43026134858650256,
+      "D_change_from_effective_fluid_percent": -0.00045044629032320316,
+      "solver_absolute_difference": 9.880984919163893e-14
+    },
+    {
+      "r": 0.35,
+      "initial_theta": 0.5,
+      "D_today": 0.7882897160416833,
+      "f_today": 0.5298020790718767,
+      "dark_contrasts_over_baryon": [
+        1.000266203255117,
+        1.003527145214053,
+        0.9968964485843467
+      ],
+      "species_q": [
+        -0.013841013425317962,
+        -0.162978318447471,
+        0.14218061048484562
+      ],
+      "wavelength_checks": [
+        {
+          "k_h_Mpc": 0.01,
+          "max_aH_over_k_squared": 0.03538737073386827,
+          "max_abs_scalar_mass_squared_over_physical_k_squared": 0.0010200103299809026,
+          "finite_mass_D_relative_change": 7.483028419130733e-09
+        },
+        {
+          "k_h_Mpc": 0.1,
+          "max_aH_over_k_squared": 0.00035387370733868273,
+          "max_abs_scalar_mass_squared_over_physical_k_squared": 1.0200103299809025e-05,
+          "finite_mass_D_relative_change": 7.480704944384797e-11
+        }
+      ],
+      "D_change_from_baseline_percent": 1.1949840972355963,
+      "D_change_from_effective_fluid_percent": -0.00118649645425295,
+      "solver_absolute_difference": 9.681144774731365e-14
+    }
+  ],
+  "fitted_parameters": 0,
+  "growth_observational_rmse": null,
+  "joint_rmse": null
+}

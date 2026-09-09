@@ -1,0 +1,72 @@
+{
+  "cases": [
+    {
+      "r": 0.15,
+      "order": 256,
+      "relative_flow_feedback": true,
+      "kappa": 0.05094267081084933,
+      "initial_number_density_GeV3": 3.5555466270465086e-31,
+      "particles_in_effective_initial_Hubble_window": 3.35873723622712e+88,
+      "initial_relative_density_rms": 5.456472684996911e-45,
+      "final_relative_density_rms": 5.836894924167747e-37,
+      "final_phase_rms": 4.480407008787229e-34,
+      "independent_mode_checks": [
+        {
+          "initial_p_over_H": 0.00017579992403105038,
+          "relative_mode_difference": 4.3965053819761124e-11
+        },
+        {
+          "initial_p_over_H": 0.9916372536980318,
+          "relative_mode_difference": 3.383515689847627e-11
+        },
+        {
+          "initial_p_over_H": 2.010620152591274,
+          "relative_mode_difference": 1.4609424781042435e-11
+        }
+      ],
+      "initial_relative_noise_rms_needed_for_final_phase_0p1": 1.2178520108319104e-12,
+      "quadrature_refinement_relative": 9.836575998178887e-14,
+      "frozen_relative_density_final_phase_rms": 1.7677014505360146e-34,
+      "feedback_over_frozen_rms": 2.5345948590066776
+    },
+    {
+      "r": 0.35,
+      "order": 256,
+      "relative_flow_feedback": true,
+      "kappa": 0.15544045708951465,
+      "initial_number_density_GeV3": 7.789708342389355e-31,
+      "particles_in_effective_initial_Hubble_window": 7.358488086255182e+88,
+      "initial_relative_density_rms": 3.686427561940638e-45,
+      "final_relative_density_rms": 1.297313195047647e-32,
+      "final_phase_rms": 7.1032241987528775e-31,
+      "independent_mode_checks": [
+        {
+          "initial_p_over_H": 0.00017579992403105038,
+          "relative_mode_difference": 4.836619993398017e-11
+        },
+        {
+          "initial_p_over_H": 0.9916372536980318,
+          "relative_mode_difference": 3.710187712613333e-11
+        },
+        {
+          "initial_p_over_H": 2.010620152591274,
+          "relative_mode_difference": 1.6226131549501588e-11
+        }
+      ],
+      "initial_relative_noise_rms_needed_for_final_phase_0p1": 5.189794745022788e-16,
+      "quadrature_refinement_relative": 1.5076828674409626e-13,
+      "frozen_relative_density_final_phase_rms": 5.199853868403656e-34,
+      "feedback_over_frozen_rms": 1366.0430424621823
+    }
+  ],
+  "fitted_parameters": [],
+  "initial_state": "Independent cold Poisson species counts, equal mean light populations, compensated relative mode.",
+  "window": "Fixed comoving Gaussian region of initial Hubble radius at ai=.01.",
+  "initial_covariance_from_creation_derived": false,
+  "full_joint_rmse": null,
+  "limitations": [
+    "Cold collisionless fluid; quantum pair correlations and velocity dispersion omitted.",
+    "No replacement of stochastic RMS by coherent background phase.",
+    "Compensated relative mode only, not full adiabatic density growth or CMB."
+  ]
+}

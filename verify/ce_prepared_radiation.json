@@ -1,0 +1,69 @@
+{
+  "scope": "conditional mean preparation plus post-annihilation background",
+  "H_I_GeV": 10000000.0,
+  "formation_H_R_GeV": 8.5471961e-45,
+  "omega_b_h2": 0.02237,
+  "T0_K": 2.7255,
+  "Neff_massless": 3.046,
+  "initial_theta": 0.5,
+  "ai": 1e-08,
+  "cases": [
+    {
+      "r": 0.15,
+      "N_pre": 60,
+      "prepared_omega_c_h2": 4.874332035710867e-11,
+      "evolved_omega_c_h2": 4.873970636433924e-11,
+      "conditional_H0": 54.76963560818712,
+      "theta_today": 0.7056182951688537,
+      "theta_N_today": 0.28117458537660694,
+      "AP_rmse": 7.650575881989332,
+      "conservation_error": 6.078225293373802e-16,
+      "solver_max_AP_difference": 4.3209880118411093e-13
+    },
+    {
+      "r": 0.15,
+      "N_pre": 100000000000,
+      "prepared_omega_c_h2": 0.08123886726184777,
+      "evolved_omega_c_h2": 0.08123602868853359,
+      "conditional_H0": 62.421563928983524,
+      "theta_today": 0.5946741529124162,
+      "theta_N_today": 0.17416806341743432,
+      "AP_rmse": 1.2575764031159713,
+      "conservation_error": 8.523425788146822e-16,
+      "solver_max_AP_difference": 3.1796787425264483e-13
+    },
+    {
+      "r": 0.35,
+      "N_pre": 60,
+      "prepared_omega_c_h2": 3.459489916338764e-11,
+      "evolved_omega_c_h2": 3.454834196395956e-11,
+      "conditional_H0": 54.815599312785864,
+      "theta_today": 0.7033156888482548,
+      "theta_N_today": 0.2776852207771745,
+      "AP_rmse": 7.658267331158756,
+      "conservation_error": 6.809925601151712e-16,
+      "solver_max_AP_difference": 2.62234678416462e-13
+    },
+    {
+      "r": 0.35,
+      "N_pre": 100000000000,
+      "prepared_omega_c_h2": 0.05765816527231274,
+      "evolved_omega_c_h2": 0.05759084757158687,
+      "conditional_H0": 59.95745596410469,
+      "theta_today": 0.6777345581311751,
+      "theta_N_today": 0.21531579246826038,
+      "AP_rmse": 2.180849769979851,
+      "conservation_error": 1.2406913788539452e-15,
+      "solver_max_AP_difference": 1.2612133559741778e-13
+    }
+  ],
+  "fitted_parameters": 0,
+  "joint_rmse": null,
+  "missing": [
+    "inflation and reheating dynamics",
+    "massive neutrino transition",
+    "recombination",
+    "primordial perturbations",
+    "full quantum-sector backreaction"
+  ]
+}

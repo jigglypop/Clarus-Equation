@@ -1,0 +1,271 @@
+{
+  "archive_sha256": "5de467e4b9964ff227b9ec9c8bb82c64a17183a4c754e6ee5f142d758f75ce91",
+  "original_manifest_entries_verified": 29,
+  "unmodified_source_entries_after_run": 15,
+  "runtime_directory": "_workspace/ce_obs32_reproduction/CE-OBS32",
+  "commands": [
+    "OPENBLAS_NUM_THREADS=1 python -W error observable_bridge.py",
+    "OPENBLAS_NUM_THREADS=1 python -W error postcomparison_diagnostics.py"
+  ],
+  "exit_codes": [
+    0,
+    0
+  ],
+  "environment": {
+    "python": "3.14.4",
+    "numpy": "2.3.5",
+    "scipy": "1.18.0"
+  },
+  "numeric_observable_fields_compared": 236,
+  "max_observable_absolute_difference": 4.636291350834654e-13,
+  "comparison_tolerance": {
+    "rtol": 1e-08,
+    "atol": 1e-09
+  },
+  "history_comparisons": [
+    {
+      "file": "history_r0.15_theta0.1.csv",
+      "shape": [
+        2001,
+        9
+      ],
+      "max_absolute_difference": 5.820766091346741e-11
+    },
+    {
+      "file": "history_r0.15_theta0.3.csv",
+      "shape": [
+        2001,
+        9
+      ],
+      "max_absolute_difference": 5.820766091346741e-11
+    },
+    {
+      "file": "history_r0.15_theta0.5.csv",
+      "shape": [
+        2001,
+        9
+      ],
+      "max_absolute_difference": 5.820766091346741e-11
+    },
+    {
+      "file": "history_r0.35_theta0.1.csv",
+      "shape": [
+        2001,
+        9
+      ],
+      "max_absolute_difference": 5.820766091346741e-11
+    },
+    {
+      "file": "history_r0.35_theta0.3.csv",
+      "shape": [
+        2001,
+        9
+      ],
+      "max_absolute_difference": 5.820766091346741e-11
+    },
+    {
+      "file": "history_r0.35_theta0.5.csv",
+      "shape": [
+        2001,
+        9
+      ],
+      "max_absolute_difference": 5.820766091346741e-11
+    }
+  ],
+  "numerical_validation": {
+    "covariance_min_eigenvalue": 0.00578998687,
+    "AP_covariance_min_eigenvalue": 0.0002927228776444376,
+    "null_AP_LCDM_max_abs": 8.881784197001252e-16,
+    "AP_DOP853_Radau_max_abs": 6.061817714453355e-14,
+    "independent_cosmic_time": {
+      "theta_velocity_H_relative_max": 5.2766348723780286e-08,
+      "cosmic_final_H": 0.6699612265600564
+    }
+  },
+  "source_checks": [
+    {
+      "relative_total_continuity": 4.170516212493646e-16,
+      "H_derivative_finite_difference_abs": 1.3078482741235575e-10,
+      "loop_integral_relative_max": 1.7596703203864632e-11,
+      "Uprime_finite_difference_abs_max": 3.2239472202988395e-10
+    },
+    {
+      "relative_total_continuity": 2.9126109585276625e-16,
+      "H_derivative_finite_difference_abs": 1.2747058963924474e-10,
+      "loop_integral_relative_max": 1.7596703203864632e-11,
+      "Uprime_finite_difference_abs_max": 3.2239472202988395e-10
+    },
+    {
+      "relative_total_continuity": 4.2925176664401053e-16,
+      "H_derivative_finite_difference_abs": 2.439574098289654e-10,
+      "loop_integral_relative_max": 1.7596703203864632e-11,
+      "Uprime_finite_difference_abs_max": 3.2239472202988395e-10
+    },
+    {
+      "relative_total_continuity": 4.1706370643863487e-16,
+      "H_derivative_finite_difference_abs": 2.4310220503309665e-11,
+      "loop_integral_relative_max": 8.056471830096834e-13,
+      "Uprime_finite_difference_abs_max": 4.307149081839157e-11
+    },
+    {
+      "relative_total_continuity": 3.76711034458633e-16,
+      "H_derivative_finite_difference_abs": 1.3147261057611104e-11,
+      "loop_integral_relative_max": 8.056471830096834e-13,
+      "Uprime_finite_difference_abs_max": 4.307149081839157e-11
+    },
+    {
+      "relative_total_continuity": 4.1257519184782544e-16,
+      "H_derivative_finite_difference_abs": 2.673417043297377e-11,
+      "loop_integral_relative_max": 8.056471830096834e-13,
+      "Uprime_finite_difference_abs_max": 4.307149081839157e-11
+    }
+  ],
+  "full13_independent_cholesky_scores": [
+    {
+      "r": null,
+      "initial_theta": 0,
+      "chi2": 10.357001421139849,
+      "rmse": 0.892576280779832,
+      "A": 29.582731087943017,
+      "profile_gradient": -3.6082476754164957e-13,
+      "delta_rmse_from_null": 0.0
+    },
+    {
+      "r": 0.15,
+      "initial_theta": 0.1,
+      "chi2": 10.395648243179028,
+      "rmse": 0.8942400401879296,
+      "A": 29.599386204242162,
+      "profile_gradient": -1.2308980876323673e-12,
+      "delta_rmse_from_null": 0.0016637594080975981
+    },
+    {
+      "r": 0.15,
+      "initial_theta": 0.3,
+      "chi2": 11.077543142414596,
+      "rmse": 0.9231027587775162,
+      "A": 29.73286278030367,
+      "profile_gradient": 1.9304973099830858e-13,
+      "delta_rmse_from_null": 0.030526477997684265
+    },
+    {
+      "r": 0.15,
+      "initial_theta": 0.5,
+      "chi2": 14.400206719630146,
+      "rmse": 1.0524771775208805,
+      "A": 30.001010848660354,
+      "profile_gradient": 7.809641330461707e-13,
+      "delta_rmse_from_null": 0.15990089674104857
+    },
+    {
+      "r": 0.35,
+      "initial_theta": 0.1,
+      "chi2": 10.398592750621118,
+      "rmse": 0.8943666753897858,
+      "A": 29.60067124818576,
+      "profile_gradient": 4.547417494938336e-14,
+      "delta_rmse_from_null": 0.0017903946099537826
+    },
+    {
+      "r": 0.35,
+      "initial_theta": 0.3,
+      "chi2": 11.160217429108922,
+      "rmse": 0.9265410210981537,
+      "A": 29.744421177957225,
+      "profile_gradient": -6.684847552792495e-13,
+      "delta_rmse_from_null": 0.03396474031832175
+    },
+    {
+      "r": 0.35,
+      "initial_theta": 0.5,
+      "chi2": 14.930097596385805,
+      "rmse": 1.0716664807092882,
+      "A": 30.03304855335565,
+      "profile_gradient": 8.472055673630614e-13,
+      "delta_rmse_from_null": 0.17909019992945618
+    }
+  ],
+  "all_six_full13_scores_worse": true,
+  "postcomparison": {
+    "residual_directions": [
+      {
+        "r": 0.15,
+        "direction_estimated_at_theta": 0.1,
+        "linear_term_B": 0.19958439946538836,
+        "quadratic_term_A": 13.154428517692281,
+        "unconstrained_delta_squared_stationary_point": -0.007586205633979226,
+        "physical_domain": "delta_squared>=0",
+        "conclusion": "Local approximate direction only; not a global model rejection or fit"
+      },
+      {
+        "r": 0.35,
+        "direction_estimated_at_theta": 0.1,
+        "linear_term_B": 0.20354069934507737,
+        "quadratic_term_A": 15.183360519727108,
+        "unconstrained_delta_squared_stationary_point": -0.006702755265562766,
+        "physical_domain": "delta_squared>=0",
+        "conclusion": "Local approximate direction only; not a global model rejection or fit"
+      }
+    ],
+    "full13_profiled_directions": [
+      {
+        "r": 0.15,
+        "first_order_profiled_chi2_derivative_wrt_theta_squared": 3.337677568236217,
+        "scope": "approximate local direction from fixed .1 perturbation, with one global ruler amplitude profiled"
+      },
+      {
+        "r": 0.35,
+        "first_order_profiled_chi2_derivative_wrt_theta_squared": 3.5518190551318853,
+        "scope": "approximate local direction from fixed .1 perturbation, with one global ruler amplitude profiled"
+      }
+    ],
+    "ratio_profile_crosscheck": [
+      {
+        "r": null,
+        "initial_theta": 0,
+        "exact_pair_amplitude_profile_chi2": 6.0913970030001465,
+        "first_order_ratio_chi2": 5.86561398904196
+      },
+      {
+        "r": 0.15,
+        "initial_theta": 0.1,
+        "exact_pair_amplitude_profile_chi2": 6.08807942321345,
+        "first_order_ratio_chi2": 5.868925275888383
+      },
+      {
+        "r": 0.15,
+        "initial_theta": 0.3,
+        "exact_pair_amplitude_profile_chi2": 6.155032923000156,
+        "first_order_ratio_chi2": 5.989857675989424
+      },
+      {
+        "r": 0.15,
+        "initial_theta": 0.5,
+        "exact_pair_amplitude_profile_chi2": 6.784097822859142,
+        "first_order_ratio_chi2": 6.736958532174929
+      },
+      {
+        "r": 0.35,
+        "initial_theta": 0.1,
+        "exact_pair_amplitude_profile_chi2": 6.087813877017703,
+        "first_order_ratio_chi2": 5.869167732087383
+      },
+      {
+        "r": 0.35,
+        "initial_theta": 0.3,
+        "exact_pair_amplitude_profile_chi2": 6.1669600831378135,
+        "first_order_ratio_chi2": 6.006505024580181
+      },
+      {
+        "r": 0.35,
+        "initial_theta": 0.5,
+        "exact_pair_amplitude_profile_chi2": 6.894660437101401,
+        "first_order_ratio_chi2": 6.862618593775913
+      }
+    ],
+    "warning": "Ratio profile eliminates six measurement amplitudes for a geometry-only robustness check. These are not six parameters fitted in the CE action. The separate full13 result profiles only one global ruler amplitude. No combined p-value, Bayes factor, or model selection is claimed."
+  },
+  "missing_bundle_blocker_resolved": true,
+  "joint_quantum_macro_rmse": null,
+  "scientific_success": false
+}

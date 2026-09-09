@@ -497,7 +497,7 @@ $$
 
 ### 10.4 시간 경계 변화 readout 시계장과 R1--R2 저장소 사전
 
-이 절의 ‘자기비동일성’은 동일 순간의 $\rho\ne\rho$가 아니다. branch가 채택한 관측 시간 경계에서 직전 좌극한 $\rho^-$와 결과-조건부 상태 $\rho_a^+$가 다를 수 있다는 변화 readout을 가리키며, 모든 측정에 대한 정리가 아니다. 기록 라벨, 조건부 상태, CTP diagonal normalization 및 CTP difference source는 서로 다른 객체로 둔다. 자세한 유도는 [암흑에너지 유도 §4.7–§4.10](5_유도/04_Dark_Energy_Derivation.md#47-자기비동일성-시계장의-조건부-암흑부문)에 둔다.
+이 절의 ‘자기비동일성’은 동일 순간의 $\rho\ne\rho$가 아니다. branch가 채택한 관측 시간 경계에서 직전 좌극한 $\rho^-$와 결과-조건부 상태 $\rho_a^+$가 다를 수 있다는 변화 readout을 가리키며, 모든 측정에 대한 정리가 아니다. 기록 라벨, 조건부 상태, CTP diagonal normalization 및 CTP difference source는 서로 다른 객체로 둔다. 자세한 유도는 [암흑에너지 유도 §4.7–§4.10](참조/5_유도/04_Dark_Energy_Derivation.md#47-자기비동일성-시계장의-조건부-암흑부문)에 둔다.
 
 **[정의]** $T$는 시간 차원 $-1$의 coarse-grained 시계장이고 $X=-g^{\mu\nu}\nabla_\mu T\nabla_\nu T/2$, $\delta=X/X_*-1$이다. $X>0$은 위 시간 경계 변화의 coarse-grained readout이며, 미래 방향 자체는 아니다. 0차원은 추가 시공간 차원이 아니라 측정 사건ㆍ기록의 타입을 가리킨다.
 

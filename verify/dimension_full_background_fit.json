@@ -1,0 +1,482 @@
+{
+  "baseline_GR_same_two_nuisances": {
+    "amplitude_c_over_H0_rd": 30.09368279524274,
+    "chi2": 5.620209903755355,
+    "whitened_rmse": 0.8381683828261595,
+    "n": 8,
+    "fitted_nuisance_count": 2,
+    "prediction": [
+      10.358092301407703,
+      24.41175403930699,
+      13.409947512423175,
+      22.557486773557635,
+      17.414593331635917,
+      20.09147723762554,
+      29.978139521933986,
+      12.77455518619006
+    ],
+    "s": 0.0,
+    "omega_local_fitted": 0.3192008433990965,
+    "omega_effective_fitted": 0.3192008433990965,
+    "s_identifiable_from_leading_BAO": false
+  },
+  "candidates": [
+    {
+      "amplitude_c_over_H0_rd": 30.09368281948896,
+      "chi2": 5.620210049151086,
+      "whitened_rmse": 0.8381683936679346,
+      "n": 8,
+      "fitted_nuisance_count": 2,
+      "prediction": [
+        10.358092307198442,
+        24.411754044061475,
+        13.409947518275938,
+        22.557486769663942,
+        17.414593335525343,
+        20.091477220249065,
+        29.978139489121507,
+        12.774555109944767
+      ],
+      "omega_local": 0.3192046850156649,
+      "eta": 0.0,
+      "s": 1.2039730775582572e-05,
+      "cells": 100,
+      "background_diagnostics": {
+        "quadrature": {
+          "method": "composite mass-frequency Gauss with squared first cell",
+          "weight_sum": 1.0,
+          "nodes": 824,
+          "n_u": 32,
+          "cell_order": 8,
+          "cells": 100,
+          "x_max_numerical": 80.0,
+          "u_tail_probability_bound": 0.0,
+          "x_tail_probability_upper": 1.4619296241547749e-33,
+          "omitted_probability_upper": 1.4619296241547749e-33,
+          "maximum_frequency_cell_width": 0.08
+        },
+        "g0_quadrature": 0.4036526376768059,
+        "g0_exact_heat_integral": 0.403652637676806,
+        "calibration_iterations": 2,
+        "H_J0_over_Href": 0.9999999999999999,
+        "omega_local_reconstructed": 0.3192046850156649,
+        "rho_bar_boundary_input": 0.957602525547585,
+        "Lambda_boundary_input": 2.042397468964348,
+        "maximum_constraint_error": 2.31119910891439e-15,
+        "maximum_abs_ln_A": 1.4892233224239833e-08,
+        "maximum_scalar_energy_to_dust": 7.513649451310464e-09,
+        "a_E_initial_input": 0.25,
+        "initial_state": "instantaneous matter-dependent minimum and its tracking velocity",
+        "local_G_condition": "unscreened effectively massless laboratory response; ambient-density check is separate",
+        "physical_status": "classical homogeneous truncation, finite quadrature approximation",
+        "scientific_success": false
+      },
+      "optimizer_evaluations": 15,
+      "evaluation_history": [
+        {
+          "omega_local": 0.2600844374964641,
+          "chi2": 8.983527487517101
+        },
+        {
+          "omega_local": 0.38992338832854,
+          "chi2": 8.91171686918422
+        },
+        {
+          "omega_local": 0.4701682730063894,
+          "chi2": 18.00922590789703
+        },
+        {
+          "omega_local": 0.32551386298259477,
+          "chi2": 5.651419299989391
+        },
+        {
+          "omega_local": 0.3253575030203665,
+          "chi2": 5.6499050193542475
+        },
+        {
+          "omega_local": 0.3177977960051129,
+          "chi2": 5.621797342951646
+        },
+        {
+          "omega_local": 0.29575325465971697,
+          "chi2": 6.0916513427513115
+        },
+        {
+          "omega_local": 0.31917346898893234,
+          "chi2": 5.620210827397735
+        },
+        {
+          "omega_local": 0.3192176494763043,
+          "chi2": 5.620210183387813
+        },
+        {
+          "omega_local": 0.31920464728355413,
+          "chi2": 5.620210049152385
+        },
+        {
+          "omega_local": 0.3192046850156649,
+          "chi2": 5.620210049151086
+        },
+        {
+          "omega_local": 0.3192046904169022,
+          "chi2": 5.620210049151245
+        },
+        {
+          "omega_local": 0.31920467777757094,
+          "chi2": 5.620210049151232
+        },
+        {
+          "omega_local": 0.3191046850156649,
+          "chi2": 5.620218037577991
+        },
+        {
+          "omega_local": 0.3193046850156649,
+          "chi2": 5.620218033072166
+        }
+      ],
+      "neighbor_density_offsets": [
+        -0.0001,
+        0.0001
+      ],
+      "neighbor_chi2": [
+        5.620218037577991,
+        5.620218033072166
+      ],
+      "refinement_delta_chi2": 4.263256414560601e-14,
+      "refinement_max_relative_prediction_change": 2.4424906541753444e-15,
+      "optimization_status": "bounded numerical minimization with local bracketing; no global theorem",
+      "scientific_success": false,
+      "delta_BAO_chi2_to_equally_fitted_GR": 1.45395731010467e-07,
+      "delta_BAO_plus_Cassini_chi2_independence_assumed": 3.0078105728951496
+    },
+    {
+      "amplitude_c_over_H0_rd": 30.09368282015943,
+      "chi2": 5.62021004719521,
+      "whitened_rmse": 0.83816839352209,
+      "n": 8,
+      "fitted_nuisance_count": 2,
+      "prediction": [
+        10.358092307277055,
+        24.41175404393,
+        13.409947518330837,
+        22.557486769446882,
+        17.414593335535432,
+        20.091477220026377,
+        29.978139489182226,
+        12.774555110349093
+      ],
+      "omega_local": 0.3192046851068684,
+      "eta": 0.1,
+      "s": 1.2039730775582572e-05,
+      "cells": 100,
+      "background_diagnostics": {
+        "quadrature": {
+          "method": "composite mass-frequency Gauss with squared first cell",
+          "weight_sum": 1.0000000000000002,
+          "nodes": 824,
+          "n_u": 32,
+          "cell_order": 8,
+          "cells": 100,
+          "x_max_numerical": 80.0,
+          "u_tail_probability_bound": 1.5239706048320986e-24,
+          "x_tail_probability_upper": 9.777336583799373e-25,
+          "omitted_probability_upper": 2.501704263212036e-24,
+          "maximum_frequency_cell_width": 0.08
+        },
+        "g0_quadrature": 0.397465751662514,
+        "g0_exact_heat_integral": 0.397465751662514,
+        "calibration_iterations": 2,
+        "H_J0_over_Href": 1.0,
+        "omega_local_reconstructed": 0.31920468510686834,
+        "rho_bar_boundary_input": 0.9576025258246071,
+        "Lambda_boundary_input": 2.042397468772375,
+        "maximum_constraint_error": 3.3026609122382817e-15,
+        "maximum_abs_ln_A": 1.4663976140962699e-08,
+        "maximum_scalar_energy_to_dust": 7.397689278277816e-09,
+        "a_E_initial_input": 0.25,
+        "initial_state": "instantaneous matter-dependent minimum and its tracking velocity",
+        "local_G_condition": "unscreened effectively massless laboratory response; ambient-density check is separate",
+        "physical_status": "classical homogeneous truncation, finite quadrature approximation",
+        "scientific_success": false
+      },
+      "optimizer_evaluations": 17,
+      "evaluation_history": [
+        {
+          "omega_local": 0.2600844374964641,
+          "chi2": 8.983527493856547
+        },
+        {
+          "omega_local": 0.38992338832854,
+          "chi2": 8.911716856107493
+        },
+        {
+          "omega_local": 0.4701682730063894,
+          "chi2": 18.009225879293577
+        },
+        {
+          "omega_local": 0.325513863120672,
+          "chi2": 5.651419298447884
+        },
+        {
+          "omega_local": 0.32535750311617084,
+          "chi2": 5.649905017399324
+        },
+        {
+          "omega_local": 0.31779779609513653,
+          "chi2": 5.621797340999923
+        },
+        {
+          "omega_local": 0.2957532547153547,
+          "chi2": 6.091651341844469
+        },
+        {
+          "omega_local": 0.3191734690806649,
+          "chi2": 5.62021082544193
+        },
+        {
+          "omega_local": 0.3192176495688991,
+          "chi2": 5.620210181431801
+        },
+        {
+          "omega_local": 0.3192046473784874,
+          "chi2": 5.620210047196291
+        },
+        {
+          "omega_local": 0.3192046851068684,
+          "chi2": 5.62021004719521
+        },
+        {
+          "omega_local": 0.3192046797056311,
+          "chi2": 5.620210047195305
+        },
+        {
+          "omega_local": 0.31920963709071826,
+          "chi2": 5.62021006678339
+        },
+        {
+          "omega_local": 0.319204708132521,
+          "chi2": 5.620210047195757
+        },
+        {
+          "omega_local": 0.3192046905081057,
+          "chi2": 5.6202100471953536
+        },
+        {
+          "omega_local": 0.3191046851068684,
+          "chi2": 5.620218035622503
+        },
+        {
+          "omega_local": 0.3193046851068684,
+          "chi2": 5.620218031115819
+        }
+      ],
+      "neighbor_density_offsets": [
+        -0.0001,
+        0.0001
+      ],
+      "neighbor_chi2": [
+        5.620218035622503,
+        5.620218031115819
+      ],
+      "refinement_delta_chi2": 8.970602038971265e-14,
+      "refinement_max_relative_prediction_change": 4.440892098500626e-16,
+      "optimization_status": "bounded numerical minimization with local bracketing; no global theorem",
+      "scientific_success": false,
+      "delta_BAO_chi2_to_equally_fitted_GR": 1.4343985466069853e-07,
+      "delta_BAO_plus_Cassini_chi2_independence_assumed": 3.0078105709392733
+    },
+    {
+      "amplitude_c_over_H0_rd": 30.0936829081664,
+      "chi2": 5.620210029592105,
+      "whitened_rmse": 0.8381683922094731,
+      "n": 8,
+      "fitted_nuisance_count": 2,
+      "prediction": [
+        10.35809232123282,
+        24.411754038522268,
+        13.409947530290152,
+        22.557486745212238,
+        17.41459334112902,
+        20.091477178410702,
+        29.978139454937807,
+        12.774555060066113
+      ],
+      "omega_local": 0.31920469133596924,
+      "eta": 1.0,
+      "s": 1.2039730775582572e-05,
+      "cells": 100,
+      "background_diagnostics": {
+        "quadrature": {
+          "method": "composite mass-frequency Gauss with squared first cell",
+          "weight_sum": 1.0000000000000027,
+          "nodes": 824,
+          "n_u": 32,
+          "cell_order": 8,
+          "cells": 100,
+          "x_max_numerical": 80.0,
+          "u_tail_probability_bound": 1.5239706048320983e-23,
+          "x_tail_probability_upper": 9.777336583799373e-25,
+          "omitted_probability_upper": 1.621743970670092e-23,
+          "maximum_frequency_cell_width": 0.08
+        },
+        "g0_quadrature": 0.3417837775338865,
+        "g0_exact_heat_integral": 0.3417837775338857,
+        "calibration_iterations": 2,
+        "H_J0_over_Href": 0.9999999999999999,
+        "omega_local_reconstructed": 0.3192046913359693,
+        "rho_bar_boundary_input": 0.95760254454242,
+        "Lambda_boundary_input": 2.0423974508199954,
+        "maximum_constraint_error": 1.5278242735112584e-15,
+        "maximum_abs_ln_A": 1.260966328199149e-08,
+        "maximum_scalar_energy_to_dust": 6.354047823894527e-09,
+        "a_E_initial_input": 0.25,
+        "initial_state": "instantaneous matter-dependent minimum and its tracking velocity",
+        "local_G_condition": "unscreened effectively massless laboratory response; ambient-density check is separate",
+        "physical_status": "classical homogeneous truncation, finite quadrature approximation",
+        "scientific_success": false
+      },
+      "optimizer_evaluations": 18,
+      "evaluation_history": [
+        {
+          "omega_local": 0.2600844374964641,
+          "chi2": 8.983527550915014
+        },
+        {
+          "omega_local": 0.38992338832854,
+          "chi2": 8.911716738420889
+        },
+        {
+          "omega_local": 0.4701682730063894,
+          "chi2": 18.009225621865294
+        },
+        {
+          "omega_local": 0.32551386436336305,
+          "chi2": 5.651419284576344
+        },
+        {
+          "omega_local": 0.32535750397840746,
+          "chi2": 5.6499049998048045
+        },
+        {
+          "omega_local": 0.3177977968913344,
+          "chi2": 5.621797323464767
+        },
+        {
+          "omega_local": 0.295753255207432,
+          "chi2": 6.0916513340414635
+        },
+        {
+          "omega_local": 0.31917346991214995,
+          "chi2": 5.620210807838914
+        },
+        {
+          "omega_local": 0.31921765040200767,
+          "chi2": 5.620210163828847
+        },
+        {
+          "omega_local": 0.3192046482096487,
+          "chi2": 5.62021002959318
+        },
+        {
+          "omega_local": 0.31920468593473195,
+          "chi2": 5.620210029592121
+        },
+        {
+          "omega_local": 0.31920468053349466,
+          "chi2": 5.620210029592217
+        },
+        {
+          "omega_local": 0.3192096379205852,
+          "chi2": 5.620210049180406
+        },
+        {
+          "omega_local": 0.31920471108928206,
+          "chi2": 5.620210029592638
+        },
+        {
+          "omega_local": 0.31920469133596924,
+          "chi2": 5.620210029592105
+        },
+        {
+          "omega_local": 0.3192046967372066,
+          "chi2": 5.620210029592219
+        },
+        {
+          "omega_local": 0.31910469133596925,
+          "chi2": 5.620218017156894
+        },
+        {
+          "omega_local": 0.3193046913359692,
+          "chi2": 5.620218014374593
+        }
+      ],
+      "neighbor_density_offsets": [
+        -0.0001,
+        0.0001
+      ],
+      "neighbor_chi2": [
+        5.620218017156894,
+        5.620218014374593
+      ],
+      "refinement_delta_chi2": 1.4477308241112041e-13,
+      "refinement_max_relative_prediction_change": 2.6645352591003757e-15,
+      "optimization_status": "bounded numerical minimization with local bracketing; no global theorem",
+      "scientific_success": false,
+      "delta_BAO_chi2_to_equally_fitted_GR": 1.2583674990906957e-07,
+      "delta_BAO_plus_Cassini_chi2_independence_assumed": 3.0078105533361685
+    }
+  ],
+  "Cassini_marginal_penalty_at_fixed_s": 3.0078104274994186,
+  "fixed_inputs": {
+    "mass_over_H0": 100.0,
+    "s": 1.2039730775582572e-05,
+    "a_E_initial": 0.25,
+    "beta": 1.0,
+    "b": 1.0,
+    "m": 1.0,
+    "internal_a": 1.0
+  },
+  "data_sources": [
+    {
+      "file": "sdss_DR12_LRG_BAO_DMDH.dat",
+      "sha256": "ccdbe5ad44016ea09e10e30f0178eb75b756417730b7b53c611ac896623c5f81",
+      "upstream": "https://raw.githubusercontent.com/CobayaSampler/bao_data/bb0c1c9/sdss_DR12_LRG_BAO_DMDH.dat"
+    },
+    {
+      "file": "sdss_DR12_LRG_BAO_DMDH_covtot.txt",
+      "sha256": "fd2a67856f0ffa7267cff5245b579dcdb4b5cd461849377a2f8e9582a7679544",
+      "upstream": "https://raw.githubusercontent.com/CobayaSampler/bao_data/bb0c1c9/sdss_DR12_LRG_BAO_DMDH_covtot.txt"
+    },
+    {
+      "file": "sdss_DR16_LRG_BAO_DMDH.dat",
+      "sha256": "b3317e7590799fad71a9a707023d0743c14d87399d6bb4129965d6a5732d91be",
+      "upstream": "https://raw.githubusercontent.com/CobayaSampler/bao_data/bb0c1c9/sdss_DR16_LRG_BAO_DMDH.dat"
+    },
+    {
+      "file": "sdss_DR16_LRG_BAO_DMDH_covtot.txt",
+      "sha256": "1a45e106f8e2bbf8742a6c3d4a9c11bdc288801fc6824e0db8cfbab4290f6160",
+      "upstream": "https://raw.githubusercontent.com/CobayaSampler/bao_data/bb0c1c9/sdss_DR16_LRG_BAO_DMDH_covtot.txt"
+    },
+    {
+      "file": "sdss_DR16_QSO_BAO_DMDH.txt",
+      "sha256": "9d3a43515d009d5c836728d4af1f1d02887fcdd874aba098c597f1f47693bbe6",
+      "upstream": "https://raw.githubusercontent.com/CobayaSampler/bao_data/bb0c1c9/sdss_DR16_QSO_BAO_DMDH.txt"
+    },
+    {
+      "file": "sdss_DR16_QSO_BAO_DMDH_covtot.txt",
+      "sha256": "c0d8bab47132045139c5bbd0ebfd8464434e1354371ceeeca70bb90ecbcee383",
+      "upstream": "https://raw.githubusercontent.com/CobayaSampler/bao_data/bb0c1c9/sdss_DR16_QSO_BAO_DMDH_covtot.txt"
+    }
+  ],
+  "limitations": [
+    "same BAO block-diagonal covariance approximation and seen data",
+    "A=c/(H0 rd) profiled; sound horizon not predicted",
+    "s and eta not optimized; these are three fixed candidate cases",
+    "initial preparation and potential remain supplied assumptions",
+    "no quantum likelihood, early-universe radiation or full perturbations",
+    "Cassini contribution assumes the same unscreened long-range regime"
+  ],
+  "actual_quantum_rmse": null,
+  "all_domain_rmse": null,
+  "scientific_success": false
+}

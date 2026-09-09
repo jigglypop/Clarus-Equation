@@ -1,0 +1,17 @@
+{
+  "inputs": {
+    "s": 1.0,
+    "epsilon": 0.35,
+    "theta": 0.7,
+    "tau": 0.7
+  },
+  "absorption_energy_per_pulse_amplitude_squared": 0.00041436184863791366,
+  "pair_energy_per_pulse_amplitude_squared": 0.00041436184863791366,
+  "kinetic_from_dispersion": 0.0001262732745101971,
+  "kinetic_from_static_spectrum": 0.00012627327451019714,
+  "relative_pair_identity_error": 0.0,
+  "relative_kinetic_identity_error": 4.440892098500626e-16,
+  "fitted_parameters": [],
+  "observational_rmse": null,
+  "scope": "Chapter31 small external pulse and vacuum linear response; not cosmological abundance."
+}

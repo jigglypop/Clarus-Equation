@@ -138,7 +138,7 @@ lensing, growth 자료에는 각각의 observable map, nuisance parameter와
 
 ## 5. 조건부 forward 계산
 
-[../9_등호이전/05o_CE_residual_cosmology_forward_model.md](../9_등호이전/05o_CE_residual_cosmology_forward_model.md)
+[../참조/9_등호이전/05o_CE_residual_cosmology_forward_model.md](../참조/9_등호이전/05o_CE_residual_cosmology_forward_model.md)
 은 평탄 FLRW와 선택한 유효 방정식상태 아래 $H(z)$, 거리와 선형성장을
 계산하는 조건부 모형이다. 그 계산식이 정확하다는 것과 CE가 그
 방정식상태를 유도한다는 것은 별개다.

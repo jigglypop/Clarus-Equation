@@ -1,0 +1,522 @@
+{
+  "role": "retrospective conditional late-time BAO check, not independent holdout",
+  "sources": [
+    {
+      "file": "sdss_DR12_LRG_BAO_DMDH.dat",
+      "sha256": "ccdbe5ad44016ea09e10e30f0178eb75b756417730b7b53c611ac896623c5f81",
+      "upstream": "https://raw.githubusercontent.com/CobayaSampler/bao_data/bb0c1c9/sdss_DR12_LRG_BAO_DMDH.dat"
+    },
+    {
+      "file": "sdss_DR12_LRG_BAO_DMDH_covtot.txt",
+      "sha256": "fd2a67856f0ffa7267cff5245b579dcdb4b5cd461849377a2f8e9582a7679544",
+      "upstream": "https://raw.githubusercontent.com/CobayaSampler/bao_data/bb0c1c9/sdss_DR12_LRG_BAO_DMDH_covtot.txt"
+    },
+    {
+      "file": "sdss_DR16_LRG_BAO_DMDH.dat",
+      "sha256": "b3317e7590799fad71a9a707023d0743c14d87399d6bb4129965d6a5732d91be",
+      "upstream": "https://raw.githubusercontent.com/CobayaSampler/bao_data/bb0c1c9/sdss_DR16_LRG_BAO_DMDH.dat"
+    },
+    {
+      "file": "sdss_DR16_LRG_BAO_DMDH_covtot.txt",
+      "sha256": "1a45e106f8e2bbf8742a6c3d4a9c11bdc288801fc6824e0db8cfbab4290f6160",
+      "upstream": "https://raw.githubusercontent.com/CobayaSampler/bao_data/bb0c1c9/sdss_DR16_LRG_BAO_DMDH_covtot.txt"
+    },
+    {
+      "file": "sdss_DR16_QSO_BAO_DMDH.txt",
+      "sha256": "9d3a43515d009d5c836728d4af1f1d02887fcdd874aba098c597f1f47693bbe6",
+      "upstream": "https://raw.githubusercontent.com/CobayaSampler/bao_data/bb0c1c9/sdss_DR16_QSO_BAO_DMDH.txt"
+    },
+    {
+      "file": "sdss_DR16_QSO_BAO_DMDH_covtot.txt",
+      "sha256": "c0d8bab47132045139c5bbd0ebfd8464434e1354371ceeeca70bb90ecbcee383",
+      "upstream": "https://raw.githubusercontent.com/CobayaSampler/bao_data/bb0c1c9/sdss_DR16_QSO_BAO_DMDH_covtot.txt"
+    }
+  ],
+  "results": [
+    {
+      "sample": "DR12_LRG",
+      "mode": "fixed_H0_rd",
+      "comparisons": [
+        {
+          "amplitude_c_over_H0_rd": 30.23971253999196,
+          "chi2": 2.7688439018491042,
+          "whitened_rmse": 0.8319921727169529,
+          "n": 4,
+          "fitted_nuisance_count": 0,
+          "prediction": [
+            10.420062718829678,
+            24.585597894176736,
+            13.494637962431982,
+            22.73258098033026
+          ],
+          "s": 0.0,
+          "omega_E0": 0.315,
+          "cassini_nominal_band_compatible": true,
+          "delta_chi2_to_GR": 0.0
+        },
+        {
+          "amplitude_c_over_H0_rd": 30.23971253999196,
+          "chi2": 2.7692798980555935,
+          "whitened_rmse": 0.8320576749924842,
+          "n": 4,
+          "fitted_nuisance_count": 0,
+          "prediction": [
+            10.420073312342451,
+            24.585648065325802,
+            13.494655725623906,
+            22.732640491637504
+          ],
+          "s": 1.2039730775582572e-05,
+          "omega_E0": 0.314996207530466,
+          "cassini_nominal_band_compatible": true,
+          "delta_chi2_to_GR": 0.0004359962064892642
+        },
+        {
+          "amplitude_c_over_H0_rd": 30.23971253999196,
+          "chi2": 3.5722168598002115,
+          "whitened_rmse": 0.9450154575191101,
+          "n": 4,
+          "fitted_nuisance_count": 0,
+          "prediction": [
+            10.437373070397825,
+            24.667716706300634,
+            13.523692204105691,
+            22.830125843617434
+          ],
+          "s": 0.02,
+          "omega_E0": 0.3088235294117647,
+          "cassini_nominal_band_compatible": false,
+          "delta_chi2_to_GR": 0.8033729579511073
+        }
+      ]
+    },
+    {
+      "sample": "DR12_LRG",
+      "mode": "profile_one_H0_rd",
+      "comparisons": [
+        {
+          "amplitude_c_over_H0_rd": 29.918837614556438,
+          "chi2": 1.395283371836604,
+          "whitened_rmse": 0.5906105679372415,
+          "n": 4,
+          "fitted_nuisance_count": 1,
+          "prediction": [
+            10.309494973070981,
+            24.324719028987506,
+            13.3514457629609,
+            22.491364559460724
+          ],
+          "s": 0.0,
+          "omega_E0": 0.315,
+          "cassini_nominal_band_compatible": true,
+          "delta_chi2_to_GR": 0.0
+        },
+        {
+          "amplitude_c_over_H0_rd": 29.91879038852468,
+          "chi2": 1.395310685524305,
+          "whitened_rmse": 0.5906163487248522,
+          "n": 4,
+          "fitted_nuisance_count": 1,
+          "prediction": [
+            10.309489180915236,
+            24.324730271814797,
+            13.351442262762772,
+            22.491387937220516
+          ],
+          "s": 1.2039730775582572e-05,
+          "omega_E0": 0.314996207530466,
+          "cassini_nominal_band_compatible": true,
+          "delta_chi2_to_GR": 2.7313687700925016e-05
+        },
+        {
+          "amplitude_c_over_H0_rd": 29.841722753678724,
+          "chi2": 1.448190894652408,
+          "whitened_rmse": 0.6017040166586076,
+          "n": 4,
+          "fitted_nuisance_count": 1,
+          "prediction": [
+            10.300005101953497,
+            24.343060865482293,
+            13.345704686421456,
+            22.529654835700637
+          ],
+          "s": 0.02,
+          "omega_E0": 0.3088235294117647,
+          "cassini_nominal_band_compatible": false,
+          "delta_chi2_to_GR": 0.05290752281580402
+        }
+      ]
+    },
+    {
+      "sample": "DR16_LRG",
+      "mode": "fixed_H0_rd",
+      "comparisons": [
+        {
+          "amplitude_c_over_H0_rd": 30.23971253999196,
+          "chi2": 3.2819535136487525,
+          "whitened_rmse": 1.2810061501899108,
+          "n": 2,
+          "fitted_nuisance_count": 0,
+          "prediction": [
+            17.531949636254666,
+            20.263010308626896
+          ],
+          "s": 0.0,
+          "omega_E0": 0.315,
+          "cassini_nominal_band_compatible": true,
+          "delta_chi2_to_GR": 0.0
+        },
+        {
+          "amplitude_c_over_H0_rd": 30.23971253999196,
+          "chi2": 3.2822756530062183,
+          "whitened_rmse": 1.281069017072503,
+          "n": 2,
+          "fitted_nuisance_count": 0,
+          "prediction": [
+            17.53197940561959,
+            20.26307751866853
+          ],
+          "s": 1.2039730775582572e-05,
+          "omega_E0": 0.314996207530466,
+          "cassini_nominal_band_compatible": true,
+          "delta_chi2_to_GR": 0.00032213935746572275
+        },
+        {
+          "amplitude_c_over_H0_rd": 30.23971253999196,
+          "chi2": 3.9074077388066537,
+          "whitened_rmse": 1.3977495732080647,
+          "n": 2,
+          "fitted_nuisance_count": 0,
+          "prediction": [
+            17.580701094024707,
+            20.373363995660156
+          ],
+          "s": 0.02,
+          "omega_E0": 0.3088235294117647,
+          "cassini_nominal_band_compatible": false,
+          "delta_chi2_to_GR": 0.6254542251579012
+        }
+      ]
+    },
+    {
+      "sample": "DR16_LRG",
+      "mode": "profile_one_H0_rd",
+      "comparisons": [
+        {
+          "amplitude_c_over_H0_rd": 30.06586903211053,
+          "chi2": 3.0715573294220584,
+          "whitened_rmse": 1.23926537299766,
+          "n": 2,
+          "fitted_nuisance_count": 1,
+          "prediction": [
+            17.431161124434777,
+            20.146521344400448
+          ],
+          "s": 0.0,
+          "omega_E0": 0.315,
+          "cassini_nominal_band_compatible": true,
+          "delta_chi2_to_GR": 0.0
+        },
+        {
+          "amplitude_c_over_H0_rd": 30.065799337271248,
+          "chi2": 3.0717097658261405,
+          "whitened_rmse": 1.2392961239804916,
+          "n": 2,
+          "fitted_nuisance_count": 1,
+          "prediction": [
+            17.431150315910735,
+            20.146541466826466
+          ],
+          "s": 1.2039730775582572e-05,
+          "omega_E0": 0.314996207530466,
+          "cassini_nominal_band_compatible": true,
+          "delta_chi2_to_GR": 0.00015243640408213466
+        },
+        {
+          "amplitude_c_over_H0_rd": 29.95197883618347,
+          "chi2": 3.3266683884329415,
+          "whitened_rmse": 1.289703141896022,
+          "n": 2,
+          "fitted_nuisance_count": 1,
+          "prediction": [
+            17.4134190725887,
+            20.17950952453193
+          ],
+          "s": 0.02,
+          "omega_E0": 0.3088235294117647,
+          "cassini_nominal_band_compatible": false,
+          "delta_chi2_to_GR": 0.25511105901088316
+        }
+      ]
+    },
+    {
+      "sample": "DR16_QSO",
+      "mode": "fixed_H0_rd",
+      "comparisons": [
+        {
+          "amplitude_c_over_H0_rd": 30.23971253999196,
+          "chi2": 0.5511039546797049,
+          "whitened_rmse": 0.524930450002524,
+          "n": 2,
+          "fitted_nuisance_count": 0,
+          "prediction": [
+            30.215031705873933,
+            12.906356289367682
+          ],
+          "s": 0.0,
+          "omega_E0": 0.315,
+          "cassini_nominal_band_compatible": true,
+          "delta_chi2_to_GR": 0.0
+        },
+        {
+          "amplitude_c_over_H0_rd": 30.23971253999196,
+          "chi2": 0.5509081269006815,
+          "whitened_rmse": 0.5248371780374754,
+          "n": 2,
+          "fitted_nuisance_count": 0,
+          "prediction": [
+            30.21511472601435,
+            12.906419830798004
+          ],
+          "s": 1.2039730775582572e-05,
+          "omega_E0": 0.314996207530466,
+          "cassini_nominal_band_compatible": true,
+          "delta_chi2_to_GR": -0.0001958277790233831
+        },
+        {
+          "amplitude_c_over_H0_rd": 30.23971253999196,
+          "chi2": 0.27589216387383686,
+          "whitened_rmse": 0.37141093405676473,
+          "n": 2,
+          "fitted_nuisance_count": 0,
+          "prediction": [
+            30.351418653436678,
+            13.011101489614205
+          ],
+          "s": 0.02,
+          "omega_E0": 0.3088235294117647,
+          "cassini_nominal_band_compatible": false,
+          "delta_chi2_to_GR": -0.275211790805868
+        }
+      ]
+    },
+    {
+      "sample": "DR16_QSO",
+      "mode": "profile_one_H0_rd",
+      "comparisons": [
+        {
+          "amplitude_c_over_H0_rd": 30.769060247984054,
+          "chi2": 0.08472928867529039,
+          "whitened_rmse": 0.20582673377781904,
+          "n": 2,
+          "fitted_nuisance_count": 1,
+          "prediction": [
+            30.743947374607902,
+            13.132282713478721
+          ],
+          "s": 0.0,
+          "omega_E0": 0.315,
+          "cassini_nominal_band_compatible": true,
+          "delta_chi2_to_GR": 0.0
+        },
+        {
+          "amplitude_c_over_H0_rd": 30.768965462962985,
+          "chi2": 0.08469758234675456,
+          "whitened_rmse": 0.2057882192288404,
+          "n": 2,
+          "fitted_nuisance_count": 1,
+          "prediction": [
+            30.743937140099778,
+            13.13230691261161
+          ],
+          "s": 1.2039730775582572e-05,
+          "omega_E0": 0.314996207530466,
+          "cassini_nominal_band_compatible": true,
+          "delta_chi2_to_GR": -3.1706328535829886e-05
+        },
+        {
+          "amplitude_c_over_H0_rd": 30.613843671631724,
+          "chi2": 0.040546883482463394,
+          "whitened_rmse": 0.1423848367672334,
+          "n": 2,
+          "fitted_nuisance_count": 1,
+          "prediction": [
+            30.726931833089594,
+            13.17207716415977
+          ],
+          "s": 0.02,
+          "omega_E0": 0.3088235294117647,
+          "cassini_nominal_band_compatible": false,
+          "delta_chi2_to_GR": -0.044182405192827
+        }
+      ]
+    },
+    {
+      "sample": "eight_points_block_diagonal_approximation",
+      "mode": "fixed_H0_rd",
+      "comparisons": [
+        {
+          "amplitude_c_over_H0_rd": 30.23971253999196,
+          "chi2": 6.601901370177561,
+          "whitened_rmse": 0.9084259305370995,
+          "n": 8,
+          "fitted_nuisance_count": 0,
+          "prediction": [
+            10.420062718829678,
+            24.585597894176736,
+            13.494637962431982,
+            22.73258098033026,
+            17.531949636254666,
+            20.263010308626896,
+            30.215031705873933,
+            12.906356289367682
+          ],
+          "s": 0.0,
+          "omega_E0": 0.315,
+          "cassini_nominal_band_compatible": true,
+          "delta_chi2_to_GR": 0.0
+        },
+        {
+          "amplitude_c_over_H0_rd": 30.23971253999196,
+          "chi2": 6.6024636779624934,
+          "whitened_rmse": 0.9084646166721694,
+          "n": 8,
+          "fitted_nuisance_count": 0,
+          "prediction": [
+            10.420073312342451,
+            24.585648065325802,
+            13.494655725623906,
+            22.732640491637504,
+            17.53197940561959,
+            20.26307751866853,
+            30.21511472601435,
+            12.906419830798004
+          ],
+          "s": 1.2039730775582572e-05,
+          "omega_E0": 0.314996207530466,
+          "cassini_nominal_band_compatible": true,
+          "delta_chi2_to_GR": 0.0005623077849321589
+        },
+        {
+          "amplitude_c_over_H0_rd": 30.23971253999196,
+          "chi2": 7.755516762480703,
+          "whitened_rmse": 0.9846012366994508,
+          "n": 8,
+          "fitted_nuisance_count": 0,
+          "prediction": [
+            10.437373070397825,
+            24.667716706300634,
+            13.523692204105691,
+            22.830125843617434,
+            17.580701094024707,
+            20.373363995660156,
+            30.351418653436678,
+            13.011101489614205
+          ],
+          "s": 0.02,
+          "omega_E0": 0.3088235294117647,
+          "cassini_nominal_band_compatible": false,
+          "delta_chi2_to_GR": 1.1536153923031414
+        }
+      ]
+    },
+    {
+      "sample": "eight_points_block_diagonal_approximation",
+      "mode": "profile_one_H0_rd",
+      "comparisons": [
+        {
+          "amplitude_c_over_H0_rd": 30.029855005661826,
+          "chi2": 5.634479517047229,
+          "whitened_rmse": 0.8392317556139685,
+          "n": 8,
+          "fitted_nuisance_count": 1,
+          "prediction": [
+            10.347749575414475,
+            24.414978780411,
+            13.400987884054796,
+            22.57482143194887,
+            17.4102814253615,
+            20.12238908493468,
+            30.005345451577842,
+            12.816788767702556
+          ],
+          "s": 0.0,
+          "omega_E0": 0.315,
+          "cassini_nominal_band_compatible": true,
+          "delta_chi2_to_GR": 0.0
+        },
+        {
+          "amplitude_c_over_H0_rd": 30.029797241419516,
+          "chi2": 5.6345054544097275,
+          "whitened_rmse": 0.8392336872416502,
+          "n": 8,
+          "fitted_nuisance_count": 1,
+          "prediction": [
+            10.34774019086802,
+            24.41498163959822,
+            13.400979746329115,
+            22.57483710611156,
+            17.410277498346844,
+            20.122417121791326,
+            30.00537017831986,
+            12.816827214178375
+          ],
+          "s": 1.2039730775582572e-05,
+          "omega_E0": 0.314996207530466,
+          "cassini_nominal_band_compatible": true,
+          "delta_chi2_to_GR": 2.5937362498673622e-05
+        },
+        {
+          "amplitude_c_over_H0_rd": 29.93543703362774,
+          "chi2": 5.7089101060619845,
+          "whitened_rmse": 0.8447566296027206,
+          "n": 8,
+          "fitted_nuisance_count": 1,
+          "prediction": [
+            10.332351008038351,
+            24.419507270389747,
+            13.387615239489174,
+            22.60040646079464,
+            17.403802033871678,
+            20.168364836427948,
+            30.046019147160507,
+            12.880182272413549
+          ],
+          "s": 0.02,
+          "omega_E0": 0.3088235294117647,
+          "cassini_nominal_band_compatible": false,
+          "delta_chi2_to_GR": 0.07443058901475563
+        }
+      ]
+    }
+  ],
+  "quality": {
+    "rows": 8,
+    "unique_sample_z_observable_keys": 8,
+    "missing_values": 0,
+    "verified_file_hashes": 6,
+    "positive_definite_covariance_blocks": 3,
+    "redshift_range": [
+      0.38,
+      1.48
+    ]
+  },
+  "supplied_inputs": {
+    "omega_local": 0.315,
+    "H0": 67.4,
+    "rd_mpc_fixed_mode": 147.09,
+    "f_cal": 1.0,
+    "mass_over_H0": 1000.0
+  },
+  "limitations": [
+    "rd is not predicted; radiation and early-time scalar background are absent",
+    "profiled A is one nuisance per fit; per-block fits are diagnostic only",
+    "joint eight-point covariance assumes zero cross-sample blocks",
+    "compressed BAO template validity under this modified model remains unchecked",
+    "Lambda boundary condition varies with s to retain flat H0",
+    ".02 is an incompatible control; no s is optimized using these observations"
+  ],
+  "quantum_rmse": null,
+  "all_domain_rmse": null,
+  "scientific_success": false
+}

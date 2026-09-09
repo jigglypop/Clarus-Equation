@@ -1,0 +1,125 @@
+{
+  "cutoff": 48.0,
+  "quadrature_order": 768,
+  "dynamic_H": false,
+  "end_time": 100.0,
+  "time_windows": [
+    {
+      "time_start": 50.0,
+      "time_end": 75.0,
+      "pressure_over_energy_integrals": 0.039204800319697614,
+      "kinetic_energy_fraction_integrated": 0.05314054581679861,
+      "integrated_particle_force": 0.0002538167057478953,
+      "integrated_coherence_force": -5.118428444644135e-06,
+      "initial_number_fractions": [
+        0.2639123442000472,
+        0.579420145076823,
+        0.15666751072312973
+      ],
+      "final_number_fractions": [
+        0.26736922162890536,
+        0.5812028588164428,
+        0.15142791955465174
+      ],
+      "total_comoving_number_change_fraction": -0.0043001517299913194
+    },
+    {
+      "time_start": 75.0,
+      "time_end": 100.0,
+      "pressure_over_energy_integrals": 0.022958877285503006,
+      "kinetic_energy_fraction_integrated": 0.030268976022753136,
+      "integrated_particle_force": 0.00026738231924294613,
+      "integrated_coherence_force": -4.60607806294176e-05,
+      "initial_number_fractions": [
+        0.26736922162890536,
+        0.5812028588164428,
+        0.15142791955465174
+      ],
+      "final_number_fractions": [
+        0.26614456132412684,
+        0.578494490632741,
+        0.15536094804313205
+      ],
+      "total_comoving_number_change_fraction": -0.0013463388044415714
+    }
+  ],
+  "initial": {
+    "a": 1.0,
+    "H": 0.08227925830665633,
+    "theta": 0.7,
+    "theta_velocity": 6.0,
+    "rho_ex": 0.0023147452647793313,
+    "gaussian_invariant_max_abs": 3.3306690738754696e-16,
+    "state_moments": {
+      "comoving_particle_numbers": [
+        3.1614993268771886e-07,
+        0.00072191072579844,
+        0.0009432166549912356
+      ],
+      "number_fractions": [
+        0.0001898292718160148,
+        0.4334645471199622,
+        0.5663456236082218
+      ],
+      "comoving_number_time_derivatives": [
+        2.21376952335868e-09,
+        0.00032399359676182053,
+        -0.0004343737183363178
+      ],
+      "rest_mass_energy": 0.0013641004694925378,
+      "kinetic_energy_fraction": 0.4106908910244256,
+      "particle_gas_pressure": 0.0004628098514539958,
+      "coherence_pressure": 0.0003087719034724477,
+      "total_state_pressure": 0.0007715817549264438,
+      "particle_force": 2.2370320767738242e-05,
+      "coherence_force": -2.2370320767738242e-05,
+      "total_state_force": 0.0
+    }
+  },
+  "final": {
+    "a": 3.4126720975737137,
+    "H": 0.004981860759990149,
+    "theta": 66.83359318890692,
+    "theta_velocity": -0.23930297094633587,
+    "rho_ex": 0.0002816361233857394,
+    "gaussian_invariant_max_abs": 2.5988100560425664e-12,
+    "state_moments": {
+      "comoving_particle_numbers": [
+        0.0028088965679323543,
+        0.006105445781877703,
+        0.0016396834546530711
+      ],
+      "number_fractions": [
+        0.26614456132412684,
+        0.578494490632741,
+        0.15536094804313205
+      ],
+      "comoving_number_time_derivatives": [
+        1.2361696767017698e-06,
+        3.2505679106818337e-06,
+        -7.139201283228495e-07
+      ],
+      "rest_mass_energy": 0.0002736126524512519,
+      "kinetic_energy_fraction": 0.028488784883245466,
+      "particle_gas_pressure": 5.000927533083996e-06,
+      "coherence_pressure": 4.8616621535812414e-06,
+      "total_state_pressure": 9.862589686665242e-06,
+      "particle_force": 9.461704651105342e-06,
+      "coherence_force": -1.0844715679029304e-06,
+      "total_state_force": 8.37723308320241e-06
+    }
+  },
+  "friedmann_max_relative": 4.217126346999822e-16,
+  "nfev": 26789,
+  "supplied_inputs": {
+    "s": 1,
+    "epsilon": 0.35,
+    "f": 0.1,
+    "M_R": 3.0,
+    "theta0": 0.7,
+    "theta_dot0": 6.0,
+    "Lambda_R": 0
+  },
+  "fitted_parameters": [],
+  "observational_rmse": null
+}

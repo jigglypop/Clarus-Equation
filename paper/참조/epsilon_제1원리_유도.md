@@ -213,4 +213,4 @@ $\epsilon_{\rm obs}$를 자료로 정했다면 이 식들은 조건부 재표현
 
 경로공간 정리를 적용하기 위한 정확한 조건과 no-go는
 [pathspace closure checklist](../검증_원장/등호이전_pathspace_closure_checklist.md)와
-[action/topology package](../9_등호이전/05f_CE_action_topology_package.md)에 둔다.
+[action/topology package](9_등호이전/05f_CE_action_topology_package.md)에 둔다.

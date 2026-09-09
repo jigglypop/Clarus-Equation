@@ -1,0 +1,117 @@
+{
+  "fixed_R_H": 128,
+  "fixed_leading_F_over_Mp": 4.29563732174866,
+  "reference": {
+    "q": 3,
+    "N": 4,
+    "local_f_over_Mp": 0.05,
+    "stiffness": 128.0,
+    "phase_for_scale_matching": 2.541592653589793,
+    "supplied_H0": 67.4,
+    "supplied_omega_c": 0.264156592027754,
+    "supplied_omega_DE": 0.685,
+    "mass_over_H0": 544.6424775606658,
+    "mass_eV": 7.830448332011105e-31,
+    "jeans_k_per_Mpc": 0.00588705542073979,
+    "jeans_physical_wavelength_Mpc": 1067.2882889881164,
+    "physical_unit_relative_check": 0.0,
+    "requirements": [
+      {
+        "target_physical_wavelength_Mpc": 1.0,
+        "minimum_stiffness_for_Jeans_length_below_target": 166087499215699.5,
+        "interpretation": "necessary Jeans diagnostic in this approximation; not a fitted or adopted parameter"
+      },
+      {
+        "target_physical_wavelength_Mpc": 0.1,
+        "minimum_stiffness_for_Jeans_length_below_target": 1.660874992156994e+18,
+        "interpretation": "necessary Jeans diagnostic in this approximation; not a fitted or adopted parameter"
+      },
+      {
+        "target_physical_wavelength_Mpc": 0.01,
+        "minimum_stiffness_for_Jeans_length_below_target": 1.660874992156995e+22,
+        "interpretation": "necessary Jeans diagnostic in this approximation; not a fitted or adopted parameter"
+      }
+    ],
+    "fitted_parameters": [],
+    "observational_rmse": null,
+    "source": "https://arxiv.org/abs/astro-ph/0003365",
+    "limitations": [
+      "Single cold harmonic mode; ignores self interaction and coupled perturbations.",
+      "Present loop-energy matching is supplied, not the original synthetic run clock.",
+      "No transfer function, baryonic forcing, halo or likelihood calculation.",
+      "Increasing stiffness changes an input and is not a derived prediction."
+    ]
+  },
+  "rows": [
+    {
+      "N": 4,
+      "phase_fields": 5,
+      "local_f_GeV": 1.2174999999999998e+17,
+      "leading_F_over_Mp": 4.29563732174866,
+      "lowest_gear_mass_eV": 7.830448332011106e-31,
+      "jeans_wavelength_Mpc": 1067.2882889881164,
+      "unit_endpoint_muon_abs_upper_bound": 4.769251120518799e-39,
+      "smallest_gear_eigenvalue": 5.145898033750315,
+      "eigenvalue_error": 8.881784197001252e-16,
+      "invariant": 3.184478661481209e-26
+    },
+    {
+      "N": 12,
+      "phase_fields": 13,
+      "local_f_GeV": 18556465336410.438,
+      "leading_F_over_Mp": 4.29563732174866,
+      "lowest_gear_mass_eV": 4.6272625091574045e-27,
+      "jeans_wavelength_Mpc": 13.883948342666,
+      "unit_endpoint_muon_abs_upper_bound": 2.053040992067767e-31,
+      "smallest_gear_eigenvalue": 4.174349095443688,
+      "eigenvalue_error": 8.881784197001252e-16,
+      "invariant": 3.1844786614812047e-26
+    },
+    {
+      "N": 20,
+      "phase_fields": 21,
+      "local_f_GeV": 2828298328.975276,
+      "leading_F_over_Mp": 4.29563732174866,
+      "lowest_gear_mass_eV": 2.996661459821829e-23,
+      "jeans_wavelength_Mpc": 0.17252666090054364,
+      "unit_endpoint_muon_abs_upper_bound": 8.837668278713919e-24,
+      "smallest_gear_eigenvalue": 4.067015042649229,
+      "eigenvalue_error": 8.881784197001252e-16,
+      "invariant": 3.1844786614812076e-26
+    },
+    {
+      "N": 28,
+      "phase_fields": 29,
+      "local_f_GeV": 431077.3249466965,
+      "leading_F_over_Mp": 4.29563732174866,
+      "lowest_gear_mass_eV": 1.958397609294936e-19,
+      "jeans_wavelength_Mpc": 0.0021341484386160495,
+      "unit_endpoint_muon_abs_upper_bound": 3.804326406843484e-16,
+      "smallest_gear_eigenvalue": 4.035172257073842,
+      "eigenvalue_error": 8.881784197001252e-16,
+      "invariant": 3.1844786614812076e-26
+    },
+    {
+      "N": 36,
+      "phase_fields": 37,
+      "local_f_GeV": 65.70299115175989,
+      "leading_F_over_Mp": 4.29563732174866,
+      "lowest_gear_mass_eV": 1.2827443732591708e-15,
+      "jeans_wavelength_Mpc": 2.636968846843876e-05,
+      "unit_endpoint_muon_abs_upper_bound": 1.6376377742832385e-08,
+      "smallest_gear_eigenvalue": 4.021615068744841,
+      "eigenvalue_error": 8.881784197001252e-16,
+      "invariant": 3.184478661481207e-26
+    }
+  ],
+  "invariant_relative_error": 1.2212453270876722e-15,
+  "fitted_parameters": [],
+  "selected_N": null,
+  "observational_rmse": null,
+  "limitations": [
+    "N and common scale are not derived by this relation.",
+    "Fixed F preserves leading slow dynamics, not all finite-lock corrections.",
+    "Jeans approximation and unit endpoint pseudoscalar subset only.",
+    "Mode abundance, reheating, portals and UV protection remain uncomputed."
+  ]
+}

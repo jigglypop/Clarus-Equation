@@ -8,10 +8,10 @@ from urllib.parse import unquote
 
 ROOT = Path(__file__).resolve().parents[1]
 PAPER_ROOT = ROOT / "paper"
-PAPER_DIR = PAPER_ROOT / "2_경로적분과_응용"
-LECTURE_DIR = PAPER_ROOT / "1_강의"
-CONSTANTS_DIR = PAPER_ROOT / "3_상수"
-FORMAL_DIR = PAPER_ROOT / "9_등호이전"
+PAPER_DIR = PAPER_ROOT / "참조" / "2_경로적분과_응용"
+LECTURE_DIR = PAPER_ROOT / "참조" / "1_강의"
+CONSTANTS_DIR = PAPER_ROOT / "참조" / "3_상수"
+FORMAL_DIR = PAPER_ROOT / "참조" / "9_등호이전"
 REFERENCE_DIR = PAPER_ROOT / "참조"
 MATH_NORMALIZER_PATH = PAPER_DIR / "normalize_markdown_math.py"
 
@@ -26,7 +26,7 @@ def _load_math_normalizer():
     return module
 
 PHYSICS_APPLICATION_MARKDOWN = tuple(
-    PAPER_ROOT / "4_공학적_활용" / name
+    PAPER_ROOT / "참조" / "4_공학적_활용" / name
     for name in (
         "01_핵융합_설계.md",
         "02_양자오류보정.md",
@@ -38,7 +38,7 @@ PHYSICS_APPLICATION_MARKDOWN = tuple(
 )
 
 THEORY_DERIVATION_MARKDOWN = tuple(
-    PAPER_ROOT / "5_유도" / name
+    PAPER_ROOT / "참조" / "5_유도" / name
     for name in (
         "00_선택과_접힘.md",
         "01_Navier_Stokes.md",
@@ -114,21 +114,6 @@ REMOVED_PARENT_PATTERNS = (
         "incorrect exchange-symmetry factor sign",
         re.compile(r"g\(1-\\epsilon\)\s*=\s*g\(\\epsilon\)"),
     ),
-)
-
-CODEX_POLICY_FILES = (
-    "agents/ce-math-verifier.md",
-    "agents/ce-status-auditor.md",
-    "agents/ce-physics-sourcer.md",
-    "agents/ce-ledger-writer.md",
-    "agents/ce-paper-writer.md",
-    "skills/ce-doc-write/SKILL.md",
-    "skills/ce-ledger-write/SKILL.md",
-    "skills/ce-paper-write/SKILL.md",
-    "skills/ce-closure-gate/SKILL.md",
-    "skills/ce-dimensionless/SKILL.md",
-    "skills/ce-validate/SKILL.md",
-    "skills/ce-explanation-planner/SKILL.md",
 )
 
 NARRATIVE_MARKDOWN = (
@@ -216,89 +201,6 @@ def test_refuted_parent_branches_are_absent_from_active_theory() -> None:
     assert not violations, "\n".join(violations)
 
 
-def test_agent_policies_use_the_same_formal_provenance() -> None:
-    violations: list[str] = []
-    for relative in CODEX_POLICY_FILES:
-        codex = ROOT / ".codex" / relative
-        if not codex.is_file():
-            violations.append(f"missing Codex policy: {relative}")
-            continue
-        codex_text = codex.read_text(encoding="utf-8")
-        if relative in {
-            "agents/ce-status-auditor.md",
-            "skills/ce-doc-write/SKILL.md",
-        }:
-            missing = [tag for tag in FORMAL_PROVENANCE if tag not in codex_text]
-            if missing:
-                violations.append(f".codex/{relative}: missing provenance: {missing}")
-        for pattern, label in (
-            (OLD_STATUS_TAG, "old status tag"),
-            (MACHINE_VERDICT, "machine verdict"),
-            (LEGACY_PROVENANCE, "legacy provenance vocabulary"),
-        ):
-            for match in pattern.finditer(codex_text):
-                line = codex_text.count("\n", 0, match.start()) + 1
-                line_text = codex_text.splitlines()[line - 1]
-                # `Gate: PASS|REVISE|BLOCKED` is the run-chain machine protocol
-                # the auditor must emit verbatim; only its protocol spelling is
-                # exempt, never a theory-status use of the same token.
-                if label == "machine verdict" and "Gate:" in line_text:
-                    continue
-                violations.append(f".codex/{relative}:{line}: {label}: {match.group(0)}")
-
-    assert not violations, "\n".join(violations)
-
-
-def test_explanation_planner_contract_is_complete() -> None:
-    skill = (ROOT / ".codex" / "skills" / "ce-explanation-planner" / "SKILL.md").read_text(
-        encoding="utf-8"
-    )
-    agent = (ROOT / ".codex" / "agents" / "ce-explanation-planner.md").read_text(
-        encoding="utf-8"
-    )
-    agent_toml = (ROOT / ".codex" / "agents" / "ce-explanation-planner.toml").read_text(
-        encoding="utf-8"
-    )
-    prompt = (ROOT / ".codex" / "prompts" / "ce-explain-plan.md").read_text(
-        encoding="utf-8"
-    )
-    harness = (ROOT / ".codex" / "harnesses" / "explanation_first_planner.md").read_text(
-        encoding="utf-8"
-    )
-    for marker in ("LaTeX", "비유", "[정리]", "[공리]", "증명 경로"):
-        assert marker in skill
-    for contract in (skill, agent, agent_toml, prompt, harness):
-        for marker in ("목표 계약", "완료 조건", "목표 이탈", "복귀 행동"):
-            assert marker in contract
-    assert "`.codex/skills/ce-explanation-planner`" in harness
-    assert "수학적 증명이 아니다" in harness
-
-    research = (ROOT / ".codex" / "skills" / "ce-research" / "SKILL.md").read_text(
-        encoding="utf-8"
-    )
-    assert "목표 정렬 게이트" in research
-    assert "어느 미완성 고리를 닫는지" in research
-
-
-def test_ledger_and_paper_writers_have_disjoint_ownership() -> None:
-    ledger = (ROOT / ".codex" / "skills" / "ce-ledger-write" / "SKILL.md").read_text(
-        encoding="utf-8"
-    )
-    paper = (ROOT / ".codex" / "skills" / "ce-paper-write" / "SKILL.md").read_text(
-        encoding="utf-8"
-    )
-    router = (ROOT / ".codex" / "skills" / "ce-doc-write" / "SKILL.md").read_text(
-        encoding="utf-8"
-    )
-
-    assert "강의, 유도, 논문 원고와 독자 가이드의 문장을 고치지 않는다" in ledger
-    assert "원장은 수정하지 않는다" in paper
-    assert "원장을 읽기 전용 입력" in paper
-    assert "$ce-ledger-write" in router
-    assert "$ce-paper-write" in router
-    assert "동시에 수정하지 않는다" in router
-
-
 def test_narrative_documents_open_with_reader_orientation() -> None:
     violations: list[str] = []
     for path in NARRATIVE_MARKDOWN:
@@ -324,7 +226,7 @@ def test_narrative_documents_open_with_reader_orientation() -> None:
 
 
 def test_core_narrative_keeps_verified_fixed_point_scope_and_measure_term() -> None:
-    narrative = (PAPER_ROOT / "5_유도" / "00_선택과_접힘.md").read_text(
+    narrative = (PAPER_ROOT / "참조" / "5_유도" / "00_선택과_접힘.md").read_text(
         encoding="utf-8"
     )
     assert r"x_0\in[0,1/D]" in narrative

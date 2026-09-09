@@ -1,0 +1,214 @@
+{
+  "source_manifest": {
+    "collective_phase_check.py": {
+      "commit": "05013ce3c653fc68c2fe5a4ab6294e95bd6c0a30",
+      "path": "paper/7_\ube44\ub3d9\uae30_\uad00\uacc4\ud2f1_\uc5f0\uad6c/repro/collective_phase/collective_phase_check.py",
+      "sha256": "d4288ea35b0f2e8f7b21c69c60f0cc7e98d146bd14797c0aca7f0eb766a51eb1"
+    },
+    "joint_state_check.py": {
+      "commit": "05013ce3c653fc68c2fe5a4ab6294e95bd6c0a30",
+      "path": "paper/7_\ube44\ub3d9\uae30_\uad00\uacc4\ud2f1_\uc5f0\uad6c/repro/collective_phase/joint_state_check.py",
+      "sha256": "c72f595a8c70b07bd8a2dfd146f8a87339ab9db13b984b8d4ea252a027718ece"
+    }
+  },
+  "original": {
+    "N": 4,
+    "q": 3,
+    "R": 128.0,
+    "local_f": 0.05,
+    "F_eff": 4.295637321748661,
+    "initial_phi": 2.541592653589793,
+    "initial_fast_over_loop_density": 4,
+    "heavy_frequency_over_H0": 294.31646145319297,
+    "final_a": 20.05192413343266,
+    "initial_total_w": 0.5999726972060494,
+    "final_loop_fraction_approx": 0.9986293659874463,
+    "friedmann_max_relative_residual": 2.7645160212105188e-09,
+    "comoving_fast_energy_relative_range": 5.604312780318478e-06,
+    "maximum_abs_averaged_fast_w": 0.004085558111917811,
+    "averaging_windows": [
+      {
+        "t_mid": 0.46645155149662343,
+        "a_mid": 1.8097550460662517,
+        "w_fast": -0.004085558111917811,
+        "averaged_comoving_fast_energy": 7.308769029916381,
+        "w_total": -0.5913563847883169
+      },
+      {
+        "t_mid": 0.7111928797864928,
+        "a_mid": 2.2830326439233297,
+        "w_fast": -0.0027654925505125744,
+        "averaged_comoving_fast_energy": 7.308740628001463,
+        "w_total": -0.7442298650499475
+      },
+      {
+        "t_mid": 0.9560297728277445,
+        "a_mid": 2.825498574540909,
+        "w_fast": -0.002417575592009555,
+        "averaged_comoving_fast_energy": 7.308736072966699,
+        "w_total": -0.8462682411028574
+      },
+      {
+        "t_mid": 1.2008666658689962,
+        "a_mid": 3.4616776030777343,
+        "w_fast": -0.002223822861991832,
+        "averaged_comoving_fast_energy": 7.308733829716387,
+        "w_total": -0.9095401758929648
+      },
+      {
+        "t_mid": 1.4457035589102478,
+        "a_mid": 4.217756610937475,
+        "w_fast": -0.0021053460990164046,
+        "averaged_comoving_fast_energy": 7.308732523974562,
+        "w_total": -0.9471968806665265
+      },
+      {
+        "t_mid": 1.6905404519514993,
+        "a_mid": 5.123139766660469,
+        "w_fast": -0.002025738885270934,
+        "averaged_comoving_fast_energy": 7.308731467177401,
+        "w_total": -0.9690897405272729
+      },
+      {
+        "t_mid": 1.9353773449927512,
+        "a_mid": 6.211916728303948,
+        "w_fast": -0.0019668609512982463,
+        "averaged_comoving_fast_energy": 7.308730751446933,
+        "w_total": -0.9816485674287493
+      },
+      {
+        "t_mid": 2.1802142380340026,
+        "a_mid": 7.524322934319506,
+        "w_fast": -0.0019190775140244987,
+        "averaged_comoving_fast_energy": 7.30872999347122,
+        "w_total": -0.9887967652094338
+      },
+      {
+        "t_mid": 2.4250511310752545,
+        "a_mid": 9.10832571232185,
+        "w_fast": -0.0018772215924379913,
+        "averaged_comoving_fast_energy": 7.308729010502177,
+        "w_total": -0.9928451822917329
+      },
+      {
+        "t_mid": 2.669888024116506,
+        "a_mid": 11.021430767237142,
+        "w_fast": -0.0018385696906621704,
+        "averaged_comoving_fast_energy": 7.308728069476257,
+        "w_total": -0.9951291016952452
+      },
+      {
+        "t_mid": 2.9146293524063753,
+        "a_mid": 13.33180282946712,
+        "w_fast": -0.002370591591828069,
+        "averaged_comoving_fast_energy": 7.308729817231931,
+        "w_total": -0.9964127177333232
+      }
+    ],
+    "limitation": "Fast/slow split is an adiabatic diagnostic around a displaced transverse minimum; only total stress is exact. Abundances and preparation supplied. No halo or CMB comparison."
+  },
+  "tighter": {
+    "N": 4,
+    "q": 3,
+    "R": 128.0,
+    "local_f": 0.05,
+    "F_eff": 4.295637321748661,
+    "initial_phi": 2.541592653589793,
+    "initial_fast_over_loop_density": 4,
+    "heavy_frequency_over_H0": 294.31646145319297,
+    "final_a": 20.051924023604343,
+    "initial_total_w": 0.5999726972060494,
+    "final_loop_fraction_approx": 0.998629365968051,
+    "friedmann_max_relative_residual": 3.30384942845205e-10,
+    "comoving_fast_energy_relative_range": 5.597243405116058e-06,
+    "maximum_abs_averaged_fast_w": 0.004085558087744741,
+    "averaging_windows": [
+      {
+        "t_mid": 0.46645155149662343,
+        "a_mid": 1.8097550457640335,
+        "w_fast": -0.004085558087744741,
+        "averaged_comoving_fast_energy": 7.308769045079745,
+        "w_total": -0.5913563841772045
+      },
+      {
+        "t_mid": 0.7111928797864928,
+        "a_mid": 2.2830326430059467,
+        "w_fast": -0.0027654925402431,
+        "averaged_comoving_fast_energy": 7.308740649957332,
+        "w_total": -0.7442298642635595
+      },
+      {
+        "t_mid": 0.9560297728277445,
+        "a_mid": 2.8254985725159862,
+        "w_fast": -0.0024175755941555923,
+        "averaged_comoving_fast_energy": 7.308736100872828,
+        "w_total": -0.8462682403417127
+      },
+      {
+        "t_mid": 1.2008666658689962,
+        "a_mid": 3.461677599300476,
+        "w_fast": -0.0022238228719073947,
+        "averaged_comoving_fast_energy": 7.308733864093732,
+        "w_total": -0.9095401752508631
+      },
+      {
+        "t_mid": 1.4457035589102478,
+        "a_mid": 4.217756604573043,
+        "w_fast": -0.0021053461253553053,
+        "averaged_comoving_fast_energy": 7.308732563798317,
+        "w_total": -0.9471968801820349
+      },
+      {
+        "t_mid": 1.6905404519514993,
+        "a_mid": 5.123139756635581,
+        "w_fast": -0.0020257389220049303,
+        "averaged_comoving_fast_energy": 7.308731511882834,
+        "w_total": -0.9690897401841081
+      },
+      {
+        "t_mid": 1.9353773449927512,
+        "a_mid": 6.21191671324071,
+        "w_fast": -0.001966860992523571,
+        "averaged_comoving_fast_energy": 7.308730801500509,
+        "w_total": -0.9816485671925779
+      },
+      {
+        "t_mid": 2.1802142380340026,
+        "a_mid": 7.524322912449524,
+        "w_fast": -0.0019190775691595445,
+        "averaged_comoving_fast_energy": 7.308730048403251,
+        "w_total": -0.9887967650509226
+      },
+      {
+        "t_mid": 2.4250511310752545,
+        "a_mid": 9.108325681378828,
+        "w_fast": -0.0018772216575915017,
+        "averaged_comoving_fast_energy": 7.308729071269989,
+        "w_total": -0.9928451821853898
+      },
+      {
+        "t_mid": 2.669888024116506,
+        "a_mid": 11.021430724321664,
+        "w_fast": -0.0018385697707524896,
+        "averaged_comoving_fast_energy": 7.308728136307566,
+        "w_total": -0.9951291016236462
+      },
+      {
+        "t_mid": 2.9146293524063753,
+        "a_mid": 13.331802770884423,
+        "w_fast": -0.002370591674058365,
+        "averaged_comoving_fast_energy": 7.308729890773272,
+        "w_total": -0.9964127176842027
+      }
+    ],
+    "limitation": "Fast/slow split is an adiabatic diagnostic around a displaced transverse minimum; only total stress is exact. Abundances and preparation supplied. No halo or CMB comparison."
+  },
+  "differences": {
+    "final_a": -1.0982831710748542e-07,
+    "maximum_abs_averaged_fast_w": -2.4173070663213725e-11,
+    "comoving_fast_energy_relative_range": -7.069375202419572e-09,
+    "friedmann_max_relative_residual": -2.4341310783653137e-09
+  },
+  "observational_rmse": null,
+  "fitted_parameters": []
+}

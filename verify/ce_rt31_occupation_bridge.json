@@ -1,0 +1,34 @@
+{
+  "checkpoint": "_workspace\\ce_rt31_checkpoints\\t25_K48_n1536.npz",
+  "checkpoint_sha256": "20e478013a5970434425f1431c786890a203124ab49835a1d1930a5c994dd4b1",
+  "time": 25.0,
+  "theta": 45.94074352216971,
+  "occupation_fractions": [
+    0.26356681616562594,
+    0.5853109164242136,
+    0.15112226741016044
+  ],
+  "full_mode": {
+    "rho": 0.0014400693270159813,
+    "particle_force": 5.031224468736505e-05,
+    "coherence_force": -4.9922605716274204e-05,
+    "total_force": 3.896389710908473e-07
+  },
+  "conserved_unequal_cold": {
+    "rho": 0.001324181550900479,
+    "force": 5.040314900829776e-05
+  },
+  "equal_cold_same_total_number": {
+    "rho": 0.001332062182122457,
+    "force": -9.865744609527767e-06
+  },
+  "unequal_cold_energy_relative_error": -0.08047374799353413,
+  "equal_cold_energy_relative_error": -0.07500135088449511,
+  "unequal_cold_particle_force_relative_error": 0.001806803125115497,
+  "equal_cold_particle_force_relative_error": -1.1960903289215667,
+  "mass_derivative_absolute_error": 2.7945582046357e-15,
+  "species_permutation_covariance_verified": true,
+  "assumptions": "Cold closures freeze measured N_j and omit coherence; neither is the full evolved state.",
+  "fitted_parameters": [],
+  "observational_rmse": null
+}

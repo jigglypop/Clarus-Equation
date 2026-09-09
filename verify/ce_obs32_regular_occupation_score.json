@@ -1,0 +1,77 @@
+{
+  "baseline_AP_rmse": 0.9887377465774193,
+  "cases": [
+    {
+      "stationary_theta": 3.4502295064003303,
+      "starts": [
+        {
+          "ai": 0.02,
+          "AP_rmse": 8.98077006596649,
+          "final_theta": 3.3689971256884963
+        },
+        {
+          "ai": 0.01,
+          "AP_rmse": 8.980770065960282,
+          "final_theta": 3.368997125690453
+        },
+        {
+          "ai": 0.005,
+          "AP_rmse": 8.980770065960204,
+          "final_theta": 3.3689971256904827
+        }
+      ],
+      "AP_prediction": [
+        0.686853816009578,
+        1.0373927485263472,
+        1.5001423028344287,
+        2.41183967536174,
+        2.8405929624667485,
+        5.45456906627513
+      ],
+      "delta_AP_rmse": 7.992032319382785,
+      "initial_time_refinement_max_AP_difference": 1.4210854715202004e-14,
+      "independent_solver_max_AP_difference": 1.965094753586527e-13
+    },
+    {
+      "stationary_theta": 13.455054912784098,
+      "starts": [
+        {
+          "ai": 0.02,
+          "AP_rmse": 2.0440296188378095,
+          "final_theta": 13.571209648901366
+        },
+        {
+          "ai": 0.01,
+          "AP_rmse": 2.044029618759983,
+          "final_theta": 13.571209648861345
+        },
+        {
+          "ai": 0.005,
+          "AP_rmse": 2.044029618758777,
+          "final_theta": 13.571209648860695
+        }
+      ],
+      "AP_prediction": [
+        0.6080339597879337,
+        0.9029901352560803,
+        1.2924728327759973,
+        2.066694887773202,
+        2.434122496966888,
+        4.706778604607562
+      ],
+      "delta_AP_rmse": 1.0552918721813578,
+      "initial_time_refinement_max_AP_difference": 1.3944401189291966e-13,
+      "independent_solver_max_AP_difference": 6.035172361862351e-13
+    }
+  ],
+  "fitted_parameters": [],
+  "assumptions": [
+    "Freeze RT31 t25 population ratios; omit coherence and momentum pressure.",
+    "Use OBS32 scales and matter coefficient, not RT31 scales or absolute abundance.",
+    "Set all homogeneous mode amplitudes to zero; this is not derived from generation.",
+    "Report both stationary branches without selecting the better score."
+  ],
+  "full_joint_rmse": null,
+  "state_matching_complete": false,
+  "independent_holdout": false
+}

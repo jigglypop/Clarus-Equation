@@ -1,0 +1,28 @@
+{
+  "record": "https://zenodo.org/records/7741399",
+  "doi": "10.5281/zenodo.7741399",
+  "version": "v1",
+  "release_date": "2023-03-16",
+  "retrieved_at": "2026-09-09",
+  "archive_url": "https://zenodo.org/records/7741399/files/T2K_arxiv2303.03222_DataRelease.zip?download=1",
+  "archive_bytes": 1149330,
+  "archive_sha256": "574eb0c60e7f193bd2b9e95b4b04967cd511df87893cb519fc43b3e5723611cb",
+  "archive_md5": "864a40abecd009c1654e0c580c4375e2",
+  "published_md5_verified": true,
+  "inspection": "zip_member_inventory_and_archive_README; ROOT_objects_not_deserialized",
+  "member_count": 8,
+  "result_files": ["Bayesian_DataRelease.root", "Frequentist_DataRelease.root"],
+  "documented_contents": ["one_dimensional_delta_chi_squared", "one_dimensional_posterior_densities", "two_dimensional_confidence_and_credible_contours", "Feldman_Cousins_critical_values_for_selected_parameters"],
+  "full_event_likelihood_available_in_this_release": false,
+  "basis_for_availability_judgment": "published_release_description_and_archive_README",
+  "reactor_constraint_tags": {"wRC": "includes_PDG2019_reactor_constraint", "woRC": "excludes_that_reactor_constraint"},
+  "splitting_conventions": {
+    "Bayesian": "signed_dm32_for_both_orderings",
+    "Frequentist_NH": "dm32",
+    "Frequentist_IH": "absolute_dm31"
+  },
+  "evaluation_role": "exploratory_reference_not_registered_untouched_holdout",
+  "prohibited_inferences": ["multiply_one_dimensional_profiles_as_an_independent_joint_likelihood", "interpret_posterior_density_as_likelihood_without_prior", "add_reactor_constraint_again_to_wRC", "reinterpret_contour_boundaries_as_a_full_covariance", "reuse_standard_oscillation_profiles_for_modified_propagation_without_validating_the_event_prediction_map"],
+  "joint_rmse": null,
+  "scientific_success": false
+}

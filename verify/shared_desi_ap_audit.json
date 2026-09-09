@@ -1,0 +1,142 @@
+{
+  "role": "rounded_shared_table_observational_audit",
+  "shared_source": "https://chatgpt.com/share/6aa0e93e-2dec-83ee-b20a-d1ee57fa611d",
+  "data": {
+    "dataset_id": "DESI_DR2_ALL_GCCOMB_BAO_V2_6",
+    "assets": {
+      "mean": {
+        "filename": "desi_gaussian_bao_ALL_GCcomb_mean.txt",
+        "url": "https://raw.githubusercontent.com/CobayaSampler/bao_data/v2.6/desi_bao_dr2/desi_gaussian_bao_ALL_GCcomb_mean.txt",
+        "bytes": 472,
+        "sha256": "9ac154ab583ce759c0f7eef3c978c7c70a6ead2d18774caceadf1a350a640585"
+      },
+      "covariance": {
+        "filename": "desi_gaussian_bao_ALL_GCcomb_cov.txt",
+        "url": "https://raw.githubusercontent.com/CobayaSampler/bao_data/v2.6/desi_bao_dr2/desi_gaussian_bao_ALL_GCcomb_cov.txt",
+        "bytes": 2547,
+        "sha256": "252a143274c8a07c78694c119617d36594f6d7965d00319ca611c6ffb886e509"
+      }
+    },
+    "retrieved_for": "independent shared-table audit",
+    "validation": "remote bytes match existing local source and pinned SHA256"
+  },
+  "n_distance_inputs": 13,
+  "n_ap_ratios": 6,
+  "source_solver_rerun": false,
+  "ratio_covariance_approximation": "first-order J C J^T",
+  "points": [
+    {
+      "z": 0.51,
+      "observed": 0.6214891536355314,
+      "sigma": 0.01710914602323674,
+      "shared_rounded_prediction": 0.59457
+    },
+    {
+      "z": 0.706,
+      "observed": 0.8918211017171782,
+      "sigma": 0.020776150259281742,
+      "shared_rounded_prediction": 0.87885
+    },
+    {
+      "z": 0.934,
+      "observed": 1.223005193169959,
+      "sigma": 0.019160171222185246,
+      "shared_rounded_prediction": 1.2535
+    },
+    {
+      "z": 1.321,
+      "observed": 1.9470100283531242,
+      "sigma": 0.04514281683326695,
+      "shared_rounded_prediction": 1.99859
+    },
+    {
+      "z": 1.484,
+      "observed": 2.3805805950697523,
+      "sigma": 0.1358822075026633,
+      "shared_rounded_prediction": 2.35273
+    },
+    {
+      "z": 2.33,
+      "observed": 4.517032688082611,
+      "sigma": 0.09693909563353667,
+      "shared_rounded_prediction": 4.55019
+    }
+  ],
+  "ratio_covariance": [
+    [
+      0.0002927228776444376,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.00043164841959625284,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.00036711216126345566,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.00203787391164189,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.018463974315796848,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.009397188262247967
+    ]
+  ],
+  "shared_prediction_score": {
+    "chi2": 6.862932219243511,
+    "standardized_rmse": 1.0694961601336328
+  },
+  "flat_lcdm_fixed_omega_03": {
+    "chi2": 5.865613989042011,
+    "standardized_rmse": 0.9887377465774237
+  },
+  "flat_lcdm_fitted": {
+    "omega_m": 0.2985253463062227,
+    "fitted_parameters": 1,
+    "chi2": 5.858634604635054,
+    "standardized_rmse": 0.9881493312108798
+  },
+  "shared_rmse_minus_fixed": 0.08075841355620905,
+  "shared_rmse_minus_fitted": 0.08134682892275302,
+  "shared_rmse_rounding_bound": 0.0002922413540225365,
+  "excluded_from_ratio_diagnostic": "BGS DV datum has no DM/DH pair; retained in source, not scored here",
+  "limitations": [
+    "rounded CE predictions, unavailable background code and parameters",
+    "not the full 13-distance likelihood",
+    "retrospective comparison, no independent holdout",
+    "no theory covariance or parameter-complexity assessment",
+    "no absolute H0 or sound-horizon prediction"
+  ],
+  "joint_rmse": null,
+  "scientific_success": false
+}

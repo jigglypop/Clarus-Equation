@@ -1,0 +1,62 @@
+{
+  "source_chapter": 19,
+  "data_loader_sha256": "d6abc29bf1d4b157281a541daea84d088f0161010edb5c3357a01e8d74cf9ae8",
+  "fixed_r": 0.495,
+  "u0": 9.853661163403481e-05,
+  "u_second": -4.942278143231775e-05,
+  "critical_density_ratio": 0.18238825369387138,
+  "initial_phase": 0,
+  "initial_phase_velocity": 0,
+  "Lambda_R": 0,
+  "fitted_parameters": [],
+  "cases": [
+    {
+      "name": "chapter19",
+      "omega_m": 0.315,
+      "omega_c": 0.264156592027754,
+      "current_density_ratio": 0.3856300613543854,
+      "critical_scale_factor": 1.2834865997720803,
+      "stable_over_data_redshifts": true,
+      "prediction": [
+        0.5936254213328631,
+        0.8774825277143833,
+        1.2516952177573946,
+        1.9961653774914965,
+        2.350061159953654,
+        4.546336502690874
+      ],
+      "chi2": 6.698235728635588,
+      "ap_rmse": 1.0565853592773584,
+      "independent_distance_max_abs": 1.708855279503041e-12,
+      "matched_LCDM_delta_rmse": 0.0
+    },
+    {
+      "name": "obs32_density_control",
+      "omega_m": 0.3,
+      "omega_c": 0.252,
+      "current_density_ratio": 0.36000000000000004,
+      "critical_scale_factor": 1.2543975926622573,
+      "stable_over_data_redshifts": true,
+      "prediction": [
+        0.5905374650168419,
+        0.8717480503204575,
+        1.2421725125079854,
+        1.9790297272309014,
+        2.3294119714656074,
+        4.505662896034949
+      ],
+      "chi2": 5.865613989042011,
+      "ap_rmse": 0.9887377465774237,
+      "independent_distance_max_abs": 1.247890679678676e-12,
+      "matched_LCDM_delta_rmse": 0.0
+    }
+  ],
+  "joint_quantum_macro_rmse": null,
+  "conclusion": "Locked branch preserves matched LCDM distances exactly; no RMSE reduction.",
+  "limitations": [
+    "Observed density normalization and selected r remain inputs.",
+    "Radiation neglected as in original late-time branch.",
+    "No charged portal in this action; no direct new one-loop muon term.",
+    "Early universe, primordial state, and four-force completion not computed."
+  ]
+}

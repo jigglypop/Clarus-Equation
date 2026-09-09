@@ -110,7 +110,7 @@ $rm^2\rho$에 접근하므로 independence에서 얻는 $N^{-1}$ 억제가
 
 추가로 $0\leq\Phi_N\leq C$ almost surely이고 상대오차를 $\delta$
 이하로 만들 충분조건을 원하면
-[../9_등호이전/05l_CE_uncertainty_floor.md](../9_등호이전/05l_CE_uncertainty_floor.md) 4절에 의해
+[../참조/9_등호이전/05l_CE_uncertainty_floor.md](../참조/9_등호이전/05l_CE_uncertainty_floor.md) 4절에 의해
 $$
 \frac{rm^2}{N}\bigl(1+(N-1)\rho\bigr)
 \leq
@@ -127,7 +127,7 @@ $$
 $$
 가 정확하다. 결정론 모형은 확률론만으로 배제되지 않는다.
 
-**[정리]** [../9_등호이전/05l_CE_uncertainty_floor.md](../9_등호이전/05l_CE_uncertainty_floor.md)
+**[정리]** [../참조/9_등호이전/05l_CE_uncertainty_floor.md](../참조/9_등호이전/05l_CE_uncertainty_floor.md)
 4절의 독립·유계 intensive 모드 조건에서는
 $$
 \frac{\mathbb Ee^{-\Phi_N}}
@@ -135,7 +135,7 @@ $$
 =1+O(N^{-1}).
 $$
 
-반면 [../9_등호이전/05k_CE_hard_constraint.md](../9_등호이전/05k_CE_hard_constraint.md)의 extensive
+반면 [../참조/9_등호이전/05k_CE_hard_constraint.md](../참조/9_등호이전/05k_CE_hard_constraint.md)의 extensive
 Gaussian action $U_N\sim\operatorname{Gamma}(N/2,1)$은
 $$
 \frac{\mathbb Ee^{-U_N}}{e^{-\mathbb EU_N}}

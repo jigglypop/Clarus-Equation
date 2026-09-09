@@ -1,4 +1,0 @@
-interface:
-  display_name: "CE Paper Writer"
-  short_description: "Draft readable Korean CE physics and math papers"
-  default_prompt: "Use $ce-paper-write to outline and draft a readable Korean CE mathematics or physics paper."

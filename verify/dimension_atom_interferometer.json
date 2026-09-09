@@ -1,0 +1,36 @@
+{
+  "representative": {
+    "source_mass_kg_nominal": 0.009336334039302162,
+    "near_phase_rad_Newton": 6.644361415726525e-06,
+    "far_phase_rad_Newton": 9.308420256285252e-07,
+    "near_minus_far_phase_rad_Newton": 5.713519390098e-06,
+    "effective_Newton_acceleration_m_s2": 1.6130521587577948e-09,
+    "source_nodes": 37632,
+    "source_order": 28,
+    "azimuths": 48,
+    "arm_to_material_distance_lower_bound_m": 0.0075669756074949485,
+    "role": "representative unmeasured apex trajectory; not a reconstructed experimental run"
+  },
+  "source_refinement_phase_difference_rad": -9.677351422380381e-18,
+  "same_cosmological_mass_over_H0": 1000.0,
+  "s": 1.2039730775582572e-05,
+  "linear_bound": {
+    "mean_internal_mass_squared": 3.056418958354776,
+    "one_source_acceleration_upper_m_s2": 6.768730873050286e-61,
+    "near_minus_far_acceleration_upper_m_s2": 1.353746174610057e-60,
+    "near_minus_far_phase_upper_rad": 4.7950433443280484e-57,
+    "assumptions": "linear vacuum propagation; same ideal G calibration; prescribed closed arms",
+    "complete_device_bound": false
+  },
+  "reported_acceleration_sigma_m_s2": 3.7e-06,
+  "linear_bound_over_reported_sigma": 3.658773444892046e-55,
+  "actual_experiment_rmse": null,
+  "all_domain_rmse": null,
+  "limitations": [
+    "published effective distance is not an initial-state distribution",
+    "near/far positions are approximate; source mass and density are not independently measured here",
+    "finite pulses, wavepacket distribution, reversal and nuisance covariance omitted",
+    "linear-vacuum cancellation bound is not a bound on full nonlinear/environmental corrections"
+  ],
+  "scientific_success": false
+}

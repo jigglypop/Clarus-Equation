@@ -1,0 +1,86 @@
+{
+  "scope": "leading subhorizon long-range approximation, no scalar horizon-scale dynamics",
+  "equations": "q=dln(m)/dtheta; dark friction 2+H_N/H+q*theta_N; Gcc/G=1+2q^2/Z",
+  "assumptions": [
+    "uncoupled pressureless baryons",
+    "nonrelativistic dark matter represented as one effective fluid with mass m(theta)",
+    "k/a much greater than H and effective scalar mass magnitude",
+    "same supplied adiabatic preparation at a=.01",
+    "scalar density perturbation corrections suppressed in this limit"
+  ],
+  "baseline": {
+    "D_today": 0.7789810167707876,
+    "f_today": 0.5127962477302371,
+    "dark_to_baryon_contrast": 1.0,
+    "fifth_force_over_gravity_today": 0.0
+  },
+  "baseline_growth_integral_check": 4.440892098500626e-16,
+  "cases": [
+    {
+      "r": 0.15,
+      "initial_theta": 0.1,
+      "D_today": 0.779328448519624,
+      "f_today": 0.5134236265736394,
+      "dark_to_baryon_contrast": 1.0000001158047447,
+      "fifth_force_over_gravity_today": 5.278453422271115e-09,
+      "D_change_percent": 0.044600797882954346,
+      "solver_absolute_difference": 1.0025313912365164e-13
+    },
+    {
+      "r": 0.15,
+      "initial_theta": 0.3,
+      "D_today": 0.7821090384027466,
+      "f_today": 0.5184621521943257,
+      "dark_to_baryon_contrast": 1.0000010211857677,
+      "fifth_force_over_gravity_today": 4.576815178445049e-08,
+      "D_change_percent": 0.40155299867588035,
+      "solver_absolute_difference": 9.159339953157541e-14
+    },
+    {
+      "r": 0.15,
+      "initial_theta": 0.5,
+      "D_today": 0.7876752194291318,
+      "f_today": 0.5286413838840136,
+      "dark_to_baryon_contrast": 1.0000027216853848,
+      "fifth_force_over_gravity_today": 1.179484154886544e-07,
+      "D_change_percent": 1.1160994261946833,
+      "solver_absolute_difference": 1.0380585280245214e-13
+    },
+    {
+      "r": 0.35,
+      "initial_theta": 0.1,
+      "D_today": 0.7793538235589036,
+      "f_today": 0.5134711250197733,
+      "dark_to_baryon_contrast": 1.000003323834645,
+      "fifth_force_over_gravity_today": 1.4557079540600963e-06,
+      "D_change_percent": 0.04785826356352718,
+      "solver_absolute_difference": 9.758860386455126e-14
+    },
+    {
+      "r": 0.35,
+      "initial_theta": 0.3,
+      "D_today": 0.7823361950031473,
+      "f_today": 0.5188905349378494,
+      "dark_to_baryon_contrast": 1.0000293307596735,
+      "fifth_force_over_gravity_today": 1.2688570399899803e-05,
+      "D_change_percent": 0.4307137350109569,
+      "solver_absolute_difference": 9.903189379656396e-14
+    },
+    {
+      "r": 0.35,
+      "initial_theta": 0.5,
+      "D_today": 0.7882990691821881,
+      "f_today": 0.5298352947411139,
+      "dark_to_baryon_contrast": 1.0000782706029654,
+      "fifth_force_over_gravity_today": 3.302916004732958e-05,
+      "D_change_percent": 1.1961847863800168,
+      "solver_absolute_difference": 9.803269307440132e-14
+    }
+  ],
+  "fitted_parameters": 0,
+  "sigma8_predicted": false,
+  "growth_observational_rmse": null,
+  "joint_rmse": null,
+  "source_context": "https://arxiv.org/abs/1305.7457",
+  "conclusion": "Growth transfer calculated conditionally; no observational improvement established."
+}

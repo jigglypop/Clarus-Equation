@@ -1,0 +1,82 @@
+{
+  "cutoff": 48.0,
+  "quadrature_order": 1536,
+  "dynamic_H": false,
+  "initial": {
+    "a": 1.0,
+    "H": 0.0822792583066562,
+    "theta_velocity": 6.0,
+    "rho_ex": 0.0023147452647787853,
+    "gaussian_invariant_max_abs": 4.440892098500626e-16,
+    "state_moments": {
+      "comoving_particle_numbers": [
+        3.161499326876529e-07,
+        0.000721910725798251,
+        0.0009432166549909984
+      ],
+      "number_fractions": [
+        0.00018982927181602376,
+        0.43346454711995963,
+        0.5663456236082244
+      ],
+      "comoving_number_time_derivatives": [
+        2.2137695233581786e-09,
+        0.0003239935967617304,
+        -0.0004343737183362
+      ],
+      "rest_mass_energy": 0.0013641004694921893,
+      "kinetic_energy_fraction": 0.4106908910244371,
+      "particle_gas_pressure": 0.0004628098514538966,
+      "coherence_pressure": 0.00030877190347236523,
+      "total_state_pressure": 0.0007715817549262617,
+      "particle_force": 2.2370320767732855e-05,
+      "coherence_force": -2.2370320767732855e-05,
+      "total_state_force": 0.0
+    }
+  },
+  "final": {
+    "a": 1.9756954149311188,
+    "H": 0.01281736711648838,
+    "theta_velocity": 0.7501954381472649,
+    "rho_ex": 0.0014400693270159813,
+    "gaussian_invariant_max_abs": 2.3092638912203256e-14,
+    "state_moments": {
+      "comoving_particle_numbers": [
+        0.0028141938503942233,
+        0.006249566639430582,
+        0.0016135845998763887
+      ],
+      "number_fractions": [
+        0.2635668161656259,
+        0.5853109164242134,
+        0.15112226741016055
+      ],
+      "comoving_number_time_derivatives": [
+        -8.192959344935865e-05,
+        -0.00018650299673514858,
+        -2.2854105906674952e-05
+      ],
+      "rest_mass_energy": 0.0013241815509004782,
+      "kinetic_energy_fraction": 0.08047374799353468,
+      "particle_gas_pressure": 6.981533492646583e-05,
+      "coherence_pressure": 1.6197113233814958e-05,
+      "total_state_pressure": 8.601244816028081e-05,
+      "particle_force": 5.031224468736503e-05,
+      "coherence_force": -4.9922605716274204e-05,
+      "total_state_force": 3.8963897109081645e-07
+    }
+  },
+  "friedmann_max_relative": 3.279664994048779e-16,
+  "nfev": 9083,
+  "supplied_inputs": {
+    "s": 1,
+    "epsilon": 0.35,
+    "f": 0.1,
+    "M_R": 3.0,
+    "theta0": 0.7,
+    "theta_dot0": 6.0,
+    "Lambda_R": 0
+  },
+  "fitted_parameters": [],
+  "observational_rmse": null
+}

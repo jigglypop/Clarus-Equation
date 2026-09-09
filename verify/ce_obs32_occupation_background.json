@@ -1,0 +1,80 @@
+{
+  "equal_population_regression": [
+    {
+      "r": 0.15,
+      "theta": 0.1,
+      "equal_population_AP_absolute_difference": 5.329070518200751e-15
+    },
+    {
+      "r": 0.15,
+      "theta": 0.3,
+      "equal_population_AP_absolute_difference": 2.6645352591003757e-15
+    },
+    {
+      "r": 0.15,
+      "theta": 0.5,
+      "equal_population_AP_absolute_difference": 1.3322676295501878e-15
+    },
+    {
+      "r": 0.35,
+      "theta": 0.1,
+      "equal_population_AP_absolute_difference": 5.551115123125783e-17
+    },
+    {
+      "r": 0.35,
+      "theta": 0.3,
+      "equal_population_AP_absolute_difference": 1.6653345369377348e-16
+    },
+    {
+      "r": 0.35,
+      "theta": 0.5,
+      "equal_population_AP_absolute_difference": 4.440892098500626e-16
+    }
+  ],
+  "unequal_population_mprime_at_zero": -0.058047469813048584,
+  "cold_matter_stationary_modes": [
+    {
+      "theta": 3.4502295064003303,
+      "mass": 0.854413439378282,
+      "mass_curvature": 0.03321442261711585,
+      "K": 0.09536248136104616,
+      "homogeneous_exponents": [
+        {
+          "real": -1.4334745925335877,
+          "imag": 0.0
+        },
+        {
+          "real": -0.06652540746641224,
+          "imag": 0.0
+        }
+      ],
+      "forced_a3_coefficient": -0.09015649392413178,
+      "freely_specifiable_past_regular_modes": 0
+    },
+    {
+      "theta": 13.455054912784098,
+      "mass": 1.177491733771292,
+      "mass_curvature": -0.016759957393574217,
+      "K": -0.036755154334763764,
+      "homogeneous_exponents": [
+        {
+          "real": -1.5241157241231855,
+          "imag": 0.0
+        },
+        {
+          "real": 0.02411572412318545,
+          "imag": 0.0
+        }
+      ],
+      "forced_a3_coefficient": 0.17427760788935598,
+      "freely_specifiable_past_regular_modes": 1
+    }
+  ],
+  "explicit_velocity_diagnostic_checks": {
+    "relative_total_continuity": 3.778344150840073e-16,
+    "H_derivative_finite_difference_abs": 1.16130438598816e-11
+  },
+  "fitted_parameters": [],
+  "observational_rmse": null,
+  "state_matching_complete": false
+}

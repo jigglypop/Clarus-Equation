@@ -1,0 +1,79 @@
+{
+  "method": "DOP853",
+  "rtol": 2e-12,
+  "inputs": {
+    "N": 4,
+    "q": 3,
+    "f": 0.05,
+    "R_H": 128.0,
+    "ai": 0.01,
+    "Rm": 0.42857142857142855,
+    "fc": 0.84,
+    "initial_phi": 2.541592653589793,
+    "initial_potential": 1,
+    "initial_fast_kinetic": 359999.99999999994
+  },
+  "source": "full cosine chain; lowest massive eigenmode initial velocity",
+  "ap_prediction": [
+    0.5382249499850337,
+    0.7682410494089971,
+    1.0592290454377713,
+    1.621220828390505,
+    1.8854335999332057,
+    3.545867557680347
+  ],
+  "ap_rmse": 7.045761507140129,
+  "final_phase": 2.541909485112403,
+  "final_H": 0.6327043265565605,
+  "final_fast_energy_diagnostic": 0.03669761136011615,
+  "cold_extrapolation_energy": 0.36,
+  "friedmann_max_relative": 1.9657874823254764e-07,
+  "nfev": 100931,
+  "fitted_parameters": [],
+  "joint_rmse": null,
+  "limitations": [
+    "Initial occupation, current epoch and baryons supplied.",
+    "Fast energy decomposition at final instant is diagnostic, not time averaged.",
+    "No radiation, quantum production, spatial perturbations or muon likelihood."
+  ],
+  "tighter_check": {
+    "method": "DOP853",
+    "rtol": 2e-13,
+    "inputs": {
+      "N": 4,
+      "q": 3,
+      "f": 0.05,
+      "R_H": 128.0,
+      "ai": 0.01,
+      "Rm": 0.42857142857142855,
+      "fc": 0.84,
+      "initial_phi": 2.541592653589793,
+      "initial_potential": 1,
+      "initial_fast_kinetic": 359999.99999999994
+    },
+    "source": "full cosine chain; lowest massive eigenmode initial velocity",
+    "ap_prediction": [
+      0.5382249552801015,
+      0.7682410590990929,
+      1.0592290642795794,
+      1.6212208658121794,
+      1.8854336530515097,
+      3.5458676889073795
+    ],
+    "ap_rmse": 7.04576071103655,
+    "final_phase": 2.5419094851508315,
+    "final_H": 0.632704268164665,
+    "final_fast_energy_diagnostic": 0.03669761519441082,
+    "cold_extrapolation_energy": 0.36,
+    "friedmann_max_relative": 7.445547487920656e-09,
+    "nfev": 131993,
+    "fitted_parameters": [],
+    "joint_rmse": null,
+    "limitations": [
+      "Initial occupation, current epoch and baryons supplied.",
+      "Fast energy decomposition at final instant is diagnostic, not time averaged.",
+      "No radiation, quantum production, spatial perturbations or muon likelihood."
+    ]
+  },
+  "tolerance_AP_max_difference": 1.3122703235168842e-07
+}

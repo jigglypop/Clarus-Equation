@@ -1,50 +1,24 @@
-# Clarus-Equation Codex rules
+# Clarus-Equation 에이전트 규약
 
-시작 지도: 이론·논문·원장은 `paper/README.md`, Codex 구조·명령·알려진 부채는 `.codex/README.md`에서 목적에 맞는 다음 경로만 읽는다.
+이 파일은 캐시에 유리한 고정 지침 머리말이 되도록 짧고 안정적으로 유지한다. 현재 요청에 필요한 파일만 읽는다. 이론과 원고 작업은 `paper/README.md`를 길잡이로 삼는다.
 
-## Default: direct implementation
+## 작업 규약
 
-- For ordinary code, test, documentation, and harness work: inspect the target, make the smallest scoped change, and run one focused validation.
-- Do not create a CE research run, preregistration, audit bundle, or full report unless the user explicitly asks for research, a new scientific claim, formal closure, preregistration, or release evidence.
-- Do not run bare `pytest`, the full suite, all benchmarks, or packaging by default. Use the narrowest changed test or a source-only check first.
-- Keep one implementation owner. Use subagents only for independent read-only mapping or research, and audit a stable snapshot after the implementation owner stops editing.
-- 모델 분담: 좁은 탐색·출처 수집·형식 확인은 Luna, 코드·문서 초안과 수학 검산은 Terra, 핵심 증명·상충 판정은 메인 Astra가 맡는다. 독립 자식은 필요한 자료만 전달하는 `fork_turns="none"`과 명시 모델을 우선한다. 호출·승급 기준은 `.codex/README.md`의 모델 분담 규칙을 따른다.
-- 강의(`1_강의`)·유도(`5_유도`)·논문 원고류 문서를 작성·수정할 때는 `.codex/skills/ce-doc-write/SKILL.md`의 "문서 유형: 원장과 논문형"과 "처음 읽는 독자 게이트"를 적용한다. 태그 블록만 나열한 원장체 강의·유도 문서는 완성으로 보고하지 않는다.
-- 문서 작성 소유권을 분리한다. 주장·상수·판본·진리값 원장은 `ce-ledger-writer`와 `$ce-ledger-write`, 강의·유도·독자 가이드·논문 원고는 `ce-paper-writer`와 `$ce-paper-write`가 맡는다. 두 유형이 함께 바뀌면 원장을 먼저 안정화한 뒤 논문 작성자는 이를 읽기 전용으로 사용하며, 두 작성자가 같은 파일이나 지위를 동시에 수정하지 않는다.
+- 저장소에서 일상적인 세부 사항을 추론하고, 승인된 작업을 구현과 집중 검증까지 자율적으로 마친다. 빠진 선택이 결과를 실질적으로 바꾸거나 새 권한이 필요할 때만 질문한다.
+- 시작할 때 적용되는 `AGENTS.md`, 명시적으로 요청된 스킬, 사용자 제약, 현재 Git 상태를 감사한다. 일반 지침 우선순위를 따르고 저장소 지침끼리는 대상에 가장 가까운 지침을 우선한다. 충돌 때문에 요청을 막거나 방향을 바꿔야 하면 정확한 출처와 규칙을 밝힌다.
+- 관련 없는 사용자 변경을 보존하고, 일관성을 갖춘 가장 작은 패치를 만든다. 사용자가 명시적으로 요청하지 않으면 스테이징, 커밋, 게시, 이력 재작성, 파괴적 정리를 하지 않는다.
+- 파일마다 작성자를 한 명만 둔다. 범위가 고정된 독립 작업이 시간을 줄이거나 유용한 독립 검증을 제공할 때만 `fork_turns="none"`으로 위임한다. 단순 도구 호출, 중복 작업, 같은 결과의 반복 확인은 위임하지 않는다. 작업자에게 관련 경로, 제약, 완료 조건만 전달한다.
+- 루트 오케스트레이터는 범위 결정, 모호성, 충돌, 종합, 최종 판단에 `gpt-6-astra`를 쓴다. 위임한 기계적 작업은 기본적으로 `gpt-5.6-sol`이 맡는다. 작업자 범위를 늘려야 할 판단은 루트로 되돌린다.
+- 위험에 비례해 검증한다. 의미 있는 최소 테스트나 소스 검사부터 시작하고, 공용 경계 변경, 실패, 명시적 요청이 있을 때만 넓힌다. 새 이유가 없으면 통과한 검사를 반복하지 않는다.
+- 진행 알림과 최종 답변은 결과부터 말한다. 짧은 문단과 쉬운 말을 우선하고, 병렬 항목이나 순서를 더 분명히 할 때만 목록을 쓴다.
 
-## Validation tiers
+과학 관련 변경에서는 정의, 가정, 유도, 경험적 적합, 열린 주장의 구분을 보존한다. 테스트 통과나 수치 일치는 구현을 검증하지만 물리 주장을 증명하지는 않는다.
+근본식을 구현하는 것이 목적이므로 파라미터 피팅은 엄격히 제한한다
 
-- FAST (default, target <=15 s): source parse/compile or one focused test file/node.
-- STANDARD (explicitly useful, target <=60 s): the changed subsystem and its adjacent integration test.
-- FULL/LOCK (explicit request only): full pytest, release gates, scientific stages, or irreversible V5 workflows.
-
-For pytest, disable the cache provider and use a unique temporary basetemp outside the repository. Never run an irreversible scientific stage as a routine validation.
-Harness changes start with `.codex/hooks/python.cmd harness`.
-
-## Windows Python execution
-
-- Agent runs are non-interactive. Never wait for a `uv`, Python selector, security, or package-install prompt; use explicit arguments or stop with the exact prerequisite.
-- On this repository, use `.codex/hooks/python.cmd doctor|python|pytest` as the Windows Python entry point. It prefers an already working non-venv system interpreter, sets the repository `PYTHONPATH`, disables bytecode/cache output, and gives pytest a unique owned basetemp.
-- Do not invoke the workspace `.venv` or a uv-managed Python after Windows Application Control rejects it. Do not weaken or bypass Windows Application Control. `uv` is reserved for an explicitly required dependency-resolution step after its cache and execution policy are separately repaired.
-- The direct-system-Python fallback is the default for focused source/tests only. A sealed scientific one-shot must also freeze and record the selected interpreter path, version, and dependency versions in its contract or manifest.
-
-## Main-agent Git ownership
-
-- The root/main agent alone owns branch changes, staging, commits, fetch/pull, and pushes. Subagents may inspect `git status`, `git diff`, and object IDs read-only, but must never change Git state or publish.
-- Before a handoff, the main agent records repository root, branch, upstream, HEAD, remote tip, exact changed-path manifest, validation command, and remaining unrelated dirt. Never use `git add .`, `git add -A`, stash, reset, clean, checkout, or an automatic rebase to make a dirty tree look clean.
-- Publishing requires the user's explicit publish instruction or an already explicit publish workflow. Fetch first, require `main` tracking `origin/main`, require a fast-forward, stage only the approved path manifest, run `.codex/hooks/check-large-data.cmd --commit` and then `--push` to scan staged and outgoing blobs, and use an ordinary non-force push. A mismatch, remote advance, hook failure, or branch-protection rejection is a stop condition, not permission to force or rewrite history.
-- After a push, verify that `refs/heads/main` at the remote equals local `HEAD`, then report the commit SHA, exact published paths, validation evidence, and any local changes that remain.
-
-## Theory analysis and explanation (서사-우선 독해 규약)
-
-CE 이론 전체를 분석·요약·설명하라는 요청(예: "논문 전체 분석", "어떤 이론인지 설명")을 받으면 다음 규약을 따른다.
-
-1. `paper/5_유도/00_선택과_접힘.md`를 먼저 읽고, 물리 서사 3단 — **끼임(환경이 강제하는 선택) → 접힘(비선택 성분의 보존) → 암흑 표현(접힌 에너지의 우주론 readout)** — 을 분석의 골격으로 삼는다. 수치 사슬($\alpha_s \to \Omega$)만 떼어 이론을 특징짓지 않는다.
-2. 태그 체계가 물리 사상을 `[공리]`/`[미완성]`으로 격리하는 것은 약점의 자백이 아니라 **의도된 감사 규율**이다. 분석 보고는 항상 네 층을 함께 제시한다: 동기 서사(공리 묶음) / 조건부 정리 / 채택 공리 / 미완성 다리.
-3. 관측 근접을 증거로 승격하지 않되, 메커니즘 서사를 생략한 채 경험식 목록만으로 이론을 "수치 우연의 모음"으로 특징짓지도 않는다. 두 방향 모두 오독이다.
-
-## CE research
-
-Use `$ce-research` only for genuinely research-grade work. A supplied `CE_RUN` or explicit audit task activates its contract -> lanes -> audit -> implementation workflow. Ordinary fixes bypass that workflow.
-
-V5 source lock and one-shot execution must use a fresh independent clone outside OneDrive/reparse-backed paths.
+목표는 양자 + 거시에서 
+- 암흑에너지
+- 암흑물질
+- 뮤온
+- 허블텐션
+- 4가지 힘의 통일
+등등 각각 떨어진 식들을 통합하여 공통 RMSE 식을 감소시키는 것이 목표이며 반드시 해당 계산 후 검산, 오차가 감소했는지 확인한다.

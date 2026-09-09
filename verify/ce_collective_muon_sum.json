@@ -1,0 +1,72 @@
+{
+  "source": "chapter 13 equation 13.7, all canonical modes",
+  "identity": "sum_k y_jk^2 = c_j^2 m_mu^2/f^2",
+  "sign": "nonpositive for this pseudoscalar one-loop subset",
+  "q": 3,
+  "N": 4,
+  "f_over_Mp": 0.05,
+  "Mp_GeV": 2.435e+18,
+  "completeness_error": 6.661338147750939e-16,
+  "endpoints": [
+    {
+      "endpoint": 0,
+      "supplied_portal_coefficient": 1,
+      "slow_fraction": 0.8889039425552092,
+      "other_modes_fraction": 0.11109605744479079,
+      "total_abs_delta_a_upper_bound": 4.7692511205187975e-39
+    },
+    {
+      "endpoint": 1,
+      "supplied_portal_coefficient": 1,
+      "slow_fraction": 0.0987671047283566,
+      "other_modes_fraction": 0.9012328952716434,
+      "total_abs_delta_a_upper_bound": 4.7692511205187975e-39
+    },
+    {
+      "endpoint": 2,
+      "supplied_portal_coefficient": 1,
+      "slow_fraction": 0.010974122747595174,
+      "other_modes_fraction": 0.9890258772524049,
+      "total_abs_delta_a_upper_bound": 4.7692511205187975e-39
+    },
+    {
+      "endpoint": 3,
+      "supplied_portal_coefficient": 1,
+      "slow_fraction": 0.0012193469719550196,
+      "other_modes_fraction": 0.998780653028045,
+      "total_abs_delta_a_upper_bound": 4.7692511205187975e-39
+    },
+    {
+      "endpoint": 4,
+      "supplied_portal_coefficient": 1,
+      "slow_fraction": 0.00013548299688389106,
+      "other_modes_fraction": 0.9998645170031161,
+      "total_abs_delta_a_upper_bound": 4.7692511205187975e-39
+    }
+  ],
+  "kernel_checks": [
+    {
+      "mediator_over_muon_mass": 0.0,
+      "integral": 0.49999999999999994
+    },
+    {
+      "mediator_over_muon_mass": 0.1,
+      "integral": 0.48492800096278527
+    },
+    {
+      "mediator_over_muon_mass": 1.0,
+      "integral": 0.2908004238438548
+    },
+    {
+      "mediator_over_muon_mass": 10.0,
+      "integral": 0.029349370522907533
+    },
+    {
+      "mediator_over_muon_mass": 100.0,
+      "integral": 0.0007380872182492173
+    }
+  ],
+  "fitted_parameters": [],
+  "joint_rmse": null,
+  "limitation": "Conditional single endpoint portal; electroweak completion, anomaly terms and other diagrams not included."
+}

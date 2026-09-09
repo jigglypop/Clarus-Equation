@@ -1,0 +1,30 @@
+{
+  "cutoff": 24,
+  "quadrature_order": 384,
+  "initial": {
+    "a": 1.0,
+    "H": 0.08227855420500158,
+    "theta_velocity": 6.0,
+    "rho_ex": 0.002311616165487923,
+    "gaussian_invariant_max_abs": 3.3306690738754696e-16
+  },
+  "final": {
+    "a": 1.9756973534923024,
+    "H": 0.0128174777671096,
+    "theta_velocity": 0.7502467513877453,
+    "rho_ex": 0.001439973184604392,
+    "gaussian_invariant_max_abs": 5.861977570020827e-14
+  },
+  "nfev": 6296,
+  "supplied_inputs": {
+    "s": 1,
+    "epsilon": 0.35,
+    "f": 0.1,
+    "M_R": 3.0,
+    "theta0": 0.7,
+    "theta_dot0": 6.0,
+    "Lambda_R": 0
+  },
+  "fitted_parameters": [],
+  "observational_rmse": null
+}

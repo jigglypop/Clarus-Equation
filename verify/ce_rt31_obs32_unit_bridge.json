@@ -1,0 +1,36 @@
+{
+  "unit_mass": "sqrt(s)",
+  "scaling": {
+    "physical_time": "t_dimensionless / sqrt(s)",
+    "physical_H": "sqrt(s) * H_dimensionless",
+    "physical_density": "s^2 * rho_dimensionless"
+  },
+  "rows": [
+    {
+      "case": "RT31 original",
+      "M_R_over_sqrt_s": 3.0,
+      "f_over_sqrt_s": 0.1,
+      "f_over_M_R": 0.03333333333333333
+    },
+    {
+      "case": "OBS32 supplied mass",
+      "M_R_over_sqrt_s": 1000000.0,
+      "f_over_sqrt_s": 1000000.0,
+      "f_over_M_R": 1.0
+    },
+    {
+      "case": "conditional physical dark mass 0.014414 eV",
+      "M_R_over_sqrt_s": 1.689329818232274e+29,
+      "f_over_sqrt_s": 1.689329818232274e+29,
+      "f_over_M_R": 1.0
+    }
+  ],
+  "original_result_regression_relative": {
+    "a": 0.0,
+    "H": 0.0,
+    "theta_velocity": 0.0,
+    "rho_ex": 0.0
+  },
+  "conclusion": "Dimensionless ratios differ; changing units alone cannot identify these trajectories.",
+  "same_state_matching_completed": false
+}

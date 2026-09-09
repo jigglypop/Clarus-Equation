@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "role": "conditional_common_spectrum_screen",
+  "benchmark": {
+    "mass_scale": 1000.0,
+    "e": 0.025,
+    "theta": 1.2
+  },
+  "alpha": 0.0072973525692838015,
+  "muon_mass_GeV": 0.1056583755,
+  "charge_squared_sum": 5.333333333333333,
+  "sources": {
+    "experiment": "https://muon-g-2.fnal.gov/result2025.pdf",
+    "theory": "https://muon-gm2-theory.illinois.edu/white-paper-25/",
+    "comparison": "https://pdg.lbl.gov/2025/reviews/rpp2025-rev-g-2-muon-anom-mag-moment.pdf",
+    "model_commit": "05013ce3c653fc68c2fe5a4ab6294e95bd6c0a30"
+  },
+  "frozen_summary": {
+    "experiment_1e12": 1165920715,
+    "experiment_sd_1e12": 145,
+    "theory_1e12": 1165920330,
+    "theory_sd_1e12": 620,
+    "covariance_assumption": "independent Gaussian experimental and theory summaries",
+    "residual": 3.85e-10,
+    "combined_sigma": 6.367299270491374e-10
+  },
+  "numerical_checks": [
+    {
+      "mass_scale_GeV": 1000.0,
+      "epsilon_over_s": 0.025,
+      "theta": 1.2,
+      "exact_em": 2.6803706581051175e-15,
+      "spectral_em": 2.680370658105109e-15,
+      "representation_relative_error": 3.2374141729956294e-15,
+      "relative_em": -1.1433117196396033e-19,
+      "difference_check_relative_error": 4.062427352355798e-12,
+      "heavy_upper_bound": 2.680370777513209e-15,
+      "below_heavy_bound": true,
+      "relative_nonpositive": true
+    },
+    {
+      "mass_scale_GeV": 1.0,
+      "epsilon_over_s": 0.2,
+      "theta": 0.3,
+      "exact_em": 2.8342934788059804e-09,
+      "spectral_em": 2.8342934788058084e-09,
+      "representation_relative_error": 6.070421736407896e-14,
+      "relative_em": -9.989289082260017e-11,
+      "difference_check_relative_error": 1.9548863431599626e-12,
+      "heavy_upper_bound": 2.870555793928039e-09,
+      "below_heavy_bound": true,
+      "relative_nonpositive": true
+    },
+    {
+      "mass_scale_GeV": 0.05,
+      "epsilon_over_s": 0.4,
+      "theta": 2.4,
+      "exact_em": 8.481324691579495e-07,
+      "spectral_em": 8.481324691579081e-07,
+      "representation_relative_error": 4.88116382788125e-14,
+      "relative_em": -3.198719451391125e-08,
+      "difference_check_relative_error": 1.2098408108560909e-10,
+      "heavy_upper_bound": 2.1133918575316046e-06,
+      "below_heavy_bound": true,
+      "relative_nonpositive": true
+    },
+    {
+      "mass_scale_GeV": 10.0,
+      "epsilon_over_s": 0.49,
+      "theta": 0.8,
+      "exact_em": 4.58322165839491e-11,
+      "spectral_em": 4.5832216583947945e-11,
+      "representation_relative_error": 2.5239023422494335e-14,
+      "relative_em": -4.0939485259327586e-10,
+      "difference_check_relative_error": 3.662148780707428e-15,
+      "heavy_upper_bound": 4.585515583251386e-11,
+      "below_heavy_bound": true,
+      "relative_nonpositive": true
+    }
+  ],
+  "absolute_comparison": {
+    "baseline": "WP2025 Standard Model",
+    "candidate": "WP2025 plus fixed scalar EM subset",
+    "n": 1,
+    "baseline_rmse": 0.6046519625428082,
+    "candidate_rmse": 0.6046477529548113,
+    "delta_rmse": -4.209587996850672e-06,
+    "correction": 2.6803706581051175e-15,
+    "fraction_of_central_residual": 6.962001709363941e-06,
+    "fitted_parameters": 0,
+    "independent_holdout": false
+  },
+  "phase_comparison": {
+    "baseline": "WP2025 plus scalar subset at theta=pi",
+    "candidate": "same model at theta=1.2",
+    "n": 1,
+    "baseline_rmse": 0.6046477527752514,
+    "candidate_rmse": 0.6046477529548113,
+    "delta_rmse": 1.7955992248630537e-10,
+    "phase_delta": -1.1433117196396033e-19
+  },
+  "necessary_min_mass_upper_bound_GeV": 2.6369249058912607,
+  "bound_scope": "To fill the positive central residual using only this EM subset; not a mass exclusion or fit",
+  "joint_rmse": null,
+  "scientific_success": false,
+  "missing": [
+    "absolute vacuum and common state",
+    "dark-matter abundance and perturbations",
+    "Hubble and distance likelihood",
+    "complete gauge/gravity and matter matching",
+    "atom, mass-ratio, and mixing predictions",
+    "independent joint validation"
+  ]
+}

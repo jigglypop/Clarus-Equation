@@ -1,0 +1,236 @@
+{
+  "pulse": "theta(t)=amplitude*sech(t/tau)*tanh(t/tau)",
+  "background": "a=1 prescribed external pulse",
+  "cases": [
+    {
+      "r": 0.15,
+      "amplitude": 0.1,
+      "tau": 0.7,
+      "order": 96,
+      "cutoff": 10.0,
+      "tails": 24.0,
+      "species_numbers": [
+        1.602480270641941e-11,
+        2.2429951249312076e-07,
+        2.2429951249312082e-07
+      ],
+      "species_fractions": [
+        3.572060882477821e-05,
+        0.4999821396955876,
+        0.4999821396955877
+      ],
+      "long_wavelength_pair_count_Fano": [
+        2.0000000000652784,
+        2.0000070044378426,
+        2.000007004437843
+      ],
+      "relative_light_asymmetry": 2.3602173101030444e-16,
+      "heavy_number_over_amplitude_fourth": 1.6024802706419407e-07,
+      "light_numbers_over_amplitude_squared": [
+        2.2429951249312072e-05,
+        2.2429951249312076e-05
+      ],
+      "heavy_Born_relative_error": -4.384060531648082e-05,
+      "light_Born_max_relative_error": 0.00010257476037223157,
+      "Bogoliubov_invariant_error": 4.3298697960381105e-15,
+      "final_pair_energy": 6.049509696411197e-07,
+      "integrated_phase_work": 6.049509839878587e-07,
+      "work_energy_relative_error": 2.3715540198310237e-08,
+      "cold_mass_curvature_at_zero": 0.007207881064196698
+    },
+    {
+      "r": 0.15,
+      "amplitude": 0.05,
+      "tau": 0.7,
+      "order": 96,
+      "cutoff": 10.0,
+      "tails": 24.0,
+      "species_numbers": [
+        1.0015831018814528e-12,
+        5.607919240632587e-08,
+        5.6079192406325805e-08
+      ],
+      "species_fractions": [
+        8.929998050697018e-06,
+        0.49999553500097493,
+        0.4999955350009744
+      ],
+      "long_wavelength_pair_count_Fano": [
+        2.0000000000040803,
+        2.0000017512676305,
+        2.0000017512676305
+      ],
+      "relative_light_asymmetry": 1.180017866961608e-15,
+      "heavy_number_over_amplitude_fourth": 1.6025329630103243e-07,
+      "light_numbers_over_amplitude_squared": [
+        2.2431676962530343e-05,
+        2.2431676962530316e-05
+      ],
+      "heavy_Born_relative_error": -1.0960288919781291e-05,
+      "light_Born_max_relative_error": 2.564475796418275e-05,
+      "Bogoliubov_invariant_error": 3.552713678800501e-15,
+      "final_pair_energy": 1.5124159382949495e-07,
+      "integrated_phase_work": 1.5124160175769348e-07,
+      "work_energy_relative_error": 5.2420754848014894e-08,
+      "cold_mass_curvature_at_zero": 0.007208544662928623
+    },
+    {
+      "r": 0.15,
+      "amplitude": 0.025,
+      "tau": 0.7,
+      "order": 96,
+      "cutoff": 10.0,
+      "tails": 24.0,
+      "species_numbers": [
+        6.259945844952469e-14,
+        1.4020067758280502e-08,
+        1.4020067758280495e-08
+      ],
+      "species_fractions": [
+        2.2324898772295563e-06,
+        0.49999888375506146,
+        0.49999888375506124
+      ],
+      "long_wavelength_pair_count_Fano": [
+        2.0000000000002554,
+        2.0000004378267935,
+        2.0000004378267935
+      ],
+      "relative_light_asymmetry": 4.719980683770834e-16,
+      "heavy_number_over_amplitude_fourth": 1.6025461363078319e-07,
+      "light_numbers_over_amplitude_squared": [
+        2.2432108413248798e-05,
+        2.2432108413248788e-05
+      ],
+      "heavy_Born_relative_error": -2.7400816426936814e-06,
+      "light_Born_max_relative_error": 6.411258179794821e-06,
+      "Bogoliubov_invariant_error": 3.774758283725532e-15,
+      "final_pair_energy": 3.781063919497322e-08,
+      "integrated_phase_work": 3.781064354775798e-08,
+      "work_energy_relative_error": 1.1512063391450056e-07,
+      "cold_mass_curvature_at_zero": 0.0072087105603468316
+    },
+    {
+      "r": 0.35,
+      "amplitude": 0.1,
+      "tau": 0.7,
+      "order": 96,
+      "cutoff": 10.0,
+      "tails": 24.0,
+      "species_numbers": [
+        7.697453832426115e-11,
+        1.7386146362758544e-06,
+        1.7386146362758461e-06
+      ],
+      "species_fractions": [
+        2.2136255151146697e-05,
+        0.4999889318724256,
+        0.4999889318724232
+      ],
+      "long_wavelength_pair_count_Fano": [
+        2.000000000340231,
+        2.000061042241837,
+        2.000061042241837
+      ],
+      "relative_light_asymmetry": 4.750087261096263e-15,
+      "heavy_number_over_amplitude_fourth": 7.697453832426113e-07,
+      "light_numbers_over_amplitude_squared": [
+        0.00017386146362758541,
+        0.00017386146362758457
+      ],
+      "heavy_Born_relative_error": -3.238553179740755e-05,
+      "light_Born_max_relative_error": 0.00011962315851754557,
+      "Bogoliubov_invariant_error": 4.884981308350689e-15,
+      "final_pair_energy": 4.323305386609113e-06,
+      "integrated_phase_work": 4.32330541612838e-06,
+      "work_energy_relative_error": 6.827939325049215e-09,
+      "cold_mass_curvature_at_zero": 0.0057517693502306105
+    },
+    {
+      "r": 0.35,
+      "amplitude": 0.05,
+      "tau": 0.7,
+      "order": 96,
+      "cutoff": 10.0,
+      "tails": 24.0,
+      "species_numbers": [
+        4.811025502008252e-12,
+        4.3469265923417406e-07,
+        4.3469265923417305e-07
+      ],
+      "species_fractions": [
+        5.533793562631297e-06,
+        0.4999972331032192,
+        0.4999972331032181
+      ],
+      "long_wavelength_pair_count_Fano": [
+        2.0000000000212648,
+        2.000015261715593,
+        2.0000152617155935
+      ],
+      "relative_light_asymmetry": 2.313937453272287e-15,
+      "heavy_number_over_amplitude_fourth": 7.697640803213202e-07,
+      "light_numbers_over_amplitude_squared": [
+        0.00017387706369366958,
+        0.0001738770636936692
+      ],
+      "heavy_Born_relative_error": -8.096366053700343e-06,
+      "light_Born_max_relative_error": 2.9906900354426114e-05,
+      "Bogoliubov_invariant_error": 3.9968028886505635e-15,
+      "final_pair_energy": 1.0808876979945643e-06,
+      "integrated_phase_work": 1.0808877143337356e-06,
+      "work_energy_relative_error": 1.5116437435125363e-08,
+      "cold_mass_curvature_at_zero": 0.005752538008192659
+    },
+    {
+      "r": 0.35,
+      "amplitude": 0.025,
+      "tau": 0.7,
+      "order": 96,
+      "cutoff": 10.0,
+      "tails": 24.0,
+      "species_numbers": [
+        3.006909197572949e-13,
+        1.0867560243213045e-07,
+        1.0867560243213082e-07
+      ],
+      "species_fractions": [
+        1.383431501839566e-06,
+        0.4999993082842482,
+        0.4999993082842499
+      ],
+      "long_wavelength_pair_count_Fano": [
+        2.0000000000013283,
+        2.000003815501095,
+        2.000003815501095
+      ],
+      "relative_light_asymmetry": 3.4099366015034204e-15,
+      "heavy_number_over_amplitude_fourth": 7.697687545786748e-07,
+      "light_numbers_over_amplitude_squared": [
+        0.0001738809638914087,
+        0.0001738809638914093
+      ],
+      "heavy_Born_relative_error": -2.024090626107089e-06,
+      "light_Born_max_relative_error": 7.476793623006905e-06,
+      "Bogoliubov_invariant_error": 5.773159728050814e-15,
+      "final_pair_energy": 2.7022575923356825e-07,
+      "integrated_phase_work": 2.7022576830877814e-07,
+      "work_energy_relative_error": 3.358380751272705e-08,
+      "cold_mass_curvature_at_zero": 0.005752730163415522
+    }
+  ],
+  "refinement": [
+    {
+      "r": 0.15,
+      "refined_max_number_relative_difference": 2.737365889515786e-12
+    },
+    {
+      "r": 0.35,
+      "refined_max_number_relative_difference": 2.8563817977556027e-12
+    }
+  ],
+  "fitted_parameters": [],
+  "pulse_generation_self_consistent": false,
+  "cosmological_abundance_predicted": false,
+  "observational_rmse": null
+}

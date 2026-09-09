@@ -1,0 +1,79 @@
+{
+  "role": "opposite_split_and_spurion_consistency_screen",
+  "assumptions": [
+    "T=i*f*theta at fixed real partner",
+    "canonical messenger Kahler metric",
+    "M(T)=m*I+lambda*exp(T/(3*f))*S",
+    "constant supplied F_T in relative subtraction",
+    "no additional common scalar soft mass",
+    "flat one-loop relative potential"
+  ],
+  "inputs": {
+    "mass_GeV": 1000.0,
+    "epsilon_over_s": 0.025,
+    "theta": 0.5,
+    "representation_dimension": 16,
+    "dark_comparison_GeV4": 2.3607302041873815e-47,
+    "f_GeV": 2.435e+18
+  },
+  "factorization": {
+    "m_GeV": 999.6872555384281,
+    "lambda_GeV": 25.007821057531725,
+    "mass_squared_relative_error": 6.984919309616089e-16,
+    "scalar_6x6_relative_error": 4.656612873077392e-16
+  },
+  "opposite_split_at_dark_scale": 1.9908593043338843e-27,
+  "spurion_probe": {
+    "F_GeV2": 4.8587346132376704e-24,
+    "b_GeV2": 1.6633314958779367e-41,
+    "b_over_s": 1.6633314958779367e-47,
+    "F_source": "square root of supplied dark comparison; not a predicted vacuum"
+  },
+  "visible_response": {
+    "gauge_threshold_at_degeneracy": -4.9898078653488245e-05,
+    "gauge_fractional_change_at_spurion_probe": 5.548974700581609e-94,
+    "muon_em_heavy_leading_at_degeneracy": 2.6803275415841372e-14,
+    "muon_em_leading_fractional_change_at_spurion_probe": 5.566692944575125e-95,
+    "scope": "one-loop phase threshold and heavy-leading EM subset; not full observed couplings or g-2"
+  },
+  "checks": [
+    {
+      "opposite_fractional_mass_squared_split": 1e-08,
+      "residual_GeV4": 5.95614440136813e-10,
+      "residual_over_dark": 2.5230093599020033e+37,
+      "independent_integral_relative_error": 6.685529047884545e-161,
+      "quadratic_relative_error": 1.0028249413219631e-16
+    },
+    {
+      "opposite_fractional_mass_squared_split": 1e-16,
+      "residual_GeV4": 5.95614440136813e-26,
+      "residual_over_dark": 2.523009359902003e+21,
+      "independent_integral_relative_error": 1.69866304828566e-144,
+      "quadratic_relative_error": 1.0028249413219632e-32
+    },
+    {
+      "opposite_fractional_mass_squared_split": 1.9908593043338843e-27,
+      "residual_GeV4": 2.3607302041873815e-47,
+      "residual_over_dark": 1.0,
+      "independent_integral_relative_error": 5.275527186924725e-123,
+      "quadratic_relative_error": 3.974717483255449e-54
+    },
+    {
+      "opposite_fractional_mass_squared_split": 1.6633314958779367e-47,
+      "residual_GeV4": 1.6478695948982924e-87,
+      "residual_over_dark": 6.980338507023625e-41,
+      "independent_integral_relative_error": 3.416784349143852e-83,
+      "quadratic_relative_error": 3.416864500309461e-83
+    }
+  ],
+  "decimal_precision": 180,
+  "joint_rmse": null,
+  "scientific_success": false,
+  "missing": [
+    "origin and dynamics of T and F_T",
+    "stabilization of real partner",
+    "full interacting symmetry including neutral/visible sectors and gravity",
+    "curvature, kinetic, and full muon matching",
+    "common observational likelihood"
+  ]
+}

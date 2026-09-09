@@ -1,0 +1,41 @@
+{
+  "q": 3,
+  "N": 4,
+  "local_f_over_Mp": 0.05,
+  "stiffness": 128.0,
+  "phase_for_scale_matching": 2.541592653589793,
+  "supplied_H0": 67.4,
+  "supplied_omega_c": 0.264156592027754,
+  "supplied_omega_DE": 0.685,
+  "mass_over_H0": 544.6424775606658,
+  "mass_eV": 7.830448332011105e-31,
+  "jeans_k_per_Mpc": 0.00588705542073979,
+  "jeans_physical_wavelength_Mpc": 1067.2882889881164,
+  "physical_unit_relative_check": 0.0,
+  "requirements": [
+    {
+      "target_physical_wavelength_Mpc": 1.0,
+      "minimum_stiffness_for_Jeans_length_below_target": 166087499215699.5,
+      "interpretation": "necessary Jeans diagnostic in this approximation; not a fitted or adopted parameter"
+    },
+    {
+      "target_physical_wavelength_Mpc": 0.1,
+      "minimum_stiffness_for_Jeans_length_below_target": 1.660874992156994e+18,
+      "interpretation": "necessary Jeans diagnostic in this approximation; not a fitted or adopted parameter"
+    },
+    {
+      "target_physical_wavelength_Mpc": 0.01,
+      "minimum_stiffness_for_Jeans_length_below_target": 1.660874992156995e+22,
+      "interpretation": "necessary Jeans diagnostic in this approximation; not a fitted or adopted parameter"
+    }
+  ],
+  "fitted_parameters": [],
+  "observational_rmse": null,
+  "source": "https://arxiv.org/abs/astro-ph/0003365",
+  "limitations": [
+    "Single cold harmonic mode; ignores self interaction and coupled perturbations.",
+    "Present loop-energy matching is supplied, not the original synthetic run clock.",
+    "No transfer function, baryonic forcing, halo or likelihood calculation.",
+    "Increasing stiffness changes an input and is not a derived prediction."
+  ]
+}

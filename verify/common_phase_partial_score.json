@@ -1,0 +1,153 @@
+{
+  "scope": "conditional partial score only",
+  "groups": [
+    "AP",
+    "muon_EM_subset",
+    "clock"
+  ],
+  "counts": [
+    6,
+    1,
+    1
+  ],
+  "covariance_assumption": "independent blocks; no theory uncertainty for missing CE terms",
+  "baseline_group_rmse": [
+    0.9887377465774193,
+    0.6046519625428082,
+    0.9090909090909092
+  ],
+  "baseline_partial_rmse": 0.9392593003159833,
+  "cases": [
+    {
+      "r": 0.15,
+      "initial_theta": 0.1,
+      "shared_theta_today": 0.11592706105013746,
+      "paired_muon_EM_subset": 2.6803176675793036e-14,
+      "group_rmse": [
+        0.9890167908827756,
+        0.6046098674950695,
+        0.9524181108179685
+      ],
+      "delta_chi_squared_by_group": [
+        0.003311286846425121,
+        -5.09039344639417e-05,
+        0.08065397682233233
+      ],
+      "partial_rmse": 0.9448266127691668,
+      "partial_rmse_change": 0.005567312453183537,
+      "full_covariance_crosscheck_absolute_error": 1.1102230246251565e-16,
+      "all_three_groups_improved": false
+    },
+    {
+      "r": 0.15,
+      "initial_theta": 0.3,
+      "shared_theta_today": 0.34745205670063384,
+      "paired_muon_EM_subset": 2.6803221188084433e-14,
+      "group_rmse": [
+        0.9991544488540818,
+        0.6046098674251618,
+        1.2876216842585062
+      ],
+      "delta_chi_squared_by_group": [
+        0.12424368694746524,
+        -5.090401899776609e-05,
+        0.8315233207809767
+      ],
+      "partial_rmse": 1.0008359237126487,
+      "partial_rmse_change": 0.061576623396665475,
+      "full_covariance_crosscheck_absolute_error": 0.0,
+      "all_three_groups_improved": false
+    },
+    {
+      "r": 0.15,
+      "initial_theta": 0.5,
+      "shared_theta_today": 0.5779771133007818,
+      "paired_muon_EM_subset": 2.6803307347021358e-14,
+      "group_rmse": [
+        1.0596350419031804,
+        0.6046098672898471,
+        1.8994338024947683
+      ],
+      "delta_chi_squared_by_group": [
+        0.8713445431329707,
+        -5.090418262293506e-05,
+        2.7814024890679994
+      ],
+      "partial_rmse": 1.15706311376362,
+      "partial_rmse_change": 0.21780381344763677,
+      "full_covariance_crosscheck_absolute_error": 2.220446049250313e-16,
+      "all_three_groups_improved": false
+    },
+    {
+      "r": 0.35,
+      "initial_theta": 0.1,
+      "shared_theta_today": 0.12129116057333199,
+      "paired_muon_EM_subset": 2.680317720843255e-14,
+      "group_rmse": [
+        0.989037219731676,
+        0.604609867494233,
+        0.9567098270672441
+      ],
+      "delta_chi_squared_by_group": [
+        0.003553743045423552,
+        -5.090393547552141e-05,
+        0.08884741221530035
+      ],
+      "partial_rmse": 0.9453844797994764,
+      "partial_rmse_change": 0.006125179483493115,
+      "full_covariance_crosscheck_absolute_error": 1.1102230246251565e-16,
+      "all_three_groups_improved": false
+    },
+    {
+      "r": 0.35,
+      "initial_theta": 0.3,
+      "shared_theta_today": 0.3634038136894988,
+      "paired_muon_EM_subset": 2.6803225846218234e-14,
+      "group_rmse": [
+        1.000541938532995,
+        0.6046098674178462,
+        1.3239769769789287
+      ],
+      "delta_chi_squared_by_group": [
+        0.1408910355382229,
+        -5.0904027843967636e-05,
+        0.9264687545785271
+      ],
+      "partial_rmse": 1.0077805534892919,
+      "partial_rmse_change": 0.0685212531733086,
+      "full_covariance_crosscheck_absolute_error": 0.0,
+      "all_three_groups_improved": false
+    },
+    {
+      "r": 0.35,
+      "initial_theta": 0.5,
+      "shared_theta_today": 0.604090222330222,
+      "paired_muon_EM_subset": 2.680331955699903e-14,
+      "group_rmse": [
+        1.0694717226880377,
+        0.604609867270671,
+        1.9885842059333325
+      ],
+      "delta_chi_squared_by_group": [
+        0.9970046047339562,
+        -5.090420581105315e-05,
+        3.1280208630957667
+      ],
+      "partial_rmse": 1.1822985467651812,
+      "partial_rmse_change": 0.24303924644919794,
+      "full_covariance_crosscheck_absolute_error": 0.0,
+      "all_three_groups_improved": false
+    }
+  ],
+  "fitted_parameters": 0,
+  "independent_holdout": false,
+  "joint_rmse": null,
+  "all_partial_scores_worsened": true,
+  "missing": [
+    "complete paired interactions and backreaction",
+    "dark matter growth",
+    "early universe and sound horizon",
+    "four-force absolute unification",
+    "derived mass scales, kinetic term and initial state"
+  ]
+}

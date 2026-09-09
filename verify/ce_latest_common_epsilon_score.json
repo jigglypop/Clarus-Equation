@@ -1,0 +1,102 @@
+{
+  "assumption": "common dimensionful epsilon and phase; distinct diagonal masses",
+  "physical_dark_mass_replaces_OBS32_kinetic_mass": true,
+  "baseline_partial_rmse": 0.9434903273672427,
+  "cases": [
+    {
+      "r_dark": 0.15,
+      "initial_theta": 0.1,
+      "final_theta": 0.11592706105013746,
+      "dark_mass_eV": 0.027615,
+      "shared_epsilon_GeV2": 1.1438823375000002e-22,
+      "charged_r": 1.1438823375000002e-28,
+      "AP_rmse": 0.9890167908827756,
+      "muon_correction": 2.6770484703485036e-15,
+      "muon_standardized_residual": 0.6046477581723889,
+      "partial_common_rmse": 0.9437405959683806,
+      "delta_partial_rmse": 0.00025026860113785965,
+      "continuity": 4.170516212493646e-16
+    },
+    {
+      "r_dark": 0.15,
+      "initial_theta": 0.3,
+      "final_theta": 0.34745205670063384,
+      "dark_mass_eV": 0.027615,
+      "shared_epsilon_GeV2": 1.1438823375000002e-22,
+      "charged_r": 1.1438823375000002e-28,
+      "AP_rmse": 0.9991544488540818,
+      "muon_correction": 2.6770484703485036e-15,
+      "muon_standardized_residual": 0.6046477581723889,
+      "partial_common_rmse": 0.9528496049409085,
+      "delta_partial_rmse": 0.009359277573665836,
+      "continuity": 2.9126109585276625e-16
+    },
+    {
+      "r_dark": 0.15,
+      "initial_theta": 0.5,
+      "final_theta": 0.5779771133007818,
+      "dark_mass_eV": 0.027615,
+      "shared_epsilon_GeV2": 1.1438823375000002e-22,
+      "charged_r": 1.1438823375000002e-28,
+      "AP_rmse": 1.0596350419031804,
+      "muon_correction": 2.6770484703485036e-15,
+      "muon_standardized_residual": 0.6046477581723889,
+      "partial_common_rmse": 1.0072988947560857,
+      "delta_partial_rmse": 0.063808567388843,
+      "continuity": 4.2925176664401053e-16
+    },
+    {
+      "r_dark": 0.35,
+      "initial_theta": 0.1,
+      "final_theta": 0.12129116057333199,
+      "dark_mass_eV": 0.014414,
+      "shared_epsilon_GeV2": 7.27171886e-23,
+      "charged_r": 7.27171886e-29,
+      "AP_rmse": 0.989037219731676,
+      "muon_correction": 2.6770484703485036e-15,
+      "muon_standardized_residual": 0.6046477581723889,
+      "partial_common_rmse": 0.9437589464893094,
+      "delta_partial_rmse": 0.00026861912206666005,
+      "continuity": 4.1706370643863487e-16
+    },
+    {
+      "r_dark": 0.35,
+      "initial_theta": 0.3,
+      "final_theta": 0.3634038136894988,
+      "dark_mass_eV": 0.014414,
+      "shared_epsilon_GeV2": 7.27171886e-23,
+      "charged_r": 7.27171886e-29,
+      "AP_rmse": 1.000541938532995,
+      "muon_correction": 2.6770484703485036e-15,
+      "muon_standardized_residual": 0.6046477581723889,
+      "partial_common_rmse": 0.9540967258574301,
+      "delta_partial_rmse": 0.010606398490187408,
+      "continuity": 3.76711034458633e-16
+    },
+    {
+      "r_dark": 0.35,
+      "initial_theta": 0.5,
+      "final_theta": 0.604090222330222,
+      "dark_mass_eV": 0.014414,
+      "shared_epsilon_GeV2": 7.27171886e-23,
+      "charged_r": 7.27171886e-29,
+      "AP_rmse": 1.0694717226880377,
+      "muon_correction": 2.6770484703485036e-15,
+      "muon_standardized_residual": 0.6046477581723889,
+      "partial_common_rmse": 1.016170507714331,
+      "delta_partial_rmse": 0.07268018034708834,
+      "continuity": 4.1257519184782544e-16
+    }
+  ],
+  "fitted_parameters": [],
+  "score_dimension": 7,
+  "cross_block_covariance_assumption": "zero AP-muon cross covariance",
+  "full_joint_rmse": null,
+  "independent_holdout": false,
+  "limitations": [
+    "Physical dark masses, f/Mp=1, charged mass 1TeV and initial populations are supplied.",
+    "RT31 rotating generated state is not identified with this late-time state.",
+    "Muon term is scalar electromagnetic subset; heavy relative dark potential is neglected at the previously verified tiny ratio.",
+    "No early-universe H0, clustering or four-force observable likelihood."
+  ]
+}

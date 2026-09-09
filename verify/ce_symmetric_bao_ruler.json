@@ -1,0 +1,276 @@
+{
+  "baseline": {
+    "A": 29.582731087943017,
+    "bao_chi2": 10.357001421139897,
+    "bao_rmse": 0.8925762807798342,
+    "partial_rmse_14": 0.8751571423220759
+  },
+  "rows": [
+    {
+      "r": 0.15,
+      "sqrt_s_eV": 0.027615,
+      "theta_initial": 1e-12,
+      "A": 29.582782336305304,
+      "physical_H0_ratio_to_null": 0.9999982676287273,
+      "bao_chi2": 10.357001812214214,
+      "bao_rmse": 0.8925762976314132,
+      "partial_rmse_14": 0.8751571582814267,
+      "delta_rmse_14": 1.5959350840866193e-08,
+      "AP_rmse_diagnostic_only": 0.9887377465731041,
+      "prediction": [
+        7.912241806208246,
+        13.270936303687652,
+        22.472640754979626,
+        17.428157017028084,
+        19.992195004753526,
+        21.690436467426448,
+        17.46169412783492,
+        27.7499817792502,
+        14.022013614757936,
+        29.938240965769875,
+        12.85227402129546,
+        8.619989281578682,
+        38.83876587023584
+      ],
+      "direct_distance_max_difference": 1.0658141036401503e-14,
+      "chi2_change_decomposition": {
+        "along_null_distance_squared": 3.9113768002265e-07,
+        "perpendicular_change": -6.336374162351e-11,
+        "note": "Algebraic decomposition at the calibrated null; no candidate fit."
+      }
+    },
+    {
+      "r": 0.15,
+      "sqrt_s_eV": 0.027615,
+      "theta_initial": 1e-10,
+      "A": 29.58278685208401,
+      "physical_H0_ratio_to_null": 0.9999981149801311,
+      "bao_chi2": 10.357001180191427,
+      "bao_rmse": 0.8925762703972494,
+      "partial_rmse_14": 0.8751571324892103,
+      "delta_rmse_14": -9.832865521808287e-09,
+      "AP_rmse_diagnostic_only": 0.9887377034023302,
+      "prediction": [
+        7.9122418569630195,
+        13.270936381848871,
+        22.472640754979626,
+        17.428157095189306,
+        19.99219500475352,
+        21.690436545587673,
+        17.461694127834917,
+        27.749981857411484,
+        14.022013614757936,
+        29.938241043931377,
+        12.852274021295454,
+        8.619989281578682,
+        38.838765948414206
+      ],
+      "direct_distance_max_difference": 1.0658141036401503e-14,
+      "chi2_change_decomposition": {
+        "along_null_distance_squared": 3.923157696708223e-07,
+        "perpendicular_change": -6.332642402510844e-07,
+        "note": "Algebraic decomposition at the calibrated null; no candidate fit."
+      }
+    },
+    {
+      "r": 0.15,
+      "sqrt_s_eV": 0.027615,
+      "theta_initial": 1e-08,
+      "A": 29.627522828365578,
+      "physical_H0_ratio_to_null": 0.9984881712628476,
+      "bao_chi2": 10.35084099760787,
+      "bao_rmse": 0.8923107857005476,
+      "partial_rmse_14": 0.8749057054934861,
+      "delta_rmse_14": -0.00025143682858974614,
+      "AP_rmse_diagnostic_only": 0.9883092360290905,
+      "prediction": [
+        7.912747026960697,
+        13.271714344807144,
+        22.47264075499653,
+        17.42893505814784,
+        19.99219500475361,
+        21.691214508546675,
+        17.46169412783492,
+        27.750759820369655,
+        14.022013614757936,
+        29.93901900688989,
+        12.852274021295456,
+        8.619989281578682,
+        38.8395439113554
+      ],
+      "direct_distance_max_difference": 1.3322676295501878e-13,
+      "chi2_change_decomposition": {
+        "along_null_distance_squared": 9.98743514673177e-05,
+        "perpendicular_change": -0.006260297883495597,
+        "note": "Algebraic decomposition at the calibrated null; no candidate fit."
+      },
+      "independent_solver": {
+        "prediction_max_difference": 4.387601393318619e-12,
+        "rmse_14_difference": 1.3280487820566123e-12
+      }
+    },
+    {
+      "r": 0.35,
+      "sqrt_s_eV": 0.014414,
+      "theta_initial": 1e-12,
+      "A": 29.58273160495629,
+      "physical_H0_ratio_to_null": 0.9999999825231395,
+      "bao_chi2": 10.357001348258441,
+      "bao_rmse": 0.8925762776393373,
+      "partial_rmse_14": 0.8751571393478568,
+      "delta_rmse_14": -2.9742190932324775e-09,
+      "AP_rmse_diagnostic_only": 0.9887377416084542,
+      "prediction": [
+        7.9122281052254335,
+        13.270913322689985,
+        22.472601824365437,
+        17.428126834244146,
+        19.99216037115443,
+        21.690398900857105,
+        17.46166387796422,
+        27.74993371539114,
+        14.021989323638431,
+        29.9381891110669,
+        12.852251756581362,
+        8.619974348688478,
+        38.838698596656954
+      ],
+      "direct_distance_max_difference": 3.552713678800501e-15,
+      "chi2_change_decomposition": {
+        "along_null_distance_squared": 1.1734499525838543e-14,
+        "perpendicular_change": -7.288146864261598e-08,
+        "note": "Algebraic decomposition at the calibrated null; no candidate fit."
+      }
+    },
+    {
+      "r": 0.35,
+      "sqrt_s_eV": 0.014414,
+      "theta_initial": 1e-10,
+      "A": 29.58789581212844,
+      "physical_H0_ratio_to_null": 0.9998254446947421,
+      "bao_chi2": 10.356274757000772,
+      "bao_rmse": 0.8925449679255887,
+      "partial_rmse_14": 0.8751274873845389,
+      "delta_rmse_14": -2.965493753692705e-05,
+      "AP_rmse_diagnostic_only": 0.9886880995650453,
+      "prediction": [
+        7.912286487600755,
+        13.27100323038671,
+        22.472601824367583,
+        17.428216741940957,
+        19.99216037115444,
+        21.690488808553912,
+        17.46166387796422,
+        27.750023623087948,
+        14.021989323638431,
+        29.938279018763673,
+        12.852251756581364,
+        8.619974348688476,
+        38.838788504351854
+      ],
+      "direct_distance_max_difference": 7.105427357601002e-15,
+      "chi2_change_decomposition": {
+        "along_null_distance_squared": 1.1721959185361384e-06,
+        "perpendicular_change": -0.0007278363350425548,
+        "note": "Algebraic decomposition at the calibrated null; no candidate fit."
+      }
+    },
+    {
+      "r": 0.35,
+      "sqrt_s_eV": 0.014414,
+      "theta_initial": 1e-08,
+      "A": 33.228910179480806,
+      "physical_H0_ratio_to_null": 0.8902708794286808,
+      "bao_chi2": 16.57778402366844,
+      "bao_rmse": 1.1292538048051035,
+      "partial_rmse_14": 1.1001098300731917,
+      "delta_rmse_14": 0.22495268775111588,
+      "AP_rmse_diagnostic_only": 0.9618168219133535,
+      "prediction": [
+        8.035226616842031,
+        13.461058809418113,
+        22.4726018457796,
+        17.618272321678894,
+        19.99216037127509,
+        21.880544388306436,
+        17.461663877965336,
+        27.940079202888477,
+        14.021989323638438,
+        30.128334598611204,
+        12.852251756581365,
+        8.619974348688478,
+        39.028844084147195
+      ],
+      "direct_distance_max_difference": 7.105427357601002e-15,
+      "chi2_change_decomposition": {
+        "along_null_distance_squared": 5.233719489885683,
+        "perpendicular_change": 0.9870631126429836,
+        "note": "Algebraic decomposition at the calibrated null; no candidate fit."
+      },
+      "independent_solver": {
+        "prediction_max_difference": 2.078586192055809e-10,
+        "rmse_14_difference": -2.7980018302287135e-10
+      }
+    }
+  ],
+  "observations": [
+    7.94167639,
+    13.58758434,
+    21.86294686,
+    17.35069094,
+    19.45534918,
+    21.57563956,
+    17.64149464,
+    27.60085612,
+    14.17602155,
+    30.51190063,
+    12.81699964,
+    8.631545674846294,
+    38.988973961958784
+  ],
+  "kinds": [
+    "DV_over_rs",
+    "DM_over_rs",
+    "DH_over_rs",
+    "DM_over_rs",
+    "DH_over_rs",
+    "DM_over_rs",
+    "DH_over_rs",
+    "DM_over_rs",
+    "DH_over_rs",
+    "DM_over_rs",
+    "DH_over_rs",
+    "DH_over_rs",
+    "DM_over_rs"
+  ],
+  "z": [
+    0.295,
+    0.51,
+    0.51,
+    0.706,
+    0.706,
+    0.934,
+    0.934,
+    1.321,
+    1.321,
+    1.484,
+    1.484,
+    2.33,
+    2.33
+  ],
+  "muon_EM_component": 2.6770484703485036e-15,
+  "muon_standardized_residual": -0.6046477581723889,
+  "calibration_parameters": [
+    "one null A=c/(H0*r_s) on the same BAO data"
+  ],
+  "candidate_fitted_parameters": [],
+  "assumptions": [
+    "fixed physical sound horizon, not derived early evolution",
+    "inherited masses, density and cold symmetric populations",
+    "same charged EM term in null and every candidate",
+    "BAO and muon blocks independent; AP not double-counted"
+  ],
+  "independent_holdout": false,
+  "full_joint_rmse": null,
+  "script_sha256": "73d5cb2ed703e3039f5e86f5f2f61290c5dea870284aad2e1a842efa288cc647"
+}

@@ -1,0 +1,63 @@
+{
+  "source": "CE-QP27 equations (3) and formation law N_j proportional to v_j/sqrt(M_j)",
+  "H_I_GeV": 10000000.0,
+  "preparation_theta": 0.5,
+  "cases": [
+    {
+      "r": 0.15,
+      "N_pre": 60,
+      "number_fractions": [
+        0.3103770764714915,
+        0.34917539267010844,
+        0.34044753085840007
+      ],
+      "prepared_q_at_preparation_phase": -0.0003753925652537593,
+      "equal_number_q": -0.00021306246306491305,
+      "prepared_q_at_zero_phase": -0.0004141922260186406,
+      "short_duration_fraction_error": 1.4504656507761396e-35
+    },
+    {
+      "r": 0.15,
+      "N_pre": 100000000000,
+      "number_fractions": [
+        0.3103770764714915,
+        0.34917539267010844,
+        0.34044753085840007
+      ],
+      "prepared_q_at_preparation_phase": -0.0003753925652537593,
+      "equal_number_q": -0.00021306246306491305,
+      "prepared_q_at_zero_phase": -0.0004141922260186406,
+      "short_duration_fraction_error": 2.417442751293566e-26
+    },
+    {
+      "r": 0.35,
+      "N_pre": 60,
+      "number_fractions": [
+        0.2821254036658907,
+        0.37282130497684945,
+        0.3450532913572599
+      ],
+      "prepared_q_at_preparation_phase": -0.006196156792593907,
+      "equal_number_q": -0.0034139048842887904,
+      "prepared_q_at_zero_phase": -0.0036761390817634946,
+      "short_duration_fraction_error": 8.746769040242047e-36
+    },
+    {
+      "r": 0.35,
+      "N_pre": 100000000000,
+      "number_fractions": [
+        0.2821254036658907,
+        0.37282130497684945,
+        0.3450532913572599
+      ],
+      "prepared_q_at_preparation_phase": -0.006196156792593907,
+      "equal_number_q": -0.0034139048842887904,
+      "prepared_q_at_zero_phase": -0.0036761390817634946,
+      "short_duration_fraction_error": 1.4577948400403413e-26
+    }
+  ],
+  "absolute_abundance_predicted": false,
+  "fitted_parameters": 0,
+  "joint_rmse": null,
+  "conclusion": "Supplied stochastic preparation does not yield equal conserved number densities; its population ratios need a new consistent background evolution."
+}

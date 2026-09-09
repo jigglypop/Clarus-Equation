@@ -1,0 +1,34 @@
+{
+  "relation_coordinates": [
+    0.8,
+    0.37,
+    1.1
+  ],
+  "simple_metric_error": 2.7755575615628914e-17,
+  "spatial_ranks": [
+    1,
+    2,
+    3
+  ],
+  "scalar_curvature_in_units_ell_minus2": "8",
+  "nonabelian_curl_errors": [
+    1.6070790060598084e-09,
+    4.0206053827443577e-10
+  ],
+  "gauge_metric_error": 5.551115123125783e-17,
+  "gauge_curvature_error": 1.0625784139551229e-16,
+  "compressed_effect_defect_error": 2.8609792490763984e-17,
+  "compressed_effect_defect_eigenvalues": [
+    -2.724271210507973e-18,
+    1.8452422831677945e-18,
+    1.885499718270709e-17,
+    0.02768722897354548,
+    0.19727616821713773
+  ],
+  "projected_commutator_norm": 0.27796285415468297,
+  "projected_commutator_identity_error": 1.6653345369377348e-16,
+  "block_logdet_error": 1.7763568394002505e-15,
+  "block_inverse_error": 1.1111390322742369e-16,
+  "scope": "Explicit relation geometry and Gaussian identities; no force identification, initial-state selection or cosmological prediction.",
+  "full_joint_rmse": null
+}

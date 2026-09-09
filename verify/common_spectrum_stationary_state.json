@@ -1,0 +1,96 @@
+{
+  "source_sha256": "d6abc29bf1d4b157281a541daea84d088f0161010edb5c3357a01e8d74cf9ae8",
+  "stationary_checks": [
+    {
+      "r": 0.15,
+      "top_U_curvature": -0.4996441715221582,
+      "top_m_curvature": -0.00044413161631690594,
+      "minimum_U_curvature": 0.5003570495806537,
+      "minimum_m_curvature": 0.0004483631585746666,
+      "minimum_U": 0.0,
+      "loop_only_Z_at_top": 1.862521758131209e-17,
+      "loop_only_abs_mass_squared_over_H_squared": 8.047865792829462e+16,
+      "local_instability_efolds": 3.5250042064864764e-09,
+      "supplied_f": 1.0,
+      "supplied_kinetic_abs_mass_squared_over_H_squared": 1.4989325145664745,
+      "f_lower_bound_for_abs_mass_squared_below_H_squared": 1.22430899472579
+    },
+    {
+      "r": 0.35,
+      "top_U_curvature": -0.4941097607394537,
+      "top_m_curvature": -0.007046727169584846,
+      "minimum_U_curvature": 0.5062661982614797,
+      "minimum_m_curvature": 0.008406101442487924,
+      "minimum_U": 0.0,
+      "loop_only_Z_at_top": 1.3260518158318778e-16,
+      "loop_only_abs_mass_squared_over_H_squared": 1.1178517042250306e+16,
+      "local_instability_efolds": 9.45818728817828e-09,
+      "supplied_f": 1.0,
+      "supplied_kinetic_abs_mass_squared_over_H_squared": 1.482329282218361,
+      "f_lower_bound_for_abs_mass_squared_below_H_squared": 1.2175094587798325
+    }
+  ],
+  "absolute_scale_check": {
+    "assumptions": "same unsuppressed scalar triplet in potential and kinetic term; theta=.5; reference dark masses supplied, not predicted",
+    "checks": [
+      {
+        "r": 0.15,
+        "reference_dark_mass_eV": 0.027615,
+        "corresponding_s_over_Mp2": 1.2861516049736686e-58,
+        "source_kinetic_s_over_Mp2": 1e-12,
+        "mass_implied_by_source_kinetic_GeV": 2435000000000.0,
+        "reference_relative_U_GeV4": 2.3607302041873815e-47,
+        "relative_U_at_source_kinetic_mass_GeV4": 1.4271250476973384e+45,
+        "potential_ratio": 6.045269574498405e+91
+      },
+      {
+        "r": 0.35,
+        "reference_dark_mass_eV": 0.014414,
+        "corresponding_s_over_Mp2": 3.5040565335267257e-59,
+        "source_kinetic_s_over_Mp2": 1e-12,
+        "mass_implied_by_source_kinetic_GeV": 2435000000000.0,
+        "reference_relative_U_GeV4": 2.362343763807698e-47,
+        "relative_U_at_source_kinetic_mass_GeV4": 1.9239814784052968e+46,
+        "potential_ratio": 8.144375547207255e+92
+      }
+    ],
+    "observational_fit": false,
+    "conclusion": "Normalized background shape alone does not establish one common absolute mass scale."
+  },
+  "vacuum_ambiguity": {
+    "role": "nonuniqueness witness, not selected or fitted CE candidate",
+    "fixed_state": "theta=pi, zero velocity, same matter abundance and spectrum",
+    "relative_loop_responses_unchanged": true,
+    "cases": [
+      {
+        "constant_vacuum_in_Utop_units": 0.0,
+        "H0_in_sqrt_Utop_over_Mp_units": 0.3755190421691887,
+        "AP_rmse": 9.355976971679558,
+        "maximum_relative_potential_change": 0.0
+      },
+      {
+        "constant_vacuum_in_Utop_units": 1.0,
+        "H0_in_sqrt_Utop_over_Mp_units": 0.688729180712563,
+        "AP_rmse": 0.988571287508372,
+        "maximum_relative_potential_change": 1.1102230246251565e-16
+      }
+    ],
+    "missing_law": "absolute renormalized vacuum condition",
+    "conclusion": "Identical relative spectral information admits distinct absolute expansion and AP scores."
+  },
+  "assumption": "Equilibrium at pi, zero phase velocity, flat late-time pressureless model; no added absolute vacuum constant",
+  "AP_baseline_rmse": 0.9887377465774193,
+  "AP_equilibrium_rmse": 9.355976971679562,
+  "AP_equilibrium_prediction": [
+    0.6910381296882413,
+    1.0445474600861147,
+    1.5111629475225978,
+    2.4300073984689803,
+    2.8619210478778134,
+    5.493359535535843
+  ],
+  "fitted_parameters": 0,
+  "joint_rmse": null,
+  "independent_holdout": false,
+  "conclusion": "Equilibrium removes relative dark energy and worsens these AP residuals; non-equilibrium initial state remains undetermined."
+}

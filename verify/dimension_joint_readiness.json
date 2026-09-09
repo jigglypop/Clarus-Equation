@@ -1,0 +1,82 @@
+{
+  "date": "2026-09-09",
+  "role": "research_readiness_inventory_not_preregistration_or_success_certificate",
+  "required_groups": [
+    "atom_interferometry",
+    "particle_mass_ratios",
+    "particle_mixing",
+    "cosmology"
+  ],
+  "flavor_comparison_reference": {
+    "status": "user_clarification_pending",
+    "options": [
+      "separate_CE_and_standard_model_comparisons",
+      "existing_CE_empirical_formula",
+      "standard_model_on_independent_data"
+    ],
+    "reason": "A baseline fitted to the same parameter central values can have exactly zero parameter-space RMSE; that is not an independent prediction baseline."
+  },
+  "branches": [
+    {
+      "id": "universal_conformal_continuum",
+      "disposition": "not_a_successful_joint_candidate",
+      "fixed_background_BAO_comparison": "no_improvement_at_three_tested_eta_values_with_common_nuisance_refitting",
+      "flavor_response": "classical_uniform_scaling_preserves_mass_ratios_and_mixing",
+      "scope_of_failure": "tested_branch_and_points_not_all_dimension_theories",
+      "evidence": [
+        "verify/dimension_full_background_fit.json",
+        "verify/dimension_flavor_response.py"
+      ]
+    },
+    {
+      "id": "affine_PMNS_probability_average",
+      "disposition": "does_not_add_flavor_prediction_freedom",
+      "flavor_response": "probability_average_stays_on_original_affine_line",
+      "observational_screen": "all_four_NuFIT60_variants_have_empty_1sigma_box_intersection_and_nonempty_3sigma_box_intersection",
+      "joint_likelihood_computed": false,
+      "evidence": [
+        "verify/dimension_pmns_screen.json"
+      ]
+    },
+    {
+      "id": "neutrino_only_common_exponential_background",
+      "disposition": "background_validation_only_not_joint_candidate",
+      "flavor_response": "common_nonzero_mass_scaling_preserves_ratios_and_fixed_mixing",
+      "atom_response": "cold_atomic_matter_minimally_coupled_in_implemented_tree_level_branch_no_direct_atom_portal",
+      "loop_induced_atomic_coupling": "not_computed",
+      "BAO_likelihood_computed": false,
+      "evidence": [
+        "verify/dimension_neutrino_background.py",
+        "verify/dimension_neutrino_background.json"
+      ]
+    },
+    {
+      "id": "general_flavor_and_seesaw_response",
+      "disposition": "forward_response_building_blocks_with_open_physical_parameters",
+      "missing": [
+        "dimension_to_flavor_state_and_coupling_rule",
+        "independent_UV_parameters_and_initial_state",
+        "composite_atom_charge_matching",
+        "common_background_and_perturbations",
+        "full_device_likelihood_and_independent_evaluation_data"
+      ],
+      "evidence": [
+        "verify/dimension_flavor_response.py",
+        "verify/dimension_seesaw_bridge.py",
+        "verify/dimension_neutrino_stress.py"
+      ]
+    }
+  ],
+  "next_candidate_requirements": [
+    "Declare one common action and parameter vector before fitting the joint observations.",
+    "Provide a nontrivial forward response for every required group; a background-only extension is insufficient.",
+    "Distinguish empirical CE compression from improvement over an independently calibrated standard-model baseline.",
+    "Keep raw likelihood inputs distinct from fitted parameter summaries; do not fabricate covariance from profile intervals.",
+    "Record common nuisance freedoms and calibration/evaluation data roles for both candidate and baseline."
+  ],
+  "joint_rmse": null,
+  "scientific_success": false,
+  "experimental_release_audits": [
+    "verify/t2k_2023_release_audit.json"
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "scope": "conditional scalar spectrum; phase eliminated, mass and splitting still inputs",
+  "fitted_parameters": 0,
+  "checks": [
+    {
+      "mass_GeV": 1000,
+      "epsilon_over_s": 0.025,
+      "theta": 1.2,
+      "log_determinant_ratio": 4.2654081205550614e-05,
+      "scalar_delta_inverse_alpha": -6.03431810391688e-06,
+      "inverse_mass_identity_relative_error": 1.934105541367854e-67,
+      "heavy_relative_muon": -1.1433119113365449e-19,
+      "finite_relative_muon": -1.1433117196396033e-19,
+      "heavy_approximation_relative_error": 1.6766810497133048e-07
+    },
+    {
+      "mass_GeV": 1000,
+      "epsilon_over_s": 0.35,
+      "theta": 0.5,
+      "log_determinant_ratio": 0.25810308594969406,
+      "scalar_delta_inverse_alpha": -0.03651411729436989,
+      "inverse_mass_identity_relative_error": 7.884785583893286e-71,
+      "heavy_relative_muon": -9.773862417977678e-16,
+      "finite_relative_muon": -9.77385993162202e-16,
+      "heavy_approximation_relative_error": 2.543882399048071e-07
+    },
+    {
+      "mass_GeV": 10,
+      "epsilon_over_s": 0.49,
+      "theta": 0.8,
+      "log_determinant_ratio": 2.301714697860299,
+      "scalar_delta_inverse_alpha": -0.3256260193348755,
+      "inverse_mass_identity_relative_error": 0.0,
+      "heavy_relative_muon": -4.122974550938104e-10,
+      "finite_relative_muon": -4.0939485259327586e-10,
+      "heavy_approximation_relative_error": 0.007040068922749278
+    }
+  ],
+  "matter_relation": {
+    "assumption": "same triplet with equal conserved occupation numbers; nonrelativistic matter",
+    "checks": [
+      {
+        "epsilon_over_s": 0.025,
+        "max_mass_sum_absolute_error": 4.440892098500626e-16,
+        "mass_ratio_pi_to_zero": 0.9999960877971595,
+        "maximum_mass_decrease_percent": 0.0003912202840461454
+      },
+      {
+        "epsilon_over_s": 0.15,
+        "max_mass_sum_absolute_error": 4.440892098500626e-16,
+        "mass_ratio_pi_to_zero": 0.9991075215079747,
+        "maximum_mass_decrease_percent": 0.08924784920253392
+      },
+      {
+        "epsilon_over_s": 0.35,
+        "max_mass_sum_absolute_error": 3.552713678800501e-15,
+        "mass_ratio_pi_to_zero": 0.984645068121017,
+        "maximum_mass_decrease_percent": 1.5354931878982958
+      },
+      {
+        "epsilon_over_s": 0.49,
+        "max_mass_sum_absolute_error": 1.3322676295501878e-15,
+        "mass_ratio_pi_to_zero": 0.910884881760105,
+        "maximum_mass_decrease_percent": 8.911511823989503
+      }
+    ],
+    "abundance_predicted": false,
+    "caveat": "A common phase alone does not make distinct sector mass scales or splittings equal."
+  },
+  "state_metric_relation": {
+    "state_choice": "rho = M_squared / (3s), not selected by the CE axioms",
+    "identity": "Z_loop = s * g_Bures / (8*pi^2)",
+    "checks": [
+      {
+        "r": 0.15,
+        "theta": 0.5,
+        "Bures_metric": 0.0014474237553722532,
+        "fidelity_distance_relative_error": 1.0899460214938153e-18,
+        "loop_Z_over_s": 1.833183601579428e-05
+      },
+      {
+        "r": 0.35,
+        "theta": 1.2,
+        "Bures_metric": 0.009043945313856237,
+        "fidelity_distance_relative_error": 1.2172112977929065e-18,
+        "loop_Z_over_s": 0.000114542905499561
+      }
+    ],
+    "fixes_absolute_kinetic_scale": false,
+    "limitation": "An information metric fixes a dimensionless shape after a state is chosen; its action coefficient and the physical state remain inputs."
+  },
+  "observational_rmse": null,
+  "joint_rmse": null,
+  "conclusion": "No independently adjustable phase corrections for gauge and EM subsets; not a full theory prediction."
+}

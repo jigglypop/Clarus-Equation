@@ -1,0 +1,156 @@
+{
+  "inputs": {
+    "initial_scale_factor": 0.01,
+    "initial_phase": 2.541592653589793,
+    "initial_phase_velocity": 0,
+    "initial_U_normalization": 1,
+    "matter_coefficient": 0.42857142857142855,
+    "leading_F_squared": 18.452500000000004
+  },
+  "approximation": "Leading collective W plus conserved cold gear energy; baryon fraction not separately constrained by AP.",
+  "baseline_rmse": 0.9887377465774225,
+  "candidate": {
+    "prediction": [
+      0.5906114385150029,
+      0.8718598891328183,
+      1.24232646146256,
+      1.979250884619204,
+      2.3296606431413593,
+      4.506056793862366
+    ],
+    "ap_rmse": 0.9882997922068993,
+    "omega_m_today": 0.30024214529400073,
+    "w_slow_today": -0.9991998371081194,
+    "phase_today": 2.536594200776468,
+    "continuity_max_relative": 6.739251933299183e-16
+  },
+  "delta_rmse": -0.00043795437052318587,
+  "first_potential_correction": {
+    "prediction": [
+      0.5906115705259589,
+      0.87186008867546,
+      1.2423267360947938,
+      1.9792512790930565,
+      2.329661086678031,
+      4.506057496380255
+    ],
+    "ap_rmse": 0.9882990331006047,
+    "omega_m_today": 0.30024257761797585,
+    "w_slow_today": -0.9991984057594203,
+    "phase_today": 2.53658974314887,
+    "continuity_max_relative": 6.637680920379068e-16
+  },
+  "corrected_delta_rmse": -0.00043871347681778694,
+  "mass_exchange_cases": [
+    {
+      "prediction": [
+        0.5906110670781279,
+        0.8718591723310448,
+        1.2423252435362528,
+        1.9792486610030717,
+        2.329657958960007,
+        4.506051528126961
+      ],
+      "ap_rmse": 0.988297533748775,
+      "omega_m_today": 0.30024048008526255,
+      "w_slow_today": -0.9991991834463477,
+      "phase_today": 2.5366243430299678,
+      "continuity_max_relative": 9.416875118242507e-16,
+      "N": 4,
+      "initial_gear_mass_over_H": 1.0050943603226106,
+      "initial_harmonic_link_excursion": 60.945137516783326,
+      "small_amplitude_condition_met": false,
+      "independent_AP_difference": 8.801848139228241e-13
+    },
+    {
+      "prediction": [
+        0.5906115219224817,
+        0.8718600001623432,
+        1.2423265918626802,
+        1.9792510259892997,
+        2.3296607842692847,
+        4.5060569191337425
+      ],
+      "ap_rmse": 0.988298886860993,
+      "omega_m_today": 0.3002423750061272,
+      "w_slow_today": -0.999198479410995,
+      "phase_today": 2.5365930893576016,
+      "continuity_max_relative": 8.14786968538909e-16,
+      "N": 12,
+      "initial_gear_mass_over_H": 5940.236905616982,
+      "initial_harmonic_link_excursion": 39.4519018517955,
+      "small_amplitude_condition_met": false,
+      "independent_AP_difference": 3.863687147998007e-12
+    },
+    {
+      "prediction": [
+        0.5906115583489784,
+        0.8718600664637717,
+        1.2423266998562599,
+        1.9792512154230968,
+        2.329661010580019,
+        4.506057350994231
+      ],
+      "ap_rmse": 0.9882989954420439,
+      "omega_m_today": 0.30024252675411145,
+      "w_slow_today": -0.999198423120541,
+      "phase_today": 2.536590585584888,
+      "continuity_max_relative": 6.595669215436914e-16,
+      "N": 20,
+      "initial_gear_mass_over_H": 38469989.67536828,
+      "initial_harmonic_link_excursion": 31.181140214657596,
+      "small_amplitude_condition_met": false,
+      "independent_AP_difference": 4.445221968296664e-12
+    },
+    {
+      "prediction": [
+        0.590611565908142,
+        0.8718600802222967,
+        1.2423267222663763,
+        1.9792512547329506,
+        2.3296610575425754,
+        4.506057440611256
+      ],
+      "ap_rmse": 0.9882990179714662,
+      "omega_m_today": 0.30024255824295754,
+      "w_slow_today": -0.99919841143853,
+      "phase_today": 2.536590066019292,
+      "continuity_max_relative": 8.200017986660781e-16,
+      "N": 28,
+      "initial_gear_mass_over_H": 251412140376.23962,
+      "initial_harmonic_link_excursion": 26.569373824184193,
+      "small_amplitude_condition_met": false,
+      "independent_AP_difference": 4.843236922624783e-12
+    },
+    {
+      "prediction": [
+        0.5906115683647644,
+        0.8718600846935666,
+        1.2423267295492273,
+        1.9792512675078429,
+        2.3296610728044693,
+        4.506057469734991
+      ],
+      "ap_rmse": 0.9882990252922527,
+      "omega_m_today": 0.30024256847606634,
+      "w_slow_today": -0.9991984076419572,
+      "phase_today": 2.5365898971719,
+      "continuity_max_relative": 7.576425216297847e-16,
+      "N": 36,
+      "initial_gear_mass_over_H": 1646742955929937.2,
+      "initial_harmonic_link_excursion": 23.53560483272924,
+      "small_amplitude_condition_met": false,
+      "independent_AP_difference": 5.127898106138673e-12
+    }
+  ],
+  "independent_method_max_AP_difference": 1.9382717653115833e-11,
+  "fitted_parameters": [],
+  "joint_rmse": null,
+  "limitations": [
+    "Abundance and reference present epoch supplied, not selected by the common principle.",
+    "First vacuum-Hessian gear mass correction and energy exchange included in additional cases; higher corrections, radiation and recombination omitted.",
+    "Cold adiabatic treatment requires gear mass/H much greater than one; inspect the initial ratio for each N.",
+    "All tested initial harmonic occupations have link excursions above one radian: the dust approximation is not a controlled full-chain prediction.",
+    "No quantum or clustering likelihood; not the original synthetic initial state."
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "precision_decimal_digits": 60,
+  "rows": [
+    {
+      "r": 0.15,
+      "theta": 0.0,
+      "matrix_eigenvalue_error": 2.220446049250313e-16,
+      "moment_error": 3.111507638930571e-61,
+      "determinant_error": 0.0,
+      "fixed_epsilon_derivative_error": 1.5192908393215678e-63,
+      "spectral_integral_Z_error": 1.1654079965044329e-98,
+      "symmetric_mass_curvature_error": 0.0
+    },
+    {
+      "r": 0.15,
+      "theta": 0.7,
+      "matrix_eigenvalue_error": 2.220446049250313e-16,
+      "moment_error": 3.111507638930571e-61,
+      "determinant_error": 7.778769097326427e-62,
+      "fixed_epsilon_derivative_error": 1.035016884287818e-63,
+      "spectral_integral_Z_error": 2.3738919364399497e-66,
+      "symmetric_mass_curvature_error": 0.0
+    },
+    {
+      "r": 0.15,
+      "theta": 1.8,
+      "matrix_eigenvalue_error": 2.220446049250313e-16,
+      "moment_error": 3.111507638930571e-61,
+      "determinant_error": 0.0,
+      "fixed_epsilon_derivative_error": 1.4243351618639698e-63,
+      "spectral_integral_Z_error": 1.4973415726823872e-98,
+      "symmetric_mass_curvature_error": 0.0
+    },
+    {
+      "r": 0.35,
+      "theta": 0.0,
+      "matrix_eigenvalue_error": 2.220446049250313e-16,
+      "moment_error": 0.0,
+      "determinant_error": 1.5557538194652854e-61,
+      "fixed_epsilon_derivative_error": 1.2154326714572542e-63,
+      "spectral_integral_Z_error": 6.649929437430629e-98,
+      "symmetric_mass_curvature_error": 1.8231490071858814e-63
+    },
+    {
+      "r": 0.35,
+      "theta": 0.7,
+      "matrix_eigenvalue_error": 2.220446049250313e-16,
+      "moment_error": 0.0,
+      "determinant_error": 0.0,
+      "fixed_epsilon_derivative_error": 2.4308653429145085e-63,
+      "spectral_integral_Z_error": 5.5174793371620364e-98,
+      "symmetric_mass_curvature_error": 1.8231490071858814e-63
+    },
+    {
+      "r": 0.35,
+      "theta": 1.8,
+      "matrix_eigenvalue_error": 2.220446049250313e-16,
+      "moment_error": 3.111507638930571e-61,
+      "determinant_error": 7.778769097326427e-62,
+      "fixed_epsilon_derivative_error": 2.4308653429145085e-63,
+      "spectral_integral_Z_error": 1.8991135491519597e-65,
+      "symmetric_mass_curvature_error": 1.8231490071858814e-63
+    }
+  ],
+  "scope": "Conditional algebra and spectral integral; no observational fit or physical proof."
+}

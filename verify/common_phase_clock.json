@@ -1,0 +1,74 @@
+{
+  "source": "https://arxiv.org/abs/2010.06620",
+  "observation_per_year": 1e-18,
+  "sigma_per_year": 1.1e-18,
+  "baseline_zero_drift_residual": 0.9090909090909092,
+  "charged_r": 0.025,
+  "paired_threshold_factor": 6,
+  "fitted_parameters": 0,
+  "assumptions": [
+    "same phase and cosmic time dependence locally",
+    "no environmental screening",
+    "constant reference electromagnetic coupling; its present value is input",
+    "exact charged pairing at one loop; no complete supersymmetric completion"
+  ],
+  "cases": [
+    {
+      "r": 0.15,
+      "initial_theta": 0.1,
+      "theta_today": 0.11592706105013746,
+      "dtheta_dN_today": 0.031219244275882848,
+      "d_inverse_alpha_dtheta": 3.073845808904658e-06,
+      "conditional_alpha_fractional_drift_per_year": -4.765992189976512e-20,
+      "standardized_absolute_residual": 0.9524181108179685
+    },
+    {
+      "r": 0.15,
+      "initial_theta": 0.3,
+      "theta_today": 0.34745205670063384,
+      "dtheta_dN_today": 0.09346500412147683,
+      "d_inverse_alpha_dtheta": 9.048829338246322e-06,
+      "conditional_alpha_fractional_drift_per_year": -4.1638385268435665e-19,
+      "standardized_absolute_residual": 1.2876216842585062
+    },
+    {
+      "r": 0.15,
+      "initial_theta": 0.5,
+      "theta_today": 0.5779771133007818,
+      "dtheta_dN_today": 0.15508121765568195,
+      "d_inverse_alpha_dtheta": 1.4518715749784994e-05,
+      "conditional_alpha_fractional_drift_per_year": -1.089377182744245e-18,
+      "standardized_absolute_residual": 1.8994338024947683
+    },
+    {
+      "r": 0.35,
+      "initial_theta": 0.1,
+      "theta_today": 0.12129116057333199,
+      "dtheta_dN_today": 0.03280420571518837,
+      "d_inverse_alpha_dtheta": 3.215394188168037e-06,
+      "conditional_alpha_fractional_drift_per_year": -5.238080977396826e-20,
+      "standardized_absolute_residual": 0.9567098270672441
+    },
+    {
+      "r": 0.35,
+      "initial_theta": 0.3,
+      "theta_today": 0.3634038136894988,
+      "dtheta_dN_today": 0.0982147980598327,
+      "d_inverse_alpha_dtheta": 9.44624691282297e-06,
+      "conditional_alpha_fractional_drift_per_year": -4.563746746768213e-19,
+      "standardized_absolute_residual": 1.3239769769789287
+    },
+    {
+      "r": 0.35,
+      "initial_theta": 0.5,
+      "theta_today": 0.604090222330222,
+      "dtheta_dN_today": 0.1629659911165413,
+      "d_inverse_alpha_dtheta": 1.5094942074051844e-05,
+      "conditional_alpha_fractional_drift_per_year": -1.1874426265266655e-18,
+      "standardized_absolute_residual": 1.9885842059333325
+    }
+  ],
+  "joint_rmse": null,
+  "independent_holdout": false,
+  "conclusion": "Conditional cross-sector comparison; not a completed unified likelihood."
+}

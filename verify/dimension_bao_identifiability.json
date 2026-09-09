@@ -1,0 +1,141 @@
+{
+  "role": "seen-data identifiability audit, not all-domain optimization",
+  "fixed_reference": {
+    "amplitude_c_over_H0_rd": 30.23971253999196,
+    "chi2": 6.601901370177561,
+    "whitened_rmse": 0.9084259305370995,
+    "n": 8,
+    "fitted_nuisance_count": 0,
+    "prediction": [
+      10.420062718829678,
+      24.585597894176736,
+      13.494637962431982,
+      22.73258098033026,
+      17.531949636254666,
+      20.263010308626896,
+      30.215031705873933,
+      12.906356289367682
+    ]
+  },
+  "equally_profiled_leading_models": [
+    {
+      "amplitude_c_over_H0_rd": 30.09368279524274,
+      "chi2": 5.620209903755355,
+      "whitened_rmse": 0.8381683828261595,
+      "n": 8,
+      "fitted_nuisance_count": 2,
+      "prediction": [
+        10.358092301407703,
+        24.41175403930699,
+        13.409947512423175,
+        22.557486773557635,
+        17.414593331635917,
+        20.09147723762554,
+        29.978139521933986,
+        12.77455518619006
+      ],
+      "s": 0.0,
+      "omega_local_fitted": 0.3192008433990965,
+      "omega_effective_fitted": 0.3192008433990965,
+      "s_identifiable_from_leading_BAO": false,
+      "Cassini_quoted_Gaussian_chi2": 0.8336483931947068,
+      "BAO_plus_Cassini_independence_assumed_chi2": 6.453858296950062,
+      "role": "retrospective diagnostic"
+    },
+    {
+      "amplitude_c_over_H0_rd": 30.093682867061673,
+      "chi2": 5.620209903755345,
+      "whitened_rmse": 0.8381683828261587,
+      "n": 8,
+      "fitted_nuisance_count": 2,
+      "prediction": [
+        10.358092313015126,
+        24.411754035605384,
+        13.409947522468325,
+        22.557486754036024,
+        17.414593336457106,
+        20.09147720292013,
+        29.978139491452232,
+        12.774555138946786
+      ],
+      "s": 1.2039730775582572e-05,
+      "omega_local_fitted": 0.3192046912297024,
+      "omega_effective_fitted": 0.31920084813742744,
+      "s_identifiable_from_leading_BAO": false,
+      "Cassini_quoted_Gaussian_chi2": 3.8414588206941254,
+      "BAO_plus_Cassini_independence_assumed_chi2": 9.46166872444947,
+      "role": "retrospective diagnostic"
+    },
+    {
+      "amplitude_c_over_H0_rd": 30.09368286702577,
+      "chi2": 5.620209903755336,
+      "whitened_rmse": 0.838168382826158,
+      "n": 8,
+      "fitted_nuisance_count": 2,
+      "prediction": [
+        10.358092313009323,
+        24.411754035607238,
+        13.409947522463304,
+        22.557486754045787,
+        17.4145933364547,
+        20.091477202937487,
+        29.978139491467473,
+        12.774555138970408
+      ],
+      "s": 0.02,
+      "omega_local_fitted": 0.32558486509775975,
+      "omega_effective_fitted": 0.31920084813505856,
+      "s_identifiable_from_leading_BAO": false,
+      "Cassini_quoted_Gaussian_chi2": 2910241.1149419774,
+      "BAO_plus_Cassini_independence_assumed_chi2": 2910246.7351518814,
+      "role": "retrospective diagnostic; .02 violates the declared long-range Cassini band"
+    }
+  ],
+  "leading_family_identity": "f(A,Omega_local,s)=f_GR(A,Omega_local/(1+s))",
+  "shape_eta_one_minus_zero_local_diagnostic": {
+    "raw_whitened_norm": 4.30881637572728e-08,
+    "nuisance_orthogonal_whitened_norm": 1.0518884797640247e-08,
+    "nuisance_parameter_shift_local": [
+      -6.204773348513521e-09,
+      -8.671899162601021e-10
+    ],
+    "nuisance_rank": 2,
+    "orthogonality_residual": 7.696216620451819e-22,
+    "remaining_whitened_vector": [
+      4.209619344220971e-09,
+      -1.2074487924593384e-10,
+      6.222802223705079e-10,
+      -3.3951593756004644e-09,
+      2.0151026830936093e-10,
+      -3.917684946506228e-09,
+      9.378907350982079e-10,
+      8.04541002166724e-09
+    ],
+    "role": "local detectability diagnostic, not observed improvement or a nonlinear fit"
+  },
+  "dynamic_prediction_source_sha256": "cc16e61ef3a8a4e5e82a84f7ad53ab20f9800270f99919df99f999e84996b8b9",
+  "dynamic_inputs": {
+    "mass_over_H0": 100.0,
+    "s": 1.2039730775582572e-05,
+    "omega_local": 0.315,
+    "eta_contrast": [
+      0.0,
+      1.0
+    ],
+    "nuisances": [
+      "A",
+      "Omega_effective"
+    ]
+  },
+  "limitations": [
+    "BAO cross-sample covariance approximated as block diagonal",
+    "sound horizon not derived; no external matter-density prior used",
+    "profiled comparison covers leading background only",
+    "dynamic spectral projection is local, not a full nonlinear parameter refit",
+    "Cassini uses the stated unscreened long-range Gaussian-summary approximation",
+    "shared independent quantum/cosmology likelihood remains missing"
+  ],
+  "actual_quantum_rmse": null,
+  "all_domain_rmse": null,
+  "scientific_success": false
+}

@@ -1,0 +1,7 @@
+model = "gpt-5.6-sol"
+model_reasoning_effort = "low"
+model_verbosity = "low"
+sandbox_mode = "workspace-write"
+developer_instructions = """
+부모가 지정한 범위의 작업만 수행한다. 관련 없는 변경을 보존하고, 범위를 넓히거나 다시 위임하지 않으며, 의미 있는 최소 검증을 사용한다. Git 상태를 바꾸거나 외부에 게시하지 않는다. 결과, 정확한 변경 경로, 검증 결과, 남은 문제를 간결하게 반환한다.
+"""

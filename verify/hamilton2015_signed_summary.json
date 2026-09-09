@@ -1,0 +1,33 @@
+{
+  "schema": "ce-published-signed-marginal/v1",
+  "observation_id": "Hamilton2015_v3_corrected_source_acceleration",
+  "source": {
+    "title": "Atom-interferometry constraints on dark energy",
+    "authors": "Hamilton et al.",
+    "arxiv_version": "1502.03888v3",
+    "version_date": "2015-07-02",
+    "pdf_url": "https://arxiv.org/pdf/1502.03888v3",
+    "doi": "10.1126/science.aaa8883",
+    "pdf_page_one_based": 6,
+    "pdf_sha256": "edbab34891037e7cadaa342acef923d374fdfac14b839e5a34f5673d01c391d0",
+    "pdf_bytes": 1078045,
+    "retrieved_date": "2026-09-09"
+  },
+  "observable": "corrected near-minus-far source-associated acceleration",
+  "unit": "micrometer per second squared",
+  "positive_direction": "toward source sphere",
+  "corrected": {"mean": -0.7, "sigma": 3.7},
+  "raw_before_systematic_corrections": {"mean": 2.7, "sigma": 3.3},
+  "raw_value_usage": "negative control only; not the released corrected result",
+  "baseline": "ordinary source gravity is nonnegative in the published sign convention; zero used only as conservative sign-screen reference",
+  "covariance": "one published marginal standard deviation; raw fringe covariance not provided here",
+  "role": "seen_retrospective_adversarial_sign_screen_not_holdout",
+  "limitations": [
+    "Not a joint quantum/cosmology data set or likelihood.",
+    "The reported acceleration includes ordinary source gravity; it is not labeled an already Newton-subtracted residual.",
+    "A negative central value does not significantly exclude a positive scalar force within uncertainty.",
+    "Exact prediction needs near/far source geometry, trajectories, laser phase and systematic covariance.",
+    "A single marginal's worsening does not imply an aggregate quantum-domain score must worsen."
+  ],
+  "scientific_joint_score_eligible": false
+}

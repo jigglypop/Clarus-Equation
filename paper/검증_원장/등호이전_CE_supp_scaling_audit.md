@@ -19,7 +19,7 @@ $\mathcal I_0,\mathcal J,B$와 $\beta$는 모두 무차원이다.
 **[정의]** $X$를 metric space, $\mu_0\in\mathcal P(X)$를 Borel
 probability라 하자. 무차원 functional
 $\mathcal I_0:X\to\mathbb R\cup\{+\infty\}$가
-[../9_등호이전/05_CE_브리지.md](../9_등호이전/05_CE_브리지.md) 1절의 good-rate와 recovery mass
+[../참조/9_등호이전/05_CE_브리지.md](../참조/9_등호이전/05_CE_브리지.md) 1절의 good-rate와 recovery mass
 조건을 만족한다고 하자. 기준 Gibbs measure를
 
 $$
@@ -130,7 +130,7 @@ $$
 
 $\mu_0(A)=0$이면 이 조건화는 정의되지 않는다. 특히 Brownian
 $C^0$ prior를 $W^{1,p}$ finite-kinetic-action 집합으로 조건화하는
-경우에는 [../9_등호이전/05i_CE_physical_path_prior.md](../9_등호이전/05i_CE_physical_path_prior.md)
+경우에는 [../참조/9_등호이전/05i_CE_physical_path_prior.md](../참조/9_등호이전/05i_CE_physical_path_prior.md)
 정리 2.2에 의해 분모가 0이다.
 
 ## 5. Scale을 바꾸면 생기는 차이

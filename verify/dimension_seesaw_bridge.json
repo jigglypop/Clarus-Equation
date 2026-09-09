@@ -1,0 +1,50 @@
+{
+  "source": "https://arxiv.org/html/2410.05380v2#S2.T1",
+  "source_html_sha256": "06228d2ee316269ebcf8ab5fd1e9c9e86564e62cd8040fd61e6eb2f0b8a32a2a",
+  "rows": {
+    "IC19_NO": {
+      "solar_eV2": 7.49e-05,
+      "signed_atmospheric_eV2": 0.002534,
+      "masses_eV": [
+        0.0,
+        0.008654478609367522,
+        0.05033885179461287
+      ],
+      "sum_eV": 0.058993330403980394
+    },
+    "IC19_IO": {
+      "solar_eV2": 7.49e-05,
+      "signed_atmospheric_eV2": -0.00251,
+      "masses_eV": [
+        0.049346732414618906,
+        0.0500999001995014,
+        0.0
+      ],
+      "sum_eV": 0.0994466326141203
+    },
+    "IC24_SK_NO": {
+      "solar_eV2": 7.49e-05,
+      "signed_atmospheric_eV2": 0.002513,
+      "masses_eV": [
+        0.0,
+        0.008654478609367522,
+        0.050129831437977126
+      ],
+      "sum_eV": 0.05878431004734465
+    },
+    "IC24_SK_IO": {
+      "solar_eV2": 7.49e-05,
+      "signed_atmospheric_eV2": -0.002484,
+      "masses_eV": [
+        0.049082583469088094,
+        0.04983974317750845,
+        0.0
+      ],
+      "sum_eV": 0.09892232664659655
+    }
+  },
+  "assumption": "exactly_two_heavy_neutrinos_tree_level_no_extra_mass_operator",
+  "status": "conditional_transform_of_external_splittings_not_their_prediction",
+  "joint_rmse": null,
+  "scientific_success": false
+}

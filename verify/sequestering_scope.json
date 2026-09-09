@@ -1,0 +1,12 @@
+{
+  "source": "https://arxiv.org/html/1505.01492v2",
+  "equation": 10,
+  "scope": "pressureless matter plus local potential; no solved spacetime average or flux",
+  "effective_density": "-average_rho/4 - average_v + residual + rho + v",
+  "constant_shift_cancels": true,
+  "local_potential_dependence_at_fixed_average": 1,
+  "residual_constant_dependence": 1,
+  "joint_rmse": null,
+  "fitted_parameters": 0,
+  "conclusion": "Constant vacuum shifts cancel, but local potential variation and an undetermined residual remain."
+}

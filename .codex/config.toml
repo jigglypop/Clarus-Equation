@@ -1,13 +1,16 @@
-# 프로젝트 기본값. 메인 모델은 앱의 사용자 선택을 유지한다.
-model_reasoning_effort = "low"
-approval_policy = "on-request"
-sandbox_mode = "workspace-write"
+# 프로젝트 오케스트레이션 기본값. 공급자와 인증 설정은 사용자 설정에 둔다.
+model = "gpt-6-astra"
+model_reasoning_effort = "medium"
+model_verbosity = "low"
 project_doc_max_bytes = 8192
 tool_output_token_limit = 4000
 
 [agents]
 enabled = true
-max_concurrent_threads_per_session = 3
-default_subagent_model = "gpt-5.6-luna"
+max_concurrent_threads_per_session = 2
+default_subagent_model = "gpt-5.6-sol"
 default_subagent_reasoning_effort = "low"
-# 역할 TOML의 명시 모델과 호출 시 모델 선택도 확인한다.
+
+[agents.worker]
+description = "범위가 고정된 기계적 구현, 집중 조사, 표적 검증을 맡는 Sol 작업자."
+config_file = "agents/worker.toml"

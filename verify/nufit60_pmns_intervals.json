@@ -1,0 +1,34 @@
+{
+  "source": "https://arxiv.org/html/2410.05380v2#S2.T1",
+  "release": "NuFIT 6.0, September 2024 data; article v2",
+  "source_html_sha256": "06228d2ee316269ebcf8ab5fd1e9c9e86564e62cd8040fd61e6eb2f0b8a32a2a",
+  "source_html_bytes": 469035,
+  "retrieved_at": "2026-09-09",
+  "role": "exploratory_marginal_interval_screen_not_joint_likelihood_or_holdout",
+  "order": ["sin2_theta12", "sin2_theta23", "sin2_theta13"],
+  "variants_are_alternatives_not_independent_datasets": true,
+  "variants": {
+    "IC19_NO": {
+      "central": [0.307, 0.561, 0.02195],
+      "one_sigma": [[0.296, 0.319], [0.546, 0.573], [0.02137, 0.02249]],
+      "three_sigma": [[0.275, 0.345], [0.430, 0.596], [0.02023, 0.02376]]
+    },
+    "IC19_IO": {
+      "central": [0.308, 0.562, 0.02224],
+      "one_sigma": [[0.297, 0.320], [0.547, 0.574], [0.02167, 0.02280]],
+      "three_sigma": [[0.275, 0.345], [0.437, 0.597], [0.02053, 0.02397]]
+    },
+    "IC24_SK_NO": {
+      "central": [0.308, 0.470, 0.02215],
+      "one_sigma": [[0.297, 0.320], [0.457, 0.487], [0.02157, 0.02271]],
+      "three_sigma": [[0.275, 0.345], [0.435, 0.585], [0.02030, 0.02388]]
+    },
+    "IC24_SK_IO": {
+      "central": [0.308, 0.550, 0.02231],
+      "one_sigma": [[0.297, 0.320], [0.535, 0.562], [0.02175, 0.02287]],
+      "three_sigma": [[0.275, 0.345], [0.440, 0.584], [0.02060, 0.02409]]
+    }
+  },
+  "joint_covariance": null,
+  "joint_likelihood": null
+}

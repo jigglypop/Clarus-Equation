@@ -1,0 +1,89 @@
+{
+  "role": "common_action_consistency_audit",
+  "common_phase": 0.5,
+  "assumptions": [
+    "same dynamical theta in both sectors",
+    "complex bosonic triplets",
+    "fixed masses and fractional splittings",
+    "no cancelling theta-dependent sector",
+    "flat-space relative one-loop potential; no absolute vacuum prediction"
+  ],
+  "charged_mass_GeV": 1000.0,
+  "charged_epsilon_over_s": 0.025,
+  "charged_representation_dimension": 16,
+  "cases": [
+    {
+      "dark_epsilon_over_s": 0.15,
+      "dark_mass_eV": 0.027615,
+      "dark_U_GeV4": 2.3607302041873815e-47,
+      "charged_U_GeV4": 2973412.7858878532,
+      "charged_to_dark_potential": 1.2595309623326362e+53,
+      "dark_dU_dtheta_GeV4": -6.023905103724866e-48,
+      "charged_dU_dtheta_GeV4": -759234.7026677046,
+      "charged_to_dark_force": 1.2603696266699715e+53,
+      "illustrative_charged_e_to_equal_dark_U": 4.987876436980525e-20,
+      "visible_response_before": {
+        "delta_alpha_star_inverse": -8.316346442248041e-06,
+        "delta_muon_em_heavy_leading": -1.5756712020516824e-19
+      },
+      "visible_response_at_equal_U": {
+        "delta_alpha_star_inverse": -6.592402370295653e-59,
+        "delta_muon_em_heavy_leading": -1.247476437943569e-72
+      },
+      "inversion_relative_residual": 0.0,
+      "inversion_status": "one-point consistency bound, not an observational fit or full-history condition"
+    },
+    {
+      "dark_epsilon_over_s": 0.35,
+      "dark_mass_eV": 0.014414,
+      "dark_U_GeV4": 2.362343763807698e-47,
+      "charged_U_GeV4": 2973412.7858878532,
+      "charged_to_dark_potential": 1.2586706606557614e+53,
+      "dark_dU_dtheta_GeV4": -5.964915886425317e-48,
+      "charged_dU_dtheta_GeV4": -759234.7026677046,
+      "charged_to_dark_force": 1.2728338791759602e+53,
+      "illustrative_charged_e_to_equal_dark_U": 4.98901258305297e-20,
+      "visible_response_before": {
+        "delta_alpha_star_inverse": -8.316346442248041e-06,
+        "delta_muon_em_heavy_leading": -1.5756712020516824e-19
+      },
+      "visible_response_at_equal_U": {
+        "delta_alpha_star_inverse": -6.596908278783933e-59,
+        "delta_muon_em_heavy_leading": -1.248329088366727e-72
+      },
+      "inversion_relative_residual": 2.1084395886461046e-81,
+      "inversion_status": "one-point consistency bound, not an observational fit or full-history condition"
+    }
+  ],
+  "determinant_checks": [
+    {
+      "epsilon_over_s": 0.025,
+      "theta": 0.5,
+      "relative_error": 6.084339212914919e-77,
+      "force_relative_error": 0.0
+    },
+    {
+      "epsilon_over_s": 0.15,
+      "theta": 0.5,
+      "relative_error": 4.4223108250574575e-79,
+      "force_relative_error": 0.0
+    },
+    {
+      "epsilon_over_s": 0.35,
+      "theta": 0.5,
+      "relative_error": 3.197975309875439e-80,
+      "force_relative_error": 0.0
+    },
+    {
+      "epsilon_over_s": 0.49,
+      "theta": 2.4,
+      "relative_error": 2.0440756031048636e-79,
+      "force_relative_error": 0.0
+    }
+  ],
+  "decimal_precision": 80,
+  "joint_rmse": null,
+  "scientific_success": false,
+  "conclusion": "neutral-only background cannot be combined unchanged with the supplied charged sector",
+  "source_commit": "05013ce3c653fc68c2fe5a4ab6294e95bd6c0a30"
+}

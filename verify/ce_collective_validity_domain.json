@@ -1,0 +1,297 @@
+{
+  "inputs_source": [
+    "ce_collective_ap.json",
+    "ce_collective_scale_relation.json"
+  ],
+  "rows": [
+    {
+      "N": 4,
+      "maximum_link_amplitude": 0.1,
+      "minimum_initial_mass_over_H": 100,
+      "target_Jeans_length_Mpc": 1.0,
+      "lower_bounds": {
+        "small_amplitude": 47543165.27282727,
+        "rapid_oscillation": 1267057.4225632977,
+        "spatial_scale": 166087499215699.5
+      },
+      "combined_R_H_lower_bound": 166087499215699.5,
+      "controlling_condition": "spatial_scale",
+      "local_f_GeV": 1.2174999999999998e+17
+    },
+    {
+      "N": 4,
+      "maximum_link_amplitude": 0.1,
+      "minimum_initial_mass_over_H": 100,
+      "target_Jeans_length_Mpc": 0.01,
+      "lower_bounds": {
+        "small_amplitude": 47543165.27282727,
+        "rapid_oscillation": 1267057.4225632977,
+        "spatial_scale": 1.660874992156995e+22
+      },
+      "combined_R_H_lower_bound": 1.660874992156995e+22,
+      "controlling_condition": "spatial_scale",
+      "local_f_GeV": 1.2174999999999998e+17
+    },
+    {
+      "N": 4,
+      "maximum_link_amplitude": 0.03,
+      "minimum_initial_mass_over_H": 100,
+      "target_Jeans_length_Mpc": 1.0,
+      "lower_bounds": {
+        "small_amplitude": 528257391.92030305,
+        "rapid_oscillation": 1267057.4225632977,
+        "spatial_scale": 166087499215699.5
+      },
+      "combined_R_H_lower_bound": 166087499215699.5,
+      "controlling_condition": "spatial_scale",
+      "local_f_GeV": 1.2174999999999998e+17
+    },
+    {
+      "N": 4,
+      "maximum_link_amplitude": 0.03,
+      "minimum_initial_mass_over_H": 100,
+      "target_Jeans_length_Mpc": 0.01,
+      "lower_bounds": {
+        "small_amplitude": 528257391.92030305,
+        "rapid_oscillation": 1267057.4225632977,
+        "spatial_scale": 1.660874992156995e+22
+      },
+      "combined_R_H_lower_bound": 1.660874992156995e+22,
+      "controlling_condition": "spatial_scale",
+      "local_f_GeV": 1.2174999999999998e+17
+    },
+    {
+      "N": 12,
+      "maximum_link_amplitude": 0.1,
+      "minimum_initial_mass_over_H": 100,
+      "target_Jeans_length_Mpc": 1.0,
+      "lower_bounds": {
+        "small_amplitude": 19922592.764463425,
+        "rapid_oscillation": 0.0362745838114742,
+        "spatial_scale": 4756219.906098636
+      },
+      "combined_R_H_lower_bound": 19922592.764463425,
+      "controlling_condition": "small_amplitude",
+      "local_f_GeV": 18556465336410.438
+    },
+    {
+      "N": 12,
+      "maximum_link_amplitude": 0.1,
+      "minimum_initial_mass_over_H": 100,
+      "target_Jeans_length_Mpc": 0.01,
+      "lower_bounds": {
+        "small_amplitude": 19922592.764463425,
+        "rapid_oscillation": 0.0362745838114742,
+        "spatial_scale": 475621990609863.6
+      },
+      "combined_R_H_lower_bound": 475621990609863.6,
+      "controlling_condition": "spatial_scale",
+      "local_f_GeV": 18556465336410.438
+    },
+    {
+      "N": 12,
+      "maximum_link_amplitude": 0.03,
+      "minimum_initial_mass_over_H": 100,
+      "target_Jeans_length_Mpc": 1.0,
+      "lower_bounds": {
+        "small_amplitude": 221362141.82737136,
+        "rapid_oscillation": 0.0362745838114742,
+        "spatial_scale": 4756219.906098636
+      },
+      "combined_R_H_lower_bound": 221362141.82737136,
+      "controlling_condition": "small_amplitude",
+      "local_f_GeV": 18556465336410.438
+    },
+    {
+      "N": 12,
+      "maximum_link_amplitude": 0.03,
+      "minimum_initial_mass_over_H": 100,
+      "target_Jeans_length_Mpc": 0.01,
+      "lower_bounds": {
+        "small_amplitude": 221362141.82737136,
+        "rapid_oscillation": 0.0362745838114742,
+        "spatial_scale": 475621990609863.6
+      },
+      "combined_R_H_lower_bound": 475621990609863.6,
+      "controlling_condition": "spatial_scale",
+      "local_f_GeV": 18556465336410.438
+    },
+    {
+      "N": 20,
+      "maximum_link_amplitude": 0.1,
+      "minimum_initial_mass_over_H": 100,
+      "target_Jeans_length_Mpc": 1.0,
+      "lower_bounds": {
+        "small_amplitude": 12444972.865102552,
+        "rapid_oscillation": 8.648998666477907e-10,
+        "spatial_scale": 0.11340568801174022
+      },
+      "combined_R_H_lower_bound": 12444972.865102552,
+      "controlling_condition": "small_amplitude",
+      "local_f_GeV": 2828298328.975276
+    },
+    {
+      "N": 20,
+      "maximum_link_amplitude": 0.1,
+      "minimum_initial_mass_over_H": 100,
+      "target_Jeans_length_Mpc": 0.01,
+      "lower_bounds": {
+        "small_amplitude": 12444972.865102552,
+        "rapid_oscillation": 8.648998666477907e-10,
+        "spatial_scale": 11340568.801174017
+      },
+      "combined_R_H_lower_bound": 12444972.865102552,
+      "controlling_condition": "small_amplitude",
+      "local_f_GeV": 2828298328.975276
+    },
+    {
+      "N": 20,
+      "maximum_link_amplitude": 0.03,
+      "minimum_initial_mass_over_H": 100,
+      "target_Jeans_length_Mpc": 1.0,
+      "lower_bounds": {
+        "small_amplitude": 138277476.2789173,
+        "rapid_oscillation": 8.648998666477907e-10,
+        "spatial_scale": 0.11340568801174022
+      },
+      "combined_R_H_lower_bound": 138277476.2789173,
+      "controlling_condition": "small_amplitude",
+      "local_f_GeV": 2828298328.975276
+    },
+    {
+      "N": 20,
+      "maximum_link_amplitude": 0.03,
+      "minimum_initial_mass_over_H": 100,
+      "target_Jeans_length_Mpc": 0.01,
+      "lower_bounds": {
+        "small_amplitude": 138277476.2789173,
+        "rapid_oscillation": 8.648998666477907e-10,
+        "spatial_scale": 11340568.801174017
+      },
+      "combined_R_H_lower_bound": 138277476.2789173,
+      "controlling_condition": "small_amplitude",
+      "local_f_GeV": 2828298328.975276
+    },
+    {
+      "N": 28,
+      "maximum_link_amplitude": 0.1,
+      "minimum_initial_mass_over_H": 100,
+      "target_Jeans_length_Mpc": 1.0,
+      "lower_bounds": {
+        "small_amplitude": 9035924.805238325,
+        "rapid_oscillation": 2.0250580580136552e-17,
+        "spatial_scale": 2.655268613411034e-09
+      },
+      "combined_R_H_lower_bound": 9035924.805238325,
+      "controlling_condition": "small_amplitude",
+      "local_f_GeV": 431077.3249466965
+    },
+    {
+      "N": 28,
+      "maximum_link_amplitude": 0.1,
+      "minimum_initial_mass_over_H": 100,
+      "target_Jeans_length_Mpc": 0.01,
+      "lower_bounds": {
+        "small_amplitude": 9035924.805238325,
+        "rapid_oscillation": 2.0250580580136552e-17,
+        "spatial_scale": 0.26552686134110337
+      },
+      "combined_R_H_lower_bound": 9035924.805238325,
+      "controlling_condition": "small_amplitude",
+      "local_f_GeV": 431077.3249466965
+    },
+    {
+      "N": 28,
+      "maximum_link_amplitude": 0.03,
+      "minimum_initial_mass_over_H": 100,
+      "target_Jeans_length_Mpc": 1.0,
+      "lower_bounds": {
+        "small_amplitude": 100399164.50264809,
+        "rapid_oscillation": 2.0250580580136552e-17,
+        "spatial_scale": 2.655268613411034e-09
+      },
+      "combined_R_H_lower_bound": 100399164.50264809,
+      "controlling_condition": "small_amplitude",
+      "local_f_GeV": 431077.3249466965
+    },
+    {
+      "N": 28,
+      "maximum_link_amplitude": 0.03,
+      "minimum_initial_mass_over_H": 100,
+      "target_Jeans_length_Mpc": 0.01,
+      "lower_bounds": {
+        "small_amplitude": 100399164.50264809,
+        "rapid_oscillation": 2.0250580580136552e-17,
+        "spatial_scale": 0.26552686134110337
+      },
+      "combined_R_H_lower_bound": 100399164.50264809,
+      "controlling_condition": "small_amplitude",
+      "local_f_GeV": 431077.3249466965
+    },
+    {
+      "N": 36,
+      "maximum_link_amplitude": 0.1,
+      "minimum_initial_mass_over_H": 100,
+      "target_Jeans_length_Mpc": 1.0,
+      "lower_bounds": {
+        "small_amplitude": 7090236.093982566,
+        "rapid_oscillation": 4.7201776140474605e-25,
+        "spatial_scale": 6.189135144074968e-17
+      },
+      "combined_R_H_lower_bound": 7090236.093982566,
+      "controlling_condition": "small_amplitude",
+      "local_f_GeV": 65.70299115175989
+    },
+    {
+      "N": 36,
+      "maximum_link_amplitude": 0.1,
+      "minimum_initial_mass_over_H": 100,
+      "target_Jeans_length_Mpc": 0.01,
+      "lower_bounds": {
+        "small_amplitude": 7090236.093982566,
+        "rapid_oscillation": 4.7201776140474605e-25,
+        "spatial_scale": 6.18913514407497e-09
+      },
+      "combined_R_H_lower_bound": 7090236.093982566,
+      "controlling_condition": "small_amplitude",
+      "local_f_GeV": 65.70299115175989
+    },
+    {
+      "N": 36,
+      "maximum_link_amplitude": 0.03,
+      "minimum_initial_mass_over_H": 100,
+      "target_Jeans_length_Mpc": 1.0,
+      "lower_bounds": {
+        "small_amplitude": 78780401.04425074,
+        "rapid_oscillation": 4.7201776140474605e-25,
+        "spatial_scale": 6.189135144074968e-17
+      },
+      "combined_R_H_lower_bound": 78780401.04425074,
+      "controlling_condition": "small_amplitude",
+      "local_f_GeV": 65.70299115175989
+    },
+    {
+      "N": 36,
+      "maximum_link_amplitude": 0.03,
+      "minimum_initial_mass_over_H": 100,
+      "target_Jeans_length_Mpc": 0.01,
+      "lower_bounds": {
+        "small_amplitude": 78780401.04425074,
+        "rapid_oscillation": 4.7201776140474605e-25,
+        "spatial_scale": 6.18913514407497e-09
+      },
+      "combined_R_H_lower_bound": 78780401.04425074,
+      "controlling_condition": "small_amplitude",
+      "local_f_GeV": 65.70299115175989
+    }
+  ],
+  "selected_N": null,
+  "selected_R_H": null,
+  "observational_rmse": null,
+  "scope": "Leading harmonic scaling constraints, not full nonlinear sufficiency.",
+  "limitations": [
+    "Amplitude and frequency tolerances are computational criteria, not observations.",
+    "Changing R changes small finite-lock normalization corrections omitted in these estimates.",
+    "Initial state, UV stability, coupled perturbations and all-force matching remain required."
+  ]
+}

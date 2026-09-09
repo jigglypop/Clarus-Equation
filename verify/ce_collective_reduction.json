@@ -1,0 +1,30 @@
+{
+  "quadrature_order": 128,
+  "W_second_zero": 1.2325755759514206e-07,
+  "F_over_Mp": 4.295637321748661,
+  "transverse_coefficient": 0.12485181260408908,
+  "cases": [
+    {
+      "stiffness": 2.0,
+      "leading_H_max_relative": 0.003735073939137745,
+      "corrected_H_max_relative": 0.00018408306810124841,
+      "reduction_factor": 20.290154752763026
+    },
+    {
+      "stiffness": 8.0,
+      "leading_H_max_relative": 0.0008903063967879987,
+      "corrected_H_max_relative": 1.0868912402317576e-05,
+      "reduction_factor": 81.91310812277398
+    },
+    {
+      "stiffness": 32.0,
+      "leading_H_max_relative": 0.00022002531258791258,
+      "corrected_H_max_relative": 6.701004147124934e-07,
+      "reduction_factor": 328.3467787172083
+    }
+  ],
+  "observable_rmse": null,
+  "fitted_parameters": [],
+  "scope": "Full versus reduced equations with relaxed initial state; no observed data or heavy-mode abundance.",
+  "quadrature_refinement_error": 1.1102230246251565e-15
+}

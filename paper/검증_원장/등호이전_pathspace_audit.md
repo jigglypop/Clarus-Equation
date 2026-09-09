@@ -256,7 +256,7 @@ $$
 
 증명:
 
-[../9_등호이전/02_연속공간과측도.md](../9_등호이전/02_연속공간과측도.md)의 compact Gibbs 농축 정리를 $\Gamma=\mathcal P_I$, $E=E_{\mathrm{fold}}$에 적용한다. compactness와 continuity가 minimizer 존재와 outside-$U$ energy gap을 보장하고, Gibbs factor가 gap 밖 질량을 지수적으로 누른다. 끝.
+[../참조/9_등호이전/02_연속공간과측도.md](../참조/9_등호이전/02_연속공간과측도.md)의 compact Gibbs 농축 정리를 $\Gamma=\mathcal P_I$, $E=E_{\mathrm{fold}}$에 적용한다. compactness와 continuity가 minimizer 존재와 outside-$U$ energy gap을 보장하고, Gibbs factor가 gap 밖 질량을 지수적으로 누른다. 끝.
 
 ### 정리 3.2: Polish/noncompact pathspace 농축
 
@@ -281,7 +281,7 @@ $$
 
 증명:
 
-[../9_등호이전/02a_noncompact_Gamma.md](../9_등호이전/02a_noncompact_Gamma.md)와 [../9_등호이전/02c_Gamma수렴과Gibbs농축.md](../9_등호이전/02c_Gamma수렴과Gibbs농축.md)의 noncompact/Gamma 농축 정리를 $\Gamma=\mathcal P_I$, $E=E_{\mathrm{fold}}$에 적용한다. coercivity가 mass escape를 막고, l.s.c.가 sublevel 안정성을 주며, recovery mass가 minimizer 근방의 분모 기여를 보장한다. 끝.
+[../참조/9_등호이전/02a_noncompact_Gamma.md](../참조/9_등호이전/02a_noncompact_Gamma.md)와 [../참조/9_등호이전/02c_Gamma수렴과Gibbs농축.md](../참조/9_등호이전/02c_Gamma수렴과Gibbs농축.md)의 noncompact/Gamma 농축 정리를 $\Gamma=\mathcal P_I$, $E=E_{\mathrm{fold}}$에 적용한다. coercivity가 mass escape를 막고, l.s.c.가 sublevel 안정성을 주며, recovery mass가 minimizer 근방의 분모 기여를 보장한다. 끝.
 
 ## 4. 발견된 표기/논리 충돌
 
@@ -373,7 +373,7 @@ $$
 
 **정리 후보 6.1: CE good-rate theorem**
 
-이 후보는 [../9_등호이전/05e_CE_good_rate_theorem.md](../9_등호이전/05e_CE_good_rate_theorem.md)에서 조건부 정리로 닫혔다. 아래 문장은 05d 시점의 목표 형태로 남겨 둔다.
+이 후보는 [../참조/9_등호이전/05e_CE_good_rate_theorem.md](../참조/9_등호이전/05e_CE_good_rate_theorem.md)에서 조건부 정리로 닫혔다. 아래 문장은 05d 시점의 목표 형태로 남겨 둔다.
 
 가정:
 

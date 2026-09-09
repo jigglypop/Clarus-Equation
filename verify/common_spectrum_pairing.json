@@ -1,0 +1,114 @@
+{
+  "role": "conditional_pairing_screen",
+  "field_content": "two complex scalar triplets and one vectorlike Dirac triplet",
+  "charged_representation_dimension": 16,
+  "neutral_sector": "unchanged, unpaired benchmark",
+  "common_phase": 0.5,
+  "mass_GeV": 1000.0,
+  "epsilon_over_s": 0.025,
+  "one_loop_flat_vacuum_weight": 0,
+  "exact_degeneracy_vacuum_cancelled": true,
+  "soft_sensitivity": [
+    {
+      "scalar_mass_squared_fractional_shift": 0.0,
+      "residual_potential_GeV4": 0.0,
+      "absolute_residual_over_dark": 0.0,
+      "independent_integral_error_scaled": 0.0
+    },
+    {
+      "scalar_mass_squared_fractional_shift": 1e-08,
+      "residual_potential_GeV4": -0.059505501192602804,
+      "absolute_residual_over_dark": 2.5206396345950084e+45,
+      "independent_integral_error_scaled": 1.3559897004377072e-108
+    },
+    {
+      "scalar_mass_squared_fractional_shift": 1e-16,
+      "residual_potential_GeV4": -5.950550178821723e-10,
+      "absolute_residual_over_dark": 2.5206396598251016e+37,
+      "independent_integral_error_scaled": 1.165401389060905e-100
+    },
+    {
+      "scalar_mass_squared_fractional_shift": 3.9672469490120874e-54,
+      "residual_potential_GeV4": -2.3607302041873815e-47,
+      "absolute_residual_over_dark": 1.0,
+      "independent_integral_error_scaled": 1.8019076899346522e-64
+    }
+  ],
+  "scalar_mass_squared_shift_at_dark_scale": 3.9672469490120874e-54,
+  "matching": {
+    "original_delta_alpha_star_inverse": -8.316346442248041e-06,
+    "paired_delta_alpha_star_inverse": -4.9898078653488245e-05,
+    "ratio": 6,
+    "normalized_gauge_shifts": [
+      -1.8711779495058095e-05,
+      -1.8711779495058095e-05,
+      -1.8711779495058095e-05
+    ],
+    "shifts_of_pairwise_inverse_coupling_differences": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "scope": "one-loop phase threshold at exact degeneracy; universal shift cannot change coupling differences"
+  },
+  "em_checks": [
+    {
+      "mass_GeV": 1000.0,
+      "e": 0.025,
+      "theta": 0.5,
+      "scalar_em": 2.6803274221832952e-15,
+      "dirac_em": 2.1442618925572886e-14,
+      "paired_em": 2.6803273769939478e-14,
+      "dirac_integral_relative_error": 1.1772605321529279e-15,
+      "dirac_heavy_upper_bound": 2.1442620332673097e-14,
+      "paired_to_scalar_ratio": 9.99999983140363
+    },
+    {
+      "mass_GeV": 1.0,
+      "e": 0.2,
+      "theta": 0.3,
+      "scalar_em": 2.8342934788059804e-09,
+      "dirac_em": 2.2559382620461315e-08,
+      "paired_em": 2.8227969578073275e-08,
+      "dirac_integral_relative_error": 3.2266793435492484e-15,
+      "dirac_heavy_upper_bound": 2.2964446351424308e-08,
+      "paired_to_scalar_ratio": 9.95943778904824
+    },
+    {
+      "mass_GeV": 0.05,
+      "e": 0.4,
+      "theta": 2.4,
+      "scalar_em": 8.481324691579495e-07,
+      "dirac_em": 5.600197212443271e-06,
+      "paired_em": 7.29646215075917e-06,
+      "dirac_integral_relative_error": 7.713778403014931e-15,
+      "dirac_heavy_upper_bound": 1.6907134860252834e-05,
+      "paired_to_scalar_ratio": 8.602974672109074
+    }
+  ],
+  "frozen_muon_comparison": {
+    "n": 1,
+    "sm_rmse": 0.6046519625428082,
+    "scalar_subset_rmse": 0.6046477530227145,
+    "paired_subset_rmse": 0.6046098673425807,
+    "paired_minus_sm": -4.209520022745491e-05,
+    "paired_minus_scalar": -3.7885680133753794e-05,
+    "independent_holdout": false,
+    "source": {
+      "experiment": "https://muon-g-2.fnal.gov/result2025.pdf",
+      "theory": "https://muon-gm2-theory.illinois.edu/white-paper-25/",
+      "comparison": "https://pdg.lbl.gov/2025/reviews/rpp2025-rev-g-2-muon-anom-mag-moment.pdf",
+      "model_commit": "05013ce3c653fc68c2fe5a4ab6294e95bd6c0a30"
+    }
+  },
+  "missing": [
+    "symmetry enforcing degeneracy and interactions",
+    "curvature and kinetic matching",
+    "full muon diagrams",
+    "common cosmological state and perturbations",
+    "joint observational predictions"
+  ],
+  "supersymmetry_established": false,
+  "joint_rmse": null,
+  "scientific_success": false
+}

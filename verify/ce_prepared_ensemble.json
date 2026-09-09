@@ -1,0 +1,92 @@
+{
+  "scope": "tensor Gauss-Laguerre preparation prior predictive diagnostic",
+  "N_pre": 100000000000.0,
+  "assumptions": "three independent exponential mode energies; homogeneous separate patches with same supplied radiation and phase",
+  "cases": [
+    {
+      "r": 0.15,
+      "orders": [
+        {
+          "order": 3,
+          "background_count": 27,
+          "expected_chi_squared": 41.50069730606744,
+          "root_mean_expected_standardized_squared_error": 2.62997773457202,
+          "mean_prediction_rmse": 1.548284609194502,
+          "normalized_predictive_minus2logL": 8.581579284214497,
+          "mean_AP_prediction": [
+            0.5812597229585262,
+            0.8530558557095564,
+            1.2089393754626674,
+            1.9145135646766047,
+            2.2499277685333876,
+            4.3385156361079735
+          ],
+          "preparation_variance_chi_squared": 27.117585919656054
+        },
+        {
+          "order": 5,
+          "background_count": 125,
+          "expected_chi_squared": 41.95403313759055,
+          "root_mean_expected_standardized_squared_error": 2.6443030946291106,
+          "mean_prediction_rmse": 1.5473169482918085,
+          "normalized_predictive_minus2logL": 9.636367562170664,
+          "mean_AP_prediction": [
+            0.581303243572459,
+            0.8531204817347697,
+            1.209015921741697,
+            1.9145582266704335,
+            2.249936999190878,
+            4.33817420327708
+          ],
+          "preparation_variance_chi_squared": 27.58889470676439
+        }
+      ],
+      "expected_chi_relative_order_change": 0.010923571432541523,
+      "predictive_log_score_order_change": 1.0547882779561668
+    },
+    {
+      "r": 0.35,
+      "orders": [
+        {
+          "order": 3,
+          "background_count": 27,
+          "expected_chi_squared": 61.08488579751959,
+          "root_mean_expected_standardized_squared_error": 3.190738832870312,
+          "mean_prediction_rmse": 2.146269507345617,
+          "normalized_predictive_minus2logL": 9.423650565141303,
+          "mean_AP_prediction": [
+            0.5764931682600424,
+            0.842963392886493,
+            1.1903886684556064,
+            1.8773547679751545,
+            2.203760805284778,
+            4.23910101911359
+          ],
+          "preparation_variance_chi_squared": 33.44604900855005
+        },
+        {
+          "order": 5,
+          "background_count": 125,
+          "expected_chi_squared": 59.93802397418095,
+          "root_mean_expected_standardized_squared_error": 3.160644026517933,
+          "mean_prediction_rmse": 2.124692302502999,
+          "normalized_predictive_minus2logL": 9.52029355269797,
+          "mean_AP_prediction": [
+            0.5767623543752844,
+            0.8434168110119123,
+            1.1910859588595293,
+            1.8785064953856891,
+            2.205111243548017,
+            4.241509165895716
+          ],
+          "preparation_variance_chi_squared": 32.85211969228836
+        }
+      ],
+      "expected_chi_relative_order_change": 0.018774886919494027,
+      "predictive_log_score_order_change": 0.09664298755666678
+    }
+  ],
+  "fitted_parameters": 0,
+  "joint_rmse": null,
+  "caveat": "Low quadrature orders are diagnostics; order comparison must be examined before claiming converged marginal likelihood. Not a CMB spatial ensemble."
+}

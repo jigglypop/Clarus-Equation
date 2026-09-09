@@ -1,0 +1,30 @@
+{
+  "source_url": "https://arxiv.org/pdf/1502.03888v3",
+  "pdf_sha256": "edbab34891037e7cadaa342acef923d374fdfac14b839e5a34f5673d01c391d0",
+  "published_inputs": {
+    "sphere_radius_m": 0.0095,
+    "bore_radius_m": 0.0015,
+    "geometry_pdf_page_one_based": 3,
+    "effective_surface_distance_m": 0.0088,
+    "far_lateral_displacement_m_approximate": 0.03,
+    "pulse_separation_s": 0.0155,
+    "measurement_pdf_page_one_based": 6
+  },
+  "supplied_representative_inputs_not_published_run_reconstruction": {
+    "uniform_density_kg_m3": 2700.0,
+    "effective_distance_used_as_mean_path_apex_at_t_T": true,
+    "gravity_m_s2": 9.81,
+    "Raman_wavelength_m_nominal": 0.00000085235,
+    "calibration_distance_m_ideal_point_source": 0.1,
+    "minimum_material_distance_m_for_bound": 0.003
+  },
+  "missing_for_experimental_prediction": [
+    "run-specific initial position, velocity, covariance and selected wavepacket distribution",
+    "exact near/far translations and source mass metrology",
+    "finite-pulse sensitivity, wavevector reversal and laser phase calibration",
+    "actual G calibration response and nonlinear environmental field",
+    "raw fringe and systematic nuisance likelihood"
+  ],
+  "role": "retrospective source dimensions plus explicit representative assumptions",
+  "scientific_success": false
+}

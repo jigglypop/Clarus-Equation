@@ -1,0 +1,328 @@
+{
+  "s": 1.2039730775582572e-05,
+  "mass_over_Href": 1000.0,
+  "eta": 0.1,
+  "diagnostics": {
+    "quadrature": {
+      "weight_sum": 1.0000000000313811,
+      "u_tail_probability_bound": 1.5239706048320986e-24,
+      "nodes": 408,
+      "n_u": 16,
+      "n_x": 24
+    },
+    "g0_quadrature": 0.39746571582735063,
+    "g0_exact_heat_integral": 0.397465751662514,
+    "calibration_iterations": 2,
+    "H_J0_over_Href": 1.0,
+    "omega_local_reconstructed": 0.31500000000000006,
+    "rho_bar_boundary_input": 0.9449886225892612,
+    "Lambda_boundary_input": 2.0550113773553687,
+    "maximum_constraint_error": 5.725243789404075e-15,
+    "maximum_abs_ln_A": 1.4470813437465006e-10,
+    "maximum_scalar_energy_to_dust": 7.236047986936608e-11,
+    "a_E_initial_input": 0.25,
+    "initial_state": "instantaneous matter-dependent minimum and its tracking velocity",
+    "local_G_condition": "unscreened effectively massless laboratory response; ambient-density check is separate",
+    "physical_status": "classical homogeneous truncation, finite quadrature approximation",
+    "scientific_success": false
+  },
+  "comparisons": [
+    {
+      "sample": "DR12_LRG",
+      "relative_distance_change_from_leading": [
+        -5.952904835737627e-12,
+        -1.3298806500472438e-11,
+        -8.298917109073045e-12,
+        -1.8707146942631425e-11
+      ],
+      "baseline": {
+        "amplitude_c_over_H0_rd": 30.23971253999196,
+        "chi2": 2.7688439018491042,
+        "whitened_rmse": 0.8319921727169529,
+        "n": 4,
+        "fitted_nuisance_count": 0,
+        "prediction": [
+          10.420062718829678,
+          24.585597894176736,
+          13.494637962431982,
+          22.73258098033026
+        ]
+      },
+      "leading": {
+        "amplitude_c_over_H0_rd": 30.23971253999196,
+        "chi2": 2.7692798980555935,
+        "whitened_rmse": 0.8320576749924842,
+        "n": 4,
+        "fitted_nuisance_count": 0,
+        "prediction": [
+          10.420073312342451,
+          24.585648065325802,
+          13.494655725623906,
+          22.732640491637504
+        ]
+      },
+      "homogeneous": {
+        "amplitude_c_over_H0_rd": 30.23971253999196,
+        "chi2": 2.7692798950990865,
+        "whitened_rmse": 0.8320576745483281,
+        "n": 4,
+        "fitted_nuisance_count": 0,
+        "prediction": [
+          10.420073312280422,
+          24.585648064998843,
+          13.494655725511914,
+          22.73264049121224
+        ]
+      }
+    },
+    {
+      "sample": "DR16_LRG",
+      "relative_distance_change_from_leading": [
+        -1.1819989431671729e-11,
+        -2.837152734969095e-11
+      ],
+      "baseline": {
+        "amplitude_c_over_H0_rd": 30.23971253999196,
+        "chi2": 3.2819535136487525,
+        "whitened_rmse": 1.2810061501899108,
+        "n": 2,
+        "fitted_nuisance_count": 0,
+        "prediction": [
+          17.531949636254666,
+          20.263010308626896
+        ]
+      },
+      "leading": {
+        "amplitude_c_over_H0_rd": 30.23971253999196,
+        "chi2": 3.2822756530062183,
+        "whitened_rmse": 1.281069017072503,
+        "n": 2,
+        "fitted_nuisance_count": 0,
+        "prediction": [
+          17.53197940561959,
+          20.26307751866853
+        ]
+      },
+      "homogeneous": {
+        "amplitude_c_over_H0_rd": 30.23971253999196,
+        "chi2": 3.282275650117961,
+        "whitened_rmse": 1.281069016508861,
+        "n": 2,
+        "fitted_nuisance_count": 0,
+        "prediction": [
+          17.53197940541236,
+          20.263077518093638
+        ]
+      }
+    },
+    {
+      "sample": "DR16_QSO",
+      "relative_distance_change_from_leading": [
+        -2.8675284369228393e-11,
+        -8.55172599401044e-11
+      ],
+      "baseline": {
+        "amplitude_c_over_H0_rd": 30.23971253999196,
+        "chi2": 0.5511039546797049,
+        "whitened_rmse": 0.524930450002524,
+        "n": 2,
+        "fitted_nuisance_count": 0,
+        "prediction": [
+          30.215031705873933,
+          12.906356289367682
+        ]
+      },
+      "leading": {
+        "amplitude_c_over_H0_rd": 30.23971253999196,
+        "chi2": 0.5509081269006815,
+        "whitened_rmse": 0.5248371780374754,
+        "n": 2,
+        "fitted_nuisance_count": 0,
+        "prediction": [
+          30.21511472601435,
+          12.906419830798004
+        ]
+      },
+      "homogeneous": {
+        "amplitude_c_over_H0_rd": 30.23971253999196,
+        "chi2": 0.5509081297197982,
+        "whitened_rmse": 0.5248371793803285,
+        "n": 2,
+        "fitted_nuisance_count": 0,
+        "prediction": [
+          30.21511472514792,
+          12.906419829694283
+        ]
+      }
+    }
+  ],
+  "convergence": {
+    "redshifts": [
+      0.38,
+      0.698,
+      1.48,
+      1.48
+    ],
+    "observables": [
+      "DM_over_rs",
+      "DH_over_rs",
+      "DM_over_rs",
+      "DH_over_rs"
+    ],
+    "fine_quadrature": {
+      "quadrature": {
+        "weight_sum": 1.0000000000000002,
+        "u_tail_probability_bound": 1.5239706048320986e-24,
+        "nodes": 1000,
+        "n_u": 24,
+        "n_x": 40
+      },
+      "g0_quadrature": 0.39746575153307423,
+      "g0_exact_heat_integral": 0.397465751662514,
+      "calibration_iterations": 2,
+      "H_J0_over_Href": 1.0,
+      "omega_local_reconstructed": 0.315,
+      "rho_bar_boundary_input": 0.9449886225892616,
+      "Lambda_boundary_input": 2.0550113773573075,
+      "maximum_constraint_error": 2.1859126020089242e-15,
+      "maximum_abs_ln_A": 1.4470813437465006e-10,
+      "maximum_scalar_energy_to_dust": 7.236048637899015e-11,
+      "a_E_initial_input": 0.25,
+      "initial_state": "instantaneous matter-dependent minimum and its tracking velocity",
+      "local_G_condition": "unscreened effectively massless laboratory response; ambient-density check is separate",
+      "physical_status": "classical homogeneous truncation, finite quadrature approximation",
+      "scientific_success": false
+    },
+    "relative_fine_minus_default": [
+      -2.639000129533997e-13,
+      -1.1302070390684094e-13,
+      -1.724176357242868e-13,
+      -1.2001510896197942e-13
+    ],
+    "relative_tighter_ODE_minus_default": [
+      6.661338147750939e-16,
+      0.0,
+      -3.3306690738754696e-16,
+      0.0
+    ],
+    "status": "empirical quadrature/ODE refinement, not a rigorous continuum error bound",
+    "mass100_eta_point1_relative_refinement_32_by_64": [
+      3.445475016405908e-10,
+      1.2718055497629166e-09,
+      2.198285997678795e-10,
+      6.94955204494363e-11
+    ],
+    "mass100_shape_comparison_status": "unresolved: dynamic quadrature refinement is not small relative to shape contrast"
+  },
+  "shape_sensitivity": [
+    {
+      "eta": 0.0,
+      "mass_over_Href": 100.0,
+      "relative_distance_change_from_leading": [
+        -5.676041858748704e-10,
+        -3.915254231934284e-09,
+        -2.8884107328153164e-09,
+        -8.555816166655461e-09
+      ],
+      "diagnostics": {
+        "quadrature": {
+          "weight_sum": 1.0000000000000002,
+          "u_tail_probability_bound": 0.0,
+          "nodes": 40,
+          "n_u": 24,
+          "n_x": 40
+        },
+        "g0_quadrature": 0.4036526375439773,
+        "g0_exact_heat_integral": 0.403652637676806,
+        "calibration_iterations": 2,
+        "H_J0_over_Href": 0.9999999999999999,
+        "omega_local_reconstructed": 0.31500000000000006,
+        "rho_bar_boundary_input": 0.9449886223781228,
+        "Lambda_boundary_input": 2.0550113717486167,
+        "maximum_constraint_error": 3.0563288581263523e-15,
+        "maximum_abs_ln_A": 1.4696067026938283e-08,
+        "maximum_scalar_energy_to_dust": 7.413840547436328e-09,
+        "a_E_initial_input": 0.25,
+        "initial_state": "instantaneous matter-dependent minimum and its tracking velocity",
+        "local_G_condition": "unscreened effectively massless laboratory response; ambient-density check is separate",
+        "physical_status": "classical homogeneous truncation, finite quadrature approximation",
+        "scientific_success": false
+      },
+      "interpretation": "finite quadrature diagnostic; dynamic continuum convergence not established"
+    },
+    {
+      "eta": 0.1,
+      "mass_over_Href": 100.0,
+      "relative_distance_change_from_leading": [
+        -5.727422980328356e-10,
+        -3.784764612824176e-09,
+        -2.8532615159448937e-09,
+        -8.434064113771456e-09
+      ],
+      "diagnostics": {
+        "quadrature": {
+          "weight_sum": 1.0000000000000002,
+          "u_tail_probability_bound": 1.5239706048320986e-24,
+          "nodes": 1000,
+          "n_u": 24,
+          "n_x": 40
+        },
+        "g0_quadrature": 0.39746575153307423,
+        "g0_exact_heat_integral": 0.397465751662514,
+        "calibration_iterations": 2,
+        "H_J0_over_Href": 0.9999999999999999,
+        "omega_local_reconstructed": 0.31500000000000006,
+        "rho_bar_boundary_input": 0.944988622381116,
+        "Lambda_boundary_input": 2.0550113719370326,
+        "maximum_constraint_error": 9.721708062056152e-16,
+        "maximum_abs_ln_A": 1.4470816760767024e-08,
+        "maximum_scalar_energy_to_dust": 7.299430525334715e-09,
+        "a_E_initial_input": 0.25,
+        "initial_state": "instantaneous matter-dependent minimum and its tracking velocity",
+        "local_G_condition": "unscreened effectively massless laboratory response; ambient-density check is separate",
+        "physical_status": "classical homogeneous truncation, finite quadrature approximation",
+        "scientific_success": false
+      },
+      "interpretation": "finite quadrature diagnostic; dynamic continuum convergence not established"
+    },
+    {
+      "eta": 1.0,
+      "mass_over_Href": 100.0,
+      "relative_distance_change_from_leading": [
+        -6.19030049442415e-10,
+        -2.6103603723015567e-09,
+        -2.5369288891852193e-09,
+        -7.338294416570079e-09
+      ],
+      "diagnostics": {
+        "quadrature": {
+          "weight_sum": 1.0000000000000022,
+          "u_tail_probability_bound": 1.5239706048320983e-23,
+          "nodes": 960,
+          "n_u": 24,
+          "n_x": 40
+        },
+        "g0_quadrature": 0.34178377743494603,
+        "g0_exact_heat_integral": 0.3417837775338857,
+        "calibration_iterations": 2,
+        "H_J0_over_Href": 1.0,
+        "omega_local_reconstructed": 0.315,
+        "rho_bar_boundary_input": 0.9449886224080559,
+        "Lambda_boundary_input": 2.0550113736327775,
+        "maximum_constraint_error": 9.721708059811872e-16,
+        "maximum_abs_ln_A": 1.2443563701375074e-08,
+        "maximum_scalar_energy_to_dust": 6.269740323977651e-09,
+        "a_E_initial_input": 0.25,
+        "initial_state": "instantaneous matter-dependent minimum and its tracking velocity",
+        "local_G_condition": "unscreened effectively massless laboratory response; ambient-density check is separate",
+        "physical_status": "classical homogeneous truncation, finite quadrature approximation",
+        "scientific_success": false
+      },
+      "interpretation": "finite quadrature diagnostic; dynamic continuum convergence not established"
+    }
+  ],
+  "rd_status": "external 147.09 Mpc input; no early-universe prediction",
+  "initial_history_status": "supplied late-time preparation; initial-state sensitivity not eliminated",
+  "all_domain_rmse": null,
+  "scientific_success": false
+}

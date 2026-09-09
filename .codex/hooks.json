@@ -1,4 +1,0 @@
-{
-  "description": "Direct repository workflow. No automatic CE_RUN or workspace routing.",
-  "hooks": {}
-}

@@ -1,0 +1,36 @@
+{
+  "original_report_final_values": {
+    "a": 1.9756954,
+    "H": 0.0128174,
+    "theta_velocity": 0.7501954,
+    "rho_ex": 0.00144007
+  },
+  "reproduced": {
+    "a": 1.9756954149311268,
+    "H": 0.012817367116488626,
+    "theta_velocity": 0.7501954381472244,
+    "rho_ex": 0.001440069327016307,
+    "gaussian_invariant_max_abs": 1.7319479184152442e-14
+  },
+  "original_report_rounding_agreement": true,
+  "quadrature_refinement_relative": {
+    "a": 3.9968028886505635e-15,
+    "H": 1.9317880628477724e-14,
+    "theta_velocity": 5.384581669432009e-14,
+    "rho_ex": 2.262634524186069e-13
+  },
+  "independent_H_equation_relative": {
+    "a": 3.3306690738754696e-16,
+    "H": 9.992007221626409e-16,
+    "theta_velocity": 4.218847493575595e-15,
+    "rho_ex": 3.3306690738754696e-15
+  },
+  "cutoff_24_to_48_relative": {
+    "a": 9.812044716728252e-07,
+    "H": 8.632866638658143e-06,
+    "theta_velocity": 6.839983011297512e-05,
+    "rho_ex": 6.676234963920447e-05
+  },
+  "observational_rmse": null,
+  "fitted_parameters": []
+}

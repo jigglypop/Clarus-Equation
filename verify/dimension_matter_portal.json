@@ -1,0 +1,130 @@
+{
+  "status": "conditional_matter_portal_and_seen_signed_marginal_screen",
+  "shared_parameters": {
+    "beta": 1.0,
+    "eta": 0.1,
+    "b": 1.0,
+    "m": 1.0,
+    "a": 1.0,
+    "lambda_background": 0.0
+  },
+  "profiles": [
+    {
+      "dimensionless_radius": 0.01,
+      "potential_shape": 0.9831051747894812,
+      "force_shape": 0.999849087130817,
+      "quadrature_errors": [
+        1.6791931044820004e-09,
+        5.739208111233321e-10
+      ]
+    },
+    {
+      "dimensionless_radius": 0.1,
+      "potential_shape": 0.8438998134966608,
+      "force_shape": 0.9865047537082485,
+      "quadrature_errors": [
+        1.594767824503496e-09,
+        7.668020769837914e-11
+      ]
+    },
+    {
+      "dimensionless_radius": 1.0,
+      "potential_shape": 0.19471891452444248,
+      "force_shape": 0.5012177300279848,
+      "quadrature_errors": [
+        1.8047694652464743e-11,
+        2.9501353956897836e-11
+      ]
+    },
+    {
+      "dimensionless_radius": 3.0,
+      "potential_shape": 0.010084952131835977,
+      "force_shape": 0.0525149672850027,
+      "quadrature_errors": [
+        1.5941838838577804e-11,
+        6.902251571502978e-11
+      ]
+    },
+    {
+      "dimensionless_radius": 10.0,
+      "potential_shape": 1.4479569966929708e-06,
+      "force_shape": 1.8520181807755475e-05,
+      "quadrature_errors": [
+        1.754077358471606e-12,
+        1.7618192353228924e-12
+      ]
+    }
+  ],
+  "source_manifest": "hamilton2015_signed_summary.json",
+  "published_marginal_cases": [
+    {
+      "input": "corrected",
+      "role": "sign_screen",
+      "zero_baseline_standardized_residual": 0.18918918918918917,
+      "unit_attractive_shift_standardized_residual": 0.45945945945945943,
+      "screen": {
+        "overall": {
+          "quadratic_A": 0.07304601899196492,
+          "alignment_B": -0.05113221329437544,
+          "baseline_sse": 0.035792549306062814,
+          "strict_improvement_possible": false,
+          "open_upper_amplitude": null
+        },
+        "groups": {
+          "published_marginal": {
+            "quadratic_A": 0.07304601899196492,
+            "alignment_B": -0.05113221329437544,
+            "baseline_sse": 0.035792549306062814,
+            "strict_improvement_possible": false,
+            "open_upper_amplitude": null
+          }
+        },
+        "joint_strict_improvement_possible": false,
+        "joint_open_interval": null,
+        "both_interval_endpoints_excluded": true,
+        "overall_nonnegative_amplitude_optimum": 0.0,
+        "constrained_infimum_amplitude": null,
+        "constrained_infimum_attained": false,
+        "scientific_success": false,
+        "status": "fixed_shape_arithmetic_not_holdout_fit"
+      }
+    },
+    {
+      "input": "raw_before_systematic_corrections",
+      "role": "invalid_raw_input_control",
+      "zero_baseline_standardized_residual": 0.8181818181818182,
+      "unit_attractive_shift_standardized_residual": 0.5151515151515152,
+      "screen": {
+        "overall": {
+          "quadratic_A": 0.09182736455463729,
+          "alignment_B": 0.2479338842975207,
+          "baseline_sse": 0.6694214876033059,
+          "strict_improvement_possible": true,
+          "open_upper_amplitude": 5.4
+        },
+        "groups": {
+          "published_marginal": {
+            "quadratic_A": 0.09182736455463729,
+            "alignment_B": 0.2479338842975207,
+            "baseline_sse": 0.6694214876033059,
+            "strict_improvement_possible": true,
+            "open_upper_amplitude": 5.4
+          }
+        },
+        "joint_strict_improvement_possible": true,
+        "joint_open_interval": [
+          0.0,
+          5.4
+        ],
+        "both_interval_endpoints_excluded": true,
+        "overall_nonnegative_amplitude_optimum": 2.7,
+        "constrained_infimum_amplitude": 2.7,
+        "constrained_infimum_attained": true,
+        "scientific_success": false,
+        "status": "fixed_shape_arithmetic_not_holdout_fit"
+      }
+    }
+  ],
+  "actual_geometry_forward_model_complete": false,
+  "all_domain_rmse_reduced": false
+}

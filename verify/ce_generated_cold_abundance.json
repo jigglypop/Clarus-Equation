@@ -1,0 +1,209 @@
+{
+  "cases": [
+    {
+      "r": 0.15,
+      "amplitude": 0.1,
+      "initial": {
+        "B": 1.0,
+        "rho_over_Utop": 0.013990781673115254,
+        "pressure_over_rho": 0.16946446940160118,
+        "kinetic_fraction": 0.31629808483901645,
+        "number_weighted_rms_speed": 0.678800657732545,
+        "rest_over_Utop": 0.009565524224508088,
+        "particle_curvature_over_abs_vacuum": 0.0001141430888053392
+      },
+      "one_percent_kinetic_state": {
+        "B": 7.890963098292381,
+        "rho_over_Utop": 1.966452878471307e-05,
+        "pressure_over_rho": 0.006601929267859095,
+        "kinetic_fraction": 0.01000000000000012,
+        "number_weighted_rms_speed": 0.1400691708180981,
+        "rest_over_Utop": 1.9467883496865936e-05,
+        "particle_curvature_over_abs_vacuum": 2.8000872073863115e-07
+      },
+      "fixed_OBS32_dark_to_potential_ratio": 0.36,
+      "cold_density_over_fixed_OBS32_dark_density": 5.462369106864741e-05,
+      "all_expansion_particle_curvature_upper_over_abs_vacuum": 0.00018768458010872823,
+      "expansion_energy_continuity_relative_error": 2.702282841937631e-13,
+      "number_fraction": [
+        3.572060882477821e-05,
+        0.4999821396955876,
+        0.4999821396955877
+      ]
+    },
+    {
+      "r": 0.15,
+      "amplitude": 0.05,
+      "initial": {
+        "B": 1.0,
+        "rho_over_Utop": 0.003497784490564127,
+        "pressure_over_rho": 0.16945957527010225,
+        "kinetic_fraction": 0.3162855477385653,
+        "number_weighted_rms_speed": 0.6787941481427581,
+        "rest_over_Utop": 0.0023914858070945935,
+        "particle_curvature_over_abs_vacuum": 2.853923671681468e-05
+      },
+      "one_percent_kinetic_state": {
+        "B": 7.890634190490768,
+        "rho_over_Utop": 4.916962354832927e-06,
+        "pressure_over_rho": 0.0066019347263660206,
+        "kinetic_fraction": 0.009999999999999898,
+        "number_weighted_rms_speed": 0.14006982731373555,
+        "rest_over_Utop": 4.867792731284597e-06,
+        "particle_curvature_over_abs_vacuum": 7.002036541972271e-08
+      },
+      "fixed_OBS32_dark_to_potential_ratio": 0.36,
+      "cold_density_over_fixed_OBS32_dark_density": 1.3658228763424797e-05,
+      "all_expansion_particle_curvature_upper_over_abs_vacuum": 4.692475504127835e-05,
+      "expansion_energy_continuity_relative_error": 4.218847493575595e-13,
+      "number_fraction": [
+        8.929998050697018e-06,
+        0.49999553500097493,
+        0.4999955350009744
+      ]
+    },
+    {
+      "r": 0.15,
+      "amplitude": 0.025,
+      "initial": {
+        "B": 1.0,
+        "rho_over_Utop": 0.0008744516902115688,
+        "pressure_over_rho": 0.1694583517660315,
+        "kinetic_fraction": 0.3162824135449638,
+        "number_weighted_rms_speed": 0.6787925208226039,
+        "rest_over_Utop": 0.0005978779991029809,
+        "particle_curvature_over_abs_vacuum": 7.1350257214753844e-06
+      },
+      "one_percent_kinetic_state": {
+        "B": 7.890551966154742,
+        "rho_over_Utop": 1.2292924793204194e-06,
+        "pressure_over_rho": 0.006601936091172542,
+        "kinetic_fraction": 0.010000000000000009,
+        "number_weighted_rms_speed": 0.14006999146154897,
+        "rest_over_Utop": 1.2169995545272151e-06,
+        "particle_curvature_over_abs_vacuum": 1.7506228091156185e-08
+      },
+      "fixed_OBS32_dark_to_potential_ratio": 0.36,
+      "cold_density_over_fixed_OBS32_dark_density": 3.4147013314456096e-06,
+      "all_expansion_particle_curvature_upper_over_abs_vacuum": 1.1731414397922496e-05,
+      "expansion_energy_continuity_relative_error": 9.015010959956271e-14,
+      "number_fraction": [
+        2.2324898772295563e-06,
+        0.49999888375506146,
+        0.49999888375506124
+      ]
+    },
+    {
+      "r": 0.35,
+      "amplitude": 0.1,
+      "initial": {
+        "B": 1.0,
+        "rho_over_Utop": 0.007421541020583079,
+        "pressure_over_rho": 0.18436240187696462,
+        "kinetic_fraction": 0.3515303740219906,
+        "number_weighted_rms_speed": 0.7073324886415419,
+        "rest_over_Utop": 0.004812643929797964,
+        "particle_curvature_over_abs_vacuum": 0.00011190028405010392
+      },
+      "one_percent_kinetic_state": {
+        "B": 8.728462139587771,
+        "rho_over_Utop": 7.310302341258943e-06,
+        "pressure_over_rho": 0.006601010104602166,
+        "kinetic_fraction": 0.009999999999999898,
+        "number_weighted_rms_speed": 0.14004056289826064,
+        "rest_over_Utop": 7.237199317846354e-06,
+        "particle_curvature_over_abs_vacuum": 9.021754005556334e-08
+      },
+      "fixed_OBS32_dark_to_potential_ratio": 0.36,
+      "cold_density_over_fixed_OBS32_dark_density": 2.0306395392385955e-05,
+      "all_expansion_particle_curvature_upper_over_abs_vacuum": 0.0002913579904570524,
+      "expansion_energy_continuity_relative_error": 2.6645352591003757e-15,
+      "number_fraction": [
+        2.2136255151146697e-05,
+        0.4999889318724256,
+        0.4999889318724232
+      ]
+    },
+    {
+      "r": 0.35,
+      "amplitude": 0.05,
+      "initial": {
+        "B": 1.0,
+        "rho_over_Utop": 0.0018554905730594324,
+        "pressure_over_rho": 0.1843611132621491,
+        "kinetic_fraction": 0.3515264110063234,
+        "number_weighted_rms_speed": 0.7073319649087824,
+        "rest_over_Utop": 0.0012032366312557839,
+        "particle_curvature_over_abs_vacuum": 2.7978606025307118e-05
+      },
+      "one_percent_kinetic_state": {
+        "B": 8.728330702143538,
+        "rho_over_Utop": 1.8277730634740823e-06,
+        "pressure_over_rho": 0.006601014193112503,
+        "kinetic_fraction": 0.01000000000000012,
+        "number_weighted_rms_speed": 0.14004088898677064,
+        "rest_over_Utop": 1.8094953328393413e-06,
+        "particle_curvature_over_abs_vacuum": 2.2559664495227325e-08
+      },
+      "fixed_OBS32_dark_to_potential_ratio": 0.36,
+      "cold_density_over_fixed_OBS32_dark_density": 5.077147398539118e-06,
+      "all_expansion_particle_curvature_upper_over_abs_vacuum": 7.284603328325282e-05,
+      "expansion_energy_continuity_relative_error": 5.027089855502709e-13,
+      "number_fraction": [
+        5.533793562631297e-06,
+        0.4999972331032192,
+        0.4999972331032181
+      ]
+    },
+    {
+      "r": 0.35,
+      "amplitude": 0.025,
+      "initial": {
+        "B": 1.0,
+        "rho_over_Utop": 0.0004638792261083124,
+        "pressure_over_rho": 0.18436079117885293,
+        "kinetic_fraction": 0.3515254204414243,
+        "number_weighted_rms_speed": 0.7073318340762769,
+        "rest_over_Utop": 0.00030081388611654536,
+        "particle_curvature_over_abs_vacuum": 6.994872454091675e-06
+      },
+      "one_percent_kinetic_state": {
+        "B": 8.728297848483908,
+        "rho_over_Utop": 4.5695560834097887e-07,
+        "pressure_over_rho": 0.006601015215131056,
+        "kinetic_fraction": 0.010000000000000231,
+        "number_weighted_rms_speed": 0.14004097050845982,
+        "rest_over_Utop": 4.5238605225756897e-07,
+        "particle_curvature_over_abs_vacuum": 5.640246107916187e-09
+      },
+      "fixed_OBS32_dark_to_potential_ratio": 0.36,
+      "cold_density_over_fixed_OBS32_dark_density": 1.269321134280497e-06,
+      "all_expansion_particle_curvature_upper_over_abs_vacuum": 1.82119168191055e-05,
+      "expansion_energy_continuity_relative_error": 8.137934770502397e-14,
+      "number_fraction": [
+        1.383431501839566e-06,
+        0.4999993082842482,
+        0.4999993082842499
+      ]
+    }
+  ],
+  "refinement": [
+    {
+      "r": 0.15,
+      "refined_cold_density_relative_difference": 8.078426816382489e-12
+    },
+    {
+      "r": 0.35,
+      "refined_cold_density_relative_difference": 2.5978108553204038e-12
+    }
+  ],
+  "fitted_parameters": [],
+  "hypotheses": [
+    "Single prescribed weak pulse; fixed post-pulse theta=0.",
+    "Discard coherence explicitly; conserve species occupations while redshifting momenta.",
+    "Use 1 percent kinetic fraction as a diagnostic coldness criterion, not an observational fit."
+  ],
+  "self_consistent_history": false,
+  "full_joint_rmse": null,
+  "conclusion": "Correct species ratios alone do not supply the required cold abundance or enough stabilizing matter curvature."
+}

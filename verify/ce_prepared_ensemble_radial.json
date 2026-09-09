@@ -1,0 +1,144 @@
+{
+  "scope": "radial Gamma / Dirichlet preparation quadrature",
+  "N_pre": 100000000000.0,
+  "assumptions": "three independent exponential mode energies; homogeneous separate patches with same supplied radiation and phase",
+  "cases": [
+    {
+      "r": 0.15,
+      "orders": [
+        {
+          "order": [
+            8,
+            2
+          ],
+          "background_count": 32,
+          "expected_chi_squared": 41.90885120187407,
+          "root_mean_expected_standardized_squared_error": 2.6428788344617087,
+          "mean_prediction_rmse": 1.5470182792269624,
+          "normalized_predictive_minus2logL": 8.481848770190815,
+          "mean_AP_prediction": [
+            0.581308333196528,
+            0.8531290357516342,
+            1.2090287410845388,
+            1.9145771355939891,
+            2.249957582661243,
+            4.33819375417887
+          ],
+          "preparation_variance_chi_squared": 27.549257864300035
+        },
+        {
+          "order": [
+            16,
+            2
+          ],
+          "background_count": 64,
+          "expected_chi_squared": 41.91565875671842,
+          "root_mean_expected_standardized_squared_error": 2.643093476614048,
+          "mean_prediction_rmse": 1.5470326559187617,
+          "normalized_predictive_minus2logL": 9.133040724621653,
+          "mean_AP_prediction": [
+            0.5813084910897767,
+            0.8531292805893598,
+            1.2090290134688233,
+            1.9145768393742821,
+            2.2499566455275852,
+            4.338184501547292
+          ],
+          "preparation_variance_chi_squared": 27.555798525844377
+        },
+        {
+          "order": [
+            16,
+            3
+          ],
+          "background_count": 144,
+          "expected_chi_squared": 41.938470112276335,
+          "root_mean_expected_standardized_squared_error": 2.643812591450597,
+          "mean_prediction_rmse": 1.5469035516934708,
+          "normalized_predictive_minus2logL": 9.310385034764733,
+          "mean_AP_prediction": [
+            0.581310529528492,
+            0.8531324959278902,
+            1.20903366459566,
+            1.9145840443209543,
+            2.249964972886683,
+            4.338199198965544
+          ],
+          "preparation_variance_chi_squared": 27.581006522825383
+        }
+      ],
+      "expected_chi_relative_order_change": 0.0005442203757386466,
+      "predictive_log_score_order_change": 0.17734431014308072
+    },
+    {
+      "r": 0.35,
+      "orders": [
+        {
+          "order": [
+            8,
+            2
+          ],
+          "background_count": 32,
+          "expected_chi_squared": 58.37923280423203,
+          "root_mean_expected_standardized_squared_error": 3.1192742960564837,
+          "mean_prediction_rmse": 2.1292042462167884,
+          "normalized_predictive_minus2logL": 9.389108828851736,
+          "mean_AP_prediction": [
+            0.5766939066377629,
+            0.8433114191748279,
+            1.1909375847112535,
+            1.8782857174033716,
+            2.2048595363253765,
+            4.241082334106896
+          ],
+          "preparation_variance_chi_squared": 31.17816847158638
+        },
+        {
+          "order": [
+            16,
+            2
+          ],
+          "background_count": 64,
+          "expected_chi_squared": 58.37628744218016,
+          "root_mean_expected_standardized_squared_error": 3.1191956079033196,
+          "mean_prediction_rmse": 2.1291724459090386,
+          "normalized_predictive_minus2logL": 9.150331912505159,
+          "mean_AP_prediction": [
+            0.5766943751686473,
+            0.8433121976898769,
+            1.190938768489583,
+            1.8782875920419708,
+            2.2048616457811154,
+            4.241084389857852
+          ],
+          "preparation_variance_chi_squared": 31.176035615670862
+        },
+        {
+          "order": [
+            16,
+            3
+          ],
+          "background_count": 144,
+          "expected_chi_squared": 59.8127412415084,
+          "root_mean_expected_standardized_squared_error": 3.1573391023008703,
+          "mean_prediction_rmse": 2.12129778479003,
+          "normalized_predictive_minus2logL": 9.805026515176934,
+          "mean_AP_prediction": [
+            0.57680684108385,
+            0.8434892640922469,
+            1.1911945254972902,
+            1.8786828169150762,
+            2.205317944781575,
+            4.241885294051631
+          ],
+          "preparation_variance_chi_squared": 32.813315490978184
+        }
+      ],
+      "expected_chi_relative_order_change": 0.024606802903507807,
+      "predictive_log_score_order_change": 0.6546946026717748
+    }
+  ],
+  "fitted_parameters": 0,
+  "joint_rmse": null,
+  "caveat": "Low quadrature orders are diagnostics; order comparison must be examined before claiming converged marginal likelihood. Not a CMB spatial ensemble."
+}

@@ -1,0 +1,163 @@
+{
+  "hypothesis": "Frozen light-doublet populations (0,1,1), reflection-symmetric phase and zero velocity.",
+  "baseline_partial_rmse": 0.9434903273672427,
+  "cases": [
+    {
+      "r": 0.15,
+      "supplied_mass_eV": 0.027615,
+      "normalized_mass_curvature": 0.007208765859284892,
+      "maximum_heavy_fraction_for_positive_matter_curvature": 0.3125573827058066,
+      "critical_a": 0.17318124800809134,
+      "critical_z": 4.774297226182815,
+      "curvature_checks": [
+        {
+          "a": 0.08659062400404567,
+          "analytic": 3.497509200655107,
+          "finite_difference": 3.4975090841271594
+        },
+        {
+          "a": 0.17318124800809134,
+          "analytic": 0.0,
+          "finite_difference": -9.237055564881302e-08
+        },
+        {
+          "a": 0.3463624960161827,
+          "analytic": -0.4371886500818884,
+          "finite_difference": -0.4371887437256324
+        }
+      ],
+      "symmetric_AP_max_difference": 0.0,
+      "muon_EM": 2.6770484703485036e-15,
+      "partial_rmse": 0.9434899424480865,
+      "delta_partial_rmse": -3.849191562939753e-07,
+      "delta_partial_rmse_vs_same_charged_static_baseline": 0.0,
+      "delta_chi2": -5.084343973804861e-06,
+      "fractional_rmse_reduction": 4.079736115240003e-07,
+      "linear_phase_transfer": 1.1062631977369555,
+      "fixed_seed_checks": [
+        {
+          "initial_theta": 0.001,
+          "final_over_initial": 1.1062631851293483,
+          "partial_rmse": 0.9434899575934268,
+          "delta_partial_rmse": -3.6977381590030944e-07
+        },
+        {
+          "initial_theta": 0.0001,
+          "final_over_initial": 1.1062631975584065,
+          "partial_rmse": 0.9434899425996472,
+          "delta_partial_rmse": -3.84767595451585e-07
+        }
+      ],
+      "heavy_to_two_phase_contact_sigma_v_GeV_minus2": 9.221010668522806e-101,
+      "heavy_contact_channel_rate_checks": [
+        {
+          "a": 0.01,
+          "maximum_partner_rate_over_H": 3.405971223865253e-92
+        },
+        {
+          "a": 1.0,
+          "maximum_partner_rate_over_H": 1.8655294459716885e-95
+        }
+      ],
+      "internal_Gibbs_redistribution_diagnostic": [
+        {
+          "T_over_sqrt_s": 0.01,
+          "heavy_fraction": 1.6663003543662532e-10,
+          "free_energy_curvature": -0.213942081528715
+        },
+        {
+          "T_over_sqrt_s": 0.1,
+          "heavy_fraction": 0.05338528712285789,
+          "free_energy_curvature": -0.015370226564503198
+        },
+        {
+          "T_over_sqrt_s": 1.0,
+          "heavy_fraction": 0.28671995101560804,
+          "free_energy_curvature": -0.0010240102186652549
+        }
+      ]
+    },
+    {
+      "r": 0.35,
+      "supplied_mass_eV": 0.014414,
+      "normalized_mass_curvature": 0.005752794214332688,
+      "maximum_heavy_fraction_for_positive_matter_curvature": 0.1345748635888125,
+      "critical_a": 0.16123251764439453,
+      "critical_z": 5.2022228183867005,
+      "curvature_checks": [
+        {
+          "a": 0.08061625882219726,
+          "analytic": 3.458768325176174,
+          "finite_difference": 3.4587683046538586
+        },
+        {
+          "a": 0.16123251764439453,
+          "analytic": -2.220446049250313e-16,
+          "finite_difference": -7.105427357601002e-09
+        },
+        {
+          "a": 0.32246503528878906,
+          "analytic": -0.432346040647022,
+          "finite_difference": -0.4323460514044086
+        }
+      ],
+      "symmetric_AP_max_difference": 0.0,
+      "muon_EM": 2.6770484703485036e-15,
+      "partial_rmse": 0.9434899424480865,
+      "delta_partial_rmse": -3.849191562939753e-07,
+      "delta_partial_rmse_vs_same_charged_static_baseline": 0.0,
+      "delta_chi2": -5.084343973804861e-06,
+      "fractional_rmse_reduction": 4.079736115240003e-07,
+      "linear_phase_transfer": 1.1143778736788537,
+      "fixed_seed_checks": [
+        {
+          "initial_theta": 0.001,
+          "final_over_initial": 1.1143778519297733,
+          "partial_rmse": 0.9434899576927038,
+          "delta_partial_rmse": -3.6967453886926904e-07
+        },
+        {
+          "initial_theta": 0.0001,
+          "final_over_initial": 1.1143778734618481,
+          "partial_rmse": 0.9434899426005204,
+          "delta_partial_rmse": -3.8476672226117614e-07
+        }
+      ],
+      "heavy_to_two_phase_contact_sigma_v_GeV_minus2": 1.0459368552820376e-100,
+      "heavy_contact_channel_rate_checks": [
+        {
+          "a": 0.01,
+          "maximum_partner_rate_over_H": 6.472564901963663e-92
+        },
+        {
+          "a": 1.0,
+          "maximum_partner_rate_over_H": 3.545173937750735e-95
+        }
+      ],
+      "internal_Gibbs_redistribution_diagnostic": [
+        {
+          "T_over_sqrt_s": 0.01,
+          "heavy_fraction": 1.2241592039781942e-22,
+          "free_energy_curvature": -1.5658747695399335
+        },
+        {
+          "T_over_sqrt_s": 0.1,
+          "heavy_fraction": 0.003438435857697231,
+          "free_energy_curvature": -0.15199172417854953
+        },
+        {
+          "T_over_sqrt_s": 1.0,
+          "heavy_fraction": 0.2331227006216763,
+          "free_energy_curvature": -0.015440305001964694
+        }
+      ]
+    }
+  ],
+  "fitted_parameters": [],
+  "score_scope": "Six original AP data plus fixed muon EM subset; zero cross covariance.",
+  "state_generation_derived": false,
+  "absolute_abundance_derived": false,
+  "full_joint_rmse": null,
+  "independent_holdout": false,
+  "conclusion": "Matter stabilization is possible for frozen populations; thermal redistribution can remove it. Tiny partial score improvement comes only from absolute EM term."
+}

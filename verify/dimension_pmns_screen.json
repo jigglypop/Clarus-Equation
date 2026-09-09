@@ -1,0 +1,431 @@
+{
+  "source": {
+    "source": "https://arxiv.org/html/2410.05380v2#S2.T1",
+    "release": "NuFIT 6.0, September 2024 data; article v2",
+    "source_html_sha256": "06228d2ee316269ebcf8ab5fd1e9c9e86564e62cd8040fd61e6eb2f0b8a32a2a",
+    "source_html_bytes": 469035,
+    "retrieved_at": "2026-09-09",
+    "role": "exploratory_marginal_interval_screen_not_joint_likelihood_or_holdout",
+    "order": [
+      "sin2_theta12",
+      "sin2_theta23",
+      "sin2_theta13"
+    ],
+    "variants_are_alternatives_not_independent_datasets": true,
+    "variants": {
+      "IC19_NO": {
+        "central": [
+          0.307,
+          0.561,
+          0.02195
+        ],
+        "one_sigma": [
+          [
+            0.296,
+            0.319
+          ],
+          [
+            0.546,
+            0.573
+          ],
+          [
+            0.02137,
+            0.02249
+          ]
+        ],
+        "three_sigma": [
+          [
+            0.275,
+            0.345
+          ],
+          [
+            0.43,
+            0.596
+          ],
+          [
+            0.02023,
+            0.02376
+          ]
+        ]
+      },
+      "IC19_IO": {
+        "central": [
+          0.308,
+          0.562,
+          0.02224
+        ],
+        "one_sigma": [
+          [
+            0.297,
+            0.32
+          ],
+          [
+            0.547,
+            0.574
+          ],
+          [
+            0.02167,
+            0.0228
+          ]
+        ],
+        "three_sigma": [
+          [
+            0.275,
+            0.345
+          ],
+          [
+            0.437,
+            0.597
+          ],
+          [
+            0.02053,
+            0.02397
+          ]
+        ]
+      },
+      "IC24_SK_NO": {
+        "central": [
+          0.308,
+          0.47,
+          0.02215
+        ],
+        "one_sigma": [
+          [
+            0.297,
+            0.32
+          ],
+          [
+            0.457,
+            0.487
+          ],
+          [
+            0.02157,
+            0.02271
+          ]
+        ],
+        "three_sigma": [
+          [
+            0.275,
+            0.345
+          ],
+          [
+            0.435,
+            0.585
+          ],
+          [
+            0.0203,
+            0.02388
+          ]
+        ]
+      },
+      "IC24_SK_IO": {
+        "central": [
+          0.308,
+          0.55,
+          0.02231
+        ],
+        "one_sigma": [
+          [
+            0.297,
+            0.32
+          ],
+          [
+            0.535,
+            0.562
+          ],
+          [
+            0.02175,
+            0.02287
+          ]
+        ],
+        "three_sigma": [
+          [
+            0.275,
+            0.345
+          ],
+          [
+            0.44,
+            0.584
+          ],
+          [
+            0.0206,
+            0.02409
+          ]
+        ]
+      }
+    },
+    "joint_covariance": null,
+    "joint_likelihood": null
+  },
+  "variants": {
+    "IC19_NO": {
+      "delta_from_each_central_angle": [
+        0.21066666666666667,
+        0.13942857142857143,
+        0.1756
+      ],
+      "one_sigma_box": {
+        "nonempty": false,
+        "delta_lower": 0.17096,
+        "delta_upper": 0.16685714285714287,
+        "exact_bounds": [
+          "2137/12500",
+          "146/875"
+        ],
+        "constraint_intervals": [
+          [
+            "0",
+            "1/4"
+          ],
+          [
+            "43/375",
+            "112/375"
+          ],
+          [
+            "92/875",
+            "146/875"
+          ],
+          [
+            "2137/12500",
+            "2249/12500"
+          ]
+        ],
+        "witness_delta": null,
+        "joint_confidence_level": null
+      },
+      "three_sigma_box": {
+        "nonempty": true,
+        "delta_lower": 0.16184,
+        "delta_upper": 0.19008,
+        "exact_bounds": [
+          "2023/12500",
+          "594/3125"
+        ],
+        "constraint_intervals": [
+          [
+            "0",
+            "1/4"
+          ],
+          [
+            "-7/75",
+            "7/15"
+          ],
+          [
+            "-4/25",
+            "192/875"
+          ],
+          [
+            "2023/12500",
+            "594/3125"
+          ]
+        ],
+        "witness_delta": 0.17596,
+        "joint_confidence_level": null
+      }
+    },
+    "IC19_IO": {
+      "delta_from_each_central_angle": [
+        0.20266666666666666,
+        0.1417142857142857,
+        0.17792
+      ],
+      "one_sigma_box": {
+        "nonempty": false,
+        "delta_lower": 0.17336,
+        "delta_upper": 0.16914285714285715,
+        "exact_bounds": [
+          "2167/12500",
+          "148/875"
+        ],
+        "constraint_intervals": [
+          [
+            "0",
+            "1/4"
+          ],
+          [
+            "8/75",
+            "109/375"
+          ],
+          [
+            "94/875",
+            "148/875"
+          ],
+          [
+            "2167/12500",
+            "114/625"
+          ]
+        ],
+        "witness_delta": null,
+        "joint_confidence_level": null
+      },
+      "three_sigma_box": {
+        "nonempty": true,
+        "delta_lower": 0.16424,
+        "delta_upper": 0.19176,
+        "exact_bounds": [
+          "2053/12500",
+          "2397/12500"
+        ],
+        "constraint_intervals": [
+          [
+            "0",
+            "1/4"
+          ],
+          [
+            "-7/75",
+            "7/15"
+          ],
+          [
+            "-18/125",
+            "194/875"
+          ],
+          [
+            "2053/12500",
+            "2397/12500"
+          ]
+        ],
+        "witness_delta": 0.178,
+        "joint_confidence_level": null
+      }
+    },
+    "IC24_SK_NO": {
+      "delta_from_each_central_angle": [
+        0.20266666666666666,
+        -0.06857142857142857,
+        0.1772
+      ],
+      "one_sigma_box": {
+        "nonempty": false,
+        "delta_lower": 0.17256,
+        "delta_upper": -0.029714285714285714,
+        "exact_bounds": [
+          "2157/12500",
+          "-26/875"
+        ],
+        "constraint_intervals": [
+          [
+            "0",
+            "1/4"
+          ],
+          [
+            "8/75",
+            "109/375"
+          ],
+          [
+            "-86/875",
+            "-26/875"
+          ],
+          [
+            "2157/12500",
+            "2271/12500"
+          ]
+        ],
+        "witness_delta": null,
+        "joint_confidence_level": null
+      },
+      "three_sigma_box": {
+        "nonempty": true,
+        "delta_lower": 0.1624,
+        "delta_upper": 0.19104,
+        "exact_bounds": [
+          "203/1250",
+          "597/3125"
+        ],
+        "constraint_intervals": [
+          [
+            "0",
+            "1/4"
+          ],
+          [
+            "-7/75",
+            "7/15"
+          ],
+          [
+            "-26/175",
+            "34/175"
+          ],
+          [
+            "203/1250",
+            "597/3125"
+          ]
+        ],
+        "witness_delta": 0.17672,
+        "joint_confidence_level": null
+      }
+    },
+    "IC24_SK_IO": {
+      "delta_from_each_central_angle": [
+        0.20266666666666666,
+        0.11428571428571428,
+        0.17848
+      ],
+      "one_sigma_box": {
+        "nonempty": false,
+        "delta_lower": 0.174,
+        "delta_upper": 0.1417142857142857,
+        "exact_bounds": [
+          "87/500",
+          "124/875"
+        ],
+        "constraint_intervals": [
+          [
+            "0",
+            "1/4"
+          ],
+          [
+            "8/75",
+            "109/375"
+          ],
+          [
+            "2/25",
+            "124/875"
+          ],
+          [
+            "87/500",
+            "2287/12500"
+          ]
+        ],
+        "witness_delta": null,
+        "joint_confidence_level": null
+      },
+      "three_sigma_box": {
+        "nonempty": true,
+        "delta_lower": 0.1648,
+        "delta_upper": 0.192,
+        "exact_bounds": [
+          "103/625",
+          "24/125"
+        ],
+        "constraint_intervals": [
+          [
+            "0",
+            "1/4"
+          ],
+          [
+            "-7/75",
+            "7/15"
+          ],
+          [
+            "-24/175",
+            "24/125"
+          ],
+          [
+            "103/625",
+            "2409/12500"
+          ]
+        ],
+        "witness_delta": 0.1784,
+        "joint_confidence_level": null
+      }
+    }
+  },
+  "historical_delta": 0.17776,
+  "historical_prediction": [
+    0.31111333333333335,
+    0.57777,
+    0.02222
+  ],
+  "joint_rmse": null,
+  "scientific_success": false,
+  "status": "exploratory_interval_screen_only"
+}

@@ -1,0 +1,75 @@
+{
+  "initial_state": "Instantaneous phase oscillator vacuum at ai=.01, Gaussian W=exp[-p_i^2/(2H_i^2)].",
+  "smoothing": "Fixed comoving region equal to initial Hubble radius; no UV vacuum stress claim.",
+  "cases": [
+    {
+      "r": 0.15,
+      "order": 256,
+      "initial_H_GeV": 7.78362160905467e-40,
+      "initial_mass_over_H": 4.0430551652460025,
+      "initial_phase_rms": 4.9470853791658896e-58,
+      "final_phase_rms": 1.305721728654861e-49,
+      "rms_amplification": 263937577.09413418,
+      "fixed_seed_1e_minus8_over_initial_rms": 2.0213922407957438e+49,
+      "initial_variance_quadrature_relative_error": 3.219646771412954e-15,
+      "independent_Radau_mode_checks": [
+        {
+          "initial_p_over_H": 0.00017579992403105038,
+          "relative_complex_mode_difference": 4.500037469852774e-12
+        },
+        {
+          "initial_p_over_H": 0.9916372536980318,
+          "relative_complex_mode_difference": 3.784514148102713e-12
+        },
+        {
+          "initial_p_over_H": 2.010620152591274,
+          "relative_complex_mode_difference": 2.0012173409014526e-12
+        }
+      ],
+      "smoothed_quadratic_energy_in_Utop_units": {
+        "kinetic": 3.808229973548259e-99,
+        "gradient": 3.0473338318470875e-101,
+        "potential": -4.237117280772284e-99
+      },
+      "sum_absolute_smoothed_energy_over_background": 5.653074414847309e-99,
+      "quadrature_refinement_final_rms_relative": 6.128431095930864e-14
+    },
+    {
+      "r": 0.35,
+      "order": 256,
+      "initial_H_GeV": 7.783635093081504e-40,
+      "initial_mass_over_H": 3.6116746739097785,
+      "initial_phase_rms": 5.208787979321127e-58,
+      "final_phase_rms": 1.856086172201446e-49,
+      "rms_amplification": 356337439.64432853,
+      "fixed_seed_1e_minus8_over_initial_rms": 1.9198324139319878e+49,
+      "initial_variance_quadrature_relative_error": 2.9976021664879227e-15,
+      "independent_Radau_mode_checks": [
+        {
+          "initial_p_over_H": 0.00017579992403105038,
+          "relative_complex_mode_difference": 4.569098633759039e-12
+        },
+        {
+          "initial_p_over_H": 0.9916372536980318,
+          "relative_complex_mode_difference": 3.955362494686286e-12
+        },
+        {
+          "initial_p_over_H": 2.010620152591274,
+          "relative_complex_mode_difference": 1.9620461005893055e-12
+        }
+      ],
+      "smoothed_quadratic_energy_in_Utop_units": {
+        "kinetic": 7.621728693590112e-99,
+        "gradient": 5.325148224522555e-101,
+        "potential": -8.475505024089924e-99
+      },
+      "sum_absolute_smoothed_energy_over_background": 1.1305339639947682e-98,
+      "quadrature_refinement_final_rms_relative": 5.3512749786932545e-14
+    }
+  ],
+  "fitted_parameters": [],
+  "primordial_state_derived": false,
+  "coherent_homogeneous_initial_phase_predicted": false,
+  "full_joint_rmse": null,
+  "conclusion": "This specified late vacuum cannot supply the previously assumed 1e-8 coherent phase seed; investigate earlier state preparation or sourced fluctuations."
+}

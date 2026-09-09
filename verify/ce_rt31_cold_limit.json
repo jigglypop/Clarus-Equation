@@ -1,0 +1,92 @@
+{
+  "quadrature_order": 96,
+  "rows": [
+    {
+      "theta": 0.1,
+      "comoving_momentum_width": 0.1,
+      "energy_relative_excess": 0.016446219879393542,
+      "pressure_over_energy": 0.010622730215201737,
+      "cold_force_relative_difference": 0.08127956505316525,
+      "mass_force_absolute_check": 3.683988227323742e-12,
+      "expansion_continuity_relative_check": 9.732314024270896e-13
+    },
+    {
+      "theta": 0.1,
+      "comoving_momentum_width": 0.03,
+      "energy_relative_excess": 0.0015015181270274791,
+      "pressure_over_energy": 0.0009980432488608923,
+      "cold_force_relative_difference": 0.00801549978013627,
+      "mass_force_absolute_check": 1.4949525992125068e-12,
+      "expansion_continuity_relative_check": 3.3269801372393206e-13
+    },
+    {
+      "theta": 0.1,
+      "comoving_momentum_width": 0.01,
+      "energy_relative_excess": 0.00016705403592975898,
+      "pressure_over_energy": 0.00011133246148709348,
+      "cold_force_relative_difference": 0.0008983386875187627,
+      "mass_force_absolute_check": 7.545166748335053e-13,
+      "expansion_continuity_relative_check": 4.622572432523243e-13
+    },
+    {
+      "theta": 0.5,
+      "comoving_momentum_width": 0.1,
+      "energy_relative_excess": 0.01652788437786601,
+      "pressure_over_energy": 0.010671063635940633,
+      "cold_force_relative_difference": 0.08206942480600088,
+      "mass_force_absolute_check": 3.2789795184617887e-12,
+      "expansion_continuity_relative_check": 1.682845223540932e-12
+    },
+    {
+      "theta": 0.5,
+      "comoving_momentum_width": 0.03,
+      "energy_relative_excess": 0.0015094761046368088,
+      "pressure_over_energy": 0.0010032879265479365,
+      "cold_force_relative_difference": 0.008104715772448534,
+      "mass_force_absolute_check": 5.119229692929217e-12,
+      "expansion_continuity_relative_check": 6.501177053636556e-13
+    },
+    {
+      "theta": 0.5,
+      "comoving_momentum_width": 0.01,
+      "energy_relative_excess": 0.00016794496055738684,
+      "pressure_over_energy": 0.00011192564772767987,
+      "cold_force_relative_difference": 0.0009084720086489639,
+      "mass_force_absolute_check": 7.175822436256141e-13,
+      "expansion_continuity_relative_check": 2.290045269871628e-12
+    },
+    {
+      "theta": 1.2,
+      "comoving_momentum_width": 0.1,
+      "energy_relative_excess": 0.016905493499472346,
+      "pressure_over_energy": 0.010893615226119069,
+      "cold_force_relative_difference": 0.08576708531704869,
+      "mass_force_absolute_check": 4.4722003877950556e-12,
+      "expansion_continuity_relative_check": 4.946487772726134e-13
+    },
+    {
+      "theta": 1.2,
+      "comoving_momentum_width": 0.03,
+      "energy_relative_excess": 0.0015464074677435935,
+      "pressure_over_energy": 0.0010276157660825385,
+      "cold_force_relative_difference": 0.008525818521818218,
+      "mass_force_absolute_check": 1.1015043044348971e-12,
+      "expansion_continuity_relative_check": 8.058968047613995e-13
+    },
+    {
+      "theta": 1.2,
+      "comoving_momentum_width": 0.01,
+      "energy_relative_excess": 0.00017208116787581496,
+      "pressure_over_energy": 0.00011467942450617666,
+      "cold_force_relative_difference": 0.0009563459504710048,
+      "mass_force_absolute_check": 2.157173745187535e-12,
+      "expansion_continuity_relative_check": 1.159418438149448e-12
+    }
+  ],
+  "occupation": "equal fixed comoving total particle numbers per species",
+  "coherence": "u=0 explicitly assumed; not inferred from RT31 rotating state",
+  "fitted_parameters": [],
+  "observational_rmse": null,
+  "conclusion": "Cold mass energy and mass force follow from the same mode stress; the state preparation remains an input.",
+  "quadrature_refinement_max_difference": 4.440892098500626e-16
+}

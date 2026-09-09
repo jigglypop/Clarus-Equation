@@ -217,20 +217,18 @@ P(\gamma)=
 Python 환경이 준비돼 있다면 다음 명령으로 핵심 계산을 재현할 수 있다.
 
 ```powershell
-.codex\hooks\python.cmd doctor
-.codex\hooks\python.cmd harness
-.codex\hooks\python.cmd source
-.codex\hooks\python.cmd pytest tests\test_repository_harness.py tests\test_cosmology.py -q
-.codex\hooks\python.cmd python verify\Q-0020\bath_recycling.py
-.codex\hooks\python.cmd pytest tests\test_bath_recycling.py -q
-.codex\hooks\python.cmd pytest tests\test_causal_light_geometry.py -q
-.codex\hooks\python.cmd python paper\2_경로적분과_응용\validate_manuscript.py
+python -B -m pytest -p no:cacheprovider tests\test_repository_harness.py -q
+python -B -m pytest -p no:cacheprovider tests\test_cosmology.py -q
+python -B verify\Q-0020\bath_recycling.py
+python -B -m pytest -p no:cacheprovider tests\test_bath_recycling.py -q
+python -B -m pytest -p no:cacheprovider tests\test_causal_light_geometry.py -q
+python -B paper\2_경로적분과_응용\validate_manuscript.py
 ```
 
 전체 회귀는 사용자가 명시적으로 요구한 경우에만 실행한다.
 
 ```powershell
-.codex\hooks\python.cmd pytest -q
+python -B -m pytest -p no:cacheprovider -q
 ```
 
 ## 9. 읽는 순서
@@ -242,8 +240,8 @@ Python 환경이 준비돼 있다면 다음 명령으로 핵심 계산을 재현
 5. [계산 체인](paper/경로적분.md)
 6. [상수 후보식과 검증](paper/상수.md)
 
-`paper/2_경로적분과_응용/`은 장별 전제·증명·공리·산출을,
-`paper/4_공학적_활용/`은 공학 적용의 입력과 미완성 항목을 담는다.
+`paper/참조/2_경로적분과_응용/`은 장별 전제·증명·공리·산출을,
+`paper/참조/4_공학적_활용/`은 공학 적용의 입력과 미완성 항목을 담는다.
 
 ## 10. 주요 검증 코드
 
@@ -264,7 +262,7 @@ reaction/source/burn/wall 산출을 물리 예측으로 두지 않는다.
 현재 `reality_stone/` 패키지 트리는 제거되어 있으며 import·빌드 전제로 사용하지
 않는다. `pyproject.toml`은 Ruff와 pytest 설정만 담으며 이 저장소를 설치 가능한
 패키지로 선언하지 않는다. 실행 가능한 연구 표면은 `examples/`, `experiments/`,
-`tests/`이고, Windows 진입점은 `.codex/hooks/python.cmd`다.
+`tests/`이고, Python 검증은 저장소 루트에서 직접 실행한다.
 
 ## 12. 읽는 사람에게
 

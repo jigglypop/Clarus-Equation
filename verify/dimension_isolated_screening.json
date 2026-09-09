@@ -1,0 +1,57 @@
+{
+  "physical_isolated_source": {
+    "beta_Newton_potential_upper": 1.368900671477801e-32,
+    "contraction_certified_under_assumptions": true,
+    "fractional_source_density_suppression_upper": 1.368900671477801e-32,
+    "conserved_source_mass_kg_input": 0.009336334039302173,
+    "one_position_nonlinear_minus_linear_acceleration_upper_m_s2": 1.1411120935316355e-44,
+    "near_minus_far_acceleration_upper_m_s2": 2.282224187063271e-44,
+    "near_minus_far_phase_upper_rad": 8.08376348808109e-41,
+    "comparison": "same conserved source density and same bare G; nonlinear minus linear scalar force",
+    "G_condition": "bare G_E does not exceed supplied G_upper",
+    "boundary": "isolated compact source, scalar field tends to zero at infinity",
+    "full_environment_or_calibrated_mass_bound": false
+  },
+  "independent_checks": [
+    {
+      "beta_artificial_numerical_stress_case": 0.1,
+      "coarse_error_vs_independent_BVP": 3.8437094806165195e-06,
+      "fine_error_vs_independent_BVP": 9.658612141888456e-07,
+      "discrete_certificate": 3.839521293495333e-15,
+      "relative_total_charge": 0.9285014064805934,
+      "iterations": 12
+    },
+    {
+      "beta_artificial_numerical_stress_case": 0.8,
+      "coarse_error_vs_independent_BVP": 1.701155637517937e-05,
+      "fine_error_vs_independent_BVP": 4.275246949236866e-06,
+      "discrete_certificate": 6.106226635438358e-14,
+      "relative_total_charge": 0.658181945406596,
+      "iterations": 37
+    }
+  ],
+  "bounded_environment": {
+    "environment_density_upper_kg_m3_input": 15000.0,
+    "environment_support_radius_m_input": 7000000.0,
+    "envelope_role": "conditional supplied bounds; no factual Earth/chamber reconstruction",
+    "beta_environment_upper": 4.1290324963011535e-14,
+    "beta_source_upper": 1.368900671477801e-32,
+    "gradient_environment_upper_m_s2": 0.0010602826683495062,
+    "gradient_source_upper_m_s2": 8.335974386656882e-13,
+    "result": {
+      "source_induced_field_sup_upper": 1.3689006714778575e-32,
+      "direct_nonlinear_source_acceleration_upper_m_s2": 3.441950913083963e-26,
+      "induced_environment_acceleration_upper_m_s2": 1.4514216566599735e-35,
+      "one_position_response_minus_linear_source_upper_m_s2": 3.4419509145353846e-26,
+      "near_minus_far_response_minus_linear_upper_m_s2": 6.883901829070769e-26,
+      "near_minus_far_phase_upper_rad": 2.4383158576977334e-22,
+      "comparison": "fixed conserved densities and bare G; source-induced nonlinear response minus linear source",
+      "includes_environment_feedback": true,
+      "full_calibrated_observational_bound": false
+    }
+  },
+  "role": "fixed-source nonlinear bound and independent mathematical checks",
+  "actual_experiment_rmse": null,
+  "all_domain_rmse": null,
+  "scientific_success": false
+}

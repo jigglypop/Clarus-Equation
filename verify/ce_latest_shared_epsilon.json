@@ -1,0 +1,67 @@
+{
+  "source_path": "C:\\dev\\ce\\Clarus-Equation\\_workspace\\ce_obs32_reproduction\\CE-OBS32\\source_context\\CE\uc2dd.txt",
+  "source_sha256": "ad89afa6176722e7258e7bbc55f73f7a49a85a89db0a6f67fafba6a44e749b12",
+  "assumption": "Same dimensionful epsilon and theta; distinct s_D and s_H.",
+  "precision_digits": 160,
+  "rows": [
+    {
+      "supplied_dark_mass_eV": 0.027615,
+      "supplied_dark_r": 0.15,
+      "supplied_charged_mass_GeV": 1000,
+      "shared_epsilon_GeV2": 1.1438823375e-22,
+      "resulting_charged_r": 1.1438823375e-28,
+      "theta": 0.5,
+      "dark_U_GeV4": 2.3607302041873815e-47,
+      "charged_U_per_component_GeV4": 1.7796040177393918e-74,
+      "charged_16_components_over_dark_U": 1.2061380090501096e-26,
+      "relative_inverse_gauge_coupling_Y_2_3": [
+        -3.954675594976426e-86,
+        -2.3728053569858555e-86,
+        -2.3728053569858555e-86
+      ],
+      "relative_muon_EM_leading": -1.504628747198179e-98,
+      "all_phase_max_abs_inverse_gauge_Y_2_3": [
+        4.2125184535105726e-86,
+        2.5275110721063436e-86,
+        2.5275110721063436e-86
+      ],
+      "all_phase_max_abs_relative_muon_EM_leading": 1.6027297842852786e-98,
+      "seven_row_rmse_max_change_from_muon_phase_only": 9.513843979361584e-90,
+      "determinant_vs_potential_second_derivative_relative_error": 5.779085518801914e-78,
+      "high_mass_expansion_relative_difference": 6.54233401022232e-57
+    },
+    {
+      "supplied_dark_mass_eV": 0.014414,
+      "supplied_dark_r": 0.35,
+      "supplied_charged_mass_GeV": 1000,
+      "shared_epsilon_GeV2": 7.27171886e-23,
+      "resulting_charged_r": 7.27171886e-29,
+      "theta": 0.5,
+      "dark_U_GeV4": 2.362343763807698e-47,
+      "charged_U_per_component_GeV4": 4.57183506683686e-75,
+      "charged_16_components_over_dark_U": 3.0964740267726906e-27,
+      "relative_inverse_gauge_coupling_Y_2_3": [
+        -1.0159633481859689e-86,
+        -6.0957800891158135e-87,
+        -6.0957800891158135e-87
+      ],
+      "relative_muon_EM_leading": -3.865418598992401e-99,
+      "all_phase_max_abs_inverse_gauge_Y_2_3": [
+        1.0822036471867154e-86,
+        6.493221883120292e-87,
+        6.493221883120292e-87
+      ],
+      "all_phase_max_abs_relative_muon_EM_leading": 4.117441946308504e-99,
+      "seven_row_rmse_max_change_from_muon_phase_only": 2.4441238102233603e-90,
+      "determinant_vs_potential_second_derivative_relative_error": 6.284989840809283e-78,
+      "high_mass_expansion_relative_difference": 2.643894758943985e-57
+    }
+  ],
+  "fitted_parameters": [],
+  "joint_rmse": null,
+  "correction": "Previous independently supplied charged r benchmarks do not implement this common-epsilon premise.",
+  "limitations": [
+    "Dark and charged mass scales and common splitting remain supplied inputs.",
+    "Relative loop potential only; absolute vacuum, full charged action and real-time state not solved."
+  ]
+}

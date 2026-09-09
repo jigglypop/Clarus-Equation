@@ -1,0 +1,68 @@
+{
+  "scope": "finite-time matched initial-state comparison, not full primordial prediction",
+  "initial_theta": 0.5,
+  "initial_theta_N": 0,
+  "ai": 0.01,
+  "baseline_partial_rmse": 0.9392593003159833,
+  "cases": [
+    {
+      "r": 0.15,
+      "cases": [
+        {
+          "label": "equal",
+          "AP_rmse": 1.0595028233105248,
+          "partial_rmse": 1.156789405414038,
+          "theta_today": 0.5776920511187809,
+          "theta_N_today": 0.15500521246842935,
+          "clock_drift_per_year": -1.0883966678065257e-18,
+          "initial_rho_c": 359980.42135190085,
+          "continuity": 3.6758777272871063e-16,
+          "solver_max_AP_difference": 1.092459456231154e-13
+        },
+        {
+          "label": "prepared",
+          "AP_rmse": 1.060012832804773,
+          "partial_rmse": 1.1579888339928646,
+          "theta_today": 0.5788070275944438,
+          "theta_N_today": 0.15540380386554714,
+          "clock_drift_per_year": -1.0929473088226512e-18,
+          "initial_rho_c": 359980.42135190085,
+          "continuity": 4.0618943983187614e-16,
+          "solver_max_AP_difference": 1.7319479184152442e-13
+        }
+      ],
+      "prepared_minus_control_partial": 0.0011994285788266001
+    },
+    {
+      "r": 0.35,
+      "cases": [
+        {
+          "label": "equal",
+          "AP_rmse": 1.0671622058067036,
+          "partial_rmse": 1.1776020667688865,
+          "theta_today": 0.5994756820939662,
+          "theta_N_today": 0.16172643236274656,
+          "clock_drift_per_year": -1.171046926085283e-18,
+          "initial_rho_c": 359687.9578938959,
+          "continuity": 2.7177923123663555e-16,
+          "solver_max_AP_difference": 1.7319479184152442e-13
+        },
+        {
+          "label": "prepared",
+          "AP_rmse": 1.0769463197494495,
+          "partial_rmse": 1.2001209053436175,
+          "theta_today": 0.6187759747336198,
+          "theta_N_today": 0.16874494978722418,
+          "clock_drift_per_year": -1.2537623358753351e-18,
+          "initial_rho_c": 359687.95789389586,
+          "continuity": 3.6598595156762473e-16,
+          "solver_max_AP_difference": 1.9984014443252818e-13
+        }
+      ],
+      "prepared_minus_control_partial": 0.022518838574731026
+    }
+  ],
+  "fitted_parameters": 0,
+  "joint_rmse": null,
+  "caveat": "Overall abundance, preparation background and late initial state remain supplied; partial score inherits charged-sector assumptions."
+}

@@ -1,1416 +1,904 @@
-# Clarus Equation 통합 논문: 선택, 접힘, readout과 조건부 응용의 현재 지형
+# Clarus Equation: 관계 차원에서 공간·힘·잔여 곡률 반응의 공통식으로
+
+Clarus Equation(CE)은 **상태·관계의 차원이 공간차원으로 나타나고, 같은 관계의 관측 방식에 따라 힘이 드러나며, 관측 밖의 잔여 성분이 시공간 곡률에 반응한다**는 구상을 연구한다. 본문의 공통식 유도는 §2.4와 §3.3–3.7에 둔다. 이미 계산한 세 채널 질량식은 이 출발 원리 전체를 대신하는 정의가 아니라 후반부의 조건부 구현이다. 최신 연구의 장별 분석과 판본 대조는 [재구성 근거](최신연구_분석과_논문구성.md)에 둔다.
 
 ## 초록
 
-Clarus Equation(CE)은 하나의 숫자식이나 완결된 통일장이 아니다. 이 문서가
-정리하는 CE의 중심은 세 단계의 물리 서사다. 환경과의 상호작용이 가능한
-성분들 가운데 한 사건을 **끼워** 선택하게 하고, 선택되지 않은 성분을
-단순 소거가 아니라 **접힘**으로 보존하며, 그 보존된 성분을 우주론에서
-암흑 부문으로 **표현**한다는 그림이다. 이 그림은 동기를 주는
-**[공리: 물리 사상]**이다. 반면 그 그림에 인접한 수학에는 완결된 정리,
-명시적 EFT, 조건부 수치 산출, 경험식과 아직 비어 있는 bridge가 함께
-있다. 특히 현재 R1--R2 경로는 비선택 경로를 독립 에너지라고 선언하지 않고,
-무차원 잔류량ㆍ양의 초기 Gaussian 운동량ㆍ유계 Gaussian 저장소를 분리해
-조건부 열린계 작용으로 만든다. 이 작용은 인과적 반응, 양의 잡음과 총응력
-보존을 시험한다. R2는 그 뒤 단일-clock 관측창에서 물리 곡률섭동과 cutoff를
-검사했을 뿐이며, 0차원 기록에서의 초기값 산출과 암흑부문 abundance 예측은 아직
-제공하지 않는다.
+관계 상태의 독립적인 변화 방향에서 공간의 거리와 차원을 구성하고, 동일한 사영의 위상 수송에서 게이지 연결을 구성하는 공통 기하식을 제시한다. 관측 밖 사영 $Q=I-P$는 국소 판정의 비투영성, 관계 공간의 계량·게이지 곡률, 제거된 자유도의 유효작용에 함께 나타난다. 이는 사용자가 제안한 관계 차원–힘–잔여 곡률 반응을 수식화하는 조건부 구성이다. 괴델의 불완전성과 물리적 미관측 성분을 동일한 정리로 취급하지 않으며, 공간차원과 게이지 표현 차원의 실제 연결은 계산할 대상으로 둔다. 기존 순환 질량식의 수치 성과만으로 이 연결이 완성됐다고 주장하지 않는다.
 
-이 통합 논문은 저장소의 이 다층 구조를 처음 읽는 독자가 한 흐름으로
-따르도록 쓴 논문형 정본이다. 우선 형식 지위와 기호를 고정하고, 선택–접힘–
-암흑 표현의 사슬을 설명한다. 이어 곱적 함수, Hodge 폐쇄, Poisson 고정점,
-공변 $Z_2$ portal EFT, 유한 Euclidean cutoff, flavor와 우주론 branch를
-전개한다. 마지막에는 등호이전 수학, 뇌·생명·AGI, 공학과 리만/MRA 응용을
-각각 조건부 결과와 검증 상태로 분리한다.
+관측 결과가 하나의 기록으로 남더라도 전체 양자 상태의 상관과 비관측 성분을 임의로 지워서는 안 된다. CE는 이 요구를 관계 상태, 사영과 잔여 동역학으로 표현하고, 공통 질량 스펙트럼에서 여러 물리 반응을 함께 계산하는 후보를 검토한다. 본문에서는 세 복소 스칼라의 순환 질량행렬을 명시적 입력으로 채택한다. 첫 두 질량제곱 순간이 순환위상에 무관하므로, 같은 계량과 연산자 연결에서 기준위상에 대한 한 루프 상대 작용의 자외선 발산이 상쇄된다. 일정 곡률의 유클리드 4-구면에서는 이 상대 작용과 계량 응답을 수렴하는 무한 모드합으로 계산할 수 있다. 실제 상대 중력원은 작용밀도 자체가 아니라 그 곡률 미분까지 포함한 양이다.
 
-독자는 미적분, 선형대수, 기초 확률론과 표준 장론·우주론 용어를 한 번은
-접했다고 가정한다. 처음 읽을 때에는 1–8장을 순서대로 읽고, 관심 분야에
-따라 9–13장을 읽은 뒤 14–16장의 재현과 열린 문제로 돌아오는 것이 좋다.
-증명 전문과 데이터·판본의 상세는 후속 링크에 남기지만, 이 문서 자체만으로
-현재 무엇이 닫혔고 무엇이 닫히지 않았는지는 판단할 수 있게 한다.
+같은 스펙트럼은 물질의 질량·점유 에너지·위상에 대한 힘을 연결하며, 하전 표현을 추가하면 저에너지 게이지 문턱과 일부 입자 반응도 공통 질량미분으로 제한한다. 비동기 관계 틱은 상태 변화의 판독 후보이고, 스펙트럼이나 물리적 단일 사건을 유일하게 도출하는 법칙은 아직 아니다. 상대 작용은 절대 진공값·Newton 상수·초기상태를 정하지 않는다. 고정 4차원의 무한 모드와 확률적 무한 차원 후보를 구분하며, 후자의 단순 가중이 상대 작용의 수렴을 깨뜨리는 반례를 보존한다. 현재 성과는 조건부 양자작용–중력 반응의 연결이고, 양자·거시 자료 전체에서 독립 예측오차를 함께 줄였다는 결과는 아직 없다.
 
-## 1. 형식 지위와 독해법
+## 1. 문제 설정과 기여의 범위
 
-중심 서사를 수치 적합이나 구현 검사와 혼동하지 않기 위해, 먼저 모든
-비자명 문장을 일곱 지위로 읽는다. **[정의]**는 대상·기호·정의역을
-고정한다. **[정리]**는 명시한 전제에서 빠짐없는 증명이 있는 명제다.
-**[공리]**는 모델 선택, 경계조건, 물리 사상 또는 외부 입력이다.
-**[산출]**은 앞선 정의·공리·정리의 직접 계산이고, **[경험식]**은 자료,
-보정 또는 현상론적 관계다. **[미완성]**은 작용·사상·증명·독립 데이터 중
-하나가 비어 있음을 뜻하며, **[예측]**은 입력과 판정 절차를 자료 전에
-고정한 경우에만 쓴다.
+### 1.1 같은 원리로 설명할 대상
 
-이 구분의 실천적 의미는 간단하다. 예컨대 $q_{\rm ext}$가 특정 방정식의
-최소 소멸확률이라는 것은 **[정리]**일 수 있지만, 그것을 현재 바리온
-분율 $\Omega_b$로 읽는 일은 별도 **[공리]**다. 모델 값이 관측값에
-가깝다는 사실은 이 사상을 정리로 바꾸지 않는다. 반대로 공리와
-미완성이 있다는 사실이 조건부 정리를 무효로 만들지도 않는다. 이 문서는
-두 층을 한 등호로 합치지 않는다.
+목표는 QFT와 일반상대론의 검증된 극한을 보존하면서, 같은 작용·상태·매개변수로 양자와 거시 관측의 잔차를 설명하는 것이다. 유도 순서는 관계의 차원과 공간적 발현, 같은 관계의 힘·곡률 응답, 잔여 상태의 작용과 암흑부문, 실제 입자·우주 관측이다. [연구 목표 계약](연구_목표_계약.md)의 에너지 경로 보존과 독립 관측 검증은 모든 단계에 적용한다.
 
-장론 절에서는 자연단위 $c=\hbar=1$, metric 부호 $(-+++)$, reduced
-Planck mass $M_{\rm Pl}^{-2}=8\pi G$를 쓴다. 따라서 작용은 무차원이며
-지수·로그·확률의 인자는 무차원이어야 한다. 이 규칙은 후술할
-Euclidean 가중 $e^{-S_E/\hbar}$와 경로 선택 functional에도 적용된다.
-형식 지위의 전체 규약과 개별 증명은 [공리계](axium.md)와
-[핵심 정리 증명](검증_원장/참조_핵심_정리_증명.md)에 보존한다.
-
-## 2. 선택과 접힘의 물리 서사
-
-형식 지위를 고정했으므로 이제 CE가 무엇을 설명하려 하는지 말할 수 있다.
-첫 단계인 **끼임**은 고립된 양자 하나가 임의로 답을 고른다는 그림을
-거부한다. 계와 환경이 상호작용하면 환경은 위상 정보를 흡수하고, 특정
-기저에서 간섭항이 억제된다. CE는 이 환경 선택을 이웃 전체가 한 성분을
-사건으로 강제하는 과정으로 읽는다. 같은 받침대 위의 메트로놈이 받침대
-매개 결합으로 박자를 맞추는 모습은 이 직관에 도움이 되지만, 고전 진동은
-복소 진폭·간섭·완전양성 동역학을 포함하지 않는다는 한계가 있다.
-
-둘째 단계인 **접힘**은 선택되지 않은 성분을 ‘없어졌다’고 선언하지
-않는다. CE의 수학적 후보는 비선택 경로에 제한된 잔류 측도와 그
-pushforward다. 종이를 접으면 안쪽 면이 눈에는 사라져도 종이의 질량은
-사라지지 않는다는 비유가 여기서 쓰인다. 그러나 종이의 접힌 방향은
-실제 상태공간, 국소 장, 공변 작용을 정의하지 않는다. 따라서 비유가
-물리적 보존 법칙을 증명하는 것은 아니며, 잔류장과 분지과정 생존분율의
-동일시는 **[미완성]**이다.
-
-셋째 단계인 **암흑 표현**은 접힌 분율을 우주에서 어떻게 읽을 것인가의
-질문이다. 암흑물질과 암흑에너지는 접힌 분율이 취할 수 있는 거시적 readout 중
-하나이지, CE가 미리 맞혀야 할 정체가 아니다. [최상위 연구 목표](연구_목표_계약.md)는
-이 후보를 포함해 기존 계산과 관측에 반복되는 잔차를 같은 검증 가능한 원리로
-줄이는 데 있다. 선택되어 끝난 분율을 보이는 물질로, 남은 분율을 암흑 부문으로
-읽는 구체적 사상은 **[미완성]**이다. 확률을 stress tensor와 에너지 밀도로 바꾸는
-사상도 분지과정 정리가 제공하지 않는다.
-이 구분을 유지한 가장 상세한 사슬은 [선택과 접힘](5_유도/00_선택과_접힘.md)에
-있으며, 본 논문은 그 사슬을 다음 장의 닫힌 수학과 연결한다.
-
-## 3. 핵심 수학: 곱적 구조, Hodge 폐쇄, 고정점
-
-선택 서사를 수학적으로 다룰 때 첫 도구는 독립 사건의 조합을 보존하는
-함수다. 연속 함수 $I:(0,1]\to(0,1]$가 $I(xy)=I(x)I(y)$와 $I(1)=1$을
-만족하면, $x=e^{-u}$로 치환하여 가법 함수 방정식으로 옮길 수 있다.
+전체 목표의 출발점은 진공 퍼텐셜 하나가 아니라 **같은 미시 작용과 같은 준비상태**다. [기존 Master action의 변분·상태 범위](참조/5_유도/06_Master_Action_Universal_Derivation.md)에 맞추어, 외부 원천 $J$를 포함한 시간발전 연산자 $U_J$로
 
 $$
-I(e^{-u-v})=I(e^{-u})I(e^{-v}).
+\mathcal Z[J_+,J_-;\rho_{\rm in},\lambda]
+=\operatorname{Tr}\!\left(U_{J_+}[\lambda]\,\rho_{\rm in}\,
+U_{J_-}^{\dagger}[\lambda]\right),\qquad
+\operatorname{Tr}\rho_{\rm in}=1
 $$
 
-연속성 아래 로그를 취하면 $-log I(e^{-u})$는 $u$의 선형 함수다.
-따라서
+을 공통 계산의 형식으로 둔다. 여기서 $\lambda$는 작용의 장내용·질량·결합과 재규격화 조건을 나타내며, $\rho_{\rm in}$은 초기 점유와 상관을 포함한다. 두 원천은 응답을 미분할 때 독립적으로 유지하고 물리적 극한에서 같게 놓는다. 유니터리 시간발전이면 $\mathcal Z[J,J]=1$이다. 이것은 새 스펙트럼이나 초기상태의 선택 법칙을 추가한 것이 아니라, 기존 후보들을 같은 상태 의존 계산에 연결하기 위한 정의다.
+
+이 함수에서 얻은 평균장 유효작용의 계량 응답은 중력원, 게이지 원천 응답은 전류와 진공편극, 적절한 뮤온·광자 상관함수의 물리적 극한은 자기모멘트 계산으로 이어진다. 점유와 진공을 나누어 근사할 때는 같은 전체 계산의 분해인지 확인해야 한다. 특히 진공 행렬식에 포함한 항을 물질 점유 에너지로 다시 더하지 않는다. 우주 팽창과 물질 생성은 이 총응력과 상태 진화로 구하고, 관측별로 서로 다른 초기상태를 선택해 하나의 예측처럼 합치지 않는다.
+
+**아직 필요한 유도는 $\lambda$와 $\rho_{\rm in}$의 선택이다.** 장에 대한 $\delta S/\delta\Phi=0$만으로 외부 결합이나 초기 점유가 결정되지는 않는다. 이들을 결정하려면 대칭·미시 동역학·경계조건을 명시해야 한다. 관측 RMSE를 최소화해 선택한 값은 피팅으로 기록한다. 공통 형식이 있다는 사실과 입력이 적은 통일 예측이 있다는 사실을 구분한다.
+
+공유 연구에서 실제로 계산된 진공 부문의 연결은 이 전체 구조의 제한된 부분이다.
 
 $$
-I(x)=x^c,\qquad c\geq0.
+\mathcal M^2(\theta)\longrightarrow\Delta\Gamma[g,\theta]
+\longrightarrow\left\{
+\frac{\delta\Delta\Gamma}{\delta g^{\mu\nu}},
+\frac{\delta\Delta\Gamma}{\delta\theta},
+\partial_s^n\mathcal U\right\}
 $$
 
-이는 **[정리]**이다. 선형 readout $c=1$은 CE가 채택할 수 있는
-**[공리]**이지, 함수 방정식이 강제하는 유일한 선택은 아니다. 독립
-확률의 곱을 보존한다는 가정이 이 결론의 핵심이며, 상관된 사건에는
-그대로 적용할 수 없다.
+이다. 주어진 질량행렬에서 상대 양자작용을 만들고 그 미분으로 응력·위상 반응·저에너지 계수를 함께 제한한다. 관계 상태에서 질량행렬을 선택하는 단계는 별도 입력이다. 논문의 기여는 그 입력을 숨기지 않은 채 이후 계산을 연결하는 데 있다.
 
-공간 차원의 조건부 도구는 Hodge 사상이다. 방향과 양의 내적을 가진
-$d$차원 공간에서 $*: \Lambda^2V^*\to\Lambda^{d-2}V^*$다. 2-form과
-1-form이 추가 지표 없이 맞물리려면 성분 수가 같아야 하므로
+### 1.2 형식 지위와 기호
 
-$$
-\binom d2=d
-\quad\Longleftrightarrow\quad d(d-3)=0.
-$$
+**[정의]**는 대상과 기호, **[공리]**는 채택한 모형·상태·경계조건, **[정리]**는 적힌 전제에서 성립하는 명제, **[산출]**은 직접 계산을 뜻한다. 자료로 정한 관계는 **[경험식]**, 추가 물리나 검증이 필요한 연결은 **[미완성]**이다. **[예측]**은 입력과 비교 규칙을 고정한 독립 관측량에만 사용한다.
 
-비자명한 양의 정수해는 $d=3$이다. 이는 Hodge 폐쇄의 **[정리]**다.
-실제 공간 차원이 이 branch라는 해석, 그리고 $N_c=d$, $N_w=d-1$,
-$N_{\rm gen}=d$ 같은 표준모형 수의 식별은 추가 **[공리]**다. 숫자
-일치만으로 게이지군·표현·hypercharge가 유도되었다고 말할 수 없다.
+장론 식은 $\hbar=c=1$, Lorentzian 계량 부호 $(-,+,+,+)$를 사용한다. $\theta$는 무차원 순환위상, $s,\epsilon$은 질량제곱, $\mathcal U$와 에너지밀도는 질량의 네제곱 차원이다. 확산시간과 우주시간, 확률과 에너지, 내부 상태공간과 시공간의 차원은 각각 구분한다.
 
-접힘 분율을 계산하는 닫힌 수학은 Poisson 분지과정이다. 자손 수가 평균
-$D$인 독립 Poisson 변수라면 확률생성함수는 $f(z)=e^{D(z-1)}$다. 세대
-$n$ 안에 소멸할 확률을 $q_n$이라 하면 독립성 때문에
+### 1.3 최근 연구 기준
 
-$$
-q_{n+1}=f(q_n)=e^{-D(1-q_n)},\qquad q_0=0.
-$$
+현재 기준은 사용자 첨부 ZIP의 [CE식](../_workspace/ce_obs32_reproduction/CE-OBS32/source_context/CE식.txt), [31장 실시간 양자상태·중력 되먹임](../_workspace/ce_obs32_reproduction/CE-OBS32/source_context/CE_realtime_quantum_gr_report_2026-09-09.md), [OBS32 계산 계약](../_workspace/ce_obs32_reproduction/CE-OBS32/calculation_contract.json)이다. 13장 집단모드의 재검산과 이후 추가 변형은 [별도 분기 기록](참조/collective_branch_review.md)으로 보존하며 최신 기준식을 대체하지 않는다.
 
-$q_n$은 증가하고 1로 유계이므로 최소 고정점 $q_{\rm ext}$로 수렴한다.
-$D>1$에서 그 비자명 해는
+$$x_{Rj}=s_R+2\epsilon\cos[(\theta+2\pi j)/3],\qquad s_R>2|\epsilon|.$$
 
-$$
-q_{\rm ext}=-\frac1D W_0(-De^{-D}),
-\qquad s_{\rm branch}=1-q_{\rm ext}.
-$$
+첨부 CE식은 중성장과 하전장이 **같은 차원 있는 $\epsilon$과 위상 $\theta$**를 공유하며, 대각 질량척도 $s_R$는 다르게 허용한다. 따라서 $r_R=\epsilon/s_R$는 부문마다 달라진다. 서로 독립적인 $r_D,r_H$를 공급했던 후속 시험은 이 전제를 구현한 결과가 아니다.
 
-여기서 $W_0$는 Lambert $W$ 함수의 주가지다. $q=1$도 고정점이므로
-유일한 고정점이 아니라 ‘최소 소멸 고정점’이라고 부른다. 연기 경보기의
-신호 계보는 이 수학의 좋은 비유지만, 양의 자손 수가 복소 양자 진폭에서
-어떻게 나오는지는 다음 장의 열린 bridge다.
+[CE-RT31 / CE-OBS32: 최근 연구 기준](latest_research_baseline.md)
 
-### 3.1 연속 곱적 함수
+### 1.4 왜 이 순서의 식이 필요한가
 
-곱적 readout 정리의 전제는 $I:(0,1]\to(0,1]$의 연속성과
-$I(xy)=I(x)I(y)$다. $x=e^{-u}$와 $J(u)=-\log I(e^{-u})$를 두면
+[공유 대화 「CE식 암흑에너지 정리」](https://chatgpt.com/share/6aa0e93e-2dec-83ee-b20a-d1ee57fa611d)의 요구는 특정 후보식을 유지하는 것이 아니라, 비관측 진폭과 상관까지 보존하는 원리에서 실제 양자·거시 관측을 함께 계산하는 것이다. 따라서 아래의 연결이 필요하다. 행렬식·운동방정식·관측식은 각각 따로 맞추는 경험함수가 아니라 앞 단계의 선택을 다음 단계까지 유지하기 위한 식이다.
 
-$$
-J(u+v)=J(u)+J(v).
-$$
+| 출발 요구 | 필요한 수학적 연결 | 본문에서 확인할 것 |
+|---|---|---|
+| 관계의 차원이 공간으로 나타난다 | 관계 변화의 양자기하 텐서에서 계량과 그 rank를 구한다 | §2.4·3.3–3.4: 관계 변수와 공간차원의 연결 |
+| 같은 관계에서 서로 다른 힘이 드러난다 | 동일한 상태 기저에서 게이지 수송과 사영된 응답 대수를 구한다 | §3.3·3.5: 거리와 위상 곡률의 공통 기원 |
+| 관측되지 않은 성분도 동역학에 남는다 | 사영 후 제거한 성분의 resolvent가 유효 연산자에 남는다 | §3: 잔여항을 버리지 않은 사영 |
+| 관계의 위상이 실제 반응을 바꾼다 | 재위상 불변량을 질량행렬에 넣고 대각화한다 | §4.1: 순환 모형의 선택과 고유값 유도를 구분 |
+| 진공·물질·힘마다 별도 함수를 붙이지 않는다 | 같은 연산자의 행렬식과 질량·장·계량 미분을 사용한다 | §4–7: 정규화, 미분 시 고정량, 에너지 교환 |
+| 생성된 양자가 주변과 팽창에 되먹임한다 | 같은 상태의 점유·상관으로 힘과 총응력을 계산한다 | §6.4: 실시간 식과 차가운 물질 근사의 연결 |
+| 전체 관측오차가 실제로 줄어야 한다 | 같은 우주 이력을 거리·음향눈금·입자 반응으로 옮긴다 | §9.6: 거리비 개선과 거리눈금을 포함한 검사를 구분 |
 
-연속 Cauchy 가법 함수는 $J(u)=cu$이므로
-$I(x)=x^c$가 된다. $c\geq0$은 range 조건에서 온다. 독립 사건의 곱이
-아닌 상관된 readout에는 이 한 줄 유도를 적용할 수 없다.
+이 연결은 후보를 고칠 위치도 정한다. 스펙트럼의 미분 관계가 맞는데 생성된 물질이 부족하면 상태 준비와 그 에너지원의 동역학을 연구한다. 거리비가 개선되어도 절대 거리눈금이 악화하면 초기 음향눈금과 후기 팽창의 연결을 함께 연구한다. 관측별 보정계수를 추가하여 앞 단계의 불일치를 숨기지 않는다.
 
-### 3.2 외대수 성분수와 Hodge
+## 2. 관계 상태, 기록과 비동기 틱
 
-$d$차원에서 1-form 수는 $d$, 2-form 수는 $\binom d2$다. 두 수를
-같게 두면
+### 2.1 기록의 확정과 전체 상태의 보존
+
+**[정의]** 내부 방향이 없는 단일점, 여러 결과를 구별하는 유한 기록 집합, 공간 절편의 지속적 운반체는 서로 다른 대상이다. [최신 연구 01–03](01_측정과_접힘/01_타입과_인과_방향.md)은 이 구분에서 출발한다. 지속하는 공간의 점은 시공간에서는 세계선을 이루며, 기록의 이산성만으로 공간 차원이 정해지지는 않는다.
+
+‘끼임’은 대상이 환경·다른 대상과의 관계에서 제약받는다는 연구 언어다. ‘접힘’은 관측에 직접 나타나지 않은 성분을 제거하지 않고 잔여 상태나 유효 동역학으로 추적하려는 구상이다. 이 용어만으로 비관측 성분에 별도 에너지나 암흑부문의 정체를 부여하지 않는다. 에너지는 Hamiltonian이나 공변 작용, 상태로부터 계산해야 한다.
+
+### 2.2 각 대상의 사건 순서
+
+**[공리]** [비동기 사건 후보][S05]는 과거에 닫힌 유한 사건집합 $D$와 사건별 유니터리 $U_e$를 공급한다. 사건에 참여하는 대상집합을 $S_e$라 하면
 
 $$
-d=\frac{d(d-1)}2\Longleftrightarrow d(d-3)=0.
+\rho[D]=V_D\rho_0V_D^\dagger,\qquad
+V_D=\overleftarrow\prod_{e\in D}^{\prec}U_e,\qquad
+n_i(D)=\#\{e\in D:i\in S_e\}.
 $$
 
-양의 비자명 해는 $d=3$이고, 방향·양의 내적에서 Hodge 사상은
-$\Lambda^2V^*$를 $\Lambda^1V^*$에 대응시킨다. 이는 수학 정리이며,
-실제 공간 또는 표준모형 세대 수로의 식별은 공리다.
+서로 무관한 사건의 연산자가 가환하면 허용 직렬화에 따른 상태는 같다. 같은 대상에 작용하는 비가환 사건의 순서를 바꾸면 다른 물리 이력이 된다. $n_i=n_j$는 요구하지 않는다. 공통 계산좌표를 사용하더라도 우주 전체가 같은 틱으로 갱신된다는 뜻은 아니다. 사건의 발생과 $U_e$ 자체는 아직 입력이다.
 
-### 3.3 Poisson 고정점과 최소성
+### 2.3 관계시계의 계산 가능한 정의
 
-평균 $D$의 Poisson 자손수 $K$에 대해 생성함수는
-$f(z)=\mathbb E z^K=e^{D(z-1)}$다. $q_n$을 $n$세대 안의 소멸확률로
-두면 독립 자손 때문에
+**[공리]** 관계영역 $\Lambda_i$의 공동상태 $\omega_i=\operatorname{Tr}_{\bar\Lambda_i}\rho$가 Bures 길이 한 눈금 $\vartheta_*>0$만큼 이동하면 틱으로 센다. 일정 rank 구간에서 고유값 $p_a$에 대한 속도와 다음 틱은
 
 $$
-q_{n+1}=f(q_n),\qquad q_0=0.
+v_i^2=\frac12\sum_{a,b:p_a+p_b>0}
+\frac{|\langle a|\dot\omega_i|b\rangle|^2}{p_a+p_b},
 $$
 
-$q_n$은 증가하고 1로 유계이므로 극한이 존재하며, 연속성으로
-$q=f(q)$의 최소해가 된다. $D\leq1$에는 1만, $D>1$에는 비자명 최소해가
-있다. 이는 offspring의 독립성과 비음수성이 깨지면 보장되지 않는다.
+$$
+t_{i,n+1}=\inf\left\{t>t_{i,n}:
+\int_{t_{i,n}}^t v_i(u)\,du\ge\vartheta_*\right\}.
+$$
 
-### 3.4 균일 축약과 Lambert W
+rank 변화점은 거리의 극한으로 처리한다. 영역과 눈금은 입력이며, 교차가 없으면 다음 틱은 무한대다. 상태공간 거리와 양자 속도한계의 연결은 [기존 연구](https://arxiv.org/abs/1209.0362)를 사용한다.
 
-$A=dI+\delta B$, $B\boldsymbol1=\boldsymbol1$이면
-$A\boldsymbol1=(d+\delta)\boldsymbol1$이므로 균일 sector의 깊이는
-$D_{\rm eff}=d+\delta$다. 고정점에 $-Dq$를 곱하면
+이 후보에서 틱은 원래 궤도의 판독이다. 정지한 에너지 고유상태는 에너지가 달라도 $v_i=0$일 수 있어 보편적인 ‘에너지 = 틱 속도’ 법칙은 성립하지 않는다. 누적 경로길이가 양수여도 끝점 상태가 같을 수 있다. 관계시계만으로 단일 사건의 객관적 실현, Born 규칙 또는 새 중력원을 얻지는 않는다.
+
+### 2.4 관계 차원의 공간적 발현과 판정 밖 성분
+
+**[출발 가설]** 1·2·3차원은 서로 독립적으로 주어진 공간 상자가 아니라, 상태·관계에서 구별 가능한 변화 방향이 공간으로 나타난 것이다. 서로 다른 힘이 관계의 순환 속에서 드러난다는 제안도 이 같은 상태의 서로 다른 응답으로 유도해야 한다. 아래에서는 관계 좌표 $q^a$를 먼저 두며, 이 좌표를 처음부터 공간 좌표라고 부르지 않는다. 관계 거리의 영방향을 제거한 뒤 비퇴화한 국소 기하가 생기는지 계산한다.
+
+‘무한차원에서 참이면 거짓이 되는, 불완전성 밖의 성분’이라는 동기는 **현재 관측·판정 체계에 다 담기지 않는 전체 성분을 지우지 않는다**는 연구 가설로 유지한다. 다만 논리에서 $T\nvdash G$와 $T\nvdash\neg G$라는 독립성은 $G\leftrightarrow\neg G$라는 모순과 다르다. 괴델의 정리는 적절한 산술 표현력·효과적 공리화·일관성 조건 아래의 한계이며, 무한차원의 물리 상태나 진공 에너지를 직접 산출하지 않는다. [불완전성의 정확한 범위](https://plato.stanford.edu/entries/goedel-incompleteness/index.html)를 유지하면서 물리적 잔여를 별도로 정의한다.
+
+전체 Hilbert 공간 $\mathcal H$의 유한 차원을 미리 요구하지 않는다. 관측 가능한 부분을 $P\mathcal H$, 나머지를 $Q\mathcal H$라 하고 $Q=I-P$로 둔다. 전체의 이진 질문을 사영 $E=E^2=E^\dagger$로 표현하면, 접근 가능한 부분에서 읽는 효과 연산자는 $E_P=PEP$다. 직접 계산하면
+
+$$\boxed{E_P-E_P^2=PEQEP=(QEP)^\dagger(QEP)\succeq0.}$$
+
+즉 전체에서 이진인 질문도 부분 관측에서는 이진 사영으로 닫히지 않을 수 있다. 이 차이는 관측 밖 성분과의 결합으로 정확히 주어진다. 이는 같은 명제가 참과 거짓이라는 주장이 아니라, 부분 관측에서 확정할 수 없는 응답이 남는다는 양자적 구성이다. 무한히 많은 미관측 상태를 허용해도 확률의 양성·정규화는 유지한다. $E_P-E_P^2$에 에너지 단위는 없으므로 이 값을 곧바로 암흑에너지 밀도로 읽지는 않는다. 에너지와 곡률의 연결은 같은 잔여가 작용에 남기는 항에서 다음과 같이 구한다.
+
+## 3. 사영, 잔여 동역학과 순환위상
+
+### 3.1 비관측 성분을 제거할 때 남는 항
+
+**[정의]** 접근 가능한 부분공간의 직교사영을 $P$, 나머지를 $Q=I-P$라 한다. 자기수반 Hamiltonian을 분할하면 필요한 역연산이 존재하는 영역에서
 
 $$
-(-Dq)e^{-Dq}=-De^{-D},
+P(z-H)^{-1}P=
+\left[z-H_{PP}-H_{PQ}(z-H_{QQ})^{-1}H_{QP}\right]^{-1}
+$$
+
+이 성립한다. 오른쪽 역연산은 $P$ 부분공간에서 읽는다. 잔여항은 일반적으로 에너지 의존적이며 시간영역에서는 기억을 남긴다. 초기 $Q$ 상태가 만드는 항도 시간진화에 필요하다. 비관측 부분을 0으로 놓거나 상관을 지우는 축약은 원래 계와 다른 예측을 낼 수 있다. 이는 [사영·잔여 동역학][S10]의 조건부 구조이며, $Q$가 곧 암흑물질이라는 동정은 아니다.
+
+### 3.2 사영각만으로 닫히지 않는 세 채널
+
+등거리 입력사상 $U=(u_1,u_2,u_3)$에 대해 사영된 Gram 행렬은
+
+$$
+K_{ab}=\langle u_a|P|u_b\rangle,\qquad
+K=U^\dagger PU,\qquad 0\preceq K\preceq I.
+$$
+
+**[산출]** 원래 직교한 진폭도 사영 뒤에는 직교하지 않을 수 있다. $K_{ab}$의 크기를 정해도 세 겹침이 모두 0이 아닐 때
+
+$$
+\theta=\arg(K_{12}K_{23}K_{31})
+$$
+
+라는 재위상 불변 순환위상이 남는다. 같은 사영량과 쌍별 각도를 가진 세 채널에서도 이 위상에 따라 스펙트럼이 달라질 수 있다. [순환위상 연구][S11]는 이를 유한 모형으로 구성한다.
+
+세 채널은 세 힘을 각각 하나의 확률값으로 바꾼 것이 아니다. 내부 채널 수, 게이지 대수의 차원, 공간 차원도 구분한다. 다음 질량행렬은 이 구조에서 동기를 얻은 후보이며, 사영의 정의만으로 유일하게 결정되지는 않는다.
+
+### 3.3 같은 관계 변화에서 거리와 힘의 연결을 얻기
+
+**[공통 기하 구성]** 관계 좌표 $q$에 따라 접근 가능한 부분공간이 달라진다고 두고, 그 국소 정규직교 기저를 열로 모은 등거리 사상 $V(q)$를 택한다. $V^\dagger V=I_m$, $P=VV^\dagger$, $Q=I-P$다. $m$은 기저의 복소 성분 수이며 아직 공간차원이 아니다. 상태 변화에서 단순한 내부 기저 회전을 제거하려면 $\partial_aV$의 $Q$ 성분을 사용해야 한다. 따라서
+
+$$\boxed{\mathcal Q_{ab}=(\partial_aV)^\dagger Q(\partial_bV),\qquad
+h_{ab}=\ell^2\operatorname{Re}\operatorname{tr}\mathcal Q_{ab}}$$
+
+를 관계의 양자기하 텐서와 거리 후보로 둔다. $\ell$은 길이 단위의 공통 척도다. 임의의 실수 방향 $v^a$에 대해
+
+$$v^ah_{ab}v^b=\ell^2\operatorname{tr}\!left[
+(Qv^a\partial_aV)^\dagger(Qv^b\partial_bV)\right]\ge0.$$
+
+그러므로 관계를 실제로 구별하는 비영 방향이 거리를 만들고, $\operatorname{rank}h$가 일정한 영역에서 영방향을 몫내어 매끄러운 공간을 만들 수 있을 때 그 국소 차원은 $d_{\rm space}=\operatorname{rank}h$다. 계량의 rank만으로 전역 다양체·국소성·연속체 극한까지 증명한 것은 아니다. 공간적인 양의 계량에서 시간의 Lorentz 부호가 자동으로 생기지도 않으며, 인과적 시간 연결은 별도 동역학에 남는다.
+
+같은 $V$에서 위상 수송을 계산하면
+
+$$\mathcal A_a=iV^\dagger\partial_aV,\qquad
+\mathcal F_{ab}=\partial_a\mathcal A_b-\partial_b\mathcal A_a
+-i[\mathcal A_a,\mathcal A_b]
+=\boxed{i(\mathcal Q_{ab}-\mathcal Q_{ba})}.$$
+
+두 번째 등식은 $\partial_a(V^\dagger V)=0$을 미분해 전개하면 얻어진다. $V\mapsto VG(q)$, $G\in U(m)$ 아래 $h$는 불변이고 $\mathcal A_a\mapsto G^\dagger\mathcal A_aG+iG^\dagger\partial_aG$, $\mathcal F_{ab}\mapsto G^\dagger\mathcal F_{ab}G$다. 따라서 거리와 게이지 곡률을 각각의 자유함수로 공급할 필요 없이 **같은 관계 변화의 대칭 부분과 반대칭 부분**으로 구성할 수 있다. 비가환 기하 위상의 기본 방법은 [Wilczek–Zee의 원 논문](https://doi.org/10.1103/PhysRevLett.52.2111)에 연결되며, 여기서는 이를 CE의 관계–공간 가설을 구현하는 후보로 사용한다.
+
+이 식은 관측 밖 $Q$가 거리와 위상 반응 양쪽에 나타나는 이유도 보여 준다. 다만 기하적 연결이 있다고 동적인 강력·약력이 완성되는 것은 아니다. 그 연결의 운동항, 물질 표현, 전하, 질량과 실제 산란을 같은 작용에서 산출해야 한다.
+
+### 3.4 관계의 1·2·3차원이 공간으로 나타나는 구체적 예
+
+세 관계 변수 $q=(\vartheta,\varphi,\eta)$를 가진 네 성분 정규화 상태
+
+$$|\psi(q)\rangle=
+\begin{pmatrix}\cos(\vartheta/2)\\e^{i\varphi}\sin(\vartheta/2)\end{pmatrix}
+\otimes
+\begin{pmatrix}\cos(\eta/2)\\\sin(\eta/2)\end{pmatrix}$$
+
+를 예로 택한다. 이것은 관측에 맞춘 우주 상태가 아니라 앞의 유도를 실제로 계산할 수 있는 상태족이다. $V=|\psi\rangle$를 대입하면
+
+$$ds^2=\frac{\ell^2}{4}
+\left(d\vartheta^2+\sin^2\vartheta\,d\varphi^2+d\eta^2\right),\qquad
+\mathcal A_\varphi=-\sin^2(\vartheta/2),\quad
+\mathcal F_{\vartheta\varphi}=-\tfrac12\sin\vartheta.$$
+
+오직 $\vartheta$ 관계만 변화할 수 있으면 계량 rank는 1, $\vartheta,\varphi$가 독립이면 2, 세 관계가 독립이면 일반점에서 3이다. 공간축을 세 개 먼저 넣어 상태를 그 위에 배치한 것이 아니라, 허용된 상태 변화의 거리에서 이 국소 기하를 읽었다. 그러나 세 독립 관계를 가진 상태족을 선택했다는 입력은 남는다. 이것으로 실제 우주가 반드시 세 관계 방향을 선택함을 증명한 것은 아니다.
+
+세 방향의 계량은 국소적으로 반지름 $\ell/2$의 2-구면과 한 평탄 방향의 곱이므로 $R[h]=8/\ell^2$다. 두 구면 방향의 위상 수송에는 동시에 위의 비영 $\mathcal F$가 남는다. **같은 상태로 공간의 곡률과 위상 곡률을 함께 계산한 예**이며, 실제 우주의 곡률값이나 세 힘의 크기를 예측한 값은 아니다. 여기서 기저 rank는 $m=1$이지만 공간차원은 3일 수 있다. 따라서 공간차원 숫자와 게이지 표현 차원을 같은 기호로 놓는 단축은 허용되지 않는다.
+
+### 3.5 서로 다른 힘의 발현과 순환에 필요한 식
+
+같은 전체 관측 연산자 $A,B$를 부분공간으로 읽으면
+
+$$\boxed{[PAP,PBP]=P[A,B]P-PAQBP+PBQAP.}$$
+
+따라서 전체의 가환 성분에서도 사영 밖 경로가 남으면 부분 관측의 응답이 비가환일 수 있다. $m=1$에서는 기저 수송이 Abelian이고, $m=2,3$에서는 일반적으로 행렬값 연결이 가능하다. 전체 행렬 대수가 생성된다는 추가 조건에서 $\mathfrak u(m)=\mathfrak u(1)\oplus\mathfrak{su}(m)$이며, traceless 생성자 수는 각각 0·3·8이다. 이 점은 $U(1)$, $SU(2)$, $SU(3)$ 응답을 공통 관계 구조에서 조사할 구체적인 출발점이다. 표준모형의 hypercharge와 전자기력 사이에는 전기약 대칭 깨짐도 필요하다.
+
+여기서 **관계의 1·2·3차원이 각각 어떤 힘으로 드러나는지**는 $d_{\rm space}=\operatorname{rank}h$와 생성된 게이지 대수 사이의 동역학적 대응으로 계산해야 한다. $m=1,2,3$을 공간차원으로 이름만 바꿔 이 대응을 증명할 수는 없다. 또한 핵자 사이 핵력은 표준적 용법에서 강한 상호작용의 잔류 효과이므로, ‘강력·약력·핵력’을 세 독립 기본 게이지군으로 바로 배정하지 않는다. 이론에서 서로 다르게 드러나는 응답이 무엇인지 먼저 명시한다.
+
+‘돌아가며 보임’의 식은 관계 이력 $\gamma:q(\tau)$ 위 수송
+
+$$W_\gamma=\mathcal P\exp\!\left(i\int_\gamma\mathcal A_a\,dq^a\right),\qquad
+O_{\rm seen}(\tau)=V^\dagger(q(\tau))\,O\,V(q(\tau))$$
+
+과 그 상태 의존 상관함수다. 이력에 따라 드러나는 성분이 변하고 닫힌 이력에 holonomy가 남을 수 있다. 그러나 기저만 바꾸는 가역 회전은 rank와 대수의 동형 유형을 보존한다. 물리적으로 서로 다른 힘이 교대하려면 실제 관측 대수·접근 가능한 모드·결합의 동역학이 달라져야 한다. 이는 공통 Hamiltonian에서 구할 대상이며, 관측에 맞춘 세 독립 주기함수로 대체하지 않는다.
+
+### 3.6 잔여 성분이 곡률 반응을 만드는 공통 작용
+
+관계의 기하를 에너지와 연결하려면 같은 상태 위 장의 이차 연산자 $\mathcal K[g,\mathcal A,\theta]$가 필요하다. 유한 regulator에서 양의 복소 Gaussian 연산자를 먼저 사용한다. 관측/잔여 블록을
+
+$$\mathcal K=\begin{pmatrix}K_P&B\\B^\dagger&K_Q\end{pmatrix},\qquad
+S_E=(\phi^\dagger,\chi^\dagger)\mathcal K\begin{pmatrix}\phi\\\chi\end{pmatrix}$$
+
+로 쓰고 $K_Q$가 가역이라고 하자. $\chi\mapsto\chi+K_Q^{-1}B^\dagger\phi$로 완전제곱하면
+
+$$S_E=\phi^\dagger(K_P-BK_Q^{-1}B^\dagger)\phi
++(\chi+K_Q^{-1}B^\dagger\phi)^\dagger K_Q
+(\chi+K_Q^{-1}B^\dagger\phi).$$
+
+따라서 잔여 상태를 적분한 뒤의 **공통 작용**은
+
+$$\boxed{\Gamma_{P,E}[\phi]
+=S_{{\rm bare},E}
++\phi^\dagger K_{\rm eff}\phi+\operatorname{Tr}_Q\ln K_Q,
+\qquad K_{\rm eff}=K_P-BK_Q^{-1}B^\dagger.}$$
+
+관측 장까지 같은 Gaussian 근사로 적분하면
+
+$$\boxed{\Gamma_E=S_{{\rm bare},E}+\operatorname{Tr}_Q\ln K_Q
++\operatorname{Tr}_P\ln K_{\rm eff}
+=S_{{\rm bare},E}+\operatorname{Tr}\ln\mathcal K.}$$
+
+잔여 성분은 관측 장의 질량·전파·기억을 바꾸는 $BK_Q^{-1}B^\dagger$와 진공·기하에 반응하는 $\operatorname{Tr}\ln K_Q$ 양쪽에 남는다. 이것이 ‘보이지 않는 성분이 힘과 곡률에 함께 영향을 준다’는 구상에서 실제로 유도되는 항이다. 질량식만 먼저 정하고 잔여 상태를 지우면 이 공통 연결을 잃는다.
+
+Lorentzian 상태 의존 작용으로 연결한 뒤에는
+
+$$T_{\mu\nu}^{\rm eff}=-\frac2{\sqrt{-g}}\frac{\delta\Gamma_L}{\delta g^{\mu\nu}},\qquad
+J^a=\frac1{\sqrt{-g}}\frac{\delta\Gamma_L}{\delta\mathcal A_a},\qquad
+\frac{\delta\Gamma_L}{\delta\theta}=0$$
+
+를 같은 $\Gamma_L$에서 구한다. 비평형 계산에서는 §1.1·6.4의 초기상태를 보유한 in-in 작용을 쓴다. 공간계량과 연결을 $V$에서 구성한다면 상태 변분에도 그 의존성을 남겨야 한다.
+
+$$\frac{\delta\Gamma}{\delta V}
+=\frac{\delta\Gamma}{\delta h_{ab}}\frac{\delta h_{ab}}{\delta V}
++\frac{\delta\Gamma}{\delta\mathcal A_a}\frac{\delta\mathcal A_a}{\delta V}
++\left.\frac{\delta\Gamma}{\delta V}\right|_{h,\mathcal A}.$$
+
+여기서 함수미분의 시공간 적분은 생략해 썼다. $h$와 $\mathcal A$를 별개로 피팅한 뒤 같은 관계 상태에서 유도했다고 부르지 않는 이유다. 반대로 $\mathcal K$, 상태법칙과 $\ell$의 선택은 이 항등식만으로 정해지지 않으며 직접 연구해야 한다.
+
+### 3.7 무한 잔여와 암흑에너지의 연결에서 실제로 계산할 양
+
+$Q\mathcal H$에 무한히 많은 모드가 있어도 그 자체로 에너지가 무한하거나 양의 암흑에너지가 되지는 않는다. 무한차원 극한은 같은 regulator·기준 상태·국소항에서 취한다. 예를 들어 상대 작용은
+
+$$\Delta\Gamma_Q=-\int_0^\infty\frac{dt}{t}
+\operatorname{Tr}_Q\!\left(e^{-tK_Q}-e^{-tK_{Q,\rm ref}}\right)$$
+
+로 정의할 수 있는지를 먼저 검사한다. 질량 합 규칙, 곡률 결합과 자외선 상태 조건이 이 적분의 존재를 결정한다. 무한차원이라는 말로 발산을 생략하지 않는다. 국소적인 낮은 에너지 전개가 가능할 때 이 같은 작용에는
+
+$$\Gamma_Q\sim\int\sqrt{|g|}\left[c_0+c_1R+
+c_2R^2+c_3R_{\mu\nu}R^{\mu\nu}
+c_F\operatorname{tr}\mathcal F_{\mu\nu}\mathcal F^{\mu\nu}+\cdots\right]$$
+
+가 생기며 계수들은 선택한 $K_Q$의 스펙트럼으로 계산한다. 이 구조는 [열핵 전개](https://arxiv.org/abs/hep-th/0306138)를 적용한 것이며 각각의 $c_i$를 관측마다 독립적으로 맞추자는 제안이 아니다. 단순한 관측/잔여 기저 재분할은 전체 $\operatorname{Tr}\ln\mathcal K$를 바꾸지 않으므로, $\operatorname{Tr}_Q\ln K_Q$ 하나만의 변화를 새 물리 에너지로 세지 않는다. 사영이 물리적으로 변한다면 다른 블록과 상태·응력의 변화도 함께 유지한다.
+
+곡률 의존 작용밀도 $\mathcal U_Q(H)$의 de Sitter 대칭 부분이 얻어졌다면 §5.2의 계량 변분으로
+
+$$\boxed{\rho_Q=\mathcal U_Q-\frac H4\partial_H\mathcal U_Q,\qquad p_Q=-\rho_Q}$$
+
+를 계산한다. 여기까지가 잔여 성분–곡률–진공형 응답의 연결이다. 양의 크기와 실제 후기 우주의 상태까지 얻어야 암흑에너지 후보를 판정할 수 있다. 물질형 점유와 비평형 응력은 같은 상태에서 별도로 남기며 모두 $p=-\rho$로 바꾸지 않는다.
+
+이 공통 유도는 앞의 출발 가설을 **관계 상태 → 거리·위상 수송 → 잔여 작용 → 힘·중력원 → 관측**으로 잇는다. 기존 세 채널 코사인 식은 이 사슬의 $K_{\rm eff}$에 대한 특정 후보일 뿐이다. 앞으로의 수정은 관계 상태가 어떤 차원·대수·스펙트럼을 선택하는지부터 이 공통 사슬을 따라 진행한다.
+
+본문 식의 [계산 동반 코드](../verify/ce_relation_geometry.py)는 네 성분 상태의 계량, 1·2·3개의 독립 방향, Christoffel 기호에서 얻은 $R=8/\ell^2$, rank-2 비가환 연결의 직접 curl과 사영식, 부분 질문의 양성 잔여, Gaussian 블록 행렬식까지 검산한다. [수치 결과](../verify/ce_relation_geometry.json)에서 직접 curl의 유한차분 간격을 절반으로 줄이면 차이는 $1.61\times10^{-9}$에서 $4.03\times10^{-10}$ 미만으로 감소했고, 나머지 행렬 항등식 차이는 $1.78\times10^{-15}$ 미만이었다. 이 수치는 관측 RMSE가 아니라 새 공통 유도의 수학적 검산이다. 물리적인 상태·대수·스펙트럼이 선택되기 전에는 뒤의 기존 관측 점수를 이 유도의 예측으로 승계하지 않는다.
+
+## 4. 공통 질량 스펙트럼과 상대 양자작용
+
+### 4.1 본문에서 채택하는 기준 모형
+
+**[공리]** $S$를 $S^3=I$인 세 채널 순환행렬로 두고
+
+$$
+\mathcal M^2(\theta)=sI+
+\epsilon\left(e^{i\theta/3}S+e^{-i\theta/3}S^\dagger\right),
+\qquad s>2\epsilon>0
+$$
+
+를 택한다. 세 **복소** 스칼라의 질량제곱은
+
+$$
+\boxed{x_j(\theta)=s+2\epsilon\cos\frac{\theta+2\pi j}{3}},
+\qquad j=0,1,2.
+$$
+
+질량 양성은 위 부등식에서 따른다. 위상의 운동항, 곡률결합, 초기 상태와 중력계수는 추가 입력이다. 로컬 [38장](07_확률차원_검증기록/38_확률적_차원과_양자_거시_공동식.md)의 세 실수 보손 예와는 행렬식 계수가 다르다. 원격 [여섯 채널 암흑 후보][S19]의 보손·페르미온 조합도 별도 모형이며, 그 안정성 정리를 여기로 옮기지 않는다.
+
+**이 행렬과 코사인이 나오는 이유.** 채널 기저를 $|a\rangle\mapsto e^{i\alpha_a}|a\rangle$로 바꾸면 $K_{ab}\mapsto e^{i(\alpha_b-\alpha_a)}K_{ab}$이므로 $K_{12}K_{23}K_{31}$의 위상은 변하지 않는다. 세 연결이 모두 존재할 때 두 연결의 위상은 기저 선택으로 없앨 수 있지만 고리 전체의 위상은 남는다. 이를 세 연결에 $\theta/3$씩 배분하는 것은 기저 선택이다. 반면 대각항을 모두 $s$, 연결의 크기를 모두 $\epsilon$으로 놓는 것은 **추가 순환 대칭 가정**이다. 세 채널이라는 선택까지 사영만으로 증명한 것은 아니다.
+
+순환행렬의 고유벡터를 $v_j$라 하면 $Sv_j=\omega_jv_j$, $\omega_j=e^{2\pi i j/3}$이다. 따라서
+
+$$\mathcal M^2v_j=\left[s+\epsilon e^{i\theta/3}\omega_j+
+\epsilon e^{-i\theta/3}\omega_j^*\right]v_j
+=\left[s+2\epsilon\cos\frac{\theta+2\pi j}{3}\right]v_j.$$
+
+즉 코사인은 독립적으로 가정한 적합함수가 아니라, 이 Hermitian 순환행렬을 대각화한 결과다. $\theta\mapsto\theta+2\pi$에서 고유값의 집합은 같지만 종 표지는 순열된다. 점유가 서로 다를 때는 질량과 점유의 표지를 함께 추적해야 하며, 매 시점 질량순으로 재정렬하고 기존 점유를 그대로 붙이면 다른 상태를 계산하게 된다.
+
+### 4.2 위상에 무관한 순간과 한 루프 상쇄
+
+**[산출]** 같은 $s,\epsilon$에서
+
+$$
+\sum_jx_j=3s,\qquad \sum_jx_j^2=3s^2+6\epsilon^2,
+$$
+
+$$
+D(s,\theta)=\prod_jx_j=s^3-3s\epsilon^2+2\epsilon^3\cos\theta.
+$$
+
+첫 두 순간은 위상에 무관하지만 행렬식은 위상을 기억한다. 평탄 배경의 상대 한 루프 함수는
+
+$$
+\boxed{\mathcal U(s,\epsilon,\theta)=
+\frac1{32\pi^2}\Delta_\pi\sum_jx_j^2
+\left[\ln\frac{x_j}{\mu^2}-\frac32\right]},
+\qquad \Delta_\pi F=F(\theta)-F(\pi).
+$$
+
+복소 스칼라의 자유도 수가 계수를 정한다. 같은 규약에서 상대 차이의 발산과 $\mu$ 의존성은 위 합 규칙으로 상쇄된다. 이는 지정한 한 루프 기여의 결과이며 절대 진공항이나 추가 상호작용까지 정한 것은 아니다. [공통 미분식][S20]이 이 정규화를 사용한다.
+
+**행렬식과 차감이 나오는 이유.** 주어진 배경에서 복소 Gaussian 장을 적분하면 $\int D\psi D\psi^*\exp[-\psi^*\mathcal D\psi]\propto(\det\mathcal D)^{-1}$이다. 그러므로 유효작용에는 $\operatorname{Tr}\ln\mathcal D$가 생긴다. 실수 장은 이 계수의 절반이다. 일정 질량에서 운동량 적분을 재규격화한 한 복소 종의 기여가 $x^2[\ln(x/\mu^2)-3/2]/(32\pi^2)$이므로 위 상대 함수가 따른다.
+
+순간 상쇄는 $\sum_j\omega_j=\sum_j\omega_j^2=0$에서 직접 나온다. 예를 들어 $\sum_j\cos[(\theta+2\pi j)/3]=0$, $\sum_j\cos^2[(\theta+2\pi j)/3]=3/2$를 대입하면 위 두 합 규칙을 얻는다. 따라서 $\partial_{\ln\mu}\mathcal U=-\Delta_\pi\sum_jx_j^2/(16\pi^2)=0$이다. 차감은 위상 변화의 상대 반응을 유한하게 계산하게 하지만, 전체 작용에 허용되는 위상 독립 진공상수를 선택하는 원리는 아니다.
+
+[유도식 검산 코드](../verify/ce_derivation_checks.py)는 직접 행렬 대각화와 코사인 고유값, 60자리 질량미분과 §7.1의 식, §6.5의 질량 곡률, §6.4의 흡수 스펙트럼 적분과 $\delta Z$를 각각 비교한다. 여섯 검사점에서 행렬 고유값 차이는 $2.23\times10^{-16}$ 미만, 나머지 고정밀 항등식 차이는 $3.12\times10^{-61}$ 미만이었다. [수치 기록](../verify/ce_derivation_checks.json)은 지정한 전제 아래의 유도 검산이며 물리적 상태 선택이나 관측 성공을 증명하지 않는다.
+
+### 4.3 곡률 공간의 상대 작용
+
+**[공리]** 같은 계량·연산자 연결·공통 곡률결합 $\xi$에서
+
+$$
+\mathcal D_\theta=-\nabla_g^2I+\mathcal M^2(\theta)+\xi RI,
 \qquad
-q_{\rm ext}=-D^{-1}W_0(-De^{-D}).
+\Delta\Gamma_E=\operatorname{Tr}\ln\mathcal D_\theta
+-\operatorname{Tr}\ln\mathcal D_\pi
 $$
 
-다른 실가지는 $q=1$에 해당한다. 이 축약은 지정 toy family의 산출이지
-양자 질량행렬이 $A$라는 결론이 아니다.
+를 비교한다. 실수인 유클리드 행렬식을 위해 연산자의 양성을 요구하며, 적외선 수렴은 별도로 확인한다. 매끄럽고 경계가 없는 4차원 공간에서 처음 세 열핵 발산계수의 위상 차이는 같은 순간 조건으로 상쇄된다. 일반 열핵 계산법은 [Vassilevich의 정리](https://arxiv.org/abs/hep-th/0306138)를 따르고, 그 구조에 위 스펙트럼을 대입한 것이 후보의 계산이다.
 
-### 3.5 차원, 에스컬레이터와 자유매개변수
+경계항, 추가 장, 다른 연결·상태를 넣으면 상쇄 조건을 다시 확인해야 한다. 상대 한 루프 유한성을 모든 루프의 재규격화 가능성이나 양자중력의 완성으로 확대하지 않는다.
 
-Hodge의 $d=3$ 결과는 3+1 시공간, 게이지 계층 또는 모든 상수의 값을
-자동으로 산출하지 않는다. 공간 branch에서 시간 차원을 추가하는
-에스컬레이터는 물리 사상이며, 자유매개변수 감사는 어느 관계가 정리,
-외부 입력, 경험식인지 분리한다. 수치 관계의 수가 많아도 독립 parameter
-count가 줄었다는 증명은 별도 Jacobian·RG·likelihood 분석을 요구한다.
+## 5. 일정 곡률에서의 중력원
 
-### 3.6 강한 CP, 중성미자와 바리온 비대칭
+### 5.1 고정 4차원 공간의 무한 모드합
 
-현재 portal EFT는 QCD theta angle을 동적으로 제거하는 axion mechanism을
-포함하지 않으므로 strong CP 해법을 제공하지 않는다. 또한 정확 $Z_2$
-singlet만으로는 표준 Weinberg operator나 Majorana mass의 기원을 완결하지
-않으며, neutrino mass에는 추가 field 또는 operator가 필요하다. baryon
-asymmetry에는 baryon violation, CP violation, departure from equilibrium,
-washout와 열이력이 필요하다. 이들은 가능한 확장 조건이지 CE 코어의
-산출이 아니다.
+**[공리]** 반지름 $H^{-1}$인 유클리드 4-구면, 일정한 $\theta$, 공통 $\xi\ge0$를 택한다. Lorentzian 해석은 유클리드 정칙 de Sitter 상태를 기준으로 한다. $H$는 곡률척도이며 현재 관측된 허블상수를 도출한 값이 아니다.
 
-### 3.7 페르미온 질량, 전이와 인과성
-
-Yukawa 존재구성은 질량을 실현하지만 hierarchy를 선택하지 않는다.
-게이지 격자 전이 ansatz는 local light-cone, signal speed, 초기값 문제와
-gauge constraint를 만족해야 한다. 고정점 control parameter의 전이구간은
-수학적 bifurcation 또는 crossover와 물리 phase transition을 구별해야
-하며, 임계값을 관측 fitting 뒤에 정하면 예측이 아니다.
-
-### 3.8 위상공간과 자기재귀 대칭
-
-상태공간·게이지궤도·경로공간의 위상은 measure, compactness, boundary,
-gauge quotient를 지정할 때만 수학적 대상이 된다. 자기·타공간 재귀의
-대칭은 지정한 연산자와 불변부분공간에서 검증할 수 있는 조건부 구조다.
-이를 우주의 실제 복제, 인과적 wormhole 또는 무한 에너지 채널로 읽는
-부모 주장은 활성 정본에 없으며, 물리 구현은 미완성이다.
-
-## 4. 공변 EFT와 유한 Euclidean 경로적분
-
-Poisson 수학을 물리장과 혼동하지 않기 위해, CE는 독립 스칼라장을 가진
-명시적 EFT branch를 따로 둔다. 시공간 좌표의 함수인 실수장 $\phi(x)$,
-장배치의 이차 변분 연산자 $\mathcal H=\delta^2S$, 그리고 Ricci scalar
-$R(x)$는 서로 다른 대상이다. 특히 Hessian을 물질장이나 곡률로
-동일시하지 않는다. 이 구분은 gauge theory에서 gauge fixing, ghost,
-measure와 재규격화가 따로 필요하다는 사실과도 연결된다.
-
-**[공리: EFT branch]** CE가 보존하는 작용은 다음 $Z_2$ singlet-portal
-모형이다.
+구면 모드의 중복도와 보조량은
 
 $$
-S_{\rm EFT}=\int d^4x\sqrt{-g}\left[
-\frac12(M_{\rm Pl}^2-\xi\phi^2)R-\Lambda_0
--\frac12(\nabla\phi)^2+\mathcal L_{\rm SM}^{\rm kin+gauge+Yuk}
--V(H,\phi)\right],
+d_n=\frac{(n+1)(n+2)(2n+3)}6,\quad
+c_n=n(n+3)+12\xi,\quad t_n=s+H^2c_n,
 $$
 
 $$
-V(H,\phi)=V_H(H)+\frac12m_\phi^2\phi^2
-+\frac{\lambda_\phi}{4}\phi^4
-+\frac{\lambda_{H\phi}}2\phi^2H^\dagger H.
+B(t)=(t-2\epsilon)(t+\epsilon)^2,\qquad
+\kappa=2\epsilon^3(1+\cos\theta).
 $$
 
-여기서 $H$는 표준모형 Higgs doublet, $\xi$와 $\lambda$들은 무차원
-결합, $m_\phi$는 질량 매개변수다. $\phi\mapsto-\phi$ 대칭과
-$M_{\rm Pl}^2-\xi\phi^2>0$, $\lambda_H>0$, $\lambda_\phi>0$,
-$\lambda_{H\phi}>-2\sqrt{\lambda_H\lambda_\phi}$를 적용 정의역으로
-둔다. 마지막 조건은 큰 장값에서 quartic potential이 아래로 유계가
-되게 하는 **[정리]**의 전제다.
-
-작용을 변분하면 $\phi$의 운동방정식과 총 stress의 on-shell 보존을
-얻는다. $H^\dagger H=v^2/2$, $R=\bar R$, $\langle\phi\rangle=0$인
-$Z_2$ 보존 branch에서
+**[산출]** [곡률 스펙트럼 연구][S30]의 상대 작용밀도는
 
 $$
-m_{\phi,\rm eff}^2=m_\phi^2+\xi\bar R+
-\frac{\lambda_{H\phi}}2v^2.
+\boxed{\mathcal U_H=
+\frac{3H^4}{8\pi^2}\sum_{n=0}^{\infty}d_n
+\ln\left(1+\frac{\kappa}{B(t_n)}\right)}.
 $$
 
-$m_{\phi,\rm eff}^2>0$이면 그 진공은 국소 안정하고 선형 Higgs–$\phi$
-혼합은 없다. 가장 가벼운 odd 양자가 안정하다는 결과는 가능한
-암흑물질 EFT 구조를 제공하지만, relic density나 특정 GeV 질량을
-산출하지는 않는다. 가능한 입자와 실제 우주 abundance는 다른 문제다.
+큰 $n$에서 중복도는 $O(n^3)$, 로그는 $O(n^{-6})$이므로 합은 수렴한다. 이는 $H/\sqrt{s}$를 작게 전개하지 않은 일정 곡률의 한 루프 결과다. $n$은 공간 차원이나 CMB 다중극이 아니다. 양의 가중치 아래 $\theta=\pi$는 최소, $\theta=0$은 최대이며, 곡률을 포함했다고 최대점이 안정 진공으로 바뀌지 않는다.
 
-Lorentzian 경로적분은 진폭의 진동 적분이고, Euclidean 적분은 특정
-조건 아래 양의 측도를 준다. scalar–Higgs bosonic truncation, 고정
-Euclidean 배경, 유한 격자와 coercive potential을 **[공리]**로 택하면
+### 5.2 작용밀도와 상대 에너지밀도
+
+곡률 의존 작용밀도를 그대로 Einstein 방정식에 넣으면 계량 반응을 빠뜨린다. 부피 $V_4=8\pi^2/(3H^4)$를 포함해 변분하면
 
 $$
-Z_N=\int_{\mathbb R^N}e^{-S_{E,N}(z)}\,d^Nz
+\boxed{\Delta\rho_{\rm dS}
+=\mathcal U_H-\frac H4\partial_H\mathcal U_H
+=\frac12(s\partial_s+\epsilon\partial_\epsilon)\mathcal U_H}.
 $$
 
-가 유한하고 다항식 모멘트가 존재한다는 **[정리]**가 성립한다. 이는
-유한 cutoff의 정확한 결과다. continuum limit, reflection positivity,
-renormalized parameter의 cutoff 독립성 및 Lorentzian 재구성은 여전히
-**[미완성]**이다. 바닥이 단단한 유한 차원 그릇에서는 물이 잘 담긴다는
-비유는 유한 측도의 직관을 주지만, continuum QFT 전체를 담는다고
-말하지 않는다.
-
-고립된 비퇴화 Euclidean 최소점에서는 Laplace 근사가 작용차뿐 아니라
-Hessian determinant와 measure prefactor의 비를 포함한다. 따라서
-$e^{-1}$은 $\Delta S_E/\hbar=1$과 prefactor 비 1을 함께 택한 특수
-산출일 뿐 보편 상수가 아니다. 영모드, 음의 모드, gauge orbit가 있으면
-집단좌표·gauge fixing·적분 contour가 추가로 필요하다.
-
-### 4.1 Z2 portal 작용과 차원
-
-portal branch의 독립장 $\phi$와 Hessian, Ricci scalar를 구분한 뒤 작용을
-택한다. 4차원에서 $[\phi]=1$, $[R]=2$, $[\lambda_\phi]=[\lambda_{H\phi}]
-=[\xi]=0$이므로 각 Lagrangian 항의 차원은 4다. 이 차원 계산은 지수나
-확률 인자에 차원 있는 양을 넣지 못하게 하는 경계다.
-
-### 4.2 Quartic 안정성
-
-큰 장값에서는 quartic 부분만 안정성을 정한다. $\lambda_H>0$,
-$\lambda_\phi>0$, $\lambda_{H\phi}>-2\sqrt{\lambda_H\lambda_\phi}$이면
-두 변수의 quartic form은 아래로 유계다. 이는 완전제곱 또는 양의
-이차형식 판정으로 얻는 **[정리]**이며, loop-level potential과 cutoff
-독립성까지 뜻하지 않는다.
-
-### 4.3 운동방정식과 stress 보존
-
-작용을 $\phi$로 변분하면
+첫 등식의 $H/4$는 4차원 계량 변분에서 나온다. 상수 Weyl 변환 $g_{\mu\nu}\mapsto e^{2\sigma}g_{\mu\nu}$에서 $V_4\mapsto e^{4\sigma}V_4$, $H\mapsto e^{-\sigma}H$이므로 $\delta(V_4\mathcal U_H)=\sigma V_4(4\mathcal U_H-H\partial_H\mathcal U_H)$다. de Sitter 대칭 응력의 trace에 맞추면 위 에너지밀도를 얻는다. 마지막 등식은 질량차원에 따른 Euler 항등식 $H\mathcal U_{H,H}+2s\mathcal U_{H,s}+2\epsilon\mathcal U_{H,\epsilon}=4\mathcal U_H$에서 따른다. 같은 양의 수렴급수는
 
 $$
-\Box\phi-(m_\phi^2+\xi R+\lambda_{H\phi}H^\dagger H)\phi
--\lambda_\phi\phi^3=0.
+\boxed{\Delta\rho_{\rm dS}=
+\frac{3H^6}{16\pi^2}\sum_{n=0}^{\infty}
+d_nc_n\frac{\kappa B'(t_n)}{B(t_n)[B(t_n)+\kappa]}},
+\qquad B'(t)=3(t^2-\epsilon^2).
 $$
 
-모든 장의 on-shell 방정식과 미분동형사상 불변성을 함께 쓰면
-$\nabla^\mu T_{\mu\nu}^{\rm total}=0$이다. portal이 있으면 개별
-sector stress는 교환항 때문에 따로 보존되지 않을 수 있다.
+선언한 정의역에서 $\Delta\rho_{\rm dS}\ge0$이며, de Sitter 대칭의 상대 압력은 $\Delta p=-\Delta\rho$다. $\xi=0$에서는 $n=0$ 모드의 작용밀도가 $H^4$에 비례하여 상대 중력원에서 상쇄된다. 일정 곡률의 이 상쇄를 일반 시공간의 모든 곡률제곱 효과가 사라진다는 명제로 바꾸지 않는다.
 
-### 4.4 유한 Euclidean cutoff 측도
+### 5.3 계산이 닫힌 부분과 남는 부분
 
-고정 Euclidean 배경, 유한 격자, 양의 kinetic operator와 coercive
-potential을 택하면 $S_{E,N}$은 유한차원 연속 함수다. 따라서
+같은 코드의 로컬 재실행에서 24개 기준점의 모드합과 디감마 해석식은 최대 상대차 $5.105\times10^{-16}$로 일치했다. 절단 수 증가와 계량 미분도 대조했다. 이는 [재현기록](참조/공통스펙트럼_재현기록.json)에 적힌 수치 검산이며 물리적 상태 선택의 증명이 아니다.
 
-$$
-Z_N=\int_{\mathbb R^N}e^{-S_{E,N}(z)}\,d^Nz<\infty
-$$
-
-이고 다항식 모멘트도 존재한다. 이는 finite cutoff의 정리이며 continuum
-limit, reflection positivity, Lorentzian reconstruction은 포함하지 않는다.
-
-### 4.5 Laplace saddle
-
-고립된 비퇴화 최소점 $z_j$와 양의 Hessian $\mathcal H_j$에서 국소
-Laplace 전개는
+**[미완성]** 절대 중력식에는 여전히
 
 $$
-Z_j\simeq \mathcal N_j e^{-S_E(z_j)/\hbar}
-\left(\det\frac{\mathcal H_j}{2\pi\hbar}\right)^{-1/2}.
+3M_{{\rm Pl},R}^2H^2
+=\Lambda_R+\rho_{\rm ref}^{\rm ren}(H)
++\Delta\rho_{\rm dS}(H,\theta)
 $$
 
-따라서 작용차 외에 determinant와 measure prefactor가 필요하다. 영모드,
-음의 모드, gauge orbit는 이 식의 전제를 깨므로 별도 처리가 필요하다.
+가 필요하다. $\Lambda_R$는 에너지밀도 단위의 재규격화된 진공항이다. 기준 부문의 곡률 의존 응력은 일반적으로 상수 하나가 아니다. 이 식은 일정 곡률의 자기일관성 조건이며, 시간 의존 우주 이력과 비평형 상태의 완성된 진화식은 아니다.
 
-## 5. 끼임에서 양의 확률과 접힘으로 가는 bridge
+**[절대 예측의 비유일성 검사]** 작용에 위상 독립 상수 $-\int\sqrt{-g}\,C$를 추가하면 고정 배경에서의 위상 차감과 그 질량미분은 변하지 않지만 중력원은 $C$만큼 변한다. 따라서 상대 스펙트럼 정보가 같아도 절대 팽창은 달라질 수 있다. [수치 증인](../verify/common_spectrum_stationary_state.json)의 `vacuum_ambiguity`는 같은 스펙트럼·물질량과 정지한 최소점 π에서 $C/V_*=0,1$을 각각 넣었다. AP RMSE는 9.35598과 0.98857로 달랐다. 상수항을 관측에 최적화하지 않았으며, 작은 점수의 경우를 새로운 CE 예측으로 선택하지 않았다. 두 해의 고정 배경 상대 작용은 같지만 실제 곡률이 달라지므로 모든 곡률 의존 반응까지 같다는 뜻은 아니다. 공통 상대작용의 검산만으로는 이 상수항을 정하는 법칙을 대신할 수 없다.
 
-EFT와 Euclidean 측도가 각각 일관되더라도, 그것만으로 양자 선택이
-Poisson offspring을 만든다는 결론은 나오지 않는다. CE의 핵심 병목은
-다음 화살표다.
+## 6. 물질 점유, 암흑 표현과 우주 이력
 
-$$
-\text{CE+SM amplitude}
-\longrightarrow\text{reduced dynamics}
-\longrightarrow\text{positive jump process}
-\longrightarrow A_{ij}\geq0.
-$$
+### 6.1 같은 질량이 에너지 교환을 정하는 범위
 
-여기서 $A_{ij}$는 type $i$ 사건 하나가 type $j$ 자손을 만드는 평균
-수다. 이 화살표를 닫으려면 환경 상태와 상호작용을 지정하고, 완전양성
-reduced dynamics, 양의 Kossakowski 행렬, population sector의 폐쇄,
-Markov·독립 증가량 근사, 그리고 genealogy의 식별을 함께 제시해야 한다.
-현재 이 묶음은 **[미완성]**이다. 부호 있는 Hessian 또는 질량행렬
-성분을 제곱해 $A_{ij}$라고 부르는 지름길은 허용되지 않는다.
-
-접힘을 형식화하는 별도 도구는 등호이전(pre-equality) 수학이다. 유한
-후보 $x$에 무차원 cost $E(x)$를 주고 $\beta$를 선택 scale로 두면
-Gibbs 재가중은 후보 질량을 낮은 cost 쪽으로 농축한다. compact·noncompact
-공간, Gamma 수렴, 조건 자체가 후보가 되는 joint manifest, Markov/Kleisli
-커널과 tropical 극한까지가 조건부 **[정리]**로 전개되어 있다. 이 층에서
-‘manifest’는 한 후보 또는 조건–값 쌍으로 수렴하는 수학적 현상이지,
-그 자체가 물리적 측정 결과라는 선언은 아니다.
-
-경로공간 bridge에서는 비선택 경로집합 위의 잔류 측도와 커널
-$K_\phi(x,\gamma)$를 이용해 pushforward 장 후보를 정의할 수 있다.
+**[공리]** 위상을 운동계수 $f^2>0$인 장으로 올리고, 비상대론적 입자종의 질량을 $m_j(\theta)=\sqrt{x_j(\theta)}$, 수밀도를 $n_j$라 하자. 생성·소멸을 무시하는 단열 범위에서 $\dot n_j+3Hn_j=0$이다. 고정 $f$의 최소 결합 저에너지 가지에서는
 
 $$
-\phi_\beta(x)=\int_{\Gamma_{\rm ns}}
-K_\phi(x,\gamma)\,\nu_{{\rm ns},\beta}(d\gamma).
+f^2(\ddot\theta+3H\dot\theta)+U_\theta
++\sum_jn_jm_{j,\theta}=0,
 $$
 
-이 식은 수학적 정의다. $K_\phi$의 물리적 식별, 잔류장의 국소성·공변성,
-good-rate 작용과 physical prior, 그리고 잔류 측도와 실제 접힌 에너지의
-동일시는 **[미완성]**이다. 종이접기 비유가 여기서 멈춰야 하는 이유도
-같다. 접힌 면을 그릴 수 있어도, 어떤 힘이 그 면을 장으로 만드는지는
-아직 작용 수준에서 쓰이지 않았다.
-
-### 5.1 Reduced dynamics와 GKSL/Kossakowski
-
-계와 환경의 결합 상태에서 환경을 부분대각합해 얻는 reduced dynamics가
-완전양성 trace-preserving map인지 먼저 확인해야 한다. Markovian limit의
-GKSL generator에는 Kossakowski 행렬의 양의 준정부호성이 필요하다.
-decoherence라는 말만으로 이 조건이나 CE+SM 작용에서의 유도는 얻지 못한다.
-
-### 5.2 Population closure, Markov와 genealogy
-
-양자 밀도행렬의 coherence를 버려 population sector가 닫혀야 양의 jump
-rate를 쓸 수 있다. coarse-graining time, 독립 증가량, Markov 근사와
-offspring genealogy를 고정한 뒤에만 $A_{ij}\geq0$를 다형 Poisson 평균으로
-식별할 수 있다. 이 단계들은 현재 함께 **[미완성]**이다.
-
-### 5.3 비선택 잔류측도와 phi pushforward
-
-선택되지 않은 경로집합 $\Gamma_{\rm ns}$의 raw mass와 conditional shape를
-구분한 뒤 kernel $K_\phi$를 택하면
-
 $$
-\phi_\beta(x)=\int_{\Gamma_{\rm ns}}K_\phi(x,\gamma)
-\nu_{{\rm ns},\beta}(d\gamma)
+\dot\rho_j+3H\rho_j=n_jm_{j,\theta}\dot\theta,
+\qquad \rho_j=n_jm_j.
 $$
 
-를 정의할 수 있다. 이는 수학적 pushforward이지 잔류장이 국소·공변
-물질장이라는 증명은 아니다.
+위상장 에너지의 교환항은 반대 부호이므로 총 연속방정식이 닫힌다. $U$는 이 가지의 총 퍼텐셜이며, 상대 루프항 외에 허용된 항과 기준값을 밝혀야 한다. 비최소 곡률항까지 유지하면 장 방정식과 중력 틀의 변환도 함께 수정한다.
 
-### 5.4 Euclidean 보조축
+물질 질량과 위상에 가하는 힘을 서로 다른 자유함수로 넣지 않는 것이 이 연결의 장점이다. 그러나 $n_j$와 초기 상태가 없으면 암흑물질의 양은 정해지지 않는다. 확률에 에너지 척도를 곱한 기대값과 실제 국소 점유 에너지 역시 구분해야 한다.
 
-양의 자기수반 $A$에 대해
+**힘과 교환항의 유도.** 위 식은 스칼라 작용과 질량이 변하는 입자의 작용
 
-$$
-\Phi(\chi)=e^{-\chi A}\Phi(0),\qquad \chi\geq0
-$$
+$$S_{\theta+m}=\int d^4x\sqrt{-g}\left[-\frac{f^2}{2}
+g^{\mu\nu}\partial_\mu\theta\partial_\nu\theta-U(\theta)\right]
+-\sum_{j,A}\int m_j(\theta)\,ds_A$$
 
-는 수축 semigroup이며 고유모드를 $e^{-\chi\omega}$로 억제한다.
-$\chi A$는 무차원이어야 한다. 이를 물리적 두 번째 시간이나 접힘 방향으로
-읽는 것은 별도 공리이며 인과성·unitarity·초기값 문제가 남는다.
+을 같은 $\theta$로 변분한 결과다. 입자 작용의 변분은 $-\int m'_j\delta\theta\,ds$이고, 차가운 균질 기체에서는 단위 부피당 $-n_jm'_j\delta\theta$가 된다. 한편 $\Box\theta=-\ddot\theta-3H\dot\theta$이므로 위상 방정식의 힘 부호와 $3H$ 항이 정해진다. 여기서 $n_j$는 입자와 반입자를 합친 실제 수밀도다.
 
-### 5.5 열린 bridge 의무
+입자수 보존식으로 $\partial_t(n_jm_j)=-3Hn_jm_j+n_jm'_j\dot\theta$를 얻는다. 위상 방정식에 $\dot\theta$를 곱하면
 
-bridge를 닫으려면 완결된 CE+SM 작용과 진공, 환경 state와 coupling,
-CP reduced dynamics, positive Kossakowski matrix, population closure,
-Markov/genealogy, physical kernel, species current와 total stress를
-공동으로 제시해야 한다. 어느 하나를 수치 근접이나 비유로 대신할 수 없다.
+$$\dot\rho_\theta+3H(\rho_\theta+p_\theta)
+=-\sum_jn_jm'_j\dot\theta,\qquad
+\rho_\theta=\tfrac12 f^2\dot\theta^2+U,\quad
+p_\theta=\tfrac12 f^2\dot\theta^2-U.$$
 
-## 6. 확률 코어, 혼합 통계량과 수치 체인
+두 식을 더하면 교환항이 상쇄된다. 따라서 같은 $m_j$를 유지하는 한 질량 변화로 얻는 물질 에너지는 위상장이 잃는 에너지와 같다. 별도 마찰계수나 임의의 물질 생성함수를 더할 필요가 없는 이유다. 실제 생성이 일어나거나 입자 운동량·양자 상관이 중요하면 이 차가운 입자 근사 대신 §6.4의 상태 식을 사용한다.
 
-열린 bridge를 분명히 둔 상태에서, 일단 비음수 $A_{ij}$가 주어지면
-다형 Poisson 코어는 정확히 풀린다. 모든 행합이 $D$인 경우 균일 벡터
-$\boldsymbol1$에 대해 $\boldsymbol q=q_{\rm ext}\boldsymbol1$로
-축약되고, 3장의 Lambert $W$ 해가 그대로 적용된다. 일반 다형 모형에서는
-최소 고정점 벡터를 쓰며 Perron 임계성과 비균일 전달을 별도로 다룬다.
-이것은 확률모형의 정리이지 임의의 QFT가 그 모형이라는 명제가 아니다.
+### 6.2 dust와 상수 진공의 역할
 
-CE의 균일 toy sector는 $B\geq0$, $B\boldsymbol1=\boldsymbol1$인
-row-stochastic 전달 연산자를 택해
+[최신 연구 24–25](04_중력_극한과_FLRW/25_공유_영수증_먼지_상수진공_FLRW.md)는 한 에너지 장부를 중복 배정하지 않은 뒤, dust와 상수 진공을 독립적으로 보존시키는 경우를 계산한다. 평탄 FLRW에서 교환이 없으면
 
 $$
-A=dI+\delta B,\qquad
-A\boldsymbol1=(d+\delta)\boldsymbol1,\qquad
-D_{\rm eff}=d+\delta
+\rho_m=\rho_{m*}(a/a_*)^{-3},\qquad
+\rho_\Lambda=\rho_{\Lambda*},\qquad
+H^2=\frac{\rho_m+\rho_\Lambda}{3M_{\rm Pl}^2}.
 $$
 
-로 정의한다. $I$는 항등행렬, $d$는 Hodge branch에서 읽은 공간 재귀
-깊이, $\delta$는 다음 전자약 readout이다. $D_{\rm eff}$가 균일
-부분공간에서 정확히 닫힌다는 것은 **[산출]**이다. $\delta\to A$가
-자연의 실제 전달법칙이라는 것은 **[공리]**다.
+이것은 명시한 성분과 배경의 전파 법칙이다. 질량이 변하며 교환하는 앞 절의 가지에는 그대로 적용할 수 없다. 압력이 음수라는 사실만으로 실제 암흑에너지가 확인되는 것도 아니다. 정규화된 총 응력, 상태 요동, 섭동 안정성과 구조 형성을 함께 검사해야 한다.
 
-one-Higgs-doublet 표준모형의 중성 질량행렬에서 혼합각
-$\tan\theta_W=g'/g$를 정의하면, 지정한 $W^3/B$ 기저의 정규화된
-비대각 진폭 제곱은
+### 6.3 초기 준비와 미래 경계
+
+**[후기 성장의 조건부 계산]** 원본의 유효 물질 질량 $m(\theta)$를 한 개의 압력 없는 암흑 유체에 적용했다. $q=\partial_\theta\ln m$, $N=\ln a$, $h_N=H_N/H$로 두면, 스칼라의 질량·허블 척도보다 충분히 짧은 파장에서
 
 $$
-\delta=\sin^2\theta_W\cos^2\theta_W,\qquad 0\leq\delta\leq\frac14.
+\delta_{b,NN}+(2+h_N)\delta_{b,N}
+=\frac32(\Omega_b\delta_b+\Omega_c\delta_c),
+$$
+$$
+\delta_{c,NN}+(2+h_N+q\theta_N)\delta_{c,N}
+=\frac32[\Omega_b\delta_b+\Omega_c(1+2q^2/Z)\delta_c].
 $$
 
-범위 부등식은 $s(1-s)$의 초등적 최대값으로 얻는 **[정리]**다.
-$\delta$를 끼임의 세기 또는 재귀 증분으로 읽는 것은 CE readout
-**[공리]**다. $\sin^2\theta_W=4\alpha_s^{4/3}$은 동일 scheme·scale에서
-시험하는 **[경험식]**이며, $\alpha_s$는 외부 입력이다. 따라서 이 수치
-체인은 계산 가능한 benchmark이지만 우주론의 제1원리 유도가 아니다.
+질량 변화에 따른 마찰항과 스칼라 힘을 함께 유지했다. 결합 암흑에너지의 작용·질량 결합은 [Pettorino의 논문](https://arxiv.org/abs/1305.7457)을 참고하며, 결합의 부호와 정규화는 여기서 정의한 $q$를 따른다. 원고의 세 질량 고유상태를 독립 유체로 전파한 완전한 섭동식은 아니므로, 고유상태별 상대 밀도 요동은 이 근사에 포함하지 않는다.
 
-### 6.1 다형 Poisson과 균일 축약
+[코드](../verify/ce_obs32_growth.py)와 [결과](../verify/ce_obs32_growth.json)는 $a_i=0.01$에서 같은 공급된 단열 초기 요동을 사용한다. 현재 성장 전달값 $D$는 기준 0.778981에 비해 여섯 후보에서 약 0.0446–1.1962% 증가했고, $d\ln D/d\ln a$는 기준 0.51280에 비해 0.51342–0.52984였다. 기준 해를 평탄 ΛCDM 해석식과, 후보를 DOP853·Radau로 교차 검산했다. 이는 관측 오차 감소율이 아니다. 원시 진폭과 초기 전달함수를 유도하지 않았으므로 $\sigma_8$ 또는 관측 $f\sigma_8$의 예측·RMSE로 바꾸지 않았다. 파장이 허블·스칼라 질량 척도와 가까워지면 이 근사 대신 완전한 섭동식을 풀어야 한다.
 
-type $i$가 type $j$ 자손을 독립 Poisson으로 만들고 평균행렬이
-$A_{ij}\geq0$일 때 최소 소멸확률은
+**[고유상태별 후속 검산]** [다중 유체 코드](../verify/ce_obs32_multifluid_growth.py)와 [결과](../verify/ce_obs32_multifluid_growth.json)는 같은 배경과 같은 단열 초기 요동에서 세 고유상태를 각각 전파한다. 각 상태의 보존 입자 수가 같고 전환·충돌이 없다고 가정해 $\rho_j=\rho_c\sqrt{x_j}/\sum_k\sqrt{x_k}$, $q_j=x_{j,\theta}/(2x_j)$로 둔다. 바리온에는 $q_b=0$을 쓰며, 같은 짧은 파장 극한에서
 
-$$
-q_i=\exp\!\left[-\sum_jA_{ij}(1-q_j)\right]
-$$
+$$\delta_{i,NN}+(2+h_N+q_i\theta_N)\delta_{i,N}
+=\frac32\sum_j\Omega_j\left(1+\frac{2q_iq_j}{Z}\right)\delta_j$$
 
-의 최소해다. 공통 행합 $D$이면 균일 벡터가 불변이어서 scalar fixed
-point로 축약된다. 이는 비음수·독립 offspring의 **[정리]**다.
+를 푼다. 밀도 가중치의 시간미분도 총 성장률에 포함했다. 고유상태별 결합을 가중한 값이 기존 $m_\theta/m$과 일치하는지, 대칭 기준해가 ΛCDM 성장으로 돌아가는지, 두 적분기가 일치하는지 검사했다.
 
-### 6.2 전자약 혼합과 유효 깊이
+현재 총 성장량은 기준보다 약 0.04460–1.19498% 증가했다. 한 유체 근사와의 총 성장량 차이는 최대 약 0.00119%지만, 가장 큰 시험점에서 개별 암흑상태의 밀도 대비는 바리온에 대해 약 0.99690–1.00353으로 갈라졌다. 총 성장의 작은 차이만으로 고유상태별 상대 요동을 항상 무시할 수 있다는 결론은 아니다. 같은 초기 진폭을 공급한 계산이며, 이 결과 역시 관측 성장 RMSE 감소를 뜻하지 않는다.
 
-지정한 $W^3/B$ 기저에서
+**[파장 범위 검사]** 같은 다중 유체 기록에서 보존 입자 수와 척도인자를 고정한 $V_{\rm eff}=U+\rho_c$의 정준 곡률
 
-$$
-\delta=\sin^2\theta_W\cos^2\theta_W,\qquad
-0\leq\delta\leq\frac14
-$$
+$$\frac{m_{\rm eff}^2}{H^2}=
+\frac{U_{\theta\theta}+\rho_c m_{\theta\theta}/m
+-\frac{Z_\theta}{2Z}(U_\theta+\rho_c m_\theta/m)}{ZH^2}$$
 
-이고, $A=dI+\delta B$, $B\boldsymbol1=\boldsymbol1$을 **[공리]**로
-택하면 $D_{\rm eff}=d+\delta$가 **[산출]**된다. 혼합 통계량을
-offspring 증분으로 읽는 일은 정리가 아니다.
+를 사용했다. 준정적 스칼라 응답에 $k^2/(k^2+a^2m_{\rm eff}^2)$를 넣어 같은 초기 요동을 다시 전파했다. 양의 분모인 시험 영역에서 계산했으며, 음의 유효 질량이 가능한 최대점 부근의 장파장 안정성을 이 검사로 증명하지 않는다.
 
-### 6.3 외부 입력과 고정점 산출
+$a=0.01$–1의 101개 검사점과 여섯 후보에서 $k=0.01\,h\,{\rm Mpc}^{-1}$의 최대 $(aH/k)^2$는 약 0.0354, 최대 $|a^2m_{\rm eff}^2/k^2|$는 약 0.00116이다. $k=0.1\,h\,{\rm Mpc}^{-1}$에서는 각각 약 $3.54\times10^{-4}$, $1.16\times10^{-5}$다. 유한 질량 응답을 넣은 현재 성장량의 상대 변화는 각각 $7.49\times10^{-9}$, $7.49\times10^{-11}$ 미만이었다. 여기의 $h$는 $H_0/(100\,{\rm km\,s^{-1}\,Mpc^{-1}})$이며 $h_N$과 다르다.
 
-$\alpha_s(M_Z)$는 외부 benchmark이고
-$\sin^2\theta_W=4\alpha_s^{4/3}$은 **[경험식]**이다. 같은 scheme과
-scale에서 이 입력을 대입하면 $\delta$, $D_{\rm eff}$, 그리고
+스칼라 힘 자체가 작아 유한 질량 보정의 효과도 작지만, 이를 전체 섭동 근사의 오차 한계로 읽으면 안 된다. 특히 더 긴 파장의 초기 구간에는 무시한 허블 척도 항이 상대적으로 커질 수 있다. 전체 성장 관측 비교에는 파장 의존 전달함수와 원시 진폭을 함께 다루어야 한다.
 
-$$
-q_{\rm ext}=-\frac1{D_{\rm eff}}
-W_0(-D_{\rm eff}e^{-D_{\rm eff}})
-$$
+[초기 우주 연구][S25]는 같은 스펙트럼의 점유·압력을 복사기와 음향 눈금에 연결하고, [양자 준비 연구][S27]는 공급한 팽창에서 생기는 장 분산을 점유의 입력으로 다룬다. 팽창 이력이나 준비 법칙을 공급했다면 무입력 초기조건이라고 부르지 않는다.
 
-를 계산할 수 있다. 작은 residual은 이 계산을 확인할 뿐 경험식을
-물리 유도로 승격하지 않는다.
+**[준비–후기 연결의 추가 검사]** S27의 유한시간 분산 $v_j=3H_I^4[1-\exp(-2x_jN/(3H_I^2))]/(8\pi^2x_j)$와 형성식 $n_j\propto v_j/x_j^{1/4}$를 [별도 코드](../verify/ce_prepared_populations.py)로 계산했다. 원문의 공급 입력 $H_I=10^7$ GeV, 준비 위상 0.5, $N=60$ 또는 $10^{11}$과 기존 두 질량을 유지했다. 이 영역에서는 $v_j$가 거의 같아도 입자 수는 같지 않다. [결과](../verify/ce_prepared_populations.json)의 정규화된 평균 입자 수 비율은 $r=0.15$에서 (0.31038, 0.34918, 0.34045), $r=0.35$에서 (0.28213, 0.37282, 0.34505)다. 공통 형성 계수와 재가열 척도는 이 비율에서만 상쇄되며 절대 물질량에서 사라지지 않는다.
 
-## 7. flavor, 질량과 입자 현상론의 범위
+이 준비 비율을 쓰면 $m(\theta)\propto\sum_j n_j\sqrt{x_j(\theta)}$를 배경부터 다시 계산해야 한다. 특히 고정된 비율에서 $\partial_\theta\ln m|_0$는 각각 약 −0.0004142, −0.0036761로 0이 아니다. 따라서 이전의 같은 입자 수 배경과 최대점 주변 초기속도 처방에 준비식만 덧붙일 수 없다. 위 성장 결과는 같은 입자 수를 공급한 가지의 결과로 유지한다. S27의 준비 분포가 실제 초기 곡률요동을 유도했다거나 두 가지가 이미 연결됐다는 주장은 하지 않는다.
 
-확률 코어 뒤에 입자 수치를 나열하기보다, 먼저 무엇이 수학적으로
-실현 가능한지 분리해야 한다. 임의의 양의 quark 질량과 unitary CKM
-행렬이 주어지면 그 자료를 재현하는 Dirac Yukawa 행렬을 구성할 수 있다.
-마찬가지로 양의 중성미자 질량과 unitary PMNS 행렬이 주어지면 복소
-대칭 Majorana 질량행렬을 구성할 수 있다. 이는 존재구성의 **[정리]**다.
-그러나 그 구성은 입력 각도와 질량을 줄이지 않으므로, 왜 자연이 그 값을
-선택하는지 예측하지 않는다.
+**[준비 비율을 넣은 배경 재계산]** [실행 코드](../verify/ce_prepared_background.py)는 준비식의 평균 비율을 질량 함수와 그 미분에 함께 넣었다. 인플레이션 이후의 전체 전달을 가정한 대신 $a_i=0.01$, $\theta_i=0.5$, $\theta_{N,i}=0$을 명시적으로 공급한 유한시간 비교를 했다. 동일 입자 수 대조군도 같은 위상·속도를 사용하며, 질량 함수의 정규화를 맞춰 시작 물질밀도를 동일하게 유지했다. 이 정규화는 물질량 예측이 아니라 비율 변화만 비교하기 위한 조건이다.
 
-Koide 관계는 세 양의 질량 $m_i$에서 $x_i=\sqrt{m_i}$를 만들고 민주축
-$u=(1,1,1)/\sqrt3$를 잡을 때 기하학적으로 읽힌다.
+[결과](../verify/ce_prepared_background.json)의 거리비·뮤온 구성항·시계 부분 공동 RMSE는 $r=0.15$에서 대조군 1.15678941 → 준비 비율 1.15798883, $r=0.35$에서 1.17760207 → 1.20012091로 악화했다. 기준 점수 0.93925930보다도 모두 높다. 이전 여섯 사례와 초기속도가 다르므로 그 값들과 직접 섞지 않는다. 두 적분기의 AP 차이는 $2.00\times10^{-13}$ 미만이고 총 연속방정식의 상대 잔차는 $4.07\times10^{-16}$ 미만이다. 새 피팅은 없으며, 실제 초기 우주부터 생성된 상태의 완성된 예측이나 전체 공동 RMSE는 아니다.
 
-$$
-\frac{\sum_i m_i}{(\sum_i\sqrt{m_i})^2}=\frac23
-\quad\Longleftrightarrow\quad
-\angle(x,u)=45^\circ.
-$$
+**[준비 평균량을 그대로 전파]** [복사 포함 코드](../verify/ce_prepared_radiation.py)는 다음 단계로 형성식의 평균 점유수를 실제 밀도에 사용했다. $H_I=10^7$ GeV, S26의 형성기 $H_R=8.5471961\times10^{-45}$ GeV, S27의 $N_{\rm pre}=60,10^{11}$을 유지했으며 후기 암흑물질량을 다시 맞추지 않았다. 바리온 눈금 $\omega_b=0.02237$, $T_{\gamma0}=2.7255$ K와 질량 없는 중성미자 근사 $N_{\rm eff}=3.046$는 외부 입력이다. 전자쌍 소멸 이후 $a_i=10^{-8}$부터 복사·바리온·생성된 암흑성분·위상을 함께 전파했다. 초기 위상은 0.5, 속도는 복사 지배 힘의 정칙 선도값으로 정했다. 인플레이션과 형성기의 미시 진화를 다시 푼 것은 아니다.
 
-이 동치는 **[정리]**다. 이를 실제 flavor potential의 정지조건으로
-만들 symmetry, vacuum alignment, 다른 sector로의 확장과 RG 안정성은
-**[미완성]**이다. 같은 이유로 CKM·PMNS·질량의 수치 관계는 경험식 또는
-입력 자료로 관리하며, 관측 근접을 mass-generation 동역학의 증명으로
-바꾸지 않는다.
+| $r$ | $N_{\rm pre}$ | 전파 후 $\omega_c$ (통상 $\Omega_ch^2$) | 조건부 $H_0$ [km/s/Mpc] | AP RMSE |
+|---|---:|---:|---:|---:|
+| 0.15 | 60 | $4.8740\times10^{-11}$ | 54.770 | 7.65058 |
+| 0.15 | $10^{11}$ | 0.081236 | 62.422 | 1.25758 |
+| 0.35 | 60 | $3.4548\times10^{-11}$ | 54.816 | 7.65827 |
+| 0.35 | $10^{11}$ | 0.057591 | 59.957 | 2.18085 |
 
-저에너지 scalar 현상론도 이 구분을 따른다. $-g_\ell\phi\bar\ell\ell$
-같은 Yukawa를 별도 EFT branch로 택하면 렙톤 자기모멘트의 one-loop
-적분은 계산할 수 있다. 그러나 정확한 $Z_2$ portal branch와는 추가
-$Z_2$ 깨짐 또는 gauge-invariant UV completion 없이는 동시에 놓이지
-않는다. proton 산란의 scalar exchange 역시 가능한 조건부 효과일 뿐
-고유 전자기 form factor나 반경 편이를 자동으로 정하지 않는다.
+[결과](../verify/ce_prepared_radiation.json)의 생성 직후 밀도는 S27의 표를 반올림 정밀도에서 재현한다. 네 AP 점수는 앞서 사용한 기준 0.98874보다 모두 높다. 두 적분기의 AP 차이는 $4.33\times10^{-13}$ 미만이며 복사압력을 포함한 총 보존식 잔차는 $1.25\times10^{-15}$ 미만이다. 생성 평균밀도로 만든 평균장 배경이며, 준비분포 전체를 전파한 앙상블 예측은 아니다. 질량 있는 중성미자의 전이·재결합·원시 요동·양자부문 전체 역반응이 남아 있다. 이 연결은 외부 준비 입력을 없애거나 관측 오차 감소를 달성하지 못했다.
 
-### 7.1 CKM/Yukawa 존재구성
+**[준비분포의 적분 진단]** [앙상블 코드](../verify/ce_prepared_ensemble.py)는 $N_{\rm pre}=10^{11}$에서 독립 지수분포를 따르는 세 모드의 진폭제곱을 전파한다. 각 표본을 하나의 균질 영역으로 해석하며 같은 표본의 배경을 모든 적색편이에 사용했다. 좋은 표본을 고르거나 모드 진폭을 관측에 적합하지 않았다. 3차·5차의 삼중 Gauss–Laguerre 적분으로 두 분할에서 총 304개의 배경을 계산했다.
 
-양의 quark 질량과 unitary $V_{\rm CKM}$이 주어지면
-$D_u=\sqrt2\,\operatorname{diag}(m_u,m_c,m_t)/v$,
-$D_d=\sqrt2\,\operatorname{diag}(m_d,m_s,m_b)/v$를 두고
-$Y_u=D_u$, $Y_d=V_{\rm CKM}D_d$로 구성할 수 있다. 이는 주어진 입력을
-실현하는 **[정리]**이며 질량·각도를 예측하지 않는다.
+$$E[\chi^2]=\chi^2(E[f])+\operatorname{Tr}(C^{-1}\operatorname{Cov}(f))$$
 
-### 7.2 PMNS/Majorana
+를 실제 예측벡터로 교차 확인했다. [결과](../verify/ce_prepared_ensemble.json)의 $\sqrt{E[\chi^2]/6}$는 $r=0.15$에서 3차 2.62998 → 5차 2.64430, $r=0.35$에서 3.19074 → 3.16064다. 평균 예측벡터만의 RMSE와 다르며, 준비분포 폭의 기여가 크다. 두 차수 모두 이전 기준 오차보다 높지만, 이를 수렴한 전체 이론의 배제 수준으로 읽지 않는다.
 
-양의 중성미자 질량행렬 $D_\nu$와 unitary $U_{\rm PMNS}$가 주어지면
+주변화 우도 $E[\exp(-\chi^2/2)]$도 계산했으나 $r=0.15$에서 $-2\log$ 점수가 차수에 따라 약 1.05 변했다. 따라서 이 낮은 차수의 우도를 확정된 관측 성과나 Bayes factor로 사용하지 않는다. 이 검사는 평균밀도만 전파하면 놓치는 분포 효과를 드러내며, 실제 관측 영역의 조건부 상태 선택·공간 상관·수렴한 분포 전달은 남아 있다.
 
-$$
-M_\nu=U_{\rm PMNS}^*D_\nu U_{\rm PMNS}^\dagger
-$$
+**[독립 변수변환 적분]** 동일 코드의 `--radial` 경로는 세 단위 지수변수 $X_j$를 $T=\sum_jX_j$와 $P_j=X_j/T$로 바꾸었다. $T\sim\mathrm{Gamma}(3,1)$와 $P\sim\mathrm{Dirichlet}(1,1,1)$는 독립이며, 원래 준비분포를 바꾸지 않는다. 생성된 적분점에서 확률 정규화와 각 $E[X_j]=1$, $E[X_j^2]=2$를 검산했다. 전체 진폭·비율 차수를 (8,2), (16,2), (16,3)으로 바꿔 두 분할에서 480개 배경을 추가 계산했다.
 
-는 복소 대칭 Majorana 질량행렬이다. 존재구성은 Weinberg operator 또는
-UV completion의 선택 이유를 주지 않으며, flavor symmetry는 **[미완성]**이다.
+[변환 적분 기록](../verify/ce_prepared_ensemble_radial.json)의 마지막 $\sqrt{E[\chi^2]/6}$는 각각 약 2.64381, 3.15734로 기존 직접 적분의 2.64430, 3.16064와 가깝다. 그러나 $r=0.35$의 비율 차수 2→3에서 기대 $\chi^2$가 약 2.46% 바뀌고, 주변화 $-2\log L$도 약 0.65 변했다. 따라서 평균오차가 기준보다 크다는 현재 수치 경향과 정밀한 주변화 우도의 수렴을 구분한다. 후자는 여전히 미확인이고, 이 추가 검산으로 관측 개선을 주장하지 않는다.
 
-### 7.3 Koide 기하와 potential 공백
+[미래–초기 경계 후보][S28]와 [경계·상태 공동해][S29]는 경계 전달과 상태의 자기일관성을 조사한다. 유한 가우스 모형의 주기 상태와 시공간의 실제 반등·순환은 다르다. 전자의 계산으로 절대 진공값이나 모든 초기 우주 자료가 자동 결정되지는 않는다.
 
-$x_i=\sqrt{m_i}$와 $u=(1,1,1)/\sqrt3$에 대해
+**[미완성]** 일정 곡률의 진공 응력을 실제 우주에 적용하려면 같은 초기 상태에서 인과적 in-in 유효작용을 구성하고, 시간 의존 응력·입자 생성·공간 섭동을 계산해야 한다. 음향 눈금 하나의 일치와 CMB 각파워스펙트럼 전체 및 허블 텐션의 설명은 구분한다.
 
-$$
-\frac{\sum_i m_i}{(\sum_i\sqrt{m_i})^2}=\frac23
-\Longleftrightarrow \angle(x,u)=45^\circ
-$$
+### 6.4 최근 실시간 식이 필요한 이유와 후기 근사의 유도
 
-는 **[정리]**다. 실제 질량이 이 cone을 고르는 potential, vacuum alignment,
-RG 안정성은 따로 제시되지 않았으므로 **[미완성]**이다.
+앞 절의 준비·배경 시험은 서로 다른 상태 가정을 검사한 기록이다. 최근의 [31장 실시간 연구](../_workspace/ce_obs32_reproduction/CE-OBS32/source_context/CE_realtime_quantum_gr_report_2026-09-09.md)는 상태와 되먹임을 함께 보유한다. 정적 $U(\theta)$만으로는 지나간 위상 운동이 남긴 입자와 상관을 알 수 없기 때문이다. 여기서는 그 원문의 가우스 물질장·고전 평균장 절단과 $\xi=1/6$을 유지한다.
 
-### 7.4 Scalar 저에너지 현상론
+공간적으로 평탄한 FLRW에서 등각시간 $\eta$, $\chi=a\psi$를 쓰면 원래 장 방정식은
 
-$-g_\ell\phi\bar\ell\ell$ 같은 Yukawa를 별도 EFT branch로 택하면
-one-loop $g-2$ 적분을 계산할 수 있다. 이는 exact $Z_2$ portal과 자동
-호환되지 않으며 $Z_2$ breaking 또는 UV completion을 요구한다. proton
-산란도 $g_\ell g_p$와 form factor를 입력해야 하며 CE 코어는 이 계수를
-정하지 않는다.
+$$\chi_{jk}''+\left[k^2+a^2x_j+(6\xi-1)\frac{a''}{a}\right]\chi_{jk}=0.$$
 
-## 8. 우주론 branch와 암흑 표현의 한계
+따라서 $\xi=1/6$에서 $\Omega_{jk}^2=k^2+a^2x_j$인 진동자가 된다. 이 절의 prime은 $d/d\eta$다. 순간 양·음 주파수 기저로 모드를 전개하면 기저 자체의 시간변화 때문에 두 진폭이 $\mathscr W=\Omega'/(2\Omega)$로 섞인다. Bogoliubov 진폭의 점유 $n=|\beta|^2$와 쌍상관 $u+iv$를 미분하면
 
-확률 코어에서 얻은 $q_{\rm ext}$를 우주에 쓰려면 먼저 우주론 방정식의
-독립적 branch를 분리해야 한다. 평탄 FLRW에서 최소 결합 canonical scalar
-$\phi(t)$는
+$$n'=2\mathscr W u,\qquad
+u'=\mathscr W(1+2n)+2\Omega v,\qquad v'=-2\Omega u.$$
 
-$$
-\rho_\phi=\frac12\dot\phi^2+V,\qquad
-p_\phi=\frac12\dot\phi^2-V,\qquad
-\dot\rho_\phi+3H(\rho_\phi+p_\phi)=0.
-$$
+$1$은 진공에서도 가능한 쌍생성, $2n$은 이미 점유된 보손 상태의 증폭, $2\Omega$ 항은 상관의 위상 회전을 나타낸다. 세 식에서 직접
+$[(1+2n)^2-4(u^2+v^2)]'=0$을 얻는다. 그러므로 생성 중에 $u,v$를 임의로 0으로 놓는 것은 같은 양자상태를 진화시키는 근사가 아니다.
 
-여기서 $H=\dot a/a$는 Hubble rate, $a(t)$는 scale factor다. $\rho_\phi>0$
-이면
+같은 모드의 순간 진공 차감 부분을 $d\Pi_k=k^2dk/(2\pi^2)$로 적으면
 
-$$
-w_\phi+1=\frac{\dot\phi^2}{\rho_\phi}\geq0.
-$$
+$$\rho_{\rm ex}=a^{-4}\sum_j\int d\Pi_k\,2\Omega n,\qquad
+p_{\rm ex}=\frac{a^{-4}}3\sum_j\int d\Pi_k
+\left[2\Omega n-\frac{2a^2x_j}{\Omega}(n+u)\right],$$
 
-따라서 positive-kinetic canonical 단일장에는 $w<-1$ crossing이 없다는
-**[정리]**가 성립한다. 상수 potential $V_0$는 $T_{\mu\nu}=-V_0g_{\mu\nu}$,
-$w=-1$을 준다. 이 결과는 진공항의 방정식상태를 고정하지만, 작은 절대값과
-radiative stability를 설명하지 않는다.
+$$J_{\rm ex}=a^{-2}\sum_j\int d\Pi_k\,
+\frac{x_{j,\theta}}{\Omega}(n+u),\qquad
+\rho_{\rm ex}'+3\frac{a'}a(\rho_{\rm ex}+p_{\rm ex})
+=\theta'J_{\rm ex}.$$
 
-별도 inflation branch에서는 Einstein frame, 정준 단일장, positive
-$V_0$, scalar dominance, adiabatic Bunch–Davies 초기상태와 leading
-slow-roll을 택해 Starobinsky형 potential을 쓴다. 이 전제 아래
-$n_s=1-2/N+\cdots$, $r=12/N^2+\cdots$가 **[산출]**된다. $N$은 reheating에
-의존하고 amplitude normalization은 $V_0$를 고정하므로, 이는 포탈
-EFT나 다섯 상수에서 나온 보편 예측이 아니다.
+마지막 식은 $\Omega'=[2aa'x_j+a^2x_{j,\theta}\theta']/(2\Omega)$와 $n'$을 첫 식에 대입하면 나온다. 압력의 $u$ 항까지 있어야 팽창에 의한 일이 상쇄된다. $2\Omega n$의 2는 복소장의 입자–반입자 에너지다. 이 식들은 원문의 공통 자외선 상태 조건과 진공·국소항 matching 아래 사용하는 상태 부분이며, 순간 차감 하나로 일반 배경의 전체 재규격화를 대신하지 않는다.
 
-암흑 표현의 역사적 경계모형 `C-B-LEGACY-01`은
+비단열 생성이 끝나고 상관의 빠른 진동을 평균할 수 있으며 $k/a\ll m_j$일 때에만 $u\to0$, $\Omega\simeq am_j$를 적용한다. 그러면
+
+$$n_j^{\rm tot}=2a^{-3}\int d\Pi_k\,n_{jk},\qquad
+\rho_{\rm ex}\simeq\sum_jn_j^{\rm tot}m_j,\quad
+p_{\rm ex}\simeq0,\quad
+J_{\rm ex}\simeq\sum_jn_j^{\rm tot}m_{j,\theta}.$$
+
+이것이 §6.1의 물질식이다. 실시간 생성 결과를 후기 물질로 넘기려면 수 비율뿐 아니라 **에너지 총량·운동량 분포·상관의 평균 가능성**도 맞아야 하는 이유가 여기에 있다.
+
+운동계수도 독립적으로 더하지 않는다. 평탄 진공의 작은 진동에서 같은 질량 결합은 흡수 스펙트럼
+
+$$\mathcal D(\nu)=\frac1{16\pi}\sum_j x_{j,\theta}^{\,2}
+\sqrt{1-4x_j/\nu^2}\,\Theta(\nu-2\sqrt{x_j})$$
+
+을 준다. 쌍을 만들려면 에너지 $\nu\ge2m_j$가 필요하므로 문턱이 생기고, 종별 확률은 결합의 제곱에 비례한다. 따라서 $\sum_jx_{j,\theta}=0$이라는 정적 합 규칙으로 흡수가 상쇄되지는 않는다. 한 번 감산한 지연 응답의 분산식에서
+
+$$\delta Z=\frac2\pi\int_0^\infty\frac{\mathcal D(\nu)}{\nu^3}\,d\nu
+=\frac1{96\pi^2}\sum_j\frac{x_{j,\theta}^{\,2}}{x_j}$$
+
+를 얻는다. 마지막 등식은 $\int_{2\sqrt x}^\infty\sqrt{1-4x/\nu^2}\,d\nu/\nu^3=1/(12x)$에서 따른다. 느린 국소 이론에서는 $f^2+\delta Z$를 쓰지만, 그 응답을 만드는 진공 모드를 이미 보유한 실시간 계산에 같은 $\delta Z$를 또 더하면 이중계산이다. 이 유도는 루프 부분을 정하며 독립적인 tree 운동척도 $f$를 결정하지는 않는다.
+
+### 6.5 대칭 점유 가설은 왜 도입했고 무엇을 설명하는가
+
+현재 상대 퍼텐셜에서 $\theta=0$은 최대다. 따라서 그 근처의 양의 진공 에너지를 오래 유지하려면 물질의 되먹임이 어떤 부호인지 먼저 계산해야 한다. 새 결합함수를 만들지 않고 같은 질량식에서 $\theta\mapsto-\theta$가 종 $1\leftrightarrow2$를 교환한다는 성질을 이용한다. **보존된 점유 $(N_0,N_1,N_2)\propto(0,1,1)$**는 이 반사를 유지하는 비열적 상태 가설이며, 대칭 자체가 이 비율이나 총량을 유도한 것은 아니다.
+
+정규화된 평균 질량과 그 곡률은
+
+$$\mathfrak m_L(\theta)=\frac{\sqrt{x_1(\theta)}+\sqrt{x_2(\theta)}}{2\sqrt{s-\epsilon}},\qquad
+\mathfrak m_L'(0)=0,\qquad
+\mathfrak m_L''(0)=\frac{r(2-5r)}{36(1-r)^2},\quad r=\epsilon/s.$$
+
+이는 $(\sqrt{x})''=x''/(2\sqrt{x})-(x')^2/(4x^{3/2})$를 두 종에 대입한 결과다. 두 종의 일차 힘은 서로 상쇄하지만 이차 힘은 $0<r<2/5$에서 양수다. $V_*=U(0)>0$ 단위에서 $\bar U=U/V_*$, $\rho_c/V_*=f_cR_ma^{-3}\mathfrak m_L$를 쓰면 균질 고정 점유 섭동의 곡률은
+
+$$\kappa(a)=\bar U_{\theta\theta}(0)+f_cR_ma^{-3}\mathfrak m_L''(0),\qquad
+a_c^3=-\frac{f_cR_m\mathfrak m_L''(0)}{\bar U_{\theta\theta}(0)}.$$
+
+물질항은 팽창으로 희석되므로 초기에는 양수인 곡률이 후기에 음수로 바뀔 수 있다. 여기서 $R_m=3/7$, $f_c=0.84$는 기존 후기 시험의 공급값이다. [유도와 계산](symmetric_state_research.md)의 $a_c=0.173181,0.161233$은 이 조건의 결과이며 관측에서 도출한 보편적 전이시점이 아니다. 정확히 $\theta=\dot\theta=0$이면 부호 전환 뒤에도 그 해에 머물기 때문에, 실제 이탈을 예측하려면 초기 요동이나 생성 상태의 힘을 계산해야 한다.
+
+이 가설을 시험한 이유는 **같은 물질이 초기에는 위상을 붙잡고 희석 뒤에는 풀어주는지**를 확인하기 위해서다. 그러나 균질 곡률의 양성은 공간 안정성과 같지 않다. 두 가벼운 종은 반대 방향의 힘을 받아 상대 밀도요동을 만들 수 있고, 열평형 재분배에서는 고정 점유 미분에 없는 음의 분산항이 생긴다. [상대 밀도 연구](relative_density_research.md)에서 이 추가 응답까지 검사했다.
+
+작은 위상 펄스는 $x_{0,\theta}(0)=0$, $x_{1,2,\theta}(0)=\mp\epsilon/\sqrt3$이므로 무거운 종의 생성수가 진폭의 네제곱, 가벼운 종은 두제곱부터 시작한다. 이는 위 비율을 준비할 수 있는 **선택 규칙**이지만 필요한 총량의 보장은 아니다. 평균 운동에너지가 정지질량에너지의 1% 이하라는 느슨한 냉각 진단에서도, 가장 큰 시험 진폭 $A=0.1$의 에너지는 공급 목표의 약 $2.0\times10^{-5}$–$5.5\times10^{-5}$에 그쳤다. 이 기준은 관측적으로 차가운 암흑물질이라는 판정이 아니다. 또 $a_i=0.01$의 순간 위상 진공과 희박한 상대 밀도 요동은 유의한 후기 이탈을 만들지 못했다. 따라서 다음 생성 모형은 에너지원·종 비율·냉각·위상 요동을 함께 산출해야 하며, 총량과 초기 위상을 관측에 맞춰 별도로 보충하지 않는다.
+
+## 7. 공통 질량미분과 게이지·입자 반응
+
+### 7.1 독립 함수 수를 줄이는 관계
+
+$\epsilon$을 고정하고 $s$를 미분하면
 
 $$
-q_{\rm ext}\longmapsto\Omega_b,
+\mathcal U_{ss}=\frac1{16\pi^2}
+\ln\frac{D(s,\theta)}{D(s,\pi)},\qquad
+\mathcal U_{sss}=\frac1{16\pi^2}\Delta_\pi\sum_j\frac1{x_j}.
+$$
+
+이 연결은 $x_j=s+\text{상수}$이므로 $\partial_sx_j=1$이라는 사실에서 온다. $F(x)=x^2[\ln(x/\mu^2)-3/2]$라 두면 $F''(x)=2\ln(x/\mu^2)$, $F'''(x)=2/x$이다. 두 번 미분한 로그합은 $\ln\prod_jx_j=\ln D$가 되고, 세 번 미분하면 역질량제곱 합이 된다. 열핵의 곡률 일차항, 게이지장의 이차항, 무거운 입자의 저에너지 전개에 이 질량 함수들이 나타나므로 같은 $\mathcal U$의 미분으로 묶을 수 있다.
+
+여기서 고정량은 **차원 있는 $\epsilon$**이다. $r=\epsilon/s$를 고정한 미분은 $\epsilon$까지 함께 바꾸므로 위 응답과 다르다. 특히 중성 질량을 유지하고 하전 대각 질량만 키울 때 $r_H=\epsilon/s_H$는 작아진다. 독립적인 큰 $r_H$를 넣어 얻은 하전 진공 변화는 §1.3의 공통 $\epsilon$ 후보에 대한 반례가 아니다. 반면 표현의 차원과 전하, 기준 게이지 결합값은 이 미분 항등식에서 새로 결정되지 않는다.
+
+이 차이는 크기에서도 드러난다. 정확히
+
+$$\frac{D(s_H,\theta)}{D(s_H,\pi)}
+=1+\frac{2\epsilon^3(1+\cos\theta)}{(s_H-2\epsilon)(s_H+\epsilon)^2}$$
+
+이므로 $s_H\gg|\epsilon|$에서 위상에 따른 게이지 문턱은 $O[(\epsilon/s_H)^3]$부터 시작한다. 반면 차감하지 않은 무거운 하전 입자의 EM 자기모멘트 구성항에는 $\sum_j1/x_{Hj}\simeq3/s_H$가 남는다. 따라서 **위상 변화에 따른 상대 뮤온 보정**과 **하전 입자가 존재해서 생기는 절대 EM 구성항**은 크기도 비교 기준도 다르다. [동일 $\epsilon$ 검산](latest_research_baseline.md)은 이 둘을 따로 계산한다.
+
+**[공리·산출]** 공통 스펙트럼의 하전 표현 $R$을 추가하고 $\operatorname{Tr}_R(T^AT^B)=T_a(R)\delta^{AB}$로 정규화하면 [저에너지 한 루프 계산][S20]은
+
+$$
+U_R=d_R\mathcal U,\qquad
+\Delta C_R^E=d_R(\xi_R-1/6)\mathcal U_s,\qquad
+\Delta(1/g_a^2)=-\frac{T_a(R)}3\mathcal U_{ss}
+$$
+
+로 연결된다. $d_R$는 표현의 다중도, $C_R^E$는 해당 유클리드 곡률항 계수다. 장내용과 전하를 공급한 뒤의 상대 보정이며, 중성 암흑장과 하전 매개장을 같은 입자로 간주하지 않는다.
+
+미분 차수는 공간 차원이나 힘의 출현 순서가 아니다. 특정 표현에서 문턱 보정비가 같아져도 절대 결합상수의 통일, 게이지군의 발생 또는 UV 완성이 따라오지는 않는다.
+
+### 7.2 뮤온과 flavor의 남은 입력
+
+무거운 하전 스칼라의 광자 진공편극을 통한 뮤온 반응에는 같은 역질량제곱 합이 나타난다. 이는 지정한 전자기 구성항의 무거운 질량 전개이며, 전체 $g-2$ 계산이나 미해결 관측 잔차의 설명은 아니다. 실제 비교에는 나머지 도표, 질량 범위, 직접 탐색 제약과 기준 이론의 오차가 필요하다.
+
+질량 고유값만으로 상대 고유기저가 정해지지는 않는다. [38장 §22–27](07_확률차원_검증기록/38_확률적_차원과_양자_거시_공동식.md)은 보편적 질량 재척도화가 질량비·혼합각을 바꾸지 못하는 경계와 flavor 방향의 미결정성을 다룬다. 주어진 행렬의 응답과 그 행렬을 선택하는 물리 법칙은 별개다. 중성미자의 질량 변화를 배경에 넣을 때도 압력과 에너지 교환항을 포함해야 한다.
+
+### 7.3 같은 우주 위상으로 계산한 전자기 결합의 시간변화
+
+**[이전 분기의 범위]** 이 절과 §9.5는 독립적인 하전 분할과 짝지음 배율을 공급한 이전 시험이다. 최신 공통 $\epsilon$ 후보의 수치 판정으로 승계하지 않는다. 최신 후보에서는 같은 차원 있는 $\epsilon$으로 하전 응답부터 다시 평가한다.
+
+**[조건부 연결]** 중성 우주론의 위상과 보손·페르미온으로 짝지은 하전 부문의 위상이 같고 국소 환경 차폐가 없다고 가정한다. 기존 하전 분할 $r_c=0.025$와 한 루프 문턱 배율 6을 유지하면
+
+$$
+\frac{\dot\alpha}{\alpha}
+=-\alpha\frac{d\alpha^{-1}}{d\theta}\frac{d\theta}{dN}H_0,
 \qquad
-\Omega_b=\frac{\rho_b(t_0)}{\rho_{\rm crit}(t_0)}
+\frac{d\alpha^{-1}}{d\theta}
+=\frac{6Q^2}{12\pi}\frac{2r_c^3\sin\theta}{1-3r_c^2+2r_c^3\cos\theta}.
 $$
 
-를 **[공리]**로 둔다. radiation과 curvature를 무시한 평탄 후기 우주에서
-$\Omega_b+\Omega_{\rm DM}+\Omega_\Lambda=1$을 함께 택하고, 남은 분율의
-내부 비를 별도 공리로 두면 수치가 산출된다. 그러나 species current,
-유일한 전이 면, 총 stress 보존, baryon current, 절대 yield와 섭동은
-아직 닫히지 않았다. 따라서 관측과의 잔차가 작아도 이 화살표는
-**[미완성]** bridge를 포함한다.
+여기서 현재 $\alpha$와 하전 표현은 입력이며, 기준 결합에는 별도의 시간변화를 넣지 않는다. [Lange 등의 원자시계 비교](https://arxiv.org/abs/2010.06620)는 $\dot\alpha/\alpha=1.0(1.1)\times10^{-18}\,{\rm yr}^{-1}$를 보고한다. 최신 한계를 망라한 결합 분석이 아니라 이 고정 관측 요약과 비교했다.
 
-### 8.1 FLRW와 canonical no-go
+[계산 코드](../verify/common_phase_clock.py)와 [결과](../verify/common_phase_clock.json)는 동일 질량으로 복원한 여섯 배경해의 현재 위상·속도·허블값을 사용한다. 예측 변화율은 약 $-0.048$에서 $-1.187$까지의 $10^{-18}\,{\rm yr}^{-1}$이며, 단일 관측의 표준화 절대 잔차는 기준 무변화의 0.9091에서 후보 0.9524–1.9886으로 모두 증가한다. 관측과 수 배 이상 불일치하여 전체 모형이 배제된다는 결론은 아니지만, 이 자료에서 오차 감소는 없다. 문턱 미분은 직접 고유값 로그곱의 고정밀 미분으로 교차 확인했다.
 
-FLRW에서 $H=\dot a/a$이며
+새 피팅은 없다. 이 검사는 우주 위상을 입자 쪽에서 독립적으로 다시 선택하지 않았다는 점에서 부문 간 연결을 시험한다. 그러나 정확한 하전 짝지음은 전체 상호작용 이론으로 완성되지 않았고, 국소 응답·고차 역반응도 남아 있으므로 완성된 공동 likelihood는 아니다. 뮤온 부분항의 작은 개선만으로 공통 위상의 관측 성공을 선언할 수 없다.
 
-$$
-H^2+\frac{k}{a^2}=\frac{\rho}{3M_{\rm Pl}^2},
-\qquad \dot\rho+3H(\rho+p)=0.
-$$
+## 8. 차원과 중력 회복의 별도 문제
 
-canonical scalar는 $\rho_\phi=\dot\phi^2/2+V$,
-$p_\phi=\dot\phi^2/2-V$이므로 $\rho_\phi>0$에서
-$w_\phi+1=\dot\phi^2/\rho_\phi\geq0$다. 이는 positive kinetic branch의
-정리이며 crossing에는 추가 자유도 또는 modified gravity가 필요하다.
 
-### 8.2 상수 진공과 dust/Lambda
+### 8.1 유한 기하의 성과와 연속 극한
 
-상수항의 변분은 $T_{\mu\nu}^{(0)}=-V_0g_{\mu\nu}$, $w=-1$을 준다.
-빠른 quadratic scalar의 dust 평균과 flat dust+Lambda 나이 적분은
-각각 adiabatic 및 GR 전제의 조건부 결과다. $V_0$의 절대값과
-radiative stability는 미완성이다.
+[최신 연구 지도](00_읽기_지도.md)의 06–23·26–35장은 인과구조, 이산 기하, Plebanski 자료, 선형화 중력과 적분의 조건을 조사한다. 비퇴화 기하의 유한 증인, Ward 항등식, 두 편광의 수용 기준은 중력 회복에 필요한 근거다. 그러나 주어진 계량 위 양자장 계산을 계량 자체의 발생으로 바꾸지는 않는다.
 
-### 8.3 Inflation slow-roll
+null 관계만으로 등각 인자를 정할 수 없고, 국소 spinor·compact pairing은 비콤팩트 Haar 적분 전체와 다르다. 따라서 5장의 곡률 응력은 공급한 4차원 배경에서 성립하는 QFT 결과로 읽는다. [36장](06_QFT_재설계/36_QFT_재설계_연구_계획서.md)의 관계적 QFT 계획과 제한된 고전 BRST/BV 계산 역시 양자 제약·이상항·연속 극한의 문제를 남긴다.
 
-Einstein frame 정준 단일장, $V_0>0$, scalar dominance, Bunch--Davies
-초기상태와 leading slow-roll에서
+### 8.2 확률측도와 차원 상태밀도
+
+**[정리]** 정규화된 스펙트럼 확률측도 $\mu$에 대해
 
 $$
-V(\phi)=V_0(1-e^{-\sqrt{2/3}\phi/M_{\rm Pl}})^2
+P(t)=\int_0^\infty e^{-tx}\mu(dx),\qquad \mu([0,\infty))=1
 $$
 
-이면 $n_s=1-2/N+O(\log N/N^2)$, $r=12/N^2+O(\log N/N^3)$다.
-$N$은 reheating에, 진폭은 $V_0$에 의존하므로 무입력 예측이 아니다.
+이면 $t\downarrow0$에서 $P(t)\to1$, $t\int xe^{-tx}\mu(dx)\to0$이다. 따라서 $-2d\ln P/d\ln t\to0$이다. 무한히 많은 상태 성분이 있다는 사실만으로 자외선 무한 차원이 생기지 않는다.
 
-### 8.4 q_ext에서 Omega_b로
-
-$q_{\rm ext}\mapsto\Omega_b$는 C-B-LEGACY-01의 경계 공리다. flat
-late-time closure와 DM/Lambda 내부비를 추가로 택할 때만 분할 수치가
-산출되며, 확률 동일시는 분지 정리의 결론이 아니다.
-
-### 8.5 관측 비교 규율
-
-비교표에는 모델, 기준값, 불확도, 잔차와 snapshot을 함께 둔다. 같은
-자료로 맞춘 scale을 독립 예측으로 세지 않으며 관측 근접은 경험식이나
-공리를 정리로 승격하지 않는다.
-
-### 8.6 Transient physical bridge
-
-물리적 readout에는 species current, 전이면, total stress 보존, 전이 뒤
-baryon current, absolute yield와 섭동의 공동 유도가 필요하다. 이 의무가
-닫히지 않았으므로 transient bridge 전체는 미완성이다.
-
-### 8.7 자기비동일성 시계장과 R1 열린계
-
-암흑 표현을 더 밀어붙이려면 ‘선택되지 않은 것이 에너지인가’라는 질문을 먼저 장부의 질문으로 바꿔야 한다. 본 논문에서 제안하는 R1 branch는 기회비용을 $\theta=\Gamma T$의 무차원 누적량 $1-e^{-\theta}$로만 읽는다. 이 양은 자체로 중력을 만들지 않으며, 에너지밀도는 독립 척도 $\rho_\infty$를 넣은 시계장 작용에서만 생긴다. 따라서 한 장의 $P(T,X)$ 작용은 정확히 진공형 $\rho_V$와 작은 $\delta=X/X_*-1>0$에서 물질형인 $\rho_K$를 분해하지만, 영 전류에서는 즉시 $J<0$, $\delta<0$, $c_s^2<0$로 가는 완전 반례를 갖는다.
-
-살아남는 조건부 해는 $\langle T_i\rangle=0$과 $\langle J_i\rangle=\Pi_{\rm F}>0$를 Gaussian 초기상태의 평균으로 준비한다. 이는 0차원 점이 새 시공간 차원이라는 주장이 아니다. 0차원은 측정 사건과 기록의 타입이며, 균일한 FLRW 초곡면으로 보내는 공간 분포ㆍ거친갈기 사상은 별도 미완성이다. 이웃 부트스트랩과 자기측정은 저장소ㆍ기록의 후보 기제일 뿐, 초기 전류의 에너지 공급을 증명하지 않는다. 변화의 반복은 $X$로 읽지만, 미래 화살은 retarded 응답과 초기 상태라는 별도 조건이다.
-
-고전 경계항은 이 준비를 대체하지 못한다. $B=-\Pi_{\rm F}T$는 자유 변분에서 전류를 주지만, 정확한 $T_i=0$에서는 허용 변분이 사라진다. 또한 선형 $gT\phi$ 저장소는 완성제곱 뒤 $-g^2T^2/(2m^2)$를 남겨 하방으로 유계가 아니다. R1은 대신 유계 source $s_A(T)=\mu_A^3F_A(\Gamma T)$를 가진 Gaussian 저장소를 채택한다. 변분하면 시계장ㆍ저장소 방정식이 함께 나오고, 저장소를 적분하면 retarded kernel $D_R$과 양의 noise kernel $N$을 가진 Schwinger--Keldysh 영향함수가 나온다. 상호작용 응력까지 포함한 총 Ward 장부만 보존되며, 축약된 시계장만으로는 보존되지 않는다.
-
-HuㆍPazㆍZhang(1992)은 Gaussian 환경이 비국소 소산과 colored noise를 함께 만든다는 표준 예를 제공한다. JanaㆍLoganayagamㆍRangamani(2020)은 실시간 영향함수를 Schwinger--Keldysh 상관함수로 조직하는 틀을, CrossleyㆍGloriosoㆍLiu(2017)와 GloriosoㆍCrossleyㆍLiu(2017)는 소산 유효장이론의 두 경로ㆍ대칭ㆍ상태 조건을 제공한다. 이는 R1의 형식 도구를 지지할 뿐 CE의 비선택 경로가 실제 저장소라는 동일성이나 $\Pi_{\rm F}$의 값을 증명하지 않는다.
-
-유한 Gaussian artifact는 비인과 성분 0, noise 최소 고윳값 $-8.03\times10^{-16}\simeq0$, Robertson 여유 $0.22$, 에너지 드리프트 $4.73\times10^{-14}$, 교환식 잔차 $1.19\times10^{-17}$을 확인했다. 이는 한정된 표본의 구현 검증일 뿐 R1의 관측 예측이 아니다. 사전 `doctor`가 삭제된 모듈 때문에 실패한 것은 작업트리 환경 문제이며 과학 결과와 분리한다.
-
-R1의 다음 병목은 고정배경 장파장에서 남는 $m_{\rm eff}^2<0$과 $c_s^2\to0$이다. 첫 음수만으로 결합 우주론의 실패를 선언하지는 않지만, metric mixing, bath self-energy, $k^4$ 완성과 full CMB/LSSㆍlensingㆍhalo 계산이 없으므로 안정성ㆍabundanceㆍ수치 예측도 선언하지 않는다. 상세 유도와 반례는 [암흑에너지 유도](5_유도/04_Dark_Energy_Derivation.md#4101-유계-gaussian-저장소의-작용과-변분)에 둔다.
-
-### 8.8 R2 관측창: 물리 mode와 cutoff의 조건부 검사
-
-R2는 R1의 음의 고정배경 질량을 그대로 결론으로 쓰지 않고, 먼저 그것이 어떤
-변수의 부호인지 다시 묻는다. $\pi=\delta T$는 시간좌표 선택에 의존하므로,
-unitary gauge에서는 사라진다. Einstein 중력과 시계장만 남긴 부분계에서
-lapse와 shift 제약을 제거하면 물리 스칼라는 곡률섭동 $\zeta$이며,
+반면 상태밀도를 세는 $K(t)=\operatorname{Tr}e^{-tL}$는 정규화된 확률과 다르다. [38장](07_확률차원_검증기록/38_확률적_차원과_양자_거시_공동식.md)은
 
 $$
-S^{(2)}_\zeta=\int a^3Q_s\left[\dot\zeta^2-c_s^2(\nabla\zeta)^2/a^2\right],
-\qquad Q_s=\frac{XA}{H^2},\qquad c_s^2=\frac BA
+K(t)=t^{-d_0/2}W(t),\qquad
+W(t)=(1-\eta)+\eta\operatorname{erfcx}
+\left(\frac{\ln t}{2\sqrt b}\right),\qquad b>0,\quad 0\le\eta\le1
 $$
 
-가 된다. 장파장 해 $\zeta=C_1+C_2\int dt/(a^3Q_s)$에는 독립 질량항이 없다.
-동결 관측창에서 고정계량 진단의 최대 $|m_{\rm eff}^2|/H^2$는
-$3.0455\times10^{-18}$, 보수적 로그 성장상계는 $2.4838\times10^{-17}$이었다.
-단일-clock 작용에서는 $\min c_s^2=9.2138\times10^{-19}$,
-$\min Q_s/M_{\rm Pl}^2=3.3167\times10^5$였고, pump 기울기 두 개도
-$3.93909$, $3.469545$로 양수였다. 따라서 유한 관측창에서 두 번째 장파장
-mode의 $\dot\zeta$와 적분함수는 감소한다. 이것은 선택한 단일-clock 부분계의
-검사일 뿐, 임의 초기값ㆍ무한 미래ㆍ다유체 우주의 안정성 증명은 아니다.
+인 연속 차원 후보를 구성한다. $t$는 기준척도로 무차원화한 확산시간이다. $d_0=4$는 여기서도 입력이며 물리 차원을 유일하게 도출한 값이 아니다.
 
-같은 R2는 작은 음속에서 에너지 cutoff와 파수 cutoff를 분리했다. 정준장 전개의
-$\Lambda_3$는 $79.7$--$80.6\,{\rm eV}$, $\Lambda_4$는
-$94.8$--$95.8\,{\rm eV}$이고,
-$\Lambda_E=\Lambda_3c_s^{7/4}$와 $q_{\rm sc}=\Lambda_3c_s^{3/4}$다.
-관측창에서 각각 $1.3336\times10^{-14}\,{\rm eV}$,
-$1.3893\times10^{-5}\,{\rm eV}$보다 작아지지 않았으며, Hubble 에너지와
-$1\,{\rm Mpc}^{-1}$ 물리 파수보다 각각 $9.2757\times10^{18}$,
-$2.1725\times10^{24}$배 위에 있다. $k^4$ crossover가 이 cutoff 전에 오기 위한
-$\bar M$의 필요하한은 오늘 $0.225\,{\rm eV}$, 관측창 최악 $7.31\,{\rm eV}$다.
-$\bar M\sim80\,{\rm eV}$ 후보는 필요조건을 충족할 수 있지만 그 사실은
-higher-derivative completion이나 관측 예측을 만들지 않는다. 미래에는
-two-derivative cutoff가 계속 내려가므로, 이 경로는 구체적 후보이며 남은 계산
-과제다.
+### 8.3 단순 융합의 자외선 반례
 
-그러므로 R1에서 R2까지 얻은 것은 포화 readout을 가진 조건부 EFT와 관측창
-부분계의 안정성ㆍcutoff 검사다. 비선택 양자경로가 실제 암흑부문이라는 동일성,
-0차원 기록에서 $\Pi_{\rm F}$를 얻는 사상, 존재량의 분할, bath pole과 전체
-coupled ADM, 정확한 $k^4$ degeneracy, Einstein--Boltzmann CMB/LSSㆍlensingㆍhalo는
-모두 미완성이다. 이 단계를 ‘암흑에너지의 증명’ 또는 예측으로 승격하지 않는다.
+**[산출]** $\eta>0$에서 $W(t)$는 $t\to0$일 때 대략 $\exp[(\ln t)^2/(4b)]$처럼 증가한다. 고정 4차원의 상대 열핵이 $O(t)$여도 상대 작용의 $dt/t$ 적분에 이 가중치를 그대로 곱하면 일반적인 비영 위상차에서 자외선 수렴을 잃는다.
 
-## 9. 유도 응용: 방정식에서 기능형까지
+‘무한한 장 모드의 상대 작용이 유한하다’와 ‘무한 차원 가중을 넣어도 유한하다’는 다른 명제다. 38장의 반례는 지정한 융합을 배제하며 모든 확률적 차원 이론을 배제하지 않는다. 물리적 cutoff의 기원이나 고에너지 작용을 바꾸려면 인과성·안정성·관측을 함께 다시 판정해야 한다.
 
-코어 이론의 조건을 다른 분야로 옮길 때에는 공통 작용이 모든 방정식을
-산출한다고 가정하지 않는다. 이 장은 각 분야에서 이미 닫힌 표준 결과를
-먼저 쓰고, CE가 제안하는 기능형·readout·결합이 어느 지위에 머무는지를
-차례로 분리한다.
+## 9. 관측 비교와 재현
 
-### 9.1 Navier--Stokes: 에너지 항등식과 잔차 목적함수
+**현재 판정:** 공통 원리에서 입력을 결정하여 다섯 목표의 공동 관측오차를 줄였다는 결과는 없다. 아래 피팅 결과는 진단 자료이며, 관측별 보정계수 피팅을 엄격히 제한한다. 질량·표현·초기상태를 공급한 계산을 무입력 예측으로 부르지 않는다.
 
-유체 적용에서는 난류를 해결했다는 선언보다 경계조건이 에너지 계산에
-어떻게 들어가는지가 먼저다. 차원 $d=2$ 또는 $3$의 periodic 영역 또는
-매끄러운 bounded 영역에서, 속도 $\mathbf u$, 압력 $p$, 밀도 $\rho>0$,
-동점성계수 $\nu>0$, 단위질량당 외력 $\mathbf f$를 둔다. periodic
-branch에서는 평균을 0으로, bounded branch에서는 no-slip
-$\mathbf u|_{\partial\Omega}=0$을 둔다.
+**동일 적합 자유도의 후속 비교:** 기준과 여섯 후보 모두에 물질 계수 Rm과 공통 거리 눈금 A를 허용하면, 전체 13거리 RMSE는 기준 0.88886449에서 최선 고정 후보 0.87781998로 소폭 감소한다(Δχ²=−0.253658). 이는 개발자료에 대한 사후 적합이며, 입력의 기원·독립 예측·전체 공동 개선을 증명하지 않는다. [적합 조건·전체 표·검산](00_기원과_현재계획/12_동일한_적합자유도의_거리비교.md).
 
-**[정의]** 비압축성 방정식은
+**2026-09-09 원본 관측 묶음 재현:** 동일한 중성 스펙트럼의 여섯 고정 후기 시험점에서 배경해와 DESI 13거리 계산을 다시 실행했다. 각 모형에 공통 눈금 한 개를 허용한 표준화 RMSE는 θ=0 기준 0.89257628에 비해 0.89424004–1.07166648로 모두 증가했다. 수치 검산 통과와 관측 개선을 구분하며, 이 거시 결과에 별도 하전 후보의 뮤온 점수를 합산하지 않는다. [원본·독립 검산과 전체 표](00_기원과_현재계획/11_원본묶음_재현과_전체거리_오차.md).
+
+### 9.1 무엇을 같은 점수로 비교하는가
+
+**[정의·평가 계약]** 실제 관측벡터 $y$, 사전에 정한 양의 정부호 공분산 $C$, 기준 예측 $f_0$와 공통 매개변수 $\Theta$의 후보 $f_\Theta$를 사용한다.
 
 $$
-\partial_t\mathbf u+(\mathbf u\cdot\nabla)\mathbf u
-=-\rho^{-1}\nabla p+\nu\Delta\mathbf u+\mathbf f,
-\qquad \nabla\cdot\mathbf u=0.
-$$
-
-충분히 매끄러운 해에 $\mathbf u$를 내적하여 적분하면, 비선형항은
-발산정리와 경계조건으로 0이 된다. 압력항도 divergence-free 조건으로
-0이 되고, Laplacian 항은 부분적분으로 음의 gradient norm이 된다.
-그러므로
-
-$$
-\frac12\frac{d}{dt}\|\mathbf u(t)\|_2^2
-+\nu\|\nabla\mathbf u(t)\|_2^2=(\mathbf f,\mathbf u)
-$$
-
-가 **[정리]**로 따른다. 이 식은 점성이 운동에너지를 소산하고 외력이
-공급한다는 정확한 장부다. 욕조의 물을 저어도 벽과 점성이 없으면 같은
-장부가 성립하지 않는다는 점에서, ‘난류 억제’의 일반 비유에는 한계가 있다.
-
-기준 길이 $L$과 속도 $U$로 무차원화하면 Reynolds 수
-$\operatorname{Re}=UL/\nu$가 나온다. 이 변수에서 PDE residual과
-divergence residual의 제곱을 적분한 $\mathcal J$를 수치 목적함수로
-**[공리]**로 둘 수 있다. 경계·초기조건을 만족하는 허용 함수에서
-$\mathcal J=0$이면 PDE가 a.e. 성립한다는 것은 **[정리]**다. 그러나
-minimizer의 존재·유일성·격자 수렴과 3차원 global regularity는 이
-동치에서 따라오지 않는다. CE stress를 넣으려면 별도의
-$\tau_{\rm CE}$ 구성방정식, causal relaxation과 energy estimate가
-필요하며, 현재는 **[미완성]**이다.
-
-### 9.2 단백질 접힘: 경로 가중과 곡률 억제
-
-유체의 잔차가 방정식 위반을 측정했다면, 단백질 절은 가능한 접힘 경로의
-비교 규칙을 제안한다. 상태공간 $\mathcal X$의 점 $x$는 하나의 입체
-구조이고, $x(t)$는 고정된 시간구간 $[0,T]$의 경로다. 자유에너지
-$E(x)$는 외부 분자모형의 입력이며, 복잡도 $\mathcal C(x)$의 실제
-정의는 아직 유일하지 않다.
-
-**[공리: 모델 선택]** 무차원 상태좌표와
-$[\beta]=\mathsf E^{-1}\mathsf T^{-1}$를 택해
-
-$$
-P_{\rm sel}[x]\propto
-\exp\!\left[-\beta\int_0^T
-\big(E(x(t))+\alpha_C\mathcal C(x(t))\big)\,dt\right]
-$$
-
-로 경로를 가중한다. $[\alpha_C]=\mathsf E\mathsf C^{-1}$이므로 지수는
-무차원이다. 이는 열평형 Boltzmann factor의 유도가 아니라, 시간 적분된
-경로 비용에 대한 역작용 가중의 선택이다.
-
-매끄러운 경로와 국소 복잡도 근사를 함께 가정하면
-
-$$
-\mathcal C(x(t))\approx c_0+c_1\|\dot x(t)\|^2
-+c_2\|\ddot x(t)\|^2.
-$$
-
-모든 후보가 같은 $T$를 공유할 때에만 $c_0T$는 비교에서 소거된다.
-복잡도 유래 항은
-
-$$
-\mathcal S_{\rm fold}[\phi]=\int_0^T
-\left(a_0\|\dot\phi\|^2+
-\lambda_{\rm fold}\|\ddot\phi\|^2\right)\,dt,
-\quad
-a_0=\beta\alpha_Cc_1,\quad
-\lambda_{\rm fold}=\beta\alpha_Cc_2
-$$
-
-가 된다. 구불구불한 등산로가 같은 고도차를 더 긴 시간에 오르는 비유는
-이 항의 직관을 주지만, 실제 protein landscape의 곡률을 측정했다는
-뜻은 아니다. RMSD 개선을 주장하려면 단백질 집합·baseline·자료 분리·seed·
-불확도를 사전 고정해야 하며, 이 검증은 **[미완성]**이다.
-
-### 9.3 암흑에너지: FLRW와 scalar branch의 경계
-
-접힘의 우주론 readout을 논하려면 먼저 확률과 무관하게 성립하는 FLRW
-배경을 고정해야 한다. scale factor $a(t)$와 Hubble rate $H=\dot a/a$,
-total density $\rho$, pressure $p$에 대해 Einstein 방정식은
-
-$$
-H^2+\frac{k}{a^2}=\frac{\rho}{3M_{\rm Pl}^2},
+R_{\rm all}(\Theta)=
+\sqrt{\frac{(f_\Theta-y)^TC^{-1}(f_\Theta-y)}N},
 \qquad
-\dot\rho+3H(\rho+p)=0.
+R_g(\Theta)=
+\sqrt{\frac{(f_{\Theta,g}-y_g)^TC_{gg}^{-1}(f_{\Theta,g}-y_g)}{N_g}}.
 $$
 
-따라서 가속 $\ddot a>0$에는 $\rho+3p<0$가 필요하다. 이는 source의
-절대 scale을 정하지 않는 **[정리]**다.
-
-최소 결합 canonical scalar를 **[공리]**로 택하면
-
-$$
-\rho_\phi=\frac12\dot\phi^2+V,\qquad
-p_\phi=\frac12\dot\phi^2-V,
-\qquad
-w_\phi+1=\frac{\dot\phi^2}{\rho_\phi}\geq0.
-$$
-
-마지막 부등식은 positive kinetic과 $\rho_\phi>0$ 아래의 **[정리]**다.
-그러므로 이 branch는 phantom crossing을 만들지 못한다. 상수 potential은
-$w=-1$을 주지만, 작은 진공에너지의 크기와 radiative stability는
-설명하지 않는다. scalar--tensor branch로 넘어가려면 $F(\phi)>0$과
-Einstein-frame kinetic positivity, matter coupling과 초기조건을 따로
-고정해야 한다. 원하는 $H(a)$를 먼저 맞춘다고 하나의 공변 작용이
-자동으로 생기지는 않는다.
-
-### 9.4 Master action: 변분, 축약, 소산의 분리
-
-여러 응용에서 쓰인 작용의 공통 부분은 변분 원리다. field를 $\Phi^A$,
-coupling을 $\lambda_I$로 쓰고
-
-$$
-S[\Phi;\lambda]=\int_M d^4x\sqrt{-g}\,
-L(\Phi^A,\nabla_\mu\Phi^A;\lambda_I)
-$$
-
-를 정의하면, variation은 bulk Euler--Lagrange 항과 boundary term으로
-갈린다. boundary condition 또는 적절한 boundary action을 정한 뒤에만
-$\delta S=0$에서 field equation이 따른다. 미분동형사상 불변 완결
-작용에서는 Noether identity가 total stress의 on-shell 보존을 준다.
-
-ansatz $\Phi^A=\iota^A(\psi)$를 대입한 reduced action의 stationary
-point는 full equation의 tangent projection만 보장한다. 버린 방향의
-equation도 0일 때에만 consistent truncation이다. 이는 지도에서 지하철
-노선 하나만 보고 도시 전체 교통이 맞는다고 말할 수 없는 것과 같다.
-Navier--Stokes나 GKSL처럼 소산적인 식에는 bath, influence functional,
-Schwinger--Keldysh doubled field와 positivity/noise가 더 필요하다.
-하나의 실수 scalar action이 모든 transport coefficient를 산출한다는
-주장은 **[미완성]**이다.
-
-### 9.5 Neural RealityStone: 곡률 기능형의 해석 한계
-
-뇌와 LLM 절은 실제 생물학적 작용을 쓰는 것이 아니라, 상태 변화의
-안정성을 비교하는 보조 기능형을 제안한다. 뇌 활성 $x$와 LLM hidden
-state $z$가 각각 계량을 가진 상태공간에 놓인다고 두고, 과업 상태
-$\phi$의 gradient와 Hessian류 변화를 지표로 읽는다. 실제 계량과 곡률을
-측정하는 절차는 아직 정해지지 않았다.
-
-**[공리: 모델 선택]** 각성 상태에는
-
-$$
-\mathcal S_{\rm awake}=\int\!\!\int_{V_{\rm task}}
-\left(\|\nabla\phi\|^2+
-\lambda_{\rm awake}\|\nabla^2\phi\|^2\right)\,dx\,dt
-$$
-
-를, NREM에는 2차 항 가중이 큰 유사 functional을 둔다. REM에는 탐색
-noise 항을 더하는 해석을 택할 수 있다. 평평한 지형에서 공이 작은
-교란에 덜 흔들린다는 비유는 가능하지만, 뇌의 수면 단계가 이 식을
-최소화한다는 증거는 아니다.
-
-ACC–오류감시, PFC–정책수정, 해마–장기기억, 수면–오프라인 평탄화의
-대응은 설계 가설이다. 조현병·뇌전증·환각을 각각 특정 곡률 항의 고장으로
-읽는 일도 임상 자료와 사전 고정 실험이 필요하다. 특히 LLM 환각률을
-하나의 상수로 동일시하지 않으며, runtime benchmark의 결과는 생물학
-기전의 검증으로 전용하지 않는다.
-
-### 9.6 상수장 블랙홀: 보존되는 Einstein branch
-
-마지막 응용은 scalar--tensor 작용에서 상수장 $\phi=\phi_0$가 실제 해가
-되는 조건을 확인한다. $F_0=F(\phi_0)>0$, $V_0=V(\phi_0)$일 때 scalar
-방정식은 pointwise로
-
-$$
-\frac{M_{\rm Pl}^2}{2}F'_0R(x)-V'_0=0
-$$
-
-을 만족해야 한다. 이 조건과 metric 방정식을 함께 쓰면
-
-$$
-G_{\mu\nu}+\Lambda_{\rm eff}g_{\mu\nu}
-=8\pi G_{\rm eff}T^{(m)}_{\mu\nu},
-\quad
-G_{\rm eff}=\frac{1}{8\pi M_{\rm Pl}^2F_0},
-\quad
-\Lambda_{\rm eff}=\frac{V_0}{M_{\rm Pl}^2F_0}
-$$
-
-로 정확히 축약된다. metric 방정식만 맞추고 scalar equation을 생략하면
-이 결론은 얻을 수 없다.
-
-점근 평탄 진공, 정적 구면대칭과 연결된 외부영역을 더 가정하면
-$f(r)=1-2G_{\rm eff}M/r$인 Schwarzschild branch가 나온다. horizon
-$r_h=2G_{\rm eff}M$, 온도 $T_H=(8\pi G_{\rm eff}M)^{-1}$, Wald entropy
-$S_{\rm W}=A_H/(4G_{\rm eff})$는 이 branch의 조건부 산출이다. 상수장을
-일정 비율로 바꾸면 shadow가 바뀐다는 식의 비유는 물리적으로 고정된
-$G_{\rm eff}$와의 비교를 놓친다. 비상수 hair, full perturbation,
-greybody spectrum, backreaction과 양자중력 종말은 **[미완성]**이다.
-
-## 10. 등호이전 수학과 측정 문제
-
-응용 기능형의 수학적 기반은 등호이전 문서군에서 더 일반적으로 전개된다.
-유한 후보공간에서 Gibbs 재가중은 유일 최소 후보로 농축하고, 연속·비콤팩트
-공간에서는 coercivity, recovery mass와 support 조건이 그 역할을 한다.
-조건 자체를 후보로 올린 joint manifest, 조건 주변화와 Bayes readout,
-`PreEq_fin`의 비음수 커널 범주, tropical/min-plus 극한은 각각 정의역을
-명시한 수학 결과다. 이 층은 ‘답이 나타나기 전 후보들이 어떻게 정렬되는가’를
-다루며, CE 물리의 대체 설명이 아니다.
-
-양자 측정과 Born rule은 특히 엄격히 분리한다. finite branch refinement
-아래 특정 prior가 Born 가중을 준다는 조건부 정리는 있으나, 실제 양자
-상태·측정장치·환경에서 그 prior가 왜 선택되는지는 추가 물리 사상이다.
-따라서 `Born prior`, 잔류 경로, AGI residual channel은 정리·공리·실험
-프로토콜의 서로 다른 지위를 유지한다. 이 층의 전체 정의와 no-go는
-[등호이전 수학](9_등호이전/README.md)에 있다.
-
-### 10.1 유한 후보와 Gibbs 농축
-
-앞 절의 경로 후보를 더 단순한 유한 집합으로 제한하면 선택의 수학적
-내용을 투명하게 볼 수 있다. 후보집합 $X$와 무차원 cost $E:X\to\mathbb R$,
-초기확률 $\mu_0$를 고정하면 Gibbs 재가중은
-
-$$
-\mu_\beta(x)=\frac{e^{-\beta E(x)}\mu_0(x)}
-{\sum_{y\in X}e^{-\beta E(y)}\mu_0(y)}.
-$$
-
-유일 최소점이 초기분포에서 양의 질량을 가지면 $\beta\to\infty$에서
-$\mu_\beta$는 그 최소점의 Dirac 측도로 수렴한다. 이는 **[정리]**다.
-동점 최소점 안에서 어떤 후보를 고를지는 이 정리만으로 정해지지 않는다.
-
-### 10.2 연속, 비콤팩트, Gamma 극한
-
-유한합을 적분으로 바꾸면 minimizer로 도망가지 않게 하는 조건이 필요하다.
-compact 공간에서는 연속성과 양의 기준측도가, 비콤팩트 공간에서는
-coercivity와 recovery mass가 농축의 전제가 된다. 에너지 자체가 scale에
-따라 변할 때에는 국소 균등수렴 또는 Gamma 수렴이 최소값의 안정성을
-통제하지만, 최소집합 내부 선택까지 자동으로 주지는 않는다.
-
-### 10.3 조건, Bayes와 범주 도구
-
-값뿐 아니라 조건 $c$도 후보라면 joint weight를 먼저 만들고 주변화해야
-한다. 조건부 readout은 joint posterior의 비율이며, 사후 선택을 이미
-선택된 값의 원인으로 되돌려 쓰지 않는다. PreEq_fin의 비음수 커널,
-Markov/Kleisli 위치와 tropical 극한은 이 합성을 엄밀히 기록하는
-**[정의]**과 **[정리]**다. 물리적 측정 사상은 이 범주 결과에 추가로
-붙여야 한다.
-
-### 10.4 phi pushforward와 good-rate 경로
-
-유한 후보의 농축을 CE 경로공간에 적용하려면 $W=S_E/\hbar+S_{\rm supp}$
-가 good rate function이고, prior가 필요한 support를 실제로 가져야 한다.
-이 전제에서 비선택 subprobability와 조건부 shape를 분리하고 커널
-$K_\phi$로 pushforward를 정의할 수 있다. 어느 prior와 kernel가 자연의
-것인지, Brownian 경로와 Sobolev 경로 중 무엇을 택할지는 **[미완성]**이다.
-
-### 10.5 Born bridge의 정확한 경계
-
-측정 후보를 refinement할 때 branch count prior가 진폭 제곱 prior로
-정렬되는 조건부 finite-branch 결과가 있다. 그러나 실제 Born rule은
-Hilbert 공간, 측정 interaction, decoherence와 apparatus를 포함하는
-물리 이론의 문제다. 따라서 finite refinement 정리를 Born rule의
-무조건 유도로 부르지 않는다.
-
-## 11. 뇌, 생명, AGI의 검증형 확장
-
-물리 코어의 선택·잔류·readout 어휘는 뇌와 생명에서 검증 질문을
-조직할 뿐 생물학적 동형성을 뜻하지 않는다. 아래 절은 관측 사실, toy
-모형, 구현과 실험 판정을 분리한다.
-
-### 11.1 뇌 해부와 관측 정의
-
-뇌 이론은 먼저 무엇을 관측량으로 부를지 고정한다. 세포형·층·영역·
-투사는 구조 자료이고, spike·calcium·LFP·행동은 서로 다른 시간해상도의
-관측이다. 영역 $i$의 시계열을 $x_i(t)$, 과업 입력을 $u(t)$, 행동
-readout을 $y(t)$로 쓰는 것은 **[정의]**이며, 이것이 완전한 신경 상태
-좌표계라는 뜻은 아니다.
-
-ACC의 오류 관련 활성과 PFC의 규칙 수정은 문헌 기반 기준 사실이지만,
-각 영역이 하나의 CE scalar를 계산한다는 결론은 없다. recording modality
-정렬, session·animal 변이, 결측과 intervention을 명시하지 않으면
-상관은 회로 인과성을 주지 않는다. 해부 지도만으로 동역학을 추론하는
-일은 도로 지도만으로 교통량을 예측하는 것과 같으며, 그 bridge는
-**[미완성]**이다.
-
-### 11.2 항상성, 그래프 결합과 이완
-
-관측을 고정한 뒤에는 외란에서의 복구를 시험할 수 있다. 영역을 노드,
-유효 연결을 $W_{ij}$로 두는 선형화는
-
-$$
-\dot x_i=-\lambda_i(x_i-\bar x_i)+\sum_jW_{ij}x_j+u_i(t)
-$$
-
-처럼 쓸 수 있는 **[공리: 모델 선택]**이다. $\bar x_i$는 기준 활성,
-$\lambda_i>0$는 국소 이완률이다. 선형화 행렬의 고유값 실수부가
-음수이면 그 근방에서 안정하다는 것은 **[정리]**이지만, 비선형 뇌 전체의
-보편 안정성은 아니다.
-
-feedback gain과 지연은 항상성의 핵심 조건이다. 온도조절기의 gain을
-과도하게 높이면 overshoot가 생기는 비유는 유용하지만 endocrine·immune·
-neural 축을 하나의 gain으로 환원하지 않는다. $W$와 $\lambda$는 공개
-자료·개입·불확도 규약으로 추정해야 하며, fitted correlation을 directed
-causal coupling으로 읽는 일은 **[미완성]**이다.
-
-### 11.3 수면, 가소성, 복구
-
-이완이 깨어 있는 상태의 짧은 복구를 다룬다면 수면은 더 긴 시간척도의
-재조직을 다룬다. NREM 재생·동기화와 REM 내부생성은 외부 문헌의 기준
-사실로 분리하며, CE functional의 직접 산출로 부르지 않는다.
-
-가소성 toy update는
-
-$$
-\Delta w_{ij}=\eta F(t_i^{\rm post}-t_j^{\rm pre})
--\gamma(w_{ij}-w_0)
-$$
-
-로 쓸 수 있다. 첫 항은 pre/post timing 의존 변화, 둘째 항은 기준
-$w_0$를 향한 항상성 완화의 예다. 이는 특정 세포형의 보편 법칙이
-아니다. 수면·replay가 기억 또는 회복을 개선하는지는 stage, task,
-intervention, 행동 readout을 사전 고정해 비교해야 한다.
-
-offline replay와 생물학적 sleep은 이름이 비슷해도 동형이 아니다.
-STDP 효능의 일부 일반 주장은 감사에서 지지되지 않아 비활성 기본값으로
-남아 있다. 수면 기능형의 계수와 실제 circuit variable의 matching은
-**[미완성]**이다.
-
-### 11.4 원시생명: 존재, 결합, 연령구조와 경험 gate
-
-원시생명 절은 생명을 한 식으로 정의하지 않고 재현·유전·선택을 가진
-최소 모형에서 성립하는 명제를 분리한다. type $i$가 type $j$ 자손을
-평균 $A_{ij}$개 만드는 다형 branching process는 수학 대상이고,
-실제 prebiotic chemistry와의 식별은 다른 문제다.
-
-연령구조에서는 상태가 type과 age로 함께 색인된다. survival·fertility
-kernel과 초기분포가 주어지면 성장률과 extinction threshold를 계산할
-수 있다. 결합 유전·선택 정리는 지정 inheritance rule 아래의
-**[정리]**이지 자연의 진화 역사를 무입력으로 재구성하는 결과가 아니다.
-
-경험 gate는 원자료, 단위, exclusion rule, baseline과 판정 기준을
-요구한다. 이 항목 없이 수치 근접을 evidence로 승격하지 않는다. chemical
-network, 환경 변화, 관측 편향을 갖춘 실제 생명 기원으로 가는 사상은
-**[미완성]**이다.
-
-### 11.5 AGI architecture와 runtime
-
-생명 모형의 검증 경계를 유지한 채 AGI architecture는 구현 설계로
-다룬다. gauge lattice, recurrent layer, local/cloud cell과 agent loop는
-채널·메모리·제어를 나누는 코드 구성요소이며, 뇌 영역의 등가물이 아니다.
-hidden state $h$에서 후보 action 또는 token 점수 $s_a(h)$를 만들면
-
-$$
-p(a\mid h)=\frac{e^{s_a(h)}}{\sum_b e^{s_b(h)}}
-$$
-
-로 후보분포를 정의할 수 있다. 이는 선택 규칙의 **[정의]**이지 의식이나
-물리적 측정의 유도가 아니다. 타당성은 unit test, failure isolation,
-latency·memory budget, safety boundary와 task benchmark에서 판정한다.
-
-CloudCell monad와 recurrent tower는 합성 규칙의 **[공리: 구현 선택]**이다.
-사양 파일의 선언만으로 성능·인과성·보안이 보장되지 않으며, 일부 연결
-주장은 부정적 감사가 있다. runtime 효과는 사전등록 실험 전까지
-**[미완성]**이다.
-
-### 11.6 memory, replay, planning
-
-runtime이 한 step의 후보를 고르면 memory는 시간적으로 떨어진 관측을
-어떻게 재사용할지 다룬다. episodic memory는 event–context–outcome,
-working memory는 현재 제약, replay buffer는 과거 trajectory로 구분한다.
-계층 planning은 상위 goal을 subgoal과 action sequence로 분해하지만,
-성공은 미래 보상·안전 제약·도구 실패를 포함해 평가해야 한다.
-
-replay의 효과는 동일 task distribution, context budget, seed, tool
-availability에서 no-replay baseline과 비교해야 한다. retrieval oracle,
-데이터 누수, prompt 차이를 제거한 ablation이 필요하다. memory가 길수록
-무조건 좋다는 명제는 interference, stale context, compute cost 때문에
-성립하지 않는다. biological hippocampus 대응과 일반 장기일관성 보장은
-**[미완성]**이다.
-
-### 11.7 sparsity, causal bridge와 OOD
-
-sparsity는 활성 channel 수를 줄이는 설계 원리일 수 있으나 transformer
-기질에서 특정 sparsity ratio가 자연 수렴한다는 보편 주장은 감사에서
-지지되지 않았다. sparse mask, routing threshold, causal bridge는
-hyperparameter와 ablation을 가진 **[공리: 모델 선택]**으로 관리한다.
-
-OOD generalization은 학습 분포 밖 길이·구조·도구 조합에서의 성능이다.
-in-distribution 평균 점수는 long context나 causal perturbation에서도
-유지된다는 뜻이 아니다. edge 선택 효과는 randomized edge, dense baseline,
-shuffled control과 비교해야 한다. intervention 또는 강한 식별 가정 없이
-causal graph가 실제 원인을 회복했다고 말할 수 없으며, bridge closure와
-세계모형 일반화는 **[미완성]**이다.
-
-### 11.8 hallucination, residual gate와 검증
-
-환각은 단일 상수보다 주장·근거·도구 결과의 불일치를 검출하는 절차로
-다룬다. residual vector $r$와 양의 weight $W$를 고정하면
-
-$$
-R=r^\mathsf TW r
-$$
-
-를 제약 위반 score로 사용할 수 있다. $R$이 작다는 것은 선택한 제약과
-일치한다는 뜻일 뿐 사실성·완전성·안전성 전체를 보장하지 않는다.
-
-phi 재주입 gate는 $\alpha_\phi=0$과 $\alpha_\phi>0$의 ablation을 자료
-전에 고정해 비교한다. accuracy, false allow, false block, latency,
-비용과 failure 사례, shuffled-residual control을 함께 기록해야 한다.
-hallucination gate나 claim verifier의 성공은 뇌 오류감시 또는 양자
-선택 bridge의 증명이 아니다. coverage가 낮은 constraint, adversarial
-prompt, source 오류와 reward hacking은 **[미완성]** 과제다.
-
-## 12. 공학적 활용의 조건부 설계
-
-뇌·AGI의 검증 규율은 공학 문서군에서도 유지된다. 아래 각 절은 필요한
-외부 입력을 갖춘 조건부 설계식 또는 verifier이며, CE 코어가 재료·bath·
-transport 계수를 무입력 산출한다는 주장은 하지 않는다.
-
-### 12.1 핵융합 설계
+단위가 다른 생 RMSE를 더하지 않는다. 전체 점수에는 알려진 분야 간 상관을 포함하고, 분야별 점수에는 해당 공분산의 주부분행렬을 사용한다. 기준 모형과 후보에 같은 보정 자유도·자료 분할을 허용한다.
 
-핵융합 모형은 핵종, 온도·밀도, Coulomb barrier, plasma screening,
-confinement time과 transport를 입력으로 요구한다. 두 전하의 유효
-potential과 WKB tunnelling exponent를 계산할 수 있어도 reactor gain은
-그 적분 하나로 정해지지 않는다. scalar coupling을 추가하려면 독립
-EFT 계수와 실험 제약을 함께 둔다. 설계 검증은 반응률, power balance,
-불안정성 및 안전 한계를 baseline plasma model과 비교하는 절차이며,
-CE의 직접 에너지 생산 예측은 **[미완성]**이다.
+목표는 동결한 독립 자료에서 $R_{\rm all}^{\rm CE}<R_{\rm all}^0$와 모든 필수 분야의 $R_g^{\rm CE}<R_g^0$를 함께 충족하는 것이다. 불확실성과 복잡도도 평가한다. 매개변수 중심값을 기준 모형에 그대로 입력해 잔차를 0으로 만든 뒤 같은 요약값에 더 작은 오차를 요구하는 비교는 성립하지 않는다.
 
-### 12.2 양자오류보정
-
-열린 양자계에는 system, bath, coupling, noise spectrum과 recovery
-channel이 필요하다. 완전양성 trace-preserving map은
-
-$$
-\mathcal E(\rho)=\sum_kK_k\rho K_k^\dagger,\qquad
-\sum_kK_k^\dagger K_k=I
-$$
-
-로 정의할 수 있지만, 이 식만으로 물리 noise나 threshold가 정해지지
-않는다. logical error rate를 physical error, code distance, decoder
-budget 아래에서 측정하고 no-recovery baseline과 비교해야 한다. CE
-residual을 syndrome으로 동일시하는 사상은 **[미완성]**이다.
+### 9.2 확보된 증거의 범위
 
-### 12.3 진공에너지
-
-상수 potential은 $T_{\mu\nu}=-V_0g_{\mu\nu}$와 $w=-1$을 주지만,
-laboratory device가 $V_0$를 조절한다는 결론은 없다. vacuum subtraction,
-boundary condition, Casimir geometry와 measurable force를 구별해야 한다.
-관측 가능한 힘·압력·열유속을 계산하는 것은 조건부 문제이고, absolute
-vacuum energy extraction 또는 gravitational shielding은 현재 근거 없는
-**[미완성]** 주장이다.
-
-### 12.4 공학적 이론 한계
-
-초광속 signalling, 순간이동, 무한 에너지 이득, 완전한 error-free
-computation은 설계 목표가 아니라 먼저 no-go와 resource accounting을
-적용할 대상이다. 인과성에는 light cone과 signal definition, 열역학에는
-work reservoir와 entropy flow, 양자에는 no-cloning과 measurement
-back-action이 필요하다. 조건부 식을 이런 경계 밖으로 외삽하지 않는다.
+| 대상 | 현재 근거 | 해석 |
+|---|---|---|
+| 공통 스펙트럼의 곡률 응력 | 모드합·해석식·미분의 로컬 재실행 | 조건부 수학식의 수치 구현 검증 |
+| 로컬 38장의 BAO 8행 | 보편 결합 가지의 전체 고전 배경과 동일 자유도 재적합 | 시험한 세 점은 GR 대비 개선되지 않음 |
+| 원자 간섭·국소 중력 | 요약자료, 기하·힘·위상과 차폐 상계의 조건부 계산 | 장치 전체 likelihood와 공동 예측 미완성 |
+| 질량·혼합각 | 행렬 응답, 경험식 검사, 공개 진동자료 범위 감사 | 고유한 flavor 선택과 독립 공동 비교 미완성 |
+| 초기 우주·군집 | 조건부 배경·점유·성장 계산 | CMB·거리·성장 전체 likelihood의 공동 개선 미확인 |
 
-### 12.5 초전도체 설계
-
-초전도 모형에는 band structure, pairing interaction, Coulomb repulsion,
-phonon 또는 bosonic glue, disorder와 bath가 필요하다. BCS형 gap equation
-
-$$
-\Delta_k=-\sum_{k'}V_{kk'}\frac{\Delta_{k'}}{2E_{k'}}
-\tanh\!\left(\frac{E_{k'}}{2T}\right)
-$$
-
-은 주어진 kernel 아래의 self-consistency 식이다. Floquet drive나
-scalar coupling을 넣어도 heating, lifetime, competing order를 검증해야
-한다. CE가 임의 재료의 $T_c$를 산출한다는 주장은 **[미완성]**이다.
-
-### 12.6 공학식 총람과 master-action 경계
-
-master action은 Euler--Lagrange equation을 주는 변분 장치다. 유체
-점성, Lindblad 소산, BCS collision integral, nuclear transport에는
-추가 자유도와 coarse graining이 필요하다. 따라서 총람의 식은 필요한
-입력·정의역·출력·검증 benchmark를 함께 읽어야 하며, 서로 다른 분야의
-계수를 하나의 CE 상수로 대체하지 않는다.
-
-### 12.7 Euler--Riemann attention
-
-Euler--Riemann attention은 위치·거리·회전 bias를 transformer에
-넣는 구현 가설이다. attention score는
-
-$$
-\operatorname{softmax}\!\left(\frac{QK^\mathsf T}{\sqrt d}+B\right)V
-$$
-
-처럼 baseline과 같은 비용·parameter budget에서 비교한다. 수론 상수나
-Euler 구조를 bias에 넣는 일이 language modeling 성능을 보장하지 않으며,
-seed·length·ablation과 baseline이 판정의 기준이다.
-
-### 12.8 기상 그래프 잔차
-
-기상 관측망은 station node, edge, 시간해상도, 결측 처리와 forecast
-target을 명시해야 한다. graph residual은 예측과 관측의 차이를 공간
-연결에 따라 집계하는 목적함수일 뿐 물리 PDE의 대체가 아니다. 독립
-forecast baseline, spatial holdout, extreme-event slice와 calibration을
-비교해야 하며, data leakage와 station-density bias는 핵심 한계다.
-
-### 12.9 무차원 잔차장 환각억제
-
-서로 단위가 다른 제약은 기준 scale로 나누어야 비교할 수 있다. residual
-$\widehat r_i=r_i/\Lambda_i$와 양의 weight를 택하면
-
-$$
-\mathcal J=\frac12\sum_iw_i|\widehat r_i|^2
-$$
-
-는 무차원 score다. threshold는 false allow·false block·latency를
-포함한 held-out benchmark로 정해야 한다. 낮은 residual은 선택한
-검사의 통과이지 사실성 전체의 증명은 아니다.
-
-### 12.10 PreEq LLM manifest verifier
-
-PreEq verifier는 후보 답변·제약·근거를 후보분포와 manifest 절차로
-기록하는 도구다. 입력 schema, source provenance, reject reason과
-replay log가 없으면 재현 가능한 verifier가 아니다. 검증은 known-valid,
-known-invalid, ambiguous case와 shuffled-evidence control에서 precision,
-recall, abstention을 함께 보고한다. 도구의 판정은 이론 지위의 자동
-승격이 아니라 구현 결과다.
-
-### 12.11 claim residual verifier
-
-claim residual verifier는 주장 $c$, 전제 $a$, 관측 또는 계산 $o$ 사이의
-불일치를 구조화한다. 허용 범위를 넘는 residual은 claim을 거부·보류할
-이유가 되지만, residual 0은 누락된 전제나 잘못된 ontology를 검출하지
-못할 수 있다. 따라서 audit trail, adversarial claim, human review와
-versioned input을 함께 둔다. 이 verifier는 문서 규율을 돕는 공학 도구이며
-자연 법칙의 판정기가 아니다.
-
-## 13. 리만, MRA와 수론 기반 attention의 교훈
-
-수론과 transformer를 잇는 MRA 문서군은 ‘장식적인 수식’과 실제 성능
-기제를 분리해야 한다는 CE의 검증 사례다. 아래 절은 positional encoding
-사양, attention block, ablation 결과와 해석 한계를 차례로 둔다.
-
-### 13.1 문제 설정과 Riemann positional encoding
-
-긴 context의 causal transformer는 위치 $n$과 상대 거리 $n-m$를 어떤
-좌표로 표현할지 선택해야 한다. RoPE류 회전 encoding은 위치별 위상을
-곱하지만 매우 긴 길이에서 phase wrapping과 주파수 배치가 일반화를
-제한할 수 있다. Riemann surface positional encoding은 복소 좌표,
-Mellin형 scale, 또는 zeta 영점 후보를 위치 feature로 넣는 **[공리:
-구현 선택]**이다.
-
-입력에는 sequence length, model dimension, head 수, frequency schedule,
-causal mask와 normalization 규약이 필요하다. 수론 객체를 feature에
-넣는 것은 정의일 뿐 Riemann hypothesis, 양자 chaos 또는 언어 구조의
-증명이 아니다. 같은 parameter·token·optimizer budget 아래에서 표준
-RoPE, ALiBi, xPos, NoPE와 비교할 때만 성능 주장이 의미를 갖는다.
-
-### 13.2 MRA 수식과 블록
-
-MRA block은 query $Q$, key $K$, value $V$와 위치 bias $B$를 받아
-
-$$
-\operatorname{Attn}(Q,K,V)
-=\operatorname{softmax}\!\left(
-\frac{QK^\mathsf T}{\sqrt{d_h}}+B\right)V
-$$
-
-를 계산한다. $d_h$는 head dimension이다. MRA는 $B$ 또는 회전
-frequency·amplitude에 Mellin/Riemann 후보 항을 넣으며, causal mask는
-미래 위치를 차단한다. block 사양은 residual connection, normalization,
-FFN, dropout과 tensor shape까지 고정해야 재현 가능하다.
-
-logarithmic distance decay 같은 항은 멀리 떨어진 token의 score를
-감쇠시키는 직접적 기제다. 반면 zeta zero frequency는 회전 주파수의
-후보일 뿐, attention spectrum을 자동으로 개선하지 않는다. 따라서
-수식은 각 knob를 독립적으로 끄고 켤 수 있게 구현해야 하며, block의
-정확한 kernel과 numerical stability는 사양·단위검사로 확인한다.
-
-### 13.3 실험, ablation과 부정 결과
-
-실험은 character-level language modeling의 perplexity, seed 간 분산,
-학습 step, wall-clock, parameter 수와 length extrapolation을 함께
-기록한다. ablation은 baseline RoPE에서 amplitude, frequency, decay,
-Hermitian option을 하나씩 바꾸고 동일 data split과 optimizer를 유지한다.
-짧은 학습의 큰 분산 차이는 early-stopping artifact일 수 있으므로,
-충분한 step과 여러 seed가 필요하다.
-
-현재 문서군의 핵심 부정 결과는 zeta 영점을 attention frequency로 직접
-쓴 가설이 효과적이지 않았다는 점이다. 반면 일부 lean MRA 변종의
-분산 감소나 OOD length 결과는 attenuation 또는 rotation 제거라는
-더 단순한 설명과 경쟁한다. 특히 NoPE 또는 강한 거리감쇠가 좋은 결과를
-보이면, 이를 수론적 기제의 승리로 부르지 않는다.
-
-### 13.4 해석 한계와 후속 검증
-
-MRA의 관측된 결과는 작은 모델·작은 corpus·제한된 seed의 조건부
-benchmark다. BPE 또는 sentencepiece, 대형 모델, native CUDA backend,
-long-context distribution shift와 bidirectional encoder에서 동일한
-결론이 유지되는지는 아직 알 수 없다. attention 행렬의 고유값 분포가
-GUE 통계를 따른다는 해석도 직접 측정 없이는 가설이다.
-
-후속 검증은 train length를 고정한 뒤 더 긴 eval length에서 extrapolation
-곡선을 보고, model scale과 seed 수를 늘리고, 모든 ablation의 비용을
-공개하는 방식이어야 한다. 수론 기반 feature가 baseline보다 낫다는
-주장은 이 절차의 독립 자료에서만 **[예측]** 또는 경험 결과가 될 수
-있다. MRA는 CE 물리 코어의 증명이 아니라, 부정 결과를 보존하는
-검증형 ML 연구다.
-
-## 14. 재현과 문서 지도의 사용법
-
-이 논문이 제시한 구분은 재현 절차에서도 유지된다. 수학 명제는 증명
-원장에서 전제를 확인하고, 수치 코어는 고정점 solver와 무차원 검사를
-수행하며, 문서 정책은 태그와 반례 처리를 점검한다. 대표적인 좁은 검사는
-다음과 같다.
-
-    py -m pytest tests\test_bootstrap_solver.py -q -p no:cacheprovider
-    py -m pytest tests\test_dimensionless.py -q -p no:cacheprovider
-    py -m pytest tests\test_canonical_document_policy.py -q -p no:cacheprovider
-
-실행 환경·임시 경로·검사 대상은 저장소의 현재 harness 규약을 따른다.
-코드가 식을 높은 정밀도로 푼다는 것은 구현된 정의와 알고리즘을 검증한다.
-그 변수에 자연의 물리량이라는 해석을 부여하는 문제는 별도의 작용, 자료,
-likelihood와 예측 절차를 요구한다.
-
-상세를 확인할 때에는 이 문서의 흐름을 끊지 않도록 역할별로 돌아가면 된다.
-[공리계](axium.md)는 공변 EFT·확률·우주론 branch의 정본 정의를,
-[선택과 접힘](5_유도/00_선택과_접힘.md)은 중심 서사를,
-[경로적분](경로적분.md)은 물리 모형군을, [상수 원장](상수.md)과
-[우주론 원장](검증_원장/상수_우주론_원장.md)은 수치·판본을, [등호이전
-수학](9_등호이전/README.md)은 후보 농축과 경로 bridge를 제공한다.
-분야별 상세는 강의, 유도, 뇌, AGI, 공학, 리만 문서군에 두되, 이 링크들은
-논증의 누락을 감추는 전제가 아니라 증명·실험의 후속 근거다.
-
-## 15. 남은 문제와 연구 우선순위
-
-모든 절의 결과를 합치면 CE의 가장 큰 열린 문제는 여전히 두 개의 bridge다.
-첫째는 양자 진폭에서 완전양성 reduced dynamics와 비음수 분지과정으로
-가는 길이다. 둘째는 선택·잔류 확률에서 보존되는 species current와
-우주론 stress tensor로 가는 길이다. R1은 이 둘째 길에서 유계 Gaussian
-저장소의 조건부 작용ㆍ인과ㆍ양성ㆍ총 Ward 장부까지 전진했지만, 초기
-$\Pi_{\rm F}$의 0차원 기원과 결합 섭동 안정성은 닫지 못했다. 이 둘이 닫히지 않는 한,
-끼임–접힘–암흑 표현은 동기를 주는 물리 서사이며, 일련의 조건부 정리와
-공리가 그 주변에 놓인 구조로 읽어야 한다.
-
-그 다음 우선순위는 EFT의 renormalized matching, 진공에너지 절대값,
-flavor 선택 potential과 RG 안정성, scalar–tensor 및 perturbation의
-공동 likelihood, 실제 데이터의 사전 고정 검증이다. 생명·뇌·AGI와 공학
-응용에서는 계량·관측량·baseline·독립 자료·반례 규칙을 먼저 고정해야
-한다. MRA처럼 부정적 결과를 보존하는 것이 이 과정의 일부다.
-
-CE를 한 문장으로 요약하면, 이는 수치 일치를 모으는 프로그램이 아니라
-선택의 물리 서사와 후보 농축의 수학, 공변 EFT, 조건부 확률·우주론
-readout, 그리고 검증형 응용 사이의 경계를 드러내는 연구 프로그램이다.
-그 경계를 지키는 한, 닫힌 정리는 재사용할 수 있고 열린 사상은 정확히
-어떤 증명·작용·관측을 더 요구하는지 알 수 있다.
-
-## 16. 문서 근거 지도
-
-이 통합 논문은 당시 정본 전체의 167개 Markdown을 다음 문서군으로 분류해 읽었다. 현재 정본 루트 이름은 `paper`다.
-강의 3개는 연역·귀납·상수 독해를, 경로적분과 응용 17개는 물리 문제와
-형식 경계를, 상수 14개는 입력·경험식·우주론 판본을, 유도 7개는 재현
-가능한 조건부 전개를 담당한다. 뇌 30개와 AGI 33개는 검증·감사·runtime
-확장을, 공학 11개는 조건부 설계를, 리만 3개는 MRA 사양·실험을,
-등호이전 35개는 후보공간·측도·bridge 수학을, 루트와 참조 14개는
-공통 공리·증명·기호를 담당한다.
-
-이 분류는 원장·감사·사양을 논문형 본문의 서술 자료로 읽되 그 지위나
-수치를 변경하지 않는다는 뜻이다. 상세 외부 참고문헌은 각 분야 문서의
-참고문헌에 보존하며, 이 문서의 인용은 저장소 내부의 근거 위치를 가리킨다.
-새로운 수치, 독립 예측, 또는 기존 지위의 승격은 이 통합 논문에서
-제안하지 않는다.
+BAO 부정 결과는 로컬 38장의 해당 가지와 시험점에 한정된다. 다른 장내용을 가진 원격 후보 전체의 반증은 아니다. 반대로 원격 후보의 수치 근사오차 감소가 이 관측 비교를 대신하지도 않는다.
+
+### 9.3 재현과 출처
+
+원격 커밋 05013ce3c653fc68c2fe5a4ab6294e95bd6c0a30의 곡률 스펙트럼 코드를 재실행했고, [재현기록](참조/공통스펙트럼_재현기록.json)에 소스 경로·해시·환경·산출물을 보존했다. 이후 제공된 CE-OBS32 원본 묶음의 재현과 별도 검산도 수행했다. 각각의 실행 범위는 [원본 재현 기록](00_기원과_현재계획/11_원본묶음_재현과_전체거리_오차.md)과 아래 수치 기록으로 추적한다. 로컬 38장 및 모든 원격 결과를 전부 다시 실행했다는 뜻은 아니다.
+
+공유 대화는 연구 방향의 출처이고 수식의 근거는 아래 고정 커밋의 문서와 코드다. 대화의 장 번호를 현재 로컬의 같은 번호와 혼동하지 않는다.
+
+### 9.4 다섯 목표와 피팅 없는 후속 검산
+
+| 목표 | 현재 계산된 것 | 독립 공동 예측까지 남은 것 |
+|---|---|---|
+| 암흑에너지 | 상대 진공항·위상력, 안정점과 운동항 및 절대 척도 검사 | 절대 진공 응력, 큰 운동항과 비평형 상태의 선택 |
+| 암흑물질 | 같은 스펙트럼의 질량 함수와 에너지 교환 | 점유수·물질량의 기원, 섭동·성장 관측의 공동 비교 |
+| 뮤온 | 공급한 하전 스펙트럼의 EM 구성항, 고정 입력에서 작은 잔차 감소 | 전체 상호작용·도표와 동일한 우주론 입력 |
+| 허블 긴장 | 기존 질량·배경해에서 조건부 $H_0=64.68$–$66.55$ km s$^{-1}$ Mpc$^{-1}$ | 초기 우주·재결합·음향눈금, 각 관측의 추론과 일관된 비교 |
+| 네 힘 통일 | 표현을 공급한 상대 문턱 보정; 시험한 완전 다중항은 세 역결합에 같은 이동 | 게이지 구조·절대 결합·중력 정규화와 공통 고에너지 이론 |
+
+완전 다중항의 공통 이동은 역결합의 차이를 바꾸지 않으므로 그 자체로 게이지 통일의 불일치를 줄이지 않는다. 중력까지 포함한 네 힘의 공동 오차는 계산하지 않았다. [짝지음 계산](../verify/common_spectrum_pairing.json)의 뮤온 표준화 잔차는 0.60465196에서 0.60460987로 약 0.00696% 감소하지만 추가 장내용과 질량 일치를 가정한 부분항이다. 이를 거시 후보의 가장 좋은 결과와 합쳐 공동 점수로 만들지 않는다.
+
+[세 스칼라 안정점 검산](../verify/common_spectrum_stationary_state.json)에서는 진공항과 양의 동일 점유 물질항이 모두 위상 π를 향해 감소했다. 그 최소점에서 상대 진공항과 위상 속도를 0으로 두면 압력 없는 평탄 우주가 되어, 동일 거리비의 RMSE가 0.98874에서 9.35598로 악화한다. 이 결론은 해당 세 스칼라와 점유 가정에 한정된다. §1.3의 집단모드 및 여섯 채널 점유 안정화를 평가한 결과가 아니다.
+
+같은 기록은 원본 운동항의 $s/M_P^2=10^{-12}$와 기존 암흑부문 질량의 $s/M_P^2\sim10^{-58}$도 구분한다. 상쇄 없는 같은 삼중항에 원본 운동항의 질량을 적용하면 진공항이 기존 암흑부문 값보다 약 $10^{92}$배 커진다. [동일 질량 재실행](../verify/ce_obs32_common_mass.json)에서 암흑부문 질량을 운동항에도 사용해 보았지만, 공급한 $f=1$이 지배하여 여섯 AP 점수는 수치 정밀도 내에서 그대로였고 모두 기준보다 나빴다. 두 적분 방법과 총 보존식으로 검산했다. 이는 단위 복원과 관측 비교의 결과이며 일반적인 상쇄 모형 전체의 배제는 아니다.
+
+[공통 반응 검산](../verify/common_spectrum_response_relation.json)은 위상을 소거한 게이지–뮤온 관계와 같은 스펙트럼의 질량 합 관계를 확인한다. 추가 상태 선택 $\rho=\mathcal M^2/(3s)$에서는 $Z_{\rm loop}=s\,g_{\rm Bures}/(8\pi^2)$도 성립한다. 그러나 상태 거리만으로 물리 질량 척도나 작용 계수가 결정되지는 않는다. 상세 유도와 근사 범위는 [연구 계획 §7](00_기원과_현재계획/02_공통작용과_돌파구_계획.md)에 둔다. 이 검사들의 수치 정밀도를 관측 RMSE 감소로 세지 않는다.
+
+### 9.5 같은 위상의 부분 공동 점수
+
+이 절의 수치는 §7.3의 이전 하전 분기에 한정한다. 최신 동일 $\epsilon$·비등점유 상태의 비교는 §9.6과 [현재 판정](latest_joint_prediction_status.md)을 따른다.
+
+**[조건부 계산]** 연결 가능한 AP 거리비 6개, 뮤온 EM 구성항 1개, 원자시계 변화율 1개를 같은 현재 위상에서 평가했다. 관측 블록 간 독립을 가정한
+
+$$R_{\rm partial}=\sqrt{(6R_{\rm AP}^2+R_\mu^2+R_{\rm clock}^2)/8}$$
+
+를 사용한다. [코드](../verify/common_phase_partial_score.py)와 [결과](../verify/common_phase_partial_score.json)는 여섯 후보 모두의 뮤온 구성항을 우주론에서 얻은 현재 위상으로 다시 계산한다. 부문별로 가장 좋은 위상을 골라 합치지 않았으며 새 피팅은 없다.
+
+| 중성 분할 $r$ | 초기 위상 | 부분 공동 RMSE | 기준 대비 변화 |
+|---|---:|---:|---:|
+| 기준 | — | 0.93925930 | — |
+| 0.15 | 0.1 | 0.94482661 | +0.00556731 |
+| 0.15 | 0.3 | 1.00083592 | +0.06157662 |
+| 0.15 | 0.5 | 1.15706311 | +0.21780381 |
+| 0.35 | 0.1 | 0.94538448 | +0.00612518 |
+| 0.35 | 0.3 | 1.00778055 | +0.06852125 |
+| 0.35 | 0.5 | 1.18229855 | +0.24303925 |
+
+모두 악화했다. 예를 들어 첫 후보의 $\Delta\chi^2$는 AP에서 +0.0033113, 뮤온에서 −0.0000509, 시계에서 +0.0806540이다. 작은 뮤온 개선이 나머지 악화를 상쇄하지 못한다. 원래 관측 잔차와 8×8 블록 공분산을 구성한 Cholesky 계산으로 합산식을 교차 확인했다.
+
+이것은 미완성 부문들을 0점 처리한 전체 공동 점수가 아니다. 완전한 짝지음 상호작용·역반응, 암흑물질 성장, 초기 우주·음향눈금과 네 힘의 절대 통일은 빠져 있다. 빠진 CE 이론항의 불확실성도 정량화되지 않아 완성된 공동 likelihood로 해석할 수 없다. 전체 목표의 $R_{\rm all}$은 여전히 미산출이며, 현재 부분 계산은 성공이 아닌 부정 결과다.
+
+### 9.6 거리비의 개선이 전체 거리 개선을 보장하지 않는 이유
+
+이 절은 기존 순환 스펙트럼의 조건부 관측 결과다. §3.3–3.7의 관계 기하에서 해당 스펙트럼과 초기상태를 새로 도출해 얻은 점수는 아니다.
+
+최신 대칭 상태의 후기 계산은 §6.5의 점유, $a_i=0.01$, $\theta_{N,i}=0$과 기존 31장의 비율 $f/M_P=1/30$을 사용한다. 두 $r=0.15,0.35$, 세 초기 위상 $10^{-12},10^{-10},10^{-8}$은 이미 계산한 고정 진단점이며 관측 최적화로 새로 선택하지 않는다. 질량척도 $\sqrt{s_D}=0.027615,0.014414$ eV와 물질밀도는 공급값이다.
+
+평탄 기하에서 관측으로 가는 식은
+
+$$E(z)=H(z)/H_0,\quad d_M(z)=\int_0^z\frac{dz'}{E(z')},\quad
+d_H(z)=1/E(z),\quad d_V(z)=[z\,d_M^2d_H]^{1/3},$$
+
+$$D_X/r_s=A\,d_X,\qquad A=\frac{c}{H_0r_s},\qquad
+F_{\rm AP}=\frac{D_M}{D_H}=\frac{d_M}{d_H}.$$
+
+$r_s$는 여기서 BAO의 drag 음향눈금이다. AP 비에서는 $A$가 소거된다. 그러므로 AP가 좋아졌다는 결과만으로 $H_0$나 $r_s$까지 맞았다고 말할 수 없다. 특히 같은 물리적 $r_s$를 유지하면 $H_0$가 달라질 때 $A$는 역비례하여 달라져야 한다. $A$를 고정한 채 같은 음향눈금이라고 부르면 서로 다른 물리적 거리를 비교한다.
+
+이를 검사하기 위해 원래 BAO 13개와 공분산을 사용한다. 기준의 거리벡터를 $b_0$, 자료를 $y$, 공분산을 $C$라 하면 기준에서 한 번만
+
+$$A_0=\frac{b_0^TC^{-1}y}{b_0^TC^{-1}b_0}=29.582731087943$$
+
+로 교정한다. **이 한 계수는 자료를 사용한 교정**이며 무피팅 예측으로 세지 않는다. 후보에서는 재적합하지 않는다. 같은 물리적 음향눈금 가정에서 $A_{\rm CE}=A_0H_{0,\rm ref}/H_{0,\rm CE}$로 옮긴다. 이 계산의 내부 허블값은 $H_{\rm internal}=HM_P/\sqrt{V_*}$이므로, 질량척도가 다른 두 가지의 비교에는 $V_*=s_D^2\mathcal U(1,r,0)$의 단위도 복원한다.
+
+뮤온에는 동일한 고정 관측 요약과 하전 EM 구성항을 사용한다. $\sigma_\mu=\sqrt{145^2+620^2}\,10^{-12}$,
+$r_\mu=(\Delta a_\mu-385\,10^{-12})/\sigma_\mu$로 두고 블록 독립 아래
+
+$$R_{14}=\sqrt{\frac{(f_{13}-y)^TC^{-1}(f_{13}-y)+r_\mu^2}{14}}.$$
+
+분모는 관측 성분 수이며 적합 자유도를 뺀 reduced $\chi^2$가 아니다. AP 6개는 같은 BAO에서 나온 요약이므로 여기에 다시 더하지 않는다. 기준에도 같은 하전 EM 구성항 $\Delta a_\mu=2.67704847\times10^{-15}$를 넣는다. 모든 값은 기존의 고정 자료와 관측 요약을 사용한 개발 비교이며 최신 자료 전체의 결합 분석이나 독립 holdout이 아니다.
+
+| $r$ | $\theta_i$ | BAO 13개 RMSE | BAO + 뮤온 $R_{14}$ | 기준 대비 $\Delta R_{14}$ |
+|---|---:|---:|---:|---:|
+| 기준 | 0 | 0.892576281 | 0.875157142 | 0 |
+| 0.15 | $10^{-12}$ | 0.892576298 | 0.875157158 | $+1.60\times10^{-8}$ |
+| 0.15 | $10^{-10}$ | 0.892576270 | 0.875157132 | $-9.83\times10^{-9}$ |
+| 0.15 | $10^{-8}$ | 0.892310786 | 0.874905705 | $-0.000251437$ |
+| 0.35 | $10^{-12}$ | 0.892576278 | 0.875157139 | $-2.97\times10^{-9}$ |
+| 0.35 | $10^{-10}$ | 0.892544968 | 0.875127487 | $-0.000029655$ |
+| 0.35 | $10^{-8}$ | 1.129253805 | 1.100109830 | $+0.224952688$ |
+
+**계산된 개선과 악화.** $r=0.15,\theta_i=10^{-8}$에서는 $R_{14}$가 약 0.02873% 감소한다. 반면 $r=0.35,\theta_i=10^{-8}$은 이전 AP+뮤온 $R_7$에서 약 2.5609% 감소했던 가지인데, 거리눈금을 포함하면 약 25.70% 증가한다. 서로 다른 관측 벡터의 RMSE 절대값을 직접 비교한 것이 아니라 각 벡터의 같은 기준에 대한 변화를 비교한 것이다. 후자의 물리적 $H_0/H_{0,\rm ref}=0.890270879$이므로 $A=33.228910179$를 사용했다.
+
+**오차 변화의 원인도 분해했다.** $C=LL^T$, $w_0=L^{-1}b_0$, $e=w_0/\|w_0\|$, $r_0=L^{-1}(A_0b_0-y)$라 두면 위 교정 조건으로 $r_0\cdot e=0$이다. 예측 변화 $\delta=L^{-1}(f_{13}-A_0b_0)$를 $\delta_\parallel=(e\cdot\delta)e$와 $\delta_\perp$로 나누면
+
+$$\Delta\chi^2=\|\delta_\parallel\|^2
++2r_0\cdot\delta_\perp+\|\delta_\perp\|^2.$$
+
+큰 이탈 가지의 $\Delta\chi^2=6.22078260$ 중 기준 거리벡터 방향의 기여는 $5.23371949$, 수직 성분의 기여는 $0.98706311$이다. 따라서 여기서는 전체 배율 방향뿐 아니라 그 밖의 BAO 변화도 함께 악화한다. 이 분해는 후보에 새 계수를 적합하지 않은 대수적 진단이며 수직 성분을 AP 점수와 동일시하지 않는다. 작은 개선 가지 $r=0.15,\theta_i=10^{-8}$에서는 각각 $+0.00009987$과 $-0.00626030$으로 후자의 개선이 우세하다.
+
+[재현 코드](../verify/ce_symmetric_bao_ruler.py)와 [전체 결과](../verify/ce_symmetric_bao_ruler.json)는 여섯 점을 모두 남긴다. 정규화하지 않은 $1/H$ 직접 적분과 거리 예측의 차이는 $1.34\times10^{-13}$ 미만이고, 두 큰 진폭 시험점의 독립 Radau 적분과 $R_{14}$ 차이는 $2.80\times10^{-10}$ 미만이다. 공분산 직접 계산과 위 오차 분해도 일치한다. 수치 검산은 작은 감소가 적분기 오차 때문이 아님을 확인하지만, 초기상태가 유도됐거나 전체 통일 예측이 검증됐음을 뜻하지는 않는다.
+
+이 결과는 초기상태와 음향눈금을 연구해야 할 이유를 구체화한다. 후기 위상을 움직이는 것만으로는 공통 점수 개선이 보장되지 않는다. 같은 생성 이력에서 물질량과 위상 섭동을 얻고, 그 에너지로 초기 $H(a)$와 $r_s=\int_0^{a_d}c_s(a)\,da/[a^2H(a)]$를 계산해야 한다. $a_d$와 음속도 같은 재결합·바리온–광자 이력에서 정한다. 필요한 만큼 $r_s$를 역으로 맞추는 것은 이 유도의 대체가 아니다. 현재 $R_{14}$에도 CMB·암흑물질 군집·네 힘의 절대 결합은 없으므로 전체 $R_{\rm all}$은 미산출로 유지한다.
+
+**기존 후기 가지가 허블값을 낮추는 이유.** 같은 $r$·질량·중력계수에서 정지한 최대점 기준을 $\rho_{\rm ref}=\rho_{m0}a^{-3}+U_*$로 놓고, 후보의 양의 위상 운동에너지를 $K$라 하자. 차가운 물질과 위상의 총 보존식에서는 내부 교환항이 상쇄되므로, $N=\ln a$와 $\delta\rho=\rho_{\rm tot}-\rho_{\rm ref}$에 대해
+
+$$\frac{d(a^3\delta\rho)}{dN}=3a^3(U-U_*-K),\qquad
+\delta\rho(1)=a_i^3\delta\rho_i-
+3\int_{\ln a_i}^{0}a^3[(U_*-U)+K]\,dN.$$
+
+기존 퍼텐셜의 전역 최대값이 $U_*$이고 $K\ge0$이면 우변 적분은 비음수다. 따라서 주어진 초기 에너지 초과분을 제외하면 단순한 위상 이탈과 차가운 물질 교환으로 현재 총밀도를 기준보다 높일 수 없다. [독립 에너지 적분](../verify/ce_cold_energy_budget.json)은 앞의 여섯 해를 이 식으로 검산하고 같은 $R_{14}$를 다시 계산했다. $r=0.35,\theta_i=10^{-8}$에서 $U_*$ 단위의 퍼텐셜 저하 적분은 0.174447438, 운동에너지 적분은 0.121863650으로, 최종 총밀도 차이 −0.296311087과 상대 $6.77\times10^{-10}$ 이내로 일치한다. 이 결과는 기존 차가운 후기 가지의 설명이며 새 관계 기하 전체에 대한 제한은 아니다. §3.6·6.4의 상태 압력과 곡률 응답을 보유하면 그 항들도 같은 보존식에 넣어 다시 유도해야 한다.
+
+## 10. 논의와 다음 계산
+
+현재 계산 가능한 중심은 공통 스펙트럼의 상대 양자작용과 여러 반응이다. 일정 곡률에서 작용밀도와 중력원을 구분해 계산했다는 점은 QFT–중력 연결을 구체화한다. 이 결과의 앞에는 스펙트럼·계량·상태의 선택이, 뒤에는 절대 정규화와 실제 우주 이력·관측 사상이 남아 있다.
+
+다음 계산은 장내용과 상태를 고정한 하나의 후보에서 진행해야 한다.
+
+현재 우선 과제는 새로운 적합 탐색이 아니라, 상대 작용만으로 정해지지 않는 절대 척도·운동항·점유수·경계 상태를 공통 원리에서 결정하는 것이다. 한 관측으로 공통 입력을 교정한 경우에는 그 관측을 검증 점수에서 구분하고, 남은 관측에서 예측력을 평가한다. 이미 검사한 평형 선택과 단순 질량 일치는 오차를 줄이지 못했다는 결과를 유지한다.
+
+1. 같은 Lorentzian in-in 작용에서 위상 운동·물질 점유·재규격화된 총 응력을 함께 계산하고 보존을 확인한다.
+2. 기준 진공 응력과 절대 척도, 초기·경계 상태를 정하는 추가 물리 입력을 명시하고 독립적으로 시험한다.
+3. 표준 이론 회복과 섭동 안정성 아래 배경·공간 전달을 계산해 CMB·거리·성장 및 선택한 양자 실험으로 연결한다.
+4. 보정·평가 자료를 분리하고 같은 매개변수로 전체와 필수 분야의 독립 예측오차가 함께 줄어드는지 판정한다.
+
+비동기 관계 틱, 사영, 공통 스펙트럼은 이 계산을 조직하는 구조다. 그 구조의 물리적 선택 법칙과 관측 성과를 확보하는 것이 남은 연구다.
+
+## 참고자료
+
+상세 유도·반례·구현은 [최신 연구 읽기 지도](00_읽기_지도.md), [핵심 정리 증명](검증_원장/참조_핵심_정리_증명.md), [우주론 판본 원장](https://github.com/jigglypop/Clarus-Equation/blob/50c778e7bbe4648394a2b54136164bd2e009a3c8/paper/검증_원장/상수_우주론_원장.md), [양자 보존 원장](검증_원장/참조_양자_보존_원장.md)을 따른다. 기존 $Z_2$ portal EFT와 Poisson 최소 고정점은 [공리계](axium.md) 및 유도 문서에 보존된 독립 조건부 모형이며 본문의 스펙트럼을 자동으로 도출하지 않는다.
+
+[리만·등호이전 참조 안내](참조/리만과_등호이전.md)는 수론 기반 계산과 후보공간·농축 수학을 보조 자료로 연결한다. 두 분야에는 본문의 독립 물리 장을 배정하지 않는다. 공학·생명·AGI 응용은 [전체 문서 지도](README.md)에서 해당 분야를 참조한다.
+
+공유 연구의 원격 근거는 아래 판본을 고정한다. 이 문서들을 현재 checkout에 병합했다는 뜻은 아니다.
+
+- [비동기 사건과 관계시계][S05], [사영과 잔여 동역학][S10], [사영각과 순환위상][S11]
+- [여섯 채널 암흑 후보][S19], [게이지·중력·뮤온 공통 미분식][S20], [매개변수 소거][S21]
+- [초기 우주와 음향 눈금][S25], [양자 준비][S27], [미래 경계][S28], [경계·상태 공동해][S29]
+- [4차원 곡률 스펙트럼과 중력원][S30]
+
+[S05]: https://github.com/jigglypop/Clarus-Equation/blob/05013ce3c653fc68c2fe5a4ab6294e95bd6c0a30/paper/7_비동기_관계틱_연구/05_비동기_사건과_관계시계.md
+[S10]: https://github.com/jigglypop/Clarus-Equation/blob/05013ce3c653fc68c2fe5a4ab6294e95bd6c0a30/paper/7_비동기_관계틱_연구/10_직교관계_사영과_잔여동역학.md
+[S11]: https://github.com/jigglypop/Clarus-Equation/blob/05013ce3c653fc68c2fe5a4ab6294e95bd6c0a30/paper/7_비동기_관계틱_연구/11_사영각과_순환위상.md
+[S13]: https://github.com/jigglypop/Clarus-Equation/blob/05013ce3c653fc68c2fe5a4ab6294e95bd6c0a30/paper/7_비동기_관계틱_연구/13_집단위상_보호와_느린모드.md
+[S19]: https://github.com/jigglypop/Clarus-Equation/blob/05013ce3c653fc68c2fe5a4ab6294e95bd6c0a30/paper/7_비동기_관계틱_연구/19_공통스펙트럼_점유와_암흑부문.md
+[S20]: https://github.com/jigglypop/Clarus-Equation/blob/05013ce3c653fc68c2fe5a4ab6294e95bd6c0a30/paper/7_비동기_관계틱_연구/20_게이지_중력_뮤온_공통미분식.md
+[S21]: https://github.com/jigglypop/Clarus-Equation/blob/05013ce3c653fc68c2fe5a4ab6294e95bd6c0a30/paper/7_비동기_관계틱_연구/21_스펙트럼_매개변수소거와_정밀예측.md
+[S25]: https://github.com/jigglypop/Clarus-Equation/blob/05013ce3c653fc68c2fe5a4ab6294e95bd6c0a30/paper/7_비동기_관계틱_연구/25_초기우주_비율진화와_음향눈금.md
+[S27]: https://github.com/jigglypop/Clarus-Equation/blob/05013ce3c653fc68c2fe5a4ab6294e95bd6c0a30/paper/7_비동기_관계틱_연구/27_양자준비_분포와_복사보정.md
+[S28]: https://github.com/jigglypop/Clarus-Equation/blob/05013ce3c653fc68c2fe5a4ab6294e95bd6c0a30/paper/7_비동기_관계틱_연구/28_미래경계_순환과_상태선택.md
+[S29]: https://github.com/jigglypop/Clarus-Equation/blob/05013ce3c653fc68c2fe5a4ab6294e95bd6c0a30/paper/7_비동기_관계틱_연구/29_경계_상태_공동해와_절대척도.md
+[S30]: https://github.com/jigglypop/Clarus-Equation/blob/05013ce3c653fc68c2fe5a4ab6294e95bd6c0a30/paper/7_비동기_관계틱_연구/30_곡률_스펙트럼과_중력원.md

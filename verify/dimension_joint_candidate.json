@@ -1,0 +1,78 @@
+{
+  "status": "mathematical_candidate_not_observation_fit",
+  "parameters": {
+    "eta": 0.1,
+    "b": 1.0,
+    "d_ir": 4.0
+  },
+  "scales": [
+    {
+      "t": 1e-12,
+      "log_heat_trace": 244.52093629664532,
+      "dimension": 31.631021115928547,
+      "continuum_weight": 1.0
+    },
+    {
+      "t": 1e-06,
+      "log_heat_trace": 73.73866619780003,
+      "dimension": 17.815510557964274,
+      "continuum_weight": 1.0
+    },
+    {
+      "t": 1.0,
+      "log_heat_trace": 2.7755575615628914e-17,
+      "dimension": 4.112837916709552,
+      "continuum_weight": 0.10000000000000002
+    },
+    {
+      "t": 1000000.0,
+      "log_heat_trace": -27.72743900607085,
+      "dimension": 4.00126311221789,
+      "continuum_weight": 0.008902759165090972
+    },
+    {
+      "t": 1000000000000.0,
+      "log_heat_trace": -55.36288726259304,
+      "dimension": 4.000324418304454,
+      "continuum_weight": 0.004505305447358767
+    }
+  ],
+  "flat_relative_action_cutoff_scan": [
+    {
+      "cutoff": 0.001,
+      "eta": 0.0,
+      "relative_action_density": 3.299884499442552e-05,
+      "quadrature_error": 2.603243562261973e-15
+    },
+    {
+      "cutoff": 1e-06,
+      "eta": 0.0,
+      "relative_action_density": 3.309754424562631e-05,
+      "quadrature_error": 2.603244658689875e-15
+    },
+    {
+      "cutoff": 1e-12,
+      "eta": 0.0,
+      "relative_action_density": 3.309764319184734e-05,
+      "quadrature_error": 2.6032504257931055e-15
+    },
+    {
+      "cutoff": 0.001,
+      "eta": 0.1,
+      "relative_action_density": 0.0013951642221111343,
+      "quadrature_error": 3.0469087595885348e-15
+    },
+    {
+      "cutoff": 1e-06,
+      "eta": 0.1,
+      "relative_action_density": 1797770327.1167705,
+      "quadrature_error": 0.0005626995373418759
+    },
+    {
+      "cutoff": 1e-12,
+      "eta": 0.1,
+      "relative_action_density": 1.2108493177093212e+65,
+      "quadrature_error": 6.392968889619403e+52
+    }
+  ]
+}

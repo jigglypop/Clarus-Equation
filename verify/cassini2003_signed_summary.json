@@ -1,0 +1,22 @@
+{
+  "source": "Bertotti, Iess, Tortora, Nature 425, 374-376 (2003)",
+  "doi": "10.1038/nature01997",
+  "publisher_url": "https://www.nature.com/articles/nature01997",
+  "pdf_url": "https://ilorentz.org/research/vanbaal/DECEASED/ART/gr-test.pdf",
+  "pdf_sha256": "469522ec41d183062d681860a212934a1dc1ebea741add8e401ac8bbe0942df7",
+  "pdf_bytes": 199016,
+  "pdf_page_one_based": 1,
+  "observable": "gamma - 1",
+  "value": 0.000021,
+  "quoted_uncertainty": 0.000023,
+  "gr_reference": 0.0,
+  "candidate_long_range_formula": "-2*s/(1+s), s=2*alpha^2 >= 0",
+  "role": "retrospective signed marginal summary; not holdout or full likelihood",
+  "conditions": [
+    "universal unscreened conformal scalar coupling",
+    "spectrum-averaged effectively massless solar response",
+    "consistent local G calibration",
+    "finite-range timing and nuisance fit not reconstructed"
+  ],
+  "scientific_success": false
+}
