@@ -1,0 +1,153 @@
+{
+  "rows": [
+    {
+      "distance": 0.0,
+      "relation_point": [
+        0.0,
+        -0.0,
+        0.0
+      ],
+      "metric_eigenvalues": [
+        35.37,
+        35.37,
+        35.37
+      ],
+      "parallel_mass_integrability_commutator": 5.889391435314267e-17,
+      "color_geometric_potential_eigenvalue_spread": 2.7755575615628914e-17,
+      "cyclic_epsilon_invariant": 0.025445292620865142,
+      "cyclic_cos_phase_invariant": 0.7648421872844896
+    },
+    {
+      "distance": 0.01,
+      "relation_point": [
+        0.00565685424949238,
+        -0.004242640687119285,
+        0.0070710678118654745
+      ],
+      "metric_eigenvalues": [
+        35.36091998412228,
+        35.36490592681863,
+        35.36524289389411
+      ],
+      "parallel_mass_integrability_commutator": 3.428964029936224e-05,
+      "color_geometric_potential_eigenvalue_spread": 1.8081118576387945e-05,
+      "cyclic_epsilon_invariant": 0.025441659001324956,
+      "cyclic_cos_phase_invariant": 0.7647923864139328
+    },
+    {
+      "distance": 0.02,
+      "relation_point": [
+        0.01131370849898476,
+        -0.00848528137423857,
+        0.014142135623730949
+      ],
+      "metric_eigenvalues": [
+        35.333704237305284,
+        35.34963335036725,
+        35.35097959732057
+      ],
+      "parallel_mass_integrability_commutator": 0.00013699574795965954,
+      "color_geometric_potential_eigenvalue_spread": 7.229432169754413e-05,
+      "cyclic_epsilon_invariant": 0.02543076274749352,
+      "cyclic_cos_phase_invariant": 0.7646429970200393
+    },
+    {
+      "distance": 0.05,
+      "relation_point": [
+        0.0282842712474619,
+        -0.021213203435596423,
+        0.035355339059327376
+      ],
+      "metric_eigenvalues": [
+        35.14420909064575,
+        35.24312865202003,
+        35.25147220646528
+      ],
+      "parallel_mass_integrability_commutator": 0.0008491510018519031,
+      "color_geometric_potential_eigenvalue_spread": 0.00045052554828585445,
+      "cyclic_epsilon_invariant": 0.02535468195592012,
+      "cyclic_cos_phase_invariant": 0.7635978283070146
+    },
+    {
+      "distance": 0.1,
+      "relation_point": [
+        0.0565685424949238,
+        -0.04242640687119285,
+        0.07071067811865475
+      ],
+      "metric_eigenvalues": [
+        34.48163442655402,
+        34.8684236263836,
+        34.90081574935104
+      ],
+      "parallel_mass_integrability_commutator": 0.0032983895193698,
+      "color_geometric_potential_eigenvalue_spread": 0.0017836241699353411,
+      "cyclic_epsilon_invariant": 0.025085698317064302,
+      "cyclic_cos_phase_invariant": 0.759873145599557
+    },
+    {
+      "distance": 0.2,
+      "relation_point": [
+        0.1131370849898476,
+        -0.0848528137423857,
+        0.1414213562373095
+      ],
+      "metric_eigenvalues": [
+        32.035437186874894,
+        33.45273453151131,
+        33.5680213532715
+      ],
+      "parallel_mass_integrability_commutator": 0.01178145782923295,
+      "color_geometric_potential_eigenvalue_spread": 0.00685596437700918,
+      "cyclic_epsilon_invariant": 0.024051028633281277,
+      "cyclic_cos_phase_invariant": 0.7451063641002452
+    },
+    {
+      "distance": 0.5,
+      "relation_point": [
+        0.282842712474619,
+        -0.21213203435596423,
+        0.35355339059327373
+      ],
+      "metric_eigenvalues": [
+        20.8521837250074,
+        26.19414077269223,
+        26.54877033607446
+      ],
+      "parallel_mass_integrability_commutator": 0.03840626381362599,
+      "color_geometric_potential_eigenvalue_spread": 0.03401736333147409,
+      "cyclic_epsilon_invariant": 0.018303519328208503,
+      "cyclic_cos_phase_invariant": 0.6485486657314922
+    }
+  ],
+  "small_radius_quadratic_ratio": 3.9952518242720543,
+  "independent_frame_difference_errors": [
+    1.6320497842059467e-07,
+    4.080127280481349e-08
+  ],
+  "gauge_conjugation_commutator_norm_error": 3.9898639947466563e-17,
+  "hierarchy_bound": "-2*(3*r - 2)",
+  "hierarchy": [
+    {
+      "r_D": 0.15,
+      "neutral_mass_scale_eV": 0.027615,
+      "maximum_sH_over_sD": 3.1,
+      "maximum_charged_mass_scale_eV": 0.04862122476347135,
+      "required_sH_over_sD": 1.3113236832367824e+27
+    },
+    {
+      "r_D": 0.35,
+      "neutral_mass_scale_eV": 0.014414,
+      "maximum_sH_over_sD": 1.9000000000000004,
+      "maximum_charged_mass_scale_eV": 0.019868327871262848,
+      "required_sH_over_sD": 4.8131673781458596e+27
+    }
+  ],
+  "previous_partial_rmse_range": [
+    0.8749057054934861,
+    1.1001098300731917
+  ],
+  "new_joint_rmse": null,
+  "fitted_parameters": [],
+  "verdict": "This fixed graph family is a local example, not a completion of the physical common-mass spectrum. No new observational prediction is promoted."
+}

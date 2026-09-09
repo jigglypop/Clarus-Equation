@@ -1,0 +1,226 @@
+{
+  "schur": {
+    "effective_kernel": "a - b**2/(d + x + z) + x + z",
+    "zero_momentum_mass": "a - b**2/(d + x) + x",
+    "kinetic_coefficient": "b**2/(d + x)**2 + 1",
+    "shared_shift_identity": "dKeff/dx=dKeff/dz",
+    "pole_checks": [
+      {
+        "theta": 0.0,
+        "full_pole_error": 1.3322676295501878e-15
+      },
+      {
+        "theta": 0.7,
+        "full_pole_error": 2.6645352591003757e-15
+      },
+      {
+        "theta": 3.141592653589793,
+        "full_pole_error": 3.552713678800501e-15
+      }
+    ],
+    "visible_only_shift_pole_slopes": [
+      0.9831174698006231,
+      0.016882530199376855
+    ],
+    "low_energy_kinetic_checks": [
+      {
+        "delta": 0.01,
+        "exact_light_mass_squared": 0.009615028700953043,
+        "canonically_normalized_mass_squared": 0.009615384615384616,
+        "unnormalized_mass_squared": 0.01
+      },
+      {
+        "delta": 0.001,
+        "exact_light_mass_squared": 0.0009615349052374267,
+        "canonically_normalized_mass_squared": 0.0009615384615384615,
+        "unnormalized_mass_squared": 0.001
+      },
+      {
+        "delta": 0.0001,
+        "exact_light_mass_squared": 9.615381059369099e-05,
+        "canonically_normalized_mass_squared": 9.615384615384615e-05,
+        "unnormalized_mass_squared": 0.0001
+      }
+    ],
+    "scope": "Constant backgrounds and canonical full kinetic term. Mixing is allowed only within equivalent gauge representations."
+  },
+  "casimir": {
+    "fields": [
+      {
+        "name": "Q",
+        "dimension": 6,
+        "casimir": "21/20",
+        "charge_squared_sum": "5/3"
+      },
+      {
+        "name": "uc",
+        "dimension": 3,
+        "casimir": "4/5",
+        "charge_squared_sum": "4/3"
+      },
+      {
+        "name": "dc",
+        "dimension": 3,
+        "casimir": "7/10",
+        "charge_squared_sum": "1/3"
+      },
+      {
+        "name": "L",
+        "dimension": 2,
+        "casimir": "9/20",
+        "charge_squared_sum": "1"
+      },
+      {
+        "name": "ec",
+        "dimension": 1,
+        "casimir": "3/10",
+        "charge_squared_sum": "1"
+      },
+      {
+        "name": "nc",
+        "dimension": 1,
+        "casimir": "0",
+        "charge_squared_sum": "0"
+      }
+    ],
+    "dimension": 16,
+    "casimir_trace": 12.0,
+    "zero_eigenvalue_multiplicity": 1,
+    "algebra_basis_change_error": 8.881802645252062e-16,
+    "inverse_mass_charge_index": "65/7"
+  },
+  "prediction": {
+    "parts": [
+      {
+        "name": "Q",
+        "mass_GeV": 1145.64392373896,
+        "mass_squared": 1312500.0,
+        "dimension": 6,
+        "charge_squared_sum": 1.6666666666666667,
+        "muon_EM": 6.3739249936942535e-16,
+        "spectral_EM": 6.373924993694238e-16
+      },
+      {
+        "name": "uc",
+        "mass_GeV": 1000.0,
+        "mass_squared": 1000000.0,
+        "dimension": 3,
+        "charge_squared_sum": 1.3333333333333333,
+        "muon_EM": 6.692621175871258e-16,
+        "spectral_EM": 6.692621175871237e-16
+      },
+      {
+        "name": "dc",
+        "mass_GeV": 935.4143466934853,
+        "mass_squared": 875000.0,
+        "dimension": 3,
+        "charge_squared_sum": 0.3333333333333333,
+        "muon_EM": 1.9121774673770405e-16,
+        "spectral_EM": 1.9121774673770297e-16
+      },
+      {
+        "name": "L",
+        "mass_GeV": 750.0,
+        "mass_squared": 562500.0,
+        "dimension": 2,
+        "charge_squared_sum": 1.0,
+        "muon_EM": 8.92349461451538e-16,
+        "spectral_EM": 8.923494614515326e-16
+      },
+      {
+        "name": "ec",
+        "mass_GeV": 612.3724356957945,
+        "mass_squared": 375000.0,
+        "dimension": 1,
+        "charge_squared_sum": 1.0,
+        "muon_EM": 1.3385241443945869e-15,
+        "spectral_EM": 1.338524144394579e-15
+      }
+    ],
+    "Lambda_squared_GeV2": 1250000.0,
+    "inherited_mean_squared_mass_GeV2": 1000000.0,
+    "previous_muon_EM": 2.6770484703485036e-15,
+    "new_muon_EM": 3.72874596954038e-15,
+    "heavy_limit_enhancement": "39/28",
+    "muon_standardized_residual_before": -0.6046477581723889,
+    "muon_standardized_residual_after": -0.6046461064556178,
+    "rows": [
+      {
+        "r_D": 0.15,
+        "theta_initial": 1e-12,
+        "theta_final": 4.3176394502106426e-05,
+        "common_epsilon_GeV2": 1.1438823375000002e-22,
+        "muon_EM": 3.72874596954038e-15,
+        "previous_R14": 0.8751571582814267,
+        "frozen_background_R14": 0.8751570767690855,
+        "delta_R14": -8.151234126225051e-08
+      },
+      {
+        "r_D": 0.15,
+        "theta_initial": 1e-10,
+        "theta_final": 0.004317637973114694,
+        "common_epsilon_GeV2": 1.1438823375000002e-22,
+        "muon_EM": 3.72874596954038e-15,
+        "previous_R14": 0.8751571324892103,
+        "frozen_background_R14": 0.8751570509768667,
+        "delta_R14": -8.151234366454385e-08
+      },
+      {
+        "r_D": 0.15,
+        "theta_initial": 1e-08,
+        "theta_final": 0.43029433727971944,
+        "common_epsilon_GeV2": 1.1438823375000002e-22,
+        "muon_EM": 3.72874596954038e-15,
+        "previous_R14": 0.8749057054934861,
+        "frozen_background_R14": 0.8749056239577178,
+        "delta_R14": -8.153576836672948e-08
+      },
+      {
+        "r_D": 0.35,
+        "theta_initial": 1e-12,
+        "theta_final": -0.001465110314541486,
+        "common_epsilon_GeV2": 7.27171886e-23,
+        "muon_EM": 3.72874596954038e-15,
+        "previous_R14": 0.8751571393478568,
+        "frozen_background_R14": 0.8751570578355138,
+        "delta_R14": -8.151234302572784e-08
+      },
+      {
+        "r_D": 0.35,
+        "theta_initial": 1e-10,
+        "theta_final": -0.14645506920374654,
+        "common_epsilon_GeV2": 7.27171886e-23,
+        "muon_EM": 3.72874596954038e-15,
+        "previous_R14": 0.8751274873845389,
+        "frozen_background_R14": 0.8751274058694339,
+        "delta_R14": -8.151510491044214e-08
+      },
+      {
+        "r_D": 0.35,
+        "theta_initial": 1e-08,
+        "theta_final": -4.920124662949168,
+        "common_epsilon_GeV2": 7.27171886e-23,
+        "muon_EM": 3.72874596954038e-15,
+        "previous_R14": 1.1001098300731917,
+        "frozen_background_R14": 1.100109765228659,
+        "delta_R14": -6.484453258586624e-08
+      }
+    ],
+    "null_R14_before": 0.8751571423220759,
+    "null_frozen_background_R14_after": 0.8751570608097332,
+    "charged_to_neutral_relative_vacuum_top_ratio_leading": 3.335422108305284e-27,
+    "calibration": "Fixed the previous 1 TeV RMS diagonal mass over 15 nonsinglet components; no mass was optimized against observations.",
+    "interpretation": "Conditional change of scalar representation masses only. The neutral backgrounds and BAO ruler are held fixed; no new cosmological state or full joint likelihood.",
+    "source_sha256": "0cabcc408b3032a5fce6223276e0ae292df6a597614fac11b4a3f476a222f802",
+    "state_source_sha256": "9c943fe2ae65b109893654f321ea982551f1b6e2b7634af02c5fbab7e888913b"
+  },
+  "assumptions": [
+    "one-family scalar representation plus its singlet identified as the neutral sector",
+    "quadratic gauge-relation penalty with trace metric of that representation",
+    "same cyclic operator acts on every retained and eliminated copy",
+    "neutral scale, epsilon, heavy RMS scale and cold states remain inputs"
+  ],
+  "fitted_parameters": [],
+  "full_joint_rmse": null,
+  "script_sha256": "45b26a56cf2544f00282106b17ce183b8839fefb8be3b5cb54c6db3b7f0b062e"
+}

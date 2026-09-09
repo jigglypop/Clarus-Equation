@@ -1,0 +1,132 @@
+{
+  "algebra": {
+    "casimir_minimal_polynomial": "x*(5*x - 4)*(10*x - 7)*(10*x - 3)*(20*x - 21)*(20*x - 9)/200000",
+    "central_polynomial_dimension": 6,
+    "mass_ansatz_tangent_rank": 3,
+    "higgs_gauge_beta_coefficient": "-9*g_2**2/2 - 3*g_Y**2/2",
+    "unit_charge_quartic_gauge_source": "6*g**4",
+    "sum_dimension_times_C": "12",
+    "first_order_matched_observable_series": "F0 - F0*c**2*tau**2/2 + O(tau**3)",
+    "scope": "Exact finite-dimensional algebra; aligned gauge-flow example, not a complete beta system."
+  },
+  "scale_diagnostic": {
+    "reference_null_R14": 0.8751570608097332,
+    "reference_EM": 3.72874596954038e-15,
+    "rows": [
+      {
+        "tau": -0.04,
+        "epsilon_R_over_epsilon_D": {
+          "Q": 1.0428944787507632,
+          "uc": 1.0325175053051183,
+          "dc": 1.028395684421425,
+          "L": 1.0181629763897937,
+          "ec": 1.0120722888660778
+        },
+        "independent_flow_ode_error": 2.220446049250313e-16,
+        "within_representation_epsilon_over_s_error": 2.2420775429197073e-44,
+        "running_mean_squared_mass_GeV2": 1035656.3776298102,
+        "naive_mass_only_EM": 3.6442877968246174e-15,
+        "mass_running_LL_matched_EM": 3.72874596954038e-15,
+        "first_order_log_matched_EM": 3.727551829696129e-15,
+        "naive_R14": 0.8751570673556983,
+        "naive_delta_R14": 6.545965141702345e-09,
+        "mass_running_LL_matched_R14": 0.8751570608097332,
+        "matched_delta_R14": 0.0
+      },
+      {
+        "tau": -0.02,
+        "epsilon_R_over_epsilon_D": {
+          "Q": 1.0212220516375285,
+          "uc": 1.016128685406095,
+          "dc": 1.0140984589384923,
+          "L": 1.0090406217738679,
+          "ec": 1.006018036054065
+        },
+        "independent_flow_ode_error": 2.220446049250313e-16,
+        "within_representation_epsilon_over_s_error": 2.2420775429197073e-44,
+        "running_mean_squared_mass_GeV2": 1017663.0420395493,
+        "naive_mass_only_EM": 3.686216701052793e-15,
+        "mass_running_LL_matched_EM": 3.72874596954038e-15,
+        "first_order_log_matched_EM": 3.7284441327985625e-15,
+        "naive_R14": 0.8751570641059814,
+        "naive_delta_R14": 3.2962481315754476e-09,
+        "mass_running_LL_matched_R14": 0.8751570608097332,
+        "matched_delta_R14": 0.0
+      },
+      {
+        "tau": 0.0,
+        "epsilon_R_over_epsilon_D": {
+          "Q": 1.0,
+          "uc": 1.0,
+          "dc": 1.0,
+          "L": 1.0,
+          "ec": 1.0
+        },
+        "independent_flow_ode_error": 0.0,
+        "within_representation_epsilon_over_s_error": 0.0,
+        "running_mean_squared_mass_GeV2": 1000000.0,
+        "naive_mass_only_EM": 3.72874596954038e-15,
+        "mass_running_LL_matched_EM": 3.72874596954038e-15,
+        "first_order_log_matched_EM": 3.72874596954038e-15,
+        "naive_R14": 0.8751570608097332,
+        "naive_delta_R14": 0.0,
+        "mass_running_LL_matched_R14": 0.8751570608097332,
+        "matched_delta_R14": 0.0
+      },
+      {
+        "tau": 0.02,
+        "epsilon_R_over_epsilon_D": {
+          "Q": 0.9792189645694596,
+          "uc": 0.9841273200552851,
+          "dc": 0.9860975442628619,
+          "L": 0.9910403787728836,
+          "ec": 0.9940179640539353
+        },
+        "independent_flow_ode_error": 1.1102230246251565e-16,
+        "within_representation_epsilon_over_s_error": 2.2420775429197073e-44,
+        "running_mean_squared_mass_GeV2": 982660.9681653386,
+        "naive_mass_only_EM": 3.771885620306145e-15,
+        "mass_running_LL_matched_EM": 3.72874596954038e-15,
+        "first_order_log_matched_EM": 3.728437393543808e-15,
+        "naive_R14": 0.8751570574661776,
+        "naive_delta_R14": -3.343555699327616e-09,
+        "mass_running_LL_matched_R14": 0.8751570608097332,
+        "matched_delta_R14": 0.0
+      },
+      {
+        "tau": 0.04,
+        "epsilon_R_over_epsilon_D": {
+          "Q": 0.9588697805724845,
+          "uc": 0.9685065820791976,
+          "dc": 0.9723883668012469,
+          "L": 0.9821610323583008,
+          "ec": 0.9880717128619305
+        },
+        "independent_flow_ode_error": 1.1102230246251565e-16,
+        "within_representation_epsilon_over_s_error": 2.2420775429197073e-44,
+        "running_mean_squared_mass_GeV2": 965639.7856550328,
+        "naive_mass_only_EM": 3.815645854136912e-15,
+        "mass_running_LL_matched_EM": 3.72874596954038e-15,
+        "first_order_log_matched_EM": 3.727497910104273e-15,
+        "naive_R14": 0.8751570540745236,
+        "naive_delta_R14": -6.73520956893178e-09,
+        "mass_running_LL_matched_R14": 0.8751570608097332,
+        "matched_delta_R14": 0.0
+      }
+    ],
+    "first_order_matching_quadratic_remainder_ratio": 4.044577186725112,
+    "actual_additional_rmse_improvement": null,
+    "scope": "A renormalization-scale diagnostic at fixed physics. Compensates only the gauge mass-running leading logs; not a new muon prediction or a complete three-loop result."
+  },
+  "convention": "16*pi^2*dM_R^2/dln(mu)|gauge=-6*sum_a(g_a^2*C2_a(R))*M_R^2",
+  "diagnostic_alignment": "g_a^2=gbar^2/T_a; tau=6*integral(gbar^2*dln(mu))/(16*pi^2). Alignment is not claimed to persist under physical gauge running.",
+  "required_new_structures": [
+    "C^2 in diagonal mass counterterms",
+    "C times the cyclic mass operator",
+    "gauge-generated scalar quartics and their matching conditions"
+  ],
+  "fitted_parameters": [],
+  "full_joint_rmse": null,
+  "source_sha256": "db6f8dd696f64e1741bd9d475ec4d902cedeb3c46f855a8ee19553541f74d4e4",
+  "script_sha256": "26ec36ce897cd0f01918a655526115cba244e80acac3861f85541d98118fef79"
+}
