@@ -1,0 +1,230 @@
+{
+  "rows": [
+    {
+      "hopping_ratio": 0.0,
+      "r": 0.0,
+      "phases": [
+        {
+          "theta": 0.0,
+          "matrix_error": 2.223804519873606e-16,
+          "eigen_error": 2.220446049250313e-16,
+          "geometric_mass_squared": [
+            0.9999999999999998,
+            0.9999999999999998,
+            1.0
+          ],
+          "curvature_lie_algebra_dimension_at_origin": 8,
+          "spatial_scalar_curvature": 4.000000000000001,
+          "curvature_second_difference_errors": [
+            1.1999571065679504e-05,
+            3.0018494898698123e-06
+          ],
+          "kinetic_action_split_error": 2.220446049250313e-16,
+          "trace_geometric_mass_away_from_origin": 3.0000000000000004
+        },
+        {
+          "theta": 0.7,
+          "matrix_error": 2.223804519873606e-16,
+          "eigen_error": 2.220446049250313e-16,
+          "geometric_mass_squared": [
+            0.9999999999999998,
+            0.9999999999999998,
+            1.0
+          ],
+          "curvature_lie_algebra_dimension_at_origin": 8,
+          "spatial_scalar_curvature": 4.000000000000001,
+          "curvature_second_difference_errors": [
+            1.1999571065679504e-05,
+            3.0018494898698123e-06
+          ],
+          "kinetic_action_split_error": 2.220446049250313e-16,
+          "trace_geometric_mass_away_from_origin": 3.0000000000000004
+        },
+        {
+          "theta": 3.141592653589793,
+          "matrix_error": 2.223804519873606e-16,
+          "eigen_error": 2.220446049250313e-16,
+          "geometric_mass_squared": [
+            0.9999999999999998,
+            0.9999999999999998,
+            1.0
+          ],
+          "curvature_lie_algebra_dimension_at_origin": 8,
+          "spatial_scalar_curvature": 4.000000000000001,
+          "curvature_second_difference_errors": [
+            1.1999571065679504e-05,
+            3.0018494898698123e-06
+          ],
+          "kinetic_action_split_error": 2.220446049250313e-16,
+          "trace_geometric_mass_away_from_origin": 3.0000000000000004
+        }
+      ]
+    },
+    {
+      "hopping_ratio": 0.3,
+      "r": 0.2752293577981651,
+      "phases": [
+        {
+          "theta": 0.0,
+          "matrix_error": 1.1115554477514918e-16,
+          "eigen_error": 1.1102230246251565e-16,
+          "geometric_mass_squared": [
+            0.7247706422018347,
+            0.7247706422018348,
+            1.55045871559633
+          ],
+          "curvature_lie_algebra_dimension_at_origin": 8,
+          "spatial_scalar_curvature": 4.151502398787979,
+          "curvature_second_difference_errors": [
+            1.5063051160169039e-05,
+            3.7649324120536676e-06
+          ],
+          "kinetic_action_split_error": 0.0,
+          "trace_geometric_mass_away_from_origin": 3.0
+        },
+        {
+          "theta": 0.7,
+          "matrix_error": 1.1857187100668868e-16,
+          "eigen_error": 4.440892098500626e-16,
+          "geometric_mass_squared": [
+            0.6220030337822376,
+            0.842455097182102,
+            1.5355418690356613
+          ],
+          "curvature_lie_algebra_dimension_at_origin": 8,
+          "spatial_scalar_curvature": 4.151502398787979,
+          "curvature_second_difference_errors": [
+            1.506262546513426e-05,
+            3.7631673350801975e-06
+          ],
+          "kinetic_action_split_error": 2.220446049250313e-16,
+          "trace_geometric_mass_away_from_origin": 3.0
+        },
+        {
+          "theta": 3.141592653589793,
+          "matrix_error": 6.206335383118183e-17,
+          "eigen_error": 2.220446049250313e-16,
+          "geometric_mass_squared": [
+            0.44954128440366964,
+            1.275229357798165,
+            1.2752293577981653
+          ],
+          "curvature_lie_algebra_dimension_at_origin": 8,
+          "spatial_scalar_curvature": 4.151502398787981,
+          "curvature_second_difference_errors": [
+            1.5062711121061056e-05,
+            3.763940851442271e-06
+          ],
+          "kinetic_action_split_error": 0.0,
+          "trace_geometric_mass_away_from_origin": 2.999999999999999
+        }
+      ]
+    },
+    {
+      "hopping_ratio": 1.0,
+      "r": 0.5,
+      "phases": [
+        {
+          "theta": 0.0,
+          "matrix_error": 2.220742673111311e-16,
+          "eigen_error": 5.551115123125783e-16,
+          "geometric_mass_squared": [
+            0.5000000000000001,
+            0.5000000000000003,
+            2.0000000000000004
+          ],
+          "curvature_lie_algebra_dimension_at_origin": 8,
+          "spatial_scalar_curvature": 4.5,
+          "curvature_second_difference_errors": [
+            3.599882956173417e-05,
+            9.00339358267388e-06
+          ],
+          "kinetic_action_split_error": 1.1102230246251565e-16,
+          "trace_geometric_mass_away_from_origin": 2.9999999999999996
+        },
+        {
+          "theta": 0.7,
+          "matrix_error": 2.2210876157341325e-16,
+          "eigen_error": 2.220446049250313e-16,
+          "geometric_mass_squared": [
+            0.3133055113710643,
+            0.7137934265474849,
+            1.9729010620814509
+          ],
+          "curvature_lie_algebra_dimension_at_origin": 8,
+          "spatial_scalar_curvature": 4.5,
+          "curvature_second_difference_errors": [
+            3.599887273786351e-05,
+            9.002986502082422e-06
+          ],
+          "kinetic_action_split_error": 2.220446049250313e-16,
+          "trace_geometric_mass_away_from_origin": 3.0
+        },
+        {
+          "theta": 3.141592653589793,
+          "matrix_error": 2.2211577373434197e-16,
+          "eigen_error": 8.881784197001252e-16,
+          "geometric_mass_squared": [
+            -4.440892098500785e-16,
+            1.4999999999999998,
+            1.5000000000000009
+          ],
+          "curvature_lie_algebra_dimension_at_origin": 3,
+          "spatial_scalar_curvature": 4.5,
+          "curvature_second_difference_errors": [
+            3.5998850382412684e-05,
+            9.003452179356941e-06
+          ],
+          "kinetic_action_split_error": 4.440892098500626e-16,
+          "trace_geometric_mass_away_from_origin": 3.0
+        }
+      ]
+    }
+  ],
+  "symbolic_curvature": {
+    "scalar_curvature": "2*(v**2 + 2)*(2*v**2 + 1)/(v**2 + 1)**2",
+    "phase_independent": true,
+    "identity_residual": "0",
+    "method": "Exact clock-shift matrices, formal unit phase, metric second derivatives."
+  },
+  "rank2": {
+    "spatial_metric": [
+      [
+        2.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        2.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        2.0
+      ]
+    ],
+    "mass_squared": [
+      [
+        1.5,
+        0.0
+      ],
+      [
+        0.0,
+        1.5
+      ]
+    ],
+    "curvature_algebra_dimension": 3
+  },
+  "length_unit": "ell=1; all masses are squared and scale as ell^-2",
+  "hypotheses": [
+    "normalized relation graph frame",
+    "cyclic hopping C=I+v exp(i theta/3) S",
+    "clock-shift leakage directions",
+    "metric from the same frame"
+  ],
+  "candidate_fitted_parameters": [],
+  "full_joint_rmse": null,
+  "scope": "Local conditional mass/curvature realization. Does not establish a dynamical gauge-group transition or select v, ell, or the state."
+}

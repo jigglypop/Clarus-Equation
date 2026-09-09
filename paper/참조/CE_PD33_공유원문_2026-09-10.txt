@@ -1,0 +1,794 @@
+## 최신화 결과
+
+CE의 공개 GitHub `main`은 현재도 **30장, 커밋 `05013ce3c653fc68c2fe5a4ab6294e95bd6c0a30`**까지입니다. 이번 작업에서는 원격을 변경하지 않고 로컬 연구 흐름을 다음처럼 최신화했습니다.
+
+* **31장 CE-RT31**: 실시간 양자상태·입자 생성·중력 되먹임
+* **32장 CE-OBS32**: 같은 스펙트럼에서 DESI 거리 관측량 전방 계산
+* **33장 CE-PD33**: 빛의 파동–입자 이중성, 무한모드, 광원뿔 접힘, CE 광자 생성식
+
+기존의 8개 성공 게이트와 R01–R12는 그대로 유지했습니다. 새 광자 연구는 새로운 종착점을 만든 것이 아니라 **전자기력·관측 instrument·CMB 연결을 구체화한 것**입니다.
+
+---
+
+# 1. 결론부터 말하면: 조건부로 증명할 수 있습니다
+
+다만 정확한 결론은 다음입니다.
+
+> **빛이 고전적인 파동인 동시에 고전적인 작은 공이라는 것을 증명하는 것이 아닙니다.
+> 하나의 양자 전자기장이 파동처럼 전파되는 복소진폭과 입자처럼 계수되는 정수 검출기록을 동시에 만든다는 것을 QED의 전제에서 증명할 수 있습니다.**
+
+즉,
+
+$$
+\boxed{
+\text{파동성}
+=
+\text{선형 진폭의 전파와 간섭}
+}
+$$
+
+$$
+\boxed{
+\text{입자성}
+=
+\text{같은 장의 정수 Fock 들뜸과 국소 검출전이}
+}
+$$
+
+입니다.
+
+기존 CE식에도 이미 전자기장을 포함하는 게이지 운동항과, 같은 순환 스펙트럼이 미세구조상수·게이지 결합·중력 반응을 함께 정하는 구조가 들어 있습니다.
+
+CE의 전자기 부분을
+
+$$
+S_\gamma
+=
+-\frac14
+\int d^4x\sqrt{-g}\,
+k_\gamma(\theta)
+F_{\mu\nu}F^{\mu\nu}
+$$
+
+로 놓겠습니다.
+
+## 1.1 변분하면 파동이 나옵니다
+
+\(k_\gamma\)가 일정한 진공 구간에서는
+
+$$
+\nabla_\mu F^{\mu\nu}=0
+$$
+
+이고, 적절한 게이지를 택하면 두 물리적 편광모드는
+
+$$
+\Box A_\lambda=0,
+\qquad
+\omega_{\mathbf k}=c|\mathbf k|
+$$
+
+를 따릅니다.
+
+이 방정식은 선형이므로
+
+$$
+A=A_1+A_2
+$$
+
+도 해입니다. 따라서 서로 구별할 수 없는 두 경로의 검출진폭은
+
+$$
+\mathcal A
+=
+\mathcal A_1
++
+e^{i\phi}\mathcal A_2
+$$
+
+로 더해집니다. 하지만 확률은
+
+$$
+\begin{aligned}
+P
+&=|\mathcal A|^2\\
+&=
+|\mathcal A_1|^2
++
+|\mathcal A_2|^2
++
+2\operatorname{Re}
+\left(
+e^{i\phi}\mathcal A_2\mathcal A_1^*
+\right)
+\end{aligned}
+$$
+
+입니다.
+
+마지막 교차항이 간섭무늬입니다. 따라서 사용자의 표현을 빌리면:
+
+$$
+\boxed{
+\text{빛의 진폭은 가법적이지만 확률은 단순 가법적이지 않다.}
+}
+$$
+
+이것이 파동성의 정확한 수학적 핵심입니다.
+
+## 1.2 같은 파동모드를 양자화하면 입자가 나옵니다
+
+장을 모드별로 양자화하면 각 모드는 양자 조화진동자가 됩니다.
+
+$$
+\widehat H
+=
+\sum_\lambda
+\int d^3k\,
+\hbar\omega_k
+\left(
+\widehat a_{\lambda k}^{\dagger}
+\widehat a_{\lambda k}
++\frac12
+\right)
+$$
+
+$$
+\widehat N
+=
+\sum_\lambda
+\int d^3k\,
+\widehat a_{\lambda k}^{\dagger}
+\widehat a_{\lambda k}
+$$
+
+광자수는
+
+$$
+N=0,1,2,\ldots
+$$
+
+의 정수입니다.
+
+한 광자 파동묶음은
+
+$$
+|1_\psi\rangle
+=
+\sum_{\lambda=\pm1}
+\int d\mu(k)\,
+\psi_\lambda(k)
+\widehat a_\lambda^\dagger(k)|0\rangle
+$$
+
+입니다.
+
+이 상태는 **광자수는 정확히 하나지만**, 주파수·방향·경로·편광에는 중첩돼 있습니다. 따라서 공간 전체로 퍼진 파동진폭과 단일 광자수가 전혀 모순되지 않습니다.
+
+Glauber의 양자 광검출 이론은 검출확률을 정상정렬된 장 상관함수로 표현해, 전파하는 장진폭과 개별 광자 click을 하나의 QED 언어로 묶습니다. ([APS Journals][1])
+
+---
+
+# 2. 한 실험장치 안에서 파동성과 입자성이 모두 나옵니다
+
+## 2.1 50:50 빔스플리터
+
+한 광자를 한쪽 입력에 넣으면
+
+$$
+\widehat a^\dagger
+\longrightarrow
+\frac{
+\widehat c^\dagger
++i\widehat d^\dagger
+}{\sqrt2}
+$$
+
+이므로
+
+$$
+|1,0\rangle_{ab}
+\longrightarrow
+\frac{
+|1,0\rangle_{cd}
++i|0,1\rangle_{cd}
+}{\sqrt2}.
+$$
+
+두 출력경로의 **진폭은 동시에 존재**하지만 출력상태에
+
+$$
+|1,1\rangle
+$$
+
+항은 없습니다.
+
+그러므로 이상적인 한 광자에서
+
+$$
+\langle n_cn_d\rangle=0,
+\qquad
+g^{(2)}(0)=0.
+$$
+
+즉 한 광자가 고전파동처럼 에너지 절반씩 갈라져 양쪽 검출기를 동시에 울리지 않습니다. 고전파동만으로는 설명되지 않는 beam-splitter anticorrelation과, 같은 광원의 높은 간섭 visibility가 실제 단일광자 실험에서 함께 관측됐습니다. ([KipHub][2])
+
+## 2.2 경로를 다시 합치면 간섭합니다
+
+두 경로 사이에 위상 \(\phi\)를 넣고 다시 합치면
+
+$$
+P_c=\sin^2\frac{\phi}{2},
+\qquad
+P_d=\cos^2\frac{\phi}{2}.
+$$
+
+각 시행은 어느 한 검출기의 점 형태 click으로 끝나지만, 많은 시행의 통계는 파동 위상에 따라 변합니다.
+
+따라서 빛의 이중성을 가장 정확하게 표현하면:
+
+$$
+\boxed{
+\text{가능성은 파동진폭으로 전파되고,
+결과는 입자기록으로 나타난다.}
+}
+$$
+
+---
+
+# 3. CE의 끼임·접힘과도 정확히 연결됩니다
+
+두 경로가 환경에 서로 다른 기록을 남기는 상태를
+
+$$
+|\Psi\rangle
+=
+\cos\frac{\vartheta}{2}
+|0\rangle|m_0\rangle
++
+e^{i\phi}
+\sin\frac{\vartheta}{2}
+|1\rangle|m_1\rangle
+$$
+
+로 놓고,
+
+$$
+\gamma
+=
+|\langle m_0|m_1\rangle|
+$$
+
+라고 하겠습니다.
+
+간섭 visibility는
+
+$$
+V=\sin\vartheta\,\gamma
+$$
+
+이고, 경로를 구별할 수 있는 정도는
+
+$$
+D
+=
+\sqrt{
+1-\sin^2\vartheta\,\gamma^2
+}.
+$$
+
+따라서 순수 전체상태에서는
+
+$$
+\boxed{
+V^2+D^2=1
+}
+$$
+
+입니다. 실제 혼합·손실을 포함하면 \(V^2+D^2\le1\)이 됩니다. 단일광자 지연선택 실험들도 이러한 정량적 상보관계를 검증해 왔습니다. ([APS Journals][3])
+
+이를 CE 언어로 옮기면:
+
+* **끼임**: 경로가 환경·검출기 기록과 얽혀 \(\gamma\)가 감소합니다.
+* **가시 선택**: 한 record에 조건부화하면 한 결과가 남습니다.
+* **접힘**: 전체 nonselective 상태에는 다른 경로와 환경상관도 보존됩니다.
+* **에너지 경계**: 비선택 경로의 확률을 선택된 세계의 추가 에너지로 다시 더하지 않습니다.
+
+즉 기존 CE의 끼임–접힘 서사는 광자 상보성의 수학적 구조와 잘 맞습니다. 다만 이 식만으로 CE의 암흑부문이나 객관적 붕괴법칙까지 증명되는 것은 아닙니다.
+
+이번 무작위 순수상태 2,000개 검산에서
+
+$$
+V^2+D^2-1
+$$
+
+의 최대 절댓값은
+
+$$
+2.22\times10^{-16}
+$$
+
+이었습니다.
+
+---
+
+# 4. “무한차원”이라는 영감은 상당 부분 맞습니다
+
+다만 **물리적 공간차원**과 **양자 상태공간의 차원**을 구분해야 합니다.
+
+한 광자의 상태공간은 개략적으로
+
+$$
+\boxed{
+\mathcal H_1
+=
+L^2(\mathcal N^+,d\mu)
+\otimes\mathbb C^2
+}
+$$
+
+입니다.
+
+* \(\mathcal N^+\): 양의 에너지 null cone
+* 연속 주파수
+* 연속 진행방향
+* 두 helicity
+
+연속적인 주파수와 방향 때문에 \(L^2\) 공간은 무한차원입니다. 하지만 광자의 내부 물리편광은 두 개이고, 이것이 추가적인 무한 공간차원을 뜻하지는 않습니다.
+
+모든 광자수까지 포함하면
+
+$$
+\boxed{
+\mathcal F_\gamma
+=
+\bigoplus_{n=0}^{\infty}
+\operatorname{Sym}
+\mathcal H_1^{\otimes n}
+}
+$$
+
+이라는 무한차원 Fock 공간이 됩니다.
+
+## 4.1 2026년 최신 연구가 이 직관을 강하게 보강합니다
+
+2026년 7월 Physical Review Letters에 발표된 **Truncated Photon**은 한 광자 파형을 optical shutter로 날카롭게 자르면, 결과가 단순한 다른 한 광자나 ‘광자와 진공의 혼합’이 아니라 **0부터 무한대까지 모든 광자수 부문의 중첩·혼합**이 될 수 있음을 보였습니다. 국소적으로는 전이영역 양쪽에서 각각 한 광자와 진공처럼 보일 수 있습니다. ([APS Journals][4])
+
+이는 사용자의 영감을 다음처럼 보강합니다.
+
+$$
+\boxed{
+\text{날카로운 국소 경계를 구현할 때
+양자장은 무한한 Fock 부문을 동원할 수 있다.}
+}
+$$
+
+하지만 이는 광자가 무한개의 물리적 공간차원을 통과한다는 뜻이 아닙니다. **국소적인 날카로운 조작과 전역적인 광자수·모드 분해가 단순하게 맞지 않는다**는 의미입니다.
+
+또 한 광자 상태는 일반적인 고전 점입자처럼 완전히 날카로운 유한 공간영역에 국소화될 수 없고 에너지·광자수 밀도에 꼬리가 남습니다. ([APS Journals][5])
+
+---
+
+# 5. “빠르기 때문에 파동이자 입자”는 아닙니다
+
+여기서는 영감의 두 부분을 나눠야 합니다.
+
+## 가볍고 = 무질량이라는 의미라면
+
+무질량성은
+
+$$
+p^\mu p_\mu=0,
+\qquad
+\omega=c|\mathbf k|
+$$
+
+라는 null dispersion을 만들고, causal front가 광원뿔을 따라 전달되게 합니다.
+
+하지만 무질량성은 파동–입자 이중성의 원인은 아닙니다. 전자·중성자·원자·분자도 간섭합니다.
+
+## 가법적이라는 의미라면
+
+이쪽은 이중성의 파동 부분과 직접 관련됩니다.
+
+$$
+\text{진폭의 선형 가산}
++
+\text{Born 제곱}
+\longrightarrow
+\text{간섭}
+$$
+
+여기에
+
+$$
+\text{Fock 양자화}
++
+\text{국소 검출전이}
+\longrightarrow
+\text{입자수 click}
+$$
+
+이 더해져 이중성이 나옵니다.
+
+또 “빛의 속도” 자체도 구분이 필요합니다. 평면파 모드는 \(c\)의 null dispersion을 갖지만, 공간적으로 국소화된 구조화된 광자묶음에서는 에너지·group centroid 속도가 \(c\)보다 작고 phase velocity가 \(c\)보다 클 수 있다는 2026년 이론 분석도 있습니다. 이것이 초광속 정보전달을 허용하는 것은 아닙니다. ([arXiv][6])
+
+---
+
+# 6. 빛은 먼 곳의 “현재”를 동시에 보여 주지는 않습니다
+
+평탄한 시공간에서 거리 \(R\)의 광원이 관측자의 시간 \(t_{\rm obs}\)에 보인다면 방출시각은
+
+$$
+\boxed{
+t_{\rm emit}
+=
+t_{\rm obs}
+-
+\frac{R}{c}
+}
+$$
+
+입니다.
+
+따라서 한 관측자의 현재에 들어오는 빛은:
+
+* 가까운 곳에서는 매우 최근의 과거
+* 먼 곳에서는 훨씬 오래된 과거
+* 각 방향마다 서로 다른 방출시점
+
+을 가져옵니다.
+
+거울 속 자신의 모습도 엄밀히는 왕복거리 \(2d\)만큼 늦은
+
+$$
+t_{\rm obs}-\frac{2d}{c}
+$$
+
+의 모습입니다.
+
+사용자의 문장을 가장 강하게 살리면서 물리적으로 고치면:
+
+$$
+\boxed{
+\text{한 국소 현재}
+=
+\text{과거 광원뿔 위의 무한한 방향·주파수 기록이
+검출기에 접힌 것}
+}
+$$
+
+입니다.
+
+빛은 먼 곳의 동시적 현재를 보여 주는 것이 아니라, **서로 다른 과거를 현재의 한 관측사건에 모아 보여 줍니다.**
+
+---
+
+# 7. 이를 CE의 “광원뿔 접힘”으로 정식화했습니다
+
+관측자의 고유시간 \(\tau\)에서 입사 광자진폭을
+
+$$
+\psi_\lambda(\omega,\mathbf n)
+$$
+
+이라 하고 detector 결과를 \(r\)이라 하면,
+
+$$
+\boxed{
+(\mathfrak F_\tau\psi)_r
+=
+\sum_{\lambda=\pm1}
+\int_0^\infty d\omega
+\int_{S^2}d\Omega_{\mathbf n}\,
+K_{r\lambda}
+(\tau;\omega,\mathbf n)
+\psi_\lambda(\omega,\mathbf n)
+}
+$$
+
+라는 **광원뿔 접힘 연산자**를 정의할 수 있습니다.
+
+여기서:
+
+* 입력은 무한차원 광자 모드공간
+* 출력은 유한한 검출기 반응진폭
+* 연산자는 진폭에 선형
+* 확률은 \(p_r=\langle\psi|E_r|\psi\rangle\)의 이차형
+* 커널은 과거 광원뿔 밖에서 0
+
+입니다.
+
+$$
+K_r(x;y)=0
+\qquad
+(y\notin J^-(x)).
+$$
+
+따라서 다음 문장은 수학적으로 일관됩니다.
+
+$$
+\boxed{
+\text{빛은 무한모드의 가법적 양자장을 광원뿔을 따라 운반하고,
+그 모드를 관측자의 한 현재에서 정수 기록으로 접는다.}
+}
+$$
+
+이것이 이번에 얻은 사용자 영감의 가장 강한 정식화입니다.
+
+256개 모드를 7개 detector amplitude로 접는 유한 근사 검산에서 선형성 잔차는
+
+$$
+4.27\times10^{-16}
+$$
+
+이하였습니다.
+
+---
+
+# 8. CE 안에서는 같은 식으로 실제 광자 생성까지 예측할 수 있습니다
+
+기존 CE에는
+
+$$
+k_\gamma=k_\gamma(\theta)
+$$
+
+가 있으므로, 암흑 집단위상 \(\theta\)가 움직이면 전자기장의 정규화도 움직입니다.
+
+공간적으로 평탄한 conformal FLRW에서
+
+$$
+I^2(\eta)=k_\gamma(\theta(\eta)),
+\qquad
+v_{\lambda k}=I A_{\lambda k}
+$$
+
+로 두면
+
+$$
+\boxed{
+v_{\lambda k}''
++
+\left(
+k^2-\frac{I''}{I}
+\right)v_{\lambda k}
+=0
+}
+$$
+
+이 됩니다.
+
+이 식 하나가 두 역할을 합니다.
+
+1. \(v_{\lambda k}\)는 선형 파동으로 전파됩니다.
+2. \(I''/I\neq0\)이면 양·음주파수가 섞여 광자가 생성됩니다.
+
+$$
+v_k^{\rm in}
+=
+\alpha_kv_k^{\rm out}
++
+\beta_kv_k^{\rm out*}
+$$
+
+$$
+|\alpha_k|^2-|\beta_k|^2=1,
+\qquad
+\boxed{n_k=|\beta_k|^2}.
+$$
+
+즉 **같은 파동방정식이 광자 입자수를 만들어 냅니다.**
+
+CE의 convention에서
+
+$$
+I\propto\alpha^{-1/2}
+$$
+
+이므로
+
+$$
+\boxed{
+\frac{I''}{I}
+=
+-\frac12(\ln\alpha)''
++
+\frac14[(\ln\alpha)']^2.
+}
+$$
+
+기존 CE가 이미 가진
+
+$$
+\frac{d\ln\alpha}{d\theta}
+$$
+
+와 31장의 \(\theta(\eta)\)를 결합하면 별도의 광자 생성함수를 맞추지 않고
+
+$$
+\theta(\eta)
+\rightarrow
+\alpha(\eta)
+\rightarrow
+\frac{I''}{I}
+\rightarrow
+n_k
+$$
+
+를 계산할 수 있습니다. 기존 31장은 상태·집단장·계량의 자기정합 되먹임까지 계산한 상태입니다. 
+
+## 8.1 새로 닫은 해석 benchmark
+
+약한 시간변조
+
+$$
+I(\eta)
+=
+1+\delta\operatorname{sech}^2(\eta/\tau),
+\qquad
+|\delta|\ll1
+$$
+
+에 대해
+
+$$
+\boxed{
+\beta_k
+=
+i
+\frac{
+4\pi\delta\tau^2k^2
+}{
+\sinh(\pi\tau k)
+}
++O(\delta^2)
+}
+$$
+
+$$
+\boxed{
+n_k
+=
+\frac{
+16\pi^2\delta^2\tau^4k^4
+}{
+\sinh^2(\pi\tau k)
+}
++O(\delta^3)
+}
+$$
+
+를 얻었습니다.
+
+두 helicity를 합친 광자 에너지밀도는
+
+$$
+\boxed{
+\rho_\gamma
+=
+\frac{
+1260\zeta(7)
+}{
+\pi^8
+}
+\frac{\delta^2}{a^4\tau^4}
++O(\delta^3)
+}
+$$
+
+이고,
+
+$$
+\frac{1260\zeta(7)}{\pi^8}
+=
+0.133900609836\ldots
+$$
+
+입니다.
+
+직접 모드 ODE와 Born 식을 비교했고, \(\delta=10^{-4}\)에서 최대 상대차는 약
+
+$$
+1.67\times10^{-4}
+$$
+
+로 예상되는 다음 차수에 맞았습니다. 에너지 적분과 닫힌 해의 상대차는 고정밀 연산에서
+
+$$
+4.92\times10^{-57}
+$$
+
+이하였습니다.
+
+현재 CE의 \(k_\gamma F^2\)는 parity-even이므로 두 helicity는 동일하게 생성됩니다.
+
+$$
+n_{+k}=n_{-k}.
+$$
+
+따라서 이 가지의 중요한 **null prediction**은 선도 helicity 비대칭이나 우주 광학회전을 만들지 않는다는 것입니다. 그런 현상이 필요하다면 \(\theta F\widetilde F\) 같은 parity-odd 항이 CE 대칭에서 실제로 유도돼야 하며, 관측을 맞추려고 사후 추가하면 안 됩니다.
+
+---
+
+# 9. 2026년 최신 연구와도 방향이 맞습니다
+
+2026년 generalized photon subtraction 실험 preprint는 Fock-like한 입자형 상태와 cat-like한 파동형 상태 사이에 **연속적인 중간상태**가 있으며, 실험변수로 그 균형을 조절할 수 있음을 보였습니다. 파동성과 입자성이 두 개의 고정된 고전적 본질이라기보다 양자상태와 측정에서 연속적으로 나타나는 특성이라는 해석을 강화합니다. ([arXiv][7])
+
+또 2026년 PRL의 잘린 광자 결과는 날카로운 시간경계가 무한한 광자수 부문을 불러올 수 있음을 보였습니다. 이는 이번 CE 식에서 시간변화 \(I''/I\)가 Bogoliubov 혼합과 광자 생성을 만드는 구조와 매우 잘 맞습니다. 다만 해당 연구는 표준 QFT 결과이며 CE의 독자적 증거는 아닙니다. ([APS Journals][4])
+
+---
+
+# 10. 이번 판정
+
+## 증명된 범위
+
+다음 전제 아래에서는 파동–입자 이중성을 조건부로 증명했습니다.
+
+* 국소 U(1) Maxwell 작용
+* 양의 에너지 canonical quantization
+* 두 transverse helicity
+* Born/Glauber 광검출
+* 국소적이고 인과적인 detector instrument
+
+그 결과:
+
+$$
+\boxed{
+\text{파동전파}
++
+\text{간섭}
++
+\text{정수 광자수}
++
+\text{단일광자 배타 검출}
+}
+$$
+
+이 하나의 양자장에서 함께 나옵니다.
+
+## 아직 CE에서 더 깊게 증명할 부분
+
+* 왜 0차원 관계·끼임·접힘에서 U(1)이 나오는가
+* 왜 광자가 정확히 무질량인가
+* 왜 물리적 편광이 정확히 두 helicity인가
+* 왜 Born rule과 이 detector instrument가 선택되는가
+* CE의 실제 \(\theta(\eta)\)가 어떤 \(n_k\), CMB 스펙트럼 왜곡, 재결합 변화를 예측하는가
+* 같은 식이 암흑에너지·거리·CMB·원자시계를 함께 통과하는가
+
+따라서 **빛의 파동–입자성은 QED 전제 안에서는 닫혔고, CE 원리에서 QED 자체를 발생시키는 문제는 아직 R01·R03·R04에 남았습니다.**
+
+---
+
+## 최신화한 결과물
+
+[33장 — 빛의 가법성·무한모드·광원뿔 접힘](sandbox:/mnt/data/33_빛의_가법성_무한모드_광원뿔_접힘.md)
+
+[2026-09-10 CE 최신 상태](sandbox:/mnt/data/CE_latest_status_2026-09-10.md)
+
+[광자 가지가 반영된 관측 목표 계약](sandbox:/mnt/data/CE_observation_goal_contract_2026-09-10.md)
+
+[업데이트된 R01–R12 조건 원장](sandbox:/mnt/data/CE_remaining_conditions_register_2026-09-10.json)
+
+[집중 검산 코드](sandbox:/mnt/data/CE_light_duality_check.py) · [검산 결과](sandbox:/mnt/data/CE_light_duality_results.json)
+
+[전체 CE-PD33 재현 묶음](sandbox:/mnt/data/CE_light_quantum_bundle_2026-09-10.zip)
+
+현재 가장 강한 새 문장은 이것입니다.
+
+$$
+\boxed{
+\textbf{빛은 무한모드의 가법적 양자장을 광원뿔을 따라 전달하고,
+관측자의 한 현재에서 그 가능성을 정수 검출기록으로 접는 장이다.}
+}
+$$
+
+이 표현은 사용자의 영감을 보존하면서도, 무한차원을 상태공간으로, “동시의 현재”를 과거 광원뿔의 국소 접힘으로 정확하게 고칩니다.
+
+[1]: https://journals.aps.org/pr/abstract/10.1103/PhysRev.130.2529 "https://journals.aps.org/pr/abstract/10.1103/PhysRev.130.2529"
+[2]: https://www.kiphub.com/paper/61e5063f47f683b4c8f6261c "https://www.kiphub.com/paper/61e5063f47f683b4c8f6261c"
+[3]: https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.100.220402 "https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.100.220402"
+[4]: https://journals.aps.org/prl/abstract/10.1103/94pm-hp34 "https://journals.aps.org/prl/abstract/10.1103/94pm-hp34"
+[5]: https://journals.aps.org/pra/abstract/10.1103/PhysRevA.79.032112 "https://journals.aps.org/pra/abstract/10.1103/PhysRevA.79.032112"
+[6]: https://arxiv.org/abs/2602.17576 "https://arxiv.org/abs/2602.17576"
+[7]: https://arxiv.org/abs/2602.21629 "https://arxiv.org/abs/2602.21629"

@@ -1,0 +1,297 @@
+{
+  "optics": {
+    "pure_complementarity_max_error": 1.9984014443252818e-15,
+    "mach_zehnder_probability_max_error": 6.661338147750939e-16,
+    "no_click_effect_min_eigenvalue": 0.3599999999999997,
+    "total_probability": 0.9999999999999998,
+    "scope": "Born detection and a specified instrument assumed; not derived from CE."
+  },
+  "pulse": {
+    "rows": [
+      {
+        "delta": 0.001,
+        "k_tau": 0.25,
+        "number": 8.16886935335787e-07,
+        "born_beta_relative_error": 0.00035361988812943057,
+        "bogoliubov_invariant_error": 9.992007221626409e-16,
+        "independent_ode_beta_difference": 4.857799564954581e-16
+      },
+      {
+        "delta": 0.001,
+        "k_tau": 0.5,
+        "number": 1.8620537382817173e-06,
+        "born_beta_relative_error": 0.00041607612524019455,
+        "bogoliubov_invariant_error": 2.6645352591003757e-15,
+        "independent_ode_beta_difference": 3.113778821419106e-16
+      },
+      {
+        "delta": 0.001,
+        "k_tau": 1.0,
+        "number": 1.1824206443084572e-06,
+        "born_beta_relative_error": 0.0006658753602887257,
+        "bogoliubov_invariant_error": 2.220446049250313e-16,
+        "independent_ode_beta_difference": 1.1164222560064559e-15
+      },
+      {
+        "delta": 0.001,
+        "k_tau": 2.0,
+        "number": 3.5127739605776995e-08,
+        "born_beta_relative_error": 0.0016646609682114955,
+        "bogoliubov_invariant_error": 4.440892098500626e-16,
+        "independent_ode_beta_difference": 2.6356633676283545e-15
+      },
+      {
+        "delta": 0.001,
+        "k_tau": 3.0,
+        "number": 3.3098725704158606e-10,
+        "born_beta_relative_error": 0.0033278418732554105,
+        "bogoliubov_invariant_error": 0.0,
+        "independent_ode_beta_difference": 2.3037189969899147e-15
+      },
+      {
+        "delta": 0.0005,
+        "k_tau": 0.25,
+        "number": 2.042939268040828e-07,
+        "born_beta_relative_error": 0.00017694656548916665,
+        "bogoliubov_invariant_error": 0.0,
+        "independent_ode_beta_difference": 1.9495211297037647e-16
+      },
+      {
+        "delta": 0.0005,
+        "k_tau": 0.5,
+        "number": 4.6570708691928636e-07,
+        "born_beta_relative_error": 0.0002081856185277564,
+        "bogoliubov_invariant_error": 1.5543122344752192e-15,
+        "independent_ode_beta_difference": 1.9679667697352885e-16
+      },
+      {
+        "delta": 0.0005,
+        "k_tau": 1.0,
+        "number": 2.958020442262188e-07,
+        "born_beta_relative_error": 0.0003331353993956121,
+        "bogoliubov_invariant_error": 2.220446049250313e-16,
+        "independent_ode_beta_difference": 1.0127320392072228e-15
+      },
+      {
+        "delta": 0.0005,
+        "k_tau": 2.0,
+        "number": 8.796575502110152e-09,
+        "born_beta_relative_error": 0.0008328316225989507,
+        "bogoliubov_invariant_error": 3.552713678800501e-15,
+        "independent_ode_beta_difference": 4.088204330319622e-16
+      },
+      {
+        "delta": 0.0005,
+        "k_tau": 3.0,
+        "number": 8.30231044578858e-11,
+        "born_beta_relative_error": 0.0016652928780814813,
+        "bogoliubov_invariant_error": 3.774758283725532e-15,
+        "independent_ode_beta_difference": 3.369891679114407e-16
+      },
+      {
+        "delta": 0.0001,
+        "k_tau": 0.25,
+        "number": 8.174070830653408e-09,
+        "born_beta_relative_error": 3.541119370154e-05,
+        "bogoliubov_invariant_error": 3.552713678800501e-15,
+        "independent_ode_beta_difference": 1.1463959002503176e-15
+      },
+      {
+        "delta": 0.0001,
+        "k_tau": 0.5,
+        "number": 1.8634489430150687e-08,
+        "born_beta_relative_error": 4.1660755488392986e-05,
+        "bogoliubov_invariant_error": 7.771561172376096e-16,
+        "independent_ode_beta_difference": 1.2313952710156783e-16
+      },
+      {
+        "delta": 0.0001,
+        "k_tau": 1.0,
+        "number": 1.1838390658343616e-08,
+        "born_beta_relative_error": 6.665874593059229e-05,
+        "bogoliubov_invariant_error": 8.881784197001252e-16,
+        "independent_ode_beta_difference": 1.776233357912049e-15
+      },
+      {
+        "delta": 0.0001,
+        "k_tau": 2.0,
+        "number": 3.523323790247641e-10,
+        "born_beta_relative_error": 0.00016664658924592235,
+        "bogoliubov_invariant_error": 3.552713678800501e-15,
+        "independent_ode_beta_difference": 3.0611414470766723e-16
+      },
+      {
+        "delta": 0.0001,
+        "k_tau": 3.0,
+        "number": 3.3297918861503942e-12,
+        "born_beta_relative_error": 0.0003332783530956007,
+        "bogoliubov_invariant_error": 1.3322676295501878e-15,
+        "independent_ode_beta_difference": 3.2608814665047297e-15
+      }
+    ],
+    "born_energy": {
+      "coefficient": "0.133900609836165693282384349634",
+      "relative_quadrature_error": "3.1115e-61"
+    },
+    "scope": "tau=1 diagnostic pulse; delta is a solver input, never a fitted CE amplitude."
+  },
+  "determinant": {
+    "r_H": "7.27171886e-29",
+    "log_determinant_ratio": "1.357210190261664011483814e-84",
+    "relative_eigenvalue_crosscheck_error": "8.8782e-98"
+  },
+  "common_CE_photons": {
+    "rows": [
+      {
+        "r": 0.15,
+        "sqrt_s_eV": 0.027615,
+        "theta_initial": 1e-12,
+        "theta_final": 4.3176394502106426e-05,
+        "r_H": 1.1438823375e-28,
+        "integrated_abs_sin_theta_dtheta": 9.321005209453367e-10,
+        "integral_abs_dlnI_upper_bound": 1.4402561951258522e-96,
+        "vacuum_number_per_mode_upper_bound": 2.0743379075983968e-192,
+        "k_in_background_conformal_units": [
+          0.1,
+          1.0,
+          10.0
+        ],
+        "leading_vacuum_number_per_helicity": [
+          2.0742828498566905e-192,
+          2.0688477127734234e-192,
+          1.6447398777850336e-192
+        ],
+        "integration_step_relative_difference": 4.217676085753068e-12,
+        "previous_partial_rmse_14": 0.8751571582814267
+      },
+      {
+        "r": 0.15,
+        "sqrt_s_eV": 0.027615,
+        "theta_initial": 1e-10,
+        "theta_final": 0.004317637973114694,
+        "r_H": 1.1438823375e-28,
+        "integrated_abs_sin_theta_dtheta": 9.320984353173868e-06,
+        "integral_abs_dlnI_upper_bound": 1.4402529724706684e-92,
+        "vacuum_number_per_mode_upper_bound": 2.074328624710596e-184,
+        "k_in_background_conformal_units": [
+          0.1,
+          1.0,
+          10.0
+        ],
+        "leading_vacuum_number_per_helicity": [
+          2.074273567147917e-184,
+          2.0688384477446336e-184,
+          1.6447320267331197e-184
+        ],
+        "integration_step_relative_difference": 4.219274207923913e-12,
+        "previous_partial_rmse_14": 0.8751571324892103
+      },
+      {
+        "r": 0.15,
+        "sqrt_s_eV": 0.027615,
+        "theta_initial": 1e-08,
+        "theta_final": 0.43029433727971944,
+        "r_H": 1.1438823375e-28,
+        "integrated_abs_sin_theta_dtheta": 0.09115699031504276,
+        "integral_abs_dlnI_upper_bound": 1.4085328468340934e-88,
+        "vacuum_number_per_mode_upper_bound": 1.9839647806105554e-176,
+        "k_in_background_conformal_units": [
+          0.1,
+          1.0,
+          10.0
+        ],
+        "leading_vacuum_number_per_helicity": [
+          1.9839114787618486e-176,
+          1.9786497472600713e-176,
+          1.5684040876051828e-176
+        ],
+        "integration_step_relative_difference": 1.0114579359537305e-11,
+        "previous_partial_rmse_14": 0.8749057054934861
+      },
+      {
+        "r": 0.35,
+        "sqrt_s_eV": 0.014414,
+        "theta_initial": 1e-12,
+        "theta_final": -0.001465110314541486,
+        "r_H": 7.27171886e-29,
+        "integrated_abs_sin_theta_dtheta": 1.0732739248889001e-06,
+        "integral_abs_dlnI_upper_bound": 4.2604429723294885e-94,
+        "vacuum_number_per_mode_upper_bound": 1.8151374320471726e-187,
+        "k_in_background_conformal_units": [
+          0.1,
+          1.0,
+          10.0
+        ],
+        "leading_vacuum_number_per_helicity": [
+          1.8150887282776368e-187,
+          1.8102809940672274e-187,
+          1.436032681690957e-187
+        ],
+        "integration_step_relative_difference": 3.8020964988181335e-12,
+        "previous_partial_rmse_14": 0.8751571393478568
+      },
+      {
+        "r": 0.35,
+        "sqrt_s_eV": 0.014414,
+        "theta_initial": 1e-10,
+        "theta_final": -0.14645506920374654,
+        "r_H": 7.27171886e-29,
+        "integrated_abs_sin_theta_dtheta": 0.010705388041762447,
+        "integral_abs_dlnI_upper_bound": 4.2495857013677334e-90,
+        "vacuum_number_per_mode_upper_bound": 1.8058978633269093e-179,
+        "k_in_background_conformal_units": [
+          0.1,
+          1.0,
+          10.0
+        ],
+        "leading_vacuum_number_per_helicity": [
+          1.805849339827859e-179,
+          1.8010594079914435e-179,
+          1.4282317290657421e-179
+        ],
+        "integration_step_relative_difference": 3.5544166267064855e-12,
+        "previous_partial_rmse_14": 0.8751274873845389
+      },
+      {
+        "r": 0.35,
+        "sqrt_s_eV": 0.014414,
+        "theta_initial": 1e-08,
+        "theta_final": -4.920124662949168,
+        "r_H": 7.27171886e-29,
+        "integrated_abs_sin_theta_dtheta": 3.206244794904206,
+        "integral_abs_dlnI_upper_bound": 1.272743405690364e-87,
+        "vacuum_number_per_mode_upper_bound": 1.6198757767283067e-174,
+        "k_in_background_conformal_units": [
+          0.1,
+          1.0,
+          10.0
+        ],
+        "leading_vacuum_number_per_helicity": [
+          9.939875717176029e-176,
+          1.1108208523761171e-175,
+          7.323706524060743e-175
+        ],
+        "integration_step_relative_difference": 3.664244123309769e-10,
+        "previous_partial_rmse_14": 1.1001098300731917
+      }
+    ],
+    "assumptions": [
+      "same six supplied late cold states, a=0.01 to 1",
+      "one-loop local parity-even Maxwell action, k_gamma positive",
+      "initial instantaneous photon vacuum, no plasma or photon backreaction",
+      "m_H=1 TeV, same dimensionful epsilon as neutral sector",
+      "k in sqrt(U_top)/M_P conformal units; finite-time final particle convention"
+    ],
+    "new_photon_likelihood": null,
+    "recomputed_joint_rmse": null,
+    "scope": "Born occupations and an all-k vacuum occupation bound, not a CMB spectrum or energy-density bound."
+  },
+  "fitted_parameters": [],
+  "full_joint_rmse": null,
+  "source": {
+    "path": "paper/\ucc38\uc870/CE_PD33_\uacf5\uc720\uc6d0\ubb38_2026-09-10.txt",
+    "sha256": "d3a929bc673d4a2ac6db2da09972cefe6c82868ff571f85124aaa70ece7ef4c6",
+    "status": "User-pasted manuscript; its linked ZIP/code were not supplied. Independently reconstructed here."
+  },
+  "script_sha256": "4ba2635c7bf7057a10cfd7749c9090d41fb5818cc107783a0f7a5b05bbecf921"
+}
