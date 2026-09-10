@@ -22,6 +22,123 @@
   },
   "refinement_scope": "only failed cases; original equations, state, parameters, interval, threshold and comparisons unchanged",
   "initial_passed_case_count": 6,
-  "refined_cases": [],
-  "run_complete": false
+  "refined_cases": [
+    {
+      "species": "-",
+      "mass_over_V": 0.00034292036732051036,
+      "eta": 0.01,
+      "theta": 0.0,
+      "initial_failed_comparisons": {
+        "fields_over_Aref": 8.609133309386011e-10,
+        "velocities_over_mref_Aref": 1.252299714852158e-05,
+        "qpower_absolute": 9.769962616701378e-12,
+        "Fi_partition_energy_over_initial_total": 9.944611062517883e-09,
+        "total_energy_relative_drift": 3.352873534367973e-14
+      },
+      "refined_comparisons": {
+        "fields_over_Aref": 3.5787316223658928e-12,
+        "velocities_over_mref_Aref": 1.0439566129602414e-08,
+        "qpower_absolute": 3.6048941609578833e-13,
+        "Fi_partition_energy_over_initial_total": 4.3529075767473934e-11,
+        "total_energy_relative_drift": 1.9539925233402755e-14,
+        "original_saved_qpower_trace_reproduction": 0.0
+      },
+      "integration": [
+        {
+          "method": "DOP853",
+          "rtol": 2e-10,
+          "atol": 2e-13,
+          "function_evaluations": 3860921,
+          "seconds": 20.587003099994035
+        },
+        {
+          "method": "DOP853",
+          "rtol": 2e-12,
+          "atol": 2e-15,
+          "function_evaluations": 5364833,
+          "seconds": 34.295556099998066
+        }
+      ],
+      "numerical_gate_passed": true,
+      "qpower_peak_sampled": 6.9885418685950835,
+      "qpower_late_min_max_sampled": [
+        0.3670464583509862,
+        4.917736650870817
+      ],
+      "threshold_upward_tau_linear_interpolation": [
+        37.4740100179283
+      ],
+      "threshold_downward_tau_linear_interpolation": [
+        56.279323329266035
+      ],
+      "late_threshold_maintained_at_all_sampled_times": false,
+      "Higgs_Fi_partition_fraction_peak": 0.07289847305475342,
+      "Higgs_Fi_partition_fraction_late_min_max": [
+        0.0031208548386601562,
+        0.05058732241829209
+      ],
+      "record_free_equation_scaled_residual_peak": 0.1858333104100844,
+      "heavy_record_amplitude_over_initial_light_peak": 6.424974245606865e-06
+    },
+    {
+      "species": "+",
+      "mass_over_V": 0.0006570796326794897,
+      "eta": 0.01,
+      "theta": 0.0,
+      "initial_failed_comparisons": {
+        "fields_over_Aref": 1.9484499000248673e-10,
+        "velocities_over_mref_Aref": 2.8401258886939047e-06,
+        "qpower_absolute": 1.680433570072637e-12,
+        "Fi_partition_energy_over_initial_total": 8.488565850929697e-10,
+        "total_energy_relative_drift": 4.241051954068098e-14
+      },
+      "refined_comparisons": {
+        "fields_over_Aref": 3.527873732354682e-12,
+        "velocities_over_mref_Aref": 1.0287648177681239e-08,
+        "qpower_absolute": 6.03073146976385e-13,
+        "Fi_partition_energy_over_initial_total": 2.1170861326519306e-11,
+        "total_energy_relative_drift": 4.574118861455645e-14,
+        "original_saved_qpower_trace_reproduction": 0.0
+      },
+      "integration": [
+        {
+          "method": "DOP853",
+          "rtol": 2e-10,
+          "atol": 2e-13,
+          "function_evaluations": 3976901,
+          "seconds": 21.213576699999976
+        },
+        {
+          "method": "DOP853",
+          "rtol": 2e-12,
+          "atol": 2e-15,
+          "function_evaluations": 5326121,
+          "seconds": 34.14620269999432
+        }
+      ],
+      "numerical_gate_passed": true,
+      "qpower_peak_sampled": 7.078748318134094,
+      "qpower_late_min_max_sampled": [
+        0.3427906809713969,
+        4.947953492900732
+      ],
+      "threshold_upward_tau_linear_interpolation": [
+        37.47799138770932
+      ],
+      "threshold_downward_tau_linear_interpolation": [
+        56.18219116863793
+      ],
+      "late_threshold_maintained_at_all_sampled_times": false,
+      "Higgs_Fi_partition_fraction_peak": 0.03950665734337176,
+      "Higgs_Fi_partition_fraction_late_min_max": [
+        0.0018130209087388873,
+        0.02639589657126747
+      ],
+      "record_free_equation_scaled_residual_peak": 0.08804171535286102,
+      "heavy_record_amplitude_over_initial_light_peak": 5.67245422212804e-06
+    }
+  ],
+  "run_complete": true,
+  "combined_numerical_gate_passed": true,
+  "actual_instrument_derived": false
 }
