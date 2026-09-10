@@ -1,0 +1,372 @@
+{
+  "schema_version": 1,
+  "checks_passed": 101,
+  "checks": [
+    "preregistration 13_확률중간_경계와_비관측_자유도의_차원.md",
+    "preregistration 14_관계차원과_시공간_네힘_대응의_조건.md",
+    "d1 r1 independent tangent count",
+    "d1 r1 trace and kernel tangent constraints",
+    "d2 r1 independent tangent count",
+    "d2 r1 trace and kernel tangent constraints",
+    "d2 r2 independent tangent count",
+    "d2 r2 trace and kernel tangent constraints",
+    "d3 r1 independent tangent count",
+    "d3 r1 trace and kernel tangent constraints",
+    "d3 r2 independent tangent count",
+    "d3 r2 trace and kernel tangent constraints",
+    "d3 r3 independent tangent count",
+    "d3 r3 trace and kernel tangent constraints",
+    "d4 r1 independent tangent count",
+    "d4 r1 trace and kernel tangent constraints",
+    "d4 r2 independent tangent count",
+    "d4 r2 trace and kernel tangent constraints",
+    "d4 r3 independent tangent count",
+    "d4 r3 trace and kernel tangent constraints",
+    "d4 r4 independent tangent count",
+    "d4 r4 trace and kernel tangent constraints",
+    "rotated rank-one tangent, non-coordinate kernel",
+    "duplicate and affine observables cost one rank",
+    "extremal pure Z fibre is not falsely certified as two-dimensional",
+    "pure tomography injective differential certifies isolated fibre",
+    "pure balanced circle regular dimension",
+    "inconsistent state witness",
+    "negative eigenvalue state",
+    "non-Hermitian state",
+    "float matrix",
+    "exact JSON rejects 0.5",
+    "exact JSON rejects True",
+    "exact JSON rejects 'nan'",
+    "exact JSON rejects '__import__(\"os\")'",
+    "exact JSON rejects '1/0'",
+    "exact JSON rejects {'re': 1}",
+    "exact JSON rejects {'re': 1, 'im': 0, 'x': 2}",
+    "exact complex JSON",
+    "qubit midpoint disk and circle",
+    "semidefinite kernel face",
+    "definite empty is not zero-dimensional",
+    "zero operator whole space",
+    "singular pure boundary critical locus",
+    "unpaired spectrum no unitary sign toggle",
+    "spectral vs commutator fixed dimensions 2,1",
+    "spectral vs commutator fixed dimensions 3,8",
+    "spectral vs commutator fixed dimensions 4,7",
+    "spectral vs commutator fixed dimensions 3,2",
+    "nonunitary toggle",
+    "raw fibre d2p1r1w1/2",
+    "independent reduced-support constraints d2p1r1",
+    "raw fibre d4p2r2w1/2",
+    "independent reduced-support constraints d4p2r2",
+    "raw fibre d4p2r1w1/2",
+    "independent reduced-support constraints d4p2r1",
+    "raw fibre d4p2r0w0",
+    "independent reduced-support constraints d4p2r0",
+    "raw fibre d4p2r1w1",
+    "raw fibre d4p2r2w1",
+    "raw fibre d2p0r0w0",
+    "independent reduced-support constraints d2p0r0",
+    "raw fibre d1p1r1w1",
+    "invalid split (2, 1, 0, '1/2')",
+    "invalid split (2, 2, 1, '1/2')",
+    "invalid split (2, 1, 2, '1/2')",
+    "invalid split (2, 1, 1, 0)",
+    "invalid split (2, 1, 1, '3/2')",
+    "pure hidden phase sphere differential q1",
+    "pure hidden phase sphere differential q2",
+    "pure hidden phase sphere differential q3",
+    "Pauli history span 1",
+    "Pauli history span 2",
+    "Pauli history span 3",
+    "independent analytic Pauli history formula",
+    "third history repeated commutator gives independent X-Z",
+    "nested qubit visible and hidden ranks",
+    "fully identified mixed state retains binary outcome uncertainty",
+    "four records need not specify entire state",
+    "qubit commutant restriction",
+    "qubit traceless commutant restriction",
+    "1+2+3 block centers persist in U6",
+    "1+2+3 block centers persist in SU6",
+    "real spinor norm identity",
+    "real spinor horizontal derivative identity",
+    "real spinor derivative norm identity",
+    "product stage 1 full metric rank and zero Berry curvature",
+    "product stage 2 full metric rank and zero Berry curvature",
+    "product stage 3 full metric rank and zero Berry curvature",
+    "product stage 4 full metric rank and zero Berry curvature",
+    "same rank-four metric has different curvature",
+    "Grassmann projector metric independent path",
+    "internal replication m2 leaves spatial rank two",
+    "internal replication m3 leaves spatial rank two",
+    "pure phase derivative contributes no space direction",
+    "invalid Stiefel frame",
+    "non-tangent frame derivative",
+    "PVM Choi PSD and completeness",
+    "later X record loses prior Z certainty",
+    "CLI exact input and conservative science metadata",
+    "CLI invalid dimension rejects with usage error"
+  ],
+  "arithmetic": "exact SymPy, rational and symbolic identities; no rank tolerance",
+  "floating_point_error_budget": null,
+  "fitted_parameters": 0,
+  "preregistrations": [
+    {
+      "path": "paper\\01_측정과_접힘\\13_확률중간_경계와_비관측_자유도의_차원.md",
+      "sha256": "20daa00114817ec7711dcc4df6d414876512d1806aab0e397284163e9d9c3b65"
+    },
+    {
+      "path": "paper\\01_측정과_접힘\\14_관계차원과_시공간_네힘_대응의_조건.md",
+      "sha256": "93a1aacfe46810cd0efb08ba33e493c2c38226e574f82109926caab0a8004ba9"
+    }
+  ],
+  "source_sha256": {
+    "verify\\ce_state_dimensions_audit.py": "a2d3615d373dd302502cef4412af4311911c454f0af289b813e833dc544bf6f5",
+    "verify\\ce_state_dimensions.py": "4a7f8e8294a859aea347750f957f2f7522b4d8a894c5eb3ae14c51ea60b3846e",
+    "verify\\ce_dimension_correspondence.py": "1f85759fc490d86dddee2bff5fdaf5d5136be61020d33c40a1bd8256decc7ed6",
+    "paper\\01_측정과_접힘\\13_확률중간_경계와_비관측_자유도의_차원.md": "d7108fb7836d80d615077d5ec5f22a5d2f97dd349c98cafdb01729ec0ba647fe",
+    "paper\\01_측정과_접힘\\14_관계차원과_시공간_네힘_대응의_조건.md": "3ca5b6f4a90d41209d1e39531a5a3a15c4d4e1d3f1ee8f07ae96217c502e3245"
+  },
+  "environment": {
+    "python": "3.11.9",
+    "sympy": "1.14.0"
+  },
+  "observation_fibres": [
+    {
+      "hilbert_complex_dimension": 2,
+      "visible_complex_dimension": 1,
+      "complement_complex_dimension": 1,
+      "visible_rank": 1,
+      "visible_weight": "1/2",
+      "raw_fibre_real_dimension": 2,
+      "pure_fibre_real_dimension": 1,
+      "rank_strata": [
+        {
+          "total_state_rank": 1,
+          "schur_rank": 0,
+          "real_dimension": 1
+        },
+        {
+          "total_state_rank": 2,
+          "schur_rank": 1,
+          "real_dimension": 2
+        }
+      ],
+      "only_normalized_visible_block_fixed_dimension": 3
+    },
+    {
+      "hilbert_complex_dimension": 4,
+      "visible_complex_dimension": 2,
+      "complement_complex_dimension": 2,
+      "visible_rank": 2,
+      "visible_weight": "1/2",
+      "raw_fibre_real_dimension": 11,
+      "pure_fibre_real_dimension": null,
+      "rank_strata": [
+        {
+          "total_state_rank": 2,
+          "schur_rank": 0,
+          "real_dimension": 7
+        },
+        {
+          "total_state_rank": 3,
+          "schur_rank": 1,
+          "real_dimension": 10
+        },
+        {
+          "total_state_rank": 4,
+          "schur_rank": 2,
+          "real_dimension": 11
+        }
+      ],
+      "only_normalized_visible_block_fixed_dimension": 12
+    },
+    {
+      "hilbert_complex_dimension": 4,
+      "visible_complex_dimension": 2,
+      "complement_complex_dimension": 2,
+      "visible_rank": 1,
+      "visible_weight": "1/2",
+      "raw_fibre_real_dimension": 7,
+      "pure_fibre_real_dimension": 3,
+      "rank_strata": [
+        {
+          "total_state_rank": 1,
+          "schur_rank": 0,
+          "real_dimension": 3
+        },
+        {
+          "total_state_rank": 2,
+          "schur_rank": 1,
+          "real_dimension": 6
+        },
+        {
+          "total_state_rank": 3,
+          "schur_rank": 2,
+          "real_dimension": 7
+        }
+      ],
+      "only_normalized_visible_block_fixed_dimension": 8
+    },
+    {
+      "hilbert_complex_dimension": 4,
+      "visible_complex_dimension": 2,
+      "complement_complex_dimension": 2,
+      "visible_rank": 0,
+      "visible_weight": "0",
+      "raw_fibre_real_dimension": 3,
+      "pure_fibre_real_dimension": 2,
+      "rank_strata": [
+        {
+          "total_state_rank": 1,
+          "schur_rank": 1,
+          "real_dimension": 2
+        },
+        {
+          "total_state_rank": 2,
+          "schur_rank": 2,
+          "real_dimension": 3
+        }
+      ],
+      "only_normalized_visible_block_fixed_dimension": null
+    },
+    {
+      "hilbert_complex_dimension": 4,
+      "visible_complex_dimension": 2,
+      "complement_complex_dimension": 2,
+      "visible_rank": 1,
+      "visible_weight": "1",
+      "raw_fibre_real_dimension": 0,
+      "pure_fibre_real_dimension": 0,
+      "rank_strata": [
+        {
+          "total_state_rank": 1,
+          "schur_rank": 0,
+          "real_dimension": 0
+        }
+      ],
+      "only_normalized_visible_block_fixed_dimension": 8
+    },
+    {
+      "hilbert_complex_dimension": 4,
+      "visible_complex_dimension": 2,
+      "complement_complex_dimension": 2,
+      "visible_rank": 2,
+      "visible_weight": "1",
+      "raw_fibre_real_dimension": 0,
+      "pure_fibre_real_dimension": null,
+      "rank_strata": [
+        {
+          "total_state_rank": 2,
+          "schur_rank": 0,
+          "real_dimension": 0
+        }
+      ],
+      "only_normalized_visible_block_fixed_dimension": 12
+    },
+    {
+      "hilbert_complex_dimension": 2,
+      "visible_complex_dimension": 0,
+      "complement_complex_dimension": 2,
+      "visible_rank": 0,
+      "visible_weight": "0",
+      "raw_fibre_real_dimension": 3,
+      "pure_fibre_real_dimension": 2,
+      "rank_strata": [
+        {
+          "total_state_rank": 1,
+          "schur_rank": 1,
+          "real_dimension": 2
+        },
+        {
+          "total_state_rank": 2,
+          "schur_rank": 2,
+          "real_dimension": 3
+        }
+      ],
+      "only_normalized_visible_block_fixed_dimension": null
+    },
+    {
+      "hilbert_complex_dimension": 1,
+      "visible_complex_dimension": 1,
+      "complement_complex_dimension": 0,
+      "visible_rank": 1,
+      "visible_weight": "1",
+      "raw_fibre_real_dimension": 0,
+      "pure_fibre_real_dimension": 0,
+      "rank_strata": [
+        {
+          "total_state_rank": 1,
+          "schur_rank": 0,
+          "real_dimension": 0
+        }
+      ],
+      "only_normalized_visible_block_fixed_dimension": 0
+    }
+  ],
+  "history_examples": [
+    {
+      "hamiltonian": "Matrix([[0, 0], [0, 0]])",
+      "visible_dimension": 1,
+      "hidden_dimension": 2
+    },
+    {
+      "hamiltonian": "Matrix([[0, 1/2], [1/2, 0]])",
+      "visible_dimension": 2,
+      "hidden_dimension": 1
+    },
+    {
+      "hamiltonian": "Matrix([[1/2, 1/2], [1/2, -1/2]])",
+      "visible_dimension": 3,
+      "hidden_dimension": 0
+    }
+  ],
+  "qubit_flag": [
+    {
+      "questions": 0,
+      "visible_rank": 0,
+      "local_hidden_dimension": 3,
+      "certificate": "regular_value_after_removing_affine_dependencies",
+      "compatible_su_dimension": 3
+    },
+    {
+      "questions": 1,
+      "visible_rank": 1,
+      "local_hidden_dimension": 2,
+      "certificate": "regular_value_after_removing_affine_dependencies",
+      "compatible_su_dimension": 1
+    },
+    {
+      "questions": 2,
+      "visible_rank": 1,
+      "local_hidden_dimension": 2,
+      "certificate": "regular_value_after_removing_affine_dependencies",
+      "compatible_su_dimension": 1
+    },
+    {
+      "questions": 3,
+      "visible_rank": 2,
+      "local_hidden_dimension": 1,
+      "certificate": "regular_value_after_removing_affine_dependencies",
+      "compatible_su_dimension": 0
+    },
+    {
+      "questions": 4,
+      "visible_rank": 3,
+      "local_hidden_dimension": 0,
+      "certificate": "regular_value_after_removing_affine_dependencies",
+      "compatible_su_dimension": 0
+    }
+  ],
+  "counterexample_status": {
+    "dimension_alone_selects_four_forces": "rejected_as_necessary_implication",
+    "relation_geometry_candidate": "conditional_local_construction_only"
+  },
+  "independence": "alternate analytic or matrix paths by same author, not external peer review",
+  "scientific_success": false,
+  "full_joint_rmse": null,
+  "unproved": [
+    "physical dimension selection",
+    "Lorentz signature emergence",
+    "four-force unification",
+    "actual measurement dynamics from common action",
+    "joint observational validation"
+  ]
+}
