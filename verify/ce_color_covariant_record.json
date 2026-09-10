@@ -1,0 +1,182 @@
+{
+  "candidate": "CE-AM4",
+  "tolerance": 1e-12,
+  "inputs": {
+    "system_energies": [
+      1.0,
+      5.0
+    ],
+    "apparatus_record_energy": 4.0,
+    "gamma": 1.5707963267948966,
+    "dimensions": [
+      4,
+      4
+    ],
+    "fit_parameters": 0
+  },
+  "symmetry": {
+    "generators_checked": 8,
+    "maximum_symmetry_error": 2.220446049250313e-16,
+    "fundamental_casimir_eigenvalues": [
+      1.3333333333333333,
+      1.3333333333333333,
+      1.3333333333333335
+    ],
+    "singlet_apparatus_invariant_transition_dimension": 0
+  },
+  "instruments": [
+    {
+      "t": 0.0,
+      "theta": 0.0,
+      "errors": {
+        "exponential_vs_closed_form": 8.881784197001252e-16,
+        "kraus_vs_formula": 8.881784197001252e-16,
+        "kraus_completeness": 1.7763568394002505e-15,
+        "choi_trace": 1.7763568394002505e-15,
+        "all_state_branch_covariance": 3.0693435941863316e-33
+      },
+      "minimum_choi_eigenvalue": -4.440892098500626e-16,
+      "choi_rank_at_tolerance": 1,
+      "branch_covariance_basis_checks": 256
+    },
+    {
+      "t": 0.25,
+      "theta": 0.39269908169872414,
+      "errors": {
+        "exponential_vs_closed_form": 9.309109355054177e-16,
+        "kraus_vs_formula": 9.309109355054177e-16,
+        "kraus_completeness": 1.9984014443252818e-15,
+        "choi_trace": 1.7763568394002505e-15,
+        "all_state_branch_covariance": 1.0408340855860843e-17
+      },
+      "minimum_choi_eigenvalue": -3.08052415672943e-16,
+      "choi_rank_at_tolerance": 4,
+      "branch_covariance_basis_checks": 256
+    },
+    {
+      "t": 0.5,
+      "theta": 0.7853981633974483,
+      "errors": {
+        "exponential_vs_closed_form": 7.901860134932573e-16,
+        "kraus_vs_formula": 6.991483875655473e-16,
+        "kraus_completeness": 1.9984014443252818e-15,
+        "choi_trace": 1.7763568394002505e-15,
+        "all_state_branch_covariance": 4.163336342344337e-17
+      },
+      "minimum_choi_eigenvalue": -1.8635087269965106e-32,
+      "choi_rank_at_tolerance": 4,
+      "branch_covariance_basis_checks": 256
+    },
+    {
+      "t": 1.0,
+      "theta": 1.5707963267948966,
+      "errors": {
+        "exponential_vs_closed_form": 5.909756185770971e-16,
+        "kraus_vs_formula": 5.909756185770971e-16,
+        "kraus_completeness": 1.9984014443252818e-15,
+        "choi_trace": 1.7763568394002505e-15,
+        "all_state_branch_covariance": 5.551115123125783e-17
+      },
+      "minimum_choi_eigenvalue": -4.1270939805752534e-16,
+      "choi_rank_at_tolerance": 4,
+      "branch_covariance_basis_checks": 256
+    }
+  ],
+  "moving_record": [
+    {
+      "t": 0.0,
+      "record_probability": 1.1047311718118964e-32,
+      "light_probability": 1.1047311718118964e-32,
+      "system_energy": 4.999999999999998,
+      "apparatus_energy": 4.4189246872475856e-32,
+      "total_free_energy": 4.999999999999998,
+      "errors": {
+        "kato_equation": 0.0,
+        "evolution_equation": 1.7763568394002505e-15,
+        "unitarity": 8.881784197001252e-16,
+        "all_state_free_energy_conservation": 1.7763568394002505e-15,
+        "all_state_free_energy_intertwining": 5.329070518200751e-15,
+        "record_probability": 1.1047311718118964e-32,
+        "light_probability": 1.1047311718118964e-32,
+        "system_energy": 1.7763568394002505e-15,
+        "apparatus_energy": 4.4189246872475856e-32,
+        "energy_sum": 1.7763568394002505e-15
+      }
+    },
+    {
+      "t": 0.25,
+      "record_probability": 0.1464466094067262,
+      "light_probability": 0.14644660940672616,
+      "system_energy": 4.414213562373094,
+      "apparatus_energy": 0.5857864376269049,
+      "total_free_energy": 4.999999999999999,
+      "errors": {
+        "kato_equation": 2.220446049250313e-16,
+        "evolution_equation": 2.7012892057857034e-15,
+        "unitarity": 7.771561172376096e-16,
+        "all_state_free_energy_conservation": 1.7763568394002505e-15,
+        "all_state_free_energy_intertwining": 6.217248937900877e-15,
+        "record_probability": 2.7755575615628914e-17,
+        "light_probability": 8.326672684688674e-17,
+        "system_energy": 8.881784197001252e-16,
+        "apparatus_energy": 1.1102230246251565e-16,
+        "energy_sum": 8.881784197001252e-16
+      }
+    },
+    {
+      "t": 0.5,
+      "record_probability": 0.5,
+      "light_probability": 0.5,
+      "system_energy": 3.0,
+      "apparatus_energy": 2.0,
+      "total_free_energy": 5.0,
+      "errors": {
+        "kato_equation": 0.0,
+        "evolution_equation": 1.6011864169946886e-15,
+        "unitarity": 8.881784197001252e-16,
+        "all_state_free_energy_conservation": 1.3322676295501878e-15,
+        "all_state_free_energy_intertwining": 5.329070518200751e-15,
+        "record_probability": 1.1102230246251565e-16,
+        "light_probability": 1.1102230246251565e-16,
+        "system_energy": 4.440892098500626e-16,
+        "apparatus_energy": 4.440892098500626e-16,
+        "energy_sum": 0.0
+      }
+    },
+    {
+      "t": 1.0,
+      "record_probability": 0.9999999999999998,
+      "light_probability": 0.9999999999999998,
+      "system_energy": 0.9999999999999998,
+      "apparatus_energy": 3.999999999999999,
+      "total_free_energy": 4.999999999999999,
+      "errors": {
+        "kato_equation": 2.220446049250313e-16,
+        "evolution_equation": 1.831026719408895e-15,
+        "unitarity": 6.661338147750939e-16,
+        "all_state_free_energy_conservation": 1.7763568394002505e-15,
+        "all_state_free_energy_intertwining": 5.329070518200751e-15,
+        "record_probability": 2.220446049250313e-16,
+        "light_probability": 2.220446049250313e-16,
+        "system_energy": 2.220446049250313e-16,
+        "apparatus_energy": 8.881784197001252e-16,
+        "energy_sum": 8.881784197001252e-16
+      }
+    }
+  ],
+  "maximum_identity_error": 6.217248937900877e-15,
+  "environment": {
+    "python": "3.14.2",
+    "numpy": "2.4.4"
+  },
+  "source_sha256": {
+    "ce_color_covariant_record.py": "f650695772a17b14b4aae30576570809591348d36e34f472e1fc71176dadaa6a",
+    "ce_isometric_color_frame.py": "625dcf6a135ba38876d21a7764c9f7cb15cd582a25b5fb345a06ab2518e778fa"
+  },
+  "limits": [
+    "Supplied SU(3) representations and finite interaction, not QCD dynamics.",
+    "Coarse record is invariant; individual color labels are not observables here.",
+    "The full dilation is reversible and the pulse/control is prescribed.",
+    "No unique outcome, spacetime locality, asynchronous event algebra or gravity is derived."
+  ]
+}

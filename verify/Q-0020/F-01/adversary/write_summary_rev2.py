@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
-import json, os
-ADV = r"C:\dev\ce\Clarus-Equation\verify\Q-0020\F-01\adversary"
-c9 = json.load(open(os.path.join(ADV,"c9_recheck.json"), encoding="utf-8"))
+import json
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+c9 = json.loads((HERE / "c9_recheck.json").read_text(encoding="utf-8"))
 S = {
  "card": "Q-0020 F-01", "revision": 2, "mode": "card_reaudit", "model": "opus",
  "card_check": "PASS (ladder 7, predicts 10, kill 4)",
@@ -56,5 +58,7 @@ S = {
  "status":"pass", "severity":"P2", "adopt_recommended":True,
  "adopt_note":"[공리: 후보] adoptable. Three declared axioms (Gaussian measure, gauge-in-numerator, |S_c| sign) are explicit and un-derived, as the ceiling permits. Preregistration byte-identical to rev1. Remaining defects are P2 wording only."
 }
-open(os.path.join(ADV,"SUMMARY_rev2.json"),"w",encoding="utf-8").write(json.dumps(S, ensure_ascii=False, indent=2))
+(HERE / "SUMMARY_rev2.json").write_text(
+    json.dumps(S, ensure_ascii=False, indent=2), encoding="utf-8"
+)
 print("ok", S["status"], S["severity"])

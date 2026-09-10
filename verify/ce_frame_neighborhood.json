@@ -1,0 +1,319 @@
+{
+  "candidate": "CE-GN1",
+  "status": "base-point color degeneracy does not extend to a neighborhood",
+  "rows": [
+    {
+      "q": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "theta": 0.0,
+      "color_eigenvalues": [
+        0.08481764206955045,
+        0.08481764206955045,
+        0.08481764206955048
+      ],
+      "color_spread": 2.7755575615628914e-17,
+      "color_traceless_norm": 2.7755575615628914e-17,
+      "mass_curvature_algebra_commutator_max": 2.4043390190390884e-17,
+      "standard_color_generator_commutator_max": 1.962615573354719e-17,
+      "curvature_algebra_dimension": 12,
+      "block_trace_rank": 1,
+      "metric_min_eigenvalue": 35.370000000000005,
+      "total_mass_trace": 3.0
+    },
+    {
+      "q": [
+        0.2,
+        0.0,
+        0.0
+      ],
+      "theta": 0.0,
+      "color_eigenvalues": [
+        0.08406604903480128,
+        0.08406604903480129,
+        0.0840660490348013
+      ],
+      "color_spread": 2.7755575615628914e-17,
+      "color_traceless_norm": 3.1031676915590914e-17,
+      "mass_curvature_algebra_commutator_max": 1.7965069689866702e-17,
+      "standard_color_generator_commutator_max": 1.962615573354719e-17,
+      "curvature_algebra_dimension": 12,
+      "block_trace_rank": 1,
+      "metric_min_eigenvalue": 32.408210897093106,
+      "total_mass_trace": 3.0
+    },
+    {
+      "q": [
+        0.2,
+        0.2,
+        0.0
+      ],
+      "theta": 0.0,
+      "color_eigenvalues": [
+        0.07697239000364553,
+        0.08537608111566528,
+        0.08841477364805173
+      ],
+      "color_spread": 0.011442383644406195,
+      "color_traceless_norm": 0.008382199792385355,
+      "mass_curvature_algebra_commutator_max": 0.008650556005847496,
+      "standard_color_generator_commutator_max": 0.008090987067897662,
+      "curvature_algebra_dimension": 12,
+      "block_trace_rank": 1,
+      "metric_min_eigenvalue": 29.35253266106556,
+      "total_mass_trace": 3.0
+    },
+    {
+      "q": [
+        0.2,
+        0.3,
+        0.4
+      ],
+      "theta": 0.0,
+      "color_eigenvalues": [
+        0.06184371580455524,
+        0.089225785886307,
+        0.09485339597153616
+      ],
+      "color_spread": 0.03300968016698092,
+      "color_traceless_norm": 0.024973897986762843,
+      "mass_curvature_algebra_commutator_max": 0.025349541121589648,
+      "standard_color_generator_commutator_max": 0.018181160741556537,
+      "curvature_algebra_dimension": 12,
+      "block_trace_rank": 1,
+      "metric_min_eigenvalue": 19.63250289582973,
+      "total_mass_trace": 3.0
+    },
+    {
+      "q": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "theta": 0.7,
+      "color_eigenvalues": [
+        0.08481764206955048,
+        0.08481764206955048,
+        0.0848176420695505
+      ],
+      "color_spread": 2.7755575615628914e-17,
+      "color_traceless_norm": 2.7755575615628914e-17,
+      "mass_curvature_algebra_commutator_max": 2.4105888852840286e-17,
+      "standard_color_generator_commutator_max": 1.962615573354719e-17,
+      "curvature_algebra_dimension": 12,
+      "block_trace_rank": 1,
+      "metric_min_eigenvalue": 35.37,
+      "total_mass_trace": 3.0000000000000004
+    },
+    {
+      "q": [
+        0.2,
+        0.0,
+        0.0
+      ],
+      "theta": 0.7,
+      "color_eigenvalues": [
+        0.08406733343217884,
+        0.08406733343217886,
+        0.08406733343217887
+      ],
+      "color_spread": 2.7755575615628914e-17,
+      "color_traceless_norm": 3.1031676915590914e-17,
+      "mass_curvature_algebra_commutator_max": 1.91690650816373e-17,
+      "standard_color_generator_commutator_max": 1.962615573354719e-17,
+      "curvature_algebra_dimension": 12,
+      "block_trace_rank": 1,
+      "metric_min_eigenvalue": 32.4073364868178,
+      "total_mass_trace": 3.0
+    },
+    {
+      "q": [
+        0.2,
+        0.2,
+        0.0
+      ],
+      "theta": 0.7,
+      "color_eigenvalues": [
+        0.07697812764594275,
+        0.08537988912992872,
+        0.08841868299320033
+      ],
+      "color_spread": 0.011440555347257575,
+      "color_traceless_norm": 0.008380735266687747,
+      "mass_curvature_algebra_commutator_max": 0.008649201383655866,
+      "standard_color_generator_commutator_max": 0.008089694266585849,
+      "curvature_algebra_dimension": 12,
+      "block_trace_rank": 1,
+      "metric_min_eigenvalue": 29.349716082908817,
+      "total_mass_trace": 3.0
+    },
+    {
+      "q": [
+        0.2,
+        0.3,
+        0.4
+      ],
+      "theta": 0.7,
+      "color_eigenvalues": [
+        0.061877602123332084,
+        0.08925634203518344,
+        0.09488597613835352
+      ],
+      "color_spread": 0.033008374015021436,
+      "color_traceless_norm": 0.024972257503156858,
+      "mass_curvature_algebra_commutator_max": 0.025345745576500905,
+      "standard_color_generator_commutator_max": 0.01817898274375255,
+      "curvature_algebra_dimension": 12,
+      "block_trace_rank": 1,
+      "metric_min_eigenvalue": 19.618981502504205,
+      "total_mass_trace": 3.0
+    },
+    {
+      "q": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "theta": 3.141592653589793,
+      "color_eigenvalues": [
+        0.08481764206955048,
+        0.08481764206955048,
+        0.0848176420695505
+      ],
+      "color_spread": 2.7755575615628914e-17,
+      "color_traceless_norm": 2.7755575615628914e-17,
+      "mass_curvature_algebra_commutator_max": 2.4105888852840286e-17,
+      "standard_color_generator_commutator_max": 1.962615573354719e-17,
+      "curvature_algebra_dimension": 12,
+      "block_trace_rank": 1,
+      "metric_min_eigenvalue": 35.37,
+      "total_mass_trace": 3.0000000000000004
+    },
+    {
+      "q": [
+        0.2,
+        0.0,
+        0.0
+      ],
+      "theta": 3.141592653589793,
+      "color_eigenvalues": [
+        0.08407697446527827,
+        0.08407697446527829,
+        0.08407697446527829
+      ],
+      "color_spread": 1.3877787807814457e-17,
+      "color_traceless_norm": 1.3877787807814457e-17,
+      "mass_curvature_algebra_commutator_max": 1.411962612463446e-17,
+      "standard_color_generator_commutator_max": 9.813077866773595e-18,
+      "curvature_algebra_dimension": 12,
+      "block_trace_rank": 1,
+      "metric_min_eigenvalue": 32.400774021217146,
+      "total_mass_trace": 3.0
+    },
+    {
+      "q": [
+        0.2,
+        0.2,
+        0.0
+      ],
+      "theta": 3.141592653589793,
+      "color_eigenvalues": [
+        0.07702122336731092,
+        0.0854084838364426,
+        0.08844803842912223
+      ],
+      "color_spread": 0.011426815061811313,
+      "color_traceless_norm": 0.008369729839442784,
+      "mass_curvature_algebra_commutator_max": 0.00863902115029915,
+      "standard_color_generator_commutator_max": 0.008079978417571358,
+      "curvature_algebra_dimension": 12,
+      "block_trace_rank": 1,
+      "metric_min_eigenvalue": 29.328576021315683,
+      "total_mass_trace": 2.9999999999999996
+    },
+    {
+      "q": [
+        0.2,
+        0.3,
+        0.4
+      ],
+      "theta": 3.141592653589793,
+      "color_eigenvalues": [
+        0.06213385137820853,
+        0.08948683667281687,
+        0.09513184801550688
+      ],
+      "color_spread": 0.03299799663729835,
+      "color_traceless_norm": 0.024959432015848656,
+      "mass_curvature_algebra_commutator_max": 0.02531654252829534,
+      "standard_color_generator_commutator_max": 0.018162173443521525,
+      "curvature_algebra_dimension": 12,
+      "block_trace_rank": 1,
+      "metric_min_eigenvalue": 19.51725159597244,
+      "total_mass_trace": 2.9999999999999996
+    }
+  ],
+  "analytic_direction": {
+    "exact_leading_coefficient": "100/1179",
+    "rows": [
+      {
+        "u": 0.1,
+        "color_diagonal_difference": 0.0008242494123460037,
+        "analytic_difference": 0.000824249412346023,
+        "difference_over_u_squared": 0.08242494123460035
+      },
+      {
+        "u": 0.05,
+        "color_diagonal_difference": 0.00021051727257384578,
+        "analytic_difference": 0.00021051727257386584,
+        "difference_over_u_squared": 0.0842069090295383
+      },
+      {
+        "u": 0.025,
+        "color_diagonal_difference": 5.291509432997499e-05,
+        "analytic_difference": 5.29150943299997e-05,
+        "difference_over_u_squared": 0.08466415092795997
+      },
+      {
+        "u": 0.0125,
+        "color_diagonal_difference": 1.324675287810162e-05,
+        "analytic_difference": 1.3246752878109428e-05,
+        "difference_over_u_squared": 0.08477921841985035
+      }
+    ]
+  },
+  "finite_difference": [
+    {
+      "step": 0.001,
+      "metric_max_error": 5.904292489944396e-05,
+      "mass_max_error": 6.281145295550239e-08
+    },
+    {
+      "step": 0.0005,
+      "metric_max_error": 1.4760747728104207e-05,
+      "mass_max_error": 1.5702866076883204e-08
+    },
+    {
+      "step": 0.00025,
+      "metric_max_error": 3.6901879809647653e-06,
+      "mass_max_error": 3.925718305985981e-09
+    }
+  ],
+  "covariance": {
+    "coordinate_mass_max_error": 1.1105067521096024e-16,
+    "color_basis_spectrum_max_error": 5.551115123125783e-17
+  },
+  "limitations": [
+    "fixed background mass condition, not gauge covariance violation",
+    "no gluon mass or new force derived",
+    "no observational refit or joint RMSE"
+  ],
+  "provenance": {
+    "python": "3.14.2",
+    "numpy": "2.4.4",
+    "source_candidate_sha256": "7eddf583eda8857d405dc23edb5a3e1508a0c4d764bc3c1dce78b10954af44b3",
+    "script_sha256": "5fe01587867a0afc98c8c1ee2afa6074b6259c3ad5837ea92912d4a7f4e28f8b"
+  }
+}

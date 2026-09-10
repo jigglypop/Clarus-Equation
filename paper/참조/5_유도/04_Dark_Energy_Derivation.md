@@ -10,7 +10,7 @@ $M_{\rm Pl}^{-2}=8\pi G$로 정의한다.
 최소 결합 canonical scalar의 강한 경계를 보인다. 그 경계를 넘는 모형은
 4.3–4.5절의 별도 scalar--tensor branch에서만 다루며, 4.6절은 관측
 입력과 아직 비어 있는 CE 사상을 분리한다. 공통 작용·기호는
-[공리계](../../axium.md)와 [master action](06_Master_Action_Universal_Derivation.md)을
+[공리계](../../00_기원과_현재계획/15_CE_공리계와_모형_사전.md)와 [master action](06_Master_Action_Universal_Derivation.md)을
 따른다.
 
 ## 4.1 FLRW 배경

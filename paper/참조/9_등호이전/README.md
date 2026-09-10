@@ -42,18 +42,18 @@
 | [05_CE_브리지.md](05_CE_브리지.md) | 무차원 good-rate 경로 재가중, 선택/비선택 subprobability, kernel pushforward | 조건부 `[정리]`; 물리 선택은 `[공리]`, `[미완성]` |
 | [05a_phi_pushforward.md](05a_phi_pushforward.md) | raw/conditional 잔류 측도, $K_\phi$ 커널 조건, operator·scalar 구분 | `[정의]`, 조건부 `[정리]`; 물리 사상은 `[미완성]` |
 | [05b_phi_kernel_catalog.md](05b_phi_kernel_catalog.md) | endpoint, occupation, curvature, AGI embedding 커널 분류 | `[정의]`, `[공리: 모델 선택]`, `[미완성]` |
-| [../../검증_원장/등호이전_pathspace_closure_checklist.md](../검증_원장/등호이전_pathspace_closure_checklist.md) | CE 경로공간 농축 정리 적용 조건 | `[정의]`, `[미완성]` |
-| [../../검증_원장/등호이전_pathspace_audit.md](../검증_원장/등호이전_pathspace_audit.md) | CE 문서의 $\mathcal P_I$, $\mu_{\mathrm{ref}}$, $W/F$, $\mathcal P_{\mathrm{ns}}$ 감사 | 조건부 `[정리]`, 남은 사상은 `[미완성]` |
+| [../../검증_원장/등호이전_pathspace_closure_checklist.md](../../검증_원장/등호이전_pathspace_closure_checklist.md) | CE 경로공간 농축 정리 적용 조건 | `[정의]`, `[미완성]` |
+| [../../검증_원장/등호이전_pathspace_audit.md](../../검증_원장/등호이전_pathspace_audit.md) | CE 문서의 $\mathcal P_I$, $\mu_{\mathrm{ref}}$, $W/F$, $\mathcal P_{\mathrm{ns}}$ 감사 | 조건부 `[정리]`, 남은 사상은 `[미완성]` |
 | [05e_CE_good_rate_theorem.md](05e_CE_good_rate_theorem.md) | $W=S_E/\hbar+S_{\mathrm{supp}}$ good-rate 농축 정리와 충분조건 | `[정리]`; action 선택은 `[공리]` |
 | [05f_CE_action_topology_package.md](05f_CE_action_topology_package.md) | CE continuum 위상과 $C^1$ 강화조건 | `[정리]`, `[공리: 모델 선택]` |
 | [05g_CE_prior_support_package.md](05g_CE_prior_support_package.md) | recovery mass/support 조건과 full-support no-go | `[정리]`; 물리 prior는 `[미완성]` |
 | [05h_CE_finite_to_continuum.md](05h_CE_finite_to_continuum.md) | finite mesh와 continuum의 joint limit, scaled recovery mass | `[정리]`; continuum prior는 `[미완성]` |
 | [05i_CE_physical_path_prior.md](05i_CE_physical_path_prior.md) | Sobolev--Gaussian prior와 Brownian $C^0/W^{1,p}$ 경계 | `[정리]`; 물리 route 선택은 `[공리]`, `[미완성]` |
-| [../../검증_원장/등호이전_CE_supp_scaling_audit.md](../검증_원장/등호이전_CE_supp_scaling_audit.md) | suppression 사용처와 scale 규약 감사 | `[산출]`, `[공리: 모델 선택]`, `[미완성]` |
+| [../../검증_원장/등호이전_CE_supp_scaling_audit.md](../../검증_원장/등호이전_CE_supp_scaling_audit.md) | suppression 사용처와 scale 규약 감사 | `[산출]`, `[공리: 모델 선택]`, `[미완성]` |
 | [05k_CE_hard_constraint.md](05k_CE_hard_constraint.md) | threshold 조건화 no-go, layer-cake와 mean-field 오차 | `[정리]`; 분위수는 `[공리]` 또는 `[미완성]` |
 | [05l_CE_uncertainty_floor.md](05l_CE_uncertainty_floor.md) | Kennard, Gaussian action과 Brownian 정칙성의 분리 | `[정리]`; prior·mode 사상은 `[공리]`, `[미완성]` |
-| [../../검증_원장/등호이전_CE_mode_decomposition_audit.md](../검증_원장/등호이전_CE_mode_decomposition_audit.md) | Gamma mean-field 비, equicorrelation 분산과 scaling 경계 | 조건부 `[정리]`; 물리 mode 구조는 `[미완성]` |
-| [../../검증_원장/등호이전_CE_cosmology_modern_audit.md](../검증_원장/등호이전_CE_cosmology_modern_audit.md) | 지수 고정점 정리와 우주론 forward 사상의 경계 | `[정리]`, `[공리]`, `[산출]`, `[미완성]` |
+| [../../검증_원장/등호이전_CE_mode_decomposition_audit.md](../../검증_원장/등호이전_CE_mode_decomposition_audit.md) | Gamma mean-field 비, equicorrelation 분산과 scaling 경계 | 조건부 `[정리]`; 물리 mode 구조는 `[미완성]` |
+| [../../검증_원장/등호이전_CE_cosmology_modern_audit.md](../../검증_원장/등호이전_CE_cosmology_modern_audit.md) | 지수 고정점 정리와 우주론 forward 사상의 경계 | `[정리]`, `[공리]`, `[산출]`, `[미완성]` |
 | [05o_CE_residual_cosmology_forward_model.md](05o_CE_residual_cosmology_forward_model.md) | 평탄 FLRW·거리·성장 계산과 BAO 중립 데이터 감사 | `[정의]`, `[공리]`, `[산출]`, `[경험식]`, `[미완성]` |
 | [06_측정문제와Born.md](06_측정문제와Born.md) | 양자 측정 후보공간, 측정 조건, Born prior | `[공리: 물리 사상]`, `[미완성]` |
 | [06a_Born_prior_유도.md](06a_Born_prior_유도.md) | finite branch refinement 아래 Born prior 조건 | 조건부 `[정리]`, `[공리]` |
@@ -65,7 +65,7 @@
 
 독립적인 공변 Hessian, Ward identity, 유클리드 스펙트럼, 국소 채널과
 wormhole no-go는
-[../../검증_원장/참조_이론물리_보존_원장.md](../검증_원장/참조_이론물리_보존_원장.md)에
+[../../검증_원장/참조_이론물리_보존_원장.md](../../검증_원장/참조_이론물리_보존_원장.md)에
 전제와 함께 보존한다.
 
 ## 읽는 순서
@@ -86,18 +86,18 @@ wormhole no-go는
 12. [05_CE_브리지.md](05_CE_브리지.md): 조건부 경로 농축과 물리 사상의 경계
 13. [05a_phi_pushforward.md](05a_phi_pushforward.md): 잔류 측도에서 장으로 내려가는 pushforward 규약
 14. [05b_phi_kernel_catalog.md](05b_phi_kernel_catalog.md): endpoint/occupation/curvature/embedding 커널 후보 분류
-15. [../../검증_원장/등호이전_pathspace_closure_checklist.md](../검증_원장/등호이전_pathspace_closure_checklist.md): CE 경로공간에 농축 정리를 적용하기 위한 가정표
-16. [../../검증_원장/등호이전_pathspace_audit.md](../검증_원장/등호이전_pathspace_audit.md): 실제 CE 문서에서 이미 닫힌 것과 남은 병목 감사
+15. [../../검증_원장/등호이전_pathspace_closure_checklist.md](../../검증_원장/등호이전_pathspace_closure_checklist.md): CE 경로공간에 농축 정리를 적용하기 위한 가정표
+16. [../../검증_원장/등호이전_pathspace_audit.md](../../검증_원장/등호이전_pathspace_audit.md): 실제 CE 문서에서 이미 닫힌 것과 남은 병목 감사
 17. [05e_CE_good_rate_theorem.md](05e_CE_good_rate_theorem.md): CE action이 good-rate이면 선택 경로로 농축한다는 정리
 18. [05f_CE_action_topology_package.md](05f_CE_action_topology_package.md): CE 경로공간 위상과 action package 선택
 19. [05g_CE_prior_support_package.md](05g_CE_prior_support_package.md): CE prior/support와 recovery mass 조건
 20. [05h_CE_finite_to_continuum.md](05h_CE_finite_to_continuum.md): finite mesh 농축과 continuum CE 농축의 일관성
 21. [05i_CE_physical_path_prior.md](05i_CE_physical_path_prior.md): Sobolev--Gaussian route와 Brownian route의 정확한 support 경계
-22. [../../검증_원장/등호이전_CE_supp_scaling_audit.md](../검증_원장/등호이전_CE_supp_scaling_audit.md): 실제 문서의 suppression scale 감사와 label 규약
+22. [../../검증_원장/등호이전_CE_supp_scaling_audit.md](../../검증_원장/등호이전_CE_supp_scaling_audit.md): 실제 문서의 suppression scale 감사와 label 규약
 23. [05k_CE_hard_constraint.md](05k_CE_hard_constraint.md): threshold 조건화와 tilt-threshold 대응
 24. [05l_CE_uncertainty_floor.md](05l_CE_uncertainty_floor.md): Kennard·Gaussian·Brownian 결과의 정확한 분리
-25. [../../검증_원장/등호이전_CE_mode_decomposition_audit.md](../검증_원장/등호이전_CE_mode_decomposition_audit.md): intensive/extensive mode scaling과 조건부 오차
-26. [../../검증_원장/등호이전_CE_cosmology_modern_audit.md](../검증_원장/등호이전_CE_cosmology_modern_audit.md): 고정점 수학과 우주론 사상의 범위 구분
+25. [../../검증_원장/등호이전_CE_mode_decomposition_audit.md](../../검증_원장/등호이전_CE_mode_decomposition_audit.md): intensive/extensive mode scaling과 조건부 오차
+26. [../../검증_원장/등호이전_CE_cosmology_modern_audit.md](../../검증_원장/등호이전_CE_cosmology_modern_audit.md): 고정점 수학과 우주론 사상의 범위 구분
 27. [05o_CE_residual_cosmology_forward_model.md](05o_CE_residual_cosmology_forward_model.md): 조건부 FLRW forward 계산과 BAO 중립 데이터 감사
 28. [06_측정문제와Born.md](06_측정문제와Born.md): 양자 측정과 Born prior의 지위
 29. [06a_Born_prior_유도.md](06a_Born_prior_유도.md): Born prior에 필요한 finite branch 공리

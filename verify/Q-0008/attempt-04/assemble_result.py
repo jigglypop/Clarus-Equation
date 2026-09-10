@@ -151,7 +151,7 @@ def main() -> int:
         "attempt": 4,
         "ladder_step": 6,
         "executed_modes": ["her", "mix", "iid", "defect"],
-        "command": ".claude\\hooks\\python.cmd python verify\\Q-0008\\F-02\\check_modes.py --mode <her|mix|iid|defect>",
+        "command": "python -B verify\\Q-0008\\F-02\\check_modes.py --mode <her|mix|iid|defect>",
         "seed": cm.SEED,
         "delta": cm.DELTA,
         "constants_match_card": constants_match,

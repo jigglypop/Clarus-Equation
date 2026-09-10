@@ -26,7 +26,7 @@ MIN_DET 재추출(Q-0008 F-02 check_modes와 같은 규약), 새 모드(kernel/d
     all        위 다섯(axis 포함) -> result.json
     smoke      작은 크기·적은 trial의 배관 점검(판정에 쓰지 않는다) -> smoke.json
 
-사용: .claude/hooks/python.cmd python verify/Q-0013/F-02/check_floor.py --mode all
+사용: python -B verify/Q-0013/F-02/check_floor.py --mode all
 """
 
 from __future__ import annotations
@@ -40,7 +40,7 @@ from pathlib import Path
 
 import numpy as np
 
-ROOT = Path(r"C:/dev/ce/Clarus-Equation")
+ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
 from examples.physics.gravity.causal_face_simplicity import (  # noqa: E402
     geometric_self_dual_triple,

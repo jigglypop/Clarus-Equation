@@ -51,6 +51,6 @@ CE-OBS32는 기존 22장의 여섯 고정 시험점에 관측 거리비 전방�
 
 ## 출처
 
-원래 목표: jigglypop/Clarus-Equation, main 05013ce3c653fc68c2fe5a4ab6294e95bd6c0a30, paper/연구_목표_계약.md §1,4,7.
+원래 목표: jigglypop/Clarus-Equation, main 05013ce3c653fc68c2fe5a4ab6294e95bd6c0a30, paper/검증_원장/연구_목표_계약.md §1,4,7.
 첨부: CE식.txt; CE_realtime_quantum_gr_report_2026-09-09.md; CE_remaining_conditions_register_2026-09-09.json.
 이번 사용자 지시의 수정 허용은 위 기존 원장의 미완성 판정을 소급하여 성공으로 바꾸지 않는다.

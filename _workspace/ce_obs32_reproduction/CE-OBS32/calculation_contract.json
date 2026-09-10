@@ -1,0 +1,67 @@
+{
+  "id": "CE-OBS32-v1",
+  "status": "exploratory_existing_data_check_not_blinded_or_preregistered",
+  "goal": "CE quantum-to-macro prediction of measured observables; original 8 gates and 12 R work packages remain required; no replacement of final goal by internal numerical consistency.",
+  "parent_main": "05013ce3c653fc68c2fe5a4ab6294e95bd6c0a30",
+  "hypothesis": "existing chapter22 three-complex-boson spectrum, equal conserved occupations, xi=1/6, cold matter, flat Einstein late-time low-derivative limit",
+  "fixed_cases": [
+    {
+      "r": 0.15,
+      "initial_theta": 0.1
+    },
+    {
+      "r": 0.15,
+      "initial_theta": 0.3
+    },
+    {
+      "r": 0.15,
+      "initial_theta": 0.5
+    },
+    {
+      "r": 0.35,
+      "initial_theta": 0.1
+    },
+    {
+      "r": 0.35,
+      "initial_theta": 0.3
+    },
+    {
+      "r": 0.35,
+      "initial_theta": 0.5
+    }
+  ],
+  "fixed_inputs": {
+    "f_over_Mp": 1,
+    "mass_over_Mp": 1e-06,
+    "matter_coefficient_over_Utop": 0.42857142857142855,
+    "coupled_matter_fraction": 0.84,
+    "a_initial": 0.01,
+    "vacuum_offset": 0,
+    "initial_velocity": "regular linear solution at a_initial"
+  },
+  "primary_readouts": [
+    "w_phi(1)",
+    "q_dec(1)",
+    "F_AP(z)=D_M(z)/D_H(z)"
+  ],
+  "reference": "fixed theta=0 same density coefficient, not a best-fit LCDM comparison",
+  "data_release": "DESI DR2 BAO 2025 13-vector and supplied covariance linked by 2503.14738v3; excludes 2026 Ly-alpha full-shape release to avoid double count",
+  "test_rule": "Report all six preselected benchmark points. No scan/refit of CE parameters to these data. AP ratios use first-order covariance propagation; secondary full-vector shape check profiles one global ruler normalization and is not an H0 or rd prediction.",
+  "scope_limits": [
+    "No absolute H0 or dark-energy scale prediction",
+    "No generation or primordial-state closure",
+    "No CMB/recombination/full perturbation likelihood",
+    "No independent-holdout or 8-gate completion claim",
+    "Compressed BAO template validity for interacting dark sector is not certified"
+  ],
+  "planned_validations": [
+    "exact loop eigenvalue versus independent positive integral",
+    "analytic derivative versus finite difference",
+    "DOP853 versus Radau",
+    "same source conservation identity",
+    "null limit versus LCDM distance integral",
+    "covariance SPD and all rows consumed",
+    "no observation array passed to physics solver"
+  ],
+  "created_utc": "2026-09-09T01:25:07.135151+00:00"
+}

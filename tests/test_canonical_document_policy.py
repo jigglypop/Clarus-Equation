@@ -5,15 +5,18 @@ import re
 from pathlib import Path
 from urllib.parse import unquote
 
+from test_support.paths import PAPER_ROOT, REPO_ROOT
 
-ROOT = Path(__file__).resolve().parents[1]
-PAPER_ROOT = ROOT / "paper"
+ROOT = REPO_ROOT
 PAPER_DIR = PAPER_ROOT / "참조" / "2_경로적분과_응용"
 LECTURE_DIR = PAPER_ROOT / "참조" / "1_강의"
 CONSTANTS_DIR = PAPER_ROOT / "참조" / "3_상수"
 FORMAL_DIR = PAPER_ROOT / "참조" / "9_등호이전"
 REFERENCE_DIR = PAPER_ROOT / "참조"
 MATH_NORMALIZER_PATH = PAPER_DIR / "normalize_markdown_math.py"
+AXIOM_PATH = PAPER_ROOT / "00_기원과_현재계획" / "15_CE_공리계와_모형_사전.md"
+PATH_INTEGRAL_PATH = PAPER_ROOT / "06_QFT_재설계" / "36A_조건부_장론과_확률_코어.md"
+CONSTANT_REGISTER_PATH = PAPER_ROOT / "검증_원장" / "상수_조건부_산출_원장.md"
 
 
 def _load_math_normalizer():
@@ -53,9 +56,9 @@ THEORY_DERIVATION_MARKDOWN = tuple(
 CANONICAL_MARKDOWN = (
     ROOT / "README.md",
     PAPER_ROOT / "README.md",
-    PAPER_ROOT / "axium.md",
-    PAPER_ROOT / "경로적분.md",
-    PAPER_ROOT / "상수.md",
+    AXIOM_PATH,
+    PATH_INTEGRAL_PATH,
+    CONSTANT_REGISTER_PATH,
     PAPER_ROOT / "코어_독자_가이드.md",
 )
 
@@ -309,8 +312,8 @@ def test_salvaged_theory_has_canonical_proofs_and_consistent_eft_signs() -> None
     ]
     assert not missing, f"missing canonical proof anchors: {missing}"
 
-    axiom = (PAPER_ROOT / "axium.md").read_text(encoding="utf-8")
-    path_integral = (PAPER_ROOT / "경로적분.md").read_text(encoding="utf-8")
+    axiom = AXIOM_PATH.read_text(encoding="utf-8")
+    path_integral = PATH_INTEGRAL_PATH.read_text(encoding="utf-8")
     for text in (axiom, path_integral):
         assert r"-\frac12(\nabla\phi)^2" in text
         assert r"M_{\rm Pl}^2-\xi\phi^2" in text

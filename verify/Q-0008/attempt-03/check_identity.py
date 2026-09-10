@@ -28,7 +28,7 @@ ladder steps 6-7, including the K4 defect window).  Layer (C) tests the IDENTITY
 Delta samples; no pre-registered window is evaluated or compared against.
 
 Tolerances and seed are declared before any result is produced and are not changed afterwards.
-Usage:  .claude\\hooks\\python.cmd python verify\\Q-0008\\attempt-03\\check_identity.py
+Usage:  python -B verify\\Q-0008\\attempt-03\\check_identity.py
 Output: verify/Q-0008/attempt-03/result.json
 """
 

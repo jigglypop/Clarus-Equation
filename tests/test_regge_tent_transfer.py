@@ -5,13 +5,13 @@ import importlib.util
 from itertools import combinations
 import json
 import math
-from pathlib import Path
 
 import numpy as np
 import pytest
 
+from test_support.paths import Q0020_ROOT
 
-SOURCE = Path(__file__).resolve().parents[1]/"verify/Q-0020/regge_tent_transfer.py"
+SOURCE = Q0020_ROOT / "regge_tent_transfer.py"
 SPEC = importlib.util.spec_from_file_location("ce_regge_tent_checks", SOURCE)
 tent = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(tent)
@@ -175,7 +175,8 @@ def test_offshell_and_invalid_branches_are_rejected(pair):
 
 def test_saved_source_hash_and_scope():
     report = json.loads(SOURCE.with_suffix(".json").read_text(encoding="utf-8"))
-    assert report["source_sha256"][SOURCE.name] == hashlib.sha256(SOURCE.read_bytes()).hexdigest()
+    source_bytes = SOURCE.read_bytes().replace(b"\r\n", b"\n")
+    assert report["source_sha256"][SOURCE.name] == hashlib.sha256(source_bytes).hexdigest()
     assert report["scope"]["two_step_global_action_and_quotient_composition"]
     for key in ("euclidean_middle_gaussian_converges", "existing_split_V_derived", "physical_clock_or_mass_derived", "common_metric_selected", "lorentzian_einstein_limit_derived"):
         assert report["scope"][key] is False

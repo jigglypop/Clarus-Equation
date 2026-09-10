@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
-import json, re, os
-ROOT = r"C:\dev\ce\Clarus-Equation"
-CARD = os.path.join(ROOT, "derivations", "Q-0020", "F-01.formula.md")
-ADV  = os.path.join(ROOT, "verify", "Q-0020", "F-01", "adversary")
-txt = open(CARD, encoding="utf-8").read()
+import json
+import re
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[3]
+CARD = ROOT / "derivations" / "Q-0020" / "F-01.formula.md"
+txt = CARD.read_text(encoding="utf-8")
 out = {}
 frozen_v = [39, 0.7448007, -1.3273034, 7.4820420, 62.0688, 0.0, 0.0, 1.0, 0.0, 1.0]
 frozen_u = [0, 1.0e-6, 1.0e-6, 1.0e-5, 1.0e-3, 1.0e-5, 1.0e-2, 0.99, 0.5, 0.25]
@@ -24,7 +27,7 @@ kill_nums = {
 }
 out["kill_numbers_intact"] = kill_nums
 out["kill_all_intact"] = all(kill_nums.values())
-hr = json.load(open(os.path.join(ROOT,"verify","Q-0020","F-01","hook_result.json"), encoding="utf-8"))
+hr = json.loads((HERE.parent / "hook_result.json").read_text(encoding="utf-8"))
 vb = txt.split("verify:")[1].split("\n---")[0]
 rev1_ok = []
 for d in hr["details"]:
@@ -39,7 +42,7 @@ out["verify_block"] = {
 }
 out["verify_block"]["tols_expected"] = [1e-12,1e-12,1e-6,1e-3,1e-3,1e-4,1e-6,2e-6,1e-5,1e-12,1e-3]
 out["verify_block"]["tols_match"] = out["verify_block"]["tols"] == out["verify_block"]["tols_expected"]
-c8 = json.load(open(os.path.join(ADV,"c8_spectrum.json"), encoding="utf-8"))
+c8 = json.loads((HERE / "c8_spectrum.json").read_text(encoding="utf-8"))
 tri_sig = [c for c in c8["sigma2_W_clusters"] if abs(c["value"])<1e-10]
 tri_rho = [c for c in c8["rho_R_clusters"] if abs(c["value"])<1e-10]
 s32 = c8["three_two_sector"]
@@ -54,8 +57,8 @@ out["claim_two_conv_free_numbers"] = {
   "std_convention_dependent": c8["std_sector"]["convention_dependent"],
   "card_claims_R_W_agree_2.2e-16": ("2.2e-16" in txt) or (u"2.2e\u221216" in txt),
 }
-c5 = json.load(open(os.path.join(ADV,"c5_kill_power.json"), encoding="utf-8"))
-c6 = json.load(open(os.path.join(ADV,"c6_k3_power_k1_structure.json"), encoding="utf-8"))
+c5 = json.loads((HERE / "c5_kill_power.json").read_text(encoding="utf-8"))
+c6 = json.loads((HERE / "c6_k3_power_k1_structure.json").read_text(encoding="utf-8"))
 r20 = c5["k3_random20"]
 eff = max(abs(r20["max"]-1.0), abs(r20["min"]-1.0))
 out["claim_k3_power"] = {
@@ -66,14 +69,14 @@ out["claim_k3_power"] = {
   "card_says_30x": (u"\uc57d 30\ubc30" in txt),
   "window_over_effect_using_lower_0.2": 0.2/eff,
 }
-c4 = json.load(open(os.path.join(ADV,"c4_content_sign.json"), encoding="utf-8"))
+c4 = json.loads((HERE / "c4_content_sign.json").read_text(encoding="utf-8"))
 out["claim_Sc_axiom"] = {
   "sign_flip_kills_lstar": c4["sign_flip_kills_lstar"],
   "GHP_monotone": c4["stationary"]["S_c<0 (GHP S_E=-S_geo/8piG)"]["gamma_monotone_decreasing"],
   "card_has_axiom_line": (u"S_c \uc758 \ubd80\ud638" in txt),
   "card_counts_three_axioms": txt.count(u"[\uacf5\ub9ac: \ud6c4\ubcf4]"),
 }
-c7 = json.load(open(os.path.join(ADV,"c7_m39_gauge.json"), encoding="utf-8"))
+c7 = json.loads((HERE / "c7_m39_gauge.json").read_text(encoding="utf-8"))
 out["claim_gauge_conditional"] = {
   "lstar2_m39": c7["m_by_gauge_convention"]["gauge_in_numerator_only"]["lstar2"],
   "lstar2_m35": c7["m_by_gauge_convention"]["gauge_in_both (cancels)"]["lstar2"],
@@ -98,8 +101,8 @@ out["claim_gamma_min"] = {
   "lnOmega_at_lstar": c4["competition"]["ln_Omega_at_lstar_R"],
   "card_has_10.73": ("10.73" in txt),
 }
-c3 = json.load(open(os.path.join(ADV,"c3_glued_schur.json"), encoding="utf-8"))
-c2 = json.load(open(os.path.join(ADV,"c2_convention.json"), encoding="utf-8"))
+c3 = json.loads((HERE / "c3_glued_schur.json").read_text(encoding="utf-8"))
+c2 = json.loads((HERE / "c2_convention.json").read_text(encoding="utf-8"))
 out["claim_glued_recover"] = {
   "card_has_2.4e-8": ("2.4e-8" in txt) or (u"2.4e\u22128" in txt),
   "c3_direct_max_abs_diff": c3["direct_fine_glued"]["max_abs_diff"],
@@ -119,6 +122,6 @@ out["dof"] = {
 }
 out["comparison_frozen"] = re.findall(r"comparison_frozen:\s*(\w+)", pred_block)
 out["revision_field"] = re.search(r"^revision:\s*(\d+)", txt, re.M).group(1)
-dst = os.path.join(ADV, "c9_recheck.json")
-open(dst, "w", encoding="utf-8").write(json.dumps(out, ensure_ascii=False, indent=2))
+dst = HERE / "c9_recheck.json"
+dst.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
 print(json.dumps(out, ensure_ascii=False, indent=2))

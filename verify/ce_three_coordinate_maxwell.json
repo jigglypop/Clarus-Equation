@@ -1,0 +1,494 @@
+{
+  "candidate": "CE-GF1",
+  "script_sha256": "d7aa4f678ff5a000af404bfa373531992dc3f63eead7c5f00ab4c78d4abf20ad",
+  "pullbacks": [
+    {
+      "jacobian": 0,
+      "target": 0,
+      "matrix": [
+        [
+          0,
+          -1,
+          0,
+          -2
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          -1,
+          0,
+          0
+        ]
+      ],
+      "pfaffian": 0,
+      "rank": 2,
+      "levi_civita_contraction": 0
+    },
+    {
+      "jacobian": 0,
+      "target": 1,
+      "matrix": [
+        [
+          0,
+          2,
+          -3,
+          -5
+        ],
+        [
+          -2,
+          0,
+          5,
+          13
+        ],
+        [
+          3,
+          -5,
+          0,
+          -7
+        ],
+        [
+          5,
+          -13,
+          7,
+          0
+        ]
+      ],
+      "pfaffian": 0,
+      "rank": 2,
+      "levi_civita_contraction": 0
+    },
+    {
+      "jacobian": 0,
+      "target": 2,
+      "matrix": [
+        [
+          0,
+          0,
+          1,
+          3
+        ],
+        [
+          0,
+          0,
+          -2,
+          -6
+        ],
+        [
+          -1,
+          2,
+          0,
+          3
+        ],
+        [
+          -3,
+          6,
+          -3,
+          0
+        ]
+      ],
+      "pfaffian": 0,
+      "rank": 2,
+      "levi_civita_contraction": 0
+    },
+    {
+      "jacobian": 1,
+      "target": 0,
+      "matrix": [
+        [
+          0,
+          -9,
+          0,
+          1
+        ],
+        [
+          9,
+          0,
+          -9,
+          14
+        ],
+        [
+          0,
+          9,
+          0,
+          -1
+        ],
+        [
+          -1,
+          -14,
+          1,
+          0
+        ]
+      ],
+      "pfaffian": 0,
+      "rank": 2,
+      "levi_civita_contraction": 0
+    },
+    {
+      "jacobian": 1,
+      "target": 1,
+      "matrix": [
+        [
+          0,
+          -33,
+          -88,
+          44
+        ],
+        [
+          33,
+          0,
+          103,
+          -11
+        ],
+        [
+          88,
+          -103,
+          0,
+          108
+        ],
+        [
+          -44,
+          11,
+          -108,
+          0
+        ]
+      ],
+      "pfaffian": 0,
+      "rank": 2,
+      "levi_civita_contraction": 0
+    },
+    {
+      "jacobian": 1,
+      "target": 2,
+      "matrix": [
+        [
+          0,
+          21,
+          32,
+          -17
+        ],
+        [
+          -21,
+          0,
+          -35,
+          -7
+        ],
+        [
+          -32,
+          35,
+          0,
+          -39
+        ],
+        [
+          17,
+          7,
+          39,
+          0
+        ]
+      ],
+      "pfaffian": 0,
+      "rank": 2,
+      "levi_civita_contraction": 0
+    },
+    {
+      "jacobian": 2,
+      "target": 0,
+      "matrix": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "pfaffian": 0,
+      "rank": 0,
+      "levi_civita_contraction": 0
+    },
+    {
+      "jacobian": 2,
+      "target": 1,
+      "matrix": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "pfaffian": 0,
+      "rank": 0,
+      "levi_civita_contraction": 0
+    },
+    {
+      "jacobian": 2,
+      "target": 2,
+      "matrix": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "pfaffian": 0,
+      "rank": 0,
+      "levi_civita_contraction": 0
+    },
+    {
+      "jacobian": 3,
+      "target": 0,
+      "matrix": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "pfaffian": 0,
+      "rank": 0,
+      "levi_civita_contraction": 0
+    },
+    {
+      "jacobian": 3,
+      "target": 1,
+      "matrix": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "pfaffian": 0,
+      "rank": 0,
+      "levi_civita_contraction": 0
+    },
+    {
+      "jacobian": 3,
+      "target": 2,
+      "matrix": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "pfaffian": 0,
+      "rank": 0,
+      "levi_civita_contraction": 0
+    }
+  ],
+  "counterexample": {
+    "F": [
+      [
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        0,
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        -1,
+        0,
+        0
+      ],
+      [
+        -1,
+        0,
+        0,
+        0
+      ]
+    ],
+    "pfaffian": 1,
+    "rank": 4,
+    "levi_civita_contraction": 8,
+    "bianchi": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "maxwell": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "four_coordinate_identity_pullback": [
+    [
+      0,
+      0,
+      0,
+      1
+    ],
+    [
+      0,
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      -1,
+      0,
+      0
+    ],
+    [
+      -1,
+      0,
+      0,
+      0
+    ]
+  ],
+  "quartic_scaling": [
+    {
+      "amplitude": 1,
+      "euclidean_F_squared": 12
+    },
+    {
+      "amplitude": 2,
+      "euclidean_F_squared": 192
+    },
+    {
+      "amplitude": 3,
+      "euclidean_F_squared": 972
+    },
+    {
+      "amplitude": 4,
+      "euclidean_F_squared": 3072
+    }
+  ],
+  "limits": [
+    "Applies to smooth three-coordinate pullback connections at fixed other parameters",
+    "Does not rule out three force projections with additional underlying state variables",
+    "No observational fitting or Maxwell dynamics of an extended model claimed"
+  ]
+}

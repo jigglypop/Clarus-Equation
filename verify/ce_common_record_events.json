@@ -1,0 +1,182 @@
+{
+  "candidate": "CE-AM3",
+  "errors": {
+    "embedding_isometry": 0.0,
+    "embedding_projection": 0.0,
+    "bare_event_commutator": 0.0,
+    "record_unitary_0": 0.0,
+    "record_energy_commutator_0": 0.0,
+    "kraus_completeness_0": 4.440892098500626e-16,
+    "record_unitary_1": 0.0,
+    "record_energy_commutator_1": 0.0,
+    "kraus_completeness_1": 4.440892098500626e-16,
+    "instrument_vs_full_(0, 1)": 6.798699777552591e-17,
+    "normalization_(0, 1)": 4.440892098500626e-16,
+    "global_inverse_(0, 1)": 4.440892098500626e-16,
+    "instrument_vs_full_(1, 0)": 8.777083671441753e-17,
+    "normalization_(1, 0)": 4.440892098500626e-16,
+    "global_inverse_(1, 0)": 4.440892098500626e-16,
+    "exact_density_12": 2.7194799110210365e-16,
+    "exact_density_21": 3.510833468576701e-16,
+    "exact_order_distance": 1.1102230246251565e-16,
+    "local_event_commutator": 0.0,
+    "end_only_order_error": 0.0
+  },
+  "orders": [
+    {
+      "order": [
+        1,
+        2
+      ],
+      "system_probabilities": [
+        0.2499999999999999,
+        0.2499999999999999,
+        0.2499999999999999,
+        0.2499999999999999
+      ],
+      "record_probabilities": [
+        0.4999999999999998,
+        0.0,
+        0.2499999999999999,
+        0.2499999999999999
+      ],
+      "system_density_real": [
+        [
+          0.2499999999999999,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.2499999999999999,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.2499999999999999,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.2499999999999999
+        ]
+      ],
+      "system_density_imag": [
+        [
+          0.0,
+          -0.2499999999999999,
+          0.0,
+          0.0
+        ],
+        [
+          0.2499999999999999,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "final_energy": 1.9999999999999993
+    },
+    {
+      "order": [
+        2,
+        1
+      ],
+      "system_probabilities": [
+        0.2499999999999999,
+        0.2499999999999999,
+        0.2499999999999999,
+        0.2499999999999999
+      ],
+      "record_probabilities": [
+        0.7499999999999997,
+        0.0,
+        0.2499999999999999,
+        0.0
+      ],
+      "system_density_real": [
+        [
+          0.2499999999999999,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.2499999999999999,
+          -0.2499999999999999,
+          0.0
+        ],
+        [
+          0.0,
+          -0.2499999999999999,
+          0.2499999999999999,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.2499999999999999
+        ]
+      ],
+      "system_density_imag": [
+        [
+          0.0,
+          -0.2499999999999999,
+          0.2499999999999999,
+          0.0
+        ],
+        [
+          0.2499999999999999,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.2499999999999999,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "final_energy": 1.9999999999999993
+    }
+  ],
+  "system_order_trace_distance": 0.3535533905932736,
+  "recorded_event_commutator_norm": 3.741657386773941,
+  "tick_energy_change_operator_norms": [
+    2.82842712474619,
+    2.82842712474619
+  ],
+  "initial_energy": 1.0,
+  "status": "base-point embedding and unitary record; single outcome not derived",
+  "source_sha256": {
+    "ce_common_record_events.py": "e1cbeab8e098ad3de6be1bfbbc25f16ced5cac41e18cd1c3c40088a1de95b661",
+    "ce_common_isotropic_frame.py": "3a281820ab956cfb7caf0dabf6d7a587b605d9898a5853a13a2e059b3858e9f8",
+    "ce_isometric_color_frame.py": "625dcf6a135ba38876d21a7764c9f7cb15cd582a25b5fb345a06ab2518e778fa"
+  }
+}

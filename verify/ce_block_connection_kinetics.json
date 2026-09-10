@@ -1,0 +1,366 @@
+{
+  "candidate": "CE-GC2",
+  "matrix_tolerance": 1e-12,
+  "integral_tolerance": 1e-09,
+  "inputs": {
+    "block_dimensions": [
+      1,
+      2,
+      3
+    ],
+    "mass_squared": [
+      1.0,
+      2.0,
+      5.0
+    ],
+    "complex_scalar_multiplicity": 1,
+    "fit_parameters": 0
+  },
+  "algebra": {
+    "U6_commutant_dimension": 14,
+    "U6_center_dimension": 3,
+    "SU6_commutant_dimension": 13,
+    "SU6_center_dimension": 2,
+    "desired_algebra_dimension": 12,
+    "desired_center_dimension": 1,
+    "off_block_normal_form_rank": 22,
+    "off_block_normal_form_kernel": 14,
+    "off_block_coefficients": [
+      {
+        "blocks": [
+          1,
+          2
+        ],
+        "finite_C_UV_limit": 0.0007200493698838066,
+        "real_off_block_directions": 4
+      },
+      {
+        "blocks": [
+          1,
+          3
+        ],
+        "finite_C_UV_limit": 0.006257866129291753,
+        "real_off_block_directions": 6
+      },
+      {
+        "blocks": [
+          2,
+          3
+        ],
+        "finite_C_UV_limit": 0.0028224127730127743,
+        "real_off_block_directions": 12
+      }
+    ]
+  },
+  "flag_connection": [
+    {
+      "t": 0.0,
+      "errors": {
+        "sum_projectors": 7.976822462306061e-16,
+        "antihermitian_minimal": 1.2212453270876722e-15,
+        "compatible_flags": 1.2212453270876722e-15,
+        "half_commutator_formula": 6.661338147750939e-16,
+        "full_gauge_connection_restored": 2.270174785158922e-15
+      }
+    },
+    {
+      "t": 0.25,
+      "errors": {
+        "sum_projectors": 7.643405145906084e-16,
+        "antihermitian_minimal": 1.5933317249000268e-15,
+        "compatible_flags": 1.4477875118003366e-15,
+        "half_commutator_formula": 7.983996564520443e-16,
+        "full_gauge_connection_restored": 2.0459678018333388e-15
+      }
+    },
+    {
+      "t": 0.5,
+      "errors": {
+        "sum_projectors": 7.494556252854361e-16,
+        "antihermitian_minimal": 1.1888196085084123e-15,
+        "compatible_flags": 1.0836492196924187e-15,
+        "half_commutator_formula": 6.992199106707309e-16,
+        "full_gauge_connection_restored": 2.29348972008852e-15
+      }
+    },
+    {
+      "t": 1.0,
+      "errors": {
+        "sum_projectors": 8.250352366403994e-16,
+        "antihermitian_minimal": 8.326672684688674e-16,
+        "compatible_flags": 7.085235762685129e-16,
+        "half_commutator_formula": 4.163336342344337e-16,
+        "full_gauge_connection_restored": 2.4180176289629917e-15
+      }
+    }
+  ],
+  "kinetic": [
+    {
+      "cutoff_squared": 10.0,
+      "proper_time_integrals": [
+        {
+          "mass_squared": 1.0,
+          "E1": 1.8229239584193906,
+          "absolute_integral_error": 5.995204332975845e-15,
+          "quadrature_values": [
+            1.8229239584193895,
+            1.8229239584193966
+          ],
+          "omitted_positive_tail_bound": 1.0620885638228973e-19
+        },
+        {
+          "mass_squared": 2.0,
+          "E1": 1.2226505441838929,
+          "absolute_integral_error": 6.439293542825908e-15,
+          "quadrature_values": [
+            1.222650544183892,
+            1.2226505441838993
+          ],
+          "omitted_positive_tail_bound": 1.0620885638228973e-19
+        },
+        {
+          "mass_squared": 5.0,
+          "E1": 0.5597735947761608,
+          "absolute_integral_error": 4.9960036108132044e-15,
+          "quadrature_values": [
+            0.5597735947761597,
+            0.5597735947761658
+          ],
+          "omitted_positive_tail_bound": 1.0620885638228973e-19
+        }
+      ],
+      "trace_F_squared_coefficients": [
+        0.0009619834018595229,
+        0.000645210418321148,
+        0.0002954006416377446
+      ],
+      "U6_center_kinetic_eigenvalues": [
+        0.0008862019249132338,
+        0.0009619834018595229,
+        0.001290420836642296
+      ],
+      "SU6_center_kinetic_matrix": [
+        [
+          0.005138354444080387,
+          0.005771900411157138
+        ],
+        [
+          0.005771900411157138,
+          0.00954405254164894
+        ]
+      ],
+      "SU6_center_kinetic_eigenvalues": [
+        0.0011632282348982051,
+        0.013519178750831123
+      ],
+      "linearized_Abelian_polarizations_U6": 6,
+      "linearized_Abelian_polarizations_SU6": 4
+    },
+    {
+      "cutoff_squared": 100.0,
+      "proper_time_integrals": [
+        {
+          "mass_squared": 1.0,
+          "E1": 4.037929576538113,
+          "absolute_integral_error": 8.881784197001252e-16,
+          "quadrature_values": [
+            4.037929576538114,
+            4.037929576538114
+          ],
+          "omitted_positive_tail_bound": 1.0620885638228973e-19
+        },
+        {
+          "mass_squared": 2.0,
+          "E1": 3.3547077833097094,
+          "absolute_integral_error": 2.6645352591003757e-15,
+          "quadrature_values": [
+            3.354707783309709,
+            3.354707783309712
+          ],
+          "omitted_positive_tail_bound": 1.0620885638228973e-19
+        },
+        {
+          "mass_squared": 5.0,
+          "E1": 2.467898488509974,
+          "absolute_integral_error": 4.440892098500626e-15,
+          "quadrature_values": [
+            2.4678984885099737,
+            2.4678984885099786
+          ],
+          "omitted_positive_tail_bound": 1.0620885638228973e-19
+        }
+      ],
+      "trace_F_squared_coefficients": [
+        0.0021308739799960697,
+        0.0017703279342661613,
+        0.001302345812317536
+      ],
+      "U6_center_kinetic_eigenvalues": [
+        0.0021308739799960697,
+        0.0035406558685323226,
+        0.003907037436952608
+      ],
+      "SU6_center_kinetic_matrix": [
+        [
+          0.012064151788516601,
+          0.012785243879976418
+        ],
+        [
+          0.012785243879976418,
+          0.023084903256917234
+        ]
+      ],
+      "SU6_center_kinetic_eigenvalues": [
+        0.0036523616781890585,
+        0.031496693367244775
+      ],
+      "linearized_Abelian_polarizations_U6": 6,
+      "linearized_Abelian_polarizations_SU6": 4
+    },
+    {
+      "cutoff_squared": 1000.0,
+      "proper_time_integrals": [
+        {
+          "mass_squared": 1.0,
+          "E1": 6.331539364136149,
+          "absolute_integral_error": 5.329070518200751e-15,
+          "quadrature_values": [
+            6.331539364136151,
+            6.331539364136144
+          ],
+          "omitted_positive_tail_bound": 1.0620885638228973e-19
+        },
+        {
+          "mass_squared": 2.0,
+          "E1": 5.639391433964937,
+          "absolute_integral_error": 4.440892098500626e-15,
+          "quadrature_values": [
+            5.639391433964938,
+            5.639391433964932
+          ],
+          "omitted_positive_tail_bound": 1.0620885638228973e-19
+        },
+        {
+          "mass_squared": 5.0,
+          "E1": 4.726095458584442,
+          "absolute_integral_error": 8.881784197001252e-16,
+          "quadrature_values": [
+            4.726095458584443,
+            4.726095458584442
+          ],
+          "omitted_positive_tail_bound": 1.0620885638228973e-19
+        }
+      ],
+      "trace_F_squared_coefficients": [
+        0.003341245117980882,
+        0.0029759886203738956,
+        0.0024940290930752754
+      ],
+      "U6_center_kinetic_eigenvalues": [
+        0.003341245117980882,
+        0.005951977240747791,
+        0.007482087279225827
+      ],
+      "SU6_center_kinetic_matrix": [
+        [
+          0.01931695771267132,
+          0.020047470707885293
+        ],
+        [
+          0.020047470707885293,
+          0.03755329334105377
+        ]
+      ],
+      "SU6_center_kinetic_eigenvalues": [
+        0.0064114549410752685,
+        0.05045879611264982
+      ],
+      "linearized_Abelian_polarizations_U6": 6,
+      "linearized_Abelian_polarizations_SU6": 4
+    }
+  ],
+  "Maxwell_witness": {
+    "F_matrix": [
+      [
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        0,
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        -1,
+        0,
+        0
+      ],
+      [
+        -1,
+        0,
+        0,
+        0
+      ]
+    ],
+    "spacetime_rank": 4,
+    "Pfaffian": 1,
+    "wedge_square_volume_coefficient": 2,
+    "U6_generator": "R1",
+    "SU6_generator": "2 R1 - R2",
+    "constant_field_Maxwell_divergence": 0
+  },
+  "independent_Landau_heat_kernel": {
+    "mass_squared": 1.0,
+    "cutoff_squared": 100.0,
+    "rows": [
+      {
+        "B": 0.1,
+        "exact_Delta_Gamma_over_B_squared": 0.004260524324182759,
+        "leading_F_squared_prediction": 0.004261747959992139,
+        "relative_weak_field_remainder": 0.00028712064178073666,
+        "quadrature_difference": 1.3053794156725473e-15
+      },
+      {
+        "B": 0.05,
+        "exact_Delta_Gamma_over_B_squared": 0.004261440626236708,
+        "leading_F_squared_prediction": 0.004261747959992139,
+        "relative_weak_field_remainder": 7.21144840840337e-05,
+        "quadrature_difference": 1.4137996329210978e-16
+      },
+      {
+        "B": 0.025,
+        "exact_Delta_Gamma_over_B_squared": 0.004261671035841254,
+        "leading_F_squared_prediction": 0.004261747959992139,
+        "relative_weak_field_remainder": 1.8049906190415678e-05,
+        "quadrature_difference": 4.172009959724221e-16
+      }
+    ],
+    "successive_remainder_ratios": [
+      0.25116440126622747,
+      0.2502951580348609
+    ],
+    "omitted_positive_tail_bound_after_B_squared_division": 6.725754401220409e-22
+  },
+  "maximum_flag_identity_error": 2.4180176289629917e-15,
+  "maximum_integral_error": 6.439293542825908e-15,
+  "environment": {
+    "python": "3.14.2",
+    "numpy": "2.4.4"
+  },
+  "source_sha256": {
+    "ce_block_connection_kinetics.py": "0ebd282a67cf34e051153562f396454ae43c604acbe9fce5d9b60308255989bb",
+    "ce_isometric_color_frame.py": "625dcf6a135ba38876d21a7764c9f7cb15cd582a25b5fb345a06ab2518e778fa",
+    "ce_projector_one_loop.py": "10d386ff54650f0d8b445d27cf1b5130657917baab6df2421298cfeab0ee96e2"
+  },
+  "limits": [
+    "Independent full connection, chosen group, finite active scalar and flat metric are inputs.",
+    "F squared is the local weak-field derivative term, not the complete determinant.",
+    "Finite C is its UV-removed normal response; no vector mass is inferred by mixing regulators.",
+    "Extra centers are a conditional failure of the U6/SU6 candidates, not a general no-go.",
+    "No observed couplings, hidden infinite sector, chiral dynamics or Einstein limit are obtained."
+  ]
+}

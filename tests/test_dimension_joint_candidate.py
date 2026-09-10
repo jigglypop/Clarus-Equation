@@ -2,13 +2,14 @@
 
 import importlib.util
 import math
-from pathlib import Path
 
 import numpy as np
 import pytest
 from scipy.integrate import quad
 
-PATH = Path(__file__).resolve().parents[1]/"verify"/"dimension_joint_candidate.py"
+from test_support.paths import VERIFY_ROOT
+
+PATH = VERIFY_ROOT / "dimension_joint_candidate.py"
 spec = importlib.util.spec_from_file_location("dimension_joint_candidate", PATH)
 model = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(model)

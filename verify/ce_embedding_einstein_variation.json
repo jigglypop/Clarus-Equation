@@ -1,0 +1,914 @@
+{
+  "candidate": "CE-GR6",
+  "status": "conditional_classical_variation_gate",
+  "inputs": {
+    "vacuum": true,
+    "Planck_coefficient": 1,
+    "action": "supplied Einstein-Hilbert; all independent embedding variations",
+    "ambient_signature": "one negative time direction",
+    "tolerance": 1e-10,
+    "fit_parameters": 0
+  },
+  "static_non_Einstein_RT_solution": {
+    "a": 1.0,
+    "adot": 0.0,
+    "addot": 0.0,
+    "cosmological_constant": 1.0,
+    "scalar_curvature": 6.0,
+    "second_form_diagonal": [
+      0.0,
+      -1.0,
+      -1.0,
+      -1.0
+    ],
+    "Einstein_residual_diagonal": [
+      2.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "RT_residual": 0.0,
+    "Einstein_residual_max": 2.0,
+    "normal_rank": 1,
+    "errors": {
+      "induced_metric": 0.0,
+      "normal_norm": 0.0,
+      "normal_tangent": 0.0,
+      "second_form_from_embedding": 0.0,
+      "Einstein_Gauss_vs_FRW": 0.0,
+      "scalar_Gauss_vs_FRW": 0.0,
+      "RT_contraction_vs_formula": 0.0,
+      "RT_equation": 0.0
+    }
+  },
+  "zero_Lambda_non_Einstein_RT_solutions": [
+    {
+      "a": 0.35355339059327384,
+      "adot": 1.0,
+      "addot": -1.885618083164126,
+      "cosmological_constant": 0.0,
+      "scalar_curvature": 64.0,
+      "second_form_diagonal": [
+        -1.3333333333333328,
+        -3.9999999999999996,
+        -3.9999999999999996,
+        -3.9999999999999996
+      ],
+      "Einstein_residual_diagonal": [
+        47.99999999999999,
+        -5.333333333333336,
+        -5.333333333333336,
+        -5.333333333333336
+      ],
+      "RT_residual": 4.973799150320701e-14,
+      "Einstein_residual_max": 47.99999999999999,
+      "normal_rank": 1,
+      "errors": {
+        "induced_metric": 4.440892098500626e-16,
+        "normal_norm": 2.220446049250313e-16,
+        "normal_tangent": 0.0,
+        "second_form_from_embedding": 4.440892098500626e-16,
+        "Einstein_Gauss_vs_FRW": 0.0,
+        "scalar_Gauss_vs_FRW": 0.0,
+        "RT_contraction_vs_formula": 3.552713678800496e-14,
+        "RT_equation": 4.973799150320701e-14,
+        "proper_lapse": 4.440892098500626e-16,
+        "proper_velocity": 4.440892098500626e-16,
+        "proper_second_form": 2.220446049250313e-16,
+        "RT_reduced_ODE": 4.440892098500626e-16,
+        "first_integral": 2.220446049250313e-16,
+        "scalar_closed_form": 2.842170943040401e-14,
+        "residual_closed_form": 1.4210854715202004e-14,
+        "residual_conservation": 5.684341886080802e-14
+      },
+      "chi": 0.7853981633974483,
+      "proper_time": 0.232233047033631,
+      "ambient_time": 0.42809724509617225,
+      "lapse": 1.0606601717798214,
+      "effective_residual_w": -0.11111111111111112
+    },
+    {
+      "a": 0.6495190528383289,
+      "adot": 0.577350269189626,
+      "addot": -0.6842669857062234,
+      "cosmological_constant": 0.0,
+      "scalar_curvature": 12.641975308641985,
+      "second_form_diagonal": [
+        -0.5925925925925927,
+        -1.7777777777777783,
+        -1.7777777777777783,
+        -1.7777777777777783
+      ],
+      "Einstein_residual_diagonal": [
+        9.481481481481488,
+        -1.0534979423868327,
+        -1.0534979423868327,
+        -1.0534979423868327
+      ],
+      "RT_residual": 3.9968028886505635e-15,
+      "Einstein_residual_max": 9.481481481481488,
+      "normal_rank": 1,
+      "errors": {
+        "induced_metric": 2.220446049250313e-16,
+        "normal_norm": 2.220446049250313e-16,
+        "normal_tangent": 1.1282949685993985e-17,
+        "second_form_from_embedding": 1.1102230246251565e-16,
+        "Einstein_Gauss_vs_FRW": 1.7763568394002505e-15,
+        "scalar_Gauss_vs_FRW": 3.552713678800501e-15,
+        "RT_contraction_vs_formula": 1.189720475771154e-15,
+        "RT_equation": 3.9968028886505635e-15,
+        "proper_lapse": 4.440892098500626e-16,
+        "proper_velocity": 2.220446049250313e-16,
+        "proper_second_form": 1.1102230246251565e-16,
+        "RT_reduced_ODE": 0.0,
+        "first_integral": 0.0,
+        "scalar_closed_form": 3.552713678800501e-15,
+        "residual_closed_form": 1.7763568394002505e-15,
+        "residual_conservation": 0.0
+      },
+      "chi": 1.0471975511965976,
+      "proper_time": 0.6249999999999997,
+      "ambient_time": 0.9212772739565673,
+      "lapse": 1.9485571585149866,
+      "effective_residual_w": -0.1111111111111111
+    },
+    {
+      "a": 1.0,
+      "adot": 6.123233995736766e-17,
+      "addot": -0.3333333333333333,
+      "cosmological_constant": 0.0,
+      "scalar_curvature": 4.0,
+      "second_form_diagonal": [
+        -0.3333333333333333,
+        -1.0,
+        -1.0,
+        -1.0
+      ],
+      "Einstein_residual_diagonal": [
+        3.0,
+        -0.33333333333333326,
+        -0.33333333333333326,
+        -0.33333333333333326
+      ],
+      "RT_residual": -2.220446049250313e-16,
+      "Einstein_residual_max": 3.0,
+      "normal_rank": 1,
+      "errors": {
+        "induced_metric": 0.0,
+        "normal_norm": 0.0,
+        "normal_tangent": 0.0,
+        "second_form_from_embedding": 0.0,
+        "Einstein_Gauss_vs_FRW": 1.1102230246251565e-16,
+        "scalar_Gauss_vs_FRW": 0.0,
+        "RT_contraction_vs_formula": 2.220446049250313e-16,
+        "RT_equation": 2.220446049250313e-16,
+        "proper_lapse": 0.0,
+        "proper_velocity": 0.0,
+        "proper_second_form": 0.0,
+        "RT_reduced_ODE": 0.0,
+        "first_integral": 0.0,
+        "scalar_closed_form": 0.0,
+        "residual_closed_form": 5.551115123125783e-17,
+        "residual_conservation": 9.860761315262648e-32
+      },
+      "chi": 1.5707963267948966,
+      "proper_time": 1.9999999999999998,
+      "ambient_time": 2.356194490192345,
+      "lapse": 3.0,
+      "effective_residual_w": -0.1111111111111111
+    }
+  ],
+  "free_flat_embedding": [
+    {
+      "x": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ambient_dimension": 24,
+      "normal_dimension": 20,
+      "radius": 0.1,
+      "H_eigenvalues": [
+        -1.040151503558925,
+        0.9401515035589245,
+        0.97,
+        0.97
+      ],
+      "second_form_rank_fraction": 10,
+      "second_form_rank_numpy": 10,
+      "normal_metric_kernel_dimension": 10,
+      "Einstein_residual_detection_rank": 10,
+      "dyad_component_matrix": [
+        [
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ]
+      ],
+      "metric_reconstruction": [
+        {
+          "component": [
+            0,
+            0
+          ],
+          "normal_coefficients": [
+            5.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "algebraic_error": 0.0,
+          "differentiated_embedding_error": 0.0
+        },
+        {
+          "component": [
+            1,
+            1
+          ],
+          "normal_coefficients": [
+            0.0,
+            5.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "algebraic_error": 0.0,
+          "differentiated_embedding_error": 0.0
+        },
+        {
+          "component": [
+            2,
+            2
+          ],
+          "normal_coefficients": [
+            0.0,
+            0.0,
+            5.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "algebraic_error": 0.0,
+          "differentiated_embedding_error": 0.0
+        },
+        {
+          "component": [
+            3,
+            3
+          ],
+          "normal_coefficients": [
+            0.0,
+            0.0,
+            0.0,
+            5.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "algebraic_error": 0.0,
+          "differentiated_embedding_error": 0.0
+        },
+        {
+          "component": [
+            0,
+            1
+          ],
+          "normal_coefficients": [
+            -5.0,
+            -5.0,
+            0.0,
+            0.0,
+            5.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "algebraic_error": 0.0,
+          "differentiated_embedding_error": 5.551115123125783e-17
+        },
+        {
+          "component": [
+            0,
+            2
+          ],
+          "normal_coefficients": [
+            -5.0,
+            0.0,
+            -5.0,
+            0.0,
+            0.0,
+            5.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "algebraic_error": 0.0,
+          "differentiated_embedding_error": 0.0
+        },
+        {
+          "component": [
+            0,
+            3
+          ],
+          "normal_coefficients": [
+            -5.0,
+            0.0,
+            0.0,
+            -5.0,
+            0.0,
+            0.0,
+            5.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "algebraic_error": 0.0,
+          "differentiated_embedding_error": 0.0
+        },
+        {
+          "component": [
+            1,
+            2
+          ],
+          "normal_coefficients": [
+            0.0,
+            -5.0,
+            -5.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            5.0,
+            0.0,
+            0.0
+          ],
+          "algebraic_error": 0.0,
+          "differentiated_embedding_error": 0.0
+        },
+        {
+          "component": [
+            1,
+            3
+          ],
+          "normal_coefficients": [
+            0.0,
+            -5.0,
+            0.0,
+            -5.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            5.0,
+            0.0
+          ],
+          "algebraic_error": 0.0,
+          "differentiated_embedding_error": 0.0
+        },
+        {
+          "component": [
+            2,
+            3
+          ],
+          "normal_coefficients": [
+            0.0,
+            0.0,
+            -5.0,
+            -5.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            5.0
+          ],
+          "algebraic_error": 0.0,
+          "differentiated_embedding_error": 0.0
+        }
+      ],
+      "errors": {
+        "linear_signature_factor": 8.881784197001252e-16,
+        "induced_Minkowski_metric": 8.881784197001252e-16,
+        "constant_metric_derivative": 0.0,
+        "normal_orthonormality": 0.0,
+        "normal_tangent_orthogonality": 0.0,
+        "second_derivatives_are_normal": 0.0,
+        "second_form_formula": 0.0,
+        "Gauss_flat_curvature": 0.0,
+        "all_metric_components_algebraic": 0.0,
+        "all_metric_components_geometric": 5.551115123125783e-17
+      }
+    },
+    {
+      "x": [
+        0.1,
+        -0.2,
+        0.3,
+        -0.1
+      ],
+      "ambient_dimension": 24,
+      "normal_dimension": 20,
+      "radius": 0.1,
+      "H_eigenvalues": [
+        -1.040151503558925,
+        0.9401515035589245,
+        0.97,
+        0.97
+      ],
+      "second_form_rank_fraction": 10,
+      "second_form_rank_numpy": 10,
+      "normal_metric_kernel_dimension": 10,
+      "Einstein_residual_detection_rank": 10,
+      "dyad_component_matrix": [
+        [
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ]
+      ],
+      "metric_reconstruction": [
+        {
+          "component": [
+            0,
+            0
+          ],
+          "normal_coefficients": [
+            5.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "algebraic_error": 0.0,
+          "differentiated_embedding_error": 2.220446049250313e-16
+        },
+        {
+          "component": [
+            1,
+            1
+          ],
+          "normal_coefficients": [
+            0.0,
+            5.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "algebraic_error": 1.1102230246251565e-16,
+          "differentiated_embedding_error": 0.0
+        },
+        {
+          "component": [
+            2,
+            2
+          ],
+          "normal_coefficients": [
+            0.0,
+            0.0,
+            5.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "algebraic_error": 0.0,
+          "differentiated_embedding_error": 0.0
+        },
+        {
+          "component": [
+            3,
+            3
+          ],
+          "normal_coefficients": [
+            0.0,
+            0.0,
+            0.0,
+            5.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "algebraic_error": 0.0,
+          "differentiated_embedding_error": 2.220446049250313e-16
+        },
+        {
+          "component": [
+            0,
+            1
+          ],
+          "normal_coefficients": [
+            -5.0,
+            -5.0,
+            0.0,
+            0.0,
+            5.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "algebraic_error": 1.1102230246251565e-16,
+          "differentiated_embedding_error": 2.220446049250313e-16
+        },
+        {
+          "component": [
+            0,
+            2
+          ],
+          "normal_coefficients": [
+            -5.0,
+            0.0,
+            -5.0,
+            0.0,
+            0.0,
+            5.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "algebraic_error": 2.220446049250313e-16,
+          "differentiated_embedding_error": 2.220446049250313e-16
+        },
+        {
+          "component": [
+            0,
+            3
+          ],
+          "normal_coefficients": [
+            -5.0,
+            0.0,
+            0.0,
+            -5.0,
+            0.0,
+            0.0,
+            5.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "algebraic_error": 0.0,
+          "differentiated_embedding_error": 2.220446049250313e-16
+        },
+        {
+          "component": [
+            1,
+            2
+          ],
+          "normal_coefficients": [
+            0.0,
+            -5.0,
+            -5.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            5.0,
+            0.0,
+            0.0
+          ],
+          "algebraic_error": 1.1102230246251565e-16,
+          "differentiated_embedding_error": 2.220446049250313e-16
+        },
+        {
+          "component": [
+            1,
+            3
+          ],
+          "normal_coefficients": [
+            0.0,
+            -5.0,
+            0.0,
+            -5.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            5.0,
+            0.0
+          ],
+          "algebraic_error": 1.1102230246251565e-16,
+          "differentiated_embedding_error": 2.220446049250313e-16
+        },
+        {
+          "component": [
+            2,
+            3
+          ],
+          "normal_coefficients": [
+            0.0,
+            0.0,
+            -5.0,
+            -5.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            5.0
+          ],
+          "algebraic_error": 1.1102230246251565e-16,
+          "differentiated_embedding_error": 2.220446049250313e-16
+        }
+      ],
+      "errors": {
+        "linear_signature_factor": 8.881784197001252e-16,
+        "induced_Minkowski_metric": 8.881784197001252e-16,
+        "constant_metric_derivative": 0.0,
+        "normal_orthonormality": 1.1102230246251565e-16,
+        "normal_tangent_orthogonality": 0.0,
+        "second_derivatives_are_normal": 0.0,
+        "second_form_formula": 1.3877787807814457e-17,
+        "Gauss_flat_curvature": 0.0,
+        "all_metric_components_algebraic": 2.220446049250313e-16,
+        "all_metric_components_geometric": 2.220446049250313e-16
+      }
+    }
+  ],
+  "maximum_algebraic_error": 5.684341886080802e-14,
+  "environment": {
+    "python": "3.14.2",
+    "numpy": "2.4.4"
+  },
+  "source_sha256": {
+    "ce_embedding_einstein_variation.py": "5754bd800f67320694cc5a3a0eff4a2066bd1485de9d4324f1f3cd0b117c199f"
+  },
+  "limits": [
+    "Embedding coordinates and the Einstein-Hilbert action are inputs, not derived quantum data.",
+    "RT equations are weaker than Einstein equations on rank-deficient embeddings.",
+    "Rank ten is a pointwise sufficient condition, not a necessary dimension theorem for all formulations.",
+    "The 24-dimensional witness is flat with full normal rank; no global embedding theorem is proved.",
+    "Classical equivalence requires rank retention and dependence on Y only through the metric.",
+    "Metric-null embedding variations are not assigned a quantum measure or automatically declared gauge.",
+    "No graviton quantization, common gauge action, hidden-state coupling or joint RMSE is established."
+  ]
+}

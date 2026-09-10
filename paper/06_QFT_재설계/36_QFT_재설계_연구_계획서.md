@@ -182,7 +182,7 @@ M2의 양자 admission 감사에서는 필요한 명제를 더 좁혀 고정했�
 
 대안 경로는 reduced/deparametrized quantization, Dirac/RAQㆍmaster constraint, perturbative BRST/EFT, discrete/refinement의 넷으로 분리했다. 네 보통 Klein--Gordon 기준장을 그대로 쓰는 reduced-LQG 경로는 현 M1 작용에서 통과하지 않는다는 범위 제한 반례가 있다. 이 결과는 모든 양자화의 no-go가 아니므로 다른 세 경로를 자동 삭제하지 않는다. 각 경로의 추가 입력과 kill condition은 E54-H3의 portfolio가 정본이다.
 
-reduced 경로의 첫 고전 단계는 [E55 원장](../검증_원장/참조_양자_보존_원장.md#qnb-e55-a)에서 닫았다. 세 rod momentum을 먼저 제거하면 clock momentum은 일반적으로 단순 square root가 아니라 $A P_T^2+2B P_T+D=0$의 두 branch를 따른다. 비직교 rod patch $64$개와 두 branch의 제약 대입 검사는 `tests/test_qft_reference_reduction.py`에서 **2 passed**다. 이 결과는 국소 고전 reduction이며 M2 양자 gate 통과가 아니다.
+reduced 경로의 첫 고전 단계는 [E55 원장](../검증_원장/참조_양자_보존_원장.md#qnb-e55-a)에서 닫았다. 세 rod momentum을 먼저 제거하면 clock momentum은 일반적으로 단순 square root가 아니라 $A P_T^2+2B P_T+D=0$의 두 branch를 따른다. 비직교 rod patch $64$개와 두 branch의 제약 대입 검사는 삭제 전 `tests/test_qft_reference_reduction.py`에서 **2 passed**였다. 이 세부 회귀는 현재 최소 집합에서 제외되어 Git 이력에서만 복구하며, 결과 자체도 국소 고전 reduction이지 M2 양자 gate 통과가 아니다.
 
 [E56 원장](../검증_원장/참조_양자_보존_원장.md#qnb-e56-a)은 $A,B,D$가 strongly commuting self-adjoint operator인 부분에서 $h_s$의 self-adjointness와 unitary evolution을 닫는다. 반면 noncommuting Hermitian $A,B$에는 $A^{-1}B$조차 Hermitian이 아닌 $2\times2$ 반례가 있으므로 고전 근의 naive operator 치환은 폐기했다. E55--E56 focused 검사는 **4 passed**이며 실제 field-operator commutator나 physical inner product의 증명이 아니다.
 

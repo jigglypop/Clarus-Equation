@@ -1,0 +1,482 @@
+{
+  "candidate": "CE-LC1",
+  "algebra_tolerance": 1e-12,
+  "curvature_tolerance": 1e-09,
+  "cone_and_frames": [
+    {
+      "rapidity": 0.0,
+      "rotation": 0.0,
+      "errors": {
+        "spinor_determinant": 0.0,
+        "Lorentz_form": 0.0,
+        "Lorentz_determinant": 0.0,
+        "cone_determinant": 8.326672684688674e-17,
+        "determinant_preserved": 0.0,
+        "four_vector_transform": 0.0,
+        "weighted_trace": 0.0,
+        "effects_sum_to_G": 0.0,
+        "projector_idempotence": 0.0,
+        "projector_G_self_adjoint": 0.0,
+        "effect_from_weighted_projector": 0.0,
+        "probability_preserved": 0.0,
+        "standardized_unitary": 0.0,
+        "density_spectrum_preserved": 0.0,
+        "normalized_filter_nonlinearity_formula": 0.0,
+        "Kraus_completeness": 0.0,
+        "isometry_information_preservation": 0.0,
+        "filter_success_probability": 0.0
+      },
+      "ordinary_trace_after_frame_change": 1.0,
+      "fixed_trace_operator_defect": 0.0,
+      "physical_probability": 0.6499999999999999,
+      "normalized_filter_nonlinearity_trace_distance": 0.0,
+      "filter_success_probability_for_maximally_mixed": 1.0
+    },
+    {
+      "rapidity": 0.0,
+      "rotation": 0.4,
+      "errors": {
+        "spinor_determinant": 0.0,
+        "Lorentz_form": 2.566746643397424e-17,
+        "Lorentz_determinant": 0.0,
+        "cone_determinant": 8.326672684688674e-17,
+        "determinant_preserved": 6.6650192101602916e-18,
+        "four_vector_transform": 2.7755575615628914e-17,
+        "weighted_trace": 1.110322837567306e-16,
+        "effects_sum_to_G": 2.220446049250313e-16,
+        "projector_idempotence": 1.1102230246251565e-16,
+        "projector_G_self_adjoint": 2.220446049250313e-16,
+        "effect_from_weighted_projector": 1.1102230246251565e-16,
+        "probability_preserved": 0.0,
+        "standardized_unitary": 2.220446049250313e-16,
+        "density_spectrum_preserved": 2.220446049250313e-16,
+        "normalized_filter_nonlinearity_formula": 6.1539646307888634e-18,
+        "Kraus_completeness": 1.2307929261577727e-17,
+        "isometry_information_preservation": 1.2307929261577727e-17,
+        "filter_success_probability": 0.0
+      },
+      "ordinary_trace_after_frame_change": 1.0,
+      "fixed_trace_operator_defect": 1.2307929261577727e-17,
+      "physical_probability": 0.6499999999999999,
+      "normalized_filter_nonlinearity_trace_distance": 6.1539646307888634e-18,
+      "filter_success_probability_for_maximally_mixed": 1.0
+    },
+    {
+      "rapidity": 0.3,
+      "rotation": 0.0,
+      "errors": {
+        "spinor_determinant": 0.0,
+        "Lorentz_form": 1.1664393137659368e-17,
+        "Lorentz_determinant": 0.0,
+        "cone_determinant": 8.326672684688674e-17,
+        "determinant_preserved": 5.551115123125783e-17,
+        "four_vector_transform": 1.1102230246251565e-16,
+        "weighted_trace": 2.220446049250313e-16,
+        "effects_sum_to_G": 0.0,
+        "projector_idempotence": 0.0,
+        "projector_G_self_adjoint": 0.0,
+        "effect_from_weighted_projector": 5.551115123125783e-17,
+        "probability_preserved": 0.0,
+        "standardized_unitary": 0.0,
+        "density_spectrum_preserved": 2.220446049250313e-16,
+        "normalized_filter_nonlinearity_formula": 2.7755575615628914e-17,
+        "Kraus_completeness": 0.0,
+        "isometry_information_preservation": 1.1102230246251565e-16,
+        "filter_success_probability": 0.0
+      },
+      "ordinary_trace_after_frame_change": 0.9235303967500033,
+      "fixed_trace_operator_defect": 0.34985880757600296,
+      "physical_probability": 0.6499999999999999,
+      "normalized_filter_nonlinearity_trace_distance": 0.14565630622579542,
+      "filter_success_probability_for_maximally_mixed": 0.7744058180470133
+    },
+    {
+      "rapidity": 0.3,
+      "rotation": 0.4,
+      "errors": {
+        "spinor_determinant": 0.0,
+        "Lorentz_form": 2.220446049250313e-16,
+        "Lorentz_determinant": 0.0,
+        "cone_determinant": 8.326672684688674e-17,
+        "determinant_preserved": 5.551115123125783e-17,
+        "four_vector_transform": 2.7755575615628914e-17,
+        "weighted_trace": 1.734723475976807e-18,
+        "effects_sum_to_G": 6.938893903907228e-17,
+        "projector_idempotence": 5.551115123125783e-17,
+        "projector_G_self_adjoint": 5.551115123125783e-17,
+        "effect_from_weighted_projector": 1.1102230246251565e-16,
+        "probability_preserved": 1.1102230246251565e-16,
+        "standardized_unitary": 4.440892098500626e-16,
+        "density_spectrum_preserved": 3.3306690738754696e-16,
+        "normalized_filter_nonlinearity_formula": 5.551115123125783e-17,
+        "Kraus_completeness": 1.9192180754564397e-17,
+        "isometry_information_preservation": 1.1102230246251565e-16,
+        "filter_success_probability": 0.0
+      },
+      "ordinary_trace_after_frame_change": 0.9235303967500035,
+      "fixed_trace_operator_defect": 0.3498588075760032,
+      "physical_probability": 0.65,
+      "normalized_filter_nonlinearity_trace_distance": 0.1456563062257955,
+      "filter_success_probability_for_maximally_mixed": 0.7744058180470133
+    },
+    {
+      "rapidity": 0.7,
+      "rotation": 0.0,
+      "errors": {
+        "spinor_determinant": 0.0,
+        "Lorentz_form": 4.440892098500626e-16,
+        "Lorentz_determinant": 5.551115123125783e-16,
+        "cone_determinant": 8.326672684688674e-17,
+        "determinant_preserved": 5.551115123125783e-17,
+        "four_vector_transform": 5.551115123125783e-17,
+        "weighted_trace": 0.0,
+        "effects_sum_to_G": 0.0,
+        "projector_idempotence": 0.0,
+        "projector_G_self_adjoint": 1.1102230246251565e-16,
+        "effect_from_weighted_projector": 1.1102230246251565e-16,
+        "probability_preserved": 2.220446049250313e-16,
+        "standardized_unitary": 0.0,
+        "density_spectrum_preserved": 3.3306690738754696e-16,
+        "normalized_filter_nonlinearity_formula": 0.0,
+        "Kraus_completeness": 2.220446049250313e-16,
+        "isometry_information_preservation": 2.220446049250313e-16,
+        "filter_success_probability": 1.1102230246251565e-16
+      },
+      "ordinary_trace_after_frame_change": 0.9517355248951295,
+      "fixed_trace_operator_defect": 1.0137527074704762,
+      "physical_probability": 0.6500000000000001,
+      "normalized_filter_nonlinearity_trace_distance": 0.3021838885585817,
+      "filter_success_probability_for_maximally_mixed": 0.6232984819708032
+    },
+    {
+      "rapidity": 0.7,
+      "rotation": 0.4,
+      "errors": {
+        "spinor_determinant": 2.220446049250313e-16,
+        "Lorentz_form": 3.3306690738754696e-16,
+        "Lorentz_determinant": 4.440892098500626e-16,
+        "cone_determinant": 8.326672684688674e-17,
+        "determinant_preserved": 5.551115123125783e-17,
+        "four_vector_transform": 5.551115123125783e-17,
+        "weighted_trace": 6.938893903907228e-18,
+        "effects_sum_to_G": 5.551115123125783e-17,
+        "projector_idempotence": 0.0,
+        "projector_G_self_adjoint": 0.0,
+        "effect_from_weighted_projector": 5.551115123125783e-17,
+        "probability_preserved": 2.220446049250313e-16,
+        "standardized_unitary": 6.661338147750939e-16,
+        "density_spectrum_preserved": 4.440892098500626e-16,
+        "normalized_filter_nonlinearity_formula": 5.551115123125783e-17,
+        "Kraus_completeness": 2.220446049250313e-16,
+        "isometry_information_preservation": 2.220446049250313e-16,
+        "filter_success_probability": 1.1102230246251565e-16
+      },
+      "ordinary_trace_after_frame_change": 0.9517355248951295,
+      "fixed_trace_operator_defect": 1.0137527074704762,
+      "physical_probability": 0.6500000000000001,
+      "normalized_filter_nonlinearity_trace_distance": 0.30218388855858175,
+      "filter_success_probability_for_maximally_mixed": 0.6232984819708032
+    },
+    {
+      "rapidity": 1.2,
+      "rotation": 0.0,
+      "errors": {
+        "spinor_determinant": 0.0,
+        "Lorentz_form": 2.220446049250313e-16,
+        "Lorentz_determinant": 1.1102230246251565e-16,
+        "cone_determinant": 8.326672684688674e-17,
+        "determinant_preserved": 8.334439268011278e-17,
+        "four_vector_transform": 1.1102230246251565e-16,
+        "weighted_trace": 0.0,
+        "effects_sum_to_G": 0.0,
+        "projector_idempotence": 0.0,
+        "projector_G_self_adjoint": 0.0,
+        "effect_from_weighted_projector": 0.0,
+        "probability_preserved": 1.1102230246251565e-16,
+        "standardized_unitary": 0.0,
+        "density_spectrum_preserved": 4.440892098500626e-16,
+        "normalized_filter_nonlinearity_formula": 5.551115123125783e-17,
+        "Kraus_completeness": 0.0,
+        "isometry_information_preservation": 0.0,
+        "filter_success_probability": 0.0
+      },
+      "ordinary_trace_after_frame_change": 1.2068710251595056,
+      "fixed_trace_operator_defect": 2.3201169227365472,
+      "physical_probability": 0.65,
+      "normalized_filter_nonlinearity_trace_distance": 0.41682730350607766,
+      "filter_success_probability_for_maximally_mixed": 0.5453589766447062
+    },
+    {
+      "rapidity": 1.2,
+      "rotation": 0.4,
+      "errors": {
+        "spinor_determinant": 0.0,
+        "Lorentz_form": 5.551115123125783e-16,
+        "Lorentz_determinant": 2.220446049250313e-16,
+        "cone_determinant": 8.326672684688674e-17,
+        "determinant_preserved": 2.781538438324882e-17,
+        "four_vector_transform": 2.220446049250313e-16,
+        "weighted_trace": 2.220446049250313e-16,
+        "effects_sum_to_G": 1.1102230246251565e-16,
+        "projector_idempotence": 0.0,
+        "projector_G_self_adjoint": 5.551115123125783e-17,
+        "effect_from_weighted_projector": 2.220446049250313e-16,
+        "probability_preserved": 0.0,
+        "standardized_unitary": 2.220446049250313e-16,
+        "density_spectrum_preserved": 1.1102230246251565e-16,
+        "normalized_filter_nonlinearity_formula": 5.551115123125783e-17,
+        "Kraus_completeness": 8.346993927433102e-18,
+        "isometry_information_preservation": 8.346993927433102e-18,
+        "filter_success_probability": 1.1102230246251565e-16
+      },
+      "ordinary_trace_after_frame_change": 1.2068710251595056,
+      "fixed_trace_operator_defect": 2.320116922736547,
+      "physical_probability": 0.6499999999999999,
+      "normalized_filter_nonlinearity_trace_distance": 0.41682730350607766,
+      "filter_success_probability_for_maximally_mixed": 0.5453589766447063
+    }
+  ],
+  "coupled_record": [
+    {
+      "rapidity": 0.0,
+      "rotation": 0.0,
+      "weighted_record_probability": 0.2500000000000005,
+      "weighted_system_energy": 2.000000000000002,
+      "weighted_apparatus_energy": 1.000000000000002,
+      "weighted_total_free_energy": 3.0000000000000044,
+      "naive_renormalized_record_probability": 0.25000000000000033,
+      "errors": {
+        "weighted_values": 4.440892098500626e-15,
+        "all_state_frame_isometry": 0.0,
+        "all_state_record_covariance": 0.0,
+        "all_state_energy_covariance": 0.0,
+        "naive_probability_formula": 3.3306690738754696e-16
+      }
+    },
+    {
+      "rapidity": 0.0,
+      "rotation": 0.4,
+      "weighted_record_probability": 0.25000000000000056,
+      "weighted_system_energy": 2.000000000000002,
+      "weighted_apparatus_energy": 1.0000000000000022,
+      "weighted_total_free_energy": 3.0000000000000044,
+      "naive_renormalized_record_probability": 0.25000000000000033,
+      "errors": {
+        "weighted_values": 4.440892098500626e-15,
+        "all_state_frame_isometry": 2.220446049250313e-16,
+        "all_state_record_covariance": 2.220446049250313e-16,
+        "all_state_energy_covariance": 1.7763568394002505e-15,
+        "naive_probability_formula": 3.3306690738754696e-16
+      }
+    },
+    {
+      "rapidity": 0.3,
+      "rotation": 0.0,
+      "weighted_record_probability": 0.25000000000000056,
+      "weighted_system_energy": 2.0000000000000013,
+      "weighted_apparatus_energy": 1.0000000000000022,
+      "weighted_total_free_energy": 3.0000000000000036,
+      "naive_renormalized_record_probability": 0.3228281531128981,
+      "errors": {
+        "weighted_values": 3.552713678800501e-15,
+        "all_state_frame_isometry": 0.0,
+        "all_state_record_covariance": 0.0,
+        "all_state_energy_covariance": 8.881784197001252e-16,
+        "naive_probability_formula": 3.885780586188048e-16
+      }
+    },
+    {
+      "rapidity": 0.3,
+      "rotation": 0.4,
+      "weighted_record_probability": 0.25000000000000056,
+      "weighted_system_energy": 2.000000000000002,
+      "weighted_apparatus_energy": 1.0000000000000022,
+      "weighted_total_free_energy": 3.0000000000000044,
+      "naive_renormalized_record_probability": 0.3228281531128981,
+      "errors": {
+        "weighted_values": 4.440892098500626e-15,
+        "all_state_frame_isometry": 3.147123156110429e-17,
+        "all_state_record_covariance": 3.147123156110429e-17,
+        "all_state_energy_covariance": 1.7763568394002505e-15,
+        "naive_probability_formula": 3.885780586188048e-16
+      }
+    },
+    {
+      "rapidity": 0.7,
+      "rotation": 0.0,
+      "weighted_record_probability": 0.25000000000000056,
+      "weighted_system_energy": 2.000000000000002,
+      "weighted_apparatus_energy": 1.0000000000000022,
+      "weighted_total_free_energy": 3.0000000000000044,
+      "naive_renormalized_record_probability": 0.4010919442792912,
+      "errors": {
+        "weighted_values": 4.440892098500626e-15,
+        "all_state_frame_isometry": 2.220446049250313e-16,
+        "all_state_record_covariance": 2.220446049250313e-16,
+        "all_state_energy_covariance": 1.7763568394002505e-15,
+        "naive_probability_formula": 3.3306690738754696e-16
+      }
+    },
+    {
+      "rapidity": 0.7,
+      "rotation": 0.4,
+      "weighted_record_probability": 0.2500000000000006,
+      "weighted_system_energy": 2.000000000000002,
+      "weighted_apparatus_energy": 1.0000000000000024,
+      "weighted_total_free_energy": 3.000000000000005,
+      "naive_renormalized_record_probability": 0.4010919442792912,
+      "errors": {
+        "weighted_values": 4.884981308350689e-15,
+        "all_state_frame_isometry": 2.220446049250313e-16,
+        "all_state_record_covariance": 2.220446049250313e-16,
+        "all_state_energy_covariance": 1.7763568394002505e-15,
+        "naive_probability_formula": 3.3306690738754696e-16
+      }
+    },
+    {
+      "rapidity": 1.2,
+      "rotation": 0.0,
+      "weighted_record_probability": 0.25000000000000056,
+      "weighted_system_energy": 2.000000000000002,
+      "weighted_apparatus_energy": 1.0000000000000022,
+      "weighted_total_free_energy": 3.0000000000000044,
+      "naive_renormalized_record_probability": 0.458413651753039,
+      "errors": {
+        "weighted_values": 4.440892098500626e-15,
+        "all_state_frame_isometry": 2.220446049250313e-16,
+        "all_state_record_covariance": 2.220446049250313e-16,
+        "all_state_energy_covariance": 3.552713678800501e-15,
+        "naive_probability_formula": 1.6653345369377348e-16
+      }
+    },
+    {
+      "rapidity": 1.2,
+      "rotation": 0.4,
+      "weighted_record_probability": 0.25000000000000044,
+      "weighted_system_energy": 2.0000000000000018,
+      "weighted_apparatus_energy": 1.0000000000000018,
+      "weighted_total_free_energy": 3.0000000000000036,
+      "naive_renormalized_record_probability": 0.4584136517530391,
+      "errors": {
+        "weighted_values": 3.552713678800501e-15,
+        "all_state_frame_isometry": 2.220446049250313e-16,
+        "all_state_record_covariance": 2.220446049250313e-16,
+        "all_state_energy_covariance": 2.2666296168767967e-15,
+        "naive_probability_formula": 2.7755575615628914e-16
+      }
+    }
+  ],
+  "state_coordinate_metric": [
+    {
+      "coordinates": [
+        0.0,
+        0.0,
+        0.1,
+        -0.1
+      ],
+      "metric_eigenvalues": [
+        -1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "minimum_positive_state_eigenvalue": 1.9900495061637926,
+      "Jacobian_determinant": 1.0,
+      "maximum_Christoffel_component": 1.0,
+      "curvature_checks": [
+        {
+          "step": 0.001,
+          "maximum_Riemann_residual": 0.0
+        },
+        {
+          "step": 0.0005,
+          "maximum_Riemann_residual": 1.1102230246251565e-13
+        }
+      ],
+      "errors": {
+        "metric_formula": 0.0,
+        "Christoffel_two_constructions": 0.0
+      }
+    },
+    {
+      "coordinates": [
+        0.2,
+        0.3,
+        0.1,
+        -0.1
+      ],
+      "metric_eigenvalues": [
+        -1.822118800390509,
+        1.0,
+        1.0,
+        1.822118800390509
+      ],
+      "minimum_positive_state_eigenvalue": 1.8875856853645374,
+      "Jacobian_determinant": 1.822118800390509,
+      "maximum_Christoffel_component": 1.0,
+      "curvature_checks": [
+        {
+          "step": 0.001,
+          "maximum_Riemann_residual": 6.938893903907228e-14
+        },
+        {
+          "step": 0.0005,
+          "maximum_Riemann_residual": 1.1102230246251565e-13
+        }
+      ],
+      "errors": {
+        "metric_formula": 2.220446049250313e-16,
+        "Christoffel_two_constructions": 2.7755575615628914e-17
+      }
+    },
+    {
+      "coordinates": [
+        -0.2,
+        -0.3,
+        0.1,
+        -0.1
+      ],
+      "metric_eigenvalues": [
+        -0.5488116360940265,
+        0.5488116360940266,
+        1.0,
+        1.0
+      ],
+      "minimum_positive_state_eigenvalue": 2.082043416754633,
+      "Jacobian_determinant": 0.5488116360940266,
+      "maximum_Christoffel_component": 1.0,
+      "curvature_checks": [
+        {
+          "step": 0.001,
+          "maximum_Riemann_residual": 5.540012892879531e-14
+        },
+        {
+          "step": 0.0005,
+          "maximum_Riemann_residual": 1.1113332476497817e-13
+        }
+      ],
+      "errors": {
+        "metric_formula": 1.1102230246251565e-16,
+        "Christoffel_two_constructions": 1.1102230246251565e-16
+      }
+    }
+  ],
+  "maximum_algebra_error": 4.884981308350689e-15,
+  "maximum_curvature_residual": 1.1113332476497817e-13,
+  "environment": {
+    "python": "3.14.2",
+    "numpy": "2.4.4"
+  },
+  "source_sha256": {
+    "ce_positive_cone_lorentz.py": "ac7aceb7db991eb6358c88f943a50b01f26bd7491503a5dbd41ae03aa0677933",
+    "ce_color_covariant_record.py": "f650695772a17b14b4aae30576570809591348d36e34f472e1fc71176dadaa6a",
+    "ce_isometric_color_frame.py": "625dcf6a135ba38876d21a7764c9f7cb15cd582a25b5fb345a06ab2518e778fa"
+  },
+  "limits": [
+    "Hermitian 2x2 factor, observer pairing and spacetime map are supplied.",
+    "A passive frame change is different from a normalized physical filter.",
+    "Record energy accounting is the earlier supplied finite apparatus model.",
+    "A single invertible four-coordinate state map produces a flat pullback metric.",
+    "No Einstein action, local spacetime event law, actual outcome or four-force unification is obtained."
+  ]
+}

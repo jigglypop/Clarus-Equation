@@ -252,7 +252,7 @@ $X$가 유한집합이고 모든 후보의 prior weight가 양수이므로 01의
 
 이 예들은 residual을 쓸 수 있는 인코딩의 방향을 보일 뿐, 무한차원 함수공간의 가측성·coercivity·prior recovery가 이미 증명되었다는 의미는 아니다.
 
-$u'=f(u)$류의 등호는 residual norm $\delta(u)=\|u'-f(u)\|_{L^2}$로 정리 1.1의 인스턴스가 된다. Galerkin 잔차 최소화, least-squares 솔버, PINN 손실함수는 전부 이 defect의 finite-$\beta$ 또는 zero-temperature 처리다. 고유값 문제는 $\delta(v,\lambda)=|Av-\lambda v|^2$ (정규화 $|v|=1$)로 들어간다. 경로공간 위의 자연스러운 defect는 [../../검증_원장/등호이전_pathspace_closure_checklist.md](../검증_원장/등호이전_pathspace_closure_checklist.md) 이후의 조건들로 닫는다.
+$u'=f(u)$류의 등호는 residual norm $\delta(u)=\|u'-f(u)\|_{L^2}$로 정리 1.1의 인스턴스가 된다. Galerkin 잔차 최소화, least-squares 솔버, PINN 손실함수는 전부 이 defect의 finite-$\beta$ 또는 zero-temperature 처리다. 고유값 문제는 $\delta(v,\lambda)=|Av-\lambda v|^2$ (정규화 $|v|=1$)로 들어간다. 경로공간 위의 자연스러운 defect는 [../../검증_원장/등호이전_pathspace_closure_checklist.md](../../검증_원장/등호이전_pathspace_closure_checklist.md) 이후의 조건들로 닫는다.
 
 ## 3. Defect는 등호보다 많은 정보다
 

@@ -1,6 +1,6 @@
 # examples/physics 색인
 
-유한 증인(witness) 스크립트를 섹터 디렉터리로 묶는다. 여기 있는 계산 결과는 원장(`ledger/`) 항목 없이는 증거가 아니다. 색인은 `python .claude/hooks/lib/examples_index.py write`가 docstring 첫 줄에서 생성한다. 규칙(섹터 밖 모듈 금지·한국어 docstring·시험 존재)은 `tests/test_harness.py`가 검사한다.
+유한 증인(witness) 스크립트를 섹터 디렉터리로 묶는다. 여기 있는 계산 결과는 원장(`ledger/`) 항목 없이는 증거가 아니다. 이 색인은 수동으로 유지하며, 각 계산의 회귀 검사는 `tests/test_<모듈>.py` 또는 해당 모듈을 가져오는 관련 테스트에서 담당한다. 현재 저장소 하네스의 최소 경계는 `tests/test_repository_harness.py`가 검사한다.
 
 모듈 수: 25. 시험 열은 `tests/test_<모듈>.py`가 있으면 ✓, 다른 시험이 import만 하면 ○.
 

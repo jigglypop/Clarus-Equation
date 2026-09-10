@@ -8,7 +8,7 @@
 
 농축의 핵심은 최소값 존재뿐 아니라 escape를 막는 compact sublevel과 최소점 근방의 prior 질량이다. 이 절은 그 형식 가정과 CE 물리 해석의 경계를 고정한다.
 
-[../../검증_원장/등호이전_pathspace_audit.md](../검증_원장/등호이전_pathspace_audit.md)는 CE 문서 안에 이미 $\mathcal P_I$, $\mu_{\mathrm{ref}}$, $W$, $F$, $\mathcal P_{\mathrm{ns}}$, $K_\phi$가 들어 있음을 확인했다. 남은 병목은 하나였다.
+[../../검증_원장/등호이전_pathspace_audit.md](../../검증_원장/등호이전_pathspace_audit.md)는 CE 문서 안에 이미 $\mathcal P_I$, $\mu_{\mathrm{ref}}$, $W$, $F$, $\mathcal P_{\mathrm{ns}}$, $K_\phi$가 들어 있음을 확인했다. 남은 병목은 하나였다.
 
 $$
 W[\gamma]

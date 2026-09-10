@@ -444,25 +444,18 @@ local simplicity의 block 실패는 “아직 prove하지 못한 closure”가 �
 examples/physics/gravity/causal_face_simplicity.py
 ```
 
-회귀:
+과거 회귀:
 
 ```text
 tests/test_causal_face_simplicity.py
 ```
 
-집중 실행:
-
-```powershell
-.codex/hooks/python.cmd pytest tests/test_causal_face_simplicity.py -q
-```
-
-현재 격리 실행 결과는
+최소 필수 테스트 정리에서 이 세부 회귀를 삭제했다. 아래 수치는 삭제 전 역사적 영수증이며,
+현재 실행 계약은 [테스트 안내](../../tests/README.md)를 따른다.
 
 ```text
 32 passed
 ```
-
-였다.
 
 참고할 기존 기하 구조는 Barrett--Crane의 bivector reconstruction,
 closure+simplicity를 통한 geometric tetrahedron, 그리고 coarse graining에서

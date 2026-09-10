@@ -68,7 +68,7 @@ H_c=A+BDs=A-BC^+B^{\mathsf T}.
 \tag{7}
 $$
 
-가 된다. 이것이 C4-REGGE-ONE-TO-FIVE-BOUNDARY-SCHUR-23B의 **조건부 고전 boundary Schur identity**다. [regge_one_to_five_boundary_hessian.py](../../examples/physics/regge_one_to_five_boundary_hessian.py)와 [대응 테스트](../../tests/test_regge_one_to_five_boundary_hessian.py)의 기록은 6 passed, Regge 묶음은 15 passed다. 실행 성공은 식 (7)의 증명 수가 아니라 구현 재현이다.
+가 된다. 이것이 C4-REGGE-ONE-TO-FIVE-BOUNDARY-SCHUR-23B의 **조건부 고전 boundary Schur identity**다. [재현 스크립트](../../verify/Q-0019/F-01/regge_one_to_five_boundary_hessian.py)의 과거 대응 테스트 기록은 6 passed, Regge 묶음은 15 passed다. 대응 테스트 파일은 현재 체크아웃에 없으므로 이 과거 숫자를 현행 green evidence로 사용하지 않는다. 실행 성공도 식 (7)의 증명 수가 아니라 구현 재현이다.
 
 **문과 비유.** 경계 서류를 처리하는 부서와 내부 기둥 위치를 정하는 부서가 있다고 하자. 기둥을 내부에서 옮기는 네 방식은 서류 결과를 바꾸지 않는 재배치다. Schur 항은 내부 부서의 효과를 경계 서류에 정확히 반영하는 정산식이지, 기둥 좌표를 억지로 하나의 역행렬로 정하라는 명령이 아니다.
 

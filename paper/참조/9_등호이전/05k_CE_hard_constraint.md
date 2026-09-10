@@ -179,7 +179,7 @@ Good-rate 성질은 functional의 성질이므로 그대로다. 05 브리지의 
 
 일반 measurable constraint $A$가 원래 최소집합을 제거하면 restricted
 support 위의 새 최소집합을 사용해야 한다. 정확한 조건은
-[../../검증_원장/등호이전_CE_supp_scaling_audit.md](../검증_원장/등호이전_CE_supp_scaling_audit.md) 4절에
+[../../검증_원장/등호이전_CE_supp_scaling_audit.md](../../검증_원장/등호이전_CE_supp_scaling_audit.md) 4절에
 있다.
 
 ## 5. Smooth tilt와 threshold 분율

@@ -6,7 +6,7 @@
 
 최소 생성 문법은 설계 영감을 줄 수 있지만 attention 구조를 유일하게 정하지 않는다. 이 절은 이식의 출발점과 공학적 가설의 경계를 분리한다.
 
-`paper/경로적분.md` §51-67은 `{e, π, i, 1, 0}`을 CE의 **최소 생성 문법**으로 규정한다.
+`paper/06_QFT_재설계/36A_조건부_장론과_확률_코어.md` §51-67은 `{e, π, i, 1, 0}`을 CE의 **최소 생성 문법**으로 규정한다.
 
 | 상수 | 코어 역할 | 대표 출력 | 등급 |
 |---|---|---|---|
@@ -266,4 +266,4 @@ python3 examples/ai/bench_riemann_ffn_init.py --steps 300 --seeds 3
 - Riemann 영점 첫 100개: `reality_stone/python/reality_stone/clarus/ce_riemann_attn.py::RIEMANN_ZEROS_IM` (Titchmarsh 표, Odlyzko 검증)
 - Euler 상수 bitfield: `reality_stone/python/reality_stone/clarus/ce_euler.py::EULER_BASIS`
 - Borbély $T_{\text{WAKE}} = 1/(3 + \text{AD}(1-\text{AD}))$: `reality_stone/python/reality_stone/clarus/constants.py`
-- 모든 유도는 `paper/경로적분.md` §51-67 최소생성문법과 `paper/참조/1_강의/A_연역적_유도.md` §801 고정점 개념에 근거.
+- 모든 유도는 `paper/06_QFT_재설계/36A_조건부_장론과_확률_코어.md` §51-67 최소생성문법과 `paper/참조/1_강의/A_연역적_유도.md` §801 고정점 개념에 근거.

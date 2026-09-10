@@ -1,0 +1,132 @@
+{
+  "candidate": "CE-GR4",
+  "curvature": [
+    {
+      "theta": 0.0,
+      "pairs": [
+        {
+          "directions": [
+            1,
+            2
+          ],
+          "cross_curvature_HS_squared": 14.999999999999986,
+          "mass_curvature_commutator_HS_squared": 119.99999999999989
+        },
+        {
+          "directions": [
+            2,
+            3
+          ],
+          "cross_curvature_HS_squared": 14.99999999999999,
+          "mass_curvature_commutator_HS_squared": 119.99999999999991
+        },
+        {
+          "directions": [
+            3,
+            1
+          ],
+          "cross_curvature_HS_squared": 14.999999999999988,
+          "mass_curvature_commutator_HS_squared": 119.9999999999999
+        }
+      ]
+    },
+    {
+      "theta": 0.7,
+      "pairs": [
+        {
+          "directions": [
+            1,
+            2
+          ],
+          "cross_curvature_HS_squared": 14.99999999999999,
+          "mass_curvature_commutator_HS_squared": 119.99999999999991
+        },
+        {
+          "directions": [
+            2,
+            3
+          ],
+          "cross_curvature_HS_squared": 14.999999999999991,
+          "mass_curvature_commutator_HS_squared": 119.99999999999993
+        },
+        {
+          "directions": [
+            3,
+            1
+          ],
+          "cross_curvature_HS_squared": 14.999999999999991,
+          "mass_curvature_commutator_HS_squared": 119.99999999999993
+        }
+      ]
+    },
+    {
+      "theta": 3.141592653589793,
+      "pairs": [
+        {
+          "directions": [
+            1,
+            2
+          ],
+          "cross_curvature_HS_squared": 14.999999999999988,
+          "mass_curvature_commutator_HS_squared": 119.9999999999999
+        },
+        {
+          "directions": [
+            2,
+            3
+          ],
+          "cross_curvature_HS_squared": 14.99999999999999,
+          "mass_curvature_commutator_HS_squared": 119.99999999999991
+        },
+        {
+          "directions": [
+            3,
+            1
+          ],
+          "cross_curvature_HS_squared": 14.99999999999999,
+          "mass_curvature_commutator_HS_squared": 119.99999999999991
+        }
+      ]
+    }
+  ],
+  "path": {
+    "old_chart_minimum_overlap_singular_value": 1.5725989193199288e-17,
+    "results": [
+      {
+        "steps": 16,
+        "inner_product_error": 2.1075785495079373e-13,
+        "light_projection_error": 1.2203314676080812e-14,
+        "complement_leakage": 1.5552019561900939e-15
+      },
+      {
+        "steps": 32,
+        "inner_product_error": 3.5408654595367906e-13,
+        "light_projection_error": 1.7968059269881973e-14,
+        "complement_leakage": 1.9671726027888977e-15
+      },
+      {
+        "steps": 64,
+        "inner_product_error": 7.057171380763318e-13,
+        "light_projection_error": 3.268676036576111e-14,
+        "complement_leakage": 3.088077382986503e-15
+      }
+    ],
+    "successive_changes": [
+      0.0035602252429203724,
+      0.0008881351270185467
+    ],
+    "change_ratio": 0.24946037579634414
+  },
+  "limits": [
+    "Prescribed radial preparation is an additional assumption",
+    "Complement curvature does not commute with the rising spectrum",
+    "Finite L=1 path is an algebra check, not an accurate infinite frame cutoff"
+  ],
+  "source_sha256": {
+    "ce_radial_transport_holonomy.py": "5766abccb0fb52c16af53c54f51ea472407aba19fe262b475b3f774cce5c3db3",
+    "ce_common_isotropic_frame.py": "3a281820ab956cfb7caf0dabf6d7a587b605d9898a5853a13a2e059b3858e9f8",
+    "ce_isometric_color_frame.py": "625dcf6a135ba38876d21a7764c9f7cb15cd582a25b5fb345a06ab2518e778fa",
+    "ce_finite_rank_transport.py": "b93c133a9e3f4fe06c68d3bd9841422c52bafd1b38c9f03d68880d2e8045efbf",
+    "ce_projector_one_loop.py": "10d386ff54650f0d8b445d27cf1b5130657917baab6df2421298cfeab0ee96e2"
+  }
+}

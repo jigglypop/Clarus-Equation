@@ -1,0 +1,393 @@
+{
+  "candidate": "CE-MR1",
+  "standard_anomalies": {
+    "SU3_cubic": 0,
+    "SU3_squared_U1": 0,
+    "SU2_squared_U1": 0,
+    "gravity_squared_U1": 0,
+    "U1_cubic": 0,
+    "SU2_doublet_parity": 0
+  },
+  "matrix_standard": {
+    "max_symmetric_triple_trace": 1.7763568394002505e-15,
+    "max_linear_trace": 0.0,
+    "hermiticity_error": 0.0,
+    "commuting_factors_error": 0.0
+  },
+  "matrix_swapped": {
+    "max_symmetric_triple_trace": 8.881784197001252e-16,
+    "max_linear_trace": 0.0,
+    "hermiticity_error": 0.0,
+    "commuting_factors_error": 0.0
+  },
+  "negative_control": {
+    "max_symmetric_triple_trace": 182.0,
+    "max_linear_trace": 1.0,
+    "hermiticity_error": 0.0,
+    "commuting_factors_error": 0.0
+  },
+  "cubic_after_linear_constraints": {
+    "q^3 u^0": 144,
+    "q^2 u^1": -36,
+    "q^1 u^2": -18
+  },
+  "center_kernel": [
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      1,
+      1,
+      1
+    ],
+    [
+      2,
+      0,
+      2
+    ],
+    [
+      3,
+      1,
+      0
+    ],
+    [
+      4,
+      0,
+      1
+    ],
+    [
+      5,
+      1,
+      2
+    ]
+  ],
+  "right_neutrino_mixed_cubic_coefficients": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "right_neutrino_families": [
+    {
+      "alpha": -2,
+      "beta": -2,
+      "charges": [
+        -4,
+        10,
+        -2,
+        12,
+        -18,
+        -6
+      ]
+    },
+    {
+      "alpha": -2,
+      "beta": -1,
+      "charges": [
+        -3,
+        9,
+        -3,
+        9,
+        -15,
+        -3
+      ]
+    },
+    {
+      "alpha": -2,
+      "beta": 0,
+      "charges": [
+        -2,
+        8,
+        -4,
+        6,
+        -12,
+        0
+      ]
+    },
+    {
+      "alpha": -2,
+      "beta": 1,
+      "charges": [
+        -1,
+        7,
+        -5,
+        3,
+        -9,
+        3
+      ]
+    },
+    {
+      "alpha": -2,
+      "beta": 2,
+      "charges": [
+        0,
+        6,
+        -6,
+        0,
+        -6,
+        6
+      ]
+    },
+    {
+      "alpha": -1,
+      "beta": -2,
+      "charges": [
+        -3,
+        6,
+        0,
+        9,
+        -12,
+        -6
+      ]
+    },
+    {
+      "alpha": -1,
+      "beta": -1,
+      "charges": [
+        -2,
+        5,
+        -1,
+        6,
+        -9,
+        -3
+      ]
+    },
+    {
+      "alpha": -1,
+      "beta": 0,
+      "charges": [
+        -1,
+        4,
+        -2,
+        3,
+        -6,
+        0
+      ]
+    },
+    {
+      "alpha": -1,
+      "beta": 1,
+      "charges": [
+        0,
+        3,
+        -3,
+        0,
+        -3,
+        3
+      ]
+    },
+    {
+      "alpha": -1,
+      "beta": 2,
+      "charges": [
+        1,
+        2,
+        -4,
+        -3,
+        0,
+        6
+      ]
+    },
+    {
+      "alpha": 0,
+      "beta": -2,
+      "charges": [
+        -2,
+        2,
+        2,
+        6,
+        -6,
+        -6
+      ]
+    },
+    {
+      "alpha": 0,
+      "beta": -1,
+      "charges": [
+        -1,
+        1,
+        1,
+        3,
+        -3,
+        -3
+      ]
+    },
+    {
+      "alpha": 0,
+      "beta": 0,
+      "charges": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "alpha": 0,
+      "beta": 1,
+      "charges": [
+        1,
+        -1,
+        -1,
+        -3,
+        3,
+        3
+      ]
+    },
+    {
+      "alpha": 0,
+      "beta": 2,
+      "charges": [
+        2,
+        -2,
+        -2,
+        -6,
+        6,
+        6
+      ]
+    },
+    {
+      "alpha": 1,
+      "beta": -2,
+      "charges": [
+        -1,
+        -2,
+        4,
+        3,
+        0,
+        -6
+      ]
+    },
+    {
+      "alpha": 1,
+      "beta": -1,
+      "charges": [
+        0,
+        -3,
+        3,
+        0,
+        3,
+        -3
+      ]
+    },
+    {
+      "alpha": 1,
+      "beta": 0,
+      "charges": [
+        1,
+        -4,
+        2,
+        -3,
+        6,
+        0
+      ]
+    },
+    {
+      "alpha": 1,
+      "beta": 1,
+      "charges": [
+        2,
+        -5,
+        1,
+        -6,
+        9,
+        3
+      ]
+    },
+    {
+      "alpha": 1,
+      "beta": 2,
+      "charges": [
+        3,
+        -6,
+        0,
+        -9,
+        12,
+        6
+      ]
+    },
+    {
+      "alpha": 2,
+      "beta": -2,
+      "charges": [
+        0,
+        -6,
+        6,
+        0,
+        6,
+        -6
+      ]
+    },
+    {
+      "alpha": 2,
+      "beta": -1,
+      "charges": [
+        1,
+        -7,
+        5,
+        -3,
+        9,
+        -3
+      ]
+    },
+    {
+      "alpha": 2,
+      "beta": 0,
+      "charges": [
+        2,
+        -8,
+        4,
+        -6,
+        12,
+        0
+      ]
+    },
+    {
+      "alpha": 2,
+      "beta": 1,
+      "charges": [
+        3,
+        -9,
+        3,
+        -9,
+        15,
+        3
+      ]
+    },
+    {
+      "alpha": 2,
+      "beta": 2,
+      "charges": [
+        4,
+        -10,
+        2,
+        -12,
+        18,
+        6
+      ]
+    }
+  ],
+  "Yukawa_charge_sums": [
+    0,
+    0,
+    0
+  ],
+  "three_generations": {
+    "internal_Weyl_components": 45,
+    "SU2_doublets": 12
+  },
+  "source_sha256": {
+    "ce_matter_representation_anomalies.py": "a04c4a89bdb9e8b030c534b0934eedfec80236714c8a965622fd30235f028c36",
+    "ce_common_isotropic_frame.py": "3a281820ab956cfb7caf0dabf6d7a587b605d9898a5853a13a2e059b3858e9f8",
+    "ce_isometric_color_frame.py": "625dcf6a135ba38876d21a7764c9f7cb15cd582a25b5fb345a06ab2518e778fa"
+  },
+  "limits": [
+    "Matter content, chirality, spin geometry and Higgs are supplied",
+    "Matter kernel does not fix the full theory global gauge group",
+    "No independent gauge vectors, Yukawa values or Einstein dynamics derived"
+  ]
+}

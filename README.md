@@ -218,14 +218,15 @@ Python 환경이 준비돼 있다면 다음 명령으로 핵심 계산을 재현
 
 ```powershell
 python -B -m pytest -p no:cacheprovider tests\test_repository_harness.py -q
-python -B -m pytest -p no:cacheprovider tests\test_cosmology.py -q
-python -B verify\Q-0020\bath_recycling.py
-python -B -m pytest -p no:cacheprovider tests\test_bath_recycling.py -q
-python -B -m pytest -p no:cacheprovider tests\test_causal_light_geometry.py -q
-python -B paper\2_경로적분과_응용\validate_manuscript.py
+python -B -m pytest -p no:cacheprovider tests\test_contextual_obstruction.py tests\test_finite_ctp_diagonal_source_obstruction.py -q
+python -B -m pytest -p no:cacheprovider tests\test_zerod_plebanski_closure.py tests\test_regge_tent_transfer.py -q
+python -B -m pytest -p no:cacheprovider tests\test_ce_residual_forward_model.py tests\test_dimension_joint_candidate.py -q
 ```
 
-전체 회귀는 사용자가 명시적으로 요구한 경우에만 실행한다.
+`paper/참조/2_경로적분과_응용/validate_manuscript.py`는 삭제된 과거 계산 모듈에 의존하므로 현재 재현 명령에서 제외한다.
+
+전체 회귀는 12개 필수 파일로 제한한다. SciPy가 없는 최소 환경에서는
+`test_dimension_joint_candidate.py` 수집이 불가능하므로 `requirements-harness.txt`를 먼저 설치한다.
 
 ```powershell
 python -B -m pytest -p no:cacheprovider -q
@@ -236,9 +237,9 @@ python -B -m pytest -p no:cacheprovider -q
 1. [문서 지도](paper/README.md)
 2. [검증 규약](paper/검증_원장/경로적분_검증_규약.md)
 3. [형식 구조 원장](paper/검증_원장/경로적분_전체_진리값_감사.md)
-4. [공리·기호 사전](paper/axium.md)
-5. [계산 체인](paper/경로적분.md)
-6. [상수 후보식과 검증](paper/상수.md)
+4. [공리·기호 사전](paper/00_기원과_현재계획/15_CE_공리계와_모형_사전.md)
+5. [계산 체인](paper/06_QFT_재설계/36A_조건부_장론과_확률_코어.md)
+6. [상수 후보식과 검증](paper/검증_원장/상수_조건부_산출_원장.md)
 
 `paper/참조/2_경로적분과_응용/`은 장별 전제·증명·공리·산출을,
 `paper/참조/4_공학적_활용/`은 공학 적용의 입력과 미완성 항목을 담는다.

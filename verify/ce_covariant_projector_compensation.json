@@ -1,0 +1,231 @@
+{
+  "candidate": "CE-GC1",
+  "tolerance": 1e-12,
+  "inputs": {
+    "times": [
+      0.0,
+      0.25,
+      0.5,
+      1.0
+    ],
+    "energy_a": 1.0,
+    "energy_b": 5.0,
+    "ell": 1.0,
+    "hbar": 1.0,
+    "initial_state": "|11>",
+    "fit_parameters": 0
+  },
+  "spatial": [
+    {
+      "q": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "errors": {
+        "normalization": 0.0,
+        "antihermitian_connection": 0.0,
+        "covariant_projector": 0.0,
+        "covariant_normal_derivative": 0.0,
+        "projected_connection_preserved": 0.0,
+        "original_metric_identity": 0.0,
+        "original_normal_mass_identity": 0.0,
+        "covariant_normal_metric_zero": 0.0,
+        "covariant_normal_mass_zero": 0.0,
+        "curvature_and_projection": 0.0
+      },
+      "original_normal_mass_trace": 3.0,
+      "covariant_normal_mass_trace": 0.0,
+      "covariant_normal_metric_rank_at_tolerance": 0,
+      "retained_curvature_frobenius_norms": [
+        1.4142135623730951,
+        1.4142135623730951,
+        1.4142135623730951
+      ]
+    },
+    {
+      "q": [
+        0.25,
+        0.0,
+        0.0
+      ],
+      "errors": {
+        "normalization": 1.1102230246251565e-16,
+        "antihermitian_connection": 0.0,
+        "covariant_projector": 2.220446049250313e-16,
+        "covariant_normal_derivative": 2.2176027087333056e-16,
+        "projected_connection_preserved": 8.951286814294795e-18,
+        "original_metric_identity": 2.220446049250313e-16,
+        "original_normal_mass_identity": 2.220446049250313e-16,
+        "covariant_normal_metric_zero": 2.2204460492503136e-16,
+        "covariant_normal_mass_zero": 2.2204460492503136e-16,
+        "curvature_and_projection": 4.440892098500626e-16
+      },
+      "original_normal_mass_trace": 3.0,
+      "covariant_normal_mass_trace": 6.05732859368868e-16,
+      "covariant_normal_metric_rank_at_tolerance": 0,
+      "retained_curvature_frobenius_norms": [
+        1.4142135623730947,
+        1.4142135623730947,
+        1.4142135623730947
+      ]
+    },
+    {
+      "q": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "errors": {
+        "normalization": 2.5802204073195862e-17,
+        "antihermitian_connection": 0.0,
+        "covariant_projector": 0.0,
+        "covariant_normal_derivative": 2.1369845897353654e-17,
+        "projected_connection_preserved": 2.5802204073195862e-17,
+        "original_metric_identity": 0.0,
+        "original_normal_mass_identity": 1.2495472284403287e-17,
+        "covariant_normal_metric_zero": 2.4357809155505582e-17,
+        "covariant_normal_mass_zero": 2.4357809155505582e-17,
+        "curvature_and_projection": 5.1604408146391724e-17
+      },
+      "original_normal_mass_trace": 3.0,
+      "covariant_normal_mass_trace": -4.8715618311011164e-17,
+      "covariant_normal_metric_rank_at_tolerance": 0,
+      "retained_curvature_frobenius_norms": [
+        1.4142135623730951,
+        1.4142135623730951,
+        1.4142135623730951
+      ]
+    },
+    {
+      "q": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "errors": {
+        "normalization": 2.3419586346110148e-17,
+        "antihermitian_connection": 0.0,
+        "covariant_projector": 2.220446049250313e-16,
+        "covariant_normal_derivative": 2.0770002939318556e-16,
+        "projected_connection_preserved": 2.220446049250313e-16,
+        "original_metric_identity": 1.1102230246251565e-16,
+        "original_normal_mass_identity": 1.1102230246251565e-16,
+        "covariant_normal_metric_zero": 1.0669662911767385e-16,
+        "covariant_normal_mass_zero": 1.0669662911767385e-16,
+        "curvature_and_projection": 2.220446049250313e-16
+      },
+      "original_normal_mass_trace": 3.0,
+      "covariant_normal_mass_trace": -2.0011867530644697e-16,
+      "covariant_normal_metric_rank_at_tolerance": 0,
+      "retained_curvature_frobenius_norms": [
+        1.4142135623730951,
+        1.4142135623730951,
+        1.4142135623730951
+      ]
+    }
+  ],
+  "temporal": [
+    {
+      "t": 0.0,
+      "ordinary_P_probability": 1.3030509415547676e-34,
+      "closed_form_P_probability": 0.0,
+      "compensated_P_probability": 0.0,
+      "drive_operator_norm": 1.0,
+      "ordinary_P_conservation_operator_error": 4.440892098500626e-16,
+      "errors": {
+        "ordinary_unitarity": 4.440892098500626e-16,
+        "compensated_unitarity": 4.440892098500626e-16,
+        "ordinary_equation": 5.394667409202009e-17,
+        "compensated_equation": 2.2371143170757382e-17,
+        "supplied_drive": 0.0,
+        "all_state_intertwining": 4.440892098500626e-16,
+        "instantaneous_conservation_operator": 0.0,
+        "ordinary_probability_closed_form": 1.3030509415547676e-34,
+        "compensated_probability_zero": 0.0,
+        "ordinary_instantaneous_energy": 1.7763568394002505e-15
+      }
+    },
+    {
+      "t": 0.25,
+      "ordinary_P_probability": 0.05625487892674007,
+      "closed_form_P_probability": 0.0562548789267401,
+      "compensated_P_probability": 9.463040011402334e-19,
+      "drive_operator_norm": 0.9999999999999998,
+      "ordinary_P_conservation_operator_error": 0.23041325379343494,
+      "errors": {
+        "ordinary_unitarity": 5.551115123125783e-16,
+        "compensated_unitarity": 3.3306690738754696e-16,
+        "ordinary_equation": 9.930136612989092e-16,
+        "compensated_equation": 5.613217783960923e-16,
+        "supplied_drive": 1.1102230246251565e-16,
+        "all_state_intertwining": 4.440892098500626e-16,
+        "instantaneous_conservation_operator": 2.7755575615628914e-16,
+        "ordinary_probability_closed_form": 3.469446951953614e-17,
+        "compensated_probability_zero": 9.463040011402334e-19,
+        "ordinary_instantaneous_energy": 8.881784197001252e-16
+      }
+    },
+    {
+      "t": 0.5,
+      "ordinary_P_probability": 0.16172728764571664,
+      "closed_form_P_probability": 0.16172728764571667,
+      "compensated_P_probability": 0.0,
+      "drive_operator_norm": 1.0,
+      "ordinary_P_conservation_operator_error": 0.3682004509455092,
+      "errors": {
+        "ordinary_unitarity": 2.220446049250313e-16,
+        "compensated_unitarity": 1.1102230246251565e-16,
+        "ordinary_equation": 6.280369834735101e-16,
+        "compensated_equation": 4.440892098500626e-16,
+        "supplied_drive": 0.0,
+        "all_state_intertwining": 1.1102230246251565e-16,
+        "instantaneous_conservation_operator": 1.1102230246251565e-16,
+        "ordinary_probability_closed_form": 2.7755575615628914e-17,
+        "compensated_probability_zero": 0.0,
+        "ordinary_instantaneous_energy": 8.881784197001252e-16
+      }
+    },
+    {
+      "t": 1.0,
+      "ordinary_P_probability": 0.12379483919805905,
+      "closed_form_P_probability": 0.12379483919805909,
+      "compensated_P_probability": -1.1855817114315173e-18,
+      "drive_operator_norm": 1.0000000000000002,
+      "ordinary_P_conservation_operator_error": 0.32934735005156135,
+      "errors": {
+        "ordinary_unitarity": 4.440892098500626e-16,
+        "compensated_unitarity": 3.3306690738754696e-16,
+        "ordinary_equation": 9.930136612989092e-16,
+        "compensated_equation": 3.510833468576701e-16,
+        "supplied_drive": 2.220446049250313e-16,
+        "all_state_intertwining": 3.3306690738754696e-16,
+        "instantaneous_conservation_operator": 2.220446049250313e-16,
+        "ordinary_probability_closed_form": 4.163336342344337e-17,
+        "compensated_probability_zero": 1.1855817114315173e-18,
+        "ordinary_instantaneous_energy": 2.6645352591003757e-15
+      }
+    }
+  ],
+  "gauge_law": {
+    "fixed_projector_gauge_law_mismatch_frobenius": 1.7320508075688772,
+    "both_connections_preserve_P": true,
+    "off_diagonal_rule_is_full_connection_gauge_law": false
+  },
+  "maximum_identity_error": 2.6645352591003757e-15,
+  "environment": {
+    "python": "3.14.2",
+    "numpy": "2.4.4"
+  },
+  "source_sha256": {
+    "ce_covariant_projector_compensation.py": "342f152c0713c544952caebc96a61c3d840579dffe80b66fd9e36482bba2c899",
+    "ce_isometric_color_frame.py": "625dcf6a135ba38876d21a7764c9f7cb15cd582a25b5fb345a06ab2518e778fa"
+  },
+  "limits": [
+    "A new supplied connection changes the original action.",
+    "Normal mass uses the fixed old metric; the new normal metric is singular.",
+    "Berry curvature survives; no complete effective action was evaluated.",
+    "P/Q nonmixing holds for compatible free dynamics, not arbitrary interactions.",
+    "No physical gauge completion, autonomous record or Einstein limit is derived."
+  ]
+}

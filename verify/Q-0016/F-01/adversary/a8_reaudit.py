@@ -67,12 +67,12 @@ R["R_max_abs_err"] = max(r["abs_err"] for r in rows)
 R["KT_window_excludes_s_band_0p71"] = all(not r["in_KT_window"] for r in rows if r["s"] <= 0.9)
 
 # ---- (3) selftest + not_implemented path re-run
-st = subprocess.run([str(ROOT / ".claude/hooks/python.cmd"), "python",
+st = subprocess.run([sys.executable,
                      "verify/Q-0016/F-01/check_selfrecursion_split.py", "--selftest"],
                     cwd=str(ROOT), capture_output=True, text=True)
 R["selftest_stdout"] = st.stdout.strip()[-400:]
 R["selftest_returncode"] = st.returncode
-ni = subprocess.run([str(ROOT / ".claude/hooks/python.cmd"), "python",
+ni = subprocess.run([sys.executable,
                      "verify/Q-0016/F-01/check_selfrecursion_split.py"],
                     cwd=str(ROOT), capture_output=True, text=True)
 R["not_implemented_stdout"] = ni.stdout.strip()[-400:]

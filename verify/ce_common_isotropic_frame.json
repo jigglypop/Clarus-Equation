@@ -1,0 +1,511 @@
+{
+  "candidate": "CE-GN3",
+  "status": "conditional common isotropic geometry; no dynamical force unification claimed",
+  "analytic": {
+    "gauge_metric_coefficient": 3,
+    "rows": [
+      {
+        "theta": 0.0,
+        "common_metric_coefficient": 27,
+        "diagonal_mass_coefficients": [
+          0.16666666666666666,
+          0.19444444444444445,
+          0.14814814814814814
+        ],
+        "shared_cyclic_epsilon": 0.022222222222222223,
+        "mass_eigenvalues": [
+          0.12592592592592589,
+          0.12592592592592589,
+          0.12592592592592589,
+          0.12592592592592594,
+          0.12592592592592594,
+          0.12592592592592594,
+          0.14444444444444443,
+          0.14444444444444446,
+          0.1722222222222222,
+          0.1722222222222222,
+          0.17222222222222225,
+          0.17222222222222225,
+          0.19259259259259254,
+          0.19259259259259254,
+          0.19259259259259254,
+          0.21111111111111114,
+          0.23888888888888887,
+          0.23888888888888887
+        ]
+      },
+      {
+        "theta": 0.7,
+        "common_metric_coefficient": 27,
+        "diagonal_mass_coefficients": [
+          0.16666666666666666,
+          0.19444444444444445,
+          0.14814814814814814
+        ],
+        "shared_cyclic_epsilon": 0.022222222222222223,
+        "mass_eigenvalues": [
+          0.11762839309797322,
+          0.11762839309797322,
+          0.11762839309797322,
+          0.13542785599470306,
+          0.13542785599470306,
+          0.13542785599470306,
+          0.13614691161649173,
+          0.15394637451322155,
+          0.16392468939426955,
+          0.16392468939426955,
+          0.18172415229099936,
+          0.18172415229099936,
+          0.1913881953517682,
+          0.1913881953517682,
+          0.1913881953517682,
+          0.2099067138702867,
+          0.23768449164806454,
+          0.23768449164806454
+        ]
+      },
+      {
+        "theta": 3.141592653589793,
+        "common_metric_coefficient": 27,
+        "diagonal_mass_coefficients": [
+          0.16666666666666666,
+          0.19444444444444445,
+          0.14814814814814814
+        ],
+        "shared_cyclic_epsilon": 0.022222222222222223,
+        "mass_eigenvalues": [
+          0.10370370370370367,
+          0.10370370370370367,
+          0.10370370370370367,
+          0.12222222222222215,
+          0.14999999999999994,
+          0.14999999999999994,
+          0.17037037037037034,
+          0.17037037037037034,
+          0.17037037037037034,
+          0.1703703703703704,
+          0.1703703703703704,
+          0.1703703703703704,
+          0.1888888888888888,
+          0.18888888888888886,
+          0.21666666666666662,
+          0.21666666666666662,
+          0.21666666666666665,
+          0.21666666666666665
+        ]
+      }
+    ],
+    "holonomy": {
+      "initial_generator_span_rank": 11,
+      "exact_combined_rank": 12,
+      "rank_on_18_component_frame": 12,
+      "method": "joint curvature, covariant derivatives and full commutator closure; rational witness elimination",
+      "group_choice_not_derived": true
+    }
+  },
+  "cutoff": [
+    {
+      "theta": 0.0,
+      "q": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "cutoff": 4,
+      "ambient_gauge_dimension": 45,
+      "discarded_norm_squared_upper_bound": 0.0,
+      "metric_max_error": 1.0658141036401503e-14,
+      "mass_max_error": 1.1102230246251565e-16,
+      "color_traceless_norm": 1.5920683837060076e-19
+    },
+    {
+      "theta": 0.0,
+      "q": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "cutoff": 8,
+      "ambient_gauge_dimension": 101,
+      "discarded_norm_squared_upper_bound": 0.0,
+      "metric_max_error": 1.0658141036401503e-14,
+      "mass_max_error": 1.1102230246251565e-16,
+      "color_traceless_norm": 1.5920683837060076e-19
+    },
+    {
+      "theta": 0.0,
+      "q": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "cutoff": 16,
+      "ambient_gauge_dimension": 309,
+      "discarded_norm_squared_upper_bound": 0.0,
+      "metric_max_error": 1.0658141036401503e-14,
+      "mass_max_error": 1.1102230246251565e-16,
+      "color_traceless_norm": 1.5920683837060076e-19
+    },
+    {
+      "theta": 0.0,
+      "q": [
+        0.2,
+        0.3,
+        0.4
+      ],
+      "cutoff": 4,
+      "ambient_gauge_dimension": 45,
+      "discarded_norm_squared_upper_bound": 4.144827252005244e-06,
+      "metric_max_error": 0.003835823812870842,
+      "mass_max_error": 6.031510639960963e-06,
+      "color_traceless_norm": 4.060556453059554e-06
+    },
+    {
+      "theta": 0.0,
+      "q": [
+        0.2,
+        0.3,
+        0.4
+      ],
+      "cutoff": 8,
+      "ambient_gauge_dimension": 101,
+      "discarded_norm_squared_upper_bound": 3.218795709739145e-12,
+      "metric_max_error": 9.397567168889509e-09,
+      "mass_max_error": 1.652697423359939e-11,
+      "color_traceless_norm": 1.0466981510188863e-11
+    },
+    {
+      "theta": 0.0,
+      "q": [
+        0.2,
+        0.3,
+        0.4
+      ],
+      "cutoff": 16,
+      "ambient_gauge_dimension": 309,
+      "discarded_norm_squared_upper_bound": 2.0480059456871763e-26,
+      "metric_max_error": 1.0658141036401503e-14,
+      "mass_max_error": 5.551115847894952e-17,
+      "color_traceless_norm": 6.981601113267996e-18
+    },
+    {
+      "theta": 0.0,
+      "q": [
+        1.0,
+        -0.5,
+        0.7
+      ],
+      "cutoff": 4,
+      "ambient_gauge_dimension": 45,
+      "discarded_norm_squared_upper_bound": 0.015168449327697623,
+      "metric_max_error": 1.5621873144750182,
+      "mass_max_error": 0.0021776504580084295,
+      "color_traceless_norm": 0.0017281566812686977
+    },
+    {
+      "theta": 0.0,
+      "q": [
+        1.0,
+        -0.5,
+        0.7
+      ],
+      "cutoff": 8,
+      "ambient_gauge_dimension": 101,
+      "discarded_norm_squared_upper_bound": 1.637624168738988e-05,
+      "metric_max_error": 0.005913400122462775,
+      "mass_max_error": 1.0159836773292186e-05,
+      "color_traceless_norm": 6.597975687592187e-06
+    },
+    {
+      "theta": 0.0,
+      "q": [
+        1.0,
+        -0.5,
+        0.7
+      ],
+      "cutoff": 16,
+      "ambient_gauge_dimension": 309,
+      "discarded_norm_squared_upper_bound": 2.292265064139049e-13,
+      "metric_max_error": 3.3647040709183784e-10,
+      "mass_max_error": 5.997667640311732e-13,
+      "color_traceless_norm": 3.768462631835075e-13
+    },
+    {
+      "theta": 0.7,
+      "q": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "cutoff": 4,
+      "ambient_gauge_dimension": 45,
+      "discarded_norm_squared_upper_bound": 0.0,
+      "metric_max_error": 7.81820899778701e-17,
+      "mass_max_error": 1.110223241607929e-16,
+      "color_traceless_norm": 1.5920683837060064e-19
+    },
+    {
+      "theta": 0.7,
+      "q": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "cutoff": 8,
+      "ambient_gauge_dimension": 101,
+      "discarded_norm_squared_upper_bound": 0.0,
+      "metric_max_error": 7.81820899778701e-17,
+      "mass_max_error": 1.110223241607929e-16,
+      "color_traceless_norm": 1.5920683837060064e-19
+    },
+    {
+      "theta": 0.7,
+      "q": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "cutoff": 16,
+      "ambient_gauge_dimension": 309,
+      "discarded_norm_squared_upper_bound": 0.0,
+      "metric_max_error": 7.81820899778701e-17,
+      "mass_max_error": 1.110223241607929e-16,
+      "color_traceless_norm": 1.5920683837060064e-19
+    },
+    {
+      "theta": 0.7,
+      "q": [
+        0.2,
+        0.3,
+        0.4
+      ],
+      "cutoff": 4,
+      "ambient_gauge_dimension": 45,
+      "discarded_norm_squared_upper_bound": 3.9924088504105465e-06,
+      "metric_max_error": 0.003773300266356472,
+      "mass_max_error": 5.737924550796859e-06,
+      "color_traceless_norm": 3.9945375648618644e-06
+    },
+    {
+      "theta": 0.7,
+      "q": [
+        0.2,
+        0.3,
+        0.4
+      ],
+      "cutoff": 8,
+      "ambient_gauge_dimension": 101,
+      "discarded_norm_squared_upper_bound": 3.0059868465046453e-12,
+      "metric_max_error": 8.847088395214087e-09,
+      "mass_max_error": 1.5420976959761374e-11,
+      "color_traceless_norm": 9.853918431390041e-12
+    },
+    {
+      "theta": 0.7,
+      "q": [
+        0.2,
+        0.3,
+        0.4
+      ],
+      "cutoff": 16,
+      "ambient_gauge_dimension": 309,
+      "discarded_norm_squared_upper_bound": 1.7974477246060156e-26,
+      "metric_max_error": 3.552713678800501e-15,
+      "mass_max_error": 5.555730851495564e-17,
+      "color_traceless_norm": 9.843322747653143e-18
+    },
+    {
+      "theta": 0.7,
+      "q": [
+        1.0,
+        -0.5,
+        0.7
+      ],
+      "cutoff": 4,
+      "ambient_gauge_dimension": 45,
+      "discarded_norm_squared_upper_bound": 0.014711491639632578,
+      "metric_max_error": 1.5567615614999788,
+      "mass_max_error": 0.002085694837576313,
+      "color_traceless_norm": 0.001722553900191304
+    },
+    {
+      "theta": 0.7,
+      "q": [
+        1.0,
+        -0.5,
+        0.7
+      ],
+      "cutoff": 8,
+      "ambient_gauge_dimension": 101,
+      "discarded_norm_squared_upper_bound": 1.541656482197447e-05,
+      "metric_max_error": 0.005643075656198704,
+      "mass_max_error": 9.552770544484336e-06,
+      "color_traceless_norm": 6.296387689314669e-06
+    },
+    {
+      "theta": 0.7,
+      "q": [
+        1.0,
+        -0.5,
+        0.7
+      ],
+      "cutoff": 16,
+      "ambient_gauge_dimension": 309,
+      "discarded_norm_squared_upper_bound": 2.0290984433104657e-13,
+      "metric_max_error": 2.984030800234905e-10,
+      "mass_max_error": 5.339299509335945e-13,
+      "color_traceless_norm": 3.342099171798781e-13
+    },
+    {
+      "theta": 3.141592653589793,
+      "q": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "cutoff": 4,
+      "ambient_gauge_dimension": 45,
+      "discarded_norm_squared_upper_bound": 0.0,
+      "metric_max_error": 7.105427357601002e-15,
+      "mass_max_error": 1.3880388671910264e-16,
+      "color_traceless_norm": 1.5920683837060076e-19
+    },
+    {
+      "theta": 3.141592653589793,
+      "q": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "cutoff": 8,
+      "ambient_gauge_dimension": 101,
+      "discarded_norm_squared_upper_bound": 0.0,
+      "metric_max_error": 7.105427357601002e-15,
+      "mass_max_error": 1.3880388671910264e-16,
+      "color_traceless_norm": 1.5920683837060076e-19
+    },
+    {
+      "theta": 3.141592653589793,
+      "q": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "cutoff": 16,
+      "ambient_gauge_dimension": 309,
+      "discarded_norm_squared_upper_bound": 0.0,
+      "metric_max_error": 7.105427357601002e-15,
+      "mass_max_error": 1.3880388671910264e-16,
+      "color_traceless_norm": 1.5920683837060076e-19
+    },
+    {
+      "theta": 3.141592653589793,
+      "q": [
+        0.2,
+        0.3,
+        0.4
+      ],
+      "cutoff": 4,
+      "ambient_gauge_dimension": 45,
+      "discarded_norm_squared_upper_bound": 1.9677729773003165e-06,
+      "metric_max_error": 0.003303858194019682,
+      "mass_max_error": 2.5702100327602777e-06,
+      "color_traceless_norm": 3.498859693095054e-06
+    },
+    {
+      "theta": 3.141592653589793,
+      "q": [
+        0.2,
+        0.3,
+        0.4
+      ],
+      "cutoff": 8,
+      "ambient_gauge_dimension": 101,
+      "discarded_norm_squared_upper_bound": 8.272128537120398e-13,
+      "metric_max_error": 4.800234876256582e-09,
+      "mass_max_error": 3.644657164006572e-12,
+      "color_traceless_norm": 5.346863986636918e-12
+    },
+    {
+      "theta": 3.141592653589793,
+      "q": [
+        0.2,
+        0.3,
+        0.4
+      ],
+      "cutoff": 16,
+      "ambient_gauge_dimension": 309,
+      "discarded_norm_squared_upper_bound": 1.5358604403144624e-27,
+      "metric_max_error": 7.105427357601002e-15,
+      "mass_max_error": 1.3877792784765656e-16,
+      "color_traceless_norm": 1.7014229255337706e-17
+    },
+    {
+      "theta": 3.141592653589793,
+      "q": [
+        1.0,
+        -0.5,
+        0.7
+      ],
+      "cutoff": 4,
+      "ambient_gauge_dimension": 45,
+      "discarded_norm_squared_upper_bound": 0.008183434757153276,
+      "metric_max_error": 1.5163249188458146,
+      "mass_max_error": 0.0011641193108273002,
+      "color_traceless_norm": 0.0016809825178669745
+    },
+    {
+      "theta": 3.141592653589793,
+      "q": [
+        1.0,
+        -0.5,
+        0.7
+      ],
+      "cutoff": 8,
+      "ambient_gauge_dimension": 101,
+      "discarded_norm_squared_upper_bound": 4.880378282842105e-06,
+      "metric_max_error": 0.0036185545555014187,
+      "mass_max_error": 2.7220398529771267e-06,
+      "color_traceless_norm": 4.0378200010182135e-06
+    },
+    {
+      "theta": 3.141592653589793,
+      "q": [
+        1.0,
+        -0.5,
+        0.7
+      ],
+      "cutoff": 16,
+      "ambient_gauge_dimension": 309,
+      "discarded_norm_squared_upper_bound": 2.012920832719473e-14,
+      "metric_max_error": 6.055600465515454e-11,
+      "mass_max_error": 4.5672923726653953e-14,
+      "color_traceless_norm": 6.782836163090552e-14
+    }
+  ],
+  "kinetic_identity": {
+    "cutoff": 4,
+    "frame_shape": [
+      16875,
+      18
+    ],
+    "factorization_max_error": 1.3877863997203528e-16,
+    "kinetic_identity_error": 6.938893903907228e-18,
+    "scope": "exact decomposition within this normalized finite-cutoff frame"
+  },
+  "not_derived": [
+    "choice of three blocks and chiral matter",
+    "independent Yang-Mills dynamics",
+    "physical generation of frame and gap",
+    "quantum effective action for infinite hidden sector",
+    "dynamic metric and Einstein limit",
+    "actual record selection",
+    "joint observational RMSE"
+  ],
+  "provenance": {
+    "python": "3.14.2",
+    "numpy": "2.4.4",
+    "script_sha256": "3a281820ab956cfb7caf0dabf6d7a587b605d9898a5853a13a2e059b3858e9f8",
+    "color_script_sha256": "625dcf6a135ba38876d21a7764c9f7cb15cd582a25b5fb345a06ab2518e778fa"
+  }
+}

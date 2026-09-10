@@ -1,0 +1,124 @@
+{
+  "candidate": "CE-MR2",
+  "tolerance": 1e-12,
+  "input_charges_L_W_C": [
+    [
+      1,
+      1,
+      1
+    ],
+    [
+      -4,
+      0,
+      -1
+    ],
+    [
+      2,
+      0,
+      -1
+    ],
+    [
+      -3,
+      1,
+      0
+    ],
+    [
+      6,
+      0,
+      0
+    ]
+  ],
+  "multiplicities": [
+    6,
+    3,
+    3,
+    2,
+    1
+  ],
+  "linear_constraints_SU3_SU2_gravity": [
+    [
+      0,
+      2,
+      0
+    ],
+    [
+      0,
+      4,
+      3
+    ],
+    [
+      0,
+      8,
+      0
+    ]
+  ],
+  "exact_constraint_rank": 2,
+  "U6_allowed_center_basis": [
+    [
+      "1",
+      "0",
+      "0"
+    ]
+  ],
+  "SU6_constraint_rank_with_trace": 3,
+  "SU6_allowed_center_basis": [],
+  "cubic_center_tensor": {
+    "000": 0,
+    "001": 24,
+    "002": -54,
+    "010": 24,
+    "011": 0,
+    "012": 6,
+    "020": -54,
+    "021": 6,
+    "022": 0,
+    "100": 24,
+    "101": 0,
+    "102": 6,
+    "110": 0,
+    "111": 8,
+    "112": 6,
+    "120": 6,
+    "121": 6,
+    "122": 6,
+    "200": -54,
+    "201": 6,
+    "202": 0,
+    "210": 6,
+    "211": 6,
+    "212": 6,
+    "220": 0,
+    "221": 6,
+    "222": 0
+  },
+  "cubic_polynomial_powers_alpha_beta_gamma": {
+    "2,1,0": 72,
+    "2,0,1": -162,
+    "1,1,1": 36,
+    "0,3,0": 8,
+    "0,2,1": 18,
+    "0,1,2": 18
+  },
+  "allowed_generator_count": 12,
+  "allowed_symmetric_triples_checked": 1728,
+  "allowed_max_symmetric_triple_trace": 1.7763568394002505e-15,
+  "maximum_matrix_error": 1.7763568394002505e-15,
+  "SU2_doublets_per_generation": 4,
+  "three_generation_internal_Weyl_dimension": 45,
+  "environment": {
+    "python": "3.14.2",
+    "numpy": "2.4.4"
+  },
+  "source_sha256": {
+    "ce_block_center_anomalies.py": "f5c5694e4cf9adb8a6ed2521d0d96ee261b0facd14f46cf4339a8890400e21ae",
+    "ce_matter_representation_anomalies.py": "a04c4a89bdb9e8b030c534b0934eedfec80236714c8a965622fd30235f028c36",
+    "ce_common_isotropic_frame.py": "3a281820ab956cfb7caf0dabf6d7a587b605d9898a5853a13a2e059b3858e9f8",
+    "ce_isometric_color_frame.py": "625dcf6a135ba38876d21a7764c9f7cb15cd582a25b5fb345a06ab2518e778fa"
+  },
+  "limits": [
+    "Fixed chiral matter, tensor powers and both non-Abelian factors are supplied.",
+    "Local anomaly-free subgroup selection does not dynamically remove other vectors.",
+    "No full U6/SU6 UV representation, anomaly inflow or spectator completion is constructed.",
+    "Global group, quantum gravity, couplings and actual observation remain open."
+  ]
+}

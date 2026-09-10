@@ -1,0 +1,1362 @@
+{
+  "candidate": "CE-GR5",
+  "tolerance": 1e-10,
+  "seed": 20260910,
+  "real_triples": [
+    {
+      "label": "Euclidean",
+      "six_components": [
+        [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "det_metric_exact": "1",
+      "det_half_wedge_exact": "1",
+      "metric_eigenvalues": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "nondegenerate": true,
+      "negative_eigenvalues_if_nondegenerate": 0,
+      "relative_Hodge_error": 0.0
+    },
+    {
+      "label": "split",
+      "six_components": [
+        [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          0,
+          -1
+        ]
+      ],
+      "det_metric_exact": "1",
+      "det_half_wedge_exact": "-1",
+      "metric_eigenvalues": [
+        -1.0,
+        -1.0,
+        1.0,
+        1.0
+      ],
+      "nondegenerate": true,
+      "negative_eigenvalues_if_nondegenerate": 2,
+      "relative_Hodge_error": 0.0
+    },
+    {
+      "label": "spatial_only",
+      "six_components": [
+        [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ]
+      ],
+      "det_metric_exact": "0",
+      "det_half_wedge_exact": "0",
+      "metric_eigenvalues": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "nondegenerate": false,
+      "negative_eigenvalues_if_nondegenerate": null,
+      "relative_Hodge_error": null
+    },
+    {
+      "label": "integer_0",
+      "six_components": [
+        [
+          -1,
+          -2,
+          1,
+          2,
+          0,
+          2
+        ],
+        [
+          -2,
+          1,
+          2,
+          -2,
+          -2,
+          -1
+        ],
+        [
+          0,
+          0,
+          -2,
+          2,
+          0,
+          -1
+        ]
+      ],
+      "det_metric_exact": "2025/4",
+      "det_half_wedge_exact": "45/2",
+      "metric_eigenvalues": [
+        -6.6710096385957725,
+        -2.232205287161932,
+        1.1423352314908797,
+        29.760879694266826
+      ],
+      "nondegenerate": true,
+      "negative_eigenvalues_if_nondegenerate": 2,
+      "relative_Hodge_error": 1.3322676295501878e-15
+    },
+    {
+      "label": "integer_1",
+      "six_components": [
+        [
+          0,
+          0,
+          2,
+          0,
+          1,
+          1
+        ],
+        [
+          -2,
+          2,
+          2,
+          -1,
+          -2,
+          -2
+        ],
+        [
+          1,
+          -1,
+          2,
+          0,
+          0,
+          2
+        ]
+      ],
+      "det_metric_exact": "121",
+      "det_half_wedge_exact": "-11",
+      "metric_eigenvalues": [
+        -5.3143978343393155,
+        -0.6792543511073564,
+        3.549090467986116,
+        9.444561717460553
+      ],
+      "nondegenerate": true,
+      "negative_eigenvalues_if_nondegenerate": 2,
+      "relative_Hodge_error": 5.551115123125783e-16
+    },
+    {
+      "label": "integer_2",
+      "six_components": [
+        [
+          1,
+          -1,
+          -1,
+          -2,
+          -2,
+          1
+        ],
+        [
+          0,
+          2,
+          2,
+          -2,
+          0,
+          -2
+        ],
+        [
+          -1,
+          1,
+          -2,
+          0,
+          -2,
+          0
+        ]
+      ],
+      "det_metric_exact": "25",
+      "det_half_wedge_exact": "-5",
+      "metric_eigenvalues": [
+        -15.81405450338752,
+        -6.204889562772059,
+        -1.8427997461048595,
+        -0.1382561877355632
+      ],
+      "nondegenerate": true,
+      "negative_eigenvalues_if_nondegenerate": 4,
+      "relative_Hodge_error": 5.995204332975845e-15
+    },
+    {
+      "label": "integer_3",
+      "six_components": [
+        [
+          -1,
+          -1,
+          -2,
+          0,
+          0,
+          -2
+        ],
+        [
+          1,
+          0,
+          -1,
+          -2,
+          0,
+          2
+        ],
+        [
+          -2,
+          1,
+          -1,
+          -1,
+          1,
+          2
+        ]
+      ],
+      "det_metric_exact": "169",
+      "det_half_wedge_exact": "-13",
+      "metric_eigenvalues": [
+        -13.78149920669518,
+        -0.6290393156907985,
+        1.511290911102858,
+        12.899247611283117
+      ],
+      "nondegenerate": true,
+      "negative_eigenvalues_if_nondegenerate": 2,
+      "relative_Hodge_error": 1.2628786905111156e-15
+    },
+    {
+      "label": "integer_4",
+      "six_components": [
+        [
+          -1,
+          -1,
+          -1,
+          1,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          2,
+          1,
+          -2,
+          2
+        ],
+        [
+          2,
+          1,
+          -1,
+          2,
+          0,
+          2
+        ]
+      ],
+      "det_metric_exact": "324",
+      "det_half_wedge_exact": "-18",
+      "metric_eigenvalues": [
+        -9.364772981323325,
+        -1.6794397304736526,
+        1.1513390585147432,
+        17.89287365328223
+      ],
+      "nondegenerate": true,
+      "negative_eigenvalues_if_nondegenerate": 2,
+      "relative_Hodge_error": 1.1102230246251565e-15
+    },
+    {
+      "label": "integer_5",
+      "six_components": [
+        [
+          0,
+          -1,
+          -1,
+          -1,
+          0,
+          1
+        ],
+        [
+          -2,
+          -1,
+          1,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          -2,
+          1,
+          2,
+          -1,
+          -2
+        ]
+      ],
+      "det_metric_exact": "11881/16",
+      "det_half_wedge_exact": "109/4",
+      "metric_eigenvalues": [
+        -13.430554729663704,
+        -2.8652441970099494,
+        2.4637946241249353,
+        7.832004302548722
+      ],
+      "nondegenerate": true,
+      "negative_eigenvalues_if_nondegenerate": 2,
+      "relative_Hodge_error": 2.220446049250313e-16
+    },
+    {
+      "label": "integer_6",
+      "six_components": [
+        [
+          1,
+          2,
+          1,
+          -2,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          2,
+          1,
+          0,
+          2
+        ],
+        [
+          2,
+          0,
+          1,
+          -1,
+          1,
+          1
+        ]
+      ],
+      "det_metric_exact": "14161/16",
+      "det_half_wedge_exact": "-119/4",
+      "metric_eigenvalues": [
+        -7.395897489787282,
+        -3.1303456497757978,
+        4.022500317382798,
+        9.50374282218028
+      ],
+      "nondegenerate": true,
+      "negative_eigenvalues_if_nondegenerate": 2,
+      "relative_Hodge_error": 5.551115123125783e-16
+    },
+    {
+      "label": "integer_7",
+      "six_components": [
+        [
+          0,
+          0,
+          -1,
+          -2,
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -2,
+          2,
+          -1,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          -2,
+          -2,
+          -2
+        ]
+      ],
+      "det_metric_exact": "1",
+      "det_half_wedge_exact": "-1",
+      "metric_eigenvalues": [
+        -17.519232914569344,
+        -0.17946662968624794,
+        0.08808876725642564,
+        3.6106107769991644
+      ],
+      "nondegenerate": true,
+      "negative_eigenvalues_if_nondegenerate": 2,
+      "relative_Hodge_error": 1.4988010832439613e-14
+    },
+    {
+      "label": "integer_8",
+      "six_components": [
+        [
+          -2,
+          -1,
+          -2,
+          0,
+          -2,
+          0
+        ],
+        [
+          2,
+          -1,
+          -2,
+          -1,
+          2,
+          -1
+        ],
+        [
+          -2,
+          1,
+          1,
+          -1,
+          0,
+          -2
+        ]
+      ],
+      "det_metric_exact": "961/4",
+      "det_half_wedge_exact": "31/2",
+      "metric_eigenvalues": [
+        -26.384119727536103,
+        -0.47788201338265274,
+        2.637497456969057,
+        7.224504283949694
+      ],
+      "nondegenerate": true,
+      "negative_eigenvalues_if_nondegenerate": 2,
+      "relative_Hodge_error": 2.55351295663786e-15
+    },
+    {
+      "label": "integer_9",
+      "six_components": [
+        [
+          0,
+          0,
+          -2,
+          2,
+          -1,
+          0
+        ],
+        [
+          2,
+          -1,
+          1,
+          0,
+          0,
+          2
+        ],
+        [
+          1,
+          2,
+          1,
+          0,
+          -1,
+          -2
+        ]
+      ],
+      "det_metric_exact": "36",
+      "det_half_wedge_exact": "-6",
+      "metric_eigenvalues": [
+        -23.46380827362713,
+        -0.45335133046281845,
+        0.6414927320908249,
+        5.275666871999127
+      ],
+      "nondegenerate": true,
+      "negative_eigenvalues_if_nondegenerate": 2,
+      "relative_Hodge_error": 2.581268532253488e-15
+    },
+    {
+      "label": "integer_10",
+      "six_components": [
+        [
+          1,
+          2,
+          -2,
+          -2,
+          -1,
+          -2
+        ],
+        [
+          -2,
+          0,
+          -1,
+          2,
+          1,
+          -1
+        ],
+        [
+          -2,
+          2,
+          -1,
+          2,
+          -1,
+          -2
+        ]
+      ],
+      "det_metric_exact": "14400",
+      "det_half_wedge_exact": "120",
+      "metric_eigenvalues": [
+        -10.236365126557274,
+        -9.572691105322756,
+        9.7743400580643,
+        15.03471617381573
+      ],
+      "nondegenerate": true,
+      "negative_eigenvalues_if_nondegenerate": 2,
+      "relative_Hodge_error": 6.661338147750939e-16
+    },
+    {
+      "label": "integer_11",
+      "six_components": [
+        [
+          1,
+          2,
+          1,
+          0,
+          -1,
+          -2
+        ],
+        [
+          1,
+          -1,
+          -1,
+          -1,
+          -2,
+          1
+        ],
+        [
+          -2,
+          -1,
+          -1,
+          1,
+          2,
+          -1
+        ]
+      ],
+      "det_metric_exact": "81/4",
+      "det_half_wedge_exact": "9/2",
+      "metric_eigenvalues": [
+        -6.749635875590508,
+        -0.575026440654636,
+        0.4037990930729791,
+        12.920863223172166
+      ],
+      "nondegenerate": true,
+      "negative_eigenvalues_if_nondegenerate": 2,
+      "relative_Hodge_error": 1.1102230246251565e-15
+    },
+    {
+      "label": "integer_12",
+      "six_components": [
+        [
+          -2,
+          0,
+          1,
+          0,
+          1,
+          -2
+        ],
+        [
+          2,
+          0,
+          1,
+          2,
+          2,
+          2
+        ],
+        [
+          0,
+          1,
+          0,
+          1,
+          -2,
+          2
+        ]
+      ],
+      "det_metric_exact": "7225/4",
+      "det_half_wedge_exact": "85/2",
+      "metric_eigenvalues": [
+        -23.155705400112645,
+        -3.459215066709725,
+        4.057863423858676,
+        5.557057042963698
+      ],
+      "nondegenerate": true,
+      "negative_eigenvalues_if_nondegenerate": 2,
+      "relative_Hodge_error": 6.661338147750939e-16
+    },
+    {
+      "label": "integer_13",
+      "six_components": [
+        [
+          -1,
+          0,
+          2,
+          1,
+          0,
+          -1
+        ],
+        [
+          -2,
+          0,
+          -2,
+          2,
+          0,
+          2
+        ],
+        [
+          0,
+          -1,
+          1,
+          1,
+          0,
+          1
+        ]
+      ],
+      "det_metric_exact": "676",
+      "det_half_wedge_exact": "26",
+      "metric_eigenvalues": [
+        -3.8150729063673254,
+        -2.6846584384264913,
+        6.8150729063673285,
+        9.684658438426487
+      ],
+      "nondegenerate": true,
+      "negative_eigenvalues_if_nondegenerate": 2,
+      "relative_Hodge_error": 5.551115123125783e-16
+    },
+    {
+      "label": "integer_14",
+      "six_components": [
+        [
+          1,
+          2,
+          -2,
+          -1,
+          0,
+          -1
+        ],
+        [
+          -2,
+          0,
+          0,
+          1,
+          -1,
+          -1
+        ],
+        [
+          0,
+          -1,
+          2,
+          -1,
+          1,
+          0
+        ]
+      ],
+      "det_metric_exact": "225/16",
+      "det_half_wedge_exact": "15/4",
+      "metric_eigenvalues": [
+        -1.4097645605512499,
+        -0.7030177697490894,
+        1.0058097017336718,
+        14.106972628566668
+      ],
+      "nondegenerate": true,
+      "negative_eigenvalues_if_nondegenerate": 2,
+      "relative_Hodge_error": 4.440892098500626e-16
+    },
+    {
+      "label": "integer_15",
+      "six_components": [
+        [
+          -2,
+          2,
+          -1,
+          2,
+          0,
+          -2
+        ],
+        [
+          -2,
+          -1,
+          -1,
+          2,
+          0,
+          -2
+        ],
+        [
+          0,
+          1,
+          -1,
+          -1,
+          0,
+          -2
+        ]
+      ],
+      "det_metric_exact": "0",
+      "det_half_wedge_exact": "0",
+      "metric_eigenvalues": [
+        -6.369316876852983,
+        0.0,
+        0.0,
+        18.36931687685298
+      ],
+      "nondegenerate": false,
+      "negative_eigenvalues_if_nondegenerate": null,
+      "relative_Hodge_error": null
+    },
+    {
+      "label": "integer_16",
+      "six_components": [
+        [
+          2,
+          1,
+          -2,
+          1,
+          1,
+          1
+        ],
+        [
+          -2,
+          -1,
+          1,
+          1,
+          1,
+          2
+        ],
+        [
+          1,
+          0,
+          -2,
+          0,
+          -1,
+          0
+        ]
+      ],
+      "det_metric_exact": "9",
+      "det_half_wedge_exact": "-3",
+      "metric_eigenvalues": [
+        -4.986288383453747,
+        -0.34660474296531857,
+        0.37303502619395207,
+        13.95985810022511
+      ],
+      "nondegenerate": true,
+      "negative_eigenvalues_if_nondegenerate": 2,
+      "relative_Hodge_error": 1.1102230246251565e-15
+    },
+    {
+      "label": "integer_17",
+      "six_components": [
+        [
+          0,
+          -2,
+          -1,
+          -1,
+          0,
+          -2
+        ],
+        [
+          1,
+          2,
+          -2,
+          1,
+          2,
+          -2
+        ],
+        [
+          -1,
+          -2,
+          -1,
+          1,
+          2,
+          1
+        ]
+      ],
+      "det_metric_exact": "53361/4",
+      "det_half_wedge_exact": "-231/2",
+      "metric_eigenvalues": [
+        -22.178345311867716,
+        -5.207782563390588,
+        5.207782563390581,
+        22.178345311867744
+      ],
+      "nondegenerate": true,
+      "negative_eigenvalues_if_nondegenerate": 2,
+      "relative_Hodge_error": 9.992007221626409e-16
+    },
+    {
+      "label": "integer_18",
+      "six_components": [
+        [
+          -1,
+          1,
+          1,
+          0,
+          -2,
+          0
+        ],
+        [
+          -1,
+          -1,
+          -2,
+          -1,
+          -2,
+          1
+        ],
+        [
+          0,
+          -2,
+          0,
+          -2,
+          1,
+          2
+        ]
+      ],
+      "det_metric_exact": "1369/16",
+      "det_half_wedge_exact": "-37/4",
+      "metric_eigenvalues": [
+        -15.928839919649466,
+        -0.6492807482186148,
+        0.8504696289813218,
+        9.727651038886759
+      ],
+      "nondegenerate": true,
+      "negative_eigenvalues_if_nondegenerate": 2,
+      "relative_Hodge_error": 1.6653345369377348e-15
+    },
+    {
+      "label": "integer_19",
+      "six_components": [
+        [
+          1,
+          -2,
+          0,
+          -1,
+          0,
+          -1
+        ],
+        [
+          1,
+          -2,
+          1,
+          -2,
+          1,
+          0
+        ],
+        [
+          2,
+          1,
+          -2,
+          2,
+          2,
+          -1
+        ]
+      ],
+      "det_metric_exact": "2025",
+      "det_half_wedge_exact": "-45",
+      "metric_eigenvalues": [
+        -10.234110825027205,
+        -4.890686167168182,
+        4.947775259525123,
+        8.177021732670271
+      ],
+      "nondegenerate": true,
+      "negative_eigenvalues_if_nondegenerate": 2,
+      "relative_Hodge_error": 2.220446049250313e-16
+    },
+    {
+      "label": "integer_20",
+      "six_components": [
+        [
+          -2,
+          0,
+          0,
+          -1,
+          2,
+          1
+        ],
+        [
+          1,
+          1,
+          0,
+          2,
+          -1,
+          0
+        ],
+        [
+          1,
+          2,
+          -2,
+          2,
+          -2,
+          0
+        ]
+      ],
+      "det_metric_exact": "49/16",
+      "det_half_wedge_exact": "-7/4",
+      "metric_eigenvalues": [
+        -1.2171905735313815,
+        -0.4708010060381574,
+        0.43619466081952235,
+        12.251796918750014
+      ],
+      "nondegenerate": true,
+      "negative_eigenvalues_if_nondegenerate": 2,
+      "relative_Hodge_error": 1.1102230246251565e-15
+    },
+    {
+      "label": "integer_21",
+      "six_components": [
+        [
+          -2,
+          1,
+          -1,
+          2,
+          -2,
+          1
+        ],
+        [
+          -2,
+          1,
+          -2,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          2,
+          1,
+          1,
+          -1
+        ]
+      ],
+      "det_metric_exact": "81/16",
+      "det_half_wedge_exact": "-9/4",
+      "metric_eigenvalues": [
+        -9.498701732345936,
+        -0.2173813861372298,
+        0.1811432270696847,
+        13.534939891413488
+      ],
+      "nondegenerate": true,
+      "negative_eigenvalues_if_nondegenerate": 2,
+      "relative_Hodge_error": 9.103828801926284e-15
+    },
+    {
+      "label": "integer_22",
+      "six_components": [
+        [
+          1,
+          -1,
+          2,
+          0,
+          0,
+          -2
+        ],
+        [
+          -2,
+          0,
+          1,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          -2,
+          2,
+          0
+        ]
+      ],
+      "det_metric_exact": "5184",
+      "det_half_wedge_exact": "72",
+      "metric_eigenvalues": [
+        -8.91510028633185,
+        -5.255424028720113,
+        9.400788587560447,
+        11.769735727491518
+      ],
+      "nondegenerate": true,
+      "negative_eigenvalues_if_nondegenerate": 2,
+      "relative_Hodge_error": 3.3306690738754696e-16
+    },
+    {
+      "label": "integer_23",
+      "six_components": [
+        [
+          2,
+          -2,
+          1,
+          -2,
+          1,
+          -2
+        ],
+        [
+          -1,
+          1,
+          -1,
+          0,
+          2,
+          2
+        ],
+        [
+          -1,
+          0,
+          1,
+          -2,
+          1,
+          -1
+        ]
+      ],
+      "det_metric_exact": "23409/16",
+      "det_half_wedge_exact": "153/4",
+      "metric_eigenvalues": [
+        -17.620782848850176,
+        -3.041951302210998,
+        2.75490751484639,
+        9.907826636214779
+      ],
+      "nondegenerate": true,
+      "negative_eigenvalues_if_nondegenerate": 2,
+      "relative_Hodge_error": 7.771561172376096e-16
+    }
+  ],
+  "complex_Lorentzian_witness": {
+    "errors": {
+      "density_i_eta": 0.0,
+      "half_wedge_minus_i_identity": 0.0,
+      "Lorentzian_self_dual": 0.0,
+      "mixed_wedge_reality": 0.0
+    },
+    "metric_after_dividing_density_by_i": [
+      [
+        -1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "negative_metric_eigenvalues": 1
+  },
+  "actual_connection_families": [
+    {
+      "epsilon": -0.5,
+      "boundary_Pontryagin_value": 14.0,
+      "integrals": [
+        {
+          "nodes": 16,
+          "composite_metric_action": 14.0,
+          "fixed_metric_action": 18.577083333333327
+        },
+        {
+          "nodes": 32,
+          "composite_metric_action": 14.000000000000004,
+          "fixed_metric_action": 18.57708333333334
+        }
+      ],
+      "maximum_pointwise_error": 2.1316282072803006e-14
+    },
+    {
+      "epsilon": 0.0,
+      "boundary_Pontryagin_value": 14.0,
+      "integrals": [
+        {
+          "nodes": 16,
+          "composite_metric_action": 14.0,
+          "fixed_metric_action": 21.599999999999998
+        },
+        {
+          "nodes": 32,
+          "composite_metric_action": 14.0,
+          "fixed_metric_action": 21.6
+        }
+      ],
+      "maximum_pointwise_error": 2.4868995751603507e-14
+    },
+    {
+      "epsilon": 0.5,
+      "boundary_Pontryagin_value": 14.0,
+      "integrals": [
+        {
+          "nodes": 16,
+          "composite_metric_action": 14.0,
+          "fixed_metric_action": 25.80922619047619
+        },
+        {
+          "nodes": 32,
+          "composite_metric_action": 13.999999999999996,
+          "fixed_metric_action": 25.80922619047619
+        }
+      ],
+      "maximum_pointwise_error": 8.881784197001252e-15
+    }
+  ],
+  "pure_connection_action_comparison": {
+    "topological_trace_Hessian_rank_exact": 0,
+    "normalized_GR_comparison_Hessian": [
+      [
+        -1.0,
+        -0.0,
+        -0.0,
+        -0.0,
+        -0.0
+      ],
+      [
+        -0.0,
+        -3.0,
+        -0.0,
+        -0.0,
+        -0.0
+      ],
+      [
+        -0.0,
+        -0.0,
+        -1.0,
+        -0.0,
+        -0.0
+      ],
+      [
+        -0.0,
+        -0.0,
+        -0.0,
+        -1.0,
+        -0.0
+      ],
+      [
+        -0.0,
+        -0.0,
+        -0.0,
+        -0.0,
+        -1.0
+      ]
+    ],
+    "comparison_trace_free_Hessian_rank": 5,
+    "finite_differences": [
+      {
+        "step": 0.01,
+        "trace_free_hessian": [
+          [
+            -1.0000270847232429,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            -3.0002437961762496,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            -1.0000270847232429,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            -1.0000270847232429,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            -1.0000270847232429
+          ]
+        ],
+        "maximum_error": 0.00024379617624958883,
+        "trace_direction_second_difference": -4.440892098500626e-12
+      },
+      {
+        "step": 0.005,
+        "trace_free_hessian": [
+          [
+            -1.000006770901507,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            -3.000060940419047,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            -1.000006770901507,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            -1.000006770901507,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            -1.000006770901507
+          ]
+        ],
+        "maximum_error": 6.094041904702863e-05,
+        "trace_direction_second_difference": -3.552713678800501e-11
+      },
+      {
+        "step": 0.0025,
+        "trace_free_hessian": [
+          [
+            -1.0000016925459931,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            -3.0000152344200615,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            -1.0000016925459931,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            -1.0000016925459931,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            -1.0000016925459931
+          ]
+        ],
+        "maximum_error": 1.5234420061460696e-05,
+        "trace_direction_second_difference": -7.105427357601002e-11
+      }
+    ],
+    "successive_error_ratios": [
+      0.24996462202360487,
+      0.24998876443078064
+    ]
+  },
+  "maximum_Hodge_relative_error": 1.4988010832439613e-14,
+  "environment": {
+    "python": "3.14.2",
+    "numpy": "2.4.4"
+  },
+  "source_sha256": {
+    "ce_curvature_metric_signature.py": "8327b8f7272eff7a506a0475b794c8d6e70388c3d463fe61152aece803cde502"
+  },
+  "limits": [
+    "Direct curvature-to-metric identification is tested, not all gravity constructions.",
+    "The self-metric F squared term is topological; higher terms and other fields are not evaluated.",
+    "The GR square-root action is a literature comparison, not derived from the scalar loop.",
+    "Metric signature witnesses and matrix Hessians do not prove Einstein dynamics or quantum unitarity."
+  ]
+}

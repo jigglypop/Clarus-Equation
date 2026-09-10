@@ -7,15 +7,17 @@ from pathlib import Path
 import pytest
 
 from experiments.preregistration.validate_holdout_manifest import (
-    ROOT,
+    MANIFEST_DIR as VALIDATOR_MANIFEST_DIR,
+    ROOT as VALIDATOR_ROOT,
     compute_manifest_sha256,
     load_manifest,
     main,
     validate_manifest,
 )
+from test_support.paths import PREREGISTRATION_ROOT, REPO_ROOT
 
 
-MANIFEST_DIR = ROOT / "experiments" / "preregistration"
+MANIFEST_DIR = PREREGISTRATION_ROOT
 COSMOLOGY_V1_PATH = MANIFEST_DIR / "cosmology_future_holdout_v1.json"
 QUANTUM_V1_PATH = MANIFEST_DIR / "quantum_future_holdout_v1.json"
 COSMOLOGY_PATH = MANIFEST_DIR / "cosmology_future_holdout_v2.json"
@@ -28,6 +30,11 @@ def _load(path: Path) -> dict:
 
 def _rehash(manifest: dict) -> None:
     manifest["manifest_sha256"] = compute_manifest_sha256(manifest)
+
+
+def test_validator_paths_match_the_repository_contract() -> None:
+    assert VALIDATOR_ROOT == REPO_ROOT
+    assert VALIDATOR_MANIFEST_DIR == PREREGISTRATION_ROOT
 
 
 def _assign_synthetic_future_holdout(manifest: dict) -> None:

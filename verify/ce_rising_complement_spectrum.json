@@ -1,0 +1,237 @@
+{
+  "candidate": "CE-GR2",
+  "inputs": {
+    "a": 1.0,
+    "b": 5.0,
+    "omega": 2.0
+  },
+  "source_sha256": {
+    "ce_rising_complement_spectrum.py": "e406206a34f0ce3e3c5e687c6362cfbbf97687be6c4b78b851e7905fa468e770",
+    "ce_common_isotropic_frame.py": "3a281820ab956cfb7caf0dabf6d7a587b605d9898a5853a13a2e059b3858e9f8",
+    "ce_isometric_color_frame.py": "625dcf6a135ba38876d21a7764c9f7cb15cd582a25b5fb345a06ab2518e778fa",
+    "ce_projector_one_loop.py": "10d386ff54650f0d8b445d27cf1b5130657917baab6df2421298cfeab0ee96e2"
+  },
+  "heat_traces": [
+    {
+      "s": 0.1,
+      "cutoff": 16,
+      "exact": 15412.459999069648,
+      "partial": 7314.888651998666,
+      "omitted_tail_bound": 43504.74080562968,
+      "relative_error": 0.5253912320005879
+    },
+    {
+      "s": 0.1,
+      "cutoff": 64,
+      "exact": 15412.459999069648,
+      "partial": 15385.08624112658,
+      "omitted_tail_bound": 28.17045767819293,
+      "relative_error": 0.0017760797396859135
+    },
+    {
+      "s": 0.1,
+      "cutoff": 256,
+      "exact": 15412.459999069648,
+      "partial": 15412.459999069637,
+      "omitted_tail_bound": 9.73290209507407e-14,
+      "relative_error": 7.081242333757196e-16
+    },
+    {
+      "s": 0.1,
+      "cutoff": 512,
+      "exact": 15412.459999069648,
+      "partial": 15412.459999069637,
+      "omitted_tail_bound": 8.465619087584147e-35,
+      "relative_error": 7.081242333757196e-16
+    },
+    {
+      "s": 0.5,
+      "cutoff": 16,
+      "exact": 31.379130351032686,
+      "partial": 31.378961292553115,
+      "omitted_tail_bound": 0.0001698343593925235,
+      "relative_error": 5.387608824075825e-06
+    },
+    {
+      "s": 0.5,
+      "cutoff": 64,
+      "exact": 31.379130351032686,
+      "partial": 31.379130351032693,
+      "omitted_tail_bound": 2.1631648777639646e-23,
+      "relative_error": 2.2643799487474206e-16
+    },
+    {
+      "s": 0.5,
+      "cutoff": 256,
+      "exact": 31.379130351032686,
+      "partial": 31.379130351032693,
+      "omitted_tail_bound": 1.814212138154277e-104,
+      "relative_error": 2.2643799487474206e-16
+    },
+    {
+      "s": 0.5,
+      "cutoff": 512,
+      "exact": 31.379130351032686,
+      "partial": 31.379130351032693,
+      "omitted_tail_bound": 1.8559928821669896e-214,
+      "relative_error": 2.2643799487474206e-16
+    },
+    {
+      "s": 1.0,
+      "cutoff": 16,
+      "exact": 7.167737372640036,
+      "partial": 7.167737372639648,
+      "omitted_tail_bound": 3.8789830207239103e-13,
+      "relative_error": 5.415013821383866e-14
+    },
+    {
+      "s": 1.0,
+      "cutoff": 64,
+      "exact": 7.167737372640036,
+      "partial": 7.167737372640036,
+      "omitted_tail_bound": 7.464275239664102e-53,
+      "relative_error": 0.0
+    },
+    {
+      "s": 1.0,
+      "cutoff": 256,
+      "exact": 7.167737372640036,
+      "partial": 7.167737372640036,
+      "omitted_tail_bound": 2.6323646076485594e-217,
+      "relative_error": 0.0
+    },
+    {
+      "s": 1.0,
+      "cutoff": 512,
+      "exact": 7.167737372640036,
+      "partial": 7.167737372640036,
+      "omitted_tail_bound": 5e-324,
+      "relative_error": 0.0
+    },
+    {
+      "s": 2.0,
+      "cutoff": 16,
+      "exact": 2.43824661382629,
+      "partial": 2.43824661382629,
+      "omitted_tail_bound": 3.84604859303539e-30,
+      "relative_error": 0.0
+    },
+    {
+      "s": 2.0,
+      "cutoff": 64,
+      "exact": 2.43824661382629,
+      "partial": 2.43824661382629,
+      "omitted_tail_bound": 1.5294991272427104e-111,
+      "relative_error": 0.0
+    },
+    {
+      "s": 2.0,
+      "cutoff": 256,
+      "exact": 2.43824661382629,
+      "partial": 2.43824661382629,
+      "omitted_tail_bound": 5e-324,
+      "relative_error": 0.0
+    },
+    {
+      "s": 2.0,
+      "cutoff": 512,
+      "exact": 2.43824661382629,
+      "partial": 2.43824661382629,
+      "omitted_tail_bound": 5e-324,
+      "relative_error": 0.0
+    }
+  ],
+  "metric_splits": [
+    {
+      "theta": 0.0,
+      "errors": {
+        "frame_isometry": 2.4176789156515795e-15,
+        "number_annihilates_frame": 0.0,
+        "normal_above_level_one": 0.0,
+        "level_zero_metric": 5.958506393734555e-15,
+        "level_one_metric": 1.2306961192854808e-14,
+        "total_metric": 1.666385598674647e-14
+      },
+      "kappa_min": 0.7999999999999998,
+      "light_heavy_kinetic_coefficient": 0.2605351618461328
+    },
+    {
+      "theta": 0.7,
+      "errors": {
+        "frame_isometry": 3.010723614909618e-15,
+        "number_annihilates_frame": 0.0,
+        "normal_above_level_one": 0.0,
+        "level_zero_metric": 6.6470029954939e-15,
+        "level_one_metric": 0.0,
+        "total_metric": 7.944514494127956e-15
+      },
+      "kappa_min": 0.7253222045484257,
+      "light_heavy_kinetic_coefficient": 0.2605351618461328
+    },
+    {
+      "theta": 3.141592653589793,
+      "errors": {
+        "frame_isometry": 3.0468204031266857e-15,
+        "number_annihilates_frame": 0.0,
+        "normal_above_level_one": 0.0,
+        "level_zero_metric": 4.783674058728259e-15,
+        "level_one_metric": 1.2306961192854808e-14,
+        "total_metric": 1.6663901400528527e-14
+      },
+      "kappa_min": 0.5999999999999998,
+      "light_heavy_kinetic_coefficient": 0.2605351618461328
+    }
+  ],
+  "uv_scaling": [
+    {
+      "s": 0.1,
+      "scaled_heat_to_limit_one": 1.6439957332340962
+    },
+    {
+      "s": 0.01,
+      "scaled_heat_to_limit_one": 1.0077578684799904
+    },
+    {
+      "s": 0.001,
+      "scaled_heat_to_limit_one": 1.000079006787016
+    },
+    {
+      "s": 0.0001,
+      "scaled_heat_to_limit_one": 1.000000791506679
+    }
+  ],
+  "heavy_chain": [
+    {
+      "cutoff": 16,
+      "positive_partial_sum_per_kappa": 0.026552414325806937,
+      "last_term_per_kappa": 0.001888924079645375,
+      "last_term_over_limit": 0.8948608036699996
+    },
+    {
+      "cutoff": 64,
+      "positive_partial_sum_per_kappa": 0.12263545551486964,
+      "last_term_per_kappa": 0.0020478701163641967,
+      "last_term_over_limit": 0.9701600598397178
+    },
+    {
+      "cutoff": 256,
+      "positive_partial_sum_per_kappa": 0.5222362757304736,
+      "last_term_per_kappa": 0.0020945594920481684,
+      "last_term_over_limit": 0.9922787318909805
+    },
+    {
+      "cutoff": 1024,
+      "positive_partial_sum_per_kappa": 2.137565900601516,
+      "last_term_per_kappa": 0.0021067473660471843,
+      "last_term_over_limit": 0.9980526276442897
+    }
+  ],
+  "chain_term_limit_per_kappa": 0.0021108579925487037,
+  "pair_coefficient_max_relative_error": 1.81175221630471e-15,
+  "status": "finite internal heat trace at positive proper time; full UV action not finite",
+  "limitations": [
+    "Supplied increasing spectrum and full unitary extension",
+    "Additional heavy-heavy kinetic sum diverges without a UV prescription",
+    "No physical Einstein limit or gauge vector dynamics established"
+  ]
+}

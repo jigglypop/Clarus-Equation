@@ -1,0 +1,233 @@
+{
+  "candidate": "CE-GF3",
+  "C_loop": 0.006257866129291753,
+  "backgrounds": [
+    {
+      "ell": 1.0,
+      "g_A": 1.0,
+      "kappa": 1.0,
+      "background_gradient": 1.0
+    },
+    {
+      "ell": 100.0,
+      "g_A": 0.01,
+      "kappa": 1.0,
+      "background_gradient": 0.01
+    }
+  ],
+  "modes": [
+    {
+      "case": "loop",
+      "C": 0.006257866129291753,
+      "k": 0.01,
+      "velocity_hessian": [
+        0.006257866129291753,
+        1.0062578661292918,
+        1.0062578661292918,
+        1.0062578661292918
+      ],
+      "longitudinal_extra_speed_squared": -0.9875621024392812,
+      "growth_rate": 0.009937615923546477,
+      "eigenvalue_match_error": 1.8214596497756474e-16,
+      "static_p0_gradient_energy_coefficient": -0.4968710669353541
+    },
+    {
+      "case": "loop",
+      "C": 0.006257866129291753,
+      "k": 0.05,
+      "velocity_hessian": [
+        0.006257866129291753,
+        1.0062578661292918,
+        1.0062578661292918,
+        1.0062578661292918
+      ],
+      "longitudinal_extra_speed_squared": -0.9875621024392812,
+      "growth_rate": 0.049688079617730384,
+      "eigenvalue_match_error": 2.914335439641036e-15,
+      "static_p0_gradient_energy_coefficient": -0.4968710669353541
+    },
+    {
+      "case": "loop",
+      "C": 0.006257866129291753,
+      "k": 0.1,
+      "velocity_hessian": [
+        0.006257866129291753,
+        1.0062578661292918,
+        1.0062578661292918,
+        1.0062578661292918
+      ],
+      "longitudinal_extra_speed_squared": -0.9875621024392812,
+      "growth_rate": 0.09937615923546077,
+      "eigenvalue_match_error": 5.828670879282072e-15,
+      "static_p0_gradient_energy_coefficient": -0.4968710669353541
+    },
+    {
+      "case": "half",
+      "C": 0.5,
+      "k": 0.01,
+      "velocity_hessian": [
+        0.5,
+        1.5,
+        1.5,
+        1.5
+      ],
+      "longitudinal_extra_speed_squared": -0.3333333333333333,
+      "growth_rate": 0.005773502691896254,
+      "eigenvalue_match_error": 5.364336092018247e-18,
+      "static_p0_gradient_energy_coefficient": -0.25
+    },
+    {
+      "case": "half",
+      "C": 0.5,
+      "k": 0.05,
+      "velocity_hessian": [
+        0.5,
+        1.5,
+        1.5,
+        1.5
+      ],
+      "longitudinal_extra_speed_squared": -0.3333333333333333,
+      "growth_rate": 0.028867513459481305,
+      "eigenvalue_match_error": 1.214306433183765e-16,
+      "static_p0_gradient_energy_coefficient": -0.25
+    },
+    {
+      "case": "half",
+      "C": 0.5,
+      "k": 0.1,
+      "velocity_hessian": [
+        0.5,
+        1.5,
+        1.5,
+        1.5
+      ],
+      "longitudinal_extra_speed_squared": -0.3333333333333333,
+      "growth_rate": 0.05773502691896261,
+      "eigenvalue_match_error": 2.42861286636753e-16,
+      "static_p0_gradient_energy_coefficient": -0.25
+    },
+    {
+      "case": "threshold",
+      "C": 1.0,
+      "k": 0.01,
+      "velocity_hessian": [
+        1.0,
+        2.0,
+        2.0,
+        2.0
+      ],
+      "longitudinal_extra_speed_squared": 0.0,
+      "growth_rate": 4.075567132921514e-20,
+      "eigenvalue_match_error": 1.2874900798265365e-19,
+      "static_p0_gradient_energy_coefficient": 0.0
+    },
+    {
+      "case": "threshold",
+      "C": 1.0,
+      "k": 0.05,
+      "velocity_hessian": [
+        1.0,
+        2.0,
+        2.0,
+        2.0
+      ],
+      "longitudinal_extra_speed_squared": 0.0,
+      "growth_rate": 5.194163614688449e-18,
+      "eigenvalue_match_error": 1.4253857148018713e-17,
+      "static_p0_gradient_energy_coefficient": 0.0
+    },
+    {
+      "case": "threshold",
+      "C": 1.0,
+      "k": 0.1,
+      "velocity_hessian": [
+        1.0,
+        2.0,
+        2.0,
+        2.0
+      ],
+      "longitudinal_extra_speed_squared": 0.0,
+      "growth_rate": 1.0388327229376899e-17,
+      "eigenvalue_match_error": 1.5326799766041375e-17,
+      "static_p0_gradient_energy_coefficient": 0.0
+    },
+    {
+      "case": "twice",
+      "C": 2.0,
+      "k": 0.01,
+      "velocity_hessian": [
+        2.0,
+        3.0,
+        3.0,
+        3.0
+      ],
+      "longitudinal_extra_speed_squared": 0.3333333333333333,
+      "growth_rate": 6.505213034913027e-19,
+      "eigenvalue_match_error": 1.8526854844795106e-18,
+      "static_p0_gradient_energy_coefficient": 0.5
+    },
+    {
+      "case": "twice",
+      "C": 2.0,
+      "k": 0.05,
+      "velocity_hessian": [
+        2.0,
+        3.0,
+        3.0,
+        3.0
+      ],
+      "longitudinal_extra_speed_squared": 0.3333333333333333,
+      "growth_rate": 6.938893903907228e-18,
+      "eigenvalue_match_error": 2.1942709178604383e-17,
+      "static_p0_gradient_energy_coefficient": 0.5
+    },
+    {
+      "case": "twice",
+      "C": 2.0,
+      "k": 0.1,
+      "velocity_hessian": [
+        2.0,
+        3.0,
+        3.0,
+        3.0
+      ],
+      "longitudinal_extra_speed_squared": 0.3333333333333333,
+      "growth_rate": 1.3877787807814457e-17,
+      "eigenvalue_match_error": 4.3885418357208765e-17,
+      "static_p0_gradient_energy_coefficient": 0.5
+    }
+  ],
+  "state_overlaps": [
+    {
+      "delta_p_norm": 0.0,
+      "state_overlap_squared": 1.0,
+      "projector_HS_distance_squared": 0.0
+    },
+    {
+      "delta_p_norm": 0.1,
+      "state_overlap_squared": 0.9950124791926822,
+      "projector_HS_distance_squared": 0.00997504161463536
+    },
+    {
+      "delta_p_norm": 0.5,
+      "state_overlap_squared": 0.8824969025845955,
+      "projector_HS_distance_squared": 0.2350061948308091
+    },
+    {
+      "delta_p_norm": 1.0,
+      "state_overlap_squared": 0.6065306597126334,
+      "projector_HS_distance_squared": 0.7869386805747332
+    }
+  ],
+  "pure_Maxwell_velocity_rank": 3,
+  "combined_p_velocity_rank": 4,
+  "source_sha256": {
+    "ce_maxwell_quantum_collision.py": "29d3153bc8f9e9205022c3b38b3d4a7d9de516689957533f1b46773bca0086e6",
+    "ce_projector_one_loop.py": "10d386ff54650f0d8b445d27cf1b5130657917baab6df2421298cfeab0ee96e2"
+  },
+  "limits": [
+    "Quadratic two-derivative model on supplied flat spacetime",
+    "Uniform-gap relative loop coefficient, not the rising-spectrum theory",
+    "No complete determinant, gravity or observational parameter claim"
+  ]
+}

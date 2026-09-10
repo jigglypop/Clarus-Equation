@@ -1,0 +1,83 @@
+{
+  "candidate": "CE-AM1",
+  "status": "finite conditional construction; deletion and compressed-generator equivalence rejected",
+  "exact": {
+    "full_probabilities": [
+      "1/4",
+      "1/4",
+      "1/4",
+      "1/4"
+    ],
+    "deleted_Q_probabilities_1_then_2_and_2_then_1": [
+      [
+        "1/4",
+        "1/4",
+        "0",
+        "0"
+      ],
+      [
+        "1/4",
+        "1/4",
+        "1/4",
+        "0"
+      ]
+    ],
+    "opposite_hidden_phase_probabilities": [
+      [
+        "0",
+        "1/2",
+        "1/2",
+        "0"
+      ],
+      [
+        "1/2",
+        "0",
+        "0",
+        "1/2"
+      ]
+    ],
+    "compressed_generator_commutator_squared_frobenius_norm": 2,
+    "hidden_curvature_cancellation_exact": true,
+    "compressed_su2_closure_and_casimir_2I_exact": true,
+    "arithmetic": "fractions.Fraction on realified Gaussian-rational matrices"
+  },
+  "numeric": {
+    "compressed_unitary_probabilities": [
+      [
+        0.4999999999999999,
+        0.4999999999999999,
+        0.0
+      ],
+      [
+        0.2499999999999999,
+        0.4999999999999999,
+        0.2499999999999999
+      ]
+    ],
+    "two_event_memory_reconstruction_max_error": 0.0,
+    "general_memory_max_error": 3.3335590258932494e-16,
+    "general_norm_max_error": 5.995204332975845e-15,
+    "supplied_energy_operator_max_error": 4.440892098500626e-16,
+    "noncommuting_full_event_max_difference": 1.0,
+    "random_cases": 24,
+    "events_per_random_case": 7,
+    "seed": 7301,
+    "tolerance": 1e-12,
+    "complete_record_dilation_checked": true,
+    "record_system_energy_change_on_plus_plus_in_E_star_units": -2.0
+  },
+  "not_derived": [
+    "event law",
+    "physical clock",
+    "actual single outcome",
+    "local relativistic record",
+    "metric and Einstein limit",
+    "three gauge sectors",
+    "joint observational RMSE"
+  ],
+  "provenance": {
+    "python": "3.14.2",
+    "numpy": "2.4.4",
+    "script_sha256": "6e82f3fb6156dc61dc58adc83c8c95aea7d47f4413f7306bcdbe16b3808da04a"
+  }
+}

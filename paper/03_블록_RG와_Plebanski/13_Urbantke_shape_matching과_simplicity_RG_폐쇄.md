@@ -409,19 +409,14 @@ Lorentzian convolution을 쓰는 새 모형은 face closure, cell normal, linear
 examples/physics/gravity/urbantke_shape_matching_rg.py
 ```
 
-회귀:
+과거 회귀:
 
 ```text
 tests/test_urbantke_shape_matching_rg.py
 ```
 
-집중 실행:
-
-```powershell
-.codex/hooks/python.cmd pytest tests/test_urbantke_shape_matching_rg.py -q
-```
-
-격리 실행 결과:
+최소 필수 테스트 정리에서 이 세부 회귀를 삭제했다. 아래 수치는 삭제 전 역사적 영수증이며,
+현재 실행 계약은 [테스트 안내](../../tests/README.md)를 따른다.
 
 ```text
 14 passed

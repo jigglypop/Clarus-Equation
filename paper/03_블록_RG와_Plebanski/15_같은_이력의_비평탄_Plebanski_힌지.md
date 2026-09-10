@@ -198,14 +198,10 @@ distributional rigging-map criterion을 검사하고, 그 한계에서 Einstein-
 
 ## 15.6 재현 경로
 
-구현은 [curved_plebanski_hinge.py](../../examples/physics/gravity/curved_plebanski_hinge.py), 집중
-회귀는 [test_curved_plebanski_hinge.py](../../tests/test_curved_plebanski_hinge.py)에 있다.
-Windows에서는 다음 명령으로 확인한다.
+구현은 [curved_plebanski_hinge.py](../../examples/physics/gravity/curved_plebanski_hinge.py)에
+남아 있다. 과거 집중 회귀 `tests/test_curved_plebanski_hinge.py`는
+[최소 필수 테스트 정리](../../tests/README.md)에서 삭제했으며 Git 이력에서만 복구한다.
 
-```powershell
-.codex/hooks/python.cmd pytest tests/test_curved_plebanski_hinge.py -q
-```
-
-원장에 기록된 focused 결과는 `15 passed`, source parse는 `416 PASS`다. 이 검사는 고정한
+원장에 기록된 삭제 전 focused 결과는 `15 passed`, source parse는 `416 PASS`다. 이 검사는 고정한
 유한 계약의 구현 일관성만 검사하며, continuum quantum gravity 또는 암흑에너지의 증명으로
 승격하지 않는다.

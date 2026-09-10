@@ -1,0 +1,343 @@
+{
+  "candidate": "CE-GN2",
+  "status": "conditional color geometry survives; source-free Yang-Mills interpretation rejected",
+  "algebra": {
+    "curvature_only_exact_rank": 3,
+    "curvature_and_covariant_derivative_exact_rank": 8,
+    "mass_matrix": "I_3 / ell^2",
+    "metric": "ell^2 I_3",
+    "source_free_Yang_Mills_current_squared_norm_at_ell_1": 24.0
+  },
+  "frame": {
+    "points": [
+      {
+        "q": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "normalization_error": 0.0,
+        "tensor_error": 0.0,
+        "mass_error": 0.0
+      },
+      {
+        "q": [
+          0.2,
+          0.2,
+          0.0
+        ],
+        "normalization_error": 6.2099022661132625e-18,
+        "tensor_error": 7.873053942001843e-17,
+        "mass_error": 2.220446049250313e-16
+      },
+      {
+        "q": [
+          0.2,
+          0.3,
+          0.4
+        ],
+        "normalization_error": 2.220538001373765e-16,
+        "tensor_error": 8.800821491517895e-17,
+        "mass_error": 2.2329511821639115e-16
+      },
+      {
+        "q": [
+          1.0,
+          -0.5,
+          0.7
+        ],
+        "normalization_error": 2.222925873690441e-16,
+        "tensor_error": 3.1090184670410605e-16,
+        "mass_error": 2.2337336212636886e-16
+      }
+    ],
+    "finite_difference": [
+      {
+        "step": 0.001,
+        "metric_error": 3.333333328248145e-07,
+        "mass_error": 8.108341224715992e-15
+      },
+      {
+        "step": 0.0005,
+        "metric_error": 8.333337242483196e-08,
+        "mass_error": 1.445240785305963e-14
+      },
+      {
+        "step": 0.00025,
+        "metric_error": 2.083354677662186e-08,
+        "mass_error": 4.023650352674492e-14
+      }
+    ]
+  },
+  "gap_dynamics": [
+    {
+      "momentum": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "gap_squared": 4.0,
+      "full_low_eigenvalues": [
+        4.0,
+        4.0,
+        4.0
+      ],
+      "projected_eigenvalues": [
+        4.0,
+        4.0,
+        4.0
+      ],
+      "max_projection_error": 0.0,
+      "schur_resolvent_error": 0.0,
+      "self_energy_norm_at_z_minus_1": 0.0
+    },
+    {
+      "momentum": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "gap_squared": 16.0,
+      "full_low_eigenvalues": [
+        4.0,
+        4.0,
+        4.0
+      ],
+      "projected_eigenvalues": [
+        4.0,
+        4.0,
+        4.0
+      ],
+      "max_projection_error": 0.0,
+      "schur_resolvent_error": 0.0,
+      "self_energy_norm_at_z_minus_1": 0.0
+    },
+    {
+      "momentum": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "gap_squared": 64.0,
+      "full_low_eigenvalues": [
+        4.0,
+        4.0,
+        4.0
+      ],
+      "projected_eigenvalues": [
+        4.0,
+        4.0,
+        4.0
+      ],
+      "max_projection_error": 0.0,
+      "schur_resolvent_error": 0.0,
+      "self_energy_norm_at_z_minus_1": 0.0
+    },
+    {
+      "momentum": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "gap_squared": 256.0,
+      "full_low_eigenvalues": [
+        4.0,
+        4.0,
+        4.0
+      ],
+      "projected_eigenvalues": [
+        4.0,
+        4.0,
+        4.0
+      ],
+      "max_projection_error": 0.0,
+      "schur_resolvent_error": 0.0,
+      "self_energy_norm_at_z_minus_1": 0.0
+    },
+    {
+      "momentum": [
+        0.2,
+        0.3,
+        0.4
+      ],
+      "gap_squared": 4.0,
+      "full_low_eigenvalues": [
+        3.436099671629374,
+        3.8940033145761213,
+        5.186751248680246
+      ],
+      "projected_eigenvalues": [
+        3.4524234807470497,
+        3.912641802749926,
+        5.5049347165030245
+      ],
+      "max_projection_error": 0.3181834678227782,
+      "schur_resolvent_error": 2.7755575615628914e-17,
+      "self_energy_norm_at_z_minus_1": 0.12486544671689992
+    },
+    {
+      "momentum": [
+        0.2,
+        0.3,
+        0.4
+      ],
+      "gap_squared": 16.0,
+      "full_low_eigenvalues": [
+        3.4481801396348306,
+        3.9080458410902095,
+        5.436759595799838
+      ],
+      "projected_eigenvalues": [
+        3.4524234807470497,
+        3.912641802749926,
+        5.5049347165030245
+      ],
+      "max_projection_error": 0.06817512070318621,
+      "schur_resolvent_error": 5.551115123125783e-17,
+      "self_energy_norm_at_z_minus_1": 0.05448567402536403
+    },
+    {
+      "momentum": [
+        0.2,
+        0.3,
+        0.4
+      ],
+      "gap_squared": 64.0,
+      "full_low_eigenvalues": [
+        3.451353168445045,
+        3.911498365396083,
+        5.488741529163148
+      ],
+      "projected_eigenvalues": [
+        3.4524234807470497,
+        3.912641802749926,
+        5.5049347165030245
+      ],
+      "max_projection_error": 0.016193187339876403,
+      "schur_resolvent_error": 2.7755575615628914e-17,
+      "self_energy_norm_at_z_minus_1": 0.016741232501082406
+    },
+    {
+      "momentum": [
+        0.2,
+        0.3,
+        0.4
+      ],
+      "gap_squared": 256.0,
+      "full_low_eigenvalues": [
+        3.4521553234167204,
+        3.912356313366922,
+        5.500939522739468
+      ],
+      "projected_eigenvalues": [
+        3.4524234807470497,
+        3.912641802749926,
+        5.5049347165030245
+      ],
+      "max_projection_error": 0.00399519376355606,
+      "schur_resolvent_error": 2.7755575615628914e-17,
+      "self_energy_norm_at_z_minus_1": 0.004439511653718091
+    },
+    {
+      "momentum": [
+        0.5,
+        -0.2,
+        0.1
+      ],
+      "gap_squared": 4.0,
+      "full_low_eigenvalues": [
+        3.029352240547842,
+        4.304715770472556,
+        5.301952172257031
+      ],
+      "projected_eigenvalues": [
+        3.1431480742008957,
+        4.4354020173489985,
+        5.321449908450104
+      ],
+      "max_projection_error": 0.1306862468764427,
+      "schur_resolvent_error": 2.7755575615628914e-17,
+      "self_energy_norm_at_z_minus_1": 0.12903225806451613
+    },
+    {
+      "momentum": [
+        0.5,
+        -0.2,
+        0.1
+      ],
+      "gap_squared": 16.0,
+      "full_low_eigenvalues": [
+        3.110285759995003,
+        4.400079434709823,
+        5.316645139584679
+      ],
+      "projected_eigenvalues": [
+        3.1431480742008957,
+        4.4354020173489985,
+        5.321449908450104
+      ],
+      "max_projection_error": 0.03532258263917587,
+      "schur_resolvent_error": 5.551115123125783e-17,
+      "self_energy_norm_at_z_minus_1": 0.05633802816901408
+    },
+    {
+      "momentum": [
+        0.5,
+        -0.2,
+        0.1
+      ],
+      "gap_squared": 64.0,
+      "full_low_eigenvalues": [
+        3.1346532697389455,
+        4.426461278628587,
+        5.320254925588822
+      ],
+      "projected_eigenvalues": [
+        3.1431480742008957,
+        4.4354020173489985,
+        5.321449908450104
+      ],
+      "max_projection_error": 0.0089407387204119,
+      "schur_resolvent_error": 2.7755575615628914e-17,
+      "self_energy_norm_at_z_minus_1": 0.017316017316017316
+    },
+    {
+      "momentum": [
+        0.5,
+        -0.2,
+        0.1
+      ],
+      "gap_squared": 256.0,
+      "full_low_eigenvalues": [
+        3.1410071988600676,
+        4.433161084185692,
+        5.32115157757051
+      ],
+      "projected_eigenvalues": [
+        3.1431480742008957,
+        4.4354020173489985,
+        5.321449908450104
+      ],
+      "max_projection_error": 0.0022409331633062024,
+      "schur_resolvent_error": 5.551115123125783e-17,
+      "self_energy_norm_at_z_minus_1": 0.004592422502870263
+    }
+  ],
+  "zero_gap_control": {
+    "full_four_mode_free_shift_spectrum_error": 1.7763568394002505e-15,
+    "statement": "No gap: full commuting connection is pure gauge; a three-mode projection is not an exact dynamics."
+  },
+  "not_derived": [
+    "other two gauge sectors on the same metric",
+    "independent Yang-Mills boson dynamics",
+    "frame and gap preparation",
+    "physical record selection",
+    "dynamic metric and Einstein limit",
+    "joint observational RMSE"
+  ],
+  "provenance": {
+    "python": "3.14.2",
+    "numpy": "2.4.4",
+    "script_sha256": "625dcf6a135ba38876d21a7764c9f7cb15cd582a25b5fb345a06ab2518e778fa"
+  }
+}
