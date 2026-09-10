@@ -255,7 +255,7 @@ $$
 
 정리는 명시한 density와 적분 가능성 아래 두 측도의 near-minimum 질량을 비교한다. density가 소실하거나 정의되지 않는 경우에는 적용할 수 없다.
 
-$W_{\min}>-\infty$, $Z_W<\infty$라고 하자. 그러면 모든 $\eta>0$에 대해
+$-\infty<W_{\min}<\infty$, $0<Z_W<\infty$라고 하자. 그러면 모든 $\eta>0$에 대해
 
 $$
 \mu_{\mathrm{CE}}(R_\eta(W))>0

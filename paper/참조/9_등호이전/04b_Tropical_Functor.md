@@ -197,6 +197,9 @@ $$
 $$
 
 로 둔다. $K(a,b)=0$이면 값은 $\infty$다.
+$K(a,b)>1$이면 음수가 나오므로 일반 공역은
+$\mathbb R\cup\{\infty\}$다. 이는 비음수 energy 범주로의 사상이라는
+주장이 아니며, 합성 Gibbs kernel에서도 이 차이를 유지한다.
 
 Gibbs kernel에는 정확히
 
@@ -241,7 +244,9 @@ N_{a,c}
 \#\{b\in B:E(a,b)+F(b,c)<\infty\}
 $$
 
-이고 $N_{a,c}=0$이면 양쪽은 모두 $\infty$로 읽는다.
+이다. 위 차에 대한 부등식은 $N_{a,c}\ge1$일 때만 적용한다.
+$N_{a,c}=0$이면 tropical energy와 tropicalized 합성 값은 각각
+$\infty$다. 이때 $\log0$이나 $\infty-\infty$를 부등식에 넣지 않는다.
 
 **증명.**
 

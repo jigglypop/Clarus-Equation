@@ -198,7 +198,10 @@ $i>r$: $\delta$가 $y_i$에 의존하지 않으므로 $\mu_\beta$는 prior 그�
 
 해석:
 
-> 퇴화 등호(해가 무한히 많거나 없는 경우)에서 PreEq의 선택은 prior가 닫는다. 해가 있으면 minimum-norm 해, 없으면 least-squares 해가 manifest된다. 그리고 등호가 결정하지 않는 방향은 **잔류장으로 남는다** (4번 항목). 이는 03a의 conditional readout과 같은 구조이고, Bayesian 선형회귀/ridge는 정확히 이 스킴의 finite-$\beta$ 층이다.
+> 이 Gaussian prior에서는 **평균**이 minimum-norm least-squares 해
+> $A^+b$로 수렴한다. Kernel이 있으면 분포 전체가 그 점의 Dirac로
+> 수렴하는 것은 아니다. Kernel 방향의 prior 분산이 남는다는 4번 항목은
+> 확률 모형의 결론이며 물리적 잔류장의 존재를 증명하지 않는다.
 
 ### 정리 2.2: 축약사상 고정점
 

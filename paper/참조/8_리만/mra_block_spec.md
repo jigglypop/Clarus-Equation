@@ -14,23 +14,26 @@
 
 전제는 input/output shape, complex convention, precision, normalization을 고정한다. 이 선택은 구현 axiom이며, 수학적 정리·관측 결과·리만가설 관련 주장을 자동으로 제공하지 않는다.
 
-- **A1 (RH).** ζ(s)의 모든 비자명 영점은 critical line `Re(s) = 1/2` 위에 있다.
-  영점은 `s_n = 1/2 + i γ_n` 형태이며 `{γ_n}`은 GUE 통계를 따른다.
+- **A1 (주파수 입력).** 유한한 실수 목록 `γ_n`을 사용한다. 모든 제타 영점의
+  critical-line 위치(RH)와 간격의 GUE 통계는 별도 가설이며 아래 유한합에는 필요하지 않다.
 - **A2 (CE 결합 상수).** `α_s : α_w : α_em = 0.118 : 0.034 : 0.008` (`paper/3_상수`).
-  이 비율은 채널 분할의 유일한 자유도다.
-- **A3 (부트스트랩 고정점).** 활성 비율은 `ε² = 4.87 %`로 자연 수렴한다
-  (`paper/6_뇌/07_수면과복구.md`). attention 행렬도 이 sparsity를 상한으로 갖는다.
-- **A4 (유니타리).** `|det T|² ≤ 1`. 정보 증폭 = 환각이므로 출력 사영의 spectral
-  norm은 1 이하로 제약한다.
+  이 숫자는 채널 분할에 채택한 설계 입력이며, 표준 상호작용의 유도나 유일한 비율이라는 정리는 아니다.
+- **A3 (sparsity 입력).** `ε² = 4.87 %`를 후보 retention 비율로 택한다.
+  보편적인 자연 수렴이나 모든 attention 행렬의 상한은 이 사양에서 증명되지 않았다.
+- **A4 (출력 사영 수축).** 출력 사영의 spectral norm을 1 이하로 제약하는 설계다.
+  `|det T|² ≤ 1`만으로는 수축도 unitary도 보장되지 않는다.
+  norm과 환각 사이의 동등성은 이 수학에서 유도되지 않는다.
 
-위 네 axiom 위에서 attention 식 자체를 ζ explicit formula의 이산화로 유도한다.
+이 입력을 사용해 아래 attention score를 정의한다. 네 조건만으로 score가
+유일하게 유도되지는 않는다. 정리와 반례는 [수학 판정](math_claims_audit.md)을 따른다.
 
 ## 1. Mellin–Riemann score
 
 score는 query/key와 position input을 받아 attention logit을 출력하는 정의역 제한 연산자다. scale·branch·precision이 가정이며, score의 형태가 length generalization 또는 영점 구조의 empirical evidence를 보장하지 않는다.
 
-ζ explicit formula의 critical-strip 합을 Mellin 커널 방향 `x^{-s}`로 쓴다. 부호 규약은
-구현(`ce_mra.py`)과 `mra_paper.md` §3을 정본으로 따른다.
+제타 모드에서 동기를 얻어 유한 Mellin형 합 `x^{-s}`를 정의한다. 이 항의
+factorization은 정확하지만 모든 영점·다른 항·합 규약을 포함한 explicit formula
+자체와 동일하지 않다. 부호 규약은 `mra_paper.md` §3을 따른다.
 
 $$
 \sum_n \frac{x^{-(1/2 + i\gamma_n)}}{\tfrac{1}{2} + i\gamma_n}
@@ -57,7 +60,7 @@ $$
 
 여기서 `K = d_head / 2`는 헤드의 복소채널 수다.
 
-### 1.1 모듈화 (RoPE와 동일한 비용)
+### 1.1 모듈화와 계산 차수
 
 모듈화는 기존 RoPE interface에서 MRA score를 호출할 수 있게 하는 구현 contract다. 동일 비용은 지정 shape·backend·precision의 추정 또는 측정이며, 다른 kernel·sequence OOD에서 성립하지 않을 수 있다.
 
@@ -74,7 +77,8 @@ $$
 S_{ij} \;=\; \sum_{k} w_k\,\tilde q_i^{(k)} \overline{\tilde k_j^{(k)}}.
 $$
 
-곧 표준 dot-product attention과 동일한 `O(N²K)` 비용이다. 추가 비용은 없다.
+주요 합의 점근 차수는 표준 dot-product attention과 같은 `O(N²K)`다.
+주파수 변환·복소 가중치·실수부 계산의 상수 비용이 있어 실제 비용 동일성은 따르지 않는다.
 
 ### 1.2 학습 자유도
 
@@ -86,7 +90,8 @@ $$
 | `w_k = 1/(1/2 + iγ_k)` | buffer | 0 (RH axiom) |
 | `W_q, W_k, W_v, W_o` | learnable | 표준 attention과 동일 |
 
-→ 표준 attention 대비 **추가 자유도 0**이다. 모든 새 항은 axiom에서 연역된다.
+이 설정의 새 계수는 학습하지 않는 고정 입력이다. 고정된 설계 선택은 남으며,
+그 값이나 score의 유일성이 네 axiom에서 연역됐다는 뜻은 아니다.
 
 ### 1.3 Real / Imag 사용
 
@@ -136,9 +141,10 @@ $$
 `ε² = 4.87 %`는 CE 부트스트랩 고정점이다. 이는 attention의 활성 비율을 우주의 자연
 스파시티에 맞추는 hard constraint이며, 추가 학습 자유도는 없다.
 
-## 4. 유니타리 제약
+## 4. 출력 사영의 norm 제약
 
-unitary 제약은 projection norm 또는 spectral invariant를 제한하는 구현 guard다. 지정 norm의 안정성만 말하며 전체 attention·학습·리만가설 관련 해석의 충분조건은 아니다.
+출력 사영의 norm 제약은 해당 선형 사상의 수축만 제한한다. Unitary성과
+구별하며 전체 attention·학습·리만가설 관련 해석의 충분조건은 아니다.
 
 출력 사영 `W_o`에 `nn.utils.spectral_norm`을 적용한다.
 
@@ -146,7 +152,9 @@ $$
 W_o \leftarrow W_o / \sigma_1(W_o),\qquad \sigma_1(W_o) \le 1.
 $$
 
-attention 출력의 spectral norm이 1 이하가 되어 잔차 합 이후의 정보 증폭을 차단한다.
+이는 사영 행렬 자체의 norm 조건이다. Attention 가중치, 입력 의존성,
+다른 층과 residual 합까지 포함한 전체 map의 수축은 보장하지 않는다.
+Norm 1인 항등 map을 residual로 더해도 전체 map은 2배가 되는 반례가 있다.
 
 ## 5. 블록 조립 (MRABlock)
 
@@ -167,22 +175,26 @@ MRABlock(x):
 
 `LBONorm`, `GaugeLattice`는 `legacy examples/ai/clarus_lm.py` (removed)에 이미 구현되어 있다.
 
-## 6. Hermitian 옵션 (Hilbert-Pólya 직접 구현)
+## 6. Hermitian 옵션의 추가 조건
 
 Hermitian 옵션은 특정 matrix symmetry를 강제하는 optional implementation branch다. Hilbert--Pólya와의 연결은 동기 또는 구조 비유이며, 옵션 통과·수치 대칭이 리만가설의 증거가 아니다.
 
-`W_q = W_k`(tied projection)로 두면 `S_{ji} = S_{ij}^*`가 보장되어 attention
-operator가 Hermitian이 된다. 영점 분포가 self-adjoint operator의 고유값이라는 H-P 추측을
-직접 구현하는 setting이며, 옵션은 `hermitian=True`다.
+`W_q = W_k`만으로는 위 score의 Hermitian 조건이 성립하지 않는다.
+한 채널의 대각성분에 복소수 `1/(1/2+iγ)`가 남고, 실수부만 취해도
+위치 amplitude와 sine 항 때문에 비대칭일 수 있다. `hermitian=True`라는
+이름만으로 조건을 충족했다고 판단하지 않는다. 비음수 실수 가중 Gram 구성,
+별도 대칭화와 mask·softmax 이후의 검사가 필요하다. 이 유한 행렬 조건은
+Hilbert–Pólya 추측의 직접 구현이나 증명이 아니다.
 
 ## 7. 점근 / 안정성
 
 점근·안정성은 정의한 sequence limit, norm, precision에서의 조건부 수학 또는 수치 성질이다. finite fixture·overflow·branch cut·OOD length가 범위를 벗어나면 반례·미완성으로 남는다.
 
 - 작은 `p`에서 `log(1+p) ≈ p`이므로 기존 RoPE와 유사하다.
-- 큰 `p`에서 `log(1+p)`가 천천히 증가하므로 frequency aliasing이 자동으로 완화된다.
-- `N → kN`일 때 phase 평행이동만 발생하므로 relative attention이 보존된다.
-- ζ 가중 `1/|1/2 + iγ_k|`가 고주파를 자동으로 감쇠해 학습 안정성을 높인다.
+- 큰 `p`에서 인접 phase 차이가 감소한다. Alias와 학습 안정성은 추가 검증 대상이다.
+- 정확한 공통 로그 이동은 `p → k(1+p)-1`이다. 일반적인 위치 배율에는 오차가 있다.
+- 가중치 크기 `1/|1/2 + iγ_k|`는 큰 `|γ_k|`에서 감소한다.
+  이 사실만으로 전체 학습 과정의 안정성을 증명하지 않는다.
 
 ## 8. 백엔드 정책
 

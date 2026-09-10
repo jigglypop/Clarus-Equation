@@ -131,7 +131,8 @@ $$
 
 만약 $\delta_U=0$이면 $E(\eta_n)\to m$인 $\eta_n\in F$를 잡을 수 있다. 위와 같은 compact sublevel 논리로 부분열 $\eta_{n_j}\to\eta\in F$를 얻는다. l.s.c.에 의해 $E(\eta)\le m$, 따라서 $\eta\in\Gamma_*\subset U$다. 그러나 $\eta\in F=S\setminus U$이므로 모순이다.
 
-이제 $\eta=\delta_U/2$를 택한다. 분모는 recovery mass로부터
+여기서 $\delta_U=\infty$이면 임의의 유한 양수로 바꿔 같은 하한을
+사용한다. 이제 $\eta=\delta_U/2$를 택한다. 분모는 recovery mass로부터
 
 $$
 Z_\beta
@@ -184,7 +185,10 @@ $$
 F[\gamma]=W[\gamma]+c
 $$
 
-로 읽을 수 있다. $W_{\min}:=\inf_{\gamma\in S}W[\gamma]$가 유한하고 $W$가 good rate function이면
+로 읽을 수 있다. $W_{\min}:=\inf_{\gamma\in S}W[\gamma]$가 유한하고
+$W$가 good rate function이면 아래 정의와 최소집합 등식을 닫힌
+support $S$에 제한한다. 특히 비음성은 $S$ 위에서만 주장한다.
+Support 밖의 더 낮은 값은 배제하지 않는다.
 
 $$
 E_{\mathrm{fold}}(\gamma)

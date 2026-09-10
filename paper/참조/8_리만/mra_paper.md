@@ -1,4 +1,4 @@
-# Mellin-Riemann Attention: ζ explicit-formula 유도 attention의 ablation 분석과 분산 절감, 그리고 Euler-CE의 length extrapolation 우위 발견
+# Mellin-Riemann Attention: 유한 Mellin형 score와 attention ablation 기록
 
 이 원고는 Mellin--Riemann attention과 Euler-CE 변종을 지정한 모델·corpus·seed·step·length fixture에서 ablation한 결과를 보고한다. 독자는 attention·PPL·holdout·seed 분산의 기본을 아는 독자를 전제로 하며, ζ explicit formula와 리만가설 관련 표현은 설계 동기·수식 배경이지 실험 결과가 가설의 증명은 아니다.
 
@@ -12,10 +12,16 @@
 
 ## Abstract
 
+2026-09-11 수학 감사: 이 원고의 수치는 과거 실험 보고로 보존하며 이번
+감사에서 재실행하지 않았다. 현재 수학 판정은 [정리·반례 원문](math_claims_audit.md)을
+따른다. 유한 Mellin형 score는 채택한 정의이며 제타 explicit formula나
+RH에서 유일하게 유도되지 않는다. Query/key 결합, 복소 가중치, 비대칭
+진폭, mask와 softmax를 포함하면 Hermitian성이나 unitary성을 자동으로
+갖지 않는다. 아래 관측된 성능 패턴은 해당 fixture의 결과에 한정한다.
+
 초록의 결과는 명시한 experimental fixture의 요약이며, 수학적 정리·리만가설 증명·일반 attention 우위와 구분한다. metric 분모·seed·baseline·length 범위가 달라지면 같은 결론을 다시 검증해야 한다.
 
-Riemann ζ 함수의 explicit formula의 critical-strip 합으로부터 attention
-score를 직접 유도한 새로운 attention 변종 **Mellin-Riemann Attention
+유한 실수 주파수와 Mellin형 위상·진폭으로 정의한 **Mellin-Riemann Attention
 (MRA)**를 제안하고, 7개 설계 요소를 ablation으로 검증한다. 또한 비교
 대상으로 기존 `euler_ce_k1`의 length extrapolation 성능을 처음으로 직접
 측정한다.
@@ -72,9 +78,9 @@ invariant라는 근본 한계를 외부 주입으로 해결하는 inductive bias
 임을 가정한다. Berry-Keating [6]은 이 operator가 `H = (xp + px)/2`의
 양자화일 가능성을 제시했다.
 
-본 연구는 RH(Riemann Hypothesis)를 **engineering axiom**으로 채택하고,
-attention score를 ζ의 explicit formula의 critical-strip 합으로부터 유도
-한다. 식 자체는 단순하지만, 어느 부분이 실제로 도움이 되고 어느 부분이
+본 연구는 유한 주파수와 위치별 진폭을 attention score의 설계 입력으로
+채택한다. RH는 이 유한 행렬의 정의나 회전 norm 보존에 필요하지 않다.
+어느 부분이 실제로 도움이 되고 어느 부분이
 도움이 되지 않는지는 **실증으로만 확인 가능**하다. 본 논문의 기여는 이를
 ablation으로 분리한 데에 있다.
 
@@ -82,8 +88,7 @@ ablation으로 분리한 데에 있다.
 
 기여 목록은 형식 사양, 구현, 좁은 ablation evidence, 미완성 가설을 구분해 읽어야 한다. 각 항은 dataset·seed·baseline·threshold 또는 증명 가정을 벗어나면 승격하지 않는다.
 
-1. ζ explicit formula의 critical-strip 합으로부터 attention score를
-   폐쇄형으로 유도 (§ 3).
+1. 유한 Mellin형 attention score를 정의하고 정확한 factorization을 제시 (§ 3).
 2. 7가지 설계 knob(frequency 방식, amplitude weighting, decay 형태,
    sparsity, spectral norm, Hermitian)을 노출하는 단일 ablation 표면 (§ 4).
 3. **부정적 발견 명시**: 직설적 ζ-frequency, multiplicative decay,
@@ -120,20 +125,12 @@ attention score에 `−|i − j|/m_h`의 거리 감쇠 bias를 직접 더한다(
 
 ### 2.3 ζ explicit formula
 
-von Mangoldt:
-
-```
-ψ(x) = x − Σ_ρ x^ρ / ρ − log(2π) − ½ log(1 − x^{-2})
-```
-
-핵심 합 `Σ_ρ x^ρ / ρ`는 RH 하에서
-
-```
-Σ_n x^{1/2 + iγ_n} / (1/2 + iγ_n) = √x · Σ_n e^{iγ_n log x} / (1/2 + iγ_n)
-```
-
-으로 정리된다. **Mellin 커널** `e^{iγ_n log x}`와 **ζ 진폭** `1/(1/2 + iγ_n)`
-의 곱이 자연스럽게 나타난다.
+제타 explicit formula의 영점 항은 이 설계의 역사적 동기다. 완전한
+수론 공식에는 영점 전체에 대한 합 규약과 나머지 항·정의역이 필요하다.
+여기서는 그 항등식을 가정하거나 증명에 사용하지 않는다.
+아래 score에 필요한 정확한 식은 양의 실수 `x`와 유한 실수 `γ_k`에 대한
+`x^{-(1/2+iγ_k)} = x^{-1/2} exp(-iγ_k log x)`뿐이다.
+유한 truncation과 학습 query/key 곱을 완전한 explicit formula와 동일시하지 않는다.
 
 ---
 
@@ -181,7 +178,8 @@ q̂_im = w_re · q̃_im + w_im · q̃_re
 Re(S) = q̂_re @ k̃_re^T + q̂_im @ k̃_im^T
 ```
 
-→ 표준 attention의 **2배 matmul** 비용이다. softmax / V 적용은 동일하다.
+이 표현은 두 실수 matmul로 계산한다. 채널 폭과 backend를 포함한 실제
+실행 비용이 표준 attention의 정확히 두 배라는 결론은 따르지 않는다.
 
 ### 3.3 학습 자유도
 
@@ -189,8 +187,8 @@ Re(S) = q̂_re @ k̃_re^T + q̂_im @ k̃_im^T
 
 | 양 | 형상 | 자유도 |
 |---|---|---|
-| `γ_k` | buffer | 0 (RH axiom) |
-| `w_k = 1/(1/2 + iγ_k)` | buffer | 0 (RH axiom) |
+| `γ_k` | buffer | 0 (고정 입력) |
+| `w_k = 1/(1/2 + iγ_k)` | buffer | 0 (고정 정의) |
 | `cos_p, sin_p, log_decay` | buffer | 0 (위치-axiom) |
 | `W_q, W_k, W_v, W_o` | learnable | 표준 attention 동일 |
 
@@ -230,7 +228,8 @@ knob은 다음과 같다.
 - `True`: `w_k = 1/(1/2 + iγ_k)`를 score에 곱한다. `Re(w_k)·Re_part −
   Im(w_k)·Im_part` 형태로 standard RoPE의 `cos` 채널과 보조 `sin` 채널이
   혼합된다.
-- `False`: `w_k = 1`. attention 식이 표준 RoPE와 일치한다(control).
+- `False`: `w_k = 1`. `freq_mode="rope"`, `decay_mode="none"`이고
+  나머지 scale·mask·projection 설정도 같을 때 표준 RoPE control이 된다.
 
 ### 4.3 `decay_mode`
 
@@ -244,10 +243,13 @@ knob은 다음과 같다.
 
 ### 4.4 `hermitian` (causal LM에서 비추천)
 
-`W_q = W_k` tied + score symmetrize `S ← (S + Sᵀ)/2` 구조다. Bidirectional encoder에서는
-self-adjoint operator의 이산화(Hilbert-Pólya 직접 구현)이지만, **causal
-LM에서는 mask 전 symmetrize가 future leakage를 일으킨다**. 본 작업의 ablation
-표에서 이 knob은 제외했다.
+실수 score에 `S ← (S + Sᵀ)/2`를 적용하면 대칭 행렬이 된다.
+복소 score에는 transpose 대신 adjoint를 사용해야 한다.
+이 유한 대칭화는 Hilbert–Pólya의 스펙트럼 대응을 구현한 증명이 아니다.
+Causal mask와 row softmax 뒤에는 대칭성이 일반적으로 사라진다.
+대칭화만으로 future leakage가 반드시 생긴다고도 말할 수 없으며,
+각 logit이 참조하는 토큰과 mask 순서를 실제 구현에서 검사해야 한다.
+본 작업의 과거 ablation 표에서는 이 knob을 제외했다.
 
 ---
 

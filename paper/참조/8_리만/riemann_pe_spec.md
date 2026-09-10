@@ -9,14 +9,16 @@
 
 전제는 input position, hidden shape, complex convention, precision과 boundary 처리를 고정한다. 이는 구현 axiom이며, 수식 표기만으로 surface의 수학적 또는 물리적 실재를 주장하지 않는다.
 
-리만 가설(Riemann Hypothesis)은 공학적 axiom으로 채택한다.
+입력은 유한한 실수 주파수 목록 γ_n이다. 아래의 회전·분해는 임의의 실수 목록에서
+성립하므로 리만 가설(RH)을 필요로 하지 않는다. 제타 함수의 모든 비자명 영점이
+critical line에 있다는 명제와 정규화된 영점 간격의 GUE 통계는 별도 가설이다.
+이 사양이나 유한 실험이 둘을 증명하지 않는다.
+기존 사양은 처음 100개의 γ_n을 영점 표에서 입력하고 `RIEMANN_ZEROS_IM`에
+보관하도록 했다. 실제 표의 정확도·출처는 별도로 확인해야 한다.
+n > 100에 사용하는 γ_n ≈ 2π n / log n은 선도 점근 근사이며 유한 n의 정확한
+영점이나 입력 목록 접합부의 정렬을 보장하지 않는다.
 
-> ζ(s)의 모든 비자명 영점은 critical line Re(s) = 1/2 위에 있다.
-
-따라서 영점은 s_n = 1/2 + i γ_n의 형태이며, {γ_n}은 Montgomery-Dyson 추측에 의해
-GUE(Gaussian Unitary Ensemble) 통계를 따르는 "무작위인 동시에 구조적인" 수열이다.
-처음 100개의 γ_n은 Titchmarsh / Odlyzko 표에서 가져와 `RIEMANN_ZEROS_IM`에 하드코딩한다.
-n > 100은 Riemann-von Mangoldt 점근식 γ_n ≈ 2π n / log n으로 외삽한다.
+정확한 증명과 반례는 [수학 판정 R1–R8](math_claims_audit.md)을 따른다.
 
 본 사양은 이 axiom 위에서 attention의 positional encoding을
 **Riemann surface (multi-sheet 복소 평면)** 위의 회전으로 재구성한다.
@@ -32,18 +34,20 @@ n > 100은 Riemann-von Mangoldt 점근식 γ_n ≈ 2π n / log n으로 외삽한
 
 이는 평면(circle) 위의 회전이며, 다음 두 가지 한계가 있다:
 
-1. **단일 시트(single-sheet)**: θ가 2π를 넘어가면 정보가 wrap-around로 사라진다.
-   같은 phase인 두 위치를 attention이 구분할 수 없다.
+1. **단일 채널의 위상 주기성**: 한 채널은 θ를 2π를 법으로만 구분한다.
+   여러 주파수 채널 전체가 같은 위치를 혼동하는지는 별도 문제다.
+   한 채널의 wrap만으로 위치 정보 전체가 사라졌다고 결론내리지 않는다.
 2. **선형 시간 lift**: 위치 p가 선형으로 들어간다.
    따라서 sequence length가 N → kN으로 늘어나면 phase도 k배 늘어나
-   학습된 frequency 분포가 깨진다(RoPE의 long-context 문제와 동일).
+   학습 때와 다른 위상 조합을 만난다. 고정 frequency 값 자체가 바뀌는
+   것은 아니며, 이 변화가 성능에 미치는 영향은 실험으로 확인한다.
 
-Riemann surface는 이 두 문제를 동시에 해결한다.
+아래 두 요소를 설계 후보로 사용한다. Alias 제거와 길이 외삽 개선은 별도 검증 대상이다.
 
 - **Multi-sheet**: log z는 단일값이 아니라 z = r e^{iθ} 위에서 무한 시트를 갖는다.
   sheet index를 명시적으로 유지하면 phase가 wrap되어도 정보가 보존된다.
-- **Logarithmic lift**: 자연 좌표 τ = log(1 + p)는 multiplicative scale에 대해
-  invariant하다(kp ↦ τ + log k). Sequence length의 power-law 변화에도 안정적이다.
+- **Logarithmic lift**: τ = log(1 + p)의 차이는 정확히 1+p 전체의 공통 배율에서
+  보존된다. p 자체의 배율·평행이동과 sheet penalty에는 추가 오차가 생긴다.
 
 ## 2. 사양
 
@@ -78,8 +82,9 @@ $$
 e^{i\theta(p,k)} = (1+p)^{i\gamma_k}.
 $$
 
-이는 Mellin 변환 커널 (1+p)^{i γ_k}와 정확히 일치한다. Riemann ζ 함수 자체가
-이 형태의 합으로 정의되므로 자연스러운 선택이다.
+이는 로그 좌표의 Fourier phase이며, 측도 dx/x와 부호를 명시한 Mellin 변환에
+사용할 수 있다. 이 유한 순수 위상합이 ζ 함수 자체의 정의는 아니다.
+ζ의 Dirichlet 급수는 Re(s)>1에서 사용하며 critical line에는 해석적 연속이 필요하다.
 
 ### 2.3 Sheet index
 
@@ -115,9 +120,10 @@ $$
 \begin{pmatrix} q_{2k} \\ q_{2k+1} \end{pmatrix}
 $$
 
-그러면 q_i^T k_j는 자동으로 Δθ = θ(i,k) - θ(j,k) = γ_k log((1+i)/(1+j))의
-함수가 된다. 이로써 translation invariance가 유지되고, Hilbert-Pólya 관점에서
-Hermitian kernel이 보장된다.
+회전 후 내적은 q_i^T R(θ(j,k)-θ(i,k)) k_j로 표현된다. 위치 인자는
+log((1+j)/(1+i))에 의존한다. 이는 통상적인 위치 평행이동 불변성이 아니다.
+서로 다른 query/key에서는 Hermitian kernel도 보장되지 않는다.
+비음수 가중 Gram 구성의 충분조건과 기존 식의 반례는 수학 판정 R2–R5에 있다.
 
 ### 2.5 최종 attention score
 
@@ -139,21 +145,26 @@ $$
 | `log_scale`     | (n_heads,)     | 헤드별 "speed of light": 모든 γ_k에 곱해지는 exp(s)                   |
 | `log_lambda_sigma` | (n_heads,) | sheet-difference penalty의 log-scale (λ_σ = exp(·))                  |
 
-이 외 파라미터(γ_k, frequency 자체)는 모두 buffer로 두고 학습하지 않는다. 이렇게 RH의 axiom적 성격을 유지한다.
+이 외 주파수 γ_k는 buffer로 고정한다. 고정 주파수라는 사실은 RH를 채택하거나
+검증한 것과 다르며, 학습 가능한 scale과 sheet penalty도 별도 설계 선택이다.
 
 ## 4. 점근적 성질
 
 점근 성질은 명시한 sequence limit·norm·branch·precision의 조건부 분석이다. finite model·truncation·overflow·OOD length에서는 반례·수치 failure를 별도 검사해야 한다.
 
-- 작은 p에서는 τ_p ≈ p(log(1+p) ≈ p)이므로 기존 RoPE와 유사하다.
-- 큰 p에서는 τ_p가 천천히 증가하므로 frequency aliasing이 자동으로 완화된다.
-- N → kN일 때 τ는 log k만큼만 평행이동하므로 relative attention이 거의 동일하게 보존된다.
+- 실수 변수 p→0에서 log(1+p)=p+O(p²)다. 같은 주파수를 쓸 때의 국소 근사이며
+  이산 위치 전체나 다른 주파수 목록의 RoPE 동일성을 뜻하지 않는다.
+- 큰 p에서 인접 phase 간격이 줄어든다. 전체 다주파수 alias나 OOD 성능이
+  자동 개선된다는 정리는 아니다.
+- 정확한 배율 변환은 p→k(1+p)-1이다. 일반 p→kp의 오차는 수학 판정 R2,
+  sheet penalty가 그 대칭을 깨는 반례는 R3에서 계산한다.
 
 ## 5. 백엔드 dispatch
 
 dispatch는 backend·dtype·shape에 따라 동일 API를 어떤 kernel이 소비하는지 정한다. backend parity는 fixture tolerance의 기계 조건이며, speed·memory·모델 품질의 보장은 아니다.
 
-세 단계 backend 모두에서 동일한 수치 결과를 보장한다.
+세 backend가 아래 허용오차를 만족하는 것을 구현 목표로 둔다.
+그 parity가 현재 검증됐다는 수학적 보장은 아니다.
 
 1. **PyTorch** (참조): `reality_stone.clarus.ce_riemann_attn.RiemannRotaryAttention`
 2. **Rust CPU**: `reality_stone.clarus._rust.nn_ce_riemann_fwd`

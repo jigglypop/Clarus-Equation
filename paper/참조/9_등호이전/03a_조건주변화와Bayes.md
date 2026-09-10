@@ -186,6 +186,11 @@ $$
 
 ## 4. 조건 free energy
 
+이 절과 다음 절의 free energy는 $\beta>0$에서 정의한다.
+조건화와 정규화 합은 해당 prior marginal이 양수인 label만을 대상으로
+한다. 영 marginal에서 무정의인 조건부 확률이나 free energy를
+형식적으로 0과 곱하지 않는다.
+
 조건을 먼저 읽는 경우에는 각 조건 내부의 값 후보를 partition function으로 접은 effective energy가 필요하다. 이 free energy는 유한 합과 양의 조건 prior에서 정의되는 산출이며, 온도와 prior가 바뀌면 값이 바뀌므로 물리적 잠재에너지 또는 인과 비용으로 동일시되지 않는다.
 
 조건 $k$가 주어졌을 때 내부 값 partition을

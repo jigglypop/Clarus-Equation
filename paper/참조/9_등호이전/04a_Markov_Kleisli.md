@@ -60,7 +60,10 @@ $$
 W(A)=\{w:A\to\mathbb R_{\ge0}\}
 $$
 
-를 finite weight monad로 보면, 커널 $K:A\to B$는 함수
+로 두자. 정확한 monad는 **Set** 위의 유한 support 비음수 weight
+functor이고, 그 Kleisli 범주에서 유한 대상만 제한한다.
+$W(A)$는 보통 무한집합이므로 FinSet의 endofunctor가 아니다.
+커널 $K:A\to B$는 함수
 
 $$
 A\to W(B)

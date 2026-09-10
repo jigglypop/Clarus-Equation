@@ -203,15 +203,19 @@ $$
 
 $x_*$를 포함하는 임의의 열린집합 $U$를 잡는다. $S\setminus U=\varnothing$이면 자명하다.
 
-$S\setminus U\ne\varnothing$라 하자. 02a 보조정리 3.1과 coercivity 논법에 의해, 충분히 큰 compact $K$ 안에서 $E_0$는 $S\setminus U$ 위에 양의 gap을 갖는다. 더 구체적으로, 작은 $\eta>0$를 택하고 $V=\{x:E_0(x)<m+\eta\}\cap U$를 잡으면 $\mu_0(V)>0$이다.
-
-equicoercivity로 $c>m+2\eta$에 대해 $\{E_n\le c\}\subset K_c$인 compact $K_c$를 잡는다. compact $K_c\cap(S\setminus U)$ 위에서는 어떤 $\delta>0$에 대해
+$S\setminus U\ne\varnothing$라 하자. 02a 보조정리 3.1로 전체
+$S\setminus U$ 위에 먼저 고정된 $\delta>0$를 잡아
 
 $$
 E_0(x)\ge m+\delta
 $$
 
-이다. $\eta<\delta/4$로 잡는다.
+로 둔다. 이제 $0<\eta<\delta/4$, $c>m+\delta$를 고정한다.
+연속성과 support로 $x_*$의 작은 열린 근방 $V\subset U$를
+$\overline V$가 compact이고 $\sup_VE_0<m+\eta$, $\mu_0(V)>0$가
+되게 택한다. Equicoercivity의 compact $K_c$를
+$K_c\cup\overline V$로 확대한다. 따라서 아래 균등오차는 분자 영역과
+분모 영역 $V$ 모두에 적용된다.
 
 국소균등수렴에 의해 충분히 큰 $n$에 대해 $K_c$ 위에서
 
@@ -360,13 +364,13 @@ $x_*$를 포함하는 열린집합 $U$를 잡는다. equicoercivity로 compact �
 Gamma liminf와 유일 minimizer를 이용하면 $K\cap(S\setminus U)$ 위에 uniform gap이 생긴다. 만약 그렇지 않다면, 어떤 부분열과 $x_n\in K\cap(S\setminus U)$가 존재해서
 
 $$
-E_n(x_n)\to m
+E_n(x_n)\le m+o(1)
 $$
 
 이다. compactness로 $x_n\to x\in K\cap(S\setminus U)$인 부분열을 잡을 수 있다. Gamma liminf에 의해
 
 $$
-E_0(x)\le\liminf_nE_n(x_n)=m
+E_0(x)\le\liminf_nE_n(x_n)\le m
 $$
 
 이므로 $x$는 $E_0$의 minimizer다. 유일성 때문에 $x=x_*$이어야 한다. 그러나 $x\in S\setminus U$이고 $x_*\in U$이므로 모순이다.

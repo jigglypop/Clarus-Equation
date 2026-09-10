@@ -72,7 +72,9 @@ B^{x_i,x_f}_t
 (1-t)x_i+tx_f+\sqrt{\sigma}\,\widetilde B_t
 $$
 
-라 쓰자. 여기서 $\widetilde B$는 $0$에서 시작해 $0$에서 끝나는 표준 Brownian bridge다.
+라 쓰자. $\sigma>0$를 가정한다. 여기서 $\widetilde B$는 $0$에서 시작해
+$0$에서 끝나는 표준 Brownian bridge다. $\sigma=0$이면 Dirac prior라서
+아래 full-support와 Sobolev 영질량 결론이 성립하지 않는다.
 
 ### 정리 2.1: Brownian bridge는 $C^0$ full support
 
@@ -95,7 +97,15 @@ $$
 k(t)=h(t)-((1-t)x_i+tx_f)
 $$
 
-는 $H^1_0$에 속한다. Brownian bridge의 Cameron-Martin space는 $H^1_0$이고, Cameron-Martin theorem에 의해 $k$만큼 shift한 bridge law는 원래 bridge law와 서로 absolutely continuous다. 따라서
+는 $H^1_0$에 속한다. 이 공간과 bridge covariance의 대응도 확인한다.
+표준 bridge의 covariance kernel $C(t,s)=\min(t,s)-ts$에 대해
+$k_s(t)=C(t,s)$라 두면 $\int_0^1h'(t)k_s'(t)dt=h(s)$다.
+모든 $k_s$에 직교인 $h\in H^1_0$는 모든 점에서 0이므로 이들의 span은
+조밀하다. 따라서 Cameron–Martin 공간은 $H^1_0$이고, 분산 $\sigma>0$는
+그 norm 제곱을 $\sigma^{-1}$배 한다.
+[Hairer의 Cameron–Martin 정리 4.44](https://www.hairer.org/notes/SPDEs.pdf#page=31)를
+표준 보조정리로 사용하면 $k$만큼 shift한 bridge law는 원래 bridge
+law와 서로 absolutely continuous다. 따라서
 
 $$
 \mu_{\mathrm{BB}}\{\|\gamma-h\|_\infty<\varepsilon\}
@@ -110,7 +120,13 @@ $$
 \ell(t)=(1-t)x_i+tx_f
 $$
 
-와 동치다. 마지막 확률은 Brownian bridge가 작은 sup-norm tube 안에 머무는 사건이며 양수다.
+와 동치다. 마지막 작은 공의 양의 확률도 다음처럼 확인한다.
+중심화된 bridge $Y$의 공간은 separable이므로 반지름 $\varepsilon/\sqrt2$인
+공들 중 하나 $B(z,\varepsilon/\sqrt2)$는 양의 질량을 갖는다.
+독립 복사 $Y_1,Y_2$가 모두 그 공 안에 있으면
+$\|(Y_1-Y_2)/\sqrt2\|_\infty<\varepsilon$다. 중심 Gaussian의
+covariance를 계산하면 $(Y_1-Y_2)/\sqrt2$의 법칙은 $Y$와 같으므로
+원점의 $\varepsilon$ 공도 양의 질량을 갖는다.
 
 일반 $h\in C^0_{x_i,x_f}$는 polygonal $h_m$으로 $\|h_m-h\|_\infty<\varepsilon/2$가 되게 근사한다. 그러면
 
@@ -146,7 +162,8 @@ $$
 \to0.
 $$
 
-반면 Brownian bridge는 Brownian motion과 같은 quadratic variation을 갖는다. 균등 partition에 대해 각 성분 $j=1,\dots,d$는
+반면 Brownian bridge는 Brownian motion과 같은 quadratic variation을 갖는다.
+Dyadic 균등 partition에 대해 각 성분 $j=1,\dots,d$는
 
 $$
 \sum_i
@@ -237,16 +254,19 @@ $$
 
 증명:
 
-Hilbert norm에 대해
+먼저 비음수 급수 $Y=\sum_n\lambda_n\xi_n^2$를 정의한다. 단조수렴으로
 
 $$
-\mathbb E\|X\|_H^2
+\mathbb EY
 =
 \sum_{n=1}^\infty \lambda_n
 <\infty.
 $$
 
-따라서 $\|X\|_H<\infty$ almost surely이고 $X\in H$ almost surely다. 끝.
+따라서 $Y<\infty$ almost surely다. 정규직교성으로 급수의 부분합들이
+$H$에서 Cauchy이고 완비성으로 $X\in H$에 수렴한다. 부분합은 가측이므로
+극한도 가측이다. 이로써 $X$의 존재를 먼저 얻고
+$\mathbb E\|X\|_H^2=\sum_n\lambda_n$를 결론낸다. 끝.
 
 ### 정리 3.2: Sobolev-Gaussian은 $H^1$ full support
 
@@ -274,7 +294,8 @@ $$
 X=X_{\le k}+X_{>k}
 $$
 
-로 나눈다. $X_{\le k}$는 $\mathbb R^{kd}$의 nondegenerate Gaussian이므로
+로 나눈다. 필요하면 $k$를 더 키워 $\sum_{n>k}\lambda_n<r^2/8$도
+만족시킨다. $X_{\le k}$의 기저 계수는 $\mathbb R^k$의 nondegenerate Gaussian이므로
 
 $$
 \mathbb P(\|X_{\le k}-h^{(k)}\|_H<r/4)>0.

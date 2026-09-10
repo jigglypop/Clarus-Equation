@@ -1,0 +1,186 @@
+{
+  "schema_version": 2,
+  "candidate": [
+    "CE-MATH-B1",
+    "CE-MATH-R1",
+    "CE-MATH-E1"
+  ],
+  "scientific_success": false,
+  "full_joint_rmse": null,
+  "new_observational_inputs_or_fits": false,
+  "general_proof_location": [
+    "paper\\01_측정과_접힘\\12_토글_판정경계와_관측밖_상태의_수학.md",
+    "paper\\참조\\8_리만\\math_claims_audit.md",
+    "paper\\참조\\9_등호이전\\10_농축_커널_Born_수학감사.md"
+  ],
+  "proof_scope": "conditional quantum boundary, Gibbs/pathspace, kernel/Born and logarithmic theorems in cited manuscripts; finite checks are witnesses only",
+  "proof_assistant_checked": false,
+  "preregistration_sha256": {
+    "B1": "3232e0eea0fa69bea180f508673298cb0f330fccc5e696190eebebe178d53921",
+    "R1": "b16bae05689ff530e994688baa98b9456389c6a3a1eb482954ed3b1dd969e8e6",
+    "E1": "27b11733f2beec5c45f9afc524acd645c7ab8d54f18d6094b6e342060c670904"
+  },
+  "source_hashes": {
+    "ce_mathematical_boundary_audit.py": "785cdf7392d51c4e887941e34ffa5db1dbe46d1f6a18c9b59822a2b7298e0739"
+  },
+  "manuscript_sha256": {
+    "paper\\01_측정과_접힘\\12_토글_판정경계와_관측밖_상태의_수학.md": "1f973495459eb3654c59ef5599241a742baeaf54eb98f310b21e9b1a47ca4bfc",
+    "paper\\참조\\8_리만\\math_claims_audit.md": "43b651ef8cf596b829e1d18312e972e105c6aac295afc7ef862f7d1748a02f51",
+    "paper\\참조\\9_등호이전\\10_농축_커널_Born_수학감사.md": "78235e3927440576d4b5e5c16806fde21d5be1f69dc729b06cd96103644b5025"
+  },
+  "environment": {
+    "python": "3.11.9",
+    "numpy": "2.4.6",
+    "sympy": "1.14.0"
+  },
+  "symbolic_identities": {
+    "B2_qubit_toggle": true,
+    "B3_Bloch_transform": true,
+    "B3_fixed_diameter": true,
+    "B3_boundary_not_fixed_initial": true,
+    "B3_boundary_not_fixed_final": true,
+    "B3_coherent_and_mixed_differ": true,
+    "B3_twirl_idempotence": true,
+    "B3_irreversible_toggle_TP": true,
+    "B3_irreversible_dual_flip": true,
+    "B3_boundary_image_singleton": true,
+    "B2_spectral_pairing_unitarity": true,
+    "B2_spectral_pairing_toggle": true,
+    "B2_spectral_pairing_involution": true,
+    "B4_actual_crossing": true,
+    "B4_tangent_touch": true,
+    "B4_tangent_derivative": true,
+    "B4_tangent_second_derivative": true,
+    "B4_boundary_leaves_at_intermediate_time": true,
+    "B9_flat_boundary_curvature": true,
+    "B9_curved_boundary_curvature": true,
+    "B6_observation_TP": true,
+    "B6_dilation_isometry": true,
+    "B6_observation_Choi_positive": true,
+    "B7_norm_1": true,
+    "B7_visible_trace_1": true,
+    "B7_initial_boundary_1": true,
+    "B7_derivative_1": true,
+    "B7_same_initial_energy_1": true,
+    "B7_norm_-1": true,
+    "B7_visible_trace_-1": true,
+    "B7_initial_boundary_-1": true,
+    "B7_derivative_-1": true,
+    "B7_same_initial_energy_-1": true,
+    "B7_identical_observed_outputs": true,
+    "B7_orthogonal_global_states": true,
+    "B6_dilation_partial_trace_output": true,
+    "B5_compression_defect": true,
+    "B5_nonprojective_compression": true,
+    "B8_seven_state_normalization": true,
+    "B8_seven_state_boundary_mass": true,
+    "B8_symmetric_prior_odd_mean": true,
+    "B8_boundary_concentration_limit": true,
+    "B8_binary_operator_squared": true,
+    "B8_filter_complete_instrument": true,
+    "B8_conditional_filter_is_nonlinear": true,
+    "R1_real_rotation_isometry": true,
+    "R2_relative_rotation": true,
+    "R2_shifted_scale_log": true,
+    "R5_complex_weight_value": true,
+    "R6_determinant_one_counterexample": true,
+    "E2_continuous_well_partition": true,
+    "E2_exponential_recovery_still_concentrates": true,
+    "E2_positive_prior_can_lose_minimum": true,
+    "E1_zero_partition_infinite_cost": true,
+    "E3_kinetic_orthogonal_decomposition": true,
+    "E3_dyadic_quadratic_variation_mean": true,
+    "E3_dyadic_quadratic_variation_variance": true,
+    "E4_global_lower_error_counterexample": true,
+    "E5_row_normalized_composition_counterexample": true,
+    "E5_state_normalization_composes": true,
+    "E6_joint_multiple_minima_limit": true,
+    "E6_raw_residual_vanishes": true,
+    "E7_refinement_Born_consistency": true,
+    "E7_refinement_power_four_violation": true,
+    "E8_instrument_complete": true,
+    "E8_Gibbs_success_probability": true,
+    "E8_Gibbs_conditional_law": true,
+    "E8_commuting_energy_conservation": true,
+    "E8_same_success_law_different_coherence": true
+  },
+  "counterexamples": {
+    "B3_not_every_boundary_state_is_fixed": true,
+    "B3_noninvertible_flip_not_onto_boundary": true,
+    "B2_unbalanced_spectrum_has_no_unitary_toggle": true,
+    "B4_zero_need_not_be_crossing_or_record": true,
+    "B9_same_boundary_different_curvatures": [
+      0,
+      4
+    ],
+    "B7_equal_visible_state_opposite_future_bias": [
+      "+1/sqrt(2)",
+      "-1/sqrt(2)"
+    ],
+    "B6_compression_trace_not_one": "1/2",
+    "B8_boundary_concentration_not_unique_record": "five equal surviving boundary atoms",
+    "B8_state_cost_not_operator_square": true,
+    "B8_conditional_normalization_not_affine_channel": true,
+    "R2_additive_translation": [
+      "log(2)",
+      "log(3/2)"
+    ],
+    "R2_unshifted_dilation": [
+      "log(2)",
+      "log(3)"
+    ],
+    "R3_sheet_common_shift_changes_distance": [
+      0,
+      1
+    ],
+    "R5_tied_projection_complex_diagonal": "2/5 - 4*I/5",
+    "R5_real_score_not_symmetric": [
+      -0.35651970121583715,
+      1.7196099644526315
+    ],
+    "R5_row_softmax_loses_symmetry": true,
+    "R6_determinant_not_contraction": {
+      "det": 1,
+      "norm": 2
+    },
+    "R6_stochastic_not_l2_contraction": "sqrt(41)/5",
+    "R6_contraction_residual_not_contraction": "x + identity(x) = 2x",
+    "E2_Gamma_unique_minimum_no_Gibbs_concentration": [
+      0.05624894189385865,
+      1.5079171905285357e-06,
+      5.97411134124365e-26,
+      3.9259473792920666e-59
+    ],
+    "E2_subexponential_condition_not_necessary": "prior rate 1/2; gap 1",
+    "E1_lsc_full_support_not_recovery": "uniform law remains uniform",
+    "E3_Brownian_kinetic_partition_zero": "positive quadratic variation excludes W1p",
+    "E4_local_uniform_not_global_lower_error": "unbounded error x^2/2 outside mesh radius",
+    "E5_row_normalization_not_functor": true,
+    "E5_tropicalization_can_be_negative": "-log(2)",
+    "E6_nonunique_joint_minimum_not_Dirac": true,
+    "E6_weak_limit_discontinuous_readout": {
+      "integrals": 0,
+      "limit_integral": 1
+    },
+    "E7_B4_needed_beyond_other_axioms": [
+      "9/10",
+      "3/4"
+    ],
+    "E8_probability_law_does_not_fix_instrument": true
+  },
+  "numerical_errors": {
+    "B5_random_compression_identity": 2.914335439641036e-16,
+    "B6_contraction_block_reconstruction": 1.3517848686956847e-15,
+    "R4_Gram_direct_kernel": 3.3306690738754696e-16,
+    "R4_Hermitian_kernel": 1.1443916996305594e-16,
+    "R5_weighted_inner_product_identity": 1.3322676295501878e-15,
+    "R7_finite_MRA_factorization": 2.5121479338940403e-15
+  },
+  "maximum_numerical_error": 2.5121479338940403e-15,
+  "witness_checks_passed": true,
+  "unproved_extensions": [
+    "proof-assistant formalization",
+    "Riemann hypothesis or Hilbert-Polya spectral identification",
+    "physical selection, actual CE path action/prior and full joint RMSE"
+  ]
+}

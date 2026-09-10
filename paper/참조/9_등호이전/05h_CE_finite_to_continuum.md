@@ -72,6 +72,8 @@ W_N:A_N\to[0,\infty].
 $$
 
 항상 $\mu_N(a)>0$ for all $a\in A_N$라고 하자.
+각 $N$에서 적어도 하나의 $a$는 $W_N(a)<\infty$라고 요구한다.
+이 조건이 없으면 모든 비용이 무한대일 수 있어 Gibbs 분모가 0이다.
 
 finite Gibbs measure:
 
@@ -152,7 +154,7 @@ $$
 
 finite set이므로 모든 비최소점의 질량이 0으로 간다. 끝.
 
-### 정리 2.1 (positive weight의 joint-limit recovery no-go)
+### 정리 2.2 (positive weight의 joint-limit recovery no-go)
 
 각 mesh에서 양의 weight가 있어도 그 하한이 사라지면 joint 분모 하한은 실패할 수 있다. 이는 fixed-mesh 결과를 continuum claim으로 승격하는 반례다.
 
@@ -200,7 +202,10 @@ $$
 
 > energy gap $1$은 $\beta_N=N$에 의해 $e^{-N}$으로 보상된다. 그런데 recovery weight가 $e^{-N^2}$로 더 빨리 죽으면 Gibbs 분모가 minimizer를 붙잡지 못한다.
 
-따라서 finite-to-continuum bridge에는 다음 scale 조건이 필요하다.
+따라서 다음 scale 조건을 쓰면 이 실패를 배제할 수 있다.
+이는 **충분조건**이며 필요조건은 아니다. 양의 고정 gap보다 느린
+지수 속도로 prior 질량이 감소해도 농축할 수 있다는 반례는
+[수학 감사 E2](10_농축_커널_Born_수학감사.md)에 있다.
 
 $$
 \frac1{\beta_N}\log\frac1{\text{recovery mass}_N}\to0.
@@ -356,7 +361,9 @@ $$
 
 주의:
 
-- locally uniform $W_N\to W$와 equicoercivity가 있으면 이 lower consistency를 보통 얻는다.
+- 같은 공간의 국소 균등 수렴과 equicoercivity는 compactness/liminf를
+  통해 outer gap을 줄 수 있다. 이들이 위의 **전역** lower consistency를
+  준다는 결론은 일반적으로 거짓이다. [수학 감사 E4](10_농축_커널_Born_수학감사.md)의 반례를 따른다.
 - Gamma 수렴은 minimizer 안정성에는 강하지만, Gibbs 분모에는 scaled recovery mass가 별도로 필요하다.
 
 ## 5. fixed-$\beta$ thermal convergence

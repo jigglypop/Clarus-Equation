@@ -248,6 +248,11 @@ $$
 
 따라서 sublevel 안의 경로들은 균일한 Holder modulus를 가진다. 또한 endpoint 고정과 위 부등식으로 $\|\gamma\|_{C^0}$도 균일하게 bounded다. Arzela-Ascoli 정리에 의해 $C^0$-precompact하다.
 
+균일 극한이 원래 정의역에 남는지도 확인한다. 도함수들은 유계
+$L^p$ 열이며 $p>1$에서 반사성이 있으므로 약수렴 부분열을 갖는다.
+분포 미분의 정의로 그 약한 극한이 균일 극한 경로의 도함수임을
+확인하면 극한도 같은 끝점의 $W^{1,p}$ 경로다.
+
 추가로 $S_E$가 $C^0$-l.s.c.이면 $\{S_E\le C\}$는 $C^0$에서 닫혀 있다. precompact set의 닫힌 부분집합이므로 compact다. 끝.
 
 ### 정리 3.2: CE $W$의 good-rate
@@ -275,6 +280,13 @@ $$
 따라서 $\{W\le c\}\subset\{S_E\le\hbar c\}$이고, 오른쪽은 compact다. 왼쪽은 $W$의 l.s.c.로 닫혀 있으므로 compact다. 끝.
 
 ### 따름정리 3.3: CE 선택 농축
+
+이 적용에서는 $-\infty<W_{\min}<\infty$를 요구한다. Polish 공간을 쓰는
+05e에 연결할 때는 ambient $C^0_{x_i,x_f}$ 위에서 비용을
+$W^{1,p}$ 밖에 $+\infty$로 확장한다. 위 compactness와 l.s.c. 논증은
+이 확장에도 적용된다. $W^{1,p}$의 유도 $C^0$ 거리 자체가 완비라는
+가정을 하지 않는다. 구체적으로 닫힌 kinetic/Gaussian 모형은
+[수학 감사 E3](10_농축_커널_Born_수학감사.md)에 있다.
 
 따름정리는 recovery prior가 추가될 때만 Gibbs 농축으로 넘어간다. prior 질량은 action regularity에서 자동으로 나오지 않는다.
 
