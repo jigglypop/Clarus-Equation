@@ -1,0 +1,393 @@
+{
+  "candidate": "CE-LM3",
+  "status": "autonomous_instrument_and_reference_gate",
+  "cases": [
+    {
+      "apparatus_gap": 0.0,
+      "rows": [
+        {
+          "time": 5.0,
+          "completeness_error": 1.801510329801914e-15,
+          "energy_matrix_error": 8.992806499463768e-15,
+          "effect_eigenvalue_range": [
+            0.0027215879954043854,
+            0.46942956207728204
+          ],
+          "choi_gram_minimum": -5.5836971752078776e-15,
+          "effect_distances": {
+            "initial_occupation": 0.9509555728384282,
+            "free_arrival_occupation": 0.6862638202420854
+          },
+          "conditional_pointer_one": [
+            0.30745035357437067,
+            0.2847971306687255
+          ],
+          "equal_prior_error": 0.5113266114528225,
+          "vacuum_pointer_one": 0.30142471504394297,
+          "sequential_joint_probabilities": [
+            [
+              0.6985752849560483,
+              0.0
+            ],
+            [
+              0.0,
+              0.3014247150439429
+            ]
+          ],
+          "sequential_flip_probability": 0.0,
+          "first_read_changes_late_pointer_one": -5.551115123125783e-17,
+          "independent_state_error": 1.6936179678530494e-15,
+          "independent_method": "X_block_exponentials"
+        },
+        {
+          "time": 10.0,
+          "completeness_error": 3.3306690738754696e-15,
+          "energy_matrix_error": 1.7208456881689926e-14,
+          "effect_eigenvalue_range": [
+            0.020388205221678023,
+            0.4632617642827641
+          ],
+          "choi_gram_minimum": -6.33920394858219e-15,
+          "effect_distances": {
+            "initial_occupation": 0.93609035065401,
+            "free_arrival_occupation": 0.6643957255951385
+          },
+          "conditional_pointer_one": [
+            0.31956681948794746,
+            0.29845099094229804
+          ],
+          "equal_prior_error": 0.5105579142728247,
+          "vacuum_pointer_one": 0.32099505806944767,
+          "sequential_joint_probabilities": [
+            [
+              0.6586125917952339,
+              0.03996269316080938
+            ],
+            [
+              0.022429136225198182,
+              0.27899557881874293
+            ]
+          ],
+          "sequential_flip_probability": 0.06239182938600756,
+          "first_read_changes_late_pointer_one": -0.0020367860898953816,
+          "independent_state_error": 4.4920875430543555e-15,
+          "independent_method": "X_block_exponentials"
+        },
+        {
+          "time": 20.0,
+          "completeness_error": 1.4210854715202004e-14,
+          "energy_matrix_error": 5.762057497804562e-14,
+          "effect_eigenvalue_range": [
+            0.07283430951672283,
+            0.3663823425767791
+          ],
+          "choi_gram_minimum": -9.660353927305464e-15,
+          "effect_distances": {
+            "initial_occupation": 0.8965917482253256,
+            "free_arrival_occupation": 0.9144053902243326
+          },
+          "conditional_pointer_one": [
+            0.2705876473387685,
+            0.2874122750338511
+          ],
+          "equal_prior_error": 0.49158768615245874,
+          "vacuum_pointer_one": 0.29146425238680046,
+          "sequential_joint_probabilities": [
+            [
+              0.5850578171216462,
+              0.1135174678343614
+            ],
+            [
+              0.173134577592291,
+              0.12829013745163154
+            ]
+          ],
+          "sequential_flip_probability": 0.2866520454266524,
+          "first_read_changes_late_pointer_one": -0.04965664710080753,
+          "independent_state_error": 1.0894454563584465e-14,
+          "independent_method": "X_block_exponentials"
+        },
+        {
+          "time": 40.0,
+          "completeness_error": 1.9539925233402755e-14,
+          "energy_matrix_error": 7.061018436615996e-14,
+          "effect_eigenvalue_range": [
+            0.14814438279646241,
+            0.4001359209300248
+          ],
+          "choi_gram_minimum": -4.6819973255213515e-15,
+          "effect_distances": {
+            "initial_occupation": 0.8123099114576432,
+            "free_arrival_occupation": 0.8279971786936456
+          },
+          "conditional_pointer_one": [
+            0.3229682105349948,
+            0.32614442405717103
+          ],
+          "equal_prior_error": 0.49841189323891183,
+          "vacuum_pointer_one": 0.35644447436326654,
+          "sequential_joint_probabilities": [
+            [
+              0.5875392992408988,
+              0.11103598571511093
+            ],
+            [
+              0.09766410621318934,
+              0.20376060883073732
+            ]
+          ],
+          "sequential_flip_probability": 0.20870009192830027,
+          "first_read_changes_late_pointer_one": -0.0416478798174183,
+          "independent_state_error": 2.8453745008474116e-14,
+          "independent_method": "X_block_exponentials"
+        }
+      ],
+      "first_read_energy": {
+        "time": 5.0,
+        "work": 0.05591315901973015,
+        "negative_interaction": 0.055913159019730534
+      },
+      "reference": {
+        "sector_ground_energy": -7.152107378812258,
+        "sector_gap": 0.47182776736300447,
+        "eigenstate_residual": 2.220446049250313e-15,
+        "local_dimension": 16,
+        "local_reference_eigenvalues": [
+          -2.1402221801206956e-17,
+          -8.902823566608047e-18,
+          -2.6020852139652106e-18,
+          0.0,
+          4.054987041438844e-18,
+          4.806046699386439e-18,
+          2.4910882959251784e-17,
+          7.264412117621831e-17,
+          0.00585716871350876,
+          0.0065511354201618415,
+          0.02779793168318527,
+          0.03703525666581346,
+          0.05402742230148952,
+          0.09356209396588738,
+          0.331096617316071,
+          0.44407237393388516
+        ],
+        "numerical_support_rank": 8,
+        "numerical_support_threshold": 1e-12,
+        "prepared_weight_outside_numerical_support": 0.5000000000000021,
+        "relative_entropy": null,
+        "relative_entropy_status": "infinite_exact_X_support_mismatch",
+        "local_reference_entropy": 1.3904910854863477,
+        "local_prepared_entropy": 0.7389438845791856,
+        "independent_X_block_control": {
+          "X_block_energies": [
+            -7.152107378812277,
+            -6.680279611449233
+          ],
+          "energy_error": 1.865174681370263e-14,
+          "pointer_X": -1.0000000000000022
+        }
+      },
+      "instrument_scope": "all 70 matter inputs in fixed particle-number-four sector",
+      "readout_rule": "pointer equals initial occupation label; no relabeling or time refitting",
+      "actual_outcome_selection_derived": false
+    },
+    {
+      "apparatus_gap": 1.0,
+      "rows": [
+        {
+          "time": 5.0,
+          "completeness_error": 1.7949378080036537e-15,
+          "energy_matrix_error": 8.234676291563947e-15,
+          "effect_eigenvalue_range": [
+            0.0018929249769332208,
+            0.42862714795577644
+          ],
+          "choi_gram_minimum": -7.284894884615206e-15,
+          "effect_distances": {
+            "initial_occupation": 0.954513217217853,
+            "free_arrival_occupation": 0.6894296406633313
+          },
+          "conditional_pointer_one": [
+            0.30478176270371377,
+            0.27945803626768756
+          ],
+          "equal_prior_error": 0.5126618632180131,
+          "vacuum_pointer_one": 0.297900887887496,
+          "sequential_joint_probabilities": [
+            [
+              0.7020991121124989,
+              0.0
+            ],
+            [
+              0.0,
+              0.297900887887496
+            ]
+          ],
+          "sequential_flip_probability": 0.0,
+          "first_read_changes_late_pointer_one": 0.0,
+          "independent_state_error": 3.2597285658603225e-11,
+          "independent_method": "DOP853"
+        },
+        {
+          "time": 10.0,
+          "completeness_error": 2.7755575615628914e-15,
+          "energy_matrix_error": 1.2221456547831149e-14,
+          "effect_eigenvalue_range": [
+            0.01671340422693839,
+            0.4214505456168334
+          ],
+          "choi_gram_minimum": -5.958080529269572e-15,
+          "effect_distances": {
+            "initial_occupation": 0.9454723478801835,
+            "free_arrival_occupation": 0.70691429520059
+          },
+          "conditional_pointer_one": [
+            0.2732318070020366,
+            0.2541398050379935
+          ],
+          "equal_prior_error": 0.5095460009820215,
+          "vacuum_pointer_one": 0.2616764538010357,
+          "sequential_joint_probabilities": [
+            [
+              0.6921187107291864,
+              0.009980401383312118
+            ],
+            [
+              0.0381814019748913,
+              0.2597194859126032
+            ]
+          ],
+          "sequential_flip_probability": 0.04816180335820342,
+          "first_read_changes_late_pointer_one": 0.008023433494879606,
+          "independent_state_error": 7.114167394072519e-11,
+          "independent_method": "DOP853"
+        },
+        {
+          "time": 20.0,
+          "completeness_error": 1.4876988529977098e-14,
+          "energy_matrix_error": 5.6527093075124826e-14,
+          "effect_eigenvalue_range": [
+            0.07699209937629169,
+            0.3695711201249584
+          ],
+          "choi_gram_minimum": -4.9207252732368145e-15,
+          "effect_distances": {
+            "initial_occupation": 0.8715293923823143,
+            "free_arrival_occupation": 0.8811812646928895
+          },
+          "conditional_pointer_one": [
+            0.19084577826602156,
+            0.20007630675165888
+          ],
+          "equal_prior_error": 0.49538473575718134,
+          "vacuum_pointer_one": 0.14019455846380385,
+          "sequential_joint_probabilities": [
+            [
+              0.6295069980081971,
+              0.07259211410424571
+            ],
+            [
+              0.19901667461403355,
+              0.09888421327343366
+            ]
+          ],
+          "sequential_flip_probability": 0.27160878871827926,
+          "first_read_changes_late_pointer_one": 0.03128176891387552,
+          "independent_state_error": 1.198015392525501e-10,
+          "independent_method": "DOP853"
+        },
+        {
+          "time": 40.0,
+          "completeness_error": 3.608224830031759e-14,
+          "energy_matrix_error": 1.485202738876288e-13,
+          "effect_eigenvalue_range": [
+            0.08595853656952342,
+            0.3410633490806803
+          ],
+          "choi_gram_minimum": -9.700402611481873e-15,
+          "effect_distances": {
+            "initial_occupation": 0.8828014747738591,
+            "free_arrival_occupation": 0.8729415300139574
+          },
+          "conditional_pointer_one": [
+            0.14958696108796582,
+            0.1437709873845834
+          ],
+          "equal_prior_error": 0.5029079868516912,
+          "vacuum_pointer_one": 0.11119694703611294,
+          "sequential_joint_probabilities": [
+            [
+              0.6624091158305543,
+              0.03968999628195369
+            ],
+            [
+              0.18060130394001767,
+              0.11729958394747855
+            ]
+          ],
+          "sequential_flip_probability": 0.22029130022197135,
+          "first_read_changes_late_pointer_one": 0.045792633193319304,
+          "independent_state_error": 3.330307492845284e-10,
+          "independent_method": "DOP853"
+        }
+      ],
+      "first_read_energy": {
+        "time": 5.0,
+        "work": 0.04552707005924361,
+        "negative_interaction": 0.04552707005924436
+      },
+      "reference": {
+        "sector_ground_energy": -6.886576369721868,
+        "sector_gap": 0.2484206450064308,
+        "eigenstate_residual": 2.4424906541753444e-15,
+        "local_dimension": 16,
+        "local_reference_eigenvalues": [
+          1.5747567514285318e-05,
+          2.771735253669744e-05,
+          5.521083234799953e-05,
+          6.981272587548547e-05,
+          8.833986223838334e-05,
+          0.0002947499340416138,
+          0.0007297735625227199,
+          0.0030926698470053414,
+          0.0047736676004337154,
+          0.009279051473339314,
+          0.024307170294208896,
+          0.05739835221535915,
+          0.06193365074013481,
+          0.06749753209384055,
+          0.3155093305316166,
+          0.45492722336698344
+        ],
+        "numerical_support_rank": 16,
+        "numerical_support_threshold": 1e-12,
+        "prepared_weight_outside_numerical_support": 0.0,
+        "relative_entropy": 0.6942320845826033,
+        "relative_entropy_status": "finite_positive_reference",
+        "local_reference_entropy": 1.4278571048407733,
+        "local_prepared_entropy": 0.7389438845791856,
+        "independent_X_block_control": null
+      },
+      "instrument_scope": "all 70 matter inputs in fixed particle-number-four sector",
+      "readout_rule": "pointer equals initial occupation label; no relabeling or time refitting",
+      "actual_outcome_selection_derived": false
+    }
+  ],
+  "fitted_parameters": 0,
+  "full_joint_rmse": null,
+  "scientific_success": false,
+  "limitations": [
+    "Finite one-dimensional regulator and prepared clock; no spacetime or gauge derivation.",
+    "Intermediate projective read is supplied and has energy backaction.",
+    "Finite sampled stability checks are not permanent or unique-outcome proofs.",
+    "Faithful local reference is not a CFT modular-stress identity or Einstein limit.",
+    "No observations or independent holdout are evaluated."
+  ],
+  "source_sha256": {
+    "ce_autonomous_record_instrument.py": "e47ea896587ce2937f962384632e15d1e90fffd4200f60b3a2efa53cf7e73886",
+    "ce_local_vacuum_modular.py": "eaa93d08395ca3504276b16cfdf6b29fd6b23e84c41fb807271a0fa9f76a9ec6"
+  },
+  "environment": {
+    "python": "3.11.9",
+    "numpy": "2.4.6"
+  }
+}

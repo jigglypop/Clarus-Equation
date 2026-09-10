@@ -1,0 +1,545 @@
+{
+  "schema_version": 1,
+  "candidate": "CE-UR4-P1",
+  "scientific_success": false,
+  "full_joint_rmse": null,
+  "preregistration_sha256": "e345b05cc71b6ce754637d8181b3e5a26d4b490743b265e97d9b3a232427e118",
+  "source_hashes": {
+    "ce_record_pair_preparation.py": "2167cf0b149903f885cda5e78239135b0a2b7ce8fd9593a4d9b2ad9a29af8869",
+    "ce_singlet_record_observability.py": "9636d1fae1548f57fd2e0383c91339c047628e084ec841613fe66d589eeb551f",
+    "ce_supersymmetric_record.py": "d945ec1dfa32113e33f91d38882fdf346257d6b9a807e1ba439f47c014719e8f",
+    "ce_simple_group_record.py": "6fbae4f419124c798f4386db609eac92d3b4236c430deb4c104f6bfa8a67df13"
+  },
+  "environment": {
+    "python": "3.11.9",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "sympy": "1.14.0"
+  },
+  "vertices": {
+    "a": 0.12909944487358055,
+    "b": 0.3872983346207417,
+    "M_over_V": 1.0,
+    "kappa_times_V": 0.05,
+    "scalar_pair_vertex": "2*M*a",
+    "scalar_antiscalar_vertex": "-2*a*m",
+    "chiral_Majorana_yukawa": "2*a",
+    "initial_weak_components": 1,
+    "initial_spin_average": false,
+    "final_identical_factors_SS_SA_FF": [
+      0.5,
+      1.0,
+      0.5
+    ]
+  },
+  "source_and_partial_cut": {
+    "rows": [
+      {
+        "ecm_over_V": 0.0013470132469929539,
+        "mass_over_V": 0.0006570796326794897,
+        "sigma_SS_SA_FF_times_V_squared": [
+          2.1835361064669865e-05,
+          1.8854993401575884e-11,
+          2.076406148348544e-11
+        ],
+        "cut_matrix_over_V_squared": [
+          [
+            0.0001455688096369539,
+            0.0
+          ],
+          [
+            0.0,
+            0.0001455688096369539
+          ]
+        ],
+        "SA_off_diagonal_cut": 1.2569949985968485e-10,
+        "FF_off_diagonal_cut": -1.2569949985968485e-10,
+        "source_partial_optical_theorem_ratio": 0.9999999999999996
+      },
+      {
+        "ecm_over_V": 0.0013470132469929539,
+        "mass_over_V": 0.00034292036732051036,
+        "sigma_SS_SA_FF_times_V_squared": [
+          8.561312418009018e-05,
+          2.0135244228535032e-11,
+          1.352050341266856e-10
+        ],
+        "cut_matrix_over_V_squared": [
+          [
+            0.000570753125596866,
+            0.0
+          ],
+          [
+            0.0,
+            0.000570753125596866
+          ]
+        ],
+        "SA_off_diagonal_cut": 1.342344744001831e-10,
+        "FF_off_diagonal_cut": -1.342344744001831e-10,
+        "source_partial_optical_theorem_ratio": 0.9999999999999992
+      },
+      {
+        "ecm_over_V": 0.01,
+        "mass_over_V": 0.0006570796326794897,
+        "sigma_SS_SA_FF_times_V_squared": [
+          9.862887673260739e-05,
+          8.516675380317418e-11,
+          9.777720919457565e-09
+        ],
+        "cut_matrix_over_V_squared": [
+          [
+            0.0006574600857249597,
+            0.0
+          ],
+          [
+            0.0,
+            0.0006574600857249597
+          ]
+        ],
+        "SA_off_diagonal_cut": 5.676648086938736e-10,
+        "FF_off_diagonal_cut": -5.676648086938736e-10,
+        "source_partial_optical_theorem_ratio": 0.9999999999999997
+      },
+      {
+        "ecm_over_V": 0.01,
+        "mass_over_V": 0.00034292036732051036,
+        "sigma_SS_SA_FF_times_V_squared": [
+          9.925746759404347e-05,
+          2.3344240391320125e-11,
+          9.902402519013028e-09
+        ],
+        "cut_matrix_over_V_squared": [
+          [
+            0.0006616502723653908,
+            2.5849394142282112e-26
+          ],
+          [
+            2.5849394142282112e-26,
+            0.0006616502723653908
+          ]
+        ],
+        "SA_off_diagonal_cut": 1.5559714517789508e-10,
+        "FF_off_diagonal_cut": -1.5559714517789505e-10,
+        "source_partial_optical_theorem_ratio": 0.9999999999999998
+      },
+      {
+        "ecm_over_V": 0.1,
+        "mass_over_V": 0.0006570796326794897,
+        "sigma_SS_SA_FF_times_V_squared": [
+          0.00010148275644906185,
+          8.763109973559413e-11,
+          1.014739933390883e-06
+        ],
+        "cut_matrix_over_V_squared": [
+          [
+            0.0006697192139445516,
+            0.0
+          ],
+          [
+            0.0,
+            0.0006697192139445516
+          ]
+        ],
+        "SA_off_diagonal_cut": 5.725816056723718e-10,
+        "FF_off_diagonal_cut": -5.725816056723718e-10,
+        "source_partial_optical_theorem_ratio": 0.9999999999999996
+      },
+      {
+        "ecm_over_V": 0.1,
+        "mass_over_V": 0.00034292036732051036,
+        "sigma_SS_SA_FF_times_V_squared": [
+          0.00010148913369972393,
+          2.3869103167965175e-11,
+          1.0148674678940715e-06
+        ],
+        "cut_matrix_over_V_squared": [
+          [
+            0.0006697612995899358,
+            0.0
+          ],
+          [
+            0.0,
+            0.0006697612995899358
+          ]
+        ],
+        "SA_off_diagonal_cut": 1.5596072009948442e-10,
+        "FF_off_diagonal_cut": -1.5596072009948442e-10,
+        "source_partial_optical_theorem_ratio": 0.9999999999999996
+      }
+    ],
+    "max_independent_relative_error": 7.771561172376096e-16,
+    "smallest_scaled_cut_or_spin_eigenvalue": 0.0,
+    "off_diagonal_cancellation_identity": "Matrix([[0, 0], [0, 0]])",
+    "scope": "tree production and its leading light-record absorptive cut; other cuts and local terms excluded"
+  },
+  "twice_subtracted_light_record_loop": {
+    "coefficient_a_squared_over_8pi_squared": 0.0002110857992548703,
+    "rows": [
+      {
+        "mass_over_V": 0.0006570796326794897,
+        "s_over_m_squared": -1.0,
+        "twice_subtracted_Pi_over_coefficient": [
+          0.014622027492501743,
+          0.0
+        ],
+        "independent_dispersion_scaled_error": 3.642919299551295e-17,
+        "quad_scaled_error_estimate": 1.501075305720967e-12
+      },
+      {
+        "mass_over_V": 0.0006570796326794897,
+        "s_over_m_squared": 1.0,
+        "twice_subtracted_Pi_over_coefficient": [
+          0.01953404949191842,
+          0.0
+        ],
+        "independent_dispersion_scaled_error": 1.0408340855860843e-17,
+        "quad_scaled_error_estimate": 4.158933614162308e-12
+      },
+      {
+        "mass_over_V": 0.0006570796326794897,
+        "s_over_m_squared": 3.0,
+        "twice_subtracted_Pi_over_coefficient": [
+          0.2908014481367479,
+          0.0
+        ],
+        "independent_dispersion_scaled_error": 3.3306690738754696e-16,
+        "quad_scaled_error_estimate": 8.477593627098656e-13
+      },
+      {
+        "mass_over_V": 0.0006570796326794897,
+        "s_over_m_squared": 4.5,
+        "twice_subtracted_Pi_over_coefficient": [
+          1.0189543766929194,
+          1.047199585787711
+        ],
+        "independent_dispersion_scaled_error": 1.0216465069780992e-14,
+        "quad_scaled_error_estimate": 1.101627255616606e-11
+      },
+      {
+        "mass_over_V": 0.0006570796326794897,
+        "s_over_m_squared": 16.0,
+        "twice_subtracted_Pi_over_coefficient": [
+          -2.947706596996317,
+          2.7207178410989528
+        ],
+        "independent_dispersion_scaled_error": 4.39648317751562e-14,
+        "quad_scaled_error_estimate": 7.390870101421525e-11
+      },
+      {
+        "mass_over_V": 0.0006570796326794897,
+        "s_over_m_squared": 4.2025,
+        "twice_subtracted_Pi_over_coefficient": [
+          1.2016213229172168,
+          0.6896191508420253
+        ],
+        "independent_dispersion_scaled_error": 7.771561172376096e-15,
+        "quad_scaled_error_estimate": 1.472057076719703e-11
+      },
+      {
+        "mass_over_V": 0.00034292036732051036,
+        "s_over_m_squared": -1.0,
+        "twice_subtracted_Pi_over_coefficient": [
+          0.014621979726248985,
+          0.0
+        ],
+        "independent_dispersion_scaled_error": 3.469446951953614e-17,
+        "quad_scaled_error_estimate": 1.5010787751679189e-12
+      },
+      {
+        "mass_over_V": 0.00034292036732051036,
+        "s_over_m_squared": 1.0,
+        "twice_subtracted_Pi_over_coefficient": [
+          0.019533990995263456,
+          0.0
+        ],
+        "independent_dispersion_scaled_error": 4.5102810375396984e-17,
+        "quad_scaled_error_estimate": 4.15893708360926e-12
+      },
+      {
+        "mass_over_V": 0.00034292036732051036,
+        "s_over_m_squared": 3.0,
+        "twice_subtracted_Pi_over_coefficient": [
+          0.29080070282490733,
+          0.0
+        ],
+        "independent_dispersion_scaled_error": 1.6653345369377348e-16,
+        "quad_scaled_error_estimate": 8.47509562529325e-13
+      },
+      {
+        "mass_over_V": 0.00034292036732051036,
+        "s_over_m_squared": 4.5,
+        "twice_subtracted_Pi_over_coefficient": [
+          1.0189518758974447,
+          1.0471981053470507
+        ],
+        "independent_dispersion_scaled_error": 1.021405182655144e-14,
+        "quad_scaled_error_estimate": 1.1015952024522649e-11
+      },
+      {
+        "mass_over_V": 0.00034292036732051036,
+        "s_over_m_squared": 16.0,
+        "twice_subtracted_Pi_over_coefficient": [
+          -2.947705184345307,
+          2.7207041653739337
+        ],
+        "independent_dispersion_scaled_error": 4.3076653355456074e-14,
+        "quad_scaled_error_estimate": 7.39088392263186e-11
+      },
+      {
+        "mass_over_V": 0.00034292036732051036,
+        "s_over_m_squared": 15.42968901614586,
+        "twice_subtracted_Pi_over_coefficient": [
+          -2.802375724375489,
+          2.7038916289566433
+        ],
+        "independent_dispersion_scaled_error": 4.1744385725905886e-14,
+        "quad_scaled_error_estimate": 7.207489759511351e-11
+      }
+    ],
+    "max_scaled_independent_error": 4.39648317751562e-14,
+    "local_constant_and_slope": "unfixed",
+    "scope": "light-record cut only, Pi(s)-Pi(0)-s Pi_prime(0); no full self-energy or fitted subtraction"
+  },
+  "pair_preparation": {
+    "ecm_over_V": 0.0013470132469929539,
+    "energy_width_over_V": 2.6940264939859076e-06,
+    "central_8sigma_bounds_over_V": [
+      0.0013254610350410666,
+      0.001368565458944841
+    ],
+    "pair_thresholds_over_V_plus_minus": [
+      0.0013141592653589794,
+      0.0006858407346410207
+    ],
+    "four_light_record_threshold_over_V": 0.0013716814692820414,
+    "Gaussian_probability_outside_central_domain": 1.2441921148543658e-15,
+    "Gaussian_probability_below_heavy_pair_threshold": 1.6500479453861142e-34,
+    "Gaussian_probability_above_four_record_threshold": 2.6769939545117782e-20,
+    "tail_scope": "probability mass only, not a bound on omitted cross-section-weighted channels",
+    "center_beta_plus_minus": [
+      0.21951219512195116,
+      0.8606738750213531
+    ],
+    "center_scalar_pair_species_prior": [
+      0.20321702083496535,
+      0.7967829791650347
+    ],
+    "center_local_density_copy_basis": [
+      [
+        0.49999999999999994,
+        -0.29678297916503465
+      ],
+      [
+        -0.29678297916503465,
+        0.49999999999999994
+      ]
+    ],
+    "center_conditional_species_mode_entanglement_bits": 0.7283156639002981,
+    "companion_removed_from_full_state": false,
+    "central_domain_source_cross_sections_SS_SA_FF_plus_minus": [
+      [
+        2.1815612154091334e-05,
+        1.8837940073373802e-11,
+        2.0751717629573257e-11
+      ],
+      [
+        8.561292343550457e-05,
+        2.0135197015665538e-11,
+        1.3520577338911775e-10
+      ]
+    ],
+    "non_SS_fraction_of_source_cross_section": 1.8145111383498444e-06,
+    "readout_center_energy_over_epsilon_plus_minus": [
+      1.2027854559320985,
+      5.256468660333339
+    ],
+    "control_center_energy_over_epsilon_both": 0.9515511420705726,
+    "fixed_classification_threshold_over_V": 0.00011075048970831312,
+    "minimum_light_record_momentum_at_common_heavy_threshold_over_V": 0.000560499121639793
+  },
+  "conditional_source_to_readout": {
+    "epsilon_over_V": 3.429203673205104e-05,
+    "threshold_over_V": 0.00011075048970831312,
+    "source_cone_pair_fraction": 4.999958333473664e-05,
+    "detector_solid_angle": 0.0012565951740925096,
+    "transfer_scale_times_V_fourth": 9.894234570545237e-17,
+    "rows": [
+      {
+        "detector_direction": "z",
+        "detector_sigma_over_epsilon": 0.5,
+        "quadrature_orders": [
+          [
+            32,
+            4,
+            8
+          ],
+          [
+            48,
+            6,
+            12
+          ]
+        ],
+        "max_scaled_quadrature_difference": 1.4360068689711625e-10,
+        "transfer_coefficient_times_V_fourth_plus_minus": [
+          1.507806196147447e-16,
+          9.860479059701217e-16
+        ],
+        "accepted_plus_fraction_with_source_weights": 0.13263268489605526,
+        "error_given_species_plus_minus": [
+          2.535846112413102e-05,
+          2.6775396603854877e-05
+        ],
+        "error_conditioned_on_SS_sourced_accepted_event": 2.6587464646854617e-05,
+        "accepted_F_fraction_plus_minus": [
+          0.09664974531843327,
+          0.2820302630655366
+        ],
+        "mean_energy_over_epsilon_plus_minus": [
+          1.2028161826040251,
+          5.253825332771454
+        ],
+        "max_collision_invariant_energy_over_V_plus_minus": [
+          0.0006919626997250977,
+          0.0004061078175008607
+        ]
+      },
+      {
+        "detector_direction": "z",
+        "detector_sigma_over_epsilon": 1.0,
+        "quadrature_orders": [
+          [
+            32,
+            4,
+            8
+          ],
+          [
+            48,
+            6,
+            12
+          ]
+        ],
+        "max_scaled_quadrature_difference": 1.4360068689711625e-10,
+        "transfer_coefficient_times_V_fourth_plus_minus": [
+          1.507806196147447e-16,
+          9.860479059701217e-16
+        ],
+        "accepted_plus_fraction_with_source_weights": 0.13263268489605526,
+        "error_given_species_plus_minus": [
+          0.021349360013649545,
+          0.021531660780086313
+        ],
+        "error_conditioned_on_SS_sourced_accepted_event": 0.02150748173997519,
+        "accepted_F_fraction_plus_minus": [
+          0.09664974531843327,
+          0.2820302630655366
+        ],
+        "mean_energy_over_epsilon_plus_minus": [
+          1.2028161826040251,
+          5.253825332771454
+        ],
+        "max_collision_invariant_energy_over_V_plus_minus": [
+          0.0006919626997250977,
+          0.0004061078175008607
+        ]
+      },
+      {
+        "detector_direction": "y",
+        "detector_sigma_over_epsilon": 0.5,
+        "quadrature_orders": [
+          [
+            32,
+            4,
+            8
+          ],
+          [
+            48,
+            6,
+            12
+          ]
+        ],
+        "max_scaled_quadrature_difference": 2.6171287359488815e-12,
+        "transfer_coefficient_times_V_fourth_plus_minus": [
+          9.439855991627278e-17,
+          3.235698767201175e-17
+        ],
+        "accepted_plus_fraction_with_source_weights": 0.7447292186602303,
+        "error_given_species_plus_minus": [
+          2.6060908385326502e-06,
+          0.9999973779822615
+        ],
+        "error_conditioned_on_SS_sourced_accepted_event": 0.2552720528472468,
+        "accepted_F_fraction_plus_minus": [
+          0.09664608874705007,
+          0.28202734859461615
+        ],
+        "mean_energy_over_epsilon_plus_minus": [
+          0.951568118773622,
+          0.9518133249020019
+        ],
+        "max_collision_invariant_energy_over_V_plus_minus": [
+          0.0006919626997250977,
+          0.0004061078175008607
+        ]
+      },
+      {
+        "detector_direction": "y",
+        "detector_sigma_over_epsilon": 1.0,
+        "quadrature_orders": [
+          [
+            32,
+            4,
+            8
+          ],
+          [
+            48,
+            6,
+            12
+          ]
+        ],
+        "max_scaled_quadrature_difference": 2.6171287359488815e-12,
+        "transfer_coefficient_times_V_fourth_plus_minus": [
+          9.439855991627278e-17,
+          3.235698767201175e-17
+        ],
+        "accepted_plus_fraction_with_source_weights": 0.7447292186602303,
+        "error_given_species_plus_minus": [
+          0.011361745045588815,
+          0.9886280048687943
+        ],
+        "error_conditioned_on_SS_sourced_accepted_event": 0.26082926676765283,
+        "accepted_F_fraction_plus_minus": [
+          0.09664608874705007,
+          0.28202734859461615
+        ],
+        "mean_energy_over_epsilon_plus_minus": [
+          0.951568118773622,
+          0.9518133249020019
+        ],
+        "max_collision_invariant_energy_over_V_plus_minus": [
+          0.0006919626997250977,
+          0.0004061078175008607
+        ]
+      }
+    ],
+    "max_kinematic_or_point_cone_error": 2.343514707991491e-15,
+    "probability_formula": "P_alpha = source_integrated_luminosity * probe_column_density * A_alpha",
+    "dimensions": "A: V^-4; source luminosity and probe column density: V^2 each",
+    "conditions": "central 8sigma luminosity spectrum; stationary thin z layer covering both arrival times; dilute separated collisions",
+    "excluded": "SA/FF source branches after preparation; source CM spread and collision position; finite propagation and actual detector dynamics"
+  },
+  "sources": [
+    "https://arxiv.org/abs/hep-ph/9709356",
+    "https://arxiv.org/abs/0709.1075",
+    "https://pdg.lbl.gov/2025/reviews/rpp2025-rev-kinematics.pdf",
+    "https://pdg.lbl.gov/2025/reviews/rpp2025-rev-resonances.pdf"
+  ],
+  "new_observational_inputs_or_fits": false,
+  "result": "PARTIAL_SOURCE_CUT_AND_CONDITIONAL_TRANSPORT; COMPLETE_INSTRUMENT_OPEN",
+  "open_gates": [
+    "all source branches through the readout",
+    "physical source and detector preparation",
+    "complete visible scattering, non-event phase and local renormalization data",
+    "finite wave-packet propagation and definite asynchronous records",
+    "common gravity and frozen covariance-aware joint predictions"
+  ]
+}

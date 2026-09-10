@@ -1,0 +1,323 @@
+{
+  "candidate": "CE-BE1",
+  "status": "conditional_boundary_equilibrium_gate",
+  "boundary_action": {
+    "same_zero_endpoints": true,
+    "rows": [
+      {
+        "omega": 1.0,
+        "mode": 1,
+        "second_variation": 4.434802200544679,
+        "analytic": 4.434802200544679,
+        "quadrature_error": 5.2261154484715094e-14
+      },
+      {
+        "omega": 1.0,
+        "mode": 2,
+        "second_variation": 19.239208802178716,
+        "analytic": 19.239208802178716,
+        "quadrature_error": 2.152573048269859e-13
+      },
+      {
+        "omega": 4.0,
+        "mode": 1,
+        "second_variation": -3.065197799455321,
+        "analytic": -3.065197799455321,
+        "quadrature_error": 9.351066140900635e-14
+      },
+      {
+        "omega": 4.0,
+        "mode": 2,
+        "second_variation": 11.739208802178718,
+        "analytic": 11.739208802178716,
+        "quadrature_error": 2.15312148888486e-13
+      }
+    ],
+    "omega_4_stationary_zero_path_is_saddle": true,
+    "unique_action_from_endpoints": false
+  },
+  "geometry": {
+    "constant_curvature_cases": [
+      {
+        "kappa": -0.0001,
+        "radius": 0.9999933334476165,
+        "area": 12.566621939617262,
+        "volume_error": 0.0
+      },
+      {
+        "kappa": 0.0001,
+        "radius": 1.0000066667809548,
+        "area": 12.566119284792615,
+        "volume_error": 0.0
+      },
+      {
+        "kappa": -1e-05,
+        "radius": 0.9999993333344762,
+        "area": 12.56639574707886,
+        "volume_error": 0.0
+      },
+      {
+        "kappa": 1e-05,
+        "radius": 1.0000006666678096,
+        "area": 12.566345481596402,
+        "volume_error": 0.0
+      }
+    ],
+    "centered_area_slopes": [
+      {
+        "step": 0.0001,
+        "derivative": -2.5132741232388525,
+        "relative_error": 1.460317461069394e-10
+      },
+      {
+        "step": 1e-05,
+        "derivative": -2.513274122875505,
+        "relative_error": 1.4603174603249796e-12
+      }
+    ],
+    "expected_fixed_volume_slope": -2.5132741228718345,
+    "fixed_radius_slope": -4.188790204786391,
+    "modular_radial_integral": 0.8377580409572782,
+    "modular_integral_error": 0.0,
+    "G00_over_T00_at_eta_hbar_1": 6.283185307179586,
+    "newton_constant_status": "G=1/(4*hbar*eta); eta supplied, not predicted"
+  },
+  "entropy": {
+    "sigma": [
+      [
+        0.2,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.3,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.5
+      ]
+    ],
+    "perturbation": [
+      [
+        0.1,
+        0.04,
+        0.0
+      ],
+      [
+        0.04,
+        -0.06,
+        0.03
+      ],
+      [
+        0.0,
+        0.03,
+        -0.04
+      ]
+    ],
+    "cases": [
+      {
+        "epsilon": -0.01,
+        "minimum_eigenvalue": 0.19899842521663097,
+        "entropy_change": -0.0006139382227532408,
+        "modular_change": -0.0006097953576146052,
+        "relative_entropy": 4.142865138517793e-06,
+        "identity_error": 1.1779856604055006e-16,
+        "linear_area_balance_entropy_change": -4.142865138635592e-06
+      },
+      {
+        "epsilon": -0.001,
+        "minimum_eigenvalue": 0.1998999840255612,
+        "entropy_change": -6.10209261542316e-05,
+        "modular_change": -6.097953576140517e-05,
+        "relative_entropy": 4.139039238325109e-08,
+        "identity_error": 4.43181190530606e-16,
+        "linear_area_balance_entropy_change": -4.139039282643228e-08
+      },
+      {
+        "epsilon": 0.001,
+        "minimum_eigenvalue": 0.20009998397436107,
+        "entropy_change": 6.0938153836787023e-05,
+        "modular_change": 6.0979535761443646e-05,
+        "relative_entropy": 4.13819244431704e-08,
+        "identity_error": 2.1345230270808369e-16,
+        "linear_area_balance_entropy_change": -4.13819246566227e-08
+      },
+      {
+        "epsilon": 0.01,
+        "minimum_eigenvalue": 0.2009983740056278,
+        "entropy_change": 0.0006056609604916385,
+        "modular_change": 0.0006097953576145669,
+        "relative_entropy": 4.134397122731765e-06,
+        "identity_error": 1.9656585387162195e-16,
+        "linear_area_balance_entropy_change": -4.1343971229283304e-06
+      }
+    ],
+    "analytic_entropy_derivative": 0.060979535761456066,
+    "numerical_entropy_derivative": 0.06097953999550931,
+    "second_entropy_derivative": -0.08277231744457936,
+    "positive_relative_entropy_hessian": 0.08277231407335518,
+    "log_resolvent_hessian": 0.08277231407335518,
+    "resolvent_quadrature_error": 1.4474414681987507e-15,
+    "scope": "maximum of S-<K> at fixed sigma; not a nonlinear gravity stability proof"
+  },
+  "record": {
+    "errors": {
+      "isometry": 0.0,
+      "completeness": 0.0,
+      "reduced_state": 1.1102230246251565e-16,
+      "remote_marginal": 0.0
+    },
+    "choi_eigenvalues": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "whole_recorded_state_entropy": -0.0,
+    "restricted_system_entropy": 1.0296530140645734,
+    "dephased_joint_entropy": 1.0296530140645734,
+    "no_signalling_scope": "finite tensor factors and nonselective channel only",
+    "actual_outcome_selection_derived": false
+  },
+  "observers": {
+    "observers": [
+      [
+        "1",
+        "0",
+        "0",
+        "0"
+      ],
+      [
+        "5/4",
+        "-3/4",
+        "0",
+        "0"
+      ],
+      [
+        "5/4",
+        "3/4",
+        "0",
+        "0"
+      ],
+      [
+        "5/4",
+        "0",
+        "-3/4",
+        "0"
+      ],
+      [
+        "5/4",
+        "0",
+        "3/4",
+        "0"
+      ],
+      [
+        "5/4",
+        "0",
+        "0",
+        "-3/4"
+      ],
+      [
+        "5/4",
+        "0",
+        "0",
+        "3/4"
+      ],
+      [
+        "3",
+        "2",
+        "2",
+        "0"
+      ],
+      [
+        "3",
+        "2",
+        "0",
+        "2"
+      ],
+      [
+        "3",
+        "0",
+        "2",
+        "2"
+      ]
+    ],
+    "rank": 10,
+    "one_rest_observer_rank": 1,
+    "counterexample_tensor_diagonal": [
+      0,
+      1,
+      -1,
+      0
+    ],
+    "rest_contraction": 0,
+    "first_axis_boost_contraction": 0.5625
+  },
+  "AM4_bridge": {
+    "support_dimension": 2,
+    "full_AM4_dimension": 16,
+    "compressed_free_energy": [
+      [
+        5.0,
+        0.0
+      ],
+      [
+        0.0,
+        5.000000000000001
+      ]
+    ],
+    "entropy_derivative": 1.3862943611198906,
+    "numerical_entropy_derivative": 1.3862982674009983,
+    "free_energy_derivative": -8.881784197001252e-16,
+    "best_identity_plus_energy_operator_norm_error": 0.6931471805599453,
+    "symmetric_positions_have_equal_ball_modular_weight": true,
+    "disposition": "direct_prepared_AM4_to_CFT_vacuum_modular_bridge_rejected",
+    "limits": "The prepared finite support state is not a relativistic local vacuum."
+  },
+  "record_charge": {
+    "prepared_record_probability": 0.8,
+    "commutator_H_K_operator_norm": 2.1775860903036017,
+    "independent_norm_formula": 2.177586090303602,
+    "record_as_independent_conserved_modular_charge": false,
+    "fixed_beta_1_gibbs_state": [
+      [
+        0.4999999999999999,
+        -0.4585761678336371
+      ],
+      [
+        -0.4585761678336371,
+        0.4999999999999999
+      ]
+    ],
+    "gibbs_record_probability": 0.4999999999999999,
+    "gibbs_conservation_error": 0.0,
+    "gibbs_does_not_replace_prepared_state": true
+  },
+  "fitted_parameters": 0,
+  "full_joint_rmse": null,
+  "scientific_success": false,
+  "limits": [
+    "Local Lorentz metric, local CFT vacuum and universal area density are assumed.",
+    "No common microscopic action or quantum metric state is constructed.",
+    "No autonomous outcome selection or matter/gauge representation is derived.",
+    "Massive-field modular terms and record-conditioned gravity remain open.",
+    "No observational input, holdout assignment, or joint score."
+  ],
+  "environment": {
+    "python": "3.11.9",
+    "numpy": "2.4.6"
+  },
+  "script_sha256": "a83a2af26ac07709c85b2ff1f92958df722e722684446df24e5939fd8af1de6a",
+  "dependency_sha256": {
+    "ce_color_covariant_record.py": "9b3e345f7f09023183a3945de9f9effb2a81998e5bc85fec370eb85d2a22341e",
+    "ce_isometric_color_frame.py": "ebc785c76f23a9be9769732443575a517a47b5c0f8086d88b4110023ce1fe817"
+  }
+}

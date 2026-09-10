@@ -1,0 +1,317 @@
+{
+  "candidate_family": "CE-LR3 trace and threshold gate",
+  "input_config_id": "CE-LR3-PDG2025-GUT-mZ-v1",
+  "representations": {
+    "Weyl_internal_components": 45,
+    "Weyl_trace_indices": [
+      6.0,
+      6.0,
+      10.0
+    ],
+    "scalar_trace_indices": [
+      3.9999999999999996,
+      1.0,
+      1.0
+    ],
+    "normalized_metrics": [
+      [
+        3.9999999999999996,
+        1.0,
+        1.0
+      ],
+      [
+        1.0,
+        1.0,
+        1.6666666666666667
+      ]
+    ],
+    "local_chiral_anomalies": {
+      "max_symmetric_triple_trace": 1.7763568394002505e-15,
+      "max_linear_trace": 0.0,
+      "hermiticity_error": 0.0,
+      "commuting_factors_error": 0.0
+    },
+    "SU2_doublet_count": 12,
+    "Weyl_only_center_kernel_k": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "full_matter_center_kernel_k": [
+      0,
+      3
+    ],
+    "simple_SU5_matter_completion": false,
+    "full_active_beta_exact": [
+      "-17/3",
+      "-17/6",
+      "43/6"
+    ]
+  },
+  "candidates": [
+    {
+      "candidate": "CE-LR3-R18",
+      "kinetic_metric_exact": [
+        "4",
+        "1",
+        "1"
+      ],
+      "certificate_exact": {
+        "y2": "107/30",
+        "yY": "13/30",
+        "lambda_cap": "2/3",
+        "bound": "(107*x2 + 13*xy)/30",
+        "witness_a": "43*x2/60 + 17*xy/60",
+        "witness_l": "-x2/10 + xy/10"
+      },
+      "central": {
+        "alpha_em_inverse": 127.93,
+        "sin_squared_theta_W": 0.23122,
+        "minimum_inverse_alpha_s": 148.1202537466667,
+        "maximum_alpha_s": 0.006751271178014061,
+        "errors": {
+          "primal_equalities": 7.105427357601002e-15,
+          "primal_inequalities": 0.0,
+          "nonnegative_variables": 0.0,
+          "analytic_vs_LP": 2.842170943040401e-14,
+          "dual_stationarity": 6.661338147750939e-16,
+          "dual_electroweak_weights": 5.551115123125783e-17,
+          "primal_dual_gap": 2.842170943040401e-14
+        },
+        "positive_saturating_relaxation_witness_exists": true,
+        "witness_is_physical_common_mass_spectrum": false
+      },
+      "error_box_corners": [
+        {
+          "alpha_em_inverse": 127.906,
+          "sin_squared_theta_W": 0.2311,
+          "minimum_inverse_alpha_s": 148.04437334666667,
+          "maximum_alpha_s": 0.0067547315537508455,
+          "errors": {
+            "primal_equalities": 1.4210854715202004e-14,
+            "primal_inequalities": 0.0,
+            "nonnegative_variables": 0.0,
+            "analytic_vs_LP": 0.0,
+            "dual_stationarity": 6.661338147750939e-16,
+            "dual_electroweak_weights": 5.551115123125783e-17,
+            "primal_dual_gap": 0.0
+          },
+          "positive_saturating_relaxation_witness_exists": true,
+          "witness_is_physical_common_mass_spectrum": false
+        },
+        {
+          "alpha_em_inverse": 127.906,
+          "sin_squared_theta_W": 0.23134000000000002,
+          "minimum_inverse_alpha_s": 148.1405586586667,
+          "maximum_alpha_s": 0.006750345813830215,
+          "errors": {
+            "primal_equalities": 3.552713678800501e-15,
+            "primal_inequalities": 0.0,
+            "nonnegative_variables": 0.0,
+            "analytic_vs_LP": 2.842170943040401e-14,
+            "dual_stationarity": 6.661338147750939e-16,
+            "dual_electroweak_weights": 5.551115123125783e-17,
+            "primal_dual_gap": 2.842170943040401e-14
+          },
+          "positive_saturating_relaxation_witness_exists": true,
+          "witness_is_physical_common_mass_spectrum": false
+        },
+        {
+          "alpha_em_inverse": 127.95400000000001,
+          "sin_squared_theta_W": 0.2311,
+          "minimum_inverse_alpha_s": 148.09993078666668,
+          "maximum_alpha_s": 0.00675219761878531,
+          "errors": {
+            "primal_equalities": 1.4210854715202004e-14,
+            "primal_inequalities": 0.0,
+            "nonnegative_variables": 0.0,
+            "analytic_vs_LP": 0.0,
+            "dual_stationarity": 6.661338147750939e-16,
+            "dual_electroweak_weights": 5.551115123125783e-17,
+            "primal_dual_gap": 0.0
+          },
+          "positive_saturating_relaxation_witness_exists": true,
+          "witness_is_physical_common_mass_spectrum": false
+        },
+        {
+          "alpha_em_inverse": 127.95400000000001,
+          "sin_squared_theta_W": 0.23134000000000002,
+          "minimum_inverse_alpha_s": 148.1961521946667,
+          "maximum_alpha_s": 0.006747813524108409,
+          "errors": {
+            "primal_equalities": 3.552713678800501e-15,
+            "primal_inequalities": 0.0,
+            "nonnegative_variables": 0.0,
+            "analytic_vs_LP": 0.0,
+            "dual_stationarity": 6.661338147750939e-16,
+            "dual_electroweak_weights": 5.551115123125783e-17,
+            "primal_dual_gap": 0.0
+          },
+          "positive_saturating_relaxation_witness_exists": true,
+          "witness_is_physical_common_mass_spectrum": false
+        }
+      ],
+      "whole_box_bound_justified_by_monotonicity": true,
+      "maximum_alpha_s_over_box": 0.0067547315537508455,
+      "observed_alpha_s_box_lower": 0.1153,
+      "disjoint_gap": 0.10854526844624915,
+      "required_extra_delta_central_upper_bound": -139.64567747548026,
+      "required_extra_delta_optimistic_box_upper_bound": -139.37134646028332,
+      "extra_delta_was_fitted_or_added": false,
+      "leading_log_zero_finite_status": "REJECTED_BY_THRESHOLD_ENVELOPE",
+      "all_orders_status": "NOT_EVALUATED",
+      "nonnegative_certificate": "x3-y2*x2-yY*xY=c3/6+cbar/6+c8+lambda_cap*((l-dminus)+(l-dplus))",
+      "nuisance_variables_eliminated": 7,
+      "optimized_parameters_adopted": false
+    },
+    {
+      "candidate": "CE-LR3-R45",
+      "kinetic_metric_exact": [
+        "1",
+        "1",
+        "5/3"
+      ],
+      "certificate_exact": {
+        "y2": "339/214",
+        "yY": "-75/214",
+        "lambda_cap": "22/107",
+        "bound": "3*(113*x2 - 25*xy)/214",
+        "witness_a": "129*x2/214 + 51*xy/214",
+        "witness_l": "-15*x2/107 + 9*xy/107"
+      },
+      "central": {
+        "alpha_em_inverse": 127.93,
+        "sin_squared_theta_W": 0.23122,
+        "minimum_inverse_alpha_s": 12.389530300934583,
+        "maximum_alpha_s": 0.08071331000534918,
+        "errors": {
+          "primal_equalities": 3.552713678800501e-15,
+          "primal_inequalities": 0.0,
+          "nonnegative_variables": 0.0,
+          "analytic_vs_LP": 1.7763568394002505e-15,
+          "dual_stationarity": 4.440892098500626e-16,
+          "dual_electroweak_weights": 2.220446049250313e-16,
+          "primal_dual_gap": 8.881784197001252e-15
+        },
+        "positive_saturating_relaxation_witness_exists": true,
+        "witness_is_physical_common_mass_spectrum": false
+      },
+      "error_box_corners": [
+        {
+          "alpha_em_inverse": 127.906,
+          "sin_squared_theta_W": 0.2311,
+          "minimum_inverse_alpha_s": 12.357512674766351,
+          "maximum_alpha_s": 0.0809224336902335,
+          "errors": {
+            "primal_equalities": 3.552713678800501e-15,
+            "primal_inequalities": 0.0,
+            "nonnegative_variables": 0.0,
+            "analytic_vs_LP": 3.552713678800501e-15,
+            "dual_stationarity": 4.440892098500626e-16,
+            "dual_electroweak_weights": 2.220446049250313e-16,
+            "primal_dual_gap": 3.552713678800501e-15
+          },
+          "positive_saturating_relaxation_witness_exists": true,
+          "witness_is_physical_common_mass_spectrum": false
+        },
+        {
+          "alpha_em_inverse": 127.906,
+          "sin_squared_theta_W": 0.23134000000000002,
+          "minimum_inverse_alpha_s": 12.416899311028041,
+          "maximum_alpha_s": 0.0805354038034159,
+          "errors": {
+            "primal_equalities": 1.4210854715202004e-14,
+            "primal_inequalities": 0.0,
+            "nonnegative_variables": 0.0,
+            "analytic_vs_LP": 5.329070518200751e-15,
+            "dual_stationarity": 4.440892098500626e-16,
+            "dual_electroweak_weights": 2.220446049250313e-16,
+            "primal_dual_gap": 1.2434497875801753e-14
+          },
+          "positive_saturating_relaxation_witness_exists": true,
+          "witness_is_physical_common_mass_spectrum": false
+        },
+        {
+          "alpha_em_inverse": 127.95400000000001,
+          "sin_squared_theta_W": 0.2311,
+          "minimum_inverse_alpha_s": 12.362150147663549,
+          "maximum_alpha_s": 0.0808920768681167,
+          "errors": {
+            "primal_equalities": 1.4210854715202004e-14,
+            "primal_inequalities": 0.0,
+            "nonnegative_variables": 0.0,
+            "analytic_vs_LP": 0.0,
+            "dual_stationarity": 4.440892098500626e-16,
+            "dual_electroweak_weights": 2.220446049250313e-16,
+            "primal_dual_gap": 7.105427357601002e-15
+          },
+          "positive_saturating_relaxation_witness_exists": true,
+          "witness_is_physical_common_mass_spectrum": false
+        },
+        {
+          "alpha_em_inverse": 127.95400000000001,
+          "sin_squared_theta_W": 0.23134000000000002,
+          "minimum_inverse_alpha_s": 12.421559070280372,
+          "maximum_alpha_s": 0.08050519216968378,
+          "errors": {
+            "primal_equalities": 1.4210854715202004e-14,
+            "primal_inequalities": 0.0,
+            "nonnegative_variables": 0.0,
+            "analytic_vs_LP": 5.329070518200751e-15,
+            "dual_stationarity": 4.440892098500626e-16,
+            "dual_electroweak_weights": 2.220446049250313e-16,
+            "primal_dual_gap": 1.7763568394002505e-15
+          },
+          "positive_saturating_relaxation_witness_exists": true,
+          "witness_is_physical_common_mass_spectrum": false
+        }
+      ],
+      "whole_box_bound_justified_by_monotonicity": true,
+      "maximum_alpha_s_over_box": 0.0809224336902335,
+      "observed_alpha_s_box_lower": 0.1153,
+      "disjoint_gap": 0.0343775663097665,
+      "required_extra_delta_central_upper_bound": -3.9149540297481416,
+      "required_extra_delta_optimistic_box_upper_bound": -3.684485788383004,
+      "extra_delta_was_fitted_or_added": false,
+      "leading_log_zero_finite_status": "REJECTED_BY_THRESHOLD_ENVELOPE",
+      "all_orders_status": "NOT_EVALUATED",
+      "nonnegative_certificate": "x3-y2*x2-yY*xY=c3/6+cbar/6+c8+lambda_cap*((l-dminus)+(l-dplus))",
+      "nuisance_variables_eliminated": 7,
+      "optimized_parameters_adopted": false
+    }
+  ],
+  "fitted_parameters": 0,
+  "covariance_available": false,
+  "blinded_holdout": false,
+  "full_joint_rmse": null,
+  "scientific_success": false,
+  "narrow_checks_passed": true,
+  "limits": [
+    "one-loop leading-log matching; finite matching set to zero",
+    "SM Weyl content, scalar content and kinetic trace choices supplied",
+    "thresholds independently relaxed; a feasible point would not prove the common-mass model",
+    "quoted marginal error box is not a joint confidence region",
+    "no all-orders or ultraviolet-theory exclusion",
+    "no stable physical readout or full quantum gravity construction"
+  ],
+  "preregistration_section_sha256": "7fd808f02418c0515a11e38b32908a0afb9212b7b713e9d2808757932867f692",
+  "source_sha256": {
+    "verify/ce_gauge_matching_gate.py": "68cc43bdff7d253d638e5bdd3b1b71415d2f9425c657104f79eac36b6dcf1bce",
+    "verify/ce_gauge_matching_inputs.json": "fe7c42947be56f3d17e34b065143adb40520969a55324e3f27fa72522b8c40b1",
+    "verify/ce_matter_representation_anomalies.py": "07fd0bf2f6877d28dba8770fe8132ee63ed7216eb143403fc39af497c90594e5",
+    "verify/ce_common_isotropic_frame.py": "30c9e6cf1679c3fe7841ea82bb848bb05c1419f65106886ad609ba2791107674",
+    "verify/ce_record_weak_symmetry.py": "ba2351afe5a663e893252b01dd933eab9b61cdcf155f30d9f9a75f2aa710d61f",
+    "verify/ce_color_covariant_record.py": "9b3e345f7f09023183a3945de9f9effb2a81998e5bc85fec370eb85d2a22341e",
+    "verify/ce_isometric_color_frame.py": "ebc785c76f23a9be9769732443575a517a47b5c0f8086d88b4110023ce1fe817"
+  },
+  "environment": {
+    "python": "3.11.9",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "sympy": "1.14.0",
+    "platform": "Windows-10-10.0.26200-SP0"
+  }
+}

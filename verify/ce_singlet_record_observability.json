@@ -1,0 +1,234 @@
+{
+  "schema_version": 1,
+  "candidate": "CE-UR4",
+  "scientific_success": false,
+  "full_joint_rmse": null,
+  "preregistration_sha256": "858befdec3b167395038147f74681ee9d6ee8ef1ecd16b1a732d84dd404240cf",
+  "source_hashes": {
+    "ce_singlet_record_observability.py": "9636d1fae1548f57fd2e0383c91339c047628e084ec841613fe66d589eeb551f",
+    "ce_supersymmetric_record.py": "d945ec1dfa32113e33f91d38882fdf346257d6b9a807e1ba439f47c014719e8f",
+    "ce_simple_group_record.py": "6fbae4f419124c798f4386db609eac92d3b4236c430deb4c104f6bfa8a67df13",
+    "ce_gauge_matching_inputs.json": "fe7c42947be56f3d17e34b065143adb40520969a55324e3f27fa72522b8c40b1"
+  },
+  "environment": {
+    "python": "3.11.9",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "sympy": "1.14.0"
+  },
+  "action_and_protection": {
+    "vacuum_mass_squared_multiplicities": {
+      "scalar": {
+        "0": 24,
+        "1": 50,
+        "16": 12,
+        "25": 34,
+        "36": 32,
+        "50": 12
+      },
+      "Weyl": {
+        "0": 18,
+        "1": 25,
+        "16": 6,
+        "25": 17,
+        "36": 16,
+        "50": 24
+      },
+      "vector": {
+        "0": 12,
+        "50": 12
+      }
+    },
+    "nonzero_m0_signed_mass_error": 1.7763568394002505e-15,
+    "SM_singlet_commutator_error": 0.0,
+    "flat_backgrounds": [
+      {
+        "x": 0.0,
+        "F_error": 5.1598503419391096e-15,
+        "D_error": 0.0,
+        "weighted_positive_spectrum_error": 7.105427357601002e-15,
+        "STr_M4": -1.4551915228366852e-11
+      },
+      {
+        "x": 0.07,
+        "F_error": 5.159853664130076e-15,
+        "D_error": 0.0,
+        "weighted_positive_spectrum_error": 7.815970093361102e-14,
+        "STr_M4": 1.4551915228366852e-11
+      },
+      {
+        "x": 0.3,
+        "F_error": 5.1595012984240185e-15,
+        "D_error": 0.0,
+        "weighted_positive_spectrum_error": 5.684341886080802e-14,
+        "STr_M4": -7.275957614183426e-11
+      }
+    ],
+    "Hessian_vector_FD_error": 4.209410597866281e-13,
+    "protected_holomorphic_combination": "-2*lambda_R*m_S/lambda_S + mu_R",
+    "beta_minus_2gammaX_combination": "0",
+    "gamma_matrix_error": 4.440892098500626e-15,
+    "scope": "exact supplied global SUSY; no protection of unspecified soft terms"
+  },
+  "free_record": {
+    "free_rest_record_error": 1.0658141036401503e-14,
+    "neutral_error": 0.0,
+    "Kraus_Choi_minimum": -5.551115123125783e-17,
+    "mass_pair_at_m0_1": [
+      3.4292036732051017,
+      6.570796326794895
+    ],
+    "autonomous_actual_record": false,
+    "scope": "free energy conservation; formal CP projections are not a physical apparatus"
+  },
+  "gauge_gate": {
+    "result": "NOT_EXCLUDED_BY_RELAXED_ONE_LOOP_THRESHOLD_ENVELOPE",
+    "light_record_beta": [
+      0,
+      0,
+      0
+    ],
+    "b_MSSM": [
+      "-3",
+      "1",
+      "11"
+    ],
+    "b_SU5": 7,
+    "matching_scale_beta_identity": true,
+    "projected_fixed_constant": "-3*log(6)/pi - 1/(28*pi) + 99*log(2)/(14*pi)",
+    "fixed_heavy_delta": [
+      "(6*log(5*sqrt(2)/6) + 4*log(sqrt(2)) + 4*log(5*sqrt(2)))/(2*pi)",
+      "(2*log(sqrt(2)) + 4*log(5*sqrt(2)/4) + 6*log(5*sqrt(2)))/(2*pi)",
+      "(2*log(sqrt(2))/3 + 50*log(5*sqrt(2))/3)/(2*pi)"
+    ],
+    "soft_projected_coefficients": [
+      "-29/7",
+      "11/2"
+    ],
+    "heavy_remainder_rational_bounds": [
+      "1319/79920",
+      "151/8880",
+      "1471/47952"
+    ],
+    "inverse_alpha_s_envelope": [
+      5.1682673659162806,
+      12.619150126539333
+    ],
+    "alpha_s_envelope": [
+      0.07924463929602518,
+      0.19348844190894723
+    ],
+    "observed_inverse_alpha_s_box": [
+      8.285004142502071,
+      8.673026886383347
+    ],
+    "independent_LP_error": 1.4210854715202004e-14,
+    "LP_envelope_edges": [
+      {
+        "inverse_alpha_s": 5.168267365916281,
+        "alpha5_inverse": 21.76506450786525,
+        "log_MX_over_MZ_div_2pi": 5.350096050956221
+      },
+      {
+        "inverse_alpha_s": 12.619150126539335,
+        "alpha5_inverse": 25.63309246507951,
+        "log_MX_over_MZ_div_2pi": 4.677768182406242
+      }
+    ],
+    "omitted_K_shift_samples": [
+      [
+        0.0004280753210328392,
+        0.00042802260629448696,
+        0.001426847457892677
+      ],
+      [
+        0.002138272361753568,
+        0.0021369565324351747,
+        0.0071258210277740375
+      ],
+      [
+        0.004271303376266022,
+        0.004266050206776395,
+        0.014230681099527409
+      ]
+    ],
+    "selected_or_fitted_soft_spectrum": false,
+    "fitted_parameters": 0,
+    "physical_correlated_soft_action_exists": null,
+    "scope": "necessary relaxed family gate; not an exact spectrum witness or joint RMSE"
+  },
+  "effective_action": {
+    "W_quartic_in_Q_P": "lambda_R^2 Q^2/(120 lambda_S V) + lambda_R lambda_H Q P/(20 lambda_S V) + lambda_H^2 P^2/(10 lambda_S V)",
+    "symbolic_elimination_identity": true,
+    "numeric_cubic_elimination_error": 7.047314121155779e-19,
+    "other_heavy_and_Goldstone_sources_error": 0.0,
+    "Kahler": "|J_s|^2/(lambda_S V)^2 + sum_a |J_a|^2/(5 lambda_S V)^2",
+    "sample_Kahler_metric_minimum": 0.9999999999999991,
+    "scope": "leading local chiral elimination about zero visible/light fields; no derived detector"
+  },
+  "observability": {
+    "action_exchange_error": 0.0,
+    "accessible_effects": "a I + b sigma_x, 0 <= a +/- b <= 1",
+    "optimal_absolute_label_error_equal_priors": 0.5,
+    "minimum_operator_norm_effect_minus_R": 0.5,
+    "symmetric_apparatus_label_trace_distance": 0.0,
+    "mass_basis_positive_control_trace_distance": 1.0,
+    "reference_unitary_exchange_error": 0.0,
+    "asymmetric_reference_trace_distance": 1.0,
+    "symmetric_reference_trace_distance": 0.0,
+    "control_unitarity_error": 0.0,
+    "result": "REJECTED_ABSOLUTE_COPY_LABEL_READOUT_WITH_INVARIANT_APPARATUS",
+    "relational_control_derived_from_action": false,
+    "scope": "exchange-covariant dynamics and invariant apparatus; asymmetric references excluded"
+  },
+  "observational_manifest": {
+    "schema_version": 1,
+    "config_id": "CE-LR3-PDG2025-GUT-mZ-v1",
+    "source_url": "https://pdg.lbl.gov/2025/reviews/rpp2025-rev-guts.pdf",
+    "source_sections": [
+      "92.5",
+      "equation 92.8"
+    ],
+    "source_printed_revision": "Revised August 2025; printed 1 December 2025",
+    "verification_date": "2026-09-10",
+    "scheme": "MSbar gauge couplings at mZ; gY is not GUT-normalized",
+    "observables": {
+      "alpha_em_inverse": {
+        "value": 127.93,
+        "quoted_error": 0.008,
+        "role": "fixed electroweak conditioning input"
+      },
+      "sin_squared_theta_W": {
+        "value": 0.23122,
+        "quoted_error": 4e-05,
+        "role": "fixed electroweak conditioning input"
+      },
+      "alpha_s": {
+        "value": 0.118,
+        "quoted_error": 0.0009,
+        "role": "comparison quantity; not used to select parameters"
+      }
+    },
+    "covariance": null,
+    "covariance_status": "not supplied by this review summary; no independence assumption",
+    "error_box_multiplier": 3,
+    "error_box_interpretation": "coordinate intervals only, not a joint confidence region",
+    "blinded_holdout": false,
+    "prior_visibility": "public values were visible during source review; no unseen-data claim",
+    "fitted_parameters": 0,
+    "scope": "conditional one-loop leading-log feasibility gate, not a joint likelihood dataset"
+  },
+  "sources": [
+    "https://arxiv.org/abs/0904.0370",
+    "https://arxiv.org/abs/quant-ph/0610030",
+    "https://arxiv.org/abs/hep-ph/9709356",
+    "https://arxiv.org/abs/hep-ph/9308222"
+  ],
+  "open_gates": [
+    "derived soft spectrum and electroweak vacuum",
+    "relational reference preparation and an actual detector from this action",
+    "asynchronous event ontology with preserved amplitudes",
+    "common quantum and gravity derivation",
+    "joint predictions, covariance, and frozen parameter validation"
+  ]
+}

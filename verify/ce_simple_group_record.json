@@ -1,0 +1,389 @@
+{
+  "schema_version": 1,
+  "candidate": "CE-UR1",
+  "scientific_success": false,
+  "full_joint_rmse": null,
+  "preregistration_sha256": "883ccb34052f997425976662947ec90972941460c9d94a1dff1e2b8fd7b75d79",
+  "source_hashes": {
+    "ce_simple_group_record.py": "6fbae4f419124c798f4386db609eac92d3b4236c430deb4c104f6bfa8a67df13",
+    "ce_gauge_matching_inputs.json": "fe7c42947be56f3d17e34b065143adb40520969a55324e3f27fa72522b8c40b1"
+  },
+  "runtime": {
+    "python": "3.11.9",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "sympy": "1.14.0"
+  },
+  "threshold_source": {
+    "url": "https://link.springer.com/article/10.1140/epjc/s10052-019-6878-1",
+    "equations": [
+      "7",
+      "8"
+    ],
+    "scheme": "MSbar",
+    "goldstones": "included with massive vectors, excluded from physical scalar sum"
+  },
+  "observational_manifest": {
+    "schema_version": 1,
+    "config_id": "CE-LR3-PDG2025-GUT-mZ-v1",
+    "source_url": "https://pdg.lbl.gov/2025/reviews/rpp2025-rev-guts.pdf",
+    "source_sections": [
+      "92.5",
+      "equation 92.8"
+    ],
+    "source_printed_revision": "Revised August 2025; printed 1 December 2025",
+    "verification_date": "2026-09-10",
+    "scheme": "MSbar gauge couplings at mZ; gY is not GUT-normalized",
+    "observables": {
+      "alpha_em_inverse": {
+        "value": 127.93,
+        "quoted_error": 0.008,
+        "role": "fixed electroweak conditioning input"
+      },
+      "sin_squared_theta_W": {
+        "value": 0.23122,
+        "quoted_error": 4e-05,
+        "role": "fixed electroweak conditioning input"
+      },
+      "alpha_s": {
+        "value": 0.118,
+        "quoted_error": 0.0009,
+        "role": "comparison quantity; not used to select parameters"
+      }
+    },
+    "covariance": null,
+    "covariance_status": "not supplied by this review summary; no independence assumption",
+    "error_box_multiplier": 3,
+    "error_box_interpretation": "coordinate intervals only, not a joint confidence region",
+    "blinded_holdout": false,
+    "prior_visibility": "public values were visible during source review; no unseen-data claim",
+    "fitted_parameters": 0,
+    "scope": "conditional one-loop leading-log feasibility gate, not a joint likelihood dataset"
+  },
+  "algebra": {
+    "generators": 24,
+    "one_generation": "wedge^2(5) + conjugate(5)",
+    "weyl_generations_supplied": 3,
+    "errors": {
+      "fundamental_gram": 1.1102230246251565e-16,
+      "closure_all_pairs": 1.1102230246251565e-16,
+      "real_structure_constants": 0.0,
+      "wedge_isometry": 2.220446049250313e-16,
+      "ten_index": 4.440892098500626e-16,
+      "bar_five_index": 1.1102230246251565e-16,
+      "cubic_anomaly_all_24_cubed": 7.216449660063518e-16,
+      "mixed_gravity_trace": 4.440892098500626e-16,
+      "Z6_central_kernel_generator": 1.2246467991473532e-16
+    },
+    "individual_cubic_anomaly_nonzero": 0.38729833462074154,
+    "independent_exact_diagonal_anomaly": 0,
+    "hypercharge_five": [
+      -0.3333333333333333,
+      -0.3333333333333333,
+      -0.3333333333333333,
+      0.5,
+      0.5
+    ],
+    "gauge_inverse_alpha_metric": [
+      1,
+      1,
+      "5/3"
+    ],
+    "metric_derivation": "2 Tr5(T_color^2, T_weak^2, Y^2)",
+    "metric_numeric": [
+      1.0,
+      1.0,
+      1.6666666666666665
+    ],
+    "boundary_sin_squared_theta_W": "3/8",
+    "old_scalar18_embedded": false
+  },
+  "spectrum": {
+    "benchmark": {
+      "g5": 1,
+      "V": 1,
+      "lambda1": 1,
+      "lambda2": 1,
+      "m_sigma_squared": 74,
+      "vEW_over_V": 0
+    },
+    "errors": {
+      "stationarity": 3.552713678800501e-15,
+      "gauge_mass": 0.0,
+      "analytic_scalar_mass": 7.105427357601002e-15,
+      "independent_quartic_finite_difference": 8.109957150281843e-11,
+      "higgs_fundamental_mass": 0.0
+    },
+    "gauge_masses_squared_multiplicity": {
+      "0": 12,
+      "25": 12
+    },
+    "scalar_masses_squared_multiplicity": {
+      "0": 12,
+      "10": 8,
+      "40": 3,
+      "148": 1
+    },
+    "exact_scalar_hessian": {
+      "octet": "10",
+      "triplet": "40",
+      "singlet": "148",
+      "goldstone": "0"
+    },
+    "mass_ratios_to_MX": {
+      "Sigma8": "sqrt(10)/5",
+      "Sigma3": "sqrt(40)/5",
+      "Sigma1": "sqrt(148)/5",
+      "H_color_triplet": "1"
+    },
+    "local_minimum_modulo_gauge_orbit": true,
+    "global_minimum_proved": false
+  },
+  "record": {
+    "free_rest_positive_frequency_limit_only": true,
+    "mass_eigenvalues": [
+      3.4292036732051034,
+      3.4292036732051034,
+      3.4292036732051034,
+      3.4292036732051034,
+      3.4292036732051034,
+      6.570796326794897,
+      6.570796326794897,
+      6.570796326794897,
+      6.570796326794897,
+      6.570796326794897
+    ],
+    "errors": {
+      "mass_gauge_commutator": 0.0,
+      "record_gauge_commutator": 0.0,
+      "charge_record_commutator": 0.0,
+      "record_probability": 2.220446049250313e-16,
+      "norm": 2.220446049250313e-16,
+      "neutrality": 0.0,
+      "kraus_completeness": 4.444021034431229e-16,
+      "positive_frequency_KG_norm": 4.440892098500626e-16,
+      "free_rest_energy": 1.790180836524724e-15
+    },
+    "probabilities": [
+      {
+        "m0_time": 0.0,
+        "record_probability": 0.0,
+        "sine_squared": 0.0,
+        "norm_error": 0.0,
+        "neutral_error": 0.0
+      },
+      {
+        "m0_time": 0.125,
+        "record_probability": 0.038060233744356624,
+        "sine_squared": 0.03806023374435662,
+        "norm_error": 0.0,
+        "neutral_error": 0.0
+      },
+      {
+        "m0_time": 0.25,
+        "record_probability": 0.14644660940672632,
+        "sine_squared": 0.14644660940672624,
+        "norm_error": 0.0,
+        "neutral_error": 0.0
+      },
+      {
+        "m0_time": 0.5,
+        "record_probability": 0.4999999999999999,
+        "sine_squared": 0.5000000000000001,
+        "norm_error": 0.0,
+        "neutral_error": 0.0
+      },
+      {
+        "m0_time": 0.75,
+        "record_probability": 0.8535533905932738,
+        "sine_squared": 0.8535533905932737,
+        "norm_error": 2.220446049250313e-16,
+        "neutral_error": 0.0
+      },
+      {
+        "m0_time": 1.0,
+        "record_probability": 0.9999999999999999,
+        "sine_squared": 1.0,
+        "norm_error": 1.1102230246251565e-16,
+        "neutral_error": 0.0
+      },
+      {
+        "m0_time": 1.25,
+        "record_probability": 0.853553390593274,
+        "sine_squared": 0.8535533905932737,
+        "norm_error": 0.0,
+        "neutral_error": 0.0
+      },
+      {
+        "m0_time": 2.0,
+        "record_probability": 2.2201497514908284e-31,
+        "sine_squared": 1.4997597826618576e-32,
+        "norm_error": 0.0,
+        "neutral_error": 0.0
+      }
+    ],
+    "choi_minimum_roundoff": -1.7614036932674338e-15,
+    "norm_preserved_without_discarding_amplitudes": true,
+    "autonomous_actual_record_constructed": false,
+    "instrument_energy_change_operator_norm": 1.5707963267948966,
+    "mass_record_commutator_operator_norm": 1.5707963267948966
+  },
+  "matching": {
+    "order": "one-loop running plus one-loop MSbar heavy matching",
+    "gauge_order": [
+      "3",
+      "2",
+      "Y_unnormalized"
+    ],
+    "b_SM": [
+      "-7",
+      "-19/6",
+      "41/6"
+    ],
+    "b_SU5": "-13",
+    "scalar_five_indices_numeric": [
+      0.5,
+      0.5,
+      0.8333333333333333
+    ],
+    "scalar_realification_beta_error": 5.551115123125783e-17,
+    "physical_heavy_scalar_beta_matrix_error": 0.0,
+    "massive_vector_indices_from_matrices": [
+      2.0,
+      3.0,
+      8.333333333333332
+    ],
+    "massive_vector_indices_exact": [
+      "2",
+      "3",
+      "25/3"
+    ],
+    "massive_vector_beta_with_goldstone": [
+      "-7",
+      "-21/2",
+      "-175/6"
+    ],
+    "scalar_heavy_beta": {
+      "Sigma8": [
+        "1/2",
+        "0",
+        "0"
+      ],
+      "Sigma3": [
+        "0",
+        "1/3",
+        "0"
+      ],
+      "H_color": [
+        "1/6",
+        "0",
+        "1/9"
+      ]
+    },
+    "threshold_beta_identity_exact": [
+      "0",
+      "0",
+      "0"
+    ],
+    "matching_scale_derivative_exact": [
+      "0",
+      "0",
+      "0"
+    ],
+    "complete_record_five_beta": [
+      "1/6",
+      "1/6",
+      "5/18"
+    ],
+    "record_five_projected_threshold_exact": "0",
+    "y2": "333/218",
+    "yY": "-69/218",
+    "finite_vector_delta": [
+      -0.05305164769729845,
+      -0.07957747154594767,
+      -0.22104853207207686
+    ],
+    "scalar_log_delta": [
+      0.03645804982176557,
+      -0.012467233477598219,
+      0.0
+    ],
+    "projected_delta_exact": "-log(10)/(436*pi) - 1/(218*pi) + 113*log(2)/(436*pi)",
+    "projected_delta_log_numerator": "112 log(2) - log(5) - 2",
+    "projected_delta_log_denominator": "436 pi",
+    "positive_delta_numerator_lower_bound_exact": "50",
+    "projected_delta_numeric": 0.05404189781193262,
+    "conditional_predictions": [
+      {
+        "input": "central",
+        "alpha_em_inverse": 127.93,
+        "sin_squared": 0.23122,
+        "predicted_alpha_s": 0.07087677015963488,
+        "predicted_inverse_alpha_s": 14.108995059279822,
+        "effective_common_inverse_alpha": 42.51472288369727,
+        "log_MX_over_MZ": 25.48202729367961
+      },
+      {
+        "input": "corner_-1_-1",
+        "alpha_em_inverse": 127.906,
+        "sin_squared": 0.2311,
+        "predicted_alpha_s": 0.07103254111117209,
+        "predicted_inverse_alpha_s": 14.07805471065597,
+        "effective_common_inverse_alpha": 42.502120736908275,
+        "log_MX_over_MZ": 25.49848762515516
+      },
+      {
+        "input": "corner_-1_1",
+        "alpha_em_inverse": 127.906,
+        "sin_squared": 0.23134,
+        "predicted_alpha_s": 0.07074806641329774,
+        "predicted_inverse_alpha_s": 14.134661916527529,
+        "effective_common_inverse_alpha": 42.51141445727525,
+        "log_MX_over_MZ": 25.456019139876034
+      },
+      {
+        "input": "corner_1_-1",
+        "alpha_em_inverse": 127.954,
+        "sin_squared": 0.2311,
+        "predicted_alpha_s": 0.07100599658372293,
+        "predicted_inverse_alpha_s": 14.08331758038074,
+        "effective_common_inverse_alpha": 42.51802956626608,
+        "log_MX_over_MZ": 25.50804341617617
+      },
+      {
+        "input": "corner_1_1",
+        "alpha_em_inverse": 127.954,
+        "sin_squared": 0.23134,
+        "predicted_alpha_s": 0.07072162778484575,
+        "predicted_inverse_alpha_s": 14.139946029555052,
+        "effective_common_inverse_alpha": 42.527326774339464,
+        "log_MX_over_MZ": 25.46555899351105
+      }
+    ],
+    "direct_elimination_error": 8.881784197001252e-15,
+    "precision_comparison_error": 0.0,
+    "box_alpha_s_upper": 0.07103254111117209,
+    "observed_alpha_s_box": [
+      0.1153,
+      0.1207
+    ],
+    "inverse_alpha_exclusion_margin": "5.40502782427262152577289101479062279550092074379956977775505",
+    "strict_rational_exclusion_margin_discarding_positive_delta": "3362479291399/628385000000",
+    "additional_projected_correction_required_at_least": -5.405027824272621,
+    "result": "REJECTED_FIXED_MASS_ONE_LOOP_MATCHING_BRANCH",
+    "whole_SU5_or_all_loop_orders_rejected": false,
+    "alpha_s_fit_parameters": 0,
+    "conditioning_inputs_count": 2,
+    "nuisance_note": "Common inverse coupling and MX are eliminated using two EW inputs; record m0 is not selected.",
+    "independent_unknown_thresholds_fit": false
+  },
+  "open_gates": [
+    "actual asynchronous stable record",
+    "dynamical spacetime from same axiom",
+    "full common quantum/muon/cosmology/gravity predictions and covariance",
+    "fermion masses and Yukawa relations",
+    "radiative scalar stability",
+    "two-loop running and higher matching orders",
+    "proton decay"
+  ]
+}

@@ -1,0 +1,379 @@
+{
+  "schema_version": 1,
+  "candidate": "CE-UR4-P2",
+  "scientific_success": false,
+  "full_joint_rmse": null,
+  "new_observational_inputs_or_fits": false,
+  "preregistration_sha256": "566b10a9f56d149c7781b228b495b98df8668bc72c115b1251d4af6c0f05d18d",
+  "source_hashes": {
+    "ce_record_coherent_transport.py": "81bf4110ad6a7bfac8c3b6110f46d44a216c3f4b23b3f4b225463ed768636bbf",
+    "ce_record_pair_preparation.json": "6ac0cf1ceb8070ce4d096fb1f643048ce82a37a5d228a778b516f4a68e6c531a",
+    "ce_record_pair_preparation.py": "2167cf0b149903f885cda5e78239135b0a2b7ce8fd9593a4d9b2ad9a29af8869",
+    "ce_singlet_record_observability.py": "9636d1fae1548f57fd2e0383c91339c047628e084ec841613fe66d589eeb551f",
+    "ce_supersymmetric_record.py": "d945ec1dfa32113e33f91d38882fdf346257d6b9a807e1ba439f47c014719e8f",
+    "ce_simple_group_record.py": "6fbae4f419124c798f4386db609eac92d3b4236c430deb4c104f6bfa8a67df13"
+  },
+  "environment": {
+    "python": "3.11.9",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "sympy": "1.14.0"
+  },
+  "vertices": {
+    "original_tensor_vertices": {
+      "a": 0.12909944487358055,
+      "b": 0.3872983346207417,
+      "M_over_V": 1.0,
+      "kappa_times_V": 0.05,
+      "scalar_pair_vertex": "2*M*a",
+      "scalar_antiscalar_vertex": "-2*a*m",
+      "chiral_Majorana_yukawa": "2*a",
+      "initial_weak_components": 1,
+      "initial_spin_average": false,
+      "final_identical_factors_SS_SA_FF": [
+        0.5,
+        1.0,
+        0.5
+      ]
+    },
+    "contact_Sbar_H_to_S_antiHbar": "-2*a*b",
+    "contact_plus_exchange": "-2*a*b*t/(-M**2 + t)",
+    "retained_scalar_amplitude": "2*M*a*b*m/(-M**2 + t)",
+    "fermion_propagator_numerators": "M and slash(q); relative signs from eliminated heavy chiral action",
+    "outgoing_visible_weak_components_for_fixed_H": 1
+  },
+  "coherent_density_and_read_effects": {
+    "max_scaled_independent_error": 6.472028856730493e-14,
+    "smallest_scaled_effect_or_density_eigenvalue": -1.7227710727418015e-16,
+    "source_rows": [
+      {
+        "mass_over_V": 0.0006570796326794897,
+        "ecm_over_V": 0.0013470132469929539,
+        "scalar_density_relative_to_SS": [
+          [
+            1.0000004317536437,
+            -0.0006570796326794897
+          ],
+          [
+            -0.0006570796326794897,
+            4.317536436822131e-07
+          ]
+        ],
+        "fermion_source_trace_relative_to_SS": 9.509374002100742e-07,
+        "fermion_helicity_polarization": 0.41884222474460814
+      },
+      {
+        "mass_over_V": 0.0006570796326794897,
+        "ecm_over_V": 0.01,
+        "scalar_density_relative_to_SS": [
+          [
+            1.0000004317536437,
+            -0.0006570796326794897
+          ],
+          [
+            -0.0006570796326794897,
+            4.317536436822131e-07
+          ]
+        ],
+        "fermion_source_trace_relative_to_SS": 9.913649271263558e-05,
+        "fermion_helicity_polarization": 0.9999620647320818
+      },
+      {
+        "mass_over_V": 0.00034292036732051036,
+        "ecm_over_V": 0.0013470132469929539,
+        "scalar_density_relative_to_SS": [
+          [
+            1.0000001175943782,
+            -0.00034292036732051036
+          ],
+          [
+            -0.00034292036732051036,
+            1.1759437832323375e-07
+          ]
+        ],
+        "fermion_source_trace_relative_to_SS": 1.5792559309280329e-06,
+        "fermion_helicity_polarization": 0.9888486784716203
+      },
+      {
+        "mass_over_V": 0.00034292036732051036,
+        "ecm_over_V": 0.01,
+        "scalar_density_relative_to_SS": [
+          [
+            1.0000001175943782,
+            -0.00034292036732051036
+          ],
+          [
+            -0.00034292036732051036,
+            1.1759437832323375e-07
+          ]
+        ],
+        "fermion_source_trace_relative_to_SS": 9.976481124335354e-05,
+        "fermion_helicity_polarization": 0.9999972212533658
+      }
+    ],
+    "channel_sensitive_interference": [
+      {
+        "mass_over_V": 0.0006570796326794897,
+        "ecm_over_V": 0.0013470132469929539,
+        "scalar_visible_interference_fraction": -5.657627464468725e-09,
+        "inclusive_scalar_interference": -8.293510941405315e-33
+      },
+      {
+        "mass_over_V": 0.0006570796326794897,
+        "ecm_over_V": 0.01,
+        "scalar_visible_interference_fraction": -3.028617519761514e-07,
+        "inclusive_scalar_interference": -3.715492901749581e-30
+      },
+      {
+        "mass_over_V": 0.00034292036732051036,
+        "ecm_over_V": 0.0013470132469929539,
+        "scalar_visible_interference_fraction": -2.4725241367737328e-08,
+        "inclusive_scalar_interference": -8.65652708426175e-33
+      },
+      {
+        "mass_over_V": 0.00034292036732051036,
+        "ecm_over_V": 0.01,
+        "scalar_visible_interference_fraction": -5.105548852269695e-07,
+        "inclusive_scalar_interference": -1.662053200178256e-30
+      }
+    ],
+    "symbolic_inclusive_scalar_effect": "Matrix([[M**2*g**2*s, 0], [0, g**2*(M**2*m**2 - t*(-m**2 + s))]])",
+    "unpolarized_fermion_equals_mean_scalar_responses": true,
+    "scope": "positive selected-event effects, not a normalized full instrument"
+  },
+  "transport": {
+    "rows": [
+      {
+        "detector_direction": "z",
+        "detector_sigma_over_epsilon": 0.5,
+        "full_two_body_transfer_times_V_fourth_plus_minus": [
+          1.5078087935782753e-16,
+          9.860492559371725e-16
+        ],
+        "relative_rate_increment_over_SS_plus_minus": [
+          1.7226556270070563e-06,
+          1.3690684217184024e-06
+        ],
+        "source_scalar_extra_relative_rate_plus_minus": [
+          8.217784077802815e-07,
+          2.0202358360271474e-07
+        ],
+        "source_fermion_relative_rate_plus_minus": [
+          9.008772192267746e-07,
+          1.1670448381156876e-06
+        ],
+        "full_error_conditioned_on_accepted_event": 2.658746458143507e-05,
+        "SS_only_error": 2.6587464646854312e-05,
+        "error_shift_from_SS_only": -6.541924120473386e-14,
+        "error_if_source_fermions_unpolarized": 2.6587464602917805e-05,
+        "relative_rate_bias_if_fermions_unpolarized_plus_minus": [
+          4.2322037812916866e-09,
+          1.895413235791308e-07
+        ],
+        "accepted_plus_fraction": 0.13263272557311379,
+        "outgoing_visible_fermion_fraction_plus_minus": [
+          0.0966496868767055,
+          0.28203025204072274
+        ],
+        "source_scalar_interference_contribution_to_visible_scalar_fraction_plus_minus": [
+          -5.65765059941822e-09,
+          -2.471061796141903e-08
+        ],
+        "incoherent_scalar_source_inclusive_rate_difference": 0.0,
+        "max_scaled_quadrature_difference": 1.4359358146975865e-10,
+        "max_scaled_nonleading_and_component_difference": 1.0311396181350574e-10,
+        "small_correction_relative_quadrature_difference": 2.7661709574062697e-12,
+        "quadrature_orders": [
+          [
+            32,
+            4,
+            8
+          ],
+          [
+            48,
+            6,
+            12
+          ]
+        ]
+      },
+      {
+        "detector_direction": "z",
+        "detector_sigma_over_epsilon": 1.0,
+        "full_two_body_transfer_times_V_fourth_plus_minus": [
+          1.5078087935782753e-16,
+          9.860492559371725e-16
+        ],
+        "relative_rate_increment_over_SS_plus_minus": [
+          1.7226556270070563e-06,
+          1.3690684217184024e-06
+        ],
+        "source_scalar_extra_relative_rate_plus_minus": [
+          8.217784077802815e-07,
+          2.0202358360271474e-07
+        ],
+        "source_fermion_relative_rate_plus_minus": [
+          9.008772192267746e-07,
+          1.1670448381156876e-06
+        ],
+        "full_error_conditioned_on_accepted_event": 0.021507481730819265,
+        "SS_only_error": 0.021507481739975114,
+        "error_shift_from_SS_only": -9.155849689523876e-12,
+        "error_if_source_fermions_unpolarized": 0.02150748173273255,
+        "relative_rate_bias_if_fermions_unpolarized_plus_minus": [
+          4.2322037812916866e-09,
+          1.895413235791308e-07
+        ],
+        "accepted_plus_fraction": 0.13263272557311379,
+        "outgoing_visible_fermion_fraction_plus_minus": [
+          0.0966496868767055,
+          0.28203025204072274
+        ],
+        "source_scalar_interference_contribution_to_visible_scalar_fraction_plus_minus": [
+          -5.65765059941822e-09,
+          -2.471061796141903e-08
+        ],
+        "incoherent_scalar_source_inclusive_rate_difference": 0.0,
+        "max_scaled_quadrature_difference": 1.4359358146975865e-10,
+        "max_scaled_nonleading_and_component_difference": 1.0311396181350574e-10,
+        "small_correction_relative_quadrature_difference": 2.7661709574062697e-12,
+        "quadrature_orders": [
+          [
+            32,
+            4,
+            8
+          ],
+          [
+            48,
+            6,
+            12
+          ]
+        ]
+      },
+      {
+        "detector_direction": "y",
+        "detector_sigma_over_epsilon": 0.5,
+        "full_two_body_transfer_times_V_fourth_plus_minus": [
+          9.439872251985173e-17,
+          3.2357031969875785e-17
+        ],
+        "relative_rate_increment_over_SS_plus_minus": [
+          1.7225218169220972e-06,
+          1.369035476602244e-06
+        ],
+        "source_scalar_extra_relative_rate_plus_minus": [
+          8.217799864936366e-07,
+          2.0202392599257507e-07
+        ],
+        "source_fermion_relative_rate_plus_minus": [
+          9.007418304284607e-07,
+          1.1670115506096687e-06
+        ],
+        "full_error_conditioned_on_accepted_event": 0.2552719856472647,
+        "SS_only_error": 0.2552720528472468,
+        "error_shift_from_SS_only": -6.719998207893596e-08,
+        "error_if_source_fermions_unpolarized": 0.25527202087539935,
+        "relative_rate_bias_if_fermions_unpolarized_plus_minus": [
+          4.224700151058973e-09,
+          1.8953199440844952e-07
+        ],
+        "accepted_plus_fraction": 0.7447292858605637,
+        "outgoing_visible_fermion_fraction_plus_minus": [
+          0.09664600774981957,
+          0.28202703044314714
+        ],
+        "source_scalar_interference_contribution_to_visible_scalar_fraction_plus_minus": [
+          -4.475888689139788e-09,
+          -4.477019083290555e-09
+        ],
+        "incoherent_scalar_source_inclusive_rate_difference": 0.0,
+        "max_scaled_quadrature_difference": 2.6173507805538065e-12,
+        "max_scaled_nonleading_and_component_difference": 2.364219930939271e-12,
+        "small_correction_relative_quadrature_difference": 2.7456138466323485e-12,
+        "quadrature_orders": [
+          [
+            32,
+            4,
+            8
+          ],
+          [
+            48,
+            6,
+            12
+          ]
+        ]
+      },
+      {
+        "detector_direction": "y",
+        "detector_sigma_over_epsilon": 1.0,
+        "full_two_body_transfer_times_V_fourth_plus_minus": [
+          9.439872251985173e-17,
+          3.2357031969875785e-17
+        ],
+        "relative_rate_increment_over_SS_plus_minus": [
+          1.7225218169220972e-06,
+          1.369035476602244e-06
+        ],
+        "source_scalar_extra_relative_rate_plus_minus": [
+          8.217799864936366e-07,
+          2.0202392599257507e-07
+        ],
+        "source_fermion_relative_rate_plus_minus": [
+          9.007418304284607e-07,
+          1.1670115506096687e-06
+        ],
+        "full_error_conditioned_on_accepted_event": 0.2608292010950918,
+        "SS_only_error": 0.2608292667676528,
+        "error_shift_from_SS_only": -6.56725610004294e-08,
+        "error_if_source_fermions_unpolarized": 0.26082923552251414,
+        "relative_rate_bias_if_fermions_unpolarized_plus_minus": [
+          4.224700151058973e-09,
+          1.8953199440844952e-07
+        ],
+        "accepted_plus_fraction": 0.7447292858605637,
+        "outgoing_visible_fermion_fraction_plus_minus": [
+          0.09664600774981957,
+          0.28202703044314714
+        ],
+        "source_scalar_interference_contribution_to_visible_scalar_fraction_plus_minus": [
+          -4.475888689139788e-09,
+          -4.477019083290555e-09
+        ],
+        "incoherent_scalar_source_inclusive_rate_difference": 0.0,
+        "max_scaled_quadrature_difference": 2.6173507805538065e-12,
+        "max_scaled_nonleading_and_component_difference": 2.364219930939271e-12,
+        "small_correction_relative_quadrature_difference": 2.7456138466323485e-12,
+        "quadrature_orders": [
+          [
+            32,
+            4,
+            8
+          ],
+          [
+            48,
+            6,
+            12
+          ]
+        ]
+      }
+    ],
+    "threshold_over_V": 0.00011075048970831312,
+    "transfer_scale_times_V_fourth": 9.894234570545237e-17,
+    "probability_formula": "P_alpha ~= L_source N_H A_alpha, for dilute separated collisions",
+    "geometry_and_detector": "exactly chapter 74, central 8sigma conditional luminosity; equal scalar/fermion response",
+    "units": "A: V^-4; L_source and N_H: V^2 each",
+    "scope": "all light-record two-body source outputs and tree single readout; no extra radiation or full coherent propagation"
+  },
+  "sources": [
+    "https://arxiv.org/abs/0812.1594",
+    "https://arxiv.org/abs/hep-ph/9709356",
+    "https://pdg.lbl.gov/2025/reviews/rpp2025-rev-kinematics.pdf"
+  ],
+  "result": "COHERENT_TWO_BODY_SOURCE_AND_TREE_READOUT; PHYSICAL_INSTRUMENT_OPEN",
+  "open_gates": [
+    "physical source and detector preparation",
+    "finite propagation and all competing radiation",
+    "complete non-event amplitude and instrument",
+    "repeatable asynchronous actual records",
+    "common gravity and frozen covariance-aware joint predictions"
+  ]
+}

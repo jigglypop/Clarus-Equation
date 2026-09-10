@@ -1,0 +1,192 @@
+{
+  "test": "CE_record_source_feedback",
+  "source_model": "CE-QG1_exact_logical_sector",
+  "source_lambda": 0.1,
+  "operator_source": {
+    "status": "same_QG1_operator_source_invariant_sector",
+    "coupling": -0.2,
+    "interaction_time": 15.707963267948966,
+    "source_errors": {
+      "isometry": 2.220446049250313e-16,
+      "invariant_sector": 8.881784197001252e-16,
+      "exact_potential_restriction": 1.7763568394002505e-15,
+      "independent_32_vs_4_state": 8.223382672556493e-15,
+      "full_H_operator_conservation": 1.7763568394002505e-15,
+      "local_phase_compensation": 5.351708560930614e-15,
+      "graph_state": 6.123233995736766e-17,
+      "interaction_energy": 0.0
+    },
+    "correlations": {
+      "z_b0": 0.7071067811865476,
+      "z_b1": 0.7071067811865475,
+      "x_b0": 0.7071067811865477,
+      "x_b1": -0.7071067811865474,
+      "xz": 1.0,
+      "zx": 1.0
+    },
+    "chsh": 2.8284271247461903,
+    "negativity": 0.49999999999999994,
+    "quantum_Bell_transport_max_error": 1.1102230246251565e-16,
+    "readout_marginals": {
+      "post_interaction_local_setting_marginal_error": 1.6653345369377348e-16,
+      "scope": "Independent read rotations after the interaction is off; not relativistic propagation."
+    },
+    "channel": {
+      "completeness_error": 0.0,
+      "minimum_choi_eigenvalue": -2.2204460492503136e-16,
+      "choi_trace": 4.0
+    }
+  },
+  "actual_bit_feedback": {
+    "candidate": "CE-FB1",
+    "status": "rejected_conditional_Born_and_quantum_observation_gate",
+    "branches": [
+      {
+        "actual_bits": [
+          0,
+          0
+        ],
+        "energy_before": 0.0,
+        "energy_error": 0.0,
+        "norm_error": 0.0,
+        "conditional_Born_total_variation": 0.75,
+        "correlations": {
+          "z_b0": 1.0,
+          "z_b1": 0.7071067811865477,
+          "x_b0": 1.0,
+          "x_b1": 0.7071067811865475,
+          "xz": 1.0,
+          "zx": 1.0
+        }
+      },
+      {
+        "actual_bits": [
+          0,
+          1
+        ],
+        "energy_before": -0.1,
+        "energy_error": 0.0,
+        "norm_error": 0.0,
+        "conditional_Born_total_variation": 0.75,
+        "correlations": {
+          "z_b0": 0.41421356237309537,
+          "z_b1": 0.7071067811865477,
+          "x_b0": -0.4142135623730949,
+          "x_b1": -0.7071067811865475,
+          "xz": 1.0,
+          "zx": 1.0
+        }
+      },
+      {
+        "actual_bits": [
+          1,
+          0
+        ],
+        "energy_before": -0.1,
+        "energy_error": 0.0,
+        "norm_error": 0.0,
+        "conditional_Born_total_variation": 0.75,
+        "correlations": {
+          "z_b0": 0.41421356237309537,
+          "z_b1": 0.7071067811865477,
+          "x_b0": -0.4142135623730949,
+          "x_b1": -0.7071067811865477,
+          "xz": 1.0,
+          "zx": 1.0
+        }
+      },
+      {
+        "actual_bits": [
+          1,
+          1
+        ],
+        "energy_before": 0.0,
+        "energy_error": 1.771034876601827e-50,
+        "norm_error": 0.0,
+        "conditional_Born_total_variation": 0.75,
+        "correlations": {
+          "z_b0": 1.0,
+          "z_b1": 0.7071067811865477,
+          "x_b0": 1.0,
+          "x_b1": 0.7071067811865477,
+          "xz": 1.0,
+          "zx": 1.0
+        }
+      }
+    ],
+    "correlations": {
+      "z_b0": 0.7071067811865477,
+      "z_b1": 0.7071067811865477,
+      "x_b0": 0.29289321881345254,
+      "x_b1": 0.0,
+      "xz": 1.0,
+      "zx": 1.0
+    },
+    "chsh": 1.707106781186548,
+    "closed_form_correlation_error": 2.220446049250313e-16,
+    "positive_density_representation_max_mismatch": 0.7071067811865474,
+    "averaged_wave_density_is_maximally_mixed_error": 1.5308084989341915e-17,
+    "averaged_branch_energy": -0.05,
+    "readout_marginals": {
+      "post_interaction_local_setting_marginal_error": 5.551115123125783e-17,
+      "scope": "Independent read rotations after the interaction is off; not relativistic propagation."
+    },
+    "reason": "XZ=ZX=1 forces one quantum state, but another fixed setting disagrees with that state.",
+    "sampled_trajectories": 0,
+    "method": "exact_piecewise_monotone_Bell_transport_no_Born_resampling"
+  },
+  "physical_measurement_feedback": {
+    "candidate": "CE-FB2",
+    "status": "CPTP_measurement_feedback_with_explicit_dephasing",
+    "channel": {
+      "completeness_error": 0.0,
+      "minimum_choi_eigenvalue": 0.0,
+      "choi_trace": 4.0
+    },
+    "full_dilation_dimension": 8,
+    "dilation_channel_max_error": 0.0,
+    "reduced_density_error": 0.0,
+    "full_state_purity": 1.0,
+    "reduced_state_purity": 0.5,
+    "correlations": {
+      "z_b0": 0.7071067811865476,
+      "z_b1": 0.7071067811865475,
+      "x_b0": 4.329780281177467e-17,
+      "x_b1": 4.329780281177467e-17,
+      "xz": 0.0,
+      "zx": 1.0
+    },
+    "chsh": 1.414213562373095,
+    "negativity": 0.0,
+    "readout_marginals": {
+      "post_interaction_local_setting_marginal_error": 1.1102230246251565e-16,
+      "scope": "Independent read rotations after the interaction is off; not relativistic propagation."
+    },
+    "limitations": [
+      "A physical measurement record is added, rather than hidden-bit substitution.",
+      "Discarded interference is retained in the full quantum memory dilation.",
+      "This is a finite channel, not a covariant classical-gravity dynamics."
+    ]
+  },
+  "fitted_parameters": 0,
+  "full_joint_rmse": null,
+  "scientific_success": false,
+  "limitations": [
+    "The configuration basis, coherent preparations and local analysis rotations are inputs.",
+    "The QG1 Newton kernel and pinned positions are supplied; no retarded metric or stress is derived.",
+    "No unification with the LM3 Hamiltonian or the three gauge sectors is claimed.",
+    "CHSH values are model calculations, not experimental observations.",
+    "No universal no-go for all classical, stochastic or hybrid gravitational theories."
+  ],
+  "source_sha256": {
+    "ce_color_covariant_record.py": "9b3e345f7f09023183a3945de9f9effb2a81998e5bc85fec370eb85d2a22341e",
+    "ce_isometric_color_frame.py": "ebc785c76f23a9be9769732443575a517a47b5c0f8086d88b4110023ce1fe817",
+    "ce_record_gravity_source.py": "f6081801b0a4f51043fe0c78f4a7560738cdba7140f2ac299c4ac2c8092738a7",
+    "ce_record_source_feedback.py": "49efe6c71c57037d4c27e103f354aa01154d2e04954bd32c1595cd92d71588d4"
+  },
+  "environment": {
+    "python": "3.11.9",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1"
+  }
+}

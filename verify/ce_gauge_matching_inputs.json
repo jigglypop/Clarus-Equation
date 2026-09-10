@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "config_id": "CE-LR3-PDG2025-GUT-mZ-v1",
+  "source_url": "https://pdg.lbl.gov/2025/reviews/rpp2025-rev-guts.pdf",
+  "source_sections": ["92.5", "equation 92.8"],
+  "source_printed_revision": "Revised August 2025; printed 1 December 2025",
+  "verification_date": "2026-09-10",
+  "scheme": "MSbar gauge couplings at mZ; gY is not GUT-normalized",
+  "observables": {
+    "alpha_em_inverse": {"value": 127.930, "quoted_error": 0.008, "role": "fixed electroweak conditioning input"},
+    "sin_squared_theta_W": {"value": 0.23122, "quoted_error": 0.00004, "role": "fixed electroweak conditioning input"},
+    "alpha_s": {"value": 0.1180, "quoted_error": 0.0009, "role": "comparison quantity; not used to select parameters"}
+  },
+  "covariance": null,
+  "covariance_status": "not supplied by this review summary; no independence assumption",
+  "error_box_multiplier": 3,
+  "error_box_interpretation": "coordinate intervals only, not a joint confidence region",
+  "blinded_holdout": false,
+  "prior_visibility": "public values were visible during source review; no unseen-data claim",
+  "fitted_parameters": 0,
+  "scope": "conditional one-loop leading-log feasibility gate, not a joint likelihood dataset"
+}

@@ -1,0 +1,335 @@
+{
+  "candidate": "CE-LR1-W0/WA/WH and CE-LR2",
+  "frozen": {
+    "status": "REJECTED_AS_UNBROKEN_WEAK_GAUGE_EXTENSION",
+    "color_representation": [
+      "3",
+      "bar3",
+      "8",
+      "1",
+      "1"
+    ],
+    "color_centralizer": {
+      "dimension": 7,
+      "minimum_eigenvalue": -1.184380974749013e-15,
+      "first_positive_eigenvalue": 1.3333333333333295
+    },
+    "mass_centralizer": {
+      "dimension": 84,
+      "minimum_eigenvalue": -3.835335664585849e-16,
+      "first_positive_eigenvalue": 0.03046174197867076
+    },
+    "joint_centralizer": {
+      "dimension": 5,
+      "minimum_eigenvalue": -5.828670296361975e-16,
+      "first_positive_eigenvalue": 0.12184696791468395
+    },
+    "joint_compact_algebra": "u(1)^5",
+    "analytic_errors": {
+      "projector_resolution": 2.220446049250313e-16,
+      "centralizer_basis_orthonormality": 2.220446049250313e-16,
+      "analytic_vs_gram_kernel": 5.6066262743570405e-15,
+      "all_centralizer_commutators": 6.409875621278546e-17,
+      "mass_commutators": 2.220446049250313e-16,
+      "color_commutators": 1.1102230246251565e-16
+    },
+    "singlet_su2_error": 1.1102230246251565e-16,
+    "squared_mass_weak_commutator_frobenius": [
+      1.7763568394002505e-15,
+      22.21441469079184,
+      22.21441469079184
+    ],
+    "record_on_singlets": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0000000000000002
+      ]
+    ]
+  },
+  "higgs": {
+    "adjoint": {
+      "status": "REJECTED_FOR_SINGLE_PHOTON_LIMIT",
+      "mass_squared": [
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          9.869604401089358,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          9.869604401089358,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "eigenvalues": [
+        0.0,
+        0.0,
+        9.869604401089358,
+        9.869604401089358
+      ],
+      "massless_vectors": 2
+    },
+    "fundamental": {
+      "status": "LIMITED_RECORD_REQUIRES_CHARGED_REFERENCE_OR_REDEFINITION",
+      "couplings": {
+        "g2": 1.0,
+        "gY": 1.0,
+        "v": 1.0
+      },
+      "mass_squared": [
+        [
+          0.2499999999999999,
+          0.0,
+          -6.162975822039155e-33,
+          0.2499999999999999
+        ],
+        [
+          0.0,
+          0.2499999999999999,
+          0.0,
+          0.0
+        ],
+        [
+          -6.162975822039155e-33,
+          0.0,
+          0.2499999999999999,
+          -6.162975822039155e-33
+        ],
+        [
+          0.2499999999999999,
+          0.0,
+          -6.162975822039155e-33,
+          0.2499999999999999
+        ]
+      ],
+      "eigenvalues": [
+        0.0,
+        0.2499999999999999,
+        0.2499999999999999,
+        0.4999999999999998
+      ],
+      "massless_vectors": 1,
+      "rho_tree": 1.0,
+      "kappa": 62.83185307179586,
+      "photon_vector": [
+        -0.7071067811865475,
+        0.0,
+        0.0,
+        0.7071067811865475
+      ],
+      "checks": {
+        "eigenvalues": 2.220446049250313e-16,
+        "photon_kernel": 0.0,
+        "neutral_vev": 0.0,
+        "original_squared_mass": 7.105427357601002e-15,
+        "mass_charge_commutator": 0.0
+      },
+      "record_charge_commutator_operator_norm": 0.5,
+      "record_charge_commutator_frobenius": 0.7071067811865476
+    }
+  },
+  "extended": {
+    "status": "CONDITIONAL_NEUTRAL_RECORD_AND_BOSONIC_GAUGE_CONSTRUCTION",
+    "internal_complex_components": 18,
+    "independent_Higgs_complex_components": 2,
+    "gauge_connection_components": 12,
+    "old_complex_components": 16,
+    "scalar_hypercharges": "outside 14: 0; record x weak 4: 1/2",
+    "checks": {
+      "embedding_isometry": 2.220446049250313e-16,
+      "mass_intertwining": 8.881784197001252e-16,
+      "record_intertwining": 2.220446049250313e-16,
+      "color_intertwining": 1.1322494858517944e-16,
+      "all_squared_mass_gauge_commutators": 7.105427357601002e-15,
+      "all_record_gauge_commutators": 1.1102230246251565e-16,
+      "record_projector": 2.220446049250313e-16,
+      "record_electromagnetic_commutator": 0.0,
+      "initial_electromagnetic_charge": 0.0,
+      "gauge_hermiticity": 0.0
+    },
+    "minimum_mass": 1.0,
+    "times": [
+      {
+        "time": 0.0,
+        "record_probability": 0.0,
+        "errors": {
+          "unitarity": 0.0,
+          "expm_vs_spectrum": 2.220446049250313e-16,
+          "all_state_evolution_intertwining": 0.0,
+          "record_probability": 0.0
+        }
+      },
+      {
+        "time": 0.25,
+        "record_probability": 0.14644660940672616,
+        "errors": {
+          "unitarity": 4.440892098500626e-16,
+          "expm_vs_spectrum": 3.3306690738754696e-16,
+          "all_state_evolution_intertwining": 2.0014830212433607e-16,
+          "record_probability": 8.326672684688674e-17
+        }
+      },
+      {
+        "time": 0.5,
+        "record_probability": 0.5,
+        "errors": {
+          "unitarity": 8.881784197001252e-16,
+          "expm_vs_spectrum": 5.551115123125783e-16,
+          "all_state_evolution_intertwining": 3.554447978966673e-16,
+          "record_probability": 1.1102230246251565e-16
+        }
+      },
+      {
+        "time": 0.75,
+        "record_probability": 0.8535533905932738,
+        "errors": {
+          "unitarity": 6.664808846157843e-16,
+          "expm_vs_spectrum": 5.661048867003677e-16,
+          "all_state_evolution_intertwining": 9.550499576785472e-16,
+          "record_probability": 1.1102230246251565e-16
+        }
+      },
+      {
+        "time": 1.0,
+        "record_probability": 1.0000000000000002,
+        "errors": {
+          "unitarity": 1.5543122344752192e-15,
+          "expm_vs_spectrum": 1.072098405376252e-15,
+          "all_state_evolution_intertwining": 6.753223014464258e-16,
+          "record_probability": 2.220446049250313e-16
+        }
+      }
+    ],
+    "old_image_weak_leakage_operator_norm": [
+      9.47634626983522e-17,
+      0.5,
+      0.5
+    ]
+  },
+  "curvature": {
+    "seed": 6401,
+    "representation_trace_indices": {
+      "color": 4.0,
+      "weak": 1.0,
+      "hypercharge": 1.0
+    },
+    "mixed_commutator_error": 0.0,
+    "trace_orthogonality_error": 1.7763568394002505e-15,
+    "curvature_checks": [
+      {
+        "mu": 0,
+        "nu": 1,
+        "errors": {
+          "hermiticity": 0.0,
+          "projection_vs_separate_algebras": 8.881784197001252e-16,
+          "reconstruction": 1.1102230246251565e-15,
+          "positive_trace_norm": 5.684341886080802e-14
+        }
+      },
+      {
+        "mu": 0,
+        "nu": 2,
+        "errors": {
+          "hermiticity": 0.0,
+          "projection_vs_separate_algebras": 8.881784197001252e-16,
+          "reconstruction": 6.661338147750939e-16,
+          "positive_trace_norm": 2.842170943040401e-14
+        }
+      },
+      {
+        "mu": 0,
+        "nu": 3,
+        "errors": {
+          "hermiticity": 0.0,
+          "projection_vs_separate_algebras": 1.3322676295501878e-15,
+          "reconstruction": 1.3322676295501878e-15,
+          "positive_trace_norm": 5.684341886080802e-14
+        }
+      },
+      {
+        "mu": 1,
+        "nu": 2,
+        "errors": {
+          "hermiticity": 0.0,
+          "projection_vs_separate_algebras": 4.440892098500626e-16,
+          "reconstruction": 4.440892098500626e-16,
+          "positive_trace_norm": 2.842170943040401e-14
+        }
+      },
+      {
+        "mu": 1,
+        "nu": 3,
+        "errors": {
+          "hermiticity": 0.0,
+          "projection_vs_separate_algebras": 4.440892098500626e-16,
+          "reconstruction": 5.311767472816653e-16,
+          "positive_trace_norm": 1.4210854715202004e-14
+        }
+      },
+      {
+        "mu": 2,
+        "nu": 3,
+        "errors": {
+          "hermiticity": 0.0,
+          "projection_vs_separate_algebras": 8.881784197001252e-16,
+          "reconstruction": 8.881784197001252e-16,
+          "positive_trace_norm": 0.0
+        }
+      }
+    ],
+    "supplied_common_trace_gstar": 1.4142135623730951,
+    "canonical_couplings": {
+      "g3": 0.5,
+      "g2": 1.0,
+      "gY": 1.0
+    },
+    "tree_sin_squared_theta_W": 0.5,
+    "general_invariant_positive_kinetic_coefficients": 3,
+    "gauge_connections_derived_from_three_scalar_angles": false
+  },
+  "fitted_parameters": 0,
+  "full_joint_rmse": null,
+  "scientific_success": false,
+  "narrow_algebra_checks_passed": true,
+  "limitations": [
+    "new scalar representations, Higgs and independent connections are supplied",
+    "no observed chiral fermion spectrum or physical hypercharges",
+    "no measured electroweak input, matching scale or RG comparison",
+    "one trace is an extra axiom; three kinetic coefficients are generally allowed",
+    "no full interacting quantum gauge-gravity construction",
+    "no autonomous stable readout or unique actual record proved here",
+    "the old state subspace is not closed under every weak generator",
+    "not a minimal-extension theorem"
+  ],
+  "environment": {
+    "python": "3.11.9",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "platform": "Windows-10-10.0.26200-SP0"
+  },
+  "preregistration_section_sha256": "c6c0a2f721ba48b6ce1835f0ceba6fc417252f3afcc253a9ca7fafb6d3d72bb7",
+  "source_sha256": {
+    "verify/ce_record_weak_symmetry.py": "ba2351afe5a663e893252b01dd933eab9b61cdcf155f30d9f9a75f2aa710d61f",
+    "verify/ce_color_covariant_record.py": "9b3e345f7f09023183a3945de9f9effb2a81998e5bc85fec370eb85d2a22341e",
+    "verify/ce_isometric_color_frame.py": "ebc785c76f23a9be9769732443575a517a47b5c0f8086d88b4110023ce1fe817",
+    "verify/ce_local_record_stress.py": "9a5ea9413d7bce490e769771ebe1b4bfcbb133a9a72c637456e432d06be873f4"
+  }
+}

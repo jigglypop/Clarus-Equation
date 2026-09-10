@@ -1,0 +1,598 @@
+{
+  "schema_version": 1,
+  "candidate": "CE-UR2-R/C",
+  "scientific_success": false,
+  "full_joint_rmse": null,
+  "preregistration_sha256": "7d227587336d95271ba8999566e6e99062545f4a6055b0289902625ab2bc68d0",
+  "source_hashes": {
+    "ce_broken_record_operator.py": "80023624cff083d3411f940f57c2a30fa3965ddc9dc9730df0a785e23e31bcb3",
+    "ce_gauge_matching_inputs.json": "fe7c42947be56f3d17e34b065143adb40520969a55324e3f27fa72522b8c40b1",
+    "ce_simple_group_record.py": "6fbae4f419124c798f4386db609eac92d3b4236c430deb4c104f6bfa8a67df13"
+  },
+  "runtime": {
+    "python": "3.11.9",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "sympy": "1.14.0"
+  },
+  "observational_manifest": {
+    "schema_version": 1,
+    "config_id": "CE-LR3-PDG2025-GUT-mZ-v1",
+    "source_url": "https://pdg.lbl.gov/2025/reviews/rpp2025-rev-guts.pdf",
+    "source_sections": [
+      "92.5",
+      "equation 92.8"
+    ],
+    "source_printed_revision": "Revised August 2025; printed 1 December 2025",
+    "verification_date": "2026-09-10",
+    "scheme": "MSbar gauge couplings at mZ; gY is not GUT-normalized",
+    "observables": {
+      "alpha_em_inverse": {
+        "value": 127.93,
+        "quoted_error": 0.008,
+        "role": "fixed electroweak conditioning input"
+      },
+      "sin_squared_theta_W": {
+        "value": 0.23122,
+        "quoted_error": 4e-05,
+        "role": "fixed electroweak conditioning input"
+      },
+      "alpha_s": {
+        "value": 0.118,
+        "quoted_error": 0.0009,
+        "role": "comparison quantity; not used to select parameters"
+      }
+    },
+    "covariance": null,
+    "covariance_status": "not supplied by this review summary; no independence assumption",
+    "error_box_multiplier": 3,
+    "error_box_interpretation": "coordinate intervals only, not a joint confidence region",
+    "blinded_holdout": false,
+    "prior_visibility": "public values were visible during source review; no unseen-data claim",
+    "fitted_parameters": 0,
+    "scope": "conditional one-loop leading-log feasibility gate, not a joint likelihood dataset"
+  },
+  "operator": {
+    "errors": {
+      "jordan_spectrum": 8.881784197001252e-16,
+      "jordan_self_adjoint": 0.0,
+      "covariance": 1.6653345369377348e-16,
+      "subgroup_indices": 1.7763568394002505e-15
+    },
+    "J_eigenvalues_multiplicity": {
+      "4": 8,
+      "-6": 3,
+      "-2": 1,
+      "-1": 12
+    },
+    "F_eigenvalues_multiplicity": {
+      "10": 8,
+      "0": 3,
+      "4": 1,
+      "5": 12
+    },
+    "adjoint_subgroup_indices": {
+      "octet": [
+        3.0,
+        0.0,
+        0.0
+      ],
+      "triplet": [
+        0.0,
+        2.0,
+        0.0
+      ],
+      "singlet": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "broken": [
+        2.0,
+        3.0,
+        8.333333333333332
+      ]
+    },
+    "mass_squared_by_record_eigenvalue": {
+      "octet": "m_pm^2 + 4 MX^2",
+      "triplet": "m_pm^2",
+      "singlet": "m_pm^2 + 16 MX^2/25",
+      "broken": "m_pm^2 + MX^2"
+    },
+    "real_fields": {
+      "CE-UR2-R": 48,
+      "CE-UR2-C": 96
+    },
+    "one_particle_amplitudes_complex_for_both": true
+  },
+  "record": {
+    "errors": {
+      "probability_error": 1.2212453270876722e-15,
+      "norm_error": 1.1102230246251565e-15,
+      "KG_norm_error": 1.1102230246251565e-15,
+      "energy_error": 5.329070518200751e-15,
+      "charge_error": 0.0,
+      "kraus_completeness_error": 2.5559253454202264e-15,
+      "charge_record_commutator": 0.0
+    },
+    "rows": [
+      {
+        "time_m0": 0,
+        "probability_error": 0.0,
+        "norm_error": 0.0,
+        "KG_norm_error": 6.661338147750939e-16,
+        "energy_error": 8.881784197001252e-16,
+        "charge_error": 0.0,
+        "kraus_completeness_error": 0.0
+      },
+      {
+        "time_m0": 0.125,
+        "probability_error": 4.163336342344337e-17,
+        "norm_error": 1.1102230246251565e-16,
+        "KG_norm_error": 6.661338147750939e-16,
+        "energy_error": 1.7763568394002505e-15,
+        "charge_error": 0.0,
+        "kraus_completeness_error": 2.220446049250313e-16
+      },
+      {
+        "time_m0": 0.5,
+        "probability_error": 3.885780586188048e-16,
+        "norm_error": 0.0,
+        "KG_norm_error": 5.551115123125783e-16,
+        "energy_error": 5.551115123125783e-17,
+        "charge_error": 0.0,
+        "kraus_completeness_error": 8.881784197001252e-16
+      },
+      {
+        "time_m0": 0.75,
+        "probability_error": 6.661338147750939e-16,
+        "norm_error": 1.1102230246251565e-16,
+        "KG_norm_error": 6.661338147750939e-16,
+        "energy_error": 8.881784197001252e-16,
+        "charge_error": 0.0,
+        "kraus_completeness_error": 9.992007221626409e-16
+      },
+      {
+        "time_m0": 1,
+        "probability_error": 8.881784197001252e-16,
+        "norm_error": 8.881784197001252e-16,
+        "KG_norm_error": 2.220446049250313e-16,
+        "energy_error": 2.673771110915334e-15,
+        "charge_error": 0.0,
+        "kraus_completeness_error": 1.3322676295501878e-15
+      },
+      {
+        "time_m0": 1.5,
+        "probability_error": 1.2212453270876722e-15,
+        "norm_error": 4.440892098500626e-16,
+        "KG_norm_error": 1.1102230246251565e-15,
+        "energy_error": 2.673771110915334e-15,
+        "charge_error": 0.0,
+        "kraus_completeness_error": 1.9984014443252818e-15
+      },
+      {
+        "time_m0": 2,
+        "probability_error": 3.644092766083215e-30,
+        "norm_error": 1.1102230246251565e-15,
+        "KG_norm_error": 6.661338147750939e-16,
+        "energy_error": 5.329070518200751e-15,
+        "charge_error": 0.0,
+        "kraus_completeness_error": 2.5559253454202264e-15
+      }
+    ],
+    "positive_frequency_mass_minimum": 3.429203673205104,
+    "scope": "free rest one-particle sector; R and C have the same neutral two-species subspace",
+    "CP_reason": "Kraus operators P_a U; Choi is a sum of positive outer products",
+    "autonomous_readout": false
+  },
+  "gauge_feasibility": [
+    {
+      "variant": "CE-UR2-R",
+      "b5": "-35/3",
+      "per_mass_eigenvalue_beta": {
+        "octet": [
+          "1/2",
+          "0",
+          "0"
+        ],
+        "triplet": [
+          "0",
+          "1/3",
+          "0"
+        ],
+        "broken": [
+          "1/3",
+          "1/2",
+          "25/18"
+        ]
+      },
+      "matching_scale_beta_identity": true,
+      "hierarchy_delta_coordinate_bound": "1/1000000",
+      "relaxed_bound": {
+        "y2": "37/22",
+        "yY": "-9/22",
+        "deficit_coefficient": "37/66",
+        "constant_projected_delta": "-25*log(2)/(132*pi) - log(10)/(66*pi) - 1/(33*pi)",
+        "strict_rational_exclusion_margin": "785839313551/1141470000000",
+        "epsilon_projected_lower": "-31/22000000",
+        "alpha_s_upper": 0.10618393050568702,
+        "inverse_alpha_margin": "0.74459398372036199947937075680362113851803180895937",
+        "independent_LP_error": 0.0
+      },
+      "exact_mass_endpoints": [
+        {
+          "input": "central",
+          "endpoints": [
+            {
+              "boundary": "m_plus_over_MX_cap",
+              "alpha_s": 0.07796418676364321,
+              "log_MX_over_MZ": 26.145596933901377,
+              "inverse_alpha5": 42.08172037593281,
+              "eta": 0.0010000000000000002,
+              "log_m_minus_over_MZ": 18.587534692230953,
+              "equation_residual": 3.552713678800501e-15
+            },
+            {
+              "boundary": "m_minus_equals_MZ",
+              "alpha_s": 0.1051577521866948,
+              "log_MX_over_MZ": 28.023125658561987,
+              "inverse_alpha5": 40.85656658451684,
+              "eta": 1.2946008452777344e-12,
+              "log_m_minus_over_MZ": 8.215650382226158e-15,
+              "equation_residual": 7.105427357601002e-15
+            }
+          ]
+        },
+        {
+          "input": "corner_-1_-1",
+          "endpoints": [
+            {
+              "boundary": "m_plus_over_MX_cap",
+              "alpha_s": 0.07815270978742032,
+              "log_MX_over_MZ": 26.16205726537693,
+              "inverse_alpha5": 42.06911822914381,
+              "eta": 0.0010000000000000002,
+              "log_m_minus_over_MZ": 18.603995023706506,
+              "equation_residual": 3.552713678800501e-15
+            },
+            {
+              "boundary": "m_minus_equals_MZ",
+              "alpha_s": 0.10553371563594742,
+              "log_MX_over_MZ": 28.04124864978254,
+              "inverse_alpha5": 40.84287949360775,
+              "eta": 1.2713501281697298e-12,
+              "log_m_minus_over_MZ": -5.995204332975845e-15,
+              "equation_residual": 3.552713678800501e-15
+            }
+          ]
+        },
+        {
+          "input": "corner_-1_1",
+          "endpoints": [
+            {
+              "boundary": "m_plus_over_MX_cap",
+              "alpha_s": 0.07780848454352704,
+              "log_MX_over_MZ": 26.119588780097807,
+              "inverse_alpha5": 42.07841194951078,
+              "eta": 0.0010000000000000002,
+              "log_m_minus_over_MZ": 18.561526538427383,
+              "equation_residual": 7.105427357601002e-15
+            },
+            {
+              "boundary": "m_minus_equals_MZ",
+              "alpha_s": 0.10482366734099002,
+              "log_MX_over_MZ": 27.99449041851562,
+              "inverse_alpha5": 40.854972424516845,
+              "eta": 1.332207925420281e-12,
+              "log_m_minus_over_MZ": -2.4424906541753444e-15,
+              "equation_residual": 3.552713678800501e-15
+            }
+          ]
+        },
+        {
+          "input": "corner_1_-1",
+          "endpoints": [
+            {
+              "boundary": "m_plus_over_MX_cap",
+              "alpha_s": 0.07812057820533702,
+              "log_MX_over_MZ": 26.171613056397938,
+              "inverse_alpha5": 42.085027058501616,
+              "eta": 0.0010000000000000002,
+              "log_m_minus_over_MZ": 18.613550814727514,
+              "equation_residual": 1.4210854715202004e-14
+            },
+            {
+              "boundary": "m_minus_equals_MZ",
+              "alpha_s": 0.10549410740683439,
+              "log_MX_over_MZ": 28.051769672219812,
+              "inverse_alpha5": 40.85815847542593,
+              "eta": 1.2580443429149196e-12,
+              "log_m_minus_over_MZ": 4.6629367034256575e-15,
+              "equation_residual": 3.552713678800501e-15
+            }
+          ]
+        },
+        {
+          "input": "corner_1_1",
+          "endpoints": [
+            {
+              "boundary": "m_plus_over_MX_cap",
+              "alpha_s": 0.07777650682399155,
+              "log_MX_over_MZ": 26.12912863373282,
+              "inverse_alpha5": 42.094324266575,
+              "eta": 0.0010000000000000002,
+              "log_m_minus_over_MZ": 18.571066392062395,
+              "equation_residual": 7.105427357601002e-15
+            },
+            {
+              "boundary": "m_minus_equals_MZ",
+              "alpha_s": 0.10478432572862229,
+              "log_MX_over_MZ": 28.004993893729928,
+              "inverse_alpha5": 40.87025594451684,
+              "eta": 1.3182883424632227e-12,
+              "log_m_minus_over_MZ": 1.1102230246251565e-15,
+              "equation_residual": 3.552713678800501e-15
+            }
+          ]
+        }
+      ],
+      "physical_interval_derivative_verification_error": 5.5290244604933036e-11,
+      "central_endpoint_bracket": [
+        0.07796418676364321,
+        0.1051577521866948
+      ],
+      "observed_alpha_s_box": [
+        0.1153,
+        0.1207
+      ],
+      "rejected_by_relaxed_bound": true,
+      "necessary_feasibility_survives": false,
+      "m0_selected_from_strong_coupling": false,
+      "prediction_with_frozen_m0": null,
+      "scope": "one-loop feasibility of a family, not a fitted or parameter-free empirical success"
+    },
+    {
+      "variant": "CE-UR2-C",
+      "b5": "-10",
+      "per_mass_eigenvalue_beta": {
+        "octet": [
+          "1",
+          "0",
+          "0"
+        ],
+        "triplet": [
+          "0",
+          "2/3",
+          "0"
+        ],
+        "broken": [
+          "2/3",
+          "1",
+          "25/9"
+        ]
+      },
+      "matching_scale_beta_identity": true,
+      "hierarchy_delta_coordinate_bound": "1/500000",
+      "relaxed_bound": {
+        "y2": "333/178",
+        "yY": "-93/178",
+        "deficit_coefficient": "111/89",
+        "constant_projected_delta": "-223*log(2)/(356*pi) - 11*log(10)/(356*pi) - 11/(178*pi)",
+        "strict_rational_exclusion_margin": null,
+        "epsilon_projected_lower": "-271/89000000",
+        "alpha_s_upper": 0.26775990301666136,
+        "inverse_alpha_margin": "-4.9383377535680624098692713083582126109348670271113",
+        "independent_LP_error": 4.440892098500626e-15
+      },
+      "exact_mass_endpoints": [
+        {
+          "input": "central",
+          "endpoints": [
+            {
+              "boundary": "m_plus_over_MX_cap",
+              "alpha_s": 0.08662652053858579,
+              "log_MX_over_MZ": 26.809166574123147,
+              "inverse_alpha5": 41.64871786816834,
+              "eta": 0.0010000000000000002,
+              "log_m_minus_over_MZ": 19.251104332452723,
+              "equation_residual": 3.552713678800501e-15
+            },
+            {
+              "boundary": "m_minus_equals_MZ",
+              "alpha_s": 0.2563280410347365,
+              "log_MX_over_MZ": 31.135257363867357,
+              "inverse_alpha5": 38.82579089226217,
+              "eta": 5.761747999112278e-14,
+              "log_m_minus_over_MZ": 1.1102230246251565e-15,
+              "equation_residual": 1.4210854715202004e-14
+            }
+          ]
+        },
+        {
+          "input": "corner_-1_-1",
+          "endpoints": [
+            {
+              "boundary": "m_plus_over_MX_cap",
+              "alpha_s": 0.08685932565837559,
+              "log_MX_over_MZ": 26.825626905598696,
+              "inverse_alpha5": 41.63611572137935,
+              "eta": 0.0010000000000000002,
+              "log_m_minus_over_MZ": 19.267564663928272,
+              "equation_residual": 3.552713678800501e-15
+            },
+            {
+              "boundary": "m_minus_equals_MZ",
+              "alpha_s": 0.25881418171316856,
+              "log_MX_over_MZ": 31.15541664623629,
+              "inverse_alpha5": 38.810775049565535,
+              "eta": 5.646758243992414e-14,
+              "log_m_minus_over_MZ": 1.1102230246251565e-15,
+              "equation_residual": 3.552713678800501e-15
+            }
+          ]
+        },
+        {
+          "input": "corner_-1_1",
+          "endpoints": [
+            {
+              "boundary": "m_plus_over_MX_cap",
+              "alpha_s": 0.08643433978809609,
+              "log_MX_over_MZ": 26.78315842031957,
+              "inverse_alpha5": 41.645409441746324,
+              "eta": 0.0010000000000000002,
+              "log_m_minus_over_MZ": 19.225096178649146,
+              "equation_residual": 0.0
+            },
+            {
+              "boundary": "m_minus_equals_MZ",
+              "alpha_s": 0.2539848434421571,
+              "log_MX_over_MZ": 31.103404681119162,
+              "inverse_alpha5": 38.82629622709362,
+              "eta": 5.948229328893833e-14,
+              "log_m_minus_over_MZ": 4.6629367034256575e-15,
+              "equation_residual": 1.0658141036401503e-14
+            }
+          ]
+        },
+        {
+          "input": "corner_1_-1",
+          "endpoints": [
+            {
+              "boundary": "m_plus_over_MX_cap",
+              "alpha_s": 0.08681963785676572,
+              "log_MX_over_MZ": 26.83518269661971,
+              "inverse_alpha5": 41.652024550737146,
+              "eta": 0.0010000000000000002,
+              "log_m_minus_over_MZ": 19.277120454949287,
+              "equation_residual": 1.4210854715202004e-14
+            },
+            {
+              "boundary": "m_minus_equals_MZ",
+              "alpha_s": 0.25871579936542194,
+              "log_MX_over_MZ": 31.167119806026065,
+              "inverse_alpha5": 38.825282645071155,
+              "eta": 5.581058526984584e-14,
+              "log_m_minus_over_MZ": 4.6629367034256575e-15,
+              "equation_residual": 7.105427357601002e-15
+            }
+          ]
+        },
+        {
+          "input": "corner_1_1",
+          "endpoints": [
+            {
+              "boundary": "m_plus_over_MX_cap",
+              "alpha_s": 0.08639488075607672,
+              "log_MX_over_MZ": 26.79269827395459,
+              "inverse_alpha5": 41.66132175881054,
+              "eta": 0.0010000000000000002,
+              "log_m_minus_over_MZ": 19.234636032284165,
+              "equation_residual": 7.105427357601002e-15
+            },
+            {
+              "boundary": "m_minus_equals_MZ",
+              "alpha_s": 0.2538883205185586,
+              "log_MX_over_MZ": 31.115088322087885,
+              "inverse_alpha5": 38.840809647318345,
+              "eta": 5.879136765337598e-14,
+              "log_m_minus_over_MZ": 1.1102230246251565e-15,
+              "equation_residual": 3.552713678800501e-15
+            }
+          ]
+        }
+      ],
+      "physical_interval_derivative_verification_error": 5.994960083910428e-11,
+      "central_endpoint_bracket": [
+        0.08662652053858579,
+        0.2563280410347365
+      ],
+      "observed_alpha_s_box": [
+        0.1153,
+        0.1207
+      ],
+      "rejected_by_relaxed_bound": false,
+      "necessary_feasibility_survives": true,
+      "m0_selected_from_strong_coupling": false,
+      "prediction_with_frozen_m0": null,
+      "scope": "one-loop feasibility of a family, not a fitted or parameter-free empirical success"
+    }
+  ],
+  "radiative_closure": {
+    "CE-UR2-C": {
+      "variant_real_copies": 4,
+      "scalar_hessian_dimension": 120,
+      "Higgs_real_components_independent_of_X": 10,
+      "Higgs_hessian_eigenvalues": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        25.0,
+        25.0,
+        25.0,
+        25.0,
+        25.0,
+        25.0
+      ],
+      "fermion_supertrace_X2": 0,
+      "jordan_T3_squared_diagonal_exact": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "3/5",
+        "3/5",
+        "1/4",
+        "1/4",
+        "1/4",
+        "1/4",
+        "1/4",
+        "1/4",
+        "1/4",
+        "1/4",
+        "1/4",
+        "1/4",
+        "1/4",
+        "1/4"
+      ],
+      "scalar_supertrace_X2_exact": "46614/5",
+      "vector_supertrace_X2_exact": "450",
+      "total_supertrace_X2_exact": "48864/5",
+      "total_units": "g5^4 V^2 x^2",
+      "full_hessian_finite_difference_error": 4.575895218295045e-12,
+      "independent_potential_gradient_error": 1.061091419627795e-11,
+      "supertrace_quartic_difference_error": 4.628782335203141e-08,
+      "log_mu_derivative_potential_X2": "-(48864/5) g5^4 V^2 / (32 pi^2)",
+      "additive_light_mass_beta_required": "(48864/5) g5^4 V^2 / (16 pi^2)",
+      "record_identity_and_original_mass_shape_gram_determinant": "400*gamma**2",
+      "record_copy_symmetry_at_zero_mass": "O(4)",
+      "protected_zero_mass_relation": "REJECTED_AT_ONE_LOOP",
+      "physical_pole_mass_computed": false,
+      "renormalized_EFT_with_independent_counterterm_rejected": false
+    }
+  },
+  "effective_potential_source": {
+    "url": "https://arxiv.org/abs/hep-ph/0111209",
+    "equations": [
+      "1.1",
+      "1.2",
+      "3.1-3.4"
+    ],
+    "gauge": "Landau",
+    "scheme": "MSbar"
+  },
+  "open_gates": [
+    "frozen m0 from same dynamics",
+    "complete renormalized scalar action",
+    "physical actual stable records",
+    "joint quantum/muon/cosmology/gravity predictions",
+    "dynamical spacetime and all standard limits",
+    "full covariance and joint RMSE"
+  ]
+}

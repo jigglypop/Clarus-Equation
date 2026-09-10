@@ -1,0 +1,323 @@
+{
+  "candidate": "CE-EV2",
+  "status": "conditional_records_with_external_reader_pulses",
+  "base_model": "CE-LM3-G",
+  "configuration_count": 9520,
+  "base_initial_energy": -4.758770483143639,
+  "cases": [
+    {
+      "pulse_duration": 1.0,
+      "coupling": 1.5707963267948966,
+      "pulses": [
+        {
+          "register": 0,
+          "start": 5.0,
+          "duration": 1.0,
+          "work_on": 0.4679416204426202,
+          "work_off": -0.4363973089355873,
+          "work": 0.03154431150703291,
+          "active_energy_error": 8.881784197001252e-16,
+          "work_ledger_error": 5.384581669432009e-15,
+          "midpoint_current": {
+            "equivariance_max_error": 7.643625316022806e-18,
+            "expected_jump_intensity": 2.536174959269391,
+            "expected_intensity_bound": 12.570796326794897,
+            "memory_changing_directed_edges": 4760
+          }
+        },
+        {
+          "register": 1,
+          "start": 10.0,
+          "duration": 1.0,
+          "work_on": 0.41518528847215885,
+          "work_off": -0.39865733719862756,
+          "work": 0.016527951273531294,
+          "active_energy_error": 4.440892098500626e-15,
+          "work_ledger_error": 5.6066262743570405e-15,
+          "midpoint_current": {
+            "equivariance_max_error": 4.716279450311944e-18,
+            "expected_jump_intensity": 2.530294157753966,
+            "expected_intensity_bound": 12.570796326794897,
+            "memory_changing_directed_edges": 4760
+          }
+        }
+      ],
+      "joint_probabilities": [
+        [
+          0.7045092797122426,
+          0.007326376014884362
+        ],
+        [
+          0.03552001334077242,
+          0.25264433093209154
+        ]
+      ],
+      "stored_joint_probabilities_at_twenty": [
+        [
+          0.7045092797122205,
+          0.00732637601488422
+        ],
+        [
+          0.03552001334077169,
+          0.25264433093208166
+        ]
+      ],
+      "record_disagreement_probability": 0.04284638935565678,
+      "distance_from_instantaneous_joint": 0.012390568983057904,
+      "independent_X_block_amplitude_error": 9.266777893079127e-16,
+      "storage_probability_error": 2.2093438190040615e-14,
+      "total_external_work": 0.0480722627805642,
+      "base_energy_at_twenty": -4.710698220362865,
+      "total_work_ledger_error": 2.1016521856154213e-13,
+      "reduced_memory_offdiagonal_max": 0.0050123004262970965,
+      "storage_current": {
+        "equivariance_max_error": 9.540979117872439e-18,
+        "expected_jump_intensity": 1.7898203603004403,
+        "expected_intensity_bound": 11.0,
+        "memory_changing_directed_edges": 0
+      }
+    },
+    {
+      "pulse_duration": 0.5,
+      "coupling": 3.141592653589793,
+      "pulses": [
+        {
+          "register": 0,
+          "start": 5.0,
+          "duration": 0.5,
+          "work_on": 0.9358832408852404,
+          "work_off": -0.8949526120421268,
+          "work": 0.0409306288431136,
+          "active_energy_error": 2.6645352591003757e-15,
+          "work_ledger_error": 2.3314683517128287e-15,
+          "midpoint_current": {
+            "equivariance_max_error": 5.204170427930421e-18,
+            "expected_jump_intensity": 3.067579858058955,
+            "expected_intensity_bound": 14.141592653589793,
+            "memory_changing_directed_edges": 4760
+          }
+        },
+        {
+          "register": 1,
+          "start": 10.0,
+          "duration": 0.5,
+          "work_on": 0.8380367204775842,
+          "work_off": -0.8312490306652818,
+          "work": 0.006787689812302378,
+          "active_energy_error": 7.549516567451064e-15,
+          "work_ledger_error": 1.6653345369377348e-15,
+          "midpoint_current": {
+            "equivariance_max_error": 3.469446951953614e-18,
+            "expected_jump_intensity": 2.9834499226491156,
+            "expected_intensity_bound": 14.141592653589793,
+            "memory_changing_directed_edges": 4760
+          }
+        }
+      ],
+      "joint_probabilities": [
+        [
+          0.7014689571229343,
+          0.007240019941846008
+        ],
+        [
+          0.033464039258349794,
+          0.25782698367686374
+        ]
+      ],
+      "stored_joint_probabilities_at_twenty": [
+        [
+          0.7014689571228929,
+          0.0072400199418458195
+        ],
+        [
+          0.03346403925834649,
+          0.2578269836768492
+        ]
+      ],
+      "record_disagreement_probability": 0.040704059200195805,
+      "distance_from_instantaneous_joint": 0.009350246393749595,
+      "independent_X_block_amplitude_error": 7.20912758077171e-16,
+      "storage_probability_error": 4.141131881851834e-14,
+      "total_external_work": 0.04771831865541598,
+      "base_energy_at_twenty": -4.711052164487862,
+      "total_work_ledger_error": 3.610445276081009e-13,
+      "reduced_memory_offdiagonal_max": 0.005576924153711051,
+      "storage_current": {
+        "equivariance_max_error": 6.938893903907228e-18,
+        "expected_jump_intensity": 1.7864365855043736,
+        "expected_intensity_bound": 11.0,
+        "memory_changing_directed_edges": 0
+      }
+    },
+    {
+      "pulse_duration": 0.25,
+      "coupling": 6.283185307179586,
+      "pulses": [
+        {
+          "register": 0,
+          "start": 5.0,
+          "duration": 0.25,
+          "work_on": 1.8717664817704809,
+          "work_off": -1.8263552229231566,
+          "work": 0.04541125884732433,
+          "active_energy_error": 1.7763568394002505e-15,
+          "work_ledger_error": 3.3306690738754696e-15,
+          "midpoint_current": {
+            "equivariance_max_error": 1.474514954580286e-17,
+            "expected_jump_intensity": 4.026705164115494,
+            "expected_intensity_bound": 17.283185307179586,
+            "memory_changing_directed_edges": 4760
+          }
+        },
+        {
+          "register": 1,
+          "start": 10.0,
+          "duration": 0.25,
+          "work_on": 1.6886767199853836,
+          "work_off": -1.6814994325070851,
+          "work": 0.0071772874782984886,
+          "active_energy_error": 4.440892098500626e-15,
+          "work_ledger_error": 1.7763568394002505e-15,
+          "midpoint_current": {
+            "equivariance_max_error": 6.613633252161577e-18,
+            "expected_jump_intensity": 3.803319036945964,
+            "expected_intensity_bound": 17.283185307179586,
+            "memory_changing_directed_edges": 4760
+          }
+        }
+      ],
+      "joint_probabilities": [
+        [
+          0.6974866618208525,
+          0.008537199863456055
+        ],
+        [
+          0.03456164793200075,
+          0.25941449038368614
+        ]
+      ],
+      "stored_joint_probabilities_at_twenty": [
+        [
+          0.697486661820802,
+          0.008537199863455877
+        ],
+        [
+          0.034561647931996155,
+          0.25941449038366765
+        ]
+      ],
+      "record_disagreement_probability": 0.04309884779545681,
+      "distance_from_instantaneous_joint": 0.005367951091667766,
+      "independent_X_block_amplitude_error": 8.641360932674558e-16,
+      "storage_probability_error": 5.051514762044462e-14,
+      "total_external_work": 0.05258854632562282,
+      "base_energy_at_twenty": -4.7061819368175986,
+      "total_work_ledger_error": 4.176659018639839e-13,
+      "reduced_memory_offdiagonal_max": 0.005374389738164966,
+      "storage_current": {
+        "equivariance_max_error": 6.288372600415926e-18,
+        "expected_jump_intensity": 1.7853146128908133,
+        "expected_intensity_bound": 11.0,
+        "memory_changing_directed_edges": 0
+      }
+    }
+  ],
+  "ideal_control": {
+    "joint_probabilities": [
+      [
+        0.6921187107291847,
+        0.009980401383312196
+      ],
+      [
+        0.038181401974890276,
+        0.2597194859126061
+      ]
+    ],
+    "previous_instrument_error": 2.886579864025407e-15,
+    "first_read_work": 0.04552707005924095,
+    "second_read_work": 0.011913540940247103,
+    "status": "instantaneous_CNOT_control_not_a_finite_pulse"
+  },
+  "exact_two_state_path_control": {
+    "status": "exact_two_state_method_and_history_counterexample_only",
+    "times": [
+      0.5235987755982988,
+      1.0471975511965976
+    ],
+    "seed": 9110,
+    "sampled_trajectories": 65536,
+    "hidden_path_joint": [
+      [
+        0.2500000000000001,
+        0.49999999999999994
+      ],
+      [
+        0.0,
+        0.24999999999999994
+      ]
+    ],
+    "sampled_hidden_joint": [
+      [
+        0.24945068359375,
+        0.4998626708984375
+      ],
+      [
+        0.0,
+        0.2506866455078125
+      ]
+    ],
+    "maximum_sampling_error": 0.0006866455078125555,
+    "preregistered_sampling_tolerance": 0.01,
+    "sequential_projective_joint": [
+      [
+        0.5625000000000002,
+        0.18749999999999997
+      ],
+      [
+        0.06249999999999997,
+        0.18749999999999997
+      ]
+    ],
+    "physical_memory_joint": [
+      [
+        0.5625000000000002,
+        0.18749999999999992
+      ],
+      [
+        0.062499999999999944,
+        0.18749999999999992
+      ]
+    ],
+    "physical_projective_max_error": 5.551115123125783e-17,
+    "hidden_history_flip_probability": 0.5,
+    "physically_read_flip_probability": 0.25
+  },
+  "full_model_sampled_trajectories": 0,
+  "fitted_parameters": 0,
+  "full_joint_rmse": null,
+  "scientific_success": false,
+  "assumptions": [
+    "The EV1 configuration and initial Born axioms are retained.",
+    "Two initially pure degenerate memories and prescribed read pulses are supplied.",
+    "Memory couplings vanish exactly after their read pulses."
+  ],
+  "limitations": [
+    "No autonomous read scheduler or preparation/reset cost is derived.",
+    "Stable stored bits do not correct LM3 initial-occupation detector errors.",
+    "Hidden trajectories without readers are not sequential measurement data.",
+    "No gravitational backreaction, relativistic locality, gauge, or empirical fit."
+  ],
+  "source_sha256": {
+    "ce_physical_record_readout.py": "452e6c2f548bd10c0ca0d52e3ba1a25e71381cac03f6702bbd5b9e1a0362bcea",
+    "ce_autonomous_record_instrument.py": "e47ea896587ce2937f962384632e15d1e90fffd4200f60b3a2efa53cf7e73886",
+    "ce_local_vacuum_modular.py": "eaa93d08395ca3504276b16cfdf6b29fd6b23e84c41fb807271a0fa9f76a9ec6"
+  },
+  "input_sha256": {
+    "ce_autonomous_record_instrument.json": "9ebc3e8f8a6adcb6b26b629d46acb3a2dfcc494e7b3da3b328aea9e87c8685d9"
+  },
+  "environment": {
+    "python": "3.11.9",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1"
+  }
+}

@@ -1,0 +1,964 @@
+{
+  "candidate": "CE-LM2",
+  "status": "local_apparatus_energy_and_reference_gate",
+  "inputs": {
+    "matter_sites": 8,
+    "local_site": 3,
+    "hopping": 1,
+    "mass": 0,
+    "gamma": [
+      0.5,
+      2.0,
+      8.0
+    ],
+    "gap": [
+      0.0,
+      1.0
+    ],
+    "fit_parameters": 0
+  },
+  "cases": [
+    {
+      "gamma": 0.5,
+      "apparatus_gap": 0.0,
+      "tstar": 3.141592653589793,
+      "current_errors": {
+        "matter_current": 0.0,
+        "apparatus_current": 0.0,
+        "total_current": 0.0,
+        "particle_number": 0.0,
+        "distant_density_coupling": 0.0
+      },
+      "evolution": [
+        {
+          "time_over_tstar": 0.0,
+          "time": 0.0,
+          "matter_energy_change": 3.552713678800501e-15,
+          "apparatus_energy": 0.0,
+          "interaction_energy": -4.337490704903265e-16,
+          "switch_on_work": 0.0,
+          "switch_off_work": 4.337490704903265e-16,
+          "record_probability": 1.643201471382643e-30,
+          "matter_energy_current": 0.0,
+          "apparatus_energy_current": 0.0,
+          "norm_error": 1.2212453270876722e-15,
+          "total_energy_error": 3.552713678800501e-15,
+          "switching_balance_error": 3.1189646083101744e-15,
+          "independent_state_error": 3.608224830031759e-16
+        },
+        {
+          "time_over_tstar": 0.25,
+          "time": 0.7853981633974483,
+          "matter_energy_change": 0.0627626068913738,
+          "apparatus_energy": 0.0,
+          "interaction_energy": -0.06276260689137073,
+          "switch_on_work": 0.0,
+          "switch_off_work": 0.06276260689137073,
+          "record_probability": 0.06231603907703425,
+          "matter_energy_current": 0.08663918198257502,
+          "apparatus_energy_current": 0.0,
+          "norm_error": 1.5543122344752192e-15,
+          "total_energy_error": 2.6645352591003757e-15,
+          "switching_balance_error": 3.0808688933348094e-15,
+          "independent_state_error": 6.703129537951225e-16
+        },
+        {
+          "time_over_tstar": 0.5,
+          "time": 1.5707963267948966,
+          "matter_energy_change": 0.06936152544436247,
+          "apparatus_energy": 0.0,
+          "interaction_energy": -0.06936152544435903,
+          "switch_on_work": 0.0,
+          "switch_off_work": 0.06936152544435903,
+          "record_probability": 0.17299508329345736,
+          "matter_energy_current": -0.042680008568729486,
+          "apparatus_energy_current": 0.0,
+          "norm_error": 1.5543122344752192e-15,
+          "total_energy_error": 3.552713678800501e-15,
+          "switching_balance_error": 3.4416913763379853e-15,
+          "independent_state_error": 9.918492907659913e-16
+        },
+        {
+          "time_over_tstar": 1.0,
+          "time": 3.141592653589793,
+          "matter_energy_change": 0.05709451789762987,
+          "apparatus_energy": 0.0,
+          "interaction_energy": -0.05709451789762643,
+          "switch_on_work": 0.0,
+          "switch_off_work": 0.05709451789762643,
+          "record_probability": 0.4999999999999932,
+          "matter_energy_current": 0.0011088233972494123,
+          "apparatus_energy_current": 0.0,
+          "norm_error": 1.5543122344752192e-15,
+          "total_energy_error": 3.552713678800501e-15,
+          "switching_balance_error": 3.4416913763379853e-15,
+          "independent_state_error": 2.5860392763626462e-15
+        },
+        {
+          "time_over_tstar": 2.0,
+          "time": 6.283185307179586,
+          "matter_energy_change": 0.04748712886422357,
+          "apparatus_energy": 0.0,
+          "interaction_energy": -0.04748712886421993,
+          "switch_on_work": 0.0,
+          "switch_off_work": 0.04748712886421993,
+          "record_probability": 0.9682808316313251,
+          "matter_energy_current": -0.012914510311680453,
+          "apparatus_energy_current": 0.0,
+          "norm_error": 1.7763568394002505e-15,
+          "total_energy_error": 3.552713678800501e-15,
+          "switching_balance_error": 3.642919299551295e-15,
+          "independent_state_error": 1.0617607408026428e-14
+        }
+      ],
+      "instrument": {
+        "kraus_completeness_error": 1.8323969715660917e-15,
+        "total_energy_operator_error": 3.168167383525925e-15,
+        "reverse_error": 4.504854807891227e-16,
+        "effect_operator_distance_from_ideal_occupation": 0.8707621986385486,
+        "conditional_probabilities": [
+          {
+            "initial_local_occupation": 0,
+            "pointer_one_probability": 0.49301526383580174
+          },
+          {
+            "initial_local_occupation": 1,
+            "pointer_one_probability": 0.5069847361641914
+          }
+        ],
+        "equal_prior_classification_error": 0.49301526383580524,
+        "no_hopping_zero_gap_ideal_control_error": 6.123233995736766e-17,
+        "channel_CP_reason": "Kraus form from a fixed pure apparatus input",
+        "actual_outcome_selection_derived": false
+      },
+      "coupled_reference": {
+        "particle_number_sector": 4,
+        "sector_dimension": 140,
+        "ground_energy": -5.036737082939116,
+        "sector_gap": 0.5000000000000009,
+        "region_matter_plus_apparatus": [
+          2,
+          3,
+          8
+        ],
+        "region_eigenvalues": [
+          -1.3799812241578471e-17,
+          -6.938893903907228e-18,
+          0.0,
+          7.971930432869329e-17,
+          0.014023231133438077,
+          0.08509070994379114,
+          0.12746272917673934,
+          0.7734233297460312
+        ],
+        "support_rank": 4,
+        "rank_threshold": 1e-12,
+        "finite_log_defined_only_on_support": true,
+        "prepared_weight_outside_reference_support": 0.5000000000000011,
+        "prepared_relative_entropy": null,
+        "relative_entropy_status": "infinite_support_mismatch",
+        "support_modular_norm": 4.267039957920483,
+        "errors": {
+          "sector_eigenstate": 1.3322676295501878e-15,
+          "block_trace": 1.1102230246251565e-16,
+          "support_reconstruction": 1.942890293094024e-16
+        },
+        "matter_wick_connected": 2.7755575615628914e-17,
+        "zero_gap_independent_control": {
+          "conditional_free_energy": -5.036737082939115,
+          "energy_error": 8.881784197001252e-16,
+          "pointer_X": -1.0
+        },
+        "matter_gaussian_density_error": 3.3306690738754696e-16,
+        "matter_region_entropy": 0.7307835209377344,
+        "prepared_state_replaced": false
+      }
+    },
+    {
+      "gamma": 0.5,
+      "apparatus_gap": 1.0,
+      "tstar": 3.141592653589793,
+      "current_errors": {
+        "matter_current": 0.0,
+        "apparatus_current": 0.0,
+        "total_current": 0.0,
+        "particle_number": 0.0,
+        "distant_density_coupling": 0.0
+      },
+      "evolution": [
+        {
+          "time_over_tstar": 0.0,
+          "time": 0.0,
+          "matter_energy_change": 1.7763568394002505e-15,
+          "apparatus_energy": 1.3925366293718743e-30,
+          "interaction_energy": 1.1281746774066486e-16,
+          "switch_on_work": 0.0,
+          "switch_off_work": -1.1281746774066486e-16,
+          "record_probability": 1.3925366293718743e-30,
+          "matter_energy_current": 0.0,
+          "apparatus_energy_current": 0.0,
+          "norm_error": 8.881784197001252e-16,
+          "total_energy_error": 1.7763568394002505e-15,
+          "switching_balance_error": 1.8891743071409167e-15,
+          "independent_state_error": 2.850441667362279e-16
+        },
+        {
+          "time_over_tstar": 0.25,
+          "time": 0.7853981633974483,
+          "matter_energy_change": 0.043689244479526046,
+          "apparatus_energy": 0.053208584262091324,
+          "interaction_energy": -0.09689782874161679,
+          "switch_on_work": 0.0,
+          "switch_off_work": 0.09689782874161679,
+          "record_probability": 0.053208584262091324,
+          "matter_energy_current": 0.01835294329334161,
+          "apparatus_energy_current": 0.09258002803721221,
+          "norm_error": 9.992007221626409e-16,
+          "total_energy_error": 8.881784197001252e-16,
+          "switching_balance_error": 5.828670879282072e-16,
+          "independent_state_error": 1.1270951119217139e-15
+        },
+        {
+          "time_over_tstar": 0.5,
+          "time": 1.5707963267948966,
+          "matter_energy_change": 0.023802726733781476,
+          "apparatus_energy": 0.12257201790711383,
+          "interaction_energy": -0.14637474464089306,
+          "switch_on_work": 0.0,
+          "switch_off_work": 0.14637474464089306,
+          "record_probability": 0.12257201790711383,
+          "matter_energy_current": -0.0041118912642992556,
+          "apparatus_energy_current": 0.09616533970183014,
+          "norm_error": 1.1102230246251565e-15,
+          "total_energy_error": 2.6645352591003757e-15,
+          "switching_balance_error": 2.248201624865942e-15,
+          "independent_state_error": 1.3665922095022723e-15
+        },
+        {
+          "time_over_tstar": 1.0,
+          "time": 3.141592653589793,
+          "matter_energy_change": 0.04282460266432153,
+          "apparatus_energy": 0.2005548849699212,
+          "interaction_energy": -0.2433794876342411,
+          "switch_on_work": 0.0,
+          "switch_off_work": 0.2433794876342411,
+          "record_probability": 0.2005548849699212,
+          "matter_energy_current": 0.0043529492513153896,
+          "apparatus_energy_current": -0.0328645110352718,
+          "norm_error": 9.992007221626409e-16,
+          "total_energy_error": 8.881784197001252e-16,
+          "switching_balance_error": 1.609823385706477e-15,
+          "independent_state_error": 4.867444894795833e-15
+        },
+        {
+          "time_over_tstar": 2.0,
+          "time": 6.283185307179586,
+          "matter_energy_change": 0.03074443947942207,
+          "apparatus_energy": 0.02531783708463159,
+          "interaction_energy": -0.0560622765640508,
+          "switch_on_work": 0.0,
+          "switch_off_work": 0.0560622765640508,
+          "record_probability": 0.02531783708463159,
+          "matter_energy_current": 0.0029184013363050855,
+          "apparatus_energy_current": 0.05524139488280368,
+          "norm_error": 1.3322676295501878e-15,
+          "total_energy_error": 2.6645352591003757e-15,
+          "switching_balance_error": 2.858824288409778e-15,
+          "independent_state_error": 7.89761969247363e-15
+        }
+      ],
+      "instrument": {
+        "kraus_completeness_error": 1.3322676295501878e-15,
+        "total_energy_operator_error": 3.775117010046022e-15,
+        "reverse_error": 3.0112232301051974e-16,
+        "effect_operator_distance_from_ideal_occupation": 0.9183541624088469,
+        "conditional_probabilities": [
+          {
+            "initial_local_occupation": 0,
+            "pointer_one_probability": 0.27394232046345934
+          },
+          {
+            "initial_local_occupation": 1,
+            "pointer_one_probability": 0.17581243639973942
+          }
+        ],
+        "equal_prior_classification_error": 0.5490649420318598,
+        "no_hopping_zero_gap_ideal_control_error": 6.123233995736766e-17,
+        "channel_CP_reason": "Kraus form from a fixed pure apparatus input",
+        "actual_outcome_selection_derived": false
+      },
+      "coupled_reference": {
+        "particle_number_sector": 4,
+        "sector_dimension": 140,
+        "ground_energy": -4.837720565288121,
+        "sector_gap": 0.6894367637463255,
+        "region_matter_plus_apparatus": [
+          2,
+          3,
+          8
+        ],
+        "region_eigenvalues": [
+          2.944459841781538e-05,
+          4.0609878935798394e-05,
+          0.00010517685433072098,
+          0.00011825247659530804,
+          0.014460151419177671,
+          0.09647072332437637,
+          0.11582744089891962,
+          0.7729482005492463
+        ],
+        "support_rank": 8,
+        "rank_threshold": 1e-12,
+        "finite_log_defined_only_on_support": true,
+        "prepared_weight_outside_reference_support": 0.0,
+        "prepared_relative_entropy": 0.5390967737477761,
+        "relative_entropy_status": "finite",
+        "support_modular_norm": 10.433000080043637,
+        "errors": {
+          "sector_eigenstate": 1.942890293094024e-15,
+          "block_trace": 4.440892098500626e-16,
+          "support_reconstruction": 6.938893903907228e-17
+        },
+        "matter_wick_connected": -0.002324657941185332,
+        "zero_gap_independent_control": null,
+        "matter_gaussian_density_error": 0.0023246579411854706,
+        "matter_region_entropy": 0.7478664215918176,
+        "prepared_state_replaced": false
+      }
+    },
+    {
+      "gamma": 2.0,
+      "apparatus_gap": 0.0,
+      "tstar": 0.7853981633974483,
+      "current_errors": {
+        "matter_current": 0.0,
+        "apparatus_current": 0.0,
+        "total_current": 0.0,
+        "particle_number": 0.0,
+        "distant_density_coupling": 0.0
+      },
+      "evolution": [
+        {
+          "time_over_tstar": 0.0,
+          "time": 0.0,
+          "matter_energy_change": -3.552713678800501e-15,
+          "apparatus_energy": 0.0,
+          "interaction_energy": -2.718913818626682e-15,
+          "switch_on_work": 0.0,
+          "switch_off_work": 2.718913818626682e-15,
+          "record_probability": 3.795503517689914e-30,
+          "matter_energy_current": 0.0,
+          "apparatus_energy_current": 0.0,
+          "norm_error": 0.0,
+          "total_energy_error": 6.217248937900877e-15,
+          "switching_balance_error": 6.271627497427182e-15,
+          "independent_state_error": 4.85722573273506e-16
+        },
+        {
+          "time_over_tstar": 0.25,
+          "time": 0.19634954084936207,
+          "matter_energy_change": 0.09527282375862534,
+          "apparatus_energy": 0.0,
+          "interaction_energy": -0.0952728237586345,
+          "switch_on_work": 0.0,
+          "switch_off_work": 0.0952728237586345,
+          "record_probability": 0.07240538711189375,
+          "matter_energy_current": 0.9309466983583616,
+          "apparatus_energy_current": 0.0,
+          "norm_error": 6.661338147750939e-16,
+          "total_energy_error": 8.881784197001252e-15,
+          "switching_balance_error": 9.159339953157541e-15,
+          "independent_state_error": 4.564927381489206e-16
+        },
+        {
+          "time_over_tstar": 0.5,
+          "time": 0.39269908169872414,
+          "matter_energy_change": 0.33713210481432476,
+          "apparatus_energy": 0.0,
+          "interaction_energy": -0.33713210481433287,
+          "switch_on_work": 0.0,
+          "switch_off_work": 0.33713210481433287,
+          "record_probability": 0.24064591813680397,
+          "matter_energy_current": 1.4353508876042445,
+          "apparatus_energy_current": 0.0,
+          "norm_error": 4.440892098500626e-16,
+          "total_energy_error": 7.993605777301127e-15,
+          "switching_balance_error": 8.104628079763643e-15,
+          "independent_state_error": 5.034883602725786e-16
+        },
+        {
+          "time_over_tstar": 1.0,
+          "time": 0.7853981633974483,
+          "matter_energy_change": 0.819213236967804,
+          "apparatus_energy": 0.0,
+          "interaction_energy": -0.8192132369678118,
+          "switch_on_work": 0.0,
+          "switch_off_work": 0.8192132369678118,
+          "record_probability": 0.4999999999999992,
+          "matter_energy_current": 0.6853668640275827,
+          "apparatus_energy_current": 0.0,
+          "norm_error": 4.440892098500626e-16,
+          "total_energy_error": 7.993605777301127e-15,
+          "switching_balance_error": 7.771561172376096e-15,
+          "independent_state_error": 1.0235750533041806e-15
+        },
+        {
+          "time_over_tstar": 2.0,
+          "time": 1.5707963267948966,
+          "matter_energy_change": 0.513864791885954,
+          "apparatus_energy": 0.0,
+          "interaction_energy": -0.5138647918859606,
+          "switch_on_work": 0.0,
+          "switch_off_work": 0.5138647918859606,
+          "record_probability": 0.8084525631715329,
+          "matter_energy_current": -0.5352284436064043,
+          "apparatus_energy_current": 0.0,
+          "norm_error": 0.0,
+          "total_energy_error": 6.217248937900877e-15,
+          "switching_balance_error": 6.5503158452884236e-15,
+          "independent_state_error": 2.096321989161977e-15
+        }
+      ],
+      "instrument": {
+        "kraus_completeness_error": 2.236602375770079e-15,
+        "total_energy_operator_error": 5.434639556698477e-15,
+        "reverse_error": 1.0477596616285218e-15,
+        "effect_operator_distance_from_ideal_occupation": 0.5841897729493056,
+        "conditional_probabilities": [
+          {
+            "initial_local_occupation": 0,
+            "pointer_one_probability": 0.3334069362557863
+          },
+          {
+            "initial_local_occupation": 1,
+            "pointer_one_probability": 0.6665930637442138
+          }
+        ],
+        "equal_prior_classification_error": 0.33340693625578627,
+        "no_hopping_zero_gap_ideal_control_error": 6.123233995736766e-17,
+        "channel_CP_reason": "Kraus form from a fixed pure apparatus input",
+        "actual_outcome_selection_derived": false
+      },
+      "coupled_reference": {
+        "particle_number_sector": 4,
+        "sector_dimension": 140,
+        "ground_energy": -6.144301111205119,
+        "sector_gap": 0.6719875130714437,
+        "region_matter_plus_apparatus": [
+          2,
+          3,
+          8
+        ],
+        "region_eigenvalues": [
+          -1.8554670386839137e-17,
+          -3.469446951953614e-18,
+          0.0,
+          1.5518904303856463e-17,
+          0.008819469461456337,
+          0.039354354035504316,
+          0.17425650045844765,
+          0.7775696760445935
+        ],
+        "support_rank": 4,
+        "rank_threshold": 1e-12,
+        "finite_log_defined_only_on_support": true,
+        "prepared_weight_outside_reference_support": 0.500000000000001,
+        "prepared_relative_entropy": null,
+        "relative_entropy_status": "infinite_support_mismatch",
+        "support_modular_norm": 4.730793562534947,
+        "errors": {
+          "sector_eigenstate": 2.220446049250313e-15,
+          "block_trace": 1.7763568394002505e-15,
+          "support_reconstruction": 2.220446049250313e-16
+        },
+        "matter_wick_connected": -3.469446951953614e-16,
+        "zero_gap_independent_control": {
+          "conditional_free_energy": -6.144301111205118,
+          "energy_error": 1.7763568394002505e-15,
+          "pointer_X": -1.0000000000000018
+        },
+        "matter_gaussian_density_error": 1.4710455076283324e-15,
+        "matter_region_entropy": 0.6691284770040109,
+        "prepared_state_replaced": false
+      }
+    },
+    {
+      "gamma": 2.0,
+      "apparatus_gap": 1.0,
+      "tstar": 0.7853981633974483,
+      "current_errors": {
+        "matter_current": 0.0,
+        "apparatus_current": 0.0,
+        "total_current": 0.0,
+        "particle_number": 0.0,
+        "distant_density_coupling": 0.0
+      },
+      "evolution": [
+        {
+          "time_over_tstar": 0.0,
+          "time": 0.0,
+          "matter_energy_change": 1.0658141036401503e-14,
+          "apparatus_energy": 1.606032949569006e-30,
+          "interaction_energy": 1.4619162191851871e-15,
+          "switch_on_work": 0.0,
+          "switch_off_work": -1.4619162191851871e-15,
+          "record_probability": 1.606032949569006e-30,
+          "matter_energy_current": 0.0,
+          "apparatus_energy_current": 0.0,
+          "norm_error": 2.886579864025407e-15,
+          "total_energy_error": 1.2434497875801753e-14,
+          "switching_balance_error": 1.2120057255586691e-14,
+          "independent_state_error": 4.996003610813204e-16
+        },
+        {
+          "time_over_tstar": 0.25,
+          "time": 0.19634954084936207,
+          "matter_energy_change": 0.09327577172746793,
+          "apparatus_energy": 0.0715731292415108,
+          "interaction_energy": -0.16484890096896637,
+          "switch_on_work": 0.0,
+          "switch_off_work": 0.16484890096896637,
+          "record_probability": 0.0715731292415108,
+          "matter_energy_current": 0.8915810153696508,
+          "apparatus_energy_current": 0.6748817092377766,
+          "norm_error": 2.886579864025407e-15,
+          "total_energy_error": 1.2434497875801753e-14,
+          "switching_balance_error": 1.2351231148954867e-14,
+          "independent_state_error": 5.4672143489065705e-16
+        },
+        {
+          "time_over_tstar": 0.5,
+          "time": 0.39269908169872414,
+          "matter_energy_change": 0.31089085776056,
+          "apparatus_energy": 0.22959942098114008,
+          "interaction_energy": -0.5404902787416876,
+          "switch_on_work": 0.0,
+          "switch_off_work": 0.5404902787416876,
+          "record_probability": 0.22959942098114008,
+          "matter_energy_current": 1.2036252559489706,
+          "apparatus_energy_current": 0.8293608953940097,
+          "norm_error": 2.7755575615628914e-15,
+          "total_energy_error": 1.2434497875801753e-14,
+          "switching_balance_error": 1.2434497875801753e-14,
+          "independent_state_error": 6.112531465858673e-16
+        },
+        {
+          "time_over_tstar": 1.0,
+          "time": 0.7853981633974483,
+          "matter_energy_change": 0.640000358144416,
+          "apparatus_energy": 0.4179669477034482,
+          "interaction_energy": -1.0579673058478525,
+          "switch_on_work": 0.0,
+          "switch_off_work": 1.0579673058478525,
+          "record_probability": 0.4179669477034482,
+          "matter_energy_current": 0.3296370308483075,
+          "apparatus_energy_current": 0.12081374501624931,
+          "norm_error": 2.6645352591003757e-15,
+          "total_energy_error": 1.1546319456101628e-14,
+          "switching_balance_error": 1.176836406102666e-14,
+          "independent_state_error": 9.09180472805593e-16
+        },
+        {
+          "time_over_tstar": 2.0,
+          "time": 1.5707963267948966,
+          "matter_energy_change": 0.6558786076287859,
+          "apparatus_energy": 0.6892738284166613,
+          "interaction_energy": -1.3451524360454363,
+          "switch_on_work": 0.0,
+          "switch_off_work": 1.3451524360454363,
+          "record_probability": 0.6892738284166613,
+          "matter_energy_current": -0.04371692982358527,
+          "apparatus_energy_current": 0.255995182690975,
+          "norm_error": 2.55351295663786e-15,
+          "total_energy_error": 1.0658141036401503e-14,
+          "switching_balance_error": 1.0880185641326534e-14,
+          "independent_state_error": 1.2960706411149376e-15
+        }
+      ],
+      "instrument": {
+        "kraus_completeness_error": 2.4424906541753444e-15,
+        "total_energy_operator_error": 5.338900093391299e-15,
+        "reverse_error": 9.162672118839449e-16,
+        "effect_operator_distance_from_ideal_occupation": 0.5952582291705361,
+        "conditional_probabilities": [
+          {
+            "initial_local_occupation": 0,
+            "pointer_one_probability": 0.3203626052649919
+          },
+          {
+            "initial_local_occupation": 1,
+            "pointer_one_probability": 0.6325243912826259
+          }
+        ],
+        "equal_prior_classification_error": 0.343919106991183,
+        "no_hopping_zero_gap_ideal_control_error": 6.123233995736766e-17,
+        "channel_CP_reason": "Kraus form from a fixed pure apparatus input",
+        "actual_outcome_selection_derived": false
+      },
+      "coupled_reference": {
+        "particle_number_sector": 4,
+        "sector_dimension": 140,
+        "ground_energy": -5.731699342549138,
+        "sector_gap": 0.6725818718459422,
+        "region_matter_plus_apparatus": [
+          2,
+          3,
+          8
+        ],
+        "region_eigenvalues": [
+          1.1064529017482055e-05,
+          2.2951051235454638e-05,
+          3.820537918426681e-05,
+          7.35927772140552e-05,
+          0.00948823259186332,
+          0.04347053689518336,
+          0.16967313984494142,
+          0.7772222769313623
+        ],
+        "support_rank": 8,
+        "rank_threshold": 1e-12,
+        "finite_log_defined_only_on_support": true,
+        "prepared_weight_outside_reference_support": 0.0,
+        "prepared_relative_entropy": 3.277525790831123,
+        "relative_entropy_status": "finite",
+        "support_modular_norm": 11.411766150438835,
+        "errors": {
+          "sector_eigenstate": 2.6645352591003757e-15,
+          "block_trace": 1.7763568394002505e-15,
+          "support_reconstruction": 2.220446049250313e-16
+        },
+        "matter_wick_connected": -0.002249932268969204,
+        "zero_gap_independent_control": null,
+        "matter_gaussian_density_error": 0.0022499322689691903,
+        "matter_region_entropy": 0.6901484439042457,
+        "prepared_state_replaced": false
+      }
+    },
+    {
+      "gamma": 8.0,
+      "apparatus_gap": 0.0,
+      "tstar": 0.19634954084936207,
+      "current_errors": {
+        "matter_current": 0.0,
+        "apparatus_current": 0.0,
+        "total_current": 0.0,
+        "particle_number": 0.0,
+        "distant_density_coupling": 0.0
+      },
+      "evolution": [
+        {
+          "time_over_tstar": 0.0,
+          "time": 0.0,
+          "matter_energy_change": 1.7763568394002505e-15,
+          "apparatus_energy": 0.0,
+          "interaction_energy": -1.836671424276155e-15,
+          "switch_on_work": 0.0,
+          "switch_off_work": 1.836671424276155e-15,
+          "record_probability": 1.920393827324878e-30,
+          "matter_energy_current": 0.0,
+          "apparatus_energy_current": 0.0,
+          "norm_error": 7.771561172376096e-16,
+          "total_energy_error": 0.0,
+          "switching_balance_error": 6.031458487590464e-17,
+          "independent_state_error": 4.163336342344337e-16
+        },
+        {
+          "time_over_tstar": 0.25,
+          "time": 0.04908738521234052,
+          "matter_energy_change": 0.0977863472383742,
+          "apparatus_energy": 0.0,
+          "interaction_energy": -0.09778634723837143,
+          "switch_on_work": 0.0,
+          "switch_off_work": 0.09778634723837143,
+          "record_probability": 0.07317158428165399,
+          "matter_energy_current": 3.9259192107159993,
+          "apparatus_energy_current": 0.0,
+          "norm_error": 1.2212453270876722e-15,
+          "total_energy_error": 2.6645352591003757e-15,
+          "switching_balance_error": 2.7755575615628914e-15,
+          "independent_state_error": 4.19157439605604e-16
+        },
+        {
+          "time_over_tstar": 0.5,
+          "time": 0.09817477042468103,
+          "matter_energy_change": 0.37429588817442916,
+          "apparatus_energy": 0.0,
+          "interaction_energy": -0.3742958881744256,
+          "switch_on_work": 0.0,
+          "switch_off_work": 0.3742958881744256,
+          "record_probability": 0.2493874144215562,
+          "matter_energy_current": 7.175702524256264,
+          "apparatus_energy_current": 0.0,
+          "norm_error": 1.2212453270876722e-15,
+          "total_energy_error": 3.552713678800501e-15,
+          "switching_balance_error": 3.552713678800501e-15,
+          "independent_state_error": 3.342213888644167e-16
+        },
+        {
+          "time_over_tstar": 1.0,
+          "time": 0.19634954084936207,
+          "matter_energy_change": 1.2510339027832371,
+          "apparatus_energy": 0.0,
+          "interaction_energy": -1.2510339027832322,
+          "switch_on_work": 0.0,
+          "switch_off_work": 1.2510339027832322,
+          "record_probability": 0.49999999999999906,
+          "matter_energy_current": 9.642002156391147,
+          "apparatus_energy_current": 0.0,
+          "norm_error": 1.3322676295501878e-15,
+          "total_energy_error": 5.329070518200751e-15,
+          "switching_balance_error": 4.884981308350689e-15,
+          "independent_state_error": 5.586655788334812e-16
+        },
+        {
+          "time_over_tstar": 2.0,
+          "time": 0.39269908169872414,
+          "matter_energy_change": 2.283780168395479,
+          "apparatus_energy": 0.0,
+          "interaction_energy": -2.283780168395477,
+          "switch_on_work": 0.0,
+          "switch_off_work": 2.283780168395477,
+          "record_probability": 0.10804641855439184,
+          "matter_energy_current": -1.4970649866432089,
+          "apparatus_energy_current": 0.0,
+          "norm_error": 9.992007221626409e-16,
+          "total_energy_error": 1.7763568394002505e-15,
+          "switching_balance_error": 2.220446049250313e-15,
+          "independent_state_error": 1.2980786360642967e-15
+        }
+      ],
+      "instrument": {
+        "kraus_completeness_error": 5.662137425588298e-15,
+        "total_energy_operator_error": 3.7907660348839244e-14,
+        "reverse_error": 7.007893679891869e-16,
+        "effect_operator_distance_from_ideal_occupation": 0.17461786772975413,
+        "conditional_probabilities": [
+          {
+            "initial_local_occupation": 0,
+            "pointer_one_probability": 0.02799867870133593
+          },
+          {
+            "initial_local_occupation": 1,
+            "pointer_one_probability": 0.9720013212986633
+          }
+        ],
+        "equal_prior_classification_error": 0.02799867870133632,
+        "no_hopping_zero_gap_ideal_control_error": 6.123233995736766e-17,
+        "channel_CP_reason": "Kraus form from a fixed pure apparatus input",
+        "actual_outcome_selection_derived": false
+      },
+      "coupled_reference": {
+        "particle_number_sector": 4,
+        "sector_dimension": 140,
+        "ground_energy": -11.802564533841142,
+        "sector_gap": 0.6357208898677484,
+        "region_matter_plus_apparatus": [
+          2,
+          3,
+          8
+        ],
+        "region_eigenvalues": [
+          -2.031455540906388e-16,
+          -6.844543402354024e-19,
+          0.0,
+          0.0,
+          0.0014672887503825015,
+          0.005032179425351991,
+          0.2242879131691472,
+          0.7692126186551197
+        ],
+        "support_rank": 4,
+        "rank_threshold": 1e-12,
+        "finite_log_defined_only_on_support": true,
+        "prepared_weight_outside_reference_support": 0.5000000000000038,
+        "prepared_relative_entropy": null,
+        "relative_entropy_status": "infinite_support_mismatch",
+        "support_modular_norm": 6.524338968663292,
+        "errors": {
+          "sector_eigenstate": 7.0915495697931874e-15,
+          "block_trace": 1.5543122344752192e-15,
+          "support_reconstruction": 2.220446049250313e-16
+        },
+        "matter_wick_connected": -3.972516759986888e-16,
+        "zero_gap_independent_control": {
+          "conditional_free_energy": -11.802564533841144,
+          "energy_error": 1.7763568394002505e-15,
+          "pointer_X": -1.0000000000000018
+        },
+        "matter_gaussian_density_error": 1.2472661792273243e-15,
+        "matter_region_entropy": 0.5733060616362305,
+        "prepared_state_replaced": false
+      }
+    },
+    {
+      "gamma": 8.0,
+      "apparatus_gap": 1.0,
+      "tstar": 0.19634954084936207,
+      "current_errors": {
+        "matter_current": 0.0,
+        "apparatus_current": 0.0,
+        "total_current": 0.0,
+        "particle_number": 0.0,
+        "distant_density_coupling": 0.0
+      },
+      "evolution": [
+        {
+          "time_over_tstar": 0.0,
+          "time": 0.0,
+          "matter_energy_change": 7.105427357601002e-15,
+          "apparatus_energy": 3.0119530319986942e-30,
+          "interaction_energy": -9.57490985805389e-16,
+          "switch_on_work": 0.0,
+          "switch_off_work": 9.57490985805389e-16,
+          "record_probability": 3.0119530319986942e-30,
+          "matter_energy_current": 0.0,
+          "apparatus_energy_current": 0.0,
+          "norm_error": 2.220446049250313e-15,
+          "total_energy_error": 6.217248937900877e-15,
+          "switching_balance_error": 6.147936371795616e-15,
+          "independent_state_error": 5.551115123125783e-16
+        },
+        {
+          "time_over_tstar": 0.25,
+          "time": 0.04908738521234052,
+          "matter_energy_change": 0.09765752489795076,
+          "apparatus_energy": 0.07311828126922103,
+          "interaction_energy": -0.1707758061671657,
+          "switch_on_work": 0.0,
+          "switch_off_work": 0.1707758061671657,
+          "record_probability": 0.07311828126922103,
+          "matter_energy_current": 3.915595189039484,
+          "apparatus_energy_current": 2.8201451853507002,
+          "norm_error": 2.1094237467877974e-15,
+          "total_energy_error": 6.217248937900877e-15,
+          "switching_balance_error": 6.106226635438361e-15,
+          "independent_state_error": 6.369057972232326e-16
+        },
+        {
+          "time_over_tstar": 0.5,
+          "time": 0.09817477042468103,
+          "matter_energy_change": 0.372431054421825,
+          "apparatus_energy": 0.24862627059996473,
+          "interaction_energy": -0.6210573250217855,
+          "switch_on_work": 0.0,
+          "switch_off_work": 0.6210573250217855,
+          "record_probability": 0.24862627059996473,
+          "matter_energy_current": 7.104844790958699,
+          "apparatus_energy_current": 3.9518665739691743,
+          "norm_error": 1.9984014443252818e-15,
+          "total_energy_error": 3.552713678800501e-15,
+          "switching_balance_error": 4.218847493575595e-15,
+          "independent_state_error": 6.400447923648137e-16
+        },
+        {
+          "time_over_tstar": 1.0,
+          "time": 0.19634954084936207,
+          "matter_energy_change": 1.231499224610503,
+          "apparatus_energy": 0.4925083427867334,
+          "interaction_energy": -1.7240075673972313,
+          "switch_on_work": 0.0,
+          "switch_off_work": 1.7240075673972313,
+          "record_probability": 0.4925083427867334,
+          "matter_energy_current": 9.36212601364453,
+          "apparatus_energy_current": -0.0033995624786774536,
+          "norm_error": 1.9984014443252818e-15,
+          "total_energy_error": 5.329070518200751e-15,
+          "switching_balance_error": 5.10702591327572e-15,
+          "independent_state_error": 7.089906314508455e-16
+        },
+        {
+          "time_over_tstar": 2.0,
+          "time": 0.39269908169872414,
+          "matter_energy_change": 2.2663338775112067,
+          "apparatus_energy": 0.10750656857109213,
+          "interaction_energy": -2.3738404460822946,
+          "switch_on_work": 0.0,
+          "switch_off_work": 2.3738404460822946,
+          "record_probability": 0.10750656857109213,
+          "matter_energy_current": -0.8557175365358953,
+          "apparatus_energy_current": 0.9032394524180806,
+          "norm_error": 1.6653345369377348e-15,
+          "total_energy_error": 4.440892098500626e-15,
+          "switching_balance_error": 4.440892098500626e-15,
+          "independent_state_error": 9.375871470198314e-16
+        }
+      ],
+      "instrument": {
+        "kraus_completeness_error": 3.774758283725532e-15,
+        "total_energy_operator_error": 3.430589403843227e-14,
+        "reverse_error": 9.432078156056576e-16,
+        "effect_operator_distance_from_ideal_occupation": 0.17632813735939348,
+        "conditional_probabilities": [
+          {
+            "initial_local_occupation": 0,
+            "pointer_one_probability": 0.02792293038277644
+          },
+          {
+            "initial_local_occupation": 1,
+            "pointer_one_probability": 0.9682534854879479
+          }
+        ],
+        "equal_prior_classification_error": 0.029834722447414252,
+        "no_hopping_zero_gap_ideal_control_error": 6.123233995736766e-17,
+        "channel_CP_reason": "Kraus form from a fixed pure apparatus input",
+        "actual_outcome_selection_derived": false
+      },
+      "coupled_reference": {
+        "particle_number_sector": 4,
+        "sector_dimension": 140,
+        "ground_energy": -11.318993082183884,
+        "sector_gap": 0.6358089359528662,
+        "region_matter_plus_apparatus": [
+          2,
+          3,
+          8
+        ],
+        "region_eigenvalues": [
+          2.3405060785098602e-08,
+          5.7534298878298416e-08,
+          6.75464001259618e-08,
+          1.858590316984078e-07,
+          0.0014855485412262647,
+          0.005098612550687668,
+          0.22413971786108755,
+          0.7692757867022075
+        ],
+        "support_rank": 8,
+        "rank_threshold": 1e-12,
+        "finite_log_defined_only_on_support": true,
+        "prepared_weight_outside_reference_support": 0.0,
+        "prepared_relative_entropy": 8.3162536317132,
+        "relative_entropy_status": "finite",
+        "support_modular_norm": 17.57031356509891,
+        "errors": {
+          "sector_eigenstate": 7.993605777301127e-15,
+          "block_trace": 0.0,
+          "support_reconstruction": 8.326672684688674e-16
+        },
+        "matter_wick_connected": -3.061532044217399e-05,
+        "zero_gap_independent_control": null,
+        "matter_gaussian_density_error": 3.0615320442350935e-05,
+        "matter_region_entropy": 0.5738213675940851,
+        "prepared_state_replaced": false
+      }
+    }
+  ],
+  "full_joint_rmse": null,
+  "scientific_success": false,
+  "limits": [
+    "Finite one-dimensional local matter-apparatus action is supplied.",
+    "Total energy is conserved only with interaction energy included during fixed-H intervals.",
+    "Switching work is computed but an autonomous controller/energy reservoir is not constructed.",
+    "Finite-time readout is not an instantaneous ideal projector or stable unique outcome.",
+    "The fixed-particle-number coupled ground reference does not replace the prepared state.",
+    "No covariant stress, gauge unification, quantum metric or joint observation fit."
+  ],
+  "source_sha256": {
+    "ce_local_record_apparatus.py": "91a05aed05e070f89191cf5d8b4caa243c58ab25db1674fe1d945f117e157ed9",
+    "ce_local_vacuum_modular.py": "eaa93d08395ca3504276b16cfdf6b29fd6b23e84c41fb807271a0fa9f76a9ec6"
+  },
+  "environment": {
+    "python": "3.11.9",
+    "numpy": "2.4.6"
+  }
+}

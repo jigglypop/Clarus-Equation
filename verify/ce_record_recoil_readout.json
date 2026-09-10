@@ -1,0 +1,248 @@
+{
+  "schema_version": 1,
+  "candidate": "CE-UR4-R2",
+  "scientific_success": false,
+  "full_joint_rmse": null,
+  "preregistration_sha256": "66cb18c9e26338cb134105fad026143bb3caf7de179b959a34bef9c20d180c67",
+  "source_hashes": {
+    "ce_record_recoil_readout.py": "d205ca2130121ecd1c450de60dfb88901be8f0df77bdc12122e090e5cc431752",
+    "ce_singlet_record_observability.py": "9636d1fae1548f57fd2e0383c91339c047628e084ec841613fe66d589eeb551f",
+    "ce_supersymmetric_record.py": "d945ec1dfa32113e33f91d38882fdf346257d6b9a807e1ba439f47c014719e8f",
+    "ce_simple_group_record.py": "6fbae4f419124c798f4386db609eac92d3b4236c430deb4c104f6bfa8a67df13"
+  },
+  "environment": {
+    "python": "3.11.9",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "sympy": "1.14.0"
+  },
+  "vertices": {
+    "UV_record_scalar_source": "2*a*m",
+    "UV_probe_scalar_source": "-M*b",
+    "boson_effective_vertex": "2*kappa*m",
+    "fermion_effective_vertex": "2*kappa",
+    "kappa_from_original_tensor": 0.04999999999999997,
+    "full_action_species_parity_error": 0.0,
+    "propagator_factor": "1/(1-t/M_Sigma^2)",
+    "final_weak_channels_for_fixed_probe": 1,
+    "channels": [
+      "S_alpha + H -> S_alpha + anti_Hbar",
+      "S_alpha + H -> Majorana_X_alpha + anti_Hbar_fermion"
+    ]
+  },
+  "two_channel_cross_sections": {
+    "rows": [
+      {
+        "mass_over_V": 0.0006570796326794897,
+        "sigma_B_times_V_squared": 0.00018014107329462602,
+        "sigma_F_times_V_squared": 1.880260472290009e-05,
+        "sigma_sum_times_V_squared": 0.0001989436780175261,
+        "conditional_F_fraction": 0.09451220018785245,
+        "outgoing_energy_at_right_angle_over_V": 3.259115161445107e-05
+      },
+      {
+        "mass_over_V": 0.00034292036732051036,
+        "sigma_B_times_V_squared": 0.00016578639840420604,
+        "sigma_F_times_V_squared": 3.315727968084123e-05,
+        "sigma_sum_times_V_squared": 0.00019894367808504727,
+        "conditional_F_fraction": 0.16666666666666677,
+        "outgoing_energy_at_right_angle_over_V": 3.117457884731913e-05
+      }
+    ],
+    "independent_relative_error": 8.881784197001252e-16,
+    "on_shell_error": 2.220531346407756e-16,
+    "inclusive_symbolic_identity": "0",
+    "contact_inclusive_sigma": "kappa^2/(4 pi), independent of mass and incident energy",
+    "retained_mass_label": true,
+    "scalar_subspace_preserved": false
+  },
+  "conservation_and_domain": {
+    "moving_target_on_shell_relative_error": 3.7270718955398106e-16,
+    "extra_record_pair_invariant_margin": [
+      1.3224646542181736e-06,
+      9.133205329062386e-07
+    ],
+    "one_record_space": "direct sum over +/- of L2(d3p) tensor C4",
+    "mass_projector_intertwining_error": 0.0,
+    "domain": "one record multiplet, parity-preserving dynamics, below additional record-pair thresholds",
+    "Gaussian_tail_union_bound": 7.465152689126195e-15
+  },
+  "source_overlap": {
+    "Gaussian_overlap_time_integral_relative_error": 2.220446049250313e-16,
+    "formula": "L0 / sqrt(u_z^2 + (D_z/D_perp) (u_x^2+u_y^2))",
+    "quantum_scope": "Gaussian phase-space source with free straight trajectories; paraxial and low-momentum approximation, not exact packet QFT"
+  },
+  "packet_readout": {
+    "epsilon_over_V": 3.429203673205104e-05,
+    "probe_energy_width_over_V": 6.858407346410208e-08,
+    "fixed_classification_threshold_over_V": 3.18828652308851e-05,
+    "reference_sigma_times_V_squared": 0.00019894367886486922,
+    "rows": [
+      {
+        "sigma_p_over_epsilon": 0.001,
+        "detector_resolution_over_epsilon": 0.003,
+        "orders_used": [
+          17,
+          13,
+          7,
+          18
+        ],
+        "successive_quadrature_scaled_differences": [
+          6.849626392433405e-11,
+          8.680771630674011e-15
+        ],
+        "last_conditional_error_change": 5.257876631360419e-15,
+        "accepted_sigma_over_reference_plus_minus": [
+          0.04987729813657193,
+          0.04958780010464624
+        ],
+        "accepted_posterior_plus_prior_half": 0.5014552744482472,
+        "error_given_plus_accepted": 1.1265756073532042e-08,
+        "error_given_minus_accepted": 6.13666736721464e-08,
+        "error_conditioned_on_accepted_event": 3.624330428762422e-08,
+        "accepted_F_fractions_plus_minus": [
+          0.09451216658342199,
+          0.16666656776016633
+        ],
+        "mean_outgoing_energy_over_epsilon_plus_minus": [
+          0.950405653995591,
+          0.9091093673145312
+        ],
+        "sigma_x_times_V": 14580644.594162444,
+        "probe_beam_width_times_V": 1458064459.4162443,
+        "single_probe_accepted_probability_source_model": 7.406177581037954e-25,
+        "target_marginal_spreading_indicator": 2.4997500249975e-13,
+        "paraxial_angular_variance": 2.0000000000000003e-10,
+        "fresh_preparation_energy_per_accepted_event_over_V_source_model": 4.630193693957458e+19,
+        "measurement_complete": false
+      },
+      {
+        "sigma_p_over_epsilon": 0.01,
+        "detector_resolution_over_epsilon": 0.003,
+        "orders_used": [
+          17,
+          13,
+          7,
+          18
+        ],
+        "successive_quadrature_scaled_differences": [
+          7.778254398011379e-11,
+          5.968315821313184e-15
+        ],
+        "last_conditional_error_change": 3.4128888309418586e-14,
+        "accepted_sigma_over_reference_plus_minus": [
+          0.04987729860207465,
+          0.049587800578716486
+        ],
+        "accepted_posterior_plus_prior_half": 0.5014552743914323,
+        "error_given_plus_accepted": 1.9736620763768137e-08,
+        "error_given_minus_accepted": 2.593110462546885e-07,
+        "error_conditioned_on_accepted_event": 1.3917518698296928e-07,
+        "accepted_F_fractions_plus_minus": [
+          0.09451220119160227,
+          0.1666667739527878
+        ],
+        "mean_outgoing_energy_over_epsilon_plus_minus": [
+          0.9504063916668066,
+          0.9091118710310188
+        ],
+        "sigma_x_times_V": 1458064.4594162446,
+        "probe_beam_width_times_V": 145806445.94162446,
+        "single_probe_accepted_probability_source_model": 7.406177650998615e-23,
+        "target_marginal_spreading_indicator": 2.4997500249974992e-09,
+        "paraxial_angular_variance": 2e-08,
+        "fresh_preparation_energy_per_accepted_event_over_V_source_model": 4.6301936502194566e+17,
+        "measurement_complete": false
+      },
+      {
+        "sigma_p_over_epsilon": 0.01,
+        "detector_resolution_over_epsilon": 0.01,
+        "orders_used": [
+          11,
+          9,
+          5,
+          12
+        ],
+        "successive_quadrature_scaled_differences": [
+          2.8542879865200987e-13
+        ],
+        "last_conditional_error_change": 5.539659009290432e-12,
+        "accepted_sigma_over_reference_plus_minus": [
+          0.04987729860207464,
+          0.04958780057871644
+        ],
+        "accepted_posterior_plus_prior_half": 0.5014552743914326,
+        "error_given_plus_accepted": 0.022174836225800357,
+        "error_given_minus_accepted": 0.024523501126935063,
+        "error_conditioned_on_accepted_event": 0.02334575072448303,
+        "accepted_F_fractions_plus_minus": [
+          0.0945122011916024,
+          0.16666677395278792
+        ],
+        "mean_outgoing_energy_over_epsilon_plus_minus": [
+          0.9504063916668043,
+          0.9091118710310219
+        ],
+        "sigma_x_times_V": 1458064.4594162446,
+        "probe_beam_width_times_V": 145806445.94162446,
+        "single_probe_accepted_probability_source_model": 7.406177650998609e-23,
+        "target_marginal_spreading_indicator": 2.4997500249974992e-09,
+        "paraxial_angular_variance": 2e-08,
+        "fresh_preparation_energy_per_accepted_event_over_V_source_model": 4.6301936502194605e+17,
+        "measurement_complete": false
+      },
+      {
+        "sigma_p_over_epsilon": 0.1,
+        "detector_resolution_over_epsilon": 0.03,
+        "orders_used": [
+          11,
+          9,
+          5,
+          12
+        ],
+        "successive_quadrature_scaled_differences": [
+          3.808949683437035e-13
+        ],
+        "last_conditional_error_change": 3.833877659786822e-12,
+        "accepted_sigma_over_reference_plus_minus": [
+          0.04987699667242195,
+          0.04958660894030506
+        ],
+        "accepted_posterior_plus_prior_half": 0.5014597687783788,
+        "error_given_plus_accepted": 0.25078246817592237,
+        "error_given_minus_accepted": 0.2655246367165261,
+        "error_conditioned_on_accepted_event": 0.25813203228886306,
+        "accepted_F_fractions_plus_minus": [
+          0.09451566188479846,
+          0.16668739012281422
+        ],
+        "mean_outgoing_energy_over_epsilon_plus_minus": [
+          0.9504801581242508,
+          0.9093622300534304
+        ],
+        "sigma_x_times_V": 145806.44594162444,
+        "probe_beam_width_times_V": 14580644.594162444,
+        "single_probe_accepted_probability_source_model": 7.406066439824973e-21,
+        "target_marginal_spreading_indicator": 2.4997500249975014e-05,
+        "paraxial_angular_variance": 2e-06,
+        "fresh_preparation_energy_per_accepted_event_over_V_source_model": 4630263178257615.0,
+        "measurement_complete": false
+      }
+    ],
+    "resource_scope": "single collision, supplied Gaussian source and response; geometric paraxial estimate, no autonomous detector",
+    "phase_of_full_scattering_state_or_non_event_instrument": "not calculated"
+  },
+  "sources": [
+    "https://arxiv.org/abs/hep-ph/9709356",
+    "https://pdg.lbl.gov/2025/reviews/rpp2025-rev-kinematics.pdf"
+  ],
+  "new_observational_inputs_or_fits": false,
+  "result": "CONDITIONAL_RECOIL_INFORMATION_WITH_RETAINED_MASS_SPECIES; DETECTOR_AND_ACTUAL_EVENT_OPEN",
+  "open_gates": [
+    "physical packet source and detector dynamics",
+    "full coherent scattering and non-event instrument",
+    "repeatable protocol with momentum and supermultiplet backaction",
+    "asynchronous actual records and common gravity",
+    "frozen joint predictions and covariance"
+  ]
+}

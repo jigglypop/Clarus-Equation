@@ -1,0 +1,296 @@
+{
+  "candidate": "CE-LM1",
+  "status": "local_matter_vacuum_modular_gate",
+  "inputs": {
+    "sites": 8,
+    "region": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "hopping": 1,
+    "masses": [
+      0.0,
+      0.3
+    ],
+    "fit_parameters": 0
+  },
+  "CAR_error": 0.0,
+  "finite_cases": [
+    {
+      "mass": 0.0,
+      "ground_energy": -4.758770483143638,
+      "ground_energy_gap": 0.34729635533386105,
+      "block_correlation_eigenvalues": [
+        0.015105805447146986,
+        0.11281527673290431,
+        0.8871847232670963,
+        0.9848941945528534
+      ],
+      "block_entropy": 0.8613721109802043,
+      "modular_one_particle_matrix": [
+        [
+          -5.8115989743742876e-15,
+          -2.712135788379986,
+          -4.241822184072733e-15,
+          0.4844866986192726
+        ],
+        [
+          -2.7121357883799866,
+          -1.1039731760988902e-14,
+          -2.599640325769153,
+          -5.672170372222701e-15
+        ],
+        [
+          -4.149653582089832e-15,
+          -2.599640325769153,
+          -7.820726138962572e-15,
+          -2.712135788379986
+        ],
+        [
+          0.4844866986192726,
+          -5.686374200320831e-15,
+          -2.712135788379986,
+          -6.599004117134952e-15
+        ]
+      ],
+      "modular_non_nearest_max": 0.4844866986192726,
+      "modular_logarithm_error": 1.4155909692362037e-12,
+      "errors": {
+        "slater_norm": 2.220446049250313e-15,
+        "ground_projector": 2.7755575615628914e-16,
+        "ground_energy": 4.440892098500626e-15,
+        "correlator": 8.881784197001252e-16,
+        "gaussian_density": 4.718447854656915e-16,
+        "block_trace": 2.220446049250313e-15
+      },
+      "current": {
+        "particle_current_operator_error": 0.0,
+        "massless_bond_energy_current_operator_error": 0.0,
+        "disjoint_even_bond_commutator": 0.0,
+        "scope": "exact finite lattice continuity; not covariant stress or strict lightcone"
+      },
+      "local_quadratic_commutant": {
+        "hermitian_basis_dimension": 16,
+        "commutator_real_rank": 16,
+        "least_singular_value": 0.7320508075688772,
+        "global_number_commutator": 0.0,
+        "local_nonconstant_conserved_quadratic_record": false
+      },
+      "record": {
+        "errors": {
+          "completeness": 0.0,
+          "reverse_dilation": 0.0,
+          "outside_marginal": 0.0,
+          "energy_from_bond_correlations": 2.220446049250313e-15,
+          "energy_operator": 0.0
+        },
+        "ground_state_energy_cost": 1.286857637640356,
+        "probability": 0.5000000000000011,
+        "whole_state_preserved_in_dilation": true,
+        "apparatus_energy_and_switching_work_not_derived": true
+      }
+    },
+    {
+      "mass": 0.3,
+      "ground_energy": -4.9673213933834255,
+      "ground_energy_gap": 0.4589278357521813,
+      "block_correlation_eigenvalues": [
+        0.009134292047756032,
+        0.11543144579923748,
+        0.884568554200763,
+        0.9908657079522443
+      ],
+      "block_entropy": 0.8194141161080515,
+      "modular_one_particle_matrix": [
+        [
+          0.643099527263226,
+          -2.668058286507759,
+          -0.40902704992037303,
+          0.31047668184522287
+        ],
+        [
+          -2.6680582865077587,
+          -1.472829390144415,
+          -2.9765470491327726,
+          0.4090270499203645
+        ],
+        [
+          -0.4090270499203731,
+          -2.976547049132773,
+          1.4728293901443885,
+          -2.6680582865077525
+        ],
+        [
+          0.31047668184522287,
+          0.4090270499203644,
+          -2.6680582865077525,
+          -0.6430995272632357
+        ]
+      ],
+      "modular_non_nearest_max": 0.4090270499203731,
+      "modular_logarithm_error": 7.927880574243318e-12,
+      "errors": {
+        "slater_norm": 4.440892098500626e-16,
+        "ground_projector": 2.0816681711721685e-16,
+        "ground_energy": 4.440892098500626e-15,
+        "correlator": 2.220446049250313e-16,
+        "gaussian_density": 4.996003610813204e-16,
+        "block_trace": 2.220446049250313e-16
+      },
+      "current": {
+        "particle_current_operator_error": 0.0,
+        "massless_bond_energy_current_operator_error": null,
+        "disjoint_even_bond_commutator": 0.0,
+        "scope": "exact finite lattice continuity; not covariant stress or strict lightcone"
+      },
+      "local_quadratic_commutant": {
+        "hermitian_basis_dimension": 16,
+        "commutator_real_rank": 16,
+        "least_singular_value": 0.7164005443496126,
+        "global_number_commutator": 0.0,
+        "local_nonconstant_conserved_quadratic_record": false
+      },
+      "record": {
+        "errors": {
+          "completeness": 0.0,
+          "reverse_dilation": 0.0,
+          "outside_marginal": 0.0,
+          "energy_from_bond_correlations": 4.440892098500626e-16,
+          "energy_operator": 0.0
+        },
+        "ground_state_energy_cost": 1.2456745314406572,
+        "probability": 0.6468798943046307,
+        "whole_state_preserved_in_dilation": true,
+        "apparatus_energy_and_switching_work_not_derived": true
+      }
+    }
+  ],
+  "infinite_intervals": [
+    {
+      "interval_length": 4,
+      "precision_digits": 60,
+      "correlation_min_eigenvalue": 0.01133583256448187,
+      "modular_max_long_range_hopping": 0.026975377767432716,
+      "modular_end_to_end": -0.026975377767432716,
+      "tridiagonal_commutator_error": 0.0,
+      "nearest_only_correlation_max_error": 0.004082118043380892,
+      "disposition": "exact_nearest_neighbor_modular_identity_rejected",
+      "continuum_limit_claim": false
+    },
+    {
+      "interval_length": 8,
+      "precision_digits": 60,
+      "correlation_min_eigenvalue": 1.6145471583930965e-05,
+      "modular_max_long_range_hopping": 0.11992500138640784,
+      "modular_end_to_end": -0.00014546731437505833,
+      "tridiagonal_commutator_error": 4.861730685829017e-63,
+      "nearest_only_correlation_max_error": 0.003085187129441823,
+      "disposition": "exact_nearest_neighbor_modular_identity_rejected",
+      "continuum_limit_claim": false
+    },
+    {
+      "interval_length": 12,
+      "precision_digits": 60,
+      "correlation_min_eigenvalue": 1.7782728597701216e-08,
+      "modular_max_long_range_hopping": 0.2245036510146883,
+      "modular_end_to_end": -1.323954578942193e-06,
+      "tridiagonal_commutator_error": 4.861730685829017e-63,
+      "nearest_only_correlation_max_error": 0.0021893392903495597,
+      "disposition": "exact_nearest_neighbor_modular_identity_rejected",
+      "continuum_limit_claim": false
+    }
+  ],
+  "low_energy_modular": [
+    {
+      "length": 8,
+      "precision_digits": 80,
+      "full_action_relative_error": 0.028635564752094844,
+      "nearest_only_action_relative_error": 0.04537549939991744,
+      "full_vs_conformal_matrix_relative_error": 0.04185018276501653,
+      "action_target_norm": 4.639651332749801,
+      "role": "fixed_low_energy_probe_not_uniform_operator_convergence"
+    },
+    {
+      "length": 12,
+      "precision_digits": 80,
+      "full_action_relative_error": 0.017228478901036997,
+      "nearest_only_action_relative_error": 0.05490174109927781,
+      "full_vs_conformal_matrix_relative_error": 0.049921618402392995,
+      "action_target_norm": 4.89309085784952,
+      "role": "fixed_low_energy_probe_not_uniform_operator_convergence"
+    },
+    {
+      "length": 16,
+      "precision_digits": 80,
+      "full_action_relative_error": 0.01022906795848256,
+      "nearest_only_action_relative_error": 0.059202367028657964,
+      "full_vs_conformal_matrix_relative_error": 0.053476991541913946,
+      "action_target_norm": 4.9862481832545225,
+      "role": "fixed_low_energy_probe_not_uniform_operator_convergence"
+    },
+    {
+      "length": 24,
+      "precision_digits": 80,
+      "full_action_relative_error": 0.004655116459802394,
+      "nearest_only_action_relative_error": 0.06298781874126345,
+      "full_vs_conformal_matrix_relative_error": 0.056535715930691295,
+      "action_target_norm": 5.054236306109548,
+      "role": "fixed_low_energy_probe_not_uniform_operator_convergence"
+    },
+    {
+      "length": 32,
+      "precision_digits": 80,
+      "full_action_relative_error": 0.002636787415473288,
+      "nearest_only_action_relative_error": 0.06460503715015828,
+      "full_vs_conformal_matrix_relative_error": 0.05781238983849805,
+      "action_target_norm": 5.078319814357743,
+      "role": "fixed_low_energy_probe_not_uniform_operator_convergence"
+    }
+  ],
+  "dispersion": {
+    "fermi_velocity_in_J_a_over_hbar": 2,
+    "rows": [
+      {
+        "qa": 0.1,
+        "massless_error": 0.0003331667063437016,
+        "massless_bound": 0.00033333333333333343,
+        "massive_error": 0.000184701016256561,
+        "massive_bound": 0.00018479339095588197
+      },
+      {
+        "qa": 0.05,
+        "massless_error": 4.166145864334392e-05,
+        "massless_bound": 4.166666666666668e-05,
+        "massive_error": 1.317203998102423e-05,
+        "massive_bound": 1.317368659383641e-05
+      },
+      {
+        "qa": 0.025,
+        "massless_error": 5.208170575338178e-06,
+        "massless_bound": 5.208333333333335e-06,
+        "massive_error": 8.561745800661491e-07,
+        "massive_bound": 8.562013360025186e-07
+      }
+    ],
+    "continuum_spacetime_dimensions": 2,
+    "scope": "supplied free Dirac low-energy dispersion; no four-dimensional GR"
+  },
+  "full_joint_rmse": null,
+  "scientific_success": false,
+  "limits": [
+    "One spatial dimension; local fermion action and CAR are supplied.",
+    "No gauge interaction, covariant stress or emergent geometry is derived.",
+    "A continuum CFT limit is not certified by finite matrix locality.",
+    "Record apparatus energetics and autonomous definite outcome remain open.",
+    "Previous AM4 prepared states are not replaced or declared validated.",
+    "No new observational or independent-holdout evaluation."
+  ],
+  "source_sha256": "eaa93d08395ca3504276b16cfdf6b29fd6b23e84c41fb807271a0fa9f76a9ec6",
+  "environment": {
+    "python": "3.11.9",
+    "numpy": "2.4.6",
+    "mpmath": "1.3.0"
+  }
+}

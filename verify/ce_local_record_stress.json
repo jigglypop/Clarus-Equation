@@ -1,0 +1,305 @@
+{
+  "candidate": "CE-LR1",
+  "status": "conditional_local_scalar_multiplet_with_internal_record",
+  "field_components": 16,
+  "mass_eigenvalues": [
+    1.0,
+    1.0,
+    1.0,
+    3.429203673205104,
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    6.570796326794897,
+    9.0,
+    9.0,
+    9.0
+  ],
+  "mass_square_root_error": 2.6645352591003757e-15,
+  "color_invariance_error": 0.0,
+  "plane_wave_cases": [
+    {
+      "momentum": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "matrix_square_root_error": 3.552713678800501e-15,
+      "rows": [
+        {
+          "time": 0.0,
+          "independent_KG_state_error": 5.551115123125783e-17,
+          "KG_charge": 0.9999999999999991,
+          "field_energy": 4.999999999999995,
+          "Hilbert_energy": 4.999999999999997,
+          "record_probability": 1.1047311718118967e-32,
+          "closed_form_record_error": 1.1047311718118967e-32,
+          "original_AM4_rest_state_error": 0.0
+        },
+        {
+          "time": 0.25,
+          "independent_KG_state_error": 4.484050470211362e-16,
+          "KG_charge": 0.999999999999999,
+          "field_energy": 4.999999999999995,
+          "Hilbert_energy": 4.999999999999998,
+          "record_probability": 0.14644660940672624,
+          "closed_form_record_error": 0.0,
+          "original_AM4_rest_state_error": 0.0
+        },
+        {
+          "time": 0.5,
+          "independent_KG_state_error": 6.004449063730082e-16,
+          "KG_charge": 0.9999999999999988,
+          "field_energy": 4.999999999999994,
+          "Hilbert_energy": 5.000000000000001,
+          "record_probability": 0.5000000000000001,
+          "closed_form_record_error": 0.0,
+          "original_AM4_rest_state_error": 0.0
+        },
+        {
+          "time": 0.75,
+          "independent_KG_state_error": 7.021666937153402e-16,
+          "KG_charge": 0.9999999999999982,
+          "field_energy": 4.999999999999991,
+          "Hilbert_energy": 5.0000000000000036,
+          "record_probability": 0.8535533905932737,
+          "closed_form_record_error": 0.0,
+          "original_AM4_rest_state_error": 0.0
+        },
+        {
+          "time": 1.0,
+          "independent_KG_state_error": 5.661048867003677e-16,
+          "KG_charge": 0.9999999999999986,
+          "field_energy": 4.999999999999992,
+          "Hilbert_energy": 5.000000000000003,
+          "record_probability": 1.0000000000000002,
+          "closed_form_record_error": 2.220446049250313e-16,
+          "original_AM4_rest_state_error": 0.0
+        }
+      ]
+    },
+    {
+      "momentum": [
+        0.0,
+        0.3,
+        0.0
+      ],
+      "matrix_square_root_error": 3.552713678800501e-15,
+      "rows": [
+        {
+          "time": 0.0,
+          "independent_KG_state_error": 5.551115123125783e-17,
+          "KG_charge": 0.9999999999999997,
+          "field_energy": 5.0099712436648804,
+          "Hilbert_energy": 5.00997124366488,
+          "record_probability": 1.1047311718118967e-32,
+          "closed_form_record_error": 1.1047311718118967e-32,
+          "original_AM4_rest_state_error": null
+        },
+        {
+          "time": 0.25,
+          "independent_KG_state_error": 4.0029660424867215e-16,
+          "KG_charge": 0.9999999999999998,
+          "field_energy": 5.0099712436648804,
+          "Hilbert_energy": 5.009971243664881,
+          "record_probability": 0.1458943803707296,
+          "closed_form_record_error": 5.551115123125783e-17,
+          "original_AM4_rest_state_error": null
+        },
+        {
+          "time": 0.5,
+          "independent_KG_state_error": 5.551115123125783e-16,
+          "KG_charge": 1.0000000000000002,
+          "field_energy": 5.009971243664882,
+          "Hilbert_energy": 5.009971243664882,
+          "record_probability": 0.4984368405878818,
+          "closed_form_record_error": 5.551115123125783e-17,
+          "original_AM4_rest_state_error": null
+        },
+        {
+          "time": 0.75,
+          "independent_KG_state_error": 6.280369834735101e-16,
+          "KG_charge": 0.9999999999999991,
+          "field_energy": 5.009971243664879,
+          "Hilbert_energy": 5.009971243664884,
+          "record_probability": 0.8518915255004407,
+          "closed_form_record_error": 1.1102230246251565e-16,
+          "original_AM4_rest_state_error": null
+        },
+        {
+          "time": 1.0,
+          "independent_KG_state_error": 7.947987303456223e-16,
+          "KG_charge": 1.0,
+          "field_energy": 5.009971243664882,
+          "Hilbert_energy": 5.009971243664886,
+          "record_probability": 0.9999902261306096,
+          "closed_form_record_error": 3.3306690738754696e-16,
+          "original_AM4_rest_state_error": null
+        }
+      ]
+    }
+  ],
+  "spacetime_stress_cases": [
+    {
+      "stress_lower": [
+        [
+          6.578547030949512,
+          -0.09996927792443139,
+          -0.15004603352751394,
+          -0.049984638962215694
+        ],
+        [
+          -0.09996927792443139,
+          0.002005042930074345,
+          -0.0020802551472317863,
+          0.002215477081517333
+        ],
+        [
+          -0.15004603352751394,
+          -0.0020802551472317863,
+          0.007531092975703906,
+          -0.0010401275736158931
+        ],
+        [
+          -0.049984638962215694,
+          0.002215477081517333,
+          -0.0010401275736158931,
+          -0.0013181726922016541
+        ]
+      ],
+      "KG_residual": 1.7763568394002505e-15,
+      "direct_divergence": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "divergence_max_error": 0.0,
+      "Noether_identity_error": 0.0,
+      "positive_energy_error": 0.0,
+      "event": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "stress_lower": [
+        [
+          6.569053857047581,
+          -0.09997409287053982,
+          -0.15005267821584112,
+          -0.04998704643526991
+        ],
+        [
+          -0.09997409287053982,
+          0.0020204191429981453,
+          -0.0020670698923922794,
+          0.0022154770815173324
+        ],
+        [
+          -0.15005267821584112,
+          -0.0020670698923922794,
+          0.007546469188627711,
+          -0.0010335349461961397
+        ],
+        [
+          -0.04998704643526991,
+          0.0022154770815173324,
+          -0.0010335349461961397,
+          -0.0013027964792778532
+        ]
+      ],
+      "KG_residual": 1.831026719408895e-15,
+      "direct_divergence": [
+        -4.015668006451811e-15,
+        -1.4300626655083803e-16,
+        -6.114900252818245e-17,
+        -7.150313327541902e-17
+      ],
+      "divergence_max_error": 4.015668006451811e-15,
+      "Noether_identity_error": 6.490154242326636e-16,
+      "positive_energy_error": 0.0,
+      "event": [
+        0.3,
+        0.2,
+        -0.1,
+        0.4
+      ]
+    },
+    {
+      "stress_lower": [
+        [
+          6.553178213303809,
+          -0.09995266440613672,
+          -0.1500197032144492,
+          -0.04997633220306836
+        ],
+        [
+          -0.09995266440613672,
+          0.002041579435014965,
+          -0.0020489242612494038,
+          0.0022154770815173324
+        ],
+        [
+          -0.1500197032144492,
+          -0.0020489242612494038,
+          0.007567629480644536,
+          -0.0010244621306247019
+        ],
+        [
+          -0.04997633220306836,
+          0.0022154770815173324,
+          -0.0010244621306247019,
+          -0.0012816361872610336
+        ]
+      ],
+      "KG_residual": 3.5596458096434965e-15,
+      "direct_divergence": [
+        -9.814198065338786e-16,
+        -7.001235528825145e-17,
+        8.603144238672478e-17,
+        -3.5006177644125724e-17
+      ],
+      "divergence_max_error": 9.814198065338786e-16,
+      "Noether_identity_error": 4.985643549706283e-16,
+      "positive_energy_error": 0.0,
+      "event": [
+        0.7,
+        -0.2,
+        0.5,
+        0.1
+      ]
+    }
+  ],
+  "fitted_parameters": 0,
+  "full_joint_rmse": null,
+  "scientific_success": false,
+  "assumptions": [
+    "The AM4 Hilbert space is now the internal space of one co-located scalar multiplet.",
+    "The positive AM4 Hamiltonian is supplied as the relativistic mass matrix.",
+    "The local KG action and canonical free-field quantization are extra axioms."
+  ],
+  "limitations": [
+    "Separated source/apparatus pair creation and transport are not represented.",
+    "Plane waves are normalization-density checks, not localized finite-energy packets.",
+    "An internal projector is not yet a complete local measurement apparatus.",
+    "No emergent EH term, gauge-field generation, nonlinear quantum backreaction or joint RMSE."
+  ],
+  "source_sha256": {
+    "ce_color_covariant_record.py": "9b3e345f7f09023183a3945de9f9effb2a81998e5bc85fec370eb85d2a22341e",
+    "ce_isometric_color_frame.py": "ebc785c76f23a9be9769732443575a517a47b5c0f8086d88b4110023ce1fe817",
+    "ce_local_record_stress.py": "9a5ea9413d7bce490e769771ebe1b4bfcbb133a9a72c637456e432d06be873f4"
+  },
+  "environment": {
+    "python": "3.11.9",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1"
+  }
+}

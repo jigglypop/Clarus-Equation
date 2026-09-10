@@ -1,0 +1,232 @@
+{
+  "schema_version": 1,
+  "candidate": "CE-UR4-R1",
+  "scientific_success": false,
+  "full_joint_rmse": null,
+  "preregistration_sha256": "c88960a499eaa9df2b861857ec65782196178ed3c80d24c61f488b3dfc6bf6a7",
+  "source_hashes": {
+    "ce_record_pair_scattering.py": "d5219ebc7b8763fce196104dc1ea3289d5d36e0c476c09a01ade802d3b9b2fdf",
+    "ce_singlet_record_observability.py": "9636d1fae1548f57fd2e0383c91339c047628e084ec841613fe66d589eeb551f",
+    "ce_supersymmetric_record.py": "d945ec1dfa32113e33f91d38882fdf346257d6b9a807e1ba439f47c014719e8f",
+    "ce_simple_group_record.py": "6fbae4f419124c798f4386db609eac92d3b4236c430deb4c104f6bfa8a67df13"
+  },
+  "environment": {
+    "python": "3.11.9",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "sympy": "1.14.0"
+  },
+  "vertex": {
+    "heavy_singlet_mass": 1.0000000000000013,
+    "Sigma_Q_source": 0.12909944487358066,
+    "Sigma_Higgsino_yukawa": 0.3872983346207417,
+    "kappa_from_UV": 0.04999999999999997,
+    "effective_vertex": "2 kappa delta_rs",
+    "UV_tree_factor_relative_to_contact": "1/(1-s/M_Sigma^2)",
+    "independent_mass_sign_symmetry_error": 0.0,
+    "final_weak_singlet_error": 0.0,
+    "final_hypercharge_sum": 0,
+    "scope": "two scalar particles to two conjugate Higgsinos; no incoming antiparticle"
+  },
+  "cross_sections": {
+    "rows": [
+      {
+        "ecm_over_V": 0.01,
+        "mass_over_V": 0.0006570796326794897,
+        "sigma_times_V_squared": 0.00040144858245954836,
+        "sigma_v_Moller_times_V_squared": 0.0007959338942789937,
+        "contact_amplitude_relative_correction": 0.00010001000100001711,
+        "contact_cross_section_relative_correction": 0.0002000300040003733
+      },
+      {
+        "ecm_over_V": 0.01,
+        "mass_over_V": 0.00034292036732051036,
+        "sigma_times_V_squared": 0.0003989062356075953,
+        "sigma_v_Moller_times_V_squared": 0.0007959338942789936,
+        "contact_amplitude_relative_correction": 0.00010001000100001711,
+        "contact_cross_section_relative_correction": 0.0002000300040003733
+      },
+      {
+        "ecm_over_V": 0.03,
+        "mass_over_V": 0.0006570796326794897,
+        "sigma_times_V_squared": 0.00039898751640835315,
+        "sigma_v_Moller_times_V_squared": 0.0007972090460029549,
+        "contact_amplitude_relative_correction": 0.0009008107296566426,
+        "contact_cross_section_relative_correction": 0.0018024329192840582
+      },
+      {
+        "ecm_over_V": 0.03,
+        "mass_over_V": 0.00034292036732051036,
+        "sigma_times_V_squared": 0.0003987087275185398,
+        "sigma_v_Moller_times_V_squared": 0.0007972090460029548,
+        "contact_amplitude_relative_correction": 0.0009008107296566426,
+        "contact_cross_section_relative_correction": 0.0018024329192840582
+      },
+      {
+        "ecm_over_V": 0.1,
+        "mass_over_V": 0.0006570796326794897,
+        "sigma_times_V_squared": 0.0004060011427853421,
+        "sigma_v_Moller_times_V_squared": 0.0008119321655540015,
+        "contact_amplitude_relative_correction": 0.010101010101010166,
+        "contact_cross_section_relative_correction": 0.02030405060708107
+      },
+      {
+        "ecm_over_V": 0.1,
+        "mass_over_V": 0.00034292036732051036,
+        "sigma_times_V_squared": 0.0004059756309796715,
+        "sigma_v_Moller_times_V_squared": 0.0008119321655540016,
+        "contact_amplitude_relative_correction": 0.010101010101010166,
+        "contact_cross_section_relative_correction": 0.02030405060708107
+      }
+    ],
+    "independent_relative_error": 1.4432899320127035e-15,
+    "four_momentum_and_mass_shell_error": 8.673617379884035e-19,
+    "formula_sigma_v": "kappa^2/pi/(1-s/M_Sigma^2)^2",
+    "final_weak_channels": 2,
+    "final_identical_particle_factor": 1,
+    "initial_pair_rate_factor": "1/2 in a gas rate n_alpha^2 sigma_v, not in sigma",
+    "absolute_physical_rate_predicted": false
+  },
+  "relational_gate": {
+    "local_annihilation_tensor_rank": 1,
+    "Bose_symmetric_orbital_embedding_error": 0.0,
+    "dark_states_in_copy_basis": [
+      "(|00>-|11>)/sqrt(2)",
+      "(|01>-|10>)/sqrt(2)"
+    ],
+    "dark_relational_eigenvalues": [
+      0,
+      1
+    ],
+    "mass_basis_content": "one S_plus and one S_minus; odd under both species parities",
+    "optimal_dark_state_error_equal_priors": 0.5,
+    "result": "REJECTED_UNIVERSAL_RELATIONAL_READOUT_BY_RECORD_FREE_ANNIHILATION",
+    "scope": "no visible-only final state in the parity-preserving theory; radiation with record remnants is not excluded"
+  },
+  "packets": {
+    "incoming_momentum_over_V": 0.005,
+    "same_mass_pair_centers_over_V": [
+      0.010085981091333102,
+      0.010023491283644284
+    ],
+    "center_energy_difference_over_V": 6.248980768881751e-05,
+    "energy_band_over_V": [
+      0.0013141592653589794,
+      0.05
+    ],
+    "rows": [
+      {
+        "sigma_E_over_delta_E": 0.125,
+        "sigma_E_over_V": 7.811225961102189e-06,
+        "normalized_packet_overlap": 0.00033546262790251185,
+        "Born_annihilation_contrast": 0.0003354576774848622,
+        "Born_click_probability_same_product": 7.963329964672932e-10,
+        "Born_click_probability_different_product": 7.957989035978478e-10,
+        "Born_one_pass_binary_error_equal_priors": 0.49999999999973294,
+        "conditional_completion_contrast": 0.0003354576774849417,
+        "click_probability_same_product": 7.963329951993985e-10,
+        "click_probability_different_product": 7.957989023308033e-10,
+        "mass_channel_click_Gram_eigenvalues_scaled": [
+          0.0,
+          0.0,
+          1.0000253463450437,
+          1.0062986861304637
+        ],
+        "quad_vs_Gauss_scaled_error": 4.518607710224387e-14,
+        "conditional_completion_unitarity_error": 2.220446049250313e-16,
+        "conditional_completion_energy_error": 3.469446951953614e-18,
+        "all_channels_mass_shell_relative_error": 1.9908987603383416e-16,
+        "conditional_completion_vs_Born_relative_amplitude": 8.160818687485971e-10,
+        "conditional_instrument_Choi_minimum": -3.8307734564157894e-16
+      },
+      {
+        "sigma_E_over_delta_E": 0.5,
+        "sigma_E_over_V": 3.1244903844408756e-05,
+        "normalized_packet_overlap": 0.6065306597126334,
+        "Born_annihilation_contrast": 0.6065217091410626,
+        "Born_click_probability_same_product": 1.2789088828080003e-09,
+        "Born_click_probability_different_product": 3.132375233451757e-10,
+        "Born_one_pass_binary_error_equal_priors": 0.49999999951716434,
+        "conditional_completion_contrast": 0.6065217091410905,
+        "click_probability_same_product": 1.2789088807716938e-09,
+        "click_probability_different_product": 3.1323752284640424e-10,
+        "mass_channel_click_Gram_eigenvalues_scaled": [
+          0.0,
+          0.0,
+          0.3947180799628518,
+          1.6116242323504055
+        ],
+        "quad_vs_Gauss_scaled_error": 1.1102230246251565e-14,
+        "conditional_completion_unitarity_error": 2.220446049250313e-16,
+        "conditional_completion_energy_error": 3.469446951953614e-18,
+        "all_channels_mass_shell_relative_error": 2.0968586619763432e-16,
+        "conditional_completion_vs_Born_relative_amplitude": 8.620417712990047e-10,
+        "conditional_instrument_Choi_minimum": -1.059738002007937e-16
+      },
+      {
+        "sigma_E_over_delta_E": 2.0,
+        "sigma_E_over_V": 0.00012497961537763502,
+        "normalized_packet_overlap": 0.9692332344763441,
+        "Born_annihilation_contrast": 0.9692189313341593,
+        "Born_click_probability_same_product": 1.5678709475422582e-09,
+        "Born_click_probability_different_product": 2.4507556030236918e-11,
+        "Born_one_pass_binary_error_equal_priors": 0.4999999992283183,
+        "conditional_completion_contrast": 0.9692189313342041,
+        "click_probability_same_product": 1.567870945044042e-09,
+        "click_probability_different_product": 2.450755599115067e-11,
+        "mass_channel_click_Gram_eigenvalues_scaled": [
+          0.0,
+          0.0,
+          0.030878181088613066,
+          1.9757566086421972
+        ],
+        "quad_vs_Gauss_scaled_error": 1.9984014443252818e-15,
+        "conditional_completion_unitarity_error": 2.220446049250313e-16,
+        "conditional_completion_energy_error": 3.469446951953614e-18,
+        "all_channels_mass_shell_relative_error": 2.574694800551494e-16,
+        "conditional_completion_vs_Born_relative_amplitude": 1.058413356957999e-09,
+        "conditional_instrument_Choi_minimum": -2.9972988200023917e-34
+      },
+      {
+        "sigma_E_over_delta_E": 8.0,
+        "sigma_E_over_V": 0.0004999184615105401,
+        "normalized_packet_overlap": 0.9980487811074755,
+        "Born_annihilation_contrast": 0.9980340494402788,
+        "Born_click_probability_same_product": 1.5945231459394404e-09,
+        "Born_click_probability_different_product": 1.568919044260551e-12,
+        "Born_one_pass_binary_error_equal_priors": 0.4999999992035229,
+        "conditional_completion_contrast": 0.9980340494403255,
+        "click_probability_same_product": 1.5945231433690644e-09,
+        "click_probability_different_product": 1.5689190416942231e-12,
+        "mass_channel_click_Gram_eigenvalues_scaled": [
+          0.0,
+          0.0,
+          0.0019722278314785457,
+          2.0093422039851587
+        ],
+        "quad_vs_Gauss_scaled_error": 4.440892098500626e-15,
+        "conditional_completion_unitarity_error": 2.220446049250313e-16,
+        "conditional_completion_energy_error": 3.469446951953614e-18,
+        "all_channels_mass_shell_relative_error": 2.6899777685373723e-16,
+        "conditional_completion_vs_Born_relative_amplitude": 2.044542979362518e-09,
+        "conditional_instrument_Choi_minimum": -1.300320611933063e-16
+      }
+    ],
+    "conditional_CP_completeness_error": 8.881784197001252e-16,
+    "packet_preparation_derived": false,
+    "Cayley_completion_status": "unitary consistency example matching the tree partial wave; omitted elastic channels and dispersive terms are not derived",
+    "physical_macroscopic_record_or_full_S_matrix": false
+  },
+  "sources": [
+    "https://arxiv.org/abs/hep-ph/9709356",
+    "https://pdg.lbl.gov/2025/reviews/rpp2025-rev-kinematics.pdf"
+  ],
+  "new_observational_inputs_or_fits": false,
+  "open_gates": [
+    "packet and reference preparation from a physical source",
+    "full scattering channels, radiative corrections, and actual detector",
+    "non-annihilating relational readout or a new record observable",
+    "asynchronous actual events with preserved state and common gravity",
+    "frozen joint predictions and covariance"
+  ]
+}

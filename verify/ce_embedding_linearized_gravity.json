@@ -1,0 +1,403 @@
+{
+  "candidate": "CE-GR7",
+  "status": "conditional_linear_EH_recovery_and_record_stress_counterexample",
+  "fourier_cases": [
+    {
+      "covector": [
+        2.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "minkowski_square": -3.0,
+      "exact_rank": 6,
+      "numeric_rank": 6,
+      "algebra_errors": {
+        "connection_vs_closed": 0.0,
+        "bianchi": 0.0,
+        "hessian_symmetry": 0.0,
+        "gauge_kernel": 3.546046371670331e-16
+      },
+      "TT_hessian": [
+        [
+          0.7499999999999999,
+          0.0
+        ],
+        [
+          0.0,
+          0.7499999999999997
+        ]
+      ],
+      "embedding_cases": [
+        {
+          "radius": 0.05,
+          "metric_rank": 10,
+          "normal_dimension": 20,
+          "normal_hessian_rank": 6,
+          "metric_fiber_nullity": 10,
+          "linear_metric_gauge_dimension": 4,
+          "on_shell_quotient_dimension": 0,
+          "coordinate_jacobian": 8.000000000000013e-10,
+          "jacobian_formula": 8.000000000000004e-10,
+          "reconstructed_action_error": 3.3306690738754696e-16,
+          "inherited_geometry_max_error": 9.992007221626409e-16
+        },
+        {
+          "radius": 0.1,
+          "metric_rank": 10,
+          "normal_dimension": 20,
+          "normal_hessian_rank": 6,
+          "metric_fiber_nullity": 10,
+          "linear_metric_gauge_dimension": 4,
+          "on_shell_quotient_dimension": 0,
+          "coordinate_jacobian": 8.191999999999992e-07,
+          "jacobian_formula": 8.192000000000005e-07,
+          "reconstructed_action_error": 3.3306690738754696e-16,
+          "inherited_geometry_max_error": 8.881784197001252e-16
+        },
+        {
+          "radius": 0.2,
+          "metric_rank": 10,
+          "normal_dimension": 20,
+          "normal_hessian_rank": 6,
+          "metric_fiber_nullity": 10,
+          "linear_metric_gauge_dimension": 4,
+          "on_shell_quotient_dimension": 0,
+          "coordinate_jacobian": 0.0008388607999999999,
+          "jacobian_formula": 0.0008388608000000005,
+          "reconstructed_action_error": 3.3306690738754696e-16,
+          "inherited_geometry_max_error": 4.440892098500626e-16
+        }
+      ]
+    },
+    {
+      "covector": [
+        1.0,
+        0.0,
+        0.0,
+        2.0
+      ],
+      "minkowski_square": 3.0,
+      "exact_rank": 6,
+      "numeric_rank": 6,
+      "algebra_errors": {
+        "connection_vs_closed": 0.0,
+        "bianchi": 0.0,
+        "hessian_symmetry": 0.0,
+        "gauge_kernel": 3.546046371670331e-16
+      },
+      "TT_hessian": [
+        [
+          -0.7499999999999999,
+          0.0
+        ],
+        [
+          0.0,
+          -0.7499999999999997
+        ]
+      ],
+      "embedding_cases": [
+        {
+          "radius": 0.05,
+          "metric_rank": 10,
+          "normal_dimension": 20,
+          "normal_hessian_rank": 6,
+          "metric_fiber_nullity": 10,
+          "linear_metric_gauge_dimension": 4,
+          "on_shell_quotient_dimension": 0,
+          "coordinate_jacobian": 8.000000000000013e-10,
+          "jacobian_formula": 8.000000000000004e-10,
+          "reconstructed_action_error": 1.734723475976807e-16,
+          "inherited_geometry_max_error": 9.992007221626409e-16
+        },
+        {
+          "radius": 0.1,
+          "metric_rank": 10,
+          "normal_dimension": 20,
+          "normal_hessian_rank": 6,
+          "metric_fiber_nullity": 10,
+          "linear_metric_gauge_dimension": 4,
+          "on_shell_quotient_dimension": 0,
+          "coordinate_jacobian": 8.191999999999992e-07,
+          "jacobian_formula": 8.192000000000005e-07,
+          "reconstructed_action_error": 1.734723475976807e-16,
+          "inherited_geometry_max_error": 8.881784197001252e-16
+        },
+        {
+          "radius": 0.2,
+          "metric_rank": 10,
+          "normal_dimension": 20,
+          "normal_hessian_rank": 6,
+          "metric_fiber_nullity": 10,
+          "linear_metric_gauge_dimension": 4,
+          "on_shell_quotient_dimension": 0,
+          "coordinate_jacobian": 0.0008388607999999999,
+          "jacobian_formula": 0.0008388608000000005,
+          "reconstructed_action_error": 1.734723475976807e-16,
+          "inherited_geometry_max_error": 4.440892098500626e-16
+        }
+      ]
+    },
+    {
+      "covector": [
+        1.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "minkowski_square": 0.0,
+      "exact_rank": 4,
+      "numeric_rank": 4,
+      "algebra_errors": {
+        "connection_vs_closed": 0.0,
+        "bianchi": 0.0,
+        "hessian_symmetry": 0.0,
+        "gauge_kernel": 8.865115929175827e-17
+      },
+      "TT_hessian": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "embedding_cases": [
+        {
+          "radius": 0.05,
+          "metric_rank": 10,
+          "normal_dimension": 20,
+          "normal_hessian_rank": 4,
+          "metric_fiber_nullity": 10,
+          "linear_metric_gauge_dimension": 4,
+          "on_shell_quotient_dimension": 2,
+          "coordinate_jacobian": 8.000000000000013e-10,
+          "jacobian_formula": 8.000000000000004e-10,
+          "reconstructed_action_error": 1.6653345369377348e-16,
+          "inherited_geometry_max_error": 9.992007221626409e-16
+        },
+        {
+          "radius": 0.1,
+          "metric_rank": 10,
+          "normal_dimension": 20,
+          "normal_hessian_rank": 4,
+          "metric_fiber_nullity": 10,
+          "linear_metric_gauge_dimension": 4,
+          "on_shell_quotient_dimension": 2,
+          "coordinate_jacobian": 8.191999999999992e-07,
+          "jacobian_formula": 8.192000000000005e-07,
+          "reconstructed_action_error": 1.6653345369377348e-16,
+          "inherited_geometry_max_error": 8.881784197001252e-16
+        },
+        {
+          "radius": 0.2,
+          "metric_rank": 10,
+          "normal_dimension": 20,
+          "normal_hessian_rank": 4,
+          "metric_fiber_nullity": 10,
+          "linear_metric_gauge_dimension": 4,
+          "on_shell_quotient_dimension": 2,
+          "coordinate_jacobian": 0.0008388607999999999,
+          "jacobian_formula": 0.0008388608000000005,
+          "reconstructed_action_error": 1.6653345369377348e-16,
+          "inherited_geometry_max_error": 4.440892098500626e-16
+        }
+      ]
+    }
+  ],
+  "physical_TT": {
+    "cases": [
+      {
+        "angle": 0.4487989505128276,
+        "spin_two_rotation_error": 2.220446049250313e-16
+      },
+      {
+        "angle": 0.7853981633974483,
+        "spin_two_rotation_error": 6.123233995736766e-17
+      },
+      {
+        "angle": 1.5707963267948966,
+        "spin_two_rotation_error": 2.220446049250313e-16
+      }
+    ],
+    "kinetic_coefficient_per_Frobenius_TT_mode": 0.125,
+    "canonical_field": "v_lambda = M_P q_lambda / 2",
+    "canonical_H": "sum_lambda integral (pi_lambda^2 + |grad v_lambda|^2)/2",
+    "status": "positive_free_TT_sector_only_with_supplied_EH_sign_and_linear_quotient"
+  },
+  "retarded_operator": {
+    "status": "retarded_Green_operator_test_not_a_conserved_stress",
+    "cases": [
+      {
+        "spacing": 0.05,
+        "interior_points": 119,
+        "rows": [
+          {
+            "time": 2.0,
+            "maximum_error": 0.057837750099396956,
+            "numerical_tail_outside_continuum_front": 0.0019400349133359702,
+            "exact_tail_outside_continuum_front": 0.0
+          },
+          {
+            "time": 4.0,
+            "maximum_error": 0.12411314118320405,
+            "numerical_tail_outside_continuum_front": 0.005180557224536195,
+            "exact_tail_outside_continuum_front": 0.0
+          }
+        ],
+        "maximum_error": 0.12411314118320405
+      },
+      {
+        "spacing": 0.025,
+        "interior_points": 239,
+        "rows": [
+          {
+            "time": 2.0,
+            "maximum_error": 0.014464128544370514,
+            "numerical_tail_outside_continuum_front": 0.0004667571491590349,
+            "exact_tail_outside_continuum_front": 0.0
+          },
+          {
+            "time": 4.0,
+            "maximum_error": 0.03172194281452312,
+            "numerical_tail_outside_continuum_front": 0.001307423720379451,
+            "exact_tail_outside_continuum_front": 0.0
+          }
+        ],
+        "maximum_error": 0.03172194281452312
+      },
+      {
+        "spacing": 0.0125,
+        "interior_points": 479,
+        "rows": [
+          {
+            "time": 2.0,
+            "maximum_error": 0.003623067009704828,
+            "numerical_tail_outside_continuum_front": 9.625479100620364e-05,
+            "exact_tail_outside_continuum_front": 0.0
+          },
+          {
+            "time": 4.0,
+            "maximum_error": 0.008031140729574227,
+            "numerical_tail_outside_continuum_front": 0.00027110485519353343,
+            "exact_tail_outside_continuum_front": 0.0
+          }
+        ],
+        "maximum_error": 0.008031140729574227
+      }
+    ],
+    "exact_solution": "u(t,r)=f(t-r), u=r hbar",
+    "causal_support": "Continuous exact solution vanishes for r>t; finite spatial lattices have small tails."
+  },
+  "static_Newton": {
+    "static_fourier_Einstein_error": 5.551115123125783e-17,
+    "G_times_source_mass": 0.01,
+    "point_metric": "h00=h11=h22=h33=2 Gm/r; Phi=-Gm/r",
+    "bending": [
+      {
+        "impact_parameter": 1.0,
+        "integrated_deflection": 0.04,
+        "linear_GR_deflection": 0.04,
+        "quadrature_error_estimate": 4.4408876938365657e-16
+      },
+      {
+        "impact_parameter": 2.0,
+        "integrated_deflection": 0.020000000000000004,
+        "linear_GR_deflection": 0.02,
+        "quadrature_error_estimate": 2.771116773862856e-13
+      }
+    ],
+    "source_condition": "Static zeroth-order conserved source only; no moving-record stress inferred."
+  },
+  "changing_record_source": {
+    "status": "rejected_as_complete_isolated_symmetric_stress_with_only_two_fixed_energy_sites",
+    "positions": [
+      -1.0,
+      1.0
+    ],
+    "gamma": 1.5707963267948966,
+    "rows": [
+      {
+        "time": 0.0,
+        "dipole": -4.999999999999998,
+        "dipole_velocity": 0.0,
+        "dipole_acceleration": 39.47841760435743,
+        "independent_double_commutator_error": 1.7763568394002505e-15,
+        "two_site_energy": 4.999999999999998,
+        "total_H_energy": 4.999999999999998,
+        "interaction_energy_expectation": -1.3339189033762728e-16
+      },
+      {
+        "time": 0.25,
+        "dipole": -3.828427124746188,
+        "dipole_velocity": 8.885765876316732,
+        "dipole_acceleration": 27.915456798555514,
+        "independent_double_commutator_error": 3.552713678800501e-15,
+        "two_site_energy": 4.999999999999998,
+        "total_H_energy": 4.999999999999998,
+        "interaction_energy_expectation": -2.7755575615628914e-16
+      },
+      {
+        "time": 0.5,
+        "dipole": -0.9999999999999993,
+        "dipole_velocity": 12.566370614359176,
+        "dipole_acceleration": -3.552713678800501e-15,
+        "independent_double_commutator_error": 5.970069566529443e-15,
+        "two_site_energy": 5.000000000000001,
+        "total_H_energy": 5.0,
+        "interaction_energy_expectation": -1.1102230246251565e-16
+      },
+      {
+        "time": 0.75,
+        "dipole": 1.8284271247461885,
+        "dipole_velocity": 8.885765876316743,
+        "dipole_acceleration": -27.91545679855551,
+        "independent_double_commutator_error": 1.0658141036401503e-14,
+        "two_site_energy": 5.000000000000002,
+        "total_H_energy": 5.000000000000002,
+        "interaction_energy_expectation": 1.1102230246251565e-16
+      },
+      {
+        "time": 1.0,
+        "dipole": 3.0,
+        "dipole_velocity": 7.351434078848994e-15,
+        "dipole_acceleration": -39.478417604357446,
+        "independent_double_commutator_error": 1.4210854715202004e-14,
+        "two_site_energy": 5.0,
+        "total_H_energy": 5.000000000000001,
+        "interaction_energy_expectation": 6.19331339665139e-17
+      }
+    ],
+    "necessary_identity": "For symmetric conserved decaying T: d/dt integral x T00 = integral T0x, and its second derivative is zero.",
+    "scope": "Additional recoil, support, field energy distribution or boundary flux can change T00 and the conclusion.",
+    "omitted_source_warning": "Zero total expectation of record interaction energy does not imply zero local interaction-energy dipole."
+  },
+  "fitted_parameters": 0,
+  "full_joint_rmse": null,
+  "scientific_success": false,
+  "assumptions": [
+    "Supplied EH action, Lorentzian free embedding and metric-only Y dependence.",
+    "Linear metric-null fibers are quotiented only as an additional conditional construction.",
+    "Retarded response requires a conserved zeroth-order stress."
+  ],
+  "limits": [
+    "No nonlinear embedding measure, constraint closure, UV quantization or rank preservation.",
+    "No microscopic derivation of EH, Newton constant, initial state or three gauge sectors.",
+    "A radial Green test is not a physical conserved pulse source.",
+    "A changing two-site energy profile fails a necessary isolated-stress condition.",
+    "No observations or full joint residuals are evaluated."
+  ],
+  "source_sha256": {
+    "ce_color_covariant_record.py": "9b3e345f7f09023183a3945de9f9effb2a81998e5bc85fec370eb85d2a22341e",
+    "ce_embedding_einstein_variation.py": "be329ba0d152611de922e882116337901bfc9a5bbbf212df20df239e3400edce",
+    "ce_embedding_linearized_gravity.py": "2ac8805fb0ac02a5f6b1476377f32ae4090ebfd815aa5726bd6eb958b292edaa",
+    "ce_isometric_color_frame.py": "ebc785c76f23a9be9769732443575a517a47b5c0f8086d88b4110023ce1fe817"
+  },
+  "environment": {
+    "python": "3.11.9",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1"
+  }
+}

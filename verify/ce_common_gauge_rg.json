@@ -1,0 +1,265 @@
+{
+  "candidate": "CE-LR2-R0/R1 and P0/P1",
+  "representation": {
+    "scalar_trace_indices_direct": [
+      3.9999999999999996,
+      1.5,
+      1.5
+    ],
+    "scalar_trace_indices_exact": [
+      "4",
+      "3/2",
+      "3/2"
+    ],
+    "representation_trace_error": 4.440892098500626e-16,
+    "beta_coefficients_exact": [
+      "-29/3",
+      "-41/6",
+      "1/2"
+    ],
+    "beta_over_trace_indices_exact": [
+      "-29/12",
+      "-41/6",
+      "1/2"
+    ],
+    "single_trace_status": "REJECTED_AS_ALL_SCALE_RELATION",
+    "standard_model_control": {
+      "beta_coefficients_exact": [
+        "-7",
+        "-19/6",
+        "41/6"
+      ],
+      "GUT_normalized_b1": "41/10",
+      "fields_included_in_candidate": false
+    },
+    "maximum_supplied_scalar_tree_mass": 9.0,
+    "matching_plane_normal": [
+      22,
+      -35,
+      -53
+    ]
+  },
+  "gauge_flow": {
+    "status": "CONDITIONAL_ONE_LOOP_BOUNDARY_FAMILY",
+    "reference_scale": 100.0,
+    "common_boundary_gstar": 1.4142135623730951,
+    "initial_couplings": [
+      0.5000000000000001,
+      1.0000000000000002,
+      1.0000000000000002
+    ],
+    "inverse_coupling_slopes": [
+      0.12242976356782481,
+      0.08654517769449685,
+      -0.006332573977646111
+    ],
+    "transported_reference_log_ratio": 0.3333333333333333,
+    "transported_coefficients": [
+      4.040809921189274,
+      1.028848392564832,
+      0.997889142007451
+    ],
+    "transported_single_trace_spread": 0.030959250557380913,
+    "boundary_parameters": [
+      "gstar(mu0)",
+      "mu0 in the fixed mass unit"
+    ],
+    "beta_order": 1,
+    "no_thresholds_crossed_in_benchmark": true,
+    "maximum_supplied_tree_mass": 9.0,
+    "all_supplied_tree_masses_below_benchmark_scales": true,
+    "physical_GeV_unit_assigned": false,
+    "rows": [
+      {
+        "log_mu_ratio": -1.0,
+        "mu": 36.787944117144235,
+        "couplings": [
+          0.507832116743848,
+          1.0463005739907016,
+          0.9968486721503292
+        ],
+        "inverse_couplings_squared": [
+          3.8775702364321742,
+          0.9134548223055029,
+          1.0063325739776459
+        ],
+        "single_trace_spread": 0.09287775167214296,
+        "sin_squared_theta_W": 0.4758104069617394,
+        "errors": {
+          "inverse_vs_g_ODE": 4.440892098500626e-16,
+          "transported_matching": 4.440892098500626e-16,
+          "fixed_boundary_sum_rule": 4.440892098500626e-16
+        }
+      },
+      {
+        "log_mu_ratio": -0.5,
+        "mu": 60.653065971263345,
+        "couplings": [
+          0.5038704109688783,
+          1.0223648073748108,
+          0.9984206061282263
+        ],
+        "inverse_couplings_squared": [
+          3.938785118216087,
+          0.9567274111527514,
+          1.003166286988823
+        ],
+        "single_trace_spread": 0.046438875836071536,
+        "sin_squared_theta_W": 0.488152705455376,
+        "errors": {
+          "inverse_vs_g_ODE": 0.0,
+          "transported_matching": 4.440892098500626e-16,
+          "fixed_boundary_sum_rule": 6.8833827526759706e-15
+        }
+      },
+      {
+        "log_mu_ratio": 0.0,
+        "mu": 100.0,
+        "couplings": [
+          0.5000000000000001,
+          1.0000000000000002,
+          1.0000000000000002
+        ],
+        "inverse_couplings_squared": [
+          3.999999999999999,
+          0.9999999999999998,
+          0.9999999999999998
+        ],
+        "single_trace_spread": 0.0,
+        "sin_squared_theta_W": 0.5,
+        "errors": {
+          "inverse_vs_g_ODE": 0.0,
+          "transported_matching": 4.440892098500626e-16,
+          "fixed_boundary_sum_rule": 4.6629367034256575e-15
+        }
+      },
+      {
+        "log_mu_ratio": 0.5,
+        "mu": 164.87212707001282,
+        "couplings": [
+          0.49621743047977146,
+          0.9790415008200091,
+          1.0015869129567117
+        ],
+        "inverse_couplings_squared": [
+          4.061214881783911,
+          1.0432725888472483,
+          0.9968337130111767
+        ],
+        "single_trace_spread": 0.046438875836071536,
+        "sin_squared_theta_W": 0.5113814843358331,
+        "errors": {
+          "inverse_vs_g_ODE": 2.220446049250313e-16,
+          "transported_matching": 2.220446049250313e-16,
+          "fixed_boundary_sum_rule": 1.099120794378905e-14
+        }
+      },
+      {
+        "log_mu_ratio": 1.0,
+        "mu": 271.8281828459045,
+        "couplings": [
+          0.4925194292060909,
+          0.9593478479708616,
+          1.0031814048490328
+        ],
+        "inverse_couplings_squared": [
+          4.1224297635678235,
+          1.0865451776944965,
+          0.9936674260223537
+        ],
+        "single_trace_spread": 0.09287775167214285,
+        "sin_squared_theta_W": 0.522324100792917,
+        "errors": {
+          "inverse_vs_g_ODE": 2.220446049250313e-16,
+          "transported_matching": 1.1102230246251565e-16,
+          "fixed_boundary_sum_rule": 1.2434497875801753e-14
+        }
+      }
+    ]
+  },
+  "symbolic_portal": {
+    "status_zero_portal": "REJECTED_AS_ALL_SCALE_CONSTRAINT",
+    "mixed_trace_polynomial": "h**2*(3*g2**4*x**2 + 3*g2**4*y**2 + 2*g2**2*gy**2*x**2 - 2*g2**2*gy**2*y**2 + gy**4*x**2 + gy**4*y**2)/2",
+    "beta_times_16pi2": {
+      "norm_product": "3*(3*g2**4 - 2*g2**2*gy**2 + gy**4)/4",
+      "overlap": "3*g2**2*gy**2",
+      "Higgs_self_gauge": "3*(3*g2**4 + 2*g2**2*gy**2 + gy**4)/8"
+    },
+    "boundary_beta_times_16pi2": [
+      "3/2",
+      "3"
+    ],
+    "mixed_log_cancellation_exact": true,
+    "full_scalar_beta_system": false
+  },
+  "numerical_portal": {
+    "status": "CONDITIONAL_GAUGE_SOURCE_LEADING_LOG_COMPLETION",
+    "seed": 6501,
+    "random_backgrounds": 12,
+    "full_source_gauge_invariance_error": 1.0125233984581428e-13,
+    "portal_formula_error": 2.842170943040401e-14,
+    "leading_log_scale_cancellation_error": 4.440892098500626e-15,
+    "minimum_background_vector_mass_squared": 0.40413830531799755,
+    "fixed_Higgs_quartic_at_matching": 0.25,
+    "portal_at_matching": [
+      0.0,
+      0.0
+    ],
+    "rows": [
+      {
+        "log_mu_ratio": -1.0,
+        "leading_log_norm_product": -0.009498860966469166,
+        "leading_log_overlap": -0.018997721932938333
+      },
+      {
+        "log_mu_ratio": -0.5,
+        "leading_log_norm_product": -0.004749430483234583,
+        "leading_log_overlap": -0.009498860966469166
+      },
+      {
+        "log_mu_ratio": 0.0,
+        "leading_log_norm_product": 0.0,
+        "leading_log_overlap": 0.0
+      },
+      {
+        "log_mu_ratio": 0.5,
+        "leading_log_norm_product": 0.004749430483234583,
+        "leading_log_overlap": 0.009498860966469166
+      },
+      {
+        "log_mu_ratio": 1.0,
+        "leading_log_norm_product": 0.009498860966469166,
+        "leading_log_overlap": 0.018997721932938333
+      }
+    ],
+    "finite_one_loop_matching_computed": false,
+    "global_effective_potential_stability_proved": false
+  },
+  "narrow_checks_passed": true,
+  "fitted_parameters": 0,
+  "full_joint_rmse": null,
+  "scientific_success": false,
+  "limitations": [
+    "standard 4D perturbative loop formulas and representations supplied",
+    "gauge running only at one loop; quartics only gauge g^4 source/leading log",
+    "no full mass, quartic, threshold or pole matching system",
+    "no data, measured couplings, covariance or holdout evaluation",
+    "matching scale and boundary parameters chosen, not derived",
+    "renormalization-scale flow is not physical time or a quantum channel",
+    "no interacting gauge-gravity quantum construction or stable actual record"
+  ],
+  "environment": {
+    "python": "3.11.9",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "sympy": "1.14.0",
+    "platform": "Windows-10-10.0.26200-SP0"
+  },
+  "preregistration_section_sha256": "86dace9eed2203981327b235aa3cdfd6205a3f82d68e4e32a6c5629983868d84",
+  "source_sha256": {
+    "verify/ce_common_gauge_rg.py": "d6db57a5747eab9c646f9dfd82c7e7005d60f636b1fcb1c9a1c55d614fc1060f",
+    "verify/ce_record_weak_symmetry.py": "ba2351afe5a663e893252b01dd933eab9b61cdcf155f30d9f9a75f2aa710d61f",
+    "verify/ce_color_covariant_record.py": "9b3e345f7f09023183a3945de9f9effb2a81998e5bc85fec370eb85d2a22341e",
+    "verify/ce_isometric_color_frame.py": "ebc785c76f23a9be9769732443575a517a47b5c0f8086d88b4110023ce1fe817"
+  }
+}

@@ -1,0 +1,469 @@
+{
+  "schema_version": 1,
+  "candidate": "CE-UR3",
+  "scientific_success": false,
+  "full_joint_rmse": null,
+  "preregistration_sha256": "a618099f7645e812605f085df2598cd10b699057fb7ff7c939f088ba719f19f0",
+  "followup_preregistration_sha256": "ff26bee4e33ff5c5c7b4e87097bf0af3ed7afb6d645d7de65a2afd5ab39e9a93",
+  "source_hashes": {
+    "ce_supersymmetric_record.py": "d945ec1dfa32113e33f91d38882fdf346257d6b9a807e1ba439f47c014719e8f",
+    "ce_gauge_matching_inputs.json": "fe7c42947be56f3d17e34b065143adb40520969a55324e3f27fa72522b8c40b1",
+    "ce_simple_group_record.py": "6fbae4f419124c798f4386db609eac92d3b4236c430deb4c104f6bfa8a67df13"
+  },
+  "runtime": {
+    "python": "3.11.9",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "sympy": "1.14.0"
+  },
+  "action": {
+    "superpotential_trace_and_gauge_error": 9.155133597044475e-16,
+    "vacuum_F_error": 5.1598503419391096e-15,
+    "vacuum_D_error": 0.0,
+    "scalar_mass_squared_histogram": {
+      "0": 32,
+      "1": 2,
+      "16": 4,
+      "25": 82,
+      "50": 12,
+      "100": 32
+    },
+    "weyl_mass_squared_histogram": {
+      "0": 22,
+      "1": 1,
+      "16": 2,
+      "25": 41,
+      "50": 24,
+      "100": 16
+    },
+    "vector_mass_squared_histogram": {
+      "0": 12,
+      "50": 12
+    },
+    "MX_squared": 50,
+    "canonical_adjoint_kinetic": "2 Tr Phi_dagger Phi",
+    "mass_ratios": {
+      "Sigma_octet_and_triplet": "1/sqrt(2)",
+      "Sigma_singlet": "1/(5 sqrt(2))",
+      "H_color_pair": "1/sqrt(2)",
+      "record_octet": "sqrt(2)+m_pm/MX",
+      "record_broken": "1/sqrt(2)+m_pm/MX",
+      "record_singlet": "4/(5 sqrt(2))+m_pm/MX",
+      "record_triplet": "m_pm/MX"
+    },
+    "decoupled_SM_matter_chiral_pairs": 45,
+    "SM_matter_zero_X2_reason": "H=Hbar=0, D=0, no Sigma or record Yukawa to SM matter"
+  },
+  "fixed_slice": {
+    "scalar_Hessian_dimension": 164,
+    "fermion_Weyl_dimension": 106,
+    "scalar_X2_coefficient": "3114/5",
+    "fermion_unweighted_X2_coefficient": "3882/5",
+    "vector_weighted_X2_coefficient": "900",
+    "supertrace_X2_exact": "-30",
+    "supertrace_X2_numeric_error": 1.3642420526593924e-12,
+    "supertrace_quartic_difference_error": 2.2505606267486655e-08,
+    "full_Hessian_gradient_difference_error": 1.5987211554602254e-14,
+    "independent_potential_direction_error": 4.49293380277993e-16,
+    "finite_DR_potential_small_field_check": [
+      {
+        "scale_over_V": 1.0,
+        "spectral_quadratic_coefficient": -0.1383045082986013,
+        "estimates": [
+          {
+            "step": 0.08,
+            "quadratic_estimator": -0.1383546884137313
+          },
+          {
+            "step": 0.04,
+            "quadratic_estimator": -0.13831608050940805
+          },
+          {
+            "step": 0.02,
+            "quadratic_estimator": -0.13830715130016283
+          }
+        ]
+      },
+      {
+        "scale_over_V": 7.0710678118654755,
+        "spectral_quadratic_coefficient": 0.04749430483234223,
+        "estimates": [
+          {
+            "step": 0.08,
+            "quadratic_estimator": 0.04752260622402476
+          },
+          {
+            "step": 0.04,
+            "quadratic_estimator": 0.04750235325972827
+          },
+          {
+            "step": 0.02,
+            "quadratic_estimator": 0.04749656064285832
+          }
+        ]
+      }
+    ],
+    "singlet_tadpole_and_relaxed_path": [
+      {
+        "scale_over_V": 1.0,
+        "one_loop_singlet_tadpole": 0.7142014097942461,
+        "fixed_slice_quadratic": -0.1383045082986013,
+        "tree_response_c": 0.19364916731037085,
+        "relaxed_quadratic": -5.262457136723242e-14
+      },
+      {
+        "scale_over_V": 7.0710678118654755,
+        "one_loop_singlet_tadpole": -0.2452595355401612,
+        "fixed_slice_quadratic": 0.04749430483234223,
+        "tree_response_c": 0.19364916731037085,
+        "relaxed_quadratic": 6.170758348744698e-14
+      }
+    ],
+    "protected_quadratic_term": "FIXED_SLICE_NONZERO_RELAXED_PATH_CANCELS",
+    "whole_off_shell_potential_vanishes": false,
+    "soft_broken_protection_proved": false
+  },
+  "protection": {
+    "scalar_Hessian_dimension": 164,
+    "fermion_Weyl_dimension": 106,
+    "scalar_X2_coefficient": "3504/5",
+    "fermion_unweighted_X2_coefficient": "4002/5",
+    "vector_weighted_X2_coefficient": "900",
+    "supertrace_X2_exact": "0",
+    "supertrace_X2_numeric_error": 9.094947017729282e-13,
+    "supertrace_quartic_difference_error": 3.104499531521772e-08,
+    "full_Hessian_gradient_difference_error": 1.554312234475219e-14,
+    "independent_potential_direction_error": 9.360570781677384e-17,
+    "finite_DR_potential_small_field_check": [
+      {
+        "scale_over_V": 1.0,
+        "spectral_quadratic_coefficient": -4.319581860940692e-15,
+        "estimates": [
+          {
+            "step": 0.08,
+            "quadratic_estimator": 2.303776992501702e-10
+          },
+          {
+            "step": 0.04,
+            "quadratic_estimator": -1.3822661955010214e-09
+          },
+          {
+            "step": 0.02,
+            "quadratic_estimator": 1.8430215940013617e-09
+          }
+        ]
+      },
+      {
+        "scale_over_V": 7.0710678118654755,
+        "spectral_quadratic_coefficient": 1.799825775391955e-15,
+        "estimates": [
+          {
+            "step": 0.08,
+            "quadratic_estimator": 5.759442481254255e-11
+          },
+          {
+            "step": 0.04,
+            "quadratic_estimator": 1.151888496250851e-10
+          },
+          {
+            "step": 0.02,
+            "quadratic_estimator": 0.0
+          }
+        ]
+      }
+    ],
+    "singlet_tadpole_and_relaxed_path": [],
+    "protected_quadratic_term": "CANCELS_ON_F_D_FLAT_PATH",
+    "whole_off_shell_potential_vanishes": false,
+    "soft_broken_protection_proved": false
+  },
+  "holomorphic_running": {
+    "gamma_Sigma_numerator_at_g_lambda_1": "-16/5",
+    "gamma_X_numerator_at_g_lambda_1": "-29/5",
+    "normalization": "divide by 16 pi^2",
+    "matrix_error": 4.440892098500626e-15,
+    "deviation": "-6*lambda_R*m_S/lambda_S + mu_R",
+    "beta_deviation_minus_2gammaX_deviation": "0",
+    "scope": "perturbative superpotential running in exact SUSY; scalar soft masses not covered",
+    "equal_lambda_and_g_preserved_by_RG": false
+  },
+  "record": {
+    "free_rest_record_error": 5.440092820663267e-15,
+    "mass_minimum": 3.4292036732051034,
+    "autonomous_actual_record": false,
+    "instrument_CP": "Kraus P_a U; positive outer-product Choi"
+  },
+  "gauge_gate": {
+    "b_MSSM_order_3_2_Y": [
+      "-3",
+      "1",
+      "11"
+    ],
+    "b_SU5": "7",
+    "soft_species": [
+      {
+        "name": "Q_1",
+        "db": [
+          "1/3",
+          "1/2",
+          "1/18"
+        ],
+        "projected": "-1/2"
+      },
+      {
+        "name": "uc_1",
+        "db": [
+          "1/6",
+          "0",
+          "4/9"
+        ],
+        "projected": "5/14"
+      },
+      {
+        "name": "dc_1",
+        "db": [
+          "1/6",
+          "0",
+          "1/9"
+        ],
+        "projected": "3/14"
+      },
+      {
+        "name": "L_1",
+        "db": [
+          "0",
+          "1/6",
+          "1/6"
+        ],
+        "projected": "-3/14"
+      },
+      {
+        "name": "ec_1",
+        "db": [
+          "0",
+          "0",
+          "1/3"
+        ],
+        "projected": "1/7"
+      },
+      {
+        "name": "Q_2",
+        "db": [
+          "1/3",
+          "1/2",
+          "1/18"
+        ],
+        "projected": "-1/2"
+      },
+      {
+        "name": "uc_2",
+        "db": [
+          "1/6",
+          "0",
+          "4/9"
+        ],
+        "projected": "5/14"
+      },
+      {
+        "name": "dc_2",
+        "db": [
+          "1/6",
+          "0",
+          "1/9"
+        ],
+        "projected": "3/14"
+      },
+      {
+        "name": "L_2",
+        "db": [
+          "0",
+          "1/6",
+          "1/6"
+        ],
+        "projected": "-3/14"
+      },
+      {
+        "name": "ec_2",
+        "db": [
+          "0",
+          "0",
+          "1/3"
+        ],
+        "projected": "1/7"
+      },
+      {
+        "name": "Q_3",
+        "db": [
+          "1/3",
+          "1/2",
+          "1/18"
+        ],
+        "projected": "-1/2"
+      },
+      {
+        "name": "uc_3",
+        "db": [
+          "1/6",
+          "0",
+          "4/9"
+        ],
+        "projected": "5/14"
+      },
+      {
+        "name": "dc_3",
+        "db": [
+          "1/6",
+          "0",
+          "1/9"
+        ],
+        "projected": "3/14"
+      },
+      {
+        "name": "L_3",
+        "db": [
+          "0",
+          "1/6",
+          "1/6"
+        ],
+        "projected": "-3/14"
+      },
+      {
+        "name": "ec_3",
+        "db": [
+          "0",
+          "0",
+          "1/3"
+        ],
+        "projected": "1/7"
+      },
+      {
+        "name": "gluino",
+        "db": [
+          "2",
+          "0",
+          "0"
+        ],
+        "projected": "2"
+      },
+      {
+        "name": "wino",
+        "db": [
+          "0",
+          "4/3",
+          "0"
+        ],
+        "projected": "-16/7"
+      },
+      {
+        "name": "Higgsinos_pair",
+        "db": [
+          "0",
+          "2/3",
+          "2/3"
+        ],
+        "projected": "-6/7"
+      },
+      {
+        "name": "extra_Higgs",
+        "db": [
+          "0",
+          "1/6",
+          "1/6"
+        ],
+        "projected": "-3/14"
+      }
+    ],
+    "bino_db": [
+      0,
+      0,
+      0
+    ],
+    "soft_beta_sum": [
+      "4",
+      "25/6",
+      "25/6"
+    ],
+    "record_triplet_beta_each": [
+      "0",
+      "2",
+      "0"
+    ],
+    "matching_scale_beta_identity": true,
+    "fixed_heavy_delta": [
+      "log(2)/(2*pi)",
+      "2*log(2)/pi",
+      "13*log(2)/(3*pi)"
+    ],
+    "MS_minus_DR_inverse_alpha": [
+      "1/(4*pi)",
+      "1/(6*pi)",
+      "0"
+    ],
+    "heavy_remainder_rational_bounds": [
+      "2599/399600",
+      "1333/222000",
+      "3359/239760"
+    ],
+    "allowed_epsilon_coordinate": "1/20",
+    "soft_projected_max_coefficient": "11/2",
+    "inverse_alpha_s_MS_upper": 4.994784052121191,
+    "alpha_s_MS_lower_if_inverse_positive": 0.20020885579133674,
+    "observed_alpha_s_MS_upper": 0.1207,
+    "exclusion_margin": "3.29022009038088038497794608236079769607408474007842877510095",
+    "strict_rational_margin": "52090218961/42245000000",
+    "independent_LP_difference": 8.881784197001252e-16,
+    "result": "REJECTED_REGISTERED_LOW_SOFT_HIERARCHICAL_RECORD_ONE_LOOP_BRANCH",
+    "fits_or_selected_soft_spectrum": false,
+    "all_SUSY_or_all_orders_rejected": false
+  },
+  "observational_manifest": {
+    "schema_version": 1,
+    "config_id": "CE-LR3-PDG2025-GUT-mZ-v1",
+    "source_url": "https://pdg.lbl.gov/2025/reviews/rpp2025-rev-guts.pdf",
+    "source_sections": [
+      "92.5",
+      "equation 92.8"
+    ],
+    "source_printed_revision": "Revised August 2025; printed 1 December 2025",
+    "verification_date": "2026-09-10",
+    "scheme": "MSbar gauge couplings at mZ; gY is not GUT-normalized",
+    "observables": {
+      "alpha_em_inverse": {
+        "value": 127.93,
+        "quoted_error": 0.008,
+        "role": "fixed electroweak conditioning input"
+      },
+      "sin_squared_theta_W": {
+        "value": 0.23122,
+        "quoted_error": 4e-05,
+        "role": "fixed electroweak conditioning input"
+      },
+      "alpha_s": {
+        "value": 0.118,
+        "quoted_error": 0.0009,
+        "role": "comparison quantity; not used to select parameters"
+      }
+    },
+    "covariance": null,
+    "covariance_status": "not supplied by this review summary; no independence assumption",
+    "error_box_multiplier": 3,
+    "error_box_interpretation": "coordinate intervals only, not a joint confidence region",
+    "blinded_holdout": false,
+    "prior_visibility": "public values were visible during source review; no unseen-data claim",
+    "fitted_parameters": 0,
+    "scope": "conditional one-loop leading-log feasibility gate, not a joint likelihood dataset"
+  },
+  "sources": [
+    "https://arxiv.org/abs/hep-ph/9709356",
+    "https://arxiv.org/abs/hep-ph/9308222",
+    "https://arxiv.org/abs/hep-ph/0111209",
+    "https://link.springer.com/article/10.1140/epjc/s10052-016-4437-6"
+  ],
+  "open_gates": [
+    "origin of SUSY and SU5",
+    "soft breaking action and Higgs vacuum",
+    "autonomous actual record",
+    "quantum and gravity common derivation",
+    "joint particle/cosmology/gravity predictions and covariance"
+  ]
+}

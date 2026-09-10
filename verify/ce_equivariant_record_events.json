@@ -1,0 +1,124 @@
+{
+  "candidate": "CE-EV1",
+  "status": "conditional_extra_configuration_law",
+  "same_H_as": "CE-LM3-G",
+  "configuration_count": 2380,
+  "directed_edge_counts": {
+    "matter_hop": 9520,
+    "controller_hop": 4480,
+    "pointer_flip": 70
+  },
+  "expected_activity_uniform_bound": 11.0,
+  "cases": [
+    {
+      "time": 0.0,
+      "equivariance_max_error": 1.0408340855860843e-17,
+      "alternative_equivariance_max_error": 1.3877787807814457e-17,
+      "probability_norm_error": 1.1102230246251565e-15,
+      "expected_jump_intensity": 1.7649680192728914,
+      "alternative_jump_intensity": 1.7705868737436672,
+      "largest_conditional_rate": 11.509205352011463,
+      "exact_zero_probability_states": 1190,
+      "total_energy": -4.758770483143639,
+      "diagonal_configuration_energy_mean": 0.0,
+      "offdiagonal_energy_mean": -4.758770483143639,
+      "diagonal_energy_derivative": 0.0
+    },
+    {
+      "time": 0.5,
+      "equivariance_max_error": 3.2959746043559335e-17,
+      "alternative_equivariance_max_error": 2.0816681711721685e-17,
+      "probability_norm_error": 1.1102230246251565e-15,
+      "expected_jump_intensity": 1.768730686175326,
+      "alternative_jump_intensity": 1.7742967772766676,
+      "largest_conditional_rate": 9.638470420470279,
+      "exact_zero_probability_states": 0,
+      "total_energy": -4.758770483143639,
+      "diagonal_configuration_energy_mean": 0.0005198777133002431,
+      "offdiagonal_energy_mean": -4.759290360856939,
+      "diagonal_energy_derivative": 0.0036255763483649486
+    },
+    {
+      "time": 1.0,
+      "equivariance_max_error": 1.214306433183765e-17,
+      "alternative_equivariance_max_error": 1.3877787807814457e-17,
+      "probability_norm_error": 1.1102230246251565e-15,
+      "expected_jump_intensity": 1.812499067757944,
+      "alternative_jump_intensity": 1.8179304500328572,
+      "largest_conditional_rate": 60.23056815113708,
+      "exact_zero_probability_states": 0,
+      "total_energy": -4.758770483143643,
+      "diagonal_configuration_energy_mean": 0.0069740930714965,
+      "offdiagonal_energy_mean": -4.765744576215139,
+      "diagonal_energy_derivative": 0.02790886947627679
+    },
+    {
+      "time": 2.0,
+      "equivariance_max_error": 1.214306433183765e-17,
+      "alternative_equivariance_max_error": 6.938893903907228e-18,
+      "probability_norm_error": 4.440892098500626e-16,
+      "expected_jump_intensity": 2.1882762114260332,
+      "alternative_jump_intensity": 2.1932321630089304,
+      "largest_conditional_rate": 25.400118038786545,
+      "exact_zero_probability_states": 0,
+      "total_energy": -4.758770483143637,
+      "diagonal_configuration_energy_mean": 0.10272054479407795,
+      "offdiagonal_energy_mean": -4.861491027937715,
+      "diagonal_energy_derivative": 0.1695143204889094
+    },
+    {
+      "time": 5.0,
+      "equivariance_max_error": 5.204170427930421e-18,
+      "alternative_equivariance_max_error": 6.938893903907228e-18,
+      "probability_norm_error": 2.55351295663786e-15,
+      "expected_jump_intensity": 2.1605617556032883,
+      "alternative_jump_intensity": 2.1617723999988008,
+      "largest_conditional_rate": 24.998265427611386,
+      "exact_zero_probability_states": 0,
+      "total_energy": -4.758770483143618,
+      "diagonal_configuration_energy_mean": 0.2979008878874978,
+      "offdiagonal_energy_mean": -5.056671371031116,
+      "diagonal_energy_derivative": -0.005303604335955292
+    },
+    {
+      "time": 10.0,
+      "equivariance_max_error": 8.131516293641283e-18,
+      "alternative_equivariance_max_error": 8.131516293641283e-18,
+      "probability_norm_error": 8.515410598874951e-14,
+      "expected_jump_intensity": 2.0150998990376867,
+      "alternative_jump_intensity": 2.016166683676685,
+      "largest_conditional_rate": 38.957186068313796,
+      "exact_zero_probability_states": 0,
+      "total_energy": -4.758770483143178,
+      "diagonal_configuration_energy_mean": 0.2616764538010231,
+      "offdiagonal_energy_mean": -5.020446936944201,
+      "diagonal_energy_derivative": -0.0019631694450677867
+    }
+  ],
+  "fitted_parameters": 0,
+  "full_joint_rmse": null,
+  "scientific_success": false,
+  "sampled_trajectories": 0,
+  "axioms": [
+    "Actual configuration Q in addition to the global wavefunction.",
+    "Initial configuration distribution equals Born probabilities.",
+    "Minimal positive-current jump rates; not uniquely forced by equivariance."
+  ],
+  "limits": [
+    "The global wavefunction is not collapsed or conditioned on Q.",
+    "Expected quantum energy conservation is not trajectory-level diagonal-energy conservation.",
+    "Local graph edges do not prove relativistic locality of state-dependent rates.",
+    "No Q-dependent gravitational backreaction or covariant stress is constructed.",
+    "LM3 record errors/instability are not fixed by adding Q.",
+    "No new observation or physical validation of the added ontology."
+  ],
+  "source_sha256": {
+    "ce_equivariant_record_events.py": "dc70042b98f9e8b9ee198073fb126bc672a0516619ec0efbf3ae7168c546eabc",
+    "ce_autonomous_record_instrument.py": "e47ea896587ce2937f962384632e15d1e90fffd4200f60b3a2efa53cf7e73886",
+    "ce_local_vacuum_modular.py": "eaa93d08395ca3504276b16cfdf6b29fd6b23e84c41fb807271a0fa9f76a9ec6"
+  },
+  "environment": {
+    "python": "3.11.9",
+    "numpy": "2.4.6"
+  }
+}
