@@ -1,0 +1,342 @@
+{
+  "schema_version": 1,
+  "candidate": "CE-RFD1",
+  "checks_passed": 101,
+  "checks": [
+    "frozen CE-RFD1 definition",
+    "frozen additional common scale definition",
+    "frozen additional shape stability test",
+    "k=1 curvature rank",
+    "k=1 constant geometric scalar",
+    "k=1 Euler Lagrange versus connection force",
+    "k=1 Berry force has zero power",
+    "k=1 probe energy conservation",
+    "k=1 homogeneous sigma continuity",
+    "k=1 homogeneous spacetime Berry field vanishes",
+    "k=2 curvature rank",
+    "k=2 constant geometric scalar",
+    "k=2 Euler Lagrange versus connection force",
+    "k=2 Berry force has zero power",
+    "k=2 probe energy conservation",
+    "k=2 homogeneous sigma continuity",
+    "k=2 homogeneous spacetime Berry field vanishes",
+    "k=3 curvature rank",
+    "k=3 constant geometric scalar",
+    "k=3 Euler Lagrange versus connection force",
+    "k=3 Berry force has zero power",
+    "k=3 probe energy conservation",
+    "k=3 homogeneous sigma continuity",
+    "k=3 homogeneous spacetime Berry field vanishes",
+    "k=4 curvature rank",
+    "k=4 constant geometric scalar",
+    "k=4 Euler Lagrange versus connection force",
+    "k=4 Berry force has zero power",
+    "k=4 probe energy conservation",
+    "k=4 homogeneous sigma continuity",
+    "k=4 homogeneous spacetime Berry field vanishes",
+    "Lorentz Maxwell energy density positive sum of squares",
+    "Lorentz Maxwell trace vanishes",
+    "Lorentz mean pressure is rho over three",
+    "Lorentz Pfaffian equals E dot B",
+    "Lorentz field determinant is Pfaffian squared",
+    "lapse variation gives Lorentz energy",
+    "anisotropic metric variation gives pressure 1",
+    "anisotropic metric variation gives pressure 2",
+    "anisotropic metric variation gives pressure 3",
+    "sigma density from independent lapse variation",
+    "sigma mean pressure from independent metric variation",
+    "magnetic_rank2 positive density and radiation mean pressure",
+    "electric_rank2 positive density and radiation mean pressure",
+    "null_wave_rank2 positive density and radiation mean pressure",
+    "parallel_rank4 positive density and radiation mean pressure",
+    "active gravitational density",
+    "zero potential minimal branch cannot accelerate FLRW",
+    "Hopf curvature curl equals imaginary QGT",
+    "Hopf sigma energy radial density",
+    "Hopf gauge energy radial density",
+    "Hopf helicity magnitude radial density",
+    "Hopf energy integrals",
+    "Hopf invariant magnitude is one",
+    "independent quadrature sigma",
+    "independent quadrature gauge",
+    "independent quadrature helicity",
+    "Hopf trial scale stationary",
+    "Hopf trial scale positive second derivative",
+    "Hopf trial scale energy",
+    "Cartesian moment sigma integral versus radial result",
+    "Cartesian moment gauge integral versus radial result",
+    "Hopf trial nonzero directional stresses",
+    "shape scale derivative versus integrated stress 0",
+    "shape scale derivative versus integrated stress 1",
+    "shape scale derivative versus integrated stress 2",
+    "isotropic virial vanishes but full stationarity fails",
+    "independent spherical quadrature of directional stresses",
+    "paired conjugate state remains normalized",
+    "paired product has identically zero Berry connection",
+    "paired product retains twice the sigma density",
+    "larger state space scales connection by cos squared",
+    "larger state space metric includes vertical direction cost",
+    "Hopf connection norm radial density",
+    "escape energy agrees with original at u one",
+    "escape ends in zero energy constant state",
+    "escape derivative exact positive decomposition",
+    "escape boundary fixed by constant unitary",
+    "boundary rotation is unitary",
+    "k=1 common length mass Hubble ratio",
+    "k=1 ratio never exceeds sqrt three",
+    "k=1 common scale ODE completed",
+    "k=1 common scale ODE versus exact modes",
+    "k=1 dominant mode pressure ratio",
+    "k=1 dominant scalar mode continuity",
+    "k=2 common length mass Hubble ratio",
+    "k=2 ratio never exceeds sqrt three",
+    "k=2 common scale ODE completed",
+    "k=2 common scale ODE versus exact modes",
+    "k=2 dominant mode pressure ratio",
+    "k=2 dominant scalar mode continuity",
+    "k=3 common length mass Hubble ratio",
+    "k=3 ratio never exceeds sqrt three",
+    "k=3 common scale ODE completed",
+    "k=3 common scale ODE versus exact modes",
+    "k=3 dominant mode pressure ratio",
+    "k=3 dominant scalar mode continuity",
+    "k=4 common length mass Hubble ratio",
+    "k=4 ratio never exceeds sqrt three",
+    "k=4 common scale ODE completed",
+    "k=4 common scale ODE versus exact modes"
+  ],
+  "preregistration_sha256": "0923f2fe26167d04f6e39783898dba87f33934d810504862ba02385b6c8f09d0",
+  "scale_preregistration_sha256": "0348cd612c57c7489f671b1adf6b3126e55e3c8d22140a080a0267a683611e89",
+  "shape_preregistration_sha256": "68019ed95e903c99e637de65353645361fe188c91cec5ab984fe8074cead73cf",
+  "source_sha256": {
+    "verify\\ce_rank_force_dark.py": "7a2bb7451c2ead45705fe89dc9bc34b36ed533dbe333f5fdbb0b28b99ef4b109",
+    "paper\\검증_원장\\차원별_곡률힘과_암흑부문_원장.md": "132fd2a2b3812164dca5ece4a1c45ef76b9a58ca1ba332312759a05b26f3a67f",
+    "verify\\ce_relation_force_bridge.py": "fbcb8e477396cd10c5e94564975f9e2efe19005c0814b8bb26bf92d8dd152c5d",
+    "paper\\01_측정과_접힘\\15_관계기하와_힘의_연결_문헌과_검증.md": "796e89f5d586a5a88c7b7c7ed34d381baa2f2e3322d8264087a014267c9e8826",
+    "paper\\01_측정과_접힘\\16_차원별_곡률힘과_암흑부문_검사.md": "d5c6763f608d7534f54b05d287bafce7f0373a2c71eba2b3d26e5727d862fa1d"
+  },
+  "dimension_rows": [
+    {
+      "k": 1,
+      "target_curvature_rank": 0,
+      "berry_force_covector": [
+        "0"
+      ],
+      "probe_acceleration": [
+        "0"
+      ],
+      "born_huang_scalar": "hbar**2/(2*M*ell**2)",
+      "homogeneous_spacetime_curvature_rank": 0
+    },
+    {
+      "k": 2,
+      "target_curvature_rank": 2,
+      "berry_force_covector": [
+        "-hbar*v1*sin(theta)/2",
+        "hbar*v0*sin(theta)/2"
+      ],
+      "probe_acceleration": [
+        "v1*(v1*cos(theta) - 2*hbar/(M*ell**2))*sin(theta)",
+        "2*v0*(-v1/tan(theta) + hbar/(M*ell**2*sin(theta)))"
+      ],
+      "born_huang_scalar": "hbar**2/(M*ell**2)",
+      "homogeneous_spacetime_curvature_rank": 0
+    },
+    {
+      "k": 3,
+      "target_curvature_rank": 2,
+      "berry_force_covector": [
+        "-hbar*v1*sin(theta)/2",
+        "hbar*v0*sin(theta)/2",
+        "0"
+      ],
+      "probe_acceleration": [
+        "v1*(v1*cos(theta) - 2*hbar/(M*ell**2))*sin(theta)",
+        "2*v0*(-v1/tan(theta) + hbar/(M*ell**2*sin(theta)))",
+        "0"
+      ],
+      "born_huang_scalar": "3*hbar**2/(2*M*ell**2)",
+      "homogeneous_spacetime_curvature_rank": 0
+    },
+    {
+      "k": 4,
+      "target_curvature_rank": 4,
+      "berry_force_covector": [
+        "-hbar*v1*sin(theta)/2",
+        "hbar*v0*sin(theta)/2",
+        "-hbar*v3*sin(eta)/2",
+        "hbar*v2*sin(eta)/2"
+      ],
+      "probe_acceleration": [
+        "v1*(v1*cos(theta) - 2*hbar/(M*ell**2))*sin(theta)",
+        "2*v0*(-v1/tan(theta) + hbar/(M*ell**2*sin(theta)))",
+        "v3*(v3*cos(eta) - 2*hbar/(M*ell**2))*sin(eta)",
+        "2*v2*(-v3/tan(eta) + hbar/(M*ell**2*sin(eta)))"
+      ],
+      "born_huang_scalar": "2*hbar**2/(M*ell**2)",
+      "homogeneous_spacetime_curvature_rank": 0
+    }
+  ],
+  "lorentz_stress_examples": [
+    {
+      "name": "magnetic_rank2",
+      "rank": 2,
+      "rho": "1/2",
+      "pressures": [
+        "1/2",
+        "1/2",
+        "-1/2"
+      ]
+    },
+    {
+      "name": "electric_rank2",
+      "rank": 2,
+      "rho": "1/2",
+      "pressures": [
+        "1/2",
+        "1/2",
+        "-1/2"
+      ]
+    },
+    {
+      "name": "null_wave_rank2",
+      "rank": 2,
+      "rho": "1",
+      "pressures": [
+        "0",
+        "0",
+        "1"
+      ]
+    },
+    {
+      "name": "parallel_rank4",
+      "rank": 4,
+      "rho": "1",
+      "pressures": [
+        "1",
+        "1",
+        "-1"
+      ]
+    }
+  ],
+  "hopf_trial": {
+    "charge": "1",
+    "E2_unit": "4*pi**2",
+    "E4_unit": "4*pi**2",
+    "scale_energy": "4*pi**2*L*f**2 + 4*pi**2/(L*e**2)",
+    "stationary_scale": "1/(e*f)",
+    "stationary_scale_energy": "8*pi**2*f/e",
+    "full_field_stationarity_verified": false,
+    "full_field_stability_verified": false,
+    "trial_stationary_solution": false,
+    "integrated_directional_stress": [
+      "4*pi**2/15",
+      "4*pi**2/15",
+      "-8*pi**2/15"
+    ],
+    "shape_quadrature": [
+      2.6318945069571384,
+      2.6318945069571384,
+      -5.263789013914312
+    ],
+    "shape_quadrature_error": 2.398081733190338e-14
+  },
+  "quadrature": [
+    {
+      "label": "sigma",
+      "exact": "4*pi**2",
+      "value": 39.47841760435743,
+      "absolute_error": 0.0,
+      "estimated_error": 5.486748900800574e-13
+    },
+    {
+      "label": "gauge",
+      "exact": "4*pi**2",
+      "value": 39.47841760435743,
+      "absolute_error": 0.0,
+      "estimated_error": 2.338221433828688e-10
+    },
+    {
+      "label": "helicity",
+      "exact": "4*pi**2",
+      "value": 39.478417604357425,
+      "absolute_error": 7.105427357601002e-15,
+      "estimated_error": 1.1860784566843647e-11
+    }
+  ],
+  "product_cancellation": {
+    "connection": "0",
+    "energy": "8*pi**2*L*f**2",
+    "finite_size_minimum": false
+  },
+  "cp3_escape": {
+    "u": "cos(alpha)^2",
+    "energy": "2*pi**2*L*f**2*u*(3 - u) + 4*pi**2*u**2/(L*e**2)",
+    "boundary_fixed": true,
+    "energy_barrier_along_path": false
+  },
+  "common_scale_test": {
+    "extra_assumption": "m_k^2=k/ell^2 and Lambda=4/ell^2 are both Lorentz physical quantities",
+    "H": 1,
+    "initial_state": [
+      1,
+      0
+    ],
+    "final_time": 4,
+    "sample_count": 81,
+    "rows": [
+      {
+        "k": 1,
+        "m_squared_over_H_squared": "3/4",
+        "m_over_H": "sqrt(3)/2",
+        "regime": "overdamped",
+        "oscillation_frequency_over_H": null,
+        "late_probe_w": "-sqrt(6)/3",
+        "late_w_scope": "fixed external de Sitter probe, no abundance or clustering prediction",
+        "maximum_state_error": 3.2326918919522996e-13
+      },
+      {
+        "k": 2,
+        "m_squared_over_H_squared": "3/2",
+        "m_over_H": "sqrt(6)/2",
+        "regime": "overdamped",
+        "oscillation_frequency_over_H": null,
+        "late_probe_w": "-sqrt(3)/3",
+        "late_w_scope": "fixed external de Sitter probe, no abundance or clustering prediction",
+        "maximum_state_error": 5.611483500089776e-13
+      },
+      {
+        "k": 3,
+        "m_squared_over_H_squared": "9/4",
+        "m_over_H": "3/2",
+        "regime": "critically damped",
+        "oscillation_frequency_over_H": null,
+        "late_probe_w": "0",
+        "late_w_scope": "fixed external de Sitter probe, no abundance or clustering prediction",
+        "maximum_state_error": 6.899827931228231e-13
+      },
+      {
+        "k": 4,
+        "m_squared_over_H_squared": "3",
+        "m_over_H": "sqrt(3)",
+        "regime": "underdamped, frequency below H",
+        "oscillation_frequency_over_H": "sqrt(3)/2",
+        "late_probe_w": null,
+        "late_w_scope": "fixed external de Sitter probe, no abundance or clustering prediction",
+        "maximum_state_error": 1.3677503574172079e-11
+      }
+    ],
+    "rapid_oscillation_dust_limit": false
+  },
+  "fit_parameters": 0,
+  "scientific_success": false,
+  "full_joint_rmse": null,
+  "dark_energy_minimal_classical_branch": "rejected: rho+3p nonnegative for U0=0",
+  "dark_matter_status": "homogeneous and radiation interpretations fail; restricted Hopf trial requires full stability and preparation; CP3 escape and product cancellation retained",
+  "validation_limits": [
+    "same-author alternative derivations, not external independent review",
+    "Lorentz action and f,e,Mpl supplied",
+    "no CP measurement instrument or full common quantum theory",
+    "no observed density, clustering, Hubble or joint residual prediction"
+  ]
+}
