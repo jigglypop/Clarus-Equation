@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "candidate": "CE-UR4-D3",
+  "scientific_success": false,
+  "full_joint_rmse": null,
+  "new_observational_inputs_or_fits": false,
+  "preregistration_sha256": "e9b621150bfc4b1a0d71e6054a038ecb71eb95ce0dedae8d10588e400ab72133",
+  "source_hashes": {
+    "ce_record_backreaction.py": "2bc2847b88b829fddcd9da60bfad2048d508bd659b4de96762d345ccfd4ca1a4",
+    "ce_singlet_record_observability.py": "9636d1fae1548f57fd2e0383c91339c047628e084ec841613fe66d589eeb551f",
+    "ce_supersymmetric_record.py": "d945ec1dfa32113e33f91d38882fdf346257d6b9a807e1ba439f47c014719e8f",
+    "ce_simple_group_record.py": "6fbae4f419124c798f4386db609eac92d3b4236c430deb4c104f6bfa8a67df13",
+    "ce_record_backreaction_refinement.py": "79802a677f023fef43508dd1ce60ac94bf031d1481c02fce59e74ca4aff5f037"
+  },
+  "initial_result_sha256": "366313f7deb41cf0c0135c3e8b5d3d5044d2e54f02559df390e3b34371d3ce5a",
+  "environment": {
+    "python": "3.11.15",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "sympy": "1.14.0",
+    "numba": "0.67.0"
+  },
+  "refinement_scope": "only failed cases; original equations, state, parameters, interval, threshold and comparisons unchanged",
+  "initial_passed_case_count": 6,
+  "refined_cases": [],
+  "run_complete": false
+}

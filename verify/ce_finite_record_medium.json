@@ -1,0 +1,1170 @@
+{
+  "schema_version": 1,
+  "candidate": "CE-UR4-D1/D2",
+  "scientific_success": false,
+  "full_joint_rmse": null,
+  "new_observational_inputs_or_fits": false,
+  "preregistration_sha256": "1ec530b8430650cb5d0a754dd08128e543ee8e56e305e2fea2616aa9cf7230b1",
+  "source_hashes": {
+    "ce_finite_record_medium.py": "c722b749a79ea070b1e3768aa23543057a4fbaecce74fb834797c41c0b061f70",
+    "ce_singlet_record_observability.py": "9636d1fae1548f57fd2e0383c91339c047628e084ec841613fe66d589eeb551f",
+    "ce_supersymmetric_record.py": "d945ec1dfa32113e33f91d38882fdf346257d6b9a807e1ba439f47c014719e8f",
+    "ce_simple_group_record.py": "6fbae4f419124c798f4386db609eac92d3b4236c430deb4c104f6bfa8a67df13"
+  },
+  "environment": {
+    "python": "3.11.9",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1"
+  },
+  "action_and_initial_curvatures": {
+    "max_scaled_independent_error": 6.734108625645496e-11,
+    "rows": [
+      {
+        "mass_over_V": 0.0006570796326794897,
+        "xi": 0.03,
+        "initial_Higgs_mass_squared_over_m_squared": [
+          -0.001797095925733952,
+          -0.001797095925733952,
+          0.0017987116762438842,
+          0.0017987116762438842
+        ],
+        "leading_negative_mass_squared_over_m_squared": -0.00179919
+      },
+      {
+        "mass_over_V": 0.0006570796326794897,
+        "xi": 0.1,
+        "initial_Higgs_mass_squared_over_m_squared": [
+          -0.01990722497877154,
+          -0.01990722497877154,
+          0.0201067003503681,
+          0.0201067003503681
+        ],
+        "leading_negative_mass_squared_over_m_squared": -0.019900000000000004
+      },
+      {
+        "mass_over_V": 0.00034292036732051036,
+        "xi": 0.03,
+        "initial_Higgs_mass_squared_over_m_squared": [
+          -0.0017982262260434285,
+          -0.0017982262260434285,
+          0.0017998440062044388,
+          0.0017998440062044388
+        ],
+        "leading_negative_mass_squared_over_m_squared": -0.00179919
+      },
+      {
+        "mass_over_V": 0.00034292036732051036,
+        "xi": 0.1,
+        "initial_Higgs_mass_squared_over_m_squared": [
+          -0.019919707863590135,
+          -0.019919707863590135,
+          0.020119433809393877,
+          0.020119433809393877
+        ],
+        "leading_negative_mass_squared_over_m_squared": -0.019900000000000004
+      }
+    ],
+    "invariant_background_fields": "Sigma singlet and one record mass species; Higgs background zero",
+    "source_is_an_exact_static_solution": false
+  },
+  "homogeneous_dynamics": {
+    "rows": [
+      {
+        "mass_over_V": 0.0006570796326794897,
+        "xi": 0.03,
+        "final_mt": 20.0,
+        "rhs_evaluations": 523781,
+        "relative_background_energy_error": 1.4654943925052066e-14,
+        "canonical_Wronskian_error": 1.1657341758765422e-14,
+        "rows": [
+          {
+            "k_over_m": 0.015,
+            "largest_free_Gaussian_variance_gain": 8.955594494840103,
+            "reference_Bogoliubov_beta_norm_squared": 2.8586968169597506,
+            "reference_scope": "free initial Gaussian covariance; no asymptotic particle-number assertion"
+          },
+          {
+            "k_over_m": 0.06,
+            "largest_free_Gaussian_variance_gain": 1.6894019624608216,
+            "reference_Bogoliubov_beta_norm_squared": 0.11164587829499148,
+            "reference_scope": "free initial Gaussian covariance; no asymptotic particle-number assertion"
+          }
+        ],
+        "background_return_not_assumed": true,
+        "final_background_scaled_real_imag": [
+          [
+            -0.6688803381614237,
+            -0.7094402223497445
+          ],
+          [
+            0.3915122429792216,
+            -0.906024881238016
+          ],
+          [
+            -1.4905369458395648,
+            1.336407868668427
+          ],
+          [
+            -0.9208082573023673,
+            -0.42418113600611956
+          ]
+        ],
+        "independent_accuracy_relative_gain_difference": 3.9790528649774615e-09
+      },
+      {
+        "mass_over_V": 0.0006570796326794897,
+        "xi": 0.1,
+        "final_mt": 20.0,
+        "rhs_evaluations": 598721,
+        "relative_background_energy_error": 2.8754776337791554e-14,
+        "canonical_Wronskian_error": 8.093531679518742e-14,
+        "rows": [
+          {
+            "k_over_m": 0.05,
+            "largest_free_Gaussian_variance_gain": 437.1168499093062,
+            "reference_Bogoliubov_beta_norm_squared": 108.81808557722151,
+            "reference_scope": "free initial Gaussian covariance; no asymptotic particle-number assertion"
+          },
+          {
+            "k_over_m": 0.2,
+            "largest_free_Gaussian_variance_gain": 1.5035885360558172,
+            "reference_Bogoliubov_beta_norm_squared": 0.055852551446417584,
+            "reference_scope": "free initial Gaussian covariance; no asymptotic particle-number assertion"
+          }
+        ],
+        "background_return_not_assumed": true,
+        "final_background_scaled_real_imag": [
+          [
+            -0.6236888568666619,
+            -0.35687019489125366
+          ],
+          [
+            0.21795385675298223,
+            -0.8186873237003455
+          ],
+          [
+            -1.3862477837850955,
+            1.356023243076034
+          ],
+          [
+            -0.9825317535386138,
+            -0.5798238694152084
+          ]
+        ],
+        "independent_accuracy_relative_gain_difference": 2.6392958929477572e-09
+      },
+      {
+        "mass_over_V": 0.00034292036732051036,
+        "xi": 0.03,
+        "final_mt": 20.0,
+        "rhs_evaluations": 1003085,
+        "relative_background_energy_error": 8.770761894538737e-15,
+        "canonical_Wronskian_error": 1.2878587085655994e-14,
+        "rows": [
+          {
+            "k_over_m": 0.015,
+            "largest_free_Gaussian_variance_gain": 8.95579054784548,
+            "reference_Bogoliubov_beta_norm_squared": 2.858762496353189,
+            "reference_scope": "free initial Gaussian covariance; no asymptotic particle-number assertion"
+          },
+          {
+            "k_over_m": 0.06,
+            "largest_free_Gaussian_variance_gain": 1.6894089331875108,
+            "reference_Bogoliubov_beta_norm_squared": 0.11164708749047075,
+            "reference_scope": "free initial Gaussian covariance; no asymptotic particle-number assertion"
+          }
+        ],
+        "background_return_not_assumed": true,
+        "final_background_scaled_real_imag": [
+          [
+            -0.6682888186409267,
+            -0.7094189924334752
+          ],
+          [
+            0.39149837310485036,
+            -0.9060306152701737
+          ],
+          [
+            -1.4904314248638657,
+            1.3364514868652704
+          ],
+          [
+            -0.9208148415519873,
+            -0.42416744968024617
+          ]
+        ],
+        "independent_accuracy_relative_gain_difference": 4.410351195360818e-09
+      },
+      {
+        "mass_over_V": 0.00034292036732051036,
+        "xi": 0.1,
+        "final_mt": 20.0,
+        "rhs_evaluations": 1153589,
+        "relative_background_energy_error": 2.808864252301646e-14,
+        "canonical_Wronskian_error": 1.2883915499080038e-13,
+        "rows": [
+          {
+            "k_over_m": 0.05,
+            "largest_free_Gaussian_variance_gain": 437.13083873699816,
+            "reference_Bogoliubov_beta_norm_squared": 108.82157177939266,
+            "reference_scope": "free initial Gaussian covariance; no asymptotic particle-number assertion"
+          },
+          {
+            "k_over_m": 0.2,
+            "largest_free_Gaussian_variance_gain": 1.503575256470971,
+            "reference_Bogoliubov_beta_norm_squared": 0.05584792416318364,
+            "reference_scope": "free initial Gaussian covariance; no asymptotic particle-number assertion"
+          }
+        ],
+        "background_return_not_assumed": true,
+        "final_background_scaled_real_imag": [
+          [
+            -0.6234621859613904,
+            -0.35664386739297327
+          ],
+          [
+            0.2177903598910857,
+            -0.818780946156943
+          ],
+          [
+            -1.3849346908011018,
+            1.356528107206981
+          ],
+          [
+            -0.9825749839183493,
+            -0.5796838591969758
+          ]
+        ],
+        "independent_accuracy_relative_gain_difference": 4.534807529488205e-09
+      }
+    ],
+    "Higgs_backreaction_on_source": "not included beyond linear order",
+    "physical_total_source_plus_amplified_quantum_energy": "not computed",
+    "scope": "exact homogeneous classical source trajectory and linear canonical Higgs propagation"
+  },
+  "finite_source_static_gate": {
+    "rows": [
+      {
+        "xi": 0.03,
+        "critical_g_shooting": 2.6845793714813513,
+        "critical_g_kernel_512_1024": [
+          2.6845110763826012,
+          2.684562281144685
+        ],
+        "critical_g_kernel_extrapolated": 2.6845793493987125,
+        "independent_critical_g_error": 2.208263882863548e-08,
+        "cases": [
+          {
+            "g": 1.0,
+            "zero_energy_Birman_Schwinger_trace": 0.4998875,
+            "Gaussian_trial_energy_times_R_squared": 0.5575901594937198,
+            "static_operator_negative_mode": false
+          },
+          {
+            "g": 2.0,
+            "zero_energy_Birman_Schwinger_trace": 0.999775,
+            "Gaussian_trial_energy_times_R_squared": 0.3651803189874395,
+            "static_operator_negative_mode": false
+          },
+          {
+            "g": 4.0,
+            "zero_energy_Birman_Schwinger_trace": 1.99955,
+            "Gaussian_trial_energy_times_R_squared": -0.019639362025120954,
+            "static_operator_negative_mode": true
+          }
+        ]
+      },
+      {
+        "xi": 0.1,
+        "critical_g_shooting": 2.6904035569078855,
+        "critical_g_kernel_512_1024": [
+          2.6903351532195385,
+          2.690386439397672
+        ],
+        "critical_g_kernel_extrapolated": 2.690403534790383,
+        "independent_critical_g_error": 2.211750249614397e-08,
+        "cases": [
+          {
+            "g": 1.0,
+            "zero_energy_Birman_Schwinger_trace": 0.49875,
+            "Gaussian_trial_energy_times_R_squared": 0.5579971238656247,
+            "static_operator_negative_mode": false
+          },
+          {
+            "g": 2.0,
+            "zero_energy_Birman_Schwinger_trace": 0.9975,
+            "Gaussian_trial_energy_times_R_squared": 0.36599424773124944,
+            "static_operator_negative_mode": false
+          },
+          {
+            "g": 4.0,
+            "zero_energy_Birman_Schwinger_trace": 1.995,
+            "Gaussian_trial_energy_times_R_squared": -0.018011504537501104,
+            "static_operator_negative_mode": true
+          }
+        ]
+      }
+    ],
+    "operator": "-d_x^2 + g[(xi^2/2) exp(-2x^2) +/- exp(-x^2)]",
+    "scope": "registered static quadratic operator only; no full dynamic-source stability assertion"
+  },
+  "conditional_spatial_scattering": {
+    "rows": [
+      {
+        "mass_over_V": 0.0006570796326794897,
+        "xi": 0.03,
+        "g": 1.0,
+        "R_times_V": 35871.18648532006,
+        "epsilon_R": 1.2300960445768483,
+        "lmax": 14,
+        "sigma_elastic_conversion_over_R_squared": [
+          0.05100723725294723,
+          0.6980599030959432
+        ],
+        "independent_scattering_relative_difference": 1.1233248775610605e-08,
+        "last_four_partial_wave_relative_contribution": 0.0,
+        "optical_theorem_relative_error": 1.2101430968414206e-14,
+        "partial_wave_no_conversion_real_imag": [
+          [
+            0.8491820302379917,
+            0.03402484237684608
+          ],
+          [
+            0.9904932703975757,
+            0.011400566107569982
+          ],
+          [
+            0.9997924469370443,
+            0.0006959149858277204
+          ],
+          [
+            0.9999976270385886,
+            2.5622833520626536e-05
+          ],
+          [
+            0.9999999834306466,
+            7.671801647390046e-07
+          ],
+          [
+            0.9999999999222458,
+            2.033648633602564e-08
+          ],
+          [
+            0.9999999999997381,
+            4.718776437218355e-10
+          ],
+          [
+            0.9999999999999991,
+            1.3172810706877298e-12
+          ],
+          [
+            1.0,
+            -5.543595682939703e-12
+          ],
+          [
+            0.9999999999999997,
+            -3.916257811777387e-12
+          ],
+          [
+            1.0000000000000004,
+            -2.7030517853511977e-12
+          ],
+          [
+            0.9999999999999998,
+            -1.9685086060798196e-12
+          ],
+          [
+            1.0,
+            5.392363594567072e-13
+          ],
+          [
+            1.0000000000000002,
+            -9.545128351209138e-14
+          ],
+          [
+            1.0,
+            -3.3490008234657395e-14
+          ]
+        ],
+        "partial_wave_conversion_probabilities": [
+          0.2777321896221136,
+          0.01879310838954235,
+          0.0004145787499701606,
+          4.745260661966483e-06,
+          3.313811843763643e-08,
+          1.555081997830844e-10,
+          5.236212082361157e-13,
+          1.326203952496944e-15,
+          2.617537374034397e-18,
+          4.071670433614941e-21,
+          5.945618093963261e-24,
+          3.1479462878722434e-25,
+          3.992745462503053e-27,
+          6.943385750667116e-31,
+          1.3231029406694256e-30
+        ],
+        "max_partial_wave_flux_error": 8.881784197001252e-16,
+        "free_circular_Gaussian_source_energy_over_V": 2628.4786531915233,
+        "free_particle_occupation_estimate": 3994850.639715577,
+        "crossing_over_free_spreading_time_scale": 0.042426406871192854,
+        "self_interaction_small_parameter_xi_squared": 0.0009,
+        "heavy_derivative_small_parameter_m_over_M": 0.0006570796326794897,
+        "central_dilute_independent_collision_optical_depth_estimate": 1.9660263529986857e-07
+      },
+      {
+        "mass_over_V": 0.0006570796326794897,
+        "xi": 0.03,
+        "g": 2.0,
+        "R_times_V": 50729.51842595411,
+        "epsilon_R": 1.7396185092620784,
+        "lmax": 16,
+        "sigma_elastic_conversion_over_R_squared": [
+          0.20555292221916105,
+          1.298010299434294
+        ],
+        "independent_scattering_relative_difference": 5.6048639063277506e-09,
+        "last_four_partial_wave_relative_contribution": 1.7106536444418355e-16,
+        "optical_theorem_relative_error": 2.9976021664879227e-15,
+        "partial_wave_no_conversion_real_imag": [
+          [
+            0.5930919548277385,
+            -0.001219603343508846
+          ],
+          [
+            0.9076179117565041,
+            0.044919868319359596
+          ],
+          [
+            0.9924438164855021,
+            0.009828915267127467
+          ],
+          [
+            0.9996757148723464,
+            0.0009195277487915442
+          ],
+          [
+            0.9999912714734509,
+            5.8458767770164666e-05
+          ],
+          [
+            0.9999998400529593,
+            3.0230603759632364e-06
+          ],
+          [
+            0.9999999978828861,
+            1.3807186499881278e-07
+          ],
+          [
+            0.9999999999788363,
+            5.711418541433967e-09
+          ],
+          [
+            0.9999999999998346,
+            2.0248815448985036e-10
+          ],
+          [
+            0.999999999999999,
+            -3.750679950382235e-12
+          ],
+          [
+            0.9999999999999999,
+            -8.14353473594954e-12
+          ],
+          [
+            1.0,
+            -5.944713718623453e-12
+          ],
+          [
+            1.0000000000000004,
+            -4.858261859686098e-12
+          ],
+          [
+            1.0000000000000002,
+            -3.345841752994403e-12
+          ],
+          [
+            0.9999999999999998,
+            -1.7211699161378624e-12
+          ],
+          [
+            1.0,
+            -1.7525011042196614e-12
+          ],
+          [
+            1.0,
+            9.12060988568436e-13
+          ]
+        ],
+        "partial_wave_conversion_probabilities": [
+          0.6482404456862966,
+          0.17421193168893462,
+          0.014958663544362169,
+          0.0006476195631831585,
+          1.745355948326337e-05,
+          3.198849171320201e-07,
+          4.234207064941002e-09,
+          4.232793389321487e-11,
+          3.3066186406984334e-13,
+          2.073351980032507e-15,
+          1.0659943980096e-17,
+          4.558338165242253e-20,
+          1.5199596523970565e-22,
+          2.1156919837171185e-26,
+          2.7383247545559806e-27,
+          2.5868292705428756e-25,
+          2.1451796611779188e-26
+        ],
+        "max_partial_wave_flux_error": 1.6653345369377348e-15,
+        "free_circular_Gaussian_source_energy_over_V": 7429.448824306094,
+        "free_particle_occupation_estimate": 11299143.908681214,
+        "crossing_over_free_spreading_time_scale": 0.03,
+        "self_interaction_small_parameter_xi_squared": 0.0009,
+        "heavy_derivative_small_parameter_m_over_M": 0.0006570796326794897,
+        "central_dilute_independent_collision_optical_depth_estimate": 2.7803811323936553e-07
+      },
+      {
+        "mass_over_V": 0.0006570796326794897,
+        "xi": 0.1,
+        "g": 1.0,
+        "R_times_V": 10761.355945596019,
+        "epsilon_R": 0.3690288133730545,
+        "lmax": 12,
+        "sigma_elastic_conversion_over_R_squared": [
+          0.30499226336190743,
+          2.5208807236189195
+        ],
+        "independent_scattering_relative_difference": 5.544582792893493e-09,
+        "last_four_partial_wave_relative_contribution": 0.0,
+        "optical_theorem_relative_error": 6.306066779870889e-14,
+        "partial_wave_no_conversion_real_imag": [
+          [
+            0.9388251230233317,
+            0.09735421938504987
+          ],
+          [
+            0.9999755667627193,
+            0.0004627516164118282
+          ],
+          [
+            0.9999999955318437,
+            1.7550252403336397e-06
+          ],
+          [
+            0.9999999999995779,
+            5.908554169585234e-09
+          ],
+          [
+            1.0,
+            1.7076742476496514e-11
+          ],
+          [
+            1.0,
+            3.423594126173484e-14
+          ],
+          [
+            0.9999999999999999,
+            -1.301917447829817e-15
+          ],
+          [
+            1.0,
+            -2.887670583639554e-16
+          ],
+          [
+            1.0,
+            -3.4688339104832525e-17
+          ],
+          [
+            1.0,
+            -2.2752082544996336e-18
+          ],
+          [
+            1.0,
+            -5.625539171236406e-20
+          ],
+          [
+            1.0,
+            -4.77045833763674e-22
+          ],
+          [
+            1.0,
+            -8.3991999325822e-25
+          ]
+        ],
+        "partial_wave_conversion_probabilities": [
+          0.10912954434815349,
+          4.865173851994587e-05,
+          8.933231175585852e-09,
+          8.44358148595232e-13,
+          4.8319826618783225e-17,
+          1.8513076154616694e-21,
+          5.078013847460893e-26,
+          1.043648517443867e-30,
+          3.0986339897110426e-33,
+          1.232597417041579e-32,
+          7.546115525154397e-41,
+          1.0439281638510747e-45,
+          3.0814879110195774e-33
+        ],
+        "max_partial_wave_flux_error": 1.2212453270876722e-15,
+        "free_circular_Gaussian_source_energy_over_V": 799.2927047454128,
+        "free_particle_occupation_estimate": 1198455.1919146737,
+        "crossing_over_free_spreading_time_scale": 0.14142135623730953,
+        "self_interaction_small_parameter_xi_squared": 0.010000000000000002,
+        "heavy_derivative_small_parameter_m_over_M": 0.0006570796326794897,
+        "central_dilute_independent_collision_optical_depth_estimate": 6.553421176662287e-07
+      },
+      {
+        "mass_over_V": 0.0006570796326794897,
+        "xi": 0.1,
+        "g": 2.0,
+        "R_times_V": 15218.855527786232,
+        "epsilon_R": 0.5218855527786235,
+        "lmax": 12,
+        "sigma_elastic_conversion_over_R_squared": [
+          4.130552395329739,
+          8.44534031847587
+        ],
+        "independent_scattering_relative_difference": 1.2363023937922435e-09,
+        "last_four_partial_wave_relative_contribution": 0.0,
+        "optical_theorem_relative_error": 6.5503158452884236e-15,
+        "partial_wave_no_conversion_real_imag": [
+          [
+            0.45703666430741696,
+            0.25139771280427586
+          ],
+          [
+            0.9992746749589714,
+            0.005541435470367496
+          ],
+          [
+            0.9999994972477522,
+            4.072725603587393e-05
+          ],
+          [
+            0.9999999998109197,
+            2.695982957561592e-07
+          ],
+          [
+            0.9999999999999569,
+            1.5478922785393338e-09
+          ],
+          [
+            1.0,
+            7.696739634470375e-12
+          ],
+          [
+            1.0,
+            -3.3116816588035985e-16
+          ],
+          [
+            1.0,
+            -6.383271100291047e-15
+          ],
+          [
+            0.9999999999999998,
+            -1.7007556984177971e-15
+          ],
+          [
+            1.0000000000000002,
+            -4.495202328960233e-16
+          ],
+          [
+            1.0000000000000002,
+            -5.393927724367049e-17
+          ],
+          [
+            1.0,
+            -2.677698172620085e-18
+          ],
+          [
+            1.0,
+            -7.163562310680099e-20
+          ]
+        ],
+        "partial_wave_conversion_probabilities": [
+          0.727916677475528,
+          0.001419416478570081,
+          1.0038455332602559e-06,
+          3.7808719501581156e-10,
+          8.647902105816049e-14,
+          1.3249507868563596e-17,
+          1.4536457471928374e-21,
+          1.196430780719687e-25,
+          8.230354072538699e-30,
+          2.8436275543723093e-34,
+          2.6707563105345164e-36,
+          3.081488974721031e-33,
+          2.5871487049936818e-42
+        ],
+        "max_partial_wave_flux_error": 9.992007221626409e-16,
+        "free_circular_Gaussian_source_energy_over_V": 2244.036182723178,
+        "free_particle_occupation_estimate": 3389743.1726043634,
+        "crossing_over_free_spreading_time_scale": 0.1,
+        "self_interaction_small_parameter_xi_squared": 0.010000000000000002,
+        "heavy_derivative_small_parameter_m_over_M": 0.0006570796326794897,
+        "central_dilute_independent_collision_optical_depth_estimate": 9.267937107978854e-07
+      },
+      {
+        "mass_over_V": 0.00034292036732051036,
+        "xi": 0.03,
+        "g": 1.0,
+        "R_times_V": 68733.81777735494,
+        "epsilon_R": 2.357022603955158,
+        "lmax": 18,
+        "sigma_elastic_conversion_over_R_squared": [
+          0.0044011432995151025,
+          0.2159292140301889
+        ],
+        "independent_scattering_relative_difference": 4.0884477137126396e-08,
+        "last_four_partial_wave_relative_contribution": 1.9707645922003164e-16,
+        "optical_theorem_relative_error": 2.2870594307278225e-14,
+        "partial_wave_no_conversion_real_imag": [
+          [
+            0.9308449326956909,
+            -0.008174213169943378
+          ],
+          [
+            0.9707743586518676,
+            0.005472129919240634
+          ],
+          [
+            0.9936580305904459,
+            0.0037336408939608046
+          ],
+          [
+            0.9991954925048081,
+            0.0009182418815120094
+          ],
+          [
+            0.9999336456679355,
+            0.00013497574361586665
+          ],
+          [
+            0.9999961778255889,
+            1.4301475794834505e-05
+          ],
+          [
+            0.9999998381832755,
+            1.2214215189405007e-06
+          ],
+          [
+            0.9999999947649614,
+            9.043144676764304e-08
+          ],
+          [
+            0.9999999998665592,
+            6.030318272411405e-09
+          ],
+          [
+            0.9999999999972535,
+            3.4985324246648585e-10
+          ],
+          [
+            0.9999999999999536,
+            -3.314026378621915e-13
+          ],
+          [
+            0.9999999999999996,
+            -1.703151116060657e-11
+          ],
+          [
+            1.0,
+            -1.5096371166734367e-11
+          ],
+          [
+            1.0,
+            -1.1929356143988849e-11
+          ],
+          [
+            1.0,
+            -9.240047174805261e-12
+          ],
+          [
+            1.0,
+            -6.959477985640013e-12
+          ],
+          [
+            0.9999999999999999,
+            -5.6806803329261886e-12
+          ],
+          [
+            1.0,
+            -2.9209241192107766e-12
+          ],
+          [
+            0.9999999999999998,
+            -2.4342020414243317e-12
+          ]
+        ],
+        "partial_wave_conversion_probabilities": [
+          0.1334608935138068,
+          0.0575672003782028,
+          0.012629778168791468,
+          0.0016075245899215542,
+          0.00013268604278079531,
+          7.64412968050589e-06,
+          3.2363193053484583e-07,
+          1.047006847878937e-08,
+          2.6688154402957556e-10,
+          5.493195804713215e-12,
+          9.315218430022843e-14,
+          1.3233760614435422e-15,
+          1.598326170181351e-17,
+          1.6576647645670118e-19,
+          1.4916523644252778e-21,
+          9.846052278509495e-24,
+          1.6359441100773864e-25,
+          1.2601379461157254e-27,
+          4.716072141712076e-27
+        ],
+        "max_partial_wave_flux_error": 7.771561172376096e-16,
+        "free_circular_Gaussian_source_energy_over_V": 2628.478653191523,
+        "free_particle_occupation_estimate": 7654648.837175485,
+        "crossing_over_free_spreading_time_scale": 0.042426406871192854,
+        "self_interaction_small_parameter_xi_squared": 0.0009,
+        "heavy_derivative_small_parameter_m_over_M": 0.00034292036732051036,
+        "central_dilute_independent_collision_optical_depth_estimate": 1.0260407500120597e-07
+      },
+      {
+        "mass_over_V": 0.00034292036732051036,
+        "xi": 0.03,
+        "g": 2.0,
+        "R_times_V": 97204.29729441632,
+        "epsilon_R": 3.333333333333334,
+        "lmax": 20,
+        "sigma_elastic_conversion_over_R_squared": [
+          0.01613368513868721,
+          0.4221661994498035
+        ],
+        "independent_scattering_relative_difference": 2.1953034057276e-08,
+        "last_four_partial_wave_relative_contribution": 0.0,
+        "optical_theorem_relative_error": 4.529709940470639e-14,
+        "partial_wave_no_conversion_real_imag": [
+          [
+            0.8613532463028639,
+            -0.014759129636564505
+          ],
+          [
+            0.9068875806709817,
+            -0.0001673683174467644
+          ],
+          [
+            0.9564868739337566,
+            0.007626758359995683
+          ],
+          [
+            0.9856456625475738,
+            0.00587808543438767
+          ],
+          [
+            0.9965613225323648,
+            0.002418270901539052
+          ],
+          [
+            0.9993800861749986,
+            0.0006738863481776658
+          ],
+          [
+            0.9999133259505373,
+            0.0001412153994102888
+          ],
+          [
+            0.9999903729851087,
+            2.3727493037781038e-05
+          ],
+          [
+            0.9999991332266931,
+            3.352719558392123e-06
+          ],
+          [
+            0.9999999356265068,
+            4.139866443818611e-07
+          ],
+          [
+            0.9999999959961906,
+            4.602401039488816e-08
+          ],
+          [
+            0.9999999997886871,
+            4.679667206723654e-09
+          ],
+          [
+            0.9999999999904268,
+            4.1389092114559476e-10
+          ],
+          [
+            0.9999999999996244,
+            6.486713109755394e-12
+          ],
+          [
+            0.9999999999999871,
+            -2.7131090376988996e-11
+          ],
+          [
+            0.9999999999999997,
+            -2.7021602348548844e-11
+          ],
+          [
+            1.0000000000000004,
+            -2.3858580055635176e-11
+          ],
+          [
+            1.0,
+            -2.2173912121516628e-11
+          ],
+          [
+            1.0,
+            -1.7902709315787564e-11
+          ],
+          [
+            0.9999999999999998,
+            -1.541277109886817e-11
+          ],
+          [
+            1.0,
+            -1.2302053008486768e-11
+          ]
+        ],
+        "partial_wave_conversion_probabilities": [
+          0.257852753175889,
+          0.17755488801257982,
+          0.08507469254934835,
+          0.02846807601278027,
+          0.006859682398390523,
+          0.0012389892340424642,
+          0.00017332064474543106,
+          1.9253374109855098e-05,
+          1.7335346220394597e-06,
+          1.2874681068333444e-07,
+          8.007616944733691e-09,
+          4.226257716133164e-10,
+          1.9146645190043003e-11,
+          7.521481234179656e-13,
+          2.5850231469174507e-14,
+          7.834657846654257e-16,
+          2.109058446860725e-17,
+          5.063472543632464e-19,
+          1.1002796674555813e-20,
+          2.1064938715770584e-22,
+          2.5514333717481286e-24
+        ],
+        "max_partial_wave_flux_error": 8.881784197001252e-16,
+        "free_circular_Gaussian_source_energy_over_V": 7429.448824306093,
+        "free_particle_occupation_estimate": 21650616.401474036,
+        "crossing_over_free_spreading_time_scale": 0.03,
+        "self_interaction_small_parameter_xi_squared": 0.0009,
+        "heavy_derivative_small_parameter_m_over_M": 0.00034292036732051036,
+        "central_dilute_independent_collision_optical_depth_estimate": 1.4510407442145176e-07
+      },
+      {
+        "mass_over_V": 0.00034292036732051036,
+        "xi": 0.1,
+        "g": 1.0,
+        "R_times_V": 20620.14533320648,
+        "epsilon_R": 0.7071067811865475,
+        "lmax": 13,
+        "sigma_elastic_conversion_over_R_squared": [
+          0.1650363856973567,
+          1.5244882818369854
+        ],
+        "independent_scattering_relative_difference": 8.319214872543057e-09,
+        "last_four_partial_wave_relative_contribution": 0.0,
+        "optical_theorem_relative_error": 2.808864252301646e-14,
+        "partial_wave_no_conversion_real_imag": [
+          [
+            0.8681282720020381,
+            0.09402822825303714
+          ],
+          [
+            0.9991446989843222,
+            0.0033010486126927446
+          ],
+          [
+            0.9999979097001219,
+            4.649930466271929e-05
+          ],
+          [
+            0.9999999973437039,
+            5.470816813142053e-07
+          ],
+          [
+            0.9999999999979533,
+            5.657424161431495e-09
+          ],
+          [
+            0.999999999999999,
+            4.3939368362264734e-11
+          ],
+          [
+            0.9999999999999999,
+            -4.838297858281827e-12
+          ],
+          [
+            1.0,
+            6.371413766894508e-14
+          ],
+          [
+            1.0000000000000002,
+            -4.8157770551246134e-14
+          ],
+          [
+            1.0,
+            -9.48789433554675e-15
+          ],
+          [
+            1.0,
+            -2.5831371945570015e-15
+          ],
+          [
+            1.0,
+            -8.513065642488621e-16
+          ],
+          [
+            1.0,
+            -1.255406858002916e-16
+          ],
+          [
+            1.0,
+            -8.98248001698807e-18
+          ]
+        ],
+        "partial_wave_conversion_probabilities": [
+          0.23751199564234998,
+          0.0016989735695847328,
+          4.178433202311196e-06,
+          5.312292817970989e-09,
+          4.093108452209157e-12,
+          2.1123143440917768e-15,
+          7.777035236967889e-19,
+          2.171716473666685e-22,
+          4.602602187646144e-26,
+          6.14677419670534e-30,
+          9.555793538166673e-34,
+          3.8601055352871136e-33,
+          3.111626793763717e-33,
+          2.6261152605261077e-36
+        ],
+        "max_partial_wave_flux_error": 8.881784197001252e-16,
+        "free_circular_Gaussian_source_energy_over_V": 799.2927047454123,
+        "free_particle_occupation_estimate": 2296394.6511526457,
+        "crossing_over_free_spreading_time_scale": 0.14142135623730953,
+        "self_interaction_small_parameter_xi_squared": 0.010000000000000002,
+        "heavy_derivative_small_parameter_m_over_M": 0.00034292036732051036,
+        "central_dilute_independent_collision_optical_depth_estimate": 3.420135833373533e-07
+      },
+      {
+        "mass_over_V": 0.00034292036732051036,
+        "xi": 0.1,
+        "g": 2.0,
+        "R_times_V": 29161.28918832489,
+        "epsilon_R": 0.9999999999999999,
+        "lmax": 13,
+        "sigma_elastic_conversion_over_R_squared": [
+          1.039563397425198,
+          2.8363140135129625
+        ],
+        "independent_scattering_relative_difference": 1.8332644291518818e-09,
+        "last_four_partial_wave_relative_contribution": 0.0,
+        "optical_theorem_relative_error": 5.773159728050814e-15,
+        "partial_wave_no_conversion_real_imag": [
+          [
+            0.43947224328925183,
+            0.11207887730182414
+          ],
+          [
+            0.9815035317758718,
+            0.0322393986229742
+          ],
+          [
+            0.9998316078704285,
+            0.0010607010865960644
+          ],
+          [
+            0.9999991566569065,
+            2.459128566239426e-05
+          ],
+          [
+            0.999999997413587,
+            4.939622925234874e-07
+          ],
+          [
+            0.9999999999946758,
+            8.810633192569504e-09
+          ],
+          [
+            0.9999999999999922,
+            1.2969874524717332e-10
+          ],
+          [
+            1.0,
+            -3.8968646752910265e-12
+          ],
+          [
+            1.0,
+            -4.736869698905589e-12
+          ],
+          [
+            1.0000000000000002,
+            -3.5942267506961467e-13
+          ],
+          [
+            0.9999999999999998,
+            3.549114557127501e-14
+          ],
+          [
+            1.0,
+            -6.816170524219197e-14
+          ],
+          [
+            1.0,
+            -1.6422315364728417e-14
+          ],
+          [
+            1.0,
+            -4.536463482903035e-15
+          ]
+        ],
+        "partial_wave_conversion_probabilities": [
+          0.7943024726410752,
+          0.03561143828791907,
+          0.00033563081643853766,
+          1.6860807444205168e-06,
+          5.1725812953736185e-09,
+          1.0648106844341397e-11,
+          1.571114060866491e-14,
+          1.742625801759845e-17,
+          1.4904079123913405e-20,
+          1.1122130171927546e-23,
+          1.4283203005131343e-26,
+          7.010777395023007e-30,
+          3.6430478165023205e-30,
+          2.711125832132635e-32
+        ],
+        "max_partial_wave_flux_error": 8.881784197001252e-16,
+        "free_circular_Gaussian_source_energy_over_V": 2244.0361827231773,
+        "free_particle_occupation_estimate": 6495184.920442208,
+        "crossing_over_free_spreading_time_scale": 0.10000000000000002,
+        "self_interaction_small_parameter_xi_squared": 0.010000000000000002,
+        "heavy_derivative_small_parameter_m_over_M": 0.00034292036732051036,
+        "central_dilute_independent_collision_optical_depth_estimate": 4.836802480715058e-07
+      }
+    ],
+    "scope": "unitary scalar scattering in the registered fixed quadratic background, not the full CE S matrix",
+    "source_and_detector_prepared_by_action": false,
+    "omitted": "dynamic background, fermion and source fluctuations, competing radiation, actual detector and event rule"
+  },
+  "result": "HOMOGENEOUS_LONG_WAVE_INSTABILITY; FINITE_STATIC_BRANCH_AND_COMPLEX_SCATTERING_PHASES",
+  "sources": [
+    "https://arxiv.org/abs/hep-ph/9709356",
+    "https://arxiv.org/abs/math-ph/0411005",
+    "https://dlmf.nist.gov/10.47",
+    "https://pdg.lbl.gov/2025/reviews/rpp2025-rev-resonances.pdf"
+  ],
+  "open_gates": [
+    "physical finite-source preparation and symmetry resource",
+    "full dynamic-source scattering and inelastic losses",
+    "backreaction and full non-event instrument",
+    "actual asynchronous records and common gravity",
+    "frozen covariance-aware joint predictions"
+  ]
+}

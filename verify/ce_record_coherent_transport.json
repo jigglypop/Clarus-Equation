@@ -6,7 +6,7 @@
   "new_observational_inputs_or_fits": false,
   "preregistration_sha256": "566b10a9f56d149c7781b228b495b98df8668bc72c115b1251d4af6c0f05d18d",
   "source_hashes": {
-    "ce_record_coherent_transport.py": "81bf4110ad6a7bfac8c3b6110f46d44a216c3f4b23b3f4b225463ed768636bbf",
+    "ce_record_coherent_transport.py": "b5fb29a1a207b69ceaed576a4f2ccaa8507523dcae075d3f65a1b63092869af8",
     "ce_record_pair_preparation.json": "6ac0cf1ceb8070ce4d096fb1f643048ce82a37a5d228a778b516f4a68e6c531a",
     "ce_record_pair_preparation.py": "2167cf0b149903f885cda5e78239135b0a2b7ce8fd9593a4d9b2ad9a29af8869",
     "ce_singlet_record_observability.py": "9636d1fae1548f57fd2e0383c91339c047628e084ec841613fe66d589eeb551f",
@@ -164,11 +164,12 @@
         ],
         "full_error_conditioned_on_accepted_event": 2.658746458143507e-05,
         "SS_only_error": 2.6587464646854312e-05,
-        "error_shift_from_SS_only": -6.541924120473386e-14,
+        "error_shift_from_SS_only": -6.541924299025762e-14,
+        "error_shift_quadrature_change": 1.2106174995883736e-24,
         "error_if_source_fermions_unpolarized": 2.6587464602917805e-05,
         "relative_rate_bias_if_fermions_unpolarized_plus_minus": [
-          4.2322037812916866e-09,
-          1.895413235791308e-07
+          4.2322038463319676e-09,
+          1.8954132362289971e-07
         ],
         "accepted_plus_fraction": 0.13263272557311379,
         "outgoing_visible_fermion_fraction_plus_minus": [
@@ -217,11 +218,12 @@
         ],
         "full_error_conditioned_on_accepted_event": 0.021507481730819265,
         "SS_only_error": 0.021507481739975114,
-        "error_shift_from_SS_only": -9.155849689523876e-12,
+        "error_shift_from_SS_only": -9.155851836746195e-12,
+        "error_shift_quadrature_change": 4.0758032213843325e-22,
         "error_if_source_fermions_unpolarized": 0.02150748173273255,
         "relative_rate_bias_if_fermions_unpolarized_plus_minus": [
-          4.2322037812916866e-09,
-          1.895413235791308e-07
+          4.2322038463319676e-09,
+          1.8954132362289971e-07
         ],
         "accepted_plus_fraction": 0.13263272557311379,
         "outgoing_visible_fermion_fraction_plus_minus": [
@@ -270,11 +272,12 @@
         ],
         "full_error_conditioned_on_accepted_event": 0.2552719856472647,
         "SS_only_error": 0.2552720528472468,
-        "error_shift_from_SS_only": -6.719998207893596e-08,
+        "error_shift_from_SS_only": -6.719998209186163e-08,
+        "error_shift_quadrature_change": 1.7205356741102976e-22,
         "error_if_source_fermions_unpolarized": 0.25527202087539935,
         "relative_rate_bias_if_fermions_unpolarized_plus_minus": [
-          4.224700151058973e-09,
-          1.8953199440844952e-07
+          4.2247001656929556e-09,
+          1.895319944365249e-07
         ],
         "accepted_plus_fraction": 0.7447292858605637,
         "outgoing_visible_fermion_fraction_plus_minus": [
@@ -323,11 +326,12 @@
         ],
         "full_error_conditioned_on_accepted_event": 0.2608292010950918,
         "SS_only_error": 0.2608292667676528,
-        "error_shift_from_SS_only": -6.56725610004294e-08,
+        "error_shift_from_SS_only": -6.56725608934816e-08,
+        "error_shift_quadrature_change": 4.367513634279986e-22,
         "error_if_source_fermions_unpolarized": 0.26082923552251414,
         "relative_rate_bias_if_fermions_unpolarized_plus_minus": [
-          4.224700151058973e-09,
-          1.8953199440844952e-07
+          4.2247001656929556e-09,
+          1.895319944365249e-07
         ],
         "accepted_plus_fraction": 0.7447292858605637,
         "outgoing_visible_fermion_fraction_plus_minus": [

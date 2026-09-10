@@ -262,6 +262,13 @@ def transport(previous):
             small_correction_relative_delta = maximum(
                 (trials[1][:, 1:4, 0]-trials[0][:, 1:4, 0])/trials[1][:, 1:4, 0])
             assert delta < QUAD_TOL and small_correction_relative_delta < 1e-6
+            error_shifts = []
+            for trial in trials:
+                br, bw = trial[:, 0, 0].sum(), trial[:, 0, 1].sum()
+                cr, cw = trial[:, 1:3, 0].sum(), trial[:, 1:3, 1].sum()
+                error_shifts.append((cw-bw/br*cr)/(br+cr))
+            shift_change = abs(error_shifts[1]-error_shifts[0])
+            assert shift_change < max(1e-18, 1e-6*abs(error_shifts[1]))
             values = trials[-1]
             full = values[:, :3].sum(axis=1)
             base = values[:, 0]
@@ -279,9 +286,10 @@ def transport(previous):
                          'source_scalar_extra_relative_rate_plus_minus': (values[:, 1, 0]/base[:, 0]).tolist(),
                          'source_fermion_relative_rate_plus_minus': (values[:, 2, 0]/base[:, 0]).tolist(),
                          'full_error_conditioned_on_accepted_event': float(err),
-                         'SS_only_error': float(old_error), 'error_shift_from_SS_only': float(err-old_error),
+                         'SS_only_error': float(old_error), 'error_shift_from_SS_only': float(error_shifts[1]),
+                         'error_shift_quadrature_change': float(shift_change),
                          'error_if_source_fermions_unpolarized': float(err_unpol),
-                         'relative_rate_bias_if_fermions_unpolarized_plus_minus': ((unpol[:, 0]-full[:, 0])/full[:, 0]).tolist(),
+                         'relative_rate_bias_if_fermions_unpolarized_plus_minus': ((values[:, 3, 0]-values[:, 2, 0])/full[:, 0]).tolist(),
                          'accepted_plus_fraction': float(full[0, 0]/sum(full[:, 0])),
                          'outgoing_visible_fermion_fraction_plus_minus': (1-values[:, 4, 0]/full[:, 0]).tolist(),
                          'source_scalar_interference_contribution_to_visible_scalar_fraction_plus_minus': (values[:, 5, 0]/values[:, 4, 0]).tolist(),
