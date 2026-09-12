@@ -1,0 +1,36 @@
+{
+  "candidate": "CE-BR1-independent-audit",
+  "preregistration_sha256": "005567e9c9a1d3d7763e60372ff0b1794649fbb451f82c287703b918777599aa",
+  "generator_result_sha256": "d3bc9dfc3ebd94483ce153b2afa92850a7bac14c27045a7c77275098c1117afd",
+  "audit_source_sha256": "6ade062b9021e75d7991db9a2793c9029281ada1c7ce33b50c08ef4630dafc48",
+  "environment": {
+    "python": "3.11.9",
+    "numpy": "2.4.6",
+    "sympy": "1.14.0"
+  },
+  "SU5_trace_coefficient_exact": "1/60",
+  "Gaussian_checks": [
+    {
+      "nodes_per_real_coordinate": 4,
+      "matrix_element_real_over_V": 1.4913765454842769e-06,
+      "matrix_element_imag_over_V": 0.0,
+      "normalized_max_error": 4.440892098500626e-16
+    },
+    {
+      "nodes_per_real_coordinate": 5,
+      "matrix_element_real_over_V": 1.4913765454842756e-06,
+      "matrix_element_imag_over_V": -2.6469779601696886e-23,
+      "normalized_max_error": 8.881784197001252e-16
+    },
+    {
+      "nodes_per_real_coordinate": 7,
+      "matrix_element_real_over_V": 1.4913765454842764e-06,
+      "matrix_element_imag_over_V": 2.481541837659083e-24,
+      "normalized_max_error": 2.220446049250313e-16
+    }
+  ],
+  "H_BA_over_mref": 0.004349046273155195,
+  "audit_passed": true,
+  "scientific_success": false,
+  "full_joint_rmse": null
+}

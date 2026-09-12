@@ -1,0 +1,205 @@
+{
+  "candidate": "CE-BR1",
+  "preregistration_sha256": "005567e9c9a1d3d7763e60372ff0b1794649fbb451f82c287703b918777599aa",
+  "source_sha256": {
+    "ce_record_quantum_bridge.py": "3e082e74dce804fd1181c6cd7fad4a6a84155e4065ee3da6bf99a71380c763c2",
+    "ce_singlet_record_observability.py": "9636d1fae1548f57fd2e0383c91339c047628e084ec841613fe66d589eeb551f",
+    "ce_supersymmetric_record.py": "d945ec1dfa32113e33f91d38882fdf346257d6b9a807e1ba439f47c014719e8f",
+    "ce_simple_group_record.py": "6fbae4f419124c798f4386db609eac92d3b4236c430deb4c104f6bfa8a67df13",
+    "ce_record_backreaction.py": "2bc2847b88b829fddcd9da60bfad2048d508bd659b4de96762d345ccfd4ca1a4",
+    "ce_equivariant_record_events.py": "dc70042b98f9e8b9ee198073fb126bc672a0516619ec0efbf3ae7168c546eabc"
+  },
+  "environment": {
+    "python": "3.11.9",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "sympy": "1.14.0"
+  },
+  "algebra": {
+    "errors": {
+      "vacuum_F_absolute": 5.1598503419391096e-15,
+      "kinetic_embedding": 2.220446049250313e-16,
+      "independent_seven_field_cubic": 2.220446049250313e-16,
+      "all_transverse_F_linear_coefficients": 8.881784197001252e-16,
+      "all_transverse_F_quadratic_coefficients": 1.1102230246251565e-16,
+      "all_projected_gauge_coefficients": 1.1185571585378691e-17,
+      "vacuum_gauge_linear_coefficients": 0.0,
+      "independent_seven_field_mass": 1.6094981250547313e-15,
+      "F_closure_relative": 3.4314335340070164e-16,
+      "force_closure_relative": 5.679830378607897e-16,
+      "D_zero_absolute": 1.6940821557164936e-21,
+      "chapter77_cubic_recovery": 2.220446049250313e-16,
+      "chapter77_F_recovery": 0,
+      "full_potential_mixed_coefficient_relative": 1.0408340855860843e-15
+    },
+    "max_error": 5.1598503419391096e-15,
+    "potential_mixed_coefficient_exact": "1/60",
+    "potential_mixed_coefficient_tensor": 0.016666666666666684,
+    "classical_zero_other_species_force_exact": true,
+    "seven_complex_fields_classically_closed_only": true
+  },
+  "quantum_matrix_element": {
+    "m_plus_over_V": 0.0006570796326794897,
+    "m_minus_over_V": 0.00034292036732051036,
+    "box_volume_times_V3": 24798200053.55081,
+    "analytic_matrix_element_over_V": 1.4913765454842762e-06,
+    "analytic_matrix_element_over_mref": 0.004349046273155195,
+    "short_time_leakage_lower_coefficient_in_tau2": 1.8914203486045094e-05,
+    "cutoff_checks": [
+      {
+        "occupation_cutoff": 3,
+        "matrix_dimension": 256,
+        "matrix_element_over_V": 1.491376545484277e-06,
+        "matrix_element_over_mref": 0.004349046273155198,
+        "matrix_element_relative_error": 6.661338147750939e-16,
+        "phases": [
+          {
+            "phase_over_pi": 0.0,
+            "J_BA_over_mref": 0.0,
+            "coherence_energy_over_mref": 0.004349046273155197,
+            "rate_A_to_B_over_mref": 0.0,
+            "rate_B_to_A_over_mref": -0.0,
+            "independent_current_energy_error": 4.2596533542401954e-16
+          },
+          {
+            "phase_over_pi": 0.5,
+            "J_BA_over_mref": -0.004349046273155197,
+            "coherence_energy_over_mref": 2.663022798881619e-19,
+            "rate_A_to_B_over_mref": 0.0,
+            "rate_B_to_A_over_mref": 0.008698092546310394,
+            "independent_current_energy_error": 4.2596533542401954e-16
+          },
+          {
+            "phase_over_pi": 1.0,
+            "J_BA_over_mref": -5.326045597763238e-19,
+            "coherence_energy_over_mref": -0.004349046273155197,
+            "rate_A_to_B_over_mref": 0.0,
+            "rate_B_to_A_over_mref": 1.0652091195526476e-18,
+            "independent_current_energy_error": 4.2596533542401954e-16
+          },
+          {
+            "phase_over_pi": 1.5,
+            "J_BA_over_mref": 0.004349046273155197,
+            "coherence_energy_over_mref": -7.989068396644856e-19,
+            "rate_A_to_B_over_mref": 0.008698092546310394,
+            "rate_B_to_A_over_mref": 0.0,
+            "independent_current_energy_error": 4.2596533542401954e-16
+          }
+        ]
+      },
+      {
+        "occupation_cutoff": 4,
+        "matrix_dimension": 625,
+        "matrix_element_over_V": 1.491376545484277e-06,
+        "matrix_element_over_mref": 0.004349046273155198,
+        "matrix_element_relative_error": 6.661338147750939e-16,
+        "phases": [
+          {
+            "phase_over_pi": 0.0,
+            "J_BA_over_mref": 0.0,
+            "coherence_energy_over_mref": 0.004349046273155197,
+            "rate_A_to_B_over_mref": 0.0,
+            "rate_B_to_A_over_mref": -0.0,
+            "independent_current_energy_error": 4.2596533542401954e-16
+          },
+          {
+            "phase_over_pi": 0.5,
+            "J_BA_over_mref": -0.004349046273155197,
+            "coherence_energy_over_mref": 2.663022798881619e-19,
+            "rate_A_to_B_over_mref": 0.0,
+            "rate_B_to_A_over_mref": 0.008698092546310394,
+            "independent_current_energy_error": 4.2596533542401954e-16
+          },
+          {
+            "phase_over_pi": 1.0,
+            "J_BA_over_mref": -5.326045597763238e-19,
+            "coherence_energy_over_mref": -0.004349046273155197,
+            "rate_A_to_B_over_mref": 0.0,
+            "rate_B_to_A_over_mref": 1.0652091195526476e-18,
+            "independent_current_energy_error": 4.2596533542401954e-16
+          },
+          {
+            "phase_over_pi": 1.5,
+            "J_BA_over_mref": 0.004349046273155197,
+            "coherence_energy_over_mref": -7.989068396644856e-19,
+            "rate_A_to_B_over_mref": 0.008698092546310394,
+            "rate_B_to_A_over_mref": 0.0,
+            "independent_current_energy_error": 4.2596533542401954e-16
+          }
+        ]
+      },
+      {
+        "occupation_cutoff": 5,
+        "matrix_dimension": 1296,
+        "matrix_element_over_V": 1.491376545484277e-06,
+        "matrix_element_over_mref": 0.004349046273155198,
+        "matrix_element_relative_error": 6.661338147750939e-16,
+        "phases": [
+          {
+            "phase_over_pi": 0.0,
+            "J_BA_over_mref": 0.0,
+            "coherence_energy_over_mref": 0.004349046273155197,
+            "rate_A_to_B_over_mref": 0.0,
+            "rate_B_to_A_over_mref": -0.0,
+            "independent_current_energy_error": 4.2596533542401954e-16
+          },
+          {
+            "phase_over_pi": 0.5,
+            "J_BA_over_mref": -0.004349046273155197,
+            "coherence_energy_over_mref": 2.663022798881619e-19,
+            "rate_A_to_B_over_mref": 0.0,
+            "rate_B_to_A_over_mref": 0.008698092546310394,
+            "independent_current_energy_error": 4.2596533542401954e-16
+          },
+          {
+            "phase_over_pi": 1.0,
+            "J_BA_over_mref": -5.326045597763238e-19,
+            "coherence_energy_over_mref": -0.004349046273155197,
+            "rate_A_to_B_over_mref": 0.0,
+            "rate_B_to_A_over_mref": 1.0652091195526476e-18,
+            "independent_current_energy_error": 4.2596533542401954e-16
+          },
+          {
+            "phase_over_pi": 1.5,
+            "J_BA_over_mref": 0.004349046273155197,
+            "coherence_energy_over_mref": -7.989068396644856e-19,
+            "rate_A_to_B_over_mref": 0.008698092546310394,
+            "rate_B_to_A_over_mref": 0.0,
+            "independent_current_energy_error": 4.2596533542401954e-16
+          }
+        ]
+      }
+    ],
+    "bare_Fock_matrix_element_not_on_shell_amplitude": true,
+    "spectator_condition": "same normalized spectator on both sides; no massless zero-mode free vacuum claimed",
+    "contact_matrix_used_only_for_selected_elements_and_instantaneous_current": true,
+    "two_state_subspace_assumed_invariant": false,
+    "sampled_trajectories": 0,
+    "time_evolution_runs": 0
+  },
+  "phase_identification": {
+    "checks": [
+      {
+        "phase_over_pi": 0.0,
+        "cyclic_mass_squared_determinant": 0.972,
+        "record_rephasing_spectral_relative_error": 0.0
+      },
+      {
+        "phase_over_pi": 1.0,
+        "cyclic_mass_squared_determinant": 0.968,
+        "record_rephasing_spectral_relative_error": 0.0
+      }
+    ],
+    "direct_state_phase_equals_action_phase_rejected": true,
+    "arbitrary_larger_common_action_ruled_out": false
+  },
+  "verdict": {
+    "exact_five_field_free_vacuum_quantum_closure": false,
+    "seven_field_quantum_closure_proven": false,
+    "physical_instrument_constructed": false,
+    "independent_algebra_and_Fock_checks_passed": true,
+    "scientific_success": false,
+    "full_joint_rmse": null
+  },
+  "runtime_seconds": 0.47304649999932735
+}
