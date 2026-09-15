@@ -1,0 +1,35 @@
+name: CE publication recovery
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/ce-br-recover.yml']
+permissions:
+  contents: read
+jobs:
+  inspect-upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Inspect the previously uploaded archive prefix
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: python
+        run: |
+          import os, urllib.request, json, base64, hashlib, lzma
+          shas='8974b0644d0c8228a7e4af33998718018db1dd74 06562b43b52071aec33fd9083da9cd39f2194f75 6db6bc3f01e83fd30992643ced5c4034c7fbda7a 87b3aa3f3d8c899bcb8898743dbd8791688b5583 379f88dc7d249da03bd8647ea65afe65c12776db d45ae7c2d289605763ba0f1899ee0ef71355783e 3b268c7e21a3f47c4d5b2af4f16bf4a9be449834 85cabde9c8147bf9d8edb0d4f0549951838980d4 24676393ca55871897d149edbf08b0c551b09d0e 0283e81d08f1adace72cb4b94412713cec56f138 22a1ecce7c72f7f27f9e399eda8d6b27c91ad1bf a8e0f5ab650db40de839db9d014f7818ac9dcf26'.split()
+          decoder=lzma.LZMADecompressor(); output=bytearray(); raw=bytearray()
+          for i,sha in enumerate(shas):
+              req=urllib.request.Request('https://api.github.com/repos/'+os.environ['GITHUB_REPOSITORY']+'/git/blobs/'+sha,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'})
+              with urllib.request.urlopen(req,timeout=30) as r: d=json.load(r)
+              b=base64.b64decode(d['content']); assert hashlib.sha1(b'blob '+str(len(b)).encode()+b'\0'+b).hexdigest()==sha
+              raw.extend(b)
+              try: output.extend(decoder.decompress(b)); print('CHUNK',i,len(b),'OUTPUT',len(output),'EOF',decoder.eof)
+              except lzma.LZMAError as e: print('DECODE_ERROR',i,str(e)); break
+          print('PREFIX_SHA256',hashlib.sha256(raw).hexdigest()); print('FIRST_BYTES',repr(bytes(output[:3000])));print('LAST_BYTES',repr(bytes(output[-800:])))
+          os.makedirs('recovery',exist_ok=True)
+          open('recovery/archive-prefix.xz','wb').write(raw);open('recovery/decoded-prefix.bin','wb').write(output)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ce-publication-recovery-prefix
+          path: recovery/
+          retention-days: 3
