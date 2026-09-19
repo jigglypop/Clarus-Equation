@@ -1,0 +1,36 @@
+PASS quartic_formed_before_projection
+PASS hermitian_dictionary
+PASS covariance_equals_energy_variance
+PASS basis_(8, 4, 4)
+PASS basis_(12, 6, 6)
+PASS basis_(16, 8, 8)
+PASS basis_(20, 10, 10)
+PASS basis_(24, 12, 12)
+PASS basis_(28, 14, 14)
+PASS projected_only_precision_is_not_certificate
+PASS unprojected_action_recovery_converges
+PASS twelve_coefficients_recovered
+PASS fixed_kinetic_potential_uniqueness
+PASS common_portal_emerges_not_imposed
+PASS unneeded_local_quartics_zero
+PASS one_dimensional_kernel_in_tested_dictionary
+PASS ground_is_even_angular_singlet
+PASS held_out_sector_predictions
+PASS frequency_record_kinetic_[1.0, 1.0, 1.0]_1.0
+PASS frequency_record_kinetic_[1.13, 0.87, 1.21]_1.0
+PASS frequency_record_kinetic_[1.0, 1.0, 1.0]_3.7
+PASS energy_weighted_sum_independent_spectrum
+PASS density_alone_does_not_fix_kinetic_metric
+PASS decoupled_action_is_not_unique
+PASS unequal_portal_negative_control
+PASS missing_portal_detected
+PASS missing_operator_detection_and_recovery
+PASS joint_correlations_cannot_be_discarded
+PASS affine_hamiltonian_same_vacuum
+PASS noise_bound_1e-09
+PASS noise_bound_1e-08
+PASS noise_bound_1e-07
+PASS noise_bound_1e-06
+PASS sector_blindness_negative_control
+PASS positive_density_inverse_identity
+PASS TOTAL 35
