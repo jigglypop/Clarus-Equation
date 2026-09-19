@@ -1,0 +1,27 @@
+{
+  "schema": "ce-selected-advances-integrity-v1",
+  "date": "2026-09-19",
+  "files": {
+    "paper/검증_원장/20260919_선별_전진_증명.md": {
+      "sha256": "9d6bcde8dc9287b09d805066580a8bfae278f4f66f3213bbe8682f08b16a071c",
+      "git_blob_sha1": "c68a8e1768efcc9a32697f4c5f70e95cdba601f0",
+      "bytes": 14163
+    },
+    "paper/검증_원장/20260919_선별_전진_출처.json": {
+      "sha256": "47a6ce771309d5ffdd7ab16a7051a63e490b5c09528efe91b86f7e4cc424a75d",
+      "git_blob_sha1": "23c35167c011dc84f3f8489cfec0014010f18529",
+      "bytes": 2073
+    },
+    "verify/ce_selected_advances_20260919.py": {
+      "sha256": "b45619ad30198c80f5b772ba52d663fa4891a1343884e79f7f5c1fdd8810888d",
+      "git_blob_sha1": "3541e154cd5a6d3cbcb0661611dbb30a21565596",
+      "bytes": 12503
+    },
+    "verify/ce_selected_advances_20260919_results.json": {
+      "sha256": "ebf0f684e91a5745fdfeee9e12a3d7e6afeecbcb18a03a6143ed341068b8af44",
+      "git_blob_sha1": "370aecbe4e9cd1b09789ae712f881fe25b3d613e",
+      "bytes": 1635
+    }
+  },
+  "manifest_self_included": false
+}
