@@ -1,0 +1,33 @@
+{
+  "upstream_repository": "jigglypop/Clarus-Equation",
+  "upstream_branch": "main",
+  "upstream_commit": "cbbc1cd930eb6c7ff42e0437aca261334f2a271d",
+  "upstream_report": "experiments/ce_state_selection_20260919/REPORT_ko.md",
+  "upstream_report_blob": "383d493047e8d5f8715df707cd21a6bf87f3be30",
+  "source_archives": [
+    {
+      "name": "CE_gravity_radiation_closure_2026-09-19.zip",
+      "bytes": 2160270,
+      "sha256": "6b55c8dd689bad0c114e37f3715821633bc4a3fbe6a345d2916d07902cfb5df9",
+      "role": "Prior conversation archive; not rerun or uploaded whole in this commit"
+    },
+    {
+      "name": "CE_symmetry_energy_closure_2026-09-18.zip",
+      "bytes": 44889,
+      "sha256": "b1447862ba4a01f31c8847c9b5c185d330df5409fbf15c5234f61751c990d638",
+      "role": "Prior conversation archive; not rerun or uploaded whole in this commit"
+    },
+    {
+      "name": "CE_micro_macro_bridge_2026-09-18.zip",
+      "bytes": 54766,
+      "sha256": "f6e66920a496f99a023b7f2e3e1dd0042564c88da4c7b2563b3a524cfa8a31df",
+      "role": "Prior conversation archive; not rerun or uploaded whole in this commit"
+    }
+  ],
+  "environment": {
+    "python": "3.13.5",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0"
+  },
+  "new_observational_optimization": false
+}

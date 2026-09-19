@@ -1,0 +1,171 @@
+{
+  "model": "CE-TH1",
+  "date": "2026-09-19",
+  "source_main": "cbbc1cd930eb6c7ff42e0437aca261334f2a271d",
+  "scope": "Conditional finite-dimensional thermal collision model; no cosmological or flavour fit.",
+  "fixed_inputs": {
+    "alpha_s": 0.11789,
+    "p": 0.23122206826075514,
+    "delta": 0.17775842340997383,
+    "masses": [
+      0.7682397925548171,
+      1.05347407236027,
+      1.140175425099138
+    ]
+  },
+  "diagnostics": [
+    {
+      "beta": 0.0,
+      "energy_plus": 1.9745928600094833,
+      "energy_minus": 1.974592860009483,
+      "energy_mean": 1.974592860009483,
+      "variance_plus": 0.06311439824973064,
+      "variance_minus": 0.025245759299893145,
+      "variance_ratio": 2.499999999999912,
+      "event_probability": 0.17775842340997383,
+      "energy_fraction": 0.17775842340997383,
+      "relative_energy_bias": 0.0,
+      "gibbs_purity": 0.3333333333333333,
+      "gibbs_selected_weight": 0.33333333333333337,
+      "split_from_purity": 0.0
+    },
+    {
+      "beta": 0.1,
+      "energy_plus": 1.9682432847592457,
+      "energy_minus": 1.9720795228267622,
+      "energy_mean": 1.9689252083899527,
+      "variance_plus": 0.06387050753652801,
+      "variance_minus": 0.02501942622571729,
+      "variance_ratio": 2.552836622243398,
+      "event_probability": 0.17775842340997383,
+      "energy_fraction": 0.17804320109418312,
+      "relative_energy_bias": 0.0016020488860462034,
+      "gibbs_purity": 0.3334182164790873,
+      "gibbs_selected_weight": 0.33329089176045634,
+      "split_from_purity": 0.0038362380675171447
+    },
+    {
+      "beta": 1.0,
+      "energy_plus": 1.908343559210042,
+      "energy_minus": 1.9505963465927636,
+      "energy_mean": 1.9158543480798715,
+      "variance_plus": 0.06854461894785135,
+      "variance_minus": 0.022624857238489504,
+      "variance_ratio": 3.0296155341587285,
+      "event_probability": 0.17775842340997383,
+      "energy_fraction": 0.18098188498885262,
+      "relative_energy_bias": 0.018133945593364897,
+      "gibbs_purity": 0.3423918408151527,
+      "gibbs_selected_weight": 0.32880407959242364,
+      "split_from_purity": 0.04225278738272166
+    },
+    {
+      "beta": 5.0,
+      "energy_plus": 1.6697740880771215,
+      "energy_minus": 1.8849756653983083,
+      "energy_mean": 1.708027981177075,
+      "variance_plus": 0.04125736708575101,
+      "variance_minus": 0.010640728896206042,
+      "variance_ratio": 3.8773064785497304,
+      "event_probability": 0.17775842340997383,
+      "energy_fraction": 0.1961737782635495,
+      "relative_energy_bias": 0.10359764955331174,
+      "gibbs_purity": 0.5552276897990039,
+      "gibbs_selected_weight": 0.22238615510049803,
+      "split_from_purity": 0.2152015773211877
+    },
+    {
+      "beta": 10.0,
+      "energy_plus": 1.562909648287989,
+      "energy_minus": 1.8531801365938387,
+      "energy_mean": 1.61450767265168,
+      "variance_plus": 0.008556939742372816,
+      "variance_minus": 0.0035190662133719464,
+      "variance_ratio": 2.4315938443720304,
+      "event_probability": 0.17775842340997383,
+      "energy_fraction": 0.20403642853834283,
+      "relative_energy_bias": 0.14782987283681415,
+      "gibbs_purity": 0.8575849803025704,
+      "gibbs_selected_weight": 0.07120750984871482,
+      "split_from_purity": 0.29027048830584784
+    }
+  ],
+  "energy_collision": {
+    "energy_commutator": 0.0,
+    "unitarity": 1.1224725352521172e-16,
+    "system_heat": 0.007185044075172176,
+    "bath_heat": -0.007185044075171981,
+    "energy_balance": 1.942890293094024e-16,
+    "swap_change": -2.7755575615628914e-17
+  },
+  "evolution": [
+    {
+      "beta": 0.0,
+      "time": 16.0,
+      "stationary_residual": 3.345813473843216e-17,
+      "stationary_error": 1.7978395729759648e-11,
+      "expm_ode_difference": 2.781137761717959e-15,
+      "zero_eigenvalues": 2,
+      "spectral_gap": 1.4999999999999953,
+      "minimum_state_eigenvalue": 0.059252807801087604,
+      "trace_error": 1.9984014443252818e-15,
+      "swap_error": 4.440892098500626e-16
+    },
+    {
+      "beta": 1.0,
+      "time": 16.0,
+      "stationary_residual": 9.340707601068754e-17,
+      "stationary_error": 5.7957228589553525e-11,
+      "expm_ode_difference": 9.98560958535331e-15,
+      "zero_eigenvalues": 2,
+      "spectral_gap": 1.3725213806964112,
+      "minimum_state_eigenvalue": 0.04701841035996632,
+      "trace_error": 2.4424906541753444e-15,
+      "swap_error": 3.885780586188048e-16
+    },
+    {
+      "beta": 5.0,
+      "time": 16.0,
+      "stationary_residual": 3.712275980765093e-16,
+      "stationary_error": 1.121546250443441e-09,
+      "expm_ode_difference": 2.15937584864317e-14,
+      "zero_eigenvalues": 2,
+      "spectral_gap": 0.9610803601353246,
+      "minimum_state_eigenvalue": 0.0131583072297217,
+      "trace_error": 3.9968028886505635e-15,
+      "swap_error": 7.216449660063518e-16
+    }
+  ],
+  "pressure": {
+    "pressure": 0.019640969880453062,
+    "minus_free_energy_derivative": 0.019640969879386457,
+    "minus_energy_derivative": 0.020225336767321075,
+    "covariance_term": 0.0005843668864843502,
+    "predicted_minus_energy_derivative": 0.020225336766937413,
+    "w_total": 0.019862448921203025
+  },
+  "high_temperature_relative_bias_per_beta": 0.015768906099095165,
+  "global_relative_bias_bound_per_beta": 0.07403007901879445,
+  "approximation_limit": [
+    {
+      "dt": 0.02,
+      "error": 2.530009792838272e-05
+    },
+    {
+      "dt": 0.01,
+      "error": 6.336998943269006e-06
+    },
+    {
+      "dt": 0.005,
+      "error": 1.585749353889792e-06
+    }
+  ],
+  "tests": 24,
+  "unresolved": [
+    "Initial delta and alpha_s matching are not predicted.",
+    "Thermal beta and diagnostic masses are supplied, not fit.",
+    "Bath supply, Markov limit and collective coupling are assumptions.",
+    "No PMNS/Yukawa, abundance, vacuum amplitude or CMB likelihood calculation.",
+    "Finite-temperature extension is a new model assumption, not a forced correction to all CE physics."
+  ]
+}
