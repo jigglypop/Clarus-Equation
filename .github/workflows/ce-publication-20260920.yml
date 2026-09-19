@@ -1,0 +1,12 @@
+name: CE publication staging
+on:
+  push:
+    branches: [ce-publication-20260920-js1]
+permissions:
+  contents: write
+jobs:
+  verify-staging:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check publication runner
+        run: echo 'CE source-integrity staging; no main changes in this probe.'
