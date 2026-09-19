@@ -8,105 +8,78 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
           ref: main
           fetch-depth: 0
-      - name: Recover complete approved research content and publish non-forced
+      - name: Verify all approved bytes and publish without force
         env:
           GH_TOKEN: ${{ github.token }}
         shell: python
         run: |
-          import base64, hashlib, io, json, lzma, os, pathlib, subprocess, tarfile, urllib.request, urllib.error
+          import base64, hashlib, io, json, lzma, os, pathlib, subprocess, tarfile, urllib.request
           repo='jigglypop/Clarus-Equation'
           base='8721ab787a3848bddc6cfaf8f8c3622479d62639'
           shas=['92a97d1b82e04d84663ae8e45c991559f2402062','e08f2ab636836529e3b4d451f063cc55546344c1','8a122e4f4e8ade3d404edc26d9e2b38d3050d6ee','5d43dc75539ad08202ae302acab89f95fa1502aa','d450371dda4bd3d21151e78805e63edee3b7a15f','7fe3d3ff59155b2322d1445f4ac9c0f537edd77f','227dd568811c89a858327e4d3d7a9257a7230b4e','67e1db378525a246cf5b3a64825a769019c3b979','8ea77b3d2503e2e9993629fac0c6f3f3dc508e14','30fe275bd43171514074a2449de35e6d8b32b590','0f622d3d3639af8652b2e6827b8321020244fb74','af8922c46cf966c13d1ae391ade23f27227d0d89','0bc6dfe40467becb73813b651d1ca6cdd71e2fb7','7cd542134837d3bbbdb378590a822c8120fd6e5a','c5e85e8775227ab6cf86ee4579ff1f756aabe6d3','168edeca71d5ee9c860092cbae0f8716b80c5a0a']
           def git(*args):
               return subprocess.check_output(['git',*args],text=True).strip()
-          def blob_sha(data):
+          def bsha(data):
               return hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
-          def fetch_blob(sha):
+          def get_blob(sha):
               req=urllib.request.Request('https://api.github.com/repos/'+repo+'/git/blobs/'+sha,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'})
-              try:
-                  with urllib.request.urlopen(req,timeout=30) as response: item=json.load(response)
-              except urllib.error.HTTPError as exc:
-                  if exc.code==404: return None
-                  raise
+              with urllib.request.urlopen(req,timeout=30) as response: item=json.load(response)
               assert item['encoding']=='base64'
               data=base64.b64decode(item['content'])
-              assert blob_sha(data)==sha
+              assert bsha(data)==sha, 'Transport integrity failure'
               return data
-          assert git('rev-parse','HEAD')==base, 'Main moved; refusing an unreviewed update.'
+          assert git('rev-parse','HEAD')==base, 'Main changed; refuse overwrite'
           assert not git('status','--porcelain')
-          prefix=[]
-          for sha in shas:
-              item=fetch_blob(sha)
-              if item is None: break
-              prefix.append(item)
-          assert prefix, 'No verified archive prefix available.'
-          decoder=lzma.LZMADecompressor()
-          raw=decoder.decompress(b''.join(prefix))
-          assert len(raw)<5_000_000
+          packed=b''.join(get_blob(sha) for sha in shas)
+          assert len(packed)==128020
+          assert hashlib.sha256(packed).hexdigest()=='e813d292ef42e3ff2da6ebd427db392f707504aa0a3ea4a96ea11f410a92d613'
+          raw=lzma.decompress(packed)
+          assert len(raw)<5000000
           available={}
-          offset=0
-          while offset+512<=len(raw):
-              header=raw[offset:offset+512]
-              if header==b'\0'*512: break
-              try: member=tarfile.TarInfo.frombuf(header,'utf-8','surrogateescape')
-              except tarfile.HeaderError: break
-              start=offset+512; end=start+member.size
-              if end>len(raw): break
-              # Archive was built with deterministic regular-file entries.
-              assert member.isfile(), 'Unexpected tar member type.'
-              path=pathlib.PurePosixPath(member.name)
-              assert not path.is_absolute() and '..' not in path.parts
-              data=raw[start:end]
-              available[member.name]=data
-              offset=start+((member.size+511)//512)*512
-          assert 'PUBLICATION_PLAN.json' in available, 'Verified plan has not arrived.'
+          with tarfile.open(fileobj=io.BytesIO(raw),mode='r:') as archive:
+              for member in archive.getmembers():
+                  name=pathlib.PurePosixPath(member.name)
+                  assert member.isfile() and not name.is_absolute() and '..' not in name.parts
+                  assert member.name not in available
+                  available[member.name]=archive.extractfile(member).read()
           plan=json.loads(available.pop('PUBLICATION_PLAN.json'))
+          assert plan['repo']==repo and plan['base_commit']==base
           entries=plan['files']; assert len(entries)==70
-          by_hash={blob_sha(data):data for data in available.values()}
-          for filename in subprocess.check_output(['git','ls-files','-z']).decode().split('\0'):
-              if not filename: continue
-              path=pathlib.Path(filename)
-              if path.is_file() and not path.is_symlink() and path.stat().st_size<2_000_000:
-                  data=path.read_bytes(); by_hash.setdefault(blob_sha(data),data)
-          missing=[]; writes=[]
-          for entry in entries:
-              name=entry['path']; sha=entry['git_blob']
+          assert set(available)=={e['path'] for e in entries}
+          writes=[]
+          for e in entries:
+              name=e['path']; data=available[name]
               assert name.startswith(('paper/','experiments/'))
-              assert '..' not in pathlib.PurePosixPath(name).parts
-              data=available.get(name,by_hash.get(sha))
-              if data is None:
-                  data=fetch_blob(sha)
-                  if data is not None: by_hash[sha]=data
-              if data is None:
-                  missing.append(name); continue
-              assert len(data)==entry['size'] and blob_sha(data)==sha
-              assert hashlib.sha256(data).hexdigest()==entry['sha256']
-              assert not pathlib.Path(name).exists(), 'Research path conflict: '+name
-              writes.append((pathlib.Path(name),data))
-          print(json.dumps({'verified_prefix_parts':len(prefix),'complete_files':len(writes),'missing':missing},ensure_ascii=False))
-          assert not missing, 'Main is unchanged: complete approved source content is required.'
-          candidates=[v for v in plan.values() if isinstance(v,dict) and v.get('path')=='paper/00_읽기_지도.md']
-          assert len(candidates)==1
-          update=candidates[0]; index=pathlib.Path(update['path']); original=index.read_bytes()
-          assert blob_sha(original)=='56e6a4d422f9e9428a6ea8379749ed13159764a0'
-          addition=update['append'].encode(); assert addition not in original
+              assert len(data)==e['size'] and bsha(data)==e['git_blob']
+              assert hashlib.sha256(data).hexdigest()==e['sha256']
+              path=pathlib.Path(name); assert not path.exists(), 'Path conflict: '+name
+              writes.append((path,data))
+          update=plan['reading_map']; index=pathlib.Path(update['path'])
+          original=index.read_bytes(); assert bsha(original)==update['expected_blob']
+          addition=update['append'].encode('utf-8'); assert addition not in original
           for path,data in writes:
               path.parent.mkdir(parents=True,exist_ok=True); path.write_bytes(data)
           index.write_bytes(original+addition)
           paths=[str(path) for path,data in writes]+[str(index)]
-          subprocess.run(['git','-c','core.quotepath=false','add','--',*paths],check=True)
-          actual=set(subprocess.check_output(['git','diff','--cached','--name-only','-z']).decode().strip('\0').split('\0'))
-          assert actual==set(paths)
+          subprocess.run(['git','add','--',*paths],check=True)
+          staged=set(subprocess.check_output(['git','diff','--cached','--name-only','-z']).decode().strip('\0').split('\0'))
+          assert staged==set(paths)
           subprocess.run(['git','config','user.name','github-actions[bot]'],check=True)
           subprocess.run(['git','config','user.email','41898282+github-actions[bot]@users.noreply.github.com'],check=True)
-          subprocess.run(['git','commit','-m',plan.get('commit_message','Publish CE follow-up chapters and joint-selection checks (CE-JS1)')],check=True)
+          subprocess.run(['git','commit','-m','Publish preserved CE follow-up chapters 01-12 and complete verification sources\n\nInstall 70 approved research files after byte-exact SHA-256 and Git object verification. Append the reading-map link. Historical validation results remain labeled by their original scope. No physics completion claim or force push.'],check=True)
           assert git('rev-parse','HEAD^')==base
           subprocess.run(['git','push','origin','HEAD:refs/heads/main'],check=True)
           head=git('rev-parse','HEAD')
           assert git('ls-remote','origin','refs/heads/main').split()[0]==head
-          print(json.dumps({'publication':'verified','commit':head,'new_research_files':70,'modified_reading_maps':1,'integrity':'every file verified against approved SHA-256 and Git blob hash'}))
+          for e in entries:
+              assert git('rev-parse',head+':'+e['path'])==e['git_blob']
+          receipt={'publication':'verified','commit':head,'parent':base,'new_research_files':70,'modified_reading_maps':1,'archive_sha256':hashlib.sha256(packed).hexdigest(),'file_integrity':'all 70 approved blobs matched'}
+          print(json.dumps(receipt,ensure_ascii=False))
+          with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as summary:
+              summary.write('## CE chapters 01-12 published\n\n```json\n'+json.dumps(receipt,indent=2)+'\n```\n')
