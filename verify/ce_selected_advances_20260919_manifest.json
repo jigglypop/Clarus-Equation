@@ -1,16 +1,62 @@
 {
-  "schema": "ce-selected-advances-integrity-v1",
+  "schema": "ce-selected-advances-integrity-v2",
   "date": "2026-09-19",
+  "edition": "Detailed paper chapters 81-85",
   "files": {
+    "paper/00_읽기_지도.md": {
+      "sha256": "ddbaffb4136039fbc60248519a32464b0ebd6e5d6a9d2b97d86c6302f0515668",
+      "git_blob_sha1": "214415245e5c441597ce3173fd261a265feeef13",
+      "bytes": 5917
+    },
+    "paper/04_중력_극한과_FLRW/84_혼합_상태의_계층_최소점과_압력.md": {
+      "sha256": "8181b873af9a72cf671d40f71f9aaa4ede584c3d160ae612779bab947302db47",
+      "git_blob_sha1": "dec0bf9f1682b0bab8bcc329e39d09afa2175d01",
+      "bytes": 12172
+    },
+    "paper/04_중력_극한과_FLRW/85_공통_작용의_힘과_물질_섭동.md": {
+      "sha256": "90199a39fe35c05f7f2d9cab34cd5209613dc8dc5387a161dff5a045ae5bc0f7",
+      "git_blob_sha1": "476790caf5b864784540a13e8469cf091b775033",
+      "bytes": 15125
+    },
+    "paper/04_중력_극한과_FLRW/README.md": {
+      "sha256": "bf6ae3b19e1639a16fe8636e965fc5d1212e928ace7108a731e0024fa619b876",
+      "git_blob_sha1": "17d957daa643940a5a48b3c16476512e5b3ccd6f",
+      "bytes": 2090
+    },
+    "paper/06_QFT_재설계/81_상대작용의_유한성과_최소_스펙트럼.md": {
+      "sha256": "f1f2a65d17f62205b75164a85a58fa023442659c296c9b6638323cefe3f5d369",
+      "git_blob_sha1": "dc9db9d4d739d333a323e0e78cd1d28243c5934d",
+      "bytes": 12121
+    },
+    "paper/06_QFT_재설계/82_공통_스펙트럼의_중력_게이지_뮤온_반응.md": {
+      "sha256": "5c0f729792c201cb11cf3127f7eaa0a85eae3997ee6e804b1d04bf30af0fe03a",
+      "git_blob_sha1": "4b5935ddcdc2b506afd40d103a8a314f19a8ad8e",
+      "bytes": 13299
+    },
+    "paper/06_QFT_재설계/83_유도_중력계수와_위상_운동항의_공동_정합.md": {
+      "sha256": "e44271f1d8aa6e99cfd563d056ad6f04f4f3c726a0671693be383c4f9b052beb",
+      "git_blob_sha1": "7a3b75c01cf49a3aa11f7193ff7d282ca0270552",
+      "bytes": 12428
+    },
+    "paper/06_QFT_재설계/README.md": {
+      "sha256": "32bea5488b5adeeb2f839c8ab0a1751e90be5347a4ab9b82b7e4710865a8e2dc",
+      "git_blob_sha1": "79831e9af81b2e37aca796e7be3d528b38e9fc12",
+      "bytes": 12126
+    },
     "paper/검증_원장/20260919_선별_전진_증명.md": {
-      "sha256": "9d6bcde8dc9287b09d805066580a8bfae278f4f66f3213bbe8682f08b16a071c",
-      "git_blob_sha1": "c68a8e1768efcc9a32697f4c5f70e95cdba601f0",
-      "bytes": 14163
+      "sha256": "d53e1f043b5f5dd3922594ef3011ac591aeb6c495681eb9c90df801e40930b5d",
+      "git_blob_sha1": "3ce8075a151fb8ee369dd5fb7f831ae8bcf207d8",
+      "bytes": 1597
     },
     "paper/검증_원장/20260919_선별_전진_출처.json": {
-      "sha256": "47a6ce771309d5ffdd7ab16a7051a63e490b5c09528efe91b86f7e4cc424a75d",
-      "git_blob_sha1": "23c35167c011dc84f3f8489cfec0014010f18529",
-      "bytes": 2073
+      "sha256": "6293c3235bed110f9e115832624dad9fe77bcded7ecab0fe52defac521aa2935",
+      "git_blob_sha1": "c22b800ebddbdf597bb9eaad5d466ed75a6fe661",
+      "bytes": 3658
+    },
+    "verify/ce_paper_chapters_20260919_validation.json": {
+      "sha256": "9360425ce3c762bc8a19f8c073540914ab87968b45922208b03b4e999c4d63b7",
+      "git_blob_sha1": "61997f383169e520ea3566ae54554bfde2775a44",
+      "bytes": 2155
     },
     "verify/ce_selected_advances_20260919.py": {
       "sha256": "b45619ad30198c80f5b772ba52d663fa4891a1343884e79f7f5c1fdd8810888d",

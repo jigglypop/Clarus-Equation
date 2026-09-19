@@ -1,0 +1,65 @@
+{
+  "schema": "ce-paper-chapter-edit-validation-v1",
+  "date": "2026-09-19",
+  "base_commit": "b093875798340409280dfdf2da6b4bb8f18a03cf",
+  "operation": "Detailed thematic documentation; no new physical model or observational fit",
+  "chapters": [
+    {
+      "path": "paper/06_QFT_재설계/81_상대작용의_유한성과_최소_스펙트럼.md",
+      "lines": 233,
+      "bytes": 12121,
+      "numbered_equations": 12
+    },
+    {
+      "path": "paper/06_QFT_재설계/82_공통_스펙트럼의_중력_게이지_뮤온_반응.md",
+      "lines": 257,
+      "bytes": 13299,
+      "numbered_equations": 14
+    },
+    {
+      "path": "paper/06_QFT_재설계/83_유도_중력계수와_위상_운동항의_공동_정합.md",
+      "lines": 223,
+      "bytes": 12428,
+      "numbered_equations": 11
+    },
+    {
+      "path": "paper/04_중력_극한과_FLRW/84_혼합_상태의_계층_최소점과_압력.md",
+      "lines": 236,
+      "bytes": 12172,
+      "numbered_equations": 14
+    },
+    {
+      "path": "paper/04_중력_극한과_FLRW/85_공통_작용의_힘과_물질_섭동.md",
+      "lines": 280,
+      "bytes": 15125,
+      "numbered_equations": 19
+    }
+  ],
+  "chapter_lines": 1229,
+  "new_chapter_relative_links_checked": 36,
+  "link_check_scope": "New chapter links resolve in the edited bundle, except preserved CE_통합_논문.md confirmed via the GitHub source; existing historical index links are retained.",
+  "checks": {
+    "display_math_delimiters_balanced": true,
+    "latex_environments_balanced": true,
+    "equation_tags_unique_per_chapter": true,
+    "no_unresolved_sandbox_or_chat_citations": true
+  },
+  "equation_suite": {
+    "tests_run": 16,
+    "passed": true,
+    "failures": 0,
+    "errors": 0,
+    "environment": {
+      "python": "3.13.5",
+      "numpy": "2.3.5",
+      "scipy": "1.17.0",
+      "sympy": "1.14.0",
+      "mpmath": "1.3.0"
+    },
+    "execution": "Rerun in this editing session; original full simulation archives not rerun"
+  },
+  "original_test_code_modified": false,
+  "original_published_result_modified": false,
+  "full_transfer_matrix_regenerated": false,
+  "observational_fit_performed": false
+}
