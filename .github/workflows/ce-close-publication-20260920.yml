@@ -1,0 +1,142 @@
+name: CE close verified publication
+on:
+  push:
+    branches: [ce-publication-20260920-js1]
+    paths: [.github/workflows/ce-close-publication-20260920.yml]
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Verify payload, preserve sources, publish and verify main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: python
+        run: |
+          import base64, hashlib, io, json, lzma, os, pathlib, subprocess, tarfile, urllib.request
+          REPO = 'jigglypop/Clarus-Equation'
+          BASE = '07d142d08153a6ba99bc8a6d6c87e57495be2d61'
+          PAYLOAD_SHA = '6bd1cd9bd37ee551f7af99fc19a3c6d45a2b4885160d64727b0a1884c21f48b7'
+          SHAS = [
+            '7057af8bacc7e04e018f0eab7ea9ac8fdbca11ca',
+            'b733802d564e5e2ad90312fa6e018da3bafaf34e',
+            '4f8a5cb07bf62c72b81863e31464c90558fad623',
+            '3d6496066ff8a7a862b515bacd71acbc95ef3bcf',
+            '201ba0d33a30c2507255f7f06504b9c67915edce',
+            'b56fc5cb8d0004e37a976b41905b53c2fcf891ca',
+            'afc3238dc846001d952497b0ae5f353866ff0db6',
+            '98377628888395b874177be315cec56be35821fe',
+            'c7b2ed76ca4d2523080a2388de42033101658127',
+            'c40e5e8ed602534bd3e7c5aac5decc767805c12f',
+            '772939e3c6bba9d2adb60c423e159c548eaf92db',
+            '20d72d811b712d900feb093dca50859bb3417116',
+            '096070017f7f366974de34f1359748f2e0bf709b',
+            '41715380f4c9564e8b5cc433425bfdad14cec366',
+            '3d4f5acc1f3c83bd257deda64afe598327a51c0c']
+          def git(*args):
+            return subprocess.check_output(['git', *args])
+          def blobsha(data):
+            return hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
+          def safe_path(name):
+            p=pathlib.PurePosixPath(name)
+            assert not p.is_absolute() and '..' not in p.parts and '\\' not in name, name
+            assert p.parts and p.parts[0] in ('paper','experiments'), name
+            return pathlib.Path(*p.parts)
+          assert git('rev-parse','HEAD').decode().strip()==BASE, 'Main changed; refusing stale publication'
+          assert not git('status','--porcelain').strip(), 'Checkout is not clean'
+          blocks=[]
+          for n, sha in enumerate(SHAS):
+            req=urllib.request.Request(f'https://api.github.com/repos/{REPO}/git/blobs/{sha}', headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'})
+            with urllib.request.urlopen(req,timeout=60) as response:
+              obj=json.load(response)
+            assert obj['encoding']=='base64'
+            data=base64.b64decode(obj['content'])
+            assert blobsha(data)==sha, 'Chunk corruption '+str(n)
+            blocks.append(data)
+          packed=b''.join(blocks)
+          assert len(packed)==118320 and hashlib.sha256(packed).hexdigest()==PAYLOAD_SHA, 'Payload mismatch'
+          dec=lzma.LZMADecompressor()
+          raw=dec.decompress(packed,max_length=20_000_000)
+          assert dec.eof and not dec.unused_data, 'Invalid/oversized archive'
+          members={}
+          with tarfile.open(fileobj=io.BytesIO(raw),mode='r:') as archive:
+            for item in archive.getmembers():
+              name=item.name
+              assert item.isfile() and not name.startswith('/') and '..' not in pathlib.PurePosixPath(name).parts
+              assert name=='PLAN.json' or name.startswith('blobs/'), name
+              assert name not in members
+              members[name]=archive.extractfile(item).read()
+          plan=json.loads(members['PLAN.json'])
+          assert plan['repo']==REPO and plan['base']==BASE
+          entries=plan['files']
+          assert len(entries)==116 and len({e['path'] for e in entries})==116
+          pending={}
+          added=modified=0
+          for e in entries:
+            dest=safe_path(e['path'])
+            if e.get('reuse'):
+              safe_path(e['reuse'])
+              data=git('show','HEAD:'+e['reuse'])
+            else:
+              data=members['blobs/'+e['git_blob']]
+            assert len(data)==e['size'] and blobsha(data)==e['git_blob'] and hashlib.sha256(data).hexdigest()==e['sha256'], e['path']
+            old=e.get('expected_old_blob')
+            if old is None:
+              assert not dest.exists(), 'New path conflict: '+e['path']
+              added+=1
+            else:
+              assert dest.is_file() and blobsha(dest.read_bytes())==old, 'Modified path conflict: '+e['path']
+              modified+=1
+            pending[e['path']]=data
+          assert (added,modified)==(113,3),(added,modified)
+          for name,data in pending.items():
+            dest=safe_path(name)
+            dest.parent.mkdir(parents=True,exist_ok=True)
+            dest.write_bytes(data)
+          chapters=plan['original_chapter_hashes']
+          assert len(chapters)==13
+          checked_chapters=[]
+          for e in chapters:
+            name=e['chapter']
+            p=pathlib.Path(name)
+            if not p.is_file():
+              p=pathlib.Path('paper/후속연구_기록과_상태선택')/name
+            assert p.is_file(),name
+            assert hashlib.sha256(p.read_bytes()).hexdigest()==e['chapter_sha256'],name
+            checked_chapters.append(p.as_posix())
+          for name,key in [('paper/00_읽기_지도.md','reading_map_append'),('README.md','root_readme_append')]:
+            dest=pathlib.Path(name)
+            existing=dest.read_bytes()
+            extra=plan[key].encode('utf-8')
+            assert extra.strip() not in existing, 'Already appended: '+name
+            dest.write_bytes(existing+extra)
+          names=sorted(list(pending)+['paper/00_읽기_지도.md','README.md'])
+          subprocess.run(['git','add','-f','--',*names],check=True)
+          staged={n.decode() for n in git('diff','--cached','--name-only','-z').split(b'\0') if n}
+          assert staged==set(names),(len(staged),len(names))
+          subprocess.run(['git','config','user.name','CE Publication Bot'],check=True)
+          subprocess.run(['git','config','user.email','52653682+jigglypop@users.noreply.github.com'],check=True)
+          subprocess.run(['git','commit','-m','Publish CE vacuum chapter 13, preserve original sources, and close verified research ledger','-m','Preserve chapters 01-13 byte-for-byte and add a publication-only final closeout. Include the locally re-executed 48 VA1 and 39 JS1 checks with exact result comparisons, historical sources and reproducibility files. Retain unresolved natural constants, continuum/gravity matching and the radius instability. No claim of completed unification or new observational success. Research paths only; staging workflow is not included.'],check=True)
+          head=git('rev-parse','HEAD').decode().strip()
+          assert git('rev-parse','HEAD^').decode().strip()==BASE
+          subprocess.run(['git','push','origin','HEAD:refs/heads/main'],check=True)
+          remote=git('ls-remote','origin','refs/heads/main').decode().split()[0]
+          assert remote==head
+          subprocess.run(['git','fetch','origin','main'],check=True)
+          assert git('rev-parse','FETCH_HEAD').decode().strip()==head
+          for e in entries:
+            assert git('rev-parse','FETCH_HEAD:'+e['path']).decode().strip()==e['git_blob'], e['path']
+          for e,name in zip(chapters,checked_chapters):
+            assert hashlib.sha256(git('show','FETCH_HEAD:'+name)).hexdigest()==e['chapter_sha256']
+          changes=git('diff','--name-status',BASE,head).decode()
+          receipt={'repository':REPO,'parent':BASE,'main_commit':head,'remote_main_verified':True,'payload_sha256':PAYLOAD_SHA,'payload_files_hash_verified':116,'original_chapters_sha256_verified':13,'local_reexecuted_checks':{'VA1_core':33,'VA1_joint':15,'JS1':39,'total':87},'added_files':113,'modified_files':5,'deleted_files':0,'changed_files':118,'workflow_committed_to_main':False}
+          print('CE_PUBLICATION_RECEIPT='+json.dumps(receipt,ensure_ascii=False,sort_keys=True))
+          print(changes)
+          with open(os.environ['GITHUB_STEP_SUMMARY'],'w') as out:
+            out.write('# CE main publication verified\n\n```json\n'+json.dumps(receipt,ensure_ascii=False,indent=2)+'\n```\n')
