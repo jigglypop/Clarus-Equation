@@ -1,0 +1,68 @@
+{
+  "hs1": {
+    "all_non_runtime_fields_identical": true,
+    "original_keys": [
+      "experiment",
+      "date",
+      "inputs",
+      "assumptions",
+      "status",
+      "selected",
+      "search",
+      "record_checks",
+      "uniform_tail_bound_at_256",
+      "linear_response",
+      "checks",
+      "check_count",
+      "versions"
+    ],
+    "rerun_keys": [
+      "experiment",
+      "date",
+      "inputs",
+      "assumptions",
+      "status",
+      "selected",
+      "search",
+      "record_checks",
+      "uniform_tail_bound_at_256",
+      "linear_response",
+      "checks",
+      "check_count",
+      "versions"
+    ]
+  },
+  "gp1": {
+    "all_non_runtime_fields_identical": true,
+    "original_keys": [
+      "experiment",
+      "research_date",
+      "remote_main_modified",
+      "status",
+      "additional_assumptions",
+      "checks",
+      "check_count",
+      "passed",
+      "full_parent_diagnostics",
+      "zero_mode_counts",
+      "projected_record_diagnostic",
+      "normalization",
+      "environments"
+    ],
+    "rerun_keys": [
+      "experiment",
+      "research_date",
+      "remote_main_modified",
+      "status",
+      "additional_assumptions",
+      "checks",
+      "check_count",
+      "passed",
+      "full_parent_diagnostics",
+      "zero_mode_counts",
+      "projected_record_diagnostic",
+      "normalization",
+      "environments"
+    ]
+  }
+}

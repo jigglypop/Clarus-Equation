@@ -1,0 +1,33 @@
+PASS symbolic complex canonical normalization
+PASS symbolic curvature portal coefficient
+PASS no hidden odd-field or orientation term
+PASS raw-coordinate rescaling does not change canonical kappa
+PASS 64 full-matrix portal checks
+PASS scalar kinetic normalization checked directly
+PASS H hypercharge plus one half and chi neutrality
+PASS hypercharge normalization retained rather than silently reset
+PASS all 35 parent generators canonically normalized
+PASS SU2 by SU3 block covariance of potential
+PASS full parent mass eigenvalues from independent diagonalization
+PASS restricted diagonal really has positive universal portal
+PASS discarded parent channels actually mix
+PASS full mass slopes include the discarded channels
+PASS full-parent negative-slope counterexample
+PASS positive-slope full-parent case is not channel universal
+PASS mixing-free special case requires common z
+PASS commuting involutive reflection automorphisms
+PASS zero-mode field content explicitly counted
+PASS H and chi matrices survive their correct reflections
+PASS reflection projection removes diagonal mass background
+PASS problematic A6 bridge has no constant zero mode
+PASS curvature parity is compatible with the full action
+PASS unbroken SU3 commutant is one-dimensional
+PASS nonzero CE splitting breaks the surviving hidden SU3
+PASS singlet mass does respect surviving SU3
+PASS tree radial flat direction retained
+PASS projected zero-mode threshold slope equals twice g squared
+PASS record amplitude shares the same tree gauge coefficient
+PASS square-root background encoding is not a selection
+PASS four-dimensional gauge invariance alone does not fix normalization
+PASS scalar-subset quartic regeneration cannot be discarded
+32 checks passed; /mnt/data/ce_publication_work/audit/gp1_rerun.json

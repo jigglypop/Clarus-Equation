@@ -1,0 +1,21 @@
+{
+  "experiment": "CE-JS1",
+  "date": "2026-09-20",
+  "source_commit": "8721ab787a3848bddc6cfaf8f8c3622479d62639",
+  "inherited_chapter": "CE-HS1",
+  "inherited_script_sha256": "bb272ef846aecc9e365d06dbd2815c19c558a43846cc0ec6cb888e26864f4c39",
+  "new_check_count": 39,
+  "observations_used": false,
+  "parameter_fitting": false,
+  "scope": {
+    "main_modified_by_script": false,
+    "observations_used": false,
+    "full_parent": false,
+    "complete_radion_potential": false,
+    "cosmological_evolution": false,
+    "real_time_qft_prediction": false,
+    "dynamic_records_are_instantaneous_synthetic": true,
+    "all_constants_selected": false,
+    "prior_holonomy_results_preserved": true
+  }
+}

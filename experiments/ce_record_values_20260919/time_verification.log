@@ -1,0 +1,12 @@
+Resuming completed time grids from local checkpoint
+PASS 31 conditional full-quantum trajectories preserve norms
+PASS 32 conditional trajectories preserve post-record energies
+PASS 33 no-readout ground-state trajectory remains stationary
+PASS 34 increasing environment basis improves time-trajectory convergence
+PASS 35 resolved conditional trajectories through t=1
+PASS 36 independent Higgs-basis dimension and frequency convergence at t=.5
+PASS 37 direct unitary second derivative agrees with correlated source
+PASS 38 dense spectral and sparse unitary evolution agree
+PASS 39 additive energy constant leaves record-conditioned physics unchanged in fixed spacetime
+PASS 40 future record-to-value slope equals unequal-time symmetrized covariance
+10 checks passed; saved /mnt/data/CE_record_values_20260919/time_results.json

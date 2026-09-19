@@ -1,0 +1,15 @@
+{
+  "date": "2026-09-20",
+  "source_bundle": "CE_followup_accuracy_20260920.zip",
+  "source_report": "CE_geometric_portal_accuracy_20260920_REPORT_ko.md",
+  "source_report_sha256": "65be2189772f5ca48cee6d2fda82b7dd91731688bc61ff17e14e92137ae68ff7",
+  "gp1_rerun_matches_supplied_json": true,
+  "new_check_count": 36,
+  "main_read_or_written": false,
+  "new_model_not_original_CE": true,
+  "external_method_sources": [
+    "https://arxiv.org/abs/1302.2196",
+    "https://arxiv.org/abs/hep-ph/0401183",
+    "https://arxiv.org/abs/hep-th/0107245"
+  ]
+}

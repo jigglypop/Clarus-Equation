@@ -1,0 +1,40 @@
+PASS independent winding kernel reproduces HS1 at fixed radius
+PASS full Einstein potential gradients against independent five-point differences
+PASS g5 is unchanged while g4 and radius vary
+PASS Einstein masses equal Jordan masses after Weyl conversion
+PASS old phase minima are not stationary in the loop radion direction
+PASS old middle Higgs input is not an exact coupled Higgs stationary point
+PASS conditional Higgs minimization solves the Higgs equation
+PASS conditional Higgs minimization does not solve the radius equation
+PASS positive integral representation of the derivative sine series
+PASS positive mass-source derivative throughout the tested stable branch
+PASS center-symmetric competitor proves a negative global phase minimum
+PASS symbolic joint stationary scale-direction curvature identity
+PASS joint stationary necessary Higgs ratio lies below one fifth
+PASS negative scale direction on the entire necessary-ratio interval
+PASS scale-invariant quartic has a negative stationary dilation curvature
+PASS zero-Higgs boundary has negative radial curvature at any stationary radius
+PASS fixed diagnostic inputs fail the remaining radial equation on the tested grid
+PASS relaxed source curvature includes the holonomy Schur correction
+PASS freezing holonomy omits a strictly negative relaxation term
+PASS neutral Casimir changes neither phase nor direct Higgs gradients
+PASS one neutral massless Dirac reverses the tested radial gradient
+PASS spectator shift in radius source equals its Casimir derivative
+PASS three thresholds recover selected phase and Einstein spectral radius
+PASS absolute noise recovers portal and Higgs source in the fixed readout scheme
+PASS threshold-ratio stationarity is a parameter-free conditional null test
+PASS same synthetic records recover the fixed adjoint multiplicity without optimization
+PASS record gauge-radius scaling follows fixed g5 rather than fixed g4
+PASS independently perturbed threshold fails fixed-content stationarity
+PASS all KK inverse masses retain the correct Einstein radius factors
+PASS both full coupled mechanical integrations complete
+PASS independent coupled integrators agree
+PASS coupled Higgs-holonomy-radius mechanics conserves total energy
+PASS radius leaves the previously fixed phase point
+PASS instantaneous synthetic-spectrum inversion tracks coupled mechanical coordinates
+PASS nonstationary trajectories must not be forced onto static selection formula
+PASS local mechanical Higgs frequency exceeds the mediator derivative-expansion gate
+PASS two-loop balancing criterion is algebraically stationary
+PASS two-loop balancing curvature requires a positive coefficient
+PASS two-loop size at such a root is six-sevenths of the one-loop term
+39 checks passed; /mnt/data/ce_publication_work/new/experiments/ce_joint_selection_20260920/results.json

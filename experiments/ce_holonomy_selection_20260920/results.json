@@ -1,0 +1,435 @@
+{
+  "experiment": "CE-HS1",
+  "date": "2026-09-20",
+  "inputs": {
+    "g": 0.6,
+    "R": 1.0,
+    "kappa": 0.18,
+    "adjoint_dirac_flavors": 1,
+    "adjoint_mass": 0.0,
+    "boundary": "periodic along NEW circle",
+    "u": [
+      0.2,
+      0.5,
+      0.8
+    ],
+    "winding_cutoff": 2048
+  },
+  "assumptions": [
+    "Extra compact direction is new, not derived from CE",
+    "Periodic massless adjoint Dirac fermion is new matter input",
+    "g and R and fixed Higgs backgrounds are inputs",
+    "Tree matching kappa=g^2/2 is imposed from GP1, not proved at all loops",
+    "One-loop compact-sector potential; other compact modes/UV matching not computed"
+  ],
+  "status": {
+    "local_stability_proved_numerically": true,
+    "global_uniqueness_proved": false,
+    "full_parent_matched": false,
+    "observations_used": false,
+    "main_modified": false,
+    "fixed_epsilon_exact": false
+  },
+  "selected": [
+    {
+      "u": 0.2,
+      "q": 0.26567892171937313,
+      "q_derivative": 0.06497891908381867,
+      "epsilon": 0.023528429815322934,
+      "spectral_center_offset": 0.04705685963064587,
+      "s": 0.08305685963064587,
+      "masses_squared": [
+        0.036,
+        0.10658528944596879,
+        0.10658528944596879
+      ],
+      "thresholds": [
+        0.3794733192202055,
+        0.6529480513669331,
+        0.6529480513669331
+      ],
+      "heavy_slope_adiabatic": 0.21452705831335867,
+      "light_slope": 0.18,
+      "relative_slope_mismatch": 0.19181699062977048,
+      "full_phase_hessian": [
+        0.22240171503280237,
+        106.35869717893634,
+        145.4547745888427
+      ],
+      "q_mass_squared": 0.0012765638191014575,
+      "next_threshold": 1.5168750060663831,
+      "inverse_sum_lowest": 46.54209328882078,
+      "inverse_sum_full": 57.09214430685647,
+      "inverse_sum_omitted_fraction": 0.18478988915413153,
+      "potential_trivial": 3.341649106387025,
+      "V": -1.6187160760266206,
+      "Vq": -3.552713678800501e-15,
+      "Vqq": 290.9095491776855,
+      "Vu": 1.2004041641277035,
+      "Vqu": -18.902988056726993,
+      "Vuu": -1.8549181492517113
+    },
+    {
+      "u": 0.5,
+      "q": 0.28145763821355535,
+      "q_derivative": 0.04280170639655184,
+      "epsilon": 0.02640613403625087,
+      "spectral_center_offset": 0.05281226807250174,
+      "s": 0.14281226807250175,
+      "masses_squared": [
+        0.09,
+        0.1692184021087526,
+        0.1692184021087526
+      ],
+      "thresholds": [
+        0.6,
+        0.8227232878890754,
+        0.8227232878890754
+      ],
+      "heavy_slope_adiabatic": 0.204093734387767,
+      "light_slope": 0.18,
+      "relative_slope_mismatch": 0.13385407993203896,
+      "full_phase_hessian": [
+        0.480567155308151,
+        107.02769239682847,
+        144.9971384180044
+      ],
+      "q_mass_squared": 0.0012725474382046745,
+      "next_threshold": 1.5573093792585233,
+      "inverse_sum_lowest": 22.930156646800828,
+      "inverse_sum_full": 33.11976640223573,
+      "inverse_sum_omitted_fraction": 0.30765946932364413,
+      "potential_trivial": 4.545536440720932,
+      "V": -1.3608225336675606,
+      "Vq": 2.930988785010413e-14,
+      "Vqq": 289.9942768360086,
+      "Vu": 0.6072701956211298,
+      "Vqu": -12.412249893815217,
+      "Vuu": -0.7173587874916518
+    },
+    {
+      "u": 0.8,
+      "q": 0.2923172845239257,
+      "q_derivative": 0.03061401892093407,
+      "epsilon": 0.028483131610480578,
+      "spectral_center_offset": 0.056966263220961155,
+      "s": 0.20096626322096114,
+      "masses_squared": [
+        0.144,
+        0.22944939483144172,
+        0.22944939483144172
+      ],
+      "thresholds": [
+        0.758946638440411,
+        0.9580175255838314,
+        0.9580175255838314
+      ],
+      "heavy_slope_adiabatic": 0.19789801375866306,
+      "light_slope": 0.18,
+      "relative_slope_mismatch": 0.09943340977035033,
+      "full_phase_hessian": [
+        0.3553486595670705,
+        109.35519822110088,
+        143.0508121710373
+      ],
+      "q_mass_squared": 0.001255465773652453,
+      "next_threshold": 1.6060072550067641,
+      "inverse_sum_lowest": 15.66096340266284,
+      "inverse_sum_full": 25.492428860438604,
+      "inverse_sum_omitted_fraction": 0.38566217097630495,
+      "potential_trivial": 5.354650161332593,
+      "V": -1.2231870870369805,
+      "Vq": -6.217248937900877e-15,
+      "Vqq": 286.10162434207456,
+      "Vu": 0.3414249771983856,
+      "Vqu": -8.758720540918242,
+      "Vuu": -0.34774831076684243
+    }
+  ],
+  "search": [
+    {
+      "u": 0.2,
+      "starts": 20,
+      "min_value": -1.6187160761393085,
+      "target": -1.6187160761393078,
+      "number_above_target": 1
+    },
+    {
+      "u": 0.5,
+      "starts": 20,
+      "min_value": -1.36082253378027,
+      "target": -1.3608225337802695,
+      "number_above_target": 1
+    },
+    {
+      "u": 0.8,
+      "starts": 20,
+      "min_value": -1.223187087153008,
+      "target": -1.2231870871530077,
+      "number_above_target": 1
+    }
+  ],
+  "record_checks": [
+    {
+      "u": 0.2,
+      "omega_in_window": 1.0849115287166582,
+      "full_in_window": 0.0032667973315078334,
+      "lowest_in_window": 0.0032667973315078334,
+      "high_omega": 2.5,
+      "full_high": 0.0073091791457709195,
+      "lowest_high": 0.0037630352085093388
+    },
+    {
+      "u": 0.5,
+      "omega_in_window": 1.1900163335737994,
+      "full_in_window": 0.0029761706196133183,
+      "lowest_in_window": 0.0029761706196133183,
+      "high_omega": 2.5,
+      "full_high": 0.007120975004968482,
+      "lowest_high": 0.003686171871641962
+    },
+    {
+      "u": 0.8,
+      "omega_in_window": 1.2820123902952978,
+      "full_in_window": 0.0027523040792255763,
+      "lowest_in_window": 0.0027523040792255763,
+      "high_omega": 2.5,
+      "full_high": 0.006920094964012165,
+      "lowest_high": 0.0036098034428993678
+    }
+  ],
+  "uniform_tail_bound_at_256": 8.149072527885437e-10,
+  "linear_response": {
+    "omega": 0.014269113150884603,
+    "q_amplitude": 5.095441237684743e-06,
+    "energy_error": 1.8968602228146153e-22
+  },
+  "checks": [
+    {
+      "name": "new circle background has allowed even-even parity and zero trace",
+      "passed": true,
+      "error": 0.0,
+      "tolerance": 2e-16
+    },
+    {
+      "name": "chosen relative background commutes with Higgs block",
+      "passed": true,
+      "error": 0.0,
+      "tolerance": 2e-16
+    },
+    {
+      "name": "full retained curvature gives common portal plus phase masses",
+      "passed": true,
+      "error": 1.3877787807814457e-17,
+      "tolerance": 2e-16
+    },
+    {
+      "name": "holonomy kinetic normalization",
+      "passed": true,
+      "error": 8.881784197001252e-16,
+      "tolerance": 2e-15
+    },
+    {
+      "name": "massive winding polynomial equals Bessel determinant",
+      "passed": true,
+      "error": 1.1102230246251565e-16,
+      "tolerance": 5e-16
+    },
+    {
+      "name": "proper-time prefactor uses four-dimensional energy density",
+      "passed": true,
+      "error": 6.776263578034403e-21,
+      "tolerance": 2e-14
+    },
+    {
+      "name": "three vector and four Dirac degrees of freedom give literature normalization",
+      "passed": true,
+      "error": 2.710505431213761e-20,
+      "tolerance": 2e-19
+    },
+    {
+      "name": "three-phase gradient against independent finite difference",
+      "passed": true,
+      "error": 3.3341471805670153e-09,
+      "tolerance": 2e-07
+    },
+    {
+      "name": "three-phase Hessian against gradient differences",
+      "passed": true,
+      "error": 7.145116143192354e-08,
+      "tolerance": 2e-06
+    },
+    {
+      "name": "integer large gauge and permutation symmetries",
+      "passed": true,
+      "error": 2.6645352591003757e-15,
+      "tolerance": 2e-14
+    },
+    {
+      "name": "all selected roots are nonzero and gapped",
+      "passed": true
+    },
+    {
+      "name": "stationarity in all three phases including the common phase",
+      "passed": true,
+      "error": 2.0261997657023767e-14,
+      "tolerance": 2e-10
+    },
+    {
+      "name": "strict local stability in all three phases",
+      "passed": true,
+      "eigenvalues": [
+        [
+          0.22240171503280237,
+          106.35869717893634,
+          145.4547745888427
+        ],
+        [
+          0.480567155308151,
+          107.02769239682847,
+          144.9971384180044
+        ],
+        [
+          0.3553486595670705,
+          109.35519822110088,
+          143.0508121710373
+        ]
+      ]
+    },
+    {
+      "name": "nonzero phase beats trivial phase with a finite gap",
+      "passed": true
+    },
+    {
+      "name": "analytic winding-tail bounds bracket the infinite-sum root",
+      "passed": true,
+      "halfwidth": 1e-09,
+      "gradient_tail_bound": 3.901114878045759e-09
+    },
+    {
+      "name": "Hessian stays positive throughout the root enclosure",
+      "passed": true,
+      "combined_bound": 4.859625533763567e-05
+    },
+    {
+      "name": "bosonic-only negative control: no lower sampled nonzero vacuum",
+      "passed": true,
+      "minimum_sample_gap": 1.9071754670516157
+    },
+    {
+      "name": "independent three-dimensional searches find no lower point",
+      "passed": true,
+      "error": 6.661338147750939e-16,
+      "tolerance": 5e-09
+    },
+    {
+      "name": "doubling winding cutoff stabilizes selected phase",
+      "passed": true,
+      "error": 2.1649348980190553e-15,
+      "tolerance": 2e-11
+    },
+    {
+      "name": "finite winding sum obeys uniform analytic potential tail bound",
+      "passed": true,
+      "error": 1.1753598094799145e-10,
+      "tolerance": 8.149072527885437e-10
+    },
+    {
+      "name": "number depends on added matter content rather than being a CE constant",
+      "passed": true,
+      "one_fermion_q": 0.28145763821355535,
+      "two_fermion_q": 0.3229525326676293
+    },
+    {
+      "name": "implicit vacuum response equals independent re-minimization",
+      "passed": true,
+      "error": 9.275219481352792e-14,
+      "tolerance": 2e-09
+    },
+    {
+      "name": "physical heavy-mass slope includes vacuum readjustment",
+      "passed": true,
+      "error": 5.676015213396113e-14,
+      "tolerance": 2e-09
+    },
+    {
+      "name": "total equilibrium potential satisfies envelope theorem",
+      "passed": true,
+      "error": 3.3453240178005217e-12,
+      "tolerance": 2e-09
+    },
+    {
+      "name": "fixed epsilon is not exact in this selected branch",
+      "passed": true,
+      "fractional_errors": [
+        0.19181699062977048,
+        0.13385407993203896,
+        0.09943340977035033
+      ]
+    },
+    {
+      "name": "lowest spectrum realizes CE 1+2 moments at its minimum",
+      "passed": true,
+      "error": 6.938893903907228e-18,
+      "tolerance": 3e-17
+    },
+    {
+      "name": "all KK inverse masses agree with direct sum plus controlled tail",
+      "passed": true,
+      "error": 1.0658141036401503e-14,
+      "tolerance": 8e-14
+    },
+    {
+      "name": "record spectrum below next threshold contains exactly three complex modes",
+      "passed": true,
+      "error": 0.0,
+      "tolerance": 2e-18
+    },
+    {
+      "name": "higher modes change record spectrum when accessible",
+      "passed": true
+    },
+    {
+      "name": "virtual higher modes cannot be dropped at percent accuracy",
+      "passed": true
+    },
+    {
+      "name": "linear dynamical response integrator completed",
+      "passed": true
+    },
+    {
+      "name": "finite-frequency response matches independent ODE",
+      "passed": true,
+      "error": 1.519746556315313e-14,
+      "tolerance": 3e-11
+    },
+    {
+      "name": "linear response includes the prescribed Higgs source work",
+      "passed": true,
+      "error": 1.8968602228146153e-22,
+      "tolerance": 3e-14
+    },
+    {
+      "name": "response is suppressed in the fast limit, not instantaneously minimized",
+      "passed": true
+    },
+    {
+      "name": "scale family leaves dimensionless selected phase unchanged",
+      "passed": true,
+      "error": 0.0,
+      "tolerance": 2e-14
+    },
+    {
+      "name": "rescaled spectrum exposes unselected absolute scale",
+      "passed": true,
+      "error": 0.0,
+      "tolerance": 2e-14
+    }
+  ],
+  "check_count": 36,
+  "versions": {
+    "python": "3.13.5",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0"
+  }
+}

@@ -1,0 +1,37 @@
+PASS new circle background has allowed even-even parity and zero trace
+PASS chosen relative background commutes with Higgs block
+PASS full retained curvature gives common portal plus phase masses
+PASS holonomy kinetic normalization
+PASS massive winding polynomial equals Bessel determinant
+PASS proper-time prefactor uses four-dimensional energy density
+PASS three vector and four Dirac degrees of freedom give literature normalization
+PASS three-phase gradient against independent finite difference
+PASS three-phase Hessian against gradient differences
+PASS integer large gauge and permutation symmetries
+PASS all selected roots are nonzero and gapped
+PASS stationarity in all three phases including the common phase
+PASS strict local stability in all three phases
+PASS nonzero phase beats trivial phase with a finite gap
+PASS analytic winding-tail bounds bracket the infinite-sum root
+PASS Hessian stays positive throughout the root enclosure
+PASS bosonic-only negative control: no lower sampled nonzero vacuum
+PASS independent three-dimensional searches find no lower point
+PASS doubling winding cutoff stabilizes selected phase
+PASS finite winding sum obeys uniform analytic potential tail bound
+PASS number depends on added matter content rather than being a CE constant
+PASS implicit vacuum response equals independent re-minimization
+PASS physical heavy-mass slope includes vacuum readjustment
+PASS total equilibrium potential satisfies envelope theorem
+PASS fixed epsilon is not exact in this selected branch
+PASS lowest spectrum realizes CE 1+2 moments at its minimum
+PASS all KK inverse masses agree with direct sum plus controlled tail
+PASS record spectrum below next threshold contains exactly three complex modes
+PASS higher modes change record spectrum when accessible
+PASS virtual higher modes cannot be dropped at percent accuracy
+PASS linear dynamical response integrator completed
+PASS finite-frequency response matches independent ODE
+PASS linear response includes the prescribed Higgs source work
+PASS response is suppressed in the fast limit, not instantaneously minimized
+PASS scale family leaves dimensionless selected phase unchanged
+PASS rescaled spectrum exposes unselected absolute scale
+36 checks passed; /mnt/data/ce_work/hs1_fresh_results.json

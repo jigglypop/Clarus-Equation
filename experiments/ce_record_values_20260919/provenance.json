@@ -1,0 +1,42 @@
+{
+  "experiment": "CE-RV1",
+  "research_date": "2026-09-19",
+  "written_at_utc": "2026-09-19T15:19:12.602242+00:00",
+  "base_repository": "jigglypop/Clarus-Equation",
+  "base_main": "8721ab787a3848bddc6cfaf8f8c3622479d62639",
+  "repository_modified": false,
+  "pushed": false,
+  "new_commit": null,
+  "source_files": [
+    {
+      "name": "CE식.txt",
+      "sha256": "ad89afa6176722e7258e7bbc55f73f7a49a85a89db0a6f67fafba6a44e749b12"
+    },
+    {
+      "name": "CE_continuum_records_20260919/REPORT_ko.md",
+      "sha256": "e51d6506bb6450856f1471e8dffdf730da252dfbf2a3b5e05e0fe9a8713d70ec"
+    },
+    {
+      "name": "source_packages/CE_residual_higgs_closure_20260919/CE_residual_higgs_closure_20260919/verify_closure.py",
+      "sha256": "db2270651b7f1a783a5135e9b3ceab76426e7d8d820260092ce6e70ab6a4d5ad"
+    },
+    {
+      "name": "source_packages/CE_residual_higgs_closure_20260919/CE_residual_higgs_closure_20260919/REPORT_ko.md",
+      "sha256": "357c203ed7a263e75ea959534f8cf57d6f1f0dd0b1cebd42bf0a9bfa9e79e2b6"
+    }
+  ],
+  "standalone_code_sha256": "42cc22215a838e00f3cd19d2dbd0031d505e9e73fda39b0248260bf144e2dec9",
+  "execution": {
+    "static_checks": 30,
+    "time_checks": 10,
+    "total": 40,
+    "observational_fit": false,
+    "time_checkpoint_used_for_verification": true,
+    "fresh_zip_full_rerun_claimed": false
+  },
+  "external_primary_sources": [
+    "https://arxiv.org/abs/quant-ph/0611067",
+    "https://arxiv.org/abs/1801.00299",
+    "https://arxiv.org/abs/1106.4953"
+  ]
+}

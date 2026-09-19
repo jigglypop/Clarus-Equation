@@ -1,0 +1,549 @@
+{
+  "experiment": "CE-JS1",
+  "date": "2026-09-20",
+  "check_count": 39,
+  "checks": [
+    {
+      "name": "independent winding kernel reproduces HS1 at fixed radius",
+      "passed": true,
+      "error": 2.220446049250313e-16,
+      "tolerance": 5e-13
+    },
+    {
+      "name": "full Einstein potential gradients against independent five-point differences",
+      "passed": true,
+      "error": 5.231370892033738e-13,
+      "tolerance": 2e-10
+    },
+    {
+      "name": "g5 is unchanged while g4 and radius vary",
+      "passed": true,
+      "error": 4.440892098500626e-16,
+      "tolerance": 2e-15
+    },
+    {
+      "name": "Einstein masses equal Jordan masses after Weyl conversion",
+      "passed": true,
+      "error": 8.881784197001252e-16,
+      "tolerance": 2e-15
+    },
+    {
+      "name": "old phase minima are not stationary in the loop radion direction",
+      "passed": true,
+      "values": [
+        0.0004969594807729222,
+        0.0004277114104897972,
+        0.0003844730562701891
+      ]
+    },
+    {
+      "name": "old middle Higgs input is not an exact coupled Higgs stationary point",
+      "passed": true,
+      "value": 2.9609018501528266e-05
+    },
+    {
+      "name": "conditional Higgs minimization solves the Higgs equation",
+      "passed": true,
+      "error": 2.1896340399478117e-14,
+      "tolerance": 2e-13
+    },
+    {
+      "name": "conditional Higgs minimization does not solve the radius equation",
+      "passed": true,
+      "rows": [
+        {
+          "r": -0.1,
+          "u": 0.49999758065083516,
+          "q": 0.2773503390992097,
+          "Uu": -5.127456347963494e-15,
+          "Ur": 0.0008111701177466545
+        },
+        {
+          "r": 0.0,
+          "u": 0.4999985195445675,
+          "q": 0.28145757484747924,
+          "Uu": -1.880808876697504e-14,
+          "Ur": 0.00042771165404190397
+        },
+        {
+          "r": 0.1,
+          "u": 0.49999912107861877,
+          "q": 0.2858966342931837,
+          "Uu": 2.1896340399478117e-14,
+          "Ur": 0.000224716659817739
+        }
+      ]
+    },
+    {
+      "name": "positive integral representation of the derivative sine series",
+      "passed": true,
+      "error": 1.1102230246251565e-16,
+      "tolerance": 3e-13
+    },
+    {
+      "name": "positive mass-source derivative throughout the tested stable branch",
+      "passed": true
+    },
+    {
+      "name": "center-symmetric competitor proves a negative global phase minimum",
+      "passed": true,
+      "upper_bound": -0.9985230234713938
+    },
+    {
+      "name": "symbolic joint stationary scale-direction curvature identity",
+      "passed": true
+    },
+    {
+      "name": "joint stationary necessary Higgs ratio lies below one fifth",
+      "passed": true,
+      "largest_sample_ratio": 0.017167878374813983
+    },
+    {
+      "name": "negative scale direction on the entire necessary-ratio interval",
+      "passed": true
+    },
+    {
+      "name": "scale-invariant quartic has a negative stationary dilation curvature",
+      "passed": true
+    },
+    {
+      "name": "zero-Higgs boundary has negative radial curvature at any stationary radius",
+      "passed": true
+    },
+    {
+      "name": "fixed diagnostic inputs fail the remaining radial equation on the tested grid",
+      "passed": true,
+      "largest_log_mismatch": -15.89903283478763
+    },
+    {
+      "name": "relaxed source curvature includes the holonomy Schur correction",
+      "passed": true,
+      "error": 8.721923720145242e-06,
+      "tolerance": 0.0005
+    },
+    {
+      "name": "freezing holonomy omits a strictly negative relaxation term",
+      "passed": true,
+      "missing": 16.397082582583668
+    },
+    {
+      "name": "neutral Casimir changes neither phase nor direct Higgs gradients",
+      "passed": true,
+      "error": 0.0,
+      "tolerance": 1e-18
+    },
+    {
+      "name": "one neutral massless Dirac reverses the tested radial gradient",
+      "passed": true,
+      "without": 0.0004277114104897972,
+      "with_dirac": -0.0007856824286879033,
+      "with_real_scalar": 0.0007310598702842222
+    },
+    {
+      "name": "spectator shift in radius source equals its Casimir derivative",
+      "passed": true,
+      "error": 2.168404344971009e-19,
+      "tolerance": 1e-18
+    },
+    {
+      "name": "three thresholds recover selected phase and Einstein spectral radius",
+      "passed": true,
+      "error": 5.551115123125783e-17,
+      "tolerance": 2e-14
+    },
+    {
+      "name": "absolute noise recovers portal and Higgs source in the fixed readout scheme",
+      "passed": true,
+      "error": 1.1102230246251565e-16,
+      "tolerance": 2e-14
+    },
+    {
+      "name": "threshold-ratio stationarity is a parameter-free conditional null test",
+      "passed": true,
+      "error": 1.1657341758564144e-14,
+      "tolerance": 3e-11
+    },
+    {
+      "name": "same synthetic records recover the fixed adjoint multiplicity without optimization",
+      "passed": true,
+      "error": 2.220446049250313e-16,
+      "tolerance": 2e-12
+    },
+    {
+      "name": "record gauge-radius scaling follows fixed g5 rather than fixed g4",
+      "passed": true,
+      "error": 5.551115123125783e-17,
+      "tolerance": 2e-14
+    },
+    {
+      "name": "independently perturbed threshold fails fixed-content stationarity",
+      "passed": true,
+      "residual": 2.559756418074027,
+      "inferred_count": 1.0514056254962156
+    },
+    {
+      "name": "all KK inverse masses retain the correct Einstein radius factors",
+      "passed": true,
+      "error": 7.105427357601002e-15,
+      "tolerance": 2e-13
+    },
+    {
+      "name": "both full coupled mechanical integrations complete",
+      "passed": true
+    },
+    {
+      "name": "independent coupled integrators agree",
+      "passed": true,
+      "error": 4.879795399953101e-12,
+      "tolerance": 3e-09
+    },
+    {
+      "name": "coupled Higgs-holonomy-radius mechanics conserves total energy",
+      "passed": true,
+      "error": 8.528605339314099e-17,
+      "tolerance": 3e-12
+    },
+    {
+      "name": "radius leaves the previously fixed phase point",
+      "passed": true,
+      "final_r": -0.00921412609898017
+    },
+    {
+      "name": "instantaneous synthetic-spectrum inversion tracks coupled mechanical coordinates",
+      "passed": true,
+      "error": 1.0820337681405334e-16,
+      "tolerance": 2e-13
+    },
+    {
+      "name": "nonstationary trajectories must not be forced onto static selection formula",
+      "passed": true,
+      "residual": 0.1131780948333696
+    },
+    {
+      "name": "local mechanical Higgs frequency exceeds the mediator derivative-expansion gate",
+      "passed": true,
+      "higgs_curvature": 19.99999463233827,
+      "first_pair_threshold_squared": 0.36
+    },
+    {
+      "name": "two-loop balancing criterion is algebraically stationary",
+      "passed": true
+    },
+    {
+      "name": "two-loop balancing curvature requires a positive coefficient",
+      "passed": true
+    },
+    {
+      "name": "two-loop size at such a root is six-sevenths of the one-loop term",
+      "passed": true
+    }
+  ],
+  "inherited_source_sha256": "bb272ef846aecc9e365d06dbd2815c19c558a43846cc0ec6cb888e26864f4c39",
+  "inputs": {
+    "gref": 0.6,
+    "Rref": 1.0,
+    "lambda_ref": 10.0,
+    "u0": 0.5,
+    "nadj": 1,
+    "nmax": 2048
+  },
+  "fixed_radius_rows": [
+    {
+      "u": 0.2,
+      "q": 0.26567892171937313,
+      "y": 0.036,
+      "w": -1.6187160760266206,
+      "wy": 6.668912022931689,
+      "loop_higgs_source": -5.852878893326011e-05,
+      "loop_radion_gradient": 0.0004969594807729222,
+      "total_higgs_gradient": -5.999941471211066,
+      "total_radion_gradient": -0.899503040519227,
+      "thresholds": [
+        0.3794733192202055,
+        0.6529480513669331,
+        1.5168750060663831
+      ],
+      "readout": {
+        "q": 0.26567892171937313,
+        "Reff": 1.0,
+        "y": 0.036,
+        "kappa": 0.18,
+        "r": 0.0,
+        "u": 0.19999999999999998,
+        "g4": 0.6,
+        "nadj": 1.0000000000000002,
+        "stationarity": -3.552713678800501e-15,
+        "inverse_denominator": -10.011751082791257
+      }
+    },
+    {
+      "u": 0.5,
+      "q": 0.28145763821355524,
+      "y": 0.09,
+      "w": -1.3608225336675608,
+      "wy": 3.373723309006284,
+      "loop_higgs_source": -2.9609018501528266e-05,
+      "loop_radion_gradient": 0.0004277114104897972,
+      "total_higgs_gradient": 2.9609018501528266e-05,
+      "total_radion_gradient": 0.0004277114104897972,
+      "thresholds": [
+        0.6,
+        0.8227232878890752,
+        1.5573093792585238
+      ],
+      "readout": {
+        "q": 0.28145763821355524,
+        "Reff": 1.0,
+        "y": 0.09,
+        "kappa": 0.18,
+        "r": 0.0,
+        "u": 0.5,
+        "g4": 0.6,
+        "nadj": 0.9999999999999998,
+        "stationarity": -2.3314683517128287e-15,
+        "inverse_denominator": -7.539619019285487
+      }
+    },
+    {
+      "u": 0.8,
+      "q": 0.29231728452392575,
+      "y": 0.144,
+      "w": -1.2231870870369805,
+      "wy": 1.896805428879919,
+      "loop_higgs_source": -1.664705190481291e-05,
+      "loop_radion_gradient": 0.0003844730562701891,
+      "total_higgs_gradient": 6.000016647051906,
+      "total_radion_gradient": -0.89961552694373,
+      "thresholds": [
+        0.758946638440411,
+        0.9580175255838314,
+        1.6060072550067641
+      ],
+      "readout": {
+        "q": 0.29231728452392575,
+        "Reff": 1.0,
+        "y": 0.144,
+        "kappa": 0.18,
+        "r": 0.0,
+        "u": 0.7999999999999999,
+        "g4": 0.6,
+        "nadj": 1.0000000000000002,
+        "stationarity": 4.107825191113079e-15,
+        "inverse_denominator": -5.8515779912445405
+      }
+    }
+  ],
+  "conditional_higgs": [
+    {
+      "r": -0.1,
+      "u": 0.49999758065083516,
+      "q": 0.2773503390992097,
+      "Uu": -5.127456347963494e-15,
+      "Ur": 0.0008111701177466545
+    },
+    {
+      "r": 0.0,
+      "u": 0.4999985195445675,
+      "q": 0.28145757484747924,
+      "Uu": -1.880808876697504e-14,
+      "Ur": 0.00042771165404190397
+    },
+    {
+      "r": 0.1,
+      "u": 0.49999912107861877,
+      "q": 0.2858966342931837,
+      "Uu": 2.1896340399478117e-14,
+      "Ur": 0.000224716659817739
+    }
+  ],
+  "inversions": [
+    {
+      "u": 0.2,
+      "r": 0.0,
+      "q": 0.26567892171937313,
+      "thresholds": [
+        0.3794733192202055,
+        0.6529480513669331,
+        1.5168750060663831
+      ],
+      "inverse": {
+        "q": 0.26567892171937313,
+        "Reff": 1.0,
+        "y": 0.036,
+        "kappa": 0.18,
+        "r": 0.0,
+        "u": 0.19999999999999998,
+        "g4": 0.6,
+        "nadj": 1.0000000000000002,
+        "stationarity": -3.552713678800501e-15,
+        "inverse_denominator": -10.011751082791257
+      }
+    },
+    {
+      "u": 0.5,
+      "r": 0.0,
+      "q": 0.28145763821355524,
+      "thresholds": [
+        0.6,
+        0.8227232878890752,
+        1.5573093792585238
+      ],
+      "inverse": {
+        "q": 0.28145763821355524,
+        "Reff": 1.0,
+        "y": 0.09,
+        "kappa": 0.18,
+        "r": 0.0,
+        "u": 0.5,
+        "g4": 0.6,
+        "nadj": 0.9999999999999998,
+        "stationarity": -2.3314683517128287e-15,
+        "inverse_denominator": -7.539619019285487
+      }
+    },
+    {
+      "u": 0.8,
+      "r": 0.0,
+      "q": 0.29231728452392575,
+      "thresholds": [
+        0.758946638440411,
+        0.9580175255838314,
+        1.6060072550067641
+      ],
+      "inverse": {
+        "q": 0.29231728452392575,
+        "Reff": 1.0,
+        "y": 0.144,
+        "kappa": 0.18,
+        "r": 0.0,
+        "u": 0.7999999999999999,
+        "g4": 0.6,
+        "nadj": 1.0000000000000002,
+        "stationarity": 4.107825191113079e-15,
+        "inverse_denominator": -5.8515779912445405
+      }
+    },
+    {
+      "u": 0.43,
+      "r": -0.2,
+      "q": 0.2710335199813747,
+      "thresholds": [
+        0.6149360079930175,
+        0.9557989459982089,
+        2.0618401122251666
+      ],
+      "inverse": {
+        "q": 0.27103351998137465,
+        "Reff": 0.7408182206817179,
+        "y": 0.051882771563158465,
+        "kappa": 0.21985249646883057,
+        "r": -0.19999999999999998,
+        "u": 0.4299999999999999,
+        "g4": 0.6631025508453886,
+        "nadj": 0.9999999999999998,
+        "stationarity": -1.1657341758564144e-14,
+        "inverse_denominator": -9.173842741857742
+      }
+    },
+    {
+      "u": 0.65,
+      "r": 0.17,
+      "q": 0.2955914701222706,
+      "thresholds": [
+        0.6283590805957272,
+        0.7776288953673186,
+        1.2596340923517941
+      ],
+      "inverse": {
+        "q": 0.2955914701222706,
+        "Reff": 1.2904616208728898,
+        "y": 0.1643788680959405,
+        "kappa": 0.15185966698734907,
+        "r": 0.16999999999999996,
+        "u": 0.65,
+        "g4": 0.5511073706408744,
+        "nadj": 1.0000000000000002,
+        "stationarity": 7.327471962526033e-15,
+        "inverse_denominator": -5.3489480000726175
+      }
+    }
+  ],
+  "coupled_diagnostic": [
+    {
+      "t": 0.0,
+      "u": 0.5,
+      "q": 0.2814576382167917,
+      "r": 0.0,
+      "thresholds": [
+        0.6,
+        0.8227232878935041,
+        1.5573093792525503
+      ],
+      "stationarity_residual": 1.554312234475219e-14
+    },
+    {
+      "t": 2.0,
+      "u": 0.49999720299956757,
+      "q": 0.28145762770318683,
+      "r": -0.0005706271226939342,
+      "thresholds": [
+        0.6001695338787907,
+        0.8231767542401703,
+        1.5585103333848178
+      ],
+      "stationarity_residual": 0.007112744119564973
+    },
+    {
+      "t": 4.0,
+      "u": 0.49999936087596003,
+      "q": 0.2814574715218595,
+      "r": -0.0022866644226443773,
+      "thresholds": [
+        0.600686007725621,
+        0.8245472298497069,
+        1.5621309793088487
+      ],
+      "stationarity_residual": 0.028315331406665867
+    },
+    {
+      "t": 8.0,
+      "u": 0.4999980298827803,
+      "q": 0.28145495986618563,
+      "r": -0.00921412609898017,
+      "thresholds": [
+        0.6027694275985165,
+        0.8301082559951191,
+        1.5768459133961097
+      ],
+      "stationarity_residual": 0.1131780948333696
+    }
+  ],
+  "energy_drift": 8.528605339314099e-17,
+  "negative_controls": {
+    "neutral_dirac_radial_gradient": -0.0007856824286879033,
+    "base_radial_gradient": 0.0004277114104897972,
+    "perturbed_record": {
+      "q": 0.2899030973722307,
+      "Reff": 0.9882464004798849,
+      "y": 0.0878967853255304,
+      "kappa": 0.18103457982978788,
+      "r": -0.007882146086212884,
+      "u": 0.4971425905736887,
+      "g4": 0.6017218291366666,
+      "nadj": 1.0514056254962156,
+      "stationarity": 2.559756418074027,
+      "inverse_denominator": -6.224407332283298
+    }
+  },
+  "scope": {
+    "main_modified_by_script": false,
+    "observations_used": false,
+    "full_parent": false,
+    "complete_radion_potential": false,
+    "cosmological_evolution": false,
+    "real_time_qft_prediction": false,
+    "dynamic_records_are_instantaneous_synthetic": true,
+    "all_constants_selected": false,
+    "prior_holonomy_results_preserved": true
+  }
+}
