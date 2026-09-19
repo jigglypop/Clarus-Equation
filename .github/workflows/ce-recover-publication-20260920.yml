@@ -66,3 +66,4 @@ jobs:
           receipt={'publication':'verified','commit':head,'parent':base,'added_files':70,'reading_maps_modified':1,'all_approved_blob_hashes_match':True}
           print(json.dumps(receipt))
           with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as f: f.write('```json\n'+json.dumps(receipt,indent=2)+'\n```\n')
+# trigger: publish verified CE chapters 01-12 to main
