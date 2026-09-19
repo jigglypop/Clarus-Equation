@@ -1,0 +1,86 @@
+{
+  "label": "CE-HC1 source and verification ledger",
+  "date": "2026-09-19",
+  "base_commit": "5ede900537a20da8a30edad9b0709b13a34f9151",
+  "source_files": {
+    "CE식.txt": {
+      "sha256": "ad89afa6176722e7258e7bbc55f73f7a49a85a89db0a6f67fafba6a44e749b12",
+      "bytes": 17723
+    },
+    "CE_inverse_main_published_20260919.zip": {
+      "sha256": "b5f67839e181e6c09b48376036b50b43e05b48249a12fb92f3c97cef5149a3db",
+      "bytes": 79690
+    },
+    "ce_inverse_structure_20260919.py": {
+      "sha256": "34a6848f4606ec442997af37690a96baa5042872e6c6b83efbf41b7b991c682a",
+      "bytes": 19245
+    },
+    "ce_inverse_charge_closure_20260919.py": {
+      "sha256": "34850953288a2c594b4e72033ea78d004987d87b06c41215dde01cb1256488da",
+      "bytes": 12723
+    }
+  },
+  "prior_reexecuted": {
+    "irs1": {
+      "groups": 14,
+      "passed": true,
+      "rerun_sha256": "81d8c76f3a5d655328a15b0e93ff3865c3fb7e4dbaac8fb73508f3499bb9eaf9"
+    },
+    "irs2": {
+      "groups": 7,
+      "passed": true,
+      "rerun_sha256": "4d806db4a4f698d9890d699272ba1c334fde4726e8f97760cde50caea8d848d9"
+    }
+  },
+  "new_groups": 11,
+  "new_all_passed": true,
+  "python_compile": true,
+  "observations_used": false,
+  "fit_performed": false,
+  "full_joint_rmse": null,
+  "scientific_success": false,
+  "full_repository_regression": false,
+  "external_peer_review": false,
+  "accuracy_scope": "Unexpanded quadratic Gaussian matter kernel on constant flat background; excludes Higgs/collective/gravitational loops.",
+  "methodology_note": "Analytical development and numerical diagnostics, not a preregistered experiment. Root brackets are arbitrary-precision floating-point, not interval certificates.",
+  "public_sources": [
+    "https://arxiv.org/abs/1201.0537",
+    "https://home.cern/science/physics/higgs-boson/",
+    "https://arxiv.org/abs/2101.02507",
+    "https://arxiv.org/abs/hep-th/0306138",
+    "https://arxiv.org/abs/2105.04726"
+  ],
+  "source_read_scope": "Pich PDF equations were available as parsed text; four requested screenshots returned cache-miss errors. No PDF table/image data were used. CERN HTML and arXiv abstract pages were read.",
+  "reproduce": [
+    "python -m pip install -r verify/ce_inverse_20260919_requirements.txt",
+    "python verify/ce_higgs_clarus_20260919.py --out _reproduce/higgs_clarus.json"
+  ],
+  "files": {
+    "paper/06_QFT_재설계/89_힉스장과_클라루스장의_차이.md": {
+      "bytes": 10233,
+      "sha256": "c8300fe120cc62b89c94b56410f7cf0bd06eb2d92b07e2dac042b12db5bb22bb",
+      "git_blob_sha": "7c95debeb3a92025f9098a1267994d6d628f5abe"
+    },
+    "paper/06_QFT_재설계/88_힉스_포털의_역선택과_클라루스_질량극.md": {
+      "bytes": 14937,
+      "sha256": "817a3da9e03320d7445a498a6f8f6166c2917374b242f960143a41559d03cfa1",
+      "git_blob_sha": "817c4b5f5844b23f29f03b17eb0f87da3b1118ff"
+    },
+    "verify/ce_higgs_clarus_20260919.py": {
+      "bytes": 13574,
+      "sha256": "8937f6d0be916289aabe47d23c858c8a5bb750477f83a6fdb783be9872cba100",
+      "git_blob_sha": "9e2b312d4a841782a99823dbdbd19e30d41dcb86"
+    },
+    "verify/ce_higgs_clarus_20260919_results.json": {
+      "bytes": 8687,
+      "sha256": "00bde83caf1a276bbd901b2f9c94a239ad909e8903854c1dc717da0c26d4992b",
+      "git_blob_sha": "b41c4edcfc33709d1ad1633f269a271353be3306"
+    },
+    "paper/00_읽기_지도.md": {
+      "bytes": 8183,
+      "sha256": "ba0efdffdfa2e5c46a9df9ca75645931c36639254ac95fe484ad0ec4cd6ec6f6",
+      "git_blob_sha": "56e6a4d422f9e9428a6ea8379749ed13159764a0"
+    }
+  },
+  "self_hash_excluded": true
+}
