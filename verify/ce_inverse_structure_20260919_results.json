@@ -1,0 +1,166 @@
+{
+  "label": "CE-IRS1: conditional inverse structure and common response audit",
+  "date": "2026-09-19",
+  "seed": 20260919,
+  "scope": "Mathematical model and implementation verification only.",
+  "new_observational_data_used": false,
+  "parameter_fit_performed": false,
+  "full_joint_rmse": null,
+  "observational_improvement_established": false,
+  "whole_theory_proved": false,
+  "remote_write": false,
+  "conditional_inverse_and_realization_proofs": "See REPORT_ko.md for hypotheses and derivations.",
+  "environment": {
+    "python": "3.13.5",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0",
+    "sympy": "1.14.0",
+    "mpmath": "1.3.0"
+  },
+  "verification_groups": {
+    "symbolic_identities": {
+      "passed": true,
+      "count": 9,
+      "identities": {
+        "determinant_difference": true,
+        "log_response_derivative": true,
+        "inverse_eta": true,
+        "inverse_quadratic": true,
+        "eta_monotonicity": true,
+        "general_triangle_determinant": true,
+        "schur_complement": true,
+        "schur_determinant_accounting": true,
+        "cubic_discriminant": true
+      }
+    },
+    "high_precision_inverse": {
+      "passed": true,
+      "cases": 60,
+      "precision_decimal_digits": 80,
+      "max_abs_r_error": "1.786878188e-57",
+      "max_abs_cosine_error": "2.68031737e-61",
+      "max_abs_trace_vs_determinant_L": "3.19958128e-80"
+    },
+    "random_matrix_inverse": {
+      "passed": true,
+      "cases": 192,
+      "max_abs_r_error": 1.0522679949609426e-11,
+      "max_abs_cosine_error": 9.451214810773934e-11
+    },
+    "projection_and_rephasing": {
+      "passed": true,
+      "cases": 192,
+      "max_scaled_schur_error": 3.8243964680295617e-16,
+      "max_scaled_cycle_product_error": 5.728823223459215e-16
+    },
+    "inverse_quadrature": {
+      "passed": true,
+      "cases": 8,
+      "max_relative_U_error": "7.621745648e-77",
+      "max_relative_Us_error": "1.657802325e-81"
+    },
+    "original_generator_mass_derivatives": {
+      "passed": true,
+      "cases": 18,
+      "max_absolute_L_error": "6.654762452e-81",
+      "max_absolute_M_error": "2.213861568e-80",
+      "fixed_quantity": "dimensionful epsilon, not epsilon/s"
+    },
+    "shared_multisector_minimum_samples": {
+      "passed": true,
+      "cases": 4,
+      "masses_squared": [
+        "0.7",
+        "1.3",
+        "3.1"
+      ],
+      "epsilon": "0.1",
+      "positive_multiplicities": [
+        1,
+        2,
+        6
+      ],
+      "minimum_reference": "theta=pi",
+      "smallest_nonreference_potential": "8.18841713015e-6",
+      "note": "Global common minimum is an analytical consequence of positivity, not a grid claim."
+    },
+    "complete_monotonicity_samples": {
+      "passed": true,
+      "derivative_orders": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "cases": 42,
+      "note": "All-orders result is proved analytically in the report."
+    },
+    "positive_induced_metric": {
+      "passed": true,
+      "cases": 24,
+      "min_sample_metric": 0.0011185782994687355,
+      "max_relative_unitary_invariance_error": 6.927919876485775e-15
+    },
+    "divided_difference_and_projective_metric": {
+      "passed": true,
+      "cases": 24,
+      "max_relative_C_integral_vs_log_error": 1.4983345721459668e-13,
+      "max_relative_CP2_metric_error": 2.9397788354928453e-16
+    },
+    "bubble_derivative_metric": {
+      "passed": true,
+      "cases": 3,
+      "max_absolute_error": "0.0"
+    },
+    "triangle_saturation_samples": {
+      "passed": true,
+      "cases": 100,
+      "min_gap": 0.0021282982671112505,
+      "equal_edge_gap": 0.0,
+      "analytic_condition": "a^2+b^2+c^2=3eps^2; |abc|<=eps^3, equality iff a=b=c=eps."
+    },
+    "vacuum_orbit_noether_transport": {
+      "passed": true,
+      "cases": 16,
+      "max_relative_current_error": 4.250954514889765e-16,
+      "max_absolute_eom_residual": 2.015590821265568e-17,
+      "max_relative_a6_energy_invariant_error": 6.661338147750939e-16,
+      "max_relative_finite_difference_velocity_error": 5.627468424814334e-11,
+      "max_absolute_charge_eigenvalue_error": 5.421010862427522e-20,
+      "scope": "Fixed spectral theta=pi, constant induced C, prescribed FLRW metric; initial charge is input."
+    },
+    "negative_controls": {
+      "passed": true,
+      "unequal_edges_single_state_same_spectrum_error": 5.551115123125783e-16,
+      "equal_edges_not_implied_by_single_nonendpoint_state": true,
+      "same_spectrum_different_kinetic_metric": {
+        "nonrotating": 1.709138100976914e-05,
+        "rotating": 0.0005754337557817271,
+        "positive_difference": 0.000558342374771958,
+        "expected_difference": 0.000558342374771958
+      },
+      "spectator_cancellation_absolute_error": 3.608224830031759e-16,
+      "zero_response_inverse_undefined": true,
+      "absolute_vacuum_constant_invisible_to_relative_responses": true,
+      "phase_orientation_theta_vs_minus_theta_not_identified": true,
+      "total_g2_not_equal_to_relative_leading_new_sector_term": true
+    }
+  },
+  "group_count": 14,
+  "all_groups_passed": true,
+  "example": {
+    "s": "1.0",
+    "epsilon": "0.15",
+    "theta": "1.2",
+    "L": "0.0098844627338706837082892878468509",
+    "M": "-0.031156793264797395200632601409945",
+    "eta_inverse": "3.1677018633540372670807453416149",
+    "recovered_r": "0.15",
+    "recovered_cos_theta": "0.36235775447667357763837335562308",
+    "U": "0.000029460356907925358405722683367079",
+    "Us": "-0.000030173976726673582367126387648889"
+  }
+}
