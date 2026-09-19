@@ -1,0 +1,116 @@
+name: CE byte-exact main publication
+on:
+  push:
+    branches: [ce-publication-20260920-js1]
+    paths: [.github/workflows/ce-publication-payload-20260920.yml]
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Validate complete payload and publish approved research only
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: python
+        run: |
+          import base64, hashlib, io, json, lzma, os, pathlib, subprocess, tarfile, urllib.request
+          repo = 'jigglypop/Clarus-Equation'
+          expected_head = '8721ab787a3848bddc6cfaf8f8c3622479d62639'
+          payload_sha = 'e813d292ef42e3ff2da6ebd427db392f707504aa0a3ea4a96ea11f410a92d613'
+          blobs = [
+              '92a97d1b82e04d84663ae8e45c991559f2402062',
+              'e08f2ab636836529e3b4d451f063cc55546344c1',
+              '8a122e4f4e8ade3d404edc26d9e2b38d3050d6ee',
+              '5d43dc75539ad08202ae302acab89f95fa1502aa',
+              'd450371dda4bd3d21151e78805e63edee3b7a15f',
+              '7fe3d3ff59155b2322d1445f4ac9c0f537edd77f',
+              '227dd568811c89a858327e4d3d7a9257a7230b4e',
+              '67e1db378525a246cf5b3a64825a769019c3b979',
+              '8ea77b3d2503e2e9993629fac0c6f3f3dc508e14',
+              '30fe275bd43171514074a2449de35e6d8b32b590',
+              '0f622d3d3639af8652b2e6827b8321020244fb74',
+              'af8922c46cf966c13d1ae391ade23f27227d0d89',
+              '0bc6dfe40467becb73813b651d1ca6cdd71e2fb7',
+              '7cd542134837d3bbbdb378590a822c8120fd6e5a',
+              'c5e85e8775227ab6cf86ee4579ff1f756aabe6d3',
+              '168edeca71d5ee9c860092cbae0f8716b80c5a0a',
+          ]
+          def git(*args):
+              return subprocess.check_output(['git', *args], text=True).strip()
+          def blob_hash(data):
+              return hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
+          assert git('rev-parse', 'HEAD') == expected_head, 'Main moved; do not overwrite concurrent work.'
+          assert not git('status', '--porcelain'), 'Checkout must be clean.'
+          pieces = []
+          for index, sha in enumerate(blobs):
+              req = urllib.request.Request('https://api.github.com/repos/'+repo+'/git/blobs/'+sha,
+                  headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],
+                           'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'})
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  item = json.load(response)
+              assert item['encoding'] == 'base64'
+              data = base64.b64decode(item['content'])
+              assert blob_hash(data) == sha, 'Part integrity failed.'
+              assert len(data) == (8192 if index < 15 else 5140), 'Part length failed.'
+              pieces.append(data)
+          payload = b''.join(pieces)
+          assert len(payload) == 128020
+          assert hashlib.sha256(payload).hexdigest() == payload_sha, 'Payload integrity failed.'
+          raw = lzma.decompress(payload)
+          assert len(raw) < 5_000_000, 'Unexpected expanded archive size.'
+          files = {}
+          with tarfile.open(fileobj=io.BytesIO(raw), mode='r:') as archive:
+              for member in archive:
+                  assert member.isfile(), 'Only regular files are approved.'
+                  path = pathlib.PurePosixPath(member.name)
+                  assert not path.is_absolute() and '..' not in path.parts
+                  assert member.name not in files, 'Duplicate archive entry.'
+                  files[member.name] = archive.extractfile(member).read()
+          plan = json.loads(files.pop('PUBLICATION_PLAN.json'))
+          entries = plan['files']
+          assert len(entries) == 70 and len(files) == 70
+          paths = []
+          for entry in entries:
+              name = entry['path']
+              assert name.startswith(('paper/', 'experiments/'))
+              data = files.pop(name)
+              assert len(data) == entry['size']
+              assert hashlib.sha256(data).hexdigest() == entry['sha256']
+              assert blob_hash(data) == entry['git_blob']
+              destination = pathlib.Path(name)
+              assert not destination.exists(), 'Research path conflict: '+name
+              paths.append((destination, data))
+          assert not files
+          # The manifest provides the sole permitted edit to an existing file.
+          candidates = [value for value in plan.values() if isinstance(value,dict) and value.get('path') == 'paper/00_읽기_지도.md']
+          assert len(candidates) == 1, 'Reading-map append plan missing.'
+          update = candidates[0]
+          index_path = pathlib.Path(update['path'])
+          original = index_path.read_bytes()
+          assert blob_hash(original) == '56e6a4d422f9e9428a6ea8379749ed13159764a0', 'Reading map changed.'
+          addition = update['append'].encode('utf-8')
+          assert addition not in original
+          for destination, data in paths:
+              destination.parent.mkdir(parents=True, exist_ok=True)
+              destination.write_bytes(data)
+          index_path.write_bytes(original + addition)
+          approved = [str(path) for path, _ in paths] + [str(index_path)]
+          subprocess.run(['git','add','--',*approved],check=True)
+          actual = set(git('diff','--cached','--name-only').splitlines())
+          assert actual == set(approved), 'Unexpected staged paths.'
+          assert not git('diff','--name-only'), 'Unexpected unstaged modifications.'
+          subprocess.run(['git','config','user.name','github-actions[bot]'],check=True)
+          subprocess.run(['git','config','user.email','41898282+github-actions[bot]@users.noreply.github.com'],check=True)
+          message = plan.get('commit_message','Publish CE follow-up chapters and joint-selection checks (CE-JS1)')
+          subprocess.run(['git','commit','-m',message],check=True)
+          assert git('rev-parse','HEAD^') == expected_head
+          subprocess.run(['git','push','origin','HEAD:refs/heads/main'],check=True)
+          head = git('rev-parse','HEAD')
+          remote = git('ls-remote','origin','refs/heads/main').split()[0]
+          assert remote == head
+          print(json.dumps({'publication':'verified','commit':head,'new_research_files':70,'modified_reading_maps':1,'payload_sha256':payload_sha}))
