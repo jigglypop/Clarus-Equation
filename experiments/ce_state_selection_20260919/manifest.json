@@ -1,0 +1,12 @@
+{
+  "scope": "Reproducible new state-preparation model only; prior CMB outputs are not rerun.",
+  "sha256": {
+    "state_selection.py": "4b03f434e2d22a1743c05f4aeee3ab1d5a32c714cd3027dd03e00d9bd7daf467",
+    "REPORT_ko.md": "1676de02d50ca264955af3063e10fadc7d4ca02b17abb2c6e0ed713bb363f2eb",
+    "results.json": "ed06cf0303b4b252d6e23e79472bcf1e31ec1613e0aef2ee490bb6c0d2a73a40",
+    "requirements.txt": "3e7c285201aa9d481b7473f4b49a9dac75af78fbc0111d9666c7733d096f0735",
+    "reproduce.py": "bf357e79f6030ea2a5db2be2cca3a6995a6685a00be945a082d5bd183850e0b1",
+    "README.md": "64c1fc0ddebc8c594a38009db4ce328067752cf047043ce1f7e14833bbf54397",
+    "environment.json": "074028cfd2047d02b6b39aaadd7727c3ac69bfb19e6115ad21e5fa8b778467bc"
+  }
+}
