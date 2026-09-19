@@ -14,72 +14,55 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-      - name: Verify all approved bytes and publish without force
+      - name: Verify approved archive and publish research files
         env:
           GH_TOKEN: ${{ github.token }}
         shell: python
         run: |
-          import base64, hashlib, io, json, lzma, os, pathlib, subprocess, tarfile, urllib.request
-          repo='jigglypop/Clarus-Equation'
-          base='8721ab787a3848bddc6cfaf8f8c3622479d62639'
-          shas=['92a97d1b82e04d84663ae8e45c991559f2402062','e08f2ab636836529e3b4d451f063cc55546344c1','8a122e4f4e8ade3d404edc26d9e2b38d3050d6ee','5d43dc75539ad08202ae302acab89f95fa1502aa','d450371dda4bd3d21151e78805e63edee3b7a15f','7fe3d3ff59155b2322d1445f4ac9c0f537edd77f','227dd568811c89a858327e4d3d7a9257a7230b4e','67e1db378525a246cf5b3a64825a769019c3b979','8ea77b3d2503e2e9993629fac0c6f3f3dc508e14','30fe275bd43171514074a2449de35e6d8b32b590','0f622d3d3639af8652b2e6827b8321020244fb74','af8922c46cf966c13d1ae391ade23f27227d0d89','0bc6dfe40467becb73813b651d1ca6cdd71e2fb7','7cd542134837d3bbbdb378590a822c8120fd6e5a','c5e85e8775227ab6cf86ee4579ff1f756aabe6d3','168edeca71d5ee9c860092cbae0f8716b80c5a0a']
-          def git(*args):
-              return subprocess.check_output(['git',*args],text=True).strip()
-          def bsha(data):
-              return hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
-          def get_blob(sha):
-              req=urllib.request.Request('https://api.github.com/repos/'+repo+'/git/blobs/'+sha,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'})
-              with urllib.request.urlopen(req,timeout=30) as response: item=json.load(response)
-              assert item['encoding']=='base64'
-              data=base64.b64decode(item['content'])
-              assert bsha(data)==sha, 'Transport integrity failure'
-              return data
-          assert git('rev-parse','HEAD')==base, 'Main changed; refuse overwrite'
-          assert not git('status','--porcelain')
-          packed=b''.join(get_blob(sha) for sha in shas)
-          assert len(packed)==128020
+          import base64,hashlib,io,json,lzma,os,pathlib,subprocess,tarfile,urllib.request
+          repo='jigglypop/Clarus-Equation'; base='8721ab787a3848bddc6cfaf8f8c3622479d62639'
+          shas='92a97d1b82e04d84663ae8e45c991559f2402062 e08f2ab636836529e3b4d451f063cc55546344c1 8a122e4f4e8ade3d404edc26d9e2b38d3050d6ee 5d43dc75539ad08202ae302acab89f95fa1502aa d450371dda4bd3d21151e78805e63edee3b7a15f 7fe3d3ff59155b2322d1445f4ac9c0f537edd77f 227dd568811c89a858327e4d3d7a9257a7230b4e 67e1db378525a246cf5b3a64825a769019c3b979 8ea77b3d2503e2e9993629fac0c6f3f3dc508e14 30fe275bd43171514074a2449de35e6d8b32b590 0f622d3d3639af8652b2e6827b8321020244fb74 af8922c46cf966c13d1ae391ade23f27227d0d89 0bc6dfe40467becb73813b651d1ca6cdd71e2fb7 7cd542134837d3bbbdb378590a822c8120fd6e5a c5e85e8775227ab6cf86ee4579ff1f756aabe6d3 168edeca71d5ee9c860092cbae0f8716b80c5a0a'.split()
+          def git(*a): return subprocess.check_output(['git',*a],text=True).strip()
+          def bsha(b): return hashlib.sha1(b'blob '+str(len(b)).encode()+b'\0'+b).hexdigest()
+          def blob(s):
+              req=urllib.request.Request('https://api.github.com/repos/'+repo+'/git/blobs/'+s,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'})
+              with urllib.request.urlopen(req,timeout=30) as f: obj=json.load(f)
+              assert obj['encoding']=='base64'
+              b=base64.b64decode(obj['content']); assert bsha(b)==s
+              return b
+          assert git('rev-parse','HEAD')==base and not git('status','--porcelain')
+          packed=b''.join(map(blob,shas))
           assert hashlib.sha256(packed).hexdigest()=='e813d292ef42e3ff2da6ebd427db392f707504aa0a3ea4a96ea11f410a92d613'
-          raw=lzma.decompress(packed)
-          assert len(raw)<5000000
-          available={}
-          with tarfile.open(fileobj=io.BytesIO(raw),mode='r:') as archive:
-              for member in archive.getmembers():
-                  name=pathlib.PurePosixPath(member.name)
-                  assert member.isfile() and not name.is_absolute() and '..' not in name.parts
-                  assert member.name not in available
-                  available[member.name]=archive.extractfile(member).read()
-          plan=json.loads(available.pop('PUBLICATION_PLAN.json'))
-          assert plan['repo']==repo and plan['base_commit']==base
-          entries=plan['files']; assert len(entries)==70
-          assert set(available)=={e['path'] for e in entries}
-          writes=[]
+          raw=lzma.decompress(packed); assert len(raw)<5000000
+          files={}
+          with tarfile.open(fileobj=io.BytesIO(raw),mode='r:') as arc:
+              for m in arc.getmembers():
+                  p=pathlib.PurePosixPath(m.name)
+                  assert m.isfile() and not p.is_absolute() and '..' not in p.parts and m.name not in files
+                  files[m.name]=arc.extractfile(m).read()
+          plan=json.loads(files.pop('PUBLICATION_PLAN.json')); entries=plan['files']
+          assert plan['base_commit']==base and plan['repo']==repo and len(entries)==70
+          assert set(files)=={e['path'] for e in entries}
           for e in entries:
-              name=e['path']; data=available[name]
-              assert name.startswith(('paper/','experiments/'))
-              assert len(data)==e['size'] and bsha(data)==e['git_blob']
-              assert hashlib.sha256(data).hexdigest()==e['sha256']
-              path=pathlib.Path(name); assert not path.exists(), 'Path conflict: '+name
-              writes.append((path,data))
-          update=plan['reading_map']; index=pathlib.Path(update['path'])
-          original=index.read_bytes(); assert bsha(original)==update['expected_blob']
-          addition=update['append'].encode('utf-8'); assert addition not in original
-          for path,data in writes:
-              path.parent.mkdir(parents=True,exist_ok=True); path.write_bytes(data)
-          index.write_bytes(original+addition)
-          paths=[str(path) for path,data in writes]+[str(index)]
-          subprocess.run(['git','add','--',*paths],check=True)
+              b=files[e['path']]; p=pathlib.Path(e['path'])
+              assert e['path'].startswith(('paper/','experiments/')) and not p.exists()
+              assert len(b)==e['size'] and bsha(b)==e['git_blob'] and hashlib.sha256(b).hexdigest()==e['sha256']
+          upd=plan['reading_map']; idx=pathlib.Path(upd['path']); prior=idx.read_bytes()
+          assert bsha(prior)==upd['expected_blob']
+          for name,b in files.items():
+              p=pathlib.Path(name); p.parent.mkdir(parents=True,exist_ok=True); p.write_bytes(b)
+          idx.write_bytes(prior+upd['append'].encode())
+          paths=list(files)+[str(idx)]
+          # Explicit allowlist only; -f includes requested research outputs, never force-pushes.
+          subprocess.run(['git','add','-f','--',*paths],check=True)
           staged=set(subprocess.check_output(['git','diff','--cached','--name-only','-z']).decode().strip('\0').split('\0'))
           assert staged==set(paths)
-          subprocess.run(['git','config','user.name','github-actions[bot]'],check=True)
-          subprocess.run(['git','config','user.email','41898282+github-actions[bot]@users.noreply.github.com'],check=True)
-          subprocess.run(['git','commit','-m','Publish preserved CE follow-up chapters 01-12 and complete verification sources\n\nInstall 70 approved research files after byte-exact SHA-256 and Git object verification. Append the reading-map link. Historical validation results remain labeled by their original scope. No physics completion claim or force push.'],check=True)
+          git('config','user.name','github-actions[bot]'); git('config','user.email','41898282+github-actions[bot]@users.noreply.github.com')
+          git('commit','-m','Publish preserved CE chapters 01-12 and 70 verified research source files\n\nByte-exact supplied reports, code, results and provenance. Existing research preserved. No force push and no claim of completed physical unification.')
           assert git('rev-parse','HEAD^')==base
           subprocess.run(['git','push','origin','HEAD:refs/heads/main'],check=True)
-          head=git('rev-parse','HEAD')
-          assert git('ls-remote','origin','refs/heads/main').split()[0]==head
-          for e in entries:
-              assert git('rev-parse',head+':'+e['path'])==e['git_blob']
-          receipt={'publication':'verified','commit':head,'parent':base,'new_research_files':70,'modified_reading_maps':1,'archive_sha256':hashlib.sha256(packed).hexdigest(),'file_integrity':'all 70 approved blobs matched'}
-          print(json.dumps(receipt,ensure_ascii=False))
-          with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as summary:
-              summary.write('## CE chapters 01-12 published\n\n```json\n'+json.dumps(receipt,indent=2)+'\n```\n')
+          head=git('rev-parse','HEAD'); assert git('ls-remote','origin','refs/heads/main').split()[0]==head
+          for e in entries: assert git('rev-parse',head+':'+e['path'])==e['git_blob']
+          receipt={'publication':'verified','commit':head,'parent':base,'added_files':70,'reading_maps_modified':1,'all_approved_blob_hashes_match':True}
+          print(json.dumps(receipt))
+          with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as f: f.write('```json\n'+json.dumps(receipt,indent=2)+'\n```\n')
