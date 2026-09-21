@@ -1,0 +1,128 @@
+$$\Delta a_\mu = a_\mu^{\text{Exp}} - a_\mu^{\text{SM}} = 249(48) \times 10^{-11} \quad (5.0\sigma,\ \text{WP2020 기준; WP2025에서 해소됨})$$
+
+### 9.2 CE 예측 공식
+
+$$\Delta a_\ell^{\text{CE}} = \frac{\alpha}{2\pi} \cdot e^{-1} \cdot \left(\frac{m_\ell}{v_{\text{EW}} \cdot \delta}\right)^2 \tag{5}$$
+
+### 9.3 공식의 유도: 5단계 구성
+
+#### Step A. 유효 차원의 결정 (우주론에서 확립)
+
+자기일관성 방정식 (1)과 D_eff = 3 + delta로부터 Omega_b = 0.04865가 유도되었다. 이 결과는 Planck 관측과 0.05 sigma로 일치하며, delta = 0.17776을 독립적으로 고정한다. delta는 g-2에 맞추기 위해 사후 조정된 적이 없다.
+
+#### Step B. 1차원 접힘 인자 (CE 공리)
+
+우주론에서 3차원 공간의 경로 접힘은 e^{-3} ~ Omega_b를 준다. 이것은 각 공간 차원이 독립적으로 e^{-1}의 접힘 인자를 기여한다는 해석을 허용한다. 1-loop Feynman 다이어그램의 루프 적분은 단일 Feynman 파라미터(x in [0,1])에 대한 1차원 적분이다.
+
+$$D_{\text{loop}} = 1 \quad \Rightarrow \quad \text{접힘 인자} = e^{-D_{\text{loop}}} = e^{-1} = 0.3679$$
+
+일관성 확인: 우주론(3차원, e^{-3})과 입자물리(1차원, e^{-1})의 비율은 e^{-2} = 0.135이며, 이는 우주론적 접힘이 입자물리적 접힘보다 3/1 = 3배 더 많은 차원에서 발생하는 것과 일치한다.
+
+#### Step B-보강. 함수방정식으로 본 지수형 접힘
+
+Step B를 "비유"가 아니라 최소 수학 구조로 쓰면 다음과 같다. 접힘 생존함수 $S(D)$를 "독립 적분 자유도 $D$개를 통과한 총 생존율"로 두고:
+
+- (B1) **가분성(독립성):** $S(D_1 + D_2) = S(D_1)S(D_2)$
+- (B2) **연속성:** $S(D)$는 $D$에 대해 연속
+- (B3) **정규화:** $S(0)=1,\; 0<S(D)\le 1$
+
+그러면 Cauchy형 함수방정식의 표준 결과로:
+
+$$S(D) = e^{-\kappa D}, \quad \kappa > 0$$
+
+이다. 즉, "지수형" 자체는 공리가 아니라 (B1)-(B3)의 귀결이다. CE는 $D$의 단위를 "1 자유도당 1 e-fold"로 정규화하여 $\kappa=1$을 채택한다:
+
+$$S(D)=e^{-D}$$
+
+따라서 1-loop(단일 Feynman 파라미터 적분)에서 $D_{\text{loop}}=1$이면 $S(1)=e^{-1}$이 된다.
+
+**정합성 교정(robustness check):** 우주론 고정점 해 $\varepsilon^2=0.04865$, $D_{\text{eff}}=3.17776$로부터
+
+$$\kappa_{\text{data}} = -\frac{\ln \varepsilon^2}{D_{\text{eff}}} = 0.9513$$
+
+를 얻는다. 이때 1차원 인자는 $e^{-0.9513}=0.3862$로, $e^{-1}=0.3679$와 4.99% 차이이다. 이 차이가 $g-2$ 중심값에 주는 이동은 약 $12.4\times10^{-11}$ (약 $0.26\sigma$)로 현재 실험 오차 내에 있다. 즉 Step B의 핵심 결론(1차원 지수 접힘)은 현재 정밀도에서 안정적이다.
+
+#### Step C. QED 루프 인자 (표준 물리학)
+
+Schwinger (1948)의 QED 1-loop 꼭짓점 보정:
+
+$$a^{(1)} = \frac{\alpha}{2\pi} = 1.1614 \times 10^{-3}$$
+
+CE 보정은 동일한 전자기 꼭짓점을 통해 진입하므로, QED 구조 인자 alpha/(2pi)를 상속한다. 이것은 가정이 아니라, CE 보정이 QCD가 아닌 QED 과정이라는 사실의 직접적 귀결이다.
+
+#### Step D. EFT 질량 스케일링 (표준 물리학)
+
+이상자기모멘트 연산자는 차원-5 (dimension-5)이다:
+
+$$\mathcal{O}_5 = \frac{e}{4m} \bar{\psi} \sigma^{\mu\nu} \psi F_{\mu\nu}$$
+
+에너지 스케일 Lambda에서의 새로운 물리학은 차원-6 보정을 생성한다:
+
+$$\Delta a \sim C_6 \cdot \frac{m_\ell^2}{\Lambda^2}$$
+
+이 m^2 스케일링은 EFT의 정리(theorem)이다. Delta a가 무차원이고, 연산자 구조가 두 차수의 운동량을 요구하며, on-shell에서 운동량이 외부 페르미온의 질량에 비례하기 때문에 강제된다. 특정 모델에 의존하지 않는다.
+
+CE에서: Lambda = M_CE = v_EW delta.
+
+#### Step E. 에너지 스케일의 결정
+
+클라루스장의 에너지 스케일은 전자약 진공기대값(v_EW = 246.22 GeV)에 delta를 곱한 값이다:
+
+$$M_{\text{CE}} = v_{\text{EW}} \cdot \delta = 43.77 \text{ GeV} \tag{4}$$
+
+v_EW 선택의 정당화: v_EW는 힉스 장의 진공기대값으로서 전자약 스케일의 근본 파라미터이다. M_W = g v_EW / 2, M_Z = M_W / cos theta_W, M_H = sqrt(2 lambda) v_EW가 모두 v_EW로부터 파생된다. 다른 전자약 스케일과의 비교:
+
+| 기본 스케일 | M = scale x delta (GeV) | 접촉 근사 Delta a_mu (x10^{-11}) | WP20 텐션 |
+|---|---|---|---|
+| v_EW delta | 43.77 | 249.0 | 0.0 sigma |
+| M_H delta | 22.26 | 962.3 | 14.9 sigma |
+| M_Z delta | 16.21 | 1815.4 | 32.6 sigma |
+| M_W delta | 14.29 | 2337.0 | 43.5 sigma |
+
+접촉 근사 기준에서는 v_EW만이 WP20 중앙값에 가장 가깝다. 따라서 이 단계의 결론은 "v_EW가 가장 자연스러운 브리지 스케일 후보"이지, 유한 상관길이까지 포함한 완전 해가 이미 닫혔다는 뜻은 아니다.
+
+#### Step E-보강. 힉스 포탈 질량항 전개로 본 유도 경로
+
+Step E의 핵심은 "왜 전자약 스케일의 기준이 $v_{\text{EW}}$인가"를 라그랑지안에서 직접 확인하는 것이다. 10.5절의 힉스 포탈 모형
+
+$$\mathcal{L} \supset -\frac{1}{2}\mu_\Phi^2\Phi^2 - \lambda_{\text{HP}}|H|^2\Phi^2$$
+
+에서 EWSB 이후 $H=(0,(v_{\text{EW}}+h)/\sqrt{2})$를 대입하면, $\Phi^2$ 항의 계수는
+
+$$m_\Phi^2 = \mu_\Phi^2 + \lambda_{\text{HP}}v_{\text{EW}}^2$$
+
+가 된다(10.5절 식과 동일). 포탈 지배 구간 $\lambda_{\text{HP}}v_{\text{EW}}^2 \gg \mu_\Phi^2$에서는
+
+$$M_{\text{CE}} \simeq v_{\text{EW}}\sqrt{\lambda_{\text{HP}}}$$
+
+이고, 10.5절의 $\lambda_{\text{HP}}=\delta^2$를 대입하면
+
+$$M_{\text{CE}} = v_{\text{EW}}\delta$$
+
+를 얻는다. 즉 Eq. (4)는 "임의 스케일 선택"이 아니라, (i) 포탈 라그랑지안, (ii) EWSB 질량항 전개, (iii) $\lambda_{\text{HP}}=\delta^2$의 세 단계에서 닫힌다.
+
+**반증 가능 조건:** 향후 충돌기에서 $\lambda_{\text{HP}}$가 $\delta^2$와 강하게 모순되거나, 포탈 지배 조건이 배제되면 Step E는 직접 반증된다. 이 경우 Eq. (5)의 스케일 항은 $v_{\text{EW}}\delta$가 아니라 $m_\Phi^2=\mu_\Phi^2+\lambda_{\text{HP}}v_{\text{EW}}^2$의 일반형으로 대체되어야 한다.
+
+#### 유도 단계별 엄밀성 평가
+
+| 단계 | 내용 | 상태 | 근거 |
+|---|---|---|---|
+| A | D_eff = 3 + delta | 검증됨 | Omega_b 관측 일치 (0.05 sigma) |
+| B | 1차원 접힘 = e^{-1} | 준-유도됨 | 가분성+연속성 => 지수형, 데이터 교정에서 5% 이내 |
+| C | alpha / (2 pi) | 증명됨 | 표준 QED (Schwinger 1948) |
+| D | (m / Lambda)^2 | 증명됨 | EFT 차원 분석 (모델 독립적) |
+| E | Lambda = v_EW delta | 준-유도됨 | 힉스 포탈 질량항 전개 + lambda_HP = delta^2 |
+
+현재 가장 약한 고리는 Step E의 포탈 지배 조건( $\lambda_{\text{HP}}v_{\text{EW}}^2 \gg \mu_\Phi^2$ )이며, 가장 강한 고리는 Step A (Planck CMB 데이터로 독립 검증)이다.
+
+### 9.4 수치 결과
+
+**독립 측정 상수**: alpha = 1/137.036, m_mu = 105.658 MeV, v_EW = 246.22 GeV. 이 3개 값은 모두 가속기 실험에서 독립 측정된 물리 상수이며, delta는 우주론적 예측(Omega_b)을 위해 CE 기하학에서 이미 고정된 값이다.
+
+**뮤온 g-2 (접촉 근사):**
+
+$$\Delta a_\mu^{\text{CE}} = \frac{1}{137.036 \times 2\pi} \cdot e^{-1} \cdot \left(\frac{105.658}{43{,}767}\right)^2 = 249.0 \times 10^{-11}$$
+
+| | CE 예측 | 비교 기준 | 텐션 |
+|---|---|---|---|
+| Delta a_mu (접촉) | 249.0 x 10^{-11} | WP20: 249 +/- 48 x 10^{-11} | 0.00 sigma |
