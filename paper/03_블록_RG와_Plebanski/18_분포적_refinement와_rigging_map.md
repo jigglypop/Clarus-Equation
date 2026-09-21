@@ -134,8 +134,8 @@ refinement renormalization의 수치적 맥락을 제공하지만, 이 모형의
 ## 18.5 재현 범위
 
 직접계, distributional functional, rigging pairing과 음성 대조군은
-[distributional_rigging_map.py](../../examples/physics/distributional_rigging_map.py)와
-[test_distributional_rigging_map.py](../../tests/test_distributional_rigging_map.py)에 있다.
+distributional_rigging_map.py (미확보 경로: `../../examples/physics/distributional_rigging_map.py`)와
+test_distributional_rigging_map.py (미확보 경로: `../../tests/test_distributional_rigging_map.py`)에 있다.
 
 ```powershell
 .codex/hooks/python.cmd pytest tests/test_distributional_rigging_map.py -q

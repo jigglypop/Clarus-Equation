@@ -10,7 +10,7 @@ proper-vertex 정리는 spacelike 경계를 가진 **평탄한 하나의 Lorentz
 붙일 수 없는 이유와, 그 대신 준비한 정확한 유리수 경계를 보인다. 다음으로 정리의 가정을
 만족하는 대칭 한 simplex와 spin family를 만든다. 마지막으로 세 vertex를 곱할 수 있게 하는
 rank-one 입력을 명시하고, 그것이 표준 state sum이나 curved amplitude가 아님을 경계로 남긴다.
-형식 지위와 수치는 [차원 분류 원장 C4](../검증_원장/참조_차원_분류_원장.md#c4-proper-boundary-12a)에
+형식 지위와 수치는 차원 분류 원장 C4 (미확보 경로: `../검증_원장/참조_차원_분류_원장.md#c4-proper-boundary-12a`)에
 고정되어 있다.
 
 ## 16.1 같은 incidence는 같은 amplitude가 아니다
@@ -187,8 +187,8 @@ refinement, Einstein--Hilbert 지배와 two-DOF를 차례로 물을 수 있다. 
 ## 16.6 재현 범위
 
 정확 유리수 경계, spin family, rank-one 음성 대조군은
-[proper_vertex_boundary.py](../../examples/physics/proper_vertex_boundary.py)와
-[test_proper_vertex_boundary.py](../../tests/test_proper_vertex_boundary.py)에 있다.
+proper_vertex_boundary.py (미확보 경로: `../../examples/physics/proper_vertex_boundary.py`)와
+test_proper_vertex_boundary.py (미확보 경로: `../../tests/test_proper_vertex_boundary.py`)에 있다.
 
 ```powershell
 .codex/hooks/python.cmd pytest tests/test_proper_vertex_boundary.py -q

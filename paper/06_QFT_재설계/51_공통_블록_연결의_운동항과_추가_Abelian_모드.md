@@ -217,8 +217,8 @@ $F_1=dt\wedge dz+dx\wedge dy$이고 $F_1\wedge F_1=2\,dt\wedge dx\wedge dy\wedge
 
 ## 51.8 검산·판정과 다음에 필요한 선택 원리
 
-**[수치 검산]** [실행 코드](../../verify/ce_block_connection_kinetics.py)와
-[산출 JSON](../../verify/ce_block_connection_kinetics.json)은 36개 Hermitian 기저의
+**[수치 검산]** 실행 코드 (과거 기록: `verify/ce_block_connection_kinetics.py`)와
+산출 JSON (과거 기록: `verify/ce_block_connection_kinetics.json`)은 36개 Hermitian 기저의
 교환자 rank와 중심 차원을 정수·유리수 소거 및 NumPy rank로 독립 대조했다.
 네 움직이는 flag의 최대 항등식 오차는 $2.419\times10^{-15}$다.
 9개 proper-time 적분은 수렴 급수와 로그 변수 Gauss 적분 64·128점으로

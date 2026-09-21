@@ -32,4 +32,4 @@ $A$의 부호와 positive residue, full gauge-fixed propagator, higher-derivativ
 
 ## 23.4 재현 범위
 
-TT projection, channel별 simple pole, determinant 차수 대조, 4미분 반례는 [massless_spin2_physical_pole_gate.py](../../examples/physics/massless_spin2_physical_pole_gate.py)와 [대응 테스트](../../tests/test_massless_spin2_physical_pole_gate.py)에 있다. 원장의 focused 결과는 `20 passed`다.
+TT projection, channel별 simple pole, determinant 차수 대조, 4미분 반례는 massless_spin2_physical_pole_gate.py (미확보 경로: `../../examples/physics/massless_spin2_physical_pole_gate.py`)와 대응 테스트 (미확보 경로: `../../tests/test_massless_spin2_physical_pole_gate.py`)에 있다. 원장의 focused 결과는 `20 passed`다.

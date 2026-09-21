@@ -153,8 +153,8 @@ $C=0$은 Hessian 자체가 퇴화하는 별도 Maxwell 극한이다.
 
 ## 49.6 산출과 미분 전개의 적용 범위
 
-[계산 코드](../../verify/ce_maxwell_quantum_collision.py)와
-[고정 산출·소스 해시](../../verify/ce_maxwell_quantum_collision.json)를 사용한다.
+계산 코드 (과거 기록: `verify/ce_maxwell_quantum_collision.py`)와
+고정 산출·소스 해시 (과거 기록: `verify/ce_maxwell_quantum_collision.json`)를 사용한다.
 
 ```powershell
 python -B verify/ce_maxwell_quantum_collision.py

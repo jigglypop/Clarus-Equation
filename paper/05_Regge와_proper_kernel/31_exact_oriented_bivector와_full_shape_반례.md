@@ -85,7 +85,7 @@ $$
 
 로 transport한다. $SL(2,\mathbb C)$ lift의 induced Lorentz adjoint action도 같은 식을 준다. fixed witness에서는 40개 cross-cell comparison에서 exact $B_0$가 일치하고, canonical 및 signed representative가 식 (8)과 일치한다. 이는 common affine embedding에서 같은 고전 bivector를 다른 cell gauge로 쓴 pure-gauge consistency다.
 
-열 internal triangle의 세-cell loop도 식 (8)을 세 번 적용하면 30장의 transition telescope 때문에 시작 bivector로 돌아온다. base witness의 최대 wedge, cross-cell transport, loop residual은 각각 약 $1.304219\times10^{-15}$, $2.230806\times10^{-15}$, $5.43944\times10^{-16}$다. scale $10^{-500}$과 $10^{500}$에서도 scale-free route가 보존된다. focused [bivector test](../../tests/test_proper_vertex_one_to_five_bivectors.py)의 **6 passed**는 이 산출의 재현 근거일 뿐, intrinsic curvature나 quantum amplitude의 증거가 아니다.
+열 internal triangle의 세-cell loop도 식 (8)을 세 번 적용하면 30장의 transition telescope 때문에 시작 bivector로 돌아온다. base witness의 최대 wedge, cross-cell transport, loop residual은 각각 약 $1.304219\times10^{-15}$, $2.230806\times10^{-15}$, $5.43944\times10^{-16}$다. scale $10^{-500}$과 $10^{500}$에서도 scale-free route가 보존된다. focused bivector test (미확보 경로: `../../tests/test_proper_vertex_one_to_five_bivectors.py`)의 **6 passed**는 이 산출의 재현 근거일 뿐, intrinsic curvature나 quantum amplitude의 증거가 아니다.
 
 ## 31.4 full labelled shape의 반례와 남는 명제
 

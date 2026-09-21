@@ -2,8 +2,8 @@
 
 이 파일은 논문 결론이 아니라 원고 재개 조건을 기록한다. 조건부 수학은
 [우주론 수식 문서](9_우주론_수식_의미와_후보.md), 데이터 의존성은
-[readout 재현성 노트](../../검증_원장/상수_H0_readout_law_audit.md)와
-[TDCOSMO 재현성 노트](../../검증_원장/상수_TDCOSMO_real_covariance_audit.md)에 분리한다.
+[readout 재현성 노트](../../검증_원장/특화_감사/상수_H0_readout_law_audit.md)와
+[TDCOSMO 재현성 노트](../../검증_원장/특화_감사/상수_TDCOSMO_real_covariance_audit.md)에 분리한다.
 
 독자는 선형회귀, 공분산 행렬, rank와 관측 likelihood의 기본 뜻을 안다고 가정한다. 먼저 원고가 아직 재현 불가한 이유를 확인하고, 이어 source-role 선형 toy model이 어떤 가정에서만 식별 가능한지 읽은 뒤, 마지막으로 실제 원고를 재개하기 위한 입력·검증·반증 조건을 확인하는 순서로 읽는다.
 

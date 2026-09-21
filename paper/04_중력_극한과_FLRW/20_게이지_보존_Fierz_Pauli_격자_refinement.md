@@ -139,8 +139,8 @@ interacting renormalized limit, CE에서 Einstein--Hilbert 항이 지배한다�
 ## 20.5 재현 범위
 
 무차원 central symbol, gaugeㆍBianchi 항등식, compact 오차 상계와 doubler 대조군은
-[lattice_fierz_pauli_refinement.py](../../examples/physics/lattice_fierz_pauli_refinement.py)와
-[test_lattice_fierz_pauli_refinement.py](../../tests/test_lattice_fierz_pauli_refinement.py)에 있다.
+lattice_fierz_pauli_refinement.py (미확보 경로: `../../examples/physics/lattice_fierz_pauli_refinement.py`)와
+test_lattice_fierz_pauli_refinement.py (미확보 경로: `../../tests/test_lattice_fierz_pauli_refinement.py`)에 있다.
 
 ```powershell
 .codex/hooks/python.cmd pytest tests/test_lattice_fierz_pauli_refinement.py -q

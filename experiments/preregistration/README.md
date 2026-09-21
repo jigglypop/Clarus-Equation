@@ -1,22 +1,16 @@
 # 사전등록 계약
 
-사전등록 JSON은 결과 확인 전에 고정한 비교 규칙과 holdout 상태를 기록한다. 파일을 단순 결과 산출물로 취급해 덮어쓰지 않는다.
+우주론·양자 holdout의 v1·v2 계약 네 개와 `validate_holdout_manifest.py`만 유지한다.
+계약의 원문과 해시는 바꾸지 않았다. v1은 v2의 선행 판본 검증에 필요하다.
 
-## 현재 직접 검증되는 계약
-
-- `cosmology_future_holdout_v1.json`, `cosmology_future_holdout_v2.json`
-- `quantum_future_holdout_v1.json`, `quantum_future_holdout_v2.json`
-- `validate_holdout_manifest.py`
-
-`tests/test_holdout_preregistration.py`가 위 네 판본과 검증기를 직접 검사한다. 기본 CLI는 최신 v2 두 판본을 검사한다.
-
-## 보존 중인 미분류 계약
-
-`agi_world_memory_*`, `episodic_ltm_*`, `sparse_causal_bridge_*`, `c_elegans_*`, `causal_recurrent_geometry_*`는 현재 코드에서 직접 소비하는 경로가 확인되지 않았지만, 사전등록의 역사적 무결성을 위해 삭제하거나 덮어쓰지 않는다. 별도 출처·해시 원장을 만든 뒤 보관 경로로 이동한다.
-
-검증 예:
+`tests/test_holdout_preregistration.py`가 동결·해시·자료 역할·재피팅 금지를 검사한다.
+실제 holdout 배정과 입력 확보는 별도 조건이며, 문법 통과가 평가 준비 완료는 아니다.
+삭제된 과거 파일을 참조하는 계약은 실행 가능하다고 표시하지 않는다.
 
 ```powershell
-python -B experiments/preregistration/validate_holdout_manifest.py --no-verify-artifacts
+python -B -m experiments.preregistration.validate_holdout_manifest --no-verify-artifacts
 python -B -m pytest -p no:cacheprovider tests/test_holdout_preregistration.py -q
 ```
+
+별도 도메인의 미사용 계약과 탐색 노트는 제거했다. 새 계약은 현재 검증기와 연결되는
+독립 실험에만 추가하며, 이미 동결한 계약을 결과에 맞춰 수정하지 않는다.

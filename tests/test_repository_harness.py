@@ -1,15 +1,15 @@
 from __future__ import annotations
 
+import ast
 import tomllib
 
 from test_support.paths import (
     CODEX_ROOT,
     PAPER_ROOT,
-    Q0020_ROOT,
+    PHYSICS_ROOT,
     REPO_ROOT,
     RESEARCH_CONTRACT_PATH,
     TESTS_ROOT,
-    VERIFY_ROOT,
 )
 
 ROOT = REPO_ROOT
@@ -39,8 +39,7 @@ def _toml(relative_path: str) -> dict:
 def test_shared_test_paths_are_semantic_and_location_independent() -> None:
     assert PAPER_ROOT == ROOT / "paper"
     assert TESTS_ROOT == ROOT / "tests"
-    assert VERIFY_ROOT == ROOT / "verify"
-    assert Q0020_ROOT == VERIFY_ROOT / "Q-0020"
+    assert PHYSICS_ROOT == ROOT / "examples" / "physics"
     assert CODEX_ROOT == ROOT / ".codex"
     assert RESEARCH_CONTRACT == PAPER_ROOT / "검증_원장" / "연구_목표_계약.md"
 
@@ -57,6 +56,35 @@ def test_only_the_essential_regression_suite_is_active() -> None:
 
     assert active_tests == ESSENTIAL_TESTS
     assert not any(TESTS_ROOT.rglob("legacy_*.py"))
+
+
+def test_maintained_code_is_reachable_from_the_regression_suite() -> None:
+    pending = list(TESTS_ROOT.glob("test_*.py"))
+    reachable = set()
+    while pending:
+        path = pending.pop()
+        if path in reachable:
+            continue
+        reachable.add(path)
+        for node in ast.walk(ast.parse(path.read_text(encoding="utf-8-sig"))):
+            names = []
+            if isinstance(node, ast.Import):
+                names = [alias.name for alias in node.names]
+            elif isinstance(node, ast.ImportFrom) and node.module:
+                names = [node.module] + [node.module + "." + a.name for a in node.names]
+            for name in names:
+                dependency = ROOT.joinpath(*name.split(".")).with_suffix(".py")
+                if dependency.is_file() and dependency not in reachable:
+                    pending.append(dependency)
+
+    implementations = {
+        path for folder in ("examples", "experiments", "test_support")
+        for path in (ROOT / folder).rglob("*.py") if path.name != "__init__.py"
+    }
+    assert implementations <= reachable, sorted(implementations - reachable)
+    assert not any(PAPER_ROOT.rglob("*.py"))
+    for retired in ("verify", "ledger", "derivations", "_workspace", "scripts", "artifacts"):
+        assert not (ROOT / retired).exists(), f"retired code root restored: {retired}"
 
 
 def test_root_and_delegated_models_are_explicit() -> None:

@@ -249,8 +249,8 @@ $$
 
 ## 55.6 독립 계산과 연구 판정
 
-**[계산 검산]** [실행 코드](../../verify/ce_embedding_einstein_variation.py)와
-[산출 JSON](../../verify/ce_embedding_einstein_variation.json)에 다음을 보존했다.
+**[계산 검산]** 실행 코드 (과거 기록: `verify/ce_embedding_einstein_variation.py`)와
+산출 JSON (과거 기록: `verify/ce_embedding_einstein_variation.json`)에 다음을 보존했다.
 
 - 두 5차원 반례에서 매장 미분의 법선 투영으로 $b$를 얻고, Gauss 곡률에서
   계산한 Einstein 텐서를 FRW 식과 대조했다. 우주상수 0의 해에서는 proper-time

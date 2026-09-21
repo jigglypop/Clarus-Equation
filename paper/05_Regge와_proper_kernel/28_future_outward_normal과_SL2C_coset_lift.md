@@ -150,7 +150,7 @@ $$
 
 ## 28.5 구현 재현과 남은 경계
 
-[frame-lift 모듈](../../examples/physics/proper_vertex_one_to_five_frame_lifts.py)과 focused [회귀 테스트](../../tests/test_proper_vertex_one_to_five_frame_lifts.py)는 위 유한 증인을 materialize한다. base scale, $7/3$, $10^{-100}$에서 15개 unique tetrahedron과 25 incidences(5 boundary, 20 internal)를 확인한다. positive rational rescaling은 normal direction, boost 및 lift를 바꾸지 않는다.
+frame-lift 모듈 (미확보 경로: `../../examples/physics/proper_vertex_one_to_five_frame_lifts.py`)과 focused 회귀 테스트 (미확보 경로: `../../tests/test_proper_vertex_one_to_five_frame_lifts.py`)는 위 유한 증인을 materialize한다. base scale, $7/3$, $10^{-100}$에서 15개 unique tetrahedron과 25 incidences(5 boundary, 20 internal)를 확인한다. positive rational rescaling은 normal direction, boost 및 lift를 바꾸지 않는다.
 
 focused test의 **8 passed**는 exact tangent annihilation, timelike/future/outward 분리, shared internal의 정확한 반대 부호, scale invariance, near-null rejection, boost 및 lift residual을 회귀한 결과다. 이는 식 (1), 식 (5), 식 (6)--(9)의 수학 증명과 구별되는 구현 재현 근거다.
 

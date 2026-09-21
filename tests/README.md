@@ -12,8 +12,11 @@
 | 이산기하·일반상대론 | `test_zerod_plebanski_closure.py`, `test_regge_tent_transfer.py` |
 
 `test_repository_harness.py`의 `ESSENTIAL_TESTS`가 이 목록을 정확히 고정한다. 삭제한 세부
-테스트는 활성 실행 계약이 아니며 필요하면 Git 이력에서 복구한다. 구현과 역사적 결과 원장은
-삭제하지 않았으므로 과거 문서에 나온 테스트 파일명은 당시의 검산 영수증으로만 읽는다.
+테스트는 활성 실행 계약이 아니다. 계산 구현은 `examples/physics/` 한 곳에서 직접
+import한다. 과거 `verify/`는 삭제했고, 천막 이동 코드·결과와 공동 차원 계산은 이곳으로
+통합했다. 문서 검사용 수식 정규화는 `test_support.markdown_math`에 둔다.
+
+하네스는 테스트에서 import 경로로 도달하지 않는 구현과 퇴역 폴더의 재생성도 검사한다.
 
 저장소 경로는 `test_support.paths`의 의미 상수를 사용한다. 전체 집합에는 NumPy와 SciPy가
 필요하며 의존성은 `requirements-harness.txt`, 재현 스냅샷은
@@ -26,4 +29,3 @@ python -B -m pytest -p no:cacheprovider tests -q
 ```
 
 새 테스트를 추가하거나 기존 대표 파일을 교체할 때는 [tests 전용 규약](AGENTS.md)을 따른다.
-
