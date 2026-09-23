@@ -10,6 +10,8 @@ import pytest
 
 from test_support.paths import PREREGISTRATION_ROOT, REPO_ROOT
 
+from examples.physics.rendering import ce_rendering_derivations as DV
+from examples.physics.rendering import ce_rendering_planck_readout as PL
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
     alpha_em_inv,
@@ -187,3 +189,79 @@ def test_rendering_predictions_v1_is_frozen_and_reproduced() -> None:
     assert values["P06"] == pytest.approx(ckm_triangle(a)[0], rel=1e-5)
     assert values["P07"] == pytest.approx(hubble_readout(c, True), rel=1e-5)
     assert values["P08"] == pytest.approx(hubble_readout(c, False), rel=1e-5)
+
+
+def test_horizon_h0_fails_the_acoustic_angle_and_theta_calibration_restores_it() -> None:
+    a = calibrated_alpha_s()[0]
+    c = core(a)
+    assert DV.ce_theta_pull(c) < -8.0
+    h = DV.h_from_theta(a)
+    assert 0.672 < h < 0.682
+    assert abs(DV.ce_theta_pull(c, h)) < 1e-6
+    res = DV.score_variant_iii("SK")
+    assert res["N"] == 38 and res["k_continuous"] == 3
+    assert res["rmse_all"] == pytest.approx(0.841, abs=2e-3)
+    assert max(abs(o["pull"]) for o in res["rows"]) < 2.0
+
+
+def test_tilt_is_not_a_lorentz_boost_of_the_observer() -> None:
+    beta = DV.boost_equivalent_beta()
+    assert 0.35 < beta < 0.41
+    assert beta > 100 * DV.CMB_DIPOLE_BETA
+
+
+def test_rendering_predictions_v2_keeps_v1_and_is_frozen() -> None:
+    v1 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v1.json").read_text(encoding="utf-8"))
+    v2 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v2.json").read_text(encoding="utf-8"))
+    assert v2["supersedes_manifest_id"] == v1["manifest_id"]
+    body = {k: v for k, v in v2.items() if k != "manifest_sha256"}
+    canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    assert hashlib.sha256(canonical).hexdigest() == v2["manifest_sha256"]
+    for key in ("registry", "derivations"):
+        path = REPO_ROOT / v2["model"][f"{key}_path"]
+        assert hashlib.sha256(path.read_bytes()).hexdigest() == v2["model"][f"{key}_sha256"], (
+            f"{key} changed after v2 freeze: create v3 and keep v1, v2")
+    values = {p["id"]: p["value"] for p in v2["predictions"]}
+    a = calibrated_alpha_s()[0]
+    assert values["P11"] == pytest.approx(1 / math.cos(math.pi / 8), rel=1e-5)
+    assert values["P07"] == pytest.approx(100 * DV.h_from_theta(a) / math.cos(math.pi / 8), rel=1e-4)
+    assert "P08" not in values
+
+
+def test_planck_unit_loop_transfers_to_the_horizon_readout() -> None:
+    a = calibrated_alpha_s()[0]
+    c = core(a)
+    h = PL.h_rings(c)
+    assert abs(DV.ce_theta_pull(c, h)) < 2.0
+    for rejected in (1 + a / (16 * math.pi), 1 + c["d"] / (2 * math.pi)):
+        assert abs(DV.ce_theta_pull(c, hubble_readout(c, False) / 100 * rejected)) > 5.0
+    res = PL.score_variant_iv("SK")
+    assert res["N"] == 39 and res["k_continuous"] == 2
+    assert res["rmse_all"] == pytest.approx(0.834, abs=2e-3)
+    assert max(abs(o["pull"]) for o in res["rows"]) < 2.0
+
+
+def test_tilt_is_a_euclidean_rotation_with_imaginary_rapidity() -> None:
+    phi = math.pi / 8
+    assert PL.killing_alignment(phi) == pytest.approx(math.cos(phi), abs=1e-14)
+    z = PL.imaginary_rapidity_factor(phi)
+    assert z.imag == pytest.approx(0.0, abs=1e-15)
+    assert z.real == pytest.approx(math.cos(phi), abs=1e-15)
+
+
+def test_rendering_predictions_v3_keeps_v1_v2_and_is_frozen() -> None:
+    v2 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v2.json").read_text(encoding="utf-8"))
+    v3 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v3.json").read_text(encoding="utf-8"))
+    assert v3["supersedes_manifest_id"] == v2["manifest_id"]
+    body = {k: v for k, v in v3.items() if k != "manifest_sha256"}
+    canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    assert hashlib.sha256(canonical).hexdigest() == v3["manifest_sha256"]
+    for key in ("registry", "derivations", "planck_readout"):
+        path = REPO_ROOT / v3["model"][f"{key}_path"]
+        assert hashlib.sha256(path.read_bytes()).hexdigest() == v3["model"][f"{key}_sha256"], (
+            f"{key} changed after v3 freeze: create v4 and keep earlier manifests")
+    values = {q["id"]: q["value"] for q in v3["predictions"]}
+    c = core(calibrated_alpha_s()[0])
+    assert values["P08"] == pytest.approx(100 * PL.h_rings(c), rel=1e-4)
+    assert values["P07"] == pytest.approx(100 * PL.h_rings(c) / math.cos(math.pi / 8), rel=1e-4)
+    assert values["P11"] == pytest.approx(1 / math.cos(math.pi / 8), rel=1e-5)

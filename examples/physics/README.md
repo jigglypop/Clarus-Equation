@@ -18,7 +18,9 @@
 | 기록 | `record/dimensional_filter.py` | 각도에 따른 1·2·3성분 투영과 비선택 상태 보존 |
 | 기록 | `record/record_dust_bridge.py` | 기록 커널의 공통 보조 구현 |
 | 기록 | `record/time_homogeneous_pointer_qca.py` | 비동기 포인터 기록 |
-| 렌더링 | `rendering/ce_rendering_registry.py` | α_s 하나로 묶은 양자·거시 행의 공동 채점, 렌더링 규칙·bit 장부 (43장) |
+| 렌더링 | `rendering/ce_rendering_registry.py` | α_s 하나로 묶은 양자·거시 행의 공동 채점, 렌더링 규칙·bit 장부 (43장, 사전 등록 v1 잠금) |
+| 렌더링 | `rendering/ce_rendering_derivations.py` | 음향 각도 θ* 검사, θ*-교정 판본 III, 부스트 반례 (43장 §43.11, v2 잠금) |
+| 렌더링 | `rendering/ce_rendering_planck_readout.py` | 플랑크 단위 판독 규칙 R-Pl, 판본 IV, 유클리드 회전 C2 (43장 §43.12, v3 잠금) |
 
 `regge_tent_transfer.json`은 해당 코드의 SHA-256과 적용범위를 검사하는 고정 fixture다.
 새 실행 결과를 기존 검증 영수증에 자동으로 덮어쓰지 않는다.
