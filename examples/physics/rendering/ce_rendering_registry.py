@@ -215,6 +215,43 @@ def hubble_kms(c: dict) -> float:
     return math.sqrt(PI) * math.exp(-log_s / 2.0) / T_PLANCK_S * KM_PER_MPC
 
 
+# H0 판독 행: (이름, 판독 시기 z, 값, +σ, −σ). DESI BAO+BBN H0는 BAO 블록과 자료가 겹쳐 제외.
+H0_READOUTS = (
+    ("H0 Planck", 1090.0, 67.36, 0.54, 0.54),
+    ("H0 TDCOSMO", 0.5, 71.6, 3.9, 3.3),
+    ("H0 TRGB", 0.03, 70.39, 1.94, 1.94),
+    ("H0 SH0ES", 0.03, 73.17, 0.86, 0.86),
+)
+
+
+def vacuum_share(c: dict, z: float) -> float:
+    """g(z) = Ω_Λ(z)/Ω_Λ(0): 분별하지 않는 진공의 점유율(오늘 1, 이른 우주 0)."""
+    om = c["Om"]
+    return 1.0 / (om * (1.0 + z) ** 3 + 1.0 - om)
+
+
+def hubble_readout(c: dict, z: float, amplitude: float) -> float:
+    """H1: 국소 판독의 분별 약화. 실제 팽창 H(z)가 아니라 판독만 바뀐다(BAO 반례)."""
+    return hubble_kms(c) * math.exp(amplitude * vacuum_share(c, z))
+
+
+@lru_cache(maxsize=4096)
+def readout_amplitude(alpha_s: float) -> float:
+    """H0 판독 네 행으로 약화 크기 하나를 맞춘다(연속 적합 매개변수 +1)."""
+    from scipy.optimize import minimize_scalar
+
+    c = core(alpha_s)
+
+    def chi2(A: float) -> float:
+        total = 0.0
+        for _, z, v, up, dn in H0_READOUTS:
+            p = hubble_readout(c, z, A)
+            total += ((p - v) / (up if p >= v else dn)) ** 2
+        return total
+
+    return float(minimize_scalar(chi2, bounds=(-0.5, 0.5), method="bounded").x)
+
+
 def scalar_amplitude(c: dict) -> float:
     q, D, Ne = c["q"], c["D"], c["Ne"]
     Q = (2.0 / PI) * (1.0 - q) ** (D / (D + 1.0)) * q * (1.0 - q)
@@ -281,8 +318,10 @@ def rows(pmns: str = "SK") -> tuple[Row, ...]:
         Row("n_s", "M", lambda c: 1.0 - 2.0 / c["Ne"], 0.9649, 0.0042, 0.0042, "경험식"),
         Row("A_s x1e9", "M", scalar_amplitude, 2.0989, 0.0294, 0.0294, "경험식"),
         Row("dn_s/dlnk", "M", lambda c: -2.0 / c["Ne"] ** 2, -0.0045, 0.0067, 0.0067, "경험식"),
-        Row("H0 Planck", "M", hubble_kms, 67.36, 0.54, 0.54, "경험식"),
-        Row("H0 SH0ES", "M", hubble_kms, 73.04, 1.04, 1.04, "경험식"),
+    ) + tuple(
+        Row(name, "M", (lambda z_: lambda c: hubble_readout(c, z_, readout_amplitude(c["a"])))(z),
+            v, up, dn, "경험식", 0.0, f"H1 판독 약화, z={z:g}")
+        for name, z, v, up, dn in H0_READOUTS
     )
 
 
@@ -290,6 +329,23 @@ def rows(pmns: str = "SK") -> tuple[Row, ...]:
 def bao_chi2(omega_m: float) -> float:
     z = np.linspace(0.0, 2.5, 25001)
     E = np.sqrt(omega_m * (1 + z) ** 3 + (1 - omega_m))
+    inv = 1.0 / E
+    dM = np.concatenate([[0.0], np.cumsum((inv[1:] + inv[:-1]) / 2.0 * np.diff(z))])
+    m = np.interp(BAO_Z, z, dM)
+    h = 1.0 / np.interp(BAO_Z, z, E)
+    b = np.array([{"dm": mi, "dh": hi, "dv": (zi * mi * mi * hi) ** (1.0 / 3.0)}[k]
+                  for mi, hi, zi, k in zip(m, h, BAO_Z, BAO_KIND)])
+    A = float(b @ BAO_CINV @ BAO_Y / (b @ BAO_CINV @ b))
+    r = A * b - BAO_Y
+    return float(r @ BAO_CINV @ r)
+
+
+def bao_chi2_if_expansion_weakened(c: dict, amplitude: float) -> float:
+    """반례 검산: 약화가 실제 팽창 H(z)를 바꾼다면의 BAO χ² (판독만 바뀌는 H1과 비교)."""
+    om = c["Om"]
+    z = np.linspace(0.0, 2.5, 25001)
+    share = 1.0 / (om * (1 + z) ** 3 + 1.0 - om)
+    E = np.sqrt(om * (1 + z) ** 3 + (1 - om)) * np.exp(amplitude * (share - 1.0))
     inv = 1.0 / E
     dM = np.concatenate([[0.0], np.cumsum((inv[1:] + inv[:-1]) / 2.0 * np.diff(z))])
     m = np.interp(BAO_Z, z, dM)
@@ -328,7 +384,8 @@ def score(variant: str = "I", pmns: str = "SK") -> dict:
     return {"variant": variant, "pmns": pmns, "alpha_s": a0, "rows": out, "bao_chi2": chib,
             "rmse_Q": math.sqrt(cq / nq), "rmse_M": math.sqrt(cm / nm),
             "rmse_all": math.sqrt((cq + cm) / (nq + nm)), "N": nq + nm,
-            "bits": sum(o["bits"] for o in out), "k_continuous": (1 if variant == "I" else 0) + 1}
+            "bits": sum(o["bits"] for o in out), "k_continuous": (1 if variant == "I" else 0) + 2,
+            "readout_amplitude": readout_amplitude(a0)}
 
 
 def main() -> None:

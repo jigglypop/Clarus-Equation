@@ -9,6 +9,8 @@ import pytest
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
     alpha_em_inv,
+    bao_chi2,
+    bao_chi2_if_expansion_weakened,
     calibrated_alpha_s,
     circulant_eigenvector_drift,
     ckm_triangle,
@@ -18,6 +20,7 @@ from examples.physics.rendering.ce_rendering_registry import (
     exterior_channels,
     pmns_matrix,
     pmns_s2,
+    readout_amplitude,
     rendering_amplitude,
     rendering_amplitude_closed,
     score,
@@ -87,6 +90,14 @@ def test_grade_partition_triangle_derives_vub_and_mirror_orientation() -> None:
     assert delta_pmns_tm1(c) > 180.0  # M1: lepton circulation opposite to quarks
 
 
+def test_hubble_readout_weakening_is_positive_and_not_in_the_expansion() -> None:
+    alpha_s = calibrated_alpha_s()[0]
+    c = core(alpha_s)
+    amplitude = readout_amplitude(alpha_s)
+    assert 0.05 < amplitude < 0.12  # weaker distinction -> larger local readout
+    assert bao_chi2_if_expansion_weakened(c, amplitude) > bao_chi2(c["Om"]) + 10.0
+
+
 def test_cosmic_cyclic_phase_does_not_move_the_mixing() -> None:
     for theta in (0.3, 0.7, 2.0, 4.0):
         assert circulant_eigenvector_drift(theta) < 1e-12
@@ -100,11 +111,11 @@ def test_one_channel_loop_restores_the_sum_rule_alpha_em() -> None:
 
 @pytest.mark.parametrize(
     ("variant", "pmns", "expected"),
-    [("I", "SK", 1.243), ("II", "SK", 0.808), ("I", "noSK", 1.808), ("II", "noSK", 1.542)],
+    [("I", "SK", 0.831), ("II", "SK", 0.773), ("I", "noSK", 1.526), ("II", "noSK", 1.495)],
 )
 def test_joint_rmse_is_frozen(variant: str, pmns: str, expected: float) -> None:
     result = score(variant, pmns)
-    assert result["N"] == 37
+    assert result["N"] == 39
     assert result["bits"] == pytest.approx(18.0)
     assert result["rmse_all"] == pytest.approx(expected, abs=1.5e-3)
-    assert result["k_continuous"] == (2 if variant == "I" else 1)
+    assert result["k_continuous"] == (3 if variant == "I" else 2)
