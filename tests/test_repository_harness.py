@@ -25,6 +25,7 @@ ESSENTIAL_TESTS = {
     "test_holdout_preregistration.py",
     "test_kinetic_dark_sector_gate.py",
     "test_regge_tent_transfer.py",
+    "test_rendering_registry.py",
     "test_repository_harness.py",
     "test_time_homogeneous_pointer_qca.py",
     "test_zerod_plebanski_closure.py",
