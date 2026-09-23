@@ -75,6 +75,8 @@ from examples.physics.rendering import ce_rendering_weight_epoch as WEP
 from examples.physics.rendering import ce_rendering_singlets as SGL
 from examples.physics.rendering import ce_rendering_e4_ii as E4II
 from examples.physics.rendering import ce_rendering_lepton_trace as LTR
+from examples.physics.rendering import ce_rendering_e4_exponent as E4X
+from examples.physics.rendering import ce_rendering_born_doubling as BDB
 from examples.physics.rendering import ce_rendering_open_predictions as OP
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
@@ -1389,6 +1391,21 @@ def test_confined_sector_trace_gives_the_e4_anchor_quarter() -> None:
     assert sr["ratios"]["coloured (k=1,2)"] == Fraction(9, 20) and sr["only_colour_singlets_give_quarter"]
     wr = LTR.weighted_range()
     assert wr["min"] >= 0.25 - 1e-9 and wr["max"] <= 0.45 + 1e-9 and not wr["reachable"]
+
+
+def test_e4_exponent_is_the_joint_factor_of_four_confined_t3_states() -> None:
+    s = E4X.scan()
+    assert s["N_T"] == 4 and s["fitting_n"] == [4] and not s["killed"]
+    assert all(abs(v["pull"]) > 100 for v in s["symmetric"].values())                # per-state bias fails
+    assert 1 < abs(s["joint"][5]["pull"]) < 2                                         # weak discrimination kept
+
+
+def test_born_doubling_fixes_the_e4_exponent() -> None:
+    s = BDB.scan()
+    assert s["born"] == [0, 2] and s["anchor"] == [1, 2] and s["user_jump"] == [2]
+    assert s["intersection"] == [2] and not s["killed"]
+    e = BDB.e4_check()
+    assert e["A2_squared_equals_A4"] and abs(e["pull_world"]) < 1
 
 
 def test_one_coin_one_event_unique_crossing_at_mz() -> None:
