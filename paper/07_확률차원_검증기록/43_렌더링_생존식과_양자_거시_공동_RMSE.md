@@ -258,9 +258,25 @@ $\pi/8$을 쓰지 않는다.
 
 **[미완성]** $\varphi$가 역학 변수가 아니라 기하로 정해진다는 것과 직접 판독이 $|d\ln A/dt|$를 읽는다는 것은 공리다. 양자장론 쪽에서 이 복소 위상이 물질장의 위상(§4의 순환 위상 $\theta$)과 어떻게 연결되는지, 섭동 수준에서 모순이 없는지는 남는다.
 
+## 43.17 물질 뭉침 S8의 무적합 예측과 두 원의 구분 — 사전 등록 v6
+
+**[산출] G1 — S8.** 복소 척도인자에서 중력은 $|A|$만 보므로 밀도 요동의 성장은 표준 그대로이고, 약한 렌즈는 각도의 비라 회전과 무관하다. CE 코어의 $A_s=2.1035\times10^{-9}$, $n_s=0.96504$, R-Pl의 $h=0.67772$와 $\omega_b$, $\omega_c$로 Eisenstein–Hu 무진동 전달함수를 써서 $\sigma_8$을 계산했다. Planck 최적값의 같은 코드 결과를 0.8111로 맞추는 상대 교정만 쓴다. 결과는 $\sigma_8=0.8094$, $S_8=\sigma_8\sqrt{\Omega_m/0.3}=0.8201$이며 적합 매개변수가 없다.
+
+| 비교 | 관측 | 잔차 |
+|---|---|---|
+| Planck 2018 (채점 제외, Planck 행과 겹침) | $0.832\pm0.013$ | $-0.92\sigma$ |
+| [KiDS-Legacy 2025](https://arxiv.org/abs/2503.19441) | $0.815^{+0.016}_{-0.021}$ | $+0.32\sigma$ |
+| DES Y3 3x2pt (Abbott 외 2022, 이번 세션에서 원문 재확인 안 함) | $0.776\pm0.017$ | $+2.59\sigma$ |
+
+CE는 약한 렌즈와 CMB 사이에 S8 긴장이 없다는 쪽을 예측하며 최근 KiDS-Legacy 결과와 같은 방향이다. 두 렌즈 행을 판본 IV에 더하면 41행 공동 RMSE는 0.910이다.
+
+**[반례] X1 — 두 원.** 시간축의 돎 $\varphi$와 질량 행렬의 순환 위상 $\theta$를 같은 원($\theta=3\varphi$, 연결마다 $\theta/3$)으로 두면 오늘 $\theta\approx1.19$ rad에서 진공 에너지가 약 31% 줄어 $\Omega_\Lambda$가 무너진다. 틀의 회전과 스펙트럼의 순환 위상은 서로 다른 성분이다.
+
+**[산출] 사전 등록 v6.** `experiments/preregistration/rendering_predictions_v6.json`은 v1–v5를 보존하고 P16 $S_8=0.8201$(Euclid, Rubin LSST, Roman)을 더했으며, [복소 척도인자](../../examples/physics/rendering/ce_rendering_complex_scale.py)와 [성장](../../examples/physics/rendering/ce_rendering_growth.py) 모듈을 잠갔다.
+
 ## 43.10 재현과 한계
 
-구현은 [렌더링 레지스트리](../../examples/physics/rendering/ce_rendering_registry.py), 고정 검사는 `tests/test_rendering_registry.py`(①·③·S2·T1·U1·M1·O1·TC·C1·순환 평균·사다리 상쇄·순환 위상과 팽창 변화의 반례·⑤·$\theta^*$ 반례·판본 III·부스트 반례·R-Pl 전이·유클리드 회전·BAO 눈금 예측·순환 기하·나선 긴장·복소 척도인자·사전 등록 v1–v5 동결과 공동 RMSE 고정)다. 필수 테스트 목록에 추가했고 전체 309개 검사를 실행했다. 실행:
+구현은 [렌더링 레지스트리](../../examples/physics/rendering/ce_rendering_registry.py), 고정 검사는 `tests/test_rendering_registry.py`(①·③·S2·T1·U1·M1·O1·TC·C1·순환 평균·사다리 상쇄·순환 위상과 팽창 변화의 반례·⑤·$\theta^*$ 반례·판본 III·부스트 반례·R-Pl 전이·유클리드 회전·BAO 눈금 예측·순환 기하·나선 긴장·복소 척도인자·S8·두 원의 구분·사전 등록 v1–v6 동결과 공동 RMSE 고정)다. 필수 테스트 목록에 추가했고 전체 312개 검사를 실행했다. 실행:
 
 ```powershell
 python -B -m examples.physics.rendering.ce_rendering_registry

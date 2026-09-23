@@ -16,6 +16,7 @@ from examples.physics.rendering import ce_rendering_bao_ruler as BR
 from examples.physics.rendering import ce_rendering_cycle as CY
 from examples.physics.rendering import ce_rendering_spiral as SP
 from examples.physics.rendering import ce_rendering_complex_scale as CX
+from examples.physics.rendering import ce_rendering_growth as GR
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
     alpha_em_inv,
@@ -349,3 +350,34 @@ def test_complex_scale_factor_restores_flrw_and_reads_the_spiral_rate() -> None:
     assert CX.friedmann_residual(c) < 1e-6
     assert CX.ring_ratio_invariance(c, 0.3) < 1e-12
     assert CX.record_phase_gap(c) < 1e-4
+
+
+def test_zero_fit_s8_sides_with_cmb_and_kids_legacy() -> None:
+    c = core(calibrated_alpha_s()[0])
+    s8, S8 = GR.ce_s8(c)
+    assert 0.80 < s8 < 0.82 and 0.81 < S8 < 0.83
+    res = GR.score_variant_iv_with_lensing("SK")
+    pulls = {o["key"]: o["pull"] for o in res["rows"]}
+    assert abs(pulls["S8 KiDS-Legacy"]) < 1.0
+    assert pulls["S8 DES Y3 3x2pt"] > 2.0
+    assert res["N"] == 41 and res["rmse_all"] == pytest.approx(0.910, abs=3e-3)
+
+
+def test_frame_rotation_and_spectral_phase_are_different_circles() -> None:
+    c = core(calibrated_alpha_s()[0])
+    assert GR.theta_equals_three_phi_vacuum_ratio(c) < 0.75
+
+
+def test_rendering_predictions_v6_is_frozen() -> None:
+    v5 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v5.json").read_text(encoding="utf-8"))
+    v6 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v6.json").read_text(encoding="utf-8"))
+    assert v6["supersedes_manifest_id"] == v5["manifest_id"]
+    body = {k: v for k, v in v6.items() if k != "manifest_sha256"}
+    canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    assert hashlib.sha256(canonical).hexdigest() == v6["manifest_sha256"]
+    for key in ("registry", "derivations", "planck_readout", "bao_ruler", "cycle", "spiral", "complex_scale", "growth"):
+        path = REPO_ROOT / v6["model"][f"{key}_path"]
+        assert hashlib.sha256(path.read_bytes()).hexdigest() == v6["model"][f"{key}_sha256"], (
+            f"{key} changed after v6 freeze: create v7 and keep earlier manifests")
+    values = {q["id"]: q["value"] for q in v6["predictions"]}
+    assert values["P16"] == pytest.approx(GR.ce_s8(core(calibrated_alpha_s()[0]))[1], rel=1e-4)
