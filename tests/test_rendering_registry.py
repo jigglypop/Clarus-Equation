@@ -65,6 +65,10 @@ from examples.physics.rendering import ce_rendering_higgs_weight as HW
 from examples.physics.rendering import ce_rendering_single_self as SSF
 from examples.physics.rendering import ce_rendering_race as RACE
 from examples.physics.rendering import ce_rendering_mass_rate as MRT
+from examples.physics.rendering import ce_rendering_jwst_cchp as JWC
+from examples.physics.rendering import ce_rendering_e4_shape as E4S
+from examples.physics.rendering import ce_rendering_horizon_pixel as HPX
+from examples.physics.rendering import ce_rendering_jacobson as JAC
 from examples.physics.rendering import ce_rendering_open_predictions as OP
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
@@ -1167,6 +1171,25 @@ def test_rendering_predictions_v20_is_frozen() -> None:
     assert "P39" in ids and len(ids) == 39 and len(v20["model"]["files"]) == 44
 
 
+def test_rendering_predictions_v21_is_frozen() -> None:
+    v20 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v20.json").read_text(encoding="utf-8"))
+    v21 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v21.json").read_text(encoding="utf-8"))
+    assert v21["supersedes_manifest_id"] == v20["manifest_id"]
+    body = {k: v for k, v in v21.items() if k != "manifest_sha256"}
+    canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    assert hashlib.sha256(canonical).hexdigest() == v21["manifest_sha256"]
+    assert v21["manifest_sha256"] == "46a5ad84ec81feae4bfe30a322e0ffa565cce5ea940977bba316b1216bfb5c6a"
+    for key, rel in v21["model"]["files"].items():
+        assert v21["model"]["sha256"][key] in _line_ending_hashes((REPO_ROOT / rel)), (
+            f"{key} changed after v21 freeze: create v22 and keep earlier manifests")
+    old = {q["id"]: q for q in v20["predictions"]}
+    for q in v21["predictions"]:
+        if q["id"] in old:
+            assert q["value"] == old[q["id"]]["value"]                        # no carried value changed
+    ids = {q["id"] for q in v21["predictions"]}
+    assert "P40" in ids and len(ids) == 40 and len(v21["model"]["files"]) == 48
+
+
 def test_distinction_equals_indistinction_at_the_z_pole_record() -> None:
     assert POLE.coin_reading() == {"mean_distinction": 0.0, "g_V": 0.0}
     p = POLE.pole_reading()
@@ -1233,6 +1256,44 @@ def test_mass_rate_scope_and_top_ladder() -> None:
     assert t["m_t_pred"] == pytest.approx(172.33, abs=0.01) and abs(t["pull_m_t"]) < 1
     fam = MRT.family()
     assert fam["n"] == 18 and fam["hits"] == ["M_Z*F^2.0"] and 0.02 < fam["p_chance"] < 0.06
+
+
+def test_cchp_jwst_only_distances_agree_and_gap_sits_on_the_supernova_side() -> None:
+    p = JWC.p37_host_distances()
+    assert not p["killed"] and abs(p["pull_vs_zero"]) < 1                             # P37 passes
+    b = JWC.budget()
+    assert all(abs(b[k]["residual_pull"]) < 1 for k in ("CCHP TRGB JWST-only", "CCHP JAGB JWST-only"))
+    a = JWC.aggregate()
+    assert a["mean"] == pytest.approx(70.88, abs=0.02) and -2.5 < a["pull_mean_vs_M"] < -2  # residual risk kept
+    assert not a["P32_kill"]
+
+
+def test_e4_shape_records_multiply_amplitudes_add() -> None:
+    s = E4S.scan()
+    assert s["E4_is_unique_AP_hit"]                                                    # only (3, 2) in AP
+    assert s["record summed (m a^m)"]["hits"] == [] and s["amplitude unsummed (a^k)"]["hits"] == []
+    assert s["probability for mixing (s2 = k a^k)"]["hits"] == [(3, 4)]              # algebraically E4 squared
+    assert abs(E4S.e4_pull()) < 1
+    assert E4S.scope_weak_coupling()["ratio"] > 5                                      # AP is not a general law
+
+
+def test_horizon_pixel_nyquist_nat_counts_a_quarter() -> None:
+    assert HPX.uniqueness()["exact_quarter"] == ["side 2 | nat (exp clock)"]
+    ce = HPX.clock_entropies()
+    assert ce["exponential(1)"] == pytest.approx(1.0) and max(ce.values()) == ce["exponential(1)"]
+    assert ce["uniform[0,2]"] == pytest.approx(math.log(2))                           # uniform clock = one bit
+    assert HPX.log_correction()["slope_vs_lnN"] == pytest.approx(-0.5, abs=1e-3)
+    rd = HPX.ringdown()
+    assert rd["alpha_inside"] and not rd["excluded"] and rd["line_spacing_M_omega"] < 0.089
+
+
+def test_pixel_entropy_gives_newton_constant_and_kerr_first_law() -> None:
+    g = JAC.g_eff()
+    assert g["pixel: 1 nat / (2 l_P)^2"] == pytest.approx(1.0)
+    assert g["bit pixel: ln2 / (2 l_P)^2"] > 1.4 and g["single cell: 1 nat / l_P^2"] == pytest.approx(0.25)
+    fl = JAC.kerr_first_law()
+    assert not fl["killed"] and fl["max_residual"] < 1e-6
+    assert JAC.pixel_energy()["ratio"] == pytest.approx(1.0)                          # one pixel = one T_H
 
 
 def test_one_coin_one_event_unique_crossing_at_mz() -> None:
