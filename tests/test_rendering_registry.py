@@ -22,6 +22,7 @@ from examples.physics.rendering import ce_rendering_event_scale as ES
 from examples.physics.rendering import ce_rendering_neutrino as NU
 from examples.physics.rendering import ce_rendering_gauge as GA
 from examples.physics.rendering import ce_rendering_generations as GE
+from examples.physics.rendering import ce_rendering_ewsb as EW
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
     alpha_em_inv,
@@ -454,3 +455,14 @@ def test_tensor_modes_travel_at_light_speed_in_the_abs_a_background() -> None:
     t = GE.tensor_mode_checks()
     assert abs(t["c_T/c"] - 1.0) < 1e-4
     assert t["amplitude*a spread (Xi-1 proxy)"] < 0.02
+
+
+def test_weak_channel_breaking_leaves_electric_charge_and_quantizes_it() -> None:
+    assert all((3 * q).denominator == 1 for q in EW.charges_all_states())
+    s = EW.higgs_channel()
+    assert EW.weak_t3(s) + GA.hypercharge(s) == 0
+    m = EW.gauge_boson_masses()
+    assert sorted(m["masses_GeV"])[0] < 1e-6
+    assert m["photon_is_Q"] < 1e-12
+    assert m["M_W/M_Z"] == pytest.approx(m["c_W"], abs=1e-12)
+    assert 79.0 < m["M_W"] < 81.5 and 90.0 < m["M_Z"] < 92.5
