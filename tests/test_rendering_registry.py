@@ -24,6 +24,7 @@ from examples.physics.rendering import ce_rendering_gauge as GA
 from examples.physics.rendering import ce_rendering_generations as GE
 from examples.physics.rendering import ce_rendering_ewsb as EW
 from examples.physics.rendering import ce_rendering_inflation as IN
+from examples.physics.rendering import ce_rendering_nu_ledger as NL
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
     alpha_em_inv,
@@ -474,3 +475,31 @@ def test_inflation_gauge_count_is_the_stage_preserving_subalgebra() -> None:
     assert IN.stage_preserving_dimension() == 12
     c = core(calibrated_alpha_s()[0])
     assert IN.inflation_efolds(c) == pytest.approx(c["Ne"], rel=1e-14)
+
+
+def test_neutrino_ledger_removes_ce_neutrinos_from_early_cold_matter() -> None:
+    c = core(calibrated_alpha_s()[0])
+    wb, wc, h = NL.early_densities(c)
+    assert NL.omega_nu_h2(c) == pytest.approx(sum(NU.neutrino_masses_mev(c)) / 1000 / 93.14, rel=1e-12)
+    assert wc == pytest.approx((c["Om"] - c["q"]) * h * h - NL.omega_nu_h2(c), rel=1e-12)
+    h0, s = NL.h0_from_bao(c)
+    assert (h0 - 100 * h) / s == pytest.approx(2.65, abs=0.02)
+    assert NL.score("IV", "fixed")["rmse_all"] == pytest.approx(0.950, abs=2e-3)
+    assert NL.score("IV", "free")["rmse_all"] == pytest.approx(0.849, abs=2e-3)   # worse row kept, not hidden
+
+
+def test_rendering_predictions_v8_is_frozen() -> None:
+    v7 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v7.json").read_text(encoding="utf-8"))
+    v8 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v8.json").read_text(encoding="utf-8"))
+    assert v8["supersedes_manifest_id"] == v7["manifest_id"]
+    body = {k: v for k, v in v8.items() if k != "manifest_sha256"}
+    canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    assert hashlib.sha256(canonical).hexdigest() == v8["manifest_sha256"]
+    for key, rel in v8["model"]["files"].items():
+        assert hashlib.sha256((REPO_ROOT / rel).read_bytes()).hexdigest() == v8["model"]["sha256"][key], (
+            f"{key} changed after v8 freeze: create v9 and keep earlier manifests")
+    values = {q["id"]: q["value"] for q in v8["predictions"]}
+    c = core(calibrated_alpha_s()[0])
+    rd, h = NL.rd_and_h(c)
+    assert values["P14"] == pytest.approx(h * rd, rel=1e-4)
+    assert values["P13"] == pytest.approx(NL.early_densities(c)[1], rel=1e-4)

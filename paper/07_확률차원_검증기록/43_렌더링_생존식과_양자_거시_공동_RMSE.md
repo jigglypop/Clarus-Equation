@@ -365,9 +365,31 @@ CE는 약한 렌즈와 CMB 사이에 S8 긴장이 없다는 쪽을 예측하며 
 
 **의미와 한계.** 새 수치는 없다. $n_s=1-2/N_e$, $r=12/N_e^2$, $A_s$에 들어가던 정수 하나가 입력에서 렌더링 단계 구조의 계산으로 바뀌었다. 계수 $d/2$와 "생성자 하나당 $D$ e-fold"라는 배분 규칙 자체는 여전히 경험식이다.
 
+## 43.24 중성미자 장부 정정과 CMB–BAO 긴장 — 사전 등록 v8
+
+**[진단]** §43.13의 $+3.1\sigma$는 CMB에서 읽은 $h=0.67772$와 CE의 $r_d=147.36$ Mpc의 곱 $hr_d=99.87$ Mpc가 BAO가 원하는 값보다 0.86% 작다는 뜻이다. 눈금을 자유롭게 두면 BAO는 $\Omega_m=0.297$, $hr_d=101.5$ Mpc를 원하며(DESI의 ΛCDM 값), CE의 $\Omega_m=0.308$은 Planck(0.315)와 DESI 사이에 있다.
+
+**[정정] 중성미자 장부.** CE의 $\Omega_m=q+\Omega_{\rm DM}$은 오늘의 전체 물질이다. 비교 기준인 Planck $\omega_c=0.1200$은 차가운 암흑물질만 센 값이고 $\theta^*$·$r_d$·$\sigma_8$의 같은 코드 교정도 그 값을 쓴다. CE 중성미자 합 $59.16$ meV(P17)는 재결합·끌림 시기($T_\nu\approx0.2$ eV)에 상대론적이라 차가운 물질이 아니다. 따라서 이른 우주 행은 모두 $\omega_c=\Omega_{\rm DM}h^2-\omega_\nu$, $\omega_\nu=\Sigma m_\nu/93.14$ eV $=0.000635$로 센다. 늦은 우주의 $\Omega_m$은 그대로다. 연속 매개변수는 늘지 않는다. 다만 긴장을 본 뒤 찾은 정정이므로 그 사실을 기록하고, 나빠지는 행도 함께 채택한다.
+
+| 항목 | 이전 | 정정 후 |
+|---|---|---|
+| CMB–BAO 척도 ($H_0^{\rm BAO}$ 대 $100h$) | $+3.07\sigma$ | $+2.65\sigma$ |
+| 고정 눈금 BAO $\chi^2$(13행) | 21.26 | 18.81 |
+| $100\theta^*$ | $+0.81\sigma$ | $-0.75\sigma$ |
+| $\omega_c$ | $-0.73\sigma$ | $-1.26\sigma$ |
+| S8 DES Y3 | $+2.59\sigma$ | $+2.42\sigma$ |
+| 판본 V(39행, $\alpha_s$만) | 0.970 | **0.950** |
+| 43행 고정 눈금 | 1.012 | **0.984** |
+| 판본 IV(39행, 눈금 적합) | 0.834 | 0.849 |
+| 43행 눈금 적합 | 0.895 | 0.896 |
+
+**판정.** 엄격한 판본이 좋아지고 눈금을 적합하는 판본은 약간 나빠져, 눈금 적합 하나가 벌어 주던 $\chi^2$가 9.6에서 7.1로 줄었다. CMB–BAO 긴장은 필요한 0.86% 가운데 0.12%만 설명되어 $+2.65\sigma$로 남는다. 남은 차이는 표준 ΛCDM의 Planck–DESI 긴장과 같은 방향이며 CE 안의 매개변수 없는 해법은 아직 없다.
+
+**[산출] 사전 등록 v8.** `experiments/preregistration/rendering_predictions_v8.json`(자기 해시 `a2e21806…`)은 v1–v7을 보존하고 P13 $\omega_c=0.11847$, P14 $hr_d=99.987$ Mpc, P16 $S_8=0.8173$로 갱신했다(이전 값은 `superseded_value_v7`에 남김). [중성미자 장부 모듈](../../examples/physics/rendering/ce_rendering_nu_ledger.py)의 SHA-256을 함께 잠갔다.
+
 ## 43.10 재현과 한계
 
-구현은 [렌더링 레지스트리](../../examples/physics/rendering/ce_rendering_registry.py), 고정 검사는 `tests/test_rendering_registry.py`(①·③·S2·T1·U1·M1·O1·TC·C1·순환 평균·사다리 상쇄·순환 위상과 팽창 변화의 반례·⑤·$\theta^*$ 반례·판본 III·부스트 반례·R-Pl 전이·유클리드 회전·BAO 눈금 예측·순환 기하·나선 긴장·복소 척도인자·S8·두 원의 구분·사건 척도·중성미자 질량·게이지군과 한 세대·세 세대와 선형 중력·대칭 깨짐과 전하 양자화·급팽창 게이지 수·사전 등록 v1–v7 동결과 공동 RMSE 고정)다. 필수 테스트 목록에 추가했고 전체 322개 검사를 실행했다. 실행:
+구현은 [렌더링 레지스트리](../../examples/physics/rendering/ce_rendering_registry.py), 고정 검사는 `tests/test_rendering_registry.py`(①·③·S2·T1·U1·M1·O1·TC·C1·순환 평균·사다리 상쇄·순환 위상과 팽창 변화의 반례·⑤·$\theta^*$ 반례·판본 III·부스트 반례·R-Pl 전이·유클리드 회전·BAO 눈금 예측·순환 기하·나선 긴장·복소 척도인자·S8·두 원의 구분·사건 척도·중성미자 질량·게이지군과 한 세대·세 세대와 선형 중력·대칭 깨짐과 전하 양자화·급팽창 게이지 수·중성미자 장부·사전 등록 v1–v8 동결과 공동 RMSE 고정)다. 필수 테스트 목록에 추가했고 전체 324개 검사를 실행했다. 실행:
 
 ```powershell
 python -B -m examples.physics.rendering.ce_rendering_registry
