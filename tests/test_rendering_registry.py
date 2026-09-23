@@ -78,6 +78,8 @@ from examples.physics.rendering import ce_rendering_lepton_trace as LTR
 from examples.physics.rendering import ce_rendering_e4_exponent as E4X
 from examples.physics.rendering import ce_rendering_born_doubling as BDB
 from examples.physics.rendering import ce_rendering_dictionary as DIC
+from examples.physics.rendering import ce_rendering_modular as MOD
+from examples.physics.rendering import ce_rendering_joint_render as JRN
 from examples.physics.rendering import ce_rendering_open_predictions as OP
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
@@ -1431,6 +1433,24 @@ def test_dictionary_mixing_is_the_scale_derivative_of_a_record() -> None:
     assert DIC.jacobi_check() < 1e-8
     s = DIC.scan()
     assert s["hits"] == ["a d_a | m=2"] and not s["killed"]
+
+
+def test_pixel_modular_fluctuation_c_equals_s_and_interferometer_tension() -> None:
+    c = MOD.clocks()
+    assert c["unit_ratio"] == ["exponential(mean 1)"]
+    assert all(abs(v - 1) < 0.01 for v in MOD.horizon_ratio().values())
+    i = MOD.interferometer()
+    assert i["alpha_CE"] == pytest.approx(1.0) and i["gquest_decisive"]
+    assert "Holometer (IR cutoff)" in i["excluded_by_3sigma"]                          # recorded tension
+
+
+def test_joint_rendering_cancels_differential_interferometer_noise() -> None:
+    s = JRN.scan()
+    a = s["alpha_diff_by_rho"]
+    assert a[0.0] == pytest.approx(1.0, abs=0.01) and a[0.5] == pytest.approx(0.5, abs=0.01)
+    assert a[1.0] < 1e-9 and s["CE_within_all_bounds"] and s["P42_null_at_gquest"]
+    assert s["residual_by_mismatch"][1e-3] < 1e-6
+    assert "Holometer (IR cutoff)" in s["VZ_like_excluded"]
 
 
 def test_one_coin_one_event_unique_crossing_at_mz() -> None:
