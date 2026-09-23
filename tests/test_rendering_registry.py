@@ -12,6 +12,8 @@ from test_support.paths import PREREGISTRATION_ROOT, REPO_ROOT
 
 from examples.physics.rendering import ce_rendering_derivations as DV
 from examples.physics.rendering import ce_rendering_planck_readout as PL
+from examples.physics.rendering import ce_rendering_bao_ruler as BR
+from examples.physics.rendering import ce_rendering_cycle as CY
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
     alpha_em_inv,
@@ -265,3 +267,44 @@ def test_rendering_predictions_v3_keeps_v1_v2_and_is_frozen() -> None:
     assert values["P08"] == pytest.approx(100 * PL.h_rings(c), rel=1e-4)
     assert values["P07"] == pytest.approx(100 * PL.h_rings(c) / math.cos(math.pi / 8), rel=1e-4)
     assert values["P11"] == pytest.approx(1 / math.cos(math.pi / 8), rel=1e-5)
+
+
+def test_fixed_bao_ruler_exposes_the_cmb_bao_scale_tension() -> None:
+    c = core(calibrated_alpha_s()[0])
+    rd, h = BR.ce_rd_and_h(c)
+    assert 146.0 < rd < 149.0
+    h0, s = BR.h0_from_bao(c)
+    assert 2.5 < (h0 - 100 * h) / s < 3.6
+    res = BR.score_variant_v("SK")
+    assert res["k_continuous"] == 1 and res["N"] == 39
+    assert res["bao_chi2"] == pytest.approx(21.26, abs=0.05)
+    assert res["rmse_all"] == pytest.approx(0.970, abs=2e-3)
+
+
+def test_rendering_predictions_v4_keeps_earlier_manifests_and_is_frozen() -> None:
+    v3 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v3.json").read_text(encoding="utf-8"))
+    v4 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v4.json").read_text(encoding="utf-8"))
+    assert v4["supersedes_manifest_id"] == v3["manifest_id"]
+    body = {k: v for k, v in v4.items() if k != "manifest_sha256"}
+    canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    assert hashlib.sha256(canonical).hexdigest() == v4["manifest_sha256"]
+    for key in ("registry", "derivations", "planck_readout", "bao_ruler"):
+        path = REPO_ROOT / v4["model"][f"{key}_path"]
+        assert hashlib.sha256(path.read_bytes()).hexdigest() == v4["model"][f"{key}_sha256"], (
+            f"{key} changed after v4 freeze: create v5 and keep earlier manifests")
+    values = {q["id"]: q["value"] for q in v4["predictions"]}
+    rd, h = BR.ce_rd_and_h(core(calibrated_alpha_s()[0]))
+    assert values["P14"] == pytest.approx(h * rd, rel=1e-4)
+
+
+def test_cosmic_cycle_tilt_agrees_with_the_vacuum_channel_angle() -> None:
+    c = core(calibrated_alpha_s()[0])
+    g = CY.cycle_geometry(c)
+    assert 5200 < g["radius_mpc"] < 5450
+    assert 13.5 < g["age_gyr"] < 14.1
+    tilt = CY.tangent_chord_tilt(c["Om"])
+    assert abs(tilt / (math.pi / 8) - 1) < 0.02
+    om = CY.omega_m_for_phase()
+    cb = dict(c)
+    cb["Om"] = om
+    assert DV.ce_theta_pull(cb, PL.h_rings(c)) > 10.0  # exact pi/4 phase is rejected by theta*
