@@ -62,6 +62,9 @@ from examples.physics.rendering import ce_rendering_one_event as OE
 from examples.physics.rendering import ce_rendering_pole as POLE
 from examples.physics.rendering import ce_rendering_fp_ladder as FPL
 from examples.physics.rendering import ce_rendering_higgs_weight as HW
+from examples.physics.rendering import ce_rendering_single_self as SSF
+from examples.physics.rendering import ce_rendering_race as RACE
+from examples.physics.rendering import ce_rendering_mass_rate as MRT
 from examples.physics.rendering import ce_rendering_open_predictions as OP
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
@@ -1145,6 +1148,25 @@ def test_rendering_predictions_v19_is_frozen() -> None:
     assert "P38" in ids and len(ids) == 38 and len(v19["model"]["files"]) == 41
 
 
+def test_rendering_predictions_v20_is_frozen() -> None:
+    v19 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v19.json").read_text(encoding="utf-8"))
+    v20 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v20.json").read_text(encoding="utf-8"))
+    assert v20["supersedes_manifest_id"] == v19["manifest_id"]
+    body = {k: v for k, v in v20.items() if k != "manifest_sha256"}
+    canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    assert hashlib.sha256(canonical).hexdigest() == v20["manifest_sha256"]
+    assert v20["manifest_sha256"] == "f726b4510a98d4cfeefd35379ea280ce12a3571a2228d3e90f8af714b596abd1"
+    for key, rel in v20["model"]["files"].items():
+        assert v20["model"]["sha256"][key] in _line_ending_hashes((REPO_ROOT / rel)), (
+            f"{key} changed after v20 freeze: create v21 and keep earlier manifests")
+    old = {q["id"]: q for q in v19["predictions"]}
+    for q in v20["predictions"]:
+        if q["id"] in old:
+            assert q["value"] == old[q["id"]]["value"]                        # no carried value changed
+    ids = {q["id"] for q in v20["predictions"]}
+    assert "P39" in ids and len(ids) == 39 and len(v20["model"]["files"]) == 44
+
+
 def test_distinction_equals_indistinction_at_the_z_pole_record() -> None:
     assert POLE.coin_reading() == {"mean_distinction": 0.0, "g_V": 0.0}
     p = POLE.pole_reading()
@@ -1178,6 +1200,39 @@ def test_higgs_weight_is_the_survival_partition_one_step() -> None:
     q = HW.q2_universality()
     assert q["q2"]["chi2"] < q["plain"]["chi2"] and not q["adopt"]                    # breaks at v/M_Pl
     assert q["q2"]["pulls"]["v/M_Pl (th+exp)"] > 2
+
+
+def test_single_self_fixed_point_is_unique_and_reached_by_alternating_reflections() -> None:
+    u = SSF.uniqueness()
+    assert u["roots"] == 1 and u["monotone"] and u["max_abs_g_prime"] < 0.1       # one self, contraction
+    assert u["g_prime_at_root"] == pytest.approx(-0.0605, abs=0.001)
+    rf = SSF.reflections()
+    assert all(x < 0 for x in rf["ratios"])                                           # sign flips each reflection
+    assert abs(rf["errors"][4]) < 1e-6
+    sc = SSF.self_count()
+    assert abs(sc["one self (1 + m)"]) < 2 and sc["every bond a new self 1/(1 - m)"] > 100 and not sc["Q2 adopted"]
+
+
+def test_race_between_self_and_capture_derives_br3_and_higgs_weight() -> None:
+    mc = RACE.race_mc()
+    assert abs(mc["race_pull"]) < 3 and mc["window_fraction"] == pytest.approx(mc["window_formula"], abs=0.003)
+    r = RACE.rules()
+    assert r["best"] == "race (first event)" and not r["race (first event)"]["killed"]
+    assert r["window (any capture in unit time)"]["killed"] and r["recursive (all descendants)"]["killed"]
+    assert r["window (any capture in unit time)"]["pull_Om"] > 4                      # cosmos alone rejects it
+    sf = RACE.self_first()
+    assert sf["P_self_first"] == pytest.approx(sf["M_Z_over_M_H_core"], abs=1e-12)
+
+
+def test_mass_rate_scope_and_top_ladder() -> None:
+    s = MRT.scope_checks()
+    assert abs(s["H/Z probability 1/F"]) < abs(s["H/Z amplitude 1/sqrt(F)"])            # race pairs: probability
+    assert abs(s["mu/tau probability s2/4 w"]) < abs(s["mu/tau amplitude sqrt(s2)/2 w"])
+    assert abs(s["W/Z amplitude c"]) < abs(s["W/Z probability c^2"])                   # rotation pair: amplitude
+    t = MRT.top_ladder()
+    assert t["m_t_pred"] == pytest.approx(172.33, abs=0.01) and abs(t["pull_m_t"]) < 1
+    fam = MRT.family()
+    assert fam["n"] == 18 and fam["hits"] == ["M_Z*F^2.0"] and 0.02 < fam["p_chance"] < 0.06
 
 
 def test_one_coin_one_event_unique_crossing_at_mz() -> None:

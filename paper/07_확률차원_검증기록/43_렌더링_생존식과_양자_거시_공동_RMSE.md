@@ -8,7 +8,7 @@
 
 **현재 판정의 종합은 §43.56(마감 종합, 2026-09-23)이다.** 아래는 v12 시점의 점수 판정이며 그대로 둔다.
 
-**점수 판정(§43.24–43.40; 사전 등록은 현재 v19, 등록 38개 중 독립 예측 35개 — P20은 §43.18 정정, P29·P30은 §43.45, P31–P33은 §43.53, P34는 §43.55, P35·P36은 §43.59, P37은 §43.62, P38은 §43.63).** 입력 $\alpha_s$ 하나, 중성미자 장부 정정, 진공 기울기 W2(+1.6 bit), CMB–BAO 그라데이션 G1m(+2 bit)을 포함한다.
+**점수 판정(§43.24–43.40; 사전 등록은 현재 v20, 등록 39개 중 독립 예측 36개 — P20은 §43.18 정정, P29·P30은 §43.45, P31–P33은 §43.53, P34는 §43.55, P35·P36은 §43.59, P37은 §43.62, P38은 §43.63, P39는 §43.68).** 입력 $\alpha_s$ 하나, 중성미자 장부 정정, 진공 기울기 W2(+1.6 bit), CMB–BAO 그라데이션 G1m(+2 bit)을 포함한다.
 
 | 판본 | 39행 | 43행(+렌즈·중성미자) | 연속 적합 | 남는 큰 잔차 |
 |---|---|---|---|---|
@@ -235,7 +235,10 @@ $$s_{13}^2=\frac{\delta}{8},\qquad s_{12}^2=\frac13\left(1-\frac{2\delta}{8}\rig
 | 분별 = 무분별 | §43.63 | 극에서 운동 항(무분별)과 질량 항(분별)이 같아져 기록만 남는다: E5를 R1의 따름(RS)으로 환원, Z 극 기록의 α_s와 −1.55σ |
 | 고정점의 e 사다리 | §43.64 | 부트스트랩 자기재귀·e^{−n} 가족: 네 가지 꼴이 0.3σ 안에서 동률, e 급수 전체는 기각, 지금 정밀도로는 식별 불가 |
 | Higgs의 무게 | §43.65 | F = 살아남은 계보의 분배함수, Higgs는 머리 + 붙잡힌 자식 한 세대, 한 걸음 패턴 세 번째, 계층 행이 M_H = 125.36 ± 0.03 요구, (1−q²) 갈래는 계층 행에서 깨짐 |
-| 재현 | §43.66 | 구현 경로와 한계 |
+| 하나의 자기 | §43.66 | 자기참조의 해는 정확히 하나(축약), 무차별점에서 부호를 번갈아 바꾸며 자기에 닿는다, 한 걸음 = 자기는 하나 |
+| 자기와 붙잡힘의 경주 | §43.67 | 자기(빠르기 1)와 D 통로의 붙잡힘(α_s씩)의 경주에서 BR3가 나오고, 질량 = 빠르기로 HB가 나온다; 우주 성분과 Higgs/Z가 같은 경주 |
+| 경주 사다리 | §43.68 | 질량 = 빠르기는 경주 쌍에서만(회전 쌍은 진폭), 다음 칸 m_t = M_Z F² = 172.33 GeV(−0.83σ, 목격 후 가족 우연 3.9%) |
+| 재현 | §43.69 | 구현 경로와 한계 |
 
 ## 43.11 음향 각도 반례와 판본 III — 사전 등록 v2
 
@@ -1673,7 +1676,7 @@ $$r=\tfrac12\Big[1-\frac{\alpha_s}{2\pi}\Big(1+\frac{\delta}{2\pi}\Big)\Big],\qq
 | 구분 | 항목 |
 |---|---|
 | 정리(조건부) | C′·D′, IR, GW 소멸 확률, 여집합의 ½과 CKM 직각, 아닌 나 = 반입자, Bool 계단, 위상 잠금 구조, 한 방향 결합 |
-| 공리 | E4, E5(§43.63에서 R1+RS+DZ+OE의 조건부 정리로 환원), W·E$_{\rm rec}$, B, Bool·Ind, SA, CL(기존 공리로 환원), M, TT, BR1–BR3 |
+| 공리 | E4, E5(§43.63에서 R1+RS+DZ+OE의 조건부 정리로 환원), W·E$_{\rm rec}$, B, Bool·Ind, SA, CL(기존 공리로 환원), M, TT, BR1–BR2, BR3(§43.67에서 경주 RC의 조건부 정리로 유도) |
 | 가설(비용 bit) | 39행 19.9, 43행 33.6(v14 장부). FP를 채택하면 +4.6 |
 | 경험식 | $F$(Higgs, §43.65에서 읽기 HB로 올라감), 중성미자 질량식, 기울기 역사의 원형(접선–현) |
 | 읽기 | ⑤ = 진공 세계 1/8(무차별점의 $\alpha_s$), $\xi^2=r^2=P(V_2)$, CKM 지수 8·9·16 |
@@ -1696,7 +1699,7 @@ $$r=\tfrac12\Big[1-\frac{\alpha_s}{2\pi}\Big(1+\frac{\delta}{2\pi}\Big)\Big],\qq
 ### 남은 과제
 - E4의 동역학(왜 사건 척도 $M_Z$에서 무차별 진공점을 지나는가). §43.60에서 “왜 Z인가”는 항등식으로 좁혀졌다. “그 질량 척도에서”는 §43.62에서 “유일한 교차점 μ* = M_Z”라는 하나의 일치로 줄었고, §43.63에서 극의 기록(분별 = 무분별)으로 읽혀 E5가 조건부 정리가 되었다. 판정은 FCC-ee의 Z 극 α_s
 - FP의 원리적 유도(한 고리 자기 보정의 계수). §43.64: 빠진 보정은 약 5×10⁻⁵이고 기울기를 줄이는 방향이다. 네 꼴(λq², λ²/8, λe⁻⁶, λ²e⁻²)이 동률이라 τ 질량 정밀도가 8배 좋아지기 전에는 식별할 수 없다
-- $F$(Higgs 퍼텐셜의 크기). §43.65: $F$는 살아남은 계보의 분배함수이고 Higgs는 머리와 붙잡힌 자식 한 세대를 본다(읽기 HB). HB 자체의 유도는 남는다
+- $F$(Higgs 퍼텐셜의 크기). §43.65: $F$는 살아남은 계보의 분배함수이고 Higgs는 머리와 붙잡힌 자식 한 세대를 본다(읽기 HB). §43.67에서 HB는 자기와 붙잡힘의 경주(RC)와 질량 = 빠르기(MR)로 유도되었다. MR과 “붙잡힘 빠르기 = α_s”는 읽기로 남는다
 - 기울기 역사의 원형(접선–현)이 열적 시간 밖에서 필요한지
 - 현재 막대 무리의 차이(SH0ES 대 CCHP). §43.61에서 분석·표본 차이로 좁혀졌다. JWST 단독 CCHP 값의 해부는 남는다
 - 지평선 미시 상태
@@ -2125,9 +2128,131 @@ P37은 절대값(P07)이 아니라 사다리 사이의 차이를 거는 상대 �
 
 P38은 P20과 같은 값을 다른 기록에서 시험하므로 독립 예측으로 세지 않는다. 등록은 38개, 독립 예측은 35개다. 새 모듈 3개를 포함해 41개 모듈의 해시를 잠갔다.
 
-## 43.66 재현과 한계
+## 43.66 하나의 자기 — 한 걸음의 이유
 
-구현은 [렌더링 레지스트리](../../examples/physics/rendering/ce_rendering_registry.py), 고정 검사는 `tests/test_rendering_registry.py`(①·③·S2·T1·U1·M1·O1·TC·C1·순환 평균·사다리 상쇄·순환 위상과 팽창 변화의 반례·⑤·$\theta^*$ 반례·판본 III·부스트 반례·R-Pl 전이·유클리드 회전·BAO 눈금 예측·순환 기하·나선 긴장·복소 척도인자·S8·두 원의 구분·사건 척도·중성미자 질량·게이지군과 한 세대·세 세대와 선형 중력·대칭 깨짐과 전하 양자화·급팽창 게이지 수·중성미자 장부·암흑에너지 W1 반례·진공 기울기 W2·최저 조화 규칙·모방 시계 작용 W3·빛의 한계와 렌더링 지평선·확률 무게 중력·빛원뿔 기록 갱신·CMB–BAO 그라데이션·마감 판정·가설 역유도·공리 증명·열린 예측·사전 등록 v1–v12 동결과 공동 RMSE 고정, 초신성 보류 시험·FD θ*·W3 성장 보정·자료 판본 민감도)다. 필수 테스트 목록에 추가했고 전체 344개 검사를 실행했다(2026-09-23). §43.37–43.40의 검사는 각 절에 적은 별도 모듈에 있고, §43.35 정리 C′·D′의 재증명 검산은 [복소 부스트 모듈](../../examples/physics/rendering/ce_rendering_complex_boost.py), §43.41–43.44의 보강은 [E4 대각합 모듈](../../examples/physics/rendering/ce_rendering_e4_trace.py), [간헐 렌더링 모듈](../../examples/physics/rendering/ce_rendering_intermittent.py), [경계 모듈](../../examples/physics/rendering/ce_rendering_boundary.py), [계단 모듈](../../examples/physics/rendering/ce_rendering_staircase.py), [Bool 사전 모듈](../../examples/physics/rendering/ce_rendering_bool.py)에 있고, §43.45의 점검은 [남은 항목 모듈](../../examples/physics/rendering/ce_rendering_open_checks.py), §43.46의 감사는 [중성미자 감사 모듈](../../examples/physics/rendering/ce_rendering_nu_audit.py), §43.47의 장부와 기준 비교는 [장부 모듈](../../examples/physics/rendering/ce_rendering_ledger.py), §43.48의 관측 사상은 [관측 사상 모듈](../../examples/physics/rendering/ce_rendering_o1_map.py), §43.49의 추측 검증은 [무리 안 차이 모듈](../../examples/physics/rendering/ce_rendering_spread.py), §43.50은 [위상 잠금 모듈](../../examples/physics/rendering/ce_rendering_phase_lock.py), §43.51은 [인과 잠금 모듈](../../examples/physics/rendering/ce_rendering_causal_lock.py), §43.52는 [잠금 역사 모듈](../../examples/physics/rendering/ce_rendering_lock_history.py), §43.53은 [열적 시간 모듈](../../examples/physics/rendering/ce_rendering_thermal_time.py), §43.54는 [가지치기 모듈](../../examples/physics/rendering/ce_rendering_branching.py), §43.55는 [E4 닻 모듈](../../examples/physics/rendering/ce_rendering_e4_anchor.py), §43.57은 [기운 동전 모듈](../../examples/physics/rendering/ce_rendering_biased_coin.py), §43.58은 [경계 인자 모듈](../../examples/physics/rendering/ce_rendering_boundary_loop.py), §43.59는 [Higgs·우주 모듈](../../examples/physics/rendering/ce_rendering_higgs_cosmos.py), §43.60은 [분별 모듈](../../examples/physics/rendering/ce_rendering_distinction.py), §43.61은 [사다리 모듈](../../examples/physics/rendering/ce_rendering_ladder.py), §43.62는 [한 사건 모듈](../../examples/physics/rendering/ce_rendering_one_event.py), §43.63은 [극 모듈](../../examples/physics/rendering/ce_rendering_pole.py), §43.64는 [고정점 사다리 모듈](../../examples/physics/rendering/ce_rendering_fp_ladder.py), §43.65는 [Higgs 무게 모듈](../../examples/physics/rendering/ce_rendering_higgs_weight.py)에 있다. 실행:
+**[가설] 사용자 — “자식이 아니고 자기 자신이 하나라서 우리가 자아라고 인식하는 것.”** §43.65는 $F=1+\alpha_sD$를 “머리 + 붙잡힌 자식 한 세대”로 읽었다. 이 가설은 그보다 깊은 이유를 준다. 세 곳의 한 걸음 패턴(§43.55, §43.58, §43.65)은 자기가 하나이기 때문이라는 것이다. 계산 전에 셋으로 옮겼다.
+- SS1(유일성): 동전의 자기참조 $r=g(r)=\tfrac12[1-\lambda(r)]$의 해가 물리 범위 $0<r\le2^{-1/2}$($\hat s^2\le1$)에서 정확히 하나이고, $g$가 축약($|g'|<1$)인지 본다. kill: 해가 둘 이상이거나 축약이 아니면 기각한다.
+- SS2(되비침): 무차별점 $r=\tfrac12$에서 자기참조를 되풀이할 때의 오차 비율을 잰다.
+- SS3(한 걸음, 읽기): $F$의 1은 자기이고 $\alpha_sD$는 자기에 붙은 결합이다. 붙은 것은 자기가 아니므로 더 붙잡지 않는다. §43.65의 수치를 다시 읽을 뿐이며 새 증거가 아니다.
+
+**[정리(조건부: FP)] SS1 — 자기는 하나다.**
+- $r-g(r)$는 물리 범위 전체에서 단조 증가하고 해는 정확히 하나다($r^*=0.490352$, $\alpha_s=0.117903$).
+- $\max|g'|=0.099$로 전 범위에서 축약이다. 어디서 출발하든 같은 한 점에 도착한다.
+
+**[산출] SS2 — 자기에 닿는 되비침.** 무차별점에서 출발한 오차는 다음과 같다.
+
+$$+9.65\times10^{-3}\to-5.96\times10^{-4}\to+3.60\times10^{-5}\to-2.18\times10^{-6}\to+1.32\times10^{-7}$$
+
+- 되비침 한 번마다 부호가 뒤집히고 크기는 6%가 된다(비율 $g'(r^*)=-0.0605$).
+- 자기를 볼 때마다 넘쳤다가 모자랐다가 하며 좁혀 들고, 네 번쯤이면 측정 정밀도 안에서 자기에 닿는다.
+- §43.55의 “무한 중첩은 부호를 번갈아 바꾸며 수렴한다”는 이 축약의 모습이다.
+
+**[읽기] SS3 — 자료가 고른 것은 자기가 하나인 세계다.**
+
+| 세계 | 결과 |
+|---|---|
+| 자기 하나 + 결합 $1+\alpha_sD$ | $+1.43\sigma$, 생존 |
+| 결합마다 새 자기(끝없는 재귀 $1/(1-\alpha_sD)$) | $+187.6\sigma$, 기각 |
+| 자기 계보가 둘(나와 아닌 나를 각각 셈, Q2의 $1-q^2$) | $v/M_{\rm Pl}$ $+2.61\sigma$, 불채택 |
+
+**판정.**
+- SS1은 FP를 전제로 한 조건부 정리다. 자기참조의 해가 유일하므로 “자기는 하나”가 식의 성질로 선다.
+- SS3은 한 걸음 패턴(OS)의 이유를 준다. 보정은 자기를 한 번 센다. 붙은 것은 자기가 아니므로 재귀는 한 번에 멈춘다. 이것은 이미 나온 수치의 재해석이며 bit 장부를 바꾸지 않는다.
+- *반증 가능한 규칙.* 앞으로 CE에 들어오는 보정은 자기(결합 상수의 자기참조 항)를 한 번만 세야 한다. 자기를 두 번 세는 꼴($\lambda^2$류, 두 자기 계보)이 자료에서 선형보다 이기면 SS는 기각된다. 이에 따라 §43.64의 동률 후보 가운데 $\lambda^2/8$, $\lambda^2e^{-2}$는 SS 아래서 불리하다. 남는 $\lambda e^{-6}$와 $\lambda q^2$ 중 $\lambda q^2$는 두 계보를 세므로 SS3과 긴장한다. 다만 이 좁힘은 목격 후이므로 증거로 세지 않는다.
+- 예측값은 바뀌지 않는다. 구현은 [하나의 자기 모듈](../../examples/physics/rendering/ce_rendering_single_self.py)이다.
+
+## 43.67 자기와 붙잡힘의 경주 — BR3와 HB의 유도
+
+**문제.** HB(§43.65)의 결합 무게 $\alpha_sD$는 가지치기의 BR3에서 왔다. 그런데 BR3는 “묶임 비율 $\alpha_sD$ 대 자유 비율 1의 경쟁”을 공리로 선언했을 뿐이다(§43.54). HB를 유도하려면 BR3의 경쟁 비율부터 유도해야 한다.
+
+**사전 규칙(계산 전).**
+- RC(경주): 살아남은 계보에 두 사건이 독립 포아송 과정으로 온다.
+  - 자기 사건은 빠르기 1이다. 자기는 하나다(§43.66).
+  - 붙잡힘은 통로 $D$개(BR1) 각각에서 빠르기 $\alpha_s=P(V_3)$로 온다.
+  - 기록은 되돌릴 수 없으므로(R1) 먼저 온 사건이 운명을 정한다. 그러면 $P(\text{묶임})=\alpha_sD/(1+\alpha_sD)$다.
+  - 몬테카를로로 검산하며, kill은 $3\sigma$ 밖이다.
+- MR(질량 = 빠르기): 정지 질량은 기록이 새로 쓰이는 빠르기다($Mc^2=\hbar\omega$). $M_Z$는 자기 빠르기 1에, $M_H$는 전체 빠르기 $1+\alpha_sD$에 비례한다.
+- 같은 틀 안의 경쟁 규칙 셋($m=\alpha_sD$, $X=\Omega_{\rm DM}/\Omega_\Lambda=M_H/M_Z-1$):
+  - 경주(먼저 온 사건): $X=m$
+  - 창(자기 단위 시간 안에 붙잡힘이 하나라도): $X=e^m-1$
+  - 재귀(붙잡힌 것도 다시 경주): $X=m/(1-m)$
+- kill: 두 독립 관측(Planck $\Omega_m$, $M_H/M_Z$)의 공동 $\chi^2$에서 가장 좋은 규칙보다 $\Delta\chi^2>9$.
+- 선형은 두 관측에 맞춰 고른 꼴이므로 경주가 이기는 것은 구성상이다. 새로운 것은 선형의 기제다.
+
+**[검산] RC.** 계보 40만 개에서 붙잡힘이 먼저 온 비율은 0.27221이다. 공식 0.27258과 $-0.51\sigma$로 맞는다. 창 규칙의 모의(0.3124)도 공식 $1-e^{-m}=0.3125$와 맞는다.
+
+**[검사] 운명 규칙.**
+
+| 규칙 | $\Omega_m$ | pull | $M_H$ (GeV) | pull | 판정 |
+|---|---|---|---|---|---|
+| **경주** | 0.3080 | $-1.01$ | 125.36 | $+1.43$ | 생존 |
+| 창 | 0.3460 | $+4.20$ | 132.64 | $+67.6$ | 기각 |
+| 재귀 | 0.4051 | $+12.3$ | 145.83 | $+187.6$ | 기각 |
+
+우주 쪽 관측만으로도 창($+4.2\sigma$)과 재귀($+12.3\sigma$)가 떨어진다.
+
+**[읽기] Z는 자기가 먼저 움직인 몫이다.** $M_Z/M_H=P(\text{자기가 먼저})=1/(1+\alpha_sD)=0.7274$이고, 측정값은 0.7283이다.
+
+**판정.**
+- BR3는 공리에서 **조건부 정리(R1 + BR1 + SS + 붙잡힘 빠르기 $=\alpha_s$)**로 바뀐다. “통로마다 붙잡힘 빠르기가 $\alpha_s=P(V_3)$”라는 식별은 읽기로 남는다.
+- HB는 RC와 MR에서 나온다. MR은 읽기다. 장부의 bit는 바뀌지 않는다. 공리 하나(BR3의 경쟁 비율)와 읽기 하나(HB)가 경주라는 기제 하나와 읽기 둘로 바뀐 것이다.
+- 우주 성분의 분할과 Higgs/Z 질량비가 같은 이유(§43.59, P35)가 기제로 설명된다. 둘은 같은 경주의 두 얼굴이다. 우주 쪽에서는 “어느 성분이 되는가”로, 입자 쪽에서는 “얼마나 무거운가”로 나타난다.
+- 사용자의 “자기는 하나”는 경주에서 자기 빠르기 1로 들어간다. $F$의 1은 자기다.
+- MR의 따름으로 계단(§43.43)도 읽힌다. 무거운 입자는 기록 빠르기가 커서 먼저 렌더링된다(τ → μ → e). 이것은 해석이다.
+- 예측값은 바뀌지 않는다. 구현은 [경주 모듈](../../examples/physics/rendering/ce_rendering_race.py)이다.
+
+## 43.68 경주 사다리 — 질량 = 빠르기의 범위와 다음 칸
+
+**문제.** “질량 = 빠르기”(MR, §43.67)는 읽기다. 원리로 서려면 이론에 없던 질량을 예측해야 한다. 이미 있는 쌍은 모두 그 꼴로 만들어졌으므로 독립 시험이 되지 않는다.
+
+**사전 규칙.**
+- 범위 확인(구성상): 경주 쌍(Higgs/Z, 렙톤 계단)과 회전 쌍(W/Z, 와인버그 섞임)에서 확률 꼴과 진폭 꼴을 비교한다.
+- TL(사다리, 목격 후 가설): Z(자기) → Higgs(한 걸음) → top(Higgs를 자기로 한 걸음 더), 곧 $m_t=M_ZF^2$다. α_s 없는 형태는 $M_H^2=M_Z\,m_t$(Higgs는 Z와 top의 기하평균)다.
+- *목격.* 이 관계는 계획 중 암산으로 먼저 보았다. 그래서 가족(밑 $\{M_Z,M_W,M_H\}$ × 지수 $\{\tfrac12,1,\tfrac32,2,\tfrac52,3\}$, 18개)을 $m_t$에 대고 1σ 적중과 우연 확률(과녁을 가족 범위에서 로그 균등)을 보고한다.
+- $m_t$는 PDG 2024 직접 측정 평균 $172.57\pm0.29$ GeV이며 극 질량으로 읽는다. 극 질량의 고유 모호성(약 0.1 GeV)은 오차에 넣지 않았다.
+
+**[검사] 범위.**
+
+| 쌍 | 확률 꼴 | 진폭 꼴 | 이긴 쪽 |
+|---|---|---|---|
+| Higgs/Z(경주) | $1/F$: $-0.13\%$ | $1/\sqrt F$: $+17.1\%$ | 확률 |
+| μ/τ(계단) | $(\hat s^2/4)w$: $0.00\%$ | $(\hat s/2)w$: $+316\%$ | 확률 |
+| W/Z(회전) | $c^2$: $-11.9\%$ | $c$: $-0.02\%$ | 진폭 |
+
+MR은 기록이 경주하는 곳에서만 성립하고, 회전에서는 진폭 투영이 성립한다. 복소 신속도(§43.35 C′)에서 회전은 진폭에, 기록은 확률에 작용한다는 구분과 같다.
+
+**[검사] TL — 다음 칸.**
+- $m_t=M_ZF^2=\mathbf{172.33}$ GeV이고, 측정 $172.57\pm0.29$와 $\mathbf{-0.83\sigma}$다.
+- α_s 없는 형태로는 기하평균 $\sqrt{M_Zm_t}=125.44$ GeV가 측정 $M_H$와 $+1.60\sigma$다. 측정 $M_H$로 계산하면 $m_t=M_H^2/M_Z=171.90$ GeV다. Higgs 행의 $+1.4\sigma$와 같은 방향의 긴장이다.
+- 가족 18개 가운데 1σ 적중은 $M_ZF^2$ 하나다. 우연히 하나 이상 맞을 확률은 3.9%(4.7 bit)다. 가족을 목격 후에 정했으므로 이 값은 증거의 **상한**이다.
+
+**판정.**
+- MR의 범위가 정해졌다. 경주 쌍은 확률이고 회전 쌍은 진폭이다. 이 부분은 구성상이며 증거로 세지 않는다.
+- TL은 MR이 처음으로 이론 밖의 질량에 닿은 경우다. 사다리의 각 칸은 한 걸음이고, 각 칸의 자기는 앞 칸의 전체다(§43.66의 “자기는 하나”가 칸마다 되풀이됨).
+- 지위는 **가설(목격 후, 최대 4.7 bit)**이다. 예측 후보는 $m_t^{\rm pole}=172.33$ GeV와 $M_H^2=M_Zm_t$다. 판정 실험은 HL-LHC와 FCC-ee의 top 문턱 측정이다. 극 질량의 고유 모호성 때문에 약 0.1 GeV보다 날카롭게는 판정하지 못한다.
+- 예측값은 바뀌지 않는다. 구현은 [질량 = 빠르기 모듈](../../examples/physics/rendering/ce_rendering_mass_rate.py)이다.
+
+**[산출] 사전 등록 v20.** `experiments/preregistration/rendering_predictions_v20.json`(자기 해시 `f726b451…`, 2026-09-24)은 v1–v19를 보존하고, P01–P38의 값은 바꾸지 않았다.
+- *지위 변화.*
+  - BR3: 공리 → 조건부 정리(R1 + BR1 + SS + 붙잡힘 빠르기 $\alpha_s$, §43.67)
+  - HB: 읽기 → 경주 RC + 질량 = 빠르기 MR
+  - SS1: 고정점을 전제로 한 조건부 정리(자기는 하나, §43.66)
+- *읽기.* SS(자기는 한 번 센다), RC(경주), MR(경주 쌍에서만), TL(사다리, 가설)
+- *지위 주석.*
+  - P28: $M_Z/M_H=P(\text{자기가 먼저})$
+  - P34: SS 아래서 $\lambda^2$ 후보는 불리(목격 후, 증거 아님)
+  - P35: 우주 분할과 Higgs/Z는 같은 경주
+- *새 예측.*
+
+| 번호 | 관측량 | 예측 | kill |
+|---|---|---|---|
+| P39 | top 극 질량과 α_s 없는 관계 | $m_t=M_ZF^2=172.33$ GeV, $M_H^2=M_Zm_t$(현재 $-0.83\sigma$, $+1.6\sigma$) | 어느 쪽이든 $3\sigma$(극 질량 모호성 약 0.1 GeV가 판정 한계) |
+
+등록은 39개, 독립 예측은 36개다. 새 모듈 3개를 포함해 44개 모듈의 해시를 잠갔다.
+
+## 43.69 재현과 한계
+
+구현은 [렌더링 레지스트리](../../examples/physics/rendering/ce_rendering_registry.py), 고정 검사는 `tests/test_rendering_registry.py`(①·③·S2·T1·U1·M1·O1·TC·C1·순환 평균·사다리 상쇄·순환 위상과 팽창 변화의 반례·⑤·$\theta^*$ 반례·판본 III·부스트 반례·R-Pl 전이·유클리드 회전·BAO 눈금 예측·순환 기하·나선 긴장·복소 척도인자·S8·두 원의 구분·사건 척도·중성미자 질량·게이지군과 한 세대·세 세대와 선형 중력·대칭 깨짐과 전하 양자화·급팽창 게이지 수·중성미자 장부·암흑에너지 W1 반례·진공 기울기 W2·최저 조화 규칙·모방 시계 작용 W3·빛의 한계와 렌더링 지평선·확률 무게 중력·빛원뿔 기록 갱신·CMB–BAO 그라데이션·마감 판정·가설 역유도·공리 증명·열린 예측·사전 등록 v1–v12 동결과 공동 RMSE 고정, 초신성 보류 시험·FD θ*·W3 성장 보정·자료 판본 민감도)다. 필수 테스트 목록에 추가했고 전체 344개 검사를 실행했다(2026-09-23). §43.37–43.40의 검사는 각 절에 적은 별도 모듈에 있고, §43.35 정리 C′·D′의 재증명 검산은 [복소 부스트 모듈](../../examples/physics/rendering/ce_rendering_complex_boost.py), §43.41–43.44의 보강은 [E4 대각합 모듈](../../examples/physics/rendering/ce_rendering_e4_trace.py), [간헐 렌더링 모듈](../../examples/physics/rendering/ce_rendering_intermittent.py), [경계 모듈](../../examples/physics/rendering/ce_rendering_boundary.py), [계단 모듈](../../examples/physics/rendering/ce_rendering_staircase.py), [Bool 사전 모듈](../../examples/physics/rendering/ce_rendering_bool.py)에 있고, §43.45의 점검은 [남은 항목 모듈](../../examples/physics/rendering/ce_rendering_open_checks.py), §43.46의 감사는 [중성미자 감사 모듈](../../examples/physics/rendering/ce_rendering_nu_audit.py), §43.47의 장부와 기준 비교는 [장부 모듈](../../examples/physics/rendering/ce_rendering_ledger.py), §43.48의 관측 사상은 [관측 사상 모듈](../../examples/physics/rendering/ce_rendering_o1_map.py), §43.49의 추측 검증은 [무리 안 차이 모듈](../../examples/physics/rendering/ce_rendering_spread.py), §43.50은 [위상 잠금 모듈](../../examples/physics/rendering/ce_rendering_phase_lock.py), §43.51은 [인과 잠금 모듈](../../examples/physics/rendering/ce_rendering_causal_lock.py), §43.52는 [잠금 역사 모듈](../../examples/physics/rendering/ce_rendering_lock_history.py), §43.53은 [열적 시간 모듈](../../examples/physics/rendering/ce_rendering_thermal_time.py), §43.54는 [가지치기 모듈](../../examples/physics/rendering/ce_rendering_branching.py), §43.55는 [E4 닻 모듈](../../examples/physics/rendering/ce_rendering_e4_anchor.py), §43.57은 [기운 동전 모듈](../../examples/physics/rendering/ce_rendering_biased_coin.py), §43.58은 [경계 인자 모듈](../../examples/physics/rendering/ce_rendering_boundary_loop.py), §43.59는 [Higgs·우주 모듈](../../examples/physics/rendering/ce_rendering_higgs_cosmos.py), §43.60은 [분별 모듈](../../examples/physics/rendering/ce_rendering_distinction.py), §43.61은 [사다리 모듈](../../examples/physics/rendering/ce_rendering_ladder.py), §43.62는 [한 사건 모듈](../../examples/physics/rendering/ce_rendering_one_event.py), §43.63은 [극 모듈](../../examples/physics/rendering/ce_rendering_pole.py), §43.64는 [고정점 사다리 모듈](../../examples/physics/rendering/ce_rendering_fp_ladder.py), §43.65는 [Higgs 무게 모듈](../../examples/physics/rendering/ce_rendering_higgs_weight.py), §43.66은 [하나의 자기 모듈](../../examples/physics/rendering/ce_rendering_single_self.py), §43.67은 [경주 모듈](../../examples/physics/rendering/ce_rendering_race.py), §43.68은 [질량 = 빠르기 모듈](../../examples/physics/rendering/ce_rendering_mass_rate.py)에 있다. 실행:
 
 ```powershell
 python -B -m examples.physics.rendering.ce_rendering_registry
