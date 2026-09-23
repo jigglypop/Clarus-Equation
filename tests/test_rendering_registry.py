@@ -44,6 +44,11 @@ from examples.physics.rendering import ce_rendering_staircase as ST
 from examples.physics.rendering import ce_rendering_bool as BO
 from examples.physics.rendering import ce_rendering_open_checks as OC
 from examples.physics.rendering import ce_rendering_nu_audit as NA
+from examples.physics.rendering import ce_rendering_ledger as LG
+from examples.physics.rendering import ce_rendering_o1_map as OM
+from examples.physics.rendering import ce_rendering_spread as SP2
+from examples.physics.rendering import ce_rendering_phase_lock as PLK
+from examples.physics.rendering import ce_rendering_causal_lock as CLK
 from examples.physics.rendering import ce_rendering_open_predictions as OP
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
@@ -830,6 +835,68 @@ def test_neutrino_mass_formula_audit() -> None:
     assert 0 < d["sum_minus_min"] < 0.5 and d["sum_meV"] < d["DESI_DR2_95_meV"]         # P17 ~ minimal normal ordering
     j = NA.juno_outlook(c)
     assert -1 < j["pull_now"] < 0 and j["pull_final_0.3pct_if_central_holds"] < -4
+
+
+def test_hypothesis_ledger_and_val01_baseline_comparison() -> None:
+    t = LG.ledger_totals()
+    assert t["39"]["before"] == pytest.approx(23.2) and t["39"]["now"] == pytest.approx(20.9)
+    assert t["43"]["now"] == pytest.approx(34.6)
+    c39 = LG.compare("IV")
+    assert c39["CE"]["rmse"] == pytest.approx(0.834, abs=1e-3) and c39["baseline"]["k"] == 19
+    assert c39["CE"]["S"] < c39["baseline"]["S"] and LG.break_even_bits(c39) > 60        # overall: CE ahead
+    blocks = LG.block_scores("IV")
+    assert blocks["Q"]["AIC_base"] < blocks["Q"]["AIC_CE"] and blocks["Q"]["BIC_CE"] < blocks["Q"]["BIC_base"]
+    b2 = LG.flexible_baseline_m("IV")
+    assert b2["AIC_CE"] < b2["AIC_B2"] and b2["BIC_CE"] < b2["BIC_B2"]                    # macro edge survives B2
+    for rf in ("IV", "full"):
+        for mp in (False, True):
+            m = LG.mdl_blocks(rf, mp)
+            assert m["Q"]["L_base"] - m["Q"]["L_CE"] > 75                            # same currency: Q block too
+            assert m["M"]["L_base"] - m["M"]["L_CE"] > 75
+
+
+def test_o1_observable_map_projection_between_frames() -> None:
+    inv = OM.ring_invariance()
+    assert inv["bao_max_rel_change"] < 1e-12 and inv["theta_ratio"] == pytest.approx(1.0)   # K1
+    rd = OM.present_units_rd()
+    assert abs(rd["pull"]) < 1 and rd["rd_CE_present"] == pytest.approx(136.3, abs=0.2)      # K3
+    cl = OM.classification()
+    assert all(abs(r[4]) < 2 for r in cl["chapter_rows"])                                     # K4
+    assert all(not r[4] for r in cl["file_display_only"])                                     # display only
+
+
+def test_spread_within_calibration_classes() -> None:
+    a = SP2.conjecture_a()
+    assert abs(a["calibration_offset"]) < 0.2                                   # analysis reproduces DESI BAO+BBN
+    assert a["CE_with_G1m"]["H0"] == pytest.approx(68.46, abs=0.05) and abs(a["CE_pred_vs_DESI_sigma"]) < 0.5
+    assert a["G1m_shift"] > 0.5 and a["CE_no_gradient"]["H0"] == pytest.approx(67.8, abs=0.1)
+    b = SP2.conjecture_b()
+    assert b["order_pred"] != b["order_obs"]                                    # pre-registered order criterion kills B
+    c = SP2.conjecture_c()
+    assert c["C_weighted"] == pytest.approx(69.4, abs=0.05)
+
+
+def test_phase_locking_reproduces_record_window_bisector_and_intermittency() -> None:
+    assert PLK.locked_point(1 / math.sqrt(2))["theta_star"] == pytest.approx(math.pi / 8)   # D': half-load lock
+    assert PLK.locked_point(1.0)["theta_star"] == pytest.approx(math.pi / 4)                 # C': lock limit
+    assert not PLK.locked_point(1.01)["locked"]
+    lam = PLK.laminar_lengths(loads=(1.002, 1.032), steps=200000)
+    assert all(3.5 < v["scaled"] < 4.8 for v in lam.values())                                # type-I scaling
+    d = PLK.slip_depth(steps=200000)
+    assert d["edge"] > 0.9 and d["deep_blur"] < 0.05                                         # brief deep blur
+    t = PLK.data_test()
+    assert t["bao_chi2"] < t["bao_chi2_none"] and t["V39"] < 0.909 and t["V39"] > t["V39_current"]
+
+
+def test_causal_lock_half_of_half_of_right_angle() -> None:
+    h = CLK.two_halvings()
+    assert h["theta_is_pi_8"] and h["phi_star_deg"] == pytest.approx(45.0)
+    d = CLK.direction()
+    assert abs(d["causal_SH0ES"]) < 1 and d["anti_causal_SH0ES"] < -10                # causality fixes the direction
+    one_way = CLK.two_phase_lock(0.0, steps=100000)
+    assert one_way["lock"] == pytest.approx(math.pi / 8, abs=1e-5) and abs(one_way["past_drift"]) < 1e-9
+    mutual = CLK.two_phase_lock(0.2, steps=100000)
+    assert mutual["lock"] < 0.3 and abs(mutual["past_drift"]) > 1                    # back-coupling drags records
 
 
 def test_rendering_predictions_v13_is_frozen() -> None:
