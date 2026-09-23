@@ -32,6 +32,7 @@ from examples.physics.rendering import ce_rendering_mimetic_vacuum as MV
 from examples.physics.rendering import ce_rendering_light_limit as LL
 from examples.physics.rendering import ce_rendering_probability_weight as PW
 from examples.physics.rendering import ce_rendering_record_update as RU
+from examples.physics.rendering import ce_rendering_gradient as GD
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
     alpha_em_inv,
@@ -619,3 +620,27 @@ def test_records_update_the_gravity_source_only_inside_the_light_cone() -> None:
     assert RU.page_geilker_correlation("average") == 0.0
     assert RU.outside_light_cone_signalling() < 1e-12 < 0.4 < RU.instant_remote_update_signalling()
     assert RU.dp_event_scale_length()["orders_below_bound"] > 5     # spontaneous DP collapse at M_Z rejected
+
+
+def test_cmb_bao_gradient_c3_shapes_fail_and_matter_share_amplitude_closes_the_tension() -> None:
+    for prof in ("G1", "G2", "G3"):                                   # pre-registered C3 shapes overshoot
+        assert GD.joint_v(prof) > GD.joint_v("none")
+    fit = GD.amplitude_fit("G1")
+    assert fit["k_lo"] < fit["Om"] < fit["k_hi"] and fit["chi2_k1"] > fit["chi2_k0"] > fit["chi2_min"] + 4
+    g = GD.bao_rows("G1m")
+    assert abs(g["tension_sigma"]) < 0.5
+    assert GD.joint_v("G1m") == pytest.approx(0.834, abs=2e-3)
+
+
+def test_rendering_predictions_v11_is_frozen() -> None:
+    v10 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v10.json").read_text(encoding="utf-8"))
+    v11 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v11.json").read_text(encoding="utf-8"))
+    assert v11["supersedes_manifest_id"] == v10["manifest_id"]
+    body = {k: v for k, v in v11.items() if k != "manifest_sha256"}
+    canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    assert hashlib.sha256(canonical).hexdigest() == v11["manifest_sha256"]
+    for key, rel in v11["model"]["files"].items():
+        assert hashlib.sha256((REPO_ROOT / rel).read_bytes()).hexdigest() == v11["model"]["sha256"][key], (
+            f"{key} changed after v11 freeze: create v12 and keep earlier manifests")
+    values = {q["id"]: q["value"] for q in v11["predictions"]}
+    assert values["P25"] == pytest.approx(1.0126, abs=2e-4)
