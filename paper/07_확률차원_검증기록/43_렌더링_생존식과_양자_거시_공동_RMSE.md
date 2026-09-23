@@ -246,9 +246,21 @@ $\pi/8$을 쓰지 않는다.
 
 **[산출] 사전 등록 v5.** `experiments/preregistration/rendering_predictions_v5.json`은 v1–v4를 보존하고 P15(비 $\sqrt{1+\Omega_\Lambda/4}=1.08306$)를 더했으며 [순환 기하](../../examples/physics/rendering/ce_rendering_cycle.py)와 [나선 긴장](../../examples/physics/rendering/ce_rendering_spiral.py) 모듈을 잠갔다. P11(1.08239)과는 현재 정밀도로 구별되지 않는다.
 
+## 43.16 복소 척도인자 — 나선 회전의 작용 수준 표현
+
+**[정의]** 척도인자를 $A=a\,e^{i\varphi}$로 둔다. $a$는 우주의 크기, $\varphi$는 유클리드 드 시터 시간 원 위에서 시간축이 돈 각이다. $d\ln A/dt=H+i\omega$이며 $\omega=H_\Lambda/2$(§43.14 접선–현)다.
+
+**[정리] C5 — 표준 극한.** 중력 작용이 $|A|=a$에만 의존하면 $\varphi$의 회전은 U(1) 대칭이고 중력원을 만들지 않는다. 프리드만 방정식은 표준 그대로이며 $\omega\to0$에서 FLRW와 정확히 같다. 같은 틀에서 새겨진 길이의 비(나이테)는 $|e^{i\varphi}|=1$이라 회전과 무관하고 실수부 $H$를 읽는다. 오늘의 직접 판독이 변화율의 크기 $|H+i\omega|=\sqrt{H^2+\omega^2}$를 읽는다는 판독 공리를 두면 §43.15의 나선 공식이 정의에서 나온다.
+
+**[산출] 수치 검산.** CE 배경을 우주 시간으로 적분하면 나이 13.808 Gyr, 오늘 $d\ln A/dt=67.77+28.19i$ km s$^{-1}$ Mpc$^{-1}$이고 크기는 73.401로 나선 공식과 같다. $|A|$는 표준 프리드만 방정식을 상대 오차 $10^{-8}$로 만족한다. 회전을 넣은 기록 거리 비의 변화는 0이다. CMB 재결합($z_*\approx1090$)과 BAO 끌림($z_d\approx1020$) 기록 사이의 위상 차는 $1.5\times10^{-6}$ rad이므로 CMB–BAO 척도 긴장(§43.13)은 회전으로 설명되지 않는다. 그 원인은 코어의 $\Omega_m$ 분할 쪽에서 찾아야 한다.
+
+**[반례] 코어 분할과 CMB–BAO 긴장.** 저장소에 이미 있는 세 분할을 같은 방식으로 비교했다. 현재의 $R_{\rm LO}=\alpha_sD$($\Omega_m=0.30796$)는 음향 각도 $+1.13\sigma$, BAO 모양 $\chi^2=11.70$이다. $R_{\rm NLO}=\alpha_sD+(\alpha_sD)^2/4\pi$($\Omega_m=0.31354$)는 $+9.80\sigma$, 13.55이고, 옛 3층 분할($\Omega_m=0.31093$)은 $+5.77\sigma$, 12.59다. CMB–BAO 척도 긴장은 세 분할 모두에서 $+3.1$–$3.2\sigma$로 남는다. 이 긴장은 회전도 분할 판본도 아닌 다른 원인에서 와야 하며, 현재 CE 안의 열린 불일치로 둔다.
+
+**[미완성]** $\varphi$가 역학 변수가 아니라 기하로 정해진다는 것과 직접 판독이 $|d\ln A/dt|$를 읽는다는 것은 공리다. 양자장론 쪽에서 이 복소 위상이 물질장의 위상(§4의 순환 위상 $\theta$)과 어떻게 연결되는지, 섭동 수준에서 모순이 없는지는 남는다.
+
 ## 43.10 재현과 한계
 
-구현은 [렌더링 레지스트리](../../examples/physics/rendering/ce_rendering_registry.py), 고정 검사는 `tests/test_rendering_registry.py`(①·③·S2·T1·U1·M1·O1·TC·C1·순환 평균·사다리 상쇄·순환 위상과 팽창 변화의 반례·⑤·$\theta^*$ 반례·판본 III·부스트 반례·R-Pl 전이·유클리드 회전·BAO 눈금 예측·순환 기하·나선 긴장·사전 등록 v1–v5 동결과 공동 RMSE 고정)다. 필수 테스트 목록에 추가했고 전체 308개 검사를 실행했다. 실행:
+구현은 [렌더링 레지스트리](../../examples/physics/rendering/ce_rendering_registry.py), 고정 검사는 `tests/test_rendering_registry.py`(①·③·S2·T1·U1·M1·O1·TC·C1·순환 평균·사다리 상쇄·순환 위상과 팽창 변화의 반례·⑤·$\theta^*$ 반례·판본 III·부스트 반례·R-Pl 전이·유클리드 회전·BAO 눈금 예측·순환 기하·나선 긴장·복소 척도인자·사전 등록 v1–v5 동결과 공동 RMSE 고정)다. 필수 테스트 목록에 추가했고 전체 309개 검사를 실행했다. 실행:
 
 ```powershell
 python -B -m examples.physics.rendering.ce_rendering_registry

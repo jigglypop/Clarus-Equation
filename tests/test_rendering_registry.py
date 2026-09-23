@@ -15,6 +15,7 @@ from examples.physics.rendering import ce_rendering_planck_readout as PL
 from examples.physics.rendering import ce_rendering_bao_ruler as BR
 from examples.physics.rendering import ce_rendering_cycle as CY
 from examples.physics.rendering import ce_rendering_spiral as SP
+from examples.physics.rendering import ce_rendering_complex_scale as CX
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
     alpha_em_inv,
@@ -336,3 +337,15 @@ def test_rendering_predictions_v5_is_frozen() -> None:
     values = {q["id"]: q["value"] for q in v5["predictions"]}
     c = core(calibrated_alpha_s()[0])
     assert values["P15"] == pytest.approx(SP.direct_over_rings(1 - c["Om"]), rel=1e-5)
+
+
+def test_complex_scale_factor_restores_flrw_and_reads_the_spiral_rate() -> None:
+    c = core(calibrated_alpha_s()[0])
+    sol, hub, t0, omega, h0 = CX.background(c)
+    assert 13.5 < t0 < 14.1
+    rate = CX.complex_rate(c, t0)
+    assert rate.real / CX.KMS_MPC_PER_GYR == pytest.approx(100 * PL.h_rings(c), rel=1e-6)
+    assert abs(rate) / CX.KMS_MPC_PER_GYR == pytest.approx(SP.direct_readout(c), rel=1e-6)
+    assert CX.friedmann_residual(c) < 1e-6
+    assert CX.ring_ratio_invariance(c, 0.3) < 1e-12
+    assert CX.record_phase_gap(c) < 1e-4
