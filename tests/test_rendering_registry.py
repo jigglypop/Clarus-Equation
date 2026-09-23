@@ -72,6 +72,9 @@ from examples.physics.rendering import ce_rendering_jacobson as JAC
 from examples.physics.rendering import ce_rendering_nu_cosmo as NUC
 from examples.physics.rendering import ce_rendering_nu_fit as NUF
 from examples.physics.rendering import ce_rendering_weight_epoch as WEP
+from examples.physics.rendering import ce_rendering_singlets as SGL
+from examples.physics.rendering import ce_rendering_e4_ii as E4II
+from examples.physics.rendering import ce_rendering_lepton_trace as LTR
 from examples.physics.rendering import ce_rendering_open_predictions as OP
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
@@ -1357,6 +1360,35 @@ def test_weight_epoch_today_preferred_path_average_does_not_replace_bit() -> Non
     assert abs(v["check_W0_vs_G1m"]) < 1e-9                                           # reproduces G1m
     assert v["W0"]["bao_chi2"] < v["Wpath"]["bao_chi2"] < v["Wz"]["bao_chi2"]        # monotone
     assert not v["path_replaces_bit"] and v["W0"]["V"] == pytest.approx(0.834, abs=0.001)
+
+
+def test_singlets_force_alpha_s_as_the_only_nontrivial_record_weight() -> None:
+    assert len(SGL.states()) == 32 and len(SGL.singlets()) == 4
+    w = SGL.weights()
+    assert w["forced_alpha_s"] and w["a_cubed"] == pytest.approx(w["alpha_s"])
+    assert w["rows"]["L3 V3 (colour full)"]["Q"] == "-1" and w["rows"]["L5 (all full)"]["Q"] == "0"
+    assert SGL.scope_su2()["ratio"] > 5                                               # weak does not confine
+    assert SGL.neutral_pairing()["neutral_singlets"] == ["L0 (empty)", "L5 (all full)"]
+
+
+def test_e4_ii_not_forced_by_singlets_and_unique_in_e1_family() -> None:
+    t = E4II.tradeoff()
+    assert t["E1 (colour only)"]["i_forced"] and not t["E1 (colour only)"]["ii_from_singlet"]
+    assert not t["all five axes"]["i_forced"] and t["all five axes"]["ii_from_singlet"]
+    assert not t["both_forced_somewhere"]
+    f = E4II.family()
+    assert f["hits"] == ["plane|tr.det|sin"]
+    others = [abs(v["pull"]) for k, v in f["rows"].items() if k != "plane|tr.det|sin"]
+    assert min(others) > 7
+
+
+def test_confined_sector_trace_gives_the_e4_anchor_quarter() -> None:
+    from fractions import Fraction
+    sr = LTR.sector_ratios()
+    assert sr["ratios"]["all"] == Fraction(3, 8) and sr["ratios"]["colour singlet (k=0,3)"] == Fraction(1, 4)
+    assert sr["ratios"]["coloured (k=1,2)"] == Fraction(9, 20) and sr["only_colour_singlets_give_quarter"]
+    wr = LTR.weighted_range()
+    assert wr["min"] >= 0.25 - 1e-9 and wr["max"] <= 0.45 + 1e-9 and not wr["reachable"]
 
 
 def test_one_coin_one_event_unique_crossing_at_mz() -> None:
