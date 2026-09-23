@@ -23,6 +23,7 @@ from examples.physics.rendering import ce_rendering_neutrino as NU
 from examples.physics.rendering import ce_rendering_gauge as GA
 from examples.physics.rendering import ce_rendering_generations as GE
 from examples.physics.rendering import ce_rendering_ewsb as EW
+from examples.physics.rendering import ce_rendering_inflation as IN
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
     alpha_em_inv,
@@ -466,3 +467,10 @@ def test_weak_channel_breaking_leaves_electric_charge_and_quantizes_it() -> None
     assert m["photon_is_Q"] < 1e-12
     assert m["M_W/M_Z"] == pytest.approx(m["c_W"], abs=1e-12)
     assert 79.0 < m["M_W"] < 81.5 and 90.0 < m["M_Z"] < 92.5
+
+
+def test_inflation_gauge_count_is_the_stage_preserving_subalgebra() -> None:
+    assert len(IN.su_basis(5)) == 24
+    assert IN.stage_preserving_dimension() == 12
+    c = R.core(R.calibrated_alpha_s()[0])
+    assert IN.inflation_efolds(c) == pytest.approx(c["Ne"], rel=1e-14)
