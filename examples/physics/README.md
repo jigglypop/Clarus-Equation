@@ -22,7 +22,8 @@
 | 렌더링 | `rendering/ce_rendering_derivations.py` | 음향 각도 θ* 검사, θ*-교정 판본 III, 부스트 반례 (43장 §43.11, v2 잠금) |
 | 렌더링 | `rendering/ce_rendering_planck_readout.py` | 플랑크 단위 판독 규칙 R-Pl, 판본 IV, 유클리드 회전 C2 (43장 §43.12, v3 잠금) |
 | 렌더링 | `rendering/ce_rendering_bao_ruler.py` | CE 음향 눈금 r_d, BAO 눈금 예측, 판본 V (43장 §43.13, v4 잠금) |
-| 렌더링 | `rendering/ce_rendering_cycle.py` | 우주 순환의 반지름·주기·온도, 접선–현 기울기 (43장 §43.14) |
+| 렌더링 | `rendering/ce_rendering_cycle.py` | 우주 순환의 반지름·주기·온도, 접선–현 기울기 (43장 §43.14, v5 잠금) |
+| 렌더링 | `rendering/ce_rendering_spiral.py` | 돌면서 퍼지는 나선 긴장, 허블 비 √(1+Ω_Λ/4) (43장 §43.15, v5 잠금) |
 
 `regge_tent_transfer.json`은 해당 코드의 SHA-256과 적용범위를 검사하는 고정 fixture다.
 새 실행 결과를 기존 검증 영수증에 자동으로 덮어쓰지 않는다.

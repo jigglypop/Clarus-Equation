@@ -230,9 +230,25 @@ $\alpha_s$ 교정 불확도가 $\theta^*$에 주는 흔들림은 약 $1\sigma$�
 
 **해석.** 우리가 사는 시기는 순환의 약 1/8을 지난 때이고, 그 결과 시간축이 진공 통로 한 칸만큼 기울어 있다. 물질과 진공의 밀도가 비슷한 시기에 우리가 있다는 우연(“왜 지금인가”)은 이 읽기에서 “순환의 첫 칸을 막 지난 때”가 된다. 이 읽기가 우연인지는 기울기가 시간에 따라 $H_\Lambda/2$ 비율로 커진다는 함의를 다른 관측과 잇기 전까지 판정할 수 없다.
 
+## 43.15 돌면서 퍼지는 시공간의 나선 긴장 — 사전 등록 v5
+
+사용자 가설: 시공간이 돌면서 퍼져 나가면 그에 대한 긴장이 있다.
+
+**[정리] C4 — 나선 긴장.** 접선–현 정리(§43.14)에서 시간축은 $\omega=H_\Lambda/2$로 돌고 우주는 $H$로 퍼진다. 돌면서 퍼지는 궤적은 로그 나선이며 퍼지는 방향과 실제 진행 방향의 각은 $\tan\psi=\omega/H$다. 직접 판독이 두 속도를 합친 크기를 읽는다고 두면
+
+$$H_{\rm direct}^2=H_{\rm rings}^2+\left(\tfrac{H_\Lambda}{2}\right)^2,\qquad \frac{H_{\rm direct}}{H_{\rm rings}}=\sqrt{1+\Omega_\Lambda/4}.$$
+
+$\pi/8$을 쓰지 않는다.
+
+**[산출] 세 경로.** 오늘 $\psi=\arctan(\sqrt{\Omega_\Lambda}/2)=22.59^\circ$로, 진공 통로 $\pi/8=22.50^\circ$, 순환 나이의 접선–현 $22.81^\circ$와 $0.3^\circ$ 안에 모인다. 직접 판독은 73.40(SH0ES $+0.27\sigma$, TDCOSMO $+0.46\sigma$, TRGB $+1.55\sigma$)이고 비는 1.08306이다. 진공만 남는 먼 미래에 나선 기울기는 $26.57^\circ$에서 멈추고 접선–현 기울기는 계속 커져 두 경로가 갈라지지만 현재 관측으로는 구별할 수 없다.
+
+**[제약] 실제 소용돌이가 아님.** $\omega/H_0\approx0.42$의 실제 우주 회전은 CMB 소용돌이 한계와 크게 어긋난다. 따라서 이 회전은 부스트(§43.11)와 같이 관계공간(허수 시간) 안의 회전으로만 읽는다.
+
+**[산출] 사전 등록 v5.** `experiments/preregistration/rendering_predictions_v5.json`은 v1–v4를 보존하고 P15(비 $\sqrt{1+\Omega_\Lambda/4}=1.08306$)를 더했으며 [순환 기하](../../examples/physics/rendering/ce_rendering_cycle.py)와 [나선 긴장](../../examples/physics/rendering/ce_rendering_spiral.py) 모듈을 잠갔다. P11(1.08239)과는 현재 정밀도로 구별되지 않는다.
+
 ## 43.10 재현과 한계
 
-구현은 [렌더링 레지스트리](../../examples/physics/rendering/ce_rendering_registry.py), 고정 검사는 `tests/test_rendering_registry.py`(①·③·S2·T1·U1·M1·O1·TC·C1·순환 평균·사다리 상쇄·순환 위상과 팽창 변화의 반례·⑤·$\theta^*$ 반례·판본 III·부스트 반례·R-Pl 전이·유클리드 회전·BAO 눈금 예측·순환 기하·사전 등록 v1–v4 동결과 공동 RMSE 고정)다. 필수 테스트 목록에 추가했고 전체 306개 검사를 실행했다. 실행:
+구현은 [렌더링 레지스트리](../../examples/physics/rendering/ce_rendering_registry.py), 고정 검사는 `tests/test_rendering_registry.py`(①·③·S2·T1·U1·M1·O1·TC·C1·순환 평균·사다리 상쇄·순환 위상과 팽창 변화의 반례·⑤·$\theta^*$ 반례·판본 III·부스트 반례·R-Pl 전이·유클리드 회전·BAO 눈금 예측·순환 기하·나선 긴장·사전 등록 v1–v5 동결과 공동 RMSE 고정)다. 필수 테스트 목록에 추가했고 전체 308개 검사를 실행했다. 실행:
 
 ```powershell
 python -B -m examples.physics.rendering.ce_rendering_registry

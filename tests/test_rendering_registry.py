@@ -14,6 +14,7 @@ from examples.physics.rendering import ce_rendering_derivations as DV
 from examples.physics.rendering import ce_rendering_planck_readout as PL
 from examples.physics.rendering import ce_rendering_bao_ruler as BR
 from examples.physics.rendering import ce_rendering_cycle as CY
+from examples.physics.rendering import ce_rendering_spiral as SP
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
     alpha_em_inv,
@@ -308,3 +309,30 @@ def test_cosmic_cycle_tilt_agrees_with_the_vacuum_channel_angle() -> None:
     cb = dict(c)
     cb["Om"] = om
     assert DV.ce_theta_pull(cb, PL.h_rings(c)) > 10.0  # exact pi/4 phase is rejected by theta*
+
+
+def test_spiral_tension_gives_the_hubble_ratio_without_pi_over_8() -> None:
+    c = core(calibrated_alpha_s()[0])
+    routes = SP.three_routes(c)
+    assert max(routes.values()) - min(routes.values()) < 0.01
+    ol = 1 - c["Om"]
+    assert SP.direct_over_rings(ol) == pytest.approx(math.sqrt(1 + ol / 4))
+    assert SP.direct_readout(c) ** 2 == pytest.approx(
+        (100 * PL.h_rings(c)) ** 2 + (100 * PL.h_rings(c) * math.sqrt(ol) / 2) ** 2)
+    assert abs(SP.direct_readout(c) - 73.17) / 0.86 < 1.0
+
+
+def test_rendering_predictions_v5_is_frozen() -> None:
+    v4 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v4.json").read_text(encoding="utf-8"))
+    v5 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v5.json").read_text(encoding="utf-8"))
+    assert v5["supersedes_manifest_id"] == v4["manifest_id"]
+    body = {k: v for k, v in v5.items() if k != "manifest_sha256"}
+    canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    assert hashlib.sha256(canonical).hexdigest() == v5["manifest_sha256"]
+    for key in ("registry", "derivations", "planck_readout", "bao_ruler", "cycle", "spiral"):
+        path = REPO_ROOT / v5["model"][f"{key}_path"]
+        assert hashlib.sha256(path.read_bytes()).hexdigest() == v5["model"][f"{key}_sha256"], (
+            f"{key} changed after v5 freeze: create v6 and keep earlier manifests")
+    values = {q["id"]: q["value"] for q in v5["predictions"]}
+    c = core(calibrated_alpha_s()[0])
+    assert values["P15"] == pytest.approx(SP.direct_over_rings(1 - c["Om"]), rel=1e-5)
