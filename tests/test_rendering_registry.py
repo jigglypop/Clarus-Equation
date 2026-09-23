@@ -35,6 +35,7 @@ from examples.physics.rendering import ce_rendering_record_update as RU
 from examples.physics.rendering import ce_rendering_gradient as GD
 from examples.physics.rendering import ce_rendering_closure as CL
 from examples.physics.rendering import ce_rendering_reverse_derivations as RD
+from examples.physics.rendering import ce_rendering_axiom_proofs as AP
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
     alpha_em_inv,
@@ -667,3 +668,13 @@ def test_inspirations_reduce_to_probability_weight_null_energy_and_bisector() ->
     r = RD.rpl_from_channel_loop()
     assert r["planck_unit_factor - 1"] == pytest.approx(r["4 * a/(16 pi)"], rel=1e-12)
     assert r["planck_unit_factor - 1"] == pytest.approx(r["g^2/(16 pi^2)"], rel=1e-12)   # canonical one-loop factor
+
+
+def test_axiom_proofs_qg1_c6_light_limit_and_bisector() -> None:
+    s = AP.qg1_signalling_scan(trials=60)
+    assert s["branch"] > 0.1 and s["weight"] < 1e-12            # Theorem A: only rho-sourcing is no-signalling
+    assert AP.affine_functional_is_trace_form() < 1e-12          # affine => Tr(rho X)
+    w = AP.wirtinger_scan(trials=500)
+    assert w["min_ratio_random"] > 1.0 == w["ratio_cos"]         # Theorem B: cos is the unique minimiser
+    assert abs(AP.imaginary_rapidity_speed(math.pi / 4)) == pytest.approx(1.0)   # Lemma C: limit at pi/4
+    assert AP.minimax_bisector() == pytest.approx(math.pi / 8, abs=1e-9)         # Theorem D
