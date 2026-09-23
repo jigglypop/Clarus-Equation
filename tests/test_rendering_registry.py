@@ -34,6 +34,7 @@ from examples.physics.rendering import ce_rendering_probability_weight as PW
 from examples.physics.rendering import ce_rendering_record_update as RU
 from examples.physics.rendering import ce_rendering_gradient as GD
 from examples.physics.rendering import ce_rendering_closure as CL
+from examples.physics.rendering import ce_rendering_reverse_derivations as RD
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
     alpha_em_inv,
@@ -652,3 +653,16 @@ def test_record_completion_is_thermodynamic_and_horizon_is_not_an_integer_channe
     assert v["RL"] == [] and len(v["R2"]) == 1          # redundancy-2 contradicted by GHZ coherence
     for r in CL.horizon_integer_channels().values():
         assert r["mismatch"] > 0.25
+
+
+def test_inspirations_reduce_to_probability_weight_null_energy_and_bisector() -> None:
+    assert RD.vacuum_frame_invariance() < 1e-12
+    g = RD.g1m_derivation_check()
+    assert g["max_diff_to_G1m"] < 1e-12
+    assert g["present weights"]["V39"] < g["epoch weights"]["V39"]      # pre-registered present-weight reading wins
+    w = RD.w2_sign_by_null_energy()
+    assert w["minus_is_phantom"] and w["w0_plus"] > -1
+    tri = RD.unitarity_triangle_from_bisector()
+    assert tri["angles_deg"] == pytest.approx((22.5, 67.5, 90.0)) and tri["sum_deg"] == pytest.approx(180.0)
+    r = RD.rpl_from_channel_loop()
+    assert r["planck_unit_factor - 1"] == pytest.approx(r["4 * a/(16 pi)"], rel=1e-12)

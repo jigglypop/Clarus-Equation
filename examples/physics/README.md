@@ -42,6 +42,7 @@
 | 렌더링 | `rendering/ce_rendering_record_update.py` | 기록 갱신 R1: 빛원뿔 안 기록만 원천 갱신, Page–Geilker 정합, 사건 척도 자발 붕괴 기각 (43장 §43.31) |
 | 렌더링 | `rendering/ce_rendering_gradient.py` | CMB–BAO 그라데이션: C3 모양 G1–G3 기각, 영감 G1m(k=Ω_m)으로 −0.22σ, 판본 V 0.834 (43장 §43.32, v11) |
 | 렌더링 | `rendering/ce_rendering_closure.py` | 마감: 기록 완성 = 란다우어(중복도 2는 GHZ로 기각), 지평선 정수 통로 기각, 영감 4.1 bit 장부 (43장 §43.33) |
+| 렌더링 | `rendering/ce_rendering_reverse_derivations.py` | 영감 역유도: k=Ω_m = 확률 무게 평균, W2 부호 = 널 에너지, U1 = O1 이등분 직각삼각형, R-Pl = 4×⑤ (43장 §43.34) |
 
 `regge_tent_transfer.json`은 해당 코드의 SHA-256과 적용범위를 검사하는 고정 fixture다.
 새 실행 결과를 기존 검증 영수증에 자동으로 덮어쓰지 않는다.
