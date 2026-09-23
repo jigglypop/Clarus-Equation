@@ -30,6 +30,7 @@ from examples.physics.rendering import ce_rendering_vacuum_tilt as VT
 from examples.physics.rendering import ce_rendering_vacuum_harmonic as VH
 from examples.physics.rendering import ce_rendering_mimetic_vacuum as MV
 from examples.physics.rendering import ce_rendering_light_limit as LL
+from examples.physics.rendering import ce_rendering_probability_weight as PW
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
     alpha_em_inv,
@@ -586,3 +587,27 @@ def test_light_speed_as_rendering_limit_fixes_the_tilt_and_bounds_all_signals() 
     assert abs(s["graviton"] - 1.0) < 1e-4
     hz = LL.rendering_horizon(c)
     assert 122.0 < hz["log10_entropy"] < 123.0
+
+
+def test_probability_weight_gravity_is_the_only_no_signalling_reading() -> None:
+    assert PW.signalling("branch") > 0.4          # branch-sourced gravity signals faster than light
+    assert PW.signalling("weight") < 1e-12         # probability-weight sourcing does not
+    b = PW.bmv()
+    assert b["concurrence_quantum_gravity"] > 0.02 and b["concurrence_probability_weight"] < 1e-12
+    c = core(calibrated_alpha_s()[0])
+    w = PW.cosmic_weights(c)
+    assert w["Omega_total"] == pytest.approx(1.0, abs=1e-15)
+
+
+def test_rendering_predictions_v10_is_frozen() -> None:
+    v9 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v9.json").read_text(encoding="utf-8"))
+    v10 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v10.json").read_text(encoding="utf-8"))
+    assert v10["supersedes_manifest_id"] == v9["manifest_id"]
+    body = {k: v for k, v in v10.items() if k != "manifest_sha256"}
+    canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    assert hashlib.sha256(canonical).hexdigest() == v10["manifest_sha256"]
+    for key, rel in v10["model"]["files"].items():
+        assert hashlib.sha256((REPO_ROOT / rel).read_bytes()).hexdigest() == v10["model"]["sha256"][key], (
+            f"{key} changed after v10 freeze: create v11 and keep earlier manifests")
+    values = {q["id"]: q["value"] for q in v10["predictions"]}
+    assert values["P23"] == 0.0 and values["P24"] == 0.0
