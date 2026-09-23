@@ -78,7 +78,8 @@ def unitarity_triangle_from_bisector() -> dict:
 def rpl_from_channel_loop() -> dict:
     a = R.calibrated_alpha_s()[0]
     c = R.core(a)
-    return {"4 * a/(16 pi)": 4 * a / (16 * math.pi), "a/(4 pi)": a / (4 * math.pi),
+    g2 = 4 * math.pi * a
+    return {"4 * a/(16 pi)": 4 * a / (16 * math.pi), "a/(4 pi)": a / (4 * math.pi), "g^2/(16 pi^2)": g2 / (16 * math.pi ** 2),
             "planck_unit_factor - 1": PL.planck_unit_factor(c) - 1}
 
 

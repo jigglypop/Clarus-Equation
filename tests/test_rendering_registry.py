@@ -666,3 +666,4 @@ def test_inspirations_reduce_to_probability_weight_null_energy_and_bisector() ->
     assert tri["angles_deg"] == pytest.approx((22.5, 67.5, 90.0)) and tri["sum_deg"] == pytest.approx(180.0)
     r = RD.rpl_from_channel_loop()
     assert r["planck_unit_factor - 1"] == pytest.approx(r["4 * a/(16 pi)"], rel=1e-12)
+    assert r["planck_unit_factor - 1"] == pytest.approx(r["g^2/(16 pi^2)"], rel=1e-12)   # canonical one-loop factor
