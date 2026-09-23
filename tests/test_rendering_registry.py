@@ -31,6 +31,7 @@ from examples.physics.rendering import ce_rendering_vacuum_harmonic as VH
 from examples.physics.rendering import ce_rendering_mimetic_vacuum as MV
 from examples.physics.rendering import ce_rendering_light_limit as LL
 from examples.physics.rendering import ce_rendering_probability_weight as PW
+from examples.physics.rendering import ce_rendering_record_update as RU
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
     alpha_em_inv,
@@ -611,3 +612,10 @@ def test_rendering_predictions_v10_is_frozen() -> None:
             f"{key} changed after v10 freeze: create v11 and keep earlier manifests")
     values = {q["id"]: q["value"] for q in v10["predictions"]}
     assert values["P23"] == 0.0 and values["P24"] == 0.0
+
+
+def test_records_update_the_gravity_source_only_inside_the_light_cone() -> None:
+    assert RU.page_geilker_correlation("record") == pytest.approx(1.0)
+    assert RU.page_geilker_correlation("average") == 0.0
+    assert RU.outside_light_cone_signalling() < 1e-12 < 0.4 < RU.instant_remote_update_signalling()
+    assert RU.dp_event_scale_length()["orders_below_bound"] > 5     # spontaneous DP collapse at M_Z rejected

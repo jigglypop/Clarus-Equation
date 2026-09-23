@@ -39,6 +39,7 @@
 | 렌더링 | `rendering/ce_rendering_mimetic_vacuum.py` | W3 모방 시계 작용: 진공→먼지 확정, 비앙키 성립, 부호=에너지 양수; 판본 V 0.920, 43행 혼재 → 경쟁 판본 (43장 §43.28) |
 | 렌더링 | `rendering/ce_rendering_light_limit.py` | c = 렌더링 한계: O1 = 빛원뿔 π/4의 이등분, 모든 신호 ≤ c, 렌더링 지평선의 온도·엔트로피 (43장 §43.29) |
 | 렌더링 | `rendering/ce_rendering_probability_weight.py` | 양자중력 = 확률의 무게: 가지 무게는 초광속 신호(기각), 확률 무게는 무신호; BMV 얽힘 0(P23), Ω_k = 0(P24) (43장 §43.30, v10) |
+| 렌더링 | `rendering/ce_rendering_record_update.py` | 기록 갱신 R1: 빛원뿔 안 기록만 원천 갱신, Page–Geilker 정합, 사건 척도 자발 붕괴 기각 (43장 §43.31) |
 
 `regge_tent_transfer.json`은 해당 코드의 SHA-256과 적용범위를 검사하는 고정 fixture다.
 새 실행 결과를 기존 검증 영수증에 자동으로 덮어쓰지 않는다.
