@@ -472,5 +472,5 @@ def test_weak_channel_breaking_leaves_electric_charge_and_quantizes_it() -> None
 def test_inflation_gauge_count_is_the_stage_preserving_subalgebra() -> None:
     assert len(IN.su_basis(5)) == 24
     assert IN.stage_preserving_dimension() == 12
-    c = R.core(R.calibrated_alpha_s()[0])
+    c = core(calibrated_alpha_s()[0])
     assert IN.inflation_efolds(c) == pytest.approx(c["Ne"], rel=1e-14)
