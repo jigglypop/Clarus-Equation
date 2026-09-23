@@ -34,6 +34,7 @@
 | 렌더링 | `rendering/ce_rendering_inflation.py` | 급팽창 N_gauge = 12를 단계 보존 부분대수 차원으로 계산, N_e = 18D (43장 §43.23) |
 | 렌더링 | `rendering/ce_rendering_nu_ledger.py` | 중성미자 장부: 이른 우주 ω_c에서 CE ω_ν를 뺌, CMB–BAO +3.07→+2.65σ, 판본 V 0.950 (43장 §43.24, v8) |
 | 렌더링 | `rendering/ce_rendering_w_branch.py` | [반례] 저장소 w0·wa 식 W1: 고정 h에서 θ* +57σ, 기각; 살아남을 꼴은 −1 둘레 진동뿐 (43장 §43.25) |
+| 렌더링 | `rendering/ce_rendering_vacuum_tilt.py` | [영감] W2 진공 판독 1+ξ²cos(H_Λt/2): 판본 V 0.909, CMB–BAO +2.17σ, w(0)=−0.989 (43장 §43.26, v9) |
 
 `regge_tent_transfer.json`은 해당 코드의 SHA-256과 적용범위를 검사하는 고정 fixture다.
 새 실행 결과를 기존 검증 영수증에 자동으로 덮어쓰지 않는다.

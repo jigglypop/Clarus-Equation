@@ -26,6 +26,7 @@ from examples.physics.rendering import ce_rendering_ewsb as EW
 from examples.physics.rendering import ce_rendering_inflation as IN
 from examples.physics.rendering import ce_rendering_nu_ledger as NL
 from examples.physics.rendering import ce_rendering_w_branch as WB
+from examples.physics.rendering import ce_rendering_vacuum_tilt as VT
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
     alpha_em_inv,
@@ -516,3 +517,30 @@ def test_repo_dark_energy_branch_w1_is_rejected_under_fixed_h() -> None:
     assert br["theta_pull"] > 30 and br["cmb_bao_tension"] < -5  # ... but theta* and the ruler break
     assert WB.joint_rmse(c, w)[0] > 5 * WB.joint_rmse(c, WB.LAMBDA)[0]
     assert WB.theta_fitted_h(c, w)["omega_b_pull"] < -10         # detour via theta-fitted h also fails
+
+
+def test_vacuum_tilt_w2_half_frequency_passes_the_preregistered_rules() -> None:
+    lam, w2 = VT.score(None), VT.score(VT.ADOPTED_NU)
+    assert w2["rmse_all"] < lam["rmse_all"] and w2["rmse_all"] == pytest.approx(0.909, abs=2e-3)
+    assert max(abs(o["pull"]) for o in w2["rows"]) < 3.0
+    assert w2["branch"]["cmb_bao_tension"] < lam["branch"]["cmb_bao_tension"]
+    for nu in (1.0, 3.0):                                   # the other two pre-declared frequencies fail on theta*
+        th = next(o for o in VT.score(nu)["rows"] if o["key"] == "100 theta*")
+        assert th["pull"] > 3.0
+    c = core(calibrated_alpha_s()[0])
+    assert -1.0 < VT.w_of(c, VT.ADOPTED_NU, 0.0) < -0.98    # never crosses -1
+
+
+def test_rendering_predictions_v9_is_frozen() -> None:
+    v8 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v8.json").read_text(encoding="utf-8"))
+    v9 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v9.json").read_text(encoding="utf-8"))
+    assert v9["supersedes_manifest_id"] == v8["manifest_id"]
+    body = {k: v for k, v in v9.items() if k != "manifest_sha256"}
+    canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    assert hashlib.sha256(canonical).hexdigest() == v9["manifest_sha256"]
+    for key, rel in v9["model"]["files"].items():
+        assert hashlib.sha256((REPO_ROOT / rel).read_bytes()).hexdigest() == v9["model"]["sha256"][key], (
+            f"{key} changed after v9 freeze: create v10 and keep earlier manifests")
+    values = {q["id"]: q["value"] for q in v9["predictions"]}
+    c = core(calibrated_alpha_s()[0])
+    assert values["P21"] == pytest.approx(VT.w_of(c, VT.ADOPTED_NU, 0.0), rel=1e-3)
