@@ -70,6 +70,8 @@ from examples.physics.rendering import ce_rendering_e4_shape as E4S
 from examples.physics.rendering import ce_rendering_horizon_pixel as HPX
 from examples.physics.rendering import ce_rendering_jacobson as JAC
 from examples.physics.rendering import ce_rendering_nu_cosmo as NUC
+from examples.physics.rendering import ce_rendering_nu_fit as NUF
+from examples.physics.rendering import ce_rendering_weight_epoch as WEP
 from examples.physics.rendering import ce_rendering_open_predictions as OP
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
@@ -1210,6 +1212,24 @@ def test_rendering_predictions_v22_is_frozen() -> None:
     assert "P41" in ids and len(ids) == 41 and "P17" in v22["model"]["killed_predictions"]
 
 
+def test_rendering_predictions_v23_is_frozen() -> None:
+    v22 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v22.json").read_text(encoding="utf-8"))
+    v23 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v23.json").read_text(encoding="utf-8"))
+    assert v23["supersedes_manifest_id"] == v22["manifest_id"]
+    body = {k: v for k, v in v23.items() if k != "manifest_sha256"}
+    canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    assert hashlib.sha256(canonical).hexdigest() == v23["manifest_sha256"]
+    assert v23["manifest_sha256"] == "eb2907f755b772ad4bc99ef19e73ee1ca6de34595492dda7d72fea423fb1c0d0"
+    for key, rel in v23["model"]["files"].items():
+        assert v23["model"]["sha256"][key] in _line_ending_hashes((REPO_ROOT / rel)), (
+            f"{key} changed after v23 freeze: create v24 and keep earlier manifests")
+    old = {q["id"]: q for q in v22["predictions"]}
+    assert {q["id"] for q in v23["predictions"]} == set(old)                   # no prediction added
+    for q in v23["predictions"]:
+        assert q["value"] == old[q["id"]]["value"]                            # no value changed
+    assert len(v23["model"]["files"]) == 51 and "P17" in v23["model"]["killed_predictions"]
+
+
 def test_distinction_equals_indistinction_at_the_z_pole_record() -> None:
     assert POLE.coin_reading() == {"mean_distinction": 0.0, "g_V": 0.0}
     p = POLE.pole_reading()
@@ -1324,6 +1344,19 @@ def test_p17_neutrino_sum_killed_as_registered_and_context() -> None:
     assert abs(j["dm21 (P19)"]) < 1 and abs(j["s12sq (P03)"]) < 1.5
     g = NUC.g1m_equivalent_shift()
     assert 0.08 < g["dOm_dSum_per_eV"] < 0.2 and g["equivalent_dSum_eV"] < -0.05       # post-hoc context only
+
+
+def test_p41_ce_readout_relaxes_neutrino_bound() -> None:
+    q = NUF.quick_check()
+    assert q["std"]["d_chi2_59"] > 2 and q["CE"]["d_chi2_59"] < 1.5                   # 59 meV allowed in CE readout
+    assert q["CE"]["chi2_0"] < q["std"]["chi2_0"]
+
+
+def test_weight_epoch_today_preferred_path_average_does_not_replace_bit() -> None:
+    v = WEP.verdict()
+    assert abs(v["check_W0_vs_G1m"]) < 1e-9                                           # reproduces G1m
+    assert v["W0"]["bao_chi2"] < v["Wpath"]["bao_chi2"] < v["Wz"]["bao_chi2"]        # monotone
+    assert not v["path_replaces_bit"] and v["W0"]["V"] == pytest.approx(0.834, abs=0.001)
 
 
 def test_one_coin_one_event_unique_crossing_at_mz() -> None:

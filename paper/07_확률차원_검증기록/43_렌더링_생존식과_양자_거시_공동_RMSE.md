@@ -8,7 +8,7 @@
 
 **현재 판정의 종합은 §43.56(마감 종합, 2026-09-23)이다.** 아래는 v12 시점의 점수 판정이며 그대로 둔다.
 
-**점수 판정(§43.24–43.40; 사전 등록은 현재 v22, 등록 41개 중 독립 예측 37개, **기각 1개(P17, §43.74)** — P20은 §43.18 정정, P29·P30은 §43.45, P31–P33은 §43.53, P34는 §43.55, P35·P36은 §43.59, P37은 §43.62, P38은 §43.63, P39는 §43.68, P40은 §43.71, P41은 §43.74).** 입력 $\alpha_s$ 하나, 중성미자 장부 정정, 진공 기울기 W2(+1.6 bit), CMB–BAO 그라데이션 G1m(+2 bit)을 포함한다.
+**점수 판정(§43.24–43.40; 사전 등록은 현재 v23, 등록 41개 중 독립 예측 37개, **기각 1개(P17, §43.74)** — P20은 §43.18 정정, P29·P30은 §43.45, P31–P33은 §43.53, P34는 §43.55, P35·P36은 §43.59, P37은 §43.62, P38은 §43.63, P39는 §43.68, P40은 §43.71, P41은 §43.74).** 입력 $\alpha_s$ 하나, 중성미자 장부 정정, 진공 기울기 W2(+1.6 bit), CMB–BAO 그라데이션 G1m(+2 bit)을 포함한다.
 
 | 판본 | 39행 | 43행(+렌즈·중성미자) | 연속 적합 | 남는 큰 잔차 |
 |---|---|---|---|---|
@@ -244,7 +244,9 @@ $$s_{13}^2=\frac{\delta}{8},\qquad s_{12}^2=\frac13\left(1-\frac{2\delta}{8}\rig
 | 강한 중력 | §43.72 | 화소 엔트로피 + 열적 시간(운루) + 기록(클라우지우스) → Jacobson 정리로 비선형 아인슈타인 방정식, 화소 하나 = 호킹 온도 한 몫 |
 | E4의 식별 | §43.73 | 가두는 힘의 결합 = 붙잡힘 기록의 확률(a³), 깨지는 힘의 흔적 = 회전 진폭(2a²), 동전은 하나; α₂ ≠ a²의 이유 |
 | 중성미자 질량 합 | §43.74 | **P17 기각(등록 문구 기준)**: ΛCDM 상한 52 meV < 55; 진동 최소 58.8도 같은 상한에 배제; G1m 어림 −81 meV는 새 예측 P41로 |
-| 재현 | §43.75 | 구현 경로와 한계 |
+| P41 적합 | §43.75 | CE 판독(G1m)을 넣은 CMB+BAO: Σ 상한 95 → 136 meV(+41), 59 meV의 Δχ² 2.38 → 0.93; 보정 이동 규칙으로 P41 통과 |
+| 무게 시점 | §43.76 | 기울기 원형(θ = ψ/2)은 TT+H1로 이미 유도됨; 남은 1 bit(무게 시점)는 경로 평균으로 못 바꿈(Δχ² +1.8), 오늘 무게가 단조롭게 선호 |
+| 재현 | §43.77 | 구현 경로와 한계 |
 
 ## 43.11 음향 각도 반례와 판본 III — 사전 등록 v2
 
@@ -1684,7 +1686,7 @@ $$r=\tfrac12\Big[1-\frac{\alpha_s}{2\pi}\Big(1+\frac{\delta}{2\pi}\Big)\Big],\qq
 | 정리(조건부) | C′·D′, IR, GW 소멸 확률, 여집합의 ½과 CKM 직각, 아닌 나 = 반입자, Bool 계단, 위상 잠금 구조, 한 방향 결합 |
 | 공리 | E4, E5(§43.63에서 R1+RS+DZ+OE의 조건부 정리로 환원), W·E$_{\rm rec}$, B, Bool·Ind, SA, CL(기존 공리로 환원), M, TT, BR1–BR2, BR3(§43.67에서 경주 RC의 조건부 정리로 유도) |
 | 가설(비용 bit) | 39행 19.9, 43행 33.6(v14 장부). FP를 채택하면 +4.6 |
-| 경험식 | $F$(Higgs, §43.65에서 읽기 HB로 올라감), 중성미자 질량식, 기울기 역사의 원형(접선–현) |
+| 경험식 | $F$(Higgs, §43.65에서 읽기 HB로 올라감), 중성미자 질량식(합 예측 P17은 기각, §43.74). 기울기 역사의 원형(접선–현)은 TT+H1로 유도되었고, 남은 것은 무게 시점 1 bit(§43.76) |
 | 읽기 | ⑤ = 진공 세계 1/8(무차별점의 $\alpha_s$), $\xi^2=r^2=P(V_2)$, CKM 지수 8·9·16 |
 | 기각 | **P17 중성미자 합(등록 문구 기준, §43.74)**, 이완 역사, 순간 지평선 온도, 교정원 나이, 바깥 $e$ 재합, 비독립 가지치기 법칙, 플랑크 격자, 시계 팽창 해석 |
 
@@ -1706,7 +1708,7 @@ $$r=\tfrac12\Big[1-\frac{\alpha_s}{2\pi}\Big(1+\frac{\delta}{2\pi}\Big)\Big],\qq
 - E4의 동역학(왜 사건 척도 $M_Z$에서 무차별 진공점을 지나는가). §43.60에서 “왜 Z인가”는 항등식으로 좁혀졌다. “그 질량 척도에서”는 §43.62에서 “유일한 교차점 μ* = M_Z”라는 하나의 일치로 줄었고, §43.63에서 극의 기록(분별 = 무분별)으로 읽혀 E5가 조건부 정리가 되었다. 판정은 FCC-ee의 Z 극 α_s. §43.70에서 모양(기록은 곱, 진폭은 합)도 읽혔고, 남은 것은 식별 두 개(α_s = 행렬식, sin θ_W = 2-평면 진폭)다
 - FP의 원리적 유도(한 고리 자기 보정의 계수). §43.64: 빠진 보정은 약 5×10⁻⁵이고 기울기를 줄이는 방향이다. 네 꼴(λq², λ²/8, λe⁻⁶, λ²e⁻²)이 동률이라 τ 질량 정밀도가 8배 좋아지기 전에는 식별할 수 없다
 - $F$(Higgs 퍼텐셜의 크기). §43.65: $F$는 살아남은 계보의 분배함수이고 Higgs는 머리와 붙잡힌 자식 한 세대를 본다(읽기 HB). §43.67에서 HB는 자기와 붙잡힘의 경주(RC)와 질량 = 빠르기(MR)로 유도되었다. MR과 “붙잡힘 빠르기 = α_s”는 읽기로 남는다
-- 기울기 역사의 원형(접선–현)이 열적 시간 밖에서 필요한지
+- 기울기 역사의 원형(접선–현)이 열적 시간 밖에서 필요한지. §43.76: 원형은 TT+H1로 유도되었다. 남은 무게 시점 1 bit는 경로 평균으로 바꿀 수 없다(Δχ² +1.8)
 - 현재 막대 무리의 차이(SH0ES 대 CCHP). §43.61에서 분석·표본 차이로 좁혀졌다. §43.69에서 JWST 단독 값도 같은 은하 거리는 맞고(P37 −0.56σ) 차이는 초신성 쪽으로 좁혀졌으나, JWST 단독 네 값 평균(70.9 ± 1.2, −2.15σ)이 남은 위험이다
 - 지평선 미시 상태. §43.71: 나이퀴스트 화소 (2ℓ_P)²마다 지수 시계 하나(1 nat)로 S = A/4이고, 로그 보정은 −½ ln A다(가설, 목격 후). §43.72: 화소 엔트로피 + 열적 시간 + 기록에서 Jacobson 경로로 비선형 아인슈타인 방정식이 조건부로 나온다. 양자 중력은 남는다
 
@@ -2497,9 +2499,77 @@ $$S=\frac{A}{4\ell_P^2}-\frac12\ln\frac{A}{\ell_P^2}+\cdots$$
 
 P41은 P17의 기각 뒤에 따로 세웠으며 구제가 아니다. 등록은 41개이고, 그중 1개(P17)가 기각이다. 모듈 49개의 해시를 잠갔다.
 
-## 43.75 재현과 한계
+## 43.75 P41 적합 — CE 판독에서 중성미자 질량 합
 
-구현은 [렌더링 레지스트리](../../examples/physics/rendering/ce_rendering_registry.py), 고정 검사는 `tests/test_rendering_registry.py`(①·③·S2·T1·U1·M1·O1·TC·C1·순환 평균·사다리 상쇄·순환 위상과 팽창 변화의 반례·⑤·$\theta^*$ 반례·판본 III·부스트 반례·R-Pl 전이·유클리드 회전·BAO 눈금 예측·순환 기하·나선 긴장·복소 척도인자·S8·두 원의 구분·사건 척도·중성미자 질량·게이지군과 한 세대·세 세대와 선형 중력·대칭 깨짐과 전하 양자화·급팽창 게이지 수·중성미자 장부·암흑에너지 W1 반례·진공 기울기 W2·최저 조화 규칙·모방 시계 작용 W3·빛의 한계와 렌더링 지평선·확률 무게 중력·빛원뿔 기록 갱신·CMB–BAO 그라데이션·마감 판정·가설 역유도·공리 증명·열린 예측·사전 등록 v1–v12 동결과 공동 RMSE 고정, 초신성 보류 시험·FD θ*·W3 성장 보정·자료 판본 민감도)다. 필수 테스트 목록에 추가했고 전체 344개 검사를 실행했다(2026-09-23). §43.37–43.40의 검사는 각 절에 적은 별도 모듈에 있고, §43.35 정리 C′·D′의 재증명 검산은 [복소 부스트 모듈](../../examples/physics/rendering/ce_rendering_complex_boost.py), §43.41–43.44의 보강은 [E4 대각합 모듈](../../examples/physics/rendering/ce_rendering_e4_trace.py), [간헐 렌더링 모듈](../../examples/physics/rendering/ce_rendering_intermittent.py), [경계 모듈](../../examples/physics/rendering/ce_rendering_boundary.py), [계단 모듈](../../examples/physics/rendering/ce_rendering_staircase.py), [Bool 사전 모듈](../../examples/physics/rendering/ce_rendering_bool.py)에 있고, §43.45의 점검은 [남은 항목 모듈](../../examples/physics/rendering/ce_rendering_open_checks.py), §43.46의 감사는 [중성미자 감사 모듈](../../examples/physics/rendering/ce_rendering_nu_audit.py), §43.47의 장부와 기준 비교는 [장부 모듈](../../examples/physics/rendering/ce_rendering_ledger.py), §43.48의 관측 사상은 [관측 사상 모듈](../../examples/physics/rendering/ce_rendering_o1_map.py), §43.49의 추측 검증은 [무리 안 차이 모듈](../../examples/physics/rendering/ce_rendering_spread.py), §43.50은 [위상 잠금 모듈](../../examples/physics/rendering/ce_rendering_phase_lock.py), §43.51은 [인과 잠금 모듈](../../examples/physics/rendering/ce_rendering_causal_lock.py), §43.52는 [잠금 역사 모듈](../../examples/physics/rendering/ce_rendering_lock_history.py), §43.53은 [열적 시간 모듈](../../examples/physics/rendering/ce_rendering_thermal_time.py), §43.54는 [가지치기 모듈](../../examples/physics/rendering/ce_rendering_branching.py), §43.55는 [E4 닻 모듈](../../examples/physics/rendering/ce_rendering_e4_anchor.py), §43.57은 [기운 동전 모듈](../../examples/physics/rendering/ce_rendering_biased_coin.py), §43.58은 [경계 인자 모듈](../../examples/physics/rendering/ce_rendering_boundary_loop.py), §43.59는 [Higgs·우주 모듈](../../examples/physics/rendering/ce_rendering_higgs_cosmos.py), §43.60은 [분별 모듈](../../examples/physics/rendering/ce_rendering_distinction.py), §43.61은 [사다리 모듈](../../examples/physics/rendering/ce_rendering_ladder.py), §43.62는 [한 사건 모듈](../../examples/physics/rendering/ce_rendering_one_event.py), §43.63은 [극 모듈](../../examples/physics/rendering/ce_rendering_pole.py), §43.64는 [고정점 사다리 모듈](../../examples/physics/rendering/ce_rendering_fp_ladder.py), §43.65는 [Higgs 무게 모듈](../../examples/physics/rendering/ce_rendering_higgs_weight.py), §43.66은 [하나의 자기 모듈](../../examples/physics/rendering/ce_rendering_single_self.py), §43.67은 [경주 모듈](../../examples/physics/rendering/ce_rendering_race.py), §43.68은 [질량 = 빠르기 모듈](../../examples/physics/rendering/ce_rendering_mass_rate.py), §43.69는 [CCHP JWST 모듈](../../examples/physics/rendering/ce_rendering_jwst_cchp.py), §43.70은 [E4 모양 모듈](../../examples/physics/rendering/ce_rendering_e4_shape.py), §43.71은 [지평선 화소 모듈](../../examples/physics/rendering/ce_rendering_horizon_pixel.py), §43.72는 [강한 중력 모듈](../../examples/physics/rendering/ce_rendering_jacobson.py), §43.74는 [중성미자 우주론 모듈](../../examples/physics/rendering/ce_rendering_nu_cosmo.py)에 있다. 실행:
+**문제.** P17은 ΛCDM 상한 52 meV로 기각되었다(§43.74). P41은 기각 뒤 따로 세운 예측이다. CE 판독(G1m 투영)을 넣은 CMB+BAO 공동 적합이 59 meV를 95% 안에 허용해야 한다.
+
+**사전 규칙(계산 전).**
+- 모형: 평탄 ΛCDM + $\Sigma m_\nu$(세 종 같은 질량, FD 정확 처리, §43.38의 θ* 계산기). 매개변수는 ($\omega_b$, $\omega_c$, $h$, Σ)다.
+- CMB(압축): Planck 2018 $\omega_b=0.02237\pm0.00015$, $\omega_c=0.1200\pm0.0012$다. $100\theta_*$는 같은 코드로 계산한 Planck 최적값(질량 0, 0, 60 meV)을 관측값으로 두어 코드 편차를 없앴다. 상관과 렌즈는 넣지 않았다.
+- BAO: DESI DR2 벡터와 공분산이다. (a) 표준 판독과 (b) CE 판독(모형의 $\Omega_m$에서 G1m 인자를 곱함) 두 가지로 계산한다.
+- 통계: Σ ≥ 0 평평 사전분포, Σ마다 나머지를 최적화한 프로파일로 95% 상한 $U$를 구한다.
+- 판정(보정된 이동): 압축 분석은 절대 상한이 느슨하다. 그래서 $52+(U_{\rm CE}-U_{\rm std})$가 59 meV 이상이면 통과, 55 meV 미만이면 기각, 그 사이는 경계로 둔다. 절대 $U_{\rm CE}$도 보고한다.
+
+**[검사]**
+
+| 판독 | 95% 상한 | 59 meV에서의 $\Delta\chi^2$ | 최소 $\chi^2$ | 가장 좋은 Σ |
+|---|---|---|---|---|
+| (a) 표준 | 95 meV | 2.38 | 13.36 | 0 |
+| (b) CE(G1m) | **136 meV** | **0.93** | 11.48 | 0 |
+
+- 교정 점검: 표준 판독의 상한은 공개 DESI+Planck(64.2 meV)보다 31 meV 느슨하다. 렌즈와 상관이 빠진 압축 분석의 예상 방향이다.
+- 이동은 +41 meV이고, 공개 상한과 같은 조건으로 바꾸면 $52+41=93$ meV다. **P41은 통과한다.** 절대 상한 136 meV도 59를 허용한다.
+
+**판정.**
+- CE 판독에서는 “우주론이 진동 최소값을 배제한다”는 긴장이 BAO 판독의 투영에서 온 것으로 읽힌다. 59 meV는 $\Delta\chi^2=0.93$으로 1σ 안이다.
+- 한계는 넷이다.
+  - 이동(+41 meV)은 §43.74의 어림(−81 meV 상당)의 절반이다. 음향 눈금과 $H_0$ 경로가 일부를 상쇄한다.
+  - CE 판독에서도 가장 좋은 Σ는 0이다. 낮은 쪽으로 당기는 힘이 약해졌을 뿐 사라지지 않았다.
+  - CE 판독이 BAO를 더 잘 맞추는 것($\Delta\chi^2=-1.9$)은 G1m을 DESI로 골랐기 때문이라 증거가 아니다.
+  - 압축 분석이므로 렌즈를 포함한 전체 적합이 최종 판정이다.
+- P17의 기각은 그대로다. P41은 살아 있다.
+- 예측값은 바뀌지 않는다. 구현은 [P41 적합 모듈](../../examples/physics/rendering/ce_rendering_nu_fit.py)이다.
+
+## 43.76 나이테 판독의 무게 시점 — 경로 평균은 1 bit를 대신하지 못한다
+
+**문제.** §43.56은 “기울기 역사의 원형(접선–현)”을 경험식으로 적었다. 그러나 원형 $\theta=\psi/2=H_\Lambda t/2$는 §43.53에서 열적 시간(TT)과 H1(진폭 = 확률 위상의 절반)으로 이미 유도되었다. G1m의 무게 $k=\Omega_m$도 정리 E(§43.36)의 따름정리다. 실제로 남은 것은 무게를 오늘의 비율로 매긴 선택 1 bit다(기록 시기 무게는 판본 V 0.903).
+
+**사전 규칙(계산 전).**
+- W0(채택): 오늘의 $\Omega_m$
+- Wz: 기록 시기 $\Omega_m(z)$
+- Wpath(원리 후보): 거리는 경로 적분이므로 투영 손실도 경로를 따라 쌓인다.
+  - $D_M$은 빛 경로 평균 $\langle\Omega_m\rangle$($dz/E$ 가중)
+  - $D_H=c/H(z)$는 국소량이라 기록 시기 $\Omega_m(z)$
+  - $D_V$는 정의대로 $(D_M^2D_H)^{1/3}$로 섞는다
+- 판정: Wpath가 W0와 BAO $\Delta\chi^2\le1$이면 “경로 평균”이 1 bit를 대신하는 원리로 선다. 더 나쁘면 오늘 무게는 선택으로 남는다.
+- 검산: W0는 기울기 모듈의 G1m을 재현해야 한다.
+
+**[검사]**
+
+| 무게 시점 | BAO $\chi^2$ | 판본 V |
+|---|---|---|
+| **W0 오늘(채택)** | 10.99 | **0.834** |
+| Wpath 경로 평균 | 12.79 | 0.861 |
+| Wz 기록 시기 | 15.56 | 0.902 |
+
+- W0는 G1m을 정확히 재현한다(차이 0.0).
+- Wpath는 $\Delta\chi^2=+1.80$으로 기준을 넘는다. **채택하지 않는다.**
+- 순서는 단조롭다. 과거의 물질 몫을 많이 섞을수록 나빠진다. 자료는 판독이 일어나는 지금의 무게를 가리킨다.
+
+**판정.**
+- 오늘 무게는 여전히 선택(1 bit)이다.
+- *읽기.* 이 모양은 RS(§43.63, 관계는 기록되는 순간에 성립한다)와 같다. BAO 판독도 오늘 이루어지는 기록이므로 그 순간의 무게를 쓴다. 다만 RS를 이 문제에 넓히는 것은 목격 후이므로 bit를 지우지 않고 “같은 규칙의 두 번째 사용”으로만 적는다.
+- §43.56 장부의 “기울기 역사의 원형 = 경험식”을 정정한다. 원형은 TT+H1로 유도되었고, 남은 것은 무게 시점 1 bit다.
+- 예측값은 바뀌지 않는다. 구현은 [무게 시점 모듈](../../examples/physics/rendering/ce_rendering_weight_epoch.py)이다.
+
+**[산출] 사전 등록 v23.** `experiments/preregistration/rendering_predictions_v23.json`(자기 해시 `eb2907f7…`, 2026-09-24)은 v1–v22를 보존한다. 예측을 더하거나 값을 바꾸지 않았다.
+- *지위 주석.* P41은 압축 적합에서 보정 이동 규칙을 통과했다(93 ≥ 59 meV). 렌즈를 포함한 전체 적합은 남는다.
+- *변경 내역.* §43.75(P41 적합), §43.76(무게 시점, 장부 정정)을 적었다.
+- 모듈 51개의 해시를 잠갔다. 등록 41개 가운데 P17은 기각 그대로다.
+
+## 43.77 재현과 한계
+
+구현은 [렌더링 레지스트리](../../examples/physics/rendering/ce_rendering_registry.py), 고정 검사는 `tests/test_rendering_registry.py`(①·③·S2·T1·U1·M1·O1·TC·C1·순환 평균·사다리 상쇄·순환 위상과 팽창 변화의 반례·⑤·$\theta^*$ 반례·판본 III·부스트 반례·R-Pl 전이·유클리드 회전·BAO 눈금 예측·순환 기하·나선 긴장·복소 척도인자·S8·두 원의 구분·사건 척도·중성미자 질량·게이지군과 한 세대·세 세대와 선형 중력·대칭 깨짐과 전하 양자화·급팽창 게이지 수·중성미자 장부·암흑에너지 W1 반례·진공 기울기 W2·최저 조화 규칙·모방 시계 작용 W3·빛의 한계와 렌더링 지평선·확률 무게 중력·빛원뿔 기록 갱신·CMB–BAO 그라데이션·마감 판정·가설 역유도·공리 증명·열린 예측·사전 등록 v1–v12 동결과 공동 RMSE 고정, 초신성 보류 시험·FD θ*·W3 성장 보정·자료 판본 민감도)다. 필수 테스트 목록에 추가했고 전체 344개 검사를 실행했다(2026-09-23). §43.37–43.40의 검사는 각 절에 적은 별도 모듈에 있고, §43.35 정리 C′·D′의 재증명 검산은 [복소 부스트 모듈](../../examples/physics/rendering/ce_rendering_complex_boost.py), §43.41–43.44의 보강은 [E4 대각합 모듈](../../examples/physics/rendering/ce_rendering_e4_trace.py), [간헐 렌더링 모듈](../../examples/physics/rendering/ce_rendering_intermittent.py), [경계 모듈](../../examples/physics/rendering/ce_rendering_boundary.py), [계단 모듈](../../examples/physics/rendering/ce_rendering_staircase.py), [Bool 사전 모듈](../../examples/physics/rendering/ce_rendering_bool.py)에 있고, §43.45의 점검은 [남은 항목 모듈](../../examples/physics/rendering/ce_rendering_open_checks.py), §43.46의 감사는 [중성미자 감사 모듈](../../examples/physics/rendering/ce_rendering_nu_audit.py), §43.47의 장부와 기준 비교는 [장부 모듈](../../examples/physics/rendering/ce_rendering_ledger.py), §43.48의 관측 사상은 [관측 사상 모듈](../../examples/physics/rendering/ce_rendering_o1_map.py), §43.49의 추측 검증은 [무리 안 차이 모듈](../../examples/physics/rendering/ce_rendering_spread.py), §43.50은 [위상 잠금 모듈](../../examples/physics/rendering/ce_rendering_phase_lock.py), §43.51은 [인과 잠금 모듈](../../examples/physics/rendering/ce_rendering_causal_lock.py), §43.52는 [잠금 역사 모듈](../../examples/physics/rendering/ce_rendering_lock_history.py), §43.53은 [열적 시간 모듈](../../examples/physics/rendering/ce_rendering_thermal_time.py), §43.54는 [가지치기 모듈](../../examples/physics/rendering/ce_rendering_branching.py), §43.55는 [E4 닻 모듈](../../examples/physics/rendering/ce_rendering_e4_anchor.py), §43.57은 [기운 동전 모듈](../../examples/physics/rendering/ce_rendering_biased_coin.py), §43.58은 [경계 인자 모듈](../../examples/physics/rendering/ce_rendering_boundary_loop.py), §43.59는 [Higgs·우주 모듈](../../examples/physics/rendering/ce_rendering_higgs_cosmos.py), §43.60은 [분별 모듈](../../examples/physics/rendering/ce_rendering_distinction.py), §43.61은 [사다리 모듈](../../examples/physics/rendering/ce_rendering_ladder.py), §43.62는 [한 사건 모듈](../../examples/physics/rendering/ce_rendering_one_event.py), §43.63은 [극 모듈](../../examples/physics/rendering/ce_rendering_pole.py), §43.64는 [고정점 사다리 모듈](../../examples/physics/rendering/ce_rendering_fp_ladder.py), §43.65는 [Higgs 무게 모듈](../../examples/physics/rendering/ce_rendering_higgs_weight.py), §43.66은 [하나의 자기 모듈](../../examples/physics/rendering/ce_rendering_single_self.py), §43.67은 [경주 모듈](../../examples/physics/rendering/ce_rendering_race.py), §43.68은 [질량 = 빠르기 모듈](../../examples/physics/rendering/ce_rendering_mass_rate.py), §43.69는 [CCHP JWST 모듈](../../examples/physics/rendering/ce_rendering_jwst_cchp.py), §43.70은 [E4 모양 모듈](../../examples/physics/rendering/ce_rendering_e4_shape.py), §43.71은 [지평선 화소 모듈](../../examples/physics/rendering/ce_rendering_horizon_pixel.py), §43.72는 [강한 중력 모듈](../../examples/physics/rendering/ce_rendering_jacobson.py), §43.74는 [중성미자 우주론 모듈](../../examples/physics/rendering/ce_rendering_nu_cosmo.py), §43.75는 [P41 적합 모듈](../../examples/physics/rendering/ce_rendering_nu_fit.py), §43.76은 [무게 시점 모듈](../../examples/physics/rendering/ce_rendering_weight_epoch.py)에 있다. 실행:
 
 ```powershell
 python -B -m examples.physics.rendering.ce_rendering_registry
