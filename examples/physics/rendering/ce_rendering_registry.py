@@ -12,8 +12,11 @@
   G1  세대 g의 가중치 w_g = (1+δ/2π)^{[g=2]}; 전이 i<j는 w_i/w_j를 받는다.
   S2  m번째로 렌더링된 축은 그 축을 포함하는 새 통로 2^{m-1}개(8통로 중)만큼 분별을 만들고,
       마지막에 렌더링된 것이 "나"다: s13^2 = δ/8, s12^2 = (1-2δ/8)/3, s23^2 = (1-4δ/8)/2.
-  T1  ν1은 2·3세대의 분별 이전 상태다: |U_μ1| = |U_τ1| (TM1). δ_PMNS는 이 조건의 해이고,
-      두 해 중 원을 도는 방향(J의 부호)은 시간축의 1 bit로 고른다.
+  T1  ν1은 2·3세대의 분별 이전 상태다: |U_μ1| = |U_τ1| (TM1). δ_PMNS는 이 조건의 해다.
+  U1  쿼크 단위 삼각형의 세 각은 8통로의 차수 분할 Λ^0 : Λ^1 : Λ^{2,3} = 1 : 3 : 4에 π를 나눈다:
+      (β, γ, α) = (π/8, 3π/8, π/2). |V_ub|, δ_CKM, J는 |V_us|, |V_cb|와 이 삼각형에서 나온다.
+      삼각형의 향(α = +π/2)이 전역 시간 화살표 1 bit다.
+  M1  렙톤은 쿼크의 거울이다: 렙톤의 원 방향은 쿼크와 반대(sgn J_PMNS = -sgn J_CKM).
 
 python -B -m examples.physics.rendering.ce_rendering_registry
 """
@@ -112,8 +115,10 @@ def pmns_matrix(s12sq: float, s23sq: float, s13sq: float, dl: float):
     return mixing_matrix(math.sqrt(s12sq), math.sqrt(s23sq), math.sqrt(s13sq), dl)
 
 
-def delta_pmns_tm1(c: dict, circulation: int = -1) -> float:
-    """T1: |U_μ1| = |U_τ1|의 해. circulation=-1은 J<0(시간축 1 bit)."""
+def delta_pmns_tm1(c: dict, circulation: int | None = None) -> float:
+    """T1: |U_μ1| = |U_τ1|의 해. 기본 방향은 M1: 쿼크 J의 반대 부호."""
+    if circulation is None:
+        circulation = -1 if ckm_triangle(c["a"])[2] > 0 else +1
     s12, s23, s13 = pmns_s2(c, 2), pmns_s2(c, 3), pmns_s2(c, 1)
     g = lambda x: abs(pmns_matrix(s12, s23, s13, x)[1][0]) ** 2 - abs(pmns_matrix(s12, s23, s13, x)[2][0]) ** 2
     lo, hi = (0.01, PI - 0.01) if circulation > 0 else (PI + 0.01, 2 * PI - 0.01)
@@ -136,14 +141,15 @@ def circulant_eigenvector_drift(theta: float, eps: float = 0.1) -> float:
 
 # ------------------------------------------------------------------ ② 세대 진폭의 조립
 def flavour_words(c: dict) -> dict:
-    """u = (A_2/tr P_2)^2 = α^{4/3}, ε = sqrt(A_1) = α^{1/6}; 조립은 [경험식] 선택."""
+    """u = (A_2/tr P_2)^2 = α^{4/3}, ε = sqrt(A_1) = α^{1/6}; 조립은 [경험식] 선택.
+
+    |V_ub|는 조립하지 않고 U1 삼각형에서 얻는다(ckm_triangle)."""
     a = c["a"]
     u = (rendering_amplitude_closed(a, 2) / 2.0) ** 2
     eps = math.sqrt(rendering_amplitude_closed(a, 1))
     return {
         "V_us": 4.0 * u * transition_factor(c, 1, 2),
         "V_cb": u * eps * transition_factor(c, 2, 3),
-        "V_ub": u * u * c["F"] ** (1.0 / 3.0),
         "m_mu/m_tau": u * transition_factor(c, 2, 3),
     }
 
@@ -156,20 +162,33 @@ def mixing_matrix(s12: float, s23: float, s13: float, dl: float):
             [s12 * s23 - c12 * c23 * s13 * e, -c12 * s23 - s12 * c23 * s13 * e, c23 * c13]]
 
 
-def triangle_alpha(V) -> float:
-    return cmath.phase(-V[2][0] * V[2][2].conjugate() / (V[0][0] * V[0][2].conjugate()))
+def _triangle_angles(V) -> tuple[float, float]:
+    alpha = cmath.phase(-V[2][0] * V[2][2].conjugate() / (V[0][0] * V[0][2].conjugate()))
+    beta = cmath.phase(-V[1][0] * V[1][2].conjugate() / (V[2][0] * V[2][2].conjugate()))
+    return alpha, beta
 
 
 @lru_cache(maxsize=4096)
-def ckm_right_angle(alpha_s: float) -> tuple[float, float]:
-    """영감 규칙 R-UT: 쿼크 단위 삼각형의 α = π/2에서 δ_CKM과 J."""
+def ckm_triangle(alpha_s: float, orientation: int = +1) -> tuple[float, float, float]:
+    """U1: (α, β) = (orientation·π/2, orientation·π/8)에서 (|V_ub|, δ_CKM, J)."""
+    from scipy.optimize import fsolve
+
     w = flavour_words(core(alpha_s))
-    s13 = w["V_ub"]
-    s12 = w["V_us"] / math.sqrt(1.0 - s13 * s13)
-    s23 = w["V_cb"] / math.sqrt(1.0 - s13 * s13)
-    dl = brentq(lambda x: triangle_alpha(mixing_matrix(s12, s23, s13, x)) - PI / 2, 0.05, PI - 0.05)
-    V = mixing_matrix(s12, s23, s13, dl)
-    return dl, (V[0][1] * V[1][2] * V[0][2].conjugate() * V[1][1].conjugate()).imag
+    vus, vcb = w["V_us"], w["V_cb"]
+
+    def parts(x):
+        s13, dl = x
+        norm = math.sqrt(1.0 - s13 * s13)
+        return mixing_matrix(vus / norm, vcb / norm, s13, dl)
+
+    def eqs(x):
+        a, b = _triangle_angles(parts(x))
+        return [a - orientation * PI / 2, b - orientation * PI / 8]
+
+    s13, dl = fsolve(eqs, [0.0037, orientation * 1.18], xtol=1e-14)
+    V = parts((s13, dl))
+    J = (V[0][1] * V[1][2] * V[0][2].conjugate() * V[1][1].conjugate()).imag
+    return float(s13), float(dl), float(J)
 
 
 def koide_me_over_mmu(r_mu_tau: float) -> float:
@@ -238,9 +257,11 @@ def rows(pmns: str = "SK") -> tuple[Row, ...]:
         Row("M_H/M_Z", "Q", lambda c: c["F"], 125.20 / 91.1876, 0.11 / 91.1876, 0.11 / 91.1876, "경험식"),
         Row("|V_us|", "Q", words("V_us"), 0.22501, 0.00068, 0.00068, "경험식", 1.0, "4u/w (G1)"),
         Row("|V_cb|", "Q", words("V_cb"), 0.04183, 0.00079, 0.00069, "경험식", 2.0, "u sqrt(A_1) w"),
-        Row("|V_ub|", "Q", words("V_ub"), 0.003732, 0.000090, 0.000085, "경험식", 2.0, "u^2 F^(1/3)"),
-        Row("delta_CKM", "Q", lambda c: ckm_right_angle(c["a"])[0], 1.147, 0.026, 0.026, "경험식", 2.0, "R-UT"),
-        Row("J_CKM", "Q", lambda c: ckm_right_angle(c["a"])[1], 3.12e-5, 0.13e-5, 0.12e-5, "산출", 0.0, "unitarity"),
+        Row("|V_ub|", "Q", lambda c: ckm_triangle(c["a"])[0], 0.003732, 0.000090, 0.000085, "산출", 0.0,
+            "U1 삼각형"),
+        Row("delta_CKM", "Q", lambda c: ckm_triangle(c["a"])[1], 1.147, 0.026, 0.026, "경험식", 3.0,
+            "U1 차수 분할 + 화살표 1 bit"),
+        Row("J_CKM", "Q", lambda c: ckm_triangle(c["a"])[2], 3.12e-5, 0.13e-5, 0.12e-5, "산출", 0.0, "U1"),
         Row("m_mu/m_tau", "Q", words("m_mu/m_tau"), M_MU / M_TAU, M_MU / M_TAU * M_TAU_ERR / M_TAU,
             M_MU / M_TAU * M_TAU_ERR / M_TAU, "경험식", 2.0, "u w (G1)"),
         Row("m_e/m_mu", "Q", lambda c: koide_me_over_mmu(flavour_words(c)["m_mu/m_tau"]), M_E / M_MU,
@@ -252,7 +273,7 @@ def rows(pmns: str = "SK") -> tuple[Row, ...]:
         Row("s13^2", "Q", lambda c: pmns_s2(c, 1), *p["s13"], "경험식", 0.0, "S2"),
         Row("s12^2", "Q", lambda c: pmns_s2(c, 2), *p["s12"], "경험식", 0.0, "S2 (=TM1 1차)"),
         Row("s23^2", "Q", lambda c: pmns_s2(c, 3), *p["s23"], "경험식", 1.0, "S2: 나=마지막 렌더링"),
-        Row("delta_PMNS", "Q", delta_pmns_tm1, *p["dl"], "경험식", 2.0, "T1 + 원 방향 1 bit"),
+        Row("delta_PMNS", "Q", delta_pmns_tm1, *p["dl"], "경험식", 2.0, "T1 + M1 거울"),
         Row("muon Da_mu x1e11", "Q", lambda c: 3.7287e-4, 38.5, math.hypot(14.5, 62.0), math.hypot(14.5, 62.0),
             "경험식"),
         Row("Omega_b", "M", lambda c: c["q"], OMEGA_B_PLANCK, OMEGA_B_PLANCK_ERR, OMEGA_B_PLANCK_ERR, "공리"),

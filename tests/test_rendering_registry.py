@@ -11,6 +11,7 @@ from examples.physics.rendering.ce_rendering_registry import (
     alpha_em_inv,
     calibrated_alpha_s,
     circulant_eigenvector_drift,
+    ckm_triangle,
     core,
     delta_pmns_tm1,
     distinction_channels,
@@ -76,6 +77,16 @@ def test_tm1_condition_fixes_delta_up_to_circulation() -> None:
     assert 255.0 < minus < 262.0
 
 
+def test_grade_partition_triangle_derives_vub_and_mirror_orientation() -> None:
+    c = core(calibrated_alpha_s()[0])
+    vub, delta, jarlskog = ckm_triangle(c["a"])
+    assert 0.00360 < vub < 0.00375
+    assert 1.15 < delta < 1.20
+    assert jarlskog > 0
+    assert ckm_triangle(c["a"], -1)[2] == pytest.approx(-jarlskog, rel=1e-6)
+    assert delta_pmns_tm1(c) > 180.0  # M1: lepton circulation opposite to quarks
+
+
 def test_cosmic_cyclic_phase_does_not_move_the_mixing() -> None:
     for theta in (0.3, 0.7, 2.0, 4.0):
         assert circulant_eigenvector_drift(theta) < 1e-12
@@ -89,11 +100,11 @@ def test_one_channel_loop_restores_the_sum_rule_alpha_em() -> None:
 
 @pytest.mark.parametrize(
     ("variant", "pmns", "expected"),
-    [("I", "SK", 1.234), ("II", "SK", 0.799), ("I", "noSK", 1.802), ("II", "noSK", 1.538)],
+    [("I", "SK", 1.243), ("II", "SK", 0.808), ("I", "noSK", 1.808), ("II", "noSK", 1.542)],
 )
 def test_joint_rmse_is_frozen(variant: str, pmns: str, expected: float) -> None:
     result = score(variant, pmns)
     assert result["N"] == 37
-    assert result["bits"] == pytest.approx(19.0)
+    assert result["bits"] == pytest.approx(18.0)
     assert result["rmse_all"] == pytest.approx(expected, abs=1.5e-3)
     assert result["k_continuous"] == (2 if variant == "I" else 1)
