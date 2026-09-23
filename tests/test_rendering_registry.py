@@ -51,6 +51,7 @@ from examples.physics.rendering import ce_rendering_phase_lock as PLK
 from examples.physics.rendering import ce_rendering_causal_lock as CLK
 from examples.physics.rendering import ce_rendering_lock_history as LH
 from examples.physics.rendering import ce_rendering_thermal_time as TT
+from examples.physics.rendering import ce_rendering_branching as BRN
 from examples.physics.rendering import ce_rendering_open_predictions as OP
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
@@ -919,6 +920,18 @@ def test_thermal_time_final_horizon_sets_the_rotation_and_cycle() -> None:
     assert TT.exact_half_now()["Om_star"] == pytest.approx(0.3163, abs=2e-4)
 
 
+def test_branching_extinction_derives_the_cosmic_composition() -> None:
+    c = core(calibrated_alpha_s()[0])
+    it = BRN.iterate_to_extinction(c["D"])
+    assert it["limit"] == pytest.approx(c["q"], abs=1e-9)                      # GW: small root = extinction
+    mc = BRN.monte_carlo(c["D"], trials=20000)
+    assert abs(mc["extinct_fraction"] - c["q"]) < 3 * mc["mc_sigma"]
+    laws = BRN.law_specificity()
+    assert abs(laws["Poisson"]["pull"]) < 1 and all(abs(r["pull"]) > 10 for k, r in laws.items() if k != "Poisson")
+    comp = BRN.composition()
+    assert comp["Om_branch"] == pytest.approx(comp["Om_core"]) and comp["borel_P1"] == pytest.approx(0.8568, abs=1e-3)
+
+
 def test_rendering_predictions_v13_is_frozen() -> None:
     v12 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v12.json").read_text(encoding="utf-8"))
     v13 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v13.json").read_text(encoding="utf-8"))
@@ -937,6 +950,25 @@ def test_rendering_predictions_v13_is_frozen() -> None:
     ids = {q["id"] for q in v13["predictions"]}
     assert {"P29", "P30"} <= ids and len(ids) == 30
     assert "duplicate" in next(q for q in v13["predictions"] if q["id"] == "P20")["status_v13"]
+
+
+def test_rendering_predictions_v14_is_frozen() -> None:
+    v13 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v13.json").read_text(encoding="utf-8"))
+    v14 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v14.json").read_text(encoding="utf-8"))
+    assert v14["supersedes_manifest_id"] == v13["manifest_id"]
+    body = {k: v for k, v in v14.items() if k != "manifest_sha256"}
+    canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    assert hashlib.sha256(canonical).hexdigest() == v14["manifest_sha256"]
+    assert v14["manifest_sha256"] == "d8802b2fd3c13c66217dcaf0ef55669d57e8be2e118fbb77ee0e514860c2b5c2"
+    for key, rel in v14["model"]["files"].items():
+        assert v14["model"]["sha256"][key] in _line_ending_hashes((REPO_ROOT / rel)), (
+            f"{key} changed after v14 freeze: create v15 and keep earlier manifests")
+    old = {q["id"]: q for q in v13["predictions"]}
+    for q in v14["predictions"]:
+        if q["id"] in old:
+            assert q["value"] == old[q["id"]]["value"]                        # no carried value changed
+    ids = {q["id"] for q in v14["predictions"]}
+    assert {"P31", "P32", "P33"} <= ids and len(ids) == 33 and len(v14["model"]["files"]) == 30
 
 
 def test_pantheon_holdout_keeps_all_ce_branches_within_two_sigma() -> None:

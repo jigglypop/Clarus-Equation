@@ -6,7 +6,7 @@
 
 ## 43.1 결과 요약 — 2026-09-23 (최신 판정)
 
-**최신 판정(§43.24–43.40, 사전 등록 v13, 등록 30개 중 독립 예측 29개 — P20은 §43.18 정정, P29·P30은 §43.45).** 입력 $\alpha_s$ 하나, 중성미자 장부 정정, 진공 기울기 W2(+1.6 bit), CMB–BAO 그라데이션 G1m(+2 bit)을 포함한다.
+**최신 판정(§43.24–43.40, 사전 등록 v14, 등록 33개 중 독립 예측 31개 — P20은 §43.18 정정, P29·P30은 §43.45, P31–P33은 §43.53).** 입력 $\alpha_s$ 하나, 중성미자 장부 정정, 진공 기울기 W2(+1.6 bit), CMB–BAO 그라데이션 G1m(+2 bit)을 포함한다.
 
 | 판본 | 39행 | 43행(+렌즈·중성미자) | 연속 적합 | 남는 큰 잔차 |
 |---|---|---|---|---|
@@ -221,7 +221,8 @@ $$s_{13}^2=\frac{\delta}{8},\qquad s_{12}^2=\frac13\left(1-\frac{2\delta}{8}\rig
 | 인과 잠금 | §43.51 | 90°의 반의 반: 무차별 + 인과율로 π/8, 허블 판독 방향의 유도, 한 방향 결합 |
 | 잠금의 역사 | §43.52 | 인과 잠금으로의 이완 판본 기각: 위상은 돌고 있고 지금은 절반 지점을 지나는 중 |
 | 열적 시간과 순환 | §43.53 | 인과가 최종 지평선의 온도로 쌓임: 회전 속도의 유도, 순환 시각표, 순간 지평선 판본 기각 |
-| 재현 | §43.54 | 구현 경로와 한계 |
+| 가지치기 | §43.54 | 우주 성분의 유도: q 방정식 = 인과 계보의 소멸 확률, 포아송 특이성 |
+| 재현 | §43.55 | 구현 경로와 한계 |
 
 ## 43.11 음향 각도 반례와 판본 III — 사전 등록 v2
 
@@ -1088,7 +1089,7 @@ $3\sigma$를 넘는 행은 없다. P-ACT에 BAO·렌즈를 더한 값($0.9743\pm
 | 진폭 $\xi^2$ | 경험식 | P21–P22 |
 | $F$(Higgs 퍼텐셜 크기) | 경험식 | P27–P28 |
 | 중성미자 질량식 | 경험식, 감사 완료(§43.46): 약 13.7 bit, P17은 변별력 없음 | P19(JUNO)가 임박한 시험 |
-| $q\mapsto\Omega_b$ 사상 | 과거 경계모형(식별 불가 반례, §43.5) | 우주론 행 전체 |
+| $q\mapsto\Omega_b$ 사상 | 인과 계보의 소멸 확률(정리 GW + 공리 BR1–BR3, §43.54) | 우주론 행 전체 |
 | CKM 지수 8·9·16과 TC | 읽기(세계 수) | CKM 행 |
 | 지평선 미시 상태 | 열림(구조 없음) | — |
 | 전체 bit 장부 재집계 | 완료(§43.47): 39행 20.9 bit, 43행 34.6 bit | — |
@@ -1498,9 +1499,80 @@ $$\frac{d\Phi}{dt}=\frac{2\pi k_BT_H}{\hbar}.$$
 - 사용자의 순환(인과가 쌓임 → 흐려짐 → 재시작)은 지평선의 열적 주기 하나로 닫힌다. TT는 새 공리로 장부에 올린다.
 - 예측값은 바뀌지 않는다. 구현은 [열적 시간 모듈](../../examples/physics/rendering/ce_rendering_thermal_time.py)이다.
 
-## 43.54 재현과 한계
+**[산출] 사전 등록 v14.** `experiments/preregistration/rendering_predictions_v14.json`(자기 해시 `d8802b2f…`)은 v1–v13을 보존한다. P01–P30의 값은 하나도 바꾸지 않았다.
 
-구현은 [렌더링 레지스트리](../../examples/physics/rendering/ce_rendering_registry.py), 고정 검사는 `tests/test_rendering_registry.py`(①·③·S2·T1·U1·M1·O1·TC·C1·순환 평균·사다리 상쇄·순환 위상과 팽창 변화의 반례·⑤·$\theta^*$ 반례·판본 III·부스트 반례·R-Pl 전이·유클리드 회전·BAO 눈금 예측·순환 기하·나선 긴장·복소 척도인자·S8·두 원의 구분·사건 척도·중성미자 질량·게이지군과 한 세대·세 세대와 선형 중력·대칭 깨짐과 전하 양자화·급팽창 게이지 수·중성미자 장부·암흑에너지 W1 반례·진공 기울기 W2·최저 조화 규칙·모방 시계 작용 W3·빛의 한계와 렌더링 지평선·확률 무게 중력·빛원뿔 기록 갱신·CMB–BAO 그라데이션·마감 판정·가설 역유도·공리 증명·열린 예측·사전 등록 v1–v12 동결과 공동 RMSE 고정, 초신성 보류 시험·FD θ*·W3 성장 보정·자료 판본 민감도)다. 필수 테스트 목록에 추가했고 전체 344개 검사를 실행했다(2026-09-23). §43.37–43.40의 검사는 각 절에 적은 별도 모듈에 있고, §43.35 정리 C′·D′의 재증명 검산은 [복소 부스트 모듈](../../examples/physics/rendering/ce_rendering_complex_boost.py), §43.41–43.44의 보강은 [E4 대각합 모듈](../../examples/physics/rendering/ce_rendering_e4_trace.py), [간헐 렌더링 모듈](../../examples/physics/rendering/ce_rendering_intermittent.py), [경계 모듈](../../examples/physics/rendering/ce_rendering_boundary.py), [계단 모듈](../../examples/physics/rendering/ce_rendering_staircase.py), [Bool 사전 모듈](../../examples/physics/rendering/ce_rendering_bool.py)에 있고, §43.45의 점검은 [남은 항목 모듈](../../examples/physics/rendering/ce_rendering_open_checks.py), §43.46의 감사는 [중성미자 감사 모듈](../../examples/physics/rendering/ce_rendering_nu_audit.py), §43.47의 장부와 기준 비교는 [장부 모듈](../../examples/physics/rendering/ce_rendering_ledger.py), §43.48의 관측 사상은 [관측 사상 모듈](../../examples/physics/rendering/ce_rendering_o1_map.py), §43.49의 추측 검증은 [무리 안 차이 모듈](../../examples/physics/rendering/ce_rendering_spread.py), §43.50은 [위상 잠금 모듈](../../examples/physics/rendering/ce_rendering_phase_lock.py), §43.51은 [인과 잠금 모듈](../../examples/physics/rendering/ce_rendering_causal_lock.py), §43.52는 [잠금 역사 모듈](../../examples/physics/rendering/ce_rendering_lock_history.py), §43.53은 [열적 시간 모듈](../../examples/physics/rendering/ce_rendering_thermal_time.py)에 있다. 실행:
+*지위 주석.*
+- P07: 방향이 인과율에서 나옴, 통일 판본은 73.52
+- P11: 통일 판본의 비는 1.0848
+- P17: 변별력 없음
+- P19: JUNO 전망
+- P26: 세 갈래 시험(73.36 / 69.4 / 67.77)
+
+*v13 이후의 공리.*
+- M: 관측 사상
+- TT: 열적 시간
+- CL: 인과 절반 잠금
+
+*장부 조정.* O1이 2.0에서 1.0 bit로 줄어, 합계는 39행 19.9 bit, 43행 33.6 bit다. §43.47의 표는 v14 이전의 기록으로 남긴다.
+
+*자료 점검.* CCHP 2024를 넣었다(보고만).
+
+*새 예측.*
+
+| 번호 | 관측량 | 예측 | kill |
+|---|---|---|---|
+| P31 | 에너지에 따른 빛의 속도 변화(선형·이차) | 없음 | 어느 차수든 $5\sigma$로 검출 |
+| P32 | 교정 종류별 $H_0$ | 이른 기록 교정 67.77, 현재 막대 교정 73.36, 순수한 방법은 사이에 없음 | 현재 교정 방법이 $\sigma\le0.8$로 70.0 이하에 모이거나, 이른 기록 교정이 71.0 이상에 모임 |
+| P33 | BAO+BBN의 ΛCDM 판독 | $H_0=68.46$, $\Omega_m=0.298$ | 최종 적합이 $3\sigma$ 밖(P14·P25에서 파생되므로 독립 예측으로 세지 않음) |
+
+등록은 33개, 독립 예측은 31개다. 새 모듈 8개를 포함해 30개 모듈의 해시를 잠갔다.
+
+## 43.54 우주 성분의 가지치기 유도 — 인과 계보가 끊기면 보이는 물질, 이어지면 암흑
+
+**문제.** 우주론 행 전체가 기대는 코어의 $\Omega_b=q$($q=e^{-D(1-q)}$의 작은 근)는 원장에 “식별 불가 반례가 있는 과거 경계모형”으로 남아 있었다(§43.5).
+
+**[정리] GW — $q$ 방정식은 인과 계보의 소멸 확률이다.** 자식 수 생성함수가 $G$인 Galton–Watson 과정에서 계보가 끊길 확률은 $s=G(s)$의 $[0,1]$ 안 가장 작은 근이다. 반복 $s_{n+1}=G(s_n)$, $s_0=0$은 “$n$세대 안에 끊길 확률”이며 그 근에 수렴한다(표준 정리). 자식 수가 포아송(평균 $D$)이면 $G(s)=e^{D(s-1)}$이므로 $q=e^{-D(1-q)}$가 된다. 코어가 “작은 근”을 고른 것은 따로 정한 규칙이 아니라 이 정리의 결과다. 스스로를 되먹이는 식(자기재귀)의 고정점이 곧 끊길 확률이다.
+
+**[공리]**
+- BR1: 각 기록의 인과적 후손 수는 서로 독립이고 평균 $D=3+\delta$다(세 공간 축 + 분별). 독립이므로 포아송이다.
+- BR2: 끊긴 계보, 곧 유한하게 닫힌 기록이 보이는 바리온이다($\Omega_b=q$).
+- BR3: 살아남은 계보는 중력으로만 보인다(QG1). 묶임(비율 $\alpha_sD$)과 자유(비율 1)의 경쟁으로 $\Omega_{\rm DM}=(1-q)\,\alpha_sD/(1+\alpha_sD)$, $\Omega_\Lambda=(1-q)/(1+\alpha_sD)$로 나뉜다. 이는 코어의 식과 같고($\Omega_m$ 0.30796 일치), $\Omega_{\rm DM}/\Omega_\Lambda=\alpha_sD=0.375$다.
+
+**검사.** 계산 전에 적은 kill 조건은 넷이다.
+- K1: 몬테카를로에서 끊긴 비율이 $q$와 $3\sigma$ 안이어야 한다.
+- K2: 반복이 작은 근으로 수렴해야 한다.
+- K3: 같은 평균의 다른 법칙이 $\omega_b$를 맞추는지 본다(특이성).
+- K4: 끊긴 계보의 크기 분포를 확인한다.
+
+*K2.* 반복값은 1세대 0.04168, 5세대 0.04864, 극한 0.048645로 작은 근에 수렴한다.
+
+*K1.* 계보 4만 개에서 끊긴 비율은 $0.04847\pm0.00107$이며 $q$와 $-0.16\sigma$다. 20만 개 두 벌에서는 $-1.2\sigma$와 $+1.6\sigma$다.
+
+*K3 — 포아송 특이성.* 같은 평균 $D$에서의 결과는 다음과 같다.
+
+| 자식 수 법칙 | $q$ | $\omega_b=qh^2$ | pull |
+|---|---|---|---|
+| **포아송(독립)** | 0.04864 | 0.02234 | $-0.2$ |
+| 이항(64) | 0.04458 | 0.02047 | $-12.6$ |
+| 이항(8) | 0.01928 | 0.00886 | $-90.1$ |
+| 이항(4) | 0.00184 | 0.00084 | $-143.5$ |
+| 기하 | 0.31468 | 0.14454 | $+814.4$ |
+
+독립인 후손(포아송)만 $\omega_b$를 맞춘다. 후손이 유한한 $n$개의 통로에서 나온다면(이항) $n$이 수백 이상이어야 한다. 곧 인과적 후손은 사실상 무한히 많은 독립 통로에서 생긴다.
+
+*K4.* 끊긴 계보는 부모가 끊긴 조건에서 부임계 포아송($Dq=0.155$) 과정이다. 그래서 크기는 Borel 분포를 따른다. 크기 1의 비율 $e^{-Dq}=0.857$, 평균 크기 1.183이다. 몬테카를로 20만 개로는 0.856과 0.862($-0.12\sigma$, $+1.36\sigma$), 평균 1.184와 1.173이다. 보이는 물질 기록의 86%는 후손 없이 닫힌 단일 기록이다.
+
+**판정.**
+- $q\mapsto\Omega_b$는 “과거 경계모형”에서 “인과 계보의 소멸 확률”(정리 GW + 공리 BR1–BR3)로 바뀐다.
+- 작은 근의 선택은 정리다. 포아송 법칙은 독립성 공리로 정해지며, 자료는 이를 날카롭게 가려낸다.
+- $q$ 방정식은 원래 $\Omega_b$에 맞춰 저장소에 있던 식이다. 그래서 $\omega_b$ 일치는 새 증거가 아니다. 새로 생긴 것은 해석(정리와 특이성)이다.
+- 남는 선택은 둘이다. $D=3+\delta$가 평균 후손 수라는 것(공리 BR1)과, 묶임 대 자유의 경쟁 비율(BR3)이다.
+- 사용자의 순환 그림에서는 이렇게 읽힌다. 인과가 쌓인다는 것은 계보가 가지를 치는 것이고, 끊긴 가지는 보이는 물질로 닫히며, 이어지는 가지는 중력으로만 보이는 암흑이 된다.
+- 예측값은 바뀌지 않는다. 구현은 [가지치기 모듈](../../examples/physics/rendering/ce_rendering_branching.py)이다(v14 뒤에 만들었으므로 v14 해시 목록에 없다).
+
+## 43.55 재현과 한계
+
+구현은 [렌더링 레지스트리](../../examples/physics/rendering/ce_rendering_registry.py), 고정 검사는 `tests/test_rendering_registry.py`(①·③·S2·T1·U1·M1·O1·TC·C1·순환 평균·사다리 상쇄·순환 위상과 팽창 변화의 반례·⑤·$\theta^*$ 반례·판본 III·부스트 반례·R-Pl 전이·유클리드 회전·BAO 눈금 예측·순환 기하·나선 긴장·복소 척도인자·S8·두 원의 구분·사건 척도·중성미자 질량·게이지군과 한 세대·세 세대와 선형 중력·대칭 깨짐과 전하 양자화·급팽창 게이지 수·중성미자 장부·암흑에너지 W1 반례·진공 기울기 W2·최저 조화 규칙·모방 시계 작용 W3·빛의 한계와 렌더링 지평선·확률 무게 중력·빛원뿔 기록 갱신·CMB–BAO 그라데이션·마감 판정·가설 역유도·공리 증명·열린 예측·사전 등록 v1–v12 동결과 공동 RMSE 고정, 초신성 보류 시험·FD θ*·W3 성장 보정·자료 판본 민감도)다. 필수 테스트 목록에 추가했고 전체 344개 검사를 실행했다(2026-09-23). §43.37–43.40의 검사는 각 절에 적은 별도 모듈에 있고, §43.35 정리 C′·D′의 재증명 검산은 [복소 부스트 모듈](../../examples/physics/rendering/ce_rendering_complex_boost.py), §43.41–43.44의 보강은 [E4 대각합 모듈](../../examples/physics/rendering/ce_rendering_e4_trace.py), [간헐 렌더링 모듈](../../examples/physics/rendering/ce_rendering_intermittent.py), [경계 모듈](../../examples/physics/rendering/ce_rendering_boundary.py), [계단 모듈](../../examples/physics/rendering/ce_rendering_staircase.py), [Bool 사전 모듈](../../examples/physics/rendering/ce_rendering_bool.py)에 있고, §43.45의 점검은 [남은 항목 모듈](../../examples/physics/rendering/ce_rendering_open_checks.py), §43.46의 감사는 [중성미자 감사 모듈](../../examples/physics/rendering/ce_rendering_nu_audit.py), §43.47의 장부와 기준 비교는 [장부 모듈](../../examples/physics/rendering/ce_rendering_ledger.py), §43.48의 관측 사상은 [관측 사상 모듈](../../examples/physics/rendering/ce_rendering_o1_map.py), §43.49의 추측 검증은 [무리 안 차이 모듈](../../examples/physics/rendering/ce_rendering_spread.py), §43.50은 [위상 잠금 모듈](../../examples/physics/rendering/ce_rendering_phase_lock.py), §43.51은 [인과 잠금 모듈](../../examples/physics/rendering/ce_rendering_causal_lock.py), §43.52는 [잠금 역사 모듈](../../examples/physics/rendering/ce_rendering_lock_history.py), §43.53은 [열적 시간 모듈](../../examples/physics/rendering/ce_rendering_thermal_time.py), §43.54는 [가지치기 모듈](../../examples/physics/rendering/ce_rendering_branching.py)에 있다. 실행:
 
 ```powershell
 python -B -m examples.physics.rendering.ce_rendering_registry
