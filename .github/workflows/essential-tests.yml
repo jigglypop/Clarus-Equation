@@ -1,0 +1,30 @@
+name: Essential tests
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: essential-tests-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install harness dependencies
+        run: python -m pip install -r requirements-harness.txt
+      - name: Run the essential regression suite
+        env:
+          OPENBLAS_NUM_THREADS: '1'
+          OMP_NUM_THREADS: '1'
+        run: python -B -m pytest -p no:cacheprovider -q

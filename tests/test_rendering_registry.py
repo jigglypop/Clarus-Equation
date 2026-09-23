@@ -36,6 +36,14 @@ from examples.physics.rendering import ce_rendering_gradient as GD
 from examples.physics.rendering import ce_rendering_closure as CL
 from examples.physics.rendering import ce_rendering_reverse_derivations as RD
 from examples.physics.rendering import ce_rendering_axiom_proofs as AP
+from examples.physics.rendering import ce_rendering_complex_boost as CB
+from examples.physics.rendering import ce_rendering_e4_trace as E4
+from examples.physics.rendering import ce_rendering_intermittent as IR
+from examples.physics.rendering import ce_rendering_boundary as BD
+from examples.physics.rendering import ce_rendering_staircase as ST
+from examples.physics.rendering import ce_rendering_bool as BO
+from examples.physics.rendering import ce_rendering_open_checks as OC
+from examples.physics.rendering import ce_rendering_nu_audit as NA
 from examples.physics.rendering import ce_rendering_open_predictions as OP
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
@@ -688,6 +696,105 @@ def test_axiom_proofs_qg1_c6_light_limit_and_bisector() -> None:
     assert AP.minimax_bisector() == pytest.approx(math.pi / 8, abs=1e-9)         # Theorem D
 
 
+def test_complex_boost_reproof_of_light_limit_and_bisector() -> None:
+    for phi in (0.2, math.pi / 4, 1.2):                                        # C-0: timelike test is vacuous
+        assert CB.tilted_axis_norm(phi) == pytest.approx(-1.0, abs=1e-12)
+    assert CB.strip_equivalence_scan(trials=4000)["mismatches"] == 0            # C': E_rec <=> |Im z| < pi/4 <=> |tanh z| < 1
+    assert CB.real_boost_invariance(trials=50) < 1e-12                          # C' (iii)
+    r = CB.real_branch()                                                        # branch R rejected by the dipole
+    assert r["null_angle"] == pytest.approx([math.pi / 4] * 2) and r["beta_over_dipole"] > 300
+    assert r["gamma"] != pytest.approx(1 / math.cos(math.pi / 8), abs=1e-3)
+    assert CB.haar_bisector() == pytest.approx(math.pi / 8, abs=1e-5)           # D'
+    assert CB.lorentz_factor(1j * math.pi / 8) == pytest.approx(math.cos(math.pi / 8))
+    t = CB.tilt_readings_today()                                                # K4
+    assert max(t["fixed"], t["tangent_chord"], t["spiral"], t["spiral_future_max"]) < math.pi / 4
+
+
+def test_e4_is_an_event_relation_not_a_weighted_trace_identity() -> None:
+    assert E4.unweighted_ratio() == Fraction(3, 8)                              # class I at a = 1
+    assert E4.class_i_kill()["e4_physical_alpha_s_max"] == pytest.approx(2 ** -1.5)
+    scan = E4.class_ii_scan()
+    assert scan["a^|S|"]["ratio"] == pytest.approx(0.375) and scan["a^2|S|"]["ratio"] == pytest.approx(0.375)
+    assert all(abs(r["pull"]) > 3 for k, r in scan.items() if k != "E4 4a^4")  # all six families fail
+    assert abs(scan["E4 4a^4"]["pull"]) < 1
+
+
+def test_intermittent_rendering_blurs_and_reemerges_on_any_convex_cycle() -> None:
+    for kind in ("circle", "ellipse:0.6", "ellipse:0.9", "random"):
+        s = IR.loop_structure(kind)
+        assert s["monotone"] and s["total"] == pytest.approx(math.pi, abs=1e-3)
+        assert s["cross_pi4"] == 1 and s["cross_3pi4"] == 1
+    t = IR.circle_timetable()
+    assert t["psi0"] < math.pi / 4 and t["blur_starts_Gyr"] == pytest.approx(27.24, abs=0.05)
+    assert IR.typical_tilt(n=100001)["phase_uniform"] == pytest.approx(math.pi / 8, abs=1e-9)
+    f = IR.flux_variant_chi2()                                                  # real part is a gate, not a flux
+    assert f["flux_rel"] - f["best_lcdm"] > 9 and f["flux_abs"] - f["best_lcdm"] > 9
+
+
+def test_octant_is_the_boundary_between_me_and_outside() -> None:
+    c = core(calibrated_alpha_s()[0])
+    assert BD.best_tbm_overlap(BD.contrast_vector(0)) == pytest.approx(1.0)     # me = e is the TBM first column
+    assert BD.best_tbm_overlap(BD.contrast_vector(2)) < 0.9                     # me = tau is no TBM column
+    s13 = pmns_s2(c, 1)
+    juno = BD.S12_DATA["JUNO 2025"]
+    assert abs(BD.pull(BD.s12_tm1(s13), juno)) < 1.5 < 3 < BD.pull(BD.s12_tm2(s13), juno)   # boundary drawn (TM1)
+    tm1 = BD.delta_from_column1(BD.s12_tm1(s13), pmns_s2(c, 3), s13)
+    assert delta_pmns_tm1(c) == pytest.approx(tm1, abs=0.05)                   # T1 is the TM1 sum rule
+    p = BD.tm1_phase_for_s2(c)
+    assert p["cos_phi"] > 0 and p["s23sq_cos_pos"] < 0.5 < p["s23sq_cos_neg"]   # octant = side of the boundary
+    assert BD.tm1_delta_for_octant(c, 0.5) == pytest.approx(270.0, abs=0.05)
+    assert 250 < BD.tm1_delta_for_octant(c, 0.5445) < 290
+
+
+def test_rendering_staircase_fixes_two_steps_and_leaves_the_octant_step_open() -> None:
+    c = core(calibrated_alpha_s()[0])
+    rules = ST.score_rules(c)
+    survivors = {k for k, r in rules.items() if r["K1_pass"]}
+    assert survivors == {"doubling 2^(m-1) (S2)", "linear m"}                 # B + data fix (h1, h2) = (1, 2)
+    dbl, lin = rules["doubling 2^(m-1) (S2)"], rules["linear m"]
+    assert dbl["s23sq"] == pytest.approx(pmns_s2(c, 3)) and lin["s23sq"] == pytest.approx(0.4667, abs=1e-4)
+    assert dbl["cos_phi_over_half_sqrt_d"] == pytest.approx(1.0, abs=0.02)
+    h3 = ST.data_step_height(c)["SK"]
+    assert abs(h3[0] - 3) < h3[2] and abs(h3[0] - 4) < h3[2]                   # current data cannot pick the stair
+    sk, nosk = ST.alignment("SK"), ST.alignment("noSK")
+    assert sk["nu3_tau_minus_mu"] > 0 and sk["nu2_mu_minus_tau"] > 0           # staircase alignment holds in both columns
+    assert nosk["nu3_tau_minus_mu"] < 0 < nosk["nu2_mu_minus_tau"]
+
+
+def test_true_false_worlds_force_the_doubling_staircase_and_the_not_me_mirror() -> None:
+    assert ST.world_heights() == (1, 2, 4)                                     # Bool: worlds where "me" is true
+    assert ST.truth_bias_for_height(4) == 0.5 and ST.truth_bias_for_height(3) == 0.375   # linear needs a false bias
+    p = ST.not_me_pair(core(calibrated_alpha_s()[0]))
+    assert p["me"] + p["not_me"] == pytest.approx(1.0)                         # complement flips the octant
+    assert p["me_vs_SK"] == pytest.approx(p["not_me_vs_noSK"], abs=0.05)
+
+
+def test_bool_dictionary_complement_halves_ckm_right_angle_and_charge_conjugation() -> None:
+    h = BO.complement_symmetry()["halves"]
+    assert all(v == Fraction(1, 2) for v in h.values())                       # me, odd, majority: one 1/2
+    t = BO.ckm_triangle_from_partition()
+    assert t["partition"] and t["deg"] == pytest.approx((22.5, 67.5, 90.0))   # right angle forced
+    cc = BO.charge_conjugation_on_full_space()
+    assert cc["Q_flips"] and cc["Y_flips"] and cc["parity_flips"] and cc["even_is_generation"]
+    assert all(d["value"] == d["bool"] for d in BO.dictionary())
+    assert BO.coverage()["covered"] == "3/7"                                   # vocabulary is restrictive
+
+
+def test_open_checks_projection_rank_o1_direction_2026_rescore_and_ledger() -> None:
+    r = OC.projection_rank_scan()
+    assert r["rank1_today"]["V39"] == pytest.approx(0.834, abs=1e-3)          # length readout: cos
+    assert min(v["V39"] for k, v in r.items() if k != "rank1_today") > 0.9
+    e = OC.frame_epochs()
+    assert e["ruler_diff"] < 1e-6 < 0.05 < e["galaxy_min"]                    # C5 same-frame vs cross-frame
+    o = OC.o1_direction()
+    assert o["clock_dilation"]["SH0ES"] < -10 and abs(o["projection"]["SH0ES"]) < 0.5
+    s = OC.rescore_2026()
+    assert s["V39"]["after"] == pytest.approx(0.876, abs=1e-3) and s["43rows"]["after"] == pytest.approx(0.914, abs=1e-3)
+    assert s["43rows"]["max_abs_pull"] < 3
+    led = OC.ledger_chi2()
+    assert led["chi2_without_chain"] == pytest.approx(35.21, abs=0.01) and led["net"] == pytest.approx(2.38, abs=0.01)
+
+
 def test_ring_rule_is_first_order_weight_response_and_open_items_are_predictions() -> None:
     c = core(calibrated_alpha_s()[0])
     e = OP.ring_first_order_error(c)
@@ -709,6 +816,40 @@ def test_rendering_predictions_v12_is_frozen() -> None:
             f"{key} changed after v12 freeze: create v13 and keep earlier manifests")
     ids = {q["id"] for q in v12["predictions"]}
     assert {"P26", "P27", "P28"} <= ids and len(ids) == 28
+
+
+def test_neutrino_mass_formula_audit() -> None:
+    c = core(calibrated_alpha_s()[0])
+    for key in ("NuFIT 6.0", "JUNO 2025"):
+        e = NA.exponent_fit(key)
+        assert abs(e["pull_5_8"]) < 1.5 and e["fractions_den_le_12_in_1sigma"] == ["5/8"]   # sharp exponent
+    s = NA.scale_look_elsewhere(c)
+    assert s["family"] == 2100 and s["actual_in_family"] and s["hits_1sigma"] == 2
+    assert s["selection_bits"] == pytest.approx(10.04, abs=0.01)
+    d = NA.distinctiveness(c)
+    assert 0 < d["sum_minus_min"] < 0.5 and d["sum_meV"] < d["DESI_DR2_95_meV"]         # P17 ~ minimal normal ordering
+    j = NA.juno_outlook(c)
+    assert -1 < j["pull_now"] < 0 and j["pull_final_0.3pct_if_central_holds"] < -4
+
+
+def test_rendering_predictions_v13_is_frozen() -> None:
+    v12 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v12.json").read_text(encoding="utf-8"))
+    v13 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v13.json").read_text(encoding="utf-8"))
+    assert v13["supersedes_manifest_id"] == v12["manifest_id"]
+    body = {k: v for k, v in v13.items() if k != "manifest_sha256"}
+    canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    assert hashlib.sha256(canonical).hexdigest() == v13["manifest_sha256"]
+    assert v13["manifest_sha256"] == "c4c45c266889c4e894be1d7036e110e0bd3d29a9c518fa60dbf27ba334721a66"
+    for key, rel in v13["model"]["files"].items():
+        assert v13["model"]["sha256"][key] in _line_ending_hashes((REPO_ROOT / rel)), (
+            f"{key} changed after v13 freeze: create v14 and keep earlier manifests")
+    old = {q["id"]: q for q in v12["predictions"]}
+    for q in v13["predictions"]:
+        if q["id"] in old:
+            assert q["value"] == old[q["id"]]["value"]                        # no carried value changed
+    ids = {q["id"] for q in v13["predictions"]}
+    assert {"P29", "P30"} <= ids and len(ids) == 30
+    assert "duplicate" in next(q for q in v13["predictions"] if q["id"] == "P20")["status_v13"]
 
 
 def test_pantheon_holdout_keeps_all_ce_branches_within_two_sigma() -> None:

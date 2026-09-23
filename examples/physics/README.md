@@ -34,15 +34,15 @@
 | 렌더링 | `rendering/ce_rendering_inflation.py` | 급팽창 N_gauge = 12를 단계 보존 부분대수 차원으로 계산, N_e = 18D (43장 §43.23) |
 | 렌더링 | `rendering/ce_rendering_nu_ledger.py` | 중성미자 장부: 이른 우주 ω_c에서 CE ω_ν를 뺌, CMB–BAO +3.07→+2.65σ, 판본 V 0.950 (43장 §43.24, v8) |
 | 렌더링 | `rendering/ce_rendering_w_branch.py` | [반례] 저장소 w0·wa 식 W1: 고정 h에서 θ* +57σ, 기각; 살아남을 꼴은 −1 둘레 진동뿐 (43장 §43.25) |
-| 렌더링 | `rendering/ce_rendering_vacuum_tilt.py` | [영감] W2 진공 판독 1+ξ²cos(H_Λt/2): 판본 V 0.909, CMB–BAO +2.17σ, w(0)=−0.989 (43장 §43.26, v9) |
+| 렌더링 | `rendering/ce_rendering_vacuum_tilt.py` | [가설] W2 진공 판독 1+ξ²cos(H_Λt/2): 판본 V 0.909, CMB–BAO +2.17σ, w(0)=−0.989 (43장 §43.26, v9) |
 | 렌더링 | `rendering/ce_rendering_vacuum_harmonic.py` | W2 = 복소 척도 위상의 최저 실수 조화(k=1 → ν=1/2), 부호 1 bit, 비앙키 틈 기록 (43장 §43.27) |
 | 렌더링 | `rendering/ce_rendering_mimetic_vacuum.py` | W3 모방 시계 작용: 진공→먼지 확정, 비앙키 성립, 부호=에너지 양수; 판본 V 0.920, 43행 혼재 → 경쟁 판본 (43장 §43.28) |
 | 렌더링 | `rendering/ce_rendering_light_limit.py` | c = 렌더링 한계: O1 = 빛원뿔 π/4의 이등분, 모든 신호 ≤ c, 렌더링 지평선의 온도·엔트로피 (43장 §43.29) |
 | 렌더링 | `rendering/ce_rendering_probability_weight.py` | 양자중력 = 확률의 무게: 가지 무게는 초광속 신호(기각), 확률 무게는 무신호; BMV 얽힘 0(P23), Ω_k = 0(P24) (43장 §43.30, v10) |
 | 렌더링 | `rendering/ce_rendering_record_update.py` | 기록 갱신 R1: 빛원뿔 안 기록만 원천 갱신, Page–Geilker 정합, 사건 척도 자발 붕괴 기각 (43장 §43.31) |
-| 렌더링 | `rendering/ce_rendering_gradient.py` | CMB–BAO 그라데이션: C3 모양 G1–G3 기각, 영감 G1m(k=Ω_m)으로 −0.22σ, 판본 V 0.834 (43장 §43.32, v11) |
-| 렌더링 | `rendering/ce_rendering_closure.py` | 마감: 기록 완성 = 란다우어(중복도 2는 GHZ로 기각), 지평선 정수 통로 기각, 영감 4.1 bit 장부 (43장 §43.33) |
-| 렌더링 | `rendering/ce_rendering_reverse_derivations.py` | 영감 역유도: k=Ω_m = 확률 무게 평균, W2 부호 = 널 에너지, U1 = O1 이등분 직각삼각형, R-Pl = 4×⑤ (43장 §43.34) |
+| 렌더링 | `rendering/ce_rendering_gradient.py` | CMB–BAO 그라데이션: C3 모양 G1–G3 기각, 가설 G1m(k=Ω_m)으로 −0.22σ, 판본 V 0.834 (43장 §43.32, v11) |
+| 렌더링 | `rendering/ce_rendering_closure.py` | 마감: 기록 완성 = 란다우어(중복도 2는 GHZ로 기각), 지평선 정수 통로 기각, 가설 4.1 bit 장부 (43장 §43.33) |
+| 렌더링 | `rendering/ce_rendering_reverse_derivations.py` | 가설 역유도: k=Ω_m = 확률 무게 평균, W2 부호 = 널 에너지, U1 = O1 이등분 직각삼각형, R-Pl = 4×⑤ (43장 §43.34) |
 | 렌더링 | `rendering/ce_rendering_axiom_proofs.py` | 공리 증명 검산: QG1(HJW+아핀 ⇒ Tr ρT), C6(비르팅거), L(이그나토프스키+허수 빠르기), 이등분(minimax) (43장 §43.35) |
 | 렌더링 | `rendering/ce_rendering_open_predictions.py` | 정리 E(나이테 = 무게 평균 1차), 미증명 항목의 예측 P26 사이렌 H0·P27 κ_λ·P28 M_H/M_Z (43장 §43.36, v12) |
 | 렌더링 | `rendering/ce_rendering_sn_holdout.py` | Pantheon 40구간 초신성 보류 시험: L0·W2·W3 모두 최적 ΛCDM 대비 Δχ² < 0.5 (43장 §43.37) |
