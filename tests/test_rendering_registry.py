@@ -52,6 +52,7 @@ from examples.physics.rendering import ce_rendering_causal_lock as CLK
 from examples.physics.rendering import ce_rendering_lock_history as LH
 from examples.physics.rendering import ce_rendering_thermal_time as TT
 from examples.physics.rendering import ce_rendering_branching as BRN
+from examples.physics.rendering import ce_rendering_e4_anchor as E4A
 from examples.physics.rendering import ce_rendering_open_predictions as OP
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
@@ -932,6 +933,19 @@ def test_branching_extinction_derives_the_cosmic_composition() -> None:
     assert comp["Om_branch"] == pytest.approx(comp["Om_core"]) and comp["borel_P1"] == pytest.approx(0.8568, abs=1e-3)
 
 
+def test_e4_anchor_and_self_consistent_fixed_point() -> None:
+    anc = E4A.anchor()
+    assert anc["e4_holds"] and anc["alpha_s"] == 0.125 and anc["sin_thetaW"] == 0.5          # Ind vacuum point
+    fp = E4A.fixed_point(*E4A.ADOPTED)
+    assert abs(fp["pull_s2"]) < 1 and abs(fp["pull_as_world"]) < 1
+    scan = E4A.family_scan()
+    assert scan["hits_1sigma"] == ["a/2pi|1+d/2pi"] and scan["n"] == 24                    # unique in the declared family
+    nest = E4A.nested_truncations()
+    assert nest[0]["pull_s2"] < -20 and abs(nest[-1]["pull_s2"] - fp["pull_s2"]) < 1e-6   # only the infinite nesting works
+    rs = E4A.resummation_scan()
+    assert rs["V1 exp outer"]["pull_s2"] > 3 and abs(rs["V3 exp inner"]["pull_s2"]) < 2
+
+
 def test_rendering_predictions_v13_is_frozen() -> None:
     v12 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v12.json").read_text(encoding="utf-8"))
     v13 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v13.json").read_text(encoding="utf-8"))
@@ -969,6 +983,25 @@ def test_rendering_predictions_v14_is_frozen() -> None:
             assert q["value"] == old[q["id"]]["value"]                        # no carried value changed
     ids = {q["id"] for q in v14["predictions"]}
     assert {"P31", "P32", "P33"} <= ids and len(ids) == 33 and len(v14["model"]["files"]) == 30
+
+
+def test_rendering_predictions_v15_is_frozen() -> None:
+    v14 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v14.json").read_text(encoding="utf-8"))
+    v15 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v15.json").read_text(encoding="utf-8"))
+    assert v15["supersedes_manifest_id"] == v14["manifest_id"]
+    body = {k: v for k, v in v15.items() if k != "manifest_sha256"}
+    canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    assert hashlib.sha256(canonical).hexdigest() == v15["manifest_sha256"]
+    assert v15["manifest_sha256"] == "13c22f3c935a183a6f8aef8a26bebd06536d2355051001f10cb7d30987e57d01"
+    for key, rel in v15["model"]["files"].items():
+        assert v15["model"]["sha256"][key] in _line_ending_hashes((REPO_ROOT / rel)), (
+            f"{key} changed after v15 freeze: create v16 and keep earlier manifests")
+    old = {q["id"]: q for q in v14["predictions"]}
+    for q in v15["predictions"]:
+        if q["id"] in old:
+            assert q["value"] == old[q["id"]]["value"]                        # no carried value changed
+    ids = {q["id"] for q in v15["predictions"]}
+    assert "P34" in ids and len(ids) == 34 and len(v15["model"]["files"]) == 32
 
 
 def test_pantheon_holdout_keeps_all_ce_branches_within_two_sigma() -> None:
