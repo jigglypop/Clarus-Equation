@@ -17,6 +17,9 @@
       (β, γ, α) = (π/8, 3π/8, π/2). |V_ub|, δ_CKM, J는 |V_us|, |V_cb|와 이 삼각형에서 나온다.
       삼각형의 향(α = +π/2)이 전역 시간 화살표 1 bit다.
   M1  렙톤은 쿼크의 거울이다: 렙톤의 원 방향은 쿼크와 반대(sgn J_PMNS = -sgn J_CKM).
+  O1  시공간축은 우로보로스처럼 x→y→z로 순환하며 π/8 기울어 있다. 순환 평균은 축마다
+      1/3(두 축이면 1/2)을 주어 TBM 기준값이 되고, 꼬리를 무는 방향(ω/ω̄)이 화살표 1 bit다.
+      시계로 잰 H0는 1/cos(π/8)배, 나이테(BAO·CMB)는 불변.
 
 python -B -m examples.physics.rendering.ce_rendering_registry
 """
@@ -215,41 +218,32 @@ def hubble_kms(c: dict) -> float:
     return math.sqrt(PI) * math.exp(-log_s / 2.0) / T_PLANCK_S * KM_PER_MPC
 
 
-# H0 판독 행: (이름, 판독 시기 z, 값, +σ, −σ). DESI BAO+BBN H0는 BAO 블록과 자료가 겹쳐 제외.
+# H0 판독 행: (이름, 시계 사용 여부, 값, +σ, −σ). DESI BAO+BBN H0는 BAO 블록과 자료가 겹쳐 제외.
+# 시계 사용: 세페이드 맥동 주기, 렌즈 시간 지연. 나이테(음향 무늬)와 별 밝기(TRGB)는 시계를 쓰지 않는다.
 H0_READOUTS = (
-    ("H0 Planck", 1090.0, 67.36, 0.54, 0.54),
-    ("H0 TDCOSMO", 0.5, 71.6, 3.9, 3.3),
-    ("H0 TRGB", 0.03, 70.39, 1.94, 1.94),
-    ("H0 SH0ES", 0.03, 73.17, 0.86, 0.86),
+    ("H0 Planck", False, 67.36, 0.54, 0.54),
+    ("H0 TDCOSMO", True, 71.6, 3.9, 3.3),
+    ("H0 TRGB", False, 70.39, 1.94, 1.94),
+    ("H0 SH0ES", True, 73.17, 0.86, 0.86),
 )
+TIME_AXIS_TILT = PI / 8.0  # U1의 β: 8통로 중 진공(0차) 통로 한 칸
 
 
-def vacuum_share(c: dict, z: float) -> float:
-    """g(z) = Ω_Λ(z)/Ω_Λ(0): 분별하지 않는 진공의 점유율(오늘 1, 이른 우주 0)."""
-    om = c["Om"]
-    return 1.0 / (om * (1.0 + z) ** 3 + 1.0 - om)
+def hubble_readout(c: dict, uses_clock: bool) -> float:
+    """O1: 시공간축은 우로보로스처럼 순환하며 π/8 기울어 있다.
+
+    나이테(한 시기에 새겨진 공간 무늬의 비율)는 축 회전에 불변이고, 시계로 잰 시간 간격은
+    cos(π/8)로 투영되어 팽창률이 1/cos(π/8)배로 읽힌다. 순환이 방향 쏠림을 평균해 없앤다.
+    """
+    h = hubble_kms(c)
+    return h / math.cos(TIME_AXIS_TILT) if uses_clock else h
 
 
-def hubble_readout(c: dict, z: float, amplitude: float) -> float:
-    """H1: 국소 판독의 분별 약화. 실제 팽창 H(z)가 아니라 판독만 바뀐다(BAO 반례)."""
-    return hubble_kms(c) * math.exp(amplitude * vacuum_share(c, z))
-
-
-@lru_cache(maxsize=4096)
-def readout_amplitude(alpha_s: float) -> float:
-    """H0 판독 네 행으로 약화 크기 하나를 맞춘다(연속 적합 매개변수 +1)."""
-    from scipy.optimize import minimize_scalar
-
-    c = core(alpha_s)
-
-    def chi2(A: float) -> float:
-        total = 0.0
-        for _, z, v, up, dn in H0_READOUTS:
-            p = hubble_readout(c, z, A)
-            total += ((p - v) / (up if p >= v else dn)) ** 2
-        return total
-
-    return float(minimize_scalar(chi2, bounds=(-0.5, 0.5), method="bounded").x)
+def cycle_average_occupation(n: np.ndarray, axes: int = 3) -> np.ndarray:
+    """축을 순환(x→y→...)시키며 평균한 축별 점유율. 어떤 단위벡터든 1/axes가 된다."""
+    v = np.asarray(n, dtype=float)[:axes]
+    v = v / np.linalg.norm(v)
+    return np.mean([np.roll(v, k) ** 2 for k in range(axes)], axis=0)
 
 
 def scalar_amplitude(c: dict) -> float:
@@ -319,9 +313,9 @@ def rows(pmns: str = "SK") -> tuple[Row, ...]:
         Row("A_s x1e9", "M", scalar_amplitude, 2.0989, 0.0294, 0.0294, "경험식"),
         Row("dn_s/dlnk", "M", lambda c: -2.0 / c["Ne"] ** 2, -0.0045, 0.0067, 0.0067, "경험식"),
     ) + tuple(
-        Row(name, "M", (lambda z_: lambda c: hubble_readout(c, z_, readout_amplitude(c["a"])))(z),
-            v, up, dn, "경험식", 0.0, f"H1 판독 약화, z={z:g}")
-        for name, z, v, up, dn in H0_READOUTS
+        Row(name, "M", (lambda clock_: lambda c: hubble_readout(c, clock_))(clock),
+            v, up, dn, "경험식", 0.5, "O1 시계: 1/cos(π/8)" if clock else "O1 나이테: 회전 불변")
+        for name, clock, v, up, dn in H0_READOUTS
     )
 
 
@@ -340,8 +334,8 @@ def bao_chi2(omega_m: float) -> float:
     return float(r @ BAO_CINV @ r)
 
 
-def bao_chi2_if_expansion_weakened(c: dict, amplitude: float) -> float:
-    """반례 검산: 약화가 실제 팽창 H(z)를 바꾼다면의 BAO χ² (판독만 바뀌는 H1과 비교)."""
+def bao_chi2_if_expansion_changed(c: dict, amplitude: float) -> float:
+    """대조 검산: 판독이 아니라 실제 팽창 H(z)를 진공 점유율 형태로 바꾸면 BAO 나이테가 거부한다."""
     om = c["Om"]
     z = np.linspace(0.0, 2.5, 25001)
     share = 1.0 / (om * (1 + z) ** 3 + 1.0 - om)
@@ -384,8 +378,7 @@ def score(variant: str = "I", pmns: str = "SK") -> dict:
     return {"variant": variant, "pmns": pmns, "alpha_s": a0, "rows": out, "bao_chi2": chib,
             "rmse_Q": math.sqrt(cq / nq), "rmse_M": math.sqrt(cm / nm),
             "rmse_all": math.sqrt((cq + cm) / (nq + nm)), "N": nq + nm,
-            "bits": sum(o["bits"] for o in out), "k_continuous": (1 if variant == "I" else 0) + 2,
-            "readout_amplitude": readout_amplitude(a0)}
+            "bits": sum(o["bits"] for o in out), "k_continuous": (1 if variant == "I" else 0) + 1}
 
 
 def main() -> None:

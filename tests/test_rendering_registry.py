@@ -10,7 +10,10 @@ from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
     alpha_em_inv,
     bao_chi2,
-    bao_chi2_if_expansion_weakened,
+    bao_chi2_if_expansion_changed,
+    cycle_average_occupation,
+    hubble_kms,
+    hubble_readout,
     calibrated_alpha_s,
     circulant_eigenvector_drift,
     ckm_triangle,
@@ -20,7 +23,6 @@ from examples.physics.rendering.ce_rendering_registry import (
     exterior_channels,
     pmns_matrix,
     pmns_s2,
-    readout_amplitude,
     rendering_amplitude,
     rendering_amplitude_closed,
     score,
@@ -90,12 +92,20 @@ def test_grade_partition_triangle_derives_vub_and_mirror_orientation() -> None:
     assert delta_pmns_tm1(c) > 180.0  # M1: lepton circulation opposite to quarks
 
 
-def test_hubble_readout_weakening_is_positive_and_not_in_the_expansion() -> None:
-    alpha_s = calibrated_alpha_s()[0]
-    c = core(alpha_s)
-    amplitude = readout_amplitude(alpha_s)
-    assert 0.05 < amplitude < 0.12  # weaker distinction -> larger local readout
-    assert bao_chi2_if_expansion_weakened(c, amplitude) > bao_chi2(c["Om"]) + 10.0
+def test_ouroboros_cycle_renders_every_axis_evenly() -> None:
+    rng = np.random.default_rng(5)
+    for _ in range(20):
+        n = rng.normal(size=3)
+        assert cycle_average_occupation(n, 3) == pytest.approx(np.full(3, 1 / 3), abs=1e-14)
+        assert cycle_average_occupation(n, 2) == pytest.approx(np.full(2, 1 / 2), abs=1e-14)
+
+
+def test_clock_readouts_see_the_tilted_axis_and_rings_do_not() -> None:
+    c = core(calibrated_alpha_s()[0])
+    assert hubble_readout(c, False) == pytest.approx(hubble_kms(c))
+    assert hubble_readout(c, True) == pytest.approx(hubble_kms(c) / math.cos(math.pi / 8))
+    assert 72.0 < hubble_readout(c, True) < 73.5
+    assert bao_chi2_if_expansion_changed(c, 0.08) > bao_chi2(c["Om"]) + 10.0
 
 
 def test_cosmic_cyclic_phase_does_not_move_the_mixing() -> None:
@@ -111,11 +121,11 @@ def test_one_channel_loop_restores_the_sum_rule_alpha_em() -> None:
 
 @pytest.mark.parametrize(
     ("variant", "pmns", "expected"),
-    [("I", "SK", 0.831), ("II", "SK", 0.773), ("I", "noSK", 1.526), ("II", "noSK", 1.495)],
+    [("I", "SK", 0.852), ("II", "SK", 0.755), ("I", "noSK", 1.537), ("II", "noSK", 1.486)],
 )
 def test_joint_rmse_is_frozen(variant: str, pmns: str, expected: float) -> None:
     result = score(variant, pmns)
     assert result["N"] == 39
-    assert result["bits"] == pytest.approx(18.0)
+    assert result["bits"] == pytest.approx(20.0)
     assert result["rmse_all"] == pytest.approx(expected, abs=1.5e-3)
-    assert result["k_continuous"] == (3 if variant == "I" else 2)
+    assert result["k_continuous"] == (2 if variant == "I" else 1)
