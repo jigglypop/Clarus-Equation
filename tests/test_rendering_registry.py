@@ -67,6 +67,13 @@ from examples.physics.rendering.ce_rendering_registry import (
 )
 
 
+def _line_ending_hashes(path) -> set[str]:
+    """SHA-256 of a frozen module under LF and CRLF endings: a checkout's autocrlf must not break the freeze."""
+    lf = path.read_bytes().replace(b"\r\n", b"\n")
+    return {hashlib.sha256(lf).hexdigest(), hashlib.sha256(lf.replace(b"\n", b"\r\n")).hexdigest()}
+
+
+
 def _haar(n: int, rng: np.random.Generator) -> np.ndarray:
     z = (rng.normal(size=(n, n)) + 1j * rng.normal(size=(n, n))) / math.sqrt(2)
     q, r = np.linalg.qr(z)
@@ -203,7 +210,7 @@ def test_rendering_predictions_v1_is_frozen_and_reproduced() -> None:
     assert hashlib.sha256(canonical).hexdigest() == manifest["manifest_sha256"]
     assert manifest["manifest_sha256"] == "e02bf7f66b2b0839d7a8424863eb852e88fd75676ebf77ccb4ac3a5481d68737"
     registry = REPO_ROOT / manifest["model"]["registry_path"]
-    assert hashlib.sha256(registry.read_bytes()).hexdigest() == manifest["model"]["registry_sha256"], (
+    assert manifest["model"]["registry_sha256"] in _line_ending_hashes(registry), (
         "registry changed after freeze: create rendering_predictions_v2.json and keep v1")
     a = calibrated_alpha_s()[0]
     c = core(a)
@@ -244,7 +251,7 @@ def test_rendering_predictions_v2_keeps_v1_and_is_frozen() -> None:
     assert hashlib.sha256(canonical).hexdigest() == v2["manifest_sha256"]
     for key in ("registry", "derivations"):
         path = REPO_ROOT / v2["model"][f"{key}_path"]
-        assert hashlib.sha256(path.read_bytes()).hexdigest() == v2["model"][f"{key}_sha256"], (
+        assert v2["model"][f"{key}_sha256"] in _line_ending_hashes(path), (
             f"{key} changed after v2 freeze: create v3 and keep v1, v2")
     values = {p["id"]: p["value"] for p in v2["predictions"]}
     a = calibrated_alpha_s()[0]
@@ -283,7 +290,7 @@ def test_rendering_predictions_v3_keeps_v1_v2_and_is_frozen() -> None:
     assert hashlib.sha256(canonical).hexdigest() == v3["manifest_sha256"]
     for key in ("registry", "derivations", "planck_readout"):
         path = REPO_ROOT / v3["model"][f"{key}_path"]
-        assert hashlib.sha256(path.read_bytes()).hexdigest() == v3["model"][f"{key}_sha256"], (
+        assert v3["model"][f"{key}_sha256"] in _line_ending_hashes(path), (
             f"{key} changed after v3 freeze: create v4 and keep earlier manifests")
     values = {q["id"]: q["value"] for q in v3["predictions"]}
     c = core(calibrated_alpha_s()[0])
@@ -313,7 +320,7 @@ def test_rendering_predictions_v4_keeps_earlier_manifests_and_is_frozen() -> Non
     assert hashlib.sha256(canonical).hexdigest() == v4["manifest_sha256"]
     for key in ("registry", "derivations", "planck_readout", "bao_ruler"):
         path = REPO_ROOT / v4["model"][f"{key}_path"]
-        assert hashlib.sha256(path.read_bytes()).hexdigest() == v4["model"][f"{key}_sha256"], (
+        assert v4["model"][f"{key}_sha256"] in _line_ending_hashes(path), (
             f"{key} changed after v4 freeze: create v5 and keep earlier manifests")
     values = {q["id"]: q["value"] for q in v4["predictions"]}
     rd, h = BR.ce_rd_and_h(core(calibrated_alpha_s()[0]))
@@ -353,7 +360,7 @@ def test_rendering_predictions_v5_is_frozen() -> None:
     assert hashlib.sha256(canonical).hexdigest() == v5["manifest_sha256"]
     for key in ("registry", "derivations", "planck_readout", "bao_ruler", "cycle", "spiral"):
         path = REPO_ROOT / v5["model"][f"{key}_path"]
-        assert hashlib.sha256(path.read_bytes()).hexdigest() == v5["model"][f"{key}_sha256"], (
+        assert v5["model"][f"{key}_sha256"] in _line_ending_hashes(path), (
             f"{key} changed after v5 freeze: create v6 and keep earlier manifests")
     values = {q["id"]: q["value"] for q in v5["predictions"]}
     c = core(calibrated_alpha_s()[0])
@@ -397,7 +404,7 @@ def test_rendering_predictions_v6_is_frozen() -> None:
     assert hashlib.sha256(canonical).hexdigest() == v6["manifest_sha256"]
     for key in ("registry", "derivations", "planck_readout", "bao_ruler", "cycle", "spiral", "complex_scale", "growth"):
         path = REPO_ROOT / v6["model"][f"{key}_path"]
-        assert hashlib.sha256(path.read_bytes()).hexdigest() == v6["model"][f"{key}_sha256"], (
+        assert v6["model"][f"{key}_sha256"] in _line_ending_hashes(path), (
             f"{key} changed after v6 freeze: create v7 and keep earlier manifests")
     values = {q["id"]: q["value"] for q in v6["predictions"]}
     assert values["P16"] == pytest.approx(GR.ce_s8(core(calibrated_alpha_s()[0]))[1], rel=1e-4)
@@ -429,7 +436,7 @@ def test_rendering_predictions_v7_is_frozen() -> None:
     canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
     assert hashlib.sha256(canonical).hexdigest() == v7["manifest_sha256"]
     for key, rel in v7["model"]["files"].items():
-        assert hashlib.sha256((REPO_ROOT / rel).read_bytes()).hexdigest() == v7["model"]["sha256"][key], (
+        assert v7["model"]["sha256"][key] in _line_ending_hashes((REPO_ROOT / rel)), (
             f"{key} changed after v7 freeze: create v8 and keep earlier manifests")
     values = {q["id"]: q["value"] for q in v7["predictions"]}
     c = core(calibrated_alpha_s()[0])
@@ -508,7 +515,7 @@ def test_rendering_predictions_v8_is_frozen() -> None:
     canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
     assert hashlib.sha256(canonical).hexdigest() == v8["manifest_sha256"]
     for key, rel in v8["model"]["files"].items():
-        assert hashlib.sha256((REPO_ROOT / rel).read_bytes()).hexdigest() == v8["model"]["sha256"][key], (
+        assert v8["model"]["sha256"][key] in _line_ending_hashes((REPO_ROOT / rel)), (
             f"{key} changed after v8 freeze: create v9 and keep earlier manifests")
     values = {q["id"]: q["value"] for q in v8["predictions"]}
     c = core(calibrated_alpha_s()[0])
@@ -549,7 +556,7 @@ def test_rendering_predictions_v9_is_frozen() -> None:
     canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
     assert hashlib.sha256(canonical).hexdigest() == v9["manifest_sha256"]
     for key, rel in v9["model"]["files"].items():
-        assert hashlib.sha256((REPO_ROOT / rel).read_bytes()).hexdigest() == v9["model"]["sha256"][key], (
+        assert v9["model"]["sha256"][key] in _line_ending_hashes((REPO_ROOT / rel)), (
             f"{key} changed after v9 freeze: create v10 and keep earlier manifests")
     values = {q["id"]: q["value"] for q in v9["predictions"]}
     c = core(calibrated_alpha_s()[0])
@@ -613,7 +620,7 @@ def test_rendering_predictions_v10_is_frozen() -> None:
     canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
     assert hashlib.sha256(canonical).hexdigest() == v10["manifest_sha256"]
     for key, rel in v10["model"]["files"].items():
-        assert hashlib.sha256((REPO_ROOT / rel).read_bytes()).hexdigest() == v10["model"]["sha256"][key], (
+        assert v10["model"]["sha256"][key] in _line_ending_hashes((REPO_ROOT / rel)), (
             f"{key} changed after v10 freeze: create v11 and keep earlier manifests")
     values = {q["id"]: q["value"] for q in v10["predictions"]}
     assert values["P23"] == 0.0 and values["P24"] == 0.0
@@ -644,7 +651,7 @@ def test_rendering_predictions_v11_is_frozen() -> None:
     canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
     assert hashlib.sha256(canonical).hexdigest() == v11["manifest_sha256"]
     for key, rel in v11["model"]["files"].items():
-        assert hashlib.sha256((REPO_ROOT / rel).read_bytes()).hexdigest() == v11["model"]["sha256"][key], (
+        assert v11["model"]["sha256"][key] in _line_ending_hashes((REPO_ROOT / rel)), (
             f"{key} changed after v11 freeze: create v12 and keep earlier manifests")
     values = {q["id"]: q["value"] for q in v11["predictions"]}
     assert values["P25"] == pytest.approx(1.0126, abs=2e-4)
@@ -698,7 +705,7 @@ def test_rendering_predictions_v12_is_frozen() -> None:
     canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
     assert hashlib.sha256(canonical).hexdigest() == v12["manifest_sha256"]
     for key, rel in v12["model"]["files"].items():
-        assert hashlib.sha256((REPO_ROOT / rel).read_bytes()).hexdigest() == v12["model"]["sha256"][key], (
+        assert v12["model"]["sha256"][key] in _line_ending_hashes((REPO_ROOT / rel)), (
             f"{key} changed after v12 freeze: create v13 and keep earlier manifests")
     ids = {q["id"] for q in v12["predictions"]}
     assert {"P26", "P27", "P28"} <= ids and len(ids) == 28
