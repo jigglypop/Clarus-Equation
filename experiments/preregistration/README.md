@@ -1,6 +1,8 @@
 # 사전등록 계약
 
-우주론·양자 holdout의 v1·v2 계약 네 개와 `validate_holdout_manifest.py`만 유지한다.
+우주론·양자 holdout의 v1·v2 계약 네 개와 `validate_holdout_manifest.py`를 유지한다.
+`rendering_predictions_v1.json`은 43장 렌더링 식 체계의 예측 10개를 2026-09-23에 동결한 계약이며,
+`tests/test_rendering_registry.py`가 자기 해시·레지스트리 해시·예측 재현을 검사한다.
 계약의 원문과 해시는 바꾸지 않았다. v1은 v2의 선행 판본 검증에 필요하다.
 
 `tests/test_holdout_preregistration.py`가 동결·해시·자료 역할·재피팅 금지를 검사한다.

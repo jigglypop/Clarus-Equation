@@ -19,7 +19,11 @@
   M1  렙톤은 쿼크의 거울이다: 렙톤의 원 방향은 쿼크와 반대(sgn J_PMNS = -sgn J_CKM).
   O1  시공간축은 우로보로스처럼 x→y→z로 순환하며 π/8 기울어 있다. 순환 평균은 축마다
       1/3(두 축이면 1/2)을 주어 TBM 기준값이 되고, 꼬리를 무는 방향(ω/ω̄)이 화살표 1 bit다.
-      시계로 잰 H0는 1/cos(π/8)배, 나이테(BAO·CMB)는 불변.
+      오늘을 직접 재는 H0는 1/cos(π/8)배, 나이테(CMB 음향 무늬)에서 외삽한 H0는 H_CE.
+      모든 시계를 같은 인자로 바꾸는 판본은 교정 사다리 안에서 상쇄되어 기각한다.
+  TC  색을 가진 부문의 2↔3 전이는 색 순환을 닫아 시간축을 한 번 감고 ε = α^{1/6}를 받는다.
+  C1  순환은 대각선 축 회전의 에르미트 생성자로 쓴다: 유니터리, ⟨H⟩ 보존, t=2π/3에서 순환 치환,
+      한 바퀴 평균 점유율 1/3, 기운 축의 세차 평균 cos(π/8)·d.
 
 python -B -m examples.physics.rendering.ce_rendering_registry
 """
@@ -152,9 +156,15 @@ def flavour_words(c: dict) -> dict:
     eps = math.sqrt(rendering_amplitude_closed(a, 1))
     return {
         "V_us": 4.0 * u * transition_factor(c, 1, 2),
-        "V_cb": u * eps * transition_factor(c, 2, 3),
-        "m_mu/m_tau": u * transition_factor(c, 2, 3),
+        "V_cb": u * eps ** colour_winding("quark", 2, 3) * transition_factor(c, 2, 3),
+        "m_mu/m_tau": u * eps ** colour_winding("lepton", 2, 3) * transition_factor(c, 2, 3),
     }
+
+
+def colour_winding(sector: str, i: int, j: int) -> int:
+    """TC: 색(3차원 단계)을 가진 부문의 2↔3 전이는 색 순환 x→y→z를 한 바퀴 닫아 시간축을
+    한 번 감는다. 감긴 수만큼 시간 통로 ε = α^{1/6}가 붙는다. 렙톤은 색 순환을 닫지 않는다."""
+    return 1 if sector == "quark" and (i, j) == (2, 3) else 0
 
 
 def mixing_matrix(s12: float, s23: float, s13: float, dl: float):
@@ -218,25 +228,76 @@ def hubble_kms(c: dict) -> float:
     return math.sqrt(PI) * math.exp(-log_s / 2.0) / T_PLANCK_S * KM_PER_MPC
 
 
-# H0 판독 행: (이름, 시계 사용 여부, 값, +σ, −σ). DESI BAO+BBN H0는 BAO 블록과 자료가 겹쳐 제외.
-# 시계 사용: 세페이드 맥동 주기, 렌즈 시간 지연. 나이테(음향 무늬)와 별 밝기(TRGB)는 시계를 쓰지 않는다.
+# H0 판독 행: (이름, 오늘을 직접 재는가, 값, +σ, −σ). DESI BAO+BBN H0는 BAO 블록과 자료가 겹쳐 제외.
+# 나이테 추론: 이른 시기의 기록(CMB 음향 무늬)에서 오늘로 외삽. 직접 판독: 사다리·시간 지연 렌즈.
 H0_READOUTS = (
     ("H0 Planck", False, 67.36, 0.54, 0.54),
     ("H0 TDCOSMO", True, 71.6, 3.9, 3.3),
-    ("H0 TRGB", False, 70.39, 1.94, 1.94),
+    ("H0 TRGB", True, 70.39, 1.94, 1.94),
     ("H0 SH0ES", True, 73.17, 0.86, 0.86),
 )
 TIME_AXIS_TILT = PI / 8.0  # U1의 β: 8통로 중 진공(0차) 통로 한 칸
 
 
-def hubble_readout(c: dict, uses_clock: bool) -> float:
-    """O1: 시공간축은 우로보로스처럼 순환하며 π/8 기울어 있다.
+def hubble_readout(c: dict, direct_present: bool) -> float:
+    """O1: 시공간축은 우로보로스처럼 순환하며 오늘 π/8 기울어 있다.
 
-    나이테(한 시기에 새겨진 공간 무늬의 비율)는 축 회전에 불변이고, 시계로 잰 시간 간격은
-    cos(π/8)로 투영되어 팽창률이 1/cos(π/8)배로 읽힌다. 순환이 방향 쏠림을 평균해 없앤다.
+    나이테(이른 시기에 새겨진 기록)에서 외삽한 H0는 기울기 이전의 축으로 읽혀 H_CE이고,
+    오늘을 직접 재는 판독은 기울어진 축의 투영으로 1/cos(π/8)배다. 순환은 방향 쏠림을 없앤다.
     """
     h = hubble_kms(c)
-    return h / math.cos(TIME_AXIS_TILT) if uses_clock else h
+    return h / math.cos(TIME_AXIS_TILT) if direct_present else h
+
+
+def ouroboros_generator() -> np.ndarray:
+    """C1: 대각선 d=(1,1,1)/√3을 축으로 도는 회전의 에르미트 생성자 H = i K (K: 반대칭).
+
+    U(t) = exp(-iHt)는 실수 회전이며 t = 2π/3에서 순환 치환 x→y→z가 된다.
+    """
+    d = np.ones(3) / math.sqrt(3.0)
+    K = np.array([[0.0, -d[2], d[1]], [d[2], 0.0, -d[0]], [-d[1], d[0], 0.0]])
+    return 1j * K
+
+
+def ouroboros_unitary(t: float) -> np.ndarray:
+    from scipy.linalg import expm
+
+    return expm(-1j * ouroboros_generator() * t)
+
+
+def time_average_occupation(psi: np.ndarray, samples: int = 720) -> np.ndarray:
+    """한 바퀴(0..2π) 동안의 축별 점유율 평균. 어떤 복소 상태든 1/3이 된다."""
+    v = np.asarray(psi, dtype=complex)
+    v = v / np.linalg.norm(v)
+    ts = np.linspace(0.0, 2 * PI, samples, endpoint=False)
+    return np.mean([np.abs(ouroboros_unitary(tt) @ v) ** 2 for tt in ts], axis=0)
+
+
+def precessing_axis_mean(tilt: float = PI / 8.0, samples: int = 720) -> np.ndarray:
+    """순환 축 d에서 tilt만큼 기운 시간축이 d 둘레를 도는 평균. 결과는 cos(tilt)·d(쏠림 0)."""
+    d = np.ones(3) / math.sqrt(3.0)
+    u = np.array([1.0, -1.0, 0.0]) / math.sqrt(2.0)
+    w = np.cross(d, u)
+    phis = np.linspace(0.0, 2 * PI, samples, endpoint=False)
+    axes = [math.cos(tilt) * d + math.sin(tilt) * (math.cos(f) * u + math.sin(f) * w) for f in phis]
+    return np.mean(axes, axis=0)
+
+
+def ladder_clock_rescaling_ratio(k: float) -> float:
+    """반례 검산: 모든 시계가 같은 인자 k로 읽히는 거리 사다리의 H0 비(항상 1).
+
+    기준점(기하 거리)에서 주기–광도 관계를 교정하고 같은 관계를 먼 은하에 쓰므로
+    log k가 절편에 흡수된다. 적색편이는 같은 시계로 잰 진동수의 비라 불변이다.
+    """
+    slope, intercept, true_mag = -3.26, -5.9, -5.9
+    periods = np.array([5.0, 10.0, 20.0, 40.0])
+    anchor_d, host_d = 0.05, 20.0  # Mpc
+    m_anchor = true_mag + slope * np.log10(periods) + 5 * np.log10(anchor_d * 1e6 / 10)
+    m_host = true_mag + slope * np.log10(periods) + 5 * np.log10(host_d * 1e6 / 10)
+    fit_b = np.mean(m_anchor - slope * np.log10(k * periods) - 5 * np.log10(anchor_d * 1e6 / 10))
+    mu_host = m_host - (slope * np.log10(k * periods) + fit_b)
+    d_inferred = 10 ** (np.mean(mu_host) / 5) * 10 / 1e6
+    return host_d / d_inferred
 
 
 def cycle_average_occupation(n: np.ndarray, axes: int = 3) -> np.ndarray:
@@ -287,14 +348,14 @@ def rows(pmns: str = "SK") -> tuple[Row, ...]:
             0.000152, 0.000152, "SM 상속"),
         Row("M_H/M_Z", "Q", lambda c: c["F"], 125.20 / 91.1876, 0.11 / 91.1876, 0.11 / 91.1876, "경험식"),
         Row("|V_us|", "Q", words("V_us"), 0.22501, 0.00068, 0.00068, "경험식", 1.0, "4u/w (G1)"),
-        Row("|V_cb|", "Q", words("V_cb"), 0.04183, 0.00079, 0.00069, "경험식", 2.0, "u sqrt(A_1) w"),
+        Row("|V_cb|", "Q", words("V_cb"), 0.04183, 0.00079, 0.00069, "경험식", 1.0, "u ε^TC w"),
         Row("|V_ub|", "Q", lambda c: ckm_triangle(c["a"])[0], 0.003732, 0.000090, 0.000085, "산출", 0.0,
             "U1 삼각형"),
         Row("delta_CKM", "Q", lambda c: ckm_triangle(c["a"])[1], 1.147, 0.026, 0.026, "경험식", 3.0,
             "U1 차수 분할 + 화살표 1 bit"),
         Row("J_CKM", "Q", lambda c: ckm_triangle(c["a"])[2], 3.12e-5, 0.13e-5, 0.12e-5, "산출", 0.0, "U1"),
         Row("m_mu/m_tau", "Q", words("m_mu/m_tau"), M_MU / M_TAU, M_MU / M_TAU * M_TAU_ERR / M_TAU,
-            M_MU / M_TAU * M_TAU_ERR / M_TAU, "경험식", 2.0, "u w (G1)"),
+            M_MU / M_TAU * M_TAU_ERR / M_TAU, "경험식", 1.0, "u ε^TC w (TC: 렙톤 0)"),
         Row("m_e/m_mu", "Q", lambda c: koide_me_over_mmu(flavour_words(c)["m_mu/m_tau"]), M_E / M_MU,
             1e-10, 1e-10, "산출", 1.0, "Koide 2/3"),
         Row("alpha_em^-1(M_Z)", "Q", alpha_em_inv, AEM_INV_MZ, AEM_INV_MZ_ERR, AEM_INV_MZ_ERR, "경험식", 3.0,
@@ -314,7 +375,7 @@ def rows(pmns: str = "SK") -> tuple[Row, ...]:
         Row("dn_s/dlnk", "M", lambda c: -2.0 / c["Ne"] ** 2, -0.0045, 0.0067, 0.0067, "경험식"),
     ) + tuple(
         Row(name, "M", (lambda clock_: lambda c: hubble_readout(c, clock_))(clock),
-            v, up, dn, "경험식", 0.5, "O1 시계: 1/cos(π/8)" if clock else "O1 나이테: 회전 불변")
+            v, up, dn, "경험식", 0.5, "O1 직접 판독: 1/cos(π/8)" if clock else "O1 나이테 추론")
         for name, clock, v, up, dn in H0_READOUTS
     )
 

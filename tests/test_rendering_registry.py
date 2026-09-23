@@ -1,10 +1,14 @@
 from __future__ import annotations
 
+import hashlib
 import itertools
+import json
 import math
 
 import numpy as np
 import pytest
+
+from test_support.paths import PREREGISTRATION_ROOT, REPO_ROOT
 
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
@@ -16,6 +20,12 @@ from examples.physics.rendering.ce_rendering_registry import (
     hubble_readout,
     calibrated_alpha_s,
     circulant_eigenvector_drift,
+    colour_winding,
+    ladder_clock_rescaling_ratio,
+    ouroboros_generator,
+    ouroboros_unitary,
+    precessing_axis_mean,
+    time_average_occupation,
     ckm_triangle,
     core,
     delta_pmns_tm1,
@@ -100,12 +110,39 @@ def test_ouroboros_cycle_renders_every_axis_evenly() -> None:
         assert cycle_average_occupation(n, 2) == pytest.approx(np.full(2, 1 / 2), abs=1e-14)
 
 
-def test_clock_readouts_see_the_tilted_axis_and_rings_do_not() -> None:
+def test_direct_readouts_see_the_tilted_axis_and_rings_do_not() -> None:
     c = core(calibrated_alpha_s()[0])
     assert hubble_readout(c, False) == pytest.approx(hubble_kms(c))
     assert hubble_readout(c, True) == pytest.approx(hubble_kms(c) / math.cos(math.pi / 8))
     assert 72.0 < hubble_readout(c, True) < 73.5
     assert bao_chi2_if_expansion_changed(c, 0.08) > bao_chi2(c["Om"]) + 10.0
+
+
+def test_uniform_clock_rescaling_cancels_inside_a_calibrated_ladder() -> None:
+    for k in (0.9, math.cos(math.pi / 8), 1.1):
+        assert ladder_clock_rescaling_ratio(k) == pytest.approx(1.0, abs=1e-12)
+
+
+def test_colour_winding_gives_the_quark_time_channel_only() -> None:
+    assert colour_winding("quark", 2, 3) == 1
+    assert colour_winding("lepton", 2, 3) == 0
+    assert colour_winding("quark", 1, 2) == 0
+
+
+def test_ouroboros_generator_conserves_probability_and_energy() -> None:
+    H = ouroboros_generator()
+    assert np.allclose(H, H.conj().T)
+    U = ouroboros_unitary(2 * math.pi / 3)
+    assert np.abs(U.conj().T @ U - np.eye(3)).max() < 1e-12
+    S = np.roll(np.eye(3), 1, axis=0)
+    assert min(np.abs(U - S).max(), np.abs(U - S.T).max()) < 1e-12
+    rng = np.random.default_rng(9)
+    psi = rng.normal(size=3) + 1j * rng.normal(size=3)
+    psi /= np.linalg.norm(psi)
+    energies = [np.vdot(ouroboros_unitary(x) @ psi, H @ (ouroboros_unitary(x) @ psi)).real for x in (0.0, 0.7, 2.5)]
+    assert max(energies) - min(energies) < 1e-12
+    assert time_average_occupation(psi) == pytest.approx(np.full(3, 1 / 3), abs=1e-12)
+    assert precessing_axis_mean() == pytest.approx(np.full(3, math.cos(math.pi / 8) / math.sqrt(3)), abs=1e-12)
 
 
 def test_cosmic_cyclic_phase_does_not_move_the_mixing() -> None:
@@ -121,11 +158,32 @@ def test_one_channel_loop_restores_the_sum_rule_alpha_em() -> None:
 
 @pytest.mark.parametrize(
     ("variant", "pmns", "expected"),
-    [("I", "SK", 0.852), ("II", "SK", 0.755), ("I", "noSK", 1.537), ("II", "noSK", 1.486)],
+    [("I", "SK", 0.830), ("II", "SK", 0.746), ("I", "noSK", 1.525), ("II", "noSK", 1.481)],
 )
 def test_joint_rmse_is_frozen(variant: str, pmns: str, expected: float) -> None:
     result = score(variant, pmns)
     assert result["N"] == 39
-    assert result["bits"] == pytest.approx(20.0)
+    assert result["bits"] == pytest.approx(18.0)
     assert result["rmse_all"] == pytest.approx(expected, abs=1.5e-3)
     assert result["k_continuous"] == (2 if variant == "I" else 1)
+
+
+def test_rendering_predictions_v1_is_frozen_and_reproduced() -> None:
+    path = PREREGISTRATION_ROOT / "rendering_predictions_v1.json"
+    manifest = json.loads(path.read_text(encoding="utf-8"))
+    body = {k: v for k, v in manifest.items() if k != "manifest_sha256"}
+    canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    assert hashlib.sha256(canonical).hexdigest() == manifest["manifest_sha256"]
+    assert manifest["manifest_sha256"] == "e02bf7f66b2b0839d7a8424863eb852e88fd75676ebf77ccb4ac3a5481d68737"
+    registry = REPO_ROOT / manifest["model"]["registry_path"]
+    assert hashlib.sha256(registry.read_bytes()).hexdigest() == manifest["model"]["registry_sha256"], (
+        "registry changed after freeze: create rendering_predictions_v2.json and keep v1")
+    a = calibrated_alpha_s()[0]
+    c = core(a)
+    values = {p["id"]: p["value"] for p in manifest["predictions"]}
+    assert values["P01"] == pytest.approx(pmns_s2(c, 3), rel=1e-5)
+    assert values["P02"] == pytest.approx(delta_pmns_tm1(c), rel=1e-5)
+    assert values["P03"] == pytest.approx(pmns_s2(c, 2), rel=1e-5)
+    assert values["P06"] == pytest.approx(ckm_triangle(a)[0], rel=1e-5)
+    assert values["P07"] == pytest.approx(hubble_readout(c, True), rel=1e-5)
+    assert values["P08"] == pytest.approx(hubble_readout(c, False), rel=1e-5)

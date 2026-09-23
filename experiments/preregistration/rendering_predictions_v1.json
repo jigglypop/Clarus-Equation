@@ -1,0 +1,147 @@
+{
+ "schema_version": 1,
+ "manifest_id": "ce-rendering-predictions-v1",
+ "manifest_hash_policy": "sha256-canonical-json-excluding-manifest_sha256",
+ "manifest_sha256": "e02bf7f66b2b0839d7a8424863eb852e88fd75676ebf77ccb4ac3a5481d68737",
+ "domain": "joint_quantum_macro",
+ "status": "frozen_predictions_pre_measurement",
+ "freeze": {
+  "freeze_date": "2026-09-23",
+  "timezone": "Asia/Seoul",
+  "amendment_policy": "Never edit this file. A model change that moves any value requires a v2 manifest that keeps v1 and explains every delta."
+ },
+ "model": {
+  "registry_path": "examples/physics/rendering/ce_rendering_registry.py",
+  "registry_sha256": "191ef19eeef4acc57de785bcefdd1a59803bfc6b542daa79b52a4db01eef5b3b",
+  "chapter": "paper/07_확률차원_검증기록/43_렌더링_생존식과_양자_거시_공동_RMSE.md",
+  "alpha_s_calibration": "MSbar s_Z^2 = 0.23129 (PDG 2024)",
+  "continuous_fitted_parameters": [
+   "alpha_s (from s_Z^2)",
+   "BAO ruler A"
+  ],
+  "post_hoc_choice_bits": 18.0,
+  "development_score": {
+   "joint_rmse_variant_I_SK": 0.83,
+   "rows": 39
+  },
+  "status_note": "Rules were built after seeing development data; only measurements released after freeze_date count as holdout."
+ },
+ "predictions": [
+  {
+   "id": "P01",
+   "observable": "sin^2 theta_23 (PMNS, normal ordering)",
+   "value": 0.455551,
+   "rule": "S2: last-rendered generation is 'me' -> lower octant",
+   "decisive_experiments": [
+    "DUNE",
+    "Hyper-Kamiokande",
+    "IceCube-Upgrade"
+   ],
+   "kill_if": "upper octant (s23^2 > 0.5) established at >= 3 sigma, or s23^2 excluded at >= 3 sigma"
+  },
+  {
+   "id": "P02",
+   "observable": "delta_CP (PMNS) [deg]",
+   "value": 258.76,
+   "rule": "T1 (TM1: |U_mu1| = |U_tau1|) + M1 (lepton circulation opposite to quarks)",
+   "decisive_experiments": [
+    "DUNE",
+    "Hyper-Kamiokande"
+   ],
+   "kill_if": "value excluded at >= 3 sigma, or sin(delta) > 0 established at >= 3 sigma"
+  },
+  {
+   "id": "P03",
+   "observable": "sin^2 theta_12 (PMNS)",
+   "value": 0.318517,
+   "rule": "S2 distinction channels (= TM1 to first order)",
+   "decisive_experiments": [
+    "JUNO"
+   ],
+   "kill_if": "value excluded at >= 3 sigma by a sub-percent measurement"
+  },
+  {
+   "id": "P04",
+   "observable": "sin^2 theta_13 (PMNS)",
+   "value": 0.0222244,
+   "rule": "S2: delta/8",
+   "decisive_experiments": [
+    "JUNO",
+    "Daya Bay legacy combinations"
+   ],
+   "kill_if": "value excluded at >= 3 sigma"
+  },
+  {
+   "id": "P05",
+   "observable": "CKM unitarity triangle (beta, gamma, alpha) [deg]",
+   "value": [
+    22.5,
+    67.5,
+    90.0
+   ],
+   "rule": "U1 grade partition 1:3:4 of pi",
+   "decisive_experiments": [
+    "LHCb Upgrade II",
+    "Belle II"
+   ],
+   "kill_if": "gamma or alpha excluded at >= 3 sigma"
+  },
+  {
+   "id": "P06",
+   "observable": "|V_ub|",
+   "value": 0.00367594,
+   "rule": "U1 + |V_us|, |V_cb| assembly",
+   "decisive_experiments": [
+    "Belle II",
+    "lattice QCD form factors"
+   ],
+   "kill_if": "value excluded at >= 3 sigma"
+  },
+  {
+   "id": "P07",
+   "observable": "H0 from direct present-epoch readouts (ladders, time-delay lenses, standard sirens) [km/s/Mpc]",
+   "value": 72.674,
+   "rule": "O1: H_CE / cos(pi/8)",
+   "decisive_experiments": [
+    "TDCOSMO follow-ups",
+    "LIGO-Virgo-KAGRA bright sirens",
+    "JWST ladders"
+   ],
+   "kill_if": "a direct readout excluded at >= 3 sigma"
+  },
+  {
+   "id": "P08",
+   "observable": "H0 from early-record inference (CMB-only) [km/s/Mpc]",
+   "value": 67.142,
+   "rule": "O1: rings are rotation invariant; H_CE from horizon readout",
+   "decisive_experiments": [
+    "Simons Observatory",
+    "CMB-S4"
+   ],
+   "kill_if": "CMB-only H0 excluded at >= 3 sigma"
+  },
+  {
+   "id": "P09",
+   "observable": "tensor-to-scalar ratio r",
+   "value": 0.00366762,
+   "rule": "r = 12/N_e^2, N_e = 18 D",
+   "decisive_experiments": [
+    "LiteBIRD",
+    "CMB-S4",
+    "Simons Observatory"
+   ],
+   "kill_if": "r < 0.002 at 95% CL, or r > 0.006 detected"
+  },
+  {
+   "id": "P10",
+   "observable": "scalar spectral index n_s",
+   "value": 0.965035,
+   "rule": "n_s = 1 - 2/N_e",
+   "decisive_experiments": [
+    "Simons Observatory",
+    "CMB-S4"
+   ],
+   "kill_if": "value excluded at >= 3 sigma"
+  }
+ ]
+}
