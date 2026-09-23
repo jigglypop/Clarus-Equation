@@ -29,6 +29,7 @@ from examples.physics.rendering import ce_rendering_w_branch as WB
 from examples.physics.rendering import ce_rendering_vacuum_tilt as VT
 from examples.physics.rendering import ce_rendering_vacuum_harmonic as VH
 from examples.physics.rendering import ce_rendering_mimetic_vacuum as MV
+from examples.physics.rendering import ce_rendering_light_limit as LL
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
     alpha_em_inv,
@@ -568,3 +569,20 @@ def test_mimetic_clock_action_conserves_energy_and_fixes_the_sign() -> None:
     assert a["rmse_all"] > 1.2                                      # primary reading fails
     assert -1.0 < MV.w_eff(m, 0.0) < -0.99
     assert MV.score("b", "free", rows_from="full")["rmse_all"] > 0.896   # mixed on 43 rows: kept as competing branch
+
+
+TIME_AXIS_TILT_VALUE = math.pi / 8
+
+
+def test_light_speed_as_rendering_limit_fixes_the_tilt_and_bounds_all_signals() -> None:
+    assert LL.bisector_tilt() == pytest.approx(TIME_AXIS_TILT_VALUE, abs=1e-15)   # O1 = half the light-cone angle
+    c = core(calibrated_alpha_s()[0])
+    sp = LL.spiral_equality_test(c)
+    assert abs(sp["tan_psi_spiral"] / sp["tan_pi8"] - 1) < 5e-3
+    assert sp["theta_pull_if_equal"] > 5                                          # not an exact equality
+    s = LL.signal_speeds(c)
+    assert s["W2 min(1+w)"] >= 0 and s["W3 min dust"] > -1e-20
+    assert s["photon-baryon sound at z*"] < s["radiation limit 1/sqrt3"] < 1.0
+    assert abs(s["graviton"] - 1.0) < 1e-4
+    hz = LL.rendering_horizon(c)
+    assert 122.0 < hz["log10_entropy"] < 123.0

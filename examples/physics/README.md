@@ -37,6 +37,7 @@
 | 렌더링 | `rendering/ce_rendering_vacuum_tilt.py` | [영감] W2 진공 판독 1+ξ²cos(H_Λt/2): 판본 V 0.909, CMB–BAO +2.17σ, w(0)=−0.989 (43장 §43.26, v9) |
 | 렌더링 | `rendering/ce_rendering_vacuum_harmonic.py` | W2 = 복소 척도 위상의 최저 실수 조화(k=1 → ν=1/2), 부호 1 bit, 비앙키 틈 기록 (43장 §43.27) |
 | 렌더링 | `rendering/ce_rendering_mimetic_vacuum.py` | W3 모방 시계 작용: 진공→먼지 확정, 비앙키 성립, 부호=에너지 양수; 판본 V 0.920, 43행 혼재 → 경쟁 판본 (43장 §43.28) |
+| 렌더링 | `rendering/ce_rendering_light_limit.py` | c = 렌더링 한계: O1 = 빛원뿔 π/4의 이등분, 모든 신호 ≤ c, 렌더링 지평선의 온도·엔트로피 (43장 §43.29) |
 
 `regge_tent_transfer.json`은 해당 코드의 SHA-256과 적용범위를 검사하는 고정 fixture다.
 새 실행 결과를 기존 검증 영수증에 자동으로 덮어쓰지 않는다.
