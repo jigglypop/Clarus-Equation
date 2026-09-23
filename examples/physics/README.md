@@ -44,6 +44,7 @@
 | 렌더링 | `rendering/ce_rendering_closure.py` | 마감: 기록 완성 = 란다우어(중복도 2는 GHZ로 기각), 지평선 정수 통로 기각, 영감 4.1 bit 장부 (43장 §43.33) |
 | 렌더링 | `rendering/ce_rendering_reverse_derivations.py` | 영감 역유도: k=Ω_m = 확률 무게 평균, W2 부호 = 널 에너지, U1 = O1 이등분 직각삼각형, R-Pl = 4×⑤ (43장 §43.34) |
 | 렌더링 | `rendering/ce_rendering_axiom_proofs.py` | 공리 증명 검산: QG1(HJW+아핀 ⇒ Tr ρT), C6(비르팅거), L(이그나토프스키+허수 빠르기), 이등분(minimax) (43장 §43.35) |
+| 렌더링 | `rendering/ce_rendering_open_predictions.py` | 정리 E(나이테 = 무게 평균 1차), 미증명 항목의 예측 P26 사이렌 H0·P27 κ_λ·P28 M_H/M_Z (43장 §43.36, v12) |
 
 `regge_tent_transfer.json`은 해당 코드의 SHA-256과 적용범위를 검사하는 고정 fixture다.
 새 실행 결과를 기존 검증 영수증에 자동으로 덮어쓰지 않는다.

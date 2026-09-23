@@ -36,6 +36,7 @@ from examples.physics.rendering import ce_rendering_gradient as GD
 from examples.physics.rendering import ce_rendering_closure as CL
 from examples.physics.rendering import ce_rendering_reverse_derivations as RD
 from examples.physics.rendering import ce_rendering_axiom_proofs as AP
+from examples.physics.rendering import ce_rendering_open_predictions as OP
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
     alpha_em_inv,
@@ -678,3 +679,26 @@ def test_axiom_proofs_qg1_c6_light_limit_and_bisector() -> None:
     assert w["min_ratio_random"] > 1.0 == w["ratio_cos"]         # Theorem B: cos is the unique minimiser
     assert abs(AP.imaginary_rapidity_speed(math.pi / 4)) == pytest.approx(1.0)   # Lemma C: limit at pi/4
     assert AP.minimax_bisector() == pytest.approx(math.pi / 8, abs=1e-9)         # Theorem D
+
+
+def test_ring_rule_is_first_order_weight_response_and_open_items_are_predictions() -> None:
+    c = core(calibrated_alpha_s()[0])
+    e = OP.ring_first_order_error(c)
+    assert e["max_second_order_gap"] < 1e-3
+    p = OP.predictions(c)
+    assert p["P26_siren_H0"] == pytest.approx(73.356, abs=1e-2) and p["P26_if_rule_wrong"] == pytest.approx(67.772, abs=1e-2)
+    assert p["P28_MH_over_MZ"] == pytest.approx(c["F"])
+
+
+def test_rendering_predictions_v12_is_frozen() -> None:
+    v11 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v11.json").read_text(encoding="utf-8"))
+    v12 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v12.json").read_text(encoding="utf-8"))
+    assert v12["supersedes_manifest_id"] == v11["manifest_id"]
+    body = {k: v for k, v in v12.items() if k != "manifest_sha256"}
+    canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    assert hashlib.sha256(canonical).hexdigest() == v12["manifest_sha256"]
+    for key, rel in v12["model"]["files"].items():
+        assert hashlib.sha256((REPO_ROOT / rel).read_bytes()).hexdigest() == v12["model"]["sha256"][key], (
+            f"{key} changed after v12 freeze: create v13 and keep earlier manifests")
+    ids = {q["id"] for q in v12["predictions"]}
+    assert {"P26", "P27", "P28"} <= ids and len(ids) == 28
