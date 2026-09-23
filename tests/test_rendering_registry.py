@@ -49,6 +49,8 @@ from examples.physics.rendering import ce_rendering_o1_map as OM
 from examples.physics.rendering import ce_rendering_spread as SP2
 from examples.physics.rendering import ce_rendering_phase_lock as PLK
 from examples.physics.rendering import ce_rendering_causal_lock as CLK
+from examples.physics.rendering import ce_rendering_lock_history as LH
+from examples.physics.rendering import ce_rendering_thermal_time as TT
 from examples.physics.rendering import ce_rendering_open_predictions as OP
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
@@ -897,6 +899,24 @@ def test_causal_lock_half_of_half_of_right_angle() -> None:
     assert one_way["lock"] == pytest.approx(math.pi / 8, abs=1e-5) and abs(one_way["past_drift"]) < 1e-9
     mutual = CLK.two_phase_lock(0.2, steps=100000)
     assert mutual["lock"] < 0.3 and abs(mutual["past_drift"]) > 1                    # back-coupling drags records
+
+
+def test_lock_history_relaxation_variants_fail_and_phase_is_still_turning() -> None:
+    ref = LH.score("ref")
+    assert ref["V39"] == pytest.approx(0.834, abs=1e-3) and not ref["kill"]
+    for v in ("V-a", "V-b", "V-c"):
+        assert LH.score(v)["kill"]                                                   # all relaxation histories fail
+    assert LH.score("V-a")["theta_today"] < math.pi / 8                             # relaxation too slow to reach pi/8
+
+
+def test_thermal_time_final_horizon_sets_the_rotation_and_cycle() -> None:
+    ds = TT.score("V-dS")
+    assert not ds["kill"] and ds["V39"] == pytest.approx(0.8407, abs=1e-3)       # one phase history for O1 + G1m
+    eh = TT.score("V-EH")
+    assert eh["kill"] and eh["h0_pulls"]["H0 SH0ES"] > 10                       # instantaneous horizon fails
+    cy = TT.cycle_timetable()
+    assert cy["restart_Gyr"] == pytest.approx(4 * cy["blur_Gyr"]) and cy["half_point_Gyr"] < cy["today_Gyr"]
+    assert TT.exact_half_now()["Om_star"] == pytest.approx(0.3163, abs=2e-4)
 
 
 def test_rendering_predictions_v13_is_frozen() -> None:

@@ -219,7 +219,9 @@ $$s_{13}^2=\frac{\delta}{8},\qquad s_{12}^2=\frac13\left(1-\frac{2\delta}{8}\rig
 | 무리 안의 차이 | §43.49 | 이른 기록 무리의 CMB–BAO 차이(G1m으로 재현), 교정원 나이 추측 기각, 중력 판독 분기 |
 | 위상 잠금 | §43.50 | 자기재귀 위상 잠금: C′·D′·IR의 동역학적 기원, 진공 점유율 적재율 분기 |
 | 인과 잠금 | §43.51 | 90°의 반의 반: 무차별 + 인과율로 π/8, 허블 판독 방향의 유도, 한 방향 결합 |
-| 재현 | §43.52 | 구현 경로와 한계 |
+| 잠금의 역사 | §43.52 | 인과 잠금으로의 이완 판본 기각: 위상은 돌고 있고 지금은 절반 지점을 지나는 중 |
+| 열적 시간과 순환 | §43.53 | 인과가 최종 지평선의 온도로 쌓임: 회전 속도의 유도, 순환 시각표, 순간 지평선 판본 기각 |
+| 재현 | §43.54 | 구현 경로와 한계 |
 
 ## 43.11 음향 각도 반례와 판본 III — 사전 등록 v2
 
@@ -1411,9 +1413,94 @@ $$\dot a=\omega+k_{\rm back}\sin2(b-a),\qquad \dot b=\omega+\Delta-\tfrac{k_{\rm
 
 구현은 [인과 잠금 모듈](../../examples/physics/rendering/ce_rendering_causal_lock.py)이다.
 
-## 43.52 재현과 한계
+## 43.52 잠금의 역사 — 위상은 멈추지 않고 돌며, 지금 절반 지점을 지난다
 
-구현은 [렌더링 레지스트리](../../examples/physics/rendering/ce_rendering_registry.py), 고정 검사는 `tests/test_rendering_registry.py`(①·③·S2·T1·U1·M1·O1·TC·C1·순환 평균·사다리 상쇄·순환 위상과 팽창 변화의 반례·⑤·$\theta^*$ 반례·판본 III·부스트 반례·R-Pl 전이·유클리드 회전·BAO 눈금 예측·순환 기하·나선 긴장·복소 척도인자·S8·두 원의 구분·사건 척도·중성미자 질량·게이지군과 한 세대·세 세대와 선형 중력·대칭 깨짐과 전하 양자화·급팽창 게이지 수·중성미자 장부·암흑에너지 W1 반례·진공 기울기 W2·최저 조화 규칙·모방 시계 작용 W3·빛의 한계와 렌더링 지평선·확률 무게 중력·빛원뿔 기록 갱신·CMB–BAO 그라데이션·마감 판정·가설 역유도·공리 증명·열린 예측·사전 등록 v1–v12 동결과 공동 RMSE 고정, 초신성 보류 시험·FD θ*·W3 성장 보정·자료 판본 민감도)다. 필수 테스트 목록에 추가했고 전체 344개 검사를 실행했다(2026-09-23). §43.37–43.40의 검사는 각 절에 적은 별도 모듈에 있고, §43.35 정리 C′·D′의 재증명 검산은 [복소 부스트 모듈](../../examples/physics/rendering/ce_rendering_complex_boost.py), §43.41–43.44의 보강은 [E4 대각합 모듈](../../examples/physics/rendering/ce_rendering_e4_trace.py), [간헐 렌더링 모듈](../../examples/physics/rendering/ce_rendering_intermittent.py), [경계 모듈](../../examples/physics/rendering/ce_rendering_boundary.py), [계단 모듈](../../examples/physics/rendering/ce_rendering_staircase.py), [Bool 사전 모듈](../../examples/physics/rendering/ce_rendering_bool.py)에 있고, §43.45의 점검은 [남은 항목 모듈](../../examples/physics/rendering/ce_rendering_open_checks.py), §43.46의 감사는 [중성미자 감사 모듈](../../examples/physics/rendering/ce_rendering_nu_audit.py), §43.47의 장부와 기준 비교는 [장부 모듈](../../examples/physics/rendering/ce_rendering_ledger.py), §43.48의 관측 사상은 [관측 사상 모듈](../../examples/physics/rendering/ce_rendering_o1_map.py), §43.49의 추측 검증은 [무리 안 차이 모듈](../../examples/physics/rendering/ce_rendering_spread.py), §43.50은 [위상 잠금 모듈](../../examples/physics/rendering/ce_rendering_phase_lock.py), §43.51은 [인과 잠금 모듈](../../examples/physics/rendering/ce_rendering_causal_lock.py)에 있다. 실행:
+**문제.** 채택 규칙에는 작은 내부 불일치가 있다. 오늘의 직접 판독(O1)은 고정 $\pi/8=0.3927$을 쓰고, BAO 그라데이션(G1m)은 접선–현 $\psi/2=H_\Lambda t/2$를 쓴다. 후자는 오늘 0.398이다. 인과 잠금(§43.51)의 하나의 기울기 역사 $\theta(t)$로 둘을 함께 채점했다.
+
+**사전 규칙.** 연속 적합은 없고, 시간 척도는 $u=H_\Lambda t$ 하나이며, 판본 선택에 1 bit를 센다.
+- V-a: $d\theta/du=\tfrac12(1-\sqrt2\sin2\theta)$. 시작 속도가 접선–현과 같고, 잠금점은 무차별이 정한 $\pi/8$이다.
+- V-b: 결합을 $K=H_\Lambda$로 둔다.
+- V-c: 탄생부터 잠겨 있다.
+
+kill은 판본 V > 0.909 또는 $H_0$ 행 $|{\rm pull}|>3$이다.
+
+| 판본 | 오늘 $\theta$ | BAO 시기 $\theta$ | 직접 판독 | SH0ES | BAO $\chi^2$ | 판본 V | 판정 |
+|---|---|---|---|---|---|---|---|
+| 채택(O1 $\pi/8$ + G1m $\psi/2$) | 0.3927 | 0.081–0.298 | 73.36 | $+0.22\sigma$ | 10.99 | **0.834** | 기준 |
+| V-a 이완 | 0.2416 | 0.073–0.203 | 69.80 | $-3.91\sigma$ | 11.71 | 1.023 | 기각 |
+| V-b 이완($K=H_\Lambda$) | 0.1951 | 0.053–0.159 | 69.08 | $-4.74\sigma$ | 13.15 | 1.133 | 기각 |
+| V-c 처음부터 잠김 | 0.3927 | 0.3927 | 73.36 | $+0.22\sigma$ | 51.37 | 1.316 | 기각 |
+
+**판정과 읽기.**
+- 잠금점으로 이완하는 역사는 오늘까지 $\pi/8$에 닿지 못한다. 되당김이 일찍 걸려 느려지기 때문이다.
+- 처음부터 잠긴 역사는 BAO가 요구하는 “과거로 갈수록 작은 기울기”를 주지 못한다.
+- 자료가 요구하는 기울기는 시간에 거의 비례해 자란다($z=2.3$에서 0.08, $z=0.3$에서 0.30, 오늘 약 0.39). 곧 과거와 현재의 위상차는 **잠겨 멈춘 것이 아니라 아직 돌고 있다**(우로보로스의 회전, 접선–현).
+- 인과 잠금의 $\pi/8$은 멈춘 자리가 아니다. 돌고 있는 위상이 **지금 막 지나가는 절반 지점**, 곧 현재가 과거에 의해 딱 절반 정해지는 순간이다.
+- O1(0.3927)과 G1m의 오늘 값(0.398)의 1.4% 차이는 우리가 그 지점을 막 지나친 정도로 읽힌다. 오늘의 실제 위상으로 직접 판독을 계산하면 73.52이며, 등록값 73.36과 현재 정밀도로 구별되지 않는다.
+- 위상이 계속 돈다면 $\pi/4$에서 흐려짐이 온다(§43.42, 약 270억 년). 잠금으로 멈춘다면 흐려짐은 없다. 자료는 전자를 가리킨다.
+- V-a의 직접 판독 69.80은 CCHP 결합값(69.96)과 거의 같다. 그러나 미리 정한 기준(SH0ES $3\sigma$)으로 기각했으므로 채택하지 않는다.
+
+구현은 [잠금 역사 모듈](../../examples/physics/rendering/ce_rendering_lock_history.py)이다.
+
+## 43.53 열적 시간과 우주 순환 — 인과가 지평선의 온도로 쌓이다가 흐려지고 다시 시작한다
+
+**가설(사용자).** “우주가 점점 인과율이 쌓이다가 어느 순간 다시 흐려져 버리고 다시 시작되는 우주 순환.”
+
+**남은 질문.** §43.52에서 위상은 돌고 있다는 결론이 나왔다. 그 속도 $d\theta/dt=H_\Lambda/2$는 원의 기하(접선–현, C3)와 “실제 시간 = 유클리드 각”이라는 동일시(C2)에서 가져온 것이었다.
+
+**[전제] TT — 열적 시간.** 기록 위상 $\Phi$는 렌더링 지평선 상태의 모듈러 흐름으로 쌓인다(Connes–Rovelli의 열적 시간 가설을 렌더링 지평선에 적용한다).
+
+$$\frac{d\Phi}{dt}=\frac{2\pi k_BT_H}{\hbar}.$$
+
+**[유도] 회전 속도.**
+- 드 시터 지평선의 기븐스–호킹 온도 $T_H=\hbar H_\Lambda/2\pi k_B$를 넣으면 $d\Phi/dt=H_\Lambda$다.
+- H1(§43.51)의 둘째 반(진폭 = 확률 위상의 절반)으로 $d\theta/dt=H_\Lambda/2$가 된다. 원의 접선–현 정리의 ½과 진폭–확률의 ½이 같은 것이다.
+- C2의 동일시는 “인과는 최종 지평선의 온도로 쌓인다”는 물리적 전제로 바뀐다.
+
+**사전 규칙.** 판본은 셋이고, kill은 판본 V > 0.909 또는 $H_0$ 행 $|{\rm pull}|>3$이다.
+- V-dS: $T_H$ = 최종 지평선. 오늘의 직접 판독도 실제 위상 $\Phi_0/2$로 계산하는 완전 통일판이다.
+- V-EH: $T_H$ = 지금의 사건 지평선, 곧 $d\Phi/dt=c/r_e(t)$.
+- V-AH: 겉보기 지평선. 탄생에서 발산하므로 구성상 제외한다.
+
+| 판본 | 오늘 $\Phi$ | 오늘 $\theta$ | 직접 판독 | SH0ES | BAO $\chi^2$ | 판본 V | 판정 |
+|---|---|---|---|---|---|---|---|
+| 채택(O1 $\pi/8$ + G1m) | — | 0.3927 | 73.36 | $+0.22\sigma$ | 10.99 | 0.834 | 기준 |
+| V-dS(최종 지평선, 통일) | 0.796 | 0.398 | 73.52 | $+0.41\sigma$ | 10.99 | **0.841** | 통과 |
+| V-EH(지금의 사건 지평선) | 1.349 | 0.675 | 86.78 | $+15.8\sigma$ | 82.20 | 3.324 | 기각 |
+
+- 지금의 사건 지평선은 16.53 Gly, 최종 지평선은 17.34 Gly다. 둘이 5%밖에 다르지 않은데도, 탄생 이후 쌓인 위상은 크게 달라진다. 과거의 사건 지평선이 훨씬 작았기 때문이다.
+- 따라서 인과가 쌓이는 속도는 지금의 지평선이 아니라 **순환 전체의 최종 경계(렌더링 지평선, §43.29)의 온도**가 정한다.
+- V-dS는 오늘의 판독과 BAO 기록의 역사를 하나의 위상으로 설명한다. O1의 별도 고정값 $\pi/8$ 없이 $\Delta\chi^2=+0.4$만 늘어난다. 대신 “허블 기울기 = CKM의 $\beta$”는 정확한 등식이 아니라 1.4% 안의 일치가 된다. 두 판본(O1 고정, V-dS 통일)은 현재 정밀도로 가를 수 없다(73.36 대 73.52). 등록값은 O1 고정판 그대로다.
+
+**[산출] 순환의 시각표(V-dS).**
+
+| 단계 | 기록 위상 $\Phi$ | 시각 |
+|---|---|---|
+| 탄생 | 0 | 0 |
+| 절반 지점(현재가 과거에 절반 정해짐) | $\pi/4$ | 136.2억 년 |
+| 오늘 | 0.796 | 138.1억 년 |
+| 흐려짐 시작 | $\pi/2$ | 272.4억 년 |
+| 다시 생겨남 | $3\pi/2$ | 817.3억 년 |
+| 재시작 | $2\pi$ | 1089.7억 년 |
+
+- 지평선 온도는 $2.2\times10^{-30}$ K다.
+- 한 순환은 정확히 지평선의 열적 주기 $2\pi/H_\Lambda$ 한 번이다. §43.14에서 “실제 시간의 반복이 아니라 온도로 나타난다”고 적었던 유클리드 주기는, 이 전제 아래에서 인과가 쌓였다가 흐려지고 다시 시작되는 순환의 길이가 된다.
+
+**[읽기] 지금이 정확히 절반 지점인가.** $H_\Lambda t_0=\pi/4$이려면 ΛCDM에서 $\Omega_m=0.3163$이어야 한다.
+- Planck 2018($0.3153\pm0.0073$)과는 $0.14\sigma$다.
+- DESI DR2 + CMB($0.3027\pm0.0036$)와는 $3.78\sigma$, DESI BAO 단독과는 $2.19\sigma$다.
+- CE 코어는 0.308이다.
+- CE 안에서 정확한 등식은 §43.14에서 기각되었으므로($\theta^*$) 읽기로 둔다. 다만 DESI의 낮은 $\Omega_m$은 G1m 투영을 ΛCDM으로 읽은 결과이므로(§43.49) 이 비교 자체가 판독의 틀에 의존한다.
+
+**판정.**
+- 회전 속도 $H_\Lambda/2$는 열적 시간(TT)과 진폭의 절반(H1)에서 나온다.
+- 속도를 정하는 온도는 최종 지평선의 것이어야 하며, 순간 지평선 판본은 $+15.8\sigma$로 기각된다.
+- 사용자의 순환(인과가 쌓임 → 흐려짐 → 재시작)은 지평선의 열적 주기 하나로 닫힌다. TT는 새 공리로 장부에 올린다.
+- 예측값은 바뀌지 않는다. 구현은 [열적 시간 모듈](../../examples/physics/rendering/ce_rendering_thermal_time.py)이다.
+
+## 43.54 재현과 한계
+
+구현은 [렌더링 레지스트리](../../examples/physics/rendering/ce_rendering_registry.py), 고정 검사는 `tests/test_rendering_registry.py`(①·③·S2·T1·U1·M1·O1·TC·C1·순환 평균·사다리 상쇄·순환 위상과 팽창 변화의 반례·⑤·$\theta^*$ 반례·판본 III·부스트 반례·R-Pl 전이·유클리드 회전·BAO 눈금 예측·순환 기하·나선 긴장·복소 척도인자·S8·두 원의 구분·사건 척도·중성미자 질량·게이지군과 한 세대·세 세대와 선형 중력·대칭 깨짐과 전하 양자화·급팽창 게이지 수·중성미자 장부·암흑에너지 W1 반례·진공 기울기 W2·최저 조화 규칙·모방 시계 작용 W3·빛의 한계와 렌더링 지평선·확률 무게 중력·빛원뿔 기록 갱신·CMB–BAO 그라데이션·마감 판정·가설 역유도·공리 증명·열린 예측·사전 등록 v1–v12 동결과 공동 RMSE 고정, 초신성 보류 시험·FD θ*·W3 성장 보정·자료 판본 민감도)다. 필수 테스트 목록에 추가했고 전체 344개 검사를 실행했다(2026-09-23). §43.37–43.40의 검사는 각 절에 적은 별도 모듈에 있고, §43.35 정리 C′·D′의 재증명 검산은 [복소 부스트 모듈](../../examples/physics/rendering/ce_rendering_complex_boost.py), §43.41–43.44의 보강은 [E4 대각합 모듈](../../examples/physics/rendering/ce_rendering_e4_trace.py), [간헐 렌더링 모듈](../../examples/physics/rendering/ce_rendering_intermittent.py), [경계 모듈](../../examples/physics/rendering/ce_rendering_boundary.py), [계단 모듈](../../examples/physics/rendering/ce_rendering_staircase.py), [Bool 사전 모듈](../../examples/physics/rendering/ce_rendering_bool.py)에 있고, §43.45의 점검은 [남은 항목 모듈](../../examples/physics/rendering/ce_rendering_open_checks.py), §43.46의 감사는 [중성미자 감사 모듈](../../examples/physics/rendering/ce_rendering_nu_audit.py), §43.47의 장부와 기준 비교는 [장부 모듈](../../examples/physics/rendering/ce_rendering_ledger.py), §43.48의 관측 사상은 [관측 사상 모듈](../../examples/physics/rendering/ce_rendering_o1_map.py), §43.49의 추측 검증은 [무리 안 차이 모듈](../../examples/physics/rendering/ce_rendering_spread.py), §43.50은 [위상 잠금 모듈](../../examples/physics/rendering/ce_rendering_phase_lock.py), §43.51은 [인과 잠금 모듈](../../examples/physics/rendering/ce_rendering_causal_lock.py), §43.52는 [잠금 역사 모듈](../../examples/physics/rendering/ce_rendering_lock_history.py), §43.53은 [열적 시간 모듈](../../examples/physics/rendering/ce_rendering_thermal_time.py)에 있다. 실행:
 
 ```powershell
 python -B -m examples.physics.rendering.ce_rendering_registry
