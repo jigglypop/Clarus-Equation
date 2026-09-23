@@ -80,6 +80,7 @@ from examples.physics.rendering import ce_rendering_born_doubling as BDB
 from examples.physics.rendering import ce_rendering_dictionary as DIC
 from examples.physics.rendering import ce_rendering_modular as MOD
 from examples.physics.rendering import ce_rendering_joint_render as JRN
+from examples.physics.rendering import ce_rendering_nu_lens as NUL
 from examples.physics.rendering import ce_rendering_open_predictions as OP
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
@@ -1451,6 +1452,13 @@ def test_joint_rendering_cancels_differential_interferometer_noise() -> None:
     assert a[1.0] < 1e-9 and s["CE_within_all_bounds"] and s["P42_null_at_gquest"]
     assert s["residual_by_mismatch"][1e-3] < 1e-6
     assert "Holometer (IR cutoff)" in s["VZ_like_excluded"]
+
+
+def test_p41_with_cmb_lensing_ce_readout_allows_minimal_mass() -> None:
+    assert NUL.sigma8(0.120, 0.68, 0.06, math.log(21.0)) == pytest.approx(0.8148, abs=0.001)
+    q = NUL.quick_check()
+    assert q["std"]["d_chi2_59"] > 2 and q["CE"]["d_chi2_59"] < 1                    # 59 meV inside 1 sigma (CE)
+    assert q["CE"]["chi2_0"] < q["std"]["chi2_0"]
 
 
 def test_one_coin_one_event_unique_crossing_at_mz() -> None:
