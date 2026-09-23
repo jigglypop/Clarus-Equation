@@ -8,7 +8,7 @@
 
 **현재 판정의 종합은 §43.56(마감 종합, 2026-09-23)이다.** 아래는 v12 시점의 점수 판정이며 그대로 둔다.
 
-**점수 판정(§43.24–43.40; 사전 등록은 현재 v16, 등록 36개 중 독립 예측 34개 — P20은 §43.18 정정, P29·P30은 §43.45, P31–P33은 §43.53, P34는 §43.55, P35·P36은 §43.59).** 입력 $\alpha_s$ 하나, 중성미자 장부 정정, 진공 기울기 W2(+1.6 bit), CMB–BAO 그라데이션 G1m(+2 bit)을 포함한다.
+**점수 판정(§43.24–43.40; 사전 등록은 현재 v18, 등록 37개 중 독립 예측 35개 — P20은 §43.18 정정, P29·P30은 §43.45, P31–P33은 §43.53, P34는 §43.55, P35·P36은 §43.59, P37은 §43.62).** 입력 $\alpha_s$ 하나, 중성미자 장부 정정, 진공 기울기 W2(+1.6 bit), CMB–BAO 그라데이션 G1m(+2 bit)을 포함한다.
 
 | 판본 | 39행 | 43행(+렌즈·중성미자) | 연속 적합 | 남는 큰 잔차 |
 |---|---|---|---|---|
@@ -230,7 +230,9 @@ $$s_{13}^2=\frac{\delta}{8},\qquad s_{12}^2=\frac13\left(1-\frac{2\delta}{8}\rig
 | 경계 인자 | §43.58 | 경계 한 고리 인자는 선형, m_μ/m_τ = (ŝ²/4)w, 렙톤 규칙의 α_s와 고정점의 3.75σ 긴장 |
 | Higgs와 우주 | §43.59 | M_H/M_Z − 1 = Ω_DM/Ω_Λ: Higgs 질량이 우주 물질 비율을 예측 |
 | 분별의 동전 | §43.60 | E4 닻에서 Z는 “나”를 순수 분별(γ5)로 본다, 동전은 운반자의 결합(MS-bar)이지 붕괴 기록(유효각)이 아니다 |
-| 재현 | §43.61 | 구현 경로와 한계 |
+| SH0ES 대 CCHP | §43.61 | 현재 막대 사다리의 해부: 사다리 사이 물리적 차이 ≤ 0.12, H0DN 독립 경로 73.18, CCHP 70.39 → 맞춘 분석 72.66 |
+| 한 동전, 한 사건 | §43.62 | 흐름은 E4 곡선을 정확히 한 번 가로지른다(μ* = 91.6 GeV), E5 = “μ* = M_Z” 하나의 일치, 사전 등록 v18(P37) |
+| 재현 | §43.63 | 구현 경로와 한계 |
 
 ## 43.11 음향 각도 반례와 판본 III — 사전 등록 v2
 
@@ -1689,11 +1691,11 @@ $$r=\tfrac12\Big[1-\frac{\alpha_s}{2\pi}\Big(1+\frac{\delta}{2\pi}\Big)\Big],\qq
 7. BMV 중력 얽힘(P23)
 
 ### 남은 과제
-- E4의 동역학(왜 사건 척도 $M_Z$에서 무차별 진공점을 지나는가). §43.60에서 “왜 Z인가”는 항등식으로 좁혀졌다. “그 질량 척도에서”는 공리로 남는다
+- E4의 동역학(왜 사건 척도 $M_Z$에서 무차별 진공점을 지나는가). §43.60에서 “왜 Z인가”는 항등식으로 좁혀졌다. “그 질량 척도에서”는 §43.62에서 “유일한 교차점 μ* = M_Z”라는 하나의 일치로 줄었다
 - FP의 원리적 유도(한 고리 자기 보정의 계수)
 - $F$(Higgs 퍼텐셜의 크기)
 - 기울기 역사의 원형(접선–현)이 열적 시간 밖에서 필요한지
-- 현재 막대 무리의 차이(SH0ES 대 CCHP)
+- 현재 막대 무리의 차이(SH0ES 대 CCHP). §43.61에서 분석·표본 차이로 좁혀졌다. JWST 단독 CCHP 값의 해부는 남는다
 - 지평선 미시 상태
 
 ## 43.57 고정점의 읽기 — 게이지 축은 이상 자기모멘트만큼 기운 동전이다
@@ -1873,9 +1875,119 @@ $$\frac{g_V}{g_A}=1-4\hat s^2=1-(2r)^4=1-(1-a)^4.$$
 - P36의 정의는 “MS-bar”만으로 ND와 구분되지 않는다. ND이면 $+4.2\sigma$다. 다음 사전 등록 판본의 변경 내역에 “PDG의 top 떼어냄 MS-bar $\hat s_Z^2$”로 적는다(값은 바뀌지 않음).
 - 예측값은 바뀌지 않는다. 구현은 [분별 모듈](../../examples/physics/rendering/ce_rendering_distinction.py)이다.
 
-## 43.61 재현과 한계
+**[산출] 사전 등록 v17.** `experiments/preregistration/rendering_predictions_v17.json`(자기 해시 `c54eb494…`)은 v1–v16을 보존한다. 예측을 더하거나 값을 바꾸지 않았다.
+- *정의.* 매니페스트의 모든 $\sin^2\theta_W$(E4 코어, P20, P34, P36)는 PDG의 top 떼어냄 MS-bar $\hat s_Z^2=0.23129\pm0.00004$다. v1부터 쓴 값이며, 위 표의 대안 판본 수치와 순환 경고를 변경 내역에 함께 적었다.
+- *정리.* DZ: 닻에서 Z의 결합은 나(전자)에게 순수 축이고, 닻을 가진 페르미온은 전자뿐이다.
+- *지위 주석.* P20에는 “어느 보손”이 DZ로 고정되고 척도는 공리 E5로 남는다고 적었다. P34·P36에는 판본을 명시했다.
 
-구현은 [렌더링 레지스트리](../../examples/physics/rendering/ce_rendering_registry.py), 고정 검사는 `tests/test_rendering_registry.py`(①·③·S2·T1·U1·M1·O1·TC·C1·순환 평균·사다리 상쇄·순환 위상과 팽창 변화의 반례·⑤·$\theta^*$ 반례·판본 III·부스트 반례·R-Pl 전이·유클리드 회전·BAO 눈금 예측·순환 기하·나선 긴장·복소 척도인자·S8·두 원의 구분·사건 척도·중성미자 질량·게이지군과 한 세대·세 세대와 선형 중력·대칭 깨짐과 전하 양자화·급팽창 게이지 수·중성미자 장부·암흑에너지 W1 반례·진공 기울기 W2·최저 조화 규칙·모방 시계 작용 W3·빛의 한계와 렌더링 지평선·확률 무게 중력·빛원뿔 기록 갱신·CMB–BAO 그라데이션·마감 판정·가설 역유도·공리 증명·열린 예측·사전 등록 v1–v12 동결과 공동 RMSE 고정, 초신성 보류 시험·FD θ*·W3 성장 보정·자료 판본 민감도)다. 필수 테스트 목록에 추가했고 전체 344개 검사를 실행했다(2026-09-23). §43.37–43.40의 검사는 각 절에 적은 별도 모듈에 있고, §43.35 정리 C′·D′의 재증명 검산은 [복소 부스트 모듈](../../examples/physics/rendering/ce_rendering_complex_boost.py), §43.41–43.44의 보강은 [E4 대각합 모듈](../../examples/physics/rendering/ce_rendering_e4_trace.py), [간헐 렌더링 모듈](../../examples/physics/rendering/ce_rendering_intermittent.py), [경계 모듈](../../examples/physics/rendering/ce_rendering_boundary.py), [계단 모듈](../../examples/physics/rendering/ce_rendering_staircase.py), [Bool 사전 모듈](../../examples/physics/rendering/ce_rendering_bool.py)에 있고, §43.45의 점검은 [남은 항목 모듈](../../examples/physics/rendering/ce_rendering_open_checks.py), §43.46의 감사는 [중성미자 감사 모듈](../../examples/physics/rendering/ce_rendering_nu_audit.py), §43.47의 장부와 기준 비교는 [장부 모듈](../../examples/physics/rendering/ce_rendering_ledger.py), §43.48의 관측 사상은 [관측 사상 모듈](../../examples/physics/rendering/ce_rendering_o1_map.py), §43.49의 추측 검증은 [무리 안 차이 모듈](../../examples/physics/rendering/ce_rendering_spread.py), §43.50은 [위상 잠금 모듈](../../examples/physics/rendering/ce_rendering_phase_lock.py), §43.51은 [인과 잠금 모듈](../../examples/physics/rendering/ce_rendering_causal_lock.py), §43.52는 [잠금 역사 모듈](../../examples/physics/rendering/ce_rendering_lock_history.py), §43.53은 [열적 시간 모듈](../../examples/physics/rendering/ce_rendering_thermal_time.py), §43.54는 [가지치기 모듈](../../examples/physics/rendering/ce_rendering_branching.py), §43.55는 [E4 닻 모듈](../../examples/physics/rendering/ce_rendering_e4_anchor.py), §43.57은 [기운 동전 모듈](../../examples/physics/rendering/ce_rendering_biased_coin.py), §43.58은 [경계 인자 모듈](../../examples/physics/rendering/ce_rendering_boundary_loop.py), §43.59는 [Higgs·우주 모듈](../../examples/physics/rendering/ce_rendering_higgs_cosmos.py), §43.60은 [분별 모듈](../../examples/physics/rendering/ce_rendering_distinction.py)에 있다. 실행:
+등록은 36개, 독립 예측은 34개 그대로다. 분별 모듈을 더해 36개 모듈의 해시를 잠갔다.
+
+## 43.61 SH0ES 대 CCHP — 현재 막대 사다리의 해부
+
+**문제.** 사상 M은 현재 막대·시계로 교정한 $H_0$가 모두 73.36으로 모인다고 본다(P32). CCHP의 결합값은 이 예측에서 가장 가까운 위험이었다(§43.48). §43.48에 고정된 kill은 “현재 막대로만 교정한 방법이 $\sigma\lesssim0.8$로 70 부근에 모이면 M 기각”이다.
+
+**사전 규칙(계산 전).**
+- R1(유도): M 아래에서 두 현재 틀 사다리가 물리적으로 얼마나 다를 수 있는지 상한을 구한다. 이 상한이 작으면 사다리 사이의 차이는 모두 분석과 표본에서 와야 한다.
+- R2(자료 가족):
+  - H0DN(지역 거리망, A&A 2026, arXiv:2510.23823)의 표 4(기준값, 직교 경로 O1·O2, 변형), 표 5·7(문헌 재현과 CCHP 사슬 분해)
+  - CCHP의 JWST 단독 TRGB·JAGB(arXiv:2408.06153 v3)
+  - TDCOSMO 2025(채점 행)
+- R3: 서로 독립인 O1+O2(+TDCOSMO)에서 세 세계를 비교한다. M은 73.36, CCHP 세계는 70.39, O1 없음은 67.77이다.
+- R4: 같은 SN 피팅 코드와 표본으로 맞춘 TRGB 사다리가 $\sigma\le1.0$으로 70.5 이하에 머물면 M은 곤경이다.
+- *눈가림.* H0DN(2025-10)은 사전 등록(2026-09-23)보다 먼저 나왔다. 개발에는 쓰지 않았으므로 보류 자료 확인이며, 예측 적중으로 세지 않는다.
+
+**[유도] R1 — 사다리 사이의 물리적 차이는 0.12 km/s/Mpc 이하다.**
+- M은 틀 사이 비에 상대 기울기의 투영 $\cos\Delta\theta$를 준다. 열적 시간(§43.53)에서 $\theta=H_\Lambda t/2$이고, 탄생부터 오늘까지 적분하면 $\theta_0=0.398$이다($\pi/8$보다 1.4% 크다. 절반 지점을 막 지남).
+- 교정(z≈0)과 허블 흐름 사이의 상대 기울기는 $\Delta\theta(z)=H_\Lambda t_{\rm lb}(z)/2$다.
+  - $z=0.15$에서는 $\Delta\theta=0.056$, $1-\cos\Delta\theta=1.6\times10^{-3}$, 곧 0.12 km/s/Mpc다.
+  - 유효 $z=0.05$에서는 0.015 km/s/Mpc다.
+- 따라서 M 아래에서 모든 현재 틀 사다리는 0.1 수준 안에서 같다. SH0ES와 CCHP의 차이 2.8은 물리가 아니다.
+
+**[검사] 판정표(M 73.36 대비).**
+
+| 판정 | $H_0$ | pull |
+|---|---|---|
+| H0DN 기준값(V00) | $73.50\pm0.81$ | $+0.17$ |
+| 직교 경로 O1(은하수·LMC 시차 → 세페이드 → Ia → 기본 평면) | $73.11\pm0.92$ | $-0.27$ |
+| 직교 경로 O2(NGC 4258 → TRGB → SBF → 메이저) | $73.45\pm1.78$ | $+0.05$ |
+| Ia 없음(V13) | $73.43\pm1.80$ | $+0.04$ |
+| 세페이드 없음(V08) | $72.51\pm1.30$ | $-0.66$ |
+| Ia $0.03<z<0.10$(V21) / $z>0.06$(V20) | $72.67$ / $73.19$ $(\pm0.86)$ | $-0.80$ / $-0.20$ |
+| SH0ES R22 세페이드(H0DN 재현) | $73.17\pm0.96$ | $-0.20$ |
+| CCHP JWST 단독 TRGB / JAGB | $68.81\pm2.22$ / $67.80\pm2.72$ | $-2.05$ / $-2.04$ |
+| TDCOSMO 2025 | $71.6^{+3.9}_{-3.3}$ | $-0.45$ |
+
+- **R3.** O1+O2의 가중 평균은 $73.18\pm0.82$다.
+
+  | 세계 | $\chi^2$(O1+O2) | TDCOSMO 포함 |
+  |---|---|---|
+  | M 73.36 | 0.08 | 0.28 |
+  | CCHP 세계 70.39 | 11.7 | 11.8 |
+  | O1 없음 67.77 | 43.9 | 45.3 |
+
+- **kill.** $\sigma\le0.85$인 현재 막대 판정은 H0DN 기준값 하나이며 73.5에 있다. 70 부근에 모인 정밀 판정은 없으므로 **kill은 걸리지 않는다.**
+
+**[검사] R4 — CCHP 사슬의 분해(H0DN 표 7).**
+
+| 단계 | $H_0$ | M 대비 |
+|---|---|---|
+| CCHP 발표값(SNooPy v2.7 이전, 교정 SN 24개) | $70.39\pm1.80$ | $-1.65$ |
+| H0DN 재현 | $70.31\pm1.80$ | $-1.69$ |
+| 같은 표본, SNooPy v2.7 | $72.05\pm1.85$ | $-0.71$ |
+| SNooPy v2.7, TRGB 교정 SN 전체 35개 | $\mathbf{72.66}\pm1.64$ | $\mathbf{-0.43}$ |
+
+- 이동은 피팅 코드 갱신 $+1.74$와 표본 확장 $+0.61$이다. 맞춘 TRGB 사다리와 SH0ES 세페이드의 차이는 2.78에서 0.51로 줄어든다. R4의 곤경 조건은 걸리지 않는다.
+- *한계.*
+  - 이 분해는 H0DN 공동 연구의 재분석이다. CCHP가 받아들였는지는 확인하지 않았다.
+  - JWST 단독 CCHP 값($-2.0\sigma$ 둘)은 이전 피팅 코드와 작은 표본을 쓰지만, H0DN이 따로 분해하지 않았다. 같은 갱신이 적용되는지는 열린 채로 둔다.
+
+**판정.**
+- 사상 M의 가장 가까운 위험이던 CCHP 결합값은 분석을 맞추면 M과 $-0.43\sigma$로 맞는다. 독립 경로 둘은 73.18에 모이며, “현재 막대 = 70” 세계보다 $\Delta\chi^2=11.6$ 앞선다.
+- M은 사다리 사이의 물리적 차이를 0.12 이하로 제한한다. 그래서 두 팀의 차이는 분석과 표본에서 와야 하며, 자료 분해도 같은 곳을 가리킨다.
+- 증거의 지위: H0DN은 보류 자료 확인이고 SH0ES 자료를 공유하므로 독립 증거는 제한적이다. 결정적 판정은 여전히 사이렌(P26)과 JWST 단독 표본의 확대다.
+- 채점 행은 바꾸지 않는다(동결). 예측값도 바뀌지 않는다. 구현은 [사다리 모듈](../../examples/physics/rendering/ce_rendering_ladder.py)이다.
+
+## 43.62 한 동전, 한 사건 — 운반자 원리의 정리와 사전 등록 v18
+
+**문제.** §43.60은 “왜 Z인가”를 항등식으로 좁혔고 “그 질량 척도에서”(운반자 원리, E5)를 공리로 남겼다. 이 원리를 결과로 올리려면 다른 곳에서 새 예측을 내야 한다. 그러나 CE의 규칙(CKM, 렙톤 비, Higgs, 우주 성분)은 모두 $M_Z$의 결합으로 만들어졌다. 그래서 “동전마다 제 운반자의 척도”(예: CKM은 $M_W$) 판본을 시험하면 구성상 틀린다. 이런 시험은 하지 않았다(§43.18과 같은 순환).
+
+**사전 규칙.**
+- OE(정리 후보): 동전 $r$은 $\alpha_s^{1/3}=(\hat s^2/4)^{1/4}$인 척도에서만 한 숫자다. 표준 모형의 흐름 $f(\mu)=\hat s^2(\mu)-4\alpha_s(\mu)^{4/3}$이 E4 곡선을 한 번만 가로지르는지 확인한다.
+  - 범위는 2 GeV부터 $10^{16}$ GeV다. 흐름은 §43.18의 두 루프 QCD와 한 루프 전자약을 쓴다.
+  - $M_W$ 아래에서는 $\hat s^2$ 공식의 부호가 맞지 않는다. 그래서 보수 한계 $|d\hat s^2/d\ln\mu|\le0.003$을 따로 둔다($0.2386\to0.2313$이 약 11 e-fold에 걸쳐 일어남).
+- kill: 교차가 둘 이상이면 OE를 기각한다. 교차 척도가 $M_Z$에서 $3\sigma$ 밖이면 P20의 반례로 기록한다.
+
+**[정리] OE — 한 동전, 한 사건.**
+- $f$는 전 범위에서 단조 증가하고 교차는 **정확히 하나**다. $M_W$ 아래에서 $\alpha_s$ 항의 기울기는 0.050 이상으로 보수 한계의 17배이므로 결론은 흔들리지 않는다.
+- 교차 척도는 $\mu^*=91.6\,(87.5\text{–}95.8)$ GeV다($\alpha_s$ 세계 평균 오차). $M_Z$ 대비 $+0.09\sigma$, $M_W$ 대비 $+2.9\sigma$, $M_H$ 대비 $-6.8\sigma$다(로그 척도). 이 값들은 §43.18 표와 같은 사실의 재진술이다.
+- *따름.* 우주에서 동전이 한 숫자로 정해지는 곳은 한 사건뿐이다. 그래서 이론의 모든 규칙(섞임, 질량비, 우주 성분)은 같은 사건에서 같은 동전을 읽는다. 사용자의 “분별에서 생긴 우주”를 식으로 옮기면 “분별의 동전은 한 번만 던져진다”이다.
+
+**판정.**
+- E5는 별도의 공리가 아니다. 남는 내용은 “유일한 교차점이 운반자 Z의 질량과 겹친다”($\mu^*=M_Z$)는 하나의 일치이며, 그 관측 내용은 P20($\alpha_s$ 세계 평균 행)이다.
+- 이 일치는 강한 힘의 척도($\Lambda_{\rm QCD}$가 정하는 $\mu^*$)와 전약 척도($v$가 정하는 $M_Z$) 사이의 관계다. 왜 겹치는지는 설명하지 못했다. 장부의 비용은 바뀌지 않는다.
+- 구현은 [한 사건 모듈](../../examples/physics/rendering/ce_rendering_one_event.py)이다.
+
+**[산출] 사전 등록 v18.** `experiments/preregistration/rendering_predictions_v18.json`(자기 해시 `2300ba99…`)은 v1–v17을 보존하고, P01–P36의 값은 바꾸지 않았다.
+- *정리.*
+  - OE: 한 동전, 한 사건
+  - LS: 현재 틀 사다리 사이의 물리적 차이는 $1.6\times10^{-3}$ 이하(§43.61)
+- *지위 주석.*
+  - P07: H0DN 기준값 $+0.17\sigma$, 보류 자료 확인
+  - P20: OE, $\mu^*=91.6$ GeV
+  - P32: CCHP는 맞춘 분석에서 72.66이고, JWST 단독 값은 열려 있음
+- *새 예측.*
+
+| 번호 | 관측량 | 예측 | kill |
+|---|---|---|---|
+| P37 | 같은 SN 표본·피팅 코드·기준점·특이 속도 모형으로 맞춘 두 현재 틀 사다리(TRGB·세페이드·JAGB 등)의 $H_0$ 차이 | 0(물리적 한계 0.12 km/s/Mpc) | 차이가 차이 오차의 $3\sigma$ 이상, 또는 차이 오차 $\le0.3$에서 1.0 이상 |
+
+P37은 절대값(P07)이 아니라 사다리 사이의 차이를 거는 상대 시험이다. 그래서 공통 교정의 계통오차와 무관하다. 현재 맞춘 TRGB(35개)와 SH0ES 세페이드의 차이는 0.51이다(상관 포함 오차는 H0DN이 따로 주지 않음).
+
+등록은 37개, 독립 예측은 35개다. 새 모듈 2개를 포함해 38개 모듈의 해시를 잠갔다.
+
+## 43.63 재현과 한계
+
+구현은 [렌더링 레지스트리](../../examples/physics/rendering/ce_rendering_registry.py), 고정 검사는 `tests/test_rendering_registry.py`(①·③·S2·T1·U1·M1·O1·TC·C1·순환 평균·사다리 상쇄·순환 위상과 팽창 변화의 반례·⑤·$\theta^*$ 반례·판본 III·부스트 반례·R-Pl 전이·유클리드 회전·BAO 눈금 예측·순환 기하·나선 긴장·복소 척도인자·S8·두 원의 구분·사건 척도·중성미자 질량·게이지군과 한 세대·세 세대와 선형 중력·대칭 깨짐과 전하 양자화·급팽창 게이지 수·중성미자 장부·암흑에너지 W1 반례·진공 기울기 W2·최저 조화 규칙·모방 시계 작용 W3·빛의 한계와 렌더링 지평선·확률 무게 중력·빛원뿔 기록 갱신·CMB–BAO 그라데이션·마감 판정·가설 역유도·공리 증명·열린 예측·사전 등록 v1–v12 동결과 공동 RMSE 고정, 초신성 보류 시험·FD θ*·W3 성장 보정·자료 판본 민감도)다. 필수 테스트 목록에 추가했고 전체 344개 검사를 실행했다(2026-09-23). §43.37–43.40의 검사는 각 절에 적은 별도 모듈에 있고, §43.35 정리 C′·D′의 재증명 검산은 [복소 부스트 모듈](../../examples/physics/rendering/ce_rendering_complex_boost.py), §43.41–43.44의 보강은 [E4 대각합 모듈](../../examples/physics/rendering/ce_rendering_e4_trace.py), [간헐 렌더링 모듈](../../examples/physics/rendering/ce_rendering_intermittent.py), [경계 모듈](../../examples/physics/rendering/ce_rendering_boundary.py), [계단 모듈](../../examples/physics/rendering/ce_rendering_staircase.py), [Bool 사전 모듈](../../examples/physics/rendering/ce_rendering_bool.py)에 있고, §43.45의 점검은 [남은 항목 모듈](../../examples/physics/rendering/ce_rendering_open_checks.py), §43.46의 감사는 [중성미자 감사 모듈](../../examples/physics/rendering/ce_rendering_nu_audit.py), §43.47의 장부와 기준 비교는 [장부 모듈](../../examples/physics/rendering/ce_rendering_ledger.py), §43.48의 관측 사상은 [관측 사상 모듈](../../examples/physics/rendering/ce_rendering_o1_map.py), §43.49의 추측 검증은 [무리 안 차이 모듈](../../examples/physics/rendering/ce_rendering_spread.py), §43.50은 [위상 잠금 모듈](../../examples/physics/rendering/ce_rendering_phase_lock.py), §43.51은 [인과 잠금 모듈](../../examples/physics/rendering/ce_rendering_causal_lock.py), §43.52는 [잠금 역사 모듈](../../examples/physics/rendering/ce_rendering_lock_history.py), §43.53은 [열적 시간 모듈](../../examples/physics/rendering/ce_rendering_thermal_time.py), §43.54는 [가지치기 모듈](../../examples/physics/rendering/ce_rendering_branching.py), §43.55는 [E4 닻 모듈](../../examples/physics/rendering/ce_rendering_e4_anchor.py), §43.57은 [기운 동전 모듈](../../examples/physics/rendering/ce_rendering_biased_coin.py), §43.58은 [경계 인자 모듈](../../examples/physics/rendering/ce_rendering_boundary_loop.py), §43.59는 [Higgs·우주 모듈](../../examples/physics/rendering/ce_rendering_higgs_cosmos.py), §43.60은 [분별 모듈](../../examples/physics/rendering/ce_rendering_distinction.py), §43.61은 [사다리 모듈](../../examples/physics/rendering/ce_rendering_ladder.py), §43.62는 [한 사건 모듈](../../examples/physics/rendering/ce_rendering_one_event.py)에 있다. 실행:
 
 ```powershell
 python -B -m examples.physics.rendering.ce_rendering_registry

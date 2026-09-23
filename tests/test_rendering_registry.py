@@ -57,6 +57,8 @@ from examples.physics.rendering import ce_rendering_biased_coin as BCN
 from examples.physics.rendering import ce_rendering_boundary_loop as BLP
 from examples.physics.rendering import ce_rendering_higgs_cosmos as HGC
 from examples.physics.rendering import ce_rendering_distinction as DST
+from examples.physics.rendering import ce_rendering_ladder as LAD
+from examples.physics.rendering import ce_rendering_one_event as OE
 from examples.physics.rendering import ce_rendering_open_predictions as OP
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
@@ -994,6 +996,18 @@ def test_distinction_coin_reads_the_carrier_coupling_not_the_decay_record() -> N
     assert 1 < direct["P36"] < 2                                                       # direct average cannot decide yet
 
 
+def test_present_ladders_cannot_differ_physically_and_cchp_gap_is_analysis() -> None:
+    spread = LAD.physical_spread()
+    assert spread["theta_now"] == pytest.approx(math.pi / 8, rel=0.02)
+    assert spread["z_max"]["kms"] < 0.15 and spread["z_eff"]["kms"] < 0.02         # R1: <= 0.12 km/s/Mpc
+    w = LAD.worlds()
+    assert w["M (73.36)"]["chi2_O1_O2"] < 1 and w["CCHP world (70.39)"]["chi2_O1_O2"] > 9
+    assert not LAD.kill_check()["killed"]                                             # section 43.48 kill not met
+    d = LAD.cchp_dissection()
+    assert not d["R4_trouble"] and d["gap_matched_vs_R22"] < 1 < d["gap_published_vs_R22"]
+    assert abs(d["rows"]["v2.7, all TRGB calibrators (35)"]["pull_M"]) < 1
+
+
 def test_rendering_predictions_v13_is_frozen() -> None:
     v12 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v12.json").read_text(encoding="utf-8"))
     v13 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v13.json").read_text(encoding="utf-8"))
@@ -1069,6 +1083,52 @@ def test_rendering_predictions_v16_is_frozen() -> None:
             assert q["value"] == old[q["id"]]["value"]                        # no carried value changed
     ids = {q["id"] for q in v16["predictions"]}
     assert {"P35", "P36"} <= ids and len(ids) == 36 and len(v16["model"]["files"]) == 35
+
+
+def test_rendering_predictions_v17_is_frozen() -> None:
+    v16 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v16.json").read_text(encoding="utf-8"))
+    v17 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v17.json").read_text(encoding="utf-8"))
+    assert v17["supersedes_manifest_id"] == v16["manifest_id"]
+    body = {k: v for k, v in v17.items() if k != "manifest_sha256"}
+    canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    assert hashlib.sha256(canonical).hexdigest() == v17["manifest_sha256"]
+    assert v17["manifest_sha256"] == "c54eb49474aa01667c6ace5d72abc87584ced5f6cf58167c7f3c9c913647758a"
+    for key, rel in v17["model"]["files"].items():
+        assert v17["model"]["sha256"][key] in _line_ending_hashes((REPO_ROOT / rel)), (
+            f"{key} changed after v17 freeze: create v18 and keep earlier manifests")
+    old = {q["id"]: q for q in v16["predictions"]}
+    assert {q["id"] for q in v17["predictions"]} == set(old)                   # no prediction added
+    for q in v17["predictions"]:
+        assert q["value"] == old[q["id"]]["value"]                            # no value changed
+    p36 = next(q for q in v17["predictions"] if q["id"] == "P36")
+    assert "decoupled" in p36["status_v17"] and len(v17["model"]["files"]) == 36
+
+
+def test_rendering_predictions_v18_is_frozen() -> None:
+    v17 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v17.json").read_text(encoding="utf-8"))
+    v18 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v18.json").read_text(encoding="utf-8"))
+    assert v18["supersedes_manifest_id"] == v17["manifest_id"]
+    body = {k: v for k, v in v18.items() if k != "manifest_sha256"}
+    canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    assert hashlib.sha256(canonical).hexdigest() == v18["manifest_sha256"]
+    assert v18["manifest_sha256"] == "2300ba99c67dbbf1d74018349dd222c5edcedc2dd4c07dc8ab034765a254ae42"
+    for key, rel in v18["model"]["files"].items():
+        assert v18["model"]["sha256"][key] in _line_ending_hashes((REPO_ROOT / rel)), (
+            f"{key} changed after v18 freeze: create v19 and keep earlier manifests")
+    old = {q["id"]: q for q in v17["predictions"]}
+    for q in v18["predictions"]:
+        if q["id"] in old:
+            assert q["value"] == old[q["id"]]["value"]                        # no carried value changed
+    ids = {q["id"] for q in v18["predictions"]}
+    assert "P37" in ids and len(ids) == 37 and len(v18["model"]["files"]) == 38
+
+
+def test_one_coin_one_event_unique_crossing_at_mz() -> None:
+    mono = OE.monotonicity()
+    assert mono["crossings"] == 1 and mono["f_increasing"] and mono["robust_below_MW"]
+    ev = OE.event_scale()
+    assert ev["mu_lo"] < 91.1876 < ev["mu_hi"] and abs(ev["pull_MZ"]) < 1
+    assert ev["pulls"]["M_W"] > 2 and ev["pulls"]["M_H"] < -3
 
 
 def test_pantheon_holdout_keeps_all_ce_branches_within_two_sigma() -> None:

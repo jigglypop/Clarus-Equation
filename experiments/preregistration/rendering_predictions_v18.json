@@ -1,0 +1,627 @@
+{
+  "schema_version": 1,
+  "manifest_id": "ce-rendering-predictions-v18",
+  "supersedes_manifest_id": "ce-rendering-predictions-v17",
+  "manifest_hash_policy": "sha256-canonical-json-excluding-manifest_sha256",
+  "domain": "joint_quantum_macro",
+  "status": "frozen_predictions_pre_measurement",
+  "freeze": {
+    "freeze_date": "2026-09-23",
+    "timezone": "Asia/Seoul",
+    "amendment_policy": "Never edit this file. Keep v1-v17. A later change needs v19 with every delta explained."
+  },
+  "model": {
+    "files": {
+      "registry": "examples/physics/rendering/ce_rendering_registry.py",
+      "derivations": "examples/physics/rendering/ce_rendering_derivations.py",
+      "planck_readout": "examples/physics/rendering/ce_rendering_planck_readout.py",
+      "bao_ruler": "examples/physics/rendering/ce_rendering_bao_ruler.py",
+      "cycle": "examples/physics/rendering/ce_rendering_cycle.py",
+      "spiral": "examples/physics/rendering/ce_rendering_spiral.py",
+      "complex_scale": "examples/physics/rendering/ce_rendering_complex_scale.py",
+      "growth": "examples/physics/rendering/ce_rendering_growth.py",
+      "event_scale": "examples/physics/rendering/ce_rendering_event_scale.py",
+      "neutrino": "examples/physics/rendering/ce_rendering_neutrino.py",
+      "nu_ledger": "examples/physics/rendering/ce_rendering_nu_ledger.py",
+      "vacuum_tilt": "examples/physics/rendering/ce_rendering_vacuum_tilt.py",
+      "probability_weight": "examples/physics/rendering/ce_rendering_probability_weight.py",
+      "gradient": "examples/physics/rendering/ce_rendering_gradient.py",
+      "open_predictions": "examples/physics/rendering/ce_rendering_open_predictions.py",
+      "complex_boost": "examples/physics/rendering/ce_rendering_complex_boost.py",
+      "e4_trace": "examples/physics/rendering/ce_rendering_e4_trace.py",
+      "intermittent": "examples/physics/rendering/ce_rendering_intermittent.py",
+      "boundary": "examples/physics/rendering/ce_rendering_boundary.py",
+      "staircase": "examples/physics/rendering/ce_rendering_staircase.py",
+      "bool": "examples/physics/rendering/ce_rendering_bool.py",
+      "open_checks": "examples/physics/rendering/ce_rendering_open_checks.py",
+      "nu_audit": "examples/physics/rendering/ce_rendering_nu_audit.py",
+      "ledger": "examples/physics/rendering/ce_rendering_ledger.py",
+      "o1_map": "examples/physics/rendering/ce_rendering_o1_map.py",
+      "spread": "examples/physics/rendering/ce_rendering_spread.py",
+      "phase_lock": "examples/physics/rendering/ce_rendering_phase_lock.py",
+      "causal_lock": "examples/physics/rendering/ce_rendering_causal_lock.py",
+      "lock_history": "examples/physics/rendering/ce_rendering_lock_history.py",
+      "thermal_time": "examples/physics/rendering/ce_rendering_thermal_time.py",
+      "branching": "examples/physics/rendering/ce_rendering_branching.py",
+      "e4_anchor": "examples/physics/rendering/ce_rendering_e4_anchor.py",
+      "biased_coin": "examples/physics/rendering/ce_rendering_biased_coin.py",
+      "boundary_loop": "examples/physics/rendering/ce_rendering_boundary_loop.py",
+      "higgs_cosmos": "examples/physics/rendering/ce_rendering_higgs_cosmos.py",
+      "distinction": "examples/physics/rendering/ce_rendering_distinction.py",
+      "ladder": "examples/physics/rendering/ce_rendering_ladder.py",
+      "one_event": "examples/physics/rendering/ce_rendering_one_event.py"
+    },
+    "sha256": {
+      "registry": "63a289c5e9817c33b6f305c18c0bb1fd9ed83a5f3e00a6782689643788b4613a",
+      "derivations": "7cf8d9891fac4b468dcc666a005340911a93e55b593380ce45faa832dfa791a4",
+      "planck_readout": "a03f9681d25aecdd5e047c0e256b59e321c4d584d5f9256cbbc50b02ee5c6a88",
+      "bao_ruler": "fa68e1d2b8dd46c6b05f351113a6ab3ab2545e1d365f9f17a4faf51002652879",
+      "cycle": "f70052066fa1a4b56baf3387497825f7d0b13031c622a052cf14c117023bba0c",
+      "spiral": "a88c4aac9d521819d533791e9e22b6c42cbb45b3bd457a8209e600ef2cdc14bd",
+      "complex_scale": "5a8db2acb32afc4e8614eae8fcd56253d9249217f05081273b461d1b1ce058eb",
+      "growth": "5af65b64da5dfa80847fd18b16da834231007cf193cdf7d5b86f433fbefca228",
+      "event_scale": "fc9f4d968e850bfa310e732cae9bd85720b124dbffa4c7546af395f64b0dc3a2",
+      "neutrino": "663ae859466a31d3606c21903b85f7232f896150132f1c55b6d99bd0b9c2d88b",
+      "nu_ledger": "191089a4e88ac01c077fb677ff0899463403364d26106ea465a1bc4dae2fbca6",
+      "vacuum_tilt": "5ac0a9f37f37caea04d14bd8cbbb6cb71baea6df50116171a938823d09456d12",
+      "probability_weight": "b5df455cfc008733e1bfdc6750ea07e2450dbebd361decb4831d9e54f56e3604",
+      "gradient": "4c9da68ff7eafbd26c8e100a4efdc434f9c7b95c4a08f210ea47c9559da4d334",
+      "open_predictions": "28ce25ed8175af163d924e5e0ccf85e816bd94f0ca48bcd41e901b74d378c5bb",
+      "complex_boost": "76687bbe5a4c432b6aca1b729dd2c6bb137210d380ecbda65e52fb6b943e8550",
+      "e4_trace": "c8e27286dd37d10adff2c410338e2045e812d27887525b4616a1f06edf85e078",
+      "intermittent": "88511e2573e378a8132b5845bb718222c60584e754d42730fa28de27b440009c",
+      "boundary": "17535bb56287b3b726f810be6e44afc7bacff6c240ab09a94ea8ecb6dc2d92b3",
+      "staircase": "c3330ac5dbd365513223e17ff6c1e31f919af85b656e5b842d1b884b5065e88c",
+      "bool": "7fd463609f690419b1c35a6fad9fcc3a5ad636223a5493df44019da687ef5705",
+      "open_checks": "617f25d89ae424ce6244f8fc24c3ab1ed3cca57b868c53b608c92187708cf04a",
+      "nu_audit": "86bc0ffc6f2c87b8a1dcad49e18a814d47a0d547db21a3ffdf7f2d505488c86a",
+      "ledger": "13d6edd84c01a77446676558347c572ee1d37c65ba54142dd51dd9f3ff99cf69",
+      "o1_map": "ac2105f83347e35770b09027b35366c8df5697b6686fa9fe50f895ad703fc862",
+      "spread": "2a40cd7852746e8965a79c6a966a639d881a5720a425ad845331364538f94f58",
+      "phase_lock": "6b81d7abbf6af5a52f38f66d542607523044fbb133194f0427437ed3a5649516",
+      "causal_lock": "839d5d03ff6f6cc781b1be674a6d957b4f4c21c64183b9574f10a9f06e132eaa",
+      "lock_history": "3bf0bf7ad00fad2639d51afb6e2a2530c37eee759d669a05b7ba2ff33ff50645",
+      "thermal_time": "bbed110ccbba05395e5dc39b283c488335abce6983a63dffc22398ff91ed297b",
+      "branching": "2906d67dc07c75901ef81dcf834b38fe6386cf486df6f348ca56f7bf0bfdd240",
+      "e4_anchor": "ef2c51fcb9e5a3fc0647d3707c76bbf2ff22cf91499b228c97a2ef4b66f78c50",
+      "biased_coin": "be34c17e2cb4cf5f9b776ea1fddd1dc6d75c5ea6943b35bcaf5b37329a23739e",
+      "boundary_loop": "abd432821b7a36e74f1dd9fbfc802adb81cf80309ad964b07cc80e94db7fe388",
+      "higgs_cosmos": "769f74c45ef822b06b66cdb07bb83a456a885c56c1f15a03a5d5625b3934a6f4",
+      "distinction": "6afa45d1b3cf2ff85d54b04e127b7c438b554e340bbe6f6f12379fe26dae6904",
+      "ladder": "95b355425b9a292b2caf0adbf9a42445e4b0c1afaeb5d1f6f1bdf9848592ed5b",
+      "one_event": "dd67c6885ef93dcb36009103e82d743c7a776273af82b2ed72c05cfaca17db61"
+    },
+    "continuous_fitted_parameters": [
+      "alpha_s (from s_Z^2)",
+      "BAO ruler (free-ruler variants only)"
+    ],
+    "inspiration_bits_added": 2.0,
+    "development_score": {
+      "variant_V_39": 0.834,
+      "rows43_fixed": 0.878,
+      "cmb_bao_tension_sigma": -0.22
+    },
+    "status_note": "Rules were built after seeing development data; only measurements released after freeze_date count as holdout.",
+    "axioms_added_v13": {
+      "W": "readout frame = complex boost of the record frame, zeta = eta + i phi",
+      "E_rec": "a light record received in the readout frame has energy density with positive real part",
+      "T": "typicality: observers are uniform in rendering phase within the rendered window",
+      "B": "the me/outside boundary contrast is a neutrino mass eigenstate (TM1)",
+      "Bool": "each rendering step records one true/false proposition; channels are truth assignments",
+      "Ind": "unrendered propositions weigh true and false equally",
+      "SA": "each mass state leans to the flavour rendered at the same step (order tau -> mu -> e, me = e)"
+    },
+    "axioms_added_v14": {
+      "M": "observables are ratios; a frame tilt theta multiplies a cross-frame ratio by cos theta (rank 1)",
+      "TT": "the record phase advances by the modular flow of the final rendering horizon: dPhi/dt = 2 pi k_B T_H / hbar",
+      "CL": "causal half-lock: indifference applied to 'is the present fixed by the past'; the past pulls one way"
+    },
+    "ledger_v14_bits": {
+      "39_rows": 19.9,
+      "43_rows": 33.6
+    },
+    "axioms_added_v15": {
+      "BR1": "each record has an independent (Poisson) number of causal descendants with mean D = 3 + delta",
+      "BR2": "extinct lineages (finite closed records) are visible baryons: Omega_b = q",
+      "BR3": "surviving lineages split by bound (rate alpha_s D) versus free (rate 1) competition into DM and vacuum",
+      "FP": "hypothesis: the per-axis unrendered probability is the self-consistent fixed point r = (1/2)[1 - (alpha_s/2pi)(1 + delta/2pi)] (post hoc, 4.6 bit)"
+    },
+    "ledger_v15_bits": {
+      "39_rows": 19.9,
+      "43_rows": 33.6,
+      "fixed_point_hypothesis_if_adopted": 4.6
+    },
+    "axioms_added_v16": {
+      "BC": "gauge axes are coins biased by their one-loop anomaly: P(rendered) = 1/2 (1 + a); flavour coins are fair",
+      "UB": "every quantity crossing the me/not-me boundary is dressed by the same linear one-loop factor 1 + delta/2pi"
+    },
+    "definitions_v17": {
+      "s2_scheme": "sin^2 theta_W = PDG MS-bar s^2_Z(M_Z), ln(m_t/M_Z) terms decoupled from the gamma-Z mixing"
+    },
+    "theorems_added_v17": {
+      "DZ": "at sin theta_W = 1/2 the Z coupling to the charged lepton is pure axial; the anchor is owned by e only"
+    },
+    "theorems_added_v18": {
+      "OE": "the SM flow crosses the E4 curve exactly once (2 GeV - 1e16 GeV): one coin, one event; E5 = (mu* = M_Z)",
+      "LS": "under M + TT present-frame ladders with Hubble flow z <= 0.15 differ physically by <= 1.6e-3"
+    }
+  },
+  "predictions": [
+    {
+      "id": "P01",
+      "observable": "sin^2 theta_23 (PMNS, normal ordering)",
+      "value": 0.455551,
+      "rule": "S2: last-rendered generation is 'me' -> lower octant",
+      "decisive_experiments": [
+        "DUNE",
+        "Hyper-Kamiokande",
+        "IceCube-Upgrade"
+      ],
+      "kill_if": "upper octant (s23^2 > 0.5) established at >= 3 sigma, or s23^2 excluded at >= 3 sigma",
+      "status_v13": "rule status v13: magnitude from Bool+Ind, sign from SA (was S2 inspiration)"
+    },
+    {
+      "id": "P02",
+      "observable": "delta_CP (PMNS) [deg]",
+      "value": 258.76,
+      "rule": "T1 (TM1: |U_mu1| = |U_tau1|) + M1 (lepton circulation opposite to quarks)",
+      "decisive_experiments": [
+        "DUNE",
+        "Hyper-Kamiokande"
+      ],
+      "kill_if": "value excluded at >= 3 sigma, or sin(delta) > 0 established at >= 3 sigma",
+      "status_v13": "rule status v13: TM1 sum rule from axiom B with M1 (was T1 inspiration)"
+    },
+    {
+      "id": "P03",
+      "observable": "sin^2 theta_12 (PMNS)",
+      "value": 0.318517,
+      "rule": "S2 distinction channels (= TM1 to first order)",
+      "decisive_experiments": [
+        "JUNO"
+      ],
+      "kill_if": "value excluded at >= 3 sigma by a sub-percent measurement"
+    },
+    {
+      "id": "P04",
+      "observable": "sin^2 theta_13 (PMNS)",
+      "value": 0.0222244,
+      "rule": "S2: delta/8",
+      "decisive_experiments": [
+        "JUNO",
+        "Daya Bay legacy combinations"
+      ],
+      "kill_if": "value excluded at >= 3 sigma"
+    },
+    {
+      "id": "P05",
+      "observable": "CKM unitarity triangle (beta, gamma, alpha) [deg]",
+      "value": [
+        22.5,
+        67.5,
+        90.0
+      ],
+      "rule": "U1 grade partition 1:3:4 of pi",
+      "decisive_experiments": [
+        "LHCb Upgrade II",
+        "Belle II"
+      ],
+      "kill_if": "gamma or alpha excluded at >= 3 sigma"
+    },
+    {
+      "id": "P06",
+      "observable": "|V_ub|",
+      "value": 0.00367594,
+      "rule": "U1 + |V_us|, |V_cb| assembly",
+      "decisive_experiments": [
+        "Belle II",
+        "lattice QCD form factors"
+      ],
+      "kill_if": "value excluded at >= 3 sigma"
+    },
+    {
+      "id": "P07",
+      "observable": "H0 from direct present-epoch readouts (ladders, time-delay lenses, standard sirens) [km/s/Mpc]",
+      "value": 73.356,
+      "rule": "O1 + R-Pl: 100 h_CE (1 + alpha_s/4pi) / cos(pi/8)",
+      "decisive_experiments": [
+        "TDCOSMO follow-ups",
+        "LIGO-Virgo-KAGRA bright sirens",
+        "JWST ladders"
+      ],
+      "kill_if": "a direct readout excluded at >= 3 sigma",
+      "status_v14": "status v14: direction derived from causality (43.51); unified thermal-time variant gives 73.52 (43.53)",
+      "status_v18": "status v18: H0DN baseline 73.50 +- 0.81 (+0.17 sigma), hold-out check (43.61)"
+    },
+    {
+      "id": "P08",
+      "observable": "H0 from early-record inference (CMB-only, LambdaCDM-extrapolated) [km/s/Mpc]",
+      "value": 67.772,
+      "rule": "R-Pl horizon readout: 100 h_CE (1 + alpha_s/4pi)",
+      "decisive_experiments": [
+        "Simons Observatory",
+        "CMB-S4"
+      ],
+      "kill_if": "CMB-only H0 excluded at >= 3 sigma"
+    },
+    {
+      "id": "P09",
+      "observable": "tensor-to-scalar ratio r",
+      "value": 0.00366762,
+      "rule": "r = 12/N_e^2, N_e = 18 D",
+      "decisive_experiments": [
+        "LiteBIRD",
+        "CMB-S4",
+        "Simons Observatory"
+      ],
+      "kill_if": "r < 0.002 at 95% CL, or r > 0.006 detected"
+    },
+    {
+      "id": "P10",
+      "observable": "scalar spectral index n_s",
+      "value": 0.965035,
+      "rule": "n_s = 1 - 2/N_e",
+      "decisive_experiments": [
+        "Simons Observatory",
+        "CMB-S4"
+      ],
+      "kill_if": "value excluded at >= 3 sigma"
+    },
+    {
+      "id": "P11",
+      "observable": "ratio H0(direct present readout) / H0(early-record inference, same data release era)",
+      "value": 1.08239,
+      "rule": "O1: 1/cos(pi/8), no fitted parameter",
+      "decisive_experiments": [
+        "any pair of direct and CMB/BAO+BBN H0 determinations"
+      ],
+      "kill_if": "ratio excluded at >= 3 sigma, or ratio consistent with 1 at >= 3 sigma",
+      "status_v14": "status v14: ratio 1/cos(pi/8); unified variant 1/cos(Phi0/2) = 1.0848"
+    },
+    {
+      "id": "P12",
+      "observable": "omega_b h^2",
+      "value": 0.022343,
+      "rule": "q h^2 with R-Pl h",
+      "decisive_experiments": [
+        "Simons Observatory",
+        "CMB-S4",
+        "BBN deuterium"
+      ],
+      "kill_if": "value excluded at >= 3 sigma"
+    },
+    {
+      "id": "P13",
+      "observable": "omega_c h^2",
+      "value": 0.11847,
+      "rule": "(Omega_DM h^2 - omega_nu) with R-Pl h; omega_nu from P17 (relativistic at recombination)",
+      "decisive_experiments": [
+        "Simons Observatory",
+        "CMB-S4"
+      ],
+      "kill_if": "value excluded at >= 3 sigma",
+      "superseded_value_v7": 0.1191
+    },
+    {
+      "id": "P14",
+      "observable": "h r_d (BAO sound-horizon scale) [Mpc]",
+      "value": 99.987,
+      "rule": "R-Pl h with CE early physics, cold matter omega_c = Omega_DM h^2 - omega_nu; r_d same-code calibrated to Planck 147.09",
+      "decisive_experiments": [
+        "DESI DR3",
+        "Euclid"
+      ],
+      "kill_if": "value excluded at >= 3 sigma (development data already show +3.1 sigma statistical tension)",
+      "superseded_value_v7": 99.87
+    },
+    {
+      "id": "P15",
+      "observable": "ratio H0(direct present readout) / H0(early-record inference) from the spiral tension",
+      "value": 1.08306,
+      "rule": "C4: sqrt(1 + Omega_Lambda/4), rotation rate H_Lambda/2 combined with expansion H0; no pi/8",
+      "decisive_experiments": [
+        "any pair of direct and CMB/BAO+BBN H0 determinations"
+      ],
+      "kill_if": "ratio excluded at >= 3 sigma; indistinguishable from P11 at present precision (0.06% apart)"
+    },
+    {
+      "id": "P16",
+      "observable": "S8 = sigma8 sqrt(Omega_m/0.3) from weak lensing (rotation-invariant)",
+      "value": 0.8161,
+      "rule": "EH no-wiggle sigma8 with cold omega_c = Omega_DM h^2 - omega_nu, same-code calibrated to Planck 0.8111; growth with W2 vacuum-tilt dark energy (nu = 1/2)",
+      "decisive_experiments": [
+        "Euclid",
+        "Rubin LSST",
+        "Roman"
+      ],
+      "kill_if": "value excluded at >= 3 sigma",
+      "superseded_value_v7": 0.8201,
+      "superseded_value_v8": 0.8173
+    },
+    {
+      "id": "P17",
+      "observable": "sum of neutrino masses [meV] (normal ordering)",
+      "value": 59.16,
+      "rule": "repo empirical formula (07_중성미자_질량 §7.3) with the current core R = alpha_s D",
+      "decisive_experiments": [
+        "DESI DR3 + CMB",
+        "Euclid + CMB-S4",
+        "KATRIN/Project 8 (upper bounds)"
+      ],
+      "kill_if": "cosmological upper bound below 55 meV at 95% CL, or inverted ordering established at >= 3 sigma",
+      "status_v14": "status v14: not distinctive (0.38 meV above minimal normal ordering)"
+    },
+    {
+      "id": "P18",
+      "observable": "lightest neutrino mass m1 [meV]",
+      "value": 0.307,
+      "rule": "same formula; m1 ~ 0 implies no observable neutrinoless double beta signal from m1",
+      "decisive_experiments": [
+        "cosmology sum + oscillation splittings"
+      ],
+      "kill_if": "m1 > 10 meV established"
+    },
+    {
+      "id": "P19",
+      "observable": "Delta m^2_21 [eV^2]",
+      "value": 7.403e-05,
+      "rule": "same formula",
+      "decisive_experiments": [
+        "JUNO"
+      ],
+      "kill_if": "value excluded at >= 3 sigma",
+      "status_v14": "status v14: JUNO 2025 pull -0.81; -4.3 sigma if JUNO final precision keeps the central value"
+    },
+    {
+      "id": "P20",
+      "observable": "rendering event scale of s^2 = 4 alpha_s^{4/3}",
+      "value": "M_Z",
+      "rule": "E5: among {M_W, M_Z, M_H, m_t, v} only M_Z reproduces the world alpha_s(M_Z)",
+      "decisive_experiments": [
+        "improved alpha_s(M_Z) and s^2(M_Z)"
+      ],
+      "kill_if": "world alpha_s(M_Z) moves away from the M_Z-event value 0.11792 by >= 3 sigma",
+      "status_v13": "status v13: duplicate of the alpha_s world-average row; not an independent prediction",
+      "status_v15": "the M_Z event relation is anchored at the indifference vacuum point (43.55)",
+      "status_v16": "status v16: the lepton rule gives the sharpest CE alpha_s = 0.1179196 +/- 0.0000045 (43.58)",
+      "status_v17": "status v17: 'which boson' fixed by the distinction identity DZ (43.60); the carrier-mass scale stays axiom E5",
+      "status_v18": "status v18: theorem OE - unique crossing mu* = 91.6 (87.5-95.8) GeV; E5 reduces to mu* = M_Z (43.62)"
+    },
+    {
+      "id": "P21",
+      "observable": "dark-energy equation of state w(z=0)",
+      "value": -0.9894,
+      "rule": "W2: rho_DE ~ 1 + alpha_s^{2/3} cos(H_Lambda t / 2), phase 0 at birth; angle = C3 tangent-chord tilt",
+      "decisive_experiments": [
+        "DESI final",
+        "Euclid",
+        "LSST",
+        "Roman"
+      ],
+      "kill_if": "w(z=0) excluded at >= 3 sigma with sigma(w0) <= 0.02 in a CMB+BAO+SN combination"
+    },
+    {
+      "id": "P22",
+      "observable": "dark-energy equation of state w(z=1)",
+      "value": -0.9974,
+      "rule": "same W2 rule; w never crosses -1 and approaches -1 at high z",
+      "decisive_experiments": [
+        "DESI final",
+        "Euclid"
+      ],
+      "kill_if": "a detected crossing of w = -1 at z < 2 at >= 3 sigma"
+    },
+    {
+      "id": "P23",
+      "observable": "gravitationally mediated entanglement between two mesoscopic masses (BMV-type)",
+      "value": 0.0,
+      "rule": "QG1 probability-weight sourcing: gravity couples to local density matrices only (mean field), so product states stay product; quantum-gravity reference concurrence for m=1e-14 kg, dx=250 um, d=450 um, t=2.5 s is 0.0330",
+      "decisive_experiments": [
+        "Bose-Mazumdar et al. / Marletto-Vedral spin-entanglement witness",
+        "QGEM"
+      ],
+      "kill_if": "gravity-mediated entanglement witnessed at >= 5 sigma with non-gravitational channels excluded"
+    },
+    {
+      "id": "P24",
+      "observable": "spatial curvature Omega_k",
+      "value": 0.0,
+      "rule": "QG1: probability weights sum to one, so the gravitating total is critical (flat)",
+      "decisive_experiments": [
+        "Euclid",
+        "DESI final + CMB-S4",
+        "21 cm intensity mapping"
+      ],
+      "kill_if": "|Omega_k| nonzero at >= 3 sigma"
+    },
+    {
+      "id": "P25",
+      "observable": "BAO apparent scale drift: (D/r_d scale factor at z=2.33) / (at z=0.3)",
+      "value": 1.0126,
+      "rule": "G1m [inspiration, 2 bits]: BAO observables x [1 - Omega_m (1 - cos(psi(z)/2))], psi = H_Lambda t(z); CMB (psi ~ 0) untouched",
+      "decisive_experiments": [
+        "DESI DR3/final",
+        "Euclid BAO"
+      ],
+      "kill_if": "per-redshift BAO scale consistent with no drift (ratio 1) or with the full C3 amplitude at >= 3 sigma"
+    },
+    {
+      "id": "P26",
+      "observable": "H0 from gravitational-wave standard sirens [km/s/Mpc]",
+      "value": 73.356,
+      "rule": "clock readout (absolute, not calibrated by early records r_d or theta*): 100 h_rings / cos(pi/8); ring-rule alternative would give 67.772",
+      "decisive_experiments": [
+        "LIGO-Virgo-KAGRA O5",
+        "Einstein Telescope",
+        "Cosmic Explorer"
+      ],
+      "kill_if": "siren H0 excludes the value at >= 3 sigma",
+      "status_v14": "status v14: three-way test - 73.36 (map M), 69.4 (branch C, weight-averaged gravitational readout), 67.77 kills the readout rule"
+    },
+    {
+      "id": "P27",
+      "observable": "Higgs trilinear self-coupling kappa_lambda; additional scalars",
+      "value": 1.0,
+      "rule": "Higgs = the single weak channel of Lambda^1 (section 43.22); no other scalar in the rendering space",
+      "decisive_experiments": [
+        "HL-LHC",
+        "FCC-hh",
+        "muon collider"
+      ],
+      "kill_if": "kappa_lambda != 1 at >= 3 sigma, or a new fundamental scalar discovered"
+    },
+    {
+      "id": "P28",
+      "observable": "M_H / M_Z",
+      "value": 1.37471,
+      "rule": "F = 1 + alpha_s D (empirical, current pull +1.42 sigma)",
+      "decisive_experiments": [
+        "FCC-ee",
+        "CEPC"
+      ],
+      "kill_if": "measured ratio excluded at >= 5 sigma",
+      "status_v16": "status v16: M_H/M_Z - 1 = Omega_DM/Omega_Lambda (43.59); current pull +1.42"
+    },
+    {
+      "id": "P29",
+      "observable": "delta_PMNS (normal ordering), any octant",
+      "value": [
+        250.0,
+        290.0
+      ],
+      "rule": "axiom B (TM1) + M1 (J_PMNS < 0): delta = f(s23^2); s23^2 = 0.43, 0.4556, 0.5, 0.5444, 0.57 -> 252.0, 258.8, 270.0, 281.2, 288.0 deg",
+      "decisive_experiments": [
+        "DUNE",
+        "Hyper-Kamiokande",
+        "T2K+NOvA"
+      ],
+      "kill_if": "delta_PMNS outside [250, 290] deg at >= 3 sigma (kills axiom B + M1 whatever the octant), or the measured (s23^2, delta) pair off the TM1 curve at >= 3 sigma"
+    },
+    {
+      "id": "P30",
+      "observable": "sin^2 2theta_23 (octant-blind)",
+      "value": 0.992097,
+      "rule": "Bool + Ind: |s23^2 - 1/2| = delta/4, so sin^2 2theta_23 = 1 - delta^2/4 (competing linear-staircase branch: 0.995555)",
+      "decisive_experiments": [
+        "DUNE",
+        "Hyper-Kamiokande",
+        "T2K+NOvA",
+        "IceCube-Upgrade"
+      ],
+      "kill_if": "measured sin^2 2theta_23 excluded at >= 3 sigma"
+    },
+    {
+      "id": "P31",
+      "observable": "energy dependence of the speed of light (linear and quadratic LIV)",
+      "value": "none (E_QG,1 = E_QG,2 = infinity)",
+      "rule": "Planck = rendering resolution counted holographically (area), Lorentz invariant; C' limit is boost invariant",
+      "decisive_experiments": [
+        "LHAASO",
+        "CTA",
+        "Fermi-LAT",
+        "GRB/AGN timing"
+      ],
+      "kill_if": "an energy-dependent photon speed detected at >= 5 sigma (any order)"
+    },
+    {
+      "id": "P32",
+      "observable": "H0 by calibration class",
+      "value": {
+        "early_calibrated": 67.77,
+        "present_calibrated": 73.36
+      },
+      "rule": "map M: early physical rulers (r_s, r_d, BBN omega_b, equality scale, inverse ladder) read the birth frame; present rods and clocks (Cepheid/TRGB/JAGB/Mira/SBF/TF ladders, masers, lens delays, sirens) read the present frame; no pure method lies in between",
+      "decisive_experiments": [
+        "SH0ES/CCHP JWST",
+        "TDCOSMO",
+        "megamasers",
+        "CMB-S4",
+        "DESI final"
+      ],
+      "kill_if": "a purely present-calibrated method converges at <= 70.0 with sigma <= 0.8, or a purely early-calibrated one at >= 71.0 with sigma <= 0.8",
+      "status_v18": "status v18: CCHP 70.39 -> 72.66 +- 1.64 in a matched analysis (H0DN Table 7); JWST-only CCHP values open"
+    },
+    {
+      "id": "P33",
+      "observable": "LambdaCDM + BBN reading of the BAO sky",
+      "value": {
+        "H0": 68.46,
+        "Omega_m": 0.298
+      },
+      "rule": "derived from P14/P25 through map M (G1m); listed for bookkeeping, not an independent prediction",
+      "decisive_experiments": [
+        "DESI final",
+        "Euclid"
+      ],
+      "kill_if": "final BAO+BBN LambdaCDM fit excluded from (68.46, 0.298) at >= 3 sigma"
+    },
+    {
+      "id": "P34",
+      "observable": "alpha_s(M_Z) and MS-bar sin^2 theta_W(M_Z) with no continuous input",
+      "value": {
+        "alpha_s": 0.117903,
+        "s2": 0.231256
+      },
+      "rule": "FP fixed point with E4 (43.55); competing inner-e variant gives s2 = 0.231249",
+      "decisive_experiments": [
+        "FCC-ee",
+        "lattice QCD (FLAG)",
+        "LEP/SLD legacy + future Z-pole"
+      ],
+      "kill_if": "sin^2 theta_W(M_Z) excludes 0.231256 at >= 5 sigma, or alpha_s(M_Z) excludes 0.117903 at >= 3 sigma",
+      "status_v16": "status v16: internal tension -3.75 sigma with the lepton-rule alpha_s (43.58); not retuned",
+      "status_v17": "status v17: s2 means the decoupled MS-bar s^2_Z (43.60)"
+    },
+    {
+      "id": "P35",
+      "observable": "Omega_m from the Higgs/Z mass ratio",
+      "value": {
+        "CMB_only_LambdaCDM": 0.3071,
+        "sigma": 0.0006,
+        "BAO_BBN_LambdaCDM": 0.297
+      },
+      "rule": "M_H/M_Z - 1 = Omega_DM/Omega_Lambda with q from the core; BAO readings shifted by map M (G1m)",
+      "decisive_experiments": [
+        "Simons Observatory",
+        "CMB-S4",
+        "DESI final",
+        "Euclid",
+        "FCC-ee (M_H)"
+      ],
+      "kill_if": "CMB-only LambdaCDM Omega_m excludes 0.3071, or BAO+BBN LambdaCDM Omega_m excludes 0.297, at >= 3 sigma"
+    },
+    {
+      "id": "P36",
+      "observable": "alpha_s-free ratio (m_mu/m_tau) / sin^2 theta_W(M_Z) MS-bar",
+      "value": 0.2570745,
+      "rule": "E4 + lepton rule: m_mu/m_tau = (s^2/4)(1 + delta/2pi), delta = s^2(1 - s^2)",
+      "decisive_experiments": [
+        "FCC-ee Z-pole sin^2 theta_W",
+        "tau mass (BES III, Belle II)"
+      ],
+      "kill_if": "measured ratio deviates from the prediction (at the measured s^2) by >= 5 sigma",
+      "status_v17": "status v17: s^2 means the decoupled MS-bar s^2_Z = 0.23129 +- 0.00004 (PDG 2024 Table 10.2); non-decoupled MS-bar would give +4.17 sigma (43.60)"
+    },
+    {
+      "id": "P37",
+      "observable": "H0 difference between present-frame distance ladders analysed with the same SN Ia sample, light-curve fitter, anchors and peculiar-velocity model (e.g. TRGB vs Cepheid vs JAGB primary calibration) [km/s/Mpc]",
+      "value": {
+        "difference": 0.0,
+        "physical_bound": 0.12
+      },
+      "rule": "map M + thermal time: relative tilt dtheta = H_Lambda t_lb(z)/2 <= 0.056 rad for z <= 0.15; the projection is second order, 1 - cos dtheta <= 1.6e-3",
+      "decisive_experiments": [
+        "SH0ES and CCHP JWST ladders",
+        "H0DN updates",
+        "CCHP JWST-only refits with SNooPy >= 2.7"
+      ],
+      "kill_if": "two matched present-frame ladders differ at >= 3 sigma of the difference (shared-calibrator correlations included), or by >= 1.0 km/s/Mpc with difference sigma <= 0.3"
+    }
+  ],
+  "deltas_from_v17": [
+    "No carried prediction value changed (P01-P36 verbatim except status notes). P37 added.",
+    "Ladder dissection (chapter 43.61): under map M + thermal time the relative tilt between calibrators (z ~ 0) and the Hubble flow (z <= 0.15) is dtheta = H_Lambda t_lb / 2 <= 0.056 rad, so present-frame ladders differ physically by <= 1.6e-3 (0.12 km/s/Mpc). H0DN (arXiv:2510.23823; published before this registration, not used in development: hold-out check, not a hit): baseline 73.50 +- 0.81, orthogonal paths O1 73.11 +- 0.92 and O2 73.45 +- 1.78; chi2(O1+O2) = 0.08 for 73.36 vs 11.7 for 70.39. CCHP F25 70.39 -> 72.66 +- 1.64 after SNooPy v2.7 (+1.74) and the full TRGB calibrator sample (+0.61) per H0DN Table 7 (not confirmed by CCHP). Section 43.48 kill not met. CCHP JWST-only TRGB 68.81 / JAGB 67.80 (-2.0 sigma each) remain open -> P37.",
+    "One coin, one event (43.62, theorem OE): f(mu) = s^2(mu) - 4 alpha_s(mu)^{4/3} increases monotonically on 2 GeV - 1e16 GeV, so E4 holds at exactly one scale, mu* = 91.6 (87.5-95.8) GeV. All rendering rules read the same coin at one event; E5 reduces to the single coincidence mu* = M_Z (the P20 content, a restatement)."
+  ],
+  "manifest_sha256": "2300ba99c67dbbf1d74018349dd222c5edcedc2dd4c07dc8ab034765a254ae42"
+}
