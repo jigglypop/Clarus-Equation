@@ -77,6 +77,7 @@ from examples.physics.rendering import ce_rendering_e4_ii as E4II
 from examples.physics.rendering import ce_rendering_lepton_trace as LTR
 from examples.physics.rendering import ce_rendering_e4_exponent as E4X
 from examples.physics.rendering import ce_rendering_born_doubling as BDB
+from examples.physics.rendering import ce_rendering_dictionary as DIC
 from examples.physics.rendering import ce_rendering_open_predictions as OP
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
@@ -1424,6 +1425,12 @@ def test_born_doubling_fixes_the_e4_exponent() -> None:
     assert s["intersection"] == [2] and not s["killed"]
     e = BDB.e4_check()
     assert e["A2_squared_equals_A4"] and abs(e["pull_world"]) < 1
+
+
+def test_dictionary_mixing_is_the_scale_derivative_of_a_record() -> None:
+    assert DIC.jacobi_check() < 1e-8
+    s = DIC.scan()
+    assert s["hits"] == ["a d_a | m=2"] and not s["killed"]
 
 
 def test_one_coin_one_event_unique_crossing_at_mz() -> None:
