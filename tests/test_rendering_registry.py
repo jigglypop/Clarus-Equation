@@ -33,6 +33,7 @@ from examples.physics.rendering import ce_rendering_light_limit as LL
 from examples.physics.rendering import ce_rendering_probability_weight as PW
 from examples.physics.rendering import ce_rendering_record_update as RU
 from examples.physics.rendering import ce_rendering_gradient as GD
+from examples.physics.rendering import ce_rendering_closure as CL
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
     alpha_em_inv,
@@ -644,3 +645,10 @@ def test_rendering_predictions_v11_is_frozen() -> None:
             f"{key} changed after v11 freeze: create v12 and keep earlier manifests")
     values = {q["id"]: q["value"] for q in v11["predictions"]}
     assert values["P25"] == pytest.approx(1.0126, abs=2e-4)
+
+
+def test_record_completion_is_thermodynamic_and_horizon_is_not_an_integer_channel_count() -> None:
+    v = CL.record_rule_verdicts()
+    assert v["RL"] == [] and len(v["R2"]) == 1          # redundancy-2 contradicted by GHZ coherence
+    for r in CL.horizon_integer_channels().values():
+        assert r["mismatch"] > 0.25
