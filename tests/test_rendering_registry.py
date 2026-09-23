@@ -69,6 +69,7 @@ from examples.physics.rendering import ce_rendering_jwst_cchp as JWC
 from examples.physics.rendering import ce_rendering_e4_shape as E4S
 from examples.physics.rendering import ce_rendering_horizon_pixel as HPX
 from examples.physics.rendering import ce_rendering_jacobson as JAC
+from examples.physics.rendering import ce_rendering_nu_cosmo as NUC
 from examples.physics.rendering import ce_rendering_open_predictions as OP
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
@@ -1190,6 +1191,25 @@ def test_rendering_predictions_v21_is_frozen() -> None:
     assert "P40" in ids and len(ids) == 40 and len(v21["model"]["files"]) == 48
 
 
+def test_rendering_predictions_v22_is_frozen() -> None:
+    v21 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v21.json").read_text(encoding="utf-8"))
+    v22 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v22.json").read_text(encoding="utf-8"))
+    assert v22["supersedes_manifest_id"] == v21["manifest_id"]
+    body = {k: v for k, v in v22.items() if k != "manifest_sha256"}
+    canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    assert hashlib.sha256(canonical).hexdigest() == v22["manifest_sha256"]
+    assert v22["manifest_sha256"] == "faae609903f08231380ed1b107278ada9a3d2bd1ccaafdf862653a90709b4a5c"
+    for key, rel in v22["model"]["files"].items():
+        assert v22["model"]["sha256"][key] in _line_ending_hashes((REPO_ROOT / rel)), (
+            f"{key} changed after v22 freeze: create v23 and keep earlier manifests")
+    old = {q["id"]: q for q in v21["predictions"]}
+    for q in v22["predictions"]:
+        if q["id"] in old:
+            assert q["value"] == old[q["id"]]["value"]                        # no carried value changed
+    ids = {q["id"] for q in v22["predictions"]}
+    assert "P41" in ids and len(ids) == 41 and "P17" in v22["model"]["killed_predictions"]
+
+
 def test_distinction_equals_indistinction_at_the_z_pole_record() -> None:
     assert POLE.coin_reading() == {"mean_distinction": 0.0, "g_V": 0.0}
     p = POLE.pole_reading()
@@ -1294,6 +1314,16 @@ def test_pixel_entropy_gives_newton_constant_and_kerr_first_law() -> None:
     fl = JAC.kerr_first_law()
     assert not fl["killed"] and fl["max_residual"] < 1e-6
     assert JAC.pixel_energy()["ratio"] == pytest.approx(1.0)                          # one pixel = one T_H
+
+
+def test_p17_neutrino_sum_killed_as_registered_and_context() -> None:
+    k = NUC.kill_check()
+    assert k["P17_killed_as_registered"] and k["triggered_by"] == ["LCDM prior>=0 adiabatic (CMB-SPA+DESI DR2+DESY5)"]
+    assert k["oscillation_minimum_meV"] == pytest.approx(58.79, abs=0.05) and 0 < k["CE_above_minimum_meV"] < 1
+    j = NUC.juno_pulls()
+    assert abs(j["dm21 (P19)"]) < 1 and abs(j["s12sq (P03)"]) < 1.5
+    g = NUC.g1m_equivalent_shift()
+    assert 0.08 < g["dOm_dSum_per_eV"] < 0.2 and g["equivalent_dSum_eV"] < -0.05       # post-hoc context only
 
 
 def test_one_coin_one_event_unique_crossing_at_mz() -> None:
