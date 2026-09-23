@@ -4,6 +4,7 @@ import hashlib
 import itertools
 import json
 import math
+from fractions import Fraction
 
 import numpy as np
 import pytest
@@ -19,6 +20,7 @@ from examples.physics.rendering import ce_rendering_complex_scale as CX
 from examples.physics.rendering import ce_rendering_growth as GR
 from examples.physics.rendering import ce_rendering_event_scale as ES
 from examples.physics.rendering import ce_rendering_neutrino as NU
+from examples.physics.rendering import ce_rendering_gauge as GA
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
     alpha_em_inv,
@@ -416,3 +418,23 @@ def test_rendering_predictions_v7_is_frozen() -> None:
     values = {q["id"]: q["value"] for q in v7["predictions"]}
     c = core(calibrated_alpha_s()[0])
     assert values["P17"] == pytest.approx(sum(NU.neutrino_masses_mev(c)), rel=1e-4)
+
+
+def test_rendered_stages_give_one_anomaly_free_sm_generation() -> None:
+    assert GA.matches_one_generation()
+    assert all(v == 0 for v in GA.anomaly_sums().values())
+    assert GA.unification_sin2() == Fraction(3, 8)
+
+
+def test_stage_preserving_symmetry_is_the_sm_gauge_group() -> None:
+    g = GA.gauge_structure_checks()
+    assert g["[Y,su3]"] < 1e-12 and g["[Y,su2]"] < 1e-12 and g["[su3,su2]"] < 1e-12
+    assert g["[Y,stage-mixing]"] > 0.1
+    assert abs(g["trace y"]) < 1e-15 and g["even sector invariant"] < 1e-12
+
+
+def test_rendering_channel_is_cptp_and_non_signalling() -> None:
+    r = GA.rendering_channel_checks()
+    assert r["isometry error"] < 1e-12
+    assert r["choi min eigenvalue"] > -1e-12
+    assert r["no-signalling error"] < 1e-12
