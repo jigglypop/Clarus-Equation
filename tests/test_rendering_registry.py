@@ -1235,6 +1235,24 @@ def test_rendering_predictions_v23_is_frozen() -> None:
     assert len(v23["model"]["files"]) == 51 and "P17" in v23["model"]["killed_predictions"]
 
 
+def test_rendering_predictions_v24_is_frozen() -> None:
+    v23 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v23.json").read_text(encoding="utf-8"))
+    v24 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v24.json").read_text(encoding="utf-8"))
+    assert v24["supersedes_manifest_id"] == v23["manifest_id"]
+    body = {k: v for k, v in v24.items() if k != "manifest_sha256"}
+    canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    assert hashlib.sha256(canonical).hexdigest() == v24["manifest_sha256"]
+    assert v24["manifest_sha256"] == "90d3905862e3a0f5796d9de6ae1d6de2cd77fe9f3a7a6e4fb9f42ddbe7645517"
+    for key, rel in v24["model"]["files"].items():
+        assert v24["model"]["sha256"][key] in _line_ending_hashes((REPO_ROOT / rel)), (
+            f"{key} changed after v24 freeze: create v25 and keep earlier manifests")
+    old = {q["id"]: q for q in v23["predictions"]}
+    assert {q["id"] for q in v24["predictions"]} == set(old)                   # no prediction added
+    for q in v24["predictions"]:
+        assert q["value"] == old[q["id"]]["value"]                            # no value changed
+    assert len(v24["model"]["files"]) == 56 and v24["model"]["status_changes_v24"]["E4"].startswith("axiom")
+
+
 def test_distinction_equals_indistinction_at_the_z_pole_record() -> None:
     assert POLE.coin_reading() == {"mean_distinction": 0.0, "g_V": 0.0}
     p = POLE.pole_reading()
