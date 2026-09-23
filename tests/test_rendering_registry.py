@@ -10,8 +10,12 @@ from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
     alpha_em_inv,
     calibrated_alpha_s,
+    circulant_eigenvector_drift,
     core,
+    delta_pmns_tm1,
+    distinction_channels,
     exterior_channels,
+    pmns_matrix,
     pmns_s2,
     rendering_amplitude,
     rendering_amplitude_closed,
@@ -51,13 +55,30 @@ def test_generation_weight_gives_the_unique_transition_sign_pattern() -> None:
     assert solutions == {(0, 1)}
 
 
-def test_exterior_channel_counts_fix_the_pmns_coefficients() -> None:
+def test_distinction_channels_fix_the_pmns_coefficients() -> None:
     assert [exterior_channels(m) for m in (1, 2, 3)] == [1, 3, 7]
-    assert exterior_channels(3) + 1 == 2 ** 3
+    assert [distinction_channels(m) for m in (1, 2, 3)] == [1, 2, 4]
     c = core(calibrated_alpha_s()[0])
-    assert pmns_s2(c, 1) == pytest.approx(c["d"] / 8)
-    assert pmns_s2(c, 2) == pytest.approx((1 - 3 * c["d"] / 8) / 3)
-    assert pmns_s2(c, 3) == pytest.approx((1 + 7 * c["d"] / 8) / 2)
+    s13 = pmns_s2(c, 1)
+    assert s13 == pytest.approx(c["d"] / 8)
+    assert pmns_s2(c, 2) == pytest.approx((1 - 2 * c["d"] / 8) / 3)
+    assert pmns_s2(c, 2) == pytest.approx((1 - 3 * s13) / (3 * (1 - s13)), abs=5e-4)  # TM1 to first order
+    assert pmns_s2(c, 3) == pytest.approx((1 - 4 * c["d"] / 8) / 2)
+    assert pmns_s2(c, 3) < 0.5  # "나" = last rendered -> lower octant
+
+
+def test_tm1_condition_fixes_delta_up_to_circulation() -> None:
+    c = core(calibrated_alpha_s()[0])
+    minus, plus = delta_pmns_tm1(c, -1), delta_pmns_tm1(c, +1)
+    assert minus + plus == pytest.approx(360.0, abs=1e-9)
+    U = pmns_matrix(pmns_s2(c, 2), pmns_s2(c, 3), pmns_s2(c, 1), math.radians(minus))
+    assert abs(U[1][0]) == pytest.approx(abs(U[2][0]), abs=1e-12)
+    assert 255.0 < minus < 262.0
+
+
+def test_cosmic_cyclic_phase_does_not_move_the_mixing() -> None:
+    for theta in (0.3, 0.7, 2.0, 4.0):
+        assert circulant_eigenvector_drift(theta) < 1e-12
 
 
 def test_one_channel_loop_restores_the_sum_rule_alpha_em() -> None:
@@ -68,11 +89,11 @@ def test_one_channel_loop_restores_the_sum_rule_alpha_em() -> None:
 
 @pytest.mark.parametrize(
     ("variant", "pmns", "expected"),
-    [("I", "SK", 1.587), ("II", "SK", 1.278), ("I", "noSK", 1.346), ("II", "noSK", 0.964)],
+    [("I", "SK", 1.234), ("II", "SK", 0.799), ("I", "noSK", 1.802), ("II", "noSK", 1.538)],
 )
 def test_joint_rmse_is_frozen(variant: str, pmns: str, expected: float) -> None:
     result = score(variant, pmns)
     assert result["N"] == 37
-    assert result["bits"] == pytest.approx(17.0)
+    assert result["bits"] == pytest.approx(19.0)
     assert result["rmse_all"] == pytest.approx(expected, abs=1.5e-3)
     assert result["k_continuous"] == (2 if variant == "I" else 1)

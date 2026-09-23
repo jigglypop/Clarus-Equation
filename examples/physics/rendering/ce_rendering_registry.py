@@ -10,8 +10,10 @@
   E3  m차원 부분공간 W로의 렌더링 진폭 A_m(W) = tr(P_W) det(P_W R P_W |_W).
   E4  sin θ_W = A_2.
   G1  세대 g의 가중치 w_g = (1+δ/2π)^{[g=2]}; 전이 i<j는 w_i/w_j를 받는다.
-  S1  PMNS 각 m(13:1, 12:2, 23:3)은 TBM 값에서 Λ(V3)의 8통로 중 Λ^{>=1}(V_m)의
-      비율 (2^m-1)/8만큼 δ를 차수 부호 (-1)^{m+1}로 받는다.
+  S2  m번째로 렌더링된 축은 그 축을 포함하는 새 통로 2^{m-1}개(8통로 중)만큼 분별을 만들고,
+      마지막에 렌더링된 것이 "나"다: s13^2 = δ/8, s12^2 = (1-2δ/8)/3, s23^2 = (1-4δ/8)/2.
+  T1  ν1은 2·3세대의 분별 이전 상태다: |U_μ1| = |U_τ1| (TM1). δ_PMNS는 이 조건의 해이고,
+      두 해 중 원을 도는 방향(J의 부호)은 시간축의 1 bit로 고른다.
 
 python -B -m examples.physics.rendering.ce_rendering_registry
 """
@@ -87,16 +89,49 @@ def transition_factor(c: dict, i: int, j: int) -> float:
     return generation_weight(c, i) / generation_weight(c, j)
 
 
-# ------------------------------------------------------------------ ④ PMNS 통로
+# ------------------------------------------------------------------ ④ PMNS 분별 통로
 def exterior_channels(m: int) -> int:
     """dim Λ^{>=1}(C^m)."""
     return sum(math.comb(m, k) for k in range(1, m + 1))
 
 
+def distinction_channels(m: int) -> int:
+    """m번째 축을 포함하는 Λ(C^m)의 통로 수 = 2^{m-1}."""
+    return exterior_channels(m) - exterior_channels(m - 1)
+
+
 def pmns_s2(c: dict, m: int) -> float:
-    tbm = {1: 0.0, 2: 1.0 / 3.0, 3: 0.5}[m]
-    frac = (-1) ** (m + 1) * exterior_channels(m) / 2.0 ** 3
-    return c["d"] * frac if m == 1 else tbm * (1.0 + frac * c["d"])
+    """S2: 분별 통로 비율만큼 최대 섞임에서 벗어나며 마지막 렌더링이 '나'다."""
+    frac = distinction_channels(m) / 2.0 ** 3
+    if m == 1:
+        return c["d"] * frac
+    return {2: 1.0 / 3.0, 3: 0.5}[m] * (1.0 - frac * c["d"])
+
+
+def pmns_matrix(s12sq: float, s23sq: float, s13sq: float, dl: float):
+    return mixing_matrix(math.sqrt(s12sq), math.sqrt(s23sq), math.sqrt(s13sq), dl)
+
+
+def delta_pmns_tm1(c: dict, circulation: int = -1) -> float:
+    """T1: |U_μ1| = |U_τ1|의 해. circulation=-1은 J<0(시간축 1 bit)."""
+    s12, s23, s13 = pmns_s2(c, 2), pmns_s2(c, 3), pmns_s2(c, 1)
+    g = lambda x: abs(pmns_matrix(s12, s23, s13, x)[1][0]) ** 2 - abs(pmns_matrix(s12, s23, s13, x)[2][0]) ** 2
+    lo, hi = (0.01, PI - 0.01) if circulation > 0 else (PI + 0.01, 2 * PI - 0.01)
+    return math.degrees(brentq(g, lo, hi))
+
+
+def circulant_eigenvector_drift(theta: float, eps: float = 0.1) -> float:
+    """CE 순환 질량 행렬의 고유벡터가 이산 푸리에 벡터에서 벗어난 최대량.
+
+    위상 θ는 고유값만 바꾸고 고유벡터(섞임)를 바꾸지 않는다. 그래서 우주 시계 θ는 δ_PMNS의
+    크기를 정하지 못하고, 두 원이 공유하는 것은 순환 방향(ω 또는 ω̄) 1 bit뿐이다.
+    """
+    S = np.roll(np.eye(3), 1, axis=0)
+    M = np.eye(3) + eps * (cmath.exp(1j * theta / 3) * S + cmath.exp(-1j * theta / 3) * S.T)
+    _, vecs = np.linalg.eigh(M)
+    w = cmath.exp(2j * PI / 3)
+    F = np.array([[w ** (a * i) for i in range(3)] for a in range(3)]) / math.sqrt(3)
+    return float(1.0 - np.abs(F.conj().T @ vecs).max(axis=0).min())
 
 
 # ------------------------------------------------------------------ ② 세대 진폭의 조립
@@ -214,11 +249,10 @@ def rows(pmns: str = "SK") -> tuple[Row, ...]:
             "합규칙 + 한 통로 고리"),
         Row("v/M_Pl", "Q", v_over_mpl, V_EW / M_PLANCK, V_EW / M_PLANCK * 1.1e-5, V_EW / M_PLANCK * 1.1e-5,
             "경험식", 3.0, "Λ^odd 고리"),
-        Row("s13^2", "Q", lambda c: pmns_s2(c, 1), *p["s13"], "경험식", 0.0, "S1"),
-        Row("s12^2", "Q", lambda c: pmns_s2(c, 2), *p["s12"], "경험식", 0.0, "S1"),
-        Row("s23^2", "Q", lambda c: pmns_s2(c, 3), *p["s23"], "경험식", 0.0, "S1: 위 옥탄트 예측"),
-        Row("delta_PMNS", "Q", lambda c: math.degrees(PI + ckm_right_angle(c["a"])[0]), *p["dl"], "경험식", 1.0,
-            "R-lep"),
+        Row("s13^2", "Q", lambda c: pmns_s2(c, 1), *p["s13"], "경험식", 0.0, "S2"),
+        Row("s12^2", "Q", lambda c: pmns_s2(c, 2), *p["s12"], "경험식", 0.0, "S2 (=TM1 1차)"),
+        Row("s23^2", "Q", lambda c: pmns_s2(c, 3), *p["s23"], "경험식", 1.0, "S2: 나=마지막 렌더링"),
+        Row("delta_PMNS", "Q", delta_pmns_tm1, *p["dl"], "경험식", 2.0, "T1 + 원 방향 1 bit"),
         Row("muon Da_mu x1e11", "Q", lambda c: 3.7287e-4, 38.5, math.hypot(14.5, 62.0), math.hypot(14.5, 62.0),
             "경험식"),
         Row("Omega_b", "M", lambda c: c["q"], OMEGA_B_PLANCK, OMEGA_B_PLANCK_ERR, OMEGA_B_PLANCK_ERR, "공리"),
