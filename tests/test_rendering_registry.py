@@ -59,6 +59,9 @@ from examples.physics.rendering import ce_rendering_higgs_cosmos as HGC
 from examples.physics.rendering import ce_rendering_distinction as DST
 from examples.physics.rendering import ce_rendering_ladder as LAD
 from examples.physics.rendering import ce_rendering_one_event as OE
+from examples.physics.rendering import ce_rendering_pole as POLE
+from examples.physics.rendering import ce_rendering_fp_ladder as FPL
+from examples.physics.rendering import ce_rendering_higgs_weight as HW
 from examples.physics.rendering import ce_rendering_open_predictions as OP
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
@@ -1121,6 +1124,60 @@ def test_rendering_predictions_v18_is_frozen() -> None:
             assert q["value"] == old[q["id"]]["value"]                        # no carried value changed
     ids = {q["id"] for q in v18["predictions"]}
     assert "P37" in ids and len(ids) == 37 and len(v18["model"]["files"]) == 38
+
+
+def test_rendering_predictions_v19_is_frozen() -> None:
+    v18 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v18.json").read_text(encoding="utf-8"))
+    v19 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v19.json").read_text(encoding="utf-8"))
+    assert v19["supersedes_manifest_id"] == v18["manifest_id"]
+    body = {k: v for k, v in v19.items() if k != "manifest_sha256"}
+    canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    assert hashlib.sha256(canonical).hexdigest() == v19["manifest_sha256"]
+    assert v19["manifest_sha256"] == "17274b1d032e922a4a4eebeb9ef5f26d4b0c6aa335a02058f9d9417602cd8f2d"
+    for key, rel in v19["model"]["files"].items():
+        assert v19["model"]["sha256"][key] in _line_ending_hashes((REPO_ROOT / rel)), (
+            f"{key} changed after v19 freeze: create v20 and keep earlier manifests")
+    old = {q["id"]: q for q in v18["predictions"]}
+    for q in v19["predictions"]:
+        if q["id"] in old:
+            assert q["value"] == old[q["id"]]["value"]                        # no carried value changed
+    ids = {q["id"] for q in v19["predictions"]}
+    assert "P38" in ids and len(ids) == 38 and len(v19["model"]["files"]) == 41
+
+
+def test_distinction_equals_indistinction_at_the_z_pole_record() -> None:
+    assert POLE.coin_reading() == {"mean_distinction": 0.0, "g_V": 0.0}
+    p = POLE.pole_reading()
+    assert p["real_at_pole"] == 0.0 and abs(p["phase_deg_at_pole"]) == pytest.approx(90.0)  # pure record
+    assert all(abs(abs(v) - 90) == pytest.approx(45, abs=0.5) for v in p["phase_deg_half_width"].values())
+    r = POLE.record_alpha_check()
+    assert not r["killed"] and -2 < r["Z pole (R_l, Gamma_Z, sigma_had)"]["E4"] < -1   # current -1.55 sigma
+
+
+def test_fixed_point_e_ladder_cannot_identify_the_missing_correction() -> None:
+    t = FPL.target_eps()
+    assert t["eps"] == pytest.approx(-4.94e-5, abs=0.05e-5) and t["sigma"] == pytest.approx(1.32e-5, abs=0.05e-5)
+    s = FPL.scan()
+    assert s["hits"] == ["F2 -lam^1 e^-6", "F2 -lam^2 e^-2", "F3 -lam q^2"]
+    assert all(s["rows"][f"F1 n={n}"]["pull_lepton"] > 10 for n in (2, 3, 4, "inf"))   # full e-series rejected
+    seen = FPL.seen_before()
+    assert all(abs(v["pull_lepton"]) < 0.3 for v in seen.values())                    # four-way tie
+    ch = FPL.chance_hits()
+    assert 0.2 < ch["F2"]["p_at_least_one"] < 0.35 and ch["F1"]["p_at_least_one"] < 0.05
+
+
+def test_higgs_weight_is_the_survival_partition_one_step() -> None:
+    idn = HW.partition_identity()
+    assert all(abs(v) < 1e-12 for v in idn.values())                                  # F = survival partition
+    forms = HW.step_forms()
+    assert not forms["one step 1+m"]["killed"]
+    assert forms["compound e^m"]["killed"] and forms["full recursion 1/(1-m)"]["killed"]
+    h = HW.hierarchy_cross_check()
+    assert abs(h["implied_vs_core"]) < 1 and 1 < h["implied_vs_higgs"] < 2
+    assert h["M_H_required"] == pytest.approx(125.36, abs=0.01) and h["M_H_required_sigma"] < 0.05
+    q = HW.q2_universality()
+    assert q["q2"]["chi2"] < q["plain"]["chi2"] and not q["adopt"]                    # breaks at v/M_Pl
+    assert q["q2"]["pulls"]["v/M_Pl (th+exp)"] > 2
 
 
 def test_one_coin_one_event_unique_crossing_at_mz() -> None:
