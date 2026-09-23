@@ -27,6 +27,8 @@ from examples.physics.rendering import ce_rendering_inflation as IN
 from examples.physics.rendering import ce_rendering_nu_ledger as NL
 from examples.physics.rendering import ce_rendering_w_branch as WB
 from examples.physics.rendering import ce_rendering_vacuum_tilt as VT
+from examples.physics.rendering import ce_rendering_vacuum_harmonic as VH
+from examples.physics.rendering import ce_rendering_mimetic_vacuum as MV
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
     alpha_em_inv,
@@ -544,3 +546,25 @@ def test_rendering_predictions_v9_is_frozen() -> None:
     values = {q["id"]: q["value"] for q in v9["predictions"]}
     c = core(calibrated_alpha_s()[0])
     assert values["P21"] == pytest.approx(VT.w_of(c, VT.ADOPTED_NU, 0.0), rel=1e-3)
+
+
+def test_w2_is_the_lowest_real_harmonic_of_the_complex_scale_phase() -> None:
+    c = core(calibrated_alpha_s()[0])
+    assert VH.phase_rate_over_h_lambda(c) == pytest.approx(0.5, abs=1e-12)      # harmonic k -> nu = k/2
+    assert c["a"] ** (2 / 3) == pytest.approx(math.sqrt(4 * c["a"] ** (4 / 3)) / 2, rel=1e-14)  # xi^2 = sin(theta_W)/2
+    f1, f_vt = VH.harmonic_density(c, 1), VT.density(c, 0.5)
+    assert all(f1(a) == pytest.approx(f_vt(a), rel=1e-14) for a in (0.3, 0.6, 0.9))
+    plus, minus = VH.score(1, 1.0), VH.score(1, -1.0)
+    assert plus["rmse_all"] < minus["rmse_all"]                                  # the sign is the one data-chosen bit
+
+
+def test_mimetic_clock_action_conserves_energy_and_fixes_the_sign() -> None:
+    m = MV.model("b")
+    assert MV.continuity_residual(m) < 1e-4                        # Bianchi: vacuum decay feeds dust
+    assert MV.model("b", sign=-1.0)["min_dust"] < 0                # c_1 < 0 needs negative-energy dust
+    assert m["min_dust"] > -1e-20
+    b, a = MV.score("b"), MV.score("a")
+    assert b["rmse_all"] == pytest.approx(0.920, abs=3e-3) and b["cmb_bao_tension"] < 2.4
+    assert a["rmse_all"] > 1.2                                      # primary reading fails
+    assert -1.0 < MV.w_eff(m, 0.0) < -0.99
+    assert MV.score("b", "free", rows_from="full")["rmse_all"] > 0.896   # mixed on 43 rows: kept as competing branch
