@@ -25,6 +25,7 @@ from examples.physics.rendering import ce_rendering_generations as GE
 from examples.physics.rendering import ce_rendering_ewsb as EW
 from examples.physics.rendering import ce_rendering_inflation as IN
 from examples.physics.rendering import ce_rendering_nu_ledger as NL
+from examples.physics.rendering import ce_rendering_w_branch as WB
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
     alpha_em_inv,
@@ -503,3 +504,15 @@ def test_rendering_predictions_v8_is_frozen() -> None:
     rd, h = NL.rd_and_h(c)
     assert values["P14"] == pytest.approx(h * rd, rel=1e-4)
     assert values["P13"] == pytest.approx(NL.early_densities(c)[1], rel=1e-4)
+
+
+def test_repo_dark_energy_branch_w1_is_rejected_under_fixed_h() -> None:
+    c = core(calibrated_alpha_s()[0])
+    w = WB.w1(c)
+    assert w[0] == pytest.approx(-0.768, abs=1e-3) and w[1] == pytest.approx(-0.214, abs=1e-3)
+    assert w[0] + w[1] > -1.0                                   # never crosses -1
+    lam, br = WB.branch_rows(c, WB.LAMBDA), WB.branch_rows(c, w)
+    assert br["bao_chi2_free"] < lam["bao_chi2_free"]           # the shape alone improves ...
+    assert br["theta_pull"] > 30 and br["cmb_bao_tension"] < -5  # ... but theta* and the ruler break
+    assert WB.joint_rmse(c, w)[0] > 5 * WB.joint_rmse(c, WB.LAMBDA)[0]
+    assert WB.theta_fitted_h(c, w)["omega_b_pull"] < -10         # detour via theta-fitted h also fails

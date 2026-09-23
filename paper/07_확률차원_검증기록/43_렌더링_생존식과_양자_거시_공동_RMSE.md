@@ -387,9 +387,26 @@ CE는 약한 렌즈와 CMB 사이에 S8 긴장이 없다는 쪽을 예측하며 
 
 **[산출] 사전 등록 v8.** `experiments/preregistration/rendering_predictions_v8.json`(자기 해시 `a2e21806…`)은 v1–v7을 보존하고 P13 $\omega_c=0.11847$, P14 $hr_d=99.987$ Mpc, P16 $S_8=0.8173$로 갱신했다(이전 값은 `superseded_value_v7`에 남김). [중성미자 장부 모듈](../../examples/physics/rendering/ce_rendering_nu_ledger.py)의 SHA-256을 함께 잠갔다.
 
+## 43.25 [반례] 저장소 암흑에너지 식 W1 — 고정된 $h$와 양립하지 않음
+
+**후보와 사전 규칙.** 저장소 식 W1은 $\xi^2=\alpha_s^{2/3}$($A_2$의 절반), $w_0=-1+2\xi^2/(3\Omega_\Lambda)=-0.768$, $w_a=-3(1+w_0)(1-\Omega_\Lambda)=-0.214$이고 연속 매개변수가 없다. 계산 전에 규칙을 고정했다. ν 장부 판본 V($\alpha_s$만, BAO 눈금 고정)에서 $\theta^*$·BAO 13행·S8(성장 억제)을 $w(z)$로 다시 계산해, 공동 RMSE 감소, 새 $3\sigma$ 초과 행 없음, CMB–BAO 긴장 감소를 모두 만족하면 채택한다. DESI+CMB+SN의 $(w_0,w_a)$는 BAO와 자료가 겹쳐 점수에서 뺀다.
+
+| 항목 | Λ | W1 |
+|---|---|---|
+| BAO 모양 $\chi^2$(눈금 자유) | 11.70 | 10.25 |
+| S8 DES Y3 | $+2.42\sigma$ | $+0.17\sigma$ |
+| $100\theta^*$ (R-Pl $h$) | $-1.05\sigma$ | $+56.7\sigma$ |
+| 고정 눈금 BAO $\chi^2$ | 18.81 | 125.95 |
+| CMB–BAO 척도 | $+2.65\sigma$ | $-11.1\sigma$ |
+| 판본 V 39행 / 43행 | 0.950 / 0.984 | 6.76 / 6.45 |
+
+**판정: 기각.** BAO 모양과 S8만 보면 좋아지지만, $w>-1$인 암흑에너지는 과거에 더 진해 재결합까지의 거리를 줄이고 R-Pl로 고정된 $h$에서 $\theta^*$를 깨뜨린다. 우회로로 $h$를 $\theta^*$에 맞추면(연속 적합 1개) $h=0.646$이 되어 직접 판독 $-3.8\sigma$, $\omega_b$ $-13.9\sigma$, $\omega_c$ $-10.4\sigma$, 고정 눈금 BAO $\chi^2=57.9$로 역시 실패한다. 같은 계산에서 Λ일 때 $\theta^*$ 적합 $h=0.6784$는 R-Pl $h=0.6777$과 맞아 두 경로의 교차 확인이 된다. 외부 대조는 DESI+CMB+DESY5 대비 $w_a$ $+2.8\sigma$, Pantheon+ 결합 대비 $+1.9\sigma$다.
+
+**남는 조건(다음 후보의 요건).** $h$가 R-Pl로, $\theta^*$가 관측으로 고정된 CE에서 $w(z)$는 재결합까지의 거리 $\int_0^{z^*}dz/H$를 거의 바꾸지 않아야 한다. W1처럼 $w$가 $-1$을 한 번도 건너지 않는 꼴은 이것이 불가능하다. 살아남을 수 있는 꼴은 $\rho_{\rm DE}-\rho_\Lambda$의 거리 가중 적분이 0인, $-1$ 둘레를 오가는 변화뿐이다. 이는 순환 평균이 0이 되는 우로보로스 진동(C1)과 같은 꼴이며, 다음 분기로 연다. 구현은 [w 분기 모듈](../../examples/physics/rendering/ce_rendering_w_branch.py)이고 예측값과 사전 등록은 바뀌지 않는다.
+
 ## 43.10 재현과 한계
 
-구현은 [렌더링 레지스트리](../../examples/physics/rendering/ce_rendering_registry.py), 고정 검사는 `tests/test_rendering_registry.py`(①·③·S2·T1·U1·M1·O1·TC·C1·순환 평균·사다리 상쇄·순환 위상과 팽창 변화의 반례·⑤·$\theta^*$ 반례·판본 III·부스트 반례·R-Pl 전이·유클리드 회전·BAO 눈금 예측·순환 기하·나선 긴장·복소 척도인자·S8·두 원의 구분·사건 척도·중성미자 질량·게이지군과 한 세대·세 세대와 선형 중력·대칭 깨짐과 전하 양자화·급팽창 게이지 수·중성미자 장부·사전 등록 v1–v8 동결과 공동 RMSE 고정)다. 필수 테스트 목록에 추가했고 전체 324개 검사를 실행했다. 실행:
+구현은 [렌더링 레지스트리](../../examples/physics/rendering/ce_rendering_registry.py), 고정 검사는 `tests/test_rendering_registry.py`(①·③·S2·T1·U1·M1·O1·TC·C1·순환 평균·사다리 상쇄·순환 위상과 팽창 변화의 반례·⑤·$\theta^*$ 반례·판본 III·부스트 반례·R-Pl 전이·유클리드 회전·BAO 눈금 예측·순환 기하·나선 긴장·복소 척도인자·S8·두 원의 구분·사건 척도·중성미자 질량·게이지군과 한 세대·세 세대와 선형 중력·대칭 깨짐과 전하 양자화·급팽창 게이지 수·중성미자 장부·암흑에너지 W1 반례·사전 등록 v1–v8 동결과 공동 RMSE 고정)다. 필수 테스트 목록에 추가했고 전체 325개 검사를 실행했다. 실행:
 
 ```powershell
 python -B -m examples.physics.rendering.ce_rendering_registry
