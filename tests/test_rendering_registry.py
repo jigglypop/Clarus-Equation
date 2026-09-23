@@ -53,6 +53,9 @@ from examples.physics.rendering import ce_rendering_lock_history as LH
 from examples.physics.rendering import ce_rendering_thermal_time as TT
 from examples.physics.rendering import ce_rendering_branching as BRN
 from examples.physics.rendering import ce_rendering_e4_anchor as E4A
+from examples.physics.rendering import ce_rendering_biased_coin as BCN
+from examples.physics.rendering import ce_rendering_boundary_loop as BLP
+from examples.physics.rendering import ce_rendering_higgs_cosmos as HGC
 from examples.physics.rendering import ce_rendering_open_predictions as OP
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
@@ -944,6 +947,31 @@ def test_e4_anchor_and_self_consistent_fixed_point() -> None:
     assert nest[0]["pull_s2"] < -20 and abs(nest[-1]["pull_s2"] - fp["pull_s2"]) < 1e-6   # only the infinite nesting works
     rs = E4A.resummation_scan()
     assert rs["V1 exp outer"]["pull_s2"] > 3 and abs(rs["V3 exp inner"]["pull_s2"]) < 2
+
+
+def test_fixed_point_is_a_biased_coin_on_gauge_axes_only() -> None:
+    assert BCN.identity_with_fp() < 1e-12                                          # FP = coin 1/2 (1 +- a)
+    assert BCN.coin_fixed_point("G")["pull_s2"] > 3                              # 1/g form rejected
+    u = BCN.universality()
+    assert abs(u["unbiased"]["pull_sin2beta"]) < 1 and u["biased"]["pull_sin2beta"] < -3   # flavour coin stays fair
+    assert u["biased"]["sum"] == pytest.approx(180.0)
+
+
+def test_boundary_loop_is_linear_and_lepton_ratio_disfavours_fixed_point() -> None:
+    rel = BLP.alpha_free_relation()
+    assert abs(rel["linear"]["pull"]) < 1 and rel["geometric"]["pull"] > 3 and 1 < rel["compound"]["pull"] < 3
+    lep = BLP.alpha_from_lepton_rule()
+    assert lep["alpha_s_lepton"] == pytest.approx(0.1179196, abs=2e-7) and abs(lep["E4_vs_lepton"]) < 1
+    assert lep["FP_vs_lepton"] < -3                                                   # internal tension of FP
+
+
+def test_higgs_mass_predicts_cosmic_matter_fraction() -> None:
+    idn = HGC.identity()
+    assert idn["F_minus_1"] == pytest.approx(idn["OmDM_over_OmL"])                 # alpha_s-free relation
+    h = HGC.from_higgs()
+    assert h["Om_true_from_Higgs"] == pytest.approx(0.3071, abs=2e-4)
+    comp = HGC.comparisons()
+    assert all(abs(v["pull"]) < 3 for k, v in comp.items() if isinstance(v, dict))
 
 
 def test_rendering_predictions_v13_is_frozen() -> None:
