@@ -45,6 +45,10 @@
 | 렌더링 | `rendering/ce_rendering_reverse_derivations.py` | 영감 역유도: k=Ω_m = 확률 무게 평균, W2 부호 = 널 에너지, U1 = O1 이등분 직각삼각형, R-Pl = 4×⑤ (43장 §43.34) |
 | 렌더링 | `rendering/ce_rendering_axiom_proofs.py` | 공리 증명 검산: QG1(HJW+아핀 ⇒ Tr ρT), C6(비르팅거), L(이그나토프스키+허수 빠르기), 이등분(minimax) (43장 §43.35) |
 | 렌더링 | `rendering/ce_rendering_open_predictions.py` | 정리 E(나이테 = 무게 평균 1차), 미증명 항목의 예측 P26 사이렌 H0·P27 κ_λ·P28 M_H/M_Z (43장 §43.36, v12) |
+| 렌더링 | `rendering/ce_rendering_sn_holdout.py` | Pantheon 40구간 초신성 보류 시험: L0·W2·W3 모두 최적 ΛCDM 대비 Δχ² < 0.5 (43장 §43.37) |
+| 렌더링 | `rendering/ce_rendering_theta_nu.py` | θ*를 정확한 FD 중성미자로 통일 계산, 경로 차이 해소·판정 불변 (43장 §43.38) |
+| 렌더링 | `rendering/ce_rendering_w3_growth.py` | W3 먼지 전달(δQ=0) 성장 보정, W2–W3 판가름: W3 경쟁 판본 유지 (43장 §43.39) |
+| 렌더링 | `rendering/ce_rendering_data_sensitivity.py` | 자료 판본 민감도(NuFIT SK·렌즈·TRGB 16조합): NuFIT 판본이 지배적 (43장 §43.40) |
 
 `regge_tent_transfer.json`은 해당 코드의 SHA-256과 적용범위를 검사하는 고정 fixture다.
 새 실행 결과를 기존 검증 영수증에 자동으로 덮어쓰지 않는다.

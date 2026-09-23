@@ -709,3 +709,41 @@ def test_rendering_predictions_v12_is_frozen() -> None:
             f"{key} changed after v12 freeze: create v13 and keep earlier manifests")
     ids = {q["id"] for q in v12["predictions"]}
     assert {"P26", "P27", "P28"} <= ids and len(ids) == 28
+
+
+def test_pantheon_holdout_keeps_all_ce_branches_within_two_sigma() -> None:
+    from examples.physics.rendering import ce_rendering_sn_holdout as SN
+    out = SN.score()
+    assert out["N"] == 40
+    assert 0.25 < out["best"]["Om"] < 0.35
+    v = SN.verdict(out)
+    assert v["L0"] == v["W2"] == v["W3"] == "pass" and v["W2 vs L0"] == "kept"
+    assert out["W2"] - out["best"]["chi2"] == pytest.approx(0.470, abs=0.02)
+
+
+def test_exact_fd_neutrinos_resolve_theta_path_gap_without_flipping_verdicts() -> None:
+    from examples.physics.rendering import ce_rendering_theta_nu as TN
+    p = TN.pulls()
+    assert abs(p["L0"] - p["L0_pathD"]) < 0.5
+    assert abs(p["W2"]) < abs(p["L0"])          # W2 still improves theta* over constant vacuum
+    assert abs(p["W3b"]) < 1.0 and p["W3a"] < -5.0   # W3 (b) passes, (a) stays rejected
+    assert TN.variant_v_with_fd_theta() == pytest.approx(0.833, abs=2e-3)
+
+
+def test_w3_growth_transfer_removes_its_s8_excess_but_w3_stays_competing() -> None:
+    from examples.physics.rendering import ce_rendering_w3_growth as W3
+    out = W3.compare()
+    w2, first, corr = out["W2"], out["W3_first_order"], out["W3_corrected"]
+    assert corr["S8"] < w2["S8"] < first["S8"]          # dilution by homogeneous new dust lowers S8
+    assert corr["rows43"] < w2["rows43"]
+    assert corr["V39"] > w2["V39"]                        # pre-registered rule needs both lower
+    assert out["verdict"] == "W3 stays competing"
+
+
+def test_data_version_sensitivity_is_dominated_by_the_nufit_sk_choice() -> None:
+    from examples.physics.rendering import ce_rendering_data_sensitivity as DS
+    tab = {(r["pmns"], r["lens"], r["h0"]): r for r in DS.table()}
+    assert not any(r["flag_3sigma"] for k, r in tab.items() if k[0] == "SK")
+    assert all(r["flag_3sigma"] and r["W2"] > 1.4 for k, r in tab.items() if k[0] == "noSK")
+    # the W2/W3 ranking follows the DES lensing row only
+    assert all((r["better"] == "W3") == (r["lens"] in ("both", "DES")) for r in tab.values())
