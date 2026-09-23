@@ -21,6 +21,7 @@ from examples.physics.rendering import ce_rendering_growth as GR
 from examples.physics.rendering import ce_rendering_event_scale as ES
 from examples.physics.rendering import ce_rendering_neutrino as NU
 from examples.physics.rendering import ce_rendering_gauge as GA
+from examples.physics.rendering import ce_rendering_generations as GE
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
     alpha_em_inv,
@@ -438,3 +439,18 @@ def test_rendering_channel_is_cptp_and_non_signalling() -> None:
     assert r["isometry error"] < 1e-12
     assert r["choi min eigenvalue"] > -1e-12
     assert r["no-signalling error"] < 1e-12
+
+
+def test_cycle_generations_explain_small_quark_and_large_lepton_mixing() -> None:
+    assert GE.generation_count() == 3
+    for seed in range(6):
+        ckm = GE.ckm_from_circulants(seed)
+        assert np.allclose(np.sort(ckm, axis=1)[:, -1], 1.0, atol=1e-10)   # permutation: no leading-order mixing
+        assert np.allclose(np.sort(ckm, axis=1)[:, :-1], 0.0, atol=1e-10)
+    assert np.abs(GE.lepton_mixing_leading() - GE.TBM_SQ).max() < 1e-12
+
+
+def test_tensor_modes_travel_at_light_speed_in_the_abs_a_background() -> None:
+    t = GE.tensor_mode_checks()
+    assert abs(t["c_T/c"] - 1.0) < 1e-4
+    assert t["amplitude*a spread (Xi-1 proxy)"] < 0.02

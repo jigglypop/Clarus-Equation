@@ -29,6 +29,7 @@
 | 렌더링 | `rendering/ce_rendering_event_scale.py` | 2차원 렌더링 사건 척도 판별(M_Z) (43장 §43.18, v7 잠금) |
 | 렌더링 | `rendering/ce_rendering_neutrino.py` | 중성미자 질량 행, 43행 공동 채점 (43장 §43.19, v7 잠금) |
 | 렌더링 | `rendering/ce_rendering_gauge.py` | 렌더링 단계 V3⊕V2에서 표준모형 게이지군·한 세대·이상 상쇄, 렌더링 사상의 CPTP·무신호 (43장 §43.20) |
+| 렌더링 | `rendering/ce_rendering_generations.py` | 우로보로스 3-순환 세대: CKM 선도 차수 단위행렬, TBM = 푸리에×π/4, 중력파 속도 (43장 §43.21) |
 
 `regge_tent_transfer.json`은 해당 코드의 SHA-256과 적용범위를 검사하는 고정 fixture다.
 새 실행 결과를 기존 검증 영수증에 자동으로 덮어쓰지 않는다.
