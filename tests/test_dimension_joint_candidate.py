@@ -1,18 +1,12 @@
 """Independent integrals and adversarial cases, not physical confirmation."""
 
-import importlib.util
 import math
 
 import numpy as np
 import pytest
 from scipy.integrate import quad
 
-from test_support.paths import VERIFY_ROOT
-
-PATH = VERIFY_ROOT / "dimension_joint_candidate.py"
-spec = importlib.util.spec_from_file_location("dimension_joint_candidate", PATH)
-model = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(model)
+from examples.physics.darksector import dimension_joint_candidate as model
 
 
 @pytest.mark.parametrize("t", [1e-6, 0.1, 1.0, 10.0, 1e6])

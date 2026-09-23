@@ -35,7 +35,7 @@ $$
 
 를 만족한다. $\xi$는 면의 방향을 적는 화살표이지 아직 면에 배정된 양자수 $j$도, coherent intertwiner도 아니다. 같은 internal tetrahedron을 두 fine cell에서 다시 읽을 때 area-squared label, normal, spinor가 일치하는 것은 이 **같은 전역 정렬과 같은 Cholesky chart**를 다시 실행했기 때문이다. 독립 local frame들의 전이법칙이나 quantum gluing을 이미 얻었다는 뜻은 아니다.
 
-구현과 검사는 [coherent boundary 모듈](../../examples/physics/proper_vertex_one_to_five_coherent_boundary.py), [대응 테스트](../../tests/test_proper_vertex_one_to_five_coherent_boundary.py)에 남아 있다. 이 단계의 산출물은 기하와 방향 자료다. half-integer spin, $\gamma$, 면적 spectrum, time orientation, bra--ket dualization, $SU(2)$ 또는 $SL(2,\mathbb C)$ lift는 여기서 정하지 않았다.
+구현과 검사는 coherent boundary 모듈 (미확보 경로: `../../examples/physics/proper_vertex_one_to_five_coherent_boundary.py`), 대응 테스트 (미확보 경로: `../../tests/test_proper_vertex_one_to_five_coherent_boundary.py`)에 남아 있다. 이 단계의 산출물은 기하와 방향 자료다. half-integer spin, $\gamma$, 면적 spectrum, time orientation, bra--ket dualization, $SU(2)$ 또는 $SL(2,\mathbb C)$ lift는 여기서 정하지 않았다.
 
 ## 27.2 왜 증명 순서를 바꾸었는가: 정확한 공통 스케일은 먼저 반증한다
 
@@ -88,7 +88,7 @@ $$
 
 **문과 비유.** 서로 다른 실제 길이의 막대에 공통 눈금자를 대면 모든 길이가 정확히 정수 칸이 되지는 않는다. 그 사실을 먼저 증명한 것이 식 (5)다. 하지만 눈금자를 $N$배 촘촘하게 만들면 각 막대의 오차는 반 칸 이하로 줄어든다. 식 (7)과 (8)은 그 “반 칸”이 사면체 전체 균형을 얼마나 흔드는지까지 계산한 보증서다.
 
-이 가족은 [spin assignment 모듈](../../examples/physics/proper_vertex_one_to_five_spin_assignment.py)과 [대응 테스트](../../tests/test_proper_vertex_one_to_five_spin_assignment.py)에 있다. 이것은 표준 면적법칙을 채택하거나 exact finite-$N$ 기하를 완성한 것이 아니라, 다음 국소 intertwiner 계산을 가능하게 하는 명시적 입력이다.
+이 가족은 spin assignment 모듈 (미확보 경로: `../../examples/physics/proper_vertex_one_to_five_spin_assignment.py`)과 대응 테스트 (미확보 경로: `../../tests/test_proper_vertex_one_to_five_spin_assignment.py`)에 있다. 이것은 표준 면적법칙을 채택하거나 exact finite-$N$ 기하를 완성한 것이 아니라, 다음 국소 intertwiner 계산을 가능하게 하는 명시적 입력이다.
 
 ## 27.4 실제로 만든 국소 LS 벡터
 
@@ -110,7 +110,7 @@ $$
 \tag{10}
 $$
 
-이다. [LS intertwiner 모듈](../../examples/physics/proper_vertex_one_to_five_ls_intertwiners.py)과 [대응 테스트](../../tests/test_proper_vertex_one_to_five_ls_intertwiners.py)는 invariant basis의 직교성, $SU(2)$ 불변성, 두 계산법의 일치를 확인한다. 이 값은 “국소 벡터가 영벡터로 사라지지 않는다”는 제한된 사실을 말한다.
+이다. LS intertwiner 모듈 (미확보 경로: `../../examples/physics/proper_vertex_one_to_five_ls_intertwiners.py`)과 대응 테스트 (미확보 경로: `../../tests/test_proper_vertex_one_to_five_ls_intertwiners.py`)는 invariant basis의 직교성, $SU(2)$ 불변성, 두 계산법의 일치를 확인한다. 이 값은 “국소 벡터가 영벡터로 사라지지 않는다”는 제한된 사실을 말한다.
 
 문헌에서 proper vertex의 Lorentzian 다중 simplex 문제는 계속 섬세한 과제다. [Engle--Zipfel (2015)](https://arxiv.org/abs/1502.04640)은 Lorentzian proper vertex의 비퇴화 경계 자료와 단일 vertex의 semiclassical 분석을 다루며, [Engle--Vilensky--Zipfel (2015)](https://arxiv.org/abs/1505.06683)은 한 4-simplex의 proper vertex가 단 하나의 Feynman term을 갖는 asymptotics를 다룬다. 두 결과 모두 이 장의 15개 국소 벡터를 전역으로 glue한 다섯-vertex proper EPRL amplitude나 multicell Hessian을 제공하지 않는다. 그래서 이 문헌을 이름만으로 마지막 다리의 증명으로 쓰지 않는다.
 

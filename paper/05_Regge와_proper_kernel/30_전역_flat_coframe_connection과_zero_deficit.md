@@ -119,7 +119,7 @@ $$
 
 ## 30.5 재현 출력과 남은 경계
 
-base witness에서 최대 cell-frame, transition, cocycle, holonomy residual은 각각 약 $1.0213\times10^{-15}$, $1.81494\times10^{-15}$, $7.2466\times10^{-16}$, $7.8679\times10^{-16}$다. positive rational scale $10^{-500}$과 $10^{500}$에서도 transition은 보존된다. focused [global-connection test](../../tests/test_proper_vertex_one_to_five_global_connection.py)의 **6 passed**는 이 고정 witness의 재현 근거일 뿐, 앞 절의 행렬 증명 또는 물리적 curvature reconstruction의 증거가 아니다.
+base witness에서 최대 cell-frame, transition, cocycle, holonomy residual은 각각 약 $1.0213\times10^{-15}$, $1.81494\times10^{-15}$, $7.2466\times10^{-16}$, $7.8679\times10^{-16}$다. positive rational scale $10^{-500}$과 $10^{500}$에서도 transition은 보존된다. focused global-connection test (미확보 경로: `../../tests/test_proper_vertex_one_to_five_global_connection.py`)의 **6 passed**는 이 고정 witness의 재현 근거일 뿐, 앞 절의 행렬 증명 또는 물리적 curvature reconstruction의 증거가 아니다.
 
 Regge state와 proper single-vertex 범위를 구분하는 외부 문맥은 [Engle--Zipfel (2015), arXiv:1502.04640](https://arxiv.org/abs/1502.04640) 및 [Engle--Vilensky--Zipfel (2015), arXiv:1505.06683](https://arxiv.org/abs/1505.06683)을 따른다. 이 문헌은 이 장의 declared affine coframe을 intrinsic connection이나 five-vertex amplitude로 승격하지 않는다.
 

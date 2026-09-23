@@ -46,4 +46,4 @@ rigging pairing의 cylindricity만으로 action equality나 Hessian pullback은 
 
 ## 22.5 재현 범위
 
-chain-rule extra term, residual Ward bound, Gaussian Schur elimination과 constructed target witness는 [stationary_refinement_ward_bridge.py](../../examples/physics/stationary_refinement_ward_bridge.py) 및 [gaussian_refinement_schur_kernel.py](../../examples/physics/gaussian_refinement_schur_kernel.py)에 있다. 원장의 focused 결과는 각각 `15 passed`, `18 passed`다.
+chain-rule extra term, residual Ward bound, Gaussian Schur elimination과 constructed target witness는 stationary_refinement_ward_bridge.py (미확보 경로: `../../examples/physics/stationary_refinement_ward_bridge.py`) 및 gaussian_refinement_schur_kernel.py (미확보 경로: `../../examples/physics/gaussian_refinement_schur_kernel.py`)에 있다. 원장의 focused 결과는 각각 `15 passed`, `18 passed`다.

@@ -158,8 +158,8 @@ UV 응답은 다시 계산해야 한다. 새 좌표의 양의 Hilbert 계량을 
 
 ## 48.7 재현과 판정
 
-[계산 코드](../../verify/ce_extended_maxwell_variation.py)와
-[산출·소스 해시](../../verify/ce_extended_maxwell_variation.json)를 사용한다.
+계산 코드 (과거 기록: `verify/ce_extended_maxwell_variation.py`)와
+산출·소스 해시 (과거 기록: `verify/ce_extended_maxwell_variation.json`)를 사용한다.
 
 ```powershell
 python -B verify/ce_extended_maxwell_variation.py

@@ -2,11 +2,11 @@
 
 이 장은 12장에서 확인한
 
-\[
+$$
 \text{local simplicity}
 \not\Rightarrow
 \text{block simplicity}
-\]
+$$
 
 문제를 한 단계 더 좁힌다.
 
@@ -28,16 +28,16 @@
 
 Euclideanized self-dual Plebanski triple을
 
-\[
+$$
 B^i\in\Lambda^2,
 \qquad i=1,2,3
-\]
+$$
 
 라 하자.
 
 비퇴화 triple은 Urbantke construction으로 metric density
 
-\[
+$$
 \widetilde g_{\mu\nu}[B]
 =
 \frac1{12}
@@ -46,45 +46,45 @@ B^i\in\Lambda^2,
 B^i_{\mu\alpha}
 B^j_{\beta\gamma}
 B^k_{\delta\nu}
-\]
+$$
 
 를 만든다.
 
 표준 geometric triple
 
-\[
+$$
 B^i=\Sigma^i(e)
-\]
+$$
 
 에서는
 
-\[
+$$
 \widetilde g_{\mu\nu}
 =
 \det(e)\,g_{\mu\nu}(e)
-\]
+$$
 
 이므로 determinant를 제거하면 conformal metric을 복원할 수 있다.
 
 현재 finite audit에서는 positive Euclidean branch만 사용하고
 
-\[
+$$
 \widehat g[B]
 =
 \frac{\widetilde g[B]}{\det(\widetilde g[B])^{1/4}}
-\]
+$$
 
 로 정규화한다.
 
 두 triple의 conformal mismatch는
 
-\[
+$$
 \boxed{
 \epsilon_g(B,C)
 =
 \frac12\left\|\widehat g[B]-\widehat g[C]\right\|_F
 }
-\]
+$$
 
 로 둔다. 이 값은 internal self-dual basis rotation과 positive rescaling에
 불변이다.
@@ -93,65 +93,65 @@ B^i=\Sigma^i(e)
 
 두 triple 사이의 cross-wedge matrix를
 
-\[
+$$
 M_{ij}[B,C]
 =
 B^i\wedge C^j
-\]
+$$
 
 로 둔다.
 
 singular-value decomposition
 
-\[
+$$
 M=U\Sigma V^\mathsf T
-\]
+$$
 
 의 proper orthogonal polar factor
 
-\[
+$$
 R=UV^\mathsf T\in SO(3)
-\]
+$$
 
 를 사용해
 
-\[
+$$
 C_{\rm align}=RC
-\]
+$$
 
 로 내부 frame을 정렬한다.
 
 만약
 
-\[
+$$
 C^i=\alpha Q^i{}_jB^j,
 \qquad
 \alpha>0,
 \quad Q\in SO(3)
-\]
+$$
 
 이면 polar alignment는 정확히
 
-\[
+$$
 R=Q^\mathsf T,
 \qquad
 C_{\rm align}=\alpha B
-\]
+$$
 
 를 복구한다. 따라서
 
-\[
+$$
 B+C_{\rm align}
 =(1+\alpha)B
-\]
+$$
 
 도 정확히 simple하다.
 
 ## 13.3 Common-Metric Orbit Closure Theorem
 
-reference triple \(B_0\)의 orbit를
+reference triple $B_0$의 orbit를
 
-\[
+$$
 \mathcal O(B_0)
 =
 \left\{
@@ -159,12 +159,12 @@ reference triple \(B_0\)의 orbit를
 \alpha>0,
 \ R\in SO(3)
 \right\}
-\]
+$$
 
 로 정의한다.
 
-> **조건부 정리.** positive Euclidean self-dual/orientation branch에서 \(\epsilon_{\rm simp}(B_0)=0\)인 비퇴화 reference triple을 두고, 모든 microscopic triple \(B_a\)가
-> \(\mathcal O(B_0)\)에 속하면, 각 triple을 \(B_0\) frame으로 정렬해 합한
+> **조건부 정리.** positive Euclidean self-dual/orientation branch에서 $\epsilon_{\rm simp}(B_0)=0$인 비퇴화 reference triple을 두고, 모든 microscopic triple $B_a$가
+> $\mathcal O(B_0)$에 속하면, 각 triple을 $B_0$ frame으로 정렬해 합한
 > block은
 >
 > \[
@@ -177,19 +177,19 @@ reference triple \(B_0\)의 orbit를
 >
 > 이며 Plebanski simplicity를 정확히 만족한다.
 
-**증명.** 같은 positive Euclidean self-dual/orientation branch에서 각 \(B_a=\alpha_aR_aB_0\)에 선언한 polar alignment와 parallel transport를 적용하면 \(B_a^{\rm align}=\alpha_aB_0\)다. 따라서 block은 \((\sum_a\alpha_a)B_0\)이고, \(\epsilon_{\rm simp}(B_0)=0\)과 양의 scale 때문에 simplicity를 보존한다. 덧셈의 결합법칙으로 grouping과 무관하게 같은 총 scale을 얻으므로 block operation은 associative다. \(\square\)
+**증명.** 같은 positive Euclidean self-dual/orientation branch에서 각 $B_a=\alpha_aR_aB_0$에 선언한 polar alignment와 parallel transport를 적용하면 $B_a^{\rm align}=\alpha_aB_0$다. 따라서 block은 $(\sum_a\alpha_a)B_0$이고, $\epsilon_{\rm simp}(B_0)=0$과 양의 scale 때문에 simplicity를 보존한다. 덧셈의 결합법칙으로 grouping과 무관하게 같은 총 scale을 얻으므로 block operation은 associative다. $\square$
 
 따라서 common orbit 안에서는 blocking order와 grouping이 결과를 바꾸지 않는다.
 
-\[
+$$
 (B_1\oplus B_2)\oplus B_3
 =
 B_1\oplus(B_2\oplus B_3).
-\]
+$$
 
 즉
 
-\[
+$$
 \boxed{
 \text{common conformal metric}
 +
@@ -197,7 +197,7 @@ B_1\oplus(B_2\oplus B_3).
 \Longrightarrow
 \text{exact simplicity RG closure}
 }
-\]
+$$
 
 이다.
 
@@ -207,23 +207,23 @@ B_1\oplus(B_2\oplus B_3).
 
 각각
 
-\[
+$$
 \epsilon_{\rm simp}(B)=0,
 \qquad
 \epsilon_{\rm simp}(C)=0
-\]
+$$
 
 인 geometric triple이라도
 
-\[
+$$
 \widehat g[B]\ne\widehat g[C]
-\]
+$$
 
 이면 internal SO(3) rotation만으로 metric mismatch를 제거할 수 없다.
 
 최적 alignment 뒤 candidate가 reference의 scale multiple인지 보는 orbit residual을
 
-\[
+$$
 \epsilon_{\rm orb}
 =
 \frac{
@@ -231,15 +231,15 @@ B_1\oplus(B_2\oplus B_3).
 }{
 \|C_{\rm align}\|_F
 }
-\]
+$$
 
 로 둔다.
 
-\[
+$$
 \epsilon_g=0,
 \quad
 \epsilon_{\rm orb}=0
-\]
+$$
 
 이면 common orbit에 있고 exact closure가 성립한다. 반대로 일반적인
 nonconformal tetrad pair에서는 두 residual이 모두 비영이고 block simplicity도
@@ -247,37 +247,37 @@ nonconformal tetrad pair에서는 두 residual이 모두 비영이고 block simp
 
 따라서
 
-\[
+$$
 \boxed{
 \text{local simplicity alone is not a sufficient RG projector.}
 }
-\]
+$$
 
 ## 13.5 coherent mismatch no-go
 
 simplicity residual은 전체 rescaling에 불변이다.
 
-\[
+$$
 \epsilon_{\rm simp}(\lambda B)
 =
 \epsilon_{\rm simp}(B).
-\]
+$$
 
-따라서 같은 mismatched pair를 \(N\)번 coherent하게 반복해
+따라서 같은 mismatched pair를 $N$번 coherent하게 반복해
 
-\[
+$$
 B_N=N(B+C_{\rm align})
-\]
+$$
 
 로 만들면
 
-\[
+$$
 \boxed{
 \epsilon_{\rm simp}(B_N)
 =
 \epsilon_{\rm simp}(B+C_{\rm align})
 }
-\]
+$$
 
 이다.
 
@@ -289,62 +289,62 @@ B_N=N(B+C_{\rm align})
 
 별도의 확률적 보조 가정으로, frame-aligned *2-form* fluctuation을
 
-\[
+$$
 B_a=\bar B+\delta B_a
-\]
+$$
 
 로 두고
 
-\[
+$$
 \mathbb E[\delta B_a]=0
-\]
+$$
 
 로 실제로 두고 약상관·유한분산을 가정하면
 
-\[
+$$
 \sum_{a=1}^{N}\delta B_a=O(\sqrt N),
 \qquad
 \sum_{a=1}^{N}\bar B=O(N)
-\]
+$$
 
 이 경우에 한해 normalized mismatch가
 
-\[
+$$
 O(N^{-1/2})
-\]
+$$
 
-방향으로 줄 수 있다는 조건부 heuristic을 얻는다. 이 식은 nonlinear한 \(\Sigma(e)\) map과 polar alignment 뒤의 실제 audit에 자동 적용되지 않는다.
+방향으로 줄 수 있다는 조건부 heuristic을 얻는다. 이 식은 nonlinear한 $\Sigma(e)$ map과 polar alignment 뒤의 실제 audit에 자동 적용되지 않는다.
 
-현재 코드는 2-form fluctuation을 직접 중심화하지 않는다. fixed seed에서 centered **tetrad perturbation**을 만든 뒤 nonlinear \(\Sigma(e)\)와 polar alignment를 적용한다. 그 finite diagnostic에서 sample size
+현재 코드는 2-form fluctuation을 직접 중심화하지 않는다. fixed seed에서 centered **tetrad perturbation**을 만든 뒤 nonlinear $\Sigma(e)$와 polar alignment를 적용한다. 그 finite diagnostic에서 sample size
 
-\[
+$$
 N=(8,16,32,64)
-\]
+$$
 
 에 대한 평균 block residual은
 
-\[
+$$
 (0.0021661,
 0.0017175,
 0.0011860,
 0.0009697)
-\]
+$$
 
 이었고 log-log fitted power는
 
-\[
+$$
 \boxed{-0.4013}
-\]
+$$
 
 이었다.
 
-이는 fixed-seed centered-tetrad finite output일 뿐, \(-1/2\) 정리나 보편지수를 뜻하지 않는다. 위 B-fluctuation heuristic의 전제도 검증하지 않는다.
+이는 fixed-seed centered-tetrad finite output일 뿐, $-1/2$ 정리나 보편지수를 뜻하지 않는다. 위 B-fluctuation heuristic의 전제도 검증하지 않는다.
 
 ## 13.7 최소 soft matching amplitude
 
 finite audit에서는
 
-\[
+$$
 W(B,C)
 =
 \exp\left[
@@ -357,20 +357,20 @@ W(B,C)
 \frac{\epsilon_{\rm block}^2}{\sigma_b^2}
 \right)
 \right]
-\]
+$$
 
 를 후보로 사용한다.
 
-\[
+$$
 \sigma_g,\sigma_o,\sigma_b\to0
-\]
+$$
 
 에서 common-orbit simple sector에 집중한다.
 
 그러나 이것은 full Lorentzian amplitude가 아니다. 실제 shared 3-cell gluing에는
 최소한 다음 항목이 함께 필요하다.
 
-\[
+$$
 \boxed{
 \begin{aligned}
 &\text{face closure},\\
@@ -381,7 +381,7 @@ W(B,C)
 &\text{nondegenerate oriented volume}.
 \end{aligned}
 }
-\]
+$$
 
 ## 13.8 이번 단계의 판정
 

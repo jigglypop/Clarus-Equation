@@ -230,8 +230,8 @@ $$
 
 ## 54.7 검산과 연구 지위
 
-**[계산 검산]** [실행 코드](../../verify/ce_positive_cone_lorentz.py)와
-[산출 JSON](../../verify/ce_positive_cone_lorentz.json)은 8개 회전·boost 조합에서
+**[계산 검산]** 실행 코드 (과거 기록: `verify/ce_positive_cone_lorentz.py`)와
+산출 JSON (과거 기록: `verify/ce_positive_cone_lorentz.json`)은 8개 회전·boost 조합에서
 행렬식·Lorentz 이차형식·양성·weighted 효과·사영·밀도행렬 스펙트럼을 검사했다.
 normalized filter의 비선형성은 두 순수 상태와 그 혼합으로 독립 대조했고,
 성공/실패 Kraus의 완비성과 전체 등거리 사상도 검사했다.

@@ -7,6 +7,8 @@ import math
 import numpy as np
 import pytest
 
+from examples.physics.record.dimensional_filter import build_filter, frame_from_angles
+
 from examples.physics.causal.contextual_obstruction import (
     OUTCOMES,
     QUANTUM_ETA,
@@ -460,3 +462,82 @@ def test_public_contract_fails_closed_and_run_is_json_serializable() -> None:
     assert payload["atom_count"] == 16
     assert payload["incidence_rank"] == 9
     assert payload["status"]["full_context_ledger_set_bijection_certified"]
+
+
+@pytest.mark.parametrize("weights", [(0.25, 0.25, 0.25), (0, 0, 0), (0, 0, 1), (0.1, 0.3, 0.6)])
+def test_dimensional_filter_unitary_realizes_complete_parallel_outputs(weights):
+    frame = frame_from_angles(0.31, -0.72, 0.18) @ np.diag([1, 1j, np.exp(0.4j)])
+    model = build_filter(frame, weights)
+    w = model.isometry
+    assert w.shape == (9, 3)
+    np.testing.assert_allclose(w.conj().T @ w, np.eye(3), atol=1e-12)
+    np.testing.assert_allclose(model.unitary.conj().T @ model.unitary, np.eye(9), atol=1e-12)
+    np.testing.assert_allclose(model.unitary[:, 6:], w, atol=1e-12)
+    np.testing.assert_allclose(model.generator, model.generator.conj().T, atol=1e-12)
+    np.testing.assert_allclose(model.evolution(), model.unitary, atol=1e-12)
+    np.testing.assert_allclose(model.evolution(-1) @ model.unitary, np.eye(9), atol=1e-12)
+    np.testing.assert_allclose(model.evolution(0), np.eye(9), atol=1e-12)
+    for rank, (weight, operator) in enumerate(zip(weights, model.operators), start=1):
+        assert np.linalg.matrix_rank(operator) == (rank if weight > 0 else 0)
+
+
+def test_dimensional_filter_known_probabilities_keep_intra_and_inter_channel_coherence():
+    model = build_filter()
+    state = np.array([1, 1j, 1]) / np.sqrt(3)
+    result = model.apply(state)
+    assert result.probabilities == pytest.approx((1 / 12, 1 / 6, 1 / 4, 1 / 2))
+    np.testing.assert_allclose(
+        result.conditional_states[1], np.array([[1, -1j], [1j, 1]]) / 2, atol=1e-12
+    )
+    assert abs(result.density[0, 1]) > 0.01  # full output is not a classical branch mixture
+    for rho in (np.outer(state, state.conj()), np.diag([0.2, 0.3, 0.5])):
+        output = model.apply(rho).density
+        np.testing.assert_allclose(
+            model.isometry.conj().T @ output @ model.isometry, rho, atol=1e-12
+        )
+    dark = build_filter(weights=(0, 0, 0)).apply(state)
+    assert dark.conditional_states[:3] == (None, None, None)
+    assert dark.probabilities == pytest.approx((0, 0, 0, 1))
+    fully_visible = build_filter(weights=(0, 0, 1)).apply(state)
+    assert fully_visible.conditional_states[3] is None
+
+
+def test_dimensional_filter_rotation_moves_kernel_without_changing_dimension():
+    for angle in (0.0, np.deg2rad(0.1), 0.7, np.pi / 2):
+        frame = frame_from_angles(0, angle, 0)
+        model = build_filter(frame)
+        two = model.operators[1]
+        assert np.linalg.matrix_rank(two) == 2
+        np.testing.assert_allclose(two @ frame[:, 2], 0, atol=1e-12)
+        response = model.apply(np.array([0, 0, 1])).probabilities[1]
+        assert response == pytest.approx(0.25 * np.sin(angle) ** 2, abs=1e-12)
+        for smaller, larger in ((1, 2), (1, 3), (2, 3)):
+            p = frame[:, :smaller] @ frame[:, :smaller].conj().T
+            q = frame[:, :larger] @ frame[:, :larger].conj().T
+            np.testing.assert_allclose(p @ q, p, atol=1e-12)
+
+
+def test_dimensional_filter_preserves_entanglement_with_an_unobserved_reference():
+    model = build_filter(frame_from_angles(0.2, 0.5, -0.4))
+    bell = np.eye(3).ravel() / np.sqrt(3)
+    output = np.kron(model.isometry, np.eye(3)) @ bell
+    full_density = np.outer(output, output.conj())
+    reference = np.einsum("abac->bc", full_density.reshape(9, 3, 9, 3))
+    np.testing.assert_allclose(reference, np.eye(3) / 3, atol=1e-12)
+    assert np.vdot(output, output).real == pytest.approx(1)
+
+
+def test_dimensional_filter_rejects_nonphysical_input():
+    for weights in ((0.5, 0.5, 0.5), (-0.1, 0.2, 0.3), (np.nan, 0, 0), (0.2,)):
+        with pytest.raises(ValueError, match="weights"):
+            build_filter(weights=weights)
+    with pytest.raises(ValueError, match="unitary"):
+        build_filter(np.ones((3, 3)))
+    with pytest.raises(ValueError, match="angles"):
+        frame_from_angles(np.nan, 0, 0)
+    model = build_filter()
+    for state in (np.zeros(3), np.ones(4), np.diag([1.1, -0.1, 0]), np.full(3, np.nan)):
+        with pytest.raises(ValueError):
+            model.apply(state)
+    with pytest.raises(ValueError, match="finite"):
+        model.evolution(np.inf)

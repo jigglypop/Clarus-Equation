@@ -125,8 +125,8 @@ continuum gravity의 증명으로 읽을 수 없다.
 ## 19.5 재현 범위
 
 정확 유리수 rank 계산과 massive 음성 대조군은
-[linearized_spin2_acceptance.py](../../examples/physics/linearized_spin2_acceptance.py)와
-[test_linearized_spin2_acceptance.py](../../tests/test_linearized_spin2_acceptance.py)에 있다.
+linearized_spin2_acceptance.py (미확보 경로: `../../examples/physics/linearized_spin2_acceptance.py`)와
+test_linearized_spin2_acceptance.py (미확보 경로: `../../tests/test_linearized_spin2_acceptance.py`)에 있다.
 
 ```powershell
 .codex/hooks/python.cmd pytest tests/test_linearized_spin2_acceptance.py -q

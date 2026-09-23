@@ -2,7 +2,7 @@
 
 이 장은 앞 장의 평탄한 유한 증인을 버리고 새 이론을 붙이는 글이 아니다. 같은 두 4-simplex 이력에 꼭 한 개의 simplex를 더해, 원래는 끊겨 있던 한 힌지 주위의 고리를 닫는다. 그 닫힌 고리 위에 일정한 양의 곡률을 가진 Plebanski/Einstein 해를 놓고, 곡률이 실제로 항등이 아닌 holonomy를 만든다는 데까지를 보인다. 따라서 여기서 전진한 것은 “평탄한 한 예”에서 “같은 이력을 보존한 비평탄한 한 예”까지다. 이 장의 순서는 고리의 조합론, 장방정식, holonomy, 남은 증명의 순서다.
 
-형식 지위와 수치는 [차원 분류 원장 C4](../검증_원장/참조_차원_분류_원장.md#c4-curved-same-history-11a)에 고정되어 있다. 이 글은 그 원장을 고치지 않는다. CE의 서사에서는 환경이 강제한 선택이 하나의 기하 이력을 고르고, 선택되지 않은 성분은 접힌 채 남으며, 그것을 우주론적 암흑 표현으로 읽는 마지막 단계가 뒤따른다. 여기서 닫는 것은 첫 단계의 기하적 후보 하나뿐이다. 접힘의 보존, 더구나 암흑에너지 readout은 이 계산으로 얻지 않는다.
+형식 지위와 수치는 차원 분류 원장 C4 (미확보 경로: `../검증_원장/참조_차원_분류_원장.md#c4-curved-same-history-11a`)에 고정되어 있다. 이 글은 그 원장을 고치지 않는다. CE의 서사에서는 환경이 강제한 선택이 하나의 기하 이력을 고르고, 선택되지 않은 성분은 접힌 채 남으며, 그것을 우주론적 암흑 표현으로 읽는 마지막 단계가 뒤따른다. 여기서 닫는 것은 첫 단계의 기하적 후보 하나뿐이다. 접힘의 보존, 더구나 암흑에너지 readout은 이 계산으로 얻지 않는다.
 
 ## 15.1 왜 두 simplex만으로는 곡률 고리를 말할 수 없었나
 
@@ -198,7 +198,7 @@ distributional rigging-map criterion을 검사하고, 그 한계에서 Einstein-
 
 ## 15.6 재현 경로
 
-구현은 [curved_plebanski_hinge.py](../../examples/physics/gravity/curved_plebanski_hinge.py)에
+구현은 curved_plebanski_hinge.py (과거 기록: `examples/physics/gravity/curved_plebanski_hinge.py`)에
 남아 있다. 과거 집중 회귀 `tests/test_curved_plebanski_hinge.py`는
 [최소 필수 테스트 정리](../../tests/README.md)에서 삭제했으며 Git 이력에서만 복구한다.
 

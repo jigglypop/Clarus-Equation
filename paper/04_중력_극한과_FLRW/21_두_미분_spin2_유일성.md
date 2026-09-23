@@ -52,4 +52,4 @@ $A=1$일 때 repository의 $2G^{(1)}_{\mu\nu}$와 일치하며, 부분적분과 
 
 ## 21.5 재현 범위
 
-계수 조건, gauge-only 반례, weighted self-adjointness와 overall-sign 미결정은 [two_derivative_spin2_uniqueness.py](../../examples/physics/two_derivative_spin2_uniqueness.py) 및 [대응 테스트](../../tests/test_two_derivative_spin2_uniqueness.py)에 있다. 원장은 focused test `23 passed`와 source parse `430 PASS`를 기록한다. 이 회귀는 선언한 ansatz의 대수만 검사한다.
+계수 조건, gauge-only 반례, weighted self-adjointness와 overall-sign 미결정은 two_derivative_spin2_uniqueness.py (미확보 경로: `../../examples/physics/two_derivative_spin2_uniqueness.py`) 및 대응 테스트 (미확보 경로: `../../tests/test_two_derivative_spin2_uniqueness.py`)에 있다. 원장은 focused test `23 passed`와 source parse `430 PASS`를 기록한다. 이 회귀는 선언한 ansatz의 대수만 검사한다.

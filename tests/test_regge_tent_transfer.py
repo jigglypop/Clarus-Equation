@@ -1,7 +1,6 @@
 """천막 이동의 작용·제약·합성을 독립 기하와 직접 12단체 계산으로 검증한다."""
 
 import hashlib
-import importlib.util
 from itertools import combinations
 import json
 import math
@@ -9,12 +8,10 @@ import math
 import numpy as np
 import pytest
 
-from test_support.paths import Q0020_ROOT
+from examples.physics.gravity import regge_tent_transfer as tent
+from test_support.paths import PHYSICS_ROOT
 
-SOURCE = Q0020_ROOT / "regge_tent_transfer.py"
-SPEC = importlib.util.spec_from_file_location("ce_regge_tent_checks", SOURCE)
-tent = importlib.util.module_from_spec(SPEC)
-SPEC.loader.exec_module(tent)
+SOURCE = PHYSICS_ROOT / "gravity" / "regge_tent_transfer.py"
 
 
 @pytest.fixture(scope="module")

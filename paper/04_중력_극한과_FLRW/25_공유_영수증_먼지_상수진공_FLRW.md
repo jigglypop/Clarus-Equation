@@ -63,6 +63,6 @@ $$
 \tag{6}
 $$
 
-식 (6)은 $0<f<1$의 mixed interior에만 쓴다. 순수 먼지와 진공 끝점은 24장의 별도 branch다. 구현은 [partitioned_dark_sector_flrw.py](../../examples/physics/partitioned_dark_sector_flrw.py)와 [대응 테스트](../../tests/test_partitioned_dark_sector_flrw.py)에 있고 focused 결과는 11 passed다. 이는 구현 재현이지 우주 파라미터의 측정이 아니다.
+식 (6)은 $0<f<1$의 mixed interior에만 쓴다. 순수 먼지와 진공 끝점은 24장의 별도 branch다. 구현은 partitioned_dark_sector_flrw.py (미확보 경로: `../../examples/physics/partitioned_dark_sector_flrw.py`)와 대응 테스트 (미확보 경로: `../../tests/test_partitioned_dark_sector_flrw.py`)에 있고 focused 결과는 11 passed다. 이는 구현 재현이지 우주 파라미터의 측정이 아니다.
 
 QD-M5-M3의 경계는 남는다. $f$와 절대 밀도 척도는 입력이고, global vacuum action은 한 slice의 영수증에서 유도되지 않는다. 미시 선택법칙, renormalized covariant $T_{\mu\nu}$, perturbation과 structure growth, CE 고유의 독립 예측도 아직 없다. 다음 [26장](../05_Regge와_proper_kernel/26_실제_Euclidean_Regge_1_to_5_내부_Hessian과_경계_Schur.md)은 실제 4차원 이산 기하의 다른 열린 다리로 간다.

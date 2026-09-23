@@ -1,132 +1,25 @@
-# Python
+# Python caches and local environments
 __pycache__/
-*.pyc
-*.pyo
+*.py[cod]
 .pytest_cache/
-.pytest_tmp_*/
-pytest-basetemp-*/
-pytest-tmp/
-pytest-v*-tmp/
-pytest-metric-tmp/
-/.uv-cache/
 .mypy_cache/
 .ruff_cache/
 .hypothesis/
-/.tmp/
+.venv/
+.uv-cache/
 *.egg-info/
 
-# Rust
-target/
-/reality_stone/python/reality_stone/clarus/core/target/
-/_workspace/ce-target/
-/_workspace/.ce-research-target/
-
-# Environment
-/.venv/
+# Local secrets, scratch space and generated output
 .env
-.cursor
-/.cursor
-.claude/*
-!.claude/agents/
-!.claude/commands/
-!.claude/skills/
-!.claude/hooks/
-!.claude/CLAUDE.md
-!.claude/README.md
-!.claude/ACCEPTANCE.md
-
-# Data
-/data/
-/.tmp/
-
-# CE research source payloads stay local. Commit manifests, code, and compact
-# derived results; retrieve the original archives from their documented DOIs.
-/_workspace/ce/**/artifacts/realdata/**/*.zip
-/_workspace/ce/**/artifacts/realdata/**/*.mat
-/_workspace/ce/**/artifacts/realdata/**/*.pkl
-/_workspace/ce/**/artifacts/input/**/*.zip
-/_workspace/ce/**/artifacts/realdata/*_repo/
-/_workspace/ce/**/artifacts/realdata/zhong-et-al-2025/
-/_workspace/ce/**/artifacts/input/bci_busch/avatarRT_analysis/
-/_workspace/ce/**/artifacts/input/grid_torus/GridCellTorus-code/
-.DS_Store
-
-# Outputs and models
-/llm_extract/
-*.json
-!.codex/hooks.json
-!.claude/settings.json
-!verify/**/*.json
-!paper/검증_원장/dark_energy_zerod_closure/counterexample.json
-!paper/검증_원장/dark_energy_zerod_closure/portfolio.json
-!benchmarks/core_claims_v1.json
-!benchmarks/neural_language_synthetic_v1.json
-!benchmarks/neural_language_blind_synthetic_v1.json
-!benchmarks/tafazoli_processed_audit_v1.json
-!benchmarks/neural_code_reverse_engineering_v1.json
-!benchmarks/tafazoli_diffusion_probe_v1.json
-!benchmarks/tafazoli_diffusion_probe_v1_result.json
-!benchmarks/q0_minimal_abelian_higgs_v1.json
-!benchmarks/neural_tree_algorithm_census_v1.json
-!benchmarks/external_field_to_matter_v1.json
-!benchmarks/cosmology/observations_v1.json
-!/_workspace/ce_obs32_reproduction/CE-OBS32/calculation_contract.json
-!experiments/preregistration/cosmology_future_holdout_v2.json
-!experiments/preregistration/quantum_future_holdout_v2.json
-!experiments/preregistration/sparse_causal_bridge_v1.json
-!experiments/preregistration/sparse_causal_bridge_v2.json
-!experiments/preregistration/sparse_causal_bridge_v3.json
-!experiments/preregistration/sparse_causal_bridge_v4.json
-!experiments/preregistration/sparse_causal_bridge_v5.json
-!experiments/preregistration/sparse_causal_bridge_v6.json
-!experiments/preregistration/sparse_causal_bridge_v7.json
-!experiments/preregistration/sparse_causal_bridge_v8.json
-!experiments/preregistration/causal_recurrent_geometry_phase_a_v1.json
-!experiments/preregistration/c_elegans_connectome_replay_v1.json
-!/_workspace/ce/neural-riemannian-metric-3d-pfc-20260819/artifacts/gate-a-fixtures-r6-release-final6.json
-!/_workspace/ce/neural-riemannian-metric-3d-pfc-20260819/artifacts/oracle-r6-release-final6.json
-*.pt
-*.pth
-*.csv
-*.png
+.env.*
+.tmp/
+logs/
 *.log
-*.db
-*.sqlite
-*.sqlite3
-*.npy
-*.npz
-*.parquet
-*.feather
-/reality_stone/artifacts/
-/reality_stone/python/reality_stone/clarus/core/*.csv
-!/artifacts/
-!/artifacts/agi/
-!/artifacts/agi/*.json
-!/artifacts/biology/
-!/artifacts/biology/origin_life_*.json
-!/artifacts/physics/
-!/artifacts/physics/public_resonance_source_manifest.json
+.coverage
+htmlcov/
 
-# Build artifacts
+# Build output and OS metadata
 build/
 dist/
-*.whl
-*.so
-*.pyd
-*.dll
-*.dylib
-*.exp
-*.lib
-*.pdb
-*.ptx
-*.exe
-
-# Coverage/profiling
-.coverage
-.coverage.*
-htmlcov/
-*.profraw
-*.profdata
-
-# Research-loop runtime (headless driver logs; ledger/ derivations/ verify/ are tracked)
-logs/
+.DS_Store
+Thumbs.db

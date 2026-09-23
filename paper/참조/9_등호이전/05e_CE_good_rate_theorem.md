@@ -8,7 +8,7 @@
 
 농축의 핵심은 최소값 존재뿐 아니라 escape를 막는 compact sublevel과 최소점 근방의 prior 질량이다. 이 절은 그 형식 가정과 CE 물리 해석의 경계를 고정한다.
 
-[../../검증_원장/등호이전_pathspace_audit.md](../../검증_원장/등호이전_pathspace_audit.md)는 CE 문서 안에 이미 $\mathcal P_I$, $\mu_{\mathrm{ref}}$, $W$, $F$, $\mathcal P_{\mathrm{ns}}$, $K_\phi$가 들어 있음을 확인했다. 남은 병목은 하나였다.
+[../../검증_원장/등호이전_pathspace_audit.md](../../검증_원장/특화_감사/등호이전_pathspace_audit.md)는 CE 문서 안에 이미 $\mathcal P_I$, $\mu_{\mathrm{ref}}$, $W$, $F$, $\mathcal P_{\mathrm{ns}}$, $K_\phi$가 들어 있음을 확인했다. 남은 병목은 하나였다.
 
 $$
 W[\gamma]
@@ -131,8 +131,7 @@ $$
 
 만약 $\delta_U=0$이면 $E(\eta_n)\to m$인 $\eta_n\in F$를 잡을 수 있다. 위와 같은 compact sublevel 논리로 부분열 $\eta_{n_j}\to\eta\in F$를 얻는다. l.s.c.에 의해 $E(\eta)\le m$, 따라서 $\eta\in\Gamma_*\subset U$다. 그러나 $\eta\in F=S\setminus U$이므로 모순이다.
 
-여기서 $\delta_U=\infty$이면 임의의 유한 양수로 바꿔 같은 하한을
-사용한다. 이제 $\eta=\delta_U/2$를 택한다. 분모는 recovery mass로부터
+이제 $\eta=\delta_U/2$를 택한다. 분모는 recovery mass로부터
 
 $$
 Z_\beta
@@ -185,10 +184,7 @@ $$
 F[\gamma]=W[\gamma]+c
 $$
 
-로 읽을 수 있다. $W_{\min}:=\inf_{\gamma\in S}W[\gamma]$가 유한하고
-$W$가 good rate function이면 아래 정의와 최소집합 등식을 닫힌
-support $S$에 제한한다. 특히 비음성은 $S$ 위에서만 주장한다.
-Support 밖의 더 낮은 값은 배제하지 않는다.
+로 읽을 수 있다. $W_{\min}:=\inf_{\gamma\in S}W[\gamma]$가 유한하고 $W$가 good rate function이면
 
 $$
 E_{\mathrm{fold}}(\gamma)

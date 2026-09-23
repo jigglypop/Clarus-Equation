@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-import importlib.util
 import re
 from pathlib import Path
 from urllib.parse import unquote
 
 from test_support.paths import PAPER_ROOT, REPO_ROOT
+from test_support import markdown_math as normalizer
 
 ROOT = REPO_ROOT
 PAPER_DIR = PAPER_ROOT / "참조" / "2_경로적분과_응용"
@@ -13,20 +13,10 @@ LECTURE_DIR = PAPER_ROOT / "참조" / "1_강의"
 CONSTANTS_DIR = PAPER_ROOT / "참조" / "3_상수"
 FORMAL_DIR = PAPER_ROOT / "참조" / "9_등호이전"
 REFERENCE_DIR = PAPER_ROOT / "참조"
-MATH_NORMALIZER_PATH = PAPER_DIR / "normalize_markdown_math.py"
 AXIOM_PATH = PAPER_ROOT / "00_기원과_현재계획" / "15_CE_공리계와_모형_사전.md"
 PATH_INTEGRAL_PATH = PAPER_ROOT / "06_QFT_재설계" / "36A_조건부_장론과_확률_코어.md"
 CONSTANT_REGISTER_PATH = PAPER_ROOT / "검증_원장" / "상수_조건부_산출_원장.md"
 
-
-def _load_math_normalizer():
-    spec = importlib.util.spec_from_file_location(
-        "ce_markdown_math_normalizer", MATH_NORMALIZER_PATH
-    )
-    assert spec is not None and spec.loader is not None
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
 
 PHYSICS_APPLICATION_MARKDOWN = tuple(
     PAPER_ROOT / "참조" / "4_공학적_활용" / name
@@ -239,7 +229,6 @@ def test_core_narrative_keeps_verified_fixed_point_scope_and_measure_term() -> N
 
 
 def test_all_paper_markdown_uses_renderable_math_delimiters_outside_code() -> None:
-    normalizer = _load_math_normalizer()
     violations: list[str] = []
     for path in sorted(PAPER_ROOT.rglob("*.md")):
         text = path.read_text(encoding="utf-8-sig")
@@ -253,7 +242,6 @@ def test_all_paper_markdown_uses_renderable_math_delimiters_outside_code() -> No
 
 
 def test_math_normalizer_preserves_code_and_latex_row_spacing() -> None:
-    normalizer = _load_math_normalizer()
     source = """\\[
 x=1\\\\[4pt]
 \\]

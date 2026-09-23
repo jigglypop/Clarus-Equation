@@ -140,8 +140,8 @@ $$
 
 ## 47.6 검산과 판정
 
-[검산 코드](../../verify/ce_three_coordinate_maxwell.py)와
-[고정 산출](../../verify/ce_three_coordinate_maxwell.json)을 사용한다.
+검산 코드 (과거 기록: `verify/ce_three_coordinate_maxwell.py`)와
+고정 산출 (과거 기록: `verify/ce_three_coordinate_maxwell.json`)을 사용한다.
 
 ```powershell
 python -B verify/ce_three_coordinate_maxwell.py

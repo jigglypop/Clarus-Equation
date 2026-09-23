@@ -97,7 +97,7 @@ $$
 
 실제 fixed witness에서 Wigner factor는 이전 local rotation과 24개에서 일치하고 26개에서는 각 mismatch가 $\sqrt8$이다. full Lorentz cocycle residual은 $8\times10^{-12}$보다 작게 닫히지만 Wigner loop residual은 최소 약 $1.350083183\times10^{-6}$, 최대 약 $2.291688314\times10^{-4}$로 영이 아니다. 최대 witness는 cell $(0,1,5,3,4)$, omitted vertices $(1,3,4)$다. 이 값들은 curved holonomy나 Regge phase가 아니라 canonical-boost split이 만드는 local section의 noncocycle를 뜻한다.
 
-positive scale $10^{-500}$과 $10^{500}$에서도 parity와 transport split은 보존된다. focused [Regge-face test](../../tests/test_proper_vertex_one_to_five_regge_faces.py)의 **5 passed**는 이 fixed witness의 재현 근거이지 위 반례의 범위를 넓히거나 quantum amplitude를 증명하지 않는다.
+positive scale $10^{-500}$과 $10^{500}$에서도 parity와 transport split은 보존된다. focused Regge-face test (미확보 경로: `../../tests/test_proper_vertex_one_to_five_regge_faces.py`)의 **5 passed**는 이 fixed witness의 재현 근거이지 위 반례의 범위를 넓히거나 quantum amplitude를 증명하지 않는다.
 
 ## 32.4 EPRL ceiling
 
