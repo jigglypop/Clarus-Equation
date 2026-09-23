@@ -4,8 +4,8 @@
 `rendering_predictions_v1.json`은 43장 렌더링 식 체계의 예측 10개를 2026-09-23에 동결한 계약이며,
 `rendering_predictions_v2.json`은 v1을 보존한 채 CMB 단독 H0 예측을 철회하고 θ* 교정·비율 예측 P11을 더했다.
 `rendering_predictions_v3.json`은 v1·v2를 보존한 채 R-Pl로 h 적합을 없애고 CMB 단독 H0 예측을 식으로 복원했다.
-`rendering_predictions_v4.json`은 BAO 눈금 예측 P14(h r_d)를, `v5`는 나선 긴장 비 P15를, `v6`은 무적합 S8 P16을 더했다.
-`tests/test_rendering_registry.py`가 여섯 판본의 자기 해시·코드 해시·예측 재현을 검사한다.
+`rendering_predictions_v4.json`은 BAO 눈금 예측 P14(h r_d)를, `v5`는 나선 긴장 비 P15를, `v6`은 무적합 S8 P16을, `v7`은 중성미자 질량 P17–P19와 사건 척도 P20을 더했다.
+`tests/test_rendering_registry.py`가 일곱 판본의 자기 해시·코드 해시·예측 재현을 검사한다.
 계약의 원문과 해시는 바꾸지 않았다. v1은 v2의 선행 판본 검증에 필요하다.
 
 `tests/test_holdout_preregistration.py`가 동결·해시·자료 역할·재피팅 금지를 검사한다.

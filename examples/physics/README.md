@@ -26,6 +26,8 @@
 | 렌더링 | `rendering/ce_rendering_spiral.py` | 돌면서 퍼지는 나선 긴장, 허블 비 √(1+Ω_Λ/4) (43장 §43.15, v5 잠금) |
 | 렌더링 | `rendering/ce_rendering_complex_scale.py` | 복소 척도인자 A=a e^{iφ}, FLRW 극한·나이테 불변·기록 위상 차 (43장 §43.16, v6 잠금) |
 | 렌더링 | `rendering/ce_rendering_growth.py` | 무적합 S8, 두 원(틀 회전과 순환 위상)의 구분 (43장 §43.17, v6 잠금) |
+| 렌더링 | `rendering/ce_rendering_event_scale.py` | 2차원 렌더링 사건 척도 판별(M_Z) (43장 §43.18, v7 잠금) |
+| 렌더링 | `rendering/ce_rendering_neutrino.py` | 중성미자 질량 행, 43행 공동 채점 (43장 §43.19, v7 잠금) |
 
 `regge_tent_transfer.json`은 해당 코드의 SHA-256과 적용범위를 검사하는 고정 fixture다.
 새 실행 결과를 기존 검증 영수증에 자동으로 덮어쓰지 않는다.

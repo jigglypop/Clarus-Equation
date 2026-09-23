@@ -274,9 +274,38 @@ CE는 약한 렌즈와 CMB 사이에 S8 긴장이 없다는 쪽을 예측하며 
 
 **[산출] 사전 등록 v6.** `experiments/preregistration/rendering_predictions_v6.json`은 v1–v5를 보존하고 P16 $S_8=0.8201$(Euclid, Rubin LSST, Roman)을 더했으며, [복소 척도인자](../../examples/physics/rendering/ce_rendering_complex_scale.py)와 [성장](../../examples/physics/rendering/ce_rendering_growth.py) 모듈을 잠갔다.
 
+## 43.18 렌더링 사건의 척도 — Z 극
+
+**[산출] E5.** $\hat s^2=4\alpha_s^{4/3}$은 척도 항등식이 될 수 없으므로(§43.4) 2차원 렌더링이 확정되는 한 척도 $\mu_E$의 사건 관계다. 후보 전자약 척도 각각을 $\mu_E$로 두고 측정된 $\hat s^2(M_Z)$, $\alpha_{\rm em}(M_Z)$를 한 루프 전자약·두 루프 QCD로 옮겨 사건 관계에서 $\alpha_s(\mu_E)$를 정한 뒤 $M_Z$로 내려 세계 평균과 비교했다. 새 상수는 없다.
+
+| 사건 척도 | 예측 $\alpha_s(M_Z)$ | 세계 평균 대비 |
+|---|---|---|
+| $M_W$ | 0.11548 | $-2.80\sigma$ |
+| **$M_Z$** | **0.11792** | $-0.09\sigma$ |
+| $M_H$ | 0.12451 | $+7.23\sigma$ |
+| $m_t$ | 0.13199 | $+15.5\sigma$ |
+| $v$ | 0.14143 | $+26.0\sigma$ |
+
+2차원 렌더링의 확정 사건은 전자기–약력 섞임이 실체화된 중성 보손의 질량 척도 $M_Z$에서 일어난다. "왜 $M_Z$인가"는 공리에서 판별된 사실로 바뀐다.
+
+## 43.19 중성미자 질량 — 사전 등록 v7
+
+**[경험식]** 저장소 식([중성미자 질량 §7.3](../참조/2_경로적분과_응용/07_중성미자_질량.md)) $m_{\nu_l}=\delta^4(1-\alpha_s/\pi)/[(16\pi^2)^2\,32\pi^3(1+R)]\,m_l^{5/8}m_\tau^{3/8}$를 현재 코어($R=\alpha_sD$)로 계산했다. 지수 $5/8$, $3/8$은 8통로 비율로 읽을 수 있으나 유도가 아니며, 이 식의 과거 선택은 bit 장부 밖이다.
+
+| 산출 | 값 | 관측 (NuFIT 6.0 NO) | 잔차 |
+|---|---|---|---|
+| $(m_1,m_2,m_3)$ | $(0.307, 8.61, 50.24)$ meV | 정상 순서 | — |
+| $\Delta m^2_{21}$ | $7.403\times10^{-5}$ eV$^2$ | $(7.49\pm0.19)\times10^{-5}$ | $-0.46\sigma$ |
+| $\Delta m^2_{31}$ | $2.524\times10^{-3}$ eV$^2$ | $2.513^{+0.021}_{-0.019}\times10^{-3}$ | $+0.54\sigma$ |
+| $\sum m_\nu$ | 59.16 meV | 정상 순서 최소 부근 | — |
+
+두 질량 분리를 채점에 더하면 43행 공동 RMSE는 0.895(양자 0.787, 거시 0.972)다. $1.5\sigma$를 넘는 행은 $\delta_{\rm PMNS}$ $+1.8\sigma$, TRGB $+1.53\sigma$, DES Y3 $S_8$ $+2.59\sigma$다.
+
+**[산출] 사전 등록 v7.** `experiments/preregistration/rendering_predictions_v7.json`은 v1–v6을 보존하고 P17 $\sum m_\nu=59.16$ meV, P18 $m_1=0.307$ meV, P19 $\Delta m^2_{21}$, P20 사건 척도 $M_Z$를 더했으며 10개 모듈의 해시를 잠갔다. 우주론 상한이 55 meV 아래로 내려가거나 역순서가 확정되면 반증이다.
+
 ## 43.10 재현과 한계
 
-구현은 [렌더링 레지스트리](../../examples/physics/rendering/ce_rendering_registry.py), 고정 검사는 `tests/test_rendering_registry.py`(①·③·S2·T1·U1·M1·O1·TC·C1·순환 평균·사다리 상쇄·순환 위상과 팽창 변화의 반례·⑤·$\theta^*$ 반례·판본 III·부스트 반례·R-Pl 전이·유클리드 회전·BAO 눈금 예측·순환 기하·나선 긴장·복소 척도인자·S8·두 원의 구분·사전 등록 v1–v6 동결과 공동 RMSE 고정)다. 필수 테스트 목록에 추가했고 전체 312개 검사를 실행했다. 실행:
+구현은 [렌더링 레지스트리](../../examples/physics/rendering/ce_rendering_registry.py), 고정 검사는 `tests/test_rendering_registry.py`(①·③·S2·T1·U1·M1·O1·TC·C1·순환 평균·사다리 상쇄·순환 위상과 팽창 변화의 반례·⑤·$\theta^*$ 반례·판본 III·부스트 반례·R-Pl 전이·유클리드 회전·BAO 눈금 예측·순환 기하·나선 긴장·복소 척도인자·S8·두 원의 구분·사건 척도·중성미자 질량·사전 등록 v1–v7 동결과 공동 RMSE 고정)다. 필수 테스트 목록에 추가했고 전체 315개 검사를 실행했다. 실행:
 
 ```powershell
 python -B -m examples.physics.rendering.ce_rendering_registry

@@ -17,6 +17,8 @@ from examples.physics.rendering import ce_rendering_cycle as CY
 from examples.physics.rendering import ce_rendering_spiral as SP
 from examples.physics.rendering import ce_rendering_complex_scale as CX
 from examples.physics.rendering import ce_rendering_growth as GR
+from examples.physics.rendering import ce_rendering_event_scale as ES
+from examples.physics.rendering import ce_rendering_neutrino as NU
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
     alpha_em_inv,
@@ -381,3 +383,36 @@ def test_rendering_predictions_v6_is_frozen() -> None:
             f"{key} changed after v6 freeze: create v7 and keep earlier manifests")
     values = {q["id"]: q["value"] for q in v6["predictions"]}
     assert values["P16"] == pytest.approx(GR.ce_s8(core(calibrated_alpha_s()[0]))[1], rel=1e-4)
+
+
+def test_rendering_event_is_at_the_z_pole_only() -> None:
+    table = ES.event_scale_table()
+    pulls = {k: (v - ES.A_WORLD) / ES.A_WORLD_ERR for k, v in table.items()}
+    assert abs(pulls["M_Z"]) < 1.0
+    assert all(abs(p) > 2.5 for k, p in pulls.items() if k != "M_Z")
+
+
+def test_neutrino_masses_near_the_normal_ordering_minimum() -> None:
+    c = core(calibrated_alpha_s()[0])
+    m1, m2, m3 = NU.neutrino_masses_mev(c)
+    assert m1 < 1.0 and 58.0 < m1 + m2 + m3 < 61.0
+    dm21, dm31 = NU.splittings_ev2(c)
+    assert abs(dm21 - 7.49e-5) / 0.19e-5 < 1.0
+    assert abs(dm31 - 2.513e-3) / 0.021e-3 < 1.0
+    res = NU.score_full("SK")
+    assert res["N"] == 43 and res["rmse_all"] == pytest.approx(0.895, abs=3e-3)
+
+
+def test_rendering_predictions_v7_is_frozen() -> None:
+    v6 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v6.json").read_text(encoding="utf-8"))
+    v7 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v7.json").read_text(encoding="utf-8"))
+    assert v7["supersedes_manifest_id"] == v6["manifest_id"]
+    body = {k: v for k, v in v7.items() if k != "manifest_sha256"}
+    canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    assert hashlib.sha256(canonical).hexdigest() == v7["manifest_sha256"]
+    for key, rel in v7["model"]["files"].items():
+        assert hashlib.sha256((REPO_ROOT / rel).read_bytes()).hexdigest() == v7["model"]["sha256"][key], (
+            f"{key} changed after v7 freeze: create v8 and keep earlier manifests")
+    values = {q["id"]: q["value"] for q in v7["predictions"]}
+    c = core(calibrated_alpha_s()[0])
+    assert values["P17"] == pytest.approx(sum(NU.neutrino_masses_mev(c)), rel=1e-4)
