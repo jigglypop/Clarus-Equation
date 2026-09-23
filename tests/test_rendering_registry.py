@@ -56,6 +56,7 @@ from examples.physics.rendering import ce_rendering_e4_anchor as E4A
 from examples.physics.rendering import ce_rendering_biased_coin as BCN
 from examples.physics.rendering import ce_rendering_boundary_loop as BLP
 from examples.physics.rendering import ce_rendering_higgs_cosmos as HGC
+from examples.physics.rendering import ce_rendering_distinction as DST
 from examples.physics.rendering import ce_rendering_open_predictions as OP
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
@@ -974,6 +975,25 @@ def test_higgs_mass_predicts_cosmic_matter_fraction() -> None:
     assert all(abs(v["pull"]) < 3 for k, v in comp.items() if isinstance(v, dict))
 
 
+def test_z_is_the_pure_distinction_coin_of_me_at_the_e4_anchor() -> None:
+    idn = DST.anchor_identity()
+    assert idn["g_V_e"] == pytest.approx(0.0, abs=1e-15) and idn["g_L_e"] == -idn["g_R_e"] == -0.25
+    assert idn["P_L_e"] == 0.5 and idn["width_ratio_me_over_other"] == pytest.approx(0.5)
+    assert idn["anchor_owner"] == ["e"]                                                # only "me" owns the anchor
+    assert DST.pure_axial_points() == {"e": 0.25, "nu": None, "u": pytest.approx(0.375), "d": pytest.approx(0.75)}
+    b = DST.bosons_on_me(0.25)
+    assert b["photon"]["g_L"] == b["photon"]["g_R"] and b["W"]["P_L"] == 1.0            # no distinction / projection
+
+
+def test_distinction_coin_reads_the_carrier_coupling_not_the_decay_record() -> None:
+    v = DST.verdict()
+    for key in ("chi2", "chi2_with_FP"):
+        assert v[key]["best"] == "MS-bar" and not v[key]["MS-bar"]["killed"]
+        assert all(v[key][s]["killed"] for s in ("MS-bar (ND)", "effective", "on-shell"))
+    direct = DST.sensitivity_direct()["effective (direct avg)"]
+    assert 1 < direct["P36"] < 2                                                       # direct average cannot decide yet
+
+
 def test_rendering_predictions_v13_is_frozen() -> None:
     v12 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v12.json").read_text(encoding="utf-8"))
     v13 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v13.json").read_text(encoding="utf-8"))
@@ -1030,6 +1050,25 @@ def test_rendering_predictions_v15_is_frozen() -> None:
             assert q["value"] == old[q["id"]]["value"]                        # no carried value changed
     ids = {q["id"] for q in v15["predictions"]}
     assert "P34" in ids and len(ids) == 34 and len(v15["model"]["files"]) == 32
+
+
+def test_rendering_predictions_v16_is_frozen() -> None:
+    v15 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v15.json").read_text(encoding="utf-8"))
+    v16 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v16.json").read_text(encoding="utf-8"))
+    assert v16["supersedes_manifest_id"] == v15["manifest_id"]
+    body = {k: v for k, v in v16.items() if k != "manifest_sha256"}
+    canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    assert hashlib.sha256(canonical).hexdigest() == v16["manifest_sha256"]
+    assert v16["manifest_sha256"] == "339e3f1fff9a9b5086f27d28af25d294dd94bbd8e8cba613a4b3cf836d7702f4"
+    for key, rel in v16["model"]["files"].items():
+        assert v16["model"]["sha256"][key] in _line_ending_hashes((REPO_ROOT / rel)), (
+            f"{key} changed after v16 freeze: create v17 and keep earlier manifests")
+    old = {q["id"]: q for q in v15["predictions"]}
+    for q in v16["predictions"]:
+        if q["id"] in old:
+            assert q["value"] == old[q["id"]]["value"]                        # no carried value changed
+    ids = {q["id"] for q in v16["predictions"]}
+    assert {"P35", "P36"} <= ids and len(ids) == 36 and len(v16["model"]["files"]) == 35
 
 
 def test_pantheon_holdout_keeps_all_ce_branches_within_two_sigma() -> None:

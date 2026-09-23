@@ -8,7 +8,7 @@
 
 **현재 판정의 종합은 §43.56(마감 종합, 2026-09-23)이다.** 아래는 v12 시점의 점수 판정이며 그대로 둔다.
 
-**점수 판정(§43.24–43.40; 사전 등록은 현재 v15, 등록 34개 중 독립 예측 32개 — P20은 §43.18 정정, P29·P30은 §43.45, P31–P33은 §43.53, P34는 §43.55).** 입력 $\alpha_s$ 하나, 중성미자 장부 정정, 진공 기울기 W2(+1.6 bit), CMB–BAO 그라데이션 G1m(+2 bit)을 포함한다.
+**점수 판정(§43.24–43.40; 사전 등록은 현재 v16, 등록 36개 중 독립 예측 34개 — P20은 §43.18 정정, P29·P30은 §43.45, P31–P33은 §43.53, P34는 §43.55, P35·P36은 §43.59).** 입력 $\alpha_s$ 하나, 중성미자 장부 정정, 진공 기울기 W2(+1.6 bit), CMB–BAO 그라데이션 G1m(+2 bit)을 포함한다.
 
 | 판본 | 39행 | 43행(+렌즈·중성미자) | 연속 적합 | 남는 큰 잔차 |
 |---|---|---|---|---|
@@ -229,7 +229,8 @@ $$s_{13}^2=\frac{\delta}{8},\qquad s_{12}^2=\frac13\left(1-\frac{2\delta}{8}\rig
 | 기운 동전 | §43.57 | 고정점 = 게이지 축의 이상 자기모멘트만큼 기운 동전, 1/g 판본 기각, 세대 축은 공평 |
 | 경계 인자 | §43.58 | 경계 한 고리 인자는 선형, m_μ/m_τ = (ŝ²/4)w, 렙톤 규칙의 α_s와 고정점의 3.75σ 긴장 |
 | Higgs와 우주 | §43.59 | M_H/M_Z − 1 = Ω_DM/Ω_Λ: Higgs 질량이 우주 물질 비율을 예측 |
-| 재현 | §43.60 | 구현 경로와 한계 |
+| 분별의 동전 | §43.60 | E4 닻에서 Z는 “나”를 순수 분별(γ5)로 본다, 동전은 운반자의 결합(MS-bar)이지 붕괴 기록(유효각)이 아니다 |
+| 재현 | §43.61 | 구현 경로와 한계 |
 
 ## 43.11 음향 각도 반례와 판본 III — 사전 등록 v2
 
@@ -1688,7 +1689,7 @@ $$r=\tfrac12\Big[1-\frac{\alpha_s}{2\pi}\Big(1+\frac{\delta}{2\pi}\Big)\Big],\qq
 7. BMV 중력 얽힘(P23)
 
 ### 남은 과제
-- E4의 동역학(왜 사건 척도 $M_Z$에서 무차별 진공점을 지나는가)
+- E4의 동역학(왜 사건 척도 $M_Z$에서 무차별 진공점을 지나는가). §43.60에서 “왜 Z인가”는 항등식으로 좁혀졌다. “그 질량 척도에서”는 공리로 남는다
 - FP의 원리적 유도(한 고리 자기 보정의 계수)
 - $F$(Higgs 퍼텐셜의 크기)
 - 기울기 역사의 원형(접선–현)이 열적 시간 밖에서 필요한지
@@ -1794,9 +1795,87 @@ $$\frac{M_H}{M_Z}-1=\frac{\Omega_{\rm DM}}{\Omega_\Lambda}\qquad(\text{CE 안에
 - $F$ 자체의 유도(퍼텐셜의 크기)는 여전히 열려 있다. 이 관계는 $F$를 “자유 몫의 역수”로 읽게 해 줄 뿐이다.
 - 예측값은 바뀌지 않는다. 구현은 [Higgs·우주 모듈](../../examples/physics/rendering/ce_rendering_higgs_cosmos.py)이다.
 
-## 43.60 재현과 한계
+**[산출] 사전 등록 v16.** `experiments/preregistration/rendering_predictions_v16.json`(자기 해시 `339e3f1f…`)은 v1–v15를 보존하고, P01–P34의 값은 바꾸지 않았다.
 
-구현은 [렌더링 레지스트리](../../examples/physics/rendering/ce_rendering_registry.py), 고정 검사는 `tests/test_rendering_registry.py`(①·③·S2·T1·U1·M1·O1·TC·C1·순환 평균·사다리 상쇄·순환 위상과 팽창 변화의 반례·⑤·$\theta^*$ 반례·판본 III·부스트 반례·R-Pl 전이·유클리드 회전·BAO 눈금 예측·순환 기하·나선 긴장·복소 척도인자·S8·두 원의 구분·사건 척도·중성미자 질량·게이지군과 한 세대·세 세대와 선형 중력·대칭 깨짐과 전하 양자화·급팽창 게이지 수·중성미자 장부·암흑에너지 W1 반례·진공 기울기 W2·최저 조화 규칙·모방 시계 작용 W3·빛의 한계와 렌더링 지평선·확률 무게 중력·빛원뿔 기록 갱신·CMB–BAO 그라데이션·마감 판정·가설 역유도·공리 증명·열린 예측·사전 등록 v1–v12 동결과 공동 RMSE 고정, 초신성 보류 시험·FD θ*·W3 성장 보정·자료 판본 민감도)다. 필수 테스트 목록에 추가했고 전체 344개 검사를 실행했다(2026-09-23). §43.37–43.40의 검사는 각 절에 적은 별도 모듈에 있고, §43.35 정리 C′·D′의 재증명 검산은 [복소 부스트 모듈](../../examples/physics/rendering/ce_rendering_complex_boost.py), §43.41–43.44의 보강은 [E4 대각합 모듈](../../examples/physics/rendering/ce_rendering_e4_trace.py), [간헐 렌더링 모듈](../../examples/physics/rendering/ce_rendering_intermittent.py), [경계 모듈](../../examples/physics/rendering/ce_rendering_boundary.py), [계단 모듈](../../examples/physics/rendering/ce_rendering_staircase.py), [Bool 사전 모듈](../../examples/physics/rendering/ce_rendering_bool.py)에 있고, §43.45의 점검은 [남은 항목 모듈](../../examples/physics/rendering/ce_rendering_open_checks.py), §43.46의 감사는 [중성미자 감사 모듈](../../examples/physics/rendering/ce_rendering_nu_audit.py), §43.47의 장부와 기준 비교는 [장부 모듈](../../examples/physics/rendering/ce_rendering_ledger.py), §43.48의 관측 사상은 [관측 사상 모듈](../../examples/physics/rendering/ce_rendering_o1_map.py), §43.49의 추측 검증은 [무리 안 차이 모듈](../../examples/physics/rendering/ce_rendering_spread.py), §43.50은 [위상 잠금 모듈](../../examples/physics/rendering/ce_rendering_phase_lock.py), §43.51은 [인과 잠금 모듈](../../examples/physics/rendering/ce_rendering_causal_lock.py), §43.52는 [잠금 역사 모듈](../../examples/physics/rendering/ce_rendering_lock_history.py), §43.53은 [열적 시간 모듈](../../examples/physics/rendering/ce_rendering_thermal_time.py), §43.54는 [가지치기 모듈](../../examples/physics/rendering/ce_rendering_branching.py), §43.55는 [E4 닻 모듈](../../examples/physics/rendering/ce_rendering_e4_anchor.py), §43.57은 [기운 동전 모듈](../../examples/physics/rendering/ce_rendering_biased_coin.py), §43.58은 [경계 인자 모듈](../../examples/physics/rendering/ce_rendering_boundary_loop.py), §43.59는 [Higgs·우주 모듈](../../examples/physics/rendering/ce_rendering_higgs_cosmos.py)에 있다. 실행:
+*지위 주석.*
+- P20: 렙톤 규칙이 주는 가장 정밀한 $\alpha_s=0.1179196\pm0.0000045$
+- P28: $M_H/M_Z-1=\Omega_{\rm DM}/\Omega_\Lambda$
+- P34: 렙톤 비와 $3.75\sigma$ 내부 긴장, 계수를 다시 맞추지 않음
+
+*공리.*
+- BC: 게이지 축만 이상량만큼 기운 동전
+- UB: 경계 인자는 모두 같은 선형 인자
+
+*새 예측.*
+
+| 번호 | 관측량 | 예측 | kill |
+|---|---|---|---|
+| P35 | Higgs/Z 질량비에서 본 $\Omega_m$ | CMB 단독 ΛCDM $0.3071\pm0.0006$, BAO+BBN ΛCDM $\approx0.297$ | 어느 쪽이든 $3\sigma$ |
+| P36 | $\alpha_s$가 없는 비 $(m_\mu/m_\tau)/\hat s^2$ | $(1+\delta/2\pi)/4=0.2570745$(현재 $-0.23\sigma$) | $5\sigma$ |
+
+등록은 36개, 독립 예측은 34개다. 새 모듈 3개를 포함해 35개 모듈의 해시를 잠갔다.
+
+## 43.60 분별의 동전 — E4는 왜 Z에서 공평한 동전 점을 지나는가
+
+**문제.** E4는 무차별 진공점을 지난다(§43.55). 사건 척도 $\mu_E=M_Z$는 공리 E5다(§43.18). §43.18의 척도 표는 판별이 아니라 재진술이므로 다시 돌리지 않는다. 남은 물음은 두 가지다. 왜 공평한 동전인가, 그리고 왜 Z인가.
+
+**[가설] DS(사용자) — 우주는 분별(나와 타인의 구분)에서 생긴다.** 이 가설을 두 주장으로 옮겼다.
+- D1: 전약 보손 가운데 “나”(전자)를 분별하는 동전인 것은 Z뿐이다. 그 동전은 E4 닻에서 공평하다.
+- D2: “동전은 운반자의 질량에서 던져진다”의 두 읽기를 가른다. (가) 운반자의 결합이면 MS-bar이고 Z보다 무거운 top을 떼어낸다(동결된 선택). (나) Z 붕괴가 남긴 기록이면 유효각이다.
+
+**사전 규칙(계산 전).**
+- D1은 대수이므로 kill이 없다. 확인할 것은 두 가지다.
+  - 닻 $\sin\theta_W=\tfrac12$($s^2=\tfrac14$)에서 Z의 결합이 순수 축인가.
+  - 순수 축 점 $s_*^2=T_3/(2Q)$가 닻과 같은 페르미온은 무엇인가.
+- D2의 판본은 PDG 2024 표 10.2의 네 정의다: MS-bar 0.23129, MS-bar(ND, top 로그를 떼지 않음) 0.23147, 유효각 0.23161(각 $\pm0.00004$), on-shell $0.22348\pm0.00010$.
+  - 각 판본의 $s^2$를 P36(α_s가 없는 관계)과 E4의 $\alpha_s$(세계 평균 비교)에 넣고, FP의 $\hat s^2$는 별도 행으로 둔다.
+  - kill: 가장 좋은 판본보다 공동 $\Delta\chi^2>9$인 판본은 기각한다. 동결된 MS-bar가 기각되면 P36·E4의 반례로 기록한다.
+  - 민감도 행: 직접 측정한 유효각의 충돌기 평균 $0.23149\pm0.00013$(PDG 식 10.75).
+  - 계산 전의 어림: 유효각이면 P36이 0.1% 움직여 $+5\sigma$ 근처일 것으로 보았다.
+- 우주사의 순간(전약 교차 온도 $T_c$)으로 읽는 판본은 §43.18과 같은 이유로 재진술이므로 제외했다.
+
+**[정리] D1 — 닻에서 Z는 나를 순수 분별로 본다.** 나의 왼손·오른손 결합은 다음과 같다(Z는 $g_L=T_3-Qs^2$, $g_R=-Qs^2$).
+
+| 보손 | 왼손 | 오른손 | 왼손이 나올 확률 | 나에게 하는 일 |
+|---|---|---|---|---|
+| 광자 | $-1$ | $-1$ | ½ | 항등: 가르지 않는다(같은 부호) |
+| W | $1/\sqrt2$ | 0 | 1 | 사영: 왼손만 골라 나를 타인(ν)으로 바꾼다 |
+| Z(닻, $s^2=\tfrac14$) | $-\tfrac14$ | $+\tfrac14$ | **½** | **순수 분별**: 선호 없이 부호만 가른다($\tfrac14\gamma^\mu\gamma_5$) |
+| Z(실제, MS-bar) | $-0.26871$ | $+0.23129$ | 0.5744 | 기운 분별 |
+
+- 광자의 동전은 늘 공평하지만 가르지 않고, W는 늘 한쪽이다. 나를 **가르는** 동전은 Z뿐이며, 그 동전이 공평해지는 점이 정확히 E4의 닻이다.
+- 같은 점에서 Z가 나를 보는 정도는 타인의 정확히 절반이다: $\Gamma(Z\to e\bar e)/\Gamma(Z\to\nu\bar\nu)=\tfrac12[1+(1-4s^2)^2]=\tfrac12$.
+- 순수 축 점은 전자 $\tfrac14$(= 닻), u $\tfrac38$, d $\tfrac34$이고, 중성미자에는 없다. 닻을 가진 페르미온은 **나(전자)뿐**이다. u의 $\tfrac38$이 SU(5) 통일값과 같은 것은 관찰로만 적는다.
+- 기운 동전(BC, §43.57) 아래서 실제 세계의 기울기는 다음과 같이 쓰인다. 네 축을 지나는 동안 한 번이라도 이상량만큼 기울 확률이다. 이 식은 FP를 다시 적은 것이다.
+
+$$\frac{g_V}{g_A}=1-4\hat s^2=1-(2r)^4=1-(1-a)^4.$$
+
+- 닻은 §43.55에서 $r=\tfrac12$로 먼저 정해졌고, 이 항등식은 그 뒤에 확인했다. 단순 분수끼리의 일치라 우연 확률을 크게 낮추지 못하므로, 증거로 세지 않고 항등식이 붙은 읽기로 둔다.
+
+**[검사] D2 — 동전은 운반자의 결합이지 붕괴 기록이 아니다.**
+
+| 판본 | $s^2$ | P36 pull | E4 $\alpha_s$ pull | FP pull | $\Delta\chi^2$(P36+E4) | 판정 |
+|---|---|---|---|---|---|---|
+| **MS-bar(떼어냄)** | 0.23129 | $-0.23$ | $-0.09$ | $-0.86$ | 0 | 생존 |
+| MS-bar(ND) | 0.23147 | $+4.17$ | $-0.02$ | $-5.36$ | 17.3 | 기각 |
+| 유효각 | 0.23161 | $+7.60$ | $+0.04$ | $-8.86$ | 57.7 | 기각 |
+| on-shell | 0.22348 | $-76.5$ | $-3.42$ | $+77.8$ | 5862 | 기각 |
+| (민감도) 유효각 직접 평균 | $0.23149\pm0.00013$ | $+1.49$ | $-0.01$ | $-1.80$ | 2.2 | 판정 불가 |
+
+- FP 행을 더해도 순위는 같다(ND 45.3, 유효각 135.5).
+- **[정정 — 순환].** P36의 렙톤 규칙과 FP는 MS-bar 값을 보며 찾았다. 그래서 이 판별은 동결된 선택이 일관한다는 확인이지 독립 증거가 아니다(§43.18과 같은 처지). 직접 측정한 유효각만 쓰면 $+1.5\sigma$로 아직 가르지 못한다. FCC-ee의 Z 극 측정이 직접 판정한다.
+- *읽기.* 사건 순간의 동전은 운반자의 결합이며, Z보다 무거운 top의 로그는 들어가지 않는다. 계단(무거운 것이 먼저 렌더링, §43.43)으로 읽으면 top은 이미 확정된 기록이라 동전에 참여하지 않는다. 이것은 해석이다.
+
+**판정.**
+- “왜 공평한 동전인가”는 Bool·Ind 공리(기록 전 분별에는 선호가 없다)로 답한다. 사용자의 말대로 새 원리는 필요 없다.
+- “왜 Z인가”는 대수로 좁혀졌다. 전약 보손 가운데 나를 가르는 동전은 Z뿐이고, 그 동전이 공평해지는 점이 E4의 닻이다. E5에서 “어느 보손”의 선택은 항등식으로 고정된다.
+- “왜 그 질량 척도에서 던져지는가”(운반자 원리)는 여전히 공리다. E5의 지위와 bit 장부는 바뀌지 않는다.
+- P36의 정의는 “MS-bar”만으로 ND와 구분되지 않는다. ND이면 $+4.2\sigma$다. 다음 사전 등록 판본의 변경 내역에 “PDG의 top 떼어냄 MS-bar $\hat s_Z^2$”로 적는다(값은 바뀌지 않음).
+- 예측값은 바뀌지 않는다. 구현은 [분별 모듈](../../examples/physics/rendering/ce_rendering_distinction.py)이다.
+
+## 43.61 재현과 한계
+
+구현은 [렌더링 레지스트리](../../examples/physics/rendering/ce_rendering_registry.py), 고정 검사는 `tests/test_rendering_registry.py`(①·③·S2·T1·U1·M1·O1·TC·C1·순환 평균·사다리 상쇄·순환 위상과 팽창 변화의 반례·⑤·$\theta^*$ 반례·판본 III·부스트 반례·R-Pl 전이·유클리드 회전·BAO 눈금 예측·순환 기하·나선 긴장·복소 척도인자·S8·두 원의 구분·사건 척도·중성미자 질량·게이지군과 한 세대·세 세대와 선형 중력·대칭 깨짐과 전하 양자화·급팽창 게이지 수·중성미자 장부·암흑에너지 W1 반례·진공 기울기 W2·최저 조화 규칙·모방 시계 작용 W3·빛의 한계와 렌더링 지평선·확률 무게 중력·빛원뿔 기록 갱신·CMB–BAO 그라데이션·마감 판정·가설 역유도·공리 증명·열린 예측·사전 등록 v1–v12 동결과 공동 RMSE 고정, 초신성 보류 시험·FD θ*·W3 성장 보정·자료 판본 민감도)다. 필수 테스트 목록에 추가했고 전체 344개 검사를 실행했다(2026-09-23). §43.37–43.40의 검사는 각 절에 적은 별도 모듈에 있고, §43.35 정리 C′·D′의 재증명 검산은 [복소 부스트 모듈](../../examples/physics/rendering/ce_rendering_complex_boost.py), §43.41–43.44의 보강은 [E4 대각합 모듈](../../examples/physics/rendering/ce_rendering_e4_trace.py), [간헐 렌더링 모듈](../../examples/physics/rendering/ce_rendering_intermittent.py), [경계 모듈](../../examples/physics/rendering/ce_rendering_boundary.py), [계단 모듈](../../examples/physics/rendering/ce_rendering_staircase.py), [Bool 사전 모듈](../../examples/physics/rendering/ce_rendering_bool.py)에 있고, §43.45의 점검은 [남은 항목 모듈](../../examples/physics/rendering/ce_rendering_open_checks.py), §43.46의 감사는 [중성미자 감사 모듈](../../examples/physics/rendering/ce_rendering_nu_audit.py), §43.47의 장부와 기준 비교는 [장부 모듈](../../examples/physics/rendering/ce_rendering_ledger.py), §43.48의 관측 사상은 [관측 사상 모듈](../../examples/physics/rendering/ce_rendering_o1_map.py), §43.49의 추측 검증은 [무리 안 차이 모듈](../../examples/physics/rendering/ce_rendering_spread.py), §43.50은 [위상 잠금 모듈](../../examples/physics/rendering/ce_rendering_phase_lock.py), §43.51은 [인과 잠금 모듈](../../examples/physics/rendering/ce_rendering_causal_lock.py), §43.52는 [잠금 역사 모듈](../../examples/physics/rendering/ce_rendering_lock_history.py), §43.53은 [열적 시간 모듈](../../examples/physics/rendering/ce_rendering_thermal_time.py), §43.54는 [가지치기 모듈](../../examples/physics/rendering/ce_rendering_branching.py), §43.55는 [E4 닻 모듈](../../examples/physics/rendering/ce_rendering_e4_anchor.py), §43.57은 [기운 동전 모듈](../../examples/physics/rendering/ce_rendering_biased_coin.py), §43.58은 [경계 인자 모듈](../../examples/physics/rendering/ce_rendering_boundary_loop.py), §43.59는 [Higgs·우주 모듈](../../examples/physics/rendering/ce_rendering_higgs_cosmos.py), §43.60은 [분별 모듈](../../examples/physics/rendering/ce_rendering_distinction.py)에 있다. 실행:
 
 ```powershell
 python -B -m examples.physics.rendering.ce_rendering_registry
