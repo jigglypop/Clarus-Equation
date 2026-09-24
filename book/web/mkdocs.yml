@@ -1,0 +1,56 @@
+# 렌더링 이론 book의 웹 페이지 설정(MkDocs + Material).
+# 원본은 book/ 폴더의 마크다운이다. 이 파일이 있는 book/web/에서 실행한다.
+#   mkdocs serve                      # 로컬 미리 보기
+#   mkdocs build -d ../../site_book   # 정적 사이트(저장소 루트의 site_book/)
+# 공개(게시)는 따로 결정한다.
+
+site_name: 렌더링 이론
+site_description: 입력 하나로 입자와 우주를 함께 채점하는 이론 — 교과서와 처음 보는 독자용 논문
+docs_dir: ..
+site_dir: ../../site_book
+use_directory_urls: true
+strict: false
+
+exclude_docs: |
+  PRD.md
+  tools/
+  web/mkdocs.yml
+
+theme:
+  name: material
+  language: ko
+  features:
+    - navigation.top
+    - navigation.footer
+    - navigation.tracking
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - toc.follow
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: 어두운 화면
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: 밝은 화면
+
+markdown_extensions:
+  - tables
+  - toc:
+      permalink: true
+  - admonition
+  - attr_list
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.arithmatex:
+      generic: true
+
+extra_javascript:
+  - web/mathjax.js
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+plugins:
+  - search
