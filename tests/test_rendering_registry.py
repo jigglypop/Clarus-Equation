@@ -81,6 +81,11 @@ from examples.physics.rendering import ce_rendering_dictionary as DIC
 from examples.physics.rendering import ce_rendering_modular as MOD
 from examples.physics.rendering import ce_rendering_joint_render as JRN
 from examples.physics.rendering import ce_rendering_nu_lens as NUL
+from examples.physics.rendering import ce_rendering_audit as AUD
+from examples.physics.rendering import ce_rendering_e4_gauge as E4G
+from examples.physics.rendering import ce_rendering_time_semantics as TSE
+from examples.physics.rendering import ce_rendering_formula_status as FST
+from examples.physics.rendering import ce_rendering_core_four as CF4
 from examples.physics.rendering import ce_rendering_open_predictions as OP
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
@@ -1505,3 +1510,78 @@ def test_data_version_sensitivity_is_dominated_by_the_nufit_sk_choice() -> None:
     assert all(r["flag_3sigma"] and r["W2"] > 1.4 for k, r in tab.items() if k[0] == "noSK")
     # the W2/W3 ranking follows the DES lensing row only
     assert all((r["better"] == "W3") == (r["lens"] in ("both", "DES")) for r in tab.values())
+
+
+def test_audit_val01_gain_comes_from_the_two_tensions() -> None:
+    d = AUD.val01_decomposition()
+    assert abs(d["total"]["CE"] - 27.14) < 0.05 and abs(d["total"]["base"] - 81.12) < 0.05
+    assert d["base_share_of_two_tensions"] > 0.9                   # SH0ES + BAO carry the baseline chi^2
+    assert d["gain_share"]["SH0ES"] > 0.8 and d["gain_share"]["fitted_in_base"] < 0
+    rest = d["without_two_tensions"]["chi2"]
+    assert rest["CE"] > rest["base"]                               # without them the baseline is ahead
+
+
+def test_audit_no_prediction_has_been_judged_by_post_freeze_data() -> None:
+    t = AUD.registration_timing()
+    assert t["versions"] >= 24 and t["post_freeze_verdicts"] == 0
+    p17 = next(r for r in t["rows"] if r["id"] == "P17")
+    assert p17["version"] == 7 and p17["published"] < p17["frozen"][:7]   # killing bound predates P17
+
+
+def test_audit_grammar_code_break_even_is_about_one_bit_per_symbol() -> None:
+    for minimal_prior in (False, True):
+        g = AUD.grammar_mdl(minimal_prior)
+        for blk in ("Q", "M"):
+            v = g[blk]
+            assert v["L_CE_ledger"] < v["L_base"]                    # §43.47 ledger code: CE ahead
+            assert v["L_CE_G2"] > v["L_base"]                        # leaf-only grammar: CE behind
+            assert min(v["L_CE_G1"].values()) > v["L_base"]           # open search: CE behind
+            assert 0.5 < v["break_even_bits_per_token"] < 1.2
+
+
+def test_audit_born_doubling_conditions_coincide_and_need_an_undefined_amplitude() -> None:
+    b = AUD.born_doubling_audit()
+    assert b["born_equals_user_jump"] and b["solution"] == [2]
+    assert b["needs_A_of"] == [4] and b["uses_undefined_amplitude"]
+
+
+def test_e4_rebuilt_from_gauge_space_dictionary_without_circular_step() -> None:
+    v = E4G.verdict()
+    assert v["k1_values_unchanged"] and v["k2_born_unique_m2"] and v["k3_cc_needed"] and not v["killed"]
+    assert all(err < 1e-12 for err in E4G.amplitude_scan().values())          # A_m defined on C^5 up to m = 5
+    b = E4G.born_consistency()
+    assert b["defined_m"] == [1, 2] and b["symbolic"] == [2] == b["numeric"]
+    e = E4G.e4_from_dictionary()
+    assert abs(e["s2_check"] - 0.23129) < 1e-12 and abs(e["pull_world"]) < 1
+
+
+def test_observation_map_keeps_proper_time_and_stellar_ages_kill_the_unit_reading() -> None:
+    t = TSE.age_test()
+    assert not t["P"]["killed"] and t["P"]["primary_excess"] < 0
+    assert t["U(pi/8)"]["killed"] and t["U(thermal)"]["killed"]
+    c = TSE.classification()
+    assert c["conflicts"] == [] and len(c["newly_classified"]) == 2
+    cc = TSE.cc_prediction()
+    assert abs(cc["P"] - 67.772) < 1e-9 and abs(cc["pull_P"]) < 1
+
+
+def test_formula_status_burden_sits_on_four_core_formulas() -> None:
+    for minimal_prior in (False, True):
+        b = FST.break_even(minimal_prior)
+        assert all(b[k]["b_star_empirical"] < b[k]["g2_bits_per_token"] for k in ("Q", "M"))   # hole not closed
+    four = FST.if_core_four_derived()
+    assert four["Q"]["core_share"] > 0.5 and four["M"]["core_share"] > 0.7
+    assert all(four[k]["b_star_remaining"] > four[k]["g2_bits_per_token"] for k in ("Q", "M"))
+
+
+def test_core_four_are_not_derivable_and_cost_less_as_parameters() -> None:
+    assert CF4.horizon_identity()["rel_diff"] < 1e-12 and CF4.ew_identity()["rel_diff"] < 1e-12
+    e = CF4.ew_sil()
+    assert e["formula_is_sil"] and [(h["k"], h["race"], h["loop"]) for h in e["hits"]] == [(12, "1/F", "ODD")]
+    assert not CF4.horizon_sil_crosscheck()["unified"] and CF4.horizon_coefficient()["hits"] == []
+    assert not CF4.sum_rule()["s2_derived"]
+    for minimal_prior in (False, True):
+        assert all(d["cheaper"] == "parameter" for d in CF4.per_formula(minimal_prior).values())
+    wide, narrow = CF4.demoted_mdl(False), CF4.demoted_mdl(True)
+    assert all(wide[b]["L_CE_after_G2"] < wide[b]["L_base"] < wide[b]["L_CE_after_G1"] for b in ("Q", "M"))
+    assert narrow["Q"]["L_CE_after_G2"] > narrow["Q"]["L_base"] and narrow["M"]["L_CE_after_G2"] < narrow["M"]["L_base"]
