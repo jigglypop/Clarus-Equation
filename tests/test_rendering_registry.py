@@ -86,6 +86,11 @@ from examples.physics.rendering import ce_rendering_e4_gauge as E4G
 from examples.physics.rendering import ce_rendering_time_semantics as TSE
 from examples.physics.rendering import ce_rendering_formula_status as FST
 from examples.physics.rendering import ce_rendering_core_four as CF4
+from examples.physics.rendering import ce_rendering_horizon_towers as HTW
+from examples.physics.rendering import ce_rendering_tower_temperature as TTW
+from examples.physics.rendering import ce_rendering_two_pi_squared as TPS
+from examples.physics.rendering import ce_rendering_parabolic_lock as PBL
+from examples.physics.rendering import ce_rendering_horizon_constant as HCN
 from examples.physics.rendering import ce_rendering_open_predictions as OP
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
@@ -1585,3 +1590,86 @@ def test_core_four_are_not_derivable_and_cost_less_as_parameters() -> None:
     wide, narrow = CF4.demoted_mdl(False), CF4.demoted_mdl(True)
     assert all(wide[b]["L_CE_after_G2"] < wide[b]["L_base"] < wide[b]["L_CE_after_G1"] for b in ("Q", "M"))
     assert narrow["Q"]["L_CE_after_G2"] > narrow["Q"]["L_base"] and narrow["M"]["L_CE_after_G2"] < narrow["M"]["L_base"]
+
+
+def test_horizon_thermal_towers_read_the_lead_but_not_the_constant() -> None:
+    t = HTW.target()
+    assert t["sigma_S"] < 0.004 and abs(t["CE_minus_needed_sigma"]) < 1
+    v = HTW.verdict()
+    assert v["status"] == "선도 계수의 읽기" and v["lead_members"] == 7 and not v["pass_final"] and not v["pass_today"]
+    r = HTW.competing_readings()
+    assert abs(r["3 zeta(2) (towers)"] - r["target"]) < 1e-12 and abs(r["(2 pi)^2 / 8 (8 channels, §43.11)"] - r["target"]) < 1e-12
+    assert all(HTW.mdl_with_ph_free(mp)["cheaper"] == "parameter" for mp in (False, True))
+    cf = HTW.constant_family()
+    assert [k for k, _ in cf["hits"]["C_today"]] == ["−πδ(1−q)"] and [k for k, _ in cf["hits"]["C_final"]] == ["−δ"]
+    assert cf["chance_per_target_upper"] < 0.2
+    b = HTW.ht_delta_branch()
+    assert abs(b["pull_vs_theta_needed"]) < 1 and -0.003 < b["rel_split"] < -0.001
+    assert all(HTW.mdl_with_ph_free(mp, HTW.RESIDUAL_HT_DELTA_WITH_PH_FREE)["cheaper"] == "formula" for mp in (False, True))
+
+
+def test_ph5_has_no_thermal_time_basis_and_n_e_needs_stiff_reheating() -> None:
+    nt = TTW.natural_tori()
+    assert not nt["supported"] and abs(nt["gap_factor"] - 4 * math.pi ** 2) < 1e-9
+    assert abs(nt["lead_over_natural"] - 4 * math.pi ** 2) < 1e-6 and nt["natural_S_over_Ne_is_one_eighth"]
+    n1, n3 = nt["candidates"]["N1 TT 주기 모드"], nt["candidates"]["N3 모듈러 정규화"]
+    assert abs(n1["x"] - n3["x"]) < 1e-12                                      # x = βω is coordinate free
+    assert TTW.diffusion_principle()["hits"] == []
+    m = TTW.matching()
+    assert 55.0 < m["N_star_instant"] < 56.2 and not m["consistent"] and m["excess"] > 1.0
+    assert 1e13 < m["kination_T_reh_GeV"] < 1e14
+
+
+def test_no_ce_native_torus_supplies_the_two_pi_squared() -> None:
+    c = TPS.candidates()
+    assert not any(d["hit"] for d in c.values())
+    expect = {"A1 자연 원환": 4 * math.pi ** 2, "A3 인과 창 = 열적 원": math.pi ** 2, "A4 허블 온도": 2 * math.pi,
+              "A5 TT 감김 작용": 4 * math.pi ** 2 / 3, "A6 구간 모드": 2 * math.pi ** 2}
+    assert all(abs(c[k]["missing_factor"] - v) < 1e-9 for k, v in expect.items())
+    r = TPS.requirement()
+    assert abs(r["T_over_T_GH"] - 4 * math.pi ** 2) < 1e-9
+    f = TPS.equivalent_forms()
+    assert max(abs(v - f["lead"]) for v in f.values()) < 1e-9
+
+
+def test_circle_free_critical_lock_gives_basel_sum_but_not_the_constant() -> None:
+    c = PBL.construction_checks()
+    assert c["ok"] and c["F_entry"] == 1.0 and c["F_record_frame"] == 2.0
+    f = PBL.family()
+    assert {h[0] for h in f["hits"]} == {"1/F (Fatou)"} and all(h[2] == 2 for h in f["hits"])
+    riccati = f["members"][("리카티 1 − tan θ", "창 진입", 2)]["coef"]
+    assert abs(riccati - 4 * math.pi ** 2 / 2) < 1e-6                           # 4× the target
+    k = PBL.constants()
+    assert not k["constant_derived"] and k["pull_final"] > 10
+    s = PBL.superstable_lock()
+    assert s["is_1_over_sqrt2"] and s["is_pi_over_8"] and abs(s["continuous_relaxation_rate"] - 1.0) < 1e-12
+
+
+def test_horizon_constant_has_no_natural_mechanism_and_is_unidentifiable() -> None:
+    n = HCN.natural_mechanisms()
+    assert n["hits"] == [] and all(abs(d["pull"]) > 50 for d in n["members"].values())
+    i = HCN.identifiability()
+    assert i["unidentifiable"] and i["n_hits"] >= 10 and i["expected_chance_hits"] >= 10
+    assert any(name == "1·1·δ" for name, _, _ in i["hits"])                     # HT-δ is one of many
+    assert i["improvement_needed"] > 100
+
+
+def test_rendering_predictions_v25_is_frozen() -> None:
+    v24 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v24.json").read_text(encoding="utf-8"))
+    v25 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v25.json").read_text(encoding="utf-8"))
+    assert v25["supersedes_manifest_id"] == v24["manifest_id"]
+    body = {k: v for k, v in v25.items() if k != "manifest_sha256"}
+    canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    assert hashlib.sha256(canonical).hexdigest() == v25["manifest_sha256"]
+    assert v25["manifest_sha256"] == "f88b496c26a0c0b3bf132791bad3a8f42594d077f1904ee3ade5e5f87b097f75"
+    for key, rel in v25["model"]["files"].items():
+        assert v25["model"]["sha256"][key] in _line_ending_hashes((REPO_ROOT / rel)), (
+            f"{key} changed after v25 freeze: create v26 and keep earlier manifests")
+    old = {q["id"]: q for q in v24["predictions"]}
+    assert {q["id"] for q in v25["predictions"]} == set(old) | {"P42", "P43"}
+    for q in v25["predictions"]:
+        if q["id"] in old:
+            assert q["value"] == old[q["id"]]["value"]                        # no value changed
+    assert len(v25["model"]["files"]) == 86
+    assert v25["model"]["status_changes_v25"]["E4"].startswith("Born-doubling basis (v24) withdrawn")
+    assert v25["model"]["mdl_accounting_v25"]["continuous_inputs"] == ["alpha_s", "alpha_em", "v/M_Pl", "A_s", "h"]

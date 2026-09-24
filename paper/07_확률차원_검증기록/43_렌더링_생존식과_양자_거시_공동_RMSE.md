@@ -8,7 +8,7 @@
 
 **현재 판정의 종합은 §43.77(마감 종합, 2026-09-24)이며, 그 해석의 한계는 §43.87(전체 감사)에 있다. §43.56(2026-09-23)은 작업 기록으로 남긴다.** 감사의 요지는 네 가지다. VAL-01 우위의 84%는 SH0ES 한 행, 36%는 BAO에서 온다. 설명 길이 우위는 식 구조가 강제되었다는 가정에 달려 있다. 동결 뒤 자료로 판정된 예측은 아직 없다. E4의 “조건부 정리”는 철회되었다가 §43.88에서 순환 없이 재구성되었다. 허점별 현황은 §43.92(허점 장부)에 있다. 아래는 v12 시점의 점수 판정이며 그대로 둔다.
 
-**점수 판정(§43.24–43.40; 사전 등록은 현재 v24, 등록 41개 중 독립 예측 37개, **기각 1개(P17, §43.74)** — P20은 §43.18 정정, P29·P30은 §43.45, P31–P33은 §43.53, P34는 §43.55, P35·P36은 §43.59, P37은 §43.62, P38은 §43.63, P39는 §43.68, P40은 §43.71, P41은 §43.74).** 입력 $\alpha_s$ 하나, 중성미자 장부 정정, 진공 기울기 W2(+1.6 bit), CMB–BAO 그라데이션 G1m(+2 bit)을 포함한다.
+**점수 판정(§43.24–43.40; 사전 등록은 현재 v25, 등록 43개 중 독립 예측 39개, **기각 1개(P17, §43.74)** — P20은 §43.18 정정, P29·P30은 §43.45, P31–P33은 §43.53, P34는 §43.55, P35·P36은 §43.59, P37은 §43.62, P38은 §43.63, P39는 §43.68, P40은 §43.71, P41은 §43.74, P42·P43은 v25(§43.98)).** 입력 $\alpha_s$ 하나, 중성미자 장부 정정, 진공 기울기 W2(+1.6 bit), CMB–BAO 그라데이션 G1m(+2 bit)을 포함한다.
 
 | 판본 | 39행 | 43행(+렌즈·중성미자) | 연속 적합 | 남는 큰 잔차 |
 |---|---|---|---|---|
@@ -263,7 +263,12 @@ $$s_{13}^2=\frac{\delta}{8},\qquad s_{12}^2=\frac13\left(1-\frac{2\delta}{8}\rig
 | 유도·경험 분리 | §43.91 | 설명 길이 부담의 54–74%는 코어 네 식(합규칙, 계층 식, A_s, H₀ 지평선); 네 식이 유도되면 우위가 잎 부호에서도 유지 |
 | 허점 장부 | §43.92 | 막은 것 넷, 좁힌 것 하나, 남은 것(G1m 무게 시점, 동결 후 판정) |
 | 코어 네 식 | §43.93 | 넷 다 유도되지 않음(계층 식은 SIL 읽기, 지평선·합규칙·A_s는 실패); 매개변수가 더 싸므로 내림 → 연속 입력 다섯, 우위는 잎 부호에서 남음 |
-| 재현 | §43.94 | 구현 경로와 한계 |
+| 지평선 계수 π²/2 | §43.94 | 세 축의 열적 기록 탑(NS 마요라나)으로 선도 계수는 읽히나 O(1) 상수는 안 나옴; 압축은 돌아오지 않음; 목격 후 경쟁 판본 HT-δ(최종 지평선, 상수 −δ, R-Pl 없음)가 기존 식과 θ*에 대해 대등 |
+| PH5와 N_e 정합 | §43.95 | 열적 시간의 자연 원환은 PH5와 (2π)² 차이(선도항 = (2π)² × TT 탑 엔트로피 N_e/8); 확산 생존도 상수 실패; N_e = 57.2는 순간 재가열 N_* = 55.58보다 1.6 많아 w > 1/3 재가열을 요구 |
+| (2π)²의 근원 | §43.96 | CE로 세울 수 있는 원환 6개(자연, 쌍대, 인과 창, 허블 온도, TT 감김, 구간) 모두 실패, 모자라는 배수는 π의 거듭제곱; 필요한 탑 온도 2πH는 근거 없음 → 지평선 선도항은 읽기로 남음 |
+| 원 없는 위상 잠김 | §43.97 | 사용자 “꼭 원이어야 함?”: 지평선의 임계 잠김은 포물형, Fatou 시간으로 창 진입 = 1, 거리 1, ½, ⅓, … → 세 축 바젤 합 π²/2(정규화까지, 24개 가족 중 유일); (2π)²는 원 전제의 부산물; 상수는 여전히 안 나옴; π/8은 단위 구동 잠금의 초안정점 |
+| 지평선 O(1) 상수 | §43.98 | PL 안의 자연 기제 7개 모두 실패; 단순 상수 2000개 중 19개가 2σ 안(우연 기대 23) → 식별 불가, 214배 정밀도 필요; HT-δ는 우연 수준 후보로 내림; 지평선 공략 종료 |
+| 재현 | §43.99 | 구현 경로와 한계 |
 
 ## 43.11 음향 각도 반례와 판본 III — 사전 등록 v2
 
@@ -3154,11 +3159,13 @@ $$a\,\frac{\partial}{\partial a}\det(aI_m)=m\,a^m=\mathrm{tr}\cdot\det .$$
 | E4의 순환·정의역(§43.82) | 조건부 정리 주장 → 철회(§43.87) | **막음.** 조건부 정리 C6 + E1′ + D + CC(§43.88) | D·CC는 사후 규칙(증거 5.1 bit 그대로), 판정은 FCC-ee |
 | 기울기 $\pi/8$의 출처 | D′의 (F)·(T), 목격 후 | **막음.** TT + H1 + $\Omega_m$에서 $\theta_0=0.398$(§43.89) | TT·H1 공리, “왜 지금 절반인가”는 1.4% 우연 |
 | 사상 M의 시간 의미 | 정해지지 않음 | **막음.** 단위 판본 U는 별 나이로 기각, 고유시간 판본 P로 확정(§43.90) | 새 판별 예측 P43(우주 시계 67.77) |
-| 설명 길이의 식 구조 비용 | 기호당 약 1 bit 가정(§43.87) | **부분적으로 막음.** 부담의 54–74%가 코어 네 식(§43.91)이고, 넷은 유도되지 않아 매개변수로 내렸다(§43.93). 손익분기는 기호당 2.5–3.5 bit | 가장 좁은 사전의 Q 블록과 개방 탐색 부호에서는 우위 없음. 연속 입력은 다섯 |
+| 설명 길이의 식 구조 비용 | 기호당 약 1 bit 가정(§43.87) | **부분적으로 막음.** 부담의 54–74%가 코어 네 식(§43.91)이고, 넷은 유도되지 않아 매개변수로 내렸다(§43.93). 손익분기는 기호당 2.5–3.5 bit | 가장 좁은 사전의 Q 블록과 개방 탐색 부호에서는 우위 없음. 연속 입력은 다섯. 지평선 식의 정보는 π²/2가 아니라 O(1) 상수에 있다(§43.94) |
 | P17 등록 절차 | 문헌 점검 없음 | **막음.** 등록 전 문헌 점검(사전등록 계약) | — |
 | G1m 무게 시점 | 1 bit | 그대로(§43.76) | 자료가 가를 때까지 선택 |
 | 게이지군·고전 중력·강한 장 | 가정을 고른 결과(§43.20, §43.22, §43.72) | 그대로. 논리 허점이 아니라 설명의 깊이 문제다 | C6·"계량은 $|A|$만"·HP는 공리로 명시 |
 | 동결 뒤 자료 판정 0건 | — | 그대로 | 시간만이 막는다(JUNO, DUNE·Hyper-K, DESI 최종, FCC-ee, 우주 시계) |
+| 지평선 선도항의 원리 | 출처 없음(§43.93) | **막음(읽기 수준).** 원을 전제한 탑 읽기(§43.94–43.96)는 $(2\pi)^2$가 비었다. 원 없는 임계 잠김(포물형)과 Fatou 좌표에서 $3\zeta(2)N_e$가 정규화까지 나온다(§43.97) | 새 전제 Q(로그 화소 수 = Fatou 거리 제곱합). O(1) 상수는 PL로 안 나오고, 단순 상수로는 식별할 수 없다(§43.98, 우연 기대 23) |
+| $N_e=18D$의 재가열 정합 | 시험 안 함 | **새로 찾음(§43.95).** 순간 재가열 $N_*=55.58$보다 1.6 많다 | CE는 급팽창 뒤 $w>1/3$ 시기를 요구한다. 재가열 모형이 없다 |
 
 다음 사전 등록 판본(v25)의 변경 내역 후보는 [사전등록 계약](../../experiments/preregistration/README.md)에 모았다.
 
@@ -3182,7 +3189,7 @@ $$a\,\frac{\partial}{\partial a}\det(aI_m)=m\,a^m=\mathrm{tr}\cdot\det .$$
 |---|---|---|---|
 | 계층 $v/M_{\rm Pl}$ | SIL: 12 게이지 생성자 통로(§43.23)가 모두 조용할 확률 $e^{-12D}$(BR1) × 자기 먼저 $1/F$(§43.67) × ODD 고리 | 식과 같은 조합. 가족 216개(통로 수 1–24 × 경주 인자 3 × 고리 3) 가운데 1σ 적중은 이 조합 하나(−0.10σ)다. 우연 상한은 $1.6\times10^{-3}$이나 가족을 목격 후에 정했으므로 증거가 아니다 | **읽기**(“조용할 확률이 척도의 비”가 새 선택) |
 | 지평선 계층 | 같은 SIL로 $\ln(1/H_0t_{\rm Pl})$ | 필요한 통로 수 $k^*=44.15$. 정수·구조 정수 적중이 없다 | **실패**(두 계층은 한 원리로 묶이지 않는다) |
-| 지평선 계수 $\pi^2/2$ | e-fold마다 넓이 $e^2$(계수 2), SIL 계수 $2k/18$ | 가장 가까운 후보가 5.33(8% 차이) | **실패** |
+| 지평선 계수 $\pi^2/2$ | e-fold마다 넓이 $e^2$(계수 2), SIL 계수 $2k/18$ | 가장 가까운 후보가 5.33(8% 차이) | **실패**(§43.94에서 열적 기록 탑으로 선도 계수만 읽힘) |
 | 합규칙 | s1: 세 게이지 통로에 기록될 확률 $2\pi\alpha_i$의 합 = 1. s2: 사전 D의 $\sum\det=a^3+a^2$ | s1은 식과 같다($2\pi$가 새 선택). s2는 $+221\sigma$ | s1 **읽기**, s2 **실패** |
 | $A_s$ | 후보 없음 | 느린 굴림으로 $H_{\rm inf}=1.5\times10^{13}$ GeV, Starobinsky 질량 $3.0\times10^{13}$ GeV | 유도 없음 |
 
@@ -3210,9 +3217,257 @@ $$a\,\frac{\partial}{\partial a}\det(aI_m)=m\,a^m=\mathrm{tr}\cdot\det .$$
 - **CE의 실제 압축은 공리에서 유도된 구조에서 온다.** 옥탄트와 CP 위상, CKM 삼각형, E4, 가지치기와 경주, 기울기 역사, G1m이 그것이다. 코어 네 식은 압축이 아니다.
 - 예측값은 바뀌지 않는다. 구현은 [코어 네 식 모듈](../../examples/physics/rendering/ce_rendering_core_four.py)이다.
 
-## 43.94 재현과 한계
+## 43.94 지평선 계수 π²/2 — 세 축의 열적 기록 탑, 그리고 식의 정보는 상수에 있다
 
-구현은 [렌더링 레지스트리](../../examples/physics/rendering/ce_rendering_registry.py), 고정 검사는 `tests/test_rendering_registry.py`(①·③·S2·T1·U1·M1·O1·TC·C1·순환 평균·사다리 상쇄·순환 위상과 팽창 변화의 반례·⑤·$\theta^*$ 반례·판본 III·부스트 반례·R-Pl 전이·유클리드 회전·BAO 눈금 예측·순환 기하·나선 긴장·복소 척도인자·S8·두 원의 구분·사건 척도·중성미자 질량·게이지군과 한 세대·세 세대와 선형 중력·대칭 깨짐과 전하 양자화·급팽창 게이지 수·중성미자 장부·암흑에너지 W1 반례·진공 기울기 W2·최저 조화 규칙·모방 시계 작용 W3·빛의 한계와 렌더링 지평선·확률 무게 중력·빛원뿔 기록 갱신·CMB–BAO 그라데이션·마감 판정·가설 역유도·공리 증명·열린 예측·사전 등록 v1–v12 동결과 공동 RMSE 고정, 초신성 보류 시험·FD θ*·W3 성장 보정·자료 판본 민감도)다. 필수 테스트 목록에 추가했고 전체 344개 검사를 실행했다(2026-09-23). §43.37–43.40의 검사는 각 절에 적은 별도 모듈에 있고, §43.35 정리 C′·D′의 재증명 검산은 [복소 부스트 모듈](../../examples/physics/rendering/ce_rendering_complex_boost.py), §43.41–43.44의 보강은 [E4 대각합 모듈](../../examples/physics/rendering/ce_rendering_e4_trace.py), [간헐 렌더링 모듈](../../examples/physics/rendering/ce_rendering_intermittent.py), [경계 모듈](../../examples/physics/rendering/ce_rendering_boundary.py), [계단 모듈](../../examples/physics/rendering/ce_rendering_staircase.py), [Bool 사전 모듈](../../examples/physics/rendering/ce_rendering_bool.py)에 있고, §43.45의 점검은 [남은 항목 모듈](../../examples/physics/rendering/ce_rendering_open_checks.py), §43.46의 감사는 [중성미자 감사 모듈](../../examples/physics/rendering/ce_rendering_nu_audit.py), §43.47의 장부와 기준 비교는 [장부 모듈](../../examples/physics/rendering/ce_rendering_ledger.py), §43.48의 관측 사상은 [관측 사상 모듈](../../examples/physics/rendering/ce_rendering_o1_map.py), §43.49의 추측 검증은 [무리 안 차이 모듈](../../examples/physics/rendering/ce_rendering_spread.py), §43.50은 [위상 잠금 모듈](../../examples/physics/rendering/ce_rendering_phase_lock.py), §43.51은 [인과 잠금 모듈](../../examples/physics/rendering/ce_rendering_causal_lock.py), §43.52는 [잠금 역사 모듈](../../examples/physics/rendering/ce_rendering_lock_history.py), §43.53은 [열적 시간 모듈](../../examples/physics/rendering/ce_rendering_thermal_time.py), §43.54는 [가지치기 모듈](../../examples/physics/rendering/ce_rendering_branching.py), §43.55는 [E4 닻 모듈](../../examples/physics/rendering/ce_rendering_e4_anchor.py), §43.57은 [기운 동전 모듈](../../examples/physics/rendering/ce_rendering_biased_coin.py), §43.58은 [경계 인자 모듈](../../examples/physics/rendering/ce_rendering_boundary_loop.py), §43.59는 [Higgs·우주 모듈](../../examples/physics/rendering/ce_rendering_higgs_cosmos.py), §43.60은 [분별 모듈](../../examples/physics/rendering/ce_rendering_distinction.py), §43.61은 [사다리 모듈](../../examples/physics/rendering/ce_rendering_ladder.py), §43.62는 [한 사건 모듈](../../examples/physics/rendering/ce_rendering_one_event.py), §43.63은 [극 모듈](../../examples/physics/rendering/ce_rendering_pole.py), §43.64는 [고정점 사다리 모듈](../../examples/physics/rendering/ce_rendering_fp_ladder.py), §43.65는 [Higgs 무게 모듈](../../examples/physics/rendering/ce_rendering_higgs_weight.py), §43.66은 [하나의 자기 모듈](../../examples/physics/rendering/ce_rendering_single_self.py), §43.67은 [경주 모듈](../../examples/physics/rendering/ce_rendering_race.py), §43.68은 [질량 = 빠르기 모듈](../../examples/physics/rendering/ce_rendering_mass_rate.py), §43.69는 [CCHP JWST 모듈](../../examples/physics/rendering/ce_rendering_jwst_cchp.py), §43.70은 [E4 모양 모듈](../../examples/physics/rendering/ce_rendering_e4_shape.py), §43.71은 [지평선 화소 모듈](../../examples/physics/rendering/ce_rendering_horizon_pixel.py), §43.72는 [강한 중력 모듈](../../examples/physics/rendering/ce_rendering_jacobson.py), §43.74는 [중성미자 우주론 모듈](../../examples/physics/rendering/ce_rendering_nu_cosmo.py), §43.75는 [P41 적합 모듈](../../examples/physics/rendering/ce_rendering_nu_fit.py), §43.76은 [무게 시점 모듈](../../examples/physics/rendering/ce_rendering_weight_epoch.py), §43.78은 [단일항 모듈](../../examples/physics/rendering/ce_rendering_singlets.py), §43.79는 [E4 식별 (ii) 모듈](../../examples/physics/rendering/ce_rendering_e4_ii.py), §43.80은 [렙톤 대각합 모듈](../../examples/physics/rendering/ce_rendering_lepton_trace.py), §43.81은 [E4 지수 모듈](../../examples/physics/rendering/ce_rendering_e4_exponent.py), §43.82는 [보른 배가 모듈](../../examples/physics/rendering/ce_rendering_born_doubling.py), §43.83은 [사전 모듈](../../examples/physics/rendering/ce_rendering_dictionary.py), §43.84는 [모듈러 요동 모듈](../../examples/physics/rendering/ce_rendering_modular.py), §43.85는 [공동 렌더링 모듈](../../examples/physics/rendering/ce_rendering_joint_render.py), §43.86은 [P41 렌즈 적합 모듈](../../examples/physics/rendering/ce_rendering_nu_lens.py), §43.87은 [감사 모듈](../../examples/physics/rendering/ce_rendering_audit.py), §43.88은 [E4 게이지 모듈](../../examples/physics/rendering/ce_rendering_e4_gauge.py), §43.90은 [시간 의미론 모듈](../../examples/physics/rendering/ce_rendering_time_semantics.py), §43.91은 [식 지위 모듈](../../examples/physics/rendering/ce_rendering_formula_status.py), §43.93은 [코어 네 식 모듈](../../examples/physics/rendering/ce_rendering_core_four.py)에 있다(§43.89는 열적 시간 모듈을 쓴다). 실행:
+**문제.** 코어 네 식 가운데 H₀ 지평선 식은 가장 큰 부담(30기호)이다. 선도 계수 $\pi^2/2$에 원리를 세운다. 30기호의 구성은 다음과 같다.
+- $\sqrt\pi e^{-S/2}$ 8기호: 지평선 엔트로피의 정의라 이미 강제된다(§43.93)
+- R-Pl 고리 7기호
+- 선도항 $(\pi^2/2)N_e$ 7기호
+- 보정항 $-\pi\delta(1-q)$ 7기호
+- 연산자 1기호
+
+그래서 $\pi^2/2$의 원리가 직접 다루는 것은 7기호다.
+
+**사전 규칙(계산 전).** 탑 가족의 O(1) 상수와 과녁 상수의 대략값을 암산으로 먼저 보았다. 그래서 판정은 보고로만 쓴다.
+- (가) 과녁: θ*에 맞춘 h(CE의 Ω 비율 고정)에서 필요한 $S$와 그 σ를 구한다. TT(§43.53)가 물리적 지평선을 최종 지평선으로 두므로, 주 과녁은 최종 지평선 $\ln S_{\rm dS}=\ln\pi-2\ln(H_\Lambda t_{\rm Pl})$이다. 상수는 $C=\ln S-(\pi^2/2)N_e$로 정의한다.
+- (나) 원리 PH(열적 기록 탑):
+  - PH1: 렌더링된 공간 축마다 기록 모드 탑이 하나씩 있다.
+  - PH2: 기록 하나는 Bool 비트(점유 0/1)이므로 페르미 통계다.
+  - PH3: 기록은 열적 원(TT) 위에 놓이므로 반주기(NS)다. 열적 장론의 경계 조건이라 선택이 아니다.
+  - PH4: 기록은 실수이므로 축마다 키랄 마요라나 탑 하나다.
+  - PH5: $T/\omega=N_e$(지평선은 급팽창 기록 전체를 담는다). 새 전제다.
+  - 주장: $\ln(\text{화소 수})=3\cdot\pi^2/(6x)=(\pi^2/2)N_e$, $x=1/N_e$(지수적으로 작은 항 빼고 정확).
+  - 가족: 통계 {보손, NS, R} × {ln Z, S} × {실수, 복소} × 탑 {1, 2, 3, 6}. 값은 직접 합으로 계산한다.
+  - 판정: 선도 계수(L)와 O(1) 상수(C, 2σ)를 모두 맞추면 “유도”, L만 맞추면 “읽기”, 둘 다 못 맞추면 “실패”다.
+- (다) 경쟁 읽기 $(2\pi)^2/8$(§43.11)을 함께 적는다.
+- (라) PH를 공짜 공리로 인정해도 남는 기호의 비용과 h 매개변수 비용을 비교한다.
+
+**[산출] (가) 과녁.**
+
+| 양 | 값 |
+|---|---|
+| θ* 맞춤 h | 0.67703 |
+| 필요한 $S$(오늘) / CE 식 | 281.7429 / 281.7408($-0.79\sigma$) |
+| $\sigma_S$ | 0.0026(θ* 몫 0.0018, α_s 몫 0.0018) |
+| 선도항 $(\pi^2/2)N_e$ | 282.2722 |
+| 필요한 상수: 오늘 / 최종 지평선 | $-0.5294$ / $-0.1799$ (각 $\pm0.0026$) |
+
+**[검사] (나) 탑 가족.** 선도 계수를 정확히 $\pi^2/2$로 주는 원소는 7개다. PH(NS 마요라나 × 3의 열적 엔트로피)가 그 하나다.
+
+| 원소 | O(1) 상수 | 최종 지평선 과녁 대비 |
+|---|---|---|
+| NS, S, 실수 × 3 (PH) | 0.0000 | $+69.8\sigma$ |
+| NS, ln Z, 실수 × 6 / 복소 × 3 | $-0.0022$ | $+68.9\sigma$ |
+| R, S, 실수 × 3 | $-1.0397$ | $-334\sigma$ |
+| R, ln Z, 실수 × 6 / 복소 × 3 | $-2.0751$ | $-735\sigma$ |
+| 보손, ln Z, 실수 × 3 | $-8.8288$ | $-3354\sigma$ |
+
+O(1) 상수를 맞추는 원소는 없다. 판정은 **선도 계수의 읽기**다. 경쟁 읽기 $(2\pi)^2/8$도 $\pi^2/2$를 정확히 준다. 계수 하나에 구조적 읽기가 둘 이상 있으므로 이 계수는 원리를 가려내는 증거가 약하다.
+
+**[산출] (라) 압축.** PH를 공짜로 인정해도 남는 기호(보정항, R-Pl, 연산자 15기호)는 잎 부호로 38.9 bit다. h 매개변수는 16.7 bit(좁은 사전 11.2)다. 매개변수가 여전히 싸다. **$\pi^2/2$를 설명해도 압축은 돌아오지 않는다.** 식의 정보는 선도 계수가 아니라 $\pm0.0026$ 정밀도로 맞아야 하는 O(1) 상수와 R-Pl에 있다. §43.93 판정의 “유도되면 압축이 크게 돌아온다”는 이 점에서 과장이었다.
+
+**[목격 후 부산물] HT-δ — 최종 지평선의 상수는 $-\delta$와 맞는다.** 과녁을 암산하다가 최종 지평선 상수 $-0.1799$가 $-\delta=-0.1779$에 가깝다는 것을 보았다. 그 뒤에 가족을 적었으므로 증거가 아니다.
+- 단순 O(1) 상수 가족 33개(CE 기본량 16종 × 부호, 0 포함)를 두 과녁에 대었다. 오늘 과녁에는 기존 식의 $-\pi\delta(1-q)$가 $-0.79\sigma$로, 최종 지평선 과녁에는 $-\delta$가 $+0.82\sigma$로 적중한다. 과녁마다 적중은 하나씩이다. 과녁 하나에서 우연히 하나 이상 맞을 확률의 상한은 16%다.
+- 경쟁 판본 **HT-δ**: $\ln S_{\rm dS}=(\pi^2/2)N_e-\delta$, $H_0=H_\Lambda/\sqrt{\Omega_\Lambda}$이며 R-Pl 고리가 없다. 기존 식과 비교하면 다음과 같다.
+  - h는 0.67631 대 0.67772로 0.21% 갈린다.
+  - θ*가 요구하는 값과의 pull은 $+0.82\sigma$ 대 $-0.79\sigma$로 대등하다.
+  - 두 판본의 차이는 $1.6\sigma_S$다. 가르려면 $\sigma_S$가 약 3배 줄어야 한다(θ*와 FCC-ee의 α_s).
+- PH를 공리로 받아들이면 HT-δ에 남는 기호는 “$-\delta$” 둘이다. 비용은 잎 부호 4.9 bit, 개방 탐색 10 bit로 h 매개변수보다 싸다. 두 조건이 모두 서면 압축이 돌아온다.
+  - 조건 1: PH가 사후 가설이 아니라 독립 근거를 얻는다.
+  - 조건 2: HT-δ가 기존 식을 이긴다.
+- 지금은 둘 다 사후라 채택하지 않는다. HT-δ는 경쟁 판본으로 두고 등록값(P08 67.772 등)은 바꾸지 않는다. 채택되면 R-Pl의 지평선 전이(§43.12)는 필요 없어지고, R-Pl은 계층 식에만 남는다. (§43.98: 단순 상수 2000개 가운데 19개가 같은 창에 든다. 우연 기대는 23개다. HT-δ는 우연 수준 후보로 내린다.)
+
+**판정.**
+- $\pi^2/2$는 “세 축의 열적 기록 탑”으로 읽힌다(Bool 비트 = 페르미, 열적 원 = NS, 실수 기록 = 마요라나, $T/\omega=N_e$). 전제 PH5가 새 선택이고 경쟁 읽기가 있으므로 지위는 **읽기**다. (§43.95: PH5는 열적 시간의 자연 원환과 $(2\pi)^2$ 다르다. 독립 근거가 없다.)
+- 지평선 식의 정보는 O(1) 상수에 있다. 기존 식(오늘, $-\pi\delta(1-q)$ + R-Pl)과 HT-δ(최종, $-\delta$)가 θ*에 대해 대등하다. 가르는 것은 α_s와 θ*의 정밀도다.
+- 설명 길이 회계에서 지평선 식은 내린 상태로 남는다(§43.93).
+- 예측값은 바뀌지 않는다. 구현은 [열적 기록 탑 모듈](../../examples/physics/rendering/ce_rendering_horizon_towers.py)이다.
+
+## 43.95 PH5의 독립 근거 — 열적 시간은 (2π)²를 주지 않고, N_e는 딱딱한 재가열을 요구한다
+
+**문제.** §43.94의 원리 PH는 선도 계수 $\pi^2/2$를 주지만 전제 PH5($T/\omega=N_e$)가 새 선택이었다. PH5가 기존 공리에서 나오는지 본다. $x=\beta\omega$는 좌표에 무관하고 두 원의 길이 비로만 정해진다. 주기 모드이면 $x=2\pi\beta/L$이므로 PH5는 $L/\beta=2\pi N_e$를 요구한다.
+
+**사전 규칙(계산 전).** 자연 원환의 $x=4\pi^2/N_e$와 순간 재가열의 $N_*\approx55.6$을 암산으로 먼저 보았다.
+- (가) 자연 원환 후보를 기존 공리로만 세운다. 공간 원은 급팽창 기간 $N_e$ e-fold(TT: e-fold마다 기록 위상 1 rad), 열적 원은 유클리드 주기 $2\pi$ e-fold(Gibbons–Hawking, C2)다. N1은 주기 모드, N2는 구간 모드, N3은 같은 원환을 모듈러 흐름 변수 $s=N/2\pi$로 잰 것이다(불변성 확인). 하나라도 $x=1/N_e$를 주면 PH5가 뒷받침된다.
+- (나) $\pi^2$를 주는 다른 원리로 흡수 경계 구간의 확산 생존 $P\approx A\,e^{-\pi^2Dt/L^2}$를 둔다. $Dt/L^2=N_e/4$이면 선도항이 $\ln(M_{\rm Pl}/H)$와 같다. 원리 고유의 상수 $-\ln A$(가운데 출발 $4/\pi$, 고른 출발 $8/\pi^2$)를 필요한 상수와 2σ로 비교한다.
+- (다) $N_e$의 표준 정합: 엔트로피 보존, 순간 재가열, $H_*^2=V_*/3M^2$, $V_*=\tfrac32\pi^2A_s r M^4$(CE의 $A_s$, $r=12/N_e^2$), Starobinsky 퍼텐셜의 $\rho_{\rm end}=\tfrac32V_{\rm end}$($\varepsilon_V=1$), $k_*=0.05$ Mpc⁻¹, $T_0=2.7255$ K, $g_{s0}=3.931$, $g_{\rm reh}=106.75$.
+  - $N_e-N_{*,\rm 순간}\le0.5$이면 정합이다.
+  - 그보다 크면 CE는 $w>1/3$ 재가열을 요구한다(기각이 아니라 요구 조건).
+  - 일정한 $w$의 재가열은 $N_*$를 $\Delta(3w-1)/(12(1+w))$만큼 바꾼다($\Delta=\ln(\rho_{\rm end}/\rho_{\rm reh})$).
+
+**[검사] (가) 자연 원환.**
+
+| 후보 | $x\cdot N_e$ | 세 탑의 엔트로피 |
+|---|---|---|
+| N1 TT 주기 모드 | $4\pi^2=39.478$ | $N_e/8$ |
+| N2 TT 구간 모드 | $2\pi^2=19.739$ | $N_e/4$ |
+| N3 모듈러 정규화 | $39.478$(N1과 같음) | $N_e/8$ |
+| PH5 | 1 | $(\pi^2/2)N_e$ |
+
+- PH5는 뒷받침되지 않는다. 자연 원환과 정확히 $(2\pi)^2$ 다르다.
+- 지평선 선도항은 $(\pi^2/2)N_e=(2\pi)^2\times N_e/8$, 곧 **$(2\pi)^2$ × (TT 자연 원환의 탑 엔트로피)**다. §43.11의 읽기 $(2\pi)^2/8$과 §43.94의 열적 기록 탑은 같은 진술이다. 빠진 것은 $(2\pi)^2$ 하나다. 두 원을 라디안 대신 회전수로 잰 것과 같은 크기이며 기존 공리에는 근거가 없다.
+- 자연 원환의 엔트로피가 e-fold마다 정확히 1/8 nat이라는 것은 대수의 결과($3\cdot\tfrac{\pi^2}{6}/4\pi^2$)다. Bool 사전의 진공 세계 확률 1/8과 같은 수이나 관찰로만 적는다.
+
+**[검사] (나) 확산 생존.** 필요한 상수는 $\ln(M_{\rm Pl}/H)$ 기준으로 오늘 $-0.8464$, 최종 지평선 $-0.6623$(σ 0.0013)이다. 가운데 출발 $-\ln(4/\pi)$는 $+469\sigma$와 $+326\sigma$, 고른 출발은 $+819\sigma$와 $+677\sigma$다. 적중이 없다. $\pi^2$는 여러 원리에서 자연스럽게 나오므로, 선도항에 $\pi^2$가 있다는 사실 자체는 원리를 가려내지 못한다.
+
+**[산출] (다) $N_e$의 표준 정합 — 새 요구 조건.**
+- 순간 재가열의 $N_*=55.58$이고 CE의 $N_e=57.20$이다. **1.62 e-fold가 많다.**
+- $N_*=\ln(a_{\rm end}H_*/k_*)$에서 $H_0$는 상쇄되므로 이 결과는 허블 판독과 무관하다. $\rho_{\rm end}$를 두 배 바꿔도 0.17, $g_{\rm reh}$에 $\nu_R$ 셋을 더해도 0.004밖에 움직이지 않는다.
+- $w\le1/3$인 재가열에서 $N_*$의 최댓값은 순간 재가열이다. 그래서 CE는 급팽창 직후 **딱딱한 시기($w>1/3$)**를 요구한다. $w=1$(kination)이면 $\ln(\rho_{\rm end}/\rho_{\rm reh})=19.4$, $T_{\rm reh}\approx2\times10^{13}$ GeV가 필요하다.
+- Starobinsky의 자연스러운 재가열($w\approx0$)이면 $N_*$가 더 작아져 차이가 커진다. CE에는 재가열 모형이 없으므로 이것은 기각이 아니라 CE가 설명해야 할 조건이다.
+
+**판정.**
+- PH5는 독립 근거가 없다. 열적 시간의 자연 원환은 PH5와 $(2\pi)^2$ 다르다. PH와 §43.94의 판정(선도 계수의 읽기)은 그대로이고, HT-δ도 경쟁 판본으로 남는다.
+- 지평선 식의 선도항은 “$(2\pi)^2$ × TT 탑 엔트로피”로 정확히 다시 쓰인다. 원리를 세우려면 이 $(2\pi)^2$를 주는 구조가 필요하다. 후보는 두 원(복소 척도인자의 회전 위상 $\varphi$와 유클리드 시간)이 이루는 원환의 넓이 $(2\pi)^2$이며, 열린 과제로 둔다.
+- **새 요구 조건:** $N_e=18D$는 표준 재가열과 1.6 e-fold 어긋나므로 CE는 $w>1/3$ 재가열을 요구한다. 허점 장부(§43.92)에 올린다.
+- 예측값은 바뀌지 않는다. 구현은 [탑 온도 모듈](../../examples/physics/rendering/ce_rendering_tower_temperature.py)이다.
+
+## 43.96 (2π)²의 근원 — CE로 세울 수 있는 원환은 어느 것도 주지 않는다
+
+**문제.** §43.95에서 지평선 선도항은 $(2\pi)^2\times S_{\rm TT}$였다. $S_{\rm TT}=N_e/8$은 열적 시간의 자연 원환에서 세 NS 탑이 갖는 엔트로피다. $x=2\pi\beta/L$은 두 원의 길이 비로만 정해지므로, $(2\pi)^2$가 구조에서 나오려면 CE 공리 안에서 원환 자체가 달라져야 한다.
+
+**사전 규칙(계산 전).** 후보는 모두 기존 공리에서 정해지며 맞출 수 있는 수가 없다. 대수라 대부분의 계수를 암산으로 먼저 보았으므로 판정은 보고로만 쓴다. 선도 계수가 $\pi^2/2$와 $10^{-9}$ 안이면 $(2\pi)^2$의 근원이다.
+- A1 자연 원환(기준): 열적 원 $2\pi$, 공간 원 $N_e$
+- A2 모듈러 쌍대: 두 원의 역할 교환
+- A3 인과 창을 열적 원으로: 정리 C′에서 기록이 생기는 기울기의 폭 $\pi/2$
+- A4 허블 온도: 탑의 온도를 $H/2\pi$ 대신 $H$로 둠
+- A5 TT 감김 작용: TT에서 기록 위상은 열적 원 한 바퀴에 $2\pi$ 감긴다. 그 유클리드 작용 $2\pi^2K\,L/\beta$에서 강성 $K$는 자유 페르미온 값(디랙 하나당 $1/4\pi$)이다
+- A6 구간 모드: 자연 원환의 모드를 구간 경계로 양자화
+
+**[검사]**
+
+| 후보 | 선도 계수 | 모자라는 배수 |
+|---|---|---|
+| A1 자연 원환 | 1/8 | $4\pi^2$ |
+| A2 모듈러 쌍대 | 0.0015 | 3272 |
+| A3 인과 창 = 열적 원 | 1/2 | $\pi^2$ |
+| A4 허블 온도 | $\pi/4$ | $2\pi$ |
+| A5 TT 감김 작용 | 3/8 | $4\pi^2/3$ |
+| A6 구간 모드 | 1/4 | $2\pi^2$ |
+
+- 적중이 없다. 모자라는 배수는 모두 $\pi$의 거듭제곱 꼴이다. 가장 가까운 것은 허블 온도($2\pi$ 부족)와 인과 창($\pi^2$ 부족)이다.
+- PH5가 요구하는 열적 원은 $1/(2\pi)$ e-fold다. 곧 탑의 온도가 $2\pi H=(2\pi)^2T_{\rm GH}$여야 한다. 드 시터 열역학과 CE 공리 어디에도 이 온도는 없다. 자연 원환의 열적 반지름 $\beta/2\pi$는 정확히 1(e-fold)이라 T-쌍대로도 바뀌지 않는다.
+- 같은 선도항의 표기는 셋이며 정의상 같다: $(2\pi)^2N_e/8=3\zeta(2)N_e=(3\pi)^2D$. 마지막 꼴이 가장 짧지만 역시 읽기다.
+
+**판정.**
+- $(2\pi)^2$에는 현재 공리의 근원이 없다. 지평선 식의 선도항은 **읽기**로 남고, 지평선 식은 설명 길이 회계에서 매개변수로 남는다(§43.93). HT-δ도 경쟁 판본 그대로다.
+- 지평선 식 공략(§43.93–43.96)은 현재 공리의 깊이에서 여기까지다. 다시 열려면 새 구조가 필요하다. 예를 들어 탑의 온도를 $2\pi H$로 만드는 기제가 있어야 한다. (§43.97: 원을 전제하지 않으면 필요 없다. 임계 잠김의 Fatou 좌표에서 선도 계수가 정규화까지 나온다.)
+- 예측값은 바뀌지 않는다. 구현은 [(2π)² 모듈](../../examples/physics/rendering/ce_rendering_two_pi_squared.py)이다.
+
+## 43.97 원 없는 위상 잠김 — 지평선의 임계 잠김은 포물형이고, 바젤 합이 π²를 준다
+
+**[지적] 사용자 — “그냥 위상잠김인데 꼭 원이어야함?”** §43.94–43.96의 $(2\pi)^2$ 분석은 모두 원을 전제했다. 원환, $2\pi$ 주기, 주기 모드가 그 전제다. CE의 기울기는 §43.50–43.51에서 이미 원의 각이 아니라 서로 물린 위상으로 정리되어 있었다.
+
+**구성(기존 공리만).**
+- 위상 잠김의 표준 방정식(Adler, §43.51 H3의 연속형)은 $u=\tan\theta$로 리카티 방정식이 된다. 그 흐름은 사영(뫼비우스) 변환이며 타원형(돌기), 쌍곡형(잠김), 포물형(임계)으로 갈린다.
+- 지평선은 인과 창의 가장자리 $\theta=\pi/4$(C′)다. 그 자리의 잠김은 정의상 임계($L=1$, 안장–마디, §43.50 P-1)이므로 포물형이다.
+- 기울기의 자유 구동은 TT + H1에서 e-fold당 ½ rad이다. 임계 결합과 함께 쓰면 $d\theta/dN=\tfrac12(1-\sin2\theta)$, 리카티로 $du/dN=(u-1)^2/2$이다.
+- 포물형 흐름의 표준 좌표(Fatou 시간)는 $F=2/(1-\tan\theta)$이며 $dF/dN=1$이다. 곧 e-fold마다 정확히 1씩 전진한다.
+
+**사전 규칙(계산 전).** 아래 항등식, 창 진입 = $F=1$, 오늘 지평선의 대략 결손을 암산으로 먼저 보았다. 그래서 선도 계수 적중은 증거가 아니라 읽기로만 쓴다.
+- (가) 검산(kill): 수치 적분에서 $F(N)-F(0)-N$, 반대점에서 창 진입까지 걸린 e-fold − 1, 창 진입부터 e-fold마다 잰 거리 $-1/n$이 모두 $10^{-8}$ 안이어야 한다.
+- (나) 원리 PL. 새 전제는 Q 하나다: 로그 화소 수 = 모든 기록·축·창 안의 걸음에 걸친 (Fatou 거리 $1/F$)²의 합. 기록은 급팽창의 e-fold마다 축마다 하나(TT·Bool)이고 축은 셋(E1)이다.
+  - 가족: 거리 {$1/F$, 기울기 각, 기록 위상, 리카티} × 시작 {반대점, 창 진입, 기록 틀} × 거듭제곱 {2, 4}, 24개.
+- (다) O(1) 상수: 최종 지평선은 모든 기록이 끝나 결손 0이다. 오늘 지평선은 끝나지 않은 꼬리 $-3\sum_j\psi_1(F_j+1)$이다. 시계는 e-fold 시계(급팽창 뒤 65.70 e-fold)와 TT 시계(급팽창 뒤 기록 위상 0.796)를 함께 보고한다. 필요한 상수(§43.94)와 2σ 안이면 상수까지 유도다.
+- (라) 부산물: 단위 구동 잠금 사상의 초안정 부하.
+
+**[검산] (가).**
+
+| 항목 | 결과 |
+|---|---|
+| $F(N)-F(0)-N$ | $3.5\times10^{-11}$ |
+| 반대점($\theta=-\pi/2$, $F=0$) → 창 진입($\theta=-\pi/4$)에 걸린 e-fold | **정확히 1**($2.5\times10^{-12}$) |
+| 창 진입 뒤 e-fold마다 거리 | **$1,\tfrac12,\tfrac13,\dots$**($3.8\times10^{-13}$) |
+| 기록 틀 $\theta=0$ / 지평선 $\theta=\pi/4$ | $F=2$ / $F=\infty$ |
+
+**[검사] (나) 선도 계수.** 기록 하나, 세 축에서 창 안의 걸음을 합했다.
+
+| 거리 척도 | 창 진입부터, 제곱 | 비고 |
+|---|---|---|
+| **Fatou $1/F$** | **$3\zeta(2)=\pi^2/2$** | 반대점부터 세도 같다(무한 거리 한 항 제외) |
+| 리카티 $1-\tan\theta$ | $2\pi^2$ | 정확히 4배 |
+| 기울기 각 $\pi/4-\theta$ | 11.05 | |
+| 기록 위상 $\pi/2-2\theta$ | 44.18 | |
+
+- 24개 가운데 적중은 Fatou 거리의 제곱뿐이다(시작점 둘은 같은 합).
+- Fatou 좌표는 포물형 흐름을 “한 걸음에 1”로 펴 주는 표준 좌표라 임의 선택이 아니다. 제곱은 H1(기울기 = 진폭)과 보른 규칙의 짝으로 읽힌다.
+- **원 없이 $(\pi^2/2)N_e$가 정규화까지 맞게 나온다.** §43.94의 전제 PH5($T/\omega=N_e$)와 §43.96의 빠진 $(2\pi)^2$는 원을 전제한 데서 생긴 것이었다.
+- 창 진입이 정확히 Fatou 시간 1이라는 것은 맞춘 값이 아니다. TT의 구동, H1의 ½, C′의 창 가장자리 $\pm\pi/4$, 반대점에서 따라 나온다.
+
+**[검사] (다) O(1) 상수.**
+
+| 지평선 | PL의 결손 | 필요한 상수 | 판정 |
+|---|---|---|---|
+| 최종(무한 미래) | 0 | $-0.1799\pm0.0026$ | $+69.8\sigma$ |
+| 오늘, e-fold 시계 | $-1.87$ | $-0.5293$ | $-519\sigma$ |
+| 오늘, TT 시계 | $-11.98$ | $-0.5293$ | $-4440\sigma$ |
+
+PL이 스스로 내놓는 상수는 틀린다. PL은 선도 계수만 설명한다.
+
+**[부산물] (라) π/8은 단위 구동 잠금의 초안정점이다.** 기록 위상 1 rad/e-fold로 구동되는 잠금 사상 $\psi_{n+1}=\psi_n+1-K\sin\psi_n$은 부하 $L=1/\sqrt2$, 곧 기울기 $\pi/8$에서 정확히 초안정이다(승수 0, 교란을 한 걸음에 지움). 연속 흐름에서는 이완율이 정확히 e-fold당 1이다. 초안정 조건 $K\cos\psi^*=K\sin\psi^*$는 §43.51 H1 첫째 반의 $\cos\Phi=\sin\Phi$와 같은 식이다. 무차별(Ind)의 식이 동역학(한 걸음, OS)으로도 읽힌다. 다만 §43.52에서 오늘의 기울기는 잠긴 것이 아니라 돌고 있으므로, 이것은 “잠긴다면 가장 빨리 잠기는 자리”라는 읽기다.
+
+**판정.**
+- 사용자의 지적대로 원은 필요 없다. 지평선의 임계 잠김(포물형)과 Fatou 표준 좌표에서 선도 계수 $\pi^2/2=3\zeta(2)$가 정규화까지 나온다. 남는 새 전제는 Q 하나이며, PH의 전제 다섯(PH1–PH5)보다 적다.
+- 지위는 **선도항의 읽기(원 없음)**다. PL 자신의 상수 예측은 틀리므로 O(1) 상수는 여전히 설명되지 않는다. 기존 식과 HT-δ가 대등하다는 것도 그대로다(§43.94).
+- 설명 길이: Q가 사후 전제이므로 장부의 bit는 바뀌지 않는다. 지평선 식은 매개변수로 남는다(§43.93).
+- 예측값은 바뀌지 않는다. 구현은 [포물형 잠금 모듈](../../examples/physics/rendering/ce_rendering_parabolic_lock.py)이다.
+
+## 43.98 최종 지평선의 O(1) 상수 — 자연 기제는 없고, 단순 상수로는 가려낼 수 없다
+
+**문제.** §43.97의 원리 PL은 선도항을 주지만 최종 지평선의 결손은 0이다. 필요한 상수는 $C_{\rm final}=\ln S_{\rm dS}-(\pi^2/2)N_e=-0.1799\pm0.0026$이다. 오늘 지평선은 $\ln S_{H_0}=\ln S_{\rm dS}+\ln\Omega_\Lambda$(+R-Pl)의 운동학 항등식으로 따라 나오므로, 원리가 설명할 상수는 최종 지평선 하나다(TT). §43.97의 “오늘 꼬리” 예측(−1.87, −12)은 이 항등식과 맞지 않으므로, PL은 최종 지평선에만 적용한다.
+
+**사전 규칙(계산 전).** $-\delta$($+0.8\sigma$)와 $-(3/2)\alpha_s$($+1.1\sigma$)가 창 근처라는 것을 암산으로 먼저 보았다. 그래서 적중 목록은 증거가 아니고 판정은 개수와 밀도로만 한다.
+- (나) PL 안의 자연 기제(맞출 수 있는 수 없음): 기록 탄생이 연속·정수 e-fold(두 방식), 첫 기록이 기록 틀에서 탄생, “나” 축이 한 e-fold 늦게 시작, 대칭 인자 2(나/아닌 나)·3!(축)로 나눔.
+- (다) 식별 가능성: 기본량 {δ, q, α_s, ŝ², α_sD, ln F, −ln(1−q)}의 하나 또는 두 개의 곱에 유리수 15개와 π 인자 9개를 곱한 크기 0.01–3의 단순 상수 가족(서로 다른 값 2000개)을 2σ 창에 댄다. 창 주변(±0.05) 밀도로 잰 우연 기대 수가 1 이상이면 가려낼 수 없다.
+
+**[검사] (나) 자연 기제.** 모두 실패한다.
+
+| 기제 | 값 | pull |
+|---|---|---|
+| 연속 탄생 | 0 | $+69.8$ |
+| 정수 탄생 1…⌊N_e⌋ / 0…⌊N_e⌋ | $-0.99$ / $+3.95$ | $-314$ / $+1600$ |
+| 첫 기록이 기록 틀에서 | $-3$ | $-1094$ |
+| “나” 축이 한 e-fold 늦게 | $-\zeta(2)$ | $-568$ |
+| 대칭 인자 2 / 3! | $-\ln2$ / $-\ln6$ | $-199$ / $-625$ |
+
+**[검사] (다) 식별 가능성.**
+- 2σ 창에 드는 단순 상수는 **19개**이고, 우연 기대 수는 **23개**다. 가장 가까운 것은 $\pi^2q\,\alpha_sD$(0.00σ), $\tfrac23\pi^2\alpha_s\hat s^2$($-0.18\sigma$), $\tfrac{3}{2\pi}\alpha_sD$($-0.39\sigma$) 등이다. $-\delta$는 $-0.82\sigma$, $-\tfrac32\alpha_s$는 $-1.18\sigma$다.
+- 적중들 사이의 가장 작은 간격은 $3.6\times10^{-5}$다. 3σ로 가르려면 $\sigma_S$가 약 **214배** 줄어야 한다.
+
+**판정.**
+- 최종 지평선의 O(1) 상수는 PL 안의 자연 기제로 나오지 않는다. 단순 상수로 맞추는 방식은 우연 적중이 20개 넘게 기대되므로 **식별할 수 없다**. 이 상수는 약 9 bit($\log_2(3/2\sigma)$)의 경험 상수다.
+- §43.94의 경쟁 판본 HT-δ($-\delta$)는 19개 적중 가운데 하나일 뿐이다. 경쟁 판본의 지위를 **“우연 수준 후보”로 내린다.** 기존 식의 오늘 상수 $-\pi\delta(1-q)$도 같은 처지다.
+- 지평선 식 공략(§43.93–43.98)은 여기서 닫는다.
+  - 선도항: 원 없는 임계 잠김의 읽기(§43.97)
+  - O(1) 상수: 식별 불가한 경험 상수
+  - 설명 길이 회계: 매개변수(§43.93)
+- 이 상수를 가리는 길은 맞추기가 아니라, 자료를 보기 전에 세운 기제뿐이다.
+- 예측값은 바뀌지 않는다. 구현은 [지평선 상수 모듈](../../examples/physics/rendering/ce_rendering_horizon_constant.py)이다.
+
+**[산출] 사전 등록 v25.** `experiments/preregistration/rendering_predictions_v25.json`(자기 해시 `f88b496c…`, 2026-09-25)은 v1–v24를 보존하고, P01–P41의 값은 바꾸지 않았다.
+- *지위 변화.*
+  - E4: v24의 보른 배가 근거를 철회하고 조건부 정리 C6 + E1′ + D + CC로 다시 세웠다(§43.88)
+  - O1 기울기: π/8은 입력이 아니다. TT + H1 + $\Omega_m$에서 0.398(§43.89)
+  - 사상 M: 고유시간 판본 P(§43.90)
+  - 코어 네 식: 설명 길이 회계에서 매개변수, 연속 입력 다섯(§43.93)
+  - 지평선 식: 선도항은 PL 읽기, 상수는 식별 불가(§43.97–43.98). HT-δ는 강등했고 등록하지 않는다
+- *새 공리.* E1′(동전은 모든 게이지 축에 같다), P(고유시간은 틀 사이 비가 아니다)
+- *읽기.* SIL(계층 식 = 12 통로가 조용할 확률), PL(임계 잠김의 Fatou 거리), SSL(π/8 = 단위 구동 잠금의 초안정점)
+- *요구 조건.* $N_e=57.2$는 급팽창 뒤 $w>1/3$ 시기를 요구한다(§43.95)
+- *절차.* 등록 전 문헌 점검(§43.87). P17 주석: 기각 자료가 등록보다 먼저 공개되었다
+- *지위 주석.* P07·P11(논리값 73.52·1.0848), P08, P09·P10(재가열 조건), P17, P20·P34·P36·P38(E4 재구성)
+- *새 예측.*
+
+| 번호 | 관측량 | 예측 | kill |
+|---|---|---|---|
+| P42 | GQuEST 차등 간섭계의 화소 요동 신호(VZ 정규화 α) | $\alpha_{\rm diff}=0$(세 축 공통 기록 시각, §43.85) | $\alpha\ge0.1$ 신호를 5σ로 검출 |
+| P43 | 우주 시계만으로 얻은 $H_0$(은하 나이 차 + 적색편이, 거리 사다리 없음) | 67.772(현재 막대 73.36이 아님, §43.90) | 오차 1.9 이하에서 67.77을 3σ 넘게 배제 |
+
+등록은 43개, 독립 예측은 39개, 기각은 1개(P17)다. 이번에 처음 잠근 30개를 포함해, 2026-09-25에 있는 렌더링 모듈 86개 전부의 해시를 잠갔다. 이후 어떤 모듈을 고치든 v26이 필요하다.
+
+## 43.99 재현과 한계
+
+구현은 [렌더링 레지스트리](../../examples/physics/rendering/ce_rendering_registry.py), 고정 검사는 `tests/test_rendering_registry.py`(①·③·S2·T1·U1·M1·O1·TC·C1·순환 평균·사다리 상쇄·순환 위상과 팽창 변화의 반례·⑤·$\theta^*$ 반례·판본 III·부스트 반례·R-Pl 전이·유클리드 회전·BAO 눈금 예측·순환 기하·나선 긴장·복소 척도인자·S8·두 원의 구분·사건 척도·중성미자 질량·게이지군과 한 세대·세 세대와 선형 중력·대칭 깨짐과 전하 양자화·급팽창 게이지 수·중성미자 장부·암흑에너지 W1 반례·진공 기울기 W2·최저 조화 규칙·모방 시계 작용 W3·빛의 한계와 렌더링 지평선·확률 무게 중력·빛원뿔 기록 갱신·CMB–BAO 그라데이션·마감 판정·가설 역유도·공리 증명·열린 예측·사전 등록 v1–v12 동결과 공동 RMSE 고정, 초신성 보류 시험·FD θ*·W3 성장 보정·자료 판본 민감도)다. 필수 테스트 목록에 추가했고 전체 344개 검사를 실행했다(2026-09-23). §43.37–43.40의 검사는 각 절에 적은 별도 모듈에 있고, §43.35 정리 C′·D′의 재증명 검산은 [복소 부스트 모듈](../../examples/physics/rendering/ce_rendering_complex_boost.py), §43.41–43.44의 보강은 [E4 대각합 모듈](../../examples/physics/rendering/ce_rendering_e4_trace.py), [간헐 렌더링 모듈](../../examples/physics/rendering/ce_rendering_intermittent.py), [경계 모듈](../../examples/physics/rendering/ce_rendering_boundary.py), [계단 모듈](../../examples/physics/rendering/ce_rendering_staircase.py), [Bool 사전 모듈](../../examples/physics/rendering/ce_rendering_bool.py)에 있고, §43.45의 점검은 [남은 항목 모듈](../../examples/physics/rendering/ce_rendering_open_checks.py), §43.46의 감사는 [중성미자 감사 모듈](../../examples/physics/rendering/ce_rendering_nu_audit.py), §43.47의 장부와 기준 비교는 [장부 모듈](../../examples/physics/rendering/ce_rendering_ledger.py), §43.48의 관측 사상은 [관측 사상 모듈](../../examples/physics/rendering/ce_rendering_o1_map.py), §43.49의 추측 검증은 [무리 안 차이 모듈](../../examples/physics/rendering/ce_rendering_spread.py), §43.50은 [위상 잠금 모듈](../../examples/physics/rendering/ce_rendering_phase_lock.py), §43.51은 [인과 잠금 모듈](../../examples/physics/rendering/ce_rendering_causal_lock.py), §43.52는 [잠금 역사 모듈](../../examples/physics/rendering/ce_rendering_lock_history.py), §43.53은 [열적 시간 모듈](../../examples/physics/rendering/ce_rendering_thermal_time.py), §43.54는 [가지치기 모듈](../../examples/physics/rendering/ce_rendering_branching.py), §43.55는 [E4 닻 모듈](../../examples/physics/rendering/ce_rendering_e4_anchor.py), §43.57은 [기운 동전 모듈](../../examples/physics/rendering/ce_rendering_biased_coin.py), §43.58은 [경계 인자 모듈](../../examples/physics/rendering/ce_rendering_boundary_loop.py), §43.59는 [Higgs·우주 모듈](../../examples/physics/rendering/ce_rendering_higgs_cosmos.py), §43.60은 [분별 모듈](../../examples/physics/rendering/ce_rendering_distinction.py), §43.61은 [사다리 모듈](../../examples/physics/rendering/ce_rendering_ladder.py), §43.62는 [한 사건 모듈](../../examples/physics/rendering/ce_rendering_one_event.py), §43.63은 [극 모듈](../../examples/physics/rendering/ce_rendering_pole.py), §43.64는 [고정점 사다리 모듈](../../examples/physics/rendering/ce_rendering_fp_ladder.py), §43.65는 [Higgs 무게 모듈](../../examples/physics/rendering/ce_rendering_higgs_weight.py), §43.66은 [하나의 자기 모듈](../../examples/physics/rendering/ce_rendering_single_self.py), §43.67은 [경주 모듈](../../examples/physics/rendering/ce_rendering_race.py), §43.68은 [질량 = 빠르기 모듈](../../examples/physics/rendering/ce_rendering_mass_rate.py), §43.69는 [CCHP JWST 모듈](../../examples/physics/rendering/ce_rendering_jwst_cchp.py), §43.70은 [E4 모양 모듈](../../examples/physics/rendering/ce_rendering_e4_shape.py), §43.71은 [지평선 화소 모듈](../../examples/physics/rendering/ce_rendering_horizon_pixel.py), §43.72는 [강한 중력 모듈](../../examples/physics/rendering/ce_rendering_jacobson.py), §43.74는 [중성미자 우주론 모듈](../../examples/physics/rendering/ce_rendering_nu_cosmo.py), §43.75는 [P41 적합 모듈](../../examples/physics/rendering/ce_rendering_nu_fit.py), §43.76은 [무게 시점 모듈](../../examples/physics/rendering/ce_rendering_weight_epoch.py), §43.78은 [단일항 모듈](../../examples/physics/rendering/ce_rendering_singlets.py), §43.79는 [E4 식별 (ii) 모듈](../../examples/physics/rendering/ce_rendering_e4_ii.py), §43.80은 [렙톤 대각합 모듈](../../examples/physics/rendering/ce_rendering_lepton_trace.py), §43.81은 [E4 지수 모듈](../../examples/physics/rendering/ce_rendering_e4_exponent.py), §43.82는 [보른 배가 모듈](../../examples/physics/rendering/ce_rendering_born_doubling.py), §43.83은 [사전 모듈](../../examples/physics/rendering/ce_rendering_dictionary.py), §43.84는 [모듈러 요동 모듈](../../examples/physics/rendering/ce_rendering_modular.py), §43.85는 [공동 렌더링 모듈](../../examples/physics/rendering/ce_rendering_joint_render.py), §43.86은 [P41 렌즈 적합 모듈](../../examples/physics/rendering/ce_rendering_nu_lens.py), §43.87은 [감사 모듈](../../examples/physics/rendering/ce_rendering_audit.py), §43.88은 [E4 게이지 모듈](../../examples/physics/rendering/ce_rendering_e4_gauge.py), §43.90은 [시간 의미론 모듈](../../examples/physics/rendering/ce_rendering_time_semantics.py), §43.91은 [식 지위 모듈](../../examples/physics/rendering/ce_rendering_formula_status.py), §43.93은 [코어 네 식 모듈](../../examples/physics/rendering/ce_rendering_core_four.py), §43.94는 [열적 기록 탑 모듈](../../examples/physics/rendering/ce_rendering_horizon_towers.py), §43.95는 [탑 온도 모듈](../../examples/physics/rendering/ce_rendering_tower_temperature.py), §43.96은 [(2π)² 모듈](../../examples/physics/rendering/ce_rendering_two_pi_squared.py), §43.97은 [포물형 잠금 모듈](../../examples/physics/rendering/ce_rendering_parabolic_lock.py), §43.98은 [지평선 상수 모듈](../../examples/physics/rendering/ce_rendering_horizon_constant.py)에 있다(§43.89는 열적 시간 모듈을 쓴다). 실행:
 
 ```powershell
 python -B -m examples.physics.rendering.ce_rendering_registry
