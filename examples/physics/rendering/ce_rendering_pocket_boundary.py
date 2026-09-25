@@ -23,6 +23,11 @@ kill: K1 C4 상대 오차 > 10⁻⁶ → 코드·모형 오류. K2 ε(φ_q) ≥ 
   K3 N_q ≥ 지평 엔트로피 증가분 → F1 기각(Arkani-Hamed 상한). K4(관측, 미래) P23 기각(중력 매개 얽힘 5σ) → Q 기각, S로.
   Ω_k < 0 3σ → Q의 열린 거품 기각. Ω_k ≠ 0 3σ → F1 기각.
 예상(계산 전, 해석 유도): K1–K3 통과. S 층 두께 ≈ (1 − 1/√6)N_q ≈ 0.59 N_q. S의 부피 앞면은 P_ζ = 1에서 오르막 √6 − 1.
+감사(2026-09-26, 사용자 "정확도는?", 독립 검산 opus, 원장 §43.111): 숫자는 모두 재현되었다. 철회: "바다가 드 시터 불변이라 한 점
+  기록의 안쪽은 O(3,1) 열린 거품"(ε는 계량만 잰다. 상태는 굴러가는 ⟨φ⟩가 평탄 조각을 고르고, 굴림/떨림 = 1/r = 1이다.
+  기록은 장을 다시 놓지 않으므로 안쪽은 평탄하다). 그래서 K2는 잘못 세운 검사다. 미정으로 내림: "층·주머니 무수는 표준 모형 탓"
+  (기록된 떨림은 R1로 국소 원천이다. 층의 97%에서 기록 예산이 팽창을 넘을 수 있어 자기 증식이 되살아날 수 있다).
+  조건 명시: Q는 QG1(나)를 비관측 성분의 정확한 법칙으로 둘 때만 선다(56장은 평균장을 근사로만 인정한다). audit()이 재현한다.
 
 python -B -m examples.physics.rendering.ce_rendering_pocket_boundary
 """
@@ -110,6 +115,16 @@ def g1_front(tau: float = 1.0) -> dict:
         out[f"rho={rho:g}"] = math.sqrt(tau ** 2 + rho ** 2) / rho
     out["boundary(tau=1e-9)"] = math.sqrt(1e-18 + 1.0)                             # 빛원뿔 위(ρ = t)
     return out
+
+
+def audit() -> dict:
+    """§43.111 감사: 상태의 굴림/떨림(열린 거품 철회의 근거), 층 안에서 기록 예산이 팽창을 넘을 수 있는 몫."""
+    m = _model()
+    x_q = m["x_at"](P_CLOCK)
+    n1, n6 = m["n_of"](x_q), m["n_of"](m["x_at"](P_VOLUME))
+    n_rl = m["n_of"](m["x_at"](2 / (3 * math.log(2))))                            # f_max = 3(1비트 비용)인 곳
+    return {"roll_over_kick_at_boundary": 1 / math.sqrt(m["p_of"](x_q)), "eps_at_boundary_metric_only": m["eps"](x_q),
+            "layer_fraction_fmax_over_3": (n_rl - n6) / (n1 - n6), "fmax_bit_at_P_1_6": 2 / (P_VOLUME * math.log(2))}
 
 
 def verdict() -> dict:

@@ -22,6 +22,12 @@ kill: K1 오늘 B ≤ 3c이면 기각(우리는 기록을 하고 있다). K2 c �
   비용에 둔감하다"를 기각한다. K3 E1이 E2보다 먼저 오면(ln a_end < ln a_b) "E1은 입자 한계보다 느슨한 상한"이라는 해석을 기각한다.
 예상(계산 전, 해석): K1 통과(오늘 B ~ e^{281}), K2 폭 (1/3)ln 3 = 0.37, K3 차이 ≈ (1/3)ln(m_p c²/k_B T_GH) ≈ 33 e-fold.
 관측으로 가를 수 없는 먼 미래의 구조 계산이다. 위험한 예측이 아니다.
+감사(2026-09-26, 원장 §43.111): 숫자는 모두 재현되었다. 정정:
+  - "빠져나가는 에너지 = 새 자리"는 방향이 거꾸로다. 저장량 R = E_m/k_BT_GH ≥ c로 정당화하고, B = 3R이라 숫자는 같다.
+  - "우주 전체 분별의 끝"은 과장이다. 94 e-fold는 고르게 퍼진 평균 부피의 예산 한계일 뿐, 묶인 구조는 열적 죽음까지 기록한다.
+  - R1에서는 확정된 영역 안의 새 부피도 확정이다.
+  - 이 S_Λ는 H0 = 67.14에 해당한다(코어 67.77이면 끝 1641 Gyr).
+  audit()이 재현한다.
 
 python -B -m examples.physics.rendering.ce_rendering_distinction_end
 """
@@ -91,6 +97,25 @@ def local_budget() -> dict:
     """E3: 묶인 국부 은하군이 앞으로 만들 수 있는 기록 비트 수의 상한."""
     x = _cosmo()
     return {f"M_LG={m:.0e}": m * M_SUN_KG * C_M_S ** 2 / (x["kT_GH_J"] * math.log(2)) for m in (2e12, 3e12, 5e12)}
+
+
+def audit() -> dict:
+    """§43.111 감사: 저장량 R = Ω_m(a)S(a)와 B = 3R의 동치, S_Λ가 뜻하는 H0, 코어 H0로 바꿀 때의 끝."""
+    from scipy.optimize import brentq
+    x = _cosmo()
+    ln_a = global_end()["bit"]["ln_a_end"]
+    m = x["om"] * math.exp(-3 * ln_a)
+    ln_r = math.log(m / (x["ol"] + m)) + x["ln_S_L"] + math.log(x["ol"] / (x["ol"] + m))   # R = Ω_m(a)·S(a)
+    mpc_km = 3.0856775814913673e19
+    h0_implied = x["H_L"] / math.sqrt(x["ol"]) * mpc_km
+    h0_core = FEV._core()["H0"]
+    y = dict(x, ln_S_L=x["ln_S_L"] - 2 * math.log(h0_core / h0_implied))
+    y["H_L"] = x["H_L"] * h0_core / h0_implied
+    ln_a_core = brentq(lambda la: budget_ln(la, y) - math.log(3 * math.log(2)), 1.0, 200.0)
+    return {"ln_R_at_end_minus_ln_c": ln_r - math.log(math.log(2)),
+            "B_over_3R_at_end": math.exp(budget_ln(ln_a, x) - math.log(3) - ln_r),
+            "H0_implied_by_S_Lambda": h0_implied, "H0_core": h0_core,
+            "t_end_Gyr_core_H0": age_gyr(ln_a_core, y), "T_GH_K_core_H0": x["T_GH_K"] * h0_core / h0_implied}
 
 
 def verdict() -> dict:

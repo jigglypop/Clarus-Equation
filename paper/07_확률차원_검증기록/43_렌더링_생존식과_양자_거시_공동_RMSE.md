@@ -276,11 +276,12 @@ $$s_{13}^2=\frac{\delta}{8},\qquad s_{12}^2=\frac13\left(1-\frac{2\delta}{8}\rig
 | 경계 밖의 시간 | §43.104 | 사용자 “없지도 있지도 않은 상태” → “다음”: 모듈러 정식화(OBJ-03 다섯 요구: 존재공간 M′, 정규화 spec ρ_B = spec ρ_A, 동역학 = 모듈러 흐름, 보존량 ln Δ ψ = 0, 관측 투영 = 제한); 삼분법(경계 밖이 없음·있음이면 시계 없음, 없지도 있지도 않을 때만 시계), 분별 = 시간(고른 무게면 흐름 멈춤), 균형(경계 밖은 거꾸로 흐름), 드 시터 속도 = H_Λ(V39 0.8407 그대로); 최종 지평 선택은 “영역 하나 → 흐름 하나”로 설명(목격 후); TT에서 자유 선택이 빠지고 Connes–Rovelli·점근 KMS가 남음; 사용자 정정: 순환 = 시공간 축이 한 바퀴 돌아 처음 자리로 돌아오는 것(그 이상도 이하도 아님), 모듈러 흐름 ℝ은 바퀴를 세는 거리, 한 바퀴 = 1090억 년 = 렌더링 지평 둘레 1090억 광년, 오늘은 12.7% 지점 |
 | 기록의 동역학 | §43.105 | OBJ-02 1단계: 기록 대수 M(τ)는 겹겹이 커지고 확정 = 제한, 새로 확정된 것 = 상대 교환자; RD1(Takesaki 적용) 상태 보존 되돌림은 새 기록이 옛 기록과 무관할 때만 가능 → 확정은 비가역, 양은 상호정보; RD2 방향 1 bit는 남음(J 대칭); RD3 속도 보편 상수 없음(자발 붕괴 미검출, 생존); RD4 기록 전 결정의 자기 중력 ω_SN(Si 0.057, W 0.42, Os 0.51 s⁻¹), 미검증, P23과 판별 쌍; 사전 등록 v26(P44, 등록 44·독립 40, 모듈 93개 잠금) |
 | 태초의 확정 거품 | §43.106 | 사용자 “아무것도 정해지지 않은 상태에 정해진 사건 하나: 퍼지는 분포·내부 인과 압력·퍼지는 속도·경계면 상태”; 사건 하나면 모든 것이 τ = √(t² − r²/c²)의 함수(로런츠) → 같은 나이 면은 쌍곡면, 우주론 원리·허블 법칙이 유도됨; 분포 n(τ) ∝ W D^{τ/τ₀}(무량대수 135세대), 인과 압력 w = −1/3(ä = 0), 속도 경계 c·안쪽 v = r/t, 경계 τ = 0(분별 없음); 포화 dA/dτ = λA(1−A)로 유효, 껍질 Δr ≈ cτ_s²/2t; 용량 목록 중 C1(H0 식 지수 ln S = 281.7)만 곡률 kill 통과(N_총 = ζ(2)N_e − (π/3)δ(1−q) = 93.9, Ω_k 6×10⁻²⁸); 고도화: 한 세대는 정상성으로 강제(부피 D배 = 길이 D^{1/3} = 1.470배, 0.385 e-fold), 곡률 맞추기 후보(급팽창 길이 = 급팽창 뒤 길이)는 재가열 가정을 섞은 착시; 감사(독립 검산): 숫자는 모두 재현, “용량 = 관측자 영역”(H3)은 다리와 모순이라 철회(그러면 Ω_k 0.76), “인과 압력 = 곡률 유체”는 중력 효과가 없어 철회, 용량은 닫히지 않음 |
-| 거품 용량의 후보 | §43.107 | 사용자 “후보 최대한” → “가능성 있는 곳부터”: 여섯 갈래 27개(칸 109개)를 곡률 kill로 한 번에 대조; 12개 기각, 살아남은 15개 중 13개는 곡률 ≈ 0이라 구별 불가, 관측 창의 둘(복사 엔트로피·광자 수)은 원리 없음(DESI 창 적중은 우연 28%); 가장 원리적인 F1 “분별의 시작 = 양자 확산의 끝(P_ζ = 1)”은 다리·용량 없이 정확한 스타로빈스키 모형에서 N_총 = 1.31×10⁶ e-fold, Ω_k ≈ 0 → 시작공리 + F1 읽기 아래 P24가 따라 나옴(두 번째 경로, 조건부); 대가(첫 사건이 면·주머니 무수)는 표준 모형 기준이라 §43.108에서 정정 |
-| 주머니의 경계 | §43.108 | 사용자 “다음”: 표준 확률 급팽창은 확정 전 떨림을 국소 원천으로 두지만 CE의 QG1(나)는 평균만 원천으로 셈 → 경계 밖은 스스로 불어나지 않는 균질한 바다(선행: Lechuga–Sudarsky 2023), 첫 기록 하나가 R1로 제 빛원뿔만 확정 → 첫 사건은 점, 경계는 빛꼴, 열린 거품(§43.106) 회복; 네 양은 한 비율 r = √P_ζ로 모임(인과 압력 1/r, 앞면 속도 c/r, 흔들림 r, 지평 증가 2/r²), 경계 r = 1에서 앞면 = c, 지평 +2 nat/e-fold; 표준에선 경계가 P_ζ 1/6–1의 층(0.59 N_q); kill 3개 통과; 남은 빈칸 = 기록률(하나의 거품 대 합쳐진 평탄 조각, Ω_k ≈ 0이라 관측 불가); Q는 P23에 기댐 |
-| 기록률의 상한 | §43.109 | 사용자 “다음”: RL(1비트 ≥ ln 2) + 평형 바다의 지평 예산 dS/dN = 2/P_ζ → 기록률 상한 f ≤ 2/(cP_ζ); 기록이 팽창(3/e-fold)을 따라잡는 문턱 P_ζ = 2/(3 ln 2) = 0.962 < 1이라 F1 경계의 바다는 어떤 기록률에서도 남음(차원 ≥ 0.115, 비용이 크면 띠가 넓어짐; 조건부 정리); 시계 경계와 4% 안에서 겹침(수치 겹침); 우리 영역의 첫 사건은 기록률과 무관하게 하나(기록률은 지평 너머 배치만 바꿈); 곡률이 보이려면 기록률 ≤ 7.6×10⁻⁷; [가설] 최대 기록이면 바다는 e^{1461}배까지 불었다가 5만 e-fold 뒤 사라짐 |
-| 분별의 끝 | §43.110 | 사용자 “다음”: 같은 기록 예산 문턱(3c/허블 부피/e-fold)을 늦은 우주에 댐, 예산 B = 2εS = 빠져나가는 물질 에너지/T_GH; 우주 전체의 끝 = 허블 부피당 평균 물질 에너지가 1비트(k_B T_GH ln 2)가 되는 때 = 오늘부터 93.9 e-fold(약 1.66조 년, 상한, 비용에 둔감 ±0.37); 입자 한계(평균 바리온 1개, 60.4 e-fold)가 먼저; 우리 조각은 국부 은하군의 1.7–4.2×10¹¹² 비트를 열적 죽음까지 씀; 끝난 뒤 바다는 시작 전과 같은 종류, 열적 시계는 돎(읽기); A1과 같은 꼴은 대수적 동일(증거 아님); kill 3개 통과 |
-| 재현 | §43.111 | 구현 경로와 한계 |
+| 거품 용량의 후보 | §43.107 | 사용자 “후보 최대한” → “가능성 있는 곳부터”: 여섯 갈래 27개(칸 109개)를 곡률 kill로 한 번에 대조; 12개 기각, 살아남은 15개 중 13개는 곡률 ≈ 0이라 구별 불가, 관측 창의 둘(복사 엔트로피·광자 수)은 원리 없음(DESI 창 적중은 우연 28%); 가장 원리적인 F1 “분별의 시작 = 양자 확산의 끝(P_ζ = 1)”은 다리·용량 없이 정확한 스타로빈스키 모형에서 N_총 = 1.31×10⁶ e-fold, Ω_k ≈ 0 → 시작공리 + F1 읽기 아래 P24가 따라 나옴(두 번째 경로, 조건부); §43.111 감사 뒤: CE에서도 안쪽은 평탄, 첫 기록은 점(R1), 주머니 수는 층 안 기록률에 달려 미정 |
+| 주머니의 경계 | §43.108 | 사용자 “다음”: 표준 확률 급팽창은 확정 전 떨림을 국소 원천으로 두지만 CE의 QG1(나)는 평균만 원천으로 셈 → 경계 밖은 스스로 불어나지 않는 균질한 바다(선행: Lechuga–Sudarsky 2023; QG1(나)를 정확한 법칙으로 두고 층 안 기록률이 낮을 때만, §43.111), 첫 기록 하나가 R1로 제 빛원뿔만 확정 → 첫 사건은 점, 경계는 빛꼴, 열린 거품 회복은 §43.111에서 철회(안쪽은 평탄); 네 양은 한 비율 r = √P_ζ로 모임(인과 압력 1/r, 앞면 속도 c/r, 흔들림 r, 지평 증가 2/r²), 경계 r = 1에서 앞면 = c, 지평 +2 nat/e-fold; 표준에선 경계가 P_ζ 1/6–1의 층(0.59 N_q); kill 3개 통과(K2는 잘못 세운 검사); 남은 빈칸 = 기록률(층의 자기 증식 여부); Q는 P23에 기댐 |
+| 기록률의 상한 | §43.109 | 사용자 “다음”: RL(1비트 ≥ ln 2) + 평형 바다의 지평 예산 dS/dN = 2/P_ζ → 기록률 상한 f ≤ 2/(cP_ζ); 기록이 팽창(3/e-fold)을 따라잡는 문턱 P_ζ = 2/(3 ln 2) = 0.962 < 1이라 띠를 지나는 동안 바다는 기록률과 무관하게 불어남(영속 아님, §43.111; 비용이 크면 띠가 넓어짐; 조건부 정리); 시계 경계와 4% 안에서 겹침(수치 겹침); 우리 영역의 첫 사건은 기록률과 무관하게 하나(기록률은 지평 너머 배치만 바꿈); 곡률 연결(기록률 ≤ 7.6×10⁻⁷)은 §43.111에서 철회; [가설] 최대 기록이면 바다는 e^{1461}배까지 불었다가 5만 e-fold 뒤 사라짐 |
+| 평균 기록 예산의 끝 | §43.110 | 사용자 “다음”: 같은 기록 예산 문턱(3c/허블 부피/e-fold)을 늦은 우주에 댐, 예산 B = 2εS = 빠져나가는 물질 에너지/T_GH; 평균 부피 예산의 끝 = 허블 부피당 평균 물질 에너지가 1비트(k_B T_GH ln 2)가 되는 때(분별 자체는 묶인 구조에서 열적 죽음까지, §43.111) = 오늘부터 93.9 e-fold(약 1.66조 년, 상한, 비용에 둔감 ±0.37); 입자 한계(평균 바리온 1개, 60.4 e-fold)가 먼저; 우리 조각은 국부 은하군의 1.7–4.2×10¹¹² 비트를 열적 죽음까지 씀; 끝난 뒤 바다는 시작 전과 같은 종류, 열적 시계는 돎(읽기); A1과 같은 꼴은 대수적 동일(증거 아님); kill 3개 통과 |
+| 감사(§43.107–110) | §43.111 | 사용자 “정확도는?”: 자료 — 예측·공동 점수 불변(V39 0.8407), Ω_k = 0은 Planck+BAO −0.37σ·DESI DR2+CMB −1.91σ; 독립 검산(opus) — 숫자 전부 재현, 항등식 셋 확인; 개념 오류 2(열린 거품 회복 철회: 기록은 장을 다시 놓지 않아 안쪽은 평탄 / 층·주머니 무수는 층 안 기록률에 달려 미정), 과장 3(56장 조건 명시, 바다 영속 → 띠 지나는 동안, 분별의 끝 → 평균 부피 예산 한계), 작은 것 2 |
+| 재현 | §43.112 | 구현 경로와 한계 |
 
 ## 43.11 음향 각도 반례와 판본 III — 사전 등록 v2
 
@@ -4024,15 +4025,15 @@ PL이 스스로 내놓는 상수는 틀린다. PL은 선도 계수만 설명한�
 | F 다리 없음 | 양자 확산의 끝($P_\zeta=1$), 영원한 급팽창(경관 전형성은 값이 없어 목록만) | ≈ 0 |
 
 - 곡률은 작은 용량만 죽인다(부피 다리·$N_H=1$에서 $\ln N_{\max}<195.6$). 관측 창은 그 바로 위의 좁은 띠($\ln N_{\max}$ 195.6–205.1)뿐이다. 더 큰 용량은 모두 $\Omega_k\approx0$이라 서로 구별되지 않는다.
-- 관측 창에 드는 것은 복사 엔트로피와 광자 수의 네 칸뿐이다. DESI 1σ 창에 드는 것은 광자 수($N_H=73$, $\Omega_k=0.0015$) 한 칸이다. $N_{\rm 총}$ 분포로 센 우연 기대는 0.33칸(적어도 한 칸일 확률 28%)이라 의미가 없다.
+- 관측 창에 드는 것은 복사 엔트로피와 광자 수의 네 칸뿐이다. DESI 1σ 창에 드는 것은 광자 수($N_H=73$, $\Omega_k=0.0015$) 한 칸이다. $N_{\rm 총}$ 분포로 센 우연 기대는 0.33칸(적어도 한 칸일 확률 28%)이라 의미가 없다. [§43.111] 국소 밀도로 세면 0.35–0.49칸(29–39%)이고 칸들은 서로 얽혀 있다. 결론은 같다.
 
 **[검사] 가장 원리적인 후보 F1 — 분별의 시작 = 양자 확산의 끝.**
 - [가설] 읽기: 시작공리(§43.102, “우주의 시작은 분별의 시작이다”)와 사용자 전제(“아무것도 정해지지 않은 상태에서 특정 하나로 정해진 사건”)를 급팽창에 옮긴다. 양자 요동이 고전 굴림보다 큰 곳($P_\zeta>1$, 영원한 급팽창의 확산 영역)은 궤적이 정해지지 않은 상태다. 한 허블 시간의 요동 $H/2\pi$와 굴림 $\sqrt{2\epsilon}M_P$의 비가 느린 굴림에서 정확히 $\sqrt{P_\zeta}$라서 경계는 $P_\zeta=1$이다. 처음으로 궤적이 정해지는 곳이 첫 사건이다.
 - 정밀화: CE 급팽창의 선도 예측($n_s=1-2/N_e$, $r=12/N_e^2$)을 내는 정확한 스타로빈스키 퍼텐셜을 모형으로 두고(모형 가정), $V_0$를 $A_s$로 맞추었다. $P_\zeta=1$은 피벗($5.4M_P$)보다 훨씬 위($17.6M_P$)에 있고, $N_q=1.31\times10^6$ e-fold다. 근사 $N_e/\sqrt{A_s}$보다 5% 크다.
 - 문턱: $P_\zeta=0.1$, 10으로 바꾸어도 $N_q=4.1\times10^5$–$4.1\times10^6$이다. 곡률은 모두 사실상 0이다($\Omega_k\le e^{-8\times10^5}$).
-- 기하(논증, 계산 아님): 확산에서 빠져나오는 곳은 점이 아니라 영역이다. 그래서 §43.106 G1의 로런츠 불변 열린 거품은 F1에 적용되지 않고, 주머니는 평탄하다. 주머니 둘레는 영원히 확산 중인 “없지도 있지도 않은” 영역이다. §43.106 G4의 “경계는 영원히 시작에 머문다”와 같은 모양이다(읽기). [정정, §43.108] 이 논증은 확정 전 떨림이 국소 중력 원천이라는 표준 모형의 가정을 썼다. CE의 QG1(나)·R1에서는 첫 기록이 점이고 열린 거품이 돌아온다.
+- 기하(논증, 계산 아님): 확산에서 빠져나오는 곳은 점이 아니라 영역이다. 그래서 §43.106 G1의 로런츠 불변 열린 거품은 F1에 적용되지 않고, 주머니는 평탄하다. 주머니 둘레는 영원히 확산 중인 “없지도 있지도 않은” 영역이다. §43.106 G4의 “경계는 영원히 시작에 머문다”와 같은 모양이다(읽기). [§43.111 감사 뒤] §43.108이 여기에 단 정정(“CE에서는 열린 거품이 돌아온다”)은 철회되었다. CE(Q)에서도 기록은 장을 다시 놓지 않으므로 안쪽은 평탄하다. 첫 기록이 점(R1)이라는 것만 남는다. 둘레가 영원히 떨리는지는 층 안의 기록률에 달려 미정이다.
 - 판정: F1은 다리 가설도 용량도 필요 없다. 매개변수 없이(18D와 CE $A_s$만으로) 급팽창 총길이를 준다. **시작공리와 F1 읽기를 받아들이면 P24($\Omega_k=0$)가 따라 나온다(조건부).** P24의 두 번째 경로다(첫째는 QG1의 무게 합 = 1).
-- 대가: 첫 사건이 한 점이 아니라 확산에서 빠져나오는 면이 된다. 영원한 급팽창을 들여오므로 주머니도 무수히 생긴다(측도 문제를 안는다). 사용자 전제의 “특정 하나”는 우리 주머니 하나로 좁혀진다. [정정, §43.108] 이 대가는 표준 모형 기준이다. CE 공리에서는 확정 전 떨림이 스스로 불어나지 않고, 첫 사건은 점이다.
+- 대가: 첫 사건이 한 점이 아니라 확산에서 빠져나오는 면이 된다. 영원한 급팽창을 들여오므로 주머니도 무수히 생긴다(측도 문제를 안는다). 사용자 전제의 “특정 하나”는 우리 주머니 하나로 좁혀진다. [§43.111 감사 뒤] CE(Q)에서 첫 기록은 점이다(R1). 그러나 안쪽은 평탄하다. 주머니가 무수히 생기는지는 층 안의 기록률에 달려 미정이다.
 - kill: $\Omega_k\ne0$이 3σ로 확정되면 F1과 P24가 함께 죽는다(배경 곡률 기준. 요동 바닥 ~10⁻⁵ 아래는 가를 수 없다).
 
 **[검사] 시험할 수 있는 후보 A3·A4 — 원리가 서지 않는다.**
@@ -4042,16 +4043,16 @@ PL이 스스로 내놓는 상수는 틀린다. PL은 선도 계수만 설명한�
 
 **판정.**
 - 기본 설정에서 27개 가운데 12개가 곡률로 기각된다. 살아남은 15개 중 13개는 곡률 ≈ 0이라 서로 구별되지 않고, 관측 창의 둘은 원리가 없다.
-- 가장 가능성 있는 것은 F1이다. 첫 사건을 양자 확산의 끝으로 읽으면 용량 문제 자체가 사라지고(다리 불필요), 급팽창 총길이는 $1.3\times10^6$ e-fold, 곡률은 사실상 0이 된다. 대가로 첫 사건은 한 점이 아니게 되고, 열린 거품 그림(§43.106)은 확산 출구에서는 성립하지 않는다(표준 모형 기준, §43.108에서 정정).
+- 가장 가능성 있는 것은 F1이다. 첫 사건을 양자 확산의 끝으로 읽으면 용량 문제 자체가 사라지고(다리 불필요), 급팽창 총길이는 $1.3\times10^6$ e-fold, 곡률은 사실상 0이 된다. 대가로 첫 사건은 한 점이 아니게 되고, 열린 거품 그림(§43.106)은 확산 출구에서는 성립하지 않는다(§43.111 감사 뒤: CE에서도 성립하지 않는다. 첫 기록은 점이지만 안쪽은 평탄하다).
 - 예측값은 바뀌지 않는다(P24 그대로). 새로 등록하지 않는다.
 
-## 43.108 주머니의 경계 — CE 공리로 보면 첫 사건은 점이고, 확정은 빛의 속도로 퍼지며, 네 양은 한 비율로 모인다
+## 43.108 주머니의 경계 — 네 양은 한 비율로 모이고, 첫 기록의 확정은 빛의 속도로 퍼진다(열린 거품 회복은 §43.111에서 철회)
 
 **문제.** §43.107의 F1은 첫 사건을 양자 확산의 끝($P_\zeta=1$)으로 읽고, 그 대가로 “첫 사건은 면, 주머니 무수”를 적었다. 사용자: “다음”(직전 제안: 주머니를 둘러싼 “영원히 떨리는 경계”의 상태를 식으로 세운다).
 
-**[공리 점검] 외부 모형을 쓰기 전에.** F1의 기하와 대가는 표준 확률 급팽창에서 나왔다. 표준은 확정 전 떨림이 조각마다 제 $H$로 팽창을 몬다고 둔다(부피 가중). CE의 QG1(나)(§43.30 정리 A)은 원천을 ${\rm Tr}\,\rho\hat T$로 두고, §43.85는 그 결과로 “요동은 계량을 흔들지 않는다”를 얻었다. R1(§43.31)은 기록이 제 빛원뿔 안만 원천을 갱신하게 한다. 그래서 [주머니 경계 모듈](../../examples/physics/rendering/ce_rendering_pocket_boundary.py) 머리글에 계산 전 두 판본을 나눠 고정했다.
+**[공리 점검] 외부 모형을 쓰기 전에.** F1의 기하와 대가는 표준 확률 급팽창에서 나왔다. 표준은 확정 전 떨림이 조각마다 제 $H$로 팽창을 몬다고 둔다(부피 가중). CE의 QG1(나)(§43.30 정리 A)은 원천을 ${\rm Tr}\,\rho\hat T$로 두고, §43.85는 같은 원리를 화소 요동에 적용했다(급팽창 장으로 넓힌 것은 확장이다, §43.111 C). R1(§43.31)은 기록이 제 빛원뿔 안만 원천을 갱신하게 한다. 그래서 [주머니 경계 모듈](../../examples/physics/rendering/ce_rendering_pocket_boundary.py) 머리글에 계산 전 두 판본을 나눠 고정했다.
 - S(표준): 확정 전 떨림도 국소 원천이다. 떨림 영역이 스스로 불어나고(영원), 출구는 면이다.
-- Q(CE): 확정 전 떨림은 평균으로만 원천이다. 경계 밖은 스스로 불어나지 않는 균질한 바다이고, 첫 기록 하나가 제 빛원뿔만 확정한다.
+- Q(CE): 확정 전 떨림은 평균으로만 원천이다. 경계 밖은 스스로 불어나지 않는 균질한 바다이고, 첫 기록 하나가 제 빛원뿔만 확정한다. [§43.111 B·C] Q는 QG1(나)를 비관측 성분의 정확한 법칙으로 둘 때만 선다(56장은 평균장을 근사로만 인정한다). “스스로 불어나지 않음”은 층 안의 기록률이 낮을 때만 따른다.
 - 선행 결론: 반고전 중력에서 요동을 본래의 미정으로 읽으면 영원 급팽창 문제가 생기지 않는다(Lechuga–Sudarsky 2023, [arXiv:2308.01383](https://arxiv.org/abs/2308.01383)). 붕괴를 넣으면 문제가 되살아나 붕괴율로 막는 판본도 있다([Piccirilli 외 2025](https://arxiv.org/abs/2510.26378)). CE 쪽의 새것은 R1(빛원뿔 갱신)과 F1의 시작점이다.
 
 **[정의] 한 비율.** $r=\sqrt{P_\zeta}=(H/2\pi)/(\sqrt{2\epsilon}M_P)$는 한 허블 시간 동안의 떨림을 굴림으로 나눈 비다. 정확한 스타로빈스키 모형(§43.107)에서 네 양은 모두 이 비로 쓰인다.
@@ -4071,20 +4072,23 @@ PL이 스스로 내놓는 상수는 틀린다. PL은 선도 계수만 설명한�
 - S: 경계는 층이다. 시계 경계 $P_\zeta=1$($N=1.309\times10^6$)과 부피 전이 $P_\zeta=1/6$($N=5.35\times10^5$, [Creminelli 외 2008](https://arxiv.org/abs/0802.1067)) 사이에 있고, 두께는 $7.7\times10^5$ e-fold($0.59N_q$)다. 층 안에서 장은 국소적으로 시계지만, 드문 오르막 떨림의 부피가 앞면을 위로 민다. 부피 앞면 속도는 $\sigma(\sqrt6-1/r)$로, 시계 경계에서 +1.45σ/e-fold, 1/6에서 0, 피벗에서 $-2.2\times10^4\sigma$다.
 - Q: 경계는 첫 기록의 빛원뿔 하나다(R1).
   - 경계 밖 바다는 균질하고 평균장 ⟨φ⟩ 하나로 굴러간다. 바다는 스스로 불어나지 않으므로, 얼마나 오래 가는지는 처음 자리에 달렸다.
-  - 경계에서 $\epsilon=4.4\times10^{-13}$이라 바다는 거의 드 시터 불변이다. 그래서 한 점 기록의 안쪽은 O(3,1) 열린 거품이다(§43.106 G1 회복).
-  - 기록이 $\phi_q$ 근처에서 시작하면 안쪽 급팽창은 $N_q$이고, $\Omega_k\approx+10^{-1.1\times10^6}$이다. 시작이 $10^5$ e-fold 늦어도 $10^{-1.05\times10^6}$이다.
-  - 곡률이 보이려면 우리 거품의 첫 기록이 급팽창 끝 65 e-fold(관측 창은 68) 이내에서 일어나야 한다.
+  - 경계에서 $\epsilon=4.4\times10^{-13}$이라 바다는 거의 드 시터 불변이다. 그래서 한 점 기록의 안쪽은 O(3,1) 열린 거품이다(§43.106 G1 회복). [철회, §43.111 A] ε는 계량만 잰다. 상태는 굴러가는 ⟨φ⟩가 평탄 조각을 고르고, 경계에서 그 굴림은 떨림과 같은 크기다(1/r = 1). 기록은 장을 다시 놓지 않으므로 안쪽은 평탄하다.
+  - 기록이 $\phi_q$ 근처에서 시작하면 안쪽 급팽창은 $N_q$이고, $\Omega_k\approx+10^{-1.1\times10^6}$이다. 시작이 $10^5$ e-fold 늦어도 $10^{-1.05\times10^6}$이다. [철회, §43.111 A] Q에서 $\Omega_k=0$이고, 기록 시각과 무관하다.
+  - 곡률이 보이려면 우리 거품의 첫 기록이 급팽창 끝 65 e-fold(관측 창은 68) 이내에서 일어나야 한다. [철회, §43.111 A]
 
 **[검사] kill.**
 - K1 항등식: $\int_{\phi_q}^{\rm end}(2/P_\zeta)\,dN$의 수치 적분 $5.674\times10^{12}$이 닫힌 꼴 $24\pi^2(1/V_{\rm end}-1/V_q)$와 상대 오차 $3\times10^{-16}$로 같다. 통과.
-- K2 드 시터 불변: $\epsilon(\phi_q)=4.4\times10^{-13}\ll0.01$. 통과.
+- K2 드 시터 불변: $\epsilon(\phi_q)=4.4\times10^{-13}\ll0.01$. 통과. [잘못 세운 검사, §43.111 A] 계량을 쟀다. 상태의 굴림/떨림은 경계에서 1이라, 바르게 세우면 열린 거품이 기각된다.
 - K3 엔트로피 상한: $N_q=1.3\times10^6$은 지평 엔트로피 증가 $5.7\times10^{12}$보다 430만 배 작다. 통과.
-- K4(미래): 중력 매개 얽힘이 5σ로 보이면(P23 기각) QG1(나)와 Q가 함께 죽고, S의 “면·층·영원”이 돌아온다. $\Omega_k<0$이 3σ면 Q의 열린 거품이, $\Omega_k\ne0$이 3σ면 F1이 죽는다.
+- K4(미래): 중력 매개 얽힘이 5σ로 보이면(P23 기각) QG1(나)와 Q가 함께 죽고, S의 “면·층·영원”이 돌아온다. $\Omega_k<0$이 3σ면 Q의 열린 거품이, $\Omega_k\ne0$이 3σ면 F1이 죽는다. [§43.111 A] Q의 열린 거품 kill은 무효다(Q는 평탄).
 
 **판정.**
-- CE 공리로는 첫 사건이 점이다. 첫 기록 하나가 R1로 제 빛원뿔만 확정하므로, 경계는 빛꼴이고 확정은 빛의 속도로 퍼진다. 사용자 전제(“특정 하나로 정해진 사건”)와 §43.106의 열린 거품이 공리에서 돌아온다. 면·층·주머니 무수는 표준 모형의 가정(확정 전 떨림의 국소 원천)에서 나온 것이다.
+- CE 공리로는 첫 사건이 점이다. 첫 기록 하나가 R1로 제 빛원뿔만 확정하므로, 경계는 빛꼴이고 확정은 빛의 속도로 퍼진다. 사용자 전제(“특정 하나로 정해진 사건”)와 §43.106의 열린 거품이 공리에서 돌아온다. 면·층·주머니 무수는 표준 모형의 가정(확정 전 떨림의 국소 원천)에서 나온 것이다. [§43.111 감사 뒤]
+  - 남는 것: QG1(나)를 비관측 성분의 정확한 법칙으로 둘 때(56장 조건) 첫 기록은 점이고, 그 확정의 경계는 빛꼴이다.
+  - 철회: 열린 거품 회복. 안쪽은 평탄하다.
+  - 미정으로 내림: “층·주머니 무수는 표준 모형 탓”. 기록된 떨림은 국소 원천이라 층 안의 기록이 잦으면 자기 증식이 되살아날 수 있다.
 - 네 양은 한 비율 $r=\sqrt{P_\zeta}$로 모인다. 경계 $r=1$에서 인과 압력과 떨림이 같고, 앞면은 빛의 속도이며, 흔들림은 1이고, 지평은 e-fold당 2 nat씩 는다.
-- 남은 빈칸은 기록률이다. 기록이 드물면 우리 우주는 한 점에서 자란 열린 거품이고, 잦으면 여러 거품이 합쳐진 평탄 조각이다. CE는 기록률을 아직 정하지 않는다(§43.105 RD3). 어느 쪽이든 $\Omega_k\approx0$이라 관측으로는 가를 수 없다. [좁힘, §43.109] 우리 영역의 첫 사건은 기록률과 무관하게 하나다. 기록률이 바꾸는 것은 첫 사건 뒤에 합류하는 기록의 수, 곧 지평 너머의 배치다.
+- 남은 빈칸은 기록률이다. 기록이 드물면 우리 우주는 한 점에서 자란 열린 거품이고, 잦으면 여러 거품이 합쳐진 평탄 조각이다. CE는 기록률을 아직 정하지 않는다(§43.105 RD3). 어느 쪽이든 $\Omega_k\approx0$이라 관측으로는 가를 수 없다. [좁힘, §43.109] 우리 영역의 첫 사건은 기록률과 무관하게 하나다. 기록률이 바꾸는 것은 첫 사건 뒤에 합류하는 기록의 수, 곧 지평 너머의 배치다. [§43.111] Q의 안쪽은 기록률과 무관하게 평탄하다. 기록률이 정하는 것은 층이 스스로 불어나는지 여부다.
 - 예측값은 바뀌지 않는다. 새로 등록하지 않는다. Q는 P23에 기대는 조건부 판정이다.
 
 ## 43.109 기록률의 상한 — 경계에서 기록은 팽창을 따라잡을 수 없고, 우리 우주의 첫 사건은 기록률과 상관없이 하나다
@@ -4098,10 +4102,10 @@ PL이 스스로 내놓는 상수는 틀린다. PL은 선도 계수만 설명한�
 - kill:
   - K1: 문턱 $P_\zeta=2/(3\ln2)$가 1 이상이면 “경계의 바다는 반드시 남는다”를 기각한다.
   - K2: 최대 기록 가설의 수치가 해석 근사와 5% 넘게 다르면 보고한다.
-  - K3(미래): $\Omega_k>0$이 확정되면 Q에서 $f\lesssim10^{-6}$이어야 한다.
+  - K3(미래): $\Omega_k>0$이 확정되면 Q에서 $f\lesssim10^{-6}$이어야 한다. [무효, §43.111 A]
 - 이 절은 위험한 예측이 아니라 구조 정리다. K1 통과는 산술로 미리 알았다. 같은 계열의 선행 기준은 Arkani-Hamed 외 2007이다(영원하지 않은 급팽창에서 지평 넓이는 e-fold마다 플랑크 단위 이상 는다).
 
-**[조건부 정리] 경계의 바다는 반드시 남는다.** 기록이 팽창을 따라잡으려면 $f>3$이어야 한다. 란다우어 상한은 $f\le2/(cP_\zeta)$라서, $P_\zeta>2/(3c)$인 띠에서는 어떤 기록률로도 따라잡을 수 없다.
+**[조건부 정리] 경계 띠를 지나는 동안 바다는 반드시 불어난다.** ([정정, §43.111 D] 처음 제목은 “경계의 바다는 반드시 남는다”였다. 바다는 띠를 한 번 지날 뿐이라 영속하지 않는다.) 기록이 팽창을 따라잡으려면 $f>3$이어야 한다. 란다우어 상한은 $f\le2/(cP_\zeta)$라서, $P_\zeta>2/(3c)$인 띠에서는 어떤 기록률로도 따라잡을 수 없다.
 
 | 비용 $c$ | 문턱 $P_\zeta$ | 경계 아래 띠 폭 | 경계에서 $f_{\max}$ | 경계의 바다 차원 하한 |
 |---|---|---|---|---|
@@ -4109,32 +4113,32 @@ PL이 스스로 내놓는 상수는 틀린다. PL은 선도 계수만 설명한�
 | 1 nat | 0.667 | $2.4\times10^5$ | 2 | 1 |
 | 3 ln 2 | 0.321 | $5.7\times10^5$ | 0.962 | 2.04 |
 
-- 세 판본 모두 F1 경계($P_\zeta=1$)가 띠 안이다(K1 통과). 경계의 정해지지 않은 바다는 어떤 기록률에서도 차원 0.115 이상의 프랙털로 남는다.
-- 이것이 §43.106 G4의 “경계는 영원히 시작에 머문다”와 OBJ-02의 “비확정 상태는 소멸하지 않고 남는다”가 경계에서 가지는 정확한 꼴이다(읽기).
+- 세 판본 모두 F1 경계($P_\zeta=1$)가 띠 안이다(K1 통과). 경계의 정해지지 않은 바다는 어떤 기록률에서도 차원 0.115 이상의 프랙털로 남는다. [철회, §43.111 D] 3 − f는 그 순간의 불어남 지수이고, 영속하는 집합의 차원이 아니다. 맞는 말은 “띠를 지나는 동안(1비트 비용에서 $2.5\times10^4$ e-fold) 미확정 물리 부피는 기록률과 무관하게 는다”이다.
+- 이것이 §43.106 G4의 “경계는 영원히 시작에 머문다”와 OBJ-02의 “비확정 상태는 소멸하지 않고 남는다”가 경계에서 가지는 정확한 꼴이다(읽기). [철회, §43.111 D] “정확한 꼴”은 과장이다. 띠를 지나는 동안에만 성립한다.
 - 장이 시계가 되는 곳($P_\zeta=1$)과 기록이 팽창을 따라잡기 시작하는 곳(1비트 비용에서 0.962)은 4% 안에서 겹친다. O(1) 기준이 수치로 겹친 것이지 유도는 아니다.
 - 우리 쪽(피벗)의 상한은 $f_{\max}=1.4\times10^9$이다. 그래서 ζ를 기록하는 일은 예산에 막히지 않는다.
 
 **[검사] 우리 우주의 첫 사건은 하나다.**
-- 우리 영역이 받은 첫 기록은 과거 빛원뿔 안에서 가장 이른 기록 하나다. 그때 우리 영역은 그 빛원뿔의 $10^{-5.7\times10^5}$배였다. 그래서 기록률이 커서 뒤에 여러 기록이 합류해도 첫 사건은 하나다. 기록률이 바꾸는 것은 지평 너머의 배치(홀로 선 거품 대 합쳐진 거품들)뿐이다.
-- 곡률 연결: 곡률이 관측 창에 들려면 우리 영역이 급팽창 끝 68 e-fold 안까지 미확정으로 남아야 한다. 그러려면 평균 기록률이 $7.6\times10^{-7}$ 이하여야 하고, 이는 경계의 상한 2.885보다 380만 배 작다. $\Omega_k>0$이 확정되면 CE는 이 작은 기록률을 설명해야 한다(K3).
+- 우리 영역이 받은 첫 기록은 과거 빛원뿔 안에서 가장 이른 기록 하나다. 그때 우리 영역은 그 빛원뿔의 길이로 $10^{-5.7\times10^5}$배(부피로 $10^{-1.7\times10^6}$배)였다. 그래서 기록률이 커서 뒤에 여러 기록이 합류해도 첫 사건은 하나다. 기록률이 바꾸는 것은 지평 너머의 배치(홀로 선 거품 대 합쳐진 거품들)뿐이다.
+- 곡률 연결: 곡률이 관측 창에 들려면 우리 영역이 급팽창 끝 68 e-fold 안까지 미확정으로 남아야 한다. 그러려면 평균 기록률이 $7.6\times10^{-7}$ 이하여야 하고, 이는 경계의 상한 2.885보다 380만 배 작다. $\Omega_k>0$이 확정되면 CE는 이 작은 기록률을 설명해야 한다(K3). [철회, §43.111 A] Q의 안쪽은 기록 시각과 무관하게 평탄하므로 기록률과 곡률은 이어지지 않는다. 늦은 첫 기록이 무엇을 남기는지는 기록 동역학(RD3)에 달려 미정이다.
 
 **[가설 아래 산출] 최대 기록.** 기록이 란다우어 상한 그대로 일어난다고 두면(1비트 비용), 바다의 물리 부피는 경계부터 $2.5\times10^4$ e-fold 동안 더 불어나 $e^{1461}$배에서 최대가 된다. 그 뒤 $5.0\times10^4$ e-fold에서 처음 부피로 돌아오고 빠르게 사라진다. 우리 관측 규모가 생기는 것은 그보다 $1.26\times10^6$ e-fold 뒤다. 수치는 해석 근사와 $7\times10^{-6}$ 안에서 같다(K2 통과). 최대 기록 자체는 원리가 아니라 가설이다.
 
 **판정.**
-- RL과 지평 예산에서 기록률의 상한 $f\le2/(cP_\zeta)$가 나온다. 그 결과 경계의 바다는 어떤 기록률에서도 남는다(조건부 정리).
-- 우리 우주의 첫 사건은 기록률과 무관하게 하나다. 기록률은 지평 너머의 배치만 바꾸고, 기록률이 $10^{-6}$보다 작지 않으면 곡률은 보이지 않는다.
+- RL과 지평 예산에서 기록률의 상한 $f\le2/(cP_\zeta)$가 나온다. 그 결과 경계의 바다는 어떤 기록률에서도 남는다(조건부 정리). [§43.111 D] “띠를 지나는 동안 불어난다”로 좁힌다.
+- 우리 우주의 첫 사건은 기록률과 무관하게 하나다. 기록률은 지평 너머의 배치만 바꾸고, 기록률이 $10^{-6}$보다 작지 않으면 곡률은 보이지 않는다. [§43.111 A] 뒤 문장(곡률)은 철회한다.
 - 예측값은 바뀌지 않는다. 새로 등록하지 않는다.
 
-## 43.110 분별의 끝 — 시작과 같은 기록 예산 문턱을 반대로 지나는 때는 오늘부터 94 e-fold 뒤다
+## 43.110 평균 기록 예산의 끝 — 시작과 같은 문턱을 반대로 지나는 때는 오늘부터 94 e-fold 뒤다(분별 자체는 묶인 구조에서 열적 죽음까지)
 
 **문제.** §43.109에서 경계의 기록은 팽창을 따라잡지 못했다. 같은 기준을 늦은 우주에 대면 분별이 끝나는 조건이 나오는가. 늦은 우주는 엔트로피가 가득 차 있지 않으므로, 가득 찰 때까지의 열역학부터 세운다. 사용자: “다음”.
 
 **사전 규칙(계산 전).** [분별의 끝 모듈](../../examples/physics/rendering/ce_rendering_distinction_end.py) 머리글에 다음을 고정했다.
 - 기준은 §43.109 그대로다. 허블 부피당 e-fold당 기록 예산 $B$가 $3c$ 이상이어야 새 부피의 확정이 팽창을 따라잡는다.
-- 열역학: 늦은 우주의 허블 부피가 가득 차기까지 남은 자리는 안의 물질 에너지를 $T_{GH}$로 나눈 만큼이다(첫째 법칙). 한 e-fold에 빠져나가는 물질 에너지가 새로 생기는 자리다.
+- 열역학: 늦은 우주의 허블 부피가 가득 차기까지 남은 자리는 안의 물질 에너지를 $T_{GH}$로 나눈 만큼이다(첫째 법칙). 한 e-fold에 빠져나가는 물질 에너지가 새로 생기는 자리다. [정정, §43.111 F] 뒤 문장은 방향이 거꾸로다. 빠져나가는 에너지는 지평 엔트로피를 채운다. 정당화는 저장량 $R=E_m/k_BT_{GH}=\Omega_m(a)S(a)\ge c$로 한다. 물질 + Λ에서 $B=3R$이 정확히 성립하므로 숫자는 같다.
   - $B=2\epsilon S\to3(\Omega_m/\Omega_\Lambda)a^{-3}S_\Lambda$.
   - 급팽창에서 같은 식이 $2/P_\zeta$였으므로 늦은 우주의 유효 $P_\zeta$는 $1/(\epsilon S)$다.
-- CE 값: $\Omega_m$(코어), $\ln S_\Lambda=282.109$(§43.106 감사), $H_\Lambda=\sqrt{\pi/S_\Lambda}/t_P$, $T_{GH}=2.2\times10^{-30}$ K.
+- CE 값: $\Omega_m$(코어), $\ln S_\Lambda=282.109$(§43.106 감사), $H_\Lambda=\sqrt{\pi/S_\Lambda}/t_P$, $T_{GH}=2.2\times10^{-30}$ K. [§43.111 G] 이 $S_\Lambda$는 $H_0=67.14$에 해당한다. 코어의 67.77을 쓰면 끝은 1641 Gyr, $T_{GH}=2.22\times10^{-30}$ K다(§43.104 MK6의 값).
 - kill:
   - K1: 오늘 $B\le3c$면 기각한다. 우리는 기록을 하고 있다.
   - K2: 비용 $c\in\{\ln2,1,3\ln2\}$에서 끝 시점의 폭이 0.5 e-fold를 넘으면 “끝은 비용에 둔감하다”를 기각한다.
@@ -4145,7 +4149,7 @@ PL이 스스로 내놓는 상수는 틀린다. PL은 선도 계수만 설명한�
 - 조건 $B=3c$는 “허블 부피당 평균 물질 에너지 = $c\,k_BT_{GH}$(1비트)”와 같다.
 - 끝은 오늘부터 93.89 e-fold 뒤, 우주 나이 약 1조 6600억 년이다(1비트 비용). 비용이 1 nat이면 93.77, 3비트면 93.52 e-fold로 폭이 0.37 e-fold다(K2 통과). 끝은 비용에 둔감하다.
 - 오늘의 예산은 $e^{281.7}$로 문턱보다 한참 위다(K1 통과).
-- 그 뒤 평균적인 새 허블 부피는 확정되지 못한다. 시작(§43.109)에서는 문턱을 아래서 위로 지났고, 끝에서는 같은 문턱을 위에서 아래로 지난다.
+- 그 뒤 평균적인 새 허블 부피는 확정되지 못한다. 시작(§43.109)에서는 문턱을 아래서 위로 지났고, 끝에서는 같은 문턱을 위에서 아래로 지난다. [정정, §43.111 E] R1에서는 이미 확정된 영역 안에 새로 생긴 부피도 확정이다. 맞는 말은 “평균 부피가 새 기록 하나를 살 예산이 없다”이다. 같은 문턱이지만 뜻이 다르다. 시작에서는 정해지지 않은 바다의 확정이고, 끝에서는 확정된 영역 안의 새 기록이다.
 - 입자 한계가 먼저 온다. 허블 부피당 평균 바리온은 오늘 $e^{181.1}$개이고 60.4 e-fold 뒤(약 1조 700억 년) 1개가 된다. 열역학 끝은 그보다 33.5 e-fold 늦다(K3 통과). 그러므로 1조 6600억 년은 평균 부피에 대한 상한이다. 실제 기록은 상호작용할 입자가 사라지는 더 이른 때부터 드물어진다.
 
 **[산출] 우리 조각의 끝.**
@@ -4158,13 +4162,57 @@ PL이 스스로 내놓는 상수는 틀린다. PL은 선도 계수만 설명한�
 **[관찰] 같은 꼴.** 물질–Λ 같음 시점부터 세면 끝은 $(1/3)\ln(S_\Lambda/c)$ e-fold 뒤다. 1 nat 비용에서 이것은 §43.107 A1(용량 $S_\Lambda$, 부피 다리)의 $\ln S_\Lambda/3=94.04$와 대수적으로 같은 식이다. 둘 다 “$e^{3N}$의 부피가 $S_\Lambda$를 채우는 e-fold 수”이기 때문이다. 이것은 새 증거가 아니다. A1은 §43.107에서 원리가 없어 채택되지 않았다(F1은 $1.3\times10^6$).
 
 **판정.**
-- 시작과 같은 기록 예산 문턱이 끝을 정한다. 우주 전체에서는 오늘부터 94 e-fold 뒤(약 1.66조 년, 상한)이고, 우리 조각에서는 국부 은하군의 $10^{112}$비트 예산이 다 쓰이는 열적 죽음이다.
+- 시작과 같은 기록 예산 문턱이 끝을 정한다. 우주 전체에서는 오늘부터 94 e-fold 뒤(약 1.66조 년, 상한)이고, 우리 조각에서는 국부 은하군의 $10^{112}$비트 예산이 다 쓰이는 열적 죽음이다. [정정, §43.111 E] 94 e-fold는 고르게 퍼진 평균 부피의 예산이 새 기록 하나 아래로 떨어지는 때(평균 부피 상한)일 뿐, 우주 전체 분별의 끝이 아니다. 물질은 뭉쳐 있어 묶인 구조는 열적 죽음까지 기록한다.
 - 끝은 기록 비용에 둔감하고, 실제로는 입자 한계(60 e-fold)가 먼저 온다.
 - 예측값은 바뀌지 않는다. 새로 등록하지 않는다.
 
-## 43.111 재현과 한계
+## 43.111 감사 — §43.107–110의 독립 검산: 숫자는 모두 맞고, 해석 둘이 틀렸다
 
-구현은 [렌더링 레지스트리](../../examples/physics/rendering/ce_rendering_registry.py), 고정 검사는 `tests/test_rendering_registry.py`(①·③·S2·T1·U1·M1·O1·TC·C1·순환 평균·사다리 상쇄·순환 위상과 팽창 변화의 반례·⑤·$\theta^*$ 반례·판본 III·부스트 반례·R-Pl 전이·유클리드 회전·BAO 눈금 예측·순환 기하·나선 긴장·복소 척도인자·S8·두 원의 구분·사건 척도·중성미자 질량·게이지군과 한 세대·세 세대와 선형 중력·대칭 깨짐과 전하 양자화·급팽창 게이지 수·중성미자 장부·암흑에너지 W1 반례·진공 기울기 W2·최저 조화 규칙·모방 시계 작용 W3·빛의 한계와 렌더링 지평선·확률 무게 중력·빛원뿔 기록 갱신·CMB–BAO 그라데이션·마감 판정·가설 역유도·공리 증명·열린 예측·사전 등록 v1–v12 동결과 공동 RMSE 고정, 초신성 보류 시험·FD θ*·W3 성장 보정·자료 판본 민감도)다. 필수 테스트 목록에 추가했고 전체 344개 검사를 실행했다(2026-09-23). §43.37–43.40의 검사는 각 절에 적은 별도 모듈에 있고, §43.35 정리 C′·D′의 재증명 검산은 [복소 부스트 모듈](../../examples/physics/rendering/ce_rendering_complex_boost.py), §43.41–43.44의 보강은 [E4 대각합 모듈](../../examples/physics/rendering/ce_rendering_e4_trace.py), [간헐 렌더링 모듈](../../examples/physics/rendering/ce_rendering_intermittent.py), [경계 모듈](../../examples/physics/rendering/ce_rendering_boundary.py), [계단 모듈](../../examples/physics/rendering/ce_rendering_staircase.py), [Bool 사전 모듈](../../examples/physics/rendering/ce_rendering_bool.py)에 있고, §43.45의 점검은 [남은 항목 모듈](../../examples/physics/rendering/ce_rendering_open_checks.py), §43.46의 감사는 [중성미자 감사 모듈](../../examples/physics/rendering/ce_rendering_nu_audit.py), §43.47의 장부와 기준 비교는 [장부 모듈](../../examples/physics/rendering/ce_rendering_ledger.py), §43.48의 관측 사상은 [관측 사상 모듈](../../examples/physics/rendering/ce_rendering_o1_map.py), §43.49의 추측 검증은 [무리 안 차이 모듈](../../examples/physics/rendering/ce_rendering_spread.py), §43.50은 [위상 잠금 모듈](../../examples/physics/rendering/ce_rendering_phase_lock.py), §43.51은 [인과 잠금 모듈](../../examples/physics/rendering/ce_rendering_causal_lock.py), §43.52는 [잠금 역사 모듈](../../examples/physics/rendering/ce_rendering_lock_history.py), §43.53은 [열적 시간 모듈](../../examples/physics/rendering/ce_rendering_thermal_time.py), §43.54는 [가지치기 모듈](../../examples/physics/rendering/ce_rendering_branching.py), §43.55는 [E4 닻 모듈](../../examples/physics/rendering/ce_rendering_e4_anchor.py), §43.57은 [기운 동전 모듈](../../examples/physics/rendering/ce_rendering_biased_coin.py), §43.58은 [경계 인자 모듈](../../examples/physics/rendering/ce_rendering_boundary_loop.py), §43.59는 [Higgs·우주 모듈](../../examples/physics/rendering/ce_rendering_higgs_cosmos.py), §43.60은 [분별 모듈](../../examples/physics/rendering/ce_rendering_distinction.py), §43.61은 [사다리 모듈](../../examples/physics/rendering/ce_rendering_ladder.py), §43.62는 [한 사건 모듈](../../examples/physics/rendering/ce_rendering_one_event.py), §43.63은 [극 모듈](../../examples/physics/rendering/ce_rendering_pole.py), §43.64는 [고정점 사다리 모듈](../../examples/physics/rendering/ce_rendering_fp_ladder.py), §43.65는 [Higgs 무게 모듈](../../examples/physics/rendering/ce_rendering_higgs_weight.py), §43.66은 [하나의 자기 모듈](../../examples/physics/rendering/ce_rendering_single_self.py), §43.67은 [경주 모듈](../../examples/physics/rendering/ce_rendering_race.py), §43.68은 [질량 = 빠르기 모듈](../../examples/physics/rendering/ce_rendering_mass_rate.py), §43.69는 [CCHP JWST 모듈](../../examples/physics/rendering/ce_rendering_jwst_cchp.py), §43.70은 [E4 모양 모듈](../../examples/physics/rendering/ce_rendering_e4_shape.py), §43.71은 [지평선 화소 모듈](../../examples/physics/rendering/ce_rendering_horizon_pixel.py), §43.72는 [강한 중력 모듈](../../examples/physics/rendering/ce_rendering_jacobson.py), §43.74는 [중성미자 우주론 모듈](../../examples/physics/rendering/ce_rendering_nu_cosmo.py), §43.75는 [P41 적합 모듈](../../examples/physics/rendering/ce_rendering_nu_fit.py), §43.76은 [무게 시점 모듈](../../examples/physics/rendering/ce_rendering_weight_epoch.py), §43.78은 [단일항 모듈](../../examples/physics/rendering/ce_rendering_singlets.py), §43.79는 [E4 식별 (ii) 모듈](../../examples/physics/rendering/ce_rendering_e4_ii.py), §43.80은 [렙톤 대각합 모듈](../../examples/physics/rendering/ce_rendering_lepton_trace.py), §43.81은 [E4 지수 모듈](../../examples/physics/rendering/ce_rendering_e4_exponent.py), §43.82는 [보른 배가 모듈](../../examples/physics/rendering/ce_rendering_born_doubling.py), §43.83은 [사전 모듈](../../examples/physics/rendering/ce_rendering_dictionary.py), §43.84는 [모듈러 요동 모듈](../../examples/physics/rendering/ce_rendering_modular.py), §43.85는 [공동 렌더링 모듈](../../examples/physics/rendering/ce_rendering_joint_render.py), §43.86은 [P41 렌즈 적합 모듈](../../examples/physics/rendering/ce_rendering_nu_lens.py), §43.87은 [감사 모듈](../../examples/physics/rendering/ce_rendering_audit.py), §43.88은 [E4 게이지 모듈](../../examples/physics/rendering/ce_rendering_e4_gauge.py), §43.90은 [시간 의미론 모듈](../../examples/physics/rendering/ce_rendering_time_semantics.py), §43.91은 [식 지위 모듈](../../examples/physics/rendering/ce_rendering_formula_status.py), §43.93은 [코어 네 식 모듈](../../examples/physics/rendering/ce_rendering_core_four.py), §43.94는 [열적 기록 탑 모듈](../../examples/physics/rendering/ce_rendering_horizon_towers.py), §43.95는 [탑 온도 모듈](../../examples/physics/rendering/ce_rendering_tower_temperature.py), §43.96은 [(2π)² 모듈](../../examples/physics/rendering/ce_rendering_two_pi_squared.py), §43.97은 [포물형 잠금 모듈](../../examples/physics/rendering/ce_rendering_parabolic_lock.py), §43.98은 [지평선 상수 모듈](../../examples/physics/rendering/ce_rendering_horizon_constant.py), §43.99는 [균형 모듈](../../examples/physics/rendering/ce_rendering_balance.py), §43.100은 [눈금 모듈](../../examples/physics/rendering/ce_rendering_ruler.py), §43.101은 [현재 몫 모듈](../../examples/physics/rendering/ce_rendering_present_share.py), §43.102는 [끼임 순환 모듈](../../examples/physics/rendering/ce_rendering_pinch_cycle.py), §43.103은 [경계 소실 모듈](../../examples/physics/rendering/ce_rendering_boundary_loss.py), §43.104는 [모듈러 시간 모듈](../../examples/physics/rendering/ce_rendering_modular_time.py), §43.105는 [기록 동역학 모듈](../../examples/physics/rendering/ce_rendering_record_dynamics.py), §43.106은 [첫 사건 모듈](../../examples/physics/rendering/ce_rendering_first_event.py), §43.107은 [거품 용량 모듈](../../examples/physics/rendering/ce_rendering_bubble_capacity.py), §43.108은 [주머니 경계 모듈](../../examples/physics/rendering/ce_rendering_pocket_boundary.py), §43.109는 [기록률 모듈](../../examples/physics/rendering/ce_rendering_record_rate.py), §43.110은 [분별의 끝 모듈](../../examples/physics/rendering/ce_rendering_distinction_end.py)에 있다(§43.89는 열적 시간 모듈을 쓴다). 실행:
+**[감사] 방법.** 사용자: “정확도는?”. 두 층으로 봤다.
+- 자료: 네 절은 예측값을 바꾸지 않았다. 공동 점수는 그대로다(V39 0.8407, χ² 27.56, 재계산). 관측과 닿는 곳은 곡률 하나이고, $\Omega_k=0$은 Planck 2018 + BAO와 −0.37σ, DESI DR2 + CMB와 −1.91σ다.
+- 계산·논리: 제 모듈을 쓰지 않는 독립 재계산(적대적 검산 에이전트, opus)을 돌렸다. 코어에서 가져온 입력은 $N_e$, $A_s$, $H_0$, $\Omega_m$, $q$, $D$, $\delta$, $\ln S_\Lambda$뿐이다.
+
+**[검사] 숫자.** 모두 재현되었다.
+- §43.107: $N_q$ = 4.1407×10⁵ / 1.30941×10⁶ / 4.1407×10⁶, 기각 12칸, 창 띠 195.63–205.07.
+- §43.108: 항등식(적분 2×10⁻¹⁶, 미분방정식 8×10⁻¹³), $\epsilon(\phi_q)=4.374\times10^{-13}$, $N(1/6)=5.3456\times10^5$.
+- §43.109: 문턱 0.9618 / 0.6667 / 0.3206, 최대 기록 25256 / 1461.4 / 50024.
+- §43.110: $T_{GH}=2.2005\times10^{-30}$ K, 끝 93.889 / 93.766 / 93.522, 마지막 바리온 60.382, 국부 은하군 1.70–4.24×10¹¹²비트.
+- 해석 셋도 맞다. $dS/dN=2/P_\zeta$는 느린 굴림에서 정확하다. Creminelli의 $\dot\phi^2/H^4=3/(2\pi^2)$는 $P_\zeta=1/6$과 같다. 부피 가중 포커–플랑크 식의 앞면 속도는 $\sigma(\sqrt6-1/r)$로 유도되고, 1/6에서 0이다.
+
+**[감사] 문제와 처리.** 감사 수치는 [주머니 경계 모듈](../../examples/physics/rendering/ce_rendering_pocket_boundary.py)과 [분별의 끝 모듈](../../examples/physics/rendering/ce_rendering_distinction_end.py)의 `audit()`이 재현한다.
+
+| 번호 | 절 | 처음 | 감사 뒤 | 지위 |
+|---|---|---|---|---|
+| A | §43.108 | 바다가 거의 드 시터 불변($\epsilon=4\times10^{-13}$)이라 한 점 기록의 안쪽은 O(3,1) 열린 거품(G1 회복), $\Omega_k\approx+10^{-1.1\times10^6}$ | ε는 계량만 잰다. 상태는 굴러가는 ⟨φ⟩가 평탄 조각을 고르고, 경계에서 굴림/떨림은 1이다(`audit()`: 1.000). 기록은 터널링처럼 장을 다시 놓지 않으므로 안쪽은 평탄하다($\Omega_k=0$). K2는 잘못 세운 검사다 | 개념 오류, 철회 |
+| A′ | §43.107·109 | §43.107에 단 정정(“CE에서는 열린 거품이 돌아온다”), K4의 곡률 부호 kill, §43.109의 곡률 연결($f\le7.6\times10^{-7}$)과 K3 | 모두 A에 기대므로 함께 철회한다. §43.107의 “안쪽은 평탄”이 CE에서도 맞다 | 연쇄 철회 |
+| B | §43.108 | “면·층·주머니 무수는 표준 모형의 가정 탓” | CE도 ζ를 실재로 만들려면 기록이 필요하고, 기록된 떨림은 R1로 국소 원천이 된다. §43.109의 예산은 층(1/6–1)의 96.7%에서 $f>3$을 허락한다(1/6에서 $f_{\max}=17.3$). 그래서 기록이 잦으면 층의 자기 증식이 되살아날 수 있다. Lechuga–Sudarsky도 붕괴를 넣으면 문제가 되살아날 수 있다고 적는다 | 개념 오류(틈), 미정으로 내림 |
+| C | §43.108 | “CE 공리로는 …”, §43.85 인용 | Q는 QG1(나)를 비관측 성분의 정확한 법칙으로 둘 때만 선다. 56장(§56.4)은 단일 평균장을 $p(1-p)\tau^2\ll1$인 근사로만 인정하는데, 경계에서는 가지별 δN이 e-fold마다 O(1)이다. §43.85는 화소 요동의 절이다 | 과장, 조건 명시 |
+| D | §43.109 | “어떤 기록률에서도 차원 0.115 이상의 프랙털로 남는다”, OBJ-02의 “정확한 꼴” | Q의 바다는 띠를 한 번($2.5\times10^4$ e-fold) 지날 뿐이다. 3 − f는 그 순간의 불어남 지수다. 맞는 말은 “띠를 지나는 동안 미확정 물리 부피는 기록률과 무관하게 는다(영속 아님)”이다 | 과장, 정정 |
+| E | §43.110 | “분별의 끝: 우주 전체는 94 e-fold 뒤”, “새 허블 부피는 확정되지 못한다” | 고르게 퍼진 평균 부피의 예산 한계일 뿐이다. 물질은 뭉쳐 있어 묶인 구조는 열적 죽음까지 기록한다. 또 R1에서는 확정된 영역 안의 새 부피도 확정이라 “확정”의 뜻이 바뀌었다 | 과장, 정정 |
+| F | §43.110 | “빠져나가는 물질 에너지가 새로 생기는 자리” | 방향이 거꾸로다. 저장량 $R=E_m/k_BT_{GH}$로 정당화하면, 물질 + Λ에서 $B=3R$이 정확히 성립해 숫자는 같다(`audit()`: $B/3R=1$, 끝에서 $R=c$) | 작은 것 |
+| G | 여러 곳 | 65 e-fold 문장, $10^{-5.7\times10^5}$, $H_0$, look-elsewhere | 65.2는 3σ 상한을 넘는 곳이다(보이려면 68.4 이하). $10^{-5.7\times10^5}$은 길이 비다(부피 비는 $10^{-1.7\times10^6}$). $S_\Lambda$는 $H_0=67.14$에 해당한다(코어 67.77이면 끝 1641 Gyr, $T_{GH}=2.22\times10^{-30}$ K). look-elsewhere는 국소 밀도로 세면 0.35–0.49칸(29–39%)이고 결론은 같다 | 작은 것 |
+
+**판정.**
+- 네 절의 숫자는 모두 맞다. 틀린 것은 해석이었다.
+- 남는 것:
+  - §43.107의 조사 결론, F1의 $N_q=1.31\times10^6$(모형 결과), 곡률 ≈ 0.
+  - §43.108의 한 비율 $r=\sqrt{P_\zeta}$ 표와 항등식. QG1(나)를 정확한 법칙으로 둘 때 첫 기록은 점이고 그 확정의 경계는 빛꼴이다(R1).
+  - §43.109의 란다우어 상한 $f\le2/(cP_\zeta)$와 “띠를 지나는 동안 바다는 기록률과 무관하게 불어난다”.
+  - §43.110의 평균 부피 예산 한계 93.9 e-fold(비용에 둔감)와 국부 은하군의 남은 예산 약 $10^{112}$비트.
+- 철회되거나 내려간 것:
+  - 열린 거품 회복, 그리고 그에 기댄 곡률 kill과 곡률 연결: 철회.
+  - “층·주머니 무수는 표준 모형 탓”: 층 안의 기록률에 달려 미정.
+  - 바다의 영속과 OBJ-02의 “정확한 꼴”: 띠를 지나는 동안으로 좁힘.
+  - “우주 전체 분별의 끝”: 평균 부피 예산 한계로 좁힘.
+- 사용자의 처음 질문으로 돌아가면: 첫 기록 하나는 점이고 그 확정은 빛의 속도로 퍼지지만, 그 안은 평탄하다. 경계 밖이 영원히 떨리는지는 기록률에 달려 있다.
+- 교훈:
+  - 대칭 논증에서는 계량이 아니라 상태의 대칭을 본다. ε ≪ 1이어도 굴러가는 상태는 드 시터 불변이 아니다.
+  - 시작과 끝을 같은 문턱으로 이을 때는 두 끝에서 문턱의 뜻이 같은지 먼저 본다.
+- 예측값과 공동 점수는 바뀌지 않는다.
+
+## 43.112 재현과 한계
+
+구현은 [렌더링 레지스트리](../../examples/physics/rendering/ce_rendering_registry.py), 고정 검사는 `tests/test_rendering_registry.py`(①·③·S2·T1·U1·M1·O1·TC·C1·순환 평균·사다리 상쇄·순환 위상과 팽창 변화의 반례·⑤·$\theta^*$ 반례·판본 III·부스트 반례·R-Pl 전이·유클리드 회전·BAO 눈금 예측·순환 기하·나선 긴장·복소 척도인자·S8·두 원의 구분·사건 척도·중성미자 질량·게이지군과 한 세대·세 세대와 선형 중력·대칭 깨짐과 전하 양자화·급팽창 게이지 수·중성미자 장부·암흑에너지 W1 반례·진공 기울기 W2·최저 조화 규칙·모방 시계 작용 W3·빛의 한계와 렌더링 지평선·확률 무게 중력·빛원뿔 기록 갱신·CMB–BAO 그라데이션·마감 판정·가설 역유도·공리 증명·열린 예측·사전 등록 v1–v12 동결과 공동 RMSE 고정, 초신성 보류 시험·FD θ*·W3 성장 보정·자료 판본 민감도)다. 필수 테스트 목록에 추가했고 전체 344개 검사를 실행했다(2026-09-23). §43.37–43.40의 검사는 각 절에 적은 별도 모듈에 있고, §43.35 정리 C′·D′의 재증명 검산은 [복소 부스트 모듈](../../examples/physics/rendering/ce_rendering_complex_boost.py), §43.41–43.44의 보강은 [E4 대각합 모듈](../../examples/physics/rendering/ce_rendering_e4_trace.py), [간헐 렌더링 모듈](../../examples/physics/rendering/ce_rendering_intermittent.py), [경계 모듈](../../examples/physics/rendering/ce_rendering_boundary.py), [계단 모듈](../../examples/physics/rendering/ce_rendering_staircase.py), [Bool 사전 모듈](../../examples/physics/rendering/ce_rendering_bool.py)에 있고, §43.45의 점검은 [남은 항목 모듈](../../examples/physics/rendering/ce_rendering_open_checks.py), §43.46의 감사는 [중성미자 감사 모듈](../../examples/physics/rendering/ce_rendering_nu_audit.py), §43.47의 장부와 기준 비교는 [장부 모듈](../../examples/physics/rendering/ce_rendering_ledger.py), §43.48의 관측 사상은 [관측 사상 모듈](../../examples/physics/rendering/ce_rendering_o1_map.py), §43.49의 추측 검증은 [무리 안 차이 모듈](../../examples/physics/rendering/ce_rendering_spread.py), §43.50은 [위상 잠금 모듈](../../examples/physics/rendering/ce_rendering_phase_lock.py), §43.51은 [인과 잠금 모듈](../../examples/physics/rendering/ce_rendering_causal_lock.py), §43.52는 [잠금 역사 모듈](../../examples/physics/rendering/ce_rendering_lock_history.py), §43.53은 [열적 시간 모듈](../../examples/physics/rendering/ce_rendering_thermal_time.py), §43.54는 [가지치기 모듈](../../examples/physics/rendering/ce_rendering_branching.py), §43.55는 [E4 닻 모듈](../../examples/physics/rendering/ce_rendering_e4_anchor.py), §43.57은 [기운 동전 모듈](../../examples/physics/rendering/ce_rendering_biased_coin.py), §43.58은 [경계 인자 모듈](../../examples/physics/rendering/ce_rendering_boundary_loop.py), §43.59는 [Higgs·우주 모듈](../../examples/physics/rendering/ce_rendering_higgs_cosmos.py), §43.60은 [분별 모듈](../../examples/physics/rendering/ce_rendering_distinction.py), §43.61은 [사다리 모듈](../../examples/physics/rendering/ce_rendering_ladder.py), §43.62는 [한 사건 모듈](../../examples/physics/rendering/ce_rendering_one_event.py), §43.63은 [극 모듈](../../examples/physics/rendering/ce_rendering_pole.py), §43.64는 [고정점 사다리 모듈](../../examples/physics/rendering/ce_rendering_fp_ladder.py), §43.65는 [Higgs 무게 모듈](../../examples/physics/rendering/ce_rendering_higgs_weight.py), §43.66은 [하나의 자기 모듈](../../examples/physics/rendering/ce_rendering_single_self.py), §43.67은 [경주 모듈](../../examples/physics/rendering/ce_rendering_race.py), §43.68은 [질량 = 빠르기 모듈](../../examples/physics/rendering/ce_rendering_mass_rate.py), §43.69는 [CCHP JWST 모듈](../../examples/physics/rendering/ce_rendering_jwst_cchp.py), §43.70은 [E4 모양 모듈](../../examples/physics/rendering/ce_rendering_e4_shape.py), §43.71은 [지평선 화소 모듈](../../examples/physics/rendering/ce_rendering_horizon_pixel.py), §43.72는 [강한 중력 모듈](../../examples/physics/rendering/ce_rendering_jacobson.py), §43.74는 [중성미자 우주론 모듈](../../examples/physics/rendering/ce_rendering_nu_cosmo.py), §43.75는 [P41 적합 모듈](../../examples/physics/rendering/ce_rendering_nu_fit.py), §43.76은 [무게 시점 모듈](../../examples/physics/rendering/ce_rendering_weight_epoch.py), §43.78은 [단일항 모듈](../../examples/physics/rendering/ce_rendering_singlets.py), §43.79는 [E4 식별 (ii) 모듈](../../examples/physics/rendering/ce_rendering_e4_ii.py), §43.80은 [렙톤 대각합 모듈](../../examples/physics/rendering/ce_rendering_lepton_trace.py), §43.81은 [E4 지수 모듈](../../examples/physics/rendering/ce_rendering_e4_exponent.py), §43.82는 [보른 배가 모듈](../../examples/physics/rendering/ce_rendering_born_doubling.py), §43.83은 [사전 모듈](../../examples/physics/rendering/ce_rendering_dictionary.py), §43.84는 [모듈러 요동 모듈](../../examples/physics/rendering/ce_rendering_modular.py), §43.85는 [공동 렌더링 모듈](../../examples/physics/rendering/ce_rendering_joint_render.py), §43.86은 [P41 렌즈 적합 모듈](../../examples/physics/rendering/ce_rendering_nu_lens.py), §43.87은 [감사 모듈](../../examples/physics/rendering/ce_rendering_audit.py), §43.88은 [E4 게이지 모듈](../../examples/physics/rendering/ce_rendering_e4_gauge.py), §43.90은 [시간 의미론 모듈](../../examples/physics/rendering/ce_rendering_time_semantics.py), §43.91은 [식 지위 모듈](../../examples/physics/rendering/ce_rendering_formula_status.py), §43.93은 [코어 네 식 모듈](../../examples/physics/rendering/ce_rendering_core_four.py), §43.94는 [열적 기록 탑 모듈](../../examples/physics/rendering/ce_rendering_horizon_towers.py), §43.95는 [탑 온도 모듈](../../examples/physics/rendering/ce_rendering_tower_temperature.py), §43.96은 [(2π)² 모듈](../../examples/physics/rendering/ce_rendering_two_pi_squared.py), §43.97은 [포물형 잠금 모듈](../../examples/physics/rendering/ce_rendering_parabolic_lock.py), §43.98은 [지평선 상수 모듈](../../examples/physics/rendering/ce_rendering_horizon_constant.py), §43.99는 [균형 모듈](../../examples/physics/rendering/ce_rendering_balance.py), §43.100은 [눈금 모듈](../../examples/physics/rendering/ce_rendering_ruler.py), §43.101은 [현재 몫 모듈](../../examples/physics/rendering/ce_rendering_present_share.py), §43.102는 [끼임 순환 모듈](../../examples/physics/rendering/ce_rendering_pinch_cycle.py), §43.103은 [경계 소실 모듈](../../examples/physics/rendering/ce_rendering_boundary_loss.py), §43.104는 [모듈러 시간 모듈](../../examples/physics/rendering/ce_rendering_modular_time.py), §43.105는 [기록 동역학 모듈](../../examples/physics/rendering/ce_rendering_record_dynamics.py), §43.106은 [첫 사건 모듈](../../examples/physics/rendering/ce_rendering_first_event.py), §43.107은 [거품 용량 모듈](../../examples/physics/rendering/ce_rendering_bubble_capacity.py), §43.108은 [주머니 경계 모듈](../../examples/physics/rendering/ce_rendering_pocket_boundary.py), §43.109는 [기록률 모듈](../../examples/physics/rendering/ce_rendering_record_rate.py), §43.110은 [분별의 끝 모듈](../../examples/physics/rendering/ce_rendering_distinction_end.py)에 있고, §43.111의 감사 수치는 주머니 경계·분별의 끝 모듈의 `audit()`이 재현한다(§43.89는 열적 시간 모듈을 쓴다). 실행:
 
 ```powershell
 python -B -m examples.physics.rendering.ce_rendering_registry

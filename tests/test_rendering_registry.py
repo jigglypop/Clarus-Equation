@@ -1845,9 +1845,12 @@ def test_one_ratio_sets_the_pocket_boundary_and_determination_spreads_at_light_s
     g = PKB.g1_front()
     assert g["rho=0"] == math.inf and abs(g["rho=1"] - math.sqrt(2)) < 1e-12 and abs(g["boundary(tau=1e-9)"] - 1) < 1e-12
     assert all(PKB.verdict().values())
+    au = PKB.audit()                                                                   # §43.111: open bubble withdrawn
+    assert abs(au["roll_over_kick_at_boundary"] - 1) < 1e-9 and au["eps_at_boundary_metric_only"] < 1e-12
+    assert abs(au["layer_fraction_fmax_over_3"] - 0.9674) < 1e-3 and abs(au["fmax_bit_at_P_1_6"] - 17.312) < 1e-3
 
 
-def test_landauer_budget_keeps_the_undetermined_sea_at_the_boundary() -> None:
+def test_landauer_budget_makes_the_undetermined_sea_grow_while_crossing_the_band() -> None:
     pb = RRT.persistence_band()
     assert abs(pb["bit"]["P_threshold"] - 2 / (3 * math.log(2))) < 1e-12 and all(v["boundary_inside"] for v in pb.values())
     assert abs(pb["bit"]["min_dim_at_boundary"] - (3 - 2 / math.log(2))) < 1e-12 and abs(pb["bit"]["band_below_boundary_efolds"] - 25256) < 5
@@ -1859,13 +1862,16 @@ def test_landauer_budget_keeps_the_undetermined_sea_at_the_boundary() -> None:
     assert mr["max_rel_dev"] < 1e-4 and all(RRT.verdict().values())
 
 
-def test_the_same_record_budget_threshold_ends_distinction_94_efolds_from_now() -> None:
+def test_the_mean_record_budget_crosses_the_start_threshold_94_efolds_from_now() -> None:
     g = DEN.global_end()
     assert abs(g["bit"]["ln_a_end"] - 93.889) < 0.001 and abs(g["bit"]["t_end_Gyr"] - 1656.4) < 0.5
     assert abs(g["bit"]["ln_a_end"] - g["bit"]["approx"]) < 1e-6 and abs(g["T_GH_K"] - 2.2005e-30) < 1e-33
     assert abs(g["nat"]["from_equality"] - g["mirror"]["A1_capacity_ln_S_over_3"]) < 1e-9       # same form, algebraic
     assert abs(g["ln_a_last_baryon"] - 60.382) < 0.001 and g["bit"]["ln_a_end"] - g["ln_a_last_baryon"] > 33
     assert abs(DEN.local_budget()["M_LG=3e+12"] - 2.55e112) < 0.01e112 and all(DEN.verdict().values())
+    au = DEN.audit()                                                                   # §43.111: stock form, H0 of S_Λ
+    assert abs(au["ln_R_at_end_minus_ln_c"]) < 1e-9 and abs(au["B_over_3R_at_end"] - 1) < 1e-9
+    assert abs(au["H0_implied_by_S_Lambda"] - 67.142) < 0.001 and abs(au["t_end_Gyr_core_H0"] - 1640.9) < 0.5
 
 
 def test_rendering_predictions_v25_is_frozen() -> None:
