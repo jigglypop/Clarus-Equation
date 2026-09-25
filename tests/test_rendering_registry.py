@@ -91,6 +91,18 @@ from examples.physics.rendering import ce_rendering_tower_temperature as TTW
 from examples.physics.rendering import ce_rendering_two_pi_squared as TPS
 from examples.physics.rendering import ce_rendering_parabolic_lock as PBL
 from examples.physics.rendering import ce_rendering_horizon_constant as HCN
+from examples.physics.rendering import ce_rendering_balance as BAL
+from examples.physics.rendering import ce_rendering_ruler as RUL
+from examples.physics.rendering import ce_rendering_present_share as PSH
+from examples.physics.rendering import ce_rendering_pinch_cycle as PCY
+from examples.physics.rendering import ce_rendering_boundary_loss as BLS
+from examples.physics.rendering import ce_rendering_modular_time as MTM
+from examples.physics.rendering import ce_rendering_record_dynamics as RDY
+from examples.physics.rendering import ce_rendering_first_event as FEV
+from examples.physics.rendering import ce_rendering_bubble_capacity as BCP
+from examples.physics.rendering import ce_rendering_pocket_boundary as PKB
+from examples.physics.rendering import ce_rendering_record_rate as RRT
+from examples.physics.rendering import ce_rendering_distinction_end as DEN
 from examples.physics.rendering import ce_rendering_open_predictions as OP
 from examples.physics.rendering.ce_rendering_registry import (
     AEM_INV_MZ,
@@ -1654,6 +1666,208 @@ def test_horizon_constant_has_no_natural_mechanism_and_is_unidentifiable() -> No
     assert i["improvement_needed"] > 100
 
 
+def test_balance_principle_fixes_the_pole_but_not_the_ruler_or_the_cosmic_now() -> None:
+    p = BAL.pole_balance()
+    assert p["sym_zero_count"] == 1 and abs(p["sym_zero_at"] - BAL.M_Z) < p["grid_step"]
+    assert abs(p["record_peak_at"] - BAL.M_Z) < p["grid_step"]
+    assert p["cost_at_pole"] == 0.0 and p["past_plus_future_at_pole"] < 1e-15    # past and future cancel
+    s = BAL.scheme_readings()
+    assert not any(s[k]["killed"] for k in ("S-a", "S-b1", "S-b2"))
+    assert -3 < s["S-b2"]["pull_Z_pole"] < -2.5 and s["S-b2"]["pull_world"] < -3.5
+    assert abs(s["S-a"]["pull_world"]) < 0.2 and s["P36_FP"]["effective"]["P36"] > 7
+    assert abs(s["lever"]["alpha_side"]) > 10 * abs(s["lever"]["s2_side"])       # the ruler weight is on alpha_s
+    t = BAL.three_shares()
+    assert abs(t["sum"] - 1) < 1e-12 and t["shares"]["past"] == t["shares"]["future"]
+    assert t["killed"] == {"MS-bar": False, "effective": True, "effective (direct avg)": False}
+    assert t["hits"]["MS-bar"]["1sigma"] == ["a/2pi|1+d/2pi"] and t["hits"]["effective"]["1sigma"] == []
+    c = BAL.cosmic_now()
+    assert c["killed"] and abs(c["Om_star"] - 0.3163) < 5e-4 and c["pulls"]["DESI DR2 + CMB"] > 3
+
+
+def test_no_ruler_the_scale_is_the_ruler_and_only_circular_rows_pick_msbar() -> None:
+    s = RUL.ruler_scales()
+    rec, pot = s["record (alpha_R, effective angle)"], s["static potential (alpha_V)"]
+    assert not s["killed"] and abs(s["ledger (MS-bar)"]["pull_ln_vs_MZ"]) < 1
+    assert 3 < rec["pull_ln_vs_ledger"] < pot["pull_ln_vs_ledger"]                # the ruler moves the event
+    v = RUL.verdict()
+    assert sorted(v["NRA_new_3sigma_rows"]) == sorted(RUL.CIRCULAR) and not v["NRA_killed"]
+    assert sorted(v["NRB_toothless_rows"]) == sorted(RUL.CIRCULAR)
+    assert 3.0 < v["NRB_bits_after"] < 3.3 and not v["NRB_killed"]
+    rows = RUL.row_audit()
+    assert max(r["width_over_sigma"] for k, r in rows.items() if k not in RUL.CIRCULAR and k != "bao_chi2") < 1.2
+    t = RUL.tensions()
+    assert abs(t["S-b2_pull_with_width"]) < 1 and t["FP_vs_lepton"] < -3.5          # FP-lepton is ruler-free
+
+
+def test_sharp_meters_agree_and_pin_the_present_share() -> None:
+    m = PSH.meters()
+    assert m["consistent"] and m["chi2"] < 5
+    assert abs(m["meters"]["M5 hierarchy"]["alpha"] - m["meters"]["M2 Koide"]["alpha"]) < 1e-6   # two sectors agree
+    assert all(PSH.verdict()["K2_killed"].values())
+    p = PSH.against_meters()["pulls"]
+    assert p["FP"]["M5 hierarchy"] < -20                                            # the present takes less than λ
+    assert p["lambda^2 e^-2"]["M5 hierarchy"] > 3 and abs(p["lambda q^2"]["M5 hierarchy"]) < 3
+    e = PSH.exploration()
+    assert abs(e["eps_star"]["M2 Koide"] + 4.3775e-5) < 2e-9 and abs(e["present_over_lambda"] - 0.99773) < 1e-5
+    assert -0.125 < e["eps_over_lambda2"] < -1 / 9
+    assert e["hits_M5"] == ["lambda e^-6", "lambda q^2", "lambda^2/8", "lambda^2/9"]
+    t = PSH.tau_mass("M5 hierarchy")
+    assert abs(t["m_tau"] - 1776.974) < 0.002 and t["sigma"] < 0.02
+
+
+def test_pinch_cycle_needs_shrinking_neighbours_and_only_ties_tt() -> None:
+    assert abs(PCY.tt_baseline()["V39"] - 0.8407) < 5e-4
+    for nu_k in ("P", "1"):
+        tr = PCY.trajectory(nu_k, 1.0, 0.1, 1e-6)
+        assert tr["peak"] > 0.5 and tr["A_end"] > 0.5 * tr["peak"]              # distinction never fades
+    for nu_k in ("H", "E"):
+        tr = PCY.trajectory(nu_k, 1.0, 0.1, 1e-6)
+        assert tr["peak"] > 0.5 and tr["A_end"] < 1e-3 * tr["peak"]             # shrinking light-cone neighbours end it
+    e = PCY.instant_equilibrium()["variants"]
+    assert all(0 < v["dAIC"] <= 2 for v in e.values())                          # one parameter ties TT, never beats it
+    h = e["H|2pi"]
+    assert abs(h["t_peak_Gyr"] - 7.62) < 0.05 and abs(h["theta0"] - 0.371) < 0.002
+    z = PCY.zero_parameter()
+    assert z["principled"] == "peak|2pi" and all(v["K1_killed"] for v in z["variants"].values())   # R0 = D fails
+    p = z["variants"]["peak|2pi"]
+    assert abs(p["A_peak"] - (1 - 1 / z["D"])) < 1e-3 and p["t_end_Gyr"] < 25 and p["today_fraction"] > 0.7
+    cl = PCY.closure()["variants"]
+    assert not cl["C-rest"]["K1_killed"] and 2.5 < cl["C-rest"]["d_chi2_vs_TT"] < 3.5          # survives, worse than TT
+    assert 5e6 < cl["C-rest"]["R0_today"] < 2e7 and cl["C-blur"]["K1_killed"] and cl["C-pix"]["K1_killed"]
+    link = PCY.present_share_link()["variants"]
+    assert all(v["K1_killed"] for v in link.values()) and all(abs(v["t_end_Gyr"] - 51.0) < 1 for v in link.values())
+    ind = PCY.indra()["variants"]
+    assert abs(ind["IN-inf"]["d_chi2_vs_TT"]) < 1e-9 and ind["IN-1"]["K1_killed"]            # endless reflection = TT
+    assert -1.5 < ind["IN-2"]["d_chi2_vs_TT"] < -0.9 and abs(ind["IN-2"]["A"] - 0.9247) < 1e-3
+
+
+def test_boundary_loss_is_bounded_and_the_vacuum_is_inherited() -> None:
+    assert abs(BLS.baseline_check()["diff"]) < 1e-9                                  # beta = 0 is the TT baseline
+    eh, tt = BLS.fit("EH", "L", "a", "all"), BLS.fit("TT", "L", "a", "all")
+    assert eh["verdict"] == "none" and -1.0 < eh["d_chi2"] < 0 and tt["verdict"] == "none"
+    assert abs(eh["beta_95"] - 0.00214) < 1e-4 and eh["lost_rec_95"] < 0.009       # <= 0.2 % of crossing mass
+    assert abs(tt["beta_95"] - 0.0633) < 2e-3 and tt["lost_rec_95"] < 0.011
+    assert BLS.score("EH", "L", "a", "all", 1.0)["killed"]                             # everything crossing vanishes
+    lit = BLS.score("TT", "r", "b", "all", 1.0)
+    assert not lit["killed"] and abs(lit["obs"]["lost_rec"] - 0.153) < 2e-3          # blind to geometry ...
+    assert BLS.rows43("TT", "r", "b", "all", 1.0)["s8_pulls"]["S8 KiDS-Legacy"] < -4  # ... killed by S8
+    cl = BLS.closure()
+    assert all(v["killed"] for v in cl.values()) and abs(cl[("all", "a")]["beta_C"] - 0.398) < 2e-3
+    g = BLS.geometric_exit()
+    assert abs(g["exited_EH_since_rec"] - 0.979) < 2e-3 and abs(g["accel_onset_z"] - 0.653) < 5e-3
+    d = BLS.neither()                                                                  # weight kept, rendering lost
+    assert d["TT"]["invisible_b_max_dchi2"] < 1e-6 and d["HX"]["invisible_b_max_dchi2"] < 1e-6
+    assert d["EH"]["invisible_b_max_dchi2"] > 5 and all(v["verdict_a"] == "none" for v in d.values())
+    assert abs(d["TT"]["literal_b_rendered_today"] - 0.850) < 2e-3
+    lab = BLS.lab_bound()                                                              # SNO+ invisible nucleon decay
+    assert lab["max_baryon_fraction_over_age"] < 2e-20 and lab["orders_stronger"] > 17
+
+
+def test_only_the_neither_state_beyond_the_boundary_makes_a_clock() -> None:
+    tr = MTM.trichotomy()
+    assert tr["nothing_faithful"] == 0 and tr["whole_faithful"] == 0                 # nothing / existent: no flow
+    assert tr["neither_faithful"] == tr["samples"] and tr["neither_min_move"] > 1.0    # neither: a clock
+    assert tr["flat_max_move"] < 1e-10                                                 # no distinction, no time
+    assert MTM.thermal_time()["passed"] and MTM.balance()["passed"]
+    ds = MTM.de_sitter_rate()
+    assert ds["rate_err"] < 1e-12 and abs(ds["V39"] - 0.8407) < 5e-4
+    od = MTM.one_domain()
+    assert od["passed"] and abs(od["today_ratio"] - 1.0495) < 1e-3 and od["ratio_at_Gyr"][0.00038] > 100
+    ax = MTM.axis_cycle()                                                              # the axis returns once per turn
+    assert abs(ax["period_Gyr"] - 108.97) < 0.05 and abs(ax["fraction_today"] - 0.1267) < 1e-3
+
+
+def test_records_cannot_be_undone_and_unrecorded_crystals_self_gravitate() -> None:
+    ir = RDY.irreversibility()                                                         # Takesaki: undo only if uncorrelated
+    assert ir["passed"] and ir["product_leakage"] < 1e-10 and ir["correlated_min_leakage"] > 0.5
+    scan = RDY.correlation_scan()                                                      # leakage and MI vanish together
+    assert scan[0]["MI"] < 1e-6 and scan[0]["leakage"] < 0.05 and scan[-1]["leakage"] > 0.5
+    sg = RDY.self_gravity()
+    assert sg["formula_check"] < 1e-5
+    c = sg["crystals"]
+    assert abs(c["Si"]["omega_SN_per_s"] - 0.0570) < 1e-3 and abs(c["Os"]["omega_SN_per_s"] - 0.515) < 5e-3
+
+
+def test_one_first_event_gives_an_open_bubble_and_only_the_horizon_capacity_closes() -> None:
+    assert FEV.lorentz_geometry()["passed"]                                            # tau-only, Hubble law
+    b = FEV.branching()
+    assert abs(b["q"] - 0.0486) < 1e-3 and abs(b["mc_extinct"] - b["q"]) < 0.01
+    assert abs(b["gens_to_muryang"] - 135.4) < 0.1 and abs(b["gens_to_S_CE"] - 243.7) < 0.1
+    prof = FEV.logistic_profile(b["ln_S_CE"], 10.0)
+    assert abs(prof["skin_over_ct"] - 0.005) < 1e-4 and prof["A"][0] > 0.999 and prof["A"][-1] < 1e-6
+    cl = FEV.closure()
+    caps = cl["caps"]
+    assert not caps["C1_S_CE"]["killed"] and caps["C2_S_inf"]["killed"] and caps["C3_patches"]["killed"]
+    assert abs(caps["C1_S_CE"]["N_total"] - 93.91) < 0.02 and caps["C1_S_CE"]["Omega_k"] < 1e-20
+    assert abs(cl["tick"]["over_hubble_time"] - math.log(b["D"]) / 3) < 1e-9      # the bridge tick is not natural
+    s = FEV.sign_test()
+    assert not s["open_killed"] and not s["P24_killed"]
+    st = FEV.stationary_tick()                                                         # the tick is forced: volume x D
+    assert abs(st["n=3"]["magnification_per_generation"] - b["D"] ** (1 / 3)) < 1e-12
+    assert abs(st["n=3"]["tau0_H"] - math.log(b["D"]) / 3) < 1e-12 and st["n=2"]["Omega_k"] < 1e-60
+    bc = FEV.balance_check()                                                           # the curvature "fit" was an artifact
+    assert abs(bc["n_after_instant"] - 65.70) < 0.01 and abs(bc["n_star_instant"] - 55.58) < 0.01
+    assert bc["consistent_cases_fit"] == [] and abs(bc["mixed_artifact"] - 0.0020) < 2e-4
+    au = FEV.audit()                                                                   # independent-audit corrections
+    assert abs(au["floor_ln_Nmax_volume"] - 195.63) < 0.01 and au["ln_records_in_observer_domain"] < b["ln_S_CE"]
+    assert abs(au["Omega_k_if_bubble_is_domain"] - 0.762) < 0.005                      # H3 would be killed
+    assert abs(au["ln_S_Lambda"] - 282.109) < 0.002 and abs(au["tuned_N_star_for_DESI"] - 56.40) < 0.01
+
+
+def test_curvature_kills_only_small_bubble_capacities_and_the_diffusion_exit_is_flat() -> None:
+    s = BCP.evaluate()["summary"]
+    assert s["n_candidates"] == 27 and abs(s["n_hub"] - 62.599) < 0.001
+    assert s["killed_base"] == ["A5", "B1", "B2", "B5", "B6", "B7", "C1", "C2", "C3", "C4", "C5", "E1"]
+    assert s["obs_window_any"] == ["A3", "A4"] and s["desi_window_any"] == ["A4"]
+    ch = BCP.chance_in_windows()                                                       # the DESI hit is chance-level
+    assert ch["n_cells"] == 109 and ch["desi_cells"] == 1 and ch["obs_cells"] == 4
+    assert abs(ch["p_at_least_one"] - 0.282) < 0.005
+    ex = BCP.starobinsky_exit()                                                        # F1: exact Starobinsky, P_zeta = 1
+    assert abs(ex["phi_star_MP"] - 5.398) < 0.001 and abs(ex["P=1"]["phi_q_MP"] - 17.603) < 0.001
+    assert abs(ex["P=1"]["N_q"] - 1.3094e6) < 1e3 and abs(ex["P=1"]["ratio_to_approx"] - 1.050) < 0.001
+    assert 4.1e5 < ex["P=0.1"]["N_q"] < 4.2e5 and 4.1e6 < ex["P=10"]["N_q"] < 4.2e6
+    assert all(ex[k]["Omega_k"] == 0.0 for k in ("P=0.1", "P=1", "P=10"))
+
+
+def test_one_ratio_sets_the_pocket_boundary_and_determination_spreads_at_light_speed() -> None:
+    r = PKB.ratios()
+    b, pv = r["boundary"], r["pivot"]
+    assert abs(b["P_zeta"] - 1) < 1e-9 and abs(b["front_speed_c"] - 1) < 1e-9 and abs(b["dS_dN"] - 2) < 1e-8
+    assert abs(pv["front_speed_c"] - 1 / math.sqrt(pv["P_zeta"])) < 1e-6 and abs(pv["causal_push"] - 2.18e4) < 10
+    assert b["eps"] < 1e-12 and abs(r["end"]["front_speed_c"] - 2.821e6) < 1e3
+    sl = PKB.standard_layer()                                                          # standard: a layer, not a surface
+    assert abs(sl["N_volume"] - 5.3456e5) < 50 and abs(sl["thickness_over_Nq"] - (1 - 1 / math.sqrt(6))) < 0.001
+    assert abs(sl["volume_front_sigma_per_efold"]["P=1"] - (math.sqrt(6) - 1)) < 1e-12
+    qb = PKB.qg1_bubble()                                                              # CE: one record, open bubble, flat
+    assert qb["dS_invariant"] and qb["log10_Omega_k"] < -1e6 and abs(qb["start_needed_for_killed_curvature"] - 65.21) < 0.01
+    ei = PKB.entropy_identity()                                                        # dS/dN = 2/P_zeta, integrated
+    assert ei["rel_err"] < 1e-9 and ei["N_q"] < ei["closed"]
+    g = PKB.g1_front()
+    assert g["rho=0"] == math.inf and abs(g["rho=1"] - math.sqrt(2)) < 1e-12 and abs(g["boundary(tau=1e-9)"] - 1) < 1e-12
+    assert all(PKB.verdict().values())
+
+
+def test_landauer_budget_keeps_the_undetermined_sea_at_the_boundary() -> None:
+    pb = RRT.persistence_band()
+    assert abs(pb["bit"]["P_threshold"] - 2 / (3 * math.log(2))) < 1e-12 and all(v["boundary_inside"] for v in pb.values())
+    assert abs(pb["bit"]["min_dim_at_boundary"] - (3 - 2 / math.log(2))) < 1e-12 and abs(pb["bit"]["band_below_boundary_efolds"] - 25256) < 5
+    assert pb["nat"]["min_dim_at_boundary"] == 1.0 and abs(pb["3bit"]["P_threshold"] - 0.3206) < 1e-4
+    cl = RRT.curvature_link()                                                          # one first event; curvature needs f < 1e-6
+    assert cl["log10_our_region_over_bubble"] < -5e5 and abs(cl["f_for_window"] - 7.637e-7) < 1e-9
+    mr = RRT.maximal_recording()                                                       # [hypothesis] maximal recording
+    assert abs(mr["dN_max"] - 25256) < 5 and abs(mr["lnV_max"] - 1461.4) < 0.5 and abs(mr["dN_zero"] - 50024) < 5
+    assert mr["max_rel_dev"] < 1e-4 and all(RRT.verdict().values())
+
+
+def test_the_same_record_budget_threshold_ends_distinction_94_efolds_from_now() -> None:
+    g = DEN.global_end()
+    assert abs(g["bit"]["ln_a_end"] - 93.889) < 0.001 and abs(g["bit"]["t_end_Gyr"] - 1656.4) < 0.5
+    assert abs(g["bit"]["ln_a_end"] - g["bit"]["approx"]) < 1e-6 and abs(g["T_GH_K"] - 2.2005e-30) < 1e-33
+    assert abs(g["nat"]["from_equality"] - g["mirror"]["A1_capacity_ln_S_over_3"]) < 1e-9       # same form, algebraic
+    assert abs(g["ln_a_last_baryon"] - 60.382) < 0.001 and g["bit"]["ln_a_end"] - g["ln_a_last_baryon"] > 33
+    assert abs(DEN.local_budget()["M_LG=3e+12"] - 2.55e112) < 0.01e112 and all(DEN.verdict().values())
+
+
 def test_rendering_predictions_v25_is_frozen() -> None:
     v24 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v24.json").read_text(encoding="utf-8"))
     v25 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v25.json").read_text(encoding="utf-8"))
@@ -1673,3 +1887,26 @@ def test_rendering_predictions_v25_is_frozen() -> None:
     assert len(v25["model"]["files"]) == 86
     assert v25["model"]["status_changes_v25"]["E4"].startswith("Born-doubling basis (v24) withdrawn")
     assert v25["model"]["mdl_accounting_v25"]["continuous_inputs"] == ["alpha_s", "alpha_em", "v/M_Pl", "A_s", "h"]
+
+
+def test_rendering_predictions_v26_is_frozen() -> None:
+    v25 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v25.json").read_text(encoding="utf-8"))
+    v26 = json.loads((PREREGISTRATION_ROOT / "rendering_predictions_v26.json").read_text(encoding="utf-8"))
+    assert v26["supersedes_manifest_id"] == v25["manifest_id"]
+    body = {k: v for k, v in v26.items() if k != "manifest_sha256"}
+    canonical = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    assert hashlib.sha256(canonical).hexdigest() == v26["manifest_sha256"]
+    assert v26["manifest_sha256"] == "c5df78725491aff49c52bda0cccf145cd78ef665c508b0b856d7886789e1f0a1"
+    for key, rel in v26["model"]["files"].items():
+        assert v26["model"]["sha256"][key] in _line_ending_hashes((REPO_ROOT / rel)), (
+            f"{key} changed after v26 freeze: create v27 and keep earlier manifests")
+    old = {q["id"]: q for q in v25["predictions"]}
+    assert {q["id"] for q in v26["predictions"]} == set(old) | {"P44"}
+    for q in v26["predictions"]:
+        if q["id"] in old:
+            assert q == old[q["id"]]                                                   # earlier entries untouched
+    assert len(v26["model"]["files"]) == 93 and v26["model"]["audit_v26"]["registered"] == 44
+    p44 = next(q for q in v26["predictions"] if q["id"] == "P44")
+    sg = RDY.self_gravity()["crystals"]                                                # the value is reproduced
+    assert abs(p44["value"]["omega_SN_Os"] - sg["Os"]["omega_SN_per_s"]) < 1e-4
+    assert abs(p44["value"]["omega_SN_Si"] - sg["Si"]["omega_SN_per_s"]) < 1e-4
