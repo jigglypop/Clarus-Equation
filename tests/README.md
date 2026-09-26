@@ -29,4 +29,4 @@ python -B -m pytest -p no:cacheprovider tests/test_holdout_preregistration.py -q
 python -B -m pytest -p no:cacheprovider tests -q
 ```
 
-새 테스트를 추가하거나 기존 대표 파일을 교체할 때는 [tests 전용 규약](AGENTS.md)을 따른다.
+새 테스트를 추가하거나 기존 대표 파일을 교체할 때는 [tests 전용 규약](CLAUDE.md)을 따른다.

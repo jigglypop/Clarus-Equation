@@ -8,18 +8,19 @@ from test_support.paths import PAPER_ROOT, REPO_ROOT
 from test_support import markdown_math as normalizer
 
 ROOT = REPO_ROOT
-PAPER_DIR = PAPER_ROOT / "참조" / "2_경로적분과_응용"
-LECTURE_DIR = PAPER_ROOT / "참조" / "1_강의"
-CONSTANTS_DIR = PAPER_ROOT / "참조" / "3_상수"
-FORMAL_DIR = PAPER_ROOT / "참조" / "9_등호이전"
-REFERENCE_DIR = PAPER_ROOT / "참조"
-AXIOM_PATH = PAPER_ROOT / "00_기원과_현재계획" / "15_CE_공리계와_모형_사전.md"
-PATH_INTEGRAL_PATH = PAPER_ROOT / "06_QFT_재설계" / "36A_조건부_장론과_확률_코어.md"
+LEGACY_ROOT = PAPER_ROOT / "레거시"
+PAPER_DIR = LEGACY_ROOT / "참조" / "2_경로적분과_응용"
+LECTURE_DIR = LEGACY_ROOT / "참조" / "1_강의"
+CONSTANTS_DIR = LEGACY_ROOT / "참조" / "3_상수"
+FORMAL_DIR = LEGACY_ROOT / "참조" / "9_등호이전"
+REFERENCE_DIR = LEGACY_ROOT / "참조"
+AXIOM_PATH = LEGACY_ROOT / "00_기원과_현재계획" / "15_CE_공리계와_모형_사전.md"
+PATH_INTEGRAL_PATH = LEGACY_ROOT / "06_QFT_재설계" / "36A_조건부_장론과_확률_코어.md"
 CONSTANT_REGISTER_PATH = PAPER_ROOT / "검증_원장" / "상수_조건부_산출_원장.md"
 
 
 PHYSICS_APPLICATION_MARKDOWN = tuple(
-    PAPER_ROOT / "참조" / "4_공학적_활용" / name
+    LEGACY_ROOT / "참조" / "4_공학적_활용" / name
     for name in (
         "01_핵융합_설계.md",
         "02_양자오류보정.md",
@@ -31,7 +32,7 @@ PHYSICS_APPLICATION_MARKDOWN = tuple(
 )
 
 THEORY_DERIVATION_MARKDOWN = tuple(
-    PAPER_ROOT / "참조" / "5_유도" / name
+    LEGACY_ROOT / "참조" / "5_유도" / name
     for name in (
         "00_선택과_접힘.md",
         "01_Navier_Stokes.md",
@@ -49,7 +50,7 @@ CANONICAL_MARKDOWN = (
     AXIOM_PATH,
     PATH_INTEGRAL_PATH,
     CONSTANT_REGISTER_PATH,
-    PAPER_ROOT / "코어_독자_가이드.md",
+    LEGACY_ROOT / "코어_독자_가이드.md",
 )
 
 OLD_STATUS_TAG = re.compile(
@@ -110,7 +111,7 @@ REMOVED_PARENT_PATTERNS = (
 )
 
 NARRATIVE_MARKDOWN = (
-    PAPER_ROOT / "코어_독자_가이드.md",
+    LEGACY_ROOT / "코어_독자_가이드.md",
 ) + tuple(sorted(LECTURE_DIR.glob("*.md"))) + THEORY_DERIVATION_MARKDOWN
 
 FORMAL_PROVENANCE = (
@@ -219,7 +220,7 @@ def test_narrative_documents_open_with_reader_orientation() -> None:
 
 
 def test_core_narrative_keeps_verified_fixed_point_scope_and_measure_term() -> None:
-    narrative = (PAPER_ROOT / "참조" / "5_유도" / "00_선택과_접힘.md").read_text(
+    narrative = (LEGACY_ROOT / "참조" / "5_유도" / "00_선택과_접힘.md").read_text(
         encoding="utf-8"
     )
     assert r"x_0\in[0,1/D]" in narrative

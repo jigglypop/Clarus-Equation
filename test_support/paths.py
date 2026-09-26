@@ -21,7 +21,6 @@ for _path, _kind in _REQUIRED_REPOSITORY_ENTRIES:
             f"expected {_kind} at {_path}"
         )
 
-CODEX_ROOT = REPO_ROOT / ".codex"
 EXPERIMENTS_ROOT = REPO_ROOT / "experiments"
 PAPER_ROOT = REPO_ROOT / "paper"
 TESTS_ROOT = REPO_ROOT / "tests"
@@ -32,7 +31,6 @@ RESEARCH_CONTRACT_PATH = PAPER_ROOT / "검증_원장" / "연구_목표_계약.md
 
 
 __all__ = (
-    "CODEX_ROOT",
     "EXPERIMENTS_ROOT",
     "PAPER_ROOT",
     "PREREGISTRATION_ROOT",

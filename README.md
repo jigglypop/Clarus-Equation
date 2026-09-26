@@ -3,21 +3,21 @@
 미발표 물리 연구 가설과 최소 계산·검증 코드다. 조건부 수학 결과, 물리 가정,
 관측 비교를 구분한다. 테스트 통과는 자연법칙의 증명이 아니다.
 
-이론의 정본은 [통합 논문](paper/CE_통합_논문.md), 읽는 순서는
-[논문 안내](paper/README.md), 성공 기준은
-[연구 목표 계약](paper/검증_원장/연구_목표_계약.md)에 둔다.
+현재 이론의 정본은 [렌더링 생존식 논문](paper/README.md)(1–14장과 부록)이고,
+성공 기준은 [연구 목표 계약](paper/검증_원장/연구_목표_계약.md)에 둔다. 폐기한 첫째 이론의 원고와
+논문의 이전 연구 기록은 [레거시](paper/레거시/README.md)에 있다.
 
 ## 저장소 구성
 
 | 경로 | 책임 |
 |---|---|
-| [examples/physics](examples/physics/README.md) | 필수 테스트가 사용하는 계산 모듈 12개 |
-| [tests](tests/README.md) | 회귀·계약 검사 파일 12개 |
+| [examples/physics](examples/physics/README.md) | 필수 테스트가 사용하는 계산 모듈 |
+| [tests](tests/README.md) | 회귀·계약 검사 파일 13개 |
 | `test_support/` | 공용 경로와 Markdown 수식 검사 |
-| [experiments/preregistration](experiments/preregistration/README.md) | 동결 계약 4개와 검증기 |
+| [experiments/preregistration](experiments/preregistration/README.md) | 동결 계약(홀드아웃 4개, 렌더링 예측 v1–v26)과 검증기 |
 | `benchmarks/cosmology/` | 계산에 필요한 관측 요약과 Pantheon 입력 |
-| [paper](paper/README.md) | 원고·조건부 증명·반례·과거 기록 |
-| `.codex/`, `AGENTS.md` | 연구 작업 규약 |
+| [paper](paper/README.md) | 렌더링 이론 논문(1–14장, 부록)·연구 계약·검증 원장, 첫째 이론과 이전 기록은 `paper/레거시/` |
+| `CLAUDE.md` | 연구 작업 규약 |
 
 `verify/`, `ledger/`, `derivations/`, `_workspace/`, `scripts/`, `artifacts/`는
 삭제했다. 유지할 구현은 `examples/physics/`로 통합했다. 새 계산은 기존 모듈에
